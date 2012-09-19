@@ -1,0 +1,17 @@
+## Interface: 20400
+## Title: Lib: LibStub
+## Notes: Universal Library Stub
+## Credits: Kaelten, Cladhaire, ckknight, Mikk, Ammo, Nevcairiel
+## X-Website: http://jira.wowace.com/browse/LS
+## X-Category: Library
+## X-License: Public Domain	
+## X-Curse-Packaged-Version: r92
+## X-Curse-Project-Name: LibStub
+## X-Curse-Project-ID: libstub
+## X-Curse-Repository-ID: wow/libstub/mainline
+## X-Curse-Packaged-Version: v1.4.7
+## X-Curse-Project-Name: Reforgenator
+## X-Curse-Project-ID: reforgenator
+## X-Curse-Repository-ID: wow/reforgenator/mainline
+
+LibStub.lua

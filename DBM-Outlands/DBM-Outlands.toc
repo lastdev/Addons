@@ -1,0 +1,31 @@
+﻿## Interface: 50001
+## X-Min-Interface: 50000
+## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Outlands|r
+## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0아웃랜드|r
+## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Scherbenwelt|r
+## LoadOnDemand: 1
+## RequiredDeps: DBM-Core
+## SavedVariablesPerCharacter: DBMOutlands_SavedVars, DBMOutlands_SavedStats
+## X-DBM-Mod: 1
+## X-DBM-Mod-Category: BC
+## X-DBM-Mod-Has-Heroic-Mode: 0
+## X-DBM-Mod-Name: Outlands
+## X-DBM-Mod-Name-esES: Terrallende
+## X-DBM-Mod-Name-koKR: 아웃랜드
+## X-DBM-Mod-Name-deDE: Scherbenwelt
+## X-DBM-Mod-Sort: 307
+## X-DBM-Mod-LoadZoneID: 776,779
+localization.en.lua
+localization.de.lua
+localization.es.lua
+localization.tw.lua
+localization.cn.lua
+localization.ru.lua
+localization.kr.lua
+Gruuls\MapSizes.lua
+Gruuls\Maulgar.lua
+Gruuls\Gruul.lua
+Magtheridon\MapSizes.lua
+Magtheridon\Magtheridon.lua
+Kazzak.lua
+Doomwalker.lua

@@ -1,0 +1,32 @@
+﻿## Interface: 50001
+## Title: Altoholic_Characters
+## Notes: Altoholic's Characters UI
+## Author: Thaoky (EU-Marécages de Zangar)
+## Version: 5.0.001
+## Dependencies: Altoholic, DataStore, DataStore_Characters
+## LoadOnDemand: 1
+## X-Category: Interface Enhancements
+## X-Curse-Packaged-Version: r123
+## X-Curse-Project-Name: Altoholic
+## X-Curse-Project-ID: altoholic
+## X-Curse-Repository-ID: wow/altoholic/mainline
+
+TabCharacters.xml
+
+Frames\AuctionHouse.xml
+Frames\Containers.xml
+Frames\Glyphs.xml
+Frames\Mails.xml
+Frames\Pets.xml
+Frames\Quests.xml
+Frames\Recipes.xml
+Frames\Spellbook.xml
+Frames\Talents.xml
+
+Data\FactionLeveling_deDE.lua
+Data\FactionLeveling_enUS.lua
+Data\FactionLeveling_frFR.lua
+Data\FactionLeveling_koKR.lua
+Data\FactionLeveling_ruRU.lua
+Data\FactionLeveling_zhCN.lua
+Data\FactionLeveling_zhTW.lua

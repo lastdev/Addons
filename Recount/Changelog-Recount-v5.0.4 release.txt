@@ -1,0 +1,49 @@
+------------------------------------------------------------------------
+r1210 | elsia | 2012-08-28 19:07:47 +0000 (Tue, 28 Aug 2012) | 1 line
+Changed paths:
+   A /tags/v5.0.4 release (from /trunk:1209)
+
+Tagging as v5.0.4 release
+------------------------------------------------------------------------
+r1209 | elsia | 2012-08-27 23:15:18 +0000 (Mon, 27 Aug 2012) | 1 line
+Changed paths:
+   M /trunk/Recount.toc
+
+- MOP preparedness repackaging (get post-bandaid LibGraph-2.0 and possible Ace3 fixes).
+------------------------------------------------------------------------
+r1208 | elsia | 2012-08-15 03:52:27 +0000 (Wed, 15 Aug 2012) | 1 line
+Changed paths:
+   M /trunk/GUI_Config.lua
+
+- Added color config support in the config window for the monk class.
+------------------------------------------------------------------------
+r1207 | elsia | 2012-08-12 20:20:26 +0000 (Sun, 12 Aug 2012) | 1 line
+Changed paths:
+   M /trunk/Tracker.lua
+
+- Added Colossus enchant proc (unconfirmed), please report if it works as intended. (Thanks to Yoshimo)
+------------------------------------------------------------------------
+r1206 | elsia | 2012-08-12 15:40:23 +0000 (Sun, 12 Aug 2012) | 1 line
+Changed paths:
+   M /trunk/Tracker.lua
+
+- Alpha state spellIDs for absorb effects in MOP. Only part of these are confirmed to be correct. Please report if spell absorbs for your class are now reported as expected.
+------------------------------------------------------------------------
+r1204 | elsia | 2012-08-04 04:10:38 +0000 (Sat, 04 Aug 2012) | 1 line
+Changed paths:
+   M /trunk/GUI_Graph.lua
+
+- Forcing repackaging with band-aided LibGraph-2.0. This should allow Recount to display line graphs without crashing on the current MOP beta.
+------------------------------------------------------------------------
+r1202 | elsia | 2012-07-31 21:23:48 +0000 (Tue, 31 Jul 2012) | 1 line
+Changed paths:
+   M /trunk/Recount.toc
+
+- MOP Beta Toc bump. This version should work on live but it is not recommended.
+------------------------------------------------------------------------
+r1201 | elsia | 2012-07-25 12:42:20 +0000 (Wed, 25 Jul 2012) | 1 line
+Changed paths:
+   M /trunk/deletion.lua
+
+- Changed to GROUP_ROSTER_UPDATE for MOP beta.
+------------------------------------------------------------------------

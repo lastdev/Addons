@@ -1,0 +1,53 @@
+== Version 2.4.0
+* Balance: Added a Balance rotation.
+* Feral: Added Proto-Drake Egg to the list of things not to shred.
+* All: Will not flash forms while mounted or in a traveling form.
+
+== Version 2.3.3
+* Feral: Bugfix - there was an error when soloing with Glyph of Shred.
+
+== Version 2.3.2
+* Feral: Mangle flashing was broken.
+* Feral: Incarnation flashing was a little wonky.
+
+== Version 2.3.1
+* Feral: there were bugs during the execute phase.
+
+== Version 2.3.0
+* Added a Feral rotation for the MoP beta.
+
+== Version 2.2.0
+* Bear: Only flashes Challenging Roar if your target is in melee range.
+* Cat: No longer flashes Ravage! for the moment between casting it and Stampede actually being consumed.
+* Resto: No longer flashes Swiftmend, to be consistant with other healing modules.
+* Resto: Now flashes things in yellow, to be consistant with other healing modules.
+* All: Improved timings of a few things in light of queued spells, especially for Cats.
+
+== Version 2.1.1
+* Taking out of beta.
+
+== Version 2.1.0 beta
+This beta release uses Bitten's SpellFlash Library version 3.  If you update you will also need to update any of your other Bitten's SpellFlash modules to their latest version, which may also be in beta.
+* Balance: Improved travel time detection (for calculating energy gains that are in the air).
+* Balance & Resto: Workaround for a bug in the Blizzard UI that sometimes reports the wrong cast time for a spell.
+* Bear: Will immediately consider Lacerate as a priority when you cast Pulverize (slight improvement last release, but now it's totally fixed).
+* Bear: Checks for the required talents before flashing for Infected Wounds.
+* Bear: Bugfix - will no longer flash Berserk for the second between Pulverize going up and Lacerate being consumed.
+* Cat: Checks for the required talents before flashing for Blood in the Water
+
+== Version 2.0.0
+* Balance: There is now a Balance rotation!
+* Bear: Lacerate no longer hesitates to flash after Pulverize.
+* Cat: This rotation has pretty much been rewritten.
+* All: Flashes raid buffs.
+* All: Detects feral T13 set bonuses automatically, instead of having to set it in the options.
+* All: Many talent/glyph related spells are now checked instead of assumed.
+* All: Added German localization (thanks Gucki!)
+
+== Version 1.0.1
+* Removes some stray debugging output.
+* Adds localization support.
+* Plays nicer with other addons.
+
+== Version 1.0.0 beta
+* Initial Release

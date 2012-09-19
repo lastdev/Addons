@@ -1,0 +1,76 @@
+------------------------------------------------------------------------
+r336 | mysticalos | 2012-09-06 16:02:18 +0000 (Thu, 06 Sep 2012) | 1 line
+Changed paths:
+   A /tags/3.6.1 (from /trunk:335)
+
+Tagging as 3.6.1
+------------------------------------------------------------------------
+r335 | mysticalos | 2012-09-06 16:00:34 +0000 (Thu, 06 Sep 2012) | 1 line
+Changed paths:
+   M /trunk/ChangeLog.lua
+   M /trunk/Sources/Options/CoreOptions.lua
+
+Fix another anchoring problem
+------------------------------------------------------------------------
+r334 | mysticalos | 2012-09-06 15:18:08 +0000 (Thu, 06 Sep 2012) | 1 line
+Changed paths:
+   M /trunk/ChangeLog.lua
+
+oops, somehow this file got excluded
+------------------------------------------------------------------------
+r333 | mysticalos | 2012-09-06 15:17:19 +0000 (Thu, 06 Sep 2012) | 2 lines
+Changed paths:
+   M /trunk/Modules/ChatEngine.lua
+   M /trunk/Modules/Expose.lua
+   M /trunk/Modules/History.lua
+   M /trunk/Modules/Includes.xml
+   M /trunk/Modules/Negotiate.lua
+   M /trunk/Modules/WhisperEngine.lua
+   M /trunk/Sources/Options/CoreOptions.lua
+   M /trunk/Sources/SlashHandler.lua
+   M /trunk/Sources/TabHandler.lua
+   M /trunk/Sources/WindowHandler.lua
+   M /trunk/WIM.lua
+
+*Disabled out of date tutorial frame until it's updated. all it does is spam lua errors if it's on.
+*Fixed sub section anchoring on the Whisper History section. (ie, no more overlapping sections)
+------------------------------------------------------------------------
+r332 | mysticalos | 2012-09-06 13:39:25 +0000 (Thu, 06 Sep 2012) | 1 line
+Changed paths:
+   M /trunk/ChangeLog.lua
+   M /trunk/WIM.lua
+
+Bump version
+------------------------------------------------------------------------
+r331 | mysticalos | 2012-09-06 13:11:47 +0000 (Thu, 06 Sep 2012) | 1 line
+Changed paths:
+   M /trunk/Modules/WhisperEngine.lua
+
+Fix a lua error that could occur if you try to /r a tell when you weren't whispered.
+------------------------------------------------------------------------
+r330 | mysticalos | 2012-09-06 12:49:30 +0000 (Thu, 06 Sep 2012) | 1 line
+Changed paths:
+   M /trunk/Modules/ChatEngine.lua
+
+Fix for party chat not working through WIM
+------------------------------------------------------------------------
+r328 | mysticalos | 2012-08-28 14:49:37 +0000 (Tue, 28 Aug 2012) | 1 line
+Changed paths:
+   M /trunk/Modules/Filters.lua
+   M /trunk/Modules/History.lua
+   M /trunk/Modules/WhisperEngine.lua
+   M /trunk/Sources/Options/OptionsTookKit.lua
+   M /trunk/WIM.lua
+   M /trunk/WIM.toc
+
+Remove 4.x compat hacks, bump toc
+------------------------------------------------------------------------
+r327 | mysticalos | 2012-08-03 22:22:06 +0000 (Fri, 03 Aug 2012) | 2 lines
+Changed paths:
+   M /trunk/Modules/History.lua
+   M /trunk/Modules/WhisperEngine.lua
+   M /trunk/WIM.lua
+
+More MoP fixes. BNGetFriendInfo(). presenceID, name, surname-->presenceID, name&surname, battleTag
+Fixed another instance of BNTokenCombineGivenAndSurname --> BNTokenFindName
+------------------------------------------------------------------------

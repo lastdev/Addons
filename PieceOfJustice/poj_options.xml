@@ -1,0 +1,1878 @@
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
+
+
+<!-- templates -->
+
+<FontString name="PoJ_OptionSubTitleTemplate" inherits="GameFontNormal" virtual="true" justifyH="LEFT">
+  <Anchors>
+    <Anchor point="TOPLEFT"><Offset><AbsDimension x="20" y="-14"/></Offset></Anchor>
+  </Anchors>
+  <Color r="1" g="1" b="1"/>
+</FontString>
+
+<Frame name="PoJ_OptionFrameTemplate" virtual="true">
+  <Size><AbsDimension x="568" y="410"/></Size>
+  <Anchors>
+    <Anchor point="TOP"><Offset><AbsDimension y="-40"/></Offset></Anchor>
+  </Anchors>
+  <Layers>
+    <Layer level="ARTWORK">					
+      <FontString name="$parent_Title" inherits="GameFontNormalLarge" justifyH="LEFT">
+        <Anchors>
+          <Anchor point="TOPLEFT"><Offset><AbsDimension x="20" y="-20"/></Offset></Anchor>
+        </Anchors>
+      </FontString>
+    </Layer>
+  </Layers>
+  <Scripts>
+    <OnLoad>PoJ_OptionFrame_OnLoad(self)</OnLoad>
+  </Scripts>
+</Frame>
+
+<Frame name="PoJ_OptionFrameBoxTemplate" virtual="true" enableMouse="true">
+  <Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+    <EdgeSize><AbsValue val="16"/></EdgeSize>
+    <TileSize><AbsValue val="16"/></TileSize>
+    <BackgroundInsets><AbsInset left="5" right="5" top="5" bottom="5"/></BackgroundInsets>
+  </Backdrop>
+  <Layers>
+    <Layer level="ARTWORK">					
+      <FontString name="$parent_Title" inherits="PoJ_OptionSubTitleTemplate"/>
+    </Layer>
+  </Layers>
+  <Scripts>
+    <OnLoad>PoJ_OptionFrameBox_OnLoad(self)</OnLoad>
+  </Scripts>
+</Frame>
+
+<Button name="PoJ_OptionsTabTemplate" inherits="CharacterFrameTabButtonTemplate" virtual="true">
+  <Scripts>
+    <OnClick>PoJ_ActivateTab(self)</OnClick>
+  </Scripts>
+</Button>
+
+<FontString name="PoJ_Font" inherits="GameFontNormalSmall" justifyH="LEFT" virtual="true"/>
+
+<CheckButton name="PoJ_CheckboxTemplate" inherits="UICheckButtonTemplate" virtual="true">
+  <Size><AbsDimension x="24" y="24"/></Size>
+  <Scripts>
+    <OnEnter>GameTooltip:Hide()</OnEnter>
+    <PreClick>
+      if self:GetChecked() then
+        PlaySound("igMainMenuOptionCheckBoxOff")
+      else
+        PlaySound("igMainMenuOptionCheckBoxOn")
+      end
+    </PreClick>
+  </Scripts>
+</CheckButton>
+
+<CheckButton name="PoJ_OptionCheckBoxTemplate" inherits="PoJ_CheckboxTemplate" virtual="true">
+  <Layers>
+    <Layer level="BACKGROUND">
+      <FontString name="$Parent_Label" inherits="PoJ_Font">
+        <Anchors>
+          <Anchor point="LEFT" relativePoint="RIGHT"><Offset><AbsDimension y="1"/></Offset></Anchor>
+        </Anchors>
+      </FontString>
+    </Layer>
+  </Layers>
+  <Scripts>
+    <OnClick>PoJ_OptionCheckBox_OnClick(self)</OnClick>
+    <OnEnter>PoJ_OptionCheckBox_OnEnter(self)</OnEnter>
+    <OnLeave>GameTooltip:Hide()</OnLeave>
+    <OnLoad>PoJ_OptionCheckBox_OnLoad(self)</OnLoad>
+    <OnShow>PoJ_OptionCheckBox_OnShow(self)</OnShow>
+  </Scripts>
+</CheckButton>
+
+<CheckButton name="PoJ_PlayerNamesCheckboxTemplate" inherits="PoJ_CheckboxTemplate" virtual="true">
+  <Scripts>
+    <OnClick>PoJ_PlayerNames_OnClick(self)</OnClick>
+  </Scripts>
+</CheckButton>
+
+<CheckButton name="PoJ_ErrorSuppressionCheckBoxTemplate" inherits="PoJ_OptionCheckBoxTemplate" hidden="true" virtual="true">
+  <Scripts>
+    <OnClick>PoJ_ErrorSuppressionCheckBox_OnClick(self)</OnClick>
+    <OnEnter/>
+    <OnLoad>PoJ_ErrorSuppressionCheckBox_OnLoad(self)</OnLoad>
+    <OnShow>PoJ_ErrorSuppressionCheckBox_OnShow(self)</OnShow>
+  </Scripts>
+</CheckButton>
+
+<CheckButton name="PoJ_OptionRadioButtonTemplate" inherits="PoJ_CheckboxTemplate" virtual="true">
+  <Size><AbsDimension x="16" y="16"/></Size>
+  <Layers>
+    <Layer level="BACKGROUND">
+      <FontString name="$Parent_Label" inherits="PoJ_Font">
+        <Anchors>
+          <Anchor point="LEFT" relativePoint="RIGHT"><Offset><AbsDimension x="1" y="1"/></Offset></Anchor>
+        </Anchors>
+      </FontString>
+    </Layer>
+  </Layers>
+  <NormalTexture file="Interface\Buttons\UI-RadioButton">
+    <TexCoords left="0" right="0.25" top="0" bottom="1"/>
+  </NormalTexture>
+  <HighlightTexture file="Interface\Buttons\UI-RadioButton" alphaMode="ADD">
+    <TexCoords left="0.5" right="0.75" top="0" bottom="1"/>
+  </HighlightTexture>
+  <CheckedTexture file="Interface\Buttons\UI-RadioButton">
+    <TexCoords left="0.25" right="0.5" top="0" bottom="1"/>
+  </CheckedTexture>
+  <DisabledCheckedTexture name="$parent_DisabledCheckedTexture" file="Interface\Buttons\UI-RadioButton">
+    <TexCoords left="0.25" right="0.5" top="0" bottom="1"/>
+  </DisabledCheckedTexture>
+  <Scripts>
+    <OnClick>PoJ_OptionRadioButton_OnClick(self)</OnClick>
+    <OnEnter>PoJ_OptionRadioButton_OnEnter(self)</OnEnter>
+    <OnLeave>GameTooltip:Hide()</OnLeave>
+    <OnLoad>PoJ_OptionRadioButton_OnLoad(self)</OnLoad>
+    <OnShow>PoJ_OptionRadioButton_OnShow(self)</OnShow>
+  </Scripts>
+</CheckButton>
+
+<EditBox name="PoJ_Editbox_Template" historyLines="0" autoFocus="false" virtual="true">
+  <Layers>
+    <Layer level="BACKGROUND">
+      <Texture name="$parent_Left" file="Interface\ClassTrainerFrame\UI-ClassTrainer-FilterBorder">
+        <Size><AbsDimension x="12" y="29"/></Size>
+        <TexCoords left="0" right="0.09375" top="0" bottom="1"/>
+        <Anchors>
+          <Anchor point="TOPLEFT"><Offset><AbsDimension x="-10" y="2"/></Offset></Anchor>
+        </Anchors>
+      </Texture>
+      <Texture name="$parent_Right" file="Interface\ClassTrainerFrame\UI-ClassTrainer-FilterBorder">
+        <Size><AbsDimension x="12" y="29"/></Size>
+        <TexCoords left="0.90625" right="1.0" top="0" bottom="1"/>
+        <Anchors>
+          <Anchor point="TOPRIGHT"><Offset><AbsDimension x="10" y="2"/></Offset></Anchor>
+        </Anchors>
+      </Texture>
+      <Texture name="$parent_Middle" file="Interface\ClassTrainerFrame\UI-ClassTrainer-FilterBorder">
+        <Size><AbsDimension y="29"/></Size>
+        <TexCoords left="0.09375" right="0.90625" top="0" bottom="1"/>
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="$parent_Left" relativePoint="RIGHT"/>
+          <Anchor point="RIGHT" relativeTo="$parent_Right" relativePoint="LEFT"/>
+        </Anchors>
+      </Texture>
+    </Layer>
+  </Layers>
+  <FontString inherits="ChatFontNormal"/>
+  <Scripts>
+    <OnEnterPressed>self:ClearFocus()</OnEnterPressed>
+    <OnEscapePressed>PoJ_ToggleFrame(PoJ_Options)</OnEscapePressed>
+    <OnTabPressed>self:ClearFocus()</OnTabPressed>
+  </Scripts>
+</EditBox>
+
+<Slider name="PoJ_OptionSliderTemplate" inherits="OptionsSliderTemplate" virtual="true">
+  <Size><AbsDimension x="240" y="16"/></Size>
+  <Scripts>
+    <OnLoad>PoJ_OptionSlider_OnLoad(self)</OnLoad>
+  </Scripts>
+</Slider>
+
+<Frame name="PoJ_UIDropDownMenuTemplate" inherits="UIDropDownMenuTemplate" enableMouse="true" virtual="true">
+  <Scripts>
+    <OnLoad>
+     local frame = self:GetName()
+     getglobal(frame .. "Text"):SetJustifyH("LEFT")
+    </OnLoad>
+  </Scripts>
+</Frame>
+
+<Button name="PoJ_CraftListHeaderTemplate" virtual="true">
+  <Size><AbsDimension x="10" y="24"/></Size>
+  <Layers>
+    <Layer level="BACKGROUND">
+      <Texture name="$parentLeft" file="Interface\FriendsFrame\WhoFrame-ColumnTabs">
+        <Size><AbsDimension x="5" y="24"/></Size>
+        <Anchors>
+          <Anchor point="TOPLEFT"/>
+        </Anchors>
+        <TexCoords left="0" right="0.078125" top="0" bottom="0.75"/>
+      </Texture>
+      <Texture name="$parentMiddle" file="Interface\FriendsFrame\WhoFrame-ColumnTabs">
+        <Size><AbsDimension x="53" y="24"/></Size>
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT"/>
+        </Anchors>
+        <TexCoords left="0.078125" right="0.90625" top="0" bottom="0.75"/>
+      </Texture>
+      <Texture name="$parentRight" file="Interface\FriendsFrame\WhoFrame-ColumnTabs">
+        <Size><AbsDimension x="4" y="24"/></Size>
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="$parentMiddle" relativePoint="RIGHT"/>
+        </Anchors>
+        <TexCoords left="0.90625" right="0.96875" top="0" bottom="0.75"/>
+      </Texture>
+    </Layer>
+  </Layers>
+  <ButtonText>
+    <Anchors>
+      <Anchor point="LEFT"><Offset><AbsDimension x="8"/></Offset></Anchor>
+    </Anchors>
+  </ButtonText>
+  <NormalFont style="GameFontHighlightSmall"/>
+  <HighlightTexture name="$parentHighlightTexture" file="Interface\PaperDollInfoFrame\UI-Character-Tab-Highlight" alphaMode="ADD">
+    <Anchors>
+      <Anchor point="TOPLEFT" relativeTo="$parentLeft"><Offset><AbsDimension x="-2" y="5"/></Offset></Anchor>
+      <Anchor point="BOTTOMRIGHT" relativeTo="$parentRight"><Offset><AbsDimension x="2" y="-7"/></Offset></Anchor>
+    </Anchors>
+  </HighlightTexture>
+  <Scripts>
+    <OnLoad>PoJ_CraftListHeader_OnLoad(self)</OnLoad>
+  </Scripts>
+</Button>
+
+<Button name="PoJ_CraftListButtonTemplate" virtual="true">
+  <Size><AbsDimension x="535" y="16"/></Size>
+  <Layers>
+    <Layer level="BORDER">
+      <FontString name="$parent_Column1" inherits="GameFontHighlightSmall" justifyH="LEFT">
+        <Size><AbsDimension y="14"/></Size>
+        <Anchors>
+          <Anchor point="TOPLEFT"><Offset><AbsDimension x="8" y="-3"/></Offset></Anchor>
+        </Anchors>
+      </FontString>
+      <FontString name="$parent_Column2" inherits="GameFontHighlightSmall" justifyH="LEFT">
+        <Size><AbsDimension y="14"/></Size>
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="$parent_Column1" relativePoint="RIGHT"/>
+        </Anchors>
+      </FontString>
+      <FontString name="$parent_Column3" inherits="GameFontHighlightSmall" justifyH="LEFT">
+        <Size><AbsDimension y="14"/></Size>
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="$parent_Column2" relativePoint="RIGHT"/>
+        </Anchors>
+      </FontString>
+      <FontString name="$parent_Column4" inherits="GameFontHighlightSmall" justifyH="LEFT">
+        <Size><AbsDimension y="14"/></Size>
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="$parent_Column3" relativePoint="RIGHT"/>
+        </Anchors>
+      </FontString>
+      <FontString name="$parent_Column5" inherits="GameFontHighlightSmall" justifyH="LEFT">
+        <Size><AbsDimension y="14"/></Size>
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="$parent_Column4" relativePoint="RIGHT"/>
+        </Anchors>
+      </FontString>
+    </Layer>
+  </Layers>
+  <Frames>
+    <CheckButton name="$parent_Column4_Check" inherits="PoJ_CheckboxTemplate">
+      <Size><AbsDimension x="18" y="18"/></Size>
+      <Anchors>
+        <Anchor point="CENTER" relativeTo="$parent_Column4"><Offset><AbsDimension x="-7"/></Offset></Anchor>
+      </Anchors>
+      <Scripts>
+        <OnClick>PoJ_CraftList_SetRemind(self:GetParent():GetID(), self:GetChecked())</OnClick>
+      </Scripts>
+    </CheckButton>
+  </Frames>
+  <HighlightTexture file="Interface\FriendsFrame\UI-FriendsFrame-HighlightBar" alphaMode="ADD">
+    <Size><AbsDimension x="535" y="16"/></Size>
+    <Anchors>
+      <Anchor point="TOPLEFT"><Offset><AbsDimension x="-5" y="-2"/></Offset></Anchor>
+    </Anchors>
+  </HighlightTexture>
+  <Scripts>
+    <OnLoad>self:RegisterForClicks("RightButtonUp")</OnLoad>
+    <OnClick>PoJ_CraftListButton_OnClick(self, button)</OnClick>
+  </Scripts>
+</Button>
+
+
+
+<!-- option window -->
+
+<Frame name="PoJ_Options" movable="true" topLevel="true" enableMouse="true" hidden="true" framestrata="DIALOG" parent="UIParent">
+  
+  <Size><AbsDimension x="600" y="504"/></Size>
+  
+  <Anchors>
+    <Anchor point="TOP"><Offset><AbsDimension y="-64"/></Offset></Anchor>
+  </Anchors>
+  
+  <Layers>
+    
+    <Layer level="BACKGROUND">
+      <Texture file="Interface\HelpFrame\HelpFrame-TopLeft">
+        <Size><AbsDimension x="256" y="256"/></Size>
+        <Anchors>
+          <Anchor point="TOPLEFT"/>
+        </Anchors>
+      </Texture>
+      <Texture file="Interface\HelpFrame\HelpFrame-Top">
+        <Size><AbsDimension x="256" y="256"/></Size>
+        <Anchors>
+          <Anchor point="TOPLEFT"><Offset><AbsDimension x="256"/></Offset></Anchor>
+        </Anchors>
+      </Texture>
+      <Texture file="Interface\HelpFrame\HelpFrame-TopRight">
+        <Size><AbsDimension x="128" y="256"/></Size>
+        <Anchors>
+          <Anchor point="TOPLEFT"><Offset><AbsDimension x="512"/></Offset></Anchor>
+        </Anchors>
+      </Texture>
+      <Texture file="Interface\HelpFrame\HelpFrame-BotLeft">
+        <Size><AbsDimension x="256" y="256"/></Size>
+        <Anchors>
+          <Anchor point="TOPLEFT"><Offset><AbsDimension y="-256"/></Offset></Anchor>
+        </Anchors>
+      </Texture>
+      <Texture file="Interface\HelpFrame\HelpFrame-Bottom">
+        <Size><AbsDimension x="256" y="256"/></Size>
+        <Anchors>
+          <Anchor point="TOPLEFT"><Offset><AbsDimension x="256" y="-256"/></Offset></Anchor>
+        </Anchors>
+      </Texture>
+      <Texture file="Interface\HelpFrame\HelpFrame-BotRight">
+        <Size><AbsDimension x="128" y="256"/></Size>
+        <Anchors>
+          <Anchor point="TOPLEFT"><Offset><AbsDimension x="512" y="-256"/></Offset></Anchor>
+        </Anchors>
+      </Texture>
+      <FontString name="PoJ_Version" inherits="GameFontNormalSmall">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT"><Offset><AbsDimension x="17" y="18"/></Offset></Anchor>
+        </Anchors>
+        <Color r="1" g="1" b="1"/>
+      </FontString>
+      <FontString name="PoJ_Clock" inherits="GameFontNormal">
+        <Anchors>
+          <Anchor point="BOTTOMRIGHT"><Offset><AbsDimension x="-17" y="17"/></Offset></Anchor>
+        </Anchors>
+        <Color r="0.9" g="0.8" b="1"/>
+      </FontString>
+    </Layer>
+    
+  </Layers>
+  
+  <Scripts>
+    <OnHide>PlaySound("igCharacterInfoClose")</OnHide>
+    <OnLoad>PoJ_Options_OnLoad(self)</OnLoad>
+    <OnShow>PlaySound("igCharacterInfoOpen")</OnShow>
+    <OnUpdate>PoJ_Options_OnUpdate(self, elapsed)</OnUpdate>
+  </Scripts>
+  
+  <Frames>
+    
+    <!-- title -->
+    
+    <Frame name="PoJ_Options_Title">
+      <Size><AbsDimension x="128" y="36"/></Size>
+      <Anchors>
+        <Anchor point="TOP"><Offset><AbsDimension y="6"/></Offset></Anchor>
+      </Anchors>
+      <Layers>
+        <Layer level="ARTWORK">
+          <Texture file="Interface\DialogFrame\UI-DialogBox-Header">
+            <Size><AbsDimension x="256" y="64"/></Size>
+            <Anchors>
+              <Anchor point="TOP"><AbsDimension y="6"/></Anchor>
+            </Anchors>
+          </Texture>
+          <FontString inherits="GameFontNormal" text="Piece of Justice">
+            <Anchors>
+              <Anchor point="TOP"><Offset><AbsDimension y="-8"/></Offset></Anchor>
+            </Anchors>
+          </FontString>
+        </Layer>
+      </Layers>
+      <Scripts>
+        <OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
+        <OnDragStart>PoJ_Drag_Start(PoJ_Options, true)</OnDragStart>
+        <OnDragStop>PoJ_Drag_Stop(PoJ_Options)</OnDragStop>
+      </Scripts>
+    </Frame>
+    
+    <!-- close button -->
+    
+    <Button name="$parent_CloseButton" inherits="UIPanelCloseButton">
+      <Anchors>
+        <Anchor point="TOPRIGHT"><Offset><AbsDimension x="-1" y="-3"/></Offset></Anchor>
+      </Anchors>
+      <Scripts>
+        <OnClick>PoJ_ToggleFrame(PoJ_Options)</OnClick>
+      </Scripts>
+    </Button>
+    
+    <!-- reload button -->
+    
+    <Button name="$parent_ReloadButton" inherits="UIPanelButtonTemplate" text="Reload UI">
+      <Size><AbsDimension x="80" y="22"/></Size>
+      <Anchors>
+        <Anchor point="BOTTOM"><Offset><AbsDimension y="13"/></Offset></Anchor>
+      </Anchors>
+      <Scripts>
+        <OnClick>ReloadUI()</OnClick>
+      </Scripts>
+    </Button>
+    
+    <!-- tabs -->
+    
+    <Button name="PoJ_OptionsTab1" id="1" inherits="PoJ_OptionsTabTemplate">
+      <Anchors>
+        <Anchor point="TOPLEFT" relativePoint="TOPLEFT"><Offset><AbsDimension x="8" y="-495"/></Offset></Anchor>
+      </Anchors>
+    </Button>
+    <Button name="PoJ_OptionsTab2" id="2" inherits="PoJ_OptionsTabTemplate">
+      <Anchors>
+        <Anchor point="LEFT" relativeTo="PoJ_OptionsTab1" relativePoint="RIGHT"><Offset><AbsDimension x="-16"/></Offset></Anchor>
+      </Anchors>
+    </Button>
+    <Button name="PoJ_OptionsTab3" id="3" inherits="PoJ_OptionsTabTemplate">
+      <Anchors>
+        <Anchor point="LEFT" relativeTo="PoJ_OptionsTab2" relativePoint="RIGHT"><Offset><AbsDimension x="-16"/></Offset></Anchor>
+      </Anchors>
+    </Button>
+    <Button name="PoJ_OptionsTab4" id="4" inherits="PoJ_OptionsTabTemplate">
+      <Anchors>
+        <Anchor point="LEFT" relativeTo="PoJ_OptionsTab3" relativePoint="RIGHT"><Offset><AbsDimension x="-16"/></Offset></Anchor>
+      </Anchors>
+    </Button>
+    <Button name="PoJ_OptionsTab5" id="5" inherits="PoJ_OptionsTabTemplate">
+      <Anchors>
+        <Anchor point="LEFT" relativeTo="PoJ_OptionsTab4" relativePoint="RIGHT"><Offset><AbsDimension x="-16"/></Offset></Anchor>
+      </Anchors>
+    </Button>
+    <Button name="PoJ_OptionsTab6" id="6" inherits="PoJ_OptionsTabTemplate">
+      <Anchors>
+        <Anchor point="LEFT" relativeTo="PoJ_OptionsTab5" relativePoint="RIGHT"><Offset><AbsDimension x="-16"/></Offset></Anchor>
+      </Anchors>
+    </Button>
+    
+    <!-- WoW UI options page -->
+    
+    <Frame name="PoJ_WoWUIOpt" inherits="PoJ_OptionFrameTemplate">
+      <Frames>
+        <Frame name="$parent_Targets" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="104"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT"><Offset><AbsDimension x="17" y="-43"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_StatusSmallFont" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_StatusShowAll" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_StatusSmallFont"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TargetColors" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_StatusShowAll"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_QuestLog" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="84"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Targets" relativePoint="BOTTOMLEFT"><Offset><AbsDimension y="-3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_QuestLevels" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_SelectMaxPrice" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_QuestLevels"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_Chat" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="104"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_QuestLog" relativePoint="BOTTOMLEFT"><Offset><AbsDimension y="-3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_ChatDouble" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_ChatTimeStamp" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_ChatDouble"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_HideChannelJoins" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_ChatTimeStamp"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_Reputation" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="64"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Chat" relativePoint="BOTTOMLEFT"><Offset><AbsDimension y="-3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_AutoFaction" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_Buffs" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="64"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Targets" relativePoint="TOPRIGHT"><Offset><AbsDimension x="3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_BuffDuration" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_Raid" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="64"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Buffs" relativePoint="BOTTOMLEFT"><Offset><AbsDimension y="-3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_ShowRaidGroup" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_Menubar" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="231"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Raid" relativePoint="BOTTOMLEFT"><Offset><AbsDimension y="-3"/></Offset></Anchor>
+          </Anchors>
+          <Layers>
+            <Layer level="ARTWORK">					
+              <FontString name="$parent_Label_ShowAction" inherits="PoJ_Font">
+                <Anchors>
+                  <Anchor point="TOPLEFT"><Offset><AbsDimension x="18" y="-83"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+            </Layer>
+          </Layers>
+          <Frames>
+            <CheckButton name="$parent_Check_NoMenuDeco" inherits="PoJ_OptionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_NoMacroNames" inherits="PoJ_OptionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_NoMenuDeco"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_ShowActionCD" inherits="PoJ_OptionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_NoMacroNames"><Offset><AbsDimension y="-45"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_ShowActionOT" inherits="PoJ_OptionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_ShowActionCD"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_ShowActionBD" inherits="PoJ_OptionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_ShowActionOT"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <Slider name="PoJ_Slider_MenuBarPos" inherits="PoJ_OptionSliderTemplate">
+              <Anchors>
+                <Anchor point="TOP"><Offset><AbsDimension y="-185"/></Offset></Anchor>
+              </Anchors>
+              <Scripts>
+                <OnShow>
+                  local halfwidth = (PoJ_GetResolution().width - MainMenuBar:GetWidth()) / 2
+                  PoJ_SetupSlider(PoJ_Slider_MenuBarPos, -halfwidth, halfwidth, 1, PoJ_Vars.MenuBarPos)
+                  PoJ_Button_MenuBarPos:SetFrameLevel(self:GetFrameLevel() + 1)
+                </OnShow>
+                <OnValueChanged>PoJ_SetMenuBarPos(self:GetValue())</OnValueChanged>
+              </Scripts>
+            </Slider>
+            <Button name="PoJ_Button_MenuBarPos" inherits="UIPanelButtonTemplate">
+              <Size><AbsDimension x="100" y="19"/></Size>
+              <Anchors>
+                <Anchor point="TOP" relativeTo="PoJ_Slider_MenuBarPos" relativePoint="BOTTOM"><Offset><AbsDimension y="1"/></Offset></Anchor>
+              </Anchors>
+              <Scripts>
+                <OnClick>
+                  PoJ_SetMenuBarPos(0)
+                  PoJ_Slider_MenuBarPos:SetValue(0)
+                </OnClick>
+                <OnShow>self:SetText(POJ_STRING.SLIDER.MENUBARPOS_CENTER)</OnShow>
+              </Scripts>
+            </Button>
+          </Frames>
+        </Frame>
+      </Frames>
+    </Frame>
+    
+    <!-- PoJ UI options page -->
+    
+    <Frame name="PoJ_PoJUIOpt" inherits="PoJ_OptionFrameTemplate">
+      <Frames>
+        <Frame name="$parent_Minimap" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="64"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT"><Offset><AbsDimension x="17" y="-43"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_MinimapIcon" inherits="PoJ_OptionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_Gems" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="64"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Minimap" relativePoint="BOTTOMLEFT"><Offset><AbsDimension y="-3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_GemCounterShow" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_ActionBar" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="207"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Gems" relativePoint="BOTTOMLEFT"><Offset><AbsDimension y="-3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_ActionBarShow" inherits="PoJ_OptionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Option_ActionBarRows_4" inherits="PoJ_OptionRadioButtonTemplate" id="4">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_ActionBarShow"><Offset><AbsDimension x="18" y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Option_ActionBarRows_2" inherits="PoJ_OptionRadioButtonTemplate" id="2">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Option_ActionBarRows_4"><Offset><AbsDimension y="-15"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Option_ActionBarRows_1" inherits="PoJ_OptionRadioButtonTemplate" id="1">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Option_ActionBarRows_2"><Offset><AbsDimension y="-15"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_ActionBarIdent" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_ActionBarShow"><Offset><AbsDimension x="15" y="-65"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_ActionBarIdentPart" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_ActionBarIdent"><Offset><AbsDimension x="15" y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_ActionBarIdentRaid" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_ActionBarIdentPart"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_ActionBarDice" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_ActionBarIdent"><Offset><AbsDimension y="-60"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_ActionBarNotes" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_ActionBarDice"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_PvE" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="64"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Minimap" relativePoint="TOPRIGHT"><Offset><AbsDimension x="3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_RaidIcons" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_PvP" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="64"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_PvE" relativePoint="BOTTOMLEFT"><Offset><AbsDimension y="-3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_PvPClasses" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_Coord" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="84"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_PvP" relativePoint="BOTTOMLEFT"><Offset><AbsDimension y="-3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_CoordShow" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_CoordShowMap" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_CoordShow"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+      </Frames>
+    </Frame>
+    
+    <!-- message options page -->
+    
+    <Frame name="PoJ_Messages" inherits="PoJ_OptionFrameTemplate">
+      <Frames>
+        <Frame name="$parent_Online" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="104"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT"><Offset><AbsDimension x="17" y="-43"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_ShowOnlineBattleNet" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_ShowOnlineFriends" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_ShowOnlineBattleNet"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_ShowOnlineGuild" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_ShowOnlineFriends"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_Trade" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="64"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Online" relativePoint="BOTTOMLEFT"><Offset><AbsDimension y="-3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_ShowTradePlayer" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_General" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="104"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Trade" relativePoint="BOTTOMLEFT"><Offset><AbsDimension y="-3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_ShowLevelUps" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GratsOnLevelUp" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_ShowLevelUps"><Offset><AbsDimension x="15" y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PostHometoParty" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_ShowLevelUps"><Offset><AbsDimension y="-40"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_Settings" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="64"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Online" relativePoint="TOPRIGHT"><Offset><AbsDimension x="3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_ErrorsToChat" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_Remind" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="270" y="124"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Settings" relativePoint="BOTTOMLEFT"><Offset><AbsDimension y="-3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_RemindSound" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_RemindRepeat" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_RemindSound"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <EditBox name="$parent_Edit_RemindInterval" inherits="PoJ_Editbox_Template" letters="2" numeric="true">
+              <Size><AbsDimension x="15" y="20"/></Size>
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_RemindRepeat"><Offset><AbsDimension x="160" y="-21"/></Offset></Anchor>
+              </Anchors>
+              <Layers>
+                <Layer level="ARTWORK">					
+                  <FontString name="$parent_LeftText" inherits="PoJ_Font">
+                    <Anchors>
+                      <Anchor point="TOPLEFT" relativeTo="PoJ_Messages_Remind_Check_RemindRepeat_Label"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+                    </Anchors>
+                  </FontString>
+                  <FontString name="$parent_RightText" inherits="PoJ_Font">
+                    <Anchors>
+                      <Anchor point="TOPLEFT" relativeTo="$parent_LeftText"><Offset><AbsDimension x="162"/></Offset></Anchor>
+                    </Anchors>
+                  </FontString>
+                </Layer>
+              </Layers>
+              <Scripts>
+                <OnEditFocusLost>PoJ_SetRemindInterval(self)</OnEditFocusLost>
+                <OnShow>self:SetNumber(PoJ_Vars.RemindRepeatTime)</OnShow>
+              </Scripts>
+            </EditBox>
+            <CheckButton name="$parent_Check_RemindItems" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_RemindRepeat"><Offset><AbsDimension y="-40"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+      </Frames>
+    </Frame>
+    
+    <!-- game world options page -->
+    
+    <Frame name="PoJ_WorldOpt" inherits="PoJ_OptionFrameTemplate">
+      <Frames>
+        <Frame name="$parent_PlayerNames" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="540" y="300"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT"><Offset><AbsDimension x="17" y="-43"/></Offset></Anchor>
+          </Anchors>
+          <Layers>
+            <Layer level="ARTWORK">					
+              <FontString name="$parent_Rank" inherits="PoJ_Font" justifyH="CENTER">
+                <Anchors>
+                  <Anchor point="CENTER" relativePoint="TOPLEFT"><Offset><AbsDimension x="125" y="-75"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_Guild" inherits="PoJ_Font" justifyH="CENTER">
+                <Anchors>
+                  <Anchor point="CENTER" relativeTo="$parent_Rank"><Offset><AbsDimension x="50"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_Self" inherits="PoJ_Font" justifyH="CENTER">
+                <Anchors>
+                  <Anchor point="CENTER" relativeTo="$parent_Guild"><Offset><AbsDimension x="50"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_Play" inherits="PoJ_Font" justifyH="CENTER">
+                <Anchors>
+                  <Anchor point="CENTER" relativeTo="$parent_Self"><Offset><AbsDimension x="50"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_Pets" inherits="PoJ_Font" justifyH="CENTER">
+                <Anchors>
+                  <Anchor point="CENTER" relativeTo="$parent_Play"><Offset><AbsDimension x="50"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_Guar" inherits="PoJ_Font" justifyH="CENTER">
+                <Anchors>
+                  <Anchor point="CENTER" relativeTo="$parent_Pets"><Offset><AbsDimension x="50"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_Tot" inherits="PoJ_Font" justifyH="CENTER">
+                <Anchors>
+                  <Anchor point="CENTER" relativeTo="$parent_Guar"><Offset><AbsDimension x="50"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_Comp" inherits="PoJ_Font" justifyH="CENTER">
+                <Anchors>
+                  <Anchor point="CENTER" relativeTo="$parent_Tot"><Offset><AbsDimension x="45"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_NPCs" inherits="PoJ_Font" justifyH="CENTER">
+                <Anchors>
+                  <Anchor point="CENTER" relativeTo="$parent_Comp"><Offset><AbsDimension x="40"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_City" inherits="PoJ_Font">
+                <Anchors>
+                  <Anchor point="LEFT" relativePoint="TOPLEFT"><Offset><AbsDimension x="15" y="-100"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_Inst" inherits="PoJ_Font">
+                <Anchors>
+                  <Anchor point="LEFT" relativeTo="$parent_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_In10" inherits="PoJ_Font">
+                <Anchors>
+                  <Anchor point="LEFT" relativeTo="$parent_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_In40" inherits="PoJ_Font">
+                <Anchors>
+                  <Anchor point="LEFT" relativeTo="$parent_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_Raid" inherits="PoJ_Font">
+                <Anchors>
+                  <Anchor point="LEFT" relativeTo="$parent_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_BG" inherits="PoJ_Font">
+                <Anchors>
+                  <Anchor point="LEFT" relativeTo="$parent_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_NoUI" inherits="PoJ_Font">
+                <Anchors>
+                  <Anchor point="LEFT" relativeTo="$parent_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+              <FontString name="$parent_Norm" inherits="PoJ_Font">
+                <Anchors>
+                  <Anchor point="LEFT" relativeTo="$parent_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+                </Anchors>
+              </FontString>
+            </Layer>
+          </Layers>
+          <Frames>
+            <CheckButton name="$parent_Check_PlayerNames" inherits="PoJ_OptionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Rank_City" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Rank"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Rank_Inst" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Rank_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Rank_In10" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Rank_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Rank_In40" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Rank_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Rank_Raid" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Rank_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Rank_BG" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Rank_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Rank_NoUI" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Rank_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Rank_Norm" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Rank_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Guild_City" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Guild"><Offset><AbsDimension x="-10" y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Guild_Inst" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Guild_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Guild_In10" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Guild_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Guild_In40" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Guild_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Guild_Raid" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Guild_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Guild_BG" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Guild_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Guild_NoUI" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Guild_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Guild_Norm" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Guild_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GTit_City" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Guild"><Offset><AbsDimension x="10" y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GTit_Inst" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GTit_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GTit_In10" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GTit_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GTit_In40" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GTit_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GTit_Raid" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GTit_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GTit_BG" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GTit_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GTit_NoUI" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GTit_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GTit_Norm" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GTit_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Self_City" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Self"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Self_Inst" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Self_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Self_In10" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Self_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Self_In40" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Self_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Self_Raid" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Self_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Self_BG" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Self_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Self_NoUI" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Self_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Self_Norm" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Self_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayF_City" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Play"><Offset><AbsDimension x="-10" y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayF_Inst" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PlayF_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayF_In10" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PlayF_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayF_In40" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PlayF_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayF_Raid" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PlayF_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayF_BG" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PlayF_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayF_NoUI" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PlayF_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayF_Norm" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PlayF_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayE_City" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Play"><Offset><AbsDimension x="10" y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayE_Inst" inherits="PoJ_PlayerNamesCheckboxTemplate" hidden="true">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PlayE_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayE_In10" inherits="PoJ_PlayerNamesCheckboxTemplate" hidden="true">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PlayE_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayE_In40" inherits="PoJ_PlayerNamesCheckboxTemplate" hidden="true">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PlayE_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayE_Raid" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PlayE_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayE_BG" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PlayE_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayE_NoUI" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PlayE_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PlayE_Norm" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PlayE_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsF_City" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Pets"><Offset><AbsDimension x="-10" y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsF_Inst" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PetsF_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsF_In10" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PetsF_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsF_In40" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PetsF_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsF_Raid" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PetsF_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsF_BG" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PetsF_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsF_NoUI" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PetsF_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsF_Norm" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PetsF_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsE_City" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Pets"><Offset><AbsDimension x="10" y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsE_Inst" inherits="PoJ_PlayerNamesCheckboxTemplate" hidden="true">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PetsE_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsE_In10" inherits="PoJ_PlayerNamesCheckboxTemplate" hidden="true">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PetsE_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsE_In40" inherits="PoJ_PlayerNamesCheckboxTemplate" hidden="true">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PetsE_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsE_Raid" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PetsE_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsE_BG" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PetsE_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsE_NoUI" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PetsE_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_PetsE_Norm" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_PetsE_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarF_City" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Guar"><Offset><AbsDimension x="-10" y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarF_Inst" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GuarF_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarF_In10" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GuarF_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarF_In40" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GuarF_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarF_Raid" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GuarF_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarF_BG" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GuarF_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarF_NoUI" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GuarF_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarF_Norm" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GuarF_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarE_City" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Guar"><Offset><AbsDimension x="10" y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarE_Inst" inherits="PoJ_PlayerNamesCheckboxTemplate" hidden="true">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GuarE_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarE_In10" inherits="PoJ_PlayerNamesCheckboxTemplate" hidden="true">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GuarE_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarE_In40" inherits="PoJ_PlayerNamesCheckboxTemplate" hidden="true">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GuarE_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarE_Raid" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GuarE_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarE_BG" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GuarE_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarE_NoUI" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GuarE_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_GuarE_Norm" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_GuarE_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotF_City" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Tot"><Offset><AbsDimension x="-10" y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotF_Inst" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_TotF_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotF_In10" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_TotF_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotF_In40" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_TotF_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotF_Raid" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_TotF_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotF_BG" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_TotF_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotF_NoUI" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_TotF_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotF_Norm" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_TotF_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotE_City" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Tot"><Offset><AbsDimension x="10" y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotE_Inst" inherits="PoJ_PlayerNamesCheckboxTemplate" hidden="true">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_TotE_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotE_In10" inherits="PoJ_PlayerNamesCheckboxTemplate" hidden="true">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_TotE_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotE_In40" inherits="PoJ_PlayerNamesCheckboxTemplate" hidden="true">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_TotE_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotE_Raid" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_TotE_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotE_BG" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_TotE_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotE_NoUI" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_TotE_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_TotE_Norm" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_TotE_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Comp_City" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Comp"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Comp_Inst" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Comp_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Comp_In10" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Comp_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Comp_In40" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Comp_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Comp_Raid" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Comp_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Comp_BG" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Comp_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Comp_NoUI" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Comp_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Comp_Norm" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_Comp_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_NPCs_City" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_NPCs"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_NPCs_Inst" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_NPCs_City"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_NPCs_In10" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_NPCs_Inst"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_NPCs_In40" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_NPCs_In10"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_NPCs_Raid" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_NPCs_In40"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_NPCs_BG" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_NPCs_Raid"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_NPCs_NoUI" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_NPCs_BG"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_NPCs_Norm" inherits="PoJ_PlayerNamesCheckboxTemplate">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parent_Check_NPCs_NoUI"><Offset><AbsDimension y="-25"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+          <Scripts>
+            <OnLoad>PoJ_PlayerNames_OnLoad(self)</OnLoad>
+            <OnShow>PoJ_PlayerNames_OnShow(self)</OnShow>
+          </Scripts>
+        </Frame>
+      </Frames>
+    </Frame>
+    
+    <!-- character options page -->
+    
+    <Frame name="PoJ_CharOpt" inherits="PoJ_OptionFrameTemplate">
+      <Frames>
+        <Frame name="$parent_Char" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="543" y="130"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT"><Offset><AbsDimension x="17" y="-43"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_DuelIgnore" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_DuelFriends" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_DuelIgnore"><Offset><AbsDimension x="15" y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_DuelGuild" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_DuelFriends"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_DuelGroup" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_DuelGuild"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_ErrorSuppression" inherits="PoJ_OptionFrameBoxTemplate">
+          <Size><AbsDimension x="543" y="210"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Char" relativePoint="BOTTOMLEFT"><Offset><AbsDimension y="-3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_Error1" inherits="PoJ_ErrorSuppressionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Error2" inherits="PoJ_ErrorSuppressionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_Error1"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Error3" inherits="PoJ_ErrorSuppressionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_Error2"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Error4" inherits="PoJ_ErrorSuppressionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_Error3"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Error5" inherits="PoJ_ErrorSuppressionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_Error4"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Error6" inherits="PoJ_ErrorSuppressionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_Error5"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Error7" inherits="PoJ_ErrorSuppressionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_Error6"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Error8" inherits="PoJ_ErrorSuppressionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_Error7"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+            <CheckButton name="$parent_Check_Error9" inherits="PoJ_ErrorSuppressionCheckBoxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parent_Check_Error8"><Offset><AbsDimension y="-20"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_Hunter" inherits="PoJ_OptionFrameBoxTemplate" hidden="true">
+          <Size><AbsDimension x="230" y="90"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_ErrorSuppression" relativePoint="TOPRIGHT"><Offset><AbsDimension x="3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_AspectActivation" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_Rogue" inherits="PoJ_OptionFrameBoxTemplate" hidden="true">
+          <Size><AbsDimension x="233" y="70"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_ErrorSuppression" relativePoint="TOPRIGHT"><Offset><AbsDimension x="3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_PickPocketAutoLoot" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_Shaman" inherits="PoJ_OptionFrameBoxTemplate" hidden="true">
+          <Size><AbsDimension x="230" y="70"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_ErrorSuppression" relativePoint="TOPRIGHT"><Offset><AbsDimension x="3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_ShowReincarnationCooldown" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+        <Frame name="$parent_Warlock" inherits="PoJ_OptionFrameBoxTemplate" hidden="true">
+          <Size><AbsDimension x="230" y="110"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_ErrorSuppression" relativePoint="TOPRIGHT"><Offset><AbsDimension x="3"/></Offset></Anchor>
+          </Anchors>
+          <Frames>
+            <CheckButton name="$parent_Check_ShowSoulStoneMessage" inherits="PoJ_OptionCheckboxTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="16" y="-33"/></Offset></Anchor>
+              </Anchors>
+            </CheckButton>
+          </Frames>
+        </Frame>
+      </Frames>
+    </Frame>
+    
+    <!-- craft cooldown page -->
+    
+    <Frame name="PoJ_Craft" inherits="PoJ_OptionFrameTemplate">
+      <Frames>
+        <Frame name="PoJ_CraftList">
+          <Size><AbsDimension x="475" y="200"/></Size>
+          <Anchors>
+            <Anchor point="TOPLEFT"/>
+          </Anchors>
+          <Frames>
+            <Button name="PoJ_CraftList_Header1" id="1" inherits="PoJ_CraftListHeaderTemplate">
+              <Anchors>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="19" y="-47"/></Offset></Anchor>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftList_Header2" id="2" inherits="PoJ_CraftListHeaderTemplate">
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="PoJ_CraftList_Header1" relativePoint="RIGHT"><Offset><AbsDimension x="-2"/></Offset></Anchor>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftList_Header3" id="3" inherits="PoJ_CraftListHeaderTemplate">
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="PoJ_CraftList_Header2" relativePoint="RIGHT"><Offset><AbsDimension x="-2"/></Offset></Anchor>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftList_Header4" id="4" inherits="PoJ_CraftListHeaderTemplate">
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="PoJ_CraftList_Header3" relativePoint="RIGHT"><Offset><AbsDimension x="-2"/></Offset></Anchor>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftList_Header5" id="5" inherits="PoJ_CraftListHeaderTemplate">
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="PoJ_CraftList_Header4" relativePoint="RIGHT"><Offset><AbsDimension x="-2"/></Offset></Anchor>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton1" inherits="PoJ_CraftListButtonTemplate" id="1">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftList_Header1" relativePoint="BOTTOMLEFT"><Offset><AbsDimension x="0" y="-2"/></Offset></Anchor>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton2" inherits="PoJ_CraftListButtonTemplate" id="2">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton1" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton3" inherits="PoJ_CraftListButtonTemplate" id="3">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton2" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton4" inherits="PoJ_CraftListButtonTemplate" id="4">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton3" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton5" inherits="PoJ_CraftListButtonTemplate" id="5">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton4" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton6" inherits="PoJ_CraftListButtonTemplate" id="6">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton5" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton7" inherits="PoJ_CraftListButtonTemplate" id="7">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton6" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton8" inherits="PoJ_CraftListButtonTemplate" id="8">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton7" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton9" inherits="PoJ_CraftListButtonTemplate" id="9">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton8" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton10" inherits="PoJ_CraftListButtonTemplate" id="10">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton9" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton11" inherits="PoJ_CraftListButtonTemplate" id="11">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton10" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton12" inherits="PoJ_CraftListButtonTemplate" id="12">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton11" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton13" inherits="PoJ_CraftListButtonTemplate" id="13">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton12" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton14" inherits="PoJ_CraftListButtonTemplate" id="14">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton13" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton15" inherits="PoJ_CraftListButtonTemplate" id="15">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton14" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton16" inherits="PoJ_CraftListButtonTemplate" id="16">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton15" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton17" inherits="PoJ_CraftListButtonTemplate" id="17">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton16" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton18" inherits="PoJ_CraftListButtonTemplate" id="18">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton17" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton19" inherits="PoJ_CraftListButtonTemplate" id="19">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton18" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Button name="PoJ_CraftListButton20" inherits="PoJ_CraftListButtonTemplate" id="20">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="PoJ_CraftListButton19" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Button>
+            <Frame name="PoJ_CraftList_DropDown" inherits="UIDropDownMenuTemplate" hidden="true">
+              <Scripts>
+                <OnLoad>UIDropDownMenu_Initialize(self, PoJ_CraftList_DropDown_Initialize, "MENU")</OnLoad>
+              </Scripts>
+            </Frame>
+          </Frames>
+        </Frame>
+        <ScrollFrame name="PoJ_CraftListScrollFrame" inherits="FauxScrollFrameTemplate">
+          <Size><AbsDimension x="529" y="318"/></Size>
+          <Anchors>
+            <Anchor point="TOPRIGHT"><Offset><AbsDimension x="-30" y="-80"/></Offset></Anchor>
+          </Anchors>
+          <Layers>
+            <Layer level="BACKGROUND">
+              <Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+                <Size><AbsDimension x="31" y="226"/></Size>
+                <Anchors>
+                  <Anchor point="TOPLEFT" relativePoint="TOPRIGHT"><Offset><AbsDimension x="-2" y="5"/></Offset></Anchor></Anchors>
+                  <TexCoords right="0.484375" bottom="0.8828125"/>
+              </Texture>
+              <Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+                <Size><AbsDimension x="31" y="106"/></Size>
+                <Anchors>
+                  <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT"><Offset><AbsDimension x="-2" y="-2"/></Offset></Anchor>
+                </Anchors>
+                <TexCoords left="0.515625" bottom="0.4140625"/>
+              </Texture>
+            </Layer>
+          </Layers>
+          <Scripts>
+            <OnVerticalScroll>FauxScrollFrame_OnVerticalScroll(self, arg1, 16, PoJ_CraftList_Update)</OnVerticalScroll>
+          </Scripts>
+        </ScrollFrame>
+      </Frames>
+      <Scripts>
+        <OnLoad>PoJ_CraftList_OnLoad(self)</OnLoad>
+        <OnShow>PoJ_CraftList_Update()</OnShow>
+        <OnUpdate>PoJ_CraftList_OnUpdate(self, elapsed)</OnUpdate>
+      </Scripts>
+    </Frame>
+    
+  </Frames>
+  
+</Frame>
+
+</Ui>

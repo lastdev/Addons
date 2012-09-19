@@ -1,0 +1,11 @@
+tag 1.0.1-release
+b53e61fcd9a47e8f6fa24d9766d1e68a7dd25b27
+root <root@db06.curselive.local>
+2010-10-27 12:57:04 +0000
+
+Tagging as 1.0.1-release
+
+
+--------------------
+
+No changelog

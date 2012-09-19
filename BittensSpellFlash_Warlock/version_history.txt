@@ -1,0 +1,47 @@
+== Version 2.3.0
+* Added a Destruction rotation.
+
+== Version 2.2.1
+* Bugfix: Pet summon flashing had issues.
+* Optical Blast now flashes in addition to Spell Lock.
+
+== Version 2.2.0
+* Added an Affliction rotation for the MoP beta.
+
+== Version 2.1.1
+* Destruction: A copy/paste error broke the new 4pT13 Soul Fire/Soulburn flashing for this spec.
+
+== Version 2.1.0
+* Demonology: Added Soul Fire/Soulburn to the regular rotation.
+* Demonology: Now flashes Soulburn along with Summon Felhunter in combat.
+* Demonology: Now flashes Axe Toss to interrupt.
+* All: Added 4pT13 Soul Fire/Soulburn to the rotations, as top priority.
+* All: Now flashes Life Tap & Soul Harvest out of combat.
+* All: Now flashes Spell Lock to interrupt.
+* All: Slight performance increase.
+
+== Version 2.0.2
+* Taking out of beta.
+
+== Version 2.0.1 beta
+This beta release uses Bitten's SpellFlash Library version 3.  If you update you will also need to update any of your other Bitten's SpellFlash modules, which may also be in beta.
+
+== Version 2.0.0
+Destruction: Added a Destruction rotation!
+All: Life Tap now flashes below 12K mana, up from 10K.
+
+== Version 1.1.0
+* Affliction: It will no longer think you have to cast Shadow Bolt for Shadow and Flame while a shadow bolt is in the air.
+* Demonology: It is now smarter to know when Hand of Gul'dan is going to refresh Immolate for you (in which case it will not flash Immolate).
+* Demonology: Lowered the priority of Immolation Aura a bit, since you have wiggle room to use its cooldown.
+* All: Will now flash both Bane of Agony and Bane of Doom, to let you decide which to use.
+* All: Dark Intent will now flash its target in your party/raid loses the buff.
+* All: Dot refresh timings are more accurate.
+* All: No longer flashes your summon nor Soul Link while you are mounted.
+* Disables Blizzard's default proc hilighting when one of the rotations is in use.
+* Should now work on non-English clients.
+* Added localization support.
+* Plays nicer with other addons.
+
+== Version 1.0.0 beta
+* Initial Release

@@ -1,0 +1,23 @@
+tag 5.0.24
+87f79b2c5b63232ea97da42cef1c7f7e7fd3e9b6
+Floraline <floraline@ophiuchus.org>
+2012-08-26 21:10:03 +0200
+
+* Fixed some issue with Masque (ButtonFacade)
+* Changed licence to MPL v2
+* Updated for Wow patch 5.0 :
+- removed old totems
+- added new totems
+- removed support for multi cast totem bar
+- upgraded to new Wow API
+
+
+--------------------
+
+Floraline:
+	- Remove support for Call of the * spells Fixed some bugs from API changes
+	- Changes for MoP : * no more bar for paladin seal * new totems * removed spells * API changes
+	- Update toc interface number and bump version
+	- Added a SEAL bar for Paladin
+	- ButtonFacade is now Masque => update to use new API
+	- Bump versions and change license to MPLv2

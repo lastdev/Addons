@@ -1,0 +1,86 @@
+﻿## Interface: 50001
+## 
+## Title: Gatherer
+## 
+## Notes: Gatherer is an addon that allows you to remember your gathering locations and view them on either or all of your main map, your minimap, or in an onscreen display HUD. It also allows you to share your finds with your guild, raid or your friends.
+## Notes-itIT: Gatherer è un addon che ti consente di memorizzare i luoghi di raccolta e vederli tutti o alcuni sulla mappa principale, la tua minimappa, o su un'interfaccia a schermo. Consente inoltre di condividere le scoperte con la tua gilda, raid o i tuoi amici.
+## Notes-ptBR: Gatherer é um addon que permite que você lembre-se dos locais de coleta e visualize-os em seu mapa principal, seu minimapa, ou em uma exibição no seu HUD. Ele também permite que você compartilhe suas descobertas com a sua guilda, raid ou seus amigos.
+## Notes-frFR: Gatherer, affiche les objets recoltes dans la minicarte et la carte du monde
+## Notes-deDE: Gatherer, zeigt gesammelte Krauter und Erze auf der Minikarte und Weltkarte an
+## 
+## Version: 4.0.2
+## Author: Norganna
+## 
+# myAddOns Support Metadata
+## X-Date: 
+## X-Website: http://www.gathereraddon.com
+## X-Category: MYADDONS_CATEGORY_PROFESSIONS
+## X-Help: 
+## X-OptionsFrame: 
+## 
+## SavedVariables: GatherItems, Gatherer_DropRates, Gatherer_SavedSettings_AccountWide, LibSwagData, Gatherer_SharingBlacklist
+## SavedVariablesPerCharacter: Gatherer_SavedSettings_PerCharacter
+## Revision: $Id: Gatherer.toc 983 2012-09-05 04:32:29Z Esamynn $
+## OptionalDeps: myAddOns, Configator, SlideBar, Babylonian, LibDataBroker
+
+# Manifest list
+GatherManifest.lua
+
+# Libraries
+Swag\LibSwag.lua
+Astrolabe\Load.xml
+Libs\Load.xml
+
+# Base object definition
+GatherObjects.lua
+
+# Translations
+GatherNodes.lua
+GatherStrings.lua
+GatherLocale.lua
+
+# Initialization
+GatherMain.lua
+GatherEvent.lua
+
+# Notification System
+GatherNotifications.lua
+GatherNotifications.xml
+
+# Data
+GatherIcons.lua
+GatherZoneTokens.lua
+
+# Storage System
+GatherStorage.lua
+
+# base UI widgets
+GatherMain.xml
+
+# Util Functions
+GatherUtil.lua
+
+# Classes
+GatherApi.lua
+GatherCategories.lua
+GatherComm.lua
+GatherCommand.lua
+GatherConfig.xml
+GatherConfig.lua
+GatherConstants.lua
+GatherConvert.lua
+GatherDropRates.lua
+GatherMapNotes.xml
+GatherMiniIcon.lua
+GatherMiniNotes.xml
+GatherPlugins.lua
+GatherReport.lua
+GatherSpecialCases.lua
+GatherTooltip.lua
+GathererNodeSearch.lua
+
+# Reports
+Reports\Load.xml
+
+# Import modules
+Import\ImportModules.xml

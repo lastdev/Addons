@@ -1,0 +1,53 @@
+<h4>0.32.3 - Changelog:</h4>
+<ul>
+    <li>Fixed a bug in the raid detection (MoP change)</li>
+</ul>
+
+<h4>0.32.2 - Changelog:</h4>
+<ul>
+    <li>Fixed another bug in the LFR detection</li>
+</ul>
+
+<h4>0.32.1 - Changelog:</h4>
+<ul>
+    <li>Fixed a bug in the LFR detection</li>
+</ul>
+
+<h4>0.32 - Changelog:</h4>
+<ul>
+    <li>Updated codebase for WoW 5.0.4 (not fully tested)</li>
+    <li>Added base data for MoP raid instances</li>
+    <li>Added localization templates for itIT and ptBR</li>
+    <li>Added option to disable tracking in LFR raids (untested)</li>
+    <li>Added option to disable slash command</li>
+    <li>Fixed a bug that prevented the creation of an attendance check event if a custom trigger is enabled</li>
+</ul>
+
+<h4>0.31 - Changelog:</h4>
+<ul>
+    <li>Updated frFR translation (thanks to Dohkoken)</li>
+    <li>Updated deDE translation (thanks to sebfle)</li>
+</ul>
+
+<h4>0.30 - Changelog:</h4>
+<ul>
+    <li>SpellIDs can now be used a triggers for bosskill events.</li>
+    <li>Added spellID 110063 as "Madness of Deathwing"-trigger</li>
+</ul>
+
+<h4>0.29.3 - Changelog:</h4>
+<ul>
+    <li>Changed BossID for Madness of Deathwing</li>
+</ul>
+
+<h4>0.29.2 - Changelog:</h4>
+<ul>
+    <li>Renamed the final boss encounters of Dragon Soul</li>
+</ul>
+
+<h4>0.29.1 - Changelog:</h4>
+<ul>
+    <li>TOC-Bump for WoW 4.3</li>
+    <li>Added BossIDs of the Dragon Soul raid instance</li>
+</ul>
+

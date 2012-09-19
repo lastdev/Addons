@@ -1,0 +1,24 @@
+tag v3.1.7
+7ad8d6321afdf66706f01543ceb960c061932509
+Xinhuan <xinhuan@pacific.net.sg>
+2012-08-29 22:23:36 +0800
+
+Tag release v3.1.7
+
+
+--------------------
+
+Xinhuan:
+	- Update version to 3.1.7
+	- Remove pre-4.2 and 4.1 combat log compat code.
+	- MI/Fade/HoS and ToTT/Misdirect damage values are no longer multipled by 100 when converting to threat.
+	- Dridzt missed out the PET class. :)
+	- Localize the Sound Channel settings option.
+dridzt:
+	- .toc update
+	- Update events and API for WoW 5.0.4+ (roster events and functions)
+	Get rid of manual localization for classes/localized classes, get them from Constants instead.
+	Update tank detection and add monk tank.
+	Adjust threatvalues again (rawthreat = damage, no 100 modifier)
+tharai:
+	- Add option to choose what sound channel to play warnings on, default is SFX. Got sick of having to hack the lua file each time an update was put out so I could have it use MASTER.

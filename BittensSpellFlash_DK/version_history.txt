@@ -1,0 +1,72 @@
+== Version 3.0.0
+* Frost: Range checking is back (it won't flash melee spells when you are out of melee range).
+* Unholy: Added an unholy rotation.
+
+== Version 2.6.1
+* Blood: Bugfix - Blood Tap was flashing before you had 5 stacks of Blood Charge.
+
+== Version 2.6.0
+* Frost: Adjusted to the closely match the rotation on EJ.
+
+== Version 2.5.0
+* There is now a Blood rotation for MoP.
+
+== Version 2.4.0
+* There is now a Frost rotation for MoP.
+* Frost: Should now work for people under level 81 (how far under, I do not know).
+
+== Version 2.3.1
+* Unholy AoE: Do not flash Pestilence if a disease is missing from the target (it was rare, but possible in the last version).
+
+== Version 2.3.0
+* Frost: The AoE rotation is now trigger by the keybinding, instead of Frost Presence.
+* Unholy: Added an AoE rotation.  See your keybindings to activate it.
+
+== Version 2.2.2
+* All: Bugfix for non-English clients.
+
+== Version 2.2.1
+* Frost: A couple tweaks to the new AoE rotation - to improve on the one given by EJ. 
+
+== Version 2.2.0
+* Frost: Now flashes an AoE rotation if you use Frost Presence.
+* All: Now takes into account the bonus RP from Frost Presence.
+
+== Version 2.1.0
+* Unholy: Refreshes diseases during their last tick.
+* Unholy: Flashes Dark Transformation out of combat.
+* All: Flashing anticipates queued spells, including rune and RP usage.
+* All: Now flashes spells when they *will* be usable by the time your current cast and queued cast finish.
+
+== Version 2.0.1 beta
+This beta release uses Bitten's SpellFlash Library version 3.  If you update you will also need to update any of your other Bitten's SpellFlash modules to their latest version, which may also be in beta.
+* Unholy: DnD/SS for Runes had a small error in the way they checked which runes were available.
+
+== Version 2.0.0
+* Blood: Flashes taunts.
+* Unholy: There is now an Unholy rotation!
+* All: Flashes Mind Freeze
+
+== Version 1.1.0
+* Blood: No longer flash Empower Rune Weapon.  It is better saved for an emergency channel of Army for mitigation.
+* Frost: Now detects when diseases are pending (e.g. so that it doesn't flash Plague Strike for a second between casting Outbreak and the diseases actually being applied).
+* Frost: Should play nicer with leveling DKs who do not yet have Outbreak.
+* All: Added German localization (thanks Gucki!)
+
+== Version 1.0.3
+* Bugfix: error when the module was loaded, but all flashing was disabled in SpellFlash.
+
+== Version 1.0.2
+* Move to Bitten's SpellFlash Library 2.0.
+* Should now work on non-English clients.
+* Added localization support.
+* Plays nicer with other addons.
+
+== Version 1.0.2 beta
+* The packager will now name the file DK instead of Mage!  Silly betas.
+
+== Version 1.0.1 beta
+* No longer require macros for proper functionality.
+
+== Version 1.0.0 beta
+* Initial Release

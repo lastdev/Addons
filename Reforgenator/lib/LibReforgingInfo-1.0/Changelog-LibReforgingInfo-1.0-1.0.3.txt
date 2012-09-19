@@ -1,0 +1,13 @@
+tag 1.0.3
+21a143827b726f7fa9cfac4e94ff049c5c926a8c
+emelio <emelio.wow@gmail.com>
+2010-11-24 18:19:43 +0100
+
+LibReforgingInfo-1.0 1.0.3:
+- Fix for Patch 4.0.3a
+
+
+--------------------
+
+emelio:
+	- Fix for 4.0.3a

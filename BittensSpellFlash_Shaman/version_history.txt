@@ -1,0 +1,55 @@
+== Version 3.0.0
+* Enhancement: added an Enhancement rotation for 5.0.4.
+* All: No longer reported as "Out of Date" in 5.0.4.
+
+== Version 2.2.0
+* Added an Elemental rotation for MoP.
+
+== Version 2.1.6
+* Enhancement: Windfury Weapon should work on a German client now.  Thanks booni89!
+
+== Version 2.1.5
+* Elemental: Bugfix - Flame Shock was not working correctly on non-English clients.
+
+== Version 2.1.4
+* All: FaStEr96 added a Russion localization.  Thanks!
+* All: dayv_d added a Traditional Chinese localization.  Thanks!
+
+== Version 2.1.3
+* Elemental: Lightning shield will now flash at 1 minute remaining out of combat, down from 5.  If you have more than 3 stacks, it waits until 15 seconds.
+* Elemental: Thunderstorm will now flash at under 92% mana out of combat, down from 100%.
+* Restoration: Earth Shield now flashes at 2 minutes out of combat, down from 5.
+
+== Version 2.1.2
+* Taking out of beta.
+
+== Version 2.1.1 beta
+This beta release uses Bitten's SpellFlash Library version 3.  If you update you will also need to update any of your other Bitten's SpellFlash modules, which may also be in beta.
+* Elemental: Lava Burst now flashes in anticipation of the Flame Shock debuff if you just cast it, instead of waiting for the actually debuff to appear.
+* Enhancement: Unleash Elements was probably broken - or at least not perfect - on non-English clients.
+
+== Version 2.1.0
+* Elemental: Tighter timing for refreshing Flame Shock.
+* Elemental: Spends a 7-stack of Fulmination a little sooner when Flame Shock will be falling off soon.
+* Enhancement: No longer flashes Lightning Bolt at 4 stacks while you are moving.
+
+== Version 2.0.0
+* Enhancement: Added an Enhancement rotation!
+* All: Flashes Wind Shear.
+
+== Version 1.2.1
+* Added German localization (thanks Gucki!)
+
+== Version 1.2.0
+* Add Earth Shield flashing for Resto.
+* Add fire totem flashing for Elemental.
+* Disables Blizzard's default proc hilighting when one of the rotations is in use.
+* Should now work on non-English clients.
+* Added localization support.
+* Plays nicer with other addons.
+
+== Version 1.1.0
+* Remove the attempts at Unleash Elements - it's to tricky to get the timing and the best case scenario is a very minimal dps gain.
+
+== Version 1.0.0
+* Initial Alpha Release

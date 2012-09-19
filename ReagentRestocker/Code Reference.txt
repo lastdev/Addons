@@ -1,0 +1,286 @@
+This is a code reference for Reagent Restocker.
+
+--=============================--
+-- Namespaces and environments --
+--=============================--
+
+Reagent Restocker does not use the normal, global WoW environment. In order to avoid conflicts with other addons, it uses its own environment.
+
+Recently, WoW has added the ability for addons to use a table that is common to all files in a single addon. Reagent Restocker takes advantage of that table to give it its own environment to run in.
+
+Reagent Restocker also exposes some functions for other addons to use. For this purpose, it puts the functions in the "ReagentRestocker" table in the global environment.
+
+--
+-- Event Handling
+--
+
+TriggerEvent(eventName, callback, ...)
+SubscribeEvent(eventName, eventAction)
+SubscribeWOWEvent(eventName, eventAction)
+
+
+--=========--
+-- Helpers --
+--=========--
+
+Core.lua:
+-- Returns the "difference" between two tables with numerical values
+local function tDiff(ta, tb, onlyInA)
+
+-- Returns true if the provided item info indicates the item should be included in the offset list for bank stocking
+local function bankOffset(itemID, qty)
+
+-- Returns the number of all items table t; #<table> returns array count only
+local function tcount(t)
+
+-- Returns true if item is a value in the table; false otherwise
+local function inT(tab,item)
+
+-- Returns a string representation of a price (in copper)
+local function nCTS(price)
+
+-- Returns a string representation of a table
+local function strT (tab)
+
+-- Returns the item id of parsed from the provided item link
+local function getIDFromItemLink(itemLink)
+
+-- Returns the item name from the provided item link
+local function getNameFromItemLink(itemLink)
+
+-- Returns true if the 'clue' is found in the item name
+local function isItemNameInLink(clue,link)
+
+-- Returns a table array containing the bag IDs for bank bags
+local function getBankBagIDList()
+
+-- Returns a table array containing the bag IDs for player bags
+local function getPlayerBagIDList()
+
+-- Prints the message if messages are enabled
+function ReagentRestocker:say(msg)
+
+--========================--
+-- Reagent Restocker Core --
+--========================--
+
+-- If the items in cache, update the stored values and return it; otherwise, return what is in cache, if it exists; otherwise return nil
+function ReagentRestocker:safeGetItemInfo(itemID)
+
+function ReagentRestocker:getSellPrice(itemID)
+
+-- Given an item's name, return the item's ID if it is found; nil on failure
+function ReagentRestocker:discoverItemID(itemClue)
+
+-- Adds a value to the ReagentRestockerDB.Items table
+function ReagentRestocker:addToItems(itemID, var, value, list)
+
+-- Add an item to the shopping list with a starting value of 0
+function ReagentRestocker:addItemToShoppingList(reagent)
+
+-- Add an item to the selling list
+function ReagentRestocker:addItemToSellingList(reagent)
+
+-- Add an item to a generic list
+function ReagentRestocker:addItemToList(reagent, list)
+
+-- Remove an item from a list
+function ReagentRestocker:removeItemFromList(reagent, list)
+
+-- Returns a table of the form {itemID = qtyOff}, indicating how far "off" the player's current stock of items is from "ideal"
+function ReagentRestocker:getOffsetList(filter)
+
+-- Returns shoppping if the item ID is on the shopping list; selling if it is on the selling list; nil if it is not on any list
+function ReagentRestocker:listType(itemID)
+
+-- Attempts to add an item to the appropriate list
+function ReagentRestocker:addToList(reagent,qty)
+
+-- Attempts to add an item to the appropriate list
+-- If "list"==nil, than add to one of old lists.
+function ReagentRestocker:addToListByID(itemID,qty,list)
+
+-- Locks out transactions to avoid multi-click problems; returns true if the transaction is has been locked; false if it is already locked
+function ReagentRestocker:lockTransaction(sec)
+
+-- Prints a message letting the player know usage
+function ReagentRestocker:notifyPlayer()
+
+--======================--
+-- Merchant Interaction --
+--======================--
+
+-- Handles auto-population of the selling list; adds new items in the buyback list to the selling list, if appropriate
+function ReagentRestocker:MERCHANT_UPDATE()
+
+(some unwrapped code here)
+
+function createStockButtons()
+
+-- Handles auto-purching, -selling, and -repairing when the vendor window is opened
+function ReagentRestocker:MERCHANT_SHOW()
+
+-- Purchases as close to as possible the specified quantity of the item
+function ReagentRestocker:purchaseItems(itemID, toBuy)
+
+-- Returns true if the item is able to be sold and if preferences dictate it should be; false otherwise
+function ReagentRestocker:isToBeSold(itemID)
+
+function ReagentRestocker:isUseless(itemID)
+	-- Useless items - armor you can't wear, weapons you can't use
+	
+function ReagentRestocker:isToBeDestroyed(itemID)
+
+-- Returns true if the merchant sells items on the player's shopping list; false otherwise
+function ReagentRestocker:isReagentVendor()
+
+-- Repairs the character's equipment, if necessary; returns the cost and a report string
+function ReagentRestocker:repair()
+
+-- Buys the necessary reagents based on those that are currently in the player's inventory; returns the cost and a reporting string
+function ReagentRestocker:buy()
+
+-- Require regions from {tooltip:GetRegions()} to save memory
+function tooltipsContain(tooltip, string, ...)
+
+(some unwrapped code here)
+
+-- Sells the appropriate item from the player's inventory; returns list of items sold
+function ReagentRestocker:sell()
+
+-- Returns true if the player has required reputation with current merchant window; false otherwise
+function ReagentRestocker:meetsDiscountRequirements()
+
+-- Returns the integer percentage that the merchant is offering
+function ReagentRestocker:getMerchantDiscount()
+
+function ReagentRestocker:getVersion()
+
+-- WARNING: Completely untested!!!!
+--TODO: untested
+function ReagentRestocker:deleteItem(item)
+
+--========--
+-- Events --
+--========--
+
+function ReagentRestocker:ADDON_LOADED()
+
+function ReagentRestocker:OnInitialize()
+
+-- Adds an action to action queue
+function ReagentRestocker:queueAction(evaluator, action, eventID)
+
+function ReagentRestocker:triggerAction(eventID)
+
+function ReagentRestocker:PLAYER_MONEY()
+function ReagentRestocker:BAG_UPDATE()
+function ReagentRestocker:ITEM_LOCK_CHANGED(bagID, bagSlotID)
+
+--===============--
+-- Database load --
+--===============--
+
+-- Helper method to fix a database problem: Apparently, some previous versions
+-- put a table in where there should be a boolean - which works, but
+-- blows up the file size and affects the load time.
+function ReagentRestocker:fixBoolean(var)
+
+function ReagentRestocker:VARIABLES_LOADED()
+function ReagentRestocker:PLAYER_ENTERING_WORLD()
+
+--==========--
+-- Bank/Bags --
+--==========--
+
+function ReagentRestocker:BANKFRAME_OPENED()
+
+function ReagentRestocker:GUILDBANKFRAME_OPENED()
+
+-- Returns true if the item in the specified slot is locked; false otherwise
+function ReagentRestocker:isSlotUnlocked(bagID,bagSlotID)
+
+-- Returns true if all of the items in the specified slot are unlocked; false otherwise
+function ReagentRestocker:areSlotsUnlocked(bagIDSlotPairs)
+
+-- Returns the number of the specified item in the specified bag
+function ReagentRestocker:countItemInBag(bagID,itemID)
+
+-- Returns the number of the specified item in the specified bags
+function ReagentRestocker:countItemInBags(bagIDList,itemID)
+
+-- Attempts to safely move an item from one slot to another; splitting often causes problems unless it is 100% necessary
+function ReagentRestocker:safeContainerMove(fromBagID, fromBagSlotID, toBagID, toBagSlotID, qty, fromType, toType) -- added isGuildBank because guild banks do things a bit differently :(.
+
+-- Attempts to move items from one baglist to another, based on shopping list
+function ReagentRestocker:recursiveMove(startOffsetList, fromBags, toBags, fromType, toType)  -- added isGuildBank because guild banks do things a bit differently :(.
+
+-- Returns a necessary move; nil if there are none
+function ReagentRestocker:findNecessaryMove(offsetList, fromBags, toBags, fromType, toType)
+
+-- Returns the location and quantity of an item that should be moved; nil if there are none
+function ReagentRestocker:findOptimalItemsToMove(bagIDList, itemID, bagType)
+
+-- Returns the "optimal" slot in the bags for the item to be placed and the number that can be moved there; nil if impossible
+function ReagentRestocker:findOptimalDestinationInBags(bagIDList, itemID)
+
+-- Returns the "optimal" slot in the bag for the item to be placed and the number that can be moved there; nil if impossible
+function ReagentRestocker:findOptimalDestinationInBag(bagID, sourceItemID)
+
+-- Returns true if the bag is of a special bag type; false otherwise
+function ReagentRestocker:isSpecialBagType(bagID)
+
+-- Item movement is pick up / place down based, let's not fight that.
+
+-- No, I'm just gonna do it another way. Picking up/ placing flopped, turned
+--out to be unreliable, got a new method that is a lot more KISS. 
+
+-- Returns amount that will be picked up
+function pickupItem(location, bag, slot, itemID, amount)
+
+-- Item is locked, queue it to be picked up later.
+function queuePickup(location, bag, slot, itemID, amount)
+
+-- Puts item in location.
+function placeItem(location, bag, slot, itemID)
+
+-- Item is locked, queue it to be placed later.
+function queuePlace(location, bag, slot, itemID)
+
+-- Any time a lock changes, see if we can do what we wanted to do while it was
+-- locked.
+function ReagentRestocker:ITEM_LOCK_CHANGED()
+
+-- Processes picking up and placing items. Returns the number of items left in the list.
+function processQueueItem()
+
+-- Move item from one location to another.
+function moveItems(fromLocation, toLocation, itemID, amount)
+
+-- Performs a single move. Returns the number of items actually moved.
+function doMove(fromLocation, fromBag, fromSlot, toLocation, toBag, toSlot, amount, itemID)
+
+function locationString(location)
+
+function getItemAmount(location, bag, slot)
+
+-- Scan for open slots for item. if itemID is used, then look for incomplete
+-- stacks.
+-- Returns a table with pairs of available slots in {bagID, slot} format.
+function scanForOpenSlots(location, itemID)
+
+-- Scans for an item in a location
+-- Returns a table of lists containing the bag, slot, and amount
+function scanForItem(location, itemID)
+
+--=====--
+-- LDB --
+--=====--
+
+(unwrapped code here)
+
+addonTable.checkLow = function(self, event, ...)
+
+(unwrapped code here)
+
+UI.lua:
