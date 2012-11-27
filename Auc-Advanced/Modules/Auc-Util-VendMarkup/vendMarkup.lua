@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - VendMarkup
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: vendMarkup.lua 4828 2010-07-21 22:20:18Z Prowell $
 	URL: http://auctioneeraddon.com/
 

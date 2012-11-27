@@ -1,7 +1,7 @@
 Reforgenator = LibStub("AceAddon-3.0"):NewAddon("Reforgenator", "AceConsole-3.0", "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Reforgenator", false)
 local RI = LibStub("LibReforgingInfo-1.0")
-local version = "1.4.7"
+local version = "2.2"
 
 -- There isn't really a "spirit" combat rating, but it will simplify
 -- some things if we pretend there is one
@@ -9,6 +9,7 @@ local CR_SPIRIT = 99
 
 -- and likewise there isn't an EP combat rating
 local CR_EP = 100
+convert = nil
 
 local function table_print(tt, indent, done)
     done = done or {}
@@ -223,7 +224,7 @@ local help_options =
 |cffffd200DWHitCap|r: the dual-wield hit cap, normally 26.5% but is affected by various modifiers.
 |cffffd200RangedHitCap|r: the ranged hit cap, normally 7.5% but is affected by various modifiers.
 |cffffd200ExpertiseSoftCap|r: the expertise soft cap where dodge is pushed off the attack table. Normally 26 but is affected by various modifiers.
-|cffffd200ExpertiseHardCap|r: the expertise hard cap where parry is pushed off the attack table. Currently 55 for 4.0.3.
+|cffffd200ExpertiseHardCap|r: the expertise hard cap where parry is pushed off the attack table. Currently 7.5 for 5.0.4
 |cffffd200MaximumPossible|r: reforge to get as much of this stat as is possible.
 |cffffd2001SecGCD|r: the value of haste rating necessary to reduce the GCD to one second.
 |cffffd200Fixed|r: Reforge up to or down to the value. You can enter a set of numbers separated by commas. If there are several numbers that means you want to reforge to just hit one of them. It will reforge to reach and just exceed the largest number in the field that it can.
@@ -338,12 +339,7 @@ function Reforgenator:OnInitialize()
 
     tinsert(UISpecialFrames, "ReforgenatorPanel")
 end
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
+
 function Reforgenator:InitializeConstants()
     Reforgenator.constants = {}
     local c = Reforgenator.constants
@@ -354,7 +350,7 @@ function Reforgenator:InitializeConstants()
         "ChestSlot", "ShirtSlot", "TabardSlot", "WristSlot", "HandsSlot",
         "WaistSlot", "LegsSlot", "FeetSlot", "Finger0Slot", "Finger1Slot",
         "Trinket0Slot", "Trinket1Slot", "MainHandSlot", "SecondaryHandSlot",
-        --"RangedSlot"															      --Ranged slot causes an error so comment it out
+        
     }
 
     c.ORDERED_ITEM_STATS = 
@@ -408,7 +404,7 @@ function Reforgenator:InitializeConstants()
     }
 
     --
-    -- These rating taken from http://elitistjerks.com/f15/t29453-combat_ratings_level_85_cataclysm/
+    -- These are up to date as of 10/12 for MoP
 	-- [0] = Vanilla [1] = BC [2] = Wrath [3] = Cata  [4] MOP
 	-- Returns value based on Game version from GetExpansionLevel()
     local HIT_RATING_CONVERSIONS = 
@@ -417,7 +413,7 @@ function Reforgenator:InitializeConstants()
         [1] = 14.7905,
         [2] = 30.7548,
         [3] = 120.109,
-		[4] = 340,						-- Tennative Setting as per discussion
+		[4] = 340,						
     }
     local SPELL_HIT_RATING_CONVERSIONS = 
 	{
@@ -425,7 +421,7 @@ function Reforgenator:InitializeConstants()
         [1] = 12.6154,
         [2] = 26.232,
         [3] = 102.446,
-		[4] = 255,						-- Tennative Setting as per discussion
+		[4] = 340,						
     }
     local EXP_RATING_CONVERSIONS = 
 	{
@@ -433,7 +429,7 @@ function Reforgenator:InitializeConstants()
         [1] = 3.69761,
         [2] = 7.68869,
         [3] = 30.0272,
-		[4] = 340,						-- Tennative Setting as per discussion
+		[4] = 340,						
     }
     local HASTE_RATING_CONVERSIONS = 
 	{
@@ -441,7 +437,7 @@ function Reforgenator:InitializeConstants()
         [1] = 15.7692,
         [2] = 32.79,
         [3] = 128.05701,
-		[4] = 425,						-- Tennative Setting as per discussion
+		[4] = 425,						
     }
     local MASTERY_RATING_CONVERSIONS = 
 	{
@@ -449,7 +445,7 @@ function Reforgenator:InitializeConstants()
         [1] = 22.0769,
         [2] = 45.906,
         [3] = 179.28,
-		[4] = 600,						-- Tennative Setting as per discussion
+		[4] = 600,						
     }
 
     local CRIT_RATING_CONVERSIONS = 
@@ -458,7 +454,7 @@ function Reforgenator:InitializeConstants()
         [1] = 22.0769,
         [2] = 45.906,
         [3] = 179.28,
-		[4] = 700,						-- Tennative 
+		[4] = 700,						
     }
 
     local PARRY_RATING_CONVERSIONS = 
@@ -467,7 +463,7 @@ function Reforgenator:InitializeConstants()
         [1] = 21.76154,
         [2] = 45.25019,
         [3] = 176.7189,
-		[4] = 1035,						-- Tennative 
+		[4] = 1035,						
     }
 
     local DODGE_RATING_CONVERSIONS = 
@@ -476,7 +472,7 @@ function Reforgenator:InitializeConstants()
         [1] = 21.76154,
         [2] = 45.25019,
         [3] = 176.7189,
-		[4] = 1035,						-- Tennative 
+		[4] = 1035,						
     }
 
     local gameVersion = GetExpansionLevel()
@@ -524,7 +520,7 @@ function Reforgenator:InitializeConstants()
     c.EXP_HARD_CAP_BY_TARGET_LEVEL = 
 	{
         [1] = 6,
-        [2] = 7.5,
+        [2] = 15,
         [3] = 3,
     }
 
@@ -701,6 +697,7 @@ function Reforgenator:ModelToModelOption(modelName, model)
             ["MAGE"] = 'Mage',
             ["WARLOCK"] = 'Warlock',
             ["HUNTER"] = 'Hunter',
+			["MONK"] = 'Monk',
         },
         get = function() return model.class end,
         set = function(info, key)
@@ -850,9 +847,12 @@ function Reforgenator:ModelToModelOption(modelName, model)
 
                 if key == 0 then
                     model.reforgeOrder[i] = {}
-                else
+                else 
                     model.reforgeOrder[i].rating = key
-                    option.args['preferSpirit' .. i].hidden = key ~= CR_HIT_SPELL
+					if convert == 1 then
+						option.args['preferSpirit' .. i].hidden = key ~= CR_HIT_SPELL
+						option.args['preferExpertise' .. i].hidden = key ~= CR_HIT_SPELL
+					end
                 end
             end,
         }
@@ -986,6 +986,30 @@ function Reforgenator:ModelToModelOption(modelName, model)
             end,
         }
         seq = seq + 1
+		
+		option.args['preferExpertise' .. i] = 
+		{
+            type = 'toggle',
+            name = 'Prefer Expertise?',
+            desc = 'Check this to specify you prefer Expertise for spell hit if possible',
+            order = seq,
+            hidden = not (model.reforgeOrder[i] and model.reforgeOrder[i].rating == CR_HIT_SPELL),
+            get = function()
+                if not model.reforgeOrder[i] then
+                    return nil
+                end
+
+                return model.reforgeOrder[i].preferExpertise
+            end,
+            set = function(info, key)
+                if model.readOnly then
+                    return
+                end
+
+                model.reforgeOrder[i].preferExpertise = key
+            end,
+        }
+        seq = seq + 1
     end
 
     option.args.notesHeader = 
@@ -1100,6 +1124,7 @@ function Reforgenator:InitializeAddOptions()
                         ["MAGE"] = 'Mage',
                         ["WARLOCK"] = 'Warlock',
                         ["HUNTER"] = 'Hunter',
+						["MONK"] = 'Monk',
                     },
                     get = function() return className end,
                     set = function(info, key) className = key end,
@@ -1261,7 +1286,7 @@ function Reforgenator:UpdateWindowItem(index, itemDescriptor)
     local msg = ''
     if itemDescriptor.reforgedFrom then
         msg = "- " .. _G[itemDescriptor.reforgedFrom] .. "\n"
-                .. "+ " .. _G[itemDescriptor.reforgedTo]
+               .. "+ " .. _G[itemDescriptor.reforgedTo]
     else
         msg = "reset"
     end
@@ -1613,7 +1638,9 @@ function PlayerModel:UpdateStats(minusStat, plusStat, delta)
     for _,v in ipairs(self.statEffectMap[minusStat]) do
         if minusStat == "ITEM_MOD_SPIRIT" and v == CR_HIT_SPELL and self.spiritHitConversionRate then
             self.playerStats[v] = self.playerStats[v] - math.floor(delta * self.spiritHitConversionRate)
-        else
+        elseif minusStat == "ITEM_MOD_EXPERTISE" and v == CR_HIT_SPELL and self.expHitConversionRate then
+            self.playerStats[v] = self.playerStats[v] - math.floor(delta * self.expHitConversionRate)
+		else 
             self.playerStats[v] = self.playerStats[v] - delta
         end
     end
@@ -1621,7 +1648,9 @@ function PlayerModel:UpdateStats(minusStat, plusStat, delta)
     for _,v in ipairs(self.statEffectMap[plusStat]) do
         if plusStat == "ITEM_MOD_SPIRIT" and v == CR_HIT_SPELL and self.spiritHitConversionRate then
             self.playerStats[v] = self.playerStats[v] + math.floor(delta * self.spiritHitConversionRate)
-        else
+        elseif plusStat == "ITEM_MOD_EXPERTISE" and v == CR_HIT_SPELL and self.expHitConversionRate then
+            self.playerStats[v] = self.playerStats[v] + math.floor(delta * self.expHitConversionRate)
+		else
             self.playerStats[v] = self.playerStats[v] + delta
         end
     end
@@ -1642,33 +1671,31 @@ end
 function PlayerModel:isEnhShaman()
     return self.className == "SHAMAN" and self.primaryTab == 2
 end
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
+
 function Reforgenator:GetPlayerModel()
     local playerModel = PlayerModel:new()
 
     local function getPrimaryTab()
+	
+		currentSpec = GetSpecialization()
+		currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec)) or "None"
+		print("Your current spec:", currentSpecName)
+		print("Your current spec tab:", currentSpec)
+			
         local primary = 
 		{
-            tab = 1,
-           -- points = 0,
-            --role = ' '
+			tab = currentSpec,
+            points = 0,
+            role = ' '
 			
         }
-		local currentSpec = GetSpecialization()
-			--local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec)) or "None"
-			print("Your current spec:", currentSpec)
-		
+		--local currentSpecName = currentSpec and select(2, GetSpecializationInfo(currentSpec)) or "None"	
       --  for i=1,GetNumSpecializations() do												--5.04 API change GetNumTalentTabs ? GetNumSpecializations
       --      local _, _, _, _, points,  role = GetSpecializationInfo(i)		--5.04 API change GetTalentTabInfo ? GetSpecializationInfo
       --      if points > primary.points then
       --          primary = 
 	--			{
-    ----                tab = i,
+    --                tab = i,
       --              points = points,
       --              role = role
       --          }
@@ -1726,64 +1753,77 @@ function Reforgenator:GetPlayerModel()
     -- Pallies get 50/100 from Enlightened Judgement
     -- Druids get 50/100 from Balance of Power
     playerModel.spiritHitConversionRate = nil
-
-    local function pointsOutOf2(points)
-        if points == 1 then
-            playerModel.spiritHitConversionRate = 0.5
-        elseif points == 2 then
-            playerModel.spiritHitConversionRate = 1
-        end
+	playerModel.expHitConversionRate = nil
+	
+		
+    if playerModel.className == "DRUID" then
+		playerModel.spiritHitConversionRate = 1
+		Convert = 1
+		currentSpec = GetSpecialization()
+		 if currentSpec == 1 then
+			playerModel.expHitConversionRate= 1
+		end	
+        
+    end
+	
+	if playerModel.className == "MAGE" then
+        playerModel.expHitConversionRate = 1
+		Convert = 1
+    end
+	
+	if playerModel.className == "MONK" then
+		currentSpec = GetSpecialization()
+		 if currentSpec == 2 then
+			playerModel.spiritHitConversionRate = 1
+			playerModel.expHitConversionRate= 1
+			Convert = 1
+		end	
+    end
+	
+	if playerModel.className == "PALADIN" then
+		currentSpec = GetSpecialization()
+		 if currentSpec == 1 then
+			playerModel.expHitConversionRate= 1
+			Convert = 1
+		end
+    end
+	
+    if playerModel.className == "PRIEST" then
+        playerModel.expHitConversionRate = 1
+		if currentSpec == 3 then
+			playerModel.spiritHitConversionRate= 1
+			Convert = 1
+		end
     end
 
-    local function pointsOutOf3(points)
-        if points == 1 then
-            playerModel.spiritHitConversionRate = 0.3333
-        elseif points == 2 then
-            playerModel.spiritHitConversionRate = 0.6666
-        elseif points == 3 then
-            playerModel.spiritHitConversionRate = 1
-        end
+    if playerModel.className == "SHAMAN" then
+       playerModel.spiritHitConversionRate = 1
+	   Convert = 1
     end
--- ************************************************************8 This block needs to be rewritten as all talents have changed drastically
-    --if playerModel.className == "PRIEST" then
-    --    local points = select(5, GetTalentInfo(3, 7))
-    --    self:Explain("talent points in Twisted Faith=" .. points)
-    --    pointsOutOf2(points)
-   -- end
 
-   -- if playerModel.className == "SHAMAN" then
-   --     local points = select(5, GetTalentInfo(1, 7))
-   --     self:Explain("talent points in Elemental Precision=" .. points)
-   --     pointsOutOf3(points)
-   -- end
+ 	if playerModel.className == "WARLOCK" then
+        playerModel.expHitConversionRate = 1
+		Convert = 1
+    end   
 
-   -- if playerModel.className == "PALADIN" then
-   --     local points = select(5, GetTalentInfo(1, 11))
-   --     self:Explain("talent points in Enlightened Judgements=" .. points)
-   --     pointsOutOf2(points)
-   -- end
-
-    --if playerModel.className == "DRUID" then
-    --    local points = select(5, GetTalentInfo(1, 6))
-    --    self:Explain("talent points in Balance of Power=" .. points)
-    --    pointsOutOf2(points)
-    --end
---****************************************************************************8  End block 
     self:Explain("spiritHitConversionRate=" .. to_string(playerModel.spiritHitConversionRate))
     if playerModel.spiritHitConversionRate then
         playerModel.statEffectMap["ITEM_MOD_SPIRIT_SHORT"] = {
             CR_SPIRIT, CR_HIT_SPELL
         }
     end
+	
+	self:Explain("expHitConversionRate=" .. to_string(playerModel.expHitConversionRate))
+    if playerModel.expHitConversionRate then
+        playerModel.statEffectMap["ITEM_MOD_EXPERTISE_RATING_SHORT"] = {
+            CR_EXPERTISE, CR_HIT_SPELL, CR_HIT_MELEE, CR_HIT_RANGED
+        }
+    end
 
+	
     return playerModel
 end
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
+
 function Reforgenator:CalculateHitMods(playerModel)
     local c = Reforgenator.constants
     local K = c.RATING_CONVERSIONS.meleeHit
@@ -1795,13 +1835,13 @@ function Reforgenator:CalculateHitMods(playerModel)
         self:Explain("1% to hit for being Draenei")
         reduction = reduction + K
     end
-
+--[[
     -- Fury warriors get 3% bonus from Precision
     if playerModel:isFuryWarrior() then
         self:Explain("3% to hit for being Fury warrior due to Precision")
         reduction = reduction + (3 * K)
    end
-
+]]
     -- Rogues get varying amounts based on Precision talent        ***** uses GetTalentInfo which changed in 5.04
    -- if playerModel.className == "ROGUE" then
    ----     local pointsInPrecision = select(5, GetTalentInfo(2, 3))
@@ -1871,12 +1911,7 @@ function Reforgenator:CalculateRangedHitCap(playerModel)
 
     return hitCap
 end
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
+
 function Reforgenator:CalculateSpellHitCap(playerModel)
     local c = Reforgenator.constants
     local K = c.RATING_CONVERSIONS.spellHit
@@ -1910,12 +1945,7 @@ function Reforgenator:CalculateSpellHitCap(playerModel)
 
     return hitCap
 end
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
+
 function Reforgenator:ExpertiseMods(playerModel)
     local c = Reforgenator.constants
     local K = c.RATING_CONVERSIONS.expertise
@@ -1954,28 +1984,28 @@ function Reforgenator:ExpertiseMods(playerModel)
         if playerModel.mainHandWeaponType == "One-Handed Axes"
                 or playerModel.mainHandWeaponType == "Two-Handed Axes"
                 or playerModel.mainHandWeaponType == "Fist Weapons" then
-            self:Explain("+3 expertise for being Orc with axe or fist")
-            reduction = reduction + (3 * K)
+            self:Explain("+1 expertise for being Orc with axe or fist")
+            reduction = reduction + (1 * K)
         end
     elseif playerModel.race == "Dwarf" then
         if playerModel.mainHandWeaponType == "One-Handed Maces"
                 or playerModel.mainHandWeaponType == "Two-Handed Maces" then
-            self:Explain("+3 expertise for being Dwarf with mace")
-            reduction = reduction + (3 * K)
+            self:Explain("+1 expertise for being Dwarf with mace")
+            reduction = reduction + (1 * K)
         end
     elseif playerModel.race == "Human" then
         if playerModel.mainHandWeaponType == "One-Handed Swords"
                 or playerModel.mainHandWeaponType == "Two-Handed Swords"
                 or playerModel.mainHandWeaponType == "One-Handed Maces"
                 or playerModel.mainHandWeaponType == "Two-Handed Maces" then
-            self:Explain("+3 expertise for being Human with sword or mace")
-            reduction = reduction + (3 * K)
+            self:Explain("+1 expertise for being Human with sword or mace")
+            reduction = reduction + (1 * K)
         end
     elseif playerModel.race == "Gnome" then
         if playerModel.mainHandWeaponType == "One-Handed Swords"
                 or playerModel.mainHandWeaponType == "Daggers" then
-            self:Explain("+3 expertise for being Gnome with dagger or 1H sword")
-            reduction = reduction + (3 * K)
+            self:Explain("+1 expertise for being Gnome with dagger or 1H sword")
+            reduction = reduction + (1 * K)
         end
     end
 
@@ -2016,12 +2046,7 @@ function Reforgenator:CalculateExpertiseHardCap(playerModel)
     self:Explain("target expertise rating = " .. expertiseCap)
     return expertiseCap
 end
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
+
 function Reforgenator:HasteTo1SecGCD(playerModel)
     local c = Reforgenator.constants
     local K = c.RATING_CONVERSIONS.haste
@@ -2056,12 +2081,7 @@ end
 function Reforgenator:CalculateMaximumValue(playerModel)
     return 9999
 end
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
+
 function Reforgenator:CalculateFrostSoftCritCap(playerModel)
     local c = Reforgenator.constants
     local K = c.RATING_CONVERSIONS.crit
@@ -2082,12 +2102,7 @@ function Reforgenator:CalculateFrostSoftCritCap(playerModel)
     self:Explain("calculated target crit rating = " .. critCap)
     return critCap
 end
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
---****************************************************************************************
+
 function Reforgenator:CalculateFireSoftHasteCap(playerModel)
     local c = Reforgenator.constants
     local K = c.RATING_CONVERSIONS.haste
@@ -2183,6 +2198,10 @@ function Reforgenator:LoadDefaultModels()
     self:LoadModel(self:FuryModel(), 'Warrior, fury', 'WARRIOR/2', 'WARRIOR')
     self:LoadModel(self:SMFuryModel(), 'Warrior, single-minded fury', nil, 'WARRIOR')
     self:LoadModel(self:ProtWarriorModel(), 'Warrior, protection', 'WARRIOR/3', 'WARRIOR')
+	
+	self:LoadModel(self:BrewMasterMonkModel(), 'Monk, BrewMaster', 'MONK/1', 'MONK')
+	self:LoadModel(self:MistWeaverMonkModel(), 'Monk, MistWeaver', 'MONK/2', 'MONK')
+	self:LoadModel(self:WindWalkerMonkModel(), 'Monk, WindWalker', 'MONK/3', 'MONK')
 end
 
 function Reforgenator:LoadModel(model, modelName, ak, class)
@@ -2363,7 +2382,7 @@ function Reforgenator:ShowState()
         local f = c.STAT_CAPS[entry.cap]
         if f then
             soln = self:OptimizeSolution(playerModel, entry.rating, f(playerModel, entry.userdata),
-                                        model.statWeights, entry.mustBeOver, entry.preferSpirit, soln)
+                                        model.statWeights, entry.mustBeOver, entry.preferSpirit, entry.preferExpertise, soln)
         end
     end
 
@@ -2536,8 +2555,11 @@ function Reforgenator:GetBestReforge(playerModel, item, stat, excessRating, stat
                 end
 
                 -- don't ever reforge spirit to spell hit if there's a spirit/hit conversion
+				-- don't ever reforge Expertise to hit if there is a ep/hit conversion
                 if stat == "ITEM_MOD_HIT_RATING_SHORT" and k == "ITEM_MOD_SPIRIT_SHORT" and playerModel.spiritHitConversionRate then
                     self:Debug("### not reforging spirit to hit")
+				elseif stat =="ITEM_MOD_HIT_RATING_SHORT" and k == "ITEM_MOD_EXPERTISE_RATING_SHORT" and playerModel.expHitConversionRate then
+					self:Debug("### not reforging Expertise to hit")
                 else
                     candidates[#candidates + 1] = entry
                 end
@@ -2594,6 +2616,11 @@ function Reforgenator:ReforgeItem(playerModel, suggestion, excessRating)
                         and playerModel.spiritHitConversionRate then
                     delta = math.floor(delta * playerModel.spiritHitConversionRate)
                 end
+				if sf == "ITEM_MOD_EXPERTISE_RATING_SHORT"
+                        and v == CR_HIT_SPELL
+                        and playerModel.expHitConversionRate then
+                    delta = math.floor(delta * playerModel.expHitConversionRate)
+                end
                 excessRating[v] = excessRating[v] - delta
             end
         end
@@ -2602,7 +2629,7 @@ function Reforgenator:ReforgeItem(playerModel, suggestion, excessRating)
     return result
 end
 
-function Reforgenator:GetBestReforgeList(playerModel, itemList, rating, excessRating, statWeights, preferSpirit)
+function Reforgenator:GetBestReforgeList(playerModel, itemList, rating, excessRating, statWeights, preferSpirit, preferExpertise)
     local c = Reforgenator.constants
     local unforged = {}
     for k,v in ipairs(itemList) do
@@ -2673,6 +2700,32 @@ function Reforgenator:GetBestReforgeList(playerModel, itemList, rating, excessRa
 
                 return (preferSpirit and a.reforgeTo == "ITEM_MOD_SPIRIT_SHORT") or (not preferSpirit and a.reforgeTo == "ITEM_MOD_HIT_RATING_SHORT")
             end)
+			
+			table.sort(choices, function(c,d)
+                local c_delta = c.delta
+                if rating == CR_HIT_SPELL
+                        and c.reforgeTo == "ITEM_MOD_EXPERTISE_RATING_SHORT"
+                        and playerModel.expHitConversionRate then
+                    c_delta = math.floor(c_delta * playerModel.expHitConversionRate)
+                end
+
+                local d_delta = d.delta
+                if rating == CR_HIT_SPELL
+                        and d.reforgeTo == "ITEM_MOD_EXPERTISE_RATING_SHORT"
+                        and playerModel.expHitConversionRate then
+                    d_delta = math.floor(d_delta * playerModel.expHitConversionRate)
+                end
+
+                if c_delta > d_delta then
+                    return true
+                end
+
+                if c_delta < d_delta then
+                    return nil
+                end
+
+                return (preferExpertise and c.reforgeTo == "ITEM_MOD_EXPERTISE_RATING_SHORT") or (not preferExpertise and c.reforgeTo == "ITEM_MOD_HIT_RATING_SHORT")
+            end)
 
             self:Debug("### sorted choices are " .. to_string(choices))
 
@@ -2681,11 +2734,12 @@ function Reforgenator:GetBestReforgeList(playerModel, itemList, rating, excessRa
     end
 
     table.sort(unforged, function(a, b) return a.delta > b.delta end)
-
+	table.sort(unforged, function(c, d) return c.delta > d.delta end)
+	
     return unforged
 end
 
-function Reforgenator:OptimizeSolution(playerModel, rating, desiredValue, statWeights, mustBeOver, preferSpirit, ancestor)
+function Reforgenator:OptimizeSolution(playerModel, rating, desiredValue, statWeights, mustBeOver, preferSpirit, preferExpertise, ancestor)
     local c = Reforgenator.constants
     self:Explain("reforging for " .. c.RATING_NAMES[rating] .. ", starting at " .. playerModel.playerStats[rating])
     if rating == CR_HIT_SPELL then
@@ -2761,7 +2815,7 @@ function Reforgenator:OptimizeSolution(playerModel, rating, desiredValue, statWe
             excess[k] = 0
         end
         local itemList = self:deepCopy(ancestor.items)
-        local unforged = self:GetBestReforgeList(playerModel, itemList, rating, excess, statWeights, preferSpirit)
+        local unforged = self:GetBestReforgeList(playerModel, itemList, rating, excess, statWeights, preferSpirit, preferExpertise)
         local val = playerModel.playerStats[rating]
         for k,v in ipairs(unforged) do
             local delta = v.delta
@@ -2769,6 +2823,11 @@ function Reforgenator:OptimizeSolution(playerModel, rating, desiredValue, statWe
                     and v.reforgeTo == "ITEM_MOD_SPIRIT_SHORT"
                     and playerModel.spiritHitConversionRate then
                 delta = math.floor(delta * playerModel.spiritHitConversionRate)
+				
+			elseif rating == CR_HIT_SPELL
+                    and v.reforgeTo == "ITEM_MOD_EXPERTISE_RATING_SHORT"
+                    and playerModel.expHitConversionRate then
+                delta = math.floor(delta * playerModel.expHitConversionRate)
             end
 
             val = val + delta
@@ -2793,7 +2852,7 @@ function Reforgenator:OptimizeSolution(playerModel, rating, desiredValue, statWe
     self:Debug("### rating="..to_string(rating))
     local itemList = self:deepCopy(ancestor.items)
     while true do
-        local unforged = self:GetBestReforgeList(playerModel, itemList, rating, soln.excessRating, statWeights, preferSpirit)
+        local unforged = self:GetBestReforgeList(playerModel, itemList, rating, soln.excessRating, statWeights, preferSpirit, preferExpertise)
         if #unforged == 0 then
             break
         end
@@ -2801,11 +2860,15 @@ function Reforgenator:OptimizeSolution(playerModel, rating, desiredValue, statWe
         local v = unforged[1]
 
         local delta = v.delta
-        if rating == CR_HIT_SPELL
-                and v.reforgeTo == "ITEM_MOD_SPIRIT_SHORT"
-                and playerModel.spiritHitConversionRate then
-            delta = math.floor(delta * playerModel.spiritHitConversionRate)
-        end
+            if rating == CR_HIT_SPELL then
+				if v.reforgeTo == "ITEM_MOD_SPIRIT_SHORT"
+                    and playerModel.spiritHitConversionRate then
+						delta = math.floor(delta * playerModel.spiritHitConversionRate)
+				elseif v.reforgeTo == "ITEM_MOD_EXPERTISE_RATING_SHORT"
+                    and playerModel.expHitConversionRate then
+						delta = math.floor(delta * playerModel.expHitConversionRate)
+				end
+			end
 
         -- Reforge the largest items that will fit under the cap
         if playerModel.playerStats[rating] + delta < desiredValue then
@@ -2823,16 +2886,20 @@ function Reforgenator:OptimizeSolution(playerModel, rating, desiredValue, statWe
     -- pass 2: find the smallest remaining item that will just meet or exceed the cap and reforge it
     if #itemList > 0 then
         local under = math.abs(desiredValue - playerModel.playerStats[rating])
-        local unforged = self:GetBestReforgeList(playerModel, itemList, rating, soln.excessRating, statWeights, preferSpirit)
+        local unforged = self:GetBestReforgeList(playerModel, itemList, rating, soln.excessRating, statWeights, preferSpirit, preferExpertise)
         for n = #unforged, 1, -1 do
             local v = unforged[n]
 
             local delta = v.delta
-            if rating == CR_HIT_SPELL
-                    and v.reforgeTo == "ITEM_MOD_SPIRIT_SHORT"
+            if rating == CR_HIT_SPELL then
+				if v.reforgeTo == "ITEM_MOD_SPIRIT_SHORT"
                     and playerModel.spiritHitConversionRate then
-                delta = math.floor(delta * playerModel.spiritHitConversionRate)
-            end
+						delta = math.floor(delta * playerModel.spiritHitConversionRate)
+				elseif v.reforgeTo == "ITEM_MOD_EXPERTISE_RATING_SHORT"
+                    and playerModel.expHitConversionRate then
+						delta = math.floor(delta * playerModel.expHitConversionRate)
+				end
+			end
 
             if playerModel.playerStats[rating] + delta >= desiredValue then
                 local over = math.abs(desiredValue - (playerModel.playerStats[rating] + delta))
@@ -2863,4 +2930,3 @@ function Reforgenator:OptimizeSolution(playerModel, rating, desiredValue, statWe
     self:Explain("-----")
     return soln
 end
-

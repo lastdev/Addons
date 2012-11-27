@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.2 (<%codename%>)
-	Revision: $Id: ImportCTMapMod.lua 980 2012-09-04 15:59:04Z Esamynn $
+	Version: 4.0.6 (<%codename%>)
+	Revision: $Id: ImportCTMapMod.lua 997 2012-09-11 03:14:32Z Esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/Import/ImportCTMapMod.lua $", "$Rev: 980 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/Import/ImportCTMapMod.lua $", "$Rev: 997 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient
@@ -38,6 +38,7 @@ Gatherer.ImportModules["CT_MapMod"] = module
 -- http://norganna.org/discuss/discussion/4096/ctmapmod-import
 function module.ImportFunction()
    if (CT_UserMap_Notes) then
+      Gatherer.Storage.MassImportMode = true
       for ctzone, ctdata in pairs(CT_UserMap_Notes) do
          for gatherC, zones in pairs(Gatherer.Util.ZoneNames) do
             local zoneIndex = zones[ctzone]
@@ -63,6 +64,7 @@ function module.ImportFunction()
             end
          end
       end
+	  Gatherer.Storage.MassImportMode = false
       Gatherer.Util.ChatPrint(_tr("IMPORT_CTMOD_DONE"))
    else
       Gatherer.Util.ChatPrint(_tr("IMPORT_CTMOD_NODATA"))

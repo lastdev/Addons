@@ -4,6 +4,8 @@ local L = a.Localize
 local s = SpellFlashAddon
 local c = BittensSpellFlashLibrary
 
+local UnitInRange = UnitInRange
+local UnitIsUnit = UnitIsUnit
 local select = select
 local math = math
 
@@ -13,6 +15,23 @@ c.Init(a)
 c.AddOptionalSpell("Mark of the Wild", nil, {
 	Override = function()
 		return c.RaidBuffNeeded(c.STAT_BUFFS)
+	end
+})
+
+c.AddOptionalSpell("Symbiosis", nil, {
+	Override = function()
+		if c.GetBuffDuration(a.SymbiosisSelfBuffs) > 5 * 60 then
+			return false
+		end
+		for member in c.GetGroupMembers() do
+			if not UnitIsUnit(member, "player") 
+				and UnitInRange(member) 
+				and (s.MyBuff(a.SymbiosisRaidBuffs, member)
+					or not s.Buff(a.SymbiosisRaidBuffs, member)) then
+				
+				return true
+			end
+		end
 	end
 })
 
@@ -28,6 +47,8 @@ c.AddOptionalSpell("Faerie Fire", "Early", {
 c.AddOptionalSpell("Force of Nature", nil, {
 	NoRangeCheck = true,
 })
+
+c.AddInterrupt("Skull Bash")
 
 ----------------------------------------------------------------------- Balance
 c.AddOptionalSpell("Moonkin Form", nil, {
@@ -124,6 +145,8 @@ c.AddSpell("Sunfire", "Overwrite", {
 c.AddSpell("Starsurge", nil, {
 	NotIfActive = true,
 })
+
+c.AddInterrupt("Solar Beam")
 
 ------------------------------------------------------------------------- Feral
 a.Costs = {

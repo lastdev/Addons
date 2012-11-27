@@ -4,7 +4,7 @@
 ## Interface: 50001
 ## LoadOnDemand: 0
 ##
-## Version: 4.0.2 (<%codename%>)
+## Version: 4.0.6 (<%codename%>)
 ## Revision: $Id: Configator.toc 329 2012-08-17 17:48:31Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Libraries

@@ -23,6 +23,7 @@ a.SpellIDs = {
 	["Rolling Thunder"] = 88764,
 	["Searing Flame"] = 77661,
 	["Searing Totem"] = 3599,
+	["Stormblast"] = 115356,
 	["Stormstrike"] = 17364,
 	["Thunderstorm"] = 51490,
 	["Unleash Elements"] = 73680,

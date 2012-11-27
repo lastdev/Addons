@@ -1,7 +1,7 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.15.5348 (LikeableLyrebird)
-	Revision: $Id: EnxConstants.lua 5339 2012-09-01 21:39:07Z ccox $
+	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: EnxConstants.lua 5363 2012-09-24 02:36:04Z ccox $
 	URL: http://enchantrix.org/
 
 	Enchantrix Constants.
@@ -28,7 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix/EnxConstants.lua $", "$Rev: 5339 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix/EnxConstants.lua $", "$Rev: 5363 $")
 
 local const = Enchantrix.Constants
 
@@ -453,7 +453,7 @@ local EPIC = 4
 const.baseDisenchantTable = {
  [UNCOMMON] = {
   [const.WEAPON] = {
-   ["bounds"] = { 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 99, 120, 151, 200, 275, 290, 305, 315, 325, 350, 390, 410, 450 },
+   ["bounds"] = { 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 99, 120, 151, 200, 275, 290, 305, 315, 325, 350, 380, 390, 410, 450 },
    [15]  = { { STRANGE , 0.20, 1.5 }, { LMAGIC  , 0.80, 1.5 }, },
    [20]  = { { STRANGE , 0.20, 2.5 }, { GMAGIC  , 0.75, 1.5 }, { SGLIMMERING, 0.05, 1.0 }, },
    [25]  = { { STRANGE , 0.15, 5.0 }, { LASTRAL , 0.75, 1.5 }, { SGLIMMERING, 0.10, 1.0 }, },
@@ -478,9 +478,9 @@ const.baseDisenchantTable = {
    [325] = { { HYPNOTIC, 0.25, 3.5 }, { GCELESTIAL , 0.75, 2.5 }, },
    [350] = { { HYPNOTIC, 0.25, 4.0 }, { GCELESTIAL , 0.75, 3.0 }, },	-- highest level Cata green is 333, first Panda is 377
    
-   -- As of Sept 1, 2012, weapons were giving mostly the same drops as armor (mostly dust)
+   -- As of Sept 23, 2012, weapons were giving almost the same drops as armor (mostly dust)
    -- weapons do seem to drop more dusts
--- tested beta Sept 1, 2012
+-- tested beta Sept 23, 2012
    [380] = { { SPIRIT, 0.85, 2.5 }, { MYSTERIOUS , 0.15, 1.0 }, },
    [390] = { { SPIRIT, 0.85, 3.0 }, { MYSTERIOUS , 0.15, 1.0 }, },
    [410] = { { SPIRIT, 0.85, 3.5 }, { MYSTERIOUS , 0.15, 1.5 }, },
@@ -488,7 +488,7 @@ const.baseDisenchantTable = {
 
   },
   [const.ARMOR] = {
-   ["bounds"] = { 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 99, 120, 151, 200, 275, 290, 305, 315, 325, 350, 390, 410, 450 },
+   ["bounds"] = { 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 99, 120, 151, 200, 275, 290, 305, 315, 325, 350, 380, 390, 410, 450 },
    [15]  = { { STRANGE , 0.80, 1.5 }, { LMAGIC  , 0.20, 1.5 }, },
    [20]  = { { STRANGE , 0.75, 2.5 }, { GMAGIC  , 0.20, 1.5 }, { SGLIMMERING, 0.05, 1.0 }, },
    [25]  = { { STRANGE , 0.75, 5.0 }, { LASTRAL , 0.15, 1.5 }, { SGLIMMERING, 0.10, 1.0 }, },
@@ -513,11 +513,11 @@ const.baseDisenchantTable = {
    [325] = { { HYPNOTIC, 0.75, 3.5 }, { GCELESTIAL , 0.25, 2.5 }, },
    [350] = { { HYPNOTIC, 0.75, 4.0 }, { GCELESTIAL , 0.25, 3.0 }, },	-- highest level Cata green is 333, first Panda is 364
    
--- tested beta Sept 1, 2012
+-- tested beta Sept 23, 2012
    [380] = { { SPIRIT, 0.85, 2.0 }, { MYSTERIOUS , 0.15, 1.0 }, },
    [390] = { { SPIRIT, 0.85, 2.5 }, { MYSTERIOUS , 0.15, 1.0 }, },
    [410] = { { SPIRIT, 0.85, 3.0 }, { MYSTERIOUS , 0.15, 1.5 }, },
-   [450] = { { SPIRIT, 0.85, 4.0 }, { MYSTERIOUS , 0.15, 2.0 }, },	-- highest level Panda green is 437, so far
+   [450] = { { SPIRIT, 0.85, 3.5 }, { MYSTERIOUS , 0.15, 2.0 }, },	-- highest level Panda green is 437, so far
    
   },
  },
@@ -525,7 +525,7 @@ const.baseDisenchantTable = {
  	-- weapon lookups will fall back to the armor table
  	-- 1% chance for better shard appears to have been removed in Cataclysm
   [const.ARMOR] = {
-   ["bounds"] = { 25, 30, 35, 40, 45, 50, 55, 65, 99, 120, 164, 200, 316, 380, 450, 500 },
+   ["bounds"] = { 25, 30, 35, 40, 45, 50, 55, 65, 99, 120, 164, 200, 316, 380, 424, 449, 450, 500 },
    [25]  = { { SGLIMMERING,     1.00, 1.0 } },
    [30]  = { { LGLIMMERING,     1.00, 1.0 } },
    [35]  = { { SGLOWING,        1.00, 1.0 } },
@@ -541,9 +541,13 @@ const.baseDisenchantTable = {
    [316] = { { SHEAVENLY_SHARD, 1.00, 1.0 } },
    [380] = { { HEAVENLY_SHARD,  1.00, 1.0 } },	-- highest level Cata blue is 377, first Panda blue is 384
 
--- tested beta, Spet 1, 2012
-   [450] = { { SETHERAL,        1.00, 1.0 } },
-   [500] = { { ETHERAL,         1.00, 1.0 } },	-- highest level Panda blue is 463, so far
+-- tested beta, Spet 23, 2012
+-- something weird is going on, some items have steady drops, while others seem random small and large
+-- need a lot more data, could be crafted vs. drop?  Dragonling seems most mixed
+   [424] = { { SETHERAL,        1.00, 1.0 } },	-- this seems solid
+   [449] = { { ETHERAL,         1.00, 1.0 } },	-- this seems solid
+   [450] = { { ETHERAL,         0.20, 1.0 }, { SETHERAL,        0.80, 1.0 } },	-- this is mixed
+   [500] = { { ETHERAL,         1.00, 1.0 } },	-- this seems solid, highest level Panda blue is 463, so far
   },
  },
  [EPIC] = {
@@ -560,7 +564,7 @@ const.baseDisenchantTable = {
    [164] = { { VOID,        1.00, 1.5 } },	-- highest level BC epic is 164, first LK epic is 200
    [299] = { { ABYSS,       1.00, 1.0 } },	-- highest level LK epic is 284, first Cata epic is 300
    [419] = { { MAELSTROM,   1.00, 1.0 } },	-- highest level CATA epic is 416, first Panda epic is 420
-   [600] = { { SHA_CRYSTAL, 1.00, 1.0 } },	-- highest level Panda epic so far is 516
+   [600] = { { SHA_CRYSTAL, 1.00, 1.0 } },	-- highest level Panda epic so far is 516, so far
    
   },
  },
@@ -580,8 +584,8 @@ const.ReverseDisenchantLevelList = {
 	[VOID]        = {  95, 164 }, -- Void Crystal
 	[NEXUS]       = {  56,  94 }, -- Nexus Crystal
 	
-	[ETHERAL] 		  = { 450, 500 }, -- Etheral Shard
-	[SETHERAL]        = { 380, 450 }, -- Small Etheral Shard
+	[ETHERAL] 		  = { 425, 500 }, -- Etheral Shard
+	[SETHERAL]        = { 380, 424 }, -- Small Etheral Shard
 	[HEAVENLY_SHARD]  = { 317, 379 }, -- Heavenly Shard
 	[SHEAVENLY_SHARD] = { 201, 316 }, -- Small Heavenly Shard
 	[DREAM_SHARD]     = { 165, 200 }, -- Dream Shard

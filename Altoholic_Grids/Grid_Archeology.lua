@@ -22,11 +22,11 @@ local function DropDown_Initialize()
 	local numRaces = GetNumArchaeologyRaces()
 	local race, icon
 	
-	-- only show 9 until MoP is released
-	-- for i = 1, numRaces do
-	for i = 1, 9 do
-		race, icon = GetArchaeologyRaceInfo(i)
-		DDM_Add(race, i, OnRaceChange, icon, (i==currentRace))
+	for i = 1, numRaces do
+		if i ~= 10 then	-- 10 = other, no idea why it is empty ..
+			race, icon = GetArchaeologyRaceInfo(i)
+			DDM_Add(race, i, OnRaceChange, icon, (i==currentRace))
+		end
 	end
 
 	DDM_AddCloseMenu()

@@ -1,7 +1,7 @@
 --[[
 Auctioneer - StatSimple
-Version: 5.15.5348 (LikeableLyrebird)
-Revision: $Id: StatSimple.lua 5323 2012-08-16 15:31:03Z brykrys $
+Version: 5.15.5365 (LikeableLyrebird)
+Revision: $Id: StatSimple.lua 5360 2012-09-21 09:53:20Z brykrys $
 URL: http://auctioneeraddon.com/
 
 This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -38,8 +38,10 @@ local lib,parent,private = AucAdvanced.NewModule(libType, libName)
 if not lib then return end
 
 local aucPrint,decode,_,_,replicate,_,get,set,default,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
+local Resources = AucAdvanced.Resources
+local AucGetStoreKeyFromLink = AucAdvanced.API.GetStoreKeyFromLink
 
-local GetFaction = AucAdvanced.GetFaction
+local PET_BAND = 4
 
 -- Eliminate some global lookups
 local select = select
@@ -55,12 +57,23 @@ local concat=table.concat
 local strsplit,strfind=strsplit,strfind
 -- GLOBALS: AucAdvancedStatSimpleData
 
-
 -- local reference to our saved stats table
 local SSRealmData
 
+-- Wrapper around AucAdvanced.API.GetStoreKeyFromLink to customize it for Stat-Simple
+local GetStoreKey = function(link)
+	local id, property, linktype = AucGetStoreKeyFromLink(link, PET_BAND)
+	if linktype == "item" then
+		-- use number here so we don't need to convert older database
+		return tonumber(id), property
+	elseif linktype == "battlepet" then
+		-- add "P" marker to battlepet ID
+		return "P"..id, property
+	end
+end
+
 function lib.CommandHandler(command, ...)
-	local serverKey = GetFaction()
+	local serverKey = Resources.ServerKeyCurrent
 	local _,_,keyText = AucAdvanced.SplitServerKey(serverKey)
 	if (command == "help") then
 		aucPrint(_TRANS('SIMP_Help_SlashHelp1') ) --Help for Auctioneer Advanced - Simple
@@ -76,47 +89,37 @@ function lib.CommandHandler(command, ...)
 	end
 end
 
-function lib.Processor(callbackType, ...)
-	if (callbackType == "tooltip") then
+lib.Processors = {
+	itemtooltip = function(callbackType, ...)
 		private.ProcessTooltip(...)
-	elseif (callbackType == "config") then
-		--Called when you should build your Configator tab.
+	end,
+	config = function(callbackType, ...)
 		private.SetupConfigGui(...)
-	end
-end
-
-lib.Processors = {}
-lib.Processors.tooltip = lib.Processor
-lib.Processors.config = lib.Processor
+	end,
+}
+lib.Processors.battlepettooltip = lib.Processors.itemtooltip
 
 lib.ScanProcessors = {}
 function lib.ScanProcessors.create(operation, itemData, oldData)
 	if not get("stat.simple.enable") then return end
-	-- This function is responsible for processing and storing the stats after each scan
-	-- Note: itemData gets reused over and over again, so do not make changes to it, or use
-	-- it in places where you rely on it. Make a deep copy of it if you need it after this
-	-- function returns.
 
 	-- We're only interested in items with buyouts.
 	local buyout = itemData.buyoutPrice
 	if not buyout or buyout == 0 then return end
 	local buyoutper = ceil(buyout/itemData.stackSize)
 
-	-- In this case, we're only interested in the initial create, other
-	-- Get the signature of this item and find it's stats.
-	local itemType, itemId, property, factor = AucAdvanced.DecodeLink(itemData.link)
-	if itemType ~= "item" then return end
-	if (factor ~= 0) then property = property.."x"..factor end
+	local keyId, property = GetStoreKey(itemData.link)
+	if not keyId then return end
 
-	local data = private.GetPriceData(GetFaction())
-	if not data.daily[itemId] then data.daily[itemId] = "" end
-	local stats = private.UnpackStats(data.daily[itemId])
+	local data = private.GetPriceData(Resources.ServerKeyCurrent)
+	if not data.daily[keyId] then data.daily[keyId] = "" end
+	local stats = private.UnpackStats(data.daily[keyId])
 	if not stats[property] then stats[property] = { 0, 0 , buyoutper } end
 	if not stats[property][3] then stats[property][3] = buyoutper end
 	stats[property][1] = stats[property][1] + buyout
 	stats[property][2] = stats[property][2] + itemData.stackSize
 	if stats[property][3] > buyoutper then stats[property][3] = buyoutper end
-	data.daily[itemId] = private.PackStats(stats)
+	data.daily[keyId] = private.PackStats(stats)
 end
 
 
@@ -125,10 +128,9 @@ local dataset = {}
 function lib.GetPrice(hyperlink, serverKey)
 	if not get("stat.simple.enable") then return end
 
-	local linkType,itemId,property,factor = AucAdvanced.DecodeLink(hyperlink)
-	if (linkType ~= "item") then return end
-	if (factor ~= 0) then property = property.."x"..factor end
-	serverKey = serverKey or GetFaction()
+	local keyId, property = GetStoreKey(hyperlink)
+	if not keyId then return end
+	serverKey = serverKey or Resources.ServerKeyCurrent
 	local data = private.GetPriceData(serverKey)
 
 	local dayTotal, dayCount, dayAverage, minBuyout = 0,0,0,0
@@ -138,8 +140,8 @@ function lib.GetPrice(hyperlink, serverKey)
 	local daysUsed =  0 -- used to keep running track of which daily averages we have
 
 
-	if data.daily[itemId] then
-		local stats = private.UnpackStats(data.daily[itemId])
+	if data.daily[keyId] then
+		local stats = private.UnpackStats(data.daily[keyId])
 		if stats[property] then
 			dayTotal, dayCount, minBuyout = unpack(stats[property])
 			dayAverage = dayTotal/dayCount
@@ -150,8 +152,8 @@ function lib.GetPrice(hyperlink, serverKey)
 			daysUsed = 1
 		end
 	end
-	if data.means[itemId] then
-		local stats = private.UnpackStats(data.means[itemId])
+	if data.means[keyId] then
+		local stats = private.UnpackStats(data.means[keyId])
 		if stats[property] then
 			seenDays, seenCount, avg3, avg7, avg14, avgmins = unpack(stats[property])
 			if not avgmins then avgmins = 0 end
@@ -296,32 +298,29 @@ function lib.OnLoad(addon)
 end
 
 function lib.ClearItem(hyperlink, serverKey)
-	local linkType, itemID, property, factor = AucAdvanced.DecodeLink(hyperlink)
-	if linkType ~= "item" then
-		return
-	end
-	if (factor ~= 0) then property = property.."x"..factor end
+	local keyId, property = GetStoreKey(hyperlink)
+	if not keyId then return end
 
-	serverKey = serverKey or GetFaction ()
+	serverKey = serverKey or Resources.ServerKeyCurrent
 	local data = private.GetPriceData (serverKey)
 
 	local cleareditem = false
 
-	if data.daily[itemID] then
-		local stats = private.UnpackStats (data.daily[itemID])
+	if data.daily[keyId] then
+		local stats = private.UnpackStats (data.daily[keyId])
 		if stats[property] then
 			stats[property] = nil
 			cleareditem = true
-			data.daily[itemID] = private.PackStats (stats)
+			data.daily[keyId] = private.PackStats (stats)
 		end
 	end
 
-	if data.means[itemID] then
-		local stats = private.UnpackStats (data.means[itemID])
+	if data.means[keyId] then
+		local stats = private.UnpackStats (data.means[keyId])
 		if stats[property] then
 			stats[property] = nil
 			cleareditem = true
-			data.means[itemID] = private.PackStats (stats)
+			data.means[keyId] = private.PackStats (stats)
 		end
 	end
 
@@ -415,7 +414,7 @@ end
 
 --[[ Local functions ]]--
 
-function private.ProcessTooltip(tooltip, name, hyperlink, quality, quantity, cost)
+function private.ProcessTooltip(tooltip, hyperlink, serverKey, quantity, decoded, additional, order)
 	-- In this function, you are afforded the opportunity to add data to the tooltip should you so
 	-- desire. You are passed a hyperlink, and it's up to you to determine whether or what you should
 	-- display in the tooltip.
@@ -425,7 +424,6 @@ function private.ProcessTooltip(tooltip, name, hyperlink, quality, quantity, cos
 	if not quantity or quantity < 1 then quantity = 1 end
 	if not get("stat.simple.quantmul") then quantity = 1 end
 
-	local serverKey, realm, faction = GetFaction () -- realm/faction requested for anticipated changes to add cross-faction tooltips
 	local dayAverage, avg3, avg7, avg14, minBuyout, avgmins, _, dayTotal, dayCount, seenDays, seenCount = lib.GetPrice(hyperlink, serverKey)
 	local dispAvg3 = get("stat.simple.avg3")
 	local dispAvg7 = get("stat.simple.avg7")
@@ -471,10 +469,10 @@ function private.PushStats(serverKey)
 	local data = private.GetPriceData(serverKey)
 
 	local pdata, fdata, temp
-	for itemId, stats in pairs(data.daily) do
-		if (itemId ~= "created") then
+	for keyId, stats in pairs(data.daily) do
+		if (keyId ~= "created") then
 			pdata = private.UnpackStats(stats)
-			fdata = private.UnpackStats(data.means[itemId] or "")
+			fdata = private.UnpackStats(data.means[keyId] or "")
 			for property, info in pairs(pdata) do
 				dailyAvg = info[1] / info[2]
 				if not info[3] then info[3] = 0 end
@@ -516,7 +514,7 @@ function private.PushStats(serverKey)
 					end
 				end
 			end
-			data.means[itemId] = private.PackStats(fdata)
+			data.means[keyId] = private.PackStats(fdata)
 		end
 	end
 	data.daily = {created = time()}
@@ -528,7 +526,6 @@ function private.UnpackStatIter(data, ...)
 	for i = 1, c do
 		v = select(i, ...)
 		local property, info = strsplit(":", v)
-		property = tonumber(property) or property
 		if (property and info) then
 			data[property] = {strsplit(";", info)}
 			local item
@@ -594,7 +591,7 @@ function private.UpgradeDb()
 end
 
 function lib.ClearData(serverKey)
-	serverKey = serverKey or GetFaction()
+	serverKey = serverKey or Resources.ServerKeyCurrent
 	if AucAdvanced.API.IsKeyword(serverKey, "ALL") then
 		wipe(SSRealmData)
 		aucPrint(_TRANS('SIMP_Interface_ClearingSimple').." {{".._TRANS("ADV_Interface_AllRealms").."}}") --Clearing Simple stats for // All realms
@@ -643,7 +640,8 @@ function private.InitData()
 			end
 			if type(data.means) == "table" then
 				for id, packed in pairs (data.means) do
-					if type(id) ~= "number" or type(packed) ~= "string" then
+					-- id type checking currently removed to allow for battlepets
+					if type(packed) ~= "string" then
 						data.means[id] = nil
 					end
 				end
@@ -652,7 +650,8 @@ function private.InitData()
 			end
 			if type(data.daily) == "table" then
 				for id, packed in pairs (data.daily) do
-					if id ~= "created" and (type(id) ~= "number" or type(packed) ~= "string") then
+					-- id type checking currently removed to allow for battlepets
+					if id ~= "created" and type(packed) ~= "string" then
 						data.daily[id] = nil
 					end
 				end
@@ -673,4 +672,4 @@ function private.InitData()
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-Simple/StatSimple.lua $", "$Rev: 5323 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-Simple/StatSimple.lua $", "$Rev: 5360 $")

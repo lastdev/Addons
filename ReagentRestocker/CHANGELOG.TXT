@@ -3,7 +3,19 @@ While Reagent Restocker is an open source addon, I do take donations. I would lo
 Reagent Restocker has its own page on Google+:
 https://plus.google.com/101127866821396020019
 
-NOTE: I've been seeing copies of Reagent Restocker popping up at other download sites. The only three places I currently upload the addon to are curse.com, wowinterface.com, and worldofaddons.com (as soon as they approve my claim). I cannot guarantee the integrity of any other download sites.
+NOTE: I've been seeing copies of Reagent Restocker popping up at other download sites. The only two places I currently upload the addon to are curse.com and wowinterface.com. I cannot guarantee the integrity of any other download sites.
+
+== v5.0 ==
+* Found a computer to test WoW with, so I can still code in a limited capacity.
+* Hopefully fixed database upgrade bugs.
+* Fixed cache bugs.
+
+== v4.0 ==
+* NOTE: This is the last update for a couple months. I am moving, and my computer won't be available to me for a while.
+* Fixed potential error in UI.
+* Fixed: Caged battle pets would cause an error.
+* Ugly window is . . . less uglier. Still not where I want it to be yet, but making progress.
+* Added database consistency check, which will run once for this version. Can also be activated manually.
 
 == v3.1 ==
 * Remove rogue poison warning from description. Apparently they don't use reagents anymore.

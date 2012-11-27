@@ -19,7 +19,7 @@ function ReagentRestocker:fixBoolean(var)
 end
 
 -- Maximum database version.
-ReagentRestocker.maxVer = 14;
+ReagentRestocker.maxVer = 15;
 
 function ReagentRestocker:loadDB()
 
@@ -63,6 +63,7 @@ function ReagentRestocker:loadDB()
 		ReagentRestockerDB.Options.UpgradeWater = false
 		ReagentRestockerDB.Options.DisableNewUI = false
 		ReagentRestockerDB.Options.Debug = false
+		ReagentRestockerDB.Options.CheckData = false
 		ReagentRestockerDB.MapTable = {} -- Info for icon on map
 		ReagentRestockerDB.MapTable.hide = true
 		ReagentRestockerDB.Items = {}
@@ -70,7 +71,7 @@ function ReagentRestocker:loadDB()
 		ReagentRestockerDB.Version = GetAddOnMetadata(addonName, "Version");
 		
 		-- Database version, so I don't have to parse the addon's version, which is a string.
-		ReagentRestockerDB.DataVersion = 14;
+		ReagentRestockerDB.DataVersion = 15;
 	end
 	
 	-- Initialize global table, which has its own versioning independent of per-character versioning.
@@ -249,6 +250,14 @@ function ReagentRestocker:loadDB()
 		ReagentRestockerDB.DataVersion = 14
 	end
 	
+	
+	if ReagentRestockerDB.DataVersion == 14 then
+		-- There have been reports of database inconsistencies - clean them up.
+		-- After this initial check, has to be done manually.
+		ReagentRestockerDB.Options.CheckData = true
+		ReagentRestockerDB.DataVersion = 15
+	end
+	
 	-- Fix any nil quantities.
 	--for k, v in pairs(ReagentRestockerDB["Items"]) do
 	--	if ReagentRestockerDB["Items"][k]["tags"]["Buy"] ~= nil then
@@ -323,12 +332,48 @@ function ReagentRestocker:VARIABLES_LOADED()
 		-- load the database and update if needed.
 		ReagentRestocker:loadDB()
 	end
+
+	-- If requested, check database for inconsistencies.
+	if ReagentRestockerDB.Options.CheckData == true then
+		ReagentRestocker:checkDB()
+	end
 	
 	-- Remove the function, since it's not needed anymore.
 	ReagentRestocker.loadDB = nil
 	ReagentRestocker.maxVer = nil
 	ReagentRestocker.fixBoolean = nil
 
+end
+
+-- Sad to say, but I have to do this - there are reports of inconsistent databases.
+function ReagentRestocker:checkDB()
+
+	if ReagentRestockerDB.Tags.Buy ~= nil then
+		for k, v in pairs(ReagentRestockerDB.Tags.Buy) do
+			if ReagentRestockerDB.Items[k] == nil then
+				ReagentRestockerDB.Tags.Buy[k] = nil
+			end
+		end
+	end
+
+	if ReagentRestockerDB.Tags.Sell ~= nil then
+		for k, v in pairs(ReagentRestockerDB.Tags.Sell) do
+			if ReagentRestockerDB.Items[k] == nil then
+				ReagentRestockerDB.Tags.Sell[k] = nil
+			end
+		end
+	end
+	
+	if ReagentRestockerDB.Tags.Exception ~= nil then
+		for k, v in pairs(ReagentRestockerDB.Tags.Exception) do
+			if ReagentRestockerDB.Items[k] == nil then
+				ReagentRestockerDB.Tags.Exception[k] = nil
+			end
+		end
+	end
+
+	-- After a check, don't check again.
+	ReagentRestockerDB.Options.CheckData = false
 end
 
 setfenv(1, oldEnv);

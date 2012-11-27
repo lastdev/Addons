@@ -1,3 +1,22 @@
+== Version 3.3.0
+* Frost & Unholy: Updated priority lists based on new research.
+* Unholy: Added Soul Reaper.
+* Unholy: Bugfix - Plague Leech was flashing at times that it was not castable.
+
+== Version 3.2.1
+* Blood: Bone Shield will no longer flash when mounted.
+* Blood: Bugfix - there were some circumstances when Blood Tap would flash when no runes were fully depleted.
+* Blood: Bugfix - Blood Boil would never flash if you didn't have a rune available, even if Crimson Scourge proc'd
+* Unholy: Now flashes Death Siphon.  Not sure why I only added it to Frost before.
+
+== Version 3.2.0
+* Blood: Added a Blood soloing rotation, meant for questing as Blood.
+
+== Version 3.1.0
+* Frost: Added a 2-handed Frost rotation.
+* Frost: Now flashes Soul Reaper.
+* Frost: Now flashes Unholy Blight.
+
 == Version 3.0.0
 * Frost: Range checking is back (it won't flash melee spells when you are out of melee range).
 * Unholy: Added an unholy rotation.

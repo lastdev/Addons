@@ -1,0 +1,31 @@
+if GetLocale() ~= "ruRU" then return end
+
+local L = NugComboBar.L
+
+L["Character-specific"] = "Для персонажа" 
+L["Switch between global/character configuration"] = "Переключение между общей/персональной конфигурацией"
+L["Scale"] = "Масштаб"
+-- L["Anchor"] = "Позиция"
+L["Unlock"] = "Разблокировать"
+L["Unlock dragging anchor"] = "Включить перетаскивание"
+L["Lock"] = "Заблокировать"
+L["Lock dragging anchor"] = "Выключить перетаскивание"
+L["General"] = "Общие"
+L["Show Empty"] = "Показывать пустым"
+L["Show Always"] = "Показывать всегда"
+L["Keep when there's no points"] = "Не скрывать когда длина серии обнуляется в бою"
+L["Don't hide at all"] = "Не скрывать никогда"
+L["Fade out"] = "Скрывать плавно"
+L["Disable Default"] = "Отключить стандартные"
+L["Hides default combat point (and other) frames"] = "Отлключить счетчики стандартного интерфейса"
+L["(Color settings only available in 2D mode)"] = "(Настройки цветов работают только в 2D режиме)"
+-- L["(Used when metamorphosis is active)"]
+L["2D Mode"] = "2D режим"
+L["3D Mode"] = "3D режим"
+L["2D Mode settings"] = "Настройки 2D режима"
+L["3D Mode settings"] = "Настройки 3D режима"
+L["Preset"] = "Профиль"
+L["All Points"] = "Все"
+L["Disable for current class (requires ui reloading)"] = "Выключить для текущего класса (требует перезагрузки интерфейса)"
+L["ReloadUI"] = "Перезагрузить UI"
+L["Disabled"] = "Выключено"

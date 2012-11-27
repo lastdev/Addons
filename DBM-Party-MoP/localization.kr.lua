@@ -9,6 +9,10 @@ local L
 -----------------------
 L= DBM:GetModLocalization(672)
 
+L:SetOptionLocalization({
+	SetIconOnAdds	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej5616")
+})
+
 -----------------------
 -- Lorewalker Stonestep --
 -----------------------
@@ -72,8 +76,17 @@ L= DBM:GetModLocalization(673)
 -----------------------
 L= DBM:GetModLocalization(657)
 
+L:SetWarningLocalization({
+	warnRemainingNovice	= "음영파 신입생 : %d 남음"
+})
+
+L:SetOptionLocalization({
+	warnRemainingNovice	= "음영파 신입생 남은 횟수 알림 보기"
+})
+
 L:SetMiscLocalization({
-	Defeat		= "I am bested.  Give me a moment and we will venture forth together to face the Sha."
+	NovicesPulled		= "네 이놈들! 너희가 잠들어 있던 샤를 깨운 놈들이로구나!",
+	NovicesDefeated 	= "갓 들어온 신참들보다는 강하구나. 그럼 우리의 상급생 둘을 상대해 봐라."
 })
 
 -----------------------
@@ -130,10 +143,11 @@ L= DBM:GetModLocalization(649)
 L= DBM:GetModLocalization(708)
 
 L:SetMiscLocalization({
+	Pull		= "만회, 아니, 증명해라. 침입자들을 처치해라. 놈들의 머리를 바치는 부족은 내 총애를 얻을 것이다!",
 	Kuai		= "구르단 부족이 폐하와 권력에 굶주린 너희 애송이들에게 보여주마. 왜 우리가 폐하를 보좌해야 하는지!",
 	Ming		= "하르닥 부족이 왜 모구 최고의 부족인지 보여주마!",
-	Haiyan		= "왜 카게쉬 부족이 왕을 보좌할만한 힘을 가진 유일한 부족인지 보여주겠다!",
-	Defeat		= "누가 우리 전당에 외부인을 들였지? 하르닥과 카케쉬 부족 놈들이나 이런 배신을 저지를 것이다!"
+	Haiyan		= "왜 카게쉬 부족이 왕을 보좌할 만한 힘을 가진 유일한 부족인지 보여주겠다!",
+	Defeat		= "누가 우리 전당에 외부인을 들였지? 하르닥과 카게쉬 부족 놈들이나 이런 배신을 저지를 것이다!"
 })
 
 -----------------------
@@ -218,7 +232,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(666)
 
 L:SetMiscLocalization({
-	Kill	= "아니?!"
+	Kill	= "죽어, 강령술사!"
 })
 
 -----------------------

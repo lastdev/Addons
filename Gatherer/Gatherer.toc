@@ -5,11 +5,13 @@
 ## Notes: Gatherer is an addon that allows you to remember your gathering locations and view them on either or all of your main map, your minimap, or in an onscreen display HUD. It also allows you to share your finds with your guild, raid or your friends.
 ## Notes-itIT: Gatherer è un addon che ti consente di memorizzare i luoghi di raccolta e vederli tutti o alcuni sulla mappa principale, la tua minimappa, o su un'interfaccia a schermo. Consente inoltre di condividere le scoperte con la tua gilda, raid o i tuoi amici.
 ## Notes-ptBR: Gatherer é um addon que permite que você lembre-se dos locais de coleta e visualize-os em seu mapa principal, seu minimapa, ou em uma exibição no seu HUD. Ele também permite que você compartilhe suas descobertas com a sua guilda, raid ou seus amigos.
-## Notes-frFR: Gatherer, affiche les objets recoltes dans la minicarte et la carte du monde
+## Notes-frFR: Gatherer est un addon qui vous permet de mémoriser les emplacements de collecte et de les revoir sur votre Carte, Minimap ou de les afficher sur une interface à l'écran. Il vous permet également de faire un partage des marques découvertes avec votre guilde, raid ou vos amis en groupe.
 ## Notes-deDE: Gatherer, zeigt gesammelte Krauter und Erze auf der Minikarte und Weltkarte an
+## Notes-zhTW: 採集助手(Gatherer)是一個允許你紀錄你的採集點位置並顯示於你的大小地圖和採集助手附加的抬頭顯示模式的插件。並允許你向你的隊友、團隊成員以及朋友來分享你的採集資料。
+## Notes-ruRU: Gatherer это дополнение, которое позволяет Вам запоминать точки сбора ресурсов и показывать их на Вашей карте или радаре, или внутри интерфейса игры. Также оно позволяет расшаривать свои находки с Вашей гильдией или рейдом.
 ## 
-## Version: 4.0.2
-## Author: Norganna
+## Version: 4.0.6
+## Author: Esamynn
 ## 
 # myAddOns Support Metadata
 ## X-Date: 
@@ -20,7 +22,7 @@
 ## 
 ## SavedVariables: GatherItems, Gatherer_DropRates, Gatherer_SavedSettings_AccountWide, LibSwagData, Gatherer_SharingBlacklist
 ## SavedVariablesPerCharacter: Gatherer_SavedSettings_PerCharacter
-## Revision: $Id: Gatherer.toc 983 2012-09-05 04:32:29Z Esamynn $
+## Revision: $Id: Gatherer.toc 1022 2012-09-25 00:12:11Z Esamynn $
 ## OptionalDeps: myAddOns, Configator, SlideBar, Babylonian, LibDataBroker
 
 # Manifest list

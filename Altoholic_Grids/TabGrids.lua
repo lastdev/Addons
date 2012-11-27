@@ -133,7 +133,7 @@ local function UpdateClassIcons()
 	end
 	
 	local itemName, itemButton, itemTexture
-	local class
+	local class, _
 	
 	for i = 1, 10 do
 		itemName = parent .. "_ClassIcon" .. i

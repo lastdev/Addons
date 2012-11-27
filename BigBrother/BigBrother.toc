@@ -8,9 +8,9 @@
 ## Notes-zhTW: 檢查團隊 增益/精煉，並警報誰破壞了 變形術/束縛不死生物
 ## Notes-koKR: 공격대 버프 & 영약 & 비약 & 음식 검사/변이 & 속박 등 공격대원의 재사용 대기 시간을 바 형태로 표시
 ## Author: Cryect, oscarucb, Treibh, Silberbüchse, Quaiche
-## Version: 3.7.3
-## X-Build: 337
-## X-ReleaseDate: 2012-09-10T08:04:17Z
+## Version: 3.7.5
+## X-Build: 342
+## X-ReleaseDate: 2012-09-21T00:51:33Z
 ## X-Revision: $Revision: 330 $
 ## X-Category: Raid
 ## X-Embeds: Ace2, RosterLib, FuBarPlugin-2.0
@@ -20,7 +20,7 @@
 ## X-LoadOn-Group: true
 ## X-LoadOn-Slash: /bb, /bigbrother
 ## X-LoadOn-LDB-Launcher: Interface\AddOns\BigBrother\icon
-## X-Curse-Packaged-Version: 3.7.3
+## X-Curse-Packaged-Version: 3.7.5
 ## X-Curse-Project-Name: BigBrother
 ## X-Curse-Project-ID: big-brother
 ## X-Curse-Repository-ID: wow/big-brother/mainline

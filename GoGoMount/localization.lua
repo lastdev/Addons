@@ -21,7 +21,8 @@
 	GoGo_Variables.Localize.RunningWild = 87840
 	GoGo_Variables.Localize.SeaLegs = 73701
 	GoGo_Variables.Localize.TravelForm = 783
-	GoGo_Variables.Localize.Glyph_GhostWolf = 59289
+	GoGo_Variables.Localize.ZenFlight = 125883  -- Spell in book appears for monks with glyph of zen flight
+--	GoGo_Variables.Localize.Glyph_GhostWolf = 59289
 	GoGo_Variables.Localize.Glyph_AquaticForm = 57856
 	GoGo_Variables.Localize.Glyph_Stag = 114338  -- Druid's Glyph of the Stag
 	GoGo_Variables.Localize.Glyph_Cheetah = 131113  -- Druid's Glyph of the Cheetah

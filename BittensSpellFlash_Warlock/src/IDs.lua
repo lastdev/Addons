@@ -21,6 +21,7 @@ a.SpellIDs = {
 	["Life Tap"] = 1454,
 	["Malefic Grasp"] = 103103,
 	["Optical Blast"] = 119911,
+	["Pandemic"] = 131973,
 	["Shadowburn"] = 17877,
 	["Soul Swap"] = 86121,
 	["Soulburn"] = 74434,

@@ -7,20 +7,20 @@ a.Localize = setmetatable({}, {__index = DefaultFunction})
 local L = a.Localize
 
 if GetLocale() == "ptBR" then -- Brazilian Portuguese
-L["Earthliving"] = "Arma Terraviva"
-L["Flametongue"] = "Arma de Labaredas"
--- L["Flash Elemental"] = ""
--- L["Flash Enhancement"] = ""
--- L["Flash Restoration"] = ""
-L["Windfury"] = "Arma de Fúria dos Ventos"
+L["Earthliving"] = "Terraviva" -- Needs review
+L["Flametongue"] = " Labaredas" -- Needs review
+L["Flash Elemental"] = "Ativar em Elemental" -- Needs review
+L["Flash Enhancement"] = "Ativar em Aperfeiçoamento" -- Needs review
+L["Flash Restoration"] = "Ativar em Restauração" -- Needs review
+L["Windfury"] = "Fúria dos Ventos" -- Needs review
 
 elseif GetLocale() == "frFR" then -- French
--- L["Earthliving"] = ""
--- L["Flametongue"] = ""
--- L["Flash Elemental"] = ""
--- L["Flash Enhancement"] = ""
--- L["Flash Restoration"] = ""
--- L["Windfury"] = ""
+L["Earthliving"] = "Viveterre"
+L["Flametongue"] = "Langue de feu"
+L["Flash Elemental"] = "Flash Elémentaire" -- Needs review
+L["Flash Enhancement"] = "Flash Amélioration" -- Needs review
+L["Flash Restoration"] = "Flash Restauration" -- Needs review
+L["Windfury"] = "Furie-des-vents"
 
 elseif GetLocale() == "deDE" then -- German
 L["Earthliving"] = "Lebensgeister" -- Needs review

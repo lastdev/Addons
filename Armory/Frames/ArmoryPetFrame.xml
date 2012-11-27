@@ -1,0 +1,435 @@
+<!-- Revision: 508 2012-09-09T17:24:16Z -->
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\..\FrameXML\UI.xsd">
+  <Script file="ArmoryPetFrame.lua"/>
+  <Button name="ArmoryPetSpecSpellTemplate" virtual="true">
+    <Size x="50" y="50"/>
+    <Layers>
+      <Layer level="OVERLAY">
+        <Texture name="$parentRing" parentKey="ring" file="Interface\TalentFrame\spec-filagree" setAllPoints="true">
+          <TexCoords left="0.00390625" right="0.27734375" top="0.48437500" bottom="0.75781250"/>
+        </Texture>
+      </Layer>
+      <Layer level="ARTWORK">
+        <Texture name="$parentIcon" parentKey="icon">
+          <Size x="39" y="39"/>
+          <Anchors>
+            <Anchor point="CENTER" relativeTo="$parentRing" relativePoint="CENTER" x="0" y="0"/>
+          </Anchors>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Scripts>
+      <OnEnter>
+        if ( self.spellID ) then
+          GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+          GameTooltip:SetSpellByID(self.spellID, false, false, true);
+          if ( self.extraTooltip ) then
+            GameTooltip:AddLine(self.extraTooltip);
+          end
+          GameTooltip:Show();
+        end
+      </OnEnter>
+      <OnLeave>
+        GameTooltip_Hide();
+      </OnLeave>
+    </Scripts>
+  </Button>
+  <Frame name="ArmoryStatGroupTemplate" virtual="true">
+    <Size x="169" y="0"/>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture name="$parentBgTop" inherits="Char-Stat-Top" parentKey="BgTop">
+          <Anchors>
+            <Anchor point="TOPLEFT"/>
+          </Anchors>
+        </Texture>
+        <Texture name="$parentBgBottom" inherits="Char-Stat-Bottom" parentKey="BgBottom">
+          <Anchors>
+            <Anchor point="BOTTOMLEFT"/>
+          </Anchors>
+        </Texture>
+        <Texture name="$parentBgMiddle" file="Interface\CharacterFrame\Char-Stat-Middle" parentKey="BgMiddle" vertTile="true">
+          <Size x="169" y="8"/>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parentBgTop" relativePoint="BOTTOMLEFT" x="1"/>
+            <Anchor point="BOTTOMLEFT" relativeTo="$parentBgBottom" relativePoint="TOPLEFT"/>
+          </Anchors>
+          <TexCoords left="0.00390625" right="0.66406250" top="0.00000000" bottom="1.00000000"/>
+        </Texture>
+        <Texture name="$parentBgMinimized" inherits="Char-Stat-Minimized" parentKey="BgMinimized" hidden="true">
+          <Size x="169" y="18"/>
+          <Anchors>
+            <Anchor point="TOPLEFT"/>
+          </Anchors>
+        </Texture>
+        <FontString name="$parentNameText" inherits="GameFontHighlight" justifyH="LEFT" parentKey="NameText">
+          <Anchors>
+            <Anchor point="TOPLEFT" x="15" y="-3"/>
+          </Anchors>
+        </FontString>
+      </Layer>
+      <Layer level="ARTWORK">
+        <Texture name="$parentCollapsedIcon" parentKey="CollapsedIcon" inherits="Char-Stat-Plus" hidden="true">
+          <Anchors>
+            <Anchor point="TOPLEFT" x="5" y="-5"/>
+          </Anchors>
+        </Texture>
+        <Texture name="$parentExpandedIcon" parentKey="ExpandedIcon" inherits="Char-Stat-Minus">
+          <Anchors>
+            <Anchor point="TOPLEFT" x="5" y="-7"/>
+          </Anchors>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Button name="$parentToolbar">
+        <Anchors>
+          <Anchor point="TOPLEFT"/>
+          <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" x="0" y="-20"/>
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            if ( self:GetParent().collapsed ) then
+              ArmoryPetFrame_ExpandStatCategory(self:GetParent());
+            else
+              ArmoryPetFrame_CollapseStatCategory(self:GetParent());
+            end
+          </OnClick>
+        </Scripts>
+      </Button>
+      <Frame name="$parentStat1" inherits="StatFrameTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" x="16" y="-19"/>
+          <Anchor point="RIGHT" x="-4"/>
+        </Anchors>
+      </Frame>
+    </Frames>
+  </Frame>
+  <CheckButton name="ArmoryPetSlotTemplate" virtual="true">
+    <Size>
+      <AbsDimension x="37" y="37"/>
+    </Size>
+    <Layers>
+      <Layer level="BORDER">
+        <Texture name="$parentIconTexture"/>
+      </Layer>
+      <Layer level="BACKGROUND">
+        <Texture name="$parentBackground" file="Interface\Buttons\UI-EmptySlot">
+          <Size>
+            <AbsDimension x="64" y="64"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="-13" y="13"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+      </Layer>
+      <Layer level="OVERLAY">
+        <FontString name="$parentPetName" inherits="GameFontHighlightSmall" parentKey="PetName">
+          <Anchors>
+            <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" x="-12" y="7"/>
+            <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" x="12" y="7"/>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Scripts>
+      <OnLoad>
+        self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+      </OnLoad>
+      <OnEnter>
+        if ( self.tooltip ) then
+          GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+          GameTooltip:SetText(self.tooltip);
+          GameTooltip:AddLine(self.tooltipSubtext, "", 1.0, 1.0, 1.0);
+          Armory:TooltipAddHints(GameTooltip, self.hint);
+          GameTooltip:Show();
+        end
+      </OnEnter>
+      <OnLeave>
+        GameTooltip:Hide();
+      </OnLeave>
+      <OnClick>
+        ArmoryPetSlot_OnClick(self, button);
+      </OnClick>
+    </Scripts>
+    <NormalTexture name="$parentNormalTexture" file="Interface\Buttons\UI-Quickslot2">
+      <Size>
+        <AbsDimension x="64" y="64"/>
+      </Size>
+      <Anchors>
+        <Anchor point="CENTER">
+          <Offset>
+            <AbsDimension x="0" y="-1"/>
+          </Offset>
+        </Anchor>
+      </Anchors>
+    </NormalTexture>
+    <PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
+    <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
+    <CheckedTexture file="Interface\Buttons\CheckButtonHilight" alphaMode="ADD"/>
+  </CheckButton>
+  <Frame name="ArmoryPetFrame" setAllPoints="true" enableMouse="true" movable="true" parent="ArmoryFrame" id="2" hidden="true">
+    <Anchors>
+      <Anchor point="TOPLEFT" x="-15" y="14"/>
+      <Anchor point="BOTTOMRIGHT" />
+    </Anchors>
+    <HitRectInsets>
+      <AbsInset left="0" right="34" top="0" bottom="75"/>
+    </HitRectInsets>
+    <Frames>
+      <Frame name="ArmoryPetFramePetInfo">
+        <Size x="260" y="40"/>
+        <Anchors>
+          <Anchor point="TOPLEFT" x="80" y="-40"/>
+        </Anchors>
+        <Layers>
+          <Layer level="ARTWORK">
+            <Texture name="ArmoryPetFrameSelectedPetIcon">
+              <Size x="40" y="40"/>
+              <Anchors>
+                <Anchor point="TOPLEFT" x="2" y="-1"/>
+              </Anchors>
+            </Texture>
+            <FontString name="ArmoryPetFrameNameText" inherits="GameFontNormalLeft">
+              <Anchors>
+                <Anchor point="TOPLEFT" x="48" y="-8"/>
+              </Anchors>
+            </FontString>
+            <FontString name="ArmoryPetFrameLevelText" inherits="GameFontHighlightSmallLeft">
+              <Anchors>
+                <Anchor point="BOTTOMLEFT" x="48" y="2"/>
+              </Anchors>
+            </FontString>
+            <FontString name="ArmoryPetFrameTypeText" inherits="GameFontHighlightSmallRight">
+              <Anchors>
+                <Anchor point="BOTTOMRIGHT" x="-5" y="2"/>
+              </Anchors>
+            </FontString>
+          </Layer>
+          <Layer level="OVERLAY">
+            <Texture name="ArmoryPetFrameIconBorder" inherits="PetTalent-PetIconBorder" hidden="true">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="ArmoryPetFrameSelectedPetIcon" x="-7" y="7"/>
+              </Anchors>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Frames>
+          <Frame name="ArmoryPetFrameDiet" enableMouse="true" hidden="true">
+            <Size>
+              <AbsDimension x="25" y="23"/>
+            </Size>
+            <Anchors>
+              <Anchor point="TOPRIGHT" x="-3" y="-2"/>
+            </Anchors>
+            <Layers>
+              <Layer level="BACKGROUND">
+                <Texture name="ArmoryPetFrameDietTexture" inherits="PetStable-DietIcon"/>
+              </Layer>
+            </Layers>
+            <Scripts>
+              <OnEnter>
+                GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+                GameTooltip:SetText(self.tooltip);
+              </OnEnter>
+              <OnLeave function="GameTooltip_Hide"/>
+            </Scripts>
+          </Frame>
+        </Frames>
+      </Frame>
+      <Frame name="ArmoryPetSpecFrame">
+        <Size x="160" y="80" />
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryFrameInsetBg" x="0" y="0"/>
+        </Anchors>
+        <Layers>
+          <Layer level="ARTWORK" textureSubLevel="2">
+            <Texture name="$parentRing" file="Interface\TalentFrame\talent-main" parentKey="ring">
+              <Size x="65" y="65"/>
+              <Anchors>
+                <Anchor point="LEFT" x="0" y="-1" />
+              </Anchors>
+              <TexCoords left="0.50000000" right="0.91796875" top="0.00195313" bottom="0.21093750"/>
+            </Texture>
+          </Layer>
+          <Layer level="ARTWORK">
+            <Texture name="$parentSpecIcon" parentKey="specIcon">
+              <Size x="43" y="43"/>
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parentRing" x="0" y="0" />
+              </Anchors>
+            </Texture>
+            <FontString name="$parentSpecName" inherits="GameFontNormal" parentKey="specName" maxLines="2">
+              <Size x="90" y="0" />
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parentRing" relativePoint="TOPRIGHT" x="-25" y="-12" />
+              </Anchors>
+            </FontString>
+            <Texture name="$parentRoleIcon" file="Interface\LFGFrame\UI-LFG-ICON-ROLES"	parentKey="roleIcon">
+              <Size x="24" y="24"/>
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parentSpecName" relativePoint="BOTTOMLEFT" x="20" y="-5" />
+              </Anchors>
+            </Texture>
+            <FontString inherits="GameFontDisableSmall" parentKey="roleName" text="damage">
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="$parentRoleIcon" relativePoint="RIGHT" x="4" y="1" />
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Frames>
+          <Button name="ArmoryPetAbility5" inherits="ArmoryPetSpecSpellTemplate">
+            <Anchors>
+              <Anchor point="BOTTOMLEFT" relativeTo="ArmoryFrameInsetBg" x="26" y="8"/>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryPetAbility6" inherits="ArmoryPetSpecSpellTemplate">
+            <Anchors>
+              <Anchor point="LEFT" relativeTo="ArmoryPetAbility5" relativePoint="RIGHT" x="6" y="0"/>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryPetAbility3" inherits="ArmoryPetSpecSpellTemplate">
+            <Anchors>
+              <Anchor point="BOTTOM" relativeTo="ArmoryPetAbility5" relativePoint="TOP" x="0" y="6"/>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryPetAbility4" inherits="ArmoryPetSpecSpellTemplate">
+            <Anchors>
+              <Anchor point="LEFT" relativeTo="ArmoryPetAbility3" relativePoint="RIGHT" x="6" y="0"/>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryPetAbility1" inherits="ArmoryPetSpecSpellTemplate">
+            <Anchors>
+              <Anchor point="BOTTOM" relativeTo="ArmoryPetAbility3" relativePoint="TOP" x="0" y="6"/>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryPetAbility2" inherits="ArmoryPetSpecSpellTemplate">
+            <Anchors>
+              <Anchor point="LEFT" relativeTo="ArmoryPetAbility1" relativePoint="RIGHT" x="6" y="0"/>
+            </Anchors>
+          </Button>
+        </Frames>
+      </Frame>
+      <Frame name="ArmoryPetStatsPane">
+        <Size x="170" y="235"/>
+        <Anchors>
+          <Anchor point="TOPRIGHT" x="-12" y="-90"/>
+        </Anchors>
+        <Frames>
+          <Frame name="ArmoryPetStatsPaneCategory1" inherits="ArmoryStatGroupTemplate"/>
+          <Frame name="ArmoryPetStatsPaneCategory2" inherits="ArmoryStatGroupTemplate"/>
+          <Frame name="ArmoryPetStatsPaneCategory3" inherits="ArmoryStatGroupTemplate"/>
+          <Frame name="ArmoryPetStatsPaneCategory4" inherits="ArmoryStatGroupTemplate"/>
+          <Frame name="ArmoryPetStatsPaneCategory5" inherits="ArmoryStatGroupTemplate"/>
+          <Frame name="ArmoryPetStatsPaneCategory6" inherits="ArmoryStatGroupTemplate"/>
+          <Frame name="ArmoryPetStatsPaneCategory7" inherits="ArmoryStatGroupTemplate"/>
+        </Frames>
+      </Frame>
+      <CheckButton name="ArmoryPetFramePet1" inherits="ArmoryPetSlotTemplate" id="1">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" x="50" y="24"/>
+        </Anchors>
+      </CheckButton>
+      <CheckButton name="ArmoryPetFramePet2" inherits="ArmoryPetSlotTemplate" id="2">
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="ArmoryPetFramePet1" relativePoint="RIGHT">
+            <Offset>
+              <AbsDimension x="22" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </CheckButton>
+      <CheckButton name="ArmoryPetFramePet3" inherits="ArmoryPetSlotTemplate" id="3">
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="ArmoryPetFramePet2" relativePoint="RIGHT">
+            <Offset>
+              <AbsDimension x="22" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </CheckButton>
+      <CheckButton name="ArmoryPetFramePet4" inherits="ArmoryPetSlotTemplate" id="4">
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="ArmoryPetFramePet3" relativePoint="RIGHT">
+            <Offset>
+              <AbsDimension x="22" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </CheckButton>
+      <CheckButton name="ArmoryPetFramePet5" inherits="ArmoryPetSlotTemplate" id="5">
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="ArmoryPetFramePet4" relativePoint="RIGHT">
+            <Offset>
+              <AbsDimension x="22" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </CheckButton>
+      <Button name="ArmoryPetFrameNextPageButton" inherits="UIPanelSquareButton">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" relativePoint="BOTTOM" x="40" y="81"/>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            SquareButton_SetIcon(self, "RIGHT");
+          </OnLoad>
+          <OnClick>
+            self:SetButtonState("NORMAL");
+            ArmoryPetFrame_NextPage();
+          </OnClick>
+        </Scripts>
+      </Button>
+      <Button name="ArmoryPetFramePrevPageButton" inherits="UIPanelSquareButton">
+        <Anchors>
+          <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOM" x="-40" y="81"/>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="ArmoryPetFrameCurrentPage" inherits="GameFontHighlightSmallOutline">
+              <Anchors>
+                <Anchor point="LEFT" relativePoint="RIGHT"/>
+                <Anchor point="RIGHT" relativeTo="ArmoryPetFrameNextPageButton" relativePoint="LEFT"/>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>
+            SquareButton_SetIcon(self, "LEFT");
+          </OnLoad>
+          <OnClick>
+            self:SetButtonState("NORMAL");
+            ArmoryPetFrame_PrevPage();
+          </OnClick>
+        </Scripts>
+      </Button>
+    </Frames>
+    <Scripts>
+      <OnLoad>
+        ArmoryPetFrame_OnLoad(self);
+      </OnLoad>
+      <OnEvent>
+        ArmoryPetFrame_OnEvent(self, event, ...);
+      </OnEvent>
+      <OnShow>
+        ArmoryPetFrame_OnShow(self);
+      </OnShow>
+      <OnHide>
+        ArmoryPetFrame_OnHide(self);
+      </OnHide>
+      <OnMouseUp>
+        ArmoryFrame_OnMouseUp(self, button);
+      </OnMouseUp>
+      <OnMouseDown>
+        ArmoryFrame_OnMouseDown(self, button);
+      </OnMouseDown>
+    </Scripts>
+  </Frame>
+</Ui>

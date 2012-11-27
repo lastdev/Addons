@@ -204,6 +204,11 @@ function Outfitter:ParseItemLink(pItemLink)
 		return
 	end
 	
+	local _, _, vLinkType = pItemLink:find("|H([^:]+):")
+	if vLinkType ~= "item" then
+		return
+	end
+	
 	local vStartIndex, vEndIndex, vItemCode, vItemEnchantCode,
 	      vItemJewelCode1, vItemJewelCode2, vItemJewelCode3, vItemJewelCode4,
 	      vItemSubCode, vItemUniqueID, vLinkLevel, vReforgeID, vUnknownCode,
@@ -272,10 +277,6 @@ function Outfitter:GetItemInfoFromLink(pItemLink)
 	vItemInfo.JewelCode2 = tonumber(vItemJewelCode2)
 	vItemInfo.JewelCode3 = tonumber(vItemJewelCode3)
 	vItemInfo.JewelCode4 = tonumber(vItemJewelCode4)
-	
-	vItemInfo.Gem1 = self.cUniqueGemEnchantIDs[vItemInfo.JewelCode1]
-	vItemInfo.Gem2 = self.cUniqueGemEnchantIDs[vItemInfo.JewelCode2]
-	vItemInfo.Gem3 = self.cUniqueGemEnchantIDs[vItemInfo.JewelCode3]
 	
 	vItemInfo.UniqueID = tonumber(vItemUniqueID)
 	vItemInfo.ReforgeID = tonumber(vItemReforgeID)

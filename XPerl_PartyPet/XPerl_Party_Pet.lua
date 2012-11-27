@@ -12,13 +12,9 @@ XPerl_RequestConfig(function(New) conf = New
 			for k,v in pairs(PartyPetFrames) do
 				v.conf = pconf
 			end
-		end, "$Revision: 644 $")
+		end, "$Revision: 760 $")
 
 local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
-
-local isMOP = select(4, _G.GetBuildInfo()) >= 50000
-local GetNumRaidMembers = isMOP and GetNumGroupMembers or GetNumRaidMembers
-local GetNumPartyMembers = isMOP and GetNumSubgroupMembers or GetNumPartyMembers
 
 local AllPetFrames = {}
 local UnitName = UnitName
@@ -31,7 +27,6 @@ local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitMana = UnitMana
 local UnitManaMax = UnitManaMax
 local UnitPowerType = UnitPowerType
-local GetNumRaidMembers = GetNumRaidMembers
 
 local XPerl_Player_Pet_HighlightCallback
 
@@ -41,9 +36,8 @@ local XPerl_Player_Pet_HighlightCallback
 function XPerl_Party_Pet_OnLoadEvents(self)
 	self.time = 0
 
-	--self:RegisterEvent("PARTY_MEMBERS_CHANGED")
 	local events = {"UNIT_COMBAT", "UNIT_FACTION", "UNIT_AURA", "UNIT_DYNAMIC_FLAGS", "UNIT_FLAGS",
-			"UNIT_HEALTH", "UNIT_MAXHEALTH", "PLAYER_ENTERING_WORLD"}
+			"UNIT_HEALTH", "UNIT_MAXHEALTH", "PLAYER_ENTERING_WORLD", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"}
 
 	for k,v in pairs(events) do
 		self:RegisterEvent(v)
@@ -67,7 +61,7 @@ do
 	function XPerl_Party_Pet_UpdateGUIDs()
 		del(guids)
 		guids = new()
-		for i = 1,GetNumPartyMembers() do
+		for i = 1,GetNumSubgroupMembers() do
 			local id = "partypet"..i
 			if (UnitExists(id)) then
 				guids[UnitGUID(id)] = PartyPetFrames[id]
@@ -256,7 +250,7 @@ function XPerl_Party_Pet_UpdateHealth(self)
 				self.statsFrame.healthBar.text:SetText(Partypethealth - Partypethealthmax)
 			end
 		else
-			self.statsFrame.healthBar.text:SetFormattedText("%d%%",(100*(Partypethealth / Partypethealthmax))+0.5)
+			self.statsFrame.healthBar.text:SetFormattedText("%.0f%%",(100*(Partypethealth / Partypethealthmax))+0.5)
 		end
 
 		self.statsFrame.healthBar.text:Show()
@@ -290,7 +284,7 @@ local function XPerl_Party_Pet_UpdateMana(self)
 		if (UnitPowerType(self.partyid) >= 1) then
 			self.statsFrame.manaBar.text:SetText(Partypetmana)
 		else
-			self.statsFrame.manaBar.text:SetFormattedText("%d%%",(100*(Partypetmana / Partypetmanamax))+0.5)
+			self.statsFrame.manaBar.text:SetFormattedText("%.0f%%",(100*(Partypetmana / Partypetmanamax))+0.5)
 		end
 	end
 end
@@ -428,11 +422,23 @@ function XPerl_Party_Pet_Events:UNIT_COMBAT(...)
 	end
 end
 
+function XPerl_Party_Pet_Events:PET_BATTLE_OPENING_START()
+	if(self) then
+		self:Hide()
+	end
+end
+
+function XPerl_Party_Pet_Events:PET_BATTLE_CLOSE()
+	if(self) then
+		self:Show()
+	end
+end
+
 -- PLAYER_ENTERING_WORLD
 function XPerl_Party_Pet_Events:PLAYER_ENTERING_WORLD()
 	XPerl_Party_Pet_UpdateGUIDs()
 end
-XPerl_Party_Pet_Events.PARTY_MEMBERS_CHANGED = XPerl_Party_Pet_Events.PLAYER_ENTERING_WORLD
+XPerl_Party_Pet_Events.GROUP_ROSTER_UPDATE= XPerl_Party_Pet_Events.PLAYER_ENTERING_WORLD
 XPerl_Party_Pet_Events.UNIT_PET = XPerl_Party_Pet_Events.PLAYER_ENTERING_WORLD
 
 -- UNIT_FLAGS

@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.2 (<%codename%>)
-	Revision: $Id: GatherMapNotes.lua 989 2012-09-07 05:11:13Z Esamynn $
+	Version: 4.0.6 (<%codename%>)
+	Revision: $Id: GatherMapNotes.lua 1004 2012-09-13 04:23:41Z Esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	World Map Drawing Functions
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherMapNotes.lua $", "$Rev: 989 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherMapNotes.lua $", "$Rev: 1004 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient
@@ -54,13 +54,21 @@ function Gatherer.MapNotes.ToggleDisplay()
 	end
 end
 
+local Gatherer_WorldMapDisplay_ButtonWidth = 100
 function Gatherer.MapNotes.Update()
 	if ( Gatherer.Config.GetSetting("mainmap.enable") ) then
-		Gatherer_WorldMapDisplay:SetText(_tr("Hide Items"))
+		Gatherer_WorldMapDisplay:SetText(_tr("MAP_NOTES_HIDE"))
 		GathererMapOverlayParent:Show()
 	else
-		Gatherer_WorldMapDisplay:SetText(_tr("Show Items"))
+		Gatherer_WorldMapDisplay:SetText(_tr("MAP_NOTES_SHOW"))
 		GathererMapOverlayParent:Hide()
+	end
+	local buttonWidth = Gatherer_WorldMapDisplay:GetFontString():GetWidth() + 15
+	if ( buttonWidth > Gatherer_WorldMapDisplay_ButtonWidth ) then
+		if ( buttonWidth > 150 ) then buttonWidth = 150 end
+		if ( buttonWidth < 100 ) then buttonWidth = 100 end
+		Gatherer_WorldMapDisplay:SetWidth(buttonWidth)
+		Gatherer_WorldMapDisplay_ButtonWidth = buttonWidth
 	end
 end
 

@@ -20,41 +20,10 @@ local HBclient=nil
 local HB_errtext=nil
 local _
 
-function HealBot_Comms_SendAddonMsg(addon_id, msg, aType, pName)
-    if aType==1 then
-        SendAddonMessage(addon_id, msg, "BATTLEGROUND" );
-    elseif aType==2 then
-        SendAddonMessage(addon_id, msg, "RAID" );
-    elseif aType==3 then
-        SendAddonMessage(addon_id, msg, "PARTY" );
-    elseif aType==4 and pName then
-        SendAddonMessage(addon_id, msg, "WHISPER", pName );
-    elseif aType==5 then
-        SendAddonMessage(addon_id, msg, "GUILD" );
-    end
-  --  HealBot_AddDebug("addon msg="..msg)
-end
-
-function HealBot_Comms_GetChan(chan)
-    if GetChannelName(chan)>0 then
-        return GetChannelName(chan);
-    else
-        return nil;
-    end
-end
-
-function HealBot_Comms_Info()
-    if HealBot_Error:IsVisible() then
-        HideUIPanel(HealBot_Error)
-        return
-    end
-    UpdateAddOnCPUUsage()
-    UpdateAddOnMemoryUsage()
-    HealBotAddonMsgType=HealBot_GetHealBot_AddonMsgType()
-    HealBotcAddonSummary=HealBot_RetHealBotAddonSummary()
-    HealBotcAddonIncHeals=HealBot_RetHealBotAddonIncHeals()
+function HealBot_Comms_About()
     hbcommver=HealBot_GetInfo()
-    
+    HealBotcAddonIncHeals=HealBot_RetHealBotAddonIncHeals()
+
     for x,_ in pairs(hbtmpver) do
         hbtmpver[x]=nil
     end
@@ -74,7 +43,7 @@ function HealBot_Comms_Info()
     table.foreach(sortorder, function (index,z)
         tmpttl=HealBotcAddonIncHeals[z] or 0
         _,_,addon_id, sender_id = string.find(z, "(.+) : (.+)")
-        if linenum<39 and addon_id and sender_id then
+        if linenum<29 and addon_id and sender_id then
             addon_id=hbcommver[sender_id] or "HealBot"
             if hbcommver[sender_id] then hbtmpver[sender_id]=true end
             HealBot_Comms_Print_IncHealsSum(sender_id,addon_id,tmpttl,linenum)
@@ -83,11 +52,25 @@ function HealBot_Comms_Info()
     end)
 
     for x,v in pairs(hbcommver) do
-        if not hbtmpver[x] and linenum<39 then
+        if not hbtmpver[x] and linenum<29 then
             HealBot_Comms_Print_IncHealsSum(x,v,0,linenum)
             linenum=linenum+1
         end
     end
+
+    HealBot_Error_Clientx:SetText(HEALBOT_WORD_CLIENT.."="..GetLocale())
+    HealBot_Error_Versionx:SetText(HEALBOT_WORD_VERSION.."="..HEALBOT_VERSION)
+    HealBot_Error_Classx:SetText(HEALBOT_SORTBY_CLASS.."="..HealBot_PlayerClassEN)
+    HealBot_Comms_AcceptSkins()
+    HealBot_Comms_MacroSuppressError()
+    HealBot_Comms_MacroSuppressSound()
+end
+
+function HealBot_Comms_Info()
+
+    UpdateAddOnCPUUsage()
+    UpdateAddOnMemoryUsage()
+    HealBotcAddonSummary=HealBot_RetHealBotAddonSummary()
 
     linenum=1
     for x,_ in pairs(HealBotAddonSummaryNoCommsCPU) do
@@ -103,7 +86,7 @@ function HealBot_Comms_Info()
         if AddonEnabled and not HealBotAddonSummaryNoCommsSort[AddonName] then
             if HealBot_Options_CPUProfiler:GetChecked() then
                 z=HealBot_Comm_round(GetAddOnCPUUsage(AddonName)/1000, 2)
-                if z>0.01 then
+                if z>0 then
                     HealBotAddonSummaryNoCommsCPU[AddonName]=z
                     HealBotAddonSummaryNoCommsMem[AddonName]=HealBot_Comm_round(GetAddOnMemoryUsage(AddonName)/1024, 2)
                     HealBotAddonSummaryNoCommsSort[AddonName]=HealBotAddonSummaryNoCommsCPU[AddonName]
@@ -111,7 +94,7 @@ function HealBot_Comms_Info()
                 end
             else
                 z=HealBot_Comm_round(GetAddOnMemoryUsage(AddonName)/1024, 2)
-                if z>0.01 then
+                if z>0 then
                     HealBotAddonSummaryNoCommsCPU[AddonName]="--"
                     HealBotAddonSummaryNoCommsMem[AddonName]=z
                     HealBotAddonSummaryNoCommsSort[AddonName]=HealBotAddonSummaryNoCommsMem[AddonName]
@@ -151,12 +134,11 @@ function HealBot_Comms_Info()
         return a<b
     end)
     table.foreach(sortorder, function (index,z)
-        if linenum<39 and HealBotcommAddonSummary[z]>0.04 then 
+        if linenum<39 and HealBotcommAddonSummary[z]>0 then 
             HealBot_Comms_Print_AddonCommsSum(z,HealBotcommAddonSummary[z],linenum)
             linenum=linenum+1
         end
     end)
-    ShowUIPanel(HealBot_Error)
 end
 
 function HealBot_Comms_Print_IncHealsSum(sender_id,addon_id,HealsCnt,linenum)
@@ -188,6 +170,7 @@ function HealBot_Comms_TargetInfo()
 end
 
 function HealBot_Comms_Zone()
+    HealBotAddonMsgType=HealBot_GetHealBot_AddonMsgType()
     HealBot_AddChat(HEALBOT_CHAT_ADDONID.."Zone="..GetRealZoneText())
     if HealBotAddonMsgType==1 then
         HealBot_AddChat(HEALBOT_CHAT_ADDONID.."AddonComms=BATTLEGROUND")
@@ -248,12 +231,7 @@ function HealBot_Comms_ReportVer()
 end
 
 function HealBot_Comms_OnShow(self)
-    HealBot_Error_Clientx:SetText(HEALBOT_WORD_CLIENT.."="..GetLocale())
-    HealBot_Error_Versionx:SetText(HEALBOT_WORD_VERSION.."="..HEALBOT_VERSION)
-    HealBot_Error_Classx:SetText(HEALBOT_SORTBY_CLASS.."="..HealBot_PlayerClassEN)
-    HealBot_Comms_AcceptSkins()
-    HealBot_Comms_MacroSuppressError()
-    HealBot_Comms_MacroSuppressSound()
+
 end
 
 function HealBot_Comms_AcceptSkins()
@@ -298,14 +276,6 @@ function HealBot_Comms_OnDragStop(self)
     HealBot_StopMoving(self);
 end
 
-function HealBot_ErrorsIn(msg,id)
-    HB_errtext = _G["HealBot_Error"..id];
-    HB_errtext:SetText(msg)
-    if not HealBot_Error:IsVisible() then 
-        ShowUIPanel(HealBot_Error)
-    end
-end
-
 local hbMountsReported={}
 function HealBot_ReportMissingMount(mountName, mountID)
     if not HealBot_Config.hbMountsReported[mountID] then
@@ -313,5 +283,3 @@ function HealBot_ReportMissingMount(mountName, mountID)
         HealBot_Config.hbMountsReported[mountID]=mountName
     end
 end
-
-  

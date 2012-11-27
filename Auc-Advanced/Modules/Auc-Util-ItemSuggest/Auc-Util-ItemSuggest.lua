@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Item Suggest module
-	Version: 5.15.5348 (LikeableLyrebird)
-	Revision: $Id: Auc-Util-ItemSuggest.lua 5314 2012-07-28 12:19:23Z brykrys $
+	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: Auc-Util-ItemSuggest.lua 5365 2012-09-24 17:33:48Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer module that allows the added tooltip for suggesting
@@ -53,7 +53,7 @@ local format, strmatch = format, strmatch
 local pairs, rawset, tinsert = pairs, rawset, tinsert
 
 local Suggestors = {}
-local LastLink, LastQuantity, LastAdditional, LastSuggest, LastValue
+local LastLink, LastQuantity, LastServerKey, LastAdditional, LastSuggest, LastValue
 local emptyTable = {}
 local ConfigGUI, ConfigID
 local SliderLast, SliderSpacer
@@ -79,9 +79,9 @@ function lib.Suggest(hyperlink, quantity, serverKey, additional)
 		return
 	end
 	if type(quantity) ~= "number" or quantity < 1 then quantity = 1 end
-	serverKey = Resources.ServerKeyHome -- temporary: peg to home faction for now
+	if not serverKey then serverKey = Resources.ServerKeyCurrent end
 	if type(additional) ~= "table" then additional = emptyTable end -- ensure 'additional' is always a table, though it may be empty
-	if hyperlink == LastLink and quantity == LastQuantity and additional == LastAdditional then
+	if hyperlink == LastLink and quantity == LastQuantity and serverKey == LastServerKey and additional == LastAdditional then
 		-- caution: we don't check to see if the _contents_ of 'additional' have changed
 		return LastSuggest, LastValue
 	end
@@ -102,7 +102,7 @@ function lib.Suggest(hyperlink, quantity, serverKey, additional)
 			end
 		end
 	end
-	LastLink, LastQuantity, LastAdditional, LastSuggest, LastValue = hyperlink, quantity, additional, bestsuggest, bestvalue
+	LastLink, LastQuantity, LastServerKey, LastAdditional, LastSuggest, LastValue = hyperlink, quantity, serverKey, additional, bestsuggest, bestvalue
 	return bestsuggest, bestvalue
 end
 lib.itemsuggest = lib.Suggest -- compatibility
@@ -320,6 +320,11 @@ do
 
 	local enchantrixGetModel, enchantrixGetValue
 	local function EnchantrixFunc(model, link, serverKey)
+		if serverKey ~= Resources.ServerKeyCurrent then
+			-- GetReagentPrice doesn't support serverKey, so it can only return prices for
+			-- current serverKey (or 'fixed' prices, but we can't tell if this is the case)
+			return
+		end
 		local _, extra = enchantrixGetModel()
 		local _, _, mkt, five = enchantrixGetValue(link, extra)
 		return five or mkt
@@ -1065,7 +1070,7 @@ local function SetupConfigGui(gui)
 end
 
 lib.Processors = {}
-function lib.Processors.tooltip(callbackType, tooltip, name, hyperlink, quality, quantity, cost, additional)
+function lib.Processors.itemtooltip(callbackType, tooltip, hyperlink, serverKey, quantity, decoded, additional, order)
 	if not get("util.itemsuggest.enablett") then return end
 	if additional.event == "SetInventoryItem" and not get("util.itemsuggest.showequipped") then return end
 	local text = lib.Suggest(hyperlink, quantity, nil, additional)
@@ -1106,4 +1111,4 @@ end
 -- Neither Enchantrix nor Informant triggers "load" processor events; instead, use LoadTriggers to detect either loading
 lib.LoadTriggers = {enchantrix = true, informant = true}
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-ItemSuggest/Auc-Util-ItemSuggest.lua $", "$Rev: 5314 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-ItemSuggest/Auc-Util-ItemSuggest.lua $", "$Rev: 5365 $")

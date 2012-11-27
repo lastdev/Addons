@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("KaelThas", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 411 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 419 $"):sub(12, -3))
 mod:SetCreatureID(19622)
 mod:SetModelID(20023)
 mod:SetZone()
@@ -104,7 +104,7 @@ do
 		maxAbsorb = absorb
 		DBM.BossHealth:RemoveBoss(getShieldHP)
 		DBM.BossHealth:AddBoss(getShieldHP, shieldName)
-		self:Schedule(10, hideShieldHealthBar)
+		mod:Schedule(10, hideShieldHealthBar)
 	end
 	
 	function hideShieldHealthBar()
@@ -118,7 +118,7 @@ function mod:EggSpawned() --Is there a better way then this? This is ugly
 		specWarnEgg:Show()
 		timerRebirth:Show()
 		DBM.BossHealth:AddBoss(21364, L.Egg)
-		mod:Schedule(15, function()
+		self:Schedule(15, function()
 			DBM.BossHealth:RemoveBoss(21364)
 		end)
 	end
@@ -195,7 +195,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		self:Unschedule(hideShieldHealthBar)
 		hideShieldHealthBar()
 	elseif args:IsSpellID(36797) then
-		if IsRaidLeader() and self.Options.MCIcon then
+		if self.Options.MCIcon then
 			self:SetIcon(args.destName, 0)
 		end
 	elseif args:IsSpellID(37027) then
@@ -296,7 +296,7 @@ function mod:CHAT_MSG_MONSTER_EMOTE(msg, _, _, _, target)
 		if self.Options.GazeIcon then
 			self:SetIcon(target, 1, 15)
 		end
-		if IsRaidLeader() and self.Options.GazeWhisper then
+		if DBM:GetRaidRank() > 1 and self.Options.GazeWhisper then
 			self:SendWhisper(L.GazeWhisper, target)
 		end
 	end

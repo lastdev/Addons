@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 347 $")
+XPerl_SetModuleRevision("$Revision: 728 $")
 
 function XPerl_Message(...)
 	DEFAULT_CHAT_FRAME:AddMessage(XPERL_MSG_PREFIX.."- "..format(...))
@@ -132,7 +132,7 @@ end
 function XPerl_OnLoad(self)
 	self:RegisterForDrag("LeftButton")
 	self:RegisterEvent("VARIABLES_LOADED")
-	self:RegisterEvent("RAID_ROSTER_UPDATE")
+	self:RegisterEvent("GROUP_ROSTER_UPDATE")
 
 	SlashCmdList["XPERLHELPER"] = XPerl_Slash
 	SLASH_XPERLHELPER1 = "/xp"

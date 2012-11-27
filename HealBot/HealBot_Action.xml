@@ -588,6 +588,20 @@
           </Anchor>
         </Anchors>
       </StatusBar>
+      <StatusBar name="$parentBar5" inherits="HealBot_StatusBar">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="0" y="3"/>
+            </Offset>
+          </Anchor>
+          <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="3"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </StatusBar>
     </Frames>
   </Button>
   

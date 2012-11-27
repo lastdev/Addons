@@ -80,6 +80,10 @@ function Recount:UpdateZoneGroupFilter()
 	end
 
 	_, instanceType = IsInInstance()
+	if instanceType == nil then
+		_, instanceType = C_Scenario.IsInScenario()
+	end
+	
 	if instanceType == "none" then -- Check if we are in an open area combat zone (ala Wintergrasp)
 		local pvpType = GetZonePVPInfo()
 		if pvpType == "combat" then

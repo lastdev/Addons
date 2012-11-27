@@ -1,0 +1,7 @@
+<!-- Revision: 22 2009-09-04T19:03:22Z -->
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\..\FrameXML\UI.xsd">
+  <Script file="Core\AgbBase.lua"/>
+  <Script file="Core\AgbConfig.lua"/>
+  <Script file="Core\AgbMessaging.lua"/>
+</Ui>

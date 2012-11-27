@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(742, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7704 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 7839 $"):sub(12, -3))
 mod:SetCreatureID(62442)--62919 Unstable Sha, 62969 Embodied Terror
 mod:SetModelID(42532)
 
@@ -117,7 +117,9 @@ function mod:OnCombatStart(delay)
 	timerShadowBreathCD:Start(8.5-delay)
 	timerNightmaresCD:Start(13.5-delay)
 	timerDayCD:Start(-delay)
-	berserkTimer:Start(-delay)
+	if not self:IsDifficulty("lfr25") then
+		berserkTimer:Start(-delay)
+	end
 	if self:IsDifficulty("heroic10", "heroic25") then
 		timerDarkOfNightCD:Start(10-delay)
 	end

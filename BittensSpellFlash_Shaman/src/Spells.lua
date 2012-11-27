@@ -50,6 +50,8 @@ c.AddOptionalSpell("Lightning Shield", nil, {
 	end
 })
 
+c.AddOptionalSpell("Ascendance")
+
 c.AddOptionalSpell("Ancestral Swiftness", nil, {
 	CheckFirst = function()
 		return not c.HasBuff("Ascendance")
@@ -58,7 +60,7 @@ c.AddOptionalSpell("Ancestral Swiftness", nil, {
 
 c.AddOptionalSpell("Earth Elemental Totem", nil, {
 	CheckFirst = function()
-		return c.GetCooldown("Fire Elemental Totem") > 60
+		return c.GetCooldown("Fire Elemental Totem") > 50
 	end
 })
 
@@ -70,11 +72,8 @@ c.AddOptionalSpell("Fire Elemental Totem", nil, {
 
 c.AddOptionalSpell("Elemental Mastery")
 
-c.AddSpell("Unleash Elements", nil, {
+c.AddSpell("Elemental Blast", nil, {
 	NotIfActive = true,
-	CheckFirst = function()
-		return not c.HasBuff("Ascendance")
-	end
 })
 
 c.AddSpell("Searing Totem", nil, {
@@ -86,11 +85,37 @@ c.AddSpell("Searing Totem", nil, {
 c.AddInterrupt("Wind Shear")
 
 --------------------------------------------------------------------- Elemental
-c.AddSpell("Flame Shock", nil, {
-	MyDebuff = "Flame Shock",
-	NotIfActive = true,
+c.AddOptionalSpell("Elemental Mastery", "unless Bloodlust", {
+	CheckFirst = function()
+		return not c.HasBuff(c.BLOODLUST_BUFFS)
+	end
 })
-c.ManageDotRefresh("Flame Shock", 3)
+
+c.AddOptionalSpell("Ascendance", "for Elemental", {
+	NotWhileActive = true,
+	CheckFirst = function()
+		return c.GetMyDebuffDuration("Flame Shock") >= 15
+			and c.GetCooldown("Lava Burst") > 0
+	end
+})
+
+c.AddSpell("Flame Shock", "for Elemental", {
+	EarlyRefresh = 0,
+	NotIfActive = true,
+	CheckFirst = function(z)
+		if c.HasBuff("Ascendance") then
+			return false
+		end
+		
+		local duration = c.GetMyDebuffDuration("Flame Shock")
+		if c.HasBuff("Elemental Mastery") or c.HasBuff(c.BLOODLUST_BUFFS) then
+			return duration <= 2 * z.EarlyRefresh
+		else
+			return duration <= z.EarlyRefresh
+		end
+	end
+})
+c.ManageDotRefresh("Flame Shock for Elemental", 3, "Flame Shock")
 
 c.AddSpell("Lava Burst", nil, {
 	CheckFirst = function()
@@ -103,9 +128,26 @@ c.AddSpell("Lava Burst", nil, {
 
 c.AddSpell("Earth Shock", "for Fulmination", {
 	CheckFirst = function()
-        local remaining = c.GetMyDebuffDuration("Flame Shock")
         local stacks = s.BuffStack(c.GetID("Lightning Shield"), "player")
-        return remaining > 5 and (stacks > 5 or (remaining < 7 and stacks > 4))
+        if stacks == 7 then
+        	return true
+        end
+        
+        local remaining = c.GetMyDebuffDuration("Flame Shock")
+        return stacks > 3 and (remaining > 6 and remaining < 8)
+	end
+})
+
+c.AddSpell("Unleash Elements", "for Elemental", {
+	CheckFirst = function()
+		return c.HasTalent("Unleashed Fury") and not c.HasBuff("Ascendance")
+	end
+})
+
+c.AddSpell("Searing Totem", "for Elemental", {
+	CheckFirst = function()
+		return getFireTotemDuration() == 0 
+			and c.GetCooldown("Fire Elemental Totem") > 15
 	end
 })
 
@@ -137,6 +179,23 @@ c.AddOptionalSpell("Flametongue Weapon", "Offhand", {
 	end
 })
 
+c.AddSpell("Unleash Elements", "with Unleashed Fury", {
+	CheckFirst = function()
+		return c.HasTalent("Unleashed Fury")
+	end
+})
+
+c.AddSpell("Stormstrike", nil, {
+	FlashID = { "Stormblast", "Stormstrike" },
+	Run = function(z)
+		if c.HasBuff("Ascendance") then
+			z.ID = c.GetID("Stormblast")
+		else
+			z.ID = c.GetID("Stormstrike")
+		end
+	end
+})
+
 c.AddSpell("Lightning Bolt", "at 5", {
 	CheckFirst = function()
 		return a.Maelstrom == 5
@@ -146,14 +205,14 @@ c.AddSpell("Lightning Bolt", "at 5", {
 c.AddSpell("Lightning Bolt", "at 4", {
 	NotWhileMoving = true,
 	CheckFirst = function()
-		return a.Maelstrom > 3
+		return a.Maelstrom > 3 and not c.HasBuff("Ascendance")
 	end
 })
 
 c.AddSpell("Lightning Bolt", "at 2", {
 	NotWhileMoving = true,
 	CheckFirst = function()
-		return a.Maelstrom > 1
+		return a.Maelstrom > 1 and not c.HasBuff("Ascendance")
 	end
 })
 
@@ -163,15 +222,9 @@ c.AddSpell("Lightning Bolt", "under Ancestral Swiftness", {
 	end
 })
 
--- c.AddSpell("Lava Lash", nil, {
-	-- CheckFirst = function()
-		-- return c.GetBuffStack("Searing Flame") == 5
-	-- end
--- })
-
-c.AddOptionalSpell("Ancestral Swiftness", "under 3", {
+c.AddOptionalSpell("Ancestral Swiftness", "under 2", {
 	CheckFirst = function()
-		return c.GetBuffStack("Maelstrom Weapon") < 3
+		return c.GetBuffStack("Maelstrom Weapon") < 2
 	end
 })
 
@@ -181,17 +234,16 @@ c.AddSpell("Flame Shock", "under Unleash Flame", {
 		return c.HasBuff("Unleash Flame")
 	end
 })
-c.ManageDotRefresh("Flame Shock", 3)
+c.ManageDotRefresh("Flame Shock under Unleash Flame", 3, "Flame Shock")
+
+c.AddSpell("Flame Shock", "Overwrite under Unleash Flame", {
+	CheckFirst = function()
+		return c.HasBuff("Unleash Flame")
+	end
+})
 
 c.AddOptionalSpell("Feral Spirit", nil, {
 	NoRangeCheck = true,
-})
-
-c.AddSpell("Searing Totem", "Early", {
-	CheckFirst = function()
-		local duration, name = getFireTotemDuration()
-		return duration < 10 and name ~= s.SpellName(c.GetID("Fire Elemental Totem"))
-	end
 })
 
 ------------------------------------------------------------------------- Resto

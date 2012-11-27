@@ -1,10 +1,10 @@
 -------------------------------------------------------------------------------
 -- Constants.lua
 -------------------------------------------------------------------------------
--- File date: 2012-08-31T07:04:12Z
--- File hash: 27656a4
--- Project hash: f647594
--- Project version: 2.4
+-- File date: 2012-09-30T00:45:08Z
+-- File hash: 113a54a
+-- Project hash: 5a95034
+-- Project version: 2.4.2
 -------------------------------------------------------------------------------
 -- Please see http://www.wowace.com/addons/arl/ for more information.
 -------------------------------------------------------------------------------
@@ -15,6 +15,8 @@
 -- Upvalued Lua API
 -------------------------------------------------------------------------------
 local _G = getfenv(0)
+
+local pairs = _G.pairs
 
 -------------------------------------------------------------------------------
 -- AddOn namespace.
@@ -54,13 +56,28 @@ private.PROFESSION_SPELL_IDS = {
 
 private.LOCALIZED_PROFESSION_NAMES = {}
 
-for name, spell_id in _G.pairs(private.PROFESSION_SPELL_IDS) do
+for name, spell_id in pairs(private.PROFESSION_SPELL_IDS) do
 	private.LOCALIZED_PROFESSION_NAMES[name] = _G.GetSpellInfo(spell_id)
 end
 
 -- Special case for Runeforging is needed because the French translation is non-conforming.
 if _G.GetLocale() == "frFR" then
 	private.LOCALIZED_PROFESSION_NAMES.RUNEFORGING = "Runeforger"
+end
+
+-- This is needed due to Pandaren cooking spells.
+private.PROFESSION_NAME_MAP = {
+	[_G.GetSpellInfo(124694)] = private.LOCALIZED_PROFESSION_NAMES.COOKING, -- Way of the Grill
+	[_G.GetSpellInfo(125584)] = private.LOCALIZED_PROFESSION_NAMES.COOKING, -- Way of the Wok
+	[_G.GetSpellInfo(125586)] = private.LOCALIZED_PROFESSION_NAMES.COOKING, -- Way of the Pot
+	[_G.GetSpellInfo(125587)] = private.LOCALIZED_PROFESSION_NAMES.COOKING, -- Way of the Steamer
+	[_G.GetSpellInfo(125588)] = private.LOCALIZED_PROFESSION_NAMES.COOKING, -- Way of the Oven
+	[_G.GetSpellInfo(125589)] = private.LOCALIZED_PROFESSION_NAMES.COOKING, -- Way of the Brew
+	[_G.GetSpellInfo(2575)] = private.LOCALIZED_PROFESSION_NAMES.SMELTING, -- Mining
+}
+
+for name, localized_name in pairs(private.LOCALIZED_PROFESSION_NAMES) do
+	private.PROFESSION_NAME_MAP[localized_name] = localized_name
 end
 
 private.PROFESSION_LABELS = {
@@ -100,18 +117,18 @@ for index = 1, #private.ORDERED_PROFESSIONS do
 end
 
 private.PROFESSION_TEXTURES = {
-	"alchemy",	-- 1
-	"blacksmith",	-- 2
-	"cooking",	-- 3
-	"enchant",	-- 4
-	"engineer",	-- 5
-	"firstaid",	-- 6
-	"inscribe",	-- 7
-	"jewel",	-- 8
-	"leather",	-- 9
-	"runeforge",	-- 10
-	"smelting",	-- 11
-	"tailor",	-- 12
+	[[Trade_Alchemy]],			-- 01 (Alchemy)
+	[[Trade_BlackSmithing]],		-- 02 (Blacksmithing)
+	[[INV_Misc_Food_15]],			-- 03 (Cooking)
+	[[Trade_Engraving]],			-- 04 (Enchinting)
+	[[Trade_Engineering]],			-- 05 (Engineering)
+	[[Spell_Holy_SealOfSacrifice]],		-- 06 (First Aid)
+	[[INV_Inscription_Tradeskill01]],	-- 07 (Inscription)
+	[[INV_Misc_Gem_01]],			-- 08 (Jewelcrafting)
+	[[Trade_LeatherWorking]],		-- 09 (Leatherworking)
+	[[Spell_DeathKnight_FrozenRuneWeapon]],	-- 10 (Runeforging)
+	[[Spell_Fire_FlameBlades]],		-- 11 (Smelting)
+	[[Trade_Tailoring]],			-- 12 (Tailoring)
 }
 
 -------------------------------------------------------------------------------
@@ -147,6 +164,12 @@ private.GAME_VERSIONS = {}
 
 for index = 1, #private.GAME_VERSION_NAMES do
 	private.GAME_VERSIONS[private.GAME_VERSION_NAMES[index]] = index
+end
+
+private.EXPANSION_FILTERS = {}
+
+for index = 1, #private.GAME_VERSION_NAMES do
+	private.EXPANSION_FILTERS[index] = ("expansion%d"):format(index - 1)
 end
 
 -------------------------------------------------------------------------------
@@ -194,6 +217,7 @@ private.CLASS_FLAGS_WORD1 = {
 	ROGUE	= 0x00000080,	-- 8
 	WARLOCK	= 0x00000100,	-- 9
 	WARRIOR	= 0x00000200,	-- 10
+	MONK	= 0x00000400,	-- 11
 }
 
 -------------------------------------------------------------------------------
@@ -245,6 +269,20 @@ private.REP_FLAGS_WORD2 = {
 	RAMKAHEN		= 0x00000010,	-- 5
 	EARTHEN_RING		= 0x00000020,	-- 6
 	THERAZANE		= 0x00000040,	-- 7
+	FORESTHOZEN		= 0X00000080,	-- 8
+	GOLDENLOTUS		= 0X00000100,	-- 9
+	CLOUDSERPENT		= 0X00000200,	-- 10
+	PEARLFINJINYU		= 0X00000400,	-- 11
+	SHADOPAN		= 0X00000800,	-- 12
+	ANGLERS			= 0X00001000,	-- 13
+	AUGUSTCELESTIALS	= 0X00002000,	-- 14
+	BREWMASTERS		= 0X00004000,	-- 15
+	KLAXXI			= 0X00008000,	-- 16
+	LOREWALKERS		= 0X00010000,	-- 17
+	TILLERS			= 0X00020000,	-- 18
+	BLACKPRINCE		= 0X00040000,	-- 19
+	SHANGXIACADEMY		= 0X00080000,	-- 20
+	PANDACOMMON1		= 0X00100000,	-- 21
 }
 
 -------------------------------------------------------------------------------
@@ -274,7 +312,7 @@ private.FLAG_MEMBERS = {
 private.FILTER_STRINGS = {}
 
 for index = 1, #private.FLAG_WORDS do
-	for flag_name in _G.pairs(private.FLAG_WORDS[index]) do
+	for flag_name in pairs(private.FLAG_WORDS[index]) do
 		private.FILTER_STRINGS[#private.FILTER_STRINGS + 1] = flag_name
 	end
 end
@@ -372,6 +410,7 @@ private.ITEM_FILTER_TYPES = {
 	INSCRIPTION_OFF_HAND = true,
 	INSCRIPTION_STAFF = true,
 	INSCRIPTION_SCROLL = true,
+	INSCRIPTION_PET = true,
 	-------------------------------------------------------------------------------
 	-- Jewelcrafting
 	-------------------------------------------------------------------------------
@@ -390,6 +429,8 @@ private.ITEM_FILTER_TYPES = {
 	JEWELCRAFTING_GEM_PURPLE = true,
 	JEWELCRAFTING_GEM_RED = true,
 	JEWELCRAFTING_GEM_YELLOW = true,
+	JEWELCRAFTING_MOUNT = true,
+	JEWELCRAFTING_PET = true,
 	-------------------------------------------------------------------------------
 	-- Leatherworking
 	-------------------------------------------------------------------------------
@@ -504,16 +545,24 @@ private.FACTION_STRINGS = {
 	[1011]	= "LOWERCITY",
 	[1012]	= "ASHTONGUE",
 	[1037]	= "ALLIANCE_VANGUARD",
+	[1050]  = "VALLIANCE",
 	[1052]	= "HORDE_EXPEDITION",
+	[1064]  = "TAUNKA",
+	[1067]  = "HAND_VENGANCE",
+	[1068]	= "EXPLORERS_LEAGUE",
 	[1073]	= "KALUAK",
 	[1077]	= "SHATTEREDSUN",
+	[1085]  = "WARSONG",
 	[1090]	= "KIRINTOR",
 	[1091]	= "WYRMREST",
+	[1094]  = "SILVER_COVENANT",
 	[1098]	= "EBONBLADE",
 	[1104]	= "FRENZYHEART",
 	[1105]	= "ORACLES",
 	[1106]	= "ARGENTCRUSADE",
 	[1119]	= "HODIR",
+	[1124]  = "SUNREAVERS",
+	[1136]  = "FROSTBORN",
 	[1156]	= "ASHEN_VERDICT",
 	[1135]	= "EARTHEN_RING",
 	[1158]	= "GUARDIANS",
@@ -523,279 +572,414 @@ private.FACTION_STRINGS = {
 	[1174]	= "WILDHAMMER",
 	[1177]	= "WARDENS",
 	[1178]	= "HELLSCREAM",
+	[1216]	=  "SHANGXIACADEMY",
+	[1228]	=  "FORESTHOZEN",
+	[1242]	=  "PEARLFINJINYU",
+	[1269]	=  "GOLDENLOTUS",
+	[1270]	=  "SHADOPAN",
+	[1271]	=  "CLOUDSERPENT",
+	[1272]	=  "TILLERS",
+	[1273]	=  "JOGU_THE_DRUNK",
+	[1275]	=  "ELLA",
+	[1276]	=  "OLD_HILLPAW",
+	[1277]	=  "CHEE_CHEE",
+	[1278]	=  "SHO",
+	[1279]	=  "HAOHAN_MUDCLAW",
+	[1280]	=  "TINA_MUDCLAW",
+	[1281]	=  "GINA_MUDCLAW",
+	[1282]	=  "FISH_FELLREED",
+	[1283]	=  "FARMER_FUNG",
+	[1302]	=  "ANGLERS",
+	[1337]	=  "KLAXXI",
+	[1341]	=  "AUGUSTCELESTIALS",
+	[1345]	=  "LOREWALKERS",
+	[1351]	=  "BREWMASTERS",
+	[1352]	=  "HUOJINPANDAREN",
+	[1353]	=  "TUSHUIPANDAREN",
+	[1358]	=  "NAT_PAGLE",
+	[1359]	=  "BLACKPRINCE",
 }
 
+private.LOCALIZED_FACTION_STRINGS = {
+	["Neutral"]	= _G.FACTION_STANDING_LABEL4,
+	["Friendly"]	= _G.FACTION_STANDING_LABEL5,
+	["Honored"]	= _G.FACTION_STANDING_LABEL6,
+	["Revered"]	= _G.FACTION_STANDING_LABEL7,
+	["Exalted"]	= _G.FACTION_STANDING_LABEL8,
+	["Horde"] = _G.GetFactionInfoByID(67),
+	["Alliance"] = _G.GetFactionInfoByID(469),
+	["Thorium Brotherhood"] = _G.GetFactionInfoByID(59),
+	["Zandalar Tribe"] = _G.GetFactionInfoByID(270),
+	["Argent Dawn"] = _G.GetFactionInfoByID(529),
+	["Timbermaw Hold"] = _G.GetFactionInfoByID(576),
+	["Wintersaber Trainers"] = _G.GetFactionInfoByID(589),
+	["Cenarion Circle"] = _G.GetFactionInfoByID(609),
+	["The Aldor"] = _G.GetFactionInfoByID(932),
+	["The Consortium"] = _G.GetFactionInfoByID(933),
+	["The Scryers"] = _G.GetFactionInfoByID(934),
+	["The Sha'tar"] = _G.GetFactionInfoByID(935),
+	["The Mag'har"] = _G.GetFactionInfoByID(941),
+	["Cenarion Expedition"] = _G.GetFactionInfoByID(942),
+	["Honor Hold"] = _G.GetFactionInfoByID(946),
+	["Thrallmar"] = _G.GetFactionInfoByID(947),
+	["The Violet Eye"] = _G.GetFactionInfoByID(967),
+	["Sporeggar"] = _G.GetFactionInfoByID(970),
+	["Kurenai"] = _G.GetFactionInfoByID(978),
+	["Keepers of Time"] = _G.GetFactionInfoByID(989),
+	["The Scale of the Sands"] = _G.GetFactionInfoByID(990),
+	["Lower City"] = _G.GetFactionInfoByID(1011),
+	["Ashtongue Deathsworn"] = _G.GetFactionInfoByID(1012),
+	["Alliance Vanguard"] = _G.GetFactionInfoByID(1037),
+	["Valiance Expedition"] = _G.GetFactionInfoByID(1050),
+	["Horde Expedition"] = _G.GetFactionInfoByID(1052),
+	["The Taunka"] = _G.GetFactionInfoByID(1064),
+	["The Hand of Vengeance"] = _G.GetFactionInfoByID(1067),
+	["Explorers' League"] = _G.GetFactionInfoByID(1068),
+	["The Kalu'ak"] = _G.GetFactionInfoByID(1073),
+	["Shattered Sun Offensive"] = _G.GetFactionInfoByID(1077),
+	["Warsong Offensive"] = _G.GetFactionInfoByID(1085),
+	["Kirin Tor"] = _G.GetFactionInfoByID(1090),
+	["The Wyrmrest Accord"] = _G.GetFactionInfoByID(1091),
+	["The Silver Covenant"] = _G.GetFactionInfoByID(1094),
+	["Knights of the Ebon Blade"] = _G.GetFactionInfoByID(1098),
+	["Frenzyheart Tribe"] = _G.GetFactionInfoByID(1104),
+	["The Oracles"] = _G.GetFactionInfoByID(1105),
+	["Argent Crusade"] = _G.GetFactionInfoByID(1106),
+	["The Sons of Hodir"] = _G.GetFactionInfoByID(1119),
+	["The Sunreavers"] = _G.GetFactionInfoByID(1124),
+	["The Earthen Ring"] = _G.GetFactionInfoByID(1135),
+	["Tranquillien Conversion"] = _G.GetFactionInfoByID(1136),
+	["The Ashen Verdict"] = _G.GetFactionInfoByID(1156),
+	["Guardians of Hyjal"] = _G.GetFactionInfoByID(1158),
+	["Therazane"] = _G.GetFactionInfoByID(1171),
+	["Dragonmaw Clan"] = _G.GetFactionInfoByID(1172),
+	["Ramkahen"] = _G.GetFactionInfoByID(1173),
+	["Wildhammer Clan"] = _G.GetFactionInfoByID(1174),
+	["Baradin's Wardens"] = _G.GetFactionInfoByID(1177),
+	["Hellscream's Reach"] = _G.GetFactionInfoByID(1178),
+	["Shang Xi's Academy"] = _G.GetFactionInfoByID(1216),
+	["Forest Hozen"] = _G.GetFactionInfoByID(1228),
+	["Pearlfin Jinyu"] = _G.GetFactionInfoByID(1242),
+	["Golden Lotus"] = _G.GetFactionInfoByID(1269),
+	["Shado-Pan"] = _G.GetFactionInfoByID(1270),
+	["Order of the Cloud Serpent"] = _G.GetFactionInfoByID(1271),
+	["The Tillers"] = _G.GetFactionInfoByID(1272),
+	["Jogu the Drunk"] = _G.GetFactionInfoByID(1273),
+	["Ella"] = _G.GetFactionInfoByID(1275),
+	["Old Hillpaw"] = _G.GetFactionInfoByID(1276),
+	["Chee Chee"] = _G.GetFactionInfoByID(1277),
+	["Sho"] = _G.GetFactionInfoByID(1278),
+	["Haohan Mudclaw"] = _G.GetFactionInfoByID(1279),
+	["Tina Mudclaw"] = _G.GetFactionInfoByID(1280),
+	["Gina Mudclaw"] = _G.GetFactionInfoByID(1281),
+	["Fish Fellreed"] = _G.GetFactionInfoByID(1282),
+	["Farmer Fung"] = _G.GetFactionInfoByID(1283),
+	["The Anglers"] = _G.GetFactionInfoByID(1302),
+	["The Klaxxi"] = _G.GetFactionInfoByID(1337),
+	["The August Celestials"] = _G.GetFactionInfoByID(1341),
+	["The Lorewalkers"] = _G.GetFactionInfoByID(1345),
+	["The Brewmasters"] = _G.GetFactionInfoByID(1351),
+	["Huojin Pandaren"] = _G.GetFactionInfoByID(1352),
+	["Tushui Pandaren"] = _G.GetFactionInfoByID(1353),
+	["Nat Pagle"] = _G.GetFactionInfoByID(1358),
+	["The Black Prince"] = _G.GetFactionInfoByID(1359),
+}
+--[[
+private.LOCALIZED_FACTION_STRINGS = {
+	["Neutral"] = _G.FACTION_STANDING_LABEL4,
+	["Friendly"] = _G.FACTION_STANDING_LABEL5,
+	["Honored"] = _G.FACTION_STANDING_LABEL6,
+	["Revered"] = _G.FACTION_STANDING_LABEL7,
+	["Exalted"] = _G.FACTION_STANDING_LABEL8,
+	["Horde"] = _G.GetFactionInfoByID(67),
+	["Alliance"] = _G.GetFactionInfoByID(469),
+	["THORIUM_BROTHERHOOD"] = _G.GetFactionInfoByID(59),
+	["ZANDALAR_TRIBE"] = _G.GetFactionInfoByID(270),
+	["ARGENT_DAWN"] = _G.GetFactionInfoByID(529),
+	["TIMBERMAW_HOLD"] = _G.GetFactionInfoByID(576),
+	["WINTERSABER_TRAINERS"] = _G.GetFactionInfoByID(589),
+	["CENARION_CIRCLE"] = _G.GetFactionInfoByID(609),
+	["THE_ALDOR"] = _G.GetFactionInfoByID(932),
+	["THE_CONSORTIUM"] = _G.GetFactionInfoByID(933),
+	["THE_SCRYERS"] = _G.GetFactionInfoByID(934),
+	["THE_SHATAR"] = _G.GetFactionInfoByID(935),
+	["THE_MAGHAR"] = _G.GetFactionInfoByID(941),
+	["CENARION_EXPEDITION"] = _G.GetFactionInfoByID(942),
+	["HONOR_HOLD"] = _G.GetFactionInfoByID(946),
+	["THRALLMAR"] = _G.GetFactionInfoByID(947),
+	["THE_VIOLET_EYE"] = _G.GetFactionInfoByID(967),
+	["SPOREGGAR"] = _G.GetFactionInfoByID(970),
+	["KURENAI"] = _G.GetFactionInfoByID(978),
+	["KEEPERS_OF_TIME"] = _G.GetFactionInfoByID(989),
+	["THE_SCALE_OF_THE_SANDS"] = _G.GetFactionInfoByID(990),
+	["LOWER_CITY"] = _G.GetFactionInfoByID(1011),
+	["ASHTONGUE_DEATHSWORN"] = _G.GetFactionInfoByID(1012),
+	["ALLIANCE_VANGUARD"] = _G.GetFactionInfoByID(1037),
+	["VALIANCE_EXPEDITION"] = _G.GetFactionInfoByID(1050),
+	["HORDE_EXPEDITION"] = _G.GetFactionInfoByID(1052),
+	["THE_TAUNKA"] = _G.GetFactionInfoByID(1064),
+	["THE_HAND_OF_VENGEANCE"] = _G.GetFactionInfoByID(1067),
+	["EXPLORERS_LEAGUE"] = _G.GetFactionInfoByID(1068),
+	["THE_KALUAK"] = _G.GetFactionInfoByID(1073),
+	["SHATTERED_SUN_OFFENSIVE"] = _G.GetFactionInfoByID(1077),
+	["WARSONG_OFFENSIVE"] = _G.GetFactionInfoByID(1085),
+	["KIRIN_TOR"] = _G.GetFactionInfoByID(1090),
+	["THE_WYRMREST_ACCORD"] = _G.GetFactionInfoByID(1091),
+	["THE_SILVER_COVENANT"] = _G.GetFactionInfoByID(1094),
+	["KNIGHTS_OF_THE_EBON_BLADE"] = _G.GetFactionInfoByID(1098),
+	["FRENZYHEART_TRIBE"] = _G.GetFactionInfoByID(1104),
+	["THE_ORACLES"] = _G.GetFactionInfoByID(1105),
+	["ARGENT_CRUSADE"] = _G.GetFactionInfoByID(1106),
+	["THE_SONS_OF_HODIR"] = _G.GetFactionInfoByID(1119),
+	["THE_SUNREAVERS"] = _G.GetFactionInfoByID(1124),
+	["THE_EARTHEN_RING"] = _G.GetFactionInfoByID(1135),
+	["TRANQUILLIEN_CONVERSION"] = _G.GetFactionInfoByID(1136),
+	["THE_ASHEN_VERDICT"] = _G.GetFactionInfoByID(1156),
+	["GUARDIANS_OF_HYJAL"] = _G.GetFactionInfoByID(1158),
+	["THERAZANE"] = _G.GetFactionInfoByID(1171),
+	["DRAGONMAW_CLAN"] = _G.GetFactionInfoByID(1172),
+	["RAMKAHEN"] = _G.GetFactionInfoByID(1173),
+	["WILDHAMMER_CLAN"] = _G.GetFactionInfoByID(1174),
+	["BARADINS_WARDENS"] = _G.GetFactionInfoByID(1177),
+	["HELLSCREAMS_REACH"] = _G.GetFactionInfoByID(1178),
+	["SHANG_XIS_ACADEMY"] = _G.GetFactionInfoByID(1216),
+	["FOREST_HOZEN"] = _G.GetFactionInfoByID(1228),
+	["PEARLFIN_JINYU"] = _G.GetFactionInfoByID(1242),
+	["GOLDEN_LOTUS"] = _G.GetFactionInfoByID(1269),
+	["SHADO_PAN"] = _G.GetFactionInfoByID(1270),
+	["ORDER_OF_THE_CLOUD_SERPENT"] = _G.GetFactionInfoByID(1271),
+	["THE_TILLERS"] = _G.GetFactionInfoByID(1272),
+	["JOGU_THE_DRUNK"] = _G.GetFactionInfoByID(1273),
+	["ELLA"] = _G.GetFactionInfoByID(1275),
+	["OLD_HILLPAW"] = _G.GetFactionInfoByID(1276),
+	["CHEE_CHEE"] = _G.GetFactionInfoByID(1277),
+	["SHO"] = _G.GetFactionInfoByID(1278),
+	["HAOHAN_MUDCLAW"] = _G.GetFactionInfoByID(1279),
+	["TINA_MUDCLAW"] = _G.GetFactionInfoByID(1280),
+	["GINA_MUDCLAW"] = _G.GetFactionInfoByID(1281),
+	["FISH_FELLREED"] = _G.GetFactionInfoByID(1282),
+	["FARMER_FUNG"] = _G.GetFactionInfoByID(1283),
+	["THE_ANGLERS"] = _G.GetFactionInfoByID(1302),
+	["THE_KLAXXI"] = _G.GetFactionInfoByID(1337),
+	["THE_AUGUST_CELESTIALS"] = _G.GetFactionInfoByID(1341),
+	["THE_LOREWALKERS"] = _G.GetFactionInfoByID(1345),
+	["THE_BREWMASTERS"] = _G.GetFactionInfoByID(1351),
+	["HUOJIN_PANDAREN"] = _G.GetFactionInfoByID(1352),
+	["TUSHUI_PANDAREN"] = _G.GetFactionInfoByID(1353),
+	["NAT_PAGLE"] = _G.GetFactionInfoByID(1358),
+	["THE_BLACK_PRINCE"] = _G.GetFactionInfoByID(1359),
+}
+]]--
 private.FACTION_IDS = {}
 
-for id, name in _G.pairs(private.FACTION_STRINGS) do
+for id, name in pairs(private.FACTION_STRINGS) do
 	private.FACTION_IDS[name] = id
 end
 
 -------------------------------------------------------------------------------
 -- Zones.
 -------------------------------------------------------------------------------
-private.ZONE_LABELS = {
-	[4] = "DUROTAR",
-	[9] = "MULGORE",
-	[11] = "NORTHERN_BARRENS",
-	[16] = "ARATHI_HIGHLANDS",
-	[17] = "BADLANDS",
-	[19] = "BLASTED_LANDS",
-	[20] = "TIRISFAL_GLADES",
-	[21] = "SILVERPINE_FOREST",
-	[22] = "WESTERN_PLAGUELANDS",
-	[23] = "EASTERN_PLAGUELANDS",
-	[24] = "HILLSBRAD_FOOTHILLS",
-	[26] = "THE_HINTERLANDS",
-	[27] = "DUN_MOROGH",
-	[28] = "SEARING_GORGE",
-	[29] = "BURNING_STEPPES",
-	[30] = "ELWYNN_FOREST",
-	[32] = "DEADWIND_PASS",
-	[34] = "DUSKWOOD",
-	[35] = "LOCH_MODAN",
-	[36] = "REDRIDGE_MOUNTAINS",
-	[37] = "NORTHERN_STRANGLETHORN",
-	[38] = "SWAMP_OF_SORROWS",
-	[39] = "WESTFALL",
-	[40] = "WETLANDS",
-	[41] = "TELDRASSIL",
-	[42] = "DARKSHORE",
-	[43] = "ASHENVALE",
-	[61] = "THOUSAND_NEEDLES",
-	[81] = "STONETALON_MOUNTAINS",
-	[101] = "DESOLACE",
-	[121] = "FERALAS",
-	[141] = "DUSTWALLOW_MARSH",
-	[161] = "TANARIS",
-	[181] = "AZSHARA",
-	[182] = "FELWOOD",
-	[201] = "UNGORO_CRATER",
-	[241] = "MOONGLADE",
-	[261] = "SILITHUS",
-	[281] = "WINTERSPRING",
-	[301] = "STORMWIND_CITY",
-	[321] = "ORGRIMMAR",
-	[341] = "IRONFORGE",
-	[362] = "THUNDER_BLUFF",
-	[381] = "DARNASSUS",
-	[382] = "UNDERCITY",
-	[401] = "ALTERAC_VALLEY",
-	[443] = "WARSONG_GULCH",
-	[461] = "ARATHI_BASIN",
-	[462] = "EVERSONG_WOODS",
-	[463] = "GHOSTLANDS",
-	[464] = "AZUREMYST_ISLE",
-	[465] = "HELLFIRE_PENINSULA",
-	[467] = "ZANGARMARSH",
-	[471] = "THE_EXODAR",
-	[473] = "SHADOWMOON_VALLEY",
-	[475] = "BLADES_EDGE_MOUNTAINS",
-	[476] = "BLOODMYST_ISLE",
-	[477] = "NAGRAND",
-	[478] = "TEROKKAR_FOREST",
-	[479] = "NETHERSTORM",
-	[480] = "SILVERMOON_CITY",
-	[481] = "SHATTRATH_CITY",
-	[482] = "EYE_OF_THE_STORM",
-	[486] = "BOREAN_TUNDRA",
-	[488] = "DRAGONBLIGHT",
-	[490] = "GRIZZLY_HILLS",
-	[491] = "HOWLING_FJORD",
-	[492] = "ICECROWN",
-	[493] = "SHOLAZAR_BASIN",
-	[495] = "THE_STORM_PEAKS",
-	[496] = "ZULDRAK",
-	[499] = "ISLE_OF_QUELDANAS",
-	[501] = "WINTERGRASP",
-	[502] = "PLAGUELANDS_THE_SCARLET_ENCLAVE",
-	[504] = "DALARAN",
-	[510] = "CRYSTALSONG_FOREST",
-	[512] = "STRAND_OF_THE_ANCIENTS",
-	[520] = "THE_NEXUS",
-	[521] = "THE_CULLING_OF_STRATHOLME",
-	[522] = "AHNKAHET_THE_OLD_KINGDOM",
-	[523] = "UTGARDE_KEEP",
-	[524] = "UTGARDE_PINNACLE",
-	[525] = "HALLS_OF_LIGHTNING",
-	[526] = "HALLS_OF_STONE",
-	[527] = "THE_EYE_OF_ETERNITY",
-	[528] = "THE_OCULUS",
-	[529] = "ULDUAR",
-	[530] = "GUNDRAK",
-	[531] = "THE_OBSIDIAN_SANCTUM",
-	[532] = "VAULT_OF_ARCHAVON",
-	[533] = "AZJOL_NERUB",
-	[534] = "DRAKTHARON_KEEP",
-	[535] = "NAXXRAMAS",
-	[536] = "THE_VIOLET_HOLD",
-	[539] = "GILNEAS",
-	[540] = "ISLE_OF_CONQUEST",
-	[541] = "HROTHGARS_LANDING",
-	[542] = "TRIAL_OF_THE_CHAMPION",
-	[543] = "TRIAL_OF_THE_CRUSADER",
-	[544] = "THE_LOST_ISLES",
-	[545] = "GILNEAS",
-	[601] = "THE_FORGE_OF_SOULS",
-	[602] = "PIT_OF_SARON",
-	[603] = "HALLS_OF_REFLECTION",
-	[604] = "ICECROWN_CITADEL",
-	[605] = "KEZAN",
-	[606] = "MOUNT_HYJAL",
-	[607] = "SOUTHERN_BARRENS",
-	[609] = "THE_RUBY_SANCTUM",
-	[610] = "KELPTHAR_FOREST",
-	[611] = "GILNEAS_CITY",
-	[613] = "VASHJIR",
-	[614] = "ABYSSAL_DEPTHS",
-	[615] = "SHIMMERING_EXPANSE",
-	[626] = "TWIN_PEAKS",
-	[640] = "DEEPHOLM",
-	[673] = "THE_CAPE_OF_STRANGLETHORN",
-	[677] = "THE_BATTLE_FOR_GILNEAS_(OLD_CITY_MAP)",
-	[678] = "GILNEAS",
-	[679] = "GILNEAS",
-	[680] = "RAGEFIRE_CHASM",
-	[681] = "THE_LOST_ISLES",
-	[682] = "THE_LOST_ISLES",
-	[683] = "MOUNT_HYJAL",
-	[684] = "RUINS_OF_GILNEAS",
-	[685] = "RUINS_OF_GILNEAS_CITY",
-	[686] = "ZULFARRAK",
-	[687] = "THE_TEMPLE_OF_ATALHAKKAR",
-	[688] = "BLACKFATHOM_DEEPS",
-	[689] = "STRANGLETHORN_VALE",
-	[690] = "THE_STOCKADE",
-	[691] = "GNOMEREGAN",
-	[692] = "ULDAMAN",
-	[696] = "MOLTEN_CORE",
-	[697] = "ZULGURUB",
-	[699] = "DIRE_MAUL",
-	[700] = "TWILIGHT_HIGHLANDS",
-	[704] = "BLACKROCK_DEPTHS",
-	[708] = "TOL_BARAD",
-	[709] = "TOL_BARAD_PENINSULA",
-	[710] = "THE_SHATTERED_HALLS",
-	[717] = "RUINS_OF_AHNQIRAJ",
-	[718] = "ONYXIAS_LAIR",
-	[720] = "ULDUM",
-	[721] = "BLACKROCK_SPIRE",
-	[722] = "AUCHENAI_CRYPTS",
-	[723] = "SETHEKK_HALLS",
-	[724] = "SHADOW_LABYRINTH",
-	[725] = "THE_BLOOD_FURNACE",
-	[726] = "THE_UNDERBOG",
-	[727] = "THE_STEAMVAULT",
-	[728] = "THE_SLAVE_PENS",
-	[729] = "THE_BOTANICA",
-	[730] = "THE_MECHANAR",
-	[731] = "THE_ARCATRAZ",
-	[732] = "MANA_TOMBS",
-	[733] = "THE_BLACK_MORASS",
-	[734] = "OLD_HILLSBRAD_FOOTHILLS",
-	[736] = "THE_BATTLE_FOR_GILNEAS",
-	[737] = "THE_MAELSTROM",
-	[747] = "LOST_CITY_OF_THE_TOLVIR",
-	[748] = "ULDUM",
-	[749] = "WAILING_CAVERNS",
-	[750] = "MARAUDON",
-	[751] = "THE_MAELSTROM",
-	[752] = "BARADIN_HOLD",
-	[753] = "BLACKROCK_CAVERNS",
-	[754] = "BLACKWING_DESCENT",
-	[755] = "BLACKWING_LAIR",
-	[756] = "THE_DEADMINES",
-	[757] = "GRIM_BATOL",
-	[758] = "THE_BASTION_OF_TWILIGHT",
-	[759] = "HALLS_OF_ORIGINATION",
-	[760] = "RAZORFEN_DOWNS",
-	[761] = "RAZORFEN_KRAUL",
-	[762] = "SCARLET_MONASTERY",
-	[763] = "SCHOLOMANCEOLD",
-	[764] = "SHADOWFANG_KEEP",
-	[765] = "STRATHOLME",
-	[766] = "AHNQIRAJ",
-	[767] = "THRONE_OF_THE_TIDES",
-	[768] = "THE_STONECORE",
-	[769] = "THE_VORTEX_PINNACLE",
-	[770] = "TWILIGHT_HIGHLANDS",
-	[772] = "AHNQIRAJ_THE_FALLEN_KINGDOM",
-	[773] = "THRONE_OF_THE_FOUR_WINDS",
-	[775] = "HYJAL_SUMMIT",
-	[776] = "GRUULS_LAIR",
-	[779] = "MAGTHERIDONS_LAIR",
-	[780] = "SERPENTSHRINE_CAVERN",
-	[781] = "ZULAMAN",
-	[782] = "TEMPEST_KEEP",
-	[789] = "SUNWELL_PLATEAU",
-	[793] = "ZULGURUB",
-	[795] = "MOLTEN_FRONT",
-	[796] = "BLACK_TEMPLE",
-	[797] = "HELLFIRE_RAMPARTS",
-	[798] = "MAGISTERS_TERRACE",
-	[799] = "KARAZHAN",
-	[800] = "FIRELANDS",
-	[803] = "THE_NEXUS",
-	[806] = "THE_JADE_FOREST",
-	[807] = "VALLEY_OF_THE_FOUR_WINDS",
-	[808] = "THE_WANDERING_ISLE",
-	[809] = "KUN_LAI_SUMMIT",
-	[810] = "TOWNLONG_STEPPES",
-	[811] = "VALE_OF_ETERNAL_BLOSSOMS",
-	[813] = "EYE_OF_THE_STORM",
-	[816] = "WELL_OF_ETERNITY",
-	[819] = "HOUR_OF_TWILIGHT",
-	[820] = "END_TIME",
-	[823] = "DARKMOON_ISLAND",
-	[824] = "DRAGON_SOUL",
-	[851] = "DUSTWALLOW_MARSH",
-	[856] = "TEMPLE_OF_KOTMOGU",
-	[857] = "KRASARANG_WILDS",
-	[858] = "DREAD_WASTES",
-	[860] = "SILVERSHARD_MINES",
-	[864] = "NORTHSHIRE",
-	[866] = "COLDRIDGE_VALLEY",
-	[867] = "TEMPLE_OF_THE_JADE_SERPENT",
-	[871] = "SCARLET_HALLS",
-	[873] = "THE_VEILED_STAIR",
-	[874] = "SCARLET_MONASTERY",
-	[875] = "GATE_OF_THE_SETTING_SUN",
-	[876] = "STORMSTOUT_BREWERY",
-	[877] = "SHADO_PAN_MONASTERY",
-	[878] = "A_BREWING_STORM",
-	[879] = "KUN_LAI_SUMMIT",
-	[880] = "THE_JADE_FOREST",
-	[881] = "TEMPLE_OF_KOTMOGU",
-	[882] = "UNGA_INGOO",
-	[883] = "ZANVESS",
-	[884] = "BREWMOON_FESTIVAL",
-	[885] = "MOGUSHAN_PALACE",
-	[886] = "TERRACE_OF_ENDLESS_SPRING",
-	[887] = "SIEGE_OF_NIUZAO_TEMPLE",
-	[888] = "SHADOWGLEN",
-	[889] = "VALLEY_OF_TRIALS",
-	[890] = "CAMP_NARACHE",
-	[891] = "ECHO_ISLES",
-	[892] = "DEATHKNELL",
-	[893] = "SUNSTRIDER_ISLE",
-	[894] = "AMMEN_VALE",
-	[895] = "NEW_TINKERTOWN",
-	[896] = "MOGUSHAN_VAULTS",
-	[897] = "HEART_OF_FEAR",
-	[898] = "SCHOLOMANCE",
-	[899] = "PROVING_GROUNDS",
-	[900] = "CRYPT_OF_FORGOTTEN_KINGS",
-	[903] = "SHRINE_OF_TWO_MOONS",
-	[905] = "SHRINE_OF_SEVEN_STARS",
-	[906] = "DUSTWALLOW_MARSH",
-	[907] = "DUSTWALLOW_MARSH",
+private.ZONE_NAMES = {
+	DUROTAR = _G.GetMapNameByID(4),
+	MULGORE = _G.GetMapNameByID(9),
+	NORTHERN_BARRENS = _G.GetMapNameByID(11),
+	ARATHI_HIGHLANDS = _G.GetMapNameByID(16),
+	BADLANDS = _G.GetMapNameByID(17),
+	BLASTED_LANDS = _G.GetMapNameByID(19),
+	TIRISFAL_GLADES = _G.GetMapNameByID(20),
+	SILVERPINE_FOREST = _G.GetMapNameByID(21),
+	WESTERN_PLAGUELANDS = _G.GetMapNameByID(22),
+	EASTERN_PLAGUELANDS = _G.GetMapNameByID(23),
+	HILLSBRAD_FOOTHILLS = _G.GetMapNameByID(24),
+	THE_HINTERLANDS = _G.GetMapNameByID(26),
+	DUN_MOROGH = _G.GetMapNameByID(27),
+	SEARING_GORGE = _G.GetMapNameByID(28),
+	BURNING_STEPPES = _G.GetMapNameByID(29),
+	ELWYNN_FOREST = _G.GetMapNameByID(30),
+	DEADWIND_PASS = _G.GetMapNameByID(32),
+	DUSKWOOD = _G.GetMapNameByID(34),
+	LOCH_MODAN = _G.GetMapNameByID(35),
+	REDRIDGE_MOUNTAINS = _G.GetMapNameByID(36),
+	NORTHERN_STRANGLETHORN = _G.GetMapNameByID(37),
+	SWAMP_OF_SORROWS = _G.GetMapNameByID(38),
+	WESTFALL = _G.GetMapNameByID(39),
+	WETLANDS = _G.GetMapNameByID(40),
+	TELDRASSIL = _G.GetMapNameByID(41),
+	DARKSHORE = _G.GetMapNameByID(42),
+	ASHENVALE = _G.GetMapNameByID(43),
+	THOUSAND_NEEDLES = _G.GetMapNameByID(61),
+	STONETALON_MOUNTAINS = _G.GetMapNameByID(81),
+	DESOLACE = _G.GetMapNameByID(101),
+	FERALAS = _G.GetMapNameByID(121),
+	TANARIS = _G.GetMapNameByID(161),
+	AZSHARA = _G.GetMapNameByID(181),
+	FELWOOD = _G.GetMapNameByID(182),
+	UNGORO_CRATER = _G.GetMapNameByID(201),
+	MOONGLADE = _G.GetMapNameByID(241),
+	SILITHUS = _G.GetMapNameByID(261),
+	WINTERSPRING = _G.GetMapNameByID(281),
+	STORMWIND_CITY = _G.GetMapNameByID(301),
+	ORGRIMMAR = _G.GetMapNameByID(321),
+	IRONFORGE = _G.GetMapNameByID(341),
+	THUNDER_BLUFF = _G.GetMapNameByID(362),
+	DARNASSUS = _G.GetMapNameByID(381),
+	UNDERCITY = _G.GetMapNameByID(382),
+	EVERSONG_WOODS = _G.GetMapNameByID(462),
+	GHOSTLANDS = _G.GetMapNameByID(463),
+	AZUREMYST_ISLE = _G.GetMapNameByID(464),
+	HELLFIRE_PENINSULA = _G.GetMapNameByID(465),
+	ZANGARMARSH = _G.GetMapNameByID(467),
+	THE_EXODAR = _G.GetMapNameByID(471),
+	SHADOWMOON_VALLEY = _G.GetMapNameByID(473),
+	BLADES_EDGE_MOUNTAINS = _G.GetMapNameByID(475),
+	BLOODMYST_ISLE = _G.GetMapNameByID(476),
+	NAGRAND = _G.GetMapNameByID(477),
+	TEROKKAR_FOREST = _G.GetMapNameByID(478),
+	NETHERSTORM = _G.GetMapNameByID(479),
+	SILVERMOON_CITY = _G.GetMapNameByID(480),
+	SHATTRATH_CITY = _G.GetMapNameByID(481),
+	BOREAN_TUNDRA = _G.GetMapNameByID(486),
+	DRAGONBLIGHT = _G.GetMapNameByID(488),
+	GRIZZLY_HILLS = _G.GetMapNameByID(490),
+	HOWLING_FJORD = _G.GetMapNameByID(491),
+	ICECROWN = _G.GetMapNameByID(492),
+	SHOLAZAR_BASIN = _G.GetMapNameByID(493),
+	THE_STORM_PEAKS = _G.GetMapNameByID(495),
+	ZULDRAK = _G.GetMapNameByID(496),
+	ISLE_OF_QUELDANAS = _G.GetMapNameByID(499),
+	WINTERGRASP = _G.GetMapNameByID(501),
+	DALARAN = _G.GetMapNameByID(504),
+	THE_NEXUS = _G.GetMapNameByID(520),
+	AHNKAHET_THE_OLD_KINGDOM = _G.GetMapNameByID(522),
+	UTGARDE_KEEP = _G.GetMapNameByID(523),
+	UTGARDE_PINNACLE = _G.GetMapNameByID(524),
+	HALLS_OF_LIGHTNING = _G.GetMapNameByID(525),
+	HALLS_OF_STONE = _G.GetMapNameByID(526),
+	THE_OCULUS = _G.GetMapNameByID(528),
+	ULDUAR = _G.GetMapNameByID(529),
+	AZJOL_NERUB = _G.GetMapNameByID(533),
+	DRAKTHARON_KEEP = _G.GetMapNameByID(534),
+	THE_VIOLET_HOLD = _G.GetMapNameByID(536),
+	GILNEAS = _G.GetMapNameByID(539),
+	TRIAL_OF_THE_CRUSADER = _G.GetMapNameByID(543),
+	ICECROWN_CITADEL = _G.GetMapNameByID(604),
+	MOUNT_HYJAL = _G.GetMapNameByID(606),
+	SOUTHERN_BARRENS = _G.GetMapNameByID(607),
+	VASHJIR = _G.GetMapNameByID(613),
+	DEEPHOLM = _G.GetMapNameByID(640),
+	THE_CAPE_OF_STRANGLETHORN = _G.GetMapNameByID(673),
+	THE_TEMPLE_OF_ATALHAKKAR = _G.GetMapNameByID(687),
+	GNOMEREGAN = _G.GetMapNameByID(691),
+	ULDAMAN = _G.GetMapNameByID(692),
+	MOLTEN_CORE = _G.GetMapNameByID(696),
+	DIRE_MAUL = _G.GetMapNameByID(699),
+	BLACKROCK_DEPTHS = _G.GetMapNameByID(704),
+	THE_SHATTERED_HALLS = _G.GetMapNameByID(710),
+	RUINS_OF_AHNQIRAJ = _G.GetMapNameByID(717),
+	ONYXIAS_LAIR = _G.GetMapNameByID(718),
+	ULDUM = _G.GetMapNameByID(720),
+	BLACKROCK_SPIRE = _G.GetMapNameByID(721),
+	AUCHENAI_CRYPTS = _G.GetMapNameByID(722),
+	SETHEKK_HALLS = _G.GetMapNameByID(723),
+	SHADOW_LABYRINTH = _G.GetMapNameByID(724),
+	THE_STEAMVAULT = _G.GetMapNameByID(727),
+	THE_SLAVE_PENS = _G.GetMapNameByID(728),
+	THE_BOTANICA = _G.GetMapNameByID(729),
+	THE_MECHANAR = _G.GetMapNameByID(730),
+	THE_ARCATRAZ = _G.GetMapNameByID(731),
+	MANA_TOMBS = _G.GetMapNameByID(732),
+	THE_BLACK_MORASS = _G.GetMapNameByID(733),
+	OLD_HILLSBRAD_FOOTHILLS = _G.GetMapNameByID(734),
+	WAILING_CAVERNS = _G.GetMapNameByID(749),
+	BLACKWING_LAIR = _G.GetMapNameByID(755),
+	THE_DEADMINES = _G.GetMapNameByID(756),
+	RAZORFEN_DOWNS = _G.GetMapNameByID(760),
+	STRATHOLME = _G.GetMapNameByID(765),
+	TWILIGHT_HIGHLANDS = _G.GetMapNameByID(770),
+	AHNQIRAJ_THE_FALLEN_KINGDOM = _G.GetMapNameByID(772),
+	HYJAL_SUMMIT = _G.GetMapNameByID(775),
+	SERPENTSHRINE_CAVERN = _G.GetMapNameByID(780),
+	TEMPEST_KEEP = _G.GetMapNameByID(782),
+	SUNWELL_PLATEAU = _G.GetMapNameByID(789),
+	BLACK_TEMPLE = _G.GetMapNameByID(796),
+	MAGISTERS_TERRACE = _G.GetMapNameByID(798),
+	KARAZHAN = _G.GetMapNameByID(799),
+	FIRELANDS = _G.GetMapNameByID(800),
+	VALLEY_OF_THE_FOUR_WINDS = _G.GetMapNameByID(807),
+	TOWNLONG_STEPPES = _G.GetMapNameByID(810),
+	VALE_OF_ETERNAL_BLOSSOMS = _G.GetMapNameByID(811),
+	DRAGON_SOUL = _G.GetMapNameByID(824),
+	DUSTWALLOW_MARSH = _G.GetMapNameByID(851),
+	KRASARANG_WILDS = _G.GetMapNameByID(857),
+	DREAD_WASTES = _G.GetMapNameByID(858),
+	THE_VEILED_STAIR = _G.GetMapNameByID(873),
+	KUN_LAI_SUMMIT = _G.GetMapNameByID(879),
+	THE_JADE_FOREST = _G.GetMapNameByID(880),
+	HEART_OF_FEAR = _G.GetMapNameByID(897),
+	SCHOLOMANCE = _G.GetMapNameByID(898),
+	SHRINE_OF_TWO_MOONS = _G.GetMapNameByID(903),
+	SHRINE_OF_SEVEN_STARS = _G.GetMapNameByID(905),
 }
 
-private.ZONE_IDS = {}
+do
+	local continent_names = { _G.GetMapContinents() }
 
-for id, name in _G.pairs(private.ZONE_LABELS) do
-	private.ZONE_IDS[name] = id
+	private.ZONE_NAMES["KALIMDOR"] = continent_names[1]
+	private.ZONE_NAMES["EASTERN_KINGDOMS"] = continent_names[2]
+	private.ZONE_NAMES["OUTLAND"] = continent_names[3]
+	private.ZONE_NAMES["NORTHREND"] = continent_names[4]
+	private.ZONE_NAMES["THE_MAELSTROM"] = continent_names[5]
+	private.ZONE_NAMES["PANDARIA"] = continent_names[6]
 end
+
+private.ZONE_LABELS_FROM_NAME = {}
+
+for label, name in pairs(private.ZONE_NAMES) do
+	private.ZONE_LABELS_FROM_NAME[name] = label
+end
+
+-------------------------------------------------------------------------------
+-- Boss names.
+-------------------------------------------------------------------------------
+private.BOSS_NAMES = {
+	LORD_ROCCOR = _G.EJ_GetEncounterInfo(370),
+	PYROMANCER_LOREGRAIN = _G.EJ_GetEncounterInfo(373),
+	GOLEM_LORD_ARGELMACH = _G.EJ_GetEncounterInfo(379),
+	RIBBLY_SCREWSPIGOT = _G.EJ_GetEncounterInfo(382),
+	PLUGGER_SPAZZRING = _G.EJ_GetEncounterInfo(383),
+	QUARTERMASTER_ZIGRIS = _G.EJ_GetEncounterInfo(393),
+	SOLAKAR_FLAMEWREATH = _G.EJ_GetEncounterInfo(398),
+	GENERAL_DRAKKISATH = _G.EJ_GetEncounterInfo(401),
+	MAGISTER_KALENDRIS = _G.EJ_GetEncounterInfo(408),
+	MEKGINEER_THERMAPLUGG = _G.EJ_GetEncounterInfo(422),
+	BALNAZZAR = _G.EJ_GetEncounterInfo(449),
+	MALEKI_THE_PALLID = _G.EJ_GetEncounterInfo(453),
+	PRIESTESS_DELRISSA = _G.EJ_GetEncounterInfo(532),
+	KAELTHAS_SUNSTRIDER = _G.EJ_GetEncounterInfo(533),
+	NEXUS_PRINCE_SHAFFAR = _G.EJ_GetEncounterInfo(537),
+	CAPTAIN_SKARLOC = _G.EJ_GetEncounterInfo(539),
+	EPOCH_HUNTER = _G.EJ_GetEncounterInfo(540),
+	DARKWEAVER_SYTH = _G.EJ_GetEncounterInfo(541),
+	BLACKHEART_THE_INCITER = _G.EJ_GetEncounterInfo(545),
+	MURMUR = _G.EJ_GetEncounterInfo(547),
+	DALLIAH_THE_DOOMSAYER = _G.EJ_GetEncounterInfo(549),
+	HIGH_BOTANIST_FREYWINN = _G.EJ_GetEncounterInfo(559),
+	THORNGRIN_THE_TENDER = _G.EJ_GetEncounterInfo(560),
+	WARP_SPLINTER = _G.EJ_GetEncounterInfo(562),
+	MECHANO_LORD_CAPACITUS = _G.EJ_GetEncounterInfo(563),
+	NETHERMANCER_SEPETHREA = _G.EJ_GetEncounterInfo(564),
+	PATHALEON_THE_CALCULATOR = _G.EJ_GetEncounterInfo(565),
+	GRAND_WARLOCK_NETHEKURSE = _G.EJ_GetEncounterInfo(566),
+	MEKGINEER_STEAMRIGGER = _G.EJ_GetEncounterInfo(574),
+	WARLORD_KALITHRESH = _G.EJ_GetEncounterInfo(575),
+	HERALD_VOLAZJ = _G.EJ_GetEncounterInfo(584),
+	LOKEN = _G.EJ_GetEncounterInfo(600),
+	LEY_GUARDIAN_EREGOS = _G.EJ_GetEncounterInfo(625),
+	INGVAR_THE_PLUNDERER = _G.EJ_GetEncounterInfo(640),
+	KING_YMIRON = _G.EJ_GetEncounterInfo(644),
+	JANDICE_BAROV = _G.EJ_GetEncounterInfo(663),
+	DARKMASTER_GANDLING = _G.EJ_GetEncounterInfo(684),
+}
 
 -------------------------------------------------------------------------------
 -- Colors.
@@ -853,23 +1037,4 @@ private.CATEGORY_COLORS = {
 	["location"]	= "ffecc1",
 	["repname"]	= "6a9ad9",
 
-}
-
--- Listing of recipes which overwrite other recipes when you learn them.
--- For example, when you learn Darkglow Embroidery Rank 2 (75175),
--- you no longer know Darkglow Embroidery Rank 1 (55769)
-
-private.SPELL_OVERWRITE_MAP = {
-	-------------------------------------------------------------------------------
-	-- Tailoring
-	-------------------------------------------------------------------------------
-	[75175] = 55769,	[75172] = 55642,	[75178] = 55777,
-	[75154] = 56034,	[75155] = 56039,	[125481] = 75172,
-	[125482] = 75175,	[125483] = 75178,
-	
-	-------------------------------------------------------------------------------
-	-- Leatherworking
-	-------------------------------------------------------------------------------
-	[124566] = 124569,	[124561] = 124566,	[124565] = 124568,	[124563] = 124565,
-	[124564] = 124567,	[124559] = 124564,
 }

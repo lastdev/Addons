@@ -12,11 +12,11 @@ XPerl_RequestConfig(function(new)
 				if (XPerl_TargetTarget) then XPerl_TargetTarget.conf = conf.targettarget end
 				if (XPerl_FocusTarget) then XPerl_FocusTarget.conf = conf.focustarget end
 				if (XPerl_PetTarget) then XPerl_PetTarget.conf = conf.pettarget end
-			end, "$Revision: 685 $")
+			end, "$Revision: 775 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 local format = format
-local GetNumRaidMembers = GetNumRaidMembers
+local GetNumGroupMembers = GetNumGroupMembers
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 local UnitIsConnected = UnitIsConnected
@@ -33,14 +33,6 @@ local playerClass
 local lastInspectPending = 0
 local mobhealth
 
-
-local isMOP = select(4, _G.GetBuildInfo()) >= 50000
-local IsPartyLeader = IsPartyLeader;
-local GetNumRaidMembers = isMOP and GetNumGroupMembers or GetNumRaidMembers
-
-if (select(4, _G.GetBuildInfo()) >= 50000) then
-	IsPartyLeader = function() return UnitIsGroupLeader("player") end
-end
 ----------------------
 -- Loading Function --
 ----------------------
@@ -54,9 +46,9 @@ function XPerl_Target_OnLoad(self, partyid)
 	self.hitIndicator.text:SetPoint("CENTER", self.portraitFrame, "CENTER", 0, 0)
 
 	local events = {"UNIT_COMBAT", "PLAYER_FLAGS_CHANGED",
-		"PARTY_MEMBER_DISABLE", "PARTY_MEMBER_ENABLE", "RAID_TARGET_UPDATE", "PARTY_MEMBERS_CHANGED",
+		"PARTY_MEMBER_DISABLE", "PARTY_MEMBER_ENABLE", "RAID_TARGET_UPDATE", "GROUP_ROSTER_UPDATE",
 		"PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "UNIT_THREAT_LIST_UPDATE","UNIT_SPELLMISS", "UNIT_FACTION", "UNIT_DYNAMIC_FLAGS", "UNIT_FLAGS",
-			"UNIT_CLASSIFICATION_CHANGED", "UNIT_PORTRAIT_UPDATE", "UNIT_AURA", "UNIT_HEALTH_FREQUENT","UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE"}
+			"UNIT_CLASSIFICATION_CHANGED", "UNIT_PORTRAIT_UPDATE", "UNIT_AURA", "UNIT_HEALTH_FREQUENT","UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"}
 	for i,event in pairs(events) do
 		self:RegisterEvent(event)
 	end
@@ -295,7 +287,7 @@ end
 local function XPerl_Target_UpdatePVP(self)
 	local partyid = self.partyid
 
-	local pvp = self.conf.pvpIcon and (UnitIsPVP(partyid) and UnitFactionGroup(partyid)) or (UnitIsPVPFreeForAll(partyid) and "FFA")
+	local pvp = self.conf.pvpIcon and (UnitIsPVPFreeForAll(partyid) and "FFA") or (UnitIsPVP(partyid) and (UnitFactionGroup(partyid) ~= "Neutral") and UnitFactionGroup(partyid))
 	if (pvp) then
 		self.nameFrame.pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..pvp)
 		self.nameFrame.pvpIcon:Show()
@@ -630,7 +622,13 @@ local function XPerl_Target_UpdateType(self)
 	end
 
 	self.typeFramePlayer:Hide()
-	self.creatureTypeFrame.text:SetText(targettype)
+	
+	
+	if ( UnitIsWildBattlePet(partyid) or UnitIsBattlePetCompanion(partyid) ) then
+		self.creatureTypeFrame.text:SetText(PET_TYPE_SUFFIX[UnitBattlePetType(partyid)])
+	else
+		self.creatureTypeFrame.text:SetText(targettype)
+	end
 
 	--if (UnitIsPlayer(partyid)) then
 		if (self.conf.classIcon and (UnitIsPlayer(partyid) or UnitClassification(partyid) == "normal")) then
@@ -752,7 +750,7 @@ function XPerl_Target_SetHealth(self)
 		-- Try to work around the occasion WoW targettarget bug of a zero hp tank who is not at zero hp
 		if (not UnitIsDeadOrGhost(partyid)) then
 			if (UnitInRaid(partyid)) then
-				for i = 1,GetNumRaidMembers() do
+				for i = 1,GetNumGroupMembers() do
 					local id = "raid"..i
 					if (UnitIsUnit(id, partyid)) then
 						hp, hpMax, percent = UnitHealth(id), UnitHealthMax(id), false
@@ -866,11 +864,11 @@ local function XPerl_Target_UpdateLeader(self)
 	local leader
 	local partyid = self.partyid
 	if (UnitIsUnit(partyid, "player")) then
-		leader = IsPartyLeader()
+		leader = UnitIsGroupLeader("player")
 
 	elseif (UnitInRaid(partyid)) then
 		local find = UnitName(partyid)
-		for i = 1,GetNumRaidMembers() do
+		for i = 1,GetNumGroupMembers() do
 			local name, rank = GetRaidRosterInfo(i)
 			if (name == find) then
 				leader = (rank == 2)
@@ -1066,8 +1064,7 @@ XPerl_ShowMessage("EXTRA EVENT")
 	local func = XPerl_Target_Events[event]
 	local unitid = select(1,...);
 	if (strsub(event, 1, 5) == "UNIT_") then
-	
-	 	if (unitid == "target" or unitid == "focus") then
+		if (unitid == "target" or unitid == "focus" or event == "UNIT_COMBO_POINTS") then
 		--print(event)
 			func(self, ...)
 		end
@@ -1083,6 +1080,42 @@ end
 
 function XPerl_Target_Events:PLAYER_REGEN_DISABLED()
 	XPerl_Unit_ThreatStatus(self, self.partyid == "target" and "player" or nil)
+end
+
+function XPerl_Target_Events:PET_BATTLE_OPENING_START()
+	if(XPerl_Target) then
+		XPerl_Target:Hide()
+	end
+	if(XPerl_Focus) then
+		XPerl_Focus:Hide()
+	end
+	if(XPerl_PetTarget) then
+		XPerl_Target:Hide()
+	end
+	if(XPerl_TargetTarget) then
+		XPerl_Focus:Hide()
+	end
+	if(XPerl_FocusTarget) then
+		XPerl_Target:Hide()
+	end
+end
+
+function XPerl_Target_Events:PET_BATTLE_CLOSE()
+	if(XPerl_Target and UnitExists("target")) then
+		XPerl_Target:Show()
+	end
+	if(XPerl_Focus and self.conf.enable and UnitExists("focus")) then
+		XPerl_Focus:Show()
+	end
+	if(XPerl_PetTarget and UnitExists("pettarget")) then
+		XPerl_Target:Show()
+	end
+	if(XPerl_TargetTarget and self.conf.enable and UnitExists("targettarget")) then
+		XPerl_Focus:Show()
+	end
+	if(XPerl_FocusTarget and self.conf.enable and UnitExists("focustarget")) then
+		XPerl_Target:Show()
+	end
 end
 
 -- PLAYER_ENTERING_WORLD
@@ -1344,7 +1377,7 @@ XPerl_Target_Events.PARTY_MEMBER_DISABLE = XPerl_Target_Events.PARTY_MEMBER_ENAB
 function XPerl_Target_Events:PARTY_LOOT_METHOD_CHANGED()
 	XPerl_Target_UpdateLeader(self)
 end
-XPerl_Target_Events.PARTY_MEMBERS_CHANGED = XPerl_Target_Events.PARTY_LOOT_METHOD_CHANGED
+XPerl_Target_Events.GROUP_ROSTER_UPDATE= XPerl_Target_Events.PARTY_LOOT_METHOD_CHANGED
 XPerl_Target_Events.PARTY_LEADER_CHANGED  = XPerl_Target_Events.PARTY_LOOT_METHOD_CHANGED
 
 function XPerl_Target_Events:UNIT_THREAT_LIST_UPDATE(unit)

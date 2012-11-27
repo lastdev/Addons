@@ -8,6 +8,32 @@ a.NoShred = {
 	[23777] = true, -- Proto-Drake Egg
 }
 
+a.SymbiosisSelfBuffs = {
+	110497, -- hunter
+	110498, -- death knight
+	110499, -- mage
+	110500, -- monk
+	110501, -- paladin
+	110502, -- priest
+	110503, -- rogue
+	110504, -- shaman
+	110505, -- warlock
+	110506, -- warrior
+}
+
+a.SymbiosisRaidBuffs = {
+	110478, -- death knight
+	110479, -- hunter
+	110482, -- mage
+	110483, -- monk
+	110484, -- paladin
+	110485, -- priest
+	110486, -- rogue
+	110488, -- shaman
+	110490, -- warlock
+	110491, -- warrior
+}
+
 a.SpellIDs = {
 	["Acquatic Form"] = 1066,
 	["Barkskin"] = 22812,
@@ -50,6 +76,8 @@ a.SpellIDs = {
 	["Savage Roar"] = 52610,
 	["Shooting Stars"] = 93400,
 	["Shred"] = 5221,
+	["Skull Bash"] = 106839,
+	["Solar Beam"] = 78675,
 --	["Stampede"] = 81022,
 	["Starfall"] = 48505,
 	["Starfire"] = 2912,
@@ -58,6 +86,7 @@ a.SpellIDs = {
 	["Survival Instincts"] = 61336,
 --	["Swiftmend"] = 18562,
 	["Swipe"] = 62078,
+	["Symbiosis"] = 110309,
 	["Thrash"] = 77758,
 	["Tiger's Fury"] = 5217,
 	["Travel Form"] = 783,

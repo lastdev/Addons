@@ -1,0 +1,13 @@
+tag 5.0.27
+379353de5f6341b86634425aeb921d23eacf70a4
+Floraline <floraline@ophiuchus.org>
+2012-10-07 15:32:47 +0200
+
+Tagged for 5.0.27
+
+
+--------------------
+
+Floraline:
+	- Added bindings for call totem bar
+	- Fixed for good the bug with earthgrab totem cooldown

@@ -8,7 +8,6 @@ local tmpTest2=nil
 local hbHealsMin=nil
 local hbHealsMax=nil
 local spell=nil
-local spellrank=nil
 local line1=nil
 local line2=nil
 local line3=nil
@@ -108,6 +107,9 @@ function HealBot_Init_Spells_Defaults(class)
         [HEALBOT_HOLY_RADIANCE] = {
             id = 82327, CastTime = 0, Mana = 200, Level = 28}, 
 
+        [HEALBOT_HOLY_PRISM] = {
+            id = 114165, CastTime = 0, Mana = 200, Level = 25}, 
+            
         [HEALBOT_LIGHT_OF_DAWN] = {
             id = 85222, CastTime = 0, Mana =  35, Level = 70 },
             
@@ -146,9 +148,6 @@ function HealBot_Init_Spells_Defaults(class)
             
         [HEALBOT_HAND_OF_FREEDOM] = {
             id = 1044, CastTime = 0, Mana = 155, Level = 52 }, 
-            
-        [HEALBOT_SEAL_OF_JUSTICE] = {
-            id = 20164, CastTime = 0, Mana = 155, Level = 70 }, 
             
         [HEALBOT_HAND_OF_SALVATION] = {
             id = 1038, CastTime = 0, Mana = 155, Level = 66 }, 
@@ -190,7 +189,7 @@ function HealBot_Init_Spells_Defaults(class)
     local _, talent = GetTalentRowSelectionInfo(6)
     if talent then
         if talent==16 then
-            HealBot_Spells[HEALBOT_HOLY_PRISM] = { id = 114163, CastTime = 0, Mana = 3.5, Level = 90}
+            HealBot_Spells[HEALBOT_HOLY_PRISM] = { id = 114165, CastTime = 0, Mana = 3.5, Level = 90}
         elseif talent==18 then
             HealBot_Spells[HEALBOT_EXECUTION_SENTENCE] = { id = 114157, CastTime = 0, Mana = 3.5, Level = 90}
         end
@@ -293,6 +292,9 @@ function HealBot_Init_Spells_Defaults(class)
         [HEALBOT_POWER_WORD_SHIELD] = {
             id = 17, CastTime = 0, Mana =  45, Level = 5 }, 
             
+        [HEALBOT_SPIRIT_SHELL] = {
+            id = 109964, CastTime = 0, Mana =  45, Level = 28 }, 
+            
         [HEALBOT_DIVINE_HYMN] = {
             id = 64843, CastTime = 0, Mana =  30, Level = 78}, 
 
@@ -380,6 +382,9 @@ function HealBot_Init_Spells_Defaults(class)
         [HEALBOT_PURIFY_SPIRIT] = {
             id = 77130, CastTime = 0, Mana = 155, Level = 18 }, 
             
+        [HEALBOT_CLEANSE_SPIRIT] = {
+            id = 51886, CastTime = 0, Mana = 155, Level = 18 }, 
+            
         [HEALBOT_EARTHLIVING_WEAPON] = {
             id = 51730, CastTime = 0, Mana = 155, Level = 30 }, 
             
@@ -416,9 +421,6 @@ function HealBot_Init_Spells_Defaults(class)
 
         [HEALBOT_LEGACY_EMPEROR] = {
             id = 115921, CastTime = 0, Mana = 155, Level = 22 }, 
-
-        [HEALBOT_LEGACY_WHITETIGER] = {
-            id = 116781, CastTime = 0, Mana = 155, Level = 81 }, 
             
         [HEALBOT_SOOTHING_MIST] = {
             id = 115175, CastTime = 0, Mana = 101, Level = 10 }, 
@@ -428,9 +430,6 @@ function HealBot_Init_Spells_Defaults(class)
             
         [HEALBOT_LIFE_COCOON] = {
             id = 116849, CastTime = 0, Mana = 101, Level = 50 }, 
-            
-        [HEALBOT_ENVELOPING_MIST] = {
-            id = 124682, CastTime = 0, Mana = 101, Level = 34 }, 
             
         [HEALBOT_REVIVAL] = {
             id = 115310, CastTime = 0, Mana = 101, Level = 78 }, 
@@ -443,6 +442,18 @@ function HealBot_Init_Spells_Defaults(class)
             
         [HEALBOT_SURGING_MIST] = {
             id = 116694, CastTime = 0, Mana = 101, Level = 32 }, 
+            
+        [HEALBOT_ZEN_SPHERE] = {
+            id = 124081, CastTime = 0, Mana = 101, Level = 30 },
+                
+        [HEALBOT_ENVELOPING_MIST] = {
+            id = 132120, CastTime = 0, Mana = 101, Level = 34 },
+                
+        [HEALBOT_CHI_WAVE] = {
+            id = 132463, CastTime = 0, Mana = 101, Level = 30 },
+        
+        [HEALBOT_CHI_BURST] = {
+            id = 130651, CastTime = 0, Mana = 101, Level = 30 },
             
     };
   end
@@ -457,20 +468,29 @@ function HealBot_Init_Spells_Defaults(class)
             id = 82661, CastTime = 0, Mana = 155, Level = 83 }, 
     };
   end
+  
+  if strsub(class,1,4)==HealBot_Class_En[HEALBOT_MAGE] then
+--  Mage
+    HealBot_Spells = {
+        [HEALBOT_FROST_ARMOR] = {
+            id = 7302, CastTime = 0, Mana =  40, Level = 54}, 
+
+    };
+  end
 
 end
 
 
 function HealBot_Init_SmartCast()
-    if strsub(HealBot_PlayerClassEN,1,4)=="PRIE" then
+    if HealBot_PlayerClassTrim=="PRIE" then
         SmartCast_Res=HEALBOT_RESURRECTION;
-    elseif strsub(HealBot_PlayerClassEN,1,4)=="DRUI" then
+    elseif HealBot_PlayerClassTrim=="DRUI" then
         SmartCast_Res=HEALBOT_REVIVE;
-    elseif strsub(HealBot_PlayerClassEN,1,4)=="MONK" then
+    elseif HealBot_PlayerClassTrim=="MONK" then
         SmartCast_Res=HEALBOT_RESUSCITATE;
-    elseif strsub(HealBot_PlayerClassEN,1,4)=="PALA" then
+    elseif HealBot_PlayerClassTrim=="PALA" then
         SmartCast_Res=HEALBOT_REDEMPTION;
-    elseif strsub(HealBot_PlayerClassEN,1,4)=="SHAM" then
+    elseif HealBot_PlayerClassTrim=="SHAM" then
         SmartCast_Res=HEALBOT_ANCESTRALSPIRIT;
     end
 end

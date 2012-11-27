@@ -114,7 +114,7 @@ local companionsCallbacks = {
 	GetSize = function() return #spellList end,
 	RowSetup = function(self, entry, row, dataRowID)
 			currentSpellID = spellList[dataRowID]
-			local petName
+			local petName, _
 			petName, _, currentPetTexture = GetSpellInfo(currentSpellID)
 			
 			if petName then
@@ -453,7 +453,7 @@ local mountsCallbacks = {
 	GetSize = function() return #spellList end,
 	RowSetup = function(self, entry, row, dataRowID)
 			currentSpellID = spellList[dataRowID]
-			local petName
+			local petName, _
 			petName, _, currentPetTexture = GetSpellInfo(currentSpellID)
 			
 			if petName then

@@ -1278,7 +1278,7 @@
 					<OnLoad>
 						self:SetID(self:GetParent():GetID())
 						self.tooltipText = XPERL_CONF_RAID_CLASS_DOWN
-						if (self:GetID() == 10) then
+						if (self:GetID() == 11) then
 							self:Hide()
 						end
 					</OnLoad>
@@ -4646,7 +4646,7 @@
 						<Scripts>
 							<OnLoad>
 								local _, class = UnitClass("player")
-								if (class ~= "DEATHKNIGHT" and class ~= "DRUID" and class ~= "WARLOCK" and class ~= "PALADIN") then
+								if (class ~= "DEATHKNIGHT" and class ~= "DRUID" and class ~= "WARLOCK" and class ~= "PALADIN" and class ~= "PRIEST" and class ~= "MONK") then
                                     self:Hide()
 								end
 
@@ -4671,7 +4671,7 @@
 						<Scripts>
 							<OnLoad>  
 								local _, class = UnitClass("player")
-								if (class ~= "DEATHKNIGHT" and class ~= "DRUID" and class ~= "WARLOCK") then
+								if (class ~= "DEATHKNIGHT" and class ~= "DRUID" and class ~= "WARLOCK" and class ~= "PALADIN" and class ~= "PRIEST" and class ~= "MONK") then
 									self:Hide()
 								end
 
@@ -4692,7 +4692,7 @@
 						<Scripts>
 							<OnLoad>
 								local _, class = UnitClass("player")
-								if (class ~= "DEATHKNIGHT" and class ~= "DRUID" and class ~= "WARLOCK" and class ~= "PALADIN") then
+								if (class ~= "DEATHKNIGHT" and class ~= "DRUID" and class ~= "WARLOCK" and class ~= "PALADIN" and class ~= "PRIEST" and class ~= "MONK") then
                                     self:ClearAllPoints()
                                     self:SetPoint("TOPLEFT", XPerl_Options_Player_Options_ShowRunes, "TOPLEFT")
 								end
@@ -9984,6 +9984,9 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
+								local localGroups = LOCALIZED_CLASS_NAMES_MALE
+								local WoWclassCount = 0
+								for k,v in pairs(localGroups) do WoWclassCount = WoWclassCount + 1 end
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_SHOW")
 								self.Validate = function()
 									XPerl_Options_EnableSibling(self, "NotInBG")
@@ -10005,10 +10008,10 @@
 									XPerl_Options_EnableSibling(self, "BuffHelperSortClass", "BuffTooltipHelper")
 									XPerl_Options_EnableSibling(self, "BuffTooltipHelperVis", "BuffTooltipHelper")
 									XPerl_Options_EnableSibling(self, "Healer")
-									for i = 1,10 do
+									for i = 1,WoWclassCount do
 										XPerl_Options_EnableSibling(self, "Groups_Grp"..i)
 									end
-									for i = 1,10 do
+									for i = 1,WoWclassCount do
 										XPerl_Options_EnableSibling(self, "Groups_ClassSel"..i.."_Enable")
 										XPerl_Options_EnableSibling(self, "Groups_ClassSel"..i.."_Up")
 										XPerl_Options_EnableSibling(self, "Groups_ClassSel"..i.."_Down")
@@ -10679,6 +10682,24 @@
 									</OnLoad>
 								</Scripts>
 							</CheckButton>
+							
+							<CheckButton name="$parent_Grp11" inherits="XPerlCheckButtonTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_Grp10" relativePoint="BOTTOMLEFT">
+										<Offset><AbsDimension x="0" y="6"/></Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										_G[self:GetName().."Text"]:SetText("11")
+										self.tooltipText = XPERL_CONF_RAID_GROUP_DESC
+										self.configBase = "XPerlDB.raid.group"
+										self.configIndex = 11
+										self.configClick = function() XPerl_Raid_ChangeAttributes() XPerl_Raid_OptionActions() end
+										XPerl_Options_RegisterProtected(self)
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
 
 							<Frame name="$parent_Title2">
 								<Size>
@@ -10736,12 +10757,16 @@
 								<Anchors><Anchor point="TOPLEFT" relativeTo="$parent_ClassSel9" relativePoint="BOTTOMLEFT"/></Anchors>
 							</Frame>
 
+							<Frame name="$parent_ClassSel11" inherits="XPerl_OptClassSelTemplate" id="11">
+								<Anchors><Anchor point="TOPLEFT" relativeTo="$parent_ClassSel10" relativePoint="BOTTOMLEFT"/></Anchors>
+							</Frame>
+							
 							<Button name="$parent_All" inherits="XPerlButtonTemplate">
 								<Size>
 									<AbsDimension x="70" y="24"/>
 								</Size>
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_Grp9" relativePoint="BOTTOMLEFT">
+									<Anchor point="TOPLEFT" relativeTo="$parent_Grp10" relativePoint="BOTTOMLEFT">
 										<Offset><AbsDimension x="3" y="-22"/></Offset>
 									</Anchor>
 								</Anchors>

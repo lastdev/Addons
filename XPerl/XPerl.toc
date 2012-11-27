@@ -4,7 +4,7 @@
 ## Title-deDE: X-Perl UnitFrames von |cFFFF8080Zek|r
 ## Title-zhCN: X-Perl 核心
 ## Title-zhTW: X-Perl 主要核心 由 |cFFFF8080Zek|r 開發
-## Version: 3.5.5
+## Version: 3.6.11
 ## Author: Zek
 ## Notes: Replaces the normal unit, party, target, pet frames and adds target-of-target.
 ## Notes-ruRU: Заменяет стандартные фреймы игроков, группы, цели, питомца и добавляет цель цели.
@@ -17,7 +17,7 @@
 ## X-Category: Interface Enhancements
 ## X-License: GNU GPL v3, 29 June 2007
 ## SavedVariables: XPerlConfig, XPerlConfig_Global, XPerlConfigNew, XPerlConfigSavePerCharacter
-## X-Curse-Packaged-Version: r688
+## X-Curse-Packaged-Version: r777
 ## X-Curse-Project-Name: X-Perl UnitFrames
 ## X-Curse-Project-ID: xperl
 ## X-Curse-Repository-ID: wow/xperl/mainline

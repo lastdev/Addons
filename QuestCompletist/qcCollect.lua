@@ -503,14 +503,16 @@ local function qcMergeSavedVariables()
 				do
 					local qcEntryFaction = qcEntry[7]
 					local qcExistingFaction = qcWorkingDB[qcIndex][7]
-					local qcEntryAlliance, qcEntryHorde = 0, 0
-					local qcExistingAlliance, qcExistingHorde = 0, 0
-					local qcNewAlliance, qcNewHorde = 0, 0
+					local qcEntryAlliance, qcEntryHorde, qcEntryNeutral = 0, 0, 0
+					local qcExistingAlliance, qcExistingHorde, qcExistingNeutral = 0, 0, 0
+					local qcNewAlliance, qcNewHorde, qcNewNeutral = 0, 0, 0
 
 					if not (bitband(qcEntryFaction, qcFactionBits["ALLIANCE"]) == 0) then qcEntryAlliance = qcFactionBits["ALLIANCE"] end
 					if not (bitband(qcEntryFaction, qcFactionBits["HORDE"]) == 0) then qcEntryHorde = qcFactionBits["HORDE"] end
+					if not (bitband(qcEntryFaction, qcFactionBits["NEUTRAL"]) == 0) then qcEntryNeutral = qcFactionBits["NEUTRAL"] end
 					if not (bitband(qcExistingFaction, qcFactionBits["ALLIANCE"]) == 0) then qcExistingAlliance = qcFactionBits["ALLIANCE"] end
 					if not (bitband(qcExistingFaction, qcFactionBits["HORDE"]) == 0) then qcExistingHorde = qcFactionBits["HORDE"] end
+					if not (bitband(qcExistingFaction, qcFactionBits["NEUTRAL"]) == 0) then qcExistingNeutral = qcFactionBits["NEUTRAL"] end
 
 					if (qcEntryAlliance > qcExistingAlliance) then
 						tableinsert(qcWorkingLog, stringformat("\t[%d] Alliance flag added. It is likely Alliance race flags will also need updated.", qcIndex))
@@ -520,7 +522,11 @@ local function qcMergeSavedVariables()
 						tableinsert(qcWorkingLog, stringformat("\t[%d] Horde flag added. It is likely Horde race flags will also need updated.", qcIndex))
 					end
 					qcNewHorde = mathmax(qcEntryHorde, qcExistingHorde)
-					qcWorkingDB[qcIndex][7] = (qcNewAlliance + qcNewHorde)
+					if (qcEntryNeutral > qcExistingNeutral) then
+						tableinsert(qcWorkingLog, stringformat("\t[%d] Neutral flag added.", qcIndex))
+					end
+					qcNewNeutral = mathmax(qcEntryNeutral, qcExistingNeutral)
+					qcWorkingDB[qcIndex][7] = (qcNewAlliance + qcNewHorde + qcNewNeutral)
 				end
 				-- Race
 				do
@@ -865,6 +871,19 @@ function qcGenerateMapData()
 		qcY = tonumber(string.format("%.1f",Y*100))
 	end
 	print(string.format("ZONE MAP:   [%d] = {%d,%d,%d,%q,%.1f,%.1f,{%d}},", qcMapID, qcMapLevel, qcIconType, qcInitiatorID, qcInitiatorName, qcX, qcY, qcQuestID))
+	
+	if (ZoomOut()) then
+		local qcMapID = GetCurrentMapAreaID()
+		local qcMapLevel = GetCurrentMapDungeonLevel()
+		do
+			local X, Y = GetPlayerMapPosition("player")
+			qcX = tonumber(string.format("%.1f",X*100))
+			qcY = tonumber(string.format("%.1f",Y*100))
+		end
+		if not ((qcX == 0) and (qcY ==0)) then
+			print(string.format("PARENT ZONE:   [%d] = {%d,%d,%d,%q,%.1f,%.1f,{%d}},", qcMapID, qcMapLevel, qcIconType, qcInitiatorID, qcInitiatorName, qcX, qcY, qcQuestID))
+		end
+	end
 
 	SetMapByID(14)
 	local qcMapID = GetCurrentMapAreaID()

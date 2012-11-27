@@ -1,7 +1,7 @@
 --[[
 	Configator - A library to help you create a gui config
-	Version: 4.0.2 (<%codename%>)
-	Revision: $Id: Configator.lua 334 2012-09-04 16:04:10Z Esamynn $
+	Version: 4.0.6 (<%codename%>)
+	Revision: $Id: Configator.lua 344 2012-10-06 15:56:26Z Esamynn $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -54,11 +54,11 @@ USAGE:
 ]]
 
 local LIBRARY_VERSION_MAJOR = "Configator"
-local LIBRARY_VERSION_MINOR = 28
+local LIBRARY_VERSION_MINOR = 29
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/Configator.lua $","$Rev: 334 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/Configator.lua $","$Rev: 344 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local kit = {}
 
@@ -1187,7 +1187,10 @@ function kit:AddControl(id, cType, column, ...)
 	local kids = ctrl.kids
 	local kpos = 0
 
-	local framewidth = frame:GetWidth() - 20
+	local framewidth = frame:GetWidth() - 25
+	if ( self.tabs[id].scroll ) then
+		framewidth = framewidth - 14
+	end
 	column = (column or 0) * framewidth
 	local colwidth = nil
 	if (self.scalewidth) then
@@ -1854,7 +1857,9 @@ function kit:ColumnCheckboxes(id, cols, options)
 	for pos, option in ipairs(options) do
 		setting, text = unpack(option)
 		col = math.floor(row / rows)
-		el = self:AddControl(id, "Checkbox", col/cols, 1, setting, text, true, 1/cols)
+		-- the last agrument (text length) divides by a special factor to improve spacing
+		-- a hard coded number would be better, but I'm doing this as a quick fix for now
+		el = self:AddControl(id, "Checkbox", col/cols, 1, setting, text, true, 1/cols/1.03)
 		row = row + 1
 		if (row % rows == 0) then
 			if (col == 0) then

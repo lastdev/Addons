@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 5.15.5348 (LikeableLyrebird)
-	Revision: $Id: Undercut.lua 5347 2012-09-06 06:26:15Z Esamynn $
+	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: Undercut.lua 5364 2012-09-24 09:32:39Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer Matcher module that returns an undercut price
@@ -35,15 +35,14 @@ local libType, libName = "Match", "Undercut"
 local lib,parent,private = AucAdvanced.NewModule(libType, libName)
 if not lib then return end
 
-local print,decode,_,_,replicate,empty,get,set,default,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
+local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
 local floor,min,max,ceil = floor,min,max,ceil
 local tonumber,tostring = tonumber,tostring
 local wipe = wipe
 
-local GetFaction = AucAdvanced.GetFaction
 local QueryImage = AucAdvanced.API.QueryImage
-local DecodeLink = AucAdvanced.DecodeLink
 local Const = AucAdvanced.Const
+local Resources = AucAdvanced.Resources
 
 local CONST_BUYOUT = Const.BUYOUT
 local CONST_COUNT = Const.COUNT
@@ -62,10 +61,11 @@ function private.clearTooltipCache()
 end
 
 lib.Processors = {}
-function lib.Processors.tooltip(callbackType, ...)
+function lib.Processors.itemtooltip(callbackType, ...)
 	--Called when the tooltip is being drawn.
 	private.ProcessTooltip(...)
 end
+lib.Processors.battlepettooltip = lib.Processors.itemtooltip
 
 function lib.Processors.config(callbackType, ...)
 	--Called when you should build your Configator tab.
@@ -89,15 +89,36 @@ function lib.Processors.auctionclose(callbackType, ...)
 end
 
 
-local query = {itemId = 0, suffix = 0, factor = 0} -- resusable pre-created table
+local query = {} -- resusable table
 function lib.GetMatchArray(hyperlink, marketprice, serverKey)
 	if not get("match.undercut.enable") then return end
-	local linkType, itemId, suffix, factor = DecodeLink(hyperlink)
-	if linkType ~= "item" then return end
-	serverKey = serverKey or GetFaction()
-	marketprice = marketprice or 0
 
-	local cacheKey = serverKey .. itemId .."x".. suffix .."x".. factor .."x".. marketprice
+	serverKey = serverKey or Resources.ServerKeyCurrect
+	marketprice = marketprice or 0
+	local linkType, id, suffix, factor = decode(hyperlink)
+	local cacheKey
+	if linkType == "item" then
+		query.itemId = id
+		query.suffix = suffix
+		query.factor = factor
+		query.speciesID = nil
+		query.quality = nil
+		query.minItemLevel = nil
+		query.maxItemLevel = nil
+		cacheKey = serverKey .. id .."x".. suffix .."x".. factor .."x".. marketprice
+	elseif linkType == "battlepet" then
+		query.speciesID = id
+		query.quality = factor
+		query.minItemLevel = suffix
+		query.maxItemLevel = suffix
+		query.itemId = 82800
+		query.suffix = nil
+		query.factor = nil
+		cacheKey = serverKey .. id .."p".. suffix .."p".. factor .."p".. marketprice
+	else
+		return
+	end
+
 	if matchArrayCache[cacheKey] then return matchArrayCache[cacheKey] end
 
 	local overmarket = get("match.undermarket.overmarket")
@@ -119,9 +140,6 @@ function lib.GetMatchArray(hyperlink, marketprice, serverKey)
 		minprice = ceil(marketprice*(1+(undermarket/100)))
 	end
 
-	query.itemId = itemId
-	query.suffix = suffix
-	query.factor = factor
 	local data = QueryImage(query, serverKey)
 	competing = #data
 	local lowestBidOnly = matchprice
@@ -133,8 +151,7 @@ function lib.GetMatchArray(hyperlink, marketprice, serverKey)
 			local bid = item[CONST_CURBID] -- should be non-nil
 			if bid == 0 then bid = item[CONST_MINBID] end -- should be non-nil
 			bid = bid / count
-			if bid < lowestBidOnly then lowestBidOnly = bid end -- faster than calling 'min' with 2 parameters
-			--lowestBidOnly = min(lowestBidOnly, bid/count)
+			if bid < lowestBidOnly then lowestBidOnly = bid end
 		else
 			buyout = buyout / count
 			if usevalue then
@@ -181,7 +198,7 @@ function lib.GetMatchArray(hyperlink, marketprice, serverKey)
 	return matchArray
 end
 
-function private.ProcessTooltip(tooltip, name, link, quality, quantity, cost, additional)
+function private.ProcessTooltip(tooltip, link, serverKey, quantity, decoded, additional, order)
 	if not link then return end
 	if not get("match.undercut.tooltip") then return end
 	local model = get("match.undercut.model")
@@ -193,12 +210,12 @@ function private.ProcessTooltip(tooltip, name, link, quality, quantity, cost, ad
 		market = matcharray.market
 	else
 		if model == "market" then
-			market = AucAdvanced.API.GetMarketValue(link)
+			market = AucAdvanced.API.GetMarketValue(link, serverKey)
 		else
-			market = AucAdvanced.API.GetAlgorithmValue(model, link)
+			market = AucAdvanced.API.GetAlgorithmValue(model, link, serverKey)
 		end
 		if not market then return end
-		matcharray = lib.GetMatchArray(link, market)
+		matcharray = lib.GetMatchArray(link, market, serverKey)
 		if not matcharray then return end
 		matcharray = replicate(matcharray)
 		matcharray.market = market
@@ -275,4 +292,4 @@ function private.SetupConfigGui(gui)
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Match-Undercut/Undercut.lua $", "$Rev: 5347 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Match-Undercut/Undercut.lua $", "$Rev: 5364 $")

@@ -9,7 +9,7 @@ XPerl_RequestConfig(function(new)
 				if (XPerl_TargetTargetTarget) then XPerl_TargetTargetTarget.conf = conf.targettargettarget end
 				if (XPerl_FocusTarget) then XPerl_FocusTarget.conf = conf.focustarget end
 				if (XPerl_PetTarget) then XPerl_PetTarget.conf = conf.pettarget end
-			end, "$Revision: 665 $")
+			end, "$Revision: 747 $")
 
 local UnitName = UnitName
 local UnitHealth = UnitHealth
@@ -21,7 +21,6 @@ local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitMana = UnitMana
 local UnitManaMax = UnitManaMax
 local UnitPowerType = UnitPowerType
-local GetNumRaidMembers = GetNumRaidMembers
 local GetDifficultyColor = GetDifficultyColor or GetQuestDifficultyColor
 
 local buffSetup
@@ -136,7 +135,7 @@ end
 -- The Update Function --
 -------------------------
 function XPerl_TargetTarget_UpdatePVP(self)
-	local pvp = self.conf.pvpIcon and (UnitIsPVP(self.partyid) and UnitFactionGroup(self.partyid)) or (UnitIsPVPFreeForAll(self.partyid) and "FFA")
+	local pvp = self.conf.pvpIcon and (UnitIsPVPFreeForAll(self.partyid) and "FFA") or (UnitIsPVP(self.partyid) and (UnitFactionGroup(self.partyid) ~= "Neutral") and UnitFactionGroup(self.partyid))
 	if (pvp) then
 		self.nameFrame.pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..pvp)
 		self.nameFrame.pvpIcon:Show()

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.15.5348 (LikeableLyrebird)
-	Revision: $Id: CoreScan.lua 5343 2012-09-03 10:30:00Z brykrys $
+	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: CoreScan.lua 5352 2012-09-14 13:17:35Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -145,6 +145,9 @@ if not coremodule or not internal then return end -- Someone has explicitely bro
 if (not _G.AucAdvanced.Scan) then _G.AucAdvanced.Scan = {} end
 
 local SCANDATA_VERSION = "A" -- must match Auc-ScanData INTERFACE_VERSION
+
+local TOLERANCE_LOWERLIMIT = 250
+local TOLERANCE_TAPERLIMIT = 10000
 
 local lib = _G.AucAdvanced.Scan
 local private = {}
@@ -1047,7 +1050,14 @@ local Commitfunction = function()
 		end
 		pos = pos -1
 	end
-	if unresolvedCount > 0 then
+	local tolerance = 0
+	if scanCount > TOLERANCE_LOWERLIMIT then -- don't use tolerance for tiny scans
+		tolerance = get("core.scan.unresolvedtolerance")
+		if scanCount < TOLERANCE_TAPERLIMIT then -- taper tolerance for smaller scans
+			tolerance = tolerance * scanCount / TOLERANCE_TAPERLIMIT
+		end
+	end
+	if unresolvedCount > tolerance then
 		hadGetError = true
 		wasIncomplete = true
 	end
@@ -1326,16 +1336,14 @@ local Commitfunction = function()
 
 		if (wasEndPagesOnly) then
 			summaryLine = (_TRANS("PSS_TailScan")):format(scanCount, scanTime)
---			summaryLine = _TRANS("PSS_TailScan_1").." {{"..scanCount.."}} ".._TRANS("PSS_TailScan_2").."{{"..scanTime.."}}:"
 		elseif (wasEarlyTerm) then
-			summaryLine = (_TRANS("PSS_Incomplete")):format(scanCount, scanTime)
---			summaryLine = _TRANS("PSS_Incomplete_1").." {{"..scanCount.."}} ".._TRANS("PSS_Incomplete_2").."{{"..scanTime.."}}".._TRANS("PSS_Incomplete_3")
+			summaryLine = (_TRANS("PSS_Incomplete")):format(scanCount, scanTime) --Auctioneer finished scanning {{%d}} auctions over {{%s}} before being stopped
 		elseif (hadGetError) then
-			summaryLine = (_TRANS("PSS_ScanError")):format(scanCount, scanTime)
---			summaryLine = _TRANS("PSS_ScanError_1").." {{"..scanCount.."}} ".._TRANS("PSS_ScanError_2").."{{"..scanTime.."}}".._TRANS("PSS_ScanError_3")
+			summaryLine = (_TRANS("PSS_GetError")):format(scanCount, scanTime) --Auctioneer finished scanning {{%d}} auctions over {{%s}} but was not able to retrieve some auctions
+		elseif wasIncomplete then -- any other incomplete (unknown reason)
+			summaryLine = (_TRANS("PSS_Incomplete")):format(scanCount, scanTime) --Auctioneer finished scanning {{%d}} auctions over {{%s}} before being stopped
 		else
-			summaryLine = (_TRANS("PSS_Complete")):format(scanCount, scanTime)
---			summaryLine = _TRANS("PSS_Complete_1").." {{"..scanCount.."}} ".._TRANS("PSS_Complete_2").."{{"..scanTime.."}}:"
+			summaryLine = (_TRANS("PSS_Complete")):format(scanCount, scanTime) --Auctioneer finished scanning {{%d}} auctions over {{%s}}
 		end
 		if (printSummary) then _print(summaryLine) end
 		summary = summaryLine
@@ -1469,14 +1477,6 @@ local Commitfunction = function()
 		private.ResetAll()
 	end
 	_G.AucAdvanced.SendProcessorMessage("scanfinish", scanSize, TempcurQuery.qryinfo.sig, TempcurQuery.qryinfo, not wasIncomplete, TempcurQuery, TempcurScanStats)
-
-	-- Report warning for Blizzard bug {ADV-595}
-	if private.warningCanSendBug then
-		private.warningCanSendBug = nil
-		if not CanSendAuctionQuery() then
-			_G.message("The Server is not responding correctly.\nClosing and reopening the Auctionhouse may fix this problem.")
-		end
-	end
 end
 
 local CoCommit, CoStore
@@ -1639,13 +1639,15 @@ end
 		Note: this function does not replace a missing seller with ""
 --]]
 function private.GetAuctionItem(list, page, index, itemLinksTried, itemData)
-	local isLogging = nLog and page and list == "list"
 	if not itemData then
 		itemData = {}
+	elseif itemData.NORETRY then
+		return itemData
 	end
 	itemData[Const.FLAG] = itemData[Const.FLAG] or 0
 	itemData[Const.ID] = itemData[Const.ID] or -1
 
+	local isLogging = nLog and page and list == "list"
 	if isLogging then
 		if not itemData.PAGE then
 			itemData.PAGE = page
@@ -1668,8 +1670,10 @@ function private.GetAuctionItem(list, page, index, itemLinksTried, itemData)
 			-- Log and abort so we don't corrupt it
 			if isLogging then
 				nLog.AddMessage("Auctioneer", "Scan", N_ERROR, "GetAuctionItem ItemLink does not match link found previously at this index",
-					("Page %d, Index %d\nOld link %s\nNew link %s"):format(page, index, itemData[Const.LINK], itemLink))
+					("Page %d, Index %d\nOld link %s\nNew link %s\nOld ITEMID %s, MINBID %s, TLEFT %s, SELLER %s"):format(page, index, itemData[Const.LINK], itemLink,
+						tostringall(itemData[Const.ITEMID], itemData[Const.MINBID], itemData[Const.TLEFT], itemData[Const.SELLER]))) -- one of these must be missing for us to need to retry
 			end
+			itemData.NORETRY = "Link changed"
 			return itemData
 		end
 		itemData[Const.LINK] = itemLink
@@ -1689,6 +1693,7 @@ function private.GetAuctionItem(list, page, index, itemLinksTried, itemData)
 				("Page %d, Index %d\nLink %s\nminBid old %s, new %s\nAll returns from GetAuctionItemInfo:\n%s"):format(page, index, itemLink, itemData[Const.MINBID], minBid,
 				strjoin(",", tostringall(name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner, saleStatus, itemId))))
 		end
+		itemData.NORETRY = "MinBid changed"
 		return itemData
 	end
 
@@ -1861,7 +1866,7 @@ function lib.GetAuctionSellItem(minBid, buyoutPrice, runTime)
 			return {
 				itemLink, itemLevel, itemType, itemSubType, nil, minBid,
 				timeLeft, curTime, name, texture, count, quality, canUse, level,
-				minBid, 0, buyoutPrice, 0, nil, UnitName("player"),
+				minBid, 0, buyoutPrice, 0, nil, Const.PlayerName,
 				0, -1, itemId, itemSuffix, itemFactor, itemEnchant, itemSeed
 			}, price
 		end
@@ -1900,6 +1905,17 @@ local StorePageFunction = function()
 
 	if (_G.nLog) then
 		_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_INFO, ("StorePage For Page %d Started %fs after Query Start"):format(page, retrievalStarted - queryStarted), ("StorePage (Page %d) Called\n%f seconds have elapsed since scan start"):format(page, retrievalStarted - queryStarted))
+	end
+
+	if private.isGetAll then
+		--[[
+			pre-store delay before starting to store a getall query to give the client a bit of time to sort itself out
+			we want to call it before GetNumAuctionItems, so we must use private.isGetAll for detection
+		--]]
+		coroutine.yield()
+		if private.warningCanSendBug and CanSendAuctionQuery() then -- check it again after delay
+			private.warningCanSendBug = nil
+		end
 	end
 
 	local curQuery, curScan, curPages = private.curQuery, private.curScan, private.curPages
@@ -2024,7 +2040,9 @@ local StorePageFunction = function()
 
 		local newRetries = { }
 		local readCount = 1
-		while (#retries > 0 and tryCount < maxTries and ((not sellerOnly) or get("core.scan.sellernamedelay")) and not private.breakStorePage) do
+		local needsRetries = #retries > 0
+		while (needsRetries and tryCount < maxTries and ((not sellerOnly) or get("core.scan.sellernamedelay")) and not private.breakStorePage) do
+			needsRetries = false
 			sellerOnly = true
 			itemLinksTried = {}
 			tryCount = tryCount + 1
@@ -2063,6 +2081,9 @@ local StorePageFunction = function()
 							remissedCounts[mc] = remissedCounts[mc] + ((itemData[mc] and 0) or 1)
 						end
 						sellerOnly = sellerOnly and completeMinusSeller
+						if not itemData.NORETRY then
+							needsRetries = true
+						end
 						tinsert(newRetries, { i[1], itemData })
 					end
 				else
@@ -2107,6 +2128,7 @@ local StorePageFunction = function()
 			retries = newRetries
 			newRetries = { }
 		end
+
 
 		local names_missed, all_missed, ld_and_names_missed, links_missed, link_data_missed = 0,0,0,0,0
 		nextPause = debugprofilestop() + processingTime
@@ -2243,6 +2265,15 @@ local StorePageFunction = function()
 		_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_INFO, ("StorePage Page %d Complete"):format(page),
 --		("Query Elapsed: %fs\nThis Page Store Elapsed: %fs\nThis Page Code Execution Time: %fs"):format(endTime-queryStarted, endTime-retrievalStarted, RunTime))
 		("Query Elapsed: %fs\nThis Page Store Elapsed: %fs"):format(endTime-queryStarted, endTime-retrievalStarted))
+	end
+
+	-- Report warning for Blizzard bug {ADV-595}
+	-- (we wait til we're finished storing as much as we can, before asking the user to close the AH)
+	if private.warningCanSendBug then
+		private.warningCanSendBug = nil
+		if not CanSendAuctionQuery() then
+			_G.message("The Server is not responding correctly.\nClosing and reopening the Auctionhouse may fix this problem.")
+		end
 	end
 end
 
@@ -2955,4 +2986,4 @@ end
 internal.Scan.Logout = lib.Logout
 internal.Scan.AHClosed = lib.AHClosed
 
-_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreScan.lua $", "$Rev: 5343 $")
+_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreScan.lua $", "$Rev: 5352 $")

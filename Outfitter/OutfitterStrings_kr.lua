@@ -209,6 +209,14 @@
 
 	Outfitter.cMageEvocate = "마법사: 환기"
 
+	Outfitter.cDeathknightBlood = "Deathknight: Blood Presence"
+	Outfitter.cDeathknightFrost = "Deathknight: Frost Presence"
+	Outfitter.cDeathknightUnholy = "Deathknight: Unholy Presence"
+
+	Outfitter.cMonkTiger = "Monk: Tiger stance"
+	Outfitter.cMonkSerpent = "Monk: Serpent stance"
+	Outfitter.cMonkOx = "Monk: Ox stance"
+
 	Outfitter.cCompleteCategoryDescription = "모든 슬롯의 아이템에 관한 설정이 들어있는 완전한 장비 세트입니다."
 	Outfitter.cPartialCategoryDescription = "Mix-n-match의 장비 세트는 전부가 아닌 일부 슬롯만 가집니다. 장비 세트가 선택되면 이전에 선택되었던 보조 장비 세트 또는 Mix-n-match 세트를 대체하면서, 완비 세트에서 해당 아이템만을 교체합니다."
 	Outfitter.cAccessoryCategoryDescription = "보조 장비의 장비 세트는 전부가 아닌 일부 슬롯만 가집니다. Mix-n-match와는 다르게 이전에 선택되었던 보조 장비 세트 또는 Mix-n-match 세트를 대체하지 않고 추가로 완비 세트에서 해당 아이템을 교체합니다."

@@ -6,7 +6,7 @@ koKR localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 2.4
+Project version: 2.4.2
 ************************************************************************
 Original translated by: damjau, next96
 Currently maintained by:
@@ -458,7 +458,6 @@ Ackis Recipe List는 GUI 변경 인자가 최근에 변경되었습니다. /arl�
   월드맵과 미니맵에 제조법을 얻을 수 있는 곳을 표시합니다.]=]
 L["Gan'arg Analyzer"] = "간아그 분석가"
 L["Gara Skullcrush"] = "가라 스컬크러쉬"
-L["Gargantuan Abyssal"] = "거대한 심연"
 L["Gaston"] = "가스톤"
 L["Gearcutter Cogspinner"] = "기어커터 코그스피너"
 L["Geba'li"] = "게바리"
@@ -703,7 +702,6 @@ L["Master Chef Mouldier"] = "수석요리사 마울디어"
 L["Master Elemental Shaper Krixix"] = "수석 원소구현술사 크릭시스"
 L["Mathar G'ochar"] = "마사 고차르"
 L["Matt Johnson"] = "매트 존슨"
-L["Mazk Snipeshot"] = "마즈크 스나이프샷"
 L["MC_RANDOM"] = "화산 심장부 보스 랜덤드랍"
 L["Meilosh"] = "메일로쉬"
 L["Melaris"] = "멜라리스"
@@ -888,6 +886,7 @@ L["Saenorion"] = "새노리온"
 L["Sairuk"] = "사이루크"
 L["Sally Tompkins"] = "샐리 톰킨스"
 L["Samuel Van Brunt"] = "사무엘 반 브런트" -- Needs review
+L["San Redscale"] = "싼 레드스케일" -- Needs review
 L["Sarah Tanner"] = "사라 터너"
 L["Saru Steelfury"] = "사루 스틸퓨리"
 L["Sassa Weldwell"] = "사사 윌드웰"
@@ -1021,7 +1020,6 @@ L["Thrown"] = "투척무기"
 L["Thuzadin Shadowcaster"] = "투자딘 흑마술사"
 L["Tiffany Cartier"] = "티파니 까르티엘"
 L["Tilli Thistlefuzz"] = "틸리 시슬퍼즈"
-L["Time-Lost Shadowmage"] = "잃어버린 시간의 어둠마법사"
 L["Timofey Oshenko"] = "티모페이 오쉔코"
 L["Timothy Jones"] = "티모시 존스"
 L["Timothy Worthington"] = "티모시 워싱턴"
@@ -1090,7 +1088,6 @@ L["Vir'aani Arcanist"] = "비르아니 비전술사"
 L["Vira Younghoof"] = "비라 영후프"
 L["Vivianna"] = "비비안나"
 L["Vizzklick"] = "비즈클릭"
-L["Voidshrieker"] = "울부짖는 공허의 망령"
 L["Volchan"] = "볼찬"
 L["Vosur Brakthel"] = "보수르 브락셀"
 L["Waldor"] = "왈도르"

@@ -2,9 +2,8 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 670 $")
+XPerl_SetModuleRevision("$Revision: 761 $")
 
-local isMOP = select(4, _G.GetBuildInfo()) >= 50000
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
 for k,v in pairs(localGroups) do WoWclassCount = WoWclassCount + 1 end
@@ -913,23 +912,9 @@ function XPerl_Options_DoRangeTooltip(self)
 end
 
 -- DefaultRaidClasses
-	local function DefaultRaidClasses()
+local function DefaultRaidClasses()
 	
-	if (not isMop) then
 		return {
-			{enable = true, name = "WARRIOR"},
-			{enable = true, name = "DEATHKNIGHT"},
-			{enable = true, name = "ROGUE"},
-			{enable = true, name = "HUNTER"},
-			{enable = true, name = "MAGE"},
-			{enable = true, name = "WARLOCK"},
-			{enable = true, name = "PRIEST"},
-			{enable = true, name = "DRUID"},
-			{enable = true, name = "SHAMAN"},
-			{enable = true, name = "PALADIN"},
-		}
-		else
-				return {
 			{enable = true, name = "WARRIOR"},
 			{enable = true, name = "DEATHKNIGHT"},
 			{enable = true, name = "ROGUE"},
@@ -942,21 +927,14 @@ end
 			{enable = true, name = "PALADIN"},
 			{enable = true, name = "MONK"},
 		}
-		end
-	end
+end
 
 -- ValidateClassNames
 local function ValidateClassNames(part)
 	-- This should never happen, but I'm sure someone will find a way to break it
 
-	if (not isMop) then
 	local list = {WARRIOR = false, MAGE = false, ROGUE = false, DRUID = false,
-			HUNTER = false, SHAMAN = false, PRIEST = false,	WARLOCK = false, PALADIN = false, DEATHKNIGHT = false}
-
-	else
-			local list = {WARRIOR = false, MAGE = false, ROGUE = false, DRUID = false,
-			HUNTER = false, SHAMAN = false, PRIEST = false,	WARLOCK = false, PALADIN = false, DEATHKNIGHT = false,MONK = false}
-	end
+				HUNTER = false, SHAMAN = false, PRIEST = false,	WARLOCK = false, PALADIN = false, DEATHKNIGHT = false, MONK = false}
 	local valid
 	if (part.class) then
 		local classCount = 0
@@ -996,7 +974,7 @@ local function SetClassNames(self)
 	ValidateClassNames(XPerlDB.raid)
 
 	local prefix = self:GetParent():GetParent():GetName().."_"
-	for i = 1,10 do
+	for i = 1,WoWclassCount do
 		local f = _G[prefix.."ClassSel"..i.."_EnableText"]
 		if (f) then
 			local class = XPerlDB.raid.class[i].name
@@ -1038,7 +1016,7 @@ function XPerl_Options_RaidSelectAll(self, enable)
 	local val
 	local prefix = self:GetParent():GetName().."_"
 
-	for i = 1,10 do
+	for i = 1,WoWclassCount do
 		local f = _G[prefix.."Grp"..i]
 		if (f) then
 			f:SetChecked(enable)
@@ -1264,15 +1242,15 @@ local function InterestingFrames()
 	local ret = {}
 
 	if (interest == "all") then
-		for i = 1,10 do
+		for i = 1,WoWclassCount do
 			tinsert(ret, _G["XPerl_Raid_Title"..i])
 		end
 	elseif (interest == "odd") then
-		for i = 1,10,2 do
+		for i = 1,WoWclassCount,2 do
 			tinsert(ret, _G["XPerl_Raid_Title"..i])
 		end
 	elseif (interest == "even") then
-		for i = 2,10,2 do
+		for i = 2,WoWclassCount,2 do
 			tinsert(ret, _G["XPerl_Raid_Title"..i])
 		end
 	elseif (interest == "first4") then
@@ -1280,7 +1258,7 @@ local function InterestingFrames()
 			tinsert(ret, _G["XPerl_Raid_Title"..i])
 		end
 	elseif (interest == "last4") then
-		for i = 5,9 do
+		for i = 5,WoWclassCount do
 			tinsert(ret, _G["XPerl_Raid_Title"..i])
 		end
 	end
@@ -2023,6 +2001,7 @@ function XPerl_Options_ImportOldConfig(old)
 				{enable = Convert(old.RaidClass8Enable), name = old.RaidClass8 or "SHAMAN"},
 				{enable = Convert(old.RaidClass9Enable), name = old.RaidClass9 or "PALADIN"},
 				{enable = true, name = "DEATHKNIGHT"},
+				{enable = true, name = "MONK"},
 			},
 			titles			= Convert(old.ShowRaidTitles),
 			percent			= Convert(old.ShowRaidPercents),
@@ -2449,7 +2428,7 @@ local function XPerl_Raid_ConfigDefault(default)
 		enable			= 1,
 --		sortByClass		= nil,
 --		sortAlpha		= nil,
-		group = {1, 1, 1, 1, 1, 1, 1, 1, 1},
+		group = {1, 1, 1, 1, 1, 1, 1, 1, 1,1},
 		class = {
 			{enable = 1, name = "WARRIOR"},
 			{enable = 1, name = "ROGUE"},
@@ -2461,6 +2440,7 @@ local function XPerl_Raid_ConfigDefault(default)
 			{enable = 1, name = "SHAMAN"},
 			{enable = 1, name = "PALADIN"},
 			{enable = 1, name = "DEATHKNIGHT"},
+			{enable = 1, name = "MONK"},
 		},
 		titles			= 1,
 		percent			= 1,

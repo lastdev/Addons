@@ -1,6 +1,6 @@
 --[[
 	PanelScroller
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: PanelScroller.lua 312 2011-06-14 07:33:25Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 

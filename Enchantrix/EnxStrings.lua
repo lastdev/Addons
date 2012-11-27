@@ -5,7 +5,7 @@
 
 	AddOn: Enchantrix
 	Revision: $Id: EnxStrings.lua 5346 2012-09-06 04:00:44Z LocalizerAutoCommit $
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 
 	License:
 		This program is free software; you can redistribute it and/or

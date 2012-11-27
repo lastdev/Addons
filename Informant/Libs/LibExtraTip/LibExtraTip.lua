@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 local LIBNAME = "LibExtraTip"
 local VERSION_MAJOR = 1
-local VERSION_MINOR = 323
+local VERSION_MINOR = 325
 -- Minor Version cannot be a SVN Revison in case this library is used in multiple repositories
 -- Should be updated manually with each (non-trivial) change
 
@@ -37,7 +37,7 @@ local LIBSTRING = LIBNAME.."_"..VERSION_MAJOR.."_"..VERSION_MINOR
 local lib = LibStub:NewLibrary(LIBNAME.."-"..VERSION_MAJOR, VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/LibExtraTip/LibExtraTip.lua $","$Rev: 324 $","5.12.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/LibExtraTip/LibExtraTip.lua $","$Rev: 342 $","5.15.DEV.", 'auctioneer', 'libs')
 
 -- Call function to deactivate any outdated version of the library.
 -- (calls the OLD version of this function, NOT the one defined in this
@@ -75,6 +75,14 @@ local defaultEnable = {
 	SetTradeSkillItem = true,
 	SetHyperlink = true,
 	SetHyperlinkAndCount = true, -- Creating a tooltip via lib:SetHyperlinkAndCount()
+	SetBattlePet = true,
+	SetBattlePetAndCount = true,
+}
+
+--[[ The following callback types are always enabled regardless of the event ]]
+local alwaysEnable = {
+	extrashow = true,
+	extrahide = true,
 }
 
 -- Money Icon setup
@@ -85,17 +93,18 @@ local coppericon = "%s|T"..iconpath.."CopperIcon:0|t"
 
 -- Function that calls all the interested tooltips
 local function ProcessCallbacks(reg, tiptype, tooltip, ...)
-	local self = lib
 	if not reg then return end
 
 	local event = reg.additional.event or "Unknown"
 	local default = defaultEnable[event]
 
-	if self.sortedCallbacks and #self.sortedCallbacks > 0 then
-		for i,options in ipairs(self.sortedCallbacks) do
-			if options.type == tiptype and options.callback and type(options.callback) == "function" then
+	if lib.sortedCallbacks and #lib.sortedCallbacks > 0 then
+		for i,options in ipairs(lib.sortedCallbacks) do
+			if options.type == tiptype then
 				local enable = default
-				if options.enable and options.enable[event] ~= nil then
+				if options.allevents or alwaysEnable[tiptype] then
+					enable = true
+				elseif options.enable and options.enable[event] ~= nil then
 					enable = options.enable[event]
 				end
 				if enable then
@@ -130,10 +139,10 @@ local function OnTooltipSetItem(tooltip)
 				local r,g,b = GetItemQualityColor(quality)
 				extraTip:AddLine(name,r,g,b)
 
-				local quantity = reg.quantity
+				local quantity = reg.quantity or 1
 
 				reg.additional.item = item
-				reg.additional.quantity = quantity or 1
+				reg.additional.quantity = quantity
 				reg.additional.name = name
 				reg.additional.link = link
 				reg.additional.quality = quality
@@ -147,7 +156,10 @@ local function OnTooltipSetItem(tooltip)
 
 				ProcessCallbacks(reg, "item", tooltip, item,quantity,name,link,quality,ilvl,minlvl,itype,isubtype,stack,equiploc,texture)
 				tooltip:Show()
-				if reg.extraTipUsed then reg.extraTip:Show() end
+				if reg.extraTipUsed then
+					reg.extraTip:Show()
+					ProcessCallbacks(reg, "extrashow", tooltip, reg.extraTip)
+				end
 			end
 		end
 	end
@@ -161,7 +173,7 @@ local function OnTooltipSetSpell(tooltip)
 
 	if self.sortedCallbacks and #self.sortedCallbacks > 0 then
 		tooltip:Show()
-		local name, rank = tooltip:GetSpell()
+		local name, category, spellID = tooltip:GetSpell()
 		local link = reg.additional.link
 
 		if name and not reg.hasItem then
@@ -171,9 +183,16 @@ local function OnTooltipSetSpell(tooltip)
 			extraTip:Attach(tooltip)
 			extraTip:AddLine(name, 1,0.8,0)
 
-			ProcessCallbacks(reg, "spell", tooltip, link, name,rank)
+			reg.additional.name = name
+			reg.additional.category = category
+			reg.additional.spellID = spellID
+
+			ProcessCallbacks(reg, "spell", tooltip, link, name, category, spellID)
 			tooltip:Show()
-			if reg.extraTipUsed then reg.extraTip:Show() end
+			if reg.extraTipUsed then
+				reg.extraTip:Show()
+				ProcessCallbacks(reg, "extrashow", tooltip, reg.extraTip)
+			end
 		end
 	end
 end
@@ -195,9 +214,12 @@ local function OnTooltipSetUnit(tooltip)
 			extraTip:Attach(tooltip)
 			extraTip:AddLine(name, 0.8,0.8,0.8)
 
-			ProcessCallbacks(reg, "unit", tooltip, name,unitId)
+			ProcessCallbacks(reg, "unit", tooltip, name, unitId)
 			tooltip:Show()
-			if reg.extraTipUsed then reg.extraTip:Show() end
+			if reg.extraTipUsed then
+				reg.extraTip:Show()
+				ProcessCallbacks(reg, "extrashow", tooltip, reg.extraTip)
+			end
 		end
 	end
 end
@@ -211,19 +233,91 @@ local function OnTooltipCleared(tooltip)
 	if reg.ignoreOnCleared then return end
 	tooltip:SetFrameLevel(1)
 
-	if reg.extraTip then
-		table.insert(self.extraTippool, reg.extraTip)
-		reg.extraTip:Hide()
-		reg.extraTip:Release()
-		reg.extraTip:SetHeight(0)
-		reg.extraTip = nil
-	end
 	reg.extraTipUsed = nil
 	reg.minWidth = 0
 	reg.quantity = nil
 	reg.hasItem = nil
 	reg.item = nil
 	table.wipe(reg.additional)
+	if reg.extraTip then
+		tinsert(self.extraTippool, reg.extraTip)
+		reg.extraTip:Hide()
+		reg.extraTip:Release()
+		reg.extraTip:SetHeight(0)
+		ProcessCallbacks(reg, "extrahide", tooltip, reg.extraTip)
+		reg.extraTip = nil
+	end
+end
+
+-- Run when a BattlePet is loaded into a BettlePetTooltip
+-- Requires special handling as BattlePetTooltips aren't real tooltips and lack most of the scripts and methods we normally use
+-- Hooked directly from BattlePetTooltipTemplate_SetBattlePet
+local function OnTooltipSetBattlePet(tooltip, data)
+	local reg = lib.tooltipRegistry[tooltip]
+	if not reg then return end
+
+	-- OnTooltipCleared is normally called via OnHide for BattlePets
+	-- clean up here in case a new BattlePet is loaded into a visible tooltip, in which case OnHide would not have been triggered
+	if reg.hasItem then
+		OnTooltipCleared(tooltip)
+	end
+	if lib.sortedCallbacks and #lib.sortedCallbacks > 0 then
+		-- extract values from data
+		local speciesID = data.speciesID
+		local level = data.level
+		local breedQuality = data.breedQuality
+		local maxHealth = data.maxHealth
+		local power = data.power
+		local speed = data.speed
+		local battlePetID = data.battlePetID or 0
+		local name = data.name
+		local customName = data.customName
+		local petType = data.petType
+		local colcode, r, g, b
+		if breedQuality == -1 then
+			colcode = NORMAL_FONT_COLOR_CODE
+			r, g, b = NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b
+		else
+			local coltable = ITEM_QUALITY_COLORS[breedQuality]
+			colcode = coltable.hex
+			r, g, b = coltable.r, coltable.g, coltable.b
+		end
+
+		-- for certain events there may already be info stored in reg - e.g. SetBattlePetAndCount
+		local quantity = reg.quantity or 1
+		local link = reg.item
+		if not link then
+			-- it's a bit of a pain that we need to reconstruct a link here, just so it can be chopped up again...
+			link = format("%s|Hbattlepet:%d:%d:%d:%d:%d:%d:%d|h[%s]|h|r", colcode, speciesID, level, breedQuality, maxHealth, power, speed, battlePetID, customName or name)
+		end
+
+		reg.hasItem = true
+		local extraTip = lib:GetFreeExtraTipObject()
+		reg.extraTip = extraTip
+		extraTip:Attach(tooltip)
+		extraTip:AddLine(name, r, g, b)
+
+		reg.additional.name = name
+		reg.additional.link = link
+		reg.additional.speciesID = speciesID
+		reg.additional.quality = breedQuality
+		reg.additional.quantity = quantity
+		reg.additional.level = level
+		reg.additional.customName = customName -- nil if no custom name
+		reg.additional.petType = petType
+		reg.additional.maxHealth = maxHealth
+		reg.additional.power = power
+		reg.additional.speed = speed
+		reg.additional.battlePetID = battlePetID -- if not 0 it's a pet in your journal
+
+		reg.additional.event = reg.additional.event or "SetBattlePet"
+
+		ProcessCallbacks(reg, "battlepet", tooltip, link, quantity, name, speciesID, breedQuality, level)
+		if reg.extraTipUsed then
+			reg.extraTip:Show()
+			ProcessCallbacks(reg, "extrashow", tooltip, reg.extraTip)
+		end
+	end
 end
 
 -- Function that gets run when a registered tooltip's size changes.
@@ -240,7 +334,7 @@ end
 
 function lib:GetFreeExtraTipObject()
 	if not self.extraTippool then self.extraTippool = {} end
-	return table.remove(self.extraTippool) or ExtraTipClass:new()
+	return tremove(self.extraTippool) or ExtraTipClass:new()
 end
 
 --[[ hookStore:
@@ -253,7 +347,7 @@ end
 
 	if we are updating, keep the old hookStore table IF it has the right version, so that we can reuse the hook stubs
 --]]
-local HOOKSTORE_VERSION = "B"
+local HOOKSTORE_VERSION = "C"
 if not lib.hookStore or lib.hookStore.version ~= HOOKSTORE_VERSION then
 	lib.hookStore = {version = HOOKSTORE_VERSION}
 end
@@ -341,6 +435,35 @@ end
 --local function unhookscript(tip,script)
 -- not used in this version
 
+-- Called to install a post hook on a global function
+-- func must be the name of a global function
+local function hookglobal(func, posthook)
+	if not lib.hookStore.global then lib.hookStore.global = {} end
+	local control = lib.hookStore.global[func]
+	if control then
+		control[1] = posthook or control[1]
+		return
+	end
+	control = {posthook}
+	local orig = _G[func]
+	if type(orig) ~= "function" then
+		if nLog then
+			nLog.AddMessage("LibExtraTip", "Hooks", N_WARNING, "Global hook - not a function", "LibExtraTip:hookglobal attempted to hook "..tostring(func).." which is not a global function name")
+		end
+		return
+	end
+	local stub = function(...)
+		local hook
+		-- prehook
+		hook = control[1]
+		if hook then hook(...) end
+	end
+	-- As we only need post-hooks we can use hooksecurefunc
+	-- Using control table protects against multiple hooking and allows us to change or disable the hook
+	hooksecurefunc(func, stub)
+end
+
+
 --[[-
 	Adds the provided tooltip to the list of tooltips to monitor for items.
 	@param tooltip GameTooltip object
@@ -348,7 +471,20 @@ end
 	@since 1.0
 ]]
 function lib:RegisterTooltip(tooltip)
-	if not tooltip or type(tooltip) ~= "table" or type(tooltip.GetObjectType) ~= "function" or tooltip:GetObjectType() ~= "GameTooltip" then return end
+	local specialTooltip
+	if not tooltip or type(tooltip) ~= "table" or type(tooltip.GetObjectType) ~= "function" then return end
+	if tooltip:GetObjectType() ~= "GameTooltip" then
+		if tooltip:GetObjectType() == "Frame" then
+			-- is it a BattlePetTooltip? check for some of the entries from BattlePetTooltipTemplate
+			if tooltip.BattlePet and tooltip.PetType and tooltip.PetTypeTexture then
+				specialTooltip = "battlepet"
+			else
+				return
+			end
+		else
+			return
+		end
+	end
 
 	if not self.tooltipRegistry then
 		self.tooltipRegistry = {}
@@ -360,17 +496,24 @@ function lib:RegisterTooltip(tooltip)
 		self.tooltipRegistry[tooltip] = reg
 		reg.additional = {}
 
-		hookscript(tooltip,"OnTooltipSetItem",OnTooltipSetItem)
-		hookscript(tooltip,"OnTooltipSetUnit",OnTooltipSetUnit)
-		hookscript(tooltip,"OnTooltipSetSpell",OnTooltipSetSpell)
-		hookscript(tooltip,"OnTooltipCleared",OnTooltipCleared)
-		hookscript(tooltip,"OnSizeChanged",OnSizeChanged)
+		if specialTooltip == "battlepet" then
+			reg.NoColumns = true -- This is not a GameTooltip so it has no Text columns. Cannot support certain functions such as embedding
+			hookscript(tooltip,"OnHide",OnTooltipCleared)
+			hookscript(tooltip,"OnSizeChanged",OnSizeChanged)
+			hookglobal("BattlePetTooltipTemplate_SetBattlePet", OnTooltipSetBattlePet) -- yes we hook the same function every time - hookglobal protects against multiple hooks
+		else
+			hookscript(tooltip,"OnTooltipSetItem",OnTooltipSetItem)
+			hookscript(tooltip,"OnTooltipSetUnit",OnTooltipSetUnit)
+			hookscript(tooltip,"OnTooltipSetSpell",OnTooltipSetSpell)
+			hookscript(tooltip,"OnTooltipCleared",OnTooltipCleared)
+			hookscript(tooltip,"OnSizeChanged",OnSizeChanged)
 
-		for k,v in pairs(tooltipMethodPrehooks) do
-			hook(tooltip,k,v)
-		end
-		for k,v in pairs(tooltipMethodPosthooks) do
-			hook(tooltip,k,nil,v)
+			for k,v in pairs(tooltipMethodPrehooks) do
+				hook(tooltip,k,v)
+			end
+			for k,v in pairs(tooltipMethodPosthooks) do
+				hook(tooltip,k,nil,v)
+			end
 		end
 		return true
 	end
@@ -389,26 +532,59 @@ function lib:IsRegistered(tooltip)
 	return true
 end
 
-local sortFunc
+--[[-
+	Returns a reference to the extra tip currently attached to the specified tooltip (if any)
+	Intended for tooltip styling AddOns - should only be used to alter cosmetic elements of the tooltip
+	(Use caution when modifying Text line fonts, as LibExtraTip also modifies the fonts)
+	@param tooltip as registered tooltip
+	@return extratip if any attached to tooltip (may be hidden and/or empty)
+	@since 1.324
+]]
+function lib:GetExtraTip(tooltip)
+	if not self.tooltipRegistry then return end
+	local reg = self.tooltipRegistry[tooltip]
+	if reg then
+		return reg.extraTip
+	end
+end
+
 
 --[[-
 	Adds a callback to be informed of any registered tooltip's activity.
-	Callbacks are passed the following parameters (in order):
-		* tooltip: The tooltip object being shown (GameTooltip object)
-		* item: The item being shown (in {@wowwiki:ItemLink} format)
-		* quantity: The quantity of the item being shown (may be nil when the quantity is unavailable)
-		* return values from {@wowwiki:API_GetItemInfo|GetItemInfo} (in order)
-	@param options a table containing the callback type and callback function
+	The parameters passed to callbacks vary depending on the type of callback
+	@param options a table containing entries defining the required callback
+		type (string, required) the callback type, e.g. "item", "spell", and others
+		callback (function, required) the function to be called back when the appropriate event occurs
+		enable (table, optional) a table containing <event>=<boolean> pairs, specifying which events to respond to
+			callbacks are usually only generated for events enabled either by this table, or by the defaultEnable table
+		allevents (boolean, optional) if true always triggers a callback regardless of the event, overrides defaultEnable and options.event table
 	@param priority the priority of the callback (optional, default 200)
 	@since 1.0
 ]]
+local sortFunc
 function lib:AddCallback(options,priority)
 -- Lower priority gets called before higher priority.  Default is 200.
 	if not options then return end
 	local otype = type(options)
 	if otype == "function" then
-		options = { type = "item", callback = options }
-	elseif otype ~= "table" then return end
+		options = {type = "item", callback = options}
+	elseif otype == "table" then
+		-- check required keys
+		if type(options.type) ~= "string" or type(options.callback) ~= "function" then
+			return
+		end
+		-- copy into a new table for our internal use
+		local copyoptions = {type = options.type, callback = options.callback}
+		if options.allevents == true then
+			copyoptions.allevents = true
+		elseif type(options.enable) == "table" then
+			copyoptions.enable = options.enable
+		end
+
+		options = copyoptions
+	else
+		return
+	end
 
 	if not sortFunc then
 		local callbacks = self.callbacks
@@ -423,8 +599,8 @@ function lib:AddCallback(options,priority)
 	end
 
 	self.callbacks[options] = priority or 200
-	table.insert(self.sortedCallbacks,options)
-	table.sort(self.sortedCallbacks,sortFunc)
+	tinsert(self.sortedCallbacks,options)
+	sort(self.sortedCallbacks,sortFunc)
 end
 
 --[[-
@@ -448,7 +624,7 @@ function lib:RemoveCallback(callback)
 	self.callbacks[callback] = nil
 	for index,options in ipairs(self.sortedCallbacks) do
 		if options == callback then
-			table.remove(self.sortedCallbacks, index)
+			tremove(self.sortedCallbacks, index)
 			return true
 		end
 	end
@@ -480,8 +656,12 @@ function lib:AddLine(tooltip,text,r,g,b,embed)
 	local reg = self.tooltipRegistry[tooltip]
 	if not reg then return end
 
-	if r and not g then embed = r r = nil end
-	embed = embed ~= nil and embed or self.embedMode
+	if reg.NoColumns then
+		embed = false
+	else
+		if r and not g then embed = r r = nil end
+		if embed == nil then embed = self.embedMode end
+	end
 	if not embed then
 		reg.extraTip:AddLine(text,r,g,b)
 		reg.extraTipUsed = true
@@ -506,9 +686,13 @@ function lib:AddDoubleLine(tooltip,textLeft,textRight,lr,lg,lb,rr,rg,rb,embed)
 	local reg = self.tooltipRegistry[tooltip]
 	if not reg then return end
 
-	if lr and not lg and not rr then embed = lr lr = nil end
-	if lr and lg and rr and not rg then embed = rr rr = nil end
-	embed = embed ~= nil and embed or self.embedMode
+	if reg.NoColumns then
+		embed = false
+	else
+		if lr and not lg and not rr then embed = lr lr = nil end
+		if lr and lg and rr and not rg then embed = rr rr = nil end
+		if embed == nil then embed = self.embedMode end
+	end
 	if not embed then
 		reg.extraTip:AddDoubleLine(textLeft,textRight,lr,lg,lb,rr,rg,rb)
 		reg.extraTipUsed = true
@@ -566,8 +750,12 @@ function lib:AddMoneyLine(tooltip,text,money,r,g,b,embed,concise)
 	local reg = self.tooltipRegistry[tooltip]
 	if not reg then return end
 
-	if r and not g then embed = r r = nil end
-	embed = embed ~= nil and embed or self.embedMode
+	if reg.NoColumns then
+		embed = false
+	else
+		if r and not g then embed = r r = nil end
+		if embed == nil then embed = self.embedMode end
+	end
 
 	local moneyText = self:GetMoneyText(money, concise)
 
@@ -583,14 +771,14 @@ end
 	Sets a tooltip to hyperlink with specified quantity
 	@param tooltip GameTooltip object
 	@param link hyperlink to display in the tooltip
-	@param quantity quantity of the item to display
-	@param detail additional detail items to set for the callbacks
-	@return nil
+	@param quantity quantity of the item to display (optional)
+	@param detail additional detail items to set for the callbacks (optional)
+	@return true if successful
 	@since 1.0
 ]]
 function lib:SetHyperlinkAndCount(tooltip, link, quantity, detail)
 	local reg = self.tooltipRegistry[tooltip]
-	if not reg then return end
+	if not reg or reg.NoColumns then return end -- NoColumns tooltips can't handle :SetHyperlink
 
 	OnTooltipCleared(tooltip)
 	reg.quantity = quantity
@@ -607,6 +795,66 @@ function lib:SetHyperlinkAndCount(tooltip, link, quantity, detail)
 	tooltip:SetHyperlink(link)
 	reg.ignoreSetHyperlink = nil
 	reg.ignoreOnCleared = nil
+	return true
+end
+
+--[[-
+	Set a (BattlePet) tooltip to (battlepetpet)link
+	(partially based on Blizzard code in BattlePetTooltip.lua)
+	Although Pet Cages cannot be stacked, some Addons may wish to group identical Pets together for display purposes
+	@param tooltip Frame(BattlePetTooltipTemplate) object
+	@param link battlepet link to display in the tooltip
+	@param quantity quantity of the item to display (optional)
+	@param detail additional detail items to set for the callbacks (optional)
+	@return true if successful
+	@since 1.325
+]]
+local BATTLE_PET_TOOLTIP = {}
+function lib:SetBattlePetAndCount(tooltip, link, quantity, detail)
+	if not link then return end
+	local reg = self.tooltipRegistry[tooltip]
+	if not reg or not reg.NoColumns then return end -- identify BattlePet tooltips by their NoColumns flag
+	local head, speciesID, level, breedQuality, maxHealth, power, speed, tail = strsplit(":", link)
+	if not tail or head:sub(-9) ~= "battlepet" then return end
+	speciesID = tonumber(speciesID)
+	if not speciesID or speciesID < 1 then return end
+	local name, icon, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
+	if not name then return end
+
+	-- set up the battlepet table
+	BATTLE_PET_TOOLTIP.speciesID = speciesID
+	BATTLE_PET_TOOLTIP.name = name
+	BATTLE_PET_TOOLTIP.level = tonumber(level)
+	BATTLE_PET_TOOLTIP.breedQuality = tonumber(breedQuality)
+	BATTLE_PET_TOOLTIP.petType = petType
+	BATTLE_PET_TOOLTIP.maxHealth = tonumber(maxHealth)
+	BATTLE_PET_TOOLTIP.power = tonumber(power)
+	BATTLE_PET_TOOLTIP.speed = tonumber(speed)
+	local customName = strmatch(tail, "%[(.+)%]")
+	if (customName ~= BATTLE_PET_TOOLTIP.name) then
+		BATTLE_PET_TOOLTIP.customName = customName;
+	else
+		BATTLE_PET_TOOLTIP.customName = nil;
+	end
+
+	-- set up reg
+	OnTooltipCleared(tooltip)
+	reg.quantity = quantity
+	reg.item = link
+	reg.additional.event = "SetBattlePetAndCount"
+	reg.additional.eventLink = link
+	if detail then
+		for k,v in pairs(detail) do
+			reg.additional[k] = v
+		end
+	end
+
+	-- load the tooltip (will trigger a call to OnTooltipSetBattlePet)
+	reg.ignoreOnCleared = true
+	BattlePetTooltipTemplate_SetBattlePet(tooltip, BATTLE_PET_TOOLTIP)
+	tooltip:Show()
+	reg.ignoreOnCleared = nil
+	return true
 end
 
 --[[-
@@ -668,15 +916,22 @@ end
 
 --[[ INTERNAL USE ONLY
 	Activates this version of the library.
-	Configures this library for use by setting up its variables and reregistering any previously registered tooltips.
+	Configures this library for use by setting up its variables and reregistering any previously registered tooltips and callbacks.
 	@since 1.0
 ]]
 function lib:Activate()
-	if self.tooltipRegistry then
-		local oldreg = self.tooltipRegistry
+	local oldreg = self.tooltipRegistry
+	if oldreg then
 		self.tooltipRegistry = nil
 		for tooltip in pairs(oldreg) do
 			self:RegisterTooltip(tooltip)
+		end
+	end
+	local oldcallbacks = self.callbacks
+	if oldcallbacks then
+		self.callbacks = nil
+		for options, priority in pairs(oldcallbacks) do
+			self:AddCallback(options, priority)
 		end
 	end
 end
@@ -704,6 +959,7 @@ end
 ]]
 function lib:GenerateTooltipMethodTable() -- Sets up hooks to give the quantity of the item
 	local tooltipRegistry = self.tooltipRegistry
+	self.GenerateTooltipMethodTable = nil -- only run once
 
 	tooltipMethodPrehooks = {
 
@@ -996,7 +1252,7 @@ function lib:GenerateTooltipMethodTable() -- Sets up hooks to give the quantity 
 			end
 		end,
 
-		SetTalent = function(self, type, index)
+		SetTalent = function(self, index, isInspect, talentGroup, inspectedUnit, classID)
 			OnTooltipCleared(self)
 			local reg = tooltipRegistry[self]
 			reg.ignoreOnCleared = true
@@ -1245,9 +1501,12 @@ do -- ExtraTip "class" definition
 			self:SetWidth(pw)
 			fixRight(self, d)
 		elseif d < -.005 then
-			self.sizing = true
-			p:SetWidth(w)
-			fixRight(p, -d)
+			local reg = lib.tooltipRegistry[p]
+			if not reg.NoColumns then
+				self.sizing = true
+				p:SetWidth(w)
+				fixRight(p, -d)
+			end
 		end
 	end
 

@@ -2,10 +2,10 @@
 ************************************************************************
 Panel.lua
 ************************************************************************
-File date: 2012-08-29T06:26:36Z
-File hash: 1558806
-Project hash: f647594
-Project version: 2.4
+File date: 2012-09-28T15:31:40Z
+File hash: 3cfcb4d
+Project hash: 5a95034
+Project version: 2.4.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -18,10 +18,10 @@ This source code is released under All Rights Reserved.
 -------------------------------------------------------------------------------
 local _G = getfenv(0)
 
-local string = _G.string
-
 local select = _G.select
 
+local math = _G.math
+local string = _G.string
 local table = _G.table
 
 local ipairs, pairs = _G.ipairs, _G.pairs
@@ -37,7 +37,6 @@ local FOLDER_NAME, private	= ...
 local LibStub = _G.LibStub
 local addon	= LibStub("AceAddon-3.0"):GetAddon(private.addon_name)
 local L		= LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
-local BFAC	= LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 
 -------------------------------------------------------------------------------
 -- Upvalues
@@ -82,27 +81,27 @@ function private.InitializeFrame()
 	addon.Frame = MainPanel
 
 	do
-		local top_left = MainPanel:CreateTexture(nil, "ARTWORK")
+		local top_left = MainPanel:CreateTexture(nil, "OVERLAY")
 		top_left:SetTexture("Interface\\QuestFrame\\UI-QuestLog-TopLeft")
 		top_left:SetPoint("TOPLEFT", MainPanel, "TOPLEFT", 0, 0)
 		MainPanel.top_left = top_left
 
-		local top_right = MainPanel:CreateTexture(nil, "ARTWORK")
+		local top_right = MainPanel:CreateTexture(nil, "OVERLAY")
 		top_right:SetTexture("Interface\\QuestFrame\\UI-QuestLog-TopRight")
 		top_right:SetPoint("TOPRIGHT", MainPanel, "TOPRIGHT", 0, 0)
 		MainPanel.top_right = top_right
 
-		local bottom_left = MainPanel:CreateTexture(nil, "ARTWORK")
+		local bottom_left = MainPanel:CreateTexture(nil, "OVERLAY")
 		bottom_left:SetTexture("Interface\\QuestFrame\\UI-QuestLog-BotLeft")
 		bottom_left:SetPoint("BOTTOMLEFT", MainPanel, "BOTTOMLEFT", 0, 0)
 		MainPanel.bottom_left = bottom_left
 
-		local bottom_right = MainPanel:CreateTexture(nil, "ARTWORK")
+		local bottom_right = MainPanel:CreateTexture(nil, "OVERLAY")
 		bottom_right:SetTexture("Interface\\QuestFrame\\UI-QuestLog-BotRight")
 		bottom_right:SetPoint("BOTTOMRIGHT", MainPanel, "BOTTOMRIGHT", 0, 0)
 		MainPanel.bottom_right = bottom_right
 
-		local title_bar = MainPanel:CreateFontString(nil, "ARTWORK")
+		local title_bar = MainPanel:CreateFontString(nil, "OVERLAY")
 		title_bar:SetFontObject("GameFontHighlightSmall")
 		title_bar:SetPoint("TOPLEFT", MainPanel, "TOPLEFT", 20, -20)
 		title_bar:SetPoint("TOPRIGHT", MainPanel, "TOPRIGHT", -40, -20)
@@ -168,23 +167,23 @@ function private.InitializeFrame()
 		-------------------------------------------------------------------------------
 		-- Set the profession.
 		-------------------------------------------------------------------------------
-		local prev_profession = self.profession
+		local prev_profession = self.current_profession
 
 		for index, name in ipairs(ORDERED_PROFESSIONS) do
 			if name == profession_name then
-				self.profession = index
+				self.current_profession = index
 				break
 			end
 		end
 
-		if self.profession ~= prev_profession then
-			self.prev_profession = self.profession
+		if self.current_profession ~= prev_profession then
+			self.prev_profession = self.current_profession
 		end
-		self.prof_button:ChangeTexture(private.PROFESSION_TEXTURES[self.profession])
+		self.prof_button:SetTexture()
 
 		local editbox = self.search_editbox
 
-		if self.profession ~= self.prev_profession then
+		if self.current_profession ~= self.prev_profession then
 			editbox.prev_search = nil
 		end
 		editbox:SetText(editbox.prev_search or _G.SEARCH)
@@ -193,7 +192,7 @@ function private.InitializeFrame()
 		if private.InitializeFilterPanel then
 			private.InitializeFilterPanel()
 		end
-		local prof_name = private.PROFESSION_LABELS[self.profession]
+		local prof_name = private.PROFESSION_LABELS[self.current_profession]
 		local init_func = ITEM_FILTER_INIT_FUNCS[prof_name]
 		local panel
 
@@ -240,7 +239,7 @@ function private.InitializeFrame()
 		-- shown so things must be initialized. In this case, MainPanel.list_frame:Update()
 		-- will be called by the tab's OnClick handler.
 		if self.current_tab then
-			MainPanel.list_frame:Update(nil, false)
+			self.list_frame:Update(nil, false)
 		else
 			local current_tab = self.tabs[addon.db.profile.current_tab]
 			local on_click = current_tab:GetScript("OnClick")
@@ -381,7 +380,7 @@ function private.InitializeFrame()
 	end	-- do-block
 
 	function MainPanel:UpdateTitle()
-		local current_prof = ORDERED_PROFESSIONS[self.profession]
+		local current_prof = ORDERED_PROFESSIONS[self.current_profession]
 
 		if not self.is_expanded then
 			self.title_bar:SetFormattedText(SetTextColor(private.BASIC_COLORS["normal"], "ARL (%s) - %s"), addon.version, current_prof)
@@ -403,125 +402,84 @@ function private.InitializeFrame()
 	-------------------------------------------------------------------------------
 	-- Create the profession-cycling button and assign its values.
 	-------------------------------------------------------------------------------
-	local profession_cycling_button = _G.CreateFrame("Button", nil, MainPanel)
-	profession_cycling_button:SetWidth(64)
-	profession_cycling_button:SetHeight(64)
-	profession_cycling_button:SetPoint("TOPLEFT", MainPanel, "TOPLEFT", 5, -4)
-	profession_cycling_button:SetHighlightTexture([[Interface\Cooldown\ping4]])
-	profession_cycling_button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+	local profession_cycler = _G.CreateFrame("Button", nil, MainPanel)
+	profession_cycler:SetSize(60, 60)
+	profession_cycler:SetPoint("TOPLEFT", 7, -6)
+	profession_cycler:SetHighlightTexture([[Interface\Cooldown\ping4]])
+	profession_cycler:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+	MainPanel.prof_button = profession_cycler
 
-	profession_cycling_button._normal = profession_cycling_button:CreateTexture(nil, "BACKGROUND")
-	profession_cycling_button._pushed = profession_cycling_button:CreateTexture(nil, "BACKGROUND")
-	profession_cycling_button._disabled = profession_cycling_button:CreateTexture(nil, "BACKGROUND")
+	local profession_texture = MainPanel:CreateTexture("ARL_ProfessionButtonPortrait", "ARTWORK")
+	profession_texture:SetSize(60, 60)
+	profession_texture:SetPoint("TOPLEFT", 7, -6)
+	MainPanel.profession_texture = profession_texture
 
-	MainPanel.prof_button = profession_cycling_button
 
 	-------------------------------------------------------------------------------
 	-- ProfCycle scripts/functions.
 	-------------------------------------------------------------------------------
-	profession_cycling_button:SetScript("OnClick", function(self, button, down)
-	-- Known professions should be in Player.professions
+	do
+		local profession_registry = {}
 
-	-- This loop is gonna be weird. The reason is because we need to
-	-- ensure that we cycle through all the known professions, but also
-	-- that we do so in order. That means that if the currently displayed
-	-- profession is the last one in the list, we're actually going to
-	-- iterate completely once to get to the currently displayed profession
-	-- and then iterate again to make sure we display the next one in line.
-	-- Further, there is the nuance that the person may not know any
-	-- professions yet at all. Users are so annoying.
-		local startLoop = 0
-		local endLoop = 0
-		local displayProf = 0
+		profession_cycler:SetScript("OnClick", function(self, button_name, down)
+			local player = private.Player
+			table.wipe(profession_registry)
 
-		local NUM_PROFESSIONS = 12
-
-		-- ok, so first off, if we've never done this before, there is no "current"
-		-- and a single iteration will do nicely, thank you
-		if button == "LeftButton" then
-			-- normal profession switch
-			if MainPanel.profession == 0 then
-				startLoop = 1
-				endLoop = NUM_PROFESSIONS + 1
-			else
-				startLoop = MainPanel.profession + 1
-				endLoop = MainPanel.profession
-			end
-			local index = startLoop
-
-			while index ~= endLoop do
-				if index > NUM_PROFESSIONS then
-					index = 1
-				elseif private.Player.professions[ORDERED_PROFESSIONS[index]] then
-					displayProf = index
-					MainPanel.profession = index
-					break
-				else
-					index = index + 1
+			for index = 1, #ORDERED_PROFESSIONS do
+				if player.professions[ORDERED_PROFESSIONS[index]] then
+					profession_registry[#profession_registry + 1] = index
 				end
 			end
-		elseif button == "RightButton" then
-			-- reverse profession switch
-			if MainPanel.profession == 0 then
-				startLoop = NUM_PROFESSIONS + 1
-				endLoop = 0
-			else
-				startLoop = MainPanel.profession - 1
-				endLoop = MainPanel.profession
-			end
-			local index = startLoop
+			local current_index
 
-			while index ~= endLoop do
-				if index < 1 then
-					index = NUM_PROFESSIONS
-				elseif private.Player.professions[ORDERED_PROFESSIONS[index]] then
-					displayProf = index
-					MainPanel.profession = index
+			for index = 1, #profession_registry do
+				if profession_registry[index] == MainPanel.current_profession then
+					current_index = index
 					break
-				else
-					index = index - 1
 				end
 			end
-		end
-		local is_shown = addon.scan_button:GetParent():IsVisible()
-		local sfx
 
-		_G.PlaySound("igCharacterNPCSelect")
+			if button_name == "LeftButton" then
+				current_index = current_index + 1
 
-		-- If not shown, save the current sound effects setting then set it to 0.
-		if not is_shown then
-			sfx = tonumber(_G.GetCVar("Sound_EnableSFX"))
-			_G.SetCVar("Sound_EnableSFX", 0)
-		end
-		_G.CastSpellByName(ORDERED_PROFESSIONS[MainPanel.profession])
-		addon:Scan()
+				if current_index > #profession_registry then
+					current_index = 1
+				end
+			elseif button_name == "RightButton" then
+				current_index = current_index - 1
 
-		if not is_shown then
-			_G.CloseTradeSkill()
-			_G.SetCVar("Sound_EnableSFX", sfx)
-		end
-	end)
+				if current_index < 1 then
+					current_index = #profession_registry
+				end
+			end
 
-	local TEXTURE_UP_FORMAT = ([[Interface\Addons\%s\img\]]):format(FOLDER_NAME) .. "%s_up"
-	local TEXTURE_DOWN_FORMAT = ([[Interface\Addons\%s\img\]]):format(FOLDER_NAME) .. "%s_down"
+			if MainPanel.current_profession == profession_registry[current_index] then
+				return
+			end
+			MainPanel.current_profession = profession_registry[current_index]
 
-	function profession_cycling_button:ChangeTexture(texture_name)
-		local normal, pushed, disabled = self._normal, self._pushed, self._disabled
+			local is_shown = addon.scan_button:GetParent():IsVisible()
+			local sfx
 
-		normal:SetTexture(TEXTURE_UP_FORMAT:format(texture_name))
-		normal:SetTexCoord(0, 1, 0, 1)
-		normal:SetAllPoints(self)
-		self:SetNormalTexture(normal)
+			_G.PlaySound("igCharacterNPCSelect")
 
-		pushed:SetTexture(TEXTURE_DOWN_FORMAT:format(texture_name))
-		pushed:SetTexCoord(0, 1, 0, 1)
-		pushed:SetAllPoints(self)
-		self:SetPushedTexture(pushed)
+			-- If not shown, save the current sound effects setting then set it to 0.
+			if not is_shown then
+				sfx = tonumber(_G.GetCVar("Sound_EnableSFX"))
+				_G.SetCVar("Sound_EnableSFX", 0)
+			end
+			_G.CastSpellByName(ORDERED_PROFESSIONS[MainPanel.current_profession])
+			addon:Scan()
 
-		disabled:SetTexture(TEXTURE_UP_FORMAT:format(texture_name))
-		disabled:SetTexCoord(0, 1, 0, 1)
-		disabled:SetAllPoints(self)
-		self:SetDisabledTexture(disabled)
+			if not is_shown then
+				_G.CloseTradeSkill()
+				_G.SetCVar("Sound_EnableSFX", sfx)
+			end
+		end)
+	end -- do-block
+
+	function profession_cycler:SetTexture()
+		_G.SetPortraitToTexture("ARL_ProfessionButtonPortrait", _G.GetTradeSkillTexture())
 	end
 
 	-------------------------------------------------------------------------------
@@ -649,7 +607,7 @@ function private.InitializeFrame()
 			end
 			search_pattern = search_pattern:lower()
 
-			for index, recipe in pairs(private.profession_recipe_list[ORDERED_PROFESSIONS[MainPanel.profession]]) do
+			for index, recipe in pairs(private.profession_recipe_list[ORDERED_PROFESSIONS[MainPanel.current_profession]]) do
 				recipe:RemoveState("RELEVANT")
 
 				for search_index = 1, #SEARCH_FUNCTIONS do
@@ -665,7 +623,7 @@ function private.InitializeFrame()
 	-------------------------------------------------------------------------------
 	-- Search EditBox
 	-------------------------------------------------------------------------------
-	local SearchBox = _G.CreateFrame("EditBox", nil, MainPanel, "InputBoxTemplate")
+	local SearchBox = _G.CreateFrame("EditBox", nil, MainPanel, "SearchBoxTemplate")
 
 	SearchBox:EnableMouse(true)
 	SearchBox:SetAutoFocus(false)
@@ -754,19 +712,15 @@ function private.InitializeFrame()
 		MainPanel.list_frame:Update(nil, false)
 	end)
 
-	SearchBox:SetScript("OnEditFocusGained", SearchBox.HighlightText)
-
 	SearchBox:SetScript("OnEditFocusLost", function(self)
+		_G.SearchBoxTemplate_OnEditFocusLost(self)
+
 		local text = self:GetText()
 
 		if text == "" or text == _G.SEARCH then
 			self:Reset()
 			return
 		end
-
-		-- Ensure that the highlight is cleared.
-		self:SetText(text)
-
 		self:AddHistoryLine(text)
 	end)
 
@@ -789,13 +743,20 @@ function private.InitializeFrame()
 		updater:SetScript("OnUpdate", function(self, elapsed)
 			last_update = last_update + elapsed
 
-			if last_update >= 0.5 then
-				last_update = 0
-
-				SearchRecipes(SearchBox:GetText())
-				MainPanel.list_frame:Update(nil, false)
-				self:Hide()
+			if last_update < 0.25 then
+				return
 			end
+			local search_text = SearchBox:GetText()
+
+			if #search_text < 4 then
+				last_update = 0
+				return
+			end
+			last_update = 0
+
+			SearchRecipes(search_text)
+			MainPanel.list_frame:Update(nil, false)
+			self:Hide()
 		end)
 
 		SearchBox:SetScript("OnTextChanged", function(self, is_typed)
@@ -806,6 +767,7 @@ function private.InitializeFrame()
 
 			if text ~= "" and text ~= _G.SEARCH and text ~= self.prev_search then
 				updater:Show()
+				last_update = 0
 			else
 				self:Reset()
 			end
@@ -860,11 +822,11 @@ function private.InitializeFrame()
 
 	expand_button:SetScript("OnClick", function(self, mouse_button, down)
 		local current_tab = MainPanel.tabs[MainPanel.current_tab]
-		local is_expanded = current_tab["expand_button_" .. MainPanel.profession]
+		local is_expanded = current_tab["expand_button_" .. MainPanel.current_profession]
 		local expand_mode
 
 		if is_expanded then
-			table.wipe(current_tab[ORDERED_PROFESSIONS[MainPanel.profession] .. " expanded"])
+			table.wipe(current_tab[ORDERED_PROFESSIONS[MainPanel.current_profession] .. " expanded"])
 		else
 			if _G.IsShiftKeyDown() then
 				expand_mode = "deep"
@@ -885,7 +847,7 @@ function private.InitializeFrame()
 	end)
 
 	function expand_button:Expand(current_tab)
-		current_tab["expand_button_"..MainPanel.profession] = true
+		current_tab["expand_button_" .. MainPanel.current_profession] = true
 
 		self:SetNormalTexture("Interface\\BUTTONS\\UI-MinusButton-Up")
 		self:SetPushedTexture("Interface\\BUTTONS\\UI-MinusButton-Down")
@@ -896,7 +858,7 @@ function private.InitializeFrame()
 	end
 
 	function expand_button:Contract(current_tab)
-		current_tab["expand_button_"..MainPanel.profession] = nil
+		current_tab["expand_button_" .. MainPanel.current_profession] = nil
 
 		self:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up")
 		self:SetPushedTexture("Interface\\Buttons\\UI-PlusButton-Down")

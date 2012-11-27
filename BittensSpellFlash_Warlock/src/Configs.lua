@@ -16,11 +16,11 @@ config.CheckButtonOptions = {
 --        ConfigKey = "demonology_off",
 --        Label = L["Flash Demonology"],
 --    },
---    LeftCheckButton3 = {
---        DefaultChecked = true,
---        ConfigKey = "destro_off",
---        Label = L["Flash Destruction"],
---    },
+    LeftCheckButton3 = {
+        DefaultChecked = true,
+        ConfigKey = "destro_off",
+        Label = L["Flash Destruction"],
+    },
 }
 
 a.LoadConfigs(config)

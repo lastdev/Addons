@@ -1,0 +1,24 @@
+------------------------------------------------------------------------
+r1223 | elsia | 2012-11-08 06:50:06 +0000 (Thu, 08 Nov 2012) | 1 line
+Changed paths:
+   A /tags/v5.0.5b release (from /trunk:1222)
+
+Tagging as v5.0.5b release
+------------------------------------------------------------------------
+r1222 | elsia | 2012-11-04 02:10:30 +0000 (Sun, 04 Nov 2012) | 3 lines
+Changed paths:
+   M /trunk/GUI_Config.lua
+   M /trunk/Recount.lua
+   M /trunk/deletion.lua
+   M /trunk/zonefilters.lua
+
+- Deletion (whether triggered manually or by autodeletes based on zoneing) will now be delayed until the next leaving of combat to avoid blizzard's lovely "script too long" cap.
+- Config window is now preloaded on startup so it can be used safely in combat (thanks to blizzard's lovely "script too long" cap.)
+- Party/Instance based content collection and deletion should now work for scenarios.
+------------------------------------------------------------------------
+r1221 | elsia | 2012-10-25 02:35:38 +0000 (Thu, 25 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/deletion.lua
+
+- scenarios seem to return nil on GetInstanceInfo calls. This should band-aid the problem.
+------------------------------------------------------------------------

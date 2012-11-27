@@ -189,8 +189,33 @@ AddArtifact(64467, 91084, 0,  45)  -- Thorned Necklace
 -- currentRace = 10	-- Other
 -- AddArtifact(0, 0, 0,  0)  -- Placeholder
 
--- currentRace = 11	-- Pandaren
--- AddArtifact(0, 0, 0,  0)  -- Placeholder
+currentRace = 11	-- Pandaren
+AddArtifact(89685, 113981, 3, 180)  -- Spear of Xuen
+AddArtifact(89684, 113980, 3, 180)  -- Umbrella of Chi-Ji
 
--- currentRace = 12	-- Mogu
--- AddArtifact(0, 0, 0,  0)  -- Placeholder
+AddArtifact(79903, 113977, 0,  50)  -- Apothecary Tins
+AddArtifact(79901, 113975, 0,  50)  -- Carved Bronze Mirror
+AddArtifact(79897, 113971, 0,  50)  -- Panderan Game Board
+AddArtifact(79900, 113974, 0,  50)  -- Empty Keg of Brewfather Xin Wo Yin
+AddArtifact(79902, 113976, 0,  50)  -- Gold-Inlaid Porecelain Funerary Figurine
+AddArtifact(79904, 113978, 0,  50)  -- Pearl of Yu'lon
+AddArtifact(79905, 113979, 0,  50)  -- Standard  of Niuzao
+AddArtifact(79898, 113972, 0,  50)  -- Twin Stein Set of Brewfather Quan Tou Kuo
+AddArtifact(79899, 113973, 0,  50)  -- Walking Cane of Brewfather Ren Yun
+AddArtifact(79896, 113968, 0,  50)  -- Pandaren Tea Set
+
+
+currentRace = 12	-- Mogu
+AddArtifact(89614, 113993, 3, 180)  -- Anatomical Dummy
+AddArtifact(89611, 113992, 3, 180)  -- Quilen Statuette
+
+AddArtifact(79909, 113983, 0,  50)  -- Cracked Mogu Runestone
+AddArtifact(79913, 113987, 0,  50)  -- Edicts of the Thunder King
+AddArtifact(79914, 113988, 0,  50)  -- Iron Amulet
+AddArtifact(79908, 113982, 0,  50)  -- Manacles of Rebellion
+AddArtifact(79916, 113990, 0,  50)  -- Mogu Coin
+AddArtifact(79911, 113985, 0,  50)  -- Petrified Bone Whip
+AddArtifact(79910, 113984, 0,  50)  -- Terracotta Arm
+AddArtifact(79912, 113986, 0,  50)  -- Thunder King Insignia
+AddArtifact(79915, 113989, 0,  50)  -- Warlord's Branding Iron
+AddArtifact(79917, 113991, 0,  50)  -- Worn Monument Ledger

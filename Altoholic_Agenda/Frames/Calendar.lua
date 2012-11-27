@@ -169,6 +169,8 @@ local function GetDay(fullday)
 	-- this function is actually different than the one in Blizzard_Calendar.lua, since weekday can't necessarily be determined from a UI button
 	local refDate = {}		-- let's use the 1st of current month as reference date
 	local refMonthFirstDay
+	local _
+	
 	refDate.month, refDate.year, _, refMonthFirstDay = CalendarGetMonth()
 	refDate.day = 1
 

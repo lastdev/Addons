@@ -156,57 +156,78 @@ function c.FlashMitigationBuffs(targetScore, ...)
 		end
 		
 		-- test castable before flashable, in case it changes the id
-		local spell = lib.A.Spells[select(i, ...)]
-		if spell and s.Castable(spell) and s.Flashable(spell.ID) then
-			if spell.ShouldHold == nil or not spell.ShouldHold() then
-				s.Flash(spell.ID, spell.FlashColor, spell.FlashSize)
+		local name = select(i, ...)
+		local spell = lib.A.Spells[name]
+		if spell and s.Castable(spell) then
+			if spell.Type == "item" then
+				if s.ItemFlashable(spell.ID) then
+					if spell.ShouldHold == nil or not spell.ShouldHold() then
+						s.FlashItem(spell.ID, spell.FlashColor, spell.FlashSize)
+					end
+					targetScore = targetScore - (spell.Score or 1)
+				end
+			else
+				if s.Flashable(spell.ID) then
+					if spell.ShouldHold == nil or not spell.ShouldHold() then
+						s.Flash(spell.ID, spell.FlashColor, spell.FlashSize)
+					end
+					targetScore = targetScore - (spell.Score or 1)
+				end
 			end
-			targetScore = targetScore - (spell.Score or 1)
 		end
 	end
 end
 
-function c.HasBuff(name, noGCD)
-	local duration = s.BuffDuration(c.GetID(name), "player")
+function c.HasBuff(name, noGCD, matchSpellID)
+	local duration = s.BuffDuration(
+		c.GetID(name), "player", nil, nil, nil, matchSpellID)
 	if duration == 0 then
 		-- duration == 0 for permanent buffs
-		return s.Buff(c.GetID(name), "player")
+		return s.Buff(c.GetID(name), "player", nil, nil, nil, matchSpellID)
 	else
 		return duration > c.GetBusyTime(noGCD)
 	end
 end
 
-function c.GetBuffDuration(name, noGCD)
+function c.GetBuffDuration(name, noGCD, matchSpellID)
 	return math.max(
-		s.BuffDuration(c.GetID(name), "player") - c.GetBusyTime(noGCD), 0)
+		0, 
+		s.BuffDuration(c.GetID(name), "player", nil, nil, nil, matchSpellID)
+			- c.GetBusyTime(noGCD))
 end
 
-function c.GetBuffStack(name)
-	if c.HasBuff(name) then -- ensure it's not going to expire
-		return s.BuffStack(c.GetID(name), "player")
+function c.GetBuffStack(name, noGCD, matchSpellID)
+	if c.HasBuff(name, noGCD, matchSpellID) then -- ensure won't to expire
+		return s.BuffStack(c.GetID(name), "player", nil, nil, nil, matchSpellID)
 	else
 		return 0
 	end
 end
 
-function c.HasMyDebuff(name, noGCD)
-	return c.GetMyDebuffDuration(name, noGCD) > 0
+function c.HasMyDebuff(name, noGCD, matchSpellID)
+	return c.GetMyDebuffDuration(name, noGCD, matchSpellID) > 0
 end
 
-function c.GetMyDebuffStack(name)
-	if c.HasMyDebuff(name) then -- ensure it's not going to expire
-		return s.MyDebuffStack(c.GetID(name))
+function c.GetMyDebuffStack(name, noGCD, matchSpellID)
+	if c.HasMyDebuff(name, noGCD, matchSpellID) then -- ensure it won't expire
+		return s.MyDebuffStack(c.GetID(name), nil, nil, nil, nil, matchSpellID)
 	else
 		return 0
 	end
 end
 
-function c.GetMyDebuffDuration(name, noGCD)
-	return math.max(s.MyDebuffDuration(c.GetID(name)) - c.GetBusyTime(noGCD), 0)
+function c.GetMyDebuffDuration(name, noGCD, matchSpellID)
+	return math.max(
+		0, 
+		s.MyDebuffDuration(c.GetID(name), nil, nil, nil, nil, matchSpellID) 
+			- c.GetBusyTime(noGCD))
 end
 
-function c.GetDebuffDuration(name, noGCD)
-	return math.max(0, s.DebuffDuration(c.GetID(name)) - c.GetBusyTime(noGCD))
+function c.GetDebuffDuration(name, noGCD, matchSpellID)
+	return math.max(
+		0, 
+		s.DebuffDuration(c.GetID(name), nil, nil, nil, nil, matchSpellID) 
+			- c.GetBusyTime(noGCD))
 end
 
 function c.SelfBuffNeeded(name)

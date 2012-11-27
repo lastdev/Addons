@@ -1,6 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: EnxConstants.lua 4632 2010-01-24 02:33:54Z ccox $
 	URL: http://enchantrix.org/
 
@@ -354,8 +354,8 @@ const.ProspectableItems = {
 			},
 
 	[GHOST_IRON_ORE] = {
--- ccox - tested in beta Sept 1, 2012
-			[SPARKLING_SHARD] = 1.1,
+-- ccox - tested in beta Sept 23, 2012
+			[SPARKLING_SHARD] = 1.14,
 			
 			[TIGEROPAL] = 0.25,
 			[LAPISLAZULI] = 0.25,
@@ -373,8 +373,8 @@ const.ProspectableItems = {
 			},
 	
 	[KYPARITE_ORE] = {
--- ccox - tested in beta Sept 1, 2012
-			[SPARKLING_SHARD] = 1.45,
+-- ccox - tested in beta Sept 23, 2012
+			[SPARKLING_SHARD] = 1.46,
 			
 			[TIGEROPAL] = 0.25,
 			[LAPISLAZULI] = 0.25,
@@ -392,6 +392,7 @@ const.ProspectableItems = {
 			},
 	
 	[WHITE_TRILLIUM_ORE] = {
+-- ccox - tested in beta Sept 23, 2012
 -- ccox - wild guess, needs update	
 			[SPARKLING_SHARD] = 1.65,
 			
@@ -411,6 +412,7 @@ const.ProspectableItems = {
 			},
 
 	[BLACK_TRILLIUM_ORE] = {
+-- ccox - tested in beta Sept 23, 2012
 -- ccox - wild guess, needs update
 			[SPARKLING_SHARD] = 1.65,
 			

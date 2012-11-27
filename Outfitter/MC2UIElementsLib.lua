@@ -1215,6 +1215,60 @@ function Addon.UIElementsLib._ExpandButton:SetExpanded(pExpanded)
 end
 
 ----------------------------------------
+Addon.UIElementsLib._DropDownMenuItems = {}
+----------------------------------------
+
+function Addon.UIElementsLib._DropDownMenuItems:Construct(pMenuFunc)
+	self.MenuFunc = pMenuFunc
+	self.Items = {}
+	self.Level = 1
+	self.MenuFunc(self, nil, self.Level)
+end
+
+function Addon.UIElementsLib._DropDownMenuItems:AddButton(pInfo)
+	table.insert(self.Items, pInfo)
+end
+
+function Addon.UIElementsLib._DropDownMenuItems:AddCategoryItem(pText)
+	table.insert(self.Items, {text = pText, notCheckable = true, notClickable = true, colorCode = HIGHLIGHT_FONT_COLOR_CODE})
+end
+
+function Addon.UIElementsLib._DropDownMenuItems:AddDivider()
+	table.insert(self.Items, {text = " ", notCheckable = true, notClickable = true})
+end
+
+function Addon.UIElementsLib._DropDownMenuItems:AddNormalItem(pName, pID)
+	table.insert(self.Items, {text = pName, value = pID})
+end
+
+function Addon.UIElementsLib._DropDownMenuItems:AddChildMenu(pName, pID)
+	self.Level = self.Level + 1
+	if self.Level > 10 then
+		Addon:ErrorMessage("AddChildMenu adding recursively for id "..tostring(pID))
+		return
+	end
+	local vParentItems = self.Items
+	self.Items = {}
+	table.insert(vParentItems, {text = pName, value = pID, menuTable = self.Items})
+	self.MenuFunc(self, pID, self.Level)
+	self.Items = vParentItems
+	self.Level = self.Level - 1
+end
+
+function Addon.UIElementsLib._DropDownMenuItems:GetNameForValue(pValue, pItems)
+	if not pItems then pItems = self.Items end
+	for _, vItem in ipairs(pItems) do
+		if vItem.value == pValue then
+			return vItem.text
+		end
+		if vItem.menuTable then
+			local vName = self:GetNameForValue(pValue, vItem.menuTable)
+			if vName then return vName end
+		end
+	end
+end
+
+----------------------------------------
 Addon.UIElementsLib._DropDownMenuButton = {}
 ----------------------------------------
 
@@ -1242,6 +1296,8 @@ function Addon.UIElementsLib._DropDownMenuButton:Construct(pParent, pMenuFunc, p
 		vButtonSize = pWidth
 	end
 	
+	self.AutoSelectValue = true -- calls SetSelectedValue on item selection automatically
+	
 	self:SetWidth(pWidth)
 	self:SetHeight(vButtonSize)
 	
@@ -1249,7 +1305,7 @@ function Addon.UIElementsLib._DropDownMenuButton:Construct(pParent, pMenuFunc, p
 	self.Button:SetWidth(vButtonSize)
 	self.Button:SetHeight(vButtonSize)
 	self.Button:SetPoint("RIGHT", self, "RIGHT", 1, 0)
-	self.Button:SetScript("OnClick", function (frame, button) self:ToggleMenu() end)
+
 	self.Button:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up")
 	self.Button:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Down")
 	self.Button:SetDisabledTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Disabled")
@@ -1259,6 +1315,11 @@ function Addon.UIElementsLib._DropDownMenuButton:Construct(pParent, pMenuFunc, p
 	self.Button.HighlightTexture:SetBlendMode("ADD")
 	self.Button.HighlightTexture:SetAllPoints()
 	
+	self.Button:SetScript("OnClick", function (frame, button)
+		self:ToggleMenu()
+		PlaySound("igMainMenuOptionCheckBoxOn")
+	end)
+
 	self.Icon = self:CreateTexture(self:GetName().."Icon", "ARTWORK")
 	self.Icon:SetWidth(1)
 	self.Icon:SetHeight(1)
@@ -1282,14 +1343,18 @@ end
 function Addon.UIElementsLib._DropDownMenuButton:SetMenuFunc(pMenuFunc)
 end
 
+function Addon.UIElementsLib._DropDownMenuButton:RefreshItems()
+	self.Items = Addon:New(Addon.UIElementsLib._DropDownMenuItems, self.MenuFunc)
+end
+
 function Addon.UIElementsLib._DropDownMenuButton:ToggleMenu()
 	PlaySound("igMainMenuOptionCheckBoxOn")
 	
 	self.relativeTo = self
-	self.point = "TOPRIGHT"
-	self.relativePoint = "BOTTOMRIGHT"
-	self.xOffset = 0
-	self.yOffset = 9
+	self.point = self.AnchorPoint or "TOPRIGHT"
+	self.relativePoint = self.AnchorRelativePoint or "BOTTOMRIGHT"
+	self.xOffset = self.AnchorXOffset or 0
+	self.yOffset = self.AnchorYOffset or 9
 	
 	if self.UseWoWMenus then
 		ToggleDropDownMenu(nil, nil, self)
@@ -1344,27 +1409,28 @@ function Addon.UIElementsLib._DropDownMenuButton:CreateInfo()
 	end
 end
 
-function Addon.UIElementsLib._DropDownMenuButton:AddButton(pInfo, pLevel)
+function Addon.UIElementsLib._DropDownMenuButton:AddButton(pInfo)
 	if self.UseWoWMenus then
-		UIDropDownMenu_AddButton(pInfo, pLevel)
+		UIDropDownMenu_AddButton(pInfo, UIDROPDOWNMENU_MENU_LEVEL)
 	else
 		table.insert(self.currentLevelItems, pInfo)
 	end
 end
 
-function Addon.UIElementsLib._DropDownMenuButton:AddNormalItem(pText, pID, pIcon, pChecked, pDisabled)
+function Addon.UIElementsLib._DropDownMenuButton:AddNormalItem(pText, pID, pIcon, pChecked, pDisabled, pTooltipTitle, pTooltipText)
 	local vInfo = self:CreateInfo()
-	
 	vInfo.text = pText
 	vInfo.value = pID
 	vInfo.func = function (item, ...) self:ItemClicked(...) end
 	vInfo.arg1 = pID
 	vInfo.colorCode = NORMAL_FONT_COLOR_CODE
 	vInfo.icon = pIcon
-	vInfo.checked = pChecked
+	vInfo.checked = pChecked or (pID == self.selectedValue)
 	vInfo.disabled = pDisabled
+	vInfo.tooltipTitle = pTooltipTitle
+	vInfo.tooltipText = pTooltipText
 	
-	self:AddButton(vInfo, UIDROPDOWNMENU_MENU_LEVEL)
+	self:AddButton(vInfo)
 end
 
 function Addon.UIElementsLib._DropDownMenuButton:AddCategoryItem(pText)
@@ -1375,18 +1441,19 @@ function Addon.UIElementsLib._DropDownMenuButton:AddCategoryItem(pText)
 	vInfo.notCheckable = true
 	vInfo.colorCode = HIGHLIGHT_FONT_COLOR_CODE
 	
-	self:AddButton(vInfo, UIDROPDOWNMENU_MENU_LEVEL)
+	self:AddButton(vInfo)
 end
 
-function Addon.UIElementsLib._DropDownMenuButton:AddChildMenu(pText, pID)
+function Addon.UIElementsLib._DropDownMenuButton:AddChildMenu(pText, pID, pChecked)
 	local vInfo = self:CreateInfo()
 	
 	vInfo.text = pText
 	vInfo.value = pID
 	vInfo.hasArrow = true
 	vInfo.colorCode = NORMAL_FONT_COLOR_CODE
+	vInfo.checked = pChecked
 	
-	self:AddButton(vInfo, UIDROPDOWNMENU_MENU_LEVEL)
+	self:AddButton(vInfo)
 end
 
 function Addon.UIElementsLib._DropDownMenuButton:AddDivider()
@@ -1396,19 +1463,23 @@ function Addon.UIElementsLib._DropDownMenuButton:AddDivider()
 	vInfo.notCheckable = true
 	vInfo.notClickable = true
 	
-	self:AddButton(vInfo, UIDROPDOWNMENU_MENU_LEVEL)
+	self:AddButton(vInfo)
 end
 
 function Addon.UIElementsLib._DropDownMenuButton:ItemClicked(pValue)
-	self:SetSelectedValue(pValue)
+	if self.AutoSelectValue then
+		self:SetSelectedValue(pValue)
+	end
 	
 	if self.ItemClickedFunc then
 		self:ItemClickedFunc(pValue)
 	end
+	
+	CloseDropDownMenus()
 end
 
 function Addon.UIElementsLib._DropDownMenuButton:SetSelectedValue(pValue)
-	-- Not applicable for a menu button
+	self.selectedValue = pValue
 end
 
 function Addon.UIElementsLib._DropDownMenuButton:GetSelectedValue()
@@ -1431,46 +1502,22 @@ end
 
 function Addon.UIElementsLib._DropDownMenuButton:WoWMenuInitFunction(pLevel, pMenuList)
 	if not pLevel or pLevel == 1 then
-		self:MenuFunc()
+		self:MenuFunc(nil, pLevel)
 	else
-		self:MenuFunc(UIDROPDOWNMENU_MENU_VALUE)
+		self:MenuFunc(UIDROPDOWNMENU_MENU_VALUE, pLevel)
 	end
 	
 	self:SetHeight(self.OrigHeight)
 end
 
 ----------------------------------------
-Addon.UIElementsLib._Section = {}
-----------------------------------------
-
-function Addon.UIElementsLib._Section:New(pParent, pTitle)
-	return CreateFrame("Frame", nil, pParent)
-end
-
-function Addon.UIElementsLib._Section:Construct(pParent, pTitle)
-	self:SetBackdrop({
-		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-		tile = true, tileSize = 16, edgeSize = 16,
-		insets = {left = 3, right = 3, top = 3, bottom = 3}})
-	
-	self:SetBackdropColor(1, 1, 1, 0.2)
-	
-	self.Title = self:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-	self.Title:SetPoint("TOPLEFT", self, "TOPLEFT", 10, -7)
-	self.Title:SetText(pTitle)
-end
-
-----------------------------------------
 Addon.UIElementsLib._DropDownMenu = {}
 ----------------------------------------
 
-for vName, vFunction in pairs(Addon.UIElementsLib._DropDownMenuButton) do
-	Addon.UIElementsLib._DropDownMenu[vName] = vFunction
-end
+Addon.UIElementsLib._DropDownMenu.New = Addon.UIElementsLib._DropDownMenuButton.New
 
 function Addon.UIElementsLib._DropDownMenu:Construct(pParent, pMenuFunc, pWidth)
-	Addon.UIElementsLib._DropDownMenuButton.Construct(self, pParent, pMenuFunc, pWidth or 150)
+	self:Inherit(Addon.UIElementsLib._DropDownMenuButton, pParent, pMenuFunc, pWidth or 150)
 	
 	self.LeftTexture = self:CreateTexture(nil, "ARTWORK")
 	self.LeftTexture:SetWidth(25)
@@ -1516,56 +1563,32 @@ function Addon.UIElementsLib._DropDownMenu:SetSelectedValue(pValue)
 		return
 	end
 	
-	--
+	self.Inherited.SetSelectedValue(self, pValue)
 	
-	self:SetCurrentValueText("") -- Set to empty in case the selected value isn't there
+	self:RefreshItems()
+	self:SetCurrentValueText(self.Items:GetNameForValue(pValue) or "")
+end
+
+----------------------------------------
+Addon.UIElementsLib._Section = {}
+----------------------------------------
+
+function Addon.UIElementsLib._Section:New(pParent, pTitle)
+	return CreateFrame("Frame", nil, pParent)
+end
+
+function Addon.UIElementsLib._Section:Construct(pParent, pTitle)
+	self:SetBackdrop({
+		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+		tile = true, tileSize = 16, edgeSize = 16,
+		insets = {left = 3, right = 3, top = 3, bottom = 3}})
 	
-	UIDROPDOWNMENU_OPEN_MENU = nil
-	UIDropDownMenu_Initialize(self, self.initialize, nil, 1)
-	UIDropDownMenu_SetSelectedName(self, "")
-	UIDropDownMenu_SetSelectedValue(self, pValue)
+	self:SetBackdropColor(1, 1, 1, 0.2)
 	
-	-- All done if the item text got set successfully
-	
-	local vItemText = self.Text:GetText()
-	
-	if vItemText and vItemText ~= "" and vItemText ~= VIDEO_QUALITY_LABEL6 then
-		return
-	end
-	
-	-- Scan for submenus
-	
-	local vRootListFrameName = "DropDownList1"
-	local vRootListFrame = _G[vRootListFrameName]
-	local vRootNumItems = vRootListFrame.numButtons
-	
-	for vRootItemIndex = 1, vRootNumItems do
-		local vItem = _G[vRootListFrameName.."Button"..vRootItemIndex]
-		
-		if vItem.hasArrow then
-			local vSubMenuFrame = DropDownList2
-			
-			--UIDROPDOWNMENU_OPEN_MENU = self
-			--UIDROPDOWNMENU_MENU_VALUE = vItem.value
-			--UIDROPDOWNMENU_MENU_LEVEL = 2
-			
-			UIDropDownMenu_Initialize(self, self.initialize, nil, 2)
-			UIDropDownMenu_SetSelectedValue(self, pValue)
-			
-			-- All done if the item text got set successfully
-			
-			local vItemText = self.Text:GetText()
-			
-			if vItemText and vItemText ~= "" and vItemText ~= VIDEO_QUALITY_LABEL6 then
-				return
-			end
-			
-			-- Switch back to the root menu
-			
-			--UIDROPDOWNMENU_OPEN_MENU = nil
-			UIDropDownMenu_Initialize(self, self.initialize, nil, 1)
-		end
-	end
+	self.Title = self:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+	self.Title:SetPoint("TOPLEFT", self, "TOPLEFT", 10, -7)
+	self.Title:SetText(pTitle)
 end
 
 ----------------------------------------

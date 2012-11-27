@@ -454,7 +454,7 @@ function ns:Update()
 	local character = addon.Tabs.Characters:GetAltKey()
 	if not character then return end
 	
-	_, currentClass = DataStore:GetCharacterClass(character)
+	local _, currentClass = DataStore:GetCharacterClass(character)
 	if not DataStore:IsClassKnown(currentClass) then return end
 	
 	local level = DataStore:GetCharacterLevel(character)

@@ -2436,15 +2436,15 @@ function s.HealthDamagePercent(unit)
 	return 100 - remaining
 end
 
-function s.Power(unit, PowerType)
-	return UnitPower(s.UnitSelection(unit), PowerType) or 0
+function s.Power(unit, ...)
+	return UnitPower(s.UnitSelection(unit), ...) or 0
 end
 
-function s.MaxPower(unit, PowerType)
-	return UnitPowerMax(s.UnitSelection(unit), PowerType) or 0
+function s.MaxPower(unit, ...)
+	return UnitPowerMax(s.UnitSelection(unit), ...) or 0
 end
 
-function s.PowerPercent(unit, PowerType)
+function s.PowerPercent(unit, ...)
 	if type(unit) == "string" then
 		local group = string.lower("|"..unit.."|")
 		local raid, party = group:match("|raid|"), group:match("|party|")
@@ -2460,9 +2460,9 @@ function s.PowerPercent(unit, PowerType)
 				if not notself
 					and ( not healer or HEALERCLASS[CLASS] )
 				then
-					local Max = s.MaxPower(u, PowerType)
+					local Max = s.MaxPower(u, ...)
 					if Max > 0 then
-						result = ( s.Power(u, PowerType) / Max ) * 100
+						result = ( s.Power(u, ...) / Max ) * 100
 					else
 						result = 0
 					end
@@ -2479,9 +2479,9 @@ function s.PowerPercent(unit, PowerType)
 							and ( not range or UnitInRange(u) )
 							and ( not healer or HEALERCLASS[s.Class(u)] )
 						then
-							local Max = s.MaxPower(u, PowerType)
+							local Max = s.MaxPower(u, ...)
 							if Max > 0 then
-								result = ( s.Power(u, PowerType) / Max ) * 100
+								result = ( s.Power(u, ...) / Max ) * 100
 							else
 								result = 0
 							end
@@ -2503,9 +2503,9 @@ function s.PowerPercent(unit, PowerType)
 							and ( not range or UnitInRange(u) )
 							and ( not healer or HEALERCLASS[s.Class(u)] )
 						then
-							local Max = s.MaxPower(u, PowerType)
+							local Max = s.MaxPower(u, ...)
 							if Max > 0 then
-								result = ( s.Power(u, PowerType) / Max ) * 100
+								result = ( s.Power(u, ...) / Max ) * 100
 							else
 								result = 0
 							end
@@ -2527,19 +2527,19 @@ function s.PowerPercent(unit, PowerType)
 			return remaining, counted
 		end
 	end
-	local Max = s.MaxPower(unit, PowerType)
+	local Max = s.MaxPower(unit, ...)
 	if Max > 0 then
-		return ( s.Power(unit, PowerType) / Max ) * 100
+		return ( s.Power(unit, ...) / Max ) * 100
 	end
 	return 0
 end
 
-function s.PowerMissing(unit, PowerType)
-	return s.MaxPower(unit, PowerType) - s.Power(unit, PowerType)
+function s.PowerMissing(unit, ...)
+	return s.MaxPower(unit, ...) - s.Power(unit, ...)
 end
 
-function s.PowerMissingPercent(unit, PowerType)
-	local remaining, counted = s.PowerPercent(unit, PowerType)
+function s.PowerMissingPercent(unit, ...)
+	local remaining, counted = s.PowerPercent(unit, ...)
 	if counted then
 		return ( 100 - remaining ), counted
 	end

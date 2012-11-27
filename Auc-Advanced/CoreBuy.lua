@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.15.5348 (LikeableLyrebird)
-	Revision: $Id: CoreBuy.lua 5336 2012-08-30 11:24:56Z brykrys $
+	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: CoreBuy.lua 5362 2012-09-21 17:59:48Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -658,7 +658,7 @@ local function ShowTooltip()
 	if not link then return end
 	if strmatch(link, "|Hitem:") then
 		GameTooltip:SetOwner(AuctionFrameCloseButton, "ANCHOR_NONE")
-		GameTooltip:SetHyperlink(private.CurRequest.link)
+		GameTooltip:SetHyperlink(link)
 		GameTooltip:ClearAllPoints()
 		GameTooltip:SetPoint("TOPRIGHT", private.Prompt.Item, "TOPLEFT", -10, -20)
 	elseif strmatch(link, "|Hbattlepet:") then
@@ -743,4 +743,4 @@ private.Prompt.DragBottom:SetHighlightTexture("Interface\\FriendsFrame\\UI-Frien
 private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreBuy.lua $", "$Rev: 5336 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreBuy.lua $", "$Rev: 5362 $")

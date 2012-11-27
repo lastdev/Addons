@@ -59,6 +59,8 @@ local initializeDropdown
 local maxlines
 local infoFrameThreshold 
 local pIndex
+local extraPIndex
+local lowestFirst
 local iconModifier
 local headerText = "DBM Info Frame"	-- this is only used if DBM.InfoFrame:SetHeader(text) is not called before :Show()
 local currentEvent
@@ -182,15 +184,15 @@ end
 local function updateIcons()
 	table.wipe(icons)
 	if IsInRaid() then
-		for i=1, GetNumGroupMembers() do
+		for i = 1, GetNumGroupMembers() do
 			local uId = "raid"..i
 			local icon = GetRaidTargetIndex(uId)
 			if icon then
 				icons[UnitName(uId)] = ("|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_%d:0|t"):format(icon)
 			end
 		end
-	elseif GetNumSubgroupMembers() > 0 then
-		for i=1, GetNumSubgroupMembers() do
+	elseif IsInGroup() then
+		for i = 1, GetNumSubgroupMembers() do
 			local uId = "party"..i
 			local icon = GetRaidTargetIndex(uId)
 			if icon then
@@ -214,7 +216,7 @@ local function updateHealth()
 				lines[UnitName(uId)] = UnitHealth(uId) - infoFrameThreshold
 			end
 		end
-	elseif GetNumSubgroupMembers() > 0 then
+	elseif IsInGroup() then
 		for i = 1, GetNumSubgroupMembers() do
 			local uId = "party"..i
 			if UnitHealth(uId) < infoFrameThreshold and not UnitIsDeadOrGhost(uId) then
@@ -231,9 +233,17 @@ end
 
 local function updatePlayerPower()
 	table.wipe(lines)
-	for i = 1, GetNumGroupMembers() do
-		if not UnitIsDeadOrGhost("raid"..i) and UnitPower("raid"..i, pIndex)/UnitPowerMax("raid"..i, pIndex)*100 >= infoFrameThreshold then
-			lines[UnitName("raid"..i)] = UnitPower("raid"..i, pIndex)
+	if IsInRaid() then
+		for i = 1, GetNumGroupMembers() do
+			if not UnitIsDeadOrGhost("raid"..i) and UnitPower("raid"..i, pIndex)/UnitPowerMax("raid"..i, pIndex)*100 >= infoFrameThreshold then
+				lines[UnitName("raid"..i)] = UnitPower("raid"..i, pIndex)
+			end
+		end
+	elseif IsInGroup() then
+		for i = 1, GetNumSubgroupMembers() do
+			if not UnitIsDeadOrGhost("party"..i) and UnitPower("party"..i, pIndex)/UnitPowerMax("party"..i, pIndex)*100 >= infoFrameThreshold then
+				lines[UnitName("party"..i)] = UnitPower("party"..i, pIndex)
+			end
 		end
 	end
 	if DBM.Options.InfoFrameShowSelf and not lines[UnitName("player")] and UnitPower("player", pIndex) > 0 then
@@ -245,9 +255,14 @@ end
 
 local function updateEnemyPower()
 	table.wipe(lines)
-	for i = 1, 4 do
+	for i = 1, 5 do
 		if UnitPower("boss"..i, pIndex)/UnitPowerMax("boss"..i, pIndex)*100 >= infoFrameThreshold then
 			lines[UnitName("boss"..i)] = UnitPower("boss"..i, pIndex)
+		end
+	end
+	if extraPIndex then
+		if UnitPower("player", extraPIndex) > 0 then
+			lines[UnitName("player")] = UnitPower("player", extraPIndex)
 		end
 	end
 	updateLines()
@@ -263,7 +278,7 @@ local function updatePlayerBuffs()
 				lines[UnitName(uId)] = ""
 			end
 		end
-	elseif GetNumSubgroupMembers() > 0 then
+	elseif IsInGroup() then
 		for i = 1, GetNumSubgroupMembers() do
 			local uId = "party"..i
 			if not UnitBuff(uId, GetSpellInfo(infoFrameThreshold)) and not UnitIsDeadOrGhost(uId) then
@@ -288,7 +303,7 @@ local function updateGoodPlayerDebuffs()
 				lines[UnitName(uId)] = ""
 			end
 		end
-	elseif GetNumSubgroupMembers() > 0 then
+	elseif IsInGroup() then
 		for i = 1, GetNumSubgroupMembers() do
 			local uId = "party"..i
 			if not UnitDebuff(uId, GetSpellInfo(infoFrameThreshold)) and not UnitIsDeadOrGhost(uId) then
@@ -314,7 +329,7 @@ local function updateBadPlayerDebuffs()
 				lines[UnitName(uId)] = ""
 			end
 		end
-	elseif GetNumSubgroupMembers() > 0 then
+	elseif IsInGroup() then
 		for i = 1, GetNumSubgroupMembers() do
 			local uId = "party"..i
 			if  UnitDebuff(uId, GetSpellInfo(infoFrameThreshold)) and not UnitIsDeadOrGhost(uId) then
@@ -345,7 +360,7 @@ local function updatePlayerBuffStacks()
 				end
 			end			
 		end
-	elseif GetNumSubgroupMembers() > 0 then
+	elseif IsInGroup() then
 		for i = 1, GetNumSubgroupMembers() do
 			local uId = "party"..i
 			if UnitBuff(uId, GetSpellInfo(infoFrameThreshold)) then
@@ -386,7 +401,7 @@ local function updatePlayerAggro()
 		end
 		updateLines()
 		updateIcons()
-	elseif GetNumSubgroupMembers() > 0 then
+	elseif IsInGroup() then
 		for i = 1, GetNumSubgroupMembers() do
 			local uId = "party"..i
 			if UnitThreatSituation(uId) == infoFrameThreshold then
@@ -414,7 +429,7 @@ local function updatePlayerTargets()
 				lines[UnitName(uId)] = ""
 			end
 		end
-	elseif GetNumSubgroupMembers() > 0 then
+	elseif IsInGroup() then
 		for i = 1, GetNumSubgroupMembers() do
 			local uId = "party"..i
 			if getUnitCreatureId("party"..i.."target") ~= infoFrameThreshold and (UnitGroupRolesAssigned("party"..i) == "DAMAGER" or UnitGroupRolesAssigned("party"..i) == "NONE") then
@@ -473,7 +488,7 @@ function onUpdate(self, elapsed)
 			addedSelf = true
 			if currentEvent == "playerbuff" or currentEvent == "playerbaddebuff" or currentEvent == "playergooddebuff" or currentEvent == "health" or currentEvent == "playertargets" or (currentEvent == "playeraggro" and infoFrameThreshold == 3) then--Player name on frame bad a thing make it red.
 				self:AddDoubleLine(name, power, 255, 0, 0, 255, 255, 255)	-- (leftText, rightText, left.R, left.G, left.B, right.R, right.G, right.B)
-			elseif currentEvent == "playerbuffstacks" or (currentEvent == "playeraggro" and infoFrameThreshold == 0) then--Player name on frame is a good thing, make it green
+			elseif currentEvent == "playerbuffstacks" or (currentEvent == "playeraggro" and infoFrameThreshold == 0) or currentEvent == "enemypower" then--Player name on frame is a good thing, make it green
 				self:AddDoubleLine(name, power, 0, 255, 0, 255, 255, 255)	-- (leftText, rightText, left.R, left.G, left.B, right.R, right.G, right.B)
 			else--it's not defined a color, so default to white.
 				self:AddDoubleLine(name, power, color.R, color.G, color.B, 255, 255, 255)	-- (leftText, rightText, left.R, left.G, left.B, right.R, right.G, right.B)
@@ -499,9 +514,14 @@ function infoFrame:Show(maxLines, event, threshold, ...)
 	maxlines = maxLines
 	pIndex = select(1, ...)		-- used as 'filter' for player buff stacks
 	iconModifier = select(2, ...)
+	extraPIndex = select(3, ...)
+	lowestFirst = select(4, ...)
 	currentEvent = event
 	frame = frame or createFrame()
 
+	if lowestFirst then
+		sortingAsc = true
+	end
 	if event == "health" then
 		sortingAsc = true	-- Person who misses the most HP to be at threshold is listed on top
 		updateHealth()

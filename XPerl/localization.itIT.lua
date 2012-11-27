@@ -1,13 +1,12 @@
 ﻿-- X-Perl UnitFrames
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
-
 if (GetLocale() == "itIT") then
 XPerl_ProductName		= "|cFFD00000X-Perl|r UnitFrames"
 XPerl_ShortProductName	= "|cFFD00000X-Perl|r"
 XPerl_Author			= "|cFFFF8080Zek|r"
 XPerl_Description		= XPerl_ProductName.." di "..XPerl_Author
-XPerl_VersionNumber 	= "3.5.3"
+
 XPerl_Version			= XPerl_Description.." - "..XPerl_VersionNumber
 XPerl_LongDescription	= "Sostituzione dell'UnitFrame del Personaggio, Famiglio, Gruppo, Bersaglio, Bersaglio del Bersaglio, Focus e Incursioni"
 XPerl_ModMenuIcon		= "Interface\\Icons\\INV_Misc_Gem_Pearl_02"
@@ -39,18 +38,18 @@ XPERL_TYPE_ELITE	= "Elite"
 XPERL_TYPE_RARE 	= "Raro"
 
 -- Zones
-XPERL_LOC_ZONE_SERPENTSHRINE_CAVERN	= "Serpentshrine Cavern"
-XPERL_LOC_ZONE_BLACK_TEMPLE			= "Black Temple"
-XPERL_LOC_ZONE_HYJAL_SUMMIT			= "Hyjal Summit"
-XPERL_LOC_ZONE_KARAZHAN				= "Karazhan"
-XPERL_LOC_ZONE_SUNWELL_PLATEAU		= "Sunwell Plateau"
-XPERL_LOC_ZONE_NAXXRAMAS			= "Naxxramas"
-XPERL_LOC_ZONE_OBSIDIAN_SANCTUM		= "The Obsidian Sanctum"
-XPERL_LOC_ZONE_EYE_OF_ETERNITY		= "The Eye of Eternity"
-XPERL_LOC_ZONE_ULDUAR				= "Ulduar"
-XPERL_LOC_ZONE_TRIAL_OF_THE_CRUSADER= "Trial of the Crusader"
-XPERL_LOC_ZONE_ICECROWN_CITADEL		= "Icecrown Citadel"
-XPERL_LOC_ZONE_RUBY_SANCTUM			= "The Ruby Sanctum"
+XPERL_LOC_ZONE_SERPENTSHRINE_CAVERN = "Serpentshrine Cavern"
+XPERL_LOC_ZONE_BLACK_TEMPLE = "Tempio Nero"
+XPERL_LOC_ZONE_HYJAL_SUMMIT = "Hyjal Summit"
+XPERL_LOC_ZONE_KARAZHAN = "Karazhan"
+XPERL_LOC_ZONE_SUNWELL_PLATEAU = "Sunwell Plateau"
+XPERL_LOC_ZONE_NAXXRAMAS = "Naxxramas"
+XPERL_LOC_ZONE_OBSIDIAN_SANCTUM = "The Obsidian Sanctum"
+XPERL_LOC_ZONE_EYE_OF_ETERNITY = "The Eye of Eternity"
+XPERL_LOC_ZONE_ULDUAR = "Ulduar"
+XPERL_LOC_ZONE_TRIAL_OF_THE_CRUSADER = "Trial of the Crusader"
+XPERL_LOC_ZONE_ICECROWN_CITADEL = "Corona di Ghiaccio"
+XPERL_LOC_ZONE_RUBY_SANCTUM = "The Ruby Sanctum"
 --Any zones 4.x and higher can all be localized from EJ, in 5.0, even these above zones are in EJ which means the rest can go bye bye too
 
 -- Status
@@ -67,12 +66,12 @@ XPERL_RAID_GROUPSHORT	= "G%d"
 
 XPERL_LOC_NONEWATCHED	= "none watched"
 
-XPERL_LOC_STATUSTIP = "Status Highlights: " 	-- Tooltip explanation of status highlight on unit
+XPERL_LOC_STATUSTIP = "Evidenziaziazione stato: " 	-- Tooltip explanation of status highlight on unit
 XPERL_LOC_STATUSTIPLIST = {
-	HOT = "Heal over Time",
-	AGGRO = "Aggro",
+	HOT = "Cure nel Tempo (HOT)",
+	AGGRO = "Aggressione",
 	MISSING = "Missing your class' buff",
-	HEAL = "Being healed",
+	HEAL = "Sta per essere curato",
 	SHIELD = "Shielded"
 }
 
@@ -95,17 +94,17 @@ BINDING_NAME_TEAMSPEAKMONITOR = "Teamspeak Monitor"
 BINDING_NAME_TOGGLERANGEFINDER = "Abilita/Disattiva Range Finder"
 
 XPERL_KEY_NOTICE_RAID_BUFFANY = "Visualizza tutti i benefici/penalità"
-XPERL_KEY_NOTICE_RAID_BUFFCURECAST = "Visualizza solo benefici lanciabili/curabili o Only castable/curable buffs or debuffs shown"
-XPERL_KEY_NOTICE_RAID_BUFFS = "Raid Buffs shown"
-XPERL_KEY_NOTICE_RAID_DEBUFFS = "Raid Debuffs shown"
-XPERL_KEY_NOTICE_RAID_NOBUFFS = "No raid buffs shown"
+XPERL_KEY_NOTICE_RAID_BUFFCURECAST = "Visualizza solo benefici lanciabili/curabili o penalità"
+XPERL_KEY_NOTICE_RAID_BUFFS = "Benefici dell'incursione mostrati"
+XPERL_KEY_NOTICE_RAID_DEBUFFS = "Penalità dell'incursione mostrati"
+XPERL_KEY_NOTICE_RAID_NOBUFFS = "Nessun beneficio dell'incursione mostrato"
 
 XPERL_DRAGHINT1		= "|c00FFFFFFFai Click|r per riscalare la finestra"
 XPERL_DRAGHINT2		= "|c00FFFFFFFai Maiusc+Click|r per ridimensionare la finestra"
 
 -- Usage
-XPerlUsageNameList	= {XPerl = "Core", XPerl_Player = "Player", XPerl_PlayerPet = "Pet", XPerl_Target = "Target", XPerl_TargetTarget = "Target's Target", XPerl_Party = "Party", XPerl_PartyPet = "Party Pets", XPerl_RaidFrames = "Raid Frames", XPerl_RaidHelper = "Raid Helper", XPerl_RaidAdmin = "Raid Admin", XPerl_TeamSpeak = "TS Monitor", XPerl_RaidMonitor = "Raid Monitor", XPerl_RaidPets = "Raid Pets", XPerl_ArcaneBar = "Arcane Bar", XPerl_PlayerBuffs = "Player Buffs", XPerl_GrimReaper = "Grim Reaper"}
-XPERL_USAGE_MEMMAX	= "UI Mem Max: %d"
+XPerlUsageNameList = {XPerl = "Core", XPerl_Player = "Giocatore", XPerl_PlayerPet = "Famiglio", XPerl_Target = "Bersaglio", XPerl_TargetTarget = "Bersaglio del bersaglio", XPerl_Party = "Gruppo", XPerl_PartyPet = "Famigli del gruppo", XPerl_RaidFrames = "Finestre del raid", XPerl_RaidHelper = "Aiutante dell'incursione", XPerl_RaidAdmin = "Amministrazione incursione", XPerl_TeamSpeak = "TS Monitor", XPerl_RaidMonitor = "Monitor dell'incursione", XPerl_RaidPets = "Famigli dell'incursione", XPerl_ArcaneBar = "Barra arcana", XPerl_PlayerBuffs = "Benefici del giocatore", XPerl_GrimReaper = "Grim Reaper"}
+XPERL_USAGE_MEMMAX	= "IU Mem Max: %d"
 XPERL_USAGE_MODULES = "Moduli: "
 XPERL_USAGE_NEWVERSION	= "*Una nuova versione"
 XPERL_USAGE_AVAILABLE	= "%s |c00FFFFFF%s|r è disponibile per il download"
@@ -129,99 +128,6 @@ XPERL_RAID_TOOLTIP_WITHBUFF	= "Con buff: (%s)"
 XPERL_RAID_TOOLTIP_WITHOUTBUFF	= "Senza buff: (%s)"
 XPERL_RAID_TOOLTIP_BUFFEXPIRING	= "%s ha usato %s che finisce in %s"	-- Name, buff name, time to expire
 
-
-local isMOP = select(4, _G.GetBuildInfo()) >= 50000
- 
-
-if (not isMOP) then
--- Status highlight spells
-XPERL_HIGHLIGHT_SPELLS = {
-	hotSpells  = {
-		[GetSpellInfo(774)] = 12,			-- Rejuvenation (old id 26982)
-		[GetSpellInfo(8936)] = 6,			-- Regrowth (old id 26980)
-		[GetSpellInfo(139)] = 12,			-- Renew (old id 25222)
-	    [GetSpellInfo(48438)] = 7,			-- Wild Growth 
-		[GetSpellInfo(33763)] = 8,			-- Lifebloom
-		[GetSpellInfo(28880)] = 15,			-- Gift of the Naaru (Racial)
-		[GetSpellInfo(61295)] = 15,			-- Riptide
-	},
-	pomSpells = {
-		[GetSpellInfo(33076)] = 30			-- Prayer of Mending
-	},
-	shieldSpells = {
-		[GetSpellInfo(17)] = 30,			-- Power Word: Shield
-		[GetSpellInfo(76669)] = 6,			-- Illuminated Healing
-		[GetSpellInfo(974)] = 600			-- Earth Shield	(old id 32594)
-	},
-	healSpells = {
-		[GetSpellInfo(2061)] = 1.5,			-- Flash of Light (old id 25235)
-		[GetSpellInfo(2060)] = 3,			-- Greater Heal (old id 25213)
-		[GetSpellInfo(2050)] = 3,			-- Heal (old id 6064)
-		[GetSpellInfo(5185)] = 3,			-- Healing Touch (old id 26979)
-		[GetSpellInfo(8936)] = 1.5,			-- Regrowth (old id 26980)
-		[GetSpellInfo(331)] = 3,			-- Healing Wave (old id 25396)
-		[GetSpellInfo(8004)] = 1.5,			-- Lesser Healing Wave (old id 25420)
-		[GetSpellInfo(19750)] = 1.5,		-- Flash Heal (old id 27137)
-		[GetSpellInfo(635)] = 2.5,			-- Holy Light (old id 27136)
-		[GetSpellInfo(50464)] = 3.0			-- Nourish
-	},
-	buffSpells = {
-		PRIEST = {
-			[GetSpellInfo(21532)] = true,	-- Power Word: Fortitude (old id 25389)
-			[GetSpellInfo(39231)] = true	-- Prayer of Fortitude (old id 25392)
-		},
-	    DRUID = {
-			[GetSpellInfo(1126)] = true		-- Mark of the Wild (old id 26990)
-		},
-	    MAGE = {
-			[GetSpellInfo(1459)] = true		-- Arcane Intellect (old id 27126)
-		},
-	    PALADIN = {
-			[GetSpellInfo(19740)] = true,	-- Blessing of Might
-			[GetSpellInfo(20217)] = true	-- Blessing of Kings
-		},
-	},
-	groupHealSpells = {
-		[GetSpellInfo(596)] = 2.5,			-- Prayer of Healing (old id 25308)
-		[GetSpellInfo(1064)] = 2.5,			-- Chain Heal
-	},
-}
-
-
--- Default spells for range checking in the healer visual out-of-range cues.
-XPerl_DefaultRangeSpells = {
-	DRUID	= {spell = GetSpellInfo(5185)},				-- Healing Touch
-	PALADIN = {spell = GetSpellInfo(635)},				-- Holy Light
-	PRIEST	= {spell = GetSpellInfo(2061)},				-- Flash Heal
-	SHAMAN	= {spell = GetSpellInfo(331)},				-- Healing Wave
-	MAGE	= {spell = GetSpellInfo(475)},				-- Remove Lesser Curse
-	WARLOCK	= {spell = GetSpellInfo(5697)},				-- Underwater Breathing
-	ANY		= {item = GetItemInfo(21991)}				-- Heavy Netherweave Bandage
-}
-
--- Don't highlight these magical debuffs
-XPerl_ArcaneExclusions = {
-	[GetSpellInfo(63559)] = true,						-- Bind Life
-	[GetSpellInfo(30451)] = true,						-- Arcane Blast (again) (old 42897)
-	[GetSpellInfo(30108)] = true,						-- Unstable Affliction (old 30405)
-	[GetSpellInfo(15822)] = true,						-- Dreamless Sleep
-	[GetSpellInfo(24360)] = true,						-- Greater Dreamless Sleep
-	[GetSpellInfo(28504)] = true,						-- Major Dreamless Sleep
-	[GetSpellInfo(31257)] = true,						-- Chilled
-	[GetSpellInfo(710)] = true,							-- Banish
-	[GetSpellInfo(44836)] = true,						-- Also Banish !?
-	[GetSpellInfo(24306)] = true,						-- Delusions of Jin'do
-	[GetSpellInfo(46543)] = {ROGUE = true, WARRIOR = true},	-- Ignite Mana
-	[GetSpellInfo(16567)] = {ROGUE = true, WARRIOR = true},	-- Tainted Mind
-	[GetSpellInfo(39052)] = {ROGUE = true},				-- Sonic Burst
-	[GetSpellInfo(41190)] = {ROGUE = true, WARRIOR = true}, -- Mind-numbing Poison
-	[GetSpellInfo(25195)] = {ROGUE = true},				-- Curse of Tongues
-	[GetSpellInfo(30129)] = true,						-- Charred Earth - Nightbane debuff, can't be cleansed, but shows as magic
-	[GetSpellInfo(31651)] = {MAGE = true, WARLOCK = true, PRIEST = true},	-- Banshee Curse, Melee hit rating debuff
-	[GetSpellInfo(38913)] = {ROGUE = true},				-- Silence
-	[GetSpellInfo(31555)] = {ROGUE = true, WARRIOR = true}, -- Decayed Intellect
-}
-else
 
 -- Status highlight spells
 XPERL_HIGHLIGHT_SPELLS = {
@@ -310,5 +216,4 @@ XPerl_ArcaneExclusions = {
 	[GetSpellInfo(31555)] = {ROGUE = true, WARRIOR = true}, -- Decayed Intellect
 }
 
-end
 end

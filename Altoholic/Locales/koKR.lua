@@ -266,6 +266,7 @@ L["Gordok Brewery"] = "고르독 양조장"
 L["Grave Moss"] = "무덤이끼"
 L["Green Dragon Mail"] = "녹색용 쇠사슬 갑옷"
 L["Grey"] = "회색"
+L["Grids"] = "그리드" -- Needs review
 L["Gromsblood"] = "그롬의 피"
 L["Guild Bank not visited yet (or not guilded)"] = "아직 길드 은행 미방문(또는 길드 미가입)"
 L["Guild Bank Remote Update"] = "원격으로 길드 은행 업데이트" -- Needs review

@@ -15,7 +15,7 @@
 ## X-Curse-Project-Name: X-Perl UnitFrames
 ## X-Curse-Project-ID: xperl
 ## X-Curse-Repository-ID: wow/xperl/mainline
-## X-Curse-Packaged-Version: r688
+## X-Curse-Packaged-Version: r777
 ## X-Curse-Project-Name: X-Perl UnitFrames
 ## X-Curse-Project-ID: xperl
 ## X-Curse-Repository-ID: wow/xperl/mainline

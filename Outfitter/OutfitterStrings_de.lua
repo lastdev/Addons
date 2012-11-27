@@ -191,6 +191,14 @@
 
 	Outfitter.cMageEvocate = "Magier: Hervorrufung"
 
+	Outfitter.cDeathknightBlood = "Deathknight: Blood Presence"
+	Outfitter.cDeathknightFrost = "Deathknight: Frost Presence"
+	Outfitter.cDeathknightUnholy = "Deathknight: Unholy Presence"
+
+	Outfitter.cMonkTiger = "Monk: Tiger stance"
+	Outfitter.cMonkSerpent = "Monk: Serpent stance"
+	Outfitter.cMonkOx = "Monk: Ox stance"
+
 	Outfitter.cCompleteCategoryDescription = "Vollständige Outfits haben für jeden Inventarslot festgelegte Gegenstände, die alles andere ersetzen wenn sie getragen werden."
 	Outfitter.cPartialCategoryDescription = "Bei Mix-n-match Outfits sind nur einige Gegenstände festgelegt, jedoch nicht alle.  Werden diese Outfits ausgewählt bleibt das vorherige Outfit erhalten, nur die neuen Gegenstände werden geändert."
 	Outfitter.cAccessoryCategoryDescription = "Zusatzgegenstände-Outfits haben nur einige festgelegte Inventarslots.  Anders als beim Mix-n-match kannst du so viele Zusatzgegenstände-Outfits erstellen und tragen, sie werden alle miteinander verbunden und über bestehenden Outfits getragen."

@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.2 (<%codename%>)
-	Revision: $Id: GatherTooltip.lua 989 2012-09-07 05:11:13Z Esamynn $
+	Version: 4.0.6 (<%codename%>)
+	Revision: $Id: GatherTooltip.lua 1008 2012-09-17 00:43:39Z Esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	Tooltip functions
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherTooltip.lua $", "$Rev: 989 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherTooltip.lua $", "$Rev: 1008 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient
@@ -69,28 +69,42 @@ end
 -- Hijack the game tooltips for ore and herb nodes so that we can add the
 -- required skill level to the information displayed
 
-local reqHERB = _trC("UNIT_SKINNABLE_HERB")
-local reqMINE = _trC("UNIT_SKINNABLE_ROCK")
+local reqHERB1 = LOCKED_WITH_SPELL and LOCKED_WITH_SPELL:format(_trC("TRADE_HERBALISM")) or "LOCKED_WITH_SPELL"
+local reqHERB2 = LOCKED_WITH_SPELL_KNOWN and LOCKED_WITH_SPELL_KNOWN:format(_trC("TRADE_HERBALISM")) or "LOCKED_WITH_SPELL_KNOWN"
+local reqMINE1 = LOCKED_WITH_SPELL and LOCKED_WITH_SPELL:format(_trC("TRADE_MINING")) or "LOCKED_WITH_SPELL"
+local reqMINE2 = LOCKED_WITH_SPELL_KNOWN and LOCKED_WITH_SPELL_KNOWN:format(_trC("TRADE_MINING")) or "LOCKED_WITH_SPELL_KNOWN"
+local GAME_OBJECT_REQUIRES_REWRITE = _trC("GAME_OBJECT_REQUIRES_REWRITE") or _trL("GAME_OBJECT_REQUIRES_REWRITE")
 
 function Gatherer.GameTooltip_OnShow()
-
 		if GameTooltip:NumLines() ~= 2 then return end
-
+		
 		local line = {}
 		for n = 1, 2 do
-		  local left = _G["GameTooltipTextLeft"..n]
-		  local right = _G["GameTooltipTextRight"..n]
-		  if not left or not left:IsShown() then return end
-		  if right and right:IsShown() then return end
-		  table.insert(line, left)
+			local left = _G["GameTooltipTextLeft"..n]
+			local right = _G["GameTooltipTextRight"..n]
+			if not left or not left:IsShown() then return end
+			if right and right:IsShown() then return end
+			table.insert(line, left)
 		end
 		
-		local profession;
+		local profession, locked_format_string;
 		local requires = line[2]:GetText()
-		if ( requires:find(reqHERB, 0, true) ) then
+		if ( requires == reqHERB1 ) then
 			profession = _trC("TRADE_HERBALISM")
-		elseif ( requires:find(reqMINE, 0, true) ) then
+			locked_format_string = LOCKED_WITH_SPELL
+		
+		elseif ( requires == reqMINE1 ) then
 			profession = _trC("TRADE_MINING")
+			locked_format_string = LOCKED_WITH_SPELL
+		
+		elseif ( requires == reqHERB2 ) then
+			profession = _trC("TRADE_HERBALISM")
+			locked_format_string = LOCKED_WITH_SPELL_KNOWN
+			
+		elseif ( requires == reqMINE2 ) then
+			profession = _trC("TRADE_MINING")
+			locked_format_string = LOCKED_WITH_SPELL_KNOWN
+		
 		end
 		if not profession then return end
 		
@@ -104,9 +118,8 @@ function Gatherer.GameTooltip_OnShow()
 		local skill = Gatherer.Constants.SkillLevel[category]
 		if not skill then return end
 		
-		line[2]:SetText(requires:gsub(profession, profession.." "..skill))
+		line[2]:SetText(locked_format_string:format(GAME_OBJECT_REQUIRES_REWRITE:format(profession, skill)))
 		GameTooltip:Show()
-
 end
 
 GameTooltip:HookScript("OnShow", Gatherer.GameTooltip_OnShow)

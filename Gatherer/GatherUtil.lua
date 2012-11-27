@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.2 (<%codename%>)
-	Revision: $Id: GatherUtil.lua 979 2012-09-04 07:38:10Z Esamynn $
+	Version: 4.0.6 (<%codename%>)
+	Revision: $Id: GatherUtil.lua 997 2012-09-11 03:14:32Z Esamynn $
 
 	License:
 	This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	Utility functions
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherUtil.lua $", "$Rev: 979 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherUtil.lua $", "$Rev: 997 $")
 
 -- reference to the Astrolabe mapping library
 local Astrolabe = DongleStub(Gatherer.AstrolabeVersion)
@@ -306,7 +306,7 @@ function Gatherer.Util.ParseFormattedMessage(format, message)
 end
 
 function Gatherer.Util.GetNodeTexture( mapZone, gatherType, index )
-	local texture, trimTexture = "Interface/AddOns/Gatherer/Original/Test", false
+	local texture, trimTexture = "Interface\\AddOns\\Gatherer\\Original\\Test", false
 	local maxCount = -1
 	for _, gatherID, count in Gatherer.Storage.GetNodeGatherNames(mapZone, gatherType, index) do
 		if ( count > maxCount ) then

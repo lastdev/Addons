@@ -1,4 +1,4 @@
-﻿Outfitter.cVersion = "5.5.2"
+﻿Outfitter.cVersion = "5.6.1"
 
 Outfitter.cTitle = "Outfitter"
 Outfitter.cTitleVersion = Outfitter.cTitle.." "..Outfitter.cVersion
@@ -252,6 +252,7 @@ Outfitter.cClassName.SHAMAN = "Shaman"
 Outfitter.cClassName.WARLOCK = "Warlock"
 Outfitter.cClassName.WARRIOR = "Warrior"
 Outfitter.cClassName.DEATHKNIGHT = "Death Knight"
+Outfitter.cClassName.MONK = "Monk"
 
 Outfitter.cBattleStance = "Battle Stance"
 Outfitter.cDefensiveStance = "Defensive Stance"
@@ -295,6 +296,10 @@ Outfitter.cMageEvocate = "Mage: Evocate"
 Outfitter.cDeathknightBlood = "Deathknight: Blood Presence"
 Outfitter.cDeathknightFrost = "Deathknight: Frost Presence"
 Outfitter.cDeathknightUnholy = "Deathknight: Unholy Presence"
+
+Outfitter.cMonkTiger = "Monk: Tiger stance"
+Outfitter.cMonkSerpent = "Monk: Serpent stance"
+Outfitter.cMonkOx = "Monk: Ox stance"
 
 Outfitter.cCompleteCategoryDescription = "Complete outfits have all slots specified.  When these outfits are equipped all other outfits will automatically be unequipped."
 Outfitter.cAccessoryCategoryDescription = "Accessory outfits have some, but not all, slots specified.  You can equip as many accessory outfits at a time as you like."

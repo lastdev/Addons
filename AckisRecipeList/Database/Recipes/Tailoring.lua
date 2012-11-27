@@ -2,10 +2,10 @@
 ************************************************************************
 Tailoring.lua
 ************************************************************************
-File date: 2012-08-31T09:59:18Z
-File hash: 6dbfc9b
-Project hash: f647594
-Project version: 2.4
+File date: 2012-10-08T14:08:34Z
+File hash: 9cc8109
+Project hash: 5a95034
+Project version: 2.4.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -30,6 +30,7 @@ local Q = private.ITEM_QUALITIES
 local REP = private.REP_LEVELS
 local FAC = private.FACTION_IDS
 local V = private.GAME_VERSIONS
+local Z = private.ZONE_NAMES
 
 --------------------------------------------------------------------------------------------------------------------
 -- Initialize!
@@ -49,7 +50,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(10, 10, 45, 57, 70)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Linen Boots -- 2386
 	recipe = AddRecipe(2386, V.ORIG, Q.COMMON)
@@ -57,7 +58,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(65, 65, 90, 107, 125)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Linen Cloak -- 2387
 	recipe = AddRecipe(2387, V.ORIG, Q.COMMON)
@@ -74,7 +75,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(40, 40, 65, 82, 100)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Red Linen Shirt -- 2392
 	recipe = AddRecipe(2392, V.ORIG, Q.COMMON)
@@ -82,7 +83,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(40, 40, 65, 82, 100)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- White Linen Shirt -- 2393
 	recipe = AddRecipe(2393, V.ORIG, Q.COMMON)
@@ -90,7 +91,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(1, 1, 35, 47, 60)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Blue Linen Shirt -- 2394
 	recipe = AddRecipe(2394, V.ORIG, Q.COMMON)
@@ -98,7 +99,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(40, 40, 65, 82, 100)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Barbaric Linen Vest -- 2395
 	recipe = AddRecipe(2395, V.ORIG, Q.COMMON)
@@ -106,7 +107,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(70, 70, 95, 112, 130)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Green Linen Shirt -- 2396
 	recipe = AddRecipe(2396, V.ORIG, Q.COMMON)
@@ -114,7 +115,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(70, 70, 95, 112, 130)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Reinforced Linen Cape -- 2397
 	recipe = AddRecipe(2397, V.ORIG, Q.COMMON)
@@ -122,7 +123,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(60, 60, 85, 102, 120)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Green Woolen Vest -- 2399
 	recipe = AddRecipe(2399, V.ORIG, Q.COMMON)
@@ -146,7 +147,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(75, 75, 100, 117, 135)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Gray Woolen Robe -- 2403
 	recipe = AddRecipe(2403, V.ORIG, Q.UNCOMMON)
@@ -155,7 +156,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(105, 105, 130, 147, 165)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Gray Woolen Shirt -- 2406
 	recipe = AddRecipe(2406, V.ORIG, Q.COMMON)
@@ -179,7 +180,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(75, 75, 90, 97, 105)
 	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Linen Bag -- 3755
 	recipe = AddRecipe(3755, V.ORIG, Q.COMMON)
@@ -187,7 +188,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(45, 45, 70, 87, 105)
 	recipe:SetItemFilterType("TAILORING_BAG")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Woolen Bag -- 3757
 	recipe = AddRecipe(3757, V.ORIG, Q.COMMON)
@@ -204,7 +205,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(95, 95, 120, 137, 155)
 	recipe:SetItemFilterType("TAILORING_BAG")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Small Silk Pack -- 3813
 	recipe = AddRecipe(3813, V.ORIG, Q.COMMON)
@@ -228,7 +229,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(35, 35, 60, 77, 95)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Green Linen Bracers -- 3841
 	recipe = AddRecipe(3841, V.ORIG, Q.COMMON)
@@ -236,7 +237,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(60, 60, 85, 102, 120)
 	recipe:SetItemFilterType("TAILORING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Handstitched Linen Britches -- 3842
 	recipe = AddRecipe(3842, V.ORIG, Q.COMMON)
@@ -244,7 +245,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(70, 70, 95, 112, 130)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Heavy Woolen Gloves -- 3843
 	recipe = AddRecipe(3843, V.ORIG, Q.COMMON)
@@ -261,7 +262,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(100, 100, 125, 142, 160)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Soft-soled Linen Boots -- 3845
 	recipe = AddRecipe(3845, V.ORIG, Q.COMMON)
@@ -278,7 +279,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(95, 95, 120, 137, 155)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Double-stitched Woolen Shoulders -- 3848
 	recipe = AddRecipe(3848, V.ORIG, Q.COMMON)
@@ -295,7 +296,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(120, 120, 145, 162, 180)
 	recipe:SetItemFilterType("TAILORING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Heavy Woolen Pants -- 3850
 	recipe = AddRecipe(3850, V.ORIG, Q.COMMON)
@@ -312,7 +313,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(125, 125, 150, 167, 185)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Gloves of Meditation -- 3852
 	recipe = AddRecipe(3852, V.ORIG, Q.COMMON)
@@ -346,7 +347,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(140, 140, 160, 175, 190)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Enchanter's Cowl -- 3857
 	recipe = AddRecipe(3857, V.ORIG, Q.COMMON)
@@ -364,7 +365,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(170, 170, 190, 205, 220)
 	recipe:SetItemFilterType("TAILORING_HEAD")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Azure Silk Vest -- 3859
 	recipe = AddRecipe(3859, V.ORIG, Q.COMMON)
@@ -381,7 +382,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(175, 175, 195, 210, 225)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Long Silken Cloak -- 3861
 	recipe = AddRecipe(3861, V.ORIG, Q.COMMON)
@@ -407,7 +408,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(180, 180, 200, 215, 230)
 	recipe:SetItemFilterType("TAILORING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Star Belt -- 3864
 	recipe = AddRecipe(3864, V.ORIG, Q.UNCOMMON)
@@ -416,7 +417,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(200, 200, 220, 235, 250)
 	recipe:SetItemFilterType("TAILORING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Bolt of Mageweave -- 3865
 	recipe = AddRecipe(3865, V.ORIG, Q.COMMON)
@@ -441,7 +442,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(125, 125, 150, 167, 185)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Bright Yellow Shirt -- 3869
 	recipe = AddRecipe(3869, V.ORIG, Q.COMMON)
@@ -476,7 +477,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(185, 185, 195, 200, 205)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Black Swashbuckler's Shirt -- 3873
 	recipe = AddRecipe(3873, V.ORIG, Q.COMMON)
@@ -493,7 +494,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(30, 30, 55, 72, 90)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Brown Linen Shirt -- 3915
 	recipe = AddRecipe(3915, V.ORIG, Q.COMMON)
@@ -554,7 +555,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(175, 175, 195, 210, 225)
 	recipe:SetItemFilterType("TAILORING_BAG")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Black Silk Pack -- 6695
 	recipe = AddRecipe(6695, V.ORIG, Q.UNCOMMON)
@@ -571,7 +572,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(30, 30, 55, 72, 90)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- White Linen Robe -- 7624
 	recipe = AddRecipe(7624, V.ORIG, Q.COMMON)
@@ -579,7 +580,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(30, 30, 55, 72, 90)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Red Linen Vest -- 7629
 	recipe = AddRecipe(7629, V.ORIG, Q.UNCOMMON)
@@ -588,7 +589,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(55, 55, 80, 97, 115)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Blue Linen Vest -- 7630
 	recipe = AddRecipe(7630, V.ORIG, Q.COMMON)
@@ -634,7 +635,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(120, 120, 145, 162, 180)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Stylish Green Shirt -- 7893
 	recipe = AddRecipe(7893, V.ORIG, Q.UNCOMMON)
@@ -643,7 +644,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(120, 120, 145, 162, 180)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Simple Dress -- 8465
 	recipe = AddRecipe(8465, V.ORIG, Q.COMMON)
@@ -651,7 +652,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(40, 40, 65, 82, 100)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- White Woolen Dress -- 8467
 	recipe = AddRecipe(8467, V.ORIG, Q.COMMON)
@@ -747,7 +748,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(15, 15, 50, 67, 85)
 	recipe:SetItemFilterType("TAILORING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOE)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Hands of Darkness -- 8780
 	recipe = AddRecipe(8780, V.ORIG, Q.UNCOMMON)
@@ -756,7 +757,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(145, 145, 165, 180, 195)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Truefaith Gloves -- 8782
 	recipe = AddRecipe(8782, V.ORIG, Q.UNCOMMON)
@@ -765,7 +766,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(150, 150, 170, 185, 200)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Green Silk Armor -- 8784
 	recipe = AddRecipe(8784, V.ORIG, Q.UNCOMMON)
@@ -774,7 +775,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(165, 165, 185, 200, 215)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Azure Silk Cloak -- 8786
 	recipe = AddRecipe(8786, V.ORIG, Q.COMMON)
@@ -809,7 +810,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(190, 190, 210, 225, 240)
 	recipe:SetItemFilterType("TAILORING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Azure Shoulders -- 8795
 	recipe = AddRecipe(8795, V.ORIG, Q.UNCOMMON)
@@ -818,7 +819,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(190, 190, 210, 225, 240)
 	recipe:SetItemFilterType("TAILORING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Earthen Silk Belt -- 8797
 	recipe = AddRecipe(8797, V.ORIG, Q.UNCOMMON)
@@ -827,7 +828,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(195, 195, 215, 230, 245)
 	recipe:SetItemFilterType("TAILORING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Crimson Silk Pantaloons -- 8799
 	recipe = AddRecipe(8799, V.ORIG, Q.COMMON)
@@ -868,7 +869,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(20, 20, 50, 67, 85)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Simple Kilt -- 12046
 	recipe = AddRecipe(12046, V.ORIG, Q.COMMON)
@@ -876,7 +877,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(75, 75, 100, 117, 135)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47418)
+	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559, 47384, 47396, 47418, 47420, 47431)
 
 	-- Colorful Kilt -- 12047
 	recipe = AddRecipe(12047, V.ORIG, Q.UNCOMMON)
@@ -885,7 +886,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(120, 120, 145, 162, 180)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Black Mageweave Vest -- 12048
 	recipe = AddRecipe(12048, V.ORIG, Q.COMMON)
@@ -917,7 +918,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(210, 210, 225, 240, 255)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4578, 9584, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 4578, 5153, 9584, 16729, 18772, 26914, 27001, 33580, 33613, 33636, 44783, 45559)
 
 	-- Black Mageweave Gloves -- 12053
 	recipe = AddRecipe(12053, V.ORIG, Q.COMMON)
@@ -933,7 +934,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(215, 215, 230, 245, 260)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4578, 9584, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 4578, 5153, 9584, 16729, 18772, 26914, 27001, 33580, 33613, 33636, 44783, 45559)
 
 	-- Red Mageweave Vest -- 12056
 	recipe = AddRecipe(12056, V.ORIG, Q.UNCOMMON)
@@ -942,7 +943,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(215, 215, 230, 245, 260)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- White Bandit Mask -- 12059
 	recipe = AddRecipe(12059, V.ORIG, Q.UNCOMMON)
@@ -951,7 +952,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(215, 215, 220, 225, 230)
 	recipe:SetItemFilterType("TAILORING_HEAD")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Red Mageweave Pants -- 12060
 	recipe = AddRecipe(12060, V.ORIG, Q.UNCOMMON)
@@ -960,7 +961,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(215, 215, 230, 245, 260)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Orange Mageweave Shirt -- 12061
 	recipe = AddRecipe(12061, V.ORIG, Q.COMMON)
@@ -994,7 +995,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(225, 225, 240, 255, 270)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Dreamweave Gloves -- 12067
 	recipe = AddRecipe(12067, V.ORIG, Q.COMMON)
@@ -1026,7 +1027,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(225, 225, 240, 255, 270)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4578, 9584, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 4578, 5153, 9584, 16729, 18772, 26914, 27001, 33580, 33613, 33636, 44783, 45559)
 
 	-- Black Mageweave Headband -- 12072
 	recipe = AddRecipe(12072, V.ORIG, Q.COMMON)
@@ -1067,7 +1068,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(235, 235, 250, 265, 280)
 	recipe:SetItemFilterType("TAILORING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4578, 9584, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 4578, 5153, 9584, 16729, 18772, 26914, 27001, 33580, 33613, 33636, 44783, 45559)
 
 	-- Simple Black Dress -- 12077
 	recipe = AddRecipe(12077, V.ORIG, Q.COMMON)
@@ -1084,7 +1085,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(235, 235, 250, 265, 280)
 	recipe:SetItemFilterType("TAILORING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Red Mageweave Bag -- 12079
 	recipe = AddRecipe(12079, V.ORIG, Q.COMMON)
@@ -1118,7 +1119,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(240, 240, 255, 270, 285)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4578, 9584, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 4578, 5153, 9584, 16729, 18772, 26914, 27001, 33580, 33613, 33636, 44783, 45559)
 
 	-- Red Mageweave Headband -- 12084
 	recipe = AddRecipe(12084, V.ORIG, Q.UNCOMMON)
@@ -1127,7 +1128,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(240, 240, 255, 270, 285)
 	recipe:SetItemFilterType("TAILORING_HEAD")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Tuxedo Shirt -- 12085
 	recipe = AddRecipe(12085, V.ORIG, Q.COMMON)
@@ -1136,8 +1137,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(240, 240, 245, 250, 255)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOE)
-	recipe:AddVendor(8681)
-	recipe:AddLimitedVendor(4577, 1)
+	recipe:AddLimitedVendor(4577, 1, 8681, 1)
 
 	-- Shadoweave Mask -- 12086
 	recipe = AddRecipe(12086, V.ORIG, Q.UNCOMMON)
@@ -1163,8 +1163,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(245, 245, 250, 255, 260)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOE)
-	recipe:AddVendor(8681)
-	recipe:AddLimitedVendor(4577, 1)
+	recipe:AddLimitedVendor(4577, 1, 8681, 1)
 
 	-- White Wedding Dress -- 12091
 	recipe = AddRecipe(12091, V.ORIG, Q.COMMON)
@@ -1190,8 +1189,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(250, 250, 265, 280, 295)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOE)
-	recipe:AddVendor(8681)
-	recipe:AddLimitedVendor(4577, 1)
+	recipe:AddLimitedVendor(4577, 1, 8681, 1)
 
 	-- Bolt of Runecloth -- 18401
 	recipe = AddRecipe(18401, V.ORIG, Q.COMMON)
@@ -1224,7 +1222,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(255, 255, 270, 285, 300)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Runecloth Bag -- 18405
 	recipe = AddRecipe(18405, V.ORIG, Q.COMMON)
@@ -1430,7 +1428,7 @@ function addon:InitTailoring()
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1103, 1346, 2399, 2627, 3004, 3363, 3484, 3523, 3704, 4159, 4193, 4576, 5153, 9584, 11052, 11557, 16366, 16640, 16729, 17487, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Brightcloth Pants -- 18439
 	recipe = AddRecipe(18439, V.ORIG, Q.UNCOMMON)
@@ -1439,7 +1437,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(290, 290, 305, 320, 335)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Mooncloth Leggings -- 18440
 	recipe = AddRecipe(18440, V.ORIG, Q.RARE)
@@ -1448,7 +1446,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(290, 290, 305, 320, 335)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Ghostweave Pants -- 18441
 	recipe = AddRecipe(18441, V.ORIG, Q.COMMON)
@@ -1481,7 +1479,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(300, 300, 315, 330, 345)
 	recipe:SetItemFilterType("TAILORING_BAG")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Wizardweave Robe -- 18446
 	recipe = AddRecipe(18446, V.ORIG, Q.COMMON)
@@ -1498,7 +1496,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(300, 300, 315, 330, 345)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Mooncloth Shoulders -- 18448
 	recipe = AddRecipe(18448, V.ORIG, Q.RARE)
@@ -1507,7 +1505,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(300, 300, 315, 330, 345)
 	recipe:SetItemFilterType("TAILORING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Runecloth Shoulders -- 18449
 	recipe = AddRecipe(18449, V.ORIG, Q.COMMON)
@@ -1540,7 +1538,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(300, 300, 315, 330, 345)
 	recipe:SetItemFilterType("TAILORING_HEAD")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Felcloth Shoulders -- 18453
 	recipe = AddRecipe(18453, V.ORIG, Q.COMMON)
@@ -1557,7 +1555,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(300, 300, 315, 330, 345)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.DPS, F.HEALER, F.CASTER, F.MAGE, F.PRIEST, F.WARLOCK)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Bottomless Bag -- 18455
 	recipe = AddRecipe(18455, V.ORIG, Q.RARE)
@@ -1566,7 +1564,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(300, 300, 315, 330, 345)
 	recipe:SetItemFilterType("TAILORING_BAG")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Eastern Kingdoms", "Kalimdor")
+	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
 
 	-- Truefaith Vestments -- 18456
 	recipe = AddRecipe(18456, V.ORIG, Q.EPIC)
@@ -1871,7 +1869,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(300, 300, 305, 315, 325)
 	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
 
 	-- Netherweave Bag -- 26746
 	recipe = AddRecipe(26746, V.TBC, Q.COMMON)
@@ -1879,7 +1877,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(315, 315, 320, 330, 340)
 	recipe:SetItemFilterType("TAILORING_BAG")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
 
 	-- Bolt of Imbued Netherweave -- 26747
 	recipe = AddRecipe(26747, V.TBC, Q.COMMON)
@@ -2033,7 +2031,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(310, 310, 320, 325, 330)
 	recipe:SetItemFilterType("TAILORING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
 
 	-- Netherweave Belt -- 26765
 	recipe = AddRecipe(26765, V.TBC, Q.COMMON)
@@ -2041,7 +2039,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(310, 310, 320, 325, 330)
 	recipe:SetItemFilterType("TAILORING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
 
 	-- Netherweave Gloves -- 26770
 	recipe = AddRecipe(26770, V.TBC, Q.COMMON)
@@ -2049,7 +2047,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(320, 320, 330, 335, 340)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
 
 	-- Netherweave Pants -- 26771
 	recipe = AddRecipe(26771, V.TBC, Q.COMMON)
@@ -2057,7 +2055,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(325, 325, 335, 340, 345)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
 
 	-- Netherweave Boots -- 26772
 	recipe = AddRecipe(26772, V.TBC, Q.COMMON)
@@ -2065,7 +2063,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(335, 335, 345, 350, 355)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
 
 	-- Netherweave Robe -- 26773
 	recipe = AddRecipe(26773, V.TBC, Q.COMMON)
@@ -2349,7 +2347,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(350, 350, 360, 365, 370)
 	recipe:SetItemFilterType("TAILORING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Outland")
+	recipe:AddWorldDrop(Z.OUTLAND)
 
 	-- Blackstrike Bracers -- 31437
 	recipe = AddRecipe(31437, V.TBC, Q.RARE)
@@ -2358,7 +2356,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(350, 350, 360, 365, 370)
 	recipe:SetItemFilterType("TAILORING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Outland")
+	recipe:AddWorldDrop(Z.OUTLAND)
 
 	-- Cloak of the Black Void -- 31438
 	recipe = AddRecipe(31438, V.TBC, Q.RARE)
@@ -2367,7 +2365,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(350, 350, 360, 365, 370)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Outland")
+	recipe:AddWorldDrop(Z.OUTLAND)
 
 	-- Cloak of Eternity -- 31440
 	recipe = AddRecipe(31440, V.TBC, Q.RARE)
@@ -2376,7 +2374,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(350, 350, 360, 365, 370)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.TANK)
-	recipe:AddWorldDrop("Outland")
+	recipe:AddWorldDrop(Z.OUTLAND)
 
 	-- White Remedy Cape -- 31441
 	recipe = AddRecipe(31441, V.TBC, Q.RARE)
@@ -2385,7 +2383,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(350, 350, 360, 365, 370)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Outland")
+	recipe:AddWorldDrop(Z.OUTLAND)
 
 	-- Unyielding Girdle -- 31442
 	recipe = AddRecipe(31442, V.TBC, Q.EPIC)
@@ -2403,7 +2401,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(365, 365, 375, 380, 385)
 	recipe:SetItemFilterType("TAILORING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Outland")
+	recipe:AddWorldDrop(Z.OUTLAND)
 
 	-- Black Belt of Knowledge -- 31444
 	recipe = AddRecipe(31444, V.TBC, Q.EPIC)
@@ -2412,7 +2410,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(365, 365, 375, 380, 385)
 	recipe:SetItemFilterType("TAILORING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Outland")
+	recipe:AddWorldDrop(Z.OUTLAND)
 
 	-- Resolute Cape -- 31448
 	recipe = AddRecipe(31448, V.TBC, Q.EPIC)
@@ -2421,7 +2419,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(365, 365, 375, 380, 385)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Outland")
+	recipe:AddWorldDrop(Z.OUTLAND)
 
 	-- Vengeance Wrap -- 31449
 	recipe = AddRecipe(31449, V.TBC, Q.EPIC)
@@ -2430,7 +2428,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(365, 365, 375, 380, 385)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Outland")
+	recipe:AddWorldDrop(Z.OUTLAND)
 
 	-- Manaweave Cloak -- 31450
 	recipe = AddRecipe(31450, V.TBC, Q.EPIC)
@@ -2439,7 +2437,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(365, 365, 375, 380, 385)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddWorldDrop("Outland")
+	recipe:AddWorldDrop(Z.OUTLAND)
 
 	-- Whitemend Pants -- 31451
 	recipe = AddRecipe(31451, V.TBC, Q.EPIC)
@@ -2501,7 +2499,7 @@ function addon:InitTailoring()
 	recipe:SetCraftedItemID(24270)
 	recipe:SetSkillLevels(340, 340, 350, 355, 360)
 	recipe:SetItemFilterType("TAILORING_BAG")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.IBOE, F.RBOP, F.REPUTATION, F.CONSORTIUM)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.REPUTATION, F.CONSORTIUM)
 	recipe:AddRepVendor(FAC.CONSORTIUM, REP.HONORED, 20242, 23007)
 
 	-- Netherweave Net -- 31460
@@ -2510,7 +2508,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(300, 300, 300, 310, 320)
 	recipe:SetItemFilterType("TAILORING_MISC")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18749, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 33684, 44783, 45559)
 
 	-- Belt of Blasting -- 36315
 	recipe = AddRecipe(36315, V.TBC, Q.EPIC)
@@ -2563,7 +2561,7 @@ function addon:InitTailoring()
 	recipe:SetCraftedItemID(30831)
 	recipe:SetSkillLevels(350, 350, 360, 365, 370)
 	recipe:SetItemFilterType("TAILORING_BACK")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.IBOE, F.RBOP, F.REPUTATION, F.LOWERCITY)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.REPUTATION, F.LOWERCITY)
 	recipe:AddRepVendor(FAC.LOWERCITY, REP.HONORED, 21655)
 
 	-- Flameheart Bracers -- 37882
@@ -2745,7 +2743,7 @@ function addon:InitTailoring()
 	recipe:SetCraftedItemID(38225)
 	recipe:SetSkillLevels(375, 375, 385, 390, 395)
 	recipe:SetItemFilterType("TAILORING_BAG")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.IBOE, F.RBOP, F.REPUTATION, F.SPOREGGAR)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.REPUTATION, F.SPOREGGAR)
 	recipe:AddRepVendor(FAC.SPOREGGAR, REP.REVERED, 18382)
 
 	-- Haliscan Jacket -- 50644
@@ -2771,21 +2769,21 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 420, 420, 420)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Darkglow Embroidery -- 55769
 	recipe = AddRecipe(55769, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(420, 420, 420, 420, 420)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Swordguard Embroidery -- 55777
 	recipe = AddRecipe(55777, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(420, 420, 420, 420, 420)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.DPS)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostweave Net -- 55898
 	recipe = AddRecipe(55898, V.WOTLK, Q.COMMON)
@@ -2793,7 +2791,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(360, 360, 370, 375, 380)
 	recipe:SetItemFilterType("TAILORING_MISC")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Bolt of Frostweave -- 55899
 	recipe = AddRecipe(55899, V.WOTLK, Q.COMMON)
@@ -2801,7 +2799,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(350, 350, 370, 372, 375)
 	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Bolt of Imbued Frostweave -- 55900
 	recipe = AddRecipe(55900, V.WOTLK, Q.COMMON)
@@ -2809,7 +2807,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(400, 400, 400, 402, 405)
 	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Duskweave Leggings -- 55901
 	recipe = AddRecipe(55901, V.WOTLK, Q.COMMON)
@@ -2817,7 +2815,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(395, 395, 405, 410, 415)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostwoven Shoulders -- 55902
 	recipe = AddRecipe(55902, V.WOTLK, Q.COMMON)
@@ -2825,7 +2823,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(350, 350, 360, 370, 380)
 	recipe:SetItemFilterType("TAILORING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostwoven Robe -- 55903
 	recipe = AddRecipe(55903, V.WOTLK, Q.COMMON)
@@ -2833,7 +2831,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(360, 360, 370, 380, 390)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostwoven Gloves -- 55904
 	recipe = AddRecipe(55904, V.WOTLK, Q.COMMON)
@@ -2841,7 +2839,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(360, 360, 370, 380, 390)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostwoven Boots -- 55906
 	recipe = AddRecipe(55906, V.WOTLK, Q.COMMON)
@@ -2849,7 +2847,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(375, 375, 385, 395, 405)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostwoven Cowl -- 55907
 	recipe = AddRecipe(55907, V.WOTLK, Q.COMMON)
@@ -2857,7 +2855,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(380, 380, 390, 395, 400)
 	recipe:SetItemFilterType("TAILORING_HEAD")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostwoven Belt -- 55908
 	recipe = AddRecipe(55908, V.WOTLK, Q.COMMON)
@@ -2865,7 +2863,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(370, 370, 380, 390, 400)
 	recipe:SetItemFilterType("TAILORING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Mystic Frostwoven Shoulders -- 55910
 	recipe = AddRecipe(55910, V.WOTLK, Q.COMMON)
@@ -2873,7 +2871,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(385, 385, 395, 405, 415)
 	recipe:SetItemFilterType("TAILORING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Mystic Frostwoven Robe -- 55911
 	recipe = AddRecipe(55911, V.WOTLK, Q.COMMON)
@@ -2881,7 +2879,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(390, 390, 400, 410, 420)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Mystic Frostwoven Wristwraps -- 55913
 	recipe = AddRecipe(55913, V.WOTLK, Q.COMMON)
@@ -2889,7 +2887,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(385, 385, 395, 405, 415)
 	recipe:SetItemFilterType("TAILORING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Duskweave Belt -- 55914
 	recipe = AddRecipe(55914, V.WOTLK, Q.COMMON)
@@ -2897,7 +2895,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(395, 395, 400, 405, 410)
 	recipe:SetItemFilterType("TAILORING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Duskweave Cowl -- 55919
 	recipe = AddRecipe(55919, V.WOTLK, Q.COMMON)
@@ -2905,7 +2903,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(395, 395, 405, 410, 415)
 	recipe:SetItemFilterType("TAILORING_HEAD")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Duskweave Wristwraps -- 55920
 	recipe = AddRecipe(55920, V.WOTLK, Q.COMMON)
@@ -2913,7 +2911,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(400, 400, 410, 415, 420)
 	recipe:SetItemFilterType("TAILORING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Duskweave Robe -- 55921
 	recipe = AddRecipe(55921, V.WOTLK, Q.COMMON)
@@ -2921,7 +2919,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(405, 405, 415, 420, 425)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Duskweave Gloves -- 55922
 	recipe = AddRecipe(55922, V.WOTLK, Q.COMMON)
@@ -2929,7 +2927,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(405, 405, 415, 420, 425)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Duskweave Shoulders -- 55923
 	recipe = AddRecipe(55923, V.WOTLK, Q.COMMON)
@@ -2937,7 +2935,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(410, 410, 420, 425, 430)
 	recipe:SetItemFilterType("TAILORING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Duskweave Boots -- 55924
 	recipe = AddRecipe(55924, V.WOTLK, Q.COMMON)
@@ -2945,7 +2943,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(410, 410, 410, 410, 420)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Black Duskweave Leggings -- 55925
 	recipe = AddRecipe(55925, V.WOTLK, Q.COMMON)
@@ -2953,7 +2951,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(415, 415, 425, 430, 435)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Black Duskweave Robe -- 55941
 	recipe = AddRecipe(55941, V.WOTLK, Q.COMMON)
@@ -2961,7 +2959,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 430, 435, 440)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Black Duskweave Wristwraps -- 55943
 	recipe = AddRecipe(55943, V.WOTLK, Q.COMMON)
@@ -2969,7 +2967,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(415, 415, 425, 430, 435)
 	recipe:SetItemFilterType("TAILORING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Red Lumberjack Shirt -- 55993
 	recipe = AddRecipe(55993, V.WOTLK, Q.UNCOMMON)
@@ -2978,7 +2976,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(400, 400, 400, 405, 410)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Northrend")
+	recipe:AddWorldDrop(Z.NORTHREND)
 
 	-- Blue Lumberjack Shirt -- 55994
 	recipe = AddRecipe(55994, V.WOTLK, Q.UNCOMMON)
@@ -2987,7 +2985,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(400, 400, 400, 405, 410)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Northrend")
+	recipe:AddWorldDrop(Z.NORTHREND)
 
 	-- Yellow Lumberjack Shirt -- 55995
 	recipe = AddRecipe(55995, V.WOTLK, Q.COMMON)
@@ -2995,7 +2993,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(400, 400, 400, 405, 410)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Green Lumberjack Shirt -- 55996
 	recipe = AddRecipe(55996, V.WOTLK, Q.UNCOMMON)
@@ -3004,7 +3002,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(400, 400, 400, 405, 410)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Northrend")
+	recipe:AddWorldDrop(Z.NORTHREND)
 
 	-- Red Workman's Shirt -- 55997
 	recipe = AddRecipe(55997, V.WOTLK, Q.UNCOMMON)
@@ -3013,7 +3011,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(400, 400, 400, 405, 410)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Northrend")
+	recipe:AddWorldDrop(Z.NORTHREND)
 
 	-- Blue Workman's Shirt -- 55998
 	recipe = AddRecipe(55998, V.WOTLK, Q.UNCOMMON)
@@ -3022,7 +3020,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(400, 400, 400, 405, 410)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Northrend")
+	recipe:AddWorldDrop(Z.NORTHREND)
 
 	-- Rustic Workman's Shirt -- 55999
 	recipe = AddRecipe(55999, V.WOTLK, Q.UNCOMMON)
@@ -3031,7 +3029,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(400, 400, 400, 405, 410)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP, F.IBOE, F.RBOE)
-	recipe:AddWorldDrop("Northrend")
+	recipe:AddWorldDrop(Z.NORTHREND)
 
 	-- Green Workman's Shirt -- 56000
 	recipe = AddRecipe(56000, V.WOTLK, Q.COMMON)
@@ -3039,7 +3037,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(400, 400, 400, 405, 410)
 	recipe:SetItemFilterType("TAILORING_SHIRT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Moonshroud -- 56001
 	recipe = AddRecipe(56001, V.WOTLK, Q.COMMON)
@@ -3047,7 +3045,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(415, 415, 425, 430, 435)
 	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Ebonweave -- 56002
 	recipe = AddRecipe(56002, V.WOTLK, Q.COMMON)
@@ -3055,7 +3053,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(415, 415, 425, 430, 435)
 	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Spellweave -- 56003
 	recipe = AddRecipe(56003, V.WOTLK, Q.COMMON)
@@ -3063,7 +3061,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(415, 415, 425, 430, 435)
 	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Abyssal Bag -- 56004
 	recipe = AddRecipe(56004, V.WOTLK, Q.COMMON)
@@ -3098,7 +3096,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(410, 410, 430, 440, 450)
 	recipe:SetItemFilterType("TAILORING_BAG")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Shining Spellthread -- 56008
 	recipe = AddRecipe(56008, V.WOTLK, Q.COMMON)
@@ -3106,7 +3104,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(400, 400, 400, 405, 410)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Brilliant Spellthread -- 56009
 	recipe = AddRecipe(56009, V.WOTLK, Q.COMMON)
@@ -3123,7 +3121,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(400, 400, 400, 405, 410)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Sapphire Spellthread -- 56011
 	recipe = AddRecipe(56011, V.WOTLK, Q.COMMON)
@@ -3140,7 +3138,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(390, 390, 395, 400, 405)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Cloak of Frozen Spirits -- 56015
 	recipe = AddRecipe(56015, V.WOTLK, Q.COMMON)
@@ -3148,7 +3146,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(395, 395, 400, 405, 410)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Wispcloak -- 56016
 	recipe = AddRecipe(56016, V.WOTLK, Q.COMMON)
@@ -3156,7 +3154,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 435, 445, 455)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(26914, 28699)
+	recipe:AddTrainer(28699)
 	recipe:AddCustom("NORTH_DUNG")
 
 	-- Deathchill Cloak -- 56017
@@ -3165,7 +3163,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 435, 445, 455)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(26914, 28699)
+	recipe:AddTrainer(28699)
 	recipe:AddCustom("LORE_NORTH")
 
 	-- Hat of Wintry Doom -- 56018
@@ -3174,7 +3172,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(425, 425, 435, 440, 445)
 	recipe:SetItemFilterType("TAILORING_HEAD")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Silky Iceshard Boots -- 56019
 	recipe = AddRecipe(56019, V.WOTLK, Q.COMMON)
@@ -3182,7 +3180,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 430, 440, 450)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Deep Frozen Cord -- 56020
 	recipe = AddRecipe(56020, V.WOTLK, Q.COMMON)
@@ -3190,7 +3188,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 430, 440, 450)
 	recipe:SetItemFilterType("TAILORING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostmoon Pants -- 56021
 	recipe = AddRecipe(56021, V.WOTLK, Q.COMMON)
@@ -3198,7 +3196,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(425, 425, 435, 440, 445)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Light Blessed Mittens -- 56022
 	recipe = AddRecipe(56022, V.WOTLK, Q.COMMON)
@@ -3206,7 +3204,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 430, 440, 450)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Aurora Slippers -- 56023
 	recipe = AddRecipe(56023, V.WOTLK, Q.COMMON)
@@ -3214,7 +3212,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 430, 440, 450)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Moonshroud Robe -- 56024
 	recipe = AddRecipe(56024, V.WOTLK, Q.COMMON)
@@ -3222,7 +3220,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(440, 440, 450, 455, 460)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Moonshroud Gloves -- 56025
 	recipe = AddRecipe(56025, V.WOTLK, Q.COMMON)
@@ -3230,7 +3228,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(435, 435, 445, 450, 455)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Ebonweave Robe -- 56026
 	recipe = AddRecipe(56026, V.WOTLK, Q.COMMON)
@@ -3238,7 +3236,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(440, 440, 450, 455, 460)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Ebonweave Gloves -- 56027
 	recipe = AddRecipe(56027, V.WOTLK, Q.COMMON)
@@ -3246,7 +3244,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(435, 435, 445, 450, 455)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Spellweave Robe -- 56028
 	recipe = AddRecipe(56028, V.WOTLK, Q.COMMON)
@@ -3254,7 +3252,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(440, 440, 450, 455, 460)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Spellweave Gloves -- 56029
 	recipe = AddRecipe(56029, V.WOTLK, Q.COMMON)
@@ -3262,7 +3260,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(435, 435, 445, 450, 455)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostwoven Leggings -- 56030
 	recipe = AddRecipe(56030, V.WOTLK, Q.COMMON)
@@ -3270,7 +3268,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(380, 380, 390, 400, 410)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostwoven Wristwraps -- 56031
 	recipe = AddRecipe(56031, V.WOTLK, Q.COMMON)
@@ -3278,21 +3276,21 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(350, 350, 360, 370, 380)
 	recipe:SetItemFilterType("TAILORING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Master's Spellthread -- 56034
 	recipe = AddRecipe(56034, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(405, 405, 405, 405, 405)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Sanctified Spellthread -- 56039
 	recipe = AddRecipe(56039, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(405, 405, 405, 405, 405)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostsavage Belt -- 59582
 	recipe = AddRecipe(59582, V.WOTLK, Q.COMMON)
@@ -3300,7 +3298,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(415, 415, 425, 435, 445)
 	recipe:SetItemFilterType("TAILORING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostsavage Bracers -- 59583
 	recipe = AddRecipe(59583, V.WOTLK, Q.COMMON)
@@ -3308,7 +3306,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(415, 415, 425, 435, 445)
 	recipe:SetItemFilterType("TAILORING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostsavage Shoulders -- 59584
 	recipe = AddRecipe(59584, V.WOTLK, Q.COMMON)
@@ -3316,7 +3314,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 430, 440, 450)
 	recipe:SetItemFilterType("TAILORING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostsavage Boots -- 59585
 	recipe = AddRecipe(59585, V.WOTLK, Q.COMMON)
@@ -3324,7 +3322,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 430, 440, 450)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostsavage Gloves -- 59586
 	recipe = AddRecipe(59586, V.WOTLK, Q.COMMON)
@@ -3332,7 +3330,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 430, 440, 450)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostsavage Robe -- 59587
 	recipe = AddRecipe(59587, V.WOTLK, Q.COMMON)
@@ -3340,7 +3338,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 430, 440, 450)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostsavage Leggings -- 59588
 	recipe = AddRecipe(59588, V.WOTLK, Q.COMMON)
@@ -3348,7 +3346,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 430, 440, 450)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Frostsavage Cowl -- 59589
 	recipe = AddRecipe(59589, V.WOTLK, Q.COMMON)
@@ -3356,7 +3354,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 430, 440, 450)
 	recipe:SetItemFilterType("TAILORING_HEAD")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Flying Carpet -- 60969
 	recipe = AddRecipe(60969, V.WOTLK, Q.COMMON)
@@ -3364,7 +3362,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(300, 300, 340, 345, 350)
 	recipe:SetItemFilterType("TAILORING_MISC")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Magnificent Flying Carpet -- 60971
 	recipe = AddRecipe(60971, V.WOTLK, Q.COMMON)
@@ -3372,7 +3370,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(425, 425, 435, 445, 455)
 	recipe:SetItemFilterType("TAILORING_MISC")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOP, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Glacial Waistband -- 60990
 	recipe = AddRecipe(60990, V.WOTLK, Q.COMMON)
@@ -3380,7 +3378,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 430, 440, 450)
 	recipe:SetItemFilterType("TAILORING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Glacial Robe -- 60993
 	recipe = AddRecipe(60993, V.WOTLK, Q.COMMON)
@@ -3388,7 +3386,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(425, 425, 435, 445, 455)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Glacial Slippers -- 60994
 	recipe = AddRecipe(60994, V.WOTLK, Q.COMMON)
@@ -3396,7 +3394,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(420, 420, 430, 440, 450)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Sash of Ancient Power -- 63203
 	recipe = AddRecipe(63203, V.WOTLK, Q.EPIC)
@@ -3404,7 +3402,7 @@ function addon:InitTailoring()
 	recipe:SetCraftedItemID(45102)
 	recipe:SetSkillLevels(450, 450, 455, 460, 465)
 	recipe:SetItemFilterType("TAILORING_WAIST")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.IBOE, F.RBOE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.IBOE, F.RBOE)
 	recipe:AddCustom("ULDUAR_RANDOM")
 
 	-- Spellslinger's Slippers -- 63204
@@ -3422,7 +3420,7 @@ function addon:InitTailoring()
 	recipe:SetCraftedItemID(45104)
 	recipe:SetSkillLevels(450, 450, 455, 460, 465)
 	recipe:SetItemFilterType("TAILORING_WAIST")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.IBOE, F.RBOE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.IBOE, F.RBOE)
 	recipe:AddCustom("ULDUAR_RANDOM")
 
 	-- Savior's Slippers -- 63206
@@ -3457,7 +3455,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(400, 400, 405, 410, 415)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.DPS)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Cloak of Crimson Snow -- 64730
 	recipe = AddRecipe(64730, V.WOTLK, Q.COMMON)
@@ -3465,10 +3463,11 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(405, 405, 410, 415, 420)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 9584, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16729, 18772, 26914, 26964, 26969, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Royal Moonshroud Robe -- 67064
 	recipe = AddRecipe(67064, V.WOTLK, Q.EPIC)
+	recipe:SetRecipeItemID(47657)
 	recipe:SetCraftedItemID(47605)
 	recipe:SetSkillLevels(450, 450, 460, 467, 475)
 	recipe:SetRequiredFaction("Alliance")
@@ -3478,6 +3477,7 @@ function addon:InitTailoring()
 
 	-- Royal Moonshroud Bracers -- 67065
 	recipe = AddRecipe(67065, V.WOTLK, Q.EPIC)
+	recipe:SetRecipeItemID(47656)
 	recipe:SetCraftedItemID(47587)
 	recipe:SetSkillLevels(450, 450, 460, 467, 475)
 	recipe:SetRequiredFaction("Alliance")
@@ -3487,6 +3487,7 @@ function addon:InitTailoring()
 
 	-- Merlin's Robe -- 67066
 	recipe = AddRecipe(67066, V.WOTLK, Q.EPIC)
+	recipe:SetRecipeItemID(47655)
 	recipe:SetCraftedItemID(47603)
 	recipe:SetSkillLevels(450, 450, 460, 467, 475)
 	recipe:SetRequiredFaction("Alliance")
@@ -3496,6 +3497,7 @@ function addon:InitTailoring()
 
 	-- Bejeweled Wizard's Bracers -- 67079
 	recipe = AddRecipe(67079, V.WOTLK, Q.EPIC)
+	recipe:SetRecipeItemID(47654)
 	recipe:SetCraftedItemID(47585)
 	recipe:SetSkillLevels(450, 450, 460, 467, 475)
 	recipe:SetRequiredFaction("Alliance")
@@ -3520,7 +3522,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(450, 450, 460, 467, 475)
 	recipe:SetRequiredFaction("Horde")
 	recipe:SetItemFilterType("TAILORING_WRIST")
-	recipe:AddFilters(F.HORDE, F.RAID, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.HORDE, F.RAID, F.IBOE, F.RBOE, F.DPS, F.HEALER, F.CASTER)
 	recipe:AddCustom("TOC25_RANDOM")
 
 	-- Merlin's Robe -- 67146
@@ -3530,7 +3532,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(450, 450, 460, 467, 475)
 	recipe:SetRequiredFaction("Horde")
 	recipe:SetItemFilterType("TAILORING_CHEST")
-	recipe:AddFilters(F.HORDE, F.RAID, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.HORDE, F.RAID, F.IBOE, F.RBOE, F.DPS, F.HEALER, F.CASTER)
 	recipe:AddCustom("TOC25_RANDOM")
 
 	-- Royal Moonshroud Bracers -- 67147
@@ -3540,7 +3542,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(450, 450, 460, 467, 475)
 	recipe:SetRequiredFaction("Horde")
 	recipe:SetItemFilterType("TAILORING_WRIST")
-	recipe:AddFilters(F.HORDE, F.RAID, F.IBOE, F.RBOE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.HORDE, F.RAID, F.IBOE, F.RBOE, F.DPS, F.HEALER, F.CASTER)
 	recipe:AddCustom("TOC25_RANDOM")
 
 	-- Leggings of Woven Death -- 70550
@@ -3585,82 +3587,87 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(425, 425, 440, 445, 450)
 	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Dream of Skywall -- 75141
 	recipe = AddRecipe(75141, V.CATA, Q.COMMON)
 	recipe:SetCraftedItemID(54440)
-	recipe:SetSkillLevels(525, 525, 535, 540, 545)
+	recipe:SetSkillLevels(515, 515, 525, 530, 535)
 	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Dream of Deepholm -- 75142
 	recipe = AddRecipe(75142, V.CATA, Q.COMMON)
 	recipe:SetCraftedItemID(54440)
-	recipe:SetSkillLevels(525, 525, 535, 540, 545)
+	recipe:SetSkillLevels(505, 505, 515, 520, 525)
 	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Dream of Hyjal -- 75144
 	recipe = AddRecipe(75144, V.CATA, Q.COMMON)
 	recipe:SetCraftedItemID(54440)
-	recipe:SetSkillLevels(525, 525, 535, 540, 545)
+	recipe:SetSkillLevels(500, 500, 510, 515, 520)
 	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Dream of Ragnaros -- 75145
 	recipe = AddRecipe(75145, V.CATA, Q.COMMON)
 	recipe:SetCraftedItemID(54440)
-	recipe:SetSkillLevels(525, 525, 535, 540, 545)
+	recipe:SetSkillLevels(510, 510, 520, 525, 530)
 	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Dream of Azshara -- 75146
 	recipe = AddRecipe(75146, V.CATA, Q.COMMON)
 	recipe:SetCraftedItemID(54440)
-	recipe:SetSkillLevels(525, 525, 535, 540, 545)
+	recipe:SetSkillLevels(500, 500, 510, 515, 520)
 	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Master's Spellthread -- 75154
 	recipe = AddRecipe(75154, V.CATA, Q.COMMON)
-	recipe:SetSkillLevels(475, 475, 475, 475, 475)
+	recipe:SetPreviousRankID(56034)
+	recipe:SetSkillLevels(405, 405, 415, 420, 425)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Sanctified Spellthread -- 75155
 	recipe = AddRecipe(75155, V.CATA, Q.COMMON)
-	recipe:SetSkillLevels(475, 475, 475, 475, 475)
+	recipe:SetPreviousRankID(56039)
+	recipe:SetSkillLevels(405, 405, 415, 420, 425)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Lightweave Embroidery -- 75172
 	recipe = AddRecipe(75172, V.CATA, Q.COMMON)
-	recipe:SetSkillLevels(500, 500, 500, 500, 500)
+	recipe:SetPreviousRankID(55642)
+	recipe:SetSkillLevels(420, 420, 430, 435, 440)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Darkglow Embroidery -- 75175
 	recipe = AddRecipe(75175, V.CATA, Q.COMMON)
-	recipe:SetSkillLevels(500, 500, 500, 500, 500)
+	recipe:SetPreviousRankID(55769)
+	recipe:SetSkillLevels(420, 420, 430, 435, 440)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Swordguard Embroidery -- 75178
 	recipe = AddRecipe(75178, V.CATA, Q.COMMON)
-	recipe:SetSkillLevels(500, 500, 500, 500, 500)
+	recipe:SetPreviousRankID(55777)
+	recipe:SetSkillLevels(420, 420, 430, 435, 440)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Embersilk Net -- 75247
 	recipe = AddRecipe(75247, V.CATA, Q.COMMON)
@@ -3668,7 +3675,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(425, 425, 435, 445, 455)
 	recipe:SetItemFilterType("TAILORING_MISC")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Deathsilk Belt -- 75248
 	recipe = AddRecipe(75248, V.CATA, Q.COMMON)
@@ -3676,7 +3683,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(445, 445, 455, 460, 465)
 	recipe:SetItemFilterType("TAILORING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Deathsilk Bracers -- 75249
 	recipe = AddRecipe(75249, V.CATA, Q.COMMON)
@@ -3684,7 +3691,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(445, 445, 455, 460, 465)
 	recipe:SetItemFilterType("TAILORING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Enchanted Spellthread -- 75250
 	recipe = AddRecipe(75250, V.CATA, Q.COMMON)
@@ -3692,7 +3699,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(450, 450, 465, 467, 470)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Deathsilk Shoulders -- 75251
 	recipe = AddRecipe(75251, V.CATA, Q.COMMON)
@@ -3700,7 +3707,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(455, 455, 460, 465, 470)
 	recipe:SetItemFilterType("TAILORING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Deathsilk Boots -- 75252
 	recipe = AddRecipe(75252, V.CATA, Q.COMMON)
@@ -3708,7 +3715,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(455, 455, 460, 465, 470)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Deathsilk Gloves -- 75253
 	recipe = AddRecipe(75253, V.CATA, Q.COMMON)
@@ -3716,7 +3723,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(460, 460, 470, 472, 475)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Deathsilk Leggings -- 75254
 	recipe = AddRecipe(75254, V.CATA, Q.COMMON)
@@ -3724,7 +3731,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(460, 460, 465, 470, 475)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Ghostly Spellthread -- 75255
 	recipe = AddRecipe(75255, V.CATA, Q.COMMON)
@@ -3732,7 +3739,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(460, 460, 470, 472, 475)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Deathsilk Cowl -- 75256
 	recipe = AddRecipe(75256, V.CATA, Q.COMMON)
@@ -3740,7 +3747,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(465, 465, 470, 475, 480)
 	recipe:SetItemFilterType("TAILORING_HEAD")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Deathsilk Robe -- 75257
 	recipe = AddRecipe(75257, V.CATA, Q.COMMON)
@@ -3748,7 +3755,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(465, 465, 475, 477, 480)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Spiritmend Belt -- 75258
 	recipe = AddRecipe(75258, V.CATA, Q.COMMON)
@@ -3756,7 +3763,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(470, 470, 475, 480, 485)
 	recipe:SetItemFilterType("TAILORING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Spiritmend Bracers -- 75259
 	recipe = AddRecipe(75259, V.CATA, Q.COMMON)
@@ -3764,7 +3771,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(470, 470, 475, 480, 485)
 	recipe:SetItemFilterType("TAILORING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Spiritmend Shoulders -- 75260
 	recipe = AddRecipe(75260, V.CATA, Q.COMMON)
@@ -3772,7 +3779,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(475, 475, 485, 487, 490)
 	recipe:SetItemFilterType("TAILORING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Spiritmend Boots -- 75261
 	recipe = AddRecipe(75261, V.CATA, Q.COMMON)
@@ -3780,7 +3787,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(475, 475, 480, 485, 490)
 	recipe:SetItemFilterType("TAILORING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Spiritmend Gloves -- 75262
 	recipe = AddRecipe(75262, V.CATA, Q.COMMON)
@@ -3788,7 +3795,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(480, 480, 485, 490, 495)
 	recipe:SetItemFilterType("TAILORING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Spiritmend Leggings -- 75263
 	recipe = AddRecipe(75263, V.CATA, Q.COMMON)
@@ -3796,7 +3803,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(480, 480, 485, 490, 495)
 	recipe:SetItemFilterType("TAILORING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Embersilk Bag -- 75264
 	recipe = AddRecipe(75264, V.CATA, Q.COMMON)
@@ -3804,7 +3811,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(480, 480, 490, 492, 495)
 	recipe:SetItemFilterType("TAILORING_BAG")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Otherworldly Bag -- 75265
 	recipe = AddRecipe(75265, V.CATA, Q.COMMON)
@@ -3812,7 +3819,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(480, 480, 490, 492, 495)
 	recipe:SetItemFilterType("TAILORING_BAG")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Spiritmend Cowl -- 75266
 	recipe = AddRecipe(75266, V.CATA, Q.COMMON)
@@ -3820,7 +3827,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(485, 485, 500, 502, 505)
 	recipe:SetItemFilterType("TAILORING_HEAD")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Spiritmend Robe -- 75267
 	recipe = AddRecipe(75267, V.CATA, Q.COMMON)
@@ -3828,7 +3835,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(485, 485, 500, 502, 505)
 	recipe:SetItemFilterType("TAILORING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Hyjal Expedition Bag -- 75268
 	recipe = AddRecipe(75268, V.CATA, Q.COMMON)
@@ -3836,7 +3843,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(490, 490, 500, 502, 505)
 	recipe:SetItemFilterType("TAILORING_BAG")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Vicious Fireweave Belt -- 75269
 	recipe = AddRecipe(75269, V.CATA, Q.COMMON)
@@ -4059,7 +4066,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(525, 525, 525, 530, 535)
 	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 16729, 18772, 26914, 27001, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Grips of Altered Reality -- 99448
 	recipe = AddRecipe(99448, V.CATA, Q.EPIC)
@@ -4103,7 +4110,7 @@ function addon:InitTailoring()
 	recipe:SetSkillLevels(490, 490, 500, 502, 505)
 	recipe:SetItemFilterType("TAILORING_BACK")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
-	recipe:AddTrainer(3363)
+	recipe:AddTrainer(1346, 3363, 4576, 45559)
 
 	-- Luxurious Silk Gem Bag -- 100585
 	recipe = AddRecipe(100585, V.CATA, Q.RARE)
@@ -4151,23 +4158,385 @@ function addon:InitTailoring()
 	recipe:AddCustom("DRAGONSOUL_RANDOM")
 
 	-- Lightweave Embroidery -- 125481
-	recipe = AddRecipe(125481, V.CATA, Q.COMMON)
-	recipe:SetSkillLevels(575, 575, 575, 575, 575)
+	recipe = AddRecipe(125481, V.MOP, Q.COMMON)
+	recipe:SetPreviousRankID(75172)
+	recipe:SetSkillLevels(420, 420, 430, 435, 440)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
 	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Darkglow Embroidery -- 125482
-	recipe = AddRecipe(125482, V.CATA, Q.COMMON)
-	recipe:SetSkillLevels(575, 575, 575, 575, 575)
+	recipe = AddRecipe(125482, V.MOP, Q.COMMON)
+	recipe:SetPreviousRankID(75175)
+	recipe:SetSkillLevels(420, 420, 430, 435, 440)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
 	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
 
 	-- Swordguard Embroidery -- 125483
-	recipe = AddRecipe(125483, V.CATA, Q.COMMON)
-	recipe:SetSkillLevels(575, 575, 575, 575, 575)
+	recipe = AddRecipe(125483, V.MOP, Q.COMMON)
+	recipe:SetPreviousRankID(75178)
+	recipe:SetSkillLevels(420, 420, 430, 435, 440)
 	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Master's Spellthread -- 125496
+	recipe = AddRecipe(125496, V.MOP, Q.COMMON)
+	recipe:SetPreviousRankID(75154)
+	recipe:SetSkillLevels(405, 405, 415, 420, 425)
+	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Sanctified Spellthread -- 125497
+	recipe = AddRecipe(125497, V.MOP, Q.COMMON)
+	recipe:SetPreviousRankID(75155)
+	recipe:SetSkillLevels(405, 405, 415, 420, 425)
+	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Windwool Hood -- 125523
+	recipe = AddRecipe(125523, V.MOP, Q.COMMON)
+	recipe:SetCraftedItemID(82397)
+	recipe:SetSkillLevels(555, 555, 565, 570, 575)
+	recipe:SetItemFilterType("TAILORING_HEAD")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Windwool Shoulders -- 125524
+	recipe = AddRecipe(125524, V.MOP, Q.COMMON)
+	recipe:SetCraftedItemID(82398)
+	recipe:SetSkillLevels(535, 535, 545, 550, 555)
+	recipe:SetItemFilterType("TAILORING_SHOULDER")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Windwool Tunic -- 125525
+	recipe = AddRecipe(125525, V.MOP, Q.COMMON)
+	recipe:SetCraftedItemID(82399)
+	recipe:SetSkillLevels(555, 555, 565, 570, 575)
+	recipe:SetItemFilterType("TAILORING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Windwool Gloves -- 125526
+	recipe = AddRecipe(125526, V.MOP, Q.COMMON)
+	recipe:SetCraftedItemID(82400)
+	recipe:SetSkillLevels(525, 525, 535, 540, 545)
+	recipe:SetItemFilterType("TAILORING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Windwool Pants -- 125527
+	recipe = AddRecipe(125527, V.MOP, Q.COMMON)
+	recipe:SetCraftedItemID(82401)
+	recipe:SetSkillLevels(545, 545, 555, 560, 565)
+	recipe:SetItemFilterType("TAILORING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Windwool Bracers -- 125528
+	recipe = AddRecipe(125528, V.MOP, Q.COMMON)
+	recipe:SetCraftedItemID(82402)
+	recipe:SetSkillLevels(525, 525, 535, 540, 545)
+	recipe:SetItemFilterType("TAILORING_WRIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Windwool Boots -- 125529
+	recipe = AddRecipe(125529, V.MOP, Q.COMMON)
+	recipe:SetCraftedItemID(82403)
+	recipe:SetSkillLevels(545, 545, 555, 560, 565)
+	recipe:SetItemFilterType("TAILORING_FEET")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Windwool Belt -- 125530
+	recipe = AddRecipe(125530, V.MOP, Q.COMMON)
+	recipe:SetCraftedItemID(82404)
+	recipe:SetSkillLevels(535, 535, 545, 550, 555)
+	recipe:SetItemFilterType("TAILORING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Contender's Silk Cowl -- 125531
+	recipe = AddRecipe(125531, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86352)
+	recipe:SetCraftedItemID(82421)
+	recipe:SetSkillLevels(590, 590, 590, 590, 600)
+	recipe:SetItemFilterType("TAILORING_HEAD")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Silk Amice -- 125532
+	recipe = AddRecipe(125532, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86353)
+	recipe:SetCraftedItemID(82422)
+	recipe:SetSkillLevels(575, 575, 575, 575, 600)
+	recipe:SetItemFilterType("TAILORING_SHOULDER")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Silk Rainment -- 125533
+	recipe = AddRecipe(125533, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86354)
+	recipe:SetCraftedItemID(82423)
+	recipe:SetSkillLevels(590, 590, 590, 590, 600)
+	recipe:SetItemFilterType("TAILORING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Silk Handwraps -- 125534
+	recipe = AddRecipe(125534, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86355)
+	recipe:SetCraftedItemID(82424)
+	recipe:SetSkillLevels(565, 565, 565, 565, 600)
+	recipe:SetItemFilterType("TAILORING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Silk Pants -- 125535
+	recipe = AddRecipe(125535, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86356)
+	recipe:SetCraftedItemID(82425)
+	recipe:SetSkillLevels(565, 565, 565, 565, 600)
+	recipe:SetItemFilterType("TAILORING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Silk Cuffs -- 125536
+	recipe = AddRecipe(125536, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86357)
+	recipe:SetCraftedItemID(82426)
+	recipe:SetSkillLevels(555, 555, 555, 555, 600)
+	recipe:SetItemFilterType("TAILORING_WRIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Silk Footwraps -- 125537
+	recipe = AddRecipe(125537, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86358)
+	recipe:SetCraftedItemID(82427)
+	recipe:SetSkillLevels(565, 565, 565, 565, 600)
+	recipe:SetItemFilterType("TAILORING_FEET")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Silk Belt -- 125538
+	recipe = AddRecipe(125538, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86359)
+	recipe:SetCraftedItemID(82428)
+	recipe:SetSkillLevels(565, 565, 565, 565, 600)
+	recipe:SetItemFilterType("TAILORING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Satin Cowl -- 125539
+	recipe = AddRecipe(125539, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86360)
+	recipe:SetCraftedItemID(82429)
+	recipe:SetSkillLevels(590, 590, 590, 590, 600)
+	recipe:SetItemFilterType("TAILORING_HEAD")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Satin Amice -- 125540
+	recipe = AddRecipe(125540, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(82361)
+	recipe:SetCraftedItemID(82430)
+	recipe:SetSkillLevels(575, 575, 575, 575, 600)
+	recipe:SetItemFilterType("TAILORING_SHOULDER")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Satin Rainment -- 125541
+	recipe = AddRecipe(125541, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86362)
+	recipe:SetCraftedItemID(82431)
+	recipe:SetSkillLevels(590, 590, 590, 590, 600)
+	recipe:SetItemFilterType("TAILORING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Satin Handwraps -- 125542
+	recipe = AddRecipe(125542, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86363)
+	recipe:SetCraftedItemID(82432)
+	recipe:SetSkillLevels(565, 565, 565, 565, 600)
+	recipe:SetItemFilterType("TAILORING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Satin Pants -- 125543
+	recipe = AddRecipe(125543, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86364)
+	recipe:SetCraftedItemID(82433)
+	recipe:SetSkillLevels(565, 565, 565, 565, 600)
+	recipe:SetItemFilterType("TAILORING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Satin Cuffs -- 125544
+	recipe = AddRecipe(125544, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86365)
+	recipe:SetCraftedItemID(82434)
+	recipe:SetSkillLevels(555, 555, 555, 555, 600)
+	recipe:SetItemFilterType("TAILORING_WRIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Satin Footwraps -- 125545
+	recipe = AddRecipe(125545, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86366)
+	recipe:SetCraftedItemID(82435)
+	recipe:SetSkillLevels(565, 565, 565, 565, 600)
+	recipe:SetItemFilterType("TAILORING_FEET")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Contender's Satin Belt -- 125546
+	recipe = AddRecipe(125546, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86367)
+	recipe:SetCraftedItemID(82436)
+	recipe:SetSkillLevels(565, 565, 565, 565, 600)
+	recipe:SetItemFilterType("TAILORING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.HEALER, F.CASTER)
+	recipe:AddVendor(64051, 64052)
+
+	-- Spelltwister's Grand Robe -- 125547
+	recipe = AddRecipe(125547, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86368)
+	recipe:SetCraftedItemID(82437)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetItemFilterType("TAILORING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.DPS, F.HEALER, F.CASTER, F.REPUTATION, F.GOLDENLOTUS)
+	recipe:AddRepVendor(FAC.GOLDENLOTUS, REP.HONORED, 59908)
+
+	-- Spelltwister's Gloves -- 125548
+	recipe = AddRecipe(125548, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86369)
+	recipe:SetCraftedItemID(82438)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetItemFilterType("TAILORING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.DPS, F.HEALER, F.CASTER, F.REPUTATION, F.GOLDENLOTUS)
+	recipe:AddRepVendor(FAC.GOLDENLOTUS, REP.HONORED, 59908)
+
+	-- Robes of Creation -- 125549
+	recipe = AddRecipe(125549, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86370)
+	recipe:SetCraftedItemID(82439)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetItemFilterType("TAILORING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.HEALER, F.CASTER, F.REPUTATION, F.GOLDENLOTUS)
+	recipe:AddRepVendor(FAC.GOLDENLOTUS, REP.HONORED, 59908)
+
+	-- Gloves of Creation -- 125550
+	recipe = AddRecipe(125550, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86371)
+	recipe:SetCraftedItemID(82440)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetItemFilterType("TAILORING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.HEALER, F.CASTER, F.REPUTATION, F.GOLDENLOTUS)
+	recipe:AddRepVendor(FAC.GOLDENLOTUS, REP.HONORED, 59908)
+
+	-- Bolt of Windwool Cloth -- 125551
+	recipe = AddRecipe(125551, V.MOP, Q.COMMON)
+	recipe:SetCraftedItemID(82441)
+	recipe:SetSkillLevels(500, 500, 510, 515, 520)
+	recipe:SetItemFilterType("TAILORING_MATERIALS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Pearlescent Spellthread -- 125552
+	recipe = AddRecipe(125552, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(530, 530, 540, 545, 550)
+	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Cerulean Spellthread -- 125553
+	recipe = AddRecipe(125553, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(540, 540, 550, 555, 560)
+	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Greater Pearlescent Spellthread -- 125554
+	recipe = AddRecipe(125554, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86375)
+	recipe:SetCraftedItemID(82444)
+	recipe:SetSkillLevels(575, 575, 575, 575, 600)
+	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.HEALER, F.CASTER, F.REPUTATION, F.GOLDENLOTUS)
+	recipe:AddRepVendor(FAC.GOLDENLOTUS, REP.HONORED, 59908)
+
+	-- Greater Cerulean Spellthread -- 125555
+	recipe = AddRecipe(125555, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86376)
+	recipe:SetCraftedItemID(82445)
+	recipe:SetSkillLevels(575, 575, 575, 575, 600)
+	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.DPS, F.HEALER, F.CASTER, F.REPUTATION, F.GOLDENLOTUS)
+	recipe:AddRepVendor(FAC.GOLDENLOTUS, REP.HONORED, 59908)
+
+	-- Royal Satchel -- 125556
+	recipe = AddRecipe(125556, V.MOP, Q.COMMON)
+	recipe:SetRecipeItemID(86377)
+	recipe:SetCraftedItemID(82446)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetItemFilterType("TAILORING_BAG")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.VENDOR, F.IBOE, F.RBOP, F.REPUTATION, F.AUGUSTCELESTIALS)
+	recipe:AddRepVendor(FAC.AUGUSTCELESTIALS, REP.EXALTED, 64032)
+
+	-- Imperial Silk -- 125557
+	recipe = AddRecipe(125557, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(550, 550, 560, 565, 570)
+	recipe:SetItemFilterType("TAILORING_MATERIALS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
+	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
+
+	-- Robe of Eternal Rule -- 125558
+	recipe = AddRecipe(125558, V.MOP, Q.EPIC)
+	recipe:SetRecipeItemID(86379)
+	recipe:SetCraftedItemID(86311)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetItemFilterType("TAILORING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.IBOE, F.RBOE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddCustom("MOP_RAIDS_RANDOM")
+
+	-- Imperial Silk Gloves -- 125559
+	recipe = AddRecipe(125559, V.MOP, Q.EPIC)
+	recipe:SetRecipeItemID(86380)
+	recipe:SetCraftedItemID(86313)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetItemFilterType("TAILORING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.IBOE, F.RBOE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddCustom("MOP_RAIDS_RANDOM")
+
+	-- Legacy of the Emperor -- 125560
+	recipe = AddRecipe(125560, V.MOP, Q.EPIC)
+	recipe:SetRecipeItemID(86381)
+	recipe:SetCraftedItemID(86312)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetItemFilterType("TAILORING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.IBOE, F.RBOE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddCustom("MOP_RAIDS_RANDOM")
+
+	-- Touch of the Light -- 125561
+	recipe = AddRecipe(125561, V.MOP, Q.EPIC)
+	recipe:SetRecipeItemID(86382)
+	recipe:SetCraftedItemID(86314)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetItemFilterType("TAILORING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.IBOE, F.RBOE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddCustom("MOP_RAIDS_RANDOM")
+
+	-- Song of Harmony -- 130325
+	recipe = AddRecipe(130325, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(560, 560, 570, 575, 580)
+	recipe:SetItemFilterType("TAILORING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE, F.RBOP)
 	recipe:AddTrainer(1346, 2399, 3004, 3363, 4159, 4576, 5153, 9584, 16640, 28699, 33580, 33613, 33636, 44783, 45559)
 

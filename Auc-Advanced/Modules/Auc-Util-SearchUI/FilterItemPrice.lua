@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemPrice
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: FilterItemPrice.lua 5228 2011-11-01 18:04:56Z brykrys $
 	URL: http://auctioneeraddon.com/
 

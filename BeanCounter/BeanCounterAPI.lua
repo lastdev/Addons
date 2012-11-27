@@ -1,6 +1,6 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: BeanCounterAPI.lua 5127 2011-04-21 18:06:00Z kandoko $
 
 	BeanCounterAPI - Functions for other addons to get BeanCounter Data

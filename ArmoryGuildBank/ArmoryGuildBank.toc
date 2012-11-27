@@ -1,0 +1,26 @@
+## Interface: 50001
+## Title: ArmoryGuildBank
+## Title-deDE: ArmoryGuildBank [Armory Gildenbank]
+## Title-frFR: ArmoryGuildBank [Banque de Guilde]
+## Title-koKR: ArmoryGuildBank [길드은행 정보 열람]
+## Version: v10.1.1
+## Notes: Provides guild bank information to Armory users
+## Notes-deDE: Ermöglicht Gildenbankinformationen für Armorynutzer
+## Notes-frFR: Fournit des renseignements de la banque de guilde aux utilisateurs de l'Armurerie
+## Notes-koKR: Armory사용자에게 길드은행의 정보를 추가로 제공합니다.
+## Notes-ruRU: Предоставляет доступ к информации о гильдейском банке пользователям Armory
+## Author: Warmexx [Neighbours]
+## Dependencies: Armory
+## SavedVariables: AgbDB
+## X-Donate: PayPal:warmexx AT wow-neighbours DOT com
+## X-Website: http://www.wow-neighbours.com/
+## X-Category: Inventory
+## X-Part-Of: Armory
+## X-Curse-Packaged-Version: v10.1.1
+## X-Curse-Project-Name: Armory
+## X-Curse-Project-ID: armory
+## X-Curse-Repository-ID: wow/armory/mainline
+
+Locales.xml
+Core.xml
+Frames.xml

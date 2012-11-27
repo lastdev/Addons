@@ -15,17 +15,20 @@ a.Rotations.Elemental = {
     OffSwitch = "elemental_off",
     
     FlashInCombat = function()
-        c.FlashAll("Elemental Mastery", "Wind Shear")
-        c.PriorityFlash(
-        	"Elemental Blast",
-            "Fire Elemental Totem",
+        c.FlashAll(
+        	"Elemental Mastery", 
+            "Ascendance for Elemental",
             "Ancestral Swiftness",
-            "Unleash Elements",
+        	"Wind Shear")
+        c.PriorityFlash(
+            "Fire Elemental Totem",
+            "Unleash Elements for Elemental",
             "Lava Burst",
-            "Flame Shock",
+            "Flame Shock for Elemental",
+        	"Elemental Blast",
             "Earth Shock for Fulmination",
             "Earth Elemental Totem",
-            "Searing Totem",
+            "Searing Totem for Elemental",
             "Lightning Bolt")
     end,
     
@@ -43,24 +46,32 @@ a.Rotations.Enhancement = {
 	OffSwitch = "enhance_off",
     
     FlashInCombat = function()
-    	a.Maelstrom = c.GetBuffStack("Maelstrom Weapon")
     	if c.IsCasting("Lightning Bolt") 
     		and not c.HasBuff("Ancestral Swiftness") then
     		
     		a.Maelstrom = 0
+    	else
+	    	a.Maelstrom = c.GetBuffStack("Maelstrom Weapon")
     	end
     	
-        c.FlashAll("Elemental Mastery", "Fire Elemental Totem", "Wind Shear")
+        c.FlashAll(
+        	"Elemental Mastery", 
+        	"Fire Elemental Totem",
+        	"Ascendance", 
+        	"Wind Shear")
         c.PriorityFlash(
         	"Searing Totem",
+        	"Unleash Elements with Unleashed Fury",
+        	"Elemental Blast",
             "Lightning Bolt at 5",
             "Stormstrike",
+            "Flame Shock under Unleash Flame",
             "Lava Lash",
+            "Flame Shock Overwrite under Unleash Flame",
             "Unleash Elements",
             "Lightning Bolt at 4",
-            "Ancestral Swiftness under 3",
+            "Ancestral Swiftness under 2",
             "Lightning Bolt under Ancestral Swiftness",
-            "Flame Shock under Unleash Flame",
             "Earth Shock",
             "Feral Spirit",
             "Earth Elemental Totem",

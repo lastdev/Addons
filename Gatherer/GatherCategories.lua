@@ -1,8 +1,8 @@
 ﻿--[[
 	Gatherable Nodes, type groupings definitions
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.2 (<%codename%>)
-	Revision: $Id: GatherCategories.lua 955 2012-08-28 16:39:14Z Esamynn $
+	Version: 4.0.6 (<%codename%>)
+	Revision: $Id: GatherCategories.lua 1036 2012-10-05 04:00:11Z LocalizerAutoCommit $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -110,7 +110,7 @@ ObjectCategories = {
 	[2041] = "HERB_LIFEROOT", -- Liferoot
 	[2042] = "HERB_FADELEAF", -- Fadeleaf
 	[2043] = "HERB_KHADGARSWHISKER", -- Khadgar's Whisker
-	[2044] = "HERB_WINTERSBITE", -- Wintersbite
+	[2044] = "HERB_WINTERSBITE", -- Dragon's Teeth
 	[2045] = "HERB_STRANGLEKELP", -- Stranglekelp
 	[2046] = "HERB_GOLDTHORN", -- Goldthorn
 	[2866] = "HERB_FIREBLOOM", -- Firebloom
@@ -123,7 +123,7 @@ ObjectCategories = {
 	[176583] = "HERB_GOLDENSANSAM", -- Golden Sansam
 	[176584] = "HERB_DREAMFOIL", -- Dreamfoil
 	[176586] = "HERB_MOUNTAINSILVERSAGE", -- Mountain Silversage
-	[176587] = "HERB_PLAGUEBLOOM", -- Plaguebloom
+	[176587] = "HERB_PLAGUEBLOOM", -- Sorrowmoss
 	[176588] = "HERB_ICECAP", -- Icecap
 	[176589] = "HERB_BLACKLOTUS", -- Black Lotus
 	[181166] = "HERB_BLOODTHISTLE", -- Bloodthistle
@@ -216,8 +216,11 @@ ObjectCategories = {
 	[207498] = "TREASURE_CHEST", -- Dark Iron Treasure Chest
 	[207512] = "TREASURE_CHEST", -- Silken Treasure Chest
 	[207529] = "TREASURE_CHEST", -- Maplewood Treasure Chest
+	[207533] = "TREASURE_CHEST", -- Runestone Treasure Chest
+	[210565] = "TREASURE_DARKSOIL", -- Dark Soil
+	[214945] = "TREASURE_ONYXEGG", -- Onyx Egg
 
-	-- ARCH
+	-- Archaeology
 	[202655] = "ARCH_TROLL", -- Troll Archaeology Find
 	[203071] = "ARCH_NIGHTELF", -- Night Elf Archaeology Find
 	[203078] = "ARCH_NERUBIAN", -- Nerubian Archaeology Find
@@ -294,9 +297,9 @@ CategoryNames = {
 	["HERB_MANATHISTLE"] = 181281, -- Mana Thistle
 	["HERB_EARTHROOT"] = 1619, -- Earthroot
 	["HERB_MOUNTAINSILVERSAGE"] = 176586, -- Mountain Silversage
-	["HERB_WINTERSBITE"] = 2044, -- Wintersbite
+	["HERB_WINTERSBITE"] = 2044, -- Dragon's Teeth
 	["HERB_FIREBLOOM"] = 2866, -- Firebloom
-	["HERB_PLAGUEBLOOM"] = 176587, -- Plaguebloom
+	["HERB_PLAGUEBLOOM"] = 176587, -- Sorrowmoss
 	["HERB_BLACKLOTUS"] = 176589, -- Black Lotus
 	["HERB_WILDSTEELBLOOM"] = 1623, -- Wild Steelbloom
 	["HERB_GHOSTMUSHROOM"] = 142144, -- Ghost Mushroom
@@ -398,8 +401,11 @@ CategoryNames = {
 	["TREASURE_CHEST"] = TREASURE_CHEST,
 	["TREASURE_CHEST"] = TREASURE_CHEST,
 	["TREASURE_CHEST"] = TREASURE_CHEST,
+	["TREASURE_CHEST"] = TREASURE_CHEST,
+	["TREASURE_ONYXEGG"] = TREASURE_ONYXEGG,
+	["TREASURE_DARKSOIL"] = 210565, -- Dark Soil
 
-	-- ARCH
+	-- Archaeology
 	["ARCH_DRAENEI"] = ARCH_DRAENEI,
 	["ARCH_DWARF"] = ARCH_DWARF,
 	["ARCH_FOSSIL"] = ARCH_FOSSIL,

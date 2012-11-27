@@ -14,9 +14,9 @@
     <Include file="libs\AceConsole-3.0\AceConsole-3.0.xml"/>
     <Include file="libs\AceGUI-3.0\AceGUI-3.0.xml"/>
     <Include file="libs\AceConfig-3.0\AceConfig-3.0.xml"/>
+    <Include file="libs\AceTimer-3.0\AceTimer-3.0.xml"/>
 
     <!--Libraries-->
-    <Include file="libs\LibBabble-Zone-3.0\lib.xml"/>
     <Include file="libs\LibBabble-Faction-3.0\lib.xml"/>
     <Include file="libs\LibBabble-Boss-3.0\lib.xml"/>
     <Include file="libs\LibAboutPanel\lib.xml"/>

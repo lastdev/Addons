@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Supremus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 411 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 416 $"):sub(12, -3))
 mod:SetCreatureID(22898)
 mod:SetModelID(21145)
 mod:SetZone()
@@ -40,7 +40,7 @@ function mod:ScanTarget()
 			if self.Options.KiteIcon then
 				self:SetIcon(target, 8)
 			end
-			if IsRaidLeader() and self.Options.KiteWhisper then
+			if DBM:GetRaidRank() > 0 and self.Options.KiteWhisper then
 				self:SendWhisper(L.KiteWhisper, target)
 			end
 		end

@@ -1,8 +1,26 @@
+== Version 2.12.1
+* Fire: Bugfix - The visibility of the combustion monitor would sometimes get out-of-sync.
+* Frost: Adjust the priority of Freeze down to just above ice-lance, to avoid using Freeze only to end up capping FoF and wasting a proc.  Simulations show this to be a dps increase.
+
+== Version 2.12.0
+Sorry about the double-release.  I simply forgot to add this one in earlier.
+* Frost: Frozen Orb is now prioritized just below the bomb spells (which shows a dps goin in simulations).
+
+== Version 2.11.0
+* Fire: Bugfix - Inferno Blast misses were not being handled correctly (causing Pyroblast to continue flashing as if it crit).
+* Frost: Ice Lance is now always prioritized above Frostfire Bolt (which shows a dps gain in simulations).
+* Frost: Freeze no longer flashes until 3 stacks of Frostbolt (which shows a dps gain in simulations).
+
+== Version 2.10.0
+* Frost: Add a frost rotation.
+* All: Now flashes Rune of Power when you don't have the buff.
+* All: Now flashes Evocation to keep up Invoker's Energy, if you have Invocation.
+
 == Verision 2.9.0
 * Fire: Now flashes Frostfire Bolt if glyphed.
 * Fire: Lowered the default value for "Minimum Combustion Total Damage" from 150K to 80K.
 * Fire: Bugfix - now flashes Molten Armor instead of Mage Armor (oops).
-* Fire: Bugfix - fight in close combat, or when using Scorch, caused issues with proc tracking.
+* Fire: Bugfix - fighting in close combat, or when using Scorch, caused issues with proc tracking.
 
 == Version 2.8.0
 * Fire: Now has a Fire rotation.

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.15.5348 (LikeableLyrebird)
-	Revision: $Id: BeanCounterMail.lua 5304 2012-07-05 14:16:55Z brykrys $
+	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: BeanCounterMail.lua 5353 2012-09-14 13:22:45Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	BeanCounterMail - Handles recording of all auction house related mail
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounterMail.lua $","$Rev: 5304 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounterMail.lua $","$Rev: 5353 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 local private, print, get, set, _BC = lib.getLocals() --_BC localization function
@@ -47,7 +47,7 @@ local function debugPrint(...)
         private.debugPrint("BeanCounterMail",...)
     end
 end
-	
+
 local expiredLocale = AUCTION_EXPIRED_MAIL_SUBJECT:gsub("%%s", "") --remove the %s
 local salePendingLocale = AUCTION_INVOICE_MAIL_SUBJECT:gsub("%%s", "") --sale pending
 local outbidLocale = AUCTION_OUTBID_MAIL_SUBJECT:gsub("%%s", "(.+)")
@@ -61,7 +61,7 @@ local registeredInboxFrameHook = false
 function private.mailMonitor(event,arg1)
 	if (event == "MAIL_INBOX_UPDATE") then
 		private.updateInboxStart()
-			
+
 	elseif (event == "MAIL_SHOW") then
 		private.inboxStart = {} --clear the inbox list, if we errored out this should give us a fresh start.
 		if not registeredInboxFrameHook then --make sure we only ever register this hook once
@@ -86,7 +86,7 @@ function private.PreGetInboxTextHook(n, ...)
 			--print("they read", n, sender, subject)
 			private.mailReadOveride[n] = sender..n
 		elseif wasRead then
-			--print("Already read", n, sender, subject) 
+			--print("Already read", n, sender, subject)
 		end
 	end
 	return private.GetInboxText(n, ...)
@@ -97,18 +97,17 @@ GetInboxText = private.PreGetInboxTextHook
 
 --New function to hide/unhide mail GUI.
 local HideMailGUI
-local MailCloseButton = InboxCloseButton or MailFrameCloseButton -- temp dual-mode patch for differences between WoW4.3 and WoW5.0
 function private.HideMailGUI( hide )
 	if hide then
 		HideMailGUI = true
-		MailCloseButton:Hide()
+		MailFrameCloseButton:Hide()
 		InboxFrame:Hide()
 		MailFrameTab2:Hide()
 		private.MailGUI:Show()
 		private.wipeSearchCache() --clear the search cache, we are updating data so it is now outdated
 	else
 		HideMailGUI = false
-		MailCloseButton:Show()
+		MailFrameCloseButton:Show()
 		InboxFrame:Show()
 		MailFrameTab2:Show()
 		private.MailGUI:Hide()
@@ -177,7 +176,7 @@ function private.mailonUpdate()
 			--update mail GUI Count
 			local count = #private.inboxStart
 			--private.CountGUI:SetText("Recording: "..total-count.." of "..total.." items")
-			private.CountGUI:SetText("Recording: "..reportReadMail.." items, Please wait")--not happy, would like a better count	
+			private.CountGUI:SetText("Recording: "..reportReadMail.." items, Please wait")--not happy, would like a better count
 			local data = private.inboxStart[i]
 			if not data.retrieved then --Send non invoiceable mails through
 				tinsert(private.reconcilePending, data)
@@ -239,7 +238,7 @@ function private.mailSort()
 
 			elseif private.reconcilePending[i].subject:match(cancelledLocale) then
 				private.sortCancelledAuctions( i )
-	
+
 			elseif private.reconcilePending[i].subject:match(salePendingLocale) then
 				--ignore We dont care about this message
 				tremove(private.reconcilePending,i)
@@ -347,7 +346,7 @@ function private.findStackfailedAuctions(key, itemID, itemLink, returnedStack, e
 		if i:match(itemString) or i == itemString then --we still stack check and data range check but match should be assured by now
  			for index, text in pairs(v) do
 				if not text:match(".*USED.*") then
-			
+
 				local postStack, postBid, postBuy, postRunTime, postDeposit, postTime, postReason = strsplit(";", private.playerData[key][itemID][i][index])
 					if returnedStack == tonumber(postStack) then --stacks same see if we can match time
 						local timeAuctionPosted, timeFailedAuctionStarted = tonumber(postTime), tonumber(expiredTime - (postRunTime * 60)) --Time this message should have been posted
@@ -358,7 +357,7 @@ function private.findStackfailedAuctions(key, itemID, itemLink, returnedStack, e
 							return postStack, postBid, postBuy, postDeposit
 						end
 					end
-				
+
 				end
  			end
 		end
@@ -366,7 +365,7 @@ function private.findStackfailedAuctions(key, itemID, itemLink, returnedStack, e
 end
 
 --Cancled auctions are stored and treated as failed auctions with just cancelled added as the reason tag
-function private.sortCancelledAuctions( i )	
+function private.sortCancelledAuctions( i )
 	local itemID =  lib.API.decodeLink(private.reconcilePending[i]["itemLink"])
 	if itemID then
 		local stack, bid, buyout, deposit = private.findStackCancelledAuctions("postedAuctions", itemID, private.reconcilePending[i]["itemLink"], private.reconcilePending[i]["stack"], private.reconcilePending[i]["time"])
@@ -402,7 +401,7 @@ function private.findStackCancelledAuctions(key, itemID, itemLink, returnedStack
 							return postStack, postBid, postBuy, postDeposit
 						end
 					end
-				
+
 				end
  			end
 		end
@@ -470,8 +469,8 @@ function private.findFailedBids(itemID, itemLink, gold)
 	if not itemLink then debugPrint("Failed auction ItemStrig nil", itemID, itemLink) return end
 	local DBitemID, DBSuffix = lib.API.decodeLink(itemLink)
 	--DEBUG string for http://jira.norganna.org/browse/BCNT-327
-	if not itemID or not private.playerData["postedBids"] or not private.playerData["postedBids"][itemID] then 
-		debugPrint("Missing critical data for FailedBid lookup.", itemID, private.playerData["postedBids"], private.playerData["postedBids"][itemID]) 
+	if not itemID or not private.playerData["postedBids"] or not private.playerData["postedBids"][itemID] then
+		debugPrint("Missing critical data for FailedBid lookup.", itemID, private.playerData["postedBids"], private.playerData["postedBids"][itemID])
 		return
 	end
 	for itemString,v in pairs (private.playerData["postedBids"][itemID]) do

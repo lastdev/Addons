@@ -1,0 +1,30 @@
+<!-- Revision: 490 2012-09-04T09:42:28Z -->
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+  <Script file="Core\ArmoryBackgroundUpdater.lua"/>
+  <Script file="Core\ArmoryCommandHandler.lua"/>
+  <Script file="Core\ArmoryDbEntry.lua"/>
+  <Script file="Core\ArmoryBase.lua"/>
+  <Script file="Core\ArmoryTooltip.lua"/>
+  <Script file="Core\ArmoryLDB.lua"/>
+  <Script file="Core\ArmoryConfig.lua"/>
+  <Script file="Core\ArmoryStubs.lua"/>
+  <Script file="Core\ArmoryFactions.lua"/>
+  <Script file="Core\ArmoryArena.lua"/>
+  <Script file="Core\ArmoryInventory.lua"/>
+  <Script file="Core\ArmoryQuests.lua"/>
+  <Script file="Core\ArmoryQuestHistory.lua"/>
+  <Script file="Core\ArmoryRaid.lua"/>
+  <Script file="Core\ArmoryRaidFinder.lua"/>
+  <Script file="Core\ArmorySpells.lua"/>
+  <Script file="Core\ArmorySpecializations.lua"/>
+  <Script file="Core\ArmoryGlyphs.lua"/>
+  <Script file="Core\ArmoryTalents.lua"/>
+  <Script file="Core\ArmoryTradeSkills.lua"/>
+  <Script file="Core\ArmoryCurrency.lua"/>
+  <Script file="Core\ArmoryFriends.lua"/>
+  <Script file="Core\ArmoryBuffs.lua"/>
+  <Script file="Core\ArmorySummary.lua"/>
+  <Script file="Core\ArmoryGearSets.lua"/>
+  <Script file="Core\ArmoryEvents.lua"/>
+</Ui>

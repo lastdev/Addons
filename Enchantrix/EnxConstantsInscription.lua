@@ -1,6 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: EnxConstants.lua 4632 2010-01-24 02:33:54Z ccox $
 	URL: http://enchantrix.org/
 
@@ -389,7 +389,7 @@ const.MillGroupYields = {
 	
 	[SHADOW_PIGMENT_HIGH] = {
 		[SHADOW_PIGMENT] = 3.0,
-		[MISTY_PIGMENT] = 0.6,
+		[MISTY_PIGMENT] = 0.56,
 		},
 }
 

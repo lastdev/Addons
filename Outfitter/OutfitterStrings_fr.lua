@@ -321,6 +321,14 @@
 
 	Outfitter.cMageEvocate = "Mage: Evocation"
 
+	Outfitter.cDeathknightBlood = "Deathknight: Blood Presence"
+	Outfitter.cDeathknightFrost = "Deathknight: Frost Presence"
+	Outfitter.cDeathknightUnholy = "Deathknight: Unholy Presence"
+
+	Outfitter.cMonkTiger = "Monk: Tiger stance"
+	Outfitter.cMonkSerpent = "Monk: Serpent stance"
+	Outfitter.cMonkOx = "Monk: Ox stance"
+
 	Outfitter.cCompleteCategoryDescription = "Les tenues complètes ont un objet spécifié pour chaque emplacement et remplaceront toutes les autres tenues quand elles sont activées"
 	Outfitter.cPartialCategoryDescription = "Les tenues \"Mix-n-match\" ont quelques emplacements spécifiés. Quand on les équipe, elles vont par-dessus la tenue complète séléctionnée et remplace toutes les tenues \"Mix-n-match\" et Accessoires"
 	Outfitter.cAccessoryCategoryDescription = "Les tenues d'accessoires ont quelques emplacements spécifiés.  Contrairement aux \"Mix-n-Match\", Contrairement aux \"Mix-n-Match\", vous pouvez séléctionner autant d'accessoires que vous voulez et ils seront combinés par-dessus votre tenue complète et \"Mix-n-Match\"."

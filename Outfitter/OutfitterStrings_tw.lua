@@ -286,6 +286,10 @@ BINDING_NAME_OUTFITTER_DISABLEAUTOMATION = "停用自動換裝"
 	Outfitter.cDeathknightFrost = "死亡騎士: 冰霜領域"
 	Outfitter.cDeathknightUnholy = "死亡騎士: 穢邪領域"
 
+	Outfitter.cMonkTiger = "Monk: Tiger stance"
+	Outfitter.cMonkSerpent = "Monk: Serpent stance"
+	Outfitter.cMonkOx = "Monk: Ox stance"
+
 	Outfitter.cCompleteCategoryDescription = "完整配裝表示所有欄位都有設定物品。當完整配裝裝備時，其他所有配裝都會自動被卸下。"
 	Outfitter.cAccessoryCategoryDescription = "零散配裝表示只有某些欄位有設定物品。零散配裝可以隨意地多套同時裝備上。"
 	Outfitter.cOddsNEndsCategoryDescription = "零星裝備所列的是未被設定在任何配裝的裝備。這對於確認是否有用到所有物品，以及避免攜帶不必要的物品，可能會有幫助。"

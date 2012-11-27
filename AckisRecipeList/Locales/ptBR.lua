@@ -6,7 +6,7 @@ ptBR localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 2.4
+Project version: 2.4.2
 ************************************************************************
 Currently maintained by:
 http://www.wowace.com/addons/arl/localization/translators/
@@ -132,9 +132,11 @@ L["BBCode"] = true -- Needs review
 L["Belil"] = true -- Needs review
 L["Bemarrin"] = true -- Needs review
 L["Bena Winterhoof"] = "Bena Casco Invernal" -- Needs review
+L["Bengus Deepforge"] = "Bengus Baixaforja" -- Needs review
 L["Binding"] = "Vinculando" -- Needs review
 L["Blixrez Goodstitch"] = "Blixrez Pontobom" -- Needs review
 L["Blizrik Buckshot"] = "Blizricco Sciumbigno" -- Needs review
+L["Bloodmaul Geomancer"] = "Geomante Malho Sangrento" -- Needs review
 L["BOA_DESC"] = "Receitas que criem itens que vinculam-se à Conta serão incluídas no escaneamento." -- Needs review
 L["BOAFilter"] = "Item vinculado à Conta" -- Needs review
 L["BOE_DESC"] = "Receitas que criem itens que Vinculam-se ao Equipar serão incluídas no escaneamento." -- Needs review
@@ -143,16 +145,23 @@ L["Bombus Finespindle"] = "Bombus Fusofino" -- Needs review
 L["Boots"] = "Botas"
 L["BOP_DESC"] = "Receitas que criem itens que Vinculam-se ao Pegar serão incluídas no escaneamento." -- Needs review
 L["BOPFilter"] = "Item Vinculado ao Pegar" -- Needs review
+L["Borgosh Corebender"] = "Borgosh Dobranúcleo" -- Needs review
 L["Borto"] = true -- Needs review
 L["Borya"] = true -- Needs review
 L["Bottom"] = "Inferior" -- Needs review
 L["Bottom Left"] = "Botão Esquerdo" -- Needs review
 L["Bottom Right"] = "Inferior à direita" -- Needs review
+L["Boulderfist Warrior"] = "Guerreiro Punho de Pedra" -- Needs review
 L["Bow"] = "Arco" -- Needs review
+L["Bowen Brisboise"] = true -- Needs review
 L["Braeg Stoutbeard"] = "Braeg Barbacã" -- Needs review
 L["BRD_RANDOM_ROOM"] = "Ha uma chance de você achar em 5 salas diferentes em Abismo Rocha Negra, mas é gerada aleatóriamente, e as vezes não é nem gerada." -- Needs review
+L["Brek Stonehoof"] = "Brek Casco de Pedra" -- Needs review
+L["Brock Stoneseeker"] = "Brock Buscapedra" -- Needs review
 L["Bro'kin"] = true -- Needs review
 L["Bronk"] = true -- Needs review
+L["Bronk Guzzlegear"] = "Bronk Gargrenagem" -- Needs review
+L["Brumman"] = true -- Needs review
 L["Brundall Chiselgut"] = "Brindall Cinzelatripa" -- Needs review
 L["Bryan Landers"] = true -- Needs review
 L["BT_RANDOM"] = "Saque aleatório dos \"trash\"/Chefes do Templo Negro." -- Needs review
@@ -438,7 +447,6 @@ L["MAP_OPTIONS_DESC"] = "Permite-lhe alterar a forma como o ARL integra o mapa d
 L["Maria Lumere"] = true -- Needs review
 L["Martine Tramblay"] = true -- Needs review
 L["Materials"] = "Materiais" -- Needs review
-L["Mazk Snipeshot"] = "Mazk Tirolongo" -- Needs review
 L["MC_RANDOM"] = "Saque aleatório dos chefes do Núcleo Derretido." -- Needs review
 L["Miall"] = true -- Needs review
 L["Mining"] = "Mineração" -- Needs review

@@ -5,7 +5,7 @@ local me={}
 local FreeWindows={}
 local WindowNum=1
 
-local revision = tonumber(string.sub("$Revision: 1136 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1217 $", 12, -3))
 local Recount = _G.Recount
 if Recount.Version < revision then Recount.Version = revision end
 
@@ -56,7 +56,7 @@ function me:UpdateTitle()
 	local Width,StartText, EndText
 	Width=self:GetWidth()-32
 	StartText=self.TitleText
-	EndText=" - "..string.format("%.1f",self.Graph:GetValue(-0.05))
+	EndText=" - "..Recount:FormatLongNums(self.Graph:GetValue(-0.05))
 
 	self.Title:SetText(StartText..EndText)
 

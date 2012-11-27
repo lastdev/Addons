@@ -120,99 +120,6 @@ if (GetLocale() == "deDE") then
 	XPERL_RAID_TOOLTIP_WITHOUTBUFF   	= "Ohne Buff: (%s)"
 	XPERL_RAID_TOOLTIP_BUFFEXPIRING		= "%s's %s schwindet in %s"	-- Name, buff name, time to expire
 
-local isMOP = select(4, _G.GetBuildInfo()) >= 50000
- 
-
-if (not isMOP) then
--- Status highlight spells
-XPERL_HIGHLIGHT_SPELLS = {
-	hotSpells  = {
-		[GetSpellInfo(774)] = 12,			-- Rejuvenation (old id 26982)
-		[GetSpellInfo(8936)] = 6,			-- Regrowth (old id 26980)
-		[GetSpellInfo(139)] = 12,			-- Renew (old id 25222)
-	    [GetSpellInfo(48438)] = 7,			-- Wild Growth 
-		[GetSpellInfo(33763)] = 8,			-- Lifebloom
-		[GetSpellInfo(28880)] = 15,			-- Gift of the Naaru (Racial)
-		[GetSpellInfo(61295)] = 15,			-- Riptide
-	},
-	pomSpells = {
-		[GetSpellInfo(33076)] = 30			-- Prayer of Mending
-	},
-	shieldSpells = {
-		[GetSpellInfo(17)] = 30,			-- Power Word: Shield
-		[GetSpellInfo(76669)] = 6,			-- Illuminated Healing
-		[GetSpellInfo(974)] = 600			-- Earth Shield	(old id 32594)
-	},
-	healSpells = {
-		[GetSpellInfo(2061)] = 1.5,			-- Flash of Light (old id 25235)
-		[GetSpellInfo(2060)] = 3,			-- Greater Heal (old id 25213)
-		[GetSpellInfo(2050)] = 3,			-- Heal (old id 6064)
-		[GetSpellInfo(5185)] = 3,			-- Healing Touch (old id 26979)
-		[GetSpellInfo(8936)] = 1.5,			-- Regrowth (old id 26980)
-		[GetSpellInfo(331)] = 3,			-- Healing Wave (old id 25396)
-		[GetSpellInfo(8004)] = 1.5,			-- Lesser Healing Wave (old id 25420)
-		[GetSpellInfo(19750)] = 1.5,		-- Flash Heal (old id 27137)
-		[GetSpellInfo(635)] = 2.5,			-- Holy Light (old id 27136)
-		[GetSpellInfo(50464)] = 3.0			-- Nourish
-	},
-	buffSpells = {
-		PRIEST = {
-			[GetSpellInfo(21532)] = true,	-- Power Word: Fortitude (old id 25389)
-			[GetSpellInfo(39231)] = true	-- Prayer of Fortitude (old id 25392)
-		},
-	    DRUID = {
-			[GetSpellInfo(1126)] = true		-- Mark of the Wild (old id 26990)
-		},
-	    MAGE = {
-			[GetSpellInfo(1459)] = true		-- Arcane Intellect (old id 27126)
-		},
-	    PALADIN = {
-			[GetSpellInfo(19740)] = true,	-- Blessing of Might
-			[GetSpellInfo(20217)] = true	-- Blessing of Kings
-		},
-	},
-	groupHealSpells = {
-		[GetSpellInfo(596)] = 2.5,			-- Prayer of Healing (old id 25308)
-		[GetSpellInfo(1064)] = 2.5,			-- Chain Heal
-	},
-}
-
-
--- Default spells for range checking in the healer visual out-of-range cues.
-XPerl_DefaultRangeSpells = {
-	DRUID	= {spell = GetSpellInfo(5185)},				-- Healing Touch
-	PALADIN = {spell = GetSpellInfo(635)},				-- Holy Light
-	PRIEST	= {spell = GetSpellInfo(2061)},				-- Flash Heal
-	SHAMAN	= {spell = GetSpellInfo(331)},				-- Healing Wave
-	MAGE	= {spell = GetSpellInfo(475)},				-- Remove Lesser Curse
-	WARLOCK	= {spell = GetSpellInfo(5697)},				-- Underwater Breathing
-	ANY		= {item = GetItemInfo(21991)}				-- Heavy Netherweave Bandage
-}
-
--- Don't highlight these magical debuffs
-XPerl_ArcaneExclusions = {
-	[GetSpellInfo(63559)] = true,						-- Bind Life
-	[GetSpellInfo(30451)] = true,						-- Arcane Blast (again) (old 42897)
-	[GetSpellInfo(30108)] = true,						-- Unstable Affliction (old 30405)
-	[GetSpellInfo(15822)] = true,						-- Dreamless Sleep
-	[GetSpellInfo(24360)] = true,						-- Greater Dreamless Sleep
-	[GetSpellInfo(28504)] = true,						-- Major Dreamless Sleep
-	[GetSpellInfo(31257)] = true,						-- Chilled
-	[GetSpellInfo(710)] = true,							-- Banish
-	[GetSpellInfo(44836)] = true,						-- Also Banish !?
-	[GetSpellInfo(24306)] = true,						-- Delusions of Jin'do
-	[GetSpellInfo(46543)] = {ROGUE = true, WARRIOR = true},	-- Ignite Mana
-	[GetSpellInfo(16567)] = {ROGUE = true, WARRIOR = true},	-- Tainted Mind
-	[GetSpellInfo(39052)] = {ROGUE = true},				-- Sonic Burst
-	[GetSpellInfo(41190)] = {ROGUE = true, WARRIOR = true}, -- Mind-numbing Poison
-	[GetSpellInfo(25195)] = {ROGUE = true},				-- Curse of Tongues
-	[GetSpellInfo(30129)] = true,						-- Charred Earth - Nightbane debuff, can't be cleansed, but shows as magic
-	[GetSpellInfo(31651)] = {MAGE = true, WARLOCK = true, PRIEST = true},	-- Banshee Curse, Melee hit rating debuff
-	[GetSpellInfo(38913)] = {ROGUE = true},				-- Silence
-	[GetSpellInfo(31555)] = {ROGUE = true, WARRIOR = true}, -- Decayed Intellect
-}
-else
-
 -- Status highlight spells
 XPERL_HIGHLIGHT_SPELLS = {
 	hotSpells  = {
@@ -299,7 +206,4 @@ XPerl_ArcaneExclusions = {
 	[GetSpellInfo(38913)] = {ROGUE = true},				-- Silence
 	[GetSpellInfo(31555)] = {ROGUE = true, WARRIOR = true}, -- Decayed Intellect
 }
-
-end
-
 end

@@ -1,10 +1,10 @@
 -------------------------------------------------------------------------------
 -- Waypoint.lua
 -------------------------------------------------------------------------------
--- File date: 2012-08-30T03:47:38Z
--- File hash: 63eaae6
--- Project hash: f647594
--- Project version: 2.4
+-- File date: 2012-09-13T18:19:29Z
+-- File hash: 5b03947
+-- Project hash: 5a95034
+-- Project version: 2.4.2
 -------------------------------------------------------------------------------
 -- Please see http://www.wowace.com/addons/arl/ for more information.
 -------------------------------------------------------------------------------
@@ -29,10 +29,9 @@ local FOLDER_NAME, private	= ...
 local LibStub = _G.LibStub
 local addon	= LibStub("AceAddon-3.0"):GetAddon(private.addon_name)
 local L		= LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
-local BFAC	= LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 
 local A = private.ACQUIRE_TYPES
-local Z = private.ZONE_IDS
+local Z = private.ZONE_NAMES
 
 -------------------------------------------------------------------------------
 -- Constants.
@@ -72,219 +71,219 @@ LoadZones(THE_MAELSTROM_NAMES, THE_MAELSTROM_IDNUMS, _G.GetMapZones(5))
 LoadZones(PANDARIA_NAMES, PANDARIA_IDNUMS, _G.GetMapZones(6))
 
 local INSTANCE_LOCATIONS = {
-	[_G.GetMapNameByID(Z.AHNKAHET_THE_OLD_KINGDOM)] = {
-		zone = NORTHREND_IDNUMS[_G.GetMapNameByID(Z.DRAGONBLIGHT)],
+	[Z.AHNKAHET_THE_OLD_KINGDOM] = {
+		zone = NORTHREND_IDNUMS[Z.DRAGONBLIGHT],
 		continent = 4,
 		x = 28.49,
 		y = 51.73,
 	},
-	[_G.GetMapNameByID(Z.AUCHENAI_CRYPTS)] = {
-		zone = OUTLAND_IDNUMS[_G.GetMapNameByID(Z.TEROKKAR_FOREST)],
+	[Z.AUCHENAI_CRYPTS] = {
+		zone = OUTLAND_IDNUMS[Z.TEROKKAR_FOREST],
 		continent = 3,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.AZJOL_NERUB)] = {
-		zone = NORTHREND_IDNUMS[_G.GetMapNameByID(Z.DRAGONBLIGHT)],
+	[Z.AZJOL_NERUB] = {
+		zone = NORTHREND_IDNUMS[Z.DRAGONBLIGHT],
 		continent = 4,
 		x = 26.01,
 		y = 50.83,
 	},
-	[_G.GetMapNameByID(Z.BLACKROCK_DEPTHS)] = {
-		zone = EASTERN_KINGDOMS_IDNUMS[_G.GetMapNameByID(Z.BURNING_STEPPES)],
+	[Z.BLACKROCK_DEPTHS] = {
+		zone = EASTERN_KINGDOMS_IDNUMS[Z.BURNING_STEPPES],
 		continent = 2,
 		x = 20.72,
 		y = 36.94,
 	},
-	[_G.GetMapNameByID(Z.BLACKROCK_SPIRE)] = {
-		zone = EASTERN_KINGDOMS_IDNUMS[_G.GetMapNameByID(Z.BURNING_STEPPES)],
+	[Z.BLACKROCK_SPIRE] = {
+		zone = EASTERN_KINGDOMS_IDNUMS[Z.BURNING_STEPPES],
 		continent = 2,
 		x = 20.72,
 		y = 36.94,
 	},
-	[_G.GetMapNameByID(Z.BLACKWING_LAIR)] = {
-		zone = EASTERN_KINGDOMS_IDNUMS[_G.GetMapNameByID(Z.BURNING_STEPPES)],
+	[Z.BLACKWING_LAIR] = {
+		zone = EASTERN_KINGDOMS_IDNUMS[Z.BURNING_STEPPES],
 		continent = 2,
 		x = 20.72,
 		y = 36.94,
 	},
-	[_G.GetMapNameByID(Z.DIRE_MAUL)] = {
-		zone = KALIMDOR_IDNUMS[_G.GetMapNameByID(Z.FERALAS)],
+	[Z.DIRE_MAUL] = {
+		zone = KALIMDOR_IDNUMS[Z.FERALAS],
 		continent = 1,
 		x = 61.36,
 		y = 31.78,
 	},
-	[_G.GetMapNameByID(Z.DRAKTHARON_KEEP)] = {
-		zone = NORTHREND_IDNUMS[_G.GetMapNameByID(Z.ZULDRAK)],
+	[Z.DRAKTHARON_KEEP] = {
+		zone = NORTHREND_IDNUMS[Z.ZULDRAK],
 		continent = 4,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.GNOMEREGAN)] = {
-		zone = EASTERN_KINGDOMS_IDNUMS[_G.GetMapNameByID(Z.DUN_MOROGH)],
+	[Z.GNOMEREGAN] = {
+		zone = EASTERN_KINGDOMS_IDNUMS[Z.DUN_MOROGH],
 		continent = 2,
 		x = 31.29,
 		y = 37.89,
 	},
-	[_G.GetMapNameByID(Z.HALLS_OF_LIGHTNING)] = {
-		zone = NORTHREND_IDNUMS[_G.GetMapNameByID(Z.THE_STORM_PEAKS)],
+	[Z.HALLS_OF_LIGHTNING] = {
+		zone = NORTHREND_IDNUMS[Z.THE_STORM_PEAKS],
 		continent = 4,
 		x = 45.40,
 		y = 21.37,
 	},
-	[_G.GetMapNameByID(Z.HALLS_OF_STONE)] = {
-		zone = NORTHREND_IDNUMS[_G.GetMapNameByID(Z.THE_STORM_PEAKS)],
+	[Z.HALLS_OF_STONE] = {
+		zone = NORTHREND_IDNUMS[Z.THE_STORM_PEAKS],
 		continent = 4,
 		x = 39.49,
 		y = 26.92,
 	},
-	[_G.GetMapNameByID(Z.KARAZHAN)] = {
-		zone = KALIMDOR_IDNUMS[_G.GetMapNameByID(Z.DEADWIND_PASS)],
+	[Z.KARAZHAN] = {
+		zone = KALIMDOR_IDNUMS[Z.DEADWIND_PASS],
 		continent = 2,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.MAGISTERS_TERRACE)] = {
-		zone = EASTERN_KINGDOMS_IDNUMS[_G.GetMapNameByID(Z.ISLE_OF_QUELDANAS)],
+	[Z.MAGISTERS_TERRACE] = {
+		zone = EASTERN_KINGDOMS_IDNUMS[Z.ISLE_OF_QUELDANAS],
 		continent = 2,
 		x = 61.20,
 		y = 30.89,
 	},
-	[_G.GetMapNameByID(Z.MANA_TOMBS)] = {
-		zone = OUTLAND_IDNUMS[_G.GetMapNameByID(Z.TEROKKAR_FOREST)],
+	[Z.MANA_TOMBS] = {
+		zone = OUTLAND_IDNUMS[Z.TEROKKAR_FOREST],
 		continent = 3,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.THE_OCULUS)] = {
-		zone = NORTHREND_IDNUMS[_G.GetMapNameByID(Z.BOREAN_TUNDRA)],
+	[Z.THE_OCULUS] = {
+		zone = NORTHREND_IDNUMS[Z.BOREAN_TUNDRA],
 		continent = 4,
 		x = 27.52,
 		y = 26.71,
 	},
-	[_G.GetMapNameByID(Z.OLD_HILLSBRAD_FOOTHILLS)] = {
-		zone = KALIMDOR_IDNUMS[_G.GetMapNameByID(Z.TANARIS)],
+	[Z.OLD_HILLSBRAD_FOOTHILLS] = {
+		zone = KALIMDOR_IDNUMS[Z.TANARIS],
 --		zone = Z.TANARIS,
 		continent = 1,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.ONYXIAS_LAIR)] = {
-		zone = KALIMDOR_IDNUMS[_G.GetMapNameByID(Z.DUSTWALLOW_MARSH)],
+	[Z.ONYXIAS_LAIR] = {
+		zone = KALIMDOR_IDNUMS[Z.DUSTWALLOW_MARSH],
 		continent = 1,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.RUINS_OF_AHNQIRAJ)] = {
-		zone = KALIMDOR_IDNUMS[_G.GetMapNameByID(Z.SILITHUS)],
+	[Z.RUINS_OF_AHNQIRAJ] = {
+		zone = KALIMDOR_IDNUMS[Z.SILITHUS],
 		continent = 1,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.SCHOLOMANCE)] = {
-		zone = EASTERN_KINGDOMS_IDNUMS[_G.GetMapNameByID(Z.WESTERN_PLAGUELANDS)],
+	[Z.SCHOLOMANCE] = {
+		zone = EASTERN_KINGDOMS_IDNUMS[Z.WESTERN_PLAGUELANDS],
 		continent = 2,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.SETHEKK_HALLS)] = {
-		zone = OUTLAND_IDNUMS[_G.GetMapNameByID(Z.TEROKKAR_FOREST)],
+	[Z.SETHEKK_HALLS] = {
+		zone = OUTLAND_IDNUMS[Z.TEROKKAR_FOREST],
 		continent = 3,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.SHADOW_LABYRINTH)] = {
-		zone = OUTLAND_IDNUMS[_G.GetMapNameByID(Z.TEROKKAR_FOREST)],
+	[Z.SHADOW_LABYRINTH] = {
+		zone = OUTLAND_IDNUMS[Z.TEROKKAR_FOREST],
 		continent = 3,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.STRATHOLME)] = {
-		zone = EASTERN_KINGDOMS_IDNUMS[_G.GetMapNameByID(Z.EASTERN_PLAGUELANDS)],
+	[Z.STRATHOLME] = {
+		zone = EASTERN_KINGDOMS_IDNUMS[Z.EASTERN_PLAGUELANDS],
 		continent = 2,
 		x = 26.75,
 		y = 11.60,
 	},
-	[_G.GetMapNameByID(Z.AHNQIRAJ_THE_FALLEN_KINGDOM)] = {
-		zone = KALIMDOR_IDNUMS[_G.GetMapNameByID(Z.SILITHUS)],
+	[Z.AHNQIRAJ_THE_FALLEN_KINGDOM] = {
+		zone = KALIMDOR_IDNUMS[Z.SILITHUS],
 		continent = 1,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.THE_ARCATRAZ)] = {
-		zone = OUTLAND_IDNUMS[_G.GetMapNameByID(Z.NETHERSTORM)],
+	[Z.THE_ARCATRAZ] = {
+		zone = OUTLAND_IDNUMS[Z.NETHERSTORM],
 		continent = 3,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.THE_BLACK_MORASS)] = {
-		zone = KALIMDOR_IDNUMS[_G.GetMapNameByID(Z.TANARIS)],
+	[Z.THE_BLACK_MORASS] = {
+		zone = KALIMDOR_IDNUMS[Z.TANARIS],
 		continent = 1,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.THE_BOTANICA)] = {
-		zone = OUTLAND_IDNUMS[_G.GetMapNameByID(Z.NETHERSTORM)],
+	[Z.THE_BOTANICA] = {
+		zone = OUTLAND_IDNUMS[Z.NETHERSTORM],
 		continent = 3,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.THE_DEADMINES)] = {
-		zone = EASTERN_KINGDOMS_IDNUMS[_G.GetMapNameByID(Z.WESTFALL)],
+	[Z.THE_DEADMINES] = {
+		zone = EASTERN_KINGDOMS_IDNUMS[Z.WESTFALL],
 		continent = 2,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.THE_MECHANAR)] = {
-		zone = OUTLAND_IDNUMS[_G.GetMapNameByID(Z.NETHERSTORM)],
+	[Z.THE_MECHANAR] = {
+		zone = OUTLAND_IDNUMS[Z.NETHERSTORM],
 		continent = 3,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.THE_NEXUS)] = {
-		zone = NORTHREND_IDNUMS[_G.GetMapNameByID(Z.BOREAN_TUNDRA)],
+	[Z.THE_NEXUS] = {
+		zone = NORTHREND_IDNUMS[Z.BOREAN_TUNDRA],
 		continent = 4,
 		x = 27.50,
 		y = 25.97,
 	},
-	[_G.GetMapNameByID(Z.THE_SHATTERED_HALLS)] = {
-		zone = OUTLAND_IDNUMS[_G.GetMapNameByID(Z.HELLFIRE_PENINSULA)],
+	[Z.THE_SHATTERED_HALLS] = {
+		zone = OUTLAND_IDNUMS[Z.HELLFIRE_PENINSULA],
 		continent = 3,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.THE_SLAVE_PENS)] = {
-		zone = OUTLAND_IDNUMS[_G.GetMapNameByID(Z.ZANGARMARSH)],
+	[Z.THE_SLAVE_PENS] = {
+		zone = OUTLAND_IDNUMS[Z.ZANGARMARSH],
 		continent = 3,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.THE_STEAMVAULT)] = {
-		zone = OUTLAND_IDNUMS[_G.GetMapNameByID(Z.ZANGARMARSH)],
+	[Z.THE_STEAMVAULT] = {
+		zone = OUTLAND_IDNUMS[Z.ZANGARMARSH],
 		continent = 3,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.THE_TEMPLE_OF_ATALHAKKAR)] = {
-		zone = EASTERN_KINGDOMS_IDNUMS[_G.GetMapNameByID(Z.SWAMP_OF_SORROWS)],
+	[Z.THE_TEMPLE_OF_ATALHAKKAR] = {
+		zone = EASTERN_KINGDOMS_IDNUMS[Z.SWAMP_OF_SORROWS],
 		continent = 2,
 		x = 0,
 		y = 0,
 	},
-	[_G.GetMapNameByID(Z.THE_VIOLET_HOLD)] = {
-		zone = NORTHREND_IDNUMS[_G.GetMapNameByID(Z.DALARAN)],
+	[Z.THE_VIOLET_HOLD] = {
+		zone = NORTHREND_IDNUMS[Z.DALARAN],
 		continent = 4,
 		x = 66.78,
 		y = 68.19,
 	},
-	[_G.GetMapNameByID(Z.UTGARDE_KEEP)] = {
-		zone = NORTHREND_IDNUMS[_G.GetMapNameByID(Z.HOWLING_FJORD)],
+	[Z.UTGARDE_KEEP] = {
+		zone = NORTHREND_IDNUMS[Z.HOWLING_FJORD],
 		continent = 4,
 		x = 57.28,
 		y = 46.73,
 	},
-	[_G.GetMapNameByID(Z.UTGARDE_PINNACLE)] = {
-		zone = NORTHREND_IDNUMS[_G.GetMapNameByID(Z.HOWLING_FJORD)],
+	[Z.UTGARDE_PINNACLE] = {
+		zone = NORTHREND_IDNUMS[Z.HOWLING_FJORD],
 		continent = 4,
 		x = 57.26,
 		y = 46.67,
@@ -382,7 +381,6 @@ local WAYPOINT_FUNCS = {
 	end,
 }
 
-local TEXTURE_UP_FORMAT = ([[Interface\Addons\%s\img\]]):format(FOLDER_NAME) .. "%s_up"
 local current_waypoints = {}
 
 local function AddRecipeWaypoints(recipe_id, acquire_id, location_id, npc_id)
@@ -468,6 +466,8 @@ local function AddAllWaypoints(acquire_id, location_id, npc_id)
 end
 
 -- Replace the TomTom waypoint icon with the icon for the profession.
+local ICON_TEXTURE_FORMAT = [[Interface\ICONS\%s]]
+
 local function SetWaypointIcon(uid, ...)
 	local map_children = {...}
 
@@ -475,7 +475,7 @@ local function SetWaypointIcon(uid, ...)
 		local child = map_children[index]
 
 		if child.point and child.point.uid == uid then
-			child.icon:SetTexture(TEXTURE_UP_FORMAT:format(private.PROFESSION_TEXTURES[addon.Frame.profession]))
+			child.icon:SetTexture(ICON_TEXTURE_FORMAT:format(private.PROFESSION_TEXTURES[addon.Frame.current_profession]))
 			break
 		end
 

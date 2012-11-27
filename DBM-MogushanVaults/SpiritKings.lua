@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(687, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7766 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 8081 $"):sub(12, -3))
 mod:SetCreatureID(60701, 60708, 60709, 60710)--Adds: 60731 Undying Shadow, 60958 Pinning Arrow
 mod:SetModelID(41813)
 mod:SetZone()
@@ -66,6 +66,7 @@ local specWarnAnnihilate		= mod:NewSpecialWarningSpell(117948)--Maybe tweak opti
 local specWarnFlankingOrders	= mod:NewSpecialWarningSpell(117910, nil, nil, nil, true)
 local specWarnImperviousShield	= mod:NewSpecialWarningTarget(117961)--Heroic Ability
 --Subetai
+local specWarnVolley			= mod:NewSpecialWarningSpell(118094, nil, nil, nil, true)
 local specWarnPinningArrow		= mod:NewSpecialWarningSwitch("ej5861", mod:IsDps())
 local specWarnPillage			= mod:NewSpecialWarningMove(118047)--Works as both a You and near warning
 local specWarnSleightOfHand		= mod:NewSpecialWarningTarget(118162)--Heroic Ability
@@ -74,15 +75,15 @@ local specWarnSleightOfHand		= mod:NewSpecialWarningTarget(118162)--Heroic Abili
 local timerChargingShadowsCD	= mod:NewCDTimer(12, 117685)
 local timerUndyingShadowsCD		= mod:NewCDTimer(41.5, 117506)--For most part it's right, but i also think on normal he can only summon a limited amount cause he did seem to skip one? leaving a CD for now until know for sure.
 local timerFixate			  	= mod:NewTargetTimer(20, 118303)
-local timerCoalescingShadowsCD	= mod:NewNextTimer(60, 117539)--EJ says 30sec but logs more recent then last EJ update show 60 seconds on heroic (so probably adjusted since EJ was last revised)
-local timerShieldOfDarknessCD  	= mod:NewCDTimer(42.5, 117697)
+local timerCoalescingShadowsCD	= mod:NewNextTimer(60, 117539)
+local timerShieldOfDarknessCD  	= mod:NewNextTimer(42.5, 117697)
 --Meng
 local timerMaddeningShoutCD		= mod:NewCDTimer(47, 117708)--47-50 sec variation. So a CD timer instead of next.
 local timerDeliriousCD			= mod:NewCDTimer(20.5, 117837, nil, mod:CanRemoveEnrage())
 --Qiang
 local timerAnnihilateCD			= mod:NewNextTimer(39, 117948)
-local timerFlankingOrdersCD		= mod:NewNextTimer(40, 117910)
-local timerImperviousShieldCD	= mod:NewCDTimer(40, 117961)
+local timerFlankingOrdersCD		= mod:NewCDTimer(40, 117910)--Every 40 seconds on normal, but on heroic it has a 40-50 second variation so has to be a CD bar instead of next
+local timerImperviousShieldCD	= mod:NewCDTimer(42, 117961)
 --Subetai
 local timerVolleyCD				= mod:NewNextTimer(41, 118094)
 local timerRainOfArrowsCD		= mod:NewNextTimer(41, 118122)
@@ -91,6 +92,9 @@ local timerSleightOfHandCD		= mod:NewCDTimer(42, 118162)
 local timerSleightOfHand		= mod:NewBuffActiveTimer(11, 118162)--2+9 (cast+duration)
 
 local berserkTimer				= mod:NewBerserkTimer(600)
+
+local countdownImperviousShield	= mod:NewCountdown(42, 117961)
+local countdownShieldOfDarkness	= mod:NewCountdown(42.5, 117697)
 
 mod:AddBoolOption("RangeFrame", mod:IsRanged())--For multiple abilities. the abiliies don't seem to target melee (unless a ranged is too close or a melee is too far.)
 
@@ -104,6 +108,7 @@ local mengActive = false
 local qiangActive = false
 local subetaiActive = false
 local pinnedTargets = {}
+local diedShadow = {}
 
 local function warnPinnedDownTargets()
 	warnPinnedDown:Show(table.concat(pinnedTargets, "<, >"))
@@ -118,6 +123,7 @@ function mod:OnCombatStart(delay)
 	subetaiActive = false
 	table.wipe(bossesActivated)
 	table.wipe(pinnedTargets)
+	table.wipe(diedShadow)
 	berserkTimer:Start(-delay)
 end
 
@@ -128,7 +134,8 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(117539) then
+	if args:IsSpellID(117539) and not diedShadow[args.destGUID] then--They only ressurrect once so only start timer once per GUID
+		diedShadow[args.destGUID] = true
 		timerCoalescingShadowsCD:Start(args.destGUID)--Basically, the rez timer for a defeated Undying Shadow that is going to re-animate in 60 seconds.
 	elseif args:IsSpellID(117837) then
 		warnDelirious:Show(args.destName)
@@ -197,6 +204,7 @@ function mod:SPELL_CAST_START(args)
 		warnShieldOfDarkness:Show(args.sourceName)
 		specWarnShieldOfDarkness:Show(args.sourceName)
 		timerShieldOfDarknessCD:Start()
+		countdownShieldOfDarkness:Start()
 	elseif args:IsSpellID(117833) then
 		warnCrazyThought:Show()
 		specWarnCrazyThought:Show(args.sourceName)
@@ -211,11 +219,16 @@ function mod:SPELL_CAST_START(args)
 	elseif args:IsSpellID(117948) then
 		warnAnnihilate:Show()
 		specWarnAnnihilate:Show()
-		timerAnnihilateCD:Start()
+		if self:IsDifficulty("heroic10", "heroic25") then
+			timerAnnihilateCD:Start(32.5)
+		else
+			timerAnnihilateCD:Start()
+		end
 	elseif args:IsSpellID(117961) then
 		warnImperviousShield:Show(args.sourceName)
 		specWarnImperviousShield:Show(args.sourceName)
---		timerImperviousShieldCD:Start()--Not yet known
+		timerImperviousShieldCD:Start()
+		countdownImperviousShield:Start(42)
 	end
 end
 
@@ -229,14 +242,18 @@ mod.SPELL_MISSED = mod.SPELL_DAMAGE
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 118088 and self:AntiSpam(2, 1) then--Volley
 		warnVolley:Show()
+		specWarnVolley:Show()
 		timerVolleyCD:Start()
 	elseif spellId == 118121 and self:AntiSpam(2, 2) then--Rain of Arrows
 		timerRainOfArrowsCD:Start()
-	elseif spellId == 118219 and self:AntiSpam(2, 3) then--Cancel Activation
+--	"<63.5 21:23:16> [UNIT_SPELLCAST_SUCCEEDED] Qiang the Merciless [[boss1:Inactive Visual::0:118205]]", -- [14066]
+--	"<63.5 21:23:16> [UNIT_SPELLCAST_SUCCEEDED] Qiang the Merciless [[boss1:Cancel Activation::0:118219]]", -- [14068]
+	elseif spellId == 118205 and self:AntiSpam(2, 3) then--Cancel Activation
 		if UnitName(uId) == Zian then
 			zianActive = false
 			timerChargingShadowsCD:Cancel()
 			timerShieldOfDarknessCD:Cancel()
+			countdownShieldOfDarkness:Cancel()
 			timerUndyingShadowsCD:Start(30)--This boss retains Undying Shadows
 			if self.Options.RangeFrame and not subetaiActive then--Close range frame, but only if zian is also not active, otherwise we still need it
 				DBM.RangeCheck:Hide()
@@ -249,6 +266,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			qiangActive = false
 			timerAnnihilateCD:Cancel()
 			timerImperviousShieldCD:Cancel()
+			countdownImperviousShield:Cancel()
 			timerFlankingOrdersCD:Start(30)--This boss retains Flanking Orders
 		elseif UnitName(uId) == Subetai then
 			subetaiActive = false
@@ -304,6 +322,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, boss)
 		timerUndyingShadowsCD:Start(20)
 		if self:IsDifficulty("heroic10", "heroic25") then
 			timerShieldOfDarknessCD:Start(40)
+			countdownShieldOfDarkness:Start(40)
 		end
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(8)
@@ -320,6 +339,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, boss)
 		timerFlankingOrdersCD:Start(25)
 		if self:IsDifficulty("heroic10", "heroic25") then
 			timerImperviousShieldCD:Start(40.7)
+			countdownImperviousShield:Start(40.7)
 		end
 	elseif boss == Subetai then
 		subetaiActive = true

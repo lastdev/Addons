@@ -1502,7 +1502,7 @@ Determines the amount of health that a target is missing.
 
 Determines the percentage of power that a target has.
 
-<<code lua>>power, counted = s.PowerPercent(unit, PowerType)<</code>>
+<<code lua>>power, counted = s.PowerPercent(unit, PowerType, arg3)<</code>>
 
 ===== ** Arguments:
 
@@ -1510,6 +1510,8 @@ Determines the percentage of power that a target has.
 :		(string or nil) UnitID or nil for "target" or "focus" depending on if the focus casting modifier key is pressed. You may use the string "raid" to return the lowest power percent from a raid or party member or "party" for only party members. You may also add a combination of options separated by a line pipe such as "raid|range|afk|notself|healer|notfull|average". Use "range" to make sure that the unit is in range of most common spells. Use "afk" to make sure that the unit is not AFK. Use "notself" to not check yourself. Use "healer" to make sure the unit is a healer class. Use "notfull" to not check group members who have 90% or more health. Use "average" to get the average health of the checked group members.
 ; ** PowerType
 :		(number or nil) The power type of the target. FrameXML defines constants in the Constants.lua file that can be used, such as SPELL_POWER_ENERGY. If nil, uses the current primary type such as energy for a druid in cat form.
+; ** arg3
+:		(unknown) ?
 
 ===== ** Returns:
 
@@ -1526,7 +1528,7 @@ Determines the percentage of power that a target has.
 
 Determines the amount of power that a target has.
 
-<<code lua>>power = s.Power(unit, PowerType)<</code>>
+<<code lua>>power = s.Power(unit, PowerType, arg3)<</code>>
 
 ===== ** Arguments:
 
@@ -1534,6 +1536,8 @@ Determines the amount of power that a target has.
 :		(string or nil) UnitID or nil for "target" or "focus" depending on if the focus casting modifier key is pressed.
 ; ** PowerType
 :		(number or nil) The power type of the target. FrameXML defines constants in the Constants.lua file that can be used, such as SPELL_POWER_ENERGY. If nil, uses the current primary type such as energy for a druid in cat form.
+; ** arg3
+:		(unknown) ?
 
 ===== ** Returns:
 
@@ -1548,7 +1552,7 @@ Determines the amount of power that a target has.
 
 Determines the maximum amount of power that a target is able to have.
 
-<<code lua>>power = s.MaxPower(unit, PowerType)<</code>>
+<<code lua>>power = s.MaxPower(unit, PowerType, arg3)<</code>>
 
 ===== ** Arguments:
 
@@ -1556,6 +1560,8 @@ Determines the maximum amount of power that a target is able to have.
 :		(string or nil) UnitID or nil for "target" or "focus" depending on if the focus casting modifier key is pressed.
 ; ** PowerType
 :		(number or nil) The power type of the target. FrameXML defines constants in the Constants.lua file that can be used, such as SPELL_POWER_ENERGY. If nil, uses the current primary type such as energy for a druid in cat form.
+; ** arg3
+:		(unknown) ?
 
 ===== ** Returns:
 
@@ -1570,7 +1576,7 @@ Determines the maximum amount of power that a target is able to have.
 
 Determines the percentage of power that a target is missing.
 
-<<code lua>>missing, counted = s.PowerMissingPercent(unit, PowerType)<</code>>
+<<code lua>>missing, counted = s.PowerMissingPercent(unit, PowerType, arg3)<</code>>
 
 ===== ** Arguments:
 
@@ -1578,6 +1584,8 @@ Determines the percentage of power that a target is missing.
 :		(string or nil) UnitID or nil for "target" or "focus" depending on if the focus casting modifier key is pressed. You may use the string "raid" to return the highest power missing percent from a raid or party member or "party" for only party members. You may also add a combination of options separated by a line pipe such as "raid|range|afk|notself|healer|notfull|average". Use "range" to make sure that the unit is in range of most common spells. Use "afk" to make sure that the unit is not AFK. Use "notself" to not check yourself. Use "healer" to make sure the unit is a healer class. Use "notfull" to not check group members who have 90% or more health. Use "average" to get the average health of the checked group members.
 ; ** PowerType
 :		(number or nil) The power type of the target. FrameXML defines constants in the Constants.lua file that can be used, such as SPELL_POWER_ENERGY. If nil, uses the current primary type such as energy for a druid in cat form.
+; ** arg3
+:		(unknown) ?
 
 ===== ** Returns:
 
@@ -1594,7 +1602,7 @@ Determines the percentage of power that a target is missing.
 
 Determines the amount of power that a target is missing.
 
-<<code lua>>missing = s.PowerMissing(unit, PowerType)<</code>>
+<<code lua>>missing = s.PowerMissing(unit, PowerType, arg3)<</code>>
 
 ===== ** Arguments:
 
@@ -1602,6 +1610,8 @@ Determines the amount of power that a target is missing.
 :		(string or nil) UnitID or nil for "target" or "focus" depending on if the focus casting modifier key is pressed.
 ; ** PowerType
 :		(number or nil) The power type of the target. FrameXML defines constants in the Constants.lua file that can be used, such as SPELL_POWER_ENERGY. If nil, uses the current primary type such as energy for a druid in cat form.
+; ** arg3
+:		(unknown) ?
 
 ===== ** Returns:
 

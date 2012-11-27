@@ -1,0 +1,174 @@
+<!-- Revision: 336 2010-10-09T15:48:49Z -->
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\..\..\FrameXML\UI.xsd">
+  <Frame name="ArmoryOptionsGuildBankPanel" hidden="true" parent="InterfaceOptionsFramePanelContainer">
+    <Layers>
+      <Layer level="ARTWORK">
+        <FontString name="$parentTitle" text="ARMORY_GUILDBANK_TITLE" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="16" y="-16"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+        <FontString name="$parentSubText" text="ARMORY_GUILDBANK_SUBTEXT" inherits="GameFontHighlightSmall" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
+          <Size>
+            <AbsDimension y="32" x="0"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT">
+              <Offset>
+                <AbsDimension x="0" y="-8"/>
+              </Offset>
+            </Anchor>
+            <Anchor point="RIGHT">
+              <Offset>
+                <AbsDimension x="-32" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Scripts>
+      <OnLoad>
+        self.name = ARMORY_GUILDBANK_TITLE;
+        self.parent = ARMORY_TITLE;
+        ArmoryOptionsPanel_OnLoad(self);
+      </OnLoad>
+      <OnShow>
+        ArmoryOptionsPanel_Refresh(self);
+      </OnShow>
+    </Scripts>
+    <Frames>
+      <Frame name="$parentShowItemCount" inherits="ArmoryOptionsCheckBoxWithSwatchTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="-2" y="-8"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:GetParent().colorText = _G[self:GetName().."Text"];
+            self:GetParent().colorSwatch = _G[self:GetName().."ColorSwatch"];
+
+            local control = _G[self:GetName().."Check"];
+            control.type = CONTROLTYPE_CHECKBOX;
+            control.label = "ARMORY_CMD_SET_AGBITEMCOUNT";
+            control.colorSet = function(r, g, b) AGB:SetConfigItemCountColor(r, g, b); end;
+            control.colorGet = function(default) return AGB:GetConfigItemCountColor(default); end;
+            ArmoryOptionsPanel_RegisterControl(control, self:GetParent());
+          </OnLoad>
+          <OnShow>
+            if ( AGB:GetConfigUniItemCountColor() ) then
+              self:GetParent().colorText:Hide();
+              self:GetParent().colorSwatch:Hide();
+            else
+              self:GetParent().colorText:Show();
+              self:GetParent().colorSwatch:Show();
+            end
+          </OnShow>
+        </Scripts>
+      </Frame>
+      <CheckButton name="$parentUniItemCountColor" inherits="ArmoryOptionsCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentShowItemCount" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="16" y="-8"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self.type = CONTROLTYPE_CHECKBOX;
+            self.label = "ARMORY_CMD_SET_AGBUNICOLOR";
+            ArmoryOptionsPanel_RegisterControl(self, self:GetParent());
+            ArmoryOptionsPanel_SetupDependentControl(ArmoryOptionsGuildBankPanelShowItemCountCheck, self);
+          </OnLoad>
+          <OnClick>
+            if ( self:GetChecked() ) then
+              PlaySound("igMainMenuOptionCheckBoxOn");
+              self:GetParent().colorText:Hide();
+              self:GetParent().colorSwatch:Hide();
+            else
+              PlaySound("igMainMenuOptionCheckBoxOff");
+              self:GetParent().colorText:Show();
+              self:GetParent().colorSwatch:Show();
+            end
+            ArmoryOptionsPanel_CheckButton_OnClick(self);
+          </OnClick>
+        </Scripts>
+      </CheckButton>
+      <CheckButton name="$parentGlobalItemCount" inherits="ArmoryOptionsCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentUniItemCountColor" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-8"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self.type = CONTROLTYPE_CHECKBOX;
+            self.label = "ARMORY_CMD_SET_AGBCOUNTALL";
+            ArmoryOptionsPanel_RegisterControl(self, self:GetParent());
+            ArmoryOptionsPanel_SetupDependentControl(ArmoryOptionsGuildBankPanelShowItemCountCheck, self);
+          </OnLoad>
+        </Scripts>
+      </CheckButton>
+      <CheckButton name="$parentCrossFactionItemCount" inherits="ArmoryOptionsCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentGlobalItemCount" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-8"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self.type = CONTROLTYPE_CHECKBOX;
+            self.label = "ARMORY_CMD_SET_AGBCOUNTXFACTION";
+            ArmoryOptionsPanel_RegisterControl(self, self:GetParent());
+            ArmoryOptionsPanel_SetupDependentControl(ArmoryOptionsGuildBankPanelShowItemCountCheck, self);
+          </OnLoad>
+        </Scripts>
+      </CheckButton>
+      <CheckButton name="$parentIncludeInFind" inherits="ArmoryOptionsCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentCrossFactionItemCount" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="-16" y="-8"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self.type = CONTROLTYPE_CHECKBOX;
+            self.label = "ARMORY_CMD_SET_AGBFIND";
+            ArmoryOptionsPanel_RegisterControl(self, self:GetParent());
+          </OnLoad>
+        </Scripts>
+      </CheckButton>
+      <CheckButton name="$parentIntegrate" inherits="ArmoryOptionsCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentIncludeInFind" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-8"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self.type = CONTROLTYPE_CHECKBOX;
+            self.label = "ARMORY_CMD_SET_AGBINTEGRATE";
+            ArmoryOptionsPanel_RegisterControl(self, self:GetParent());
+          </OnLoad>
+        </Scripts>
+      </CheckButton>
+    </Frames>
+  </Frame>
+</Ui>

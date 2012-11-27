@@ -1,5 +1,5 @@
 local AddonName, a = ...
-if a.BuildFail(40000, 50000) then return end
+if a.BuildFail(50000) then return end
 local L = a.Localize
 local s = SpellFlashAddon
 local c = BittensSpellFlashLibrary
@@ -8,6 +8,7 @@ local GetComboPoints = GetComboPoints
 local GetPowerRegen = GetPowerRegen
 local math = math
 local select = select
+local string = string
 
 local relentlessPending = false
 local finishers = { "Slice and Dice", "Rupture", "Envenom", "Recuperate" }
@@ -15,7 +16,7 @@ local finishers = { "Slice and Dice", "Rupture", "Envenom", "Recuperate" }
 local function triggersRelentless(info)
 	return c.InfoMatches(info, finishers)
 		and GetComboPoints("player") == 5
-		and s.TalentRank(58423) == 3
+		and s.HasSpell(c.GetID("Relentless Strikes"))
 end
 
 local function maybePendRelentless(info)
@@ -32,45 +33,39 @@ end
 
 a.Rotations = {}
 c.RegisterForEvents(a)
-s.Spam[AddonName] = function()
+a.SetSpamFunction(function()
 	c.Init(a)
-
+	
+	-- Calc regen
 	a.Regen = select(2, GetPowerRegen())
-	local extra = 4 * c.GetTalentRank("Energetic Recovery")
-	if extra > 0
-		and (c.HasBuff("Recuperate") or c.IsAuraPendingFor("Recuperate")) then
-		
-		a.Regen = a.Regen + extra / 3
-	end
-	extra = .6 * 5 * c.GetTalentRank("Venomous Wounds")
-	if extra > 0 then
-		if c.HasMyDebuff("Garrote") or c.IsAuraPendingFor("Garrote") then
-			a.Regen = a.Regen + extra / 3
+	if s.HasSpell(c.GetID("Energetic Recovery")) then
+		if c.HasBuff("Slice and Dice") or c.IsCasting("Slice and Dice") then
+			a.Regen = a.Regen + 4
 		end
-		if c.HasMyDebuff("Rupture") or c.IsAuraPendingFor("Rupture") then
-			a.Regen = a.Regen + extra / 2
+	elseif s.HasSpell(c.GetID("Venomous Wounds")) then
+		if c.HasMyDebuff("Rupture") or c.IsCasting("Rupture") then
+			a.Regen = a.Regen + 10 * .75 / 2
+--		elseif c.HasMyDebuff("Garrote") or c.IsCasting("Garrote") then
+--			a.Regen = a.Regen + 10 * .75 / 3
 		end
 	end
 	
+	-- Calc power
 	local info = c.GetQueuedInfo()
 	a.CP = GetComboPoints("player")
-	if a.CP == 5 
-		and c.GetTalentRank("Relentless Strikes") == 3
-		and c.InfoMatches(info, finishers) then
-		
-		info.Cost = s.SpellCost(info.Name) - 25
-	end
 	a.Energy = c.GetPower(a.Regen)
 	if relentlessPending or triggersRelentless(info) then
 		a.Energy = math.min(s.MaxPower("player"), a.Energy + 25)
 	end
 	
+	-- Calc cp
 	if c.InfoMatches(
 		info,
-		"Sinister Strike", 
+--		"Sinister Strike", 
 		"Backstab", 
-		"Revealing Strike", 
-		"Garrote", 
+		"Dispatch",
+--		"Revealing Strike", 
+--		"Garrote", 
 		"Hemorrhage") then
 		
 		a.CP = math.min(5, a.CP + 1)
@@ -82,42 +77,54 @@ s.Spam[AddonName] = function()
 	
 --c.Debug("Spam", a.CP, a.Energy, relentlessPending)
 	c.Flash(a)
-end
+end)
 
+----------------------------------------------------------------- Assassination
 a.LastRuptureCP = 0
 a.Rotations.Assassination = {
 	Spec = 1,
 	OffSwitch = "assassination_off",
 	
 	FlashInCombat = function()
-		c.FlashAll(
-			"Vendetta",
-			"Vanish for Assassination",
-			"Tricks of the Trade",
-			"Kick")
-		if c.HasBuff("Vanish") then
-			c.PriorityFlash("Garrote")
+		c.FlashAll("Vendetta", "Kick")
+		
+		if c.HasBuff("Vanish") and c.HasTalent("Nightstalker") then
+			c.PriorityFlash("Envenom")
+		elseif c.HasBuff("Vanish") and c.HasTalent("Shadow Focus") then
+			c.PriorityFlash("Mutilate")
 		else
-			c.PriorityFlash(
+			local flashing = c.PriorityFlash(
 				"Envenom to refresh Slice and Dice",
 				"Slice and Dice",
 				"Rupture for Assassination",
-				"Envenom for Assassination",
-				"Backstab during Execute",
-				"Mutilate")
+				"Envenom",
+				"Tricks of the Trade unglyphed",
+				"Dispatch",
+				"Mutilate",
+				"Preparation",
+				"Tricks of the Trade glyphed")
+			if c.HasTalent("Nightstalker") then
+				if flashing and string.find(flashing, "Envenom") then
+					c.FlashAll("Vanish")
+				end
+			elseif c.HasTalent("Shadow Focus") then
+				if flashing == "Mutilate" then
+					c.FlashAll("Vanish")
+				end
+			end
 		end
 	end,
 	
 	FlashOutOfCombat = function(self)
 		if c.HasBuff("Vanish") then
 			self:FlashInCombat()
-		elseif a.InSoloMode() then
-			c.FlashAll("Recuperate")
+--		elseif a.InSoloMode() then
+--			c.FlashAll("Recuperate")
 		end
 	end,
 	
 	FlashAlways = function()
-		c.FlashAll("Deadly Poison", "Instant Poison", "Redirect")
+		c.FlashAll("Deadly Poison", "Redirect")
 	end,
 	
 	CastSucceeded = function(info)
@@ -131,87 +138,109 @@ a.Rotations.Assassination = {
 	Energized = maybeConsumeRelentless,
 }
 
-local uncontrolledCooldowns = {}
-a.Rotations.Combat = {
-	Spec = 2,
-	OffSwitch = "combat_off",
-		
-	FlashInCombat = function()
-		c.FlashAll("Tricks of the Trade", "Kick")
-		c.RotateCooldowns(
-			uncontrolledCooldowns, "Adrenaline Rush", "Killing Spree")
-		c.PriorityFlash(
-			"Slice and Dice",
-			"Expose Armor",
-			"Rupture unless SnD",
-			"Eviscerate for Combat",
-			"Revealing Strike",
-			"Sinister Strike Smart")
-	end,
-	
-	FlashOutOfCombat = function()
-		if a.InSoloMode() then
-			c.FlashAll("Recuperate")
-		end
-	end,
-	
-	FlashAlways = function()
-		c.FlashAll(
-			"Deadly Poison or Wound", "Instant Poison or Wound", "Redirect")
-	end,
-	
-	CastSucceeded = maybePendRelentless,
-	
-	Energized = maybeConsumeRelentless,
-}
+------------------------------------------------------------------------ Combat
+--local uncontrolledCooldowns = {}
+--a.Rotations.Combat = {
+--	Spec = 2,
+--	OffSwitch = "combat_off",
+--		
+--	FlashInCombat = function()
+--		c.FlashAll("Tricks of the Trade", "Kick")
+--		c.RotateCooldowns(
+--			uncontrolledCooldowns, "Adrenaline Rush", "Killing Spree")
+--		c.PriorityFlash(
+--			"Slice and Dice",
+--			"Expose Armor",
+--			"Rupture unless SnD",
+--			"Eviscerate for Combat",
+--			"Revealing Strike",
+--			"Sinister Strike Smart")
+--	end,
+--	
+--	FlashOutOfCombat = function()
+--		if a.InSoloMode() then
+--			c.FlashAll("Recuperate")
+--		end
+--	end,
+--	
+--	FlashAlways = function()
+--		c.FlashAll(
+--			"Deadly Poison or Wound", "Instant Poison or Wound", "Redirect")
+--	end,
+--	
+--	CastSucceeded = maybePendRelentless,
+--	
+--	Energized = maybeConsumeRelentless,
+--}
 
+---------------------------------------------------------------------- Subtlety
 a.Rotations.Subtlety = {
 	Spec = 3,
 	OffSwitch = "sub_off",
 	
 	FlashInCombat = function()
-		if c.HasBuff("Vanish") and a.CanBackstab() then
-			c.FlashAll("Ambush", "Shadowstep")
-			if a.CP == 0 then
+		if a.CanBackstab() 
+			and (c.HasBuff("Vanish") or c.IsCasting("Vanish")) 
+			and not c.HasTalent("Subterfuge") then
+			
+			c.PriorityFlash("Ambush")
+			if a.CP < 3 then
 				c.FlashAll("Premeditation")
 			end
 			return
 		end
 		
-		c.FlashAll("Premeditation", "Tricks of the Trade", "Kick")
-		
-		local untilCap = s.MaxPower("player") - a.Energy - a.Regen
-		if untilCap < 10 then
-			c.PriorityFlash("Shadow Dance", "Vanish for Subtlety")
+		c.FlashAll("Kick")
+		local untilCap = s.MaxPower("player") - a.Energy - a.Regen / 2
+		local cdDealBreaker =
+			c.HasBuff("Master of Subtlety") 
+			or c.HasBuff("Find Weakness") 
+			or c.HasBuff("Stealth")
+			or c.HasBuff("Shadow Dance")
+			or c.IsCasting("Shadow Dance")
+		if untilCap < a.Regen / 2 and not cdDealBreaker then
+			if not c.FlashAll("Shadow Dance")
+				and (not c.HasTalent("Shadow Focus") 
+					or untilCap < 3 / 2 * a.Regen) then
+				
+				c.FlashAll("Vanish")
+			end
 		end
 		
-		local nextCool = math.min(
-			c.GetCooldown("Shadow Dance"), c.GetCooldown("Vanish"))
-		if c.HasBuff("Master of Subtlety") or c.HasBuff("Find Weakness") then
+		if a.CP < 5 and c.PriorityFlash("Ambush") then
+			return
+		end
+		
+		local nextCool
+		if cdDealBreaker then
 			nextCool = 500
+		else
+			nextCool = math.min(
+				c.GetCooldown("Shadow Dance"), c.GetCooldown("Vanish"))
 		end
-		if (a.CP < 4 and nextCool > untilCap / a.Regen)
+		if (a.CP < 4 and untilCap / a.Regen < nextCool)
 			or (a.CP < 5 and (
 				untilCap <= 0
 					or c.HasBuff("Shadow Dance")
-					or a.InSoloMode()
-					or not c.HasTalent("Honor Among Thieves"))) then
+					or a.InSoloMode())) then
 			
-			c.FlashAll("Shadowstep")
 			c.PriorityFlash(
 				"Ambush",
-				"Hemorrhage",
+				"Hemorrhage for Bleed",
+				"Tricks of the Trade unglyphed",
 				"Backstab",
-				"Preparation")
+				"Hemorrhage",
+				"Preparation",
+				"Tricks of the Trade glyphed")
 		elseif a.CP == 5 then
 --c.Debug("Flash",
 			c.PriorityFlash(
-				"Rupture with Master of Subtlety",
-				"Slice and Dice unless Solo",
-				"Rupture for Subtlety",
-				"Recuperate for Energetic Recovery",
+				"Slice and Dice",
+				"Rupture",
+				"Ambush for Last Second Find Weakness",
 				"Eviscerate",
-				"Preparation")
+				"Preparation",
+				"Tricks of the Trade")
 --)
 		end
 	end,
@@ -219,14 +248,13 @@ a.Rotations.Subtlety = {
 	FlashOutOfCombat = function(self)
 		if c.HasBuff("Vanish") then
 			self:FlashInCombat()
-		elseif a.InSoloMode() then
-			c.FlashAll("Recuperate")
+--		elseif a.InSoloMode() then
+--			c.FlashAll("Recuperate")
 		end
 	end,
 	
 	FlashAlways = function()
-		c.FlashAll(
-			"Deadly Poison or Wound", "Instant Poison or Wound", "Redirect")
+		c.FlashAll("Deadly Poison", "Redirect")
 	end,
 	
 	CastSucceeded = maybePendRelentless,

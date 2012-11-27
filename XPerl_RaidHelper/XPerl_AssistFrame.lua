@@ -3,7 +3,7 @@
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local conf
-XPerl_RequestConfig(function(new) conf = new end, "$Revision: 644 $")
+XPerl_RequestConfig(function(new) conf = new end, "$Revision: 771 $")
 
 local myClass
 local playerAggro, petAggro
@@ -13,13 +13,8 @@ local enemyUnitList = {}			-- Players with mobs targetted that target me
 local wholeEnemyUnitList = {}			-- Players with mobs targetted
 local currentPlayerAggro = {}
 
-
-local isMOP = select(4, _G.GetBuildInfo()) >= 50000
-local GetNumRaidMembers = isMOP and GetNumGroupMembers or GetNumRaidMembers
-local GetNumPartyMembers = isMOP and GetNumSubgroupMembers or GetNumPartyMembers
-
-
-
+local GetNumGroupMembers = GetNumGroupMembers
+local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 -- XPerl_Assists_OnLoad(self)
 function XPerl_Assists_OnLoad(self)
@@ -28,8 +23,8 @@ function XPerl_Assists_OnLoad(self)
 
 	self:RegisterEvent("VARIABLES_LOADED")
 	self:RegisterEvent("UNIT_TARGET")
-	self:RegisterEvent("RAID_ROSTER_UPDATE")
-	self:RegisterEvent("PARTY_MEMBERS_CHANGED")
+	self:RegisterEvent("GROUP_ROSTER_UPDATE")
+	self:RegisterEvent("GROUP_ROSTER_UPDATE")
 	self:RegisterEvent("PLAYER_TARGET_CHANGED")
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("PLAYER_DEAD")
@@ -270,10 +265,10 @@ end
 local function MakeFriendlyUnitList()
 
 	local start, prefix, total
-	if (GetNumRaidMembers() > 0) then
-		start, prefix, total = 1, "raid", GetNumRaidMembers()
+	if (IsInRaid()) then
+		start, prefix, total = 1, "raid", GetNumGroupMembers()
 	else
-		start, prefix, total = 0, "party", GetNumPartyMembers()
+		start, prefix, total = 0, "party", GetNumSubgroupMembers()
 	end
 
 	--friendlyUnitList = {"player", "pet"}
@@ -325,7 +320,7 @@ function XPerl_Assists_OnEvent(self, event, unit)
 		end
 		XPerlAssistPin:SetButtonTex()
 
-	elseif (event == "RAID_ROSTER_UPDATE" or event == "PARTY_MEMBERS_CHANGED") then
+	elseif (event == "GROUP_ROSTER_UPDATE" or event == "GROUP_ROSTER_UPDATE") then
 		MakeFriendlyUnitList()
 		doUpdate = true
 
@@ -550,7 +545,7 @@ function XPerl_UpdateAssists()
 		end
 	end
 
-	if (GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0) then
+	if (GetNumGroupMembers() == 0) then
 		-- Don't show it if we're on our own... we know we have aggro..
 		playerAggro, petAggro = false, false
 	end

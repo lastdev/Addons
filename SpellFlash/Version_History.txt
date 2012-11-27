@@ -1,6 +1,16 @@
 
 
 
+== Version 6.2
+
+* Added a third argument to these functions:
+** s.PowerPercent
+** s.Power
+** s.MaxPower
+** s.PowerMissingPercent
+** s.PowerMissing
+
+
 == Version 6.1
 
 * Now properly registering some events that were mistakenly disabled.

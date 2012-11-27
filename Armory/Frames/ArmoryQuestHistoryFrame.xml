@@ -1,0 +1,363 @@
+<!-- Revision: 310 2010-08-20T17:28:21Z -->
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\..\FrameXML\UI.xsd">
+  <Script file="ArmoryQuestHistoryFrame.lua"/>
+  <Button name="ArmoryQuestHistoryTitleButtonTemplate" inherits="ArmoryQuestTitleButtonTemplate" virtual="true">
+    <Scripts>
+      <OnClick>
+        ArmoryQuestHistoryTitleButton_OnClick(self, button);
+      </OnClick>
+    </Scripts>
+  </Button>
+  <Frame name="ArmoryQuestHistoryFrame" parent="ArmoryQuestFrame" hidden="true">
+    <Size>
+      <AbsDimension x="384" y="512"/>
+    </Size>
+    <Anchors>
+      <Anchor point="TOPLEFT">
+        <Offset>
+          <AbsDimension x="0" y="0"/>
+        </Offset>
+      </Anchor>
+    </Anchors>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture file="Interface\PaperDollInfoFrame\UI-Character-General-TopLeft">
+          <Size>
+            <AbsDimension x="256" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT"/>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\PaperDollInfoFrame\UI-Character-General-TopRight">
+          <Size>
+            <AbsDimension x="128" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPRIGHT"/>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\PaperDollInfoFrame\UI-Character-General-BottomLeft">
+          <Size>
+            <AbsDimension x="256" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="BOTTOMLEFT"/>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\PaperDollInfoFrame\UI-Character-General-BottomRight">
+          <Size>
+            <AbsDimension x="128" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="BOTTOMRIGHT"/>
+          </Anchors>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Scripts>
+      <OnLoad>
+        ArmoryQuestHistoryFrame_OnLoad(self);
+      </OnLoad>
+      <OnEvent>
+        ArmoryQuestHistoryFrame_OnEvent(self, event, ...);
+      </OnEvent>
+      <OnShow>
+        ArmoryQuestHistoryFrame_OnShow(self);
+      </OnShow>
+    </Scripts>
+    <Frames>
+      <Frame name="ArmoryQuestHistoryExpandButtonFrame">
+        <Size>
+          <AbsDimension x="54" y="32"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="70" y="-48"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Frames>
+          <Button name="ArmoryQuestHistoryCollapseAllButton" hidden="false" inherits="ArmoryQuestTitleButtonTemplate" text="ALL">
+            <Size>
+              <AbsDimension x="40" y="22"/>
+            </Size>
+            <Anchors>
+              <Anchor point="TOPLEFT">
+                <Offset>
+                  <AbsDimension x="0" y="-2"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+            <Layers>
+              <Layer level="BACKGROUND">
+                <Texture name="ArmoryQuestHistoryExpandTabLeft" file="Interface\QuestFrame\UI-QuestLogSortTab-Left">
+                  <Size>
+                    <AbsDimension x="8" y="32"/>
+                  </Size>
+                  <Anchors>
+                    <Anchor point="TOPLEFT">
+                      <Offset>
+                        <AbsDimension x="-6" y="8"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                </Texture>
+                <Texture name="ArmoryQuestHistoryExpandTabMiddle" file="Interface\QuestFrame\UI-QuestLogSortTab-Middle">
+                  <Size>
+                    <AbsDimension x="38" y="32"/>
+                  </Size>
+                  <Anchors>
+                    <Anchor point="LEFT" relativeTo="ArmoryQuestHistoryExpandTabLeft" relativePoint="RIGHT">
+                      <Offset>
+                        <AbsDimension x="0" y="0"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                </Texture>
+                <Texture file="Interface\QuestFrame\UI-QuestLogSortTab-Right">
+                  <Size>
+                    <AbsDimension x="8" y="32"/>
+                  </Size>
+                  <Anchors>
+                    <Anchor point="LEFT" relativeTo="ArmoryQuestHistoryExpandTabMiddle" relativePoint="RIGHT"/>
+                  </Anchors>
+                </Texture>
+              </Layer>
+            </Layers>
+            <Scripts>
+              <OnLoad>
+                ArmoryQuestHistoryCollapseAllButtonNormalText:SetWidth(0);
+                ArmoryQuestHistoryExpandTabMiddle:SetWidth(self:GetTextWidth() + 24);
+              </OnLoad>
+              <OnClick>
+                ArmoryQuestHistoryCollapseAllButton_OnClick(self);
+              </OnClick>
+            </Scripts>
+          </Button>
+        </Frames>
+      </Frame>
+
+      <Button name="ArmoryQuestHistoryGroupByDateButton">
+        <Size>
+          <AbsDimension x="24" y="24"/>
+        </Size>
+        <Anchors>
+          <Anchor point="RIGHT" relativeTo="ArmoryQuestFrameEditBox" relativePoint="LEFT">
+            <Offset>
+              <AbsDimension x="-10" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <HitRectInsets>
+          <AbsInset left="6" right="0" top="5" bottom="10"/>
+        </HitRectInsets>
+        <Scripts>
+          <OnClick>
+            self.checked = not self.checked;
+            Armory:SetQuestHistoryGroupByDate(self.checked);
+            if ( self.checked ) then
+              self:SetButtonState("PUSHED", 1);
+            else
+              self:SetButtonState("NORMAL");
+            end
+            GameTooltip:Hide();
+            ArmoryQuestHistory_Update();
+          </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT");
+            if ( self.checked ) then
+              GameTooltip:SetText(ARMORY_BY_GROUP);
+            else
+              GameTooltip:SetText(ARMORY_BY_DATE);
+            end
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>
+        <ButtonText>
+          <Anchors>
+            <Anchor point="CENTER">
+              <Offset>
+                <AbsDimension x="-1" y="-1"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </ButtonText>
+        <NormalFont style="GameFontBlack"/>
+        <NormalTexture file="Interface\Calendar\UI-Calendar-Button">
+          <TexCoords left="0.0" right="0.390625" top="0.0" bottom="0.78125"/>
+        </NormalTexture>
+        <PushedTexture file="Interface\Calendar\UI-Calendar-Button">
+          <TexCoords left="0.5" right="0.890625" top="0.0" bottom="0.78125"/>
+        </PushedTexture>
+        <HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+      </Button>
+
+      <Button name="ArmoryQuestHistoryTitle1" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryFrame">
+            <Offset>
+              <AbsDimension x="19" y="-75"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle2" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle1" relativePoint="BOTTOMLEFT" />
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle3" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle2" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle4" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle3" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle5" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle4" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle6" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle5" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle7" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle6" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle8" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle7" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle9" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle8" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle10" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle9" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle11" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle10" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle12" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle11" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle13" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle12" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle14" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle13" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle15" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle14" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle16" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle15" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle17" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle16" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle18" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle17" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle19" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle18" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle20" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle19" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle21" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle20" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <Button name="ArmoryQuestHistoryTitle22" inherits="ArmoryQuestHistoryTitleButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryQuestHistoryTitle21" relativePoint="BOTTOMLEFT"/>
+        </Anchors>
+      </Button>
+      <ScrollFrame name="ArmoryQuestHistoryScrollFrame" inherits="FauxScrollFrameTemplate">
+        <Size>
+          <AbsDimension x="296" y="354"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="-66" y="-76"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <Texture name="$parentScrollBarTop" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+              <Size>
+                <AbsDimension x="31" y="256"/>
+              </Size>
+              <Anchors>
+                <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+                  <Offset>
+                    <AbsDimension x="-2" y="5"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+              <TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
+            </Texture>
+            <Texture name="$parentScrollBarBottom" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+              <Size>
+                <AbsDimension x="31" y="106"/>
+              </Size>
+              <Anchors>
+                <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
+                  <Offset>
+                    <AbsDimension x="-2" y="-2"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+              <TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnVerticalScroll>
+            FauxScrollFrame_OnVerticalScroll(self, offset, ARMORY_QUESTHISTORY_HEIGHT, ArmoryQuestHistory_Update);
+          </OnVerticalScroll>
+        </Scripts>
+      </ScrollFrame>
+    </Frames>
+  </Frame>
+</Ui>

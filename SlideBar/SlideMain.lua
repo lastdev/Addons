@@ -1,6 +1,6 @@
 --[[
 	Slidebar AddOn for World of Warcraft (tm)
-	Version: 4.0.2 (<%codename%>)
+	Version: 4.0.6 (<%codename%>)
 	Revision: $Id: SlideMain.lua 312 2011-06-14 07:33:25Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 

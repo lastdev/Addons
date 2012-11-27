@@ -1,5 +1,32 @@
-CHANGELOG (- done, = to test, + todo):
+CHANGELOG
 ---------------------------------------
+
+4.0.6
+========
+Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10656
+- GATH-199: fix a bug which prevented upgrading from a pre-cataclysm database
+
+4.0.5
+========
+Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10655
+- GATH-195: add tracking of Onyx Egg
+- GATH-196: add tracking of Dark Soil
+- GATH-193: fix option to disable Archaeology display
+- GATH-191: node deletion now works correctly and deletes all selected objects
+- GATH-99:  improve Gathererables Report search field to accept prefix of + to require a token match and a prefix of - to exclude nodes which match a token
+
+4.0.4
+========
+Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10654
+- GATH-186: fixed error thrown by HUD when displaying party memebers
+- GATH-189: support database plugins
+- GATH-185: add Runestone Treasure Chest
+
+4.0.3
+========
+Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10652
+- GATH-181: added custom icons for gatherables that are missing them
+- GATH-178: updated with latest string translations, added more node names for itIT and updated two node names for frFR
 
 4.0.2
 ========
@@ -542,4 +569,4 @@ Deleted a rogue print2 statement.
 - Added giant clam treasure
 
 --------------
-Revision: $Id: ChangeLog.txt 987 2012-09-06 06:02:19Z Esamynn $
+Revision: $Id: ChangeLog.txt 1050 2012-11-02 01:56:53Z Esamynn $

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Council", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 397 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 416 $"):sub(12, -3))
 mod:SetCreatureID(22949, 22950, 22951, 22592, 23426)
 mod:SetModelID(21416)
 mod:SetUsedIcons(8)
@@ -67,7 +67,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.PoisonIcon then
 			self:SetIcon(args.destName, 8)
 		end
-		if IsRaidLeader() and self.Options.PoisonWhisper then
+		if DBM:GetRaidRank() > 0 and self.Options.PoisonWhisper then
 			self:SendWhisper(L.PoisonWhisper, args.destName)
 		end
 	elseif args:IsSpellID(41481) and args:IsPlayer() then

@@ -1,5 +1,14 @@
-== Version 2.4.1
+== Version 2.4.4
+* Shadow Bugfix - found some smaller issues with cooldowns.  Flashing should be smoother now.
+
+== Version 2.4.3
+* Shadow: Bugfix - Shadow Word: Death was flashing even when it was on cooldown!  Booo.
+
+== Version 2.4.2
 * Shadow: Bugfix - If you could manage to get your mana low, Shadow Word: Death would start flashing as if you could cast it and it would give you mana back.  You can't.  And it won't.
+
+== Version 2.4.1
+* Why was there no version 2.4.1?
 
 == Version 2.4.0
 * Added a Shadow rotation for the MoP beta.

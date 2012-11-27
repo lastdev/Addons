@@ -3,10 +3,10 @@
 Core.lua
 Core functions for Ackis Recipe List
 ************************************************************************
-File date: 2012-08-31T03:55:10Z
-File hash: abde914
-Project hash: f647594
-Project version: 2.4
+File date: 2012-10-07T00:59:28Z
+File hash: 5dea9ce
+Project hash: 5a95034
+Project version: 2.4.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -42,7 +42,7 @@ local table = _G.table
 local FOLDER_NAME, private = ...
 
 local LibStub = _G.LibStub
-local addon = LibStub("AceAddon-3.0"):NewAddon(private.addon_name, "AceConsole-3.0", "AceEvent-3.0")
+local addon = LibStub("AceAddon-3.0"):NewAddon(private.addon_name, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
 _G.AckisRecipeList = addon
 
 --[===[@alpha@
@@ -50,7 +50,6 @@ _G.ARL = addon
 --@end-alpha@]===]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
-local BFAC = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 local Toast = LibStub("LibToast-1.0")
 
 local debugger = _G.tekDebug and _G.tekDebug:GetFrame(private.addon_name)
@@ -95,51 +94,12 @@ Toast:Register("ARL_DebugToast", function(toast, ...)
 	toast:SetIconTexture([[Interface\HELPFRAME\HotIssueIcon]])
 end)
 
-do
-	local output = {}
-
-	function addon:DumpMembers(match)
-		table.wipe(output)
-		table.insert(output, "Addon Object members.\n")
-
-		local count = 0
-
-		for key, value in pairs(self) do
-			local val_type = type(value)
-
-			if not match or val_type == match then
-				table.insert(output, ("%s (%s)"):format(key, val_type))
-				count = count + 1
-			end
-		end
-		table.insert(output, ("\n%d found\n"):format(count))
-		self:DisplayTextDump(nil, nil, table.concat(output, "\n"))
-	end
-
-	function addon:DumpZones()
-		table.wipe(output)
-		table.insert(output, "private.ZONE_NAMES = {")
-
-		for index = 1, 100000 do
-			local zone_name = _G.GetMapNameByID(index)
-
-			if zone_name then
-				table.insert(output, ("[%d] = \"%s\","):format(index, zone_name:upper():gsub(" ", "_"):gsub("'", ""):gsub(":", ""):gsub("-", "_")))
-			end
-		end
-		table.insert(output, "}\n")
-		self:DisplayTextDump(nil, nil, table.concat(output, "\n"))
-	end
-end -- do
-
 -------------------------------------------------------------------------------
 -- Initialization functions
 -------------------------------------------------------------------------------
 local REQUIRED_LIBS = {
 	"AceLocale-3.0",
 	"LibBabble-Boss-3.0",
-	"LibBabble-Faction-3.0",
-	"LibBabble-Zone-3.0",
 	"LibQTip-1.0",
 	"LibToast-1.0"
 }
@@ -350,6 +310,20 @@ function addon:OnInitialize()
 					ramkahen = true,
 					earthenring = true,
 					therazane = true,
+					foresthozen = true,
+					goldenlotus = true,
+					cloudserpent = true,
+					pearlfinjinyu = true,
+					shadopan = true,
+					anglers = true,
+					augustcelestials = true,
+					brewmasters = true,
+					klaxxi = true,
+					lorewalkers = true,
+					tillers = true,
+					blackprince = true,
+					shangxiacademy = true,
+					pandacommon1 = true,
 				},
 				-------------------------------------------------------------------------------
 				-- Class Filters
@@ -366,6 +340,7 @@ function addon:OnInitialize()
 					shaman = true,
 					warlock = true,
 					warrior = true,
+					monk = true,
 				},
 			}
 		}
@@ -395,7 +370,7 @@ function addon:OnInitialize()
 	version = debug_version and "Devel" or (alpha_version and version .. "-Alpha") or version
 
 	self.version = version
-
+	self.is_development_version = debug_version
 	self:SetupOptions()
 
 	-- Register slash commands
@@ -488,7 +463,7 @@ function addon:OnEnable()
 		}
 
 		SpecialtyTable = {
-			[_G.GetSpellInfo(51306)] = EngineeringSpec,
+			[private.LOCALIZED_PROFESSION_NAMES.ENGINEERING] = EngineeringSpec,
 		}
 
 		for i in pairs(EngineeringSpec) do
@@ -590,7 +565,7 @@ function addon:CreateScanButton()
 		local prev_profession
 
 		if main_panel then
-			prev_profession = private.ORDERED_PROFESSIONS[main_panel.profession]
+			prev_profession = private.ORDERED_PROFESSIONS[main_panel.current_profession]
 		end
 		local shift_pressed = _G.IsShiftKeyDown()
 		local alt_pressed = _G.IsAltKeyDown()
@@ -700,18 +675,40 @@ end
 -------------------------------------------------------------------------------
 -- ARL Logic Functions
 -------------------------------------------------------------------------------
-function addon:InitializeProfession(profession)
-	if not profession then
-		addon:Debug("nil profession passed to InitializeProfession()")
-		return
-	end
-	local func = PROFESSION_INIT_FUNCS[profession]
+do
+	local function InitializeLookups()
+		addon:InitCustom()
+		addon:InitDiscovery()
+		addon:InitMob()
+		addon:InitQuest()
+		addon:InitReputation()
+		addon:InitTrainer()
+		addon:InitSeasons()
+		addon:InitVendor()
 
-	if func then
-		func(addon)
-		PROFESSION_INIT_FUNCS[profession] = nil
+		InitializeLookups = nil
 	end
-end
+
+	-- Returns true if a profession was initialized.
+	function addon:InitializeProfession(profession)
+		if not profession then
+			addon:Debug("nil profession passed to InitializeProfession()")
+			return false
+		end
+
+		if InitializeLookups then
+			InitializeLookups()
+		end
+		local func = PROFESSION_INIT_FUNCS[profession]
+
+		if func then
+			func(addon)
+			PROFESSION_INIT_FUNCS[profession] = nil
+			return true
+		end
+		return false
+	end
+end -- do-block
 
 do
 	-- Code snippet stolen from GearGuage by Torhal and butchered by Ackis
@@ -780,22 +777,6 @@ do
 	end
 end
 
---- Public API function to initialize all of the lookup lists - self-nils once run.
--- @name AckisRecipeList:InitializeLookups()
--- @usage if AckisRecipeList.InitializeLookups then AckisRecipeList:InitializeLookups() end
-function addon:InitializeLookups()
-	self:InitCustom()
-	self:InitDiscovery()
-	self:InitMob()
-	self:InitQuest()
-	self:InitReputation()
-	self:InitTrainer()
-	self:InitSeasons()
-	self:InitVendor()
-
-	self.InitializeLookups = nil
-end
-
 -------------------------------------------------------------------------------
 -- Recipe Scanning Functions
 -------------------------------------------------------------------------------
@@ -827,15 +808,7 @@ do
 			self:Print(L["OpenTradeSkillWindow"])
 			return
 		end
-
-		if _G.TradeSkillFrame and _G.TradeSkillFrame:IsVisible() then
-			-- Clear the search box focus so the scan will have correct results.
-			local search_box = _G.TradeSkillFrameSearchBox
-			search_box:SetText("")
-			_G.TradeSkillSearch_OnTextChanged(search_box)
-			search_box:ClearFocus()
-			search_box:GetScript("OnEditFocusLost")(search_box)
-		end
+		private.current_profession_specialty = nil
 
 		if profession_name == private.LOCALIZED_PROFESSION_NAMES.RUNEFORGING then
 			prof_level = _G.UnitLevel("player")
@@ -847,6 +820,15 @@ do
 		player:UpdateProfessions()
 
 		private.current_profession_scanlevel = prof_level
+
+		-- Clear the search box and its focus so the scan will have correct results.
+		if _G.TradeSkillFrame and _G.TradeSkillFrame:IsVisible() then
+			local search_box = _G.TradeSkillFrameSearchBox
+			search_box:ClearFocus()
+			search_box:GetScript("OnEditFocusLost")(search_box)
+			search_box:SetText("")
+			_G.TradeSkillSearch_OnTextChanged(search_box)
+		end
 
 		-- Make sure we're only updating a profession the character actually knows - this could be a scan from a tradeskill link.
 		local tradeskill_is_linked = _G.IsTradeSkillLinked() or _G.IsTradeSkillGuild()
@@ -861,27 +843,26 @@ do
 		for index = 1, #PROFESSION_BUTTONS do
 			local button = PROFESSION_BUTTONS[index]
 			local spell_offset = button:GetParent().spellOffset
+			local specialization_offset = button:GetParent().specializationOffset
 
 			if spell_offset then
-				specialtices_indices[insert_index] = button:GetID() + spell_offset
+				specialtices_indices[insert_index] = specialization_offset + spell_offset
 				insert_index = insert_index + 1
 			end
 		end
-		local specialty = SpecialtyTable[profession_name]
+		local profession_specialties = SpecialtyTable[profession_name]
 
-		for index, book_index in ipairs(specialtices_indices) do
-			local spell_name = _G.GetSpellBookItemName(book_index, "profession")
+		if profession_specialties then
+			for index, book_index in ipairs(specialtices_indices) do
+				local spell_name = _G.GetSpellBookItemName(book_index, _G.BOOKTYPE_PROFESSION)
 
-			if not spell_name then
-				private.current_profession_specialty = nil
-				break
-			elseif specialty and specialty[spell_name] then
-				private.current_profession_specialty = specialty[spell_name]
+				if not spell_name then
+					break
+				elseif profession_specialties[spell_name] then
+					private.current_profession_specialty = profession_specialties[spell_name]
+					break
+				end
 			end
-		end
-
-		if self.InitializeLookups then
-			self:InitializeLookups()
 		end
 		addon:InitializeProfession(profession_name)
 
@@ -924,7 +905,6 @@ do
 		end
 		local profession_recipes = private.profession_recipe_list[profession_name]
 		local recipes_found = 0
-		local SPELL_OVERWRITE_MAP = private.SPELL_OVERWRITE_MAP
 
 		for spell_id, recipe in pairs(profession_recipes) do
 			recipe:RemoveState("KNOWN")
@@ -937,29 +917,43 @@ do
 			local entry_name, entry_type = _G.GetTradeSkillInfo(skill_index)
 
 			if entry_type ~= "header" and entry_type ~= "subheader" then
-				local spell_string = _G.GetTradeSkillRecipeLink(skill_index):match("^|c%x%x%x%x%x%x%x%x|H%w+:(%d+)")
-				local spell_id = tonumber(spell_string)
+				local spell_id = tonumber(_G.GetTradeSkillRecipeLink(skill_index):match("^|c%x%x%x%x%x%x%x%x|H%w+:(%d+)"))
 				local recipe = profession_recipes[spell_id]
 
 				if recipe then
-					-- Mark the first rank of the spell as known if we know rank 2 for certain recipes.
-					-- This is only done for recipes which when you learn the higher rank, you lose the
-					-- ability to learn the lower rank.
+					local previous_rank_id = recipe:PreviousRankID()
 
-					-- If we have it in the mapping, set the lower rank spell to known
-					if SPELL_OVERWRITE_MAP[spell_id] then
-						local overwrite_recipe = profession_recipes[SPELL_OVERWRITE_MAP[spell_id]]
+					if previous_rank_id then
+						local previous_rank_recipe = profession_recipes[previous_rank_id]
 
-						if overwrite_recipe then
-							overwrite_recipe:SetAsKnownOrLinked(tradeskill_is_linked)
+						if previous_rank_recipe then
+							previous_rank_recipe:SetAsKnownOrLinked(tradeskill_is_linked)
 						else
-							self:Debug(entry_name .. " " .. SPELL_OVERWRITE_MAP[spell_id] .. L["MissingFromDB"])
+							self:Debug("%s (%d): %s", entry_name, previous_rank_id, L["MissingFromDB"])
 						end
 					end
 					recipe:SetAsKnownOrLinked(tradeskill_is_linked)
 					recipes_found = recipes_found + 1
 				else
-					self:Debug(entry_name .. " " .. spell_string .. L["MissingFromDB"])
+					--[===[@debug@
+					local profession_id
+					for name, profession_spell_id in pairs(private.PROFESSION_SPELL_IDS) do
+						if profession_name == _G.GetSpellInfo(profession_spell_id) then
+							profession_id = profession_spell_id
+							break
+						end
+					end
+					local F = private.FILTER_IDS
+
+					local recipe = addon:AddRecipe(spell_id, profession_id, _G.GetExpansionLevel() + 1, private.ITEM_QUALITIES.COMMON)
+					recipe:SetSkillLevels(0, 0, 0, 0, 0)
+					recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE)
+					addon:Printf("Added '%s (%d)' to %s. Do a profession dump.", entry_name, spell_id, profession_name)
+					--@end-debug@]===]
+
+					if not self.is_development_version then
+						self:Debug("%s (%d): %s", entry_name, spell_id, L["MissingFromDB"])
+					end
 				end
 			end
 		end
@@ -995,7 +989,8 @@ do
 		-- Everything is ready - display the GUI or dump the list to text.
 		-------------------------------------------------------------------------------
 		if textdump then
-			self:DisplayTextDump(profession_recipes, profession_name)
+			private.TextDump:AddLine(self:GetTextDump(profession_name))
+			private.TextDump:Display()
 		else
 			if private.InitializeFrame then
 				private.InitializeFrame()
@@ -1004,78 +999,6 @@ do
 		end
 	end
 end
-
--------------------------------------------------------------------------------
--- Text dumping functions
--------------------------------------------------------------------------------
-
---------------------------------------------------------------------------------
---- Creates a new frame with the contents of a text dump so you can copy and paste
--- Code borrowed from Antiarc (Chatter) with permission
--- @name AckisRecipeList:DisplayTextDump
--- @param RecipeDB The database (array) which you wish read data from.
--- @param profession Which profession are you displaying data for
--- @param text The text to be dumped
---------------------------------------------------------------------------------
-do
-	local copy_frame = _G.CreateFrame("Frame", "ARLCopyFrame", _G.UIParent)
-	copy_frame:SetBackdrop({
-		bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]],
-		edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
-		tile = true,
-		tileSize = 16,
-		edgeSize = 16,
-		insets = {
-			left = 3,
-			right = 3,
-			top = 5,
-			bottom = 3
-		}
-	})
-	copy_frame:SetBackdropColor(0, 0, 0, 1)
-	copy_frame:SetWidth(750)
-	copy_frame:SetHeight(400)
-	copy_frame:SetPoint("CENTER", _G.UIParent, "CENTER")
-	copy_frame:SetFrameStrata("DIALOG")
-
-	table.insert(_G.UISpecialFrames, "ARLCopyFrame")
-
-	local scrollArea = _G.CreateFrame("ScrollFrame", "ARLCopyScroll", copy_frame, "UIPanelScrollFrameTemplate")
-	scrollArea:SetPoint("TOPLEFT", copy_frame, "TOPLEFT", 8, -30)
-	scrollArea:SetPoint("BOTTOMRIGHT", copy_frame, "BOTTOMRIGHT", -30, 8)
-
-	local edit_box = _G.CreateFrame("EditBox", nil, copy_frame)
-	edit_box:SetMultiLine(true)
-	edit_box:SetMaxLetters(0)
-	edit_box:EnableMouse(true)
-	edit_box:SetAutoFocus(true)
-	edit_box:SetFontObject("ChatFontNormal")
-	edit_box:SetWidth(650)
-	edit_box:SetHeight(270)
-	edit_box:SetScript("OnEscapePressed", function()
-		copy_frame:Hide()
-	end)
-	edit_box:HighlightText(0)
-
-	scrollArea:SetScrollChild(edit_box)
-
-	local close = _G.CreateFrame("Button", nil, copy_frame, "UIPanelCloseButton")
-	close:SetPoint("TOPRIGHT", copy_frame, "TOPRIGHT")
-
-	copy_frame:Hide()
-
-	function addon:DisplayTextDump(recipe_list, profession, text)
-		local display_text = (not recipe_list and not profession) and text or self:GetTextDump(profession)
-
-		if display_text == "" then
-			return
-		end
-		edit_box:SetText(display_text)
-		edit_box:HighlightText(0)
-		edit_box:SetCursorPosition(1)
-		copy_frame:Show()
-	end
-end -- do
 
 do
 	-------------------------------------------------------------------------------
@@ -1087,6 +1010,7 @@ do
 	local GetFilterFlagNames
 	do
 		local LC = _G.LOCALIZED_CLASS_NAMES_MALE
+		local FAC = private.LOCALIZED_FACTION_STRINGS
 		local FILTER_FLAG_NAMES
 
 		function GetFilterFlagNames()
@@ -1099,8 +1023,8 @@ do
 				-------------------------------------------------------------------------------
 				-- Common flags.
 				-------------------------------------------------------------------------------
-				ALLIANCE = BFAC["Alliance"],
-				HORDE = BFAC["Horde"],
+				ALLIANCE = FAC["Alliance"],
+				HORDE = FAC["Horde"],
 				TRAINER = L["Trainer"],
 				VENDOR = L["Vendor"],
 				INSTANCE = _G.INSTANCE,
@@ -1136,48 +1060,74 @@ do
 				ROGUE = LC["ROGUE"],
 				WARLOCK = LC["WARLOCK"],
 				WARRIOR = LC["WARRIOR"],
+				MONK = LC["MONK"],
 				-------------------------------------------------------------------------------
 				-- Reputation flags.
 				-------------------------------------------------------------------------------
-				ARGENTDAWN = BFAC["Argent Dawn"],
-				CENARION_CIRCLE = BFAC["Cenarion Circle"],
-				THORIUM_BROTHERHOOD = BFAC["Thorium Brotherhood"],
-				TIMBERMAW_HOLD = BFAC["Timbermaw Hold"],
-				ZANDALAR = BFAC["Zandalar Tribe"],
-				ALDOR = BFAC["The Aldor"],
-				ASHTONGUE = BFAC["Ashtongue Deathsworn"],
-				CENARION_EXPEDITION = BFAC["Cenarion Expedition"],
-				HELLFIRE = (is_alliance and BFAC["Honor Hold"] or BFAC["Thrallmar"]),
-				CONSORTIUM = BFAC["The Consortium"],
-				KOT = BFAC["Keepers of Time"],
-				LOWERCITY = BFAC["Lower City"],
-				NAGRAND = (is_alliance and BFAC["Kurenai"] or BFAC["The Mag'har"]),
-				SCALE_SANDS = BFAC["The Scale of the Sands"],
-				SCRYER = BFAC["The Scryers"],
-				SHATAR = BFAC["The Sha'tar"],
-				SHATTEREDSUN = BFAC["Shattered Sun Offensive"],
-				SPOREGGAR = BFAC["Sporeggar"],
-				VIOLETEYE = BFAC["The Violet Eye"],
-				ARGENTCRUSADE = BFAC["Argent Crusade"],
-				FRENZYHEART = BFAC["Frenzyheart Tribe"],
-				EBONBLADE = BFAC["Knights of the Ebon Blade"],
-				KIRINTOR = BFAC["Kirin Tor"],
-				HODIR = BFAC["The Sons of Hodir"],
-				KALUAK = BFAC["The Kalu'ak"],
-				ORACLES = BFAC["The Oracles"],
-				WYRMREST = BFAC["The Wyrmrest Accord"],
-				WRATHCOMMON1 = (is_alliance and BFAC["The Silver Covenant"] or BFAC["The Sunreavers"]),
-				WRATHCOMMON2 = (is_alliance and BFAC["Explorers' League"] or BFAC["The Hand of Vengeance"]),
-				WRATHCOMMON3 = (is_alliance and BFAC["Valiance Expedition"] or BFAC["Warsong Offensive"]),
-				WRATHCOMMON4 = (is_alliance and BFAC["The Frostborn"] or BFAC["The Taunka"]),
-				WRATHCOMMON5 = (is_alliance and BFAC["Alliance Vanguard"] or BFAC["Horde Expedition"]),
-				ASHEN_VERDICT = BFAC["The Ashen Verdict"],
-				CATACOMMON1 = (is_alliance and BFAC["Wildhammer Clan"] or BFAC["Dragonmaw Clan"]),
-				CATACOMMON2 = (is_alliance and BFAC["Baradin's Wardens"] or BFAC["Hellscream's Reach"]),
-				GUARDIANS = BFAC["Guardians of Hyjal"],
-				RAMKAHEN = BFAC["Ramkahen"],
-				EARTHEN_RING = BFAC["The Earthen Ring"],
-				THERAZANE = BFAC["Therazane"],
+				ARGENTDAWN = FAC["Argent Dawn"],
+				CENARION_CIRCLE = FAC["Cenarion Circle"],
+				THORIUM_BROTHERHOOD = FAC["Thorium Brotherhood"],
+				TIMBERMAW_HOLD = FAC["Timbermaw Hold"],
+				ZANDALAR = FAC["Zandalar Tribe"],
+				ALDOR = FAC["The Aldor"],
+				ASHTONGUE = FAC["Ashtongue Deathsworn"],
+				CENARION_EXPEDITION = FAC["Cenarion Expedition"],
+				HELLFIRE = (is_alliance and FAC["Honor Hold"] or FAC["Thrallmar"]),
+				CONSORTIUM = FAC["The Consortium"],
+				KOT = FAC["Keepers of Time"],
+				LOWERCITY = FAC["Lower City"],
+				NAGRAND = (is_alliance and FAC["Kurenai"] or FAC["The Mag'har"]),
+				SCALE_SANDS = FAC["The Scale of the Sands"],
+				SCRYER = FAC["The Scryers"],
+				SHATAR = FAC["The Sha'tar"],
+				SHATTEREDSUN = FAC["Shattered Sun Offensive"],
+				SPOREGGAR = FAC["Sporeggar"],
+				VIOLETEYE = FAC["The Violet Eye"],
+				ARGENTCRUSADE = FAC["Argent Crusade"],
+				FRENZYHEART = FAC["Frenzyheart Tribe"],
+				EBONBLADE = FAC["Knights of the Ebon Blade"],
+				KIRINTOR = FAC["Kirin Tor"],
+				HODIR = FAC["The Sons of Hodir"],
+				KALUAK = FAC["The Kalu'ak"],
+				ORACLES = FAC["The Oracles"],
+				WYRMREST = FAC["The Wyrmrest Accord"],
+				WRATHCOMMON1 = (is_alliance and FAC["The Silver Covenant"] or FAC["The Sunreavers"]),
+				WRATHCOMMON2 = (is_alliance and FAC["Explorers' League"] or FAC["The Hand of Vengeance"]),
+				WRATHCOMMON3 = (is_alliance and FAC["Valiance Expedition"] or FAC["Warsong Offensive"]),
+				WRATHCOMMON4 = (is_alliance and FAC["The Frostborn"] or FAC["The Taunka"]),
+				WRATHCOMMON5 = (is_alliance and FAC["Alliance Vanguard"] or FAC["Horde Expedition"]),
+				ASHEN_VERDICT = FAC["The Ashen Verdict"],
+				CATACOMMON1 = (is_alliance and FAC["Wildhammer Clan"] or FAC["Dragonmaw Clan"]),
+				CATACOMMON2 = (is_alliance and FAC["Baradin's Wardens"] or FAC["Hellscream's Reach"]),
+				GUARDIANS = FAC["Guardians of Hyjal"],
+				RAMKAHEN = FAC["Ramkahen"],
+				EARTHEN_RING = FAC["The Earthen Ring"],
+				THERAZANE = FAC["Therazane"],
+--[[				SHANGXIACADEMY 
+				FORESTHOZEN
+				PEARLFINJINYU
+				GOLDENLOTUS
+				SHADOPAN
+				CLOUDSERPENT
+				TILLERS
+				JOGU_THE_DRUNK
+				ELLA
+				OLD_HILLPAW
+				CHEE_CHEE
+				SHO
+				HAOHAN_MUDCLAW
+				TINA_MUDCLAW
+				GINA_MUDCLAW
+				FISH_FELLREED
+				FARMER_FUNG
+				ANGLERS
+				KLAXX,
+				AUGUSTCELESTIALS
+				LOREWALKERS
+				BREWMASTERS
+				NAT_PAGLE
+				BLACKPRINCE]]--
+				TUSHUI_HUOJIN =	isAlliance and FAC["Tushui Pandaren"]	or FAC["Huojin Pandaren"]
 			}
 			return FILTER_FLAG_NAMES
 		end

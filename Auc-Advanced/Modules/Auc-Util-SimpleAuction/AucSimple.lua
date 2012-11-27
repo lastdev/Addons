@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Basic Auction Posting
-	Version: 5.15.5348 (LikeableLyrebird)
-	Revision: $Id: AucSimple.lua 5347 2012-09-06 06:26:15Z Esamynn $
+	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: AucSimple.lua 5362 2012-09-21 17:59:48Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a simple dialog for
@@ -34,34 +34,20 @@ if not AucAdvanced then return end
 local libType, libName = "Util", "SimpleAuction"
 local lib,parent,private = AucAdvanced.NewModule(libType, libName)
 if not lib then return end
-local print,decode,_,_,replicate,empty,get,set,default,debugPrint,fill = AucAdvanced.GetModuleLocals()
+local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill = AucAdvanced.GetModuleLocals()
+local Resources = AucAdvanced.Resources
+local GetSigFromLink = AucAdvanced.API.GetSigFromLink
+local GetMarketValue = AucAdvanced.API.GetMarketValue
 
 local data, _
 local ownResults = {}
 local ownCounts = {}
 
-function lib.Processor(callbackType, ...)
-	if (callbackType == "tooltip") then
-		lib.ProcessTooltip(...)
-	elseif (callbackType == "auctionui") then
-        private.CreateFrames(...)
-	elseif (callbackType == "config") then
-		private.SetupConfigGui(...)
-	elseif (callbackType == "configchanged") then
-		private.UpdateConfig(...)
-	elseif (callbackType == "inventory") then
-	elseif (callbackType == "scanstats") then
-		private.clearcache()
-		private.delayedUpdatePricing = true -- Note: calling private.UpdatePricing is unsafe inside "scanstats"
-	elseif (callbackType == "postresult") then
-		private.clearcache()
-	end
-end
-
 lib.Processors = {}
-function lib.Processors.tooltip(callbackType, ...)
+function lib.Processors.itemtooltip(callbackType, ...)
 	lib.ProcessTooltip(...)
 end
+lib.Processors.battlepettooltip = lib.Processors.itemtooltip
 
 function lib.Processors.auctionui(callbackType, ...)
 	private.CreateFrames(...)
@@ -83,6 +69,8 @@ end
 function lib.Processors.postresult(callbackType, ...)
 	private.clearcache()
 end
+lib.Processors.auctionclose = lib.Processors.postresult
+lib.Processors.serverkey = lib.Processors.postresult
 
 local function whitespace(length)
 	local spaces = ""
@@ -92,18 +80,18 @@ local function whitespace(length)
 	return spaces
 end
 
-function lib.ProcessTooltip(tooltip, name, link, quality, quantity, cost, additional)
+function lib.ProcessTooltip(tooltip, link, serverKey, quantity, decoded, additional, order)
 	if not get("util.simpleauc.tooltip") then return end
-	local realm = AucAdvanced.GetFaction()
-	local id = private.SigFromLink(link)
-	local settingstr = get("util.simpleauc."..realm.."."..id)
+	if serverKey ~= Resources.ServerKeyCurrent then return end -- only support current serverKey - consider handling other keys for future
+	local id = GetSigFromLink(link)
+	local settingstr = get("util.simpleauc."..serverKey.."."..id)
 	local market, seen, fixbuy, fixbid, stack
 	local imgseen, image, matchBid, matchBuy, lowBid, lowBuy, aSeen, aveBuy = private.GetItems(link)
 	local reason = "Market"
 
 	tooltip:SetColor(0.4, 1.0, 0.9)
 
-	market, seen = AucAdvanced.API.GetMarketValue(link)
+	market, seen = GetMarketValue(link)
 	if (not market) or (market <= 0) or (not (seen > 5 or aSeen < 3)) then
 		market = aveBuy
 		reason = "Current"
@@ -128,11 +116,11 @@ function lib.ProcessTooltip(tooltip, name, link, quality, quantity, cost, additi
 		coinsBuyEa = private.coins(market)
 	end
 	if quantity == 1 then
-		local text = string.format("%s: %s bid/%s buyout", libName, coinsBid, coinsBuy)
+		local text = format("%s: %s bid/%s buyout", libName, coinsBid, coinsBuy)
 		tooltip:AddLine(text)
 	else
-		local text = string.format("%s x%d: %s bid/%s buyout", libName, quantity, coinsBid, coinsBuy)
-		local textea =  string.format("%s(Or individually: %s/%s)", whitespace(5), coinsBidEa, coinsBuyEa)
+		local text = format("%s x%d: %s bid/%s buyout", libName, quantity, coinsBid, coinsBuy)
+		local textea =  format("%s(Or individually: %s/%s)", whitespace(5), coinsBidEa, coinsBuyEa)
 		tooltip:AddLine(text)
 		tooltip:AddLine(textea, 0.3, 0.8, 0.7)
 	end
@@ -150,10 +138,10 @@ function lib.ProcessTooltip(tooltip, name, link, quality, quantity, cost, additi
 			coinsBuy = private.coins(fixbuy*quantity)
 		end
 		if quantity == 1 then
-			local text = string.format("%sFixed: %s bid/%s buyout", whitespace(12), coinsBid, coinsBuy)
+			local text = format("%sFixed: %s bid/%s buyout", whitespace(12), coinsBid, coinsBuy)
 			tooltip:AddLine(text)
 		else
-			local text = string.format("%sFixed x%d: %s bid/%s buyout", whitespace(12), quantity, coinsBid, coinsBuy)
+			local text = format("%sFixed x%d: %s bid/%s buyout", whitespace(12), quantity, coinsBid, coinsBuy)
 			tooltip:AddLine(text)
 		end
 	end
@@ -165,10 +153,10 @@ function lib.ProcessTooltip(tooltip, name, link, quality, quantity, cost, additi
 				coinsBuy = private.coins(lowBuy*quantity)
 			end
 			if quantity == 1 then
-				local text = string.format("%sUndercut: %s bid/%s buyout", whitespace(8), coinsBid, coinsBuy)
+				local text = format("%sUndercut: %s bid/%s buyout", whitespace(8), coinsBid, coinsBuy)
 				tooltip:AddLine(text)
 			else
-				local text = string.format("%sUndercut x%d: %s bid/%s buyout", whitespace(8), quantity, coinsBid, coinsBuy)
+				local text = format("%sUndercut x%d: %s bid/%s buyout", whitespace(8), quantity, coinsBid, coinsBuy)
 				tooltip:AddLine(text)
 			end
 		else
@@ -286,4 +274,4 @@ function private.SetupConfigGui(gui)
 	gui:AddControl(id, "Checkbox",     0, 2, "util.simpleauc.scanbutton.disable.wowecon", "Except if WowEcon is loaded")
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SimpleAuction/AucSimple.lua $", "$Rev: 5347 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SimpleAuction/AucSimple.lua $", "$Rev: 5362 $")

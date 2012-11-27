@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Stat-Sales module
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: BeanCount.lua 5305 2012-07-05 18:38:40Z brykrys $
 	URL: http://auctioneeraddon.com/
 

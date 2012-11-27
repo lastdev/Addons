@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - ScanData
-	Version: 5.15.5348 (LikeableLyrebird)
-	Revision: $Id: ScanData.lua 5318 2012-08-06 10:15:53Z brykrys $
+	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: ScanData.lua 5364 2012-09-24 09:32:39Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -128,23 +128,35 @@ function lib.Colored(doIt, counts, alt, shorten)
 	return text
 end
 
-local query3 = {} -- 3 fields itemId, suffix & factor
+local query = {} -- resuable table
 function lib.GetImageCounts(hyperlink, maxPrice, items, serverKey)
 	if type(hyperlink) == "number" then
-		query3.itemId = hyperlink
-		query3.suffix = 0
-		query3.factor = 0
+		query.itemId = hyperlink
+		query.suffix = 0
+		query.factor = 0
 	else
-		local iType, iID, iSuffix, iFactor = decode(hyperlink)
-		if iType == "item" then
-			query3.itemId = iID
-			query3.suffix = iSuffix
-			query3.factor = iFactor
+		local linkType, id, suffix, factor = decode(hyperlink)
+		if linkType == "item" then
+			query.itemId = id
+			query.suffix = suffix
+			query.factor = factor
+			query.speciesID = nil
+			query.quality = nil
+			query.minItemLevel = nil
+			query.maxItemLevel = nil
+		elseif linkType == "battlepet" then
+			query.speciesID = id
+			query.quality = factor
+			query.minItemLevel = suffix
+			query.maxItemLevel = suffix
+			query.itemId = 82800
+			query.suffix = nil
+			query.factor = nil
 		else
 			return
 		end
 	end
-	local image = QueryImage(query3, serverKey)
+	local image = QueryImage(query, serverKey)
 
 	local totalBid, totalBuy = 0, 0
 
@@ -181,10 +193,82 @@ function lib.GetImageCounts(hyperlink, maxPrice, items, serverKey)
 end
 
 local query1 = {} -- only 1 field itemId
-function lib.GetDistribution(hyperlink)
+function private.GetPetDistribution(hyperlink, serverKey, iSpeciesId, iLevel, iQuality)
+	-- in future it may be possible to merge this function back into GetDistribution
+	iSpeciesId = tostring(iSpeciesId) -- we're going to be comparing this to strings
+	local sig = serverKey..iSpeciesId.."^"..iLevel.."^"..iQuality -- we're sharing a cache with items, so use different dividers
+	if private.distributionCache[sig] then return unpack(private.distributionCache[sig]) end
+
+	local exact, suffix, base, myColors = 0,0,0,{}
+	for k,v in pairs(colorDist) do
+		myColors[k] = {}
+		for c,n in pairs(v) do
+			myColors[k][c] = 0
+		end
+	end
+
+	query1.itemId = 82800
+	local image = QueryImage(query1, serverKey)
+	local sigTemplate = serverKey..iSpeciesId.."^%d^%d" -- different dividers than for item sigs
+	for i=1, #image do
+		local item = image[i]
+		local vLink = item[Const.LINK]
+		local _, vSpeciesId = strsplit(":", vLink)
+		if vSpeciesId == iSpeciesId then
+			local vLevel = item[Const.ILEVEL]
+			local vQuality = item[Const.QUALITY]
+			-- Pet Cages are not stackable so count is always 1
+
+			local vColor
+			if (PriceCalcLevel) then
+				local _
+				local vBid = item[Const.PRICE]
+				local vBuy = item[Const.BUYOUT]
+				local vSig = sigTemplate:format(vLevel, vQuality)
+				_,_,_,_,_, vColor, private.worthCache[vSig] = PriceCalcLevel(vLink, 1, vBid, vBuy, private.worthCache[vSig], serverKey)
+			end
+
+			if (vQuality == iQuality) then
+				if (vLevel == iLevel) then
+					exact = exact + 1
+					if (vColor) then
+						myColors.exact[vColor] = myColors.exact[vColor] + 1
+					end
+				else
+					suffix = suffix + 1
+					if (vColor) then
+						-- keeping this as .suffix, even though it actually represents a match in quality
+						myColors.suffix[vColor] = myColors.suffix[vColor] + 1
+					end
+				end
+			else
+				base = base + 1
+				if (vColor) then
+					myColors.base[vColor] = myColors.base[vColor] + 1
+				end
+			end
+			if (vColor) then
+				myColors.all[vColor] = myColors.all[vColor] + 1
+				-- Set up colours per stack size as well
+				-- todo: Pet Cages don't stack, do we really need to do this? kept for now as cloned from GetDistribution
+				if not myColors.stack[1] then myColors.stack[1] =  { red=0, orange=0, yellow=0, green=0, blue=0 } end
+				myColors.stack[1][vColor] = myColors.stack[1][vColor] + 1
+			end
+		end
+	end
+
+	private.distributionCache[sig] = {exact, suffix, base, myColors}
+	return exact, suffix, base, myColors
+end
+function lib.GetDistribution(hyperlink, serverKey)
+	serverKey = serverKey or Resources.ServerKeyCurrent
 	local iType, iID, iSuffix, iFactor = decode(hyperlink)
-	if iType ~= "item" then return end
-	local sig = strjoin(":", iID, iSuffix, iFactor)
+	if iType == "battlepet" then
+		return private.GetPetDistribution(hyperlink, serverKey, iID, iSuffix, iFactor)
+	elseif iType ~= "item" then
+		return
+	end
+	local sig = serverKey..iID..":"..iSuffix..":"..iFactor
 	if private.distributionCache[sig] then return unpack(private.distributionCache[sig]) end
 
 	local exact, suffix, base, myColors = 0,0,0,{}
@@ -196,8 +280,8 @@ function lib.GetDistribution(hyperlink)
 	end
 
 	query1.itemId = iID
-	local image = QueryImage(query1)
-	local sigTemplate = iID..":%d:%d"
+	local image = QueryImage(query1, serverKey)
+	local sigTemplate = serverKey..iID..":%d:%d"
 	for i=1, #image do
 		local item = image[i]
 		local vSuffix = item[Const.SUFFIX]
@@ -211,7 +295,7 @@ function lib.GetDistribution(hyperlink)
 			local vBid = item[Const.PRICE]
 			local vBuy = item[Const.BUYOUT]
 			local vSig = sigTemplate:format(vSuffix, vFactor)
-			_,_,_,_,_, vColor, private.worthCache[vSig] = PriceCalcLevel(vLink, vCount, vBid, vBuy, private.worthCache[vSig])
+			_,_,_,_,_, vColor, private.worthCache[vSig] = PriceCalcLevel(vLink, vCount, vBid, vBuy, private.worthCache[vSig], serverKey)
 		end
 
 		if (vSuffix == iSuffix) then
@@ -244,13 +328,14 @@ function lib.GetDistribution(hyperlink)
 	return exact, suffix, base, myColors
 end
 
-function lib.Processors.tooltip(callbackType, tooltip, name, hyperlink, quality, quantity, cost)
+function lib.Processors.itemtooltip(callbackType, tooltip, hyperlink, serverKey, quantity, decoded, additional, order)
 	if not get("scandata.tooltip.display") then return  end
 
 	tooltip:SetColor(0.3, 0.9, 0.8)
 
 	local doColor = true
-	local exact, suffix, base, dist = lib.GetDistribution(hyperlink)
+	local exact, suffix, base, dist = lib.GetDistribution(hyperlink, serverKey)
+	if not exact then return end
 
 	if base+suffix+exact <= 0 then
 		tooltip:AddLine("No matches in image.")
@@ -280,6 +365,7 @@ function lib.Processors.tooltip(callbackType, tooltip, name, hyperlink, quality,
 		end
 	end
 end
+lib.Processors.battlepettooltip = lib.Processors.itemtooltip
 
 --[[ DATABASE FUNCTIONS ]]--
 function lib.GetAddOnInfo()
@@ -560,4 +646,4 @@ if Resources.PlayerFaction == "Neutral" then
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-ScanData/ScanData.lua $", "$Rev: 5318 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-ScanData/ScanData.lua $", "$Rev: 5364 $")

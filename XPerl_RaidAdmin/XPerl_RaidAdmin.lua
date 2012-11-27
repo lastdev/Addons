@@ -2,12 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 644 $")
-
-local isMOP = select(4, _G.GetBuildInfo()) >= 50000
-local GetNumRaidMembers = isMOP and GetNumGroupMembers or GetNumRaidMembers
-local GetNumPartyMembers = isMOP and GetNumSubgroupMembers or GetNumPartyMembers
-
+XPerl_SetModuleRevision("$Revision: 736 $")
 
 local SavedRoster = nil
 local XswapCount = 0
@@ -66,7 +61,7 @@ function XPerl_AdminOnLoad(self)
 	SLASH_XPERLRAIDADMIN3 = "/xpad"
 
 	self:RegisterEvent("VARIABLES_LOADED")
-	self:RegisterEvent("RAID_ROSTER_UPDATE")
+	self:RegisterEvent("GROUP_ROSTER_UPDATE")
 	self:SetBackdropBorderColor(0.5, 0.5, 0.5, 1)
 	self:SetBackdropColor(0, 0, 0, 1)
 
@@ -138,9 +133,9 @@ end
 -- XPerl_AdminCheckMyRank
 function XPerl_AdminCheckMyRank()
 	if (XPerl_Admin.AutoHideShow == 1) then
-		if (GetNumRaidMembers() > 0) then
+		if (IsInRaid()) then
 			local me = UnitName("player")
-			for i = 1,GetNumRaidMembers() do
+			for i = 1,GetNumGroupMembers() do
 				local name, rank = GetRaidRosterInfo(i)
 				if (name == me) then
 					if (rank > 0) then
@@ -177,7 +172,7 @@ function XPerl_SaveRoster(saveName)
 
 	local Roster = {}
 
-	for i = 1,GetNumRaidMembers() do
+	for i = 1,GetNumGroupMembers() do
 		local name, rank, subgroup, level, class, fileName, zone, online, isDead = GetRaidRosterInfo(i)
 		Roster[name] = {group = subgroup, class = fileName}
 	end
@@ -202,7 +197,7 @@ local function LoadRoster()
 	local FreeFloating = {}
 
 	-- Store the current raid roster, and a list of players in the raid, but not in the saved roster
-	for i = 1,GetNumRaidMembers() do
+	for i = 1,GetNumGroupMembers() do
 		local name, rank, subgroup, level, class, fileName, zone, online, isDead = GetRaidRosterInfo(i)
 		CurrentRoster[name] = {index = i, group = subgroup, class = fileName}
 
@@ -356,7 +351,7 @@ end
 function XPerl_AdminOnEvent(self, event)
 	XPerl_AdminCheckMyRank()
 
-	if (event == "RAID_ROSTER_UPDATE") then
+	if (event == "GROUP_ROSTER_UPDATE") then
                 XPerl_AdminFrame_Controls:Details()
 
 		if (WaitingForRoster) then
@@ -444,7 +439,7 @@ function XPerl_Admin_CountDifferences(rosterName)
 
 	SavedRoster = XPerl_Admin.SavedRosters[rosterName]
 	if (SavedRoster) then
-		for i = 1,GetNumRaidMembers() do
+		for i = 1,GetNumGroupMembers() do
 			local name, rank, subgroup = GetRaidRosterInfo(i)
 
 			if (SavedRoster[name]) then
@@ -536,7 +531,7 @@ function XPerl_Admin_ControlsOnLoad(self)
 	                	if (name == find) then
 	                	        f:LockHighlight()
 	                	        XPerl_AdminFrame.Valid = true
-	                	        if (IsRaidOfficer() or IsRaidLeader()) then
+	                	        if (UnitIsGroupAssistant("player") or UnitIsGroupLeader("player")) then
 	                	                XPerl_AdminFrame_Controls_LoadRoster:Enable()
 	                	        end
 	                	        XPerl_AdminFrame_Controls_DeleteRoster:Enable()

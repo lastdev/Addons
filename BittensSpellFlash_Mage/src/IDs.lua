@@ -10,6 +10,7 @@ a.SpellIDs = {
 	["Arcane Missiles!"] = 79683,
 	["Arcane Power"] = 12042,
 	["Arcane Brilliance"] = 1459,
+	["Brain Freeze"] = 57761,
 	["Brilliant Mana Gem"] = 81901,
 	["Dalaran Brilliance"] = 61316,
 	["Combustion"] = 11129,
@@ -17,10 +18,18 @@ a.SpellIDs = {
 	["Conjure Mana Gem"] = 759, -- also 119316, when glyphed
 	["Counterspell"] = 2139,
 	["Evocation"] = 12051,
+	["Fingers of Frost"] = 44544,
 	["Fireball"] = 133,
+	["Freeze"] = 33395,
+	["Frost Armor"] = 7302,
 	["Frost Bomb"] = 112948,
+	["Frostbolt"] = 116,
 	["Frostfire Bolt"] = 44614,
+	["Frozen Orb"] = 84714,
 	["Heating Up"] = 48107,
+	["Ice Lance"] = 30455,
+	["Icy Veins"] = 131078,
+	["Invoker's Energy"] = 116257,
 	["Ignite"] = 12654,
 	["Inferno Blast"] = 108853,
 	["Living Bomb"] = 44457,
@@ -35,6 +44,7 @@ a.SpellIDs = {
 	["Rune of Power"] = 116011,
 	["Scorch"] = 2948,
 	["Spellsteal"] = 30449,
+	["Summon Water Elemental"] = 31687,
 	
 	-- Items
 	["Mana Gem"] = 36799,
@@ -45,12 +55,13 @@ a.SpellIDs = {
 }
 
 a.TalentIDs = {
-	
+	["Invocation"] = 114003,
 }
 
 a.GlyphIDs = {
 	["Mana Gem"] = 56984,
 	["Frostfire Bolt"] = 61205,
+	["Icy Veins"] = 56364,
 }
 
 a.EquipmentSets = {

@@ -1,8 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 <!--
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.2 (<%codename%>)
-	Revision: $Id: GatherMapNotes.xml 894 2010-12-02 22:46:33Z Esamynn $
+	Version: 4.0.6 (<%codename%>)
+	Revision: $Id: GatherMapNotes.xml 1024 2012-09-26 02:53:04Z Esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 -->
-	<Script>Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherMapNotes.xml $", "$Rev: 894 $")</Script>
+	<Script>Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherMapNotes.xml $", "$Rev: 1024 $")</Script>
 	<Script file = "GatherMapNotes.lua"/>
 	
 	<!-- World Map Display Templates -->
@@ -51,6 +51,7 @@
 		</Anchors>
 		<Scripts>
 			<OnLoad>
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 				self:SetFrameLevel(self:GetParent():GetFrameLevel() + 1)
 			</OnLoad>
 			<OnEnter>
@@ -59,6 +60,12 @@
 			<OnLeave>
 				Gatherer.Tooltip.HideTooltips()
 			</OnLeave>
+			<OnMouseUp>
+				local func = WorldMapButton:GetScript("OnMouseUp")
+				if ( func ) then
+					func(WorldMapButton, button)
+				end
+			</OnMouseUp>
 		</Scripts>
 		<Layers>
 			<Layer level="ARTWORK">

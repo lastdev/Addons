@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 local Riplimb	= EJ_GetSectionInfo(2581)
 local Rageface	= EJ_GetSectionInfo(2583)
 
-mod:SetRevision(("$Revision: 7664 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(53691)
 mod:SetModelID(38448)
 mod:SetZone()
@@ -113,13 +113,38 @@ function mod:CrystalTrapTarget(targetname)
 	end
 end
 
+local function getBossuId()
+	local uId
+	if UnitExists("boss1") or UnitExists("boss2") or UnitExists("boss3") then
+		for i = 1, 3 do
+			if UnitName("boss"..i) == L.name then
+				uId = "boss"..i
+				break
+			end
+		end
+	else
+		for i = 1, DBM:GetGroupMembers() do
+			if UnitName("raid"..i.."target") == L.name and not UnitIsPlayer("raid"..i.."target") then
+				uId = "raid"..i.."target"
+				break
+			end			
+		end
+	end
+	return uId
+end
+
 local function isTank(unit)
 	-- 1. check blizzard tanks first
 	-- 2. check blizzard roles second
+	-- 3. check shannox's highest threat target
 	if GetPartyAssignment("MAINTANK", unit, 1) then
 		return true
 	end
 	if UnitGroupRolesAssigned(unit) == "TANK" then
+		return true
+	end
+	local uId = getBossuId()
+	if uId and UnitExists(uId.."target") and UnitDetailedThreatSituation(unit, uId) then
 		return true
 	end
 	return false

@@ -1,5 +1,5 @@
 local AddonName, a = ...
-if a.BuildFail(40000, 50000) then return end
+if a.BuildFail(50000) then return end
 local L = a.Localize
 local s = SpellFlashAddon
 
@@ -10,11 +10,11 @@ config.CheckButtonOptions = {
 		ConfigKey = "assassination_off",
 		Label = L["Flash Assassination"],
 	},
-	LeftCheckButton2 = {
-		DefaultChecked = true,
-		ConfigKey = "combat_off",
-		Label = L["Flash Combat"],
-	},
+--	LeftCheckButton2 = {
+--		DefaultChecked = true,
+--		ConfigKey = "combat_off",
+--		Label = L["Flash Combat"],
+--	},
 	LeftCheckButton3 = {
 		DefaultChecked = true,
 		ConfigKey = "sub_off",

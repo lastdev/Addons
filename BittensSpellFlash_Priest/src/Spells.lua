@@ -153,8 +153,7 @@ c.AddSpell("Devouring Plague", "to Prevent Cap", {
 
 c.AddSpell("Mind Blast", nil, {
 	Override = function()
-		return s.SpellCooldown(s.SpellName(c.GetID("Mind Blast"))) 
-				<= c.GetBusyTime()
+		return c.GetCooldown("Mind Blast") == 0
 			and not c.IsCasting("Mind Blast")
 	end
 })
@@ -171,6 +170,8 @@ c.ManageDotRefresh("Shadow Word: Pain", 3)
 c.AddSpell("Shadow Word: Death", nil, {
 	Override = function(z)
 		return s.HealthPercent() < 20
+			and c.GetCooldown("Shadow Word: Death") == 0
+			and not c.IsCasting("Shadow Word: Death")
 	end
 })
 
@@ -185,13 +186,13 @@ c.ManageDotRefresh("Vampiric Touch", 3)
 
 c.AddOptionalSpell("Shadowfiend", nil, {
 	Override = function()
-		return c.GetCooldown("Shadowfiend") <= c.GetBusyTime()
+		return c.GetCooldown("Shadowfiend") == 0
 	end
 })
 
 c.AddOptionalSpell("Mindbender", nil, {
 	Override = function()
-		return c.GetCooldown("Mindbender") <= c.GetBusyTime()
+		return c.GetCooldown("Mindbender") == 0
 	end
 })
 

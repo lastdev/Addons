@@ -1,6 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: EnxAucUtil.lua 5278 2012-03-05 13:09:29Z brykrys $
 	URL: http://enchantrix.org/
 

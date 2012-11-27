@@ -227,7 +227,7 @@ function ns:ShowCharInfo(view)
 	if view == VIEW_BAGS then
 		addon:ClearScrollFrame(_G[ "AltoholicFrameContainersScrollFrame" ], "AltoholicFrameContainersEntry", 7, 41)
 		
-		addon.Containers:SetView((addon:GetOption("CharacterTabViewBagsAllInOne") == 1))
+		addon.Containers:SetView((addon:GetOption("UI.Tabs.Characters.ViewBagsAllInOne") == 1))
 		AltoholicFrameContainers:Show()
 		addon.Containers:Update()
 		
@@ -364,18 +364,20 @@ end
 
 local function OnContainerChange(self)
 	if self.value == 1 then
-		addon:ToggleOption(nil, "CharacterTabViewBags")
+		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewBags")
 	elseif self.value == 2 then
-		addon:ToggleOption(nil, "CharacterTabViewBank")
+		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewBank")
 	elseif self.value == 3 then
-		addon:ToggleOption(nil, "CharacterTabViewBagsAllInOne")
+		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewVoidStorage")
+	elseif self.value == 4 then
+		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewBagsAllInOne")
 	end
 	
 	ns:ViewCharInfo(VIEW_BAGS)
 end
 
 local function OnRarityChange(self)
-	addon:SetOption("CharacterTabViewBagsRarity", self.value)
+	addon:SetOption("UI.Tabs.Characters.ViewBagsRarity", self.value)
 	addon.Containers:Update()
 end
 
@@ -531,13 +533,14 @@ local function BagsIcon_Initialize(self, level)
 
 	DDM_AddTitle(format("%s / %s", L["Containers"], DataStore:GetColoredCharacterName(currentCharacterKey)))
 	DDM_Add(L["View"], nil, function() ns:ViewCharInfo(VIEW_BAGS) end)
-	DDM_Add(L["Bags"], 1, OnContainerChange, nil, (addon:GetOption("CharacterTabViewBags") == 1))
-	DDM_Add(L["Bank"], 2, OnContainerChange, nil, (addon:GetOption("CharacterTabViewBank") == 1))
-	DDM_Add(L["All-in-one"], 3, OnContainerChange, nil, (addon:GetOption("CharacterTabViewBagsAllInOne") == 1))
-	
+	DDM_Add(L["Bags"], 1, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewBags") == 1))
+	DDM_Add(L["Bank"], 2, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewBank") == 1))
+	DDM_Add(VOID_STORAGE, 3, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewVoidStorage") == 1))
+	DDM_Add(L["All-in-one"], 4, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewBagsAllInOne") == 1))
+		
 	DDM_AddTitle(" ")
 	DDM_AddTitle("|r" ..RARITY)
-	local rarity = addon:GetOption("CharacterTabViewBagsRarity")
+	local rarity = addon:GetOption("UI.Tabs.Characters.ViewBagsRarity")
 	DDM_Add(L["Any"], 0, OnRarityChange, nil, (rarity == 0))
 	
 	for i = 2, 6 do		-- Quality: 0 = poor .. 5 = legendary
@@ -698,7 +701,7 @@ local function ProfessionsIcon_Initialize(self, level)
 		-- rank = DataStore:GetArchaeologyRank(currentCharacterKey)
 		
 		-- Profession 1
-		local rank, professionName
+		local rank, professionName, _
 		rank, _, _, professionName = DataStore:GetProfession1(currentCharacterKey)
 		if last and rank then
 			DDM_Add(format("%s %s(%s)", professionName, GREEN, rank ), professionName, OnProfessionChange, nil, (professionName == (currentProfession or "")))

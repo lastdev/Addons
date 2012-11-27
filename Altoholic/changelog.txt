@@ -8,6 +8,35 @@ IMPORTANT NOTE: If you're upgrading from 4.x :
 - Make sure you delete the addon's databases in SavedVariables. ie: Altoholic.lua and all DataStore*.lua.
 - Make sure to delete the old addon directories (Altoholic & all DataStore modules) as many files have changed/moved. A patch like this one is always a good opportunity for a fresh install.
 
+5.0.002 (06/10/2012)
+
+- Integrated the Void Storage to the container's UI (Characters -> Containers).
+- Added Mists of Pandaria factions (Grids -> Reputations).
+- Added Mists of Pandaria archaeology artefacts (Grids -> Archaeology).
+- Added Mists of Pandaria crafts for each professions (Grids -> Tradeskills).
+- Fixed a few Lua errors related to Battle Pets. They are temporarily NOT scanned at the Auction House.
+
+Some features related to Battle Pets are now fully working, this is on my (neverending) to-do-list.
+
+5.0.001d (13/09/2012)
+
+- Fixed tooltips sometime being incorrect in Grids -> reputations & currencies.
+- Fixed potential tainting issues due to the usage of the underscore in the code.
+- Cleared a few source files that were no longer used.
+- Fixed scanning of partially completed achievements.
+- Fixed Lua errors that appeared in 5.0.5 due to a wrong spell ID for fishing.
+
+Note about achievements:
+
+Achievements partially completed on one alt. They will now appear a bit differently in the UI (especially when part of a series).
+This is due to the values the game is returning. 
+Sometimes, the results may seem weird, BUT THERE IS NOTHING I CAN DO TO FIX THAT !
+
+It also makes no sense for me that some achievements in a series are character based, while some others are account based.
+Ex: 100 HK is character based, but 25000 HK is account based ? 
+If you too think there is a problem here, then complain about it to Blizzard, as I will not write code to work around those inconsistencies.
+
+
 5.0.001c (03/09/2012)
 
 - Fixed tooltip showing "No data" for herbalism in the Skills pane.. for good this time !

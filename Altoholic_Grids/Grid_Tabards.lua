@@ -20,7 +20,7 @@ local function BuildTabardList()
 	
 	-- do not use GetAchievementNumCriteria(621) as it returns 1
 	for i = 1, NUM_TABARDS do
-		_, _, _, _, _, _, _, _, _, criteriaID = GetAchievementCriteriaInfo(TABARDS_ACHIEVEMENT_ID, i)
+		local _, _, _, _, _, _, _, _, _, criteriaID = GetAchievementCriteriaInfo(TABARDS_ACHIEVEMENT_ID, i)
 		tabardNames[criteriaID] = GetAchievementCriteriaInfoByID(TABARDS_ACHIEVEMENT_ID, criteriaID)
 		table.insert(tabardList, criteriaID)
 	end
@@ -50,7 +50,7 @@ local callbacks = {
 		end,
 	GetSize = function() return #tabardList end,
 	RowSetup = function(self, entry, row, dataRowID)
-			local tabardName
+			local tabardName, _
 			tabardName, _, _, _, _, _, _, currentItemID = GetAchievementCriteriaInfoByID(621, tabardList[dataRowID] )
 			
 			if tabardName then

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 5.15.5348 (LikeableLyrebird)
-	Revision: $Id: AprFrame.lua 5336 2012-08-30 11:24:56Z brykrys $
+	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: AprFrame.lua 5362 2012-09-21 17:59:48Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -425,11 +425,17 @@ function private.CreateFrames()
 	-- Normally delayed by 1 frame (called from OnUpdate)
 	-- Multiple updates without changing the selected item are throttled to 3 seconds
 	-- Exception: CheckImageUpdate allows the throttle to be overridden if required
+	local query = {} -- query table used for QueryImage
 	function private.DelayedImageUpdate()
-		local sig = private.needImageUpdate
-		local sigChanged = lastImageSig ~= sig
+		local sig = frame.salebox.sig
+		if not sig then -- sanity check
+			frame.UpdateImage()
+			return
+		end
+		local sigChanged = lastImageSig ~= sig or private.needImageUpdate ~= sig
 		local now = GetTime()
 		if not sigChanged and now < throttleImageNext then
+			-- private.needImageUpdate is still set to sig
 			return
 		end
 
@@ -437,21 +443,29 @@ function private.CreateFrames()
 		throttleImageNext = now + 3 -- 3 second throttle
 		lastImageSig = sig
 
-		local itemId, suffix, factor = strsplit(":", sig)
-		-- ### todo: handle Pet Cages (needs update of QueryImage)
-		itemId = tonumber(itemId)
-		if not itemId then
+		local sigType, property1, property2, property3 = AucAdvanced.API.DecodeSig(sig)
+		if sigType == "item" then
+			query.itemId = property1
+			query.suffix = property2
+			query.factor = property3
+			query.speciesID = nil
+			query.quality = nil
+			query.minItemLevel = nil
+			query.maxItemLevel = nil
+		elseif sigType == "battlepet" then
+			query.speciesID = property1
+			query.quality = property3
+			query.minItemLevel = property2
+			query.maxItemLevel = property2
+			query.itemId = 82800
+			query.suffix = nil
+			query.factor = nil
+		else
 			frame.imageview.sheet:SetData(emptyData)
 			return
 		end
-		suffix = tonumber(suffix) or 0
-		factor = tonumber(factor) or 0
 
-		local results = AucAdvanced.API.QueryImage({
-			itemId = itemId,
-			suffix = suffix,
-			factor = factor,
-		})
+		local results = AucAdvanced.API.QueryImage(query)
 		local seen
 		local seentext = ""
 		if results[1] then
@@ -476,7 +490,6 @@ function private.CreateFrames()
 		end
 		frame.age:SetText(seentext)
 
-		local itemkey = string.join(":", "item", itemId, "0", "0", "0", "0", "0", suffix, factor)
 
 		local data = {}
 		local style = {}
@@ -507,7 +520,7 @@ function private.CreateFrames()
 				curbid = result[Const.MINBID]
 			end
 			--price level color item
-			local r, g, b, Alpha1, Alpha2, direction = frame.SetPriceColor(itemkey, count, curbid, result[Const.BUYOUT])
+			local r, g, b, Alpha1, Alpha2, direction = frame.SetPriceColor(result[Const.LINK], count, curbid, result[Const.BUYOUT])
 			if direction and r then
 				style[i] = {}
 				style[i][1] = {}
@@ -527,9 +540,13 @@ function private.CreateFrames()
 		sheet:EnableVerticalScrollReset(false)
 	end
 
-	function frame.SetPriceColor(itemID, count, requiredBid, buyoutPrice, rDef, gDef, bDef)
+	function frame.SetPriceColor(link, count, requiredBid, buyoutPrice, rDef, gDef, bDef)
 		if get('util.appraiser.color') and AucAdvanced.Modules.Util.PriceLevel then
-			local _, link = GetItemInfo(itemID) -- ### todo: will have to do something different for battlepets, depending how CalcLevel supports them
+			if type(link) == "number" then
+				local _, l = GetItemInfo(link)
+				link = l
+			end
+			if not link then return end
 			local _, _, r,g,b = AucAdvanced.Modules.Util.PriceLevel.CalcLevel(link, count, requiredBid, buyoutPrice)
 
 			local direction = get("util.appraiser.colordirection")
@@ -1747,9 +1764,7 @@ function private.CreateFrames()
 				GameTooltip:ClearAllPoints()
 				GameTooltip:SetPoint(point, relFrame, relPoint, xoff, yoff)
 			elseif strmatch(link, "|Hbattlepet") then
-				local _, speciesID, level, breedQuality, maxHealth, power, speed, battlePetID = strsplit(":", link)
-				BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed), string.gsub(string.gsub(link, "^(.*)%[", ""), "%](.*)$", ""))
-				-- somewhat hacky - BattlePetToolTip_Show anchors to GameTooltip's anchor point, but we want to specify our own anchor
+				AucAdvanced.ShowPetLink(BattlePetTooltip, link, count)
 				BattlePetTooltip:ClearAllPoints()
 				BattlePetTooltip:SetPoint(point, relFrame, relPoint, xoff, yoff)
 			end
@@ -2854,4 +2869,4 @@ function private.CreateFrames()
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5336 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5362 $")

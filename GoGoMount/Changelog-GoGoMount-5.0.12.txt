@@ -1,0 +1,39 @@
+------------------------------------------------------------------------
+r369 | tiker | 2012-10-19 23:39:34 +0000 (Fri, 19 Oct 2012) | 1 line
+Changed paths:
+   A /tags/5.0.12 (from /trunk:368)
+
+Tagging as 5.0.12
+------------------------------------------------------------------------
+r368 | tiker | 2012-10-19 23:23:38 +0000 (Fri, 19 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/GoGoMount.lua
+   M /trunk/GoGoMount.toc
+   M /trunk/GoGoMountData.lua
+
+- Magic Brooms instant cast again this year
+- Identified some more instance zones
+------------------------------------------------------------------------
+r367 | tiker | 2012-10-03 22:46:15 +0000 (Wed, 03 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/GoGoMount.lua
+   M /trunk/GoGoMount.toc
+   M /trunk/GoGoMountData.lua
+   M /trunk/localization.lua
+
+- (Untested) support for Zen Flight (Monk glyph)
+------------------------------------------------------------------------
+r365 | tiker | 2012-09-25 01:01:24 +0000 (Tue, 25 Sep 2012) | 7 lines
+Changed paths:
+   M /trunk/GoGoMount.lua
+   M /trunk/GoGoMount.toc
+   M /trunk/GoGoMountData.lua
+
+- Now giving swimming mounts at the bottom of Vashj'ir when you appear to be standing
+- Now supporting removal Master Angler when attempting to mount in water
+- Added support for Jeweled Onyx Panther
+- Added support for Sapphire Panther
+- Added support for Dawnstone Panther / Sunstone Panther
+- Added support for Jade Panther / Emerald Panther
+- Added support for Ruby Panther
+------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 local addonName, vars = ...
 vars.SpellData = {}
 vars.svnrev = {}
-vars.svnrev["SpellData.lua"] = tonumber(("$Revision: 328 $"):match("%d+"))
+vars.svnrev["SpellData.lua"] = tonumber(("$Revision: 342 $"):match("%d+"))
 
 
 vars.SpellData.foods = {
@@ -55,6 +55,12 @@ vars.SpellData.flasks = {
 	92730, -- Flask of the Draconic Mind (guild cauldron)
 	92725, -- Flask of the Winds (guild cauldron)
 	92731, -- Flask of Titanic Strength (guild cauldron)
+	-- Flask MoP
+	105689, -- Flask of Spring Blossoms
+	105691, -- Flask of the Warm Sun
+	105693, -- Flask of Falling Leaves
+	105694, -- Flask of the Earth
+	105696, -- Flask of Winter\'s Bite
 }
 
 vars.SpellData.elixirGuardian = {
@@ -80,6 +86,9 @@ vars.SpellData.elixirGuardian = {
 	-- Cata
 	79480, -- Elixir of Deep Earth
 	79631, -- Prismatic Elixir
+	-- MoP
+	105681, -- Mantid Elixir
+	105687, -- Elixir of Mirrors
 }
 
 vars.SpellData.elixirBattle = {
@@ -119,6 +128,13 @@ vars.SpellData.elixirBattle = {
 	79632, -- Elixir of Mighty Speed
 	79635, -- Elixir of the Master
 	79468, -- Ghost Elixir
+	-- MoP
+	105682, -- Mad Hozen Elixir
+	105683, -- Elixir of Weaponry
+	105684, -- Elixir of the Rapids
+	105685, -- Elixir of Peace
+	105686, -- Elixir of Perfection
+	105688, -- Monk\'s Elixir
 }
 
 vars.SpellData.ccspells = {
@@ -143,6 +159,7 @@ vars.SpellData.ccspells = {
 	6358, -- Seduction
 	1513, -- Scare Beast
 	339, -- Entangling Roots
+	115078, -- Paralysis (Monk)
 }
 
 -- debuffs that can be applied to a cc target without breaking it
@@ -184,6 +201,7 @@ vars.SpellData.rezSpells = {
   2008,  -- Ancestral Spirit (Shaman)
   50769, -- Revive (Druid)
   2006,  -- Resurrection (Priest)
+  115178,-- Resuscitate (Monk)
   54732, -- Defibrillate (Engineer)
   83968, -- Mass Resurrection
 }
@@ -196,6 +214,7 @@ vars.SpellData.tauntSpells = {
   56222, -- Dark Command (Death Knight)
   49576, -- Death Grip (Death Knight)  
   20736, -- Distracting Shot (Hunter)  
+  116189, -- Provoke (Monk)
   17735, -- Suffering (Warlock Voidwalker)
   2649,  -- Growl (Hunter Pet)
   53477, -- Taunt (Hunter Pet)

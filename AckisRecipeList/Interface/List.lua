@@ -20,8 +20,6 @@ local FOLDER_NAME, private = ...
 local LibStub	= _G.LibStub
 local addon	= LibStub("AceAddon-3.0"):GetAddon(private.addon_name)
 local L		= LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
-local BFAC	= LibStub("LibBabble-Faction-3.0"):GetLookupTable()
-local BZ	= LibStub("LibBabble-Zone-3.0"):GetLookupTable()
 local QTip	= LibStub("LibQTip-1.0")
 local Dialog	= LibStub("LibDialog-1.0")
 
@@ -39,6 +37,7 @@ local BASIC_COLORS	= private.BASIC_COLORS
 local COMMON1		= private.COMMON_FLAGS_WORD1
 
 local A			= private.ACQUIRE_TYPES
+local FAC		= private.LOCALIZED_FACTION_STRINGS
 
 local COORD_FORMAT	= "(%.2f, %.2f)"
 
@@ -219,7 +218,7 @@ function private.InitializeListFrame()
 	ScrollBar:SetScript("OnValueChanged", function(self, value)
 		local min_val, max_val = self:GetMinMaxValues()
 		local current_tab = MainPanel.tabs[MainPanel.current_tab]
-		local member = "profession_" .. MainPanel.profession .. "_scroll_value"
+		local member = "profession_" .. MainPanel.current_profession .. "_scroll_value"
 
 		current_tab[member] = value
 
@@ -269,7 +268,7 @@ function private.InitializeListFrame()
 
 		-- First, check if this is a "modified" click, and react appropriately
 		if clicked_line.recipe_id and _G.IsModifierKeyDown() then
-			local profession_recipes = private.profession_recipe_list[private.ORDERED_PROFESSIONS[MainPanel.profession]]
+			local profession_recipes = private.profession_recipe_list[private.ORDERED_PROFESSIONS[MainPanel.current_profession]]
 
 			if _G.IsControlKeyDown() then
 				if _G.IsShiftKeyDown() then
@@ -506,13 +505,6 @@ function private.InitializeListFrame()
 		local obtain_filters	= filter_db.obtain
 		local general_filters	= filter_db.general
 
-		local V = private.GAME_VERSIONS
-		local EXPANSION_FILTERS = {
-			[V.ORIG]	= "expansion0",
-			[V.TBC]		= "expansion1",
-			[V.WOTLK]	= "expansion2",
-			[V.CATA]	= "expansion3",
-		}
 
 		local Q = private.ITEM_QUALITIES
 		local QUALITY_FILTERS = {
@@ -604,6 +596,20 @@ function private.InitializeListFrame()
 			[REP2.RAMKAHEN]			= "ramkahen",
 			[REP2.EARTHEN_RING]		= "earthenring",
 			[REP2.THERAZANE]		= "therazane",
+			[REP2.FORESTHOZEN]		= "foresthozen",
+			[REP2.GOLDENLOTUS]		= "goldenlotus",
+			[REP2.CLOUDSERPENT]		= "cloudserpent",
+			[REP2.PEARLFINJINYU]		= "pearlfinjinyu",
+			[REP2.SHADOPAN]			= "shadopan",
+			[REP2.ANGLERS]			= "anglers",
+			[REP2.AUGUSTCELESTIALS]		= "augustcelestials",
+			[REP2.BREWMASTERS]		= "brewmasters",
+			[REP2.KLAXXI]			= "klaxxi",
+			[REP2.LOREWALKERS]		= "lorewalkers",
+			[REP2.TILLERS]			= "tillers",
+			[REP2.BLACKPRINCE]		= "blackprince",
+			[REP2.SHANGXIACADEMY]		= "shangxiacademy",
+			[REP2.PANDACOMMON1]		= "pandacommon1",
 		}
 
 		local CLASS1 = private.CLASS_FLAGS_WORD1
@@ -618,6 +624,7 @@ function private.InitializeListFrame()
 			[CLASS1.ROGUE]		= "rogue",
 			[CLASS1.WARLOCK]	= "warlock",
 			[CLASS1.WARRIOR]	= "warrior",
+			[CLASS1.MONK]		= "monk",
 		}
 
 		-- Returns true if any of the filter flags are turned on.
@@ -668,7 +675,7 @@ function private.InitializeListFrame()
 			end
 
 			-- Expansion filters.
-			if not obtain_filters[EXPANSION_FILTERS[private.GAME_VERSIONS[recipe.genesis]]] then
+			if not obtain_filters[private.EXPANSION_FILTERS[private.GAME_VERSIONS[recipe.genesis]]] then
 				return false
 			end
 
@@ -735,7 +742,7 @@ function private.InitializeListFrame()
 			-- Update recipe filters.
 			-------------------------------------------------------------------------------
 			local general_filters = addon.db.profile.filters.general
-			local profession_recipes = private.profession_recipe_list[private.ORDERED_PROFESSIONS[MainPanel.profession]]
+			local profession_recipes = private.profession_recipe_list[private.ORDERED_PROFESSIONS[MainPanel.current_profession]]
 			local recipes_known, recipes_known_filtered = 0, 0
 			local recipes_total, recipes_total_filtered = 0, 0
 
@@ -806,7 +813,7 @@ function private.InitializeListFrame()
 			-- Initialize the expand button and entries for the current tab.
 			-------------------------------------------------------------------------------
 			local current_tab = MainPanel.tabs[addon.db.profile.current_tab]
-			local expanded_button = current_tab["expand_button_"..MainPanel.profession]
+			local expanded_button = current_tab["expand_button_"..MainPanel.current_profession]
 
 			if expanded_button then
 				MainPanel.expand_button:Expand(current_tab)
@@ -945,7 +952,7 @@ function private.InitializeListFrame()
 		else
 			local max_val = num_entries - NUM_RECIPE_LINES
 			local current_tab = MainPanel.tabs[MainPanel.current_tab]
-			local scroll_value = current_tab["profession_"..MainPanel.profession.."_scroll_value"] or 0
+			local scroll_value = current_tab["profession_"..MainPanel.current_profession.."_scroll_value"] or 0
 
 			scroll_value = math.max(0, math.min(scroll_value, max_val))
 			offset = scroll_value
@@ -1184,11 +1191,11 @@ function private.InitializeListFrame()
 			local rep_color = private.REPUTATION_COLORS
 
 			FACTION_LABELS = {
-				[0] = SetTextColor(rep_color["neutral"], BFAC["Neutral"] .. " : "),
-				[1] = SetTextColor(rep_color["friendly"], BFAC["Friendly"] .. " : "),
-				[2] = SetTextColor(rep_color["honored"], BFAC["Honored"] .. " : "),
-				[3] = SetTextColor(rep_color["revered"], BFAC["Revered"] .. " : "),
-				[4] = SetTextColor(rep_color["exalted"], BFAC["Exalted"] .. " : ")
+				[0] = SetTextColor(rep_color["neutral"], FAC["Neutral"] .. " : "),
+				[1] = SetTextColor(rep_color["friendly"], FAC["Friendly"] .. " : "),
+				[2] = SetTextColor(rep_color["honored"], FAC["Honored"] .. " : "),
+				[3] = SetTextColor(rep_color["revered"], FAC["Revered"] .. " : "),
+				[4] = SetTextColor(rep_color["exalted"], FAC["Exalted"] .. " : ")
 			}
 		end
 
@@ -1225,7 +1232,7 @@ function private.InitializeListFrame()
 	end
 
 	local function ExpandWorldDropData(entry_index, entry_type, parent_entry, identifier, recipe_id, hide_location, hide_type)
-		local drop_location = type(identifier) == "string" and SetTextColor(CATEGORY_COLORS["location"], BZ[identifier])
+		local drop_location = type(identifier) == "string" and SetTextColor(CATEGORY_COLORS["location"], identifier)
 
 		if drop_location then
 			local recipe_item_id = private.recipe_list[recipe_id]:RecipeItemID()
@@ -1332,7 +1339,7 @@ function private.InitializeListFrame()
 		local current_entry = self.entries[orig_index]
 		local expand_all = expand_mode == "deep"
 		local current_tab = MainPanel.tabs[MainPanel.current_tab]
-		local prof_name = private.ORDERED_PROFESSIONS[MainPanel.profession]
+		local prof_name = private.ORDERED_PROFESSIONS[MainPanel.current_profession]
 		local profession_recipes = private.profession_recipe_list[prof_name]
 
 		-- Entry_index is the position in self.entries that we want to expand. Since we are expanding the current entry, the return
@@ -1666,15 +1673,15 @@ do
 							addline_func(0, -1, false, _G.REPUTATION, CATEGORY_COLORS["reputation"], private.reputation_list[identifier].name, CATEGORY_COLORS["repname"])
 
 							if rep_level == 0 then
-								addline_func(1, -2, false, BFAC["Neutral"], private.REPUTATION_COLORS["neutral"], rep_vendor.name, name_color)
+								addline_func(1, -2, false, FAC["Neutral"], private.REPUTATION_COLORS["neutral"], rep_vendor.name, name_color)
 							elseif rep_level == 1 then
-								addline_func(1, -2, false, BFAC["Friendly"], private.REPUTATION_COLORS["friendly"], rep_vendor.name, name_color)
+								addline_func(1, -2, false, FAC["Friendly"], private.REPUTATION_COLORS["friendly"], rep_vendor.name, name_color)
 							elseif rep_level == 2 then
-								addline_func(1, -2, false, BFAC["Honored"], private.REPUTATION_COLORS["honored"], rep_vendor.name, name_color)
+								addline_func(1, -2, false, FAC["Honored"], private.REPUTATION_COLORS["honored"], rep_vendor.name, name_color)
 							elseif rep_level == 3 then
-								addline_func(1, -2, false, BFAC["Revered"], private.REPUTATION_COLORS["revered"], rep_vendor.name, name_color)
+								addline_func(1, -2, false, FAC["Revered"], private.REPUTATION_COLORS["revered"], rep_vendor.name, name_color)
 							else
-								addline_func(1, -2, false, BFAC["Exalted"], private.REPUTATION_COLORS["exalted"], rep_vendor.name, name_color)
+								addline_func(1, -2, false, FAC["Exalted"], private.REPUTATION_COLORS["exalted"], rep_vendor.name, name_color)
 							end
 
 							if rep_vendor.coord_x ~= 0 and rep_vendor.coord_y ~= 0 then
@@ -1688,7 +1695,7 @@ do
 			end
 		end,
 		[A.WORLD_DROP] = function(recipe_id, identifier, location, acquire_info, addline_func)
-			local drop_location = type(identifier) == "string" and BZ[identifier] or _G.UNKNOWN
+			local drop_location = type(identifier) == "string" and identifier or _G.UNKNOWN
 
 			if location and drop_location ~= location then
 				return

@@ -10324,6 +10324,7 @@ local function IsMetaGemActive(item)
 	if (type(item) == "string") or (type(item) == "number") then
 	elseif type(item) == "table" and type(item.GetItem) == "function" then
 		-- Get the link
+		local _
 		_, item = item:GetItem()
 		if type(item) ~= "string" then return end
 	else
@@ -12887,6 +12888,7 @@ function StatLogic:GetGemID(item)
 	if (type(item) == "string") or (type(item) == "number") then
 	elseif type(item) == "table" and type(item.GetItem) == "function" then
 		-- Get the link
+		local _
 		_, item = item:GetItem()
 		if type(item) ~= "string" then return false end
 	else

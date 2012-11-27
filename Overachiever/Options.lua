@@ -78,7 +78,7 @@ function Overachiever.CreateOptions(THIS_TITLE, BuildCriteriaLookupTab_check, Au
 	{ variable = "CreatureTip_killed", text = L.OPT_KILLCREATURETIPS, tooltip = L.OPT_KILLCREATURETIPS_TIP,
 	  tooltip2 = L.OPT_KILLCREATURETIPS_TIP2, OnChange = BuildCriteriaLookupTab_check, xOffset = 28 },
 
-	{ type = "Oa_AchLabel", text = L.OPT_LABEL_ACHTHREE, topBuffer = 4, id1 = IDs.LoveCritters, id2 = IDs.LoveCritters2, id3 = IDs.LoveCritters3, xOffset = 0 },
+	{ type = "Oa_AchLabel", text = L.OPT_LABEL_ACHFOUR, topBuffer = 4, id1 = IDs.LoveCritters, id2 = IDs.LoveCritters2, id3 = IDs.LoveCritters3, id4 = IDs.LoveCritters4, xOffset = 0 },
 	{ variable = "CritterTip_loved", text = L.OPT_CRITTERTIPS, tooltip = L.OPT_CRITTERTIPS_TIP, xOffset = 28 },
 
 	{ type = "Oa_AchLabel", topBuffer = 4, id1 = IDs.PestControl, xOffset = 0 },

@@ -1,6 +1,6 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.2 (<%codename%>)
+	Version: 4.0.6 (<%codename%>)
 	Revision: $Id: GatherMain.lua 967 2012-09-02 21:37:21Z Esamynn $
 
 	License:
@@ -28,7 +28,7 @@
 Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherMain.lua $", "$Rev: 967 $")
 
 
-Gatherer.Var.Version="4.0.2"
+Gatherer.Var.Version="4.0.6"
 if (Gatherer.Var.Version == "<%".."version%>") then
 	Gatherer.Var.Version = "4.0-DEV"
 end

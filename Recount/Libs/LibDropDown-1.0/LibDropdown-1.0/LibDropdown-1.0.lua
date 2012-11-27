@@ -21,7 +21,7 @@ lib.frameHideQueue = frameHideQueue
 local sliderPool = lib.sliderPool or {}
 lib.sliderPool = sliderPool
 
-local AddButton, ShowGroup, HideGroup, SetGroup, NewDropdownFrame, NewDropdownButton, ReleaseFrame, AcquireButton, ReleaseButton, AcquireFrame
+local AddButton, Refresh, GetRoot, SetChecked, HideRecursive, ShowGroup, HideGroup, SetGroup, NewDropdownFrame, NewDropdownButton, ReleaseFrame, AcquireButton, ReleaseButton, AcquireFrame
 local UIParent = _G.UIParent
 
 local openMenu
@@ -383,7 +383,7 @@ do
    end
    
    local function revert()
-      p = ColorPickerFrame.previousValues
+      local p = ColorPickerFrame.previousValues
       ColorPickerFrame:SetColorRGB(p.r, p.g, p.b)
       ColorPickerFrame.opacity = p.opacity
       setColor()
@@ -1141,7 +1141,7 @@ local t = {
    }
 }
 
-function testdropdown()
+function testlibdropdown()
    LibStub("LibDropdown-1.0"):OpenAce3Menu(t)
 end
 

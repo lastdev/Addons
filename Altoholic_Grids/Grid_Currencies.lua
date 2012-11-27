@@ -152,9 +152,11 @@ local callbacks = {
 				end
 				
 				itemText:SetText(GREEN..count)
+				itemButton:SetID(dataRowID)
 				itemButton:Show()
 			else
 				itemButton.key = nil
+				itemButton:SetID(0)
 				itemButton:Hide()
 			end
 		end,
@@ -165,7 +167,8 @@ local callbacks = {
 			AltoTooltip:SetOwner(frame, "ANCHOR_LEFT")
 			AltoTooltip:ClearLines()
 			AltoTooltip:AddLine(DataStore:GetColoredCharacterName(character))
-			AltoTooltip:AddLine(view[frame:GetParent():GetID()], 1, 1, 1)
+			-- AltoTooltip:AddLine(view[frame:GetParent():GetID()], 1, 1, 1)
+			AltoTooltip:AddLine(view[frame:GetID()], 1, 1, 1)
 			AltoTooltip:AddLine(GREEN..frame.count)
 			AltoTooltip:Show()
 		end,

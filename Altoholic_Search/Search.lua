@@ -49,7 +49,6 @@ local function Realm_UpdateEx(self, offset, entry, desc)
 			end
 			_G[ entry..i.."Stat2" ]:SetText(location)
 			
-			local itemRarity
 			local hex = WHITE
 			local itemButton = _G[ entry..i.."Item" ]
 			
@@ -57,7 +56,7 @@ local function Realm_UpdateEx(self, offset, entry, desc)
 			itemButton.border:Hide()
 			
 			if result.id then
-				_, _, itemRarity = GetItemInfo(result.id)
+				local _, _, itemRarity = GetItemInfo(result.id)
 				if itemRarity then
 					local r, g, b
 					r, g, b, hex = GetItemQualityColor(itemRarity)
@@ -644,12 +643,11 @@ local function BrowseCharacter(character)
 		and (filters:GetFilterValue("itemRarity") == 0)
 		and (filters:GetFilterValue("itemSlot") == 0) then
 		
-		local isHeader, spellID, itemID
 		local professions = DataStore:GetProfessions(character)
 		if professions then
 			for professionName, profession in pairs(professions) do
 				for index = 1, DataStore:GetNumCraftLines(profession) do
-					isHeader, _, spellID = DataStore:GetCraftLineInfo(profession, index)
+					local isHeader, _, spellID = DataStore:GetCraftLineInfo(profession, index)
 					
 					if not isHeader then
 						if CraftMatchFound(spellID, currentValue) then

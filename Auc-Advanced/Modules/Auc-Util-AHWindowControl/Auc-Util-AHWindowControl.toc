@@ -6,7 +6,7 @@
 ## Disabled: 0
 ## Dependencies: Auc-Advanced
 ##
-## Version: 5.15.5348 (LikeableLyrebird)
+## Version: 5.15.5365 (LikeableLyrebird)
 ## Revision: $Id: Auc-Util-AHWindowControl.toc
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

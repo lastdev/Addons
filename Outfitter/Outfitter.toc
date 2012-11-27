@@ -1,12 +1,13 @@
 ## Interface: 50001
 ## Author: John Stephen
 ## Title: Outfitter
-## Version: 5.5.2
+## Version: 5.6.1
 ## Notes: Clothing and weapon management and automated equipment changes
 ## OptionalDeps: Titan, FuBar, TankPoints, ButtonFacade
 ## RequiredDeps: 
 ## SavedVariablesPerCharacter: gOutfitter_Settings
 ## SavedVariables: gOutfitter_GlobalSettings
+## X-ReloadTag: 1
 
 utf8data.lua
 utf8.lua
@@ -19,8 +20,22 @@ LibBabble-Zone-3.0.lua
 LibBabble-SubZone-3.0.lua
 LibBabble-Inventory-3.0.lua
 LibTipHooker-1.1.lua
-LibStatLogic-1.2.lua
 LibDropdown-1.0.lua
+
+LibStatLogic_enUS.lua
+LibStatLogic_deDE.lua
+LibStatLogic_enGB.lua
+LibStatLogic_esES.lua
+LibStatLogic_esMX.lua
+LibStatLogic_frFR.lua
+LibStatLogic_itIT.lua
+LibStatLogic_koKR.lua
+LibStatLogic_ptBR.lua
+LibStatLogic_ruRU.lua
+LibStatLogic_zhCN.lua
+LibStatLogic_zhTW.lua
+LibStatLogic-1.2.lua
+
 OutfitterPrefix.lua
 
 MC2AddonLib.lua
@@ -35,6 +50,7 @@ OutfitterStrings_fr.lua
 OutfitterStrings_cn.lua
 OutfitterStrings_tw.lua
 OutfitterStrings_kr.lua
+OutfitterStrings_ru.lua
 OutfitterStrings_ru.lua
 
 OutfitterMenu.lua

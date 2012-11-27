@@ -277,6 +277,7 @@ L["Gordok Brewery"] = "Пивоваренный завод Гордока"
 L["Grave Moss"] = "Могильный мох"
 L["Green Dragon Mail"] = "Кольчуга Зеленого дракона"
 L["Grey"] = "Серый"
+L["Grids"] = "Сетка" -- Needs review
 L["Gromsblood"] = "Кровь Грома"
 L["Guild Bank not visited yet (or not guilded)"] = "Вы еще не посетили банк гильдии (или не состоите в гильдии"
 L["Guild Bank Remote Update"] = "Удаленное обновление банка гильдии"

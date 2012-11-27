@@ -1,6 +1,6 @@
 ﻿## Interface: 50001
 ## Title: Overachiever
-## Version: 0.66
+## Version: 0.67
 ## Author: Tuhljin
 ## Notes: Tools and tweaks to make the lives of players seeking Achievements a little bit easier.
 ## Notes-zhTW: 使玩家尋求成就可以稍微輕鬆點的微調工具。
@@ -9,7 +9,7 @@
 ## SavedVariablesPerCharacter: Overachiever_CharVars, Overachiever_CharVars_Consumed
 ## OptionalDeps: LibBabble-Zone-3.0, LibBabble-Inventory-3.0
 ## X-WoWI-ID: 11361
-## X-Curse-Packaged-Version: v0.66
+## X-Curse-Packaged-Version: v0.67
 ## X-Curse-Project-Name: Overachiever - achievement tools and tweaks
 ## X-Curse-Project-ID: overachiever
 ## X-Curse-Repository-ID: wow/overachiever/mainline

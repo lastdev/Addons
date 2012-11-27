@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.2 (<%codename%>)
-	Revision: $Id: GatherReport.lua 982 2012-09-05 04:31:52Z Esamynn $
+	Version: 4.0.6 (<%codename%>)
+	Revision: $Id: GatherReport.lua 1031 2012-09-28 04:54:31Z Esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -27,10 +27,10 @@
 
 	Reporting and data management subsystem
 --]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherReport.lua $", "$Rev: 982 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherReport.lua $", "$Rev: 1031 $")
 
-local THROTTLE_COUNT = 25
-local THROTTLE_RATE = 0.5
+local THROTTLE_COUNT = 10
+local THROTTLE_RATE = .25
 
 -- indicies
 local ZONE      = 1
@@ -187,6 +187,7 @@ function private.AddText(obj, name, displayName, x, ftype)
 		lastobj:SetWidth(x-lastobj.left)
 	end
 	obj[name] = obj:CreateFontString("", "OVERLAY", ftype)
+	obj[name]:SetHeight(13)
 	obj[name]:SetPoint("TOPLEFT", obj, "TOPLEFT", x,0)
 	obj[name]:SetJustifyH("LEFT")
 	obj[name]:Show()
@@ -238,8 +239,8 @@ function private.AddTexts(obj, ftype, icon)
 	private.AddText(obj, "X", _tr("REPORT_COLUMN_HEADER_X"), 420, ftype)
 	private.AddText(obj, "Y", _tr("REPORT_COLUMN_HEADER_Y"), 460, ftype)
 	private.AddText(obj, "Dist", _tr("REPORT_COLUMN_HEADER_DIST"), 500, ftype)
-	--private.AddText(obj, "Value", _tr("VALUE"), 500, ftype)
 	private.AddText(obj, "Source", _tr("REPORT_COLUMN_HEADER_SOURCE"), 560, ftype)
+	obj.Source:SetWidth(150)
 	obj:Show()
 end
 
@@ -450,9 +451,7 @@ function public.ConfirmNodeDeletes()
 	end
 
 	table.sort(deleteList, function(a,b)
-		if a[ZONE] ~= b[ZONE] then return a[ZONE] < b[ZONE] end
-		if a[ID] ~= b[ID] then return a[ID] < b[ID] end
-		return a[INDEX] > b[INDEX]
+		return a[4] > b[4]
 	end)
 
 	for i = 1, #deleteList do
@@ -529,7 +528,6 @@ function private.UpdateResults()
 			result.X:SetText("")
 			result.Y:SetText("")
 			result.Dist:SetText("")
-			--result.Value:SetText("")
 			result.Source:SetText("")
 			result.Type.Icon:SetTexture(blank)
 			result.Highlight:SetChecked(false)
@@ -545,7 +543,6 @@ function private.UpdateResults()
 			result.X:SetText(string.format("%0.01f", x*100))
 			result.Y:SetText(string.format("%0.01f", y*100))
 			result.Dist:SetText(d and string.format("%d", d) or "∞")
-			--result.Value:SetText("")
 			result.Source:SetText(s)
 			result.Type.Icon:SetTexture(t)
 			if (private.results.mark[strjoin(":", z,n,i,g,tostring(indoor))]) then
@@ -590,12 +587,22 @@ end
 
 local function filter(searchString, ...)
 	local show = false
-	local f, s, var = string.gmatch(searchString, "[%p%w]+")
+	local f, s, var = string.gmatch(searchString, "%S+")
 	while true do
 		local match = f(s, var)
 		var = match
 		if ( var == nil ) then
 			break
+		end
+		
+		local firstChar = match:sub(1, 1)
+		local mustMatch, mustNotMatch = false, false
+		if ( firstChar == '+' ) then
+			mustMatch = true
+			match = match:sub(2)
+		elseif ( firstChar == '-' ) then
+			mustNotMatch = true
+			match = match:sub(2)
 		end
 		
 		if ( match:sub(1, 1) == '"' ) then
@@ -610,14 +617,19 @@ local function filter(searchString, ...)
 			match = match:sub(2, #match - 1)
 		end
 		
+		local tokenShow = false
 		for filterName, button in pairs(private.SearchButtons) do
 			if ( button.active and button.filter(match, ...) ) then
+				if ( mustNotMatch ) then
+					return false
+				end
 				show = true
+				tokenShow = true
 				break
 			end
 		end
-		if ( show ) then
-			break
+		if ( mustMatch and not tokenShow ) then
+			return false
 		end
 	end
 	return show

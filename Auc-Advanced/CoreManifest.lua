@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: CoreManifest.lua 5345 2012-09-05 11:17:00Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -72,7 +72,7 @@ end
 AucAdvanced = {}
 local lib = AucAdvanced
 
-lib.Version="5.15.5348";
+lib.Version="5.15.5365";
 if (lib.Version == "<".."%version%>") then
 	lib.Version = "5.15.DEV";
 end

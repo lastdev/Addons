@@ -19,6 +19,7 @@ local addon = _G[addonName]
 local THIS_ACCOUNT = "Default"
 local commPrefix = "DS_Cont"		-- let's keep it a bit shorter than the addon name, this goes on a comm channel, a byte is a byte ffs :p
 local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+local MAIN_BANK_SLOTS = 100		-- bag id of the 28 main bank slots
 
 local guildMembers = {} 	-- hash table containing guild member info (tab timestamps)
 
@@ -336,7 +337,7 @@ local function ScanBankSlotsInfo()
 	local char = addon.ThisCharacter
 	
 	local numBankSlots = NUM_BANKGENERIC_SLOTS
-	local numFreeBankSlots = char.Containers["Bag100"].freeslots
+	local numFreeBankSlots = char.Containers["Bag"..MAIN_BANK_SLOTS].freeslots
 
 	for bagID = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do		-- 5 to 11
 		local bag = char.Containers["Bag" .. bagID]
@@ -422,7 +423,7 @@ local function OnPlayerBankSlotsChanged(event, slotID)
 	if (slotID >= 29) and (slotID <= 35) then
 		ScanBag(slotID - 24)		-- bagID for bank bags goes from 5 to 11, so slotID - 24
 	else
-		ScanContainer(100, BANK)
+		ScanContainer(MAIN_BANK_SLOTS, BANK)
 		ScanBankSlotsInfo()
 	end
 end
@@ -432,7 +433,7 @@ local function OnBankFrameOpened()
 	for bagID = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do		-- 5 to 11
 		ScanBag(bagID)
 	end
-	ScanContainer(100, BANK)
+	ScanContainer(MAIN_BANK_SLOTS, BANK)
 	ScanBankSlotsInfo()
 	addon:RegisterEvent("BANKFRAME_CLOSED", OnBankFrameClosed)
 	addon:RegisterEvent("PLAYERBANKSLOTS_CHANGED", OnPlayerBankSlotsChanged)
@@ -509,7 +510,10 @@ end
 -- ** Mixins **
 local function _GetContainer(character, containerID)
 	-- containerID can be number or string
-	return character.Containers["Bag" .. containerID]
+	if type(containerID) == "number" then
+		return character.Containers["Bag" .. containerID]
+	end
+	return character.Containers[containerID]
 end
 
 local function _GetContainers(character)
@@ -531,7 +535,18 @@ local BagTypeStrings = {
 
 local function _GetContainerInfo(character, containerID)
 	local bag = _GetContainer(character, containerID)
-	return bag.icon, bag.link, bag.size, bag.freeslots, BagTypeStrings[bag.bagtype]
+	
+	local icon = bag.icon
+	local size = bag.size
+	
+	if containerID == MAIN_BANK_SLOTS then	-- main bank slots
+		icon = "Interface\\Icons\\inv_misc_enggizmos_17"
+	elseif containerID == "VoidStorage" then
+		icon = "Interface\\Icons\\spell_nature_astralrecalgroup"
+		size = 80
+	end
+	
+	return icon, bag.link, size, bag.freeslots, BagTypeStrings[bag.bagtype]
 end
 
 local function _GetContainerSize(character, containerID)
@@ -579,7 +594,7 @@ local function _GetContainerItemCount(character, searchedID)
 				
 				if (containerName == "VoidStorage") then
 					voidCount = voidCount + 1
-				elseif (containerName == "Bag100") then
+				elseif (containerName == "Bag"..MAIN_BANK_SLOTS) then
 					bankCount = bankCount + itemCount
 				elseif (containerName == "Bag-2") then
 					bagCount = bagCount + itemCount

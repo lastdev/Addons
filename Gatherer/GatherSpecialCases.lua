@@ -1,6 +1,6 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.2 (<%codename%>)
+	Version: 4.0.6 (<%codename%>)
 	Revision: $Id: GatherSpecialCases.lua 894 2010-12-02 22:46:33Z Esamynn $
 
 	License:

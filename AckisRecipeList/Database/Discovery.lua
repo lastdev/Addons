@@ -2,10 +2,10 @@
 ************************************************************************
 Discovery.lua
 ************************************************************************
-File date: 2012-08-18T04:52:05Z
-File hash: 4d6b8e4
-Project hash: f647594
-Project version: 2.4
+File date: 2012-09-22T19:55:35Z
+File hash: 46f65df
+Project hash: 5a95034
+Project version: 2.4.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -27,7 +27,8 @@ local LibStub = _G.LibStub
 
 local addon = LibStub("AceAddon-3.0"):GetAddon(private.addon_name)
 local L = LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
-local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
+
+local Z = private.ZONE_NAMES
 
 private.discovery_list	= {}
 
@@ -40,12 +41,15 @@ function addon:InitDiscovery()
 	AddDiscovery("DISCOVERY_ALCH_POTION")
 	AddDiscovery("DISCOVERY_ALCH_PROT")
 	AddDiscovery("DISCOVERY_ALCH_BC_XMUTE")
-	AddDiscovery("DISCOVERY_INSC_BOOK", BZ["Northrend"])
+	AddDiscovery("DISCOVERY_INSC_BOOK", Z.NORTHREND)
 	AddDiscovery("DISCOVERY_INSC_MINOR")
 	AddDiscovery("DISCOVERY_INSC_NORTHREND")
 	AddDiscovery("DISCOVERY_ALCH_NORTHREND_RESEARCH")
 	AddDiscovery("DISCOVERY_ALCH_NORTHREND_XMUTE")
 	AddDiscovery("ENG_DISC")
+	AddDiscovery("DISCOVERY_ALCH_PANDARIA")
+	AddDiscovery("DISCOVERY_INSC_PANDARIA")
+	AddDiscovery("DISCOVERY_JC_PANDARIA")
 
 	self.InitDiscovery = nil
 end

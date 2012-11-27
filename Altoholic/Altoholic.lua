@@ -48,10 +48,10 @@ local function InitLocalization()
 	AltoholicFrameSearchLabel:SetText(L["Search Containers"])
 	AltoholicFrame_ResetButton:SetText(L["Reset"])
 
-	if GetLocale() == "deDE" then
+	-- if GetLocale() == "deDE" then
 		-- This is a global string from wow, for some reason the original is causing problem. DO NOT copy this line in localization files
-		ITEM_MOD_SPELL_POWER = "Erh\195\182ht die Zaubermacht um %d."; 
-	end
+		-- ITEM_MOD_SPELL_POWER = "Erh\195\182ht die Zaubermacht um %d."; 
+	-- end
 end
 
 local function BuildUnsafeItemList()
@@ -188,7 +188,7 @@ function AuctionFrameBrowse_UpdateHook()
 			trueID = button:GetID() + offset;
 		end
 		link = GetAuctionItemLink("list", trueID)
-		if link then		-- if there's a valid item link in this slot ..
+		if link and not link:match("battlepet:(%d+)") then		-- if there's a valid item link in this slot ..
 			local itemID = addon:GetIDFromLink(link)
 			local _, _, _, _, _, itemType, itemSubType = GetItemInfo(itemID)
 			if itemType == BI["Recipe"] and itemSubType ~= BI["Book"] then		-- is it a recipe ?

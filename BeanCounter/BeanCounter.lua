@@ -1,6 +1,6 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: BeanCounter.lua 5266 2012-01-12 03:33:30Z kandoko $
 
 	BeanCounterCore - BeanCounter: Auction House History

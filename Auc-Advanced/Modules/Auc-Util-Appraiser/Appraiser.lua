@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 5.15.5348 (LikeableLyrebird)
-	Revision: $Id: Appraiser.lua 5336 2012-08-30 11:24:56Z brykrys $
+	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: Appraiser.lua 5362 2012-09-21 17:59:48Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -53,68 +53,11 @@ local GetItemInfo = GetItemInfo
 local pricecache -- cache for GetPrice; only used in certain circumstances
 local tooltipcache = {} -- cache for ProcessTooltip
 
---[[
-function lib.Processor(callbackType, ...)
-	if (callbackType == "tooltip") then
-		lib.ProcessTooltip(...)
-	elseif (callbackType == "auctionui") then
-		if private.CreateFrames then private.CreateFrames(...) end
-	elseif (callbackType == "config") then
-		private.SetupConfigGui(...)
-	elseif (callbackType == "configchanged") then
-		local change, value = ... --get the reason if its a scrollframe color change re-render the window
-		if private.frame then
-			private.frame.salebox.config = true
-			--	private.frame.SetPriceFromModel()
-			private.frame.UpdatePricing()
-			private.frame.UpdateDisplay()
-			--	private.frame.salebox.config = nil
-			if change == "util.appraiser.color" or change == "util.appraiser.colordirection" then
-				private.frame.UpdateImage()
-			end
-			--show/hide the appraiser tab on the AH
-			if change == "util.appraiser.displayauctiontab" then
-				if value then
-					AucAdvanced.AddTab(private.frame.ScanTab, private.frame)
-				else
-					AucAdvanced.RemoveTab(private.frame.ScanTab, private.frame)
-				end
-			end
-		end
-		if change:sub(1, 20) == "util.appraiser.round" then
-			private.updateRoundExample()
-		end
-		-- clear cache for any changes, as we can't always predict what will change our cached values
-		wipe(tooltipcache)
-	elseif (callbackType == "inventory") then
-		if private.frame and private.frame:IsVisible() then
-			private.frame.GenerateList()
-		end
-	elseif (callbackType == "scanstats") then
-		if private.frame then
-			private.frame.cache = {}
-			-- caution: other modules may not yet have flushed their caches
-			-- flag to update our display next OnUpdate
-			private.frame.scanstatsEvent = true
-		end
-		wipe(tooltipcache)
-	elseif (callbackType == "postresult") then
-		private.SelectNextOnPost(select(3, ...))
-		--private.frame.Reselect(select(3, ...))
-	elseif callbackType == "postqueue" then
-		if private.UpdatePostQueueProgress then private.UpdatePostQueueProgress(...) end
-	elseif callbackType == "searchbegin" then
-		pricecache = {} -- use cache when SearchUI is running a search
-	elseif callbackType == "searchcomplete" then
-		pricecache = nil -- stop using cache when search ends
-	end
-end
---]]
-
 lib.Processors = {}
-function lib.Processors.tooltip(callbackType, ...)
+function lib.Processors.itemtooltip(callbackType, ...)
 	lib.ProcessTooltip(...)
 end
+lib.Processors.battlepettooltip = lib.Processors.itemtooltip
 
 function lib.Processors.auctionui(callbackType, ...)
 	if private.CreateFrames then private.CreateFrames(...) end
@@ -194,7 +137,7 @@ end
 lib.GetSigFromLink = GetSigFromLink
 lib.GetLinkFromSig = AucAdvanced.API.GetLinkFromSig
 
-function lib.ProcessTooltip(tooltip, name, hyperlink, quality, quantity, cost, additional)
+function lib.ProcessTooltip(tooltip, hyperlink, serverKey, quantity, decoded, additional, order)--(tooltip, name, hyperlink, quality, quantity, cost, additional)
 	if not get("util.appraiser.enable") then return end
 	if not get("util.appraiser.model") then return end
 	local sig = GetSigFromLink(hyperlink)
@@ -207,7 +150,7 @@ function lib.ProcessTooltip(tooltip, name, hyperlink, quality, quantity, cost, a
 	if tooltipcache[sig] then
 		value, bid, curModel = unpack(tooltipcache[sig]) -- all values should be non-nil
 	else
-		value, bid, _, curModel = private.GetPriceCore(sig, hyperlink, GetFaction(), true)
+		value, bid, _, curModel = private.GetPriceCore(sig, hyperlink, serverKey, true)
 		if curModel ~= "Enchantrix" then -- don't cache values based on modules which don't broadcast configchanged
 			tooltipcache[sig] = {value, bid, curModel}
 		end
@@ -220,7 +163,7 @@ function lib.ProcessTooltip(tooltip, name, hyperlink, quality, quantity, cost, a
 		end
 	end
     if get("util.appraiser.ownauctions") then
-        local itemName = name
+        local itemName = additional.name
 
         local colored = get('util.appraiser.manifest.color') and AucAdvanced.Modules.Util.PriceLevel
 
@@ -309,51 +252,47 @@ end
 
 function lib.OnLoad()
 	-- Configure our defaults
-	AucAdvanced.Settings.SetDefault("util.appraiser.enable", false)
-	AucAdvanced.Settings.SetDefault("util.appraiser.bidtooltip", true)
-	AucAdvanced.Settings.SetDefault("util.appraiser.model", "market")
-	AucAdvanced.Settings.SetDefault("util.appraiser.ownauctions", false)
-	AucAdvanced.Settings.SetDefault("util.appraiser.altModel", "market")
-	AucAdvanced.Settings.SetDefault("util.appraiser.duration", 2880)
-	AucAdvanced.Settings.SetDefault("util.appraiser.round.bid", false)
-	AucAdvanced.Settings.SetDefault("util.appraiser.round.buy", false)
-	AucAdvanced.Settings.SetDefault("util.appraiser.round.method", "unit")
-	AucAdvanced.Settings.SetDefault("util.appraiser.round.position", 0.10)
-	AucAdvanced.Settings.SetDefault("util.appraiser.round.magstep", 5)
-	AucAdvanced.Settings.SetDefault("util.appraiser.round.subtract", 1)
-	AucAdvanced.Settings.SetDefault("util.appraiser.bid.markdown", 10)
-	AucAdvanced.Settings.SetDefault("util.appraiser.bid.subtract", 0)
-	AucAdvanced.Settings.SetDefault("util.appraiser.bid.deposit", false)
-	AucAdvanced.Settings.SetDefault("util.appraiser.bid.vendor", true)
-	AucAdvanced.Settings.SetDefault("util.appraiser.color", true)
-	AucAdvanced.Settings.SetDefault("util.appraiser.colordirection","RIGHT")
-	AucAdvanced.Settings.SetDefault("util.appraiser.manifest.color", true)
-	AucAdvanced.Settings.SetDefault("util.appraiser.tint.color", true)
-	AucAdvanced.Settings.SetDefault("util.appraiser.match", "on")
-	AucAdvanced.Settings.SetDefault("util.appraiser.stack", "max")
-	AucAdvanced.Settings.SetDefault("util.appraiser.number", "maxplus")
-	AucAdvanced.Settings.SetDefault("util.appraiser.clickhookany", true)
-	AucAdvanced.Settings.SetDefault("util.appraiser.reselect", true)
-	AucAdvanced.Settings.SetDefault("util.appraiser.buttontips", true)
-	AucAdvanced.Settings.SetDefault("util.appraiser.displayauctiontab", true)
+	default("util.appraiser.enable", false)
+	default("util.appraiser.bidtooltip", true)
+	default("util.appraiser.model", "market")
+	default("util.appraiser.ownauctions", false)
+	default("util.appraiser.altModel", "market")
+	default("util.appraiser.duration", 2880)
+	default("util.appraiser.round.bid", false)
+	default("util.appraiser.round.buy", false)
+	default("util.appraiser.round.method", "unit")
+	default("util.appraiser.round.position", 0.10)
+	default("util.appraiser.round.magstep", 5)
+	default("util.appraiser.round.subtract", 1)
+	default("util.appraiser.bid.markdown", 10)
+	default("util.appraiser.bid.subtract", 0)
+	default("util.appraiser.bid.deposit", false)
+	default("util.appraiser.bid.vendor", true)
+	default("util.appraiser.color", true)
+	default("util.appraiser.colordirection","RIGHT")
+	default("util.appraiser.manifest.color", true)
+	default("util.appraiser.tint.color", true)
+	default("util.appraiser.match", "on")
+	default("util.appraiser.stack", "max")
+	default("util.appraiser.number", "maxplus")
+	default("util.appraiser.clickhookany", true)
+	default("util.appraiser.reselect", true)
+	default("util.appraiser.buttontips", true)
+	default("util.appraiser.displayauctiontab", true)
 	--Default sizes for the scrollframe column widths
-	AucAdvanced.Settings.SetDefault("util.appraiser.columnwidth.".._TRANS('APPR_Interface_Seller'), 71) --Seller
-	AucAdvanced.Settings.SetDefault("util.appraiser.columnwidth.".._TRANS('APPR_Interface_TimeLeft'), 27) --Left
-	AucAdvanced.Settings.SetDefault("util.appraiser.columnwidth.".._TRANS('APPR_Interface_Stk'), 27 ) --Stk
-	AucAdvanced.Settings.SetDefault("util.appraiser.columnwidth.".._TRANS('APPR_Interface_Min/ea'), 65) --Min/ea
-	AucAdvanced.Settings.SetDefault("util.appraiser.columnwidth.".._TRANS('APPR_Interface_Cur/ea'), 65) --Cur/ea
-	AucAdvanced.Settings.SetDefault("util.appraiser.columnwidth.".._TRANS('APPR_Interface_Buy/ea'), 65) --Buy/ea
-	AucAdvanced.Settings.SetDefault("util.appraiser.columnwidth.".._TRANS('APPR_Interface_MinBid'), 65) --MinBid
-	AucAdvanced.Settings.SetDefault("util.appraiser.columnwidth.".._TRANS('APPR_Interface_CurBid'), 65) --CurBid
-	AucAdvanced.Settings.SetDefault("util.appraiser.columnwidth.".._TRANS('APPR_Interface_Buyout'), 67) --Buyout
-	AucAdvanced.Settings.SetDefault("util.appraiser.columnwidth.BLANK", 0.05)
+	default("util.appraiser.columnwidth.".._TRANS('APPR_Interface_Seller'), 71) --Seller
+	default("util.appraiser.columnwidth.".._TRANS('APPR_Interface_TimeLeft'), 27) --Left
+	default("util.appraiser.columnwidth.".._TRANS('APPR_Interface_Stk'), 27 ) --Stk
+	default("util.appraiser.columnwidth.".._TRANS('APPR_Interface_Min/ea'), 65) --Min/ea
+	default("util.appraiser.columnwidth.".._TRANS('APPR_Interface_Cur/ea'), 65) --Cur/ea
+	default("util.appraiser.columnwidth.".._TRANS('APPR_Interface_Buy/ea'), 65) --Buy/ea
+	default("util.appraiser.columnwidth.".._TRANS('APPR_Interface_MinBid'), 65) --MinBid
+	default("util.appraiser.columnwidth.".._TRANS('APPR_Interface_CurBid'), 65) --CurBid
+	default("util.appraiser.columnwidth.".._TRANS('APPR_Interface_Buyout'), 67) --Buyout
+	default("util.appraiser.columnwidth.BLANK", 0.05)
 
 	local localName = _TRANS('APPR_Interface_Appraiser')
 	function lib.GetLocalName() return localName end
-end
-
-function lib.CanSupplyMarket()
-	return false
 end
 
 function lib.ClearItem()
@@ -525,4 +464,4 @@ function lib.GetOwnAuctionDetails()
 end
 Stubby.RegisterEventHook("AUCTION_OWNED_LIST_UPDATE", "Auc-Util-Appraiser", lib.GetOwnAuctionDetails)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-Appraiser/Appraiser.lua $", "$Rev: 5336 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-Appraiser/Appraiser.lua $", "$Rev: 5362 $")

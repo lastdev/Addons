@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.2 (<%codename%>)
-	Revision: $Id: GatherComm.lua 979 2012-09-04 07:38:10Z Esamynn $
+	Version: 4.0.6 (<%codename%>)
+	Revision: $Id: GatherComm.lua 997 2012-09-11 03:14:32Z Esamynn $
 
 	License:
 	This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherComm.lua $", "$Rev: 979 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherComm.lua $", "$Rev: 997 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient
@@ -116,12 +116,16 @@ function Gatherer.Comm.Receive( message, how, who )
 	end
 
 	if ( message ~= lastMessage and who ~= playerName ) then
-		if (how:lower() == "guild") then msgtype = "guild" end
-		if (how:lower() == "whisper") then
+		if (how == "GUILD") then msgtype = "guild" end
+		if (how == "WHISPER") then
 			msgtype = "whisper"
-			if not acceptFrom[who:lower()] then return end
-		elseif not (setting(msgtype..".enable") and setting(msgtype..".receive")) then return end
-
+			if not ( acceptFrom[who:lower()] ) then
+				return
+			end
+		elseif ( not (setting(msgtype..".enable") and setting(msgtype..".receive")) ) then
+			return
+		end
+		
 		lastMessage = message
 		local commVersion, data = strsplit(":", message, 2)
 		commVersion = tonumber(commVersion)
@@ -143,16 +147,19 @@ function Gatherer.Comm.Receive( message, how, who )
 		local gatherType = Gatherer.Nodes.Objects[objectID]
 		zoneToken = Gatherer.ZoneTokens.GetZoneToken(zoneToken)
 		if ( objectID and gatherType and zoneToken and gatherX and gatherY ) then
+			Gatherer.Storage.MassImportMode = (how == "WHISPER")
 			Gatherer.Api.AddGather(objectID, gatherType, indoorNode, who, nil, nil, false, nil, zoneToken, gatherX, gatherY)
+			Gatherer.Storage.MassImportMode = false
 			local objName = Gatherer.Util.GetNodeName(objectID);
-			if msgtype == "whisper" then
+			if ( how == "WHISPER" ) then
 				Gatherer.Report.SendFeedback(who, "RECV", objectID)
-			elseif setting(msgtype..".print.recv") then
+			elseif ( setting(msgtype..".print.recv") ) then
 				local gatherC, gatherZ = Gatherer.ZoneTokens.GetContinentAndZone(zoneToken)
 				local localizedZoneName = select(gatherZ, GetMapZones(gatherC))
 				Gatherer.Util.ChatPrint(_tr("COMM_RECEIVE_NODE", objName, localizedZoneName, who, _tr(how)))
 			end
 		end
+		
 	end
 end
 
@@ -202,7 +209,7 @@ function Gatherer.Comm.General( msg, how, who )
 	end
 	local cmd, a,b,c,d = strsplit(":", msg)
 	if ( msg == "VER" ) then
-		SendAddonMessage("Gatherer", "VER:"..Gatherer.Var.Version, how)
+		SendAddonMessage("Gatherer", "VER:"..Gatherer.Var.Version, how, who)
 	elseif ( cmd == "SENDNODES" ) then
 		-- check if the player is on our sharing blacklist
 		local blacklisted = Gatherer.Config.SharingBlacklist_IsPlayerIgnored(who)

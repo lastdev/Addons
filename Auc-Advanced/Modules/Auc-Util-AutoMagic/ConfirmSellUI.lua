@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: ConfirmSellUI.lua 5345 2012-09-05 11:17:00Z brykrys $
 	URL: http://auctioneeraddon.com/
 

@@ -75,7 +75,7 @@ local function ScanTabards()
 	end
 end
 
-local function ScanSingleAchievement(id, isCompleted, month, day, year, flags)
+local function ScanSingleAchievement(id, isCompleted, month, day, year, flags, wasEarnedByMe)
 	local storage		-- pointer to the destination location of this achievement's info (ie = character or account)
 	
 	local isAccountBound = ( bit.band(flags, ACHIEVEMENT_FLAGS_ACCOUNT) == ACHIEVEMENT_FLAGS_ACCOUNT ) 
@@ -97,7 +97,7 @@ local function ScanSingleAchievement(id, isCompleted, month, day, year, flags)
 	--]]
 
 	-- 1) Fully completed achievements
-	if isCompleted then
+	if isCompleted and wasEarnedByMe then
 		local completed = storage.Completed
 		local bitPos = (id % 32)	
 		local index = ceil(id / 32)
@@ -128,6 +128,13 @@ local function ScanSingleAchievement(id, isCompleted, month, day, year, flags)
 	for j = 1, num do
 		-- ** calling GetAchievementCriteriaInfo in this loop is what costs the most in terms of cpu time **
 		local _, _, critCompleted, quantity, reqQuantity = GetAchievementCriteriaInfo(id, j);
+		
+		-- MoP fix, some achievements not completed by current alt, but completed by another alt, return that the criteria is completed, even when it's not
+		-- This is visible for reputation achievements for example.
+		if quantity < reqQuantity then
+			critCompleted = false
+		end
+		
 	   if critCompleted then 
 	      table.insert(CriteriaCache, tostring(j))
 	   else                  
@@ -156,18 +163,14 @@ local function ScanAllAchievements()
 	for _, categoryID in ipairs(cats) do
 		for i = 1, GetCategoryNumAchievements(categoryID) do
 			local achievementID, _, _, achCompleted, month, day, year, _, flags,_, _, _, wasEarnedByMe, earnedBy = GetAchievementInfo(categoryID, i)
-			if wasEarnedByMe then
-				ScanSingleAchievement(achievementID, achCompleted, month, day, year, flags)
-			end
+			ScanSingleAchievement(achievementID, achCompleted, month, day, year, flags, wasEarnedByMe)
 			
 			-- track previous steps of a progressive achievements
 			prevID = GetPreviousAchievement(achievementID)
 			
 			while type(prevID) ~= "nil" do
 				local achievementID, _, _, achCompleted, month, day, year, _, flags,_, _, _, wasEarnedByMe, earnedBy = GetAchievementInfo(prevID)
-				if wasEarnedByMe then
-					ScanSingleAchievement(achievementID, achCompleted, month, day, year, flags)
-				end
+				ScanSingleAchievement(achievementID, achCompleted, month, day, year, flags, wasEarnedByMe)
 				prevID = GetPreviousAchievement(achievementID)
 			end
 		end

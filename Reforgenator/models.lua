@@ -14,31 +14,31 @@ local CR_SPIRIT = 99
 local CR_EP = 100
 
 
--- Death Knight 0000000000000000000000000000000000000000000000000000000000000000000000000000000000
---updated 9-7 for 5.04
+-- Death Knight 
+
 function Reforgenator:TwoHandFrostDKModel()
     local model = ReforgeModel:new()
     model.readOnly = true
     model.statWeights = 
 	{
-        ["ITEM_MOD_HIT_RATING_SHORT"] = 2.26,
-        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 1.75,
-        ["ITEM_MOD_HASTE_RATING_SHORT"] = 1.40,
-        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.37,
-        ["ITEM_MOD_CRIT_RATING_SHORT"] = 1.34,
+        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 2.15,
+		["ITEM_MOD_HIT_RATING_SHORT"] = 2.17,
+        ["ITEM_MOD_HASTE_RATING_SHORT"] = 1.67,
+		["ITEM_MOD_CRIT_RATING_SHORT"] = 1.44,
+        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.02,        
     }
 
     model.notes = 'http://www.noxxic.com/wow/pve/death-knight/frost/dps-gear-reforging'
 
     model.reforgeOrder = 
 	{
+		{
+            rating = CR_EXPERTISE,
+            cap = "ExpertiseSoftCap"
+        },
         {
             rating = CR_HIT_MELEE,
             cap = "MeleeHitCap"
-        },
-        {
-            rating = CR_EXPERTISE,
-            cap = "ExpertiseHardCap"
         },
         {
             rating = CR_HASTE_MELEE,
@@ -56,18 +56,17 @@ function Reforgenator:TwoHandFrostDKModel()
 
     return model
 end
---updated 9-7 for 5.04
 
 function Reforgenator:DWFrostDKModel()
     local model = ReforgeModel:new()
     model.readOnly = true
     model.statWeights = 
 	{
-        ["ITEM_MOD_HIT_RATING_SHORT"] = 2.14,
-        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 2.10,
-		["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.51,
-		["ITEM_MOD_HASTE_RATING_SHORT"] = 1.33,
-        ["ITEM_MOD_CRIT_RATING_SHORT"] = 0.50,
+        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 2.74,
+		["ITEM_MOD_HIT_RATING_SHORT"] = 2.29,
+		["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.60,
+        ["ITEM_MOD_HASTE_RATING_SHORT"] = 1.39,
+        ["ITEM_MOD_CRIT_RATING_SHORT"] = 1.34,
     }
 
     model.notes = 'http://www.noxxic.com/wow/pve/death-knight/frost/dps-gear-reforging'
@@ -75,18 +74,18 @@ function Reforgenator:DWFrostDKModel()
     model.reforgeOrder = 
 	{
         {
+            rating = CR_EXPERTISE,
+            cap = "ExpertiseSoftCap"
+        },
+        {
             rating = CR_HIT_MELEE,
             cap = "MeleeHitCap"
         },
-        {
-            rating = CR_EXPERTISE,
-            cap = "ExpertiseHardCap"
-        },
-        {
+		{
             rating = CR_MASTERY,
             cap = "MaximumPossible"
         },
-		{
+        {
             rating = CR_HASTE_MELEE,
             cap = "MaximumPossible"
         },
@@ -94,6 +93,7 @@ function Reforgenator:DWFrostDKModel()
             rating = CR_CRIT_MELEE,
             cap = "MaximumPossible"
         },
+		
     }
 
     return model
@@ -153,11 +153,12 @@ function Reforgenator:BloodDKModel()
         ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.2,
         ["ITEM_MOD_DODGE_RATING_SHORT"] = 1,
         ["ITEM_MOD_PARRY_RATING_SHORT"] = 1,
-        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 0.4,
-        ["ITEM_MOD_HIT_RATING_SHORT"] = 0.2,
+        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 1.2,
+        ["ITEM_MOD_HIT_RATING_SHORT"] = 1.5,
+		["ITEM_MOD_HASTE_RATING_SHORT"] = 0.75,
     }
 
-    model.notes = 'http://www.noxxic.com/wow/pve/death-knight/blood'
+    model.notes = 'http://www.noxxic.com/wow/pve/death-knight/blood/reforging-gear'
 
     model.reforgeOrder = 
 	{
@@ -165,28 +166,18 @@ function Reforgenator:BloodDKModel()
             rating = CR_MASTERY,
             cap = "MaximumPossible"
 		},
-		--[[ --just place holders until i come back to work on it again.
 		{
             rating = CR_HIT_MELEE,
             cap = "MeleeHitCap"
         },
-        {
-            rating = CR_HASTE_MELEE,
-            cap = "MaximumPossible"
-        },
-        {
-            rating = CR_CRIT_MELEE,
-            cap = "MaximumPossible"
-        },
-        {
-            rating = CR_MASTERY,
-            cap = "MaximumPossible"
-        },
-        {
+		{
             rating = CR_EXPERTISE,
             cap = "ExpertiseSoftCap"
         },
-		]]
+		{
+            rating = CR_HASTE_MELEE,
+            cap = "MaximumPossible"
+        },        
     }
 
     return model
@@ -197,17 +188,21 @@ function Reforgenator:UnholyDKModel()
     model.readOnly = true
     model.statWeights = 
 	{
-        ["ITEM_MOD_HIT_RATING_SHORT"] = 3.0,
-        ["ITEM_MOD_HASTE_RATING_SHORT"] = 1.89,
-        ["ITEM_MOD_CRIT_RATING_SHORT"] = 1.85,
-        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.55,
-        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 0.99,
+        ["ITEM_MOD_HIT_RATING_SHORT"] = 2.29,
+        ["ITEM_MOD_HASTE_RATING_SHORT"] = 1.63,
+        ["ITEM_MOD_CRIT_RATING_SHORT"] = 1.61,
+        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.15,
+        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 2.42,
     }
 
-    model.notes = 'http://elitistjerks.com/f72/t125292-unholy_dps_my_friend_misery_4_3_0_a/'
+    model.notes = 'http://www.noxxic.com/wow/pve/death-knight/unholy/reforging-gear'
 
     model.reforgeOrder = 
 	{
+		{
+            rating = CR_EXPERTISE,
+            cap = "ExpertiseSoftCap"
+        },
         {
             rating = CR_HIT_MELEE,
             cap = "MeleeHitCap"
@@ -224,18 +219,15 @@ function Reforgenator:UnholyDKModel()
             rating = CR_MASTERY,
             cap = "MaximumPossible"
         },
-        {
-            rating = CR_EXPERTISE,
-            cap = "ExpertiseSoftCap"
-        },
+        
     }
 
     return model
 end
 
--- End Death Knight 0000000000000000000000000000000000000000000000000000000000000000000000000000000000
+-- End Death Knight 
  
--- Druid  111111111111111111111111111111111111111111111111111111111111111111111
+-- Druid  
 
 -- TODO
 function Reforgenator:GuardianModel()
@@ -243,15 +235,15 @@ function Reforgenator:GuardianModel()
     model.readOnly = true
     model.statWeights = 
 	{
-        ["ITEM_MOD_DODGE_RATING_SHORT"] = 0.98,
-        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 0.42,
-        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 0.25,
-        ["ITEM_MOD_CRIT_RATING_SHORT"] = 0.22,
-        ["ITEM_MOD_HIT_RATING_SHORT"] = 0.13,
+        ["ITEM_MOD_DODGE_RATING_SHORT"] = 0.0252,
+        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 0.011,
+        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 0.018,
+        ["ITEM_MOD_CRIT_RATING_SHORT"] = 0.043,
+        ["ITEM_MOD_HIT_RATING_SHORT"] = 0.018,
         ["ITEM_MOD_HASTE_RATING_SHORT"] = 0.02,
     }
 
-    model.notes = 'http://elitistjerks.com/f73/t127444-feral_bear_cataclysm_4_3_dragon_soul/'
+    model.notes = 'http://www.noxxic.com/wow/pve/druid/guardian/reforging-gear'
 
     model.reforgeOrder = 
 	{
@@ -273,14 +265,14 @@ function Reforgenator:BalanceModel()
     model.readOnly = true
     model.statWeights = 
 	{
-        ["ITEM_MOD_SPIRIT_SHORT"] = 2.4,
-        ["ITEM_MOD_HIT_RATING_SHORT"] = 2.4,
-        ["ITEM_MOD_HASTE_RATING_SHORT"] = 2.15,
-        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.45,
-        ["ITEM_MOD_CRIT_RATING_SHORT"] = 0.87,
+        ["ITEM_MOD_SPIRIT_SHORT"] = 3.06,
+        ["ITEM_MOD_HIT_RATING_SHORT"] = 3.06,
+        ["ITEM_MOD_HASTE_RATING_SHORT"] = 1.57,
+        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.65,
+        ["ITEM_MOD_CRIT_RATING_SHORT"] = 1.76,
     }
 
-    model.notes = 'http://elitistjerks.com/f73/t110353-balance_cataclysm_4_3_dragon_soul/'
+    model.notes = 'http://www.noxxic.com/wow/pve/druid/balance/reforging-gear'
 
     model.reforgeOrder = {
         {
@@ -291,14 +283,15 @@ function Reforgenator:BalanceModel()
             rating = CR_HASTE_SPELL,
             cap = "MaximumPossible",
         },
+		{
+            rating = CR_CRIT_SPELL,
+            cap = "MaximumPossible",
+        },
         {
             rating = CR_MASTERY,
             cap = "MaximumPossible"
         },
-        {
-            rating = CR_CRIT_SPELL,
-            cap = "MaximumPossible",
-        },
+        
     }
 
     return model
@@ -309,24 +302,19 @@ function Reforgenator:FeralModel()
     model.readOnly = true
     model.statWeights = 
 	{
-        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.291,
-        ["ITEM_MOD_CRIT_RATING_SHORT"] = 1.291,
-        ["ITEM_MOD_HASTE_RATING_SHORT"] = 1.291,
-        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 1.24,
-        ["ITEM_MOD_HIT_RATING_SHORT"] = 1.24,
+        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.76,
+        ["ITEM_MOD_CRIT_RATING_SHORT"] = 1.60,
+        ["ITEM_MOD_HASTE_RATING_SHORT"] = 1.29,
+        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 1.60,
+        ["ITEM_MOD_HIT_RATING_SHORT"] = 1.60,
     }
 
-    model.notes = 'http://elitistjerks.com/f73/t127445-feral_cat_cataclysm_4_3_dragon_soul/'
+    model.notes = 'http://www.noxxic.com/wow/pve/druid/feral/reforging-gear'
 
     model.reforgeOrder = 
 	{
 		{
-            rating = CR_HIT_MELEE,
-            cap = "MeleeHitCap"
-        },
-
-		{
-            rating = CR_HASTE_MELEE,
+            rating = CR_MASTERY,
             cap = "MaximumPossible"
         },
 		{
@@ -334,13 +322,20 @@ function Reforgenator:FeralModel()
             cap = "MaximumPossible"
         },
 		{
-            rating = CR_MASTERY,
-            cap = "MaximumPossible"
-        },
-		{
             rating = CR_EXPERTISE,
             cap = "ExpertiseSoftCap"
         },
+		{
+            rating = CR_HIT_MELEE,
+            cap = "MeleeHitCap"
+        },
+		{
+            rating = CR_HASTE_MELEE,
+            cap = "MaximumPossible"
+        },
+		
+		
+		
     }
 
     return model
@@ -351,41 +346,37 @@ function Reforgenator:RestoDruidModel()
     model.readOnly = true
     model.statWeights = 
 	{
-        ["ITEM_MOD_SPIRIT_SHORT"] = 0.75,
-        ["ITEM_MOD_HASTE_RATING_SHORT"] = 0.65,
-        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 0.60,
+        ["ITEM_MOD_SPIRIT_SHORT"] = 2.75,
+        ["ITEM_MOD_HASTE_RATING_SHORT"] = 2,
+        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.25,
         ["ITEM_MOD_CRIT_RATING_SHORT"] = 0.50,
     }
 
-    model.notes = 'http://elitistjerks.com/f73/t110354-resto_cataclysm_4_3_dragon_soul/'
+    model.notes = 'http://www.noxxic.com/wow/pve/druid/restoration/reforging-gear'
 
     model.reforgeOrder = 
 	{
-        {
-            rating = CR_MASTERY,
-            cap = "Maintain",
-        },
-        {
-            rating = CR_HASTE_SPELL,
-            cap = "Fixed",
-            userdata = { 916, 2005 },
-        },
-        {
+		{
             rating = CR_SPIRIT,
             cap = "MaximumPossible",
         },
+		{
+            rating = CR_HASTE_SPELL,
+            cap = "1SecGCD",
+            --userdata = { 916, 3043 },
+        },
         {
             rating = CR_MASTERY,
-            cap = "MaximumPossible"
+            cap = "MaimumPossible",
         },
     }
 
     return model
 end
 
--- End Druid 111111111111111111111111111111111111111111111111111111111111111111111
+-- End Druid 
 
---Pally  222222222222222222222222222222222222222222222222222222222222222222222222
+--Pally  
 
 function Reforgenator:ProtPallyModel()
     local model = ReforgeModel:new()
@@ -399,15 +390,27 @@ function Reforgenator:ProtPallyModel()
         ["ITEM_MOD_HIT_RATING_SHORT"] = 0.02,
     }
 
-    model.notes = 'http://elitistjerks.com/f76/t126438-prot_4_3_send_me_my_way/'
+    model.notes = 'http://www.noxxic.com/wow/pve/paladin/protection/reforging-gear'
 
     model.reforgeOrder = 
 	{
+		{
+            rating = CR_HIT_MELEE,
+            cap = "MeleeHitCap"
+        },
+        {
+            rating = CR_EXPERTISE,
+            cap = "ExpertiseHardCap"
+        },
         {
             rating = CR_MASTERY,
             cap = "MaximumPossible"
         },
-    }
+		{
+            rating = CR_HASTE_MELEE,
+            cap = "MaximumPossible"
+        },
+     }
 
     return model
 end
@@ -424,7 +427,7 @@ function Reforgenator:RetPallyModel()
         ["ITEM_MOD_HASTE_RATING_SHORT"] = 0.79,
     }
 
-    model.notes = 'http://www.noxxic.com/pve/paladin/retribution/stat-priority-and-reforging-strats'
+    model.notes = 'http://www.noxxic.com/wow/pve/paladin/retribution/reforging-gear'
 
     model.reforgeOrder = 
 	{
@@ -436,6 +439,10 @@ function Reforgenator:RetPallyModel()
             rating = CR_EXPERTISE,
             cap = "ExpertiseSoftCap"
         },
+		{
+            rating = CR_HASTE_MELEE,
+            cap = "MaximumPossible"
+        },
         {
             rating = CR_MASTERY,
             cap = "MaximumPossible"
@@ -444,10 +451,7 @@ function Reforgenator:RetPallyModel()
             rating = CR_CRIT_MELEE,
             cap = "MaximumPossible"
         },
-        {
-            rating = CR_HASTE_MELEE,
-            cap = "MaximumPossible"
-        },
+        
     }
 
     return model
@@ -465,7 +469,7 @@ function Reforgenator:HolyPallyModel()
         ["ITEM_MOD_MASTERY_RATING_SHORT"] = 0.30,
     }
 
-    model.notes = 'http://elitistjerks.com/f76/t110847-%5Bholy%5Dcataclysm_holy_compendium/ http://www.bandagespec.com/2011/02/on-haste-crit-and-other-secondary-stats.html'
+    model.notes = 'http://www.noxxic.com/wow/pve/paladin/holy/reforging-gear'
 
     model.reforgeOrder = 
 	{
@@ -473,27 +477,27 @@ function Reforgenator:HolyPallyModel()
             rating = CR_SPIRIT,
             cap = "MaximumPossible"
         },
+		{
+            rating = CR_MASTERY,
+            cap = "MaximumPossible"
+        },
         {
             rating = CR_HASTE_SPELL,
             cap = "MaximumPossible"
         },
-        {
-            rating = CR_MASTERY,
-            cap = "MaximumPossible"
-        },
-	{
-	    rating = CR_CRIT_SPELL,
-            cap = "MaximumPossible"
-	},
+		{
+			rating = CR_CRIT_SPELL,
+			cap = "MaximumPossible"
+		},
     }
 
     return model
 end
 
 
--- End Pally 222222222222222222222222222222222222222222222222222222222222222222222222
+-- End Pally 
 
---Hunter  3333333333333333333333333333333333333333333333333333333333333333333333333333333333
+--Hunter  
 
 -- updated 9/8  for 5.04
 function Reforgenator:BeastMasterHunterModel()
@@ -501,25 +505,25 @@ function Reforgenator:BeastMasterHunterModel()
     model.readOnly = true
     model.statWeights = 
 	{
-	    ["ITEM_MOD_HIT_RATING_SHORT"] = 1.77,
-        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 1.30,
-        ["ITEM_MOD_CRIT_RATING_SHORT"] = 0.99,
-        ["ITEM_MOD_HASTE_RATING_SHORT"] = 0.79,
-		["ITEM_MOD_MASTERY_RATING_SHORT"] = 0.55,
+	    ["ITEM_MOD_HIT_RATING_SHORT"] = 2.89,
+        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 2.98,
+        ["ITEM_MOD_CRIT_RATING_SHORT"] = 1.45,
+        ["ITEM_MOD_HASTE_RATING_SHORT"] = 1.25,
+		["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.32,
 
     }
 
-    model.notes = 'http://www.noxxic.com/wow/pve/hunter/beast-mastery/dps-gear-reforging'
+    model.notes = 'http://www.noxxic.com/wow/pve/hunter/beast-mastery/reforging-gear'
 
     model.reforgeOrder = 
 	{
+		{
+            rating = CR_EXPERTISE,
+            cap = "ExpertiseSoftCap"
+        },
         {
             rating = CR_HIT_RANGED,
             cap = "RangedHitCap"
-        },
-		{
-            rating = CR_EXPERTISE,
-            cap = "ExpertiseHardCap"
         },
         {
             rating = CR_CRIT_RANGED,
@@ -544,14 +548,14 @@ function Reforgenator:MarksmanshipHunterModel()
     model.readOnly = true
     model.statWeights = 
 	{
-		["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 3.49,
-        ["ITEM_MOD_HIT_RATING_SHORT"] = 3.49,
-        ["ITEM_MOD_CRIT_RATING_SHORT"] = 2.65,
-        ["ITEM_MOD_HASTE_RATING_SHORT"] = 1.61,
-        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.38,
+		["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 3.19,
+        ["ITEM_MOD_HIT_RATING_SHORT"] = 3.27,
+        ["ITEM_MOD_CRIT_RATING_SHORT"] = 1.42,
+        ["ITEM_MOD_HASTE_RATING_SHORT"] = 1.19,
+        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 0.92,
     }
 
-    model.notes = 'http://www.noxxic.com/wow/pve/hunter/marksmanship/dps-gear-reforging'
+    model.notes = 'http://www.noxxic.com/wow/pve/hunter/marksmanship/reforging-gear'
 
     model.reforgeOrder = 
 	{
@@ -563,12 +567,12 @@ function Reforgenator:MarksmanshipHunterModel()
             rating = CR_HIT_RANGED,
             cap = "RangedHitCap"
         },
-        {
-            rating = CR_CRIT_RANGED,
+		{
+            rating = CR_HASTE_RANGED,
             cap = "MaximumPossible"
         },
         {
-            rating = CR_HASTE_RANGED,
+            rating = CR_CRIT_RANGED,
             cap = "MaximumPossible"
         },
         {
@@ -586,24 +590,24 @@ function Reforgenator:SurvivalHunterModel()
     model.readOnly = true
     model.statWeights = 
 	{
-		["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 3.19,
-		["ITEM_MOD_HIT_RATING_SHORT"] = 3.19,
-        ["ITEM_MOD_CRIT_RATING_SHORT"] = 1.37,
-        ["ITEM_MOD_HASTE_RATING_SHORT"] = 1.33,
-        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.27,
+		["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 2.89,
+		["ITEM_MOD_HIT_RATING_SHORT"] = 2.94,
+        ["ITEM_MOD_CRIT_RATING_SHORT"] = 1.34,
+        ["ITEM_MOD_HASTE_RATING_SHORT"] = -6.83,
+        ["ITEM_MOD_MASTERY_RATING_SHORT"] = -7.11,
     }
 
-    model.notes = 'http://www.noxxic.com/wow/pve/hunter/survival/dps-gear-reforging'
+    model.notes = 'http://www.noxxic.com/wow/pve/hunter/survival/reforging-gear'
 
     model.reforgeOrder = 
 	{
+		{
+            rating = CR_EXPERTISE,
+            cap = "ExpertiseSoftCap"
+        },
         {
             rating = CR_HIT_RANGED,
             cap = "RangedHitCap"
-        },
-        {
-            rating = CR_EXPERTISE,
-            cap = "ExpertiseSoftCap"
         },
 		{
             rating = CR_CRIT_RANGED,
@@ -622,11 +626,9 @@ function Reforgenator:SurvivalHunterModel()
     return model
 end
 
--- End Hunter 3333333333333333333333333333333333333333333333333333333333333333333333333333333333
+-- End Hunter 
 
---Warrior  44444444444444444444444444444444444444444444444444444444444444444444444444444444
-
---Fix this whole class ************************<---<---<---<---<---<---<---<---<---<---<---<---<---<---<---<---<---<---<---<--- 
+--Warrior  
 
 function Reforgenator:FuryModel()
     local model = ReforgeModel:new()
@@ -644,21 +646,17 @@ function Reforgenator:FuryModel()
 
     model.reforgeOrder = 
 	{
-        {
-            rating = CR_EXPERTISE,
-            cap = "ExpertiseSoftCap"
-        },
 		{
             rating = CR_HIT_MELEE,
             cap = "MeleeHitCap"
         },
         {
-            rating = CR_CRIT_MELEE,
-            cap = "MaximumPossible"
+            rating = CR_EXPERTISE,
+            cap = "ExpertiseSoftCap"
         },
         {
-            rating = CR_HIT_MELEE,
-            cap = "DWHitCap"
+            rating = CR_CRIT_MELEE,
+            cap = "MaximumPossible"
         },
         {
             rating = CR_MASTERY,
@@ -685,7 +683,7 @@ function Reforgenator:SMFuryModel()
         ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.24,
     }
 
-    model.notes = 'http://elitistjerks.com/f81/t110350-cataclysm_warrior_faq_4_2_read_while_patching_before_posting/'
+    model.notes = 'http://www.noxxic.com/wow/pve/warrior/fury/reforging-gear'
 
     model.reforgeOrder = 
 	{
@@ -702,15 +700,11 @@ function Reforgenator:SMFuryModel()
             cap = "MaximumPossible"
         },
         {
-            rating = CR_HIT_MELEE,
-            cap = "DWHitCap"
-        },
-        {
-            rating = CR_HASTE_MELEE,
+            rating = CR_MASTERY,
             cap = "MaximumPossible"
         },
-        {
-            rating = CR_MASTERY,
+		{
+            rating = CR_HASTE_MELEE,
             cap = "MaximumPossible"
         },
     }
@@ -718,7 +712,6 @@ function Reforgenator:SMFuryModel()
     return model
 end
 
---TODO  Needs fixing Outdated ***************************************************************** <---<---<---<---<---<---
 
 function Reforgenator:ArmsModel()
     local model = ReforgeModel:new()
@@ -732,7 +725,7 @@ function Reforgenator:ArmsModel()
         ["ITEM_MOD_HASTE_RATING_SHORT"] = 0.8,
     }
 
-    model.notes = 'http://www.noxxic.com/pve/warrior/arms/stat-priority-and-reforging-strats'
+    model.notes = 'http://www.noxxic.com/wow/pve/warrior/arms/reforging-gear'
 
     model.reforgeOrder = 
 	{
@@ -748,12 +741,13 @@ function Reforgenator:ArmsModel()
             rating = CR_CRIT_MELEE,
             cap = "MaximumPossible",
         },
-        {
-            rating = CR_MASTERY,
-            cap = "MaximumPossible",
-        },
+        
         {
             rating = CR_HASTE_MELEE,
+            cap = "MaximumPossible",
+        },
+		{
+            rating = CR_MASTERY,
             cap = "MaximumPossible",
         },
     }
@@ -773,7 +767,7 @@ function Reforgenator:ProtWarriorModel()
         ["ITEM_MOD_HIT_RATING_SHORT"] = 0.02,
     }
     
-    model.notes = 'http://elitistjerks.com/f81/t110350-cataclysm_warrior_faq_4_2_read_while_patching_before_posting/'
+    model.notes = 'http://www.noxxic.com/wow/pve/warrior/protection/reforging-gear'
 
     model.reforgeOrder = 
 	{
@@ -781,14 +775,35 @@ function Reforgenator:ProtWarriorModel()
             rating = CR_MASTERY,
             cap = "MaximumPossible"
         },
+		{
+            rating = CR_HIT_MELEE,
+            cap = "MeleeHitCap",
+        },
+        {
+            rating = CR_EXPERTISE,
+            cap = "ExpertiseSoftCap",
+        },
+		{
+			rating = CR_PARRY,
+			cap ="maximumPossible"
+        },
+		{
+			rating = CR_DODGE,
+			cap = "MaximumPossible"
+		},
+        {
+            rating = CR_HASTE_MELEE,
+            cap = "MaximumPossible",
+        },
+
     }
 
     return model
 end
 
--- end Earrior 44444444444444444444444444444444444444444444444444444444444444444444444444444444
+-- end Warrior 
 
---Rogue 55555555555555555555555555555555555555555555555555555555555555555555555555555555555
+--Rogue 
 
 function Reforgenator:CombatRogueModel()
     local model = ReforgeModel:new()
@@ -803,16 +818,16 @@ function Reforgenator:CombatRogueModel()
     }
 
     model.notes = 'http://www.noxxic.com/wow/pve/rogue/combat/dps-gear-reforging'
--- Agility > Melee Hit (7.5%) >= Expertise (7.5%) > Haste >= Mastery > Crit
+
     model.reforgeOrder = 
 	{
         {
-            rating = CR_HIT_MELEE,
-            cap = "MeleeHitCap"
-        },
-		{
             rating = CR_EXPERTISE,
             cap = "ExpertiseSoftCap"
+        },
+		{
+            rating = CR_HIT_MELEE,
+            cap = "MeleeHitCap"
         },
         {
             rating = CR_HASTE_MELEE,
@@ -843,7 +858,7 @@ function Reforgenator:AssassinationRogueModel()
         ["ITEM_MOD_CRIT_RATING_SHORT"] = 0.9,
     }
 
-    model.notes = 'http://elitistjerks.com/f78/t110134-assassination_guide_cata_12_01_2011_a/'
+    model.notes = 'http://www.noxxic.com/wow/pve/rogue/assassination/reforging-gear'
 
     model.reforgeOrder = 
 	{
@@ -851,26 +866,23 @@ function Reforgenator:AssassinationRogueModel()
             rating = CR_HIT_SPELL,
             cap = "SpellHitCap"
         },
-        {
-            rating = CR_MASTERY,
-            cap = "MaximumPossible"
-        },
-        {
-            rating = CR_HASTE_MELEE,
-            cap = "MaximumPossible"
-        },
-        {
+		{
             rating = CR_EXPERTISE,
             cap = "ExpertiseSoftCap"
         },
         {
-            rating = CR_HIT_MELEE,
-            cap = "DWHitCap"
-        },
-        {
+            rating = CR_MASTERY,
+            cap = "MaximumPossible"
+        },{
             rating = CR_CRIT_MELEE,
             cap = "MaximumPossible"
         },
+   
+        {
+            rating = CR_HASTE_MELEE,
+            cap = "MaximumPossible"
+        },
+       
     }
 
     return model
@@ -889,7 +901,7 @@ function Reforgenator:SubtletyRogueModel()
         ["ITEM_MOD_MASTERY_RATING_SHORT"] = 0.9,
     }
 
-    model.notes = 'http://elitistjerks.com/f78/t119013-cataclysm_subtlety_compendium/'
+    model.notes = 'http://www.noxxic.com/wow/pve/rogue/subtlety/reforging-gear'
 
     model.reforgeOrder = 
 	{
@@ -897,36 +909,28 @@ function Reforgenator:SubtletyRogueModel()
             rating = CR_HIT_MELEE,
             cap = "MeleeHitCap"
         },
+		{
+            rating = CR_EXPERTISE,
+            cap = "ExpertiseSoftCap"
+        },
         {
             rating = CR_HASTE_MELEE,
             cap = "MaximumPossible"
-        },
-        {
-            rating = CR_EXPERTISE,
-            cap = "ExpertiseSoftCap"
         },
         {
             rating = CR_CRIT_MELEE,
             cap = "MaximumPossible"
         },
         {
-            rating = CR_HIT_SPELL,
-            cap = "SpellHitCap"
-        },
-        {
             rating = CR_MASTERY,
             cap = "MaximumPossible"
-        },
-        {
-            rating = CR_HIT_MELEE,
-            cap = "DWHitCap"
         },
     }
 
     return model
 end
 
--- End Rogue  55555555555555555555555555555555555555555555555555555555555555555555555555555555555
+-- End Rogue  
 
 --updated 9/8 for 5.04
 function Reforgenator:AffWarlockModel()
@@ -1042,10 +1046,10 @@ function Reforgenator:DemoWarlockModel()
     return model
 end
 
--- End Warlock 66666666666666666666666666666666666666666666666666666666666666666666666666666666666
+-- End Warlock 
 
 
---Mage 77777777777777777777777777777777777777777777777777777777777777777777777777777
+--Mage 
 
 -- TODO
 function Reforgenator:ArcaneMageModel()
@@ -1160,9 +1164,9 @@ function Reforgenator:FireMageModel()
     return model
 end
 
---end Mage 77777777777777777777777777777777777777777777777777777777777777777777777777777
+--end Mage 
 
---Priest  88888888888888888888888888888888888888888888888888888888888888888888
+--Priest  
 
 -- TODO
 function Reforgenator:ShadowPriestModel()
@@ -1273,9 +1277,9 @@ function Reforgenator:HolyPriestModel()
 end
 
 
--- End Priest 88888888888888888888888888888888888888888888888888888888888888888888
+-- End Priest 
 
---Shamman 9999999999999999999999999999999999999999999999999999999999
+--Shamman 
 
 function Reforgenator:ElementalModel()
     local model = ReforgeModel:new()
@@ -1289,7 +1293,7 @@ function Reforgenator:ElementalModel()
         ["ITEM_MOD_CRIT_RATING_SHORT"] = 1.11,
     }
 
-    model.notes = 'http://www.noxxic.com/pve/shaman/elemental/stat-priority-and-reforging-strats'
+    model.notes = 'http://www.noxxic.com/wow/pve/shaman/elemental/reforging-gear'
 
     model.reforgeOrder = 
 	{
@@ -1326,7 +1330,7 @@ function Reforgenator:EnhancementModel()
         ["ITEM_MOD_HASTE_RATING_SHORT"] = 1.37,
     }
 
-    model.notes = 'http://elitistjerks.com/f79/t127416-enhancement_4_3_least_your_old_axe_good_transmog/'
+    model.notes = 'http://www.noxxic.com/wow/pve/shaman/enhancement/reforging-gear/'
 
     model.reforgeOrder = 
 	{
@@ -1338,14 +1342,15 @@ function Reforgenator:EnhancementModel()
             rating = CR_EXPERTISE,
             cap = "ExpertiseSoftCap"
         },
-        {
-            rating = CR_HIT_SPELL,
-            cap = "SpellHitCap"
-        },
-        {
+		{
             rating = CR_MASTERY,
             cap = "MaximumPossible"
         },
+        {
+            rating = CR_HASTE_SPELL,
+            cap = "MaximumPossible"
+        },
+        
     }
 
     return model
@@ -1362,13 +1367,13 @@ function Reforgenator:RestoShamanModel()
         ["ITEM_MOD_CRIT_RATING_SHORT"] = 0.40,
     }
 
-    model.notes = 'http://elitistjerks.com/f79/t121202-resto_raiding_4_1_updating_4_3_a/'
+    model.notes = 'http://www.noxxic.com/wow/pve/shaman/restoration/reforging-gear'
 
     model.reforgeOrder = 
 	{
         {
             rating = CR_SPIRIT,
-            cap = "MaimumPossible"
+            cap = "MaximumPossible"
         },
         {
             rating = CR_HASTE_SPELL,
@@ -1383,4 +1388,144 @@ function Reforgenator:RestoShamanModel()
     return model
 end
 
--- End Shaman 9999999999999999999999999999999999999999999999999999999999
+-- End Shaman 
+
+-- Monk
+
+function Reforgenator:BrewMasterMonkModel()
+	local model = ReforgeModel:new()
+	model.readOnly = true
+	model.statWeights =
+	{
+		["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 2.5,
+		["ITEM_MOD_HIT_RATING_SHORT"] = 2.45,
+		["ITEM_MOD_CRIT_RATING_SHORT"] = 1.75,
+		["ITEM_MOD_HASTE_RATING_SHORT"] = 1.7,
+        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1,
+	}
+	
+	model.notes = 'http://www.noxxic.com/wow/pve/monk/brewmaster/reforging-gear'
+	
+	model.reforgeOrder = 
+	{
+		{
+            rating = CR_EXPERTISE,
+            cap = "ExpertiseHardCap"
+        },
+		{
+            rating = CR_HIT_MELEE,
+            cap = "MeleeHitCap"
+        },        
+		{
+            rating = CR_CRIT_MELEE,
+            cap = "MaximumPossible"
+        },
+        {
+            rating = CR_HASTE_MELEE,
+            cap = "MaximumPossible"
+        },
+		{
+            rating = CR_MASTERY,
+            cap = "MaximumPossible"
+        },
+      
+	}
+	
+	return model
+
+
+end
+function Reforgenator:MistWeaverMonkModel()
+	local model = ReforgeModel:new()
+	model.readOnly = true
+	model.statWeights =
+	{
+	--add weights
+		["ITEM_MOD_SPIRIT_SHORT"] = 2.5,
+        ["ITEM_MOD_HASTE_RATING_SHORT"] = 1.75,
+		["ITEM_MOD_CRIT_RATING_SHORT"] = 1.5,
+        ["ITEM_MOD_MASTERY_RATING_SHORT"] = 1.05,
+	}
+	
+	model.notes = 'http://www.noxxic.com/wow/pve/monk/mistweaver/reforging-gear'
+	
+	model.reforgeOrder = 
+	{
+		{
+            rating = CR_SPIRIT,
+            cap = "MaximumPossible"
+        },
+        {
+            rating = CR_HASTE_SPELL,
+            cap = "1SecGCD"
+        },
+		{
+            rating = CR_CRIT_SPELL,
+            cap = "MaximumPossible"
+        },
+ 		{
+            rating = CR_MASTERY,
+            cap = "MaximumPossible"
+        },
+
+	}
+	
+	return model
+
+
+end
+--[[
+        [1] = "ITEM_MOD_CRIT_RATING_SHORT",
+        [2] = "ITEM_MOD_DODGE_RATING_SHORT",
+        [3] = "ITEM_MOD_EXPERTISE_RATING_SHORT",
+        [4] = "ITEM_MOD_HASTE_RATING_SHORT",
+        [5] = "ITEM_MOD_HIT_RATING_SHORT",
+        [6] = "ITEM_MOD_MASTERY_RATING_SHORT",
+        [7] = "ITEM_MOD_PARRY_RATING_SHORT",
+        [8] = "ITEM_MOD_SPIRIT_SHORT",
+		]]
+function Reforgenator:WindWalkerMonkModel()
+	local model = ReforgeModel:new()
+	model.readOnly = true
+	model.statWeights =
+	{
+		["ITEM_MOD_HIT_RATING_SHORT"] = 2.5,
+        ["ITEM_MOD_EXPERTISE_RATING_SHORT"] = 1.75,
+		["ITEM_MOD_CRIT_RATING_SHORT"] = 1.15,
+		["ITEM_MOD_HASTE_RATING_SHORT"] = 1.0,
+        ["ITEM_MOD_MASTERY_RATING_SHORT"] = .75,
+	}
+	
+	model.notes = 'http://www.noxxic.com/wow/pve/monk/windwalker/reforging-gear'
+	
+	model.reforgeOrder = 
+	{
+		{
+            rating = CR_HIT_MELEE,
+            cap = "MeleeHitCap"
+        },
+        {
+            rating = CR_EXPERTISE,
+            cap = "ExpertiseSoftCap"
+        },
+		{
+            rating = CR_CRIT_MELEE,
+            cap = "MaximumPossible"
+        },
+        {
+            rating = CR_HASTE_MELEE,
+            cap = "MaximumPossible"
+        },
+		{
+            rating = CR_MASTERY,
+            cap = "MaximumPossible"
+        },
+
+      
+	}
+	
+	return model
+
+
+end
+--End Monk

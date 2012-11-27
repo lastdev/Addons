@@ -493,8 +493,8 @@ function Outfitter.OutfitBar:UpdateBars2()
 	local vStackBackwards = (self.Settings.OutfitBar.Vertical and vIsAnchorBottom)
 	                     or (not self.Settings.OutfitBar.Vertical and vIsAnchorRight)
 	
-	local vDragBarAnchor = tern(self:xor(self.Settings.OutfitBar.Vertical, vIsAnchorBottom), "BOTTOM", "TOP")..
-	                       tern(self:xor(self.Settings.OutfitBar.Vertical, vIsAnchorRight), "LEFT", "RIGHT")
+	local vDragBarAnchor = (self:xor(self.Settings.OutfitBar.Vertical, vIsAnchorBottom) and "BOTTOM" or "TOP")..
+	                       (self:xor(self.Settings.OutfitBar.Vertical, vIsAnchorRight) and "LEFT" or "RIGHT")
 	
 	self.DidStackBackwards = vStackBackwards
 	

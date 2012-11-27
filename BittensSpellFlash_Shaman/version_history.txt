@@ -1,3 +1,14 @@
+== Version 3.2.0
+* Elemental: Prioritize Lava Burst above Flame Shock.
+* Elemental: Do not flash Elemental Mastery during Bloodlust.
+* Elemental: Do not flash Flame Shock during Ascendance.
+* Elemental: Bugfix - flash Ascendance when Lava Burst is on cooldown, instead of when it is not.
+
+== Version 3.1.0 beta
+* All: Updated rotations to match Simulationcraft defaults.
+* All: Added Ascendance and level 90 talents.
+* All: Updated translations for Brazilian Portuguese (thanks Kasth!).
+
 == Version 3.0.0
 * Enhancement: added an Enhancement rotation for 5.0.4.
 * All: No longer reported as "Out of Date" in 5.0.4.

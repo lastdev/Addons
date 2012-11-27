@@ -5,7 +5,7 @@
 
 	AddOn: EnchantrixBarker
 	Revision: $Id: BarkerStrings.lua 5325 2012-08-17 15:56:13Z brykrys $
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 
 	License:
 		This program is free software; you can redistribute it and/or

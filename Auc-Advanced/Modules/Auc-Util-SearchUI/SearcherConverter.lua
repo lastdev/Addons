@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Search UI - Searcher Converter
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: SearcherConverter.lua 5331 2012-08-19 02:43:59Z ccox $
 	URL: http://auctioneeraddon.com/
 

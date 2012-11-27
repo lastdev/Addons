@@ -170,7 +170,7 @@
         </Texture>
       </Layer>
       <Layer level="ARTWORK">
-        <FontString name="$parentQuestName" parentKey="QuestName" inherits="GameFontHighlightSmall" justifyH="LEFT" hidden="false">
+        <FontString name="$parentQuestName" parentKey="QuestName" inherits="GameFontHighlightSmall" justifyH="LEFT">
           <Size x ="300" y ="16"/>
           <Anchors>
             <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$parent" x="130"/>
@@ -907,4 +907,5 @@
       <OnMouseWheel>qcMenuMouseWheel(self, delta)</OnMouseWheel>
     </Scripts>
   </Frame>
-</Ui>
+
+  </Ui>

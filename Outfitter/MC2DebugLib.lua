@@ -1,4 +1,5 @@
 ﻿local AddonName, Addon = ...
+local _
 
 Addon.DebugLib =
 {
@@ -110,7 +111,7 @@ function Addon.DebugLib:AddDebugMessage(pPrefix, pMessage, ...)
 		local vTabFlash = _G[self.DebugFrame:GetName().."TabFlash"]
 		
 		vTabFlash:Show()
-		UIFrameFlash(vTabFlash, 0.25, 0.25, 60, nil, 0.5, 0.5)
+		--UIFrameFlash(vTabFlash, 0.25, 0.25, 60, nil, 0.5, 0.5)
 	end
 	
 	return vMessage

@@ -1,7 +1,7 @@
 --[[
 	Norganna's Tooltip Helper class
 	Version: 1,4
-	Revision: $Id: nTipHelper.lua 336 2012-09-07 16:17:46Z brykrys $
+	Revision: $Id: nTipHelper.lua 343 2012-09-21 16:49:14Z brykrys $
 	URL: http://norganna.org/tthelp
 
 	This is a slide-in helper class for the Norganna's AddOns family of AddOns
@@ -43,7 +43,7 @@
 if not LibStub then -- LibStub is included in LibExtraTip
 	error("TipHelper cannot load because LibExtraTip is not loaded (LibStub missing)")
 end
-local MAJOR,MINOR,REVISION = "nTipHelper", 1, 4
+local MAJOR,MINOR,REVISION = "nTipHelper", 1, 5
 local LIBSTRING = MAJOR..":"..MINOR
 local lib = LibStub:NewLibrary(LIBSTRING,REVISION)
 if not lib then return end
@@ -203,7 +203,7 @@ do -- tooltip class definition
 						ret4 = tonumber(s4) or 0 -- health
 						ret5 = tonumber(s5) or 0 -- power
 						ret6 = tonumber(s6) or 0 -- speed
-						if ret7 then
+						if s7 then
 							ret7 = tonumber((strsplit("|", s7))) or 0 -- battlepetID (journal ID. usually 0 for caged pets)
 						else
 							ret7 = 0
@@ -298,7 +298,12 @@ do -- tooltip class definition
 
 	-- Call the given frame's SetHyperlink call
 	function lib:ShowItemLink(frame, link, count, additional)
-		libTT:SetHyperlinkAndCount(frame, link, count, additional)
+		return libTT:SetHyperlinkAndCount(frame, link, count, additional)
+	end
+
+	-- Load a battlepet link into a BattlePetTooltip frame
+	function lib:ShowPetLink(frame, link, count, additional)
+		return libTT:SetBattlePetAndCount(frame, link, count, additional)
 	end
 
 	-- Activation function. All client addons should call this when they get ADDON_LOADED
@@ -306,6 +311,8 @@ do -- tooltip class definition
 		if activated then return end
 		libTT:RegisterTooltip(GameTooltip)
 		libTT:RegisterTooltip(ItemRefTooltip)
+		libTT:RegisterTooltip(BattlePetTooltip)
+		libTT:RegisterTooltip(FloatingBattlePetTooltip)
 		activated = true
 	end
 
@@ -462,4 +469,4 @@ do -- tooltip class definition
 
 end -- tooltip class definition
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/TipHelper/nTipHelper.lua $","$Rev: 336 $","5.12.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/TipHelper/nTipHelper.lua $","$Rev: 343 $","5.12.DEV.", 'auctioneer', 'libs')

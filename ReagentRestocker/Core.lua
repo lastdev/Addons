@@ -195,9 +195,21 @@ local function strT (tab)
 end
 
 -- Returns the item id of parsed from the provided item link
+-- WARNING: Starting with Mists, there is also Hbattlepet in addition to Hitem,
+-- so this may return nil!
 function getIDFromItemLink(itemLink)
+	local itemID
 	if itemLink then
-		return tonumber(string.match(itemLink, "|c[0-9a-fA-F]+|Hitem:([0-9]+):.*"))
+		itemID = tonumber(string.match(itemLink, "|c[0-9a-fA-F]+|Hitem:([0-9]+):.*"))
+		if itemID then
+			return itemID
+		else
+			-- If not battle pet, report an API change.
+			if tonumber(string.match(itemLink, "|c[0-9a-fA-F]+|Hbattlepet:([0-9]+):.*")) == nil then
+				dprint(string.match(itemLink, "|c[0-9a-fA-F]+|(H%a+):.*"))
+				error("New itemID type found: ".. string.match(itemLink, "|c[0-9a-fA-F]+|(H%a+):.*") ..". Please report to author.")
+			end
+		end
 	end
 end
 
@@ -268,6 +280,16 @@ end
 
 -- If the items in cache, update the stored values and return it; otherwise, return what is in cache, if it exists; otherwise return nil
 function ReagentRestocker:safeGetItemInfo(itemID)
+	
+	-- With battle pets now in play, itemID can be nil sometimes . . .
+	if itemID == nil then
+		return nil
+	end
+	
+	if ReagentRestockerDB.Items == nil then
+		error("FATAL: Items database does not exist.")
+	end
+	
 	if ReagentRestockerDB.Items[itemID] then
 
 		if ReagentRestockerDB.Items[itemID].tocversion == nil then -- Store TOC version, so we know when database is out of date
@@ -291,16 +313,16 @@ function ReagentRestocker:safeGetItemInfo(itemID)
 			if RRGlobal ~= nil and RRGlobal.Options.UseCache then RRGlobal.ItemCache[itemID]=ReagentRestockerDB.Items[itemID] end
 			return ReagentRestockerDB.Items[itemID].item_name,ReagentRestockerDB.Items[itemID][ITEM_LINK],ReagentRestockerDB.Items[itemID][ITEM_RARITY],ReagentRestockerDB.Items[itemID][ITEM_LEVEL],ReagentRestockerDB.Items[itemID][ITEM_MIN_LEVEL],ReagentRestockerDB.Items[itemID][ITEM_TYPE],ReagentRestockerDB.Items[itemID][ITEM_SUB_TYPE],ReagentRestockerDB.Items[itemID][ITEM_STACK_COUNT],ReagentRestockerDB.Items[itemID][ITEM_EQUIP_LOC],ReagentRestockerDB.Items[itemID][ITEM_TEXTURE],ReagentRestockerDB.Items[itemID][ITEM_SELL_PRICE]
 		end
-	elseif RRGlobal ~= nil and RRGlobal.Options.UseCache and RRGlobal.ItemCache[itemID]then
+	elseif RRGlobal ~= nil and RRGlobal.Options.UseCache and RRGlobal.ItemCache[itemID] then
 	
-		if ReagentRestockerDB.Items[itemID].tocversion == nil then
+		if RRGlobal.ItemCache[itemID].tocversion == nil then
 			local _, _, _, tocversion = GetBuildInfo()
-			ReagentRestockerDB.Items[itemID].tocversion = tocversion
+			RRGlobal.ItemCache[itemID].tocversion = tocversion
 		end
 		
 		if not _G.GetItemInfo(itemID) then
 			local _, _, _, tocversion = GetBuildInfo()
-			if ReagentRestockerDB.Items[itemID].tocversion ~= tocversion then
+			if RRGlobal.ItemCache[itemID].tocversion ~= tocversion then
 				-- Item may have been deleted from WoW
 				return RRGlobal.ItemCache[itemID].item_name.." (outdated)",RRGlobal.ItemCache[itemID][ITEM_LINK],RRGlobal.ItemCache[itemID][ITEM_RARITY],RRGlobal.ItemCache[itemID][ITEM_LEVEL],RRGlobal.ItemCache[itemID][ITEM_MIN_LEVEL],RRGlobal.ItemCache[itemID][ITEM_TYPE],RRGlobal.ItemCache[itemID][ITEM_SUB_TYPE],RRGlobal.ItemCache[itemID][ITEM_STACK_COUNT],RRGlobal.ItemCache[itemID][ITEM_EQUIP_LOC],RRGlobal.ItemCache[itemID][ITEM_TEXTURE],RRGlobal.ItemCache[itemID][ITEM_SELL_PRICE]
 			else
@@ -309,7 +331,7 @@ function ReagentRestocker:safeGetItemInfo(itemID)
 		else
 			local _, _, _, tocversion = GetBuildInfo()
 			RRGlobal.ItemCache[itemID].item_name,RRGlobal.ItemCache[itemID][ITEM_LINK],RRGlobal.ItemCache[itemID][ITEM_RARITY],RRGlobal.ItemCache[itemID][ITEM_LEVEL],RRGlobal.ItemCache[itemID][ITEM_MIN_LEVEL],RRGlobal.ItemCache[itemID][ITEM_TYPE],RRGlobal.ItemCache[itemID][ITEM_SUB_TYPE],RRGlobal.ItemCache[itemID][ITEM_STACK_COUNT],RRGlobal.ItemCache[itemID][ITEM_EQUIP_LOC],RRGlobal.ItemCache[itemID][ITEM_TEXTURE],RRGlobal.ItemCache[itemID][ITEM_SELL_PRICE] = _G.GetItemInfo(itemID)
-			ReagentRestockerDB.Items[itemID].tocversion = tocversion -- Update toc version
+			RRGlobal.ItemCache[itemID].tocversion = tocversion -- Update toc version
 			return RRGlobal.ItemCache[itemID].item_name,RRGlobal.ItemCache[itemID][ITEM_LINK],RRGlobal.ItemCache[itemID][ITEM_RARITY],RRGlobal.ItemCache[itemID][ITEM_LEVEL],RRGlobal.ItemCache[itemID][ITEM_MIN_LEVEL],RRGlobal.ItemCache[itemID][ITEM_TYPE],RRGlobal.ItemCache[itemID][ITEM_SUB_TYPE],RRGlobal.ItemCache[itemID][ITEM_STACK_COUNT],RRGlobal.ItemCache[itemID][ITEM_EQUIP_LOC],RRGlobal.ItemCache[itemID][ITEM_TEXTURE],RRGlobal.ItemCache[itemID][ITEM_SELL_PRICE]
 		end
 	
@@ -964,6 +986,11 @@ MyScanningTooltip:SetOwner( WorldFrame, "ANCHOR_NONE" );
 
 -- Returns true if the item is able to be sold and if preferences dictate it should be; false otherwise
 function ReagentRestocker:isToBeSold(itemID)
+
+	-- Can't sell it if we don't know what it is.
+	if self:safeGetItemInfo(itemID) == nil then
+		return false
+	end
 	
 	local _, itemLink, quality = self:safeGetItemInfo(itemID)
 	if ReagentRestockerDB.Items[itemID] ~= nil then
@@ -1453,7 +1480,6 @@ function ReagentRestocker:sell()
 	for _,bagID in pairs(getPlayerBagIDList()) do
 		for bagSlotID=1,GetContainerNumSlots(bagID) do
 			itemLink = GetContainerItemLink(bagID,bagSlotID)
-				
 			if itemLink then
 			
 				-- Cache Item ID, see if that helps performance

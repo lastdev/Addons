@@ -5,23 +5,18 @@
 if (not XPerl_GetUsage) then
 
 local conf
-XPerl_RequestConfig(function(new) conf = new end, "$Revision: 673 $")
+XPerl_RequestConfig(function(new) conf = new end, "$Revision: 746 $")
 
 XPerl_Usage = {}
 
-
-local isMOP = select(4, _G.GetBuildInfo()) >= 50000
-local GetNumRaidMembers = isMOP and GetNumGroupMembers or GetNumRaidMembers
-local GetNumPartyMembers = isMOP and GetNumSubgroupMembers or GetNumPartyMembers
-local GetPrimaryTalentTree  =  isMOP and GetSpecialization or GetPrimaryTalentTree 
+local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
 local mod = CreateFrame("Frame", "XPerl_UsageFrame")
 mod:RegisterEvent("PLAYER_ENTERING_WORLD")
 mod:RegisterEvent("CHAT_MSG_ADDON")
-mod:RegisterEvent("RAID_ROSTER_UPDATE")
-mod:RegisterEvent("PARTY_MEMBERS_CHANGED")
+mod:RegisterEvent("GROUP_ROSTER_UPDATE")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix(XPERL_COMMS_PREFIX)
@@ -298,9 +293,9 @@ function mod:PLAYER_ENTERING_WORLD()
 	end
 end
 
--- RAID_ROSTER_UPDATE
-function mod:RAID_ROSTER_UPDATE()
-	if (GetNumRaidMembers() > 0) then
+-- GROUP_ROSTER_UPDATE
+function mod:GROUP_ROSTER_UPDATE()
+	if (IsInRaid()) then
 		if (not self.inRaid) then
 			self.inRaid = true
 			self:SendModules()
@@ -308,11 +303,8 @@ function mod:RAID_ROSTER_UPDATE()
 	else
 		self.inRaid = nil
 	end
-end
-
--- PARTY_MEMBERS_CHANGED
-function mod:PARTY_MEMBERS_CHANGED()
-	if (GetNumPartyMembers() > 0) then
+	
+	if (UnitInParty("player")) then
 		if (not self.inParty and not self.inRaid) then
 			self.inParty = true
 			self:SendModules("PARTY")			-- Let other X-Perl users know which version we're running
@@ -320,6 +312,7 @@ function mod:PARTY_MEMBERS_CHANGED()
 	else
 		self.inParty = nil
 	end
+	
 end
 
 -- CHAT_MSG_ADDON
@@ -346,13 +339,13 @@ local xpModList = {"XPerl", "XPerl_Player", "XPerl_PlayerPet", "XPerl_Target", "
 mod.throttle = {}
 function mod:SendModules(chan, target)
 	if (not chan) then
-		if (GetNumRaidMembers() > 0) then
+		if (IsInRaid()) then
 			if (select(2, IsInInstance()) == "pvp") then
 				chan = "BATTLEGROUND"
 			else
 				chan = "RAID"
 			end
-		elseif (GetNumPartyMembers() > 0) then
+		elseif (UnitInParty("player")) then
 			chan = "PARTY"
 		end
 	end

@@ -6,6 +6,7 @@ local c = BittensSpellFlashLibrary
 local bcm = a.BCM
 
 local GetItemCount = GetItemCount
+local IsMounted = IsMounted
 local UnitBuff = UnitBuff
 
 c.Init(a)
@@ -107,9 +108,17 @@ c.AddOptionalSpell("Evocation", nil, {
 	end
 })
 
-c.AddOptionalSpell("Molten Armor", nil, {
-	Buff = "Molten Armor",
+c.AddOptionalSpell("Evocation", "for Invoker's Energy", {
+	CheckFirst = function()
+		return c.HasTalent("Invocation")
+			and c.GetBuffDuration("Invoker's Energy") < c.GetHastedTime(2.25)
+	end
+})
+
+c.AddOptionalSpell("Rune of Power", nil, {
+	Buff = "Rune of Power",
 	BuffUnit = "player",
+	NoRangeCheck = true,
 })
 
 ------------------------------------------------------------------------ Arcane
@@ -180,6 +189,11 @@ local function combustionCheckFirst(z, multiplier)
 	end
 end
 
+c.AddOptionalSpell("Molten Armor", nil, {
+	Buff = "Molten Armor",
+	BuffUnit = "player",
+})
+
 c.AddOptionalSpell("Combustion", nil, {
 	NoGCD = true,
 	CheckFirst = function(z)
@@ -219,5 +233,93 @@ c.AddSpell("Frostfire Bolt", nil, {
 	Continue = true,
 	CheckFirst = function()
 		return c.HasGlyph("Frostfire Bolt")
+	end
+})
+
+------------------------------------------------------------------------- Frost
+c.AssociateTravelTimes(.7, "Frostbolt")
+
+c.AddOptionalSpell("Summon Water Elemental", nil, {
+    FlashColor = "yellow",
+    CheckFirst = function()
+        return not s.UpdatedVariables.PetAlive
+            and not IsMounted()
+    end
+})
+
+c.AddOptionalSpell("Frost Armor", nil, {
+	Buff = "Frost Armor",
+	BuffUnit = "player",
+})
+
+c.AddOptionalSpell("Freeze", nil, {
+    NoRangeCheck = 1,
+    NoGCD = true,
+    CheckFirst = function()
+        return a.FingerCount < 2
+    end
+})
+
+c.AddOptionalSpell("Freeze", "on Pet Bar", {
+    Type = "pet",
+    NoRangeCheck = 1,
+    NoGCD = true,
+    CheckFirst = function()
+        return a.FingerCount < 2
+    end
+})
+
+c.AddSpell("Ice Lance", nil, {
+	CheckFirst = function()
+		return a.FingerCount > 0
+	end
+})
+
+c.AddSpell("Ice Lance", "within 2", {
+	CheckFirst = function()
+		return a.FingerCount > 0 and c.GetBuffDuration("Fingers of Frost") < 2
+	end
+})
+
+c.AddSpell("Ice Lance", "within 5", {
+	CheckFirst = function()
+		return a.FingerCount > 0 and c.GetBuffDuration("Fingers of Frost") < 5
+	end
+})
+
+c.AddOptionalSpell("Frozen Orb", nil, {
+	NoRangeCheck = true,
+})
+
+--c.AddOptionalSpell("Frozen Orb", "with Icy Veins", {
+--	NoRangeCheck = true,
+--	CheckFirst = function()
+--		return a.FingerCount < 2
+--			and c.HasGlyph("Icy Veins")
+--			and c.GetCooldown("Icy Veins") < c.GetHastedTime(1.5)
+--	end
+--})
+
+c.AddOptionalSpell("Icy Veins", nil, {
+	CheckFirst = function()
+		if c.HasGlyph("Icy Veins") then
+			return c.GetCooldown("Frozen Orb") > 50
+		else
+			return true
+		end
+	end
+})
+
+c.AddSpell("Frostbolt", "for Debuff", {
+	CheckFirst = function()
+		return c.GetMyDebuffStack("Frostbolt", false, true)
+				+ c.CountLandings("Frostbolt", -3, 10)
+			< 3
+	end
+})
+
+c.AddSpell("Frostfire Bolt", "under Brain Freeze", {
+	CheckFirst = function()
+		return c.HasBuff("Brain Freeze")
 	end
 })

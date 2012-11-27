@@ -307,7 +307,7 @@
 							end
 						end
 
-						if (IsRaidLeader() and XPerl_AdminFrame.Valid and not InCombatLockdown()) then
+						if (UnitIsGroupLeader("player") and XPerl_AdminFrame.Valid and not InCombatLockdown()) then
 							XPerl_AdminFrame_Controls_LoadRoster:Enable()
 						else
 							XPerl_AdminFrame_Controls_LoadRoster:Disable()

@@ -1,8 +1,8 @@
 ﻿--[[
 	DebugLib - An embedded library which works as a higher layer for nLog,
 	by providing easier usage of debugging features.
-	Version: 5.15.5348 (LikeableLyrebird)
-	Revision: $Id: DebugLib.lua 312 2011-06-14 07:33:25Z brykrys $
+	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: DebugLib.lua 337 2012-09-10 19:58:45Z Esamynn $
 	URL: http://auctioneeraddon.com/dl/
 
 	Manual:
@@ -125,11 +125,11 @@
 ]]
 
 local LIBRARY_VERSION_MAJOR = "DebugLib"
-local LIBRARY_VERSION_MINOR = 1
+local LIBRARY_VERSION_MINOR = 2
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/DebugLib/DebugLib.lua $","$Rev: 312 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/DebugLib/DebugLib.lua $","$Rev: 337 $","5.1.DEV.", 'auctioneer', 'libs')
 
 if not lib.private then
 	lib.private = {}
@@ -518,7 +518,7 @@ end
 --    explanation about this function.
 -------------------------------------------------------------------------------
 function lib.SimpleDebugPrint(addon, message, category, title, errorCode, level, ...)
-	_, message, _, _, errorCode = private.normalizeParameters(addon, message, category, title, errorCode, level)
+	local _, message, _, _, errorCode = private.normalizeParameters(addon, message, category, title, errorCode, level)
 
 	return errorCode, message
 end

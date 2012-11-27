@@ -6,9 +6,9 @@ local conf
 local percD	= "%d"..PERCENT_SYMBOL
 local perc1F = "%.1f"..PERCENT_SYMBOL
 
-XPerl_SetModuleRevision("$Revision: 679 $")
-XPerl_RequestConfig(function(New) conf = New end, "$Revision: 679 $")
- 
+XPerl_SetModuleRevision("$Revision: 776 $")
+XPerl_RequestConfig(function(New) conf = New end, "$Revision: 776 $")
+
 --Some local copies for speed
 local strsub = strsub
 local format = format
@@ -32,8 +32,8 @@ local UnitIsTapped = UnitIsTapped
 local UnitIsVisible = UnitIsVisible
 local UnitPlayerControlled = UnitPlayerControlled
 local UnitReaction = UnitReaction
-local GetNumRaidMembers = GetNumRaidMembers
-local GetNumPartyMembers = GetNumPartyMembers
+local GetNumGroupMembers = GetNumGroupMembers
+local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetRaidRosterInfo = GetRaidRosterInfo
 local largeNumDiv = XPERL_LOC_LARGENUMDIV
 local largeNumTag = XPERL_LOC_LARGENUMTAG
@@ -43,13 +43,6 @@ local hugeNumDiv10 = hugeNumDiv * 10
 local largeNumDiv100 = largeNumDiv * 100
 local ArcaneExclusions = XPerl_ArcaneExclusions
 local GetDifficultyColor = GetDifficultyColor or GetQuestDifficultyColor
-
-local isMOP = select(4, _G.GetBuildInfo()) >= 50000
-local GetNumRaidMembers = isMOP and GetNumGroupMembers or GetNumRaidMembers
-local GetNumPartyMembers = isMOP and GetNumSubgroupMembers or GetNumPartyMembers
-local GetPrimaryTalentTree  =  isMOP and GetSpecialization or GetPrimaryTalentTree 
-
-local GetNumTalentTabs = isMOP and GetNumSpecializations or GetNumTalentTabs
 
 --[===[@debug@
 local function d(...)
@@ -1149,18 +1142,18 @@ function XPerl_MinimapButton_Details(tt, ldb)
 			tt:AddLine(XPERL_MINIMAP_HELP5)
 		end
 	end
-
-	if (GetRealNumRaidMembers) then
-		if (GetNumRaidMembers() > 0 and GetRealNumRaidMembers() > 0) then
+	--GetRealNumRaidMembers doesn't exist anymore in 5.0.4
+	--[==[if (GetRealNumRaidMembers) then
+		if (GetNumGroupMembers() > 0 and GetRealNumRaidMembers() > 0) then
 			if (select(2, IsInInstance()) == "pvp") then
-				tt:AddLine(format(XPERL_MINIMAP_HELP3, GetRealNumRaidMembers(), GetRealNumPartyMembers()))
+				tt:AddLine(format(XPERL_MINIMAP_HELP3, GetRealNumRaidMembers(), GetNumSubgroupMembers(LE_PARTY_CATEGORY_HOME)))
 
 				if (IsRealPartyLeader()) then
 					tt:AddLine(XPERL_MINIMAP_HELP4)
 				end
 			end
 		end
-	end
+	end]==]
 
 	if (UpdateAddOnMemoryUsage and IsAltKeyDown()) then
 		local showDiff = IsShiftKeyDown()
@@ -1467,7 +1460,7 @@ function XPerl_CombatFlashSetFrames(self)
 end
 
 local function GetTalentPosition(findName)
-	for i = 1,GetNumTalentTabs() do
+	for i = 1,GetNumSpecializations() do
 		for j = 1,GetNumTalents(i) do
 			local name = GetTalentInfo(i, j)
 			if (name == findName) then
@@ -1487,14 +1480,23 @@ local function GetTalentValueByName(name)
 	return 0
 end
 
-local MagicCureTalents = {
+--[[local MagicCureTalents = {
 	["DRUID"] = GetSpellInfo(88423),			-- Nature's Cure
 	["PALADIN"] = GetSpellInfo(53551),			-- Sacred Cleansing
 	["SHAMAN"] = GetSpellInfo(77130),			-- Improved Cleanse Spirit
+}]]--
+
+local MagicCureTalents = {
+	["DRUID"] = 4,	--Resto
+	["PALADIN"] = 1,	 --Holy
+	["SHAMAN"] = 3, -- Resto
+	["MONK"] = 2, -- Mistweaver
 }
+
 local function CanClassCureMagic(class)
 	if (MagicCureTalents[class]) then
-		return GetTalentValueByName(MagicCureTalents[class]) > 0
+		--return GetTalentValueByName(MagicCureTalents[class]) > 0
+		return (GetSpecialization() == MagicCureTalents[class])--IsSpellKnown(MagicCureTalents[class])	
 	end
 end
 
@@ -1540,6 +1542,18 @@ function XPerl_DebufHighlightInit()
 			end
 			return Curses.Magic or show
 		end
+	elseif (playerClass == "MONK") then
+		getShow = function(Curses)
+			local show
+			if (not conf.highlightDebuffs.class) then
+				show = Curses.Magic or Curses.Curse or Curses.Poison or Curses.Disease
+			end
+			local magic
+			if (CanClassCureMagic(playerClass)) then
+				magic = Curses.Magic
+			end
+			return Curses.Poison or Curses.Disease or magic or show
+		end
 
 	elseif (playerClass == "PALADIN") then
 		getShow = function(Curses)
@@ -1548,7 +1562,7 @@ function XPerl_DebufHighlightInit()
 				show = Curses.Magic or Curses.Curse or Curses.Poison or Curses.Disease
 			end
 			local magic
-			if (GetPrimaryTalentTree() == 1 and CanClassCureMagic(playerClass)) then
+			if (CanClassCureMagic(playerClass)) then
 				magic = Curses.Magic
 			end
 			return Curses.Poison or Curses.Disease or magic or show
@@ -1823,74 +1837,6 @@ end
  
 local DebuffExceptions
 local BuffExceptions
- 
-if (not isMOP) then
-
- BuffExceptions = {
-	PRIEST = {
-		[GetSpellInfo(774)] = true,					-- Rejuvenation
-		[GetSpellInfo(8936)] = true,				-- Regrowth
-		[GetSpellInfo(33076)] = true,				-- Prayer of Mending
-	},
-	DRUID = {
-		[GetSpellInfo(139)] = true,					-- Renew
-	},
-	WARLOCK = {
-		[GetSpellInfo(20707)] = true,				-- Soulstone Resurrection
-	},
-	HUNTER = {
-		
-		[GetSpellInfo(13165)] = "HUNTER",			-- Aspect of the Hawk
-		[GetSpellInfo(5118)] = "HUNTER",			-- Aspect of the Cheetah
-		[GetSpellInfo(13159)] = true,				-- Aspect of the Pack
-		[GetSpellInfo(20043)] = true,				-- Aspect of the Wild
-		[GetSpellInfo(61648)] = "HUNTER",			-- Aspect of the Beast
-		-- [GetSpellInfo(13163)] = "HUNTER",			-- Aspect of the Monkey
-		[GetSpellInfo(19506)] = true,				-- Trueshot Aura
-		[GetSpellInfo(5384)] = "HUNTER",			-- Feign Death
-	},
-	ROGUE = {
-		[GetSpellInfo(1784)] = "ROGUE",				-- Stealth
-		[GetSpellInfo(1856)] = "ROGUE",			-- Vanish
-		[GetSpellInfo(2983)] = "ROGUE",			-- Sprint
-		[GetSpellInfo(13750)] = "ROGUE",			-- Adrenaline Rush
-		[GetSpellInfo(13877)] = "ROGUE",			-- Blade Flurry
-	},
-	PALADIN = {
-		[GetSpellInfo(20154)] = true,				-- Seal of Righteousness
-		[GetSpellInfo(20165)] = true,				-- Seal of Insight
-		[GetSpellInfo(20164)] = true,				-- Seal of Justice
-		[GetSpellInfo(31801)] = true,				-- Seal of Truth
-		-- [GetSpellInfo(20375)] = true,				-- Seal of Command
-		-- [GetSpellInfo(20166)] = true,				-- Seal of Wisdom
-		-- [GetSpellInfo(20165)] = true,				-- Seal of Light
-		-- [GetSpellInfo(53736)] = true,				-- Seal of Corruption
-		-- [GetSpellInfo(31892)] = true,				-- Seal of Blood
-		-- [GetSpellInfo(31801)] = true,				-- Seal of Vengeance
-		
-		[GetSpellInfo(465)] = true,				-- Devotion Aura
-		[GetSpellInfo(7294)] = true,				-- Retribution Aura
-		[GetSpellInfo(19746)] = true,				-- Concentration Aura
-		[GetSpellInfo(19891)] = true,				-- Resistance Aura
-		[GetSpellInfo(32223)] = true,				-- Crusader Aura
-		[GetSpellInfo(25780)] = true,				-- Righteous Fury
-		[GetSpellInfo(20925)] = true,				-- Holy Shield
-		[GetSpellInfo(54428)] = true,				-- Divine Plea
-	},
-}
-
- DebuffExceptions = {
-	ALL = {
-		[GetSpellInfo(11196)] = true,				-- Recently Bandaged
-	},
-	PRIEST = {
-		[GetSpellInfo(6788)] = true,				-- Weakened Soul
-	},
-	PALADIN = {
-		[GetSpellInfo(25771)] = true				-- Forbearance
-	}
-}
-else
 
  BuffExceptions = {
 	PRIEST = {
@@ -1950,7 +1896,6 @@ else
 		[GetSpellInfo(25771)] = true				-- Forbearance
 	}
 }
-end
 
 local SeasonalDebuffs = {
 	[GetSpellInfo(26004)] = true,					-- Mistletoe
@@ -2262,9 +2207,11 @@ local function GetFreeFader(parent)
 		bar.tex = parent.tex
 
 		local tex = parent:GetStatusBarTexture()
-		bar:SetStatusBarTexture(tex:GetTexture())
-		bar:GetStatusBarTexture():SetHorizTile(false)
-		bar:GetStatusBarTexture():SetVertTile(false)
+		if tex:GetTexture() then
+			bar:SetStatusBarTexture(tex:GetTexture())
+			bar:GetStatusBarTexture():SetHorizTile(false)
+			bar:GetStatusBarTexture():SetVertTile(false)
+		end
 
 		local r, g, b = bar.tex:GetVertexColor()
 		bar:SetStatusBarColor(r, g, b)
@@ -2592,7 +2539,7 @@ local function AuraButtonOnShow(self)
 		cd:SetAllPoints()
 	end
 	cd:SetReverse(true)
-	cd:SetDrawEdge(true)
+	--cd:SetDrawEdge(true) Blizzard removed this call from 5.0.4, commented it out to avoid lua error
 	
 	if (not cd.countdown) then
 		cd.countdown = self.cooldown:CreateFontString(nil, "OVERLAY", "GameFontNormalHuge")
@@ -3262,7 +3209,7 @@ end
 -- nextMember(last)
 function XPerl_NextMember(_, last)
 	if (last) then
-		local raidCount = GetNumRaidMembers()
+		local raidCount = GetNumGroupMembers()
 		if (raidCount > 0) then
 			local i = tonumber(strmatch(last, "^raid(%d+)"))
 			if (i and i < raidCount) then
@@ -3271,7 +3218,7 @@ function XPerl_NextMember(_, last)
 				return "raid"..i, unitName, unitClass, group, zone, online, dead
 			end
 		else
-			local partyCount = GetNumPartyMembers()
+			local partyCount = GetNumSubgroupMembers()
 			if (partyCount > 0) then
 				local id
 				if (last == "player") then
@@ -3290,7 +3237,7 @@ function XPerl_NextMember(_, last)
 			end
 		end
 	else
-		if (GetNumRaidMembers() > 0) then
+		if (IsInRaid()) then
 			local unitName, rank, group, level, _, unitClass, zone, online, dead = GetRaidRosterInfo(1)
 			return "raid1", unitName, unitClass, group, zone, online, dead
 		else
@@ -3299,50 +3246,6 @@ function XPerl_NextMember(_, last)
 	end
 end
 
--- Some models have camera views switched for face/body or just don't look right with face
-local alternateCamera = {
-	[21717] = true,			-- Dragonmaw Wrangler
-	[21718] = true,			-- Dragonmaw Subjugator
-	[21719] = true,			-- Dragonmaw Drake-Rider
-	[21720] = true,			-- Dragonmaw Shaman
-	[22231] = true,			-- Dragonmaw Elite
-	[22252] = true,			-- Dragonmaw Peon
-	[23188] = true,			-- Dragonmaw Transporter
-	[28859] = true,			-- Malygos
-	[33136] = true,			-- Guardian of Yogg-Saron
-	[33687] = true,			-- Chillmaw
-	[33845] = true,			-- Quel'dorei Steed
-	[37230] = true,			-- Spire Frostwyrm (ICC)
-	[37955] = true,			-- Blood Queen Lana'thel
-	[40561] = true,			-- Deep Corruptor
-	[41378] = true,			-- Maloriak (Blackwing Depths)
-	[39392] = true,			-- Faceless Corruptor
-}
-local dragonmawIllusion = GetSpellInfo(42016)
-
--- PerlSetPortrait3D
-local function XPerlSetPortrait3D(self, argUnit)
-
-	self:ClearModel()
-	self:SetUnit(argUnit)
-	local guid = UnitGUID(argUnit)
-	local fullbody
-	--PlayerLin: Added other checks, UnitIsPlayer check isn't enough and it's weird...
---	if UnitIsPlayer(argUnit) or UnitIsEnemy(argUnit, "target") or UnitIsFriend(argUnit, "target") then
-		--Male Worgen 3D Portrait fix, thanks sontix.
-		if string.find(tostring(self:GetModel()), "worgenmale", 1, true) ~= nil then
-			fullbody = true 
-		else
-			fullbody = UnitBuff(argUnit, dragonmawIllusion)
-		end
---	end
-	local id = guid and tonumber(strsub(guid, -13, -9), 16)
-	if (alternateCamera[id] or fullbody ) then
-		self:SetCamera(1)
-	else
-		self:SetCamera(0)
-	end
-end
 
 -- XPerl_Unit_UpdatePortrait()
 function XPerl_Unit_UpdatePortrait(self)

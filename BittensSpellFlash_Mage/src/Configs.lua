@@ -18,11 +18,11 @@ config.CheckButtonOptions = {
 		ConfigKey = "fire_off",
 		Label = L["Flash Fire"],
 	},
---	LeftCheckButton3 = {
---		DefaultChecked = true,
---		ConfigKey = "frost_off",
---		Label = L["Flash Frost"],
---	},
+	LeftCheckButton3 = {
+		DefaultChecked = true,
+		ConfigKey = "frost_off",
+		Label = L["Flash Frost"],
+	},
 	RightCheckButton2 = {
 		DefaultChecked = true,
 		ConfigKey = "hide_BCM",

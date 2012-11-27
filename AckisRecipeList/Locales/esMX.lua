@@ -6,7 +6,7 @@ esMX localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 2.4
+Project version: 2.4.2
 ************************************************************************
 Currently maintained by:
 http://www.wowace.com/addons/arl/localization/translators/
@@ -464,7 +464,6 @@ Esta es la funcionalidad que se produce al hacer click en una receta.
  Agrega el método de adquisición de una receta específica en el mapa del mundo y el minimapa."]=]
 L["Gan'arg Analyzer"] = "Analizador Gan'arg"
 L["Gara Skullcrush"] = "Gara Craneaplastado"
-L["Gargantuan Abyssal"] = "Abissal inmenso"
 L["Gaston"] = true
 L["Gearcutter Cogspinner"] = "Cortallave Volopiñón"
 L["Geba'li"] = true
@@ -698,7 +697,6 @@ L["Master Chef Mouldier"] = "Maestro cocinero Mouldier"
 L["Master Elemental Shaper Krixix"] = "Maestro de los elementos Formacio Krixix"
 L["Mathar G'ochar"] = true
 L["Matt Johnson"] = true
-L["Mazk Snipeshot"] = "Mazk Tirocertero"
 L["MC_RANDOM"] = "Drop aleatorio de jefes en El Núcleo de Magma."
 L["Meilosh"] = true
 L["Melaris"] = true
@@ -1005,7 +1003,6 @@ L["Thrown"] = "Arrojadiza"
 L["Thuzadin Shadowcaster"] = "Taumaturgo umbrío Thuzadin"
 L["Tiffany Cartier"] = true
 L["Tilli Thistlefuzz"] = "Tilli Cardopelusa"
-L["Time-Lost Shadowmage"] = "Mago de las Sombras Tiempo Perdido"
 L["Timofey Oshenko"] = "Timofey Oshenko "
 L["Timothy Jones"] = true
 L["Timothy Worthington"] = "Timoteo Valión"
@@ -1073,7 +1070,6 @@ L["Vir'aani Arcanist"] = "Arcanista Vir'aani"
 L["Vira Younghoof"] = "Vira Jovenpezuña"
 L["Vivianna"] = true
 L["Vizzklick"] = true
-L["Voidshrieker"] = "Chillón del vacío"
 L["Volchan"] = true
 L["Vosur Brakthel"] = true
 L["Waldor"] = true

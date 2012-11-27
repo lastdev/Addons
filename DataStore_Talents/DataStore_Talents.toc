@@ -8,7 +8,7 @@
 ## SavedVariables: DataStore_TalentsDB, DataStore_TalentsRefDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
-## X-Curse-Packaged-Version: r38
+## X-Curse-Packaged-Version: r39
 ## X-Curse-Project-Name: DataStore_Talents
 ## X-Curse-Project-ID: datastore_talents
 ## X-Curse-Repository-ID: wow/datastore_talents/mainline

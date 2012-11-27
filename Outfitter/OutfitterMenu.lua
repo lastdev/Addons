@@ -668,7 +668,7 @@ info.menuTable = [TABLE] -- This contains an array of info tables to be displaye
 ]]
 
 function Outfitter._DropDownList:New(pParentList, pLevel)
-	return CreateFrame("Button", nil, tern(pParentList ~= nil, pParentList, UIParent))
+	return CreateFrame("Button", nil, pParentList or UIParent)
 end
 
 function Outfitter._DropDownList:Construct(pParentList, pLevel)

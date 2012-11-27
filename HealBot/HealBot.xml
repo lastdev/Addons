@@ -45,84 +45,7 @@
     
   <GameTooltip name="HealBot_ScanTooltip" frameStrata="TOOLTIP" hidden="true" parent="UIParent" inherits="GameTooltipTemplate" />
   
-	<Frame name="HealBot_ButtonFrame" parent="Minimap" enableMouse="true" hidden="false" frameStrata="LOW">
-		<Size>
-			<AbsDimension x="32" y="32"/>
-		</Size>
-		<Anchors>
-			<Anchor point="TOPLEFT" relativeTo="Minimap" relativePoint="RIGHT">
-				<Offset>
-					<AbsDimension x="2" y="0"/>
-				</Offset>
-			</Anchor>
-		</Anchors>
-		<Frames>
-			<Button name="HealBot_MMButton">
-				<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
-				<Size>
-					<AbsDimension x="33" y="33"/>
-				</Size>
-				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Layers>
-					<Layer level="BORDER">
-						<Texture name="$parentIcon" file="Interface\AddOns\HealBot\Images\HealBot">
-							<Size>
-								<AbsDimension x="18" y="18"/>
-							</Size>
-							<Anchors>
-								<Anchor point="CENTER">
-									<Offset>
-										<AbsDimension x="-1" y="1"/>
-									</Offset>
-								</Anchor>
-							</Anchors>
-						</Texture>
-					</Layer>
-					<Layer level="OVERLAY">
-						<Texture name="$parentBorder" file="Interface\Minimap\MiniMap-TrackingBorder">
-							<Size>
-								<AbsDimension x="52" y="52"/>
-							</Size>
-							<Anchors>
-								<Anchor point="TOPLEFT"/>
-							</Anchors>
-						</Texture>
-					</Layer>
-				</Layers>
-				<Scripts>
-					<OnLoad>
-						HealBot_MMButton_OnLoad(self)
-					</OnLoad>
-					<OnDragStart> 
-						self.dragme = true;
-					</OnDragStart> 
-					<OnDragStop>
-						self.dragme = false;
-					</OnDragStop>
-					<OnUpdate>
-						if(self.dragme == true) then
-							HealBot_MMButton_BeingDragged();
-						end
-					</OnUpdate>
-					<OnClick>
-						HealBot_MMButton_OnClick();
-					</OnClick>
-					<OnEnter>
-						HealBot_MMButton_OnEnter(self);
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide();
-					</OnLeave>
-				</Scripts>
-			</Button>
-		</Frames>
-	</Frame>
+
   
    <Frame name="HealBot_Tooltip" frameStrata="TOOLTIP" parent="UIParent" hidden="true">
       <Layers>
@@ -954,4 +877,68 @@
       </BackgroundInsets>
     </Backdrop>
    </Frame>
+	<Button name="HealBot_MMButton" parent="Minimap" enableMouse="true" movable="true" hidden="true" frameStrata="MEDIUM">
+		<Size>
+			<AbsDimension x="31" y="31"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT"/>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="HealBot_MMButton_Icon" file="Interface\AddOns\HealBot\Images\HealBot">
+					<Size>
+						<AbsDimension x="20" y="20"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="7" y="-6"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture file="Interface\Minimap\MiniMap-TrackingBorder">
+					<Size>
+						<AbsDimension x="53" y="53"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForClicks("LeftButtonUp","RightButtonUp")
+                self:RegisterForDrag("LeftButton","RightButton")
+                self.dragme = false;
+			</OnLoad>
+			<OnDragStart>
+				self:LockHighlight()
+                self.dragme = true;
+			</OnDragStart>
+			<OnDragStop>
+				self:UnlockHighlight()
+                self.dragme = false;
+			</OnDragStop>
+            <OnUpdate>
+                if(self.dragme == true) then
+                    HealBot_MMButton_BeingDragged();
+                end
+            </OnUpdate>
+            <OnClick>
+                HealBot_MMButton_OnClick();
+            </OnClick>
+            <OnEnter>
+                HealBot_MMButton_OnEnter(self);
+            </OnEnter>
+            <OnLeave>
+                GameTooltip:Hide();
+            </OnLeave>
+		</Scripts>
+	</Button>
 </Ui>

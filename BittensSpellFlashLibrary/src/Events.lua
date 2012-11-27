@@ -2,11 +2,13 @@ local libName, lib = ...
 local s = SpellFlashAddon
 local c = BittensSpellFlashLibrary
 
-local ActionButton_HideOverlayGlow = ActionButton_HideOverlayGlow
+local GetActionInfo = GetActionInfo
+local GetMacroSpell = GetMacroSpell
 local GetNetStats = GetNetStats
 local GetTime = GetTime
 local UnitIsUnit = UnitIsUnit
 local math = math
+local next = next
 local pairs = pairs
 local print = print
 local select = select
@@ -32,10 +34,11 @@ function c.RegisterForEvents(a)
 	registeredAddons[a] = true
 end
 
-function c.ManageDotRefresh(name, unhastedTick, spellID)
-	if not spellID then
-		spellID = c.GetID(name)
+function c.ManageDotRefresh(name, unhastedTick, baseName)
+	if baseName == nil then
+		baseName = name
 	end
+	local spellID = c.GetID(baseName)
 	if not managedDots[spellID] then
 		managedDots[spellID] = {}
 	end
@@ -92,6 +95,7 @@ frame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 frame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
 frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 frame:RegisterEvent("PLAYER_REGEN_ENABLED")
+frame:RegisterEvent("ADDON_LOADED")
 
 local function fireEvent(functionName, ...)
 	for a, _ in pairs(registeredAddons) do
@@ -116,7 +120,7 @@ local function handleLogEvent(...)
 	local target = select(9, ...)
 	local spellID = select(12, ...)
 	local spellSchool = select(13, ...)
---c.Debug("Lib", select(1, ...), event, target, spellID, spellSchool)
+--c.Debug("Lib", event, target, spellID, spellSchool)
 	if event == "SPELL_DAMAGE" or event == "SPELL_PERIODIC_DAMAGE" then
 		local amount = select(15, ...)
 		local damageSchool = select(17, ...)
@@ -168,9 +172,83 @@ local function printCurrentSpells()
 	end
 end
 
+s.AddSettingsListener(
+	function()
+		c.DisableProcHighlights = false
+	end
+)
+
+local overlays = {}
+local labButtons
+
+local function showOverlay(button)
+	if not c.DisableProcHighlights then
+		return
+	end
+	
+	-- Hide the super-flashy Blizzard overlay
+	if button.overlay then
+		button.overlay:Hide()
+	end
+	
+	if s.config.disable_default_proc_highlighting then
+		return
+	end
+	
+	-- And show a more subtle outline instead
+	local overlay = overlays[button]
+	if overlay == nil then
+		local w, h = button:GetSize()
+		overlay = button:CreateTexture(nil, 'OVERLAY')
+		overlay:SetTexture('Interface\\Buttons\\UI-ActionButton-Border')
+		overlay:SetBlendMode('ADD')
+		overlay:SetSize(2 * w, 2 * h)
+		overlay:SetPoint("CENTER", button)
+		overlay:SetVertexColor(1, 0, 0)
+		overlays[button] = overlay
+	end
+	overlay:Show()
+end
+
+local function hideOverlay(button)
+	local overlay = overlays[button]
+	if overlay then
+		overlay:Hide()
+	end
+end
+
+local function hookLAB(buttons)
+	labButtons = buttons
+	local f = CreateFrame("frame")
+	f:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
+	f:SetScript("OnEvent", 
+		function(self, event, spellId)
+			if c.DisableProcHighlights then
+				for button in next, buttons do
+					if button:GetSpellId() == spellId then
+						if button.overlay then
+							button.overlay:Hide()
+						end
+					end
+				end
+			end
+		end
+	)
+end
+
 lib.LastGCD = 1.5
 frame:SetScript("OnEvent", 
 	function(self, event, ...)
+		if event == "ADDON_LOADED" then
+			if select(1, ...) == libName then
+				return
+			end
+			
+			if LibStub and LibStub.libs["LibActionButton-1.0"] then
+				hookLAB(LibStub.libs["LibActionButton-1.0"].activeButtons)
+			end
+		end
+
 		local gcd, totalGcd = s.GlobalCooldown()
 		if totalGcd and totalGcd > 0 then
 			lib.LastGCD = totalGcd
@@ -219,6 +297,10 @@ frame:SetScript("OnEvent",
 		if info == nil then
 			if event == "UNIT_SPELLCAST_CHANNEL_STOP" then
 				info = c.GetCastingInfo()
+				if info == nil then
+					return
+				end
+				
 				lineID = info.LineID
 			else
 --c.Debug("Lib", "  no record of spell", lineID)
@@ -278,18 +360,32 @@ frame:SetScript("OnEvent",
 	end
 )
 
-c.HideHilighting = false
-hooksecurefunc(
-	"ActionButton_ShowOverlayGlow", 
-	function(self)
-		if c.HideHilighting and self.overlay then
-			self.overlay:Hide()
-			ActionButton_HideOverlayGlow(self)
+hooksecurefunc("ActionButton_ShowOverlayGlow", function(button)
+	showOverlay(button)
+	if labButtons and button.action then
+		local type, spellId = GetActionInfo(button.action)
+		if type == "macro" then
+			spellId = select(3, GetMacroSpell(spellId))
+		end
+		for button in next, labButtons do
+			if button:GetSpellId() == spellId then
+				showOverlay(button)
+			end
 		end
 	end
-)
-s.AddSettingsListener(
-	function()
-		c.HideHilighting = false
+end)
+
+hooksecurefunc("ActionButton_HideOverlayGlow", function(button)
+	hideOverlay(button)
+	if labButtons and button.action then
+		local type, spellId = GetActionInfo(button.action)
+		if type == "macro" then
+			spellId = select(3, GetMacroSpell(spellId))
+		end
+		for button in next, labButtons do
+			if button:GetSpellId() == spellId then
+				hideOverlay(button)
+			end
+		end
 	end
-)
+end)

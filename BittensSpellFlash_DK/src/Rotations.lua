@@ -6,6 +6,7 @@ local c = BittensSpellFlashLibrary
 
 local GetRuneCooldown = GetRuneCooldown
 local GetTime = GetTime
+local OffhandHasWeapon = OffhandHasWeapon
 local UnitIsUnit = UnitIsUnit
 local math = math
 local select = select
@@ -62,6 +63,7 @@ local function consumesKM(info)
 	return c.InfoMatches(info, "Obliterate", "Frost Strike")
 end
 
+a.LastSoulReaper = 0
 local function adjustResourcesForSuccessfulCast(info)
 	local cost = s.SpellCost(info.Name)
 	if cost == 0 and not c.InfoMatches(info, "Blood Boil") then
@@ -70,6 +72,11 @@ local function adjustResourcesForSuccessfulCast(info)
 		if bump > 0 then
 			rpBumped = s.Power("player") + bump
 			rpBumpExpires = GetTime() + .8
+		end
+		if c.InfoMatches(
+			info, "Soul Reaper - Frost", "Soul Reaper - Unholy") then
+			
+			a.LastSoulReaper = info.GCDStart
 		end
 --c.Debug("Resources", info.Name, "bump", bump, "->", rpBumped)
 	elseif GetTime() < rpBumpExpires then
@@ -104,6 +111,12 @@ a.SetSpamFunction(function()
 	
 	-- grab Freezing Fog
 	a.FreezingFog = c.GetBuffStack("Freezing Fog")
+	
+	-- grab Blood Charge
+	a.BloodCharges = c.GetBuffStack("Blood Charge")
+	if c.IsCasting("Blood Charge") then
+		a.BloodCharges = a.BloodCharges - 5
+	end
 	
 	-- adjust resources for queued spell
 	local info = c.GetQueuedInfo()
@@ -149,7 +162,7 @@ local function flashNoCap(...)
 		local spell = c.GetSpell(name)
 		if s.Flashable(spell.ID) and s.Castable(spell) then
 			local bump = getBump(s.SpellName(spell.ID), a.FreezingFog)
-			if bump == 0 or a.RP + bump < s.MaxPower("player") then
+			if bump == 0 or a.RP + bump <= s.MaxPower("player") then
 				local color = spell.FlashColor
 				if c.AoE and color == nil then
 					color = "purple"
@@ -183,6 +196,9 @@ local function debugPrint(flashing)
 		a.PendingDeathRunes,
 		a.KillingMachine or "KM" and "",
 		a.FreezingFog > 0 or "FF" .. a.FreezingFog and "",
+		a.BloodCharges,
+		s.BuffStack(c.GetID("Shadow Infusion"), "pet"),
+		a.ShadowInfusionPending,
 		"==>", flashing)
 end
 
@@ -214,24 +230,38 @@ a.Rotations.Blood = {
 			"Death Pact",
 			"Conversion",
 			"Icebound Fortitude")
+		if s.InRaidOrParty() then
 --debugPrint(
-		c.PriorityFlash(
-			"Death Strike for Health",
-			"Death Strike to Save Shield",
-			"Blood Tap for Death Strike",
-			"Death Siphon for Health",
-			"Outbreak for Blood Plague",
-			"Plague Strike for Blood Plague",
-			"Rune Strike for Resources if Capped",
-			"Death Strike if Two Available",
-			"Blood Boil for Blood Plague",
-			"Rune Strike for Resources",
-			"Horn of Winter for Buff",
-			"Heart Strike for Runic Power",
-			"Blood Boil for Runic Power",
-			"Horn of Winter for Runic Power",
-			"Outbreak Early")
+			c.PriorityFlash(
+				"Death Strike for Health",
+				"Death Strike to Save Shield",
+				"Blood Tap for Death Strike",
+				"Death Siphon for Health",
+				"Outbreak for Blood Plague",
+				"Plague Strike for Blood Plague",
+				"Rune Strike for Resources if Capped",
+				"Death Strike if Two Available",
+				"Blood Boil for Blood Plague",
+				"Rune Strike for Resources",
+				"Horn of Winter for Buff",
+				"Heart Strike for Runic Power",
+				"Blood Boil for Runic Power",
+				"Horn of Winter for Runic Power",
+				"Outbreak Early")
 --)
+		else
+			spellIfCapped = "Rune Strike"
+			c.FlashAll("Blood Tap")
+			flashNoCap(
+				"Outbreak",
+				"Death Strike",
+				"Heart Strike BB",
+				"Blood Boil for Runic Power",
+				"Rune Strike for Resources unless DRW",
+				"Heart Strike",
+				"Rune Strike unless DRW",
+				"Horn of Winter")
+		end
 	end,
 	
 	FlashOutOfCombat = function()
@@ -268,31 +298,76 @@ a.Rotations.Frost = {
 	OffSwitch = "frost_off",
 	
 	FlashInCombat = function()
-		if s.MeleeDistance() then
-			spellIfCapped = "Frost Strike"
-		else
-			spellIfCapped = "Death Coil"
-		end
-		
+--		if s.MeleeDistance() then
+--			spellIfCapped = "Frost Strike"
+--		else
+--			spellIfCapped = "Death Coil"
+--		end
+		a.SetCost(0, 1, 0, 0, "Soul Reaper - Frost")
 		c.FlashAll(
 			"Pillar of Frost", 
-			"Blood Tap for Frost", 
-			"Empower Rune Weapon when low",
-			"Mind Freeze")
-debugPrint(
-		flashNoCap(
-			"Frost Strike under KM",
-			"Outbreak",
-			"Howling Blast for FF",
-			"Plague Strike for BP unless Outbreak",
-			"Plague Leech for Frost",
-			"Obliterate KM UU",
-			"Howling Blast Freezing Fog",
-			"Obliterate UU",
-			"Frost Strike for Resources",
-			"Howling Blast",
-			"Horn of Winter")
-)
+			"Raise Dead",
+			"Mind Freeze",
+			"Death Siphon")
+		local flashing
+		if OffhandHasWeapon() then
+--c.Debug("flashing",c.GetMyDebuffDuration("Blood Plague"),c.IsCasting("Plague Leech"),c.GetCooldown("Outbreak"))
+			flashing = c.PriorityFlash(
+				"Frost Strike under KM",
+				"Frost Strike at 88",
+				"Plague Leech at 2",
+				"Outbreak at 2",
+				"Unholy Blight at 2",
+				"Soul Reaper - Frost",
+				"Blood Tap for Soul Reaper - Frost",
+				"Howling Blast for Frost Fever",
+				"Plague Strike for Blood Plague",
+				"Howling Blast under Freezing Fog",
+				"Frost Strike at 76",
+				"Obliterate UU",
+				"Howling Blast BB or FF",
+				"Plague Leech if Outbreak",
+				"Horn of Winter",
+				"Obliterate U",
+				"Howling Blast",
+				"Frost Strike for Resources except Blood Charge",
+				"Blood Tap at 8 or Non-Execute",
+				"Death and Decay",
+				"Frost Strike at 40",
+				"Death Coil at 60",
+				"Empower Rune Weapon")
+		else
+			flashing = c.PriorityFlash(
+				"Plague Leech at 1",
+				"Outbreak",
+				"Unholy Blight",
+				"Soul Reaper - Frost",
+				"Blood Tap for Soul Reaper - Frost",
+				"Howling Blast for Frost Fever",
+				"Plague Strike for Blood Plague",
+				"Howling Blast under Freezing Fog",
+				"Obliterate under KM",
+				"Blood Tap for OB KM",
+				"Frost Strike at 76",
+				"Obliterate BB or FF or UU",
+				"Plague Leech at 3",
+				"Outbreak at 3",
+				"Unholy Blight at 3",
+				"Horn of Winter",
+				"Frost Strike for Resources",
+				"Obliterate",
+				"Frost Strike",
+				"Death Coil at 60",
+				"Plague Leech",
+				"Empower Rune Weapon")
+		end
+debugPrint(flashing)
+		if flashing then
+			local id = c.GetSpell(flashing).ID
+			if id == c.GetID("Frost Strike") or id == c.GetID("Death Coil") then
+				c.FlashAll("Blood Tap at 11")
+			end
+		end
 	end,
 	
 	FlashAlways = function()
@@ -332,11 +407,12 @@ a.Rotations.Unholy = {
 	OffSwitch = "unholy_off",
 	
 	FlashInCombat = function()
-		spellIfCapped = "Death Coil"
+		a.SetCost(0, 0, 1, 0, "Soul Reaper - Unholy")
 		c.FlashAll(
 			"Unholy Frenzy",
-			"Empower Rune Weapon when low",
-			"Mind Freeze")
+			"Mind Freeze",
+			"Death Siphon")
+		local flashing
 --		if c.AoE then
 --			flashNoCap(
 --				"Outbreak Refresh",
@@ -351,27 +427,35 @@ a.Rotations.Unholy = {
 --				"Death Coil under Sudden Doom if DCisOK",
 --				"Icy Touch")
 --		else
-debugPrint(
-			flashNoCap(
-				"Outbreak Refresh",
-				"Unholy Blight Refresh",
-				"Icy Touch for FF",
-				"Plague Strike for BP",
-				"Plague Leech for Unholy",
+			flashing = c.PriorityFlash(
+				"Outbreak",
+				"Unholy Blight",
+				"Soul Reaper - Unholy",
+				"Blood Tap for Soul Reaper - Unholy",
+				"Icy Touch for Frost Fever",
+				"Plague Strike for Blood Plague",
 				"Summon Gargoyle",
 				"Dark Transformation",
-				"Death and Decay DB or DF or UU",
-				"Scourge Strike DB or DF or UU",
+				"Blood Tap for Dark Transformation",
+				"Death Coil at 90",
+				"Death and Decay UU",
+				"Scourge Strike UU",
 				"Festering Strike BBFF",
-				"Death Coil under Sudden Doom",
-				"Blood Tap for Unholy",
-				"Death and Decay",
-				"Scourge Strike",
+				"Death and Decay unless Soul Reaper",
+				"Blood Tap for D&D",
+				"Death Coil under Sudden Doom or for Dark Transformation",
+				"Scourge Strike unless Soul Reaper",
+				"Plague Leech if Outbreak",
 				"Festering Strike",
-				"Death Coil unless Gargoyle",
-				"Horn of Winter")
-)
+				"Horn of Winter",
+				"Death Coil unless Gargoyle or Dark Transformation",
+				"Blood Tap at 8 or for Dark Transformation",
+				"Empower Rune Weapon")
 --		end
+--debugPrint(flashing)
+		if flashing and c.GetSpell(flashing).ID == c.GetID("Death Coil") then
+			c.FlashAll("Blood Tap at 11")
+		end
 	end,
 	
 	FlashOutOfCombat = function()
@@ -402,7 +486,7 @@ debugPrint(
 	
 	AuraApplied = function(spellID, target, spellSchool)
 		if spellID == c.GetID("Shadow Infusion") 
-			and UnitIsUnit(target, "player") then
+			and UnitIsUnit(target, "pet") then
 			
 			a.ShadowInfusionPending = false
 			c.Debug("Event", "Shadow Infusion connected", target)

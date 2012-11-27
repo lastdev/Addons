@@ -1,0 +1,152 @@
+tag 4.11.5
+9983159619d4912f043cb23399184d5d690a0210
+subversion <svn@deadlybossmods.com>
+2012-11-10 14:32:27 +0100
+
+Tagging as 4.11.5
+
+
+--------------------
+
+subversion:
+	- increment version number
+	- nbluewiz via svn r8086: # Unsok : Fix Scalpel warning spam. And give PlayerIsConstruct to higher priority. (sometimes variable Construct goes bad) # Meljarak : comment timerWhirlingBladeCD timer. (varies large) # Stone Guard : Set activePetrification nil on Overload to avoid bad Jasper Chain warning.
+	- Omega via svn r8085: comment out debug for now so we can tag a release as is, uncomment in next alpha incriment
+	- Omega via svn r8084: another minor option defaults tweek
+	- Omega via svn r8083: option default tweak
+	- Omega via svn r8082: Update rain of blades timer. it appears it's no longer a static one minute timer. it has a wild variation of 48-62 seconds
+	- Omega via svn r8081: Annihilate has a shorter cd on heroic.
+	- Omega via svn r8080: Don't start more than 1 shadow rez timer per shadow add
+	- Omega via svn r8079: change flanking orders from next timer to Cd (since on heroic it's variable) Add an audio countdown for other shield as well
+	- ultrashining via svn r8078: zhTW update (Mogushan/HOF)
+	- Omega via svn r8077: enable impervious shield cd, why did no one report this was missing for weeks? i thought it was already added. :\
+	- Omega via svn r8076: Add some debug to find cause of problem. of course i'll have to wait until next tuesday.
+	- nbluewiz via svn r8075: # Stone Guard : fix Cobalt Mine timer. # Sha of Violence : fix target warning. # koKR update.
+	- Omega via svn r8074: with message moved, make the wording more clear
+	- Omega via svn r8073: *Add a warning explaining vehicle UI ability usage on amber shaper (another mostly LFR aimed but may help norm/heroic as well for learning fight).
+	- Omega via svn r8072: *Add a special warning to garalon for being under boss (ie purple ring). People in LFR tend to not know what's going on so maybe a little hand holding will help here. *Also add a chat yell to pheromones target to help avoid bad passing while at it. *Fix massive stomp cd again. changing it from "pheramones" to "Amber carapace" didn't fix the problem. oops
+	- Omega via svn r8071: Fix arrow on blade lord so it actually auto clears after 5 sec even if you didn't make it to target.
+	- Omega via svn r8070: Pre warn force and verve using the clear throat unit event. Still special warn when actual damage starts though (best for CD timing)
+	- nbluewiz via svn r8069: # Stone Guard : Change Overload special warning. Now overload special warning warns only boss is not casting petrification. Need to change English locales.
+	- Omega via svn r8068: Make audio countdown timer for personal amber explosion. that timer is always precise. while at it, when you leave a construct, cancel said timer.
+	- ebmor via svn r8067: deDE update (HoF)
+	- ebmor via svn r8066: deDE update (MV, HoF)
+	- Omega via svn r8065: cancel other phase 1-2 timers as well when phase starts
+	- nbluewiz via svn r8064: # Will of Emperor : Fix first Titan Gas bar showing on heroic. And moved first Titan Gas bar for more accuracy. # Elegon : Moved despawn floor special warning. (pre 5 sec)
+	- Omega via svn r8063: Fix lua error, change timing of interrupt warning as it's only thing left i can think of on why it's still failing.
+	- Omega via svn r8062: update berserk
+	- Omega via svn r8061: add berserk timer to zorlok
+	- swix via svn r8060: ruRU update
+	- Omega via svn r8059: pungency is 20 seconds in LFR?\226?\128?\166?\226?\128?\166?\226?\128?\166?\226?\128?\166.
+	- Omega via svn r8058: make scan a little smarter by adding a failcheck against boss1targettarget actually being boss1
+	- Omega via svn r8057: Target scanning for amber scalpel thanks to "boss1targettarget" returning a valid target even when boss1target is nil (or rather, obscured from the player. amber shaper targets an invisible mob during scalpel, and that invisible mob targets a player. while we cannot target that invisible mob or THAT mobs target within api, we can call boss1targettarget which returns a valid target because that's a valid unitID when you know what you're looking for ;) )
+	- DiabloHu via svn r8056: zhCN update
+	- nbluewiz via svn r8055: # koKR update.
+	- Omega via svn r8054: *Re-add the special warnings to interrupt other controlled units, but split amber montrosity from loose MCed contructs. made montrosity on by default and lose constructs off by default. Montrosity must be interrupted on heroic or it's an auto wipe, this needs to be on by default. If it is still found to be confusing a player can turn an option off too, features shouldn't be removed. These were highly requested. The warning text is pretty clear about what needs interrupting anyways so i'm not sure where confusion comes from. *Readded phase 3 trigger from yell using actual localized text (since it differs from phase 1 yells) but left CLEU event as a backup
+	- nbluewiz via svn r8053: # Shekzeer : Fix phase 3 start.
+	- nbluewiz via svn r8052: # Unsok 1. Fix not working Interrupt Available warning. 2. Fix Amber Monstrosity's Amber Explosion cooldown. (46~49 sec variables) 3. Fix Low Will warn showing on Entering Construct. (hopefully) # Garajal : If you set Voodoo Doll global option on, personal warning off, and Voodoo Doll target is you, no warning will appear. Fix them.
+	- Omega via svn r8051: also make sure to cancel schedule on reapply too and not just removal
+	- Omega via svn r8050: Fix bad spellid on warning, re-enable it, it's still useful even with countdown.
+	- nbluewiz via svn r8049: # Meljarak : fix countdown. # koKR update.
+	- tandanu via svn r8048: insert an empty argument to mod syncs without arguments for compatibility reasons
+	- tandanu via svn r8047: mod:SendSync and mod:OnSync now accept any number of parameters... (design fail in the original API, sorry.)
+	- tandanu via svn r8046: fix Unsok interrupt syncs
+	- Omega via svn r8045: *add a countdown to amber explosions from monstrosity. *filter amber scalpel warnings if you are a construct since you don't care about them then. *Change amber scalpel sound to standard sound because in phase 2 it's just not working to have 3 diff events all using same sound. *Turn amber scalpel off by default for tanks and on for everyone else. I just don't think this targets tanks. even if it did, it won't kill us and we got other stuff to worry about. Wish target scanning would work on this to reduce spam further. :\
+	- Omega via svn r8044: Shekzeer phase 3 support.
+	- Omega via svn r8043: fix lua error in blue's fix
+	- Omega via svn r8042: remove the commented log too. but yeah, that's health based, he switches sides every 10%
+	- Omega via svn r8041: meant to shorten tank debuff timer not the cry one
+	- Omega via svn r8040: Screech off by default for melee/tanks. oops.
+	- Omega via svn r8039: small tweak still need to figure out why "available interrupts" warning isn't working
+	- Omega via svn r8038: some bugfixes, more to do later, still raiding
+	- Omega via svn r8037: remove timerStormUnleashedCD, it's health based
+	- nbluewiz via svn r8036: # Garalon : fix Broken Leg warning bug. # Meljarak : fix CC warns. # Tayak : fix Unseen Strike double warns. fix phase 2 Intensify timer. added experimental Storm Unleashed CD bar. # koKR update.
+	- Omega via svn r8035: put that icon local in right place
+	- Omega via svn r8034: add a special warning for fling for tanks.
+	- Omega via svn r8033: Update unsok with a 5 person info frame instead of 10, make it sort lowest to highest via new arg in info frame that can override that behavior in all info frames for when lower is worse than higher.
+	- Omega via svn r8032: warnings, special warnings, icons, and yells for sticky resin added to Shekzeer
+	- DiabloHu via svn r8031: zhCN update
+	- nbluewiz via svn r8030: # Tayak : fix Unseen Strike warning. (wtf EMOTE not fires?) # Gekkan : This fight ends at all adds dies, not boss dies. apply this. # Taran Zhu : added Rising Hate warning. # fix Heart of Fear ruRU locale bug. # koKR update.
+	- Omega via svn r8029: Switch garalon to emote trigger crush to make it a pre warning instead of a "oops you're already stunned" warning
+	- Omega via svn r8028: Also, commit this Meljarak update so korthak strike has the rest of the target information available to everyone else.
+	- Omega via svn r8027: More improvements for unsok 1. Only give an interrupt warning for amber monstrosity if YOU are actually a construct that can do it. Give the raid no warning, because lets assume you won't screw it up. Also give a general interrupt warning for who's interrupts are available to everyone else. 2. If there are NO constructs in raid with available interrupts when an add casts explosion, give a raid wide warning to beware the incoming damage you can't stop (ie get a raid cd up). 3. always announce the source of amber explosions in the special warnings for either monstrosity or loose constructs.
+	Point of these changes is is to make sure there is clear distinction between the 3 different types of amber explosion.
+	1. Ones YOU cast while a construct that you need to use strugle for control for.
+	2. Ones amber monstrosity casts YOU can interrupt while in a construct
+	3. Ones you can't interrupt because someone in raid fucked up.
+	4. Making sure split decisions can be made with the information dbm provides, such as tasking a split second interrupt decision.
+	
+	Sorry for the locals changes, i felt these changes fit better with my design intent.
+	- nbluewiz via svn r8026: # Feng : tweak timer. # Elegon : change Draw Power warning to count warning. (reset on phase change) # koKR update.
+	- Omega via svn r8025: More unsok stuff drycode visions of demise into shekzeer (no cd data yet)
+	- Omega via svn r8024: More Unsok stuff, still a lot more to do tomorrow, but bed time.
+	- Omega via svn r8023: massive stomp ~= Pungent. More fixes to come
+	- nbluewiz via svn r8022: # koKR update.
+	- Omega via svn r8021: remove target scanning, it doesn't work, i tried with 50 scans, the boss never targets whirling target korthak scanning does work but barely, unit aura with syncing will be better
+	- Omega via svn r8020: fix wind bomb target announces i think?
+	- swix via svn r8019: ruRU update for HoF
+	- swix via svn r8018: ruRU update for HoF
+	- Omega via svn r8017: Some debug code for Meljarak for two diff methods for possibly detecting strike target. I know in beta i tried target scanning this aggressive before and it failed despite aggressive multi pass scans. However, on live it's working for some people using other mods so trying again. Also trying a UNIT_AURA approach that apparently may work too (and better). Also try scanning again on whirling blade too, i don't believe it has a unit aura alternative either.
+	- Adam77 via svn r8016: Update Zor'Lok pull message from Chat Log
+	- Omega via svn r8015: remove unused variable
+	- Omega via svn r8014: Also, call an extra arrow hide on wipe just in case, i did have one get stuck for some reason because the 5 second auto clear failed?
+	- Omega via svn r8013: Make sure warnings/timers use spellids that actually have icons
+	- Omega via svn r8012: Fix pungency duration on 25 man
+	- Omega via svn r8011: Wind lord updates
+	- nbluewiz via svn r8010: # Spirit Kings: missed countdown.
+	- Omega via svn r8009: Tanks don't need to worry about power down, t hey have enough to worry about cycling 4 bosses around.
+	- nbluewiz via svn r8008: # some heroic stuff for Mogushan Vaults. # Garajal : fix totem timer for 10 man. and seeming that in koKR lfr, totem timer is 30 sec.
+	- Omega via svn r8007: only use one icon for pheramones
+	- Omega via svn r8006: Fix a bug
+	- nbluewiz via svn r8005: # koKR update.
+	- Omega via svn r8004: Garalon's berserk was hotfixed to 7 minutes.
+	- Omega via svn r8003: overwhelming assault timer update
+	- Omega via svn r8002: add a wildfire spark sound by request
+	- Omega via svn r8001: Blade lord has 8 min berserk
+	- Omega via svn r8000: Add missing spellid for energy conduit (LFR version)
+	- Omega via svn r7999: Try using inactive visual instead of cancel activation do to reports of cancel not working on heroic
+	- Omega via svn r7998: 6 min berserk for garalon
+	- DiabloHu via svn r7997: zhCN update
+	- Snamor via svn r7996: esES update
+	- Omega via svn r7995: Add the Empyreal focus pillars to boss health. Restore the floor despawn timer using a better way.
+	- Omega via svn r7994: elegon icon setting for destabilized
+	- Omega via svn r7993: Fix arrows so they aren't totally backwards. oops Make the energy based pre warning work off target only, the two bosses can get way out of sync
+	- ultrashining via svn r7992: zhTW update (Mogushan)
+	- ebmor via svn r7991: MV: Devastating Arc EJ id; deDE update
+	- Snamor via svn r7990: esES update
+	- Omega via svn r7989: by request, arc arrow stuff. off by default though since it's still subjective. it's going to be wrong if you're a dps/healer and aren't behind the boss, or a tank and not in front of boss. naturally, since sometimes tanks end up behind the boss and dps end up in front during combo, you see why this is off by default. There is no actual way to detect where you are in relation to the bosses orientation
+	- tandanu via svn r7988: add a second argument to DBM.Arrow:ShowStatic(): timeout, which automatically hides the arrow after a specific time has passed (just like the other arrow modes...)
+	- tandanu via svn r7987: Add a new Arrow target type: static, it will show an arrow that points in a specified direction, independent of the player's position and orientation.
+	New API:
+	DBM.Arrow:ShowStatic(angleDegrees)
+	- Omega via svn r7986: Heroic elegon protector cd differences
+	- Omega via svn r7985: forgot option defaults on timers for anti spam, those should be off too
+	- tandanu via svn r7984: fix sync of countdown voices for pull timers
+	- Omega via svn r7983: Some stuff that absolutely doesn't work, hopefully you can fix it tandanu.
+	- Adam77 via svn r7982: Updated Last Boss from ChatLog
+	- DiabloHu via svn r7981: zhCN update
+	- nbluewiz via svn r7980: # koKR update
+	- Snamor via svn r7979: esES update
+	- toni via svn r7978: zhTW locale update
+	- Omega via svn r7977: Count totems todo, maybe add in popup menu to choose count method (reset in 2s, reset in 3s reset in 4s?)
+	- ebmor via svn r7976: deDE update
+	- Omega via svn r7975: This should fix best time and last time being nil on world bosses., maybe also actually fix it still always saying 0 kills or 0 wipes, blue's fix did not fix anything, was still ALWAYS 0.
+	- DiabloHu via svn r7974: zhCN update
+	- DiabloHu via svn r7973: zhCN update
+	Suggestion on whisper auto-respond: What about inform player how to turn this feature on or off automatically when he's got a whisper during a boss fight and/or boss fight ends? People will know something about DBM settings a bit.
+	- Omega via svn r7972: whisper stats off by default too. greater majority of players just don't like stat reporting and don't know how to open dbm options still (still think 80% of our users just play with default settings). I hear a lot about people wanting to be able to turn this of?\226?\128?\166sigh
+	- Omega via svn r7971: minimap icon now off by default, it's just annoying.
+	- DiabloHu via svn r7970: zhCN update
+	- ultrashining via svn r7969: zhTW update(Mogushan)
+	- Adam77 via svn r7968: Updates from ChatLog for Feng, Garajal and Spirit Kings
+	- Omega via svn r7967: fix totem timer, it's 20 in all difficulties now.
+	- Omega via svn r7966: some fixes, countdown seems to be just like fading light, need to -1 sec to make it right.
+	banishment is a CD not next, he seems to vary a lot about casting right away or waiting.
+	- nbluewiz via svn r7965: koKR update.
+	- Omega via svn r7964: some anti spam options for stoneguard, those two warnings should be optional and not forced upon everyone.
+	- Omega via svn r7963: Add an auto range frame to feng
+	- ebmor via svn r7962: deDE update (MV, part 2)
+	- ebmor via svn r7961: deDE update (MV, part 1)
+	- ultrashining via svn r7960: zhTW update(party)
+	- Snamor via svn r7959: esES update
+	- tandanu via svn r7958: increment version number for alpha builds

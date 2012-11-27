@@ -36,7 +36,8 @@ function ns:OnClick(frame, button)
 	local chat = ChatEdit_GetLastActiveWindow()
 	if not chat:IsShown() then return end
 	
-	local link
+	local link, _
+	
 	if frame.spellID then
 		link = DataStore:GetCompanionLink(frame.spellID)
 	elseif frame.glyphID then

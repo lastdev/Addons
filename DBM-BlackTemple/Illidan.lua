@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Illidan", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 411 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 416 $"):sub(12, -3))
 mod:SetCreatureID(22917)
 mod:SetModelID(21135)
 mod:SetUsedIcons(8)
@@ -117,7 +117,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.ParasiteIcon then
 			self:SetIcon(args.destName, 8)
 		end
-		if IsRaidLeader() and self.Options.ParasiteWhisper then
+		if DBM:GetRaidRank() > 0 and self.Options.ParasiteWhisper then
 			self:SendWhisper(L.ParasiteWhisper, args.destName)
 		end
 	elseif args:IsSpellID(40585) then

@@ -712,9 +712,11 @@ equip = GetActiveSpecGroup() == 2
 -- $SETTING Tree1={type="boolean", label=Outfitter:GetTalentTreeName(1), default=false}
 -- $SETTING Tree2={type="boolean", label=Outfitter:GetTalentTreeName(2), default=false}
 -- $SETTING Tree3={type="boolean", label=Outfitter:GetTalentTreeName(3), default=false}
+-- $SETTING Tree4={type="boolean", label=Outfitter:GetTalentTreeName(4), default=false}
 if GetSpecialization() == 1 then equip = setting.Tree1
 elseif GetSpecialization() == 2 then equip = setting.Tree2
-elseif GetSpecialization() == 3 then equip = setting.Tree3 end
+elseif GetSpecialization() == 3 then equip = setting.Tree3
+elseif GetSpecialization() == 4 then equip = setting.Tree4 end
 ]],
 	},
 	{
@@ -1204,6 +1206,24 @@ end
 		ID = "Unholy",
 		Class = "DEATHKNIGHT",
 		Script = Outfitter:GenerateSimpleScript("UNHOLY", Outfitter.cDeathknightUnholyDescription),
+	},
+	{
+		Name = Outfitter.cMonkSerpent,
+		ID = "Serpent",
+		Class = "MONK",
+		Script = Outfitter:GenerateShapeshiftScript("SERPENT_STANCE", Outfitter.cMonkSerpentDescription),
+	},
+	{
+		Name = Outfitter.cMonkOx,
+		ID = "Ox",
+		Class = "MONK",
+		Script = Outfitter:GenerateShapeshiftScript("OX_STANCE", Outfitter.cMonkOxDescription),
+	},
+	{
+		Name = Outfitter.cMonkTiger,
+		ID = "Tiger",
+		Class = "MONK",
+		Script = Outfitter:GenerateShapeshiftScript("TIGER_STANCE", Outfitter.cMonkTigerDescription),
 	},
 	{
 		Name = Outfitter.cSoloOutfit,
@@ -1787,7 +1807,9 @@ function Outfitter:ParseScriptFields(pScript)
 				end
 				
 				vValue.Field = vKey
-				table.insert(vSettings.Inputs, vValue)
+				if vValue.Label then -- don't add fields with nil labels, this allows scripts like Primary Tree skip checkboxes for the fourth talent tree
+					table.insert(vSettings.Inputs, vValue)
+				end
 			end
 		end
 	end

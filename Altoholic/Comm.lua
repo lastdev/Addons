@@ -217,6 +217,7 @@ function Altoholic.Comm.Sharing:RequestNext(player)
 		local TocData = self.DestTOC[index]
 		
 		local TocType = strsplit(TOC_SEP, TocData)
+		local _
 			
 		if TocType == TOC_SETREALM then
 			_, self.ClientRealmName = strsplit(TOC_SEP, TocData)
@@ -391,6 +392,7 @@ function Altoholic.Comm.Sharing:OnSendItemReceived(sender, data)
 		
 	local TocData = self.SourceTOC[index]
 	local TocType = strsplit(TOC_SEP, TocData)		-- get its type
+	local _
 		
 	if TocType == TOC_SETREALM then
 		_, self.ServerRealmName = strsplit(TOC_SEP, TocData)

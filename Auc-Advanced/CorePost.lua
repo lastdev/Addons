@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.15.5348 (LikeableLyrebird)
-	Revision: $Id: CorePost.lua 5345 2012-09-05 11:17:00Z brykrys $
+	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: CorePost.lua 5350 2012-09-13 12:46:50Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -302,26 +302,22 @@ local function AnalyzeItem(item)
 			local sig, linkType = GetSigFromLink(item)
 			if sig then
 				if linkType == "battlepet" then
-					return sig, 82800, linkType, item
+					return sig, 82800, "battlepet", item
 				else
-					local id = DecodeSig(sig)
-					if id then
-						return sig, id, linkType, item
+					local sigType, id = DecodeSig(sig)
+					if sigType == "item" then
+						return sig, id, "item", item
 					end
 				end
 			end
 
 		else -- check it it's a sig
-			if item:sub(1,2) == "P:" then
-				-- looks like a battlepet sig
-				-- todo: improve this test?
+			local sigType, id = DecodeSig(item)
+			if sigType == "battlepet" then
 				return item, 82800, "battlepet"
-			else
-				local id = DecodeSig(item)
-				if id then
-					-- it's an item sig
-					return item, id, "item"
-				end
+
+			elseif sigType == "item" then
+				return item, id, "item"
 			end
 		end
 	elseif iType == "number" then
@@ -1328,4 +1324,4 @@ private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CorePost.lua $", "$Rev: 5345 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CorePost.lua $", "$Rev: 5350 $")

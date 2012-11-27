@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.2 (<%codename%>)
-	Revision: $Id: GatherConfig.lua 982 2012-09-05 04:31:52Z Esamynn $
+	Version: 4.0.6 (<%codename%>)
+	Revision: $Id: GatherConfig.lua 1039 2012-10-06 16:28:36Z Esamynn $
 
 	License:
 	This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	Saved Variables Configuration and management code
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherConfig.lua $", "$Rev: 982 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherConfig.lua $", "$Rev: 1039 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient
@@ -81,7 +81,7 @@ local function getDefault(setting)
 	if (setting == "inspect.distance")  then return 25      end
 	if (setting == "inspect.percent")   then return 80      end
 	if (setting == "inspect.time")      then return 120     end
-	if (setting == "anon.tint")         then return true    end
+	if (setting == "anon.tint")         then return false   end
 	if (setting == "anon.opacity")      then return 60      end
 	if (setting == "guild.receive")     then return true    end
 	if (setting == "guild.print.send")  then return false   end
@@ -559,7 +559,7 @@ function MakeGuiConfig()
 	gui:AddControl(id, "Checkbox",   0, 2, "mainmap.tooltip.rate", _trL("CONFIG_TOOLTIP_DROP_RATES"))
 
 	gui:AddControl(id, "Subhead",  0,    _trL("LABEL_NOTE"))
-	gui:AddControl(id, "Note",     0, 1, 290, 55, _tr("CONFIG_ALL_FILTER_NOTE", _tr("ALL")))
+	gui:AddControl(id, "Note",     0, 1, 290, 40, _tr("CONFIG_ALL_FILTER_NOTE", _tr("ALL")))
 
 	gui:AddControl(id, "Subhead",    0,    _trL("CONFIG_GENERAL_MINIICON_LABEL"))
 	gui:AddControl(id, "Checkbox",   0, 1, "miniicon.enable", _trL("CONFIG_MINIICON_ENABLE"))
@@ -612,6 +612,7 @@ function MakeGuiConfig()
 	id = gui:AddTab(_trL("CONFIG_SECTION_MINIMAP"))
 	gui:AddControl(id, "Header",     0,    _trL("CONFIG_SECTION_TITLE_MINIMAP"))
 	last = gui:GetLast(id) -- Get the current position so we can return here for the second column
+	local headerPosition = gui:GetLast(id):GetBottom()
 
 	gui:AddControl(id, "Subhead",    0,    _trL("CONFIG_MINIMAP_LABEL"))
 	gui:AddControl(id, "Checkbox",   0, 1, "minimap.enable", _trL("CONFIG_MINIMAP_ENABLE"))
@@ -650,7 +651,10 @@ function MakeGuiConfig()
 	gui:AddControl(id, "Checkbox",  0.49, 1, "anon.enable", _trL("CONFIG_MINIMAP_ANON_ENABLE"));
 	gui:AddControl(id, "Checkbox",  0.49, 2, "anon.tint", _trL("CONFIG_MINIMAP_ANON_TINT"));
 	gui:AddControl(id, "Slider",    0.49, 2, "anon.opacity", 0, 100, 1, _trL("CONFIG_MINIMAP_ANON_OPACITY"));
-
+	
+	if ( headerPosition - gui:GetLast(id):GetBottom() > 375 ) then
+		gui:MakeScrollable(id)
+	end
 	----------------------------------------------------------------------
 	-- Sharing
 	----------------------------------------------------------------------
@@ -660,19 +664,19 @@ function MakeGuiConfig()
 	last = gui:GetLast(id) -- Get the current position so we can return here for the second column
 
 	gui:AddControl(id, "Subhead",    0,    _trL("CONFIG_SHARING_GUILD_LABEL"))
-	gui:AddControl(id, "Checkbox",   0, 1, "guild.enable", _trL("CONFIG_SHARING_GUILD_ENABLE"))
-	gui:AddControl(id, "Checkbox",   0, 2, "guild.receive", _trL("CONFIG_SHARING_GUILD_DATABASE"))
-	gui:AddControl(id, "Checkbox",   0, 2, "guild.print.send", _trL("CONFIG_SHARING_GUILD_MESSAGE_SENT"))
-	gui:AddControl(id, "Checkbox",   0, 2, "guild.print.recv", _trL("CONFIG_SHARING_GUILD_MESSAGE_RECV"))
+	gui:AddControl(id, "Checkbox",   0, 1, "guild.enable", _trL("CONFIG_SHARING_GUILD_ENABLE"), true, 290)
+	gui:AddControl(id, "Checkbox",   0, 2, "guild.receive", _trL("CONFIG_SHARING_GUILD_DATABASE"), true, 290)
+	gui:AddControl(id, "Checkbox",   0, 2, "guild.print.send", _trL("CONFIG_SHARING_GUILD_MESSAGE_SENT"), true, 290)
+	gui:AddControl(id, "Checkbox",   0, 2, "guild.print.recv", _trL("CONFIG_SHARING_GUILD_MESSAGE_RECV"), true, 290)
 
 	gui:AddControl(id, "Subhead",    0,    _trL("CONFIG_SHARING_GROUP_LABEL"))
-	gui:AddControl(id, "Checkbox",   0, 1, "raid.enable", _trL("CONFIG_SHARING_GROUP_ENABLE"))
-	gui:AddControl(id, "Checkbox",   0, 2, "raid.receive", _trL("CONFIG_SHARING_GROUP_DATABASE"))
-	gui:AddControl(id, "Checkbox",   0, 2, "raid.print.send", _trL("CONFIG_SHARING_GROUP_MESSAGE_SENT"))
-	gui:AddControl(id, "Checkbox",   0, 2, "raid.print.recv", _trL("CONFIG_SHARING_GROUP_MESSAGE_RECV"))
+	gui:AddControl(id, "Checkbox",   0, 1, "raid.enable", _trL("CONFIG_SHARING_GROUP_ENABLE"), true, 290)
+	gui:AddControl(id, "Checkbox",   0, 2, "raid.receive", _trL("CONFIG_SHARING_GROUP_DATABASE"), true, 290)
+	gui:AddControl(id, "Checkbox",   0, 2, "raid.print.send", _trL("CONFIG_SHARING_GROUP_MESSAGE_SENT"), true, 290)
+	gui:AddControl(id, "Checkbox",   0, 2, "raid.print.recv", _trL("CONFIG_SHARING_GROUP_MESSAGE_RECV"), true, 290)
 	
 	gui:AddControl(id, "Subhead",    0,    _trL("CONFIG_SHARING_PERSONAL_LABEL"))
-	gui:AddControl(id, "Checkbox",   0, 1, "personal.print", _trL("CONFIG_SHARING_PERSONAL_ENABLE"))
+	gui:AddControl(id, "Checkbox",   0, 1, "personal.print", _trL("CONFIG_SHARING_PERSONAL_ENABLE"), true, 290)
 
 	gui:SetLast(id, last) -- Return to the saved position
 	gui:AddControl(id, "Subhead", 0.55,    _trL("CONFIG_SHARING_BLACKLIST_LABEL"))
@@ -798,7 +802,9 @@ function MakeGuiConfig()
 	for name, data in pairs(Gatherer.Plugins.Data) do
 		local id = gui:AddTab(data.tabName)
 		name = name:lower()
-		gui:AddControl(id, "Checkbox",   0, 1, "plugin."..name..".enable", _trL("ENABLE"))
+		if ( data.type ~= "DATABASE" ) then
+			gui:AddControl(id, "Checkbox",   0, 1, "plugin."..name..".enable", _trL("ENABLE"))
+		end
 		gui:AddControl(id, "Header",     0,    data.title)
 		gui:AddControl(id, "Note",       0, 1, 565, nil, data.notes)
 		if ( Gatherer.Plugins.Registrations[name] ) then
@@ -969,11 +975,9 @@ function SharingBlacklist_RemoveBlacklistedNodes()
 	if ( LastIgnoredPlayer ) then
 		local numRemoved = 0
 		for i, zone in Gatherer.Storage.GetAreaIndices() do
-			for _, gatherId in Gatherer.Storage.ZoneGatherNames(zone) do
-				for _, gatherType in pairs(Gatherer.Constants.SupportedGatherTypes) do
-					local result, _, count = Gatherer.Storage.RemoveGather(zone, gatherId, gatherType, LastIgnoredPlayer)
-					numRemoved = numRemoved + count
-				end
+			for _, gatherId, gatherType in Gatherer.Storage.ZoneGatherNames(zone) do
+				local result, _, count = Gatherer.Storage.RemoveGather(zone, gatherId, gatherType, LastIgnoredPlayer)
+				numRemoved = numRemoved + count
 			end
 		end
 		if ( numRemoved > 0 ) then

@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.2 (<%codename%>)
-	Revision: $Id: GatherStorage.lua 979 2012-09-04 07:38:10Z Esamynn $
+	Version: 4.0.6 (<%codename%>)
+	Revision: $Id: GatherStorage.lua 1049 2012-11-02 01:52:57Z Esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	Library for accessing and updating the database
 --]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherStorage.lua $", "$Rev: 979 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherStorage.lua $", "$Rev: 1049 $")
 
 
 --------------------------------------------------------------------------
@@ -64,6 +64,8 @@ local corruptData = false
 
 local lib = Gatherer.Storage
 
+lib.MassImportMode = false
+
 -- reference to the Astrolabe mapping library
 local Astrolabe = DongleStub(Gatherer.AstrolabeVersion)
 
@@ -73,7 +75,6 @@ for index, name in ipairs(continents) do
 	ZoneData[index] = {GetMapZones(index)}
 	ZoneData[index].name = name
 end
-
 
 local function argcheck(value, num, ...)
 	assert(1, type(num) == "number", "Bad argument #2 to 'argcheck' (number expected, got " .. type(level) .. ")")
@@ -86,6 +87,11 @@ local function argcheck(value, num, ...)
 	local name = string.match(debugstack(2,2,0), ": in function [`<](.-)['>]")
 	error(string.format("Bad argument #%d to 'Gatherer.Storage.%s' (%s expected, got %s)", num, name, types, type(value)), 3)
 end
+
+-- references to localization functions
+local _tr = Gatherer.Locale.Tr
+local _trC = Gatherer.Locale.TrClient
+local _trL = Gatherer.Locale.TrLocale
 
 --[[
 ##########################################################################
@@ -265,20 +271,24 @@ function lib.AddNode(nodeName, gatherType, zoneToken, gatherX, gatherY, source, 
 	if ( incrementCount ) then
 		gatherData[COUNT] = gatherData[COUNT] + 1
 	end
-
-	local now = time()
-
+	
+	local previousInspected = node[INSPECTED]
+	local previousHarvested = gatherData[HARVESTED]
+	
 	-- Update last harvested time (and inspected time as well)
-	gatherData[HARVESTED] = now
-	if (not gatherData[SOURCE]) then
+	local now = time()
+	if not ( lib.MassImportMode ) then
 		node[INSPECTED] = now
+	end
+	if not ( source ) then
+		gatherData[HARVESTED] = now
 	end
 
 	-- Notify the reporting subsystem that something has changed
 	Gatherer.Report.NeedsUpdate()
 
 	-- Return the indexed position
-	return index
+	return index, previousInspected, previousHarvested
 end
 
 --************************************************************************
@@ -1165,7 +1175,7 @@ local function MergeNode(gather, gatherType, continent, zone, gatherX, gatherY, 
 		return -- not enough data
 	end
 	zone = Gatherer.ZoneTokens.GetZoneTokenByContZone(continent, zone) or Gatherer.ZoneTokens.GetZoneToken(zone)
-	local index = lib.AddNode(gather, gatherType, zone, gatherX, gatherY, source, false, indoorNode)
+	local index, previousInspected, previousHarvested = lib.AddNode(gather, gatherType, zone, gatherX, gatherY, source, false, indoorNode)
 	if not ( index ) then return end -- node was not added for some reason, abort
 	local node = data[zone][gatherType][index]
 	local gather = node[gather]
@@ -1173,14 +1183,14 @@ local function MergeNode(gather, gatherType, continent, zone, gatherX, gatherY, 
 		gather[COUNT] = gather[COUNT] + count
 	end
 	if ( harvested ) then
-		gather[HARVESTED] = harvested
-	else
-		gather[HARVESTED] = 0
+		if ( harvested > gather[HARVESTED] ) then
+			gather[HARVESTED] = harvested
+		end
 	end
 	if ( inspected ) then
-		node[INSPECTED] = inspected
-	else
-		node[INSPECTED] = 0
+		if ( inspected > node[INSPECTED] ) then
+			node[INSPECTED] = inspected
+		end
 	end
 	if ( gather[SOURCE] and gather[SOURCE] ~= "IMPORTED" and gather[SOURCE] ~= "REQUIRE" ) then
 		gather[SOURCE] = processImportedSourceField(string.split(",", gather[SOURCE]))
@@ -1191,18 +1201,15 @@ function lib.ImportDatabase( database )
 	if not ( data ) then
 		lib.ClearDatabase();
 	end
+	lib.MassImportMode = true
 	Gatherer.Convert.ImportDatabase(database, MergeNode, numMergeNodeArgs)
+	lib.MassImportMode = false
 end
 
 
 --------------------------------------------------------------------------
 -- Warning Dialogs
 --------------------------------------------------------------------------
-
--- references to localization functions
-local _tr = Gatherer.Locale.Tr
-local _trC = Gatherer.Locale.TrClient
-local _trL = Gatherer.Locale.TrLocale
 
 StaticPopupDialogs["GATHERER_INVALID_DATABASE_VERSION"] = {
 	text = _trL("STORAGE_DB_VERSION_INVALID"),

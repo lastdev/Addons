@@ -30,12 +30,12 @@
 
 	SVN Info for this file:
 		File $URL: http://svn.norganna.org/libs/trunk/TipHelper/LibAltChatLink.lua $
-		Revision $Id: LibAltChatLink.lua 315 2011-07-18 11:53:36Z brykrys $
+		Revision $Id: LibAltChatLink.lua 341 2012-09-21 08:23:13Z brykrys $
 --]]
 
 
 local LIBRARY_VERSION_MAJOR = "LibAltChatLink"
-local LIBRARY_VERSION_MINOR = 1
+local LIBRARY_VERSION_MINOR = 2
 
 local lib, oldminor = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
@@ -130,12 +130,17 @@ function lib._hooksetitemref1(...)
 		end
 	end
 	if opentooltip and not blocktooltip then
-		ShowUIPanel(ItemRefTooltip)
-		if not ItemRefTooltip:IsShown() then
-			ItemRefTooltip:SetOwner(UIParent, "ANCHOR_PRESERVE")
+		if linktype == "battlepet" then
+			local _, speciesID, level, breedQuality, maxHealth, power, speed, battlePetID = strsplit(":", link)
+			FloatingBattlePet_Toggle(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed), string.gsub(string.gsub(link, "^(.*)%[", ""), "%](.*)$", ""), tonumber(battlePetID))
+		else
+			ShowUIPanel(ItemRefTooltip)
+			if not ItemRefTooltip:IsShown() then
+				ItemRefTooltip:SetOwner(UIParent, "ANCHOR_PRESERVE")
+			end
+			-- pcall it just in case an invalid link got through
+			pcall(ItemRefTooltip.SetHyperlink, ItemRefTooltip, link)
 		end
-		-- pcall it just in case an invalid link got through
-		pcall(ItemRefTooltip.SetHyperlink, ItemRefTooltip, link)
 	end
 end
 
@@ -147,6 +152,7 @@ lib._allowedlinktypes1 = {
 	achievement = true,
 	talent = true,
 	glyph = true,
+	battlepet = true,
 }
 
 function lib._deactivate()

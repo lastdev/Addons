@@ -1,8 +1,8 @@
 --[[
 --	Gatherer Addon for World of Warcraft(tm).
 --	HUD Plugin Module
---	Version: 4.0.2 (<%codename%>)
---	Revision: $Id: GatherHUD.lua 955 2012-08-28 16:39:14Z Esamynn $
+--	Version: 4.0.6 (<%codename%>)
+--	Revision: $Id: GatherHUD.lua 1014 2012-09-18 04:48:18Z Esamynn $
 --
 --	License:
 --	This program is free software; you can redistribute it and/or
@@ -397,8 +397,8 @@ function lib.Render()
 		node:Hide()
 	end
 	if (get("plugin.gatherer_hud.party.enable")) then
-		local n_members = GetNumPartyMembers()
-		if n_members > 0 then
+		local n_members = GetNumGroupMembers()
+		if n_members > 0 and not IsInRaid() then
 			local color = get("plugin.gatherer_hud.party.color")
 			local r, g, b, a = strsplit(",", tostring(color) or "0,0,0,1")
 			r = tonumber(r) or 0
@@ -407,8 +407,8 @@ function lib.Render()
 			local partysize = get("plugin.gatherer_hud.party.size")
 		
 			local n
-			for n = 1, n_members do
-				local member_c, member_z, member_x, member_y = Astrolabe:GetUnitPosition("party"..n, false)
+			for n = 1, n_members-1 do
+				local member_c, member_z, member_x, member_y = Astrolabe:GetUnitPosition("party"..n, true)
 		
 				if member_x and member_y then
 					dx = (member_x - px) * xScale

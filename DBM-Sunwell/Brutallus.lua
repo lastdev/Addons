@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Brutallus", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 411 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 416 $"):sub(12, -3))
 mod:SetCreatureID(24882)
 mod:SetModelID(22711)
 mod:SetMinSyncRevision(358)--Block bad pulls from old versions
@@ -57,7 +57,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				burnIcon = burnIcon - 1
 			end
 		end
-		if IsRaidLeader() and self.Options.BurnWhisper then
+		if DBM:GetRaidRank() > 0 and self.Options.BurnWhisper then
 			self:SendWhisper(L.BurnWhisper, args.destName)
 		end
 		if args:IsPlayer() then

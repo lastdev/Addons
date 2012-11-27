@@ -9,6 +9,10 @@ local L
 -----------------------
 L= DBM:GetModLocalization(672)
 
+L:SetOptionLocalization({
+	SetIconOnAdds	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej5616")
+})
+
 -----------------------
 -- Lorewalker Stonestep --
 -----------------------
@@ -72,8 +76,18 @@ L= DBM:GetModLocalization(673)
 -----------------------
 L= DBM:GetModLocalization(657)
 
+L:SetWarningLocalization({
+	warnRemainingNovice	= "Novizen verbleibend: %d"
+})
+
+L:SetOptionLocalization({
+	warnRemainingNovice	= "Verkünde die Anzahl der verbleibenden Novizen"
+})
+
 L:SetMiscLocalization({
-	Defeat		= "I am bested.  Give me a moment and we will venture forth together to face the Sha." --translate (trigger)
+	NovicesPulled	= "Ihr! Ihr habt zugelassen, dass das Sha nach all diesen Jahren wieder erwacht ist!",
+	NovicesDefeated = "Ihr habt unsere unerfahrensten Schüler bezwungen. Jetzt müsst Ihr Euch gegen zwei der besten behaupten.",
+--	Defeat			= "I am bested.  Give me a moment and we will venture forth together to face the Sha." --translate (trigger)
 })
 
 -----------------------
@@ -108,7 +122,7 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(675)
 
 L:SetMiscLocalization({
-	StaffingRun		= "Striker Ga'dok prepares to make a strafing run!" --translate (trigger)
+	StaffingRun		= "Bomber Ga'dok bereitet einen Bombenlauf vor!"
 })
 
 -----------------------
@@ -130,10 +144,11 @@ L= DBM:GetModLocalization(649)
 L= DBM:GetModLocalization(708)
 
 L:SetMiscLocalization({
-	Kuai		= "Clan Gurthan will show our King and the rest of you power-hungry imposters why we are the rightful ones at his side!", --translate (trigger)
-	Ming		= "Clan Harthak will show all why they are the truest of Mogu!", --translate (trigger)
-	Haiyan		= "Clan Korgesh will demonstrate why only the strong deserve to stand at our King's side!", --translate (trigger)
-	Defeat		= "Who allowed these outsiders inside our halls? Only Clan Harthak or Clan Kargesh would stoop to such treachery!" --translate (trigger)
+	Pull		= "Ihr seid alle nutzlos! Die Wachen, die Ihr mir als Tribut überlasst, können nicht einmal diese minderwertigen Wesen von meinem Palast fernhalten.",
+	Kuai		= "Klan Gurthan wird unserem König und dem Rest von Euch machthungrigen Schwindlern zeigen, warum wir zu Recht an seiner Seite stehen!",
+	Ming		= "Klan Harthak wird allen zeigen, warum sie die wahren Mogu sind!",
+	Haiyan		= "Klan Kargesh wird Euch zeigen, warum nur die Starken es verdient haben, an der Seite des Königs zu stehen!",
+	Defeat		= "Wer hat diese Eindringlinge in unsere Hallen gelassen? Nur Klan Harthak oder Klan Kargesh würden einen derartigen Verrat begehen!"
 })
 
 -----------------------
@@ -168,7 +183,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	WaveStart	= "Fools! Attacking the might of the mantid head on?  Your deaths will be swift." --translate (trigger)
+	WaveStart	= "Narren! Ein Frontalangriff auf die Macht der Mantis? Ich werde Euch einen schnellen Tod bereiten!"
 })
 
 -----------------------
@@ -240,7 +255,7 @@ L= DBM:GetModLocalization(660)
 L= DBM:GetModLocalization(654)
 
 L:SetMiscLocalization({
-	Call		= "Armsmaster Harlan calls on two of his allies to join the fight!" --translate (trigger)
+	Call		= "Waffenmeister Harlan ruft zwei seiner Verbündeten, die sich am Kampf beteiligen!"
 })
 
 -----------------------

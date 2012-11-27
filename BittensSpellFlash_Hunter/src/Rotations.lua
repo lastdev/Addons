@@ -52,24 +52,27 @@ a.Rotations.BeastMastery = {
 	FlashInCombat = function()
 		c.FlashAll(
 			"Hunter's Mark", 
-			"Focus Fire",
-			"Kiroptyric Sigil")
+			"Focus Fire")
 --c.Debug("Flash", string.format("%.1f", a.Focus),
 		c.PriorityFlash(
 			"Serpent Sting", 
 			"Fervor",
 			"Bestial Wrath",
-			"Kill Shot",
-			"A Murder of Crows",
-			"Blink Strike",
-			"Lynx Rush",
 			"Rapid Fire for BM",
+			"Stampede",
+			"Kill Shot",
 			"Kill Command",
+			"A Murder of Crows",
+			"Glaive Toss",
+			"Lynx Rush",
 			"Dire Beast",
-			"Arcane Shot under Thrill of the Hunt",
+			"Barrage",
+			"Powershot",
+			"Blink Strike",
 			"Readiness",
+			"Arcane Shot under Thrill of the Hunt",
+			"Cobra Shot for Serpent Sting",
 			"Arcane Shot for BM",
-			"Focus Fire",
 			"Cobra Shot")
 --)
 	end,
@@ -85,28 +88,29 @@ a.Rotations.Survival = {
 	OffSwitch = "survival_off",
 	
 	FlashInCombat = function()
-		c.FlashAll(
-			"Hunter's Mark", 
-			"Kiroptyric Sigil")
-c.Debug("Flash", string.format("%.1f", a.Focus),
+		c.FlashAll("Hunter's Mark", "Rapid Fire")
+--c.Debug("Flash", string.format("%.1f", a.Focus),
 		c.PriorityFlash(
 			"A Murder of Crows",
 			"Blink Strike",
 			"Lynx Rush",
 			"Explosive Shot under Lock and Load",
+			"Glaive Toss",
+			"Powershot",
+			"Barrage",
 			"Serpent Sting",
 			"Explosive Shot",
 			"Kill Shot",
 			"Black Arrow",
 			"Arcane Shot under Thrill of the Hunt",
 			"Dire Beast",
-			"Rapid Fire",
+			"Stampede",
 			"Readiness",
 			"Fervor",
 			"Cobra Shot for Serpent Sting",
 			"Arcane Shot",
 			"Cobra Shot")
-)
+--)
 	end,
 	
 	FlashAlways = function()

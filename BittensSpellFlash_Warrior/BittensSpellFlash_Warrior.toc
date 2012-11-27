@@ -1,0 +1,19 @@
+## Interface: 50001
+## Version:2.2.2
+## Author: Xemnosyst
+## Title: Bitten's SpellFlash: Warrior
+## Notes: Replaces Blizzard's default proc highlighting to flash 1) a maximum dps rotation, or 2) a maximum suvivability tanking rotation.
+## URL: http://www.curse.com/addons/wow/bittens-spellflash-warrior
+## Dependencies: BittensSpellFlashLibrary
+## LoadOnDemand: 1
+## X-SpellFlashAddon-LoadWith: Warrior
+## X-Curse-Packaged-Version: 2.2.2
+## X-Curse-Project-Name: Bitten's SpellFlash: Warrior
+## X-Curse-Project-ID: bittens-spellflash-warrior
+## X-Curse-Repository-ID: wow/bittens-spellflash-warrior/mainline
+src\Localization.lua
+src\Core.lua
+src\Configs.lua
+src\IDs.lua
+src\Spells.lua
+src\Rotations.lua

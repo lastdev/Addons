@@ -16,8 +16,8 @@ local borderFrame = _G.CreateFrame("ScrollFrame", "RRMerchant", _G["MerchantFram
 --frame.items = {}
 --frame.items.length = 0;
 
-borderWidth = 300
-borderHeight = 425
+borderWidth = 250
+borderHeight = 400
 
 
 borderFrame:SetWidth(borderWidth)
@@ -25,16 +25,17 @@ borderFrame:SetHeight(borderHeight)
 
 borderFrame:SetBackdrop({
 	bgFile=[[Interface\DialogFrame\UI-DialogBox-Background]],
-	edgeFile=[[Interface\DialogFrame\UI-DialogBox-Border]],
+	edgeFile=[[Interface\AddOns\ReagentRestocker\RRBorders]],
+	--edgeFile=[[Interface\DialogFrame\UI-DialogBox-Border]],
 	tile="true",
 	tileSize=32,
 	edgeSize=32,
 	insets = 
 	{
-		left=11,
-		right=12,
-		top=12,
-		bottom=11
+		left=1,
+		right=1,
+		top=1,
+		bottom=1
 	}
 })
 
@@ -109,22 +110,22 @@ closeFrame:SetPoint("TOPRIGHT", borderFrame, "TOPRIGHT",5,5)
 closeFrame:Show();
 
 local titleFrame = _G.CreateFrame("Frame", "RRMerchantTitle", borderFrame);
-titleFrame:SetWidth(200)
-titleFrame:SetHeight(40)
+titleFrame:SetWidth(150)
+titleFrame:SetHeight(20)
 titleFrame:SetFrameStrata("DIALOG")
-titleFrame:SetPoint("TOP", borderFrame, "TOP",5,30)
+titleFrame:SetPoint("TOP", borderFrame, "TOP",5,15)
 titleFrame:SetBackdrop({
 	bgFile=[[Interface\DialogFrame\UI-DialogBox-Background]],
-	edgeFile=[[Interface\DialogFrame\UI-DialogBox-Border]],
+	edgeFile=[[Interface\AddOns\ReagentRestocker\RRBorders]],
 	tile="true",
 	tileSize=32,
 	edgeSize=32,
 	insets = 
 	{
-		left=11,
-		right=12,
-		top=12,
-		bottom=11
+		left=1,
+		right=1,
+		top=1,
+		bottom=1
 	}
 })
 titleFrame:Show();
@@ -204,7 +205,6 @@ function addItem()
 		_G.ClearCursor();
 		refreshShoppingList();
 		selectTree:RefreshTree();
-		bTree:RefreshTree();
 		showItems(currentFilter)
 	elseif(infoType == "merchant") then
 		if currentFilter ~= nil then
@@ -450,22 +450,26 @@ end
 
 local yAdjust = -15 -- to adjust the Y position of the tabs
 
+-- Adjust tab size
+local tabHeight = 30
+local tabWidth = 60
+
 --------------------------------------------------------------------------------
 local buyTab = _G.CreateFrame("Frame", "RRBuyTab", frame);
-buyTab:SetWidth(100)
-buyTab:SetHeight(50)
+buyTab:SetWidth(tabWidth)
+buyTab:SetHeight(tabHeight)
 buyTab:SetBackdrop({
 	bgFile=[[Interface\DialogFrame\UI-DialogBox-Background]],
-	edgeFile=[[Interface\DialogFrame\UI-DialogBox-Border]],
+	edgeFile=[[Interface\AddOns\ReagentRestocker\RRRightTab]],
 	tile="true",
 	tileSize=32,
 	edgeSize=32,
 	insets = 
 	{
-		left=11,
-		right=12,
-		top=12,
-		bottom=11
+		left=1,
+		right=1,
+		top=1,
+		bottom=1
 	}
 })
 buyTab:SetPoint("TOPLEFT",frame,"TOPRIGHT",0,0 + yAdjust)
@@ -486,23 +490,23 @@ buyTab:SetScript("OnMouseUp", filterBuy)
 
 --------------------------------------------------------------------------------
 local sellTab = _G.CreateFrame("Frame", "RRSellTab", frame);
-sellTab:SetWidth(100)
-sellTab:SetHeight(50)
+sellTab:SetWidth(tabWidth)
+sellTab:SetHeight(tabHeight)
 sellTab:SetBackdrop({
 	bgFile=[[Interface\DialogFrame\UI-DialogBox-Background]],
-	edgeFile=[[Interface\DialogFrame\UI-DialogBox-Border]],
+	edgeFile=[[Interface\AddOns\ReagentRestocker\RRRightTab]],
 	tile="true",
 	tileSize=32,
 	edgeSize=32,
 	insets = 
 	{
-		left=11,
-		right=12,
-		top=12,
-		bottom=11
+		left=1,
+		right=1,
+		top=1,
+		bottom=1
 	}
 })
-sellTab:SetPoint("TOPLEFT",frame,"TOPRIGHT",0,-50 + yAdjust)
+sellTab:SetPoint("TOPLEFT",frame,"TOPRIGHT",0,-tabHeight + yAdjust)
 sellText = sellTab:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
 sellText:SetPoint("CENTER", sellTab, "CENTER", 0, 0)
 sellText:SetTextColor(.9, .7, 1)
@@ -516,23 +520,23 @@ end
 sellTab:SetScript("OnMouseUp", filterSell)
 --------------------------------------------------------------------------------
 local exceptTab = _G.CreateFrame("Frame", "RRExceptTab", frame);
-exceptTab:SetWidth(100)
-exceptTab:SetHeight(50)
+exceptTab:SetWidth(tabWidth)
+exceptTab:SetHeight(tabHeight)
 exceptTab:SetBackdrop({
 	bgFile=[[Interface\DialogFrame\UI-DialogBox-Background]],
-	edgeFile=[[Interface\DialogFrame\UI-DialogBox-Border]],
+	edgeFile=[[Interface\AddOns\ReagentRestocker\RRRightTab]],
 	tile="true",
 	tileSize=32,
 	edgeSize=32,
 	insets = 
 	{
-		left=11,
-		right=12,
-		top=12,
-		bottom=11
+		left=1,
+		right=1,
+		top=1,
+		bottom=1
 	}
 })
-exceptTab:SetPoint("TOPLEFT",frame,"TOPRIGHT",0,-100 + yAdjust)
+exceptTab:SetPoint("TOPLEFT",frame,"TOPRIGHT",0,-2*tabHeight + yAdjust)
 exceptText = exceptTab:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
 exceptText:SetPoint("CENTER", exceptTab, "CENTER", 0, 0)
 exceptText:SetTextColor(.9, .7, 1)
@@ -547,23 +551,23 @@ exceptTab:SetScript("OnMouseUp", filterExcept)
 
 --------------------------------------------------------------------------------
 local allTab = _G.CreateFrame("Frame", "RRAllTab", frame);
-allTab:SetWidth(100)
-allTab:SetHeight(50)
+allTab:SetWidth(tabWidth)
+allTab:SetHeight(tabHeight)
 allTab:SetBackdrop({
 	bgFile=[[Interface\DialogFrame\UI-DialogBox-Background]],
-	edgeFile=[[Interface\DialogFrame\UI-DialogBox-Border]],
+	edgeFile=[[Interface\AddOns\ReagentRestocker\RRRightTab]],
 	tile="true",
 	tileSize=32,
 	edgeSize=32,
 	insets = 
 	{
-		left=11,
-		right=12,
-		top=12,
-		bottom=11
+		left=1,
+		right=1,
+		top=1,
+		bottom=1
 	}
 })
-allTab:SetPoint("TOPLEFT",frame,"TOPRIGHT",0,-150 + yAdjust)
+allTab:SetPoint("TOPLEFT",frame,"TOPRIGHT",0,-3*tabHeight + yAdjust)
 allText = allTab:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
 allText:SetPoint("CENTER", allTab, "CENTER", 0, 0)
 allText:SetTextColor(.9, .7, 1)

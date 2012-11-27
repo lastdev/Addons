@@ -163,6 +163,18 @@ aeldra@sonnenkinder.org
 Changes: 
 Rev     Date        Description
 ------  ----------  -----------------------
+5.0h    2012-10-24  Added item: Crystal of Insanity
+                    Updated Alchemist's Flask detection/checks
+                    Updated linked buffs
+
+5.0g    2012-10-21  Added buffs: Hunter (Trap Launcher), Druid (Cenarion Ward)
+                    Added MoP consumables: flasks/elixirs/food
+                    Added check to disable buff check during pet combat
+                    Updated MoP flask check
+
+5.0f    2012-09-20  Added buffs: Warlock (Soul Link)
+                    Fixed conjured items, Mana Gem/Healthstone
+
 5.0e    2012-09-05  Updated chained buff detection: stances/seals/presences/poisons
                     Note: 'Chained' buffs will casted by priority, based on the order in the buff list. You can drag'n'drop the buffs in the list to change the priority.
                     Added linked item detection: Brilliant Mana Gem

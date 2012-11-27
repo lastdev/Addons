@@ -8,6 +8,10 @@
 --  "losing" the old item(s) and "gaining" the new one(s).) In addition to the backpack and equipped bags, the
 --  keyring, and, when applicable, the bank (including bank bags) are checked. (Equipped items are not checked.)
 --
+--  Note that battlepets in bags are ignored: No notifications indicating a new or lost "battlepet item" will be
+--  sent. This only applies to proper battlepet items, not "normal" items that give you a battlepet when used.
+--  (You can tell a proper battlepet item by its special tooltip which gives actual battlepet stats.)
+--
 --  TjBagWatch.RegisterFunc( func[, multiItem] )
 --    func       A function to be called when bag contents change. Note that multiple firings of the BAG_UPDATE
 --               event at essentially the same time are condensed into a single call (or a single call per itemID
@@ -35,7 +39,7 @@
 --
 
 
-local THIS_VERSION = 0.05
+local THIS_VERSION = 0.06
 
 if (not TjBagWatch or TjBagWatch.Version < THIS_VERSION) then
   TjBagWatch = TjBagWatch or {}
@@ -87,8 +91,10 @@ if (not TjBagWatch or TjBagWatch.Version < THIS_VERSION) then
         _, num, _, _, _, _, link = GetContainerItemInfo(bagID, i)
         if (link) then
           _, _, itemID = strfind(link, "item:(%d+)")
-          itemID = tonumber(itemID)
-          tab[itemID] = (tab[itemID] or 0) + num
+          if (itemID) then  -- Ignores special objects not classified as normal items, like battlepets
+            itemID = tonumber(itemID)
+            tab[itemID] = (tab[itemID] or 0) + num
+          end
         end
       end
       -- Compare to number of these items previously in the bag:

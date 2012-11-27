@@ -4,10 +4,10 @@
 
 local playerClass, playerName, playerGUID
 local conf
-XPerl_RequestConfig(function(new) conf = new end, "$Revision: 620 $")
+XPerl_RequestConfig(function(new) conf = new end, "$Revision: 744 $")
 
-local GetNumPartyMembers = GetNumPartyMembers
-local GetNumRaidMembers = GetNumRaidMembers
+local GetNumSubgroupMembers = GetNumSubgroupMembers
+local GetNumGroupMembers = GetNumGroupMembers
 local GetTime = GetTime
 local UnitBuff = UnitBuff
 local UnitClass = UnitClass
@@ -28,7 +28,7 @@ local pomSpells = XPERL_HIGHLIGHT_SPELLS.pomSpells
 local shieldSpells = XPERL_HIGHLIGHT_SPELLS.shieldSpells
 
 local function GetTalentPosition(findName)
-	for i = 1,GetNumTalentTabs() do
+	for i = 1,GetNumSpecializations() do
 		for j = 1,GetNumTalents(i) do
 			local name = GetTalentInfo(i, j)
 			if (name == findName) then
@@ -39,7 +39,7 @@ local function GetTalentPosition(findName)
 end
 
 local function GetTalentValueByName(name)
-	local group = GetActiveTalentGroup()
+	local group = GetActiveSpecGroup()
 	local tab, index = GetTalentPosition(name)
 	if (index) then
 		local name, iconPath, tier, column, currentRank, maxRank, isExceptional, meetsPrereq = GetTalentInfo(tab, index, nil, nil, group)
@@ -51,7 +51,7 @@ end
 local function getTalentModifier(self)
 	if (self.improved) then
 		local spent = GetTalentValueByName(self.improved.name)
-		return 1 + (self.improved.percentPerRank * spent) / 100
+		return 1 + (self.improved.percentPerRank * (spent or 0)) / 100
 	end
 	return 1
 end
@@ -853,7 +853,7 @@ end
 -- TriggerMendingAnimation
 function xpHigh:TriggerMendingAnimation(sourceGUID, targetGUID)
 	local sourceFrame, targetFrame
-	if (GetNumRaidMembers() > 0 and XPerl_Raid_GetUnitFrameByUnit) then
+	if (IsInRaid() and XPerl_Raid_GetUnitFrameByUnit) then
 		sourceFrame, targetFrame = XPerl_Raid_GetUnitFrameByGUID(sourceGUID), XPerl_Raid_GetUnitFrameByGUID(targetGUID)
 		if (not sourceFrame and XPerl_Raid_Pet_GetUnitFrameByGUID) then
 			sourceFrame = XPerl_Raid_Pet_GetUnitFrameByGUID(sourceGUID)
@@ -862,7 +862,7 @@ function xpHigh:TriggerMendingAnimation(sourceGUID, targetGUID)
 			targetFrame = XPerl_Raid_Pet_GetUnitFrameByGUID(targetGUID)
 		end
 
-	elseif (GetNumPartyMembers() > 0 and XPerl_Party_GetUnitFrameByUnit) then
+	elseif (GetNumSubgroupMembers() > 0 and XPerl_Party_GetUnitFrameByUnit) then
 		sourceFrame = sourceID == "player" and XPerl_Player or XPerl_Party_GetUnitFrameByGUID(sourceGUID)
 		targetFrame = targetID == "player" and XPerl_Player or XPerl_Party_GetUnitFrameByGUID(targetGUID)
 		if (not sourceFrame and XPerl_Party_Pet_GetUnitFrameByGUID) then
@@ -1634,13 +1634,13 @@ function xpHigh:UNIT_AURA(unit)
 	end
 end
 
--- xpHigh:RAID_ROSTER_UPDATE
-function xpHigh:RAID_ROSTER_UPDATE()
+-- xpHigh:GROUP_ROSTER_UPDATE
+function xpHigh:GROUP_ROSTER_UPDATE()
 	self.rosterUpdate = true
 	self:SetScript("OnUpdate", self.OnUpdate)
 end
 
-xpHigh.PARTY_MEMBERS_CHANGED = xpHigh.RAID_ROSTER_UPDATE
+xpHigh.GROUP_ROSTER_UPDATE= xpHigh.GROUP_ROSTER_UPDATE
 
 -- PLAYER_TARGET_CHANGED
 function xpHigh:PLAYER_TARGET_CHANGED()
@@ -1699,13 +1699,11 @@ function xpHigh:OptionChange()
 	if (conf.highlight.enable and (conf.highlight.HOTCOUNT or conf.highlight.HOT or conf.highlight.SHIELD)) then
 		events = true
 		self:RegisterEvent("UNIT_AURA")
-		self:RegisterEvent("RAID_ROSTER_UPDATE")
-		self:RegisterEvent("PARTY_MEMBERS_CHANGED")
+		self:RegisterEvent("GROUP_ROSTER_UPDATE")
 		self:RefreshAllAuras()
 	else
 		self:UnregisterEvent("UNIT_AURA")
-		self:UnregisterEvent("RAID_ROSTER_UPDATE")
-		self:UnregisterEvent("PARTY_MEMBERS_CHANGED")
+		self:UnregisterEvent("GROUP_ROSTER_UPDATE")
 		self:ClearAll("HOTCOUNT")
 	end
 

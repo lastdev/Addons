@@ -353,39 +353,22 @@
 		<DisabledTexture inherits="UIPanelButtonDisabledTexture"/>
 		<HighlightTexture inherits="UIPanelButtonHighlightTexture"/>
 	</Button>
-	<Button name="OutfitterItemMenuTemplate" virtual="true">
+	<Frame name="OutfitterItemMenuTemplate" virtual="true">
 		<Size>
 			<AbsDimension x="17" y="17"/>
 		</Size>
 		<Scripts>
-			<OnClick>
-				ToggleDropDownMenu(nil, nil, self, self)
-				PlaySound("igMainMenuOptionCheckBoxOn")
-			</OnClick>
-			<OnHide>
-				CloseDropDownMenus()
-			</OnHide>
 			<OnLoad>
-				self.SavedHeight = self:GetHeight()
-				self.ChangedValueFunc = Outfitter.OutfitItemSelected
-				self.initialize = Outfitter.ItemDropDown_Initialize
+				self.Inherit = Outfitter.Inherit
+				self:Inherit(Outfitter.UIElementsLib._DropDownMenuButton, nil, Outfitter.ItemDropDownMenuFunc, 17)
+				self.ItemClickedFunc = function (...)
+					Outfitter.OutfitItemSelected(...)
+				end
+				self.AnchorPoint = "TOPLEFT"
+				self.AnchorRelativePoint = "TOPRIGHT"
 			</OnLoad>
 		</Scripts>
-		<Frames>
-			<Frame name="$parentLeft" setAllPoints ="true">
-			</Frame>
-		</Frames>
-		<NormalTexture name="$parentNormalTexture" file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Up">
-			<TexCoords left="0.09375" top="0.09375" right="0.90625" bottom="0.90625"/>
-		</NormalTexture>
-		<PushedTexture name="$parentPushedTexture" file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Down">
-			<TexCoords left="0.09375" top="0.09375" right="0.90625" bottom="0.90625"/>
-		</PushedTexture>
-		<DisabledTexture name="$parentDisabledTexture" file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Disabled">
-			<TexCoords left="0.09375" top="0.09375" right="0.90625" bottom="0.90625"/>
-		</DisabledTexture>
-		<HighlightTexture name="$parentHighlightTexture" file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
-	</Button>
+	</Frame>
 	<Frame name="OutfitterItemTemplate" hidden="true" virtual="true">
 		<Size>
 			<AbsDimension x="224" y="18"/>
@@ -509,7 +492,7 @@
 						<CheckedTexture file="Interface\Icons\Temp"/>
 						<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 					</CheckButton>
-					<Button name="$parentMenu" inherits="OutfitterItemMenuTemplate">
+					<Frame name="$parentMenu" inherits="OutfitterItemMenuTemplate">
 						<Anchors>
 							<Anchor point="LEFT" relativeTo="$parentServerButton" relativePoint="RIGHT">
 								<Offset>
@@ -517,7 +500,7 @@
 								</Offset>
 							</Anchor>
 						</Anchors>
-					</Button>
+					</Frame>
 				</Frames>
 			</Frame>
 			<Frame name="$parentCategory" hidden="true" setAllPoints="true">
@@ -569,6 +552,7 @@
 			<OnLoad>
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 				self.OutfitMenu = _G[self:GetName().."OutfitMenu"]
+				self.OutfitMenu.ParentItem = self
 				self.UpdateTooltip = Outfitter.Item_OnEnter
 			</OnLoad>
 			<OnClick>
@@ -1573,31 +1557,20 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame name="$parentPresetScript" inherits="UIDropDownMenuTemplate" hidden="false">
+			<Frame name="$parentPresetScript" hidden="false">
 				<Anchors>
 					<Anchor point="TOPLEFT">
 						<Offset>
-							<AbsDimension x="303" y="-28"/>
+							<AbsDimension x="330" y="-30"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Layers>
-					<Layer level="OVERLAY">
-						<FontString name="$parentTitle" text="Outfitter_cPresetScript" inherits="GameFontNormal">
-							<Anchors>
-								<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT">
-									<Offset>
-										<AbsDimension x="14" y="13"/>
-									</Offset>
-								</Anchor>
-							</Anchors>
-						</FontString>
-					</Layer>
-				</Layers>
 				<Scripts>
-					<OnShow>
-						Outfitter.PresetScriptDropDown_OnLoad(self)
-					</OnShow>
+					<OnLoad>
+						self.Inherit = Outfitter.Inherit
+						self:Inherit(Outfitter.UIElementsLib._DropDownMenu, nil, Outfitter.ScriptMenuFunc, 150)
+						self:SetTitle(Outfitter.cPresetScript)
+					</OnLoad>
 				</Scripts>
 			</Frame>
 			<Frame name="$parentSettings" hidden="true" setAllPoints="true">

@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 335 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 338 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,7 +16,7 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
-addEntry("3.6.1", "10/27/2010", [[
+addEntry("3.6.1", "9/6/2012", [[
     *Fixed a lua error that could occur if you try to /r a tell when you weren't whispered.
     *Fixed for party chat not working through WIM
     *Disabled out of date tutorial frame until it's updated. all it does is spam lua errors if it's on.

@@ -66,6 +66,8 @@ a.Rotations.Balance = {
 			end
 		end
 		
+		c.FlashAll("Solar Beam")
+		
 --c.Debug("Flash", energy, a.Solar, a.Lunar, a.GoingUp,
 		c.PriorityFlash(
 			"Starfall",
@@ -86,6 +88,10 @@ a.Rotations.Balance = {
 --)
 	end,
 	
+	FlashOutOfCombat = function()
+		c.FlashAll("Symbiosis")
+	end,
+	
 	FlashAlways = function()
 		c.FlashAll("Mark of the Wild")
 		if not (IsMounted() 
@@ -98,7 +104,7 @@ a.Rotations.Balance = {
 	end,
 }
 
---------------------------------------------------------------------------- cat
+------------------------------------------------------------------------- Feral
 local lastRipTime = 0
 local lastRipDuration = 0
 local pendingRipExtension = 0
@@ -385,7 +391,8 @@ a.Rotations.Feral = {
 			"Tiger's Fury",
 			"Berserk",
 			"Incarnation: King of the Jungle",
-			"Faerie Fire")
+			"Faerie Fire",
+			"Skull Bash")
 		
 		local finisher, cpNeeded, delay = chooseFinisher()
 		if a.CP >= cpNeeded and (delay <= .1 or a.Timers.Berserk > 0) then
@@ -442,6 +449,10 @@ a.Rotations.Feral = {
 				c.PriorityFlash("Force of Nature", "Healing Touch for Feral")
 			end
 		end
+	end,
+	
+	FlashOutOfCombat = function()
+		c.FlashAll("Symbiosis")
 	end,
 	
 	FlashAlways = function()

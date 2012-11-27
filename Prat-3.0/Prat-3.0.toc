@@ -1,5 +1,5 @@
 ﻿## Interface: 50001
-## X-Curse-Packaged-Version: 3.5
+## X-Curse-Packaged-Version: 3.5.1
 ## X-Curse-Project-Name: Prat 3.0
 ## X-Curse-Project-ID: prat-3-0
 ## X-Curse-Repository-ID: wow/prat-3-0/mainline
@@ -15,7 +15,7 @@
 ## Notes-deDE: Ein Grundaddon für Chatfenstermodule.
 ## Notes-koKR: 대화창에 대한 다양한 기능을 제공하는 애드온입니다.
 ## Notes-ruRU: Фреймворк для чата. Это БЕТА-версия, а значит возможны баги и глюки.
-## Version: 3.5      
+## Version: 3.5.1      
 ## Author: Sylvanaar (Sylvaan - Zul'Jin/US-Horde)
 ## eMail: sylvanaar@mindspring.com 
 

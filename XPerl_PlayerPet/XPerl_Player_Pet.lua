@@ -10,7 +10,7 @@ XPerl_RequestConfig(function(new)
 			if (XPerl_Player_Pet) then
 				XPerl_Player_Pet.conf = pconf
 			end
-		end, "$Revision: 681 $")
+		end, "$Revision: 760 $")
 local XPerl_Player_Pet_HighlightCallback
 
 -- XPerl_Player_Pet_OnLoad
@@ -67,13 +67,13 @@ function XPerl_Player_Pet_OnLoad(self)
 	--RegisterUnitWatch(self)
         --Added UNIT_POWER/UNIT_MAXPOWER shit on events list by PlayerLin
 	local events = {
-					"UNIT_HEALTH", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_POWER",
+					"UNIT_HEALTH", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_POWER_FREQUENT",
 					"UNIT_MAXPOWER", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE",
 					"UNIT_FACTION", "UNIT_PORTRAIT_UPDATE",
 					"UNIT_FLAGS", "UNIT_DYNAMIC_FLAGS", "UNIT_AURA",
 					"UNIT_PET", "PET_ATTACK_START", "UNIT_COMBAT", "UNIT_SPELLMISS", "VARIABLES_LOADED",
 					"PLAYER_REGEN_ENABLED", "PLAYER_ENTERING_WORLD", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE",
-					"UNIT_THREAT_LIST_UPDATE", "PLAYER_TARGET_CHANGED", "UNIT_TARGET"}
+					"UNIT_THREAT_LIST_UPDATE", "PLAYER_TARGET_CHANGED", "UNIT_TARGET", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"}
 	for i,event in pairs(events) do
 		self:RegisterEvent(event)
 	end
@@ -254,7 +254,6 @@ function XPerl_Player_Pet_UpdateDisplay(self)
 		self.buffFrame:SetAlpha(1)
 		self.debuffFrame:SetAlpha(1)
 	end
-
 	XPerl_Unit_UpdatePortrait(self)
 	XPerl_Player_Pet_UpdateName(self)
 	XPerl_Player_Pet_UpdateHealth(self)
@@ -271,7 +270,7 @@ end
 function XPerl_Player_Pet_OnEvent(self, event, unitID, ...)
 	local func = XPerl_Player_Pet_Events[event]
 	if (strsub(event, 1, 5) == "UNIT_") then
-	 	if (unitID == "pet") then
+	 	if (unitID == "pet" or unitID == "player") then
 			func(self,unitID,...)
 		end
 	else
@@ -282,7 +281,7 @@ end
 -- VARIABLES_LOADED
 function XPerl_Player_Pet_Events:VARIABLES_LOADED()
 	-- added UNIT_POWER event check for 4.0 by PlayerLin, thanks Brounks.
-	XPerl_UnitEvents(self, XPerl_Player_Pet_Events, {"UNIT_FOCUS", "UNIT_MAXFOCUS", "UNIT_PET_EXPERIENCE", "UNIT_POWER"})
+	--XPerl_UnitEvents(self, XPerl_Player_Pet_Events, {"UNIT_FOCUS", "UNIT_MAXFOCUS", "UNIT_PET_EXPERIENCE", "UNIT_POWER"})
 
 	XPerl_Player_Pet_Events.VARIABLES_LOADED = nil
 end
@@ -296,6 +295,18 @@ end
 function XPerl_Player_Pet_Events:UNIT_PET()
 	if (conf) then		-- DK can issue very early UNIT_PET, long before PEW. We refresh on entering world regardless
 		XPerl_Player_Pet_UpdateDisplay(XPerl_Player_Pet)
+	end
+end
+
+function XPerl_Player_Pet_Events:PET_BATTLE_OPENING_START()
+	if(self) then
+		self:Hide()
+	end
+end
+
+function XPerl_Player_Pet_Events:PET_BATTLE_CLOSE()
+	if(self) then
+		self:Show()
 	end
 end
 
@@ -323,28 +334,13 @@ XPerl_Player_Pet_Events.UNIT_MAXHEALTH = XPerl_Player_Pet_Events.UNIT_HEALTH
 
 -- UNIT_POWER/UNIT_MAXPOWER shit for 4.0 and later.
 -- All power bars will be firing UNIT_POWER/UNIT_MAXPOWER events.
-function XPerl_Player_Pet_Events:UNIT_POWER()
+function XPerl_Player_Pet_Events:UNIT_POWER_FREQUENT()
 	XPerl_Player_Pet_UpdateMana(self)
 	XPerl_Player_Pet_UpdateCombat(self)
 end
 
-XPerl_Player_Pet_Events.UNIT_MAXPOWER = XPerl_Player_Pet_Events.UNIT_POWER
+XPerl_Player_Pet_Events.UNIT_MAXPOWER = XPerl_Player_Pet_Events.UNIT_POWER_FREQUENT
 
--- UNIT_RAGE / others for 3.3.5 and older.
-
-function XPerl_Player_Pet_Events:UNIT_RAGE()
-	XPerl_Player_Pet_UpdateMana(self)
-end
-
-XPerl_Player_Pet_Events.UNIT_MAXRAGE		= XPerl_Player_Pet_Events.UNIT_RAGE
-XPerl_Player_Pet_Events.UNIT_ENERGY		= XPerl_Player_Pet_Events.UNIT_RAGE
-XPerl_Player_Pet_Events.UNIT_MAXENERGY		= XPerl_Player_Pet_Events.UNIT_RAGE
-XPerl_Player_Pet_Events.UNIT_MANA		= XPerl_Player_Pet_Events.UNIT_RAGE
-XPerl_Player_Pet_Events.UNIT_MAXMANA		= XPerl_Player_Pet_Events.UNIT_RAGE
-XPerl_Player_Pet_Events.UNIT_FOCUS		= XPerl_Player_Pet_Events.UNIT_RAGE
-XPerl_Player_Pet_Events.UNIT_MAXFOCUS		= XPerl_Player_Pet_Events.UNIT_RAGE
-XPerl_Player_Pet_Events.UNIT_MAXRUNIC_POWER	= XPerl_Player_Pet_Events.UNIT_RAGE
-XPerl_Player_Pet_Events.UNIT_RUNIC_POWER	= XPerl_Player_Pet_Events.UNIT_RAGE
 
 -- UNIT_LEVEL
 function XPerl_Player_Pet_Events:UNIT_LEVEL()

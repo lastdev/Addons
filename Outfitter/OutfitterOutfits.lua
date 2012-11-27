@@ -308,6 +308,8 @@ function Outfitter._OutfitMethods:UpdateDatabaseItemCodes(pInventoryCache)
 end
 
 function Outfitter._OutfitMethods:OutfitUsesItem(pItemInfo)
+	if not pItemInfo then return false end
+	
 	local vInventoryCache = Outfitter:GetInventoryCache(false)
 	local vItemInfo, vItemInfo2
 	

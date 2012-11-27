@@ -1,3 +1,53 @@
+== Version 3.16.2
+* No change, just releasing fully what was previously only in Beta.
+
+== Version 3.16.1 beta
+This update affects all classes.
+* Possible bugfix of a Lua error reported by a user.
+
+== Version 3.16.0 beta
+This update affects all classes.
+* Adds an optional red border around spells that would otherwise have Blizzard's proc highlighting.
+
+== Version 3.15.4
+This update affects all classes.
+* The last version caused issues when combined with certain other addons.
+
+== Version 3.15.3
+This update affects all classes.
+* Some sly spells were still getting Blizzard proc hilighting.  I think I covered everything this time.  See the last question in the FAQ for a discussion about why I disable them.
+
+== Version 3.15.2
+This update affects all classes.
+* Finally found how to disable Blizzard proc hilighting again!  See the last question in the FAQ for a discussion about why I disable them.
+
+== Version 3.15.1
+This is an optional update for all classes.
+* None of Bitten's module will ever flash anything when you are mounted out of combat anymore.
+
+== Version 3.15.0
+This version supports the latest Warlock module.
+* If c.GetID() is passed a table, it is now simply returned.
+
+== Version 3.14.2
+This version supports the latest Atonement module.
+* Bugfix: updated c.GetGroupMembers() for MoP.
+
+== Version 3.14.1
+This version fixes a bug that was introduced last version for Blood and Holy tanks.
+* Bugfix: c.FlashMitigationCooldowns wasn't respecting ShouldHold().
+
+== Version 3.14.0
+This version supports the latest Paladin module.
+* Many more (de)buff functions now take noGCD and matchSpellID arguments.
+
+== Version 3.13.0
+This version supports the latest Mage module (I'm a bit late releasing it, oops!).
+* c.HasMyDebuff and c.GetMyDebuffStack now take noGCD and matchSpellID arguments.
+
+== Version 3.12.2
+* Bugfix: protection against an error reported by a user.
+
 == Version 3.12.1
 * Absolutely no change whatsoever, except now it will no longer be reported as "Out of Date" in 5.0.4.
 

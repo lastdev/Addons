@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.15.5348 (LikeableLyrebird)
-	Revision: $Id: CoreMain.lua 5336 2012-08-30 11:24:56Z brykrys $
+	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: CoreMain.lua 5361 2012-09-21 10:54:27Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -60,47 +60,38 @@ local tooltip
 local ALTCHATLINKTOOLTIP_OPEN
 local ScheduleMessage -- function("event", delay)
 
-local function OnTooltip(tip, item, quantity, name, hyperlink, quality, ilvl, rlvl, itype, isubtype, stack, equiploc, texture)
+local function OnTooltip(calltype, tip, hyperlink, quantity, name, quality)
+	if InCombatLockdown() and not AucAdvanced.Settings.GetSetting("core.tooltip.enableincombat") then return end
 	if not tip then return end
-	if AucAdvanced.Settings.GetSetting("ModTTShow") then
-		if AucAdvanced.Settings.GetSetting("ModTTShow") == "never" then
+	local ModTTShow = AucAdvanced.Settings.GetSetting("ModTTShow")
+	if ModTTShow then
+		if ModTTShow == "never" then
 			return
-		elseif AucAdvanced.Settings.GetSetting("ModTTShow") == "noalt" and IsAltKeyDown() then
+		elseif ModTTShow == "noalt" and IsAltKeyDown() then
 			return
-		elseif AucAdvanced.Settings.GetSetting("ModTTShow") == "alt" and not IsAltKeyDown() then
+		elseif ModTTShow == "alt" and not IsAltKeyDown() then
 			return
-		elseif AucAdvanced.Settings.GetSetting("ModTTShow") == "noshift" and IsShiftKeyDown() then
+		elseif ModTTShow == "noshift" and IsShiftKeyDown() then
 			return
-		elseif AucAdvanced.Settings.GetSetting("ModTTShow") == "shift" and not IsShiftKeyDown() then
+		elseif ModTTShow == "shift" and not IsShiftKeyDown() then
 			return
-		elseif AucAdvanced.Settings.GetSetting("ModTTShow") == "noctrl" and IsControlKeyDown() then
+		elseif ModTTShow == "noctrl" and IsControlKeyDown() then
 			return
-		elseif AucAdvanced.Settings.GetSetting("ModTTShow") == "ctrl" and not IsControlKeyDown() then
+		elseif ModTTShow == "ctrl" and not IsControlKeyDown() then
 			return
 		end
 	else
 		AucAdvanced.Settings.SetSetting("ModTTShow", "always")
 	end
 
+	local decoded = {}
+	local linkType = AucAdvanced.DecodeLink(hyperlink, decoded)
+	if linkType ~= calltype then -- bad link or mismatched link type
+		return
+	end
+
 	tooltip:SetFrame(tip)
-
-	local extra = tooltip:GetExtra()
-	AucAdvanced.DecodeLink(item, extra)
-
-	if extra.itemType ~= "item" then
-		tooltip:ClearFrame(tip)
-		return -- Auctioneer hooks into item tooltips only
-	end
-
-	local cost
-	if extra.event == "SetLootItem" then
-		cost = extra.price
-	elseif extra.event == "SetAuctionItem" then
-		cost = extra.bidAmount
-		if cost then cost = cost + extra.minIncrement
-		else cost = extra.minBid
-		end
-	end
+	local additional = tooltip:GetExtra()
 	quantity = tonumber(quantity) or 1
 
 	-- Check to see if we need to load scandata
@@ -117,29 +108,40 @@ local function OnTooltip(tip, item, quantity, name, hyperlink, quality, ilvl, rl
 	local modules = AucAdvanced.GetAllModules()
 
 	if AucAdvanced.Settings.GetSetting("tooltip.marketprice.show") then
+		local L = AucAdvanced.localizations
 		local market, seen = AucAdvanced.API.GetMarketValue(saneLink)
-		--we could just return here, but we want an indication that we don't have any data
-        -- NB: So we return a value of 0? That sounds stupid to me... -- Shirik
-		-- if not seen then seen = 0 end
-		-- if not market then market = 0 end
-        if not (seen and market) then
-            tooltip:AddLine("Market Price: Not Available");
+		if not market then
+			tooltip:AddLine(L"ADV_Interface_MarketPrice" ..": ".. L"ADV_Tooltip_NotAvailable")--Market Price // Not Available
 		else
-			tooltip:AddLine("Market Price: (seen "..tostring(seen)..")", market)
+			if seen and seen > 0 then
+				tooltip:AddLine(L"ADV_Interface_MarketPrice" ..": "..format(L"ADV_Tooltip_SeenBrackets", tostring(seen)), market)--Market Price // (seen %s)
+			else
+				tooltip:AddLine(L"ADV_Interface_MarketPrice", market) --Market Price
+			end
 			if ((quantity > 1) and AucAdvanced.Settings.GetSetting("tooltip.marketprice.stacksize")) then
-				tooltip:AddLine("Market Price x"..tostring(quantity)..": ", market*quantity)
+				tooltip:AddLine(L"ADV_Interface_MarketPrice" .." x"..tostring(quantity)..": ", market*quantity) --Market Price
 			end
 		end
 
 		if IsShiftKeyDown() then
 			for pos, engineLib in ipairs(modules) do
 				if engineLib.GetItemPDF then
-					local pricearray = engineLib.GetPriceArray(saneLink)
-					if pricearray and pricearray.price and pricearray.price > 0 then
+					local price
+					if engineLib.GetPriceSeen then
+						price = engineLib.GetPriceSeen(saneLink)
+					end
+					if not price and engineLib.GetPriceArray then
+						local pricearray = engineLib.GetPriceArray(saneLink)
+						if pricearray then
+							price = pricearray.price
+						end
+					end
+					if price and price > 0 then
+						local text = format(L"ADV_Interface_Algorithm_Price", engineLib.GetLocalName()) --%s Price
 						if quantity == 1 then
-							tooltip:AddLine("  "..engineLib.libName.." price:", pricearray.price)
+							tooltip:AddLine("  "..text..":", price)
 						else
-							tooltip:AddLine("  "..engineLib.libName.." price x"..tostring(quantity)..":", pricearray.price*quantity)
+							tooltip:AddLine("  "..text.." x"..tostring(quantity)..":", price*quantity)
 						end
 					end
 				end
@@ -147,8 +149,45 @@ local function OnTooltip(tip, item, quantity, name, hyperlink, quality, ilvl, rl
 		end
 	end
 
-	AucAdvanced.SendProcessorMessage("tooltip", tooltip, name, hyperlink, quality, quantity, cost, extra)
+	if calltype == "item" then
+		--[[
+		In future there will be support for issuing multiple Processor messages with different serverKeys
+		Modules whose tooltip display depends on a serverKey (i.e. most pricing modules) must use the provided serverKey for each message
+			if the module does not support that particular serverKey the message should be ignored
+		Modules whose tooltip does not depend on serverKey should check the order parameter to ensure they don't duplicate their output in the tooltip
+			usually they would only respond when order == 1
+		]]
+		local serverKey = AucAdvanced.Resources.ServerKeyCurrent
+		local order = 1
+		AucAdvanced.SendProcessorMessage("itemtooltip", tooltip, hyperlink, serverKey, quantity, decoded, additional, order)
+
+		-- Old-style "tooltip" message - Deprecated
+		local extra = AucAdvanced.Replicate(additional) -- replicate it so we don't change the original table
+		for k, v in pairs(decoded) do extra[k] = v end
+		local cost
+		if extra.event == "SetLootItem" then
+			cost = extra.price
+		elseif extra.event == "SetAuctionItem" then
+			cost = extra.bidAmount
+			if cost then cost = cost + extra.minIncrement
+			else cost = extra.minBid
+			end
+		end
+		AucAdvanced.SendProcessorMessage("tooltip", tooltip, name, hyperlink, quality, quantity, cost, extra)
+	elseif calltype == "battlepet" then
+		local serverKey = AucAdvanced.Resources.ServerKeyCurrent
+		local order = 1
+		AucAdvanced.SendProcessorMessage("battlepettooltip", tooltip, hyperlink, serverKey, quantity, decoded, additional, order)
+	end
 	tooltip:ClearFrame(tip)
+end
+
+-- Wrappers used to pass through the different parameters provided by the caller in the correct order for OnTooltip
+local function OnItemTooltip(tooltip, item, quantity, name, hyperlink, quality, ilvl, rlvl, itype, isubtype, stack, equiploc, texture)
+	return OnTooltip("item", tooltip, hyperlink, quantity, name, quality)
+end
+local function OnPetTooltip(tooltip, link, quantity, name, speciesID, breedQuality, level)
+	return OnTooltip("battlepet", tooltip, link, quantity, name, breedQuality)
 end
 
 local function HookClickBag(hookParams, returnValue, self, button, ignoreShift)
@@ -290,7 +329,8 @@ local function OnEnteringWorld(frame)
 
 	tooltip = AucAdvanced.GetTooltip()
 	tooltip:Activate()
-	tooltip:AddCallback(OnTooltip, 600)
+	tooltip:AddCallback({type = "item", callback = OnItemTooltip}, 600)
+	tooltip:AddCallback({type = "battlepet", callback = OnPetTooltip}, 600)
 	tooltip:AltChatLinkRegister(HookAltChatLinkTooltip)
 	ALTCHATLINKTOOLTIP_OPEN = tooltip:AltChatLinkConstants()
 
@@ -411,4 +451,4 @@ function AucAdvanced.Debug.Assert(test, message)
 	return DebugLib.Assert(addonName, test, message)
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreMain.lua $", "$Rev: 5336 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreMain.lua $", "$Rev: 5361 $")

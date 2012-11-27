@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - BasicFilter
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: BasicFilter.lua 5318 2012-08-06 10:15:53Z brykrys $
 	URL: http://auctioneeraddon.com/
 

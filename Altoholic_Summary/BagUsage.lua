@@ -203,7 +203,7 @@ function ns:OnEnter(self)
 	local numSlots
 	local numFree = 0
 	
-	local link, size, free, bagtype
+	local link, size, free, bagtype, _
 	
 	if id == 1 then		-- 1 for player bags, 2 for bank bags
 		_, link, size, free, bagtype = DS:GetContainerInfo(character, 0)

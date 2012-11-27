@@ -1,3 +1,10 @@
+== Version 2.4.2
+* All: Added Symbiosis (thanks Olgren!).
+
+== Version 2.4.1
+* Balance: Added Solar Beam.
+* Feral: Added Skull Bash.
+
 == Version 2.4.0
 * Balance: Added a Balance rotation.
 * Feral: Added Proto-Drake Egg to the list of things not to shred.

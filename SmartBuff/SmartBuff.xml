@@ -73,6 +73,50 @@
 				</Scripts>
 			</CheckButton>
 			
+	    <Slider name="$parent_sldSize" inherits="OptionsSliderTemplate" hidden="false" parentKey="size">
+	    	<Size>
+					<AbsDimension x="200" y="16"/>
+				</Size>	
+				<Anchors>
+				  <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parent">
+						<Offset>
+							<AbsDimension x="0" y="-4"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+		    <Scripts>
+			    <OnLoad>
+				    SmartBuffOptionsFrameSlider_OnLoad(self, 4, 48, 1);
+			    </OnLoad>
+          <OnShow>
+            local o = SMARTBUFF_Options;
+            if (o and o.CurrentFontSize) then
+			        self:SetValue(o.CurrentFontSize);
+			      end
+          </OnShow>
+			    <OnValueChanged>
+			      local p = self:GetParent();
+			      if (not p) then return end
+			      
+			      local o = SMARTBUFF_Options;
+			      local f = p:GetFontObject();
+			      local fName, fHeight, fFlags = f:GetFont();
+            local n = self:GetValue();
+            --getglobal(self:GetName().."Text"):SetText(string.format("Font size %.0f", n));
+            f:SetFont(fName, n, fFlags)
+            o.CurrentFontSize = n;
+            --print("Font size = "..n);
+			    </OnValueChanged>
+					<OnEnter>
+						--GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						--GameTooltip:SetText("Scale", SMARTBUFF_TTC_R, SMARTBUFF_TTC_G, SMARTBUFF_TTC_B, SMARTBUFF_TTC_A);
+					</OnEnter>
+					<OnLeave>
+						--GameTooltip:Hide();
+					</OnLeave>			    
+		    </Scripts>
+	    </Slider> 			
+			
 			<CheckButton name="$parent_cbMsgShort" inherits="OptionsCheckButtonTemplate" hidden="false">
 				<HitRectInsets>
 					<AbsInset left="0" right="0" top="0" bottom="0"/>
@@ -97,7 +141,7 @@
 					  if (o) then o.SplashMsgShort = not o.SplashMsgShort end
 					</OnClick>
 				</Scripts>
-			</CheckButton>			
+			</CheckButton>
 		
       <ColorSelect name="$parent_csFont" enableMouse="true" hidden="true">
         <Size><AbsDimension x="32" y="32" /></Size>

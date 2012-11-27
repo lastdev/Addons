@@ -3,10 +3,10 @@
 Config.lua
 Ace3 Configuration options for ARL
 ************************************************************************
-File date: 2012-08-18T04:52:05Z
-File hash: 4d6b8e4
-Project hash: f647594
-Project version: 2.4
+File date: 2012-09-28T15:31:40Z
+File hash: 3cfcb4d
+Project hash: 5a95034
+Project version: 2.4.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -36,7 +36,6 @@ local LibStub = _G.LibStub
 
 local addon		= LibStub("AceAddon-3.0"):GetAddon(private.addon_name)
 
-local BFAC		= LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 local LC		= _G.LOCALIZED_CLASS_NAMES_MALE
 local L			= LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
 

@@ -7,11 +7,15 @@ local L
 L= DBM:GetModLocalization(679)
 
 L:SetWarningLocalization({
-	SpecWarnOverloadSoon	= "7초 후 %s 가능!"
+	SpecWarnOverloadSoon		= "곧 %s - 생존기 준비 또는 보스 이동!",
+	specWarnBreakJasperChains	= "벽옥 석화 푸세요!"
 })
 
 L:SetOptionLocalization({
-	SpecWarnOverloadSoon	= "과부하 사전 특수 경고 보기",
+	SpecWarnOverloadSoon		= "석화중이지 않은 보스가 과부화되려고 할 때 특수 경고 보기",
+	specWarnBreakJasperChains	= "$spell:130395 주문을 안전하게 해제할 수 있을 때 특수 경고 보기",
+	ArrowOnJasperChains			= "$spell:130395 주문의 영향을 받은 경우 DBM 화살표 보기",
+	InfoFrame					= "보스 기력, 석화상태, 석화 진행중인 보스에 대한 정보 프레임 보기"
 })
 
 L:SetMiscLocalization({
@@ -29,14 +33,15 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	WarnPhase	= "단계 전환 알림 보기"
+	WarnPhase	= "단계 전환 알림 보기",
+	RangeFrame	= "지팡이의 혼 단계에서 거리 프레임 표시 (6m)"
 })
 
 L:SetMiscLocalization({
 	Fire		= "오 고귀한 자여! 나와 함께 발라내자! 뼈에서 살을!",
 	Arcane		= "오 세기의 현자여! 내게 비전의 지혜를 불어넣어라!",
-	Nature		= "오 위대한 영혼이여! 내게 대지의 힘을 부여하라!",--I did not log this one, text is probably not right
-	Shadow		= "Great soul of champions past! Bear to me your shield!"
+	Nature		= "오 위대한 영혼이여! 내게 대지의 힘을 부여하라!",
+	Shadow		= "과거의 위대한 영웅들이여! 너희의 방패를 빌려다오!"
 })
 
 
@@ -71,7 +76,7 @@ L:SetOptionLocalization({
 L = DBM:GetModLocalization(726)
 
 L:SetWarningLocalization({
-	specWarnDespawnFloor		= "가운데 바닥 조심!"
+	specWarnDespawnFloor		= "6초 후 가운데 바닥 사라짐!"
 })
 
 L:SetTimerLocalization({
@@ -80,7 +85,8 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	specWarnDespawnFloor		= "가운데 바닥이 무너지기 전에 특수 경고 보기",
-	timerDespawnFloor			= "가운데 바닥이 무너지기 전까지 남은 시간 바 표시"
+	timerDespawnFloor			= "가운데 바닥이 무너지기 전까지 남은 시간 바 표시",
+	SetIconOnDestabilized	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(132226)
 })
 
 
@@ -90,7 +96,8 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(677)
 
 L:SetOptionLocalization({
-	InfoFrame		= "$spell:116525 주문의 영향을 받은 플레이어를 정보 프레임에 표시"
+	InfoFrame		= "$spell:116525 주문의 영향을 받은 플레이어를 정보 프레임에 표시",
+	ArrowOnCombo	= "$journal:5673 도중 정보 프레임 표시\n알림: 방어전담이 보스 앞에 있고 나머지 공격대원이 뒤에 있을때를 기준으로 합니다."
 })
 
 L:SetMiscLocalization({

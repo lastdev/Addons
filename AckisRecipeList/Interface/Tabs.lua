@@ -16,7 +16,6 @@ local FOLDER_NAME, private = ...
 local LibStub = _G.LibStub
 local addon	= LibStub("AceAddon-3.0"):GetAddon(private.addon_name)
 local L		= LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
-local BFAC	= LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 
 -------------------------------------------------------------------------------
 -- Constants
@@ -95,7 +94,7 @@ function private.InitializeTabs()
 
 	-- Expands or collapses a list entry in the current active tab.
 	local function Tab_ModifyEntry(self, entry, expanded)
-		local member = ORDERED_PROFESSIONS[MainPanel.profession] .. " expanded"
+		local member = ORDERED_PROFESSIONS[MainPanel.current_profession] .. " expanded"
 
 		if entry.acquire_id then
 			self[member][private.ACQUIRE_NAMES[entry.acquire_id]] = expanded or nil
@@ -212,7 +211,7 @@ function private.InitializeTabs()
 			end
 			table.sort(sorted_acquires, Sort_Acquisition)
 		end
-		local prof_name = ORDERED_PROFESSIONS[MainPanel.profession]
+		local prof_name = ORDERED_PROFESSIONS[MainPanel.current_profession]
 		local profession_recipes = private.profession_recipe_list[prof_name]
 
 		self[prof_name.." expanded"] = self[prof_name.." expanded"] or {}
@@ -279,7 +278,7 @@ function private.InitializeTabs()
 			end
 			table.sort(sorted_locations, Sort_Location)
 		end
-		local prof_name = ORDERED_PROFESSIONS[MainPanel.profession]
+		local prof_name = ORDERED_PROFESSIONS[MainPanel.current_profession]
 		local profession_recipes = private.profession_recipe_list[prof_name]
 
 		self[prof_name.." expanded"] = self[prof_name.." expanded"] or {}
@@ -366,7 +365,7 @@ function private.InitializeTabs()
 	end
 
 	function RecipesTab:Initialize(expand_mode)
-		local prof_name = ORDERED_PROFESSIONS[MainPanel.profession]
+		local prof_name = ORDERED_PROFESSIONS[MainPanel.current_profession]
 		local profession_recipes = private.profession_recipe_list[prof_name]
 
 		self[prof_name.." expanded"] = self[prof_name.." expanded"] or {}

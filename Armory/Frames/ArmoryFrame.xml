@@ -1,0 +1,589 @@
+<!-- Revision: 508 2012-09-09T17:24:16Z -->
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\..\FrameXML\UI.xsd">
+  <Script file="ArmoryFrame.lua"/>
+  <Button name="ArmoryTabButtonTemplate" inherits="TabButtonTemplate" virtual="true">
+    <Scripts>
+      <OnShow>
+        PanelTemplates_TabResize(self, 0);
+      </OnShow>
+      <OnEnter>
+        if ( self.textWidth and self.textWidth > self:GetFontString():GetWidth() ) then	--We're ellipsizing.
+          GameTooltip:SetOwner(self, "ANCHOR_BOTTOM");
+          GameTooltip:SetText(self:GetText());
+        end
+      </OnEnter>
+      <OnLeave>
+        GameTooltip:Hide();
+      </OnLeave>
+    </Scripts>
+  </Button>
+  <Button name="ArmoryFrameTabButtonTemplate" inherits="CharacterFrameTabButtonTemplate" virtual="true">
+    <Scripts>
+      <OnClick>
+        PanelTemplates_Tab_OnClick(self, ArmoryFrame);
+        ArmoryFrameTab_OnClick(self);
+      </OnClick>
+      <OnLeave>
+        GameTooltip:Hide();
+      </OnLeave>
+    </Scripts>
+  </Button>
+  <CheckButton name="ArmoryFrameLineTabTemplate"  frameLevel="1" virtual="true" hidden="true">
+    <Size>
+      <AbsDimension x="25" y="25"/>
+    </Size>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture file="Interface\SpellBook\SpellBook-SkillLineTab">
+          <Size>
+            <AbsDimension x="58" y="58"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="-5" y="12"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Scripts>
+      <OnClick>
+        ArmoryFrameLineTab_OnClick(self);
+      </OnClick>
+      <OnEnter>
+        ArmoryFrameLineTabTooltip(self);
+      </OnEnter>
+      <OnLeave>
+        GameTooltip:Hide();
+      </OnLeave>
+    </Scripts>
+    <NormalTexture/>
+    <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
+    <CheckedTexture/>
+  </CheckButton>
+
+  <MessageFrame name="ArmoryMessageFrame" displayDuration="1" parent="UIParent" toplevel="true">
+    <Size>
+      <AbsDimension x="300" y="60"/>
+    </Size>
+    <Anchors>
+      <Anchor point="TOP">
+        <Offset>
+          <AbsDimension x="0" y="-200"/>
+        </Offset>
+      </Anchor>
+    </Anchors>
+    <FontString inherits="GameFontNormalLarge" justifyH="CENTER"/>
+  </MessageFrame>
+
+  <Frame name="ArmoryComparisonFrame">
+    <Frames>
+      <GameTooltip name="ArmoryComparisonTooltip1" frameStrata="TOOLTIP" hidden="true" parent="UIParent" inherits="ShoppingTooltipTemplate"/>
+      <GameTooltip name="ArmoryComparisonTooltip2" frameStrata="TOOLTIP" hidden="true" parent="UIParent" inherits="ShoppingTooltipTemplate"/>
+    </Frames>
+    <Scripts>
+      <OnLoad>
+        self.updateTime = TOOLTIP_UPDATE_TIME;
+      </OnLoad>
+      <OnUpdate>
+        ArmoryComparisonFrame_OnUpdate(self, elapsed);
+      </OnUpdate>
+    </Scripts>
+  </Frame>
+
+  <Button name="ArmoryMinimapButton" parent="Minimap" toplevel="true">
+    <Size>
+      <AbsDimension x="33" y="33"/>
+    </Size>
+    <Layers>
+      <Layer level="ARTWORK">
+        <Texture name="$parentIcon">
+          <Size>
+            <AbsDimension x="21" y="21"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="7" y="-6"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+      </Layer>
+      <Layer level="OVERLAY">
+        <Texture file="Interface\Minimap\MiniMap-TrackingBorder">
+          <Size>
+            <AbsDimension x="56" y="56"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" />
+          </Anchors>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Scripts>
+      <OnLoad>
+        ArmoryMinimapButton_OnLoad(self);
+      </OnLoad>
+      <OnClick>
+        ArmoryMiniMapButton_OnClick(self, button);
+      </OnClick>
+      <OnUpdate>
+        ArmoryMinimapButton_OnUpdate(self, elapsed);
+      </OnUpdate>
+      <OnEnter>
+        GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT");
+        ArmoryMinimapButton_OnEnter(self);
+      </OnEnter>
+      <OnLeave>
+        ArmoryMinimapButton_OnLeave(self);
+      </OnLeave>
+      <OnDragStart>
+        self.isMoving = true;
+      </OnDragStart>
+      <OnDragStop>
+        self.isMoving = false;
+      </OnDragStop>
+    </Scripts>
+    <HighlightTexture file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight" alphaMode="ADD"/>
+  </Button>
+
+  <Frame name="ArmoryFrame" toplevel="true" movable="true" enableMouse="true" hidden="true" parent="UIParent" inherits="ButtonFrameTemplate">
+    <Anchors>
+      <Anchor point="TOPLEFT">
+        <Offset>
+          <AbsDimension x="20" y="-110"/>
+        </Offset>
+      </Anchor>
+    </Anchors>
+    <Layers>
+      <Layer level="OVERLAY">
+        <Texture name="ArmoryRestIcon" file="Interface\CharacterFrame\UI-StateIcon" hidden="false">
+          <Size>
+            <AbsDimension x="31" y="33"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="-14" y="34"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0" right="0.5" top="0" bottom="0.421875"/>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Button name="ArmorySelectCharacter">
+        <Size>
+          <AbsDimension x="24" y="24"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="54" y="1"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetFrameLevel(self:GetFrameLevel() + 4);
+          </OnLoad>
+          <OnEnter>
+            ArmorySelectCharacter_OnEnter(self);
+          </OnEnter>
+          <OnLeave>
+            ArmorySelectCharacter_OnLeave(self);
+          </OnLeave>
+          <OnClick>
+            ArmorySelectCharacter_OnClick(self);
+          </OnClick>
+          <OnHide>
+            ArmorySelectCharacter_OnHide(self);
+          </OnHide>
+        </Scripts>
+        <NormalTexture name="$parentNormalTexture" file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Up">
+          <Size>
+            <AbsDimension x="24" y="24"/>
+          </Size>
+          <Anchors>
+            <Anchor point="RIGHT"/>
+          </Anchors>
+        </NormalTexture>
+        <PushedTexture name="$parentPushedTexture" file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Down">
+          <Size>
+            <AbsDimension x="24" y="24"/>
+          </Size>
+          <Anchors>
+            <Anchor point="RIGHT"/>
+          </Anchors>
+        </PushedTexture>
+        <DisabledTexture name="$parentDisabledTexture" file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Disabled">
+          <Size>
+            <AbsDimension x="24" y="24"/>
+          </Size>
+          <Anchors>
+            <Anchor point="RIGHT"/>
+          </Anchors>
+        </DisabledTexture>
+        <HighlightTexture name="$parentHighlightTexture" file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD">
+          <Size>
+            <AbsDimension x="24" y="24"/>
+          </Size>
+          <Anchors>
+            <Anchor point="RIGHT"/>
+          </Anchors>
+        </HighlightTexture>
+      </Button>
+      <CheckButton name="ArmoryFrameLineTab1" inherits="ArmoryFrameLineTabTemplate" id="1">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryFrame" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="2" y="-45"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </CheckButton>
+      <CheckButton name="ArmoryFrameLineTab2" inherits="ArmoryFrameLineTabTemplate" id="2">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryFrameLineTab1" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-14"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </CheckButton>
+      <CheckButton name="ArmoryFrameLineTab3" inherits="ArmoryFrameLineTabTemplate" id="3">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryFrameLineTab2" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-14"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </CheckButton>
+      <CheckButton name="ArmoryFrameLineTab4" inherits="ArmoryFrameLineTabTemplate" id="4">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryFrameLineTab3" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-14"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </CheckButton>
+      <CheckButton name="ArmoryFrameLineTab5" inherits="ArmoryFrameLineTabTemplate" id="5">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryFrameLineTab4" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-14"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </CheckButton>
+      <CheckButton name="ArmoryFrameLineTab6" inherits="ArmoryFrameLineTabTemplate" id="6">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryFrameLineTab5" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-14"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </CheckButton>
+      <CheckButton name="ArmoryFrameLineTab7" inherits="ArmoryFrameLineTabTemplate" id="7">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryFrameLineTab6" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-14"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </CheckButton>
+      <CheckButton name="ArmoryFrameLineTab8" inherits="ArmoryFrameLineTabTemplate" id="8">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryFrameLineTab7" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-14"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </CheckButton>
+      <CheckButton name="ArmoryFrameLineTab9" inherits="ArmoryFrameLineTabTemplate" id="9">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryFrameLineTab8" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-14"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </CheckButton>
+      <CheckButton name="ArmoryFrameLineTab10" inherits="ArmoryFrameLineTabTemplate" id="10">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryFrameLineTab9" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-14"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </CheckButton>
+      <Button name="ArmoryFramePortraitButton">
+        <Size>
+          <AbsDimension x="60" y="60"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="ArmoryFramePortrait" relativePoint="TOP">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetFrameLevel(self:GetFrameLevel() + 1);
+            self:RegisterForClicks("RightButtonUp");
+          </OnLoad>
+          <OnClick>
+            if ( button == "RightButton" and self.canDelete ) then
+              local dialog = StaticPopup_Show("ARMORY_DELETE_CHARACTER", self.profile.character);
+              dialog.data = self.profile;
+            end
+          </OnClick>
+          <OnEnter>
+            self.profile = Armory:CurrentProfile();
+            self.canDelete = not Armory:IsPlayerSelected();
+            GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT");
+            GameTooltip:SetText(self.profile.character, 1.0, 1.0, 1.0);
+            GameTooltip:AddLine(self.profile.realm);
+            if ( self.canDelete ) then
+              Armory:TooltipAddHints(GameTooltip, ARMORY_DELETE_UNIT_HINT);
+            end
+            GameTooltip:Show();
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>
+        <HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight">
+          <Size x="78" y="78"/>
+          <Anchors>
+            <Anchor point="CENTER"/>
+          </Anchors>
+        </HighlightTexture>
+      </Button>
+      <Button name="ArmoryFrameLeftButton">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="RIGHT" relativeTo="ArmoryFramePortrait" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="-1"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetFrameLevel(self:GetFrameLevel() + 4);
+          </OnLoad>
+          <OnClick>
+            ArmoryFrameLeft_Click(self);
+          </OnClick>
+          <OnEnter>
+            self.tooltipScale = GameTooltip:GetScale();
+            ArmoryFrameLeft_OnEnter(self)
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+            GameTooltip:SetScale(self.tooltipScale);
+          </OnLeave>
+        </Scripts>
+        <NormalTexture file="Interface\MoneyFrame\Arrow-Left-Up"/>
+        <PushedTexture file="Interface\MoneyFrame\Arrow-Left-Down"/>
+        <DisabledTexture file="Interface\MoneyFrame\Arrow-Left-Disabled"/>
+      </Button>
+      <Button name="ArmoryFrameRightButton">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="ArmoryFramePortrait" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="8" y="-1"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetFrameLevel(self:GetFrameLevel() + 4);
+          </OnLoad>
+          <OnClick>
+            ArmoryFrameRight_Click(self);
+          </OnClick>
+          <OnEnter>
+            self.tooltipScale = GameTooltip:GetScale();
+            ArmoryFrameRight_OnEnter(self)
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+            GameTooltip:SetScale(self.tooltipScale);
+          </OnLeave>
+        </Scripts>
+        <NormalTexture file="Interface\MoneyFrame\Arrow-Right-Up"/>
+        <PushedTexture file="Interface\MoneyFrame\Arrow-Right-Down"/>
+        <DisabledTexture file="Interface\MoneyFrame\Arrow-Right-Disabled"/>
+      </Button>
+      <Frame name="ArmoryMailFrame" enableMouse="true" hidden="true">
+        <Size>
+          <AbsDimension x="22" y="22"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="54" y="24"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="ARTWORK">
+            <Texture name="ArmoryMailIcon" file="Interface\Icons\INV_Letter_15">
+              <Size>
+                <AbsDimension x="22" y="22"/>
+              </Size>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>
+            self:RegisterEvent("UPDATE_PENDING_MAIL");
+            self:SetFrameLevel(self:GetFrameLevel()+1)
+          </OnLoad>
+          <OnEvent>
+            if ( Armory:CanHandleEvents() ) then
+              ArmoryFrame_UpdateMail();
+            end
+          </OnEvent>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT");
+            if( GameTooltip:IsOwned(self) ) then
+              ArmoryMailFrameUpdate();
+            end
+          </OnEnter>
+          <OnLeave function="GameTooltip_Hide"/>
+        </Scripts>
+      </Frame>
+      <Button name="ArmoryFrameTab1" inherits="ArmoryFrameTabButtonTemplate" id="1" text="CHARACTER">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="11" y="2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(CHARACTER_INFO, 1.0,1.0,1.0 );
+          </OnEnter>
+        </Scripts>
+      </Button>
+      <Button name="ArmoryFrameTab2" inherits="ArmoryFrameTabButtonTemplate" id="2" text="PET">
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="ArmoryFrameTab1" relativePoint="RIGHT">
+            <Offset>
+              <AbsDimension x="-15" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+           <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(PET, 1.0,1.0,1.0 );
+          </OnEnter>
+        </Scripts>
+      </Button>
+      <Button name="ArmoryFrameTab3" inherits="ArmoryFrameTabButtonTemplate" id="3" text="TALENTS">
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="ArmoryFrameTab2" relativePoint="RIGHT">
+            <Offset>
+              <AbsDimension x="-15" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(TALENTS, 1.0,1.0,1.0 );
+          </OnEnter>
+        </Scripts>
+      </Button>
+      <Button name="ArmoryFrameTab4" inherits="ArmoryFrameTabButtonTemplate" id="4" text="PVP">
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="ArmoryFrameTab3" relativePoint="RIGHT">
+            <Offset>
+              <AbsDimension x="-15" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(PLAYER_V_PLAYER, 1.0,1.0,1.0 );
+          </OnEnter>
+        </Scripts>
+      </Button>
+      <Button name="ArmoryFrameTab5" inherits="ArmoryFrameTabButtonTemplate" id="5" text="FACTION_OTHER">
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="ArmoryFrameTab4" relativePoint="RIGHT">
+            <Offset>
+              <AbsDimension x="-15" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnEnter>
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+            GameTooltip:SetText(ArmoryOtherFrame_TabNames(), 1.0, 1.0, 1.0);
+          </OnEnter>
+        </Scripts>
+      </Button>
+      <Frame name="ArmoryFrameInsetRight" inherits="InsetFrameTemplate" hidden="true">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmoryFrameInset" relativePoint="TOPRIGHT" x="1" y="0"/>
+          <Anchor point="BOTTOMRIGHT" relativeTo="ArmoryFrameInset" x="-4" y="4"/>
+        </Anchors>
+      </Frame>
+    </Frames>
+    <Scripts>
+      <OnLoad>
+        ArmoryFrame_OnLoad(self);
+      </OnLoad>
+      <OnEvent>
+        ArmoryFrame_OnEvent(self, event, ...);
+      </OnEvent>
+      <OnShow>
+        self:SetScale(Armory:GetConfigFrameScale());
+        ArmoryFrame_OnShow(self);
+      </OnShow>
+      <OnHide>
+        if ( self.isMoving ) then
+          self:StopMovingOrSizing();
+          self.isMoving = false;
+        end
+        ArmoryFrame_OnHide(self);
+      </OnHide>
+      <OnMouseWheel>
+        local scale = min(max(self:GetScale() + delta * 0.05, 0.5), 1.5);
+        self:SetScale(scale);
+        Armory:SetConfigFrameScale(scale);
+      </OnMouseWheel>
+      <OnMouseUp>
+        ArmoryFrame_OnMouseUp(self, button);
+      </OnMouseUp>
+      <OnMouseDown>
+        ArmoryFrame_OnMouseDown(self, button);
+      </OnMouseDown>
+    </Scripts>
+  </Frame>
+</Ui>

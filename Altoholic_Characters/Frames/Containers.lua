@@ -3,15 +3,6 @@ local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
-local GREEN		= "|cFF00FF00"
-
-local BAGSBANK					= 1
-local BAGSBANK_ALLINONE		= 2
-local BAGSONLY					= 3
-local BAGSONLY_ALLINONE		= 4
-local BANKONLY					= 5
-local BANKONLY_ALLINONE		= 6
-
 addon.Containers = {}
 
 local ns = addon.Containers		-- ns = namespace
@@ -39,7 +30,7 @@ end
 
 local function UpdateSpread()
 
-	local rarity = addon:GetOption("CharacterTabViewBagsRarity")
+	local rarity = addon:GetOption("UI.Tabs.Characters.ViewBagsRarity")
 	local VisibleLines = 7
 	local frame = "AltoholicFrameContainers"
 	local entry = frame.."Entry"
@@ -68,13 +59,18 @@ local function UpdateSpread()
 			
 			if bagIndices[line].from == 1 then		-- if this is the first line for this bag .. draw bag icon
 				local itemButton = _G[itemName];	
-				if containerIcon then
-					Altoholic:SetItemButtonTexture(itemName, containerIcon);
-				else		-- will be nill for bag 100
-					Altoholic:SetItemButtonTexture(itemName, "Interface\\Icons\\INV_Box_03");
+				
+				if containerID == "VoidStorage" then
+					itemButton:SetID(200)	-- use id 200 for void storage, only required a few lines below
+				else
+					itemButton:SetID(containerID)
 				end
-
-				itemButton:SetID(containerID)
+				
+				Altoholic:SetItemButtonTexture(itemName, containerIcon);
+				-- if containerIcon then
+				-- else		-- will be nill for bag 100
+					-- Altoholic:SetItemButtonTexture(itemName, "Interface\\Icons\\INV_Box_03");
+				-- end
 
 				itemButton:SetScript("OnEnter", function(self)
 					local id = self:GetID()
@@ -86,6 +82,8 @@ local function UpdateSpread()
 					elseif id == 100 then
 						GameTooltip:AddLine(L["Bank"],0.5,0.5,1);
 						GameTooltip:AddLine(L["28 Slot"],1,1,1);
+					elseif id == 200 then
+						GameTooltip:AddLine(VOID_STORAGE,0.5,0.5,1);
 					else
 						local character = Altoholic.Tabs.Characters:GetAltKey()
 						local _, link = DS:GetContainerInfo(character, id)
@@ -181,13 +179,7 @@ local function UpdateSpread()
 end	
 
 local function UpdateAllInOne()
-	local viewBags = (addon:GetOption("CharacterTabViewBags") == 1)
-	local viewBank = (addon:GetOption("CharacterTabViewBank") == 1)
-	
-	local bagsOnly = (viewBags and not viewBank)
-	local bankOnly = (viewBank and not viewBags)
-
-	local rarity = addon:GetOption("CharacterTabViewBagsRarity")
+	local rarity = addon:GetOption("UI.Tabs.Characters.ViewBagsRarity")
 	local VisibleLines = 7
 	local frame = "AltoholicFrameContainers"
 	local entry = frame.."Entry"
@@ -203,22 +195,27 @@ local function UpdateAllInOne()
 	local j = 1
 	
 	local containerList = {}
-	
-	if not bankOnly then		-- if it's not a bank only view, add the normal bags
+
+	if (addon:GetOption("UI.Tabs.Characters.ViewBags") == 1) then
 		for i = 0, 4 do
 			table.insert(containerList, i)
 		end
 	end
 	
-	if not bagsOnly then		-- if it's not a bag only view, add bank bags
+	if (addon:GetOption("UI.Tabs.Characters.ViewBank") == 1) then
 		for i = 5, 11 do
 			table.insert(containerList, i)
 		end
 		table.insert(containerList, 100)
 	end
-
-	local DS = DataStore
-	if viewBags or viewBank then
+	
+	if (addon:GetOption("UI.Tabs.Characters.ViewVoidStorage") == 1) then
+		table.insert(containerList, "VoidStorage")
+	end
+	
+	if #containerList > 0 then
+		local DS = DataStore
+		
 		for _, containerID in pairs(containerList) do
 			local container = DS:GetContainer(character, containerID)
 			local _, _, containerSize = DS:GetContainerInfo(character, containerID)
@@ -318,37 +315,33 @@ end
 function ns:UpdateCache()
 	bagIndices = bagIndices or {}
 	wipe(bagIndices)
-	
-	local viewBags = (addon:GetOption("CharacterTabViewBags") == 1)
-	local viewBank = (addon:GetOption("CharacterTabViewBank") == 1)
-	if not viewBags and not viewBank then return end
-	
-	local bagsOnly = (viewBags and not viewBank)
-	local bankOnly = (viewBank and not viewBags)
 
-	local bagMin = 0
-	local bagMax = 11
-	
-	-- bags : 0 to 4
-	-- bank: 5 to 11 and 100
-	if bagsOnly then
-		bagMax = 4			-- 0 to 4
-	elseif bankOnly then
-		bagMin = 5			-- 5 to 11
-	end
-	
 	local character = addon.Tabs.Characters:GetAltKey()
-	for bagID = bagMin, bagMax do
-		if DataStore:GetContainer(character, bagID) then
-			local _, _, size = DataStore:GetContainerInfo(character, bagID)
-			UpdateBagIndices(bagID, size)
-		end
+	
+	if (addon:GetOption("UI.Tabs.Characters.ViewBags") == 1) then
+		for bagID = 0, 4 do
+			if DataStore:GetContainer(character, bagID) then
+				local _, _, size = DataStore:GetContainerInfo(character, bagID)
+				UpdateBagIndices(bagID, size)
+			end
+		end	
 	end
 	
-	if not bagsOnly then
-		if DataStore:GetContainer(character, 100) then 	-- if bank hasn't been visited yet, exit
+	if (addon:GetOption("UI.Tabs.Characters.ViewBank") == 1) then
+		for bagID = 5, 11 do
+			if DataStore:GetContainer(character, bagID) then
+				local _, _, size = DataStore:GetContainerInfo(character, bagID)
+				UpdateBagIndices(bagID, size)
+			end
+		end
+		
+		if DataStore:GetContainer(character, 100) then 	-- if bank has been visited, add it
 			UpdateBagIndices(100, 28)
 		end
+	end
+	
+	if (addon:GetOption("UI.Tabs.Characters.ViewVoidStorage") == 1) then
+		UpdateBagIndices("VoidStorage", 80)
 	end
 end
 

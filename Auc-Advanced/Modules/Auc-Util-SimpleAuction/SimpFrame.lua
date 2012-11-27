@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Simplified Auction Posting
-	Version: 5.15.5348 (LikeableLyrebird)
-	Revision: $Id: SimpFrame.lua 5342 2012-09-03 09:48:14Z brykrys $
+	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: SimpFrame.lua 5362 2012-09-21 17:59:48Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a simple dialog for
@@ -33,18 +33,39 @@ if not AucAdvanced then return end
 
 local lib = AucAdvanced.Modules.Util.SimpleAuction
 local private = lib.Private
-local const = AucAdvanced.Const
 local aucPrint,decode,_,_,replicate,_,get,set,default,debugPrint,fill = AucAdvanced.GetModuleLocals()
-local Const = const
+local Const = AucAdvanced.Const
+local Resources = AucAdvanced.Resources
+
+local GetMarketValue = AucAdvanced.API.GetMarketValue
+local SanitizeLink = AucAdvanced.SanitizeLink
+local GetSigFromLink = AucAdvanced.API.GetSigFromLink
+local GetStoreKeyFromLink = AucAdvanced.API.GetStoreKeyFromLink
+local GetAuctionItem = AucAdvanced.Scan.GetAuctionItem
+local QueryImage = AucAdvanced.API.QueryImage
+local CountAvailableItems = AucAdvanced.Post.CountAvailableItems
+local QueueBuy = AucAdvanced.Buy.QueueBuy
+local StartScan = AucAdvanced.Scan.StartScan
+local StartPushedScan = AucAdvanced.Scan.StartPushedScan
+local PushScan = AucAdvanced.Scan.PushScan
+local AucIsScanning = AucAdvanced.Scan.IsScanning
+local PostAuctionClick = AucAdvanced.Post.PostAuctionClick
+local ShowItemLink = AucAdvanced.ShowItemLink
+local ShowPetLink = AucAdvanced.ShowPetLink
+
+local IsPlayerIgnored -- to be filled in when Auc-Filter-Basic loads
+AucAdvanced.RegisterModuleCallback("basic", function(lib) IsPlayerIgnored = lib.IsPlayerIgnored end)
+if not IsPlayerIgnored then IsPlayerIgnored = function() end end -- dummy function in case Filter-Basic never loads
+
 local wipe = wipe
 
-local pricecache
+local pricecache = {}
 
 local frame
 local TAB_NAME = "Post"
 
 function private.clearcache()
-	pricecache = nil
+	wipe(pricecache)
 end
 
 function private.postPickupContainerItemHook(_,_,bag, slot)
@@ -76,34 +97,32 @@ function private.SetPrevNext(frame, prevFrame, nextFrame)
 	frame:SetScript("OnEnterPressed", private.ShiftFocus)
 end
 
-function private.SigFromLink(link)
-	local itype, id, suffix, factor, enchant, seed = AucAdvanced.DecodeLink(link)
-	if itype=="item" then
-		if enchant ~= 0 then
-			return ("%d:%d:%d:%d"):format(id, suffix, factor, enchant)
-		elseif factor ~= 0 then
-			return ("%d:%d:%d"):format(id, suffix, factor)
-		elseif suffix ~= 0 then
-			return ("%d:%d"):format(id, suffix)
-		end
-		return tostring(id)
-	end
-	-- returns nil
+function private.GetKey(link)
+	-- for items this matches itemId, suffix and factor
+	-- for pets this matches speciesId, level and quality
+	local id, property = GetStoreKeyFromLink(link, 1)
+	return id..":"..property
+end
+function private.IsMatchingKey(key, item)
+	itemlink = item[Const.LINK]
+	if not itemlink then return end
+	return key == private.GetKey(itemlink)
 end
 
+
 function private.GetMyPrice(link, items)
-	if not link then return end
 	local uBid, uBuy
-	local searchname = GetItemInfo (link)
+	if not link then return end
+	local searchkey = private.GetKey(link)
 	local n = GetNumAuctionItems("owner")
 	if n and n > 0 then
 		for i = 1, n do
-			local item = AucAdvanced.Scan.GetAuctionItem("owner", i)
-			if item and item[const.NAME] == searchname then
-				local stack = item[const.COUNT]
+			local item = GetAuctionItem("owner", i)
+			if item and private.IsMatchingKey(searchkey, item) then
+				local stack = item[Const.COUNT]
 				if stack and stack > 0 then
 					-- stack may be 0 for a sold auction - only try to calculate bid or buy for auction with non-zero stack counts
-					local bid, buy = item[const.MINBID], item[const.BUYOUT]
+					local bid, buy = item[Const.MINBID], item[Const.BUYOUT]
 					if bid and bid > 0 then -- check for rare bug where you could get an invalid bid
 						if items then tinsert(items, item) end -- only insert items with valid stack and bid values
 						bid = bid / stack
@@ -131,21 +150,38 @@ end
 --aBuy: average price for current competing auctions
 local query = {}
 function private.GetItems(link)
-	local itype, id, suffix, factor, enchant, seed = AucAdvanced.DecodeLink(link)
-	if itype ~= "item" then return end
-	local aSeen, lBid, lBuy, uBid, uBuy, aBuy, aveBuy = 0
-	local player = UnitName("player")
-	local items = {}
-	local sig = AucAdvanced.API.GetSigFromLink(link)
-	if pricecache and pricecache[sig] then
+	local sig = GetSigFromLink(link)
+	if not sig then return end
+	if pricecache[sig] then
 		uBid, uBuy, lBid, lBuy, aSeen, aveBuy = strsplit(":", pricecache[sig][1])
 		uBid, uBuy, lBid, lBuy, aSeen, aveBuy = tonumber(uBid), tonumber(uBuy), tonumber(lBid), tonumber(lBuy), tonumber(aSeen), tonumber(aveBuy)
 		return #pricecache[sig][2], pricecache[sig][2], uBid, uBuy, lBid, lBuy, aSeen, aveBuy
 	end
-	query.itemId = id
-	query.suffix = suffix
-	query.factor = factor
-	local matching = AucAdvanced.API.QueryImage(query)
+	local linkType, id, suffix, factor = decode(link)
+	if linkType == "item" then
+		query.itemId = id
+		query.suffix = suffix
+		query.factor = factor
+		query.speciesID = nil
+		query.quality = nil
+		query.minItemLevel = nil
+		query.maxItemLevel = nil
+	elseif linkType == "battlepet" then
+		query.speciesID = id
+		query.quality = factor
+		query.minItemLevel = suffix
+		query.maxItemLevel = suffix
+		query.itemId = 82800
+		query.suffix = nil
+		query.factor = nil
+	else
+		return
+	end
+
+	local aSeen, lBid, lBuy, uBid, uBuy, aBuy, aveBuy = 0
+	local player = Const.PlayerName
+	local items = {}
+	local matching = QueryImage(query)
 
 	local live = false
 	if AuctionFrame and AuctionFrame:IsVisible() then
@@ -153,7 +189,7 @@ function private.GetItems(link)
 		uBid, uBuy = private.GetMyPrice(link, items)
 	end
 	for pos, item in ipairs(matching) do
-		local bid, buy, owner, stk = item[const.MINBID], item[const.BUYOUT], item[const.SELLER], item[const.COUNT]
+		local bid, buy, owner, stk = item[Const.MINBID], item[Const.BUYOUT], item[Const.SELLER], item[Const.COUNT]
 		if stk and stk >= 1 then
 			local bidea, buyea
 			if bid and bid > 0 then
@@ -167,7 +203,7 @@ function private.GetItems(link)
 				if not live then
 					if not uBid then uBid = bidea elseif bidea then uBid = min(uBid, bidea) end
 					if not uBuy then uBuy = buyea elseif buyea then uBuy = min(uBuy, buyea) end
-					table.insert(items, item)
+					tinsert(items, item)
 				end
 			else
 				if not lBid then
@@ -182,14 +218,13 @@ function private.GetItems(link)
 				end
 				if buy then
 					aBuy = (aBuy or 0) + buy
-					aSeen = (aSeen or 0)+ stk
+					aSeen = aSeen + stk
 				end
-				table.insert(items, item)
+				tinsert(items, item)
 			end
 		end
 	end
 	aveBuy = (aBuy and aSeen>=1) and aBuy/aSeen or 0
-	if not pricecache then pricecache = {} end
 	pricecache[sig] = {}
 	pricecache[sig][1] = strjoin(":", tostring(uBid), tostring(uBuy), tostring(lBid), tostring(lBuy), tostring(aSeen), tostring(aveBuy))
 	pricecache[sig][2] = replicate(items)
@@ -225,9 +260,9 @@ function private.UpdateDisplay()
 	local lStack = frame.stacks.size.lastSize or oStack
 	local duration = frame.duration.time.selected
 
-	local sig = AucAdvanced.API.GetSigFromLink(link)
+	local sig = GetSigFromLink(link)
 	if not sig then return private.LoadItemLink() end
-	local _, total, unpostable, _, _, reason = AucAdvanced.Post.CountAvailableItems(sig)
+	local _, total, unpostable, _, _, reason = CountAvailableItems(sig)
 	total = total - unpostable
 	if total < 1 then return private.LoadItemLink() end
 	private.SetIconCount(total)
@@ -295,17 +330,13 @@ function private.UpdateDisplay()
 
 	local text
 	if (cStack > 1) then
-		text = string.format("Auctioning %d %s of %d sized stacks at %s bid/%s buyout per stack (%s/%s ea)", cNum, lots, cStack, coinsBid, coinsBuy, coinsBidEa, coinsBuyEa)
+		text = format("Auctioning %d %s of %d sized stacks at %s bid/%s buyout per stack (%s/%s ea)", cNum, lots, cStack, coinsBid, coinsBuy, coinsBidEa, coinsBuyEa)
 	else
-		text = string.format("Auctioning %d %s of this item at %s bid/%s buyout each", cNum, lots, coinsBid, coinsBuy)
+		text = format("Auctioning %d %s of this item at %s bid/%s buyout each", cNum, lots, coinsBid, coinsBuy)
 	end
 	frame.info:SetText(text)
 
-	local faction = "home"
-	if AucAdvanced.GetFactionGroup() == "Neutral" then
-		faction = "neutral"
-	end
-	local deposit = GetDepositCost(oLink, duration, faction, cStack)
+	local deposit = GetDepositCost(oLink, duration, Resources.CurrentFaction, cStack)
 	if not deposit then
 		frame.fees:SetText("Unknown deposit cost")
 	elseif cNum > 1 then
@@ -337,13 +368,12 @@ function private.UpdateCompetition(image)
 		local count = result[Const.COUNT]
 		if count < 1 then count = 1 end -- in case a 0 slips through
 		data[i] = {
-			--result[Const.NAME],
 			result[Const.SELLER],
 			tLeft,
 			count,
-			math.floor(0.5+result[Const.MINBID]/count),
-			math.floor(0.5+result[Const.CURBID]/count),
-			math.floor(0.5+result[Const.BUYOUT]/count),
+			floor(0.5+result[Const.MINBID]/count),
+			floor(0.5+result[Const.CURBID]/count),
+			floor(0.5+result[Const.BUYOUT]/count),
 			result[Const.MINBID],
 			result[Const.CURBID],
 			result[Const.BUYOUT],
@@ -355,11 +385,10 @@ function private.UpdateCompetition(image)
 		end
 		--color ignored/self sellers
 		local seller = result[Const.SELLER]
-		local player = UnitName("player")
-		if seller == player then
+		if seller == Const.PlayerName then
 			if not style[i] then style[i] = {} end
 			style[i][1] = { textColor = {0,1,0} }
-		elseif AucAdvanced.Modules.Filter.Basic and AucAdvanced.Modules.Filter.Basic.IsPlayerIgnored and AucAdvanced.Modules.Filter.Basic.IsPlayerIgnored(result[Const.SELLER]) then
+		elseif IsPlayerIgnored(seller) then
 			if not style[i] then style[i] = {} end
 			style[i][1] = { textColor = {1,0,0} }
 		end
@@ -373,10 +402,13 @@ function private.UpdatePricing()
 	local mid, seen = 0,0
 	local stack = frame.stacks.size:GetNumber()
 	local _,_,_,_,_,_,_,stx = GetItemInfo(link)
+	if not stx or stx < 1 then
+		stx = 1
+	end
 
-	local sig = AucAdvanced.API.GetSigFromLink(link)
+	local sig = GetSigFromLink(link)
 	if not sig then return private.LoadItemLink() end
-	local _, total, unpostable, _, _, reason = AucAdvanced.Post.CountAvailableItems(sig)
+	local _, total, unpostable, _, _, reason = CountAvailableItems(sig)
 	total = total - unpostable
 	if total < 1 then return private.LoadItemLink() end
 	private.SetIconCount(total)
@@ -451,7 +483,7 @@ function private.UpdatePricing()
 		end
 		--if no buy price yet, look for marketprice
 		if not buy then
-			local market, seen = AucAdvanced.API.GetMarketValue(link)
+			local market, seen = GetMarketValue(link)
 			if market and (market > 0) and (seen > 5 or aSeen < 3) then
 				buy = market
 				bid = market * 0.8
@@ -604,22 +636,35 @@ function private.IconClicked()
 end
 
 function private.LoadItemLink(itemLink, size)
+	local name, quality, texture
 	wipe(frame.CurItem)
 	if itemLink then
-		local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture = GetItemInfo(itemLink)
-		if not itemName then return private.LoadItemLink() end
-		local sig = AucAdvanced.API.GetSigFromLink(itemLink)
+		local sig, linkType = GetSigFromLink(itemLink)
 		if not sig then
 			aucPrint(itemLink.." cannot be posted: Not an item")
 			return private.LoadItemLink()
 		end
-		itemLink = AucAdvanced.SanitizeLink(itemLink)
+		if linkType == "item" then
+			local itemName, _, itemRarity, _, _, _, _, _, _, itemTexture = GetItemInfo(itemLink)
+			if not itemName then return private.LoadItemLink() end
+			name = itemName
+			quality = itemRarity
+			texture = itemTexture
+			itemLink = SanitizeLink(itemLink)
+		elseif linkType == "battlepet" then
+			local _, speciesID, _, petQuality = strsplit(":", itemLink)
+			local petName, petIcon = C_PetJournal.GetPetInfoBySpeciesID(tonumber(speciesID) or 0)
+			if not petName then return private.LoadItemLink() end
+			name = petName
+			texture = petIcon
+			quality = tonumber(petQuality) or -1
+		end
 		frame.CurItem.link = itemLink
-		frame.CurItem.name = itemName
+		frame.CurItem.name = name
 		frame.icon.itemLink = itemLink
-		frame.icon:SetNormalTexture(itemTexture)
+		frame.icon:SetNormalTexture(texture)
 
-		local _, total, unpostable, _, _, reason = AucAdvanced.Post.CountAvailableItems(sig)
+		local _, total, unpostable, _, _, reason = CountAvailableItems(sig)
 		local itemCount = total - unpostable
 		if itemCount < 1 then
 			if reason == "Damaged" then
@@ -632,8 +677,8 @@ function private.LoadItemLink(itemLink, size)
 		frame.CurItem.count = itemCount
 		private.SetIconCount(itemCount)
 
-		frame.name:SetText(itemName)
-		local r, g, b = GetItemQualityColor(itemRarity)
+		frame.name:SetText(name)
+		local r, g, b = GetItemQualityColor(quality)
 		frame.name:SetTextColor(r, g, b)
 	else
 		frame.icon.itemLink = nil
@@ -672,16 +717,23 @@ function private.LoadItemLink(itemLink, size)
 end
 
 function private.DoTooltip()
-	if not frame.CurItem.link then return end
-	GameTooltip:SetOwner(frame.icon, "ANCHOR_NONE")
-	GameTooltip:SetHyperlink(frame.CurItem.link)
-	AucAdvanced.ShowItemLink(GameTooltip, frame.CurItem.link, frame.CurItem.count)
-	GameTooltip:ClearAllPoints()
-	GameTooltip:SetPoint("TOPLEFT", frame.icon, "TOPRIGHT", 10, 0)
+	local link = frame.CurItem.link
+	if not link then return end
+	if strmatch(link, "|Hitem:") then
+		GameTooltip:SetOwner(frame.icon, "ANCHOR_NONE")
+		ShowItemLink(GameTooltip, link, frame.CurItem.count)
+		GameTooltip:ClearAllPoints()
+		GameTooltip:SetPoint("TOPLEFT", frame.icon, "TOPRIGHT", 10, 0)
+	elseif strmatch(link, "|Hbattlepet:") then
+		ShowPetLink(BattlePetTooltip, link, frame.CurItem.count)
+		BattlePetTooltip:ClearAllPoints()
+		BattlePetTooltip:SetPoint("TOPLEFT", frame.icon, "TOPRIGHT", 10, 0)
+	end
 end
 
 function private.UndoTooltip()
 	GameTooltip:Hide()
+	BattlePetTooltip:Hide()
 end
 
 function private.OnUpdate()
@@ -700,8 +752,8 @@ end
 
 function private.LoadConfig()
 	if not frame.CurItem.link then return end
-	local id = private.SigFromLink(frame.CurItem.link)
-	local settingstring = get("util.simpleauc."..private.realmKey.."."..id)
+	local id = GetSigFromLink(frame.CurItem.link)
+	local settingstring = get("util.simpleauc."..Resources.ServerKeyCurrent.."."..id)
 	if not settingstring then return end
 	local bid, buy, duration, number, stack = strsplit(":", settingstring)
 	bid = tonumber(bid)
@@ -742,13 +794,13 @@ end
 
 function private.RemoveConfig()
 	if not frame.CurItem.link then return end
-	local id = private.SigFromLink(frame.CurItem.link)
-	set("util.simpleauc."..private.realmKey.."."..id, nil)
+	local id = GetSigFromLink(frame.CurItem.link)
+	set("util.simpleauc."..Resources.ServerKeyCurrent.."."..id, nil)
 end
 
 function private.SaveConfig()
 	if not frame.CurItem.link then return end
-	local id = private.SigFromLink(frame.CurItem.link)
+	local id = GetSigFromLink(frame.CurItem.link)
 	local settingstring = strjoin(":",
 		tostring(frame.CurItem.bid),
 		tostring(frame.CurItem.buy),
@@ -756,7 +808,7 @@ function private.SaveConfig()
 		tostring(frame.CurItem.number),
 		tostring(frame.CurItem.stack)
 		)
-	set("util.simpleauc."..private.realmKey.."."..id, settingstring)
+	set("util.simpleauc."..Resources.ServerKeyCurrent.."."..id, settingstring)
 end
 
 function private.ClearSetting()
@@ -798,13 +850,13 @@ function private.PostAuction()
 		aucPrint("Posting Failed: No Item Selected")
 		return
 	end
-	local sig = private.SigFromLink(link)
+	local sig = GetSigFromLink(link)
 	local number = frame.CurItem.number
 	local stack = frame.CurItem.stack
 	local bid = frame.CurItem.bid
 	local buy = frame.CurItem.buy
 	local duration = frame.CurItem.duration or 48
-	local success, reason = AucAdvanced.Post.PostAuctionClick(sig, stack, bid, buy, duration, number)
+	local success, reason = PostAuctionClick(sig, stack, bid, buy, duration, number)
 	if success then
 		aucPrint("Posting "..number.." stacks of "..stack.."x "..link.." at Bid:"..coins(bid)..", BO:"..coins(buy).." for "..duration.."h")
 	else
@@ -813,28 +865,41 @@ function private.PostAuction()
 end
 
 function private.Refresh(background)
+	local name, minLevel, typeId, subtypeId, quality
 	local link = frame.CurItem.link
 	if not link then return end
-	local name, _, rarity, _, itemMinLevel, itemType, itemSubType, stack = GetItemInfo(link)
-	local itemTypeId, itemSubId
-	for catId, catName in pairs(AucAdvanced.Const.CLASSES) do
-		if catName == itemType then
-			itemTypeId = catId
-			for subId, subName in pairs(AucAdvanced.Const.SUBCLASSES[itemTypeId]) do
-				if subName == itemSubType then
-					itemSubId = subId
-					break
-				end
-			end
-			break
+	if strmatch(link, "|Hitem:") then
+		local itemName, _, itemRarity, _, itemMinLevel, itemType, itemSubType = GetItemInfo(link)
+		if not itemName then return end
+		name = itemName
+		minLevel = itemMinLevel
+		typeId = Const.CLASSESREV[itemType]
+		if typeId then
+			subtypeId = Const.SUBCLASSESREV[itemType][itemSubType]
+		end
+		quality = itemRarity
+	else
+		local lType, speciesID, _, petQuality = strsplit(":", link)
+		lType = lType:sub(-9)
+		if lType == "battlepet" and speciesID then
+			-- it's a pet
+			local _,_,_,_,iMin, iType = GetItemInfo(82800) -- Pet Cage
+			-- all caged pets should have the default pet name (custom names are removed when caging)
+			local petName, _, petType = C_PetJournal.GetPetInfoBySpeciesID(tonumber(speciesID))
+			if not petName then return end
+			name = petName
+			minLevel = iMin
+			typeId = Const.CLASSESREV[iType]
+			subtypeId = petType
+			quality = tonumber(petQuality)
 		end
 	end
 	aucPrint(("Refreshing view of {{%s}}"):format(name))--Refreshing view of {{%s}}
 	if background and type(background) == 'boolean' then
-		AucAdvanced.Scan.StartPushedScan(name, itemMinLevel, itemMinLevel, nil, itemTypeId, itemSubId, nil, rarity)
+		StartPushedScan(name, minLevel, minLevel, nil, typeId, subtypeId, nil, quality)
 	else
-		AucAdvanced.Scan.PushScan()
-		AucAdvanced.Scan.StartScan(name, itemMinLevel, itemMinLevel, nil, itemTypeId, itemSubId, nil, rarity)
+		PushScan()
+		StartScan(name, minLevel, minLevel, nil, typeId, subtypeId, nil, quality)
 	end
 end
 
@@ -846,7 +911,6 @@ function private.CreateFrames()
 
 	frame = CreateFrame("Frame", "AucAdvSimpFrame", AuctionFrame)
 	private.frame = frame
-	private.realmKey, private.realm = AucAdvanced.GetFaction()
 	local DiffFromModel = 0
 	local MatchString = ""
 	frame.list = {}
@@ -1173,7 +1237,7 @@ function private.CreateFrames()
 				private.buyselection.buyout = selected[9]
 
 				-- Make sure that it's not one of our auctions
-				if (not AucAdvancedConfig["users."..private.realm.."."..private.buyselection.seller]) then
+				if (not AucAdvancedConfig["users."..Const.PlayerRealm.."."..private.buyselection.seller]) then
 					if private.buyselection.buyout and (private.buyselection.buyout > 0) then
 						frame.buy:Enable()
 					else
@@ -1194,7 +1258,7 @@ function private.CreateFrames()
 	end
 
 	function private.BuyAuction()
-		AucAdvanced.Buy.QueueBuy(private.buyselection.link, private.buyselection.seller, private.buyselection.stack, private.buyselection.minbid, private.buyselection.buyout, private.buyselection.buyout)
+		QueueBuy(private.buyselection.link, private.buyselection.seller, private.buyselection.stack, private.buyselection.minbid, private.buyselection.buyout, private.buyselection.buyout)
 		frame.imageview.sheet.selected = nil
 		private.onSelect()
 	end
@@ -1202,9 +1266,9 @@ function private.CreateFrames()
 	function private.BidAuction()
 		local bid = private.buyselection.minbid
 		if private.buyselection.curbid and private.buyselection.curbid > 0 then
-			bid = math.ceil(private.buyselection.curbid*1.05)
+			bid = ceil(private.buyselection.curbid*1.05)
 		end
-		AucAdvanced.Buy.QueueBuy(private.buyselection.link, private.buyselection.seller, private.buyselection.stack, private.buyselection.minbid, private.buyselection.buyout, bid)
+		QueueBuy(private.buyselection.link, private.buyselection.seller, private.buyselection.stack, private.buyselection.minbid, private.buyselection.buyout, bid)
 		frame.imageview.sheet.selected = nil
 		private.onSelect()
 	end
@@ -1237,8 +1301,8 @@ function private.CreateFrames()
 	frame.scanbutton:SetParent("AuctionFrameBrowse")
 	frame.scanbutton:SetPoint("LEFT", "AuctionFrameMoneyFrame", "RIGHT", 5,0)
 	frame.scanbutton:SetScript("OnClick", function()
-		if not AucAdvanced.Scan.IsScanning() then
-			AucAdvanced.Scan.StartScan("", "", "", AuctionFrameBrowse.selectedInvtypeIndex, AuctionFrameBrowse.selectedClassIndex, AuctionFrameBrowse.selectedSubclassIndex,  nil, nil)
+		if not AucIsScanning() then
+			StartScan("", "", "", AuctionFrameBrowse.selectedInvtypeIndex, AuctionFrameBrowse.selectedClassIndex, AuctionFrameBrowse.selectedSubclassIndex,  nil, nil)
 		end
 	end)
 
@@ -1292,4 +1356,4 @@ function private.CreateFrames()
 	frame:RegisterEvent("BAG_UPDATE")
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 5342 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 5362 $")

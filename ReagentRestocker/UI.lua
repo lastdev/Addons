@@ -279,7 +279,6 @@ function loadShopping()
 				_G.ClearCursor();
 				refreshShoppingList();
 				selectTree:RefreshTree();
-				bTree:RefreshTree();
 			elseif(infoType == "merchant") then
 				ReagentRestocker:addToListByID(getIDFromItemLink(_G.GetMerchantItemLink(info1)),0, "Buy");
 				_G.ClearCursor();
@@ -672,6 +671,12 @@ function showMisc()
 		"Enables debug logging. Will spam your chat!",
 		function() return ReagentRestockerDB.Options.Debug end,
 		function(x) ReagentRestockerDB.Options.Debug = x; debugRR = x; addonTable.debugRR = x; end);
+
+	addCheckBox("Check database on next login",
+		"Checks the database for inconsistencies and removes inconsistent items on next login.",
+		function() return ReagentRestockerDB.Options.CheckData end,
+		function(x) ReagentRestockerDB.Options.CheckData = x; end);
+		
 
 	if dbIcon then
 		addCheckBox("Add minimap icon",

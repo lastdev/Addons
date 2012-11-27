@@ -1,0 +1,34 @@
+== Version 2.2.2
+* Fury: Bugfix - the execute phase was not being flashed like it should.
+* Fury: Bugfix - the changes to Deadly Calm in the last release were being applied to Fury, when they are meant only for Arms.
+
+== Version 2.2.1
+* Arms: Only flash Colossus Smash when the debuff would fall off.
+* Arms: Only flash Deadly Calm when you can use Heroic Strike at least twice during Colossus Smash.
+
+== Version 2.2.0
+* Added Arms.
+
+== Version 2.1.0
+* Added a Fury rotation for the MoP beta.
+* Protection: Thunderclap will now only be flashed to refresh Rend if you have 2/2 Blood and Thunder.
+
+== Version 2.0.0
+* Taking out of beta.
+* This doesn't really deserve a major version bump - but all my other modules went to 2.x when they got all 3 specs defined, so I'm just making things consistent.
+
+== Version 1.1.1 beta
+This beta release uses Bitten's SpellFlash Library version 3.  If you update you will also need to update any of your other Bitten's SpellFlash modules, which may also be in beta.
+* Prot: Bugfix - 2pT13 Revenge was 1 notch too low on the priority scheme.
+
+== Version 1.1.0
+* Arms: No longer flashes Enraged Regeneration.
+* Fury: No longer flashes Enraged Regeneration.
+* Prot: Now flashes Vigilance.
+* Prot: Revenge is now prioritized above Shield Slam when wearing 2pT13.
+* Prot: Now flashes Taunt.
+* Prot: Now flashes Challenging Shout.
+* All: No longer flashes shouts out of combat.
+
+== Version 1.0.0
+* Initial Release

@@ -225,10 +225,6 @@ function eventHandlers.PLAYER_LOGOUT()
 	saveWindowPosition()
 end
 
-function eventHandlers.PLAYER_REGEN_ENABLED()
-	bcm.UpdateVisibility()
-end
-
 function eventHandlers.UNIT_SPELLCAST_START()
 	updateWindow()
 end

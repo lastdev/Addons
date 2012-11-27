@@ -19,7 +19,7 @@ local ICON_READY = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t"
 local Factions = {
 	-- Factions reference table, based on http://www.wowwiki.com/Factions
 	{	-- [1]
-		name = GetCategoryInfo(14864),	-- "Classic"
+		name = EXPANSION_NAME0,	-- "Classic"
 		{	-- [1]
 			name = FACTION_ALLIANCE,
 			{ name = BZ["Darnassus"], icon = "Achievement_Character_Nightelf_Female"	},
@@ -28,6 +28,7 @@ local Factions = {
 			{ name = BZ["Ironforge"], icon = "Achievement_Character_Dwarf_Male" },
 			{ name = BF["Stormwind"], icon = "Achievement_Character_Human_Male" },
 			{ name = BF["Gilneas"], icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.625, right = 0.75, top = 0, bottom = 0.25 },
+			{ name = BF["Tushui Pandaren"], icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.625, right = 0.75, top = 0, bottom = 0.25 },
 			{ name = BF["Alliance"], icon = "INV_BannerPVP_02" },
 		},
 		{	-- [2]
@@ -38,6 +39,7 @@ local Factions = {
 			{ name = BZ["Undercity"], icon = "Achievement_Character_Undead_Female" },
 			{ name = BZ["Silvermoon City"], icon = "Achievement_Character_Bloodelf_Male" },
 			{ name = BF["Bilgewater Cartel"], icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.625, right = 0.75, top = 0.25, bottom = 0.5 },
+			{ name = BF["Huojin Pandaren"], icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.625, right = 0.75, top = 0.25, bottom = 0.5 },
 			{ name = BF["Horde"], icon = "INV_BannerPVP_01" },
 		},
 		{	-- [3]
@@ -80,7 +82,7 @@ local Factions = {
 		}
 	},
 	{	-- [2]
-		name = GetCategoryInfo(14865),	-- "The Burning Crusade"
+		name = EXPANSION_NAME1,	-- "The Burning Crusade"
 		{	-- [1]
 			name = GetRealZoneText(530),	-- Outland
 			{ name = BF["Ashtongue Deathsworn"], icon = "Achievement_Reputation_AshtongueDeathsworn" },
@@ -111,7 +113,7 @@ local Factions = {
 		}
 	},
 	{	-- [3]
-		name = GetCategoryInfo(14866),	-- "Wrath of the Lich King"
+		name = EXPANSION_NAME2,	-- "Wrath of the Lich King"
 		{	-- [1]
 			name = GetRealZoneText(571),	-- Northrend
 			{ name = BF["Argent Crusade"], icon = "Achievement_Reputation_ArgentCrusader" },
@@ -145,7 +147,7 @@ local Factions = {
 		},
 	},
 	{	-- [4]
-		name = GetCategoryInfo(15072),	-- "Cataclysm"
+		name = EXPANSION_NAME3,	-- "Cataclysm"
 		{	-- [1]
 			name = OTHER,
 			{ name = BF["Guardians of Hyjal"], icon = "Achievement_Zone_mount hyjal" },
@@ -160,6 +162,42 @@ local Factions = {
 		}
 	},
 	{	-- [5]
+		name = EXPANSION_NAME4,	-- "Mists of Pandaria"
+		{	-- [1]
+			name = BF["The Anglers"],
+			{ name = BF["Nat Pagle"], icon = "achievement_faction_anglers" },
+		},
+		{	-- [2]
+			name = BF["The Tillers"],
+			{ name = BF["Chee Chee"], icon = "achievement_faction_tillers" },
+			{ name = BF["Ella"], icon = "achievement_faction_tillers" },
+			{ name = BF["Farmer Fung"], icon = "achievement_faction_tillers" },
+			{ name = BF["Fish Fellreed"], icon = "achievement_faction_tillers" },
+			{ name = BF["Gina Mudclaw"], icon = "achievement_faction_tillers" },
+			{ name = BF["Haohan Mudclaw"], icon = "achievement_faction_tillers" },
+			{ name = BF["Jogu the Drunk"], icon = "achievement_faction_tillers" },
+			{ name = BF["Old Hillpaw"], icon = "achievement_faction_tillers" },
+			{ name = BF["Sho"], icon = "achievement_faction_tillers" },
+			{ name = BF["Tina Mudclaw"], icon = "achievement_faction_tillers" },
+		},
+		{	-- [3]
+			name = OTHER,
+			{ name = BF["Forest Hozen"], icon = "inv_misc_fish_58" },
+			{ name = BF["Golden Lotus"], icon = "achievement_faction_goldenlotus" },
+			{ name = BF["Order of the Cloud Serpent"], icon = "achievement_faction_serpentriders" },
+			{ name = BF["Pearlfin Jinyu"], icon = "inv_misc_fish_58" },
+			{ name = BF["Shado-Pan"], icon = "achievement_faction_shadopan" },
+			{ name = BF["Shang Xi's Academy"], icon = "inv_misc_book_07" },
+			{ name = BF["The Anglers"], icon = "achievement_faction_anglers" },
+			{ name = BF["The August Celestials"], icon = "achievement_faction_celestials" },
+			{ name = BF["The Black Prince"], icon = "inv_misc_head_dragon_black" },
+			{ name = BF["The Brewmasters"], icon = "inv_cask_02" },
+			{ name = BF["The Klaxxi"], icon = "achievement_faction_klaxxi" },
+			{ name = BF["The Lorewalkers"], icon = "achievement_faction_lorewalkers" },
+			{ name = BF["The Tillers"], icon = "achievement_faction_tillers" },
+		}
+	},
+	{	-- [6]
 		name = GUILD,
 		{	-- [1]
 			name = GUILD,
@@ -284,7 +322,7 @@ local function DropDown_Initialize(self, level)
 	local info = UIDropDownMenu_CreateInfo()
 	
 	if level == 1 then
-		for xpackIndex = 1, 4 do
+		for xpackIndex = 1, 5 do
 			info.text = Factions[xpackIndex].name
 			info.hasArrow = 1
 			info.value = xpackIndex
@@ -394,10 +432,12 @@ local callbacks = {
 				end
 
 				itemButton.key = character
+				itemButton:SetID(dataRowID)
 				itemText:SetText(color..text)
 			else
 				itemTexture:SetVertexColor(0.3, 0.3, 0.3);	-- greyed out
 				itemText:SetText(ICON_NOTREADY)
+				itemButton:SetID(0)
 				itemButton.key = nil
 			end
 		end,
@@ -406,7 +446,7 @@ local callbacks = {
 			local character = frame.key
 			if not character then return end
 
-			local faction = view[ frame:GetParent():GetID() ].name
+			local faction = view[ frame:GetID() ].name
 			local status, currentLevel, maxLevel, rate = DataStore:GetReputationInfo(character, faction)
 			if not status then return end
 			

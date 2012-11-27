@@ -284,6 +284,10 @@
 	Outfitter.cDeathknightFrost = "Рыцарь смерти: Власть льда"
 	Outfitter.cDeathknightUnholy = "Рыцарь смерти: Власть нечестивости"
 
+	Outfitter.cMonkTiger = "Monk: Tiger stance"
+	Outfitter.cMonkSerpent = "Monk: Serpent stance"
+	Outfitter.cMonkOx = "Monk: Ox stance"
+
 	Outfitter.cCompleteCategoryDescription = "Полные комплекты занимают все ячейки на персонаже. При смене любого комплекта на этот - все вещи переодеваются."
 	Outfitter.cAccessoryCategoryDescription = "Аксессуары - это неполные комплекты. Вы можете одевать сразу несколько комплектов акксесуаров"
 	Outfitter.cOddsNEndsCategoryDescription = "Всякая всячина - это предметы, которых нет ни в одном комплекте."

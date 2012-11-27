@@ -1,6 +1,6 @@
 -- Elsia: For delete on instance entry
 -- Deletes data whenever a new, not the same instance is entered. This should safe-guard against corpse-run-reenters and the like.
-local revision = tonumber(string.sub("$Revision: 1201 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1222 $", 12, -3))
 local Recount = _G.Recount
 if Recount.Version < revision then Recount.Version = revision end
 
@@ -20,15 +20,25 @@ function Recount:DetectInstanceChange() -- Elsia: With thanks to Loggerhead
 --	local zone = GetRealZoneText()
  	local zone = GetInstanceInfo() -- Elsia; GetInstanceInfo() is robust at PEW!
 
-	if zone == nil or zone == "" then
+	if zone == "" then
 		-- zone hasn't been loaded yet, try again in 5 secs.
 		self:ScheduleTimer("DetectInstanceChange",5)
 		return
 	end
-
+	
 	if UnitIsGhost(Recount.PlayerName) then
 		return
 	end
+
+	local inInstance, instanceType
+	if zone == nil then
+		inInstance, zone = IsInInstance()
+		if zone == nil then
+			inInstance, zone = C_Scenario.IsInScenario()
+			Recount:DPrint((inInstance or "nil") .. " : ".. (zone or "nil"))
+		end
+	end
+
 --[[	local groupType
 
 	if Recount.inRaid then
@@ -51,7 +61,7 @@ function Recount:DetectInstanceChange() -- Elsia: With thanks to Loggerhead
 		return
 	end
 
-	local inInstance, instanceType = IsInInstance()
+	inInstance, instanceType = IsInInstance()
 	
 	if inInstance and (not Recount.db.profile.DeleteNewInstanceOnly or Recount.db.profile.LastInstanceName ~= zone) and Recount.CurrentDataCollect then
 		if Recount.db.profile.ConfirmDeleteInstance == true then

@@ -13,7 +13,7 @@ local FilterSize	= 20
 local RampUp		= 5
 local RampDown		= 10
       
-Recount.Version = tonumber(string.sub("$Revision: 1198 $", 12, -3))
+Recount.Version = tonumber(string.sub("$Revision: 1222 $", 12, -3))
 
 local UnitLevel = UnitLevel
 local UnitClass = UnitClass
@@ -852,6 +852,15 @@ function Recount:ShowNrCombatants()
 end
 
 function Recount:ResetData()
+	if UnitAffectingCombat("player") then
+		Recount:RegisterEvent("PLAYER_REGEN_ENABLED","ResetDataUnsafe")
+	else
+		Recount:ResetDataUnsafe()
+	end
+end
+
+function Recount:ResetDataUnsafe()
+	Recount:UnregisterEvent("PLAYER_REGEN_ENABLED")
 	if Recount.GraphWindow then
 		Recount.GraphWindow:Hide()
 		Recount.GraphWindow.LineGraph:LockXMin(false)
@@ -2022,6 +2031,8 @@ function Recount:OnInitialize()
 	Recount.PlayerName=UnitName("player")
 	Recount.PlayerGUID=nil
 	Recount.PlayerLevel=UnitLevel("player")
+	
+	Recount:PreloadConfig() -- To avoid script running too long problems when using config in combat. Unfortunately increases memory footprint, blame blizz if you must.
 
 --	Recount.GuardiansGUIDs={} -- No need to db, guardians are not persistent GUIDs
 --	Recount.LatestGuardian=0

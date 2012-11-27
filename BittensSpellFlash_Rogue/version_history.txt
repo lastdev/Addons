@@ -1,3 +1,15 @@
+== Version 2.4.2
+* Subtlety: The detection of the glyph "Tricks of the Trade" and the talent "Subterfuge" were broken.
+* All: Removed chat frame spam during combat associated with the latest Bitten's SpellFlash Library release (which is what led me to find the bugs listed above).
+
+== Version 2.4.1
+* Bugfix: The options were messed up.  Should be straightened out now.
+
+== Version 2.4.0
+* Assassination: Added an Assassination rotation.
+* Subtlety: Played with when Tricks of the Trade flashes.
+* Subtlety: Added Proto-Drake Egg to the list of things not to backstab.
+
 == Version 2.3.0
 * Added a Subtlety rotation for the MoP beta.
 

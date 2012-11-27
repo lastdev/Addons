@@ -81,11 +81,6 @@ c.AddOptionalSpell("Aspect of the Hawk", nil, {
 	end
 })
 
-c.AddOptionalSpell("Kiroptyric Sigil", nil, {
-	Type = "item",
-	NoGCD = true,
-})
-
 c.AddOptionalSpell("Call Pet", nil, {
 	ID = "Call Pet 1",
 	FlashID = {
@@ -106,7 +101,6 @@ c.AddOptionalSpell("Fervor", nil, {
 	CheckFirst = function()
 		return not c.HasBuff("Fervor")
 			and s.MaxPower("player") - a.Focus > 55
---			and s.PowerMissing("pet") > 60
 	end
 })
 
@@ -116,7 +110,7 @@ addOptionalSpell("A Murder of Crows", nil, {
 
 c.AddSpell("Dire Beast", nil, {
 	CheckFirst = function()
-		return a.Focus < 80
+		return s.MaxPower("player") - a.Focus > 30
 	end
 })
 
@@ -148,6 +142,13 @@ c.AddOptionalSpell("Readiness", nil, {
 	end
 })
 
+c.AddOptionalSpell("Stampede", nil, {
+	FlashSize = s.FlashSizePercent() / 2,
+	CheckFirst = function()
+		return c.HasBuff("Rapid Fire") or c.HasBuff(c.BLOODLUST_BUFFS)
+	end
+})
+
 addSpell("Arcane Shot", nil, {
 	CheckFirst = function()
 		return generatorWillCap()
@@ -155,13 +156,18 @@ addSpell("Arcane Shot", nil, {
 	end
 })
 
+addSpell("Cobra Shot", "for Serpent Sting", {
+	CheckFirst = function()
+		return c.ShouldCastToRefresh(
+			"Cobra Shot", "Serpent Sting", 4, false, "Serpent Sting")
+	end
+})
+
 ----------------------------------------------------------------- Beast Mastery
 c.AddOptionalSpell("Focus Fire", nil, {
 	CheckFirst = function()
-		return not c.HasBuff("Focus Fire")
-			and s.BuffStack(c.GetID("Frenzy"), "pet") == 5
-			and not c.HasBuff("The Beast Within")
---			and c.GetCooldown("Bestial Wrath") > 10
+		return s.BuffStack(c.GetID("Frenzy"), "pet") == 5
+			and not c.HasBuff("Focus Fire")
 	end
 })
 
@@ -179,15 +185,12 @@ c.AddOptionalSpell("Bestial Wrath", nil, {
 	CheckFirst = function()
 		return a.Focus > 60
 			and not c.HasBuff("The Beast Within")
---			and s.BuffStack(c.GetID("Frenzy"), "pet") == 5
 	end
 })
 
 c.AddOptionalSpell("Rapid Fire", "for BM", {
 	CheckFirst = function()
-		return not c.HasBuff("The Beast Within")
-			and not s.Buff(c.BLOODLUST_BUFFS, "player")
-			and not c.HasBuff("Rapid Fire")
+		return not c.HasBuff("Rapid Fire")
 	end
 })
 
@@ -216,10 +219,3 @@ addSpell("Black Arrow", nil, {
 	end
 })
 c.ManageDotRefresh("Black Arrow", 2)
-
-addSpell("Cobra Shot", "for Serpent Sting", {
-	CheckFirst = function()
-		return c.ShouldCastToRefresh(
-			"Cobra Shot", "Serpent Sting", 4, false, "Serpent Sting")
-	end
-})

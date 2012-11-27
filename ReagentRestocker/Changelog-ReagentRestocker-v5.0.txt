@@ -1,0 +1,58 @@
+------------------------------------------------------------------------
+r92 | cobraa1 | 2012-10-28 07:41:57 +0000 (Sun, 28 Oct 2012) | 4 lines
+Changed paths:
+   A /tags/v5.0 (from /trunk:91)
+
+== v5.0 ==
+* Found a computer to test WoW with, so I can still code in a limited capacity.
+* Hopefully fixed database upgrade bugs.
+* Fixed cache bugs.
+------------------------------------------------------------------------
+r91 | cobraa1 | 2012-10-28 07:33:23 +0000 (Sun, 28 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/Core.lua
+
+Alpha release: debugging.
+------------------------------------------------------------------------
+r90 | cobraa1 | 2012-10-28 06:47:29 +0000 (Sun, 28 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/CHANGELOG.TXT
+   M /trunk/Core.lua
+   M /trunk/ReagentRestocker.toc
+
+Alpha release: debugging. Updated version number; release candidate.
+------------------------------------------------------------------------
+r89 | cobraa1 | 2012-10-27 21:46:35 +0000 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/DatabaseUpdate.lua
+
+Alpha release: debugging.
+------------------------------------------------------------------------
+r88 | cobraa1 | 2012-10-27 20:49:05 +0000 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/Core.lua
+
+Alpha release: debugging.
+------------------------------------------------------------------------
+r86 | cobraa1 | 2012-10-23 18:14:54 +0000 (Tue, 23 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/CHANGELOG.TXT
+   M /trunk/RRRightTab.svg
+
+Commit before update.
+------------------------------------------------------------------------
+r85 | cobraa1 | 2012-10-08 13:31:46 +0000 (Mon, 08 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/CHANGELOG.TXT
+   M /trunk/Core.lua
+   M /trunk/DatabaseUpdate.lua
+   A /trunk/RRBorders.svg
+   A /trunk/RRBorders.tga
+   A /trunk/RRRightTab.svg
+   A /trunk/RRRightTab.tga
+   M /trunk/ReagentRestocker.toc
+   M /trunk/UI.lua
+   M /trunk/UI2.lua
+
+Alpha update.
+------------------------------------------------------------------------

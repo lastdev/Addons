@@ -7,9 +7,9 @@ local c = BittensSpellFlashLibrary
 --local GetItemCount = GetItemCount
 local UnitLevel = UnitLevel
 local GetSpellBookItemName = GetSpellBookItemName
---local GetTime = GetTime
+local GetTime = GetTime
 local SPELL_POWER_BURNING_EMBERS = SPELL_POWER_BURNING_EMBERS
---local SPELL_POWER_SOUL_SHARDS = SPELL_POWER_SOUL_SHARDS
+local SPELL_POWER_SOUL_SHARDS = SPELL_POWER_SOUL_SHARDS
 --local UnitExists = UnitExists
 --local IsMounted = IsMounted
 
@@ -58,13 +58,27 @@ c.AddInterrupt("Optical Blast", nil, {
 })
 
 -------------------------------------------------------------------- Affliction
+local function shouldRefreshDot(name, baseLength, earlyRefresh)
+	if c.IsCastingOrInAir(name) then
+		return false
+	end
+	
+	local duration = c.GetMyDebuffDuration(name)
+	if s.HasSpell(c.GetID("Pandemic")) then
+		return duration < baseLength / 2 - 2
+	else
+		return duration < earlyRefresh + .1
+	end
+end
+
 c.RegisterForFullChannels("Malefic Grasp", 4)
 c.AssociateTravelTimes(.8, "Haunt")
 
 c.AddOptionalSpell("Soulburn", "under Dark Soul: Misery", {
 	CheckFirst = function()
-		local duration = c.GetBuffDuration("Dark Soul: Misery")
-		return duration >= 18.5	or (duration > .1 and duration < 1.5)
+		return c.HasBuff("Dark Soul: Misery") 
+			and GetTime() - a.LastDarkSoul > 30
+			and not c.HasBuff("Soulburn")
 	end
 })
 
@@ -92,28 +106,58 @@ c.AddSpell("Soul Swap", "during Execute", {
 	end
 })
 
-c.AddOptionalSpell("Dark Soul: Misery")
+c.AddOptionalSpell("Dark Soul: Misery", nil, {
+	CheckFirst = function()
+		return a.Shards > 0
+	end
+})
 
 c.AddOptionalSpell("Grimoire: Felhunter")
 
 c.AddSpell("Haunt", nil, {
-	CheckFirst = function()
-		return c.ShouldCastToRefresh("Haunt", "Haunt", 0, true)
+	CheckFirst = function(z)
+		if a.Shards == 0
+			or not c.ShouldCastToRefresh("Haunt", "Haunt", 0, true) then
+			
+			return false
+		end
+		
+		if a.Shards >= s.MaxPower("player", SPELL_POWER_SOUL_SHARDS) - 1 
+			or GetTime() + c.GetBusyTime() - a.LastDarkSoul < 30 then
+			
+			z.FlashColor = nil
+			z.Continue = nil
+			z.FlashSize = nil
+			return true
+		end
+		
+		local miseryCD = c.GetCooldown("Dark Soul: Misery")
+		if miseryCD < 35 then
+			return false
+		end
+		
+		z.FlashColor = "yellow"
+		z.Continue = true
+		local castTime = c.GetCastTime("Haunt")
+		if miseryCD < castTime then
+			z.FlashSize = nil
+		else
+			z.FlashSize = s.FlashSizePercent() / 2
+		end
+		return true
 	end
 })
 
 c.AddSpell("Agony", nil, {
 	CheckFirst = function()
-		return c.GetMyDebuffDuration("Agony") < c.GetHastedTime(4) + .1
-			and not c.IsCastingOrInAir("Agony")
+		return shouldRefreshDot("Agony", 24, c.GetHastedTime(4))
 	end
 })
 
 c.AddSpell("Corruption", nil, {
 	EarlyRefresh = 99,
 	CheckFirst = function(z)
-		return c.GetMyDebuffDuration("Corruption") < z.EarlyRefresh
-			and not c.IsCastingOrInAir("Corruption")
+		return shouldRefreshDot("Corruption", 18, z.EarlyRefresh)
 	end
 })
 c.ManageDotRefresh("Corruption", 2)
@@ -121,15 +165,22 @@ c.ManageDotRefresh("Corruption", 2)
 c.AddSpell("Unstable Affliction", nil, {
 	EarlyRefresh = 99,
 	CheckFirst = function(z)
-		return c.GetMyDebuffDuration("Unstable Affliction") < z.EarlyRefresh
-			and not c.IsCastingOrInAir("Unstable Affliction")
+		return shouldRefreshDot("Unstable Affliction", 14, z.EarlyRefresh)
 	end
 })
 c.ManageDotRefresh("Unstable Affliction", 2)
 
-c.AddSpell("Life Tap", nil, {
+c.AddOptionalSpell("Life Tap", "for Affliction", {
 	CheckFirst = function()
-		return s.PowerPercent("player") < 35
+		if c.HasBuff("Dark Soul: Misery") or c.HasBuff(c.BLOODLUST_BUFFS) then
+			return false
+		end
+		
+		if s.HealthPercent() <= 20 then
+			return s.PowerPercent("player") < 10
+		else
+			return s.PowerPercent("player") < 50
+		end
 	end
 })
 

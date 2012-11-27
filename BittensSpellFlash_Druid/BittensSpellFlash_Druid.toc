@@ -1,5 +1,5 @@
 ## Interface: 50001
-## Version: 2.4.0
+## Version: 2.4.2
 ## Author: Xemnosyst
 ## Title: Bitten's SpellFlash: Druid
 ## Notes: Replaces Blizzard's default proc highlighting to flash 1) a maximum dps rotation, 2) a maximum suvivability tanking rotation, or 3) more informative healing proc highlighting.
@@ -7,7 +7,7 @@
 ## Dependencies: BittensSpellFlashLibrary
 ## LoadOnDemand: 1
 ## X-SpellFlashAddon-LoadWith: Druid
-## X-Curse-Packaged-Version: 2.4.0
+## X-Curse-Packaged-Version: 2.4.2
 ## X-Curse-Project-Name: Bitten's SpellFlash: Druid
 ## X-Curse-Project-ID: bittens-spellflash-druid
 ## X-Curse-Repository-ID: wow/bittens-spellflash-druid/mainline

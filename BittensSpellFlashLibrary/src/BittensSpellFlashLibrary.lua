@@ -11,9 +11,10 @@ BINDING_NAME_BITTENS_SPELLFLASH_DEBUGGING
 BINDING_NAME_BITTENS_SPELLFLASH_FLOATING_TEXT
 	= lib.Localize["Toggle Floating Combat Text"]
 
-local GetNumPartyMembers = GetNumPartyMembers
-local GetNumRaidMembers = GetNumRaidMembers
+local GetNumGroupMembers = GetNumGroupMembers
 local GetTime = GetTime
+local IsInRaid = IsInRaid
+local IsMounted = IsMounted
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned
 local UnitIsUnit = UnitIsUnit
 local UnitSpellHaste = UnitSpellHaste
@@ -38,9 +39,7 @@ function c.GetCurrentRotation(a)
 		if (rotation.CheckFirst == nil or rotation.CheckFirst())
 			and rotation.Spec == s.TalentMastery()
 			and (rotation.OffSwitch == nil
-				or not a.GetConfig(rotation.OffSwitch))
-			-- Form can go away with 5.0.4
-			and (rotation.Form == nil or s.Form(c.GetID(rotation.Form))) then
+				or not a.GetConfig(rotation.OffSwitch)) then
 			
 			return rotation
 		end
@@ -49,24 +48,29 @@ end
 
 function c.Flash(a)
 	local rotation = c.GetCurrentRotation(a)
-	if rotation ~= nil then
-		c.HideHilighting = true
-		c.Init(a)
-		if rotation.Function then -- depricated, do not use, will be phased out.
-			rotation.Function()
-		else
-			if rotation.FlashAlways then
-				rotation:FlashAlways()
-			end
-			if s.InCombat() then
-				if rotation.FlashInCombat then
-					rotation:FlashInCombat()
-				end
-			else
-				if rotation.FlashOutOfCombat then
-					rotation:FlashOutOfCombat()
-				end
-			end
+	if rotation == nil then
+		c.DisableProcHighlights = false
+		return
+	end
+	
+	c.DisableProcHighlights = true
+	
+	local inCombat = s.InCombat()
+	if IsMounted() and not inCombat then
+		return
+	end
+	
+	c.Init(a)
+	if rotation.FlashAlways then
+		rotation:FlashAlways()
+	end
+	if inCombat then
+		if rotation.FlashInCombat then
+			rotation:FlashInCombat()
+		end
+	else
+		if rotation.FlashOutOfCombat then
+			rotation:FlashOutOfCombat()
 		end
 	end
 end
@@ -99,7 +103,7 @@ function c.GetIDs(...)
 end
 
 function c.GetID(name)
-	if type(name) == "number" then
+	if type(name) == "number" or type(name) == "table" then
 		return name
 	end
 	
@@ -196,30 +200,6 @@ function c.EstimateTravelTime(name)
 		end
 		return travel
 	end
-	
-	-- TODO phase this out
-	local spell = c.GetSpell(name)
-	local id = spell.ID
-	local travel, lastSeen = s.LastSpellTravelTime(id)
-	if travel == nil then
-		travel = spell.TravelTimeEstimate
-		if travel == nil then
-			print(name, "does not define TravelTimeEstimate")
-			travel = 1
-		end
-		lastSeen = 0
-	end
-	
-	if spell.SameTravelTimeAs ~= nil then
-		for _, name in pairs(spell.SameTravelTimeAs) do
-			local t, l = s.LastSpellTravelTime(c.GetID(name))
-			if t ~= nil and l > lastSeen then
-				travel = t
-				lastSeen = l
-			end
-		end
-	end
-	return travel
 end
 
 local function incrementIfLanding(
@@ -251,7 +231,7 @@ function c.CountLandings(name, startDelay, endDelay, countNextCast)
 --c.Debug("Lib", "loop", estimated, actual)
 				if estimated ~= nil then
 					if actual then
---c.Debug("Lib", "actual spell in air lands in", estimated - GetTime() + travel)
+--c.Debug("Lib", "actual", name, " in air lands in", estimated - GetTime() + travel)
 						count = incrementIfLanding(
 							count,
 							startDelay,
@@ -319,15 +299,30 @@ function c.ShouldCastToRefresh(
 end
 
 function c.HasTalent(name)
-	return s.HasTalent(lib.A.TalentIDs[name])
+	local id = lib.A.TalentIDs[name]
+	if id == nil then
+		print('No talent defined:', name)
+	else
+		return s.HasTalent(id)
+	end
 end
 
 function c.GetTalentRank(name)
-	return s.TalentRank(lib.A.TalentIDs[name])
+	local id = lib.A.TalentIDs[name]
+	if id == nil then
+		print('No talent defined:', name)
+	else
+		return s.TalentRank(id)
+	end
 end
 
 function c.HasGlyph(name)
-	return s.HasGlyph(lib.A.GlyphIDs[name])
+	local id = lib.A.GlyphIDs[name]
+	if id == nil then
+		print('No glyph defined:', name)
+	else
+		return s.HasGlyph(id)
+	end
 end
 
 function c.RegisterAura(spellName, auraName)
@@ -529,20 +524,19 @@ function c.FlashAll(...)
 end
 
 function c.GetGroupMembers()
-	local type
 	local last = 0
-	local max = GetNumRaidMembers()
-	if max > 1 then
+	local max = math.max(1, GetNumGroupMembers())
+	local type
+	if IsInRaid() then
 		type = "raid"
 	else
-		max = GetNumPartyMembers()
 		type = "party"
 	end
 	return function()
 		last = last + 1
-		if last <= max then
+		if last < max then
 			return type .. last
-		elseif last == max + 1 and type == "party" then
+		elseif last == max and type ~= "raid" then
 			return "player"
 		end
 	end

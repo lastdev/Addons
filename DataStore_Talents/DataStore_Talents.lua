@@ -165,7 +165,7 @@ local function ScanTalents()
 	
 	wipe(char.TalentTrees)
 	
-	local attrib, offset, column, isSelected
+	local attrib, offset
 	for specNum = 1, 2 do												-- primary and secondary specs
 		attrib = 0
 		offset = 0
@@ -175,7 +175,7 @@ local function ScanTalents()
 		-- etc..
 		
 		for talentNum = 1, GetNumTalents() do			-- all talents
-			_, _, _, column, isSelected = GetTalentInfo(talentNum, nil, specNum)
+			local _, _, _, column, isSelected = GetTalentInfo(talentNum, nil, specNum)
 			if isSelected then
 				attrib = attrib + LeftShift(column, offset)
 			end

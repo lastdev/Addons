@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Scan Button module
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: ScanButton.lua 5320 2012-08-08 12:07:37Z brykrys $
 	URL: http://auctioneeraddon.com/
 

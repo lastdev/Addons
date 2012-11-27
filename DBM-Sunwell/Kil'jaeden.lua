@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kil", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 399 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 416 $"):sub(12, -3))
 mod:SetCreatureID(25315)
 mod:SetModelID(23200)
 mod:SetZone()
@@ -94,7 +94,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				SendChatMessage(L.YellBloom, "SAY")
 			end
 		end
-		if IsRaidLeader() and self.Options.BloomWhisper then
+		if DBM:GetRaidRank() > 0 and self.Options.BloomWhisper then
 			self:SendWhisper(L.BloomWhisper, args.destName)
 		end
 		if #warnBloomTargets >= 5 then

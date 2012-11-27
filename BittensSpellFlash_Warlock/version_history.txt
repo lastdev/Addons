@@ -1,3 +1,17 @@
+== Version 2.4.1
+* Affliction: Flash Soul Swap under Soul Burn even out of combat.
+* Affliction: Bugfix - Pandemic detection was broken on non-English clients.
+
+== Version 2.4.0
+* Affliction: Rotation now adjusts for Pandemic.
+* Affliction: Made the flashing for Haunt more intelligent.  It now tries to line it up with Dark Soul: Misery more often.  White flashes indicate you should definitely cast it to avoid capping your shards, or because Dark Soul is still in effect.  Yellow flashes indicate you can optionally cast when you have some other beneficial proc.
+* Affliction: Life Tap now flashes at different threshholds depending on whether you are in the execute phase.
+* Affliction: Made the detection of whether you have cast Soul Swap during Dark Soul: Misery more robust.
+* Affliction: Bugfix - no longer flashes Dark Soul: Misery if Haunt is currently casting, and about to use up your last Soul Shard.
+
+== Version 2.3.1
+* Bugfix: the option to turn off the Destruction rotation was missing!
+
 == Version 2.3.0
 * Added a Destruction rotation.
 

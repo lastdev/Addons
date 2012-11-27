@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.2 (<%codename%>)
-	Revision: $Id: GatherMiniNotes.lua 989 2012-09-07 05:11:13Z Esamynn $
+	Version: 4.0.6 (<%codename%>)
+	Revision: $Id: GatherMiniNotes.lua 1025 2012-09-26 03:00:40Z Esamynn $
 
 	License:
 	This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	Minimap Drawing Routines
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherMiniNotes.lua $", "$Rev: 989 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherMiniNotes.lua $", "$Rev: 1025 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient
@@ -188,7 +188,7 @@ function Gatherer.MiniNotes.UpdateMinimapNotes(timeDelta, force)
 
 		-- Archaeology
 		numArchNotesUsed = 0
-		if ( Gatherer.Var.ArchaeologyActive ) then
+		if ( Gatherer.Var.ArchaeologyActive and setting("arch.enable")) then
 			local displayNumber = setting("arch.minimap.count")
 			local maxDist = 500
 			
@@ -260,9 +260,8 @@ function Gatherer.MiniNotes.UpdateMinimapNotes(timeDelta, force)
 					local nodeVerified = false
 					for _, gatherID, count, harvested, nodeSource in Gatherer.Storage.GetNodeGatherNames(nodeZone, gType, nodeIndex) do
 						-- If this icon has not been verified
-						if ( not nodeSource or (nodeSource == 'REQUIRE') or (nodeSource == "IMPORTED") ) then
+						if ( not nodeSource or (nodeSource == "REQUIRE") or (nodeSource == "IMPORTED") ) then
 							nodeVerified = true
-							break
 						end
 					end
 					if not ( nodeVerified ) then
@@ -324,16 +323,16 @@ function Gatherer.MiniNotes.UpdateMinimapNotes(timeDelta, force)
 				gatherNote:SetWidth(normSize)
 				gatherNote:SetHeight(normSize)
 				
-				if (tooltip and not gatherNote:IsMouseEnabled()) then
+				if ( tooltip ) then
 					gatherNote:EnableMouse(true)
-				elseif (not tooltip and gatherNote:IsMouseEnabled()) then
+				else
 					gatherNote:EnableMouse(false)
 				end
 				
 				local gatherNoteTexture = gatherNote:GetNormalTexture()
 				
 				-- Check to see if we need to trim the border off
-				if (trimTexture) then
+				if ( trimTexture ) then
 					gatherNoteTexture:SetTexCoord(0.08,0.92,0.08,0.92)
 				else
 					gatherNoteTexture:SetTexCoord(0,1,0,1)

@@ -248,7 +248,7 @@ function ns:GetInfo(index)
 	
 	if lineType == INFO_REALM_LINE then
 		local line = characterList[index]
-		return _, line.realm, line.account
+		return nil, line.realm, line.account
 	elseif lineType == INFO_CHARACTER_LINE then
 		local account, realm, name = strsplit(".", characterList[index].key)
 		return name, realm, account

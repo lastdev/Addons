@@ -1,5 +1,5 @@
 
-Overachiever v0.66
+Overachiever v0.67
 ==============================
 
 Author: Tuhljin
@@ -106,6 +106,11 @@ Change log
 ==========
 
 The change log lists changes of particular note to users, not every change made.
+
+v0.67
+- "To All the Squirrels I Once Caressed?" (new): Critters' /loved status for this achievement is now part of the option
+  that exists for the other "To All the Squirrels..." achievements.
+- Fixed an issue where an error was thrown if a battle pet container item is in your inventory.
 
 v0.66
 - Updated for WoW patch 5.0.4.

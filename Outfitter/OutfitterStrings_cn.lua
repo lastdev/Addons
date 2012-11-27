@@ -293,6 +293,10 @@ if GetLocale() == "zhCN" then
 	Outfitter.cDeathknightFrost = "死亡骑士：冰霜灵气"
 	Outfitter.cDeathknightUnholy = "死亡骑士：邪恶灵气"
 
+	Outfitter.cMonkTiger = "Monk: Tiger stance"
+	Outfitter.cMonkSerpent = "Monk: Serpent stance"
+	Outfitter.cMonkOx = "Monk: Ox stance"
+
 	Outfitter.cCompleteCategoryDescription = "全部换装：每个位置都有自定义装备，换装时将换掉所有位置的装备。"
 	Outfitter.cAccessoryCategoryDescription = "补充套装：只定义了一部分而不是全部位置。不象部分换装，你可以为其选择尽可能多的喜欢的套装，他们将会联合在一起并会在需要时覆盖当前选择的全部换装和部分换装。"
 	Outfitter.cOddsNEndsCategoryDescription = "零星物件是所有未见于任何套装的装备列表。主要用处是可以让你确认使用了所有装备或者没有携带多余的装备。"

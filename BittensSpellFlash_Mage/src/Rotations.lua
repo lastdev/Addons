@@ -7,17 +7,26 @@ local bcm = a.BCM
 
 local GetPowerRegen = GetPowerRegen
 local GetTime = GetTime
+local math = math
 local select = select
 
 a.Rotations = {}
 c.RegisterForEvents(a)
 a.SetSpamFunction(function()
+	bcm.UpdateVisibility()
+	
 	local mana = c.GetPower(select(2, GetPowerRegen()))
 	a.ManaPercent = mana / s.MaxPower("player") * 100
 	c.Flash(a)
 end)
 
 bcm.UpdateVisibility()
+
+s.AddSettingsListener(
+	function()
+		bcm.UpdateVisibility()
+	end
+)
 
 ------------------------------------------------------------------------- 4pT13
 a.StolenTimeRemaining = 10
@@ -85,7 +94,11 @@ a.Rotations.Arcane = {
 		end
 		
 		---------------------------------------------------------- flashing
-		c.FlashAll("Counterspell", "Spellsteal")
+		c.FlashAll(
+			"Counterspell", 
+			"Spellsteal", 
+			"Rune of Power",
+			"Evocation for Invoker's Energy")
 --c.Debug("Flash", a.ChargeStacks, string.format("%.1f", a.ManaPercent),
 		c.PriorityFlash(
 			"Nether Tempest",
@@ -156,11 +169,11 @@ a.Rotations.Fire = {
 		a.HeatingProc = c.HasBuff("Heating Up")
 		a.PyroProc = c.HasBuff("Pyroblast!")
 		if pendingBlast or c.IsCastingOrInAir("Inferno Blast") then
-c.Debug("Flash", "applying proc from Inferno Blast")
+--c.Debug("Flash", "applying proc from Inferno Blast")
 			applyFireProc()
 		end
 		if pendingProc then
-c.Debug("Flash", "applying proc from a natural crit")
+--c.Debug("Flash", "applying proc from a natural crit")
 			applyFireProc()
 		elseif a.HeatingProc then
 			local endDelay = c.GetBusyTime() - .25
@@ -170,22 +183,27 @@ c.Debug("Flash", "applying proc from a natural crit")
 				or c.CountLandings("Frostfire Bolt", -3, endDelay, false) > 0
 				or c.CountLandings("Scorch", -3, endDelay, false) > 0 then
 				
-c.Debug("Flash", "landing dirties heating up")
+--c.Debug("Flash", "landing dirties heating up")
 				a.HeatingProc = false
 			end
 		end
 		if a.PyroProc and c.IsCasting("Pyroblast") then
-c.Debug("Flash", "consuming pyroblast!")
+--c.Debug("Flash", "consuming pyroblast!")
 			a.PyroProc = false
 		end
 		
 		-- Flash
 		c.FlashAll(
-			"Counterspell", "Spellsteal", "Mana Gem", "Brilliant Mana Gem")
-c.Debug("Flash", 
-"heat", s.Buff(c.GetID("Heating Up"), "player"), c.HasBuff("Heating Up"), "->", a.HeatingProc, 
-"(", pendingBlast, ")", 
-"pyro", s.Buff(c.GetID("Pyroblast!"), "player"), c.HasBuff("Pyroblast!"), "->", a.PyroProc,
+			"Counterspell", 
+			"Spellsteal", 
+			"Mana Gem", 
+			"Brilliant Mana Gem",
+			"Rune of Power",
+			"Evocation for Invoker's Energy")
+--c.Debug("Flash", 
+--"heat", s.Buff(c.GetID("Heating Up"), "player"), c.HasBuff("Heating Up"), "->", a.HeatingProc, 
+--"(", pendingBlast, ")", 
+--"pyro", s.Buff(c.GetID("Pyroblast!"), "player"), c.HasBuff("Pyroblast!"), "->", a.PyroProc,
 		c.PriorityFlash(
 			"Combustion when Big",
 			"Nether Tempest",
@@ -200,7 +218,7 @@ c.Debug("Flash",
 			"Scorch",
 			"Frostfire Bolt",
 			"Fireball")
-)
+--)
 	end,
 	
 	FlashOutOfCombat = function()
@@ -215,7 +233,7 @@ c.Debug("Flash",
 	end,
 	
 	CastSucceeded = function(info)
-c.Debug("Event", "Succeeded", info.Name)
+--c.Debug("Event", "Succeeded", info.Name)
 		if c.InfoMatches(info, "Inferno Blast") then
 			if s.Buff(c.GetID("Heating Up"), "player") then
 				pendingBlast = true
@@ -224,7 +242,7 @@ c.Debug("Event", "Succeeded", info.Name)
 		end
 	end,
 	
-	CastMissed = function(spellID)
+	SpellMissed = function(spellID)
 		if spellID == c.GetID("Inferno Blast") then
 			pendingBlast = false
 			c.Debug("Event", "blast missed")
@@ -265,7 +283,90 @@ c.Debug("Event", "Succeeded", info.Name)
 		end
 	end,
 	
-CastQueued = function(info)
-c.Debug("Event", "Queued", info.Name)
-end,
+	LeftCombat = function()
+		bcm.UpdateVisibility()
+	end,
+	
+--CastQueued = function(info)
+--c.Debug("Event", "Queued", info.Name)
+--end,
+}
+
+------------------------------------------------------------------------- Frost
+local blizzFingerCount = -1
+a.FingerCount = blizzFingerCount
+
+a.Rotations.Frost = {
+    Spec = 3,
+    OffSwitch = "frost_off",
+    
+    FlashInCombat = function()
+        c.FlashAll(
+            "Counterspell",
+            "Spellsteal",
+            "Presence of Mind",
+			"Rune of Power")
+--c.Debug("Flash", a.FingerCount, blizzFingerCount, 
+        c.PriorityFlash(
+        	"Ice Lance within 2",
+        	"Frost Bomb",
+        	"Living Bomb",
+        	"Nether Tempest",
+            "Frozen Orb",
+            "Icy Veins", 
+            "Mirror Image",
+            "Evocation for Invoker's Energy",
+            "Ice Lance within 5",
+            "Frostbolt for Debuff",
+            "Freeze",
+            "Freeze on Pet Bar",
+            "Ice Lance",
+            "Frostfire Bolt under Brain Freeze",
+            "Mana Gem",
+            "Evocation",
+            "Frostbolt")
+--)
+    end,
+    
+    FlashOutOfCombat = function()
+        c.FlashAll("Conjure Mana Gem")
+    end,
+    
+    FlashAlways = function()
+        c.FlashAll(
+            "Frost Armor", 
+            "Summon Water Elemental", 
+            "Arcane Brilliance", 
+            "Dalaran Brilliance")
+    end,
+    
+    CastSucceeded = function(info)
+        if c.InfoMatches(info, "Ice Lance") then
+            a.FingerCount = math.max(0, a.FingerCount - 1)
+            c.Debug("Event", "Pretend FoF is now at", a.FingerCount)
+        end
+    end,
+    
+    AuraApplied = function(spellID, target, spellSchool)
+        if spellID == c.GetID("Fingers of Frost") then
+            local stack = c.GetBuffStack("Fingers of Frost")
+            if a.FingerCount == blizzFingerCount - 1 then
+                a.FingerCount = stack - 1
+            else
+                a.FingerCount = stack
+            end
+            c.Debug("Event",
+                "Gained FoF. Stack =", stack, "Pretend =", a.FingerCount)
+            blizzFingerCount = stack
+        end
+    end,
+    
+    AuraRemoved = function(spellID, target, spellSchool)
+        if spellID == c.GetID("Fingers of Frost") then
+            local stack = c.GetBuffStack("Fingers of Frost")
+            a.FingerCount = stack
+            c.Debug("Event", "Lost FoF. Stack =", stack)
+            blizzFingerCount = stack
+        end
+    end, 
 }

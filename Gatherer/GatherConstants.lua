@@ -1,6 +1,6 @@
 --[[
 	Various Constant Information definitions
-	Revision: $Id: GatherConstants.lua 956 2012-08-28 16:49:47Z Esamynn $
+	Revision: $Id: GatherConstants.lua 1008 2012-09-17 00:43:39Z Esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherConstants.lua $", "$Rev: 956 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherConstants.lua $", "$Rev: 1008 $")
 
 local metatable = { __index = getfenv(0) }
 setmetatable( Gatherer.Constants, metatable )
@@ -134,6 +134,9 @@ SkillLevel = {
 ["HERB_ADDERSTONGUE"] = 400,
 ["HERB_FIRETHORN"] = 360,
 -- Cata herbs
+["HERB_CINDERBLOOM"] = 425,
+["HERB_STORMVINE"] = 425,
+["HERB_AZSHARASVEIL"] = 425,
 ["HERB_HEARTBLOSSOM"] = 475,
 ["HERB_WHIPTAIL"] = 500,
 ["HERB_TWILIGHTJASMINE"] = 525,

@@ -40,7 +40,7 @@ GameTooltip:SetUnitDebuff("unit", [index] or ["name", "rank"][, "filter"]);
 * The untilCanceled return value is true if the buff doesn't have its own duration (e.g. stealth)
 ]]--
 
-SMARTBUFF_VERSION       = "v5.0e";
+SMARTBUFF_VERSION       = "v5.0h";
 SMARTBUFF_VERSIONNR     = 50001;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in cast buffs";
@@ -125,7 +125,7 @@ local cIgnoreUnitList = { };
 
 local cClasses       = {"DRUID", "HUNTER", "MAGE", "PALADIN", "PRIEST", "ROGUE", "SHAMAN", "WARLOCK", "WARRIOR", "DEATHKNIGHT", "MONK", "HPET", "WPET", "DKPET", "TANK", "HEALER", "DAMAGER"};
 local cOrderGrp      = {0, 1, 2 , 3, 4 , 5 , 6, 7, 8, 9};
-local cFonts         = {"NumberFontNormal", "NumberFontNormalLarge", "NumberFontNormalHuge", "GameFontNormal", "GameFontNormalLarge", "GameFontNormalHuge", "ChatFontNormal", "SystemFont", "MailTextFontNormal", "QuestTitleFont"};
+local cFonts         = {"NumberFontNormal", "NumberFontNormalLarge", "NumberFontNormalHuge", "GameFontNormal", "GameFontNormalLarge", "GameFontNormalHuge", "ChatFontNormal", "QuestFont", "MailTextFontNormal", "QuestTitleFont"};
 
 local currentUnit = nil;
 local currentSpell = nil;
@@ -1193,7 +1193,7 @@ function SMARTBUFF_PreCheck(mode, force)
   --SMARTBUFF_AddMsgD(string.format("%.2f, %.2f", GetTime(), GetTime() - tLastCheck));
   tLastCheck = GetTime();
   
-  if (SMARTBUFF_IsTalentFrameVisible()) then return false; end
+  if (SMARTBUFF_IsTalentFrameVisible() or C_PetBattles.IsInBattle()) then return false; end
   
   SMARTBUFF_SetButtonTexture(SmartBuff_KeyButton, imgSB);
   if (SmartBuffOptionsFrame:IsVisible()) then return false; end  
@@ -2449,7 +2449,7 @@ function SMARTBUFF_CheckUnitBuffs(unit, buffN, buffT, buffL, buffC)
   if (cBuffs[n] and cBuffs[n].Type == SMARTBUFF_CONST_STANCE) then
     if (defBuff and buffC and #buffC >= 1) then
       local t = B[CS()].Order;
-      if (t and #t > 1) then
+      if (t and #t >= 1) then
         --SMARTBUFF_AddMsgD("Check chained stance: "..defBuff);
         for i = 1, #t, 1 do
           --print("Check for chained stance: "..t[i]);
@@ -2707,7 +2707,7 @@ end
 
 -- SMARTBUFF_IsSpell(sType)
 function SMARTBUFF_IsSpell(sType)
-  return sType == SMARTBUFF_CONST_GROUP or sType == SMARTBUFF_CONST_GROUPALL or sType == SMARTBUFF_CONST_SELF or sType == SMARTBUFF_CONST_FORCESELF or sType == SMARTBUFF_CONST_WEAPON or sType == SMARTBUFF_CONST_STANCE;
+  return sType == SMARTBUFF_CONST_GROUP or sType == SMARTBUFF_CONST_GROUPALL or sType == SMARTBUFF_CONST_SELF or sType == SMARTBUFF_CONST_FORCESELF or sType == SMARTBUFF_CONST_WEAPON or sType == SMARTBUFF_CONST_STANCE or sType == SMARTBUFF_CONST_ITEM;
 end
 -- END SMARTBUFF_IsSpell
 
@@ -3933,6 +3933,7 @@ function SMARTBUFF_Splash_Show()
   SmartBuffSplashFrame_cbIcon:SetChecked(OG.SplashIcon);
   SmartBuffSplashFrame_cbMsgShort:Show();
   SmartBuffSplashFrame_cbMsgShort:SetChecked(OG.SplashMsgShort);
+  SmartBuffSplashFrame_sldSize:Show();
 end
 
 function SMARTBUFF_Splash_Hide()
@@ -3942,6 +3943,7 @@ function SMARTBUFF_Splash_Hide()
   SmartBuffSplashFrame_csFont:Hide();
   SmartBuffSplashFrame_cbIcon:Hide();
   SmartBuffSplashFrame_cbMsgShort:Hide();
+  SmartBuffSplashFrame_sldSize:Hide();
   SmartBuffSplashFrame:SetBackdrop(nil);
   SmartBuffSplashFrame:EnableMouse(false);
   SmartBuffSplashFrame:SetFadeDuration(O.SplashDuration);
@@ -3961,6 +3963,8 @@ function SMARTBUFF_Splash_ChangePos()
 end
 
 function SMARTBUFF_Splash_ChangeFont(mode)
+  local f = SmartBuffSplashFrame;
+  
   if (mode > 1) then
     SMARTBUFF_Splash_ChangePos();    
     iCurrentFont = iCurrentFont + 1;
@@ -3969,14 +3973,24 @@ function SMARTBUFF_Splash_ChangeFont(mode)
     iCurrentFont = 1;
   end
   O.CurrentFont = iCurrentFont;
-  SmartBuffSplashFrame:ClearAllPoints();
-  SmartBuffSplashFrame:SetPoint("TOPLEFT", O.SplashX, O.SplashY);
-  SmartBuffSplashFrame:SetFontObject(_G[cFonts[iCurrentFont]]);  
-  SmartBuffSplashFrame:SetInsertMode("TOP");
-  SmartBuffSplashFrame:SetJustifyV("MIDDLE");
+  f:ClearAllPoints();
+  f:SetPoint("TOPLEFT", O.SplashX, O.SplashY);
+  
+  local fo = f:GetFontObject();
+  local fName, fHeight, fFlags = _G[cFonts[iCurrentFont]]:GetFont();
+  if (mode > 1 or O.CurrentFontSize == nil) then
+    O.CurrentFontSize = fHeight;
+  end
+  f.size:SetValue(O.CurrentFontSize);
+  fo:SetFont(fName, O.CurrentFontSize, fFlags);
+  
+  --SmartBuffSplashFrame:SetFontObject(_G[cFonts[iCurrentFont]]);
+  
+  f:SetInsertMode("TOP");
+  f:SetJustifyV("MIDDLE");
   if (mode > 0) then
     SMARTBUFF_Splash_Clear();
-    SmartBuffSplashFrame:AddMessage("Demo Text Font: " .. cFonts[iCurrentFont] .. "\ndrag'n'drop to move", O.ColSplashFont.r, O.ColSplashFont.g, O.ColSplashFont.b, 1.0);
+    f:AddMessage("Demo Text Font: " .. cFonts[iCurrentFont] .. "\ndrag'n'drop to move", O.ColSplashFont.r, O.ColSplashFont.g, O.ColSplashFont.b, 1.0);
   end
 end
 -- END Splash screen events

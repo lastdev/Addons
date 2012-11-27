@@ -4,8 +4,8 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v5.0.001c"
-addon.VersionNum = 500001
+addon.Version = "v5.0.002"
+addon.VersionNum = 500002
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -130,10 +130,11 @@ local AddonDB_Defaults = {
 			WarningType4 = "30|15|10|5|4|3|2|1",		-- for item timers (like mysterious egg)
 			
 			-- ** Character tab options **
-			CharacterTabViewBags = 1,
-			CharacterTabViewBank = 1,
-			CharacterTabViewBagsAllInOne = 0,
-			CharacterTabViewBagsRarity = 0,
+			["UI.Tabs.Characters.ViewBags"] = 1,
+			["UI.Tabs.Characters.ViewBank"] = 1,
+			["UI.Tabs.Characters.ViewBagsAllInOne"] = 0,
+			["UI.Tabs.Characters.ViewBagsRarity"] = 0,
+			["UI.Tabs.Characters.ViewVoidStorage"] = 1,
 			
 			["UI.Tabs.Guild.BankItemsRarity"] = 0,		-- rarity filter in the guild bank tab
 			

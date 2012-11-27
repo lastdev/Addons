@@ -5,7 +5,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale( "Recount" )
 local LD = LibStub("LibDropdown-1.0")
 
-local revision = tonumber(string.sub("$Revision: 1177 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1215 $", 12, -3))
 local Recount = _G.Recount
 if Recount.Version < revision then Recount.Version = revision end
 
@@ -41,14 +41,14 @@ end
 
 -- This is comma_value() by Richard Warburton from: http://lua-users.org/wiki/FormattingNumbers with slight modifications (and a bug fix)
 function Recount.CommaNumber(n)
-	n = ("%.0f"):format(n)
+	n = ("%.0f"):format(math_floor(n+0.5))
    	local left,num,right = string_match(n,'^([^%d]*%d)(%d+)(.-)$')
    	return left and left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse()) or n --..right
 end
 
 local NumFormats =
 {
-	function(value) return ("%.0f"):format(value) end,
+	function(value) return ("%.0f"):format(math_floor(value+0.5)) end,
 	Recount.CommaNumber,
 	Recount.ShortNumber
 }
@@ -667,7 +667,7 @@ function Recount:CreateMainWindow()
 
 	theFrame.FileButton=CreateFrame("Button",nil,theFrame)
 	theFrame.FileButton:SetNormalTexture("Interface\\Buttons\\UI-GuildButton-PublicNote-Up.blp")
-	theFrame.FileButton:SetPushedTexture("Interface\\Buttons\\UI-GuildButton-PublicNote-Down.blp")	
+--	theFrame.FileButton:SetPushedTexture("Interface\\Buttons\\UI-GuildButton-PublicNote-Down.blp")	-- Texture disappeared with MOP
 	theFrame.FileButton:SetHighlightTexture("Interface\\Buttons\\UI-Panel-MinimizeButton-Highlight.blp")
 	theFrame.FileButton:SetWidth(16)
 	theFrame.FileButton:SetHeight(16)

@@ -1413,6 +1413,7 @@ function me:CreateConfigWindow()
 	theFrame:Hide()
 
 	me:CreateDataOptions(theFrame)
+	
 	me:CreateAppearanceOptions(theFrame)
 	me:CreateWindowOptions(theFrame)
 	me:CreateColorOptions(theFrame)
@@ -1502,6 +1503,12 @@ function me:SaveFilterConfig()
 	end
 	Recount:IsTimeDataActive()
 	Recount:FullRefreshMainWindow()
+end
+
+function Recount:PreloadConfig()
+	if type(me.ConfigWindow)=="nil" then
+		me:CreateConfigWindow()
+	end
 end
 
 function Recount:ShowConfig()

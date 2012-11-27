@@ -17,7 +17,7 @@
 		ClearGlobalFavoriteMounts = "즐겨찾기 탈것 제거",
 		CurrentZone = "현재 지역", -- Needs review
 		CurrentZoneDescription = "Mounts flagged here as zone favorites will be the only mounts GoGoMount will use in this zone.  All other mounts and shape forms will be ignored.  Clearing this list will allow GoGoMount to use all mounts (or global favorites if set).", -- Requires localization
-		CurrentZoneExclusions = "Current Zone Exclusions", -- Requires localization
+		CurrentZoneExclusions = "현재 지역 제외", -- Needs review
 		CurrentZoneFavorites = "현재 지역 즐겨찾기",
 		DisableFlyingFromWater = "물에서 나는 탈것 비활성화", -- Needs review
 		DisableInCombat = "전투 상태시 GoGoMount 버튼 비활성화", -- Needs review

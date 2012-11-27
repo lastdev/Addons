@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Souls", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 399 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 416 $"):sub(12, -3))
 mod:SetCreatureID(23420)
 mod:SetModelID(21483)
 mod:SetZone()
@@ -92,7 +92,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnSpite:Show()
 		end
-		if IsRaidLeader() and self.Options.SpiteWhisper then
+		if DBM:GetRaidRank() > 0 and self.Options.SpiteWhisper then
 			self:SendWhisper(L.SpiteWhisper, args.destName)
 		end
 		self:Schedule(0.3, showSpite)

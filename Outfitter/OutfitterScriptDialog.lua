@@ -19,7 +19,9 @@ function Outfitter._EditScriptDialog:Construct()
 	self.Widgets.SourceScriptEditBox.Dialog = self
 	self.Widgets.SourceScriptEditBox.TextChanged = Outfitter.EditorScript_TextChanged
 	
-	self.Widgets.PresetScript.Dialog = self
+	self.Widgets.PresetScript.ItemClickedFunc = function (pMenu, pScriptID)
+		self:SetPresetScriptID(pScriptID)
+	end
 	
 	self.CloseButton:SetScript("OnClick", function (self) self:GetParent():Done() end)
 	
@@ -142,11 +144,11 @@ function Outfitter._EditScriptDialog:SetPresetScriptID(pID)
 	local vPresetScript = Outfitter:GetPresetScriptByID(pID)
 	
 	if not vPresetScript then
-		Outfitter.DropDown_SetSelectedValue(self.Widgets.PresetScript, "CUSTOM")
+		self.Widgets.PresetScript:SetSelectedValue("CUSTOM")
 		return
 	end
 	
-	Outfitter.DropDown_SetSelectedValue(self.Widgets.PresetScript, pID)
+	self.Widgets.PresetScript:SetSelectedValue(pID)
 	
 	self.Widgets.SourceScriptEditBox:SetText(vPresetScript.Script)
 

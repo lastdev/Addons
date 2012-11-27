@@ -9,6 +9,7 @@ local GetTime = GetTime
 local IsMounted = IsMounted
 local MAX_POWER_PER_EMBER = MAX_POWER_PER_EMBER
 local SPELL_POWER_BURNING_EMBERS = SPELL_POWER_BURNING_EMBERS
+local SPELL_POWER_SOUL_SHARDS = SPELL_POWER_SOUL_SHARDS
 local UnitPower = UnitPower
 local select = select
 
@@ -47,16 +48,24 @@ local function flashSummon(...)
 	end
 end
 
+-------------------------------------------------------------------- Affliction
+a.LastDarkSoul = 0
+
 a.Rotations.Afliction = {
 	Spec = 1,
 	OffSwitch = "affliction_off",
 	
 	FlashInCombat = function()
+		a.Shards = s.Power("player", SPELL_POWER_SOUL_SHARDS)
+		local info = c.GetQueuedInfo()
+		if c.InfoMatches(info, "Soulburn") or c.IsCasting("Haunt") then
+			a.Shards = a.Shards - 1
+		end
+		
 		c.FlashAll(
 			"Curse of the Elements",
 			"Dark Soul: Misery",
 			"Soulburn under Dark Soul: Misery",
-			"Soul Swap under Soulburn",
 			"Grimoire: Felhunter",
 			"Spell Lock",
 			"Optical Blast")
@@ -65,22 +74,31 @@ a.Rotations.Afliction = {
 				"Haunt",
 				"Soulburn during Execute",
 				"Soul Swap during Execute",
-				"Life Tap",
+				"Life Tap for Affliction",
 				"Drain Soul")
 		else
+--c.Debug("Flash", a.Shards, 
 			c.PriorityFlash(
 				"Haunt",
 				"Agony",
 				"Corruption",
 				"Unstable Affliction",
-				"Life Tap",
+				"Life Tap for Affliction",
 				"Malefic Grasp")
+--)
 		end
 	end,
 	
 	FlashAlways = function()
-		c.FlashAll("Dark Intent")
+		c.FlashAll("Soul Swap under Soulburn", "Dark Intent")
 		flashSummon("Felhunter", "Observer")
+	end,
+	
+	CastSucceeded = function(info)
+		if c.InfoMatches(info, "Dark Soul: Misery") then
+			a.LastDarkSoul = GetTime()
+			c.Debug("Event", "Dark Soul cast")
+		end
 	end,
 	
 	AuraApplied = function(spellID)
@@ -95,6 +113,7 @@ a.Rotations.Afliction = {
 	end,
 }
 
+-------------------------------------------------------------------- Demonology
 --a.ImmolateRefresh = 0
 --a.Rotations.Demonology = {
 --	Spec = 2,
@@ -152,6 +171,7 @@ a.Rotations.Afliction = {
 --	end,
 --}
 
+------------------------------------------------------------------- Destruction
 local lastEmbers = 0
 local pendingEmberBump = false
 local pendingEmberDrop = false

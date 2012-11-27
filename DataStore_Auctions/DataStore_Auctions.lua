@@ -163,11 +163,13 @@ local function ScanAuctions()
 
 		if itemName then
 			local link = GetAuctionItemLink("owner", i)
-			local id = tonumber(link:match("item:(%d+)"))
-			local timeLeft = GetAuctionItemTimeLeft("owner", i)
-		
-			table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s", 
-				AHZone, id, count, highBidder or "", startPrice, buyoutPrice, timeLeft))
+			if not link:match("battlepet:(%d+)") then		-- temporarily skip battle pets
+				local id = tonumber(link:match("item:(%d+)"))
+				local timeLeft = GetAuctionItemTimeLeft("owner", i)
+			
+				table.insert(character.Auctions, format("%s|%s|%s|%s|%s|%s|%s", 
+					AHZone, id, count, highBidder or "", startPrice, buyoutPrice, timeLeft))
+			end
 		end
 	end
 end
@@ -191,11 +193,13 @@ local function ScanBids()
 			
 		if itemName then
 			local link = GetAuctionItemLink("bidder", i)
-			local id = tonumber(link:match("item:(%d+)"))
-			local timeLeft = GetAuctionItemTimeLeft("bidder", i)
-		
-			table.insert(character.Bids, format("%s|%s|%s|%s|%s|%s|%s", 
-				AHZone, id, count, ownerName or "", bidPrice, buyoutPrice, timeLeft))
+			if not link:match("battlepet:(%d+)") then		-- temporarily skip battle pets
+				local id = tonumber(link:match("item:(%d+)"))
+				local timeLeft = GetAuctionItemTimeLeft("bidder", i)
+			
+				table.insert(character.Bids, format("%s|%s|%s|%s|%s|%s|%s", 
+					AHZone, id, count, ownerName or "", bidPrice, buyoutPrice, timeLeft))
+			end
 		end
 	end
 end

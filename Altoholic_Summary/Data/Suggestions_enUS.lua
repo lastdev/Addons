@@ -428,6 +428,8 @@ addon.Suggestions = {
 		{ 350, "Up to 350: Roasted Clefthoof\nWarp Burger, Talbuk Steak" },
 		{ 375, "Up to 375: Crunchy Serpent\nMok'nathal Treats" },
 		{ 400, "Up to 400: Any Trainer-learned Cooking Recipes" },
+		{ 415, "Up to 415: Darkbrew Lager" },
+		{ 425, "Up to 425: Blackened Surprise" },
 		{ 450, "Up to 450: Dalaran Cooking Dailies" },
 		{ 525, "Up to 525: Stormwind & Orgrimmar Cooking Dailies" },
 	},	

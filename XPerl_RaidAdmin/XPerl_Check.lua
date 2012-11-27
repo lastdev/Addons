@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 644 $")
+XPerl_SetModuleRevision("$Revision: 761 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -25,20 +25,9 @@ local outputChannelIndex = nil
 local outputChannelSelection
 local outputChannelColour
 
+local GetNumGroupMembers = GetNumGroupMembers
 
-local isMOP = select(4, _G.GetBuildInfo()) >= 50000
-local GetNumRaidMembers = isMOP and GetNumGroupMembers or GetNumRaidMembers
-local GetNumPartyMembers = isMOP and GetNumSubgroupMembers or GetNumPartyMembers
-
-
-local IsRaidOfficer = IsRaidOfficer;
-
-
-if (select(4, _G.GetBuildInfo()) >= 50000) then
-	IsRaidOfficer = function() return UnitIsGroupAssistant("player") end
-end
-
-
+local UnitIsGroupAssistant = UnitIsGroupAssistant;
 
 local ITEMLISTSIZE		= 12
 local PLAYERLISTSIZE		= 10
@@ -93,17 +82,13 @@ if (not XPerlColourTable) then
 end
 
 if (not XPerl_ClassPos) then
-	XPerl_ClassPos = function(class)
-		if(class=="WARRIOR") then return 0,    0.25,    0,	0.25;	end
-		if(class=="MAGE")    then return 0.25, 0.5,     0,	0.25;	end
-		if(class=="ROGUE")   then return 0.5,  0.75,    0,	0.25;	end
-		if(class=="DRUID")   then return 0.75, 1,       0,	0.25;	end
-		if(class=="HUNTER")  then return 0,    0.25,    0.25,	0.5;	end
-		if(class=="SHAMAN")  then return 0.25, 0.5,     0.25,	0.5;	end
-		if(class=="PRIEST")  then return 0.5,  0.75,    0.25,	0.5;	end
-		if(class=="WARLOCK") then return 0.75, 1,       0.25,	0.5;	end
-		if(class=="PALADIN") then return 0,    0.25,    0.5,	0.75;	end
-		return 0.25, 0.5, 0.5, 0.75	-- Returns empty next one, so blank
+	local ClassPos = CLASS_BUTTONS
+	function XPerl_ClassPos(class)
+		local b = ClassPos[class]		-- Now using the Blizzard supplied from FrameXML/WorldStateFrame.lua
+		if (b) then
+			return unpack(b)
+		end
+		return 0.25, 0.5, 0.5, 0.75
 	end
 end
 
@@ -226,18 +211,18 @@ end
 
 -- XPerl_CheckOnShow
 function XPerl_CheckOnShow(self)
-	self:RegisterEvent("RAID_ROSTER_UPDATE")
+	self:RegisterEvent("GROUP_ROSTER_UPDATE")
 end
 
 -- XPerl_CheckOnHide
 function XPerl_CheckOnHide(self)
-	self:UnregisterEvent("RAID_ROSTER_UPDATE")
+	self:UnregisterEvent("GROUP_ROSTER_UPDATE")
 end
 
 -- XPerl_CheckOnEvent
 function XPerl_CheckOnEvent(self, event, a1, a2, a3, a4)
-	if (event == "RAID_ROSTER_UPDATE") then
-		if (GetNumRaidMembers() == 0) then
+	if (event == "GROUP_ROSTER_UPDATE") then
+		if (not IsInRaid()) then
 			XPerl_ItemResults = {["type"] = "item"}
 			XPerl_ResistResults = {["type"] = "res", count = 0}
 			XPerl_DurResults = {["type"] = "dur", count = 0}
@@ -665,7 +650,7 @@ local reagentClasses = {
 local function GetOnlineMembers()
 	local count = 0
 	local reagentCount = 0
-	for i = 1,GetNumRaidMembers() do
+	for i = 1,GetNumGroupMembers() do
 		if (UnitIsConnected("raid"..i)) then
 			if (reagentClasses[select(2, UnitClass("raid"..i))]) then
 				reagentCount = reagentCount + 1
@@ -988,7 +973,7 @@ function XPerl_Check_MakePlayerList()
 			ShowResists(true)
 		end
 
-		for i = 1,GetNumRaidMembers() do
+		for i = 1,GetNumGroupMembers() do
 			local name = UnitName("raid"..i)
 			local class = select(2, UnitClass("raid"..i))
 			local count = 0
@@ -1579,19 +1564,19 @@ function XPerl_Check_ValidateButtons()
 		XPerl_CheckButtonDelete:Disable()
 	end
 
-	if (not XPerl_Check.queryStart and IsRaidOfficer()) then
+	if (not XPerl_Check.queryStart and UnitIsGroupAssistant("player")) then
 		XPerl_CheckButtonQuery:Enable()
 	else
 		XPerl_CheckButtonQuery:Disable()
 	end
 
-	if (((results and results.last) or XPerl_ActiveScan) and GetNumRaidMembers() > 0) then
+	if (((results and results.last) or XPerl_ActiveScan) and IsInRaid()) then
 		XPerl_CheckButtonReport:Enable()
 	else
 		XPerl_CheckButtonReport:Disable()
 	end
 
-	if (results and results.last and not (fixedSelected and not regSelected) and GetNumRaidMembers() > 0) then
+	if (results and results.last and not (fixedSelected and not regSelected) and IsInRaid()) then
 		XPerl_CheckButtonReportWith:Enable()
 		XPerl_CheckButtonReportWithout:Enable()
 	else
@@ -1932,7 +1917,7 @@ function XPerl_Check_StartActiveScan()
 		if (itemId) then
 			XPerl_ActiveScan = {}
 
-			ActiveScanItem = {id = itemId, slot = itemSlot, missing = GetNumRaidMembers()}
+			ActiveScanItem = {id = itemId, slot = itemSlot, missing = GetNumGroupMembers()}
 			ActiveScanTotals = {missing = 0, equipped = 0, notequipped = 0, offline = 0, wrongZone = 0}
 
 			XPerl_Check:SetScript("OnUpdate", XPerl_CheckOnUpdate)
@@ -1984,7 +1969,7 @@ function XPerl_Check_ActiveScan()
 	local any
 	local update
 	ActiveScanTotals = {missing = 0, equipped = 0, notequipped = 0, offline = 0, wrongZone = 0}
-	for i = 1,GetNumRaidMembers() do
+	for i = 1,GetNumGroupMembers() do
 		local name, rank, subgroup, level, _, class, zone, online, isDead = GetRaidRosterInfo(i)
 		local unit = "raid"..i
 		local new

@@ -17,6 +17,7 @@ L["Activity"] = "Actividad"
 L["Adamantite Battlegear"] = "Equipo de Batalla de Adamantita"
 L["Adamantite Deposit"] = "Depósito de Adamantita"
 L["Aged Dalaran Wizard"] = "Zahorí de Dalaran Envegecido"
+L["Agenda"] = "agenda" -- Needs review
 L["Aggem Thorncurse"] = "Aggem Malaespina"
 L["AH"] = true
 L["All accounts"] = "Todas las cuentas"

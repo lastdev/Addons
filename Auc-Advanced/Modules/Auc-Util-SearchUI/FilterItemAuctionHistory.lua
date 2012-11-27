@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemauctionhistory
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: FilterItemAuctionHistory.lua 5229 2011-11-03 13:10:05Z brykrys $
 	URL: http://auctioneeraddon.com/
 

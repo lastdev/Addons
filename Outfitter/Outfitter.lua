@@ -22,6 +22,15 @@ Outfitter.CreditPlayersByRealm =
 -- 3 Donor
 ----------------------------------------
 {
+	["Ace Library"] = {
+		["LibStatLogic"] = 2,
+		["LibBabble"] = 2,
+		["LibBabble-Zone"] = 2,
+		["LibBabble-SubZone"] = 2,
+		["LibBabble-Inventory"] = 2,
+		["LibDataBroker"] = 2,
+		["LibTipHooker"] = 2,
+	},
 	[Outfitter.cGermanLocalization] =
 	{
 		["Ani"] = 2,
@@ -489,74 +498,6 @@ else
 end
 
 
-Outfitter.cUniqueGemEnchantIDs =
-{
-	[2850] = 2850, -- Blood of Amber, ItemCode 33140, +13 Spell Critical Strike Rating
-	[2749] = 2749, -- Brilliant Bladestone, ItemCode 33139, +12 Intellect
-	[1068] = 1068, -- Charmed Amani Jewel, ItemCode 34256, +15 Stamina
-	[1593] = 1593, -- Crimson Sun, ItemCode 33131, +24 Attack Power
-	[368] = 368, -- Delicate Fire Ruby, ItemCode 33132, +12 Agility
-	[3210] = 3210, -- Don Julio's Heart, ItemCode 33133
-	[1957] = 1957, -- Facet of Eternity, ItemCode 33144, +12 Defense Rating
-	[1071] = 1071, -- Falling Star, ItemCode 33135, +18 Stamina
-	
-	[3218] = 3218, -- Great Bladestone, ItemCode 33141, +12 Spell Hit Rating
-	[3211] = 3211, -- Kailee's Rose, ItemCode 33134, +26 Healing and +9 Spell Damage
-	[3215] = 3215, -- Mystic Bladestone, ItemCode 33138, +12 Resilience Rating
-	[1591] = 1591, -- Radiant Spencerite, ItemCode 32735, +20 Attack Power
-	[2784] = 2784, -- Rigid Bladestone, ItemCode 33142, +12 Hit Rating
-	[370] = 370, -- Sparkling Falling Star, ItemCode 33137, +12 Spirit
-	
-	[3220] = 3220, -- Stone of Blades, ItemCode 33143, +12 Critical Strike Rating
-	[2891] = 2891, -- Sublime Mystic Dawnstone, ItemCode 27679, +10 Resilience Rating
-	[2899] = 2899, -- Barbed Deep Peridot, ItemCode 27786 & 27809, +3 Stamina, +4 Critical Strike Rating
-	[3103] = 3103, -- Don Amancio's Heart, ItemCode 30598, +8 Strength (numerous enchants of +8 str)
-	[3065] = 3065, -- Don Rodrigo's Heart, ItemCode 30571, +8 Strength
-	[3268] = 3268, -- Eye of the Sea, ItemCode 34831, +15 Stamina
-	[2943] = 2943, -- Mighty Blood Garnet, ItemCode 28360, +14 Attack Power
-	[2944] = 2944, -- Mighty Blood Garnet, ItemCode 28361, +14 Attack Power
-	[2898] = 2898, -- Notched Deep Peridot, ItemCode 27785, +3 Stamina, +4 Spell Critical Strike Rating
-	[2923] = 2923, -- Notched Deep Peridot, ItemCode 27820, +3 Stamina, +4 Spell Critical Strike Rating
-	[2896] = 2896, -- Stark Blood Garnet, ItemCode 27777, +8 Spell Damage
-	[2924] = 2924, -- Stark Blood Garnet, ItemCode 27812, +8 Spell Damage
-	[2970] = 2970, -- Swift Starfire Diamond, ItemCode 28557, +12 Spell Damage and Minor Run Speed Increase
-	[2969] = 2969, -- Swift Windfire Diamond, ItemCode 28556, +20 Attack Power and Minor Run Speed Increase
-
-	[3156] = 3156, -- Unstable Amethyst, ItemCode 32634, +8 Attack Power and +6 Stamina
-	[3159] = 3159, -- Unstable Citrine, ItemCode 32637, +8 Attack Power
-	[3157] = 3157, -- Unstable Peridot, ItemCode 32635,
-	[3158] = 3158, -- Unstable Sapphire, ItemCode 32636
-	[3161] = 3161, -- Unstable Talasite, ItemCode 32639
-	[3160] = 3160, -- Unstable Topaz, ItemCode 32638
-	
-	-- WotLK unique-equipped
-	
-	[3749] = 3749, -- Enchanted Pearl, +4 all stats, ItemCode 42701
-	[3750] = 3750, -- Enchanted Tear, +6 all stats, ItemCode 42702
-	[3792] = 3792, -- Kharmaa's Grace, +20 resilience, ItemCode 44066
-	
-	-- WotLK JC Prismatics (unique-equipped x 3)
-	
-	[3732] = "PRISM3", -- Bold Dragon's Eye, 27str, ItemCode 42142
-	[3292] = "PRISM3", -- Bright Dragon's Eye, 54att, ItemCode 36766
-	[3737] = "PRISM3", -- Brilliant Dragon's Eye, 27int, ItemCode 42148
-	[3733] = "PRISM3", -- Delicate Dragon's Eye, 27agi, ItemCode 42143
-	[3741] = "PRISM3", -- Flashing Dragon's Eye, 27parry, ItemCode 42152
-	[3745] = "PRISM3", -- Fractured Dragon's Eye, 27armorpen, ItemCode 42153
-	[3736] = "PRISM3", -- Lustrous Dragon's Eye, 11mp5, ItemCode 42146
-	[3744] = "PRISM3", -- Mystic Dragon's Eye, 27resil, ItemCode 42158
-	[3746] = "PRISM3", -- Precise Dragon's Eye, 27exp, ItemCode 42154
-	[3739] = "PRISM3", -- Quick Dragon's Eye, 27haste, ItemCode 42150
-	[3742] = "PRISM3", -- Rigid Dragon's Eye, 27hit, ItemCode 42156
-	[3734] = "PRISM3", -- Runed Dragon's Eye, 32spell, ItemCode 42144
-	[3738] = "PRISM3", -- Smooth Dragon's Eye, 27crit, ItemCode 42149
-	[3293] = "PRISM3", -- Solid Dragon's Eye, 41stam, ItemCode 36767
-	[3735] = "PRISM3", -- Sparkling Dragon's Eye, 27spi, ItemCode 42145
-	[3747] = "PRISM3", -- Stormy Dragon's Eye, 32spellpen, ItemCode 42155
-	[3740] = "PRISM3", -- Subtle Dragon's Eye, 27dodge, ItemCode 42151
-	[3743] = "PRISM3", -- Thick Dragon's Eye, 27def, ItemCode 42157
-}
-
 Outfitter.cUniqueGemItemIDs =
 {
 	[33140] = 33140, -- Blood of Amber, ItemCode 33140, +13 Spell Critical Strike Rating
@@ -645,6 +586,21 @@ Outfitter.cUniqueGemItemIDs =
 	[52262] = "PRISM3", -- Sparkling Chimera's Eye
 	[52263] = "PRISM3", -- Stormy Chimera's Eye
 	[52265] = "PRISM3", -- Subtle Chimera's Eye
+	
+	-- MoP JC
+	
+	[83141] = "PRISM3", -- Bold Serpent's Eye
+	[83142] = "PRISM3", -- Quick Serpent's Eye
+	[83143] = "PRISM3", -- Fractured Serpent's Eye
+	[83144] = "PRISM3", -- Rigid Serpent's Eye
+	[83145] = "PRISM3", -- Subtle Serpent's Eye
+	[83146] = "PRISM3", -- Smooth Serpent's Eye
+	[83147] = "PRISM3", -- Precise Serpent's Eye
+	[83148] = "PRISM3", -- Solid Serpent's Eye
+	[83149] = "PRISM3", -- Sparkling Serpent's Eye
+	[83150] = "PRISM3", -- Brilliant Serpent's Eye
+	[83151] = "PRISM3", -- Delicate Serpent's Eye
+	[83152] = "PRISM3", -- Flashing Serpent's Eye
 }
 
 StaticPopupDialogs.OUTFITTER_CANT_RELOADUI =
@@ -906,6 +862,10 @@ Outfitter.cSpecialIDEvents =
 	Dragonhawk = {Equip = "DRAGONHAWK_ASPECT", Unequip = "NOT_DRAGONHAWK_ASPECT"},
 	Feigning = {Equip = "FEIGN_DEATH", Unequip = "NOT_FEIGN_DEATH"},
 	
+	Tiger = {Equip = "TIGER_STANCE", Unequip = "NOT_TIGER_STANCE"},
+	Serpent = {Equip = "SERPENT_STANCE", Unequip = "NOT_SERPENT_STANCE"},
+	Ox = {Equip = "OX_STANCE", Unequip = "NOT_OX_STANCE"},
+
 	Evocate = {Equip = "EVOCATE", Unequip = "NOT_EVOCATE"},
 	
 	Blood = {Equip = "BLOOD", Unequip = "NOT_BLOOD"},
@@ -996,6 +956,13 @@ Outfitter.cClassSpecialOutfits =
 		{Name = Outfitter.cDeathknightBlood, ScriptID = "Blood"},
 		{Name = Outfitter.cDeathknightFrost, ScriptID = "Frost"},
 		{Name = Outfitter.cDeathknightUnholy, ScriptID = "Unholy"},
+	},
+
+	MONK =
+	{
+		{Name = Outfitter.cMonkTiger, ScriptID = "Tiger"},
+		{Name = Outfitter.cMonkSerpent, ScriptID = "Serpent"},
+		{Name = Outfitter.cMonkOx, ScriptID = "Ox"},
 	},
 }
 
@@ -1157,6 +1124,12 @@ Outfitter.cShapeshiftTextureInfo =
 	Spell_Deathknight_BloodPresence = {ID = "Blood"},
 	Spell_Deathknight_FrostPresence = {ID = "Frost"},
 	Spell_Deathknight_UnholyPresence = {ID = "Unholy"},
+	
+	-- Monk
+	
+	monk_stance_whitetiger = {ID = "Tiger"},
+	monk_stance_wiseserpent = {ID = "Serpent"},
+	monk_stance_drunkenox = {ID = "Ox"},
 }
 
 function Outfitter:ToggleOutfitterFrame()
@@ -1186,7 +1159,7 @@ end
 function Outfitter:OnHide()
 	self:ClearSelection()
 	
-	if self.QuickSlots then
+	if self.QuickSlots and self.QuickSlots.Close then
 		self.QuickSlots:Close()
 	end
 	
@@ -1567,7 +1540,7 @@ function Outfitter:InventoryChanged()
 			end
 		end
 		
-		if self.QuickSlots then
+		if self.QuickSlots and self.QuickSlots.InventoryChanged then
 			self.QuickSlots:InventoryChanged(false)
 		end
 	end
@@ -2217,6 +2190,222 @@ function Outfitter:InitializeOutfitMenu(pFrame, pOutfit)
 	end -- elseif
 end
 
+function Outfitter:AddOutfitMenu(pMenu, pMenuID, pLevel, pOutfit)
+	if not pOutfit then
+		return
+	end
+	
+	pMenu.AutoSelectValue = false -- Don't change menu value when an item is selected
+	
+	if not pMenuID then -- Root menu
+		pMenu:AddCategoryItem(pOutfit:GetName())
+		
+		-- General
+		
+		pMenu:AddNormalItem(PET_RENAME, "RENAME")
+		pMenu:AddChildMenu(self.cKeyBinding, "BINDING")
+		pMenu:AddChildMenu(self.cOutfitDisplay, "DISPLAY")
+		pMenu:AddChildMenu(self.cBankCategoryTitle, "BANKING")
+		if self.Settings.Options.EnableBeta then
+			pMenu:AddChildMenu(self.cVoidStorageCategoryTitle, "VOIDSTORAGE")
+		end
+		if pOutfit.CategoryID ~= "Complete" then
+			pMenu:AddNormalItem(self.cUnequipOthers, "UNEQUIP_OTHERS", nil, pOutfit.UnequipOthers)
+		end
+		pMenu:AddNormalItem(self.cIgnoreComparisons, "IGNORE_COMPARISONS", nil, pOutfit.IgnoreComparisons)
+		pMenu:AddNormalItem(DELETE, "DELETE")
+		
+		-- Rebuild
+		
+		pMenu:AddCategoryItem(self.cRebuild)
+		
+		pMenu:AddNormalItem(self.cSetCurrentItems, "SET_CURRENT")
+		
+		local vStatName
+		
+		if pOutfit.StatConfig then
+			vStatName = self:GetStatConfigName(pOutfit.StatConfig)
+		elseif pOutfit.StatID then
+			vStatName = self:GetStatIDName(pOutfit.StatID)
+		end
+		
+		if vStatName then
+			pMenu:AddNormalItem(format(self.cRebuildOutfitFormat, vStatName), "REBUILD")
+		end
+		
+		pMenu:AddNormalItem(self.cRebuildFor, "REBUILD_FOR")
+		
+		-- Automation
+		
+		pMenu:AddCategoryItem(self.cAutomation)
+		
+		local vPresetScript = self:GetPresetScriptByID(pOutfit.ScriptID)
+		local vScriptName
+		
+		if vPresetScript then
+			vScriptName = vPresetScript.Name
+		elseif pOutfit.Script then
+			vScriptName = self.cCustomScript
+		else
+			vScriptName = nil
+		end
+		
+		pMenu:AddChildMenu(string.format(self.cScriptFormat, vScriptName or self.cNoScript), "SCRIPT")
+		pMenu:AddNormalItem(self.cScriptSettings, "SCRIPT_SETTINGS", nil, false, vScriptName == nil)
+		pMenu:AddNormalItem(self.cDisableScript, "DISABLE", nil, pOutfit.Disabled, vScriptName == nil)
+		pMenu:AddNormalItem(self.cDisableOutfitInCombat, "COMBATDISABLE", nil, pOutfit.CombatDisabled, vScriptName == nil)
+		
+		-- Outfit bar
+		
+		if self.OutfitBar then
+			pMenu:AddCategoryItem(self.cOutfitBar)
+			pMenu:AddNormalItem(self.cShowInOutfitBar, "OUTFITBAR_SHOW", nil, self.OutfitBar:IsOutfitShown(pOutfit))
+			pMenu:AddNormalItem(self.cChangeIcon, "OUTFITBAR_CHOOSEICON")
+		end
+		
+	elseif pLevel == 2 then
+		if pMenuID == "BANKING" then
+			pMenu:AddNormalItem(self.cDepositToBank, "DEPOSIT", nil, nil, not self.BankFrameIsOpen)
+			pMenu:AddNormalItem(self.cDepositUniqueToBank, "DEPOSITUNIQUE", nil, nil, not self.BankFrameIsOpen)
+			pMenu:AddNormalItem(self.cWithdrawFromBank, "WITHDRAW", nil, nil, not self.BankFrameIsOpen)
+			pMenu:AddDivider()
+			pMenu:AddNormalItem(self.cDepositOthersToBank, "DEPOSITOTHERS", nil, nil, not self.BankFrameIsOpen)
+			pMenu:AddNormalItem(self.cWithdrawOthersFromBank, "WITHDRAWOTHERS", nil, nil, not self.BankFrameIsOpen)
+		elseif pMenuID == "VOIDSTORAGE" then
+			pMenu:AddNormalItem(self.cDepositToVoidStorage, "DEPOSITVOID", nil, nil, not self.VoidStorageIsOpen or not CanUseVoidStorage())
+			pMenu:AddNormalItem(self.cDepositUniqueToVoidStorage, "DEPOSITUNIQUEVOID", nil, nil, not self.VoidStorageIsOpen or not CanUseVoidStorage())
+			pMenu:AddNormalItem(self.cWithdrawFromVoidStorage, "WITHDRAWVOID", nil, nil, not self.VoidStorageIsOpen or not CanUseVoidStorage())
+		elseif pMenuID == "BINDING" then
+			pMenu:AddNormalItem(self.cNone, "BINDING_NONE", nil, not pOutfit.BindingIndex)
+			
+			for vIndex = 1, 10 do
+				pMenu:AddNormalItem(_G["BINDING_NAME_OUTFITTER_OUTFIT"..vIndex], "BINDING_"..vIndex, nil, pOutfit.BindingIndex == vIndex)
+			end
+		elseif pMenuID == "DISPLAY" then
+			pMenu:AddCategoryItem(self.cHelm)
+			pMenu:AddNormalItem(self.cDontChange, "IGNOREHELM", nil, pOutfit.ShowHelm == nil)
+			pMenu:AddNormalItem(self.cShow, "SHOWHELM", nil, pOutfit.ShowHelm == true)
+			pMenu:AddNormalItem(self.cHide, "HIDEHELM", nil, pOutfit.ShowHelm == false)
+			
+			pMenu:AddCategoryItem(self.cCloak)
+			pMenu:AddNormalItem(self.cDontChange, "IGNORECLOAK", nil, pOutfit.ShowCloak == nil)
+			pMenu:AddNormalItem(self.cShow, "SHOWCLOAK", nil, pOutfit.ShowCloak == true)
+			pMenu:AddNormalItem(self.cHide, "HIDECLOAK", nil, pOutfit.ShowCloak == false)
+			
+			pMenu:AddCategoryItem(self.cPlayerTitle)
+			
+			pMenu:AddNormalItem(self.cDontChange, "IGNORETITLE", nil, pOutfit.ShowTitleID == nil)
+			pMenu:AddNormalItem(NONE, "TITLE_-1", nil, pOutfit.ShowTitleID == 0)
+			
+			local vNumTitles = GetNumTitles()
+			local vNumVisibleTitles = 0
+			
+			for vTitleID = 1, vNumTitles do
+				if IsTitleKnown(vTitleID) ~= 0 then
+					vNumVisibleTitles = vNumVisibleTitles + 1
+					
+					if vNumVisibleTitles > self.MaxSimpleTitles then
+						pMenu:AddChildMenu(self.cMore, "TITLE")
+						break
+					end
+					
+					pMenu:AddNormalItem(GetTitleName(vTitleID), "TITLE_"..vTitleID, nil, vTitleID == pOutfit.ShowTitleID)
+				end
+			end
+		elseif pMenuID == "SCRIPT" then
+			local vHasAnyScript = self:GetScript(pOutfit) ~= nil
+			pMenu:AddNormalItem(self.cNoScript, "PRESET_NONE", nil, (pOutfit.ScriptID == nil) and not vHasAnyScript)
+			pMenu:AddNormalItem(self.cEditScriptEllide, "EDIT_SCRIPT", nil, (pOutfit.ScriptID == nil) and vHasAnyScript)
+			
+			local vCategory, vFoundSelectedScript
+			
+			for _, vPresetScript in ipairs(self.PresetScripts) do
+				if not vPresetScript.Class
+				or vPresetScript.Class == self.PlayerClass then
+					-- Get the category for this script
+					local vScriptCategory = vPresetScript.Category or vPresetScript.Class or "GENERAL"
+					if not vCategory then
+						vCategory = vScriptCategory
+					end
+					
+					-- Add the category once it changes
+					if vCategory ~= vScriptCategory then
+						pMenu:AddChildMenu(self.cScriptCategoryName[vCategory] or self.cClassName[vCategory], vCategory, vFoundSelectedScript)
+						vCategory = vScriptCategory
+						vFoundSelectedScript = false
+					end
+					
+					if pOutfit.ScriptID == vPresetScript.ID then
+						vFoundSelectedScript = true
+					end
+				end -- if
+			end -- for
+			if vCategory then
+				pMenu:AddChildMenu(self.cScriptCategoryName[vCategory] or self.cClassName[vCategory], vCategory, vFoundSelectedScript)
+			end
+		end -- elseif
+	elseif pLevel == 3 then
+		if pMenuID == "TITLE" then
+			local vNumTitles = GetNumTitles()
+			local vNumVisibleTitles = 0
+			
+			for vTitleID = 1, vNumTitles do
+				if IsTitleKnown(vTitleID) ~= 0 then
+					vNumVisibleTitles = vNumVisibleTitles + 1
+					
+					if vNumVisibleTitles > self.MaxSimpleTitles then
+						pMenu:AddNormalItem(GetTitleName(vTitleID), "TITLE_"..vTitleID, nil, vTitleID == pOutfit.ShowTitleID)
+					end
+				end
+			end
+		elseif type(pMenuID) == "string" and pMenuID:sub(1, 8) == "REBUILD_" then
+			local vCategory = self:GetCategoryByID(pMenuID:sub(9))
+			
+			if vCategory then
+				local vNumStats = vCategory:GetNumStats()
+				
+				for vStatIndex = 1, vNumStats do
+					local vStat = vCategory:GetIndexedStat(vStatIndex)
+					pMenu:AddNormalItem(vStat.Name, "REBUILD_STAT_"..vStat.ID)
+				end
+			end
+		else
+			for _, vPresetScript in ipairs(self.PresetScripts) do
+				if not vPresetScript.Class
+				or vPresetScript.Class == self.PlayerClass then
+					local vCategory = vPresetScript.Category or vPresetScript.Class or "GENERAL"
+					
+					if vCategory == pMenuID then
+						local vName = vPresetScript.Name
+						local vScriptFields = self:ParseScriptFields(vPresetScript.Script)
+						
+						if vScriptFields.Inputs ~= nil and #vScriptFields.Inputs ~= 0 then
+							vName = vName.."..."
+						end
+						
+						pMenu:AddNormalItem(
+								vName,
+								"PRESET_"..vPresetScript.ID,
+								nil,
+								pOutfit.ScriptID == vPresetScript.ID,
+								nil, -- Disabled
+								vName, -- Tooltip title
+								vScriptFields.Description) -- Tooltip text
+					end -- if
+				end -- if
+			end -- for
+		end -- else
+	end -- elseif
+end
+
+function Outfitter.ItemDropDownMenuFunc(pMenu, pMenuID, pLevel)
+	if true then
+		local vItem = pMenu:GetParent():GetParent()
+		local vOutfit = Outfitter:GetOutfitFromListItem(vItem)
+		Outfitter:AddOutfitMenu(pMenu, pMenuID, pLevel, vOutfit)
+	end
+end
+
 function Outfitter.ItemDropDown_Initialize(pFrame)
 	local vItem = pFrame:GetParent():GetParent()
 	local vOutfit = Outfitter:GetOutfitFromListItem(vItem)
@@ -2470,7 +2659,7 @@ function Outfitter:GenerateItemListString(pLabel, pListColorCode, pItems)
 end
 
 function Outfitter.AddNewbieTip(pItem, pNormalText, pRed, pGreen, pBlue, pNewbieText, pNoNormalText)
-	if SHOW_NEWBIE_TIPS == "1" then
+	if GetCVar("UberTooltips") == 1 then
 		GameTooltip_SetDefaultAnchor(GameTooltip, pItem)
 		if pNormalText then
 			GameTooltip:SetText(pNormalText, pRed, pGreen, pBlue)
@@ -2494,8 +2683,7 @@ function Outfitter.Item_OnEnter(pItem)
 		local vDescription = Outfitter.cCategoryDescriptions[pItem.categoryID]
 		
 		if vDescription then
-			local CvategoryName = Outfitter["c"..pItem.categoryID.."Outfits"]
-			
+			local vCategoryName = Outfitter["c"..pItem.categoryID.."Outfits"]
 			Outfitter.AddNewbieTip(pItem, vCategoryName, 1.0, 1.0, 1.0, vDescription, 1)
 		end
 		
@@ -4765,7 +4953,7 @@ function Outfitter:UpdateShapeshiftState()
 		
 		_, _, vTexture = vTexture:find("([^\\]+)$")
 		
-		--self:TestMessage("%d: %s texture = %s (%d) %s", vIndex, vName, vTexture, vTexture:len(), tern(vIsActive, "ACTIVE", "not active"))
+		--self:TestMessage("%d: %s texture = %s (%d) %s", vIndex, vName, vTexture, vTexture:len(), vIsActive and "ACTIVE" or "not active")
 		
 		local vShapeshiftInfo = self.cShapeshiftTextureInfo[vTexture]
 		
@@ -5126,11 +5314,7 @@ function Outfitter:Initialize()
 	
 	-- Makes sure they're not upgrading with a reloadui when there are new files
 	
-	if not self._QuickSlots
-	or not self._OutfitIterator
-	or not self.BuildEquipmentChangeList
-	or not self._AboutView
-	or not self.New then
+	if tonumber(GetAddOnMetadata("Outfitter", "X-ReloadTag")) ~= 1 then
 		OutfitterMinimapButton:Hide() -- Remove access to Outfitter so more errors don't start coming up
 		OutfitterButtonFrame:Hide()
 		StaticPopup_Show("OUTFITTER_CANT_RELOADUI")
@@ -5952,14 +6136,14 @@ function Outfitter._NameOutfitDialog:AdjustSize()
 	self:SetHeight(vHeight)
 end
 
-function Outfitter._NameOutfitDialog:ScriptMenuFunc(pMenu)
-	if UIDROPDOWNMENU_MENU_LEVEL == 2 then
+function Outfitter._NameOutfitDialog:ScriptMenuFunc(pMenu, pValue, pLevel)
+	if pLevel == 2 then
 		for _, vPresetScript in ipairs(Outfitter.PresetScripts) do
 			if not vPresetScript.Class
 			or vPresetScript.Class == Outfitter.PlayerClass then
 				local vCategory = vPresetScript.Category or vPresetScript.Class or "GENERAL"
 				
-				if vCategory == UIDROPDOWNMENU_MENU_VALUE then
+				if vCategory == pValue then
 					pMenu:AddNormalItem(vPresetScript.Name, vPresetScript.ID)
 					-- TODO: tooltipText = Outfitter:GetScriptDescription(vPresetScript.Script)
 				end
@@ -5995,6 +6179,8 @@ function Outfitter._NameOutfitDialog:Done()
 	and vName ~= "" then
 		if self.OutfitToRename then
 			local vWearingOutfit = Outfitter:WearingOutfit(self.OutfitToRename)
+			local vPreviousName = self.OutfitToRename.Name
+			Outfitter:DispatchOutfitEvent("WILL_RENAME_OUTFIT", self.OutfitToRename, vPreviousName, vName)
 			
 			if vWearingOutfit then
 				Outfitter:DispatchOutfitEvent("UNWEAR_OUTFIT", self.OutfitToRename.Name, self.OutfitToRename)
@@ -6006,6 +6192,7 @@ function Outfitter._NameOutfitDialog:Done()
 			if vWearingOutfit then
 				Outfitter:DispatchOutfitEvent("WEAR_OUTFIT", self.OutfitToRename.Name, self.OutfitToRename)
 			end
+			Outfitter:DispatchOutfitEvent("DID_RENAME_OUTFIT", self.OutfitToRename, vPreviousName, vName)
 		else
 			-- Create the new outift
 			
@@ -6242,7 +6429,7 @@ function Outfitter:GetOutfitFromListItem(pItem)
 		return nil
 	end
 	
-	if not self.Settings.Outfits then
+	if not self.Settings or not self.Settings.Outfits then
 		return nil
 	end
 	
@@ -6545,6 +6732,35 @@ function Outfitter.PresetScriptDropdown_Initialize(pFrame)
 					vItem.arg2 = vCategory
 					vItem.value = vCategory
 					UIDropDownMenu_AddButton(vItem, UIDROPDOWNMENU_MENU_LEVEL)
+				end
+			end
+		end
+	end
+end
+
+function Outfitter.ScriptMenuFunc(pMenu, pMenuID)
+	if pMenuID then
+		for _, vPresetScript in ipairs(Outfitter.PresetScripts) do
+			if not vPresetScript.Class
+			or vPresetScript.Class == Outfitter.PlayerClass then
+				local vCategory = vPresetScript.Category or vPresetScript.Class or "GENERAL"
+				
+				if vCategory == pMenuID then
+					pMenu:AddNormalItem(vPresetScript.Name, vPresetScript.ID, nil, false, false, vPresetScript.Name, Outfitter:GetScriptDescription(vPresetScript.Script))
+				end
+			end
+		end
+	else -- top level
+		local vCategory
+		
+		for _, vPresetScript in ipairs(Outfitter.PresetScripts) do
+			if not vPresetScript.Class
+			or vPresetScript.Class == Outfitter.PlayerClass then
+				-- Start a new category if it's changing
+				local vNewCategory = vPresetScript.Category or vPresetScript.Class or "GENERAL"
+				if vCategory ~= vNewCategory then
+					vCategory = vNewCategory
+					pMenu:AddChildMenu(Outfitter.cScriptCategoryName[vCategory] or Outfitter.cClassName[vCategory], vCategory)
 				end
 			end
 		end
@@ -8650,21 +8866,14 @@ function Outfitter:GetIconIndex(pTexture)
 end
 
 function Outfitter:SummonCompanionByName(pName, pDelay)
-	local vNumCompanions = GetNumCompanions("CRITTER")
+	local vNumPets = C_PetJournal.GetNumPets(false)
 	local vLowerName = pName:lower()
 
-	for vIndex = 1, vNumCompanions do
-		local vCreatureID, vName, vSpellID, vIcon, vIsSummoned = GetCompanionInfo("CRITTER", vIndex)
+	for vIndex = 1, vNumPets do
+		local vPetID, vSpeciesID, vIsOwned, vCustomName, vLevel, vFavorite, vIsRevoked, vName = C_PetJournal.GetPetInfoByIndex(vIndex, false)
 		
 		if vName:lower() == vLowerName then
-			if not vIsSummoned then
-				if pDelay then
-					Outfitter.SchedulerLib:ScheduleTask(2, function () CallCompanion("CRITTER", vIndex) end)
-				else
-					CallCompanion("CRITTER", vIndex)
-				end
-			end
-			
+			self:SummonCompanionByID(vPetID, pDelay)
 			return true
 		end
 	end

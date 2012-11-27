@@ -1171,9 +1171,9 @@ function Outfitter._MultiStatConfigLine:Construct(pParent, pIndex, pCanDelete)
 	self:SetHeight(30)
 end
 
-function Outfitter._MultiStatConfigLine:StatMenuFunc(pMenu)
-	if UIDROPDOWNMENU_MENU_LEVEL == 2 then
-		local vCategory = Outfitter:GetCategoryByID(UIDROPDOWNMENU_MENU_VALUE)
+function Outfitter._MultiStatConfigLine:StatMenuFunc(pMenu, pValue, pLevel)
+	if pLevel == 2 then
+		local vCategory = Outfitter:GetCategoryByID(pValue)
 		
 		if vCategory then
 			local vNumStats = vCategory:GetNumStats()
@@ -1193,7 +1193,7 @@ function Outfitter._MultiStatConfigLine:StatMenuFunc(pMenu)
 	end
 end
 
-function Outfitter._MultiStatConfigLine:OpMenuFunc(pMenu)
+function Outfitter._MultiStatConfigLine:OpMenuFunc(pMenu, pValue, pLevel)
 	pMenu:AddNormalItem("Max", "MAX")
 	pMenu:AddNormalItem("<=", "LT")
 	pMenu:AddNormalItem(">=", "GT")

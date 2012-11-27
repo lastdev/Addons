@@ -1,0 +1,225 @@
+------------------------------------------------------------------------
+r777 | tharai | 2012-10-28 19:20:26 +0000 (Sun, 28 Oct 2012) | 3 lines
+Changed paths:
+   M /trunk/XPerl.toc
+   M /trunk/localization.lua
+
+More fixes for pet battle
+
+Lin, pleaase do not use your own versioning system. This is a standard.
+------------------------------------------------------------------------
+r776 | playerlin | 2012-10-28 13:46:28 +0000 (Sun, 28 Oct 2012) | 4 lines
+Changed paths:
+   M /trunk/XPerl.lua
+   M /trunk/XPerl.toc
+   M /trunk/localization.lua
+
+Set release, again.
+
+3.6.1a Release for PetBattle frames show and hide...
+(Please, just do "x.x.1", not "x.x.10"..., .1 still > .05...)
+------------------------------------------------------------------------
+r775 | asixandur | 2012-10-28 04:56:18 +0000 (Sun, 28 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_Target/XPerl_Target.lua
+
+Improved Pet Battle frames hide/show
+------------------------------------------------------------------------
+r774 | tharai | 2012-10-27 21:40:45 +0000 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl.toc
+   M /trunk/localization.lua
+
+Set for release
+------------------------------------------------------------------------
+r773 | tharai | 2012-10-27 21:37:13 +0000 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_Target/XPerl_Target.lua
+
+Show battle pet type for battlepets
+------------------------------------------------------------------------
+r772 | tharai | 2012-10-27 21:09:10 +0000 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+
+Use unit_connection to update raid frames when player goes offline
+------------------------------------------------------------------------
+r771 | asixandur | 2012-10-27 09:31:04 +0000 (Sat, 27 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_RaidHelper/XPerl_AssistFrame.lua
+
+Fixes AGGRO Warning not appearing
+------------------------------------------------------------------------
+r770 | asixandur | 2012-10-26 12:30:07 +0000 (Fri, 26 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_Player/XPerl_Player.lua
+
+Sorry if I forgot these every time
+------------------------------------------------------------------------
+r769 | asixandur | 2012-10-26 11:29:06 +0000 (Fri, 26 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_Player/XPerl_Player.lua
+
+Trying to fix druid moonkin bar not appering
+------------------------------------------------------------------------
+r768 | asixandur | 2012-10-20 12:14:22 +0000 (Sat, 20 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_Target/XPerl_Target.lua
+
+Fixed frames appearing after pet battle even if they are disabled
+------------------------------------------------------------------------
+r767 | asixandur | 2012-10-19 14:38:48 +0000 (Fri, 19 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+
+Fixed another stupid bug
+------------------------------------------------------------------------
+r766 | asixandur | 2012-10-19 14:38:44 +0000 (Fri, 19 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+
+Fixed another stupid bug
+------------------------------------------------------------------------
+r765 | asixandur | 2012-10-19 11:31:12 +0000 (Fri, 19 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_Player/XPerl_Player.lua
+
+Fixed stupid bug (a space when not needed). Sorry for any problems that this may have caused.
+------------------------------------------------------------------------
+r764 | asixandur | 2012-10-18 17:46:51 +0000 (Thu, 18 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_Player/XPerl_Player.lua
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+
+Trying to fix "Shadow Orb tracker frame not appearing after talentswap" and some self==nil errors
+------------------------------------------------------------------------
+r763 | asixandur | 2012-10-18 11:51:34 +0000 (Thu, 18 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_PlayerBuffs/XPerl_PlayerBuffs.lua
+
+Probably fixes "Buffs Above Player Spacing Issue"
+------------------------------------------------------------------------
+r762 | tharai | 2012-10-18 01:54:49 +0000 (Thu, 18 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl.toc
+   M /trunk/localization.lua
+
+Tagging as release 3.6.05
+------------------------------------------------------------------------
+r761 | asixandur | 2012-10-15 14:31:40 +0000 (Mon, 15 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_Init.lua
+   M /trunk/XPerl_Options/XPerl_FrameOptions.lua
+   M /trunk/XPerl_Options/XPerl_FrameOptions.xml
+   M /trunk/XPerl_RaidAdmin/XPerl_Check.lua
+   M /trunk/XPerl_RaidMonitor/XPerl_RaidMonitor.lua
+
+Minor improvements to monks and easier support for future classes
+------------------------------------------------------------------------
+r760 | asixandur | 2012-10-14 17:52:56 +0000 (Sun, 14 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/XPerl_Party/XPerl_Party.lua
+   M /trunk/XPerl_PartyPet/XPerl_Party_Pet.lua
+   M /trunk/XPerl_Player/XPerl_Player.lua
+   M /trunk/XPerl_PlayerPet/XPerl_Player_Pet.lua
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+   M /trunk/XPerl_RaidPets/XPerl_RaidPets.lua
+   M /trunk/XPerl_Target/XPerl_Target.lua
+
+Hide frames when in Pet Battle
+Little event code cleanups
+------------------------------------------------------------------------
+r759 | tharai | 2012-10-11 08:04:16 +0000 (Thu, 11 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+
+Clean up code
+------------------------------------------------------------------------
+r758 | tharai | 2012-10-10 02:56:49 +0000 (Wed, 10 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+
+i seriously, always forget to comment out these print statements
+------------------------------------------------------------------------
+r757 | tharai | 2012-10-09 15:09:09 +0000 (Tue, 09 Oct 2012) | 3 lines
+Changed paths:
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+
+Fix raid frames not showing up upon login...seriously why was that code there?
+
+Looks like the SecureGroupHeader_OnEvent only fires for two events, the group roster update and the unit_name change. Can someone tell me when that code was added and for what reason? It has been driving me nuts trying to find a fix and I finally looked into secureheader stuff and wham there it is.
+------------------------------------------------------------------------
+r756 | tharai | 2012-10-06 17:41:25 +0000 (Sat, 06 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_Options/XPerl_FrameOptions.xml
+
+more monk stuff
+------------------------------------------------------------------------
+r755 | tharai | 2012-10-06 16:32:25 +0000 (Sat, 06 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_Options/XPerl_FrameOptions.lua
+
+Options updating
+------------------------------------------------------------------------
+r754 | tharai | 2012-10-06 16:29:05 +0000 (Sat, 06 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_Options/XPerl_FrameOptions.lua
+   M /trunk/XPerl_Options/XPerl_FrameOptions.xml
+
+More raid sorting stuff
+------------------------------------------------------------------------
+r753 | tharai | 2012-10-06 16:25:01 +0000 (Sat, 06 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_Options/XPerl_FrameOptions.xml
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+
+Raid sorting stuff...
+------------------------------------------------------------------------
+r752 | tharai | 2012-10-06 15:30:16 +0000 (Sat, 06 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl.lua
+
+remove unused code
+------------------------------------------------------------------------
+r751 | playerlin | 2012-10-03 13:00:52 +0000 (Wed, 03 Oct 2012) | 4 lines
+Changed paths:
+   M /trunk/XPerl.lua
+   M /trunk/XPerl.toc
+   M /trunk/localization.lua
+
+3.6.0
+
+Some bugfixes for bugged on 3.5.60 and older.
+And enough with 3.5.x so just bumped to 3.6.0, sorry and eat me.
+------------------------------------------------------------------------
+r750 | tharai | 2012-10-03 08:28:36 +0000 (Wed, 03 Oct 2012) | 2 lines
+Changed paths:
+   M /trunk/XPerl.lua
+
+Proper fix for curable debuffs.
+Add monk code for curable debuffs.
+------------------------------------------------------------------------
+r749 | asixandur | 2012-10-02 17:45:41 +0000 (Tue, 02 Oct 2012) | 4 lines
+Changed paths:
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+
+Don't really know why Tharai committed that.
+Probably because of a taint in 5.0.4 and it isn't here anymore.
+This should fix bugs about Blizz Raid Manager not showing.
+I haven't time to check if removing next line gets the taint back or if it just makes the Blizz raid organizer work again.
+------------------------------------------------------------------------
+r748 | asixandur | 2012-10-02 17:22:40 +0000 (Tue, 02 Oct 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl.lua
+
+Fixes problem with X-Perl not showing Magic debuffs with Shamans
+------------------------------------------------------------------------
+r747 | romracer | 2012-09-25 22:47:41 +0000 (Tue, 25 Sep 2012) | 1 line
+Changed paths:
+   M /trunk/XPerl_Party/XPerl_Party.lua
+   M /trunk/XPerl_Player/XPerl_Player.lua
+   M /trunk/XPerl_Target/XPerl_Target.lua
+   M /trunk/XPerl_TargetTarget/XPerl_TargetTarget.lua
+
+Fix Faction icons for Neutral pandas and that ugly green box
+------------------------------------------------------------------------

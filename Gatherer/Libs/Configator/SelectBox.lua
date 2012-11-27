@@ -1,6 +1,6 @@
 --[[
 	SelectBox
-	Version: 4.0.2 (<%codename%>)
+	Version: 4.0.6 (<%codename%>)
 	Revision: $Id: SelectBox.lua 312 2011-06-14 07:33:25Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 

@@ -1,8 +1,8 @@
 ﻿--[[
 	Icon set definitions
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.2 (<%codename%>)
-	Revision: $Id: GatherIcons.lua 964 2012-09-01 19:48:21Z Esamynn $
+	Version: 4.0.6 (<%codename%>)
+	Revision: $Id: GatherIcons.lua 1033 2012-09-30 04:00:08Z LocalizerAutoCommit $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -63,6 +63,18 @@ Gatherer.Icons = {
 	[189980] = "Mine\\Saronite", -- Saronite Deposit
 	[189981] = "Mine\\Saronite", -- Rich Saronite Deposit
 	[191133] = "Mine\\Titanium", -- Titanium Vein
+	[202736] = "Mine\\Obsidium", -- Obsidium Deposit
+	[202737] = "Mine\\Pyrite", -- Pyrite Deposit
+	[202738] = "Mine\\Elementium", -- Elementium Vein
+	[202739] = "Mine\\Obsidium", -- Rich Obsidium Deposit
+	[202740] = "Mine\\Pyrite", -- Rich Pyrite Deposit
+	[202741] = "Mine\\Elementium", -- Rich Elementium Vein
+	[209311] = "Mine\\GhostIron", -- Ghost Iron Deposit
+	[209312] = "Mine\\Kyparite", -- Kyparite Deposit
+	[209313] = "Mine\\Trillium", -- Trillium Vein
+	[209328] = "Mine\\GhostIron", -- Rich Ghost Iron Deposit
+	[209329] = "Mine\\Kyparite", -- Rich Kyparite Deposit
+	[209330] = "Mine\\Trillium", -- Rich Trillium Vein
 	[1617] = "Herb\\Silverleaf", -- Silverleaf
 	[1618] = "Herb\\Peacebloom", -- Peacebloom
 	[1619] = "Herb\\Earthroot", -- Earthroot
@@ -75,7 +87,7 @@ Gatherer.Icons = {
 	[2041] = "Herb\\Liferoot", -- Liferoot
 	[2042] = "Herb\\Fadeleaf", -- Fadeleaf
 	[2043] = "Herb\\KhadgarsWhisker", -- Khadgar's Whisker
-	[2044] = "Herb\\Wintersbite", -- Wintersbite
+	[2044] = "Herb\\Wintersbite", -- Dragon's Teeth
 	[2045] = "Herb\\Stranglekelp", -- Stranglekelp
 	[2046] = "Herb\\Goldthorn", -- Goldthorn
 	[2866] = "Herb\\Firebloom", -- Firebloom
@@ -88,7 +100,7 @@ Gatherer.Icons = {
 	[176583] = "Herb\\GoldenSansam", -- Golden Sansam
 	[176584] = "Herb\\Dreamfoil", -- Dreamfoil
 	[176586] = "Herb\\MountainSilversage", -- Mountain Silversage
-	[176587] = "Herb\\Plaguebloom", -- Plaguebloom
+	[176587] = "Herb\\Plaguebloom", -- Sorrowmoss
 	[176588] = "Herb\\Icecap", -- Icecap
 	[176589] = "Herb\\BlackLotus", -- Black Lotus
 	[181166] = "Herb\\Stranglekelp", -- Bloodthistle
@@ -110,6 +122,19 @@ Gatherer.Icons = {
 	[190175] = "Herb\\Icecap", -- Frozen Herb
 	[190176] = "Herb\\FrostLotus", -- Frost Lotus
 	[191019] = "Herb\\AddersTongue", -- Adder's Tongue
+	[202747] = "Herb\\Cinderbloom", -- Cinderbloom
+	[202748] = "Herb\\Stormvine", -- Stormvine
+	[202749] = "Herb\\AzsharasVeil", -- Azshara's Veil
+	[202750] = "Herb\\Heartblossom", -- Heartblossom
+	[202751] = "Herb\\TwilightJasmine", -- Twilight Jasmine
+	[202752] = "Herb\\Whiptail", -- Whiptail
+	[209349] = "Herb\\GreenTeaLeaf", -- Green Tea Leaf
+	[209350] = "Herb\\Silkweed", -- Silkweed
+	[209351] = "Herb\\SnowLilly", -- Snow Lily
+	[209353] = "Herb\\RainPoppy", -- Rain Poppy
+	[209354] = "Herb\\GoldenLotus", -- Golden Lotus
+	[209355] = "Herb\\FoolsCap", -- Fool's Cap
+	[214510] = "Herb\\ShaTouchedHerb", -- Sha-Touched Herb
 	[2039] = "Open\\Chest", -- Hidden Strongbox
 	[2744] = "Open\\Clam", -- Giant Clam
 	[2843] = "Open\\Chest", -- Battered Chest
@@ -167,4 +192,7 @@ Gatherer.Icons = {
 	[207498] = "Open\\Chest", -- Dark Iron Treasure Chest
 	[207512] = "Open\\Chest", -- Silken Treasure Chest
 	[207529] = "Open\\Chest", -- Maplewood Treasure Chest
+	[207533] = "Open\\Chest", -- Runestone Treasure Chest
+	[210565] = "Herb\\GraveMoss", -- Dark Soil
+	[214945] = "Open\\OynxEgg", -- Onyx Egg
 }

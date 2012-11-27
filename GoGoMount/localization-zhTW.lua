@@ -15,7 +15,7 @@
 		AutoStartCrusaderAura_Long = "Automatically start Crusader Aura when using GoGoMount to mount.", -- Requires localization
 		Clear = "Clear", -- Requires localization
 		ClearGlobalFavoriteMounts = "Clear global favorite mounts", -- Requires localization
-		CurrentZone = "Current Zone", -- Requires localization
+		CurrentZone = "當前地區", -- Needs review
 		CurrentZoneDescription = "Mounts flagged here as zone favorites will be the only mounts GoGoMount will use in this zone.  All other mounts and shape forms will be ignored.  Clearing this list will allow GoGoMount to use all mounts (or global favorites if set).", -- Requires localization
 		CurrentZoneExclusions = "Current Zone Exclusions", -- Requires localization
 		CurrentZoneFavorites = "當前地區的偏好",

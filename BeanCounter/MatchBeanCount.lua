@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - BeanCounter Matcher module
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: MatchBeanCount.lua 5279 2012-03-05 13:20:38Z brykrys $
 	URL: http://auctioneeraddon.com/
 

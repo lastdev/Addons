@@ -6,7 +6,7 @@ itIT localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 2.4
+Project version: 2.4.2
 ************************************************************************
 Original translated by: Pettigrow
 Currently maintained by:
@@ -29,4 +29,375 @@ local L = LibStub("AceLocale-3.0"):NewLocale("Ackis Recipe List", "itIT", false)
 
 if not L then return end
 
+L["Aaron Hollman"] = true
+L["Aayndia Floralwind"] = "Ayandia Ariafresca"
+L["Abigail Shiel"] = true
+L["About"] = "Circa"
+L["Abyssal Flamebringer"] = "Portatore Abissale delle Fiamme"
+L["ACHIEVEMENT_DESC"] = "Le ricette ottenute tramite Imprese devono essere incluse nella scansione."
+L["ACQUIRETOOLTIPPOSITION_DESC"] = "Cambia il luogo del tooltip contenente le informazioni d'acquisizione."
+L["Acquisition"] = "Acquisizione"
+L["Adele Fielder"] = true
+L["Adelene Sunlance"] = true -- Needs review
+L["Aendel Windspear"] = "Aendel Brezzalama"
+L["Aged Dalaran Wizard"] = "Mago di Dalaran Invecchiato"
+L["Ainderu Summerleaf"] = "Ainderu Fogliasecca"
+L["Ainethil"] = true
+L["Akham"] = true
+L["Alanna Raveneye"] = "Alanna Occhiocorvo"
+L["Alard Schmied"] = true
+L["Alchemist Gribble"] = "Alchimista Pozzastrana"
+L["Alchemist Mallory"] = "Alchimista Mallory"
+L["Alchemist Pestlezugg"] = "Alchimista Rollabomba"
+L["Aldraan"] = true
+L["Alegorn"] = true
+L["Aleinia"] = true
+L["Alestos"] = true
+L["Alestus"] = true
+L["Algernon"] = true
+L["ALL_FILTERED"] = "Anche se hai già scansionato questa professione, i tuoi filtri stanno al momento prevenendo ad alcune ricette di essere mostrate. Per favore cambia i tuoi filtri e prova di nuovo."
+L["Almaador"] = true
+L["Altaa"] = true
+L["ALT_CLICK"] = "Fai Alt-Clic per aggiungere/rimuovere questa ricetta alla tua lista ignorati."
+L["ALT_TRADESKILL_DESC"] = [=[Questo mostrerà una lista di alt che hanno avuto le competenze scansionate.
+Cliccando sul nome dell'alt mostrerà la professione in chat.
+Alt-Clic sul nome dell'alt cancellerà l'alt dalla lista.]=]
+L["Alurmi"] = true
+L["Alys Vol'tyr"] = true -- Needs review
+L["Amal'thazad"] = true
+L["Amy Davenport"] = true
+L["Anchorite Ensham"] = "Anacoreta Ensham"
+L["Anchorite Fateema"] = "Anacoreta Fateema"
+L["Anchorite Paetheus"] = "Anacoreta Paetheus"
+L["Anchorite Yazmina"] = "Anacoreta Yazmina"
+L["Andrew Hilbert"] = true -- Needs review
+L["Andrion Darkspinner"] = "Andrion Telanera"
+L["Annora"] = true
+L["Anvilrage Captain"] = "Capitano Anvilrage" -- Needs review
+L["Anvilrage Marshal"] = "Maresciallo Anvilrage" -- Needs review
+L["Apothecary Antonivich"] = "Farmacista Antonivich" -- Needs review
+L["Apothecary Bressa"] = "Farmacista Bressa" -- Needs review
+L["Apothecary Wormwick"] = "Farmacista Wormwick" -- Needs review
+L["Apprentice Darius"] = "Apprendista Darius"
+L["AQ40_RANDOM_BOP"] = "Drop casuale da AQ40, Si vincola alla raccolta."
+L["ARCH_DROP_ULD"] = "Questa ricetta è un drop casuale dal \"Vaso Canopo\" quando collezioni manufatti per Archeologia."
+L["ARL_ALLEXCLUDED"] = "Anche se hai già scansionato questa professione, le tue esclusioni stanno al momento prevenendo ad alcune ricette di essere mostrate. Per favore cambia le tue esclusioni e prova di nuovo."
+L["ARL_ALLKNOWN"] = "Conosci tutte le ricette per questa professione."
+L["ARL_SEARCHFILTERED"] = "La tua ricerca non ha risultati."
+L["Arras"] = true
+L["Arred"] = true
+L["Arrond"] = true
+L["Arugi"] = true
+L["Asarnan"] = true
+L["AUTOLOAD_DB_DESC"] = "Carica automaticamente tutti i database delle ricette di ARL quando fai una scansione datamining."
+L["AUTOSCANMAP_DESC"] = "Mostra automaticamente tutti i punti quando fai una scansione delle ricette."
+L["AUTOSCAN_TRAINERS_DESC"] = "Attiva la scansione agli istruttori per comparare livelli di competenza e metodi di acquisizione ricette."
+L["AUTOSCAN_VENDORS_DESC"] = "Attiva la scansione dei mercanti per comparare i livelli di competenza e i metodi d'acquisizione delle ricette."
+L["Baxter"] = true
+L["Belil"] = true
+L["Bemarrin"] = true
+L["BOA_DESC"] = "Le ricette che creano oggetti che Si vincolano all'account Battle.net devono essere incluse nella scansione."
+L["BOAFilter"] = "Oggetto Vincolato all'Account"
+L["BOE_DESC"] = "Le ricette che creano oggetti che Si vincolano all'equipaggiamento devono essere incluse nella scansione."
+L["BOEFilter"] = "Oggetto Vincolato all'equipaggiamento"
+L["Boots"] = "Stivali" -- Needs review
+L["BOP_DESC"] = "Le ricette che creano oggetti che Si vincolano alla raccolta devono essere incluse nella scansione."
+L["BOPFilter"] = "Oggetto Vincolato all'acquisizione"
+L["Bow"] = "Arco"
+L["BRD_RANDOM_ROOM"] = "C'è una possibilità di trovarla in 5 stanze diverse ai Sotterranei di Roccianera, ma è una apparizione casuale e a volte non appare affatto."
+L["BT_RANDOM"] = "Drop casuale dai mob/boss del Tempio Nero."
+L["CLASS_DESC"] = "Includi questa classe nella scansione. Questo filtrerà su due fattori: 1) La classe può usare la ricetta e 2) la classe può imparare la ricetta."
+L["Classes"] = "Classi"
+L["Clear Exclusion List"] = "Pulisci Lista Esclusioni"
+L["CLEAR_EXCLUSION_LIST_DESC"] = "Rimuove tutte le ricette dalla lista d'esclusione."
+L["CLEAR_WAYPOINTS_DESC"] = "Rimuove tutti i punti di ARL da TomTom."
+L["Cloak"] = "Schiena"
+L["CLOSE_DESC"] = "Chiudi la Finestra della Lista Ricette."
+L["Close GUI"] = "Chiudi con la finestra delle professioni"
+L["CLOSEGUI_DESC"] = "Chiudi la finestra di ARL quando la finestra di creazione è chiusa."
+L["Cloth"] = "Stoffa"
+L["COMMAND_LINE_SCAN"] = "Per eseguire una scansione da riga di comando devi specificare la professione, come /arl scan incantamento"
+L["COMMON_ISSUES_DESC"] = [=[Per favore fai riferimento a questi problemi comuni prima d'inviare una segnalazione bug.
+1) La ricetta X non appare! - Controlla le tue impostazioni dei filtri per assicurarti la ricetta non sia filtrata.
+2) A Runografia mancano così tanti glifi! Perché non sono elencati? - Disattiva il filtro 'classi'. Come predefinito (è per richiesta popolare) ARL mostra solo le ricette che la tua classe può usare e la maggior parte dei glifi non sono usabili dalla tua classe.
+3) Non voglio vedere le ricette della fazione opposta! - Attiva il filtro fazioni. Questo imposterà per mostrare solo le ricette ottenibili dalla tua fazione. Se qualcosa appare ancora e non dovrebbe, per favore invia una segnalazione bug.]=]
+L["COMPARE_TRAINER_ACQUIRE_DESC"] = "Compara i metodi d'acquisizione degli istruttori selezionati con quelli nel database di ARL."
+L["CONTRACTALL_DESC"] = "Rimpicciolisci tutte le ricette sotto elencate."
+L["\"Cookie\" McWeaksauce"] = "\"Capitan\" Dolcetto"
+L["CRAFTED_ENGINEERS"] = "La ricetta è creata dagli Ingegneri."
+L["Crossbow"] = "Balestra"
+L["CTRL_CLICK"] = "Fai Ctrl-Clic per aggiungere il link di questa ricetta alla tua chat."
+L["CTRL_SHIFT_CLICK"] = "Fai Ctrl-Maiusc-Clic per aggiungere l'oggetto alla mappa e mini-mappa."
+L["Dagger"] = "Pugnale"
+L["DAILY_COOKING_DAL"] = "Ottenuta casualmente completando una delle missioni giornaliere di cucina a Dalaran."
+L["DAILY_COOKING_FISH"] = "Scegli Barile di Pesce quando completi una di queste missioni."
+L["DAILY_COOKING_MEAT"] = "Scegli Cassa di Carne quando completi una di queste missioni."
+L["DAILY_FISHING_SHATT"] = "Ottenuta casualmente completando una delle missioni giornaliere di pesca di Burning Crusade."
+L["DATAMINE_OPTIONS_DESC"] = "Ti permette di personalizzare il datamining in-gioco di ARL."
+L["DATAMINER_NODB_ERROR"] = "Database delle ricette non caricato. Per favore scansiona prima la professione e poi prova il datamining."
+L["DATAMINER_SKILLLEVEL_ERROR"] = "Può essere usato solo per un istruttore di professione. Per favore apri l'istruttore e prova di nuovo."
+L["DATAMINER_TRAINER_INFO"] = [=[Nome istruttore: %s
+ID istruttore: %s]=]
+L["DATAMINER_TRAINER_NOTTARGETTED"] = "Devi selezionare l'istruttore quando esegui questo comando."
+L["DATAMINER_VENDOR_INFO"] = [=[Nome mercante: %s
+ID mercante: %s]=]
+L["DATAMINER_VENDOR_NOTTARGETTED"] = "Devi selezionare il mercante quando esegui questo comando."
+L["DATAMINE_WARNING_DESC"] = "Per favore nota che abilitare Carica Automaticamente Database Ricette aumenterà la quantità di memoria usata da ARL. Abilitare Scansione Automatica Istruttori può causare un po' di lag quando l'istruttore è aperto. Questo sarà più evidente durante la prima scansione di un istruttore."
+L["DEFAULT_RECIPE"] = "Imparata automaticamente quando impari la professione."
+L["Discovery"] = "Scoperta"
+L["DISCOVERY_ALCH_BC_XMUTE"] = "Scoperta facendo trasmutazioni di Primordiali."
+L["DISCOVERY_ALCH_ELIXIRFLASK"] = "Scoperta facendo elisir o tonici usando ingredienti di Burning Crusade o superiori."
+L["DISCOVERY_ALCH_NORTHREND_RESEARCH"] = "Ottenuta casualmente conducendo la ricerca alchemica di Nordania."
+L["DISCOVERY_ALCH_NORTHREND_XMUTE"] = "Scoperta facendo trasmutazioni di Eterni."
+L["DISCOVERY_ALCH_POTION"] = "Scoperta facendo pozioni usando ingredienti di Burning Crusade o superiori."
+L["DISCOVERY_ALCH_PROT"] = "Scoperta creando Pozioni Maggiori della Difesa usando materiali di Burning Crusade."
+L["DISCOVERY_DESC"] = "Le ricette ottenute tramite Scoperta devono essere incluse nella scansione."
+L["DISCOVERY_INSC_BOOK"] = "Scoperta casualmente leggendo il Libro della Maestria dei Glifi."
+L["DISCOVERY_INSC_MINOR"] = "Ottenuta casualmente conducendo la Ricerca Runografica Minore."
+L["DISCOVERY_INSC_NORTHREND"] = "Ottenuta casualmente conducendo la Ricerca Runografica di Nordania."
+L["DISPLAY_EXCLUSION_DESC"] = "Mostra le ricette che sono nella lista d'esclusione."
+L["Display Exclusions"] = "Mostra Esclusioni"
+L["DISPLAY_OPTIONS_DESC"] = "Ti permette di personalizzare come si comporta la GUI."
+L["DM_TRIBUTE"] = "Cassa della Tribute Run a Maglio Infausto"
+L["DRAGONSOUL_RANDOM"] = "Drop casuale dai mob/boss di Anima del Drago."
+L["Eiin"] = true
+L["ENG_DISC"] = "Questa è scoperta casualmente creando altri oggetti di Ingegneria."
+L["ENG_FLOOR_ITEM_BRD"] = "Lo schema può essere trovato sul pavimento vicino Argelmach il Signore dei Golem ai Sotterranei di Roccianera. Solo gli ingegneri con competenza 300 possono imparare lo schema dopo averci cliccato sopra."
+L["ENG_GNOMER"] = "Drop dai mob a Gnomeregan."
+L["Erika Tate"] = true
+L["EXCLUDECOUNT_DESC"] = "Includi le ricette escluse nel conto delle ricette totali."
+L["EXCLUSION_ISSUES_DESC"] = "Per aggiungere una ricetta nella lista d'esclusione (ignora), fai alt-clic su essa dalla finestra della ricetta. Per riavere la ricetta, apri le opzioni di ARL e attiva l'opzione \"Mostra Ricette Escluse\". Questo mostrerà tutte le ricette che hai escluso dalla tua scansione dalla tua prossima scansione. Quando l'hai fatto, fai di nuovo alt-clic sulla ricetta  per rimuoverla dalla lista d'esclusione."
+L["EXPANDALL_DESC"] = [=[Espandi tutte le ricette sotto elencate.
+Premi il tasto Maiusc per espandere le sotto-voci.]=]
+L["EXPANSION_DESC_FORMAT"] = "Mostra le ricette introdotte in %s."
+L["EXPANSION_FILTER_FORMAT"] = "Mostra una selezione di %s reputazioni da includere nella scansione."
+L["FACTION_DESC_FORMAT"] = "Includi le ricette che devono prima essere ottenute dai giocatori %s."
+L["FILTER_CLOSE_DESC"] = "Chiudi il pannello delle opzioni di filtro."
+L["FILTERCOUNT_DESC"] = "Includi le ricette filtrate nel conto delle ricette totali."
+L["FILTER_DESC_FORMAT"] = "Mostra le ricette di %s."
+L["FILTERING_BINDING_DESC"] = "Configurazione per quali tipi di vincoli sono incluse nella scansione."
+L["FILTERING_GENERAL_DESC"] = "Configurazione ulteriore per diversi tipi di filtri generali."
+L["FILTERING_ITEM_DESC"] = "Configurazione per quali tipi d'oggetto sono inclusi nella scansione."
+L["FILTERING_MISC_DESC"] = "Configurazione per opzioni varie che sono anche presenti nelle opzioni di visualizzazione."
+L["FILTERING_OBTAIN_DESC"] = "Configurazione per quali metodi d'ottenimento delle ricette sono inclusi nella scansione."
+L["FILTERING_PLAYERTYPE_DESC"] = "Configurazione per oggetti corrispondenti quali tipi di giocatore sono inclusi nella scansione."
+L["FILTERING_QUALITY_DESC"] = "Configurazione per quali qualità di ricette devono essere incluse nella scansione."
+L["FILTERING_REP_DESC"] = "Configurazione per quali ricette ricompense di reputazione sono incluse nella scansione."
+L["FILTER_OPEN_DESC"] = "Apri il pannello delle opzioni di filtro."
+L["FIRELANDS_RANDOM"] = "Drop casuale dai mob/boss delle Terre del Fuoco."
+L["Fist Weapon"] = "Tirapugni"
+L["FONT_SIZE_DESC"] = "Cambia la dimensione dei font per ARL."
+L["GAME_COMMANDS_DESC"] = [=[Riga di Comando:
+Premi /arl per aprire la GUI. I comandi accettati includono:
+- /arl about
+  Apre la finestra d'informazioni, mostrando informazioni sulla mod.
+- /arl sort o /arl sorting
+  Apre le opzioni d'elenco.
+- /arl documentation
+  Apre la documentazione in-gioco riguardo ARL.
+- /arl display
+  Apre le opzioni di visualizzazione.
+- /arl profile
+  Apre le opzioni di profilo.
+- /arl filter
+  Apre le opzioni di filtraggio.
+- /arl scan
+  Effettua una scansione per le ricette mancanti. Questo è per le volte in cui non riesci ad accedere al pulsante scansione.
+- /arl tradelinks
+  Stampa una lista di tutti i link alle abilità della professione.
+
+Cliccando:
+Ackis Recipe List si comporterà diversamente in base a quali tasti di modifica usi per cliccare.
+
+Pulsante Scansione:
+Queste sono le funzionalità che si verificano quando premi sul pulsante scansione.
+
+- Clic Normale
+  Esegue una scansione della professione attuale mostrando le ricette in una nuova finestra.
+- Clic Maiusc
+  Genera un text dump della corrente professione in un formato (CSV, XML, BBC) specificato dall'utente.
+- Clic Alt
+  Rimuove tutti i punti sulla Mappa del Mondo e la Mini-mappa generati da ARL.
+- Clic Ctrl
+  Fornisce un codice di sviluppo da usare quando aggiorni istruttori, mercanti, ecc nel database ricette.
+
+Ricette:
+Queste sono le funzionalità che si verificano quando premi su una ricetta.
+
+- Clic Normale
+  Espande o riduce le informazioni d'acquisizione di una ricetta.
+- Clic Maiusc
+  Genera un link oggetto dell'oggetto che la ricetta creerà nella tua finestra chat predefinita.
+- Clic Ctrl
+  Genera un link incantesimo per la ricetta che hai cliccato.
+- Clic Alt
+  Aggiunge o rimuove una ricetta dalla lista d'esclusione.
+- Clic Ctrl-Maiusc
+  Aggiunge i metodi d'acquisizione della specifica ricetta nella Mappa del Mondo e Mini-mappa.]=]
+L["Gems"] = "Gemme"
+L["GENERATE_LINKS_DESC"] = "Genera link completi della professione."
+L["Gidge Spellweaver"] = "Mistica della magia Gidge"
+L["Gizzik Oregrab"] = "Gizzik Scavaori"
+L["Gloves"] = "Guanti" -- Needs review
+L["GREEN_GEM"] = "Verde"
+L["GROUP_TOGGLE_FORMAT"] = "Clic-Sinistro per selezionare o Clic-Destro per deselezionare tutti i filtri %s."
+L["Gun"] = "Arma da fuoco"
+L["HENRY_STERN_RFD"] = "Ottenuta parlando con Henry Stern ai Sotterranei di Lamaspina."
+L["HIDEPOPUP_DESC"] = "Previene i pop-up dal notificarti il perché la finestra di scansione è vuota. I pop-up saranno sempre visualizzati la prima volta dopo che una nuova versione è stata aggiunta."
+L["HYJAL_RANDOM"] = "Drop casuale dai mob/boss della Sommità di Hyjal."
+L["Imindril Spearsong"] = "Imindril Cantaluce"
+L["INSTANCE_DESC"] = "Le ricette ottenute dalle spedizioni (5 giocatori) devono essere incluse nella scansione."
+L["Jojo"] = true
+L["Kark Helmbreaker"] = "Kark Spezzaelmi"
+L["Kendor Kabonka"] = true
+L["KNOWN_DESC"] = "Includi tutte le ricette conosciute nella scansione."
+L["Krenk Choplimb"] = "Krenk Tagliabracci"
+L["Leather"] = "Cuoio"
+L["LEATHER_DESC"] = "Le ricette che creano oggetti in cuoio devono essere incluse nella scansione."
+L["LIMITED_SUPPLY"] = "Venduta in quantità limitata."
+L["Lizna Goldweaver"] = "Lizna Filaoro"
+L["LORE_NORTH"] = "Puoi imparare questa ricetta se hai ottenuto l'impresa \"Storico di Nordania\"."
+L["Lorewalker Huynh"] = "Raminga della Sapienza Huynh"
+L["Lugrah"] = true
+L["Mail"] = "Maglia"
+L["Main Filter Options"] = "Principali Opzioni di filtro"
+L["MAINFILTER_OPTIONS_DESC"] = "Ti consente di specificare come ARL gestisce vari filtri."
+L["MAIN_OPTIONS_DESC"] = "Opzioni principali di configurazione"
+L["Makaru"] = true
+L["MAP_ISSUES_DESC"] = "ARL si basa su TomTom per aggiungere icone e punti alla Mappa del Mondo e alla Mini-mappa. Puoi personalizzarli andando nel menù di configurazione di ARL e scorrendo alle opzioni di visualizzazione. Se non hai TomTom installato, non verrà aggiunto niente. Aggiungere icone automaticamente è disabilitato come predefinito."
+L["MAP_OPTIONS_DESC"] = "Ti consente di cambiare come ARL si integra nella mappa del mondo e nella mini-mappa."
+L["Marith Lazuria"] = true
+L["MC_RANDOM"] = "Drop casuale dai boss del Nucleo Ardente."
+L["MISSING_LIBRARY"] = "%s è mancante. L'addon non può essere eseguito."
+L["MOB_DROP_DESC"] = "Le ricette che sono drop dalle creature devono essere incluse nella scansione."
+L["Nasmara Moonsong"] = "Nasmara Cantoluna"
+L["Necklace"] = "Collana"
+L["Nivi Weavewell"] = "Nivi buoncucito"
+L["NO_DISPLAY"] = "Non ci sono ricette da mostrare. Se visualizzi questo messaggio per favore invia un ticket su http://www.wowace.com/addons/arl/tickets elencando che filtri hai, qual è la tua lista esclusioni, quale professione e il numero di ricette conosciute/non conosciute."
+L["NORTH_DUNG"] = "Puoi imparare questa ricetta se hai ottenuto l'impresa \"Eroe delle spedizioni di Nordania\"."
+L["NOT_YET_SCANNED"] = "Non ancora scansionato!"
+L["Obtain"] = "Ottenere"
+L["Obtained From"] = "Ottenuto da"
+L["Ockil"] = true
+L["Ogg'marr"] = true
+L["Oglethorpe Obnoticus"] = true -- Needs review
+L["OGRI_DRAGONS"] = "Drop dagli elite ad Ogri'la."
+L["Oil"] = "Olio"
+L["Okothos Ironrager"] = true -- Needs review
+L["Okuno"] = true
+L["Olisarra the Kind"] = "Olisarra la Benevola"
+L["Oluros"] = true
+L["One-Handed Axe"] = "Ascia ad una mano"
+L["One-Handed Mace"] = "Mazza ad una mano"
+L["One-Handed Sword"] = "Spada ad una mano"
+L["Onodo"] = true
+L["Onslaught Mason"] = true -- Needs review
+L["Ontuvo"] = true
+L["ONYXIA_HEAD_QUEST"] = "La missione per ottenere la ricetta si apre dopo aver consegnato la Testa di Onyxia."
+L["OpenTradeSkillWindow"] = "Apri la finestra di Abilità Commercio"
+L["Opuno Ironhorn"] = true -- Needs review
+L["ORANGE_GEM"] = "Arancione"
+L["Orland Schaeffer"] = true
+L["Orn Tenderhoof"] = true -- Needs review
+L["Other Realms"] = "Altri reami"
+L["Otho Moji'ko"] = true -- Needs review
+L["Ounhulo"] = true
+L["Outfitter Eric"] = "Eric lo Stilista"
+L["Plate"] = "Piastre"
+L["PRISMATIC_GEM"] = "Prismatica"
+L["PURPLE_GEM"] = "Viola"
+L["PVP_DESC"] = "Le ricette ottenute tramite PVP devono essere incluse nella scansione."
+L["QUALITY_GENERAL_DESC"] = "Includi oggetti di qualità %s nella scansione."
 L["Quest"] = "Missione"
+L["QUEST_DESC"] = "Le ricette ottenute come ricompense dalle missioni devono essere incluse nella scansione."
+L["RAID_DESC"] = "Le ricette ottenute nelle incursioni (es: Nucleo Ardente, Caverna di Sacrespire, ecc.) devono essere incluse nella scansione."
+L["RECIPE_BOA_DESC"] = "Le ricette che Si vincolano all'account Battle.net devono essere incluse nella scansione."
+L["RECIPE_BOE_DESC"] = "Le ricette che Si vincolano all'equipaggiamento devono essere incluse nella scansione."
+L["RECIPE_BOP_DESC"] = "Le ricette che Si vincolano alla raccolta devono essere incluse nella scansione."
+L["RECIPE_EXCLUDED"] = "La ricetta è nella lista delle Esclusioni"
+L["REMOVED_FROM_GAME"] = "Questa ricetta è stata rimossa dal gioco, ma può essere ancora ottenuta se qualcuno ha l'oggetto della ricetta."
+L["REPORTING_BUGS_DESC"] = [=[Quando segnali un bug, per favore fai le seguenti cose:
+1) Scarica la versione più recente, disponibile su http://www.wowace.com/addons/arl/files/
+2) Assicurati che non ci sia già una segnalazione bug riguardante il tuo problema. Puoi controllare da http://www.wowace.com/addons/arl/tickets/
+3) Disattiva addon come Skillet o ATSW.
+4) Leggi la documentazione sulla segnalazione bug su http://www.wowace.com/addons/arl/pages/feedback-and-bug-reporting/
+5) Se il tuo problema non è elencato e stai usando la versione più recente, controlla le tue impostazioni degli addon. Controlla filtri, profili, ecc.
+6) Hai trovato un bug che nessuno ha segnalato prima. Crea un nuovo ticket su http://www.wowace.com/addons/arl/tickets/ con un messaggio dettagliato riguardante il problema. Nel ticket assicurati d'includere il messaggio d'errore che hai ricevuto (solo il messaggio d'errore, non ho bisogno della lista degli addon che usi), la ricetta/professione con cui stavi lavorando e ogni altra informazione che pensi potrebbe aiutare.
+Quando invii una segnalazione bug, NON includere tutti gli addon da swatter. Lo rende semplicemente difficile da leggere. Se vuoi una buona mod per segnalare errori, usa BugSack. Non inviare errori/ricette mancanti nei commenti, o mandarmeli via MP. Inviali come ticket così posso occuparmene e tracciarli facilmente.]=]
+L["REPUTATION_DESC"] = "Le ricette ottenute tramite mercanti di reputazione devono essere incluse nella scansione."
+L["RESET_DESC"] = "Reimposta Tutti i Filtri ai valori predefiniti."
+L["RESET_WINDOW_DESC"] = "Reimposta la GUI di ARL alla posizione predefinita."
+L["RETIRED_DESC"] = "Includi le ricette che non possono più essere ottenute."
+L["Ring"] = "Anello" -- Needs review
+L["ROLE_DESC_FORMAT"] = "Mostra le ricette preferite dalle classi %s."
+L["SCANBUTTONPOSITION_DESC"] = "Ti permette di personalizzare dove è posizionato il bottone di scansione sulla finestra della professione."
+L["SCAN_ENTIRE_DB_DESC"] = "Carica l'intero database ricette, e scansiona ogni singolo tooltip di ricette controllando le flag. Questo rallenterà il tuo computer e userà un sacco di memoria."
+L["SCAN_PROF_DB_DESC"] = "Scansiona una professione specifica (nome minuscolo o id incantesimo) nel database ricette, scansionando i tooltip e comprandoli con il database interno."
+L["SCAN_RECIPES_DESC"] = [=[Scansiona una professione aperta per le ricette mancanti.
+Maiusc-clic per generare un text-dump.
+Alt-clic per rimuovere tutti i punti dalla mini-mappa e la mappa del mondo.]=]
+L["SCAN_SPELL_ID_DESC"] = "Scansiona un specifico ID incantesimo, scansionando il suo tooltip e comprandolo con il database interno."
+L["SCAN_VENDOR_DESC"] = "Scansiona l'attuale mercante aperto per ricette e compara le informazioni con il database interno."
+L["SCHOLO_BOOK_SPAWN"] = "Dopo che uccidi Jandice Barov a Scholomance, compare un libro che ti fa imparare questa ricetta."
+L["SEASONAL_DESC"] = "Le ricette ottenute in eventi mondiali devono essere incluse nella scansione."
+L["Shazdar"] = true
+L["Shield"] = "Scudo"
+L["SHIFT_CLICK"] = "Fai Maiusc-Clic per aggiungere il link all'item creato da questa ricetta alla tua chat."
+L["SKILL_DESC"] = "Includi tutte le ricette nella scansione, ignorando il tuo attuale livello di competenza."
+L["SKILL_TOGGLE_DESC"] = "Mostra le ricette in base al loro livello competenza invece che al loro nome."
+L["SMALL_FONT_DESC"] = "Attiva per usare un font più piccolo per le voci nella lista ricette."
+L["SORTING_DESC"] = "Cambia il modo in cui sono elencate le ricette mostrate."
+L["Sorting Options"] = "Opzioni di ordinamento"
+L["SORTING_OPTIONS_DESC"] = "Ti consente di personalizzare il modo in cui le ricette sono elencate."
+L["SPECIALTY_DESC"] = "Includi le ricette per le professioni abbandonate."
+L["SPECIFIC_REP_DESC"] = "Includi la fazione %s."
+L["SPELLTOOLTIPPOSITION_DESC"] = "Cambia il luogo del tooltip contenente le informazioni delle ricette."
+L["SSC_RANDOM"] = "Drop casuale dai mob di Caverna di Sacrespire."
+L["Staff"] = "Bastone" -- Needs review
+L["Stephen Ryback"] = true
+L["STRATH_BS_PLANS"] = "I progetti di Forgiatura si trovano sul pavimento a Stratholme."
+L["SUNWELL_RANDOM"] = "Drop casuale dai mob della Cittadella del Pozzo Solare."
+L["TEXT_DUMP_DESC"] = "Cambia il modo in cui appare il text dump."
+L["Text Dump Options"] = "Opzioni Text Dump"
+L["TEXTDUMP_OPTIONS_DESC"] = "Opzioni per cambiare il comportamento del text dump."
+L["Thrown"] = "Arma da lancio"
+L["TK_RANDOM"] = "Drop casuale da Forte Tempesta."
+L["TOC25_RANDOM"] = "Drop casuale dall'Ordalia dei Crociati, versione normale da 25 giocatori."
+L["Tooltip (Acquire) Position"] = "Posizione Tooltip (Acquisizione)"
+L["TOOLTIP_HINT"] = "Nascondi Suggerimenti"
+L["TOOLTIP_HINT_DESC"] = "Nasconde i suggerimenti in fondo al tooltip."
+L["Tooltip Options"] = "Opzioni Tooltip"
+L["TOOLTIP_OPTIONS_DESC"] = "Ti consente di specificare come si comportano i tooltip per ARL. Il tooltip d'acquisizione elenca le varie informazioni su come ottenere la ricetta, mentre il tooltip dell'incantesimo elenca le informazioni della ricetta stessa."
+L["Tooltip (Recipe) Position"] = "Posizione del Tooltip (Ricetta)"
+L["TOOLTIP_SCALE_DESC"] = "Cambia la dimensione del tooltip di ARL. Varia da .5 a 1.5 (.9 è predefinito)"
+L["Top"] = "In Alto"
+L["Top Left"] = "In Alto a Sinistra"
+L["Top Right"] = "In Alto a Destra"
+L["Trainer"] = "Istruttore"
+L["TRAINER_DESC"] = "Le ricette imparate dagli istruttori devono essere incluse nella scansione."
+L["Transmute"] = "Trasmutazione"
+L["Trinket"] = "Monile"
+L["Two-Handed Axe"] = "Ascia a Due mani"
+L["Two-Handed Mace"] = "Mazza a Due mani"
+L["Two-Handed Sword"] = "Spada a Due mani"
+L["UI_SCALE_DESC"] = "Cambia la dimensione dell'IU. Varia da .5 a 1.5 (1 è predefinito)"
+L["ULDUAR_RANDOM"] = "Drop casuale dai boss di Ulduar."
+L["UNIT_MAX_TOOLTIPS_DESC"] = "Numero massimo ricette da mostrare nei tooltip."
+L["UNIT_TOOLTIPS_DESC"] = "Imposta se mostrare o no le ricette non conosciute nei tooltip dei mercanti, istruttori o mob che le portano."
+L["UNKNOWN_DESC"] = "Includi tutte le ricette sconosciute nella scansione."
+L["USING_FILTERS_DESC"] = [=[I filtri possono essere attivati o disattivati. Ci sono due tipi di filtri: uno che previene la ricetta di apparire del tutto, e uno che previene un tipo specifico d'informazione d'acquisizione dall'apparire.
+Con il primo tipo di filtro, questi corrispondono alle proprietà della ricetta (es: vincolo). Se imposti ARL per non mostrare le ricette che Si vincolano alla raccolta, nessuna ricetta che Si vincola alla raccolta apparirà nella scansione. Il secondo tipo di filtro ha a che fare con le informazioni d'acquisizione. Se una ricetta è disponibile come mob drop, o da un mercante e tu imposti di non mostrare le ricette dei mercanti, la ricetta apparirà ancora ma le informazioni sul mercante saranno nascoste. La ragione è che c'è un altro modo per acquisire la ricetta (mob drop) così deve essere ancora inclusa nella scansione.
+Per favore nota che i tooltip nasconderanno sempre i metodi d'acquisizione dell'altra fazione di una ricetta. Questo è stato fatto per risparmiare spazio nel tooltip, visto che possono diventare parecchio larghi.]=]
+L["VENDOR_DESC"] = "Le ricette comprate dai mercanti devono essere incluse nella scansione."
+L["VIEW_EXCLUSION_LIST_DESC"] = "Stampa una lista di tutte le ricette nella lista d'esclusione."
+L["Wand"] = "Bacchetta"
+L["WAYPOINT_MAP_FORMAT"] = "Crea punti per le ricette mancanti su %s."
+L["WAYPOINT_TOGGLE_FORMAT"] = "Crea punti per le ricette %s."
+L["WORLD_DROP_DESC"] = "Le ricette che sono drop globali devono essere incluse nella scansione."
+L["Xen'to"] = true
+L["Zamja"] = true
+L["Zarbo Porkpatty"] = true
+L["Zarrin"] = true
+L["Zido Helmbreaker"] = "Zido spezzaelmi"
+L["ToC/Description"] = "Ackis Recipe List è un addon che scansiona le tue competenze nelle professioni e fornisce informazioni su come ottenere ricette. Funziona per tutte le professioni, inclusa Forgiarune."
+L["ToC/Title"] = "Ackis Recipe List"

@@ -4,12 +4,11 @@
 
 -- Whats new info
 SMARTBUFF_WHATSNEW = "|cffffffffWhats new:|r\n\n"
-  .."- Updated chained buff detection: stances/seals/presences/poisons\n\n"
-  .."- Note: 'Chained' buffs will casted by priority, based on the order in the buff list. You can drag'n'drop the buffs in the list to change the priority!\n\n"
-  .."- Added linked item detection: Brilliant Mana Gem\n\n"
-  .."- Updated buffs and items\n\n"
+  .."- Added item: Crystal of Insanity\n\n"
+  .."- Updated Alchemist's Flask detection/checks\n\n"
+  .."- Updated linked buffs\n\n"
   .."- Due to I am moving to a new town, my online access and spare time is limited. This release will restore basic functionality, but unfortunately it will not contain all the buff changes, sorry.\n\n"
-  .."- Please report any missing buffs, thanks!\n\n"
+  .."- Please let me know if anything is missing (buffs/consumables/etc), thanks!\n\n"
   --.."- Thanks for donation:  :)\n\n"
   ;
 

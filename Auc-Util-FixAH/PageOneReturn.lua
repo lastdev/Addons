@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Fix for searches not returning to page one in Blizzard code.
-	Version: 5.15.5348 (LikeableLyrebird)
+	Version: 5.15.5365 (LikeableLyrebird)
 	Revision: $Id: PageOneReturn.lua 5171 2011-05-31 11:29:35Z brykrys $
 	URL: http://auctioneeraddon.com/
 

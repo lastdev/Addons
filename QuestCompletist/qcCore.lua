@@ -33,8 +33,8 @@ local qcNewDataAlertTooltip = nil
 local qcMutuallyExclusiveAlertTooltip = nil
 
 --[[ Constants ]]--
-local QCADDON_VERSION = 99.8
-local QCADDON_PURGE = true
+local QCADDON_VERSION = 99.9
+local QCADDON_PURGE = false
 local QCDEBUG_MODE = false
 local QCTRIPLEPADDING = "   "
 local QCADDON_CHAT_TITLE = "|CFF9482C9Quest Completist:|r "
@@ -343,8 +343,8 @@ function qcUpdateQuestList(qcCategoryID, qcStartIndex, qcSearch, qcSearchText)
 			elseif (qcQuestType == 3) then --[[ Daily ]]--
 				qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_DAILY))
 				qcQuestListRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
-			elseif (qcQuestType == 4) then --[[ Special TODO: USING NORMAL ICON ]]--
-				qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
+			elseif (qcQuestType == 4) then
+				qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_SPECIAL))
 				qcQuestListRecord.QuestName:SetTextColor(1.0, 0.6156862745098039, 0.0862745098039216, 1.0)
 			elseif (qcQuestType == 5) then --[[ Weekly TODO: USING NORMAL ICON ]]--
 				qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
@@ -455,21 +455,17 @@ local function qcQuestQueryCompleted()
 
 	GetQuestsCompleted(qcCompletedTable)
 
-	for qcIndex, qcEntry in pairs(qcQuestDatabase) do
-		if (IsQuestFlaggedCompleted(qcIndex) == 1) then
-			if not (qcEntry[6] == 2) or (qcEntry[6] == 3) then
+	for qcIndex, qcEntry in pairs(qcCompletedTable) do
+		if not (qcQuestDatabase[qcIndex] == nil) then
+			if not (qcQuestDatabase[qcIndex][6] == 2) or (qcQuestDatabase[qcIndex][6] == 3) then
 				if (qcCompletedQuests[qcIndex] == nil) then
 					qcNewFlagged = (qcNewFlagged + 1)
-				else
-					if not (qcCompletedQuests[qcIndex]["C"] == 1) then
-						qcNewFlagged = (qcNewFlagged + 1)
-					end
 				end
 				qcCompletedQuests[qcIndex] = {["C"]=1}
+				qcUpdateMutuallyExclusiveCompletedQuest(qcIndex)
+				qcUpdateSkippedBreadcrumbQuest(qcIndex)
 			end
 		end
-		qcUpdateMutuallyExclusiveCompletedQuest(qcIndex)
-		qcUpdateSkippedBreadcrumbQuest(qcIndex)
 	end
 
 	if (qcNewFlagged > 0) then
@@ -1030,7 +1026,7 @@ local function qcNewDataChecks(qcQuestID)
 		qcFaction = qcFactionBits[string.upper(qcEFaction)]
 		if (bit.band(qcFaction,qcQuestDatabase[qcQuestID][7]) == 0) then
 			qcNewDataAlert.Faction = true
-			print(QCADDON_CHAT_TITLE, "QC did not know this quest could be completed by your faction. Please read the How To Contribute file in the addon folder to help fix this.")
+			--print(QCADDON_CHAT_TITLE, "QC did not know this quest could be completed by your faction. Please read the How To Contribute file in the addon folder to help fix this.")
 			qcNewDataAlert:Show()
 		end
 		--[[ Race ]]--
@@ -1038,7 +1034,7 @@ local function qcNewDataChecks(qcQuestID)
 		qcRace = qcRaceBits[string.upper(qcERace)]
 		if (bit.band(qcRace,qcQuestDatabase[qcQuestID][8]) == 0) then
 			qcNewDataAlert.Race = true
-			print(QCADDON_CHAT_TITLE, "QC did not know this quest could be completed by your race. Please read the How To Contribute file in the addon folder to help fix this.")
+			--print(QCADDON_CHAT_TITLE, "QC did not know this quest could be completed by your race. Please read the How To Contribute file in the addon folder to help fix this.")
 			qcNewDataAlert:Show()
 		end
 		--[[ Class ]]--
@@ -1046,7 +1042,7 @@ local function qcNewDataChecks(qcQuestID)
 		qcClass = qcClassBits[string.upper(qcEClass)]
 		if (bit.band(qcClass,qcQuestDatabase[qcQuestID][9]) == 0) then
 			qcNewDataAlert.Class = true
-			print(QCADDON_CHAT_TITLE, "QC did not know this quest could be completed by your class. Please read the How To Contribute file in the addon folder to help fix this.")
+			--print(QCADDON_CHAT_TITLE, "QC did not know this quest could be completed by your class. Please read the How To Contribute file in the addon folder to help fix this.")
 			qcNewDataAlert:Show()
 		end
 	end
@@ -1553,6 +1549,8 @@ local function qcPrepareIcon(qcIconType)
 			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_REPEATABLE))
 		elseif (qcIconType == 5) then
 			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_SEASONAL))
+		elseif (qcIconType == 4) then
+			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_SPECIAL))
 		elseif (qcIconType == 6) then
 			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_PROFESSION))
 		elseif (qcIconType == 7) then
@@ -1575,6 +1573,8 @@ local function qcPrepareIcon(qcIconType)
 			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_REPEATABLE))
 		elseif (qcIconType == 5) then
 			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_SEASONAL))
+		elseif (qcIconType == 4) then
+			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_SPECIAL))
 		elseif (qcIconType == 6) then
 			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_PROFESSION))
 		elseif (qcIconType == 7) then
@@ -1788,6 +1788,8 @@ local function qcRefreshMapIcons(qcMapID, qcMapLevel)
 					qcIconType = 3
 				elseif (qcQuestDatabase[qcQuestID][6] == 2) then
 					qcIconType = 2
+				elseif (qcQuestDatabase[qcQuestID][6] == 4) then
+					qcIconType = 4
 				end
 			end
 		end
@@ -2181,7 +2183,7 @@ local function qcEventHandler(self, event, ...)
 			qcCheckSettings()
 			qcApplySettings()
 			qcCollectUpdate()
-			qcQuestQueryCompleted()
+			--qcQuestQueryCompleted()
 		end
 
 	end

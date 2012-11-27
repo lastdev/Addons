@@ -5,8 +5,8 @@ Runeforging data for all of Ackis Recipe List
 ************************************************************************
 File date: 2012-08-18T04:52:05Z
 File hash: 4d6b8e4
-Project hash: f647594
-Project version: 2.4
+Project hash: 5a95034
+Project version: 2.4.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************

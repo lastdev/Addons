@@ -349,13 +349,13 @@ L:AddLocale("zhCN",
 {
 	Autohide = "自动隐藏", -- Needs review
 	BACKGROUND = "背景", -- Needs review
-	-- ["Bar colour"] = "",
+	["Bar colour"] = "工具条颜色", -- Needs review
 	["Border colour"] = "边框颜色", -- Needs review
 	["Border width"] = "边框宽度", -- Needs review
 	Bottom = "按钮", -- Needs review
 	Clickable = "可点击", -- Needs review
 	-- ["Click the edit box to open it up for editing. Only available if Autohide is disabled."] = "",
-	-- DIALOG = "",
+	DIALOG = "对话框", -- Needs review
 	["Editbox options."] = "输入框选项", -- Needs review
 	["Enable Arrowkeys"] = "允许方向键", -- Needs review
 	-- ["Enable using arrowkeys in editbox without the alt key."] = "",

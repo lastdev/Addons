@@ -20,6 +20,19 @@ SMARTBUFF_CONST_ITEM      = "ITEM";
 SMARTBUFF_CONST_ITEMGROUP = "ITEMGROUP";
 
 
+local function GetItems(items)
+  local t = { };
+  for _, id in pairs(items) do
+    local name = GetItemInfo(id);
+    if (name) then
+      --print("Item found: "..id..", "..name);
+      tinsert(t, name);
+    end
+  end
+  return t;
+end
+
+
 function SMARTBUFF_InitItemList()  
   -- Stones and oils
   SMARTBUFF_HEALTHSTONE         = GetItemInfo(5512);  --"Healthstone"
@@ -77,65 +90,19 @@ function SMARTBUFF_InitItemList()
   SMARTBUFF_SPICYCRAWDAD        = GetItemInfo(27667); --"Spicy Crawdad"
   --SMARTBUFF_FISHERMANSFEAST     = GetItemInfo(33052); --"Fisherman's Feast"
   --SMARTBUFF_HOTAPPLECIDER       = GetItemInfo(34411); --"Hot Apple Cider"
-  SMARTBUFF_WOTLKFOOD1          = GetItemInfo(34748); --"Mammoth Meal"
-  SMARTBUFF_WOTLKFOOD2          = GetItemInfo(43268); --"Dalaran Clam Chowder"
-  SMARTBUFF_WOTLKFOOD3          = GetItemInfo(42942); --"Baked Manta Ray"
-  SMARTBUFF_WOTLKFOOD4          = GetItemInfo(34762); --"Grilled Sculpin"
-  SMARTBUFF_WOTLKFOOD5          = GetItemInfo(34763); --"Smoked Salmon"
-  SMARTBUFF_WOTLKFOOD6          = GetItemInfo(34765); --"Pickled Fangtooth"
-  SMARTBUFF_WOTLKFOOD7          = GetItemInfo(34764); --"Poached Nettlefish"
-  SMARTBUFF_WOTLKFOOD8          = GetItemInfo(34749); --"Shoveltusk Steak"
-  SMARTBUFF_WOTLKFOOD9          = GetItemInfo(34750); --"Wyrm Delight"
-  SMARTBUFF_WOTLKFOOD10         = GetItemInfo(34751); --"Roasted Worg"
-  SMARTBUFF_WOTLKFOOD11         = GetItemInfo(34752); --"Rhino Dogs"
-  SMARTBUFF_WOTLKFOOD12         = GetItemInfo(34757); --"Very Burnt Worg"
-  SMARTBUFF_WOTLKFOOD13         = GetItemInfo(43001); --"Tracker Snacks"
-  SMARTBUFF_WOTLKFOOD14         = GetItemInfo(34755); --"Tender Shoveltusk Steak"
-  SMARTBUFF_WOTLKFOOD15         = GetItemInfo(42993); --"Spicy Fried Herring"
-  SMARTBUFF_WOTLKFOOD16         = GetItemInfo(34768); --"Spicy Blue Nettlefish"
-  SMARTBUFF_WOTLKFOOD17         = GetItemInfo(34756); --"Spiced Wyrm Burger"
-  SMARTBUFF_WOTLKFOOD18         = GetItemInfo(42996); --"Snapper Extreme"
-  SMARTBUFF_WOTLKFOOD19         = GetItemInfo(42994); --"Rhinolicious Wyrmsteak"
-  SMARTBUFF_WOTLKFOOD20         = GetItemInfo(34766); --"Poached Northern Sculpin"
-  SMARTBUFF_WOTLKFOOD21         = GetItemInfo(34758); --"Mighty Rhino Dogs"
-  SMARTBUFF_WOTLKFOOD22         = GetItemInfo(34754); --"Mega Mammoth Meal"
-  SMARTBUFF_WOTLKFOOD23         = GetItemInfo(34769); --"Imperial Manta Steak"
-  SMARTBUFF_WOTLKFOOD24         = GetItemInfo(42995); --"Hearty Rhino"
-  SMARTBUFF_WOTLKFOOD25         = GetItemInfo(34767); --"Firecracker Salmon"
-  SMARTBUFF_WOTLKFOOD26         = GetItemInfo(43000); --"Dragonfin Filet"
-  SMARTBUFF_WOTLKFOOD27         = GetItemInfo(42998); --"Cuttlesteak"
-  SMARTBUFF_WOTLKFOOD28         = GetItemInfo(42997); --"Blackened Worg Steak"
-  SMARTBUFF_WOTLKFOOD29         = GetItemInfo(42999); --"Blackened Dragonfin"
-  SMARTBUFF_WOTLKFOOD30         = GetItemInfo(42779); --"Steaming Chicken Soup"
-  SMARTBUFF_WOTLKFOOD31         = GetItemInfo(34125); --"Shoveltusk Soup"
-  SMARTBUFF_WOTLKFOOD32         = GetItemInfo(39691); --"Succulent Orca Stew"  
-  SMARTBUFF_FOODCT1             = GetItemInfo(62661); --"Baked Rockfish"
-  SMARTBUFF_FOODCT2             = GetItemInfo(62665); --"Basilisk Liverdog"
-  SMARTBUFF_FOODCT3             = GetItemInfo(62670); --"Beer-Basted Crocolisk"
-  SMARTBUFF_FOODCT4             = GetItemInfo(62668); --"Blackbelly Sushi"
-  SMARTBUFF_FOODCT5             = GetItemInfo(62664); --"Crocolisk Au Gratin"
-  SMARTBUFF_FOODCT6             = GetItemInfo(62666); --"Delicious Sagefish Tail"
-  SMARTBUFF_FOODCT7             = GetItemInfo(62662); --"Grilled Dragon"
-  SMARTBUFF_FOODCT8             = GetItemInfo(62667); --"Mushroom Sauce Mudfish"
-  SMARTBUFF_FOODCT9             = GetItemInfo(62671); --"Severed Sagefish Head"
-  SMARTBUFF_FOODCT10            = GetItemInfo(62669); --"Skewered Eel"
-  SMARTBUFF_FOODCT11            = GetItemInfo(62659); --"Hearty Seafood Soup"
-  SMARTBUFF_FOODCT12            = GetItemInfo(62660); --"Pickled Guppy"
-  SMARTBUFF_FOODCT13            = GetItemInfo(62658); --"Tender Baked Turtle"
-  SMARTBUFF_FOODCT14            = GetItemInfo(62663); --"Lavascale Minestrone"
-  SMARTBUFF_FOODCT15            = GetItemInfo(62655); --"Broiled Mountain Trout"
-  SMARTBUFF_FOODCT16            = GetItemInfo(62654); --"Lavascale Fillet"
-  SMARTBUFF_FOODCT17            = GetItemInfo(62651); --"Lightly Fried Lurker"
-  SMARTBUFF_FOODCT18            = GetItemInfo(62657); --"Lurker Lunch"
-  SMARTBUFF_FOODCT19            = GetItemInfo(62653); --"Salted Eye"
-  SMARTBUFF_FOODCT20            = GetItemInfo(62652); --"Seasoned Crab"
-  SMARTBUFF_FOODCT21            = GetItemInfo(62656); --"Whitecrest Gumbo"
-  SMARTBUFF_FOODCT22            = GetItemInfo(62649); --"Fortune Cookie"
-  --SMARTBUFF_FOODCT22            = GetItemInfo(11111); --"Food"
+  
+  -- Food item IDs
+  S.FoodItems = GetItems({
+    -- WotLK
+    39691, 34125, 42779, 42997, 42998, 42999, 43000, 34767, 42995, 34769, 34754, 34758, 34766, 42994, 42996, 34756, 34768, 42993, 34755, 43001, 34757, 34752, 34751, 34750, 34749, 34764, 34765, 34763, 34762, 42942, 43268, 34748,
+    -- CT
+    62651, 62652, 62653, 62654, 62655, 62656, 62657, 62658, 62659, 62660, 62661, 62662, 62663, 62664, 62665, 62666, 62667, 62668, 62669, 62670, 62671, 62649,
+    -- MoP
+    74645, 74646, 74647, 74648, 74649, 74650, 74652, 74653, 74655, 74656, 86069, 86070, 86073, 86074, 81400, 81401, 81402, 81403, 81404, 81405, 81406, 81408, 81409, 81410, 81411, 81412, 81413, 81414,
+  });
   
   --SMARTBUFF_BCPETFOOD1          = GetItemInfo(33874); --"Kibler's Bits (Pet food)"
   --SMARTBUFF_WOTLKPETFOOD1       = GetItemInfo(43005); --"Spiced Mammoth Treats (Pet food)"
-  
   
   -- Scrolls
   SMARTBUFF_SOAGILITY1          = GetItemInfo(3012);  --"Scroll of Agility I"
@@ -188,6 +155,7 @@ function SMARTBUFF_InitItemList()
   SMARTBUFF_MiscItem1           = GetItemInfo(71134); --"Celebration Package"
   SMARTBUFF_MiscItem2           = GetItemInfo(44986); --"Warts-B-Gone Lip Balm"
   SMARTBUFF_MiscItem3           = GetItemInfo(69775); --"Vrykul Drinking Horn"
+  SMARTBUFF_MiscItem4           = GetItemInfo(86569); --"Crystal of Insanity"
   
   SMARTBUFF_FLASK1              = GetItemInfo(46377);  --"Flask of Endless Rage"
   SMARTBUFF_FLASK2              = GetItemInfo(46376);  --"Flask of the Frost Wyrm"
@@ -201,7 +169,12 @@ function SMARTBUFF_InitItemList()
   SMARTBUFF_FLASKCT5            = GetItemInfo(67438);  --"Flask of Flowing Water"
   SMARTBUFF_FLASKCT6            = GetItemInfo(58149);  --"Flask of Enhancement"
   SMARTBUFF_FLASKCT7            = GetItemInfo(65455);  --"Flask of Battle"
-  SMARTBUFF_FLASKMIP1           = GetItemInfo(75525);  --"Alchemist's Flask"
+  SMARTBUFF_FLASKMOP1           = GetItemInfo(75525);  --"Alchemist's Flask"
+  SMARTBUFF_FLASKMOP2           = GetItemInfo(76087);  --"Flask of the Earth"
+  SMARTBUFF_FLASKMOP3           = GetItemInfo(76086);  --"Flask of Falling Leaves"
+  SMARTBUFF_FLASKMOP4           = GetItemInfo(76084);  --"Flask of Spring Blossoms"
+  SMARTBUFF_FLASKMOP5           = GetItemInfo(76085);  --"Flask of the Warm Sun"
+  SMARTBUFF_FLASKMOP6           = GetItemInfo(76088);  --"Flask of Winter's Bite"
   
   SMARTBUFF_ELIXIR1             = GetItemInfo(39666);  --"Elixir of Mighty Agility"
   SMARTBUFF_ELIXIR2             = GetItemInfo(44332);  --"Elixir of Mighty Thoughts"
@@ -227,6 +200,14 @@ function SMARTBUFF_InitItemList()
   SMARTBUFF_ELIXIRCT6           = GetItemInfo(58092);  --"Elixir of the Cobra"
   SMARTBUFF_ELIXIRCT7           = GetItemInfo(58089);  --"Elixir of the Naga"
   SMARTBUFF_ELIXIRCT8           = GetItemInfo(58084);  --"Ghost Elixir"
+  SMARTBUFF_ELIXIRMOP1          = GetItemInfo(76081);  --"Elixir of Mirrors"
+  SMARTBUFF_ELIXIRMOP2          = GetItemInfo(76079);  --"Elixir of Peace"
+  SMARTBUFF_ELIXIRMOP3          = GetItemInfo(76080);  --"Elixir of Perfection"
+  SMARTBUFF_ELIXIRMOP4          = GetItemInfo(76078);  --"Elixir of the Rapids"
+  SMARTBUFF_ELIXIRMOP5          = GetItemInfo(76077);  --"Elixir of Weaponry"
+  SMARTBUFF_ELIXIRMOP6          = GetItemInfo(76076);  --"Mad Hozen Elixir"
+  SMARTBUFF_ELIXIRMOP7          = GetItemInfo(76075);  --"Mantid Elixir"
+  SMARTBUFF_ELIXIRMOP8          = GetItemInfo(76083);  --"Monk's Elixir"
   
   --SMARTBUFF_ELIXIR1             = GetItemInfo(39666);  --"Elixir"
   
@@ -250,6 +231,7 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_NATURESGRASP    = GetSpellInfo(16689); --"Nature's Grasp"
   SMARTBUFF_TIGERSFURY      = GetSpellInfo(5217);  --"Tiger's Fury"
   SMARTBUFF_SAVAGEROAR      = GetSpellInfo(52610); --"Savage Roar"
+  SMARTBUFF_CENARIONWARD    = GetSpellInfo(102351);--"Cenarion Ward"
 
   -- Priest
   SMARTBUFF_PWF             = GetSpellInfo(21562); --"Power Word: Fortitude"
@@ -298,7 +280,7 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_DEMONARMOR      = GetSpellInfo(687);   --"Demon Armor"
   SMARTBUFF_DARKINTENT      = GetSpellInfo(109773);--"Dark Intent"  
   SMARTBUFF_UNENDINGBREATH  = GetSpellInfo(5697);  --"Unending Breath"
-  SMARTBUFF_SOULLINK        = GetSpellInfo(19028); --"Soul Link"
+  SMARTBUFF_SOULLINK        = GetSpellInfo(108415);--"Soul Link"
   SMARTBUFF_SHADOWWARD      = GetSpellInfo(6229);  --"Shadow Ward"
   SMARTBUFF_LIFETAP         = GetSpellInfo(1454);  --"Life Tap"
   SMARTBUFF_NETHERWARD      = GetSpellInfo(91711); --"Nether Ward"
@@ -314,7 +296,8 @@ function SMARTBUFF_InitSpellIDs()
   -- Hunter
   SMARTBUFF_TRUESHOTAURA    = GetSpellInfo(19506); --"Trueshot Aura"
   SMARTBUFF_RAPIDFIRE       = GetSpellInfo(3045);  --"Rapid Fire"
-  SMARTBUFF_FOCUSFIRE       = GetSpellInfo(82692); --"Focus Fire"  
+  SMARTBUFF_FOCUSFIRE       = GetSpellInfo(82692); --"Focus Fire"
+  SMARTBUFF_TRAPLAUNCHER    = GetSpellInfo(77769); --"Trap Launcher"
   SMARTBUFF_AOTF            = GetSpellInfo(82661); --"Aspect of the Fox"
   SMARTBUFF_AOTH            = GetSpellInfo(13165); --"Aspect of the Hawk"
   SMARTBUFF_AOTW            = GetSpellInfo(20043); --"Aspect of the Wild"
@@ -473,6 +456,7 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_BMiscItem1      = GetSpellInfo(100951);--"WoW's 7th Anniversary"
   SMARTBUFF_BMiscItem2      = GetSpellInfo(62574); --"Warts-B-Gone Lip Balm"
   SMARTBUFF_BMiscItem3      = GetSpellInfo(98444); --"Vrykul Drinking Horn"
+  SMARTBUFF_BMiscItem4      = GetSpellInfo(127230);--"Visions of Insanity"
   
   -- Flasks & Elixirs
   SMARTBUFF_BFLASK1         = GetSpellInfo(53760);  --"Flask of Endless Rage"
@@ -487,13 +471,19 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_BFLASKCT5       = GetSpellInfo(94160);  --"Flask of Flowing Water"
   SMARTBUFF_BFLASKCT6       = GetSpellInfo(79637);  --"Flask of Enhancement"
   SMARTBUFF_BFLASKCT7       = GetSpellInfo(92679);  --"Flask of Battle"
-  SMARTBUFF_BFLASKMIP1      = GetSpellInfo(105617); --"Alchemist's Flask"
+  SMARTBUFF_BFLASKMOP1      = GetSpellInfo(105617); --"Alchemist's Flask"
+  SMARTBUFF_BFLASKMOP2      = GetSpellInfo(105694); --"Flask of the Earth"
+  SMARTBUFF_BFLASKMOP3      = GetSpellInfo(105693); --"Flask of Falling Leaves"
+  SMARTBUFF_BFLASKMOP4      = GetSpellInfo(105689); --"Flask of Spring Blossoms"
+  SMARTBUFF_BFLASKMOP5      = GetSpellInfo(105691); --"Flask of the Warm Sun"
+  SMARTBUFF_BFLASKMOP6      = GetSpellInfo(105696); --"Flask of Winter's Bite"
   
   SMARTBUFF_BFLASKCT61      = GetSpellInfo(79640);  --"Enhanced Intellect"
   SMARTBUFF_BFLASKCT62      = GetSpellInfo(79639);  --"Enhanced Agility"
   SMARTBUFF_BFLASKCT63      = GetSpellInfo(79638);  --"Enhanced Strength"
   S.LinkFlaskCT6            = { SMARTBUFF_BFLASKCT61, SMARTBUFF_BFLASKCT62, SMARTBUFF_BFLASKCT63, SMARTBUFF_BFLASKCT1, SMARTBUFF_BFLASKCT2, SMARTBUFF_BFLASKCT3, SMARTBUFF_BFLASKCT4, SMARTBUFF_BFLASKCT5 };
   S.LinkFlaskCT7            = { SMARTBUFF_BFLASKCT1, SMARTBUFF_BFLASKCT2, SMARTBUFF_BFLASKCT3, SMARTBUFF_BFLASKCT4, SMARTBUFF_BFLASKCT5 };
+  S.LinkFlaskMoP            = { SMARTBUFF_BFLASKCT61, SMARTBUFF_BFLASKCT62, SMARTBUFF_BFLASKCT63, SMARTBUFF_BFLASKMOP2, SMARTBUFF_BFLASKMOP3, SMARTBUFF_BFLASKMOP4, SMARTBUFF_BFLASKMOP5, SMARTBUFF_BFLASKMOP6 };
   
   SMARTBUFF_BELIXIR1        = GetSpellInfo(28497);  --"Mighty Agility"
   SMARTBUFF_BELIXIR2        = GetSpellInfo(60347);  --"Mighty Thoughts"
@@ -519,6 +509,14 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_BELIXIRCT6      = GetSpellInfo(79477);  --"Elixir of the Cobra"
   SMARTBUFF_BELIXIRCT7      = GetSpellInfo(79474);  --"Elixir of the Naga"
   SMARTBUFF_BELIXIRCT8      = GetSpellInfo(79468);  --"Ghost Elixir"
+  SMARTBUFF_BELIXIRMOP1     = GetSpellInfo(105687); --"Elixir of Mirrors"
+  SMARTBUFF_BELIXIRMOP2     = GetSpellInfo(105685); --"Elixir of Peace"
+  SMARTBUFF_BELIXIRMOP3     = GetSpellInfo(105686); --"Elixir of Perfection"
+  SMARTBUFF_BELIXIRMOP4     = GetSpellInfo(105684); --"Elixir of the Rapids"
+  SMARTBUFF_BELIXIRMOP5     = GetSpellInfo(105683); --"Elixir of Weaponry"
+  SMARTBUFF_BELIXIRMOP6     = GetSpellInfo(105682); --"Mad Hozen Elixir"
+  SMARTBUFF_BELIXIRMOP7     = GetSpellInfo(105681); --"Mantid Elixir"
+  SMARTBUFF_BELIXIRMOP8     = GetSpellInfo(105688); --"Monk's Elixir"
   
   --if (SMARTBUFF_GOTW) then
   --  SMARTBUFF_AddMsgD(SMARTBUFF_GOTW.." found");
@@ -548,8 +546,9 @@ function SMARTBUFF_InitSpellList()
     SMARTBUFF_BUFFLIST = {
       {SMARTBUFF_DRUID_MOONKIN, -1, SMARTBUFF_CONST_SELF},
       {SMARTBUFF_DRUID_TREE, 0.5, SMARTBUFF_CONST_SELF},
-      {SMARTBUFF_MOTW, 60, SMARTBUFF_CONST_GROUP, {30}, "WPET;DKPET"},
+      {SMARTBUFF_MOTW, 60, SMARTBUFF_CONST_GROUP, {30}, "WPET;DKPET", S.LinkStats},
       {SMARTBUFF_THORNS, 0.333, SMARTBUFF_CONST_GROUP, {5}, "WARRIOR;DRUID;SHAMAN;HUNTER;ROGUE;MAGE;PRIEST;PALADIN;WARLOCK;DEATHKNIGHT;MONK"},
+      {SMARTBUFF_CENARIONWARD, 0.5, SMARTBUFF_CONST_GROUP, {1}, "WARRIOR;DRUID;SHAMAN;HUNTER;ROGUE;MAGE;PRIEST;PALADIN;WARLOCK;DEATHKNIGHT;MONK"},
       {SMARTBUFF_BARKSKIN, 0.25, SMARTBUFF_CONST_FORCESELF},
       {SMARTBUFF_NATURESGRASP, 0.75, SMARTBUFF_CONST_FORCESELF},
       {SMARTBUFF_TIGERSFURY, 0.1, SMARTBUFF_CONST_SELF, nil, SMARTBUFF_DRUID_CAT},
@@ -599,10 +598,10 @@ function SMARTBUFF_InitSpellList()
   -- Warlock
   if (SMARTBUFF_PLAYERCLASS == "WARLOCK") then
     SMARTBUFF_BUFFLIST = {
-      {SMARTBUFF_DARKINTENT, 60, SMARTBUFF_CONST_GROUP, nil, "WARRIOR;HUNTER;ROGUE;MONK", S.LinkSp},
+      {SMARTBUFF_DARKINTENT, 60, SMARTBUFF_CONST_GROUP, nil, "WARRIOR;HUNTER;ROGUE", S.LinkSp},
       --{SMARTBUFF_FELARMOR, 30, SMARTBUFF_CONST_SELF, nil, nil, S.LinkWarlockArmor},
       --{SMARTBUFF_DEMONARMOR, 30, SMARTBUFF_CONST_SELF, nil, nil, S.LinkWarlockArmor},
-      {SMARTBUFF_SOULLINK, 0, SMARTBUFF_CONST_SELF},
+      {SMARTBUFF_SOULLINK, -1, SMARTBUFF_CONST_SELF},
       {SMARTBUFF_UNENDINGBREATH, 10, SMARTBUFF_CONST_GROUP, {16}, "HPET;WPET;DKPET"},
       {SMARTBUFF_SHADOWWARD, 0.5, SMARTBUFF_CONST_SELF, nil, nil, nil, {SMARTBUFF_NETHERWARD, SMARTBUFF_SHADOWWARD}},
       {SMARTBUFF_NETHERWARD, 0.5, SMARTBUFF_CONST_SELF},
@@ -619,6 +618,7 @@ function SMARTBUFF_InitSpellList()
     SMARTBUFF_BUFFLIST = {
       {SMARTBUFF_RAPIDFIRE, 0.2, SMARTBUFF_CONST_SELF},
       {SMARTBUFF_FOCUSFIRE, 0.25, SMARTBUFF_CONST_SELF},
+      {SMARTBUFF_TRAPLAUNCHER, -1, SMARTBUFF_CONST_SELF},
       {SMARTBUFF_AOTIH, -1, SMARTBUFF_CONST_SELF, nil, nil, S.LinkAspects},
       {SMARTBUFF_AOTH, -1, SMARTBUFF_CONST_SELF, nil, nil, S.LinkAspects},
       {SMARTBUFF_AOTF, -1, SMARTBUFF_CONST_SELF, nil, nil, S.LinkAspects},
@@ -717,9 +717,9 @@ function SMARTBUFF_InitSpellList()
     SMARTBUFF_BUFFLIST = {
       {SMARTBUFF_LOTWT, 60, SMARTBUFF_CONST_SELF},
       {SMARTBUFF_LOTE, 60, SMARTBUFF_CONST_SELF},
-      {SMARTBUFF_SOTFIERCETIGER, 15, SMARTBUFF_CONST_STANCE, nil, nil, nil, S.ChainMonkStance},
-      {SMARTBUFF_SOTSTURDYOX, 15, SMARTBUFF_CONST_STANCE, nil, nil, nil, S.ChainMonkStance},
-      {SMARTBUFF_SOTWISESERPENT, 15, SMARTBUFF_CONST_STANCE, nil, nil, nil, S.ChainMonkStance},
+      {SMARTBUFF_SOTFIERCETIGER, -1, SMARTBUFF_CONST_STANCE, nil, nil, nil, S.ChainMonkStance},
+      {SMARTBUFF_SOTSTURDYOX, -1, SMARTBUFF_CONST_STANCE, nil, nil, nil, S.ChainMonkStance},
+      {SMARTBUFF_SOTWISESERPENT, -1, SMARTBUFF_CONST_STANCE, nil, nil, nil, S.ChainMonkStance},
       {SMARTBUFF_BLACKOX, 15, SMARTBUFF_CONST_SELF, nil, nil, nil, S.ChainMonkStatue},
       {SMARTBUFF_SMARTBUFF_JADESERPENT, 15, SMARTBUFF_CONST_SELF, nil, nil, nil, S.ChainMonkStatue},
     };
@@ -785,60 +785,6 @@ function SMARTBUFF_InitSpellList()
 
   -- FOOD
   SMARTBUFF_FOOD = {
-    {SMARTBUFF_FOODCT1, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT2, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT3, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT4, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT5, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT6, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT7, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT8, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT9, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT10, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT11, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT12, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT13, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT14, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT15, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT16, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT17, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT18, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT19, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT20, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT21, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_FOODCT22, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD32, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD31, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD30, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD29, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD28, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD27, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD26, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD25, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD24, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD23, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD22, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD21, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD20, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD19, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD18, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD17, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD16, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD15, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD14, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD13, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD12, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD11, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD10, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD9, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD8, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD7, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD6, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD5, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD4, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD3, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD2, 60, SMARTBUFF_CONST_FOOD},
-    {SMARTBUFF_WOTLKFOOD1, 60, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_SPICYCRAWDAD, 30, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_MOKNATHALSHORTRIBS, 30, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_CRUNCHYSERPENT, 30, SMARTBUFF_CONST_FOOD},
@@ -860,6 +806,22 @@ function SMARTBUFF_InitSpellList()
     {SMARTBUFF_BUZZARDBITES, 30, SMARTBUFF_CONST_FOOD},
     {SMARTBUFF_SAGEFISHDELIGHT, 15, SMARTBUFF_CONST_FOOD}
   };
+  
+  for n, name in pairs(S.FoodItems) do
+    if (name) then
+      --print("Adding: "..n..". "..name);
+      tinsert(SMARTBUFF_FOOD, 1, {name, 60, SMARTBUFF_CONST_FOOD});
+    end
+  end
+  
+  --[[
+  for _, v in pairs(SMARTBUFF_FOOD) do
+    if (v and v[1]) then
+      print("List: "..v[1]);
+    end
+  end
+  ]]--
+  
 
   -- Scrolls
   SMARTBUFF_SCROLL = {
@@ -911,11 +873,26 @@ function SMARTBUFF_InitSpellList()
     {SMARTBUFF_SOPROTECTION9, 30, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_SBPROTECTION},
     {SMARTBUFF_MiscItem1, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem1},
     {SMARTBUFF_MiscItem2, -1, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem2},
-    {SMARTBUFF_MiscItem3, 10, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem3}
+    {SMARTBUFF_MiscItem3, 10, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem3},
+    {SMARTBUFF_MiscItem4, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem4}
   };
   
   -- Potions
   SMARTBUFF_POTION = {
+    {SMARTBUFF_FLASKMOP1, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFLASKMOP1, S.LinkFlaskMoP},
+    {SMARTBUFF_FLASKMOP2, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFLASKMOP2},
+    {SMARTBUFF_FLASKMOP3, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFLASKMOP3},
+    {SMARTBUFF_FLASKMOP4, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFLASKMOP4},
+    {SMARTBUFF_FLASKMOP5, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFLASKMOP5},
+    {SMARTBUFF_FLASKMOP6, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFLASKMOP6},
+    {SMARTBUFF_ELIXIRMOP1, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BELIXIRMOP1},
+    {SMARTBUFF_ELIXIRMOP2, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BELIXIRMOP2},
+    {SMARTBUFF_ELIXIRMOP3, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BELIXIRMOP3},
+    {SMARTBUFF_ELIXIRMOP4, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BELIXIRMOP4},
+    {SMARTBUFF_ELIXIRMOP5, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BELIXIRMOP5},
+    {SMARTBUFF_ELIXIRMOP6, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BELIXIRMOP6},
+    {SMARTBUFF_ELIXIRMOP7, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BELIXIRMOP7},
+    {SMARTBUFF_ELIXIRMOP8, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BELIXIRMOP8},
     {SMARTBUFF_FLASKCT1, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFLASKCT1},
     {SMARTBUFF_FLASKCT2, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFLASKCT2},
     {SMARTBUFF_FLASKCT3, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFLASKCT3},
@@ -923,7 +900,6 @@ function SMARTBUFF_InitSpellList()
     {SMARTBUFF_FLASKCT5, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFLASKCT5},
     {SMARTBUFF_FLASKCT6, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFLASKCT6, S.LinkFlaskCT6},
     {SMARTBUFF_FLASKCT7, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFLASKCT7, S.LinkFlaskCT7},
-    {SMARTBUFF_FLASKMIP1, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BFLASKMIP1, S.LinkFlaskCT6},
     {SMARTBUFF_ELIXIRCT1, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BELIXIRCT1},
     {SMARTBUFF_ELIXIRCT2, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BELIXIRCT2},
     {SMARTBUFF_ELIXIRCT3, 60, SMARTBUFF_CONST_POTION, nil, SMARTBUFF_BELIXIRCT3},

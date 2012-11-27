@@ -1,0 +1,900 @@
+<!-- Revision: 490 2012-09-04T09:42:28Z -->
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\..\FrameXML\UI.xsd">
+  <Script file="ArmorySocialFrame.lua"/>
+  <Button name="ArmorySocialTabTemplate" inherits="ArmoryTabButtonTemplate" virtual="true">
+    <Size>
+      <AbsDimension x="10" y="24"/>
+    </Size>
+    <Scripts>
+      <OnClick>
+        ArmorySocialFrameTab_OnClick(self);
+      </OnClick>
+    </Scripts>
+  </Button>
+  <Button name="ArmoryFriendsListButtonTemplate" virtual="true">
+    <Size>
+      <AbsDimension x="298" y="31"/>
+    </Size>
+    <Frames>
+      <Frame name="$parentButtonText" setAllPoints="true">
+        <Layers>
+          <Layer level="BORDER">
+            <FontString name="$parentName" inherits="GameFontNormal" justifyH="LEFT">
+              <Anchors>
+                <Anchor point="TOPLEFT">
+                  <Offset>
+                    <AbsDimension x="10" y="-3"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+            <FontString name="$parentInfo" inherits="GameFontHighlightSmall" justifyH="LEFT">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parentName" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="$parentNoteHiddenText" inherits="GameFontNormalSmall" justifyH="LEFT" hidden="true">
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="$parentInfo" relativePoint="RIGHT">
+                  <Offset x="5" y="0"/>
+                </Anchor>
+              </Anchors>
+            </FontString>
+            <FontString name="$parentNoteText" inherits="GameFontNormalSmall" justifyH="LEFT">
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="$parentInfo" relativePoint="RIGHT">
+                  <Offset x="2" y="0"/>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+    </Frames>
+    <Scripts>
+      <OnClick>
+        if ( self.candidate and IsModifiedClick() ) then
+          local dialog = StaticPopup_Show("ADD_FRIEND");
+          dialog.editBox:SetText(self.candidate);
+        end
+      </OnClick>
+      <OnEnter>
+        if ( self.candidate ) then
+          Armory:AddEnhancedTip(self, FRIENDS_LIST, 1.0, 1.0, 1.0, ARMORY_SOCIAL_ADD_TOOLTIP, 1);
+        end
+      </OnEnter>
+      <OnLeave>
+        GameTooltip:Hide();
+      </OnLeave>
+    </Scripts>
+    <HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
+  </Button>
+  <Button name="ArmoryIgnoreListButtonTemplate" virtual="true">
+    <Size>
+      <AbsDimension x="298" y="16"/>
+    </Size>
+    <Frames>
+      <Frame name="$parentButtonText" setAllPoints="true">
+        <Layers>
+          <Layer level="BORDER">
+            <FontString name="$parentName" inherits="GameFontNormal">
+              <Anchors>
+                <Anchor point="TOPLEFT">
+                  <Offset>
+                    <AbsDimension x="10" y="-3"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+    </Frames>
+    <Scripts>
+      <OnClick>
+        if ( self.candidate and IsModifiedClick() ) then
+          local dialog = StaticPopup_Show("ADD_IGNORE");
+          dialog.editBox:SetText(self.candidate);
+        end
+      </OnClick>
+      <OnEnter>
+        if ( self.candidate ) then
+          Armory:AddEnhancedTip(self, IGNORE_LIST, 1.0, 1.0, 1.0, ARMORY_SOCIAL_ADD_TOOLTIP, 1);
+        end
+      </OnEnter>
+      <OnLeave>
+        GameTooltip:Hide();
+      </OnLeave>
+    </Scripts>
+    <HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
+  </Button>
+  <Button name="ArmoryEventsListButtonTemplate" virtual="true">
+    <Size>
+      <AbsDimension x="298" y="31"/>
+    </Size>
+    <Frames>
+      <Frame name="$parentButtonText" setAllPoints="true">
+        <Layers>
+          <Layer level="BORDER">
+            <FontString name="$parentTitleHiddenText" inherits="GameFontNormal" justifyH="LEFT" wordwrap="false" hidden="true">
+              <Anchors>
+                <Anchor point="TOPLEFT">
+                  <Offset>
+                    <AbsDimension x="10" y="-3"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+            <FontString name="$parentTitle" inherits="GameFontNormal" justifyH="LEFT" wordwrap="false">
+              <Anchors>
+                <Anchor point="TOPLEFT">
+                  <Offset>
+                    <AbsDimension x="10" y="-3"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+            <FontString name="$parentStatus" inherits="GameFontNormal" justifyH="LEFT">
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="$parentTitle" relativePoint="RIGHT">
+                  <Offset x="2" y="0"/>
+                </Anchor>
+              </Anchors>
+            </FontString>
+            <FontString name="$parentDateTime" inherits="GameFontHighlightSmall" justifyH="LEFT">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </FontString>
+           </Layer>
+        </Layers>
+      </Frame>
+    </Frames>
+    <Scripts>
+      <OnEnter>
+        ArmoryEventsListButton_OnEnter(self);
+      </OnEnter>
+      <OnLeave>
+        GameTooltip:Hide();
+      </OnLeave>
+    </Scripts>
+    <HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
+  </Button>
+
+  <Frame name="ArmoryEventWarning" parent="UIParent" toplevel="true" hidden="true">
+    <Size>
+      <AbsDimension x="600" y="60"/>
+    </Size>
+    <Anchors>
+      <Anchor point="TOP">
+        <Offset>
+          <AbsDimension x="0" y="-150"/>
+        </Offset>
+      </Anchor>
+    </Anchors>
+    <Frames>
+      <MessageFrame name="$parentMessageFrame" displayDuration="2">
+        <Size>
+          <AbsDimension x="600" y="60"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <FontString inherits="GameFontNormalHuge" justifyH="CENTER"/>
+      </MessageFrame>
+    </Frames>
+    <Scripts>
+      <OnLoad>
+        ArmoryEventWarning_OnLoad(self);
+      </OnLoad>
+      <OnUpdate>
+        ArmoryEventWarning_OnUpdate(self, elapsed);
+      </OnUpdate>
+    </Scripts>
+  </Frame>
+
+  <Frame name="ArmorySocialFrame" movable="true" parent="ArmoryFrame" enableMouse="true" hidden="true">
+    <Size>
+      <AbsDimension x="384" y="512"/>
+    </Size>
+    <Anchors>
+      <Anchor point="TOPLEFT" relativeTo="ArmoryFrame" relativePoint="TOPRIGHT">
+        <Offset>
+          <AbsDimension x="32" y="11"/>
+        </Offset>
+      </Anchor>
+    </Anchors>
+    <HitRectInsets>
+      <AbsInset left="0" right="30" top="0" bottom="75"/>
+    </HitRectInsets>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture file="Interface\FriendsFrame\FriendsFrameScrollIcon">
+          <Size>
+            <AbsDimension x="60" y="60"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="8" y="-4"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+      </Layer>
+      <Layer level="BORDER">
+        <Texture file="Interface\PaperDollInfoFrame\UI-Character-General-TopLeft">
+          <Size>
+            <AbsDimension x="256" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT"/>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\PaperDollInfoFrame\UI-Character-General-TopRight">
+          <Size>
+            <AbsDimension x="128" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPRIGHT"/>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\PaperDollInfoFrame\UI-Character-General-BottomLeft">
+          <Size>
+            <AbsDimension x="256" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="BOTTOMLEFT"/>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\PaperDollInfoFrame\UI-Character-General-BottomRight">
+          <Size>
+            <AbsDimension x="128" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="BOTTOMRIGHT"/>
+          </Anchors>
+        </Texture>
+        <FontString name="ArmorySocialFrameTitleText" inherits="GameFontNormal">
+          <Anchors>
+            <Anchor point="TOP" relativeTo="ArmorySocialFrame" relativePoint="TOP">
+              <Offset>
+                <AbsDimension x="0" y="-17"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Button name="ArmorySocialFrameCloseButton" inherits="UIPanelCloseButton">
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeTo="ArmorySocialFrame" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="-30" y="-8"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="ArmorySocialFrameTab1" inherits="ArmorySocialTabTemplate" text="FRIENDS" id="1">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="ArmorySocialFrame">
+            <Offset>
+              <AbsDimension x="70" y="-49"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            PanelTemplates_SelectTab(self);
+          </OnLoad>
+        </Scripts>
+      </Button>
+      <Button name="ArmorySocialFrameTab2" inherits="ArmorySocialTabTemplate" text="IGNORE" id="2">
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="ArmorySocialFrameTab1" relativePoint="RIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnShow>
+            PanelTemplates_DeselectTab(self);
+          </OnShow>
+        </Scripts>
+      </Button>
+      <Button name="ArmorySocialFrameTab3" inherits="ArmorySocialTabTemplate" text="EVENTS_LABEL" id="3">
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="ArmorySocialFrameTab2" relativePoint="RIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnShow>
+            PanelTemplates_DeselectTab(self);
+          </OnShow>
+        </Scripts>
+      </Button>
+      <Frame name="ArmoryFriendsListFrame" hidden="true" setAllPoints="true">
+        <Frames>
+          <Button name="ArmoryFriendsListButton1" inherits="ArmoryFriendsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOPLEFT" relativeTo="ArmorySocialFrame">
+                <Offset>
+                  <AbsDimension x="23" y="-76"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryFriendsListButton2" inherits="ArmoryFriendsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryFriendsListButton1" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryFriendsListButton3" inherits="ArmoryFriendsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryFriendsListButton2" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryFriendsListButton4" inherits="ArmoryFriendsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryFriendsListButton3" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryFriendsListButton5" inherits="ArmoryFriendsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryFriendsListButton4" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryFriendsListButton6" inherits="ArmoryFriendsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryFriendsListButton5" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryFriendsListButton7" inherits="ArmoryFriendsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryFriendsListButton6" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryFriendsListButton8" inherits="ArmoryFriendsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryFriendsListButton7" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryFriendsListButton9" inherits="ArmoryFriendsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryFriendsListButton8" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryFriendsListButton10" inherits="ArmoryFriendsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryFriendsListButton9" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryFriendsListButton11" inherits="ArmoryFriendsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryFriendsListButton10" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <ScrollFrame name="ArmoryFriendsListScrollFrame" inherits="FauxScrollFrameTemplate">
+            <Size>
+              <AbsDimension x="296" y="354"/>
+            </Size>
+            <Anchors>
+              <Anchor point="TOPRIGHT">
+                <Offset>
+                  <AbsDimension x="-66" y="-76"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+            <Layers>
+              <Layer level="BACKGROUND">
+                <Texture name="$parentScrollBarTop" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+                  <Size>
+                    <AbsDimension x="31" y="256"/>
+                  </Size>
+                  <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+                      <Offset>
+                        <AbsDimension x="-2" y="5"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                  <TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
+                </Texture>
+                <Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+                  <Size>
+                    <AbsDimension x="31" y="108"/>
+                  </Size>
+                  <Anchors>
+                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
+                      <Offset>
+                        <AbsDimension x="-2" y="-4"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                  <TexCoords left="0.515625" right="1.0" top="0" bottom="0.421875"/>
+                </Texture>
+              </Layer>
+            </Layers>
+            <Scripts>
+              <OnVerticalScroll>
+                FauxScrollFrame_OnVerticalScroll(self, offset, ARMORY_SOCIALFRAME_FRIEND_HEIGHT, ArmoryFriendsList_Update);
+              </OnVerticalScroll>
+            </Scripts>
+          </ScrollFrame>
+        </Frames>
+        <Scripts>
+          <OnShow>
+            ArmoryFriendsListFrame_OnShow(self);
+          </OnShow>
+        </Scripts>
+      </Frame>
+      <Frame name="ArmoryIgnoreListFrame" hidden="true" setAllPoints="true">
+        <Frames>
+          <Button name="ArmoryIgnoreListButton1" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOPLEFT" relativeTo="ArmorySocialFrame">
+                <Offset>
+                  <AbsDimension x="23" y="-80"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton2" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton1" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton3" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton2" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton4" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton3" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton5" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton4" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton6" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton5" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton7" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton6" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton8" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton7" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton9" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton8" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton10" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton9" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton11" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton10" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton12" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton11" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton13" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton12" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton14" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton13" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton15" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton14" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton16" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton15" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton17" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton16" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton18" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton17" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton19" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton18" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton20" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton19" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryIgnoreListButton21" inherits="ArmoryIgnoreListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryIgnoreListButton20" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <ScrollFrame name="ArmoryIgnoreListScrollFrame" inherits="FauxScrollFrameTemplate">
+            <Size>
+              <AbsDimension x="296" y="354"/>
+            </Size>
+            <Anchors>
+              <Anchor point="TOPRIGHT">
+                <Offset>
+                  <AbsDimension x="-66" y="-76"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+            <Layers>
+              <Layer level="BACKGROUND">
+                <Texture name="$parentScrollBarTop" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+                  <Size>
+                    <AbsDimension x="31" y="256"/>
+                  </Size>
+                  <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+                      <Offset>
+                        <AbsDimension x="-2" y="5"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                  <TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
+                </Texture>
+                <Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+                  <Size>
+                    <AbsDimension x="31" y="108"/>
+                  </Size>
+                  <Anchors>
+                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
+                      <Offset>
+                        <AbsDimension x="-2" y="-4"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                  <TexCoords left="0.515625" right="1.0" top="0" bottom="0.421875"/>
+                </Texture>
+              </Layer>
+            </Layers>
+            <Scripts>
+              <OnVerticalScroll>
+                FauxScrollFrame_OnVerticalScroll(self, offset, ARMORY_SOCIALFRAME_IGNORE_HEIGHT, ArmoryIgnoreList_Update);
+              </OnVerticalScroll>
+            </Scripts>
+          </ScrollFrame>
+        </Frames>
+        <Scripts>
+          <OnShow>
+            ArmoryIgnoreListFrame_OnShow(self);
+          </OnShow>
+        </Scripts>
+      </Frame>
+      <Frame name="ArmoryEventsListFrame" hidden="true" setAllPoints="true">
+        <Frames>
+          <Button name="ArmoryEventsListButton1" inherits="ArmoryEventsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOPLEFT" relativeTo="ArmorySocialFrame">
+                <Offset>
+                  <AbsDimension x="23" y="-80"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryEventsListButton2" inherits="ArmoryEventsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryEventsListButton1" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryEventsListButton3" inherits="ArmoryEventsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryEventsListButton2" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryEventsListButton4" inherits="ArmoryEventsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryEventsListButton3" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryEventsListButton5" inherits="ArmoryEventsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryEventsListButton4" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryEventsListButton6" inherits="ArmoryEventsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryEventsListButton5" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryEventsListButton7" inherits="ArmoryEventsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryEventsListButton6" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryEventsListButton8" inherits="ArmoryEventsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryEventsListButton7" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryEventsListButton9" inherits="ArmoryEventsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryEventsListButton8" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryEventsListButton10" inherits="ArmoryEventsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryEventsListButton9" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <Button name="ArmoryEventsListButton11" inherits="ArmoryEventsListButtonTemplate">
+            <Anchors>
+              <Anchor point="TOP" relativeTo="ArmoryEventsListButton10" relativePoint="BOTTOM">
+                <Offset>
+                  <AbsDimension x="0" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+          </Button>
+          <ScrollFrame name="ArmoryEventsListScrollFrame" inherits="FauxScrollFrameTemplate">
+            <Size>
+              <AbsDimension x="296" y="354"/>
+            </Size>
+            <Anchors>
+              <Anchor point="TOPRIGHT">
+                <Offset>
+                  <AbsDimension x="-66" y="-76"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+            <Layers>
+              <Layer level="BACKGROUND">
+                <Texture name="$parentScrollBarTop" file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+                  <Size>
+                    <AbsDimension x="31" y="256"/>
+                  </Size>
+                  <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+                      <Offset>
+                        <AbsDimension x="-2" y="5"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                  <TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
+                </Texture>
+                <Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+                  <Size>
+                    <AbsDimension x="31" y="108"/>
+                  </Size>
+                  <Anchors>
+                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
+                      <Offset>
+                        <AbsDimension x="-2" y="-4"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                  <TexCoords left="0.515625" right="1.0" top="0" bottom="0.421875"/>
+                </Texture>
+              </Layer>
+            </Layers>
+            <Scripts>
+              <OnVerticalScroll>
+                FauxScrollFrame_OnVerticalScroll(self, offset, ARMORY_SOCIALFRAME_EVENT_HEIGHT, ArmoryEventsList_Update);
+              </OnVerticalScroll>
+            </Scripts>
+          </ScrollFrame>
+        </Frames>
+        <Scripts>
+          <OnShow>
+            ArmoryEventsListFrame_OnShow(self);
+          </OnShow>
+        </Scripts>
+      </Frame>
+    </Frames>
+    <Scripts>
+      <OnLoad>
+        ArmorySocialFrame_OnLoad(self);
+      </OnLoad>
+      <OnEvent>
+        ArmorySocialFrame_OnEvent(self, event, ...);
+      </OnEvent>
+      <OnShow>
+        ArmorySocialFrame_OnShow(self);
+      </OnShow>
+      <OnHide>
+        ArmorySocialFrame_OnHide(self);
+      </OnHide>
+      <OnMouseWheel>
+        return;
+      </OnMouseWheel>
+    </Scripts>
+  </Frame>
+</Ui>
