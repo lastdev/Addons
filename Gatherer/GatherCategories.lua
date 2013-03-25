@@ -1,8 +1,8 @@
 ﻿--[[
 	Gatherable Nodes, type groupings definitions
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.6 (<%codename%>)
-	Revision: $Id: GatherCategories.lua 1036 2012-10-05 04:00:11Z LocalizerAutoCommit $
+	Version: 4.2.0 (<%codename%>)
+	Revision: $Id: GatherCategories.lua 1074 2013-03-03 05:00:04Z LocalizerAutoCommit $
 
 	License:
 		This program is free software; you can redistribute it and/or

@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 521 2012-09-16T10:38:05Z
+    Revision: 580 2013-01-22T20:01:17Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -829,12 +829,34 @@ function ArmoryPaperDollFrame_SetPvpPower(statFrame, unit)
 		return;
 	end
 
-	local pvpPower = BreakUpLargeNumbers(Armory:GetCombatRating(CR_PVP_POWER));
-	local pvpPowerBonus = Armory:GetCombatRatingBonus(CR_PVP_POWER);
-	PaperDollFrame_SetLabelAndText(statFrame, STAT_PVP_POWER, pvpPowerBonus, 1);
+	local pvpPower = Armory:GetCombatRating(CR_PVP_POWER);
+    local pvpDamage = Armory:GetPvpPowerDamage();
+    local pvpHealing = Armory:GetPvpPowerHealing();
+    
+    if ( not (pvpPower and pvpDamage and pvpHealing) ) then
+        statFrame:Hide();
+        return;
+    end
+    
+	pvpPower = BreakUpLargeNumbers(pvpPower);
 
-	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_PVP_POWER).." "..format("%.2F%%", pvpPowerBonus)..FONT_COLOR_CODE_CLOSE;
-	statFrame.tooltip2 = PVP_POWER_TOOLTIP .. format(PVP_POWER_BASE_TOOLTIP, pvpPower, pvpPowerBonus);
+    if ( pvpHealing > pvpDamage ) then
+        PaperDollFrame_SetLabelAndText(statFrame, STAT_PVP_POWER, pvpHealing, 1);
+        statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_PVP_POWER).." "..
+            format("%.2F%%", pvpHealing).." ("..SHOW_COMBAT_HEALING..")"..FONT_COLOR_CODE_CLOSE;
+        statFrame.tooltip2 = PVP_POWER_TOOLTIP .. format(PVP_POWER_HEALING_TOOLTIP, pvpPower, pvpHealing, pvpDamage);
+    else
+        PaperDollFrame_SetLabelAndText(statFrame, STAT_PVP_POWER, pvpDamage, 1);
+        statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_PVP_POWER).." "..
+            format("%.2F%%", pvpDamage).." ("..DAMAGE..")"..FONT_COLOR_CODE_CLOSE;
+        statFrame.tooltip2 = PVP_POWER_TOOLTIP .. format(PVP_POWER_DAMAGE_TOOLTIP, pvpPower, pvpDamage, pvpHealing);
+    end
+
+	--local pvpPowerBonus = Armory:GetCombatRatingBonus(CR_PVP_POWER);
+	--PaperDollFrame_SetLabelAndText(statFrame, STAT_PVP_POWER, pvpPowerBonus, 1);
+--
+	--statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_PVP_POWER).." "..format("%.2F%%", pvpPowerBonus)..FONT_COLOR_CODE_CLOSE;
+	--statFrame.tooltip2 = PVP_POWER_TOOLTIP .. format(PVP_POWER_BASE_TOOLTIP, pvpPower, pvpPowerBonus);
 	statFrame:Show();
 end
 
@@ -1119,6 +1141,9 @@ end
 function ArmoryPaperDollFrame_SetAttackSpeed(statFrame, unit)
     local speed, offhandSpeed = Armory:UnitAttackSpeed(unit);
     if ( speed ) then
+        if ( offhandSpeed ) then
+            offhandSpeed = format("%.2F", offhandSpeed);
+        end
         local text;    
         if ( offhandSpeed ) then
             text = BreakUpLargeNumbers(speed).." / "..offhandSpeed;
@@ -2164,6 +2189,54 @@ function ArmoryCharacterSpellCritChance_OnEnter(self)
     GameTooltip:Show();
 end
 
+--helper function to determine if PVP power should be shown in a particular category
+--might be worth changing this so the locations of pvp power are stored in a table...but too late now
+function ArmoryShowStatInCategory(stat, category, unit)
+    local statInfo = ARMORY_PAPERDOLL_STATINFO[stat];
+    if ( stat ~= "PVP_POWER" ) then
+        return statInfo;
+    end
+
+    local primaryTalentTree = Armory:GetSpecialization();
+    local _, class = Armory:UnitClass("player"); 
+    local role = nil;
+    local specID = nil;
+
+    if ( primaryTalentTree ) then
+        specID, _, _, _, _, role = Armory:GetSpecializationInfo(primaryTalentTree);
+    end
+
+    --Show PVP power in melee for tanks or damagers that aren't spell based
+    if ( category == "MELEE" ) then
+        if ( class == "ROGUE" or class == "DEATHKNIGHT" or class == "WARRIOR" or
+            ((class == "SHAMAN" or class =="MONK" or class == "PALADIN" or class == "DRUID") and 
+             (role == "DAMAGER" or role == "TANK") and SPEC_CORE_ABILITY_TEXT[specID] ~= "DRUID_BALANCE" and
+             SPEC_CORE_ABILITY_TEXT[specID] ~= "SHAMAN_ELE") ) then
+            return statInfo;
+        else
+            return nil;
+        end
+    --Show it in ranged for hunters
+    elseif ( category == "RANGED" ) then
+        if ( class == "HUNTER" ) then
+            return statInfo;
+        else
+            return nil;
+        end
+    --Show it in spells for healers and spell based damagers
+    elseif ( category == "SPELL" ) then
+        if ( class == "WARLOCK" or class == "MAGE" or class == "PRIEST" or
+             role == "HEALER" or SPEC_CORE_ABILITY_TEXT[specID] == "DRUID_BALANCE" or
+             SPEC_CORE_ABILITY_TEXT[specID] == "SHAMAN_ELE" ) then
+            return statInfo;
+        else
+            return nil;
+        end
+    end
+
+    return statInfo;
+end
+
 function ArmoryPaperDollFrame_UpdateStatCategory(category, suffix)
     local overlay = suffix ~= nil;
     if ( not suffix ) then
@@ -2176,32 +2249,50 @@ function ArmoryPaperDollFrame_UpdateStatCategory(category, suffix)
     end
     
     local parentFrame = _G["ArmoryAttributes"..suffix.."Frame"];
+    local scrollFrame = _G["ArmoryAttributes"..suffix.."FrameScrollFrame"];
+    local categoryFrame = scrollFrame:GetScrollChild();
+    
     parentFrame.Category = category;
      
+	local prevStatFrame = nil;
     local numVisible = 0;
+    local totalHeight = 0;
     for index, stat in next, categoryInfo.stats do
         local statFrame = _G["ArmoryAttributes"..suffix.."FramePlayerStat"..numVisible+1];
+        if ( not statFrame ) then
+            statFrame = CreateFrame("Frame", "ArmoryAttributes"..suffix.."FramePlayerStat"..numVisible+1, categoryFrame, "ArmoryStatTemplate");
+            if ( prevStatFrame ) then
+                statFrame:SetPoint("TOPLEFT", prevStatFrame, "BOTTOMLEFT", 0, 0);
+                statFrame:SetPoint("TOPRIGHT", prevStatFrame, "BOTTOMRIGHT", 0, 0);
+            else
+                statFrame:SetPoint("TOPLEFT", categoryFrame, "TOPLEFT", 5, 0);
+            end
+        end
         local statInfo;
         if ( overlay ) then
             statInfo = PAPERDOLL_STATINFO[stat];
+            statInfo = ShowStatInCategory(stat, category, "player");
         else
             statInfo = ARMORY_PAPERDOLL_STATINFO[stat];
+            statInfo = ArmoryShowStatInCategory(stat, category, "player");
         end
-        statFrame:Show();
-        -- Reset tooltip script in case it's been changed
-        statFrame:SetScript("OnEnter", PaperDollStatTooltip);
-        statFrame.tooltip = nil;
-        statFrame.tooltip2 = nil;
-        statFrame.UpdateTooltip = nil;
-        statFrame:SetScript("OnUpdate", nil);
         if ( statInfo ) then
+            statFrame:Show();
+            -- Reset tooltip script in case it's been changed
+            statFrame:SetScript("OnEnter", PaperDollStatTooltip);
+            statFrame.tooltip = nil;
+            statFrame.tooltip2 = nil;
+            statFrame.UpdateTooltip = nil;
+            statFrame:SetScript("OnUpdate", nil);
             statInfo.updateFunc(statFrame, "player");
-        end
-        if ( statFrame:IsShown() ) then
-            numVisible = numVisible + 1;
-            -- Update Tooltip
-            if ( GameTooltip:GetOwner() == statFrame ) then
-                statFrame:GetScript("OnEnter")(statFrame);
+            if ( statFrame:IsShown() ) then
+                numVisible = numVisible + 1;
+				totalHeight = totalHeight + statFrame:GetHeight();
+				prevStatFrame = statFrame;
+                -- Update Tooltip
+                if ( GameTooltip:GetOwner() == statFrame ) then
+                    statFrame:GetScript("OnEnter")(statFrame);
+                end
             end
         end
     end
@@ -2225,14 +2316,22 @@ function ArmoryPaperDollFrame_UpdateStatCategory(category, suffix)
         end
     end
     
+    local scrollbar = scrollFrame.ScrollBar;
+    local scrollbarVisible = totalHeight > scrollFrame:GetHeight();
+    if ( scrollbarVisible ) then
+        scrollbar:Show();
+    else
+        scrollbar:Hide();
+    end
+    
     local index = 1;
     while ( _G["ArmoryAttributes"..suffix.."FramePlayerStat"..index] ) do
         local statFrame = _G["ArmoryAttributes"..suffix.."FramePlayerStat"..index];
         if ( index <= numVisible ) then
             if ( not statFrame.Bg ) then
                 statFrame.Bg = statFrame:CreateTexture(statFrame:GetName().."Bg", "BACKGROUND");
-                statFrame.Bg:SetPoint("LEFT", "ArmoryAttributes"..suffix.."Frame", "LEFT", 2, 0);
-                statFrame.Bg:SetPoint("RIGHT", "ArmoryAttributes"..suffix.."Frame", "RIGHT", -2, 0);
+                statFrame.Bg:SetPoint("LEFT", parentFrame, "LEFT", 2, 0);
+                statFrame.Bg:SetPoint("RIGHT", parentFrame, "RIGHT", -2, 0);
                 statFrame.Bg:SetPoint("TOP");
                 statFrame.Bg:SetPoint("BOTTOM");
                 statFrame.Bg:SetTexture(STRIPE_COLOR.r, STRIPE_COLOR.g, STRIPE_COLOR.b);
@@ -2242,6 +2341,11 @@ function ArmoryPaperDollFrame_UpdateStatCategory(category, suffix)
                 statFrame.Bg:Show();
             else
                 statFrame.Bg:Hide();
+            end
+            if ( scrollbarVisible ) then
+                statFrame:SetWidth(parentFrame:GetWidth() - scrollbar:GetWidth() - 10);
+            else
+                statFrame:SetWidth(parentFrame:GetWidth() - 10);
             end
         else
             statFrame:Hide();
@@ -2379,8 +2483,6 @@ end
 
 function ArmoryPaperDollFrame_UpdateStats()
     ArmoryInitializePaperDollStats();
-    ArmoryPaperDollFrame_SetStatDropDown();
-    ArmoryDropDownMenu_SetSelectedValue(ArmoryAttributesFramePlayerStatDropDown, ARMORY_PLAYERSTAT_DROPDOWN_SELECTION);
     ArmoryPaperDollFrame_UpdateStatCategory(ARMORY_PLAYERSTAT_DROPDOWN_SELECTION);    
 end
 
@@ -2516,7 +2618,7 @@ function ArmoryAlternateSlotFrame_Show(parent, orientation, direction)
 
     local frame = ArmoryAlternateSlotFrame;
     local slotName = strsub(parent:GetName(), 7);
-    local parentId = Armory:GetItemId(parent.link)
+    local parentId = Armory:GetUniqueItemId(parent.link)
     local id, link, equipLoc, texture, itemId;
     local numItems = 0;
     
@@ -2530,7 +2632,7 @@ function ArmoryAlternateSlotFrame_Show(parent, orientation, direction)
                 if ( link and IsEquippableItem(link) and (Armory:GetContainerItemCanEquip(id, index) or Armory:GetConfigShowUnequippable()) ) then
                     _, _, _, _, _, _, _, _, equipLoc, texture = GetItemInfo(link);
                     if ( ARMORY_SLOTINFO[equipLoc] and ARMORY_SLOTINFO[equipLoc] == slotName ) then
-                        itemId = Armory:GetItemId(link);
+                        itemId = Armory:GetUniqueItemId(link);
                         if ( not alternatives[itemId] and itemId ~= parentId ) then
                             alternatives[itemId] = {link=link, texture=texture};
                             numItems = numItems + 1;
@@ -2638,7 +2740,7 @@ end
 
 function ArmoryAlternateSlotFrame_HideSlots(start)
     local i = start or 1;
-      while ( _G["ArmoryAlternate"..i.."Slot"] ) do
+    while ( _G["ArmoryAlternate"..i.."Slot"] ) do
         _G["ArmoryAlternate"..i.."Slot"]:Hide();
         i = i + 1;
     end
@@ -2974,20 +3076,22 @@ function ArmoryPaperDoll_UpdateSockets(overlay)
 end
 
 function ArmoryPaperDollSocketTooltip(self)
-    GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-    GameTooltip:SetText(self.tooltip, 1.0, 1.0, 1.0);
-    if ( self.gems ) then
-        for _, gemInfo in ipairs(self.gems) do
-            GameTooltip:AddDoubleLine(gemInfo[2], gemInfo[1], NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+    if ( self.tooltip ) then
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+        GameTooltip:SetText(self.tooltip, 1.0, 1.0, 1.0);
+        if ( self.gems ) then
+            for _, gemInfo in ipairs(self.gems) do
+                GameTooltip:AddDoubleLine(gemInfo[2], gemInfo[1], NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+            end
         end
+        if ( self.tooltipSubText ) then
+            GameTooltip:AddLine(self.tooltipSubText, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+        end
+        if ( self.tooltip2 ) then
+	        GameTooltip:AddLine(self.tooltip2, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+        end
+        GameTooltip:Show();
     end
-    if ( self.tooltipSubText ) then
-        GameTooltip:AddLine(self.tooltipSubText, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-    end
-    if ( self.tooltip2 ) then
-	    GameTooltip:AddLine(self.tooltip2, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-    end
-    GameTooltip:Show();
 end
 
 ----------------------------------------------------------

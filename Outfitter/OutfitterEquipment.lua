@@ -28,8 +28,10 @@ function Outfitter:ShowEquipError(pOutfitItem, pIgnoredItem, pInventorySlot)
 			end
 			
 			self:ErrorMessage(format(self.cItemAlreadyUsedError, self:GenerateItemLink(pOutfitItem), vSlotDisplayName))
+			self:DebugMessage("item already used for slot %s", tostring(pInventorySlot))
 		else
 			self:ErrorMessage(format(self.cItemNotFoundError, self:GenerateItemLink(pOutfitItem)))
+			self:DebugMessage("can't find item for slot %s", tostring(pInventorySlot))
 		end
 	else
 		self:ErrorMessage(format(self.cItemNotFoundError, "unknown"))

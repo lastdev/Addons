@@ -1,10 +1,10 @@
 local mod	= DBM:NewMod(691, "DBM-Pandaria", nil, 322)	-- 322 = Pandaria/Outdoor I assume
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7887 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 8599 $"):sub(12, -3))
 mod:SetCreatureID(60491)
 mod:SetModelID(41448)
-mod:SetZone(809)--Kun-Lai Summit (zoneid not yet known)
+mod:SetZone(809)--Kun-Lai Summit
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
 
 -- TODO: This is field boss, if you die while combat, you can go tomb and revive as you wish.
@@ -13,7 +13,7 @@ mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
 -- Also, you can enter combat while boss fights (not 100% health). 
 -- On this situration, block OnCombatStart() function will be better (+ do not record kill time)
 mod:RegisterCombat("combat")
-mod:SetWipeTime(180)
+mod:SetWipeTime(120)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
@@ -31,7 +31,7 @@ local specWarnGrowingAnger		= mod:NewSpecialWarningYou(119622)
 local specWarnBitterThoughts	= mod:NewSpecialWarningMove(119610)
 
 local timerGrowingAngerCD		= mod:NewCDTimer(32, 119622)--Min 32.6~ Max 67.8
-local timerUnleashedWrathCD		= mod:NewCDTimer(77, 119488)--Based on rage, but timing is consistent enough to use a CD bar, might require some perfecting later, similar to xariona's special, if rage doesn't reset after wipes, etc.
+local timerUnleashedWrathCD		= mod:NewCDTimer(53, 119488)--Based on rage, but timing is consistent enough to use a CD bar, might require some perfecting later, similar to xariona's special, if rage doesn't reset after wipes, etc.
 local timerUnleashedWrath		= mod:NewBuffActiveTimer(24, 119488, nil, mod:IsTank() or mod:IsHealer())
 
 --local berserkTimer				= mod:NewBerserkTimer(900)--he did not seems to berserk. my combat lasts 20 min, not berserks at all.
@@ -44,6 +44,7 @@ local warnMCTargets = {}
 local mcTargetIcons = {}
 local mcIcon = 8
 local bitterThought = GetSpellInfo(119601)
+local playerMCed = false
 
 local function debuffFilter(uId)
 	return UnitDebuff(uId, GetSpellInfo(119622))
@@ -73,7 +74,7 @@ do
 			self:SetIcon(v, mcIcon)
 			mcIcon = mcIcon - 1
 		end
-		self:Schedule(10, clearMCTargets)--delay 10 sec. (mc sperad takes 2~3 sec, and dead players do not get the SPELL_AURA_REMOVED event)
+		self:Schedule(10, clearMCTargets)--delay 10 sec. (mc spread takes 2~3 sec, and dead players do not get the SPELL_AURA_REMOVED event)
 	end
 end
 
@@ -102,6 +103,7 @@ local function showMC()
 end
 
 function mod:OnCombatStart(delay)
+	playerMCed = false
 	table.wipe(warnpreMCTargets)
 	table.wipe(warnMCTargets)
 	mcIcon = 8
@@ -150,12 +152,18 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnMCTargets[#warnMCTargets + 1] = args.destName
 		self:Unschedule(showMC)
 		self:Schedule(2.5, showMC)--These can be vastly spread out, not even need to use 3, depends on what more data says. As well as spread failures.
+		if args:IsPlayer() then
+			playerMCed = true
+		end
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
 	if args:IsSpellID(119626) and self.Options.SetIconOnMC then--Remove them after the MCs break.
 		removeIcon(args.destName)
+		if args:IsPlayer() then
+			playerMCed = false
+		end
 	elseif args:IsSpellID(119488) then
 		timerUnleashedWrathCD:Start()
 	end
@@ -163,7 +171,7 @@ end
 
 function mod:UNIT_AURA(uId)
 	if uId ~= "player" then return end
-	if UnitDebuff("player", bitterThought) and self:AntiSpam(2) then
+	if UnitDebuff("player", bitterThought) and self:AntiSpam(2) and not playerMCed then
 		specWarnBitterThoughts:Show()
 	end
 end

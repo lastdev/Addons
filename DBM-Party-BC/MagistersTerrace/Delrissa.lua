@@ -1,7 +1,7 @@
 local mod = DBM:NewMod("Delrissa", "DBM-Party-BC", 16)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 403 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 435 $"):sub(12, -3))
 
 mod:SetCreatureID(24560, 24557, 24558, 24554, 24561, 24559, 24555, 24553, 24556)--24560 is main boss.
 mod:SetModelID(22596)
@@ -28,7 +28,7 @@ local warnPWShield      = mod:NewTargetAnnounce(44175, 2, nil, false)
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(17843) and self:IsInCombat() then                                -- Delrissa's Flash Heal
 		warnFlashHeal:Show()
-	elseif args:IsSpellID(46181, 44256) then                                           -- Apoko's LHW
+	elseif args:IsSpellID(44256, 46181) then                                           -- Apoko's LHW
 		warnLHW:Show()
 	end
 end

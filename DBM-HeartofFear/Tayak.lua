@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(744, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8072 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 8664 $"):sub(12, -3))
 mod:SetCreatureID(62543)
 mod:SetModelID(43141)
 mod:SetZone()
@@ -37,39 +37,26 @@ local timerTempestSlashCD				= mod:NewNextTimer(15.5, 125692)
 local timerOverwhelmingAssault			= mod:NewTargetTimer(45, 123474, nil, mod:IsTank())
 local timerOverwhelmingAssaultCD		= mod:NewCDTimer(20.5, 123474, nil, mod:IsTank() or mod:IsHealer())--Only ability with a variation in 2 pulls so far. He will use every 20.5 seconds unless he's casting something else, then it can be delayed as much as an extra 15-20 seconds. TODO: See if there is a way to detect when variation is going to occur and call update timer.
 local timerWindStepCD					= mod:NewCDTimer(25, 123175)
-local timerUnseenStrike					= mod:NewCastTimer(5, 123017)
-local timerUnseenStrikeCD				= mod:NewCDTimer(55, 123017) -- this spell seems to have 2 cooldowns. some fight 55, some  61. 
+local timerUnseenStrike					= mod:NewCastTimer(4.8, 123017)
+local timerUnseenStrikeCD				= mod:NewCDTimer(53, 123017) -- 53~61 cd.
 local timerIntensifyCD					= mod:NewNextTimer(60, 123471)
 local timerBladeTempest					= mod:NewBuffActiveTimer(9, 125310)
 local timerBladeTempestCD				= mod:NewNextTimer(60, 125310)--Always cast after immediately intensify since they essencially have same CD
 
-local berserkTimer						= mod:NewBerserkTimer(480)
+local countdownTempest					= mod:NewCountdown(60, 125310)
+local berserkTimer						= mod:NewBerserkTimer(490)
 
 local soundBladeTempest					= mod:NewSound(125310)
 
 mod:AddBoolOption("RangeFrame", mod:IsRanged())--For Wind Step
 mod:AddBoolOption("UnseenStrikeArrow")
 
-local emoteFired = false
 local intensifyCD = 60
-
-local function checkUnseenEmote()
-	if not emoteFired then
-		warnUnseenStrike = mod:NewSpellAnnounce(123017, 4)
-		specWarnUnseenStrike = mod:NewSpecialWarningSpell(122949)
-		warnUnseenStrike:Show()
-		specWarnUnseenStrike:Show()
-		timerUnseenStrike:Start(4.2)
-		timerUnseenStrikeCD:Start(54.2)
-		-- recover Unseen Strike Target Warning
-		warnUnseenStrike = mod:NewTargetAnnounce(123017, 4)
-		specWarnUnseenStrike = mod:NewSpecialWarningTarget(122949)
-	end
-end
+local phase2 = false
 
 function mod:OnCombatStart(delay)
-	emoteFired = false
 	intensifyCD = 60
+	phase2 = false
 	timerTempestSlashCD:Start(10-delay)
 	timerOverwhelmingAssaultCD:Start(15.5-delay)--Possibly wrong, the cd was shortened since beta, need better log with engage timestamp
 	timerWindStepCD:Start(20.5-delay)
@@ -80,9 +67,10 @@ function mod:OnCombatStart(delay)
 	end
 	if self:IsDifficulty("heroic10", "heroic25") then
 		timerBladeTempestCD:Start(-delay)
+		countdownTempest:Start(-delay)
 	end
-	if self.Options.RangeFrame then
-		DBM.RangeCheck:Show(8)
+	if self.Options.RangeFrame and not self:IsDifficulty("lfr25") then
+		DBM.RangeCheck:Show(10)
 	end
 end
 
@@ -109,7 +97,9 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 	elseif args:IsSpellID(123471) then
-		warnIntensify:Show(args.destName, args.amount or 1)
+		if phase2 and (args.amount or 1) % 3 == 0 or not phase2 then
+			warnIntensify:Show(args.destName, args.amount or 1)
+		end
 		timerIntensifyCD:Start(intensifyCD)
 	end
 end
@@ -128,6 +118,7 @@ function mod:SPELL_CAST_START(args)
 		soundBladeTempest:Play()
 		timerBladeTempest:Start()
 		timerBladeTempestCD:Start()
+		countdownTempest:Start()
 	end
 end
 
@@ -136,13 +127,16 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerOverwhelmingAssaultCD:Start()--Start CD here, since this might miss.
 	elseif args:IsSpellID(123175) then
 		warnWindStep:Show(args.destName)
-		timerWindStepCD:Start()
+		if self:IsDifficulty("lfr25") then
+			timerWindStepCD:Start(30)
+		else
+			timerWindStepCD:Start()
+		end
 	end
 end
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
-	if msg:find("spell:122949") then--Does not show in combat log except for after it hits. IT does fire a UNIT_SPELLCAST event but has no target info. The only way to get target is emote.
-		emoteFired = true
+	if msg:find("spell:122949") then--Does not show in combat log except for after it hits. IT does fire a UNIT_SPELLCAST event but has no target info. You can get target 1 sec faster with UNIT_AURA but it's more cpu and not worth the trivial gain IMO
 		warnUnseenStrike:Show(target)
 		specWarnUnseenStrike:Show(target)
 		timerUnseenStrike:Start()
@@ -151,28 +145,32 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 			yellUnseenStrike:Yell()
 		end
 		if self.Options.UnseenStrikeArrow then
-			DBM.Arrow:ShowRunTo(target, 5, 5)
+			DBM.Arrow:ShowRunTo(target, 3, 3, 5)
 		end
-		self:Schedule(5, function()
-			emoteFired = false
-		end)
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 122839 and self:AntiSpam(2, 1) then--Tempest Slash. DO NOT ADD OTHER SPELLID. 122839 is primary cast, 122842 is secondary cast 3 seconds later. We only need to warn for primary and start CD off it and it alone.
 		warnTempestSlash:Show()
-		timerTempestSlashCD:Start()
-	elseif spellId == 122949 and self:AntiSpam(2, 3) then-- sometimes Unseen Strike emote not fires. bliz bug.
-		self:Schedule(0.8, checkUnseenEmote)
+		if self:IsDifficulty("lfr25") then
+			timerTempestSlashCD:Start(20)
+		else
+			timerTempestSlashCD:Start()
+		end
 	elseif spellId == 123814 and self:AntiSpam(2, 2) then--Do not add other spellids here either. 123814 is only cast once, it starts the channel. everything else is cast every 1-2 seconds as periodic triggers.
+		phase2 = true
 		intensifyCD = 10
+		if self.Options.RangeFrame then
+			DBM.RangeCheck:Hide()
+		end
 		timerTempestSlashCD:Cancel()
 		timerOverwhelmingAssaultCD:Cancel()
 		timerWindStepCD:Cancel()
 		timerUnseenStrikeCD:Cancel()
 		timerIntensifyCD:Cancel()
 		timerBladeTempestCD:Cancel()
+		countdownTempest:Cancel()
 		warnStormUnleashed:Show()
 		specWarnStormUnleashed:Show()
 	end

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: BeanCounter.lua 5266 2012-01-12 03:33:30Z kandoko $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: BeanCounter.lua 5377 2012-11-11 12:13:10Z brykrys $
 
 	BeanCounterCore - BeanCounter: Auction House History
 	URL: http://auctioneeraddon.com/
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounter.lua $","$Rev: 5266 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounter.lua $","$Rev: 5377 $","5.1.DEV.", 'auctioneer', 'libs')
 
 --AucAdvanced.Modules["Util"]["BeanCounter"]
 
@@ -125,7 +125,7 @@ if AucAdvanced and AucAdvanced.NewModule then
 		if lib.API.isLoaded then
 			private.storeReasonForBid(...)
 		end
-	end		
+	end
 end
 
 -- lib.API.isLoaded  is false until DB is ready and all gui and API elements have been created
@@ -176,14 +176,14 @@ function lib.OnLoad(addon)
 	--mail
 	Stubby.RegisterFunctionHook("TakeInboxMoney", -100, private.PreTakeInboxMoneyHook)
 	Stubby.RegisterFunctionHook("TakeInboxItem", -100, private.PreTakeInboxItemHook)
-	
+
 	--Bids
 	Stubby.RegisterFunctionHook("PlaceAuctionBid", 50, private.postPlaceAuctionBidHook)
 	--Posting
 	Stubby.RegisterFunctionHook("StartAuction", -100, private.preStartAuctionHook)
 	--Vendor
 	--hooksecurefunc("BuyMerchantItem", private.merchantBuy)
-	
+
 	tooltip:Activate()
 	tooltip:AddCallback(private.processTooltip, 700)
 
@@ -195,13 +195,13 @@ end
 function private.initializeDB(server, player)
 	if not server then server = private.realmName end
 	if not player then player = private.playerName end
-	
+
 	local db = BeanCounterDB
 	if not db then
 		db = {}
 		BeanCounterDB = db
 	end
-	
+
 	if not db[server] then
 		db[server] = {}
 	end
@@ -209,7 +209,7 @@ function private.initializeDB(server, player)
 	if not db[server][player] then
 		local playerData = {}
 		db[server][player] = playerData
-		
+
 		playerData["vendorbuy"] = {}
 		playerData["vendorsell"] = {}
 
@@ -220,7 +220,7 @@ function private.initializeDB(server, player)
 		playerData["postedBids"] = {}
 		playerData["completedBidsBuyouts"]  = {}
 		playerData["failedBids"]  = {}
-		
+
 		playerData["completedAuctionsNeutral"] = {}
 		playerData["failedAuctionsNeutral"] = {}
 
@@ -233,15 +233,15 @@ function private.initializeDB(server, player)
 		db = {}
 		BeanCounterDBSettings = db
 	end
-	
+
 	if not db[server] then
 		db[server] = {}
 	end
-	
+
 	if not db[server][player] then
 		local playerData = {}
 		db[server][player] = playerData
-		
+
 		playerData["version"] = private.version
 		playerData["faction"] = "unknown" --faction is recorded when we get the login event
 		playerData["wealth"] = GetMoney()
@@ -275,7 +275,7 @@ function private.slidebar()
 						private.GUI(self, button)
 					end,
 				})
-				
+
 		function private.LDBButton:OnTooltipShow()
 			local count, items = private.DBSumEntry or 0, private.DBSumItems or 0
 			self:AddLine("BeanCounter",  1,1,0.5, 1)
@@ -285,7 +285,7 @@ function private.slidebar()
 			self:AddLine("|cff1fb3ff".."Click|r to view your activity report.",  1,1,0.5, 1)
 			self:AddLine("|cff1fb3ff".."Right-Click|r to edit the configuration",  1,1,0.5, 1)
 		end
-		
+
 		function private.LDBButton:OnEnter()
 			--print(self)
 			GameTooltip:SetOwner(self, "ANCHOR_NONE")
@@ -310,11 +310,11 @@ end
 function private.sumDEValue()
 	local deMat, quantity =	private.bag["link"],  private.bag["quantity"]
 	local itemLink = private.bag["DElink"]
-	if not itemLink or not deMat or not quantity then 
-		debugPrint("Missing data for DE event", itemLink, deMat, quantity) 
+	if not itemLink or not deMat or not quantity then
+		debugPrint("Missing data for DE event", itemLink, deMat, quantity)
 		return
 	end
-	
+
 	--use average sell price or fall back and use auctionner if possible
 	local settings = {["selectbox"] = {"1", "server"} ,["auction"] = true}
 	local data = lib.API.search(deMat, settings, true)
@@ -339,7 +339,7 @@ function private.sumDEValue()
 	deMat = lib.API.decodeLink(deMat)
 	--print("We Disnechnated ", itemLink, " into ", deMat, quantity, profit)
 	if not deMat or not quantity or not profit then return end
-	
+
 	local meta = string.join(":", "DE", deMat, quantity, profit)
 	meta = meta.."|"
 	private.attachMeta( itemLink, meta )
@@ -348,7 +348,7 @@ end
 function private.attachMeta( itemLink, meta )
 	local itemString = lib.API.getItemString(itemLink)
 	local itemID, suffix = lib.API.decodeLink(itemLink)
-	
+
 	for  player, playerData in pairs(private.serverData) do
 		for DB, data in pairs(playerData) do
 			if   DB == "completedBidsBuyouts" or DB == "completedBidsBuyoutsNeutral" then
@@ -359,11 +359,11 @@ function private.attachMeta( itemLink, meta )
 							if META == 0 then
 								META = meta
 							else
-								META = META.."|"..meta								
+								META = META.."|"..meta
 							end
-							
+
 							local newText = private.packString(STACK, NET, DEPOSIT, FEE, BUY, BID, SELLERNAME, TIME, REASON, META)
-						
+
 							table.remove(data[itemID][itemString], i)
 							private.databaseAdd(DB, nil, itemString, newText)
 							--print(newText)
@@ -386,7 +386,22 @@ function private.onEvent(frame, event, arg, ...)
 		private.scriptframe:UnregisterEvent("PLAYER_ENTERING_WORLD") --no longer care about this event after we get our current wealth
 		private.wealth = GetMoney()
 		private.playerSettings["wealth"] = private.wealth
-
+		local faction = UnitFactionGroup("player")
+		if faction == "Alliance" or faction == "Horde" then
+			private.playerSettings["faction"] = faction
+		elseif faction == "Neutral" then -- Pandarian
+			private.scriptframe:RegisterEvent("NEUTRAL_FACTION_SELECT_RESULT")
+			private.playerSettings["faction"] = "unknown" -- don't use "Neutral" as that refers to the Neutral Auctionhouse
+		else
+			-- faction is only permitted to be one of "Alliance", "Horde" or "unknown"
+			-- if there's a valid faction saved from a previous session, use that
+			-- otherwise (nil, unknown or possibly corrupt) overwrite data with "unknown"
+			local oldfaction = private.playerSettings["faction"]
+			if oldfaction ~= "Alliance" and oldfaction ~= "Horde" then
+				private.playerSettings["faction"] = "unknown"
+			end
+		end
+		private.faction = faction -- not used by BeanCounter; record of actual return value for possible debugging
 	elseif (event == "MAIL_INBOX_UPDATE") or (event == "MAIL_SHOW") or (event == "MAIL_CLOSED") then
 		private.mailMonitor(event, arg, ...)
 
@@ -395,16 +410,27 @@ function private.onEvent(frame, event, arg, ...)
 
 	elseif (event == "UPDATE_PENDING_MAIL") then
 		private.hasUnreadMail()
-		--we also use this event to get faction data since the faction often returns nil if called after "PLAYER_ENTERING_WORLD"
-		private.faction = UnitFactionGroup(UnitName("player"))
-		private.playerSettings["faction"] =  private.faction or "unknown"
-
+		--we also use this event to get faction data - legacy as faction detection was previously unreliable
+		if private.playerSettings["faction"] == "unknown" then
+			local faction = UnitFactionGroup("player")
+			if faction == "Alliance" or faction == "Horde" then
+				private.playerSettings["faction"] = faction
+			end
+			private.faction = faction
+		end
 	elseif (event == "ADDON_LOADED") then
 		if arg == "BeanCounter" then
 		   lib.OnLoad()
 		   private.scriptframe:UnregisterEvent("ADDON_LOADED")
 		end
-	end		
+	elseif event == "NEUTRAL_FACTION_SELECT_RESULT" then
+		local faction = UnitFactionGroup("player")
+		if faction == "Alliance" or faction == "Horde" then
+			private.playerSettings["faction"] = faction
+		end
+		private.faction = faction
+		private.scriptframe:UnregisterEvent("NEUTRAL_FACTION_SELECT_RESULT")
+	end
 end
 --scripts that handle recording DE events
 local inDEState = false
@@ -425,7 +451,7 @@ function private.onEventDisenchant(frame, event, arg, spell, _, _, spellID)
 		end
 		private.sumDEValue()
 		inDEState =  false
-	end		
+	end
 end
 
 --[[ Utility Functions]]--
@@ -477,7 +503,7 @@ function private.unpackString(text)
 	if Time == "" then Time = "0" end
 	if reason == "" then reason = "0" end
 	if meta == "" then meta = "0" end
-	
+
 	return stack, money, deposit , fee, buyout , bid, buyer, Time, reason, meta
 end
 --[[
@@ -490,9 +516,9 @@ function private.databaseAdd(key, itemLink, itemString, value, compress, server,
 	if itemLink and not itemString then
 		itemString = lib.API.getItemString(itemLink)
 	end
-	
+
 	if not key or not itemString or not value then
-		debugPrint("BeanCounter database add error: Missing required data") 
+		debugPrint("BeanCounter database add error: Missing required data")
 		debugPrint("Database:", key, "itemString:", itemString, "Value:", value, "compress:",compress)
 		return false
 	end
@@ -500,7 +526,7 @@ function private.databaseAdd(key, itemLink, itemString, value, compress, server,
 	if key == "failedBids" or key == "failedAuctions" or key == "failedAuctionsNeutral" or key == "failedBidsNeutral"  then
 		compress = true
 	end
-	
+
 	local item, itemID, enchantID, jewelID1, jewelID2, jewelID3, jewelID4, suffixID, uniqueID, linkLevel, reforged = strsplit(":", itemString)
 	--if this will be a compressed entry replace uniqueID with 0 or its scaling factor
 	if compress then
@@ -515,9 +541,9 @@ function private.databaseAdd(key, itemLink, itemString, value, compress, server,
 	--use current player unless we pass in a server, player
 	local db = private.playerData
 	if BeanCounterDB[server] and BeanCounterDB[server][player] then
-		db = BeanCounterDB[server][player] 
+		db = BeanCounterDB[server][player]
 	end
-	
+
 	if db[key][itemID] then --if ltemID exists
 		if db[key][itemID][itemString] then
 			tinsert(db[key][itemID][itemString], 1, value) --insert into front of array
@@ -559,11 +585,11 @@ end
 function private.storeReasonForBid(CallBack)
 	--debugPrint("bidplaced", CallBack)
 	if not CallBack then return end
-	
+
 	local itemLink, seller, count, buyout, price, reason = strsplit(";", CallBack)
 	local itemString = lib.API.getItemString(itemLink)
 	local itemID, suffix = lib.API.decodeLink(itemLink)
-	
+
 	if private.playerData.postedBids[itemID] and private.playerData.postedBids[itemID][itemString] then
 		for i, v in pairs(private.playerData.postedBids[itemID][itemString]) do
 			local postCount, postBid, postSeller, isBuyout, postTimeLeft, postTime, postReason = private.unpackString(v)

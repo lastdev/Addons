@@ -1,6 +1,6 @@
 --[[
 	BeanCounter Addon for World of Warcraft(tm).
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 	Revision: $Id: BeanCounterLocale.lua 3583 2008-10-11 16:50:02Z Norganna $
 	URL: http://auctioneeraddon.com/
 

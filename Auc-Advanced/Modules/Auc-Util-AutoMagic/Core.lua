@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: Core.lua 5345 2012-09-05 11:17:00Z brykrys $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: Core.lua 5380 2012-11-12 19:58:06Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	AutoMagic is an Auctioneer module which automates mundane tasks for you.
@@ -76,6 +76,10 @@ local isGem =
 	[36921] = true,--AUTUMNSGLOW
 	[24243] = true,--Adamantite Powder
 	[31079] = true,--Mercurial Adamantite
+	[41334] = true,--Earthsiege Diamond
+	[41266] = true,--Skyflare Diamond
+	[25867] = true,--Earthstorm Diamond
+	[25868] = true,--Skyfire Diamond
 	--EPIC 80
 	[36919] = true,--Cardinal Ruby
 	[36922] = true,--KING'S AMBER
@@ -100,11 +104,42 @@ local isGem =
 	[52182] = true,--Jasper
 	[52180] = true,--Nightstone
 	[52178] = true,--Zephyrite
+	--Catclysm Epic
+	[71805] = true,--Queen's Garnet
+	[71806] = true,--Lightstone
+	[71807] = true,--Deepholm Iolite
+	[71808] = true,--Lava Coral
+	[71809] = true,--Shadow Spinel
+	[71810] = true,--Elven Peridot
+	--Pandarian Uncommon
+	[76130] = true,--Tiger Opal
+	[76133] = true,--Lapis Lazuli
+	[76134] = true,--Sunstone
+	[76135] = true,--Roguestone
+	[76136] = true,--Pandarian Garnet
+	[76137] = true,--Alexandrite
+	--Padarian Rare
+	[76131] = true,--Primordial Ruby
+	[76138] = true,--River's Heart
+	[76139] = true,--Wild Jade
+	[76140] = true,--Vermilion Onyx
+	[76141] = true,--Imperial Amethyst
+	[76142] = true,--Sun's Radiance
+	--Pandarian Other
+	[76132] = true,--Primal Diamond
+	[76734] = true,--Serpent's Eye
+	[90407] = true,--Sparkling Shard
 }
 
 -- This table is validating that each ID within it is a mat from disenchanting.
 local isDEMats =
 	{
+	--Pandarian
+	[74248] = true,--Sha Crystal
+	[74247] = true,--Ethereal Shard
+	[74252] = true,--Small Ethereal Shard
+	[74250] = true,--Mysterious Essence
+	[74249] = true,--Spirit Dust
 	--Cataclysm
 	[52722] = true, --Maelstrom Crystal
 	[52721] = true, --Heavenly Shard
@@ -172,6 +207,9 @@ local isPigmentMats =
 	--Cataclysm
 	[61979] = true,-- ASHEN_PIGMENT
 	[61981] = true,-- BURNING_EMBERS
+	--Pandarian
+	[79251] = true,--Shadow Pigment
+	[79253] = true,--Misty Pigment
 }
 -- This table is validating that each ID within it is a herb. Data from informant. This allows locale independent herbs
 local isHerb =
@@ -238,6 +276,14 @@ local isHerb =
 	[52986] = true,-- HEART BLOSSOM
 	[52987] = true,-- TWILIGHT JASMINE
 	[52988] = true,-- WHIPTAIL
+	--Pandarian
+	[72234] = true,--Green Tea Leaf
+	[72235] = true,--Silkweed
+	[72237] = true,--Rain Poppy
+	[72238] = true,--Golden Lotus
+	[79010] = true,--Snow Lily
+	[79011] = true,--Fool's Cap
+	[89639] = true,--Desecrated Herb
 	}
 
 --what armor each class can use localized
@@ -248,6 +294,7 @@ local isClass = {
 	["PRIEST"] = CLOTH,
 	["WARLOCK"] = CLOTH,
 	["DRUID"] = LEATHER,
+	["MONK"] = LEATHER,
 	["ROGUE"] = LEATHER,
 	--lvl 40
 	["WARRIOR"] = PLATE,
@@ -671,4 +718,4 @@ function lib.customAction(button)
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AutoMagic/Core.lua $", "$Rev: 5345 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AutoMagic/Core.lua $", "$Rev: 5380 $")

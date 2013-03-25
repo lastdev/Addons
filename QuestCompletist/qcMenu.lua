@@ -263,7 +263,7 @@ qcCategoryMenu = {
 			{1089,qcL.THRONEOFTHEFOURWINDS},
 		},
 	},
-	{26,"EXPANSION_NAME4", -- NEEDS UPDATED FOR MOP
+	{26,GetText("EXPANSION_NAME4"),
 		{
 		},
 	},

@@ -8,6 +8,42 @@ IMPORTANT NOTE: If you're upgrading from 4.x :
 - Make sure you delete the addon's databases in SavedVariables. ie: Altoholic.lua and all DataStore*.lua.
 - Make sure to delete the old addon directories (Altoholic & all DataStore modules) as many files have changed/moved. A patch like this one is always a good opportunity for a fresh install.
 
+5.2.001 (12/03/2013)
+
+- Added new pane in the 'Grids' tab to track dailies across all alts. Dailies are stored in DataStore_Quests and reset at 3am.
+- Added 5.2 achievements.
+- Added 5.2 pets.
+- Fixed a bug while scanning reputations (Thanks Sylvannis !).
+- Fixed a Lua error in the tabards pane.
+- Added a safeguard to prevent tooltip errors when mousing over a recipe, this seems to be caused by other tooltip addons/libs.
+- Added the Mantid archaeology race.
+- Fixed scanning quest history.
+
+
+Note: I have tried to look into an issue where profession cooldowns are announced at the wrong time, mostly for people playing on US realms.
+Unfortunately, I could not make any solid tests (UK realms return me the same realm time as other EU realms .. weird).
+If anyone can provide me with more info, I would gladly help.
+
+Places to check in the code:
+Altoholic\Events.lua: as of line 427
+DataStore_Agenda\DataStore_Agenda.lua: look at how I set the variable clientServerTimeGap, see if results are consistent.
+
+
+5.1.002 (24/02/2013)
+
+- Updated both Achievements & Grids tab to show 11 characters per realm.
+- Support for tabards is back.
+
+5.1.001 (29/11/2012)
+
+- Fixed 5.0.003 archive, DataStore_Achievements was missing.
+- Fixed .Toc files not updated for 5.1 in previous release.
+
+5.0.003 (28/11/2012)
+
+- Re-fixed searching for heirlooms (Thanks JCinDE !).
+- Scanning tabards is temporarily disabled, as it triggers an error I cannot fix right now.
+
 5.0.002 (06/10/2012)
 
 - Integrated the Void Storage to the container's UI (Characters -> Containers).
@@ -16,7 +52,7 @@ IMPORTANT NOTE: If you're upgrading from 4.x :
 - Added Mists of Pandaria crafts for each professions (Grids -> Tradeskills).
 - Fixed a few Lua errors related to Battle Pets. They are temporarily NOT scanned at the Auction House.
 
-Some features related to Battle Pets are now fully working, this is on my (neverending) to-do-list.
+Some features related to Battle Pets are not fully working, this is on my (neverending) to-do-list.
 
 5.0.001d (13/09/2012)
 

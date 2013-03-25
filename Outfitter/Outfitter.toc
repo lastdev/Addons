@@ -1,7 +1,7 @@
-## Interface: 50001
+## Interface: 50200
 ## Author: John Stephen
 ## Title: Outfitter
-## Version: 5.6.1
+## Version: 5.8.3
 ## Notes: Clothing and weapon management and automated equipment changes
 ## OptionalDeps: Titan, FuBar, TankPoints, ButtonFacade
 ## RequiredDeps: 
@@ -16,7 +16,6 @@ LibStub.lua
 CallbackHandler-1.0.lua
 LibDataBroker-1.1.lua
 LibBabble-3.0.lua
-LibBabble-Zone-3.0.lua
 LibBabble-SubZone-3.0.lua
 LibBabble-Inventory-3.0.lua
 LibTipHooker-1.1.lua

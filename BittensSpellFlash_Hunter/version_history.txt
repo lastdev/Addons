@@ -1,3 +1,32 @@
+== Version 3.0.2
+* Update to Bitten's SpellFlash Library to fix at least one reported error.
+
+== Version 3.0.1
+NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
+* All: Mend Pet no longer flashes red.  The main point of this release is the update to the library.
+
+== Version 3.0.0
+* Beast Mastery: Keeps focus a little lower, to make capping less likely with Invigoration.
+* Beast Mastery: Slightly smarter focus management when Fervor is nearly off cooldown.
+* Beast Mastery & Survival: Updated priorities based on new research in Simulationcraft.
+* Marksmanship: Added a Marksmanship rotation.
+* Survival: Tweaked focus management a little to allow for surprise Lock & Load procs.
+* All: Semi-workarounds for a bug in SpellFlash that affects when to cast/refresh Seprent Sting.
+* All: Correctly accounts for Aspect of the Iron Hawk.
+* All: Powershot is now an optional flash while moving.
+* All: Dire Beast will now flash with slightly higher focus.
+* All: Lyxn Rush will no longer flash if the bleed is already up.
+* All: Blink Strike is no longer an optional flash.
+
+== Version 2.6.0
+NOTE: Your options will be reset when you upgrade to this version.
+* Repackaging so that Bitten's SpellFlash Library is included with the addon, instead of downloaded separately.
+* Several other internal changes.
+* All: Removed Hunter's Mark, since it is always applied automatically in 5.2.
+
+== Version 2.5.2
+* Making the "Out of Date" status go away.  Please report any real issues w/ the new patch.
+
 == Version 2.5.1
 * No change, just releasing fully what was previously only in Beta.
 

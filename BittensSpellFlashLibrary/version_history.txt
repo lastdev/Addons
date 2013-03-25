@@ -1,3 +1,139 @@
+== Version 4.4.0
+This version supports the latest Shaman and Monk releases.
+* Added c.GetMinCooldown()
+* Added c.IsMissingTotem()
+* Added c.GetTotemDuration()
+
+== Version 4.3.2
+* Added Energizing Spores to c.SPELL_HASTE_BUFFS
+* Added Legacy of the White Tiger to c.CRIT_BUFFS
+
+== Version 4.3.1
+* Bugfix - occasional Lua error when logging in.
+
+== Version 4.3.0
+* Bugfix - c.RegisterOptions() was not setting the title at the top of the options window.
+* Bugfix - c.RegisterOptions() was not handling the "Spell Flashing" checkbox in the upper left.
+* Bugfix - now tracks the travel time of spells internally, since SpellFlash's methods got buggy w/ 5.2.
+* Bugfix - work around a quirk in LibActionButton that broke the red border for proc highlights in certain action bar positions.
+* If you pass an argument to c.ToggleDebugging() it now toggles whether that tag is printed by c.Debug().
+* c.AddSpell() now looks for the Applies attribute.
+* Removed c.RegisterAura(), in favor of the new Applies attribute.
+* Removed c.EstimateTravelTime(), since it was never used outside of the library itself.
+* Added c.IsTagOn()
+
+== Version 4.2.3
+This release is important for the latest Monk version, and may fix unreported issues with non-English clients.
+* Bugfix - c.GetBufStack() would always report 0 on non-English clients.
+
+== Version 4.2.2
+This release should make some modules more friendly for lower-level characters.  But there are still no promises about how well any of them will work at lower levels.
+* c.GetCooldown() now reports a large number when you don't have the spell.
+* c.PriorityFlash() now prints the flashing spell to debug output.
+
+== Version 4.2.1
+This release may affect many classes, but only if you don't have all of your spec's important spells on your action bar (e.g. because you are low level).
+* c.PriorityFlash() now consults s.ItemFlashable() and s.Flashable().
+
+== Version 4.2.0
+This release supports the latest Warlock version.
+IMPORTANT NOTE: You should not have to download this, or any future version of Bitten's SpellFlash Library.  It will be included with future versions of class modules from now on.
+* c.IsSolo() now optionally factors in whether you are queued for a dungeon/raid/scenario.
+
+== Version 4.1.0
+IMPORTANT NOTE: You should not have to download this, or any future version of Bitten's SpellFlash Library.  It will be included with future versions of class modules from now on.
+This updated supports the latest Priest & Atonement releases.
+* No longer flashes anything when you are a ghost.
+* Added c.IdMatches().
+* Replaced Blood Pact with Dark Intent in c.STAMINA_BUFFS.
+
+== Version 4.0.0
+IMPORTANT NOTE: You should not have to download this, or any future version of Bitten's SpellFlash Library.  It will be included with future versions of class modules from now on.
+* No longer flashes anything when you are dead.
+* Replaced the global table management in Utils with BittensGlobalTables (which is better).
+* Converted to the new global table management.
+* Added u.SkipOrUpgrade().
+* Added everything in OptionsFrames.lua.
+* The flags to turn rotations on/off now follow the convention Flash<RotationName>.  It flashes when c.GetOption(flagname) is true.
+* Added c.RegisterAddon(), which also takes care of calling c.RegisterForEvents() and s.RegisterModuleSpamFunction.
+* Removed c.Flash().
+* c.PriorityFlash() now correctly colors spells for AoE that set their own color within CheckFirst.
+* c.DistanceAtTheMost() now works for friendly targets ... though perhaps not with the same granularity. 
+
+== Version 3.22.2
+IMPORTANT NOTE: You should not have to download this, or any future version of Bitten's SpellFlash Library.  It will be included with future versions of class modules from now on.
+* Removed some debug output.
+
+== Version 3.22.1 beta
+* Reduced overhead when integrating with LibActionButton.
+
+== Version 3.22.0 beta
+This marks the first version you should never have to download.  Instead, a copy of the library will be included with each class module (once each is updated).
+* Added u.MakeGlobalTable()
+* Added u.GetOrMakeGlobalTable()
+* Added u.RegisterSlashCommand()
+* Added u.MagicallyIncrement()
+* The library will only be defined once, using the most recent version (via u.MakeGlobalTable()).
+* Moved key bindings to slash commands, since key bindings cannot be defined in an embedded library. They are now available in a separate addon: Bitten's SpellFlash Key Bindings.
+* The slash command functionalities now always print out a message when toggled.
+
+== Version 3.21.1
+This bugfix release may affect any spec that uses channeled spells, and especially the new Monk version.
+* Bugfix - c.IsCasting() and c.RegisterForEvents() callbacks now correctly account for a channeled spell that is interrupted by re-casting the same spell.
+
+== Version 3.21.0
+This version has updates that apply to almost every class, and is necessary for the latest Warlock release.  One change could have subtle quirks for any class if I got it wrong, so please notify me right away if something seems a little off after the update.
+* Changed AoE color from purple to more bluish.  It will not be quite as easy to distinguish from white (the single-target color), but much easier to distinguish from red (which more and more modules are using).
+* Changed c.IsCasting() to work around a bug in WoW.
+* Added c.DistanceAtTheLeast() and c.DistanceAtTheMost().
+* Added Aura of the Elements to c.MAGIC_VULNERABILITY_DEBUFFS.
+
+== Version 3.20.0
+This update supports the latest Warlock and Mage releases.
+* Spell power & spell haste raid buffs no longer flash just because a non-mana-user lacks them.
+* Removed SpellSchool arguments & added targetID arguments to c.RegisterForEvents() callbacks.
+* c.RegisterForEvents() now handles spells that fail and succeed at the same time (such as Warlock spells cast with Soulburn).
+* Added u.GetFromTable()
+* Added u.GetOrMakeTable()
+
+== Version 3.19.1
+This update supports the latest Warlock release.
+* The AuraRemoved() callback for c.RegisterForEvents() now takes a new argument: "quiet". 
+
+== Version 3.19.0
+This update supports the latest Warlock release, and will support some upcoming releases for tanking classes.
+* Added c.IsQueued()
+* c.FlashMitigationBuffs() now checks for an Enabled() function on spells.
+
+== Version 3.18.2
+This update supports the latest Mage release.  It also corrects a mistake in the last release, so my apologies but everyone should update again.
+* c.GetCastingInfo() now includes spells that are being channeled.
+* Bugfix - c.RaidBuffNeeded() was refreshing at 2 and 5 seconds, instead of minutes!  Oops!
+* Bugfix - c.ManageDotRefresh() no longer updates channeled spells on each tick.  Now it's only once when channeling starts, as it should be.
+
+== Version 3.18.1
+This version corrects 2 issues that may affect many modules.  I recommend everyone update.
+* c.SelfBuffNeeded() and c.RaidBuffNeeded() now refresh at 2 minutes out of combat when the player is solo.
+* Bugfix - c.IsCasting() could sometimes report false when it shouldn't.
+* Bugfix - c.GetCastTime() could sometimes report a number lower than the GCD even noGCD was false.
+
+== Version 3.18.0
+This update supports the latest Druid release.
+It also adds green, small flashes for all tank rotations when a healing cooldown is being held until you take damage.
+* c.FlashMitigationBuffs() now respects the FlashID property.
+* c.FlashMitigationBuffs() now flashes cooldowns that it is holding small and green.
+
+== Version 3.17.0
+This update supports the latest Warrior release, and may fix a bug for Blood and Brewmaster tanks who do not use an English client.
+* c.FlashMitigationBuffs() new checks spell.IsUp().
+* c.FlashMitigationBuffs() now uses spell.ID instead of the name of the buff.
+* Added c.HasDebuff().
+* Added c.GetDebuffStack().
+
+== Version 3.16.3
+* A little bit of work on the red border proc highlights.  I think the only visible change is that they are slightly bigger now.
+* Making the "Out of Date" status go away.
+
 == Version 3.16.2
 * No change, just releasing fully what was previously only in Beta.
 

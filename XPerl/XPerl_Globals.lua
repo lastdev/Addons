@@ -29,7 +29,7 @@ function XPerl_SetModuleRevision(rev)
 end
 local AddRevision = XPerl_SetModuleRevision
 
-XPerl_SetModuleRevision("$Revision: 660 $")
+XPerl_SetModuleRevision("$Revision: 791 $")
 
 function XPerl_Notice(...)
 	if (DEFAULT_CHAT_FRAME) then
@@ -308,14 +308,16 @@ end ]]
 
 -- onEventPostSetup
 local function onEventPostSetup(self, event, unit, ...)
-	if (unit and XPerl_UnitEvent(unit, event, unit, ...)) then
-		return
-	end
-
-	if (event == "PLAYER_REGEN_ENABLED") then
+	--if (unit and XPerl_UnitEvent(unit, event, unit, ...)) then
+	--	return
+	--end
+	--print(event)
+	--if (event == "PLAYER_REGEN_ENABLED") then
+		--print("something useful")
 		if (not XPerlDB) then
 			return
 		end
+		--print("dsadasd")
 		if (XPerl_OutOfCombatOptionSet) then
 			XPerl_OutOfCombatOptionSet = nil
 			XPerl_OptionActions()
@@ -323,7 +325,7 @@ local function onEventPostSetup(self, event, unit, ...)
 		for func,arg in pairs(XPerl_OutOfCombatQueue) do
 			assert(type(func) == "function")
 			func(arg)
-
+			--print("out of combat magiczzz:" .. tostring(arg))
 			--if (type(v) == "function") then
 			--	v()
 			--elseif (type(v) == "table") then
@@ -333,7 +335,7 @@ local function onEventPostSetup(self, event, unit, ...)
 			--end
 			XPerl_OutOfCombatQueue[func] = nil
 		end
-	end
+	--end
 end
 
 -- XPerl_RegisterLDB
@@ -429,8 +431,9 @@ function XPerl_Globals_OnEvent(self, event, arg1, ...)
 
 	elseif (event == "PLAYER_ENTERING_WORLD") then
 		self:UnregisterEvent(event)
-
-		--self:SetScript("OnEvent", onEventPostSetup)
+		self:UnregisterAllEvents();
+		self:RegisterEvent("PLAYER_REGEN_ENABLED");
+		self:SetScript("OnEvent", onEventPostSetup)
 		XPerl_Globals_OnEvent = nil
 	end
 end

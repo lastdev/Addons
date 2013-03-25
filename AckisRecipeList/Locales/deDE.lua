@@ -6,7 +6,7 @@ deDE localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 2.4.2
+Project version: 2.4.6
 ************************************************************************
 Original translated by: Winkiller, Dessa
 Currently maintained by:
@@ -152,6 +152,7 @@ L["Bernadette Dexter"] = true
 L["Bethany Cromwell"] = "Bethany Kromwell"
 L["Binding"] = "Bindung"
 L["Binkie Brightgear"] = "Binkie Klargang"
+L["Blackhand Assassin"] = "Auftragsmörder der Schwarzfaustlegion"
 L["Blackhand Elite"] = "Elitesoldat der Schwarzfaustlegion"
 L["BLACK_MARKET_AUCTION_HOUSE"] = "Wird nur von Madame Goya im Schwarzmarkt Auktionshaus verkauft.Keine Garantie das es immer erhältlich ist!"
 L["Blacksmith Calypso"] = "Schmied Calypso"
@@ -186,7 +187,8 @@ L["Bradley Towns"] = "Bradley Städter"
 L["Braeg Stoutbeard"] = "Braeg Starkbart"
 L["Brandig"] = true
 L["Brawn"] = true
-L["BRD_RANDOM_ROOM"] = "Es gibt eine Chance, dass es in 5 verschiedenen Räumen in den Schwarzfelstiefen gefunden werden kann; jedoch erscheint es zufällig und manchmal gar nicht."
+L["BRD_MAIL"] = "Es gibt vier Spawn Punkte in den Schwarzfelstiefen: kurz vorm Eingang zur Manufaktur, in Golemlord Arglemach's Zimmer, in der Manufaktur auf einer Bank oder in der Form Gießerei"
+L["BRD_SHOULDERS"] = "Es gibt einen seltener Spawn Punkt in den Schwarzfelstiefen: das Zimmer kurz nach der Schattenschmiede Tür und kurz vor der Arena, in der Ecke auf einigen Etagenbetten."
 L["Brek Stonehoof"] = "Brek Steinhuf"
 L["Brikk Keencraft"] = "Brikk Kühnwerk"
 L["Brock Stoneseeker"] = "Brock Steinsucher"
@@ -297,6 +299,7 @@ L["Danielle Zipstitch"] = "Danielle Stichelnaht"
 L["Dank Drizzlecut"] = "Dank Feinschliff"
 L["Dannelor"] = true
 L["Danwe"] = true
+L["Darian Singh"] = true
 L["Darin Goodstitch"] = "Darin Gutnaht"
 L["Dark Conclave Shadowmancer"] = "Schattenbeschwörer des Dunklen Rats"
 L["Darkmoon Faire"] = "Dunkelmond-Jahrmarkt"
@@ -741,6 +744,7 @@ L["Larana Drome"] = true
 L["Lardan"] = true
 L["Lavinia Crowe"] = "Lavinia Raab"
 L["Layna Karner"] = true
+L["LEARNT_BY_ACCEPTING_QUEST"] = "Dieses Rezept wird gelernt wenn man die Quest annimmt."
 L["Leather"] = "Leder"
 L["LEATHER_DESC"] = "Rezepte, welche Lederitems erstellen, sollen im Scan angezeigt werden."
 L["Lebowski"] = true
@@ -830,6 +834,7 @@ L["Mining"] = "Bergbau"
 L["Miralisse"] = true
 L["Mirla Silverblaze"] = "Mirla Silberstreif"
 L["Misensi"] = true
+L["Mishka"] = true
 L["Mishta"] = true
 L["MissingFromDB"] = [=[: fehlt in der Datenbank. 
 Bitte Informiere den Autor dieses AddOns über das Rezept.]=]
@@ -1093,6 +1098,7 @@ L["Shield"] = "Schild"
 L["SHIFT_CLICK"] = "Shift-Klick um das durch das Rezept hergestellte Item im Chat einzufügen"
 L["Show Known"] = "Bekannte anzeigen"
 L["Sid Limbardi"] = true
+L["Silkmaster Tsai"] = "Seidenmeister Tsai"
 L["Silverbrook Defender"] = "Verteidiger von Silberwasser"
 L["Silverbrook Hunter"] = "Jäger von Silberwasser"
 L["Silverbrook Trapper"] = "Fährtenleser von Silberwasser"
@@ -1109,6 +1115,7 @@ L["Skreah"] = true
 L["Slagg"] = "Brenn"
 L["Small Font"] = "Kleine Schrift"
 L["SMALL_FONT_DESC"] = "Einschalten, um eine kleinere Schrift für Einträge in der Rezepteliste zu verwenden."
+L["Smeltmaster Ashpaw"] = "Schmelzmeisterin Aschtatze"
 L["Smiles O'Byron"] = true
 L["Smith Argus"] = "Schmied Argus"
 L["Smudge Thunderwood"] = "Smudge Donnerholz"

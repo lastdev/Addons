@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 504 2012-09-06T20:42:02Z
+    Revision: 585 2013-03-02T14:19:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -35,16 +35,13 @@ ARMORY_MAX_GUILDBANK_SLOTS_PER_TAB = 98;
 ARMORY_NUM_SLOTS_PER_GUILDBANK_GROUP = 14;
 ARMORY_NUM_GUILDBANK_COLUMNS = 7;
 
-StaticPopupDialogs["ARMORY_DELETE_GUILDBANK"] = {
+ArmoryStaticPopupDialogs["ARMORY_DELETE_GUILDBANK"] = {
     text = ARMORY_DELETE_UNIT,
     button1 = YES,
     button2 = NO,
     OnAccept = function()
         ArmoryGuildBankFrame_Delete();
     end,
-    timeout = 0,
-    whileDead = 1,
-    exclusive = 1,
     showAlert = 1,
     hideOnEscape = 1
 };
@@ -333,7 +330,7 @@ function ArmoryGuildBankFrame_Update()
 
                 if ( name and Armory:MatchInventoryItem(frame.filter or "", name, link) ) then
                     button.searchOverlay:Hide();
-                elseif ( frame.filter ~= "" or ArmoryItemFilter_IsEnabled() ) then
+                elseif ( (frame.filter or "") ~= "" or ArmoryItemFilter_IsEnabled() ) then
                     button.searchOverlay:Show();
                 else
                     button.searchOverlay:Hide();
@@ -634,12 +631,23 @@ function CloseGuildBankFrame(...)
             local name, icon = GetGuildBankTabInfo(tab);
             local items = {};
             local slots = {};
-            local itemString, link, count;
+            local itemString, link, texture, count, tooltip;
             for i = 1, ARMORY_MAX_GUILDBANK_SLOTS_PER_TAB do
                 link = GetGuildBankItemLink(tab, i);
                 if ( link ) then
-                    _, count = GetGuildBankItemInfo(tab, i);
-                    itemString = Armory:GetItemString(link);
+                    texture, count = GetGuildBankItemInfo(tab, i);
+                    
+                    -- Caged pet?
+                    tooltip = Armory:AllocateTooltip();
+	                local speciesID, level, breedQuality, maxHealth, power, speed, petName = tooltip:SetGuildBankItem(tab, i);
+                    Armory:ReleaseTooltip(tooltip);
+	                if ( speciesID and tonumber(speciesID) > 0 ) then
+                        texture = strupper(texture):match("^INTERFACE\\ICONS\\(.+)") or "";
+                        itemString = strjoin(":", speciesID, level, breedQuality, maxHealth, power, speed);
+                        itemString = strjoin("|", itemString, texture, petName);
+                    else
+                        itemString = Armory:GetItemString(link);
+                    end
                     items[itemString] = (items[itemString] or 0) + count;
                     slots[tostring(i)] = itemString..";"..count;
                 end
@@ -674,20 +682,6 @@ function CloseGuildBankFrame(...)
     return Orig_CloseGuildBankFrame(...);
 end
 
-local Orig_ArmoryChatCommand = Armory.ChatCommand;
-function Armory:ChatCommand(msg)
-    local args = self:String2Table(msg);
-    local command;
-    if ( args and args[1] ) then
-        command = strlower(args[1]);
-    end
-    if ( command == "gb" or command == "guildbank" ) then
-        ArmoryGuildBankFrame_Toggle();
-    else
-        Orig_ArmoryChatCommand(self, msg);
-    end
-end
-
 local Orig_Armory_InitializeMenu = Armory.InitializeMenu;
 function Armory:InitializeMenu()
     Orig_Armory_InitializeMenu();
@@ -717,45 +711,47 @@ local function AddGuildBankCount(item, itemCounts)
 
         local dbEntry, count, info, items, name, link, itemCount;
         for realm, guilds in pairs(AgbDB) do
-            if ( AGB:GetConfigGlobalItemCount() or realm == AGB.realm ) then
+            if ( AGB:GetConfigGlobalItemCount() or realm == AGB.realm or realm == Armory.characterRealm ) then
                 for guild in pairs(guilds) do
-                    dbEntry = AGB:SelectDb(frame, realm, guild);
-                    if ( AGB:GetConfigCrossFactionItemCount() or _G.UnitFactionGroup("player") == AGB:GetFaction(dbEntry) ) then
-                        count = 0;
-                        table.wipe(detailCounts);
-                        for tab = 1, MAX_GUILDBANK_TABS do
-                            local tabCount;
-                            if ( itemString ) then
-                                tabCount = AGB:GetItemCount(dbEntry, tab, itemString);
-                            else
-                                items = AGB:GetTabItems(dbEntry, tab);
-                                if ( items ) then
-                                    for itemId in pairs(items) do
-                                        name, link, _, itemCount = AGB:GetTabItemInfo(dbEntry, tab, itemId);
-                                        if ( name and strtrim(name) == strtrim(itemName) ) then
-                                            itemString = Armory:SetCachedItemString(name, link);
-                                            tabCount = itemCount;
-                                            break;
+                    if ( not AGB:GetConfigMyGuildItemCount() or guild == AGB.guild ) then
+                        dbEntry = AGB:SelectDb(frame, realm, guild);
+                        if ( AGB:GetConfigCrossFactionItemCount() or _G.UnitFactionGroup("player") == AGB:GetFaction(dbEntry) ) then
+                            count = 0;
+                            table.wipe(detailCounts);
+                            for tab = 1, MAX_GUILDBANK_TABS do
+                                local tabCount;
+                                if ( itemString ) then
+                                    tabCount = AGB:GetItemCount(dbEntry, tab, itemString);
+                                else
+                                    items = AGB:GetTabItems(dbEntry, tab);
+                                    if ( items ) then
+                                        for itemId in pairs(items) do
+                                            name, link, _, itemCount = AGB:GetTabItemInfo(dbEntry, tab, itemId);
+                                            if ( name and strtrim(name) == strtrim(itemName) ) then
+                                                itemString = Armory:SetCachedItemString(name, link);
+                                                tabCount = itemCount;
+                                                break;
+                                            end
                                         end
                                     end
                                 end
+                                if ( tabCount ) then
+                                    count = count + tabCount;
+                                    table.insert(detailCounts, format(GUILDBANK_TAB_NUMBER, tab).." "..tabCount);
+                                end
                             end
-                            if ( tabCount ) then
-                                count = count + tabCount;
-                                table.insert(detailCounts, format(GUILDBANK_TAB_NUMBER, tab).." "..tabCount);
+                            if ( count > 0 ) then
+                                info = { name=guild, count=count, details="("..table.concat(detailCounts, ", ")..")" };
+                                if ( AGB:GetConfigCrossFactionItemCount() ) then
+                                    info.name = info.name .. "@" .. realm;
+                                end
+                                if ( AGB:GetConfigUniItemCountColor() ) then
+                                    SetTableColor(info, Armory:GetConfigItemCountColor());
+                                else
+                                    SetTableColor(info, AGB:GetConfigItemCountColor());
+                                end
+                                table.insert(itemCounts, info);
                             end
-                        end
-                        if ( count > 0 ) then
-                            info = { name=guild, count=count, details="("..table.concat(detailCounts, ", ")..")" };
-                            if ( AGB:GetConfigCrossFactionItemCount() ) then
-                                info.name = info.name .. "@" .. realm;
-                            end
-                            if ( AGB:GetConfigUniItemCountColor() ) then
-                                SetTableColor(info, Armory:GetConfigItemCountColor());
-                            else
-                                SetTableColor(info, AGB:GetConfigItemCountColor());
-                            end
-                            table.insert(itemCounts, info);
                         end
                     end
                 end

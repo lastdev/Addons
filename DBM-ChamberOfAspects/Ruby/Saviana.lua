@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Saviana", "DBM-ChamberOfAspects", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(39747)
 mod:SetModelID(31577)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
@@ -56,7 +56,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(74403, 74404) then
+	if args:IsSpellID(74403) then
 		warningWarnBreath:Show()
 		timerBreath:Start()
 	end

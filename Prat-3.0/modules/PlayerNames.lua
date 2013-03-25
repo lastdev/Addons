@@ -17,8 +17,8 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program; if not, write to:
 --
--- Free Software Foundation, Inc., 
--- 51 Franklin Street, Fifth Floor, 
+-- Free Software Foundation, Inc.,
+-- 51 Franklin Street, Fifth Floor,
 -- Boston, MA  02110-1301, USA.
 --
 --
@@ -466,7 +466,7 @@ Prat:AddModuleToLoad(function()
 	["Prat_Playernames: Stored Player Data Cleared"] = "Prat_Playernames: Информация о собеседниках очищена",
 	["Query the server for all player names we do not know. Note: This happpens pretty slowly, and this data is not saved."] = "Запрос сервера для всех неизвестных играков. Заметка: Это происходит дастаточно медленно, и их данные не сохраняются.",
 	Random = "Случайно",
-	-- realidcolor_desc = "",
+	realidcolor_desc = "Окрашивание имен RealID",
 	realidcolor_name = "RealID Цвет",
 	["Reset Settings"] = "Сброс настроек",
 	["Restore default settings, and delete stored character data."] = "Восстановить настройки по умолчанию и удалить сохраненную информацию о собеседниках.",
@@ -493,7 +493,7 @@ Prat:AddModuleToLoad(function()
 	["Unknown Use Common Color"] = "Общий цвет для неизвестных",
 	["Use Channel Color"] = "Использовать цвет канала",
 	["Use Player Color"] = "Использовать цвет игрока",
-	-- ["Use toon name for RealID"] = "",
+	["Use toon name for RealID"] = "Использовать имя персонажа вместо RealID",
 }
 
   )
@@ -636,7 +636,7 @@ Prat:AddModuleToLoad(function()
 	["Brackets Use Common Color"] = "括號使用的通用色彩",
 	Class = "職業",
 	["Color by Level Difference"] = "等級差異色彩",
-	-- coloreverywhere_desc = "",
+	coloreverywhere_desc = "當玩家名稱出現在聊天訊息文字中時，為其上色。", -- Needs review
 	coloreverywhere_name = "顏色名字到處",
 	["Enable Alt-Invite"] = "啟用 Alt 按鍵邀請",
 	["Enable Invite Links"] = "啟用邀請連結",
@@ -666,8 +666,8 @@ Prat:AddModuleToLoad(function()
 	["Reset Settings"] = "重置設定",
 	["Restore default settings, and delete stored character data."] = "恢復至預設值且刪除儲存的角色資料。",
 	["Set common color of unknown player names."] = "設定未知角色的顯示色彩",
-	["Sets common color of brackets to use around player names."] = "設定用來圍繞玩家名稱的括號顏色。", -- Needs review
-	["Sets style of brackets to use around player names."] = "設定用來圍繞玩家名稱的括號類型。", -- Needs review
+	["Sets common color of brackets to use around player names."] = "設定用來圍繞玩家名稱的括號顏色。",
+	["Sets style of brackets to use around player names."] = "設定用來圍繞玩家名稱的括號類型。",
 	["Show Group"] = "顯示隊伍編號",
 	["Show Level"] = "顯示等級",
 	["Show Raid Target Icon"] = "顯示團隊標記",
@@ -675,12 +675,12 @@ Prat:AddModuleToLoad(function()
 	tabcomplete_name = "可能的名稱 ",
 	["Tab completion : "] = "標籤完成:",
 	-- ["Toggle group invites by alt-clicking hyperlinked keywords like 'invite'."] = "",
-	["Toggle group invites by alt-clicking on player name."] = "組隊邀請用alt-點擊玩家名稱。", -- Needs review
+	["Toggle group invites by alt-clicking on player name."] = "組隊邀請用alt-點擊玩家名稱。",
 	["Toggle level showing."] = "切換等級顯示。",
 	["Toggle raid group showing."] = "切換團隊組隊顯示。",
 	["Toggle showing the raid target icon which is currently on the player."] = "顯示當前玩家的團隊目標圖標", -- Needs review
 	["Toggle tab completion of player names."] = "切換玩家名稱的標籤完成。",
-	-- ["Toggle using a common color for brackets around player names."] = "",
+	["Toggle using a common color for brackets around player names."] = "選擇是否為玩家名稱外的括號使用一個通用顏色", -- Needs review
 	["Toggle using a common color for unknown player names."] = "切換未知玩家以一般色彩顯示",
 	["Too many matches (%d possible)"] = "太多符合 (可能 %d)",
 	["Unknown Common Color"] = "未知的文字通用顏色",
@@ -1103,7 +1103,7 @@ Prat:AddModuleToLoad(function()
     for k, v in pairs(self.Subgroups) do
       self.Subgroups[k] = nil
     end
-	
+
     for i = 1, GetNumRaidMembers() do
       _, rank, SubGroup, Level, _, Class, zone, online, isDead, role, isML = GetRaidRosterInfo(i)
       Name, Server = UnitName("raid" .. i)
@@ -1399,8 +1399,8 @@ Prat:AddModuleToLoad(function()
     -- ["CHAT_MSG_RAID"] = module.updateRaid,
     -- ["CHAT_MSG_RAID_LEADER"] = module.updateRaid,
     -- ["CHAT_MSG_RAID_WARNING"] = module.updateRaid,
-    ["CHAT_MSG_BATTLEGROUND"] = module.updateBG,
-    ["CHAT_MSG_BATTLEGROUND_LEADER"] = module.updateBG,
+    ["CHAT_MSG_INSTANCE_CHAT"] = module.updateBG,
+    ["CHAT_MSG_INSTANCE_CHAT_LEADER"] = module.updateBG,
     ["CHAT_MSG_SYSTEM"] = module.updateGF,
   }
 
@@ -1411,8 +1411,8 @@ Prat:AddModuleToLoad(function()
     CHAT_MSG_RAID = true,
     CHAT_MSG_RAID_WARNING = true,
     CHAT_MSG_RAID_LEADER = true,
-    CHAT_MSG_BATTLEGROUND = true,
-    CHAT_MSG_BATTLEGROUND_LEADER = true,
+    CHAT_MSG_INSTANCE_CHAT = true,
+    CHAT_MSG_INSTANCE_CHAT_LEADER = true,
   }
 
 

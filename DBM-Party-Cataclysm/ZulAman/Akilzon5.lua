@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod(186, "DBM-Party-Cataclysm", 10, 77)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(23574)
 mod:SetModelID(21630)
 mod:SetZone()
@@ -34,8 +34,8 @@ local eagleGUID = nil
 
 mod:RegisterOnUpdateHandler(function(self)
 	if self.Options.SetIconOnEagle and eagleGUID then
-		for i = 0, DBM:GetGroupMembers() do
-			local uId = (i == 0 and "target") or "party"..i.."target"
+		for uId in DBM:GetGroupMembers() do
+			uId = uId .. "target"
 			local guid = UnitGUID(uId)
 			if guid == eagleGUID then
 				SetRaidTarget(uId, 8)
@@ -80,7 +80,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerStormCD:Start()
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Hide()
-			mod:Schedule(10, function()
+			self:Schedule(10, function()
 				DBM.RangeCheck:Show(6)
 			end)
 		end

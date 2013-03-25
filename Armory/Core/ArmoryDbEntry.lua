@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 494 2012-09-04T21:04:44Z
+    Revision: 585 2013-03-02T14:19:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -323,6 +323,7 @@ local LINK_TRADE = 0x50;
 local LINK_ENCHANT = 0x60;
 local LINK_QUEST = 0x70;
 local LINK_GLYPH = 0x80;
+local LINK_BATTLEPET = 0x90;
 
 local band = bit.band;
 local char = string.char;
@@ -426,8 +427,8 @@ local function EncodeValue(value)
             return char(TYPE_FALSE);
         end
     elseif ( type(value) == "string" ) then
-        if ( value:match("^Interface\\Icons") ) then
-            value = value:match("^Interface\\Icons\\(.+)");
+        if ( strupper(value):match("^INTERFACE\\ICONS") ) then
+            value = strupper(value):match("^INTERFACE\\ICONS\\(.+)");
             len = #value;
             return char(TYPE_ICON, len) .. value;
         elseif ( value:match("|H.-|h") ) then
@@ -452,6 +453,8 @@ local function EncodeValue(value)
                     linkType = LINK_QUEST;
                 elseif ( kind == "glyph" ) then
                     linkType = LINK_GLYPH;
+                elseif ( kind == "battlepet" ) then
+                    linkType = LINK_BATTLEPET;
                 end
                 if ( linkType and quality > -1 ) then
                     value = id .. "\001" .. name;
@@ -514,6 +517,8 @@ local function DecodeValue(bytes)
             value = Armory:GetLink("quest", id, name);
         elseif ( linkType == LINK_GLYPH ) then
             value = Armory:GetLink("glyph", id, name);
+        elseif ( linkType == LINK_BATTLEPET ) then
+            value = Armory:GetLink("battlepet", id, name);
         end
     elseif ( id == TYPE_STR ) then
         offset = bytes:byte(2) + 3;

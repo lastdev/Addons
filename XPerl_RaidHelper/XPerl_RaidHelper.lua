@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 736 $")
+XPerl_SetModuleRevision("$Revision: 819 $")
 
 XPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -381,8 +381,6 @@ function XPerl_MTRosterChanged()
 
 	del(MainTanks, true)
 	MainTanks = new()
-
-	-- TODO: oRA:GetSortedTanks()
 
 	blizzMTanks, ctraTanks = 0, 0
 	

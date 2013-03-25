@@ -58,7 +58,7 @@ db_defaults.pop_rules.chat = {
             autofocus = false,
             keepfocus = false,
         },
-	bn = {
+        bn = {
             onSend = false,
             onReceive = false,
             supress = false,
@@ -210,7 +210,7 @@ RegisterWidgetTrigger("msg_box", "chat", "OnEnterPressed", function(self)
         elseif(obj.chatType == "raid") then
             TARGET = "RAID";
         elseif(obj.chatType == "battleground") then
-            TARGET = "BATTLEGROUND";
+            TARGET = "INSTANCE_CHAT";
         elseif(obj.chatType == "say") then
             TARGET = "SAY";
         elseif(obj.chatType == "channel") then
@@ -449,11 +449,12 @@ function Party:OnEnable()
     RegisterWidget("chat_info", createWidget_Chat);
     self:RegisterChatEvent("CHAT_MSG_PARTY");
     self:RegisterChatEvent("CHAT_MSG_PARTY_LEADER");
-    self:RegisterEvent("PARTY_MEMBERS_CHANGED");
+    self:RegisterEvent("GROUP_ROSTER_UPDATE");
 end
 
 function Party:OnDisable()
     self:UnregisterChatEvent("CHAT_MSG_PARTY");
+    self:UnregisterChatEvent("CHAT_MSG_PARTY_LEADER");
 end
 
 function Party:OnWindowDestroyed(self)
@@ -468,14 +469,14 @@ function Party:OnWindowDestroyed(self)
     end
 end
 
-function Party:PARTY_MEMBERS_CHANGED()
+function Party:GROUP_ROSTER_UPDATE()
     if(Party.partyWindow) then
         cleanChatList(self.partyWindow);
         local myName = _G.UnitName("player");
         table.insert(self.partyWindow.chatList, myName);
         local count = 0;
         for i=1, 4 do
-            if UnitExists("party"..i) then
+            if _G.UnitExists("party"..i) then
                 count = count + 1;
                 local name = _G.UnitName("party"..i);
                 table.insert(self.partyWindow.chatList, name);
@@ -504,7 +505,7 @@ function Party:CHAT_MSG_PARTY(...)
     local color = _G.ChatTypeInfo["PARTY"];
     Party.partyWindow = win;
     if(not self.chatLoaded) then
-        Party:PARTY_MEMBERS_CHANGED();
+        Party:GROUP_ROSTER_UPDATE();
     end
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
@@ -541,7 +542,7 @@ function Party:CHAT_MSG_PARTY_LEADER(...)
     local color = _G.ChatTypeInfo["PARTY_LEADER"];
     self.raidWindow = win;
     if(not self.chatLoaded) then
-        Party:PARTY_MEMBERS_CHANGED();
+        Party:GROUP_ROSTER_UPDATE();
     end
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
@@ -575,7 +576,7 @@ function Raid:OnEnable()
     self:RegisterChatEvent("CHAT_MSG_RAID");
     self:RegisterChatEvent("CHAT_MSG_RAID_LEADER");
     self:RegisterChatEvent("CHAT_MSG_RAID_WARNING");
-    self:RegisterEvent("PARTY_MEMBERS_CHANGED");
+    self:RegisterEvent("GROUP_ROSTER_UPDATE");
 end
 
 function Raid:OnDisable()
@@ -595,7 +596,7 @@ function Raid:OnWindowDestroyed(self)
     end
 end
 
-function Raid:PARTY_MEMBERS_CHANGED()
+function Raid:GROUP_ROSTER_UPDATE()
     if(Raid.raidWindow) then
         cleanChatList(self.raidWindow);
         local count = 0;
@@ -629,7 +630,7 @@ function Raid:CHAT_MSG_RAID(...)
     local color = _G.ChatTypeInfo["RAID"];
     self.raidWindow = win;
     if(not self.chatLoaded) then
-        Raid:PARTY_MEMBERS_CHANGED();
+        Raid:GROUP_ROSTER_UPDATE();
     end
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
@@ -666,7 +667,7 @@ function Raid:CHAT_MSG_RAID_LEADER(...)
     local color = _G.ChatTypeInfo["RAID_LEADER"];
     self.raidWindow = win;
     if(not self.chatLoaded) then
-        Raid:PARTY_MEMBERS_CHANGED();
+        Raid:GROUP_ROSTER_UPDATE();
     end
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
@@ -703,7 +704,7 @@ function Raid:CHAT_MSG_RAID_WARNING(...)
     local color = _G.ChatTypeInfo["RAID_WARNING"];
     self.raidWindow = win;
     if(not self.chatLoaded) then
-        Raid:PARTY_MEMBERS_CHANGED();
+        Raid:GROUP_ROSTER_UPDATE();
     end
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
@@ -734,13 +735,13 @@ _G.LibStub:GetLibrary("LibChatHandler-1.0"):Embed(Battleground);
 
 function Battleground:OnEnable()
     RegisterWidget("chat_info", createWidget_Chat);
-    self:RegisterChatEvent("CHAT_MSG_BATTLEGROUND");
-    self:RegisterChatEvent("CHAT_MSG_BATTLEGROUND_LEADER");
+    self:RegisterChatEvent("CHAT_MSG_INSTANCE_CHAT");
+    self:RegisterChatEvent("CHAT_MSG_INSTANCE_CHAT_LEADER");
 end
 
 function Battleground:OnDisable()
-    self:UnregisterChatEvent("CHAT_MSG_BATTLEGROUND");
-    self:UnregisterChatEvent("CHAT_MSG_BATTLEGROUND_LEADER");
+    self:UnregisterChatEvent("CHAT_MSG_INSTANCE_CHAT");
+    self:UnregisterChatEvent("CHAT_MSG_INSTANCE_CHAT_LEADER");
 end
 
 function Battleground:OnWindowDestroyed(self)
@@ -757,7 +758,7 @@ end
 local function getBattlegroundCount()
     for i=1, 20 do
         local name, header, collapsed, channelNumber, count, active, category, voiceEnabled, voiceActive = _G.GetChannelDisplayInfo(i);
-        if(name == _G.BATTLEGROUND) then
+        if(name == _G.INSTANCE_CHAT) then
             return count;
         end
     end
@@ -770,7 +771,7 @@ function Battleground:OnWindowShow(win)
     end
 end
 
-function Battleground:CHAT_MSG_BATTLEGROUND_CONTROLLER(eventController, ...)
+function Battleground:CHAT_MSG_INSTANCE_CHAT_CONTROLLER(eventController, ...)
     if(eventController.ignoredByWIM) then
         eventController:BlockFromDelegate(self);
         return;
@@ -780,18 +781,18 @@ function Battleground:CHAT_MSG_BATTLEGROUND_CONTROLLER(eventController, ...)
     end
 end
 
-function Battleground:CHAT_MSG_BATTLEGROUND(...)
-    local filter, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12 = honorChatFrameEventFilter("CHAT_MSG_BATTLEGROUND", ...);
+function Battleground:CHAT_MSG_INSTANCE_CHAT(...)
+    local filter, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12 = honorChatFrameEventFilter("CHAT_MSG_INSTANCE_CHAT", ...);
     if(filter) then
         return;
     end
-    local win = getChatWindow(_G.BATTLEGROUND, "battleground");
+    local win = getChatWindow(_G.INSTANCE_CHAT, "battleground");
     win.widgets.chat_info:SetText(getBattlegroundCount());
-    local color = _G.ChatTypeInfo["BATTLEGROUND"];
+    local color = _G.ChatTypeInfo["INSTANCE_CHAT"];
     self.battlegroundWindow = win;
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
-    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_BATTLEGROUND", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_INSTANCE_CHAT", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
     if(arg2 ~= _G.UnitName("player")) then
         win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
         if(not db.chat.battleground.neverPop) then
@@ -802,10 +803,10 @@ function Battleground:CHAT_MSG_BATTLEGROUND(...)
             win:Pop("out");
         end
     end
-    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_BATTLEGROUND", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_INSTANCE_CHAT", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
 end
 
-function Battleground:CHAT_MSG_BATTLEGROUND_LEADER_CONTROLLER(eventController, ...)
+function Battleground:CHAT_MSG_INSTANCE_CHAT_LEADER_CONTROLLER(eventController, ...)
     if(eventController.ignoredByWIM) then
         eventController:BlockFromDelegate(self);
         return;
@@ -815,18 +816,18 @@ function Battleground:CHAT_MSG_BATTLEGROUND_LEADER_CONTROLLER(eventController, .
     end
 end
 
-function Battleground:CHAT_MSG_BATTLEGROUND_LEADER(...)
-    local filter, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12 = honorChatFrameEventFilter("CHAT_MSG_BATTLEGROUND_LEADER", ...);
+function Battleground:CHAT_MSG_INSTANCE_CHAT_LEADER(...)
+    local filter, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12 = honorChatFrameEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", ...);
     if(filter) then
         return;
     end
-    local win = getChatWindow(_G.BATTLEGROUND, "battleground");
+    local win = getChatWindow(_G.INSTANCE_CHAT, "battleground");
     win.widgets.chat_info:SetText(getBattlegroundCount());
-    local color = _G.ChatTypeInfo["BATTLEGROUND_LEADER"];
+    local color = _G.ChatTypeInfo["INSTANCE_CHAT_LEADER"];
     self.battlegroundWindow = win;
     self.chatLoaded = true;
     arg3 = CleanLanguageArg(arg3);
-    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_BATTLEGROUND_LEADER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+    win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_INSTANCE_CHAT_LEADER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
     if(arg2 ~= _G.UnitName("player")) then
         win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
         if(not db.chat.battleground.neverPop) then
@@ -837,7 +838,7 @@ function Battleground:CHAT_MSG_BATTLEGROUND_LEADER(...)
             win:Pop("out");
         end
     end
-    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_BATTLEGROUND_LEADER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
+    CallModuleFunction("PostEvent_ChatMessage", "CHAT_MSG_INSTANCE_CHAT_LEADER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
 end
 
 --------------------------------------
@@ -922,15 +923,17 @@ function BNC:OnEnable()
     self.frame = self.frame or _G.CreateFrame("Frame");
     self.frame:Show();
     self.frame:SetScript("OnUpdate", function(self, elapsed)
-		for i=1, 10 do
-			if(_G.BNGetConversationInfo(i)) then
-				local winName = _G.format(_G.CONVERSATION_NAME, _G.MAX_WOW_CHAT_CHANNELS + i);
-				local win = getChatWindow(winName, "BN_CONVERSATION");
-				win.channelNumber = i;
-				win.channelIdentifier = winName;
-			end
-		end
-	self:Hide();
+      if _G.BNFeaturesEnabledAndConnected and _G.BNFeaturesEnabledAndConnected() then
+		    for i=1, _G.BNGetMaxNumConversations() do
+				  if(_G.BNGetConversationInfo(i)) then
+					  local winName = _G.format(_G.CONVERSATION_NAME, _G.MAX_WOW_CHAT_CHANNELS + i);
+					  local win = getChatWindow(winName, "BN_CONVERSATION");
+					  win.channelNumber = i;
+					  win.channelIdentifier = winName;
+				  end
+			  end
+        self:Hide();
+      end
     end);
 end
 
@@ -1289,14 +1292,15 @@ function ChatAlerts:PostEvent_ChatMessage(event, ...)
             win = getChatWindow(_G.PARTY, "party");
         elseif((event == "RAID" or event == "RAID_LEADER") and db.chat.raid.showAlerts) then
             win = getChatWindow(_G.RAID, "raid");
-        elseif((event == "BATTLEGROUND" or event == "BATTLEGROUND_LEADER") and db.chat.battleground.showAlerts) then
-            win = getChatWindow(_G.BATTLEGROUND, "battleground");
+        elseif((event == "INSTANCE_CHAT" or event == "INSTANCE_CHAT_LEADER") and db.chat.battleground.showAlerts) then
+            win = getChatWindow(_G.INSTANCE_CHAT, "battleground");
         elseif(event == "SAY" and db.chat.say.showAlerts) then
             win = getChatWindow(_G.SAY, "say");
         end
         
         if(win and not win:IsVisible() and win.unreadCount and win.unreadCount > 0) then
-            local color = _G.ChatTypeInfo[string.upper(win.chatType)];
+            local chat_type = win.chatType == "battleground" and "INSTANCE_CHAT" or string.upper(win.chatType);
+            local color = _G.ChatTypeInfo[chat_type]; -- Drii: ticket 344 color error if party/instance chat handled by WIM
             MinimapPushAlert(win.theUser, RGBPercentToHex(color.r, color.g, color.b), win.unreadCount);
         end
     end
@@ -1598,7 +1602,7 @@ local function loadChatOptions()
     end
     
     local function createBattlegroundChat()
-        local f = createChatTemplate(_G.BATTLEGROUND, "BattlegroundChat", "battleground");
+        local f = createChatTemplate(_G.INSTANCE_CHAT, "BattlegroundChat", "battleground");
         return f;
     end
     
@@ -1626,7 +1630,7 @@ local function loadChatOptions()
     RegisterOptionFrame(L["Chat"], _G.GUILD_RANK1_DESC, createOfficerChat);
     RegisterOptionFrame(L["Chat"], _G.PARTY, createPartyChat);
     RegisterOptionFrame(L["Chat"], _G.RAID, createRaidChat);
-    RegisterOptionFrame(L["Chat"], _G.BATTLEGROUND, createBattlegroundChat);
+    RegisterOptionFrame(L["Chat"], _G.INSTANCE_CHAT, createBattlegroundChat);
     RegisterOptionFrame(L["Chat"], _G.SAY, createSayChat);
     RegisterOptionFrame(L["Chat"], _G.BN_CONVERSATION, createBNChat);
     RegisterOptionFrame(L["Chat"], L["World Chat"], createWorldChat);

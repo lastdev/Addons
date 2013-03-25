@@ -8,15 +8,96 @@
 
 </head>
 
-
 <body>
 
 <font face="Verdana, sans-serif"><span style="color: rgb(51, 51, 255);">
 <a href="http://www.healbot.info/">HealBot Continued</a> - Change Log
 </span><br>
-
 <br>
-
+<br>
+v5.2.0.0<br>
+=================<br>
+* toc files updated<br>
+* Changes to options frame, improved use of space<br>
+* Absorption can be shown in a similar way to in coming heals, see options Skins>Bars for settings<br>
+* Minor performance improvements<br>
+<br>
+v5.1.0.7<br>
+=================<br>
+* Change to identify known spells, far less hard coded dependencies<br>
+* Spell option Avoid Blue Cursor now uses slot 4 to avoid conflict with engineers<br>
+* Added Death Knight Shroud of Purgatory buff to the skins>icon options<br>
+* Added Mage buff Ice Ward<br>
+* A number of changes in preparation for 5.2 and showing absorption in a similar way to in coming heals<br>
+<br>
+v5.1.0.6<br>
+=================<br>
+* Fixed HealBot_Action_RefreshTooltip bug<br>
+* Improved tooltips GREEN for Usable, RED for Not Usable and YELLOW for Macro's. Not Usable can be when a spell is on CD or player out of range<br>
+<br>
+v5.1.0.5<br>
+=================<br>
+* Another fix for Legacy of the Emperor not identified when MotW or BoK is missing<br>
+* Fix for identifying roles in LFR<br>
+* Added additional damage reduction buffs to the icon tracker<br>
+* Moved Skin delete button away from skin select dropdown, to avoid accidental deletion<br>
+* Fixed incorrect background bar colour when using custom colours for health bar and background bar<br>
+* Speed up internal timers<br>
+* Protect against abnormal FPS readings (such as UI in background) that can affect HealBots internal timers<br>
+<br>
+v5.1.0.4<br>
+=================<br>
+* Update to Chinese localizations<br>
+* Number of localization fixes to static popup boxes<br>
+<br>
+v5.1.0.3<br>
+=================<br>
+* Added Italian localizations, Maintained by Brezza<br>
+* Fixed: under certain conditions with buffs monitor off, bars show missing buffs after zone change<br>
+* Added Monitor buffs "Only when in a Group or Raid" on buffs tab<br>
+* Added Monitor debuffs "Only when in a Group or Raid" on cures tab<br>
+* Fixed Random Pets on Mouse Wheel<br>
+* Fixed Legacy of the Emperor not identified when MotW or BoK is missing, showed missing buff when not required<br>
+* Fixed a number of spells to only show on correct spec<br>
+* Fixed layout of bars in multiple columns, but when using bottom anchors<br>
+* Improved icon text update frequency when frame rate above 30FPS<br>
+* Added additional tank buffs to icon buff tracker<br>
+<br>
+v5.1.0.2<br>
+=================<br>
+* Major update to Chinese localizations, now maintained by Ydzzs<br>
+* Number of localization fixes in option tabs<br>
+* If chat set to Party or Raid while in an Instance, messages sent to Instance Chat<br>
+<br>
+v5.1.0.1<br>
+=================<br>
+* Separated Mouse Wheel "Random Mount/Pet" function into a load on demand addon (HealBot_MountsPets)<br>
+* Addon load fail popup box is now only shown once per addon per Healbot version, it will still message in chat<br>
+* Added Portuguese (Brazil) localizations - Maintained by aldetal<br>
+* Added Hungarian localizations - Maintained by Von - Hungarian is the first unsupported by WoW localization to be added!<br>
+* Separated Tooltips function into a load on demand addon (HealBot_Tips)<br>
+* Included all localizations in the main zipfile<br>
+* Fixed a number of sliders not displaying correctly on load and when changes localization<br>
+* Improved options layout to accommodate different localizations<br>
+* Updated Libraries<br>
+<br>
+v5.1.0.0<br>
+=================<br>
+* Added Holy Word: Serenity to HoT tracker<br>
+* Added a number of missing mounts - Thanks to daddyweight for reporting<br>
+* Added Language option to General tab, gives the ability to use alternative language in the options frames<br>
+* Legacy of the White Tiger ignored when Arcane Brilliance or Dalaran Brilliance present<br>
+* Localizations separated into load on demand addons, for more information and availability see <a href="http://www.healbot.info/dokuwiki/doku.php?id=healbot:localizations">HealBot Localizations</a><br>
+<br>
+v5.0.5.7<br>
+=================<br>
+* Add Skin Author to skins, for possible future use with an offline skin sharing repository<br>
+* Added "Avoid Blue Cursor option to spells tab". Disabled by default, turn it on for spells that give a troublesome Blue Cursor<br>
+* Buffs no longer tracked on pets<br>
+* Fixed Share Skins with others<br>
+* Possible race condition fix to debuff names<br>
+* Fixed rare nil error with aggro threat percent<br>
+* Fixed a number of dropdowns showing two selections<br>
 <br>
 v5.0.5.6<br>
 =================<br>

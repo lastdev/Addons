@@ -18,7 +18,7 @@ end
 
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 	Revision: $Id: Example.lua 5347 2012-09-06 06:26:15Z Esamynn $
 	URL: http://auctioneeraddon.com/
 

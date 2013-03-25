@@ -13,9 +13,11 @@ Installing and Updating
 
 1: Completely log off WoW
 2: Unzip the downloaded
-3: Copy the HealBot folder into your WoW Addons folder.
+3: Copy the HealBot folders into your WoW Addons folder.
 4: Logon to WoW on your main Healer.
 5: As a priority you should open the options and configure spells, cures and buffs.
+
+Install guide: http://www.healbot.info/dokuwiki/doku.php?id=healbot:install
 
 
 

@@ -2,7 +2,7 @@ local oRA = LibStub("AceAddon-3.0"):GetAddon("oRA3")
 local module = oRA:NewModule("ReadyCheck", "AceEvent-3.0", "AceConsole-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 
-module.VERSION = tonumber(("$Revision: 543 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 556 $"):sub(12, -3))
 
 local nameCache = {} -- Player names without the realm suffix, cleared every ready check
 local readycheck = {} -- table containing ready check results
@@ -187,7 +187,8 @@ local function updateWindow()
 	if oRA:InRaid() then
 		--GetInstanceInfo() and GetInstanceDifficulty() don't match, blizz screwup.
 		--It's likely one of these apis will get fixed soonª, which may break these numbers again if GetInstanceDifficulty() is one that changes, keep an eye on em
-		local diff = GetInstanceDifficulty()
+		local _, _, diff = GetInstanceInfo()
+		diff = diff + 1
 		local highgroup = 8 -- 40 man it
 		if diff and diff == 4 or diff == 6 then -- 10 man
 			highgroup = 2

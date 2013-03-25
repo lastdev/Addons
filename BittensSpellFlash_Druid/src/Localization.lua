@@ -1,7 +1,7 @@
 -- To update a translation please use the localization utility at:
 -- http://wow.curseforge.com/addons/bittens-spellflash-druid/localization/
 
-local AddonName, a = ...
+local addonName, a = ...
 local function DefaultFunction(_, key) return key end
 a.Localize = setmetatable({}, {__index = DefaultFunction})
 local L = a.Localize

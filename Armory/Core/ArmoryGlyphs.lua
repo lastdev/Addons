@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 525 2012-09-20T09:02:14Z
+    Revision: 585 2013-03-02T14:19:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -70,12 +70,12 @@ function Armory:UpdateGlyphs()
 	    for i = 1, numGlyphs do
 	        local name, glyphType, isKnown, icon, glyphID, link = _G.GetGlyphInfo(i);
             if ( name ~= "header" and link ) then
-                local fullName = self:GetNameFromLink(link);
-                glyphCache[tostring(glyphID)] = fullName
+                local key = self:GetGlyphKey(name);
+                glyphCache[tostring(glyphID)] = key
                 if ( isKnown ) then
                     table.insert(knownGlyphs, glyphID);
                 end
-                self:SetClassValue("player", 2, container, fullName, glyphType, icon, glyphID, link);
+                self:SetClassValue("player", 2, container, key, glyphType, icon, glyphID, link);
             end
 	    end
 	    dbEntry:SetValue(2, container, "Known", "|"..strjoin("|", unpack(knownGlyphs)).."|");
@@ -91,8 +91,8 @@ function Armory:UpdateGlyphs()
                     dbEntry:SetValue(3, container, talentGroup, i, nil);
                 elseif ( update ) then
 	                local enabled, glyphType, glyphTooltipIndex, glyphSpell, icon, glyphID = _G.GetGlyphSocketInfo(i, talentGroup);
-	                local fullName = glyphCache[tostring(glyphID)];
-                    dbEntry:SetValue(3, container, talentGroup, i, fullName, enabled, glyphType, glyphTooltipIndex, glyphSpell);
+	                local key = glyphCache[tostring(glyphID)];
+                    dbEntry:SetValue(3, container, talentGroup, i, key, enabled, glyphType, glyphTooltipIndex, glyphSpell);
 	            end
 	        end
 	    end
@@ -106,6 +106,25 @@ function Armory:UpdateGlyphs()
     end
 end
 
+local buzzWords;
+local words = {};
+function Armory:GetGlyphKey(name)
+    if ( not buzzWords ) then
+        buzzWords = "|"..strupper(ARMORY_GLYPH).."|";
+        for word in ARMORY_BUZZ_WORDS:gmatch("%S+") do
+            buzzWords = buzzWords..strupper(word).."|";
+        end
+    end
+
+    table.wipe(words);
+    for word in name:gmatch("%S+") do
+        if ( not buzzWords:find("|"..strupper(word).."|") ) then
+            table.insert(words, strupper(word));
+        end
+    end
+    return strjoin("_", unpack(words));
+end
+
 ----------------------------------------------------------
 -- Glyphs Interface
 ----------------------------------------------------------
@@ -113,10 +132,10 @@ end
 function Armory:GetGlyphSocketInfo(id, talentGroup)
 	local dbEntry = self.selectedDbBaseEntry;
 	if ( dbEntry ) then
-        local fullName, enabled, glyphType, glyphTooltipIndex, glyphSpell = dbEntry:GetValue(container, talentGroup, id);
+        local key, enabled, glyphType, glyphTooltipIndex, glyphSpell = dbEntry:GetValue(container, talentGroup, id);
         local icon, glyphID;
-        if ( fullName ) then
-            _, icon, glyphID = self:GetClassValue("player", container, fullName);
+        if ( key ) then
+            _, icon, glyphID = self:GetClassValue("player", container, key);
         end
 
         return enabled, glyphType, glyphTooltipIndex, glyphSpell, icon, glyphID;
@@ -126,10 +145,10 @@ end
 function Armory:GetGlyphLink(id, talentGroup)
 	local dbEntry = self.selectedDbBaseEntry;
 	if ( dbEntry ) then
-        local fullName = dbEntry:GetValue(container, talentGroup, id);
+        local key = dbEntry:GetValue(container, talentGroup, id);
         local link;
-        if ( fullName ) then
-            _, _, _, link = self:GetClassValue("player", container, fullName);
+        if ( key ) then
+            _, _, _, link = self:GetClassValue("player", container, key);
         end
         return link;
     end
@@ -140,13 +159,14 @@ function Armory:GetGlyphInfoByName(name)
 	if ( dbEntry ) then
 	    local knownGlyphs = dbEntry:GetValue(container, "Known");
 	    if ( knownGlyphs ) then
-	        local glyphType, icon, glyphID, link = self:GetClassValue("player", container, name);
+	        local key = self:GetGlyphKey(name);
+	        local glyphType, icon, glyphID, link = self:GetClassValue("player", container, key);
 	        local isKnown;
 	        if ( glyphID ) then
 	            isKnown = knownGlyphs:find("|"..glyphID.."|") and true;
 	        end
+	        return isKnown, link, icon, glyphType, glyphID;
 	    end
-	    return isKnown, link, icon, glyphType, glyphID;
 	end
 end
 
@@ -162,8 +182,10 @@ function Armory:FindGlyphs(...)
         local glyphs = self:GetClassValue("player", container);
         if ( glyphs ) then
             local findUnknown = strlower(select(1, ...)) == strlower(UNKNOWN) or select(1, ...) == "?";
-            local isKnown, link, text, found, crafters, label;
-            for name in pairs(glyphs) do
+            local name, isKnown, link, text, found, crafters, label;
+            for key in pairs(glyphs) do
+                local glyphType, icon, glyphID, link = self:GetClassValue("player", container, key);
+                name = self:GetNameFromLink(link);
                 isKnown, link = self:GetGlyphInfoByName(name);
                 if ( findUnknown ) then
                     found = not isKnown;

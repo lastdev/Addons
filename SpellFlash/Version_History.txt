@@ -1,6 +1,46 @@
 
 
 
+== Version 6.6
+
+* Fixed error with the s.UnitSelection and s.UnitID functions.
+
+
+== Version 6.5
+
+* Added Bitten's SpellFlash Library as an embedded library.
+
+
+== Version 6.4.1
+
+* Bumped the toc file interface number to 50200.
+
+
+== Version 6.4
+
+* Added function: s.LocalizeFontStrings
+
+
+== Version 6.3
+
+* The function s.GlobalCooldown will now properly return the second value.
+
+
+== Version 6.2.3
+
+* Updated to the 2.0.1 version of SpellFlashCore.
+
+
+== Version 6.2.2
+
+* Bumped the toc file interface number to 50100.
+
+
+== Version 6.2.1
+
+* The function s.GlobalCooldown will now always return a 0 instead of nil.
+
+
 == Version 6.2
 
 * Added a third argument to these functions:

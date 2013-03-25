@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(131, "DBM-Party-Cataclysm", 3, 71)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(39625)
 mod:SetModelID(31498)
 mod:SetZone()
@@ -53,13 +53,13 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(74846, 91937) then
+	if args:IsSpellID(74846) then
 		warnBleedingWound:Show(args.destName)
 		timerBleedingWound:Start(args.destName)
 		timerBleedingWoundCD:Start()
 	elseif args:IsSpellID(74853) then
 		warnFrenzy:Show()
-	elseif args:IsSpellID(74837, 90179) then
+	elseif args:IsSpellID(74837) then
 		maladyCount = maladyCount + 1
 		maladyTargets[#maladyTargets + 1] = args.destName
 		self:Unschedule(showMaladyWarning)
@@ -74,9 +74,9 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(74846, 91937) then
+	if args:IsSpellID(74846) then
 		timerBleedingWound:Cancel(args.destName)
-	elseif args:IsSpellID(74837, 90179) then
+	elseif args:IsSpellID(74837) then
 		maladyCount = maladyCount - 1
 		if maladyCount == 0 then
 			timerMalady:Cancel()
@@ -85,7 +85,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(74634, 90249) then
+	if args:IsSpellID(74634) then
 		timerGroundSiege:Start()
 	end
 end

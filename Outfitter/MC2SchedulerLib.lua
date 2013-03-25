@@ -220,7 +220,7 @@ function Addon.SchedulerLib:OnUpdate2(pElapsed)
 			-- Repeat tasks just need a new time calculated
 			
 			else
-				vTask.Time = vTask.Time + vTask.Interval
+				vTask.Time = vTime + vTask.Interval
 				
 				if vTask.Interval > 0 then
 					self.NeedSorted = true

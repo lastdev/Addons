@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(291, "DBM-Party-Cataclysm", 13, 185)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(54853)
 mod:SetModelID(39391)
 mod:SetZone()
@@ -26,6 +26,7 @@ local timerObedienceCD	= mod:NewCDTimer(37, 103241)
 local timerAdds			= mod:NewTimer(36, "TimerAdds")
 
 local addsCount = 0
+
 function mod:Adds()
 	addsCount = addsCount + 1
 	if addsCount == 3 then return end

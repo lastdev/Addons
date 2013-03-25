@@ -110,7 +110,7 @@ function Outfitter._EditScriptDialog:Done()
 end
 
 function Outfitter._EditScriptDialog:LoadScript(pScript)
-	local vFunction, vMessage = loadstring(Outfitter.cScriptPrefix..pScript..Outfitter.cScriptSuffix, "Outfit Script")
+	local vFunction, vMessage = loadstring(Outfitter.cScriptPrefix..pScript..Outfitter.cScriptSuffix, "Script for "..(self.Outfit.Name or "untitled outfit"))
 	
 	if vMessage then
 		local _, _, vLine, vMessage2 = string.find(vMessage, Outfitter.cExtractErrorFormat)

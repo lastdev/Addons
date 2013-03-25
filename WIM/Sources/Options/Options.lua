@@ -141,7 +141,8 @@ end
 
 local function createCategory(index)
     local cat = CreateFrame("Button", options.frame.nav:GetName().."Cat"..index, options.frame.nav, "UIPanelButtonTemplate");
-    cat:SetNormalTexture(""); cat:SetPushedTexture(""); cat:SetDisabledTexture(""); cat:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestLogTitleHighlight", "ADD");
+    local bgtex = "Interface\\AddOns\\"..addonTocName.."\\Modules\\Textures\\Menu_bg"
+    cat:SetNormalTexture(bgtex); cat:SetPushedTexture(bgtex); cat:SetDisabledTexture(bgtex); cat:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestLogTitleHighlight", "ADD");
     cat:GetHighlightTexture():SetVertexColor(.196, .388, .5);
     cat:RegisterForClicks("LeftButtonUp", "RightButtonUp");
     cat.info = Categories[index];
@@ -168,7 +169,8 @@ end
 
 local function createSubCategory(index)
     local sub = CreateFrame("Button", options.frame.nav.sub:GetName().."Button"..index, options.frame.nav.sub, "UIPanelButtonTemplate");
-    sub:SetNormalTexture(""); sub:SetPushedTexture(""); sub:SetDisabledTexture(""); sub:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestLogTitleHighlight", "ADD");
+    local bgtex = "Interface\\AddOns\\"..addonTocName.."\\Modules\\Textures\\Menu_bg"
+    sub:SetNormalTexture(bgtex); sub:SetPushedTexture(bgtex); sub:SetDisabledTexture(bgtex); sub:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestLogTitleHighlight", "ADD");
     sub:GetHighlightTexture():SetVertexColor(.196, .388, .8);
     sub:SetWidth(sub:GetParent():GetWidth());
     sub:SetHeight(20);
@@ -329,6 +331,7 @@ end
 RegisterSlashCommand("options", ShowOptions, L["Display WIM's options."]);
 RegisterSlashCommand("reset", function()
                 _G.StaticPopupDialogs["WIM_RESET_DEFAULTS"] = {
+                	preferredIndex = STATICPOPUP_NUMDIALOGS,
                     text = L["Resetting WIM will clear all of your settings!"].."\n"..L["A reset will reload your user interface."].."\n"..L["Do you want to continue?"],
                     button1 = _G.YES,
                     button2 = _G.NO,
@@ -338,7 +341,6 @@ RegisterSlashCommand("reset", function()
                     end,
                     timeout = 0,
                     whileDead = 1,
-                    preferredIndex = 3,
                     hideOnEscape = 1
                 };
                 _G.StaticPopup_Show ("WIM_RESET_DEFAULTS");

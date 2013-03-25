@@ -1,6 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 	Revision: $Id: EnxConstants.lua 5363 2012-09-24 02:36:04Z ccox $
 	URL: http://enchantrix.org/
 

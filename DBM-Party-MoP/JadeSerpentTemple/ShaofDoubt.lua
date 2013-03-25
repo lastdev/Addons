@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(335, "DBM-Party-MoP", 1, 313)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7842 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 8777 $"):sub(12, -3))
 mod:SetCreatureID(56439)
 mod:SetModelID(43283)
 mod:SetZone()
@@ -25,7 +25,7 @@ local specWarnShadowsOfDoubt	= mod:NewSpecialWarningMove(110099)--Actually used 
 local timerWitherWillCD			= mod:NewCDTimer(6, 106736)--6-10 second variations.
 local timerTouchofNothingnessCD	= mod:NewCDTimer(15.5, 106113)--15.5~20 second variations.
 local timerTouchofNothingness	= mod:NewTargetTimer(30, 106113)
-local timerBoundsOfRealityCD	= mod:NewNextTimer(60, 117665)
+local timerBoundsOfRealityCD	= mod:NewCDTimer(60, 117665)
 local timerBoundsOfReality		= mod:NewBuffFadesTimer(30, 117665)
 
 function mod:OnCombatStart(delay)

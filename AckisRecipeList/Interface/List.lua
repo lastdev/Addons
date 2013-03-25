@@ -126,20 +126,22 @@ local SetTextColor = private.SetTextColor
 function private.InitializeListFrame()
 	local MainPanel	= addon.Frame
 	local ListFrame = _G.CreateFrame("Frame", nil, MainPanel)
-
-	MainPanel.list_frame = ListFrame
-
-	ListFrame:SetHeight(335)
-	ListFrame:SetWidth(LISTFRAME_WIDTH)
+	ListFrame:SetSize(LISTFRAME_WIDTH, 335)
 	ListFrame:SetPoint("TOPLEFT", MainPanel, "TOPLEFT", 22, -75)
 	ListFrame:SetBackdrop({
-				      bgFile = [[Interface\DialogFrame\UI-DialogBox-Background-Dark]],
-				      tile = true,
-				      tileSize = 16,
-			      })
+		bgFile = [[Interface\DialogFrame\UI-DialogBox-Background-Dark]],
+		tile = true,
+		tileSize = 16,
+	})
 	ListFrame:SetBackdropColor(1, 1, 1)
 	ListFrame:EnableMouse(true)
 	ListFrame:EnableMouseWheel(true)
+	ListFrame:SetScript("OnHide", function(self)
+		QTip:Release(acquire_tip)
+		spell_tip:Hide()
+		self.selected_entry = nil
+	end)
+	MainPanel.list_frame = ListFrame
 
 	-------------------------------------------------------------------------------
 	-- Scroll bar.
@@ -235,22 +237,36 @@ function private.InitializeListFrame()
 		ListFrame:Update(nil, true)
 	end)
 
-	local function Button_OnEnter(self)
-		ListItem_ShowTooltip(self, ListFrame.entries[self.string_index])
-	end
-
-	local function Button_OnLeave()
-		QTip:Release(acquire_tip)
-		spell_tip:Hide()
-	end
-
 	local function Bar_OnEnter(self)
+		if ListFrame.selected_entry then
+			return
+		end
 		ListItem_ShowTooltip(self, ListFrame.entries[self.string_index])
 	end
 
 	local function Bar_OnLeave()
+		if ListFrame.selected_entry then
+			return
+		end
 		QTip:Release(acquire_tip)
 		spell_tip:Hide()
+	end
+
+	local function Bar_OnClick(self)
+		local old_selected = ListFrame.selected_entry
+		ListFrame.selected_entry = nil
+
+		if old_selected then
+			old_selected.button.selected_texture:Hide()
+			Bar_OnLeave(old_selected.button)
+		end
+		Bar_OnEnter(self)
+
+		local entry = ListFrame.entries[self.string_index]
+		if old_selected ~= entry then
+			self.selected_texture:Show()
+			ListFrame.selected_entry = entry
+		end
 	end
 
 	local function ListItem_OnClick(self, button, down)
@@ -280,7 +296,7 @@ function private.InitializeListFrame()
 					edit_box:Insert(_G.GetSpellLink(profession_recipes[clicked_line.recipe_id].spell_id))
 				end
 			elseif _G.IsShiftKeyDown() then
-				local crafted_item_id = profession_recipes[clicked_line.recipe_id]:CraftedItemID()
+				local crafted_item_id = profession_recipes[clicked_line.recipe_id]:CraftedItem()
 
 				if crafted_item_id then
 					local _, item_link = _G.GetItemInfo(crafted_item_id)
@@ -363,9 +379,6 @@ function private.InitializeListFrame()
 				addon:Debug("Error: clicked_line (%s) has no parent.", clicked_line.type or _G.UNKNOWN)
 			end
 		end
-		QTip:Release(acquire_tip)
-		spell_tip:Hide()
-
 		ListFrame:Update(nil, true)
 	end
 
@@ -379,18 +392,13 @@ function private.InitializeListFrame()
 
 	for index = 1, NUM_RECIPE_LINES do
 		local cur_container = _G.CreateFrame("Frame", nil, ListFrame)
-
-		cur_container:SetHeight(16)
-		cur_container:SetWidth(LIST_ENTRY_WIDTH)
+		cur_container:SetSize(LIST_ENTRY_WIDTH, 16)
 
 		local cur_state = _G.CreateFrame("Button", nil, ListFrame)
-		cur_state:SetWidth(16)
-		cur_state:SetHeight(16)
+		cur_state:SetSize(16, 16)
 
-		local entry_name = ("%s_ListEntryButton%d"):format(FOLDER_NAME, index)
-		local cur_entry = _G.CreateFrame("Button", entry_name, cur_container)
-		cur_entry:SetWidth(LIST_ENTRY_WIDTH)
-		cur_entry:SetHeight(16)
+		local cur_entry = _G.CreateFrame("Button", ("%s_ListEntryButton%d"):format(FOLDER_NAME, index), cur_container)
+		cur_entry:SetSize(LIST_ENTRY_WIDTH, 16)
 
 		local highlight_texture = cur_entry:CreateTexture(nil, "BORDER")
 		highlight_texture:SetTexture([[Interface\ClassTrainerFrame\TrainerTextures]])
@@ -399,6 +407,14 @@ function private.InitializeListFrame()
 		highlight_texture:SetPoint("TOPLEFT", 2, 0)
 		highlight_texture:SetPoint("BOTTOMRIGHT", -2, 1)
 		cur_entry:SetHighlightTexture(highlight_texture)
+
+		local selected_texture = cur_entry:CreateTexture(nil, "BORDER")
+		selected_texture:SetTexture([[Interface\ClassTrainerFrame\TrainerTextures]])
+		selected_texture:SetTexCoord(0.00195313, 0.57421875, 0.84960938, 0.94140625)
+		selected_texture:SetBlendMode("ADD")
+		selected_texture:SetPoint("TOPLEFT", 2, 0)
+		selected_texture:SetPoint("BOTTOMRIGHT", -2, 1)
+		cur_entry.selected_texture = selected_texture
 
 		local emphasis_texture = cur_entry:CreateTexture(nil, "BORDER")
 		emphasis_texture:SetTexture([[Interface\QUESTFRAME\Ui-QuestLogTitleHighlight]])
@@ -430,7 +446,6 @@ function private.InitializeListFrame()
 		cur_state.container = cur_container
 
 		cur_state:SetScript("OnClick", ListItem_OnClick)
-		cur_entry:SetScript("OnClick", ListItem_OnClick)
 
 		ListFrame.button_containers[index] = cur_container
 		ListFrame.state_buttons[index] = cur_state
@@ -517,15 +532,6 @@ function private.InitializeListFrame()
 		-- HARD_FILTERS and SOFT_FILTERS are used to determine if a recipe should be shown based on the value of the key compared to the value
 		-- of its saved_var.
 		private.HARD_FILTERS = {
-			------------------------------------------------------------------------------------------------
-			-- Binding flags.
-			------------------------------------------------------------------------------------------------
-			["itemboe"]	= { flag = COMMON1.IBOE,	field = "common1",	sv_root = binding_filters },
-			["itembop"]	= { flag = COMMON1.IBOP,	field = "common1",	sv_root = binding_filters },
-			["itemboa"]	= { flag = COMMON1.IBOA,	field = "common1",	sv_root = binding_filters },
-			["recipeboe"]	= { flag = COMMON1.RBOE,	field = "common1",	sv_root = binding_filters },
-			["recipebop"]	= { flag = COMMON1.RBOP,	field = "common1",	sv_root = binding_filters },
-			["recipeboa"]	= { flag = COMMON1.RBOA,	field = "common1",	sv_root = binding_filters },
 			------------------------------------------------------------------------------------------------
 			-- Player Type flags.
 			------------------------------------------------------------------------------------------------
@@ -686,6 +692,24 @@ function private.InitializeListFrame()
 			local item_filter_type = recipe:ItemFilterType()
 
 			if item_filter_type and not addon.db.profile.filters.item[item_filter_type] then
+				return false
+			end
+
+			------------------------------------------------------------------------------------------------
+			-- Binding types.
+			------------------------------------------------------------------------------------------------
+			local _, recipe_item_binding = recipe:RecipeItem()
+
+			-- Assume that recipes without a recipe item are obtained via trainers, and treat them as bind on pickup.
+			if recipe_item_binding and not addon.db.profile.filters.binding["recipe_" .. recipe_item_binding:lower()] then
+				return false
+			elseif not recipe_item_binding and not addon.db.profile.filters.binding.recipe_bind_on_pickup then
+				return false
+			end
+
+			local _, crafted_item_binding = recipe:CraftedItem()
+
+			if crafted_item_binding and not addon.db.profile.filters.binding["item_" .. crafted_item_binding:lower()] then
 				return false
 			end
 
@@ -862,15 +886,16 @@ function private.InitializeListFrame()
 			entry:SetText("")
 			entry:SetScript("OnEnter", nil)
 			entry:SetScript("OnLeave", nil)
+			entry:SetScript("OnClick", nil)
 			entry:SetWidth(LIST_ENTRY_WIDTH)
-			entry.emphasis_texture:Hide()
 			entry:Disable()
+			entry.emphasis_texture:Hide()
+			entry.selected_texture:Hide()
+			entry.button = nil
 
 			state.string_index = 0
 
 			state:Hide()
-			state:SetScript("OnEnter", nil)
-			state:SetScript("OnLeave", nil)
 			state:Disable()
 
 			state:ClearAllPoints()
@@ -984,8 +1009,6 @@ function private.InitializeListFrame()
 					cur_state:SetHighlightTexture([[Interface\MINIMAP\UI-Minimap-ZoomButton-Highlight]])
 				end
 				cur_state.string_index = string_index
-				cur_state:SetScript("OnEnter", Button_OnEnter)
-				cur_state:SetScript("OnLeave", Button_OnLeave)
 				cur_state:Enable()
 			else
 				cur_state:Hide()
@@ -993,6 +1016,10 @@ function private.InitializeListFrame()
 			end
 			local cur_container = cur_state.container
 			local cur_button = self.entry_buttons[button_index]
+
+			if cur_entry == ListFrame.selected_entry then
+				cur_button.selected_texture:Show()
+			end
 
 			if cur_entry.emphasized then
 				cur_button.emphasis_texture:Show()
@@ -1004,17 +1031,17 @@ function private.InitializeListFrame()
 				cur_state:SetPoint("TOPLEFT", cur_container, "TOPLEFT", 15, 0)
 				cur_button:SetWidth(LIST_ENTRY_WIDTH - 15)
 			end
+			cur_entry.button = cur_button
 			cur_button.string_index = string_index
 			cur_button:SetText(cur_entry.text)
 			cur_button:SetScript("OnEnter", Bar_OnEnter)
 			cur_button:SetScript("OnLeave", Bar_OnLeave)
+			cur_button:SetScript("OnClick", Bar_OnClick)
 			cur_button:Enable()
 
 			-- This function could possibly have been called from a mouse click or by scrolling. Since, in those cases, the list entries have
 			-- changed, the mouse is likely over a different entry - a tooltip should be generated for it.
-			if cur_state:IsMouseOver() then
-				Button_OnEnter(cur_state)
-			elseif cur_button:IsMouseOver() then
+			if cur_button:IsMouseOver() then
 				Bar_OnEnter(cur_button)
 			end
 			button_index = button_index + 1
@@ -1235,7 +1262,7 @@ function private.InitializeListFrame()
 		local drop_location = type(identifier) == "string" and SetTextColor(CATEGORY_COLORS["location"], identifier)
 
 		if drop_location then
-			local recipe_item_id = private.recipe_list[recipe_id]:RecipeItemID()
+			local recipe_item_id = private.recipe_list[recipe_id]:RecipeItem()
 			local recipe_item_level = recipe_item_id and select(4, _G.GetItemInfo(recipe_item_id))
 
 			if recipe_item_level then
@@ -1701,7 +1728,7 @@ do
 				return
 			end
 			local recipe = private.recipe_list[recipe_id]
-			local recipe_item_id = recipe:RecipeItemID()
+			local recipe_item_id = recipe:RecipeItem()
 			local recipe_item_level = recipe_item_id and select(4, _G.GetItemInfo(recipe_item_id))
 			local quality_color = select(4, _G.GetItemQualityColor(recipe.quality)):sub(3)
 			local location_text
@@ -1842,13 +1869,14 @@ do
 		end
 	end
 
-	local BINDING_FLAGS = {
-		[COMMON1.IBOE] = L["BOEFilter"],
-		[COMMON1.IBOP] = L["BOPFilter"],
-		[COMMON1.IBOA] = L["BOAFilter"],
-		[COMMON1.RBOE] = L["RecipeBOEFilter"],
-		[COMMON1.RBOP] = L["RecipeBOPFilter"],
-		[COMMON1.RBOA] = L["RecipeBOAFilter"]
+	local ITEM_BINDING_TYPES = {
+		BIND_ON_EQUIP = L["BOEFilter"],
+		BIND_ON_PICKUP = L["BOPFilter"],
+	}
+
+	local RECIPE_BINDING_TYPES = {
+		BIND_ON_EQUIP = L["RecipeBOEFilter"],
+		BIND_ON_PICKUP = L["RecipeBOPFilter"],
 	}
 
 	local NON_COORD_ACQUIRES = {
@@ -1906,11 +1934,18 @@ do
 		ttAdd(0, -1, false, ("%s:"):format(_G.SKILL_LEVEL), BASIC_COLORS["normal"], recipe.skill_level, private.DIFFICULTY_COLORS[color_type])
 		acquire_tip:AddSeparator()
 
-		for flag, label in pairs(BINDING_FLAGS) do
-			if _G.bit.band(recipe.flags.common1, flag) == flag then
-				ttAdd(0, -1, true, label, BASIC_COLORS["normal"])
-			end
+		local _, recipe_item_binding = recipe:RecipeItem()
+
+		if recipe_item_binding then
+			ttAdd(0, -1, true, RECIPE_BINDING_TYPES[recipe_item_binding], BASIC_COLORS["normal"])
 		end
+
+		local _, crafted_item_binding = recipe:RecipeItem()
+
+		if crafted_item_binding then
+			ttAdd(0, -1, true, ITEM_BINDING_TYPES[crafted_item_binding], BASIC_COLORS["normal"])
+		end
+
 		acquire_tip:AddSeparator()
 
 		local recipe_specialty = recipe.specialty
@@ -1941,5 +1976,6 @@ do
 			end
 		end
 		acquire_tip:Show()
+		acquire_tip:UpdateScrolling(addon.Frame:GetHeight())
 	end
 end	-- do

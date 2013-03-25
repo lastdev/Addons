@@ -1,8 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 <!--
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.6 (<%codename%>)
-	Revision: $Id: GatherMiniNotes.xml 955 2012-08-28 16:39:14Z Esamynn $
+	Version: 4.2.0 (<%codename%>)
+	Revision: $Id: GatherMiniNotes.xml 1056 2012-12-10 04:10:54Z Esamynn $
 
 	License:
 	This program is free software; you can redistribute it and/or
@@ -26,11 +26,14 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 -->
-	<Script>Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherMiniNotes.xml $", "$Rev: 955 $")</Script>
+	<Script>Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherMiniNotes.xml $", "$Rev: 1056 $")</Script>
 	<Script file = "GatherMiniNotes.lua"/>
 	
 	<Frame name="GatherMiniNoteUpdateFrame" hidden="true" parent="Minimap">
 		<Scripts>
+			<OnLoad>
+				Gatherer.MiniNotes.OnLoad(self)
+			</OnLoad>
 			<OnUpdate>
 				Gatherer.MiniNotes.UpdateMinimapNotes(elapsed)
 			</OnUpdate>
@@ -47,7 +50,7 @@
 		</Size>
 		<Scripts>
 			<OnLoad>
-				
+				Gatherer.MiniNotes.OnNoteCreation(self)
 			</OnLoad>
 			<OnEnter>
 				Gatherer.MiniNotes.MiniNoteOnEnter(self)

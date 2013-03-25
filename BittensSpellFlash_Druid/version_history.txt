@@ -1,3 +1,42 @@
+== Version 2.8.0
+NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
+* Balance: Updated Moonfire/Sunfire priorities for a slight dps gain.
+* Balance: Starfall is now held to line up with Incarnation if applicable (a dps gain).
+* Balance: Incarnation stops flashing once you start moving toward the next eclipse.
+
+== Version 2.7.1
+* Feral: Bugfix - Savage Roar was not flashing when glyphed.  The rotation needs work when it's glyphed, but at least it flashes now.
+
+== Version 2.7.0
+NOTE: Your options will be reset when you upgrade to this version.
+* Repackaging so that Bitten's SpellFlash Library is included with the addon, instead of downloaded separately.
+* Several other internal changes.
+* Guardian: Mangle with Soul of the Forest now grants 10 rage, instead of 7.
+
+== Version 2.6.2
+* Feral: Bugfix - removed the REST of the Tier 13 code, so the addon actually works again ...
+
+== Version 2.6.1
+* Feral: Removed Tier 13 code.
+* Guardian: Increased the priority of Might of Ursoc when its cooldown is 2 minutes (2pT14, unglyphed).
+* Guardian: Savage Defense now only flashes when in melee range.
+* Guardian: Bugfix - glyphed Frenzied Regeneration no longer flashes when you have under 60 rage.
+* Guardian: Bugfix - activating Heart of the Wild caused a Lua error.
+
+== Version 2.6.0
+* Guardian: Added a Guardian rotation.
+* All: Bugfix - Faery Fire was not flashing if you took the Faerie Swarm talent.
+
+== Version 2.5.0
+* Balance: Updating the rotation based on research with Simulationcraft.
+
+== Version 2.4.4
+* Making the "Out of Date" status go away.  Please report any real issues w/ the new patch.
+
+== Version 2.4.3
+* Balance: Continue flashing to the next priority after Starfall, in case you can't use it because it would pull a room.
+* All: Forms now only flash when in combat.
+
 == Version 2.4.2
 * All: Added Symbiosis (thanks Olgren!).
 

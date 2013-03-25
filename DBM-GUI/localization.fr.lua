@@ -4,12 +4,13 @@ local L = DBM_GUI_Translations
 
 L.MainFrame = "Deadly Boss Mods"
 
-L.TranslationBy 			= "Psyco/Sasmira/Pettigrow"
+L.TranslationBy 			= "Psyco/Sasmira/Pettigrow/Edoz@EU-Ysondre"
 
 L.OTabBosses	= "Boss"
 L.OTabOptions	= "Options"
 
 L.TabCategory_Options		= "Options générales"
+L.TabCategory_MOP	 		= "Mists of Pandaria"
 L.TabCategory_CATA			= "Cataclysm"
 L.TabCategory_WOTLK			= "Wrath of the Lich King"
 L.TabCategory_BC			= "The Burning Crusade"
@@ -29,7 +30,6 @@ L.Button_OK 				= 'OK'
 L.Button_Cancel 			= 'Annuler'
 L.Button_LoadMod 			= 'Charger l\'AddOn'
 L.Mod_Enabled				= "Activer ce module"
-L.Mod_EnableAnnounce		= "Annoncer au raid (nécessite d'être le chef)"
 L.Reset 					= "Réinit."
 
 L.Enable  					= "Activer"
@@ -65,6 +65,8 @@ L.ModelSoundShort			= "Court"
 L.ModelSoundLong			= "Long"
 
 L.Button_RangeFrame			= "Cadre des portées"
+L.Button_RangeRadar			= "Show/hide range radar"
+L.Button_InfoFrame			= "Show/hide info frame"
 L.Button_TestBars			= "Barres de test"
 
 L.PizzaTimer_Headline 		= 'Création d\'un "délai pizza"'
@@ -96,6 +98,21 @@ L.RaidWarnSound				= "Son des alertes"
 L.CountdownVoice			= "Voix des comptes à rebours"
 L.SpecialWarnSound			= "Son des alertes spéciales affectant vous-même ou votre rôle"
 L.SpecialWarnSound2			= "Son des alertes spéciales affectant tout le monde"
+
+-- Tab: Generalwarnings
+L.Tab_GeneralMessages 		= "General Messages"
+L.CoreMessages				= "Core Message Options"
+L.ShowLoadMessage 			= "Show mod loading messages in chat frame"
+L.ShowPizzaMessage 			= "Show timer broadcast messages in chat frame"
+L.CombatMessages			= "Combat Message Options"
+L.ShowEngageMessage 		= "Show engage messages in chat frame"
+L.ShowKillMessage 			= "Show kill messages in chat frame"
+L.ShowWipeMessage 			= "Show wipe messages in chat frame"
+L.ShowRecoveryMessage 		= "Show timer recovery messages in chat frame"
+L.WhisperMessages			= "Whisper Message Options"
+L.AutoRespond 				= "Auto-respond to whispers while fighting"
+L.EnableStatus 				= "Reply to 'status' whispers"
+L.WhisperStats 				= "Include kill/wipe stats in whisper responses"
 
 -- Tab: Barsetup
 L.BarSetup   				= "Style des barres"
@@ -143,7 +160,6 @@ L.BarWidth					= "Largeur des barres : %d"
 L.Panel_SpamFilter				= "Filtres globaux et de spam"
 L.Area_SpamFilter				= "Options des filtres de spam"
 L.HideBossEmoteFrame			= "Masquer le cadre des émotes des boss de raid"
-L.SpamBlockRaidWarning			= "Filtrer les annonces des autres boss mods" 
 L.SpamBlockBossWhispers			= "Filtrer les chuchotements d'alerte <DBM> pendant les rencontres"
 L.BlockVersionUpdateNotice		= "Désactiver le popup de notification de mise à jour"
 L.ShowBigBrotherOnCombatStart	= "Effectuer une vérif. des buffs Big Brother au début du combat"
@@ -151,6 +167,10 @@ L.BigBrotherAnnounceToRaid		= "Annoncer les résultats de Big Brother au raid"
 
 L.Area_SpamFilter_Outgoing		= "Options des filtres globaux"
 L.SpamBlockNoShowAnnounce		= "Ne pas afficher d'annonces ou jouer de sons d'alerte"
-L.SpamBlockNoSendAnnounce		= "Ne pas envoyer d'annonces au canal Raid"
 L.SpamBlockNoSendWhisper		= "Ne pas envoyer de chuchotements aux autres joueurs"
 L.SpamBlockNoSetIcon			= "Ne pas placer d'icônes sur les cibles"
+L.SpamBlockNoRangeFrame			= "Ne pas afficher le cadre de distance"
+L.SpamBlockNoInfoFrame			= "Ne pas afficher le cadre d'information"
+
+-- Misc
+L.FontHeight	= 16

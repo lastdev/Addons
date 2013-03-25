@@ -99,7 +99,7 @@ do
 	local function setRange(self, range)
 		rangeCheck:Show(range)
 	end
-	
+
 	local sound0 = "none"
 	local sound1 = "Interface\\AddOns\\DBM-Core\\Sounds\\blip_8.ogg"
 	local sound2 = "Interface\\AddOns\\DBM-Core\\Sounds\\alarmclockbeeps.ogg"
@@ -113,7 +113,7 @@ do
 			end
 		end
 	end
-	
+
 	local function setFrames(self, option)
 		DBM.Options.RangeFrameFrames = option
 		radarFrame:Hide()
@@ -138,7 +138,7 @@ do
 			radarFrame:Hide()
 		end
 	end
-	
+
 	function initializeDropdown(dropdownFrame, level, menu)
 		local info
 		if level == 1 then
@@ -163,13 +163,6 @@ do
 			info.menuList = "frames"
 			UIDropDownMenu_AddButton(info, 1)
 
---[[			info = UIDropDownMenu_CreateInfo()
-			info.text = DBM_CORE_RANGECHECK_OPTION_SPEED
-			info.notCheckable = true
-			info.hasArrow = true
-			info.menuList = "speed"
-			UIDropDownMenu_AddButton(info, 1)]]
-
 			info = UIDropDownMenu_CreateInfo()
 			info.text = DBM_CORE_RANGECHECK_LOCK
 			if DBM.Options.RangeFrameLocked then
@@ -187,33 +180,6 @@ do
 
 		elseif level == 2 then
 			if menu == "range" then
-				if initRangeCheck() then
-					info = UIDropDownMenu_CreateInfo()
-					info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(3)
-					info.func = setRange
-					info.arg1 = 3
-					info.checked = (frame.range == 3)
-					UIDropDownMenu_AddButton(info, 2)
-				end
-
-				if initRangeCheck() then
-					info = UIDropDownMenu_CreateInfo()
-					info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(4)
-					info.func = setRange
-					info.arg1 = 4
-					info.checked = (frame.range == 4)
-					UIDropDownMenu_AddButton(info, 2)
-				end
-
-				if initRangeCheck() then
-					info = UIDropDownMenu_CreateInfo()
-					info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(5)
-					info.func = setRange
-					info.arg1 = 5
-					info.checked = (frame.range == 5)
-					UIDropDownMenu_AddButton(info, 2)
-				end
-
 				if initRangeCheck() then
 					info = UIDropDownMenu_CreateInfo()
 					info.text = DBM_CORE_RANGECHECK_SETRANGE_TO:format(6)
@@ -322,7 +288,7 @@ do
 			info.arg2 = sound0
 			info.checked = (DBM.Options[option] == sound0)
 			UIDropDownMenu_AddButton(info, 3)
-			
+
 			info = UIDropDownMenu_CreateInfo()
 			info.text = DBM_CORE_RANGECHECK_SOUND_1
 			info.func = setSound
@@ -330,7 +296,7 @@ do
 			info.arg2 = sound1
 			info.checked = (DBM.Options[option] == sound1)
 			UIDropDownMenu_AddButton(info, 3)
-			
+
 			info = UIDropDownMenu_CreateInfo()
 			info.text = DBM_CORE_RANGECHECK_SOUND_2
 			info.func = setSound
@@ -373,14 +339,6 @@ end
 ------------------------
 function createFrame()
 	local elapsed = 0
---[[	local updateRate
-	if DBM.Options.RangeFrameUpdates == "Slow" then
-		updateRate = 0.5
-	elseif DBM.Options.RangeFrameUpdates == "Average" then
-		updateRate = 0.25
-	elseif DBM.Options.RangeFrameUpdates == "Fast" then
-		updateRate = 0.05
-	end]]
 	local frame = CreateFrame("GameTooltip", "DBMRangeCheck", UIParent, "GameTooltipTemplate")
 	dropdownFrame = CreateFrame("Frame", "DBMRangeCheckDropdown", frame, "UIDropDownMenuTemplate")
 	frame:SetFrameStrata("DIALOG")
@@ -426,7 +384,7 @@ function createRadarFrame()
 	local elapsed = 0
 	local radarFrame = CreateFrame("Frame", "DBMRangeCheckRadar", UIParent)
 	radarFrame:SetFrameStrata("DIALOG")
-	
+
 	radarFrame:SetPoint(DBM.Options.RangeFrameRadarPoint, UIParent, DBM.Options.RangeFrameRadarPoint, DBM.Options.RangeFrameRadarX, DBM.Options.RangeFrameRadarY)
 	radarFrame:SetHeight(128)
 	radarFrame:SetWidth(128)
@@ -466,7 +424,7 @@ function createRadarFrame()
 	bg:SetBlendMode("BLEND")
 	bg:SetTexture(0, 0, 0, 0.3)
 	radarFrame.background = bg
-	
+
 	local circle = radarFrame:CreateTexture(nil, "ARTWORK")
 	circle:SetPoint("CENTER")
 	circle:SetTexture("Interface\\AddOns\\DBM-Core\\textures\\radar_circle.blp")
@@ -479,15 +437,22 @@ function createRadarFrame()
 	player:SetBlendMode("ADD")
 	player:SetPoint("CENTER")
 
-	local text = radarFrame:CreateFontString(nil, "OVERLAY","GameTooltipText")
+	local text = radarFrame:CreateFontString(nil, "OVERLAY", "GameTooltipText")
 	text:SetWidth(128)
 	text:SetHeight(15)
 	text:SetPoint("BOTTOMLEFT", radarFrame, "TOPLEFT", 0,0)
---	text:SetFont("Fonts\\FRIZQT__.TTF", 11)
 	text:SetTextColor(1, 1, 1, 1)
 	text:Show()
 	radarFrame.text = text
 
+	local inRangeText = radarFrame:CreateFontString(nil, "OVERLAY", "GameTooltipText")
+	inRangeText:SetWidth(128)
+	inRangeText:SetHeight(15)
+	inRangeText:SetPoint("TOPLEFT", radarFrame, "BOTTOMLEFT", 0,0)
+	inRangeText:SetTextColor(1, 1, 1, 1)
+	inRangeText:Hide()
+	radarFrame.inRangeText = inRangeText
+	
 --	for i=1, 40 do
 --		local dot = CreateFrame("Frame", "DBMRangeCheckRadarDot"..i, radarFrame, "WorldMapPartyUnitTemplate")
 --		dot:SetWidth(24)
@@ -538,7 +503,7 @@ function onUpdate(self, elapsed)
 					if j >= 5 then
 						break
 					end
-				end	
+				end
 			end
 		elseif GetNumSubgroupMembers() > 0 then
 			for i = 1, GetNumSubgroupMembers() do
@@ -552,14 +517,14 @@ function onUpdate(self, elapsed)
 					if j >= 5 then
 						break
 					end
-				end	
+				end
 			end
 		end
 	else
 		self:AddLine(DBM_CORE_RANGE_CHECK_ZONE_UNSUPPORTED:format(self.range))
 	end
 	soundUpdate = soundUpdate + elapsed
-	if soundUpdate >= 5 and j > 0 then
+	if soundUpdate >= 5 and j >= self.redCircleNumPlayers then
 		updateSound(j)
 		soundUpdate = 0
 	end
@@ -567,7 +532,7 @@ function onUpdate(self, elapsed)
 end
 
 do
-	local rotation, pixelsperyard, prevNumPlayers, range, isInSupportedArea
+	local rotation, pixelsperyard, prevNumPlayers, range, isInSupportedArea, prevNumPlayersTooClose
 	local function createDot(id)
 		local dot = CreateFrame("Frame", "DBMRangeCheckRadarDot"..id, radarFrame, "WorldMapPartyUnitTemplate")
 		dot:SetFrameStrata("TOOLTIP")
@@ -588,7 +553,7 @@ do
 			BLIP_TEX_COORDS[class][3],
 			BLIP_TEX_COORDS[class][4]
 		)
-		dots[id].class = class		
+		dots[id].class = class
 	end
 
 	local function setDot(id, icon, filtered)
@@ -639,7 +604,7 @@ do
 			dots[id].tooClose = true
 		else
 			dots[id].tooClose = false
-		end			
+		end
 	end
 
 	function onUpdateRadar(self, elapsed)
@@ -662,7 +627,7 @@ do
 					v.dot:Hide()
 				end
 				for i = 1, 8 do
-					charms[i]:Hide()	
+					charms[i]:Hide()
 				end
 			else
 				isInSupportedArea = true
@@ -687,7 +652,7 @@ do
 						end
 					end
 					for i=1, 8 do
-						charms[i]:Hide()	
+						charms[i]:Hide()
 					end
 				end
 				prevNumPlayers = numPlayers
@@ -720,16 +685,29 @@ do
 					end
 				end
 
-				local playerTooClose = false
+				local exceedsPlayersTooClose = false
+				local numPlayersTooClose = 0
 				for i,v in pairs(dots) do
 					if v.tooClose then
-						playerTooClose = true
-						break;
+						numPlayersTooClose = numPlayersTooClose + 1
+						if numPlayersTooClose >= frame.redCircleNumPlayers then
+							exceedsPlayersTooClose = true
+						end
 					end
 				end
+				if numPlayersTooClose ~= (prevNumPlayersTooClose or 0) then
+					radarFrame.inRangeText:SetText(DBM_CORE_RANGERADAR_IN_RANGE_TEXT:format(numPlayersTooClose))
+					if exceedsPlayersTooClose then	-- only show the text if the circle is red
+						radarFrame.inRangeText:Show()
+					else
+						radarFrame.inRangeText:Hide()
+					end
+				end
+				prevNumPlayersTooClose = numPlayersTooClose
+				
 				if UnitIsDeadOrGhost("player") then
 					radarFrame.circle:SetVertexColor(1,1,1)
-				elseif playerTooClose then
+				elseif exceedsPlayersTooClose then
 					radarFrame.circle:SetVertexColor(1,0,0)
 				else
 					radarFrame.circle:SetVertexColor(0,1,0)
@@ -747,7 +725,7 @@ do
 					v.dot:Hide()
 				end
 				for i = 1, 8 do
-					charms[i]:Hide()	
+					charms[i]:Hide()
 				end
 			end
 		end
@@ -762,7 +740,6 @@ checkFuncs[11] = function(uId)
 	return CheckInteractDistance(uId, 2)
 end
 
-
 checkFuncs[10] = function(uId)
 	return CheckInteractDistance(uId, 3)
 end
@@ -775,7 +752,7 @@ end
 local getDistanceBetween
 do
 	local mapSizes = DBM.MapSizes
-	
+
 	function getDistanceBetween(uId, x, y)
 		local startX, startY = GetPlayerMapPosition(uId)
 		local mapName = GetMapInfo()
@@ -791,7 +768,7 @@ do
 	local function mapRangeCheck(uId, range)
 		return getDistanceBetween(uId, GetPlayerMapPosition("player")) < range
 	end
-	
+
 	function initRangeCheck(range)
 		if checkFuncs[range] ~= mapRangeCheck then
 			return true
@@ -817,7 +794,7 @@ do
 		end
 		return true -- everything ok!
 	end
-	
+
 	setmetatable(checkFuncs, {
 		__index = function(t, k)
 			return mapRangeCheck
@@ -842,24 +819,27 @@ end
 ---------------
 --  Methods  --
 ---------------
-function rangeCheck:Show(range, filter)
+function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers)
+	if DBM.Options.DontShowRangeFrame and not forceshow then return end
 	SetMapToCurrentZone()--Set map to current zone before checking other stuff, work around annoying bug i hope?
 	if type(range) == "function" then -- the first argument is optional
 		return self:Show(nil, range)
 	end
 	local mapName = GetMapInfo()
 	range = range or 10
+	redCircleNumPlayers = redCircleNumPlayers or 1
 	frame = frame or createFrame()
 	radarFrame = radarFrame or createRadarFrame()
 	frame.checkFunc = checkFuncs[range] or error(("Range \"%d yd\" is not supported."):format(range), 2)
 	frame.range = range
 	frame.filter = filter
+	frame.redCircleNumPlayers = redCircleNumPlayers
 	if DBM.Options.RangeFrameFrames == "text" or DBM.Options.RangeFrameFrames == "both" or DBM.MapSizes[mapName] == nil or (DBM.MapSizes[mapName] and DBM.MapSizes[mapName][GetCurrentMapDungeonLevel()] == nil) then
 		frame:Show()
 		frame:SetOwner(UIParent, "ANCHOR_PRESERVE")
 		onUpdate(frame, 0)
 	end
-	if (DBM.Options.RangeFrameFrames == "radar" or DBM.Options.RangeFrameFrames == "both") and (DBM.MapSizes[mapName] and DBM.MapSizes[mapName][GetCurrentMapDungeonLevel()] ~= nil) then
+	if (DBM.Options.RangeFrameFrames == "radar" or DBM.Options.RangeFrameFrames == "both") and (DBM.MapSizes[GetMapInfo()] and DBM.MapSizes[mapName][GetCurrentMapDungeonLevel()] ~= nil) then
 		onUpdateRadar(radarFrame, 1)
 	end
 end

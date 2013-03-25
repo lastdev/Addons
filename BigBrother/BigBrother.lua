@@ -21,7 +21,7 @@ end
 
 local addon = BigBrother
 addon.vars = vars
-vars.svnrev["BigBrother.lua"] = tonumber(("$Revision: 336 $"):match("%d+"))
+vars.svnrev["BigBrother.lua"] = tonumber(("$Revision: 375 $"):match("%d+"))
 
 local bit, math, date, string, select, table, time, tonumber, unpack, wipe, pairs, ipairs = 
       bit, math, date, string, select, table, time, tonumber, unpack, wipe, pairs, ipairs
@@ -60,6 +60,7 @@ for k,_ in pairs(brezSpellNames) do rezSpellNames[k] = nil end
 local tauntSpellNames = convertIDstoNames(vars.SpellData.tauntSpells)
 local aoetauntSpellNames = convertIDstoNames(vars.SpellData.aoetauntSpells)
 for k,_ in pairs(aoetauntSpellNames) do tauntSpellNames[k] = nil end
+local deathgrip = GetSpellInfo(49576)
 
 local color = "|cffff8040%s|r"
 local outdoor_bg = {}
@@ -93,7 +94,7 @@ addon:RegisterDefaults("profile", {
   CombatRez = true,
   NonCombatRez = true,
   Groups = {true, true, true, true, true, true, true, true},
-  PolyOut = {true, false, false, false, false, false, false},
+  PolyOut = {true, false, false, false, false, false, false, false},
   GroupOnly = true,
   ReportTanks = true,
   ReadyCheckMine = true,
@@ -102,6 +103,7 @@ addon:RegisterDefaults("profile", {
   ReadyCheckToRaid = false,
   ReadyCheckBuffWinMine = false,
   ReadyCheckBuffWinOther = false,
+  ReadyCheckIgnoreLFG = true,
   BuffWindowCombatClose = true,
   CheckFlasks = true,
   CheckElixirs = true,
@@ -143,6 +145,14 @@ local options = {
           func = "FlaskCheck",
           disabled = function() return not IsInRaid() end,
           passValue = "RAID",
+        },
+        instance = {
+          name = L["Instance"],
+          desc = L["Reports result to LFG/LFR instance group."],
+          type = 'execute',
+          func = "FlaskCheck",
+          disabled = function() return not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) end,
+          passValue = "INSTANCE_CHAT",
         },
         guild = {
           name = L["Guild"],
@@ -194,6 +204,14 @@ local options = {
           func = "QuickCheck",
           disabled = function() return not IsInRaid() end,
           passValue = "RAID",
+        },
+        instance = {
+          name = L["Instance"],
+          desc = L["Reports result to LFG/LFR instance group."],
+          type = 'execute',
+          func = "QuickCheck",
+          disabled = function() return not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) end,
+          passValue = "INSTANCE_CHAT",
         },
         guild = {
           name = L["Guild"],
@@ -368,6 +386,14 @@ local options = {
               set = function(v) addon.db.profile.PolyOut[7] = v end,
               map = { [false] = "|cffff4040Disabled|r", [true] = "|cff40ff40Enabled|r" }
             },                        
+            instance = {
+              name = L["Instance"],
+              desc = L["Reports result to LFG/LFR instance group."],
+              type = 'toggle',
+              get = function() return addon.db.profile.PolyOut[8] end,
+              set = function(v) addon.db.profile.PolyOut[8] = v end,
+              map = { [false] = "|cffff4040Disabled|r", [true] = "|cff40ff40Enabled|r" }
+            },
           }
         },
         checks = {
@@ -406,6 +432,14 @@ local options = {
           desc = L["Perform a quickcheck automatically on ready check"],
           type = 'group',
           args = {
+            ignorelfg = {
+              name  = L["Ignore Ready checks in LFG/LFR"],
+              desc = L["Ignore Ready checks in LFG/LFR"],
+              type = 'toggle',
+              get = function() return addon.db.profile.ReadyCheckIgnoreLFG end,
+              set = function(v) addon.db.profile.ReadyCheckIgnoreLFG = v end,
+              map = { [false] = "|cffff4040Disabled|r", [true] = "|cff40ff40Enabled|r" }
+            },
             fromself = {
               name  = L["Ready checks from self"],
               desc = L["Ready checks from self"],
@@ -613,7 +647,9 @@ function addon:BroadcastVersion(force)
      return -- not a packaged release
    end
    local msg = "revision "..addon.revision.." version "..addon.version
-   if IsInRaid() then
+   if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+     SendAddonMessage(addon.name, msg, "INSTANCE_CHAT")
+   elseif IsInRaid() then
      SendAddonMessage(addon.name, msg, "RAID")
    elseif GetNumGroupMembers() ~= 0 then
      SendAddonMessage(addon.name, msg, "PARTY")
@@ -836,6 +872,7 @@ end
 local petToOwner = {}
 local tanklist = {}
 local tankcnt = 0
+addon.petToOwner = petToOwner
 
 local function nospace(str)
   if not str then return "" end
@@ -956,7 +993,7 @@ local function unitColor(guid, flags, name)
   return "\124cff"..color..name.."\124r"
 end
 
-local function unitOwner(petGUID, petFlags, usecolor)
+function addon:unitOwner(petGUID, petFlags, usecolor)
   --print("unitOwner"..petGUID.." "..petFlags)
   if not petGUID or not petFlags then
     return ""
@@ -968,8 +1005,9 @@ local function unitOwner(petGUID, petFlags, usecolor)
   local ownerGUID = petToOwner[petGUID]
   if not ownerGUID then -- try a refresh
     for unit in RL:IterateRoster(true) do
-      local ownerid = unit.unitid:match("^(.*)pet$")
+      local ownerid,tag = unit.unitid:match("^(.*)pet(%d*)$") -- raid1pet or raidpet1
       if ownerid == "" then ownerid = "player" end
+      ownerid = (ownerid or "")..(tag or "")
       if ownerid and UnitExists(ownerid) and UnitExists(unit.unitid) then
         local guid = UnitGUID(unit.unitid)
         local ownerguid = UnitGUID(ownerid)
@@ -981,7 +1019,11 @@ local function unitOwner(petGUID, petFlags, usecolor)
   if not ownerGUID then
     return ""
   end
-  local name = select(6,GetPlayerInfoByGUID(ownerGUID)) or "Unknown"
+  local name,realm = select(6,GetPlayerInfoByGUID(ownerGUID))
+  name = name or "Unknown"
+  if realm and #realm > 0 then
+    name = name.."-"..realm
+  end
   if usecolor then
     local colored = unitColor(ownerGUID, bit.bor(COMBATLOG_OBJECT_TYPE_PLAYER, COMBATLOG_OBJECT_REACTION_FRIENDLY), name)
     return " <"..colored..">"
@@ -1000,8 +1042,8 @@ local function SYMDECODE(spam,chatoutput)
     srctxt = unitColor(srcGUID, srcflags, srctxt)
     dsttxt = unitColor(dstGUID, dstflags, dsttxt)
   end
-  local srcowner = unitOwner(srcGUID, srcflags, not chatoutput)
-  local dstowner = unitOwner(dstGUID, dstflags, not chatoutput)
+  local srcowner = addon:unitOwner(srcGUID, srcflags, not chatoutput)
+  local dstowner = addon:unitOwner(dstGUID, dstflags, not chatoutput)
   srctxt = iconize(srcRaidFlags,chatoutput)..srctxt..srcowner
   dsttxt = iconize(dstRaidFlags,chatoutput)..dsttxt..dstowner
   spam = string.gsub(spam, SRC, srctxt)
@@ -1055,7 +1097,7 @@ local function sendspam(spam,channels,tankunit)
   -- BG reporting - never spam bg unless specifically requested, and dont spam anyone else
   if inbattleground then 
     if channels[7] then 
-      spamchannel(spam, "BATTLEGROUND")
+      spamchannel(spam, "INSTANCE_CHAT")
     end
     return	  
   elseif inoutdoorbg then
@@ -1071,7 +1113,11 @@ local function sendspam(spam,channels,tankunit)
   end	
     
   -- raid/party reporting
-  if IsInRaid() and channels[3] then
+  if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+     if channels[8] then
+       spamchannel(spam, "INSTANCE_CHAT")
+     end
+  elseif IsInRaid() and channels[3] then
      spamchannel(spam, "RAID")
   elseif GetNumGroupMembers() ~= 0 and channels[2] then
      spamchannel(spam, "PARTY")	
@@ -1093,7 +1139,7 @@ local function sendspam(spam,channels,tankunit)
   end
 end
 
-local clickchan = {false, true, true, false, false, false, true}
+local clickchan = {false, true, true, false, false, false, true, true}
 hooksecurefunc("SetItemRef",function(link,text,button,chatFrame)
   local time, data = string.match(link,"^player::BigBrother:(%d+):(.+)$")
   if time then
@@ -1132,6 +1178,10 @@ function addon:READY_CHECK(sender)
     if addon.db.profile.ReadyCheckOther then doquickcheck = true end           
     if addon.db.profile.ReadyCheckBuffWinOther then dowindisplay = true end  
   end
+
+  if addon.db.profile.ReadyCheckIgnoreLFG and IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+    doquickcheck = false
+  end
   
   if dowindisplay then
     if not BigBrother_BuffWindow or not BigBrother_BuffWindow:IsShown() then
@@ -1141,7 +1191,9 @@ function addon:READY_CHECK(sender)
   
   if doquickcheck then
     if addon.db.profile.ReadyCheckToRaid then
-      if IsInRaid() then
+      if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+          addon:ConsumableCheck("INSTANCE_CHAT")
+      elseif IsInRaid() then
           addon:ConsumableCheck("RAID")
       elseif GetNumGroupMembers() > 0 then
           addon:ConsumableCheck("PARTY")                
@@ -1377,8 +1429,9 @@ function addon:COMBAT_LOG_EVENT_UNFILTERED(timestamp, subevent, hideCaster, ...)
      and subevent == "SPELL_RESURRECT" and rezSpellNames[spellname] then
 	-- would like to report at spell cast start, but unfortunately the SPELL_CAST_SUCCESS combat log event for all rezzes has a nil target
 	sendspam(L["%s cast %s on %s"]:format(SRC, SPELL(spellID), DST))		
-  elseif self.db.profile.Taunt and is_playersrc 
-     and not is_playerdst and subevent == "SPELL_CAST_SUCCESS" and tauntSpellNames[spellname] then
+  elseif self.db.profile.Taunt and is_playersrc and not is_playerdst and 
+        ((subevent == "SPELL_CAST_SUCCESS" and tauntSpellNames[spellname] and spellname ~= deathgrip) or 
+	 (subevent == "SPELL_AURA_APPLIED" and spellname == deathgrip)) then -- trigger off death grip "taunted" debuff, which is not applied with Glyph of Tranquil Grip
 	sendspam(L["%s taunted %s with %s"]:format(SRC, DST, SPELL(spellID)), nil, srcname)
   elseif self.db.profile.Taunt and is_playersrc 
      and not is_playerdst and subevent == "SPELL_AURA_APPLIED" and aoetauntSpellNames[spellname] then
@@ -1392,9 +1445,17 @@ function addon:COMBAT_LOG_EVENT_UNFILTERED(timestamp, subevent, hideCaster, ...)
   elseif self.db.profile.Interrupt and is_playersrc and subevent == "SPELL_INTERRUPT" then
 	sendspam(L["%s interrupted %s casting %s"]:format(SRC, DST, SPELL(extraspellID)))
   elseif self.db.profile.Dispel and is_playersrc and is_hostiledst and subevent == "SPELL_DISPEL" then
-	sendspam(L["%s dispelled %s on %s"]:format(SRC, SPELL(extraspellID), DST))
+        local extra = ""
+	if extraspellID and extraspellID > 0 then
+	  extra = " ("..SPELL(extraspellID)..")"
+	end
+	sendspam(L["%s dispelled %s on %s"]:format(SRC, SPELL(spellID), DST)..extra)
   elseif self.db.profile.Dispel and is_playersrc and is_hostiledst and subevent == "SPELL_STOLEN" then
-	sendspam(L["%s stole %s from %s"]:format(SRC, SPELL(extraspellID), DST))
+        local extra = ""
+	if extraspellID and extraspellID > 0 then
+	  extra = " ("..SPELL(extraspellID)..")"
+	end
+	sendspam(L["%s stole %s from %s"]:format(SRC, SPELL(spellID), DST)..extra)
   end
 end
 

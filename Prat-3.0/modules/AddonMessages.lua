@@ -114,7 +114,7 @@ L:AddLocale("ruRU",
 	show_desc = "Включить отображение сообщений аддонов в каждой закладке чата.",
 	show_name = "Показывать сообщения аддонов",
 	show_perframedesc = "Вкл/Выкл отображение сообщений аддонов.",
-	show_perframename = "ChatFrame%d AddonMsgsShow", -- Needs review
+	show_perframename = "ChatFrame%d AddonMsgsShow",
 }
 
 )

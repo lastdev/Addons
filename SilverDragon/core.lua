@@ -1,5 +1,3 @@
-local BZ = LibStub("LibBabble-Zone-3.0"):GetUnstrictLookupTable()
-local BZR = LibStub("LibBabble-Zone-3.0"):GetReverseLookupTable()
 local BCT = LibStub("LibBabble-CreatureType-3.0"):GetUnstrictLookupTable()
 local BCTR = LibStub("LibBabble-CreatureType-3.0"):GetReverseLookupTable()
 
@@ -15,77 +13,155 @@ local globaldb
 function addon:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("SilverDragon2DB", {
 		global = {
-			mobs_byzone = {
-				['*'] = {}, -- zones
+			mobs_byzoneid = {
+				['*'] = { -- zones
+					-- 132132 = {encoded_loc, encoded_loc2, etc}
+				},
 			},
-			mob_locations = {
-				['*'] = {}, -- mob names
+			mob_seen = {
+				-- 132132 = time()
 			},
-			mob_id = {}, -- NPC ids, only available for mobs from wowhead
-			mob_type = {},
-			mob_level = {},
-			mob_elite = {},
-			mob_tameable = {},
+			mob_id = {
+				-- "Bob the Rare" = 132132
+			},
+			mob_name = {
+				-- 132132 = "Bob the Rare"
+			},
+			mob_type = {
+				-- 132132 = "Critter"
+			},
+			mob_level = {
+				-- 132132 = 73
+			},
+			mob_elite = {
+				-- 132132 = true
+			},
+			mob_tameable = {
+				-- 132132 = nil
+			},
+			mob_notes = {
+				-- 132132 = "Jade"
+			},
 			mob_count = {
 				['*'] = 0,
+			},
+			always = {},
+			ignore = {
+				[32435] = true, -- Vern!
+				[64403] = true, -- Alani
+				[60491] = true, -- Sha of Anger
+				[62346] = true, -- Galleon (depends on if they make his new 5.2 spawn rate very common)
+				[69099] = true, -- Nalak (the next not so rare, rare world boss?)
+				--Throne of Thunder Weekly bosses
+				[70243] = true,--Agony and Anima (Archritualist Kelada)
+				[70238] = true,--Eyes of the Thunder King
+				[70249] = true,--Eyes of the Thunder King
+				[70440] = true,--Requiem for a Queen (Monara)
+				[70430] = true,--Rocks Fall, People Die (Rocky Horror)
+				[70429] = true,--Something Foul is Afoot (Flesh'rok the Diseased)
+				[70276] = true,--Taming the Tempest (No'ku Stormsayer)
+				[69843] = true,--Zao'cho the Wicked (Zao'cho)
 			},
 		},
 		profile = {
 			scan = 1, -- scan interval, 0 for never
 			delay = 600, -- number of seconds to wait between recording the same mob
-			cache_tameable = true, -- whether to alert for tameable mobs found through cache-scanning
-			mouseover = true,
-			targets = true,
-			nameplates = true,
-			cache = true,
 			instances = false,
 			taxi = true,
-			-- neighbors = true,
 		},
-	})
+	}, true)
 	globaldb = self.db.global
+
+	if globaldb.mobs_byzone then
+		-- We are in a version of SilverDragon prior to 2.7
+		-- That means that everything is still indexed by mapfile and mob name, instead of
+		-- by mapid and mobid. So, let's fix that as much as we can...
+		local current_mobs_byzone = globaldb.mobs_byzone
+		local current_mob_locations = globaldb.mob_locations
+		local current_mob_type = globaldb.mob_type
+		local current_mob_level = globaldb.mob_level
+		local current_mob_elite = globaldb.mob_elite
+		local current_mob_tameable = globaldb.mob_tameable
+		local current_mob_count = globaldb.mob_count
+
+		globaldb.mob_locations = {}
+		globaldb.mob_type = {}
+		globaldb.mob_level = {}
+		globaldb.mob_elite = {}
+		globaldb.mob_tameable = {}
+		globaldb.mob_count = {}
+		globaldb.mobs_byzone = nil
+		globaldb.mob_locations = nil
+
+		for name, id in pairs(globaldb.mob_id) do
+			globaldb.mob_type[id] = current_mob_type[name]
+			globaldb.mob_level[id] = current_mob_level[name]
+			globaldb.mob_elite[id] = current_mob_elite[name]
+			globaldb.mob_tameable[id] = current_mob_tameable[name]
+			globaldb.mob_count[id] = current_mob_count[name]
+		end
+
+		for zone, mobs in pairs(current_mobs_byzone) do
+			for name, last in pairs(mobs) do
+				local id = globaldb.mob_id[name]
+				if id then
+					globaldb.mob_name[id] = name
+					globaldb.mob_seen[id] = last
+					local zoneid = addon.zoneid_from_mapfile(zone)
+					if zoneid then
+						globaldb.mobs_byzoneid[zoneid][id] = current_mob_locations[name] or {}
+					end
+				end
+			end
+		end
+
+		self:Print("Upgraded rare mob database; you may have to reload your UI before everything is 100% there.")
+	end
+
+	-- Total hack. I'm very disappointed in myself. Blood Seeker is flagged as tamemable, but really isn't.
+	-- (It despawns in 10-ish seconds, and shows up high in the sky.)
+	globaldb.mob_tameable[3868] = nil
 end
 
 function addon:OnEnable()
-	self:RegisterEvent("PLAYER_TARGET_CHANGED")
-	self:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 	if self.db.profile.scan > 0 then
 		self:ScheduleRepeatingTimer("CheckNearby", self.db.profile.scan)
 	end
 end
 
-function addon:PLAYER_TARGET_CHANGED()
-	if self.db.profile.targets then
-		self:ProcessUnit('target', 'target')
-	end
-end
+local alliance_ignore_mobs = { --Mobs alliance cannot kill
+	[51071] = true,--Captain Florence (Vashjir)
+	[68318] = true,--Dalan Nightbreaker (Krasarang)
+	[68319] = true,--Disha Fearwarden (Krasarang)
+	[68317] = true,--Mavis Harms (Krasarang)
+}
+local horde_ignore_mobs = { --Mobs horde cannot kill
+	[51079] = true,--Captain Foulwind (Vashjir)
+	[68321] = true,--Kar Warmaker (Krasarang)
+	[68322] = true,--Muerta (Krasarang)
+	[68320] = true,--Ubunti the Shade (Krasarang)
+}
 
-function addon:UPDATE_MOUSEOVER_UNIT()
-	if self.db.profile.mouseover then
-		self:ProcessUnit('mouseover', 'mouseover')
-	end
-end
-
+local valid_unit_types = {
+	[0x003] = true, -- npcs
+	[0x005] = true, -- vehicles
+}
 local function npc_id_from_guid(guid)
 	if not guid then return end
-	local unit_type = bit.band(tonumber("0x"..strsub(guid, 3,5)), 0x00f)
-	if unit_type ~= 0x003 then
-		-- npcs only
+	local unit_type = bit.band(tonumber("0x"..strsub(guid, 3, 5)), 0x00f)
+	if not valid_unit_types[unit_type] then
 		return
 	end
-	-- So, interesting point, docs say that 9-12 are the ones to use here. However... in actual
-	-- practive 7-10 appears to be correct.
-	-- return tonumber("0x"..strsub(guid,9,12))
-	return tonumber("0x"..strsub(guid,7,10))
+	return tonumber("0x"..strsub(guid, 6, 10))
 end
 function addon:UnitID(unit)
 	return npc_id_from_guid(UnitGUID(unit))
 end
 
 local lastseen = {}
-function addon:ShouldSave(zone, name)
-	local last_saved = globaldb.mobs_byzone[zone][name]
+function addon:ShouldSave(id)
+	local last_saved = globaldb.mob_seen[id]
 	if not last_saved then
 		return true
 	end
@@ -95,104 +171,146 @@ function addon:ShouldSave(zone, name)
 	return false
 end
 
-function addon:ProcessUnit(unit, source)
-	if not UnitExists(unit) then return end
-	if UnitPlayerControlled(unit) then return end -- helps filter out player-pets
-	local unittype = UnitClassification(unit)
-	if not (unittype == 'rare' or unittype == 'rareelite') or not UnitIsVisible(unit) then return end
-	-- from this point on, it's a rare
-	local zone, x, y = self:GetPlayerLocation()
-	if not zone then return end -- there are only a few places where this will happen
-	
-	local name = UnitName(unit)
-
-	local level = (UnitLevel(unit) or -1)
-	local creature_type = UnitCreatureType(unit)
-	local id = self:UnitID(unit)
-
-	local newloc = self:SaveMob(zone, name, x, y, level, unittype=='rareelite', creature_type, id)
-
-	self:NotifyMob(zone, name, x, y, UnitIsDead(unit), newloc, source or 'target', unit)
-	return true
-end
-
-function addon:SaveMob(zone, name, x, y, level, elite, creature_type, id)
-	if not (zone and name) then return end
+local elite_types = {
+	elite = true,
+	rareelite = true,
+	worldboss = true,
+}
+function addon:SaveMob(id, name, zone, x, y, level, elite, creature_type)
+	Debug("SaveMob", id, name, zone, x, y, level, elite, creature_type)
+	if not id then return end
 	-- saves a mob's information, returns true if this is the first time a mob has been seen at this location
-	if not globaldb.mob_locations[name] then globaldb.mob_locations[name] = {} end
-	if not self:ShouldSave(zone, name) then return end
-
-	globaldb.mobs_byzone[zone][name] = time()
-	globaldb.mob_level[name] = level
-	if elite then globaldb.mob_elite[name] = true end
-	globaldb.mob_type[name] = BCTR[creature_type]
-	globaldb.mob_count[name] = globaldb.mob_count[name] + 1
-	if id then
-		globaldb.mob_id[name] = id
+	if not self:ShouldSave(id) then
+		Debug("Shouldn't save")
+		return
 	end
-	
-	if not (x and y and x > 0 and y > 0) then return end
+
+	if type(elite) == 'string' then
+		elite = elite_types[elite] or false
+	end
+
+	globaldb.mob_seen[id] = time()
+	globaldb.mob_level[id] = level
+	if elite ~= nil then
+		globaldb.mob_elite[id] = elite
+	end
+	globaldb.mob_type[id] = BCTR[creature_type]
+	globaldb.mob_name[id] = name
+	globaldb.mob_id[name] = id
+
+	if not (zone and x and y and x > 0 and y > 0) then
+		return
+	end
+	if not globaldb.mobs_byzoneid[zone][id] then globaldb.mobs_byzoneid[zone][id] = {} end
 
 	local newloc = true
-	for _, coord in ipairs(globaldb.mob_locations[name]) do
+	for _, coord in ipairs(globaldb.mobs_byzoneid[zone][id]) do
 		local loc_x, loc_y = self:GetXY(coord)
 		if (math.abs(loc_x - x) < 0.03) and (math.abs(loc_y - y) < 0.03) then
-			-- We've seen it close to here before. (within 5% of the zone)
+			-- We've seen it close to here before. (within 3% of the zone)
 			newloc = false
 			break
 		end
 	end
 	if newloc then
-		table.insert(globaldb.mob_locations[name], self:GetCoord(x, y))
+		table.insert(globaldb.mobs_byzoneid[zone][id], self:GetCoord(x, y))
 	end
 	return newloc
 end
 
--- Returns num_locs, level, is_elite, creature_type, last_seen, times_seen, mob_id, is_tameable
-function addon:GetMob(zone, name)
-	if not (zone and name and globaldb.mobs_byzone[zone][name]) then
+-- Returns name, num_locs, level, is_elite, creature_type, last_seen, times_seen, is_tameable
+function addon:GetMob(zone, id)
+	if not (zone and id and globaldb.mobs_byzoneid[zone][id]) then
 		return 0, 0, false, UNKNOWN, nil, 0, nil, nil
 	end
-	return #globaldb.mob_locations[name], globaldb.mob_level[name], globaldb.mob_elite[name], BCT[globaldb.mob_type[name]], globaldb.mobs_byzone[zone][name], globaldb.mob_count[name], globaldb.mob_id[name], globaldb.mob_tameable[name]
+	return globaldb.mob_name[id], #globaldb.mobs_byzoneid[zone][id], globaldb.mob_level[id], globaldb.mob_elite[id], BCT[globaldb.mob_type[id]], globaldb.mob_seen[id], globaldb.mob_count[id], globaldb.mob_tameable[name]
 end
 
-function addon:NotifyMob(zone, name, x, y, is_dead, is_new_location, source, unit)
-	if lastseen[name] and time() < lastseen[name] + self.db.profile.delay then
+function addon:GetMobLabel(id)
+	if not globaldb.mob_name[id] then
 		return
 	end
-	lastseen[name] = time()
-	self.events:Fire("Seen", zone, name, x, y, is_dead, is_new_location, source, unit, globaldb.mob_id[name])
+	return globaldb.mob_name[id] .. (globaldb.mob_notes[id] and (" (" .. globaldb.mob_notes[id] .. ")") or "")
 end
 
--- Returns name, addon:GetMob(zone, name)
+local faction = UnitFactionGroup("player")
+function addon:NotifyMob(id, name, zone, x, y, is_dead, is_new_location, source, unit, silent)
+	self.events:Fire("Seen_Raw", id, name, zone, x, y, is_dead, is_new_location, source, unit)
+
+	if silent then
+		Debug("Skipping notification: silent call", id, name)
+		return
+	end
+	if globaldb.ignore[id] then
+		Debug("Skipping notification: ignored", id, name)
+		return
+	end
+	--Maybe add an option for this later. This checks unit faction and ignores mobs your faction cannot do anything with.
+	if faction == "Alliance" and alliance_ignore_mobs[id] or faction == "Horde" and horde_ignore_mobs[id] then
+		Debug("Skipping notification: faction ignore", id, name)
+		return
+	end
+	if lastseen[id] and time() < lastseen[id] + self.db.profile.delay then
+		Debug("Skipping notification: seen", id, name, lastseen[id], time() - self.db.profile.delay)
+		return
+	end
+	if (not self.db.profile.taxi) and UnitOnTaxi('player') then
+		Debug("Skipping notification: taxi", id, name)
+		return
+	end
+
+	globaldb.mob_count[id] = globaldb.mob_count[id] + 1
+	lastseen[id] = time()
+
+	self.events:Fire("Seen", id, name, zone, x, y, is_dead, is_new_location, source, unit)
+end
+
+-- Returns id, addon:GetMob(zone, id)
 function addon:GetMobByCoord(zone, coord)
-	if not globaldb.mobs_byzone[zone] then return end
-	for name in pairs(globaldb.mobs_byzone[zone]) do
-		for _, mob_coord in ipairs(globaldb.mob_locations[name]) do
+	if not globaldb.mobs_byzoneid[zone] then return end
+	for id, locations in pairs(globaldb.mobs_byzoneid[zone]) do
+		for _, mob_coord in ipairs(locations) do
 			if coord == mob_coord then
-				return name, self:GetMob(zone, name)
+				return id, self:GetMob(zone, id)
 			end
 		end
 	end
 end
 
-function addon:DeleteMob(zone, name)
-	if not (zone and name) then return end
-	if not globaldb.mobs_byzone[zone] then return end
-	globaldb.mobs_byzone[zone][name] = nil
-	globaldb.mob_level[name] = nil
-	globaldb.mob_elite[name] = nil
-	globaldb.mob_type[name] = nil
-	globaldb.mob_count[name] = nil
-	globaldb.mob_locations[name] = nil
+function addon:DeleteMobCoord(zone, id, coord)
+	if not globaldb.mobs_byzoneid[zone] and globaldb.mobs_byzoneid[zone][id] then return end
+	for i, mob_coord in ipairs(globaldb.mobs_byzoneid[zone][id]) do
+		if coord == mob_coord then
+			table.remove(globaldb.mobs_byzoneid[zone][id], i)
+			return
+		end
+	end
+end
+
+function addon:DeleteMob(id)
+	if not (id and globaldb.mob_name[id]) then return end
+	for zone, mobs in pairs(globaldb.mobs_byzoneid) do
+		mobs[id] = nil
+	end
+	globaldb.mob_level[id] = nil
+	globaldb.mob_elite[id] = nil
+	globaldb.mob_type[id] = nil
+	globaldb.mob_count[id] = nil
+	globaldb.mob_seen[id] = nil
+	globaldb.mob_tameable[id] = nil
+	local name = globaldb.mob_name[id]
+	globaldb.mob_name[id] = nil
+	globaldb.mob_id[name] = nil
 end
 
 function addon:DeleteAllMobs()
 	local n = 0
-	for zone,mobs in pairs(globaldb.mobs_byzone) do for name, info in pairs(mobs) do
-		self:DeleteMob(zone, name)
+	for id in pairs(globaldb.mob_name) do
+		self:DeleteMob(id)
 		n = n + 1
-	end end
+	end
+	globaldb.mob_name = {}
+	globaldb.mob_id = {}
 	DEFAULT_CHAT_FRAME:AddMessage("SilverDragon: Removed "..n.." rare mobs from database.")
 	self.events:Fire("DeleteAll", n)
 end
@@ -203,174 +321,9 @@ function addon:CheckNearby()
 	local zone = self:GetPlayerZone()
 	if not zone then return end
 	if (not self.db.profile.instances) and IsInInstance() then return end
-	if (not self.db.profile.taxi) and UnitOnTaxi('player') then return end
 
-	-- zone is a mapfile here, note
-
-	if self.db.profile.targets then
-		addon:ScanTargets()
-	end
-	if self.db.profile.nameplates then
-		addon:ScanNameplates(zone)
-	end
-	if self.db.profile.cache then
-		addon:ScanCache(zone)
-	end
-	--[[
-	if self.db.profile.neighbors then
-		for z in Tourist:IterateBorderZones(self.mapfile_to_zone[zone], true) do
-			if self.db.profile.nameplates then
-				addon:ScanNameplates(self.zone_to_mapfile[z])
-			end
-			if self.db.profile.cache then
-				addon:ScanCache(self.zone_to_mapfile[z])
-			end
-		end
-	end
-	--]]
+	self.events:Fire("Scan", zone)
 end
-
-local units_to_scan = {'targettarget', 'party1target', 'party2target', 'party3target', 'party4target', 'party5target'}
-function addon:ScanTargets()
-	for _, unit in ipairs(units_to_scan) do
-		self:ProcessUnit(unit, 'grouptarget')
-	end
-end
-
-local nameplates = {}
-local function process_possible_nameplate(frame)
-	-- This was mostly copied from "Nameplates - Nameplate Modifications" by Biozera.
-	-- Nameplates are unnamed children of WorldFrame.
-	-- So: drop it if it's not the right type, has a name, or we already know about it.
-	if frame:GetObjectType() ~= "Frame" or frame:GetName() or nameplates[frame] then
-		return
-	end
-	local name, level, bar, icon, border, glow
-	for i=1,frame:GetNumRegions(),1 do
-		local region = select(i, frame:GetRegions())
-		if region then
-			local oType = region:GetObjectType()
-			if oType == "FontString" then
-				local point, _, relativePoint = region:GetPoint()
-				if point == "BOTTOM" and relativePoint == "CENTER" then
-					name = region
-				elseif point == "CENTER" and relativePoint == "BOTTOMRIGHT" then
-					level = region
-				end
-			elseif oType == "Texture" then
-				local path = region:GetTexture()
-				if path == "Interface\\TargetingFrame\\UI-RaidTargetingIcons" then
-					icon = region
-				elseif path == "Interface\\Tooltips\\Nameplate-Border" then
-					border = region
-				elseif path == "Interface\\Tooltips\\Nameplate-Glow" then
-					glow = region
-				end
-			end
-		end
-	end
-	for i=1,frame:GetNumChildren(),1 do
-		local childFrame = select(i, frame:GetChildren())
-		if childFrame:GetObjectType() == "StatusBar" then
-			bar = childFrame
-		end
-	end
-	if name and level and bar and border and glow then -- We have a nameplate!
-		nameplates[frame] = {name = name, level = level, bar = bar, border = border, glow = glow}
-		return true
-	end
-end
-
-local num_worldchildren
-function addon:ScanNameplates(zone)
-	if GetCVar("nameplateShowEnemies") ~= "1" then
-		return
-	end
-	if num_worldchildren ~= WorldFrame:GetNumChildren() then
-		num_worldchildren = WorldFrame:GetNumChildren()
-		for i=1, num_worldchildren, 1 do
-			process_possible_nameplate(select(i, WorldFrame:GetChildren()))
-		end
-	end
-	
-	local zone_mobs = globaldb.mobs_byzone[zone]
-	if not zone_mobs then return end
-	for nameplate, regions in pairs(nameplates) do
-		local name = regions.name:GetText()
-		if nameplate:IsVisible() and zone_mobs[name] and (not lastseen[name] or (lastseen[name] < (time() - self.db.profile.delay))) then
-			local current_zone, x, y = self:GetPlayerLocation()
-			self:NotifyMob(current_zone, name, x, y, false, false, "nameplate", false)
-			break -- it's pretty unlikely there'll be two rares on screen at once
-		end
-	end
-end
-
-local already_cached = {}
-local first_cachescan = true
-local cache_tooltip = CreateFrame("GameTooltip", "SDCacheTooltip")
-cache_tooltip:AddFontStrings(
-	cache_tooltip:CreateFontString("$parentTextLeft1", nil, "GameTooltipText"),
-	cache_tooltip:CreateFontString("$parentTextRight1", nil, "GameTooltipText")
-)
-
-local function is_cached(id)
-	-- this doesn't work with just clearlines and the setowner outside of this, and I'm not sure why
-	cache_tooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
-	cache_tooltip:SetHyperlink(("unit:0xF53%05X00000000"):format(id))
-	return cache_tooltip:IsShown()
-end
-addon.is_cached = is_cached
-
-addon.already_cached = already_cached
-
-function addon:ScanCache(zone)
-	if first_cachescan then
-		for mob, id in pairs(globaldb.mob_id) do
-			if is_cached(id) then
-				already_cached[id] = true
-			end
-		end
-		first_cachescan = false
-		return
-	end
-	-- Debug("Scanning Cache", zone, globaldb.mobs_byzone[zone])
-	
-	local zone_mobs = globaldb.mobs_byzone[zone]
-	if not zone_mobs then return end
-	for mob, lastseen in pairs(zone_mobs) do
-		local id = globaldb.mob_id[mob]
-		-- Debug("Checking for", id, mob, lastseen)
-		if id and (not globaldb.mob_tameable[mob] or self.db.profile.cache_tameable) and not already_cached[id] and is_cached(id) then
-			-- Debug("They're new!")
-			already_cached[id] = true
-			local current_zone, x, y = self:GetPlayerLocation()
-			self:NotifyMob(current_zone, mob, x, y, false, false, "cache", false)
-		end
-	end
-	first_cachescan = false
-end
-addon.RegisterCallback(addon, "Import", function()
-	if first_cachescan then
-		table.wipe(already_cached)
-		first_cachescan = true
-	end
-end)
-
-addon:RegisterChatCommand("sdcached", function()
-	local lookup = {}
-	for mob,id in pairs(globaldb.mob_id) do
-		lookup[id] = mob
-	end
-	local output
-	addon:Print("The following mobs are in the NPC cache, and so will not be detected by the cache scanner.")
-	for id,_ in pairs(already_cached) do
-		addon:Print(" ", lookup[id])
-		output = true
-	end
-	if not output then
-		addon:Print("Nothing")
-	end
-end)
 
 -- Utility:
 
@@ -395,105 +348,65 @@ function addon:FormatLastSeen(t)
 	end
 end
 
--- location code from here on in has been heavily modified by mysticalos
--- see http://www.wowace.com/addons/silver-dragon/tickets/86-better-player-location-code/
-local continent_list = { GetMapContinents() }
-local zone_to_mapfile = {}
-local mapfile_to_zone = {}
-local currentContinent = nil
-local currentZone = nil
-for C in pairs(continent_list) do
-	local zones = { GetMapZones(C) }
-	continent_list[C] = zones
-	for Z, Zname in ipairs(zones) do
-		SetMapZoom(C, Z)
-		zones[Z] = GetMapInfo()
-		--Fix bug where silver dragon will fail to detect, or populate rares in two diff zones for different phases.
-		if zones[Z] == "Hyjal_terrain1" then zones[Z] = "Hyjal" end
-		if zones[Z] == "TwilightHighlands_terrain1" then zones[Z] = "TwilightHighlands" end
-		if zones[Z] == "Uldum_terrain1" then zones[Z] = "Uldum" end
-		zone_to_mapfile[Zname] = zones[Z]
-		mapfile_to_zone[zones[Z]] = Zname
-	end
-end
-addon.continent_list = continent_list
-addon.zone_to_mapfile = zone_to_mapfile
-addon.mapfile_to_zone = mapfile_to_zone
+-- Location
 
--- Blizzard has started sending us to zones that aren't returned by
--- GetMapZones... they tend to be continent -1, zone 0. So I'm making up
--- a convention of storing them under their actual areaid and remembering
--- that as the current zone when it's given as 0
-if not continent_list[-1] then
-	continent_list[-1] = {}
-end
-continent_list[-1][795] = "MoltenFront"
-zone_to_mapfile[BZ["Molten Front"]] = "MoltenFront"
-mapfile_to_zone["MoltenFront"] = BZ["Molten Front"]
-continent_list[-1][823] = "DarkmoonFaireIsland"
-zone_to_mapfile[BZ["Darkmoon Island"]] = "DarkmoonFaireIsland"
-mapfile_to_zone["DarkmoonFaireIsland"] = BZ["Darkmoon Island"]
+local currentZone
 
-local function GetCurrentMapZoneSafe()
-	local zone = GetCurrentMapZone()
-	if zone == 0 then
-		return GetCurrentMapAreaID(), zone
-	end
-	return zone, zone
+--fix terrain phased zones with multiple IDs
+local zone_overrides = {
+	[606] = 683, -- hyjal_terrain1
+	[720] = 748, -- uldum_terrain1
+	[700] = 770, -- twilight highlands
+	[905] = 811, -- vale of eternal blossoms
+}
+function addon:CanonicalZoneId(zoneid)
+	return zone_overrides[zoneid] or zoneid
 end
 
 function addon:ZONE_CHANGED_NEW_AREA()
 	if WorldMapFrame:IsVisible() then--World Map is open
-		local C, Z, actualZ = GetCurrentMapContinent(), GetCurrentMapZoneSafe()--Save current map settings.
+		local Z = GetCurrentMapAreaID()
 		SetMapToCurrentZone()
-		local actualZ2
-		currentContinent, currentZone, actualZ2 = GetCurrentMapContinent(), GetCurrentMapZoneSafe()--Get right info after we set map to right place.
-		if currentContinent ~= C or currentZone ~= actualZ then
-			SetMapZoom(C, Z)--Restore old map settings if they differed to what they were prior to forcing mapchange and user has map open.
+		currentZone = GetCurrentMapAreaID()
+		if currentZone ~= Z then
+			SetMapByID(Z)--Restore old map settings if they differed to what they were prior to forcing mapchange and user has map open.
 		end
 	else--Map is not open, no reason to go extra miles, just force map to right zone and get right info.
 		SetMapToCurrentZone()
-		currentContinent, currentZone = GetCurrentMapContinent(), GetCurrentMapZoneSafe()--Get right info after we set map to right place.
+		currentZone = GetCurrentMapAreaID()--Get right info after we set map to right place.
 	end
-	self.events:Fire("ZoneChanged", currentContinent, currentZone)
+
+	currentZone = self:CanonicalZoneId(currentZone)
+
+	self.events:Fire("ZoneChanged", currentZone)
 end
 
 --Zone functions split into 2, location, and coords. There is no reason to spam check player coords and do complex map checks when we only need zone.
 --So this should save a lot of wasted calls.
-function addon:GetPlayerZone()--Simplier function that just uses cached zone from last actual zone change to return current zone we are in and scanning.
-	if IsInInstance() then
-		return BZR[GetRealZoneText()]
-	end
-	--Silver dragon loads AFTER first ZONE_CHANGED_NEW_AREA on login, so we need a hack for initial lack of ZONE_CHANGED_NEW_AREA.
-	if currentContinent == nil and currentZone == nil then
+
+--First, a simpler function that just uses cached zone from last actual zone change to return current zone we are in and scanning.
+function addon:GetPlayerZone()
+	-- We load AFTER first ZONE_CHANGED_NEW_AREA on login, so we need a hack for initial lack of ZONE_CHANGED_NEW_AREA.
+	if currentZone == nil then
 		self:ZONE_CHANGED_NEW_AREA()
 	end
-	if not (continent_list[currentContinent] and continent_list[currentContinent][currentZone]) then
-		return
-	end
-	return continent_list[currentContinent][currentZone]
+	return currentZone
 end
 
 function addon:GetPlayerLocation()--Advanced function that actually gets the player coords for when we actually find/save a rare. No reason to run this function every second though.
-	local C, Z, actualZ = GetCurrentMapContinent(), GetCurrentMapZoneSafe()--Save current map settings.
+	local set_Z = GetCurrentMapAreaID()
 	SetMapToCurrentZone()
-	local x, y = GetPlayerMapPosition('player')--Get right info after we set map to right place.
-	local C2, Z2 = currentContinent, currentZone--Check what map was set to compared to actual current zone cached from when we last saw ZONE_CHANGED_NEW_AREA
-	if C2 ~= C or Z2 ~= Z and WorldMapFrame:IsVisible() then
-		SetMapZoom(C, actualZ)--Restore old map settings if they differed to what they were prior to forcing mapchange and user has map open.
+	local true_Z = GetCurrentMapAreaID()
+	local x, y = GetPlayerMapPosition('player')
+	if true_Z ~= set_Z and WorldMapFrame:IsVisible() then
+		--Restore old map settings if they differed to what they were prior to forcing mapchange and user has map open.
+		SetMapByID(set_Z)
 	end
-	C, Z = C2, Z2
 	if x <= 0 and y <= 0 then
-		--This should never happen, no zone is without map anymore.
-		return BZR[GetRealZoneText()], 0, 0
+		-- I don't *think* this should be possible any more. But just in case...
+		x, y = 0, 0
 	end
-	if IsInInstance() then
-		return BZR[GetRealZoneText()], x, y
-	end
-	if not (continent_list[C] and continent_list[C][Z]) then
-		return
-	end
-	return continent_list[C][Z], x, y
+	return self:GetPlayerZone(), x, y
 end
 
 function addon:GetCoord(x, y)
@@ -504,3 +417,31 @@ function addon:GetXY(coord)
 	return floor(coord / 10000) / 10000, (coord % 10000) / 10000
 end
 
+do
+	-- need to set up a mapfile-to-mapid mapping
+	-- for: imports, and map notes addons
+	local MAX_MAPFILE = 950
+	local mapfile_to_zoneid = {}
+	local zoneid_to_mapfile = {}
+	for zoneid = 1, MAX_MAPFILE do
+		local name = GetMapNameByID(zoneid)
+		if name then
+			SetMapByID(zoneid)
+			local mapfile = GetMapInfo()
+			if mapfile_to_zoneid[mapfile] then
+				Debug("Duplicate mapfile", mapfile, zoneid_to_mapfile[zoneid])
+			else
+				mapfile_to_zoneid[mapfile] = zoneid
+			end
+			zoneid_to_mapfile[zoneid] = mapfile
+		end
+	end
+
+	addon.zoneid_from_mapfile = function(mapfile)
+		return addon:CanonicalZoneId(mapfile_to_zoneid[mapfile]) -- :gsub("_terrain%d+$", "")
+	end
+	addon.mapfile_from_zoneid = function(zoneid)
+		return zoneid_to_mapfile[zoneid]
+	end
+	-- addon.mapfile_to_zoneid = mapfile_to_zoneid
+end

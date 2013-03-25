@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(168, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 46 $"):sub(12, -3))
 mod:SetCreatureID(45213)
 mod:SetModelID(34335)
 mod:SetZone()
@@ -87,10 +87,11 @@ end
 local function showOrbWarning(source)
 	table.wipe(orbList)
 	mod:Unschedule(showOrbWarning)
-	for i = 1, DBM:GetGroupMembers() do
+	local _, _, difficulty = GetInstanceInfo()
+	for i = 1, DBM:GetNumGroupMembers() do
 		-- do some checks for 25/10 man raid size so we don't warn for ppl who are not in the instance
-		if GetInstanceDifficulty() == 3 and i > 10 then return end
-		if GetInstanceDifficulty() == 4 and i > 25 then return end
+		if difficulty == 5 and i > 10 then return end
+		if difficulty == 6 and i > 25 then return end
 		local n = GetRaidRosterInfo(i)
 		-- Has aggro on something, but not a tank
 		if UnitThreatSituation(n) == 3 and not isTank(n) then
@@ -193,7 +194,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(90125, 92944) then
+	if args:IsSpellID(90125) then
 		warnBreath:Show()
 		specWarnBreath:Show()
 		timerBreathCD:Start()
@@ -206,10 +207,10 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(90045, 92946) then
 		specWarnIndomitable:Show()
-	elseif args:IsSpellID(89421, 92955) then--Cast wracks (10,25)
+	elseif args:IsSpellID(89421) then--Cast wracks (10,25)
 		warnWrack:Show(args.destName)
 		timerWrack:Start()
-	elseif args:IsSpellID(89435, 92956) then -- jumped wracks (10,25)
+	elseif args:IsSpellID(89435) then -- jumped wracks (10,25)
 		wrackTargets[#wrackTargets + 1] = args.destName
 		self:Unschedule(showWrackWarning)
 		self:Schedule(0.3, showWrackWarning)
@@ -255,8 +256,8 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-function mod:SPELL_DAMAGE(sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId)
-	if (spellId == 92954 or spellId == 92959) and not orbWarned then
+function mod:SPELL_DAMAGE(_, _, _, _, _, _, _, _, spellId)
+	if spellId == 92954 and not orbWarned then
 		orbWarned = true
 		showOrbWarning("damage")
 	end

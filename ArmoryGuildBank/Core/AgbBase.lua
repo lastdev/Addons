@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 347 2010-10-18T10:03:46Z
+    Revision: 585 2013-03-02T14:19:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -411,7 +411,13 @@ function AGB:GetTabSlotInfo(dbEntry, tab, slot)
 end
 
 function AGB:GetItemInfo(itemString)
-    local name, link, texture;
+    local link;
+    
+    -- Caged pet
+    local id, icon, name = itemString:match("(.+)|(.+)|(.+)");
+    if ( name ) then
+        return name, Armory:GetLink("battlepet", id, name), "Interface\\Icons\\"..icon;
+    end
 
     -- phase 1: try to get the info from the game tooltip
     local tooltip = Armory:AllocateTooltip();
@@ -439,8 +445,12 @@ function AGB:GetItemInfo(itemString)
 end
 
 function AGB:GetPlainItemString(itemString)
+    local itemId, suffixId = Armory:GetItemId("item:"..itemString);
+    if ( not suffixId ) then
+        return itemString;
+    end
     -- itemId:enchantId:jewelId1:jewelId2:jewelId3:jewelId4:suffixId:uniqueId
-    return itemString:match("[-%d]+")..":0:0:0:0:0:0";
+    return itemId..":0:0:0:0:0:"..suffixId;
 end
 
 function AGB:SetFilter(frame, text)

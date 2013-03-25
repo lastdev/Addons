@@ -1,32 +1,23 @@
-local AddonName, a = ...
-if a.BuildFail(50000) then return end
+local addonName, a = ...
 
 local L = a.Localize
 local s = SpellFlashAddon
-local c = BittensSpellFlashLibrary
+local g = BittensGlobalTables
+local c = g.GetTable("BittensSpellFlashLibrary")
+local u = g.GetTable("BittensUtilities")
 
 local GetTime = GetTime
 local GetTotemInfo = GetTotemInfo
+local IsSwimming = IsSwimming
+local UnitGUID = UnitGUID
 local math = math
-
-c.Init(a)
-
-local function shouldFlashShield(name, noncombatTime)
-	local duration = c.GetBuffDuration(name)
-	local stacks = c.GetBuffStack(name)
-	if s.InCombat() then
-		return duration == 0
-	elseif stacks > 1 then
-		return duration < 15
-	else
-		return duration < noncombatTime
-	end
-end
 
 local function shouldFlashImbue(buffTooltipName, offhand)
 	local min
 	if s.InCombat() then
 		min = 0
+	elseif c.IsSolo() then
+		min = 2 * 60
 	else
 		min = 5 * 60
 	end
@@ -37,20 +28,13 @@ local function shouldFlashImbue(buffTooltipName, offhand)
 	end
 end
 
-local function getFireTotemDuration()
-	local haveTotem, name, startTime, duration, icon = GetTotemInfo(1)
-	duration = startTime + duration - GetTime() - c.GetBusyTime()
-	return math.max(0, duration), name
-end
-
 ------------------------------------------------------------------------ Common
 c.AddOptionalSpell("Lightning Shield", nil, {
 	Override = function()
-		return shouldFlashShield("Lightning Shield", 5 * 60)
+		return c.GetBuffStack("Lightning Shield") < 2
+			and c.SelfBuffNeeded("Lightning Shield")
 	end
 })
-
-c.AddOptionalSpell("Ascendance")
 
 c.AddOptionalSpell("Ancestral Swiftness", nil, {
 	CheckFirst = function()
@@ -66,7 +50,7 @@ c.AddOptionalSpell("Earth Elemental Totem", nil, {
 
 c.AddOptionalSpell("Fire Elemental Totem", nil, {
 	CheckFirst = function()
-		return getFireTotemDuration() == 0
+		return c.IsMissingTotem(1)
 	end
 })
 
@@ -76,9 +60,21 @@ c.AddSpell("Elemental Blast", nil, {
 	NotIfActive = true,
 })
 
-c.AddSpell("Searing Totem", nil, {
+c.AddOptionalSpell("Searing Totem", nil, {
 	CheckFirst = function()
-		return getFireTotemDuration() == 0
+		return c.IsMissingTotem(1)
+	end
+})
+
+c.AddOptionalSpell("Healing Surge", "when Solo", {
+	Override = function()
+		return c.IsSolo() and s.HealthPercent("player") < 80
+	end
+})
+
+c.AddOptionalSpell("Water Walking", nil, {
+	Override = function()
+		return IsSwimming() and c.SelfBuffNeeded("Water Walking")
 	end
 })
 
@@ -92,10 +88,10 @@ c.AddOptionalSpell("Elemental Mastery", "unless Bloodlust", {
 })
 
 c.AddOptionalSpell("Ascendance", "for Elemental", {
-	NotWhileActive = true,
 	CheckFirst = function()
 		return c.GetMyDebuffDuration("Flame Shock") >= 15
-			and c.GetCooldown("Lava Burst") > 0
+			and (c.GetCooldown("Lava Burst") > 0 or c.IsCasting("Lava Burst"))
+			and not c.HasBuff("Ascendance")
 	end
 })
 
@@ -122,7 +118,9 @@ c.AddSpell("Lava Burst", nil, {
 		return (c.GetMyDebuffDuration("Flame Shock")
 					> c.GetCastTime("Lava Burst") + .1
 				or c.IsAuraPendingFor("Flame Shock"))
-			and (not c.IsCasting("Lava Burst") or c.HasBuff("Ascendance"))
+			and (not c.IsCasting("Lava Burst")
+				or (c.HasBuff("Lava Surge") and not c.IsQueued("Lava Burst")) 
+				or c.HasBuff("Ascendance"))
 	end
 })
 
@@ -144,9 +142,9 @@ c.AddSpell("Unleash Elements", "for Elemental", {
 	end
 })
 
-c.AddSpell("Searing Totem", "for Elemental", {
+c.AddOptionalSpell("Searing Totem", "for Elemental", {
 	CheckFirst = function()
-		return getFireTotemDuration() == 0 
+		return c.IsMissingTotem(1) 
 			and c.GetCooldown("Fire Elemental Totem") > 15
 	end
 })
@@ -179,21 +177,26 @@ c.AddOptionalSpell("Flametongue Weapon", "Offhand", {
 	end
 })
 
+c.AddOptionalSpell("Ascendance", "for Enhancement", {
+	CheckFirst = function()
+		return c.GetCooldown("Stormstrike") > 3
+			and not c.HasBuff("Ascendance")
+	end
+})
+
 c.AddSpell("Unleash Elements", "with Unleashed Fury", {
 	CheckFirst = function()
 		return c.HasTalent("Unleashed Fury")
 	end
 })
 
-c.AddSpell("Stormstrike", nil, {
+c.AddSpell("Stormblast", nil, {
 	FlashID = { "Stormblast", "Stormstrike" },
-	Run = function(z)
-		if c.HasBuff("Ascendance") then
-			z.ID = c.GetID("Stormblast")
-		else
-			z.ID = c.GetID("Stormstrike")
-		end
-	end
+})
+
+c.AddSpell("Stormstrike", nil, {
+	Melee = true,
+	FlashID = { "Stormblast", "Stormstrike" },
 })
 
 c.AddSpell("Lightning Bolt", "at 5", {
@@ -202,17 +205,39 @@ c.AddSpell("Lightning Bolt", "at 5", {
 	end
 })
 
-c.AddSpell("Lightning Bolt", "at 4", {
-	NotWhileMoving = true,
+c.AddSpell("Lightning Bolt", "at 3", {
 	CheckFirst = function()
-		return a.Maelstrom > 3 and not c.HasBuff("Ascendance")
+		return a.Maelstrom >= 3 
+			and not c.HasBuff("Ascendance")
+			and (not s.Moving("player") or c.HasBuff("Spiritwalker's Grace"))
 	end
 })
 
 c.AddSpell("Lightning Bolt", "at 2", {
 	NotWhileMoving = true,
 	CheckFirst = function()
-		return a.Maelstrom > 1 and not c.HasBuff("Ascendance")
+		return a.Maelstrom >= 2 
+			and not c.HasBuff("Ascendance")
+			and (not s.Moving("player") or c.HasBuff("Spiritwalker's Grace"))
+			and c.GetMinCooldown(
+					"Lava Lash", 
+					"Unleash Elements",
+					"Earth Shock",
+					"Feral Spirit",
+					"Stormstrike", -- reports on cooldown w/ stormblast
+					"Ascendance", -- resets stormblast cooldown
+					"Elemental Blast")
+				> .5
+	end
+})
+
+c.AddSpell("Lightning Bolt", "2pT15", {
+	NotWhileMoving = true,
+	CheckFirst = function()
+		return a.Maelstrom >= 4 
+			and not c.HasBuff("Ascendance")
+			and (not s.Moving("player") or c.HasBuff("Spiritwalker's Grace"))
+			and c.WearingSet(2, "EnhanceT15")
 	end
 })
 
@@ -228,17 +253,31 @@ c.AddOptionalSpell("Ancestral Swiftness", "under 2", {
 	end
 })
 
-c.AddSpell("Flame Shock", "under Unleash Flame", {
-	MyDebuff = "Flame Shock",
+c.AddSpell("Flame Shock", "Apply", {
 	CheckFirst = function()
-		return c.HasBuff("Unleash Flame")
+		return not c.HasMyDebuff("Flame Shock")
 	end
 })
-c.ManageDotRefresh("Flame Shock under Unleash Flame", 3, "Flame Shock")
 
-c.AddSpell("Flame Shock", "Overwrite under Unleash Flame", {
+c.AddSpell("Flame Shock", "Empowered Apply", {
 	CheckFirst = function()
-		return c.HasBuff("Unleash Flame")
+		return c.HasBuff("Unleash Flame") and not c.HasMyDebuff("Flame Shock")
+	end
+})
+
+c.AddSpell("Flame Shock", "Improve", {
+	CheckFirst = function()
+		if not c.HasBuff("Unleash Flame") then
+			return false
+		end
+		
+		if c.GetMyDebuffDuration("Flame Shock") < 15 then
+			return true
+		end
+		
+		local dps = a.GetFSStats(true)
+		local snap = u.GetFromTable(a.FSStats, UnitGUID(s.UnitSelection()))
+		return snap == nil or dps > snap.Dps
 	end
 })
 
@@ -246,40 +285,79 @@ c.AddOptionalSpell("Feral Spirit", nil, {
 	NoRangeCheck = true,
 })
 
+c.AddOptionalSpell("Feral Spirit", "4pT15", {
+	NoRangeCheck = true,
+	CheckFirst = function()
+		return c.WearingSet(4, "EnhanceT15")
+	end
+})
+
+c.AddSpell("Searing Totem", "Refresh", {
+	CheckFirst = function(z)
+		local dur, name = c.GetTotemDuration(1)
+		return name == s.SpellName(z.ID)
+			and dur < 30
+			and c.GetMinCooldown(
+					"Lava Lash", 
+					"Unleash Elements",
+					"Earth Shock",
+					"Feral Spirit",
+					"Stormstrike", -- reports on cooldown w/ stormblast
+					"Ascendance", -- resets stormblast cooldown
+					"Elemental Blast")
+				> c.LastGCD
+	end
+})
+
 ------------------------------------------------------------------------- Resto
---c.AddSpell("Earthliving Weapon", nil, {
---	ID = 51730,
---	FlashColor = "yellow",
---	Override = function()
---		return shouldFlashImbue("Earthliving")
---	end
---})
---
---c.AddSpell("Water Shield", nil, {
---	ID = 52127,
---	FlashColor = "yellow",
---	Override = function()
---		return shouldFlashShield(52127, 3, 5 * 60)
---	end
---})
---
---c.AddSpell("Earth Shield", nil, {
---	ID = 974,
---	FlashColor = "yellow",
---	Override = function()
---		if not s.InRaidOrParty() then
---			return false
---		end
---		
---		if not a.EarthShieldTarget then
---			return true
---		end
---		
---		if s.InCombat() then
---			return not s.MyBuff(974, a.EarthShieldTarget)
---		else
---			return s.MyBuffDuration(974, a.EarthShieldTarget) < 2 * 60
---				or s.MyBuffStack(974, a.EarthShieldTarget) < 9
---		end
---	end
---})
+c.AddOptionalSpell("Earthliving Weapon", nil, {
+	FlashID = { "Earthliving Weapon", "Weapon Imbues" },
+	Override = function()
+		return shouldFlashImbue("Earthliving")
+	end
+})
+
+c.AddOptionalSpell("Water Shield", nil, {
+	Override = function()
+		return c.SelfBuffNeeded("Water Shield")
+	end
+})
+
+c.AddOptionalSpell("Earth Shield", nil, {
+	Override = function(z)
+		if c.IsSolo() then
+			return false
+		end
+		
+		if not a.EarthShieldTarget then
+			return true
+		end
+		
+		if s.InCombat() then
+			return not s.MyBuff(z.ID, a.EarthShieldTarget)
+		else
+			return s.MyBuffDuration(z.ID, a.EarthShieldTarget) < 2 * 60
+				or s.MyBuffStack(z.ID, a.EarthShieldTarget) < 9
+		end
+	end
+})
+
+c.AddOptionalSpell("Healing Stream Totem", nil, {
+	CheckFirst = function()
+		return c.IsMissingTotem(3)
+	end
+})
+
+c.AddOptionalSpell("Mana Tide Totem", nil, {
+	CheckFirst = function()
+		return c.IsMissingTotem(3) and s.PowerPercent("player") < 75
+	end
+})
+
+c.AddOptionalSpell("Lightning Bolt", "for Mana", {
+	Override = function()
+		return c.HasGlyph("Telluric Currents")
+			and s.PowerPercent("player") < 95
+			and s.HealthPercent("raid|range") > 90
+	end
+})

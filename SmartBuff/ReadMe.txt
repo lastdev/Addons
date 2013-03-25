@@ -163,6 +163,14 @@ aeldra@sonnenkinder.org
 Changes: 
 Rev     Date        Description
 ------  ----------  -----------------------
+5.1b    2012-12-10  Updated support for Water Elemental (Mage)
+
+5.1a    2012-12-06  Fixed battlefield LUA error
+                    Auto hide SmartBuff UI elements during pet battles or in vehicles
+                    Added item: Anglers Fishing Raft
+                    Updated support for Water Elemental (Mage)
+                    Updated TOC
+
 5.0h    2012-10-24  Added item: Crystal of Insanity
                     Updated Alchemist's Flask detection/checks
                     Updated linked buffs

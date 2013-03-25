@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 524 2012-09-17T10:49:10Z
+    Revision: 581 2013-01-22T21:06:47Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -32,39 +32,10 @@ ARMORY_MAX_LINE_TABS = 10;
 
 ARMORYFRAME_MAINFRAMES = { "ArmoryFrame", "ArmoryLookupFrame", "ArmoryFindFrame" };
 ARMORYFRAME_SUBFRAMES = { "ArmoryPaperDollFrame", "ArmoryPetFrame", "ArmoryTalentFrame", "ArmoryPVPFrame", "ArmoryOtherFrame" };
-ARMORYFRAME_CHILDFRAMES = { "ArmoryTradeSkillFrame", "ArmoryInventoryFrame", "ArmoryQuestFrame", "ArmorySpellBookFrame", "ArmoryPVPTeamDetails", "ArmorySocialFrame" };
+ARMORYFRAME_CHILDFRAMES = { "ArmoryTradeSkillFrame", "ArmoryInventoryFrame", "ArmoryQuestFrame", "ArmorySpellBookFrame", "ArmoryPVPTeamDetails", "ArmoryAchievementFrame", "ArmorySocialFrame" };
 
 ARMORY_ID = "Armory";
 ARMORYFRAME_SUBFRAME = "ArmoryPaperDollFrame";
-
-StaticPopupDialogs["ARMORY_DELETE_CHARACTER"] = {
-    text = ARMORY_DELETE_UNIT,
-    button1 = YES,
-    button2 = NO,
-    OnAccept = function (self) ArmoryFrame_DeleteCharacter(self.data); end,
-    OnShow = function (self)
-        if ( Armory.summary and Armory.summary.locked ) then
-            self:SetParent(Armory.summary);
-        end
-    end,
-    OnHide = function (self)
-        self:SetParent(UIParent);
-        self.data = nil; 
-    end,
-    timeout = 0,
-    whileDead = 1,
-    exclusive = 1,
-    showAlert = 1,
-    hideOnEscape = 1
-};
-
-StaticPopupDialogs["ARMORY_CHECK_MAIL_POPUP"] = {
-    text = RED_FONT_COLOR_CODE..ARMORY_WARNING..": "..FONT_COLOR_CODE_CLOSE..ARMORY_CHECK_MAIL_POPUP,
-    button1 = OKAY,
-    showAlert = 1,
-    whileDead = 1,
-    timeout = 0,
-}
 
 local tabWidthCache = {};
 
@@ -167,10 +138,7 @@ function ArmoryFrame_OnEvent(self, event, ...)
         end
         if ( IsAddOnLoaded("GearScore") ) then
             -- PlayerScore
-            --Armory_PS_OnLoad();
-        end
-        if ( IsAddOnLoaded("GearScoreLite") ) then
-            --Armory_GS_OnLoad();
+            Armory_PS_OnLoad();
         end
     elseif ( not Armory:CanHandleEvents() ) then
         return;
@@ -239,7 +207,7 @@ function ArmoryFrame_Initialize()
 
     local expire = Armory:CheckMailItems(1);
     if ( expire > 0 ) then
-        StaticPopup_Show("ARMORY_CHECK_MAIL_POPUP", expire);
+        ArmoryStaticPopup_Show("ARMORY_CHECK_MAIL_POPUP", expire);
     end
 end
 
@@ -564,6 +532,12 @@ function ArmoryFrame_UpdateLineTabs()
         tabId = tabId + 1;
     end
 
+    if ( Armory:HasAchievements() and _G.GetTotalAchievementPoints() > 0 ) then
+        ArmoryFrame_SetLineTab(tabId, "Achievements", ACHIEVEMENT_BUTTON, "Interface\\Icons\\Achievement_Level_10");
+        ArmoryAchievementFrame.enabled = true;
+        tabId = tabId + 1;
+    end
+
     if ( Armory:HasSocial() ) then
         ArmoryFrame_SetLineTab(tabId, "Social", SOCIAL_BUTTON, "Interface\\Icons\\INV_Scroll_03");
         ArmorySocialFrame.enabled = true;
@@ -624,6 +598,8 @@ function ArmoryFrameLineTab_OnClick(self)
         ArmoryToggleSpellBook(BOOKTYPE_SPELL);
     elseif ( self.tabType == "Social" ) then
         ArmorySocialFrame_Toggle();
+    elseif ( self.tabType == "Achievements" ) then
+        ArmoryAchievementFrame_Toggle()
     elseif ( self.tabType == "TradeSkill" ) then
         if ( ArmoryTradeSkillFrame:IsShown() and self.skillName == Armory:GetSelectedProfession() ) then
             ArmoryTradeSkillFrame_Hide();
@@ -735,9 +711,11 @@ function ArmoryCloseChildWindows(reopen)
         if ( currentChild:GetName() == "ArmoryTradeSkillFrame" ) then
             for _, name in ipairs(Armory:GetProfessionNames()) do
                 if ( name == Armory:GetSelectedProfession() ) then
-                     Armory:SetSelectedProfession(name);
-                     ArmoryTradeSkillFrame_Show();
-                     break;
+                    if ( Armory:HasTradeSkillLines(name) ) then
+                        Armory:SetSelectedProfession(name);
+                        ArmoryTradeSkillFrame_Show();
+                    end
+                    break;
                 end
             end
         elseif ( currentChild.enabled ) then
@@ -1344,35 +1322,37 @@ function Armory_PS_OnLoad()
     ArmoryPS.UnitClass = function(unit) return Armory:UnitClass(unit); end;
     ArmoryPS.UnitLevel = function(unit) return Armory:UnitLevel(unit); end;
     ArmoryPS.UnitName = function(unit) return Armory:UnitName(unit); end;
-    ArmoryPS.GetActiveSpecGroup = function() return Armory:GetActiveSpecGroup(); end;
-    ArmoryPS.GetNumTalentTabs = function(inspect, pet) return Armory:GetNumTalentTabs(inspect, pet); end;
-    ArmoryPS.GetTalentTabInfo = function(tab, inspect, pet, talentGroup) return Armory:GetTalentTabInfo(tab, inspect, pet, talentGroup); end;
-    ArmoryPS.GetInventoryItemLink = function(unit, index) return (Armory:GetInventoryItemLink(unit, index)) or false; end;
+    ArmoryPS.GetActiveSpecGroup = function(inspect) return Armory:GetActiveSpecGroup(); end;
+    ArmoryPS.GetSpecialization = function(inspect, pet, talentGroup) return Armory:GetSpecialization(inspect, pet, talentGroup); end;
+    ArmoryPS.GetSpecializationInfo = function(index, inspect, pet) return Armory:GetSpecializationInfo(index, inspect, pet); end;
+    ArmoryPS.GetInventoryItemLink = function(unit, index) return (Armory:GetInventoryItemLink(unit, index)) or nil; end;
 
     local categoryInfo = PAPERDOLL_STATCATEGORIES["PLAYERSCORE"];
     if ( categoryInfo and not ARMORY_PLAYERSTAT_DROPDOWN_OPTIONS["PLAYERSCORE"] ) then
         table.insert(ARMORY_PLAYERSTAT_DROPDOWN_OPTIONS, "PLAYERSCORE");
         for index, stat in next, categoryInfo.stats do
             local updateFunc = PAPERDOLL_STATINFO[stat].updateFunc;
-            ARMORY_PAPERDOLL_STATINFO[stat] = PAPERDOLL_STATINFO[stat];
-            ARMORY_PAPERDOLL_STATINFO[stat].updateFunc = function(statFrame, unit)
-                if ( Armory:IsPlayerSelected() ) then
-                   return updateFunc(statFrame, unit);
-                end
-                local Orig_Realm = TenTonHammer.Realm;
-                TenTonHammer.Realm = Armory.characterRealm;
-                if not ( TenTonHammer_Database[TenTonHammer.Realm] ) then
-                    TenTonHammer_Database[TenTonHammer.Realm] = {};
-                end;
-                --local Orig_GetComparisonStatistic = GetComparisonStatistic;
-                --GetComparisonStatistic = function(id) return tonumber(Armory:GetStatistic(id)); end;
-                setfenv(TenTonHammer.GetPlayerInfo, ArmoryPS);
-                pcall(updateFunc, statFrame, unit);
-                setfenv(TenTonHammer.GetPlayerInfo, _G);
-                --GetComparisonStatistic = Orig_GetComparisonStatistic;
-                TenTonHammer.Realm = Orig_Realm;
-                TenTonHammer.PlayerInfo = nil;
-            end;
+            ARMORY_PAPERDOLL_STATINFO[stat] = {
+                updateFunc = function(statFrame, unit)
+                    if ( Armory:IsPlayerSelected() ) then
+                       return updateFunc(statFrame, unit);
+                    end
+                    local Orig_Realm = TenTonHammer.Realm;
+                    TenTonHammer.Realm = Armory.characterRealm;
+                    if not ( TenTonHammer_Database[TenTonHammer.Realm] ) then
+                        TenTonHammer_Database[TenTonHammer.Realm] = {};
+                    end;
+                    local Orig_GetComparisonStatistic = GetComparisonStatistic;
+                    GetComparisonStatistic = function(id) return tonumber(Armory:GetStatistic(id)); end;
+                    setfenv(TenTonHammer.GetPlayerInfo, ArmoryPS);
+                    pcall(TenTonHammer.GetPlayerInfo, TenTonHammer);
+                    pcall(updateFunc, statFrame, unit);
+                    setfenv(TenTonHammer.GetPlayerInfo, _G);
+                    GetComparisonStatistic = Orig_GetComparisonStatistic;
+                    TenTonHammer.Realm = Orig_Realm;
+                    TenTonHammer.PlayerInfo = nil;
+                end 
+            };
         end
     end
 end

@@ -1,49 +1,37 @@
-﻿
-qcMapIcon = { -- |cff69ccf0<Remote>|r
-
+﻿qcMapIcon = {
 	[4] = { --[[ Durotar ]]--
-		{0,5,0,"Dark Iron Mole Machine Wreckage",40.7,17.4,{12192}},
-		{0,5,27216,"Bizzle Quicklift",41.5,17.6,{12191}},
 		{0,1,10578,"Bom'bay",55.7,75.4,{25170,25165}},
-		{0,5,34654,"Bountiful Feast Hostess",46.2,14.3,{14065}},
-		{0,5,34654,"Bountiful Feast Hostess",52.8,44.1,{14065}},
-		{0,1,41140,"Burok",53.1,43.6,{26807}},
-		{0,1,5887,"Canaga Earthcaller",42.4,69.2,{25128}},
+		{0,1,41140,"Burok",53.1,43.6,{26807,6384}},
 		{0,1,41621,"Commander Thorak",55.9,12.3,{25924}},
-		{0,5,24498,"Cort Gorestein",40.6,18.2,{11407}},
-		{0,5,24510,"Driz Tumblequick",42.7,17.7,{29396}},
-		{0,1,11378,"Foreman Thazz'ril",43.5,67.4,{25134,25135}},
-		{0,5,34679,"Francis Eaton",46.6,13.8,{14041}},
-		{0,1,9796,"Galgar",42.7,67.2,{25136}},
-		{0,1,3139,"Gar'Thok",52.0,43.5,{26806}},
-		{0,1,3143,"Gornek",43.2,68.3,{25126,25172,25127,3087}},
-		{0,1,3287,"Hana'zua",40.6,62.6,{25129,25130}},
-		{0,5,24499,"Ja'ron",40.2,17.1,{11408}},
-		{0,5,15012,"Javnir Nashak",46.2,15.1,{8150}},
+		{0,1,3139,"Gar'Thok",52.0,43.5,{26806,25173,25177}},
 		{0,1,37951,"Jin'thala",62.5,84.4,{24764,24750}},
-		{0,1,10176,"Kaltunk",43.3,68.8,{25152}},
-		{0,1,39214,"Karranisha",42.8,69.3,{25139}},
 		{0,1,37969,"Kijara",63.2,95.6,{24623,24626}},
 		{0,1,39609,"Kor'kron Loyalist",57.7,9.8,{25267}},
 		{0,1,3140,"Lar Prowltusk",55.4,75.1,{25169}},
 		{0,1,3188,"Master Gadrin",55.9,74.7,{25167,25168,25171}},
 		{0,1,38442,"Morakki",68.0,74.1,{24812,24813,24814}},
 		{0,1,38005,"Moraya",67.2,88.0,{24622}},
-		{0,5,34713,"Ondani Greatmill",46.4,13.9,{14061,14062}},
-		{0,1,3142,"Orgnil Soulscar",52.3,43.1,{25232}},
-		{0,5,24497,"Ram Master Ray",42.6,17.8,{11409,11412,29393}},
+		{0,1,3142,"Orgnil Soulscar",52.3,43.1,{25232,25196}},
 		{0,9,38246,"Soratha",68.2,84.0,{24751,24753}}, --[[ Mage Trainer ]]--
 		{0,1,3336,"Takrin Pathseeker",50.8,43.6,{840}},
-		{0,5,24711,"Tapper Swindlekeg",41.6,18.4,{11447}},
 		{0,1,37987,"Tegashi",63.5,95.2,{24624,24625}},
 		{0,1,39007,"Tora'jin",68.5,87.7,{25037}},
 		{0,1,38440,"Tortunga",68.0,89.0,{25035}},
 		{0,1,38966,"Vol'jin",68.9,88.7,{25064,25073}},
 		{0,1,38243,"Zen'tabra",67.7,84.6,{24765,24767,24768,24769}},
-		{0,1,3145,"Zureetha Fargaze",43.4,67.5,{25131,25132,25133}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,25929,"Durotar Flame Keeper",52.2,47.4,{11846}},
-		{0,1,25994,"Flame Eater",52.4,47.3,{11915}},
+		{0,1,39423,"Gail Nozzywig",53.1,43.1,{25176,25178,25227}},
+		{0,1,3881,"Grimtak",50.7,42.8,{6365}},
+		{0,1,0,nil,59.6,45.6,{25179},"Provided when you assist an Injured Razer Hill Grunt."},
+		{0,1,39323,"Thonk",49.6,40.2,{25187,25188}},
+		{0,1,3193,"Misha Tor'kren",43.4,30.6,{25193}},
+		{0,1,39325,"Grandmatron Tekla",40.5,35.4,{25189}},
+		{0,1,39326,"Raggaran",42.7,49.9,{25190,25192}},
+		{0,1,39324,"Zen'Taji",35.8,41.4,{25194,25195}},
+		{0,1,39379,"Gor the Enforcer",45.0,14.8,{25260,25236,25206,25261,25648}},
+		{0,1,39380,"Shin Stonepillar",44.9,14.8,{25205}},
+		{0,1,3208,"Margoz",56.4,20.0,{25262,25263}},
+		{0,1,39604,"Vek'nag",56.3,20.3,{25256}},
+		{0,1,39590,"Spiketooth",58.8,23.2,{25257,25258,25259}},
 	},
 	[9] = { --[[ Mulgore ]]--
 		{0,1,2981,"Chief Hawkwind",45.2,75.4,{14449,24861,23733}},
@@ -62,8 +50,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,3052,"Skorn Whitecloud",49.7,17.2,{861}},
 		{0,1,3233,"Lorekeeper Raintotem",49.5,17.1,{833}},
 		{0,7,0,"Demon Scarred Cloak",42.3,17.8,{770},"Drops from Ghost Howl."},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,25936,"Mulgore Flame Keeper",51.8,59.3,{11852}},
 	},
 	[11] = { --[[ Northern Barrens ]]--
 		{0,1,0,nil,59.1,67.4,{869}},
@@ -82,13 +68,8 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,3449,"Darsok Swiftdagger",30.6,45.9,{867,875,29095}},
 		{0,1,33263,"Dinah Halfmoon",42.4,15.8,{13613,13621}},
 		{0,1,34284,"Dorak",67.0,45.5,{13878}},
-		{0,5,15597,"Elder Moonwarden",48.5,59.3,{8717}},
-		{0,5,15582,"Elder Windtotem",68.4,70.0,{8680}},
 		{0,1,3391,"Gazlowe",68.4,69.1,{14034,14038,14045,14050,26702,26769}},
 		{0,1,3464,"Gazrog",66.9,72.8,{14066}},
-		{0,5,20102,"Goblin Commoner",69.1,70.7,{11356,11357,11446,13484,14022,14036,29074,29400}},
-		{0,5,20102,"Goblin Commoner",68.2,71.4,{11356,11357,11446,13484,14022,14036,29074,29400}},
-		{0,5,20102,"Goblin Commoner",67.5,74.2,{11356,11357,11446,13484,14022,14036,29074,29400}},
 		{0,1,34634,"Gorgal Angerscar",55.1,78.5,{13995}},
 		{0,1,34547,"Grol'dom Kodo",58.0,49.3,{13970,13971}},
 		{0,1,34258,"Halga Bloodeye",67.4,38.7,{844,5041,13949}},
@@ -118,45 +99,9 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,3453,"Wharfmaster Dizzywig",69.6,73.0,{887,14052}},
 		{0,1,3439,"Wizzlecrank's Shredder",57.5,18.3,{858,863}},
 		{1,1,52382,"Ziradormi",48.8,70.1,{30094}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,25943,"The Northern Barrens Flame Keeper",50.0,54.6,{11859}},
-		-- [[ Pilgrim's Bounty ]]--
-		{0,5,34654,"Bountiful Feast Hostess",68.1,72.7,{14065}},
-		{0,1,34654,"Bountiful Feast Hostess",48.6,57.4,{14065}},
-	},
-	[13] = { --[[ Kalimdor ]]--
-		--[[ Lunar Festival ]]--
-		{0,5,15598,"Elder Bladeswift",39.4,10.9,{8718}},
-		{0,5,15595,"Elder Bladeleaf",43.9,12.4,{8715}},
-		{0,5,15603,"Elder Nightwind",47.8,31.4,{8723}},
-		{0,5,15606,"Elder Brightspear",58.0,25.8,{8726}},
-		{0,5,15574,"Elder Stonespire",59.1,24.7,{8672}},
-		{0,5,15601,"Elder Starweave",46.9,22.0,{8721}},
-		{0,5,55224,"Elder Windsong",52.0,34.1,{29739}},
-		{0,5,55227,"Elder Evershade",56.1,29.6,{29740}},
-		{0,5,15600,"Elder Skygleam",65.2,42.1,{8720}},
-		{0,5,15605,"Elder Riversong",47.3,40.8,{8725}},
-		{0,5,15597,"Elder Moonwarden",53.4,54.0,{8717}},
-		{0,5,15582,"Elder Windtotem",56.5,55.7,{8680}},
-		{0,5,15579,"Elder Darkhorn",58.4,44.9,{8677}},
-		{0,5,15580,"Elder Ezra Wheathoof",47.0,56.3,{8678}},
-	},
-	[14] = { --[[ Eastern Kingdoms ]]--
-		--[[ Lunar Festival ]]--
-		{0,5,15559,"Elder Highpeak",53.2,40.3,{8643}},
-		{0,5,15566,"Elder Snowcrown",57.7,32.9,{8650}},
-		{0,5,15592,"Elder Windrun",53.7,34.3,{8688}},
-		{0,5,15594,"Elder Moonstrike",50.9,36.5,{8714}},
-		{0,5,15602,"Elder Meadowrun",50.3,32.6,{8722}},
-		{0,5,15568,"Elder Graveborn",44.0,33.0,{8652}},
-		{0,5,15564,"Elder Darkcore",44.0,35.1,{8648}},
-		{0,5,55228,"Elder Moonlance",35.0,68.9,{29738}},
-		{0,5,15569,"Elder Goldwell",45.8,61.7,{8653}},
-		{0,5,15871,"Elder Bronzebeard",46.9,58.3,{8866}},
-		{0,5,15558,"Elder Silvervein",51.8,60.8,{8642}},
 	},
 	[16] = { --[[ Arathi Highlands ]]--
-		{0,1,14983,"Field Marshal Oslight",39.9,46.7,{8105,8114,8115}},
+		{0,1,14983,"Field Marshal Oslight",39.9,46.7,{8105,8114}},
 		{0,1,2700,"Captain Nials",40.0,48.9,{26093,26982,26095,26542}},
 		{0,1,0,"Wanted Board",40.2,49.1,{26024,26079}},
 		{0,1,2789,"Skuerto",40.3,49.1,{26035,26336,26341,26036,26037,26049}},
@@ -181,10 +126,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,2771,"Drum Fel",69.0,34.8,{26429,26430}},
 		{0,1,12920,"Doctor Gregory Victor",68.5,37.8,{26986}},
 		{0,1,15021,"Deathmaster Dwire",68.4,30.4,{8170,8122,8121,8120}},
-		{0,5,34654,"Bountiful Feast Hostess",69.8,37.8,{14065}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",44.7,46.2,{11732}},
-		{0,1,25923,"Arathi Flame Keeper",69.3,42.6,{11840}},
 	},
 	[17] = { --[[ Badlands ]]--
 		{0,1,1068,"Gorn",17.7,43.9,{27880}},
@@ -194,12 +135,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,4618,"Martek the Exiled",26.2,62.5,{27715}},
 		{0,1,46758,"Aoren Sunglow",52.1,51.6,{27878}},
 		{0,1,46759,"Lidia Sunglow",52.2,51.7,{27877}},
-		{0,5,0,"Candy Bucket",20.9,56.3,{28956}},
-		{0,5,0,"Candy Bucket",65.9,35.7,{28955}},
-		{0,5,34654,"Bountiful Feast Hostess",17.9,41.5,{14065}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",18.7,56.2,{28912}},
-		{0,1,25925,"Badlands Flame Keeper",23.1,37.4,{11842}},
 	},
 	[19] = { --[[ Blasted Lands ]]--
 		{0,1,5393,"Quartermaster Lungertz",60.1,13.5,{25710,25711}},
@@ -218,27 +153,14 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,0,nil,63.0,64.3,{25707}},
 		{0,1,42349,"Mayor Charlton Connisport",46.4,87.2,{26184,26185,26187}},
 		{0,1,42352,"Cenarion Observer Shayana",44.8,86.0,{26186}},
-		{0,5,15563,"Elder Bellowrage",54.3,49.5,{8647}},
 		{0,1,19254,"Warlord Dar'toon",54.4,50.5,{25694,25695,25696}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",55.2,15.2,{11737}},
-		{0,1,51603,"Blasted Lands Flame Keeper",46.2,13.8,{28930}},
 	},
 	[20] = { --[[ Tirisfal Glades ]]--
-		{0,1,49044,"Agatha",29.4,70.9,{24959}},
-		{0,1,1568,"Undertaker Mordo",30.1,71.3,{28608,26799,28652}},
-		{0,1,2307,"Caretaker Caice",30.7,71.4,{24960,25089}},
-		{0,1,1740,"Deathguard Saltain",31.6,65.6,{26800}},
-		{0,1,1569,"Shadow Priest Sarvis",30.8,66.2,{26801,24962,24972}},
-		{0,1,1661,"Novice Elreth",30.9,66.0,{24961,28672}},
-		{0,1,38911,"Xavier the Huntsman",31.5,65.6,{24964}},
-		{0,1,1570,"Executor Arren",33.0,61.1,{26802,24973,24970}},
-		{0,1,49425,"Darnell",35.8,62.2,{24971}},
 		{0,1,1519,"Deathguard Simmer",44.7,53.7,{24978,24980}},
 		{0,1,1518,"Apothecary Johaan",44.6,53.8,{24975,24976,24977}},
 		{0,1,38925,"Sedrick Calston",44.7,53.6,{24974}},
-		{0,7,0,"A Scarlet Letter",36.3,48.2,{24979}},
-		{0,1,10666,"Gordo",44.7,52.9,{25038}},
+		{0,7,0,"A Scarlet Letter",36.3,48.2,{24979},"Drops from Scarlet Warriors."},
+		{0,1,10666,"Gordo",44.7,52.9,{25038},"Gordo patrols Calston Estate."},
 		{0,1,1496,"Deathguard Dillinger",52.5,54.8,{25090,24982}},
 		{0,1,10665,"Junior Apothecary Holland",60.1,52.7,{24990,24996,24991}},
 		{0,1,1745,"Deathguard Morris",60.1,52.4,{6321}},
@@ -257,57 +179,40 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,13158,"Lieutenant Sanders",87.5,43.3,{25046}},
 		{0,1,37915,"Timothy Cunningham",83.6,69.9,{25012}},
 		{0,1,11055,"Shadow Priestess Vandis",83.4,69.8,{26931}},
-		{0,5,34654,"Bountiful Feast Hostess",58.7,51.4,{14065}},
-		{0,5,34768,"William Mullins",61.7,68.1,{14058,14040}},
-		{0,5,34677,"Miles Standish",61.4,67.5,{14037,14047}},
-		{0,5,34654,"Bountiful Feast Hostess",61.7,66.8,{14065}},
-		{0,5,34712,"Roberta Carter",61.2,66.9,{14059}},
-		{0,5,15568,"Elder Graveborn",61.9,53.9,{8652}},
 		{0,3,32798,"Spring Gatherer",61.6,53.1,{13479}},
 		{0,1,32837,"Noblegarden Merchant",61.3,53.0,{13503}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,26221,"Earthen Ring Elder",62.0,67.9,{11886}},
-		{0,1,16818,"Festival Talespinner",62.2,66.8,{9339,11966}},
-		{0,1,26113,"Master Flame Eater",62.4,66.9,{11922,11923}},
-		{0,1,25946,"Tirisfal Glades Flame Keeper",57.2,51.8,{11862}},
 	},
 	[21] = { --[[ Silverpine Forest ]]--
 		{0,1,44615,"Grand Executor Mortuus",57.4,10.1,{26965,26989}},
 		{0,1,44640,"High Warlord Cromush",57.8,10.0,{28089},"High Warlord Cromush patrols the Forsaken High Command."},
 		{0,1,44778,"Apothecary Witherbloom",56.8,9.2,{26992}},
 		{0,1,44784,"High Apothecary Shana T'veen",56.3,8.4,{26995,26998}},
-		{0,1,44789,"Deathstalker Commander Belmont",58.1,9.0,{27039}},
-		{0,1,0,"Abandoned Outhouse",53.8,12.9,{27045,27056}},
-		{0,1,44365,"Lady Sylvanas Windrunner",57.4,10.2,{27065,27097,27098}},
+		{0,1,44789,"Deathstalker Commander Belmont",58.1,9.0,{27039,27056}},
+		{0,1,0,"Abandoned Outhouse",53.8,12.9,{27045}},
+		{0,1,44365,"Lady Sylvanas Windrunner",57.4,10.2,{27065,27097,27098,27099}},
 		{0,1,44916,"Admiral Hatchet",44.0,21.4,{27069,27093,27096}},
 		{0,1,44917,"Warlord Torok",44.0,21.3,{27073,27095}},
 		{0,1,44912,"Apothecary Wormcrud",44.8,20.9,{27082,27088}},
-		{0,1,0,nil,65.8,25.8,{27099}},
-		{0,1,0,"Lady Sylvanas Windrunner |cff69ccf0<Remote>|r",35.7,15.5,{27094}},
-		{0,1,44365,"Lady Sylvanas Windrunner",44.9,41.7,{27180,27290}},
+		{0,1,0,nil,35.0,7.9,{27094},"This quest is provided automatically after completing Skitterweb Menace. You can also pick it up by walking to the back of The Skittering Dark."},
+		{0,1,44365,"Lady Sylvanas Windrunner",44.9,41.7,{27180,27290,27193,27194}},
+		{0,1,44640,"High Warlord Cromush",44.8,40.7,{28089}},
 		{0,1,44917,"Warlord Torok",45.8,41.9,{27226}},
 		{0,1,44916,"Admiral Hatchet",45.8,42.0,{27231}},
 		{0,1,0,"Horde Communication Panel",59.2,34.2,{27232}},
-		{0,10,0,nil,47.1,50.6,{27181,27193,27194},"Kill a Bloodfang Stalker to start this chain quest."},
+		{0,10,0,nil,47.1,50.6,{27181},"Kill a Bloodfang Stalker to start this quest."},
 		{0,1,0,"Master Forteski",55.9,46.3,{27195}},
 		{0,1,45525,"Lady Sylvanas Windrunner",51.8,66.1,{27472}},
-		{0,1,45617,"Lady Sylvanas Windrunner",51.9,65.0,{27474,27476,27512,27601}},
+		{0,1,45617,"Lady Sylvanas Windrunner",51.9,65.0,{27474,27476,27512,27601,27518}},
 		{0,1,45626,"Daschla",51.9,64.7,{27475}},
 		{0,1,1938,"Dalar Dawnweaver",47.1,43.2,{27478,27483,27484}},
 		{0,1,45631,"High Warlord Cromush",51.3,66.3,{27510,28089},"High Warlord Cromush patrols The Forsaken Front."},
 		{0,1,45752,"Ambermill Dimensional Portal",58.1,69.9,{27513}},
-		{0,1,0,"Lady Sylvanas Windrunner |cff69ccf0<Remote>|r",59.2,64.3,{27518}},
-		{0,1,0,"Lord Godfrey",51.8,65.8,{27550}},
-		{0,1,45879,"Lord Walden",51.8,65.8,{27548}},
+		{0,1,0,"Lord Godfrey",51.8,65.8,{27550,27580,27594,27575}},
+		{0,1,45879,"Lord Walden",51.8,65.8,{27548,27577}},
 		{0,1,45880,"Baron Ashbury",51.8,65.8,{27547}},
-		{0,1,0,"Lord Godfrey",45.2,73.5,{27580}},
-		{0,1,45879,"Lord Walden",45.2,73.5,{27577}},
-		{0,1,0,"Lord Godfrey",40.8,82.8,{27594}},
 		{0,1,46124,"Lady Sylvanas Windrunner",45.3,84.5,{27746}},
 		{0,1,46125,"High Warlord Cromush",45.3,84.3,{28089}},
-		{0,5,34654,"Bountiful Feast Hostess",45.8,43.1,{14065}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,25939,"Silverpine Forest Flame Keeper",49.6,38.2,{11584}},
+		{0,7,0,"Partially Digested Head",46.2,77.9,{27574},"Drops from Marsh Crocolisks."},
 	},
 	[22] = { --[[ Western Plaguelands ]]--
 		{0,1,44453,"Thassarian",41.1,70.4,{27159,27162,27163,27165}},
@@ -339,12 +244,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,44458,"Del Gahrron",50.7,52.6,{27017}},
 		{0,1,0,"Scourge Cauldron",62.6,58.6,{27057}},
 		{0,1,0,nil,66.1,47.8,{27055}},
-		{0,5,0,"Candy Bucket",43.4,84.4,{28988}},
-		{0,5,15594,"Elder Moonstrike",69.2,73.4,{8714}},
-		{0,5,15602,"Elder Meadowrun",63.5,36.1,{8722}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",43.4,82.6,{11756}},
-		{0,1,51604,"Western Plaguelands Flame Keeper",29.2,57.3,{28931}},
 	},
 	[23] = { --[[ Eastern Plaguelands ]]--
 		{0,1,45500,"Urk Gagbaz",35.0,68.1,{27432,27544}},
@@ -392,16 +291,8 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,16115,"Crusade Commander Eligor Dawnbringer",76.7,73.1,{27612,27613,27617}},
 		{0,1,16112,"Crusade Commander Korfax",75.3,76.2,{27614,27615,27616,27619,27619,27618}},
 		{0,1,0,"Highlord Darion Mograine",83.4,49.4,{13166,13189,13188}},
-
-
-		{0,5,0,"Candy Bucket",75.6,52.3,{12402}},
-		{0,5,34654,"Bountiful Feast Hostess",74.3,52.3,{14065}},
-		{0,5,15566,"Elder Snowcrown",75.7,54.6,{8650}},
-		{0,5,15592,"Elder Windrun",35.6,68.8,{8688}},
 	},
 	[24] = { --[[ Hillsbrad Foothills ]]--
-		{0,1,13841,"Lieutenant Haggerdin",44.7,46.2,{7162,7170,7169,7171,7168,7172}},
-		{0,1,13816,"Prospector Stonehewer",45.3,45.2,{7141,8271}},
 		{0,1,18165,"Archmage Cedric",30.9,30.9,{9829}},
 		{0,1,49687,"Brazie the Botanist",33.5,49.3,{28733,28617,28744,28748,28747,28751}},
 		{0,1,13777,"Sergeant Durgen Stormpike",43.1,43.9,{7102,7081,7122}},
@@ -414,10 +305,8 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,47899,"Flesh-Shaper Arnauld",36.3,60.2,{28199}},
 		{0,7,0,"The Battle for Hillsbrad",37.5,63.3,{28196},"Drops from Clerk Horrace Whitesteed."},
 		{0,1,0,"Shovel",39.7,63.0,{28189}},
-		{0,1,47900,"Master Apothecary Lydon",40.3,59.3,{28209,28230}},
+		{0,1,47900,"Master Apothecary Lydon",40.3,59.3,{28209,28230,28235,28237},"Lydon will follow you, allowing you to complete the rest of the chain on the move."},
 		{0,1,48021,"Johnny Awesome",40.3,59.4,{28231}},
-		{0,1,48020,"Master Apothecary Lydon",38.6,57.2,{28235}},
-		{0,1,48020,"Master Apothecary Lydon",36.5,58.0,{28237}},
 		{0,1,47900,"Master Apothecary Lydon",36.6,61.2,{28251}},
 		{0,1,2391,"Serge Hinott",49.1,66.4,{28324,28325}},
 		{0,1,48129,"Helcular",49.2,66.3,{28331,28332,28344}},
@@ -425,7 +314,7 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,48218,"Kingslayer Orkus",49.6,74.4,{28345}},
 		{0,1,48218,"Kingslayer Orkus",50.0,74.3,{28348,28354,28375}},
 		{0,10,0,nil,57.7,73.9,{28355},"Killing a Mudsnout Gnoll or Shaman at Nethander Stead will start this quest."},
-		{0,1,48470,"Kingslayer Orkus",29.2,83.9,{28397,28400}},
+		{0,1,48470,"Kingslayer Orkus",29.2,83.9,{28397,28400},"Orkus spawns as you approach the island."},
 		{0,1,48545,"High Warlord Cromush",57.1,46.2,{28587,28506,28556,28616}},
 		{0,1,2437,"Keeper Bel'varil",57.0,45.7,{28484}},
 		{0,1,2419,"Deathguard Humbert",57.2,45.5,{28487}},
@@ -435,26 +324,16 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,0,"Warchief's Command Board",56.5,47.1,{28619}},
 		{0,1,17092,"Advisor Duskingdawn",56.7,47.5,{28495}},
 		{0,1,0,"Warchief's Command Board",59.9,63.5,{28619}},
-		{0,1,49243,"Captain Jekyll",60.3,63.5,{28635,28643}},
+		{0,1,49243,"Captain Jekyll",60.3,63.5,{28635,28643,28644,28645,28646,28647}},
 		{0,1,49201,"Nils Beerot",60.1,63.7,{28634}},
-		{0,10,0,nil,68.5,59.6,{28644},"Killing Zephyrus while on 'The Burnholde Challange: Zephyrus' will start this quest."},
-		{0,10,0,nil,67.4,60.3,{28645},"Killing Teracula while on 'The Burnholde Challange: Teracula' will start this quest."},
-		{0,10,0,nil,66.3,60.7,{28646},"Killing Bloodvenom while on 'The Burnholde Challange: Bloodvenom' will start this quest."},
-		{0,10,0,nil,68.0,63.2,{28647},"Killing Infernus while on 'The Burnholde Challange: Infernus' will start this quest."},
 		{0,1,49240,"Captain Ironhill's Ghost",61.7,84.5,{28636}},
 		{0,7,0,"Daggerspine Attack Plans",52.4,74.9,{28356},"The Daggerspine Attack Plans drop from Daggerspine Naga at the Eastern Strand."},
-		{0,1,13817,"Voggah Deathgrip",58.7,34.2,{28600}},
-		{0,1,2278,"Melisara",57.3,46.3,{28538}},
-		{0,1,0,"Melisara |cff69ccf0<Remote>|r",55.6,38.9,{28566}},
-		{0,1,0,"Melisara |cff69ccf0<Remote>|r",49.4,46.6,{28603}},
-		{0,1,49035,"Lilith",49.7,47.4,{28604}},
-		{0,1,0,"Lilith or Melisara |cff69ccf0<Remote>|r",44.1,49.8,{28605},"This quest is auto-accepted after 'Infiltration' and 'Deception and Trickery' are completed."},
-		{0,10,49116,"Stormpike Engineer",41.4,47.4,{28605},"Killing a Stormpike Engineer starts this quest if you did not pick it up after 'Infiltration' and 'Deception and Trickery'."},
+		{0,1,13817,"Voggah Deathgrip",58.7,34.2,{28600,7142}},
+		{0,1,13840,"Warmaster Laggrond",57.8,33.3,{7161}},
+		{0,1,2278,"Melisara",57.3,46.3,{28538,28566,28603,28605}},
+		{0,1,49035,"Lilith",49.7,47.4,{28604},"Lilith appears as you approach Corrahn's Dagger."},
 		{0,1,47681,"Dumass",36.6,70.2,{28156}},
 		{0,7,0,"Arcane Remnant",30.2,36.9,{27480},"Drops from Arcane Remnants in Dalaran Crater."},
-		{0,5,34654,"Bountiful Feast Hostess",56.1,47.3,{14065}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,25935,"Hillsbrad Flame Keeper",54.7,50.1,{11853}},
 	},
 	[26] = { --[[ Hinterlands ]]--
 		{0,1,14740,"Katoom the Angler",80.3,81.5,{26210,26211}},
@@ -470,12 +349,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,42898,"Darkcleric Marnal",31.9,58.4,{26381,28508,26406,26418,26558}},
 		{0,1,42896,"Apothecary Surlis",31.8,58.6,{26382,26387}},
 		{0,1,43299,"Deathstalker Lookout",35.6,68.5,{26419}},
-		{0,5,0,"Candy Bucket",14.2,44.6,{12351}},
-		{0,5,34654,"Bountiful Feast Hostess",79.0,80.5,{14065}},
-		{0,5,15559,"Elder Highpeak",50.0,48.0,{8643}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",14.6,49.7,{11755}},
-		{0,1,25944,"The Hinterlands Flame Keeper",76.6,75.0,{11860}},
 	},
 	[27] = { --[[ Dun Morogh ]]--
 		{0,1,37081,"Joren Ironstock",36.9,70.0,{24469,24470,24473}},
@@ -510,22 +383,8 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,41853,"Commander Stonebreaker",78.3,20.5,{26078,26085,26094,26102,26112}},
 		{0,1,1960,"Pilot Hammerfoot",92.2,48.5,{26854}},
 		{0,1,0,"A Dwarven Corpse",87.6,50.1,{26855}},
-		{0,5,15011,"Wagner Hammerstrike",59.7,34.3,{8149}},
-		{0,5,0,"Dark Iron Mole Machine Wreckage",56.0,37.1,{12020}},
-		{0,5,27215,"Boxey Boltspinner",54.7,38.1,{12022}},
-		{0,5,23558,"Neill Ramstein",53.7,38.6,{11318,11122,29394}},
-		{0,5,24468,"Pol Amberstill",53.5,38.6,{29397}},
-		{0,5,23628,"Daran Thunderbrew",56.6,36.9,{11294}},
-		{0,5,23627,"Becan Barleybrew",56.1,38.1,{11293}},
-		{0,5,24710,"Ipfelkofer Ironkeg",55.1,38.1,{11442}},
-		{0,5,24519,"Costumed Orphan Matron",53.3,51.5,{11131}},
-		{0,5,0,"Candy Bucket",54.5,50.8,{12332}},
 		{0,1,37115,"Teo Hammerstorm",35.7,64.6,{24527}}, --[[ Shaman Trainer ]]--
-		{0,5,15732,"Wonderform Operator",60.3,33.8,{8827}},
-		{0,5,15569,"Elder Goldwell",53.9,49.9,{8653}},
 		{0,1,37121,"Teegli Merrowith",35.7,64.8,{24526}}, --[[ Mage Trainer ]]--
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",53.8,44.9,{11742}},
 	},
 	[28] = {
 		{0,1,47269,"Lunk",68.9,53.3,{27956,27957}},
@@ -548,11 +407,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,14625,"Overseer Oilfist",50.0,39.0,{28062,28061},"Inside The Slag Pit."},
 		{0,1,0,nil,42.9,29.5,{28064},"Inside The Slag Pit."},
 		{0,1,47429,"Lunk",39.0,26.0,{28053}},
-
-
-
-		{0,5,0,"Candy Bucket",39.5,66.0,{28965}},
-		{0,5,15567,"Elder Ironband",21.3,79.1,{8651}},
 	},
 	[29] = { --[[ Burning Steppes ]]--
 		{0,1,47779,"Mouton Flamestar",17.0,51.3,{28172}},
@@ -576,18 +430,13 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,0,nil,69.7,42.9,{28327},"This quest is remotely provided remotely after completing the 3 'A Delivery for #' quests."},
 		{0,1,0,nil,66.5,40.5,{28327},"This quest is remotely provided remotely after completing the 3 'A Delivery for #' quests."},
 		{0,1,0,"Adventure Board",72.9,65.1,{28068}},
-		{0,5,34654,"Bountiful Feast Hostess",53.1,31.3,{14065}},
-		{0,5,15585,"Elder Dawnstrider",53.6,24.5,{8683}},
-		{0,5,15557,"Elder Rumblerock",70.1,45.4,{8636}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",68.5,60.0,{11739}},
-		{0,1,25927,"Burning Steppes Flame Keeper",51.1,29.2,{11844}},
 	},
 	[30] = { --[[ Ellwyn Forest ]]--
 		{0,1,197,"Marshal McBride",48.2,42.1,{28765,28773,3105,26389,26390,54,28757,28769,3104,28766,28774,3100,28763,28771,3103,28762,28770,3101,28764,28772,3102,28767,28759,26910,29078,29079,29080}},
 		{0,1,0,"Sergeant Willem",48.9,38.4,{28796,28822,28792,28818,28797,28823,28794,28820,28793,28819,28795,28821,28791,28817,29081,29083}},
 		{0,1,0,"Brother Paxton",48.3,38.4,{28812,28808,28813,28810,28809,28811,28806,29082}},
 		{0,1,0,"Milly Osworth",48.2,42.5,{26391}},
+
 		{0,1,0,"Drusilla La Salle",49.9,42.7,{26914,28788}},
 		{0,1,0,"Khelden Bremen",49.7,39.4,{26916,28784}},
 		{0,1,0,"Llane Beshere",50.2,42.3,{26913,28789}},
@@ -620,25 +469,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,0,"Wanted Poster",24.5,74.7,{176}},
 		{0,1,0,"Deputy Rainer",24.2,74.5,{11,26378}},
 		{0,1,0,"Westfall Deed",24.8,95.3,{184}},
-		{0,5,51665,"Celestine of the Harvest",32.0,50.5,{29075}},
-		{0,5,15310,"Jesper",32.0,50.4,{8311}},
-		{0,5,52064,"Keira",32.1,50.6,{29371}},
-		{0,5,51934,"Gretchen Fenlow",32.3,50.9,{29430,29054,29144}},
-		{0,5,24519,"Costumed Orphan Matron",42.6,64.4,{11131}},
-		{0,5,0,"Large Jack-o'-Lantern",42.4,65.9,{12133}},
-		{0,5,0,"Candy Bucket",43.7,65.9,{12286}},
-		{0,5,34675,"Gregory Tabor",34.1,51.4,{14023}},
-		{0,5,34653,"Bountiful Table Hostess",34.2,51.1,{14064}},
-		{0,5,34744,"Jasper Moore",33.9,50.8,{14055}},
-		{0,5,34710,"Ellen Moore",33.7,50.6,{14053}},
-		{0,5,34653,"Bountiful Table Hostess",42.2,64.1,{14064}},
-		--[[ Lunar Festival ]]--
-		{0,5,15562,"Elder Hammershout",34.6,50.3,{8646}},
-		{0,5,15895,"Lunar Festival Harbinger",34.2,50.6,{8867,8883}},
-		{0,5,15565,"Elder Stormbrow",39.8,63.7,{8649}},
-		--[[ Noblegarden ]]--
-		{0,3,32799,"Spring Collector",43.0,65.4,{13480}},
-		{0,1,32836,"Noblegarden Vendor",43.0,65.3,{13502}},
 		{0,1,64330,"Julia Stevens",41.7,83.7,{31724}}, --[[ Pet Battle ]]--
 	},
 	[32] = { --[[ Deadwind Pass ]]--
@@ -668,8 +498,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,0,"Sirra Von'lndi",72.6,47.8,{26794}},
 		{0,1,0,"Lord Ello Ebonlocke",71.9,46.5,{26727}},
 		{0,1,0,"Watcher Ladimore",74.5,47.1,{26797}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",73.2,54.8,{11743}},
 	},
 	[35] = { --[[ Loch Modan ]]--
 		{0,1,1960,"Pilot Hammerfoot",14.0,56.5,{26854,13635}},
@@ -702,11 +530,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,63306,"Stolen Explorers' League Document",41.4,39.0,{13655}},
 		{0,1,63316,"Stolen Explorers' League Document",61.7,73.2,{13657}},
 		{0,1,1153,"Torren Squarejaw",37.3,47.8,{13661}},
-		{0,5,0,"Candy Bucket",35.5,48.5,{12339}},
-		{0,5,0,"Candy Bucket",83.0,63.5,{28963}},
-		{0,5,15558,"Elder Silvervein",33.3,46.5,{8642}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",32.4,40.4,{11749}},
 	},
 	[36] = { --[[ Redridge Mountains ]]--
 		{0,1,0,"Wanted!",16.3,65.3,{26504}},
@@ -744,8 +567,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,0,"Colonel Troteman",77.2,65.9,{26708}}, --[[ Phased ]]--
 		{0,1,0,"Colonel Troteman",60.7,36.7,{26713,26726}}, --[[ Phased ]]--
 		{0,1,0,"Colonel Troteman |cff69ccf0<Remote>|r",58.5,55.5,{26714}}, --[[ Phased ]]--
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",24.7,53.8,{11751}},
 		--[[ Pet Battle ]]--
 		{0,1,115,"Lindsay",33.3,52.6,{31726}},
 	},
@@ -794,11 +615,7 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,52374,"Panther Cub",76.1,66.7,{29267,29268}},
 		{0,1,52410,"Lieutenant Doren",47.8,12.0,{29131}},
 		{0,1,52753,"James Stillair",47.9,11.9,{29133}},
-		{0,5,15596,"Elder Starglade",71.0,34.3,{8716}},
 		{0,1,2464,"Commander Aggro'gosh",38.4,50.5,{26278}}, --[[ Grom'gol Base Camp ]]--
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",51.7,63.4,{28910}},
-		{0,1,51582,"Northern Stranglethorn Vale Flame Keeper",40.6,50.9,{28924}},
 	},
 	[38] = { --[[ Swamp of Sorrows ]]--
 		{0,1,45786,"Trade Baron Silversnap",73.2,14.9,{27587,27536,27656,27597}},
@@ -814,9 +631,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,46676,"Joanna Blueheart",68.2,36.2,{27821,27822,27795,27843,27845,27849,27851}},
 		{0,1,18221,"Holaaru",69.9,36.5,{27860,27840,27918}},
 		{0,1,17127,"Anchorite Avuun",26.9,33.6,{27875,27876,27902,27904,24913}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",70.3,14.4,{28916}},
-		{0,1,25941,"Swamp of Sorrows Flame Keeper",76.3,13.8,{11857}},
 	},
 	[39] = { --[[ Westfall ]]--
 		{0,1,0,"Lieutenant Horatio Laine",60.0,19.3,{26209,26213,26214,26215}},
@@ -842,10 +656,7 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,7,0,"Red Bandana",43.0,69.1,{26296}},
 		{0,1,0,"Old Jug",40.6,17.0,{26356}},
 		{0,1,0,"Marshal Gryan Stoutmantle",56.4,49.6,{26761}}, --[[ Phased ]]--
-		{0,5,15577,"Elder Skychaser",56.6,47.1,{8675}},
 		{0,1,112,"Old MacDonald",60.9,18.5,{31725}}, --[[ Pet Battle ]]--
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",45.2,62.5,{11581}},
 	},
 	[40] = { --[[ Wetlands ]]--
 		{0,1,41074,"Mountaineer Grugelm",49.6,79.2,{25211}},
@@ -875,19 +686,10 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,1071,"Longbraid the Grim",49.8,18.3,{26327}},
 		{0,1,42160,"Thargas Anvilmar",49.4,17.2,{26127,26128}},
 		{0,1,42160,"Thargas Anvilmar",51.1,9.2,{26139}},
-		{0,5,0,"Candy Bucket",10.8,61.0,{12343}},
-		{0,5,0,"Candy Bucket",58.2,39.2,{28991}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",13.3,47.3,{11757}},
 	},
 	[41] = { --[[ Teldrassil ]]--
-		{0,1,2079,"Ilthalaine",58.0,39.2,{28713,28714,28734,3117,3116,3120,3118,3119,26841}},
-		{0,1,2077,"Melithar Staghelm",58.0,38.8,{28715,3117,3116,3120,3118,3119,26841}},
-		{0,1,3596,"Ayanna Everstride",58.8,35.7,{26947,28723}},
-		{0,1,49479,"Dentaria Silverglade",57.2,33.3,{28724,28725,28729,28730}},
-		{0,1,49480,"Tarindrella",56.4,27.6,{28726,28727,28728}},
-		{0,1,3514,"Tenaron Stormgrip",58.4,34.6,{28731}},
-		{0,1,6780,"Porthannius",60.2,41.7,{2159}},
+		{2,1,49480,"Tarindrella",45.3,91.4,{28726,28727,28728},"Tarindrella appears as you enter Shadowthread Cave."},
+
 		{0,1,2150,"Zenn Foulhoof",59.6,49.2,{488}},
 		{0,6,3567,"Tallonkai Swiftroot",55.6,50.0,{2438,2459,932}},
 		{0,1,2078,"Athridas Bearmantle",55.7,52.0,{475,483,486}},
@@ -909,17 +711,8 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,3515,"Corithras Moonrage",41.0,45.7,{933,14039}},
 		{0,1,7510,"Sprouted Frond",43.9,44.0,{2399}},
 		{0,1,2080,"Denalan",43.9,44.2,{2499}},
-		{0,1,1992,"Tarindrella",42.5,58.2,{14005,935}},
 		{0,7,2,"Moss-Twined Heart",52.0,63.7,{927}},
-		{0,1,3593,"Alyissia",58.8,33.7,{26945,28723}},
-		{0,1,3597,"Mardant Strongoak",58.2,34.8,{26948,28723}},
-		{0,1,3594,"Frahun Shadewhisper",58.8,33.9,{26946,28723}},
-		{0,1,3595,"Shanda",58.4,35.5,{26949,28723}},
-		{0,1,43006,"Rhyanda",58.4,35.5,{26940,28723}},
-		{0,5,15595,"Elder Bladeleaf",56.9,53.1,{8715}},
 		{0,1,42968,"Krennan Aranas",55.2,89.2,{28517}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",54.7,52.8,{11753}},
 	},
 	[42] = { --[[ Darkshore ]]--
 		{0,1,32973,"Dentaria Silverglade",51.8,18.0,{13518}},
@@ -980,9 +773,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,34422,"Malfurion Stormrage",32.8,84.3,{13897}},
 		{0,1,11711,"Sentinel Aynasha",47.7,88.9,{5713}},
 		{0,7,0,"Writings of the Dark Herald",52.3,31.0,{28529}},
-		{0,5,15601,"Elder Starweave",49.5,18.9,{8721}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",48.9,22.6,{11740}},
 	},
 	[43] = { --[[ Ashenvale ]]--
 		{0,1,0,nil,53.8,46.0,{13921}},
@@ -1015,7 +805,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,43063,"Cromula",50.7,67.1,{26416},"Cromula patrols in interior of Silverwind Refuge."},
 		{0,1,34303,"Dagrun Ragehammer",11.6,35.3,{13883,26890}},
 		{0,1,33760,"Durak",72.2,57.7,{13797,13798,13805}},
-		{0,5,15605,"Elder Riversong",35.5,48.9,{8725}},
 		{0,1,33204,"Evenar Stillwhisper",26.8,22.0,{13623,26473}},
 		{0,1,3996,"Faldreas Goeth'Shael",35.8,49.1,{13965}},
 		{0,1,34569,"Flooz",50.0,67.2,{13977}},
@@ -1073,9 +862,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,34251,"Vear Darksnout",38.0,30.0,{13876}},
 		{0,1,17106,"Vindicator Palanaar",35.0,49.9,{26453}},
 		{0,1,17303,"Vindicator Vedaar",84.1,62.7,{26444,26445}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",86.7,41.4,{11734}},
-		{0,1,25884,"Ashenvale Flame Keeper",51.3,66.1,{11841}},
 	},
 	[61] = { --[[ Thousand Needles ]]--
 		{0,1,39895,"Kanati Greycloud",11.2,11.2,{27062}},
@@ -1147,9 +933,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,42091,"Orthus Cliffwalker",39.7,46.4,{26098,26099}},
 		{0,1,42047,"Masha Cliffwalker",45.0,32.8,{26100}},
 		{0,1,3995,"Witch Doctor Jin'Zil",71.1,91.2,{26069}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",49.5,51.2,{28915}},
-		{0,1,25940,"Stonetalon Flame Keeper",52.9,62.5,{11856}},
 	},
 	[101] = { --[[ Desolace ]]--
 		{0,1,36410,"Officer Jankie",54.2,9.3,{14384}},
@@ -1206,17 +989,11 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,0,"Ancient Vortex Runestone",74.8,13.2,{14196}},
 		{0,1,0,nil,77.6,18.6,{14198}},
 		{0,1,12277,"Melizza Brimbuzzle",33.9,53.5,{6132}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",65.8,17.0,{11741}},
-		{0,1,25928,"Desolace Flame Keeper",26.1,76.9,{11845}},
 	},
 	[121] = { --[[ Feralas ]]--
 		{0,1,39377,"Konu Runetotem",41.3,15.4,{25210}},
 		{0,1,39946,"Caryssia Moonhunter",86.1,45.3,{25486}},
 		{0,1,39992,"Rendow",88.5,44.4,{25488}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",46.7,43.7,{11746}},
-		{0,1,25932,"Feralas Flame Keeper",72.4,47.8,{11849}},
 	},
 	[141] = { --[[ Dustwallow Marsh ]]--
 		{0,1,23566,"Calia Hastings",68.4,51.0,{27210,27211,27212,27213}},
@@ -1263,9 +1040,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,5087,"Do'gol",36.5,30.8,{27256,27257}},
 		{0,1,4502,"Tharg",37.4,31.4,{1168}},
 		{0,1,0,"Wanted Poster",37.5,31.5,{27229}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",62.1,40.4,{11744}},
-		{0,1,25930,"Dustwallow Marsh Flame Keeper",33.4,30.9,{11847}},
 	},
 	[161] = { --[[ Tanaris ]]--
 		{0,1,38535,"Kelsey Steelspark",51.2,29.9,{25048,25049,25050,25121}},
@@ -1286,18 +1060,10 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,6,8126,"Nixx Sprocketspring",52.4,28.3,{3639}},
 		{0,1,44833,"Adarrah",30.5,65.5,{27003}},
 		{0,5,34654,"Bountiful Feast Hostess",52.1,27.1,{14065}},
-		{0,5,20102,"Goblin Commoner",51.5,26.7,{29074,29400,11446,11356,11357,14022,14036,13484}},
-		{0,5,20102,"Goblin Commoner",52.2,28.6,{29074,29400,11446,11356,11357,14022,14036,13484}},
-		{0,5,20102,"Goblin Commoner",52.0,29.4,{29074,29400,11446,11356,11357,14022,14036,13484}},
-		{0,5,20102,"Goblin Commoner",50.9,30.1,{29074,29400,11446,11356,11357,14022,14036,13484}},
 		{0,1,20142,"Steward of Time",65.4,49.7,{10279}},
 		{0,1,20130,"Andormu",58.1,54.1,{10277,10296}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",52.7,30.1,{11762}},
-		{0,1,25921,"Tanaris Flame Keeper",49.8,27.9,{11838}},
 	},
 	[181] = { --[[ Azshara ]]--
-		{0,5,15600,"Elder Skygleam",64.7,79.3,{8720}},
 		{0,1,35086,"Labor Captain Grabbit",27.0,77.1,{14129,14162}},
 		{0,1,8576,"Ag'tor Bloodfist",26.8,77.0,{14118,14117,14128}},
 		{0,1,0,nil,27.6,74.1,{14134,14135,14146,14155}},
@@ -1358,9 +1124,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,0,"Slinky Sharpshiv",12.5,67.4,{14464}},
 		{0,1,36785,"Bombardier Captain Smooks",14.5,75.6,{14476,14477}},
 		{0,1,36903,"Jr. Bombardier Hackel",14.5,65.7,{24430}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,51575,"Azshara Flame Keeper",60.8,53.5,{28923}},
-		
 		{0,1,55054,"General Nazgrim",37.9,95.7,{29690}}, --[[ Panda intro ]]--
 	},
 	[182] = { --[[ Felwood ]]--
@@ -1396,8 +1159,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		 {0,1,48461,"Ferli",64.1,10.3,{28362}},
 		 {0,1,47556,"Drizle",60.6,9.5,{28364}},
 		 {0,1,0,"Deadwood Cauldron",59.7,8.1,{28467}},
-		 --[[ Lunar Festival ]]--
-		 {0,5,15603,"Elder Nightwind",38.4,52.9,{8723}},
 	},
 	[201] = { --[[ Un'Goro Crater ]]--
 		{0,1,9619,"Torwa Pathfinder",71.2,76.6,{24731,24732,24733}},
@@ -1427,9 +1188,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,38504,"Un'Goro Examinant",53.8,62.5,{24694}},
 		{0,1,38502,"Nablya",83.5,46.0,{24695}},
 		{0,1,28092,"The Etymidian",47.4,9.2,{12547,12797}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",59.9,62.9,{28921}},
-		{0,1,51607,"Un'Goro Flame Keeper",56.3,66.3,{28933}},
 	},
 	[241] = { --[[ Moonglade ]]--
 		{0,1,39865,"Emissary Windsong",45.5,44.9,{25316}},
@@ -1458,9 +1216,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,15170,"Rutgar Glyphshaper",46.8,79.5,{8309,8314}},
 		{0,1,15194,"Hermit Ortell",68.7,63.0,{8279,8287,8323,8324}},
 		{0,1,15190,"Noggle Ficklespragg",56.2,36.3,{8282}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",60.6,33.0,{11760}},
-		{0,1,25919,"Silithus Flame Keeper",50.9,41.3,{11836}},
 	},
 	[281] = { --[[ Winterspring ]]--
 		{0,2,11556,"Salfa",21.0,46.2,{28524,28522,28523}},
@@ -1469,10 +1224,8 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,7,0,"Crudely-Written Log",37.0,55.6,{28471}},
 		{0,1,48658,"Kaldorei Spirit",50.7,54.9,{28513,28534}},
 		{0,1,48659,"Quel'dorei Spirit",50.8,55.0,{28518,28535}},
-		{0,5,15606,"Elder Brightspear",53.2,56.8,{8726}},
 		{0,1,48660,"Sin'dorei Spirit",50.7,55.1,{28519,28536}},
 		{0,1,10920,"Kelek Skykeeper",46.8,53.8,{28537,28848}},
-		{0,5,15574,"Elder Stonespire",60.0,49.9,{8672}},
 		{0,1,11191,"Lilith the Lithe",59.9,49.2,{28609}},
 		{0,1,48965,"Deez Rocksnitch",59.7,49.7,{28610,28618,28625,28626,28632,28628,28674}},
 		{0,1,11192,"Kilram",59.8,49.1,{28624}},
@@ -1497,14 +1250,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,3,0,"Winterspring Cub",46.2,17.6,{29053,29037,29040}},
 		{0,1,48722,"Burndl",65.3,46.2,{28614}},
 		{0,1,48723,"Tanrir",65.4,46.2,{28615}},
-		{0,1,20102,"Goblin Commoner",58.8,48.4,{29074,29400,11446,11356,11357,14022,14036,13484}},
-		{0,1,34654,"Bountiful Feast Hostess",58.7,48.5,{14065}},
-		{0,1,20102,"Goblin Commoner",59.8,49.7,{29074,29400,11446,11356,11357,14022,14036,13484}},
-		{0,1,20102,"Goblin Commoner",59.9,50.9,{29074,29400,11446,11356,11357,14022,14036,13484}},
-		{0,1,20102,"Goblin Commoner",61.1,48.8,{29074,29400,11446,11356,11357,14022,14036,13484}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",61.4,47.1,{11763}},
-		{0,1,25922,"Winterspring Flame Keeper",58.1,47.5,{11839}},
 	},
 	[301] = { --[[ Stormwind City ]]--
 		{0,3,42288,"Robby Flay",50.6,71.9,{26190,26177,26192,26153,26183}},
@@ -1529,15 +1274,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,24729,"Alicia",81.8,28.3,{11451}},
 		{0,1,332,"Master Mathias Shaw",81.3,63.5,{27072}},
 		{0,6,5518,"Lilliam Sparkspindle",62.8,32.0,{3630,3629}},
-		{0,5,53949,"Anson Hastings",60.0,75.1,{29392}},
-		{0,5,0,"Candy Bucket",60.5,75.3,{12336}},
-		{0,5,6740,"Innkeeper Allison",60.4,75.3,{8356}},
-		{0,5,53950,"Hired Courier",24.0,44.8,{29398}},
-		{0,5,8719,"Auctioneer Fitch",61.1,70.6,{29399}},
-		{0,5,54021,"Hudson Barnes",64.2,46.3,{29402,29403}},
-		{0,5,12464,"Stolen Crate",55.4,43.4,{29411}},
-		{0,5,12468,"Anson's Crate",65.1,33.5,{29413}},
-		{0,5,12468,"Anson's Crate",60.1,75.1,{29413}},
 		{0,1,0,"Naraat the Earthspeaker |cff69ccf0<Remote>|r",65.8,76.3,{28825},"Upon becoming eligible for this quest, it will be offered remotely as soon as you enter the city by land or air."},
 		{0,1,44238,"Harrison Jones",85.8,26.0,{28295}},
 		{0,1,2439,"Major Samuelson",85.1,31.0,{26997}},
@@ -1557,27 +1293,9 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,55789,"Rell Nightwind",78.8,40.0,{29548}},
 		{0,1,63596,"Audrey Burnhep",69.5,25.2,{31591,31592,31821,32008,31593,31316}}, -- [[ Pet Battles ]]--
 
-		--[[ Seasonal Commoners ]]--
-		{0,5,18927,"Human Commoner",61.7,74.2,{29074,11441,11356,14022,13484}},
-		{0,5,18927,"Human Commoner",67.0,72.5,{29074,11441,11356,14022,13484}},
-		{0,5,18927,"Human Commoner",73.9,55.9,{29074,11441,11356,14022,13484}},
-		{0,5,18927,"Human Commoner",63.8,32.0,{29074,11441,11356,14022,13484}},
-		{0,5,18927,"Human Commoner",49.7,90.0,{29074,11441,11356,14022,13484}},
 		--[[ Darkmoon Faire ]]--
 		{0,1,54334,"Darkmoon Faire Mystic Mage",62.3,73.0,{7905}},
 		{0,1,54334,"Darkmoon Faire Mystic Mage",62.1,32.2,{7905}},
-		--[[ Lunar Festival ]]--
-		{0,5,15892,"Lunar Festival Emissary",61.7,75.7,{8871}},
-		--[[ Love is in the Air ]]--
-		{0,5,37887,"Kwee Q. Peddlefeet",62.5,75.0,{24597}},
-		{0,5,37675,"Public Relations Agent",62.4,75.4,{24635,24629,24636}},
-		{0,5,38066,"Inspector Snip Snagglebolt",61.5,75.3,{24655,24656,24848,24658,24659,24660,24662,24663,24664,24665,24666,28934}},
-		{0,5,38325,"Marion Sutton",60.6,76.4,{24849,24657}},
-		--[[ Children's Week ]]--
-		{0,5,51988,"Orphan Matron Nightingale",56.3,54.0,{1468}},
-		{0,5,14305,"Human Orphan",56.3,54.0,{29093,29106,29107,29117,29119,171},"Appears when you blow the Human Orphan Whistle."},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Flame of Stormwind",49.0,72.0,{9330}},
 	},
 	[321] = { --[[ Orgrimmar ]]--
 		{1,3,42506,"Marogg",56.5,62.5,{26227,26226,26235,26220,26233,26234}},
@@ -1597,34 +1315,14 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{1,1,52382,"Ziradormi",48.8,70.1,{30094}},
 		{1,1,43062,"Bort",52.1,56.3,{26417}},
 		{1,1,3344,"Kardris Dreamseeker",39.0,47.4,{27397}},
-		
+		{1,1,6929,"Innkeeper Gryshka",53.6,78.8,{6385}},
+		{1,1,3310,"Doras",49.7,59.2,{6386,26804}},
 		{1,1,54870,"General Nazgrim",48.6,70.6,{31853}}, --[[ Panda intro ]]--
-		
-		
-		--[[ Goblins ]]--
 		{1,1,3144,"Eitrigg",49.2,72.2,{26803}},
-		{1,1,3310,"Doras",49.6,59.0,{26804}},
-		--[[ Seasonal Commoners ]]--
-		{1,5,19175,"Orc Commoner",51.6,75.2,{29400,11446,11357,14036}},
-		{1,5,19175,"Orc Commoner",69.9,49.4,{29400,11446,11357,14036}},
-		{1,5,19176,"Tauren Commoner",40.3,49.1,{29400,11446,11357,14036}},
-		{1,5,19177,"Troll Commoner",32.2,65.7,{29400,11446,11357,14036}},
-		{1,5,19177,"Troll Commoner",39.5,78.1,{29400,11446,11357,14036}},
-		{1,5,19177,"Troll Commoner",49.1,61.5,{29400,11446,11357,14036}},
-		--[[ Lunar Festival ]]--
-		{1,5,15891,"Lunar Festival Herald",49.9,81.2,{8873}},
-		{1,5,15895,"Lunar Festival Harbinger",52.4,58.5,{8867,8883}},
-		{1,5,15579,"Elder Darkhorn",52.3,60.0,{8677}},
-		--[[ Love is in the Air ]]--
-		{1,5,37172,"Detective Snap Snagglebolt",50.8,75.3,{24536,24541,24850,24638,24645,24647,24648,24649,24650,24651,24652,28935}},
-		{1,5,37675,"Public Relations Agent",53.0,77.2,{24635,24629,24636}},
-		{1,5,38042,"Kwee Q. Peddlefeet",53.0,76.8,{24612}},
-		{1,5,38328,"Roka",57.6,60.8,{24851,24576}},
+		--[[ Battle Pets ]]--
+		{1,1,63626,"Varzok",52.6,59.3,{31812}},
 		--[[ Darkmoon Faire ]]--
 		{1,1,55382,"Darkmoon Faire Mystic Mage",48.2,62.2,{7926}},
-		--[[ Children's Week ]]--
-		{1,1,51989,"Orphan Matron Battlewail",58.0,57.6,{172}},
-		{1,1,14444,"Orcish Orphan",58.0,57.6,{5502,29146,29167,29176,29190,29191},"Appears when you blow the Orcish Orphan Whistle."},
 },
 	[341] = { --[[ City of Ironforge ]]--
 		{0,3,5159,"Daryl Riknussun",60.1,36.4,{6612,29356,29355,29353,29352,29351}},
@@ -1643,46 +1341,17 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,9,5147,"Valgar Highforge",23.1,6.1,{27265,28268}},
 		{0,1,42129,"Moira Thaurissan",39.8,57.3,{26118}},
 		{1,1,0,"Hero's Call Board",25.5,69.7,{28567,28565,28573,26542,28576,28578,28579,28582,28666,28675,28673,28708,28709,27726,27724,27727,28716,28558,29387,29156}},
-		{0,5,0,"Candy Bucket",18.3,50.9,{12335}},
 		{0,5,6826,"Talvash del Kissel",36.4,3.6,{8355}},
 		{0,5,5111,"Innkeeper Firebrew",18.1,51.5,{8353}},
-		{0,5,13433,"Wulmort Jinglepocket",33.6,67.9,{7022,7043,7045}},
-		{0,5,1365,"Goli Krumn",30.3,59.4,{7062}},
-		{0,5,2916,"Historian Karnik",77.5,11.8,{7063}},
 		{0,9,5146,"Nittlebur Sparkfizzle",25.9,6.2,{27271}}, --[[ Mage Trainer ]]--
-
-		--[[ Seasonal Commoners ]]--
-		{0,5,19148,"Dwarf Commoner",30.8,62.9,{29074,11441,11356,14022,13484}},
-		{0,5,19172,"Gnome Commoner",58.1,49.4,{29074,11441,11356,14022,13484}},
 
 		--[[ Darkmoon Faire ]]--
 		{0,1,54334,"Darkmoon Faire Mystic Mage",27.5,73.4,{7905}},
 
-		--[[ Winter Veil ]]--
-		{0,5,13444,"Greatfather Winter",33.2,65.4,{7025}},
-		{0,5,0,"Gently Shaken Gift",33.5,65.6,{8788}},
-		{0,5,0,"Winter Veil Gift",33.6,65.6,{29385}},
-		{0,5,0,"Carefully Wrapped Present",33.8,65.7,{8744}},
-		{0,5,0,"Festive Gift",33.9,65.9,{8803}},
-		{0,5,0,"Gaily Wrapped Present",33.8,66.3,{8768}},
-		{0,5,0,"Ticking Present",33.9,66.7,{8769}},
-
-		--[[ Lunar Festival ]]--
-		{0,5,15892,"Lunar Festival Emissary",30.9,61.6,{8870}},
-		{0,5,15871,"Elder Bronzebeard",29.2,17.0,{8866}},
-		{0,5,15895,"Lunar Festival Harbinger",28.9,16.2,{8867,8883}},
-
-		--[[ Love is in the Air ]]--
-		{0,5,38041,"Kwee Q. Peddlefeet",33.6,65.6,{24609}},
-		{0,5,37675,"Public Relations Agent",34.2,66.4,{24635,24629,24636}},
-		{0,5,38293,"Junior Inspector",35.4,69.0,{24804}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Flame of Ironforge",64.0,25.0,{9331}},
 	},
 	[362] = { --[[ Thunder Bluff ]]--
 		{0,3,3026,"Aska Mistrunner",50.7,53.1,{29362,29364,29363,29365,29358}},
 		{0,3,3028,"Kah Mistrunner",56.1,46.4,{29349,29345,29354,29348,29346}},
-		{0,5,19176,"Tauren Commoner",40.8,56.1,{29400,11446,11357,14036}},
 		{0,5,34654,"Bountiful Feast Hostess",29.9,65.1,{14065}},
 		{0,5,34714,"Mahara Goldwheat",31.0,69.8,{14060}},
 		{0,5,34678,"Dokin Farplain",30.9,63.7,{14043}},
@@ -1694,14 +1363,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,6,52651,"Engineer Palehoof",36.0,59.6,{29475,29477}},
 		{0,1,51639,"Kador Cloudsong",22.0,18.7,{27280}},
 		{0,1,4943,"Mosarn",54.0,80.7,{27292}},
-		--[[ Lunar Festival ]]--
-		{0,5,15891,"Lunar Festival Herald",38.4,63.4,{8875}},
-		{0,5,15895,"Lunar Festival Harbinger",71.1,28.2,{8867,8883}},
-		{0,5,15580,"Elder Ezra Wheathoof",73.0,23.4,{8678}},
-		--[[ Love is in the Air ]]--
-		{0,5,38295,"Junior Detective",44.2,55.9,{24805}},
-		{0,5,38044,"Kwee Q. Peddlefeet",44.0,52.6,{24614}},
-		{0,5,37675,"Public Relations Agent",43.6,52.9,{24635,24629,24636}},
 	},
 	[381] = { --[[ Darnassus ]]--
 		{0,3,4156,"Astaia",49.1,61.0,{29325,29359,29321,29323,29324}},
@@ -1714,23 +1375,11 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,42936,"Sentinel Cordressa Briarbow",43.9,76.1,{26383}},
 		{0,1,7740,"Gracina Spiritmight",44.9,80.9,{4493}},
 		{0,9,4138,"Jeen'ra Nightrunner",43.5,25.7,{27266}},
-		{0,5,19173,"Night Elf Commoner",44.7,52.9,{29074,11441,11356,14022,13484}},
 		{0,5,6735,"Innkeeper Saelienne",62.5,32.8,{8357}},
-		{0,5,0,"Candy Bucket",62.3,33.2,{12334}},
 		{0,1,48736,"Genn Greymane",48.1,14.4,{26385}},
 		{0,9,50690,"Tarelvir",37.7,80.4,{28263}}, --[[ Mage Only Quest ]]--
 		--[[ Darkmoon Faire ]]--
 		{0,1,54334,"Darkmoon Faire Mystic Mage",38.6,49.4,{7905}},
-		--[[ Lunar Festival ]]--
-		{0,5,15892,"Lunar Festival Emissary",45.2,52.2,{8872}},
-		{0,5,15895,"Lunar Festival Harbinger",38.6,30.3,{8867,8883}},
-		{0,5,15598,"Elder Bladeswift",39.2,31.9,{8718}},
-		--[[ Love is in the Air ]]--
-		{0,5,38293,"Junior Inspector",45.0,56.4,{24804}},
-		{0,5,38039,"Kwee Q. Peddlefeet",45.4,57.8,{24610}},
-		{0,5,37675,"Public Relations Agent",45.0,57.7,{24635,24629,24636}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Flame of Darnassus",65.7,46.1,{9332}},
 	},
 	[382] = { --[[ Undercity ]]--
 		{0,3,4573,"Armand Cromwell",80.7,31.3,{29317,29320,29361,29319,29322}},
@@ -1739,18 +1388,7 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,4551,"Michael Garrett",63.3,48.6,{6324}},
 		{0,1,0,"Warchief's Command Board",65.9,50.0,{28568,28571,28572,28688,28704,28574,28575,28577,28580,28581,28667,28677,28671,28705,28711,27721,27718,27722,28717,28557,29157}},
 		{0,1,10181,"Lady Sylvanas Windrunner",58.1,91.8,{9626,26867}},
-		{0,1,19178,"Forsaken Commoner",67.7,39.0,{13483}},
-		--[[ Lunar Festival ]]--
-		{0,5,15891,"Lunar Festival Herald",66.7,43.4,{8874}},
-		{0,5,15895,"Lunar Festival Harbinger",65.6,36.0,{8867,8883}},
-		{0,5,15564,"Elder Darkcore",66.6,38.2,{8648}},
-		--[[ Seasonal Commoners ]]--
-		{0,5,19178,"Forsaken Commoner",67.6,39.1,{29400,11446,11357,14036}},
-		{0,5,19178,"Forsaken Commoner",63.3,47.6,{29400,11446,11357,14036}},
-		--[[ Love is in the Air ]]--
-		{0,5,38295,"Junior Detective",64.3,37.5,{24805}},
-		{0,5,38045,"Kwee Q. Peddlefeet",66.5,38.6,{24613}},
-		{0,3,37675,"Public Relations Agent",65.9,38.7,{24635,24629,24636}},
+		{0,1,55382,"Darkmoon Faire Mystic Mage",43.9,35.4,{7926}},
 	},
 	[462] = { --[[ Eversong Woods ]]--
 		{0,1,15278,"Magistrix Erona",38.0,21.0,{8325,8326,8327,8328,8564,8329,9676,9392,8563,9393}},
@@ -1807,11 +1445,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,15398,"Larianna Riverwind",34.1,80.0,{8473,10166}},
 		{0,7,0,"Old Whitebark's Pendant",34.7,84.1,{8474}},
 		{0,1,16183,"Courier Dawnstrider",49.0,89.0,{9148}},
-		{0,5,34654,"Bountiful Feast Hostess",55.5,53.3,{14065}},
-		{0,5,19169,"Blood Elf Commoner",54.2,50.8,{29400,11446,11357,14036}},
-		{0,5,34654,"Bountiful Feast Hostess",46.6,47.4,{14065}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,25931,"Eversong Woods Flame Keeper",46.4,50.6,{11848}},
 	},
 	[463] = { --[[ Ghostlands ]]--
 		{0,1,0,"Dusty Journal",79.6,17.6,{9162}},
@@ -1847,11 +1480,8 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,16219,"Ranger Valanna",69.4,15.2,{9143,9146}},
 		{0,1,16203,"Ranger Vynna",72.0,32.6,{9161,9172}},		
 		{0,1,50081,"Wanted Poster: Kel'gash the Wicked",72.2,31.2,{9215}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,25933,"Ghostlands Flame Keeper",46.9,26.3,{11850}},
 	},
 	[464] = { --[[ Azuremyst Isle ]]--
-		{0,5,19171,"Draenei Commoner",31.6,46.1,{29074,11441,11356,14022,13484}},
 		{0,1,16475,"Megelon",84.2,43.0,{9279}},
 		{0,1,16477,"Proenitus",80.4,45.9,{9280,9369,9409,9371}},
 		{0,1,16502,"Zalduun",80.2,48.2,{9283},"Zalduun patrols the interior of the Crash Site."},
@@ -1886,8 +1516,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,17362,"Totem of Tikti",64.5,39.8,{9541}},
 		{0,1,17363,"Totem of Yor",63.1,67.9,{9542}},
 		{0,1,17364,"Totem of Vark",28.1,62.4,{9544}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",44.6,52.6,{11735}},
 	},
 	[465] = { --[[ Hellfire Peninsula ]]--
 		{0,1,19229,"Commander Duron",87.3,50.7,{10288}},
@@ -1961,9 +1589,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,16588,"Apothecary Antonivich",52.3,36.5,{10864}},
 		{0,1,19736,"Althen the Historian",61.7,81.8,{10230}},
 		{0,1,17006,"Elsaana",23.2,36.7,{9383}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",61.9,58.3,{11747}},
-		{0,1,25934,"Hellfire Peninsula Flame Keeper",57.1,42.0,{11851}},
 	},
 	[467] = { --[[ Zangarmarsh ]]--
 		{0,1,17841,"Ysiel Windsinger",78.4,62.0,{9716,9778,9718,9720,9724,9876}},
@@ -1995,9 +1620,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,18006,"Noraani",67.6,47.9,{9791,9780}},
 		{0,1,18005,"Haalrun",67.8,47.9,{9781,9790}},
 		{0,7,0,"Withered Basidium",82.1,38.5,{9827}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",68.6,52.2,{11758}},
-		{0,1,25947,"Zangarmarsh Flame Keeper",35.4,51.6,{11863}},
 	},
 	[471] = { --[[ The Exodar ]]--
 		{0,9,16761,"Baatun",38.9,84.8,{27265,28268}},
@@ -2005,25 +1627,8 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,17555,"Stephanos",54.5,36.3,{9606}},
 		{0,5,23010,"Wolgren Jinglepocket",55.8,48.8,{7023}},
 		{0,1,0,"Hero's Call Board",55.3,47.3,{28492,28559,27727,28531,28552,28543,28511,27726,28708,28528,28550,28539,28507,28503,28558,28525,27724,28544,29156,29391}},
-
 		--[[ Darkmoon Faire ]]--
 		{0,1,54334,"Darkmoon Faire Mystic Mage",51.3,42.0,{7905}},
-		--[[ Seasonal Commoners ]]--
-		{0,5,19171,"Draenei Commoner",68.0,61.9,{29074,11441,11356,14022,13484},"Draenei Commoner is located at the flight path outside The Exodar."},
-		{0,5,19171,"Draenei Commoner",61.0,28.5,{29074,11441,11356,14022,13484}},
-		{0,5,19171,"Draenei Commoner",60.2,48.9,{29074,11441,11356,14022,13484}},
-		{0,5,19171,"Draenei Commoner",51.9,42.5,{29074,11441,11356,14022,13484}},
-		--[[ Lunar Festival ]]--
-		{0,5,15895,"Lunar Festival Harbinger",74.0,57.5,{8867,8883}},
-		--[[ Love is in the Air ]]--
-		{0,5,38293,"Junior Inspector",76.0,57.5,{24804}},
-		{0,5,38040,"Kwee Q. Peddlefeet",73.7,57.0,{24611}},
-		{0,3,37675,"Public Relations Agent",73.7,56.1,{24635,24629,24636}},
-		--[[ Children's Week ]]--
-		{0,5,17538,"O'ros",58.0,41.4,{10968}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Flame of the Exodar",40.7,25.4,{11933}},
-
 	},
 	[473] = { --[[ Shadowmoon Valley ]]--
 		{0,1,0,"Wanted Poster",38.2,54.0,{10648}},
@@ -2060,9 +1665,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,23139,"Overlord Mor'ghor",66.2,85.7,{11086,11014,11094,11099,11108}},
 		{0,3,23140,"Taskmaster Varkule Dragonbreath",66.1,86.4,{11107,11092,11018,11017,11016,11015,11053,11084,11075}},
 		{0,1,23141,"Yarzill the Merc",66.0,86.5,{11020,11050,11049,11035,11019}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",39.7,54.4,{11752}},
-		{0,1,25938,"Shadowmoon Valley Flame Keeper",33.4,30.5,{11855}},
 	},
 	[475] = { --[[ Blade's Edge Mountains ]]--
 		{0,1,22488,"Sentinel Moonwhisper",32.2,91.1,{10927}},
@@ -2075,13 +1677,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,0,"Lashh'an Tome",34.3,77.4,{10556}},
 		{0,1,0,"Lashh'an Tome",35.7,79.0,{10556}},
 		{0,1,21277,"Vindicator Vuuleen",44.0,51.8,{10516,10518,10517}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",41.7,65.9,{11736}},
-		{0,1,25926,"Blade's Edge Flame Keeper",49.9,58.7,{11843}},
-	},
-	[476] = { --[[ Bloodmyst Isle ]]--
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",55.9,68.3,{11738}},
 	},
 	[477] = { --[[ Nagrand ]]--
 		{0,1,19035,"Wazat",61.7,67.1,{10109,10111}},
@@ -2115,9 +1710,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,18276,"Zerid",30.8,58.1,{9900,9925,9883}},
 		{0,1,18445,"Corki",29.5,26.0,{9955}},
 		{0,1,18471,"Gurgthock",42.8,20.7,{9962,9970,9972,9967,9977,9973}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",49.7,69.6,{11750}},
-		{0,1,25937,"Nagrand Flame Keeper",50.9,34.1,{11854}},
 	},
 	[478] = { --[[ Terokkar Forest ]]--
 		{0,3,25580,"Old Man Barlo",38.7,12.8,{11666,11665,11669,11668,11667}},
@@ -2168,32 +1760,77 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,3,23048,"Sky Sergeant Doryn",64.5,66.7,{11008}},
 		{0,1,23415,"Skyguard Handler Deesak",63.5,65.8,{11093}},
 		{0,1,21465,"David Wayne",77.6,38.7,{10664}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",54.3,55.4,{11754}},
-		{0,1,25942,"Terokkar Forest Flame Keeper",52.0,42.9,{11858}},
 	},
 	[479] = { --[[ Netherstorm ]]--
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",31.0,62.9,{11759}},
-		{0,1,25918,"Netherstorm Flame Keeper",32.1,68.3,{11835}},
+		{0,1,19569,"Netherologist Coppernickels",20.6,55.7,{10183}},
+		{0,1,19570,"Rocket-Chief Fuselage",32.7,65.0,{10186,10203,10225,10247}},
+		{0,1,19880,"Nether-Stalker Khay'ji",32.4,64.2,{10265,10262,10205,10308,10266}},
+		{0,1,0,"Wanted Poster",32.1,64.7,{10261,10701}},
+		{0,1,19217,"Ravandwyr",31.4,66.2,{10173,10300,10174}},
+		{0,1,19617,"Boots",32.3,63.9,{10342,10199}},
+		{0,1,19645,"Papa Wheeler",33.0,64.7,{10206,10232,10333}},
+		{0,1,19709,"Chief Engineer Trep",32.5,66.8,{10224,10226}},
+		{0,1,19644,"Image of Archmage Vargoth",31.4,66.4,{10188},"Archmage Vargoth appears when you use Archmage Vargoth's Staff."},
+		{0,1,19644,"Image of Archmage Vargoth",52.0,82.5,{10192},"Archmage Vargoth appears when you use Archmage Vargoth's Staff."},
+		{0,1,19644,"Image of Archmage Vargoth",58.0,89.0,{10301},"Archmage Vargoth appears when you use Archmage Vargoth's Staff."},
+		{0,1,19644,"Image of Archmage Vargoth",56.3,77.6,{10209},"Archmage Vargoth appears when you use Archmage Vargoth's Staff."},
+		{0,1,19644,"Image of Archmage Vargoth",57.2,66.9,{10176},"Archmage Vargoth appears when you use Archmage Vargoth's Staff."},
+		{0,1,19634,"Lead Sapper Blastfizzle",34.2,68.1,{10221}},
+		{0,7,0,"Belmara's Tome",58.0,88.6,{10305},"Drops from Abjurist Belmara."},
+		{0,1,19488,"Custodian Dieworth",57.5,86.3,{10185,10222,10184,10312,10316,10223,10319,10320}},
+		{0,1,19489,"Lieutenant-Sorcerer Morran",57.6,86.3,{10233,10343,10239,10240}},
+		{0,1,20463,"Apprentice Andrethan",57.7,85.2,{10331,10332}},
+		{0,1,20464,"Thadell",57.7,84.9,{10334}},
+		{0,7,0,"Luminrath's Mantle",60.2,84.9,{10306},"Drops from Conjuer Luminrath."},
+		{0,7,0,"Cohlien's Cap",59.6,86.4,{10307},"Drops from Cohlien Frostweaver."},
+		{0,7,0,"Dathric's Blade",60.4,88.0,{10182},"Drops from Battle-Mage Dathric."},
+		{0,1,19481,"Archmage Vargoth",58.3,86.4,{10256,10257}},
+		{0,1,20415,"Bessy",59.1,78.8,{10337}},
+		{0,1,0,"Necromantic Focus",62.3,28.0,{10314}},
+		{0,1,20066,"Gahruj",46.7,56.9,{10267,10311,10268}},
+		{0,1,20810,"Mehrdad",46.4,56.4,{10417,10348,10418,10423}},
+		{0,1,20921,"Shauly Pore",46.5,56.0,{10433,10434}},
+		{0,1,20281,"Drijya",48.1,63.5,{10310}},
+		{0,1,19728,"Mama Wheeler",46.6,56.5,{10234,10235,10237}},
+		{0,1,19832,"Doctor Vomisa, Ph.T.",37.3,63.7,{10248,10249}},
+		{0,1,19690,"N. D. Meancamp",26.8,77.0,{10309}},
+		{0,1,19578,"Bot-Specialist Alley",31.5,56.6,{10190}},
+		{0,1,19589,"Maxx A. Million Mk. V",31.6,56.6,{10191}},
+		{0,1,20811,"Ghabar",43.5,35.1,{10424,10430}},
+		{0,1,20067,"Zuben Elgenubi",44.1,36.0,{10290,10293}},
+		{0,1,20470,"Zephyrion",44.7,34.9,{10335}},
+		{0,1,20471,"Nether-Stalker Nauthis",44.7,34.9,{10336,10855,10856,10857}},
+		{0,1,20205,"Audi the Needle",44.7,36.7,{10435}},
+		{0,1,20084,"Image of Nexus-Prince Haramad",45.9,36.0,{10269,10280}},
+		{0,1,22293,"Inactive Fel Reaver",37.9,25.7,{10850}},
+		{0,1,22293,"Inactive Fel Reaver",36.7,25.1,{10850}},
+		{0,1,22293,"Inactive Fel Reaver",35.9,28.8,{10850}},
+		{0,1,20913,"Tashar",44.7,14.6,{10436,10440}},
+		{0,1,20092,"Dealer Hazzin",58.3,31.3,{10275}},
+		{0,1,20071,"Wind Trader Marid",58.3,31.7,{10270}},
+		{0,1,20449,"Researcher Navuud",59.2,32.6,{10411}},
+		{0,1,20448,"Commander Ameer",59.5,32.4,{10339,10970,10971,10972}},
+		{0,1,20450,"Flesh Handler Viridius",59.7,31.9,{10422},"Viridius patrol's Protectorate Watch Post."},
+		{0,1,20907,"Professor Dabiri",60.1,31.7,{10437,10438,10439}},
+		{0,1,20482,"Image of Commander Ameer",56.8,38.7,{10384,10385,10405,10406,10408}},
+		{0,1,20552,"Agent Ya-six",60.9,41.5,{10353},"Within Access Shaft Zeon."},
+		{0,1,20518,"Image of Wind Trader Marid",71.1,39.0,{10271}},
+		{0,1,20154,"Shrouded Figure",70.9,38.8,{10281}},
+		{0,1,20110,"Tyri",71.2,35.1,{10272,10273,10274}},
+		{0,1,20551,"Agent Araxes",59.4,45.0,{10345}},
+		{0,1,20763,"Captured Protectorate Vanguard",57.1,37.7,{10425}},
+		{0,1,20871,"Aurine Moonblaze",42.3,32.6,{10426,10427,10429}},
+		{0,1,20112,"Wind Trader Tuluman",34.6,37.9,{10276,10317}},
+		{0,1,20341,"Nether-Stalker Oazul",34.5,37.8,{10315}},
+		{0,1,20393,"Foreman Sundown",26.4,42.3,{10318}},
+		{0,1,22479,"Sab'aoth",66.4,67.3,{10924}},
 	},
 	[480] = { --[[ Silvermoon City ]]--
 		{0,1,16191,"Sathren Azuredawn",53.9,71.0,{9134}},
 		{0,1,0,"Warchief's Command Board",62.2,60.4,{28560,28571,28572,28688,28704,28574,28575,28577,28580,28667,28677,27721}},
 		{0,9,16658,"Aldrae",53.1,26.7,{27335}},
 		{0,1,16802,"Lor'themar Theron ",53.8,20.2,{9621}},
-		{0,5,19169,"Blood Elf Commoner",89.6,49.1,{29400,11446,11357,14036}},
-		{0,5,19169,"Blood Elf Commoner",90.2,57.4,{29400,11446,11357,14036}},
-		{0,5,19169,"Blood Elf Commoner",78.0,57.6,{29400,11446,11357,14036}},
-		{0,5,19169,"Blood Elf Commoner",59.1,60.8,{29400,11446,11357,14036}},
-		{0,5,19169,"Blood Elf Commoner",62.5,73.8,{29400,11446,11357,14036}},
 		{0,6,16667,"Danwe",77.0,41.1,{29475,29477}},
-		--[[ Lunar Festival ]]--
-		{0,5,15895,"Lunar Festival Harbinger",73.1,82.6,{8867,8883}},
-		--[[ Love is in the Air ]]--
-		{0,5,38295,"Junior Detective",64.4,70.3,{24805}},
-		{0,3,38043,"Kwee Q. Peddlefeet",64.4,66.5,{24615}},
-		{0,3,37675,"Public Relations Agent",64.5,67.3,{24635,24629,24636}},
 	},
 	[481] = { --[[ Shattrath City ]]--
 		{0,1,19684,"Haggard War Veteran",73.5,54.5,{10210}},
@@ -2228,40 +1865,10 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,21411,"Tobias the Filth Gorger",63.9,70.0,{10550}},
 		{0,1,23273,"Arcanist Raestan",60.8,63.5,{11039}},
 		{0,1,18531,"Magistrix Fyalenn",45.2,81.4,{10412,10656,10659,10658}},
-		{0,1,18530,"Voren'thal the Seer",42.8,91.7,{10416}},
+		{0,1,18530,"Voren'thal the Seer",42.8,91.7,{10416,10419}},
 		{0,3,24393,"The Rokk",61.7,15.5,{11380,11377,11381,11379}},
-		{0,5,20102,"Goblin Commoner",54.9,38.6,{14022}},
-		{0,5,20102,"Goblin Commoner",58.1,46.2,{14022}},
-		{0,5,20102,"Goblin Commoner",53.1,51.0,{14022}},
-		{0,5,20102,"Goblin Commoner",59.0,58.0,{14022}},
-		{0,5,20102,"Goblin Commoner",55.2,80.6,{14022}},
 		{0,1,18594,"Dathris Sunstriker",54.6,80.7,{11482}},
-		{0,5,20102,"Goblin Commoner",28.0,47.0,{14022}},
-		{0,5,20102,"Goblin Commoner",49.1,31.5,{14022}},
-		--[[ Children's Week ]]--
-		{0,5,22819,"Orphan Matron Mercy",75.1,47.9,{10942,10943}},
-		{0,5,22818,"Draenei Orphan",75.1,47.9,{10950,10952,10954,10956,10962,10966},"Appears when you blow the Draenei Orphan Whistle."},
-		{0,5,22817,"Blood Elf Orphan",75.1,47.9,{10945,10951,10953,10963,10967,11975},"Appears when you blow the Blood Elf Orphan Whistle."},
-	},
-	[485] = { --[[ Northrend ]]--
-		{0,5,30348,"Elder Sardis",22.8,69.4,{13012}},
-		{0,5,30364,"Elder Arp",22.3,62.3,{13033}},
-		{0,5,30371,"Elder Pamuya",17.6,64.2,{13029}},
-		{0,5,30360,"Elder Northal",14.6,59.3,{13016}},
-		{0,5,30362,"Elder Sandrene",25.1,43.5,{13018}},
-		{0,5,30365,"Elder Wanikaya",28.5,40.0,{13024}},
-		{0,5,30368,"Elder Bluewolf",35.8,43.5,{13026}},
-		{0,5,30370,"Elder Graymane",58.0,37.3,{13028}},
-		{0,5,30359,"Elder Fargal",53.1,32.9,{13015}},
-		{0,5,30375,"Elder Stonebeard",54.1,18.4,{13020}},
-		{0,5,30374,"Elder Muraco",67.4,23.9,{13032}},
-		{0,5,30369,"Elder Tauros",71.9,40.5,{13027}},
-		{0,5,30357,"Elder Beldak",76.1,51.1,{13013}},
-		{0,5,30367,"Elder Lunaro",82.0,53.9,{13025}},
-		{0,5,30372,"Elder Whurain",77.2,56.8,{13030}},
-		{0,5,30363,"Elder Thoim",46.9,67.1,{13019}},
-		{0,5,30358,"Elder Morthie",40.9,60.1,{13014}},
-		{0,5,30373,"Elder Skywarden",42.6,57.7,{13031}},
+		{0,1,18481,"A'dal",54.0,44.7,{10704}},
 	},
 	[486] = { --[[ Borean Tundra ]]--
 		{0,1,25307,"Recruitment Officer Blythe",57.8,67.6,{11672}},
@@ -2335,22 +1942,40 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,25838,"Hierophant Liandra",57.8,55.1,{11871,11872}},
 		{0,1,25862,"Khu'nok the Behemoth",59.5,30.4,{11879}},
 		{0,1,25589,"Bonker Togglevolt",55.6,12.6,{11673}},
-		--[[ Lunar Festival ]]--
-		{0,5,30348,"Elder Sardis",59.1,65.6,{13012}},
-		{0,5,30364,"Elder Arp",57.4,43.7,{13033}},
-		{0,5,30371,"Elder Pamuya",42.9,49.6,{13029}},
-		{0,5,30360,"Elder Northal",33.8,34.4,{13016}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",55.1,20.2,{13440}},
-		{0,1,32809,"Borean Tundra Flame Keeper",51.1,11.5,{13493}},
+		
+		{0,1,25273,"Warsong Recruitment Officer",41.6,54.0,{11585}},
+		{0,1,25256,"High Overlord Saurfang",41.4,53.7,{11596}},
+		{0,1,29155,"Magistrix Kaelana",41.6,53.6,{12791}},
+		{0,1,26972,"Orn Tenderhoof",42.0,54.1,{13090}},
+		{0,1,25279,"Overlord Razgor",43.2,55.0,{11598,11602,11634}},
+		{0,1,25327,"Quartermaster Holgoth",43.3,55.4,{11606,11608}},
+		{0,1,25280,"Foreman Mortuus",42.1,56.2,{11611}},
+		{0,1,25394,"Shadowstalker Barthus",43.2,55.1,{11614}},
+		{0,1,25247,"Endorah",41.7,54.7,{11574}},
+		{0,1,25978,"Ambassador Talonga",41.7,54.6,{11888}},
+		{0,1,25272,"Sauranok the Mystic",41.6,53.3,{12486},"Sauranok patrols the main war room."},
+		{0,1,25328,"Shadowstalker Luther",40.1,52.1,{11615,11616}},
+		{0,1,25288,"Turida Coldwind",40.4,51.4,{29609}},
+		{0,1,25237,"Garrosh Hellscream",41.3,53.6,{11618,11709,11916}},
+		{0,1,25289,"Wind Master To'bor",42.4,55.1,{11636}},
+		{0,1,25329,"Gorge the Corpsegrinder",32.2,54.1,{11642,11652}},
+		{0,1,25476,"Waltor of Pal'ea",14.1,65.8,{11655,11660,11656,11661,11662}},
+		{0,1,25475,"Mobu",32.0,54.3,{11643,11644,11651}},
+		{0,1,25504,"Mootoo the Younger",31.9,52.3,{11664}},
+		{0,1,25437,"Shadowstalker Ickoris",38.1,52.6,{11686,11703}},
+		{0,1,25438,"Shadowstalker Canarius",37.9,52.6,{11676}},
+		{0,1,25607,"Farmer Torp",37.9,52.3,{11688,11690}},
+		{0,1,25729,"Shadowstalker Getry",34.6,46.4,{11705}},
+		{0,1,25379,"Warden Nork Bloodfrenzy",43.7,54.4,{11711}},
+		{0,1,25440,"Scout Tungok",53.3,52.3,{11714}},
+		{0,1,25381,"Bloodmage Laurith",52.1,52.5,{11716,11717,11719,11720}},
+		{0,1,25380,"Primal Mighthorn",52.2,52.8,{11721,11722}},
+		{0,1,0,"Massive Glowing Egg",48.5,59.0,{11724}},
 	},
 	[488] = { --[[ Dragonblight ]]--
 		{0,1,26917,"Alexstrasza the Life-Binder",59.8,54.7,{12500}},
 		{0,1,27856,"Chromie",60.0,54.5,{13343}},
 		{0,1,26194,"Elder Ko'nani",48.0,74.9,{11958,11959}},
-		{0,5,30358,"Elder Morthie",29.7,55.9,{13014}},
-		{0,5,30363,"Elder Thoim",48.8,78.2,{13019}},
-		{0,5,30373,"Elder Skywarden",35.1,48.3,{13031}},
 		{0,1,26440,"Emissary Skyhaven",48.1,75.0,{11995}},
 		{0,1,26673,"Image of Archmage Modera",29.0,55.5,{12000}},
 		{0,1,27990,"Krasus",59.8,54.7,{26013}},
@@ -2360,21 +1985,41 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,26595,"Toalu'u the Mystic",49.1,75.7,{12028,12030}},
 		{0,3,26228,"Trapper Mau'i",48.3,74.3,{11960}},
 		{0,1,26245,"Tua'kea",48.0,76.1,{12009}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",75.0,43.8,{13443}},
-		{0,1,32811,"Dragonblight Flame Keeper",38.3,48.5,{13495}},
+		{0,1,27172,"Chief Plaguebringer Middleton",77.7,62.8,{12188,12200,12218,12221}},
+		{0,1,27248,"Apothecary Vicky Levine",77.0,62.9,{12206,12211,12240,12243}},
+		{0,1,0,"Wanted Poster",77.0,62.8,{12205}},
+		{0,1,29162,"Magister Tyr'ganal",76.8,63.2,{12791}},
+		{0,1,27243,"High Executor Wroth",76.8,63.3,{12273,12487,12252,12285}},
+		{0,1,27267,"Quartermaster Bartlett",76.0,63.3,{12303,12209}},
+		{0,1,27320,"Deathguard Molder",77.2,62.2,{12230,12232},"Molder patrols Venomspite."},
+		{0,1,27337,"Spy Mistress Repine",76.7,63.0,{12245,12234,12239}},
+		{0,1,27028,"Hansel Bauer",75.9,61.9,{12214}},
+		{0,1,27350,"Agent Skully",73.6,73.5,{12254,12260,12274,12283}},
+		{0,1,26415,"Senior Sergeant Juktok",36.6,46.6,{11979,12488}},
+		{0,1,0,"Wanted!",37.7,46.6,{12089,12090,12091}},
+		{0,1,26471,"Image of Archmage Aethas Sunreaver",38.1,46.2,{11999,12005,12061}},
+		{0,1,26501,"Ethenial Moonshadow",24.2,60.1,{12006,12013}},
+		{0,1,26181,"Emissary Brighthoof",13.8,48.2,{11978,11983,12008}},
+		{0,1,26180,"Blood Guard Roh'kill",14.2,49.8,{11980}},
+		{0,1,26618,"Captain Gort",35.8,48.4,{12095,12056,12115}},
+		{0,1,26379,"Overlord Agmar",38.2,46.3,{12034,12140}},
+		{0,1,26415,"Senior Sergeant Juktok",36.6,46.6,{12036,12053,12071}},
+		{0,1,26564,"Borus Ironbender",36.6,47.2,{12039,12048}},
+		{0,1,26504,"Soar Hawkfury",37.1,48.5,{12100,12101}},
+		{0,1,26653,"Kilix the Unraveler",26.2,50.8,{12040,12041}},
+		{0,1,26652,"Greatmother Icemist",36.2,45.2,{12063},"Greatmother Icemist patrols Agmar's Hammer."},
+		{0,1,26505,"Doctor Sintar Malefious",36.1,48.9,{12102}},
+		{0,1,26733,"Banthok Icemist",22.6,41.7,{12064,12069}},
+		{0,7,0,"Flesh-Bound Tome",23.9,39.1,{12057}},
+		{0,7,0,"Goramosh's Strange Device",19.5,58.2,{12059}},
+		{0,1,26581,"Koltira Deathweaver",36.4,46.4,{12125,12126,12127},"Koltira patrols Agmar's Hammer."},
+		{0,1,26574,"Valnok Windrager",37.2,45.7,{12072}},
+		{0,7,0,"Torturer's Rod",69.8,72.0,{12271}},
 	},
 	[490] = { --[[ Grizzly Hills ]]--
 		{0,3,27468,"Sergeant Hartsman",39.4,43.9,{12289}},
 		{0,3,27371,"Synipus",39.5,43.6,{12244}},
 		{0,3,27416,"Pipthwack",39.6,43.4,{12268}},
-		--[[ Lunar Festival ]]--
-		{0,5,30357,"Elder Beldak",60.6,27.7,{13013}},
-		{0,5,30367,"Elder Lunaro",80.5,37.1,{13025}},
-		{0,5,30372,"Elder Whurain",64.2,47.0,{13030}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",34.1,60.6,{13445}},
-		{0,1,32813,"Grizzly Hills Flame Keeper",19.3,61.2,{13497}},
 	},
 	[491] = { --[[ Howling Fjord ]]--
 		{0,1,0,"Dragonskin Scroll",75.9,19.7,{11254}},
@@ -2403,7 +2048,8 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,24037,"Captain Harker",84.7,36.5,{11230,11232}},
 		{0,1,24032,"Celea Frozenmane",49.6,11.6,{11267}},
 		{0,1,23773,"Chef Kettleblack",31.2,40.8,{11155}},
-		{0,1,24251,"Chief Plaguebringer Harris",53.6,66.4,{11305,11306,11307,11308}},
+		{0,1,24251,"Chief Plaguebringer Harris",53.6,66.4,{11305,11306,11307,11308,12181}},
+		{0,1,24155,"Tobias Sarkhoff",52.0,67.4,{12182}},
 		{0,1,24129,"Chieftain Ashtotem",48.1,10.7,{11256,11263,11264}},
 		{0,1,24056,"Christopher Sloan",60.3,18.7,{11329,11410}},
 		{0,1,24151,"Daegarn",55.7,57.4,{11300},"Inside Utgarde Catacombs."},
@@ -2471,9 +2117,7 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,24130,"Winterhoof Brave",43.6,26.2,{11257,11258,11259,11261},"Appears when you use Winterhoof Emblem."},
 		{0,1,24145,"Zedd",56.6,52.4,{11276}},
 		{0,1,24525,"Zeh'gehn",35.6,80.6,{11459,11479}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",57.7,15.7,{13444}},
-		{0,1,32812,"Howling Fjord Flame Keeper",48.6,13.2,{13496}},
+		{0,1,26953,"Thomas Kolichio",78.6,29.5,{13089}},
 },
 	[493] = { --[[ Sholazar Basin ]]--
 		{0,1,0,"Timeworn Coffer",80.4,55.8,{12691}},
@@ -2483,8 +2127,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,28464,"Cultist Corpse",65.1,60.3,{12608}},
 		{0,1,28032,"Debaar",27.2,59.9,{12560,12569}},
 		{0,1,28376,"Dorian Drakestalker",42.3,28.7,{12603,12605,12614}},
-		{0,5,30362,"Elder Sandrene",49.8,63.6,{13018}},
-		{0,5,30365,"Elder Wanikaya",63.8,49.0,{13024}},
 		{0,1,29157,"Grimbooze Thunderbrew",26.8,60.1,{12645}},
 		{0,1,27986,"Hemet Nesingwary",27.1,58.6,{12556,12595}},
 		{0,3,28667,"Jaloot",72.5,57.5,{12689,12695}},
@@ -2492,21 +2134,12 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,28266,"Professor Calvert",25.4,58.5,{12696}},
 		{0,1,28568,"Tamara Wobblesprocket",50.5,62.1,{12654}},
 		{0,1,28374,"Zootfizzle",42.1,28.9,{12607,12658}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",47.8,66.3,{13442}},
-		{0,1,32810,"Sholazar Basin Flame Keeper",47.1,61.6,{13494}},
 	},
 	[495] = { --[[ The Storm Peaks ]]--
 		{0,1,0,"Harpoon Crate",24.1,61.7,{12953}},
 		{0,1,29839,"Astrid Bjornrittar",49.7,71.8,{12900,12983,12989,12996,12997,13061}},
-		{0,5,34653,"Bountiful Table Hostess",40.3,85.4,{14064}},
 		{0,1,29592,"Brijana",53.1,65.7,{12851,12856,13063}},
-		{0,5,30359,"Elder Fargal",28.9,73.7,{13015}},
-		{0,5,30370,"Elder Graymane",41.2,84.7,{13028}},
-		{0,5,30374,"Elder Muraco",64.6,51.3,{13032}},
-		{0,5,30375,"Elder Stonebeard",31.3,37.6,{13020}},
 		{0,1,29432,"Gino",50.4,81.6,{12823,12824}},
-		{0,5,20102,"Goblin Commoner",40.8,84.5,{14022}},
 		{0,1,29473,"Gretchen Fizzlespark",41.1,86.1,{12846}},
 		{0,1,29796,"Gretta the Arbiter",50.9,65.6,{12886}},
 		{0,1,29997,"Iva the Vengeful",48.3,72.1,{12942,12968}},
@@ -2518,16 +2151,9 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,3,29428,"Ricket",40.8,85.4,{12833}},
 		{0,1,29445,"Thorim",33.4,58.0,{12915,13064}},
 		{0,1,30041,"Thyra Kvinnshal",48.4,72.2,{12925}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",41.4,86.9,{13446}},
-		{0,1,32814,"Storm Peaks Flame Keeper",40.3,85.3,{13498}},
 	},
 	[496] = { --[[ Zul'drak ]]--
-		{0,5,30369,"Elder Tauros",58.9,56.0,{13027}},
 		{0,1,28401,"Har'koa",60.3,57.7,{29833}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",40.6,61.0,{13449}},
-		{0,1,32816,"Zul'Drak Flame Keeper",43.4,71.7,{13500}},
 	},
 	[499] = {
 		{0,3,24967,"Captain Theris Dawnhearth",47.4,30.5,{29682,11523}},
@@ -2540,9 +2166,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,3,25133,"Astromancer Darnarian",47.5,35.4,{11547}},
 		{0,3,25057,"Battlemage Arynna",47.5,35.1,{11533}},
 		{0,3,25061,"Harbinger Inuuro",47.6,35.1,{11537}},
-	},
-	[501] = {
-		{0,5,30368,"Elder Bluewolf",49.0,13.9,{13026}},
 	},
 	[502] = { --[[ Plaguelands: The Scarlet Enclave ]]--
 		{0,1,0,"The Lich King",51.3,35.2,{12593,12641,12657}},
@@ -2576,8 +2199,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{1,3,28705,"Katherine Lee",40.7,65.5,{13103,13101,13100,13107,13102}},
 		{1,1,16128,"Rhonin",30.6,48.6,{13158,26012,29829}},
 		{1,1,31080,"Warden Alturas",61.3,63.7,{13159}},
-		{1,5,18927,"Human Commoner",46.3,72.7,{14022}},
-		{1,5,18927,"Human Commoner",44.1,58.9,{14022}},
 		{1,1,28701,"Timothy Jones",40.7,35.3,{12958,12959,12960,12961,12962,12963,13041}},
 		{1,1,31081,"Officer Van Rossem",67.7,47.2,{13418}},
 		{1,1,28160,"Archmage Pentarus",68.6,42.0,{12521}},
@@ -2588,24 +2209,19 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{2,1,30137,"Shifty Vickers",45.4,40.5,{12974},"Shifty Vickers patrols the Circle of Wills."},
 		{1,1,31085,"Sky-Reaver Klum",69.4,40.6,{13419}},
 		{1,1,29156,"Archmage Celindra",56.3,46.7,{12790}},
-		{1,1,18927,"Human Commoner",44.2,58.8,{13484}},
-		--[[ Chilren's Week ]]--
-		{1,5,34365,"Orphan Matron Aria",49.4,63.3,{13927,13926}},
-		{1,5,33532,"Wolvar Orphan",49.4,63.3,{13930,13934,13951,13955,13957,13938,13960},"Appears when you blow the Wolvar Orphan Whistle."},
-		{1,1,33533,"Oracle Orphan",49.4,63.3,{13929,13933,13950,13954,13956,13937,13959},"Appears when you blow the Oracle Orphan Whistle."},
 		--[[ Darkmoon Faire ]]--
 		{1,1,55382,"Darkmoon Faire Mystic Mage",50.3,50.4,{7926}},
 	},
 	[510] = { --[[ Crystalsong Forest ]]--
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",77.7,75.0,{13447}},
-		{0,1,32815,"Crystalsong Forest Flame Keeper",80.0,53.2,{13499}},
 	},
 	[520] = { --[[ The Nexus ]]--
 		{1,1,55537,"Image of Warmage Kaitlyn",36.2,83.0,{13094,13095}},
 		{1,1,55535,"Image of Warmage Kaitlyn",35.1,81.4,{11905}},
 		{1,1,55536,"Image of Warmage Kaitlyn",37.3,81.4,{11911}},
 		{1,1,55531,"Warmage Kaitlyn",36.2,81.4,{11973}},
+	},
+	[522] = {
+		{1,1,55658,"Seer Ixit",87.1,72.6,{29825,29826,13187}},
 	},
 	[523] = { --[[ Utgarde Keep ]]--
 		{1,1,24137,"Dark Ranger Marrah",68.1,67.7,{11262,13206}},
@@ -2618,6 +2234,9 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 	[528] = { --[[ The Oculus ]]--
 		{1,1,0,nil,62.6,44.8,{13124}},
 		{1,1,27658,"Belgaristrasz",50.1,81.2,{13126}},
+	},
+	[533] = {
+		{3,1,55564,"Reclaimer A'zak",15.0,83.7,{29807,29808,29811}},
 	},
 	[536] = {
 		{1,1,30658,"Lieutenant Sinclari",47.7,89.7,{29830}},
@@ -2695,9 +2314,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,3,52986,"Dorda'en Nightweaver",27.5,62.5,{29248,29246,29247}},
 		{0,3,52669,"Matoclaw",27.2,62.6,{29123,29126,29126,29145,29163}},
 		{0,3,52671,"Mylune",27.1,62.0,{29101,29161,29122,29162}},
-		{0,5,0,"Candy Bucket",63.0,24.1,{28999}},
-		{0,5,0,"Candy Bucket",42.7,45.7,{29001}},
-		{0,5,0,"Candy Bucket",18.6,37.3,{29000}},
 		{0,1,40289,"Ysera",62.0,24.9,{25317,25584,25597,29437}},
 		{0,1,39925,"Anren Shadowseeker",64.0,22.7,{25460}},
 		{0,1,40278,"Tholo Whitehoof",64.1,22.5,{25370,25574}},
@@ -2766,10 +2382,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,40773,"Cenarius",71.9,74.1,{25554,25555,25551}},
 		{0,1,0,"Pure Twilight Egg",59.1,83.9,{25644}},
 		{0,1,40816,"Aronus",72.2,73.9,{25552,25553}},
-		{0,5,55224,"Elder Windsong",26.7,62.1,{29739}},
-		{0,5,55227,"Elder Evershade",62.5,22.8,{29740}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,51682,"Hyjal Flame Guardian",62.8,22.7,{29030}},
 	},
 	[607] = { --[[ Southern Barrens ]]--
 		{0,1,38378,"Commander Walpole",29.9,9.0,{24862,24863}},
@@ -2830,9 +2442,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,39697,"Nato Raintree",49.2,82.3,{25292}},
 		{1,1,0,"Roadway Plans",52.6,75.8,{24518}}, --[[ drop from the southern Barrens ]]--
 		{0,1,0,"Carved Boar Idol",43.5,82.3,{24606}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",48.2,72.4,{28913}},
-		{0,1,51587,"Southern Barrens Flame Keeper",40.9,67.8,{28927}},
 	},
 	[610] = {
 		{0,1,36915,"Erunak Stonespeaker",45.2,23.4,{24432,25281,25405}},
@@ -2962,14 +2571,8 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,42077,"Lady Naz'jar",33.1,75.9,{25629}},
 		{0,1,42411,"Captain Taylor",56.9,75.9,{26219},"At the surface of the ocean, aboard Voldin's Hold"},
 		{0,1,45462,"Toshe Chaosrender",57.3,75.6,{27443},"At the surface of the ocean, aboard Voldin's Hold"},
-		--[[ Lunar Festival ]]--
-		{0,5,55228,"Elder Moonlance",57.3,86.2,{29738}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,51697,"Vashj'ir Flame Guardian",49.3,42.0,{29031}},
 	},
 	[640] = { --[[ Deepholm ]]--
-		{0,5,0,"Candy Bucket",51.2,50.0,{29019}},
-		{0,5,0,"Candy Bucket",47.5,51.7,{29020}},
 		{0,1,42573,"Earthcaller Yevaa",49.5,53.3,{26409,26484,27952}},
 		{0,1,44799,"Explorer Mowi",47.3,51.4,{27004,27040,27058,28292}},
 		{0,1,42574,"Initiate Goldmine",46.5,57.3,{26410,26411,26413,27135}},
@@ -3076,13 +2679,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,2487,"Fleet Master Seahorn",41.5,72.9,{26700,26699}}, --[[ Phased ]]--
 		{0,1,52234,"Bwemba",55.2,42.2,{29150,29151}},
 		{0,1,52646,"Colin Swifthammer",55.3,42.0,{29152}},
-		{0,5,20102,"Goblin Commoner",40.5,68.3,{29074,29400,11446,11356,11357,14022,14036,13484}},
-		{0,5,20102,"Goblin Commoner",40.5,73.1,{29074,29400,11446,11356,11357,14022,14036,13484}},
-		{0,5,20102,"Goblin Commoner",41.7,74.2,{29074,29400,11446,11356,11357,14022,14036,13484}},
-		{0,5,15576,"Elder Winterhoof",40.0,72.5,{8674}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",51.8,67.3,{11761}},
-		{0,1,25920,"Cape of Stranglethorn Flame Keeper",50.4,70.4,{11837}},
 	},
 	[678] = { 
 		{0,1,36332,"King Genn Greymane",36.4,61.3,{14375}},
@@ -3115,17 +2711,14 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,43727,"Lorna Crowley",41.6,36.5,{26706}},
 	},
 	[680] = { --[[ Ragefire Chasm ]]--
-		{1,1,44217,"Stone Guard Kurjack",68.7,11.9,{26858,26856}},
-		{1,1,44216,"Bovaal Whitehorn",70.5,11.4,{26862}},
+		{1,1,61716,"Invoker Xorenth",67.7,11.5,{30969,30983}},
+		{1,1,61724,"Commander Bagran",68.2,12.2,{30982,30984}},
+		
 	},
 	[684] = { --[[ Ruins of Gilneas ]]--
 		{0,1,45312,"Deathstalker Commander Belmont",57.5,18.9,{27342}},
-		{0,1,45315,"Forward Commander Onslaught",57.5,18.2,{27333,27345,27349}},
-		{0,1,0,"Forward Commander Onslaught |cff69ccf0<Remote>|r",52.7,33.2,{27350}},
+		{0,1,45315,"Forward Commander Onslaught",57.5,18.2,{27333,27345,27349,27350,27364,27401,27405}},
 		{0,1,45389,"Captain Rutsak",65.6,34.1,{27360}},
-		{0,1,0,"Forward Commander Onslaught |cff69ccf0<Remote>|r",65.6,34.1,{27364},"Automatically picked up when you start Vengeance for our Soldiers."},
-		{0,1,0,"Forward Commander Onslaught |cff69ccf0<Remote>|r",58.9,47.5,{27401}},
-		{0,1,0,"Forward Commander Onslaught |cff69ccf0<Remote>|r",54.7,44.5,{27405}},
 		{0,1,45312,"Deathstalker Commander Belmont",73.0,30.1,{27406}},
 		{0,1,0,nil,73.7,32.3,{27423},"Quest is offered as you leave Emberstone Village during the quest A Man Named Godfrey."},
 		{0,1,45312,"Deathstalker Commander Belmont",79.7,75.8,{27438}},
@@ -3141,11 +2734,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 	},
 	[687] = {
 		{1,1,46077,"Lord Itharius",50.0,17.2,{27604,27605,27633}},
-		
-
-
-
-		{1,5,15593,"Elder Starsong",62.9,34.5,{8713}},
 	},
 	[688] = { --[[ Blackfathom Deeps ]]--
 		{1,1,33261,"Sentinel-trainee Issara",49.1,11.7,{26885}},
@@ -3182,11 +2770,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{1,1,48413,"Broken Trap",26.5,57.8,{27118}},
 	},
 	[700] = { --[[ Twilight Highlands ]]--
-		{0,5,0,"Candy Bucket",49.6,30.4,{28978}},
-		{0,5,0,"Candy Bucket",60.4,58.2,{28977}},
-		{0,5,0,"Candy Bucket",43.5,57.3,{28979}},
-		{0,5,0,"Candy Bucket",79.5,78.5,{28980}},
-		{0,5,0,"Candy Bucket",78.9,77.8,{28980}},
 		{0,1,49022,"Lieutenant Fawkes",81.0,79.4,{28596}},
 		{0,1,49252,"Fargo Flintlocke",81.0,79.3,{28597}},
 		{0,1,49020,"Fargo Flintlocke",78.8,76.8,{28598,28599}},
@@ -3220,12 +2803,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,48014,"Nivvet Channelock",49.1,29.3,{28211,28212,28215}},
 		{0,1,0,"Eye of Twilight",57.9,33.5,{28242,28243}},
 		{0,1,46935,"Gurgthock",50.7,58.3,{27866}},
-		--[[ Lunar Festival ]]--
-		{0,5,55219,"Elder Firebeard",50.9,70.4,{29737}},
-		{0,5,55218,"Elder Darkfeather",51.9,33.1,{29736}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",47.2,28.3,{28943}},
-		{0,1,51651,"Twilight Highlands Flame Keeper",53.1,46.2,{28946}},
 	},
 	[704] = { --[[ Blackrock Depths ]]--
 		{2,5,0,"Direbrew's Dire Brew",46.7,60.4,{12491}},
@@ -3317,13 +2894,27 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,49203,"Harrison Jones",32.6,30.7,{28622}},
 		{0,1,49248,"Brann Bronzebeard",44.9,67.3,{28633,28654}},
 		{0,3,49523,"Weathered Nomad",41.4,5.6,{28736}},
-		--[[ Midsummer Fire Festival ]]--
-		{0,1,0,"Alliance Bonfire",53.5,31.9,{28947}},
-		{0,1,51652,"Uldum Flame Keeper",53.2,34.5,{28949}},
+	},
+	[724] = {
+		{1,1,54891,"Spy Grik'tha",22.6,12.5,{29640}},
+		{1,1,54890,"Field Commander Mahfuun",21.3,13.1,{29643,29645}},
+		{1,1,18891,"Spy To'gun",17.1,22.1,{29641}},
+		{1,1,0,"The Codex of Blood",53.3,58.8,{29644}},
 	},
 	[725] = { --[[ Blood Furnace ]]--
 		{1,1,54629,"Gunny",50.9,90.2,{29538,29540,29539}},
-	},	
+	},
+	[729] = {
+		{1,1,0,nil,86.2,46.1,{29660}},
+		{1,1,0,nil,12.2,50.1,{29667}},
+		{1,1,0,nil,34.2,81.1,{29669}},
+	},
+	[730] = {
+		{1,1,0,nil,49.4,80.4,{29657}},
+		{1,10,0,nil,60.3,45.6,{29659},"Killing a Gatewatcher Iron Hand starts this quest."},
+		{1,10,0,nil,46.5,59.3,{29659},"Killing a Gatewatcher Iron Hand starts this quest."},
+		{1,1,0,nil,48.1,31.1,{29658}},
+	},
 	[737] = { --[[ The Maelstrom ]]--
 		{0,1,45042,"Thrall",33.4,50.2,{27123}},
 	},
@@ -3392,7 +2983,6 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{1,1,45323,"Packmaster Stonebruiser",67.0,89.4,{27192}},
 		{1,1,45201,"Master Craftsman Wilhelm",65.2,87.1,{27185}},
 		{1,1,45200,"Crusade Commander Eligor Dawnbringer",66.3,86.6,{27208,27305,27223}},
-		{1,5,15607,"Elder Farwhisper",78.6,22.1,{8727}},
 	},
 	[766] = { --[[  Temple of Ahn'Qiraj ]]--
 		{2,1,15502,"Andorgos <Brood of Malygos>",58.8,68.4,{8544,8561,8592,8594,8602,8623,8628,8630,8625,8632,8639,8641,8657,8659,8662,8664,8667,8669}},			
@@ -3511,7 +3101,7 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,59418,"Lorewalker Cho",49.3,61.5,{30500,30502,31319,30504}},
 		{0,1,59899,"Fei",49.3,61.4,{30648}},
 		{0,1,54697,"Shao the Defiant",43.5,75.9,{29578,29579}},
-		{0,1,54854,"Gentle Mother Hanae",43.2,76.0,{29585}},
+		{0,1,54854,"Gentle Mother Hanae",43.2,76.0,{29585,29580}},
 		{0,1,55209,"Traumatized Nectarbreeze Farmer",43.2,75.9,{29586}},
 		{0,1,55009,"Shao the Defiant",41.0,74.0,{29587,29670}},
 		{0,1,55438,"Outcast Sprite",48.7,24.9,{29745}},
@@ -3601,14 +3191,14 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,64315,"Stonecarver Mac",55.1,47.4,{32045}},
 		{0,1,64231,"Sungshin Ironpaw",53.6,51.2,{31281,31302,31311,31470,31472,31475,31478,31479}},
 		{0,1,58721,"Farmer Yoon",52.0,48.0,{30252}},
-		{0,1,58646,"Farmer Yoon",52.2,48.8,{30535,30254,30255,30256,30257,30336,31670,30335,31674,30333,31675,30337}},
+		{0,1,58646,"Farmer Yoon",52.2,48.8,{30535,30254,30255,30256,30257,30336,31670,30335,31674,30333,31675,30337,30260,31943,31671,31941,30258,31672,30523,30517}},
 		{0,1,56474,"Mudmug",54.3,38.7,{30051,30172}},
 		{0,1,62377,"Gardener Fran",48.3,33.5,{30050}},
 		{0,1,62385,"Den Mudclaw",44.3,34.2,{30056}},
-		{0,1,57401,"Mung-Mung",44.2,34.2,{30054}},
+		{0,1,57401,"Mung-Mung",44.2,34.2,{30054,30259,31946}},
 		{0,1,57408,"Mina Mudclaw",41.3,38.1,{30057}},
 		{0,3,58761,"Tina Mudclaw",53.0,51.8,{30323}},
-		{0,1,57385,"Gai Lan",38.6,51.7,{30052}},
+		{0,1,57385,"Gai Lan",38.6,51.7,{30052,30516}},
 		{0,1,56138,"Li Li",52.7,62.8,{30031,30047}},
 		{0,1,57209,"Grainer Pan",52.6,63.0,{30030}},
 		{0,1,57211,"Grainlord Kai",52.7,63.0,{30029,30032,30028}},
@@ -3641,10 +3231,7 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,56720,"Loon Mai",17.8,56.2,{30622,30628}},
 		{0,1,57198,"Guard Captain Oakenshield",11.6,49.5,{30625,30626}},
 		{0,1,59856,"Master Bruised Paw",17.9,55.7,{30627}},
-		{0,3,58707,"Old Hillpaw",53.1,51.9,{30318}},
-		{0,3,58647,"Ella",53.0,51.7,{30327}},
-		{0,3,64464,"Andi",52.7,50.5,{30474,30475,30470,30472,30478}},
-		{0,3,57298,"Farmer Fung",52.9,51.7,{30317}},
+
 		{0,7,0,"Krosh's Back",65.4,25.7,{29758},"Drops from Krosh."},
 		{0,7,0,"Enormous Crocolisk Tail",57.5,25.8,{30275},"Drops from Manglemaw's Mother. Kill Manglemaw first, which will cause Manglemaw's Mother to spawn."},
 		{0,1,63778,"Messenger Grummle",18.5,56.8,{31254}}, -- Breadcrumb to Kun-Lai Summit
@@ -3652,16 +3239,23 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 
 		{0,2,58647,"Ella",31.5,58.1,{30381,30386}},
 		{0,2,58709,"Chee Chee",34.4,46.8,{30400,30402}},
-		{0,2,57298,"Farmer Fung",48.3,33.9,{30420,30421}},
-		{0,2,58705,"Fish Fellreed",41.7,30.0,{30424,30427}},
-		{0,2,58706,"Gina Mudclaw",53.2,51.8,{31945,30388,30389,30390}},
+		{0,2,57298,"Farmer Fung",48.3,33.9,{30420,30421,30518,31947}},
+		{0,2,58705,"Fish Fellreed",41.7,30.0,{30424,30427,30524}},
+		{0,2,58706,"Gina Mudclaw",53.2,51.8,{31945,30388,30389,30390,30322}},
 		{0,2,57402,"Haohan Mudclaw",44.6,34.1,{30409,30414}},
-		{0,2,58710,"Jogu the Drunk",53.6,52.6,{30321,30435,30439,31320,31321,31322}},
+		{0,2,58710,"Jogu the Drunk",53.6,52.6,{30321,30435,30439,31320,31321,31322,31323}},
 		{0,2,58707,"Old Hillpaw",30.9,53.1,{30394,30396}},
-		{0,2,58708,"Sho",53.1,52.1,{30325,30404,30408}},
+		{0,2,58708,"Sho",29.5,30.6,{30325,30404,30408}},
 		{0,2,58761,"Tina Mudclaw",45.1,33.8,{30428,30433}},
 		{0,3,58705,"Fish Fellreed",52.8,51.9,{30326}},
-		{0,7,0,"Nice Necklace",29.3,38.9,{31325},"Drops from Hozen at the Skyrange."},
+		{0,3,58708,"Sho",53.1,52.1,{30325}},
+		{0,3,58707,"Old Hillpaw",53.1,51.9,{30318}},
+		{0,3,58647,"Ella",53.0,51.7,{30327}},
+		{0,3,64464,"Andi",52.7,50.5,{30474,30475,30470,30472,30478}},
+		{0,3,57298,"Farmer Fung",52.9,51.7,{30317}},
+		
+		
+		{0,1,0,"\"Jinyu Princess\" Irrigation System",53.0,50.7,{31936}},
 	},
 	[808] = { --[[ The Wandering Isle ]]--
 		{0,9,0,nil,56.6,17.5,{30045,30041,30043,30042,30044,30040,30039}},
@@ -3773,6 +3367,9 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,0,nil,47.8,80.6,{30660}}, -- needs mutually exclusive set
 		{0,1,59441,"Admiral Taylor",53.8,83.3,{31455}},
 		{0,1,62227,"Ban Bearheart",36.7,47.8,{31030}},
+		{0,1,62871,"Puli the Even Handed",72.7,92.3,{31488}},
+		{0,1,63367,"Brewmaster Boof",72.7,93.0,{31611}},
+		{0,1,63315,"Gurgthock",68.7,48.4,{31207}},
 	},
 	[810] = { --[[ Townlong Steppes ]]--
 		{0,1,60688,"Taran Zhu",71.2,56.7,{30814,30769,30770,30771}},
@@ -3843,6 +3440,17 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,64033,"Master Angler Marina",86.6,60.0,{31369}},
 		{0,3,58470,"He Softfoot",56.5,43.2,{30281}},
 		{0,3,58469,"Ren Firetongue",56.7,43.2,{30283}},
+		{0,1,64010,"Master Angler Karu",60.9,23.8,{31370}},
+		{0,1,64011,"Farmhand Dooka",60.3,22.9,{31374}},
+		{0,1,64533,"Wei Lakebreeze",60.6,21.7,{31375}},
+		{0,3,63994,"Challenger Wuli",61.1,20.9,{31523}},
+		{0,1,63996,"Elder Liao",62.0,20.6,{32017}},
+		{0,1,64002,"Sang-Bo",63.2,21.1,{31388,31389}},
+		{0,1,64534,"Bowmaster Ku",63.2,20.6,{31391}},
+		{0,1,64007,"Weng the Merciful",63.2,22.3,{31385}},
+		{0,1,64001,"Sage Lotusbloom",62.8,23.4,{32010}},
+		{0,1,64531,"Lena Stonebrush",62.4,21.7,{31368}},
+		{0,1,2298,"Fanlyr Silverthorn",21.0,15.6,{32257}},
 	},
 	[816] = { --[[ Well of Eternity ]]--
 		{0,1,57864,"Alurmi",26.0,63.0,{30104}},
@@ -3918,9 +3526,25 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,1,63778,"Messenger Grummle",40.5,33.9,{31254}}, -- Breadcrumb to Kun-Lai Summit
 		
 		--[[ The Anglers ]]--
-		{0,3,60136,"Fiznix",67.5,44.6,{30698}},
-		{0,3,59586,"Angler Shen",67.6,43.5,{30700}},
+		{0,3,60136,"Fiznix",67.5,44.6,{30698,30678}},
+		{0,3,59586,"Angler Shen",67.6,43.5,{30700,30588}},
 		{0,3,60673,"Elder Fisherman Rassan",68.3,42.1,{30598}},
+		{0,3,60674,"John \"Big Hook\" Marsock",68.3,43.5,{30753}},
+		
+		--[[ Pandaren Campaign\Landfall ]]--
+		{0,1,2856,"King Varian Wrynn",85.3,29.1,{32247,32109},"Varian follows you, allowing you to continue the chain on the move."},
+		{0,1,2404,"Admiral Taylor",89.6,32.6,{32248,32380}},
+		{0,3,3372,"Amber Kearnen",89.8,32.4,{32452}},
+		{0,3,1850,"Sky Admiral Rogers",16.5,79.2,{32157},"Aboard The Skyfire."},
+		{0,3,1908,"Mishka",16.7,78.5,{32156},"Aboard The Skyfire."},
+		{0,3,2646,"Seraphine of the Winter",16.7,78.5,{32158},"Aboard The Skyfire."},
+		{0,3,2630,"Sully \"The Pickle\" McLeary",17.3,78.7,{32154,32446},"Aboard The Skyfire."},
+		{0,3,2095,"Marshal Troteman",89.7,33.1,{32116}},
+		{1,3,2739,"Hilda Hornswaggle",30.1,27.5,{32121,32115,32347,32346,32122}},
+		
+		{0,1,2331,"Garrosh Hellscream",8.7,64.5,{32250,32108},"Garrosh follows you, allowing you to continue the chain on the move."},
+		{0,1,2403,"General Nazgrim",10.4,53.7,{32256,32251}},
+		{0,3,2344,"Blood Guard Gro'tash",10.1,53.9,{32449}},
 	},
 	[858] = { --[[ The Dread Wastes ]]--
 		{0,1,62112,"Bowmistress Li",75.0,21.5,{31001,31002},"Atop the Serpent's Spine."},
@@ -3968,11 +3592,22 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 		{0,3,63072,"Rik'kal the Dissector",54.4,35.9,{31502,31503,31271}},
 	},
 	[864] = { --[[ Northshire Abbey ]]--
-		{0,1,197,"Marshal McBride",33.5,53.0,{29078,29079,29080,26389,26390,54}},
-		{0,1,6774,"Falkhaan Isenstrider",24.1,73.4,{2158}},
+	
+		{0,1,197,"Marshal McBride",33.5,53.0,{28766}},
+		{0,9,911,"Llane Beshere",40.9,53.8,{26913,28789}}, --[[ Warrior ]]--
+		{0,9,925,"Brother Sammuel",41.6,53.2,{26918,28785}}, --[[ Paladin ]]--
+		{0,9,43278,"Ashley Blank",34.8,54.8,{26917,28780}}, --[[ Hunter ]]--
+		{0,1,823,"Sergeant Willem",35.7,39.8,{28797}},
+		{0,1,951,"Brother Paxton",35.0,38.2,{28813}},
+	
+	
+	
+	
+		{0,1,197,"Marshal McBride",33.5,53.0,{29078,29079,29080,26389,26390,54,28766}},
 		{0,1,823,"Sergeant Willem",35.7,39.8,{29081,29083}},
 		{0,1,951,"Brother Paxton",35.1,38.1,{29082}},
 		{0,1,9296,"Milly Osworth",33.4,54.7,{26391}},
+		{0,1,6774,"Falkhaan Isenstrider",24.1,73.4,{2158}},
 	},
 	[867] = { --[[ Temple of the Jade Serpent ]]--
 		{1,1,64399,"Master Windstrong",36.0,44.2,{31356}},
@@ -3981,5 +3616,46 @@ qcMapIcon = { -- |cff69ccf0<Remote>|r
 	[873] = { --[[ The Veiled Stair ]]--
 		{0,1,63484,"Len the Whisperer",53.5,65.8,{31286,31287}},
 		{0,1,63367,"Brewmaster Boof",51.9,43.7,{31285}},
+	},
+	[888] = { --[[ Shadowglen ]]--
+		{0,1,2079,"Ilthalaine",45.6,74.6,{28713,28714,28734}},
+		{0,1,2077,"Melithar Staghelm",46.0,72.9,{28715,3116,3117,3118,3119,26841,31168,3120}},
+		{0,1,2079,"Ilthalaine",46.3,73.5,{3116,3117,3118,3119,26841,31168,3120}},
+		{0,9,3593,"Alyissia",49.2,52.4,{26945,28723}}, --[[ Warrior ]]--
+		{0,9,3596,"Ayanna Everstride",49.2,60.6,{26947,28723}}, --[[ Hunter ]]--
+		{0,9,3594,"Frahun Shadewhisper",49.2,53.2,{26946,28723}}, --[[ Rogue ]]--
+		{0,9,3595,"Shanda",47.6,59.4,{26949,28723}}, --[[ Priest ]]--
+		{0,9,43006,"Rhyanda",47.4,59.7,{26940,28723}}, --[[ Mage ]]--
+		{0,9,63331,"Laoxi",48.7,52.5,{31169,28723}}, --[[ Monk ]]--
+		{0,9,3597,"Mardant Strongoak",46.6,56.6,{26948,28723}}, --[[ Druid ]]--
+		{0,1,49479,"Dentaria Silverglade",42.5,50.5,{28724,28725,28729,28730}},
+		{0,1,49480,"Tarindrella",39.3,30.5,{28726,28727,28728},"Tarindrella appears as you enter Shadowthread Cave."},
+		{0,1,3514,"Tenaron Stormgrip",47.2,55.9,{28731},"Highest room atop Aldrassil."},
+		{0,1,6780,"Porthannius",54.6,84.7,{2159}},
+	},
+	[889] = {
+		{0,1,10176,"Kaltunk",45.2,68.4,{25152}},
+		{0,1,3143,"Gornek",44.9,66.4,{25126,25172,3087,25127}},
+		{0,1,39214,"Karranisha",43.4,70.6,{25139}}, --[[ Hunter ]]--
+		{0,1,9796,"Galgar",43.0,62.4,{25136}},
+		{0,1,11378,"Foreman Thazz'ril",46.1,63.1,{25134,25135}},
+		{0,1,3145,"Zureetha Fargaze",45.8,63.4,{25131,25132,25133}},
+		{0,1,5887,"Canaga Earthcaller",41.7,70.0,{25128}},
+		{0,1,3287,"Hana'zua",34.6,44.2,{25129,25130}},
+	},
+	[892] = {
+		{0,1,1569,"Shadow Priest Sarvis",46.6,58.8,{26801,3099,24972}},
+		{0,1,2126,"Maximillion",46.9,59.4,{24968}}, --[[ Warlock ]]--
+		{0,1,1661,"Novice Elreth",46.7,58.2,{24961,28672}},
+		{0,1,1570,"Executor Arren",55.5,37.8,{26802,24973,24970}},
+		{0,1,49425,"Darnell",67.0,42.4,{24971}},
+	},
+	[903] = {
+		{2,1,2304,"Garrosh Hellscream",32.2,84.7,{32242}},
+		{2,1,64047,"Kurong Caskhead",57.3,77.3,{31488}},
+		{1,1,64041,"Mifan",67.2,38.8,{31279}},
+	},
+	[922] = {
+		{2,1,2990,"Barkeep Townsley",70.0,47.0,{32381,32426}},
 	},
 }

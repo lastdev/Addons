@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 761 $")
+XPerl_SetModuleRevision("$Revision: 819 $")
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -171,24 +171,6 @@ function XPerl_Check_Setup()
 	SLASH_RARST1 = nil
 	SlashCmdList["RAREG"] = nil
 	SLASH_RAREG1 = nil
-
-	local ora = oRA
-	if (not ora) then
-		ora = oRA_Core
-	end
-	if (ora) then
-		if (ora.UnRegisterShorthand) then
-			ora:UnRegisterShorthand("raitem")
-			ora:UnRegisterShorthand("rareg")
-			ora:UnRegisterShorthand("radur")
-			ora:UnRegisterShorthand("raresist")
-		elseif (ora.UnregisterShorthand) then
-			ora:UnregisterShorthand("raitem")
-			ora:UnregisterShorthand("rareg")
-			ora:UnregisterShorthand("radur")
-			ora:UnregisterShorthand("raresist")
-		end
-	end
 
 	if (not XPerl_Admin.ResistSort) then
 		XPerl_Admin.ResistSort = "fr"
@@ -1386,39 +1368,6 @@ function XPerl_Check_DeleteSelectedItems()
 	XPerl_Check_ItemsChanged()
 end
 
--- FixORA2
-local function FixORA2()
-	-- A small hack to stop the error that oRA2 throws when it receives un-expected query results
-
-	-- oRA.modules.LeaderResist.AddPlayer
-	-- oRA.modules.LeaderDurability.AddPlayer
-	-- oRA.modules.LeaderItem.AddPlayer
-
-	if (oRA and oRA.version and oRA.modules) then
-		local s1, s2, dummy
-
-		dummy = function() end
-
-		s1 = oRA.SendMessage
-		oRA.SendMessage = dummy
-
-		-- Perform dummy calls to these to initialize their catcher variable, then close their window
-		if (oRA.modules.LeaderItem) then
-			oRA.modules.LeaderItem:PerformItemCheck("")
-		end
-		if (oRA.modules.LeaderResist) then
-			oRA.modules.LeaderResist:PerformResistanceCheck()
-		end
-		if (oRA.modules.LeaderDurability) then
-			oRA.modules.LeaderDurability:PerformDurabilityCheck()
-		end
-
-		oRA.SendMessage = s1
-
-		oRA:CloseWindow()
-	end
-end
-
 -- XPerl_Check_Query
 function XPerl_Check_Query()
 
@@ -1426,8 +1375,6 @@ function XPerl_Check_Query()
 	XPerl_ItemResults = {["type"] = "item"}
 
 	XPerl_CheckListItemsScrollBarScrollBar:SetValue(0)
-
-	FixORA2()
 
 	tinsert(XPerl_MsgQueue, "DURC")
 	tinsert(XPerl_MsgQueue, "RSTC")

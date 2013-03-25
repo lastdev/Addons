@@ -24,7 +24,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS["stack"]:format(6, 113315)
+	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(6, 113315)
 })
 
 -----------------------
@@ -96,6 +96,10 @@ L:SetMiscLocalization({
 -- Sha of Violence --
 -----------------------
 L= DBM:GetModLocalization(685)
+
+L:SetMiscLocalization({
+	Kill		= "Siempre que la violencia anide en vuestros corazones... volveré...",
+})
 
 -----------------------
 -- Taran Zhu --

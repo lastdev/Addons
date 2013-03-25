@@ -4,10 +4,11 @@ if GetLocale() ~= "zhCN" then return end
 
 local L = NugComboBar.L
 
+L["Specialization-specific"] = "专精限定"
 L["Character-specific"] = "角色限定"
 L["Switch between global/character configuration"] = "选择角色限定或全局设定"
 L["Scale"] = "大小"
---L["Anchor"] = "瞄点"
+L["Anchorpoint"] = "瞄点"
 L["Unlock"] = "解锁"
 L["Unlock dragging anchor"] = "解锁"
 L["Lock"] = "锁定"
@@ -27,6 +28,6 @@ L["2D Mode settings"] = "2D模式设定"
 L["3D Mode settings"] = "3D模式设定"
 L["Preset"] = "表现效果"
 L["All Points"] = "所有资源"
-L["Disable for current class (requires ui reloading)"] = "此职业停用插件 (需要重载界面)"
+L["Disable for current character or spec"] = ""
 L["ReloadUI"] = "重载界面"
 L["Disabled"] = "停用插件"

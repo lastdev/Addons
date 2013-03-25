@@ -398,7 +398,7 @@
   <Frame name="qcToast" toplevel="true" parent="QuestFrame" enableMouse="true" movable="false" hidden="true" frameStrata="MEDIUM">
     <Size x="256" y="64"/>
     <Anchors>
-      <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="QuestFrame" x="0" y="30"/>
+      <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="QuestFrame" x="0" y="-40"/>
     </Anchors>
     <Layers>
       <Layer level="BACKGROUND">
@@ -445,9 +445,9 @@
   </Frame>
 
   <Button name="qcQuestLogButton" toplevel="true" parent="QuestLogFrame" parentKey="qcQuestLogButton" text="Open QC" inherits="UIPanelButtonTemplate">
-    <Size x="75" y="16"/>
+    <Size x="75" y="19"/>
     <Anchors>
-      <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="QuestLogFrame" x="69" y="-15"/>
+      <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="QuestLogFrame" x="55" y="-1"/>
     </Anchors>
     <Scripts>
       <OnClick>ShowUIPanel(qcQuestCompletistUI)</OnClick>

@@ -40,7 +40,7 @@ GameTooltip:SetUnitDebuff("unit", [index] or ["name", "rank"][, "filter"]);
 * The untilCanceled return value is true if the buff doesn't have its own duration (e.g. stealth)
 ]]--
 
-SMARTBUFF_VERSION       = "v5.0h";
+SMARTBUFF_VERSION       = "v5.1b";
 SMARTBUFF_VERSIONNR     = 50001;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in cast buffs";
@@ -1193,7 +1193,19 @@ function SMARTBUFF_PreCheck(mode, force)
   --SMARTBUFF_AddMsgD(string.format("%.2f, %.2f", GetTime(), GetTime() - tLastCheck));
   tLastCheck = GetTime();
   
-  if (SMARTBUFF_IsTalentFrameVisible() or C_PetBattles.IsInBattle()) then return false; end
+  -- If buffs can't casted, hide UI elements
+  if (C_PetBattles.IsInBattle() or UnitInVehicle("player") or UnitHasVehicleUI("player")) then
+    if (SmartBuff_KeyButton:IsVisible()) then
+      SmartBuff_KeyButton:Hide();
+    end
+    if (SmartBuff_MiniGroup:IsVisible()) then
+      SmartBuff_MiniGroup:Hide();
+    end    
+    return false;
+  else
+    SMARTBUFF_ShowSAButton();
+    SMARTBUFF_MiniGroup_Show();
+  end
   
   SMARTBUFF_SetButtonTexture(SmartBuff_KeyButton, imgSB);
   if (SmartBuffOptionsFrame:IsVisible()) then return false; end  
@@ -1741,6 +1753,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
       -- Check for buffs which depends on a pet
       if (bUsable and sPlayerClass == "WARLOCK" and buffnS == SMARTBUFF_SOULLINK and not UnitExists("pet")) then bUsable = false end     
       if (bUsable and sPlayerClass == "DEATHKNIGHT" and buffnS == SMARTBUFF_RAISEDEAD and UnitExists("pet")) then bUsable = false end
+      if (bUsable and sPlayerClass == "MAGE" and buffnS == SMARTBUFF_SUMMONWATERELE and UnitExists("pet")) then bUsable = false end
       
       -- Check for mount auras
       if (bUsable and (sPlayerClass == "PALADIN" or sPlayerClass == "DEATHKNIGHT")) then
@@ -2852,10 +2865,13 @@ function SMARTBUFF_IsActiveBattlefield(zone)
   local i, status, map, instanceId, teamSize;
   for i = 1, GetMaxBattlefieldID() do
     status, map, instanceId, _, _, teamSize = GetBattlefieldStatus(i);
-    SMARTBUFF_AddMsgD("Battlefield status = "..ChkS(status)..", Id = "..instanceId..", TS = "..teamSize..", Map = "..ChkS(map)..", Zone = "..ChkS(zone));
-    --if (status == "active" and map and (instanceId ~= 0 or (teamSize > 0 and zone and map == zone)) then
-    if (status == "active" and map) then
-      if (teamSize > 0) then
+    if (status and status ~= "none") then
+      SMARTBUFF_AddMsgD("Battlefield status = "..ChkS(status)..", Id = "..ChkS(instanceId)..", TS = "..ChkS(teamSize)..", Map = "..ChkS(map)..", Zone = "..ChkS(zone));
+    else
+      SMARTBUFF_AddMsgD("Battlefield status = none");
+    end
+    if (status and status == "active" and map) then
+      if (teamSize and teamSize > 0) then
         return 2;      
       end
       return 1;

@@ -6,7 +6,7 @@ if ( GetLocale() == "itIT" ) then
 
 XPERL_RAID_GROUP		= "Gruppo %d"
 XPERL_RAID_TOOLTIP_OFFLINE	= "Offline da %s"
-XPERL_RAID_TOOLTIP_AFK		= "AFK da %s"
+XPERL_RAID_TOOLTIP_AFK		= "Assente da %s"
 XPERL_RAID_TOOLTIP_DND		= "DND da %s"
 XPERL_RAID_TOOLTIP_DYING	= "Morto da %s"
 XPERL_RAID_TOOLTIP_REBIRTH	= "Rez. attivo da: %s"
@@ -23,7 +23,7 @@ XPERL_RAID_DROPDOWN_SETMT	= "Imposta GP #%d"
 XPERL_RAID_DROPDOWN_REMOVEMT	= "Rimuovi GP #%d"
 
 XPERL_RAID_RESSING		= " sta rivivendo"
-XPERL_RAID_AFK			= "AFK"
+XPERL_RAID_AFK			= "Assente"
 XPERL_RAID_DND			= "DND"
 XPERL_RAID_AUTOPROMOTE		= "Auto-Promuovi"
 XPERL_RAID_RESSER_AVAIL		= "Curatori Disponibili: "

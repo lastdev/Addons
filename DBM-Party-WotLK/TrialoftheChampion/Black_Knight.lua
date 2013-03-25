@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BlackKnight", "DBM-Party-WotLK", 13)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(35451, 10000)		-- work around, DBM API failes to handle a Boss to die, rebirth, die again, rebirth again and die to loot...
 mod:SetModelID(29837)
 mod:SetUsedIcons(8)
@@ -39,7 +39,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(67729, 67886) and self:AntiSpam(2, 2) then
+	if args:IsSpellID(67729) and self:AntiSpam(2, 2) then
 		warnExplode:Show()
 		specWarnExplode:Show()
 		soundExplode:Play()
@@ -48,7 +48,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId)
-	if (spellId == 67781 or spellId == 67876) and destGUID == UnitGUID("player") and self:AntiSpam(3, 1) then
+	if spellId == 67781 and destGUID == UnitGUID("player") and self:AntiSpam(3, 1) then
 		specWarnDesecration:Show()
 	elseif spellId == 67886 then
 		if self.Options.AchievementCheck and not warnedfailed then
@@ -60,7 +60,7 @@ end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(67823, 67882) and args:IsDestTypePlayer() then
+	if args:IsSpellID(67823) and args:IsDestTypePlayer() then
 		if self.Options.SetIconOnMarkedTarget then
 			self:SetIcon(args.destName, 8, 10)
 		end

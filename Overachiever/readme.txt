@@ -1,5 +1,5 @@
 
-Overachiever v0.67
+Overachiever v0.71
 ==============================
 
 Author: Tuhljin
@@ -106,6 +106,49 @@ Change log
 ==========
 
 The change log lists changes of particular note to users, not every change made.
+
+v0.71
+- Updated for WoW patch 5.2.
+- Tabs module: Corrected a taint issue that could occur when achievements were added to a Watch list from another tab.
+- Suggestions Tab: Added suggestions for Throne of Thunder, Isle of Thunder, and a missing one for Vale of Eternal
+  Blossoms ("Eternally in the Vale").
+
+v0.70
+- Updated for WoW patch 5.1.
+- "Pandaren Cuisine" and "Pandaren Delicacies" (new): Added to the consumed item tracking system.
+- "Pandarian Angler" (new): Added reminder tooltips for this achievement, expanding the existing option for "The
+  Scavenger," "Outland Angler," and "Northrend Angler."
+- Kill Creature Achievements: Fixed an issue where reminder tooltips weren't working. (This means you, "Glorious!")
+- Trade module: "The Pandaren Gourmet" is now considered when determining if you need to cook a recipe.
+- Suggestions Tab, Kill Creature Achievements: When a reminder that you need to kill one of these creatures is
+  triggered, the related achievement will temporarily be added to the suggestions list, as intended.
+- Suggestions Tab: Suggestions added for Mists of Pandaria raids.
+- Suggestions Tab: Fixed an issue where Cooking and Fishing achievements could "take over" the list, preventing you
+  from seeing other suggestions once you looked at the tab while the Cooking tradeskill window was open or your fishing
+  pole was equipped.
+- Switched to LibBabble-Subzone library for zone/subzone localizations. (Should correct some issues with suggestions,
+  among other things, for users with non-English clients.)
+
+v0.69
+- Fixed an issue where critters that were reclassified as wild pets wouldn't trigger achievement reminders.
+- "Turkey Lurkey": Fixed an issue where the proper tooltip reminder wouldn't be displayed in some cases.
+
+v0.68
+- Tabs module: Improved performance when switching tabs and scrolling through achievement lists.
+- Suggestions Tab:
+-- Instance difficulty and raid size override options added. Use them to see suggestions that have particular
+   difficulty and/or raid size requirements without having to change your actual instance/group settings.
+-- Numerous suggestions added for Mists of Pandaria zones, battlegrounds, and dungeons.
+-- Now suggests "Big City Pet Brawlin' - Alliance" and "Big City Pet Brawlin' - Horde" when in an Alliance or Horde
+   capital city, respectively.
+-- The "Complete X quests" achievements for Loch Modan and Wetlands were merged into one achievement. Likewise,
+   those for Westfall and Duskwood were merged. Suggestions updated to reflect this.
+-- Several Horde-specific achievements were merged into their Alliance-specific counterparts. (For instance, "Hail to
+   the Chef" had a Horde version and an Alliance version with separate IDs. The ID used by Alliance characters is now
+   also used by Horde characters.) Suggestions updated to reflect this.
+- Italian localization (itIT) is now supported.
+- Remember, translations are provided by users like you. Thanks for your generosity! Please help contribute if you are
+  able: http://wow.curseforge.com/projects/overachiever/localization/
 
 v0.67
 - "To All the Squirrels I Once Caressed?" (new): Critters' /loved status for this achievement is now part of the option

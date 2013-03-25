@@ -18,7 +18,7 @@ Raid tooltip will show combat rezzers available (druids with Rebirth ready (or v
 
 Red and Green combat flashes for frames when player, pet, target, party, partypets, raid take damage/heals. Useful indication of things happening.
 
-Added time left on party member/target buffs/debuffs when in a raid, these depend somewhat on CTRA/oRA/oRA2 sending appropriate information over the addon channel, although some of it can be determined at run time by X-Perl, when a player gets a buff for example, we know how long it should last, and therefor when it should expire.
+Added time left on party member/target buffs/debuffs when in a raid, these depend somewhat on CTRA sending appropriate information over the addon channel, although some of it can be determined at run time by X-Perl, when a player gets a buff for example, we know how long it should last, and therefor when it should expire.
 
 Totally new options window including all X-Perl options and access via minimap icon.
 
@@ -35,7 +35,7 @@ Will show anyone from raid assising you with your target, and can also show heal
 Tooltips for the same also available (on player and target frames) if you prefer to not use the main window.
 
 MT Targets
-Replaces CTRA/oRA2 MT Targets window, and doubles as a replacement for the Perl RaidFrames warrior targets.
+Replaces CTRA MT Targets window, and doubles as a replacement for the Perl RaidFrames warrior targets.
 Indicator shows which target you are on.
 Frames will be coloured to show if tanks have duplicate targets.
 
@@ -80,7 +80,7 @@ Alt-Mousewheel to scale the reaper window (when un-docked)
 
 Supported Addons
 ----------------
-CT_RaidAssist, oRA2. Shows tooltip info and player status, replaces MT Targets List, improves raid frames, shows player status, resurrection monitor, buff timers aware.
+CT_RaidAssist. Shows tooltip info and player status, replaces MT Targets List, improves raid frames, shows player status, resurrection monitor, buff timers aware.
 MobInfo-2 / MobHealth3 - Shows target health from MobHealth database.
 DruidBar - Shows druid mana bar from SimpleDruidBar, DruidBar or SmartyCat when shapeshifted.
 Clique compatible. And any other click cast addon that uses the same communication method. (see below)

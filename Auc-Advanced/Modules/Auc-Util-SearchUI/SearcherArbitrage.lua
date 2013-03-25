@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer - Search UI - Searcher Arbitrage
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: SearcherArbitrage.lua 5331 2012-08-19 02:43:59Z ccox $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: SearcherArbitrage.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -29,6 +29,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 --]]
 -- Create a new instance of our lib with our parent
+if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewSearcher("Arbitrage")
 if not lib then return end
 --local print,decode,_,_,replicate,empty,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals()
@@ -121,75 +122,6 @@ function private.doValidation()
 end
 
 function lib.Processor(event, subevent, ...)
-	if event == "search" and subevent == "complete" and private.factionUpdateRequired then
-		-- something changed during a search - complete the update now the search has finished
-		private.factionUpdateRequired = nil
-		private.SetCurrentFaction()
-	elseif event == "selecttab" then
-		if subevent == lib.tabname and private.doValidation then
-			private.doValidation()
-		end
-	elseif event == "config" then
-		-- update private variables, but only if a relevant setting may have changed
-		if subevent == "changed" then
-			local setting = ...
-			if setting and setting:match("^arbitrage") then
-				private.SetCurrentFaction()
-			end
-		elseif subevent == "loaded" or subevent == "reset" or subevent == "deleted" then
-			private.SetCurrentFaction()
-		end
-	elseif event == "resources" and subevent == "faction" then
-		private.SetCurrentFaction()
-	elseif event == "onload" and subevent == "auc-util-searchui" then
-		if private.createRealmList then
-			private.createRealmList()
-		end
-	end
-end
-
-lib.Processors = {}
-function lib.Processors.search(event, subevent, ...)
-	if subevent == "complete" and private.factionUpdateRequired then
-		-- something changed during a search - complete the update now the search has finished
-		private.factionUpdateRequired = nil
-		private.SetCurrentFaction()
-	end
-end
-
-function lib.Processors.selecttab(event, subevent, ...)
-	if subevent == lib.tabname and private.doValidation then
-		private.doValidation()
-	end
-end
-
-function lib.Processors.config(event, subevent, ...)
-	-- update private variables, but only if a relevant setting may have changed
-	if subevent == "changed" then
-		local setting = ...
-		if setting and setting:match("^arbitrage") then
-			private.SetCurrentFaction()
-		end
-	elseif subevent == "loaded" or subevent == "reset" or subevent == "deleted" then
-		private.SetCurrentFaction()
-	end
-end
-
-function lib.Processors.resources(event, subevent, ...)
-	if subevent == "faction" then
-		private.SetCurrentFaction()
-	end
-end
-
-function lib.Processors.onload(event, subevent, ...)
-	if subevent == "auc-util-searchui" then
-		if private.createRealmList then
-			private.createRealmList()
-		end
-	end
-end
-
-function lib.Processors.selecttab(event, subevent, ...)
 	if event == "search" and subevent == "complete" and private.factionUpdateRequired then
 		-- something changed during a search - complete the update now the search has finished
 		private.factionUpdateRequired = nil
@@ -365,4 +297,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherArbitrage.lua $", "$Rev: 5331 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherArbitrage.lua $", "$Rev: 5368 $")

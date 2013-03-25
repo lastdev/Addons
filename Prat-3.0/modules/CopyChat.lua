@@ -209,9 +209,9 @@ L:AddLocale("ruRU",
 {
 	BBCode = true,
 	BOTTOMLEFT = "Снизу, Слева",
-	BOTTOMRIGHT = "Снизу, Справа", -- Needs review
-	buttonpos_desc = "Где на окне чата, чтобы показать копию кнопки", -- Needs review
-	buttonpos_name = "Кнопка Расположение", -- Needs review
+	BOTTOMRIGHT = "Снизу, Справа",
+	buttonpos_desc = "Где в окне чата показывать кнопку копирования",
+	buttonpos_name = "Положение кнопки",
 	ChatFrame = "Окно чата",
 	["Copy all of the text in the selected chat frame into an edit box"] = "Копировать весь текст из выбранного окна чата в поле ввода.",
 	CopyChat = true,
@@ -226,8 +226,8 @@ L:AddLocale("ruRU",
 	showbutton_desc = "Показывать кнопку копирования в окне чата",
 	showbutton_name = "Кнопка копирования",
 	[" Text"] = " Текст",
-	TOPLEFT = "Сверху, Слева", -- Needs review
-	TOPRIGHT = "Сверху, Справа", -- Needs review
+	TOPLEFT = "Сверху, Слева",
+	TOPRIGHT = "Сверху, Справа",
 	["Wowace.com Forums"] = "Форумы Wowace.com",
 }
 

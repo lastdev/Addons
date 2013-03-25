@@ -1,7 +1,7 @@
 ﻿--[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 	Revision: $Id: InfMain.lua 5261 2012-01-04 13:56:43Z dinesh $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
@@ -29,7 +29,7 @@
 ]]
 Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Informant/InfMain.lua $","$Rev: 5261 $")
 
-INFORMANT_VERSION = "5.15.5365"
+INFORMANT_VERSION = "5.15.5380"
 if (INFORMANT_VERSION == "<".."%version%>") then
 	INFORMANT_VERSION = "5.2.DEV"
 end

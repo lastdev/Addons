@@ -6,7 +6,7 @@ esES localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 2.4.2
+Project version: 2.4.6
 ************************************************************************
 Original translated by: StiviS
 Currently maintained by:
@@ -153,6 +153,7 @@ L["Bernadette Dexter"] = true
 L["Bethany Cromwell"] = true
 L["Binding"] = "Ligado"
 L["Binkie Brightgear"] = "Binkie Brillaengranaje"
+L["Blackhand Assassin"] = "Asesino Puño Negro"
 L["Blackhand Elite"] = "Élite Puño Negro"
 L["BLACK_MARKET_AUCTION_HOUSE"] = "Vendido solo por Madam Goya en la casa de subastas del Mercado Negro. Solo esta disponible a veces."
 L["Blacksmith Calypso"] = "Herrera Calypso"
@@ -187,7 +188,8 @@ L["Bradley Towns"] = "Bradley Villas"
 L["Braeg Stoutbeard"] = "Braeg Barbarrobusta"
 L["Brandig"] = true
 L["Brawn"] = "Mole"
-L["BRD_RANDOM_ROOM"] = "Hay una posibilidad de que la encuentres en cinco diferentes habitaciones en Profundidades de Roca Negra, aunque es un spawn aleatorio, y a veces no tiene ni por que aparecer una sola vez."
+L["BRD_MAIL"] = "Hay cuatro nodos en las Profundidades de Roca Negra: justo antes de entrar en la Fábrica, en la habitación del Golem Lord Arglemach, en la Fábrica en un banco o la Fundición de Molde."
+L["BRD_SHOULDERS"] = "Hay un nodo raro en las Profundidades de Roca Negra: en la habitación justo después de la esclusa de la forja de las sombras y justo antes de la arena, en la esquina de algunas literas."
 L["Brek Stonehoof"] = "Brek Pezuñapétrea"
 L["Brikk Keencraft"] = "Brikk Finoficio"
 L["Brock Stoneseeker"] = "Brock Buscapiedras"
@@ -299,6 +301,7 @@ L["Danielle Zipstitch"] = "Danielle Puntillas"
 L["Dank Drizzlecut"] = "Dank Cortefiel"
 L["Dannelor"] = true
 L["Danwe"] = true
+L["Darian Singh"] = true
 L["Darin Goodstitch"] = "Darin Cortefino"
 L["Dark Conclave Shadowmancer"] = "Sombramántico del cónclave oscuro"
 L["Darkmoon Faire"] = "Feria de la Luna Negra"
@@ -744,6 +747,7 @@ L["Larana Drome"] = "Larana Dromo"
 L["Lardan"] = true
 L["Lavinia Crowe"] = true
 L["Layna Karner"] = true
+L["LEARNT_BY_ACCEPTING_QUEST"] = "Esta receta se aprende cuando aceptas la misión."
 L["Leather"] = "Cuero"
 L["LEATHER_DESC"] = "Las recetas que hacen elementos de cuero serán incluidas en la exploración."
 L["Lebowski"] = true
@@ -832,6 +836,7 @@ L["Mining"] = "Minería"
 L["Miralisse"] = true
 L["Mirla Silverblaze"] = "Mirla Platardiente"
 L["Misensi"] = true
+L["Mishka"] = true
 L["Mishta"] = true
 L["MissingFromDB"] = [=[: no se encuentra en la base de datos.
 Por favor, informe al autor del add-on sobre esta receta.]=]
@@ -1097,6 +1102,7 @@ L["Shield"] = "Escudo"
 L["SHIFT_CLICK"] = "Shift-Click para añadir el objeto creado por el enlace de esta receta a su chat."
 L["Show Known"] = "Mostrar conocidas"
 L["Sid Limbardi"] = true
+L["Silkmaster Tsai"] = "Maestro de la seda Tsai"
 L["Silverbrook Defender"] = "Defensor de Arroyoplata"
 L["Silverbrook Hunter"] = "Cazador de Arroyoplata"
 L["Silverbrook Trapper"] = "Trampero de Arroyoplata"
@@ -1113,6 +1119,7 @@ L["Skreah"] = true
 L["Slagg"] = "Eskoria"
 L["Small Font"] = "Fuente pequeña"
 L["SMALL_FONT_DESC"] = "Activalo para usar una fuente mas pequeña para las entradas en la lista de recetas"
+L["Smeltmaster Ashpaw"] = "Maestra fundidora Zarpa Cinérea"
 L["Smiles O'Byron"] = "Sonrisas O'Byron"
 L["Smith Argus"] = "Herrero Argus"
 L["Smudge Thunderwood"] = "Smudge Truenedera"

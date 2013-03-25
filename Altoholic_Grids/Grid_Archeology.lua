@@ -23,7 +23,7 @@ local function DropDown_Initialize()
 	local race, icon
 	
 	for i = 1, numRaces do
-		if i ~= 10 then	-- 10 = other, no idea why it is empty ..
+		if i ~= 13 then	-- 13 = UNUSED
 			race, icon = GetArchaeologyRaceInfo(i)
 			DDM_Add(race, i, OnRaceChange, icon, (i==currentRace))
 		end

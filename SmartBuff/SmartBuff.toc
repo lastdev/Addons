@@ -1,12 +1,12 @@
-## Interface: 50001
+## Interface: 50100
 ## Title: Smart|cffffffffBuff|r by |cff00ff00Aeldra|r
-## Version: 5.0h
+## Version: 5.1b
 ## Author: |cff20d2ffAeldra|r (EU-Proudmoore)
 ## Notes: Cast the most important buffs on you or party/raid members/pets. Use  /sbm  for options menu.
 ## Notes-deDE: Castet die wichtigsten Buffs auf dich selbst, Gruppe/Raid Mitglieder/Pets. Benutze  /sbm  um das Menü zu öffnen
 ## Notes-frFR: Cast the most important buffs on you or party/raid members/pets. Use  /sbm  for options menu.
 ## eMail: aeldra@sonnenkinder.org
-## URL: http://magnanimous-majesty.de
+## URL: http://www.kernfusion-gilde.de
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## OptionalDeps: Titan, FuBar

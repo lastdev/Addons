@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Item Suggest module
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 	Revision: $Id: Auc-Util-ItemSuggest.lua 5365 2012-09-24 17:33:48Z brykrys $
 	URL: http://auctioneeraddon.com/
 

@@ -1,7 +1,7 @@
 Reforgenator = LibStub("AceAddon-3.0"):NewAddon("Reforgenator", "AceConsole-3.0", "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Reforgenator", false)
 local RI = LibStub("LibReforgingInfo-1.0")
-local version = "2.2"
+local version = "2.4"
 
 -- There isn't really a "spirit" combat rating, but it will simplify
 -- some things if we pretend there is one
@@ -2164,6 +2164,7 @@ function Reforgenator:LoadDefaultModels()
     self:LoadModel(self:BalanceModel(), 'Druid, Balance', 'DRUID/1', 'DRUID')
 	self:LoadModel(self:FeralModel(), 'Druid, Feral', 'DRUID/2', 'DRUID')
     self:LoadModel(self:GuardianModel(), 'Druid, Guardian', 'DRUID/3', 'DRUID')
+    self:LoadModel(self:ManaRestoDruidModel(), 'Druid, Mana Restoration', 'DRUID/4', 'DRUID')
     self:LoadModel(self:RestoDruidModel(), 'Druid, Restoration', 'DRUID/4', 'DRUID')
 	
     self:LoadModel(self:BeastMasterHunterModel(), 'Hunter, BM', 'HUNTER/1', 'HUNTER')
@@ -2201,7 +2202,8 @@ function Reforgenator:LoadDefaultModels()
 	
 	self:LoadModel(self:BrewMasterMonkModel(), 'Monk, BrewMaster', 'MONK/1', 'MONK')
 	self:LoadModel(self:MistWeaverMonkModel(), 'Monk, MistWeaver', 'MONK/2', 'MONK')
-	self:LoadModel(self:WindWalkerMonkModel(), 'Monk, WindWalker', 'MONK/3', 'MONK')
+	self:LoadModel(self:TwoHandWindWalkerMonkModel(), 'Monk, TwoHandWindWalker', nil, 'MONK')
+	self:LoadModel(self:DWWindWalkerMonkModel(), 'Monk, DWWindWalker', 'MONK/3', 'MONK')
 end
 
 function Reforgenator:LoadModel(model, modelName, ak, class)

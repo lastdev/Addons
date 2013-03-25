@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("DSTrash", "DBM-DragonSoul")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 40 $"):sub(12, -3))
 mod:SetModelID(39378)
 mod:SetZone()
 
@@ -47,7 +47,7 @@ end
 
 function mod:BoulderTarget(sGUID)
 	local targetname = nil
-	for i=1, DBM:GetGroupMembers() do
+	for i=1, DBM:GetNumGroupMembers() do
 		if UnitGUID("raid"..i.."target") == sGUID then
 			targetname = DBM:GetUnitFullName("raid"..i.."targettarget")
 			break

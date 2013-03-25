@@ -21,7 +21,9 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	ArachnophobiaTimer	= "Arachnophobia"
+	ArachnophobiaTimer	= "Arachnophobia",
+	Pull1				= "Yes, run! It makes the blood pump faster!",
+	Pull2				= "Just a little taste..."
 })
 
 ----------------------------
@@ -41,6 +43,10 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	WarningEmbraceExpire	= "Show pre-warning for Widow's Embrace fade",
 	WarningEmbraceExpired	= "Show warning for Widow's Embrace fade"
+})
+
+L:SetMiscLocalization({
+	Pull					= "Kneel before me, worm!"--Not actually pull trigger, but often said on pull
 })
 
 ---------------
@@ -98,6 +104,10 @@ L:SetOptionLocalization({
 	TimerTeleportBack	= "Show timer for Teleport back"
 })
 
+L:SetMiscLocalization({
+	Pull				= "Die, trespasser!"
+})
+
 --------------------------
 --  Heigan the Unclean  --
 --------------------------
@@ -120,6 +130,10 @@ L:SetOptionLocalization({
 	WarningTeleportNow	= "Show warning for Teleport",
 	WarningTeleportSoon	= "Show pre-warning for Teleport",
 	TimerTeleport		= "Show timer for Teleport"
+})
+
+L:SetMiscLocalization({
+	Pull				= "You are mine now."
 })
 
 ---------------

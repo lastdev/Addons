@@ -343,8 +343,8 @@ function ChatHistory:PostEvent_ChatMessage(event, ...)
         elseif((event == "RAID" or event == "RAID_LEADER") and db.history.chat.raid) then
             recordAs = _G.RAID;
             chatType = "raid";
-        elseif((event == "BATTLEGROUND" or event == "BATTLEGROUND_LEADER") and db.history.chat.battleground) then
-            recordAs = _G.BATTLEGROUND;
+        elseif((event == "INSTANCE_CHAT" or event == "INSTANCE_CHAT_LEADER") and db.history.chat.battleground) then
+            recordAs = _G.INSTANCE_CHAT;
             chatType = "battleground";
         elseif(event == "SAY" and db.history.chat.say) then
             recordAs = _G.SAY;
@@ -627,6 +627,7 @@ local function createHistoryViewer()
                 button.delete:SetPoint("RIGHT");
                 button.delete:SetScript("OnClick", function(self)
                         _G.StaticPopupDialogs["WIM_DELETE_HISTORY"] = {
+                        	preferredIndex = STATICPOPUP_NUMDIALOGS,
                             text = _G.format(L["Are you sure you want to delete all history saved for %s on %s?"],
                                 "|cff69ccf0"..self:GetParent().user.."|r",
                                 "|cff69ccf0"..win.USER.."|r"
@@ -660,7 +661,6 @@ local function createHistoryViewer()
                             end,
                             timeout = 0,
                             whileDead = 1,
-                            preferredIndex = 3,
                             hideOnEscape = 1
                         };
                         _G.StaticPopup_Show("WIM_DELETE_HISTORY");

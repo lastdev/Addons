@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: BeanCounter
-	Revision: $Id: BeanCounterStrings.lua 5325 2012-08-17 15:56:13Z brykrys $
-	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: BeanCounterStrings.lua 5374 2012-10-29 03:50:21Z kandoko $
+	Version: 5.15.5380 (LikeableLyrebird)
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -175,7 +175,7 @@ BeanCounterLocalizations = {
 		["TT_ColorizeSearch"]	= "Diese Option ändert die Farben der Itemlinien im BeanCounter Suchfenster";
 		["TT_MaxDisplayedResults"]	= "Dies kontrolliert die Anzahl der im Fenster angezeigten Suchtreffer.";
 		["TT_neutralCheck"]	= "Ergebnisanzeige für neutrales Schwarzmeer Auktionshaus";
-		["TT_OpacityLevel"]	= "Dies steuert das Niveau der Opazität für die farbigen Balken im BeanCounter Suchfenster (wenn aktiviert) ";
+		["TT_OpacityLevel"]	= "Dies steuert das Niveau der Opazität für die farbigen Balken im BeanCounter Suchfenster (wenn aktiviert)";
 		["TT_sendtosearch"]	= "Wenn eine Suche in BeanCounter eingetragen wird übernimmt das AH Browserfenster die Abfrage ebenfalls.";
 
 		-- Section: Interface
@@ -374,7 +374,7 @@ BeanCounterLocalizations = {
 		["UiDepositTransaction"]	= "Deposit";
 		["UiDone"]	= "Done";
 		["UiExactNameSearch"]	= "Exact name search";
-		["UiFailedAuctions"]	= "Failed Auctions ";
+		["UiFailedAuctions"]	= "Failed Auctions";
 		["UiFee"]	= "Fee";
 		["UiMailFrameRecording"]	= "BeanCounter is recording your mail";
 		["UiMailFrameWait1"]	= "Please do not close the mail frame or";
@@ -421,7 +421,7 @@ BeanCounterLocalizations = {
 		["C_ModTTShow"]	= "Mostrar el tooltip extra solo si se presiona Alt.";
 		["C_MonthsToKeep"]	= "¿Cuantos meses se guardarän los datos?";
 		["C_OpacityLevel"]	= "Nivel de opacidad";
-		["C_Resortascendingtime"]	= "Reordenar todas las entradas de modo ascendente por la fecha ";
+		["C_Resortascendingtime"]	= "Reordenar todas las entradas de modo ascendente por la fecha";
 		["C_ResortDatabase"]	= "Reordenar datos";
 		["C_ScanDatabase"]	= "Escanear la base de datos: Usar si tienes errores al buscar.\nSalva los datos anteriores de BeanCounter antes de usarlo.";
 		["C_SearchConfiguration"]	= "Configuración de busqueda";
@@ -461,7 +461,7 @@ BeanCounterLocalizations = {
 		["TTDataExpireEnabled"]	= "Los datos más antiguos de la fecha seleccionada serán BORRADOS";
 		["TT_ColorizeSearch"]	= "Cambia el color de las lineas de los objetos en la ventana de busqueda de BeanCounter";
 		["TT_MaxDisplayedResults"]	= "Controla el número total de resultados a mostrar.";
-		["TT_neutralCheck"]	= "Muestra los resultados de la casa de subastas neutral ";
+		["TT_neutralCheck"]	= "Muestra los resultados de la casa de subastas neutral";
 		["TT_OpacityLevel"]	= "Controla el nivel de opacidad de las barras de colores en la ventana de busqueda de BeanCounter (Si está habilitado)";
 		["TT_sendtosearch"]	= "Cuando se realiza una busqueda en BeanCounter añadirá la cadena al marco de busqueda de la casa de subastas.";
 
@@ -600,10 +600,10 @@ BeanCounterLocalizations = {
 		["HelpGuiItemBox"]	= "Déplacer l'item dans la boite de recherche";
 		["Q_BeanCountersTooltip"]	= "Qu'est ce que l'encadré d'aide BeanCounter";
 		["Q_DateString"]	= "Format de date à utiliser";
-		["Q_DateStringCommands"]	= "Commandes acceptables de date ? ";
+		["Q_DateStringCommands"]	= "Commandes acceptables de date ?";
 		["Q_ExtenalSearch"]	= "Autoriser les addons externes à utiliser BeanCounter";
-		["Q_MailInvoiceTimeout"]	= "Quel est temps mort de facture de courrier ? ";
-		["Q_MailRecolor"]	= "Quelle est méthode de Re-couleur de courrier ? ";
+		["Q_MailInvoiceTimeout"]	= "Quel est temps mort de facture de courrier ?";
+		["Q_MailRecolor"]	= "Quelle est méthode de Re-couleur de courrier ?";
 
 		-- Section: HelpTooltip
 		["C_MaxDisplayedResults"]	= "Affichage Max des résultats de recherche (à partir de chaque base de données)";
@@ -621,7 +621,7 @@ BeanCounterLocalizations = {
 		-- Section: Mail
 		["MailAllianceAuctionHouse"]	= "Hôtel des ventes de l'Alliance";
 		["MailHordeAuctionHouse"]	= "Hôtel des ventes de la Horde";
-		["MailNeutralAuctionHouse"]	= "Maison des ventes aux-enchères de Blackwater ";
+		["MailNeutralAuctionHouse"]	= "Maison des ventes aux-enchères de Blackwater";
 
 		-- Section: Tooltip Messages
 		["TTDateString"]	= "Entrez le format voulu d'affichage de votre date.Par défaut c'est %c";
@@ -695,41 +695,141 @@ BeanCounterLocalizations = {
 
 	itIT = {
 
+		-- Section: Config Text
+		["C_BeanCounterConfig"]	= "Configurazione di BeanCounter";
+		["C_BeanCounterDatabaseMaintenance"]	= "Gestione del database di BeanCounter";
+		["C_BeanCounterOptions"]	= "Opzioni di BeanCounter";
+		["C_ColorizeSearch"]	= "Aggiungi un gradiente di colore a ogni risultato nella finestra di ricerca.";
+		["C_DatabaseLength"]	= "Determina per quanto tempo BeanCounter terrà traccia delle transazione alla casa d'aste.";
+		["C_DataMaintenance"]	= "Gestione dei dati";
+		["C_DateString"]	= "Formato data da usare:";
+		["C_DateStringExample"]	= "Esempio della data:";
+		["C_ExtenalSearch"]	= "Permetti ad Addon di terze parti di usare i dati di BeanCounter";
+		["C_MailInvoiceTimeout"]	= "Timeout di scansione della posta = %d secondi";
+		["C_MailRecolor"]	= "Metodo di ri-colorazione della posta";
+		["C_ModTTShow"]	= "Mostra il tooltip aggiuntivo solo quando il tasto Alt è premuto";
+		["C_MonthsToKeep"]	= "Quanti mesi di dati vuoi tenere in memoria?";
+		["C_OpacityLevel"]	= "Livello di opacità";
+		["C_Resortascendingtime"]	= "Riordina tutti i dati in base a data crescente";
+		["C_ResortDatabase"]	= "Riorganizza il Database";
+		["C_ScanDatabase"]	= "Scansiona il database per eventuali errori: da usare solo in caso ci siano errori durante la ricerca con BeanCounter.\nFai un backup dei dati di BeanCounter prima di procedere.";
+		["C_SearchConfiguration"]	= "Configurazione della ricerca";
+		["C_SendToSearch"]	= "Aggiungere gli oggetti cercati in BeanCounter nella finestra di ricerca principale della casa d'aste?";
+		["C_ShowBeginnerTooltips"]	= "Mostra il tooltip iniziale quando passi il mouse";
+		["C_ShowReasonPurchase"]	= "Mostra il motivo dell'acquisto nel tooltip";
+		["C_ValidateDatabase"]	= "Valida il Databse";
+
+		-- Section: Generic Strings
+		["NoRe-Color"]	= "Non ricolorare";
+		["off"]	= "Spento";
+		["Ok"]	= "Ok";
+		["on"]	= "Acceso";
+		["Re-ColorIcons"]	= "Ricolora le icone";
+		["Re-ColorIconsandText"]	= "Ricolora le icone ed il testo";
+		["Re-ColorText"]	= "Ricolora il testo";
+		["TooltipFailed"]	= "Impossibile ricevere le informazioni del messaggio a a comparsa.";
+		["UiNeutralCheckBox"]	= "Visualizza dati delle case d'asta neutrali.";
+
+		-- Section: Help Text
+		["A_BeanCountersTooltip"]	= "BeanCounter memorizzerà i motivi degli acquisti fatti e li mostrerà nel tooltip dell'oggetto";
+		["A_DateString"]	= "Questo controlla come il campo \"Data\" di BeanCounter viene mostrato nella GUI. I comandi sono preceduti da %, comandi multipli di testo possono essere concatenati. Per esempio %a == %x mostrerà Mer == 21:34:21";
+		["A_DateStringCommands"]	= "Comandi: \n %a = nome del giorno abbreviato, \n %A = nome del giorno, \n %b = nome del mese abbreviato, \n %B = nome del mese, \n %c = data e ora, \n %d = giorno del mese (01-31),\n %H = ore (24), \n %I = ore (12),\n %M = minuti, \n %m = mese, \n %p = am/pm, \n %S = secondi, \n %U = numero della settimana ,\n %w = giorno della settimana in numero (0-6),\n %x = data, \n %X = tempo,\n %Y = anno completo (2012), \n %y = anno abbreviato(12)";
+		["A_ExtenalSearch"]	= "Permetti a BeanCounter di usare le ricerche che fai in altre addon. Per esempio permetti a BeanCounter di mostrare l'oggetto che stai guardando in Appraiser.";
+		["A_MailInvoiceTimeout"]	= "Il tempo che BeanCounter aspetterà prima di richiedere le informazioni al server in caso di mancata risposta. La richiesta consiste nell'oggetto della lettera, nome del mittente e oggetti allegati.";
+		["A_MailRecolor"]	= "BeanCounter legge tutte le lettere provenienti dalla Casa d'Aste. Questa opzione dice a BeanCounter come si vuole che vengano marcate le lettere non lette.";
+		["HelpGuiItemBox"]	= "Trascina un oggetto nel box per visualizzarne lo storico";
+		["Q_BeanCountersTooltip"]	= "Cos'è il tooltip di BeanCounter";
+		["Q_DateString"]	= "Che formato si vuole usare per la data?";
+		["Q_DateStringCommands"]	= "Comandi per la data accettabili?";
+		["Q_ExtenalSearch"]	= "Permettere ad Addon di terze parti di usare BeanCounter?";
+		["Q_MailInvoiceTimeout"]	= "Cos'è il timeout di controllo della posta?";
+		["Q_MailRecolor"]	= "Cos'è il controllo di ri-colorazione delle lettere?";
+
+		-- Section: HelpTooltip
+		["C_MaxDisplayedResults"]	= "Numero massimo di risultati da mostrare durante una ricerca (da ogni database)";
+		["TTDataExpireEnabled"]	= "Dati più vecchi del tempo scelto verranno CANCELLATI";
+		["TT_ColorizeSearch"]	= "Questa opzione cambia il colore delle linee degli oggetti nella finestra di ricerca di BeanCounter";
+		["TT_MaxDisplayedResults"]	= "Questa opzione controlla il numero massimo di risultati da mostrare nella finestra di scroll.";
+		["TT_neutralCheck"]	= "Mostra i risultati dalla casa d'aste neutrale di Blackwater";
+		["TT_OpacityLevel"]	= "Questa opzione controlla l'opacità delle barre colorate nella finestra di ricerca di BeacnCounter (se abilitato)";
+		["TT_sendtosearch"]	= "Quando viene fatta una ricerca in BeanCounter, questa verrà aggiunta anche alla tab di ricerca principale della Casa d'Aste.";
+
+		-- Section: Interface
+		["Cancelled"]	= "Cancellato";
+		["UiAucCancelled"]	= "Asta Cancellata";
+
 		-- Section: Mail
-		["MailAllianceAuctionHouse"]	= "Casa d'aste dell'Alleanza";
-		["MailHordeAuctionHouse"]	= "Casa d'aste dell'Orda";
-		["MailNeutralAuctionHouse"]	= "Casa d'aste di Blackwater";
+		["MailAllianceAuctionHouse"]	= "Casa d'Aste dell'Alleanza";
+		["MailHordeAuctionHouse"]	= "Casa d'Aste dell'Orda";
+		["MailNeutralAuctionHouse"]	= "Casa d'Aste di Blackwater";
 
 		-- Section: Tooltip Messages
 		["TTDateString"]	= "Entra il formato desiderato per mostrate la data. L'opzione predefinita è %c";
 		["TTDateStringExample"]	= "Mostra un esempio della data formattata";
 		["TTExtenalSearch"]	= "Se fate una ricerca in un altro addon, BeanCounter vi mostrerà la stessa ricerca";
 		["TTMailInvoiceTimeout"]	= "Sceglie quanto tempo BeanCounter cecherà di recuperare le mail dal server prima di lasciar perdere. Più basso == più veloce ma con più possibilità di mancare una mail. Più alto == più lento, ma migliori risultati se il server di posta è estremamente occupato.";
+		["TTMailRecolor"]	= "Scegli come appariranno le mail dopo che BeanCounter scansiona  la mailbox.";
+		["TTModTTShow"]	= "Questa opzione mostrerà il tooltip aggiuntivo di BeanCounter solo se il tasto Alt è premuto.";
+		["TTOpenconfig"]	= "Apre la finestra di configurazione di BeancCounter";
+		["TTResort Database"]	= "Questa opzione riorganizzerà il database ordinandolo per data crescente. Ciò migliora la compattazione del database.";
+		["TTShowBeginnerTooltips"]	= "Mostra il tooltip d'inzio quando si passa il mouse.";
+		["TTShowReasonPurchase"]	= "Mostra il motivo per cui è stato fatto l'acquisto nel tooltip.";
+		["TTValidateDatabase"]	= "Questa opzione scansiona i dati di BeanCounter per cercare di correggere eventuali errori presenti. Usalo solo se riscontri malfunzionamenti.";
+		["TT_AuctionCheck"]	= "Mostra gli oggetti venduti alla Casa d'Aste.";
+		["TT_AuctionFailedCheck"]	= "Mostra gli oggetti la cui vendita non è andata a buon fine";
+		["TT_BeanCounterAHTab"]	= "Click destro per mostrare BeanCounter in una finestra esterna.";
+		["TT_BeanCounterSelectBox"]	= "Filtra i risultati in base al server, giocatore o fazione.";
+		["TT_BidCheck"]	= "Mostra gli oggetti acquistati alla Casa d'Aste.";
+		["TT_BidFailedCheck"]	= "Mostra gli oggetti su cui hai fatto un'offerta.";
+		["TT_ClassicCheck"]	= "Mostra i risultati dal databse classico di BeanCounter.";
+		["TT_ExactCheck"]	= "Ricerca solo testo esatto.";
+		["TT_ItemIconBox"]	= "Trascina un oggetto sul box per cercarlo.\nVerrà mostrata l'icona dell'oggetto se possibile.";
+		["TT_ScrollHeader"]	= "\nRightClick+Drag per Spostare\nALT+RightClick per Ridimensionare\nCTRL+RightClick per Resettare";
+		["TT_SearchBox"]	= "Scrivi quì le query di ricerca, lascia il campo vuoto per visualizzare tutto.";
 
 		-- Section: User Interface
+		["UiAddonTitle"]	= "BeanCounter: Database storico delle aste";
+		["UiAucExpired"]	= "Asta Scaduta";
+		["UiAucSuccessful"]	= "Asta Riuscita";
 		["UiAuctions"]	= "Aste";
 		["UiAuctionTransaction"]	= "Asta";
 		["UiBids"]	= "Offerte";
 		["UiBidTransaction"]	= "Offerta";
 		["UiBuyerSellerHeader"]	= "Compratore/Venditore";
 		["UiBuyTransaction"]	= "Compra";
+		["UiClassicCheckBox"]	= "Mostra i dati classici di BeanCounter";
+		["UiData"]	= "Dati";
 		["UiDateHeader"]	= "Data";
 		["UiDepositTransaction"]	= "Deposito";
+		["UiDone"]	= "Fatto";
 		["UiExactNameSearch"]	= "Ricerca nome esatto";
+		["UiFailedAuctions"]	= "Asta fallita";
+		["UiFee"]	= "Tassa";
+		["UiMailFrameRecording"]	= "BeanCounter sta registrando la tua posta";
+		["UiMailFrameWait1"]	= "Per favore non chiudere la posta";
+		["UiMailFrameWait2"]	= "L'oggetto messo all'asta non verrà registrato";
 		["UiNameHeader"]	= "Oggetto";
 		["UiNetHeader"]	= "Netto";
 		["UiNetPerHeader"]	= "Netto per";
+		["UiOutbid"]	= "Offerta superata";
+		["UiOutbids"]	= "Offerte superate";
 		["UiPriceHeader"]	= "Prezzo";
-		["UiPricePerHeader"]	= "Prezzo per";
+		["UiPriceper"]	= "Prezzo per";
+		["UiPricePerHeader"]	= "Indicatore di prezzo";
 		["UiPurchases"]	= "Compere";
 		["UiQuantityHeader"]	= "Q.tà";
+		["UiReason"]	= "Ragione";
 		["UiSales"]	= "Vendite";
 		["UiSearch"]	= "Ricerca";
 		["UiSearchForLabel"]	= "Cerca per:";
 		["UiSellTransaction"]	= "Vendi";
+		["UiServer"]	= "Server";
 		["UiTransactions"]	= "Transazioni";
 		["UiTransactionsLabel"]	= "Transazioni:";
 		["UiTransactionTypeHeader"]	= "Tipo";
+		["UiWealth"]	= "Ricchezza";
+		["UiWononBid"]	= "Vinto con offerta";
+		["UiWononBuyout"]	= "Vinto all'acquisto diretto";
 
 	};
 
@@ -740,8 +840,8 @@ BeanCounterLocalizations = {
 		["C_BeanCounterDatabaseMaintenance"]	= "콩순이 데이터베이스 관리";
 		["C_BeanCounterOptions"]	= "콩순이 옵션";
 		["C_DataMaintenance"]	= "데이터 관리";
-		["C_DateString"]	= "사용할 날짜 형식: ";
-		["C_DateStringExample"]	= "날짜 예제: ";
+		["C_DateString"]	= "사용할 날짜 형식:";
+		["C_DateStringExample"]	= "날짜 예제:";
 		["C_ExtenalSearch"]	= "외부 애드온이 콩순이 검색을 사용하도록 허락합니까?";
 		["C_MailInvoiceTimeout"]	= "우편 송장 타임아웃 = %d 초";
 		["C_MailRecolor"]	= "우편에 다시 색입히는 방법";
@@ -769,7 +869,7 @@ BeanCounterLocalizations = {
 		-- Section: Help Text
 		["A_BeanCountersTooltip"]	= "SearchUI의 아이템 구입사유를 저장하고 툴팁에 보여줍니다.";
 		["A_DateString"]	= "콩순이의 GUI창에 보이는 날짜의 형식을 결정합니다.\n명령어 앞에 %를 붙여야 하고, 복수의 명령어와 글씨가 혼합될 수 있습니다.\n예를 들어 %a == %X라고 하면 수요일 == 21:34:21로 표시됩니다.";
-		["A_DateStringCommands"]	= "명령어 : \n %a = 요일 약자, \n %A = 요일, \n %b = 월 약자, \n %B = 월,\n %c = 날짜와 시간, \n %d = 일(01-31일),\n %H = 시간 (24시간제), \n %I = 시간(12시간제),\n %M = 분, \n %m = 월(숫자),\n %p = a ";
+		["A_DateStringCommands"]	= "명령어 : \n %a = 요일 약자, \n %A = 요일, \n %b = 월 약자, \n %B = 월,\n %c = 날짜와 시간, \n %d = 일(01-31일),\n %H = 시간 (24시간제), \n %I = 시간(12시간제),\n %M = 분, \n %m = 월(숫자),\n %p = a";
 		["A_ExtenalSearch"]	= "다른 애드온이 콩순이를 이용해 아이템을 검색하여 콩순이 GUI에 보이도록 할 수 있습니다. 예를 들면 Appraiser에서 보고있는 아이템이 무엇인지 콩순이가 보여주도록 합니다.";
 		["A_MailInvoiceTimeout"]	= "송장 요청에 서버가 반응하기를 기다리는 시간입니다. 송장이란 경매장에서 온 우편의 누구, 무엇, 어떻게 부분입니다.";
 		["A_MailRecolor"]	= "콩순이는 경매장에서 온 모든 우편을 읽습니다. 이 옵션은 우편을 안 읽은 것처럼 다시 색을 입힐지를 결정합니다.";
@@ -882,7 +982,7 @@ BeanCounterLocalizations = {
 		["C_OpacityLevel"]	= "Doorzichtigheid niveau";
 		["C_Resortascendingtime"]	= "Sorteer alle items, met oplopende tijd";
 		["C_ResortDatabase"]	= "Sorteer de database";
-		["C_ScanDatabase"]	= "Scan de database voor fouten: Gebruik dit als je fouten hebt tijdens het zoeken met BeanCounter.¶\nBewaar BeanCounter's bewaarde variablen voordat je dit gebruikt. ";
+		["C_ScanDatabase"]	= "Scan de database voor fouten: Gebruik dit als je fouten hebt tijdens het zoeken met BeanCounter.¶\nBewaar BeanCounter's bewaarde variablen voordat je dit gebruikt.";
 		["C_SearchConfiguration"]	= "Zoek configuratie";
 		["C_SendToSearch"]	= "BeanCounters gezochte items aan het hoofd Auction House venster toevoegen?";
 		["C_ShowBeginnerTooltips"]	= "Toon beginnerstooltips in mouse-over";
@@ -951,7 +1051,7 @@ BeanCounterLocalizations = {
 		["TTDateString"]	= "Wpisz format, w którym chcesz mieć wyświetloną datę. Domyślny to %c.";
 		["TTDateStringExample"]	= "Wyświetla przykład pokazujący, jak twoja sformatowana data będzie wyglądać.";
 		["TTExtenalSearch"]	= "Gdy wpisujesz wyszukiwanie w innym AddOn'ie, BeanCounter także wyświetli wyszukiwanie tej rzeczy.";
-		["TTMailInvoiceTimeout"]	= "Wybiera, jak długo BeanCounter będzie próbować dostać odpowiedź z serwera, zanim się podda. Mniejszy czas = szybciej, ale jest większa szansa na zgubienie danych, Większy czas = wolniej, ale zwiększa szanse na zdobycie informacji jeśli serwer jest zajęty. ";
+		["TTMailInvoiceTimeout"]	= "Wybiera, jak długo BeanCounter będzie próbować dostać odpowiedź z serwera, zanim się podda. Mniejszy czas = szybciej, ale jest większa szansa na zgubienie danych, Większy czas = wolniej, ale zwiększa szanse na zdobycie informacji jeśli serwer jest zajęty.";
 		["TTMailRecolor"]	= "Pokaż, jak poczta się będzie pojawiać, gdy BeanCounter już zeskanował skrzynkę odbiorczą.";
 		["TTOpenconfig"]	= "Włącza okno konfiguracji BeanCounter'a";
 
@@ -1146,14 +1246,17 @@ BeanCounterLocalizations = {
 		["C_BeanCounterConfig"]	= "Configurações do BeanCounter";
 		["C_BeanCounterDatabaseMaintenance"]	= "Manutenção do Banco de Dados do BeanCounter";
 		["C_BeanCounterOptions"]	= "Opções do BeanCounter";
+		["C_ColorizeSearch"]	= "Adicionar um gradiente de cor a cada resultado da janela de busca.";
 		["C_DataMaintenance"]	= "Manutenção de Dados";
 		["C_DateString"]	= "Formato de data a ser usado:";
 		["C_DateStringExample"]	= "Exemplo de Data";
 		["C_ExtenalSearch"]	= "Permitir que AddOns externos usem a pesquisa do BeanCounter?";
 		["C_MailRecolor"]	= "Método de Recolorização de Mail";
+		["C_OpacityLevel"]	= "Nível de opacidade";
 		["C_Resortascendingtime"]	= "Reorganizar todas as entradas por data em ordem crescente";
 		["C_ResortDatabase"]	= "Reorganizar Banco de Dados";
 		["C_ScanDatabase"]	= "Analizar o Banco de Dados por erros: Use se você encontra erros enquanto pesquisa usando o BeanCounter. \n Faça um backup das variáveis salvas do BeanCounter antes de usar.";
+		["C_SearchConfiguration"]	= "Configuração de Busca";
 		["C_ValidateDatabase"]	= "Validar Banco de Dados";
 
 		-- Section: Generic Strings
@@ -1248,7 +1351,7 @@ BeanCounterLocalizations = {
 		["TTDataExpireEnabled"]	= "Данные, созданные ранее указонного периода будут УДАЛЕНЫ";
 		["TT_ColorizeSearch"]	= "Эта настройка изменяет цвета отображения предметов в окне поиска BeanCounter.";
 		["TT_MaxDisplayedResults"]	= "Это управляет общим числом результатов, отображаемых в окне прокрутки.";
-		["TT_neutralCheck"]	= "Показать данные нейтральных аукционов домов АО\n";
+		["TT_neutralCheck"]	= "Показать данные нейтральных аукционов домов АО";
 		["TT_OpacityLevel"]	= "Управляет уровнем прозрачности цветных линеек в окне поиска BeanCounter (если они разрешены)";
 		["TT_sendtosearch"]	= "Данные, введенные в окне поиска BeanCounter добавляются в окно просмотра Аукциона.";
 
@@ -1275,7 +1378,7 @@ BeanCounterLocalizations = {
 		["TTValidateDatabase"]	= "Просканировать данные BeanCounter'а и попытаться исправить ошибки. Воспользуйтесь данной функцией, если вы получаете ошибки при поиске.";
 		["TT_AuctionCheck"]	= "Отображать предметы, проданные на аукционе";
 		["TT_AuctionFailedCheck"]	= "Отображать предметы, которые не удалось продать.";
-		["TT_BeanCounterAHTab"]	= "Кликните правой клавишей для показа BeanCounter в отдельном окне. ";
+		["TT_BeanCounterAHTab"]	= "Кликните правой клавишей для показа BeanCounter в отдельном окне.";
 		["TT_BeanCounterSelectBox"]	= "Фильтровать результаты поиска по серверу, персонажу или фракции.";
 		["TT_BidCheck"]	= "Отображать предметы, купленные на аукционе.";
 		["TT_BidFailedCheck"]	= "Отображать предметы, на которые вы сделали ставку.";
@@ -1547,7 +1650,7 @@ BeanCounterLocalizations = {
 		["TTExtenalSearch"]	= "當在其他插件中鍵入一個搜索,BeanCounter也將顯示一個搜索結果";
 		["TTMailInvoiceTimeout"]	= "選擇BeanCounter將嘗試從服務器獲取一個郵件通知的時間.低==更快但較高幾率丟失數據,高==更慢但可提高獲取數據的幾率(如果郵件服務器非常忙).";
 		["TTMailRecolor"]	= "選擇BeanCounter掃瞄郵箱後郵件的顯示方式.";
-		["TTModTTShow"]	= "Alt被按下時將顯示選項BeanCounter的額外提示。\n";
+		["TTModTTShow"]	= "Alt被按下時將顯示選項BeanCounter的額外提示。";
 		["TTOpenconfig"]	= "打開BeanCounter配置窗口";
 		["TTResort Database"]	= "這將把BeanCounter數據按照增序排序.可提高數據庫壓縮速度.";
 		["TTShowBeginnerTooltips"]	= "開啟鼠標經過時的新手提示";

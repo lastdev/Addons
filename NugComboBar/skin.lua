@@ -18,6 +18,10 @@ local resolution5x4 = {
     ["1280x1024"] = true,
     ["2560x2048"] = true,
 }
+local resolution5x2 = {
+ ["2560x1024"] = true,
+}
+
 local res = GetCVar("gxResolution")
 if res then
     if resolution4x3[res] then
@@ -26,6 +30,8 @@ if res then
         aX, aY = 2, 2
     elseif resolution5x4[res] then
         aX, aY = 7, 7
+    elseif resolution5x2[res] then
+        aX, aY = -11, -5
     end
 end
 
@@ -135,16 +141,6 @@ NugComboBar.presets = {
         { "spells\\gouge_precast_state_hand.mdx", 3 },
         { "spells\\gouge_precast_state_hand.mdx", 3 },
     },
-    ["fogPink"] = {
-        { "spells\\spells\\seedofcorruption_state.mdx", .7 },
-        { "spells\\spells\\seedofcorruption_state.mdx", .7 },
-        { "spells\\spells\\seedofcorruption_state.mdx", .7 },
-        { "spells\\spells\\seedofcorruption_state.mdx", .7 },
-        { "spells\\spells\\seedofcorruption_state.mdx", .7 },
-        { "spells\\spells\\seedofcorruption_state.mdx", 1 },
-        { "spells\\spells\\seedofcorruption_state.mdx", .7 },
-        { "spells\\spells\\seedofcorruption_state.mdx", .7 },
-    },
     ["fireBlue"] = {
         { "spells\\fire_blue_precast_uber_hand.mdx", 4, 0, 0.0015 },
         { "spells\\fire_blue_precast_uber_hand.mdx", 4, 0, 0.0015 },
@@ -175,16 +171,16 @@ NugComboBar.presets = {
         { "spells\\fel_fire_precast_hand.mdx", 4, 0, 0.0015 },
         { "spells\\fel_fire_precast_hand.mdx", 4, 0, 0.0015 },
     },
-    ["electricBlue"] = {
-        { "spells\\lightningboltivus_missile.mdx", .25 },
-        { "spells\\lightningboltivus_missile.mdx", .25 },
-        { "spells\\lightningboltivus_missile.mdx", .25 },
-        { "spells\\lightningboltivus_missile.mdx", .25 },
-        { "spells\\lightningboltivus_missile.mdx", .25 },
-        { "spells\\lightningboltivus_missile.mdx", .4 },
-        { "spells\\lightningboltivus_missile.mdx", .25 },
-        { "spells\\lightningboltivus_missile.mdx", .25 },
-    },
+    -- ["electricBlue"] = {
+    --     { "spells\\lightningboltivus_missile.mdx", .25 },
+    --     { "spells\\lightningboltivus_missile.mdx", .25 },
+    --     { "spells\\lightningboltivus_missile.mdx", .25 },
+    --     { "spells\\lightningboltivus_missile.mdx", .25 },
+    --     { "spells\\lightningboltivus_missile.mdx", .25 },
+    --     { "spells\\lightningboltivus_missile.mdx", .4 },
+    --     { "spells\\lightningboltivus_missile.mdx", .25 },
+    --     { "spells\\lightningboltivus_missile.mdx", .25 },
+    -- },
 }
 
 
@@ -207,7 +203,7 @@ local SetColorFunc = function(self,r,g,b)
 end
 local SetPresetFunc = function ( self, name )
     local ps = NugComboBar.presets[name]
-    if not ps then return end
+    if not ps then return false end
     local settings = ps[self.id]
     local model, scale, ox, oy = unpack(settings)
     self:SetModel(model)
@@ -216,6 +212,7 @@ local SetPresetFunc = function ( self, name )
     oy = oy or 0
     local x,y,z = unpack(self.position)
     self:SetPosition(x+ox, y+oy, z)
+    return true
 end
 
 local pointtex = {
@@ -224,42 +221,42 @@ local pointtex = {
         coords = {0, 26/256, 0, 1},
         width = 26, height = 32,
         psize = 14,
-        poffset_x = 19 +aX, poffset_y = -14 +aY,
+        poffset_x = 19, poffset_y = -14,
     },
     [2] = {
         texture = "Interface\\Addons\\NugComboBar\\tex\\ncbc_bg5",
         coords = {26/256, 50/256, 0, 1},
         width = 24, height = 32,
         psize = 14,
-        poffset_x = 17 +aX, poffset_y = -14 +aY,
+        poffset_x = 17, poffset_y = -14,
     },
     [3] = {
         texture = "Interface\\Addons\\NugComboBar\\tex\\ncbc_bg5",
         coords = {50/256, 74/256, 0, 1},
         width = 24, height = 32,
         psize = 14,
-        poffset_x = 17 +aX, poffset_y = -14 +aY,
+        poffset_x = 17, poffset_y = -14,
     },
     [4] = {
         texture = "Interface\\Addons\\NugComboBar\\tex\\ncbc_bg5",
         coords = {74/256, 98/256, 0, 1},
         width = 24, height = 32,
         psize = 14,
-        poffset_x = 17 +aX, poffset_y = -14 +aY,
+        poffset_x = 17, poffset_y = -14,
     },
     [5] = {
         texture = "Interface\\Addons\\NugComboBar\\tex\\ncbc_bg5",
         coords = {26/256, 50/256, 0, 1},
         width = 24, height = 32,
         psize = 14,
-        poffset_x = 17 +aX, poffset_y = -14 +aY,
+        poffset_x = 17, poffset_y = -14,
     },
     [6] = {
         texture = "Interface\\Addons\\NugComboBar\\tex\\ncbc_bg5",
         coords = {98/256, 140/256, 0, 1},
         width = 42, height = 32,
         psize = 18,
-        poffset_x = 20 +aX, poffset_y = -14 +aY,
+        poffset_x = 20, poffset_y = -14,
     },
 
     --reversed textures for paladin
@@ -269,7 +266,7 @@ local pointtex = {
         width = 25, height = 32,
         offset_x = -13, drawlayer = 1,
         psize = 14,
-        poffset_x = 17 +aX, poffset_y = -14 +aY,
+        poffset_x = 17, poffset_y = -14,
     },
 
     [8] = {
@@ -277,7 +274,7 @@ local pointtex = {
         coords = {221/256, 1, 0, 1},
         width = 35, height = 32,
         psize = 14,
-        poffset_x = 16 +aX, poffset_y = -14 +aY,
+        poffset_x = 16, poffset_y = -14,
     },
 
     ["bar"] = {
@@ -323,7 +320,10 @@ function NugComboBar.SetMaxPoints(self, n, special)
         prevt = point.bg
 
         point:SetColor(unpack(NugComboBarDB.colors[i])) --+color_offset
-        point:SetPreset(NugComboBarDB.preset3d)
+        if not (point:SetPreset(NugComboBarDB.preset3d)) then
+            NugComboBarDB.preset3d = NugComboBar.defaults.preset3d
+            point:SetPreset(NugComboBarDB.preset3d)
+        end
     end
     self:SetWidth(framesize)
 end
@@ -430,7 +430,12 @@ NugComboBar.Create = function(self)
         t.settings = ts
         prevt = t
 
-        local f = NugComboBarDB.enable3d  and self:Create3DPoint(i, ts) or self:Create2DPoint(i, ts)
+        local is3D = NugComboBarDB.enable3d
+        local f = is3D  and self:Create3DPoint(i, ts) or self:Create2DPoint(i, ts)
+        if is3D then
+            ts.poffset_x = ts.poffset_x + aX
+            ts.poffset_y = ts.poffset_y + aY
+        end
 
         f:SetAlpha(0)
         f:SetPoint("CENTER", t, "TOPLEFT", ts.poffset_x, ts.poffset_y)
@@ -512,6 +517,8 @@ NugComboBar.Create = function(self)
 
     local normalSetScale = self.SetScale
     local normalSetAlpha = self.SetAlpha
+    local normalShow = self.Show
+    local normalHide = self.Hide
     bar.Small = function(self)
         self:SetWidth(45); self:SetHeight(7);
         self.text:Hide()
@@ -519,6 +526,8 @@ NugComboBar.Create = function(self)
         self:ClearAllPoints()
         NugComboBar.SetScale = normalSetScale
         NugComboBar.SetAlpha = normalSetAlpha
+        NugComboBar.Show = nil -- return to normal
+        NugComboBar.Hide = nil
         if barBottom then 
             self:SetPoint("TOPLEFT", NugComboBar, "BOTTOMLEFT", 14, 4)
         else
@@ -547,10 +556,18 @@ NugComboBar.Create = function(self)
             self.bar:SetAlpha(alpha)
             normalSetAlpha(NugComboBar, alpha)
         end
+
+        NugComboBar.Hide = function(self)
+            self.bar:Hide()
+        end
+        NugComboBar.Show = function(self)
+            self.bar:Show()
+        end
+        normalHide(NugComboBar)
+
         self:ClearAllPoints()
         self:SetPoint("TOPLEFT", NugComboBar, "TOPLEFT", 5, -3)
         self.text:Show()
-        NugComboBar:Hide()
     end
 
     -- local tb = bar:CreateTexture(nil, "BACKGROUND", nil, 1)

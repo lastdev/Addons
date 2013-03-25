@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(96, "DBM-Party-Cataclysm", 6, 64)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(46962)
 mod:SetModelID(34610)
 mod:SetZone()
@@ -26,7 +26,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(93581, 93712) then -- unconfirmed in mop
+	if args:IsSpellID(93581) then
 		warnPain:Show(args.destName)
 	end
 end
@@ -38,7 +38,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(93423, 93710) then -- unconfirmed in mop
+	if args:IsSpellID(93423) then
 		timerAsphyxiate:Start()
 	elseif args:IsSpellID(93720) then
 		warnWracking:Show()

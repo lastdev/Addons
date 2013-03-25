@@ -9,9 +9,10 @@
 
 local L = OVERACHIEVER_STRINGS
 local GetAchievementInfo = Overachiever.GetAchievementInfo
+local GetAchievementCriteriaInfo = Overachiever.GetAchievementCriteriaInfo
 
-local LBZ = LibStub("LibBabble-Zone-3.0"):GetUnstrictLookupTable()
-local LBZR = LibStub("LibBabble-Zone-3.0"):GetReverseLookupTable()
+local LBZ = LibStub("LibBabble-SubZone-3.0"):GetUnstrictLookupTable()
+local LBZR = LibStub("LibBabble-SubZone-3.0"):GetReverseLookupTable()
 local LBI = LibStub:GetLibrary("LibBabble-Inventory-3.0"):GetLookupTable()
 local LBIR = LibStub:GetLibrary("LibBabble-Inventory-3.0"):GetReverseLookupTable()
 
@@ -62,7 +63,7 @@ if (IsAlliance) then
 	["The Cape of Stranglethorn"] = 4905,
 	--["Deadwind Pass"] = nil,
 	--["Dun Morogh"] = nil,
-	["Duskwood"] = 4907,
+	["Duskwood"] = 4903,
 	["Eastern Plaguelands"] = 4892, -- faction neutral
 	--["Elwynn Forest"] = nil,
 	--["Hillsbrad Foothills"] = nil,
@@ -76,7 +77,7 @@ if (IsAlliance) then
 	--["Tirisfal Glades"] = nil,
 	["Western Plaguelands"] = 4893, -- faction neutral
 	["Westfall"] = 4903,
-	["Wetlands"] = 4898,
+	["Wetlands"] = 4899,
      -- Burning Crusade:
 	--["Eversong Woods"] = nil,
 	--["Ghostlands"] = nil,
@@ -261,19 +262,67 @@ local ACHID_ZONE_MISC = {
 	["Sholazar Basin"] =		-- "The Snows of Northrend", "Honorary Frenzyheart",
 		{ 938, 961, 962, 952 },	-- "Savior of the Oracles", "Mercenary of Sholazar"
 	["Zul'Drak"] = { "1576:2", "1596:2" },	-- "Of Blood and Anguish", "Guru of Drakuru"
-	["Wintergrasp"] = { 2199, 1717, 1751, 1755, 1727, 1723 },
+	["Wintergrasp"] = { 1752, 2199, 1717, 1751, 1755, 1727, 1723 },
 -- Darkmoon Faire
 	["Darkmoon Island"] = { 6020, 6021, 6022, 6023, 6026, 6027, 6028, 6029, IsAlliance and 6030 or 6031, 6032, 6025 },
 	["Darkmoon Faire"] = { 6020, 6021, 6022, 6023, 6026, 6027, 6028, 6029, IsAlliance and 6030 or 6031, 6032, 6025 },
 	-- !! not 100% certain which is needed; may be both; test when the faire's available
--- Other (Cataclysm)
+-- Other Cataclysm-related
 	["Deepholm"] = { 5445, 5446, 5447, 5449 },	-- "Fungalophobia", "The Glop Family Line",
 							-- "My Very Own Broodmother", "Rock Lover"
+-- Pandaria
+	["The Jade Forest"] = {
+		IsAlliance and 6300 or 6534, -- Upjade Complete
+		6550, -- Order of the Cloud Serpent
+		7289, -- Shadow Hopper
+		7290, -- How To Strain Your Dragon
+		7291, -- In a Trail of Smoke
+		7381, -- Restore Balance
+	},
+	["Krasarang Wilds"] = {
+		IsAlliance and 6535 or 6536, -- Mighty Roamin' Krasaranger
+		6547, -- The Anglers
+		7518, -- Wanderers, Dreamers, and You
+	},
+	["Kun-Lai Summit"] = {
+		6480, -- Settle Down, Bro
+		IsAlliance and 6537 or 6538, -- Slum It in the Summit
+		7386, -- Grand Expedition Yak
+	},
+	["Valley of the Four Winds"] = {
+		6301, -- Rally the Valley
+		6544, -- The Tillers
+		6551, -- Friend on the Farm
+		7292, -- Green Acres
+		7293, -- Till the Break of Dawn
+		7294, -- A Taste of Things to Come
+		7295, -- Listen to the Drunk Fish
+		7325, -- Now I'm the Master
+		7502, -- Savior of Stoneplow
+		6517, -- Extinction Event
+	},
+	["Townlong Steppes"] = {
+		6539, -- One Steppe Foward, Two Steppes Back
+		7299, -- Loner and a Rebel
+	},
+	["Dread Wastes"] = {
+		6540, -- Dread Haste Makes Dread Waste
+		6545, -- Klaxxi
+		7312, -- Amber is the Color of My Energy
+		7313, -- Stay Klaxxi
+		7314, -- Test Drive
+	},
+	["Vale of Eternal Blossoms"] = {
+		6546, -- The Golden Lotus
+		7317, -- One Many Army
+		7318, -- A Taste of History
+		7315, -- Eternally in the Vale
+	},
+	["Isle of Thunder"] = 8121, -- "Stormbreaker"
 }
 if (IsAlliance) then
   tinsert(ACHID_ZONE_MISC["Grizzly Hills"], 2016) -- "Grizzled Veteran"
   tinsert(ACHID_ZONE_MISC["Wintergrasp"], 1737) -- "Destruction Derby"
-  tinsert(ACHID_ZONE_MISC["Wintergrasp"], 1752) -- "Master of Wintergrasp"
   --Currently a Feat of Strength but this may be a bug as I've seen reports that you can still get one. Then
   --again, maybe since it was much more difficult to get one previously, a FoS is meant to recognize that:
   --tinsert(ACHID_ZONE_MISC["Winterspring"], 3356) -- "Winterspring Frostsaber"
@@ -284,7 +333,7 @@ if (IsAlliance) then
   ACHID_ZONE_MISC["Stormwind City"] = { 388, 545, 5476, 5474 }
   ACHID_ZONE_MISC["Ironforge"] = { 388, 545, 5847, 5841 }
   ACHID_ZONE_MISC["Darnassus"] = { 388, 5848, 5842 }
-  ACHID_ZONE_MISC["The Exodar"] = 388
+  ACHID_ZONE_MISC["The Exodar"] = { 388 }
   -- "Wrath of the Alliance", faction leader kill, "For The Alliance!":
   ACHID_ZONE_MISC["Orgrimmar"] = { 604, 610, 614 }
   ACHID_ZONE_MISC["Thunder Bluff"] = { 604, 611, 614 }
@@ -297,14 +346,13 @@ else
   tinsert(ACHID_ZONE_MISC["Azshara"], 5454) -- "Joy Ride"
   tinsert(ACHID_ZONE_MISC["Grizzly Hills"], 2017) -- "Grizzled Veteran"
   tinsert(ACHID_ZONE_MISC["Wintergrasp"], 2476)	-- "Destruction Derby"
-  tinsert(ACHID_ZONE_MISC["Wintergrasp"], 2776)	-- "Master of Wintergrasp"
   tinsert(ACHID_ZONE_MISC["Twilight Highlands"], 5482) -- "Dragonmaw Tour of Duty"
   tinsert(ACHID_ZONE_MISC["Twilight Highlands"], 5321) -- "King of the Mountain"
   -- As applicable, "City Defender", "Shave and a Haircut", "Fish or Cut Bait: <City>", "Let's Do Lunch: <City>":
   ACHID_ZONE_MISC["Orgrimmar"] = { 1006, 545, 5477, 5475 }
   ACHID_ZONE_MISC["Thunder Bluff"] = { 1006, 5849, 5843 }
   ACHID_ZONE_MISC["Undercity"] = { 1006, 545, 5850, 5844 }
-  ACHID_ZONE_MISC["Silvermoon City"] = 1006
+  ACHID_ZONE_MISC["Silvermoon City"] = { 1006 }
   -- "Wrath of the Horde", faction leader kill, "For The Horde!":
   ACHID_ZONE_MISC["Stormwind City"] = { 603, 615, 619 }
   ACHID_ZONE_MISC["Ironforge"] = { 603, 616, 619 }
@@ -320,6 +368,16 @@ tinsert(ACHID_ZONE_MISC["Orgrimmar"], "150:1")
 -- "Old Crafty" and "Old Ironjaw":
 tinsert(ACHID_ZONE_MISC["Orgrimmar"], 1836)
 tinsert(ACHID_ZONE_MISC["Ironforge"], 1837)
+-- "Big City Pet Brawlin' - Alliance":
+tinsert(ACHID_ZONE_MISC["Stormwind City"], "6584:1")
+tinsert(ACHID_ZONE_MISC["Ironforge"], "6584:2")
+tinsert(ACHID_ZONE_MISC["Darnassus"], "6584:3")
+tinsert(ACHID_ZONE_MISC["The Exodar"], "6584:4")
+-- "Big City Pet Brawlin' - Horde":
+tinsert(ACHID_ZONE_MISC["Orgrimmar"], "6621:1")
+tinsert(ACHID_ZONE_MISC["Thunder Bluff"], "6621:2")
+tinsert(ACHID_ZONE_MISC["Undercity"], "6621:3")
+tinsert(ACHID_ZONE_MISC["Silvermoon City"], "6621:4")
 
 -- INSTANCES - ANY DIFFICULTY (any group size):
 local ACHID_INSTANCES = {
@@ -331,7 +389,6 @@ local ACHID_INSTANCES = {
 	["Gnomeregan"] = 634,
 	["Razorfen Kraul"] = 635,
 	["Razorfen Downs"] = 636,
-	["Scarlet Monastery"] = 637,
 	["Uldaman"] = 638,
 	["Zul'Farrak"] = 639,
 	["Maraudon"] = 640,
@@ -340,7 +397,6 @@ local ACHID_INSTANCES = {
 	["Lower Blackrock Spire"] = 643,
 	["Upper Blackrock Spire"] = { 1307, 2188 },	-- "Upper Blackrock Spire", "Leeeeeeeeeeeeeroy!"
 	["Dire Maul"] = 644,
-	["Scholomance"] = 645,
 	["Stratholme"] = 646,
 -- Classic Raids
 	-- These are now Feats of Strength: ["Zul'Gurub"] = { 688, 560, 957 },	-- "Zul'Gurub", "Deadliest Catch", "Hero of the Zandalar"
@@ -399,28 +455,40 @@ local ACHID_INSTANCES = {
 	["Zul'Gurub"] = { 5768, 5765, 5743, 5762, 5759, 5744 },  -- "Heroic: Zul'Gurub", "Here, Kitty Kitty...", "It's Not Easy Being Green", "Ohganot So Fast!", "Spirit Twister", "Gurubashi Headhunter"
 -- Cataclysm Raids
 	["Firelands"] = { 5802, 5828, 5855 }, -- "Firelands", "Glory of the Firelands Raider", "Ragnar-O's"
+
+-- Pandaria Dungeons
+	["Gate of the Setting Sun"] = 6945, -- "Mantid Swarm"
+	["Stormstout Brewery"] = { 6400, 6402 }, -- "How Did He Get Up There?", "Ling-Ting's Herbal Journey"
+	["Scarlet Monastery"] = 6946, -- "Empowered Spiritualist"
+-- Pandaria Raids
+	["Heart of Fear"] = { 6718, 6845, 6936, 6518, 6683, 6553, 6937, 6922 }, -- "The Dread Approach", "Nightmare of Shek'zeer", "Candle in the Wind", "I Heard You Like Amber...", "Less Than Three", "Like An Arrow to the Face", "Overzealous", "Timing is Everything"
+	["Mogu'shan Vaults"] = { 6458, 6844, 6674, 6687, 6823, 6455, 7056, 6686 }, -- "Guardians of Mogu'shan", "The Vault of Mysteries", "Anything You Can Do, I Can Do Better...", "Getting Hot in Here", "Must Love Dogs", "Show Me Your Moves!", "Sorry, Were You Looking for This?", "Straight Six"
+	["Terrace of Endless Spring"] = { 6689, 6824, 6717, 6825, 6933 }, -- "Terrace of Endless Spring", "Face Clutchers", "Power Overwhelming", "The Mind-Killer", "Who's Got Two Green Thumbs?"
+	["Throne of Thunder"] = {
+		8070, 8071, 8069, 8072, 8089, -- "Forgotten Depths", "Halls of Flesh-Shaping", "Last Stand of the Zandalari", "Pinnacle of Storms", "I Thought He Was Supposed to Be Hard?"
+		8037, 8087, 8090, 8094, 8073, 8082, 8098, 8081, 8086 -- "Genetically Unmodified Organism", "Can't Touch This", "A Complete Circuit", "Lightning Overload", "Cage Match", "Head Case", "You Said Crossing the Streams Was Bad", "Ritualist Who?", "From Dusk 'til Dawn"
+	},
 }
 -- Battlegrounds
-ACHID_INSTANCES["Eye of the Storm"] = { 1171, 587, 1258, 211 }
 ACHID_INSTANCES["The Battle for Gilneas"] = 5258
+ACHID_INSTANCES["Eye of the Storm"] = { 1171, 587, 1258, 211 }
+ACHID_INSTANCES["Silvershard Mines"] = 7106
+ACHID_INSTANCES["Strand of the Ancients"] = 2194
+ACHID_INSTANCES["Twin Peaks"] = 5223  -- "Master of Twin Peaks"
+ACHID_INSTANCES["Wildhammer Stronghold"] = 5223  -- Also part of Twin Peaks
+ACHID_INSTANCES["Dragonmaw Stronghold"] = 5223  -- Also part of Twin Peaks
+ACHID_INSTANCES["Temple of Kotmogu"] = 6981
 if (IsAlliance) then
 	ACHID_INSTANCES["Alterac Valley"] = { 1167, 907, 226 }
 	ACHID_INSTANCES["Arathi Basin"] = { 1169, 907 }
 	ACHID_INSTANCES["Warsong Gulch"] = { 1172, 1259, 907 }
-	ACHID_INSTANCES["Strand of the Ancients"] = 2194
 	ACHID_INSTANCES["Isle of Conquest"] = { 3857, 3845, 3846 }
-	ACHID_INSTANCES["Twin Peaks"] = 5223  -- "Master of Twin Peaks"
-	ACHID_INSTANCES["Wildhammer Stronghold"] = 5223  -- Also part of Twin Peaks
-	ACHID_INSTANCES["Dragonmaw Stronghold"] = 5223  -- Also part of Twin Peaks
+
 else
-	ACHID_INSTANCES["Alterac Valley"] = { 1168, 714, 226 }
-	ACHID_INSTANCES["Arathi Basin"] = { 1170, 714 }
-	ACHID_INSTANCES["Warsong Gulch"] = { 1173, 1259, 714 }
-	ACHID_INSTANCES["Strand of the Ancients"] = 2195
+	ACHID_INSTANCES["Alterac Valley"] = { 1167, 714, 226 }
+	ACHID_INSTANCES["Arathi Basin"] = { 1169, 714 }
+	ACHID_INSTANCES["Warsong Gulch"] = { 1172, 1259, 714 }
 	ACHID_INSTANCES["Isle of Conquest"] = { 3957, 3845, 4176 }
-	ACHID_INSTANCES["Twin Peaks"] = 5259  -- "Master of Twin Peaks"
-	ACHID_INSTANCES["Wildhammer Stronghold"] = 5259  -- Also part of Twin Peaks
-	ACHID_INSTANCES["Dragonmaw Stronghold"] = 5259  -- Also part of Twin Peaks
 end
 -- For all battlegrounds:
 local ACHID_BATTLEGROUNDS = { 238, 245, IsAlliance and 246 or 1005, 247, 229, 227, 231, 1785 }
@@ -430,6 +498,8 @@ local ACHID_INSTANCES_NORMAL = {
 -- Classic Dungeons
 	["The Deadmines"] = 628,
 	["Shadowfang Keep"] = 631,
+	["Scarlet Monastery"] = 637,
+	["Scholomance"] = 645,
 -- Cataclysm Dungeons
 	["Lost City of the Tol'vir"] = 4848,
 	["Blackrock Caverns"] = 4833,
@@ -438,6 +508,12 @@ local ACHID_INSTANCES_NORMAL = {
 	["Halls of Origination"] = 4841,
 	["The Stonecore"] = 4846,
 	["Throne of the Tides"] = 4839,
+-- Pandaria Dungeons
+	["Mogu'shan Palace"] = 6755,
+	["Shado-Pan Monastery"] = 6469,
+	["Stormstout Brewery"] = 6457,
+	["Temple of the Jade Serpent"] = 6757,
+	["Scarlet Halls"] = 7413,
 }
 
 -- INSTANCES - HEROIC ONLY (any group size):
@@ -486,6 +562,21 @@ local ACHID_INSTANCES_HEROIC = {
 	["The Deadmines"] = { 5083, 5370, 5369, 5368, 5367, 5366, 5371 },
 	["The Stonecore"] = { 5063, 5287 },
 	["Throne of the Tides"] = { 5061, 5285, 5286 },
+-- Pandaria Dungeons
+	["Gate of the Setting Sun"] = { 6759, 6479, 6476 },
+	["Mogu'shan Palace"] = { 6478, 6756, 6713, 6736 },
+	["Shado-Pan Monastery"] = { 6470, 6471, 6477, 6472 },
+	["Siege of Niuzao Temple"] = { 6763, 6485, 6822, 6688 },
+	["Stormstout Brewery"] = { 6456, 6420, 6089 },
+	["Temple of the Jade Serpent"] = { 6758, 6475, 6460, 6671 },
+	["Scarlet Halls"] = { 6760, 6684, 6427 },
+	["Scarlet Monastery"] = { 6761, 6929, 6928 },
+	["Scholomance"] = { 6762, 6531, 6394, 6396, 6821 },
+-- Pandaria Raids
+	["Heart of Fear"] = { 6729, 6726, 6727, 6730, 6725, 6728 },
+	["Mogu'shan Vaults"] = { 6723, 6720, 6722, 6721, 6719, 6724 },
+	["Terrace of Endless Spring"] = { 6733, 6731, 6734, 6732 },
+	["Throne of Thunder"] = { 8124, 8067 }, -- "Glory of the Thundering Raider", "Heroic: Lei Shen"
 }
 
 -- INSTANCES - 10-MAN ONLY (normal or heroic):
@@ -615,8 +706,8 @@ end
 ----------------------------------------------------
 
 local ACHID_TRADESKILL = {
-	["Cooking"] = IsAlliance and { 1563, 5845 } or { 1784, 5846 },	-- "Hail to the Chef", "A Bunch of Lunch"
-	["Fishing"] = { 1516, 5478, 5479, IsAlliance and 5851 or 5852 }, -- "Accomplished Angler", "The Limnologist", "The Oceanographer", "Gone Fishin'"
+	["Cooking"] = { 1563, 5845 },	-- "Hail to the Chef", "A Bunch of Lunch"
+	["Fishing"] = { 1516, 5478, 5479, 5851 }, -- "Accomplished Angler", "The Limnologist", "The Oceanographer", "Gone Fishin'"
 }
 
 local ACHID_TRADESKILL_ZONE = {
@@ -674,6 +765,7 @@ local ACHID_TRADESKILL_BG = { Cooking = 1785 }	-- "Dinner Impossible"
 local VARS
 local frame, panel, sortdrop
 local LocationsList, EditZoneOverride, subzdrop, subzdrop_menu, subzdrop_Update = {}
+local diffdrop, raidsizedrop
 local RefreshBtn, ResetBtn, NoSuggestionsLabel, ResultsLabel
 
 local function SortDrop_OnSelect(self, value)
@@ -779,11 +871,12 @@ end
 
 local TradeskillSuggestions
 
-local Refresh_stoploop
+local Refresh_lastcount, Refresh_stoploop = 0
 
 local function Refresh(self)
   if (not frame:IsVisible() or Refresh_stoploop) then  return;  end
   if (self == RefreshBtn or self == EditZoneOverride) then  PlaySound("igMainMenuOptionCheckBoxOn");  end
+  Refresh_stoploop = true
 
   wipe(suggested)
   EditZoneOverride:ClearFocus()
@@ -798,13 +891,25 @@ local function Refresh(self)
   else
     zone = ZoneLookup(GetRealZoneText(), nil, CurrentSubzone)
     EditZoneOverride:SetTextColor(0.75, 0.1, 0.1)
-    Refresh_stoploop = true
+    --Refresh_stoploop = true
     subzdrop:SetMenu(subzdrop_menu)
-    Refresh_stoploop = nil
+    --Refresh_stoploop = nil
     subzdrop:Disable()
   end
 
   local instype, heroicD, twentyfive, heroicR = Overachiever.GetDifficulty()
+
+  -- Check for difficulty override:
+  local val = diffdrop:GetSelectedValue()
+  if (val ~= 0) then
+    val = val == 2 and true or false
+    heroicD = val
+    heroicR = val
+  end
+  val = raidsizedrop:GetSelectedValue()
+  if (val ~= 0) then
+    twentyfive = val == 25 and true or false
+  end
 
   -- Suggestions based on an open tradeskill window or whether a fishing pole is equipped:
   TradeskillSuggestions = GetTradeSkillLine()
@@ -870,7 +975,7 @@ local function Refresh(self)
             Refresh_Add(ACHID_INSTANCES_NORMAL[CurrentSubzone] or ACHID_INSTANCES_NORMAL[zone], ach10, achN10)
           end
         end
-      -- Not a raid:
+      -- Not a raid (or at least no 10-man vs 25-man specific suggestions):
       elseif (heroicD) then
         Refresh_Add(ACHID_INSTANCES_HEROIC[CurrentSubzone] or ACHID_INSTANCES_HEROIC[zone])
       else
@@ -883,6 +988,7 @@ local function Refresh(self)
     for id in pairs(RecentReminders) do
       suggested[id] = true
     end
+
   end
 
   local list, count = frame.AchList, 0
@@ -900,8 +1006,12 @@ local function Refresh(self)
     end
   end
 
-  Overachiever_SuggestionsFrameContainerScrollBar:SetValue(0)
+  if (self ~= panel or Refresh_lastcount ~= count) then
+    Overachiever_SuggestionsFrameContainerScrollBar:SetValue(0)
+  end
   frame:ForceUpdate(true)
+  Refresh_lastcount = count
+  Refresh_stoploop = nil
 end
 
 function frame.SetNumListed(num)
@@ -1172,7 +1282,46 @@ Overachiever_SuggestionsFrameSubzoneDropButton:SetScript("OnClick", function(...
 end)
 
 
-RefreshBtn:SetPoint("TOPLEFT", subzdrop, "BOTTOMLEFT", 16, -14)
+-- Override for Normal/Heroic and group size
+diffdrop = TjDropDownMenu.CreateDropDown("Overachiever_SuggestionsFrameDiffDrop", panel, {
+  {
+    text = L.SUGGESTIONS_DIFFICULTY_AUTO,
+    value = 0
+  },
+  {
+    text = L.SUGGESTIONS_DIFFICULTY_NORMAL,
+    value = 1
+  },
+  {
+    text = L.SUGGESTIONS_DIFFICULTY_HEROIC,
+    value = 2
+  };
+})
+diffdrop:SetLabel(L.SUGGESTIONS_DIFFICULTY, true)
+diffdrop:SetPoint("TOPLEFT", subzdrop, "BOTTOMLEFT", 0, -18)
+diffdrop:OnSelect(Refresh)
+
+raidsizedrop = TjDropDownMenu.CreateDropDown("Overachiever_SuggestionsFrameRaidSizeDrop", panel, {
+  {
+    text = L.SUGGESTIONS_RAIDSIZE_AUTO,
+    value = 0
+  },
+  {
+    text = L.SUGGESTIONS_RAIDSIZE_10,
+    value = 10
+  },
+  {
+    text = L.SUGGESTIONS_RAIDSIZE_25,
+    value = 25
+  };
+})
+raidsizedrop:SetLabel(L.SUGGESTIONS_RAIDSIZE, true)
+raidsizedrop:SetPoint("TOPLEFT", diffdrop, "BOTTOMLEFT", 0, -18)
+raidsizedrop:OnSelect(Refresh)
+
+
+
+RefreshBtn:SetPoint("TOPLEFT", raidsizedrop, "BOTTOMLEFT", 16, -14)
 
 ResetBtn = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
 ResetBtn:SetWidth(75); ResetBtn:SetHeight(21)

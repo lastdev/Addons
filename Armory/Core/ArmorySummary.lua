@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 524 2012-09-17T10:49:10Z
+    Revision: 585 2013-03-02T14:19:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -149,7 +149,7 @@ end
 local function OnCharacterClick(self, profile, button)
     if ( button == "RightButton" ) then
         if ( not Armory:IsPlayerSelected(profile) ) then
-            local dialog = StaticPopup_Show("ARMORY_DELETE_CHARACTER", profile.character);
+            local dialog = ArmoryStaticPopup_Show("ARMORY_DELETE_CHARACTER", profile.character);
             dialog.data = profile;
             Armory:HideSummary();
         end
@@ -198,32 +198,6 @@ local function OnMoneyEnter(self, characterInfo)
         SetTooltipMoney(GameTooltip, characterInfo.Money);
     end
     GameTooltip:Show();
-end
-
-local function OnValorEnter(self, capBarInfo)
-    local currencyID, tier1DungeonID, tier1Quantity, tier1Limit, overallQuantity, overallLimit, periodPurseQuantity, periodPurseLimit = unpack(capBarInfo);
-    if ( currencyID ) then
-        local currencyName;
-        if ( currencyID == 0 ) then
-            currencyName = REWARDS;
-        else
-            currencyName = GetCurrencyInfo(currencyID);
-        end
-        local tier1Name = GetLFGDungeonInfo(tier1DungeonID);
-        local hasNoSharedStats = (periodPurseLimit == 0);
-
-        SummaryHideDetail();
-        GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-        GameTooltip:SetFrameLevel(self:GetFrameLevel() + 1);
-        GameTooltip:SetText(MAXIMUM_REWARD);
-        GameTooltip:AddLine(format(CURRENCY_RECEIVED_THIS_WEEK, currencyName), 1, 1, 1, true);
-        GameTooltip:AddDoubleLine(format(FROM_A_DUNGEON, tier1Name), format(CURRENCY_WEEKLY_CAP_FRACTION, tier1Quantity, tier1Limit));
-        if ( not hasNoSharedStats ) then
-            GameTooltip:AddDoubleLine(FROM_DUNGEON_FINDER_SOURCES, format(CURRENCY_WEEKLY_CAP_FRACTION, overallQuantity, overallLimit));
-            GameTooltip:AddDoubleLine(FROM_ALL_SOURCES, format(CURRENCY_WEEKLY_CAP_FRACTION, periodPurseQuantity, periodPurseLimit));
-        end
-        GameTooltip:Show();
-    end
 end
 
 local function OnXPEnter(self, tooltipText)
@@ -595,15 +569,15 @@ function Armory:BuildSummary()
                 local earnedThisWeek, earnablePerWeek;
                 currencyName, currencyAmount, currencyIcon, earnedThisWeek, earnablePerWeek = self:GetCurrencyInfo(CONQUEST_CURRENCY);
                 characterInfo.Conquest = currencyAmount or 0;
-                if ( earnablePerWeek ) then
-                    characterInfo.ConquestEarned = earnedThisWeek;
-                    characterInfo.ConquestCap = earnablePerWeek;
-                end
                 if ( characterInfo.Conquest > 0 ) then
                     summary.Conquest = {
                         Name = currencyName or "Conquest Points",
                         Icon = currencyIcon and "Interface\\Icons\\"..currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
                     };
+                    if ( earnablePerWeek ) then
+                        characterInfo.ConquestEarned = earnedThisWeek;
+                        characterInfo.ConquestCap = earnablePerWeek;
+                    end
                 end
                 currencyName, currencyAmount, currencyIcon = self:GetCurrencyInfo(JUSTICE_CURRENCY);
                 characterInfo.Justice = currencyAmount or 0;
@@ -613,14 +587,17 @@ function Armory:BuildSummary()
                         Icon = currencyIcon and "Interface\\Icons\\"..currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
                     };
                 end
-                currencyName, currencyAmount, currencyIcon = self:GetCurrencyInfo(VALOR_CURRENCY);
+                currencyName, currencyAmount, currencyIcon, earnedThisWeek, earnablePerWeek = self:GetCurrencyInfo(VALOR_CURRENCY);
                 characterInfo.Valor = currencyAmount or 0;
-                characterInfo.ValorCapBarInfo = {self:GetLFGDungeonRewardCapBarInfo(VALOR_TIER1_LFG_ID)};
                 if ( characterInfo.Valor > 0 ) then
                     summary.Valor = {
                         Name = currencyName or "Valor Points",
                         Icon = currencyIcon and "Interface\\Icons\\"..currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
                     };
+                    if ( earnablePerWeek ) then
+                        characterInfo.ValorEarned = earnedThisWeek;
+                        characterInfo.ValorCap = floor(earnablePerWeek / 100);
+                    end
                 end
             end
             if ( self:GetConfigSummaryQuest() and self:HasQuestLog() ) then
@@ -696,12 +673,11 @@ function Armory:BuildSummary()
                 for _, name in ipairs(self:GetProfessionNames()) do
                     if ( self:HasTradeSkillLines(name) ) then
                         self:SetSelectedProfession(name);
-                        link = self:GetTradeSkillListLink();
-                        if ( link ) then
-                            _, rank, maxRank = self:GetTradeSkillLine();
+                        _, rank, maxRank = self:GetTradeSkillLine();
+                        if ( rank ) then
                             table.insert(skills, {
                                 Name = name,
-                                Link = link, 
+                                Link = self:GetTradeSkillListLink(), 
                                 Icon = self:GetProfessionTexture(name), 
                                 Tooltip = format("%s (%d/%d)", name, rank, maxRank)
                             });
@@ -1013,8 +989,10 @@ function Armory:DisplaySummary()
                     end
                     if ( summary.Valor ) then 
                         myColumn = column; index, column = self.summary:SetCell(index, myColumn, characterInfo.Valor > 0 and characterInfo.Valor or "", nil, "RIGHT");
-                        self.summary:SetCellScript(index, myColumn, "OnEnter", OnValorEnter, characterInfo.ValorCapBarInfo); 
-                        self.summary:SetCellScript(index, myColumn, "OnLeave", CellHideTooltip); 
+                        if ( characterInfo.ValorCap ) then
+                            self.summary:SetCellScript(index, myColumn, "OnEnter", CellShowTooltip, {summary.Valor.Name, format(CURRENCY_WEEKLY_CAP, "", characterInfo.ValorEarned, characterInfo.ValorCap)} ); 
+                            self.summary:SetCellScript(index, myColumn, "OnLeave", CellHideTooltip); 
+                        end
                     end
                 end
                 if ( self:GetConfigSummaryQuest() and self:HasQuestLog() ) then

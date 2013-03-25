@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 494 2012-09-04T21:04:44Z
+    Revision: 585 2013-03-02T14:19:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -35,7 +35,7 @@ local VALOR_TIER1_LFG_ID = 301;
 
 function ArmoryRaidInfoFrame_OnLoad(self)
     self:RegisterEvent("PLAYER_ENTERING_WORLD");
-    self:RegisterEvent("UPDATE_INSTANCE_INFO");
+    --self:RegisterEvent("UPDATE_INSTANCE_INFO");
     self:RegisterEvent("RAID_INSTANCE_WELCOME");
 end
 
@@ -46,7 +46,7 @@ function ArmoryRaidInfoFrame_OnEvent(self, event, ...)
         return;
     
     elseif ( event == "PLAYER_ENTERING_WORLD" ) then
-        self:UnregisterEvent("PLAYER_ENTERING_WORLD");
+        --self:UnregisterEvent("PLAYER_ENTERING_WORLD");
         RequestRaidInfo();
         Armory:Execute(
             function() 
@@ -54,27 +54,43 @@ function ArmoryRaidInfoFrame_OnEvent(self, event, ...)
             end
         );
         
+        -- because the RAID_INSTANCE_WELCOME is no longer fired...
+       Armory:ExecuteDelayed(5,
+            function()
+                if ( IsInLFGDungeon() and GetPartyLFGID() ) then
+                    local dungeonID = GetPartyLFGID();
+                    local instanceName, _, difficultyIndex, difficultyName, maxPlayers = GetInstanceInfo();
+                    local dungeonName = GetLFGDungeonInfo(dungeonID);
+                    local lockExpireTime = Armory:GetRaidReset(instanceName);
+                    if ( lockExpireTime ) then
+                        Armory:SaveRaidFinderInfo(dungeonName, dungeonID, lockExpireTime - time(), difficultyIndex, maxPlayers, difficultyName);
+                    end
+                end
+            end
+        );
+
     elseif ( event == "UPDATE_INSTANCE_INFO" ) then
         Armory:Execute(ArmoryRaidInfoFrame_UpdateInfo);
     
-    elseif ( event == "RAID_INSTANCE_WELCOME" ) then
-        local lockExpireTime = arg2;
-        Armory:ExecuteDelayed(5,
-            function()
-                if ( IsInLFGDungeon() and GetPartyLFGID() ) then
-                    for index = 1, GetNumRFDungeons() do
-                        local dungeonID = GetRFDungeonInfo(index);
-                        if ( dungeonID == GetPartyLFGID() ) then
-                            local _, _, difficultyIndex, difficultyName, maxPlayers = GetInstanceInfo();
-                            local dungeonName = GetLFGDungeonInfo(dungeonID);
-                            Armory:SaveRaidFinderInfo(dungeonName, dungeonID, lockExpireTime, difficultyIndex, maxPlayers, difficultyName);
-                            break;
-                        end
-                    end
-                end
-                self:RegisterEvent("PLAYER_ENTERING_WORLD");
-            end
-        );
+    -- event is no longer fired
+    --elseif ( event == "RAID_INSTANCE_WELCOME" ) then
+        --local lockExpireTime = arg2;
+        --Armory:ExecuteDelayed(5,
+            --function()
+                --if ( IsInLFGDungeon() and GetPartyLFGID() ) then
+                    --for index = 1, GetNumRFDungeons() do
+                        --local dungeonID = GetRFDungeonInfo(index);
+                        --if ( dungeonID == GetPartyLFGID() ) then
+                            --local _, _, difficultyIndex, difficultyName, maxPlayers = GetInstanceInfo();
+                            --local dungeonName = GetLFGDungeonInfo(dungeonID);
+                            --Armory:SaveRaidFinderInfo(dungeonName, dungeonID, lockExpireTime, difficultyIndex, maxPlayers, difficultyName);
+                            --break;
+                        --end
+                    --end
+                --end
+                --self:RegisterEvent("PLAYER_ENTERING_WORLD");
+            --end
+        --);
     end
 end
 
@@ -228,173 +244,4 @@ function ArmoryRaidInfoFrame_UpdateSelectedIndex()
     end
     
     ArmoryRaidInfoFrame.selectedIndex = nil;
-end
-
-function ArmoryRaidInfoFrameCapBar_OnLoad(self)
-    if ( GetLFGDungeonRewardCapBarInfo ) then -- Patch 4.1.0
-        self:RegisterEvent("PLAYER_ENTERING_WORLD");
-        ArmoryRaidInfoFrame_SetCapBarNotches(7);
-    end
-end
-
-function ArmoryRaidInfoFrameCapBar_OnEvent(self, event, ...)
-    -- Force update
-    Armory:GetLFGDungeonRewardCapBarInfo(VALOR_TIER1_LFG_ID);
-end
-
-function ArmoryRaidInfoFrameCapBar_OnEnter(self)
-    local currencyID, tier1DungeonID, tier1Quantity, tier1Limit, overallQuantity, overallLimit, periodPurseQuantity, periodPurseLimit = Armory:GetLFGDungeonRewardCapBarInfo(VALOR_TIER1_LFG_ID);
-    if ( currencyID ) then
-        local currencyName;
-        if ( currencyID == 0 ) then
-            currencyName = REWARDS;
-        else
-            currencyName = GetCurrencyInfo(currencyID);
-        end
-        local tier1Name = GetLFGDungeonInfo(tier1DungeonID);
-        local hasNoSharedStats = (periodPurseLimit == 0);
-
-        GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-        GameTooltip:SetText(MAXIMUM_REWARD);
-        GameTooltip:AddLine(format(CURRENCY_RECEIVED_THIS_WEEK, currencyName), 1, 1, 1, true);
-        GameTooltip:AddDoubleLine(format(FROM_A_DUNGEON, tier1Name), format(CURRENCY_WEEKLY_CAP_FRACTION, tier1Quantity, tier1Limit));
-        if ( not hasNoSharedStats ) then
-            GameTooltip:AddDoubleLine(FROM_DUNGEON_FINDER_SOURCES, format(CURRENCY_WEEKLY_CAP_FRACTION, overallQuantity, overallLimit));
-            GameTooltip:AddDoubleLine(FROM_ALL_SOURCES, format(CURRENCY_WEEKLY_CAP_FRACTION, periodPurseQuantity, periodPurseLimit));
-        end
-        GameTooltip:Show();
-    end
-end
-
-function ArmoryRaidInfoFrameCapBarCapMarker_OnEnter(self)
-    local isTier1 = self:GetID() == 1;
-
-    local currencyID, tier1DungeonID, tier1Quantity, tier1Limit, overallQuantity, overallLimit, periodPurseQuantity, periodPurseLimit = Armory:GetLFGDungeonRewardCapBarInfo(VALOR_TIER1_LFG_ID);
-    if ( currencyID ) then
-        local currencyName;
-        if ( currencyID == 0 ) then
-            currencyName = REWARDS;
-        else
-            currencyName = GetCurrencyInfo(currencyID);
-        end
-
-        GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-        if ( isTier1 ) then
-            local tier1Name = GetLFGDungeonInfo(tier1DungeonID);
-            GameTooltip:SetText(MAXIMUM_REWARD);
-            GameTooltip:AddLine(format(LFD_CURRENCY_CAP_SPECIFIC, currencyName, tier1Name), 1, 1, 1, true);
-            GameTooltip:AddLine(format(CURRENCY_THIS_WEEK_WITH_AMOUNT, currencyName, tier1Quantity, tier1Limit));
-        else
-            GameTooltip:SetText(MAXIMUM_REWARD);
-            GameTooltip:AddLine(format(LFD_CURRENCY_CAP_ALL, currencyName), 1, 1, 1, true);
-            GameTooltip:AddLine(format(CURRENCY_THIS_WEEK_WITH_AMOUNT, currencyName, overallQuantity, overallLimit));
-        end
-        GameTooltip:Show();
-    end
-end
-
-function ArmoryRaidInfoFrame_SetCapBarNotches(count)
-    local capBar = ArmoryRaidInfoFrameCapBar;
-    local barWidth = capBar:GetWidth();
-
-    if ( capBar.notchCount and capBar.notchCount > count ) then
-        for i = count + 1, capBar.notchCount do
-            _G["ArmoryRaidInfoFrameCapBarDivider"..i]:Hide();
-        end
-    end
-
-    local notchWidth = barWidth / count;
-
-    for i = 1, count - 1 do
-        local notch = _G["ArmoryRaidInfoFrameCapBarDivider"..i];
-        if ( not notch ) then
-            notch = capBar:CreateTexture("ArmoryRaidInfoFrameCapBarDivider"..i, "BORDER", "ArmoryCapBarDividerTemplate", -1);
-        end
-        notch:ClearAllPoints();
-        notch:SetPoint("LEFT", capBar, "LEFT", notchWidth * i - 2, 0);
-    end
-    capBar.notchCount = count;
-end
-
-function ArmoryRaidInfoFrame_UpdateCapBar()
-    local capBar = ArmoryRaidInfoFrameCapBar;
-    local panel = ArmoryRaidInfoFrameTopBg;
-    local scrollFrame = ArmoryRaidInfoScrollFrame;
-
-    local currencyID, tier1DungeonID, tier1Quantity, tier1Limit, overallQuantity, overallLimit, periodPurseQuantity, periodPurseLimit = Armory:GetLFGDungeonRewardCapBarInfo(VALOR_TIER1_LFG_ID);
-    local currencyName, currencyQuantity, currencyIcon, currencyIsDiscovered;
-    if ( currencyID ) then
-        currencyName, currencyQuantity, currencyIcon, _, _, _, currencyIsDiscovered = Armory:GetCurrencyInfo(currencyID);
-    end
-    if ( currencyIsDiscovered ) then
-        capBar:Show();
-        panel:Show();
-        scrollFrame:SetHeight(302);
-        scrollFrame:SetPoint("TOPLEFT", 16, -58);
-    else
-        capBar:Hide();
-        panel:Hide();
-        scrollFrame:SetHeight(348);
-        scrollFrame:SetPoint("TOPLEFT", 16, -12);
-        return;
-    end
-    
-    local hasNoSharedStats = false;
-    if ( periodPurseQuantity == 0 and periodPurseLimit == 0 ) then
-        --This is the case for reward counts not directly associated with currencies (e.g. non-heroics)
-        periodPurseQuantity, periodPurseLimit = overallQuantity, overallLimit;
-        hasNoSharedStats = true;
-    end
-
-    local barWidth = capBar:GetWidth();
-    local sizePerPoint = barWidth / periodPurseLimit;
-    local progressWidth = periodPurseQuantity * sizePerPoint;
-    local tier1Width = (tier1Limit - tier1Quantity) * sizePerPoint;
-    local overallWidth = (overallLimit - overallQuantity) * sizePerPoint - tier1Width;
-
-    --Don't let it go past the end.
-    progressWidth = min(progressWidth, barWidth);
-    tier1Width = min(tier1Width, barWidth - progressWidth);
-    overallWidth = min(overallWidth, barWidth - progressWidth - tier1Width);
-
-    capBar.progress:SetWidth(progressWidth);
-
-    capBar.cap1:SetWidth(tier1Width);
-    capBar.cap2:SetWidth(overallWidth);
-
-    local lastFrame, lastRelativePoint = capBar, "LEFT";
-
-    if ( progressWidth > 0 ) then
-        capBar.progress:Show();
-        capBar.progress:SetPoint("LEFT", lastFrame, lastRelativePoint, 0, 0);
-        lastFrame, lastRelativePoint = capBar.progress, "RIGHT";
-    else
-        capBar.progress:Hide();
-    end
-
-    if ( tier1Width > 0 and not hasNoSharedStats) then
-        capBar.cap1:Show();
-        capBar.cap1Marker:Show();
-        capBar.cap1:SetPoint("LEFT", lastFrame, lastRelativePoint, 0, 0);
-        lastFrame, lastRelativePoint = capBar.cap1, "RIGHT";
-    else
-        capBar.cap1:Hide();
-        capBar.cap1Marker:Hide();
-    end
-
-    if ( overallWidth > 0 and not hasNoSharedStats) then
-        capBar.cap2:Show();
-        capBar.cap2Marker:Show();
-        capBar.cap2:SetPoint("LEFT", lastFrame, lastRelativePoint, 0, 0);
-        lastFrame, lastRelativePoint = capBar.cap2, "RIGHT";
-    else
-        capBar.cap2:Hide();
-        capBar.cap2Marker:Hide();
-    end
-
-    if ( currencyID == 0 ) then
-        currencyName = REWARDS;
-    end
-
-    capBar.label:SetFormattedText(CURRENCY_THIS_WEEK, currencyName);
 end

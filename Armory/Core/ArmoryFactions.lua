@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 525 2012-09-20T09:02:14Z
+    Revision: 565 2012-11-28T10:03:52Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -126,8 +126,20 @@ function Armory:UpdateFactions()
         -- store the complete (expanded) list
         local funcNumLines = _G.GetNumFactions;
         local funcGetLineInfo = function(index)
-            local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild = _G.GetFactionInfo(index);
-            description = nil;
+            local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild, factionID = _G.GetFactionInfo(index);
+            local friendID, friendRep, friendMaxRep, friendName, friendText, friendTexture, friendTextLevel, friendThreshold, nextFriendThreshold = GetFriendshipReputation(factionID);
+            if ( friendID ~= nil ) then
+                description = friendTextLevel;
+				if ( nextFriendThreshold ) then
+					barMin, barMax, barValue = friendThreshold, nextFriendThreshold, friendRep;
+				else
+					-- max rank, make it look like a full bar
+					barMin, barMax, barValue = 0, 1, 1;
+				end
+				standingID = 5;
+            else
+                description = nil;
+            end
             return name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild;
         end;
         local funcGetLineState = function(index)

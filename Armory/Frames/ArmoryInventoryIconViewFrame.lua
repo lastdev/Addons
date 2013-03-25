@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 504 2012-09-06T20:42:02Z
+    Revision: 551 2012-11-11T13:24:10Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -190,10 +190,10 @@ function ArmoryInventoryIconViewFrame_ShowContainer(containerFrame)
     end
     
     if ( not isCollapsed ) then
-        local texture, itemCount, locked, quality, readable, slotId;
+        local texture, itemCount, quality, slotId;
         local name, link;
         for i = 1, numSlots do
-            texture, itemCount, locked, quality, readable, slotId = Armory:GetContainerItemInfo(id, i);
+            texture, itemCount, quality, _, _, _, slotId = Armory:GetInventoryContainerValue(id, i);
             if ( texture ) then
                 if ( Armory:GetInventoryBagLayout() ) then
                     index = offset + (slotId or i);

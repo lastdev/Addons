@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemQuality
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: FilterItemQuality.lua 5229 2011-11-03 13:10:05Z brykrys $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: FilterItemQuality.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -29,6 +29,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 --]]
 -- Create a new instance of our lib with our parent
+if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewFilter("ItemQuality")
 if not lib then return end
 local print,decode,_,_,replicate,empty,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals()
@@ -37,7 +38,7 @@ lib.tabname = "ItemQuality"
 -- Set our defaults
 default("ignoreitemquality.enable", false)
 
-local typename
+local typename = Const.CLASSES
 
 local qualname = {
 	[0] = "Poor",
@@ -51,9 +52,6 @@ local qualname = {
 
 -- This function is automatically called when we need to create our search parameters
 function lib:MakeGuiConfig(gui)
-	if not typename then
-		typename = {GetAuctionItemClasses()}
-	end
 	-- Get our tab and populate it with our controls
 	local id = gui:AddTab(lib.tabname, "Filters")
 	gui:MakeScrollable(id)
@@ -100,9 +98,6 @@ end
 --This function will return true if the item is to be filtered
 --Item is the itemtable, and searcher is the name of the searcher being called. If searcher is not given, it will assume you want it active.
 function lib.Filter(item, searcher)
-	if not typename then
-		typename = {GetAuctionItemClasses()}
-	end
 	if (not get("ignoreitemquality.enable"))
 			or (searcher and (not get("ignoreitemquality.filter."..searcher))) then
 		return
@@ -119,4 +114,4 @@ function lib.Filter(item, searcher)
 	return false
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemQuality.lua $", "$Rev: 5229 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemQuality.lua $", "$Rev: 5368 $")

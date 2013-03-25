@@ -208,6 +208,23 @@ This will allow you to add a function that will be called every time the SpellFl
 ----
 \\
 
+=== ** s.LocalizeFontStrings
+
+This will search a frame for font strings and localize them.
+
+<<code lua>>s.LocalizeFontStrings(Frame, Localizations)<</code>>
+
+===== ** Arguments:
+
+; ** Frame
+:		(table) A frame that contains font strings that needs to be localized.
+; ** Localizations
+:		(table) A table with localizations.
+
+\\
+----
+\\
+
 === ** s.CopyTable
 
 A simple function that will copy a table.

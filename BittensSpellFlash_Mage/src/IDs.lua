@@ -1,34 +1,43 @@
-local AddonName, a = ...
-if a.BuildFail(50000) then return end
+local addonName, a = ...
+local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
+
+a.AddonName = addonName
+c.Init(a)
 
 a.SpellIDs = {
 	["Alter Time"] = 108978,
 	["Arcane Barrage"] = 44425,
 	["Arcane Blast"] = 30451,
 	["Arcane Charge"] = 114664,
+	["Arcane Explosion"] = 1449,
 	["Arcane Missiles"] = 5143,
 	["Arcane Missiles!"] = 79683,
 	["Arcane Power"] = 12042,
 	["Arcane Brilliance"] = 1459,
 	["Brain Freeze"] = 57761,
-	["Brilliant Mana Gem"] = 81901,
 	["Dalaran Brilliance"] = 61316,
 	["Combustion"] = 11129,
 	["Combustion DoT"] = 83853,
 	["Conjure Mana Gem"] = 759, -- also 119316, when glyphed
 	["Counterspell"] = 2139,
+	["Deep Freeze"] = 44572,
 	["Evocation"] = 12051,
 	["Fingers of Frost"] = 44544,
 	["Fireball"] = 133,
+	["Flamestrike"] = 2120,
 	["Freeze"] = 33395,
 	["Frost Armor"] = 7302,
 	["Frost Bomb"] = 112948,
+	["Frost Nova"] = 122,
 	["Frostbolt"] = 116,
 	["Frostfire Bolt"] = 44614,
 	["Frozen Orb"] = 84714,
 	["Heating Up"] = 48107,
 	["Ice Lance"] = 30455,
-	["Icy Veins"] = 131078,
+	["Icy Veins"] = 12472,
+	["Icy Veins Glyphed"] = 131078,
+	["Incanter's Ward"] = 1463,
+	["Incanter's Absorption"] = 116267,
 	["Invoker's Energy"] = 116257,
 	["Ignite"] = 12654,
 	["Inferno Blast"] = 108853,
@@ -47,6 +56,7 @@ a.SpellIDs = {
 	["Summon Water Elemental"] = 31687,
 	
 	-- Items
+	["Brilliant Mana Gem"] = 81901,
 	["Mana Gem"] = 36799,
 	["Combat Mind LFR"] = 109793,
 	["Combat Mind"] = 107970,
@@ -55,13 +65,16 @@ a.SpellIDs = {
 }
 
 a.TalentIDs = {
+	["Incanter's Ward"] = 1463,
 	["Invocation"] = 114003,
+	["Rune of Power"] = 116011,
 }
 
 a.GlyphIDs = {
-	["Mana Gem"] = 56984,
+	["Evocation"] = 56380,
 	["Frostfire Bolt"] = 61205,
 	["Icy Veins"] = 56364,
+	["Mana Gem"] = 56984,
 }
 
 a.EquipmentSets = {

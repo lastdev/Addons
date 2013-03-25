@@ -1,4 +1,4 @@
-if GetLocale() ~= "frFR" then return end
+﻿if GetLocale() ~= "frFR" then return end
 DBM_CORE_NEED_SUPPORT				= "Vous êtes bon en programmation ou en langues ? Si oui, l'équipe de DBM a besoin de votre aide pour que DBM reste le meilleur boss mod de WoW. Rejoignez l'équipe en visitant www.deadlybossmods.com ou en envoyant un message à tandanu@deadlybossmods.com ou à nitram@deadlybossmods.com."
 DBM_HOW_TO_USE_MOD					= "Bienvenue sur DBM. Tapez /dbm help pour une liste des commandes supportées. Pour accédez aux options, tapez /dbm dans la fenêtre de discussion pour commencer la configuration. Chargez des zones spécifiques manuellement pour configurer tous les paramètres spécifiques aux boss selon vos envies. DBM essaie de le faire pour vous en analysant votre spécialisation au premier lancement, mais nous savons que de toute façon certaines personnes souhaitent activer d'autres options."
 
@@ -49,7 +49,7 @@ DBM_CORE_VERSIONCHECK_FOOTER		= "%d joueurs trouvés avec Deadly Boss Mods"
 DBM_CORE_YOUR_VERSION_OUTDATED      = "Votre version de Deadly Boss Mods est périmée. Veuillez vous rendre sur www.deadlybossmods.com pour obtenir la dernière version."
 
 DBM_CORE_UPDATEREMINDER_HEADER		= "Votre version de Deadly Boss Mods est périmée.\nLa version %s (r%d) est disponible au téléchargement ici:"
-DBM_CORE_UPDATEREMINDER_FOOTER		= "Faites la combinaison Ctrl-C pour copier le lien de téléchargement dans votre presse-papier."
+DBM_CORE_UPDATEREMINDER_FOOTER		= "Faites la combinaison " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " pour copier le lien de téléchargement dans votre presse-papier."
 DBM_CORE_UPDATEREMINDER_NOTAGAIN	= "Afficher un popup quand une nouvelle version est disponible"
 
 DBM_CORE_MOVABLE_BAR				= "Bougez-moi !"
@@ -83,6 +83,7 @@ DBM_CORE_RANGECHECK_OPTION_SLOW		= "Lente (faible utilisation du CPU)"
 DBM_CORE_RANGECHECK_OPTION_AVERAGE	= "Moyenne"
 DBM_CORE_RANGECHECK_OPTION_FAST		= "Rapide (plus proche du temps réel)"
 DBM_CORE_RANGERADAR_HEADER			= "Radar de portée (%d m)"
+DBM_CORE_RANGERADAR_IN_RANGE_TEXT	= "%d joueurs à portée"
 
 DBM_CORE_INFOFRAME_LOCK				= "Verrouiller le cadre"
 DBM_CORE_INFOFRAME_HIDE				= "Masquer"
@@ -112,6 +113,10 @@ DBM_CORE_ALLIANCE					= "Alliance"
 DBM_CORE_HORDE						= "Horde"
 
 DBM_CORE_UNKNOWN					= "inconnu"
+DBM_CORE_LEFT						= "Gauche"
+DBM_CORE_RIGHT						= "Droite"
+DBM_CORE_BACK						= "Back"--Translate
+DBM_CORE_FRONT						= "Front"--Translate
 
 DBM_CORE_BREAK_START				= "La pause commence maintenant -- vous avez %s minute(s)!"
 DBM_CORE_BREAK_MIN					= "Fin de la pause dans %s minute(s) !"
@@ -174,7 +179,7 @@ DBM_CORE_AUTO_ANNOUNCE_OPTIONS = {
 	target		= "Alerte indiquant le(s) cible(s) de $spell:%s",
 	targetcount	= "Alerte indiquant le(s) cible(s) de $spell:%s",
 	spell		= "Alerte concernant $spell:%s",
-	adds		= "Announce how many $spell:%s remain",
+	adds		= "Alerte indiquant le nombre restant de : $spell:%s",
 	cast		= "Alerte quand $spell:%s est incanté",
 	soon		= prewarnOption,
 	prewarn		= prewarnOption,
@@ -196,7 +201,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
 	run 		= "Alerte spéciale concernant $spell:%s",
 	cast 		= "Alerte spéciale quand $spell:%s est incanté",
 	stack 		= "Alerte spéciale quand >=%d cumuls de $spell:%s",
-	switch 		= "Show special warning to switch targets for \n $spell:%s"
+	switch 		= "Alerte spéciale de changement de cible pour\n $spell:%s"
 }
 
 DBM_CORE_AUTO_SPEC_WARN_TEXTS = {

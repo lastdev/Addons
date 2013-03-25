@@ -1,5 +1,5 @@
 ﻿-- Simplified Chinese by Diablohu(diablohudream@gmail.com)
--- Last update: 10/31/2012
+-- Last update: 1/4/2013
 
 if GetLocale() ~= "zhCN" then return end
 local L
@@ -10,12 +10,12 @@ local L
 L= DBM:GetModLocalization(679)
 
 L:SetWarningLocalization({
-	SpecWarnOverloadSoon	= "%s: 7秒后可施放",
+	SpecWarnOverloadSoon		= "%s: 即将施放", -- prepare survival ablility or move boss. need more specific message.
 	specWarnBreakJasperChains	= "扯断红玉锁链！"
 })
 
 L:SetOptionLocalization({
-	SpecWarnOverloadSoon	= "特殊警报：过载预警",
+	SpecWarnOverloadSoon		= "特殊警报：过载预警", -- need to change this, i can not translate this with good grammer. please help.
 	specWarnBreakJasperChains	= "特殊惊爆：可扯断$spell:130395",
 	ArrowOnJasperChains			= "DBM箭头：当你受到$spell:130395效果影响时",
 	InfoFrame					= "信息框：石像能量及激活情况"
@@ -37,7 +37,9 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	WarnPhase	= "警报：阶段转换",
-	RangeFrame	= "距离监视（6码）：应对奥术阶段"
+	RangeFrame	= "距离监视（6码）：应对奥术阶段",
+	SetIconOnWS	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(116784),
+	SetIconOnAR	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(116417)
 })
 
 L:SetMiscLocalization({
@@ -54,7 +56,6 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(682)
 
 L:SetOptionLocalization({
-	RangeFrame			= "距离监视（8码）",
 	SetIconOnVoodoo		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122151)
 })
 
@@ -68,27 +69,37 @@ L:SetMiscLocalization({
 ----------------------
 L = DBM:GetModLocalization(687)
 
+L:SetWarningLocalization({
+	DarknessSoon		= "黑暗之盾：%d秒后施放"
+})
+
+L:SetTimerLocalization({
+	timerUSRevive		= "不灭之影复活",
+	timerRainOfArrowsCD	= "%s"
+})
+
 L:SetOptionLocalization({
+	DarknessSoon		= "预警：$spell:117697（提前5秒倒计时）",
+	timerUSRevive		= "计时条：$spell:117506复活",
+	timerRainOfArrowsCD = DBM_CORE_AUTO_TIMER_OPTIONS.cd:format(118122),
 	RangeFrame			= "距离监视（8码）"
 })
 
 
 ------------
--- Elegon --
-------------
 L = DBM:GetModLocalization(726)
 
 L:SetWarningLocalization({
-	specWarnDespawnFloor		= "注意脚下！"
+	specWarnDespawnFloor	= "6秒后地板消失！"
 })
 
 L:SetTimerLocalization({
-	timerDespawnFloor			= "注意脚下！"
+	timerDespawnFloor		= "地板消失"
 })
 
 L:SetOptionLocalization({
-	specWarnDespawnFloor		= "特殊警报：平台消失预警",
-	timerDespawnFloor			= "计时条：平台消失",
+	specWarnDespawnFloor	= "特殊警报：平台消失预警",
+	timerDespawnFloor		= "计时条：平台消失",
 	SetIconOnDestabilized	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(132226)
 })
 
@@ -100,7 +111,8 @@ L= DBM:GetModLocalization(677)
 
 L:SetOptionLocalization({
 	InfoFrame		= "信息框：受$spell:116525效果影响的玩家",
-	ArrowOnCombo	= "DBM箭头：$journal:5673阶段\n注：该功能正常工作的前提是坦克在Boss面前而其他人在Boss身后。"
+	CountOutCombo	= "统计$journal:5673次数\n注：当前仅有女性声音设置",
+	ArrowOnCombo	= "DBM箭头：$journal:5673阶段\n注：该功能正常工作的前提是坦克在Boss面前而其他人在Boss身后"
 })
 
 L:SetMiscLocalization({

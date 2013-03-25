@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(190, "DBM-Party-Cataclysm", 10, 77)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 41 $"):sub(12, -3))
 mod:SetCreatureID(24239)
 mod:SetModelID(22332)
 mod:SetZone()
@@ -51,8 +51,8 @@ local function getClass(name)
 		class = select(2, UnitClass("player"))
 	else
 		local nameString = "%s-%s"	-- "PlayerName-RealmName"
-		for i=1, DBM:GetGroupMembers() do
-			local n,r = UnitName("party"..i)	-- arg1 = PlayerName , arg2 = RealmName
+		for uId, i in DBM:GetGroupMembers() do
+			local n, r = UnitName(uId)	-- PlayerName, RealmName
 			if n == name or (n and r and nameString:format(n,r) == name) then
 				class = select(2, UnitClass("party"..i))
 				break

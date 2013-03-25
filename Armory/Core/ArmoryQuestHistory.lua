@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 525 2012-09-20T09:02:14Z
+    Revision: 569 2012-12-04T23:32:59Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -37,7 +37,7 @@ local groupByDate;
 
 local function IsRecentQuest(dbEntry, title)
     local _, timestamp = dbEntry:GetValue(container, title);
-    return time() - timestamp < 7 * 24*60*60;
+    return time() - timestamp < 7 * (24*60*60);
 end
 
 local groups = {};
@@ -72,7 +72,7 @@ local function GetQuestLines()
                 weekday, _, day, year, month, hour, minute = Armory:GetFullDate(Armory:GetLocalTimeAsServerTime(timestamp));
                 questDate = Armory:GetLocalTimeAsServerTime(Armory:MakeDate(day, month, year));
                 questTime = GameTime_GetFormattedTime(hour, minute, true);
-                days = floor(today / 24*60*60) - floor(questDate / 24*60*60);
+                days = floor(today / (24*60*60)) - floor(questDate / (24*60*60));
                 if ( days == 0 ) then
                     tag = HONOR_TODAY;
                 elseif ( days == 1 ) then
@@ -153,6 +153,8 @@ end
 ----------------------------------------------------------
 
 local randomBG;
+local worldBoss;
+local bosses = {};
 
 local function SaveHistoryEntry(title, header, isWeekly)
     local dbEntry = Armory.playerDbBaseEntry;
@@ -170,6 +172,21 @@ function Armory:SetRandomBattleground()
             break;
         end
     end
+end
+
+function Armory:SetWorldBossBySpell(spellId)
+    local bonus = GetSpellInfo(spellId);
+    local name = bonus and bonus:match(ARMORY_BONUS_PATTERN);
+    worldBoss = nil;
+    if ( name ) then
+        if ( bosses[name] == nil ) then
+            bosses[name] = not IsInInstance();
+        end
+        if ( bosses[name] ) then
+            worldBoss = name;
+        end
+    end
+    return worldBoss;
 end
 
 function Armory:ClearQuestHistory()
@@ -198,15 +215,19 @@ function Armory:UpdateQuestHistory(historyType)
             SaveHistoryEntry(title, header, isWeekly);
             
         elseif ( historyType == "raid" ) then
-            local name, typeID = GetLFGCompletionReward();
+            local name, typeID, subtypeID = GetLFGCompletionReward();
             title = name;
-            if ( typeID == TYPEID_HEROIC_DIFFICULTY ) then
+            if ( subtypeID == LFG_SUBTYPEID_HEROIC ) then
                 header = LFG_TYPE_HEROIC_DUNGEON;
+            elseif ( subtypeID == LFG_SUBTYPEID_RAID ) then
+                header = RAID_FINDER;
+            elseif ( subtypeID == LFG_SUBTYPEID_SCENARIO ) then
+                header = LFG_TYPE_RANDOM_SCENARIO;
             else
                 header = LFG_TYPE_RANDOM_DUNGEON;
             end
             SaveHistoryEntry(title, header);
-            
+
         elseif ( historyType == "battle" ) then
             local winner = GetBattlefieldWinner();
             local faction = UnitFactionGroup("player");
@@ -235,6 +256,11 @@ function Armory:UpdateQuestHistory(historyType)
                         break;
                     end
                 end
+            end
+        
+        elseif ( historyType == "worldboss" ) then
+            if ( worldBoss ) then
+                SaveHistoryEntry(worldBoss, BOSS);
             end
 
         end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Illidan", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 416 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 433 $"):sub(12, -3))
 mod:SetCreatureID(22917)
 mod:SetModelID(21135)
 mod:SetUsedIcons(8)
@@ -153,7 +153,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(39855) then
+	if args:IsSpellID(39855) and self:AntiSpam(4, 1) then
 		flamesDown = 0
 		warnPhase2:Show()
 		timerNextBarrage:Start(81)
@@ -161,7 +161,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:SPELL_DAMAGE(sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId)
-	if spellId == 41131 and self:AntiSpam(4) then
+	if spellId == 41131 and self:AntiSpam(4, 2) then
 		warnFlameBurst:Show()
 		flameBursts = flameBursts + 1
 		if flameBursts < 3 then

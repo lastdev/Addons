@@ -1,15 +1,12 @@
-local AddonName, a = ...
-if a.BuildFail(50000) then return end
+local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
-local c = BittensSpellFlashLibrary
+local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 local bcm = a.BCM
 
 local GetItemCount = GetItemCount
 local IsMounted = IsMounted
 local UnitBuff = UnitBuff
-
-c.Init(a)
 
 ------------------------------------------------------------------------ Common
 c.AddOptionalSpell("Mage Armor", nil, {
@@ -20,11 +17,18 @@ c.AddOptionalSpell("Mage Armor", nil, {
 c.AddOptionalSpell("Conjure Mana Gem", nil, {
 	NotIfActive = true,
 	CheckFirst = function()
+		local count, target
 		if c.HasGlyph("Mana Gem") then
-			return GetItemCount(c.GetID("Brilliant Mana Gem"), false, true) < 7
+			count = GetItemCount(c.GetID("Brilliant Mana Gem"), false, true)
+			target = 7
 		else
-			return GetItemCount(c.GetID("Mana Gem"), false, true) < 3
+			count = GetItemCount(c.GetID("Mana Gem"), false, true)
+			target = 3
 		end 
+		if c.IsSolo() then
+			target = 1
+		end
+		return count < target
 	end	
 })
 
@@ -83,28 +87,67 @@ c.AddOptionalSpell("Spellsteal", nil, {
 })
 
 c.AddSpell("Nether Tempest", nil, {
-	MyDebuff = "Nether Tempest",
-	NoStopChannel = true,
+	EarlyRefresh = 99,
+	CheckFirst = function(z)
+		if c.AoE or c.IsSolo() then
+			z.FlashColor = "yellow"
+			z.Continue = true
+		else
+			z.FlashColor = nil
+			z.Continue = nil
+		end
+		return c.GetMyDebuffDuration("Nether Tempest") < z.EarlyRefresh
+	end
 })
 c.ManageDotRefresh("Nether Tempest", 1)
 
 c.AddSpell("Living Bomb", nil, {
-	MyDebuff = "Living Bomb",
-	NoStopChannel = true,
+	EarlyRefresh = 99,
+	CheckFirst = function(z)
+		if c.IsSolo() then
+			z.FlashColor = "yellow"
+			z.Continue = true
+		else
+			z.FlashColor = nil
+			z.Continue = nil
+		end
+		return c.GetMyDebuffDuration("Living Bomb") < z.EarlyRefresh
+	end
 })
+c.ManageDotRefresh("Living Bomb", 3)
 
 c.AddSpell("Frost Bomb", nil, {
-	NoStopChannel = true,
-	NotIfActive = true,
+	CheckFirst = function(z)
+		if c.IsSolo() then
+			z.FlashColor = "yellow"
+			z.Continue = true
+		else
+			z.FlashColor = nil
+			z.Continue = nil
+		end
+		return not c.IsCasting("Frost Bomb")
+			and c.GetCooldown("Frost Bomb") == 0
+	end
 })
 
 c.AddOptionalSpell("Presence of Mind", nil, {
 	NoGCD = true,
+	CheckFirst = function()
+		return not c.HasBuff("Alter Time", true)
+	end
 })
 
 c.AddOptionalSpell("Evocation", nil, {
 	CheckFirst = function()
 		return a.ManaPercent <= 10
+	end
+})
+
+c.AddOptionalSpell("Evocation", "for Health", {
+	CheckFirst = function()
+		return c.IsSolo()
+			and c.HasGlyph("Evocation")
+			and s.HealthPercent("player") < 60
 	end
 })
 
@@ -122,55 +165,128 @@ c.AddOptionalSpell("Rune of Power", nil, {
 })
 
 ------------------------------------------------------------------------ Arcane
+local function hasT6TalentFor(duration)
+	return (not c.HasTalent("Rune of Power") or c.HasBuff("Rune of Power"))
+		and (not c.HasTalent("Invocation")
+			or c.GetBuffDuration("Invoker's Energy") >= duration)
+		and (not c.HasTalent("Incanter's Ward") 
+			or c.GetCooldown("Incanter's Ward") == 0
+			or c.GetBuffDuration("Incanter's Absorption") > duration)
+end
+
+local function doPower()
+	return a.MissilesStacks > 0
+		and a.ChargeStacks > 2
+		and not c.HasBuff("Alter Time")
+		and hasT6TalentFor(15)
+end
+
 c.AddOptionalSpell("Arcane Power", nil, {
-	CheckFirst = function()
-		return a.ChargeStacks > 2 and a.StolenTimeRemaining == 0
+	CheckFirst = doPower,
+})
+
+c.AddOptionalSpell("Alter Time", "for Arcane", {
+	CheckFirst = function(z)
+		if c.HasBuff("Arcane Power") then
+			z.FlashSize = nil
+			return not c.HasBuff("Alter Time")
+		elseif doPower() then
+			z.FlashSize = s.FlashSizePercent() / 2
+			return true
+		end
 	end
 })
 
-c.AddSpell("Arcane Blast", "at Cap", {
-	CheckFirst = function(z)
-		return a.ManaPercent > a.GetConfig("cap_percent")
+c.AddOptionalSpell("Evocation", "for Arcane", {
+	CheckFirst = function()
+		if c.HasBuff("Alter Time") then
+			return false
+		end
+		
+		return a.ManaPercent < 70
+			or (c.HasTalent("Invocation") 
+				and c.GetBuffDuration("Invoker's Energy") 
+					< c.GetCastTime("Arcane Blast"))
 	end
 })
+
+c.AddOptionalSpell("Evocation", "Interrupt", {
+	FlashColor = "red",
+	Override = function()
+		return c.IsCasting("Evocation")
+			and not c.HasTalent("Invocation") 
+			and s.PowerPercent("player") > 98
+	end
+})
+
+c.RegisterForFullChannels("Arcane Missiles", 2)
+
+c.AddSpell("Arcane Missiles", nil, {
+	CheckFirst = function(z)
+		z.FlashColor = nil
+		z.FlashSize = nil
+		z.Continue = nil
+		if c.HasBuff("Alter Time") or c.IsSolo() then
+			return true
+		end
+		
+		if a.MissilesStacks == 2 then
+			if c.GetCooldown("Alter Time") == 0 then
+				z.FlashSize = s.FlashSizePercent() / 2
+				z.FlashColor = "yellow"
+				z.Continue = true
+			end
+			return true
+		end
+		
+		if a.ChargeStacks == 4 then
+			if c.GetCooldown("Arcane Power") < 6 then
+				z.FlashSize = s.FlashSizePercent() / 2
+				z.FlashColor = "yellow"
+				z.Continue = true
+			end
+			return true
+		end
+	end
+})
+
+c.AddOptionalSpell("Arcane Missiles", "for AoE")
 
 c.AddSpell("Arcane Barrage", nil, {
 	NoStopChannel = true,
 	CheckFirst = function()
-		local burnLength = a.GetConfig("burn_length")
-		local burnAmount = 100 - a.GetConfig("evocate_percent")
-		
-		local name = s.ItemName(c.GetID("Mana Gem"))
-		if s.Flashable(name)
-			and GetItemCount(name, false, true) > 0
-			and s.ItemCooldown(name) < burnLength / burnAmount * 20 then
-			
-			return false
-		end
-		
-		name = s.ItemName(c.GetID("Brilliant Mana Gem"))
-		if s.Flashable(name)
-			and GetItemCount(name, false, true) > 0
-			and s.ItemCooldown(name) < burnLength / burnAmount * 20 then
-			
-			return false
-		end
-		
-		name = s.SpellName(c.GetID("Evocation"))
-		if s.Flashable(name)
-			and s.SpellCooldown(name) < burnLength then
-			
-			return false
-		end
-		
-		return true
+		return a.ChargeStacks == 4 and not c.HasBuff("Alter Time")
 	end
 })
 
-c.AddSpell("Evocation", "for Arcane", {
+c.AddSpell("Arcane Barrage", "for AoE", {
+	NoStopChannel = true,
 	CheckFirst = function()
-		return a.ManaPercent <= a.GetConfig("evocate_percent")
+		return a.ChargeStacks == 4
 	end
+})
+
+c.AddSpell("Arcane Barrage", "if Losing Stacks", {
+	FlashColor = "red",
+	NoStopChannel = true,
+	CheckFirst = function()
+		local duration = a.ChargeDuration
+		if c.HasBuff("Alter Time") then
+			duration = math.min(duration, c.GetBuffDuration("Alter Time"))
+		end
+		return duration > 0 and duration < c.GetCastTime("Arcane Blast") + .1
+	end
+})
+
+c.AddOptionalSpell("Flamestrike", nil, {
+	NoRangeCheck = true,
+	CheckFirst = function()
+		return not c.IsCasting("Flamestrike")
+	end
+})
+
+c.AddSpell("Arcane Explosion", nil, {
+	Melee = true,
 })
 
 -------------------------------------------------------------------------- Fire
@@ -178,7 +294,7 @@ c.AssociateTravelTimes(.5, "Fireball", "Pyroblast", "Frostfire Bolt")
 c.AssociateTravelTimes(.2, "Scorch", "Inferno Blast")
 
 local function combustionCheckFirst(z, multiplier)
-	local threshhold = a.GetConfig("combust_at") * multiplier
+	local threshhold = c.GetOption("CombustionMin") * multiplier
 	if bcm.PredictDamage(false, false) >= threshhold then
 		if bcm.PredictDamage(true, false) >= threshhold then
 			z.FlashColor = "yellow"
@@ -253,19 +369,13 @@ c.AddOptionalSpell("Frost Armor", nil, {
 })
 
 c.AddOptionalSpell("Freeze", nil, {
-    NoRangeCheck = 1,
-    NoGCD = true,
-    CheckFirst = function()
-        return a.FingerCount < 2
-    end
-})
-
-c.AddOptionalSpell("Freeze", "on Pet Bar", {
     Type = "pet",
     NoRangeCheck = 1,
     NoGCD = true,
     CheckFirst = function()
-        return a.FingerCount < 2
+        return a.FingerCount < 2 
+        	and s.SpellCooldown(c.GetID("Freeze")) == 0
+        	and not s.Boss() 
     end
 })
 
@@ -277,7 +387,10 @@ c.AddSpell("Ice Lance", nil, {
 
 c.AddSpell("Ice Lance", "within 2", {
 	CheckFirst = function()
-		return a.FingerCount > 0 and c.GetBuffDuration("Fingers of Frost") < 2
+		return (a.FingerCount > 0 and c.GetBuffDuration("Fingers of Frost") < 2)
+			or (a.FingerCount < 2 
+				and (c.HasDebuff("Deep Freeze") 
+					or c.IsAuraPendingFor("Deep Freeze")))
 	end
 })
 
@@ -301,10 +414,12 @@ c.AddOptionalSpell("Frozen Orb", nil, {
 --})
 
 c.AddOptionalSpell("Icy Veins", nil, {
-	CheckFirst = function()
+	CheckFirst = function(z)
 		if c.HasGlyph("Icy Veins") then
+			z.ID = c.GetID("Icy Veins Glyphed")
 			return c.GetCooldown("Frozen Orb") > 50
 		else
+			z.ID = c.GetID("Icy Veins")
 			return true
 		end
 	end
@@ -313,8 +428,9 @@ c.AddOptionalSpell("Icy Veins", nil, {
 c.AddSpell("Frostbolt", "for Debuff", {
 	CheckFirst = function()
 		return c.GetMyDebuffStack("Frostbolt", false, true)
-				+ c.CountLandings("Frostbolt", -3, 10)
-			< 3
+					+ c.CountLandings("Frostbolt", -3, 10)
+				< 3
+			and not c.IsSolo()
 	end
 })
 
@@ -323,3 +439,20 @@ c.AddSpell("Frostfire Bolt", "under Brain Freeze", {
 		return c.HasBuff("Brain Freeze")
 	end
 })
+
+c.AddOptionalSpell("Deep Freeze", nil, {
+	CheckFirst = function()
+		return a.FingerCount < 2 
+			and not s.Boss() 
+			and c.GetCooldown("Frozen Orb") < 50
+	end
+})
+
+--c.AddOptionalSpell("Frost Nova", nil, {
+--	CheckFirst = function()
+--		return c.IsSolo() 
+--			and c.DistanceAtTheMost() <= 12 
+--			and not c.HasDebuff("Deep Freeze")
+--			and not s.Boss()
+--	end
+--})

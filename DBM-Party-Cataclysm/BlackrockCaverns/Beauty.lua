@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(108, "DBM-Party-Cataclysm", 1, 66)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(39700)
 mod:SetModelID(34433)
 mod:SetZone()
@@ -31,7 +31,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(76028, 93586) then
+	if args:IsSpellID(76028) then
 		warnTerrifyingRoar:Show()
 		timerTerrifyingRoarCD:Start()
 	end

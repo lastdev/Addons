@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(115, "DBM-Party-Cataclysm", 8, 68)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 23 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(43873)
 mod:SetModelID(34265)
 mod:SetZone()
@@ -65,7 +65,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(88308, 93989) then
+	if args:IsSpellID(88308) then
 		self:ScheduleMethod(0.2, "BreathTarget")
 		timerBreath:Start()
 		timerBreathCD:Start()

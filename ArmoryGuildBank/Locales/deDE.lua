@@ -23,6 +23,9 @@ L["ARMORY_CMD_SET_AGBCOUNTALL_MENUTEXT"] = "Alle Realms in die Aufzählung einbe
 L["ARMORY_CMD_SET_AGBCOUNTALL_TEXT"] = "Alle Realms in der Gegenstandszählung berücksichtigen" -- Needs review
 L["ARMORY_CMD_SET_AGBCOUNTALL_TOOLTIP"] = [=[Aktiv: Gildenbanksummen werden für alle Realms angezeigt
 Inaktiv: Gildenbanksummen werden nur für den aktuellen Realm angezeigt]=]
+L["ARMORY_CMD_SET_AGBCOUNTMYGUILD_MENUTEXT"] = "Nur die aktuelle Gilde einbeziehen" -- Needs review
+L["ARMORY_CMD_SET_AGBCOUNTMYGUILD_TEXT"] = "Anzahl der Gegenstände nur für die aktuelle Gilde einbeziehen" -- Needs review
+L["ARMORY_CMD_SET_AGBCOUNTMYGUILD_TOOLTIP"] = "Aktiv: Anzahl der Gegenstände in der Gildenbank wird nur für die Gilde des aktuellen und ausgewählten Charakters angezeigt." -- Needs review
 L["ARMORY_CMD_SET_AGBCOUNTXFACTION_MENUTEXT"] = "Alle Fraktionen einbeziehen"
 L["ARMORY_CMD_SET_AGBCOUNTXFACTION_TEXT"] = "alle Fraktionen bei der Zählung berücksichtigen" -- Needs review
 L["ARMORY_CMD_SET_AGBCOUNTXFACTION_TOOLTIP"] = [=[Aktiv: Gildenbankanzahl wird für alle Fraktionen angezeigt

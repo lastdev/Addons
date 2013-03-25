@@ -2,10 +2,10 @@
 ************************************************************************
 Mob.lua
 ************************************************************************
-File date: 2012-09-10T03:52:39Z
-File hash: 1291879
-Project hash: 5a95034
-Project version: 2.4.2
+File date: 2013-03-03T23:11:34Z
+File hash: 4c8bad9
+Project hash: f922565
+Project version: 2.4.6
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -57,7 +57,7 @@ function addon:InitMob()
 	-- Burning Steppes
 	AddMob(7035,	L["Firegut Brute"],			Z.BURNING_STEPPES,		82.5, 48.1)
 	AddMob(7037,	L["Thaurissan Firewalker"],		Z.BURNING_STEPPES,		61.1, 42.0)
-	AddMob(10119,	L["Volchan"],				Z.BURNING_STEPPES,		73.0, 49.3)
+	AddMob(10119,	L["Volchan"],				Z.BURNING_STEPPES,		22.0, 41.0)
 
 	-- Deadwind Pass
 	AddMob(7372,	L["Deadwind Warlock"],			Z.DEADWIND_PASS,		59.8, 74.4)
@@ -253,6 +253,7 @@ function addon:InitMob()
 	AddMob(9736,	BN.QUARTERMASTER_ZIGRIS,		Z.BLACKROCK_SPIRE,		0, 0)
 	AddMob(10264,	BN.SOLAKAR_FLAMEWREATH,			Z.BLACKROCK_SPIRE,		0, 0)
 	AddMob(10317,	L["Blackhand Elite"],			Z.BLACKROCK_SPIRE,		0, 0)
+	AddMob(10318,	L["Blackhand Assassin"],		Z.BLACKROCK_SPIRE,		0, 0)
 	AddMob(10363,	BN.GENERAL_DRAKKISATH,			Z.BLACKROCK_SPIRE,		0, 0)
 	AddMob(10899,	BB["Goraluk Anvilcrack"],		Z.BLACKROCK_SPIRE,		0, 0)
 
@@ -268,6 +269,9 @@ function addon:InitMob()
 
 	-- Halls of Lightning
 	AddMob(28923,	BN.LOKEN,				Z.HALLS_OF_LIGHTNING,		0, 0)
+
+	-- Isle of Thunder
+	AddMob(69461,	L["Itoka"],				Z.ISLE_OF_THUNDER,		0, 0)
 
 	-- Karazhan
 	AddMob(16406,	L["Phantom Attendant"],			Z.KARAZHAN,			0, 0)
@@ -321,7 +325,7 @@ function addon:InitMob()
 	AddMob(10426,	L["Risen Inquisitor"],			Z.STRATHOLME,			0, 0)
 	AddMob(10813,	BN.BALNAZZAR,				Z.STRATHOLME,			0, 0)
 	AddMob(10438,	BN.MALEKI_THE_PALLID,			Z.STRATHOLME,			0, 0)
-	AddMob(10997,	BB["Cannon Master Willey"],		Z.STRATHOLME,			0, 0)
+	AddMob(10997,	BB["Willey Hopebreaker"],		Z.STRATHOLME,			0, 0)
 
 	-- Temple of Ahn'Qiraj
 	AddMob(15263,	BB["The Prophet Skeram"],		Z.AHNQIRAJ_THE_FALLEN_KINGDOM,	0, 0)

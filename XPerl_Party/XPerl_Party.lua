@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 			for k,v in pairs(PartyFrames) do
 				v.conf = pconf
 			end
-		end, "$Revision: 760 $")
+		end, "$Revision: 834 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -25,10 +25,9 @@ local UnitIsConnected = UnitIsConnected
 local UnitIsDead = UnitIsDead
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitIsGhost = UnitIsGhost
-local UnitMana = UnitMana
-local UnitManaMax = UnitManaMax
+local UnitPower = UnitPower
+local UnitPowerMax = UnitPowerMax
 local UnitName = UnitName
-local UnitPowerType = UnitPowerType
 local partyHeader
 local partyAnchor
 
@@ -635,9 +634,11 @@ local function XPerl_Party_UpdateMana(self)
 	if (self.afk and not UnitIsAFK(self.partyid)) then
 		XPerl_Party_UpdatePlayerFlags(self)
 	end
-
-	local Partymana = UnitMana(self.partyid)
-	local Partymanamax = UnitManaMax(self.partyid)
+	
+	local pType = XPerl_GetDisplayedPowerType(self.partyid);
+	
+	local Partymana = UnitPower(self.partyid, pType)
+	local Partymanamax = UnitPowerMax(self.partyid, pType)
 
 	--Begin 4.3 division by 0 work around to ensure we don't divide if max is 0
 	local percent
@@ -658,7 +659,7 @@ local function XPerl_Party_UpdateMana(self)
 	self.statsFrame.manaBar:SetMinMaxValues(0, Partymanamax)
 	self.statsFrame.manaBar:SetValue(Partymana)
 
-	if (UnitPowerType(self.partyid)>=1) then
+	if (XPerl_GetDisplayedPowerType(self.partyid)>=1) then
 		self.statsFrame.manaBar.percent:SetText(Partymana)
 	else
 		self.statsFrame.manaBar.percent:SetFormattedText(percD, 100 * percent)

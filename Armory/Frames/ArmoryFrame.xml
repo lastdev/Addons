@@ -1,4 +1,4 @@
-<!-- Revision: 508 2012-09-09T17:24:16Z -->
+<!-- Revision: 572 2013-01-04T15:34:54Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\FrameXML\UI.xsd">
   <Script file="ArmoryFrame.lua"/>
@@ -8,7 +8,7 @@
         PanelTemplates_TabResize(self, 0);
       </OnShow>
       <OnEnter>
-        if ( self.textWidth and self.textWidth > self:GetFontString():GetWidth() ) then	--We're ellipsizing.
+        if ( self.textWidth and Armory:Round(self.textWidth, 2) > Armory:Round(self:GetFontString():GetWidth(), 2) ) then	--We're ellipsizing.
           GameTooltip:SetOwner(self, "ANCHOR_BOTTOM");
           GameTooltip:SetText(self:GetText());
         end
@@ -24,9 +24,6 @@
         PanelTemplates_Tab_OnClick(self, ArmoryFrame);
         ArmoryFrameTab_OnClick(self);
       </OnClick>
-      <OnLeave>
-        GameTooltip:Hide();
-      </OnLeave>
     </Scripts>
   </Button>
   <CheckButton name="ArmoryFrameLineTabTemplate"  frameLevel="1" virtual="true" hidden="true">
@@ -346,7 +343,7 @@
           </OnLoad>
           <OnClick>
             if ( button == "RightButton" and self.canDelete ) then
-              local dialog = StaticPopup_Show("ARMORY_DELETE_CHARACTER", self.profile.character);
+              local dialog = ArmoryStaticPopup_Show("ARMORY_DELETE_CHARACTER", self.profile.character);
               dialog.data = self.profile;
             end
           </OnClick>
@@ -496,12 +493,6 @@
             </Offset>
           </Anchor>
         </Anchors>
-        <Scripts>
-           <OnEnter>
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-            GameTooltip:SetText(PET, 1.0,1.0,1.0 );
-          </OnEnter>
-        </Scripts>
       </Button>
       <Button name="ArmoryFrameTab3" inherits="ArmoryFrameTabButtonTemplate" id="3" text="TALENTS">
         <Anchors>
@@ -511,12 +502,6 @@
             </Offset>
           </Anchor>
         </Anchors>
-        <Scripts>
-          <OnEnter>
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-            GameTooltip:SetText(TALENTS, 1.0,1.0,1.0 );
-          </OnEnter>
-        </Scripts>
       </Button>
       <Button name="ArmoryFrameTab4" inherits="ArmoryFrameTabButtonTemplate" id="4" text="PVP">
         <Anchors>

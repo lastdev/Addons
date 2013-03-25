@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher EnchantMats
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: SearcherEnchantMats.lua 5331 2012-08-19 02:43:59Z ccox $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: SearcherEnchantMats.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -29,6 +29,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 --]]
 -- Create a new instance of our lib with our parent
+if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewSearcher("EnchantMats")
 if not lib then return end
 --local print,decode,_,_,replicate,empty,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals()
@@ -222,13 +223,6 @@ function lib.Processor(event, subevent)
 	end
 end
 
-lib.Processors = {}
-function lib.Processors.selecttab(event, subevent)
-	if subevent == lib.tabname and private.doValidation then
-		private.doValidation()
-	end
-end
-
 -- This function is automatically called when we need to create our search parameters
 function lib:MakeGuiConfig(gui)
 	-- Get our tab and populate it with our controls
@@ -412,4 +406,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherEnchantMats.lua $", "$Rev: 5331 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherEnchantMats.lua $", "$Rev: 5368 $")

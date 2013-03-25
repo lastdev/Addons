@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 525 2012-09-20T09:02:14Z
+    Revision: 557 2012-11-11T23:10:00Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -188,7 +188,7 @@ function Armory:UpdateQuests()
                 local _, id = self:GetLinkId(link);
                 local info = dbEntry:SelectContainer(container, id);
                 info.Link = link;
-                info.Text = _G.GetQuestLogQuestText();
+                info.Text = dbEntry.Save(_G.GetQuestLogQuestText());
                 if ( _G.IsCurrentQuestFailed() ) then
                     info.Failed = _G.IsCurrentQuestFailed();
                 end

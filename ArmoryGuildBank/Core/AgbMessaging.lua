@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 473 2012-02-27T00:29:03Z
+    Revision: 585 2013-03-02T14:19:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -40,7 +40,7 @@ ARMORY_GUILDBANK_QUEUE_WAIT_TIME = 10;
 
 ARMORY_GUILDBANK_PUSH_DELAY = 10;
 
-ARMORY_GUILDBANK_PROTOCOL_VERSION = "6";
+ARMORY_GUILDBANK_PROTOCOL_VERSION = "7";
 
 function AGB:Push()
     Armory:ExecuteDelayed(ARMORY_GUILDBANK_PUSH_DELAY, self.InfoPusher);

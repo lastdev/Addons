@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Valithria", "DBM-Icecrown", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 27 $"):sub(12, -3))
 mod:SetCreatureID(36789)
 mod:SetModelID(30318)
 mod:SetUsedIcons(8)
@@ -114,7 +114,7 @@ end
 
 function mod:TrySetTarget()
 	if DBM:GetRaidRank() >= 1 then
-		for i = 1, DBM:GetGroupMembers() do
+		for i = 1, DBM:GetNumGroupMembers() do
 			if UnitGUID("raid"..i.."target") == blazingSkeleton then
 				blazingSkeleton = nil
 				SetRaidTarget("raid"..i.."target", 8)

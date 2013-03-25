@@ -892,12 +892,12 @@ XPERL_CONF_ASSIST_BACKALPHA_DESC		= "Change the transparency of the assists back
 
 XPERL_CONF_RAIDHELP_ENABLE				= ENABLE
 XPERL_CONF_RAIDHELP_ENABLE_DESC			= "Enable the Tank Targets window"
-XPERL_CONF_RAIDHELP_CTTARGETS			= "Use CTRA (or oRA) MT Targets"
-XPERL_CONF_RAIDHELP_CTTARGETS_DESC		= "Use CTRA or oRA for tank list, instead of building from Warriors in raid"
+XPERL_CONF_RAIDHELP_CTTARGETS			= "Use CTRA MT Targets"
+XPERL_CONF_RAIDHELP_CTTARGETS_DESC		= "Use CTRA for tank list, instead of building from Warriors in raid"
 XPERL_CONF_RAIDHELP_BLIZZMTTARGETS		= "Use Blizzard MT Targets"
-XPERL_CONF_RAIDHELP_BLIZZMTTARGETS_DESC	= "This will merge defined Blizzard MT Targets into the oRA2 MT Targets"
+XPERL_CONF_RAIDHELP_BLIZZMTTARGETS_DESC	= "This will merge defined Blizzard MT Targets into the CTRA MT Targets"
 XPERL_CONF_RAIDHELP_NOAUTO				= "No Default"
-XPERL_CONF_RAIDHELP_NOAUTO_DESC			= "Don't automatically create warrior tank list when there is no defined CTRA/oRA MT List"
+XPERL_CONF_RAIDHELP_NOAUTO_DESC			= "Don't automatically create warrior tank list when there is no defined CTRA MT List"
 XPERL_CONF_RAIDHELP_GROWUP				= "Grow Upwards"
 XPERL_CONF_RAIDHELP_GROWUP_DESC			= "Grow the MT List upwards"
 XPERL_CONF_RAIDHELP_THREATBAR			= "Threat Bar"

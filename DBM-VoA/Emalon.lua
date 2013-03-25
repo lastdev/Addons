@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Emalon", "DBM-VoA")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(33993)
 mod:SetModelID(27108)
 mod:SetUsedIcons(8)
@@ -69,7 +69,7 @@ function mod:TrySetTarget(target, icon)
 	icon = icon or 8
 	if DBM:GetRaidRank() >= 1 then
 		local found = false
-		for i = 1, DBM:GetGroupMembers() do
+		for i = 1, DBM:GetNumGroupMembers() do
 			if UnitGUID("raid"..i.."target") == target then
 				found = true
 				SetRaidTarget("raid"..i.."target", icon)
@@ -84,7 +84,7 @@ function mod:TrySetTarget(target, icon)
 	end
 end
 
-function mod:SPELL_HEAL(sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId)
+function mod:SPELL_HEAL(_, _, _, _, _, _, _, _, spellId)
 	if spellId == 64218 then
 		warnOverCharge:Show()
 		timerOvercharge:Start()

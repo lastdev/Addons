@@ -11,6 +11,7 @@ local THIS_ACCOUNT = "Default"
 local ICON_NOT_STARTED = "Interface\\RaidFrame\\ReadyCheck-NotReady" 
 local ICON_PARTIAL = "Interface\\RaidFrame\\ReadyCheck-Waiting"
 local ICON_COMPLETED = "Interface\\RaidFrame\\ReadyCheck-Ready" 
+local CHARS_PER_FRAME = 11
 
 local parent = "AltoholicTabGrids"
 local classMenu = parent .. "ClassIconMenu"	-- name of mouse over menu frames (add a number at the end to get it)
@@ -42,6 +43,7 @@ local ICON_VIEW_COMPANIONS = "Interface\\Icons\\INV_Box_Birdcage_01"
 local ICON_VIEW_MOUNTS = "Interface\\Icons\\Ability_Mount_RidingHorse"
 local ICON_VIEW_TRADESKILLS = "Interface\\Icons\\Ability_Repair"
 local ICON_VIEW_ARCHEOLOGY = "Interface\\Icons\\trade_archaeology"
+local ICON_VIEW_QUESTS = "Interface\\LFGFrame\\LFGIcon-Quest"
 
 addon.Tabs.Grids = {}
 
@@ -106,6 +108,12 @@ local function UpdateMenuIcons()
 	else
 		DisableIcon(parent .. "_Tabards")
 	end
+
+	if DataStore_Quests then
+		EnableIcon(parent .. "_Dailies")
+	else
+		DisableIcon(parent .. "_Dailies")
+	end
 end
 
 local function UpdateClassIcons()
@@ -114,19 +122,19 @@ local function UpdateClassIcons()
 	
 		local index = 1
 
-		-- add the first 10 keys found on this realm
+		-- add the first 11 keys found on this realm
 		for characterName, characterKey in pairs(DataStore:GetCharacters(currentRealm, currentAccount)) do	
 			-- ex: : ["Tabs.Grids.Default.MyRealm.Column4"] = "Account.realm.alt7"
 
 			addon:SetOption(format("Tabs.Grids.%s.%s.Column%d", currentAccount, currentRealm, index), characterKey)
 			
 			index = index + 1
-			if index > 10 then
+			if index > CHARS_PER_FRAME then
 				break
 			end
 		end
 		
-		while index <= 10 do
+		while index <= CHARS_PER_FRAME do
 			addon:SetOption(format("Tabs.Grids.%s.%s.Column%d", currentAccount, currentRealm, index), nil)
 			index = index + 1
 		end
@@ -135,7 +143,7 @@ local function UpdateClassIcons()
 	local itemName, itemButton, itemTexture
 	local class, _
 	
-	for i = 1, 10 do
+	for i = 1, CHARS_PER_FRAME do
 		itemName = parent .. "_ClassIcon" .. i
 		itemButton = _G[itemName]
 		
@@ -166,11 +174,13 @@ local function UpdateClassIcons()
 			itemButton.border:SetVertexColor(0, 1, 0, 0.5)
 		end
 		
-		itemTexture:SetWidth(36)
-		itemTexture:SetHeight(36)
+		itemTexture:SetWidth(33)
+		itemTexture:SetHeight(33)
 		itemTexture:SetAllPoints(itemButton)
 		
 		itemButton.border:Show()
+		itemButton:SetWidth(34)
+		itemButton:SetHeight(34)
 		itemButton:Show()
 	end
 end
@@ -187,7 +197,7 @@ function ns:OnShow()
 		currentCategory = 1
 		
 		-- Button Borders
-		for column = 1, 10 do
+		for column = 1, CHARS_PER_FRAME do
 			for row = 1, 8 do
 				addon:CreateButtonBorder(_G["AltoholicFrameGridsEntry".. row .. "Item" .. column])
 			end
@@ -239,7 +249,7 @@ function ns:Update()
 
 			obj:RowSetup(entry, row, dataRowID)
 			
-			for column = 1, 10 do
+			for column = 1, CHARS_PER_FRAME do
 				itemButton = _G[entry.. row .. "Item" .. column]
 				itemButton.border:Hide()
 				
@@ -442,8 +452,11 @@ function ns:OnLoad()
 	addon:SetItemButtonTexture(parent .. "_Archeology", ICON_VIEW_ARCHEOLOGY, size, size)
 	_G[parent .. "_Archeology"].text = GetSpellInfo(78670)
 	
+	addon:SetItemButtonTexture(parent .. "_Dailies", ICON_VIEW_QUESTS, size, size)
+	_G[parent .. "_Dailies"].text = "Daily Quests"
+	
 	-- Class Icons
-	for column = 1, 10 do
+	for column = 1, CHARS_PER_FRAME do
 		addon:DDM_Initialize(_G[classMenu..column], ClassIcon_Initialize)
 	end
 end

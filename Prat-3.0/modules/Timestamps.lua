@@ -250,7 +250,7 @@ Prat:AddModuleToLoad(function()
 	["Show Timestamp"] = "Показывать время",
 	space_desc = "Вкл/Выкл добавление пробела после времени.",
 	space_name = "Пробел",
-	Timestamps = true,
+	Timestamps = "Отображение времени",
 	["Toggle showing timestamp for each window."] = "Вкл/Выкл отображение времени во всех окнах.",
 	twocolumn_desc = "Помещает время в отдельную колонку, чтобы текст не переносился на строку под ним.",
 	twocolumn_name = "Чат в 2 колонки",

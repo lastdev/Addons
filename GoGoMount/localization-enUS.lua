@@ -27,6 +27,8 @@
 		DruidOptions = "Druid Options",
 		DruidSingleClick = "Single click to shift from form to travel forms",
 		EnableAutoDismount = "Enable automatic dismount",
+		ExtraPassengerMounts = "Extra Passenger Mounts",
+		ExtraPassengerMountsDescription = "This list of passenger mounts is used to add passenger mounts to the random selection only when the Passenger Mount button is pressed.  This will allow you to set preferred mount lists excluding passenger mounts but still have them available when using the Passenger Mount button.  These mounts will not be used if they are marked as excluded mounts globally or for the current zone you are in.",
 		Favorites = "Favorites",
 		GlobalExclusions = "Global Exclusions",
 		GlobalExclusionsDescription = "Mounts will always be ignored.  Even if mounts selected here are set as favorites, they will not be used.",

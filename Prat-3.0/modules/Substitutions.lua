@@ -540,8 +540,8 @@ L:AddLocale("ruRU",
 	["A module to provide basic chat substitutions."] = "Модуль для простых замен текста в чате.",
 	["Are you sure?"] = "Ты уверен?",
 	["Are you sure - this will delete all user defined substitutions and reset defaults?"] = "Вы уверены - будут удалены все пользовательские замены и установлены значения по умолчанию?",
-	["can't find substitution index for a substitution named '%s'"] = "Не можете найти замена индекса для подстановки имени", -- Needs review
-	-- ["|cffff0000warning:|r subtitution \"%s\" already defined as \"%s\", overwriting"] = "",
+	["can't find substitution index for a substitution named '%s'"] = "не могу найти номер замены в списке замен для '%s'",
+	["|cffff0000warning:|r subtitution \"%s\" already defined as \"%s\", overwriting"] = "|cffff0000предупреждение:|r замена \"%s\" уже определена как \"%s\", переписываем",
 	[ [=[Current value: '%s'
 Click to paste into the chat.]=] ] = [=[Текущее значение: '%s'
 Кликнуть для копирования в чат.]=],
@@ -566,38 +566,38 @@ Click to paste into the chat.]=] ] = [=[Текущее значение: '%s'
 	MapLoc = "Блокировка карты",
 	MapPos = "Позиция на карте",
 	MapXPos = "Позиция Х на карте",
-	-- MapYPos = "",
+	MapYPos = "Поз.по Y",
 	MapZone = "Зона карты",
 	["module:buildUserSubsIndex(): warning: module patterns not defined!"] = "module:buildUserSubsIndex(): предупреждение: шаблоны модуля не определены!",
-	-- MouseoverTargetName = "",
+	MouseoverTargetName = true,
 	["<noguild>"] = "<без гильдии>",
-	["NO MATCHFUNC FOUND"] = "Нет соответствующих ", -- Needs review
+	["NO MATCHFUNC FOUND"] = "Нет соответствующих ",
 	["no substitution name given"] = "не задано имя замены",
 	["no substitution name supplied for deletion"] = "не задано имя замены для удаления",
 	["<notarget>"] = "<нет цели>",
 	["no user defined subs found"] = "не найдено замен определяемых пользователем",
 	["no value given for subtitution \"%s\""] = "не задано значение для замены \"%s\"",
 	["Options for setting and removing user defined substitutions. (NB: users may define custom values for existing substitutions, but they will revert to the default value if the user definition is deleted.)"] = "Опции для назначения и отмены пользовательских замен. (Внимание: пользователи могут назначать свои значения для существующих замен, однако будет использовано значение по умолчанию если определение пользователя удалено).",
-	PlayerAverageItemLevel = "Игрок средний уровень Пункт ", -- Needs review
+	PlayerAverageItemLevel = true,
 	PlayerCurrentMana = "текушая мана игрока",
-	PlayerHealthDeficit = true, -- Needs review
-	PlayerHP = "Игрок HP", -- Needs review
+	PlayerHealthDeficit = true,
+	PlayerHP = true,
 	PlayerManaDeficit = "нехватка маны",
-	PlayerMaxHP = true, -- Needs review
-	PlayerMaxMana = true, -- Needs review
+	PlayerMaxHP = true,
+	PlayerMaxMana = true,
 	PlayerName = "Имя игрока",
-	PlayerPercentHP = "Игрок Процент HP", -- Needs review
-	PlayerPercentMana = "Игрок Процент Мана", -- Needs review
-	-- RandNum = "",
+	PlayerPercentHP = true,
+	PlayerPercentMana = true,
+	RandNum = true,
 	["removing user defined substitution \"%s\"; previously expanded to => \"%s\""] = "удаляется определяемая пользователем замена \"%s\", раскрывавшаяся в => \"%s\"",
 	["Set substitution"] = "Назначить замену",
 	["Set the value of a user defined substitution (NB: this may be the same as an existing default substitution; to reset it to the default, just remove the user created definition)."] = "Установить значение для определяемой пользователем замены (Внимание: может совпадать с существующей заменой по умолчанию; чтобы сбросить к первоначальному значению удалите пользовательское определение).",
-	["subname -- NOTE: sub name without the prefix '%'"] = "subname -- ВНИМАНИЕ: sub name указывать без префикса '%'", -- Needs review
-	["subname = text after expansion -- NOTE: sub name without the prefix \"%\""] = "subname = text after expansion -- ВНИМАНИЕ: sub name указывать без префикса '%'", -- Needs review
+	["subname -- NOTE: sub name without the prefix '%'"] = "subname -- ВАЖНО: sub name указывать без префикса '%'",
+	["subname = text after expansion -- NOTE: sub name without the prefix \"%\""] = "subname = text after expansion -- ВАЖНО: sub name указывать без префикса '%'",
 	Substitutions = "Замены",
-	-- ["substitution: %s defined as => %s"] = "",
-	TargetClass = "Класс цели", -- Needs review
-	TargetGender = "Пол цели", -- Needs review
+	["substitution: %s defined as => %s"] = "замена: %s определен как => %s",
+	TargetClass = true,
+	TargetGender = true,
 	TargetGuild = "показать гильдию",
 	TargetHealth = "показать жизнь",
 	TargetHealthDeficit = "Деф. здоровья цели",
@@ -606,15 +606,15 @@ Click to paste into the chat.]=] ] = [=[Текущее значение: '%s'
 	TargetManaDeficit = "Деф. маны цели",
 	TargetName = "показать имя",
 	TargetPercentHP = "% здоровья цели",
-	TargetPossesive = "Притяжательное цели", -- Needs review
-	TargetPronoun = "Местоимение цели", -- Needs review
+	TargetPossesive = true,
+	TargetPronoun = true,
 	TargetRace = "Раса цели",
 	TargetTargetName = "Имя цели цели",
 	["unknown sex"] = "неизвестный пол",
-	-- ["user defined substition \"%s\" not found"] = "",
+	["user defined substition \"%s\" not found"] = "пользовательская замена \"%s\" не найдена",
 	["User defined substitutions"] = "Пользовательские подмены",
-	-- usersub_ = "",
-	-- ["user substitutions index (usersubs_idx) doesn't exist! oh dear."] = "",
+	usersub_ = true,
+	["user substitutions index (usersubs_idx) doesn't exist! oh dear."] = "таблица пользовательских замен (usersubs_idx) не существует! о боже.",
 }
 
 )

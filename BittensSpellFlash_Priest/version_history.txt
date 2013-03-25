@@ -1,3 +1,30 @@
+== Version 2.7.2
+NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
+
+== Version 2.7.1
+NOTE: Your options will be reset when you upgrade to this version.
+* Repackaging so that Bitten's SpellFlash Library is included with the addon, instead of downloaded separately.
+* Several other internal changes.
+* Shadow: Removed old Shadow Word: Insanity code.
+
+== Version 2.7.0
+* Discipline: Added flashing for Archangel.
+
+== Version 2.6.0
+* Discipline: Added flashing for Discipline.
+
+== Version 2.5.1
+* Shadow: Halo and Cascade now flash pretty colors to indicate distance.  See the addon description for more info.
+* Shadow: Tweaked the condition for the top-priority Devouring Plague.
+
+== Version 2.5.0
+* Shadow: Researched the Shadow rotation in Simulationcraft and found several improvement.
+* Shadow: Added Cascade and Halo (not Divine Star, since it's not worth using on a single target).
+* Shadow: Added Desperate Prayer.
+
+== Version 2.4.5
+* Making the "Out of Date" status go away.  Please report any real issues w/ the new patch.
+
 == Version 2.4.4
 * Shadow Bugfix - found some smaller issues with cooldowns.  Flashing should be smoother now.
 

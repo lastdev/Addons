@@ -75,6 +75,15 @@ local petList = {
 		101989,102317,103074,103076,103125,103544,103549,103588,104047,104049,
 		105122,
 	},
+	{	-- "Mists of Pandaria"
+		114090,118414,120501,120507,122748,123212,123214,123778,123784,124000,
+		124152,124660,126247,126249,126251,126885,127006,127008,127813,127815,
+		127816,130726,130759,131590,131650,132574,132580,132759,132762,132785,
+		132789,134538,134892,134894,134895,135156,135254,135255,135256,135257,
+		135258,135259,135261,135263,135264,135265,135266,135267,135268,136484,
+		137568,137977,138082,138087,138161,138285,138380,138381,138382,138913,
+		139148,139361,139362,139363,139365,139932,139933,139934
+	},
 }
 
 for _, list in pairs(petList) do
@@ -88,7 +97,7 @@ local xPacks = {
 	EXPANSION_NAME1,	-- "The Burning Crusade"
 	EXPANSION_NAME2,	-- "Wrath of the Lich King"
 	EXPANSION_NAME3,	-- "Cataclysm"
-	-- EXPANSION_NAME4,	-- "Mists of Pandaria"
+	EXPANSION_NAME4,	-- "Mists of Pandaria"
 }
 
 local function OnXPackChange(self)
@@ -102,7 +111,7 @@ local function PetDropDown_Initialize()
 	for i, xpack in pairs(xPacks) do
 		DDM_Add(xpack, i, OnXPackChange, nil, (i==currentXPack))
 	end
-	DDM_Add(L["All-in-one"], 5, OnXPackChange, nil, (currentXPack==5))
+	DDM_Add(L["All-in-one"], 6, OnXPackChange, nil, (currentXPack==6))
 	
 	DDM_AddCloseMenu()
 end

@@ -88,7 +88,6 @@ function ns:SetSinglePetView(petType)
 	currentPetType = petType
 	
 	AltoholicFramePetsNormal:Show()
-	AltoholicFramePetsAllInOne:Hide()
 	AltoholicFramePets:Show()
 	
 	SetPage(1)

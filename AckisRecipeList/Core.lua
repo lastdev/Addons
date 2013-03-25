@@ -3,10 +3,10 @@
 Core.lua
 Core functions for Ackis Recipe List
 ************************************************************************
-File date: 2012-10-07T00:59:28Z
-File hash: 5dea9ce
-Project hash: 5a95034
-Project version: 2.4.2
+File date: 2012-12-19T03:08:12Z
+File hash: c79d759
+Project hash: f922565
+Project version: 2.4.6
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -253,10 +253,10 @@ function addon:OnInitialize()
 				-- Binding Filters
 				-------------------------------------------------------------------------------
 				binding = {
-					itemboe = true,
-					itembop = true,
-					recipebop = true,
-					recipeboe = true,
+					item_bind_on_equip = true,
+					item_bind_on_pickup = true,
+					recipe_bind_on_equip = true,
+					recipe_bind_on_pickup = true,
 				},
 				-------------------------------------------------------------------------------
 				-- Player Role Filters
@@ -525,7 +525,7 @@ local TRADESKILL_ADDON_INITS = {
 	end,
 	MRTSkillFrame = function(scan_button)
 		scan_button:SetParent(_G.MRTSkillFrame)
-		scan_button:SetPoint("RIGHT", _G.MRTSkillFrame, "LEFT", 4, 0)
+		scan_button:SetPoint("RIGHT", _G.MRTSkillFrameCloseButton, "LEFT", 4, 0)
 		scan_button:SetWidth(scan_button:GetTextWidth() + 10)
 		scan_button:Show()
 	end,
@@ -796,6 +796,24 @@ do
 		_G.PrimaryProfession2SpellButtonBottom,
 	}
 
+	local function SetPreviousRanksKnown(previous_rank_id, profession_recipes, tradeskill_is_linked)
+
+		local previous_rank_recipe = profession_recipes[previous_rank_id]
+
+		if previous_rank_recipe then
+			previous_rank_recipe:SetAsKnownOrLinked(tradeskill_is_linked)
+		else
+			self:Debug("%s (%d): %s", entry_name, previous_rank_id, L["MissingFromDB"])
+		end
+
+		local nested_previous_rank_id = previous_rank_recipe:PreviousRankID()
+
+		if nested_previous_rank_id then
+			SetPreviousRanksKnown(nested_previous_rank_id, profession_recipes, tradeskill_is_linked)
+		end
+
+	end
+
 	--- Causes a scan of the tradeskill to be conducted. Function called when the scan button is clicked.   Parses recipes and displays output
 	-- @name AckisRecipeList:Scan
 	-- @usage AckisRecipeList:Scan(true)
@@ -924,13 +942,7 @@ do
 					local previous_rank_id = recipe:PreviousRankID()
 
 					if previous_rank_id then
-						local previous_rank_recipe = profession_recipes[previous_rank_id]
-
-						if previous_rank_recipe then
-							previous_rank_recipe:SetAsKnownOrLinked(tradeskill_is_linked)
-						else
-							self:Debug("%s (%d): %s", entry_name, previous_rank_id, L["MissingFromDB"])
-						end
+						SetPreviousRanksKnown(previous_rank_id, profession_recipes, tradeskill_is_linked)
 					end
 					recipe:SetAsKnownOrLinked(tradeskill_is_linked)
 					recipes_found = recipes_found + 1
@@ -947,7 +959,7 @@ do
 
 					local recipe = addon:AddRecipe(spell_id, profession_id, _G.GetExpansionLevel() + 1, private.ITEM_QUALITIES.COMMON)
 					recipe:SetSkillLevels(0, 0, 0, 0, 0)
-					recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER, F.IBOE)
+					recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER)
 					addon:Printf("Added '%s (%d)' to %s. Do a profession dump.", entry_name, spell_id, profession_name)
 					--@end-debug@]===]
 
@@ -1036,12 +1048,6 @@ do
 				MOB_DROP = L["Mob Drop"],
 				DISC = L["Discovery"],
 				RETIRED = L["Retired"],
-				IBOE = L["BOEFilter"],
-				IBOP = L["BOPFilter"],
-				IBOA = L["BOAFilter"],
-				RBOE = L["RecipeBOEFilter"],
-				RBOP = L["RecipeBOPFilter"],
-				RBOA = L["RecipeBOAFilter"],
 				DPS = _G.MELEE,
 				TANK = _G.TANK,
 				HEALER = _G.HEALER,
@@ -1103,7 +1109,7 @@ do
 				RAMKAHEN = FAC["Ramkahen"],
 				EARTHEN_RING = FAC["The Earthen Ring"],
 				THERAZANE = FAC["Therazane"],
---[[				SHANGXIACADEMY 
+--[[				SHANGXIACADEMY
 				FORESTHOZEN
 				PEARLFINJINYU
 				GOLDENLOTUS

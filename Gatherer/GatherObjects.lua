@@ -1,6 +1,6 @@
 --[[
 -	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.6 (<%codename%>)
+	Version: 4.2.0 (<%codename%>)
 	Revision: $Id: GatherObjects.lua 754 2008-10-14 04:43:39Z Esamynn $
 
 	License:

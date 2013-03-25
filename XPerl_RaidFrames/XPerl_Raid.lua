@@ -11,9 +11,11 @@ local ResArray = {}		-- List of currently active resserections in progress
 local buffUpdates = {}		-- Queue for buff updates after a roster change
 local raidLoaded
 local rosterUpdated
-local percD = "%d"..PERCENT_SYMBOL
+local percD = "%.1f"..PERCENT_SYMBOL
 local lastNamesList, lastName, lastWith, lastNamesCount -- Stores with/without buff list (OnUpdate optimization)
 local fullyInitiallized
+
+local taintFrames = {}
 
 if type(RegisterAddonMessagePrefix) == "function" then
 	RegisterAddonMessagePrefix("CTRA")
@@ -36,10 +38,9 @@ local UnitIsConnected = UnitIsConnected
 local UnitIsDead = UnitIsDead
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitIsGhost = UnitIsGhost
-local UnitMana = UnitMana
-local UnitManaMax = UnitManaMax
+local UnitPower = UnitPower
+local UnitPowerMax = UnitPowerMax
 local UnitName = UnitName
-local UnitPowerType = UnitPowerType
 local XPerl_UnitBuff = XPerl_UnitBuff
 local XPerl_UnitDebuff = XPerl_UnitDebuff
 local XPerl_CheckDebuffs = XPerl_CheckDebuffs
@@ -49,7 +50,7 @@ local XPerl_ColourHealthBar = XPerl_ColourHealthBar
 -- TODO - Watch for:	 ERR_FRIEND_OFFLINE_S = "%s has gone offline."
 
 local conf, rconf
-XPerl_RequestConfig(function(newConf) conf = newConf rconf = conf.raid end, "$Revision: 772 $")
+XPerl_RequestConfig(function(newConf) conf = newConf rconf = conf.raid end, "$Revision: 839 $")
 
 XPERL_RAIDGRP_PREFIX	= "XPerl_Raid_Grp"
 
@@ -91,7 +92,7 @@ function XPerl_Raid_OnLoad(self)
 			"UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_NAME_UPDATE", "PLAYER_FLAGS_CHANGED",
 			"UNIT_COMBAT", "UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED",
 			"UNIT_SPELLCAST_INTERRUPTED", "READY_CHECK", "READY_CHECK_CONFIRM", "READY_CHECK_FINISHED",
-			"RAID_TARGET_UPDATE", "PLAYER_LOGIN", "ROLE_CHANGED_INFORM", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE","UNIT_CONNECTION"
+			"RAID_TARGET_UPDATE", "PLAYER_LOGIN", "ROLE_CHANGED_INFORM", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE","UNIT_CONNECTION","PLAYER_REGEN_ENABLED"
 			}
 			
 			
@@ -113,9 +114,10 @@ function XPerl_Raid_OnLoad(self)
 
 	--Disable the creation of blizz CompactRaidFrameX, theres an issue with taint due to dropdown with more 7 items
 	--From http://www.wowinterface.com/forums/showpost.php?p=261589&postcount=5
-	if (rconf.enable) then
+	
+	if (rconf.enable and CompactUnitFrameProfiles) then
 		--CompactRaidFrameManager:SetParent(self)
-		CompactUnitFrameProfiles:UnregisterAllEvents()
+		CompactUnitFrameProfiles:UnregisterAllEvents()--This disables the creation of the blizzard raid frames
 	end
 	
 	XPerl_RegisterOptionChanger(function()
@@ -559,7 +561,8 @@ function XPerl_Raid_UpdateHealth(self)
 				if (rconf.values) then
 					self.statsFrame.healthBar.text:SetFormattedText("%d/%d", health, healthmax)
 				else
-					self.statsFrame.healthBar.text:SetFormattedText(percD, (percentHp + 0.005) * 100)
+					--self.statsFrame.healthBar.text:SetFormattedText(percD, (percentHp + 0.005) * 100)
+					self.statsFrame.healthBar.text:SetFormattedText(percD, (percentHp) * 100)
 				end
 			end
 
@@ -599,11 +602,13 @@ local function XPerl_Raid_UpdateMana(self)
 		if (not partyid) then
 			return
 		end
+		
+		local pType = XPerl_GetDisplayedPowerType(self.partyid);
 
-		local mana = UnitMana(partyid)
-		local manamax = UnitManaMax(partyid)
+		local mana = UnitPower(partyid, pType)
+		local manamax = UnitPowerMax(partyid, pType)
 
-		if (rconf.manaPercent and UnitPowerType(partyid) == 0 and not self.pet) then
+		if (rconf.manaPercent and XPerl_GetDisplayedPowerType(partyid) == 0 and not self.pet) then
 			if (rconf.values) then -- TODO rconf.manavalues
 			 	self.statsFrame.manaBar.text:SetFormattedText("%d/%d", mana, manamax)
 		 	else
@@ -647,6 +652,27 @@ local function onAttrChanged(self, name, value)
 	end
 end
 
+
+local function taintable(self)
+	--self:SetAttribute("*type1", "target")
+	--self:SetAttribute("type2", "menu")
+	
+	--self.menu = XPerl_Raid_ShowPopup -- Wtf, doesnt seem todo anything....
+	
+	if(not self or self == 1) then
+		return
+	end
+	
+	-- Does AllowAttributeChange work for children?
+	-- This taints the UI if done in combat. there a fix?
+	self.nameFrame:SetAttribute("useparent-unit", true)
+	--self.nameFrame:SetAttribute("*type1", "target")
+	--self.nameFrame:SetAttribute("type2", "menu")
+	--self.nameFrame.menu = XPerl_Raid_ShowPopup --Again, doesnt seem todo anything...
+	XPerl_SecureUnitButton_OnLoad(self.nameFrame, partyid, nil, TargetFrameDropDown, XPerl_ShowGenericMenu)		--TargetFrame.menu)
+	XPerl_SecureUnitButton_OnLoad(self, partyid, nil, TargetFrameDropDown, XPerl_ShowGenericMenu)
+end
+
 -- XPerl_Raid_Single_OnLoad
 function XPerl_Raid_Single_OnLoad(self)
 	XPerl_SetChildMembers(self)
@@ -668,17 +694,13 @@ function XPerl_Raid_Single_OnLoad(self)
 
 	Setup1RaidFrame(self)
 
-	self:SetAttribute("*type1", "target")
-	self:SetAttribute("type2", "menu")
-	self.menu = XPerl_Raid_ShowPopup
-	-- Does AllowAttributeChange work for children?
-	-- This taints the UI if done in combat. there a fix?
-	self.nameFrame:SetAttribute("useparent-unit", true)
-	self.nameFrame:SetAttribute("*type1", "target")
-	self.nameFrame:SetAttribute("type2", "menu")
-	self.nameFrame.menu = XPerl_Raid_ShowPopup
-	XPerl_SecureUnitButton_OnLoad(self.nameFrame, partyid, nil, TargetFrameDropDown, XPerl_ShowGenericMenu)		--TargetFrame.menu)
-	XPerl_SecureUnitButton_OnLoad(self, partyid, nil, TargetFrameDropDown, XPerl_ShowGenericMenu)
+	if (InCombatLockdown()) then
+		tinsert(taintFrames,self);
+		return
+	else
+		taintable(self)
+	end
+
 end
 
 -- XPerl_Raid_CombatFlash
@@ -1220,13 +1242,8 @@ end
 -------------------
 -- Event Handler --
 -------------------
-local lastevent = nil;
+
 -- XPerl_Raid_OnEvent
-
-
-
-local lastUnit = nil;
-local lastEvent = nil;
 function XPerl_Raid_OnEvent(self, event,unit, ...)
 --print(event);
 --print(dump({...}));
@@ -1288,6 +1305,15 @@ function XPerl_Raid_Events:PLAYER_ENTERING_WORLDsmall()
 		LoadAddOn("XPerl_CustomHighlight")
 	end
 end
+
+function XPerl_Raid_Events:PLAYER_REGEN_ENABLED()
+--Update all raid frame that would have tained
+		for frame,arg in pairs(taintFrames) do
+			taintable(frame)
+			taintFrames[frame] = nil
+		end
+end
+
 
 function XPerl_Raid_Events:UNIT_CONNECTION()
 --Update players health when their connection state changes.
@@ -1730,7 +1756,7 @@ function SetRaidRoster()
 	for i = 1,GetNumGroupMembers() do
 		local name, rank, group, level, class, fileName = GetRaidRosterInfo(i)
 
-		if (name) then
+		if (name and IsInRaid()) then
 			local unit = "raid"..i
 			RaidPositions[name] = unit
 
@@ -2100,11 +2126,7 @@ function XPerl_RaidTipExtra(unitid)
 			local t = GetTime()
 
 			if (stats.version) then
-				if (stats.oRAversion) then
-					GameTooltip:AddLine("CTRA "..stats.version.." (oRA "..stats.oRAversion..")", 1, 1, 1)
-				else
-					GameTooltip:AddLine("CTRA "..stats.version, 1, 1, 1)
-				end
+				GameTooltip:AddLine("CTRA "..stats.version, 1, 1, 1)
 			end
 
 			if (stats.offline and UnitIsConnected(unitid)) then
@@ -2187,13 +2209,13 @@ local function initialConfigFunction(self)
 	Setup1RaidFrame(self)
 
 	self:SetAttribute("*type1", "target")
-	self:SetAttribute("type2", "menu")
+	self:SetAttribute("type2", "togglemenu")
 	self.menu = XPerl_Raid_ShowPopup
 
 	-- Does AllowAttributeChange work for children?
 	self.nameFrame:SetAttribute("useparent-unit", true)
 	self.nameFrame:SetAttribute("*type1", "target")
-	self.nameFrame:SetAttribute("type2", "menu")
+	self.nameFrame:SetAttribute("type2", "togglemenu")
 	self.nameFrame.menu = XPerl_Raid_ShowPopup
 
 	if (rconf.mana) then

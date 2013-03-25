@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 494 2012-09-04T21:04:44Z
+    Revision: 532 2012-09-29T21:48:44Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -36,7 +36,10 @@ local container = "Specializations";
 function Armory:SetSpecializations(unit)
     local isPet = (strlower(unit) == "pet");
     
-    if ( not self:IsLocked(container) ) then
+    if ( not isPet ) then
+        -- No longer needs to be stored for characters
+        return;
+    elseif ( not self:IsLocked(container) ) then
         self:Lock(container);
 
         self:PrintDebug("UPDATE", container);
@@ -63,12 +66,24 @@ end
 
 function Armory:GetNumSpecializations(inspect, pet)
     local unit = ((pet and "pet") or "player");
-    return self:GetClassNumValues(unit, container) or 0;
+    local numSpecs;
+    if ( pet ) then
+        numSpecs = self:GetClassNumValues(unit, container);
+    else
+        local _, _, classID = self:UnitClass(unit);
+        numSpecs = _G.GetNumSpecializationsForClassID(classID);
+    end
+    return numSpecs or 0;
 end
 
 function Armory:GetSpecializationInfo(index, inspect, pet)
     local unit = ((pet and "pet") or "player");
-    return self:GetClassValue(unit, container, index);
+    if ( pet ) then
+        return self:GetClassValue(unit, container, index);
+    else
+        local _, _, classID = self:UnitClass(unit);
+        return _G.GetSpecializationInfoForClassID(classID, index);
+    end
 end
 
 function Armory:GetSpecializationRole(index, inspect, pet)

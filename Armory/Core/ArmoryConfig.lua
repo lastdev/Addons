@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 494 2012-09-04T21:04:44Z
+    Revision: 575 2013-01-09T23:30:53Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -111,6 +111,13 @@ Armory.options = {
         disabled = function() return not Armory:HasInventory(); end,
         default = true
     },
+    ARMORY_CMD_SET_COUNTPERSLOT = {
+        type = "toggle",
+        set = function(value) Armory:SetConfigShowItemCountPerSlot(value and value ~= "0"); end,
+        get = function() return Armory:GetConfigShowItemCountPerSlot(); end,
+        disabled = function() return not Armory:GetConfigShowItemCount(); end,
+        default = false
+    },
     ARMORY_CMD_SET_COUNTALL = {
         type = "toggle",
         set = function(value) Armory:SetConfigGlobalItemCount(value and value ~= "0"); end,
@@ -160,12 +167,40 @@ Armory.options = {
         disabled = function() return not Armory:HasTradeSkills(); end,
         default = true
     },
+    ARMORY_CMD_SET_SHOWSKILLRANK = {
+        type = "toggle",
+        set = function(value) Armory:SetConfigShowTradeSkillRanks(value and value ~= "0"); end,
+        get = function() return Armory:GetConfigShowTradeSkillRanks(); end,
+        disabled = function() return not Armory:HasTradeSkills(); end,
+        default = true
+    },
+    ARMORY_CMD_SET_SHOW2NDSKILLRANK = {
+        type = "toggle",
+        set = function(value) Armory:SetConfigShowSecondaryTradeSkillRanks(value and value ~= "0"); end,
+        get = function() return Armory:GetConfigShowSecondaryTradeSkillRanks(); end,
+        disabled = function() return not Armory:HasTradeSkills(); end,
+        default = true
+    },
     ARMORY_CMD_SET_SHOWQUESTALTS = {
         type = "toggle",
         set = function(value) Armory:SetConfigShowQuestAlts(value and value ~= "0"); end,
         get = function() return Armory:GetConfigShowQuestAlts(); end,
         disabled = function() return not Armory:HasQuestLog(); end,
         default = true
+    },
+    ARMORY_CMD_SET_SHOWACHIEVEMENTS = {
+        type = "toggle",
+        set = function(value) Armory:SetConfigShowAchievements(value and value ~= "0"); end,
+        get = function() return Armory:GetConfigShowAchievements(); end,
+        disabled = function() return not Armory:HasAchievements(); end,
+        default = true
+    },
+    ARMORY_CMD_SET_USEINPROGRESSCOLOR = {
+        type = "toggle",
+        set = function(value) Armory:SetConfigUseInProgressColor(value and value ~= "0"); end,
+        get = function() return Armory:GetConfigUseInProgressColor(); end,
+        disabled = function() return not Armory:GetConfigShowAchievements(); end,
+        default = false
     },
     ARMORY_CMD_SET_SHOWGEARSETS = {
         type = "toggle",
@@ -349,7 +384,7 @@ Armory.options = {
         type = "toggle",
         set = function(value) Armory:SetConfigLDBLabel(value and value ~= "0"); end,
         get = function() return Armory:GetConfigLDBLabel(); end,
-        default = true
+        default = false
     },
     ARMORY_CMD_CHECK = {
         type = "execute",
@@ -693,6 +728,14 @@ function Armory:GetConfigShowItemCount()
     return not self:Setting("General", "HideItemCount");
 end
 
+function Armory:SetConfigShowItemCountPerSlot(on)
+    self:Setting("General", "ShowItemCountPerSlot", on);
+end
+
+function Armory:GetConfigShowItemCountPerSlot()
+    return self:Setting("General", "ShowItemCountPerSlot");
+end
+
 function Armory:SetConfigShowItemCountTotals(on)
     self:Setting("General", "HideItemCountTotals", not on);
 end
@@ -749,12 +792,44 @@ function Armory:GetConfigShowCrafters()
     return not self:Setting("General", "HideCrafters");
 end
 
+function Armory:SetConfigShowTradeSkillRanks(on)
+    self:Setting("General", "HideTradeSkillRanks", not on);
+end
+
+function Armory:GetConfigShowTradeSkillRanks()
+    return not self:Setting("General", "HideTradeSkillRanks");
+end
+
+function Armory:SetConfigShowSecondaryTradeSkillRanks(on)
+    self:Setting("General", "HideSecondaryTradeSkillRanks", not on);
+end
+
+function Armory:GetConfigShowSecondaryTradeSkillRanks()
+    return not self:Setting("General", "HideSecondaryTradeSkillRanks");
+end
+
 function Armory:SetConfigShowQuestAlts(on)
     self:Setting("General", "HideQuestAlts", not on);
 end
 
 function Armory:GetConfigShowQuestAlts()
     return not self:Setting("General", "HideQuestAlts");
+end
+
+function Armory:SetConfigShowAchievements(on)
+    self:Setting("General", "HideAchievements", not on);
+end
+
+function Armory:GetConfigShowAchievements()
+    return not self:Setting("General", "HideAchievements");
+end
+
+function Armory:SetConfigUseInProgressColor(on)
+    self:Setting("General", "UseInProgressColor", on);
+end
+
+function Armory:GetConfigUseInProgressColor()
+    return self:Setting("General", "UseInProgressColor") or nil;
 end
 
 function Armory:SetConfigShowGearSets(on)
@@ -1033,6 +1108,18 @@ function Armory:GetConfigCraftersColor(default)
     return r, g, b;
 end
 
+function Armory:SetConfigTradeSkillRankColor(r, g, b)
+    self:Setting("General", "TradeSkillRankColor", r, g, b);
+end
+
+function Armory:GetConfigTradeSkillRankColor(default)
+    local r, g, b = self:Setting("General", "TradeSkillRankColor");
+    if ( default or not r ) then
+        r, g, b = GetTableColor(NORMAL_FONT_COLOR);
+    end
+    return r, g, b;
+end
+
 function Armory:SetConfigQuestAltsColor(r, g, b)
     self:Setting("General", "QuestAltsColor", r, g, b);
 end
@@ -1041,6 +1128,30 @@ function Armory:GetConfigQuestAltsColor(default)
     local r, g, b = self:Setting("General", "QuestAltsColor");
     if ( default or not r ) then
         r, g, b = GetTableColor(GREEN_FONT_COLOR);
+    end
+    return r, g, b;
+end
+
+function Armory:SetConfigAchievementsColor(r, g, b)
+    self:Setting("General", "AchievementsColor", r, g, b);
+end
+
+function Armory:GetConfigAchievementsColor(default)
+    local r, g, b = self:Setting("General", "AchievementsColor");
+    if ( default or not r ) then
+        r, g, b = GetTableColor(GREEN_FONT_COLOR);
+    end
+    return r, g, b;
+end
+
+function Armory:SetConfigAchievementInProgressColor(r, g, b)
+    self:Setting("General", "AchievementInProgressColor", r, g, b);
+end
+
+function Armory:GetConfigAchievementInProgressColor(default)
+    local r, g, b = self:Setting("General", "AchievementInProgressColor");
+    if ( default or not r ) then
+        r, g, b = GetTableColor(LIGHTYELLOW_FONT_COLOR);
     end
     return r, g, b;
 end
@@ -1094,12 +1205,12 @@ function Armory:GetConfigDefaultSearch()
 end
 
 function Armory:SetConfigLDBLabel(on)
-    self:Setting("General", "HideLDBLabel", not on);
+    self:Setting("General", "ShowLDBLabel", on);
     self:SetProfile(self:CurrentProfile());
 end
 
 function Armory:GetConfigLDBLabel()
-    return not self:Setting("General", "HideLDBLabel");
+    return self:Setting("General", "ShowLDBLabel") or nil;
 end
 
 function Armory:SetConfigMailIgnoreAlts(on)

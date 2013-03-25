@@ -1,8 +1,7 @@
-local AddonName, a = ...
-if a.BuildFail(50000) then return end
+local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
-local c = BittensSpellFlashLibrary
+local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
 local GetComboPoints = GetComboPoints
 local GetPowerRegen = GetPowerRegen
@@ -11,7 +10,9 @@ local select = select
 local string = string
 
 local relentlessPending = false
-local finishers = { "Slice and Dice", "Rupture", "Envenom", "Recuperate" }
+local finishers = { 
+	"Slice and Dice", "Rupture", "Envenom", "Recuperate", "Eviscerate" 
+}
 
 local function triggersRelentless(info)
 	return c.InfoMatches(info, finishers)
@@ -19,9 +20,12 @@ local function triggersRelentless(info)
 		and s.HasSpell(c.GetID("Relentless Strikes"))
 end
 
-local function maybePendRelentless(info)
+local function processCast(info)
 	if triggersRelentless(info) then
 		relentlessPending = true
+	elseif c.InfoMatches(info, "Expose Armor") then
+		a.ExposePending = true
+		c.Debug("Event", "Expose Armor pending")
 	end
 end
 
@@ -31,10 +35,16 @@ local function maybeConsumeRelentless(id)
 	end
 end
 
+local function unpendExpose(id)
+	if id == c.ARMOR_DEBUFFS then
+		a.ExposePending = false
+		c.Debug("Event", "Expose Armor applied")
+	end
+end
+
 a.Rotations = {}
-c.RegisterForEvents(a)
-a.SetSpamFunction(function()
-	c.Init(a)
+
+function a.PreFlash()
 	
 	-- Calc regen
 	a.Regen = select(2, GetPowerRegen())
@@ -61,32 +71,37 @@ a.SetSpamFunction(function()
 	-- Calc cp
 	if c.InfoMatches(
 		info,
---		"Sinister Strike", 
+		"Sinister Strike", 
 		"Backstab", 
 		"Dispatch",
---		"Revealing Strike", 
---		"Garrote", 
-		"Hemorrhage") then
+		"Revealing Strike", 
+		"Hemorrhage",
+		"Expose Armor") then
 		
 		a.CP = math.min(5, a.CP + 1)
 	elseif c.InfoMatches(info, finishers) then
 		a.CP = 0
 	elseif c.InfoMatches(info, "Mutilate", "Ambush") then
 		a.CP = math.min(5, a.CP + 2)
+	elseif c.InfoMatches(info, "Marked for Death") then
+		a.CP = 5
 	end
 	
 --c.Debug("Spam", a.CP, a.Energy, relentlessPending)
-	c.Flash(a)
-end)
+end
 
 ----------------------------------------------------------------- Assassination
 a.LastRuptureCP = 0
 a.Rotations.Assassination = {
 	Spec = 1,
-	OffSwitch = "assassination_off",
 	
 	FlashInCombat = function()
-		c.FlashAll("Vendetta", "Kick")
+		c.FlashAll(
+			"Vendetta", 
+			"Marked for Death", 
+			"Expose Armor", 
+			"Recuperate", 
+			"Kick")
 		
 		if c.HasBuff("Vanish") and c.HasTalent("Nightstalker") then
 			c.PriorityFlash("Envenom")
@@ -95,7 +110,7 @@ a.Rotations.Assassination = {
 		else
 			local flashing = c.PriorityFlash(
 				"Envenom to refresh Slice and Dice",
-				"Slice and Dice",
+				"Slice and Dice for Assassination",
 				"Rupture for Assassination",
 				"Envenom",
 				"Tricks of the Trade unglyphed",
@@ -118,17 +133,15 @@ a.Rotations.Assassination = {
 	FlashOutOfCombat = function(self)
 		if c.HasBuff("Vanish") then
 			self:FlashInCombat()
---		elseif a.InSoloMode() then
---			c.FlashAll("Recuperate")
 		end
 	end,
 	
 	FlashAlways = function()
-		c.FlashAll("Deadly Poison", "Redirect")
+		c.FlashAll("Deadly Poison", "Non-Lethal Poison", "Redirect")
 	end,
 	
 	CastSucceeded = function(info)
-		maybePendRelentless(info)
+		processCast(info)
 		if c.InfoMatches(info, "Rupture") then
 			a.LastRuptureCP = GetComboPoints("player")
 			c.Debug("Event", "Rupture at", a.LastRuptureCP, "CP")
@@ -136,47 +149,107 @@ a.Rotations.Assassination = {
 	end,
 	
 	Energized = maybeConsumeRelentless,
+	
+	AuraApplied = unpendExpose,
 }
 
 ------------------------------------------------------------------------ Combat
---local uncontrolledCooldowns = {}
---a.Rotations.Combat = {
---	Spec = 2,
---	OffSwitch = "combat_off",
---		
---	FlashInCombat = function()
---		c.FlashAll("Tricks of the Trade", "Kick")
---		c.RotateCooldowns(
---			uncontrolledCooldowns, "Adrenaline Rush", "Killing Spree")
---		c.PriorityFlash(
---			"Slice and Dice",
---			"Expose Armor",
---			"Rupture unless SnD",
---			"Eviscerate for Combat",
---			"Revealing Strike",
---			"Sinister Strike Smart")
---	end,
---	
---	FlashOutOfCombat = function()
---		if a.InSoloMode() then
---			c.FlashAll("Recuperate")
---		end
---	end,
---	
---	FlashAlways = function()
---		c.FlashAll(
---			"Deadly Poison or Wound", "Instant Poison or Wound", "Redirect")
---	end,
---	
---	CastSucceeded = maybePendRelentless,
---	
---	Energized = maybeConsumeRelentless,
---}
+local guile = 0
+a.Rotations.Combat = {
+	Spec = 2,
+		
+	FlashInCombat = function()
+		if c.IsQueued("Sinister Strike", "Revealing Strike") then
+			a.Guile = guile + 1
+		else
+			a.Guile = guile
+		end
+		
+		if a.Guile > 8 and not s.Buff(c.GetID("Deep Insight"), "player") then
+			a.DeepInsight = 15
+		else
+			a.DeepInsight = c.GetBuffDuration("Deep Insight")
+		end
+		
+		c.FlashAll(
+			"Shadow Blades for Combat", 
+			"Killing Spree",
+			"Adrenaline Rush", 
+			"Vanish for Combat", 
+			"Marked for Death",
+			"Expose Armor",
+			"Recuperate",
+			"Kick")
+		c.PriorityFlash(
+			"Ambush", 
+			"Slice and Dice for Combat", 
+			"Revealing Strike if Down",
+			"Rupture for Combat",
+			"Eviscerate for Combat",
+			"Tricks of the Trade unglyphed",
+			"Revealing Strike",
+			"Sinister Strike",
+			"Preparation",
+			"Tricks of the Trade glyphed")
+	end,
+	
+	FlashOutOfCombat = function(self)
+		if c.HasBuff("Vanish") then
+			self:FlashInCombat()
+		end
+	end,
+	
+	FlashAlways = function()
+		c.FlashAll("Deadly Poison", "Non-Lethal Poison", "Redirect")
+	end,
+	
+	CastSucceeded = function(info)
+		processCast(info)
+		if c.InfoMatches(info, "Sinister Strike", "Revealing Strike") then
+			guile = guile + 1
+			c.Debug("Event", "Guile Bump", guile)
+		end
+	end,
+	
+	Energized = maybeConsumeRelentless,
+	
+	AuraApplied = function(spellID)
+		unpendExpose(spellID)
+		if spellID == c.GetID("Shallow Insight") then
+			if guile < 4 then
+				guile = 4
+				c.Debug("Event", "Guile Set to 4")
+			end
+		elseif spellID == c.GetID("Moderate Insight") then
+			if guile < 8 then
+				guile = 8
+				c.Debug("Event", "Guile Set to 8")
+			end
+		elseif spellID == c.GetID("Deep Insight") then
+			guile = 0
+			c.Debug("Event", "Guile Set to 0")
+		end
+	end,
+	
+	AuraRemoved = function(spellID)
+		if spellID == c.GetID("Shallow Insight")
+			or spellID == c.GetID("Moderate Insight")
+			or spellID == c.GetID("Deep Insight") then
+			
+			guile = 0
+			c.Debug("Event", "Guile Reset")
+		end
+	end,
+	
+	ExtraDebugInfo = function()
+		return string.format("%s %s %s %.1f",
+			a.CP, a.Guile, a.DeepInsight, a.Energy)
+	end,
+}
 
 ---------------------------------------------------------------------- Subtlety
 a.Rotations.Subtlety = {
 	Spec = 3,
-	OffSwitch = "sub_off",
 	
 	FlashInCombat = function()
 		if a.CanBackstab() 
@@ -190,7 +263,7 @@ a.Rotations.Subtlety = {
 			return
 		end
 		
-		c.FlashAll("Kick")
+		c.FlashAll("Marked for Death", "Recuperate", "Expose Armor", "Kick")
 		local untilCap = s.MaxPower("player") - a.Energy - a.Regen / 2
 		local cdDealBreaker =
 			c.HasBuff("Master of Subtlety") 
@@ -222,7 +295,7 @@ a.Rotations.Subtlety = {
 			or (a.CP < 5 and (
 				untilCap <= 0
 					or c.HasBuff("Shadow Dance")
-					or a.InSoloMode())) then
+					or c.IsSolo())) then
 			
 			c.PriorityFlash(
 				"Ambush",
@@ -233,31 +306,29 @@ a.Rotations.Subtlety = {
 				"Preparation",
 				"Tricks of the Trade glyphed")
 		elseif a.CP == 5 then
---c.Debug("Flash",
 			c.PriorityFlash(
-				"Slice and Dice",
+				"Slice and Dice for Subtlety",
 				"Rupture",
 				"Ambush for Last Second Find Weakness",
 				"Eviscerate",
 				"Preparation",
 				"Tricks of the Trade")
---)
 		end
 	end,
 	
 	FlashOutOfCombat = function(self)
 		if c.HasBuff("Vanish") then
 			self:FlashInCombat()
---		elseif a.InSoloMode() then
---			c.FlashAll("Recuperate")
 		end
 	end,
 	
 	FlashAlways = function()
-		c.FlashAll("Deadly Poison", "Redirect")
+		c.FlashAll("Deadly Poison", "Non-Lethal Poison", "Redirect")
 	end,
 	
-	CastSucceeded = maybePendRelentless,
+	CastSucceeded = processCast,
 	
 	Energized = maybeConsumeRelentless,
+	
+	AuraApplied = unpendExpose,
 }

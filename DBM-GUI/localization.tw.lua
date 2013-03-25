@@ -31,7 +31,6 @@ L.Button_OK 				= '確定'
 L.Button_Cancel 			= '取消'
 L.Button_LoadMod 			= '載入模組'
 L.Mod_Enabled				= "啟用首領模組"
-L.Mod_EnableAnnounce		= "團隊廣播 (需要隊長)"
 L.Reset 					= "重置"
 
 L.Enable  					= "啟用"
@@ -100,6 +99,7 @@ L.RaidWarnSound				= "發出團隊警告時播放音效"
 L.CountdownVoice			= "設置倒計時聲音"
 L.SpecialWarnSound			= "設定只作用於你或你的角色天賦的特別警告的音效"
 L.SpecialWarnSound2			= "設定作用於全團的特別警告的音效"
+L.SpecialWarnSound3			= "設定作用於極度重要的特別警告的音效(對你或對團隊具毀滅性的)"
 
 -- Tab: Generalwarnings
 L.Tab_GeneralMessages 		= "綜合訊息"
@@ -162,18 +162,23 @@ L.BarWidth					= "寬度: %d"
 L.Panel_SpamFilter				= "整體及垃圾過濾"
 L.Area_SpamFilter				= "垃圾過濾選項"
 L.HideBossEmoteFrame			= "隱藏團隊首領表情框"
-L.SpamBlockRaidWarning			= "過濾其他首領模組的警告" 
 L.SpamBlockBossWhispers			= "當戰鬥時過濾 <DBM> 密語警告"
 L.BlockVersionUpdateNotice		= "禁用彈出的更新通知"
 L.ShowBigBrotherOnCombatStart	= "戰鬥開始時顯示BigBrother(檢查團隊 增益/精煉UI)"
 L.BigBrotherAnnounceToRaid		= "通告BigBrother的結果給團隊"
+L.SpamBlockSayYell				= "從聊天頻道隱藏聊天泡泡提示"
 
 L.Area_SpamFilter_Outgoing		= "整體過濾選項"
 L.SpamBlockNoShowAnnounce		= "不顯示提示或播放警告音效"
-L.SpamBlockNoSendAnnounce		= "不發送提示到團隊頻道"
 L.SpamBlockNoSendWhisper		= "不發送密語給其他玩家"
 L.SpamBlockNoSetIcon			= "不設置標記在目標上"
+L.SpamBlockNoRangeFrame			= "不顯示距離框架"
+L.SpamBlockNoInfoFrame			= "不顯示訊息框架"
 
+L.Area_PullTimer				= "開怪計時器過濾選項"
+L.DontShowPT					= "不要顯示開怪倒數計時條"
+L.DontShowPTCountdownText		= "不要顯示開怪倒數文字"
+L.DontPlayPTCountdown			= "不要使用開怪倒數音效"
 
 -- Misc
 L.FontHeight	= 18

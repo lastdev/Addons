@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FirelandsTrash", "DBM-Firelands")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetModelID(38765)
 mod:SetZone()
 
@@ -38,7 +38,7 @@ local lavaRunning = false
 
 function mod:LeapTarget(sGUID)
 	local targetname = nil
-	for i=1, DBM:GetGroupMembers() do
+	for i=1, DBM:GetNumGroupMembers() do
 		if UnitGUID("raid"..i.."target") == sGUID then
 			targetname = DBM:GetUnitFullName("raid"..i.."targettarget")
 			break
@@ -111,7 +111,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	end
 end
 
-function mod:SPELL_DAMAGE(sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId)
+function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 99510 and destGUID == UnitGUID("player") and self:AntiSpam(3) then
 		specWarnLava:Show()
 	end

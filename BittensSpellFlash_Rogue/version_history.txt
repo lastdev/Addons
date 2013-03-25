@@ -1,3 +1,37 @@
+== Version 3.1.3
+NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
+* Combat: Sinister Strike will no longer flash outside of melee range.  This release is mostly about the update to the library.
+
+== Version 3.1.2
+* Assassination: No longer pause at 4 combo points to "refresh" Rupture if it is not up.
+* Combat: Never suggests a finisher when Revealing Strike is down.
+* Combat: Never tries to pool energy when solo.
+* Combat: Never tries to apply Slice and Dice early to last through Deep Insight when solo.
+* Combat & Subtlety: Don't flash Slice and Dice w/ less than 5 combo points when solo and you have Glyph of Deadly Momentum.
+* All: Added Recuperate flashing when solo and you have Glyph of Deadly Momentum.
+* All: Bugfix - Flashing Deadly Poison was broken.
+
+== Version 3.1.1
+* Missed Paralytic Poison in the last version.
+
+== Version 3.1.0
+NOTE: Your options will be reset when you upgrade to this version.
+* Repackaging so that Bitten's SpellFlash Library is included with the addon, instead of downloaded separately.
+* Several other internal changes.
+* Combat & Subtlety: No longer flashes Ambush if you have Cloak and Dagger and the enemy is in the (resurrected) "No Shadowstep" list.
+* All: Added Marked for Death.
+* All: Added flashing for Non-Lethal Poisons.
+* All: No longer insists that you switch from Wound to Deadly Poison.
+
+== Version 3.0.0
+* Combat: Added a Combat rotation.
+* Subtlety: Bugfix - the energy from Relentless Strikes was not being anticipated for Eviscerate.
+* Subtlety: Bugfix - Shadow Dance and Preparation should have been flashing yellow.  Now they are.
+* All: Added Expose Armor.
+
+== Version 2.4.3
+* Making the "Out of Date" status go away.  Please report any real issues w/ the new patch.
+
 == Version 2.4.2
 * Subtlety: The detection of the glyph "Tricks of the Trade" and the talent "Subterfuge" were broken.
 * All: Removed chat frame spam during combat associated with the latest Bitten's SpellFlash Library release (which is what led me to find the bugs listed above).

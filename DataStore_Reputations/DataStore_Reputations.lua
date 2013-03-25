@@ -313,7 +313,7 @@ local function OnFactionChange(event, messageType, faction, amount)
 	if newValue >= top then	-- rep status increases (to revered, etc..)
 		ScanReputations()					-- so scan all
 	else
-		addon.ThisCharacter.Factions[FactionUIDsRev[faction]] = format("%s|%s|%s", bottom, top, newValue)
+		addon.ThisCharacter.Factions[FactionUIDsRev[faction]] = newValue
 		addon.ThisCharacter.lastUpdate = time()
 	end
 end
@@ -337,7 +337,8 @@ local function _GetRawReputationInfo(character, faction)
 	local earned = GetEarnedRep(character, faction)
 	if not earned then return end
 
-	return GetLimits(earned), earned
+	local bottom, top = GetLimits(earned)
+	return bottom, top, earned
 end
 
 local function _GetReputations(character)

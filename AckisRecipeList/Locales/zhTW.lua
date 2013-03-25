@@ -6,7 +6,7 @@ zhTW localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 2.4.2
+Project version: 2.4.6
 ************************************************************************
 Original translated by: iCat, apa1102, zhucc
 Currently maintained by:
@@ -153,6 +153,7 @@ L["Bernadette Dexter"] = "伯娜戴特·戴斯特"
 L["Bethany Cromwell"] = "貝薩尼·克倫威爾"
 L["Binding"] = "綁定"
 L["Binkie Brightgear"] = "賓奇·亮輪"
+L["Blackhand Assassin"] = "黑手刺客"
 L["Blackhand Elite"] = "黑手精英"
 L["BLACK_MARKET_AUCTION_HOUSE"] = "只由黑市的苟雅女士出售。不保證有現貨。"
 L["Blacksmith Calypso"] = "鐵匠卡利比索"
@@ -187,7 +188,8 @@ L["Bradley Towns"] = "布瑞德利·湯恩斯"
 L["Braeg Stoutbeard"] = "布瑞格·厚鬚"
 L["Brandig"] = "布銳迪格"
 L["Brawn"] = "布勞恩"
-L["BRD_RANDOM_ROOM"] = "有機會在黑石深淵的五個不同的房間中找到隨機刷新的配方，但有時甚至於沒有。"
+L["BRD_MAIL"] = "在黑石深淵有4個刷新點：進入製造廠之前，魔像領主阿格曼奇的房間，製造廠的長凳上，或在澆鑄間之內。"
+L["BRD_SHOULDERS"] = "在黑石深淵有1個稀有刷新點：暗爐鎖和競技場之間，在角落的床上。"
 L["Brek Stonehoof"] = "布瑞克·石蹄"
 L["Brikk Keencraft"] = "布里克·基克拉夫"
 L["Brock Stoneseeker"] = "布洛克·尋石者"
@@ -301,6 +303,7 @@ L["Danielle Zipstitch"] = "丹尼勒·希普斯迪"
 L["Dank Drizzlecut"] = "丹克·利刃"
 L["Dannelor"] = "丹納羅爾"
 L["Danwe"] = "丹威"
+L["Darian Singh"] = "達利安·辛格" -- Needs review
 L["Darin Goodstitch"] = "達寧·古斯提"
 L["Dark Conclave Shadowmancer"] = "黑暗議會暗影術師"
 L["Darkmoon Faire"] = "暗月馬戲團"
@@ -833,6 +836,7 @@ L["Mining"] = "採礦"
 L["Miralisse"] = "米拉莉絲"
 L["Mirla Silverblaze"] = "米拉·銀光"
 L["Misensi"] = "米森希"
+L["Mishka"] = "密西卡"
 L["Mishta"] = "米希塔"
 L["MissingFromDB"] = [=[：不在配方的資料庫中。
 請將該配方的訊息提供給作者，謝謝。]=]
@@ -1097,6 +1101,7 @@ L["Shield"] = "盾牌"
 L["SHIFT_CLICK"] = "Shift+點擊 新增此配方內所製作出的物品連結到你的聊天視窗中"
 L["Show Known"] = "顯示已知"
 L["Sid Limbardi"] = "希德·琳巴迪"
+L["Silkmaster Tsai"] = "絲綢大師老蔡"
 L["Silverbrook Defender"] = "銀溪防衛者"
 L["Silverbrook Hunter"] = "銀溪獵人"
 L["Silverbrook Trapper"] = "銀溪陷捕者"
@@ -1113,6 +1118,7 @@ L["Skreah"] = "史卡瑞"
 L["Slagg"] = "斯拉格"
 L["Small Font"] = "小字型"
 L["SMALL_FONT_DESC"] = "切換配方列表使用小字型。"
+L["Smeltmaster Ashpaw"] = "熔煉大師灰爪"
 L["Smiles O'Byron"] = "史邁爾斯·歐拜朗"
 L["Smith Argus"] = "鐵匠阿格斯"
 L["Smudge Thunderwood"] = "斯穆德·雷木"

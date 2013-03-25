@@ -2,10 +2,10 @@
 ************************************************************************
 Discovery.lua
 ************************************************************************
-File date: 2012-09-22T19:55:35Z
-File hash: 46f65df
-Project hash: 5a95034
-Project version: 2.4.2
+File date: 2013-03-03T23:11:34Z
+File hash: 4c8bad9
+Project hash: f922565
+Project version: 2.4.6
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -50,6 +50,10 @@ function addon:InitDiscovery()
 	AddDiscovery("DISCOVERY_ALCH_PANDARIA")
 	AddDiscovery("DISCOVERY_INSC_PANDARIA")
 	AddDiscovery("DISCOVERY_JC_PANDARIA")
+	AddDiscovery("DISCOVERY_LW_PANDARIA")
+	AddDiscovery("DISCOVERY_TAILOR_PANDARIA")
+	AddDiscovery("DISCOVERY_BS_PANDARIA")
+	AddDiscovery("DISCOVERY_BS_WEAP_PANDARIA")
 
 	self.InitDiscovery = nil
 end

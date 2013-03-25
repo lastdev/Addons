@@ -633,7 +633,7 @@ Prat:AddModuleToLoad(function()
 	["alt name exists: %s -> %s; not overwriting as set in preferences"] = "имя альта уже существует: %s -> %s; перезапись запрещена настройками",
 	AltNames = "Имя альтов",
 	["Alts:"] = "Альты:",
-	-- autoguildalts_desc = "",
+	autoguildalts_desc = "Автоматически и без отчета выполнять команду импорта из списка гильдии",
 	autoguildalts_name = "Авто-импорт альтов гильдии",
 	["Be quiet"] = "Молчи",
 	["character removed: %s"] = "персонаж удалён: %s",
@@ -653,7 +653,7 @@ Prat:AddModuleToLoad(function()
 	["Don't overwrite existing links"] = "Не перезаписывать существующие связки",
 	["don't use"] = "не окрашивать",
 	["Don't use data from the PlayerNames module at all"] = "Не использовать для всех данные из модуля PlayerNames",
-	["ERROR: some function sent a blank message!"] = "ОШИБКА: некоторые функции направлены пустое сообщение!", -- Needs review
+	["ERROR: some function sent a blank message!"] = "ОШИБКА: одна из функций послала пустое сообщение!",
 	["Find characters"] = "Найти персонажи",
 	["Fix alts"] = "Исправить альтов",
 	["Fix corrupted entries in your list of alt names."] = "Исправить неправельные записи в вашем списке имен альтов.",
@@ -684,34 +684,34 @@ Prat:AddModuleToLoad(function()
 	["Main name position"] = "Позиция основного имени",
 	mainpos_desc = "Где отображать имя главного персонажа если он на альте.",
 	mainpos_name = "Позиция основного имени",
-	-- module_desc = "",
+	module_desc = "Позволяет привязывать имена альтов к именам основных персонажей, а потом отображать их рядом в сообщениях в чате (по умолчанию=выключено).",
 	["no alts found for character "] = "не найдено альтов для персонажа",
 	["no alts or mains found matching \"%s\""] = "совпавших альтов или основных \"%s\"",
-	-- ["No arg string given to :addAlt()"] = "",
+	["No arg string given to :addAlt()"] = "Не задано значение строки для: :addAlt()",
 	["no characters called \"%s\" found; nothing deleted"] = "не найден персонаж по имени \"%s\"; нечего удалять",
 	["No Guild Greet database found"] = "База данных Guild Greet не найдена",
 	["No main name supplied to link %s to"] = "Не предоставлено основное имя для связки %s к",
 	["no matches found"] = "совпадений не найдено",
 	quiet = "тихий",
-	-- quiet_desc = "",
-	-- quiet_name = "",
+	quiet_desc = "Отчитываться о действиях в чат или нет.",
+	quiet_name = true,
 	Right = "Справа",
-	["(.-)'s? [Aa]lt"] = "(.-)'s? [Аа]льт", -- Needs review
+	["(.-)'s? [Aa]lt"] = "%f[%a\\192-\\255]([%a\\192-\\255]+)%f[^%a\\128-\\255]'s [Аа]льт",
 	["%s alts imported from LOKWhoIsWho"] = "Импортировано альтов из LOKWhoIsWho: %s",
 	["searched for: %s - total matches: %s"] = "поиск для: %s - всего совподений: %s",
 	["<search term> (eg, /altnames find fin)"] = "<элемент поиска> (к примеру, /altnames find Загзаг)",
 	["Search the list of linked characters for matching main or alt names."] = "Поиск в списке связанных персонажей.",
 	["Show alts in tooltip"] = "Альты в подсказке",
 	["Show main in tooltip"] = "Основные в подсказке",
-	["([^%s%p%d%c%z]+)'s alt"] = "([^%s%p%d%c%z]+) альт", -- Needs review
+	["([^%s%p%d%c%z]+)'s alt"] = "[Аа]льт %f[%a\\192-\\255]([%a\\192-\\255]+)%f[^%a\\128-\\255]",
 	Start = "Начать",
 	["%s total alts linked to mains"] = "всего альтов связано с основным %s",
-	["The colour of an alt's main name that will be displayed"] = "Отображать цвет альта по основному персонажу", -- Needs review
+	["The colour of an alt's main name that will be displayed"] = "Отображать цвет имени альта по основному персонажу",
 	["Use class colour (from the PlayerNames module)"] = "Использовать окраску по цвету класса (из модуля PlayerNames)",
 	["use class colour of alt"] = "цвета класса для альтов",
 	["use class colour of main"] = "цвета класса для основных",
 	["Use LibAlts Data"] = "Использовать LibAlts",
-	["Use the data available via the shared alt information library."] = "Использовать данные посредством совместно используемой библиотеки информации об альтах.", -- Needs review
+	["Use the data available via the shared alt information library."] = "Использовать данные посредством совместно используемой библиотеки информации об альтах.",
 	["Various ways to import a main's alts from other addons"] = "Различные варианты импорта альтов основных персонажей из других аддонов",
 	["warning: alt %s already linked to %s"] = "внимание: альт %s уже связан с %s",
 	["Where to display a character's main name when on their alt."] = "Где отображать имя главного персонажа если он на альте.",
@@ -1395,10 +1395,10 @@ Prat:AddModuleToLoad(function()
     UnitPopupButtons['LINK_ALT'] = { text = "Set Main", dist = 0, func = function() module:UnitPopup_LinkAltOnClick() end, arg1 = "", arg2 = "" }
 
     if not self.menusAdded then
-      tinsert(UnitPopupMenus['PARTY'], #UnitPopupMenus['PARTY'] - 1, 'LINK_ALT')
-      tinsert(UnitPopupMenus['FRIEND'], #UnitPopupMenus['FRIEND'] - 1, 'LINK_ALT')
-      tinsert(UnitPopupMenus['SELF'], #UnitPopupMenus['SELF'] - 1, 'LINK_ALT')
-      tinsert(UnitPopupMenus['PLAYER'], #UnitPopupMenus['PLAYER'] - 1, 'LINK_ALT')
+--      tinsert(UnitPopupMenus['PARTY'], #UnitPopupMenus['PARTY'] - 1, 'LINK_ALT')
+--      tinsert(UnitPopupMenus['FRIEND'], #UnitPopupMenus['FRIEND'] - 1, 'LINK_ALT')
+--      tinsert(UnitPopupMenus['SELF'], #UnitPopupMenus['SELF'] - 1, 'LINK_ALT')
+--      tinsert(UnitPopupMenus['PLAYER'], #UnitPopupMenus['PLAYER'] - 1, 'LINK_ALT')
       -- tinsert(UnitPopupMenus['TARGET'], getn(UnitPopupMenus['TARGET'])-1, 'LINK_ALT')
 
       self.menusAdded = true

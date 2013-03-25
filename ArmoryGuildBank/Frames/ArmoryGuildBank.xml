@@ -1,4 +1,4 @@
-<!-- Revision: 504 2012-09-06T20:42:02Z -->
+<!-- Revision: 585 2013-03-02T14:19:03Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\..\FrameXML\UI.xsd">
   <Script file="ArmoryGuildBank.lua"/>
@@ -16,9 +16,7 @@
         GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT", 80, 5);
         ArmoryGuildBankFrameButton_OnEnter(self);
       </OnEnter>
-      <OnLeave>
-        GameTooltip:Hide();
-      </OnLeave>
+      <OnLeave function="GameTooltip_Hide" />
     </Scripts>
     <NormalTexture name="$parentNormalTexture">
       <Size>
@@ -66,9 +64,7 @@
         GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT", 80, 5);
         ArmoryGuildBankFrameButton_OnEnter(self);
       </OnEnter>
-      <OnLeave>
-        GameTooltip:Hide();
-      </OnLeave>
+      <OnLeave function="GameTooltip_Hide" />
     </Scripts>
   </Button>
   <Frame name="ArmoryGuildBankFrameColumnTemplate" virtual="true">
@@ -279,7 +275,7 @@
           </OnLoad>
           <OnClick>
             if ( button == "RightButton" and self.canDelete ) then
-              StaticPopup_Show("ARMORY_DELETE_GUILDBANK", ArmoryGuildBankFrame.selectedGuild);
+              ArmoryStaticPopup_Show("ARMORY_DELETE_GUILDBANK", ArmoryGuildBankFrame.selectedGuild);
             end
           </OnClick>
           <OnEnter>

@@ -6,7 +6,7 @@ esMX localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 2.4.2
+Project version: 2.4.6
 ************************************************************************
 Currently maintained by:
 http://www.wowace.com/addons/arl/localization/translators/
@@ -163,7 +163,6 @@ L["Bradley Towns"] = "Bradley Villas"
 L["Braeg Stoutbeard"] = "Braeg Barbarrobusta"
 L["Brandig"] = true
 L["Brawn"] = "Mole"
-L["BRD_RANDOM_ROOM"] = "Hay una posibilidad de que la encuentres en cinco diferentes habitaciones en Profundidades de Roca Negra, aunque es un spawn aleatorio, y a veces no tiene ni por que aparecer una sola vez."
 L["Brek Stonehoof"] = "Brek Pezuñapétrea"
 L["Brikk Keencraft"] = "Brikk Finoficio"
 L["Brock Stoneseeker"] = "Brock Buscapiedras"

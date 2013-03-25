@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Snatch
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: SearcherSnatch.lua 5331 2012-08-19 02:43:59Z ccox $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: SearcherSnatch.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -30,6 +30,7 @@
 --]]
 
 -- Create a new instance of our lib with our parent
+if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewSearcher("Snatch")
 if not lib then return end
 local print,decode,_,_,replicate,empty,_,_,_,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
@@ -47,6 +48,15 @@ private.snatchList = {} -- dummy table
 
 private.workingItemLink = nil
 local frame
+
+local function GetSnatchSig(link)
+	local linkType, id, property1, property2 = decode(link)
+	if linkType == "item" then
+		return id..":"..property1..":"..property2, "item"
+	elseif linkType == "battlepet" then
+		return id.."^"..property1.."^"..property2, "battlepet"
+	end
+end
 
 --[[
 The slash command will take the following input
@@ -146,12 +156,22 @@ function lib:MakeGuiConfig(gui)
 	frame.icon:SetScript("OnClick", frame.IconClicked)
 	frame.icon:SetScript("OnReceiveDrag", frame.IconClicked)
 	frame.icon:SetScript("OnEnter", function() --set mouseover tooltip
-		if private.workingItemLink then
-				GameTooltip:SetOwner(frame.icon, "ANCHOR_BOTTOMRIGHT")
-				GameTooltip:SetHyperlink(private.workingItemLink)
+		local link = private.workingItemLink
+		if link then
+			GameTooltip:SetOwner(frame.icon, "ANCHOR_BOTTOMRIGHT")
+			if link:match("|Hitem:%d") then
+				GameTooltip:SetHyperlink(link)
+			elseif link:match("|Hbattlepet:%d") then
+				local _, speciesID, level, breedQuality, maxHealth, power, speed, battlePetID = strsplit(":", link)
+				-- BattlePetToolTip_Show gets the anchor point from GameTooltip
+				BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed), string.gsub(string.gsub(link, "^(.*)%[", ""), "%](.*)$", ""))
 			end
-		end)
-	frame.icon:SetScript("OnLeave", function() GameTooltip:Hide() end)
+		end
+	end)
+	frame.icon:SetScript("OnLeave", function()
+		GameTooltip:Hide()
+		BattlePetTooltip:Hide()
+	end)
 
 	frame.slot.help = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	frame.slot.help:SetPoint("LEFT", frame.slot, "RIGHT", 2, 0)
@@ -380,42 +400,18 @@ function lib.Processor(event, subevent, setting)
 	end
 end
 
-lib.Processors = {}
-function lib.Processors.config(event, subevent, setting)
-	if subevent == "loaded" or subevent == "reset" or subevent == "deleted" then
-		--saved search has changed, so reload our private ignorelist
-		private.snatchList = get("snatch.itemsList")
-		--if there was no saved snatchList, create an empty table
-		if not private.snatchList then
-			private.snatchList = {}
-			set("snatch.itemsList", private.snatchList) -- Caution: this causes a Processor("config", "changed", ...) event
-		end
-		private.refreshDisplay()
-	elseif subevent == "changed" and setting == "snatch.price.model" then -- this is the only "change" that requires a refresh
-		private.refreshDisplay()
-	end
-end
-
-function lib.Processors.selecttab(event, subevent, setting)
-	if subevent == lib.tabname then
-		if private.doValidation then
-			private.doValidation()
-		end
-		private.refreshDisplay() -- redraw whenever tab is selected
-	end
-end
-
-function lib.Processors.postscanupdate(event, subevent, setting)
-	private.refreshDisplay() -- redraw whenever valuations may have changed
-end
-
 function private.OnEnterSnatch(button, row, index)
 	if frame.snatchlist.sheet.rows[row][index]:IsShown() then --Hide tooltip for hidden cells
 		local link = frame.snatchlist.sheet.rows[row][index]:GetText()
-		--check is a valid itemlink
-		if link and link:match("Hitem:.+|h%[(.-)%]|h|r") then
+		if link then
 			GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
-			GameTooltip:SetHyperlink(link)
+			if link:match("|Hitem:%d") then
+				GameTooltip:SetHyperlink(link)
+			elseif link:match("|Hbattlepet:%d") then
+				local _, speciesID, level, breedQuality, maxHealth, power, speed, battlePetID = strsplit(":", link)
+				-- BattlePetToolTip_Show gets the anchor point from GameTooltip
+				BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed), string.gsub(string.gsub(link, "^(.*)%[", ""), "%](.*)$", ""))
+			end
 		end
 	end
 end
@@ -470,7 +466,7 @@ end
 ]]
 --returns if a item meets snatch criteria
 function lib.Search(item)
-	local itemsig = (":"):join(item[Const.ITEMID], item[Const.SUFFIX] , item[Const.ENCHANT])
+	local itemsig = GetSnatchSig(item[Const.LINK])
 	local iteminfo = private.snatchList[itemsig]
 
 	if iteminfo then
@@ -517,9 +513,8 @@ end
 
 --[[Snatch GUI functinality code]]
 function lib.AddSnatch(itemlink, price, percent, count)
-	local linkType, itemid, itemsuffix, itemenchant = AucAdvanced.DecodeLink(itemlink)
-	if linkType ~= "item" or not itemid then return end
-	local itemsig = (":"):join(itemid, itemsuffix, itemenchant)
+	local itemsig = GetSnatchSig(itemlink)
+	if not itemsig then return end
 
 	price, count, percent = tonumber(price), tonumber(count), tonumber(percent)
 	if price and price <=0 then
@@ -549,9 +544,8 @@ function lib.AddSnatch(itemlink, price, percent, count)
 end
 
 function lib.RemoveSnatch(itemlink)
-	local linkType, itemid, itemsuffix, itemenchant = AucAdvanced.DecodeLink(itemlink)
-	if linkType ~= "item" or not itemid then return end
-	local itemsig = (":"):join(itemid, itemsuffix, itemenchant)
+	local itemsig = GetSnatchSig(itemlink)
+	if not itemsig then return end
 
 	--remove from snatch list
 	private.snatchList[itemsig] = nil
@@ -576,11 +570,10 @@ end
 function lib.SetWorkingItem(link)
 	if type(link)~="string" then return end
 	if not frame then return end
-	local linkType, itemid, itemsuffix, itemenchant = AucAdvanced.DecodeLink(link)
-	if linkType ~= "item" or not itemid then return end
+	local itemsig, linkType = GetSnatchSig(link)
+	if not itemsig then return end
 
 	--Get the current saved value if already in snatch list
-	local itemsig = (":"):join(itemid, itemsuffix, itemenchant)
 	local iteminfo = private.snatchList[itemsig]
 
 	if iteminfo then
@@ -596,7 +589,15 @@ function lib.SetWorkingItem(link)
 	end
 
 	--set edit box texture and name
-	frame.icon:SetNormalTexture(GetItemIcon(link)) --set icon texture
+	local texture
+	if linkType == "item" then
+		texture = GetItemIcon(link)
+	elseif linkType == "battlepet" then
+		local _, id = strsplit(":", link)
+		local _, icon = C_PetJournal.GetPetInfoBySpeciesID(tonumber(id))
+		texture = icon
+	end
+	frame.icon:SetNormalTexture(texture) --set icon texture
 	frame.slot.help:SetText(link)
 
 	--set current working item
@@ -641,4 +642,4 @@ function private.refreshDisplay()
 	frame.pctBox.help:SetText(format("Buy as percent of %s value", get("snatch.price.model") or "market") )
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherSnatch.lua $", "$Rev: 5331 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherSnatch.lua $", "$Rev: 5368 $")

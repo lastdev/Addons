@@ -1,4 +1,4 @@
-<!-- Revision: 508 2012-09-09T17:24:16Z -->
+<!-- Revision: 555 2012-11-11T16:07:45Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\FrameXML\UI.xsd">
   <Script file="ArmorySpellBookFrame.lua"/>
@@ -70,18 +70,24 @@
       <AbsInset left="15" right="14" top="13" bottom="15"/>
     </HitRectInsets>
     <Scripts>
+      <OnLoad>
+        _G[self:GetName().."Text"]:SetWidth(88)
+      </OnLoad>
       <OnClick>
         ArmoryToggleSpellBook(self.bookType);
       </OnClick>
       <OnEnter>
-        GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-        GameTooltip:SetText(self:GetText(), 1.0,1.0,1.0 );
+        local buttonText = _G[self:GetName().."Text"];
+        if ( buttonText:IsTruncated() ) then
+          GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+          GameTooltip:SetText(buttonText:GetText());
+        end
       </OnEnter>
       <OnLeave>
         GameTooltip:Hide();
       </OnLeave>
     </Scripts>
-    <ButtonText>
+    <ButtonText name="$parentText">
       <Anchors>
         <Anchor point="CENTER">
           <Offset>

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: Auc-Util-AutoMagic.lua 5347 2012-09-06 06:26:15Z Esamynn $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: Auc-Util-AutoMagic.lua 5379 2012-11-12 19:53:01Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	AutoMagic is an Auctioneer module which automates mundane tasks for you.
@@ -34,7 +34,7 @@ if not AucAdvanced then return end
 local libName, libType = "AutoMagic", "Util"
 local lib,parent,private = AucAdvanced.NewModule(libType, libName)
 if not lib then return end
-local print,decode,_,_,replicate,empty,get,set,default,debugPrint,fill,_TRANS = AucAdvanced.GetModuleLocals()
+local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill,_TRANS = AucAdvanced.GetModuleLocals()
 
 --Start Module Code
 local amBTMRule, itemName, itemID, _
@@ -51,9 +51,6 @@ end
 lib.autoSellList = {} -- default empty table in case of no saved data
 
 lib.Processors = {}
-function lib.Processors.tooltip(callbackType, ...)
-	lib.ProcessTooltip(...) --Called when the tooltip is being drawn.
-end
 
 function lib.Processors.config(callbackType, ...)
 	lib.SetupConfigGui(...) --Called when you should build your Configator tab.
@@ -66,26 +63,6 @@ function lib.Processors.configchanged(callbackType, ...)
 	end
 end
 
-function lib.ProcessTooltip(tooltip, name, hyperlink, quality, quantity, cost, additional)
-	if not (get("util.automagic.depositTT")) then
-		if hyperlink then
-			local ttdepcost = GetDepositCost(hyperlink, get("util.automagic.deplength"), nil, quantity)
-
-			if (ttdepcost == nil) then
-				tooltip:AddLine("|cff336699 Unknown deposit cost |r")
-			elseif (ttdepcost == 0) then
-				tooltip:AddLine("|cff336699 No deposit cost |r")
-			else
-				tooltip:AddLine("|cffCCFF99"..get("util.automagic.deplength").."hr Deposit : |r" , ttdepcost)
-			end
-		end
-	end
-end
-local ahdeplength = {
-	{12, "12 hour"},
-	{24, "24 hour"},
-	{48, "48 hour"},
-}
 function lib.OnLoad()
 	lib.slidebar()
 
@@ -96,7 +73,7 @@ function lib.OnLoad()
 	end
 
 	-- Sets defaults
-	print("AucAdvanced: {{"..libType..":"..libName.."}} loaded!")
+	--aucPrint("AucAdvanced: {{"..libType..":"..libName.."}} loaded!")
 
 	default("util.automagic.autovendor", false) -- DO NOT SET TRUE ALL AUTOMAGIC OPTIONS SHOULD BE TURNED ON MANUALLY BY END USER!!!!!!!
 	default("util.automagic.autostopafter12", true) --stops autovendor after 12 items are sold. Want it to be on
@@ -105,11 +82,9 @@ function lib.OnLoad()
 	default("util.automagic.showmailgui", false)
 	default("util.automagic.autosellgui", false) -- Acts as a button and reverts to false anyway
 	default("util.automagic.chatspam", true) --Supposed to default on has to be unchecked if you don't want the chat text.
-	default("util.automagic.depositTT", false) --Used for disabling the deposit costs TT
 	default("util.automagic.ammailguix", 100) --Used for storing mailgui location
 	default("util.automagic.ammailguiy", 100) --Used for storing mailgui location
 	default("util.automagic.uierrormsg", 0) --Keeps track of ui error msg's
-	default("util.automagic.deplength", 48)
 	default("util.automagic.overidebtmmail", false) -- Item AI for mail rule instead of BTM rule.
 
 
@@ -177,11 +152,6 @@ function lib.SetupConfigGui(gui)
 		gui:AddTip(id, _TRANS('AAMU_HelpTooltip_Chatspam')) --'Display chat messages from AutoMagic.'
 
 		gui:AddControl(id, "Note",       0, 1, nil, nil, " ")
-		gui:AddControl(id, "Checkbox",		0, 1, 	"util.automagic.depositTT", _TRANS('AAMU_Interface_DepositTooltip')) --"Disable deposit costs in the tooltip"
-		gui:AddTip(id, _TRANS('AAMU_HelpTooltip_DepositTooltip')) --'Remove item deposit costs from the tooltip.'
-
-		gui:AddControl(id, "Selectbox",		0, 1, 	ahdeplength, "util.automagic.deplength") --"Base deposits on what length of auction."
-		gui:AddTip(id, _TRANS('AAMU_HelpTooltip_DepositLength')) --'Select the auction length deposit cost you want to display in the tooltip.'
 
 		gui:AddControl(id, "Header",     0,    _TRANS('AAMU_Interface_VendorOptions')) --" Vendor Options"
 		gui:AddControl(id, "Checkbox",		0, 1, 	"util.automagic.autovendor", _TRANS('AAMU_Interface_Vendoring')) --"Enable AutoMagic vendoring (W A R N I N G: READ HELP!) "
@@ -250,7 +220,7 @@ function lib.merchantShow()
 --~ 		A better option is to auto close vendor when user hits confirm button window
 --~ 		if (get("util.automagic.autoclosemerchant")) then
 --~ 			if (get("util.automagic.chatspam")) then
---~ 				print("AutoMagic has closed the merchant window for you, to disable you must change this options in the settings.")
+--~ 				aucPrint("AutoMagic has closed the merchant window for you, to disable you must change this options in the settings.")
 --~ 			end
 --~ 			CloseMerchant()
 --~ 		end
@@ -740,4 +710,4 @@ function lib.ClientItemCacheRefresh(link)
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AutoMagic/Auc-Util-AutoMagic.lua $", "$Rev: 5347 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AutoMagic/Auc-Util-AutoMagic.lua $", "$Rev: 5379 $")

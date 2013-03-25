@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(340, "DBM-Party-Cataclysm", 12, 184)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(54431)
 mod:SetModelID(38791)
 mod:SetZone()
@@ -18,11 +18,11 @@ mod:RegisterEventsInCombat(
 
 -- Just adding all I can find, no idea how usefull they will be on Live :)
 
-local warnTotem		= mod:NewSpellAnnounce(101614, 3)
+local warnTotem			= mod:NewSpellAnnounce(101614, 3)
 local warnMoltenBlast	= mod:NewTargetAnnounce(101840, 3)
-local warnPulverize	= mod:NewSpellAnnounce(101625, 3)
+local warnPulverize		= mod:NewSpellAnnounce(101625, 3)
 
-local timerTotem	= mod:NewNextTimer(25, 101614)
+local timerTotem		= mod:NewNextTimer(25, 101614)
 local timerMoltenBlast	= mod:NewTargetTimer(10, 101840)
 local timerPulverize	= mod:NewNextTimer(40, 101625)
 

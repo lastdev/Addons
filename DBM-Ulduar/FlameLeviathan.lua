@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FlameLeviathan", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 27 $"):sub(12, -3))
 
 mod:SetCreatureID(33113)
 mod:SetModelID(28875)
@@ -32,7 +32,7 @@ local soundPursued			= mod:NewSound(62374)
 local guids = {}
 local function buildGuidTable()
 	table.wipe(guids)
-	for i = 1, DBM:GetGroupMembers() do
+	for i = 1, DBM:GetNumGroupMembers() do
 		guids[UnitGUID("raid"..i.."pet") or "none"] = GetRaidRosterInfo(i)
 	end
 end

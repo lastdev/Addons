@@ -2,10 +2,10 @@
 ************************************************************************
 Custom.lua
 ************************************************************************
-File date: 2012-10-07T16:23:58Z
-File hash: 73b32f0
-Project hash: 5a95034
-Project version: 2.4.2
+File date: 2013-02-12T01:48:38Z
+File hash: de80792
+Project hash: f922565
+Project version: 2.4.6
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -47,7 +47,8 @@ function addon:InitCustom()
 	AddCustom("ENG_FLOOR_ITEM_BRD", Z.BLACKROCK_DEPTHS)
 	AddCustom("AQ40_RANDOM_BOP", Z.AHNQIRAJ_THE_FALLEN_KINGDOM)
 	AddCustom("SUNWELL_RANDOM", Z.SUNWELL_PLATEAU)
-	AddCustom("BRD_RANDOM_ROOM", Z.BLACKROCK_DEPTHS)
+	AddCustom("BRD_MAIL", Z.BLACKROCK_DEPTHS)
+	AddCustom("BRD_SHOULDERS", Z.BLACKROCK_DEPTHS)
 	AddCustom("MC_RANDOM", Z.MOLTEN_CORE)
 	AddCustom("HYJAL_RANDOM", Z.HYJAL_SUMMIT)
 	AddCustom("SCHOLO_BOOK_SPAWN", Z.SCHOLOMANCE)
@@ -73,6 +74,7 @@ function addon:InitCustom()
 	AddCustom("MOP_RAIDS_RANDOM", Z.HEART_OF_FEAR)
 	AddCustom("BANANA_INFUSED_RUM", Z.KRASARANG_WILDS)
 	AddCustom("FOUR_SENSES_BREW", Z.KUN_LAI_SUMMIT)
+	AddCustom("LEARNT_BY_ACCEPTING_QUEST")
 
 	self.InitCustom = nil
 end

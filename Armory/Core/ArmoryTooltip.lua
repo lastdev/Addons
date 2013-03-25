@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 514 2012-09-09T21:26:36Z
+    Revision: 587 2013-03-05T17:39:39Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -31,14 +31,26 @@ local Armory, _ = Armory;
 local tooltipHooks = {};
 local tooltipLines = {};
 
+local MAX_ACHIEVEMENT_PLAYERS = 2;
+
 ----------------------------------------------------------
 -- Tooltip Enhancement
 ----------------------------------------------------------
 
 local function AddSpacer(tooltip)
     local lastLine = _G[tooltip:GetName().."TextLeft"..tooltip:NumLines()];
-    if ( lastLine and strtrim(lastLine:GetText() or "") ~= "" ) then
-        tooltip:AddLine(" ");
+    if ( lastLine ) then
+        if ( strtrim(lastLine:GetText() or "") ~= "" ) then
+            tooltip:AddLine(" ");
+        elseif ( tooltip.hasMoney ) then
+            for i = 1, (tooltip.shownMoneyFrames or 0) do
+                local moneyFrame = _G[tooltip:GetName().."MoneyFrame"..i];
+                if ( moneyFrame and moneyFrame:IsShown() and select(2, moneyFrame:GetPoint()) == lastLine ) then
+                    tooltip:AddLine(" ");
+                    break;
+                end
+            end
+        end
     end
     return 1;
 end
@@ -58,23 +70,25 @@ local function AddAltsText(tooltip, spaceAdded, list, text, r, g, b)
 end
 
 local knownBy;
+local fetched;
 
-local minLevelPattern = ITEM_MIN_LEVEL:gsub("(%%d)", "(.+)");
-local rankPattern = ITEM_MIN_SKILL:gsub("%d%$", ""):gsub("%%s", "(.+)"):gsub("%(%%d%)", "%%((%%d+)%%)");
-local repPattern = ITEM_REQ_REPUTATION:gsub("%-", "%%-"):gsub("%%s", "(.+)");
-local skillPattern = ITEM_REQ_SKILL:gsub("%d%$", ""):gsub("%%s", "(.+)");
-local racesPattern = ITEM_RACES_ALLOWED:gsub("%%s", "(.+)");
-local classesPattern = ITEM_CLASSES_ALLOWED:gsub("%%s", "(.+)");
+local minLevelPattern = "^"..ITEM_MIN_LEVEL:gsub("(%%d)", "(.+)").."$";
+local rankPattern = "^"..ITEM_MIN_SKILL:gsub("%d%$", ""):gsub("%%s", "(.+)"):gsub("%(%%d%)", "%%((%%d+)%%)").."$";
+local repPattern = "^"..ITEM_REQ_REPUTATION:gsub("%-", "%%-"):gsub("%%s", "(.+)").."$";
+local skillPattern = "^"..ITEM_REQ_SKILL:gsub("%d%$", ""):gsub("%%s", "(.+)").."$";
+local racesPattern = "^"..ITEM_RACES_ALLOWED:gsub("%%s", "(.+)").."$";
+local classesPattern = "^"..ITEM_CLASSES_ALLOWED:gsub("%%s", "(.+)").."$";
+local reagentPattern = "\n"..ITEM_REQ_SKILL:gsub("%d%$", ""):gsub("%%s", "(.+)");
 
 local function GetRequirements(tooltip)
-    local text, standing;
+    local text, standing, reagents;
     local reqLevel, reqProfession, reqRank, reqReputation, reqStanding, reqSkill, reqRaces, reqClasses;
 
     for i = 2, tooltip:NumLines() do
         text = Armory:GetTooltipText(tooltip, i);
         if ( (text or "") ~= "" ) then
-            if ( text:find(ITEM_SPELL_TRIGGER_ONUSE) ) then	
-                break;
+           if ( text:find(minLevelPattern) ) then
+                reqLevel = text:match(minLevelPattern);
                 
             elseif ( text:find(rankPattern) ) then
                 reqProfession, reqRank = text:match(rankPattern);
@@ -97,36 +111,41 @@ local function GetRequirements(tooltip)
 
             elseif ( text:find(classesPattern) ) then
                 reqClasses = text:match(classesPattern);
+            
+            elseif ( text:find(reagentPattern) ) then
+                reagents = text:match(reagentPattern);
                 
-            elseif ( text:find(minLevelPattern) ) then
-                reqLevel = text:match(minLevelPattern);
-
             end
         end
     end
     
-    return tonumber(reqLevel), reqProfession, tonumber(reqRank), reqReputation, reqStanding, reqSkill, reqRaces, reqClasses;
+    return tonumber(reqLevel), reqProfession, tonumber(reqRank), reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, reagents;
 end
 
-local currentItem, gemInfo, crafters, itemCount, hasSkill, canLearn;
+local gemInfo, crafters, itemCount, hasSkill, canLearn;
 local function EnhanceItemTooltip(tooltip, id, link)
     local spaceAdded, name;
     
-    if ( link ~= currentItem ) then
+    if ( not Armory:IsValidTooltip(tooltip) ) then
+        return;
+    elseif ( link ~= fetched ) then
         gemInfo = nil;
         knownBy = nil;
         canLearn = nil;
         hasSkill = nil;
         crafters = nil;
-
+        
         -- Need the fully qualified link
         name, link = tooltip:GetItem();
-
-        local  _, currentItem, _, _, minLevel, itemType, itemSubType = GetItemInfo(id);
-        local reqProfession, reqRank, reqReputation, reqStanding, reqSkill;
+        
+        local _, _, _, _, minLevel, itemType, itemSubType = GetItemInfo(id);
 
         if ( itemType == ARMORY_RECIPE ) then
-            _, reqProfession, reqRank, reqReputation, reqStanding, reqSkill = GetRequirements(tooltip);
+            local _, reqProfession, reqRank, reqReputation, reqStanding, reqSkill, _, _, reagents = GetRequirements(tooltip);
+            -- Recipe tooltips are built in stages (last stage shows rank)
+            if ( not reagents ) then
+                return;
+            end
             knownBy, hasSkill, canLearn = Armory:GetRecipeAltInfo(name, link, reqProfession, reqRank, reqReputation, reqStanding, reqSkill);
 
         elseif ( itemType == ARMORY_GLYPH ) then
@@ -146,6 +165,7 @@ local function EnhanceItemTooltip(tooltip, id, link)
         end
 
         itemCount = Armory:GetItemCount(link);
+        fetched = link;
     end
 
     if ( gemInfo ) then
@@ -174,7 +194,7 @@ local function EnhanceItemTooltip(tooltip, id, link)
             auctionCount = auctionCount + (v.auction or 0);
             equipCount = equipCount + (v.equipped or 0);
             voidCount = voidCount + (v.void or 0);
-            details = v.details or Armory:GetCountDetails(v.bags, v.bank, v.mail, v.auction, nil, nil, v.equipped, v.void);
+            details = v.details or Armory:GetCountDetails(v.bags, v.bank, v.mail, v.auction, nil, nil, v.equipped, v.void, v.perSlot);
             tooltip:AddDoubleLine(format("%s [%d]", v.name, v.count), details, r, g, b, r, g, b);
         end
 
@@ -192,20 +212,24 @@ local function EnhanceItemTooltip(tooltip, id, link)
     spaceAdded = AddAltsText(tooltip, spaceAdded, canLearn, ARMORY_CAN_LEARN, Armory:GetConfigCanLearnColor());
 
     tooltip:Show();
+    
+    return 1;
 end
 
-local currentRecipe, reagents, reagentCount;
+local reagents, reagentCount;
 local function EnhanceRecipeTooltip(tooltip, id, link)
     local spaceAdded;
     
-    if ( id ~= currentRecipe ) then
-        currentRecipe = id;
+    if ( id ~= fetched ) then
+        fetched = id;
+
+        knownBy = nil;
+        reagentCount = nil;
 
         if ( tooltip ~= GameTooltip ) then
             knownBy = Armory:GetRecipeOwners(id);
         end
 
-        reagentCount = nil;
         if ( Armory:HasInventory() and Armory:GetConfigShowItemCount() ) then
             reagents = Armory:GetReagentsFromTooltip(tooltip);
             if ( reagents ) then
@@ -242,6 +266,8 @@ local function EnhanceRecipeTooltip(tooltip, id, link)
     end
     
     tooltip:Show();
+    
+    return 1;
 end
 
 local function EnhanceQuestTooltip(tooltip, id, link)
@@ -269,6 +295,140 @@ local function EnhanceQuestTooltip(tooltip, id, link)
         tooltip:AddLine(table.concat(tooltipLines, ", "), r, g, b, true);
         tooltip:Show();
     end
+    
+    return 1;
+end
+
+local achievements = {};
+local function EnhanceAchievementTooltip(tooltip, id, link)
+    if ( not (Armory:HasAchievements() and Armory:GetConfigShowAchievements()) ) then
+        return;
+    end
+    
+    local tooltipText = Armory:GetTextFromLink(link);
+    local inProgressColor = Armory:HexColor(Armory:GetConfigAchievementInProgressColor());
+    local addProgress = function(progress, inProgress)
+        if ( not (inProgress and tooltipText:find(inProgress)) ) then
+            table.insert(tooltipLines, progress);
+            return true;
+        end
+        return false;
+    end;
+
+    table.wipe(tooltipLines);
+    
+    local id, _, _, completed, month, day, year, _, flags, _, _, isGuild, _, earnedBy = GetAchievementInfo(id);
+    if ( isGuild ) then
+        return;
+    elseif ( completed ) then
+        addProgress(format(ACHIEVEMENT_TOOLTIP_COMPLETE, earnedBy ~= "" and earnedBy or strlower(YOU), month, day, year));
+    else
+        table.wipe(achievements);
+
+        local multiRealm;
+        local parent = "";
+        while ( id and #achievements == 0 ) do
+            if ( bit.band(flags, ACHIEVEMENT_FLAGS_ACCOUNT) ~= ACHIEVEMENT_FLAGS_ACCOUNT ) then
+                local currentProfile = Armory:CurrentProfile();
+                for _, profile in ipairs(Armory:Profiles()) do
+                    Armory:SelectProfile(profile);
+                    local quantity, reqQuantity = Armory:GetAchievement(id);
+                    if ( quantity ) then
+                        table.insert(achievements, {profile.character, profile.realm, quantity, reqQuantity, parent});
+                        if ( profile.realm ~= Armory.playerRealm ) then
+                            multiRealm = true;
+                        end
+                    end
+                end
+                Armory:SelectProfile(currentProfile);
+            end
+            
+            if ( #achievements == 0 ) then
+                local quantity = 0;
+                local totalQuantity = 0;
+                local started;
+                for i = 1, GetAchievementNumCriteria(id) do
+                    local _, criteriaType, completed, quantityNumber, reqQuantity, _, flags, assetId, quantityString = GetAchievementCriteriaInfo(id, i);
+                    if ( criteriaType == CRITERIA_TYPE_ACHIEVEMENT and assetId ) then
+                        _, _, _, completed = _G.GetAchievementInfo(assetId);
+                        totalQuantity = totalQuantity + 1;
+                        if ( completed ) then
+                            quantity = quantity + 1;
+                            started = true;
+                        end
+                    elseif ( bit.band(flags, EVALUATION_TREE_FLAG_PROGRESS_BAR) == EVALUATION_TREE_FLAG_PROGRESS_BAR ) then
+                        if ( quantityString and quantityString:find("Gold") ) then
+                            quantityNumber = floor(quantityNumber / 10000);
+                            reqQuantity = floor(reqQuantity / 10000);
+                        end
+                        totalQuantity = totalQuantity + reqQuantity;
+                        quantity = quantity + quantityNumber;
+                        if ( quantityNumber > 0 ) then
+                            started = true;
+                        end
+                    elseif ( completed ) then
+                        totalQuantity = totalQuantity + 1;
+                        quantity = quantity + 1;
+                        started = true;
+                    else
+                        totalQuantity = totalQuantity + 1;
+                    end
+                end
+                
+                if ( started ) then
+                    table.insert(achievements, {strlower(YOU), Armory.realm, quantity, totalQuantity, parent});
+                end
+            end
+            
+            id = GetPreviousAchievement(id);
+            if ( id ) then 
+                _, parent = GetAchievementInfo(id);
+            end
+        end
+        
+        if ( #achievements > 0 ) then
+            table.sort(achievements, function(a, b) return a[3] > b[3] end);
+            local count = 0;
+            for i, v in ipairs(achievements) do
+                local character, realm, quantity, reqQuantity, parent = unpack(v);
+                local inProgress, progress;
+                if ( i == 1 and parent ~= "" ) then
+                    addProgress(parent..":");
+                end
+                if ( count < MAX_ACHIEVEMENT_PLAYERS ) then
+                    inProgress = format(ACHIEVEMENT_TOOLTIP_IN_PROGRESS, character);
+                    if ( multiRealm ) then
+                        progress = format(ACHIEVEMENT_TOOLTIP_IN_PROGRESS, character.."@"..realm);
+                    else
+                        progress = inProgress;
+                    end
+                    if ( quantity ) then
+                        progress = progress..format(" (%d%% [%d/%d])", floor((quantity * 100) / reqQuantity), quantity, reqQuantity);
+                    end
+                else
+                    progress = ". . .";
+                end
+                if ( Armory:GetConfigUseInProgressColor() ) then
+                    progress = inProgressColor..progress..FONT_COLOR_CODE_CLOSE;
+                end
+                if ( addProgress(progress, inProgress) ) then
+                    count = count + 1;
+                    if ( count > MAX_ACHIEVEMENT_PLAYERS ) then
+                        break;
+                    end
+                end
+            end
+        end
+    end
+
+    if ( #tooltipLines > 0 ) then
+        AddSpacer(tooltip);
+        local r, g, b = Armory:GetConfigAchievementsColor();
+        for i = 1, #tooltipLines do
+            tooltip:AddLine(tooltipLines[i], r, g, b);
+        end
+        tooltip:Show();
+    end
 end
 
 local function EnhanceGlyphTooltip(tooltip, id, link)
@@ -290,6 +450,8 @@ local function EnhanceGlyphTooltip(tooltip, id, link)
         end
         tooltip:Show();
     end
+    
+    return 1;
 end
 
 local function EnhanceCurrencyTooltip(tooltip, id, link)
@@ -319,6 +481,62 @@ local function EnhanceCurrencyTooltip(tooltip, id, link)
         end
         tooltip:Show();
     end
+    
+    return 1;
+end
+
+local function EnhanceSpellTooltip(tooltip, id, link)
+    local name = Armory:GetNameFromLink(link);
+    if ( name ) then
+        if ( not (Armory:HasTradeSkills() and Armory:GetConfigShowTradeSkillRanks()) ) then
+            return;
+        end
+        
+        -- Smelting
+        if ( id == "2656" ) then
+            name = ARMORY_TRADE_MINING;
+        end
+        
+        local currentProfile = Armory:CurrentProfile();
+
+        table.wipe(tooltipLines);
+
+        for _, character in ipairs(Armory:CharacterList(Armory.playerRealm)) do
+            Armory:LoadProfile(Armory.playerRealm, character);
+            
+            local rank, maxRank;
+            local tradeSkillLink = select(2, _G.GetSpellLink(id));
+
+            if ( Armory:GetConfigShowSecondaryTradeSkillRanks() ) then
+                rank, maxRank = Armory:GetTradeSkillRank(name);
+            else
+                for _, v in ipairs(Armory:GetPrimaryTradeSkills()) do
+                    if ( v[1] == name ) then
+                        rank = v[2];
+                        maxRank = v[3];
+                        break;
+                    end
+                end
+            end
+
+            if ( rank and maxRank ) then
+                table.insert(tooltipLines, {name=character, rank=rank, maxRank=maxRank});
+            end
+        end
+        Armory:SelectProfile(currentProfile);
+        
+        if ( #tooltipLines > 0 ) then
+            table.sort(tooltipLines, function(a, b) return a.rank > b.rank; end);
+            AddSpacer(tooltip);
+            local r, g, b = Armory:GetConfigTradeSkillRankColor();
+            for _, v in ipairs(tooltipLines) do
+                tooltip:AddDoubleLine(v.name, v.rank.."/"..v.maxRank, r, g, b, r, g, b);
+            end
+            tooltip:Show();
+        end
+    end
+
+    return 1;
 end
 
 ----------------------------------------------------------
@@ -338,7 +556,10 @@ local function ExecuteHook(tooltip, hook)
 
         if ( hook.hooks[idType] and id ) then
             for _, v in ipairs(hook.hooks[idType]) do
-                v[1](tooltip, id, link);
+                if ( not v[1](tooltip, id, link) ) then
+                    hook.idType = nil;
+                    hook.id = nil;
+                end
             end
         end
     end
@@ -432,6 +653,15 @@ local function RegisterTooltipHook(tooltip, idType, hook, reset)
             self.alink = select(2, self:GetItem());
             ExecuteHook(self, hook);
         end);
+        
+        tooltip:HookScript("OnTooltipSetSpell", function(self)
+            local hook = tooltipHooks[self];
+            local id = select(3, self:GetSpell());
+            if ( id ) then
+                self.alink = _G.GetSpellLink(id);
+                ExecuteHook(self, hook);
+            end
+        end);
 
         tooltip:HookScript("OnTooltipCleared", function(self)
             local hook = tooltipHooks[self];
@@ -473,13 +703,14 @@ function Armory:RegisterTooltipHooks(tooltip)
     RegisterTooltipHook(tooltip, "item", EnhanceItemTooltip);
     RegisterTooltipHook(tooltip, "enchant", EnhanceRecipeTooltip);
     RegisterTooltipHook(tooltip, "quest", EnhanceQuestTooltip);
+    RegisterTooltipHook(tooltip, "achievement", EnhanceAchievementTooltip);
     RegisterTooltipHook(tooltip, "glyph", EnhanceGlyphTooltip);
     RegisterTooltipHook(tooltip, "currency", EnhanceCurrencyTooltip);
+    RegisterTooltipHook(tooltip, "spell", EnhanceSpellTooltip);
 end
 
 function Armory:ResetTooltipHook()
-    currentItem = nil; 
-    currentRecipe = nil;
+    fetched = nil; 
 end
 
 function Armory:RefreshTooltip(tooltip)
@@ -614,12 +845,14 @@ function Armory:AllocateTooltip()
             for i = 1, 4 do
                 _G[tooltip:GetName().."Texture"..i]:SetTexture("");
             end
-            -- For some reason the owner might become nil
-            tooltip:SetOwner(UIParent, "ANCHOR_NONE");
+            -- In case the owner has been removed
+            if ( not tooltip:GetOwner() ) then
+                tooltip:SetOwner(UIParent, "ANCHOR_NONE");
+            end
             return tooltip;
         end
     end
-    tooltip = CreateFrame("GameTooltip", "ArmoryTooltip"..(#self.dummyTips + 1), UIParent, "GameTooltipTemplate")
+    tooltip = CreateFrame("GameTooltip", "ArmoryTooltip"..(#self.dummyTips + 1), nil, "GameTooltipTemplate")
     tooltip:SetOwner(UIParent, "ANCHOR_NONE");
     tooltip.allocated = true;
     table.insert(self.dummyTips, tooltip);
@@ -687,17 +920,28 @@ function Armory:SetHyperlink(tooltip, link, tinker, anchor)
     if ( not (link and tooltip) ) then
         return;
     end
-    ---- prevent feedback error on PTR
-    --local GetMerchantItemLink_Orig = GetMerchantItemLink;
-    --GetMerchantItemLink = function() end;
-    tooltip:SetHyperlink(link);
-    --GetMerchantItemLink = GetMerchantItemLink_Orig;
     
-    if ( tinker ) then
-        local tooltipLines = self:Tooltip2Table(tooltip, true);
-        table.insert(tooltipLines, min(anchor, #tooltipLines) + 1, self:Text2String(tinker, GetTableColor(GREEN_FONT_COLOR)));
-        self:Table2Tooltip(tooltip, tooltipLines);
-        tooltip:Show();
+    local _, kind, _, name = self:GetLinkInfo(link);
+    if ( kind == "battlepet" ) then
+        if ( tooltip == GameTooltip ) then
+	        local _, speciesID, level, breedQuality, maxHealth, power, speed, battlePetID = strsplit(":", link);
+            if ( speciesID and tonumber(speciesID) > 0 ) then
+   			    BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed), name);
+	        end
+	    end
+    else
+        ---- prevent feedback error on PTR
+        --local GetMerchantItemLink_Orig = GetMerchantItemLink;
+        --GetMerchantItemLink = function() end;
+        tooltip:SetHyperlink(link);
+        --GetMerchantItemLink = GetMerchantItemLink_Orig;
+        
+        if ( tinker ) then
+            local tooltipLines = self:Tooltip2Table(tooltip, true);
+            table.insert(tooltipLines, min(anchor, #tooltipLines) + 1, self:Text2String(tinker, GetTableColor(GREEN_FONT_COLOR)));
+            self:Table2Tooltip(tooltip, tooltipLines);
+            tooltip:Show();
+        end
     end
 end
 

@@ -1,13 +1,11 @@
-## Interface: 50001
+## Interface: 50200
 ## Title: NugComboBarGUI
 ## Notes: NugComboBar Configuration Panel
 ## Dependencies: NugComboBar
 ## Author: d87
 ## LoadOnDemand: 1
-embeds.xml
-
-Locale\ruRU.lua
-Locale\zhTW.lua
-Locale\zhCN.lua
-
-NugComboBarGUI.lua
+## X-Curse-Packaged-Version: v5.2.1r1
+## X-Curse-Project-Name: NugComboBar
+## X-Curse-Project-ID: nugie-combo-bar
+## X-Curse-Repository-ID: wow/nugie-combo-bar/mainline
+gui.xml

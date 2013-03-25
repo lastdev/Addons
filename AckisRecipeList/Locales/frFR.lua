@@ -6,7 +6,7 @@ frFR localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 2.4.2
+Project version: 2.4.6
 ************************************************************************
 Original translated by: Pettigrow
 Currently maintained by:
@@ -187,7 +187,6 @@ L["Bradley Towns"] = "Bradley Laville"
 L["Braeg Stoutbeard"] = "Braeg Rudebarbe"
 L["Brandig"] = true
 L["Brawn"] = "Muscu"
-L["BRD_RANDOM_ROOM"] = "Il y a une chance de le trouver dans une des 5 pièces des Profondeurs de Rochenoire. C'est cependant une apparition aléatoire, et parfois il n'y en a pas du tout."
 L["Brek Stonehoof"] = "Brek Sabot-de-pierre"
 L["Brikk Keencraft"] = "Brikk Belouvrage"
 L["Brock Stoneseeker"] = "Brock Cherchepierre"
@@ -475,7 +474,7 @@ L["Flask"] = "Flacon"
 L["Fono"] = true
 L["FONT_SIZE_DESC"] = "Change la taille des polices d'ARL."
 L["Foreman Marcrid"] = "Contremaître Marcrid"
-L["FOUR_SENSES_BREW"] = "Contenu dans la \"Tablette de Ren Yun\" se trouvant au sommet du mont Neverest au sommet de Kun-Lai." -- Needs review
+L["FOUR_SENSES_BREW"] = "Contenu dans la \"Tablette de Ren Yun\" se trouvant au sommet du mont Neverest au sommet de Kun-Lai."
 L["Fradd Swiftgear"] = "Fradd Vifembraye"
 L["Franklin Lloyd"] = true
 L["Fremal Doohickey"] = "Fremal Bidutruc"

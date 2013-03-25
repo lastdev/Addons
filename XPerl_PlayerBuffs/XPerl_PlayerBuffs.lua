@@ -3,7 +3,7 @@
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
 local conf, pconf
-XPerl_RequestConfig(function(new) conf = new pconf = new.player end, "$Revision: 763 $")
+XPerl_RequestConfig(function(new) conf = new pconf = new.player end, "$Revision: 833 $")
 
 local playerClass
 
@@ -25,13 +25,17 @@ local function setCommon(self, filter, buffTemplate)
 	if (filter == "HELPFUL") then
 		self:SetAttribute("includeWeapons", 1)
 	end
-	self:SetAttribute("point", "TOPLEFT")
-	self:SetAttribute("wrapAfter", max(1, floor(XPerl_Player:GetWidth() / pconf.buffs.size)))	-- / XPerl_Player:GetEffectiveScale() 
+	self:SetAttribute("point", pconf.buffs.above and "BOTTOMLEFT" or "TOPLEFT")
+	if (pconf.buffs.wrap) then
+		self:SetAttribute("wrapAfter", max(1, floor(XPerl_Player:GetWidth() / pconf.buffs.size)))	-- / XPerl_Player:GetEffectiveScale()
+	else
+		self:SetAttribute("wrapAfter", 0)
+	end
 	self:SetAttribute("maxWraps", pconf.buffs.rows)
 	self:SetAttribute("xOffset", 32)	-- pconf.buffs.size)
 	self:SetAttribute("yOffset", 0)
 	self:SetAttribute("wrapXOffset", 0)
-	self:SetAttribute("wrapYOffset", pconf.buffs.above and 0 or -32)
+	self:SetAttribute("wrapYOffset", pconf.buffs.above and 32 or -32)
 
 	self:SetAttribute("minWidth", 32)
 	self:SetAttribute("minHeight", 32)
@@ -41,9 +45,11 @@ local function setCommon(self, filter, buffTemplate)
 	-- Workaround: We can't set the initial-width/height (beacuse the api ignores this so far)
 	-- So, we'll scale the parent frame so the effective size matches our setting
 
-	local settings = filter == "HELPFUL" and pconf.buffs or pconf.debuffs
-	if (settings) then
-		local needScale = settings.size / 32
+	if (filter == "HELPFUL" and pconf.buffs) then
+		local needScale = pconf.buffs.size / 32
+		self:SetScale(needScale)
+	elseif (pconf.debuffs) then
+		local needScale = pconf.debuffs.size / pconf.buffs.size 
 		self:SetScale(needScale)
 	end
 end
@@ -52,36 +58,29 @@ end
 function XPerl_Player_Buffs_Position(self)
 	if (self.buffFrame and not InCombatLockdown()) then
 		self.buffFrame:ClearAllPoints()
-		self.buffFrame:SetWidth(32)
-		self.buffFrame:SetHeight(32)
-
 		self.debuffFrame:ClearAllPoints()
-		self.debuffFrame:SetWidth(32)
-		self.debuffFrame:SetHeight(32)
-
+		
 		if (pconf.buffs.above) then
 			self.buffFrame:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 3, 0)
 		else
-			if (self.runes and self.runes:IsShown() and not pconf.hideRunes) then
+			if (self.runes and self.runes:IsShown() and pconf.dockRunes) then
 				self.buffFrame:SetPoint("TOPLEFT", self.runes, "BOTTOMLEFT", 3, 0)
-			elseif (self.runes and self.runes:IsShown()) then
-				self.buffFrame:SetPoint("TOPLEFT", self.runes, "BOTTOMLEFT", 3, 0)
-			--elseif (self.shards) then
-			--	self.buffFrame:SetPoint("TOPLEFT", self.shards, "BOTTOMLEFT", 3, 0)
 			elseif ((pconf.xpBar or pconf.repBar) and not pconf.extendPortrait) then
-				--self.buffFrame:SetPoint("TOPLEFT", self.statsFrame, "BOTTOMLEFT", 3, 0)
 				local diff = self.statsFrame:GetBottom() - self.portraitFrame:GetBottom()
-				self.buffFrame:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 3, diff - 3)
+				self.buffFrame:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 3, diff - 5)
 			else
 				self.buffFrame:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 3, 0)
 			end
-		end
 
+		end
+		
 		if (pconf.buffs.above) then
 			self.debuffFrame:SetPoint("BOTTOMLEFT", self.buffFrame, "TOPLEFT", 0, 2)
 		else
 			self.debuffFrame:SetPoint("TOPLEFT", self.buffFrame, "BOTTOMLEFT", 0, -2)
 		end
+
+		XPerl_Unit_BuffPositions(self, self.buffFrame.buff, self.buffFrame.debuff, pconf.buffs.size, pconf.debuffs.size)
 	end
 end
 
@@ -104,7 +103,7 @@ function XPerl_Player_BuffSetup(self)
 
 	if (not self.buffFrame) then
 		self.buffFrame = CreateFrame("Frame", self:GetName().."buffFrame", self, "SecureAuraHeaderTemplate")
-		self.debuffFrame = CreateFrame("Frame", self:GetName().."debuffFrame", self, "SecureAuraHeaderTemplate")
+		self.debuffFrame = CreateFrame("Frame", self:GetName().."debuffFrame", self.buffFrame, "SecureAuraHeaderTemplate")
 
 		self.buffFrame.BuffFrameUpdateTime = 0
 		self.buffFrame.BuffFrameFlashTime = 0
@@ -287,6 +286,7 @@ function XPerl_PlayerBuffs_Update(self)
 			if (XPerl_PlayerbuffFrameTempEnchant1:GetAttribute("target-slot") == XPerl_PlayerbuffFrameTempEnchant2:GetAttribute("target-slot")) then
 				if (self:GetName() == "XPerl_PlayerbuffFrameTempEnchant2") then
 					slot = 17
+					XPerl_Notice("PlayerbuffFrameTempEnchant still doesn't work, please report this error on WoWAce")
 					if (not InCombatLockdown()) then
 						XPerl_PlayerbuffFrameTempEnchant2:SetAttribute("target-slot", 17)
 						XPerl_PlayerbuffFrameTempEnchant2:SetID(17)

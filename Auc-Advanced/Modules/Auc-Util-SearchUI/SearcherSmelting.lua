@@ -32,6 +32,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 --]]
 -- Create a new instance of our lib with our parent
+if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewSearcher("Smelting")
 if not lib then return end
 
@@ -272,15 +273,6 @@ function lib.Processor(event, subevent)
 	end
 end
 
-
-lib.Processors = {}
-function lib.Processors.selecttab(event, subevent)
-	if subevent == lib.tabname and private.doValidation then
-		private.doValidation()
-	end
-end
-
-
 -- This function is automatically called when we need to create our search parameters
 function lib:MakeGuiConfig(gui)
 	-- Get our tab and populate it with our controls
@@ -385,7 +377,7 @@ function lib.Search (item)
 	end
 	if get("smelting.adjust.deposit") then
 		-- note: GetDepositCost can handle numerical itemIDs instead of links
-		local amount = GetDepositCost(newID, get("smelting.adjust.deplength"), resources.faction, count)
+		local amount = GetDepositCost(newID, get("smelting.adjust.deplength"), resources.Faction, count)
 		if amount then
 			market = market - amount * get("smelting.adjust.listings")
 		end

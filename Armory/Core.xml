@@ -1,4 +1,4 @@
-<!-- Revision: 490 2012-09-04T09:42:28Z -->
+<!-- Revision: 573 2013-01-07T23:24:43Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\FrameXML\UI.xsd">
   <Script file="Core\ArmoryBackgroundUpdater.lua"/>
@@ -22,6 +22,8 @@
   <Script file="Core\ArmoryTalents.lua"/>
   <Script file="Core\ArmoryTradeSkills.lua"/>
   <Script file="Core\ArmoryCurrency.lua"/>
+  <Script file="Core\ArmoryAchievements.lua"/>
+  <Script file="Core\ArmoryStatistics.lua"/>
   <Script file="Core\ArmoryFriends.lua"/>
   <Script file="Core\ArmoryBuffs.lua"/>
   <Script file="Core\ArmorySummary.lua"/>

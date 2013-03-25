@@ -39,7 +39,7 @@
 --
 
 
-local THIS_VERSION = 0.06
+local THIS_VERSION = 0.07
 
 if (not TjBagWatch or TjBagWatch.Version < THIS_VERSION) then
   TjBagWatch = TjBagWatch or {}
@@ -91,8 +91,8 @@ if (not TjBagWatch or TjBagWatch.Version < THIS_VERSION) then
         _, num, _, _, _, _, link = GetContainerItemInfo(bagID, i)
         if (link) then
           _, _, itemID = strfind(link, "item:(%d+)")
+          itemID = tonumber(itemID)
           if (itemID) then  -- Ignores special objects not classified as normal items, like battlepets
-            itemID = tonumber(itemID)
             tab[itemID] = (tab[itemID] or 0) + num
           end
         end

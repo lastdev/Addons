@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: Enchantrix
-	Revision: $Id: EnxStrings.lua 5346 2012-09-06 04:00:44Z LocalizerAutoCommit $
-	Version: 5.15.5365 (LikeableLyrebird)
+	Revision: $Id: EnxStrings.lua 5370 2012-10-02 04:00:48Z LocalizerAutoCommit $
+	Version: 5.15.5380 (LikeableLyrebird)
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -1403,6 +1403,7 @@ EnchantrixLocalizations = {
 		["MesgAuctVersion"]	= "Enchantrix nécessite Auctioneer version 4.0 ou plus. Certaines fonctions seront indisponibles tant que vous ne mettrez pas Auctioneer à jour.";
 
 		-- Section: Help Text
+		["GuiAltChatlink"]	= "Ouvrir les bulles d'aide depuis la fenêtre de discussion avec Alt clic-gauche";
 		["GuiClearall"]	= "Réinitialiser toutes les données d'Enchantrix";
 		["GuiClearallButton"]	= "Effacer tout";
 		["GuiClearallHelp"]	= "Cliquer ici pour réinitialiser toutes les données d'Enchantrix pour le royaume actuel.";
@@ -1616,7 +1617,7 @@ EnchantrixLocalizations = {
 	itIT = {
 
 		-- Section: Command Messages
-		["FrmtActClearall"]	= "Eliminando tutti i dati di enchant";
+		["FrmtActClearall"]	= "Eliminando tutti i dati di incantamento";
 		["FrmtActClearFail"]	= "Impossibile trovare l'oggetto: %s";
 		["FrmtActClearOk"]	= "Eliminati i dati dell'oggetto: %s";
 		["FrmtActDefault"]	= "L'opzione %s di Enchantrix e' stata resettata al valore di default";
@@ -1675,14 +1676,14 @@ EnchantrixLocalizations = {
 
 		-- Section: Game Constants
 		["ArgSpellMillingName"]	= "Pestatura";
-		["ArgSpellname"]	= "Disincanta";
-		["ArgSpellProspectingName"]	= "Prospetta";
+		["ArgSpellname"]	= "Disincantamento";
+		["ArgSpellProspectingName"]	= "Prospezione";
 		["Enchanting"]	= "Incantamento";
 		["Inscription"]	= "Runografia";
 		["Jewelcrafting"]	= "Oreficeria";
-		["PatReagents"]	= "Reagente:(.+)";
+		["PatReagents"]	= "Reagenti:(.+)";
 		["TextCombat"]	= "Combattimento";
-		["TextGeneral"]	= "Generico";
+		["TextGeneral"]	= "Generale";
 
 		-- Section: Generic Messages
 		["FrmtCredit"]	= "(vai su http://enchantrix.org/ per condividere i tuoi dati)";
@@ -1872,7 +1873,33 @@ EnchantrixLocalizations = {
 		["GuiSaveProfileButton"]	= "Salva";
 		["GuiShowMatSources"]	= "Mostra la fonte dei materiali per gli oggetti ottenuti disincantando, tagliano e pestando.";
 		["GuiShowMilling"]	= "Mostra i dati di pestatura per le erbe";
+		["GuiShowProspecting"]	= "Mostra i dati di taglio per i minerali";
+		["GuiTabAuctions"]	= "Aste";
+		["GuiTabFixed"]	= "Valore fisso";
+		["GuiTabGeneral"]	= "Generali";
+		["GuiTabMilling"]	= "Pestatura";
+		["GuiTabProfiles"]	= "Profili";
+		["GuiTabProspecting"]	= "Taglio delle gemme";
+		["GuiTabWeights"]	= "Pesi";
+		["GuiValueOptions"]	= "Opzioni Finestra Valori";
+		["GuiValueShowAuc4HSP"]	= "Mostra i valori più alti possibili Auctioneer";
+		["GuiValueShowAuc4Median"]	= "Mostra i valori medi Auctioneer";
+		["GuiValueShowAuc5Market"]	= "Mostra i prezzi di mercato Auctioneer";
+		["GuiValueShowBaseline"]	= "Mostra i valori di base predefiniti";
+		["GuiValueShowDEValues"]	= "Mostra i possibili valori disincantamento";
+		["GuiValueTerse"]	= "Mostra i valori concisi per disincantamento";
+		["GuiWeighSettingsNote"]	= "I pesi seguenti cambiano la valutazione del reagente della quantità specificata. In genere vorrai lasciarli al 100% a meno che tu non pensi che possano valere di più o di meno, rispetto al prezzo predefinito.";
+		["GuiWeightSettings"]	= "Desiderabilità reagenti disincantamento";
 		["GuiYes"]	= "Si";
+		["ModTTShow"]	= "Mostra descrizione:";
+		["ModTTShow_alt"]	= "Quando Alt è premuto";
+		["ModTTShow_always"]	= "Sempre";
+		["ModTTShow_ctrl"]	= "Quando Ctrl è premuto";
+		["ModTTShow_never"]	= "Mai";
+		["ModTTShow_noalt"]	= "Quando Alt non è premuto";
+		["ModTTShow_noctrl"]	= "Quando Ctrl non è premuto";
+		["ModTTShow_noshift"]	= "Quando Maiusc. non è premuto";
+		["ModTTShow_shift"]	= "Quando Maiusc. è premuto";
 
 	};
 
@@ -2808,6 +2835,7 @@ EnchantrixLocalizations = {
 		["MesgAuctVersion"]	= "Для работы Enchantrix требуется аддон Auctioneer версии 4.0 или выше. Некоторые возможности будут недоступны, пока вы не обновите Auctioneer.";
 
 		-- Section: Help Text
+		["GuiAltChatlink"]	= "Открывать подсказки из ссылок в чате при щелчке ЛКМ и нажатом Alt";
 		["GuiClearall"]	= "Очистить все данные Enchantrix";
 		["GuiClearallButton"]	= "Очистить всё";
 		["GuiClearallHelp"]	= "Нажмите сюда, чтобы очистить все данные Enchantrix для текущего сервера.";
@@ -2833,6 +2861,7 @@ EnchantrixLocalizations = {
 		["GuiValuateEnable"]	= "Разрешить оценку";
 		["GuiValuateHeader"]	= "Оценка";
 		["GuiValuateMedian"]	= "Оценивать с медианными значениями Auctioneer";
+		["HelpAltChatlink"]	= "Включить подсказку над ссылкой на предмет в чате при щелчке ЛКМ над ней и нажатом ALT.";
 		["HelpClear"]	= "Очистить данные для определённого предмета (\"Shift+щелчок\" для вставки предмета в команду). Вы также можете использовать специальное ключевое слово \"all\".";
 		["HelpDefault"]	= "Установить опцию к значению по умолчанию. Вы также можете использовать специальное ключевое слово \"all\" для установки всех настроек Enchantrix'а к их значениям по умолчанию.";
 		["HelpDisable"]	= "Не загружать enchantrix в следующий раз, когда Вы войдете в игру.";

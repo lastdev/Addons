@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: AprFrame.lua 5362 2012-09-21 17:59:48Z brykrys $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: AprFrame.lua 5372 2012-10-05 13:45:15Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -670,11 +670,17 @@ function private.CreateFrames()
 		frame.salebox.config = nil
 	end
 
-	function frame.ShowOwnAuctionDetails(itemString)
+	function frame.ShowOwnAuctionDetails(itemLink)
         local colored = (get('util.appraiser.manifest.color') and AucAdvanced.Modules.Util.PriceLevel)
-
-		-- ### todo: fix for battlepets
-		local itemName, itemLink = GetItemInfo(itemString)
+		local itemName
+		local header, id = strsplit(":", itemLink)
+		local lType = header:sub(-4)
+		if lType == "item" then
+			itemName = GetItemInfo(itemLink)
+		elseif lType == "epet" then -- battlepet
+			itemName = C_PetJournal.GetPetInfoBySpeciesID(tonumber(id) or 0)
+		end
+		if not itemName then return end
 
 		local results = lib.ownResults[itemName]
 		local counts = lib.ownCounts[itemName]
@@ -980,16 +986,7 @@ function private.CreateFrames()
 			frame.salebox.matcher.label:SetTextColor(1, 1, 1)
 		end
 
-		local itemId, suffix, factor = strsplit(":", frame.salebox.sig)
-		local itemKey
-		itemId = tonumber(itemId)
-		if itemId then
-			-- ### todo: fix for battlepets
-			suffix = tonumber(suffix) or 0
-			factor = tonumber(factor) or 0
-
-			itemKey = string.join(":", "item", itemId, "0", "0", "0", "0", "0", suffix, factor)
-		end
+		local itemLink = frame.salebox.link
 
 		local curDurationIdx = frame.salebox.duration:GetValue() or 3
 		local curDurationMins = private.durations[curDurationIdx][1]
@@ -1011,13 +1008,8 @@ function private.CreateFrames()
 		local r,g,b,a = 0,0,0,0
 		local colored = get('util.appraiser.manifest.color')
 		local tinted = get('util.appraiser.tint.color')
-		if not itemKey then
-			-- ### workaround for battlepets
-			colored = nil
-			tinted = nil
-		end
 		if tinted then
-			r,g,b = frame.SetPriceColor(itemKey, 1, curBuy, curBuy, r,g,b)
+			r,g,b = frame.SetPriceColor(itemLink, 1, curBuy, curBuy, r,g,b)
 			if r then a = 0.4 end
 		end
 		AppraiserSaleboxBuyGold:SetBackdropColor(r,g,b, a)
@@ -1030,7 +1022,7 @@ function private.CreateFrames()
 
 		r,g,b,a=0,0,0,0
 		if tinted then
-			r,g,b = frame.SetPriceColor(itemKey, 1, curBid, curBid,  r,g,b)
+			r,g,b = frame.SetPriceColor(itemLink, 1, curBid, curBid,  r,g,b)
 			if r then a=0.4 end
 		end
 		AppraiserSaleboxBidGold:SetBackdropColor(r,g,b, a)
@@ -1082,12 +1074,12 @@ function private.CreateFrames()
 
 						r,g,b=nil,nil,nil
 						if colored then
-							r,g,b = frame.SetPriceColor(itemKey, curSize, bidVal, bidVal)
+							r,g,b = frame.SetPriceColor(itemLink, curSize, bidVal, bidVal)
 						end
 						frame.manifest.lines:Add("  ".._TRANS('APPR_Interface_BidForX'):format(curSize), bidVal, r,g,b)--Bid for %dx
 						r,g,b=nil,nil,nil
 						if colored then
-							r,g,b = frame.SetPriceColor(itemKey, curSize, buyVal, buyVal)
+							r,g,b = frame.SetPriceColor(itemLink, curSize, buyVal, buyVal)
 						end
 						frame.manifest.lines:Add("  ".._TRANS('APPR_Interface_BuyoutForX'):format(curSize), buyVal, r,g,b)--Buyout for %dx
 						if depositVal then
@@ -1104,12 +1096,12 @@ function private.CreateFrames()
 						frame.manifest.lines:Add(_TRANS('APPR_Interface_LotsOfStacks') :format(1, remain))--%d lots of %dx stacks:
 						r,g,b=nil,nil,nil
 						if colored then
-							r,g,b = frame.SetPriceColor(itemKey, remain, bidVal, bidVal)
+							r,g,b = frame.SetPriceColor(itemLink, remain, bidVal, bidVal)
 						end
 						frame.manifest.lines:Add("  ".._TRANS('APPR_Interface_BidForX'):format(remain), bidVal, r,g,b)--Bid for %dx
 						r,g,b=nil,nil,nil
 						if colored then
-							r,g,b = frame.SetPriceColor(itemKey, remain, buyVal, buyVal)
+							r,g,b = frame.SetPriceColor(itemLink, remain, buyVal, buyVal)
 						end
 						frame.manifest.lines:Add("  ".._TRANS('APPR_Interface_BuyoutForX'):format(remain), buyVal, r,g,b)--Buyout for %dx
 						if depositVal then
@@ -1128,12 +1120,12 @@ function private.CreateFrames()
 
 					r,g,b=nil,nil,nil
 					if colored then
-						r,g,b = frame.SetPriceColor(itemKey, curSize, bidVal, bidVal)
+						r,g,b = frame.SetPriceColor(itemLink, curSize, bidVal, bidVal)
 					end
 					frame.manifest.lines:Add(("  ".._TRANS('APPR_Interface_BidForX')):format(curSize), bidVal, r,g,b)--Bid for %dx
 					r,g,b=nil,nil,nil
 					if colored then
-						r,g,b = frame.SetPriceColor(itemKey, curSize, buyVal, buyVal)
+						r,g,b = frame.SetPriceColor(itemLink, curSize, buyVal, buyVal)
 					end
 					frame.manifest.lines:Add(("  ".._TRANS('APPR_Interface_BuyoutForX')):format(curSize), buyVal, r,g,b)--Buyout for %dx
 					if depositVal then
@@ -1165,12 +1157,12 @@ function private.CreateFrames()
 
 					r,g,b=nil,nil,nil
 					if colored then
-						r,g,b = frame.SetPriceColor(itemKey, 1, bidVal, bidVal)
+						r,g,b = frame.SetPriceColor(itemLink, 1, bidVal, bidVal)
 					end
 					frame.manifest.lines:Add("  ".._TRANS('APPR_Interface_Bid/item'), bidVal, r,g,b)--Bid /item
 					r,g,b=nil,nil,nil
 					if colored then
-						r,g,b = frame.SetPriceColor(itemKey, 1, buyVal, buyVal)
+						r,g,b = frame.SetPriceColor(itemLink, 1, buyVal, buyVal)
 					end
 					frame.manifest.lines:Add("  ".._TRANS('APPR_Interface_Buyout/item'), buyVal, r,g,b)--Buyout /item
 					if depositVal then
@@ -1202,10 +1194,7 @@ function private.CreateFrames()
 			end
 		end
 
-		if itemKey then
-			-- ### todo: fix for battlepets
-			frame.ShowOwnAuctionDetails(itemKey)	-- Adds lines to frame.manifest
-		end
+		frame.ShowOwnAuctionDetails(itemLink)	-- Adds lines to frame.manifest
 
 		frame.salebox.warn:SetText("")
 		local warnvendor
@@ -2869,4 +2858,4 @@ function private.CreateFrames()
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5362 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5372 $")

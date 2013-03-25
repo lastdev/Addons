@@ -673,6 +673,9 @@ end
 -- Library methods.
 -----------------------------------------------------------------------
 --- Register a new dialog delegate.
+-- @name LibDialog-1.0:Register
+-- @class function
+-- @paramsig delegate_name, delegate
 -- @param delegate_name The name the delegate table will be registered under.
 -- @param delegate The delegate table definition.
 function lib:Register(delegate_name, delegate)
@@ -706,6 +709,9 @@ local function _FindDelegate(method_name, reference)
 end
 
 --- Spawns a dialog from a delegate reference.
+-- @name LibDialog-1.0:Spawn
+-- @class function
+-- @paramsig reference[, data]
 -- @param reference The delegate to be used for the spawned dialog. Can be either a string, in which case the delegate must be registered, or a delegate definition table.
 -- @param data Additional data to be passed on to the resultant dialog.
 function lib:Spawn(reference, data)
@@ -813,6 +819,9 @@ function lib:Spawn(reference, data)
 end
 
 --- Determines whether or not a specific dialog is currently active.
+-- @name LibDialog-1.0:ActiveDialog
+-- @class function
+-- @paramsig reference[, data]
 -- @param reference The delegate criteria for the dialog being targeted. Can be either a string, in which case the delegate must be registered, or a delegate definition table.
 -- @param data Additional data to be used as further criteria to determine if the target dialog is active - this would be the same data used to spawn the dialog.
 function lib:ActiveDialog(reference, data)
@@ -828,6 +837,9 @@ function lib:ActiveDialog(reference, data)
 end
 
 --- Dismisses a specific dialog.
+-- @name LibDialog-1.0:Dismiss
+-- @class function
+-- @paramsig reference[, data]
 -- @param reference The delegate criteria for the dialog being targeted. Can be either a string, in which case the delegate must be registered, or a delegate definition table.
 -- @param data Additional data to be used as further criteria to identify the target dialog - this would be the same data used to spawn the dialog.
 function lib:Dismiss(reference, data)
@@ -936,6 +948,9 @@ function dialog_prototype:Resize()
     self:SetHeight(height)
 end
 
+-----------------------------------------------------------------------
+-- Default dialog events.
+-----------------------------------------------------------------------
 function dialog_prototype:DISPLAY_SIZE_CHANGED()
     self:Resize()
 end

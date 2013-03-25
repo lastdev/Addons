@@ -1,6 +1,6 @@
 ﻿--[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.6 (<%codename%>)
+	Version: 4.2.0 (<%codename%>)
 	Revision: $Id: GatherManifest.lua 980 2012-09-04 15:59:04Z Esamynn $
 
 	Gatherer Manifest

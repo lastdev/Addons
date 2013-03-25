@@ -156,6 +156,7 @@ function SMARTBUFF_InitItemList()
   SMARTBUFF_MiscItem2           = GetItemInfo(44986); --"Warts-B-Gone Lip Balm"
   SMARTBUFF_MiscItem3           = GetItemInfo(69775); --"Vrykul Drinking Horn"
   SMARTBUFF_MiscItem4           = GetItemInfo(86569); --"Crystal of Insanity"
+  SMARTBUFF_MiscItem5           = GetItemInfo(85500); --"Anglers Fishing Raft"
   
   SMARTBUFF_FLASK1              = GetItemInfo(46377);  --"Flask of Endless Rage"
   SMARTBUFF_FLASK2              = GetItemInfo(46376);  --"Flask of the Frost Wyrm"
@@ -457,6 +458,7 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_BMiscItem2      = GetSpellInfo(62574); --"Warts-B-Gone Lip Balm"
   SMARTBUFF_BMiscItem3      = GetSpellInfo(98444); --"Vrykul Drinking Horn"
   SMARTBUFF_BMiscItem4      = GetSpellInfo(127230);--"Visions of Insanity"
+  SMARTBUFF_BMiscItem5      = GetSpellInfo(124036);--"Anglers Fishing Raft"
   
   -- Flasks & Elixirs
   SMARTBUFF_BFLASK1         = GetSpellInfo(53760);  --"Flask of Endless Rage"
@@ -580,6 +582,7 @@ function SMARTBUFF_InitSpellList()
       {SMARTBUFF_DALARANB, 60, SMARTBUFF_CONST_GROUP, {80,80,80,80,80,80,80}, nil, S.LinkInt, S.LinkInt},
       {SMARTBUFF_FOCUSMAGIC, 30, SMARTBUFF_CONST_GROUP, {20}, "WARRIOR;DRUID;SHAMAN;HUNTER;ROGUE;MAGE;PRIEST;PALADIN;WARLOCK;DEATHKNIGHT;MONK;HPET;WPET;DKPET"},
       {SMARTBUFF_TEMPSHIELD, 0.067, SMARTBUFF_CONST_SELF},
+      {SMARTBUFF_SUMMONWATERELE, -1, SMARTBUFF_CONST_SELF},
       {SMARTBUFF_FROSTARMOR, -1, SMARTBUFF_CONST_SELF, nil, nil, nil, S.ChainMageArmor},
       {SMARTBUFF_MAGEARMOR, -1, SMARTBUFF_CONST_SELF, nil, nil, nil, S.ChainMageArmor},
       {SMARTBUFF_MOLTENARMOR, -1, SMARTBUFF_CONST_SELF, nil, nil, nil, S.ChainMageArmor},
@@ -874,7 +877,8 @@ function SMARTBUFF_InitSpellList()
     {SMARTBUFF_MiscItem1, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem1},
     {SMARTBUFF_MiscItem2, -1, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem2},
     {SMARTBUFF_MiscItem3, 10, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem3},
-    {SMARTBUFF_MiscItem4, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem4}
+    {SMARTBUFF_MiscItem4, 60, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem4},
+    {SMARTBUFF_MiscItem5, 10, SMARTBUFF_CONST_SCROLL, nil, SMARTBUFF_BMiscItem5}
   };
   
   -- Potions

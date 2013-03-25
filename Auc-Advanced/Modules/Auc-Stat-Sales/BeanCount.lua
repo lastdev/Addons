@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Stat-Sales module
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: BeanCount.lua 5305 2012-07-05 18:38:40Z brykrys $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: BeanCount.lua 5376 2012-11-06 15:11:47Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This Auctioneer statistic module calculates a price statistics for items
@@ -35,7 +35,7 @@ if not AucAdvanced then return end
 local libType, libName = "Stat", "Sales"
 local lib,parent,private = AucAdvanced.NewModule(libType, libName)
 if not lib then return end
-local print,decode,_,_,replicate,_,get,set,default,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
+local aucPrint,decode,_,_,replicate,_,get,set,default,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
 
 local unpack,pairs,wipe = unpack,pairs,wipe
 local floor,abs,sqrt = floor,abs,sqrt
@@ -52,11 +52,8 @@ local day7time = currenttime - 7*86400
 --local name for our saved var file
 local SalesDB
 
-function private.onEvent(frame, event, arg, ...)
-	if (event == "MAIL_CLOSED") then
-		-- Clear pricecache
-		wipe(pricecache)
-	end
+function private.clearCache()
+	wipe(pricecache)
 end
 
 local BellCurve = AucAdvanced.API.GenerateBellCurve();
@@ -174,7 +171,6 @@ function lib.GetPrice(hyperlink, serverKey)
 		The test for ["ALL"..sig] won't work like this; temporarily removed as it's not used for any Auctioneer functions
 	local ignoreDate = SalesDB[cachesig] or SalesDB["ALL"..sig] or SalesDB[serverKey] or SalesDB.ALL or 0
 	--]]
-
 	if tbl then
 		for i,v in pairs(tbl) do
 			-- local itemLink, reason, bid, buy, net, qty, priceper, seller, deposit, fee, wealth, date = v
@@ -322,7 +318,7 @@ end
 	Instead we record the time, and GetPrice will ignore entries with timestamps earlier than that time
 --]]
 function lib.ClearItem(hyperlink, serverKey)
-	print(_TRANS('ASAL_Interface_SlashHelpClearingData') )-- Sales does not store data itself. It uses your Beancounter data. BeanCounter data before todays date will be ignored.
+	aucPrint(_TRANS('ASAL_Interface_SlashHelpClearingData') )-- Sales does not store data itself. It uses your Beancounter data. BeanCounter data before todays date will be ignored.
 	local sig = GetSigFromLink(hyperlink)
 	if not sig then return end
 	serverKey = serverKey or GetFaction()
@@ -337,7 +333,7 @@ function lib.ClearData(serverKey)
 		-- "ALL" overrides all pre-existing entries in the table. Eliminate those "dead" entries.
 		wipe(SalesDB)
 		SalesDB.ALL = time()
-		print(_TRANS('ASAL_Interface_SlashHelpClearingData').." {{".._TRANS("ADV_Interface_AllRealms").."}}.")-- Sales does not store data itself. It uses your Beancounter data. BeanCounter data before todays date will be ignored.
+		aucPrint(_TRANS('ASAL_Interface_SlashHelpClearingData').." {{".._TRANS("ADV_Interface_AllRealms").."}}.")-- Sales does not store data itself. It uses your Beancounter data. BeanCounter data before todays date will be ignored.
 	elseif AucAdvanced.SplitServerKey(serverKey) then -- looks like a valid serverKey
 		-- Any pre-existing entries *containing* this serverKey are overridden by the new entry for this serverKey; remove them
 		for key, value in pairs(SalesDB) do
@@ -347,7 +343,7 @@ function lib.ClearData(serverKey)
 		end
 		SalesDB[serverKey] = time()
 		local _,_,keyText = AucAdvanced.SplitServerKey(serverKey)
-		print(_TRANS('ASAL_Interface_SlashHelpClearingData').." {{"..keyText.."}}.")-- Sales does not store data itself. It uses your Beancounter data. BeanCounter data before todays date will be ignored.
+		aucPrint(_TRANS('ASAL_Interface_SlashHelpClearingData').." {{"..keyText.."}}.")-- Sales does not store data itself. It uses your Beancounter data. BeanCounter data before todays date will be ignored.
 	end
 	wipe(pricecache)
 end
@@ -375,6 +371,10 @@ lib.Processors = {}
 function lib.Processors.config(callbackType, ...)
 	if private.SetupConfigGui then private.SetupConfigGui(...) end
 end
+
+lib.Processors.mailclose = private.clearCache
+lib.Processors.auctionclose = private.clearCache
+lib.Processors.factionselect = private.clearCache
 
 function lib.Processors.tooltip(callbackType, tooltip, name, hyperlink, quality, quantity, cost)
 	if not get("stat.sales.tooltip") or not (BeanCounter) or not (BeanCounter.API) or not (BeanCounter.API.isLoaded) then return end --If beancounter disabled itself, boughtseen etc are nil and throw errors
@@ -470,9 +470,4 @@ function private.SetupConfigGui(gui)
 	if tooltipID then private.addTooltipControls(tooltipID) end
 end
 
---[[Bootstrap Code]]
-private.scriptframe = CreateFrame("Frame")
-private.scriptframe:SetScript("OnEvent", private.onEvent)
-
-
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-Sales/BeanCount.lua $", "$Rev: 5305 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-Sales/BeanCount.lua $", "$Rev: 5376 $")

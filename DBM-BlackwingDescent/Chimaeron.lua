@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(172, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 21 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(43296)
 mod:SetModelID(33308)
 mod:SetZone()
@@ -130,7 +130,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		massacreCast = 0
 		specWarnFailure:Show()
 		timerFailure:Start()
-	elseif not botOffline and args:IsSpellID(82935, 88915, 88916, 88917) and args:IsDestTypePlayer() then
+	elseif not botOffline and args:IsSpellID(82935) and args:IsDestTypePlayer() then
 		slimeTargets[#slimeTargets + 1] = args.destName
 		if self.Options.SetIconOnSlime then
 			table.insert(slimeTargetIcons, DBM:GetRaidUnitId(args.destName))
@@ -177,7 +177,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(88872) then
 		warnFeud:Show()
-	elseif args:IsSpellID(82934, 95524) then
+	elseif args:IsSpellID(82934) then
 		phase2 = true
 		warnPhase2:Show()
 		timerCausticSlime:Cancel()

@@ -1,13 +1,11 @@
-local AddonName, a = ...
-if a.BuildFail(50000) then return end
+local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
-local c = BittensSpellFlashLibrary
+local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
 local UnitCreatureType = UnitCreatureType
 local UnitLevel = UnitLevel
-
-c.Init(a)
+local math = math
 
 ------------------------------------------------------------------------ common
 c.AddOptionalSpell("Blessing of Kings", nil, { NoRangeCheck = 1 })
@@ -21,98 +19,125 @@ c.AddOptionalSpell("Holy Avenger", nil, {
 	end
 })
 
+c.AddSpell("Crusader Strike", nil, {
+	NotIfActive = true,
+	CheckFirst = function()
+		return not c.IsCasting("Hammer of the Righteous")
+	end,
+})
+
+c.AddSpell("Judgment", nil, {
+	NotIfActive = true,
+})
+
+c.AddOptionalSpell("Lay on Hands", nil, {
+	FlashColor = "red",
+	NoRangeCheck = true,
+	CheckFirst = function()
+		return s.HealthPercent("player") < 20
+			and not s.Debuff(c.GetID("Forebearance"), "player")
+	end
+})
+
 c.AddInterrupt("Rebuke")
---
---c.AddOptionalSpell("Seal of Truth", nil, {
---    CheckFirst = function()
---        return c.SelfBuffNeeded("Seal of Truth")
---    end
---})
---
---c.AddOptionalSpell("Judgement", "for Buff", {
---    NoRangeCheck = true,
---    CheckFirst = function()
---        return not c.HasBuff("Judgements of the Pure")
---        	and c.HasTalent("Judgements of the Pure")
---    end
---})
---
---c.AddOptionalSpell("Consecration", "over 50", {
---	Melee = true,
---    CheckFirst = function()
---        return s.PowerPercent("player") > 50
---    end
---})
---
---c.AddOptionalSpell("Auras", nil, {
---    Type = "form",
---    ID = "Devotion Aura",
---    FlashID = { 
---    	"Concentration Aura", 
---    	"Crusader Aura", 
---    	"Devotion Aura", 
---    	"Resistance Aura", 
---    	"Retribution Aura" 
---    },
---    Override = function()
---        return not s.Form()
---    end
---})
 
--------------------------------------------------------------------------- holy
---c.AddOptionalSpell("Word of Glory", "at 3", {
---    NoRangeCheck = 1,
---    CheckFirst = threeHolyPower,
---})
---
---c.AddOptionalSpell("Light of Dawn", "at 3", {
---    NoRangeCheck = 1,
---    CheckFirst = threeHolyPower,
---})
---
---c.AddOptionalSpell("Holy Shock", "under 3 with Daybreak", {
---    NoRangeCheck = 1,
---    CheckFirst = function()
---        return a.HolyPower < 3 and c.HasBuff("Daybreak")
---    end
---})
---
---c.AddOptionalSpell("Divine Light", nil, { NoRangeCheck = 1 })
---
---c.AddOptionalSpell("Flash of Light", nil, { NoRangeCheck = 1 })
---
---c.AddOptionalSpell("Holy Radiance", nil, { NoRangeCheck = 1 })
---
---c.AddOptionalSpell("Beacon of Light", nil, {
---    Override = function()
---        if not s.InRaidOrParty() then
---            return false
---        end
---        
---        if not a.BeaconTarget then
---            return true
---        end
---        
---        if s.InCombat() then
---            return not s.MyBuff(c.GetID("Beacon of Light"), a.BeaconTarget)
---        else
---            return s.MyBuffDuration(
---            	c.GetID("Beacon of Light"), a.BeaconTarget) < 2 * 60
---        end
---    end
---})
+-------------------------------------------------------------------------- Holy
+local function hpCheckFirst(z)
+	if a.HolyPower < 3 then
+		return false
+	end
+	
+	local dp = c.GetBuffDuration("Divine Purpose")
+	if dp > 0 and dp < 2.5 then
+		z.FlashSize = nil
+		z.FlashColor = "red"
+		return true
+	end
+	
+	z.FlashColor = "yellow"
+	if a.HolyPower < 5 then
+		z.FlashSize = s.FlashSizePercent() / 2
+	else
+		z.FlashSize = nil
+	end
+	return true
+end
 
--------------------------------------------------------------------- protection
+c.AddOptionalSpell("Seal of Insight", nil, {
+	Type = "form",
+})
+
+c.AddOptionalSpell("Word of Glory", "for Holy", {
+	Override = hpCheckFirst,
+})
+
+c.AddOptionalSpell("Eternal Flame", "for Holy", {
+	Override = hpCheckFirst,
+})
+
+c.AddOptionalSpell("Light of Dawn", "for Holy", {
+	Override = hpCheckFirst,
+})
+
+c.AddOptionalSpell("Holy Shock", "under 5 with Daybreak", {
+	NoRangeCheck = 1,
+	CheckFirst = function()
+		return a.HolyPower < 5 
+			and (c.HasBuff("Daybreak") or c.IsCasting("Holy Radiance"))
+	end
+})
+
+c.AddOptionalSpell("Beacon of Light", nil, {
+	Override = function()
+		return s.InRaidOrParty()
+			and not s.MyBuff(c.GetID("Beacon of Light"), a.BeaconTarget)
+	end
+})
+
+c.AddOptionalSpell("Sacred Shield", "for Holy", {
+	NoRangeCheck = true,
+	CheckFirst = function()
+		return not s.MyBuff(c.GetID("Sacred Shield"), a.SacredShieldTarget)
+	end
+})
+
+c.AddOptionalSpell("Flash of Light", "under Selfless Healer", { 
+	NoRangeCheck = 1,
+	CheckFirst = function()
+		return c.GetBuffStack("Selfless Healer") == 3
+	end
+})
+
+c.AddOptionalSpell("Flash of Light", "to Save Selfless Healer", {
+	NoRangeCheck = 1,
+	FlashColor = "red",
+	CheckFirst = function()
+		local duration = c.GetBuffDuration("Selfless Healer")
+		return duration > 0 and duration < 2.5
+	end
+})
+
+c.AddOptionalSpell("Judgment", "to Save Selfless Healer", {
+	NoRangeCheck = 1,
+	FlashColor = "red",
+	CheckFirst = function()
+		local duration = c.GetBuffDuration("Selfless Healer")
+		return duration > 0 and duration < 2.5
+	end
+})
+
+-------------------------------------------------------------------- Protection
 c.AddOptionalSpell("Seal of Insight", "for Prot", {
-    Type = "form",
-    CheckFirst = function()
-    	return not s.Form()
-    end
+	Type = "form",
+	CheckFirst = function()
+		return not s.Form()
+	end
 })
 
 c.AddOptionalSpell("Righteous Fury", nil, {
-    Buff = "Righteous Fury",
-    BuffUnit = "player",
+	NoGCD = true,
+	Buff = "Righteous Fury",
+	BuffUnit = "player",
 })
 
 c.AddOptionalSpell("Avenging Wrath", "if Plain", {
@@ -125,7 +150,7 @@ c.AddOptionalSpell("Avenging Wrath", "if Plain", {
 
 c.AddOptionalSpell("Avenging Wrath", "if Cool for Prot", {
 	NoGCD = true,
-	CheckFirst = function()
+	Enabled = function()
 		return c.HasTalent("Sanctified Wrath") or c.HasGlyph("Avenging Wrath")
 	end,
 	ShouldHold = function()
@@ -134,12 +159,18 @@ c.AddOptionalSpell("Avenging Wrath", "if Cool for Prot", {
 })
 
 c.AddOptionalSpell("Word of Glory", "for Prot", {
-	NoGCD = true,
-	CheckFirst = function()
-		local heal = a.HolyPower * 4 
-			* (1 + .1 * c.GetBuffStack("Bastion of Glory"))
-		return s.HealthDamagePercent("player") > heal + 5
+	Override = function()
+		return a.HolyPower > 0
+			and c.GetCooldown("Word of Glory", true) == 0 
+			and s.HealthDamagePercent("player") - 5 
+				> math.min(3, a.HolyPower) 
+					* 4 
+					* (1 + .1 * c.GetBuffStack("Bastion of Glory", true))
 	end
+})
+
+c.AddOptionalSpell("Hand of Purity", nil, {
+	NoRangeCheck = true,
 })
 
 c.AddOptionalSpell("Divine Protection", nil, {
@@ -147,11 +178,6 @@ c.AddOptionalSpell("Divine Protection", nil, {
 	CheckFirst = function()
 		return c.HasGlyph("Divine Protection")
 	end
-})
-
-c.AddOptionalSpell("Fire of the Deep", nil, {
-    Type = "item",
-    Buff = "Elusive",
 })
 
 c.AddOptionalSpell("Holy Avenger", "for Prot", { 
@@ -162,64 +188,82 @@ c.AddOptionalSpell("Holy Avenger", "for Prot", {
 })
 
 c.AddOptionalSpell("Guardian of Ancient Kings", nil, {
+	NoGCD = true,
 	NoRangeCheck = true,
 })
 
-c.AddOptionalSpell("Ardent Defender")
-
-c.AddOptionalSpell("Shield of the Righteous", nil, {
+c.AddOptionalSpell("Ardent Defender", nil, {
 	NoGCD = true,
-    CheckFirst = function()
-    	return a.HolyPower == 5-- and c.IsTanking()
-    end
+	Enabled = function()
+		return not c.WearingSet(2, "ProtT14")
+	end
 })
 
-c.AddOptionalSpell("Shield of the Righteous", "to save Bastion of Glory", {
+c.AddOptionalSpell("Ardent Defender", "2pT14", {
 	NoGCD = true,
-    CheckFirst = function()
-    	local duration = c.GetBuffDuration("Bastion of Glory")
-        return a.HolyPower >= 3 
-        	and (duration > 0 and duration < 1) 
-        --	and c.IsTanking()
-    end
+	Enabled = function()
+		return c.WearingSet(2, "ProtT14")
+	end
+})
+
+c.AddOptionalSpell("Shield of the Righteous")
+
+c.AddOptionalSpell("Shield of the Righteous", "to save Buffs", {
+	Override = function()
+		if a.HolyPower < 3 or not s.MeleeDistance() then
+			return false
+		end
+		
+		local duration = c.GetBuffDuration("Bastion of Glory")
+		if duration > 0 and duration < 1.6 then
+			return true
+		end
+		
+		local duration = c.GetBuffDuration("Divine Purpose")
+		if duration > 0 and duration < 1.6 then
+			return true
+		end
+	end
 })
 
 c.AddSpell("Holy Wrath", nil, {
 	Melee = true,
 	NoRangeCheck = true,
+	NotIfActive = true,
 })
 
 c.AddSpell("Holy Wrath", "to Stun", {
 	Melee = true,
+	NotIfActive = true,
 	NoRangeCheck = true,
-    CheckFirst = function()
-        local level = UnitLevel("target")
-        if level == -1 or level > UnitLevel("player") then
-            return false
-        end
-        
-        local ct = UnitCreatureType("target")
-        if ct == L["Demon"] or ct == L["Undead"] then
-        	return true
-        end
-        
-        if not c.HasGlyph("Holy Wrath") then
-        	return false
-        end
-        
-        
-        return ct == L["Dragonkin"] or ct == L["Elemental"]
-    end
+	CheckFirst = function()
+		local level = UnitLevel("target")
+		if level == -1 or level > UnitLevel("player") then
+			return false
+		end
+		
+		local ct = UnitCreatureType("target")
+		if ct == L["Demon"] or ct == L["Undead"] then
+			return true
+		end
+		
+		if not c.HasGlyph("Holy Wrath") then
+			return false
+		end
+		
+		return ct == L["Dragonkin"] or ct == L["Elemental"]
+	end
 })
 
 c.AddSpell("Hammer of the Righteous", "for Debuff", {
-    Debuff = c.WEAKENED_BLOWS_DEBUFFS,
-    Run = function(z)
-    	z.EarlyRefresh = c.GetHastedTime(4.5)
-    end
+	Debuff = c.WEAKENED_BLOWS_DEBUFFS,
+	CheckFirst = function(z)
+		z.EarlyRefresh = c.GetHastedTime(4.5)
+		return not c.IsCasting("Crusader Strike")
+	end
 })
 
-c.AddSpell("Eternal Flame", nil, {
+c.AddSpell("Eternal Flame", "for Prot", {
 	EarlyRefresh = 1, -- overwritten once applied
 	CheckFirst = function(z)
 		return a.HolyPower >= 3 
@@ -228,14 +272,16 @@ c.AddSpell("Eternal Flame", nil, {
 })
 c.ManageDotRefresh("Eternal Flame", 3)
 
-c.AddSpell("Sacred Shield", nil, {
+c.AddSpell("Sacred Shield", "for Prot", {
 	Buff = "Sacred Shield",
 	BuffUnit = "player",
 	NoRangeCheck = true,
+	NotIfActive = true,
 })
 
 c.AddSpell("Sacred Shield", "Refresh", {
 	NoRangeCheck = true,
+	NotIfActive = true,
 	CheckFirst = function()
 		return c.GetBuffDuration("Sacred Shield") < 5
 	end
@@ -248,54 +294,102 @@ c.AddSpell("Flash of Light", "for Prot", {
 	end
 })
 
+c.AddSpell("Avenger's Shield", nil, {
+	NotIfActive = true,
+})
+
 c.AddSpell("Avenger's Shield", "under Grand Crusader", {
-    CheckFirst = function()
-        return c.HasBuff("Grand Crusader")
-    end
+	NotIfActive = true,
+	CheckFirst = function()
+		return c.HasBuff("Grand Crusader")
+	end
 })
 
 c.AddOptionalSpell("Consecration", nil, {
 	NoRangeCheck = true,
 	CheckFirst = function(z)
-		z.Melee = not c.HasGlyph("Consecration")
-		return c.GetCooldown("Consecration Glyphed") == 0
+		if c.HasGlyph("Consecration") then
+			z.Melee = nil
+			return c.GetCooldown("Consecration Glyphed") == 0
+		else
+			z.Melee = true
+			return true
+		end
 	end
 })
 
 c.AddTaunt("Hand of Reckoning", nil, { NoGCD = true })
 
 ------------------------------------------------------------------- retribution
-c.AddOptionalSpell("Avenging Wrath", nil, { 
-	NoGCD = true,
+c.AddOptionalSpell("Seal of Truth", nil, {
+	Type = "form",
+	CheckFirst = function()
+		return s.Form() == nil
+	end
+})
+
+c.AddOptionalSpell("Word of Glory", "for Ret", {
+	FlashID = { "Word of Glory", "Eternal Flame" },
+	Override = function()
+		return a.HolyPower > 0
+			and not s.InRaidOrParty() 
+			and s.HealthDamagePercent("player") - 5 
+				> 8 * math.min(3, a.HolyPower)
+			and (not s.InCombat() or a.HolyPower >= 3)
+	end
+})
+
+c.AddOptionalSpell("Flash of Light", "for Ret", {
+	NoRangeCheck = true,
+	CheckFirst = function()
+		return (a.SelflessHealer == 3 or not s.InCombat())
+			and s.HealthPercent("player") < 80
+	end
+})
+
+c.AddOptionalSpell("Avenging Wrath", "for Ret", { 
 	CheckFirst = function()
 		return c.HasBuff("Inquisition")
 	end
 })
 
 c.AddSpell("Inquisition", nil, {
-    Override = function()
-        return a.HolyPower >= 3
-        	and c.GetBuffDuration("Inquisition") < 2
-        	and not c.IsCasting("Inquisition")
-    end
-})
-
-c.AddSpell("Templar's Verdict", nil, { 
 	Override = function()
-		return a.HolyPower >= 3
+		return a.HolyPower >= 1
+			and not c.HasBuff("Inquisition")
+			and not c.IsCasting("Inquisition")
 	end
 })
 
-c.AddSpell("Templar's Verdict", "at 5", { 
+c.AddSpell("Inquisition", "before Templar's Verdict at 5", {
 	Override = function()
-		return a.HolyPower == 5
+		return (a.HolyPower == 5 
+				or (a.HolyPower >= 3 and c.HasBuff("Holy Avenger")))
+			and c.GetBuffDuration("Inquisition") < 3
+			and not c.IsCasting("Inquisition")
+	end
+})
+
+c.AddSpell("Inquisition", "before Templar's Verdict", {
+	Override = function()
+		return a.HolyPower >= 3
+			and c.GetBuffDuration("Inquisition") < 4
+			and not c.IsCasting("Inquisition")
+	end
+})
+
+c.AddOptionalSpell("Execution Sentence", nil, {
+	CheckFirst = function()
+		return c.HasBuff("Inquisition")
 	end
 })
 
 c.AddSpell("Hammer of Wrath", "for Ret", {
 	Override = function(z)
 		if (s.HealthPercent() > 20 and not c.HasBuff("Avenging Wrath"))
-			or c.IsCasting("Hammer of Wrath") then
+			or c.IsCasting("Hammer of Wrath")
+			or not s.SpellInRange(c.GetID("Hammer of Wrath")) then
+			
 			return false
 		end
 		
@@ -316,29 +410,92 @@ c.AddSpell("Hammer of Wrath", "for Ret", {
 	end
 })
 
+c.AddSpell("Templar's Verdict", nil, { 
+	Override = function()
+		return a.HolyPower >= 3 and s.MeleeDistance()
+	end
+})
+
+c.AddSpell("Templar's Verdict", "at 5", { 
+	Override = function()
+		return (a.HolyPower == 5 
+				or (a.HolyPower >= 3 
+					and c.GetBuffDuration("Holy Avenger") > c.LastGCD))
+			and s.MeleeDistance()
+	end
+})
+
 c.AddSpell("Exorcism", nil, {
-	Run = function(z)
+	Override = function()
 		if c.HasGlyph("Mass Exorcism") then
-			z.Melee = true
-			z.ID = c.GetID("Glyphed Exorcism")
+			return c.GetCooldown("Glyphed Exorcism") == 0
+				and not c.IsCasting("Glyphed Exorcism")
+				and s.MeleeDistance()
 		else
-			z.Melee = nil
-			z.ID = c.GetID("Exorcism")
+			return c.GetCooldown("Exorcism") == 0
+				and not c.IsCasting("Exorcism")
 		end
 	end
 })
 
-c.AddOptionalSpell("Seal of Insight", "below 20", {
-	Type = "form",
+local function countCasts(span)
+	local casts = 0
+	if c.GetCooldown("Exorcism") < span then
+		casts = casts + 1
+	end
+	
+	local avenge = c.GetBuffDuration("Avenging Wrath")
+	local hammer = c.GetCooldown("Hammer of Wrath")
+	if (s.HealthPercent() <= 20 or (avenge > 0 and avenge >= hammer))
+		and hammer < span then
+		
+		casts = casts + 1
+	end
+	
+	if c.GetCooldown("Execution Sentence") < span then
+		casts = casts + 1
+	end
+	
+	avenge = c.GetBuffDuration("Holy Avenger")
+	if avenge > 0 then
+		casts = casts + 1
+		if avenge > 2 * c.LastGCD then
+			casts = casts + 1
+		end
+	elseif a.RawHolyPower >= 3 then
+		casts = casts + 1
+		if c.HasBuff("Divine Purpose") then
+			casts = casts + 1
+		end
+	end
+	
+	return casts
+end
+
+c.AddSpell("Judgment", "unless Wastes GCD", {
 	CheckFirst = function()
-		return s.PowerPercent("player") < 20
+		return (c.HasTalent("Sanctified Wrath") and c.HasBuff("Avenging Wrath"))
+			or (countCasts(2 * c.LastGCD) > 0 and countCasts(3 * c.LastGCD) > 1)
 	end
 })
 
-c.AddOptionalSpell("Seal of Truth", nil, {
-	Type = "form",
+c.AddOptionalSpell("Light's Hammer")
+
+local function cdOver1GCD(name)
+	return c.IsCasting(name) or c.GetCooldown(name) > c.LastGCD
+end
+
+c.AddOptionalSpell("Sacred Shield", "for Ret", {
+	NoRangeCheck = true,
+	NotIfActive = true,
 	CheckFirst = function()
-		return s.Form() == nil
-			or (s.Form("Seal of Insight") and s.PowerPercent("player") > 90)
+		return cdOver1GCD("Judgment")
+			and cdOver1GCD("Crusader Strike")
+			and cdOver1GCD("Exorcism")
+			and ((s.HealthPercent() > 20 and not c.HasBuff("Avenging Wrath"))
+				or cdOver1GCD("Hammer of Wrath"))
+			and cdOver1GCD("Light's Hammer")
+			and cdOver1GCD("Holy Prism")
+			and cdOver1GCD("Execution Sentence")
 	end
 })

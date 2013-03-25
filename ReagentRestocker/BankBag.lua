@@ -345,6 +345,7 @@ end
 
 -- Attempts to move items from one baglist to another, based on shopping list
 function ReagentRestocker:recursiveMove(startOffsetList, fromBags, toBags, fromType, toType)  -- added isGuildBank because guild banks do things a bit differently :(.
+	dprint("recursiveMove called.")
 	-- Attempt to find an appropriate move
 	local offsetList = self:getOffsetList(bankOffset)
 	local fromBagID, fromBagSlotID, toBagID, toBagSlotID, qty, itemID, newFromType, newToType = self:findNecessaryMove(offsetList,fromBags,toBags,fromType,toType)
@@ -419,6 +420,7 @@ end
 
 -- Returns a necessary move; nil if there are none
 function ReagentRestocker:findNecessaryMove(offsetList, fromBags, toBags, fromType, toType)
+	dprint("findNecessaryMove called.")
 	map(offsetList,function(itemID, qty) if qty == 0 then offsetList[itemID] = nil; end end)
 	for itemID, qty in pairs(offsetList) do
 		local lFromBags, lToBags, lfromType, ltoType = fromBags, toBags, fromType, toType
@@ -438,6 +440,7 @@ end
 
 -- Returns the location and quantity of an item that should be moved; nil if there are none
 function ReagentRestocker:findOptimalItemsToMove(bagIDList, itemID, bagType)
+	dprint("findOptimalItemsToMove called.")
 	-- Find the optimal bag to remove the item from (least of that item)
 	local itemInBagCountList = {}
 	map(bagIDList,function(_,bagID) local count = self:countItemInBag(bagID,itemID, bagType); if count > 0 then table.insert(itemInBagCountList,{bagID,count}); end end)
@@ -489,6 +492,7 @@ end
 
 -- Returns the "optimal" slot in the bags for the item to be placed and the number that can be moved there; nil if impossible
 function ReagentRestocker:findOptimalDestinationInBags(bagIDList, itemID)
+	dprint("findOptimalDestinationInBags called.")
 	-- First, find the optimal bag to place the item in (the once with the most of it)
 	local itemInBagCountList = {}
 	map(bagIDList,function(_,bagID) table.insert(itemInBagCountList,{bagID,self:countItemInBag(bagID,itemID)}); end)
@@ -507,6 +511,8 @@ end
 
 -- Returns the "optimal" slot in the bag for the item to be placed and the number that can be moved there; nil if impossible
 function ReagentRestocker:findOptimalDestinationInBag(bagID, sourceItemID)
+	dprint("findOptimalDestinationInBag called.")
+
 	-- First, look for any stacks of the item that are not full
 	local _, _, _, _, _, _, _, itemStackSize = self:safeGetItemInfo(sourceItemID)
 	local slotStatusList, OPEN, CLOSED, SAME = {}, 0, -1, 1
@@ -617,8 +623,8 @@ function pickupItem(location, bag, slot, itemID, amount)
 	local itemCount, locked
 	if location == TYPE_GUILDBANK then
 		_, itemCount, locked = GetGuildBankItemInfo(fromBag, fromSlot)
-		if locked == nil then
-			if itemCount > amount then
+		if not locked then
+			if itemCount > amount and itemCount > 1 then
 				-- need to split the stack
 				_G.SplitGuildBankItem(bag, slot, amount)
 				returnAmount = amount
@@ -639,8 +645,8 @@ function pickupItem(location, bag, slot, itemID, amount)
 		
 		if itemCount == nil then error("Cannot find item ID " .. itemID .. " in bag " .. bag .. " slot " .. slot) end
 		
-		if locked == nil then
-			if itemCount > amount then
+		if not locked then
+			if itemCount > amount and itemCount > 1 then
 				-- need to split the stack
 				dprint("Splitting " .. amount .. " of type " .. link .. ", bag number " .. bag .. ", slot " .. slot .. ", ItemID " .. itemID .. ", and we have " .. itemCount .. " items to split from.")
 				_G.SplitContainerItem(bag, slot, amount) 
@@ -739,10 +745,10 @@ end
 -- Item is locked, queue it to be placed later.
 function queuePlace(location, bag, slot, itemID)
 	--print("Placement LOCKED")
-	--dprint("(moveQueue) Item added via queuePlace.")
+	dprint("(moveQueue) Item added via queuePlace.")
 	tinsert(moveQueue, {"place", location, bag, slot, itemID})
 	--processQueueItem()
-	triggerAction()
+	--triggerAction()
 end
 
 -- Any time a lock changes, see if we can do what we wanted to do while it was
@@ -754,18 +760,20 @@ function()
 	triggerAction(ITEM_LOCK_CHANGED)
 end)
 
+-- DISABLED IN AN ATTEMPT TO MAKE MORE RELIABLE
 SubscribeWOWEvent("BAG_UPDATE",
 function()
 	dprint("BAG_UPDATE")
 	--processQueueItem()
-	triggerAction(BAG_UPDATE)
+	--triggerAction(BAG_UPDATE)
 end)
 
+-- DISABLED IN AN ATTEMPT TO MAKE MORE RELIABLE
 SubscribeWOWEvent("PLAYER_MONEY",
 function()
 	dprint("PLAYER_MONEY")
 	--processQueueItem()
-	triggerAction(PLAYER_MONEY)
+	--triggerAction(PLAYER_MONEY)
 end)
 
 -- Move item from one location to another.
@@ -837,15 +845,15 @@ function moveItems(fromLocation, toLocation, itemID, amount)
 	freeSlots = scanForOpenSlots(toLocation, itemID)
 	itemList = scanForItem(fromLocation, itemID)
 
---	while amount > 0 and #freeSlots > 0 and #itemList > 0 and remainingWithdrawls >= numWithdrawls / 2 do
-	while amount > 0 and #freeSlots > 0 and #itemList > 0 do
+	--while amount > 0 and #freeSlots > 0 and #itemList > 0 do
+	if amount > 0 and #freeSlots > 0 and #itemList > 0 then
 	
 
 		dprint("amount: " .. amount .. " Free slots: " .. #freeSlots .. " itemList: " .. #itemList)
 		name, icon, isViewable, canDeposit, numWithdrawals, remainingWithdrawals = _G.GetGuildBankTabInfo(1)
 		
 		--print("Remaining withdrawls: " .. remainingWithdrawals)
-		if(fromLocation == TYPE_GUILDBANK and remainingWithdrawls < numWithdrawls / 2) then
+		if(fromLocation == TYPE_GUILDBANK and remainingWithdrawls <= 1) then
 			print("Not using any more bank withdrawls")
 			return;
 		end
@@ -913,8 +921,8 @@ function doMove(fromLocation, fromBag, fromSlot, toLocation, toBag, toSlot, amou
 	
 	local name, icon, isViewable, canDeposit, numWithdrawals, remainingWithdrawals = _G.GetGuildBankTabInfo(1)
 	
-	if (fromLocation == TYPE_GUILDBANK or toLocation == TYPE_GUILDBANK) and (remainingWithdrawals <= numWithdrawals / 2) then
-		print("Will not withdraw more than 1/2 of your limit.")
+	if (fromLocation == TYPE_GUILDBANK or toLocation == TYPE_GUILDBANK) and (remainingWithdrawals <= 1) then
+		print("You have one or less withdrawls left. Reagent Restocker will not use the last withdrawl for automatic processing.")
 	else
 		noQueue = true
 		movedCount = pickupItem(fromLocation, fromBag, fromSlot, itemID, amount)
@@ -966,7 +974,7 @@ end
 -- Returns a table with pairs of available slots in {bagID, slot, count} format.
 -- count is the number of items in the slot.
 function scanForOpenSlots(location, itemID)
-	--dprint("scanForOpenSlots called")
+	dprint("scanForOpenSlots called")
 
 	local openStacks = {}
 	local emptySlots = {}
@@ -1113,7 +1121,7 @@ end
 -- Scans for an item in a location
 -- Returns a table of lists containing the bag, slot, and amount
 function scanForItem(location, itemID)
-	--	dprint("scanForItem called")
+	dprint("scanForItem called")
 
 	local itemList = {}
 	if location == TYPE_GUILDBANK then
@@ -1210,6 +1218,7 @@ QueuedActions = {}
 -- eventID optional, will trigger on any event if it's left out.
 -- args is arguments for called event.
 function queueAction(evaluator, action, eventID, name, args)
+	dprint("QueueAction called.")
 	--dprint("(QueuedActions) Action queued.")
 	--print(type(...))
 	table.insert(QueuedActions,{evaluator,action,eventID, name, ["args"]=args})
@@ -1219,6 +1228,7 @@ end
 noQueue = false
 
 function triggerAction(eventID)
+	dprint("triggerAction called.")
 	if QueuedActions and noQueue == false then
 		-- self:say(string.format("A [%s] event has been triggered.",tostring(eventID)))
 		--dprint("(QueuedActions) triggerAction.")

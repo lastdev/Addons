@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 513 2012-09-09T20:38:34Z
+    Revision: 572 2013-01-04T15:34:54Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -31,20 +31,6 @@ local Armory, _ = Armory;
 ARMORY_NUM_PET_SLOTS = 5;
 ARMORY_NUM_PET_ABILITIES = 6;
 
-StaticPopupDialogs["ARMORY_DELETE_PET"] = {
-    text = ARMORY_DELETE_UNIT,
-    button1 = YES,
-    button2 = NO,
-    OnAccept = function (self) Armory:DeletePet(Armory:GetCurrentPet()); end,
-    OnCancel = function (self) Armory.selectedPet = ArmoryPetFrame.selectedPet; end,
-    OnHide = function (self) ArmoryPetFrame_Update(1); end,
-    timeout = 0,
-    whileDead = 1,
-    exclusive = 1,
-    showAlert = 1,
-    hideOnEscape = 1
-};
-
 local STRIPE_COLOR = {r=0.9, g=0.9, b=1};
 local STATCATEGORY_PADDING = 4;
 
@@ -59,7 +45,7 @@ function ArmoryPetSlot_OnClick(self, button)
         Armory.selectedPet = pets[self:GetID()];
 
         if ( button == "RightButton" ) then
-            StaticPopup_Show("ARMORY_DELETE_PET", Armory:GetCurrentPet());
+            ArmoryStaticPopup_Show("ARMORY_DELETE_PET", Armory:GetCurrentPet());
         else
             ArmoryPetFrame_Update(1);
         end

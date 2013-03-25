@@ -30,23 +30,23 @@ L["Use All Class Modules"] = "Use todos os módulos de classe"
 
 elseif GetLocale() == "frFR" then -- French
 L["Asleep"] = "Endormi"
-L["Blink Spells"] = "clignotement des sorts" -- Needs review
-L["Configure Class Module"] = "configurer le module de la classe" -- Needs review
-L["Default Proc Highlighting"] = "Surbrillance du proc par défaut" -- Needs review
-L["Error loading:"] = "Erreur de chargement :" -- Needs review
-L["Flash Brightness:"] = "luminosité du flash" -- Needs review
-L["Flash Macros"] = "Flash sur les macro " -- Needs review
-L["Flash Size:"] = "taille du flash" -- Needs review
+L["Blink Spells"] = "Clignotement des sorts"
+L["Configure Class Module"] = "Configurer le module de la classe"
+L["Default Proc Highlighting"] = "Surbrillance du proc par défaut"
+L["Error loading:"] = "Erreur de chargement :"
+L["Flash Brightness:"] = "Luminosité du flash"
+L["Flash Macros"] = "Flash sur les macro "
+L["Flash Size:"] = "Taille du flash"
 L["In Combat Only"] = "En combat seulement"
 L["Movement Check"] = "vérification du mouvement"
 L["Range Check"] = "vérification de la distance"
-L["Selected Class Module:"] = "Module de classe sélectionné" -- Needs review
+L["Selected Class Module:"] = "Module de classe sélectionné"
 L["Shields"] = "Boucliers"
-L["Spell Flashing"] = "Effet du sort clignotant (ou flash)" -- Needs review
-L["SpellFlash settings have been reset for all players"] = "Les paramètres SpellFlash ont été réinitialisés pour tous les personnages" -- Needs review
-L["<SPELL> has not been defined in a table!"] = "<SPELL> n'a pas été défini dans une fonction! " -- Needs review
-L["This module has not been updated to work with the latest expansion:"] = "Ce module n'a pas été mis à jour pour fonctionner avec la dernière extension :" -- Needs review
-L["Use All Class Modules"] = "utiliser tous les modules de classe" -- Needs review
+L["Spell Flashing"] = "Flash du sort"
+L["SpellFlash settings have been reset for all players"] = "Les paramètres de Flash du sort ont été réinitialisés pour tous les personnages"
+L["<SPELL> has not been defined in a table!"] = "<SPELL> n'a pas été défini dans une table ! "
+L["This module has not been updated to work with the latest expansion:"] = "Ce module n'a pas été mis à jour pour fonctionner avec la dernière extension :"
+L["Use All Class Modules"] = "Utiliser tous les modules de classe"
 
 elseif GetLocale() == "deDE" then -- German
 L["Asleep"] = "Schlafend"
@@ -112,8 +112,8 @@ elseif GetLocale() == "ruRU" then -- Russian
 L["Asleep"] = "Сон"
 L["Blink Spells"] = "Мигать заклинаниями"
 L["Configure Class Module"] = "Настройка модуля класса"
-L["Default Proc Highlighting"] = "Подсветка прока по умолчанию" -- Needs review
--- L["Error loading:"] = ""
+L["Default Proc Highlighting"] = "Подсветка прока по умолчанию"
+L["Error loading:"] = "Загрузка ошибки:" -- Needs review
 L["Flash Brightness:"] = "Яркость подсветки:"
 L["Flash Macros"] = "Подсвечивать макросы"
 L["Flash Size:"] = "Размер подсветки:"
@@ -124,8 +124,8 @@ L["Selected Class Module:"] = "Модуль выбранного класса"
 L["Shields"] = "Щиты"
 L["Spell Flashing"] = "Подсветка заклинания"
 L["SpellFlash settings have been reset for all players"] = "Настройки SpellFlash были сброшены для всех игроков"
-L["<SPELL> has not been defined in a table!"] = "Заклинание <SPELL> не определено в функции!" -- Needs review
--- L["This module has not been updated to work with the latest expansion:"] = ""
+L["<SPELL> has not been defined in a table!"] = "Заклинание <SPELL> не найдено в списке!" -- Needs review
+L["This module has not been updated to work with the latest expansion:"] = "Этот модуль не был обновлен для работы с последним дополнением:" -- Needs review
 L["Use All Class Modules"] = "Использовать все модули классов"
 
 elseif GetLocale() == "zhCN" then -- Simplified Chinese

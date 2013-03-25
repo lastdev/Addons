@@ -1,8 +1,7 @@
-local AddonName, a = ...
-if a.BuildFail(50000) then return end
+local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
-local c = BittensSpellFlashLibrary
+local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
 local GetRuneCooldown = GetRuneCooldown
 local GetTime = GetTime
@@ -10,12 +9,15 @@ local OffhandHasWeapon = OffhandHasWeapon
 local UnitIsUnit = UnitIsUnit
 local math = math
 local select = select
+local string = string
+local tostring = tostring
 
 local rpBumped = 0
 local rpBumpExpires = 0
 local suppressKM = false
 a.Runes = { 0, 0, 0, 0, 0, 0 }
 a.PendingDeathRunes = 0
+a.Rotations = {}
 
 local function getBump(name, freezingFog)
 	local cost = a.Costs[name]
@@ -84,9 +86,49 @@ local function adjustResourcesForSuccessfulCast(info)
 	end
 end
 
-a.Rotations = {}
-c.RegisterForEvents(a)
-a.SetSpamFunction(function()
+local spellIfCapped
+local function flashNoCap(...)
+	local flashed
+	for i = 1, select("#", ...) do
+		local name = select(i, ...)
+		local spell = c.GetSpell(name)
+		if s.Flashable(spell.ID) and s.Castable(spell) then
+			local bump = getBump(s.SpellName(spell.ID), a.FreezingFog)
+			if bump == 0 or a.RP + bump <= s.MaxPower("player") then
+				local color = spell.FlashColor
+				if c.AoE and color == nil then
+					color = "purple"
+				end
+				s.Flash(spell.ID, color, spell.FlashSize)
+				if spell.Continue then
+					flashed = name
+				else
+					return name
+				end
+			elseif spellIfCapped ~= nil then
+				s.Flash(c.GetID(spellIfCapped))
+				return spellIfCapped .. " pre-cap " .. name
+			end
+		end
+	end
+	return flashed
+end
+
+local function getGenericDebugInfo()
+	return string.format(
+		"%d %.1f %.1f %.1f %.1f %.1f %.1f %d %d",
+		a.RP,
+		math.max(0, math.min(9.9, a.Runes[1])),
+		math.max(0, math.min(9.9, a.Runes[2])),
+		math.max(0, math.min(9.9, a.Runes[5])),
+		math.max(0, math.min(9.9, a.Runes[6])),
+		math.max(0, math.min(9.9, a.Runes[3])),
+		math.max(0, math.min(9.9, a.Runes[4])),
+		a.PendingDeathRunes,
+		a.BloodCharges)
+end
+
+function a.PreFlash()
 	
 	-- grab RP	
 	a.RP = s.Power("player")
@@ -122,7 +164,6 @@ a.SetSpamFunction(function()
 	local info = c.GetQueuedInfo()
 	a.PendingDeathRunes = 0
 	if info then
---c.Debug("Queued", info.Name)
 		local cost = s.SpellCost(info.Name)
 		if cost > 0 then
 			a.RP = a.RP - cost
@@ -149,69 +190,16 @@ a.SetSpamFunction(function()
 			a.PendingDeathRunes = 1
 		end
 	end
-	
-	-- flash
-	c.Flash(a)
-end)
-
-local spellIfCapped
-local function flashNoCap(...)
-	local flashed
-	for i = 1, select("#", ...) do
-		local name = select(i, ...)
-		local spell = c.GetSpell(name)
-		if s.Flashable(spell.ID) and s.Castable(spell) then
-			local bump = getBump(s.SpellName(spell.ID), a.FreezingFog)
-			if bump == 0 or a.RP + bump <= s.MaxPower("player") then
-				local color = spell.FlashColor
-				if c.AoE and color == nil then
-					color = "purple"
-				end
-				s.Flash(spell.ID, color, spell.FlashSize)
-				if spell.Continue then
-					flashed = name
-				else
-					return name
-				end
-			elseif spellIfCapped ~= nil then
-				s.Flash(c.GetID(spellIfCapped))
-				return spellIfCapped .. " pre-cap " .. name
-			end
-		end
-	end
-	return flashed
-end
-
-local function debugPrint(flashing)
-	c.Debug("Flashing",
-		a.RP, 
-		string.format(
-			"%.1f %.1f %.1f %.1f %.1f %.1f",
-			math.max(0, math.min(9.9, a.Runes[1])),
-			math.max(0, math.min(9.9, a.Runes[2])),
-			math.max(0, math.min(9.9, a.Runes[5])),
-			math.max(0, math.min(9.9, a.Runes[6])),
-			math.max(0, math.min(9.9, a.Runes[3])),
-			math.max(0, math.min(9.9, a.Runes[4]))),
-		a.PendingDeathRunes,
-		a.KillingMachine or "KM" and "",
-		a.FreezingFog > 0 or "FF" .. a.FreezingFog and "",
-		a.BloodCharges,
-		s.BuffStack(c.GetID("Shadow Infusion"), "pet"),
-		a.ShadowInfusionPending,
-		"==>", flashing)
 end
 
 ------------------------------------------------------------------------- Blood
 local uncontrolledMitigationBuffs = {
-	"Master Tactician LFR",
-	"Master Tactician",
-	"Master Tactician Heroic",
+	"Anti-Magic Shell",
+	"Anti-Magic Zone",
 }
 
 a.Rotations.Blood = {
 	Spec = 1,
-	OffSwitch = "blood_off",
 	
 	FlashInCombat = function()
 		c.FlashAll(
@@ -223,15 +211,51 @@ a.Rotations.Blood = {
 		c.FlashMitigationBuffs(
 			2,
 			uncontrolledMitigationBuffs,
+			"Death Pact",
 			"Dancing Rune Weapon",
 			"Bone Shield",
 			"Vampiric Blood",
-			"Fire of the Deep",
-			"Death Pact",
+			"Icebound Fortitude Glyphed",
+			"Raise Dead for Death Pact",
 			"Conversion",
-			"Icebound Fortitude")
-		if s.InRaidOrParty() then
---debugPrint(
+			"Icebound Fortitude Unglyphed")
+		if c.IsSolo() then
+			spellIfCapped = "Rune Strike"
+			c.FlashAll("Blood Tap")
+			if c.AoE then
+				if a.ShouldDeathStrikeForHealth() then
+					flashNoCap(
+						"Death Strike",
+						"Death and Decay Free",
+						"Blood Boil for AoE B or Free",
+						"Heart Strike B",
+						"Rune Strike unless DRW",
+						"Horn of Winter")
+				else
+					flashNoCap(
+						"Death and Decay",
+						"Outbreak",
+						"Blood Boil for AoE",
+						"Heart Strike",
+						"Death Strike",
+						"Rune Strike unless DRW",
+						"Horn of Winter")
+				end
+			else
+				flashNoCap(
+					"Outbreak",
+					"Unholy Blight",
+					"Icy Touch for Frost Fever",
+					"Plague Strike for Blood Plague",
+					"Death Strike",
+					"Heart Strike BB",
+					"Blood Boil for Runic Power",
+					"Rune Strike for Resources unless DRW",
+					"Heart Strike",
+					"Rune Strike unless DRW",
+					"Horn of Winter")
+			end
+		else
 			c.PriorityFlash(
 				"Death Strike for Health",
 				"Death Strike to Save Shield",
@@ -244,23 +268,10 @@ a.Rotations.Blood = {
 				"Blood Boil for Blood Plague",
 				"Rune Strike for Resources",
 				"Horn of Winter for Buff",
-				"Heart Strike for Runic Power",
+				"Heart Strike for Runic Power unless AoE",
 				"Blood Boil for Runic Power",
 				"Horn of Winter for Runic Power",
 				"Outbreak Early")
---)
-		else
-			spellIfCapped = "Rune Strike"
-			c.FlashAll("Blood Tap")
-			flashNoCap(
-				"Outbreak",
-				"Death Strike",
-				"Heart Strike BB",
-				"Blood Boil for Runic Power",
-				"Rune Strike for Resources unless DRW",
-				"Heart Strike",
-				"Rune Strike unless DRW",
-				"Horn of Winter")
 		end
 	end,
 	
@@ -290,19 +301,15 @@ a.Rotations.Blood = {
 			c.Debug("Event", "Scent of Blood")
 		end
 	end,
+	
+	ExtraDebugInfo = getGenericDebugInfo,
 }
 
 ------------------------------------------------------------------------- Frost
 a.Rotations.Frost = {
 	Spec = 2,
-	OffSwitch = "frost_off",
 	
 	FlashInCombat = function()
---		if s.MeleeDistance() then
---			spellIfCapped = "Frost Strike"
---		else
---			spellIfCapped = "Death Coil"
---		end
 		a.SetCost(0, 1, 0, 0, "Soul Reaper - Frost")
 		c.FlashAll(
 			"Pillar of Frost", 
@@ -310,8 +317,20 @@ a.Rotations.Frost = {
 			"Mind Freeze",
 			"Death Siphon")
 		local flashing
-		if OffhandHasWeapon() then
---c.Debug("flashing",c.GetMyDebuffDuration("Blood Plague"),c.IsCasting("Plague Leech"),c.GetCooldown("Outbreak"))
+		if c.AoE then
+			flashing = c.PriorityFlash(
+				"Frost Strike under KM",
+				"Frost Strike at 88",
+				"Death and Decay UU",
+				"Howling Blast BB or FF or DU",
+				"Plague Strike UU",
+				"Death and Decay",
+				"Howling Blast",
+				"Frost Strike for Resources",
+				"Plague Strike unless RE",
+				"Blood Tap",
+				"Plague Leech")
+		elseif OffhandHasWeapon() then
 			flashing = c.PriorityFlash(
 				"Frost Strike under KM",
 				"Frost Strike at 88",
@@ -361,7 +380,6 @@ a.Rotations.Frost = {
 				"Plague Leech",
 				"Empower Rune Weapon")
 		end
-debugPrint(flashing)
 		if flashing then
 			local id = c.GetSpell(flashing).ID
 			if id == c.GetID("Frost Strike") or id == c.GetID("Death Coil") then
@@ -384,19 +402,26 @@ debugPrint(flashing)
 		end
 	end,
 	
-	AuraApplied = function(spellID, target, spellSchool)
+	AuraApplied = function(spellID)
 		if spellID == c.GetID("Killing Machine") then
 			suppressKM = false
 			c.Debug("Event", "New KM")
 		end
 	end,
 	
-	AuraRemoved = function(spellID, target, spellSchool)
+	AuraRemoved = function(spellID)
 		if spellID == c.GetID("Killing Machine") then
 			suppressKM = false
 			c.Debug("Event", "KM is really gone")
 		end
 	end,
+	
+	ExtraDebugInfo = function()
+		return string.format("%s %s %d",
+			getGenericDebugInfo(),
+			tostring(a.KillingMachine),
+			a.FreezingFog)
+	end
 }
 
 ------------------------------------------------------------------------ Unholy
@@ -404,7 +429,6 @@ debugPrint(flashing)
 
 a.Rotations.Unholy = {
 	Spec = 3,
-	OffSwitch = "unholy_off",
 	
 	FlashInCombat = function()
 		a.SetCost(0, 0, 1, 0, "Soul Reaper - Unholy")
@@ -432,8 +456,7 @@ a.Rotations.Unholy = {
 				"Unholy Blight",
 				"Soul Reaper - Unholy",
 				"Blood Tap for Soul Reaper - Unholy",
-				"Icy Touch for Frost Fever",
-				"Plague Strike for Blood Plague",
+				"Plague Strike for Both Diseases",
 				"Summon Gargoyle",
 				"Dark Transformation",
 				"Blood Tap for Dark Transformation",
@@ -452,7 +475,6 @@ a.Rotations.Unholy = {
 				"Blood Tap at 8 or for Dark Transformation",
 				"Empower Rune Weapon")
 --		end
---debugPrint(flashing)
 		if flashing and c.GetSpell(flashing).ID == c.GetID("Death Coil") then
 			c.FlashAll("Blood Tap at 11")
 		end
@@ -477,14 +499,14 @@ a.Rotations.Unholy = {
 		end
 	end,
 	
-	SpellMissed = function(spellID, target, spellSchool)
+	SpellMissed = function(spellID)
 		if spellID == c.GetID("Death Coil") then
 			a.ShadowInfusionPending = false
 			c.Debug("Event", "Death Coil missed")
 		end
 	end,
 	
-	AuraApplied = function(spellID, target, spellSchool)
+	AuraApplied = function(spellID, target)
 		if spellID == c.GetID("Shadow Infusion") 
 			and UnitIsUnit(target, "pet") then
 			
@@ -496,5 +518,13 @@ a.Rotations.Unholy = {
 --	LeftCombat = function()
 --		a.LastPestilence = 0
 --		c.Debug("Event", "Left combat")
---	end
+--	end,
+	
+	ExtraDebugInfo = function()
+		return string.format("%s %d %s %s",
+			getGenericDebugInfo(),
+			s.BuffStack(c.GetID("Shadow Infusion"), "pet"),
+			tostring(a.ShadowInfusionPending),
+tostring(not not c.IsAuraPendingFor("Plague Strike")))
+	end,
 }

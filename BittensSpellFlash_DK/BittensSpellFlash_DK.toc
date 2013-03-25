@@ -1,19 +1,20 @@
-## Interface: 50001
-## Version: 3.3.0
+## Interface: 50200
+## Version: 3.5.2
 ## Author: Xemnosyst
 ## Title: Bitten's SpellFlash: DK
-## Notes: Replaces Blizzard's default proc highlighting to flash 1) a maximum dps rotation or 2) a maximum suvivability tanking rotation.
+## Notes: Replaces Blizzard's default proc highlighting to flash 1) a maximum dps rotation or 2) a maximum survivability tanking rotation.
 ## URL: http://www.curse.com/addons/wow/bittens-spellflash-dk
-## Dependencies: BittensSpellFlashLibrary
+## Dependencies: SpellFlash
+## OptionalDeps: BittensSpellFlashLibrary
 ## LoadOnDemand: 1
 ## X-SpellFlashAddon-LoadWith: Death Knight
-## X-Curse-Packaged-Version: 3.3.0
+## X-Curse-Packaged-Version: 3.5.2
 ## X-Curse-Project-Name: Bitten's SpellFlash: DK
 ## X-Curse-Project-ID: bittens-spellflash-dk
 ## X-Curse-Repository-ID: wow/bittens-spellflash-dk/mainline
+bsl\BittensSpellFlashLibrary.xml
 src\Localization.lua
-src\Core.lua
-src\Configs.lua
 src\IDs.lua
 src\Spells.lua
 src\Rotations.lua
+src\Options.lua

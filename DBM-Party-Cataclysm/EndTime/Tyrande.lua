@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(283, "DBM-Party-Cataclysm", 12, 184)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(54544)
 mod:SetModelID(39617)
 mod:SetZone()
@@ -20,9 +20,6 @@ local warnStardust		= mod:NewSpellAnnounce(102173 ,3)
 local specwarnStardust	= mod:NewSpecialWarningInterrupt(102173)
 
 local timerGuidance		= mod:NewNextTimer(20, 102472)
-
-function mod:OnCombatStart(delay)
-end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(102472) then

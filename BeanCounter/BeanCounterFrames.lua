@@ -1,6 +1,6 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 	Revision: $Id: BeanCounterFrames.lua 5240 2011-11-30 12:03:24Z brykrys $
 	URL: http://auctioneeraddon.com/
 

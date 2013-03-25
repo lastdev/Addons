@@ -1,7 +1,7 @@
-## Interface: 50001
+## Interface: 50100
 ## Title: Coordinates
 
-## Version: 1.7
+## Version: 1.8
 ## Author: Szandos
 ## Notes: Adds coordinates to the minimap and the world map
 ## SavedVariables: CoordinatesDB

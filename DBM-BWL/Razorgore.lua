@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Razorgore", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 333 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 425 $"):sub(12, -3))
 mod:SetCreatureID(12435, 99999)--Bogus detection to prevent invalid kill detection if razorgore happens to die in phase 1
 mod:SetModelID(10115)
 mod:SetMinSyncRevision(168)
@@ -11,7 +11,6 @@ mod:SetWipeTime(45)--guesswork
 mod:RegisterEvents(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
-	"RAID_BOSS_EMOTE",
 	"CHAT_MSG_MONSTER_EMOTE",
 	"UNIT_DIED"
 )
@@ -42,14 +41,13 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
-function mod:RAID_BOSS_EMOTE(msg)
+--For some reason this no longer works
+function mod:CHAT_MSG_MONSTER_EMOTE(msg)
 	if msg == L.Phase2Emote or msg:find(L.Phase2Emote) then
 		warnPhase2:Show()
 		phase2 = true
 	end
 end
-
-mod.RAID_BOSS_EMOTE = mod.CHAT_MSG_MONSTER_EMOTE -- Not sure which is used yet so for time being support both.
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)

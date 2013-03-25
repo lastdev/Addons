@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(91, "DBM-Party-Cataclysm", 2, 63)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(43778)
 mod:SetModelID(35606)
 mod:SetZone()
@@ -62,7 +62,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(88481) then
 		warnOverdrive:Show()
 		timerOverdrive:Start()
-	elseif args:IsSpellID(88522, 91720) then
+	elseif args:IsSpellID(88522) then
 		warnEnrage:Show()
 	end
 end

@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 501 2012-09-05T20:13:39Z
+    Revision: 557 2012-11-11T23:10:00Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -495,7 +495,7 @@ function ArmoryQuestInfo_ShowDescriptionHeader()
 end
 
 function ArmoryQuestInfo_ShowObjectivesText()
-    local questObjectives = Armory:GetQuestLogQuestText();
+    local _, questObjectives = Armory:GetQuestLogQuestText();
     ArmoryQuestInfoObjectivesText:SetText(questObjectives);
     return ArmoryQuestInfoObjectivesText;
 end

@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 529 2012-09-24T21:39:27Z
+    Revision: 570 2012-12-06T09:17:26Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -34,6 +34,15 @@ ARMORY_TRADE_SKILL_HEIGHT = 16;
 ARMORY_TRADE_SKILL_TEXT_WIDTH = 270;
 ARMORY_TRADE_SKILL_SKILLUP_TEXT_WIDTH = 30;
 ARMORY_SUB_SKILL_BAR_WIDTH = 60;
+
+ArmoryTradeSkillTypePrefix = {
+["optimal"] = " [+++] ",
+["medium"] = " [++] ",
+["easy"] = " [+] ",
+["trivial"] = " ", 
+["header"] = " ",
+["subheader"] = " ",
+}
 
 ArmoryTradeSkillTypeColor = {};
 ArmoryTradeSkillTypeColor["optimal"]   = { r = 1.00, g = 0.50, b = 0.25, font = GameFontNormalLeftOrange };
@@ -302,7 +311,7 @@ function ArmoryTradeSkillFrame_Update()
             if ( (numSkillUps or 0) > 1 and skillType == "optimal" ) then
                 skillButtonNumSkillUps:Show();
                 skillButtonNumSkillUpsIcon:Show();
-                skillButtonNumSkillUps:SetText(numSkillUps);
+                skillButtonNumSkillUpsText:SetText(numSkillUps);
                 usedWidth = ARMORY_TRADE_SKILL_SKILLUP_TEXT_WIDTH;
             else 
                 skillButtonNumSkillUps:Hide();
@@ -324,7 +333,7 @@ function ArmoryTradeSkillFrame_Update()
             end
             
 			if ( ENABLE_COLORBLIND_MODE == "1" ) then
-				skillNamePrefix = TradeSkillTypePrefix[skillType] or " ";
+				skillNamePrefix = ArmoryTradeSkillTypePrefix[skillType] or " ";
 			end
 			
 			local textWidth = ARMORY_TRADE_SKILL_TEXT_WIDTH;
@@ -338,6 +347,7 @@ function ArmoryTradeSkillFrame_Update()
 				skillButton:GetDisabledTexture():SetPoint("LEFT", 3, 0);
 				skillButton:GetHighlightTexture():SetPoint("LEFT", 3, 0);
 			end
+			skillButton.indentLevel = indentLevel;
 
             skillButton:SetID(skillIndex);
             skillButton:Show();
@@ -356,8 +366,8 @@ function ArmoryTradeSkillFrame_Update()
 					textWidth = textWidth - ARMORY_SUB_SKILL_BAR_WIDTH;
 				end
 
-                skillButton:SetText(skillName);
                 skillButtonText:SetWidth(textWidth);
+                skillButton:SetText(skillName);
                 skillButtonCount:SetText("");
                 if ( isExpanded ) then
                     skillButton:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up");
@@ -438,7 +448,11 @@ function ArmoryTradeSkillFrame_Update()
     if ( numHeaders > 0 ) then
         -- If has headers then move all the names to the right
         for i=1, ARMORY_TRADE_SKILLS_DISPLAYED, 1 do
-            _G["ArmoryTradeSkillSkill"..i.."Text"]:SetPoint("TOPLEFT", "ArmoryTradeSkillSkill"..i, "TOPLEFT", 21, 0);
+            if ( _G["ArmoryTradeSkillSkill"..i].indentLevel ~= 0 ) then
+                _G["ArmoryTradeSkillSkill"..i.."Text"]:SetPoint("TOPLEFT", "ArmoryTradeSkillSkill"..i, "TOPLEFT", 46, 0);
+            else
+                _G["ArmoryTradeSkillSkill"..i.."Text"]:SetPoint("TOPLEFT", "ArmoryTradeSkillSkill"..i, "TOPLEFT", 23, 0);
+            end
         end
         ArmoryTradeSkillExpandButtonFrame:Show();
     else

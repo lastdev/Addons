@@ -23,7 +23,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS["stack"]:format(6, 113315)
+	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(6, 113315)
 })
 
 -----------------------
@@ -71,6 +71,14 @@ L:SetOptionLocalization({
 -----------------------
 L= DBM:GetModLocalization(673)
 
+L:SetWarningLocalization({
+	warnStaticField	= "%s"
+})
+
+L:SetOptionLocalization({
+	warnStaticField	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(106923)
+})
+
 -----------------------
 -- Snowdrift --
 -----------------------
@@ -94,6 +102,10 @@ L:SetMiscLocalization({
 -- Sha of Violence --
 -----------------------
 L= DBM:GetModLocalization(685)
+
+L:SetMiscLocalization({
+	Kill		= "So lange die Gewalt in Euren Herzen wohnt... werde ich... zurückkehren...",
+})
 
 -----------------------
 -- Taran Zhu --
@@ -175,7 +187,7 @@ L= DBM:GetModLocalization(693)
 L= DBM:GetModLocalization(738)
 
 L:SetTimerLocalization({
-	TimerWave	= "Angriffsbefehl an: %s"
+	TimerWave	= "Sendet: %s"
 })
 
 L:SetOptionLocalization({
@@ -233,7 +245,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(666)
 
 L:SetMiscLocalization({
-	Kill	= "What?!"
+	Kill	= "STERBT, NEKROMANT!"
 })
 
 -----------------------

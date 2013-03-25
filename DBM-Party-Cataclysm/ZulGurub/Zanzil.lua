@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(184, "DBM-Party-Cataclysm", 11, 76)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(52053)
 mod:SetModelID(37813)
 mod:SetZone()
@@ -81,10 +81,3 @@ function mod:SPELL_CAST_START(args)
 		self:ScheduleMethod(0.2, "GazeTarget")
 	end
 end
-
---[[
-SPELL_AURA_APPLIED:  96316 - "Zanzil's Resurrection Elixir"
-19:25:47.165
-19:26:17.697
-19:26:48.624
---]]

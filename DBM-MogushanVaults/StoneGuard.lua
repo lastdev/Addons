@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(679, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8086 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 8777 $"):sub(12, -3))
 mod:SetCreatureID(60051, 60043, 59915, 60047)--Cobalt: 60051, Jade: 60043, Jasper: 59915, Amethyst: 60047
 mod:SetModelID(41892)
 mod:SetZone()
@@ -21,26 +21,25 @@ local warnCobaltOverload			= mod:NewSpellAnnounce(115840, 4)
 local warnJadeOverload				= mod:NewSpellAnnounce(115842, 4)
 local warnJasperOverload			= mod:NewSpellAnnounce(115843, 4)
 local warnAmethystOverload			= mod:NewSpellAnnounce(115844, 4)
-local warnCobaltMine				= mod:NewTargetAnnounce(129424, 4)
+local warnCobaltMine				= mod:NewSpellAnnounce(129424, 4)
 local warnJadeShards				= mod:NewSpellAnnounce(116223, 3, nil, false)
 local warnJasperChains				= mod:NewTargetAnnounce(130395, 4)
 local warnAmethystPool				= mod:NewTargetAnnounce(130774, 3, nil, false)
 local warnPowerDown					= mod:NewSpellAnnounce(116529, 4, nil, not mod:IsTank())
 
-local specWarnOverloadSoon			= mod:NewSpecialWarning("SpecWarnOverloadSoon", nil, nil, nil, true)
+local specWarnOverloadSoon			= mod:NewSpecialWarning("SpecWarnOverloadSoon", nil, nil, nil, 2)
 local specWarnJasperChains			= mod:NewSpecialWarningYou(130395)
 local specWarnBreakJasperChains		= mod:NewSpecialWarning("specWarnBreakJasperChains", false)
 local yellJasperChains				= mod:NewYell(130395, nil, false)
-local specWarnCobaltMine			= mod:NewSpecialWarningYou(129424)
+--local specWarnCobaltMine			= mod:NewSpecialWarningYou(129424)
 local specWarnCobaltMineNear		= mod:NewSpecialWarningClose(129424)
-local yellCobaltMine				= mod:NewYell(129424)
+--local yellCobaltMine				= mod:NewYell(129424)
 local specWarnAmethystPool			= mod:NewSpecialWarningMove(130774)
-local yellAmethystPool				= mod:NewYell(130774, nil, false)
 local specWarnPowerDown				= mod:NewSpecialWarningSpell(116529, not mod:IsTank())
 
-local timerCobaltMineCD				= mod:NewNextTimer(8.5, 129424)--12-15second variations
 local timerPetrification			= mod:NewNextTimer(76, 125091)
-local timerJadeShardsCD				= mod:NewNextTimer(20.5, 116223, nil, false)--Always 20.5 seconds
+local timerCobaltMineCD				= mod:NewNextTimer(8.5, 129424)
+local timerJadeShardsCD				= mod:NewCDTimer(9, 116223, nil, false)--9~12
 local timerJasperChainsCD			= mod:NewCDTimer(12, 130395)--11-13
 local timerAmethystPoolCD			= mod:NewCDTimer(6, 130774, nil, false)
 
@@ -60,7 +59,7 @@ local Overload = {
 	["Jasper"] = GetSpellInfo(115843),
 	["Amethyst"] = GetSpellInfo(115844)
 }
-local scansDone = 0
+--local scansDone = 0
 local activePetrification = nil
 local playerHasChains = false
 local jasperChainsTargets = {}
@@ -88,26 +87,6 @@ local function warnJasperChainsTargets()
 	table.wipe(jasperChainsTargets)
 end
 
-local function getBossuId(Boss)
-	local uId
-	if UnitExists("boss1") or UnitExists("boss2") or UnitExists("boss3") or UnitExists("boss4") then
-		for i = 1, 4 do
-			if UnitName("boss"..i) == Boss then
-				uId = "boss"..i
-				break
-			end
-		end
-	else
-		for i = 1, DBM:GetGroupMembers() do
-			if UnitName("raid"..i.."target") == Boss and not UnitIsPlayer("raid"..i.."target") then
-				uId = "raid"..i.."target"
-				break
-			end			
-		end
-	end
-	return uId
-end
-
 local function isTank(unit)
 	if GetPartyAssignment("MAINTANK", unit, 1) then
 		return true
@@ -115,13 +94,14 @@ local function isTank(unit)
 	if UnitGroupRolesAssigned(unit) == "TANK" then
 		return true
 	end
-	local uId = getBossuId(Cobalt)
+	local uId = DBM:GetBossUnitId(Cobalt)
 	if uId and UnitExists(uId.."target") and UnitDetailedThreatSituation(unit, uId) then
 		return true
 	end
 	return false
 end
 
+--[[
 function mod:ClobaltMineTarget(targetname)
 	warnCobaltMine:Show(targetname)
 	if targetname == UnitName("player") then
@@ -142,6 +122,7 @@ function mod:ClobaltMineTarget(targetname)
 		end
 	end
 end
+
 
 function mod:ScanHandler(ScansCompleted)
 	scansDone = scansDone + 1
@@ -164,10 +145,30 @@ function mod:ScanHandler(ScansCompleted)
 		end
 	end
 end
+--]]
+
+function mod:ThreeBossStart(delay)
+	for i = 1, 5 do
+		local id = self:GetUnitCreatureId("boss"..i)
+		if id == 60051 then -- cobalt
+			if self:IsDifficulty("lfr25") then
+				timerCobaltMineCD:Start(10.5-delay-1)
+			else
+				timerCobaltMineCD:Start(-delay-1)
+			end
+		elseif id == 60043 then -- jade
+			timerJadeShardsCD:Start(-delay-1)
+		elseif id == 59915 then -- jasper
+			timerJasperChainsCD:Start(-delay-1)
+		elseif id == 60047 then -- amethyst
+			timerAmethystPoolCD:Start(-delay-1)
+		end
+	end
+end
 
 function mod:OnCombatStart(delay)
 	activePetrification = nil
-	scansDone = 0
+--	scansDone = 0
 	playerHasChains = false
 	table.wipe(jasperChainsTargets)
 	table.wipe(amethystPoolTargets)
@@ -180,18 +181,7 @@ function mod:OnCombatStart(delay)
 		expectedBosses = 4--Only fight all 4 at once on 25man (excluding LFR)
 	else
 		expectedBosses = 3--Else you get a random set of 3/4
-		for i = 1, 4 do
-			local id = self:GetUnitCreatureId("boss" .. i)
-			if id == 60051 then -- cobalt
-				timerCobaltMineCD:Start(-delay)
-			elseif id == 60043 then -- jade
-				timerJadeShardsCD:Start(-delay)
-			elseif id == 59915 then -- jasper
-				timerJasperChainsCD:Start(-delay)
-			elseif id == 60047 then -- amethyst
-				timerAmethystPoolCD:Start(-delay)
-			end
-		end
+		self:ScheduleMethod(1, "ThreeBossStart", delay)
 	end
 end
 
@@ -222,8 +212,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			playerHasChains = true
 			specWarnJasperChains:Show()
-			yellJasperChains:Yell()
-			local uId = getBossuId(Jasper)
+			if not self:IsDifficulty("lfr25") then
+				yellJasperChains:Yell()
+			end
+			local uId = DBM:GetBossUnitId(Jasper)
 			if uId and UnitPower(uId) <= 50 and activePetrification == "Jasper" then--Make sure his energy isn't already high, otherwise breaking chains when jasper will only be active for a few seconds is bad
 				specWarnBreakJasperChains:Show()
 				DBM.Arrow:Hide()
@@ -329,7 +321,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			DBM.InfoFrame:Show(5, "enemypower", 1, nil, nil, ALTERNATE_POWER_INDEX)
 		end
 		if playerHasChains then
-			local uId = getBossuId(Jasper)
+			local uId = DBM:GetBossUnitId(Jasper)
 			if uId and UnitPower(uId) <= 50 then--Make sure his energy isn't already high, otherwise breaking chains when jasper will only be active for a few seconds is bad
 				specWarnBreakJasperChains:Show()
 				DBM.Arrow:Hide()
@@ -343,9 +335,14 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			DBM.InfoFrame:Show(5, "enemypower", 1, nil, nil, ALTERNATE_POWER_INDEX)
 		end
 	elseif spellId == 129424 and self:AntiSpam(2, 5) then
-		scansDone = 0
-		self:ScanHandler()
-		timerCobaltMineCD:Start()
+--		scansDone = 0
+--		self:ScanHandler()
+		warnCobaltMine:Show()
+		if self:IsDifficulty("lfr25") then
+			timerCobaltMineCD:Start(10.5)
+		else
+			timerCobaltMineCD:Start()
+		end
 	end
 end
 

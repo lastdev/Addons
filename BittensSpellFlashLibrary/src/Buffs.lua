@@ -1,8 +1,11 @@
-if select(4, GetBuildInfo()) < 50000 then return end
+local g = BittensGlobalTables
+local c = g.GetTable("BittensSpellFlashLibrary")
+local u = g.GetTable("BittensUtilities")
+if u.SkipOrUpgrade(c, "Buffs", 4) then
+	return
+end
 
-local libName, lib = ...
 local s = SpellFlashAddon
-local c = BittensSpellFlashLibrary
 
 local type = type
 local select = select
@@ -18,7 +21,7 @@ c.STAT_BUFFS = {
 
 c.STAMINA_BUFFS = {
 	21562, -- Power Word: Fortitude
-	103127, -- Imp: Blood Pact
+	109773, -- Dark Intent
 	469, -- Commanding Shout
 	90364, -- Qiraji Fortitude
 }
@@ -48,14 +51,16 @@ c.MELEE_HASTE_BUFFS = {
 c.SPELL_HASTE_BUFFS = {
 	24907, -- Moonkin Aura
 	15473, -- Shadowform
-	49868, -- Mind Quickening
+	49868, -- Mind Quickening (applied to raid members by Shadowform)
 	51470, -- Elemental Oath
+	135678, -- Energizing Spores
 }
 
 c.CRIT_BUFFS = {
 	17007, -- Leader of the Pack
 	1459, -- Arcane Brilliance
 	61316, -- Dalaran Brialliance
+	116781, -- Legacy of the White Tiger
 	97229, -- Bellowing Roar
 	24604, -- Furious Howl
 	90309, -- Terrifying Roar
@@ -86,6 +91,7 @@ c.MAGIC_VULNERABILITY_DEBUFFS = {
 	1490, -- Curse of the Elements
 	34889, -- Fire Breath
 	24844, -- Lightning Breath
+	116202, -- Aura of the Elements
 }
 
 c.WEAKENED_BLOWS_DEBUFFS = 115798
@@ -104,9 +110,9 @@ c.SLOW_CASTING_DEBUFFS = {
 c.MORTAL_WOUNDS_DEBUFFS = 115804
 
 local function getScore(buff)
-	return type(buff) == "string"
-		and lib.A.Spells[buff]
-		and lib.A.Spells[buff].Score
+	return (type(buff) == "string"
+			and c.A.Spells[buff]
+			and c.A.Spells[buff].Score)
 		or 1
 end
 
@@ -115,12 +121,24 @@ local function isUp(buff)
 		return c.HasBuff(buff)
 	end
 	
-	local spell = lib.A.Spells[buff]
+	local spell = c.A.Spells[buff]
 	if spell == nil then
 		return c.HasBuff(buff)
 	end
 	
-	buff = spell.Buff or buff
+	if spell.RunFirst ~= nil then
+		spell:RunFirst()
+	end
+	
+	if spell.Enabled ~= nil and not spell:Enabled() then
+		return false
+	end
+	
+	if spell.IsUp ~= nil then
+		return spell:IsUp()
+	end
+	
+	buff = spell.Buff or spell.ID
 	return s.Buff(
 		buff, 
 		"player", 
@@ -139,6 +157,7 @@ local function getCurrentScore(buff)
 		return score
 	end
 	
+--c.Debug("mitigation", buff, isUp(buff))
 	return isUp(buff) and getScore(buff) or 0
 end
 
@@ -157,22 +176,26 @@ function c.FlashMitigationBuffs(targetScore, ...)
 		
 		-- test castable before flashable, in case it changes the id
 		local name = select(i, ...)
-		local spell = lib.A.Spells[name]
-		if spell and s.Castable(spell) then
+		local spell = c.A.Spells[name]
+		if spell 
+			and (spell.Enabled == nil or spell:Enabled()) 
+			and s.Castable(spell) then
+			
+			local flashable = s.Flashable
+			local flash = s.Flash
 			if spell.Type == "item" then
-				if s.ItemFlashable(spell.ID) then
-					if spell.ShouldHold == nil or not spell.ShouldHold() then
-						s.FlashItem(spell.ID, spell.FlashColor, spell.FlashSize)
-					end
-					targetScore = targetScore - (spell.Score or 1)
+				flashable = s.ItemFlashable
+				flash = s.FlashItem
+			end
+			if flashable(spell.ID) then
+				local color = spell.FlashColor
+				local size = spell.FlashSize
+				if spell.ShouldHold ~= nil and spell:ShouldHold() then
+					color = "green"
+					size = s.FlashSizePercent() / 3
 				end
-			else
-				if s.Flashable(spell.ID) then
-					if spell.ShouldHold == nil or not spell.ShouldHold() then
-						s.Flash(spell.ID, spell.FlashColor, spell.FlashSize)
-					end
-					targetScore = targetScore - (spell.Score or 1)
-				end
+				flash(spell.FlashID or spell.ID, color, size)
+				targetScore = targetScore - (spell.Score or 1)
 			end
 		end
 	end
@@ -197,8 +220,9 @@ function c.GetBuffDuration(name, noGCD, matchSpellID)
 end
 
 function c.GetBuffStack(name, noGCD, matchSpellID)
-	if c.HasBuff(name, noGCD, matchSpellID) then -- ensure won't to expire
-		return s.BuffStack(c.GetID(name), "player", nil, nil, nil, matchSpellID)
+	local id = c.GetID(name)
+	if c.HasBuff(id, noGCD, matchSpellID) then -- ensure won't to expire
+		return s.BuffStack(id, "player", nil, nil, nil, matchSpellID)
 	else
 		return 0
 	end
@@ -223,6 +247,18 @@ function c.GetMyDebuffDuration(name, noGCD, matchSpellID)
 			- c.GetBusyTime(noGCD))
 end
 
+function c.HasDebuff(name, noGCD, matchSpellID)
+	return c.GetDebuffDuration(name, noGCD, matchSpellID) > 0
+end
+
+function c.GetDebuffStack(name, noGCD, matchSpellID)
+	if c.HasDebuff(name, noGCD, matchSpellID) then -- ensure it won't expire
+		return s.DebuffStack(c.GetID(name), nil, nil, nil, nil, matchSpellID)
+	else
+		return 0
+	end
+end
+
 function c.GetDebuffDuration(name, noGCD, matchSpellID)
 	return math.max(
 		0, 
@@ -234,18 +270,21 @@ function c.SelfBuffNeeded(name)
 	if s.InCombat() then
 		return not c.HasBuff(name)
 	else
-		return c.GetBuffDuration(name) < 5 * 60
+		local min = s.InRaidOrParty() and 5 or 2
+		return c.GetBuffDuration(name) < min * 60
 	end
 end
 
 function c.RaidBuffNeeded(idTable)
 	local duration = 0
 	if not s.InCombat() then
-		duration = 5 * 60
+		duration = s.InRaidOrParty() and 5 or 2
 	end
 	local flags = "raid|all|range"
---	if idTable == c.INTELLECT_BUFFS then
---		flags = flags .. "|mana"
---	end
-	return not s.Buff(idTable, flags, duration)
+	if idTable == c.SPELL_HASTE_BUFFS
+		or idTable == c.SPELL_POWER_BUFFS then
+		
+		flags = flags .. "|mana"
+	end
+	return not s.Buff(idTable, flags, duration * 60)
 end

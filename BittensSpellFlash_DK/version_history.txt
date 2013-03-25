@@ -1,3 +1,29 @@
+== Version 3.5.2
+* Frost: Bugfix for a Lua error.
+
+== Version 3.5.1
+NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
+* Unholy: No longer tries to flash Icy Touch for Frost Fever (now simply uses Plague Strike).
+
+== Version 3.5.0
+NOTE: Your options will be reset when you upgrade to this version.
+* Repackaging so that Bitten's SpellFlash Library is included with the addon, instead of downloaded separately.
+* Several other internal changes.
+* Blood: Major work to the solo rotation, including AoE.
+* Blood: Solo mode can now be disabled in the options.
+* Frost: Added an AoE rotation.
+
+== Version 3.4.0
+* Blood: Removed code having to do with Cataclysm items/enchants.
+* Blood: Anti-Magic Shell and Anti-Magic Zone now count toward the 2 cooldowns it tries to keep up.
+* Blood: Increase the priority of Icebound Fortitude if it is glyphed for a shorter cooldown.
+* Blood: Factor in 2pT14 when deciding when calculating the minimum Death Strike heal.
+* Blood: Do not flash Dancing Rune Weapon when out of melee range.
+* Blood: Make Death Pact the highest priority cooldown if your ghoul is already out.
+
+== Version 3.3.1
+* Making the "Out of Date" status go away.  Please report any real issues w/ the new patch.
+
 == Version 3.3.0
 * Frost & Unholy: Updated priority lists based on new research.
 * Unholy: Added Soul Reaper.

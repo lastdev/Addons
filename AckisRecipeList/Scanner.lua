@@ -3,10 +3,10 @@
 Scanner.lua
 Vendor/trainer scanning for Ackis Recipe List.
 ************************************************************************
-File date: 2012-10-04T01:29:29Z
-File hash: eae7499
-Project hash: 5a95034
-Project version: 2.4.2
+File date: 2012-10-24T00:47:43Z
+File hash: c823ced
+Project hash: f922565
+Project version: 2.4.6
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -202,7 +202,7 @@ do
 				matching_trainer = true
 			end
 			local matching_recipe = scanned_recipes[recipe.name]
-			local matching_item = scanned_items[recipe:CraftedItemID()]
+			local matching_item = scanned_items[recipe:CraftedItem()]
 
 			if matching_recipe or matching_item then
 				if not matching_trainer then
@@ -217,7 +217,7 @@ do
 						recipe:AddFilters(F.TRAINER)
 
 						if matching_item then
-							output:AddLine(("Added trainer flag to recipe with spell ID %d. (matching crafted item ID %d)"):format(spell_id, recipe:CraftedItemID()))
+							output:AddLine(("Added trainer flag to recipe with spell ID %d. (matching crafted item ID %d)"):format(spell_id, recipe:CraftedItem()))
 						elseif matching_recipe then
 							output:AddLine(("Added trainer flag to recipe with spell ID %d. (matching recipe name \"%s\")"):format(spell_id, recipe.name))
 						end
@@ -235,10 +235,10 @@ do
 			elseif matching_trainer then
 				table.wipe(itemless_spells)
 
-				if not recipe:CraftedItemID() then
+				if not recipe:CraftedItem() then
 					for item_id in pairs(scanned_items) do
 						if recipe.name == _G.GetItemInfo(item_id) then
-							recipe:SetCraftedItemID(item_id)
+							recipe:SetCraftedItem(item_id, "BIND_ON_EQUIP")
 							itemless_spells[spell_id] = true
 						end
 					end
@@ -269,7 +269,7 @@ do
 			for index in ipairs(extra_spell_ids) do
 				local spell_id = extra_spell_ids[index]
 				local recipe = recipe_list[spell_id]
-				local crafted_item = recipe:CraftedItemID()
+				local crafted_item = recipe:CraftedItem()
 
 				if crafted_item then
 					output:AddLine(("%d (%s) - Crafted item ID set to %d (%s)"):format(spell_id, recipe.name, crafted_item, _G.GetItemInfo(crafted_item) or _G.UNKNOWN))
@@ -297,7 +297,7 @@ do
 				local spell_id = mismatched_item_levels[index]
 				local recipe = recipe_list[spell_id]
 				local recipe_skill = recipe:SkillLevels()
-				local corrected_skill = scanned_items[recipe:CraftedItemID()]
+				local corrected_skill = scanned_items[recipe:CraftedItem()]
 				output:AddLine(("%d (%s): Corrected skill level from %d to %d."):format(spell_id, recipe.name, recipe_skill, corrected_skill))
 				recipe:SetSkillLevels(corrected_skill)
 			end
@@ -746,7 +746,7 @@ do
 			RECIPE_ITEM_TO_SPELL_MAP = {}
 
 			for spell_id, recipe in pairs(private.recipe_list) do
-				local recipe_item_id = recipe:RecipeItemID()
+				local recipe_item_id = recipe:RecipeItem()
 
 				if recipe_item_id then
 					RECIPE_ITEM_TO_SPELL_MAP[recipe_item_id] = spell_id
@@ -773,7 +773,7 @@ do
 							local recipe_type, match_text = (":"):split(item_name, 2)
 
 							if recipe.name == match_text:trim() then
-								recipe:SetRecipeItemID(item_id)
+								recipe:SetRecipeItem(item_id, "BIND_ON_EQUIP")
 								RECIPE_ITEM_TO_SPELL_MAP[item_id] = spell_id
 								NormalizeVendorData(spell_id, supply, vendor_id, vendor_name)
 							end
@@ -1219,61 +1219,44 @@ do
 			end
 		end
 
-		if scan_data.item_bop and not recipe:HasFilter("common1", "IBOP") then
-			table.insert(missing_flags, flag_format:format(FS[F.IBOP]))
-			recipe:AddFilters(F.IBOP)
-
-			if recipe:HasFilter("common1", "IBOE") then
-				recipe:RemoveFilters(F.IBOE)
-				table.insert(extra_flags, flag_format:format(FS[F.IBOE]))
-			end
-
-			if recipe:HasFilter("common1", "IBOA") then
-				recipe:RemoveFilters(F.IBOA)
-				table.insert(extra_flags, flag_format:format(FS[F.IBOA]))
-			end
-		elseif not recipe:HasFilter("common1", "IBOE") and not scan_data.item_bop then
-			recipe:AddFilters(F.IBOE)
-			table.insert(missing_flags, flag_format:format(FS[F.IBOE]))
-
-			if recipe:HasFilter("common1", "IBOP") then
-				recipe:RemoveFilters(F.IBOP)
-				table.insert(extra_flags, flag_format:format(FS[F.IBOP]))
-			end
-
-			if recipe:HasFilter("common1", "IBOA") then
-				recipe:RemoveFilters(F.IBOP)
-				table.insert(extra_flags, flag_format:format(FS[F.IBOA]))
-			end
-		end
-
-		if scan_data.recipe_bop and not recipe:HasFilter("common1", "RBOP") then
-			table.insert(missing_flags, flag_format:format(FS[F.RBOP]))
-			recipe:AddFilters(F.RBOP)
-
-			if recipe:HasFilter("common1", "RBOE") then
-				recipe:RemoveFilters(F.RBOE)
-				table.insert(extra_flags, flag_format:format(FS[F.RBOE]))
-			end
-
-			if recipe:HasFilter("common1", "RBOA") then
-				recipe:RemoveFilters(F.RBOA)
-				table.insert(extra_flags, flag_format:format(FS[F.RBOA]))
-			end
-		elseif not recipe:HasFilter("common1", "TRAINER") and not recipe:HasFilter("common1", "RBOE") and not scan_data.recipe_bop then
-			table.insert(missing_flags, flag_format:format(FS[F.RBOE]))
-			recipe:AddFilters(F.RBOE)
-
-			if recipe:HasFilter("common1", "RBOP") then
-				recipe:RemoveFilters(F.RBOP)
-				table.insert(extra_flags, flag_format:format(FS[F.RBOP]))
-			end
-
-			if recipe:HasFilter("common1", "RBOA") then
-				recipe:RemoveFilters(F.RBOA)
-				table.insert(extra_flags, flag_format:format(FS[F.RBOA]))
-			end
-		end
+		-- TODO: Make this work with the new binding system, if even applicable anymore.
+		--		if scan_data.item_bop and not recipe:HasFilter("common1", "IBOP") then
+		--			table.insert(missing_flags, flag_format:format(FS[F.IBOP]))
+		--			recipe:AddFilters(F.IBOP)
+		--
+		--			if recipe:HasFilter("common1", "IBOE") then
+		--				recipe:RemoveFilters(F.IBOE)
+		--				table.insert(extra_flags, flag_format:format(FS[F.IBOE]))
+		--			end
+		--		elseif not recipe:HasFilter("common1", "IBOE") and not scan_data.item_bop then
+		--			recipe:AddFilters(F.IBOE)
+		--			table.insert(missing_flags, flag_format:format(FS[F.IBOE]))
+		--
+		--			if recipe:HasFilter("common1", "IBOP") then
+		--				recipe:RemoveFilters(F.IBOP)
+		--				table.insert(extra_flags, flag_format:format(FS[F.IBOP]))
+		--			end
+		--
+		--		end
+		--
+		--		if scan_data.recipe_bop and not recipe:HasFilter("common1", "RBOP") then
+		--			table.insert(missing_flags, flag_format:format(FS[F.RBOP]))
+		--			recipe:AddFilters(F.RBOP)
+		--
+		--			if recipe:HasFilter("common1", "RBOE") then
+		--				recipe:RemoveFilters(F.RBOE)
+		--				table.insert(extra_flags, flag_format:format(FS[F.RBOE]))
+		--			end
+		--
+		--		elseif not recipe:HasFilter("common1", "TRAINER") and not recipe:HasFilter("common1", "RBOE") and not scan_data.recipe_bop then
+		--			table.insert(missing_flags, flag_format:format(FS[F.RBOE]))
+		--			recipe:AddFilters(F.RBOE)
+		--
+		--			if recipe:HasFilter("common1", "RBOP") then
+		--				recipe:RemoveFilters(F.RBOP)
+		--				table.insert(extra_flags, flag_format:format(FS[F.RBOP]))
+		--			end
+		--		end
 
 		for role_index, role in ipairs(ORDERED_ROLE_TYPES) do
 			local role_string = ROLE_TYPES[role]
@@ -1410,15 +1393,18 @@ do
 			end
 		end
 
+		-- TODO: Make this work with the new binding system, if even applicable anymore.
+		--[[
 		-- Check for recipe binding information,  all recipes must have one of these
-		if not recipe:HasFilter("common1", "RBOE") and not recipe:HasFilter("common1", "RBOP") and not recipe:HasFilter("common1", "RBOA") then
+		if not recipe:HasFilter("common1", "RBOE") and not recipe:HasFilter("common1", "RBOP") then
 			output:AddLine("    No recipe binding information.")
 		end
 
 		-- Check for item binding information,  all recipes must have one of these
-		if not recipe:HasFilter("common1", "IBOE") and not recipe:HasFilter("common1", "IBOP") and not recipe:HasFilter("common1", "IBOA") then
+		if not recipe:HasFilter("common1", "IBOE") and not recipe:HasFilter("common1", "IBOP") then
 			output:AddLine("    No item binding information.")
 		end
+]] --
 
 		-- We need to code this better.  Some items (aka bags) won't have a role at all.
 		-- Check for player role flags
@@ -1661,7 +1647,7 @@ do
 		local reverse_lookup = GetReverseLookup(recipe_list)
 		ScanTooltip(recipe_name, recipe_list, reverse_lookup, is_vendor)
 
-		local recipe_item_id = recipe:RecipeItemID()
+		local recipe_item_id = recipe:RecipeItem()
 
 		table.wipe(scan_data)
 

@@ -334,7 +334,7 @@ Prat:AddModuleToLoad(function()
 	["Extra data for WHISPER (target) and CHANNEL (channel name or num)"] = "Добавочные данные для ШЕПОТА (цель) и КАНАЛА (название канала или номер)",
 	["Filter Name"] = "Название фильтра",
 	Forward = "Пересылать",
-	ForwardCustom = "Вперед пользовательских", -- Needs review
+	ForwardCustom = true,
 	ForwardMessage = true,
 	ForwardMessageCustom = "Частный канал",
 	["Forward the message to a chat channel."] = "Пересылать сообщение в канал чата.",
@@ -526,8 +526,8 @@ Prat:AddModuleToLoad(function()
     CHAT_MSG_OFFICER = true,
     CHAT_MSG_RAID = true,
     CHAT_MSG_RAID_LEADER = true,
-    CHAT_MSG_BATTLEGROUND = true,
-    CHAT_MSG_BATTLEGROUND_LEADER = true,
+    CHAT_MSG_INSTANCE_CHAT = true,
+    CHAT_MSG_INSTANCE_CHAT_LEADER = true,
   }
 
   local eventTypes = {}
@@ -568,8 +568,8 @@ Prat:AddModuleToLoad(function()
         RAID = true,
         RAID_LEADER = true,
         RAID_WARNING = true,
-        BATTLEGROUND = true,
-        BATTLEGROUND_LEADER = true,
+        INSTANCE_CHAT = true,
+        INSTANCE_CHAT_LEADER = true,
         GUILD = true,
         GUILD_OFFICER = true,
         MONSTER_SAY = true,

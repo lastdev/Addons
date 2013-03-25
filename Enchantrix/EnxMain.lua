@@ -1,6 +1,6 @@
 ﻿--[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 	Revision: $Id: EnxMain.lua 5317 2012-08-03 05:11:38Z ccox $
 	URL: http://enchantrix.org/
 
@@ -41,7 +41,7 @@ local spellTargetItemHook
 local useItemByNameHook
 local onEvent
 
-Enchantrix.Version = "5.15.5365"
+Enchantrix.Version = "5.15.5380"
 if (Enchantrix.Version == "<".."%version%>") then
 	Enchantrix.Version = "4.0.DEV"
 end

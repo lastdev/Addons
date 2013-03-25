@@ -1,7 +1,7 @@
 ﻿--[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.6 (<%codename%>)
-	Revision: $Id: GatherNodes.lua 1043 2012-10-12 04:00:10Z LocalizerAutoCommit $
+	Version: 4.2.0 (<%codename%>)
+	Revision: $Id: GatherNodes.lua 1074 2013-03-03 05:00:04Z LocalizerAutoCommit $
 
 	License:
 		This program is free software; you can redistribute it and/or

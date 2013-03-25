@@ -24,6 +24,7 @@ local AddonDB_Defaults = {
 				Quests = {},
 				QuestLinks = {},
 				Rewards = {},
+				Dailies = {},
 				History = {},		-- a list of completed quests, hash table ( [questID] = true )
 				HistoryBuild = nil,	-- build version under which the history has been saved
 				HistorySize = 0,
@@ -56,6 +57,42 @@ local function TestBit(value, pos)
    if bAnd(value, mask) == mask then
       return true
    end
+end
+
+local function ClearExpiredDailies()
+	-- this function will clear all the dailies from the day(s) before (or same day, but before the reset hour)
+	
+	local timeTable = {}
+	
+	timeTable.year = date("%Y")
+	timeTable.month = date("%m")
+	timeTable.day = date("%d")
+	timeTable.hour = 3
+	timeTable.min = 0
+
+	local now = time()
+	local resetTime = time(timeTable)
+	
+	-- gap is positive if reset time was earlier in the day (ex: it is now 9am, reset was at 3am) => simply make sure that:
+	--		the elapsed time since the quest was turned in is bigger than  (ex: 10 hours ago)
+	--		the elapsed time since the last reset (ex: 6 hours ago)
+
+	-- gap is negative if reset time is later on the same day (ex: it is 1am, reset is at 3am)
+	--		the elapsed time since the quest was turned in is bigger than 
+	--		the elapsed time since the last reset 1 day before
+	
+	local gap = now - resetTime
+	gap = (gap < 0) and (86400 + gap) or gap	-- ex: it's 1am, next reset is in 2 hours, so previous reset was (24 + (-2)) = 22 hours ago
+
+	for characterKey, character in pairs(addon.Characters) do
+		-- browse dailies history backwards, to avoid messing up the indexes when removing
+		for i = #character.Dailies, 1, -1 do
+			
+			if (now - character.Dailies[i].timestamp) > gap then
+				table.remove(character.Dailies, i)
+			end
+		end
+	end
 end
 
 -- *** Scanning functions ***
@@ -109,7 +146,7 @@ local function ScanQuests()
 
 	local RewardsCache = {}
 	for i = 1, GetNumQuestLogEntries() do
-		local title, _, questTag, groupSize, isHeader, _, isComplete = GetQuestLogTitle(i);
+		local title, _, questTag, groupSize, isHeader, _, isComplete, isDaily = GetQuestLogTitle(i);
 		
 		if isHeader then
 			quests[i] = "0|" .. (title or "")
@@ -174,20 +211,6 @@ local function ScanQuests()
 end
 
 local queryVerbose
-local answerQuery		-- set to true if this module has triggered the quest query. Will be nil if another addon does it.
-
-local function RefreshQuestHistory()
-	-- called 5 seconds after login, if the current character already has an history, one that was saved in the same build, then it's safe to refresh it automatically
-	local thisChar = addon.ThisCharacter
-	if not thisChar.HistoryLastUpdate then return end	-- never scanned the history before ? exit
-	
-	local _, version = GetBuildInfo()
-	
-	if version and thisChar.HistoryBuild and version == thisChar.HistoryBuild then	-- proceed if version is the same as the one saved in the db
-		answerQuery = true
-		QueryQuestsCompleted()
-	end
-end
 
 -- *** Event Handlers ***
 local function OnPlayerAlive()
@@ -203,7 +226,7 @@ local function OnUnitQuestLogChanged()			-- triggered when accepting/validating 
 	addon:RegisterEvent("QUEST_LOG_UPDATE", OnQuestLogUpdate)		-- so register for this one ..
 end
 
-local lastCompleteQuestLink
+local lastCompletedQuest = {}
 
 local function OnQuestComplete()
 	if GetOption("TrackTurnIns") ~= 1 then return end
@@ -212,14 +235,12 @@ local function OnQuestComplete()
 	-- At this point, only detect which quest we're dealing with, and save its link
 	local num = GetQuestLogIndexByName(GetTitleText());
 	if num then
-		lastCompleteQuestLink = GetQuestLink(num)		-- or save quest id
+		lastCompletedQuest.link = GetQuestLink(num)		-- or save quest id
+		lastCompletedQuest.title, _, _, _, _, _, _, lastCompletedQuest.isDaily = GetQuestLogTitle(num)
 	end
 end
 
-local function OnQuestQueryComplete()
-	if not answerQuery then return end
-	answerQuery = nil
-
+local function RefreshQuestHistory()
 	local thisChar = addon.ThisCharacter
 	local history = thisChar.History
 	wipe(history)
@@ -311,8 +332,7 @@ end
 
 local function _QueryQuestHistory()
 	queryVerbose = true
-	answerQuery = true
-	QueryQuestsCompleted()		-- this call triggers "QUEST_QUERY_COMPLETE"
+	RefreshQuestHistory()		-- this call triggers "QUEST_QUERY_COMPLETE"
 end
 
 local function _GetQuestHistory(character)
@@ -322,6 +342,19 @@ end
 local function _GetQuestHistoryInfo(character)
 	-- return the size of the history, the timestamp, and the build under which it was saved
 	return character.HistorySize, character.HistoryLastUpdate, character.HistoryBuild
+end
+
+local function _GetDailiesHistory(character)
+	return character.Dailies
+end
+
+local function _GetDailiesHistorySize(character)
+	return #character.Dailies
+end
+
+local function _GetDailiesHistoryInfo(character, index)
+	local quest = character.Dailies[index]
+	return quest.id, quest.title, quest.timestamp
 end
 
 local function _IsQuestCompletedBy(character, questID)
@@ -343,6 +376,9 @@ local PublicMethods = {
 	GetQuestHistory = _GetQuestHistory,
 	GetQuestHistoryInfo = _GetQuestHistoryInfo,
 	IsQuestCompletedBy = _IsQuestCompletedBy,
+	GetDailiesHistory = _GetDailiesHistory,
+	GetDailiesHistorySize = _GetDailiesHistorySize,
+	GetDailiesHistoryInfo = _GetDailiesHistoryInfo,
 }
 
 function addon:OnInitialize()
@@ -356,19 +392,23 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetQuestHistory")
 	DataStore:SetCharacterBasedMethod("GetQuestHistoryInfo")
 	DataStore:SetCharacterBasedMethod("IsQuestCompletedBy")
+	DataStore:SetCharacterBasedMethod("GetDailiesHistory")
+	DataStore:SetCharacterBasedMethod("GetDailiesHistorySize")
+	DataStore:SetCharacterBasedMethod("GetDailiesHistoryInfo")
 end
 
 function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 	addon:RegisterEvent("UNIT_QUEST_LOG_CHANGED", OnUnitQuestLogChanged)
 	addon:RegisterEvent("QUEST_COMPLETE", OnQuestComplete)
-	addon:RegisterEvent("QUEST_QUERY_COMPLETE", OnQuestQueryComplete)
 	
 	addon:SetupOptions()
 	
 	if GetOption("AutoUpdateHistory") == 1 then		-- if history has been queried at least once, auto update it at logon (fast operation - already in the game's cache)
 		addon:ScheduleTimer(RefreshQuestHistory, 5)	-- refresh quest history 5 seconds later, to decrease the load at startup
 	end
+	
+	ClearExpiredDailies()
 end
 
 function addon:OnDisable()
@@ -382,8 +422,8 @@ end
 local Orig_QuestRewardCompleteButton_OnClick = QuestRewardCompleteButton_OnClick;
 
 function QuestRewardCompleteButton_OnClick()
-	if lastCompleteQuestLink then			-- if there's a valid link
-		local questID = lastCompleteQuestLink:match("quest:(%d+):")
+	if lastCompletedQuest.link then			-- if there's a valid link
+		local questID = lastCompletedQuest.link:match("quest:(%d+):")
 		questID = tonumber(questID)
 		if questID then
 			local history = addon.ThisCharacter.History
@@ -396,9 +436,17 @@ function QuestRewardCompleteButton_OnClick()
 			
 			-- mark the current quest ID as completed
 			history[index] = bOr((history[index] or 0), 2^bitPos)	-- read: value = SetBit(value, bitPosition)
+
+			-- track daily quests turn-ins
+			if lastCompletedQuest.isDaily then
+				local dailies = addon.ThisCharacter.Dailies
+				
+				table.insert(dailies, { title = lastCompletedQuest.title, id = questID, timestamp = time() })
+			end
+
 			addon:SendMessage("DATASTORE_QUEST_TURNED_IN", questID)		-- trigger the DS event
 		end
-		lastCompleteQuestLink = nil
+		wipe(lastCompletedQuest)
 	end
 	Orig_QuestRewardCompleteButton_OnClick();
 end

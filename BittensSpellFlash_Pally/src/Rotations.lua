@@ -1,58 +1,79 @@
-local AddonName, a = ...
-if a.BuildFail(50000) then return end
+local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
-local c = BittensSpellFlashLibrary
+local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
 local SPELL_POWER_HOLY_POWER = SPELL_POWER_HOLY_POWER
-local select = select
 local math = math
+local select = select
+local string = string
 
---local function castGivesHP(info, delay)
---	return c.InfoMatches(info, "Holy Radiance")
---		or (c.InfoMatches(info, "Divine Light")
---			and s.MyBuff(c.GetID("Beacon of Light"), info.Target, delay)
---			and c.GetTalentRank("Tower of Radiance") == 3)
---end
+local function castGivesHP(info)
+	return c.InfoMatches(info, "Holy Radiance")
+		or (c.InfoMatches(info, "Divine Light")
+			and s.MyBuff(c.GetID("Beacon of Light"), info.Target))
+end
 
 local selflessStackPending = false
 local selflessClearPending = false
 
+local function bumpHolyPower()
+	if s.Buff(c.GetID("Holy Avenger"), "player") then
+		a.HolyPower = math.min(5, a.HolyPower + 3)
+	else
+		a.HolyPower = math.min(5, a.HolyPower + 1)
+	end
+end
+
 a.Rotations = {}
-c.RegisterForEvents(a)
-a.SetSpamFunction(function()
+
+function a.PreFlash()
 	
 	-- calculate holy power
 	a.HolyPower = s.Power("player", SPELL_POWER_HOLY_POWER)
-	
-	-- bump/consume it from spells that are queued
-	local info = c.GetQueuedInfo()
-	if c.InfoMatches(info, 
-			"Crusader Strike", 
-			"Hammer of the Righteous",
-			"Exorcism",
-			"Hammer of Wrath",
-			"Judgment") then
-		
-		if s.Buff(c.GetID("Holy Avenger"), "player") then
-			a.HolyPower = math.min(5, a.HolyPower + 3)
-		else
-			a.HolyPower = math.min(5, a.HolyPower + 1)
-		end
---c.Debug("Spam", "Queued bump from", info.Name)
-	elseif c.InfoMatches(info,
-		"Inquisition",
-		"Templar's Verdict") then
+    
+    -- bump it from spells that are casting
+    local info = c.GetCastingInfo()
+    if castGivesHP(info) then
+        bumpHolyPower()
+    end
+    
+    -- bump/consume it from spells that are queued
+    a.RawHolyPower = -1
+	if c.IsQueued(
+		"Inquisition", 
+		"Templar's Verdict", 
+		"Shield of the Righteous", 
+		"Word of Glory", 
+		"Eternal Flame",
+		"Light of Dawn") then
 		
 		if not s.Buff(c.GetID("Divine Purpose"), "player") then
 			a.HolyPower = math.max(0, a.HolyPower - 3)
 		end
---c.Debug("Spam", "Queued consume from", info.Name)
-	elseif s.Buff(c.GetID("Divine Purpose"), "player") then
-		a.HolyPower = math.max(3, a.HolyPower)
---c.Debug("Spam", "Divine Purpose")
+	else
+		local info = c.GetQueuedInfo()
+		if c.IsQueued(
+				"Crusader Strike", 
+				"Hammer of the Righteous",
+				"Exorcism",
+				"Hammer of Wrath")
+			or (c.IsQueued("Judgment") 
+				and s.HasSpell(c.GetID("Judgments of the Bold")))
+			or (c.IsQueued("Avenger's Shield")
+				and s.Buff(c.GetID("Grand Crusader"), "player"))
+	    	or castGivesHP(info) then
+			
+			bumpHolyPower()
+		end
+		if s.Buff(c.GetID("Divine Purpose"), "player") then
+			a.RawHolyPower = a.HolyPower
+			a.HolyPower = math.max(3, a.HolyPower)
+		end
 	end
---c.Debug("Spam", a.HolyPower)
+	if a.RawHolyPower < 0 then
+		a.RawHolyPower = a.HolyPower
+	end
 	
 	-- selfless healer monitoring
 	a.SelflessHealer = c.GetBuffStack("Selfless Healer")
@@ -63,18 +84,13 @@ a.SetSpamFunction(function()
 		if selflessClearPending then
 			a.SelflessHealer = 0
 		end
-		if c.InfoMatches(info, "Judgment") then
+		if c.IsQueued("Judgment") then
 			a.SelflessHealer = math.min(3, a.SelflessHealer + 1)
---c.Debug("Spam", "selfless queued")
-		elseif c.InfoMatches(info, "Flash of Light") then
+		elseif c.IsQueued("Flash of Light") then
 			a.SelflessHealer = 0
---c.Debug("Spam", "selfless clear queued")
 		end
 	end
-	
-	-- flash!
-	c.Flash(a)
-end)
+end
 
 local function selflessTriggerMonitor(info)
 	if c.HasTalent("Selfless Healer") then
@@ -109,7 +125,11 @@ end
 local function flashRaidBuffs()
 	local duration = 0
 	if not s.InCombat() then
-		duration = 5 * 60
+		if s.InRaidOrParty() then
+			duration = 5 * 60
+		else
+			duration = 2 * 60
+		end
 	end
 	
 	-- if I have my own kings, make sure everyone else does too
@@ -138,111 +158,82 @@ local function flashRaidBuffs()
 end
 
 -------------------------------------------------------------------------- Holy
---local consumingInfusion = false
---a.Rotations.Holy = {
---	Spec = 1,
---	OffSwitch = "holy_off",
---	
---	FlashAlways = function()
---		c.FlashAll("Seal of Insight", "Beacon of Light", "Auras")
---		flashRaidBuffs()
---	end,
---	
---	FlashInCombat = function()
---		c.FlashAll(
---			"Judgement for Buff",
---			"Word of Glory at 3",
---			"Light of Dawn at 3",
---			"Holy Shock under 3 with Daybreak",
---			"Rebuke")
---		if c.HasBuff("Infusion of Light") and not consumingInfusion then
---			c.FlashAll("Divine Light", "Holy Radiance", "Flash of Light")
---		end
---	end,
---	
---	CastStarted = function(info)
---		if c.InfoMatches(info, "Divine Light", "Holy Radiance")
---			and c.HasBuff("Infusion of Light") then
---			
---			consumingInfusion = true
---			c.Debug("Event", "Consuming Infusion of Light")
---		end
---	end,
---	
---	CastFailed = function(info)
---		if consumingInfusion
---			and c.InfoMatches(info, "Divine Light", "Holy Radiance") then
---			
---			consumingInfusion = false
---			c.Debug("Event", "Resuming Infusion of Light (failure)")
---		end
---	end,
---	
---	CastSucceeded = function(info)
---		if consumingInfusion
---			and c.InfoMatches(
---				info, "Divine Light", "Holy Radiance", "Flash of Light") then
---			
---			consumingInfusion = false
---			c.Debug("Event", "Resuming Infusion of Light (success)")
---		end
---	end,
---	
---	AuraApplied = function(spellID, target)
---		if spellID == c.GetID("Beacon of Light") then
---			a.BeaconTarget = target
---			c.Debug("Event", "Beacon target:", target)
---		end
---	end,
---}
-
--------------------------------------------------------------------------- Prot
-local uncontrolledMitigationBuffs = { "Windwalk", "Veil of Lies" }
-a.Rotations.Protection = {
-	Spec = 2,
-	OffSwitch = "prot_off",
+a.Rotations.Holy = {
+	Spec = 1,
 	
 	FlashInCombat = function()
---c.Debug("Flash", a.HolyPower, a.SelflessHealer)
+c.Debug("Flash", a.HolyPower)
 		c.FlashAll(
-		   "Avenging Wrath if Plain", 
-		   "Hand of Reckoning", 
-		   "Rebuke",
-		   "Word of Glory for Prot",
-		   "Shield of the Righteous to save Bastion of Glory")
-		
+			"Sacred Shield for Holy",
+			"Word of Glory for Holy",
+			"Eternal Flame for Holy",
+			"Light of Dawn for Holy",
+			"Holy Shock under 5 with Daybreak",
+			"Judgment to Save Selfless Healer",
+			"Flash of Light to Save Selfless Healer",
+			"Flash of Light under Selfless Healer",
+			"Rebuke")
+	end,
+	
+	FlashAlways = function()
+		c.FlashAll("Seal of Insight", "Beacon of Light")
+		flashRaidBuffs()
+	end,
+	
+	AuraApplied = function(spellID, target)
+		if spellID == c.GetID("Beacon of Light") then
+			a.BeaconTarget = target
+			c.Debug("Event", "Beacon target:", target)
+		elseif spellID == c.GetID("Sacred Shield") then
+			a.SacredShieldTarget = target
+			c.Debug("Event", "Sacred Shield target:", target)
+		end
+	end,
+}
+
+-------------------------------------------------------------------------- Prot
+local uncontrolledMitigationBuffs = { 
+	"Devotion Aura",
+	"Divine Shield",
+	"Hand of Protection",
+}
+
+a.Rotations.Protection = {
+	Spec = 2,
+	
+	FlashInCombat = function()
+		c.FlashAll(
+			"Avenging Wrath if Plain", 
+			"Hand of Reckoning", 
+			"Rebuke",
+			"Word of Glory for Prot",
+			"Shield of the Righteous to save Buffs",
+			"Lay on Hands")
+
 		c.FlashMitigationBuffs(
 			1,
 			uncontrolledMitigationBuffs,
+			"Hand of Purity",
 			"Divine Protection", 
-			"Fire of the Deep", 
-			"Holy Avenger",
+			"Holy Avenger for Prot",
+			"Ardent Defender 2pT14",
 			"Avenging Wrath if Cool for Prot",
 			"Guardian of Ancient Kings", 
 			"Ardent Defender")
 		
-		-- mitigation
-		if c.PriorityFlash(
+		local flashing = c.PriorityFlash(
+			
+			-- mitigation
 			"Holy Wrath to Stun",
 			"Hammer of the Righteous for Debuff",
-			"Eternal Flame",
-			"Sacred Shield",
-			"Flash of Light for Prot") then
+			"Eternal Flame for Prot",
+			"Sacred Shield for Prot",
+			"Flash of Light for Prot",
 			
-			return
-		end
-			
-		-- holy power
-		if c.PriorityFlash(
+			-- holy power
 			"Crusader Strike",
 			"Judgment",
-			"Avenger's Shield under Grand Crusader") then
-			
-			c.FlashAll("Shield of the Righteous")
-			return
-		end
-		
-		if not c.PriorityFlash(
+			"Avenger's Shield under Grand Crusader",
 			
 			-- thinking ahead mitigation
 			"Sacred Shield Refresh",
@@ -251,7 +242,13 @@ a.Rotations.Protection = {
 			"Avenger's Shield",
 			"Hammer of Wrath",
 			"Consecration",
-			"Holy Wrath") then
+			"Holy Wrath")
+		
+		if (flashing == "Hammer of the Righteous for Debuff"
+				or flashing == "Crusader Strike"
+				or flashing == "Judgment"
+				or flashing == "Avenger's Shield under Grand Crusader")
+			and a.HolyPower + (c.HasBuff("Holy Avenger") and 3 or 1) > 5 then
 			
 			c.FlashAll("Shield of the Righteous")
 		end
@@ -262,7 +259,9 @@ a.Rotations.Protection = {
 		flashRaidBuffs()
 	end,
 	
-	CastSucceeded = selflessTriggerMonitor,
+	CastSucceeded = function(info)
+		selflessTriggerMonitor(info)
+	end,
 	
 	SpellMissed = function(spellID)
 		clearSelflessPending(spellID, "Judgment")
@@ -273,32 +272,46 @@ a.Rotations.Protection = {
 	end,
 	
 	AuraRemoved = clearSelflessMonitor,
+	
+	ExtraDebugInfo = function()
+		return string.format("%s %s", a.HolyPower, a.SelflessHealer)
+	end,
 }
 
 --------------------------------------------------------------------------- Ret
 a.Rotations.Retribution = {
 	Spec = 3,
-	OffSwitch = "ret_off",
 	
 	FlashInCombat = function()
-		c.FlashAll("Avenging Wrath", "Holy Avenger", "Rebuke")
+		c.FlashAll(
+			"Avenging Wrath for Ret", 
+			"Holy Avenger", 
+			"Lay on Hands", 
+			"Rebuke")
 		c.PriorityFlash(
 			"Inquisition",
-			"Templar's Verdict at 5",
+			"Execution Sentence",
 			"Hammer of Wrath for Ret",
+			"Inquisition before Templar's Verdict at 5",
+			"Templar's Verdict at 5",
 			"Exorcism",
+			"Judgment unless Wastes GCD",
 			"Crusader Strike",
 			"Judgment",
-			"Seal of Insight below 20",
-			"Templar's Verdict")
+			"Light's Hammer",
+			"Holy Prism",
+			"Inquisition before Templar's Verdict",
+			"Templar's Verdict",
+			"Sacred Shield for Ret")
 	end,
 	
 	FlashAlways = function()
---		if s.PowerPercent() < 20 then
---			c.FlashAll("Seal of Insight")
---		elseif s.PowerPercent() > 90 or s.Form() == nil then
-			c.FlashAll("Seal of Truth")
---		end
+		c.FlashAll(
+			"Seal of Truth", "Flash of Light for Ret", "Word of Glory for Ret")
 		flashRaidBuffs()
+	end,
+	
+	ExtraDebugInfo = function()
+		return string.format("%s %s", a.HolyPower, a.RawHolyPower)
 	end,
 }

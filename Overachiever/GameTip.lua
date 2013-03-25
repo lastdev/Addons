@@ -53,6 +53,28 @@ do
   end
 end
 
+local isCriteria_asset
+do
+  local cache
+  function isCriteria_asset(achID, assetID)
+    local _
+    if (not cache or not cache[achID]) then
+      cache = cache or {}
+      cache[achID] = {}
+      local a
+      for i=1,GetAchievementNumCriteria(achID) do
+        _, _, _, _, _, _, _, a  = GetAchievementCriteriaInfo(achID, i)
+        cache[achID][a] = i  -- Creating lookup table
+      end
+    end
+    if (cache[achID][assetID]) then
+      local complete
+      _, _, complete = GetAchievementCriteriaInfo(achID, cache[achID][assetID])
+      return true, complete
+    end
+  end
+end
+
 --[[ Cacheless versions:
 local function isCriteria(achID, name)
   local n, t, complete
@@ -122,17 +144,15 @@ function Overachiever.GetDifficulty()
   --   Note: While it may seem that the "Heroic?" and "Heroic Raid?" returns are redundant here, it's done this
   --   way to make the return values consistent with those given when you're NOT in an instance.
     local _, itype, diff, _, _, dynDiff, isDynamic = GetInstanceInfo()
-    if (itype == "raid") then
-      if (isDynamic) then  return itype, (dynDiff == 1), (diff == 2 or diff == 4), (dynDiff == 1), true;  end
-      return itype, (diff > 2), (diff == 2 or diff == 4), (diff > 2), false
-    end
-    return itype, (diff > 1), false
+    --if (isDynamic) then  diff = dynDiff;  end  -- Testing is needed to see if this line is necessary.
+    local _, _, isHeroic = GetDifficultyInfo(diff) -- This function can also give us isChallengeMode, but we're not using it at the moment.
+    return itype, isHeroic, (diff == 4 or diff == 6), (diff == 5 or diff == 6), isDynamic
   end
 -- IF NOT IN AN INSTANCE:
   -- Returns: false, <Dungeon set as Heroic?>, <Raid set for 25 players?>, <Raid set as Heroic?>
   local d = GetDungeonDifficultyID()
-  local r = GetRaidDifficulty()
-  return false, (d > 1), (r == 2 or r == 4), (r > 2)
+  local r = GetRaidDifficultyID()
+  return false, (d > 1), (r == 4 or r == 6), (r > 4)
 end
 
 
@@ -155,7 +175,9 @@ local function CritterCheck(ach, name)
   end
   local isCrit, complete = isCriteria(id, name)
   if (isCrit) then
-    return id, complete and CritterAch[ach][2] or CritterAch[ach][3], complete
+    local tip = complete and CritterAch[ach][2] or CritterAch[ach][3]
+    if (Overachiever_Debug) then  tip = tip .. " (" .. id .. ")";  end
+    return id, tip, complete
   end
 end
 
@@ -170,7 +192,7 @@ local RaceClassAch = {
     { "BloodElf", "Draenei", "Dwarf", "Gnome", "Goblin", "Human", "NightElf", "Orc", "Tauren", "Troll", "Scourge", "Worgen" }, true
   },
   TurkeyLurkey = { "TurkeyLurkey_feathered", L.ACH_TURKEYLURKEY_COMPLETE, L.ACH_TURKEYLURKEY_INCOMPLETE,
-    { "BloodElf ROGUE", "Dwarf ROGUE", "Gnome ROGUE", "Human ROGUE", "NightElf ROGUE", "Orc ROGUE", "Troll ROGUE", "Scourge ROGUE" }
+    { "BloodElf ROGUE", "Dwarf ROGUE", "Gnome ROGUE", "Goblin ROGUE", "Human ROGUE", "NightElf ROGUE", "Orc ROGUE", "Troll ROGUE", "Scourge ROGUE", "Worgen ROGUE" }
   },
   BunnyMaker = { "BunnyMaker_eared", L.ACH_BUNNYMAKER_COMPLETE, L.ACH_BUNNYMAKER_INCOMPLETE,
     { "BloodElf", "Draenei", "Dwarf", "Gnome", "Goblin", "Human", "NightElf", "Orc", "Tauren", "Troll", "Scourge", "Worgen" }, true,
@@ -262,7 +284,8 @@ function Overachiever.ExamineSetUnit(tooltip)
     end
 
   elseif (name) then
-    if (UnitCreatureType(unit) == L.CRITTER) then
+    local type = UnitCreatureType(unit)
+    if (type == L.CRITTER or type == L.WILDPET) then
       for key,tab in pairs(CritterAch) do
         if (Overachiever_Settings[ tab[1] ]) then
           id, text, complete = CritterCheck(key, name)
@@ -284,7 +307,8 @@ function Overachiever.ExamineSetUnit(tooltip)
 
     elseif (Overachiever_Settings.CreatureTip_killed and UnitCanAttack("player", unit)) then
       local guid = UnitGUID(unit)
-      guid = tonumber( "0x"..strsub(guid, 8, 12) )
+      --guid = tonumber( "0x"..strsub(guid, 6, 10) )
+      guid = tonumber(guid:sub(6,10), 16)
       local tab = Overachiever.AchLookup_kill[guid]
       if (tab) then
         local num, numincomplete, potential, _, achcom, c, t = 0, 0
@@ -304,18 +328,16 @@ function Overachiever.ExamineSetUnit(tooltip)
 
         if (num > 0) then
           if (numincomplete > 0) then
+            local cat, t
             local instype, heroic, twentyfive = Overachiever.GetDifficulty()
-            if (instype) then
-              local cat, t
-              for id, crit in pairs(potential) do
-                cat = GetAchievementCategory(id)
-                if ((not heroic and (OVERACHIEVER_CATEGORY_HEROIC[cat] or (OVERACHIEVER_HEROIC_CRITERIA[id] and OVERACHIEVER_HEROIC_CRITERIA[id][crit])))
-                    or (not twentyfive and OVERACHIEVER_CATEGORY_25[cat])) then
-                  numincomplete = numincomplete - 1
-                else
-                  t = t or time()
-                  RecentReminders[id] = t
-                end
+            for id, crit in pairs(potential) do
+              cat = GetAchievementCategory(id)
+              if (((not instype or not heroic) and (OVERACHIEVER_CATEGORY_HEROIC[cat] or (OVERACHIEVER_HEROIC_CRITERIA[id] and OVERACHIEVER_HEROIC_CRITERIA[id][crit])))
+                  or ((not instype or not twentyfive) and OVERACHIEVER_CATEGORY_25[cat])) then
+                numincomplete = numincomplete - 1 -- Discount this reminder if it's heroic-only and you're not in a heroic instance or if it's 25-man only and you're not in a 25-man instance.
+              else
+                t = t or time()
+                RecentReminders[id] = t
               end
             end
           end
@@ -351,6 +373,7 @@ local WorldObjAch = {
   NorthrendAngler = { "AnglerTip_fished", L.ACH_ANGLER_COMPLETE, L.ACH_ANGLER_INCOMPLETE, true },
   Limnologist = { "SchoolTip_fished", L.ACH_ANGLER_COMPLETE, L.ACH_ANGLER_INCOMPLETE, true, L.ACH_FISHSCHOOL_FORMAT },
   Oceanographer = { "SchoolTip_fished", L.ACH_ANGLER_COMPLETE, L.ACH_ANGLER_INCOMPLETE, true, L.ACH_FISHSCHOOL_FORMAT },
+  PandarianAngler = { "SchoolTip_fished", L.ACH_ANGLER_COMPLETE, L.ACH_ANGLER_INCOMPLETE, true, L.ACH_FISHSCHOOL_FORMAT },
 };
 
 local function WorldObjCheck(ach, text)
@@ -428,7 +451,9 @@ end
 -- ITEM TOOLTIP HOOK
 ----------------------
 
-local FoodCriteria, DrinkCriteria, FoodCriteria2, DrinkCriteria2 = {}, {}, {}, {}
+-- All this consumable item tracking stuff really should be rewritten when you've got the time. (It's so disorganized and confusing because Blizzard kept changing things on me but I didn't want to take too long fixing things.)
+
+local FoodCriteria, DrinkCriteria, FoodCriteria2, DrinkCriteria2, PandaEats, PandaEats2 = {}, {}, {}, {}, {}, {}
 local numDrinksConsumed, numFoodConsumed
 
 local ConsumeItemAch = {
@@ -436,6 +461,8 @@ local ConsumeItemAch = {
   HappyHour = { "Item_consumed", L.ACH_CONSUME_COMPLETE, L.ACH_CONSUME_INCOMPLETE, L.ACH_CONSUME_INCOMPLETE_EXTRA, DrinkCriteria },
   CataclysmicallyDelicious = { "Item_consumed", L.ACH_CONSUME_COMPLETE, L.ACH_CONSUME_INCOMPLETE, L.ACH_CONSUME_INCOMPLETE_EXTRA, FoodCriteria2 },
   DrownYourSorrows = { "Item_consumed", L.ACH_CONSUME_COMPLETE, L.ACH_CONSUME_INCOMPLETE, L.ACH_CONSUME_INCOMPLETE_EXTRA, DrinkCriteria2 },
+  PandarenCuisine = { "Item_consumed", L.ACH_CONSUME_COMPLETE, L.ACH_CONSUME_INCOMPLETE, L.ACH_CONSUME_INCOMPLETE_EXTRA, PandaEats, "PandaEats" },
+  PandarenDelicacies = { "Item_consumed", L.ACH_CONSUME_COMPLETE, L.ACH_CONSUME_INCOMPLETE, L.ACH_CONSUME_INCOMPLETE_EXTRA, PandaEats2, "PandaEats2" },
 };
 
 --local lastitemTime, lastitemLink = 0
@@ -461,10 +488,10 @@ function Overachiever.BuildItemLookupTab(THIS_VERSION, id, savedtab, tab, duptab
       if ((not savedtab or next(savedtab) == nil) and Overachiever.Consumed_Default[id]) then
         wipe(tab)
         for k,v in pairs(Overachiever.Consumed_Default[id]) do
-	  tab[k] = v;
-	  if (savedtab) then  savedtab[k] = v;  end
-	end
-	if (Overachiever_Debug) then  Overachiever.chatprint("Skipped lookup table rebuild for Ach #"..id..": Used default list because WoW API no longer supports the required method and character has no relevant saved data.");  end
+          tab[k] = v;
+          if (savedtab) then  savedtab[k] = v;  end
+        end
+        if (Overachiever_Debug) then  Overachiever.chatprint("Skipped lookup table rebuild for Ach #"..id..": Used default list because WoW API no longer supports the required method and character has no relevant saved data.");  end
       elseif (savedtab) then
         wipe(tab)
         for k,v in pairs(savedtab) do  tab[k] = v;  end  -- Copy table (cannot just set using "=" or reference will be lost)
@@ -473,7 +500,6 @@ function Overachiever.BuildItemLookupTab(THIS_VERSION, id, savedtab, tab, duptab
       return tab
     end
 
-    local GetAchievementCriteriaInfo = GetAchievementCriteriaInfo
     local i, _, completed, asset = 1
     _, _, completed, _, _, _, _, asset = GetAchievementCriteriaInfo(id, i)
     while (asset) do -- while loop used because "hidden" criteria may be used (where GetAchievementNumCriteria returns only 1).
@@ -511,12 +537,15 @@ function Overachiever.BuildItemLookupTab(THIS_VERSION, id, savedtab, tab, duptab
   local _, gamebuild = GetBuildInfo()
   if (not Overachiever_CharVars_Consumed or not Overachiever_CharVars_Consumed.LastBuilt or
       not Overachiever_CharVars_Consumed.Food or not Overachiever_CharVars_Consumed.Drink or
-      not Overachiever_CharVars_Consumed.Food2 or not Overachiever_CharVars_Consumed.Drink2) then
+      not Overachiever_CharVars_Consumed.Food2 or not Overachiever_CharVars_Consumed.Drink2 or
+      not Overachiever_CharVars_Consumed.PandaEats or not Overachiever_CharVars_Consumed.PandaEats2) then
     Overachiever_CharVars_Consumed = Overachiever_CharVars_Consumed or {}
     Overachiever_CharVars_Consumed.Food = Overachiever_CharVars_Consumed.Food or {}
     Overachiever_CharVars_Consumed.Drink = Overachiever_CharVars_Consumed.Drink or {}
     Overachiever_CharVars_Consumed.Food2 = Overachiever_CharVars_Consumed.Food2 or {}
     Overachiever_CharVars_Consumed.Drink2 = Overachiever_CharVars_Consumed.Drink2 or {}
+    Overachiever_CharVars_Consumed.PandaEats = Overachiever_CharVars_Consumed.PandaEats or {}
+    Overachiever_CharVars_Consumed.PandaEats2 = Overachiever_CharVars_Consumed.PandaEats2 or {}
     needBuild = true
   else
     local oldver, oldbuild = strsplit("|", Overachiever_CharVars_Consumed.LastBuilt, 2)
@@ -528,12 +557,16 @@ function Overachiever.BuildItemLookupTab(THIS_VERSION, id, savedtab, tab, duptab
     Overachiever_CharVars_Consumed.Drink = Overachiever.BuildItemLookupTab(nil, OVERACHIEVER_ACHID.HappyHour, Overachiever_CharVars_Consumed.Drink, DrinkCriteria)
     Overachiever_CharVars_Consumed.Food2 = Overachiever.BuildItemLookupTab(nil, OVERACHIEVER_ACHID.CataclysmicallyDelicious, Overachiever_CharVars_Consumed.Food2, FoodCriteria2, FoodCriteria)
     Overachiever_CharVars_Consumed.Drink2 = Overachiever.BuildItemLookupTab(nil, OVERACHIEVER_ACHID.DrownYourSorrows, Overachiever_CharVars_Consumed.Drink2, DrinkCriteria2, DrinkCriteria)
+    Overachiever_CharVars_Consumed.PandaEats = Overachiever.BuildItemLookupTab(nil, OVERACHIEVER_ACHID.PandarenCuisine, Overachiever_CharVars_Consumed.PandaEats, PandaEats)
+    Overachiever_CharVars_Consumed.PandaEats2 = Overachiever.BuildItemLookupTab(nil, OVERACHIEVER_ACHID.PandarenDelicacies, Overachiever_CharVars_Consumed.PandaEats2, PandaEats2)
     Overachiever_CharVars_Consumed.LastBuilt = THIS_VERSION.."|"..gamebuild
   else
     FoodCriteria, DrinkCriteria = Overachiever_CharVars_Consumed.Food, Overachiever_CharVars_Consumed.Drink
     FoodCriteria2, DrinkCriteria2 = Overachiever_CharVars_Consumed.Food2, Overachiever_CharVars_Consumed.Drink2
+    PandaEats, PandaEats2 = Overachiever_CharVars_Consumed.PandaEats, Overachiever_CharVars_Consumed.PandaEats2;
     ConsumeItemAch.TastesLikeChicken[5], ConsumeItemAch.HappyHour[5] = FoodCriteria, DrinkCriteria
     ConsumeItemAch.CataclysmicallyDelicious[5], ConsumeItemAch.DrownYourSorrows[5] = FoodCriteria2, DrinkCriteria2
+    ConsumeItemAch.PandarenCuisine[5], ConsumeItemAch.PandarenDelicacies[5] = PandaEats, PandaEats2
     if (Overachiever_Debug) then  Overachiever.chatprint("Skipped food/drink lookup table rebuild: Retrieved from saved variables.");  end
   end
   Overachiever.Consumed_Default = nil
@@ -554,8 +587,19 @@ local function ItemConsumedCheck(ach, itemID)
   end
   local isCrit = ach[5][itemID]
   if (isCrit) then
-    local complete = isCrit == true
-    return id, complete and ach[2] or achcomplete and ach[4] or ach[3], complete, achcomplete
+    local complete
+    if (ach[6]) then -- Special case for criteria we can't track by seeing what was consumed (consumed food/drink statistic doesn't change - Blizzard bug?) but CAN track through the achievement itself:
+      isCrit, complete = isCriteria_asset(id, itemID)
+      if (not isCrit) then  return;  end  -- That should never happen..
+      -- Update the table for tracking purposes, just to be consistent (mostly for the saved variable, in case we use it in some other way in the future):
+      ach[5][itemID] = complete or 0
+      Overachiever_CharVars_Consumed[ ach[6] ][itemID] = complete or 0
+    else
+      complete = isCrit == true
+    end
+    local tip = complete and ach[2] or achcomplete and ach[4] or ach[3]
+    if (Overachiever_Debug) then  tip = tip .. " (" .. id .. ")";  end
+    return id, tip, complete, achcomplete
   end
 end
 
@@ -584,6 +628,7 @@ function Overachiever.ExamineItem(tooltip)
       (itemType == LBI["Trade Goods"] and subtype == LBI["Meat"])) then
     local _, _, itemID  = strfind(link, "item:(%d+)")
     itemID = tonumber(itemID)
+    if (not itemID) then  return;  end  -- Ignores special objects not classified as normal items, like battlepets
     local id, text, complete, achcomplete
     for key,tab in pairs(ConsumeItemAch) do
       if (Overachiever_Settings[ tab[1] ]) then
@@ -638,11 +683,14 @@ local function BagUpdate(...)
   numFoodConsumed = tonumber(GetStatistic(OVERACHIEVER_ACHID.Stat_ConsumeFood)) or 0
   numDrinksConsumed = tonumber(GetStatistic(OVERACHIEVER_ACHID.Stat_ConsumeDrinks)) or 0
 
+  --print("BagUpdate?",numFoodConsumed,oldF < numFoodConsumed, numDrinksConsumed,oldD < numDrinksConsumed)
+
   local changeF, changeD = oldF < numFoodConsumed, oldD < numDrinksConsumed
   if (changeF or changeD) then
     local itemID, old, new
     for i=1,select("#", ...),3 do
       itemID, old, new = select(i, ...)
+      --print(itemID, old, new)
       --if (old > new) then
       if (changeF) then
         if (FoodCriteria[itemID]) then
@@ -657,6 +705,22 @@ local function BagUpdate(...)
           FoodCriteria2[itemID] = true
           Overachiever_CharVars_Consumed.Food2[itemID] = true
         end
+        if (PandaEats[itemID]) then -- Unfortunately, this won't be triggered because the associated consumables don't increase the statistic properly.
+          if (Overachiever_Debug) then
+            local _, link = GetItemInfo(itemID)
+            print("You ate:",link)
+          end
+          PandaEats[itemID] = true
+          Overachiever_CharVars_Consumed.PandaEats[itemID] = true
+        end
+        if (PandaEats2[itemID]) then -- Unfortunately, this won't be triggered because the associated consumables don't increase the statistic properly.
+          if (Overachiever_Debug) then
+            local _, link = GetItemInfo(itemID)
+            print("You ate:",link)
+          end
+          PandaEats2[itemID] = true
+          Overachiever_CharVars_Consumed.PandaEats2[itemID] = true
+        end
       end
       if (changeD) then
         if (DrinkCriteria[itemID]) then
@@ -670,6 +734,22 @@ local function BagUpdate(...)
           --print("You drank:",link)
           DrinkCriteria2[itemID] = true
           Overachiever_CharVars_Consumed.Drink2[itemID] = true
+        end
+        if (PandaEats[itemID]) then -- Unfortunately, this won't be triggered because the associated consumables don't increase the statistic properly.
+          if (Overachiever_Debug) then
+            local _, link = GetItemInfo(itemID)
+            print("You drank:",link)
+          end
+          PandaEats[itemID] = true
+          Overachiever_CharVars_Consumed.PandaEats[itemID] = true
+        end
+        if (PandaEats2[itemID]) then -- Unfortunately, this won't be triggered because the associated consumables don't increase the statistic properly.
+          if (Overachiever_Debug) then
+            local _, link = GetItemInfo(itemID)
+            print("You drank:",link)
+          end
+          PandaEats2[itemID] = true
+          Overachiever_CharVars_Consumed.PandaEats2[itemID] = true
         end
       end
       --end

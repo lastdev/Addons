@@ -176,6 +176,7 @@ L["HOT Uptime"] = true
 L["HPS"] = true
 L["HTPS"] = true
 L["Incoming"] = true
+L["Instance"] = true
 L["Instance Based Deletion"] = true
 L["Integrate"] = true
 L["Interrupted"] = true

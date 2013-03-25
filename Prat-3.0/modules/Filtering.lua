@@ -147,8 +147,8 @@ L:AddLocale("esMX",
 )
 L:AddLocale("ruRU",  
 {
-	afkdnd_desc = "Заглушать сообщения AFK и DND.", -- Needs review
-	afkdnd_name = "Заглушать сообщения AFK и DND.", -- Needs review
+	afkdnd_desc = "Заглушать сообщения AFK и DND.",
+	afkdnd_name = "Заглушать сообщения AFK и DND.",
 	["A module to provide basic chat filtering."] = "Модуль для обеспечения базовый фильтрации чата.",
 	bgjoin_desc = "Отфильтровывать сообщения входа и выхода на/из Поля Сражения (БГ)",
 	bgjoin_name = "Отфильтровывать вход/выход на ПС",
@@ -157,8 +157,8 @@ L:AddLocale("ruRU",
 	leavejoin_name = "Вход/выход в/из канала",
 	notices_desc = "Отфильтровывать извещения в каналах (такие как смета модератора и т.п.).",
 	notices_name = "Извещения в канале",
-	-- tradespam_desc = "",
-	-- tradespam_name = "",
+	tradespam_desc = "Скрывать повторяющиеся сообщения",
+	tradespam_name = "Скрывать спам",
 }
 
 )

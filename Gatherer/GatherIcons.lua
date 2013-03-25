@@ -1,8 +1,8 @@
 ﻿--[[
 	Icon set definitions
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.6 (<%codename%>)
-	Revision: $Id: GatherIcons.lua 1033 2012-09-30 04:00:08Z LocalizerAutoCommit $
+	Version: 4.2.0 (<%codename%>)
+	Revision: $Id: GatherIcons.lua 1074 2013-03-03 05:00:04Z LocalizerAutoCommit $
 
 	License:
 		This program is free software; you can redistribute it and/or

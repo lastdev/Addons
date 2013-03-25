@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 503 2012-09-06T17:15:50Z
+    Revision: 585 2013-03-02T14:19:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -194,7 +194,16 @@ function ArmoryReputationFrame_Update()
             end
             factionRow.index = factionIndex;
             factionRow.isCollapsed = isCollapsed;
-            local factionStandingtext = GetText("FACTION_STANDING_LABEL"..standingID, gender);
+            
+            local factionStandingtext;
+            local isCappedFriendship;
+            -- description contains friendship
+            if ( description ) then
+                factionStandingtext = description;
+                isCappedFriendship = (barValue == barMax);
+            else
+                factionStandingtext = GetText("FACTION_STANDING_LABEL"..standingID, gender);
+            end
             factionStanding:SetText(factionStandingtext);
 
             -- Normalize values
@@ -203,7 +212,11 @@ function ArmoryReputationFrame_Update()
             barMin = 0;
 
             factionRow.standingText = factionStandingtext;
-            factionRow.tooltip = HIGHLIGHT_FONT_COLOR_CODE.." "..barValue.." / "..barMax..FONT_COLOR_CODE_CLOSE;
+            if ( isCappedFriendship ) then
+                factionRow.tooltip = nil;
+            else
+                factionRow.tooltip = HIGHLIGHT_FONT_COLOR_CODE.." "..barValue.." / "..barMax..FONT_COLOR_CODE_CLOSE;
+            end
             factionBar:SetMinMaxValues(0, barMax);
             factionBar:SetValue(barValue);
             local color = FACTION_BAR_COLORS[standingID];
@@ -295,14 +308,19 @@ function ArmoryReputationBar_DrawVerticalLine(texture, rows)
 end
 
 function ArmoryReputationBar_DrawHorizontalLine(texture, width, anchorTo)
-    ReputationBar_DrawHorizontalLine(texture, width, anchorTo);
+  	texture:SetPoint("RIGHT", anchorTo, "LEFT", 3, 0);
+	texture:SetWidth(width);
+	texture:SetTexCoord(0, width/2, 0, 0.25);
+	texture:Show();
 end
 
 function ArmoryReputationBar_OnClick(self)
     if ( IsModifiedClick("CHATLINK") ) then
         if ( self.hasRep ) then
-            local name, _, standingID, barMin, barMax, barValue = Armory:GetFactionInfo(self.index);
-            local standing = GetText("FACTION_STANDING_LABEL"..standingID, Armory:UnitSex("player"));
+            local name, standing, standingID, barMin, barMax, barValue = Armory:GetFactionInfo(self.index);
+            if ( not standing ) then
+                standing = GetText("FACTION_STANDING_LABEL"..standingID, Armory:UnitSex("player"));
+            end
             local text = format(ARMORY_REPUTATION_SUMMARY, name, standing, barValue - barMin, barMax - barMin, barMax - barValue);
             if ( not ChatEdit_InsertLink(text) ) then
                 ChatFrame_OpenChat(text);

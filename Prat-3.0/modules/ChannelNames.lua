@@ -17,8 +17,8 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program; if not, write to:
 --
--- Free Software Foundation, Inc., 
--- 51 Franklin Street, Fifth Floor, 
+-- Free Software Foundation, Inc.,
+-- 51 Franklin Street, Fifth Floor,
 -- Boston, MA  02110-1301, USA.
 --
 --
@@ -28,12 +28,12 @@
 
 
 
-Prat:AddModuleToLoad(function() 
+Prat:AddModuleToLoad(function()
 
 local PRAT_MODULE = Prat:RequestModuleName("ChannelNames")
 
-if PRAT_MODULE == nil then 
-    return 
+if PRAT_MODULE == nil then
+    return
 end
 
 -- define localized strings
@@ -51,14 +51,14 @@ L:AddLocale("enUS", {
     ["Channel %d"] = true,
     ["%s settings."] = true,
     ["Use a custom replacement for the chat %s text."] = true,
-    
+
 	["channelnick_name"] = "Channel Abbreviations",
 	["channelnick_desc"] = "Channel Abbreviations",
 
     ["Add Channel Abbreviation"] = true,
     ["addnick_desc"] = "Adds an abbreviated channel name. Prefix the name with '#' to include the channel number. (e.g. '#Trade').",
     ["Remove Channel Abbreviation"] = true,
-    ["Removes an an abbreviated channel name."] = true,    
+    ["Removes an an abbreviated channel name."] = true,
     ["Clear Channel Abbreviation"] = true,
     ["Clears an abbreviated channel name."] = true,
 
@@ -72,7 +72,7 @@ L:AddLocale("enUS", {
 
     ["chanlink_name"] = "Create Channel Link",
     ["chanlink_desc"] = "Make the channel a clickable link which opens chat to that channel.",
-	
+
     ["<string>"] = true,
 })
 --@end-debug@]===]
@@ -82,7 +82,7 @@ L:AddLocale("enUS", {
 
 
 --@non-debug@
-L:AddLocale("enUS", 
+L:AddLocale("enUS",
 {
 	["Add Channel Abbreviation"] = true,
 	addnick_desc = "Adds an abbreviated channel name. Prefix the name with '#' to include the channel number. (e.g. '#Trade').",
@@ -114,7 +114,7 @@ L:AddLocale("enUS",
 }
 
 )
-L:AddLocale("frFR",  
+L:AddLocale("frFR",
 {
 	["Add Channel Abbreviation"] = "Ajouter une abréviation",
 	addnick_desc = "Ajoute une abréviation pour le nom de ce canal. Préfixer le nom avec '#' permet d'inclure le numéro du canal. (Exemple : '#Commerce')",
@@ -146,7 +146,7 @@ L:AddLocale("frFR",
 }
 
 )
-L:AddLocale("deDE", 
+L:AddLocale("deDE",
 {
 	["Add Channel Abbreviation"] = "Hinzufügen einer Kanal-Abkürzung",
 	addnick_desc = "Fügt einen abgekürzten Kanalnamen hinzu. Füge den Vorsatz '#' dem Namen hinzu, um die Nummer des Kanals mit anzuzeigen (z.B. '#Handel')",
@@ -179,7 +179,7 @@ L:AddLocale("deDE",
 }
 
 )
-L:AddLocale("koKR",  
+L:AddLocale("koKR",
 {
 	["Add Channel Abbreviation"] = "채널 이름 줄임 추가",
 	addnick_desc = "채널 이름 줄이기 추가. 채널 이름에 #을 붙이면 채널 번호를 포함합니다. (예. '#거래').",
@@ -211,7 +211,7 @@ L:AddLocale("koKR",
 }
 
 )
-L:AddLocale("esMX",  
+L:AddLocale("esMX",
 {
 	-- ["Add Channel Abbreviation"] = "",
 	-- addnick_desc = "",
@@ -243,7 +243,7 @@ L:AddLocale("esMX",
 }
 
 )
-L:AddLocale("ruRU",  
+L:AddLocale("ruRU",
 {
 	["Add Channel Abbreviation"] = "Добавить сокращение канала",
 	addnick_desc = "Добавляет сокращение названий каналов. Префикс названия с '#' включает номер канала. (например '#Торговля').",
@@ -275,7 +275,7 @@ L:AddLocale("ruRU",
 }
 
 )
-L:AddLocale("zhCN",  
+L:AddLocale("zhCN",
 {
 	["Add Channel Abbreviation"] = "添加频道缩写",
 	addnick_desc = "添加一个缩写的频道名称.名称前缀为 '#' 来包含频道数字(例如'#贸易')",
@@ -307,7 +307,7 @@ L:AddLocale("zhCN",
 }
 
 )
-L:AddLocale("esES",  
+L:AddLocale("esES",
 {
 	["Add Channel Abbreviation"] = "Añadir Abreviatura del Canal",
 	addnick_desc = "Agrega un nombre abreviado del canal. El nombre con '#' para incluir el número de canal. (por ejemplo, '#Comercio').",
@@ -339,7 +339,7 @@ L:AddLocale("esES",
 }
 
 )
-L:AddLocale("zhTW",  
+L:AddLocale("zhTW",
 {
 	["Add Channel Abbreviation"] = "新增頻道縮寫",
 	-- addnick_desc = "",
@@ -387,15 +387,23 @@ local orderMap = {
         "raid",
         "raidleader",
         "raidwarning",
-        "battleground",
-        "battlegroundleader",
+        "instance",
+        "instanceleader",
         "bnwhisper",
         "bnwhisperincome",
         "bnconversation",
 }
 
-if not CHAT_MSG_BN_WHISPER_INFORM then 
+if not CHAT_MSG_BN_WHISPER_INFORM then
     CHAT_MSG_BN_WHISPER_INFORM = "Outgoing Real ID Whisper";
+end
+
+if not CHAT_MSG_INSTANCE_CHAT then
+    CHAT_MSG_INSTANCE_CHAT = INSTANCE_CHAT_MESSAGE;
+end
+
+if not CHAT_MSG_INSTANCE_CHAT_LEADER then
+    CHAT_MSG_INSTANCE_CHAT_LEADER = INSTANCE_CHAT_LEADER;
 end
 
 -- Look Up Our Settings Key event..message.CHANNUM
@@ -424,8 +432,8 @@ local eventMap = {
     CHAT_MSG_RAID = "raid",
     CHAT_MSG_RAID_LEADER = "raidleader",
     CHAT_MSG_RAID_WARNING = "raidwarning",
-    CHAT_MSG_BATTLEGROUND = "battleground",
-    CHAT_MSG_BATTLEGROUND_LEADER = "battlegroundleader",
+    CHAT_MSG_INSTANCE_CHAT = "instance",
+    CHAT_MSG_INSTANCE_CHAT_LEADER = "instanceleader",
     CHAT_MSG_BN_CONVERSATION = "bnconversation"
 }
 
@@ -454,8 +462,8 @@ Prat:SetModuleDefaults(module.name, {
         raid = true,
         raidleader = true,
         raidwarning = true,
-        battleground = true,
-        battlegroundleader = true,
+        instance = true,
+        instanceleader = true,
         channel1 = true,
         channel2 = true,
         channel3 = true,
@@ -468,7 +476,7 @@ Prat:SetModuleDefaults(module.name, {
         channel10 = true,
     },
     chanSave = {},
-    shortnames = 
+    shortnames =
 		-- zhCN
 		PratCNlocal == "zhCN" and {
         say = "[说]",
@@ -481,8 +489,8 @@ Prat:SetModuleDefaults(module.name, {
         raid = "[团]",
         raidleader = "[酱]",
         raidwarning = "[警]",
-        battleground = "[战]",
-        battlegroundleader = "[蟀]",
+        instance = "[战]",
+        instanceleader = "[蟀]",
         channel1 = "[1]",
         channel2 = "[2]",
         channel3 = "[3]",
@@ -506,8 +514,8 @@ Prat:SetModuleDefaults(module.name, {
         raid = "[團]",
         raidleader = "[團長]",
         raidwarning = "[警]",
-        battleground = "[戰]",
-        battlegroundleader = "[戰領]",
+        instance = "[戰]",
+        instanceleader = "[戰領]",
         channel1 = "[1]",
         channel2 = "[2]",
         channel3 = "[3]",
@@ -531,8 +539,8 @@ Prat:SetModuleDefaults(module.name, {
         raid = "[공대]",
         raidleader = "[공대장]",
         raidwarning = "[공대경보]",
-        battleground = "[전장]",
-        battlegroundleader = "[전투대장]",
+        instance = "[전장]",
+        instanceleader = "[전투대장]",
         channel1 = "[1]",
         channel2 = "[2]",
         channel3 = "[3]",
@@ -560,8 +568,8 @@ Prat:SetModuleDefaults(module.name, {
         raid = "[R]",
         raidleader = "[RL]",
         raidwarning = "[RW]",
-        battleground = "[B]",
-        battlegroundleader = "[BL]",
+        instance = "[I]",
+        instanceleader = "[IL]",
         channel1 = "[1]",
         channel2 = "[2]",
         channel3 = "[3]",
@@ -573,7 +581,7 @@ Prat:SetModuleDefaults(module.name, {
         channel9 = "[9]",
         channel10 = "[10]",
     },
-    
+
     nickname = {}
 	}
 })
@@ -640,7 +648,7 @@ Prat:SetModuleOptions(module.name, {
 function module:OnModuleEnable()
 	self:BuildChannelOptions()
     self:RegisterEvent("UPDATE_CHAT_COLOR", "RefreshOptions")
-	self:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE") 
+	self:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE")
 
 	Prat.RegisterChatEvent(self, "Prat_FrameMessage")
 
@@ -664,7 +672,7 @@ end
 
 --function module:ChatEdit_UpdateHeader(editBox, ...)
 --    self.hooks["ChatEdit_UpdateHeader"](...)
---	
+--
 --    local type = editBox:GetAttribute("chatType");
 --	if ( not type ) then
 --		return;
@@ -674,7 +682,7 @@ end
 --	local header = _G[editBox:GetName().."Header"];
 --	if ( not header ) then
 --		return;
---	end    
+--	end
 --
 --    if ( type == "CHANNEL" ) then
 --		local channel, channelName, instanceID = Prat.GetChannelName(editBox:GetAttribute("channelTarget"));
@@ -745,7 +753,7 @@ function module:Prat_FrameMessage(arg, message, frame, event)
         end
 
         local cfg
-        
+
         if event == "CHAT_MSG_BN_CONVERSATION" then
          cfg = eventMap[event]
         else
@@ -765,17 +773,17 @@ function module:Prat_FrameMessage(arg, message, frame, event)
             local colon = self.db.profile.colon and (message.PLAYERLINK:len() > 0 and message.MESSAGE:len() > 0) and ":" or ""
             message.TYPEPREFIX = self.db.profile.shortnames[cfg] or ""
 
-			if message.TYPEPREFIX:len() == 0 then 
+			if message.TYPEPREFIX:len() == 0 then
                 message.nN, message.NN, message.Nn, message.CHANLINK = "", "", "", ""
 			end
 
             message.TYPEPREFIX = message.TYPEPREFIX..space
-            
-            if (message.PLAYERLINK:len() > 0) or (message.TYPEPREFIX:len() > 0)  then 
+
+            if (message.PLAYERLINK:len() > 0) or (message.TYPEPREFIX:len() > 0)  then
                 message.TYPEPOSTFIX = colon.."\32"
             else
                 message.TYPEPOSTFIX = ""
-            end	
+            end
         end
 --    end
 end
@@ -791,13 +799,13 @@ function module:BuildChannelOptions()
     for i=1,9 do
         self:CreateChannelOption(eventPlugins["channels"], "channel"..i, i)
     end
-    
+
     local t = Prat.GetChannelTable()
     for k, v in pairs(t) do
         if type(v) == "string" then
             self:CreateChanNickOption(nickPlugins["nicks"], v)
         end
-    end    
+    end
 end
 
 function module:CreateChanNickOption(args, keyname)
@@ -825,9 +833,9 @@ function module:CreateChanNickOption(args, keyname)
                 order = 150,
 				func = "RemoveNickname",
                 disabled = "NotGetNickname";
-            },  
+            },
         }
-    }        
+    }
 end
 
 function module:GetChanOptValue(info, ...)
@@ -838,7 +846,7 @@ function module:SetChanOptValue(info, val, ...)
 	self.db.profile[info[#info]][info[#info-1]] = val
 end
 
-do 
+do
 	local function revLookup(keyname)
 	    for k,v in pairs(eventMap) do
 	        if keyname == v then
@@ -855,7 +863,7 @@ do
 	    end
 	    return CLR:GetHexColor(info)
 	end
-	
+
 	local function ChatType(text, type) return CLR:Colorize(GetChatCLR(type), text) end
 
 
@@ -868,7 +876,7 @@ do
 		    args = {
 		        shortnames = {
 					name = function(info) return ChatType(_G[revLookup(info[#info-1])], revLookup(info[#info-1])) end,
-					desc = function(info) return (L["Use a custom replacement for the chat %s text."]):format(ChatType(_G[revLookup(info[#info-1])], revLookup(info[#info-1]))) end, 
+					desc = function(info) return (L["Use a custom replacement for the chat %s text."]):format(ChatType(_G[revLookup(info[#info-1])], revLookup(info[#info-1]))) end,
 		            order = 1,
 		            type = "input",
 		            usage = L["<string>"],
@@ -892,7 +900,7 @@ do
 		    args = {
 		        shortnames = {
 					name = function(info) return ChatType((L["Channel %d"]):format(info[#info-1]:sub(-1)), revLookup(info[#info-1])) end,
-					desc = function(info) return (L["Use a custom replacement for the chat %s text."]):format(ChatType((L["Channel %d"]):format(info[#info-1]:sub(-1)), revLookup(info[#info-1]))) end, 
+					desc = function(info) return (L["Use a custom replacement for the chat %s text."]):format(ChatType((L["Channel %d"]):format(info[#info-1]:sub(-1)), revLookup(info[#info-1]))) end,
 		            order = 1,
 		            type = "input",
 		            usage = L["<string>"],
@@ -905,13 +913,13 @@ do
 		        },
 		    }
 		}
-		
+
 	function module:CreateTypeOption(args, keyname)
 		if not args[keyname] then
 	    	args[keyname] = optionGroup
 		end
 	end
-	
+
 	function module:CreateChannelOption(args, keyname, keynum)
 		if not args[keyname] then
 	    	args[keyname] = optionGroupChan

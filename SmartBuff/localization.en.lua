@@ -4,12 +4,9 @@
 
 -- Whats new info
 SMARTBUFF_WHATSNEW = "|cffffffffWhats new:|r\n\n"
-  .."- Added item: Crystal of Insanity\n\n"
-  .."- Updated Alchemist's Flask detection/checks\n\n"
-  .."- Updated linked buffs\n\n"
-  .."- Due to I am moving to a new town, my online access and spare time is limited. This release will restore basic functionality, but unfortunately it will not contain all the buff changes, sorry.\n\n"
-  .."- Please let me know if anything is missing (buffs/consumables/etc), thanks!\n\n"
-  --.."- Thanks for donation:  :)\n\n"
+  .."- Updated support for Water Elemental (Mage)\n\n"
+  .."- Please let me know if anything is missing (buffs/consumables/etc.), thanks!\n\n"
+  .."- Thanks for donation: Isabell O. :)\n\n"
   ;
 
 

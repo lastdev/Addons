@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: CorePost.lua 5350 2012-09-13 12:46:50Z brykrys $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: CorePost.lua 5371 2012-10-02 11:44:05Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -378,7 +378,34 @@ function private.GetRequest(item, size, bid, buyout, duration, multiple)
 		exactLink = exactLink, -- for future: will be used to post item with exact matching link
 	}
 
-	return request
+	--[[ Temporary fix {ADV-665}
+		Multisell API is currently not working for battlepets
+		handle if the user requests to post multiple of the same pet, by generating multiple individual requests of size 1 each
+		patch intended to be easily removed assuming Blizzard fixes the API
+		also changes in PostAuction and PostAuctionClick, and a related fix in LoadAuctionSlot
+	--]]
+	local petextrarequests = nil
+	if linkType == "battlepet" and multiple > 1 then
+		request.stacks = 1 -- only post 1 pet in the primary request
+		petextrarequests = {}
+		for i = 1, multiple-1 do
+				lastPostId = lastPostId + 1
+				tinsert(petextrarequests, {
+				sig = sig,
+				count = size,
+				bid = bid,
+				buy = buyout,
+				duration = duration,
+				stacks = 1, -- 1 pet per extra request
+				id = lastPostId,
+				posted = 0,
+				linkType = linkType,
+				--exactLink = exactLink, -- planned implementation of exactLink will only be for single item
+			})
+		end
+	end
+
+	return request, nil, petextrarequests
 end
 
 --[[
@@ -397,12 +424,21 @@ end
 		reason is an internal short text code; it can be converted to a displayable text message using lib.GetErrorText(reason)
 ]]
 function lib.PostAuction(sig, size, bid, buyout, duration, multiple)
-	local request, reason = private.GetRequest(sig, size, bid, buyout, duration, multiple)
+	local request, reason, extra = private.GetRequest(sig, size, bid, buyout, duration, multiple)
 	if not request then
 		return nil, reason
 	end
 	private.QueueInsert(request)
 	private.Wait(0) -- delay until next OnUpdate
+
+	-- temp fix {ADV-665} as above
+	if extra then
+		for _, xrequest in ipairs(extra) do
+			private.QueueInsert(xrequest)
+		end
+	end
+	-- be aware that we currently only return the id for the *first* request
+
 	return request.id
 end
 
@@ -411,7 +447,7 @@ end
 	May only be called from an OnClick handler
 --]]
 function lib.PostAuctionClick(sig, size, bid, buyout, duration, multiple)
-	local request, failure = private.GetRequest(sig, size, bid, buyout, duration, multiple)
+	local request, failure, extra = private.GetRequest(sig, size, bid, buyout, duration, multiple)
 	if not request then
 		return nil, failure
 	end
@@ -429,6 +465,13 @@ function lib.PostAuctionClick(sig, size, bid, buyout, duration, multiple)
 	end
 	private.QueueInsert(request)
 	local id = request.id
+
+	-- temp fix {ADV-665} as above
+	if extra and not noqueue then
+		for _, xrequest in ipairs(extra) do
+			private.QueueInsert(xrequest)
+		end
+	end
 
 	if postNow then
 		local success, reason, special
@@ -898,6 +941,15 @@ function private.LoadAuctionSlot(request)
 		private.QueueRemove()
 		return nil, "UnknownError", private.lastUIError
 	end
+	--[[ Temporary fix {ADV-655}
+		GetAuctionSellItemInfo returns incorrect totalCount for battlepets (always returns 1)
+		to be removed when Blizzard fixes the API (CountAvailableItems is not a particularly efficient or reliable way to do this)
+	--]]
+	if itemId == 82800 then
+		local _, tc = lib.CountAvailableItems(request.sig)
+		totalCount = tc
+	end
+
 	if totalCount < request.count * request.stacks then
 		-- not enough items to complete this request; abort whole request
 		private.ClearAuctionSlot() -- Put it back in the bags
@@ -1324,4 +1376,4 @@ private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CorePost.lua $", "$Rev: 5350 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CorePost.lua $", "$Rev: 5371 $")

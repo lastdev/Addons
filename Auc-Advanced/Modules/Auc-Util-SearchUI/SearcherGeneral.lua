@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher General
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: SearcherGeneral.lua 5347 2012-09-06 06:26:15Z Esamynn $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: SearcherGeneral.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -29,6 +29,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 --]]
 -- Create a new instance of our lib with our parent
+if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewSearcher("General")
 if not lib then return end
 local print,decode,_,_,replicate,empty,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals()
@@ -216,18 +217,10 @@ function lib.Rescan()
 	local searchtype = get("general.type")
 	local searchsubtype = get("general.subtype")
 
-	local classIndex, subclassIndex
-	for catId, catName in pairs(AucAdvanced.Const.CLASSES) do
-		if catName == searchtype then
-			classIndex = catId
-			for subId, subName in pairs(AucAdvanced.Const.SUBCLASSES[catId]) do
-				if subName == searchsubtype then
-					subclassIndex = subId
-					break
-				end
-			end
-			break
-		end
+	local classIndex = AucAdvanced.Const.CLASSESREV[searchtype]
+	local subclassIndex
+	if classIndex then
+		subclassIndex = AucAdvanced.Const.SUBCLASSESREV[searchtype][searchsubtype]
 	end
 
 	if name then
@@ -361,4 +354,4 @@ function private.PriceSearch(buybid, price)
 	end
 	return false
 end
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherGeneral.lua $", "$Rev: 5347 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherGeneral.lua $", "$Rev: 5368 $")

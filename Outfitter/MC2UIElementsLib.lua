@@ -2532,3 +2532,109 @@ function Addon.UIElementsLib._ProgressBar:SetProgress(pProgress)
 		self:SetValue(0)
 	end
 end
+
+----------------------------------------
+Addon.UIElementsLib._PowerDot = {}
+----------------------------------------
+
+function Addon.UIElementsLib._PowerDot:New(pParent)
+	return CreateFrame("Frame", nil, pParent)
+end
+
+function Addon.UIElementsLib._PowerDot:Construct(pParent)
+	local vAlphaAnimation
+	
+	self.Value = nil
+	
+	self:SetWidth(21)
+	self:SetHeight(21)
+	
+	self.BackgroundTexture = self:CreateTexture(nil, "BACKGROUND")
+	self.BackgroundTexture:SetTexture("Interface\\PlayerFrame\\MonkUI")
+	self.BackgroundTexture:SetTexCoord(0.09375000, 0.17578125, 0.71093750, 0.87500000)
+	self.BackgroundTexture:SetWidth(21)
+	self.BackgroundTexture:SetHeight(21)
+	self.BackgroundTexture:SetPoint("CENTER", self, "CENTER", 0, 0)
+
+	self.OnTexture = self:CreateTexture(nil, "ARTWORK")
+	self.OnTexture:SetTexture("Interface\\PlayerFrame\\MonkUI")
+	self.OnTexture:SetTexCoord(0.00390625, 0.08593750, 0.71093750, 0.87500000)
+	self.OnTexture:SetWidth(21)
+	self.OnTexture:SetHeight(21)
+	self.OnTexture:SetPoint("CENTER", self, "CENTER", 0, 0)
+	self.OnTexture:SetAlpha(0) -- initially off
+	
+	-- Fade in
+	self.activate = self.OnTexture:CreateAnimationGroup("activate")
+	vAlphaAnimation = self.activate:CreateAnimation("Alpha")
+	vAlphaAnimation:SetChange(1)
+	vAlphaAnimation:SetDuration(0.2)
+	vAlphaAnimation:SetOrder(1)
+	
+	-- Fade out
+	self.deactivate = self.OnTexture:CreateAnimationGroup("deactivate")
+	vAlphaAnimation = self.deactivate:CreateAnimation("Alpha")
+	vAlphaAnimation:SetChange(-1)
+	vAlphaAnimation:SetDuration(0.3)
+	vAlphaAnimation:SetOrder(1)
+end
+
+function Addon.UIElementsLib._PowerDot:SetValue(pValue)
+	-- normalize the value
+	pValue = pValue and true or nil
+	
+	-- return if the value isn't changing
+	if pValue == self.Value then return end
+	
+	if pValue then
+		if self.deactivate:IsPlaying() then self.deactivate:Stop() end
+		if not self.activate:IsPlaying() then self.activate:Play() end
+	else
+		if self.activate:IsPlaying() then self.activate:Stop() end
+		if not self.deactivate:IsPlaying() then self.deactivate:Play() end
+	end
+end
+
+----------------------------------------
+Addon.UIElementsLib._PowerDots = {}
+----------------------------------------
+
+function Addon.UIElementsLib._PowerDots:New(pParent)
+	return CreateFrame("Frame", nil, pParent)
+end
+
+function Addon.UIElementsLib._PowerDots:Construct()
+	self.MaxValue = 0
+	self.Dots = {}
+end
+
+function Addon.UIElementsLib._PowerDots:SetMax(pMax)
+	self.MaxValue = pMax
+	while #self.Dots < self.MaxValue do
+		table.insert(self.Dots, Addon:New(Addon.UIElementsLib._PowerDot, self))
+	end
+	self:LayoutDots()
+end
+
+function Addon.UIElementsLib._PowerDots:LayoutDots()
+	local vLeft = 0
+	local vSpacing = 5
+	for vIndex = 1, self.MaxValue do
+		local vDot = self.Dots[vIndex]
+		vDot:ClearAllPoints()
+		vDot:SetPoint("LEFT", self, "LEFT", vLeft, 0)
+		vDot:Show()
+		vLeft = vLeft + vDot:GetWidth() + vSpacing
+	end
+	-- Hide unused dots
+	for vIndex = self.MaxValue + 1, #self.Dots do
+		self.Dots[vIndex]:Hide()
+	end 
+end
+
+function Addon.UIElementsLib._PowerDots:SetValue(pValue)
+	for vIndex = 1, self.MaxValue do
+		local vDot = self.Dots[vIndex]
+		vDot:SetValue(vIndex <= pValue)
+	end
+end

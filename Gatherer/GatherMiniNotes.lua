@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.0.6 (<%codename%>)
-	Revision: $Id: GatherMiniNotes.lua 1025 2012-09-26 03:00:40Z Esamynn $
+	Version: 4.2.0 (<%codename%>)
+	Revision: $Id: GatherMiniNotes.lua 1056 2012-12-10 04:10:54Z Esamynn $
 
 	License:
 	This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	Minimap Drawing Routines
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherMiniNotes.lua $", "$Rev: 1025 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherMiniNotes.lua $", "$Rev: 1056 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient
@@ -46,6 +46,18 @@ local SHADED_TEXTURE = "Interface\\AddOns\\Gatherer\\Shaded\\White"
 -- table to store current active Minimap Notes objects
 Gatherer.MiniNotes.Notes = {}
 Gatherer.MiniNotes.ArchNotes = {}
+
+function Gatherer.MiniNotes.OnLoad( frame )
+	local function updateProcessingFrameParent()
+		frame:SetParent(DongleStub(Gatherer.AstrolabeVersion).processingFrame:GetParent())
+	end
+	updateProcessingFrameParent()
+	Astrolabe:Register_TargetMinimapChanged_Callback(updateProcessingFrameParent , "GathererMinimapNotes")
+end
+
+function Gatherer.MiniNotes.OnNoteCreation( self )
+	Astrolabe:AssociateIcon(self, "Gatherer")
+end
 
 function Gatherer.MiniNotes.Show()
 	if ( Gatherer.Config.GetSetting("minimap.enable") ) then

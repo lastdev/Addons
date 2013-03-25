@@ -2,7 +2,7 @@
 local addonName, vars = ...
 vars.SpellData = {}
 vars.svnrev = {}
-vars.svnrev["SpellData.lua"] = tonumber(("$Revision: 342 $"):match("%d+"))
+vars.svnrev["SpellData.lua"] = tonumber(("$Revision: 363 $"):match("%d+"))
 
 
 vars.SpellData.foods = {
@@ -157,9 +157,12 @@ vars.SpellData.ccspells = {
 	710, -- Banish
 	10326, -- Turn Evil
 	6358, -- Seduction
+	115268, -- Mesmerize
 	1513, -- Scare Beast
 	339, -- Entangling Roots
 	115078, -- Paralysis (Monk)
+        122224, -- Impaling Spear (HoF: Wind Lord Mel'jarak)
+        122220, -- Impaling Spear (HoF: Wind Lord Mel'jarak) 
 }
 
 -- debuffs that can be applied to a cc target without breaking it
@@ -191,8 +194,8 @@ vars.SpellData.ccsafeauras = {
 vars.SpellData.brezSpells = {
   20484, -- Rebirth (Druid)
   20608, -- Reincarnation (Shaman) -- no combat log event?
-  6203,  -- Soulstone Applied (Warlock) - There is no combat log event for using a soulstone :-(
-  20707, -- Soulstone Cast (Warlock) 
+  20707, -- Soulstone Applied (Warlock) - There is no combat log event for using a soulstone :-(
+  95750, -- Soulstone Resurrection (Warlock) - this is the SPELL_RESURRECT
   61999, -- Raise Ally (DK)
 }
 

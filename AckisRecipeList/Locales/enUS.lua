@@ -6,7 +6,7 @@ enUS localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 2.4.2
+Project version: 2.4.6
 ************************************************************************
 Translation credits: http://www.wowace.com/addons/arl/localization/translators/
 
@@ -159,6 +159,7 @@ L["Bernadette Dexter"] = true
 L["Bethany Cromwell"] = true
 L["Binding"] = true
 L["Binkie Brightgear"] = true
+L["Blackhand Assassin"] = true
 L["Blackhand Elite"] = true
 L["BLACK_MARKET_AUCTION_HOUSE"] = "Sold only by Madam Goya in the Black Market Auction House. Not guaranteed to be selling at any point."
 L["Blacksmith Calypso"] = true
@@ -193,7 +194,8 @@ L["Bradley Towns"] = true
 L["Braeg Stoutbeard"] = true
 L["Brandig"] = true
 L["Brawn"] = true
-L["BRD_RANDOM_ROOM"] = "There is a chance that you will find it in 5 different rooms in blackrock depths, it is a random spawn though, and sometimes it doesn't even spawn at all."
+L["BRD_MAIL"] = "There are four spawn spots in Blackrock Depths: just before entering the Manufactory, in Golem Lord Arglemach's room, in the Manufactory on a bench, or in the Mold Foundry."
+L["BRD_SHOULDERS"] = "There is one rare spawn spot in Blackrock Depths: the room just after the shadowforge lock and just before the arena, in the corner on some bunk beds."
 L["Brek Stonehoof"] = true
 L["Brikk Keencraft"] = true
 L["Brock Stoneseeker"] = true
@@ -304,6 +306,7 @@ L["Danielle Zipstitch"] = true
 L["Dank Drizzlecut"] = true
 L["Dannelor"] = true
 L["Danwe"] = true
+L["Darian Singh"] = true
 L["Darin Goodstitch"] = true
 L["Dark Conclave Shadowmancer"] = true
 L["Darkmoon Faire"] = true
@@ -356,12 +359,16 @@ L["DISCOVERY_ALCH_NORTHREND_XMUTE"] = "Discovered by doing transmutes of Eternal
 L["DISCOVERY_ALCH_PANDARIA"] = "Discovered randomly by creating any Mists of Pandaria recipe."
 L["DISCOVERY_ALCH_POTION"] = "Discovered by making potions using Burning Crusade or higher materials."
 L["DISCOVERY_ALCH_PROT"] = "Discovered by crafting Major Protection Potions using Burning Crusade materials."
+L["DISCOVERY_BS_PANDARIA"] = "Discovered by crafting Lightning Steel Ingots."
+L["DISCOVERY_BS_WEAP_PANDARIA"] = "Discovered by crafting Pandaria weapons with a similar name."
 L["DISCOVERY_DESC"] = "Recipes obtained through Discovery should be included in the scan."
 L["DISCOVERY_INSC_BOOK"] = "Discovered randomly by reading the Book of Glyph Mastery."
 L["DISCOVERY_INSC_MINOR"] = "Obtained randomly by conducting Minor Inscription Research."
 L["DISCOVERY_INSC_NORTHREND"] = "Obtained randomly by conducting Northrend Inscription Research."
-L["DISCOVERY_INSC_PANDARIA"] = "Obtained randomly by using the Scroll of Wisdom."
+L["DISCOVERY_INSC_PANDARIA"] = "Obtained randomly by creating a Scroll of Wisdom."
 L["DISCOVERY_JC_PANDARIA"] = "Obtained randomly via the daily Facet of Research."
+L["DISCOVERY_LW_PANDARIA"] = "Obtained randomly via the daily Magnificence of Leather and Magnificence of Scales."
+L["DISCOVERY_TAILOR_PANDARIA"] = "Obtained randomly via the daily Imperial Silk cooldown."
 L["Disembodied Protector"] = true
 L["Disembodied Vindicator"] = true
 L["DISPLAY_EXCLUSION_DESC"] = "Display recipes that are in the exclusion list."
@@ -648,6 +655,7 @@ L["Ironwool Mammoth"] = true
 L["Isabel Jones"] = true
 L["Item"] = true
 L["Item Enhancement"] = true
+L["Itoka"] = true
 L["\"Jack\" Pisarek Slamfix"] = true
 L["Jack Trapper"] = true
 L["Jadefire Rogue"] = true
@@ -753,6 +761,7 @@ L["Larana Drome"] = true
 L["Lardan"] = true
 L["Lavinia Crowe"] = true
 L["Layna Karner"] = true
+L["LEARNT_BY_ACCEPTING_QUEST"] = "This recipe is learnt when you accept the quest."
 L["Leather"] = true
 L["LEATHER_DESC"] = "Recipes that make leather items should be included in the scan."
 L["Lebowski"] = true
@@ -841,6 +850,7 @@ L["Mining"] = true
 L["Miralisse"] = true
 L["Mirla Silverblaze"] = true
 L["Misensi"] = true
+L["Mishka"] = true
 L["Mishta"] = true
 L["MissingFromDB"] = [=[": is missing from the database.
 Please inform the author of the add-on about this recipe."]=]
@@ -1105,6 +1115,7 @@ L["Shield"] = true
 L["SHIFT_CLICK"] = "Shift-Click to add the item crafted by this recipe's link to your chat."
 L["Show Known"] = "Known"
 L["Sid Limbardi"] = true
+L["Silkmaster Tsai"] = true
 L["Silverbrook Defender"] = true
 L["Silverbrook Hunter"] = true
 L["Silverbrook Trapper"] = true
@@ -1121,6 +1132,7 @@ L["Skreah"] = true
 L["Slagg"] = true
 L["Small Font"] = true
 L["SMALL_FONT_DESC"] = "Toggle on to use a smaller font for entries in the recipe list."
+L["Smeltmaster Ashpaw"] = true
 L["Smiles O'Byron"] = true
 L["Smith Argus"] = true
 L["Smudge Thunderwood"] = true

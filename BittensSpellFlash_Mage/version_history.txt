@@ -1,10 +1,63 @@
+== Version 3.2.3
+* Frost: Added flashing for Deep Freeze.
+* Frost: Ice Lance now flashes at its highest priority when the target has Deep Freeze.
+* Frost: Frostbolt no longer flashes at a higher priority to stacks its debuff when solo.
+
+== Version 3.2.2
+NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
+
+== Version 3.2.1
+* Frost: No longer flashes Freeze when targeting a boss.
+* Frost: Improved the timing of Freeze so it never flashes before its cooldown is ready.
+
+== Version 3.2.0
+NOTE: Your options will be reset when you upgrade to this version.
+* Repackaging so that Bitten's SpellFlash Library is included with the addon, instead of downloaded separately.
+* Several other internal changes.
+* Arcane: Updated rotations (both single target and AoE) for 5.2.
+
+== Version 3.1.2
+* Arcane: Arcane Power no longer flashes if you have the talent Incanter's Ward, but none of its benefits.
+* Arcane: Bugfix - Arcane Power was never flashing if you had the talent Rune of Power.
+* Arcane: Bugfix - minor fix in the AoE rotation.
+
+== Version 3.1.1
+* All: Bugfix - Frost Bomb was broken in the last release.  Sorry!
+
+== Version 3.1.0
+* Arcane: By popular demand, Arcane Blast now stays at its higher priority until you have 4 stacks of Arcane Charge (simulations showed no difference in dps).
+* All: There is now a "Solo Mode" option that adjusts things when you are not in a group.  See the (new) website for more details.
+
+== Version 3.0.2
+* Arcane: now flashes Arcane Barrage if Arcane Charge would fall off otherwise.
+
+== Version 3.0.1 beta
+* Arcane: added an AoE rotation.
+* Arcane: no longer prioritize Arcane Blast based on number of Arcane Charges.
+
+== Version 3.0.0 beta
+* Arcane: pretty much reworked the whole rotation.
+* All: Living Bomb will refresh within the last tick (instead of waiting until it expires).
+* All: Presence of Mind will not flashes during Alter Time.
+
+== Version 2.13.0
+* Fire: Lowered the priority of Nether Tempest / Living Bomb.  Simulations showed a dps improvement.
+* Fire: Worked a bit on the Heating Up / Pyroblast! detection, including adjusting some lag tolerances.  I believe it is an improvement.
+* Fire: Removed the 3rd line from the combustion monitor.
+
+== Version 2.12.4
+* Fire: Fixed the combustion monitor to reflect changes in 5.1.0.
+
+== Version 2.12.3
+* Frost: Icy Veins was flashing even when on cooldown if it was glyphed.
+
 == Version 2.12.1
 * Fire: Bugfix - The visibility of the combustion monitor would sometimes get out-of-sync.
 * Frost: Adjust the priority of Freeze down to just above ice-lance, to avoid using Freeze only to end up capping FoF and wasting a proc.  Simulations show this to be a dps increase.
 
 == Version 2.12.0
 Sorry about the double-release.  I simply forgot to add this one in earlier.
-* Frost: Frozen Orb is now prioritized just below the bomb spells (which shows a dps goin in simulations).
+* Frost: Frozen Orb is now prioritized just below the bomb spells (which shows a dps gain in simulations).
 
 == Version 2.11.0
 * Fire: Bugfix - Inferno Blast misses were not being handled correctly (causing Pyroblast to continue flashing as if it crit).

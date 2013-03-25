@@ -1,3 +1,35 @@
+== Version 3.5.1
+* Enhancement: Fix for an occasional Lua error.
+
+== Version 3.5.0
+* Enhancement: Updated the rotation, including a couple adjustments when you have T15 set bonuses.
+* All: Cleaned up Ascendance flashing (e.g. it no longer flashes while it is already up).
+
+== Version 3.4.3
+NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
+
+== Version 3.4.2
+* Enhancement: Bugfix - I believe there was probably an issue with Stormblast flashing, which this should fix.
+
+== Version 3.4.1
+NOTE: Your options will be reset when you upgrade to this version.
+* Repackaging so that Bitten's SpellFlash Library is included with the addon, instead of downloaded separately.
+* Several other internal changes.
+* Elemental: Now properly detects that the cooldown on Lava Burst is not going to trigger if Lava Surge is up.
+* Elemental & Enhancement: Flashes Healing Surge when solo and you could use the heal.
+* Restoration: Flashes Lightning Bolt if you have the Glyph of Telluric Currents, under 95% mana, and everyone in range has at least 90% health.
+* All: Flashes Water Walking when you are swimming.
+
+== Version 3.3.1
+* All: Fixed a recent error in the German translation that caused weapon buffs to continuously flash.
+* All: Added Spanish translations for weapon buffs so they hopefully flash correctly.
+
+== Version 3.3.0
+* Restoration: Added some flashing for Restoration.
+
+== Version 3.2.1
+* Making the "Out of Date" status go away.  Please report any real issues w/ the new patch.
+
 == Version 3.2.0
 * Elemental: Prioritize Lava Burst above Flame Shock.
 * Elemental: Do not flash Elemental Mastery during Bloodlust.

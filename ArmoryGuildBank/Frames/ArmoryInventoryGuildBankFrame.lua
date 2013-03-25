@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 72 2009-09-27T22:31:40Z
+    Revision: 572 2013-01-04T15:34:54Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -51,7 +51,7 @@ function ArmoryInventoryGuildBankFrame_OnShow(self)
     ArmoryInventoryGuildBankScrollFrameScrollBar:SetMinMaxValues(0, 0); 
     ArmoryInventoryGuildBankScrollFrameScrollBar:SetValue(0);
 
-    MoneyFrame_Update("ArmoryInventoryMoneyFrame", AGB:GetMoney(dbEntry) or 0);
+    MoneyFrame_Update("ArmoryInventoryMoneyFrame", dbEntry and AGB:GetMoney(dbEntry) or 0);
     ArmoryInventoryGuildBankFrame_Update();
 end
 

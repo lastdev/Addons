@@ -1,5 +1,5 @@
-﻿## Interface: 50001
-## X-Min-Interface: 50000
+﻿## Interface: 50200
+## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Поля Боя|r
@@ -9,7 +9,8 @@
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Batallas|r
 ## Title-esMX:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Batallas|r
 ## Title-ptBR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0JxJ|r
-## Author: Nitram/Tandanu
+## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
+## Author: Nitram/Tandanu/Arta
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
 ## SavedVariablesPerCharacter: DBMPvP_SavedVars
@@ -25,9 +26,10 @@
 ## X-DBM-Mod-SubCategories-esES: Arena,Campos de Batallas
 ## X-DBM-Mod-SubCategories-esMX: Arena,Campos de Batallas
 ## X-DBM-Mod-SubCategories-ptBR: Arena,Campos de Batalha
+## X-DBM-Mod-SubCategories-frFR: Arène,Champs de Bataille
 ## X-DBM-Mod-Name: PvP
 ## X-DBM-Mod-Name-deDE: PvP
-## X-DBM-Mod-Name-frFR: Champs de bataille
+## X-DBM-Mod-Name-frFR: PvP
 ## X-DBM-Mod-Name-ruRU: Игрок против игрока
 ## X-DBM-Mod-Name-zhTW: PvP
 ## X-DBM-Mod-Name-zhCN: PvP
@@ -36,8 +38,8 @@
 ## X-DBM-Mod-Name-esMX: JcJ
 ## X-DBM-Mod-Name-ptBR: JxJ
 ## X-DBM-Mod-Sort: 75
-## X-DBM-Mod-LoadZoneID: 461,443,401,540,482
-## X-Curse-Packaged-Version: 4.11.5
+## X-DBM-Mod-LoadZoneID: 461,443,401,540,482,856,860
+## X-Curse-Packaged-Version: 5.2.1
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
@@ -56,6 +58,8 @@ Battlegrounds\Arathi.lua
 Battlegrounds\Gilneas.lua
 Battlegrounds\EyeOfTheStorm.lua
 Battlegrounds\IsleOfConquest.lua
+Battlegrounds\SilvershardMines.lua
+Battlegrounds\TempleOfKotmogu.lua
 Battlegrounds\TwinPeaks.lua
 Battlegrounds\Warsong.lua
 Arenas\Arenas.lua

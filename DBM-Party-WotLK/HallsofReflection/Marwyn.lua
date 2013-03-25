@@ -1,7 +1,7 @@
 local mod = DBM:NewMod("Marwyn", "DBM-Party-WotLK", 16)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(38113)
 mod:SetModelID(30973)
 
@@ -24,7 +24,7 @@ local specWarnWellCorruption	= mod:NewSpecialWarningMove(72362)
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(72362) and args:IsPlayer() then
 		specWarnWellCorruption:Show()
-	elseif args:IsSpellID(72363, 72436) then
+	elseif args:IsSpellID(72363) then
 		if self:AntiSpam(5) then
 			warnCorruptedFlesh:Show()
 			timerCorruptedFlesh:Start()

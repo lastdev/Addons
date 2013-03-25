@@ -5,7 +5,7 @@
 if (not XPerl_GetUsage) then
 
 local conf
-XPerl_RequestConfig(function(new) conf = new end, "$Revision: 746 $")
+XPerl_RequestConfig(function(new) conf = new end, "$Revision: 800 $")
 
 XPerl_Usage = {}
 
@@ -341,7 +341,7 @@ function mod:SendModules(chan, target)
 	if (not chan) then
 		if (IsInRaid()) then
 			if (select(2, IsInInstance()) == "pvp") then
-				chan = "BATTLEGROUND"
+				chan = "INSTANCE_CHAT"
 			else
 				chan = "RAID"
 			end

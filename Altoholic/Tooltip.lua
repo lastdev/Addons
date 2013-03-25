@@ -304,6 +304,11 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel)
 	local couldLearn = {}		-- list of alts who could learn it
 	local willLearn = {}			-- list of alts who will be able to learn it later
 
+	if not recipeLevel then
+		-- it seems that some tooltip libraries interfere and cause a recipeLevel to be nil
+		return know, couldLearn, willLearn
+	end
+	
 	local profession, isKnownByChar
 	for characterName, character in pairs(DataStore:GetCharacters()) do
 		profession = DataStore:GetProfession(character, professionName)

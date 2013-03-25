@@ -110,7 +110,8 @@ function Outfitter.OutfitBar:Construct()
 	Outfitter:RegisterOutfitEvent("ADD_OUTFIT", function () Outfitter.OutfitBar:ChangedOutfits() end)
 	Outfitter:RegisterOutfitEvent("DELETE_OUTFIT", function () Outfitter.OutfitBar:ChangedOutfits() end)
 	Outfitter:RegisterOutfitEvent("EDIT_OUTFIT", function () Outfitter.OutfitBar:ChangedOutfits() end)
-	
+	Outfitter.EventLib:RegisterEvent("PET_BATTLE_OPENING_START", self.PetBattleStarted, self)
+	Outfitter.EventLib:RegisterEvent("PET_BATTLE_OVER", self.PetBattleFinished, self)
 	self.Initialized = true
 	
 	self:Show()
@@ -461,6 +462,16 @@ end
 
 function Outfitter.OutfitBar:ChangedOutfits()
 	self:UpdateBars()
+end
+
+function Outfitter.OutfitBar:PetBattleStarted()
+	self:Hide()
+end
+
+function Outfitter.OutfitBar:PetBattleFinished()
+	if self.Settings.OutfitBar.ShowOutfitBar then
+		self:Show()
+	end
 end
 
 function Outfitter.OutfitBar:UpdateBars()

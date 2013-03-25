@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Resale
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: SearcherResale.lua 5331 2012-08-19 02:43:59Z ccox $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: SearcherResale.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -29,6 +29,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 --]]
 -- Create a new instance of our lib with our parent
+if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewSearcher("Resale")
 if not lib then return end
 --local print,decode,_,_,replicate,empty,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals() -- commenting out as unused, re-enable if needed
@@ -60,17 +61,6 @@ function lib.Processor(event, subevent)
 			else
 				private.validationRequired = nil
 			end
-		end
-	end
-end
-
-lib.Processors = {}
-function lib.Processors.selecttab(event, subevent)
-	if subevent == lib.tabname and private.validationRequired then
-		if not resources.isValidPriceModel(get("resale.model")) then
-			message("Resale Searcher Warning!\nCurrent price model setting ("..get("resale.model")..") is not valid. Select a new price model")
-		else
-			private.validationRequired = nil
 		end
 	end
 end
@@ -151,7 +141,7 @@ function lib.Search(item)
 		market = market * resources.CutAdjust
 	end
 	if get("resale.adjust.deposit") then
-		local amount = GetDepositCost(link, get("resale.adjust.deplength"), resources.faction, count)
+		local amount = GetDepositCost(link, get("resale.adjust.deplength"), resources.Faction, count)
 		if amount then
 			market = market - amount * get("resale.adjust.listings")
 		end
@@ -166,4 +156,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherResale.lua $", "$Rev: 5331 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherResale.lua $", "$Rev: 5368 $")

@@ -1,11 +1,12 @@
-﻿## Interface: 50001
-## X-Min-Interface: 50000
+﻿## Interface: 50200
+## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Mogu'shan Vaults|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0모구샨 금고|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Mogu'shangewölbe|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Подземелья Могу'шан|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0魔古山宝库|r
-## Author: Nitram/Tandanu
+## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Caveaux Mogu’shan|r
+## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
 ## SavedVariablesPerCharacter: DBMMogushanVaults_SavedVars, DBMMogushanVaults_SavedStats
@@ -18,9 +19,10 @@
 ## X-DBM-Mod-Name-ruRU: Дворец Могу'шан
 ## X-DBM-Mod-Name-zhTW: 魔古山寶庫
 ## X-DBM-Mod-Name-zhCN: 魔古山宝库
-## X-DBM-Mod-Sort: 3
+## X-DBM-Mod-Name-frFR: Caveaux Mogu’shan
+## X-DBM-Mod-Sort: 4
 ## X-DBM-Mod-LoadZoneID: 896
-## X-Curse-Packaged-Version: 4.11.5
+## X-Curse-Packaged-Version: 5.2.1
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
@@ -32,6 +34,7 @@ localization.de.lua
 localization.ru.lua
 localization.tw.lua
 localization.cn.lua
+localization.fr.lua
 MapSizes.lua
 StoneGuard.lua
 Feng.lua

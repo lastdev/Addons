@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 	Revision: $Id: CoreConst.lua 5345 2012-09-05 11:17:00Z brykrys $
 	URL: http://auctioneeraddon.com/
 

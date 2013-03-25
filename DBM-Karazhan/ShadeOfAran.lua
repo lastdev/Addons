@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Aran", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 411 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 434 $"):sub(12, -3))
 mod:SetCreatureID(16524)
 mod:SetModelID(16621)
 mod:RegisterCombat("combat")
@@ -132,8 +132,8 @@ do
 	
 	mod:RegisterOnUpdateHandler(function(self)
 		if self.Options.ElementalIcons and (DBM:GetRaidRank() > 0 and not iconsSet == 4) then
-			for i = 1, DBM:GetGroupMembers() do
-				local uId = "raid"..i.."target"
+			for uId in DBM:GetGroupMembers() do
+				uId = uId .. "target"
 				local guid = UnitGUID(uId)
 				if elementalIcon[guid] then
 					SetRaidTarget(uId, elementalIcon[guid])

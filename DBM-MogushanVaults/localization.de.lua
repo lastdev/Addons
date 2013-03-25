@@ -7,7 +7,7 @@ local L
 L= DBM:GetModLocalization(679)
 
 L:SetWarningLocalization({
-	SpecWarnOverloadSoon		= "%s wirkbar in 7 Sek!",
+	SpecWarnOverloadSoon		= "%s bald!",
 	specWarnBreakJasperChains	= "Sprenge Jaspisketten!"
 })
 
@@ -34,14 +34,16 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	WarnPhase	= "Verkünde Phasenwechsel",
-	RangeFrame	= "Zeige Abstandsfenster (6m) während Arkanphase"
+	RangeFrame	= "Zeige Abstandsfenster (6m) während Arkanphase",
+	SetIconOnWS	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(116784),
+	SetIconOnAR	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(116417)
 })
 
 L:SetMiscLocalization({
 	Fire		= "Oh, Erhabener! Durch mich sollt Ihr das Fleisch von den Knochen schmelzen!",
 	Arcane		= "Oh, Weiser der Zeitalter! Vertraut mir Euer arkanes Wissen an!",
 	Nature		= "Oh, großer Geist! Gewährt mir die Macht der Erde!",
-	Shadow		= "Great soul of champions past! Bear to me your shield!" --translate (trigger, hero only)
+	Shadow		= "Große Seele vergangener Helden! Gewährt mir Euren Schild!"
 })
 
 
@@ -51,7 +53,6 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(682)
 
 L:SetOptionLocalization({
-	RangeFrame			= "Zeige Abstandsfenster (8m)",
 	SetIconOnVoodoo		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122151)
 })
 
@@ -65,7 +66,19 @@ L:SetMiscLocalization({
 ----------------------
 L = DBM:GetModLocalization(687)
 
+L:SetWarningLocalization({
+	DarknessSoon		= "Schild der Dunkelheit in %d Sekunden"
+})
+
+L:SetTimerLocalization({
+	timerUSRevive		= "Unsterblicher Schatten Neuformung",
+	timerRainOfArrowsCD	= "%s"
+})
+
 L:SetOptionLocalization({
+	DarknessSoon		= "Zeige Vorwarnungscountdown für $spell:117697 (5s zuvor)",
+	timerUSRevive		= "Zeige Zeit bis sich $spell:117506 neu formen",
+	timerRainOfArrowsCD = DBM_CORE_AUTO_TIMER_OPTIONS.cd:format(118122),
 	RangeFrame			= "Zeige Abstandsfenster (8m)"
 })
 
@@ -76,17 +89,17 @@ L:SetOptionLocalization({
 L = DBM:GetModLocalization(726)
 
 L:SetWarningLocalization({
-	specWarnDespawnFloor	= "Paß auf, wo du hintrittst!"
+	specWarnDespawnFloor	= "Der Boden verschwindet in 6 Sekunden!"
 })
 
 L:SetTimerLocalization({
-	timerDespawnFloor		= "Paß auf, wo du hintrittst!"
+	timerDespawnFloor		= "Boden verschwindet"
 })
 
 L:SetOptionLocalization({
 	specWarnDespawnFloor	= "Zeige Spezialwarnung bevor der Boden (Energievortex) verschwindet",
 	timerDespawnFloor		= "Zeige Zeit bis der Boden (Energievortex) verschwindet",
-	SetIconOnDestabilized	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(132226)
+	SetIconOnDestabilized	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(132222)
 })
 
 
@@ -97,6 +110,7 @@ L= DBM:GetModLocalization(677)
 
 L:SetOptionLocalization({
 	InfoFrame		= "Zeige Infofenster für Spieler, welche von $spell:116525 betroffen sind",
+	CountOutCombo	= "Zähle akkustisch die Anzahl der $journal:5673 Wirkungen\nHINWEIS: Dafür ist derzeit nur die weibliche Stimme verfügbar.",
 	ArrowOnCombo	= "Zeige DBM-Pfeil während $journal:5673  HINWEIS: Nimmt an,\ndass sich der Tank vor dem Boss befindet und alle anderen dahinter."
 })
 

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemPrice
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: FilterItemPrice.lua 5228 2011-11-01 18:04:56Z brykrys $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: FilterItemPrice.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -29,11 +29,14 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 --]]
 -- Create a new instance of our lib with our parent
+if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewFilter("ItemPrice")
 if not lib then return end
 local aucPrint,decode,_,_,replicate,empty,_,_,_,debugPrint,fill,_TRANS = AucAdvanced.GetModuleLocals()
 local get,set,default,Const,resources = AucSearchUI.GetSearchLocals()
 lib.tabname = "ItemPrice"
+
+local GetSigFromLink = AucAdvanced.API.GetSigFromLink
 
 -- Set our defaults
 default("ignoreitemprice.enable", true)
@@ -75,17 +78,25 @@ end
 function private.OnEnterSheet(button, row, index)
 	if private.ignorelistGUI.sheet.rows[row][index]:IsShown()then --Hide tooltip for hidden cells
 		local link = private.ignorelistGUI.sheet.rows[row][index]:GetText()
-		if link and link:match("|Hitem:%d") then
+		if link then
 			GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
-			GameTooltip:SetHyperlink(link)
-		else
-			private.UpdateSheet(true) -- if no link, try updating the table to fix it
+			if link:match("|Hitem:%d") then
+				GameTooltip:SetHyperlink(link)
+				return
+			elseif link:match("|Hbattlepet:%d") then
+				local _, speciesID, level, breedQuality, maxHealth, power, speed, battlePetID = strsplit(":", link)
+				-- BattlePetToolTip_Show gets the anchor point from GameTooltip
+				BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed), string.gsub(string.gsub(link, "^(.*)%[", ""), "%](.*)$", ""))
+				return
+			end
 		end
+		private.UpdateSheet(true) -- if no link, try updating the table to fix it
 	end
 end
 
 function private.OnLeaveSheet(button, row, index)
 	GameTooltip:Hide()
+	BattlePetTooltip:Hide()
 end
 
 function private.OnClickSheet(button, row, index)
@@ -127,11 +138,9 @@ end
 function private.remove()
 	local link = private.ignorelistGUI.sheet:GetSelection()[1]
 	if link then
-		if string.find(link, "item:") then
-			local sig = AucAdvanced.API.GetSigFromLink(link)
-			if sig then
-				lib.AddIgnore(sig) --second var is nil, removes item from list
-			end
+		local sig, linkType = GetSigFromLink(link)
+		if linkType == "item" or linkType == "battlepet" then
+			lib.AddIgnore(sig) --second var is nil, removes item from list
 		else
 			lib.AddIgnore(link)
 		end
@@ -219,9 +228,9 @@ function lib.Filter(item, searcher)
 	if not item[Const.PRICE] then DevTools_Dump(item) end
 	local price = item[Const.PRICE]
 	local count = item[Const.COUNT] or 1
-	price = math.floor(price/count)
+	price = floor(price/count)
 
-	local sig = AucAdvanced.API.GetSigFromLink(item[Const.LINK])
+	local sig = GetSigFromLink(item[Const.LINK])
 	if ignorelist[sig] then
 		if price >= ignorelist[sig] then
 			return true, "Item ignored at "..AucAdvanced.Coins(ignorelist[sig], true)
@@ -248,9 +257,9 @@ function lib.PostFilter(item, searcher, buyorbid)
 		price = item[Const.BUYOUT]
 	end
 	local count = item[Const.COUNT] or 1
-	price = math.floor(price/count)
+	price = floor(price/count)
 
-	local sig = AucAdvanced.API.GetSigFromLink(item[Const.LINK])
+	local sig = GetSigFromLink(item[Const.LINK])
 	if ignorelist[sig] then
 		if price >= ignorelist[sig] then
 			return true, "Item ignored at "..AucAdvanced.Coins(ignorelist[sig], true)
@@ -263,4 +272,4 @@ function lib.PostFilter(item, searcher, buyorbid)
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemPrice.lua $", "$Rev: 5228 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemPrice.lua $", "$Rev: 5368 $")

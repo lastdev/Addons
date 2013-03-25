@@ -1,9 +1,30 @@
 While Reagent Restocker is an open source addon, I do take donations. I would love to have the next version of "World of Warcraft Programming" and other resources that would make maintaining this addon easier :).
 
-Reagent Restocker has its own page on Google+:
+Reagent Restocker has its own pages on Google+ and Facebook:
 https://plus.google.com/101127866821396020019
+https://www.facebook.com/ReagentRestocker
 
 NOTE: I've been seeing copies of Reagent Restocker popping up at other download sites. The only two places I currently upload the addon to are curse.com and wowinterface.com. I cannot guarantee the integrity of any other download sites.
+
+== v7.0 ==
+* Updated TOC.
+* Relaxed the restriction on guild bank withdrawls. Reagent Restocker will now use all except the last withdrawl for automatic processing. 
+* Various optimizations.
+* Changes made to event processing in an attempt to make overstocking more reliable.
+
+== v6.1 ==
+* Added monks to automatic selling of useless items.
+
+== v6.0 ==
+* Profile support added! Now you can save, load, and remove profiles that are shared between characters!
+* Updated database to use names instead of numbers everywhere.
+* Added Facebook to "About" section.
+
+== v5.1 ==
+* Not using Google+? Reagent Restocker now has a Facebook page! facebook.com/ReagentRestocker
+* Simple and flat is in - Reagent Restocker has a new icon. Works better for the larger minimum photo sizes that Google+ and Facebook are requiring, and has a slightly lighter blue for more contrast with the black border.
+* Updated TOC for most recent version of WoW.
+* Since this is a non-code update (mostly news and TOC update), only incrementing the minor version number.
 
 == v5.0 ==
 * Found a computer to test WoW with, so I can still code in a limited capacity.

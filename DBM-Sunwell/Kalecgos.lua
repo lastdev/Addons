@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kal", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 411 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 434 $"):sub(12, -3))
 mod:SetCreatureID(24850)
 mod:SetModelID(26628)
 mod:SetZone()
@@ -90,7 +90,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if self:AntiSpam(20, 2) then
 			local grp, class
-			for i = 1, DBM:GetGroupMembers() do
+			for i = 1, DBM:GetNumGroupMembers() do
 				local name, _, subgroup, _, _, fileName = GetRaidRosterInfo(i)
 				if name == args.destName then
 					grp = subgroup
@@ -121,7 +121,7 @@ function mod:UNIT_DIED(args)
 	end
 	if bit.band(args.destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) ~= 0 then
 		local grp
-		for i = 1, DBM:GetGroupMembers() do
+		for i = 1, DBM:GetNumGroupMembers() do
 			local name, _, subgroup = GetRaidRosterInfo(i)
 			if name == args.destName then
 				grp = subgroup

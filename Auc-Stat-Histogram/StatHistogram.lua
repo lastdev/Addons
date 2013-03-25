@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Histogram Statistics module
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 	Revision: $Id: StatHistogram.lua 5154 2011-05-13 23:15:57Z kandoko $
 	URL: http://auctioneeraddon.com/
 

@@ -1,10 +1,9 @@
-local AddonName, a = ...
-if a.BuildFail(50000) then return end
+local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
 local x = s.UpdatedVariables
-local c = BittensSpellFlashLibrary
-local u = a.CatSimulator
+local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
+local m = a.CatSimulator
 
 local GetComboPoints = GetComboPoints
 local GetEclipseDirection = GetEclipseDirection
@@ -22,62 +21,78 @@ local RIP_FURY_DELAY = 2
 local RAKE_FURY_DELAY = 2
 
 a.Rotations = {}
-c.RegisterForEvents(a)
-a.SetSpamFunction(function()
-	c.Flash(a)
-end)
 
 ----------------------------------------------------------------------- Balance
 a.Rotations.Balance = {
 	Spec = 1,
-	OffSwitch = "balance_off",
 	
 	FlashInCombat = function()
-		local energy = s.Power("player", SPELL_POWER_ECLIPSE)
-		a.Solar = c.HasBuff("Eclipse (Solar)") 
-			or c.HasBuff("Celestial Alignment")
-		a.Lunar = c.HasBuff("Eclipse (Lunar)")
-			or c.HasBuff("Celestial Alignment")
+		a.Energy = s.Power("player", SPELL_POWER_ECLIPSE)
+		if c.HasBuff("Celestial Alignment") then
+			a.Solar = true
+			a.Lunar = true
+		else
+			a.Solar = c.HasBuff("Eclipse (Solar)") 
+			a.Lunar = c.HasBuff("Eclipse (Lunar)")
+		end
 		a.GoingUp = GetEclipseDirection() ~= "moon"
 		
+		a.EclipsePending = false
 		local info = c.GetCastingInfo()
 		if info and not c.HasBuff("Celestial Alignment") then
+			local bump = 0
 			if c.InfoMatches(info, "Starfire") then
 				if a.GoingUp then
-					energy = energy + 40
+					bump = 20
 				end
 			elseif c.InfoMatches(info, "Wrath") then
 				if not a.GoingUp then
-					energy = energy - 30
+					bump = -15
 				end
 			elseif c.InfoMatches(info, "Starsurge") then
 				if a.GoingUp then
-					energy = energy + 40
+					bump = 20
 				else
-					energy = energy - 40
+					bump = -20
 				end
 			end
-			if energy <= -100 then
+			if s.HasSpell(c.GetID("Euphoria"))
+				and not a.Solar
+				and not a.Lunar then
+				
+				bump = bump * 2
+			end
+			a.Energy = a.Energy + bump
+			if a.Energy <= -100 then
 				a.GoingUp = true
 				a.Lunar = true
-			elseif energy >= 100 then
+				a.EclipsePending = true
+			elseif a.Energy >= 100 then
 				a.GoingUp = false
 				a.Solar = true
+				a.EclipsePending = true
+			elseif not c.HasBuff("Celestial Alignment") then
+				if a.Energy >= 0 then
+					a.Lunar = false
+				end
+				if a.Energy <= 0 then
+					a.Solar = false
+				end
 			end
 		end
 		
-		c.FlashAll("Solar Beam")
-		
---c.Debug("Flash", energy, a.Solar, a.Lunar, a.GoingUp,
-		c.PriorityFlash(
-			"Starfall",
-			"Force of Nature",
+		c.FlashAll(
+			"Moonkin Form", 
+			"Starfall", 
+			"Force of Nature", 
 			"Incarnation: Chosen of Elune",
 			"Celestial Alignment",
-			"Wrath Near Cap",
-			"Starfire Near Cap",
-			"Moonfire Overwrite",
-			"Sunfire Overwrite",
+			"Solar Beam")
+		
+		c.PriorityFlash(
+			"Starsurge under Shooting Stars",
+			"Moonfire under Eclipse",
+			"Sunfire under Eclipse",
 			"Moonfire",
 			"Sunfire",
 			"Starsurge",
@@ -85,7 +100,6 @@ a.Rotations.Balance = {
 			"Wrath under Celestial Alignment",
 			"Starfire",
 			"Wrath")
---)
 	end,
 	
 	FlashOutOfCombat = function()
@@ -94,13 +108,15 @@ a.Rotations.Balance = {
 	
 	FlashAlways = function()
 		c.FlashAll("Mark of the Wild")
-		if not (IsMounted() 
-			or s.Form(c.GetID("Travel Form")) 
-			or s.Form(c.GetID("Flight Form"))
-			or s.Form(c.GetID("Acquatic Form"))) then
-			
-			c.FlashAll("Moonkin Form")
-		end
+	end,
+	
+	ExtraDebugInfo = function()
+		return string.format("%d, %s, %s, %s, %s",
+			a.Energy,
+			tostring(a.Solar),
+			tostring(a.Lunar),
+			tostring(a.GoingUp),
+			tostring(a.EclipsePending))
 	end,
 }
 
@@ -244,20 +260,20 @@ local function chooseExecuteFinisher()
 	-- Bite if Roar will be up @ 5
 	--   or Roar might make it unrefreshable
 	-- Roar
-	u.Reset()
-	u.SimTo(5, "Ferocious Bite")
-	if u.Timers.Roar > 0 then
+	m.Reset()
+	m.SimTo(5, "Ferocious Bite")
+	if m.Timers.Roar > 0 then
 		return "Ferocious Bite", 5, 0
 	end
 	
-	u.Reset()
-	u.SimTo(a.RoarCPs, "Savage Roar")
-	u.Roar()
-	u.SimTo(1, "Ferocious Bite")
-	if u.Timers.Rip > .1 then
+	m.Reset()
+	m.SimTo(a.RoarCPs, "Savage Roar")
+	m.Roar()
+	m.SimTo(1, "Ferocious Bite")
+	if m.Timers.Rip > .1 then
 		return "Savage Roar", 
 			a.RoarCPs, 
-			math.min(a.Timers.Roar, u.Timers.Rip - .1)
+			math.min(a.Timers.Roar, m.Timers.Rip - .1)
 	end
 	
 	-- Roar is going to fall off very soon, refresh Rip now!
@@ -266,9 +282,9 @@ end
 
 local function chooseFinisher()
 	if a.InExecute then
-		u.Reset()
-		u.SimTo(1, "Ferocious Bite")
-		if u.Timers.Rip > .1 then
+		m.Reset()
+		m.SimTo(1, "Ferocious Bite")
+		if m.Timers.Rip > .1 then
 			return chooseExecuteFinisher()
 		end
 	end
@@ -279,53 +295,53 @@ local function chooseFinisher()
 	--   or can then Roar and Rip without much gap
 	-- Rip
 	
-	u.Reset()
-	u.SimTo(5, "Ferocious Bite")
-	if u.Timers.Roar < .1 then
-		u.Reset()
-		u.SimTo(a.RoarCPs, "Savage Roar")
-		u.SimTo(0, "Cap")
-		return "Savage Roar", a.RoarCPs, math.min(a.Timers.Roar, u.Time)
+	m.Reset()
+	m.SimTo(5, "Ferocious Bite")
+	if m.Timers.Roar < .1 then
+		m.Reset()
+		m.SimTo(a.RoarCPs, "Savage Roar")
+		m.SimTo(0, "Cap")
+		return "Savage Roar", a.RoarCPs, math.min(a.Timers.Roar, m.Time)
 	end
 	
 	for cp = 5, math.max(1, a.CP), -1 do
-		u.Reset()
-		u.SimTo(cp, "Ferocious Bite")
-		u.Bite()
-		u.SimTo(5, "Rip")
-		if u.Timers.Roar > .1 
-			and u.Time < a.Timers.Rip + RIP_ACCEPTABLE_DOWNTIME then
+		m.Reset()
+		m.SimTo(cp, "Ferocious Bite")
+		m.Bite()
+		m.SimTo(5, "Rip")
+		if m.Timers.Roar > .1 
+			and m.Time < a.Timers.Rip + RIP_ACCEPTABLE_DOWNTIME then
 			
 			return "Ferocious Bite", cp, 0
 		end
 		
-		u.Reset()
-		u.SimTo(cp, "Ferocious Bite")
-		u.Bite()
-		u.SimTo(1, "Savage Roar")
-		u.Roar()
-		u.SimTo(5, "Rip")
-		if u.Timers.Roar > .1 
-			and u.Time < a.Timers.Rip + RIP_ACCEPTABLE_DOWNTIME then
+		m.Reset()
+		m.SimTo(cp, "Ferocious Bite")
+		m.Bite()
+		m.SimTo(1, "Savage Roar")
+		m.Roar()
+		m.SimTo(5, "Rip")
+		if m.Timers.Roar > .1 
+			and m.Time < a.Timers.Rip + RIP_ACCEPTABLE_DOWNTIME then
 			
 			return "Ferocious Bite", cp, 0
 		end
 	end
 	
-	u.Reset()
-	u.SimTo(5, "Rip")
+	m.Reset()
+	m.SimTo(5, "Rip")
 	local roarOff = a.Timers.Roar
 	local furyUp = a.Timers.TigersFuryCD
-	local earliestRip = math.max(a.Timers.Rip - 3, u.Time)
+	local earliestRip = math.max(a.Timers.Rip - 3, m.Time)
 	local latestRip = math.max(earliestRip, a.Timers.Rip)
 	if furyUp + .1 < roarOff and latestRip + RIP_FURY_DELAY > furyUp then
 		earliestRip = math.max(earliestRip, furyUp)
 	end
 	if a.Timers.Roar < earliestRip + .1 then
-		u.Reset()
-		u.SimTo(a.RoarCPs, "Savage Roar")
-		u.SimTo(0, "Cap")
-		return "Savage Roar", 0, math.min(a.Timers.Roar, u.Time)
+		m.Reset()
+		m.SimTo(a.RoarCPs, "Savage Roar")
+		m.SimTo(0, "Cap")
+		return "Savage Roar", 0, math.min(a.Timers.Roar, m.Time)
 	else
 		return "Rip", 5, earliestRip
 	end
@@ -347,7 +363,7 @@ function a.ChooseCPGenerator(state)
 		or (c.HasGlyph("Shred") 
 			and (state.Timers.TigersFury > 0 or state.Timers.Berserk > 0)) then
 --			and math.max(state.Timers.TigersFury, state.Timers.Berserk) 
---				> u.TimeToPool(40, state, true)) then
+--				> m.TimeToPool(40, state, true)) then
 		
 		return "Shred"
 	else
@@ -375,34 +391,39 @@ end
 
 a.Rotations.Feral = {
 	Spec = 2,
-	OffSwitch = "feral_off",
 	
 	FlashInCombat = function()
-		a.InExecute =
-			s.HealthPercent() < (c.WearingSet(2, "FeralT13") and 60 or 25)
-		a.RoarCPs = c.HasGlyph("Savagery") and 0 or 1
+		a.InExecute = s.HealthPercent() < 25
+		if c.HasGlyph("Savagery") then
+			a.RoarCPs = 0
+			a.SpellIDs["Savage Roar"] = a.SpellIDs["Savage Roar Glyphed"]
+		else
+			a.RoarCPs = 1
+			a.SpellIDs["Savage Roar"] = a.SpellIDs["Savage Roar Unglyphed"]
+		end
 		setInitialState()
 --a.PrintState("Flash", a)
 		
 		-- Not on the GCD
 		c.FlashAll(
+			"Cat Form",
 			"Survival Instincts under 30", 
 			"Barkskin under 30",
 			"Tiger's Fury",
 			"Berserk",
 			"Incarnation: King of the Jungle",
-			"Faerie Fire",
+			"Faerie Fire for Debuff",
 			"Skull Bash")
 		
 		local finisher, cpNeeded, delay = chooseFinisher()
 		if a.CP >= cpNeeded and (delay <= .1 or a.Timers.Berserk > 0) then
---c.Debug("Flash", "Time for", finisher, cpNeeded, delay)
+c.Debug("Flash", "Time for", finisher, cpNeeded, delay)
 			flash(finisher)
 			return
 		end
 		
 		if a.CP >= cpNeeded	and delay < 1 then
---c.Debug("Flash", "Waiting for", finisher, cpNeeded, delay, "- Coming soon!")
+c.Debug("Flash", "Waiting for", finisher, cpNeeded, delay, "- Coming soon!")
 			prepFlash(finisher)
 			return
 		end
@@ -421,23 +442,24 @@ a.Rotations.Feral = {
 			or a.Timers.TigersFury > 0
 			or (ability == "Rake" and a.Timers.Rake < 3) then
 			
---c.Debug("Flash", "Working to", finisher, cpNeeded, delay, "- Use", ability)
+c.Debug("Flash", "Working to", finisher, cpNeeded, delay, "- Use", ability)
 			flash(ability)
 			return
 		end
 		
-		u.Reset()
-		u.SimTo(cpNeeded, finisher)
-		if u.Time + 1 > delay
-			or u.Capped
-			or (u.Timers.TigersFuryCD <= 0 
-				and u.Energy + 60 > 100 - u.Regen) then
---c.Debug("Flash", "Hurrying for", finisher, cpNeeded, delay, "- Use", ability)
+		m.Reset()
+		m.SimTo(cpNeeded, finisher)
+		if m.Time + 1 > delay
+			or m.Capped
+			or (m.Timers.TigersFuryCD <= 0 
+				and m.Energy + 60 > 100 - m.Regen) then
+			
+c.Debug("Flash", "Hurrying for", finisher, cpNeeded, delay, "- Use", ability)
 			flash(ability)
 			return
 		end
 		
---c.Debug("Flash", "Waiting before", finisher, cpNeeded, delay)
+c.Debug("Flash", "Waiting before", finisher, cpNeeded, delay)
 		if a.CP < cpNeeded then
 			prepFlash(ability)
 		else
@@ -457,17 +479,9 @@ a.Rotations.Feral = {
 	
 	FlashAlways = function()
 		c.FlashAll("Mark of the Wild")
-		if not (IsMounted() 
-			or s.Form(c.GetID("Travel Form")) 
-			or s.Form(c.GetID("Flight Form"))
-			or s.Form(c.GetID("Acquatic Form"))) then
-			
-			c.FlashAll("Cat Form")
-		end
 	end,
 	
 	CastQueued = function(info)
---c.Debug("Queued", info.Name)
 		if c.InfoMatches(info, "Ferocious Bite") then
 			local _, regen = GetPowerRegen()
 			local cost = s.SpellCost(info.Name)
@@ -484,5 +498,74 @@ a.Rotations.Feral = {
 			biteTime = GetTime()
 			c.Debug("Event", "FB will still cost", pendingBiteDrain)
 		end
-	end
+	end,
+}
+
+---------------------------------------------------------------------- Guardian
+local uncontrolledMitigationCooldowns = {
+	"Feint",
+	"Spell Reflection",
+	"Tooth and Claw",
+}
+
+a.Rotations.Guardian = {
+	Spec = 3,
+	
+	FlashInCombat = function()
+		a.Rage = c.GetPower(select(2, GetPowerRegen()))
+		local info = c.GetQueuedInfo()
+		if c.InfoMatches(info, "Mangle(Bear Form)") then
+			if c.HasTalent("Soul of the Forest") then
+				a.Rage = a.Rage + 10
+			else
+				a.Rage = a.Rage + 5
+			end
+			a.Rage =  math.min(s.MaxPower("player"), a.Rage)
+		end
+		a.EmptyRage = s.MaxPower("player") - a.Rage
+		
+		c.FlashMitigationBuffs(
+			1,
+			uncontrolledMitigationCooldowns,
+			"Cenarion Ward",
+			"Nature's Swiftness for Guardian",
+--			"Bone Shield",
+			"Barkskin",
+			"Renewal",
+			"Survival Instincts Glyphed",
+			"Might of Ursoc at 2 mins",
+			"Survival Instincts Unglyphed",
+			"Might of Ursoc above 2 mins")
+		c.FlashAll(
+			"Bear Form",
+			"Frenzied Regeneration",
+			"Savage Defense",
+			"Maul",
+			"Skull Bash",
+			"Growl")
+		c.PriorityFlash(
+			"Thrash for Weakened Blows",
+			"Healing Touch for Guardian",
+			"Rejuvenation for Guardian",
+			"Mangle(Bear Form)",
+			"Rejuvenation Refresh for Guardian",
+			"Thrash for Bleed",
+			"Faerie Fire for Debuff for Guardian",
+			"Enrage",
+			"Lacerate",
+			"Faerie Fire",
+			"Thrash")
+	end,
+	
+	FlashOutOfCombat = function()
+		c.FlashAll("Symbiosis")
+	end,
+	
+	FlashAlways = function()
+		c.FlashAll("Mark of the Wild")
+	end,
+	
+	ExtraDebugInfo = function()
+		return a.Rage
+	end,
 }

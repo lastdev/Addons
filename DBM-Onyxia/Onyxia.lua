@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Onyxia", "DBM-Onyxia")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(10184)
 mod:SetModelID(8570)
 
@@ -49,7 +49,7 @@ function mod:OnCombatStart(delay)
 	sndFunny:Schedule(30, "Interface\\AddOns\\DBM-Onyxia\\sounds\\now-hit-it-very-hard-and-fast.ogg")
 end
 
-function mod:Whelps()
+function mod:Whelps()--Not right, need to fix
 	if self:IsInCombat() then
 		timerWhelps:Start()
 		warnWhelpsSoon:Schedule(95)
@@ -61,7 +61,9 @@ function mod:Whelps()
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if msg == L.YellP2 or msg:find(L.YellP2) then
+	if msg == L.YellPull and not self:IsInCombat() then
+		DBM:StartCombat(self, 0)
+	elseif msg == L.YellP2 or msg:find(L.YellP2) then
 		phase = 2
 		warnPhase2:Show()
 		timerNextDeepBreath:Start(77)
@@ -93,13 +95,13 @@ function mod:SPELL_CAST_START(args)
 		soundDeepBreath:Play()
 		timerBreath:Start()
 		timerNextDeepBreath:Start()
-	elseif args:IsSpellID(18435, 68970) then        -- Flame Breath (Ground phases)
+	elseif args:IsSpellID(18435) then        -- Flame Breath (Ground phases)
 		timerNextFlameBreath:Start()
 	end
 end
 
-function mod:SPELL_DAMAGE(sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId)
-	if (spellId == 68867 or spellId == 69286) and destGUID == UnitGUID("player") then		-- Tail Sweep
+function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+	if spellId == 68867 and destGUID == UnitGUID("player") then		-- Tail Sweep
 		sndFunny:Play("Interface\\AddOns\\DBM-Onyxia\\sounds\\watch-the-tail.ogg")
 	end
 end

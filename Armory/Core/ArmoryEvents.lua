@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 525 2012-09-20T09:02:14Z
+    Revision: 571 2013-01-03T00:19:27Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -46,9 +46,6 @@ end
 local function GetCooldownEntry(dbEntry, cooldown)
     local index = 0;
     local key, title, calendarType;
-    if ( cooldown.skill:find(ARMORY_TRANSMUTE) ) then
-        cooldown.skill = ARMORY_TRANSMUTE;
-    end
     while ( true ) do
         index = index + 1;
         key = CreateKey(cooldown.time, index);
@@ -65,7 +62,7 @@ end
 local calendarState = {
     {cvar = "calendarShowBattlegrounds"},
     {cvar = "calendarShowDarkmoon"},
-    {cvar = "calendarShowLockouts", enabled = true},
+    {cvar = "calendarShowLockouts"},
     {cvar = "calendarShowResets"},
     {cvar = "calendarShowWeeklyHolidays"},
 };
@@ -82,15 +79,55 @@ local function RestoreCalendarState()
     end
 end
 
-local function SetCalendarFilter()
+local function SetCalendarFilter(cvar)
     for _, state in pairs(calendarState) do
-        if ( state.enabled ) then
+        if ( state.cvar == cvar ) then
             SetCVar(state.cvar, 1);
         else
             SetCVar(state.cvar, 0);
         end
     end
 end
+
+local function EvalCalendar(cvar, numDays, callback)
+    local present = date("*t");
+    local today = time();
+    local month = present.month;
+    local monthOffset = 0;
+    
+    local state = PreserveCalendarState();
+
+    SetCalendarFilter(cvar);
+    
+    for i = 1, numDays do
+        local eventTime = today + (i - 1) * (24*60*60);
+        local eventDate = date("*t", eventTime);
+        if ( eventDate.month ~= month ) then
+            month = eventDate.month;
+            monthOffset = monthOffset + 1;
+        end
+ 
+        local numEvents = CalendarGetNumDayEvents(monthOffset, eventDate.day);
+        for eventIndex = 1, numEvents do
+            local title, hour, minute, calendarType, sequenceType, eventType, texture,
+                modStatus, inviteStatus, invitedBy, difficulty, inviteType,
+                sequenceIndex, numSequenceDays, difficultyName = CalendarGetDayEvent(monthOffset, eventDate.day, eventIndex);
+            
+            local done = callback(eventIndex, Armory:MakeDate(eventDate.day, eventDate.month, eventDate.year, hour, minute),
+                                  title, calendarType, sequenceType, eventType, texture,
+                                  modStatus, inviteStatus, invitedBy, difficulty, inviteType,
+                                  sequenceIndex, numSequenceDays, difficultyName);
+
+            if ( done ) then
+                RestoreCalendarState(state);
+                return;
+            end
+        end
+    end
+
+    RestoreCalendarState(state);
+end
+
 
 
 local eventLines = {};
@@ -141,19 +178,6 @@ function Armory:UpdateEvents()
         dbEntry:SetValue(container, nil);
         return;
     end
-   
-    local _, presentMonth, presentDay, presentYear = CalendarGetDate();
-    local month, year = CalendarGetMonth();
-    local monthOffset = 0;
-    if (month ~= presentMonth or year ~= presentYear) then
-        month, year = CalendarGetMonth(-1);
-        if (month == presentMonth and year == presentYear) then
-            monthOffset = -1;
-        else
-            self:PrintDebug("UPDATE", container, "not possible (wrong offset)");
-            return;
-        end
-    end
 
     if ( not self:IsLocked(container) ) then
         self:Lock(container);
@@ -161,39 +185,22 @@ function Armory:UpdateEvents()
         self:PrintDebug("UPDATE", container);
         
         dbEntry:ClearContainer(container);
-
-        local today = self:MakeDate(presentDay, presentMonth, presentYear);
-        local eventTime, eventDate, numEvents;
-        local key;
-    
-        local state = PreserveCalendarState();
-        SetCalendarFilter();
-
-        for i = 1, ARMORY_MAX_EVENT_DAYS do
-            eventTime = today + (i - 1) * 24*60*60;
-            eventDate = date("*t", eventTime);
-            if ( eventDate.month ~= month ) then
-                month = eventDate.month;
-                monthOffset = monthOffset + 1;
-            end
-
-            numEvents = CalendarGetNumDayEvents(monthOffset, eventDate.day);
-            for eventIndex = 1, numEvents do
-                local title, hour, minute, calendarType, sequenceType, eventType, texture,
-                    modStatus, inviteStatus, invitedBy, difficulty, inviteType,
-                    sequenceIndex, numSequenceDays, difficultyName = CalendarGetDayEvent(monthOffset, eventDate.day, eventIndex);
+        
+        EvalCalendar("calendarShowLockouts", ARMORY_MAX_EVENT_DAYS, 
+            function(eventIndex, eventTime,
+                     title, calendarType, sequenceType, eventType, texture,
+                     modStatus, inviteStatus, invitedBy, difficulty, inviteType,
+                     sequenceIndex, numSequenceDays, difficultyName)
 
                 if ( calendarType ~= "HOLIDAY" and calendarType ~= "SYSTEM" ) then
-                    key = CreateKey(self:GetServerTimeAsLocalTime(eventTime + hour*60*60 + minute*60), eventIndex);
+                    key = CreateKey(self:GetServerTimeAsLocalTime(eventTime), eventIndex);
                     dbEntry:SetValue(2, container, key, title, calendarType, eventType, texture, modStatus, inviteStatus, invitedBy, difficulty, inviteType, difficultyName);
                 end
             end
-        end
-        
-        RestoreCalendarState(state);
+        );
 
         if ( self:GetConfigEnableCooldownEvents() ) then
-            local cooldowns = self:GetTradeSkillCooldowns();
+            local cooldowns = self:GetTradeSkillCooldowns(dbEntry);
             local title;
             for _, cooldown in ipairs(cooldowns) do
                 key, title = GetCooldownEntry(dbEntry, cooldown);
@@ -240,7 +247,7 @@ function Armory:GetEventReminders()
     table.wipe(reminders);
     if ( self:HasSocial() ) then
         local now = time();
-        local watchPeriod = now + 24*60*60;
+        local watchPeriod = now + (24*60*60);
         local dbEntry, db, eventTime, title, calendarType, inviteStatus, isCooldown;
         
         if ( not populated ) then
@@ -248,8 +255,8 @@ function Armory:GetEventReminders()
             for _, profile in ipairs(self:Profiles()) do
                 self:SelectProfile(profile);
                 dbEntry = self.selectedDbBaseEntry;
-                db = dbEntry:SelectContainer(container);
                 if ( not self:IsPlayerSelected() ) then
+                    db = dbEntry:SelectContainer(container);
                     for key in pairs(db) do
                         eventTime = GetTimeFromKey(key);
                         title, calendarType, _, _, _, inviteStatus = dbEntry:GetValue(container, key);
@@ -307,4 +314,19 @@ function Armory:CheckAvailableCooldowns()
         end            
         self:SelectProfile(currentProfile);
     end
+end
+
+function Armory:GetRaidReset(name)
+    local resetTime;
+    
+    EvalCalendar("calendarShowResets", 7, 
+        function(eventIndex, eventTime, title, calendarType)
+            if ( calendarType == "RAID_RESET" and title == name ) then
+                resetTime = eventTime;
+                return true;
+            end
+        end
+    );
+        
+    return resetTime;
 end

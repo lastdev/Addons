@@ -9,7 +9,7 @@ XPerl_RequestConfig(function(new)
 				if (XPerl_TargetTargetTarget) then XPerl_TargetTargetTarget.conf = conf.targettargettarget end
 				if (XPerl_FocusTarget) then XPerl_FocusTarget.conf = conf.focustarget end
 				if (XPerl_PetTarget) then XPerl_PetTarget.conf = conf.pettarget end
-			end, "$Revision: 747 $")
+			end, "$Revision: 832 $")
 
 local UnitName = UnitName
 local UnitHealth = UnitHealth
@@ -18,9 +18,8 @@ local UnitIsConnected = UnitIsConnected
 local UnitIsGhost = UnitIsGhost
 local UnitIsDead = UnitIsDead
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
-local UnitMana = UnitMana
-local UnitManaMax = UnitManaMax
-local UnitPowerType = UnitPowerType
+local UnitPower = UnitPower
+local UnitPowerMax = UnitPowerMax
 local GetDifficultyColor = GetDifficultyColor or GetQuestDifficultyColor
 
 local buffSetup
@@ -191,7 +190,7 @@ function XPerl_TargetTarget_UpdateDisplay(self,force)
 
 			-- Save these 2, so we know whether to update the frame later
 			self.targethp = UnitHealth(partyid)
-			self.targetmana = UnitMana(partyid)
+			self.targetmana = UnitPower(partyid)
 			self.guid = UnitGUID(partyid);
 			self.afk = UnitIsAFK(partyid) and conf.showAFK
 
@@ -283,7 +282,7 @@ function XPerl_TargetTarget_OnUpdate(self, elapsed)
 
 	local partyid = self.partyid
 	local newHP = UnitHealth(partyid)
-	local newMana = UnitMana(partyid)
+	local newMana = UnitPower(partyid)
 	local newAFK = UnitIsAFK(partyid)
 local newGuid = UnitGUID(partyid);
 	

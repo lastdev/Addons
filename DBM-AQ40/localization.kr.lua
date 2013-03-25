@@ -49,7 +49,7 @@ L:SetWarningLocalization{
 	WarnWound	= "%s : >%s< (%s)"
 }
 L:SetOptionLocalization{
-	WarnWound = DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(25646, GetSpellInfo(25646) or "unknown")
+	WarnWound = DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(25646)
 }
 --------------
 -- Viscidus --
@@ -57,17 +57,20 @@ L:SetOptionLocalization{
 L = DBM:GetModLocalization("Viscidus")
 
 L:SetGeneralLocalization{
-	name = "비시디우스"
+	name = "비시두스"
 }
 L:SetWarningLocalization{
 	WarnFreeze	= "빙결 : %d/3",
 	WarnShatter	= "분해 : %d/3"
 }
 L:SetOptionLocalization{
-	WarnFreeze	= "빙결 상태 알림",
-	WarnShatter	= "분해 상태 알림",
+	WarnFreeze	= "빙결 상태 알림 보기",
+	WarnShatter	= "분해 상태 알림 보기",
 }
 L:SetMiscLocalization{
+	Slow	= "느려지기 시작했습니다!",
+	Freezing= "얼어붙고 있습니다!",
+	Frozen	= "단단하게 얼었습니다!",
 	Phase4 	= "분해되기 시작합니다!",
 	Phase5 	= "부서질 것 같습니다!",
 	Phase6 	= "폭발"
@@ -84,8 +87,8 @@ L:SetWarningLocalization{
 	WarnAcid	= "%s : >%s< (%s)"
 }
 L:SetOptionLocalization{
-	WarnAcid	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(26180, GetSpellInfo(26180) or "unknown")
-	}
+	WarnAcid	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(26180)
+}
 ---------------
 -- Twin Emps --
 ---------------
@@ -110,32 +113,32 @@ L:SetGeneralLocalization{
 L:SetWarningLocalization{
 	WarnEyeTentacle			= "눈달린 촉수",
 	WarnClawTentacle		= "발톱 촉수",
-	WarnGiantEyeTentacle	=  "거대한 눈달린 촉수",
+	WarnGiantEyeTentacle	= "거대한 눈달린 촉수",
 	WarnGiantClawTentacle	= "거대한 발톱 촉수",
 	WarnWeakened			= "45초간 약화!"
 }
 L:SetTimerLocalization{
-	TimerEyeTentacle		= "눈달린 촉수",
-	TimerGiantEyeTentacle	= "거대한 눈달린 촉수",
-	TimerClawTentacle		= "발톱 촉수",
-	TimerGiantClawTentacle	= "거대한 발톱 촉수",
-	TimerWeakened			= "약화"
+	TimerEyeTentacle		= "다음 눈달린 촉수",
+	TimerGiantEyeTentacle	= "다음 거대한 눈달린 촉수",
+	TimerClawTentacle		= "다음 발톱 촉수",
+	TimerGiantClawTentacle	= "다음 거대한 발톱 촉수",
+	TimerWeakened			= "약화 종료"
 }
 L:SetOptionLocalization{
-	WarnEyeTentacle			= "눈달린 촉수 알림",
-	WarnClawTentacle		= "발톱 촉수 알림",
-	WarnGiantEyeTentacle	=  "거대한 눈달린 촉수 알림",
-	WarnGiantClawTentacle	= "거대한 발톱 촉수 알림",
-	WarnWeakened			= "약화 알림",
-	TimerEyeTentacle		= "눈달린 촉수 타이머 보기",
-	TimerGiantEyeTentacle	= "거대한 눈달린 촉수 타이머 보기",
-	TimerClawTentacle		= "발톱 촉수 타이머 보기",
-	TimerGiantClawTentacle = "거대한 발톱 촉수 타이머 보기",
-	TimerWeakened			= "약화 타이머 보기",
-	RangeFrame				= "거리 프레임 표시"
+	WarnEyeTentacle			= "눈달린 촉수 알림 보기",
+	WarnClawTentacle		= "발톱 촉수 알림 보기",
+	WarnGiantEyeTentacle	= "거대한 눈달린 촉수 알림 보기",
+	WarnGiantClawTentacle	= "거대한 발톱 촉수 알림 보기",
+	WarnWeakened			= "약화 알림 보기",
+	TimerEyeTentacle		= "다음 눈달린 촉수 바 표시",
+	TimerGiantEyeTentacle	= "다음 거대한 눈달린 촉수 바 표시",
+	TimerClawTentacle		= "다음 발톱 촉수 바 표시",
+	TimerGiantClawTentacle	= "다음 거대한 발톱 촉수 바 표시",
+	TimerWeakened			= "약화 유지시간 바 표시",
+	RangeFrame				= "거리 창 보기"
 }
 L:SetMiscLocalization{
-	Weakened 	= "약해집니다!",
+	Weakened 	= "약해집니다!",--확인필요
 }
 ----------------
 -- Ouro --
@@ -149,17 +152,17 @@ L:SetWarningLocalization{
 	WarnSubmerge		= "잠수",
 	WarnEmerge			= "등장",
 	WarnSubmergeSoon	= "곧 잠수",
-	WarnEmergeSoon		= "등장"
+	WarnEmergeSoon		= "곧 등장"
 }
 L:SetTimerLocalization{
-	TimerSubmerge		= "잠수",
-	TimerEmerge			= "등장"
+	TimerSubmerge		= "다음 잠수",
+	TimerEmerge			= "다음 등장"
 }
 L:SetOptionLocalization{
-	WarnSubmerge		= "잠수 경고 보기",
-	WarnSubmergeSoon	= "잠수 사전 경고 보기",
-	TimerSubmerge		= "잠수 타이머 보기",
-	WarnEmerge			= "등장 경고 보기",
-	WarnEmergeSoon		= "등장 사전 경고 보기",
-	TimerEmerge			= "등장 타이머 보기"
+	WarnSubmerge		= "잠수 알림 보기",
+	WarnSubmergeSoon	= "잠수 사전 알림 보기",
+	TimerSubmerge		= "다음 잠수 바 표시",
+	WarnEmerge			= "등장 알림 보기",
+	WarnEmergeSoon		= "등장 사전 알림 보기",
+	TimerEmerge			= "다음 등장 바 표시"
 }

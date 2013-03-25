@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 521 2012-09-16T10:38:05Z
+    Revision: 580 2013-01-22T20:01:17Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -96,7 +96,9 @@ function ArmoryAddonMessageFrame_OnUpdate(self, elapsed)
             ArmoryAddonMessageFrame_SendMessage(version, "GUILD");
         end
 
-        if ( IsInRaid() ) then
+        if ( IsPartyLFG() ) then
+            return;
+        elseif ( IsInRaid() ) then
             ArmoryAddonMessageFrame_SendMessage(version, "RAID");
         elseif ( IsInGroup() ) then
             ArmoryAddonMessageFrame_SendMessage(version, "PARTY");

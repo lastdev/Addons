@@ -1,6 +1,7 @@
 
 local L = OVERACHIEVER_STRINGS
 local GetAchievementInfo = Overachiever.GetAchievementInfo
+local GetAchievementCriteriaInfo = Overachiever.GetAchievementCriteriaInfo
 local LBI = LibStub:GetLibrary("LibBabble-Inventory-3.0"):GetReverseLookupTable()
 
 local TradeSkillLookup = {}
@@ -10,7 +11,8 @@ do
     Cooking = {
       GourmetOutland = true,
       GourmetNorthrend = true,
-      GourmetCataclysm = true
+      GourmetCataclysm = true,
+      GourmetPandaren = true
     }
   }
   local lookup, id, name, _, completed

@@ -5,7 +5,8 @@ DBM_HOW_TO_USE_MOD					= "Willkommen bei DBM. Tippe /dbm help für eine Liste un
 
 DBM_CORE_LOAD_MOD_ERROR				= "Fehler beim Laden der Boss Mods für %s: %s"
 DBM_CORE_LOAD_MOD_SUCCESS			= "Boss Mods für '%s' geladen. Für weitere Einstellungen /dbm oder /dbm help im Chatfenster eingeben!"
-DBM_CORE_LOAD_GUI_ERROR				= "Konnte die Benutzeroberfläche nicht laden: %s"
+DBM_CORE_LOAD_GUI_ERROR				= "Konnte die grafische Benutzeroberfläche nicht laden: %s"
+DBM_CORE_LOAD_GUI_COMBAT			= "Die grafische Benutzeroberfläche kann nicht im Kampf geladen werden. Zur Vornahme von Einstellungen bitte diese zunächst außerhalb des Kampfes laden. Danach steht sie auch im Kampf zur Verfügung."
 
 DBM_CORE_COMBAT_STARTED				= "Kampf gegen %s hat begonnen. Viel Glück! :)";
 DBM_CORE_BOSS_DOWN					= "%s tot nach %s!"
@@ -84,6 +85,7 @@ DBM_CORE_RANGECHECK_OPTION_SLOW		= "Langsam (geringste CPU-Last)"
 DBM_CORE_RANGECHECK_OPTION_AVERAGE	= "Mittel"
 DBM_CORE_RANGECHECK_OPTION_FAST		= "Schnell (nahezu Echtzeit)"
 DBM_CORE_RANGERADAR_HEADER			= "Abstandsradar (%dm)"
+DBM_CORE_RANGERADAR_IN_RANGE_TEXT	= "%d Spieler in Reichweite"
 
 DBM_CORE_INFOFRAME_LOCK				= "Fenster sperren"
 DBM_CORE_INFOFRAME_HIDE				= "Verstecken"
@@ -113,6 +115,10 @@ DBM_CORE_ALLIANCE					= "Allianz"
 DBM_CORE_HORDE						= "Horde"
 
 DBM_CORE_UNKNOWN					= "unbekannt"
+DBM_CORE_LEFT						= "Links"
+DBM_CORE_RIGHT						= "Rechts"
+DBM_CORE_BACK						= "Hinten"
+DBM_CORE_FRONT						= "Vorne"
 
 DBM_CORE_BREAK_START				= "Pause startet jetzt -- du hast %s Minute(n)!"
 DBM_CORE_BREAK_MIN					= "Pause endet in %s Minute(n)!"

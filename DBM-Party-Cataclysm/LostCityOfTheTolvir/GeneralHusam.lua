@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(117, "DBM-Party-Cataclysm", 5, 69)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(44577)
 mod:SetModelID(34743)
 mod:SetZone()
@@ -15,7 +15,7 @@ mod:RegisterEventsInCombat(
 
 local warnShockwave 	= mod:NewCastAnnounce(83445, 3)
 local warnIntentions	= mod:NewSpellAnnounce(83113, 3)
-local warnDetonate	= mod:NewSpellAnnounce(91263, 3)
+local warnDetonate		= mod:NewSpellAnnounce(91263, 3)
 
 local timerShockwave	= mod:NewCastTimer(5, 83445)
 local timerIntentions	= mod:NewNextTimer(25, 83113)
@@ -25,7 +25,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(83445, 91257) then
+	if args:IsSpellID(83445) then
 		warnShockwave:Show()
 		timerShockwave:Start()
 	elseif args:IsSpellID(91263) then

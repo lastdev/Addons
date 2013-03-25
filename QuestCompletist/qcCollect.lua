@@ -870,7 +870,7 @@ function qcGenerateMapData()
 		qcX = tonumber(string.format("%.1f",X*100))
 		qcY = tonumber(string.format("%.1f",Y*100))
 	end
-	print(string.format("ZONE MAP:   [%d] = {%d,%d,%d,%q,%.1f,%.1f,{%d}},", qcMapID, qcMapLevel, qcIconType, qcInitiatorID, qcInitiatorName, qcX, qcY, qcQuestID))
+	print(string.format("ZONE MAP:   |cFF69CCF0[%d] = {%d,%d,%d,%q,%.1f,%.1f,{%d}},|r", qcMapID, qcMapLevel, qcIconType, qcInitiatorID, qcInitiatorName, qcX, qcY, qcQuestID))
 	
 	if (ZoomOut()) then
 		local qcMapID = GetCurrentMapAreaID()
@@ -936,15 +936,20 @@ function qcGenerateMapData()
 end
 function qcFindMappedNILQuests()
 
+	local qcCount = 0
+
 	for qcMapIndex, qcMapEntry in pairs(qcMapIcon) do
 		for qcInitiatorIndex, qcInitiatorEntry in pairs(qcMapIcon[qcMapIndex]) do
 			for qcInitiatorQuestIndex, qcInitiatorQuestEntry in pairs(qcMapIcon[qcMapIndex][qcInitiatorIndex][7]) do
 				if (qcQuestDatabase[qcInitiatorQuestEntry] == nil) then
+					qcCount = qcCount + 1
 					print(qcInitiatorQuestEntry .. " - Given by: " .. tostring(qcMapIcon[qcMapIndex][qcInitiatorIndex][4]))
 				end
 			end
 		end
 	end
+	
+	print(qcCount)
 
 end
 function qcFindQuestsWithNoMapData()
@@ -1147,6 +1152,7 @@ function qcDetectSharedQuestOnDetail(qcQuestID)
 end
 function qcCollectQuestOnAccept(...)
 
+	if not (qcSharedIDs) then qcSharedIDs = {} end
 	if not (qcCollectedQuests) then qcCollectedQuests = {} end
 	if ((GetLocale() == "enUS") or (GetLocale() == "enGB")) then
 

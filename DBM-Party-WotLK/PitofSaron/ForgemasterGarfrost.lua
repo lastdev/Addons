@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ForgemasterGarfrost", "DBM-Party-WotLK", 15)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(36494)
 mod:SetModelID(30843)
 mod:SetUsedIcons(8)
@@ -32,7 +32,7 @@ local guids = {}
 local function buildGuidTable()
 	table.wipe(guids)
 	guids[UnitGUID("player")] = DBM:GetUnitFullName("player")
-	for i = 1, DBM:GetGroupMembers() do
+	for i = 1, DBM:GetNumGroupMembers() do
 		guids[UnitGUID("party"..i) or "none"] = DBM:GetUnitFullName("party"..i)
 	end
 end
@@ -43,16 +43,16 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(70381, 72930) then		-- Deep Freeze
+	if args:IsSpellID(70381) then		-- Deep Freeze
 		warnDeepFreeze:Show(args.destName)
 		timerDeepFreeze:Start(args.destName)
-	elseif args:IsSpellID(68785, 70335) then	-- Forge Frostborn Mace
+	elseif args:IsSpellID(68785) then	-- Forge Frostborn Mace
 		warnForgeWeapon:Show()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED_DOSE(args)
-	if args:IsSpellID(68786, 70336) then
+	if args:IsSpellID(68786) then
 		if args.amount >= 9 and args:IsPlayer() and self:AntiSpam(5) then --11 stacks is what's needed for achievement, 9 to give you time to clear/dispel
 			specWarnPermafrost:Show(args.spellName, args.amount)
 		end
@@ -68,7 +68,7 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 end
 
 function mod:SPELL_CREATE(args)
-	if args:IsSpellID(68789, 70851) then		-- Saronite Rock
+	if args:IsSpellID(68789) then		-- Saronite Rock
 		warnSaroniteRock:Show()
 	end
 end

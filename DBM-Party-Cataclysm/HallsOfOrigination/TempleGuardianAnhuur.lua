@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(124, "DBM-Party-Cataclysm", 4, 70)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(39425)
 mod:SetModelID(35067)
 mod:SetZone()
@@ -32,20 +32,20 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(74938) then
 		warnShield:Show()
-	elseif args:IsSpellID(75592, 94949) then
+	elseif args:IsSpellID(75592) then
 		warnReckoning:Show(args.destName)
 		timerReckoning:Start(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(75592, 94949) then
+	if args:IsSpellID(75592) then
 		timerReckoning:Cancel(args.destName)
 	end
 end
 
-function mod:SPELL_DAMAGE(sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId)
-	if (spellId == 75117 or spellId == 94951) and destGUID == UnitGUID("player") and self:AntiSpam(5) then
+function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+	if spellId == 75117 and destGUID == UnitGUID("player") and self:AntiSpam(5) then
 		specWarnLight:Show()
 	end
 end

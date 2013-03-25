@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 525 2012-09-20T09:02:14Z
+    Revision: 573 2013-01-07T23:24:43Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -76,7 +76,7 @@ local function SaveSpellBook(dbEntry, oldNum, newNum, bookType)
         family = _G.UnitCreatureFamily("pet");
         _, isHunterPet = _G.HasPetUI();
         if ( isHunterPet ) then
-            spec = _G.GetSpecialization(false, true);
+            spec = _G.GetSpecialization(false, true) or 1;
             specSpells = { _G.GetSpecializationSpells(spec, nil, true) };
         end
     end
@@ -118,14 +118,14 @@ local spellsFamily;
 local petSpec;
 local hasSpecSpells;
 local function GetPetSpells(specialization)
-    local _, isHunterPet = Armory:HasPetUI();
+    local hasPetUI, isHunterPet = Armory:HasPetUI();
     local family = Armory:UnitCreatureFamily("pet");
     local spec;
     if ( isHunterPet ) then
         spec = specialization or Armory:GetSpecialization(false, true);
     end
 
-    if ( not family ) then
+    if ( not (hasPetUI and family) ) then
         table.wipe(petSpells);
     
     elseif ( spellsFamily ~= family or petSpec ~= spec ) then
@@ -298,7 +298,9 @@ end
 
 function Armory:HasPetSpells(specialization)
     local spells = GetPetSpells(specialization);
-    return #spells, "PET"; 
+    if ( #spells > 0 ) then
+        return #spells, "PET"; 
+    end
 end
 
 function Armory:GetNumSpellTabs(bookType)

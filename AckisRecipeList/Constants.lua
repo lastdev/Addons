@@ -1,10 +1,10 @@
 -------------------------------------------------------------------------------
 -- Constants.lua
 -------------------------------------------------------------------------------
--- File date: 2012-09-30T00:45:08Z
--- File hash: 113a54a
--- Project hash: 5a95034
--- Project version: 2.4.2
+-- File date: 2013-03-03T23:11:34Z
+-- File hash: 4c8bad9
+-- Project hash: f922565
+-- Project version: 2.4.6
 -------------------------------------------------------------------------------
 -- Please see http://www.wowace.com/addons/arl/ for more information.
 -------------------------------------------------------------------------------
@@ -189,12 +189,12 @@ private.COMMON_FLAGS_WORD1 = {
 	MOB_DROP	= 0x00000400,	-- 11
 	DISC		= 0x00000800,	-- 12
 	RETIRED		= 0x00001000,	-- 13
-	IBOE		= 0x00002000,	-- 14
-	IBOP		= 0x00004000,	-- 15
-	IBOA		= 0x00008000,	-- 16
-	RBOE		= 0x00010000,	-- 17
-	RBOP		= 0x00020000,	-- 18
-	RBOA		= 0x00040000,	-- 19
+	UNUSED1		= 0x00002000,	-- 14
+	UNUSED2		= 0x00004000,	-- 15
+	UNUSED3		= 0x00008000,	-- 16
+	UNUSED4		= 0x00010000,	-- 17
+	UNUSED5		= 0x00020000,	-- 18
+	UNUSED6		= 0x00040000,	-- 19
 	DPS		= 0x00080000,	-- 20
 	TANK		= 0x00100000,	-- 21
 	HEALER		= 0x00200000,	-- 22
@@ -919,6 +919,7 @@ private.ZONE_NAMES = {
 	SCHOLOMANCE = _G.GetMapNameByID(898),
 	SHRINE_OF_TWO_MOONS = _G.GetMapNameByID(903),
 	SHRINE_OF_SEVEN_STARS = _G.GetMapNameByID(905),
+	ISLE_OF_THUNDER = _G.GetMapNameByID(928),
 }
 
 do

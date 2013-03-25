@@ -19,7 +19,7 @@ function ReagentRestocker:fixBoolean(var)
 end
 
 -- Maximum database version.
-ReagentRestocker.maxVer = 15;
+ReagentRestocker.maxVer = 16;
 
 function ReagentRestocker:loadDB()
 
@@ -71,7 +71,7 @@ function ReagentRestocker:loadDB()
 		ReagentRestockerDB.Version = GetAddOnMetadata(addonName, "Version");
 		
 		-- Database version, so I don't have to parse the addon's version, which is a string.
-		ReagentRestockerDB.DataVersion = 15;
+		ReagentRestockerDB.DataVersion = 16;
 	end
 	
 	-- Initialize global table, which has its own versioning independent of per-character versioning.
@@ -258,6 +258,152 @@ function ReagentRestocker:loadDB()
 		ReagentRestockerDB.DataVersion = 15
 	end
 	
+	
+	-- Move away from using numbers as names in the database. Finally, doing ALL of them.
+	if ReagentRestockerDB.DataVersion == 15 then
+	
+		for k, v in pairs(ReagentRestockerDB["Items"]) do
+			if v["1"]~=nil then
+				v.item_link=v["1"]
+				v["1"]=nil
+			end
+		end
+		
+		-- Move items in cache to names as well.
+		for k, v in pairs(RRGlobal["ItemCache"]) do
+			if v["1"]~=nil then
+				v.item_link=v["1"]
+				v["1"]=nil
+			end
+		end
+		
+		for k, v in pairs(ReagentRestockerDB["Items"]) do
+			if v["2"]~=nil then
+				v.item_rarity=v["2"]
+				v["2"]=nil
+			end
+		end
+		
+		-- Move items in cache to names as well.
+		for k, v in pairs(RRGlobal["ItemCache"]) do
+			if v["2"]~=nil then
+				v.item_rarity=v["2"]
+				v["2"]=nil
+			end
+		end
+		
+		for k, v in pairs(ReagentRestockerDB["Items"]) do
+			if v["3"]~=nil then
+				v.item_level=v["3"]
+				v["3"]=nil
+			end
+		end
+		
+		-- Move items in cache to names as well.
+		for k, v in pairs(RRGlobal["ItemCache"]) do
+			if v["3"]~=nil then
+				v.item_level=v["3"]
+				v["3"]=nil
+			end
+		end
+		
+		for k, v in pairs(ReagentRestockerDB["Items"]) do
+			if v["4"]~=nil then
+				v.item_min_level=v["4"]
+				v["4"]=nil
+			end
+		end
+		
+		-- Move items in cache to names as well.
+		for k, v in pairs(RRGlobal["ItemCache"]) do
+			if v["4"]~=nil then
+				v.item_min_level=v["4"]
+				v["4"]=nil
+			end
+		end
+		
+		for k, v in pairs(ReagentRestockerDB["Items"]) do
+			if v["5"]~=nil then
+				v.item_type=v["5"]
+				v["5"]=nil
+			end
+		end
+		
+		-- Move items in cache to names as well.
+		for k, v in pairs(RRGlobal["ItemCache"]) do
+			if v["5"]~=nil then
+				v.item_type=v["5"]
+				v["5"]=nil
+			end
+		end
+
+		for k, v in pairs(ReagentRestockerDB["Items"]) do
+			if v["6"]~=nil then
+				v.item_sub_type=v["6"]
+				v["6"]=nil
+			end
+		end
+		
+		-- Move items in cache to names as well.
+		for k, v in pairs(RRGlobal["ItemCache"]) do
+			if v["6"]~=nil then
+				v.item_sub_type=v["6"]
+				v["6"]=nil
+			end
+		end
+
+		for k, v in pairs(ReagentRestockerDB["Items"]) do
+			if v["7"]~=nil then
+				v.item_stack_count=v["7"]
+				v["7"]=nil
+			end
+		end
+		
+		-- Move items in cache to names as well.
+		for k, v in pairs(RRGlobal["ItemCache"]) do
+			if v["7"]~=nil then
+				v.item_stack_count=v["7"]
+				v["7"]=nil
+			end
+		end
+
+		for k, v in pairs(ReagentRestockerDB["Items"]) do
+			if v["8"]~=nil then
+				v.item_euip_loc=v["8"]
+				v["8"]=nil
+			end
+		end
+		
+		-- Move items in cache to names as well.
+		for k, v in pairs(RRGlobal["ItemCache"]) do
+			if v["8"]~=nil then
+				v.item_euip_loc=v["8"]
+				v["8"]=nil
+			end
+		end
+
+
+		for k, v in pairs(ReagentRestockerDB["Items"]) do
+			if v["9"]~=nil then
+				v.item_texture=v["9"]
+				v["9"]=nil
+			end
+		end
+		
+		-- Move items in cache to names as well.
+		for k, v in pairs(RRGlobal["ItemCache"]) do
+			if v["9"]~=nil then
+				v.item_texture=v["9"]
+				v["9"]=nil
+			end
+		end
+
+		--item_texture
+
+		ReagentRestockerDB.DataVersion = 16;
+	end
+	
+	
 	-- Fix any nil quantities.
 	--for k, v in pairs(ReagentRestockerDB["Items"]) do
 	--	if ReagentRestockerDB["Items"][k]["tags"]["Buy"] ~= nil then
@@ -295,8 +441,7 @@ function ReagentRestocker:loadDB()
 		tagsInit();
 	end
 	
-	fixTags()
-	
+	fixTags()	
 end
 
 function ReagentRestocker:VARIABLES_LOADED()
@@ -342,7 +487,10 @@ function ReagentRestocker:VARIABLES_LOADED()
 	ReagentRestocker.loadDB = nil
 	ReagentRestocker.maxVer = nil
 	ReagentRestocker.fixBoolean = nil
-
+	
+	-- Adding Ace profile support
+	RRAceDB = LibStub("AceDB-3.0"):New("RRAceDB")
+	RRAceDB.profile.db = ReagentRestockerDB;
 end
 
 -- Sad to say, but I have to do this - there are reports of inconsistent databases.

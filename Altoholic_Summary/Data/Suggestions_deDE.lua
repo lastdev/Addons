@@ -230,7 +230,7 @@ addon.Suggestions = {
 		{ 125, "bis zu 125: Baue Zinn, Silber, Pyrophor and geringes Blutsteinerz ab\n\nBaue Phyrophorerz in Thelgen Rock (Sumpfland)\nEinfach zu skillen bis 125" },
 		{ 175, "bis zu 175: \nDesolace,Eschental, Ödland, Arathihochland,\nAlteracgebirge, Schlingendorntal, Sümpfe des Elends" },
 		{ 250, "bis zu 250: Baue Mithril und Echtsilber ab\nVerwüstete Lande, Sengende Schlucht, Ödland, Hinterland,\nWestliche Pestländer, Azshara, Winterquell, Teufelswald, Steinkrallengebirge, Tanaris" },
-		{ 300, "bis zu 300: Baue Thorium ab \nKrater von Un'goro, Azshara, Winterquell, Verwüstete Lande\nSengende Schlucht, Brennende Steppe, Östliche Pestländer, Westliche Pestländer" },
+		{ 275, "bis zu 275: Baue Thorium ab \nKrater von Un'goro, Azshara, Winterquell, Verwüstete Lande\nSengende Schlucht, Brennende Steppe, Östliche Pestländer, Westliche Pestländer" },
 		{ 330, "bis zu 330: Baue Teufelseisen ab\nHöllenfeuerhalbinsel, Zangarmarschen" },
 		{ 375, "bis zu 375: Baue Teufelseisen und Adamantit ab\nWälder von Terokkar, Nagrand\nEigentlich überall in der Scherbenwelt" }
 	},

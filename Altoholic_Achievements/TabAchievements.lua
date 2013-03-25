@@ -11,6 +11,7 @@ local THIS_ACCOUNT = "Default"
 local ICON_NOT_STARTED = "Interface\\RaidFrame\\ReadyCheck-NotReady" 
 local ICON_PARTIAL = "Interface\\RaidFrame\\ReadyCheck-Waiting"
 local ICON_COMPLETED = "Interface\\RaidFrame\\ReadyCheck-Ready" 
+local CHARS_PER_FRAME = 11
 
 local parent = "AltoholicTabAchievements"
 local classMenu = parent .. "ClassIconMenu"	-- name of mouse over menu frames (add a number at the end to get it)
@@ -84,12 +85,12 @@ function ns:UpdateClassIcons()
 			addon:SetOption(format("Tabs.Achievements.%s.%s.Column%d", currentAccount, currentRealm, index), characterKey)
 			
 			index = index + 1
-			if index > 10 then
+			if index > CHARS_PER_FRAME then
 				break
 			end
 		end
 		
-		while index <= 10 do
+		while index <= CHARS_PER_FRAME do
 			addon:SetOption(format("Tabs.Achievements.%s.%s.Column%d", currentAccount, currentRealm, index), nil)
 			index = index + 1
 		end
@@ -98,7 +99,7 @@ function ns:UpdateClassIcons()
 	local itemName, itemButton, itemTexture
 	local class, _
 	
-	for i = 1, 10 do
+	for i = 1, CHARS_PER_FRAME do
 		itemName = parent .. "_ClassIcon" .. i
 		itemButton = _G[itemName]
 		
@@ -129,11 +130,13 @@ function ns:UpdateClassIcons()
 			itemButton.border:SetVertexColor(0, 1, 0, 0.5)
 		end
 		
-		itemTexture:SetWidth(36)
-		itemTexture:SetHeight(36)
+		itemTexture:SetWidth(33)
+		itemTexture:SetHeight(33)
 		itemTexture:SetAllPoints(itemButton)
 		
 		itemButton.border:Show()
+		itemButton:SetWidth(34)
+		itemButton:SetHeight(34)
 		itemButton:Show()
 	end
 end
@@ -376,7 +379,7 @@ local function ClassIcon_Initialize(self, level)
 end
 
 function ns:OnLoad()
-	for i = 1, 10 do
+	for i = 1, CHARS_PER_FRAME do
 		addon:DDM_Initialize(_G[classMenu..i], ClassIcon_Initialize)
 	end
 end

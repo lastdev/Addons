@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 513 2012-09-09T20:38:34Z
+    Revision: 585 2013-03-02T14:19:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -176,20 +176,6 @@ function Armory:GetLatestThreeSenders()
     return self:SetGetCharacterValue("LatestThreeSenders", _G.GetLatestThreeSenders());
 end
 
-function Armory:GetLFGDungeonRewardCapBarInfo(id)
-    if ( _G.GetLFGDungeonRewardCapBarInfo and _G.GetLFGDungeonRewardCapBarInfo(id) ) then -- Patch 4.1.0
-        local currencyID, dungeonID, quantity, limit, overallQuantity, overallLimit, periodPurseQuantity, periodPurseLimit = self:SetGetCharacterValue("DungeonRewardCap"..id, _G.GetLFGDungeonRewardCapBarInfo(id));
-
-        if ( time() >= self:GetQuestResetTime() ) then
-            quantity = 0;
-            overallQuantity = 0;
-            periodPurseQuantity = 0;
-        end
-
-	    return currencyID, dungeonID, quantity, limit, overallQuantity, overallLimit, periodPurseQuantity, periodPurseLimit;
-	end
-end
-
 function Armory:GetManaRegen()
     return self:SetGetCharacterValue("ManaRegen", _G.GetManaRegen());
 end
@@ -301,6 +287,14 @@ end
 
 function Armory:GetPowerRegen()
     return self:SetGetCharacterValue("PowerRegen", _G.GetPowerRegen());
+end
+
+function Armory:GetPvpPowerDamage()
+    return self:SetGetCharacterValue("PvpPowerDamage", _G.GetPvpPowerDamage());
+end
+
+function Armory:GetPvpPowerHealing()
+    return self:SetGetCharacterValue("PvpPowerHealing", _G.GetPvpPowerHealing());
 end
 
 function Armory:GetPVPLifetimeStats()

@@ -34,7 +34,9 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	WarnPhase	= "提示轉換階段",
-	RangeFrame	= "在祕法階段時顯示距離框(6碼)"
+	RangeFrame	= "在祕法階段時顯示距離框(6碼)",
+	SetIconOnWS	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(116784),
+	SetIconOnAR	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(116417)
 })
 
 L:SetMiscLocalization({
@@ -51,7 +53,6 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(682)
 
 L:SetOptionLocalization({
-	RangeFrame			= "顯示距離框(8碼)",
 	SetIconOnVoodoo		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122151)
 })
 
@@ -65,7 +66,19 @@ L:SetMiscLocalization({
 ----------------------
 L = DBM:GetModLocalization(687)
 
+L:SetWarningLocalization({
+	DarknessSoon		= "黑暗之盾在%d秒"
+})
+
+L:SetTimerLocalization({
+	timerUSRevive		= "不死黑影重新成形",
+	timerRainOfArrowsCD	= "%s"
+})
+
 L:SetOptionLocalization({
+	DarknessSoon		= "為$spell:117697提示施放前五秒倒數",
+	timerUSRevive		= "為$spell:117506重新成形顯示計時器",
+	timerRainOfArrowsCD = DBM_CORE_AUTO_TIMER_OPTIONS.cd:format(118122),
 	RangeFrame			= "顯示距離框(8碼)"
 })
 
@@ -97,14 +110,15 @@ L= DBM:GetModLocalization(677)
 
 L:SetOptionLocalization({
 	InfoFrame		= "為受到$spell:116525的玩家顯示訊息框",
-	ArrowOnCombo	= "為$journal:5673顯示DBM箭頭\n注:這是假設坦克在前方而其他人在後方"
+	CountOutCombo	= "數出$journal:5673連擊數 註:這目前僅只有女性音效.",
+	ArrowOnCombo	= "為$journal:5673顯示DBM箭頭 註:這是假設坦克在前方而其他人在後方"
 })
 
 L:SetMiscLocalization({
 	Pull		= "這台機器啟動了!到下一層去!",--Emote
 	Rage		= "大帝之怒響徹群山。",--Yell
-	Strength	= "帝王之力出現在壁龜裡!",--Emote
-	Courage		= "帝王之勇出現在壁龜裡!",--Emote
-	Boss		= "兩個泰坦魁儡出現在大壁龜裡!"--Emote
+	Strength	= "帝王之力出現在壁龕裡!",--Emote
+	Courage		= "帝王之勇出現在壁龕裡!",--Emote
+	Boss		= "兩個泰坦魁儡出現在大壁龕裡!"--Emote
 })
 

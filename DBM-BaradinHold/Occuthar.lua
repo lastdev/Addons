@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(140, "DBM-BaradinHold", nil, 74)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(52363)
 mod:SetModelID(37876)
 mod:SetZone()
@@ -39,12 +39,12 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(96920, 101006) then
+	if args:IsSpellID(96920) then
 		warnEyes:Show()
 		timerEyes:Start()
 		focusedCast = 0
 		timerFocusedFire:Start()--eyes resets the CD of focused. Blizz hotfix makes more sense now.
-	elseif args:IsSpellID(96913, 101007) then
+	elseif args:IsSpellID(96913) then
 		warnSearingShadows:Show()
 		timerSearingShadows:Start()
 		specWarnSearingShadows:Schedule(3.2)

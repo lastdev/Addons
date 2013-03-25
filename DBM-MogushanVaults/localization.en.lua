@@ -33,7 +33,9 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	WarnPhase	= "Announce Phase transition",
-	RangeFrame	= "Show range frame (6) during arcane phase"
+	RangeFrame	= "Show range frame (6) during arcane phase",
+	SetIconOnWS	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(116784),
+	SetIconOnAR	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(116417)
 })
 
 L:SetMiscLocalization({
@@ -50,7 +52,6 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(682)
 
 L:SetOptionLocalization({
-	RangeFrame			= "Show range frame (8)",
 	SetIconOnVoodoo		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122151)
 })
 
@@ -64,7 +65,19 @@ L:SetMiscLocalization({
 ----------------------
 L = DBM:GetModLocalization(687)
 
+L:SetWarningLocalization({
+	DarknessSoon		= "Shield of Darkness in %ds"
+})
+
+L:SetTimerLocalization({
+	timerUSRevive		= "Undying Shadow Reform",
+	timerRainOfArrowsCD	= "%s"
+})
+
 L:SetOptionLocalization({
+	DarknessSoon		= "Show pre-warning countdown for $spell:117697 (5s before)",
+	timerUSRevive		= "Show timer for $spell:117506 reform",
+	timerRainOfArrowsCD = DBM_CORE_AUTO_TIMER_OPTIONS.cd:format(118122),
 	RangeFrame			= "Show range frame (8)"
 })
 
@@ -85,7 +98,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	specWarnDespawnFloor	= "Show special warning before floor vanishes",
 	timerDespawnFloor		= "show timer for when floor vanishes",
-	SetIconOnDestabilized	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(132226)
+	SetIconOnDestabilized	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(132222)
 })
 
 
@@ -96,6 +109,7 @@ L= DBM:GetModLocalization(677)
 
 L:SetOptionLocalization({
 	InfoFrame		= "Show info frame for players affected by $spell:116525",
+	CountOutCombo	= "Count out $journal:5673 casts\nNOTE: This currently only has female voice option.",
 	ArrowOnCombo	= "Show DBM Arrow during $journal:5673\nNOTE: This assumes tank is in front of boss and anyone else is behind."
 })
 

@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 529 2012-09-24T21:39:27Z
+    Revision: 586 2013-03-02T15:33:52Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -65,6 +65,18 @@ tradeIcons[ARMORY_TRADE_INSCRIPTION] = "INV_Inscription_Tradeskill01";
 -- TradeSkills Internals
 ----------------------------------------------------------
 
+local function FixGetTradeSkillReagentItemLink(id, index)
+    local link = _G.GetTradeSkillReagentItemLink(id, index);
+    -- PTR 5.2: GetTradeSkillReagentItemLink returns nil
+    if ( not link ) then
+        local tooltip = Armory:AllocateTooltip();
+        tooltip:SetTradeSkillItem(id, index);
+        _, link = tooltip:GetItem();
+        Armory:ReleaseTooltip(tooltip);
+    end
+    return link;
+end
+
 local professionLines = {};
 local dirty = true;
 local owner = "";
@@ -84,7 +96,7 @@ local function GetReagentInfo(id, index)
 end
 
 local function IsRecipe(skillType)
-    return skillType ~= "header" and skillType ~= "subheader";
+    return skillType and skillType ~= "header" and skillType ~= "subheader";
 end
 
 local function IsSameRecipe(skillName, recipeName)
@@ -114,6 +126,7 @@ local function GetProfessionLines()
     local numReagents, oldPosition, names, isIncluded, itemMinLevel;
     local numLines, extended;
     local name, id, skillType, isExpanded;
+    local subgroup;
 
     table.wipe(professionLines);
 
@@ -123,51 +136,61 @@ local function GetProfessionLines()
         numLines, extended = GetProfessionNumValues(dbEntry);
         if ( numLines > 0 ) then
             table.wipe(groups);
-            
+             
             -- apply filters
             for i = 1, numLines do
                 name, skillType = dbEntry:GetValue(itemContainer, i, "Info");
                 id = dbEntry:GetValue(itemContainer, i, "Data");
                 isExpanded = not Armory:GetHeaderLineState(itemContainer..selectedSkill, name);
-                if ( not IsRecipe(skillType) ) then
+                if ( skillType == "header" ) then
                     if ( tradeSkillSubClassFilter ) then
                         isIncluded = tradeSkillSubClassFilter[name..(#groups + 1)];
                     else
                         isIncluded = true;
                     end
                     group = { index=i, expanded=isExpanded, included=isIncluded, items={} };
+                    subgroup = nil;
                     table.insert(groups, group);
-                 elseif ( group.included ) then
-                    numReagents = GetNumReagents(id);
-                    names = name or "";
-                    for index = 1, numReagents do
-                        names = names.."\t"..(GetReagentInfo(id, index) or "");
-                    end
+                elseif ( group.included ) then
+                    if ( skillType == "subheader" ) then
+                        subgroup = { index=i, expanded=isExpanded, items={} };
+                        table.insert(group.items, subgroup);
+                    else
+                        numReagents = GetNumReagents(id);
+                        names = name or "";
+                        for index = 1, numReagents do
+                            names = names.."\t"..(GetReagentInfo(id, index) or "");
+                        end
 
-                    Armory:FillTable(invSlot, GetRecipeValue(id, "InvSlot"));
-                    if ( extended and tradeSkillInvSlotFilter ) then
-                        isIncluded = false;
-                        for _, slot in ipairs(invSlot) do
-                            if ( tradeSkillInvSlotFilter[slot] ) then
-                                isIncluded = true;
-                                break;
+                        Armory:FillTable(invSlot, GetRecipeValue(id, "InvSlot"));
+                        if ( extended and tradeSkillInvSlotFilter ) then
+                            isIncluded = false;
+                            for _, slot in ipairs(invSlot) do
+                                if ( tradeSkillInvSlotFilter[slot] ) then
+                                    isIncluded = true;
+                                    break;
+                                end
+                            end
+                        else
+                            isIncluded = true;
+                        end
+                        if ( isIncluded and tradeSkillMinLevel > 0 and tradeSkillMaxLevel > 0 ) then
+                            _, _, _, _, itemMinLevel = _G.GetItemInfo(GetRecipeValue(id, "ItemLink"));
+                            isIncluded = itemMinLevel and itemMinLevel >= tradeSkillMinLevel and itemMinLevel <= tradeSkillMaxLevel;
+                        elseif ( isIncluded and not name or (tradeSkillFilter ~= "" and not string.find(strlower(names), strlower(tradeSkillFilter), 1, true)) ) then
+                            isIncluded = false;
+                        end
+                        if ( isIncluded ) then
+                            if ( subgroup ) then
+                                table.insert(subgroup.items, {index=i, name=name});
+                            else
+                                table.insert(group.items, {index=i, name=name});
                             end
                         end
-                    else
-                        isIncluded = true;
                     end
-                    if ( isIncluded and tradeSkillMinLevel > 0 and tradeSkillMaxLevel > 0 ) then
-                        _, _, _, _, itemMinLevel = _G.GetItemInfo(GetRecipeValue(id, "ItemLink"));
-                        isIncluded = itemMinLevel and itemMinLevel >= tradeSkillMinLevel and itemMinLevel <= tradeSkillMaxLevel;
-                    elseif ( isIncluded and not name or (tradeSkillFilter ~= "" and not string.find(strlower(names), strlower(tradeSkillFilter), 1, true)) ) then
-                        isIncluded = false;
-                    end
-                    if ( isIncluded ) then
-                        table.insert(group.items, {index=i, name=name});
-                    end
-                 end
+                end
             end
-        
+
             -- build the list
             if ( #groups == 0 ) then
                 if ( not extended ) then
@@ -182,8 +205,13 @@ local function GetProfessionLines()
                     if ( groups[i].included and (table.getn(groups[i].items) > 0 or not hasFilter) ) then
                         table.insert(professionLines, groups[i].index);
                         if ( groups[i].expanded ) then
-                            for _, v in ipairs(groups[i].items) do
-                                table.insert(professionLines, v.index);
+                            for _, item in ipairs(groups[i].items) do
+                                table.insert(professionLines, item.index);
+                                if ( item.items and item.expanded ) then
+                                    for _, subitem in ipairs(item.items) do
+                                        table.insert(professionLines, subitem.index);
+                                    end
+                                end
                             end
                         end
                     end
@@ -456,29 +484,29 @@ function Armory:ClearTradeSkills()
     dirty = true;
 end
 
-local function StoreTradeSkillInfo(dbEntry, index)
+local function StoreTradeSkillInfo(dbEntry, skillIndex, index)
     local success = true;
-    local link = _G.GetTradeSkillRecipeLink(index);
+    local link = _G.GetTradeSkillRecipeLink(skillIndex);
     local _, id = Armory:GetLinkId(link);
     local recipe = Armory.sharedDbEntry:SelectContainer(container, recipeContainer, id);
     local reagents = Armory.sharedDbEntry:SelectContainer(container, reagentContainer);
 
     recipe.RecipeLink = link;
-    recipe.Description = _G.GetTradeSkillDescription(index);
-    recipe.Icon = _G.GetTradeSkillIcon(index);
-    recipe.Tools = Armory:BuildColoredListString(_G.GetTradeSkillTools(index));
-    recipe.NumMade = dbEntry.Save(_G.GetTradeSkillNumMade(index));
-    if ( _G.GetTradeSkillItemLink(index) ) then
-        recipe.ItemLink = _G.GetTradeSkillItemLink(index);
+    recipe.Description = _G.GetTradeSkillDescription(skillIndex);
+    recipe.Icon = _G.GetTradeSkillIcon(skillIndex);
+    recipe.Tools = Armory:BuildColoredListString(_G.GetTradeSkillTools(skillIndex));
+    recipe.NumMade = dbEntry.Save(_G.GetTradeSkillNumMade(skillIndex));
+    if ( _G.GetTradeSkillItemLink(skillIndex) ) then
+        recipe.ItemLink = _G.GetTradeSkillItemLink(skillIndex);
     else
         success = false;
     end
     
-    if ( _G.GetTradeSkillNumReagents(index) > 0 ) then
+    if ( _G.GetTradeSkillNumReagents(skillIndex) > 0 ) then
         recipe.Reagents = {};
-        for i = 1, _G.GetTradeSkillNumReagents(index) do
-            local reagentName, reagentTexture, reagentCount, playerReagentCount = _G.GetTradeSkillReagentInfo(index, i);
-            link = _G.GetTradeSkillReagentItemLink(index, i);
+        for i = 1, _G.GetTradeSkillNumReagents(skillIndex) do
+            local reagentName, reagentTexture, reagentCount, playerReagentCount = _G.GetTradeSkillReagentInfo(skillIndex, i);
+            link = FixGetTradeSkillReagentItemLink(skillIndex, i);
             if ( link ) then
                 local _, id = Armory:GetLinkId(link);
                 reagents[id] = dbEntry.Save(reagentName, reagentTexture, link);
@@ -489,9 +517,13 @@ local function StoreTradeSkillInfo(dbEntry, index)
         end
     end
 
-    local cooldown, isDayCooldown = _G.GetTradeSkillCooldown(index);
-    if ( isDayCooldown ) then
+    local cooldown, isDayCooldown = _G.GetTradeSkillCooldown(skillIndex);
+
+    -- HACK: when a cd is activated it will return 00:00, but after a relog it suddenly becomes 03:00
+    if ( cooldown and isDayCooldown and date("*t", time() + cooldown).hour == 0 ) then
+        cooldown = _G.GetQuestResetTime();
     end
+    
     if ( cooldown and cooldown > 0 ) then
         dbEntry:SetValue(3, itemContainer, index, "Cooldown", cooldown, isDayCooldown, time());
     else
@@ -533,7 +565,7 @@ local function UpdateTradeSkillExtended(dbEntry)
     end;
     local funcAdditionalInfo = function(index)
         local name = _G.GetTradeSkillInfo(index);
-        local success, id, recipe, cooldown = StoreTradeSkillInfo(dbEntry, index);
+        local success, id, recipe, cooldown = StoreTradeSkillInfo(dbEntry, index, index);
         dataMissing = not success;
         if ( cooldown ) then
             hasCooldown = true;
@@ -568,7 +600,7 @@ local function UpdateTradeSkillSimple(dbEntry)
         skillName, skillType = _G.GetTradeSkillInfo(skillIndex);
 
         if ( skillName and IsRecipe(skillType) ) then
-            local success, id, recipe, cooldown = StoreTradeSkillInfo(dbEntry, skillIndex);
+            local success, id, recipe, cooldown = StoreTradeSkillInfo(dbEntry, skillIndex, index);
             failed = failed or not success;
 
             dbEntry:SetValue(3, itemContainer, index, "Info", _G.GetTradeSkillInfo(skillIndex));
@@ -595,7 +627,7 @@ function Armory:PullTradeSkillItems()
                 _G.GetTradeSkillItemLink(index);
                 numReagents = _G.GetTradeSkillNumReagents(index);
                 for i = 1, numReagents do
-                    _G.GetTradeSkillReagentItemLink(index, i);
+                    FixGetTradeSkillReagentItemLink(index, i);
                 end
             end
             index = index + 1;
@@ -970,14 +1002,13 @@ function Armory:GetFirstTradeSkill()
 end
 
 function Armory:GetUniqueTradeSkillSubClasses()
-    self:FillTable(subClasses, self:GetTradeSkillSubClasses());
-    for i = #subClasses, 1, -1 do
-        if ( subClasses[i] ) then
-            subClasses[i] = subClasses[i]..i;
-        else
-            table.remove(subClasses, i);
-        end
+    self:FillUnbrokenTable(subClasses, self:GetTradeSkillSubClasses());
+
+    -- Create unique list
+    for i = 1, #subClasses do
+        subClasses[i] = subClasses[i]..i;
     end
+
     return subClasses;    
 end
 
@@ -990,7 +1021,9 @@ function Armory:GetTradeSkillInvSlots()
 end
 
 function Armory:GetTradeSkillListLink()
-    return GetProfessionValue("ListLink");
+    if ( self.characterRealm == self.playerRealm ) then
+        return GetProfessionValue("ListLink");
+    end
 end
 
 function Armory:GetTradeSkillDescription(index)
@@ -1256,26 +1289,37 @@ function Armory:GetRecipeAltInfo(name, link, profession, reqRank, reqReputation,
     return recipeOwners, recipeHasSkill, recipeCanLearn;
 end
 
+local gemResearch = {
+    ["131593"] = true, -- blue
+    ["131686"] = true, -- red
+    ["131688"] = true, -- green
+    ["131690"] = true, -- orange
+    ["131691"] = true, -- purple
+    ["131695"] = true, -- yellow
+};
 local cooldowns = {};
-function Armory:GetTradeSkillCooldowns()
-    local dbEntry = self.playerDbBaseEntry;
-
+function Armory:GetTradeSkillCooldowns(dbEntry)
     table.wipe(cooldowns);
 
     if ( dbEntry and self:HasTradeSkills() ) then
         local professions = dbEntry:GetValue(container);
         if ( professions ) then
-            local _, month, day, year = CalendarGetDate();
-            local today = self:MakeDate(day, month, year);
-            local cooldown, timestamp, skillName;
-            
+            local cooldown, isDayCooldown, timestamp, skillName, data;
             for profession in pairs(professions) do
                 for i = 1, dbEntry:GetNumValues(container, profession, itemContainer) do
-                    cooldown, _, timestamp = dbEntry:GetValue(container, profession, itemContainer, i, "Cooldown");
+                    cooldown, isDayCooldown, timestamp = dbEntry:GetValue(container, profession, itemContainer, i, "Cooldown");
                     if ( cooldown ) then
-                        cooldown = self:MinutesTime(cooldown + timestamp);
-                        if ( cooldown >= today ) then
-                            skillName = dbEntry:GetValue(container, profession, itemContainer, i, "Info");
+                        cooldown = self:MinutesTime(cooldown + timestamp, true);
+                        if ( cooldown > time() ) then
+                            data = dbEntry:GetValue(container, profession, itemContainer, i, "Data");
+                            if ( gemResearch[data] ) then
+                                skillName = ARMORY_PANDARIA_GEM_RESEARCH;
+                            else
+                                skillName = dbEntry:GetValue(container, profession, itemContainer, i, "Info");
+                                if ( skillName:find(ARMORY_TRANSMUTE) ) then
+                                    skillName = ARMORY_TRANSMUTE;
+                                end
+                            end
                             table.insert(cooldowns, {skill=skillName, time=cooldown});
                         end
                     end
@@ -1285,6 +1329,25 @@ function Armory:GetTradeSkillCooldowns()
     end
 
     return cooldowns;
+end
+
+function Armory:CheckTradeSkillCooldowns()
+    local currentProfile = self:CurrentProfile();
+    local cooldowns, cooldown;
+    local total = 0;
+    for _, profile in ipairs(self:Profiles()) do
+        self:SelectProfile(profile);
+        cooldowns = self:GetTradeSkillCooldowns(self.selectedDbBaseEntry);
+        for _, v in ipairs(cooldowns) do
+            cooldown = SecondsToTime(v.time - time(), true, true);
+            self:PrintTitle(format("%s (%s@%s) %s %s", v.skill, profile.character, profile.realm, COOLDOWN_REMAINING, cooldown));
+            total = total + 1;
+        end
+    end
+    self:SelectProfile(currentProfile);
+    if ( total == 0 ) then
+        self:PrintRed(ARMORY_CHECK_CD_NONE);
+    end
 end
 
 local crafters = {};
@@ -1337,6 +1400,7 @@ function Armory:GetInscribers(glyphName, class)
     if ( glyphName and class and self:HasTradeSkills() and self:GetConfigShowCrafters() ) then
         local currentProfile = self:CurrentProfile();
         local profession = ARMORY_TRADE_INSCRIPTION;
+        local key = self:GetGlyphKey(glyphName);
         local dbEntry, id, link, name;
 
         for _, character in ipairs(self:CharacterList(self.playerRealm)) do
@@ -1346,7 +1410,7 @@ function Armory:GetInscribers(glyphName, class)
             if ( dbEntry:Contains(container, profession) ) then
                 for i = 1, dbEntry:GetNumValues(container, profession, itemContainer) do
                     name = dbEntry:GetValue(container, profession, itemContainer, i, "Info");
-                    if ( glyphName == name ) then
+                    if ( self:GetGlyphKey(name) == key ) then
                         id = dbEntry:GetValue(container, profession, itemContainer, i, "Data");
                         link = GetRecipeValue(id, "ItemLink");
                         if ( link ) then

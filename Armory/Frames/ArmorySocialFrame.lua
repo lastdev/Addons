@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 494 2012-09-04T21:04:44Z
+    Revision: 553 2012-11-11T14:01:51Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -151,6 +151,7 @@ end
 
 function ArmoryFriendsList_Update()
     local numFriends = Armory:GetNumFriends();
+    local showScrollBar = (numFriends > ARMORY_FRIENDS_TO_DISPLAY);
     local nameText, infoText, noteText, noteHiddenText;
     local name, class, note;
     local friendButton;
@@ -184,7 +185,7 @@ function ArmoryFriendsList_Update()
             noteHiddenText:SetText(note);
             local width = noteHiddenText:GetWidth() + infoText:GetWidth();
             local friendButtonWidth = friendButton:GetWidth();
-            if ( ArmoryFriendsListScrollFrameScrollBarTop:IsVisible() ) then
+            if ( showScrollBar ) then
                 friendButtonWidth = friendButtonWidth - ArmoryFriendsListScrollFrameScrollBarTop:GetWidth();
             end
             if ( width > friendButtonWidth ) then
@@ -358,6 +359,7 @@ end
 
 function ArmoryEventsList_Update()
     local numEvents = Armory:GetNumEvents();
+    local showScrollBar = (numEvents > ARMORY_EVENTS_TO_DISPLAY);
     local eventTime, isOldEvent, title, status;
     local dateTimeText, titleText, statusText;
     local eventButton;
@@ -392,7 +394,7 @@ function ArmoryEventsList_Update()
             statusText:SetText(status or "");
             
             width = eventButton:GetWidth();
-            if ( ArmoryEventsListScrollFrameScrollBarTop:IsVisible() ) then
+            if ( showScrollBar ) then
                 width = width - ArmoryEventsListScrollFrameScrollBarTop:GetWidth();
             end
             width = width - statusText:GetWidth();

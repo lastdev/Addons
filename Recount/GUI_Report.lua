@@ -2,7 +2,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale( "Recount" )
 local me={}
 
-local revision = tonumber(string.sub("$Revision: 1199 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1226 $", 12, -3))
 local Recount = _G.Recount
 if Recount.Version < revision then Recount.Version = revision end
 
@@ -11,6 +11,7 @@ local GetNumPartyMembers = GetNumPartyMembers or GetNumSubgroupMembers
 local ReportLocations={
 	{L["Say"],"SAY"},
 	{L["Party"],"PARTY",function() return GetNumPartyMembers()>0 end},
+	{L["Instance"],"INSTANCE_CHAT",function() return GetNumGroupMembers(LE_PARTY_CATEGORY_INSTANCE)~=0 end},
 	{L["Raid"],"RAID",function() return UnitInRaid("player") end},
 	{L["Guild"],"GUILD",IsInGuild},
 	{L["Officer"],"OFFICER",IsInGuild},

@@ -1,6 +1,11 @@
-local libName, lib = ...
+local g = BittensGlobalTables
+local c = g.GetTable("BittensSpellFlashLibrary")
+local u = g.GetTable("BittensUtilities")
+if u.SkipOrUpgrade(c, "Events", 4) then
+	return
+end
+
 local s = SpellFlashAddon
-local c = BittensSpellFlashLibrary
 
 local GetActionInfo = GetActionInfo
 local GetMacroSpell = GetMacroSpell
@@ -12,26 +17,33 @@ local next = next
 local pairs = pairs
 local print = print
 local select = select
+local tinsert = tinsert
 local type = type
+local wipe = wipe
 
-local managedDots = {}
-local registeredAddons = {}
-local currentSpells = {}
+local managedDots = { }
+local registeredAddons = { }
+local currentSpells = { }
 --[[
-local template = {
-	Name = "Spell Name",
+	Name = "Localized Spell Name",
 	Target = "Unit ID",
 	ID = spellID, -- nil until CAST
-	Status = "Queued/Casting/Interrupted",
-	Cost = "Mana/Focus/etc cost", -- nil until CAST
+	Status = "Queued/Casting/Channeling/Interrupted",
+	Cost = Mana/Focus/etc cost, -- nil until CAST
 	GCDStart = GetTime(),
 	CastStart = GetTime(),
-}
 --]]
 
+--local aoeDetectors = {}
+--local aoeTime = 0
+--local aoeSpell = 0
+--local aoeCount = 0
+
 -------------------------------------------------------------- Public Functions
-function c.RegisterForEvents(a)
-	registeredAddons[a] = true
+c.LastGCD = 1.5
+
+function c.RegisterForEvents()
+	registeredAddons[c.A] = true
 end
 
 function c.ManageDotRefresh(name, unhastedTick, baseName)
@@ -47,7 +59,7 @@ end
 
 function c.GetCastingInfo()
 	for _, info in pairs(currentSpells) do
-		if info.Status == "Casting" then
+		if info.Status == "Casting" or info.Status == "Channeling" then
 			return info
 		end
 	end
@@ -82,104 +94,322 @@ function c.InfoMatches(info, ...)
 	end
 end
 
-------------------------------------------------------- Internal Event Handling
-local frame = CreateFrame("frame")
-frame:RegisterEvent("UNIT_SPELLCAST_SENT")
-frame:RegisterEvent("UNIT_SPELLCAST_FAILED")
-frame:RegisterEvent("UNIT_SPELLCAST_FAILED_QUIET")
-frame:RegisterEvent("UNIT_SPELLCAST_START")
---frame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
-frame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
-frame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
---frame:RegisterEvent("UNIT_SPELLCAST_STOP")
-frame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
-frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-frame:RegisterEvent("PLAYER_REGEN_ENABLED")
-frame:RegisterEvent("ADDON_LOADED")
-
-local function fireEvent(functionName, ...)
-	for a, _ in pairs(registeredAddons) do
-		local rotation = c.GetCurrentRotation(a)
-		if rotation ~= nil
-			and rotation[functionName] ~= nil then
-			
-			c.Init(a)
-			rotation[functionName](...)
+function c.IsQueued(...)
+	for _, info in pairs(currentSpells) do
+		if info.Status == "Queued" and c.InfoMatches(info, ...) then
+			return true
 		end
 	end
 end
 
-local function handleLogEvent(...)
-	local source = select(5, ...)
-	if source == nil or not UnitIsUnit(source, "player") then
+function c.IsCasting(...)
+	for _, info in pairs(currentSpells) do
+		if c.InfoMatches(info, ...) then
+			return true
+		end
+	end
+end
+
+--function c.RegisterAoEDetector(name)
+--	aoeDetectors[c.GetID(name)] = true
+--end
+
+------------------------------------------------------------------ Travel Times
+local metaTravelInfo = { }
+local inFlight = { }
+--[[
+	[spellID][target] = { GetTime()* }
+]]--
+local pendingAura = { }
+local pastTravelInfo = { }
+--[[
+	spellID = {
+		LaunchTime = GetTime(),
+		TravelTime = __,
+	}
+]]--
+
+local travelEnders = {
+	SPELL_DAMAGE = true,
+	SPELL_MISSED = true,
+-- These cause problem w/ spells that both deal damage and apply an aura, if
+-- two are in the air (because then the first one lands, but consumes both
+-- launches, and ends up w/ a ridiculously small travel time).
+	SPELL_AURA_APPLIED = true,
+	SPELL_AURA_REFRESH = true,
+	SPELL_AURA_APPLIED_DOSE = true,
+}
+
+local function getTrimmed(table, max, spellID, target, magically)
+	if magically then
+		table = u.GetOrMakeTable(table, spellID, target)
+	else
+		table = u.GetFromTable(table, spellID, target)
+		if table == nil then
+			return nil
+		end
+	end
+	
+	local now = GetTime()
+	for key, launch in pairs(table) do
+		if now - launch > max then
+			table[key] = nil
+		end
+	end
+	return table
+end
+
+local function getTrimmedLaunches(spellID, target, magically)
+	return getTrimmed(inFlight, 3, spellID, target, magically)
+end
+
+local function getTrimmedLandings(spellID, target, magically)
+	return getTrimmed(pendingAura, 1, spellID, target, magically)
+end
+
+local function removeOldest(table, spellID, target)
+	if table == nil then
+		return nil
+	end
+	
+	local min = nil
+	local minKey = nil
+	for key, launch in pairs(table) do
+		if min == nil or launch < min then
+			min = launch
+			minKey = key
+		end
+	end
+	if minKey then
+		table[minKey] = nil
+	end
+	return min
+end
+
+local function startTravelTime(spellID, target)
+	if target == nil then
 		return
 	end
---c.Debug("Lib", ...)
 	
-	local event = select(2, ...)
-	local target = select(9, ...)
-	local spellID = select(12, ...)
-	local spellSchool = select(13, ...)
---c.Debug("Lib", event, target, spellID, spellSchool)
-	if event == "SPELL_DAMAGE" or event == "SPELL_PERIODIC_DAMAGE" then
-		local amount = select(15, ...)
-		local damageSchool = select(17, ...)
-		local critical = select(21, ...)
-		fireEvent(
-			"SpellDamage",
-			spellID,
-			target,
-			amount,
-			critical,
-			spellSchool,
-			damageSchool,
-			event == "SPELL_PERIODIC_DAMAGE")
-	elseif event == "SPELL_MISSED" then
-		fireEvent("SpellMissed", spellID, target, spellSchool)
-	elseif event == "SPELL_AURA_APPLIED"
-		or event == "SPELL_AURA_REFRESH"
-		or event == "SPELL_AURA_APPLIED_DOSE" then
+--c.Debug("startTravelTime", s.SpellName(spellID), spellID, target, GetTime())
+	tinsert(getTrimmedLaunches(spellID, target, true), GetTime())
+end
+
+local function runOnRelatedIDs(spellID, action)
+	if action(spellID) then
+		return true
+	end
+	
+	local appliers = u.GetFromTable(c, "A", "AurasToSpells", "spellID")
+	if appliers == nil then
+		return false
+	end
+	
+	for applierID, _ in pairs(appliers) do
+		if action(applierID) then
+			return true
+		end
+	end
+	return false
+end
+
+local function endTravelTime(spellID, target, pendAura)
+	if target == nil then
+		return false
+	end
+	
+--c.Debug("endTravelTime", s.SpellName(spellID), spellID, target, GetTime())
+	return runOnRelatedIDs(spellID, function(spellID)
+		local oldest = removeOldest(getTrimmedLaunches(spellID, target))
+		if oldest == nil then
+			return false
+		end
 		
-		fireEvent("AuraApplied", spellID, target, spellSchool)
-	elseif event == "SPELL_AURA_REMOVED"
-		or event == "SPELL_AURA_REMOVED_DOSE" then
+		local now = GetTime()
+		local travelInfo = u.GetOrMakeTable(pastTravelInfo, spellID)
+		travelInfo.LaunchTime = oldest
+		travelInfo.TravelTime = now - oldest
+--c.Debug("endTravelTime", "   ", travelInfo.TravelTime, s.SpellName(spellID))
+		
+		if pendAura then
+			tinsert(getTrimmedLandings(spellID, target, true), now)
+		end
+		return true
+	end)
+end
+
+local function endAuraDelay(spellID, target)
+	if target == nil then
+		return
+	end
 	
-		fireEvent("AuraRemoved", spellID, target, spellSchool)
-	elseif event == "SPELL_HEAL" or event == "SPELL_PERIODIC_HEAL" then
-		local amount = select(15, ...)
-		local overheal = select(16, ...)
-		fireEvent(
-			"SpellHeal",
-			spellID,
-			target,
-			amount,
-			overheal,
-			spellSchool,
-			event == "SPELL_PERIODIC_HEAL")
-	elseif event == "SPELL_ENERGIZE" then
-		local amount = select(15, ...)
-		fireEvent("Energized", spellID, amount)
+--c.Debug("endAuraDelay", s.SpellName(spellID), spellID, target, GetTime())
+	if endTravelTime(spellID, target, false) then
+--c.Debug("endAuraDelay", "    ended travel", s.SpellName(spellID))
+		return
+	end
+	
+	runOnRelatedIDs(spellID, function(spellID)
+		local oldest = removeOldest(getTrimmedLandings(spellID, target))
+--if oldest then
+--c.Debug("endAuraDelay", "   ", GetTime() - oldest, s.SpellName(spellID))
+--else
+--c.Debug("endAuraDelay", "    nothin", s.SpellName(spellID))
+--end
+		return oldest
+	end)
+end
+
+local function estimateTravelTime(name)
+	local metaInfo = metaTravelInfo[name]
+	local lastTravel = metaInfo.Estimate
+	local lastLaunch = 0
+	local spellID = c.GetID(name)
+	for _, id in pairs(metaInfo.IDs) do
+		local pastInfo = pastTravelInfo[id]
+		if pastInfo and pastInfo.LaunchTime > lastLaunch then
+			lastLaunch = pastInfo.LaunchTime
+			lastTravel = pastInfo.TravelTime
+		end 
+	end
+	return lastTravel
+end
+
+local function incrementIfLanding(
+	count, startDelay, endDelay, castDelay, travelTime)
+	
+	if castDelay == nil then
+		return count
+	end
+	
+	local landDelay = castDelay + travelTime
+	if startDelay <= landDelay and landDelay < endDelay then
+		return count + 1
+	else
+		return count
 	end
 end
 
-local function printCurrentSpells()
-	local list = ""
-	for id, info in pairs(currentSpells) do
-		c.Debug("Lib", " ", id, info.Name,
-			"Target:", info.Target,
-			"ID:", info.ID or "?",
-			"Status:", info.Status)
+function c.AssociateTravelTimes(estimate, ...)
+	local info = {
+		Estimate = estimate,
+		IDs = c.GetIDs(...)
+	}
+	for i = 1, select("#", ...) do
+		metaTravelInfo[select(i, ...)] = info
 	end
 end
 
-s.AddSettingsListener(
-	function()
-		c.DisableProcHighlights = false
+function c.IsCastingOrInAir(name)
+	if c.IsCasting(name) then
+		return true
 	end
-)
+	
+	local spellID = c.GetID(name)
+	if inFlight[spellID] then
+		for target, _ in pairs(inFlight[spellID]) do
+			if next(getTrimmedLaunches(spellID, target)) then
+				return true
+			end
+		end
+	end
+end
 
+function c.IsAuraPendingFor(name)
+	if c.IsCastingOrInAir(name) then
+		return true
+	end
+	
+	local spellID = c.GetID(name)
+	if pendingAura[spellID] then
+		for target, _ in pairs(pendingAura[spellID]) do
+			if next(getTrimmedLandings(spellID, target)) then
+				return true
+			end
+		end
+	end
+end
+
+function c.CountLandings(name, startDelay, endDelay, countNextCast)
+--c.Debug("Lib", name)
+	local count = 0
+	local travel = estimateTravelTime(name)
+	
+	-- in the air
+	local now = GetTime()
+	local spellID = c.GetID(name)
+	if inFlight[spellID] then
+		for target, _ in pairs(inFlight[spellID]) do
+			for _, launch in pairs(getTrimmedLaunches(spellID, target)) do
+--c.Debug("CountLandings", name, "in air lands in", launch - now + travel, launch - now, travel)
+				count = incrementIfLanding(
+					count,
+					startDelay,
+					endDelay,
+					launch - now,
+					travel)
+			end
+		end
+	end
+	
+	-- currently casting
+	local castTime = c.GetCastTime(spellID)
+	for _, info in pairs(currentSpells) do
+		if c.InfoMatches(info, name) then
+--c.Debug("CountLandings", name, "casting lands in", info.CastStart + castTime - now + travel)
+			count = incrementIfLanding(
+				count,
+				startDelay,
+				endDelay,
+				info.CastStart + castTime - now,
+				travel)
+		end
+	end
+	
+	-- will have time to cast
+	if countNextCast then
+--c.Debug("CountLandings", name, "next lands in", info.CastStart + castTime - now + travel)
+		count = incrementIfLanding(
+			count,
+			startDelay,
+			endDelay,
+			c.GetBusyTime() + castTime,
+			travel)
+	end
+	
+	return count
+end
+
+function c.ShouldCastToRefresh(
+	spellName, debuffName, earlyRefresh, willApplyDebuff, ...)
+	
+	if willApplyDebuff and c.IsAuraPendingFor(spellName) then
+		return false
+	end
+	
+	local duration = s.MyDebuffDuration(c.GetID(debuffName))
+	if c.CountLandings(spellName, -3, duration) > 0 then
+		return false
+	end
+	
+	for i = 1, select("#", ...) do
+		if c.CountLandings(select(i, ...), -3, duration) > 0 then
+			return false
+		end
+	end
+	
+	local landing =
+		c.GetBusyTime()
+			+ c.GetCastTime(spellName)
+			+ estimateTravelTime(spellName)
+	return landing > duration - earlyRefresh + .1
+		and (willApplyDebuff or landing < duration - .1)
+end
+
+----------------------------------------------------------------- Overlay Glows
 local overlays = {}
 local labButtons
+local labScriptFrame
 
 local function showOverlay(button)
 	if not c.DisableProcHighlights then
@@ -202,7 +432,7 @@ local function showOverlay(button)
 		overlay = button:CreateTexture(nil, 'OVERLAY')
 		overlay:SetTexture('Interface\\Buttons\\UI-ActionButton-Border')
 		overlay:SetBlendMode('ADD')
-		overlay:SetSize(2 * w, 2 * h)
+		overlay:SetSize(2.2 * w, 2.2 * h)
 		overlay:SetPoint("CENTER", button)
 		overlay:SetVertexColor(1, 0, 0)
 		overlays[button] = overlay
@@ -219,39 +449,160 @@ end
 
 local function hookLAB(buttons)
 	labButtons = buttons
-	local f = CreateFrame("frame")
-	f:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
-	f:SetScript("OnEvent", 
-		function(self, event, spellId)
+	if labScriptFrame then
+		labScriptFrame:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
+		labScriptFrame:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE")
+	else
+		labScriptFrame = CreateFrame("frame")
+		labScriptFrame:SetScript("OnEvent", function(self, event, spellId)
 			if c.DisableProcHighlights then
 				for button in next, buttons do
-					if button:GetSpellId() == spellId then
-						if button.overlay then
-							button.overlay:Hide()
+					if button:GetSpellId() == spellId and button.overlay then
+						if event == "SPELL_ACTIVATION_OVERLAY_GLOW_SHOW" then
+							showOverlay(button)
+						else
+							hideOverlay(button)
 						end
 					end
 				end
 			end
-		end
-	)
+		end)
+	end
+	labScriptFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
+	labScriptFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE")
 end
 
-lib.LastGCD = 1.5
+local function doGlowHook(action, button)
+	action(button)
+end
+
+hooksecurefunc("ActionButton_ShowOverlayGlow", function(button)
+	showOverlay(button)
+end)
+
+hooksecurefunc("ActionButton_HideOverlayGlow", function(button)
+	hideOverlay(button)
+end)
+
+------------------------------------------------------- Internal Event Handling
+local frame = CreateFrame("frame")
+frame:RegisterEvent("UNIT_SPELLCAST_SENT")
+frame:RegisterEvent("UNIT_SPELLCAST_FAILED")
+frame:RegisterEvent("UNIT_SPELLCAST_FAILED_QUIET")
+frame:RegisterEvent("UNIT_SPELLCAST_START")
+--frame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
+frame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
+frame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+--frame:RegisterEvent("UNIT_SPELLCAST_STOP")
+frame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
+frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+frame:RegisterEvent("PLAYER_REGEN_ENABLED")
+frame:RegisterEvent("ADDON_LOADED")
+
+local function fireEvent(functionName, ...)
+	for a, _ in pairs(registeredAddons) do
+		c.Init(a)
+		local rotation = c.GetCurrentRotation()
+		if rotation ~= nil and rotation[functionName] ~= nil then
+			rotation[functionName](...)
+		end
+	end
+end
+
+local function handleLogEvent(...)
+	local source = select(5, ...)
+	if source == nil or not UnitIsUnit(source, "player") then
+		return
+	end
+--c.Debug("Lib", ...)
+	
+	local event = select(2, ...)
+	local targetID = select(8, ...)
+	local target = select(9, ...)
+	local spellID = select(12, ...)
+	if spellID == nil then
+		return
+	end
+	
+	c.Debug("Log Event", event, target, spellID)
+	if event == "SPELL_CAST_SUCCESS" then
+		startTravelTime(spellID, target)
+	elseif event == "SPELL_DAMAGE" or event == "SPELL_PERIODIC_DAMAGE" then
+		if event == "SPELL_DAMAGE" then
+			endTravelTime(spellID, target, true)
+		end
+		
+		local critical = select(21, ...)
+--		if aoeDetectors[spellID] then
+--			if GetTime() ~= aoeTime or spellID ~= aoeSpell then
+--				aoeTime = GetTime()
+--				aoeSpell = spellID
+--				aoeCount = 0
+--			end
+--			aoeCount = aoeCount + 1
+--		end
+--c.Debug("Lib AoE", GetTime(), event, target, spellID)
+		fireEvent(
+			"SpellDamage",
+			spellID,
+			target,
+			targetID,
+			critical,
+			event == "SPELL_PERIODIC_DAMAGE")
+	elseif event == "SPELL_MISSED" then
+		endTravelTime(spellID, target, false)
+		fireEvent("SpellMissed", spellID, target, targetID)
+	elseif event == "SPELL_AURA_APPLIED"
+		or event == "SPELL_AURA_REFRESH"
+		or event == "SPELL_AURA_APPLIED_DOSE" then
+		
+		endAuraDelay(spellID, target)
+		fireEvent("AuraApplied", spellID, target, targetID)
+	elseif event == "SPELL_AURA_REMOVED"
+		or event == "SPELL_AURA_REMOVED_DOSE" then
+	
+		fireEvent("AuraRemoved", spellID, target, targetID)
+	elseif event == "SPELL_HEAL" or event == "SPELL_PERIODIC_HEAL" then
+		local amount = select(15, ...)
+		local overheal = select(16, ...)
+		fireEvent("SpellHeal", spellID, target, amount)
+	elseif event == "SPELL_ENERGIZE" then
+		local amount = select(15, ...)
+		fireEvent("Energized", spellID, amount)
+	end
+end
+
+local function printCurrentSpells()
+	local list = ""
+	for id, info in pairs(currentSpells) do
+		c.Debug("Cast Event", "   ", id, info.Name,
+			"Target:", info.Target,
+			"ID:", info.ID or "?",
+			"Status:", info.Status)
+	end
+end
+
+s.AddSettingsListener(
+	function()
+		c.DisableProcHighlights = false
+	end
+)
+
+local lastInfo
 frame:SetScript("OnEvent", 
 	function(self, event, ...)
 		if event == "ADDON_LOADED" then
-			if select(1, ...) == libName then
-				return
+			local labButtons = u.GetFromTable(
+				LibStub, "libs", "LibActionButton-1.0", "activeButtons")
+			if labButtons then
+				hookLAB(labButtons)
 			end
-			
-			if LibStub and LibStub.libs["LibActionButton-1.0"] then
-				hookLAB(LibStub.libs["LibActionButton-1.0"].activeButtons)
-			end
+			return
 		end
 
 		local gcd, totalGcd = s.GlobalCooldown()
 		if totalGcd and totalGcd > 0 then
-			lib.LastGCD = totalGcd
+			c.LastGCD = totalGcd
 		end
 		 
 		if event == "COMBAT_LOG_EVENT_UNFILTERED" then
@@ -260,6 +611,9 @@ frame:SetScript("OnEvent",
 		end
 		
 		if event == "PLAYER_REGEN_ENABLED" then
+			wipe(inFlight)
+			wipe(pendingAura)
+			wipe(pastTravelInfo)
 			fireEvent("LeftCombat")
 			return
 		end
@@ -270,7 +624,8 @@ frame:SetScript("OnEvent",
 			return
 		end
 		
---c.Debug("Lib", event, spell)
+		c.Debug("Cast Event", event, spell)
+		--c.Debug("Cast Event", event, ...)
 		local info
 		if event == "UNIT_SPELLCAST_SENT" then
 			local target = select(4, ...)
@@ -287,7 +642,7 @@ frame:SetScript("OnEvent",
 			}
 			currentSpells[lineID] = info
 			fireEvent("CastQueued", info)
---printCurrentSpells()
+			printCurrentSpells()
 			return
 		end
 		
@@ -295,49 +650,64 @@ frame:SetScript("OnEvent",
 		local spellID = select(5, ...)
 		info = currentSpells[lineID]
 		if info == nil then
-			if event == "UNIT_SPELLCAST_CHANNEL_STOP" then
+			if lastInfo ~= nil and lineID == lastInfo.LineID then
+				info = lastInfo
+			elseif event == "UNIT_SPELLCAST_CHANNEL_STOP" then
 				info = c.GetCastingInfo()
 				if info == nil then
+					c.Debug("Cast Event", "    no record of spell", lineID)
+					printCurrentSpells()
 					return
 				end
 				
 				lineID = info.LineID
 			else
---c.Debug("Lib", "  no record of spell", lineID)
+				c.Debug("Cast Event", "    no record of spell", lineID)
+				printCurrentSpells()
 				return
 			end 
 		end
+		lastInfo = info
 		info.ID = spellID
 		
+--c.Debug("Cast Event", event, spell, spellID, lineID)
 		if event == "UNIT_SPELLCAST_START" then
 			info.Status = "Casting"
 			info.Cost = s.SpellCost(info.Name)
 			fireEvent("CastStarted", info)
 			
 		elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
-			if managedDots[info.ID] then
-				for z, unhasted in pairs(managedDots[info.ID]) do
-					local tick = c.GetHastedTime(unhasted)
-					z.EarlyRefresh = tick
-					c.Debug("Library", info.Name, "ticks every", tick)
+			if info.Status ~= "Channeling" then
+				if managedDots[info.ID] then
+					for z, unhasted in pairs(managedDots[info.ID]) do
+						local tick = c.GetHastedTime(unhasted)
+						z.EarlyRefresh = tick
+						c.Debug("Library", info.Name, "ticks every", tick)
+					end
 				end
-			end
-			if s.Channeling(info.name, "player") then
-				if info.Status == "Queued" then
-					info.Status = "Casting"
-					info.Cost = 0
+				if s.Channeling(info.Name, "player") then
+					-- If you re-start a channel of the same spell, there is 
+					-- no event to clear the old channel out. Do that here.
+					for id, cs in pairs(currentSpells) do
+						if cs.Status == "Channeling" then
+							currentSpells[id] = nil
+						end
+					end
+					info.Status = "Channeling"
+					info.Cost = s.SpellCost(info.Name)
 					fireEvent("CastStarted", info)
+				else
+					fireEvent("CastSucceeded", info)
+					currentSpells[lineID] = nil
 				end
-			else
-				fireEvent("CastSucceeded", info)
-				currentSpells[lineID] = nil
 			end
 			
 		elseif event == "UNIT_SPELLCAST_FAILED"
 			or event == "UNIT_SPELLCAST_FAILED_QUIET" then
 			
 			if info.Status == "Casting" then
-				fireEvent("CastFailed", info)
+				fireEvent(
+					"CastFailed", info, event == "UNIT_SPELLCAST_FAILED_QUIET")
 			end
 			currentSpells[lineID] = nil
 			
@@ -356,36 +726,7 @@ frame:SetScript("OnEvent",
 		else
 			print(event, "unhandled")
 		end
---printCurrentSpells()
+		
+		printCurrentSpells()
 	end
 )
-
-hooksecurefunc("ActionButton_ShowOverlayGlow", function(button)
-	showOverlay(button)
-	if labButtons and button.action then
-		local type, spellId = GetActionInfo(button.action)
-		if type == "macro" then
-			spellId = select(3, GetMacroSpell(spellId))
-		end
-		for button in next, labButtons do
-			if button:GetSpellId() == spellId then
-				showOverlay(button)
-			end
-		end
-	end
-end)
-
-hooksecurefunc("ActionButton_HideOverlayGlow", function(button)
-	hideOverlay(button)
-	if labButtons and button.action then
-		local type, spellId = GetActionInfo(button.action)
-		if type == "macro" then
-			spellId = select(3, GetMacroSpell(spellId))
-		end
-		for button in next, labButtons do
-			if button:GetSpellId() == spellId then
-				hideOverlay(button)
-			end
-		end
-	end
-end)

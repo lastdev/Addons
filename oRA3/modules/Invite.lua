@@ -3,7 +3,7 @@ local module = oRA:NewModule("Invite", "AceEvent-3.0", "AceConsole-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 local AceGUI = LibStub("AceGUI-3.0")
 
-module.VERSION = tonumber(("$Revision: 536 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 554 $"):sub(12, -3))
 
 local frame = nil
 local db = nil
@@ -166,7 +166,7 @@ local function inviteRankCommand(input)
 	local ranks = oRA:GetGuildRanks()
 	local r, n = nil, nil
 	for i, rank in next, ranks do
-		if rank:lower():find(input) then
+		if rank:lower():find(input:lower()) then
 			r = i
 			n = rank
 			break
@@ -225,7 +225,7 @@ end
 
 function module:CHAT_MSG_BN_WHISPER(event, msg, author, _, _, _, _, _, _, _, _, _, _, presenceId)
 	for i = 1, BNGetNumFriends() do
-		local friendPresenceId, _, _, toonName, _, client = BNGetFriendInfo(i)
+		local friendPresenceId, _, _, _, toonName, _, client = BNGetFriendInfo(i)
 		if client == BNET_CLIENT_WOW and presenceId == friendPresenceId then
 			handleWhisper(event, msg, toonName)
 			break

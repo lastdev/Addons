@@ -209,6 +209,13 @@
 					</Anchor>
 				</Anchors>
 			</Button>
+			<Button name="$parent_ClassIcon11" inherits="AltoTabGridsIconTemplate" id="11">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_ClassIcon10" relativePoint="TOPRIGHT" >
+						<Offset x="5" y="0" />
+					</Anchor>
+				</Anchors>
+			</Button>
 		
 			<Frame name="$parentClassIconMenu1" inherits="AltoRightClickMenuTemplate" id="1" />
 			<Frame name="$parentClassIconMenu2" inherits="AltoRightClickMenuTemplate" id="2" />
@@ -220,6 +227,7 @@
 			<Frame name="$parentClassIconMenu8" inherits="AltoRightClickMenuTemplate" id="8" />
 			<Frame name="$parentClassIconMenu9" inherits="AltoRightClickMenuTemplate" id="9" />
 			<Frame name="$parentClassIconMenu10" inherits="AltoRightClickMenuTemplate" id="10" />
+			<Frame name="$parentClassIconMenu11" inherits="AltoRightClickMenuTemplate" id="11" />
 
 			<Button name="$parent_Equipment" inherits="AltoTabGridsMenuIconTemplate" id="1">
 				<Anchors>
@@ -278,7 +286,14 @@
 					</Anchor>
 				</Anchors>
 			</Button>
-			
+
+			<Button name="$parent_Dailies" inherits="AltoTabGridsMenuIconTemplate" id="9">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" >
+						<Offset x="30" y="160" />
+					</Anchor>
+				</Anchors>
+			</Button>
 		</Frames>
 		<Scripts>
 			<OnLoad>

@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 	Revision: $Id: Undercut.lua 5364 2012-09-24 09:32:39Z brykrys $
 	URL: http://auctioneeraddon.com/
 

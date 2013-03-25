@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 489 2012-09-01T11:40:16Z
+    Revision: 572 2013-01-04T15:34:54Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -41,6 +41,12 @@ function ArmoryGuildBankFrame_Register()
         set = function(value) AGB:SetConfigShowItemCount(value and value ~= "0"); end,
         get = function() return AGB:GetConfigShowItemCount(); end,
         default = true
+    };
+    Armory.options["ARMORY_CMD_SET_AGBCOUNTMYGUILD"] = {
+        type = "toggle",
+        set = function(value) AGB:SetConfigMyGuildItemCount(value and value ~= "0"); end,
+        get = function() return AGB:GetConfigMyGuildItemCount(); end,
+        default = false
     };
     Armory.options["ARMORY_CMD_SET_AGBCOUNTALL"] = {
         type = "toggle",
@@ -89,6 +95,14 @@ end
 
 function AGB:GetConfigShowItemCount()
     return not Armory:Setting("General", "HideAgbItemCount");
+end
+
+function AGB:SetConfigMyGuildItemCount(on)
+    Armory:Setting("General", "AgbMyGuildItemCount", on);
+end
+
+function AGB:GetConfigMyGuildItemCount()
+    return Armory:Setting("General", "AgbMyGuildItemCount");
 end
 
 function AGB:SetConfigGlobalItemCount(on)

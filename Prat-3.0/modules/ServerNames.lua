@@ -125,7 +125,7 @@ Prat:AddModuleToLoad(function()
 	randomclr_desc = "Использовать случайные цвета для всех серверов.",
 	randomclr_name = "Случайные цвета",
 	["Server name abbreviation options."] = "Настройки сокращений имен серверов.",
-	ServerNames = true,
+	ServerNames = "Названия серверов",
 }
 
   )

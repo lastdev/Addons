@@ -1,8 +1,8 @@
-## Interface: 50001
+## Interface: 50200
 ## Name: oRA3
 ## Notes: Raid and Party Assist
 ## Author: Ammo, Rabbit
-## X-Curse-Packaged-Version: r546
+## X-Curse-Packaged-Version: r560-release
 ## X-Curse-Project-Name: oRA3
 ## X-Curse-Project-ID: ora3
 ## X-Curse-Repository-ID: wow/ora3/mainline

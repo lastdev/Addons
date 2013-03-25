@@ -1,4 +1,4 @@
-<!-- Revision: 490 2012-09-04T09:42:28Z -->
+<!-- Revision: 564 2012-11-28T00:03:51Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\FrameXML\UI.xsd">
   <Script file="ArmoryTalentFrame.lua"/>
@@ -299,7 +299,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>
-            self.tooltip = TALENT_SPEC_SECONDARY;
+            self.tooltip = SPECIALIZATION_SECONDARY;
           </OnLoad>
         </Scripts>
       </CheckButton>
@@ -313,7 +313,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>
-            self.tooltip = TALENT_SPEC_PRIMARY;
+            self.tooltip = SPECIALIZATION_PRIMARY;
           </OnLoad>
         </Scripts>
       </CheckButton>

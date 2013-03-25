@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: Gatherer
-	Revision: $Id: GatherStrings.lua 1048 2012-10-31 04:00:12Z LocalizerAutoCommit $
-	Version: 4.0.6 (<%codename%>)
+	Revision: $Id: GatherStrings.lua 1075 2013-03-07 05:00:08Z LocalizerAutoCommit $
+	Version: 4.2.0 (<%codename%>)
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -225,13 +225,13 @@ GathererLocalizations = {
 
 		-- Section: Configuration
 		["CONFIG_ABOUT_LOADED_ENABLE"]	= "Zeige Lade-Nachricht";
-		["CONFIG_ALL_FILTER_NOTE"]	= "Alle Filter werden ignoriert und alle Knotenpunkte dieser Kategorie angezeigt.";
+		["CONFIG_ALL_FILTER_NOTE"]	= "Die '%1' Einstellungen werden wegen der aktuellen Filter ignoriert und sorgen dafür dass alle Punkte in dieser Kategorie angezeigt werden.";
 		["CONFIG_ARCH_MAX_NOTES"]	= "Zeige: %d nächste";
-		["CONFIG_ENABLE_HERB"]	= "Zeige Kräuter";
+		["CONFIG_ENABLE_HERB"]	= "Zeige Kräutervorkommen";
 		["CONFIG_ENABLE_HERB_HERBALIST_ONLY"]	= "Nur Kräuterkunde";
 		["CONFIG_ENABLE_MINE"]	= "Zeige Erzvorkommen";
 		["CONFIG_ENABLE_MINE_MINER_ONLY"]	= "Nur Bergbau";
-		["CONFIG_ENABLE_ONLY_IF_TRACKING"]	= "nur bei Suche";
+		["CONFIG_ENABLE_ONLY_IF_TRACKING"]	= "Nur bei suche";
 		["CONFIG_GENERAL_MINIICON_LABEL"]	= "Minimap-Optionen";
 		["CONFIG_GENERAL_MINIMAP_TRACKING_LABEL"]	= "Minimap Verfolgungs-Optionen";
 		["CONFIG_GENERAL_WORLDMAP_LABEL"]	= "Weltkarten-Optionen";
@@ -240,28 +240,42 @@ GathererLocalizations = {
 		["CONFIG_IGNORE_PURGE_CONFIRM"]	= "Bist Du sicher, dass Du alle geteilten Knoten dieses Spielers aus deiner Datenbank entfernen möchtest?\nDiese Aktion kann NICHT RÜCKGÄNGIG gemacht werden und wird die Knotenpunkte von %d aus deiner Gatherer-Datenbank entfernen...";
 		["CONFIG_IGNORE_PURGE_DONE"]	= "%d Knoten wurden endgültig aus deiner Gatherer-Datenbank entfernt.";
 		["CONFIG_IGNORE_PURGE_QUESTION"]	= "Möchtest Du alle geteilten Knotenpunkte dieses Spielers entfernen?";
-		["CONFIG_MINE_FILTER_LABEL"]	= "Mineralien Knoten verfolgen";
+		["CONFIG_MINE_FILTER_LABEL"]	= "Mineralienvorkommen verfolgen";
 		["CONFIG_MINIICON_ANGLE"]	= "Schalter Winkel: %d°";
 		["CONFIG_MINIICON_DISTANCE"]	= "Entfernung: %d";
 		["CONFIG_MINIICON_ENABLE"]	= "Zeige Minimap-Button";
+		["CONFIG_MINIMAP_ADD_LABEL"]	= "Minimap-Zusatz";
 		["CONFIG_MINIMAP_ANON_ENABLE"]	= "Zeige anonyme Punkte";
-		["CONFIG_MINIMAP_ANON_TINT"]	= "Färbe anonyme Punkte rot";
+		["CONFIG_MINIMAP_ANON_OPACITY"]	= "Knoten Transparenz: %d %";
+		["CONFIG_MINIMAP_ANON_TINT"]	= "Färbe unerkannte Punkte rot";
 		["CONFIG_MINIMAP_DISTANCE"]	= "Entfernung: %d Meter";
 		["CONFIG_MINIMAP_ENABLE"]	= "Zeige die Punkte in der Minimap";
 		["CONFIG_MINIMAP_FADE_DIST"]	= "Nach %d Metern ausblenden";
 		["CONFIG_MINIMAP_FADE_ENABLE"]	= "Mini-Knoten ausblenden";
 		["CONFIG_MINIMAP_FADE_PERCENT"]	= "Entfernung zum Ausblenden: %d%%";
 		["CONFIG_MINIMAP_ICON_SIZE"]	= "Punktegröße: %d";
+		["CONFIG_MINIMAP_INSPECT_DIST"]	= "Untersuche bei: %d Yards";
 		["CONFIG_MINIMAP_INSPECT_ENABLE"]	= "Knoten als untersucht markieren";
+		["CONFIG_MINIMAP_INSPECT_FADING"]	= "Ausblenden nach %d%%";
+		["CONFIG_MINIMAP_INSPECT_TIMEOUT"]	= "Wiedervorlage nach: %d Sek.";
+		["CONFIG_MINIMAP_INSPECT_TINT_ENABLE"]	= "Während des untersuchens grün färben";
 		["CONFIG_MINIMAP_LABEL"]	= "Minimap-Optionen";
+		["CONFIG_MINIMAP_MAX_NOTES"]	= "Zeige die %d nächsten Knoten an";
+		["CONFIG_MINIMAP_NOTE_OPACITY"]	= "Derzeitige Durchsichtigkeit %d%%";
 		["CONFIG_MINIMAP_TRACKING_ACTIVE_ONLY"]	= "Nur für die aktive Suche";
+		["CONFIG_MINIMAP_TRACKING_CIRCLE_ENABLE"]	= "Zum Tracking-Icon ändern wenn in der Nähe";
+		["CONFIG_MINIMAP_TRACKING_DISTANCE"]	= "verfolgen bis: %d Meter";
+		["CONFIG_MINIMAP_TRACKING_ENABLE"]	= "Erlaube Trackingfeature";
+		["CONFIG_MINIMAP_TRACKING_OPACITY"]	= "Icon Transparenz: 5d %";
+		["CONFIG_OPEN_FILTER_LABEL"]	= "Schätze die gesucht werden";
 		["CONFIG_PROFILE_CHANGE_NOTIFICATION"]	= "Profil auswählen: %1";
 		["CONFIG_PROFILE_CREATE_COPY"]	= "Profil kopieren";
 		["CONFIG_PROFILE_CREATE_NEW"]	= "Neues Profil erstellen";
 		["CONFIG_PROFILE_CURRENT_LABEL"]	= "Ein Profil aktivieren";
 		["CONFIG_PROFILE_NEW"]	= "Profil erstellen oder ersetzen";
 		["CONFIG_PROFILE_NEW_LABEL"]	= "Neuer Profilname:";
-		["CONFIG_SECTION_ABOUT"]	= "Über Gatherer";
+		["CONFIG_SECTION_ABOUT"]	= "Über";
+		["CONFIG_SECTION_GENERAL"]	= "Grundeinstellung";
 		["CONFIG_SECTION_HEADER_CORE"]	= "Hauptoptionen";
 		["CONFIG_SECTION_HEADER_PLUGINS"]	= "Plugins";
 		["CONFIG_SECTION_MINIMAP"]	= "Minimap";
@@ -294,12 +308,21 @@ GathererLocalizations = {
 		["CONFIG_TOOLTIP_DISTANCE"]	= "Zeige Entfernung zum Knoten";
 		["CONFIG_TOOLTIP_DROP_RATES"]	= "Zeige Droprate";
 		["CONFIG_TOOLTIP_ENABLE"]	= "Zeige Tooltipps";
+		["CONFIG_TOOLTIP_LAST_SEEN"]	= "Zeige wann zuletzt gesehen";
 		["CONFIG_TOOLTIP_SOURCE"]	= "Zeige Notiz-Quelle";
 		["CONFIG_WORLDMAP_ENABLE"]	= "Zeige Knotenpunkte auf der Weltkarte";
 		["CONFIG_WORLDMAP_ICON_SIZE"]	= "Icon-Größe";
 		["CONFIG_WORLDMAP_MAX_NOTES"]	= "Zeige: %d Punkte";
 		["CONFIG_WORLDMAP_NOTE_OPACITY"]	= "(Un-)Durchsichtigkeit";
 		["ENABLE_OPEN"]	= "Zeige Schatzpunkte";
+
+		-- Section: Database Version Messages
+		["STORAGE_DB_CATACLYSMIC"]	= "Passend zu diesem Bösewicht, verbrannte Todesschwinge's Rückkehr alle Kräuter, lies die Erzvorkommen schmelzen und zerstörte sämtliche Truhen. Jetzt müssen sie alle neu wachsen, rekristallisiert oder von Piraten wieder, an neuen Orten, versteckt werden.\nSchatzsuche!!!\n(Alte Weltdaten wurden gelöscht aufgrund großer geographischer Veränderungen.)";
+		["STORAGE_DB_VERSION_INVALID"]	= "WARNUNG!!!\nGatherer hat festgestellt dass deine Datenbankversion falsch ist.\nBitte drücke auf Akzeptieren zum löschen der Datenbank, oder drücke Ignorieren wenn du deine Datenbank selber reparieren möchtest.";
+		["STORAGE_DB_VERSION_NEWER"]	= "Deine gespeicherte Gatherer-Datenbank ist zu neu.\nDie aktuelle Datenbank wird beiseite gelegt bis du Gatherer upgradest.";
+
+		-- Section: Game Object Tooltip
+		["GAME_OBJECT_REQUIRES_REWRITE"]	= "%1$s %2$d";
 
 		-- Section: Gatherables Report
 		["REPORT_COLUMN_HEADER_DIST"]	= "Entf";
@@ -321,6 +344,14 @@ GathererLocalizations = {
 		["REPORT_UNMARK_ALL"]	= "Markierung rückgängig: alle";
 		["REPORT_UNMARK_THESE"]	= "Markierung rückgängig: diese";
 
+		-- Section: Generic Messages
+		["DESCRIPTION"]	= "Gatherer ist ein Addon dass sich deine Fundorte merkt und sie dir auf der Hauptkarte, deiner Minimap, oder in einem HUD ausgibt.\nEs bietet auch die Möglichkeit deine Funorte mit deinem Raid, deiner Gilde und deinen Freunden zu teilen.";
+		["DESCRIPTION_LICENSE"]	= "Gatherer ist Open-source Software und steht unter der GNU General Public License v2. Siehe gpl.txt, im Addon enthalten, um die ganze Lizenz zu sehen.";
+		["LOADED_NOTIFICATION"]	= "Gatherer v%1 -- Geladen!";
+		["MANIFEST_INVALID_VERSIONS_WARNING"]	= "{{Warnung:}} Deine Gatherer Installation scheint fehlerhafte Datei Versionen zu haben.\n\nBitte stelle sicher dass du das alte:\n %1\nVerzeichnis löschst, eine neue Kopie von:\n %2\ninstallierst und WoW komplett neustartest bevor du irgendeinen Bug meldest.\n\nVielen Dank,\n Das Gatherer Dev Team";
+		["VERSION_MESSAGE"]	= "Das ist Gatherer v%1";
+		["ZONETOKENS_UNIDENTIFIED_ZONES_WARNING"]	= "Gatherer konnte folgende Zonen nicht identifizieren: {{%1}}\nWenn dies eine Neue Zone ist, dann ist das kein problem, und du kannst wie gewohnt weiter machen.\nWenn dies keine Neue Zone ist, dann erinnere Calm als {{deine Daten sind nicht Verloren geganen!}} Deine Daten für diese Zonen sind weiter intakt, aber du mußt dein Gatherer updaten um auf sie zuzugreifen. Bis dahin kannst du fortfahren wie gehabt und all deine Daten werden zusammengefügt bis du upgradest.\n\n{{Bitte Gatherer updaten wenn möglich.}}";
+
 		-- Section: Generic Strings
 		["ACCEPT"]	= "Akzeptieren";
 		["ALL"]	= "Alle";
@@ -335,13 +366,21 @@ GathererLocalizations = {
 		["SEARCH"]	= "Suchen";
 		["STOP_IGNORE"]	= "Spieler löschen";
 		["STRATA_BACKGROUND"]	= "Hintergrund";
+		["STRATA_HIGH"]	= "Hoch";
 		["STRATA_LOW"]	= "Tief";
 		["STRATA_MEDIUM"]	= "Medium";
 		["YES"]	= "Ja";
 
+		-- Section: HelpTooltip
+		["MINIICON_ACTIONS_CLICK"]	= "{{Click}} zum schalten der Anzeige der Knoten.";
+		["MINIICON_ACTIONS_RIGHT_CLICK"]	= "{{Rechts-Click}} Zeige den sammelbericht.";
+		["MINIICON_ACTIONS_SHIFT_CLICK"]	= "{{Shift-Click}} zum schalten der Projektionsanzeige";
+		["MINIICON_ACTIONS_SHIFT_RIGHT_CLICK"]	= "{{Shift-Rechts-Click}} zum bearbeiten der Einstellungen.";
+
 		-- Section: HUD
 		["HUD_ABBREVIATION"]	= "HUD";
 		["HUD_CONFIG_DISPLAY_LABEL"]	= "HUD Anzeigeoptionen";
+		["HUD_CONFIG_HEAT_TRACKING_LABEL"]	= "HUD Heat Verfolgungsmodus";
 		["HUD_CONFIG_HIDING_LABEL"]	= "HUD verstecke Optionen";
 		["HUD_CONFIG_plugin.gatherer_hud.angle"]	= "Sichtwinkel: %d°";
 		["HUD_CONFIG_plugin.gatherer_hud.base.color"]	= "Hintergrundfarbe";
@@ -349,6 +388,9 @@ GathererLocalizations = {
 		["HUD_CONFIG_plugin.gatherer_hud.center.color"]	= "Farbe zentrieren";
 		["HUD_CONFIG_plugin.gatherer_hud.center.enable"]	= "Aktiviere Sichtfeldkreis des Spielers";
 		["HUD_CONFIG_plugin.gatherer_hud.fade"]	= "Punkte blenden aus bei: %d%% Radius";
+		["HUD_CONFIG_plugin.gatherer_hud.heat.cooldown"]	= "speichert Abklingzeit: %d Sekunden";
+		["HUD_CONFIG_plugin.gatherer_hud.heat.enable"]	= "Zeigt gespeicherte Reise (heiß)";
+		["HUD_CONFIG_plugin.gatherer_hud.heat.nevercooldown"]	= "Niemals abklingen";
 		["HUD_CONFIG_plugin.gatherer_hud.heat.size"]	= "Folgepfadbreite: %d Meter";
 		["HUD_CONFIG_plugin.gatherer_hud.hide.combat"]	= "Verstecke im Kampf";
 		["HUD_CONFIG_plugin.gatherer_hud.hide.flying"]	= "Verstecke im Flug";
@@ -360,14 +402,18 @@ GathererLocalizations = {
 		["HUD_CONFIG_plugin.gatherer_hud.hide.target"]	= "Verstecke bei ausgewähltem Ziel";
 		["HUD_CONFIG_plugin.gatherer_hud.hide.walking"]	= "Verstecke wenn nicht gemountet";
 		["HUD_CONFIG_plugin.gatherer_hud.iconsize"]	= "Punktegröße: %d Pixel";
+		["HUD_CONFIG_plugin.gatherer_hud.min_fullframerate"]	= "Minimum Bildrate zum zeigen jedes Fenster: %dfps";
 		["HUD_CONFIG_plugin.gatherer_hud.offset.horizontal"]	= "Horizontaler Abstand: %d Pixel";
 		["HUD_CONFIG_plugin.gatherer_hud.offset.vertical"]	= "Vertikaler Abstand: %d Pixel";
 		["HUD_CONFIG_plugin.gatherer_hud.party.color"]	= "Gruppenmitgliederfarbe";
 		["HUD_CONFIG_plugin.gatherer_hud.party.enable"]	= "Zeige andere Gruppenmitglieder";
 		["HUD_CONFIG_plugin.gatherer_hud.party.size"]	= "Gruppensymbolgröße: %d Pixel";
+		["HUD_CONFIG_plugin.gatherer_hud.perspective"]	= "Sichtlevel : %0.1F";
 		["HUD_CONFIG_plugin.gatherer_hud.radius"]	= "Gesamter HUD-Radius: %d Pixel";
 		["HUD_CONFIG_plugin.gatherer_hud.yards"]	= "Punkteumkreis: %d Meter";
+		["HUD_CONFIG_STRATA_LABEL"]	= "Strata (Zeichnungs Level)";
 		["HUD_CONFIG_VISIBILITY_LABEL"]	= "HUD Sichtbarkeitsoptionen";
+		["HUD_DESCRIPTION"]	= "HUD ist ein Navigationsbestandteil, das einem gefundene Gathererables auf dem Bildschirm anzeigt.";
 
 		-- Section: Import Modules
 		["IMPORT_CTMOD_DONE"]	= "Deine CT_MapMod Daten wurden importiert.";
@@ -441,6 +487,10 @@ GathererLocalizations = {
 		["TREASURE_UNGOROSOIL"]	= "Erde von Un'Goro";
 		["TREASURE_WHIPPERROOT"]	= "Peitscherwurzelknollen";
 		["TREASURE_WINDBLOSSOM"]	= "Windblütenbeeren";
+
+		-- Section: Node Database Plugins
+		["DATABASE_IMPORT_BUTTON_LABEL"]	= "Importieren";
+		["DATABASE_IMPORT_HEADER"]	= "Import der Sammelpunkte durchführen:";
 
 		-- Section: Node Density Search
 		["DENSITY_COLUMN_HEADER_LOCATION"]	= "Lage";
@@ -1303,6 +1353,9 @@ GathererLocalizations = {
 		["STORAGE_DB_VERSION_INVALID"]	= "ATTENTION !!!\nGatherer à détecté que la version de votre base de donnée est invalide. Appuyer sur \"accepter\" pour effacer votre base de donnée, ou sur \"ignorer\" si vous voulez essayer de la réparer manuellement";
 		["STORAGE_DB_VERSION_NEWER"]	= "Votre base de donnée de Gatherer est trop récente. Votre base de donnée à été mise de coté jusqu'à ce que vous mettiez Gatherer à jour.";
 
+		-- Section: Game Object Tooltip
+		["GAME_OBJECT_REQUIRES_REWRITE"]	= "%1$s %2$d";
+
 		-- Section: Gatherables Report
 		["REPORT_COLUMN_HEADER_DIST"]	= "Distance";
 		["REPORT_COLUMN_HEADER_REGION"]	= "Région";
@@ -1369,8 +1422,9 @@ GathererLocalizations = {
 		["HUD_CONFIG_plugin.gatherer_hud.center.enable"]	= "Activer la zone de vue autour du joueur";
 		["HUD_CONFIG_plugin.gatherer_hud.fade"]	= "Atténuation de l'affichage des notes à : %d%%";
 		["HUD_CONFIG_plugin.gatherer_hud.heat.color"]	= "Couleur principale";
-		["HUD_CONFIG_plugin.gatherer_hud.heat.cooldown"]	= "temps de suivi : %d secondes";
+		["HUD_CONFIG_plugin.gatherer_hud.heat.cooldown"]	= "Temps de suivi : %d secondes";
 		["HUD_CONFIG_plugin.gatherer_hud.heat.enable"]	= "Afficher le chemin parcouru";
+		["HUD_CONFIG_plugin.gatherer_hud.heat.nevercooldown"]	= "Pas de cooldown";
 		["HUD_CONFIG_plugin.gatherer_hud.heat.size"]	= "Largeur du tracé de chemin parcouru";
 		["HUD_CONFIG_plugin.gatherer_hud.hide.combat"]	= "Cacher pendant le combat";
 		["HUD_CONFIG_plugin.gatherer_hud.hide.flying"]	= "Cacher en vol";
@@ -1392,7 +1446,7 @@ GathererLocalizations = {
 		["HUD_CONFIG_plugin.gatherer_hud.radius"]	= "Taille générale du HUD : %d pixels";
 		["HUD_CONFIG_plugin.gatherer_hud.yards"]	= "distance des notes : %d yards";
 		["HUD_CONFIG_STRATA_LABEL"]	= "Qualité d'affichage du HUD";
-		["HUD_CONFIG_USAGE_NOTE"]	= "L'utilisation du HUD va entrainer une baisse de votre fps, et plus encore si vous utilisez le suivi du trajet parcouru.";
+		["HUD_CONFIG_USAGE_NOTE"]	= "L'utilisation du HUD peut entrainer une baisse de votre fps, et plus encore si vous utilisez le suivi du trajet parcouru.";
 		["HUD_CONFIG_VISIBILITY_LABEL"]	= "HUD Options Visibilité";
 		["HUD_DESCRIPTION"]	= "Le HUD est un outil de navigation qui vous permet de suivre les emplacements des ressources sur votre écran à la façon d'un viseur tête haute";
 		["HUD_TITLE"]	= "Plugin de Visualisation Tête Haute pour Gatherer";
@@ -2725,44 +2779,47 @@ GathererLocalizations = {
 
 		-- Section: Configuration
 		["CONFIG_ABOUT_LOADED_ENABLE"]	= "Показать сообщение при загрузке";
+		["CONFIG_ALL_FILTER_NOTE"]	= "Текущие настройки фильтров '%1' будут проигнорированы и будут показаны все точки в этой категории.";
 		["CONFIG_ARCH_MAX_NOTES"]	= "Показывать: %d ближайших";
-		["CONFIG_ENABLE_HERB"]	= "Показывать точки сбора травников";
-		["CONFIG_ENABLE_HERB_HERBALIST_ONLY"]	= "Только для травников";
-		["CONFIG_ENABLE_MINE"]	= "Показывать точки сбора горняков";
-		["CONFIG_ENABLE_MINE_MINER_ONLY"]	= "Только для горняков";
+		["CONFIG_ENABLE_HERB"]	= "Показывать точки травников";
+		["CONFIG_ENABLE_HERB_HERBALIST_ONLY"]	= "Только травникам";
+		["CONFIG_ENABLE_MINE"]	= "Показывать точки горняков";
+		["CONFIG_ENABLE_MINE_MINER_ONLY"]	= "Только горнякам";
 		["CONFIG_ENABLE_ONLY_IF_TRACKING"]	= "Только если ведется поиск";
-		["CONFIG_GENERAL_MINIICON_LABEL"]	= "Настройки кнопки радара";
-		["CONFIG_GENERAL_MINIMAP_TRACKING_LABEL"]	= "Свойства отслеживания на радаре";
+		["CONFIG_GENERAL_MINIICON_LABEL"]	= "Настройки кнопки миникарты";
+		["CONFIG_GENERAL_MINIMAP_TRACKING_LABEL"]	= "Свойства отслеживания на миникарте";
 		["CONFIG_GENERAL_WORLDMAP_LABEL"]	= "Настройки глобальной карты";
 		["CONFIG_GENERAL_WORLDMAP_TRACKING_LABEL"]	= "Настройки отслеживания на глобальной карте";
 		["CONFIG_HERB_FILTER_LABEL"]	= "Точки сбора травников к отслеживанию";
 		["CONFIG_IGNORE_PURGE_CONFIRM"]	= "Вы уверены, что желаете удалить все точки этого игрока из базы данных? Это операцию НЕВОЗМОЖНО отменить и она удалит %d из базы данных Gatherer.";
-		["CONFIG_IGNORE_PURGE_DONE"]	= "%d точка(ек) безвозвратно удалены из Вашей базы дынных Gatherer.";
+		["CONFIG_IGNORE_PURGE_DONE"]	= "%d точка(ек) безвозвратно удалены из Вашей базы данных Gatherer.";
 		["CONFIG_IGNORE_PURGE_QUESTION"]	= "Вы хотите удалить все точки сбора расшаренные этим игроком?";
 		["CONFIG_MINE_FILTER_LABEL"]	= "Отслеживать точки сбора горняков";
 		["CONFIG_MINIICON_ANGLE"]	= "Угол кнопки: %d°";
 		["CONFIG_MINIICON_DISTANCE"]	= "Расстояние: %d";
-		["CONFIG_MINIICON_ENABLE"]	= "Показывать кнопку на радаре";
-		["CONFIG_MINIMAP_ADD_LABEL"]	= "Радар Дополнительно";
+		["CONFIG_MINIICON_ENABLE"]	= "Показывать кнопку на миникарте";
+		["CONFIG_MINIMAP_ADD_LABEL"]	= "Миникарта дополнительно";
 		["CONFIG_MINIMAP_ANON_ENABLE"]	= "Показывать неизвестные точки сбора";
 		["CONFIG_MINIMAP_ANON_OPACITY"]	= "Прозрачность неизвестных точек: %d%%";
 		["CONFIG_MINIMAP_ANON_TINT"]	= "Окрасить неизвестные точки красным";
 		["CONFIG_MINIMAP_DISTANCE"]	= "Расстояние: %d ярдов";
-		["CONFIG_MINIMAP_ENABLE"]	= "Показывать примечания на радаре";
+		["CONFIG_MINIMAP_ENABLE"]	= "Примечания на миникарте";
 		["CONFIG_MINIMAP_FADE_DIST"]	= "Угасание в: %d ярдах";
-		["CONFIG_MINIMAP_FADE_ENABLE"]	= "Угасание минипримечаний";
+		["CONFIG_MINIMAP_FADE_ENABLE"]	= "Угасание примечаний";
 		["CONFIG_MINIMAP_FADE_PERCENT"]	= "Расстояние угасания: %d%%";
 		["CONFIG_MINIMAP_ICON_SIZE"]	= "Размер иконки: %d";
 		["CONFIG_MINIMAP_INSPECT_DIST"]	= "Обследовать в: %d ярдах";
-		["CONFIG_MINIMAP_INSPECT_ENABLE"]	= "Отмечать точки сбора как обследованные";
+		["CONFIG_MINIMAP_INSPECT_ENABLE"]	= "Отмечать точки как обследованные";
 		["CONFIG_MINIMAP_INSPECT_FADING"]	= "Угасание обследованных: %d%%";
 		["CONFIG_MINIMAP_INSPECT_TIMEOUT"]	= "Переобследование: %d сек.";
 		["CONFIG_MINIMAP_INSPECT_TINT_ENABLE"]	= "Окрасить зеленым при обследовании";
-		["CONFIG_MINIMAP_LABEL"]	= "Настройки радара";
+		["CONFIG_MINIMAP_LABEL"]	= "Настройки миникарты";
 		["CONFIG_MINIMAP_MAX_NOTES"]	= "Показывать: %d ближайших";
 		["CONFIG_MINIMAP_NOTE_OPACITY"]	= "Прозрачность по умолчанию: %d%%";
 		["CONFIG_MINIMAP_TRACKING_ACTIVE_ONLY"]	= "Только для активного навыка";
-		["CONFIG_MINIMAP_TRACKING_DISTANCE"]	= "Отслеживать в: %d ярдах";
+		["CONFIG_MINIMAP_TRACKING_CIRCLE_ENABLE"]	= "Преобразовать в иконку слежения при приближении";
+		["CONFIG_MINIMAP_TRACKING_DISTANCE"]	= "Следить в: %d ярдах";
+		["CONFIG_MINIMAP_TRACKING_ENABLE"]	= "Включить отслеживание";
 		["CONFIG_MINIMAP_TRACKING_OPACITY"]	= "Прозрачность иконки: %d%%";
 		["CONFIG_OPEN_FILTER_LABEL"]	= "Отслеживать сокровища";
 		["CONFIG_PROFILE_CHANGE_NOTIFICATION"]	= "Смена профиля: %1";
@@ -2775,7 +2832,7 @@ GathererLocalizations = {
 		["CONFIG_SECTION_GENERAL"]	= "Общие настройки";
 		["CONFIG_SECTION_HEADER_CORE"]	= "Основные Настройки";
 		["CONFIG_SECTION_HEADER_PLUGINS"]	= "Дополнения";
-		["CONFIG_SECTION_MINIMAP"]	= "Радар";
+		["CONFIG_SECTION_MINIMAP"]	= "Миникарта";
 		["CONFIG_SECTION_OPEN"]	= "Сокровища";
 		["CONFIG_SECTION_PROFILES"]	= "Профили";
 		["CONFIG_SECTION_SHARING"]	= "Расшаривание";
@@ -2784,21 +2841,21 @@ GathererLocalizations = {
 		["CONFIG_SECTION_TITLE_GENERAL"]	= "Основные настройки Gatherer";
 		["CONFIG_SECTION_TITLE_HERB"]	= "Настройки фильтра Травничество";
 		["CONFIG_SECTION_TITLE_MINE"]	= "Настройки фильтра Горное дело";
-		["CONFIG_SECTION_TITLE_MINIMAP"]	= "Настройки радара Gatherer";
+		["CONFIG_SECTION_TITLE_MINIMAP"]	= "Настройки миникарты Gatherer";
 		["CONFIG_SECTION_TITLE_OPEN"]	= "Настройки фильтра Сокровища";
 		["CONFIG_SECTION_TITLE_PROFILES"]	= "Установка, настройка и редактирование профилей";
 		["CONFIG_SECTION_TITLE_SHARING"]	= "Настройки синхронизации";
-		["CONFIG_SHARING_BLACKLIST_LABEL"]	= "Черный список расшаривания";
-		["CONFIG_SHARING_GROUP_DATABASE"]	= "Добавить принятые точки сбора группы в свою базу данных";
+		["CONFIG_SHARING_BLACKLIST_LABEL"]	= "Черный список синхронизации";
+		["CONFIG_SHARING_GROUP_DATABASE"]	= "Добавить принятые точки группы в свою базу данных";
 		["CONFIG_SHARING_GROUP_ENABLE"]	= "Включить синхронизацию с группой";
-		["CONFIG_SHARING_GROUP_LABEL"]	= "Расшаривание с Группой/Рейдом";
+		["CONFIG_SHARING_GROUP_LABEL"]	= "Синхронизация с Группой/Рейдом";
 		["CONFIG_SHARING_GROUP_MESSAGE_RECV"]	= "Показать сообщение когда принимается точка сбора от группы";
-		["CONFIG_SHARING_GROUP_MESSAGE_SENT"]	= "Показать сообщение когда отправляется точка сбора группе";
-		["CONFIG_SHARING_GUILD_DATABASE"]	= "Добавить принятые точки сбора гильдии в свою базу данных";
+		["CONFIG_SHARING_GROUP_MESSAGE_SENT"]	= "Показать сообщение когда отправляется точка группе";
+		["CONFIG_SHARING_GUILD_DATABASE"]	= "Добавить принятые от гильдии точки в базу данных";
 		["CONFIG_SHARING_GUILD_ENABLE"]	= "Включить синхронизацию с гильдией";
-		["CONFIG_SHARING_GUILD_LABEL"]	= "Расшаривание с гильдией";
-		["CONFIG_SHARING_GUILD_MESSAGE_RECV"]	= "Показать сообщение когда принимается точка сбора от гильдии";
-		["CONFIG_SHARING_GUILD_MESSAGE_SENT"]	= "Показать сообщение когда отправляется точка сбора гильдии";
+		["CONFIG_SHARING_GUILD_LABEL"]	= "Синхронизация с гильдией";
+		["CONFIG_SHARING_GUILD_MESSAGE_RECV"]	= "Показать сообщение когда принимается точка от гильдии";
+		["CONFIG_SHARING_GUILD_MESSAGE_SENT"]	= "Показать сообщение когда отправляется точка в гильдию";
 		["CONFIG_SHARING_PERSONAL_ENABLE"]	= "Показать сообщение когда собственная точка сбора добавляется к базе данных";
 		["CONFIG_SHARING_PERSONAL_LABEL"]	= "Персональное предупреждение";
 		["CONFIG_TOOLTIP_COUNTS"]	= "Показать счетчики урожая";
@@ -2811,12 +2868,15 @@ GathererLocalizations = {
 		["CONFIG_WORLDMAP_ICON_SIZE"]	= "Размер иконки: %d";
 		["CONFIG_WORLDMAP_MAX_NOTES"]	= "Показывать: %d заметок";
 		["CONFIG_WORLDMAP_NOTE_OPACITY"]	= "Прозрачность: %d%%";
-		["ENABLE_OPEN"]	= "Показывать точки сбора сокровищ";
+		["ENABLE_OPEN"]	= "Показывать точки сокровищ";
 
 		-- Section: Database Version Messages
 		["STORAGE_DB_CATACLYSMIC"]	= "Произошел Катаклизм, вернулся Смертокрыл, он сжёг все растения, расплавил все металлы, уничтожил все сундуки. Сейчас всё это вновь растёт, выкристаллизовывается и препрятывается от пиратов, и меняет расположение. Охота началась!!!\n(Старые данные мира очищены всвязи с изменением географии мира.)";
 		["STORAGE_DB_VERSION_INVALID"]	= "ВНИМАНИЕ!!!\nGatherer обнаружил, что у Вас неправильная версия базы данных. Пожалуйста нажмите принять, чтобы очистить Вашу базу данных, или выберите игнорировать, чтобы попробывать восстановить её вручную.";
 		["STORAGE_DB_VERSION_NEWER"]	= "Ваша база данных слишком новая для Gatherer, и не будет использоваться до тех пор, пока Вы не обновите Gatherer.";
+
+		-- Section: Game Object Tooltip
+		["GAME_OBJECT_REQUIRES_REWRITE"]	= "%1$s %2$d";
 
 		-- Section: Gatherables Report
 		["REPORT_COLUMN_HEADER_DIST"]	= "Расст.";
@@ -2835,8 +2895,8 @@ GathererLocalizations = {
 		["REPORT_SEARCH_BY_TYPE"]	= "По типу";
 		["REPORT_SEND_MARKED"]	= "Отослать отмеченные";
 		["REPORT_TITLE"]	= "Список точек сбора";
-		["REPORT_UNMARK_ALL"]	= "Снять выделение с всех";
-		["REPORT_UNMARK_THESE"]	= "Снять выделение с указанных";
+		["REPORT_UNMARK_ALL"]	= "Снять выд. с всех";
+		["REPORT_UNMARK_THESE"]	= "Снять выд. с указанных";
 
 		-- Section: Generic Messages
 		["DESCRIPTION"]	= "Gatherer это дополнение, которое позволяет Вам запоминать точки сбора ресурсов и показывать их на Вашей карте или радаре, или внутри интерфейса игры. Также оно позволяет расшаривать свои находки с Вашей гильдией или рейдом.";
@@ -2876,14 +2936,16 @@ GathererLocalizations = {
 		["HUD_CONFIG_DISPLAY_LABEL"]	= "Настройки отображения игрового интерфейса";
 		["HUD_CONFIG_HEAT_TRACKING_LABEL"]	= "Игровой интерфейс опции тепловизора";
 		["HUD_CONFIG_HIDING_LABEL"]	= "Игровой интерфейс опции скрытия";
+		["HUD_CONFIG_plugin.gatherer_hud.alpha"]	= "Общая прозрачность: %d%%";
 		["HUD_CONFIG_plugin.gatherer_hud.angle"]	= "Угол обзора: %d°";
 		["HUD_CONFIG_plugin.gatherer_hud.base.color"]	= "Цвет подложки";
 		["HUD_CONFIG_plugin.gatherer_hud.base.enable"]	= "Затемнить интерфейс для лучшего восприятия";
 		["HUD_CONFIG_plugin.gatherer_hud.center.color"]	= "Цвет центра";
+		["HUD_CONFIG_plugin.gatherer_hud.center.enable"]	= "Отображать поле зрения игрока";
 		["HUD_CONFIG_plugin.gatherer_hud.fade"]	= "Примечания пропадают в: %d%% радиусах";
-		["HUD_CONFIG_plugin.gatherer_hud.heat.color"]	= "Цвет тепла";
+		["HUD_CONFIG_plugin.gatherer_hud.heat.color"]	= "Цвет теплового следа";
 		["HUD_CONFIG_plugin.gatherer_hud.heat.cooldown"]	= "Восстановление отслеживания: %d секунд";
-		["HUD_CONFIG_plugin.gatherer_hud.heat.enable"]	= "Показывать отслеживание маршрута (по теплу)";
+		["HUD_CONFIG_plugin.gatherer_hud.heat.enable"]	= "Показывать тепловой след";
 		["HUD_CONFIG_plugin.gatherer_hud.heat.nevercooldown"]	= "Больше не перегружать";
 		["HUD_CONFIG_plugin.gatherer_hud.heat.size"]	= "Ширина отслеживаемой зоны: %d ярдов";
 		["HUD_CONFIG_plugin.gatherer_hud.hide.combat"]	= "Прятать в бою";
@@ -2895,19 +2957,21 @@ GathererLocalizations = {
 		["HUD_CONFIG_plugin.gatherer_hud.hide.swimming"]	= "Прятать при плавании";
 		["HUD_CONFIG_plugin.gatherer_hud.hide.target"]	= "Прятать при прицеливании";
 		["HUD_CONFIG_plugin.gatherer_hud.hide.walking"]	= "Прятать не на маунте";
-		["HUD_CONFIG_plugin.gatherer_hud.iconsize"]	= "Размер примечания: %d пикселей";
-		["HUD_CONFIG_plugin.gatherer_hud.min_fullframerate"]	= "Минимальная частота фреймов при прорисовке каждого фрейма: %dfps";
+		["HUD_CONFIG_plugin.gatherer_hud.iconsize"]	= "Размер примечаний: %d пикселей";
+		["HUD_CONFIG_plugin.gatherer_hud.min_fullframerate"]	= "Минимальная частота фреймов: %dfps";
 		["HUD_CONFIG_plugin.gatherer_hud.offset.horizontal"]	= "Горизонтальное смещение : %d пикселей";
 		["HUD_CONFIG_plugin.gatherer_hud.offset.vertical"]	= "Вертикальное смещение : %d пикселей";
 		["HUD_CONFIG_plugin.gatherer_hud.party.color"]	= "Цвет членов группы";
-		["HUD_CONFIG_plugin.gatherer_hud.party.enable"]	= "Показывать членов других групп";
+		["HUD_CONFIG_plugin.gatherer_hud.party.enable"]	= "Показывать других членов группы";
 		["HUD_CONFIG_plugin.gatherer_hud.party.size"]	= "Размер иконки группы: %d пикселей";
 		["HUD_CONFIG_plugin.gatherer_hud.perspective"]	= "Уровень переспективы: %0.1f";
 		["HUD_CONFIG_plugin.gatherer_hud.radius"]	= "Общий радиус интерфейса: %d пикселей";
 		["HUD_CONFIG_plugin.gatherer_hud.yards"]	= "Дистанция примечаний: %d ярдов";
-		["HUD_CONFIG_STRATA_LABEL"]	= "HUD Strata (Уровень прорисовки)";
+		["HUD_CONFIG_STRATA_LABEL"]	= "Приоритет прорисовки";
+		["HUD_CONFIG_USAGE_NOTE"]	= "Использование этого интерфейса снижает общую частоту кадров и будет снижать её ещё больше, если Вы включите отслеживание вашего маршрута по тепловизору.";
 		["HUD_CONFIG_VISIBILITY_LABEL"]	= "HUD Настройки видимости";
-		["HUD_DESCRIPTION"]	= "HUD это навигационный компонент, позволяющий отслеживать местонахождение ресурсов на экране в наложенном стиле heads-up";
+		["HUD_DESCRIPTION"]	= "HUD это навигационный компонент, позволяющий отслеживать местонахождение ресурсов на экране в стиле прибора ночного видения";
+		["HUD_TITLE"]	= "Плагин отображения Gatherer в стиле прибора ночного видения";
 
 		-- Section: Import Modules
 		["IMPORT_CTMOD_DONE"]	= "Ваши данные CT_MapMod импортированы.";
@@ -3288,15 +3352,242 @@ GathererLocalizations = {
 
 	zhCN = {
 
+		-- Section: AddOn Communication
+		["COMM_NODE_SEND"]	= "送出采集点 %1 给 %2";
+		["COMM_NODE_SEND_TWO"]	= "送出采集点 %1 给 %2 和 %3";
+		["COMM_RECEIVE_NODE"]	= "已接收采集点 %1 于 %2 从 %3 (%4)";
+		["NODE_ADD"]	= "已增加采集点 %1";
+
+		-- Section: Configuration
+		["CONFIG_ABOUT_LOADED_ENABLE"]	= "显示加载完成信息";
+		["CONFIG_ALL_FILTER_NOTE"]	= "'%1' 将导致目前的过滤设定被忽略,并且强制显示该类别的所有采集点";
+		["CONFIG_ARCH_MAX_NOTES"]	= "显示: 最靠近 %d";
+		["CONFIG_ENABLE_HERB"]	= "显示采药点";
+		["CONFIG_ENABLE_HERB_HERBALIST_ONLY"]	= "仅当学会采药时显示";
+		["CONFIG_ENABLE_MINE"]	= "显示采矿点";
+		["CONFIG_ENABLE_MINE_MINER_ONLY"]	= "仅当学会采矿时显示";
+		["CONFIG_ENABLE_ONLY_IF_TRACKING"]	= "仅当正在跟踪时";
+		["CONFIG_GENERAL_MINIICON_LABEL"]	= "小地图按钮选项";
+		["CONFIG_GENERAL_MINIMAP_TRACKING_LABEL"]	= "小地图跟踪选项";
+		["CONFIG_GENERAL_WORLDMAP_LABEL"]	= "世界地图选项";
+		["CONFIG_GENERAL_WORLDMAP_TRACKING_LABEL"]	= "世界地图跟踪选项";
+		["CONFIG_HERB_FILTER_LABEL"]	= "要跟踪的采药点";
+		["CONFIG_IGNORE_PURGE_CONFIRM"]	= "你确定要从资料库中删除此玩家分享的采集点吗? 这将永久性地删除掉 %d 个采集点";
+		["CONFIG_IGNORE_PURGE_DONE"]	= "%d 个采集点已被永久地从资料库中删除";
+		["CONFIG_IGNORE_PURGE_QUESTION"]	= "你真的想删除此玩家分享的所有采集点数据吗?";
+		["CONFIG_MINE_FILTER_LABEL"]	= "要跟踪的采矿点";
+		["CONFIG_MINIICON_ANGLE"]	= "按钮角度: %d°";
+		["CONFIG_MINIICON_DISTANCE"]	= "距离: %d";
+		["CONFIG_MINIICON_ENABLE"]	= "显示小地图按钮";
+		["CONFIG_MINIMAP_ADD_LABEL"]	= "小地图附加";
+		["CONFIG_MINIMAP_ANON_ENABLE"]	= "显示匿名的采集点";
+		["CONFIG_MINIMAP_ANON_OPACITY"]	= "匿名采集点的不透明度：%d%%";
+		["CONFIG_MINIMAP_ANON_TINT"]	= "将匿名的采集点设为红色";
+		["CONFIG_MINIMAP_DISTANCE"]	= "距离: %d 码";
+		["CONFIG_MINIMAP_ENABLE"]	= "在小地图上显示注释";
+		["CONFIG_MINIMAP_FADE_DIST"]	= "淡出于: %d 码";
+		["CONFIG_MINIMAP_FADE_ENABLE"]	= "淡出小地图注释";
+		["CONFIG_MINIMAP_FADE_PERCENT"]	= "淡出距离: %d%%";
+		["CONFIG_MINIMAP_ICON_SIZE"]	= "图标大小: %d";
+		["CONFIG_MINIMAP_INSPECT_DIST"]	= "显示于：%d 码";
+		["CONFIG_MINIMAP_INSPECT_ENABLE"]	= "标记采集点为监视点";
+		["CONFIG_MINIMAP_INSPECT_FADING"]	= "监视点淡出: %d%%";
+		["CONFIG_MINIMAP_INSPECT_TIMEOUT"]	= "再检查于：%d 秒";
+		["CONFIG_MINIMAP_INSPECT_TINT_ENABLE"]	= "检查中的显示为绿色";
+		["CONFIG_MINIMAP_LABEL"]	= "小地图选项";
+		["CONFIG_MINIMAP_MAX_NOTES"]	= "显示: %d 最接近";
+		["CONFIG_MINIMAP_NOTE_OPACITY"]	= "预设不透明度: %d%%";
+		["CONFIG_MINIMAP_TRACKING_ACTIVE_ONLY"]	= "只在跟踪技能开启时";
+		["CONFIG_MINIMAP_TRACKING_CIRCLE_ENABLE"]	= "当接近时改变追踪图标";
+		["CONFIG_MINIMAP_TRACKING_DISTANCE"]	= "跟踪于：%d 码";
+		["CONFIG_MINIMAP_TRACKING_ENABLE"]	= "开启跟踪技能";
+		["CONFIG_MINIMAP_TRACKING_OPACITY"]	= "图标不透平度: %d%%";
+		["CONFIG_OPEN_FILTER_LABEL"]	= "要跟踪的宝箱点";
+		["CONFIG_PROFILE_CHANGE_NOTIFICATION"]	= "更改设定档：%1";
+		["CONFIG_PROFILE_CREATE_COPY"]	= "创建副本";
+		["CONFIG_PROFILE_CREATE_NEW"]	= "新建";
+		["CONFIG_PROFILE_CURRENT_LABEL"]	= "启用一个当前的设定档";
+		["CONFIG_PROFILE_NEW"]	= "创建或替换一个设定档";
+		["CONFIG_PROFILE_NEW_LABEL"]	= "新设定档名";
+		["CONFIG_SECTION_ABOUT"]	= "关于";
+		["CONFIG_SECTION_GENERAL"]	= "通用";
+		["CONFIG_SECTION_HEADER_CORE"]	= "核心选项";
+		["CONFIG_SECTION_HEADER_PLUGINS"]	= "插件";
+		["CONFIG_SECTION_MINIMAP"]	= "小地图";
+		["CONFIG_SECTION_OPEN"]	= "宝箱";
+		["CONFIG_SECTION_PROFILES"]	= "设定档";
+		["CONFIG_SECTION_SHARING"]	= "分享";
+		["CONFIG_SECTION_TITLE_ABOUT"]	= "关于Gatherer";
+		["CONFIG_SECTION_TITLE_ARCH"]	= "考古选项";
+		["CONFIG_SECTION_TITLE_GENERAL"]	= "主选项";
+		["CONFIG_SECTION_TITLE_HERB"]	= "采药过滤器";
+		["CONFIG_SECTION_TITLE_MINE"]	= "采矿过滤器";
+		["CONFIG_SECTION_TITLE_MINIMAP"]	= "小地图选项";
+		["CONFIG_SECTION_TITLE_OPEN"]	= "宝箱过滤器";
+		["CONFIG_SECTION_TITLE_PROFILES"]	= "新建，设置和编辑设定档";
+		["CONFIG_SECTION_TITLE_SHARING"]	= "同步选项";
+		["CONFIG_SHARING_BLACKLIST_LABEL"]	= "分享黑名单";
+		["CONFIG_SHARING_GROUP_DATABASE"]	= "加入队友发送的采集信息到数据库";
+		["CONFIG_SHARING_GROUP_ENABLE"]	= "开启小队同步";
+		["CONFIG_SHARING_GROUP_LABEL"]	= "团队分享";
+		["CONFIG_SHARING_GROUP_MESSAGE_RECV"]	= "当收到小队发送的采集信息时,显示一条信息";
+		["CONFIG_SHARING_GROUP_MESSAGE_SENT"]	= "当发送给队友采集信息时,显示一条信息";
+		["CONFIG_SHARING_GUILD_DATABASE"]	= "加入公会会员发送的采集信息到资料库";
+		["CONFIG_SHARING_GUILD_ENABLE"]	= "开启公会同步";
+		["CONFIG_SHARING_GUILD_LABEL"]	= "公会分享";
+		["CONFIG_SHARING_GUILD_MESSAGE_RECV"]	= "当收到公会会员发送的采集信息时,显示一条信息";
+		["CONFIG_SHARING_GUILD_MESSAGE_SENT"]	= "当发送给公会会员采集信息时,显示一条信息";
+		["CONFIG_SHARING_PERSONAL_ENABLE"]	= "当自己自己的采集点到数据库时,显示一条信息";
+		["CONFIG_SHARING_PERSONAL_LABEL"]	= "私人通知";
+		["CONFIG_TOOLTIP_COUNTS"]	= "显示采集到的数量";
+		["CONFIG_TOOLTIP_DISTANCE"]	= "显示采集点距离";
+		["CONFIG_TOOLTIP_DROP_RATES"]	= "显示掉落率";
+		["CONFIG_TOOLTIP_ENABLE"]	= "显示鼠标提示";
+		["CONFIG_TOOLTIP_LAST_SEEN"]	= "显示最近一次发现的时间";
+		["CONFIG_TOOLTIP_SOURCE"]	= "显示采集点来源";
+		["CONFIG_WORLDMAP_ENABLE"]	= "在世界地图上显示采集点";
+		["CONFIG_WORLDMAP_ICON_SIZE"]	= "图标大小: %d";
+		["CONFIG_WORLDMAP_MAX_NOTES"]	= "显示: %d 采集点";
+		["CONFIG_WORLDMAP_NOTE_OPACITY"]	= "不透明度: %d%%";
+		["ENABLE_OPEN"]	= "显示宝箱采集点";
+
+		-- Section: Database Version Messages
+		["STORAGE_DB_CATACLYSMIC"]	= "当那个邪恶的超级坏蛋,死亡之翼的返回已经烧掉所有的草药,融化所有的矿石和摧毁所有的宝箱后 现在它们全部已经重新生长,重新结晶化,以及重新被海盗们再次藏起之后它们已经都出现在新的地点 寻宝吧!!(旧世界资料已经被清除由于广大的地理改变";
+		["STORAGE_DB_VERSION_INVALID"]	= "警告！！！\n采集助手已侦测到你的数据库版本是失效的。 请按下接受来清除你的数据库，或是选择忽略若你想要自行修复数据库的话。";
+		["STORAGE_DB_VERSION_NEWER"]	= "你拥有的采集数据库太新了。 你目前的数据库已被搁置直到你更新升级了采集助手。";
+
+		-- Section: Game Object Tooltip
+		["GAME_OBJECT_REQUIRES_REWRITE"]	= "%1$s %2$d";
+
+		-- Section: Gatherables Report
+		["REPORT_COLUMN_HEADER_DIST"]	= "距离";
+		["REPORT_COLUMN_HEADER_REGION"]	= "地区";
+		["REPORT_COLUMN_HEADER_SOURCE"]	= "来源";
+		["REPORT_COLUMN_HEADER_TYPE"]	= "种类";
+		["REPORT_COLUMN_HEADER_X"]	= "X";
+		["REPORT_COLUMN_HEADER_Y"]	= "Y";
+		["REPORT_DELETE_CONFIRMATION"]	= "你真的要删除 %d 的采集点？";
+		["REPORT_DELETE_MARKED"]	= "删除已标记的";
+		["REPORT_MARKED_NODES_COUNT"]	= "已标记的采集点：%1";
+		["REPORT_MARKING_NOTE"]	= "附注：当你标记采集点后，它们将持续保持标记状态,直到你在看报告中点选该物品，使用解除标记按钮或离开游戏。";
+		["REPORT_MARK_THESE"]	= "标记这些";
+		["REPORT_SEARCH_BY_REGION"]	= "依照地区";
+		["REPORT_SEARCH_BY_SOURCE"]	= "依照来源";
+		["REPORT_SEARCH_BY_TYPE"]	= "依照种类";
+		["REPORT_SEND_MARKED"]	= "发送已标记的";
+		["REPORT_TITLE"]	= "采集报告";
+		["REPORT_UNMARK_ALL"]	= "取消所有标记";
+		["REPORT_UNMARK_THESE"]	= "取消这些的标记";
+
+		-- Section: Generic Messages
+		["DESCRIPTION"]	= "采集助手(Gatherer)是一个允许你纪录你的采集点位置并显示于你的大小地图和采集助手附加的抬头显示模式的插件。并允许你向你的队友、团队成员以及朋友来分享你的采集数据。";
+		["DESCRIPTION_LICENSE"]	= "采集助手(Gatherer)是一款基于 GNU GPL v2 的开放原始码软件。请查看插件目录内附的gpl.txt 以了解完整的内容。";
+		["LOADED_NOTIFICATION"]	= "采集助手 Gatherer v%1 -- 已载入！---BY 主宰之剑 永恒残星";
+		["MANIFEST_INVALID_VERSIONS_WARNING"]	= "{{警告：}}你的采集助手似乎混和了不同版本的文件。\n\n请确认你删除了旧版本：\n%1\n目录，并从\n%2\n重新安装一个全新的\n先完整地重新启动魔兽世界后再回报任何可能出现的问题 。\n\n谢谢，\n  采集助手 Gatherer 开发团队";
+		["VERSION_MESSAGE"]	= "采集助手 Gatherer v%1";
+		["ZONETOKENS_UNIDENTIFIED_ZONES_WARNING"]	= "采集助手(Gatherer)无法辨认出以下的区域：{{%1}}\n如果那些区域是新的区域，那么这个并不是问题，而且你可以正常继续。\n但如果那些区域不是新的区域，那么请保持冷静{{你的数据并没有消失！}} 你的那些数据将会在你更新采集助手并进入游戏后升级，然后才能继续正常使用并收集新的采集点纪录。\n\n{{为了方便，请更新升级采集助手 Gatherer。}}";
+
+		-- Section: Generic Strings
+		["ACCEPT"]	= "接受";
+		["ALL"]	= "全部";
+		["CANCEL"]	= "取消";
+		["DELETE"]	= "删除";
+		["DONE"]	= "完成";
+		["ENABLE"]	= "启用";
+		["IGNORE"]	= "忽略";
+		["IGNORE_PLAYER"]	= "忽略玩家";
+		["NO"]	= "不";
+		["OKAY"]	= "OK";
+		["SEARCH"]	= "搜索";
+		["STOP_IGNORE"]	= "移除玩家";
+		["STRATA_BACKGROUND"]	= "背景";
+		["STRATA_HIGH"]	= "高";
+		["STRATA_LOW"]	= "低";
+		["STRATA_MEDIUM"]	= "中";
+		["YES"]	= "是";
+
+		-- Section: HelpTooltip
+		["MINIICON_ACTIONS_CLICK"]	= "{{点击}} 来启动采集点显示。";
+		["MINIICON_ACTIONS_RIGHT_CLICK"]	= "{{右击}} 来查看采集报告。";
+		["MINIICON_ACTIONS_SHIFT_CLICK"]	= "{{Shift+点击}} 来启动HUD显示。";
+		["MINIICON_ACTIONS_SHIFT_RIGHT_CLICK"]	= "{{Shift+右击}} 來編輯编辑設置。";
+
 		-- Section: HUD
+		["HUD_ABBREVIATION"]	= "HUD";
 		["HUD_CONFIG_DISPLAY_LABEL"]	= "HUD 显示选项";
+		["HUD_CONFIG_HEAT_TRACKING_LABEL"]	= "HUD 热追踪模式";
+		["HUD_CONFIG_HIDING_LABEL"]	= "HUD 隐藏选项";
+		["HUD_CONFIG_plugin.gatherer_hud.alpha"]	= "全局 HUD 不透明度：%d%%";
+		["HUD_CONFIG_plugin.gatherer_hud.angle"]	= "视角：%d°";
+		["HUD_CONFIG_plugin.gatherer_hud.base.color"]	= "底色";
+		["HUD_CONFIG_plugin.gatherer_hud.base.enable"]	= "使HUD变暗(提升可视性)";
+		["HUD_CONFIG_plugin.gatherer_hud.center.color"]	= "中心的颜色";
+		["HUD_CONFIG_plugin.gatherer_hud.center.enable"]	= "启用玩家视野(Field Of View)圈";
+		["HUD_CONFIG_plugin.gatherer_hud.fade"]	= "淡出注释于：半径 %d%%";
+		["HUD_CONFIG_plugin.gatherer_hud.heat.color"]	= "热追踪颜色";
+		["HUD_CONFIG_plugin.gatherer_hud.heat.cooldown"]	= "追踪冷却：%d 秒";
+		["HUD_CONFIG_plugin.gatherer_hud.heat.enable"]	= "显示探索追踪(热追踪)";
+		["HUD_CONFIG_plugin.gatherer_hud.heat.nevercooldown"]	= "永不冷却";
+		["HUD_CONFIG_plugin.gatherer_hud.heat.size"]	= "追踪轨迹宽度：%d 码";
+		["HUD_CONFIG_plugin.gatherer_hud.hide.combat"]	= "战斗中隐藏";
 		["HUD_CONFIG_plugin.gatherer_hud.hide.flying"]	= "飞行时隐藏";
 		["HUD_CONFIG_plugin.gatherer_hud.hide.inside"]	= "室内隐藏";
 		["HUD_CONFIG_plugin.gatherer_hud.hide.mounted"]	= "骑乘时隐藏";
+		["HUD_CONFIG_plugin.gatherer_hud.hide.resting"]	= "休息时隐藏";
+		["HUD_CONFIG_plugin.gatherer_hud.hide.stealth"]	= "潜行时隐藏";
+		["HUD_CONFIG_plugin.gatherer_hud.hide.swimming"]	= "游泳时隐藏";
+		["HUD_CONFIG_plugin.gatherer_hud.hide.target"]	= "选定目标时隐藏";
+		["HUD_CONFIG_plugin.gatherer_hud.hide.walking"]	= "未上座骑时隐藏";
+		["HUD_CONFIG_plugin.gatherer_hud.iconsize"]	= "注释大小：%d 像素";
+		["HUD_CONFIG_plugin.gatherer_hud.min_fullframerate"]	= "最低帧数：%d fps";
+		["HUD_CONFIG_plugin.gatherer_hud.offset.horizontal"]	= "水平偏移：%d 像素";
+		["HUD_CONFIG_plugin.gatherer_hud.offset.vertical"]	= "垂直偏移：%d 像素";
+		["HUD_CONFIG_plugin.gatherer_hud.party.color"]	= "队友颜色";
+		["HUD_CONFIG_plugin.gatherer_hud.party.enable"]	= "显示其他队友";
+		["HUD_CONFIG_plugin.gatherer_hud.party.size"]	= "小队图标大小：%d 像素";
+		["HUD_CONFIG_plugin.gatherer_hud.perspective"]	= "透视等级：%0.1f";
+		["HUD_CONFIG_plugin.gatherer_hud.radius"]	= "全局 HUD 半径：%d 像素";
+		["HUD_CONFIG_plugin.gatherer_hud.yards"]	= "注释范围：%d 码";
+		["HUD_CONFIG_STRATA_LABEL"]	= "HUD 位层(图层等级)";
+		["HUD_CONFIG_USAGE_NOTE"]	= "使用HUD将会降低你的帧数，若你开启了热追踪功能会在绘制热轨迹时降低更多的帧数。";
+		["HUD_CONFIG_VISIBILITY_LABEL"]	= "HUD 可视性选项";
+		["HUD_DESCRIPTION"]	= "HUD是一个允许你在你的屏幕上显示雷达的方式来追踪采集点位置的导航模块。";
+		["HUD_TITLE"]	= "采集助手HUD插件";
+
+		-- Section: Import Modules
+		["IMPORT_CTMOD_DONE"]	= "你的 CT_MapMod 数据已经导入。";
+		["IMPORT_CTMOD_NODATA"]	= "没有发现任何要导入的 CT_MapMod 数据。";
 
 		-- Section: Keybinding Text
 		["BINDING_HEADER_GATHERER"]	= "采集助手";
 		["BINDING_NAME_GATHERER_TOGGLE_OPTIONS_DIALOG"]	= "显示/关闭选项对话框";
+
+		-- Section: Labels
+		["GENERAL_LABEL"]	= "通用";
+		["LABEL_CONFIG"]	= "设置";
+		["LABEL_DENSITY_REPORT"]	= "采集点搜索";
+		["LABEL_NOTE"]	= "注释";
+		["LABEL_REPORT"]	= "采集报告";
+		["MAP_NOTES_HIDE"]	= "隐藏物品";
+		["MAP_NOTES_SHOW"]	= "显示物品";
+		["NOTIFICATIONS_TITLE"]	= "采集助手:警报";
+
+		-- Section: Mass Sharing Messages
+		["MASS_SHARING_ABORT"]	= "放弃上传。";
+		["MASS_SHARING_ABORTED"]	= "已于 %1 时放弃";
+		["MASS_SHARING_ACCEPTED"]	= "开始";
+		["MASS_SHARING_ASKING"]	= "请求";
+		["MASS_SHARING_BUSY"]	= "用户忙";
+		["MASS_SHARING_CLOSED"]	= "已关闭";
+		["MASS_SHARING_COMPLETE"]	= "成功";
+		["MASS_SHARING_DONE"]	= "结束于 %1";
+		["MASS_SHARING_GATHERER_COMM_REQUESTSEND"]	= "%1$s 想发送给你 %2$d 采集点 接受吗?";
+		["MASS_SHARING_GATHERER_REPORT_TRANSMIT"]	= "你希望发送 %1$s 采集点给 %2$s 吗？\n(注意，他们必须要开启采集报告[Gatherables Report]窗口才能接收。)";
+		["MASS_SHARING_RECEIVED_COUNT"]	= "接受 %1";
+		["MASS_SHARING_REJECT"]	= "拒绝";
+		["MASS_SHARING_SENDING"]	= "发送中";
+		["MASS_SHARING_SENT"]	= "发送 %1";
+		["MASS_SHARING_TIMEOUT"]	= "超时";
 
 		-- Section: Node Category Names
 		["HERB_NETHERDUST"]	= "灵尘花粉";
@@ -3335,6 +3626,17 @@ GathererLocalizations = {
 		["TREASURE_UNGOROSOIL"]	= "安戈洛的泥土";
 		["TREASURE_WHIPPERROOT"]	= "鞭根块茎";
 		["TREASURE_WINDBLOSSOM"]	= "风花果";
+
+		-- Section: Node Database Plugins
+		["DATABASE_IMPORT_BUTTON_LABEL"]	= "导入";
+		["DATABASE_IMPORT_HEADER"]	= "要导入的采集点数据库：";
+
+		-- Section: Node Density Search
+		["DENSITY_COLUMN_HEADER_LOCATION"]	= "地区";
+		["DENSITY_COLUMN_HEADER_NUM_NODE"]	= "# 采集点";
+		["DENSITY_COLUMN_HEADER_PERCENT"]	= "百分比";
+		["DENSITY_COLUMN_HEADER_TYPE"]	= "种类";
+		["DENSITY_SEARCH_TITLE"]	= "采集点密度搜索";
 
 		-- Section: Node Tooltip Messages
 		["NOTE_ADDITIONAL"]	= "%1附加掉落...";

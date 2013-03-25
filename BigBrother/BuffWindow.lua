@@ -21,7 +21,7 @@ local BuffWindow_ResizeWindow, BuffWindow_UpdateWindow, BuffWindow_UpdateBuffs
 
 local RL = AceLibrary("Roster-2.1")
 
-vars.svnrev["BuffWindow.lua"] = tonumber(("$Revision: 337 $"):match("%d+"))
+vars.svnrev["BuffWindow.lua"] = tonumber(("$Revision: 371 $"):match("%d+"))
 
 -- tie-in for third party addons to add tooltips
 -- table maps GUID => {  highlight = boolean, [addonname] = "status text" }
@@ -46,23 +46,24 @@ end
 
 --[[ Load up local tables from master spell ID tables ]]
 
-local function cataConsumable(spellID) 
-  return spellID >= 79000 and spellID < 80000 and GetExpansionLevel() < 3
+local function currentFlixir(spellID) 
+  -- return spellID >= 79000 and spellID < 93000 -- cata
+  return spellID >= 105600 
 end
 
 vars.Flasks = {}
-for i,v in ipairs(vars.SpellData.flasks) do
-	table.insert( vars.Flasks, { spellData(v, cataConsumable(v)) } )
+for _,v in ipairs(vars.SpellData.flasks) do
+	table.insert( vars.Flasks, { spellData(v, nil, nil, not currentFlixir(v)) } )
 end
 
 vars.Elixirs_Battle={}
-for i,v in ipairs(vars.SpellData.elixirBattle) do
-	table.insert( vars.Elixirs_Battle, { spellData(v, cataConsumable(v)) } )
+for _,v in ipairs(vars.SpellData.elixirBattle) do
+	table.insert( vars.Elixirs_Battle, { spellData(v, nil, nil, not currentFlixir(v)) } )
 end
 
 vars.Elixirs_Guardian={}
-for i,v in ipairs(vars.SpellData.elixirGuardian) do
-	table.insert( vars.Elixirs_Guardian, { spellData(v, cataConsumable(v)) } )
+for _,v in ipairs(vars.SpellData.elixirGuardian) do
+	table.insert( vars.Elixirs_Guardian, { spellData(v, nil, nil, not currentFlixir(v)) } )
 end
 vars.Elixirs={}
 for i,v in ipairs(vars.Elixirs_Battle) do
@@ -75,6 +76,40 @@ end
 vars.Foodbuffs={}
 for i,v in ipairs(vars.SpellData.foods) do
 	table.insert(vars.Foodbuffs,  { spellData(v) })
+end
+
+local foodmin = 250 -- minimum food stat level to allow
+local scanfoodcache = {}
+local scantt = CreateFrame("GameTooltip", "BigBrotherScanTooltip", UIParent, "GameTooltipTemplate")
+local function scanfood(spellid)
+  local f = scanfoodcache[spellid]
+  if f then return f end
+  f = { spellData(spellid) }
+  scantt:ClearLines()
+  scantt:SetOwner(UIParent, "ANCHOR_NONE");
+  scantt:SetSpellByID(spellid)
+  local line = getglobal(scantt:GetName() .. "TextLeft3")
+  line = line and line:GetText()
+  if not line then return f end
+  local statval = 0
+  for v in string.gmatch(line, "%d+") do  -- assume largest number in tooltip is the statval
+     statval = math.max(statval,tonumber(v))
+  end
+  if statval >= 100 and string.find(line, ITEM_MOD_STAMINA_SHORT) then -- normalize for MoP stam bonus
+     statval = statval * 300 / 450
+  end
+  --print(spellid, f[1], statval)
+  if statval >= foodmin or
+     spellid == 66623 then -- bountiful feast
+     -- food is good
+  elseif statval == 0 then -- scan failed (client cache miss), retry next call
+     return f
+  else
+     -- food is bad
+     f[4] = true
+  end
+  scanfoodcache[spellid] = f
+  return f
 end
 
 local function Sort_RaidBuffs(a,b)
@@ -136,7 +171,7 @@ local BigBrother_BuffTable={
 			 }, 
 			{ -- stamina
 			 {BTspell(PR,21562)},		-- Power Word: Fortitude
-			 {BTspell(WK,6307)},		-- Blood Pact
+			 {BTspell(WK,109773)},		-- Dark Intent
 			 {BTspell(WA,469)},		-- Commanding Shout
 			 {BTspell(HP,90364)},		-- Qiraji Fortitude
 			 {BTspell(nil,111922,true)},	-- Runescroll of Fortitude III
@@ -171,6 +206,7 @@ local BigBrother_BuffTable={
                          {BTspell(SH,51470)}, 		-- Elemental Oath
 			 {BTspell(DR,24907)}, 		-- Moonkin Aura
 			 {BTspell(PR,49868)}, 		-- Mind Quickening
+			 {BTspell(HP,135678)},		-- Energizing Spores
 			},
 			{ -- attack power
 			 {BTspell(HU,19506)}, 		-- Trueshot Aura
@@ -611,8 +647,13 @@ function BuffWindow_UpdateBuffs()
 				for i, BuffList in pairs(BuffChecking.buffs) do
 					local buffNotSet = true
 					for _, buffs in pairs(BuffList) do
-						if UnitBuff(unit.unitid, buffs[1]) then
-							player.buff[i] = buffs
+						local spellid = select(11,UnitBuff(unit.unitid, buffs[1]))
+						if spellid then
+							if BuffList == vars.Foodbuffs then
+							  player.buff[i] = scanfood(spellid)
+							else
+							  player.buff[i] = buffs
+							end
 							player.totalBuffs = player.totalBuffs + 1
 							if not buffs[4] then -- binary sort by non-weak buffs
 							  player.buffMask = bit.bor(player.buffMask, 2^i)

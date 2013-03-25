@@ -13,11 +13,11 @@
    height="160"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.2 r9819"
+   inkscape:version="0.48.4 r9939"
    sodipodi:docname="RR Icon.svg"
-   inkscape:export-filename="C:\Users\Jeremiah\Dropbox\WoW projects\Reagent Restocker\RR Icon128.png"
-   inkscape:export-xdpi="72"
-   inkscape:export-ydpi="72">
+   inkscape:export-filename="C:\Users\Jeremiah\Dropbox\WoW projects\Reagent Restocker\RR Icon300.png"
+   inkscape:export-xdpi="168.75"
+   inkscape:export-ydpi="168.75">
   <defs
      id="defs4">
     <filter
@@ -115,9 +115,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.1194266"
-     inkscape:cx="10.261535"
-     inkscape:cy="59.025214"
+     inkscape:zoom="5.19375"
+     inkscape:cx="49.963899"
+     inkscape:cy="80"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -138,7 +138,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -149,7 +149,7 @@
      transform="translate(0,-892.36218)">
     <text
        xml:space="preserve"
-       style="font-size:175.35980225000000000px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-opacity:1;font-family:Sans;"
+       style="font-size:175.35980225000000000px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#4149ff;fill-opacity:1;stroke:#000000;stroke-opacity:1;font-family:Sans;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round;stroke-linecap:round"
        x="36.81744"
        y="1043.2157"
        id="text2985-1"
@@ -158,10 +158,10 @@
          id="tspan2987-7"
          x="36.81744"
          y="1043.2157"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-opacity:1;font-family:Baskerville Old Face;-inkscape-font-specification:Baskerville Old Face Bold;">R</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#4149ff;fill-opacity:1;stroke:#000000;stroke-opacity:1;font-family:Baskerville Old Face;-inkscape-font-specification:Baskerville Old Face Bold;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round;stroke-linecap:round">R</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:175.35980225000000000px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-opacity:1;font-family:Sans;"
+       style="font-size:175.35980225000000000px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-opacity:1;font-family:Sans;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round;stroke-linecap:round"
        x="2.8849275"
        y="1019.5265"
        id="text2985"
@@ -170,7 +170,7 @@
          id="tspan2987"
          x="2.8849275"
          y="1019.5265"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-opacity:1;font-family:Baskerville Old Face;-inkscape-font-specification:Baskerville Old Face Bold;">R</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-opacity:1;font-family:Baskerville Old Face;-inkscape-font-specification:Baskerville Old Face Bold;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round;stroke-linecap:round">R</tspan></text>
     <g
        id="g3841"
        transform="translate(5,23)">

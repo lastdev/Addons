@@ -7,7 +7,7 @@
 ## X-Curse-Project-Name: Ace2
 ## X-Curse-Project-ID: ace2
 ## X-Curse-Repository-ID: wow/ace2/luckyjack_sl
-## X-Curse-Packaged-Version: r1115
+## X-Curse-Packaged-Version: r1116
 ## X-Curse-Project-Name: Ace2
 ## X-Curse-Project-ID: ace2
 ## X-Curse-Repository-ID: wow/ace2/luckyjack_sl

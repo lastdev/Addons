@@ -1,8 +1,8 @@
 local L = OVERACHIEVER_STRINGS
 local GetAchievementInfo = Overachiever.GetAchievementInfo
+local GetAchievementCriteriaInfo = Overachiever.GetAchievementCriteriaInfo
 
 
-local isAchievementInUI = Overachiever.IsAchievementInUI
 local isGuildAchievement = Overachiever.IsGuildAchievement
 local isUIInGuildView = Overachiever.isUIInGuildView
 
@@ -13,6 +13,20 @@ local function emptyfunc() end
 
 local ACHIEVEMENTUI_FONTHEIGHT
 local In_Guild_View   -- imitation of Blizzard's local IN_GUILD_VIEW
+
+
+local isAchievementInUI_cache = {}
+local function isAchievementInUI(id, checkNext, useCache)
+-- The cache is here and not in the main Overachiever.IsAchievementInUI function because there are some issues that
+-- could arise where the cache would have outdated data, but those issues shouldn't be relevant in the places the
+-- function here is called with the "useCache" arg set to true. (In theory, there are ways to mitigate those issues
+-- so in the future the cache could automatically be used when appropriate, but this solution will do for now.)
+  if (useCache and isAchievementInUI_cache[id] ~= nil) then  return isAchievementInUI_cache[id];  end
+  local result = Overachiever.IsAchievementInUI(id, checkNext)
+  isAchievementInUI_cache[id] = result
+  return result
+end
+
 
 
 local FilterByTab = {}
@@ -102,7 +116,7 @@ end
 local function isPreviousAchievementInUI(id)
   id = GetPreviousAchievement(id)
   if (id) then
-    if (isAchievementInUI(id)) then  return true;  end
+    if (isAchievementInUI(id, false, true)) then  return true;  end
     return isPreviousAchievementInUI(id)
   end
 end
@@ -164,9 +178,13 @@ local function displayAchievement(button, frame, achievement, index, selectionID
 -- This function is based on AchievementButton_DisplayAchievement, with only a few alterations as needed.
 -- Things to always do before calling this:  Overachiever.RecentReminders_Check()  AND  In_Guild_View = isUIInGuildView()
 -- To do after calling this:  delayedToggleView()
+  --local StartTime
+  --if (Overachiever_Debug) then  StartTime = debugprofilestop(); print("displayAchievement:"..(achievement or "nil"))  end
+
   local id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe, earnedBy
   if (achievement) then
     id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe, earnedBy = GetAchievementInfo(achievement);
+    --if (Overachiever_Debug) then  print("GetAchievementInfo("..achievement..") took "..(debugprofilestop() - StartTime) .." ms.");  end
   end
   if ( not id ) then
     button:Hide();
@@ -177,6 +195,8 @@ local function displayAchievement(button, frame, achievement, index, selectionID
 
   button.index = index;
   button.element = true;
+
+  --if (Overachiever_Debug) then  print("- Next bit took "..(debugprofilestop() - StartTime) .." ms."); StartTime = debugprofilestop();  end
 
   if ( button.id ~= id ) then
     local saturatedStyle;
@@ -253,7 +273,7 @@ local function displayAchievement(button, frame, achievement, index, selectionID
         --button:SetBackdropBorderColor(.8, .5, .5)
         _G[name .. "Background"]:SetTexture("Interface\\AddOns\\Overachiever_Tabs\\ParchmentDesaturateGreen")
         _G[name.."Glow"]:SetVertexColor(.13, .52, .17)
-      elseif (not isAchievementInUI(id)) then
+      elseif (not isAchievementInUI(id, false, true)) then
         local name = button:GetName()
         --button:SetBackdropBorderColor(.8, .5, .5)
         if (isPreviousAchievementInUI(id)) then
@@ -315,6 +335,8 @@ local function displayAchievement(button, frame, achievement, index, selectionID
     button.description:Show();
     button.hiddenDescription:Hide();
   end
+  
+  --if (Overachiever_Debug) then  print("- Last bit took for \""..name.."\" took "..(debugprofilestop() - StartTime) .." ms.");  end
 
   return id;
 end
@@ -455,7 +477,9 @@ local function applyAchievementFilter(list, completed, built, checkprev, critlis
 end
 
 local function updateAchievementsList(frame)
-  --print("updateAchievementsList",frame:GetName());
+  local StartTime
+  if (Overachiever_Debug) then  StartTime = debugprofilestop(); print("updateAchievementsList",frame:GetName());  end
+
   local list, sorted = frame.AchList, frame.AchList_sorted
   if (ACHIEVEMENTUI_SELECTEDFILTER == AchievementFrame_GetCategoryNumAchievements_Complete) then
     list = applyAchievementFilter(list, true, sorted, frame.AchList_checkprev, frame.AchList_criteria)
@@ -492,9 +516,9 @@ local function updateAchievementsList(frame)
 
   local totalHeight = numAchievements * ACHIEVEMENTBUTTON_COLLAPSEDHEIGHT;
   totalHeight = totalHeight + (extraHeight - ACHIEVEMENTBUTTON_COLLAPSEDHEIGHT);
-
+  
   HybridScrollFrame_Update(scrollFrame, totalHeight, displayedHeight);
-
+  
   if ( selection ) then
     frame.selection = selection;
   else
@@ -502,6 +526,8 @@ local function updateAchievementsList(frame)
   end
   
   if (frame.SetNumListed) then  frame.SetNumListed(#list);  end
+
+  if (Overachiever_Debug) then  print("- Took "..(debugprofilestop() - StartTime)/1000 .." seconds.");  end
 end
 
 local function forceUpdate(frame, keepSelection, fromHook)
@@ -813,7 +839,7 @@ do
 
   -- Meta-criteria recolor:
   function recolor_AchievementObjectives_DisplayCriteria(objectivesFrame, id)
-    if (isSet or not id or GetPreviousAchievement(id) or isAchievementInUI(id, true)) then  return;  end
+    if (isSet or not id or GetPreviousAchievement(id) or isAchievementInUI(id, true, true)) then  return;  end
     -- Checking for isSet like this means we "ignore" calls when CRITERIA_UPDATE events have been detected until
     -- the OnUpdate function clears it. Since the OnUpdate func calls AchievementButton_DisplayObjectives
     -- which in turn calls AchievementObjectives_DisplayCriteria which will in turn trigger this function (since
@@ -825,7 +851,7 @@ do
     -- achievements while in combat or otherwise triggering AchievementObjectives_DisplayCriteria repeatedly.
     local metaCriteria, index = AchievementFrameMeta1, 1
     while (metaCriteria and metaCriteria:IsShown()) do
-      if (not GetPreviousAchievement(metaCriteria.id) and not isAchievementInUI(metaCriteria.id, true)) then
+      if (not GetPreviousAchievement(metaCriteria.id) and not isAchievementInUI(metaCriteria.id, true, true)) then
         metaCriteria.label:SetTextColor(.9, .4, .4, 1)
       end
       index = index + 1
@@ -947,6 +973,66 @@ hooksecurefunc("AchievementObjectives_DisplayCriteria", recolor_AchievementObjec
 
 
 -- Flashing tab:
+local flashFrame, flashFrame_stop
+do
+  local frames
+
+  local function flashFrame_OnFinished(self)
+      if (self.showWhenDone) then
+        self.frame:Show()
+      else
+        self.frame:Hide()
+      end
+      self.frame:SetAlpha(1)
+      frames[self.frame] = nil
+      if (next(frames) == nil) then -- If the table is empty
+        frames = nil -- then get rid of it.
+      end
+    end
+
+  function flashFrame(frame, fadeInTime, fadeOutTime, flashDuration, showWhenDone, flashInHoldTime, flashOutHoldTime)
+    if (frames) then
+      if (frames[frame]) then  return;  end  -- If currently flashing, do nothing.
+    else
+      frames = {}
+    end
+
+    frame:SetAlpha(0)
+    frame:Show()
+    local flasher = frame:CreateAnimationGroup()
+    frames[frame] = flasher
+
+    -- Flashing in
+    local fade1 = flasher:CreateAnimation("Alpha")
+    fade1:SetDuration(fadeInTime)
+    fade1:SetChange(1)
+    fade1:SetOrder(1)
+
+    if (flashInHoldTime) then  fade1:SetStartDelay(flashInHoldTime);  end
+
+    -- Flashing out
+    local fade2 = flasher:CreateAnimation("Alpha")
+    fade2:SetDuration(fadeOutTime)
+    fade2:SetChange(-1)
+    fade2:SetOrder(2)
+
+    if (flashOutHoldTime) then  fade2:SetEndDelay(flashOutHoldTime);  end
+
+    flasher:SetScript("OnFinished", flashFrame_OnFinished)
+    flasher.showWhenDone = showWhenDone
+    flasher.frame = frame
+
+    flasher:Play()
+  end
+  
+  function flashFrame_stop(frame)
+    if (frames and frames[frame]) then
+      frames[frame]:Stop()
+      flashFrame_OnFinished(frames[frame])
+    end
+  end
+end
+
 function Overachiever.FlashTab(tab)
   if (tabselected and tabselected.tab == tab) then  return;  end
   local flash = tab.flash
@@ -961,6 +1047,9 @@ function Overachiever.FlashTab(tab)
     tex:SetPoint("BOTTOMRIGHT", flash, "BOTTOMRIGHT", -3, -3)
     tab.flash = flash
   end
-  if (UIFrameIsFading(flash)) then  UIFrameFlashRemoveFrame(flash);  end
-  UIFrameFlash(flash, 0.35, 0.35, 0.9, nil, 0.05, 0.15)
+  --if (UIFrameIsFading(flash)) then  UIFrameFlashRemoveFrame(flash);  end
+  --UIFrameFlash(flash, 0.35, 0.35, 0.9, nil, 0.05, 0.15)
+  -- Use our own animation since the above causes taint:
+  flashFrame_stop(flash)
+  flashFrame(flash, 0.35, 0.35, 0.9, nil, 0.05, 0.15)
 end

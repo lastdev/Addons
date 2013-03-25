@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Standard Deviation Statistics module
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 	Revision: $Id: StatStdDev.lua 5360 2012-09-21 09:53:20Z brykrys $
 	URL: http://auctioneeraddon.com/
 

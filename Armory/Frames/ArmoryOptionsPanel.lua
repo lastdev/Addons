@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 525 2012-09-20T09:02:14Z
+    Revision: 573 2013-01-07T23:24:43Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -330,7 +330,16 @@ end
 function ArmoryOptionsPanel_RefreshDependentControls(checkButton)
     if ( checkButton.dependentControls ) then
         for _, control in next, checkButton.dependentControls do
-            ArmoryOptionsPanel_EnableDependentControl(control, checkButton:GetChecked())
+            ArmoryOptionsPanel_EnableDependentControl(control, checkButton:GetChecked());
+            if ( control.dependentControls ) then
+                if ( not control:IsEnabled() ) then
+                    for _, dependentControl in next, control.dependentControls do
+                        dependentControl:Disable();
+                    end
+                else
+                    ArmoryOptionsPanel_RefreshDependentControls(control);
+                end
+            end
         end
     end
 end
@@ -552,6 +561,23 @@ local function SetTradeSkills(on)
         Armory:ClearTradeSkills();
     end
 end
+
+local function SetAchievements(on)
+    if ( on ) then
+        Armory:UpdateAchievements();
+    else
+        Armory:ClearAchievements();
+        Armory:ClearStatistics();
+    end
+end
+
+local function SetStatistics(on)
+    if ( on ) then
+        Armory:UpdateStatistics();
+    else
+        Armory:ClearStatistics();
+    end
+end
   
 function ArmoryOptionsPanel_CheckModule(control, module)
     if ( control.value == control.currValue ) then
@@ -592,7 +618,13 @@ function ArmoryOptionsPanel_CheckModule(control, module)
             
     elseif ( module == "Buffs" ) then
         SetBuffs(control.value);
+    
+    elseif ( module == "Achievements" ) then
+        SetAchievements(control.value);
         
+    elseif ( module == "Statistics" ) then
+        SetStatistics(control.value);
+
     end
     
     if ( ArmoryFrame:IsVisible() ) then

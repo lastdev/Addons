@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Sapphiron", "DBM-Naxx", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 27 $"):sub(12, -3))
 mod:SetCreatureID(15989)
 mod:SetModelID(16033)
 mod:RegisterCombat("combat")
@@ -85,7 +85,7 @@ end
 mod:RegisterOnUpdateHandler(function(self, elapsed)
 	if not self:IsInCombat() then return end
 		local foundBoss, target
-		for i = 1, DBM:GetGroupMembers() do
+		for i = 1, DBM:GetNumGroupMembers() do
 			local uId = "raid"..i.."target"
 			if self:GetUnitCreatureId(uId) == 15989 and UnitAffectingCombat(uId) then
 				target = DBM:GetUnitFullName(uId.."target")

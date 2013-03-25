@@ -5,7 +5,7 @@
 ## Dependancies: Auc-Advanced
 ## OptionalDependencies: Auc-Util-Appraiser, Enchantrix, Auc-Util-ItemSuggest, LibDataBroker
 ##
-## Version: 5.15.5365 (LikeableLyrebird)
+## Version: 5.15.5380 (LikeableLyrebird)
 ## Revision: $Id: Auc-Util-AutoMagic.toc 5326 2012-08-17 17:52:02Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

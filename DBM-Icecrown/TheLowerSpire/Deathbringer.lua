@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Deathbringer", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(37813)
 mod:SetModelID(30790)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -95,7 +95,7 @@ do	-- add the additional Rune Power Bar
 			last = math.floor(UnitPower("focus")/UnitPowerMax("focus") * 100)
 			return last
 		end
-		for i = 0, DBM:GetGroupMembers(), 1 do
+		for i = 0, DBM:GetNumGroupMembers(), 1 do
 			local unitId = ((i == 0) and "target") or "raid"..i.."target"
 			local guid = UnitGUID(unitId)
 			if mod:GetCIDFromGUID(guid) == 37813 then
@@ -111,7 +111,7 @@ do	-- add the additional Rune Power Bar
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(73058, 72378) then	-- Blood Nova (only 2 cast IDs, 4 spell damage IDs, and one dummy)
+	if args:IsSpellID(72378) then	-- Blood Nova (only 2 cast IDs, 4 spell damage IDs, and one dummy)
 		warnBloodNova:Show()
 		timerBloodNova:Start()
 	end
@@ -155,7 +155,7 @@ do
 	
 	mod:RegisterOnUpdateHandler(function(self)
 		if self.Options.BeastIcons and (DBM:GetRaidRank() > 0 and not (iconsSet == 5 and self:IsDifficulty("normal25", "heroic25") or iconsSet == 2 and self:IsDifficulty("normal10", "heroic10"))) then
-			for i = 1, DBM:GetGroupMembers() do
+			for i = 1, DBM:GetNumGroupMembers() do
 				local uId = "raid"..i.."target"
 				local guid = UnitGUID(uId)
 				if beastIcon[guid] then
@@ -173,7 +173,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		Mark = Mark + 1
 		warnMark:Show(Mark, args.destName)
 		specwarnMark:Show(args.destName)
-	elseif args:IsSpellID(72385, 72441, 72442, 72443) then	-- Boiling Blood
+	elseif args:IsSpellID(72385) then	-- Boiling Blood
 		boilingBloodTargets[#boilingBloodTargets + 1] = args.destName
 		timerBoilingBlood:Start()
 		if self.Options.BoilingBloodIcons then
@@ -192,7 +192,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(72385, 72441, 72442, 72443) then
+	if args:IsSpellID(72385) then
 		self:SetIcon(args.destName, 0)
 	end
 end

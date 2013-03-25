@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemauctionhistory
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: FilterItemAuctionHistory.lua 5229 2011-11-03 13:10:05Z brykrys $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: FilterItemAuctionHistory.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -29,6 +29,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 --]]
 -- Create a new instance of our lib with our parent
+if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewFilter("ItemAuctionHistory")
 if not lib then return end
 local print,decode,_,_,replicate,empty,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals()
@@ -137,4 +138,4 @@ function lib.Filter(item, searcher)
 	return false
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemAuctionHistory.lua $", "$Rev: 5229 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemAuctionHistory.lua $", "$Rev: 5368 $")

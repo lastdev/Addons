@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: CoreMain.lua 5361 2012-09-21 10:54:27Z brykrys $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: CoreMain.lua 5378 2012-11-12 19:49:23Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -107,8 +107,9 @@ local function OnTooltip(calltype, tip, hyperlink, quantity, name, quality)
 
 	local modules = AucAdvanced.GetAllModules()
 
+	local L = AucAdvanced.localizations
+
 	if AucAdvanced.Settings.GetSetting("tooltip.marketprice.show") then
-		local L = AucAdvanced.localizations
 		local market, seen = AucAdvanced.API.GetMarketValue(saneLink)
 		if not market then
 			tooltip:AddLine(L"ADV_Interface_MarketPrice" ..": ".. L"ADV_Tooltip_NotAvailable")--Market Price // Not Available
@@ -141,9 +142,28 @@ local function OnTooltip(calltype, tip, hyperlink, quantity, name, quality)
 						if quantity == 1 then
 							tooltip:AddLine("  "..text..":", price)
 						else
-							tooltip:AddLine("  "..text.." x"..tostring(quantity)..":", price*quantity)
+							tooltip:AddLine("  "..text.." x"..tostring(quantity)..": ", price*quantity)
 						end
 					end
+				end
+			end
+		end
+	end
+
+	if AucAdvanced.Settings.GetSetting("core.tooltip.depositcost") then
+		local duration = AucAdvanced.Settings.GetSetting("core.tooltip.depositduration")
+		local faction = AucAdvanced.Resources.CurrentFaction
+		local deposit = GetDepositCost(saneLink, duration, faction, 1)
+		if not deposit then
+			tooltip:AddLine(L"ADV_Tooltip_UnknownDepositCost", .2, .4, .6)
+		else
+			local hours = AucAdvanced.Post.AuctionDurationHours(duration) or 24 -- GetDepositCost defaults to 24hr if duration is invalid
+			local text = format(L"ADV_Tooltip_HourDepositCost", hours)
+			tooltip:AddLine(text..": ", deposit, .8, 1, .6)
+			if quantity > 1 and AucAdvanced.Settings.GetSetting("tooltip.marketprice.stacksize") then
+				local stackdeposit = GetDepositCost(saneLink, duration, faction, quantity) -- for now we won't worry if stacksize > maxstack: assume GetDepositCost will handle it
+				if stackdeposit and stackdeposit ~= deposit then
+					tooltip:AddLine(text.." x"..tostring(quantity)..": ", stackdeposit, .8, 1, .6)
 				end
 			end
 		end
@@ -451,4 +471,4 @@ function AucAdvanced.Debug.Assert(test, message)
 	return DebugLib.Assert(addonName, test, message)
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreMain.lua $", "$Rev: 5361 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreMain.lua $", "$Rev: 5378 $")

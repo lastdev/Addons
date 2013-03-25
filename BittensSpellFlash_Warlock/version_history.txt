@@ -1,3 +1,98 @@
+== Version 3.6.5
+* Affliction: Bugfix for Lua error.
+
+== Version 3.6.4
+NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
+* Destruction: small adjustment to Rain of Fire.  This release is mostly about the update to the library.
+
+== Version 3.6.3
+NOTE: Your options will be reset when you upgrade to this version.
+* Upgraded to the latest Bitten's SpellFlash Library.
+* Several other internal changes.
+* Destruction: Factors in the new Glyph of Ember Tap when deciding whether it should flash.
+* All: Now flashes Dark Intent if anyone in your raid needs the stamina buff (or the spell power buff, as always).
+* All: No longer flashes Soulstone if you are queued for a dungeon/raid.
+
+== Version 3.6.2
+* Bear with me - I'm learning this new packaging system.  I think this time the debug output should be removed.
+
+== Version 3.6.1
+* No change, just releasing out of beta (see last version for the real changes).
+
+== Version 3.6.0 beta
+* Repackaging so that Bitten's SpellFlash Library is included with the addon, instead of downloaded separately.
+* Destruction: Added Rain of Fire to the single target rotation, which sims as small dps increase.
+* Destruction: Added fancy, colored Immolate flashing for Pandemic, like Affliction dots.
+
+== Version 3.5.1
+* Affliction & Demonology: Life Tap flashes a little less aggressively when solo.
+* Demonology: Bugfix - Shadow Bolt was not flashing if glyphed.
+* All: Added Soulshatter flashing, in red, if you pull aggro.
+
+== Version 3.5.0
+* Affliction & Demonology: Life Tap now flashes out of combat when you can use the mana.
+* Demonology: Added an AoE rotation.
+* Demonology: Researched and updated the single target rotation for slightly higher dps.
+* Demonology: Doom now flashes pretty colors like DoTs for Affliction.
+* Demonology: The next priority after Doom now also flashes, in case your target will not live long enough to be worth casting Doom.
+* Demonology: Closer tracking of Demonic Fury.
+* Demonology: Made Felstorm and Wrathstorm flashing behave a little better (they were flashing early at times).
+* Demonology: Bugfix - Grimoire: Felhunter was not flashing.
+* Demonology: Bugfix - Aura of the Elements was flashing even when it was on cooldown.
+
+== Version 3.4.1
+* Affliction: DoT dps is now tracked per-target, so the pretty colors now work when multi-dotting.
+* Affliction: Bugfix (I hope) - Corruption was sometimes never flashing because of a bug in Soulburn + Seed of Corruption detection.
+
+== Version 3.4.0
+* Affliction: Super-cool green/yellow/red flashing for DoTs now.  Check the description page for what they mean and how you should respond.
+* Affliction: Traded the priority of Corruption and Unstable Affliction unless corruption will expire otherwise.
+
+== Version 3.3.0
+* Affliction: Tweaked the rotation according to more research in Simulationcraft.  DoT logic is more sophisticated, and should produces slightly higher dps.
+* Affliction: Made better use of yellow flashes and small flashes for DoTs.  Consult the description page for more info on what they mean.
+* Affliction: No longer flashes Corruption if you have an empowered Seed of Corruption pending.  (Warning: it will get confused if chain cast Seed of Corruption.)
+* All: Now flashes Underwater Breathing.
+
+== Version 3.2.3
+* Demonology: Bugfix - Touch of Chaos did not always flash when it should.
+
+== Version 3.2.2
+* Affliction: Bugfix - The cast time for Unstable Affliction was not being factored in correctly, causing it to flash later than it should.
+
+== Version 3.2.1
+* All: Bugfix - Dark Regeneration flashing was broken when your pet wasn't out.
+
+== Version 3.2.0
+* Affliction: Workaround for a bug in WoW to make Soulburn/Soul Swap macros work.
+* Destruction: Added an AoE rotation.
+* All: Added Dark Regeneration.
+
+== Version 3.1.0
+* Affliction: DoTs will now flash with higher priority when on their last tick, so, e.g. it does not suggest you refresh Agony pandemic-style when Unable Affliction has already fallen off.
+* Affliction: Pandemic-style refreshes are now shown as optional flashes, so you can decide to put off the refresh if a proc will be coming up soon.
+* Affliction: Pandemic-style refreshes will now have small flashes if Dark Soul will be off cooldown before they expire, so if you plan you use Dark Soul right away you know to wait to refresh DoTs until then.
+* Affliction: Haunt will no longer flash if casting it would cause Agony to fall off.
+* Affliction: Optional Haunt flashes will now be full size, to match optional DoT flashes.
+* Affliction: I think Soulburn flashing under Dark Soul might have been broken?  Either way, it works correctly now.
+
+== Version 3.0.0
+* Demonology: Added a Demonology rotation.
+
+== Version 2.5.0
+* Destruction: Now flashes Ember Tap when under 75% health.
+* Destruction: Now flashes Spell Lock/Optical Blast.
+* Destruction: Now prioritizes Incinerate over Conflagrate when you have Backlash.
+* Destruction: Bugfix - ember tracking had some issues from the last update.
+* All: Now flashes Spell Lock when obtained through Grimoire of Sacrifice.
+* All: Now flashes Soulstone for its buff when not in a group.
+
+== Version 2.4.3
+* Destruction: Improved internal tracking of Burning Embers, especially in light of changes to 5.1.0.
+
+== Version 2.4.2
+* All: No longer flash to summon a pet if one is out, no matter which one.
+
 == Version 2.4.1
 * Affliction: Flash Soul Swap under Soul Burn even out of combat.
 * Affliction: Bugfix - Pandemic detection was broken on non-English clients.
@@ -5,7 +100,7 @@
 == Version 2.4.0
 * Affliction: Rotation now adjusts for Pandemic.
 * Affliction: Made the flashing for Haunt more intelligent.  It now tries to line it up with Dark Soul: Misery more often.  White flashes indicate you should definitely cast it to avoid capping your shards, or because Dark Soul is still in effect.  Yellow flashes indicate you can optionally cast when you have some other beneficial proc.
-* Affliction: Life Tap now flashes at different threshholds depending on whether you are in the execute phase.
+* Affliction: Life Tap now flashes at different thresholds depending on whether you are in the execute phase.
 * Affliction: Made the detection of whether you have cast Soul Swap during Dark Soul: Misery more robust.
 * Affliction: Bugfix - no longer flashes Dark Soul: Misery if Haunt is currently casting, and about to use up your last Soul Shard.
 
@@ -52,7 +147,7 @@ All: Life Tap now flashes below 12K mana, up from 10K.
 * All: Dark Intent will now flash its target in your party/raid loses the buff.
 * All: Dot refresh timings are more accurate.
 * All: No longer flashes your summon nor Soul Link while you are mounted.
-* Disables Blizzard's default proc hilighting when one of the rotations is in use.
+* Disables Blizzard's default proc highlighting when one of the rotations is in use.
 * Should now work on non-English clients.
 * Added localization support.
 * Plays nicer with other addons.

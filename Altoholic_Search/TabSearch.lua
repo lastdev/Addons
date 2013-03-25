@@ -166,7 +166,7 @@ end
 function ns:DropDownRarity_Initialize()
 	local info = UIDropDownMenu_CreateInfo(); 
 
-	for i = 0, 6 do		-- Quality: 0 = poor .. 5 = legendary
+	for i = 0, NUM_ITEM_QUALITIES do		-- Quality: 0 = poor .. 5 = legendary
 		info.text = ITEM_QUALITY_COLORS[i].hex .. _G["ITEM_QUALITY"..i.."_DESC"]
 		info.value = i
 		info.func = function(self)	

@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 494 2012-09-04T21:04:44Z
+    Revision: 563 2012-11-26T15:44:38Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -35,6 +35,7 @@ function ArmoryQuestHistoryFrame_OnLoad(self)
     self:RegisterEvent("LFG_COMPLETION_REWARD");
     self:RegisterEvent("UPDATE_BATTLEFIELD_SCORE");
     self:RegisterEvent("UPDATE_BATTLEFIELD_STATUS");
+    self:RegisterEvent("SPELL_CONFIRMATION_PROMPT");
 end
 
 function ArmoryQuestHistoryFrame_OnEvent(self, event, ...)
@@ -46,6 +47,11 @@ function ArmoryQuestHistoryFrame_OnEvent(self, event, ...)
         end
     elseif ( event == "UPDATE_BATTLEFIELD_STATUS" ) then
         Armory:SetRandomBattleground();
+    elseif ( event == "SPELL_CONFIRMATION_PROMPT" ) then
+        local spellID, confirmType = ...;
+		if ( confirmType == CONFIRMATION_PROMPT_BONUS_ROLL and Armory:SetWorldBossBySpell(spellID) ) then
+            ArmoryQuestHistoryFrame_UpdateQuests("worldboss");
+        end
 	end
 end
 

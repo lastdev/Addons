@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 338 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 367 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,15 +16,26 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.6.5", "03/05/2013", [[
+	*Replaced frame fade with animations & embed LibChatAnims
+    *Fixed error with chat color if party/instance chat handled by WIM
+    *Fixed lua errors caused by missing chat type args
+    *Changed emoticon string replacements to use one operation to prevent 'script ran too long' errors
+]]);
+addEntry("3.6.4", "01/18/2013", [[
+    *Added Monk icon to class icons
+    *Added recognition and icon to Battle.net Desktop App users
+]]);
+addEntry("3.6.3", "12/6/2012", [[
+    *Updated for 5.1
+    *Fixed more UI issues
+    *Fixed party chat
+]]);
 addEntry("3.6.1", "9/6/2012", [[
     *Fixed a lua error that could occur if you try to /r a tell when you weren't whispered.
     *Fixed for party chat not working through WIM
     *Disabled out of date tutorial frame until it's updated. all it does is spam lua errors if it's on.
     *Fixed 2 out of the 3 anchoring problems. 1 is left but it's less severe at least.
-]]);
-
-addEntry("3.6.0", "9/03/2012", [[
-    *Updated for wow patch 5.0.4
 ]]);
 
 

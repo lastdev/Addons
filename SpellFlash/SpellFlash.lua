@@ -2,8 +2,9 @@ local MinBuild, OverBuild, Build = 50000, 0, select(4, GetBuildInfo())
 if Build < (MinBuild or 0) or ( (OverBuild or 0) > 0 and Build >= OverBuild ) then return end
 local AddonName, a = ...
 a.AddonName = AddonName
-local AddonTitle = select(2, GetAddOnInfo(AddonName))
-local PlainAddonTitle = AddonTitle:gsub("|c........", ""):gsub("|r", "")
+a.AddonTitle = select(2, GetAddOnInfo(AddonName))
+a.PlainAddonTitle = a.AddonTitle:gsub("|c........", ""):gsub("|r", "")
+a.AddonTitleHeader = "|cFF00FFFF["..a.PlainAddonTitle.."]|r"
 local L = a.Localize
 SpellFlashAddon = {}
 local s = SpellFlashAddon
@@ -18,7 +19,7 @@ s.RegisterBigLibTimer = SpellFlashCore.RegisterBigLibTimer
 s.RegisterBigLibTimer(a)
 
 function a.print(...)
-	print("|cFF00FFFF["..PlainAddonTitle.."]|r", ...)
+	print(a.AddonTitleHeader, ...)
 end
 
 local MELEESPELL = {
@@ -445,7 +446,7 @@ local function FindEnemy(unit)
 	end
 	local u = unit.."target"
 	local jumps = 1
-	while UnitExists(u) do
+	while UnitExists(u) and jumps < 10 do
 		if s.Enemy(u) then
 			return u
 		end
@@ -465,30 +466,29 @@ end
 local EnemyTargetFound = "target"
 
 local function RunSpam()
-	if not s.config.in_combat_only or s.InCombat() then
-		local x = s.UpdatedVariables
-		x.ActiveEnemy = s.ActiveEnemy()
-		x.Enemy = x.ActiveEnemy or s.Enemy()
-		x.NoCC = x.ActiveEnemy or not s.NoDamageCC()
-		x.PetAlive = UnitHealth("pet") > 0
-		x.PetActiveEnemy = x.PetAlive and s.ActiveEnemy("pettarget")
-		x.PetNoCC = not x.PetAlive or x.PetActiveEnemy or not s.BreakOnDamageCC("pettarget")
-		x.InInstance, x.InstanceType = IsInInstance()
-		x.Lag = select(3, GetNetStats()) / 1000
-		x.DoubleLag = x.Lag * 2
-		x.ThreatPercent = select(3, UnitDetailedThreatSituation("player", s.UnitSelection())) or 0
-		x.EnemyDetected = s.InCombat() or x.Enemy or s.Enemy("mouseover") or s.Enemy("focus") or s.Enemy("enemy")
-		x.ShouldPermanentBuff = not UnitIsDeadOrGhost("player") and HasFullControl() and not IsMounted() and not UnitOnTaxi("player") and not UnitInVehicle("player")
-		x.ShouldTemporaryBuff = x.ShouldPermanentBuff and ( x.EnemyDetected or not IsResting() )
-		if IsModifiedClick("FOCUSCAST") and UnitExists("focus") then
-			EnemyTargetFound = FindEnemy("focus")
-		else
-			EnemyTargetFound = FindEnemy("target")
-		end
-		for n, v in pairs(Spam) do
-			if s.GetModuleFlashable(n) then
-				v()
-			end
+	if s.config.in_combat_only and not s.InCombat() then return end
+	local x = s.UpdatedVariables
+	x.ActiveEnemy = s.ActiveEnemy()
+	x.Enemy = x.ActiveEnemy or s.Enemy()
+	x.NoCC = x.ActiveEnemy or not s.NoDamageCC()
+	x.PetAlive = UnitHealth("pet") > 0
+	x.PetActiveEnemy = x.PetAlive and s.ActiveEnemy("pettarget")
+	x.PetNoCC = not x.PetAlive or x.PetActiveEnemy or not s.BreakOnDamageCC("pettarget")
+	x.InInstance, x.InstanceType = IsInInstance()
+	x.Lag = select(3, GetNetStats()) / 1000
+	x.DoubleLag = x.Lag * 2
+	x.ThreatPercent = select(3, UnitDetailedThreatSituation("player", s.UnitSelection())) or 0
+	x.EnemyDetected = s.InCombat() or x.Enemy or s.Enemy("mouseover") or s.Enemy("focus") or s.Enemy("enemy")
+	x.ShouldPermanentBuff = not UnitIsDeadOrGhost("player") and HasFullControl() and not IsMounted() and not UnitOnTaxi("player") and not UnitInVehicle("player")
+	x.ShouldTemporaryBuff = x.ShouldPermanentBuff and ( x.EnemyDetected or not IsResting() )
+	if IsModifiedClick("FOCUSCAST") and UnitExists("focus") then
+		EnemyTargetFound = FindEnemy("focus")
+	else
+		EnemyTargetFound = FindEnemy("target")
+	end
+	for n, v in pairs(Spam) do
+		if s.GetModuleFlashable(n) then
+			v()
 		end
 	end
 end
@@ -703,14 +703,14 @@ local function SaveOptionsFrameSettings()
 	SetSpam()
 end
 
-local function LocalizeFontStrings(frame)
-	for _, f in next, {frame:GetChildren()} do
+function s.LocalizeFontStrings(Frame, Localizations)
+	for _, f in next, {Frame:GetChildren()} do
 		if f:GetObjectType() == "FontString" then
-			f:SetText(L[f:GetText()])
+			f:SetText(Localizations[f:GetText()])
 		else
 			for _, f in next, {f:GetRegions()} do
 				if f:GetObjectType() == "FontString" then
-					f:SetText(L[f:GetText()])
+					f:SetText(Localizations[f:GetText()])
 				end
 			end
 		end
@@ -719,7 +719,7 @@ end
 
 function SpellFlashAddon.OptionsFrame_OnLoad(self)
 	
-	LocalizeFontStrings(self)
+	s.LocalizeFontStrings(self, L)
 	
 	_G[self:GetName().."TitleString"]:SetText(select(2, GetAddOnInfo(AddonName)).." "..GetAddOnMetadata(AddonName, "Version"))
 	
@@ -1743,8 +1743,6 @@ function s.SpellCooldown(SpellName)
 		if TimeLeft > 0 then
 			return TimeLeft, duration
 		end
-	else
-		return nil
 	end
 	return 0, 0
 end
@@ -2139,7 +2137,7 @@ end
 local function UnitIDTargetOfTarget(unit, name)
 	local u = unit.."target"
 	local jumps = 1
-	while UnitExists(u) do
+	while UnitExists(u) and jumps < 10 do
 		if UnitName(u) == name then
 			return u
 		end

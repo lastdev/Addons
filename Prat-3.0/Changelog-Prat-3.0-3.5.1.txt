@@ -1,8 +1,0 @@
-2012-09-10  nebula  <nebula@the-syn.com>
-
-[dbdcda8ee22e] [3.5.1]
-* modules/PlayerNames.lua:
-
-Fix battle.net names
-
-

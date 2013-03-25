@@ -21,6 +21,16 @@ function Outfitter._FlyoutQuickSlots:Construct()
 			if vOnPlayer then pItemTable[vLocation] = nil end
 		end
 	end
+	local vOrigPostGetItemsFunc = vFlyoutSettings.postGetItemsFunc
+	vFlyoutSettings.postGetItemsFunc = function (pItemSlotButton, pItemDisplayTable, pNumItems)
+		local vNumItems = vOrigPostGetItemsFunc(pItemSlotButton, pItemDisplayTable, pNumItems)
+		-- If the first item is the PLACEINBAGS item, then move it to the end
+		if vNumItems > 0 and (pItemDisplayTable[1] == EQUIPMENTFLYOUT_PLACEINBAGS_LOCATION) then
+			table.remove(pItemDisplayTable, 1)
+			table.insert(pItemDisplayTable, EQUIPMENTFLYOUT_PLACEINBAGS_LOCATION)
+		end
+		return vNumItems
+	end
 end
 
 function Outfitter._FlyoutQuickSlots:PreClick(pButton, ...)

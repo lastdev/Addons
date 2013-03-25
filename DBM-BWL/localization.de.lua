@@ -16,7 +16,7 @@ L:SetOptionLocalization{
 	TimerAddsSpawn	= "Zeige Zeit bis die ersten Adds erscheinen"
 }
 L:SetMiscLocalization{
-	Phase2Emote	= "Kugel der Herrschaft verliert Energie und schaltet sich ab!",
+	Phase2Emote	= "verliert Energie und schaltet sich ab!",
 	YellPull 	= "Eindringlinge sind in die Brutstätte vorgestoßen! Schlagt Alarm! Beschützt die Eier um jeden Preis!"
 }
 -------------------
@@ -25,7 +25,7 @@ L:SetMiscLocalization{
 L = DBM:GetModLocalization("Vaelastrasz")
 
 L:SetGeneralLocalization{
-	name = "Vaelastrasz der Verdorbene"
+	name				= "Vaelastrasz der Verdorbene"
 }
 
 L:SetTimerLocalization{
@@ -45,7 +45,11 @@ L:SetMiscLocalization{
 L = DBM:GetModLocalization("Broodlord")
 
 L:SetGeneralLocalization{
-	name = "Brutwächter Dreschbringer"
+	name	= "Brutwächter Dreschbringer"
+}
+
+L:SetMiscLocalization{
+	Pull	= "Euresgleichen sollte nicht hier sein! Ich werde Euch vernichten!"
 }
 
 ---------------

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Skeram", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 311 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 432 $"):sub(12, -3))
 mod:SetCreatureID(15263)
 mod:SetModelID(15345)
 mod:RegisterCombat("combat")
@@ -26,7 +26,7 @@ local split1
 local split2
 local split3
 local MCTargets = {}
-local MCIcon 	= 8
+local MCIcon = 8
 
 function mod:OnCombatStart(delay)
 	split1 = false

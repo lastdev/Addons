@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Anub'Rekhan", "DBM-Naxx", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 21 $"):sub(12, -3))
 mod:SetCreatureID(15956)
 mod:SetModelID(15931)
 mod:RegisterCombat("combat")
@@ -11,7 +11,8 @@ mod:EnableModel()
 mod:RegisterEvents(
 	"SPELL_CAST_START",
 	"SPELL_AURA_REMOVED",
-	"UNIT_DIED"
+	"UNIT_DIED",
+	"CHAT_MSG_MONSTER_YELL"
 )
 
 local warningLocustSoon		= mod:NewSoonAnnounce(28785, 2)
@@ -63,6 +64,16 @@ function mod:UNIT_DIED(args)
 		local cid = self:GetCIDFromGUID(args.destGUID)
 		if cid == 15956 then		-- Anub'Rekhan
 			DBM.Bars:CreateBar(1200, L.ArachnophobiaTimer)
+			warningLocustSoon:Cancel()
+			timerLocustFade:Cancel()
+			timerLocustIn:Cancel()
 		end
+	end
+end
+
+--Secondary pull trigger, so we can detect combat when he's pulled while already in combat (which is about 99% of time)
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L.Pull1 or msg == L.Pull2) and not self:IsInCombat() then
+		DBM:StartCombat(self, 0)
 	end
 end

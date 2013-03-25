@@ -6,7 +6,7 @@ koKR localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 2.4.2
+Project version: 2.4.6
 ************************************************************************
 Original translated by: damjau, next96
 Currently maintained by:
@@ -165,7 +165,6 @@ L["Bradley Towns"] = "브래들리 타운스"
 L["Braeg Stoutbeard"] = "브랙 스타우트비어드"
 L["Brandig"] = "브란디그"
 L["Brawn"] = "브로운"
-L["BRD_RANDOM_ROOM"] = "검은바위 나락의 5개의 방에서 찾을 수 있습니다, 이 도안들은 랜덤하게 생성되며, 생성되지 않는 경우도 있습니다."
 L["Brek Stonehoof"] = "브렉 스톤후프"
 L["Brikk Keencraft"] = "브리크 킨크래프트"
 L["Brock Stoneseeker"] = "브록 스톤시커"

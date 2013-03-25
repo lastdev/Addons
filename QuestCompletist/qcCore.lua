@@ -33,7 +33,7 @@ local qcNewDataAlertTooltip = nil
 local qcMutuallyExclusiveAlertTooltip = nil
 
 --[[ Constants ]]--
-local QCADDON_VERSION = 99.9
+local QCADDON_VERSION = 100.0
 local QCADDON_PURGE = false
 local QCDEBUG_MODE = false
 local QCTRIPLEPADDING = "   "
@@ -448,14 +448,42 @@ function qcScrollUpdate(qcValue)
 
 end
 
+local function qcQueryQuestFlaggedComplete()
+
+	local qcChecked = 0
+	local qcNewFlagged = 0
+
+	for qcIndex, qcEntry in pairs(qcQuestDatabase) do
+		qcChecked = (qcChecked + 1)
+		if (IsQuestFlaggedCompleted(qcIndex)) then
+			if not (qcQuestDatabase[qcIndex][6] == 2) or (qcQuestDatabase[qcIndex][6] == 3) then
+				if (qcCompletedQuests[qcIndex] == nil) then
+					qcNewFlagged = (qcNewFlagged + 1)
+				end
+				qcCompletedQuests[qcIndex] = {["C"]=1}
+				qcUpdateMutuallyExclusiveCompletedQuest(qcIndex)
+				qcUpdateSkippedBreadcrumbQuest(qcIndex)
+			end
+		end
+	end
+
+	if (qcNewFlagged > 0) then
+		print(string.format("%s%d quests where checked, and %d previously completed quest(s) have now been updated as such.",QCADDON_CHAT_TITLE,qcChecked,qcNewFlagged))
+		qcUpdateQuestList(nil,qcMenuSlider:GetValue())
+	end
+	
+end
+
 local function qcQuestQueryCompleted()
 
+	local qcCountReturned = 0
 	local qcNewFlagged = 0
 	local qcCompletedTable = {}
 
 	GetQuestsCompleted(qcCompletedTable)
 
 	for qcIndex, qcEntry in pairs(qcCompletedTable) do
+		qcCountReturned = (qcCountReturned + 1)
 		if not (qcQuestDatabase[qcIndex] == nil) then
 			if not (qcQuestDatabase[qcIndex][6] == 2) or (qcQuestDatabase[qcIndex][6] == 3) then
 				if (qcCompletedQuests[qcIndex] == nil) then
@@ -468,6 +496,10 @@ local function qcQuestQueryCompleted()
 		end
 	end
 
+	if (qcCountReturned == 0) then
+		print(string.format("%sNo quests were returned from the server query. Attempting to check each quest individually...",QCADDON_CHAT_TITLE))
+		qcQueryQuestFlaggedComplete()
+	end
 	if (qcNewFlagged > 0) then
 		print(string.format("%s%d previously completed quest(s) have now been updated as such.",QCADDON_CHAT_TITLE,qcNewFlagged))
 		qcUpdateQuestList(nil,qcMenuSlider:GetValue())
@@ -2036,6 +2068,9 @@ local function qcCheckSettings()
 	end
 	if (qcSettings.QC_SERVER_QUERY_COMPLETE == nil) then --[[ 0:No, 1:Yes ]]--
 		qcSettings.QC_SERVER_QUERY_COMPLETE = 0
+	end
+	if (qcSettings.QCIO_M_HIDE_DAILYREPEATABLE == nil) then
+		qcSettings.QCIO_M_HIDE_DAILYREPEATABLE = 0
 	end
 
 end

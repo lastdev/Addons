@@ -1,8 +1,7 @@
-local AddonName, a = ...
-if a.BuildFail(50000) then return end
+local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
-local c = BittensSpellFlashLibrary
+local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
 local GetComboPoints = GetComboPoints
 local GetTime = GetTime
@@ -10,12 +9,6 @@ local UnitDebuff = UnitDebuff
 local UnitIsUnit = UnitIsUnit
 local math = math
 local select = select
-
-c.Init(a)
-
-function a.InSoloMode()
-	return (not s.InRaidOrParty()) and (not a.GetConfig("solo_off"))
-end
 
 function a.CanBackstab()
 	local _, targetID = s.UnitInfo()
@@ -26,6 +19,9 @@ local function modSpell(spell)
 	local origColor = spell.FlashColor
 	spell.NoPowerCheck = true
 	spell.CheckLast = function()
+		if spell.FlashColor ~= origColor and spell.FlashColor ~= "green" then
+			origColor = spell.FlashColor
+		end
 		if a.Energy < s.SpellCost(s.SpellName(spell.ID)) then
 			spell.FlashColor = "green"
 			spell.FlashSize = s.FlashSizePercent() / 2
@@ -46,24 +42,31 @@ local function addOptionalSpell(name, tag, attributes)
 end
 
 ------------------------------------------------------------------------ Common
+local function canAmbush()
+	local _, targetID = s.UnitInfo()
+	return a.CanBackstab()
+		and (not c.HasTalent("Cloak and Dagger") 
+			or not a.NoShadowstep[targetID])
+end
+
 c.AddOptionalSpell("Tricks of the Trade", nil, {
 	NoRangeCheck = true,
 	CheckFirst = function()
-		return not s.InRaidOrParty()
+		return s.InRaidOrParty()
 	end
 })
 
 addOptionalSpell("Tricks of the Trade", "unglyphed", {
 	NoRangeCheck = true,
 	CheckFirst = function()
-		return not s.InRaidOrParty() and not c.HasGlyph("Tricks of the Trade")
+		return s.InRaidOrParty() and not c.HasGlyph("Tricks of the Trade")
 	end
 })
 
 c.AddOptionalSpell("Tricks of the Trade", "glyphed", {
 	NoRangeCheck = true,
 	CheckFirst = function()
-		return not s.InRaidOrParty() and c.HasGlyph("Tricks of the Trade")
+		return s.InRaidOrParty() and c.HasGlyph("Tricks of the Trade")
 	end
 })
 
@@ -71,6 +74,24 @@ c.AddOptionalSpell("Deadly Poison", nil, {
 	FlashID = { "Deadly Poison", "Poisons" },
 	CheckFirst = function()
 		return c.SelfBuffNeeded("Deadly Poison")
+			and c.SelfBuffNeeded("Wound Poison")
+	end
+})
+
+c.AddOptionalSpell("Non-Lethal Poison", nil, {
+	ID = "Crippling Poison",
+	FlashID = { 
+		"Crippling Poison", 
+		"Mind-numbing Poison", 
+		"Leeching Poison", 
+		"Paralytic Poison",
+		"Poisons" 
+	},
+	CheckFirst = function()
+		return c.SelfBuffNeeded("Crippling Poison")
+			and c.SelfBuffNeeded("Mind-numbing Poison")
+			and c.SelfBuffNeeded("Leeching Poison")
+			and c.SelfBuffNeeded("Paralytic Poison")
 	end
 })
 
@@ -88,28 +109,51 @@ c.AddOptionalSpell("Preparation", nil, {
 	end
 })
 
+c.AddOptionalSpell("Marked for Death", nil, {
+	CheckFirst = function()
+		return a.CP == 0
+	end
+})
+
+c.AddOptionalSpell("Expose Armor", nil, {
+	CheckFirst = function()
+		if c.IsSolo() then
+			return false
+		end
+		
+		if c.GetDebuffDuration(c.ARMOR_DEBUFFS) < 3 then
+			return true
+		end
+		
+		local stack = c.GetDebuffStack(c.ARMOR_DEBUFFS)
+		if c.IsQueued("Expose Armor") or a.ExposePending then
+			if c.HasGlyph("Expose Armor") then
+				stack = 3
+			else
+				stack = stack + 1
+			end
+		end
+		return stack < 3
+	end
+})
+
+addSpell("Ambush", nil, {
+	CheckFirst = canAmbush,
+})
+
 c.AddInterrupt("Kick", nil, {
 	NoGCD = true,
 })
---
---local deadlyOrWound = { L["Deadly Poison"], L["Wound Poison"] }
---c.AddOptionalSpell("Deadly Poison", "or Wound", {
---	Type = "item",
---	FlashID = { "Deadly Poison", "Wound Poison" },
---	CheckFirst = function()
---		return poisonNeeded(deadlyOrWound, true)
---	end
---})
---
---c.CloneSpell("Slice and Dice", "unless Solo", {
---	CheckFirst = function()
---		return not a.InSoloMode()
---	end
---})
---
---c.AddOptionalSpell("Recuperate", nil, {
---	NoRangeCheck = true,
---})
+
+c.AddOptionalSpell("Recuperate", nil, {
+	NoRangeCheck = true,
+	CheckFirst = function()
+		return a.CP == 5
+			and c.IsSolo()
+			and not c.HasBuff("Recuperate")
+			and c.HasGlyph("Deadly Momentum")
+	end
+})
 
 ----------------------------------------------------------------- Assassination
 local function canDispatch()
@@ -135,8 +179,9 @@ addSpell("Mutilate", nil, {
 		end
 		
 		-- If we can just wait at 4 combo points for a rupture, do that.
-		return a.Energy + a.Regen * c.GetMyDebuffDuration("Rupture") 
-			> s.MaxPower("player") - 10
+		local dur = c.GetMyDebuffDuration("Rupture") 
+		return dur == 0
+			or a.Energy + a.Regen * dur > s.MaxPower("player") - 10
 	end
 })
 
@@ -146,10 +191,10 @@ addSpell("Dispatch", nil, {
 	end
 })
 
-addSpell("Slice and Dice", "no refresh", {
+addSpell("Slice and Dice", "for Assassination", {
 	NoRangeCheck = true,
 	CheckFirst = function(z)
-		if a.InSoloMode() then
+		if c.IsSolo() then
 			z.FlashColor = "yellow"
 			z.Continue = true
 		else
@@ -174,7 +219,7 @@ addSpell("Envenom", nil, {
 			return false
 		end
 		
-		if a.InSoloMode() then
+		if c.IsSolo() then
 			return true
 		end
 		
@@ -195,7 +240,7 @@ addSpell("Envenom", "to refresh Slice and Dice", {
 addOptionalSpell("Rupture", "for Assassination", {
 	MyDebuff = "Rupture",
 	CheckFirst = function(z)
-		if a.InSoloMode() then
+		if c.IsSolo() then
 			return false
 		end
 		
@@ -235,112 +280,191 @@ c.AddOptionalSpell("Vendetta")
 c.AddOptionalSpell("Vanish", nil, {
 	NoGCD = true,
 	CheckFirst = function()
-		return not a.InSoloMode()
+		return not c.IsSolo() and not c.HasBuff("Stealth")
 	end
 })
 
 ------------------------------------------------------------------------ Combat
---local function sndIsNext()
---	-- Can we wait for SnD to wear off without capping?
---	-- Only called at 4 or 5 combo points, so no need to consider double combo
---	-- point generation.
---	return not a.InSoloMode()
---		and a.Energy
---				 + a.Regen * c.GetBuffDuration("Slice and Dice")
---				 - (5 - a.CP) * c.GetCost("Sinister Strike")
---			< s.MaxPower("player") - 15
---end
---
---c.AddOptionalSpell("Adrenaline Rush", nil, {
---	NoGCD = true,
---	CheckFirst = function()
---		return a.Energy < 25
---	end
---})
---
---c.AddOptionalSpell("Killing Spree", nil, {
---	NoRangeCheck = true,
---	CheckFirst = function()
---		local _, targetID = s.UnitInfo()
---		return not a.NoKillingSpree[targetID]
---			and a.Energy < 25
---	end
---})
---
---c.AddOptionalSpell("Expose Armor", nil, {
---	Debuff = c.ARMOR_DEBUFFS,
---	EarlyRefresh = 5,
---	CheckFirst = function()
---		return a.CP == 5 and not sndIsNext() and not a.InSoloMode()
---	end
---})
---
---c.AddOptionalSpell("Rupture", "unless SnD", {
---	MyDebuff = "Rupture",
---	EarlyRefresh = 1.9,
---	RequireDebuff = c.BLEED_DEBUFFS,
---	CheckFirst = function()
---		return a.CP == 5
---			and not sndIsNext()
---			and not s.Buff("Blade Flurry", "player")
---			and not a.InSoloMode()
---	end
---})
---
---c.AddSpell("Eviscerate", "for Combat", {
---	CheckFirst = function()
---		return a.CP == 5 and (not sndIsNext() or a.InSoloMode())
---	end
---})
---
---c.AddSpell("Revealing Strike", nil, {
---	MyDebuff = "Revealing Strike",
---	EarlyRefresh = 2,
---	CheckFirst = function()
---		return a.CP == 4 and not sndIsNext()
---	end
---})
---
----- improvement: wait before putting on that 5th combo point to get a better
----- estimate on sndIsNext()
---c.AddSpell("Sinister Strike", "Smart", {
---	CheckFirst = function()
---		return a.CP < 4 or (a.CP == 4 and sndIsNext())
---	end
---})
+local function shouldSpendCpCombat()
+	-- this should have more logic once I implement Anticipation
+	return a.CP == 5
+end
 
+local function shouldSpendEnergyCombat()
+	return a.Energy > 60 
+		or a.DeepInsight == 0 
+		or a.DeepInsight > 5 - a.CP
+		or c.IsSolo()
+end
 
----------------------------------------------------------------------- Subtlety
-addSpell("Slice and Dice", nil, {
+c.AddOptionalSpell("Shadow Blades", "for Combat", {
+	CheckFirst = function()
+		if not c.WearingSet(4, "T14") then
+			return true
+		end
+		
+		local ks = c.GetCooldown("Killing Spree")
+		local ar = c.GetCooldown("Adrenaline Rush")
+		return (ks > 30.5 and ar <= 9) 
+			or (a.Energy < 35 and (ks == 0 or ar == 0))
+	end
+})
+
+c.AddOptionalSpell("Killing Spree", nil, {
+	NoRangeCheck = true,
+	CheckFirst = function()
+		local _, targetID = s.UnitInfo()
+		if a.NoKillingSpree[targetID] or c.HasBuff("Adrenaline Rush") then
+			return false
+		end
+		
+		if c.WearingSet(4, "T14") then
+			local sb = c.GetBuffDuration("Shadow Blades")
+			if sb == 0 then
+				return c.GetCooldown("Shadow Blades") > 30
+			else
+				return sb <= 3.5 or a.Energy < 35
+			end
+		else
+			return a.Energy < 35
+		end
+	end
+})
+
+c.AddOptionalSpell("Adrenaline Rush", nil, {
+	CheckFirst = function()
+		local sb = c.GetBuffDuration("Shadow Blades")
+		if c.WearingSet(4, "T14") then
+			return sb > 0 and (a.Energy < 35 or sb <= 15)
+		else
+			return sb > 0 or a.Energy < 35
+		end
+	end
+})
+
+c.AddOptionalSpell("Vanish", "for Combat", {
+	CheckFirst = function()
+		if c.IsSolo() 
+			or c.HasBuff("Stealth") 
+			or a.CP > 3
+			or (c.HasBuff("Shadow Blades") and a.CP > 2) then
+			
+			return false
+		end
+		
+		if c.HasTalent("Shadow Focus") then
+			return a.Energy < 20 and not c.HasBuff("Adrenaline Rush")
+		elseif c.HasTalent("Subterfuge") then
+			return a.Energy >= 90
+		else
+			return a.Energy >= 60
+		end
+	end
+})
+
+addSpell("Slice and Dice", "for Combat", {
 	NoRangeCheck = true,
 	CheckFirst = function(z)
-		if a.InSoloMode() then
+		local duration = c.GetBuffDuration("Slice and Dice")
+		if c.IsSolo() then
 			z.FlashColor = "yellow"
 			z.Continue = true
+			if c.HasGlyph("Deadly Momentum") then
+				return duration == 0 and a.CP == 5
+			else
+				return duration < 2
+			end
 		else
 			z.FlashColor = nil
 			z.Continue = nil
+			return duration < 2 
+				or (a.Guile == 11 and duration < 16 and a.CP >= 4)
 		end
-		return c.GetBuffDuration("Slice and Dice") < 3
+		
+	end
+})
+
+addOptionalSpell("Rupture", "for Combat", {
+	CheckFirst = function()
+		return shouldSpendCpCombat()
+			and c.GetMyDebuffDuration("Rupture") < 2
+			and not c.HasBuff("Blade Flurry")
+			and not c.IsSolo()
+	end
+})
+
+addSpell("Eviscerate", "for Combat", {
+	CheckFirst = shouldSpendCpCombat,
+})
+
+c.AddSpell("Revealing Strike", nil, {
+	Override = function()
+		return a.Energy >= 40
+			and c.GetMyDebuffDuration("Revealing Strike") < 2
+			and not c.IsAuraPendingFor("Revealing Strike")
+			and shouldSpendEnergyCombat()
+	end
+})
+
+c.AddSpell("Revealing Strike", "if Down", {
+	Override = function(z)
+		local duration = c.GetMyDebuffDuration("Revealing Strike")
+		if a.Energy < 40 then
+			duration = duration + (40 - a.Energy) * a.Regen
+		end
+		if duration > .1 or c.IsAuraPendingFor("Revealing Strike") then
+			return false
+		end
+		
+		if a.Energy < 40 then
+			z.FlashSize = s.FlashSizePercent() / 2
+			z.FlashColor = "green"
+		else
+			z.FlashSize = nil
+			z.FlashColor = nil
+		end
+		return true
+	end
+})
+
+c.AddSpell("Sinister Strike", nil, {
+	Override = function()
+		return a.Energy >= 40 
+			and shouldSpendEnergyCombat() 
+			and s.MeleeDistance()
+	end,
+})
+
+---------------------------------------------------------------------- Subtlety
+addSpell("Slice and Dice", "for Subtlety", {
+	NoRangeCheck = true,
+	CheckFirst = function(z)
+		local duration = c.GetBuffDuration("Slice and Dice")
+		if c.IsSolo() then
+			z.FlashColor = "yellow"
+			z.Continue = true
+			if c.HasGlyph("Deadly Momentum") then
+				return duration == 0 and a.CP == 5
+			else
+				return duration < 3
+			end
+		else
+			z.FlashColor = nil
+			z.Continue = nil
+			return duration < 3
+		end
 	end
 })
 
 addOptionalSpell("Rupture", nil, {
 	CheckFirst = function()
-		return not a.InSoloMode() and c.GetMyDebuffDuration("Rupture") < 5
-	end
-})
-
-addSpell("Ambush", nil, {
-	CheckFirst = function()
-		return a.CanBackstab()
+		return not c.IsSolo() and c.GetMyDebuffDuration("Rupture") < 5
 	end
 })
 
 addSpell("Ambush", "for Last Second Find Weakness", {
 	CheckFirst = function()
-		return a.CanBackstab()
-			and c.GetBuffDuration("Shadow Dance") < 2
+		return canAmbush() and c.GetBuffDuration("Shadow Dance") < 2
 	end
 })
 
@@ -359,118 +483,6 @@ addSpell("Backstab", nil, {
 	CheckFirst = a.CanBackstab
 })
 
---c.AddSpell("Shadow Dance", nil, {
---	Type = "form",
---	NoGCD = true,
---	FlashColor = "yellow",
---	CheckFirst = function()
---		return not c.HasBuff("Master of Subtlety", true)
---	end
---})
---
---c.AddSpell("Vanish", "for Subtlety", {
---	NoGCD = true,
---	FlashColor = "yellow",
---	CheckFirst = function()
---		return not a.InSoloMode()
---			and a.CP < 3
---			and not c.HasBuff("Master of Subtlety")
---	end
---})
---
---c.AddOptionalSpell("Premeditation", nil, {
---	NoGCD = true,
---	CheckFirst = function()
---		return a.CP < 4
---	end
---})
---
---c.AddOptionalSpell("Shadowstep", nil, {
---	NoGCD = true,
---	CheckFirst = function()
---		local _, targetID = s.UnitInfo()
---		return not a.NoShadowstep[targetID]
---			and s.Castable(c.GetSpell("Ambush"))
---	end
---})
---
---c.AddSpell("Ambush", nil, {
---	CheckFirst = a.CanBackstab,
---})
---
---local function canFlashRupture(z)
---	if a.InSoloMode() then
---		return false
---	end
---	
---	local duration = c.GetDebuffDuration("Rupture")
---	local canEvisIn = math.max(
---		0, (35 - a.Energy) / a.Regen)
---	if duration > canEvisIn + .1 then
---		z.FlashID = c.GetID("Eviscerate")
---		z.Continue = nil
---		z.FlashColor = nil
---	else
---		z.FlashID = nil
---		z.Continue = 1
---		z.FlashColor = "yellow"
---	end
---	return duration < 1.9
---end
---
---c.AddSpell("Rupture", "for Subtlety", {
---	CheckFirst = canFlashRupture,
---})
---
---c.AddSpell("Rupture", "with Master of Subtlety", {
---	CheckFirst = function(z)
---		return c.HasBuff("Master of Subtlety") and canFlashRupture(z)
---	end
---})
---
---c.AddSpell("Recuperate", "for Energetic Recovery", {
---	Buff = "Recuperate",
---	BuffUnit = "player",
---	EarlyRefresh = 2.9,
---	NoRangeCheck = true,
---	CheckFirst = function()
---		return c.HasTalent("Energetic Recovery")
---	end
---})
---
---c.AddSpell("Hemorrhage", nil, {
---	CheckFirst = function()
---		if a.InSoloMode() or not a.CanBackstab() then
---			return true
---		end
---		
---		if not s.HasGlyph("Glyph of Hemorrhage")
---			or c.IsAuraPendingFor("Hemorrhage") then
---			
---			return false
---		end
---		
---		for i = 1, 500000 do
---			local _, _, _, _, _, _, expires, source, _, _, id
---				= UnitDebuff("target", i)
---			if id == nil then
---				return true -- no hemorrhage debuff found
---			
---			-- refresh the bleed at 3 seconds
---			elseif id == 89775 and UnitIsUnit(source, "player") then
---				return expires - GetTime() - c.GetBusyTime() < 2.9
---			
---			-- if the bleed debuff is fresh, the bleed may be pending
---			elseif id == 16511 and UnitIsUnit(source, "player") then
---				local duration = expires - GetTime()
---				if duration > 55 then
---					return false
---				end
---			end
---		end
---	end
---})
---
---c.AddSpell("Backstab", nil, {
---	CheckFirst = a.CanBackstab(),
---})
+c.AddOptionalSpell("Shadow Dance")
+
+c.AddOptionalSpell("Premeditation")

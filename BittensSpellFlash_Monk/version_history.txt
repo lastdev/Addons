@@ -1,3 +1,67 @@
+== Version 3.2.4
+* Brewmaster: Added flashing for Black Ox Statue.
+* Mistweaver: Added flashing for Jade Serpent Statue.
+* Mistweaver: Mana Tea now flashes whenever it will not cap your mana if you have the glyph.
+
+== Version 3.2.3
+* Windwalker: Added flashing for Legacy of the White Tiger.
+
+== Version 3.2.2
+* Mistweaver: Bugfix for a Lua error.
+
+== Version 3.2.1
+NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
+
+== Version 3.2.0
+* Brewmaster: Elusive Brew now flashes a normal yellow color even at 10 stacks (was red).
+* Mistweaver: Bugfix - Expel Harm was flashing even if it was on cooldown.
+* Mistweaver and Brewmaster: Expel Harm is now used when you are under 80% health (was 85 or 90, depending on spec).
+* Windwalker: Added level 30 talents (because they changed w/ 5.2).
+* Windwalker: Removed Rushing Jade Wind from the single target rotation (Blackout Kick is better dps).
+* Windwalker: Added an option to synchronize Tigereye Brew with a mastery proc.  See the website for more info (especially if you have the Rune of Re-Origination).
+* Windwalker: Fists of Fury now flashes small and yellow if Energizing Brew is off cooldown, to make you less tempted to press them both at the same time.
+
+== Version 3.1.1
+* Windwalker: Bugfix - one of the Blackout Kick conditions was wrong.
+
+== Version 3.1.0
+NOTE: Your options will be reset when you upgrade to this version.
+* Repackaging so that Bitten's SpellFlash Library is included with the addon, instead of downloaded separately.
+* Several other internal changes.
+* Brewmaster: Added Rushing Jade Wind to the AoE rotation.
+* Brewmaster: Now holds brews until you are under 85% health if you have Healing Elixirs (a change for 5.2).
+* Brewmaster: Now holds Fortifying Brew until you are under 80% health (was 90%).
+* Brewmaster: Removed logic from level 30 talents that had to do with their Chi cost (because they no longer cost Chi in 5.2).
+* Mistweaver: Updated melee rotation for 5.2.
+* Mistweaver: Added an option for only flashing the melee rotation above a certain % mana (default 50%).
+* Mistweaver: Now detects and adjusts for Glyph of Uplift.
+* Windwalker: Updated the rotation for 5.2.
+
+== Version 3.0.0
+* Brewmaster: Now prioritized Keg Smash above Jab or Spinning Crane Kick to generate Chi.
+* Brewmaster/Windwalker: Spinning Crane Kick can now flash while it is casting, though the timings are not always perfect (in AoE modes).
+* Mistweaver: Added flashing for Mistweaver.
+
+== Version 2.6.0
+* Brewmaster: No longer flashes mitigation cooldowns when Diffuse Magic is up.
+* Brewmaster: Flash Elusive Brew with higher priority when its stacks are getting high.
+* Brewmaster: Hold Elusive Brew and Purifying Brew when above 90% health and Healing Elixirs is up.
+* Brewmaster: Hold Fortifying Brew when above 90% health.
+* Windwalker: No longer flashes Fists of Fury if you are moving.
+
+== Version 2.5.2
+* Oops!  I didn't release that last version correctly.  NOW it should have the fix.
+* Brewmaster: Bugfix - Guard was still waiting for 3 stacks of Power Guard, even though it only stacks to 1 (since it changed in 5.1.0).
+
+== Version 2.5.1
+* Brewmaster: Bugfix - Guard was still waiting for 3 stacks of Power Guard, even though it only stacks to 1 (since it changed in 5.1.0).
+
+== Version 2.5.0
+* Windwalker: Update Tiger Palm to only try stacking Tiger Power to 1 (since it changed in 5.1.0).
+* Windwalker: Update Fists of Fury so it will work w/ 5.1.0.
+* All: Updated the internals of Power Strikes to match the change in 5.1.0.
+* All: Updated to the new way Blizzard gave to detect the amount of a player has Chi.
+
 == Version 2.4.1
 * Brewmaster: Bugfix - Tiger Palm wasn't flashing when you had 0 Chi (even though it's free).
 * Windwalker: Made Tigereye Brew and Energizing Brew flash yellow and continue to the next priority, like a cooldown should.
@@ -15,7 +79,7 @@
 * Brewmaster: Jab was a bit broken.  Should behave better now.
 * Windwalker: Changed rotation to match what's in Simulationcraft.
 * Windwalker: Added Chi Brew.
-* All: Added Xnvoke Xuen and Rishing Jade Wind.
+* All: Added Invoke Xuen and Rushing Jade Wind.
 * All: Added Roll.
 * All: Bugfix - Legacy of the Emperor broke with one of the previous releases of the library.
 

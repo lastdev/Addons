@@ -1,6 +1,6 @@
 --[[
 	Enchantrix:Barker Addon for World of Warcraft(tm).
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 	Revision: $Id: BarkerLocale.lua 3581 2008-10-11 12:36:19Z Norganna $
 	URL: http://enchantrix.org/
 

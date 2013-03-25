@@ -190,7 +190,7 @@ L:AddLocale("esES",
 )
 L:AddLocale("zhTW",  
 {
-	-- adjustlinks_desc = "",
+	adjustlinks_desc = "在置中或靠右排列文字時，調整連結並復原點擊開啟能力", -- Needs review
 	adjustlinks_name = "修正玩家或物品連結",
 	Center = "中央",
 	["Chat window paragraph options."] = "聊天視窗段落設定",

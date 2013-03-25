@@ -1,5 +1,5 @@
 ﻿-- Simplified Chinese by Diablohu(diablohudream@gmail.com)
--- Last update: 10/20/2012
+-- Last update: 1/4/2013
 
 if GetLocale() ~= "zhCN" then return end
 local L
@@ -26,7 +26,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS["stack"]:format(6, 113315)
+	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(6, 113315)
 })
 
 -----------------------
@@ -74,6 +74,14 @@ L:SetOptionLocalization({
 -----------------------
 L= DBM:GetModLocalization(673)
 
+L:SetWarningLocalization({
+	warnStaticField	= "%s"
+})
+
+L:SetOptionLocalization({
+	warnStaticField	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(106923)
+})
+
 -----------------------
 -- Snowdrift --
 -----------------------
@@ -105,6 +113,10 @@ L= DBM:GetModLocalization(686)
 
 L:SetOptionLocalization({
 	InfoFrame			= "信息框：$journal:5827"
+})
+
+L:SetMiscLocalization({
+	Kill		= "只要你们心中的暴虐不除……我……就会……回来的……",
 })
 
 -----------------------

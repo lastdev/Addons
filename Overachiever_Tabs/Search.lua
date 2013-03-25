@@ -9,6 +9,7 @@
 
 local L = OVERACHIEVER_STRINGS
 local GetAchievementInfo = Overachiever.GetAchievementInfo
+local GetAchievementCriteriaInfo = Overachiever.GetAchievementCriteriaInfo
 
 local categories_sel = Overachiever.UI_GetValidCategories(1)
 local EditBoxes = {}

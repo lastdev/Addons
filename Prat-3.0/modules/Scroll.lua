@@ -186,8 +186,8 @@ L:AddLocale("ruRU",
 	["Control whether text is added to the frame at the top or the bottom."] = "Регулировка текста добавленного в окно в вверх или низ.",
 	lowdown_desc = "Вкл/Выкл авто прокрутку в низ для во всех окнах чата.",
 	lowdown_name = "Включить спад в низ",
-	modified_speed = "Установка скорости колеса мышки+Shift", -- Needs review
-	modified_speed_desc = "Установите количество прокручиваемых строк с помощью колеса мыши+shift.", -- Needs review
+	modified_speed = "Установка скорости прокрутки колеса мышки+Shift",
+	modified_speed_desc = "Установите количество прокручиваемых строк с помощью колеса мыши+shift.",
 	mousewheel_desc = "Вкл/Выкл поддержку колесика мыши во всех оконах чата.",
 	mousewheel_name = "Включить КолесоМыши",
 	Scroll = "Прокрутка",

@@ -45,7 +45,7 @@ L["TRADE_SKILLET_ACHSORT"] = "的成就"
 
 
 elseif (locale == "ruRU") then  -- Russian
-L["TRADE_COOKING_OBJRENAME"] = "Используйте это в кулинарной задаче которая дала не верное имя в списке достижений. Используйте формат \"<неправильное имя>=<правильное название вещи>\"."
+L["TRADE_COOKING_OBJRENAME"] = "Используйте это в кулинарной задаче которая дала неверное имя в списке достижений. Используйте формат \"<неправильное имя>=<правильное название вещи>\"."
 L["TRADE_SKILLET_ACHSORT"] = "относится к достижению"
 
 
@@ -67,8 +67,14 @@ L["TRADE_SKILLET_ACHSORT"] = "Por logro"
 	end
 
 elseif (locale == "ptBR") then  -- Brazilian Portuguese
+L["TRADE_COOKING_OBJRENAME"] = [=[<Sopa Névoa Rodopiante>=<Sopa Névoa Rodopiante>
+<Sopa Névoa Rodopiante>=<Sopa de Névoa Rodopiante>]=]
+L["TRADE_SKILLET_ACHSORT"] = "Por Conquista"
+
+
+elseif (locale == "itIT") then  -- Italian
 -- L["TRADE_COOKING_OBJRENAME"] = ""
--- L["TRADE_SKILLET_ACHSORT"] = ""
+L["TRADE_SKILLET_ACHSORT"] = "Per Impresa"
 
 
 end

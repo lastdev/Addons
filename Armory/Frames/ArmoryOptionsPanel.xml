@@ -1,4 +1,4 @@
-<!-- Revision: 523 2012-09-16T22:59:10Z -->
+<!-- Revision: 575 2013-01-09T23:30:53Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\FrameXML\UI.xsd">
   <Script file="ArmoryOptionsPanel.lua"/>
@@ -808,6 +808,7 @@
           </OnLoad>
         </Scripts>
       </CheckButton>
+      
       <CheckButton name="$parentBuffs" inherits="ArmoryOptionsCheckButtonTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT">
@@ -825,6 +826,47 @@
             self.SetValue = function(self, value) self.value = value; self:SetChecked(value); Armory:BuffsEnabled(value); end
             self.onOkay = function(self) ArmoryOptionsPanel_CheckModule(self, "Buffs"); end
             ArmoryOptionsPanel_RegisterControl(self, self:GetParent());
+          </OnLoad>
+        </Scripts>
+      </CheckButton>
+      <CheckButton name="$parentAchievements" inherits="ArmoryOptionsCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentBuffs" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-8"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self.type = CONTROLTYPE_CHECKBOX;
+            self.text = ACHIEVEMENTS;
+            self.defaultValue = true;
+            self.GetValue = function(self) return Armory:HasAchievements(); end
+            self.SetValue = function(self, value) self.value = value; self:SetChecked(value); Armory:HasAchievements(value); end
+            self.onOkay = function(self) ArmoryOptionsPanel_CheckModule(self, "Achievements"); end
+            ArmoryOptionsPanel_RegisterControl(self, self:GetParent());
+          </OnLoad>
+        </Scripts>
+      </CheckButton>
+      <CheckButton name="$parentStatistics" inherits="ArmoryOptionsCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentAchievements" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-8"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self.type = CONTROLTYPE_CHECKBOX;
+            self.text = STATISTICS;
+            self.defaultValue = true;
+            self.GetValue = function(self) return Armory:HasStatistics(); end
+            self.SetValue = function(self, value) self.value = value; self:SetChecked(value); Armory:HasStatistics(value); end
+            self.onOkay = function(self) ArmoryOptionsPanel_CheckModule(self, "Statistics"); end
+            ArmoryOptionsPanel_RegisterControl(self, self:GetParent());
+            ArmoryOptionsPanel_SetupDependentControl(ArmoryOptionsModulePanelAchievements, self);
           </OnLoad>
         </Scripts>
       </CheckButton>
@@ -1209,9 +1251,26 @@
           </OnLoad>
         </Scripts>
       </CheckButton>
-      <CheckButton name="$parentGlobalItemCount" inherits="ArmoryOptionsWideCheckButtonTemplate">
+      <CheckButton name="$parentItemCountPerSlot" inherits="ArmoryOptionsWideCheckButtonTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentShowItemCountTotals" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self.type = CONTROLTYPE_CHECKBOX;
+            self.label = "ARMORY_CMD_SET_COUNTPERSLOT";
+            ArmoryOptionsPanel_RegisterControl(self, self:GetParent());
+            ArmoryOptionsPanel_SetupDependentControl(ArmoryOptionsTooltipPanelShowItemCountCheck, self);
+          </OnLoad>
+        </Scripts>
+      </CheckButton>
+      <CheckButton name="$parentGlobalItemCount" inherits="ArmoryOptionsWideCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentItemCountPerSlot" relativePoint="BOTTOMLEFT">
             <Offset>
               <AbsDimension x="0" y="0"/>
             </Offset>
@@ -1319,11 +1378,47 @@
           </OnLoad>
         </Scripts>
       </Frame>
-      <Frame name="$parentShowQuestAlts" inherits="ArmoryOptionsCheckBoxWithSwatchTemplate">
+      <Frame name="$parentShowSkillRank" inherits="ArmoryOptionsCheckBoxWithSwatchTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentShowCrafters" relativePoint="BOTTOMLEFT">
             <Offset>
               <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            local control = _G[self:GetName().."Check"];
+            control.type = CONTROLTYPE_CHECKBOX;
+            control.label = "ARMORY_CMD_SET_SHOWSKILLRANK";
+            control.colorSet = function(r, g, b) Armory:SetConfigTradeSkillRankColor(r, g, b); end;
+            control.colorGet = function(default) return Armory:GetConfigTradeSkillRankColor(default); end;
+            ArmoryOptionsPanel_RegisterControl(control, self:GetParent());
+          </OnLoad>
+        </Scripts>
+      </Frame>
+      <CheckButton name="$parentShowSecondarySkillRank" inherits="ArmoryOptionsWideCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentShowSkillRank" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="16" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self.type = CONTROLTYPE_CHECKBOX;
+            self.label = "ARMORY_CMD_SET_SHOW2NDSKILLRANK";
+            ArmoryOptionsPanel_RegisterControl(self, self:GetParent());
+            ArmoryOptionsPanel_SetupDependentControl(ArmoryOptionsTooltipPanelShowSkillRankCheck, self);
+          </OnLoad>
+        </Scripts>
+      </CheckButton>
+      <Frame name="$parentShowQuestAlts" inherits="ArmoryOptionsCheckBoxWithSwatchTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentShowSecondarySkillRank" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="-16" y="0"/>
             </Offset>
           </Anchor>
         </Anchors>
@@ -1338,11 +1433,51 @@
           </OnLoad>
         </Scripts>
       </Frame>
-      <CheckButton name="$parentShowGearSets" inherits="ArmoryOptionsWideCheckButtonTemplate">
+      <Frame name="$parentShowAchievements" inherits="ArmoryOptionsCheckBoxWithSwatchTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentShowQuestAlts" relativePoint="BOTTOMLEFT">
             <Offset>
               <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            local control = _G[self:GetName().."Check"];
+            control.type = CONTROLTYPE_CHECKBOX;
+            control.label = "ARMORY_CMD_SET_SHOWACHIEVEMENTS";
+            control.colorSet = function(r, g, b) Armory:SetConfigAchievementsColor(r, g, b); end;
+            control.colorGet = function(default) return Armory:GetConfigAchievementsColor(default); end;
+            ArmoryOptionsPanel_RegisterControl(control, self:GetParent());
+          </OnLoad>
+        </Scripts>
+      </Frame>
+      <CheckButton name="$parentAchievementProgressColor" inherits="ArmoryOptionsCheckBoxWithSwatchTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentShowAchievements" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="16" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self:SetWidth(self:GetWidth() - 16);
+            local control = _G[self:GetName().."Check"];
+            control.type = CONTROLTYPE_CHECKBOX;
+            control.label = "ARMORY_CMD_SET_USEINPROGRESSCOLOR";
+            control.colorSet = function(r, g, b) Armory:SetConfigAchievementInProgressColor(r, g, b); end;
+            control.colorGet = function(default) return Armory:GetConfigAchievementInProgressColor(default); end;
+            ArmoryOptionsPanel_RegisterControl(control, self:GetParent());
+            ArmoryOptionsPanel_SetupDependentControl(ArmoryOptionsTooltipPanelShowAchievementsCheck, control);
+          </OnLoad>
+        </Scripts>
+      </CheckButton>
+      <CheckButton name="$parentShowGearSets" inherits="ArmoryOptionsWideCheckButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentAchievementProgressColor" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="-16" y="0"/>
             </Offset>
           </Anchor>
         </Anchors>

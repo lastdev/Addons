@@ -55,12 +55,12 @@ local HealBot_Unit_Bar2={}
 local HealBot_Unit_Bar3={}
 local HealBot_Unit_Bar4={}
 local HealBot_Unit_Bar5={}
+local HealBot_Unit_Bar6={}
 local HealBot_pcClass=false
 local HealBot_pcMax=3
 local rangeSpell=nil
 local sID=nil
 local sName=nil
-local uHealIn=nil
 local uHlth=nil
 local uMaxHlth=nil
 local uName=nil
@@ -116,7 +116,8 @@ function HealBot_Action_UpdateAggro(unit,status,threatStatus,hbGUID,threatPct)
     end
     hbprevThreatPct=HealBot_UnitThreatPct[hbGUID] or -4
     if threatStatus and (Healbot_Config_Skins.ShowAggroBarsPct[Healbot_Config_Skins.Current_Skin]==1 or Healbot_Config_Skins.ShowAggroTextPct[Healbot_Config_Skins.Current_Skin]==1) then
-        if not threatPct then threatPct,_=HealBot_CalcThreat(unit) end
+        if (threatPct or 0)==0 then threatPct,_=HealBot_CalcThreat(unit) end
+       -- threatPct,_=HealBot_CalcThreat(unit)
         if threatPct>0 then
             HealBot_UnitThreatPct[hbGUID]=threatPct
             if threatStatus==0 then
@@ -317,7 +318,7 @@ end
 function HealBot_Action_EndAggro()
     for hbGUID,_ in pairs(HealBot_Aggro) do
         if HealBot_UnitID[hbGUID] then
-            HealBot_Action_UpdateAggro(HealBot_UnitID[hbGUID],false,nil,hbGUID)
+            HealBot_Action_UpdateAggro(HealBot_UnitID[hbGUID],false,nil,hbGUID, 0)
         end
     end
     for hbGUID,barName in pairs(HealBot_AggroBar4) do
@@ -533,13 +534,14 @@ function HealBot_GetBandageType()
     return bandage
 end
 
-function HealBot_HealthColor(unit,hlth,maxhlth,tooltipcol,hbGUID,UnitDead,Member_Buff,Member_Debuff,healin,getBar5)
-    local hca,hcr,hir,hcg,hig,hcb,hib,hbr,hbg,hbb=nil,nil,nil,nil,nil,nil,nil,nil,nil,nil
-    local hcaggro,hcta,hcpct,hipct,hrpct=nil,nil,nil,nil,100
+function HealBot_HealthColor(unit,hlth,maxhlth,tooltipcol,hbGUID,UnitDead,Member_Buff,Member_Debuff,healin,absorbs,getBar5)
+    local hca,hcr,hir,hcg,hig,hcb,hib,hbr,hbg,hbb,har,hag,hab=0,0,0,0,0,0,0,0,0,0,0,0,0
+    local hcaggro,hcta,hcpct,hipct,hrpct,hapct,hbuff=nil,nil,nil,nil,100,nil,nil
     if UnitDead then
         hcpct=0
         hipct=0
         hrpct=0
+        hapct=0
     else
         hipct = hlth+healin
         if hipct<maxhlth then
@@ -553,6 +555,16 @@ function HealBot_HealthColor(unit,hlth,maxhlth,tooltipcol,hbGUID,UnitDead,Member
         else
             hrpct=floor((hlth/maxhlth)*100)
         end
+        if Healbot_Config_Skins.AbsorbBarColour[Healbot_Config_Skins.Current_Skin] == 1 then
+            hapct=hlth+absorbs
+        else
+            hapct=hlth+healin+absorbs
+        end
+        if hapct<maxhlth then
+            hapct=hapct/maxhlth
+        else
+            hapct=1;
+        end
     end
   
     if HealBot_Aggro[hbGUID] and (HealBot_UnitThreat[hbGUID] or 0)>(Healbot_Config_Skins.AggroAlertLevel[Healbot_Config_Skins.Current_Skin]) and UnitIsConnected(unit) then
@@ -565,56 +577,31 @@ function HealBot_HealthColor(unit,hlth,maxhlth,tooltipcol,hbGUID,UnitDead,Member
         HealBot_UnitStatus[unit]=1
         if UnitDead then
             HealBot_UnitStatus[unit]=8
+            hbuff=true
         elseif Member_Debuff and UnitIsConnected(unit) then
             if HealBot_Config.CDCshownHB==1 and HealBot_UnitInRange(HealBot_dSpell, unit)>(HealBot_Config.HealBot_CDCWarnRange_Bar-3) and (HealBot_Globals.HealBot_Custom_Debuffs_ShowBarCol[HealBot_UnitDebuff[hbGUID]["name"]] or 1)==1  then
                 if HealBot_Globals.CDCBarColour[HealBot_UnitDebuff[hbGUID]["name"]] then
                     hcr = HealBot_Globals.CDCBarColour[HealBot_UnitDebuff[hbGUID]["name"]].R
                     hcg = HealBot_Globals.CDCBarColour[HealBot_UnitDebuff[hbGUID]["name"]].G
                     hcb = HealBot_Globals.CDCBarColour[HealBot_UnitDebuff[hbGUID]["name"]].B
-                    hca = Healbot_Config_Skins.bareora[Healbot_Config_Skins.Current_Skin]
-                    hcta = Healbot_Config_Skins.btextenabledcola[Healbot_Config_Skins.Current_Skin]
                 elseif Member_Debuff == HEALBOT_CUSTOM_en then
                     hcr = HealBot_Globals.CDCBarColour[Member_Debuff].R
                     hcg = HealBot_Globals.CDCBarColour[Member_Debuff].G
                     hcb = HealBot_Globals.CDCBarColour[Member_Debuff].B
-                    hca = Healbot_Config_Skins.bareora[Healbot_Config_Skins.Current_Skin]
-                    hcta = Healbot_Config_Skins.btextenabledcola[Healbot_Config_Skins.Current_Skin]
                 else
                     hcr = HealBot_Config.CDCBarColour[Member_Debuff].R
                     hcg = HealBot_Config.CDCBarColour[Member_Debuff].G
                     hcb = HealBot_Config.CDCBarColour[Member_Debuff].B
-                    hca = Healbot_Config_Skins.bareora[Healbot_Config_Skins.Current_Skin]
-                    hcta = Healbot_Config_Skins.btextenabledcola[Healbot_Config_Skins.Current_Skin]
                 end
-                if (Healbot_Config_Skins.IncHealBarColour[Healbot_Config_Skins.Current_Skin] <= 3) then
-                    hir=hcr
-                    hig=hcg
-                    hib=hcb
-                elseif (Healbot_Config_Skins.IncHealBarColour[Healbot_Config_Skins.Current_Skin] == 4) then
-                    hir, hig = HealBot_Action_BarColourPct(hipct)
-                else
-                    hir=Healbot_Config_Skins.ihbarcolr[Healbot_Config_Skins.Current_Skin]
-                    hig=Healbot_Config_Skins.ihbarcolg[Healbot_Config_Skins.Current_Skin]
-                    hib=Healbot_Config_Skins.ihbarcolb[Healbot_Config_Skins.Current_Skin]
-                end
-                return hcr,hcg,hcb,hca,hrpct,hcta,hir,hig,hib
+                hca = Healbot_Config_Skins.bareora[Healbot_Config_Skins.Current_Skin]
+                hcta = Healbot_Config_Skins.btextenabledcola[Healbot_Config_Skins.Current_Skin]
+                hbuff=true
             end
         elseif Member_Buff and UnitIsConnected(unit) then
             hcr,hcg,hcb=HealBot_Options_RetBuffRGB(Member_Buff)
             hca = Healbot_Config_Skins.bareora[Healbot_Config_Skins.Current_Skin]
             hcta = Healbot_Config_Skins.btextenabledcola[Healbot_Config_Skins.Current_Skin]
-            if (Healbot_Config_Skins.IncHealBarColour[Healbot_Config_Skins.Current_Skin] <= 3) then
-                hir=hcr
-                hig=hcg
-                hib=hcb
-            elseif (Healbot_Config_Skins.IncHealBarColour[Healbot_Config_Skins.Current_Skin] == 4) then
-                hir, hig = HealBot_Action_BarColourPct(hipct)
-            else
-                hir=Healbot_Config_Skins.ihbarcolr[Healbot_Config_Skins.Current_Skin]
-                hig=Healbot_Config_Skins.ihbarcolg[Healbot_Config_Skins.Current_Skin]
-                hib=Healbot_Config_Skins.ihbarcolb[Healbot_Config_Skins.Current_Skin]
-            end
-            return hcr,hcg,hcb,hca,hrpct,hcta,hir,hig,hib
+            hbuff=true
         elseif hlth>maxhlth*Healbot_Config_Skins.AlertLevel[Healbot_Config_Skins.Current_Skin] and not hcaggro then
             vUnit=HealBot_retIsInVehicle(unit)
             if vUnit then
@@ -628,69 +615,58 @@ function HealBot_HealthColor(unit,hlth,maxhlth,tooltipcol,hbGUID,UnitDead,Member
         end
     end
 
-    hcr,hcg,hcb,hir,hig,hib = 1.0, 1.0, 0.0, 1.0, 1.0, 0.0
-    if HealBot_UnitStatus[unit]~=0 then --(hipct<=Healbot_Config_Skins.AlertLevel[Healbot_Config_Skins.Current_Skin] or HealBot_Aggro[hbGUID]) then -- 
-        hca=Healbot_Config_Skins.bareora[Healbot_Config_Skins.Current_Skin]
-        hcta=Healbot_Config_Skins.btextenabledcola[Healbot_Config_Skins.Current_Skin]
-    else
-        hca=Healbot_Config_Skins.bardisa[Healbot_Config_Skins.Current_Skin]
-        hcta=Healbot_Config_Skins.btextdisbledcola[Healbot_Config_Skins.Current_Skin]
-    end
-  
-    if UnitDead then
-        hcr = 0
-        hcg = 0
-        hcb = 0
-    elseif (Healbot_Config_Skins.HlthBarColour[Healbot_Config_Skins.Current_Skin] >= 2) and not tooltipcol then
-        if (Healbot_Config_Skins.HlthBarColour[Healbot_Config_Skins.Current_Skin] == 2) then
-            hcr,hcg,hcb = HealBot_Action_ClassColour(hbGUID, unit)
+    if not hbuff then
+        hcr,hcg,hir,hig,har,hag = 1, 1, 1, 1, 1, 1
+        if HealBot_UnitStatus[unit]~=0 then --(hipct<=Healbot_Config_Skins.AlertLevel[Healbot_Config_Skins.Current_Skin] or HealBot_Aggro[hbGUID]) then -- 
+            hca=Healbot_Config_Skins.bareora[Healbot_Config_Skins.Current_Skin]
+            hcta=Healbot_Config_Skins.btextenabledcola[Healbot_Config_Skins.Current_Skin]
         else
-            hcr=Healbot_Config_Skins.barcolr[Healbot_Config_Skins.Current_Skin]
-            hcg=Healbot_Config_Skins.barcolg[Healbot_Config_Skins.Current_Skin]
-            hcb=Healbot_Config_Skins.barcolb[Healbot_Config_Skins.Current_Skin]
+            hca=Healbot_Config_Skins.bardisa[Healbot_Config_Skins.Current_Skin]
+            hcta=Healbot_Config_Skins.btextdisbledcola[Healbot_Config_Skins.Current_Skin]
         end
-        if (Healbot_Config_Skins.IncHealBarColour[Healbot_Config_Skins.Current_Skin] == 5) then -- Incoming Heal Bar Colour = "Custom"
-            hir=Healbot_Config_Skins.ihbarcolr[Healbot_Config_Skins.Current_Skin]
-            hig=Healbot_Config_Skins.ihbarcolg[Healbot_Config_Skins.Current_Skin]
-            hib=Healbot_Config_Skins.ihbarcolb[Healbot_Config_Skins.Current_Skin]
-	    elseif (Healbot_Config_Skins.IncHealBarColour[Healbot_Config_Skins.Current_Skin] == 4) then -- Incoming Heal Bar Colour = "Custom"
-            hir, hig = HealBot_Action_BarColourPct(hipct)
-            hib=0
-        else
-			hir=hcr
-			hig=hcg
-			hib=hcb
-        end
-    else
-        if (Healbot_Config_Skins.IncHealBarColour[Healbot_Config_Skins.Current_Skin] <= 2) then -- Incoming Heal Bar Colour = "Same as Health (Current Health)" or "Do not show"
-            hcr, hcg = HealBot_Action_BarColourPct(hcpct)
-            hir=hcr
-            hig=hcg
-            hib=hcb
-        elseif (Healbot_Config_Skins.IncHealBarColour[Healbot_Config_Skins.Current_Skin] == 3) then -- Incoming Heal Bar Colour = "Same as Health (Future Health)"
-            hcr, hcg = HealBot_Action_BarColourPct(hipct)
-            hir=hcr
-            hig=hcg
-            hib=hcb
-        elseif (Healbot_Config_Skins.IncHealBarColour[Healbot_Config_Skins.Current_Skin] == 4) then  -- Incoming Heal Bar Colour = "Future Health"
-            hcr, hcg = HealBot_Action_BarColourPct(hcpct)
-            if hcpct~=hipct then
-                hir, hig = HealBot_Action_BarColourPct(hipct)
+        if (Healbot_Config_Skins.HlthBarColour[Healbot_Config_Skins.Current_Skin] >= 2) and not tooltipcol then
+            if (Healbot_Config_Skins.HlthBarColour[Healbot_Config_Skins.Current_Skin] == 2) then
+                hcr,hcg,hcb = HealBot_Action_ClassColour(hbGUID, unit)
             else
-                hir=hcr
-                hig=hcg
+                hcr=Healbot_Config_Skins.barcolr[Healbot_Config_Skins.Current_Skin]
+                hcg=Healbot_Config_Skins.barcolg[Healbot_Config_Skins.Current_Skin]
+                hcb=Healbot_Config_Skins.barcolb[Healbot_Config_Skins.Current_Skin]
             end
-			hib=hcb
-        else  -- Incoming Heal Bar Colour = "Custom"
-            hcr, hcg = HealBot_Action_BarColourPct(hcpct)
-            hir=Healbot_Config_Skins.ihbarcolr[Healbot_Config_Skins.Current_Skin]
-            hig=Healbot_Config_Skins.ihbarcolg[Healbot_Config_Skins.Current_Skin]
-            hib=Healbot_Config_Skins.ihbarcolb[Healbot_Config_Skins.Current_Skin]
+        else
+            if (Healbot_Config_Skins.IncHealBarColour[Healbot_Config_Skins.Current_Skin] == 3) then -- Incoming Heal Bar Colour = "Same as Health (Future Health)"
+                hcr, hcg = HealBot_Action_BarColourPct(hipct)
+            else 
+                hcr, hcg = HealBot_Action_BarColourPct(hcpct)
+            end
         end
+    end
+
+    if (Healbot_Config_Skins.IncHealBarColour[Healbot_Config_Skins.Current_Skin] == 5) then -- Incoming Heal Bar Colour = "Custom"
+        hir=Healbot_Config_Skins.ihbarcolr[Healbot_Config_Skins.Current_Skin]
+        hig=Healbot_Config_Skins.ihbarcolg[Healbot_Config_Skins.Current_Skin]
+        hib=Healbot_Config_Skins.ihbarcolb[Healbot_Config_Skins.Current_Skin]
+    elseif (Healbot_Config_Skins.IncHealBarColour[Healbot_Config_Skins.Current_Skin] == 4) then -- Incoming Heal Bar Colour = "Future Health"
+        hir, hig = HealBot_Action_BarColourPct(hipct)
+    else
+        hir=hcr
+        hig=hcg
+        hib=hcb
+    end
+    if (Healbot_Config_Skins.AbsorbBarColour[Healbot_Config_Skins.Current_Skin] == 4) then -- Incoming Heal Bar Colour = "Custom"
+        har=Healbot_Config_Skins.asbarcolr[Healbot_Config_Skins.Current_Skin]
+        hag=Healbot_Config_Skins.asbarcolg[Healbot_Config_Skins.Current_Skin]
+        har=Healbot_Config_Skins.asbarcolb[Healbot_Config_Skins.Current_Skin]
+    elseif (Healbot_Config_Skins.AbsorbBarColour[Healbot_Config_Skins.Current_Skin] == 3) then -- Incoming Heal Bar Colour = "Future Health"
+        har, hag = HealBot_Action_BarColourPct(hapct)
+        hab=hcb
+    else
+        har=hcr
+        hag=hcg
+        hab=hcb
     end
     
     if getBar5 then
-        if Healbot_Config_Skins.HlthBarColour[Healbot_Config_Skins.Current_Skin]==Healbot_Config_Skins.HlthBackColour[Healbot_Config_Skins.Current_Skin] and not UnitDead then
+        if Healbot_Config_Skins.HlthBackColour[Healbot_Config_Skins.Current_Skin]<3 and Healbot_Config_Skins.HlthBarColour[Healbot_Config_Skins.Current_Skin]==Healbot_Config_Skins.HlthBackColour[Healbot_Config_Skins.Current_Skin] and not UnitDead then
             hbr,hbg,hbb=hcr,hcg,hcb
         elseif Healbot_Config_Skins.HlthBackColour[Healbot_Config_Skins.Current_Skin]==1 then
             if Healbot_Config_Skins.IncHealBarColour[Healbot_Config_Skins.Current_Skin] > 2 then
@@ -698,7 +674,6 @@ function HealBot_HealthColor(unit,hlth,maxhlth,tooltipcol,hbGUID,UnitDead,Member
             else
                 hbr,hbg = HealBot_Action_BarColourPct(hcpct)
             end
-            hbb=0
         elseif Healbot_Config_Skins.HlthBackColour[Healbot_Config_Skins.Current_Skin]==2 then
             hbr,hbg,hbb = HealBot_Action_ClassColour(hbGUID, unit)
         else
@@ -706,9 +681,10 @@ function HealBot_HealthColor(unit,hlth,maxhlth,tooltipcol,hbGUID,UnitDead,Member
             hbg=Healbot_Config_Skins.barbackcolg[Healbot_Config_Skins.Current_Skin]
             hbb=Healbot_Config_Skins.barbackcolb[Healbot_Config_Skins.Current_Skin]
         end
+        
     end
 
-    return hcr,hcg,hcb,hca,hrpct,hcta,hir,hig,hib,hbr,hbg,hbb
+    return hcr,hcg,hcb,hca,hrpct,hcta,hir,hig,hib,hbr,hbg,hbb,har,hag,hab
 end
 
 local hcpr, hcpg = nil,nil
@@ -754,6 +730,12 @@ function HealBot_Action_HealthBar5(button)
     if not button then return end
     barName = button:GetName();
     return _G[barName.."Bar5"];
+end
+
+function HealBot_Action_HealthBar6(button)
+    if not button then return end
+    barName = button:GetName();
+    return _G[barName.."Bar6"];
 end
 
 function HealBot_Action_ShouldHealSome(hbGUID)
@@ -1026,12 +1008,13 @@ end
 local activeUnit = true
 function HealBot_Action_EnableButton(button, hbGUID)
     local ebUnit=button.unit
-    local ebubar,ebubar2,ebubar5,ebuicon15=nil,nil,nil,nil
+    local ebubar,ebubar2,ebubar5,ebubar6,ebuicon15=nil,nil,nil,nil,nil
     local ebusr,ebusg,ebusb,ebusa=nil,nil,nil,nil
-    local ebur,ebir,ebug,ebig,ebub,ebib,ebua,hbr,hbg,hbb=nil,nil,nil,nil,nil,nil,nil,nil,nil,nil
-    local ebpct,ebipct,ebtext=1,0,nil
+    local ebur,ebir,ebug,ebig,ebub,ebib,ebua,hbr,hbg,hbb,har,hag,hab=nil,nil,nil,nil,nil,nil,nil,nil,nil,nil
+    local ebpct,ebipct,ebapct,ebtext=1,0,0,nil
     local ebufastenable,ebuProcessThis=nil,nil
     local ebuUnitDead,ebuHealBot_UnitDebuff,ebuHealBot_UnitBuff=nil,nil,nil
+    local unitHRange=HealBot_UnitInRange(HealBot_hSpell, ebUnit)
 
 
 --    if not uName then return end
@@ -1040,14 +1023,15 @@ function HealBot_Action_EnableButton(button, hbGUID)
     ebubar = HealBot_Unit_Bar1[ebUnit]
     ebubar2 = HealBot_Unit_Bar2[ebUnit]
     ebubar5 = HealBot_Unit_Bar5[ebUnit]
+    ebubar6 = HealBot_Unit_Bar6[ebUnit]
     ebuicon15 = _G[ebubar:GetName().."Icon15"];
     HealBot_UnitRangeSpell[ebUnit]=HealBot_hSpell
 
+    local uHealIn, uAbsorbs = HealBot_IncHeals_retHealsIn(hbGUID)
     if UnitExists(ebUnit) and UnitIsFriend("player",ebUnit) then
         activeUnit = true
         uName=UnitName(ebUnit)
         uHlth,uMaxHlth=HealBot_UnitHealth(hbGUID, ebUnit)
-        uHealIn = HealBot_IncHeals_retHealsIn(hbGUID)
 
         ebuUnitDead = UnitIsDeadOrGhost(ebUnit)
         if HealBot_UnitDebuff[hbGUID] then
@@ -1063,12 +1047,11 @@ function HealBot_Action_EnableButton(button, hbGUID)
             if UnitIsFeignDeath(ebUnit) then
                 ebuUnitDead = nil
             else
-                if uHealIn>0 then
-                    uHealIn=0
-                end
+                if uHealIn>0 then uHealIn=0 end
+                if uAbsorbs>0 then uAbsorbs=0 end
                 if HealBot_Aggro[hbGUID] then
                     HealBot_Action_SetUnitDebuffStatus(hbGUID)
-                    HealBot_Action_UpdateAggro(ebUnit,false,HealBot_UnitThreat[hbGUID] or 0,hbGUID)
+                    HealBot_Action_UpdateAggro(ebUnit,false,HealBot_UnitThreat[hbGUID] or 0,hbGUID, 0)
                     HealBot_Aggro[hbGUID]=nil
                 end
                 if HealBot_UnitDebuff[hbGUID] then
@@ -1076,6 +1059,11 @@ function HealBot_Action_EnableButton(button, hbGUID)
                 end
                 if HealBot_HoT_Active_Button[hbGUID] then 
                     HealBot_HoT_RemoveIconButton(button)
+                end
+                if HealBot_UnitInRange(HealBot_rSpell, ebUnit)==1 and not UnitIsGhost(ebUnit) then
+                    ebubar:SetValue(100)
+                else
+                    ebubar:SetValue(0)
                 end
             end
             if uName==HealBot_PlayerName and not HealBot_PlayerDead then
@@ -1098,9 +1086,25 @@ function HealBot_Action_EnableButton(button, hbGUID)
             ebubar2:SetValue(ebipct);
         elseif ebubar2:GetValue()>0 then
             ebubar2:SetValue(0)
+        end
+        if uAbsorbs>0 then
+            if Healbot_Config_Skins.AbsorbBarColour[Healbot_Config_Skins.Current_Skin] == 1 then
+                ebapct = uHlth+uAbsorbs
+            else
+                ebapct = uHlth+uHealIn+uAbsorbs
+            end
+            if ebapct<uMaxHlth then
+                ebapct=ebapct/uMaxHlth
+            else
+                ebapct=1;
+            end
+            ebapct=floor(ebapct*100)
+            ebubar6:SetValue(ebapct);
+        elseif ebubar6:GetValue()>0 then
+            ebubar6:SetValue(0)
         end    
     
-        ebur,ebug,ebub,ebua,ebpct,ebusa,ebir,ebig,ebib,hbr,hbg,hbb = HealBot_HealthColor(ebUnit,uHlth,uMaxHlth,false,hbGUID,ebuUnitDead,ebuHealBot_UnitBuff,ebuHealBot_UnitDebuff,uHealIn,true)
+        ebur,ebug,ebub,ebua,ebpct,ebusa,ebir,ebig,ebib,hbr,hbg,hbb,har,hag,hab = HealBot_HealthColor(ebUnit,uHlth,uMaxHlth,false,hbGUID,ebuUnitDead,ebuHealBot_UnitBuff,ebuHealBot_UnitDebuff,uHealIn,uAbsorbs,true)
 
         if Healbot_Config_Skins.SetClassColourText[Healbot_Config_Skins.Current_Skin]==1 then
             ebusr,ebusg,ebusb = HealBot_Action_ClassColour(hbGUID, ebUnit);
@@ -1119,30 +1123,10 @@ function HealBot_Action_EnableButton(button, hbGUID)
         end
   
         if Healbot_Config_Skins.UseFluidBars[Healbot_Config_Skins.Current_Skin]==0 then
-            if ebuUnitDead then
-                if HealBot_UnitInRange(HealBot_rSpell, ebUnit)==1 and not UnitIsGhost(ebUnit) then
-                    ebubar:SetValue(100)
-                else
-                    ebubar:SetValue(0)
-                end
-                ebubar2:SetValue(0)
-            else
-                ebubar:SetValue(ebpct)
-            end
-        else
-            if HealBot_curUnitHealth[ebubar]~=ebpct then
-                if ebuUnitDead then
-                    if HealBot_UnitInRange(HealBot_rSpell, ebUnit)==1 and not UnitIsGhost(ebUnit) then
-                        ebubar:SetValue(100)
-                    else
-                        ebubar:SetValue(0)
-                    end
-                    ebubar2:SetValue(0)
-                else
-                    HealBot_UnitBarUpdate[ebubar]=HealBot_curUnitHealth[ebubar]
-                end
-                HealBot_curUnitHealth[ebubar]=ebpct
-            end
+            ebubar:SetValue(ebpct)
+        elseif HealBot_curUnitHealth[ebubar]~=ebpct then
+            HealBot_UnitBarUpdate[ebubar]=HealBot_curUnitHealth[ebubar]
+            HealBot_curUnitHealth[ebubar]=ebpct
         end
     
         ebuProcessThis=true
@@ -1160,10 +1144,10 @@ function HealBot_Action_EnableButton(button, hbGUID)
                 HealBot_UnitRangeSpell[ebUnit]=HealBot_bSpell
                 if HealBot_UnitInRange(HealBot_bSpell, ebUnit)==1 then ebufastenable=true end
             end
-            if not ebufastenable and (uHlth<=(uMaxHlth*Healbot_Config_Skins.AlertLevel[Healbot_Config_Skins.Current_Skin]) or HealBot_MyTargets[hbGUID]) and HealBot_UnitInRange(HealBot_hSpell, ebUnit)==1 then
+            if not ebufastenable and (uHlth<=(uMaxHlth*Healbot_Config_Skins.AlertLevel[Healbot_Config_Skins.Current_Skin]) or HealBot_MyTargets[hbGUID]) and unitHRange==1 then
                 ebufastenable=true
                 HealBot_UnitRangeSpell[ebUnit]=HealBot_hSpell
-            elseif not ebufastenable and HealBot_Aggro[hbGUID] and (HealBot_UnitThreat[hbGUID] or 0)>(Healbot_Config_Skins.AggroAlertLevel[Healbot_Config_Skins.Current_Skin]) and HealBot_UnitInRange(HealBot_hSpell, ebUnit)==1 then
+            elseif not ebufastenable and HealBot_Aggro[hbGUID] and (HealBot_UnitThreat[hbGUID] or 0)>(Healbot_Config_Skins.AggroAlertLevel[Healbot_Config_Skins.Current_Skin]) and unitHRange==1 then
                 ebufastenable=true
                 HealBot_UnitRangeSpell[ebUnit]=HealBot_hSpell
             end
@@ -1172,7 +1156,6 @@ function HealBot_Action_EnableButton(button, hbGUID)
             ebusa = Healbot_Config_Skins.btextenabledcola[Healbot_Config_Skins.Current_Skin];
             HealBot_Enabled[hbGUID]=true
             ebubar:SetStatusBarColor(ebur,ebug,ebub,Healbot_Config_Skins.Barcola[Healbot_Config_Skins.Current_Skin]);
-            ebubar5:SetStatusBarColor(hbr,hbg,hbb,Healbot_Config_Skins.barbackcola[Healbot_Config_Skins.Current_Skin]);
             HealBot_UnitRangeb3a[ebUnit]=Healbot_Config_Skins.Barcola[Healbot_Config_Skins.Current_Skin]
             if Healbot_Config_Skins.ShowClassOnBar[Healbot_Config_Skins.Current_Skin]==1 and Healbot_Config_Skins.ShowClassType[Healbot_Config_Skins.Current_Skin]==1 then -- and HealBot_retdebuffTargetIcon(ebUnit) then
                 ebuicon15:SetAlpha(1) --Healbot_Config_Skins.Barcola[Healbot_Config_Skins.Current_Skin]);
@@ -1187,7 +1170,7 @@ function HealBot_Action_EnableButton(button, hbGUID)
                 HealBot_Action_TooltipUnit = ebUnit;
                 HealBot_Action_DisableTooltipUnit = nil;
             end
-            if ebUnit==HealBot_Action_TooltipUnit then
+            if HealBot_useTips and ebUnit==HealBot_Action_TooltipUnit then
                 HealBot_Action_RefreshTooltip(ebUnit,"Enabled")
             end
             if Healbot_Config_Skins.AutoClose[Healbot_Config_Skins.Current_Skin]==1 then HealBot_Action_ShowPanel() end
@@ -1260,13 +1243,12 @@ function HealBot_Action_EnableButton(button, hbGUID)
                     ebuicon15:SetAlpha(Healbot_Config_Skins.bardisa[Healbot_Config_Skins.Current_Skin]);
                 end
             end
-            ebubar5:SetStatusBarColor(hbr,hbg,hbb,Healbot_Config_Skins.barbackcola[Healbot_Config_Skins.Current_Skin]);
             if not HealBot_IsFighting and HealBot_Config.EnableHealthy==0 then
                 if ebUnit==HealBot_Action_TooltipUnit then
                     HealBot_Action_TooltipUnit = nil;
                     HealBot_Action_DisableTooltipUnit = ebUnit;
                 end
-                if ebUnit==HealBot_Action_DisableTooltipUnit then
+                if HealBot_useTips and ebUnit==HealBot_Action_DisableTooltipUnit then
                     HealBot_Action_RefreshTooltip(ebUnit,"Disabled")
                 end
             end
@@ -1280,9 +1262,11 @@ function HealBot_Action_EnableButton(button, hbGUID)
     else
         uHlth,uMaxHlth=1,1
         uHealIn = 0
+        uAbsorbs = 0
         ebusr,ebusg,ebusb=0.7,0.7,0.7
         ebubar:SetStatusBarColor(0,1,0,0)
         ebubar5:SetStatusBarColor(0,0,0,0);
+        ebubar6:SetStatusBarColor(0,0,0,0);
         HealBot_UnitRanger[ebUnit]=0
         HealBot_UnitRangeg[ebUnit]=1
         HealBot_UnitRangeb[ebUnit]=0
@@ -1300,13 +1284,28 @@ function HealBot_Action_EnableButton(button, hbGUID)
         end
     end
     
+    ebubar5:SetStatusBarColor(hbr,hbg,hbb,Healbot_Config_Skins.barbackcola[Healbot_Config_Skins.Current_Skin]);
     if uHealIn>0 then
-        ebubar2:SetStatusBarColor(ebir,ebig,ebib,Healbot_Config_Skins.BarcolaInHeal[Healbot_Config_Skins.Current_Skin]);
-        if HealBot_UnitRangeb3a[ebUnit]<Healbot_Config_Skins.BarcolaInHeal[Healbot_Config_Skins.Current_Skin] then
-            HealBot_UnitRangeb3a[ebUnit]=Healbot_Config_Skins.BarcolaInHeal[Healbot_Config_Skins.Current_Skin]
+        if unitHRange==1 and not HealBot_PlayerDead then
+            ebubar2:SetStatusBarColor(ebir,ebig,ebib,Healbot_Config_Skins.BarcolaInHeal[Healbot_Config_Skins.Current_Skin]);
+        elseif unitHRange==0 then
+            ebubar2:SetStatusBarColor(ebir,ebig,ebib,HealBot_UnitRangea[ebUnit]);
+        else
+            ebubar2:SetStatusBarColor(ebir,ebig,ebib,Healbot_Config_Skins.bardisa[Healbot_Config_Skins.Current_Skin]);
         end
     else
         ebubar2:SetStatusBarColor(ebur,ebug,ebub,0);
+    end
+    if uAbsorbs>0 then
+        if unitHRange==1 and not HealBot_PlayerDead then
+            ebubar6:SetStatusBarColor(har,hag,hab,Healbot_Config_Skins.barabsorbcola[Healbot_Config_Skins.Current_Skin]);
+        elseif unitHRange==0 then
+            ebubar6:SetStatusBarColor(har,hag,hab,HealBot_UnitRangea[ebUnit]);
+        else
+            ebubar6:SetStatusBarColor(har,hag,hab,Healbot_Config_Skins.bardisa[Healbot_Config_Skins.Current_Skin]);
+        end
+    else
+        ebubar6:SetStatusBarColor(ebur,ebug,ebub,0);
     end
   
   --  ebubar.txt = _G[ebubar:GetName().."_text"];
@@ -1537,7 +1536,7 @@ function HealBot_Action_HBText(hlth,maxhlth,unitName,unit,healin, hbGUID)
         if vUnit then
             x,y=HealBot_VehicleHealth(vUnit)
             hpPerc = floor((x/y)*100)
-            if hpPerc < 0 then 
+            if hpPerc < 0.0001 then 
                 hpPerc = 0
             end
             bthlthdelta="  "..string.format("|cff%s%d%%|r", HealBot_PercentToHexColor(hpPerc), hpPerc)
@@ -1592,12 +1591,11 @@ end
 
 function HealBot_PercentToHexColor(percent)
     percent = percent/100
-    r,g,b = 2-percent*2,1,0
     if percent <= 0 then
         r,g,b = 1,0,0
     elseif percent <= 0.5 then
         r,g,b = 1,percent*2,0
-    elseif percent >= 1 then
+    else
         r,g,b = 0,1,0
     end 
     return string.format("%02x%02x%02x",r*255,g*255,b*255)
@@ -1659,7 +1657,7 @@ local btexture=Healbot_Config_Skins.btexture[Healbot_Config_Skins.Current_Skin];
 local btextheight=Healbot_Config_Skins.btextheight[Healbot_Config_Skins.Current_Skin]*frameScale;
 local btextoutline=Healbot_Config_Skins.btextoutline[Healbot_Config_Skins.Current_Skin];
 local b,bar,bar2,bar3,bar4,icon,txt,icon1,icon15,icon16,icon1t,icon15t,icon1ta,icon15ta,pIcon,icont,iconta
-local barScale,h,hwidth,hheight,iScale,itScale,x,hcpct,bar5
+local barScale,h,hwidth,hheight,iScale,itScale,x,hcpct,bar5,bar6
 local abSize = ceil((Healbot_Config_Skins.AggroBarSize[Healbot_Config_Skins.Current_Skin] or 2)*frameScale)
 local abtSize = {[0]=1,[1]=1,[2]=1,[3]=2,[4]=2,[5]=2,[6]=3,[7]=3,[8]=3,[9]=3,[10]=4,[11]=4,[12]=4,[13]=4,[14]=4,[15]=5}
   
@@ -1683,15 +1681,20 @@ local abtSize = {[0]=1,[1]=1,[2]=1,[3]=2,[4]=2,[5]=2,[6]=3,[7]=3,[8]=3,[9]=3,[10
         bar3 = HealBot_Action_HealthBar3(b);
         bar4 = HealBot_Action_HealthBar4(b)
         bar5 = HealBot_Action_HealthBar5(b)
+        bar6 = HealBot_Action_HealthBar6(b)
         bar.txt = _G[bar:GetName().."_text"];
         bar3.txt=_G[bar3:GetName().."Power".."1"];
         bar:SetHeight(bheight);
         bar:SetWidth(bwidth)
         bar5:SetHeight(bheight);
         bar5:SetWidth(bwidth)
+        bar6:SetHeight(bheight);
+        bar6:SetWidth(bwidth)
         bar5:SetPoint("TOPLEFT",bar,"TOPLEFT",0,0);
+        bar6:SetPoint("TOPLEFT",bar,"TOPLEFT",0,0);
         bar5:SetFrameLevel(bar4:GetFrameLevel()+ 1);
-        bar2:SetFrameLevel(bar5:GetFrameLevel()+ 1);
+        bar6:SetFrameLevel(bar5:GetFrameLevel()+ 1);
+        bar2:SetFrameLevel(bar6:GetFrameLevel()+ 1);
         bar:SetFrameLevel(bar2:GetFrameLevel()+ 1);
 		bar3:SetFrameLevel(bar:GetFrameLevel()+ 1);
      --   bar:SetTexture(LSM:Fetch('statusbar',Healbot_Config_Skins.btexture[Healbot_Config_Skins.Current_Skin]),false);
@@ -1701,6 +1704,8 @@ local abtSize = {[0]=1,[1]=1,[2]=1,[3]=2,[4]=2,[5]=2,[6]=3,[7]=3,[8]=3,[9]=3,[10
         bar.txt:ClearAllPoints();
         bar5:SetStatusBarTexture(LSM:Fetch('statusbar',Healbot_Config_Skins.btexture[Healbot_Config_Skins.Current_Skin]));
         bar5:GetStatusBarTexture():SetHorizTile(false)
+        bar6:SetStatusBarTexture(LSM:Fetch('statusbar',Healbot_Config_Skins.btexture[Healbot_Config_Skins.Current_Skin]));
+        bar6:GetStatusBarTexture():SetHorizTile(false)
         if Healbot_Config_Skins.TextAlignment[Healbot_Config_Skins.Current_Skin]==1 then
             bar.txt:SetPoint("LEFT",bar,"LEFT",4,0)
         elseif Healbot_Config_Skins.TextAlignment[Healbot_Config_Skins.Current_Skin]==2 then
@@ -1803,8 +1808,10 @@ local abtSize = {[0]=1,[1]=1,[2]=1,[3]=2,[4]=2,[5]=2,[6]=3,[7]=3,[8]=3,[9]=3,[10
             bar2:SetMinMaxValues(0,100);
             bar3:SetMinMaxValues(0,100)
             bar5:SetMinMaxValues(0,100)
+            bar6:SetMinMaxValues(0,100)
             bar:SetStatusBarColor(0,1,0,Healbot_Config_Skins.bardisa[Healbot_Config_Skins.Current_Skin]);
             bar5:SetStatusBarColor(0,1,0,Healbot_Config_Skins.barbackcola[Healbot_Config_Skins.Current_Skin]);
+            bar6:SetStatusBarColor(0,1,0,Healbot_Config_Skins.barabsorbcola[Healbot_Config_Skins.Current_Skin]);
             if not HealBot_curUnitHealth[bar] then
                 uHlth,uMaxHlth=HealBot_UnitHealth(hbGUID, b.unit)
                 if uHlth>uMaxHlth then uMaxHlth=HealBot_CorrectPetHealth(b.unit,uHlth,uMaxHlth,hbGUID) end
@@ -1819,6 +1826,7 @@ local abtSize = {[0]=1,[1]=1,[2]=1,[3]=2,[4]=2,[5]=2,[6]=3,[7]=3,[8]=3,[9]=3,[10
             HealBot_Panel_SetBarArrays(b)
             bar2:SetValue(0);
             bar5:SetValue(100);
+            bar6:SetValue(0);
             bar2:SetStatusBarColor(0,1,0,0);
         end
         if Healbot_Config_Skins.ShowClassOnBar[Healbot_Config_Skins.Current_Skin]==1 and Healbot_Config_Skins.ShowClassType[Healbot_Config_Skins.Current_Skin]==1 then
@@ -2100,6 +2108,9 @@ local abtSize = {[0]=1,[1]=1,[2]=1,[3]=2,[4]=2,[5]=2,[6]=3,[7]=3,[8]=3,[9]=3,[10
         barScale = bar5:GetScale();
         bar5:SetScale(barScale + 0.01);
         bar5:SetScale(barScale);
+        barScale = bar6:GetScale();
+        bar6:SetScale(barScale + 0.01);
+        bar6:SetScale(barScale);
     elseif barType=="header" then
           --for x=1,15 do
         h=button
@@ -2208,21 +2219,33 @@ function HealBot_Action_CheckRange(unit, button)
         if unit~="player" and HealBot_UnitStatus[unit]==8 and UnitHealth(unit)>1 then 
             HealBot_OnEvent_UnitHealth(nil,unit,UnitHealth(unit),UnitHealthMax(unit)) 
         end
+        xGUID=HealBot_UnitGUID(unit)
         if HealBot_UnitRange[unit]==-2 then
             --HealBot_AddDebug("HealBot_UnitRange[unit]==-2 unit="..unit)
-            xGUID=HealBot_UnitGUID(unit)
             if xGUID then
                 HealBot_Action_RefreshButton(button, xGUID)
             elseif unit==button.guid then
                 HealBot_Action_RefreshButton(button, button.guid)
             end
         elseif uRange~=HealBot_UnitRange[unit] then
+            local ebubar,ebubar2,ebubar6=nil,nil,nil
+            local uHealIn, uAbsorbs = HealBot_IncHeals_retHealsIn(xGUID)
             ebubar = HealBot_Unit_Bar1[unit]
+            ebubar2 = HealBot_Unit_Bar2[unit]
+            ebubar6 = HealBot_Unit_Bar6[unit]
             ebubar.txt=_G[ebubar:GetName().."_text"];
             ebuicon15 = _G[ebubar:GetName().."Icon15"];
             HealBot_UnitRange[unit]=uRange
+            if uHealIn==0 then
+                ebubar2:SetStatusBarColor(HealBot_UnitRanger[unit],HealBot_UnitRangeg[unit],HealBot_UnitRangeb[unit],0);
+            end
+            if uAbsorbs==0 then
+                ebubar6:SetStatusBarColor(HealBot_UnitRanger[unit],HealBot_UnitRangeg[unit],HealBot_UnitRangeb[unit],0);
+            end
             if uRange==1 and not HealBot_PlayerDead then
                 ebubar:SetStatusBarColor(HealBot_UnitRanger[unit],HealBot_UnitRangeg[unit],HealBot_UnitRangeb[unit],Healbot_Config_Skins.Barcola[Healbot_Config_Skins.Current_Skin])
+                if uHealIn>0 then ebubar2:SetAlpha(Healbot_Config_Skins.BarcolaInHeal[Healbot_Config_Skins.Current_Skin]); end
+                if uAbsorbs>0 then ebubar6:SetAlpha(Healbot_Config_Skins.barabsorbcola[Healbot_Config_Skins.Current_Skin]); end
                 ebubar.txt:SetTextColor(HealBot_UnitRangeitr[unit],HealBot_UnitRangeitg[unit],HealBot_UnitRangeitb[unit],Healbot_Config_Skins.btextenabledcola[Healbot_Config_Skins.Current_Skin]);
                 if Healbot_Config_Skins.ShowClassOnBar[Healbot_Config_Skins.Current_Skin]==1 and Healbot_Config_Skins.ShowClassType[Healbot_Config_Skins.Current_Skin]==1 then
                     ebuicon15:SetAlpha(Healbot_Config_Skins.Barcola[Healbot_Config_Skins.Current_Skin]);
@@ -2235,6 +2258,8 @@ function HealBot_Action_CheckRange(unit, button)
             elseif uRange==0 then
                 --ebubar:SetStatusBarColor(HealBot_UnitRanger[unit],HealBot_UnitRangeg[unit],HealBot_UnitRangeb[unit],Healbot_Config_Skins.bardisa[Healbot_Config_Skins.Current_Skin])
                 ebubar:SetStatusBarColor(HealBot_UnitRanger[unit],HealBot_UnitRangeg[unit],HealBot_UnitRangeb[unit],HealBot_UnitRangea[unit])
+                if uHealIn>0 then ebubar2:SetAlpha(HealBot_UnitRangea[unit]); end
+                if uAbsorbs>0 then ebubar6:SetAlpha(HealBot_UnitRangea[unit]); end
                 ebubar.txt:SetTextColor(HealBot_UnitRangeitr[unit],HealBot_UnitRangeitg[unit],HealBot_UnitRangeitb[unit],HealBot_UnitRangeota[unit]);
                 if Healbot_Config_Skins.ShowClassOnBar[Healbot_Config_Skins.Current_Skin]==1 and Healbot_Config_Skins.ShowClassType[Healbot_Config_Skins.Current_Skin]==1 then
                     ebuicon15:SetAlpha(HealBot_UnitRangea[unit]);
@@ -2245,6 +2270,8 @@ function HealBot_Action_CheckRange(unit, button)
                 end
             else
                 ebubar:SetStatusBarColor(HealBot_UnitRanger[unit],HealBot_UnitRangeg[unit],HealBot_UnitRangeb[unit],Healbot_Config_Skins.bardisa[Healbot_Config_Skins.Current_Skin])
+                if uHealIn>0 then ebubar2:SetAlpha(Healbot_Config_Skins.bardisa[Healbot_Config_Skins.Current_Skin]); end
+                if uAbsorbs>0 then ebubar6:SetAlpha(Healbot_Config_Skins.bardisa[Healbot_Config_Skins.Current_Skin]); end
                 ebubar.txt:SetTextColor(HealBot_UnitRangeotr[unit],HealBot_UnitRangeotg[unit],HealBot_UnitRangeotb[unit],Healbot_Config_Skins.btextdisbledcola[Healbot_Config_Skins.Current_Skin]);
                 if Healbot_Config_Skins.ShowClassOnBar[Healbot_Config_Skins.Current_Skin]==1 and Healbot_Config_Skins.ShowClassType[Healbot_Config_Skins.Current_Skin]==1 then
                     ebuicon15:SetAlpha(Healbot_Config_Skins.bardisa[Healbot_Config_Skins.Current_Skin]);
@@ -2343,6 +2370,7 @@ function HealBot_Action_SetHealButton(index,unit,hbGUID)
             HealBot_Unit_Bar3[unit]=HealBot_Action_HealthBar3(shb)
             HealBot_Unit_Bar4[unit]=HealBot_Action_HealthBar4(shb)
             HealBot_Unit_Bar5[unit]=HealBot_Action_HealthBar5(shb)
+            HealBot_Unit_Bar6[unit]=HealBot_Action_HealthBar6(shb)
             HealBot_UnitRangeSpell[unit]=HealBot_hSpell
             HealBot_Enabled[hbGUID]=false
             HealBot_CheckHealth(hbGUID)
@@ -2383,6 +2411,7 @@ function HealBot_Action_SetTargetHealButton(unit,hbGUID)
             HealBot_Unit_Bar3[unit]=HealBot_Action_HealthBar3(shb)
             HealBot_Unit_Bar4[unit]=HealBot_Action_HealthBar4(shb)
             HealBot_Unit_Bar5[unit]=HealBot_Action_HealthBar5(shb)
+            HealBot_Unit_Bar6[unit]=HealBot_Action_HealthBar6(shb)
             HealBot_CheckHealth(hbGUID)
             HealBot_UnitRangeSpell[unit]=HealBot_hSpell
         elseif hbGUID~=shb.guid then
@@ -2486,7 +2515,6 @@ local showmenu=nil
 local showHBmenu=nil
 local setDropdown=nil
 local partyNo=nil
-local sTar, sTrin1, sTrin2=0, 0, 0
 local curGUID=nil
 function HealBot_Action_SetButtonAttrib(button,bbutton,bkey,status,j)
  
@@ -2496,11 +2524,13 @@ function HealBot_Action_SetButtonAttrib(button,bbutton,bkey,status,j)
         HB_prefix = "";
     end
     
+    local sTar, sTrin1, sTrin2, AvoidBC=0, 0, 0, 0
+    
     HB_combo_prefix = bkey..bbutton..HealBot_Config.CurrentSpec;
     if status=="Enabled" then
-        sName, sTar, sTrin1, sTrin2 = HealBot_Action_AttribSpellPattern(HB_combo_prefix)
+        sName, sTar, sTrin1, sTrin2, AvoidBC = HealBot_Action_AttribSpellPattern(HB_combo_prefix)
     elseif status=="Disabled" then
-        sName, sTar, sTrin1, sTrin2 = HealBot_Action_AttribDisSpellPattern(HB_combo_prefix)
+        sName, sTar, sTrin1, sTrin2, AvoidBC = HealBot_Action_AttribDisSpellPattern(HB_combo_prefix)
     else
         sName=nil;
     end
@@ -2590,8 +2620,8 @@ function HealBot_Action_SetButtonAttrib(button,bbutton,bkey,status,j)
             button:SetAttribute(HB_prefix.."type-mainassist"..j, "toggle")
             hbAttribsMinReset[button.id..HB_prefix..status..j]=true
         elseif HealBot_GetSpellId(sName) then
-            if sTar==1 or sTrin1==1 or sTrin2==1 then
-                mText = HealBot_Action_AlterSpell2Macro(sName, sTar, sTrin1, sTrin2, button.unit, HB_combo_prefix)
+            if sTar==1 or sTrin1==1 or sTrin2==1 or AvoidBC==1 then
+                mText = HealBot_Action_AlterSpell2Macro(sName, sTar, sTrin1, sTrin2, AvoidBC, button.unit, HB_combo_prefix)
                 button:SetAttribute(HB_prefix.."helpbutton"..j, nil);
                 button:SetAttribute(HB_prefix.."type"..j,"macro")
                 button:SetAttribute(HB_prefix.."macrotext"..j, mText)
@@ -2621,8 +2651,8 @@ function HealBot_Action_SetButtonAttrib(button,bbutton,bkey,status,j)
             button:SetAttribute(HB_prefix.."type-item"..j, "item");
             button:SetAttribute(HB_prefix.."item-item"..j, sName);
         else
-            if sTar==1 or sTrin1==1 or sTrin2==1 then
-                mText = HealBot_Action_AlterSpell2Macro(sName, sTar, sTrin1, sTrin2, button.unit, HB_combo_prefix)
+            if sTar==1 or sTrin1==1 or sTrin2==1 or AvoidBC==1 then
+                mText = HealBot_Action_AlterSpell2Macro(sName, sTar, sTrin1, sTrin2, AvoidBC, button.unit, HB_combo_prefix)
                 button:SetAttribute(HB_prefix.."helpbutton"..j, nil);
                 button:SetAttribute(HB_prefix.."type"..j,"macro")
                 button:SetAttribute(HB_prefix.."macrotext"..j, mText)
@@ -2649,7 +2679,7 @@ end
 local smName={}
 local sysSoundSFX = strsub(GetCVar("Sound_EnableSFX") or "nil",1,1)
 
-function HealBot_Action_AlterSpell2Macro(spellName, spellTar, spellTrin1, spellTrin2, unit, combo)
+function HealBot_Action_AlterSpell2Macro(spellName, spellTar, spellTrin1, spellTrin2, spellAvoidBC, unit, combo)
     if not smName[combo..unit] then
         smName[combo..unit]=""
         if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName[combo..unit]=smName[combo..unit].."/console Sound_EnableSFX 0;\n" end
@@ -2660,7 +2690,8 @@ function HealBot_Action_AlterSpell2Macro(spellName, spellTar, spellTrin1, spellT
         if HealBot_Config.MacroUse10==1 then smName[combo..unit]=smName[combo..unit].."/use 10;\n" end
         if HealBot_Globals.MacroSuppressError==1 then smName[combo..unit]=smName[combo..unit].."/script UIErrorsFrame:Clear(); UIErrorsFrame:Show();\n" end
         if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName[combo..unit]=smName[combo..unit].."/console Sound_EnableSFX 1;\n" end
-        smName[combo..unit]=smName[combo..unit].."/cast [@"..unit.."] "..spellName..";"
+        smName[combo..unit]=smName[combo..unit].."/cast [@"..unit.."] "..spellName..";\n"
+        if spellAvoidBC==1 then smName[combo..unit]=smName[combo..unit].."/use 4;" end
         if strlen(smName[combo..unit])>255 then
             smName[combo..unit]=""
             if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName[combo..unit]=smName[combo..unit].."/console Sound_EnableSFX 0;\n" end
@@ -2669,14 +2700,16 @@ function HealBot_Action_AlterSpell2Macro(spellName, spellTar, spellTrin1, spellT
             if spellTrin2==1 then smName[combo..unit]=smName[combo..unit].."/use 14;\n" end
             if HealBot_Config.MacroUse10==1 then smName[combo..unit]=smName[combo..unit].."/use 10;\n" end
             if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName[combo..unit]=smName[combo..unit].."/console Sound_EnableSFX 1;\n" end
-            smName[combo..unit]=smName[combo..unit].."/cast [@"..unit.."] "..spellName..";"
+            smName[combo..unit]=smName[combo..unit].."/cast [@"..unit.."] "..spellName..";\n"
+            if spellAvoidBC==1 then smName[combo..unit]=smName[combo..unit].."/use 4;" end
             if strlen(smName[combo..unit])>255 then
                 smName[combo..unit]=""
                 if spellTar==1 then smName[combo..unit]=smName[combo..unit].."/target "..UnitName(unit)..";\n" end
                 if spellTrin1==1 then smName[combo..unit]=smName[combo..unit].."/use 13;\n" end
                 if spellTrin2==1 then smName[combo..unit]=smName[combo..unit].."/use 14;\n" end
                 if HealBot_Config.MacroUse10==1 then smName[combo..unit]=smName[combo..unit].."/use 10;\n" end
-                smName[combo..unit]=smName[combo..unit].."/cast [@"..unit.."] "..spellName..";"
+                smName[combo..unit]=smName[combo..unit].."/cast [@"..unit.."] "..spellName..";\n"
+                if spellAvoidBC==1 then smName[combo..unit]=smName[combo..unit].."/use 4;" end
                 if strlen(smName[combo..unit])>255 then
                     smName[combo..unit]=spellName
                 end
@@ -2809,10 +2842,11 @@ function HealBot_Action_AttribSpellPattern(HB_combo_prefix)
     hbTarget = HealBot_Config.EnabledSpellTarget
     hbTrinket1 = HealBot_Config.EnabledSpellTrinket1
     hbTrinket2 = HealBot_Config.EnabledSpellTrinket2
+    hbAvoidBC  = HealBot_Config.EnabledAvoidBlueCursor
     if not hbCombos then 
         return nil 
     end
-    return hbCombos[HB_combo_prefix], hbTarget[HB_combo_prefix] or 0, hbTrinket1[HB_combo_prefix] or 0, hbTrinket2[HB_combo_prefix] or 0
+    return hbCombos[HB_combo_prefix], hbTarget[HB_combo_prefix] or 0, hbTrinket1[HB_combo_prefix] or 0, hbTrinket2[HB_combo_prefix] or 0, hbAvoidBC[HB_combo_prefix] or 0
 end
 
 function HealBot_Action_AttribDisSpellPattern(HB_combo_prefix)
@@ -2820,10 +2854,11 @@ function HealBot_Action_AttribDisSpellPattern(HB_combo_prefix)
     hbTarget = HealBot_Config.DisabledSpellTarget
     hbTrinket1 = HealBot_Config.DisabledSpellTrinket1
     hbTrinket2 = HealBot_Config.DisabledSpellTrinket2
+    hbAvoidBC  = HealBot_Config.DisabledAvoidBlueCursor
     if not hbCombos then 
         return nil 
     end
-    return hbCombos[HB_combo_prefix], hbTarget[HB_combo_prefix] or 0, hbTrinket1[HB_combo_prefix] or 0, hbTrinket2[HB_combo_prefix] or 0
+    return hbCombos[HB_combo_prefix], hbTarget[HB_combo_prefix] or 0, hbTrinket1[HB_combo_prefix] or 0, hbTrinket2[HB_combo_prefix] or 0, hbAvoidBC[HB_combo_prefix] or 0
 end
 
 local hbInitButtons=false
@@ -3016,16 +3051,20 @@ end
 
 function HealBot_Action_ShowTooltip(unit)
     if HealBot_Globals.ShowTooltip==0 then return end
-    HealBot_Action_TooltipUnit = unit;
     HealBot_Action_DisableTooltipUnit = nil;
-    HealBot_Action_RefreshTooltip(unit,"Enabled");
+    if HealBot_useTips then
+        HealBot_Action_TooltipUnit = unit;
+        HealBot_Action_RefreshTooltip(unit,"Enabled");
+    end
 end
 
 function HealBot_Action_ShowDisabledTooltip(unit)
     if HealBot_Globals.ShowTooltip==0 then return end
     HealBot_Action_TooltipUnit = nil;
-    HealBot_Action_DisableTooltipUnit = unit;
-    HealBot_Action_RefreshTooltip(unit,"Disabled");
+    if HealBot_useTips then
+        HealBot_Action_DisableTooltipUnit = unit;
+        HealBot_Action_RefreshTooltip(unit,"Disabled");
+    end
 end
 
 function HealBot_Action_HideTooltip(self)
@@ -3134,7 +3173,7 @@ function HealBot_Action_HealUnit_OnLeave(self)
     xGUID=HealBot_UnitGUID(self.unit)
     if Healbot_Config_Skins.HighLightActiveBar[Healbot_Config_Skins.Current_Skin]==1 and HealBot_Hightlight[xGUID] and HealBot_Hightlight[xGUID]=="M" then
         if HealBot_Aggro[xGUID] and HealBot_Aggro[xGUID]=="h" then
-            HealBot_Action_UpdateAggro(self.unit,"off",HealBot_UnitThreat[xGUID] or 0,xGUID)
+            HealBot_Action_UpdateAggro(self.unit,"off",HealBot_UnitThreat[xGUID] or 0,xGUID, 0)
         end
     end
     HealBot_curGUID=nil
@@ -3225,12 +3264,12 @@ function HealBot_Action_HealUnit_Wheel(delta)
         HealBot_Panel_ToggelPrivateTanks(HealBot_curGUID)
     elseif HealBot_MouseWheelCmd==HEALBOT_RESET_BAR then
         HealBot_Reset_Unit(HealBot_curGUID)
-    elseif HealBot_MouseWheelCmd==HEALBOT_RANDOMMOUNT and UnitIsUnit(xUnit,"player") and not UnitAffectingCombat("player") then
-        HealBot_Action_ToggelMount("all")
-    elseif HealBot_MouseWheelCmd==HEALBOT_RANDOMGOUNDMOUNT and UnitIsUnit(xUnit,"player") and not UnitAffectingCombat("player") then
-        HealBot_Action_ToggelMount("ground")
-    elseif HealBot_MouseWheelCmd==HEALBOT_RANDOMPET and UnitIsUnit(xUnit,"player") then
-        HealBot_Action_RandomPet()   
+    elseif HealBot_MouseWheelCmd==HEALBOT_RANDOMMOUNT and UnitIsUnit(xUnit,"player") and not UnitAffectingCombat("player") and HealBot_Action_retFuncUse()=="YES" then
+        HealBot_MountsPets_ToggelMount("all")
+    elseif HealBot_MouseWheelCmd==HEALBOT_RANDOMGOUNDMOUNT and UnitIsUnit(xUnit,"player") and not UnitAffectingCombat("player") and HealBot_Action_retFuncUse()=="YES" then
+        HealBot_MountsPets_ToggelMount("ground")
+    elseif HealBot_MouseWheelCmd==HEALBOT_RANDOMPET and UnitIsUnit(xUnit,"player") and HealBot_Action_retFuncUse()=="YES" then
+        HealBot_MountsPets_RandomPet()   
     end
 
 end
@@ -3504,7 +3543,7 @@ function HealBot_Action_PreClick(self,button)
             if button=="RightButton" then
                 if HealBot_UnitID[xGUID] then
                     HealBot_Panel_ToggelHealTarget(xGUID)
-                    if HealBot_Globals.ShowTooltip==1 then 
+                    if HealBot_useTips and HealBot_Globals.ShowTooltip==1 then 
                         HealBot_Action_RefreshTargetTooltip(xGUID, self.unit) 
                     end
                 end
@@ -3607,6 +3646,7 @@ local scuSpell, scuHlth, scuMaxHlth, scuHealsIn, scuMinHlth = nil,nil,nil,nil, U
 function HealBot_Action_SmartCast(hbGUID)
     scuSpell=nil
     rangeSpell=HealBot_hSpell
+    
     if HealBot_PlayerDead or not HealBot_UnitID[hbGUID] then return nil; end
   
     if HealBot_Globals.SmartCastRes==1 and UnitIsDead(HealBot_UnitID[hbGUID]) and not UnitIsGhost(HealBot_UnitID[hbGUID]) then
@@ -3650,364 +3690,7 @@ function HealBot_Action_ClearLocalArr(hbGUID)
     if HealBot_AggroIndicator[hbGUID] then HealBot_AggroIndicator[hbGUID]=nil end
 end
 
-local HealBot_Mounts = {}
-
-function HealBot_Action_initMountData()
-HealBot_Mounts = {
-      [458]="G", 
-      [470]="G",
-      [472]="G",
-      [579]="G",
-      [580]="G",
-     [3363]="F",
-     [5784]="G",
-     [6648]="G",
-     [6653]="G",
-     [6654]="G",
-     [6777]="G",
-     [6898]="G",
-     [6899]="G",
-     [8394]="G",
-     [8395]="G", 
-    [10789]="G", 
-    [10793]="G", 
-    [10795]="G", 
-    [10796]="G", 
-    [10799]="G", 
-    [10873]="G",
-    [10969]="G", 
-    [13819]="G", 
-    [15779]="G", 
-    [15780]="G", 
-    [15781]="G", 
-    [16055]="G", 
-    [16056]="G", 
-    [16058]="G", 
-    [16059]="G", 
-    [16060]="G",
-    [16080]="G", 
-    [16081]="G", 
-    [16082]="G", 
-    [16083]="G", 
-    [16084]="G", 
-    [17229]="G", 
-    [17450]="G", 
-    [17453]="G", 
-    [17454]="G", 
-    [17455]="G",
-    [17456]="G", 
-    [17458]="G", 
-    [17459]="G", 
-    [17460]="G", 
-    [17461]="G", 
-    [17462]="G", 
-    [17463]="G", 
-    [17464]="G", 
-    [17465]="G", 
-    [17481]="G",
-    [18363]="G", 
-    [18989]="G", 
-    [18990]="G", 
-    [18991]="G", 
-    [18992]="G", 
-    [22717]="G", 
-    [22722]="G", 
-    [23246]="G", 
-    [22718]="G", 
-    [22719]="G",
-    [22720]="G", 
-    [22721]="G", 
-    [22723]="G", 
-    [22724]="G", 
-    [23161]="G", 
-    [23214]="G", 
-    [23219]="G", 
-    [23220]="G", 
-    [23221]="G", 
-    [23222]="G",
-    [23223]="G", 
-    [23225]="G", 
-    [23227]="G", 
-    [23228]="G", 
-    [23229]="G", 
-    [23238]="G", 
-    [23239]="G", 
-    [23240]="G", 
-    [23241]="G", 
-    [23242]="G",
-    [23243]="G", 
-    [23247]="G", 
-    [23248]="G", 
-    [23249]="G", 
-    [23250]="G", 
-    [23251]="G", 
-    [23252]="G", 
-    [23338]="G", 
-    [23509]="G", 
-    [23510]="G",
-    [24242]="G", 
-    [24252]="G", 
-    [25953]="A", 
-    [26054]="A", 
-    [26055]="A", 
-    [26056]="A", 
-    [26656]="A", 
-    [28828]="F",
-    [30174]="G", 
-    [32235]="F", 
-    [32239]="F", 
-    [32240]="F", 
-    [32242]="F", 
-    [32243]="F", 
-    [32244]="F", 
-    [32245]="F", 
-    [32246]="F",
-    [32289]="F", 
-    [32290]="F", 
-    [32292]="F", 
-    [32295]="F", 
-    [32296]="F", 
-    [32297]="F", 
-    [32345]="F", 
-    [33176]="F", 
-    [33182]="F", 
-    [33184]="F", 
-    [33630]="G", 
-    [33660]="G", 
-    [34406]="G", 
-    [34407]="G", 
-    [34767]="G", 
-    [34769]="G", 
-    [34790]="G", 
-    [34795]="G",
-    [34896]="G", 
-    [34897]="G", 
-    [34898]="G", 
-    [34899]="G", 
-    [35018]="G", 
-    [35020]="G", 
-    [35022]="G", 
-    [35025]="G", 
-    [35027]="G", 
-    [35028]="G",
-    [35710]="G", 
-    [35711]="G", 
-    [35712]="G", 
-    [35713]="G", 
-    [35714]="G", 
-    [36702]="G", 
-    [37011]="F", 
-    [37015]="F", 
-    [39798]="F", 
-    [39800]="F",
---    [37815]="O", 
---    [37859]="O", 
---    [37860]="O",
-    [37011]="F", 
-    [37015]="F", 
-    [39315]="G", 
-    [39316]="G", 
-    [39317]="G", 
-    [39318]="G",
-    [39319]="G", 
-    [39798]="F", 
-    [39800]="F", 
-    [39801]="F", 
-    [39802]="F", 
-    [39803]="F", 
-    [40192]="F", 
-    [41252]="G", 
-    [41513]="F", 
-    [41514]="F", 
-    [41515]="F", 
-    [41516]="F", 
-    [41517]="F", 
-    [41518]="F",
-    [42776]="G", 
-    [42777]="G", 
-    [43688]="G", 
-    [43810]="F", 
-    [43899]="G", 
-    [43900]="G", 
-    [43927]="F", 
-    [44151]="F", 
-    [44153]="F", 
-    [44221]="F", 
-    [44229]="F", 
-    [44317]="F", 
-    [44744]="F", 
-    [46197]="F", 
-    [46199]="F",
-    [46628]="G", 
-    [47037]="G", 
-    [48025]="GF",
-    [48027]="G", 
-    [48778]="G", 
-    [48954]="G", 
-    [49193]="F", 
-    [49322]="G", 
-    [49378]="G", 
-    [49379]="G", 
-    [50281]="G", 
-    [50869]="G", 
-    [51412]="G", 
-    [51960]="F", 
-    [54729]="F", 
-    [54753]="G",
-    [55164]="F", 
-    [55531]="G", 
-    [58615]="F", 
-    [59567]="F", 
-    [59568]="F", 
-    [59569]="F", 
-    [59570]="F",
-    [59571]="F", 
-    [59572]="G", 
-    [59573]="G", 
-    [59650]="F", 
-    [59785]="G", 
-    [59788]="G", 
-    [59791]="G", 
-    [59793]="G", 
-    [59797]="G", 
-    [59799]="G", 
-    [59802]="G",
-    [59804]="G", 
-    [59810]="G", 
-    [59811]="G", 
-    [59961]="F", 
-    [59976]="F", 
-    [59996]="F", 
-    [60002]="F", 
-    [60021]="F", 
-    [60024]="F", 
-    [60025]="F",
-    [60114]="G", 
-    [60116]="G", 
-    [60118]="G", 
-    [60119]="G", 
-    [60136]="G", 
-    [60140]="G", 
-    [60424]="G",
-    [61229]="F",
-    [61230]="F", 
-    [61294]="F", 
-    [61309]="F", 
-    [61425]="G", 
-    [61442]="F", 
-    [61444]="F", 
-    [61446]="F", 
-    [61447]="G", 
-    [61451]="F", 
-    [61465]="G", 
-    [61466]="G", 
-    [61467]="G", 
-    [61469]="G", 
-    [61470]="G", 
-    [61996]="F", 
-    [61997]="F", 
-    [62048]="F",
-    [63232]="G", 
-    [63234]="G", 
-    [63635]="G",
-    [63636]="G", 
-    [63637]="G", 
-    [63638]="G", 
-    [63639]="G", 
-    [63640]="G", 
-    [63641]="G", 
-    [63642]="G", 
-    [63643]="G", 
-    [63796]="F",
-    [63844]="F", 
-    [63956]="F", 
-    [63963]="F", 
-    [64657]="G", 
-    [64658]="G",
-    [64659]="G", 
-    [64731]="GS", 
-    [64927]="F", 
-    [65439]="F", 
-    [64977]="G", 
-    [65637]="G", 
-    [65638]="G", 
-    [65639]="G", 
-    [65640]="G", 
-    [65641]="G", 
-    [65642]="G", 
-    [65643]="G",
-    [65644]="G", 
-    [65645]="G", 
-    [65646]="G", 
-    [66087]="F", 
-    [66088]="F", 
-    [66091]="G", 
-    [66846]="G", 
-    [66847]="G", 
-    [66906]="G", 
-    [67336]="F", 
-    [67466]="G",
-    [68056]="G", 
-    [68188]="G", 
-    [69395]="F", 
-    [71342]="F",
-    [71810]="F",
-    [72286]="GF",     
-    [72808]="F", 
-    [72807]="F", 
-    [72808]="F",
-    [73313]="G",
-    [73629]="G", 
-    [73630]="G",        
-    [74856]="F", 
-    [74918]="G", 
-    [75207]="V", 
-    [75596]="F", 
-    [75614]="GF", 
-    [75973]="F", 
-    [84751]="G",
-    [87090]="G",
-    [87091]="G", 
-    [88331]="F", 
-    [88335]="F", 
-    [88718]="F", 
-    [88741]="F", 
-    [88742]="F", 
-    [88744]="F", 
-    [88746]="F", 
-    [88748]="G", 
-    [88749]="G", 
-    [88750]="G", 
-    [88990]="F", 
-    [92155]="A", 
-    [92231]="G",
-    [92232]="G",        
-    [93623]="F",
-    [93644]="G",
-    [97359]="F",
-    [98204]="G",
-    [98727]="G",
-    [129552]="G",
-};
-end
-
--- Codes
---
--- A  - Ahn'Qiraj
--- F  - Flying
--- G  - Ground
--- GF - Ground and Flying
--- GS - Ground and Swiming
--- O  - The Oculus
--- S  - Swimming
--- V  - Swimming in Vashj'ir
-
-local HealBot_GMount = {}
-local HealBot_PrevGMounts = {}
-local HealBot_FMount = {}
-local HealBot_PrevFMounts = {}
-local HealBot_SMount = {}
-local HealBot_mountData = {}
+local HealBot_mountDataFuncUsed = "NO"
 
 function HealBot_Action_InitFuncUse()
     if (HealBot_Globals.HealBot_MouseWheelTxt["NoneUp"] and (HealBot_Globals.HealBot_MouseWheelTxt["NoneUp"]==HEALBOT_RANDOMMOUNT or HealBot_Globals.HealBot_MouseWheelTxt["NoneUp"]==HEALBOT_RANDOMGOUNDMOUNT))
@@ -4018,282 +3701,25 @@ function HealBot_Action_InitFuncUse()
     or (HealBot_Globals.HealBot_MouseWheelTxt["CtrlDown"] and (HealBot_Globals.HealBot_MouseWheelTxt["CtrlDown"]==HEALBOT_RANDOMMOUNT or HealBot_Globals.HealBot_MouseWheelTxt["CtrlDown"]==HEALBOT_RANDOMGOUNDMOUNT))
     or (HealBot_Globals.HealBot_MouseWheelTxt["AltUp"] and (HealBot_Globals.HealBot_MouseWheelTxt["AltUp"]==HEALBOT_RANDOMMOUNT or HealBot_Globals.HealBot_MouseWheelTxt["AltUp"]==HEALBOT_RANDOMGOUNDMOUNT))
     or (HealBot_Globals.HealBot_MouseWheelTxt["AltDown"] and (HealBot_Globals.HealBot_MouseWheelTxt["AltDown"]==HEALBOT_RANDOMMOUNT or HealBot_Globals.HealBot_MouseWheelTxt["AltDown"]==HEALBOT_RANDOMGOUNDMOUNT)) then
-        HealBot_Action_initMountData()
-        HealBot_mountData["FuncUsed"]="YES"
-        HealBot_setOptions_Timer(410)
+        local loaded, reason = LoadAddOn("HealBot_MountsPets")
+        if loaded then
+            HealBot_MountsPets_initMountData()
+            HealBot_mountDataFuncUsed="YES"
+            HealBot_setOptions_Timer(410)
+        else
+            HealBot_mountDataFuncUsed="NO"
+            HealBot_AddChat("Unable to load addon HealBot_MountsPets - Reason: "..reason)
+            if not HealBot_Globals.OneTimeMsg["MountsPets"] then
+                HealBot_Globals.OneTimeMsg["MountsPets"]=true
+                local failreason = reason or HEALBOT_WORDS_UNKNOWN
+                HealBot_Options_AddonFail(failreason,"HealBot_MountsPets")
+            end
+        end
     else
-        HealBot_mountData["FuncUsed"]="NO"
+        HealBot_mountDataFuncUsed="NO"
     end
 end
 
 function HealBot_Action_retFuncUse()
-    return HealBot_mountData["FuncUsed"] or "YES"
-end
-
-function HealBot_Action_InitMount()
-    if not HealBot_mountData["FuncUsed"] then 
-        HealBot_Action_InitFuncUse()
-        return
-    end
-    SetMapToCurrentZone()
-    if IsSpellKnown(54197) then
-        HealBot_mountData["ColdFlying"]=true
-    else
-        HealBot_mountData["ColdFlying"]=false
-    end
-    if IsSpellKnown(90267) then
-        HealBot_mountData["CataFlying"]=true
-    else
-        HealBot_mountData["CataFlying"]=false
-    end
-    y = GetCurrentMapContinent();
-    if (y==3 or y>4) or (y == 4 and HealBot_mountData["ColdFlying"]) or (y<3 and HealBot_mountData["CataFlying"]) then
-        HealBot_mountData["IncFlying"]=true
-    else
-        HealBot_mountData["IncFlying"]=false
-    end
-    if IsInInstance() and GetRealZoneText()==HEALBOT_ZONE_AQ40 then
-        HealBot_mountData["IncGround"]="aq40"
-    else
-        HealBot_mountData["IncGround"]="grd"
-        if GetRealZoneText()==HEALBOT_ZONE_VASHJIR1 or GetRealZoneText()==HEALBOT_ZONE_VASHJIR2 or GetRealZoneText()==HEALBOT_ZONE_VASHJIR3 or GetRealZoneText()==HEALBOT_ZONE_VASHJIR then
-            HealBot_mountData["IncVashjir"]=GetRealZoneText()
-        else
-            HealBot_mountData["IncVashjir"]=false
-        end
-    end
-    HealBot_mountData["#Ground"]=0
-    HealBot_mountData["OculusID"]=nil
-    for z,_ in pairs(HealBot_GMount) do
-        HealBot_GMount[z]=nil;
-    end
-    for z,_ in pairs(HealBot_FMount) do
-        HealBot_FMount[z]=nil;
-    end
-    for z,_ in pairs(HealBot_SMount) do
-        HealBot_SMount[z]=nil;
-    end
-    for z,_ in pairs(HealBot_PrevGMounts) do
-        HealBot_PrevGMounts[z]=nil;
-    end
-    for z,_ in pairs(HealBot_PrevFMounts) do
-        HealBot_PrevFMounts[z]=nil;
-    end
-
-    x = GetNumCompanions("MOUNT");
-	for z=1,x do
- 		_, sName, sID, _, _ = GetCompanionInfo("MOUNT", z);
-        
-        if HealBot_Mounts[sID] then
-            if HealBot_Mounts[sID]=="F" then
-                if HealBot_mountData["IncFlying"] then
-                    table.insert(HealBot_FMount, sName);
-                end
-            elseif HealBot_Mounts[sID]=="G" then
-                if HealBot_mountData["IncGround"]=="grd" then
-                    table.insert(HealBot_GMount, sName);
-                    HealBot_mountData["#Ground"]=HealBot_mountData["#Ground"]+1
-                end
-            elseif HealBot_Mounts[sID]=="GF" then
-                if HealBot_mountData["IncFlying"] then
-                    table.insert(HealBot_FMount, sName);
-                end
-                if HealBot_mountData["IncGround"]=="grd" then
-                    table.insert(HealBot_GMount, sName);
-                    HealBot_mountData["#Ground"]=HealBot_mountData["#Ground"]+1
-                end
-            elseif HealBot_Mounts[sID]=="GS" then
-                if HealBot_mountData["IncGround"]=="grd" then
-                    table.insert(HealBot_GMount, sName);
-                    HealBot_mountData["#Ground"]=HealBot_mountData["#Ground"]+1
-                end
-                table.insert(HealBot_SMount, sName);
-            elseif HealBot_Mounts[sID]=="A" then
-                if HealBot_mountData["IncGround"]=="aq40" then
-                    table.insert(HealBot_GMount, sName);
-                    HealBot_mountData["#Ground"]=HealBot_mountData["#Ground"]+1
-                end
---            elseif HealBot_Mounts[sID]=="O" then
---                HealBot_mountData["OculusID"]=sID
-            elseif HealBot_Mounts[sID]=="S" then
-                table.insert(HealBot_SMount, sName);
-            elseif HealBot_Mounts[sID]=="V" and HealBot_mountData["IncVashjir"] then
-                table.insert(HealBot_SMount, sName);
-            end
-        elseif HealBot_mountData["FuncUsed"] and HealBot_mountData["FuncUsed"]=="YES" then
-            HealBot_ReportMissingMount(sName, sID)
-            HealBot_Mounts[sID]="G"
-        end
-	end   
-    
-    if #HealBot_FMount<3 then
-        HealBot_mountData["PrevFlying#"]=0
-    elseif #HealBot_FMount<5 then
-        HealBot_mountData["PrevFlying#"]=1
-    elseif #HealBot_FMount<7 then
-        HealBot_mountData["PrevFlying#"]=2
-    elseif #HealBot_FMount<9 then
-        HealBot_mountData["PrevFlying#"]=3
-    elseif #HealBot_FMount<11 then
-        HealBot_mountData["PrevFlying#"]=4
-    elseif #HealBot_FMount<14 then
-        HealBot_mountData["PrevFlying#"]=5
-    elseif #HealBot_FMount<17 then
-        HealBot_mountData["PrevFlying#"]=6
-    elseif #HealBot_FMount<21 then
-        HealBot_mountData["PrevFlying#"]=7
-    elseif #HealBot_FMount<25 then
-        HealBot_mountData["PrevFlying#"]=8
-    else
-        HealBot_mountData["PrevFlying#"]=9
-    end
-    if HealBot_mountData["#Ground"]<3 then
-        HealBot_mountData["PrevGround#"]=0
-    elseif HealBot_mountData["#Ground"]<5 then
-        HealBot_mountData["PrevGround#"]=1
-    elseif HealBot_mountData["#Ground"]<7 then
-        HealBot_mountData["PrevGround#"]=2
-    elseif HealBot_mountData["#Ground"]<9 then
-        HealBot_mountData["PrevGround#"]=3
-    elseif HealBot_mountData["#Ground"]<11 then
-        HealBot_mountData["PrevGround#"]=4
-    elseif HealBot_mountData["#Ground"]<14 then
-        HealBot_mountData["PrevGround#"]=5
-    elseif HealBot_mountData["#Ground"]<17 then
-        HealBot_mountData["PrevGround#"]=6
-    elseif HealBot_mountData["#Ground"]<21 then
-        HealBot_mountData["PrevGround#"]=7
-    elseif HealBot_mountData["#Ground"]<25 then
-        HealBot_mountData["PrevGround#"]=8
-    else
-        HealBot_mountData["PrevGround#"]=9
-    end
-
-    if HealBot_mountData["#Ground"]==0 and #HealBot_FMount==0 then
-        HealBot_mountData["ValidUse"]=false
-    else
-        HealBot_mountData["ValidUse"]=true
-    end
-
-end
-
-function HealBot_Action_ToggelMount(mountType)
-    if IsMounted() then
-        Dismount()
-	elseif CanExitVehicle() then	
-		VehicleExit()
-    elseif HealBot_mountData["ValidUse"] and IsOutdoors() and not HealBot_IsFighting then
-        sName = nil
-        if mountType=="all" and not IsSwimming() and IsFlyableArea() and #HealBot_FMount>0 then
-            i = math.random(1, #HealBot_FMount);
-            sName = HealBot_FMount[i];
-            if HealBot_Globals.dislikeMount[sName] then
-                if HealBot_Globals.dislikeMount[sName]>0 then
-                    HealBot_Globals.dislikeMount[sName]=HealBot_Globals.dislikeMount[sName]-1
-                    z = math.random(1, #HealBot_FMount);
-                    if z==i then 
-                        z = math.random(1, #HealBot_FMount); 
-                        if z==i then 
-                            i = math.random(1, #HealBot_FMount); 
-                            if z==i then 
-                                i = math.random(1, #HealBot_FMount); 
-                            else
-                                i=z
-                            end
-                        else
-                            i=z
-                        end
-                    else
-                        i=z
-                    end
-                    sName = HealBot_FMount[i];
-                else
-                    HealBot_Globals.dislikeMount[sName]=250
-                end
-            end
-            if HealBot_mountData["PrevFlying#"]>0 then
-                table.insert(HealBot_PrevFMounts, HealBot_FMount[i]);
-                table.remove(HealBot_FMount,i)
-            end
-            if #HealBot_PrevFMounts>HealBot_mountData["PrevFlying#"] then
-                table.insert(HealBot_FMount, HealBot_PrevFMounts[1]);
-                table.remove(HealBot_PrevFMounts,1)
-            end
-        elseif IsSwimming() and #HealBot_SMount>0 then
-            i = math.random(1, #HealBot_SMount);
-            sName = HealBot_SMount[i];
-        elseif #HealBot_GMount>0 then
-            i = math.random(1, #HealBot_GMount);
-            sName = HealBot_GMount[i];
-            if HealBot_Globals.dislikeMount[sName] then
-                if HealBot_Globals.dislikeMount[sName]>0 then
-                    HealBot_Globals.dislikeMount[sName]=HealBot_Globals.dislikeMount[sName]-1
-                    z = math.random(1, #HealBot_GMount);
-                    if z==i then 
-                        z = math.random(1, #HealBot_GMount);
-                        if z==i then 
-                            i = math.random(1, #HealBot_GMount);
-                            if z==i then 
-                                i = math.random(1, #HealBot_GMount);
-                            else
-                                i=z
-                            end
-                        else
-                            i=z
-                        end
-                    else
-                        i=z
-                    end
-                    sName = HealBot_GMount[i];
-                else
-                    HealBot_Globals.dislikeMount[sName]=250
-                end
-            end
-            if HealBot_mountData["PrevGround#"]>0 then
-                table.insert(HealBot_PrevGMounts, HealBot_GMount[i]);
-                table.remove(HealBot_GMount,i)
-            end
-            if #HealBot_PrevGMounts>HealBot_mountData["PrevGround#"] then
-                table.insert(HealBot_GMount, HealBot_PrevGMounts[1]);
-                table.remove(HealBot_PrevGMounts,1)
-            end
-        end
-        if sName then HealBot_Action_Mount(sName) end
-    end
-end
-
-function HealBot_Action_DislikeMount()
-    local z = GetNumCompanions("MOUNT");
-    local mount=nil
-	for i=1,z do
- 		local _, x, _, _, y = GetCompanionInfo("MOUNT", i);
- 		if y then
- 			mount=x
-            do break end
- 		end
- 	end
-    if mount then
-        if HealBot_Globals.dislikeMount[mount] then
-            HealBot_AddChat(HEALBOT_OPTION_DISLIKEMOUNT_OFF.." "..mount)
-            HealBot_Globals.dislikeMount[mount]=nil
-        else
-            HealBot_AddChat(HEALBOT_OPTION_DISLIKEMOUNT_ON.." "..mount)
-            HealBot_Globals.dislikeMount[mount]=75
-        end
-    end
-end
-
-function HealBot_Action_Mount(mountName)
-	z = GetNumCompanions("MOUNT");
-	for i=1,z do
- 		_, sName, _, _, _ = GetCompanionInfo("MOUNT", i);
- 		if sName==mountName then
- 			CallCompanion("MOUNT", i);
-            do break end
- 		end
- 	end
-end
-
-function HealBot_Action_RandomPet()
-    SummonRandomCritter();
+    return HealBot_mountDataFuncUsed or "NO"
 end

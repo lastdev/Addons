@@ -1,6 +1,6 @@
 Reagent Restocker is a simple addon for automatically purchasing items, selling unwanted items, and repairing. Unlike many other similar addons, Reagent Restocker supports drag and drop and has a full GUI for editing buy/sell lists.
 
-Reagent Restocker now has a [[https://plus.google.com/101127866821396020019|Google+]] page! News, notes, and patch releases will be posted to Google+.
+Reagent Restocker now has [[https://plus.google.com/101127866821396020019|Google+]] and [[https://www.facebook.com/ReagentRestocker|Facebook]] pages! News, notes, and patch releases will be posted to Google+ and Facebook.
 
 If you like it, feel free to donate! I highly recommend donating to your favorite addons, it really helps.
 
@@ -21,7 +21,7 @@ What can you do with Reagent Restocker? Well, you can do the following:
 * Stock excess items in your bank or the guild bank.
 * Control buying/selling/repairing based on vendor discounts.
 
-Devs wanted! It's open source, and I've been busy the last year or two. I'm willing to add more members to the team. Must have a CurseForge account.
+Devs wanted! It's open source, and I've been busy with other things in real life. I'm willing to add more members to the team. Must have a CurseForge account.
 
 == Usage ==
 If you have LibDBIcon or a LDB compatible bar installed, you can access Reagent Restocker simply by clicking on the icon. Otherwise, you can access it via slash commands.

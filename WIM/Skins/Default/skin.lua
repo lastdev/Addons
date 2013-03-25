@@ -84,9 +84,11 @@ local WIM_ClassicSkin = {
                 warlock = {.75, .25, .75, .5, 1, .25, 1, .5},
                 warrior = {0, .5, 0, .75, .25, .5, .25, .75},
                 deathknight = {.75, .5, .75, .75, 1, .5, 1, .75},
+                monk = {0, .75, 0, 1, .25, .75, .25, 1},
                 gm = {.25, .5, .25, .75, .5, .5, .5, .75},
                 sc2 = {.75, .75, .75, 1, 1, .75, 1, 1},
-                d3 = {.5, .75, .5, 1, .75, .75, .75, 1}
+                d3 = {.5, .75, .5, 1, .75, .75, .75, 1},
+                bnd = {.25, .75, .25, 1, .5, .75, .5, 1}
             },
             from = {
                 points = {
@@ -109,7 +111,7 @@ local WIM_ClassicSkin = {
             close = {
                 state_hide = {
                     NormalTexture = "Interface\\Minimap\\UI-Minimap-MinimizeButtonDown-Up",
-                    PushedTexture = "Interface\\Minimap\\UI-Panel-MinimizeButtonDown-Down",
+                    PushedTexture = "Interface\\Minimap\\UI-Minimap-MinimizeButtonDown-Down",
                     HighlightTexture = "Interface\\Buttons\\UI-Panel-MinimizeButton-Highlight",
                     HighlightAlphaMode = "ADD"
                 },
@@ -147,7 +149,7 @@ local WIM_ClassicSkin = {
                 }
             },
             chat_info = {
-                NormalTexture = "", -- by default we don't want a texture, but your skin is welcome to have one.
+                NormalTexture = nil, -- by default we don't want a texture, but your skin is welcome to have one.
                 PushedTexture = "Interface\\AddOns\\"..WIM.addonTocName.."\\Skins\\Default\\w2w",
                 HighlightTexture = "Interface\\AddOns\\"..WIM.addonTocName.."\\Skins\\Default\\w2w",
                 HighlightAlphaMode = "ADD",

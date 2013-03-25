@@ -1,8 +1,8 @@
 --[[
 --	Gatherer Addon for World of Warcraft(tm).
 --	HUD Plugin Module
---	Version: 4.0.6 (<%codename%>)
---	Revision: $Id: GatherHUD.lua 1014 2012-09-18 04:48:18Z Esamynn $
+--	Version: 4.2.0 (<%codename%>)
+--	Revision: $Id: GatherHUD.lua 1057 2012-12-10 04:13:52Z Esamynn $
 --
 --	License:
 --	This program is free software; you can redistribute it and/or
@@ -224,6 +224,7 @@ function lib.PlaceIcon(nodeZoneToken, gType, nodeIndex, x, y)
 	if (not node) then
 		node = {}
 		node.tex = frame:CreateTexture("GatherHudNode"..nodeId)
+		node.tex:SetNonBlocking(true)
 		node.tex:SetWidth(get("plugin.gatherer_hud.iconsize"))
 		node.tex:SetHeight(get("plugin.gatherer_hud.iconsize"))
 		node.tex:Show();

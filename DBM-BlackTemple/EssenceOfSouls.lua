@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Souls", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 416 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 433 $"):sub(12, -3))
 mod:SetCreatureID(23420)
 mod:SetModelID(21483)
 mod:SetZone()
@@ -33,7 +33,7 @@ local warnPhase3		= mod:NewPhaseAnnounce(3)
 local warnSoul			= mod:NewSpellAnnounce(41545, 3)
 local warnSpite			= mod:NewSpellAnnounce(41376, 3)
 
-local specWarnShock		= mod:NewSpecialWarningInterrupt(41426, false)
+local specWarnShock		= mod:NewSpecialWarningInterrupt(41426, mod:IsMelee())
 local specWarnShield	= mod:NewSpecialWarningDispel(41431)
 local specWarnSpite		= mod:NewSpecialWarningYou(41376)
 
@@ -44,6 +44,7 @@ local timerNextDeaden	= mod:NewCDTimer(31, 41410)
 local timerMana			= mod:NewTimer(160, "TimerMana", 41350)
 local timerNextShield	= mod:NewCDTimer(15, 41431)
 local timerNextSoul		= mod:NewCDTimer(10, 41545)
+local timerNextShock	= mod:NewCDTimer(12, 41426)--Blizz lied, this is a 12-15 second cd. you can NOT solo interrupt these with most classes
 
 mod:AddBoolOption("DrainIcon", true)
 mod:AddBoolOption("SpiteIcon", true)
@@ -122,6 +123,7 @@ function mod:SPELL_CAST_START(args)
 		timerNextDeaden:Start()
 	elseif args:IsSpellID(41426) then
 		warnShockCast:Show()
+		timerNextShock:Start()
 		if self:GetUnitCreatureId("target") == 23419 or self:GetUnitCreatureId("focus") == 23419 then
 			specWarnShock:Show(args.sourceName)
 		end
@@ -162,6 +164,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		timerMana:Cancel()
 		timerNextShield:Cancel()
 		timerNextDeaden:Cancel()
+		timerNextShock:Cancel()
 		warnPhase3:Show()
 		timerNextSoul:Start()
 		DBM.BossHealth:AddBoss(23450, L.Anger)

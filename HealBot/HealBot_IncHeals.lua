@@ -1,10 +1,13 @@
 local hbHealsIn={}
+local hbAbsorbs={}
 local xGUID=nil
 local xUnit=nil
 local _
 
 function HealBot_IncHeals_retHealsIn(hbGUID)
-    return hbHealsIn[hbGUID] or 0
+    local x=hbHealsIn[hbGUID] or 0
+    local y=hbAbsorbs[hbGUID] or 0
+    return x, y
 end
 
 function HealBot_IncHeals_updHealsIn(unit)
@@ -17,25 +20,33 @@ end
 function HealBot_IncHeals_HealsInUpdate(hbGUID)
     xUnit=HealBot_UnitID[hbGUID]
     if xUnit then 
-        hbHealsIn[hbGUID]=UnitGetIncomingHeals(xUnit) 
+        hbHealsIn[hbGUID]=UnitGetIncomingHeals(xUnit)
+        hbAbsorbs[hbGUID]=UnitGetTotalAbsorbs(xUnit)
         HealBot_RecalcHeals(hbGUID)
-    elseif hbHealsIn[hbGUID] then
-        hbHealsIn[hbGUID]=nil
-    end
-    if (hbHealsIn[hbGUID] or 0)==0 then
-        HealBot_setHealsIncEndTime(hbGUID, nil)
     else
-        HealBot_setHealsIncEndTime(hbGUID, GetTime()+2)
+        if hbHealsIn[hbGUID] then hbHealsIn[hbGUID]=nil end
+        if hbAbsorbs[hbGUID] then hbAbsorbs[hbGUID]=nil end
+    end
+    local x=hbHealsIn[hbGUID] or 0
+    local y=hbAbsorbs[hbGUID] or 0
+    if (x+y)==0 then
+        HealBot_setHealsAbsorb(hbGUID, nil)
+    else
+        HealBot_setHealsAbsorb(hbGUID, true)
     end
 end
 
 function HealBot_IncHeals_ClearLocalArr(hbGUID)
     if hbHealsIn[hbGUID] then hbHealsIn[hbGUID]=nil end
+    if hbAbsorbs[hbGUID] then hbAbsorbs[hbGUID]=nil end
 end
 
 function HealBot_IncHeals_ClearAll()
     for xGUID,_ in pairs(hbHealsIn) do
         hbHealsIn[xGUID]=nil
+    end
+    for xGUID,_ in pairs(hbAbsorbs) do
+        hbAbsorbs[xGUID]=nil
     end
 end
 

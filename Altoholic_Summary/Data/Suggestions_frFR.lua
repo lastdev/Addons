@@ -320,7 +320,7 @@ addon.Suggestions = {
 		{ 125, "Atteindre 125: Miner l'\195\169tain, l'argent, l'incendicite et la pierre de sang inf\195\169rieur\n\nMiner l'incendicite au Rocher de Thelgen (Les Paluns)\nProgression rapide jusqu'\195\160 125" },
 		{ 175, "Atteindre 175: Miner le fer et l'or\nD\195\169solace, Orneval, Terres ingrates, Hautes-terres d'Arathi,\nMontagnes d'Alt\195\169rac, Vall\195\169e de strangleronce, Marais des chagrins" },
 		{ 250, "Atteindre 250: Miner le mithril et le vrai-argent\nTerres foudroy\195\169es, Gorge des vents br\195\187lants, Terres ingrates, Les Hinterlands,\nMaleterres de l'ouest, Azshara, Berceau-de-l'hiver, Gangrebois, Les Serres-Rocheuses, Tanaris" },
-		{ 300, "Atteindre 300: Miner le thorium \nCrat\195\168re d'Un'Goro, Azshara, Berceau-de-l'hiver, Terres foudroy\195\169es\nGorge des vents br\195\187lants, Steppes ardentes, Maleterres (Est et Ouest)" },
+		{ 275, "Atteindre 275: Miner le thorium \nCrat\195\168re d'Un'Goro, Azshara, Berceau-de-l'hiver, Terres foudroy\195\169es\nGorge des vents br\195\187lants, Steppes ardentes, Maleterres (Est et Ouest)" },
 -----------     OUTRETERRE
 		{ 330, "Atteindre 330: Miner le gangrefer\nP\195\169ninsule des flammes infernales, Mar\195\169cage de Zangar" },
 		{ 350, "Atteindre 350: Miner le gangrefer et l'adamantite\nFor\195\170t de Terrokar, Nagrand\nSimplement partout en Outreterre" },

@@ -21,13 +21,29 @@ do
                 type = 'toggle',
                 name = L"Character-specific",
                 desc = L"Switch between global/character configuration",
-                width = "full",
+                width = "normal",
                 order = 0,
                 get = function(info)
-                    return NugComboBarDB_Global.charspec[UnitName("player").."@"..GetRealmName()]
+                    return NugComboBarDB_Character.charspec
                 end,
                 set = function( info, s )
                     NugComboBar.Commands.charspec()
+                end
+            },
+            specspec = {
+                type = 'toggle',
+                name = L"Specialization-specific",
+                width = "normal",
+                order = 1,
+                disabled = function()
+                    return (not NugComboBarDB_Character.charspec)
+                end,
+                get = function(info)
+                    local spec = GetSpecialization()
+                    return NugComboBarDB_Character.specspec[spec]
+                end,
+                set = function( info, s )
+                    NugComboBar.Commands.specspec()
                 end
             },
             showGeneral = {
@@ -50,6 +66,18 @@ do
                         func = function() NugComboBar.Commands.lock() end,
                         order = 2,
                     },
+                    anchorpoint = {
+                        name = L"Anchorpoint",
+                        type = "select",
+                        values = {
+                            LEFT = "Left",
+                            RIGHT = "Right",
+                            TOP = "Top",
+                        },
+                        get = function() return NugComboBarDB.anchorpoint end,
+                        set = function(info, s) NugComboBar.Commands.anchorpoint(s) end,
+                        order = 3,
+                    },
                     scale = {
                         name = L"Scale",
                         type = "range",
@@ -59,7 +87,7 @@ do
                         min = 0.4,
                         max = 2,
                         step = 0.01,
-                        order = 3,
+                        order = 4,
                     },
                     showempty = {
                         name = L"Show Empty",
@@ -67,7 +95,7 @@ do
                         desc = L"Keep when there's no points IN COMBAT",
                         get = function(info) return NugComboBarDB.showEmpty end,
                         set = function(info, s) NugComboBar.Commands.showempty() end,
-                        order = 4,
+                        order = 5,
                     },
                     showAlways = {
                         name = L"Show Always",
@@ -75,14 +103,22 @@ do
                         type = "toggle",
                         get = function(info) return NugComboBarDB.showAlways end,
                         set = function(info, s) NugComboBar.Commands.showalways() end,
-                        order = 5,
+                        order = 6,
+                    },
+                    hideOOC = {
+                        name = L"Hide OOC",
+                        desc = L"Always hide out of combat",
+                        type = "toggle",
+                        get = function(info) return NugComboBarDB.onlyCombat end,
+                        set = function(info, s) NugComboBar.Commands.onlycombat() end,
+                        order = 7,
                     },
                     hideslowly = {
                         name = L"Fade out",
                         type = "toggle",
                         get = function(info) return NugComboBarDB.hideSlowly end,
                         set = function(info, s) NugComboBar.Commands.hideslowly() end,
-                        order = 6,
+                        order = 8,
                     },
                     togglebliz = {
                         name = L"Disable Default",
@@ -91,7 +127,7 @@ do
                         desc = L"Hides default combat point (and other) frames",
                         get = function(info) return NugComboBarDB.disableBlizz end,
                         set = function(info, s) NugComboBar.Commands.toggleblizz() end,
-                        order = 7,
+                        order = 9,
                     },
                 }
             },
@@ -270,22 +306,26 @@ do
                 args = {
                     desc = {
                         type = 'description',
-                        name = L"Disable for current class (requires ui reloading)",
+                        name = L"Disable for current character or spec",
                         order = 1,
                     },
                     disabled = {
                         name = L"Disabled",
                         type = 'toggle',
-                        get = function(info) return NugComboBarDB_Global.disabled[select(2,UnitClass("player"))] end,
-                        set = function(info, s) NugComboBarDB_Global.disabled[select(2,UnitClass("player"))] = s end,
+                        disabled = function() return not NugComboBarDB_Character.charspec end,
+                        get = function(info)
+                            if NugComboBarDB == NugComboBarDB_Global then return nil end
+                            return NugComboBarDB.disabled
+                        end,
+                        set = function(info, s) NugComboBar.Commands.disable(s) end,
                         order = 2,
                     },
-                    reloadui = {
-                        order = 3,
-                        type = "execute",
-                        name = L"ReloadUI",
-                        func = function() ReloadUI() end
-                    },
+                    -- reloadui = {
+                    --     order = 3,
+                    --     type = "execute",
+                    --     name = L"ReloadUI",
+                    --     func = function() ReloadUI() end
+                    -- },
                 },
             },
         },

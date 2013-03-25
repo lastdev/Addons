@@ -14,15 +14,21 @@ end
 L["ARMORY_ALTS"] = "Twinks" -- Needs review
 L["ARMORY_BAGS"] = "Taschen"
 L["ARMORY_BANK_CONTAINER_NAME"] = "Bank"
+L["ARMORY_BONUS_PATTERN"] = "(.+) Bonus" -- Needs review
+L["ARMORY_BUZZ_WORDS"] = [=[of
+the]=] -- Requires localization
 L["ARMORY_BY_DATE"] = "nach Datum sortieren"
 L["ARMORY_BY_GROUP"] = "nach Gruppe sortieren"
 L["ARMORY_CAN_LEARN"] = "Lernbar von"
+L["ARMORY_CHECK_CD_NONE"] = "Keine Cooldowns gefunden" -- Needs review
 L["ARMORY_CHECK_MAIL_DISABLED"] = "Keine automatische Überprüfung auf bald ablaufende Gegenstände."
 L["ARMORY_CHECK_MAIL_MESSAGE"] = "Der Posteingang von %1$s (%2$s) enthält Gegenstand '%3$s' der in %4$s ablaufen wird!"
 L["ARMORY_CHECK_MAIL_NONE"] = "Es wurden keine Gegenstände im Posteingang gefunden, die bald ablaufen werden."
 L["ARMORY_CHECK_MAIL_POPUP"] = [=[In Deinem Briefkasten befinden sich Gegenstände, die bald ablaufen werden. 
 Gib "/ar check" ein, um weitere Details zu sehen.]=]
 L["ARMORY_CMD_CHECK"] = "check"
+L["ARMORY_CMD_CHECKCD"] = "cooldown|cd" -- Needs review
+L["ARMORY_CMD_CHECKCD_TEXT"] = "Prüft Cooldowns der Handwerksfähigkeiten" -- Needs review
 L["ARMORY_CMD_CHECK_INVALID"] = "Trage eine Anzahl Tage ein, nachdem geprüft werden soll. Nichts für Standardeinstellung." -- Needs review
 L["ARMORY_CMD_CHECK_MENUTEXT"] = "Prüfe auf bald ablaufende Gegenstände"
 L["ARMORY_CMD_CHECK_TEXT"] = "Post auf bald ablaufene Gegenstände prüfen" -- Needs review
@@ -90,6 +96,10 @@ L["ARMORY_CMD_SET_COUNTALL_MENUTEXT"] = "Alle Realms in Zählungen einbeziehen"
 L["ARMORY_CMD_SET_COUNTALL_TEXT"] = "Gegenstandsanzahl für alle Realms einbeziehen" -- Needs review
 L["ARMORY_CMD_SET_COUNTALL_TOOLTIP"] = [=[Aktiv: Gesamtanzahl wird über alle Realms angezeigt
 Inaktiv: Gesamtanzahl wird nur für diesen Realm angezeigt]=]
+L["ARMORY_CMD_SET_COUNTPERSLOT_MENUTEXT"] = "Summe pro Tasche/Bankfach" -- Needs review
+L["ARMORY_CMD_SET_COUNTPERSLOT_TEXT"] = "Anzahl der Gegenstände pro Tasche/Bankfach anzeigen" -- Needs review
+L["ARMORY_CMD_SET_COUNTPERSLOT_TOOLTIP"] = [=[Aktiv: Anzahl der Gegenstände pro Tasche/Bankfach werden angezeigt, wobei '0' der Rucksack oder die eigentliche Bank darstellt.
+]=] -- Needs review
 L["ARMORY_CMD_SET_COUNTXFACTION_MENUTEXT"] = "Alle Fraktionen einbeziehen"
 L["ARMORY_CMD_SET_COUNTXFACTION_TEXT"] = "alle Fraktionen bei der Zählung berücksichtigen" -- Needs review
 L["ARMORY_CMD_SET_COUNTXFACTION_TOOLTIP"] = [=[Aktiv: Gesamtanzahl wird für alle Fraktionen angezeigt
@@ -225,6 +235,14 @@ L["ARMORY_CMD_SET_SHARESKILLS_MENUTEXT"] = "Berufsinformationen teilen"
 L["ARMORY_CMD_SET_SHARESKILLS_TEXT"] = "Information über deine Rezepte teilen" -- Needs review
 L["ARMORY_CMD_SET_SHARESKILLS_TOOLTIP"] = [=[Aktiv: erlaubt anderen Armorynutzern deine Berufe und Rezepte zu durchsuchen
 Inaktiv: andere Armorynutzer dürfen es nicht]=] -- Needs review
+L["ARMORY_CMD_SET_SHOW2NDSKILLRANK_MENUTEXT"] = "Zweitberufe mit einbeziehen" -- Needs review
+L["ARMORY_CMD_SET_SHOW2NDSKILLRANK_TEXT"] = "Beziehe Zweitberufe mit ein" -- Needs review
+L["ARMORY_CMD_SET_SHOW2NDSKILLRANK_TOOLTIP"] = [=[Aktiv: Berufsränge der Sekundärberufe werden bei den Tooltips angezeigt
+Inaktiv: Nur die Berufsränge der Primärberufe werden angezeigt]=] -- Needs review
+L["ARMORY_CMD_SET_SHOWACHIEVEMENTS_MENUTEXT"] = "Erfolge und Heldentaten in Link anzeigen"
+L["ARMORY_CMD_SET_SHOWACHIEVEMENTS_TEXT"] = "legt fest ob ob Charaktere im Tooltip zu verlinkten Erfolgen angezeigt werden sollen"
+L["ARMORY_CMD_SET_SHOWACHIEVEMENTS_TOOLTIP"] = [=[Aktiv: Zeigt charkter die diesen Erfolg schon haben oder ihn gerade bearbeiten
+Inaktiv: Zeigt den normalen Blizard-Tooltip]=]
 L["ARMORY_CMD_SET_SHOWALTEQUIP_MENUTEXT"] = "alternative Ausrüstung anzeigen"
 L["ARMORY_CMD_SET_SHOWALTEQUIP_TEXT"] = "ermöglicht es passende Ausrüstung aus dem Inventar anzuzeigen"
 L["ARMORY_CMD_SET_SHOWALTEQUIP_TOOLTIP"] = [=[Aktiv: zeigt passende Ausrüstung
@@ -280,6 +298,9 @@ L["ARMORY_CMD_SET_SHOWSHAREMSG_MENUTEXT"] = "Teilen verfolgen"
 L["ARMORY_CMD_SET_SHOWSHAREMSG_TEXT"] = "verfolgen, welche Daten geteilt werden" -- Needs review
 L["ARMORY_CMD_SET_SHOWSHAREMSG_TOOLTIP"] = [=[Aktiv: Zeigt eine Meldung wenn Daten geteilt werden
 Inaktiv: Zeigt keine Meldung wenn Daten geteilt werden]=]
+L["ARMORY_CMD_SET_SHOWSKILLRANK_MENUTEXT"] = "Berufsränge in Tooltips anzeigen" -- Needs review
+L["ARMORY_CMD_SET_SHOWSKILLRANK_TEXT"] = "Zeige Berufsränge in Tooltips" -- Needs review
+L["ARMORY_CMD_SET_SHOWSKILLRANK_TOOLTIP"] = "Aktiv: Berufsränge werden bei den Tooltips der Berufsbuttons angezeigt" -- Needs review
 L["ARMORY_CMD_SET_SHOWSUMMARY_MENUTEXT"] = "Charakterübersicht"
 L["ARMORY_CMD_SET_SHOWSUMMARY_TEXT"] = "Charakterübersicht anzeigen" -- Needs review
 L["ARMORY_CMD_SET_SHOWSUMMARY_TOOLTIP"] = [=[Aktiv: Übersicht wird bei Mausover angezeigt
@@ -299,6 +320,10 @@ L["ARMORY_CMD_SET_USEFACTIONFILTER_MENUTEXT"] = "Realm- & Fraktionsfilter" -- Ne
 L["ARMORY_CMD_SET_USEFACTIONFILTER_TEXT"] = "aktiviere Realm- und Fraktionsfilter" -- Needs review
 L["ARMORY_CMD_SET_USEFACTIONFILTER_TOOLTIP"] = [=[Wenn aktiviert, werden nur Charaktere auf demselben Realm und mit derselben Fraktion angezeigt. Dies beeinflusst auch Tooltips.
 Wichtig, für Gegenstandzähler existieren seperate Realm- und Fraktionseinstellungen.]=] -- Needs review
+L["ARMORY_CMD_SET_USEINPROGRESSCOLOR_MENUTEXT"] = "andere Einfärbung für \"in Bearbeitung\""
+L["ARMORY_CMD_SET_USEINPROGRESSCOLOR_TEXT"] = "legt fest ob für \"in Bearbeitung\" eine andere farbe verwendet werden soll"
+L["ARMORY_CMD_SET_USEINPROGRESSCOLOR_TOOLTIP"] = [=[Aktiv: für Erfolge in Bearbeitung von einem Charakter wird eine andere Farbe verwendet als für Abgeschloßene
+Inaktiv: keine Farbunterscheidung für nicht abgeschloßene Erfolge]=]
 L["ARMORY_CMD_SET_USEMAZIEL_MENUTEXT"] = "Verwende zwei Werte-Panels" -- Needs review
 L["ARMORY_CMD_SET_USEMAZIEL_TEXT"] = "Talente und Berufe verstecken" -- Needs review
 L["ARMORY_CMD_SET_USEMAZIEL_TOOLTIP"] = [=[Aktiv: versteckt Talente und Berufe zugunsten eines zusätzlichen Werte-Panels
@@ -416,6 +441,7 @@ L["ARMORY_MODULES_TITLE"] = "Armory Module"
 L["ARMORY_MONEY_TOTAL"] = "%1$s %2$s ingesamt:"
 L["ARMORY_NO_DATA"] = "Keine Daten verfügbar" -- Needs review
 L["ARMORY_OPEN_HINT"] = "Zum Öffnen klicken" -- Needs review
+L["ARMORY_PANDARIA_GEM_RESEARCH"] = "Juwelenschleifen-Forschung von Pandaria" -- Needs review
 L["ARMORY_QUEST_TOOLTIP_LABEL"] = "Charaktere auf dieser Quest:" -- Needs review
 L["ARMORY_RECIPE"] = "Rezept"
 L["ARMORY_REPUTATION_SUMMARY"] = "%1$s - %2$s (%3$d/%4$d,%5$d verbleibend)"

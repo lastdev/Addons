@@ -26,7 +26,7 @@
 --    * Share Alike. If you alter, transform, or build upon this work, you may distribute the resulting work only under the same or similar license to this one.
 --
 
-local Revision = ("$Revision: 82 $"):sub(12, -3)
+local Revision = ("$Revision: 86 $"):sub(12, -3)
 
 local default_bartext = "%spell: %player"
 local default_bartextwtarget = "%spell: %player on %target"	-- Added by Florin Patan
@@ -42,21 +42,20 @@ local default_settings = {
 		{ spell = 61999, bartext = default_bartext, cooldown = 600 },	-- Death Knight: Raise Ally
 		{ spell = 61336, bartext = "%spell on %player", cooldown = 12 },-- Druid: Survival Instincts Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 20484, bartext = default_bartext, cooldown = 600 },	-- Druid: Rebirth
-		{ spell = 29166, bartext = default_bartext, cooldown = 180 },	-- Druid: Innervate
---		{ spell = 740, bartext = default_bartext, cooldown = 480 }, 	-- Druid: Tranquility (3 min for resto, not sure how to detect if it was cast by specced player or not without complex inspecting :\)
-		{ spell = 34477, bartext = default_bartext, cooldown = 30 },	-- Hunter: Misdirect
+--		{ spell = 29166, bartext = default_bartext, cooldown = 180 },	-- Druid: Innervate
+--		{ spell = 34477, bartext = default_bartext, cooldown = 30 },	-- Hunter: Misdirect
 		{ spell = 80353, bartext = default_bartext, cooldown = 300 },	-- Mage: Time Warp
 		{ spell = 6940, bartext = "%spell on %target", cooldown = 12 }, -- Paladin: Hand of Sacrifice Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 498, bartext = "%spell on %player", cooldown = 10 },	-- Paladin: Divine Protection Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 31850, bartext = "%spell on %player", cooldown = 10 },-- Paladin: Argent Defender Duration (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 86150, bartext = "%spell on %player", cooldown = 12 },-- Paladin: Guardian of Ancient Kings (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 70940, bartext = default_bartext, cooldown = 180 },	-- Paladin: Divine Guardian
-		{ spell = 6346, bartext = default_bartext, cooldown = 180 },	-- Priest: Fear Ward
+		{ spell = 86659, bartext = "%spell on %player", cooldown = 12 },-- Paladin: Guardian of Ancient Kings (for Healers/Tanks to see how long cooldown runs)
+		{ spell = 31821, bartext = default_bartext, cooldown = 180 },	-- Paladin: Devotion Aura
+--		{ spell = 6346, bartext = default_bartext, cooldown = 180 },	-- Priest: Fear Ward
 		{ spell = 73325, bartext = default_bartext, cooldown = 90 },	-- Priest: Leap of Faith (Life Grip)
 		{ spell = 33206, bartext = "%spell on %target", cooldown = 8 }, -- Priest: Pain Suppression Duration (for Healers to see how long cooldown runs)
 		{ spell = 47788, bartext = "%spell on %target", cooldown = 10 },-- Priest: Guardian Spirit (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 62618, bartext = default_bartext, cooldown = 180 },	-- Priest: Power Word: Barrier
-		{ spell = 57934, bartext = default_bartext, cooldown = 30 },	-- Rogue: Tricks of the Trade
+--		{ spell = 57934, bartext = default_bartext, cooldown = 30 },	-- Rogue: Tricks of the Trade
 		{ spell = 32182, bartext = default_bartext, cooldown = 300 },	-- Shaman: Heroism (alliance)
 		{ spell = 2825, bartext = default_bartext, cooldown = 300 },	-- Shaman: Bloodlust (horde)
 		{ spell = 98008, bartext = default_bartext, cooldown = 180 },	-- Shaman: Spirit Link Totem
@@ -65,6 +64,8 @@ local default_settings = {
 		{ spell = 871, bartext = "%spell on %player", cooldown = 12 },	-- Warrior: Shieldwall Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 12975, bartext = "%spell on %player", cooldown = 20 },-- Warrior: Last Stand Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 97462, bartext = default_bartext, cooldown = 180 },	-- Warrior: Rallying Cry CD (for Healers/Tanks to see how long cooldown runs)
+		{ spell = 114203, bartext = default_bartext, cooldown = 180 },	-- Warrior: Demoralizing Banner (for Healers/Tanks to see how long cooldown runs)
+		{ spell = 114207, bartext = default_bartext, cooldown = 180 },	-- Warrior: Skull Banner (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 22700, bartext = default_bartext, cooldown = 600 }, 	-- Field Repair Bot 74A
 		{ spell = 44389, bartext = default_bartext, cooldown = 600 }, 	-- Field Repair Bot 110G
 		{ spell = 54711, bartext = default_bartext, cooldown = 300 }, 	-- Scrapbot Construction Kit
@@ -72,24 +73,26 @@ local default_settings = {
 
 	},
 	portal_alliance = {
-		{ spell = 53142, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Dalaran
-		{ spell = 33691, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Shattrath (Alliance)
-		{ spell = 11416, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Ironforge
 		{ spell = 10059, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Stormwind
-		{ spell = 49360, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Theramore
+		{ spell = 11416, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Ironforge
 		{ spell = 11419, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Darnassus
 		{ spell = 32266, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Exodar
+		{ spell = 33691, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Shattrath
+		{ spell = 49360, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Theramore
+		{ spell = 53142, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Dalaran
 		{ spell = 88345, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Tol Barad
+		{ spell = 132620, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Vale of eternal Blossoms
 	},
 	portal_horde = {
-		{ spell = 53142, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Dalaran
-		{ spell = 35717, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Shattrath (Horde)
 		{ spell = 11417, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Orgrimmar
 		{ spell = 11418, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Undercity
 		{ spell = 11420, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Thunder Bluff
 		{ spell = 32667, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Silvermoon
+		{ spell = 35717, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Shattrath
 		{ spell = 49361, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Stonard
+		{ spell = 53142, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Dalaran
 		{ spell = 88346, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Tol Barad
+		{ spell = 132626, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Vale of eternal Blossoms
 	}
 }
 DBM_SpellTimers_Settings = {}

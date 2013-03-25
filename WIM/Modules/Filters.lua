@@ -336,8 +336,8 @@ function ChatFilters:OnEnable()
         ChatFilters:RegisterChatEvent("CHAT_MSG_RAID_LEADER", 1);
         ChatFilters:RegisterChatEvent("CHAT_MSG_SAY", 1);
         ChatFilters:RegisterChatEvent("CHAT_MSG_CHANNEL", 1);
-        ChatFilters:RegisterChatEvent("CHAT_MSG_BATTLEGROUND", 1);
-        ChatFilters:RegisterChatEvent("CHAT_MSG_BATTLEGROUND_LEADER", 1);
+        ChatFilters:RegisterChatEvent("CHAT_MSG_INSTANCE_CHAT", 1);
+        ChatFilters:RegisterChatEvent("CHAT_MSG_INSTANCE_CHAT_LEADER", 1);
     end
 end
 
@@ -349,8 +349,8 @@ function ChatFilters:OnDisable()
     ChatFilters:UnregisterChatEvent("CHAT_MSG_RAID_LEADER");
     ChatFilters:UnregisterChatEvent("CHAT_MSG_SAY");
     ChatFilters:UnregisterChatEvent("CHAT_MSG_CHANNEL");
-    ChatFilters:UnregisterChatEvent("CHAT_MSG_BATTLEGROUND");
-    ChatFilters:UnregisterChatEvent("CHAT_MSG_BATTLEGROUND_LEADER");
+    ChatFilters:UnregisterChatEvent("CHAT_MSG_INSTANCE_CHAT");
+    ChatFilters:UnregisterChatEvent("CHAT_MSG_INSTANCE_CHAT_LEADER");
 end
 
 local function chatController(self, eventItem, msg, from)
@@ -389,8 +389,8 @@ ChatFilters.CHAT_MSG_RAID_CONTROLLER = chatController;
 ChatFilters.CHAT_MSG_RAID_LEADER_CONTROLLER = chatController;
 ChatFilters.CHAT_MSG_SAY_CONTROLLER = chatController;
 ChatFilters.CHAT_MSG_CHANNEL_CONTROLLER = chatController;
-ChatFilters.CHAT_MSG_BATTLEGROUND_CONTROLLER = chatController;
-ChatFilters.CHAT_MSG_BATTLEGROUND_LEADER_CONTROLLER = chatController;
+ChatFilters.CHAT_MSG_INSTANCE_CHAT_CONTROLLER = chatController;
+ChatFilters.CHAT_MSG_INSTANCE_CHAT_LEADER_CONTROLLER = chatController;
 
 
 
@@ -788,7 +788,7 @@ local function createFilterFrame()
             end
             win:Hide();
         end);
-    win.cancel = CreateFrame("Button", win:GetName().."Cancel", win, "UIPanelButtonTemplate2");
+    win.cancel = CreateFrame("Button", win:GetName().."Cancel", win, "UIPanelButtonTemplate");
     win.cancel:SetPoint("TOPRIGHT", win.save, "TOPLEFT", -10, 0);
     win.cancel.text = _G[win.cancel:GetName().."Text"];
     win.cancel.text:SetText(L["Cancel"]);

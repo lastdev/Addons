@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Huhuran", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 311 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 432 $"):sub(12, -3))
 mod:SetCreatureID(15509)
 mod:SetModelID(15739)
 mod:RegisterCombat("combat")
@@ -65,4 +65,3 @@ function mod:UNIT_HEALTH(uId)
 		prewarn_berserk = true
 	end
 end
-		

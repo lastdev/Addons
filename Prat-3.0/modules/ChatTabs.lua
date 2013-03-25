@@ -193,22 +193,22 @@ L:AddLocale("ruRU",
 	["Active Alpha"] = "Прозрачность активной",
 	All = "Все",
 	Always = "Всегда",
-	["Chat window tab options."] = "Настройки закладок чата.",
+	["Chat window tab options."] = "Настройки вкладок чата.", -- Needs review
 	Default = "По умолчанию",
-	disableflash_desc = "Отключить мигание закладок чата.",
+	disableflash_desc = "Отключить мигание вкладок чата.", -- Needs review
 	disableflash_name = "Отключить мигание",
 	Hidden = "Скрывать",
 	Individual = "Индивидуально",
 	["Not Active Alpha"] = "Прозрачность неактивных",
-	preventdrag_desc = "Запретить перетаскивание закладок чата с помощью мыши",
+	preventdrag_desc = "Запретить перетаскивание вкладок чата с помощью мыши", -- Needs review
 	preventdrag_name = "Запретить перетаскивание",
-	["Set ChatFrame%d Display Mode"] = "Установить режим отображения %d закладки",
+	["Set ChatFrame%d Display Mode"] = "Установить режим отображения %d вкладки", -- Needs review
 	["Set Display Mode"] = "Режим отображения",
-	["Sets alpha of chat tab for active chat frame."] = "Прозрачность активной закладки чата.",
-	["Sets alpha of chat tab for not active chat frame."] = "Прозрачность неактивных закладок чата.",
-	["Set tab display mode for each chat window."] = "Установить режим отображения каждой закладки окна чата. Отмеченно (вкл), Не отмеченно (выкл), Отмеченно серым (по умолчанию)",
-	["Set tab display to always, hidden or the Blizzard default."] = "Установить режим отображения закладки на 'всегда показывать', 'скрывать' или 'поведение по умолчанию, как у Blizzard'.",
-	Tabs = "Закладки",
+	["Sets alpha of chat tab for active chat frame."] = "Прозрачность активной вкладки чата.", -- Needs review
+	["Sets alpha of chat tab for not active chat frame."] = "Прозрачность неактивных вкладок чата.", -- Needs review
+	["Set tab display mode for each chat window."] = "Установить режим отображения каждой вкладки окна чата. Отмечено (вкл), Не отмечено (выкл), Отмечено серым (по умолчанию)", -- Needs review
+	["Set tab display to always, hidden or the Blizzard default."] = "Установить режим отображения вкладки на 'всегда показывать', 'скрывать' или 'поведение по умолчанию, как у Blizzard'.", -- Needs review
+	Tabs = "Вкладки чата", -- Needs review
 }
 
 )

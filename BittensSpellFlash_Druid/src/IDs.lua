@@ -1,5 +1,8 @@
-local AddonName, a = ...
-if a.BuildFail(50000) then return end
+local addonName, a = ...
+local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
+
+a.AddonName = addonName
+c.Init(a)
 
 a.NoShred = {
 	[55294] = true, -- Ultraxion
@@ -37,34 +40,41 @@ a.SymbiosisRaidBuffs = {
 a.SpellIDs = {
 	["Acquatic Form"] = 1066,
 	["Barkskin"] = 22812,
---	["Bear Form"] = 5487,
-	["Berserk"] = 50334,
+	["Bear Form"] = 5487,
+	["Berserk"] = 106952,
 	["Cat Form"] = 768,
 	["Celestial Alignment"] = 112071,
+	["Cenarion Ward"] = 102351,
 --	["Challenging Roar"] = 5209,
 	["Clearcasting"] = 16870,
 --	["Demoralizing Roar"] = 99,
 	["Eclipse (Lunar)"] = 48518,
 	["Eclipse (Solar)"] = 48517,
---	["Enrage"] = 5229,
+	["Enrage"] = 5229,
+	["Euphoria"] = 81062,
 	["Faerie Fire"] = 770,
+	["Faerie Swarm"] = 102355,
 	["Ferocious Bite"] = 22568,
 	["Force of Nature"] = 106737,
 	["Flight Form"] = 33943,
---	["Frenzied Regeneration"] = 22842,
---	["Growl"] = 6795,
+	["Frenzied Regeneration"] = 22842,
+	["Growl"] = 6795,
 	["Healing Touch"] = 5185,
+	["Heart of the Wild"] = 108288,
 	["Incarnation: Chosen of Elune"] = 102560,
 	["Incarnation: King of the Jungle"] = 102543,
+	["Incarnation: Son of Ursoc"] = 102558,
 --	["Innervate"] = 29166,
---	["Lacerate"] = 33745,
---	["Mangle(Bear Form)"] = 33878,
+	["Lacerate"] = 33745,
+	["Mangle(Bear Form)"] = 33878,
 	["Mangle(Cat Form)"] = 33876,
 	["Mark of the Wild"] = 1126,
---	["Maul"] = 6807,
+	["Maul"] = 6807,
+	["Might of Ursoc"] = 106922,
 	["Moonfire"] = 8921,
 	["Moonkin Form"] = 24858,
 	["Nature's Grace"] = 16886,
+	["Nature's Swiftness"] = 132158,
 --	["Power Torrent"] = 74241,
 	["Predatory Swiftness"] = 69369,
 --	["Pulverize"] = 80313,
@@ -72,8 +82,13 @@ a.SpellIDs = {
 --	["Ravage!"] = 81170, 
 	["Ravage"] = 6785, 
 --	["Regrowth"] = 8936,
+	["Rejuvenation"] = 774,
+	["Renewal"] = 108238,
 	["Rip"] = 1079,
+	["Savage Defense"] = 62606,
 	["Savage Roar"] = 52610,
+	["Savage Roar Glyphed"] = 127538,
+	["Savage Roar Unglyphed"] = 52610,
 	["Shooting Stars"] = 93400,
 	["Shred"] = 5221,
 	["Skull Bash"] = 106839,
@@ -89,9 +104,14 @@ a.SpellIDs = {
 	["Symbiosis"] = 110309,
 	["Thrash"] = 77758,
 	["Tiger's Fury"] = 5217,
+	["Tooth and Claw"] = 135288,
 	["Travel Form"] = 783,
 --	["Tree of Life"] = 33891,
 	["Wrath"] = 5176,
+	
+	-- Symbiosis Spells
+	["Feint"] = 122289,
+	["Spell Reflection"] = 23920,
 	
 	-- Items
 --	["Fury of the Beast Heroic"] = 109864, -- staff proc
@@ -103,21 +123,26 @@ a.SpellIDs = {
 }
 
 a.TalentIDs = {
+	["Faerie Swarm"] = 106707,
 	["Incarnation"] = 106731,
+	["Nature's Swiftness"] = 132158,
 	["Soul of the Forest"] = 114107,
 }
 
 a.GlyphIDs = {
+	["Frenzied Regeneration"] = 54810,
+	["Might of Ursoc"] = 116238,
 	["Savagery"] = 127540,
 	["Shred"] = 114234,
+	["Survival Instincts"] = 114223,
 }
 
 a.EquipmentSets = {
-	FeralT13 = {
-	    HeadSlot = { 78789, 77015, 78694 },
-	    ShoulderSlot = { 78838, 77017, 78743 },
-	    ChestSlot = { 78760, 77013, 78665 },
-	    HandsSlot = { 78779, 77014, 78684 },
-	    LegsSlot = { 78808, 77016, 78713 },
-	}
+	GuardianT14 = {
+	    HeadSlot = { 86721, 85381, 86940 },
+	    ShoulderSlot = { 86723, 85383, 86942 },
+	    ChestSlot = { 86719, 85379, 86938 },
+	    HandsSlot = { 86720, 85380, 86939 },
+	    LegsSlot = { 86722, 85382, 86941 },
+	},
 }

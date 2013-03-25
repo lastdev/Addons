@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(175, "DBM-Party-Cataclysm", 11, 76)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(52155)
 mod:SetModelID(37788)
 mod:SetZone()
@@ -80,7 +80,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args:IsSpellID(96509) then
 		warnBreathHethiss:Show()
 		timerBreathHethiss:Start()
-	elseif args:IsSpellID(96512, 97354) then --unconfirmed in mop
+	elseif args:IsSpellID(96512) then
 		warnBlessing:Show()
 	elseif args:IsSpellID(96466) and args:IsDestTypePlayer() then
 		warnWhisperHethiss:Show(args.destName)
@@ -107,10 +107,10 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
-function mod:SPELL_DAMAGE(sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId)
-	if (spellId == 96685 or spellId == 97338) and self:AntiSpam(3, 1) and destGUID == UnitGUID("player") then -- unconirmed in mop
+function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+	if spellId == 96685 and self:AntiSpam(3, 1) and destGUID == UnitGUID("player") then -- unconirmed in mop
 		specWarnEffusion:Show()
-	elseif (spellId == 92521 or spellId == 97089) and self:AntiSpam(3, 2) and destGUID == UnitGUID("player") then -- unconirmed in mop
+	elseif spellId == 92521 and self:AntiSpam(3, 2) and destGUID == UnitGUID("player") then -- unconirmed in mop
 		specWarnPoolAcridTears:Show()
 	end
 end

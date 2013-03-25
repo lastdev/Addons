@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 	Revision: $Id: Mail-GUI.lua 5293 2012-05-04 22:36:05Z kandoko $
 	URL: http://auctioneeraddon.com/
 

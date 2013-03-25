@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(New) conf = New
 			for k,v in pairs(PartyPetFrames) do
 				v.conf = pconf
 			end
-		end, "$Revision: 760 $")
+		end, "$Revision: 832 $")
 
 local new, del, copy = XPerl_GetReusableTable, XPerl_FreeTable, XPerl_CopyTable
 
@@ -24,9 +24,8 @@ local UnitIsConnected = UnitIsConnected
 local UnitIsGhost = UnitIsGhost
 local UnitIsDead = UnitIsDead
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
-local UnitMana = UnitMana
-local UnitManaMax = UnitManaMax
-local UnitPowerType = UnitPowerType
+local UnitPower = UnitPower
+local UnitPowerMax = UnitPowerMax
 
 local XPerl_Player_Pet_HighlightCallback
 
@@ -273,15 +272,15 @@ end
 -- XPerl_Party_Pet_UpdateMana
 local function XPerl_Party_Pet_UpdateMana(self)
 	if (self.partyid) then
-		local Partypetmana = UnitMana(self.partyid)
-		local Partypetmanamax = UnitManaMax(self.partyid)
+		local Partypetmana = UnitPower(self.partyid)
+		local Partypetmanamax = UnitPowerMax(self.partyid)
 
 		self.statsFrame.manaBar:SetMinMaxValues(0, Partypetmanamax)
 		self.statsFrame.manaBar:SetValue(Partypetmana)
 
 		pmanaPct = (Partypetmana * 100.0) / Partypetmanamax
 		pmanaPct =  format("%3.0f", pmanaPct)
-		if (UnitPowerType(self.partyid) >= 1) then
+		if (XPerl_GetDisplayedPowerType(self.partyid) >= 1) then
 			self.statsFrame.manaBar.text:SetText(Partypetmana)
 		else
 			self.statsFrame.manaBar.text:SetFormattedText("%.0f%%",(100*(Partypetmana / Partypetmanamax))+0.5)

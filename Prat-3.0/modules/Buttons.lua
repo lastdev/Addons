@@ -228,8 +228,8 @@ L:AddLocale("ruRU",
 	["Set Position"] = "Положение",
 	["Sets position of chat menu and arrows for all chat windows."] = "Установить положение стрелок и кнопок чата для всех окон.",
 	["Show Arrows"] = "Показывать стрелки",
-	-- showbnet_desc = "",
-	-- showbnet_name = "",
+	showbnet_desc = "Показать меню Общение",
+	showbnet_name = "Показать меню Общение",
 	["Show Chat%d Arrows"] = "Показывать стрелки %d чата",
 	showmenu_desc = "Отображать меню команд",
 	showmenu_name = "Отображать меню",
@@ -307,10 +307,10 @@ L:AddLocale("zhTW",
 	Default = "預設值",
 	["Right, Inside Frame"] = "右側，內部框架",
 	["Right, Outside Frame"] = "右側，外部框架",
-	-- scrollReminder_desc = "",
-	-- scrollReminder_name = "",
+	scrollReminder_desc = "當不在聊天視窗底部時顯示剩餘按鈕", -- Needs review
+	scrollReminder_name = "顯示視窗可下卷的提示信號", -- Needs review
 	["Set Position"] = "設定位置",
-	-- ["Sets position of chat menu and arrows for all chat windows."] = "",
+	["Sets position of chat menu and arrows for all chat windows."] = "設定聊天選單的位置與所有聊天視窗的箭頭。", -- Needs review
 	["Show Arrows"] = "顯示箭頭",
 	showbnet_desc = "顯示社交選單",
 	showbnet_name = "顯示社交選單",
@@ -319,8 +319,8 @@ L:AddLocale("zhTW",
 	showmenu_name = "顯示選單",
 	showminimize_desc = "顯示最小化按鈕",
 	showminimize_name = "顯示最小化按鈕",
-	-- ["Toggle showing chat arrows for each chat window."] = "",
-	-- ["Toggles navigation arrows on and off."] = "",
+	["Toggle showing chat arrows for each chat window."] = "點擊顯示每個聊天視窗的聊天箭頭", -- Needs review
+	["Toggles navigation arrows on and off."] = "開啟/關閉輸入箭頭", -- Needs review
 }
 
 )

@@ -1,8 +1,9 @@
-local AddonName, a = ...
-if a.BuildFail(50000) then return end
+local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
-local c = BittensSpellFlashLibrary
+local g = BittensGlobalTables
+local c = g.GetTable("BittensSpellFlashLibrary")
+local u = g.GetTable("BittensUtilities")
 
 a.BCM = {}
 local bcm = a.BCM
@@ -27,25 +28,11 @@ end
 
 function bcm.PredictDamage(delay, debug)
 	local perTick = 0
-	local spellPower = GetSpellBonusDamage(3)
-	if debug then
-		c.Debug("Combustion", "Spell Power:", spellPower)
-	end
-	if countDebuff("Pyroblast", delay) then
-		local tick = 337 + spellPower / 2.778
-		perTick = perTick + tick / 3
-		if debug then
-			c.Debug("Combustion", "Pyroblast Tick:", tick)
-		end
-	end
 	if countDebuff("Ignite", delay) then
-		local tick = select(
-			14, 
+		perTick = select(
+			15, 
 			UnitDebuff("target", s.SpellName(c.GetID("Ignite")), nil, "PLAYER"))
-		perTick = perTick + tick / 2
-		if debug then
-			c.Debug("Combustion", "Ignite Tick:", tick)
-		end
+		perTick = perTick / 2
 	end
 	
 	local numTicks = floor(.5 + 10 * (1 + UnitSpellHaste("player") / 100))
@@ -64,7 +51,7 @@ end
 -------------------------------------------------------------------- The Window
 local window = CreateFrame("Frame", nil, UIParent)
 window:SetFrameStrata("HIGH")
-window:SetSize(90, 45)
+window:SetSize(90, 25)
 window:EnableMouse(true)
 window:SetMovable(true)
 window:RegisterForDrag("LeftButton")
@@ -73,7 +60,7 @@ window:CreateTitleRegion():SetAllPoints(true)
 local function createLine(anchor)
 	local line = window:CreateFontString()
 	line:SetPoint(anchor)
-	line:SetSize(window:GetWidth(), window:GetHeight() / 3)
+	line:SetSize(window:GetWidth(), window:GetHeight() / 2)
 	line:SetJustifyH("LEFT")
 	line:SetFont("Fonts\\FRIZQT__.TTF", 10) 
 	line:SetTextColor(1, 1, 1)
@@ -81,8 +68,7 @@ local function createLine(anchor)
 end
 
 local line1 = createLine("TOP")
-local line2 = createLine("CENTER")
-local line3 = createLine("BOTTOM")
+local line2 = createLine("BOTTOM")
 
 local function saveWindowPosition()
 	local settings = CombustionMonitorSettings
@@ -120,9 +106,9 @@ end
 
 function bcm.UpdateVisibility()
 	local hide = s.TalentMastery() ~= 2
-		or a.GetConfig("fire_off")
-		or a.GetConfig("hide_BCM")
-		or not s.GetModuleFlashable(AddonName)
+		or not c.GetOption("FlashFire")
+		or not c.GetOption("CombustionMonitor")
+		or not s.GetModuleFlashable(addonName)
 		or (s.config.in_combat_only and not s.InCombat())
 	local isShowing = window:IsShown()
 	if hide and isShowing then
@@ -133,25 +119,10 @@ function bcm.UpdateVisibility()
 end
 s.AddSettingsListener(a.UpdateBCMVisibility)
 
-SLASH_BITTENS_COMBUSTION_MONITOR1 = "/bcm"
-function SlashCmdList.BITTENS_COMBUSTION_MONITOR(args)
-	if string.find(args, "reset") then
-		CombustionMonitorSettings = nil
-		positionWindow()
-	end
-end
-
-local function getDisplayText(damage, perTick)
-	local text = floor(damage / 1000) .. "K"
-	if igniteIsDirty then
-		text = text .. "*"
-	end
-	text = text .. " (" .. floor(perTick / 1000 + .5) .. "K"
-	if igniteIsDirty then
-		text = text .. "*"
-	end
-	return text .. ")"
-end
+u.RegisterSlashCommand("bcm", "reset", function()
+	CombustionMonitorSettings = nil
+	positionWindow()
+end)
 
 local function updateWindow()
 	if not window:IsShown() then
@@ -160,13 +131,12 @@ local function updateWindow()
 	
 	local damage, perTick, numTicks, crit
 		= bcm.PredictDamage(false, false)
-	local text = floor(crit * 1000 + .5) / 10 .. "%   x" .. numTicks
-	line1:SetText(text)
-	line2:SetText(getDisplayText(damage, perTick))
-	line3:SetText(getDisplayText(bcm.PredictDamage(true, false)))
+	line1:SetText(floor(crit * 1000 + .5) / 10 .. "%   x" .. numTicks)
+	line2:SetText(
+		floor(damage / 1000) .. "K" 
+			.. " (" .. floor(perTick / 1000 + .5) .. "K" .. ")")
 end
 
-c.Init(a)
 updateWindow()
 
 ------------------------------------------------------------------------ Events
@@ -216,7 +186,7 @@ end
 local eventHandlers = {}
 
 function eventHandlers.ADDON_LOADED(addonName)
-	if addonName == AddonName then
+	if addonName == addonName then
 		positionWindow()
 	end
 end

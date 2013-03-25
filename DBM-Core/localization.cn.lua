@@ -1,6 +1,6 @@
 ﻿-- Simplified Chinese by Diablohu(diablohudream@gmail.com) & yleaf(yaroot@gmail.com)
 -- merge traslation by bigfoot team  - yleaf 9-10-2010
--- Last update: 10/11/2012
+-- Last update: 2/25/2013
 
 if GetLocale() ~= "zhCN" then return end
 
@@ -10,11 +10,12 @@ DBM_HOW_TO_USE_MOD					= "欢迎使用DBM。在聊天框输入 /dbm help 以获�
 DBM_CORE_LOAD_MOD_ERROR				= "读取%s模块时发生错误：%s"
 DBM_CORE_LOAD_MOD_SUCCESS			= "成功读取%s模块。在聊天框输入 /dbm 或 /dbm help 可进行更多设置。"
 DBM_CORE_LOAD_GUI_ERROR				= "无法读取图形界面：%s"
+DBM_CORE_LOAD_GUI_COMBAT			= "无法在战斗中初始化图形界面。请先在非战斗状态打开图形设置界面，之后的战斗中就可以自由打开和关闭该界面了。"
 
 DBM_CORE_COMBAT_STARTED				= "%s作战开始，祝你走运 :)"
-DBM_CORE_BOSS_DOWN					= "%s被击杀！用时%s！"
-DBM_CORE_BOSS_DOWN_L				= "%s被击杀！用时%s！上次用时%s，最快击杀用时%s。总击杀%d次。"
-DBM_CORE_BOSS_DOWN_NR				= "%s被击杀！用时%s！新的纪录诞生了！原纪录为%s。总击杀%d次。"
+DBM_CORE_BOSS_DOWN					= "%s战斗胜利！用时%s！"
+DBM_CORE_BOSS_DOWN_L				= "%s战斗胜利！用时%s！上次用时%s，最快用时%s。总计%d次胜利。"
+DBM_CORE_BOSS_DOWN_NR				= "%s战斗胜利！用时%s！新的纪录诞生了！原纪录为%s。总计%d次胜利。"
 DBM_CORE_COMBAT_ENDED_AT			= "%s（%s）作战结束，用时%s。"
 DBM_CORE_COMBAT_ENDED_AT_LONG		= "%s（%s）作战结束，用时%s。该难度下总计失败%d次。"
 DBM_CORE_COMBAT_STATE_RECOVERED		= "%s作战%s前开始，正在恢复计时条……"
@@ -42,8 +43,8 @@ DBM_CORE_OPTION_CATEGORY_MISC		= "其它"
 DBM_CORE_AUTO_RESPONDED						= "已自动回复密语。"
 DBM_CORE_STATUS_WHISPER						= "%s：%s，%d/%d存活"
 DBM_CORE_AUTO_RESPOND_WHISPER				= "%s正在与%s交战，（当前%s，%d/%d存活）"
-DBM_CORE_WHISPER_COMBAT_END_KILL			= "%s已经击败%s！"
-DBM_CORE_WHISPER_COMBAT_END_KILL_STATS		= "%s已经击败%s！总计击败%d次。"
+DBM_CORE_WHISPER_COMBAT_END_KILL			= "%s已在%s的战斗中取得胜利！"
+DBM_CORE_WHISPER_COMBAT_END_KILL_STATS		= "%s已在%s的战斗中取得胜利！总计%d次胜利。"
 DBM_CORE_WHISPER_COMBAT_END_WIPE_AT			= "%s在%s（%s）的战斗中灭团了。"
 DBM_CORE_WHISPER_COMBAT_END_WIPE_STATS_AT	= "%s在%s（%s）的战斗中灭团了。该难度下总共失败%d次。"
 
@@ -88,6 +89,7 @@ DBM_CORE_RANGECHECK_OPTION_SLOW		= "慢（适用于低端CPU）"
 DBM_CORE_RANGECHECK_OPTION_AVERAGE	= "中"
 DBM_CORE_RANGECHECK_OPTION_FAST		= "快（几乎实时）"
 DBM_CORE_RANGERADAR_HEADER			= "距离雷达（%d码）"
+DBM_CORE_RANGERADAR_IN_RANGE_TEXT	= "%d人在监视距离内"
 
 DBM_CORE_INFOFRAME_LOCK				= "锁定框体"
 DBM_CORE_INFOFRAME_HIDE				= "隐藏"
@@ -117,6 +119,10 @@ DBM_CORE_ALLIANCE					= "联盟"
 DBM_CORE_HORDE						= "部落"
 
 DBM_CORE_UNKNOWN					= "未知"
+DBM_CORE_LEFT						= "左"
+DBM_CORE_RIGHT						= "右"
+DBM_CORE_BACK						= "后"
+DBM_CORE_FRONT						= "前"
 
 DBM_CORE_BREAK_START				= "开始休息 - %s分钟！"
 DBM_CORE_BREAK_MIN					= "%s分钟后休息结束！"
@@ -134,8 +140,8 @@ DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "成就：快速击杀"
 DBM_CORE_AUTO_TIMER_TEXTS = {
 	target		= "%s: %%s",
 	cast		= "%s",
-	active		= "%s效果结束",--Buff/Debuff/event on boss
-	fades		= "%s效果消失",--Buff/Debuff on players
+	active		= "%s结束",--Buff/Debuff/event on boss
+	fades		= "%s消失",--Buff/Debuff on players
 	cd			= "%s冷却",
 	cdcount		= "%s冷却（%%d）",
 	cdsource	= "%s冷却: %%s",

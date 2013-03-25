@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 513 2012-09-09T20:38:34Z
+    Revision: 564 2012-11-28T00:03:51Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -354,7 +354,7 @@ function ArmorySpellButton_UpdateButton(self)
     end
     ArmorySpellBookFrame.selectedSkillLineNumSlots = numSlots;
     ArmorySpellBookFrame.selectedSkillLineOffset = offset;
-	local isOffSpec = (offSpecID ~= 0);
+	local isOffSpec = (offSpecID ~= 0) and (ArmorySpellBookFrame.bookType == BOOKTYPE_SPELL);
     local slot, slotType = ArmorySpellBook_GetSpellBookSlot(self);
     local name = self:GetName();
     local iconTexture = _G[name.."IconTexture"];

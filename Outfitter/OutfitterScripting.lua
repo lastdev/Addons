@@ -418,26 +418,29 @@ function Outfitter:GenerateGatheringScript(pTooltipGatherMessage, pDescription)
 -- $EVENTS GAMETOOLTIP_SHOW GAMETOOLTIP_HIDE
 -- $DESC ]]..(pDescription or "")..[[
 
+-- $SETTING ignoreDifficulty = {label="Ignore difficulty", type="boolean"}
+
 -- If the tooltip is being shown see if the outfit should be equipped
 
 if event == "GAMETOOLTIP_SHOW" then
 
-	-- Check the tooltip for an orange or red tradeskill message
-	-- and equip the outfit if there is one
+    -- Check the tooltip for an orange or red tradeskill message
+    -- and equip the outfit if there is one
 
-	local hasText, isDifficult = Outfitter:TooltipContainsLine(GameTooltip, ]]..pTooltipGatherMessage..[[)
+    local hasText, isDifficult = Outfitter:TooltipContainsLine(GameTooltip, ]]..pTooltipGatherMessage..[[)
 
-	if hasText and isDifficult then
-		equip=true
-	end
+    if hasText and (setting.ignoreDifficulty or isDifficult) then
+        equip = true
+    end
 
-	-- The tooltip isn't being shown so it's being hidden.
-	-- A one second delay is used so that the outfit doesn't
-	-- unequip if the user momentarily moves the cursor off
-	-- the node
+    -- The tooltip isn't being shown so it's being hidden.
+    -- A one second delay is used so that the outfit doesn't
+    -- unequip if the user momentarily moves the cursor off
+    -- the node
 
 elseif didEquip then
-	equip=false; delay=1
+    equip = false
+    delay = 1
 end
 ]]
 end
@@ -450,33 +453,33 @@ function Outfitter:GenerateLockpickingScript(pDescription)
 -- If the tooltip is being shown see if the outfit should be equipped
 
 if event == "GAMETOOLTIP_SHOW" or event == "TIMER" then
-	if event == "GAMETOOLTIP_SHOW" then
-		self:RegisterEvent("TIMER")
-	end
+    if event == "GAMETOOLTIP_SHOW" then
+        self:RegisterEvent("TIMER")
+    end
 
-	if not SpellIsTargeting() then
-		return
-	end
+    if not SpellIsTargeting() then
+        return
+    end
 
-	-- Check the tooltip for an orange or red tradeskill message
-	-- and equip the outfit if there is one
+    -- Check the tooltip for an orange or red tradeskill message
+    -- and equip the outfit if there is one
 
-	local hasText, isDifficult = Outfitter:TooltipContainsLine(GameTooltip, Outfitter.cRequiresLockpicking)
+    local hasText, isDifficult = Outfitter:TooltipContainsLine(GameTooltip, Outfitter.cRequiresLockpicking)
 
-	if hasText and isDifficult then
-		equip=true
-	end
+    if hasText and isDifficult then
+        equip=true
+    end
 
-	-- The tooltip isn't being shown so it's being hidden.
-	-- A one second delay is used so that the outfit doesn't
-	-- unequip if the user momentarily moves the cursor off
-	-- the node
+    -- The tooltip isn't being shown so it's being hidden.
+    -- A one second delay is used so that the outfit doesn't
+    -- unequip if the user momentarily moves the cursor off
+    -- the node
 
 else
-	self:UnregisterEvent("TIMER")
-	if didEquip then -- GAME_TOOLTIP_HIDE
-		equip=false; delay=1
-	end
+    self:UnregisterEvent("TIMER")
+    if didEquip then -- GAME_TOOLTIP_HIDE
+        equip=false; delay=1
+    end
 end
 ]]
 end
@@ -520,15 +523,15 @@ Outfitter.PresetScripts =
 local isPvP = UnitIsPVP("player")
 
 if isPvP == outfit.wasPvP then
-	return
+    return
 end
 
 outfit.wasPvP = isPvP
 
 if isPvP then
-	equip = true
+    equip = true
 else
-	equip = false
+    equip = false
 end
 ]],
 	},
@@ -591,20 +594,20 @@ end
 if itemInfo0
 and (Outfitter:GetInventoryCache():ItemsAreSame(itemInfo0, outfit.Items.Trinket0Slot)
  or Outfitter:InventoryItemIsActive("Trinket0Slot")) then
-	itemInfo0 = nil
+    itemInfo0 = nil
 end
 
 if itemInfo1
 and (Outfitter:GetInventoryCache():ItemsAreSame(itemInfo1, outfit.Items.Trinket1Slot)
  or Outfitter:InventoryItemIsActive("Trinket1Slot")) then
-	itemInfo1 = nil
+    itemInfo1 = nil
 end
 
 if itemInfo0 or itemInfo1 then
     Outfitter:BeginEquipmentUpdate()
     if itemInfo0 then
         outfit:SetItem("Trinket0Slot", itemInfo0)
-	end
+    end
     if itemInfo1 then
         outfit:SetItem("Trinket1Slot", itemInfo1)
     end
@@ -734,52 +737,52 @@ elseif GetSpecialization() == 4 then equip = setting.Tree4 end
 -- Equip on mount unless it's disabled
 
 if event == "MOUNTED" then
-	-- The disable options are only checked inside the mounting handler.  This way
-	-- the outfit won't equip automatically, but if the player chooses to
-	-- manually equip it after mounting, then Outfitter will still unequip
-	-- it for them when they dismount
+    -- The disable options are only checked inside the mounting handler.  This way
+    -- the outfit won't equip automatically, but if the player chooses to
+    -- manually equip it after mounting, then Outfitter will still unequip
+    -- it for them when they dismount
 
-	local inInstance, instanceType = IsInInstance()
+    local inInstance, instanceType = IsInInstance()
 
-	if (setting.DisableInstance and inInstance and (instanceType == "raid" or instanceType == "party"))
-	or (setting.DisableBG and Outfitter:InBattlegroundZone())
-	or (setting.DisablePVP and UnitIsPVP("player")) then
-		return
-	end
+    if (setting.DisableInstance and inInstance and (instanceType == "raid" or instanceType == "party"))
+    or (setting.DisableBG and Outfitter:InBattlegroundZone())
+    or (setting.DisablePVP and UnitIsPVP("player")) then
+        return
+    end
 
-	equip = true
+    equip = true
 
 -- Unequip on dismount
 
 elseif event == "NOT_MOUNTED" then
-	if not setting.StayEquippedWhileFalling then
-		equip = false
-	else
-		self.UnequipWhenNotFalling = true
-		self.DismountTime = GetTime()
-		self:RegisterEvent("TIMER")
-	end
+    if not setting.StayEquippedWhileFalling then
+        equip = false
+    else
+        self.UnequipWhenNotFalling = true
+        self.DismountTime = GetTime()
+        self:RegisterEvent("TIMER")
+    end
 
-	if setting.UnequipDelay then
-		delay = setting.UnequipDelay
-	end
+    if setting.UnequipDelay then
+        delay = setting.UnequipDelay
+    end
 
 -- Check to see if the player is no longer falling
 
 elseif event == "TIMER" then
 
-	-- Unequip if the player was falling when dismounted and has now landed
+    -- Unequip if the player was falling when dismounted and has now landed
 
-	if self.UnequipWhenNotFalling
-	and GetTime() >= self.DismountTime + 1
-	and not IsFalling() then
-		equip = false
-		self.UnequipWhenNotFalling = nil
-	end
+    if self.UnequipWhenNotFalling
+    and GetTime() >= self.DismountTime + 1
+    and not IsFalling() then
+        equip = false
+        self.UnequipWhenNotFalling = nil
+    end
 
-	if not self.UnequipWhenNotFalling then
-		self:UnregisterEvent("TIMER")
-	end
+    if not self.UnequipWhenNotFalling then
+        self:UnregisterEvent("TIMER")
+    end
 end
 ]],
 	},
@@ -801,22 +804,22 @@ local inInstance, instanceType = IsInInstance()
 if (setting.DisableInstance and inInstance and (instanceType == "raid" or instanceType == "party"))
 or (setting.DisableBG and Outfitter:InBattlegroundZone())
 or (setting.DisablePVP and UnitIsPVP("player")) then
-	return
+    return
 end
 
 local zoneText = GetRealZoneText()
 if setting.DisableVashjir
-and (zoneText == Outfitter.LZ["Abyssal Depths"]
-or zoneText == Outfitter.LZ["Kelp'thar Forest"]
-or zoneText == Outfitter.LZ["Shimmering Expanse"]) then
+and (zoneText == GetMapNameByID(614) -- Abyssal Depths
+or zoneText == GetMapNameByID(610) -- Kelp'thar Forest
+or zoneText == GetMapNameByID(615)) then -- Shimmering Expanse
     return
 end
 
 if event == "SWIMMING" then
-	equip = true
+    equip = true
 elseif didEquip then
-	equip = false
-	delay = 2.5 -- Use a delay since hitting spacebar temporarily makes the player not swimming
+    equip = false
+    delay = 2.5 -- Use a delay since hitting spacebar temporarily makes the player not swimming
 end
 ]],
 	},
@@ -1232,18 +1235,46 @@ end
 		Script = Outfitter:GenerateScriptHeader("PLAYER_ENTERING_WORLD GROUP_ROSTER_UPDATE", Outfitter.cSoloOutfitDescription)..
 [[
 -- $SETTING EquipSolo={label="Equip when solo", type="boolean"}
--- $SETTING EquipGroup={label="Equip when in a party", type="boolean"}
--- $SETTING EquipRaid={label="Equip when in a raid", type="boolean"}
+-- $SETTING EquipNormal5={label="Equip in 5 player normal/scenario", type="boolean"}
+-- $SETTING EquipHeroic5={label="Equip in 5 player heroic", type="boolean"}
+-- $SETTING EquipNormal10={label="Equip in 10 player normal", type="boolean"}
+-- $SETTING EquipHeroic10={label="Equip in 10 player heroic", type="boolean"}
+-- $SETTING EquipNormal25={label="Equip in 25 player normal", type="boolean"}
+-- $SETTING EquipHeroic25={label="Equip in 25 player heroic", type="boolean"}
+-- $SETTING EquipRaidFinder={label="Equip in raid finder", type="boolean"}
+-- $SETTING EquipChallenge={label="Equip in challenge mode", type="boolean"}
+-- $SETTING EquipNormal40={label="Equip in 40 player", type="boolean"}
 
+local _, _, difficulty = GetInstanceInfo()
 if setting.EquipSolo
-and GetNumGroupMembers() == 0 then
+and difficulty == 1 then
     equip = true
-elseif setting.EquipGroup
-and GetNumGroupMembers() ~= 0
-and !IsInRaid() then
+elseif setting.EquipNormal5
+and difficulty == 2 then
     equip = true
-elseif setting.EquipRaid
-and IsInRaid() then
+elseif setting.EquipHeroic5
+and difficulty == 3 then
+    equip = true
+elseif setting.EquipNormal10
+and difficulty == 4 then
+    equip = true
+elseif setting.EquipHeroic10
+and difficulty == 6 then
+    equip = true
+elseif setting.EquipNormal25
+and difficulty == 5 then
+    equip = true
+elseif setting.EquipHeroic25
+and difficulty == 7 then
+    equip = true
+elseif setting.EquipRaidFinder
+and difficulty == 8 then
+    equip = true
+elseif setting.EquipChallenge
+and difficulty == 9 then
+    equip = true
+elseif setting.EquipNormal40
+and difficulty == 10 then
     equip = true
 elseif didEquip then
     equip = false
@@ -1288,13 +1319,13 @@ end
 -- Just return if they're PvP'ing and don't want the outfit changing
 
 if equip then
-	local inInstance, instanceType = IsInInstance()
+    local inInstance, instanceType = IsInInstance()
     
-	if (setting.DisableInstance and inInstance and (instanceType == "raid" or instanceType == "party"))
-	or (setting.DisableBG and Outfitter:InBattlegroundZone())
-	or (setting.DisablePVP and UnitIsPVP("player")) then
-		return
-	end
+    if (setting.DisableInstance and inInstance and (instanceType == "raid" or instanceType == "party"))
+    or (setting.DisableBG and Outfitter:InBattlegroundZone())
+    or (setting.DisablePVP and UnitIsPVP("player")) then
+        return
+    end
 end
 
 if equip == nil and didEquip then equip = false end
@@ -1320,13 +1351,13 @@ end
 -- Just return if they're PvP'ing and don't want the outfit changing
 
 if equip then
-	local inInstance, instanceType = IsInInstance()
+    local inInstance, instanceType = IsInInstance()
     
-	if (setting.DisableInstance and inInstance and (instanceType == "raid" or instanceType == "party"))
-	or (setting.DisableBG and Outfitter:InBattlegroundZone())
-	or (setting.DisablePVP and UnitIsPVP("player")) then
-		return
-	end
+    if (setting.DisableInstance and inInstance and (instanceType == "raid" or instanceType == "party"))
+    or (setting.DisableBG and Outfitter:InBattlegroundZone())
+    or (setting.DisablePVP and UnitIsPVP("player")) then
+        return
+    end
 end
 
 if equip == nil and didEquip then equip = false end
@@ -1380,50 +1411,50 @@ end
 		Script = Outfitter:GenerateScriptHeader("GAMETOOLTIP_SHOW GAMETOOLTIP_HIDE UNIT_ENTERED_VEHICLE UNIT_EXITED_VEHICLE", Outfitter.cArgentTournamentOutfit)..
 [[
 if event == "GAMETOOLTIP_SHOW" then
-	local unitGUID = UnitGUID("mouseover")
-	
-	if not unitGUID then
-		return
-	end
-	
-	local unitType = unitGUID:sub(5, 5)
-	
-	if unitType ~= "3" and unitType ~= "5" then
+    local unitGUID = UnitGUID("mouseover")
+    
+    if not unitGUID then
         return
     end
-	
-	local npcID = tonumber(unitGUID:sub(7, 10), 16)
-	
-	if not self.MountIDs then
-		if UnitFactionGroup("player") == "Alliance" then
-			self.MountIDs =
-			{
-				[33790] = "Stabled Exodar Elekk",
-				[33793] = "Stabled Gnomeregan Mechanostrider",
-				[33794] = "Stabled Darnassian Nightsaber",
-				[33795] = "Stabled Ironforge Ram",
-				[33800] = "Stabled Stormwind Steed",
-				[33843] = "Stabled Quel'dorei Steed",
-				[36557] = "Argent Warhorse"
-			}
-		else
-			self.MountIDs =
-			{
-				[33791] = "Stabled Silvermoon Hawkstrider",
-				[33792] = "Stabled Thunder Bluff Kodo",
-				[33796] = "Stabled Darkspear Raptor",
-				[33798] = "Stabled Forsaken Warhorse",
-				[33799] = "Stabled Orgrimmar Wolf",
-				[33842] = "Stabled Sunreaver Hawkstrider",
-				[36558] = "Argent Battleworg"
-			}
-		end
-		
-		self.MountIDs[33870] = "Stabled Argent Warhorse"
-		self.MountIDs[34125] = "Stabled Campaign Warhorse"
-	end
-	
-	if self.MountIDs[npcID] then
+    
+    local unitType = unitGUID:sub(5, 5)
+    
+    if unitType ~= "3" and unitType ~= "5" then
+        return
+    end
+    
+    local npcID = tonumber(unitGUID:sub(7, 10), 16)
+    
+    if not self.MountIDs then
+        if UnitFactionGroup("player") == "Alliance" then
+            self.MountIDs =
+            {
+                [33790] = "Stabled Exodar Elekk",
+                [33793] = "Stabled Gnomeregan Mechanostrider",
+                [33794] = "Stabled Darnassian Nightsaber",
+                [33795] = "Stabled Ironforge Ram",
+                [33800] = "Stabled Stormwind Steed",
+                [33843] = "Stabled Quel'dorei Steed",
+                [36557] = "Argent Warhorse"
+            }
+        else
+            self.MountIDs =
+            {
+                [33791] = "Stabled Silvermoon Hawkstrider",
+                [33792] = "Stabled Thunder Bluff Kodo",
+                [33796] = "Stabled Darkspear Raptor",
+                [33798] = "Stabled Forsaken Warhorse",
+                [33799] = "Stabled Orgrimmar Wolf",
+                [33842] = "Stabled Sunreaver Hawkstrider",
+                [36558] = "Argent Battleworg"
+            }
+        end
+        
+        self.MountIDs[33870] = "Stabled Argent Warhorse"
+        self.MountIDs[34125] = "Stabled Campaign Warhorse"
+    end
+    
+    if self.MountIDs[npcID] then
         equip = true
     end
 elseif event == "GAMETOOLTIP_HIDE"
@@ -1451,29 +1482,29 @@ end
 		Script = Outfitter:GenerateScriptHeader("GAMETOOLTIP_SHOW GAMETOOLTIP_HIDE UNIT_ENTERED_VEHICLE UNIT_EXITED_VEHICLE", "")..
 [[
 if event == "GAMETOOLTIP_SHOW" then
-	local unitGUID = UnitGUID("mouseover")
-	
-	if not unitGUID then
-		return
-	end
-	
-	local unitType = unitGUID:sub(5, 5)
-	
-	if unitType ~= "3" and unitType ~= "5" then
+    local unitGUID = UnitGUID("mouseover")
+    
+    if not unitGUID then
         return
     end
-	
-	local npcID = tonumber(unitGUID:sub(7, 10), 16)
-	
-	if not self.MountIDs then
-		self.MountIDs = {}
-		self.MountIDs[39710] = "Aviana's Guardian"
-		self.MountIDs[40719] = "Aviana's Guardian"
-		self.MountIDs[40720] = "Aviana's Guardian"
-		self.MountIDs[40723] = "Aviana's Guardian"
-	end
-	
-	if self.MountIDs[npcID] then
+    
+    local unitType = unitGUID:sub(5, 5)
+    
+    if unitType ~= "3" and unitType ~= "5" then
+        return
+    end
+    
+    local npcID = tonumber(unitGUID:sub(7, 10), 16)
+    
+    if not self.MountIDs then
+        self.MountIDs = {}
+        self.MountIDs[39710] = "Aviana's Guardian"
+        self.MountIDs[40719] = "Aviana's Guardian"
+        self.MountIDs[40720] = "Aviana's Guardian"
+        self.MountIDs[40723] = "Aviana's Guardian"
+    end
+    
+    if self.MountIDs[npcID] then
         equip = true
     end
 elseif event == "GAMETOOLTIP_HIDE"
@@ -1501,25 +1532,25 @@ end
 		Script = Outfitter:GenerateScriptHeader("GAMETOOLTIP_SHOW GAMETOOLTIP_HIDE UNIT_ENTERED_VEHICLE UNIT_EXITED_VEHICLE PLAYER_REGEN_ENABLED", Outfitter.cFlameLeviathanOutfitDescription)..
 [[
 if event == "GAMETOOLTIP_SHOW" then
-	local unitGUID = UnitGUID("mouseover")
-	
-	if not unitGUID
-	or unitGUID:sub(5, 5) ~= "5" then
+    local unitGUID = UnitGUID("mouseover")
+    
+    if not unitGUID
+    or unitGUID:sub(5, 5) ~= "5" then
         return
     end
-	
-	local npcID = tonumber(unitGUID:sub(9, 12), 16)
-	
-	if not self.MountIDs then
-		self.MountIDs =
-		{
-			[33060] = "Salvaged Siege Engine",
-			[33109] = "Salvaged Demolisher",
-			[33062] = "Salvaged Chopper",
-		}
-	end
-	
-	if self.MountIDs[npcID] then
+    
+    local npcID = tonumber(unitGUID:sub(9, 12), 16)
+    
+    if not self.MountIDs then
+        self.MountIDs =
+        {
+            [33060] = "Salvaged Siege Engine",
+            [33109] = "Salvaged Demolisher",
+            [33062] = "Salvaged Chopper",
+        }
+    end
+    
+    if self.MountIDs[npcID] then
         equip = true
     end
 elseif event == "GAMETOOLTIP_HIDE"
@@ -1553,9 +1584,9 @@ end
 -- $EVENTS QUEST_LOG_UPDATE ZONE_CHANGED ZONE_CHANGED_NEW_AREA ZONE_CHANGED_INDOORS
 -- $DESC Equips the outfit when you're on the Multiphase Survey quest and enter Nagrand, unequips when you complete the quest or leave Nagrand
 
-if GetZoneText() == Outfitter.LZ["Nagrand"] then
-	local vOnQuest, vCompleted = Outfitter:PlayerIsOnQuestID(11880)
-	
+if GetZoneText() == GetMapNameByID(477) then -- Nagrand
+    local vOnQuest, vCompleted = Outfitter:PlayerIsOnQuestID(11880)
+    
     if vOnQuest and not vCompleted then
         equip = true
         delay = 5
@@ -1642,63 +1673,206 @@ elseif event == "TRADE_SKILL_UPDATE" then
         equip = false
     end
 end
-if setting.Ragnaros and equip ~= nil and not IsFlying() then
+if setting.Ragnaros and equip ~= nil then
     if equip then
         self.savedCompanionID = Outfitter:GetSummonedCompanionID()
-        Outfitter:SummonCompanionByID(234441, 0.2)
+        Outfitter:SummonCompanionByGUID("0x00000000000393c9", 0.2)
     elseif self.savedCompanionID then
-        Outfitter:SummonCompanionByID(self.savedCompanionID, 0.2)
+        Outfitter:SummonCompanionByGUID(self.savedCompanionID, 0.2)
     else
-        Outfitter:DismissCompanionByID(234441)
+        Outfitter:DismissCompanionByGUID("0x00000000000393c9")
     end
 end
 ]],
 	},
 	{
-		Name = "Championing",
-		ID = "CHAMP",
+		Name = "Championing Faction",
+		ID = "CHAMPFACTION",
 		Category = "QUEST",
 		Script =
 [[
 -- $EVENTS PLAYER_ENTERING_WORLD
--- $DESC Equips the outfit when you're in a 5 player level 80 instance
+-- $EVENTS ACTIVE_TALENT_GROUP_CHANGED
+-- $DESC Equips the outfit when you're in a 5 player party instance
 
-local name, type, difficulty, difficultyName = GetInstanceInfo()
+local name, instanceType, difficultyIndex, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, mapID = GetInstanceInfo()
 
-if type == "party"
-and (name == Outfitter.LZ["Trial of the Champion"]
-or name == Outfitter.LZ["The Culling of Stratholme"]
-or name == Outfitter.LZ["Halls of Lightning"]
-or name == Outfitter.LZ["The Oculus"]
-or name == Outfitter.LZ["Utgarde Pinnacle"]
-or name == Outfitter.LZ["The Forge of Souls"]
-or name == Outfitter.LZ["Pit of Saron"]
-or name == Outfitter.LZ["Halls of Reflection"]
-or name == Outfitter.LZ["The Stonecore"]
-or name == Outfitter.LZ["The Vortex Pinnacle"]
-or name == Outfitter.LZ["Grim Batol"]
-or name == Outfitter.LZ["Halls of Origination"]
-or name == Outfitter.LZ["Lost City of the Tol'vir"]
-or name == Outfitter.LZ["End Time"]
-or name == Outfitter.LZ["Well of Eternity"]
-or name == Outfitter.LZ["Hour of Twilight"]
-or (difficulty == 2
-    and (name == Outfitter.LZ["Ahn'kahet: The Old Kingdom"]
-      or name == Outfitter.LZ["Azjol-Nerub"]
-      or name == Outfitter.LZ["Drak'Tharon Keep"]
-      or name == Outfitter.LZ["Gundrak"]
-      or name == Outfitter.LZ["Halls of Stone"]
-      or name == Outfitter.LZ["The Nexus"]
-      or name == Outfitter.LZ["Utgarde Keep"]
-      or name == Outfitter.LZ["Violet Hold"]
-      or name == Outfitter.LZ["Blackrock Caverns"]
-      or name == Outfitter.LZ["Deadmines"]
-      or name == Outfitter.LZ["Shadowfang Keep"]
-      or name == Outfitter.LZ["Throne of the Tides"]))) then
-    equip = true
-else
-    equip = false
-end 
+if type == "solo" or "party"
+        and (name == GetMapNameByID(680) -- Ragefire Chasm
+        or name == GetMapNameByID(756) -- The Deadmines
+        or name == GetMapNameByID(749) -- Wailing Caverns
+        or name == GetMapNameByID(764) -- Shadowfang Keep
+        or name == GetMapNameByID(688) -- Blackfathom Deeps
+        or name == GetMapNameByID(690) -- The Stockade
+        or name == GetMapNameByID(691) -- Gnomeregan
+        or name == GetMapNameByID(871) -- Scarlet Halls 
+        or name == GetMapNameByID(874) -- Scarlet Monastery
+        or name == GetMapNameByID(761) -- Razorfen Kraul
+        or name == GetMapNameByID(750) -- Maraudon
+        or name == GetMapNameByID(692) -- Uldaman
+        or name == GetMapNameByID(898) -- Scholomance
+        or name == GetMapNameByID(760) -- Razorfen Downs
+        or name == GetMapNameByID(699) -- Dire Maul
+        or name == GetMapNameByID(765) -- Stratholme
+        or name == GetMapNameByID(686) -- Zul'Farrak
+        or name == GetMapNameByID(704) -- Blackrock Depths
+        or name == GetMapNameByID(687) -- Temple of Atal'Hakkar
+        or name == GetMapNameByID(721) -- Blackrock Spire    
+        or name == GetMapNameByID(797) -- Hellfire Ramparts
+        or name == GetMapNameByID(725) -- The Blood Furnace
+        or name == GetMapNameByID(710) -- Shattered Halls
+        or name == GetMapNameByID(728) -- The Slave Pens
+        or name == GetMapNameByID(726) -- The Underbog
+        or name == GetMapNameByID(727) -- The Steamvault
+        or name == GetMapNameByID(732) -- Mana-Tombs
+        or name == GetMapNameByID(722) -- Auchenai Crypts
+        or name == GetMapNameByID(724) -- Shadow Labyrinth
+        or name == GetMapNameByID(734) -- Old Hillsbrad Foothills
+        or name == GetMapNameByID(723) -- Sethekk Halls
+        or name == GetMapNameByID(730) -- The Mechanar
+        or name == GetMapNameByID(729) -- The Botanica
+        or name == GetMapNameByID(733) -- Black Morass
+        or name == GetMapNameByID(731) -- The Arcatraz
+        or name == GetMapNameByID(798) -- Magisters' Terrace
+        or name == GetMapNameByID(522) -- Ahn'kahet: The Old Kingdom
+        or name == GetMapNameByID(533) -- Azjol-Nerub
+        or name == GetMapNameByID(534) -- Drak'Tharon Keep
+        or name == GetMapNameByID(530) -- Gundrak
+        or name == GetMapNameByID(526) -- Halls of Stone
+        or name == GetMapNameByID(520) -- The Nexus
+        or name == GetMapNameByID(523) -- Utgarde Keep
+        or name == GetMapNameByID(536) -- Violet Hold
+        or (difficulty == 2
+        and (name == GetMapNameByID(797) -- Hellfire Ramparts
+            or name == GetMapNameByID(725) -- The Blood Furnace
+            or name == GetMapNameByID(710) -- Shattered Halls
+            or name == GetMapNameByID(728) -- The Slave Pens
+            or name == GetMapNameByID(726) -- The Underbog
+            or name == GetMapNameByID(727) -- The Steamvault
+            or name == GetMapNameByID(732) -- Mana-Tombs
+            or name == GetMapNameByID(722) -- Auchenai Crypts
+            or name == GetMapNameByID(724) -- Shadow Labyrinth
+            or name == GetMapNameByID(734) -- Old Hillsbrad Foothills
+            or name == GetMapNameByID(723) -- Sethekk Halls
+            or name == GetMapNameByID(730) -- The Mechanar
+            or name == GetMapNameByID(729) -- The Botanica
+            or name == GetMapNameByID(733) -- Black Morass
+            or name == GetMapNameByID(731) -- The Arcatraz
+            or name == GetMapNameByID(798) -- Magisters' Terrace
+            ))) then
+        equip = true
+    else
+        equip = false
+end
+]],
+    },    
+    {
+        Name = "Championing WotLK",
+        ID = "CHAMP",
+        Category = "QUEST",
+        Script =
+[[
+-- $EVENTS PLAYER_ENTERING_WORLD
+-- $EVENTS ACTIVE_TALENT_GROUP_CHANGED
+-- $DESC Equips the outfit when you're in a 5 player level 70-75 party instance
+
+local name, instanceType, difficultyIndex, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, mapID = GetInstanceInfo()
+
+if type == "solo" or "party"
+        and (name == GetMapNameByID(528) -- The Oculus
+        or name == GetMapNameByID(525) -- Halls of Lightning
+        or name == GetMapNameByID(524) -- Utgarde Pinnacle
+        or name == GetMapNameByID(521) -- Culling of Stratholme
+        or name == GetMapNameByID(542) -- Trial of the Champion
+        or name == GetMapNameByID(601) -- The Forge of Souls
+        or name == GetMapNameByID(602) -- Pit of Saron
+        or name == GetMapNameByID(603) -- Halls of Reflection
+        or (difficulty == 2
+        and (name == GetMapNameByID(522) -- Ahn'kahet: The Old Kingdom
+            or name == GetMapNameByID(533) -- Azjol-Nerub
+            or name == GetMapNameByID(534) -- Drak'Tharon Keep
+            or name == GetMapNameByID(530) -- Gundrak
+            or name == GetMapNameByID(526) -- Halls of Stone
+            or name == GetMapNameByID(520) -- The Nexus
+            or name == GetMapNameByID(523) -- Utgarde Keep
+            or name == GetMapNameByID(536) -- Violet Hold
+            or name == GetMapNameByID(528) -- The Oculus
+            or name == GetMapNameByID(525) -- Halls of Lightning
+            or name == GetMapNameByID(524) -- Utgarde Pinnacle
+            or name == GetMapNameByID(521) -- Culling of Stratholme
+            or name == GetMapNameByID(542) -- Trial of the Champion
+            or name == GetMapNameByID(601) -- The Forge of Souls
+            or name == GetMapNameByID(602) -- Pit of Saron
+            or name == GetMapNameByID(603) -- Halls of Reflection
+            ))) then
+        equip = true
+    else
+        equip = false
+end
+]],
+    },
+    {
+        Name = "Championing Cata/Pand",
+        ID = "CHAMPCATACLYSM",
+        Category = "QUEST",
+        Script =
+[[
+-- $EVENTS PLAYER_ENTERING_WORLD
+-- $EVENTS ACTIVE_TALENT_GROUP_CHANGED
+-- $DESC Equips the outfit when you're in a 5 player level 85-90 party instance
+
+local name, instanceType, difficultyIndex, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, mapID = GetInstanceInfo()
+
+if type == "solo" or "party"
+        and (name == GetMapNameByID(747) -- Lost City of the Tol'vir
+        or name == GetMapNameByID(759) -- Halls of Origination
+        or name == GetMapNameByID(757) -- Grim Batol
+        or name == GetMapNameByID(867) -- Temple of the Jade Serpent
+        or name == GetMapNameByID(876) -- Stormstout Brewery
+        or name == GetMapNameByID(885) -- Mogu'Shan Palace
+        or name == GetMapNameByID(877) -- Shado-pan Monastery
+        or name == GetMapNameByID(887) -- Siege of Niuzao Temple
+        or (difficulty == 2
+        and (name == GetMapNameByID(756) -- The Deadmines
+            or name == GetMapNameByID(764) -- Shadowfang Keep
+            or name == GetMapNameByID(753) -- Blackrock Caverns
+            or name == GetMapNameByID(767) -- Throne of the Tides
+            or name == GetMapNameByID(768) -- The Stonecore
+            or name == GetMapNameByID(769) -- The Vortex Pinnacle
+            or name == GetMapNameByID(747) -- Lost City of the Tol'vir
+            or name == GetMapNameByID(759) -- Halls of Origination
+            or name == GetMapNameByID(757) -- Grim Batol
+            or name == GetMapNameByID(781) -- Zul'Gurub
+            or name == GetMapNameByID(793) -- Zul'Aman
+            or name == GetMapNameByID(820) -- End Time
+            or name == GetMapNameByID(816) -- Well of Eternity
+            or name == GetMapNameByID(819) -- Hour of Twilight
+            or name == GetMapNameByID(867) -- Temple of the Jade Serpent
+            or name == GetMapNameByID(876) -- Stormstout Brewery
+            or name == GetMapNameByID(885) -- Mogu'Shan Palace
+            or name == GetMapNameByID(877) -- Shado-pan Monastery
+            or name == GetMapNameByID(887) -- Siege of Niuzao Temple            
+            or name == GetMapNameByID(871) -- Scarlet Halls
+            or name == GetMapNameByID(874) -- Scarlet Monastery
+            or name == GetMapNameByID(898) -- Scholomance
+            or name == GetMapNameByID(875) -- Gate of the Setting Sun
+            ))) then
+        equip = true
+    else
+        equip = false
+end
+]],
+    },
+	{
+		Name = "Pet Battle",
+		ID = "PETBATTLE",
+		Category = "QUEST",
+		Script =
+[[
+-- Pet Battle script courtesy of Bruce Quinton
+-- $DESC Equips the outfit when engaging in a pet battle 
+-- $EVENTS PET_BATTLE_OPENING_DONE PET_BATTLE_CLOSE 
+equip = event == "PET_BATTLE_OPENING_DONE"
 ]],
 	},
 }
@@ -1744,18 +1918,18 @@ Outfitter.cScriptPrefix = [[
 		local didEquip, didUnequip, isEquipped = outfit.didEquip, outfit.didUnequip, Outfitter:WearingOutfit(outfit)
 		local time, setting = GetTime(), outfit.ScriptSettings
 		local run = Outfitter.Run
-		if true then
+		if true then -- wrap the user's code in a block to help ensure clearer error messages
 ]]
-
-Outfitter.cScriptPrefixNumLines = string.gsub(Outfitter.cScriptPrefix, "[^\n]+", ""):len()
-
+-- ...
 -- User's script will be inserted here
-
+-- ...
 Outfitter.cScriptSuffix = [[
-		end -- This 'if true then end' just makes for clearer error messages
+		end
 		self:PostProcess(equip, immediate, layer, delay, interrupt, time)
 	end
 ]]
+
+Outfitter.cScriptPrefixNumLines = string.gsub(Outfitter.cScriptPrefix, "[^\n]+", ""):len()
 
 Outfitter.cInputPrefix = "return {"
 Outfitter.cInputSuffix = "}"
@@ -1968,7 +2142,7 @@ Outfitter._ScriptContext = {}
 ----------------------------------------
 
 function Outfitter._ScriptContext:NewContext(pOutfit, pScript)
-	local vFunction, vMessage = loadstring(Outfitter.cScriptPrefix..pScript..Outfitter.cScriptSuffix, "Outfit Script")
+	local vFunction, vMessage = loadstring(Outfitter.cScriptPrefix..pScript..Outfitter.cScriptSuffix, "Script for "..(pOutfit.Name or "untitled outfit"))
 	
 	if not vFunction then
 		return nil, vMessage

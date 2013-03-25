@@ -1,4 +1,4 @@
-## Interface: 40200
+## Interface: 50100
 ## Title: Lib: ChatThrottleLib
 ## Notes: Embeddable chat throttling library with traffic shaping and priorities
 ## Author: Mikk
@@ -6,10 +6,10 @@
 ## eMail: dpsgnome@mail.com
 ## LoadOnDemand: 1
 ## X-Category: Library
-## X-Website: http://www.wowwiki.com/ChatThrottleLib
+## X-Website: http://www.wowpedia.org/ChatThrottleLib
 ## SavedVariables: 
 ## SavedVariablesPerCharacter: 
-## X-Curse-Packaged-Version: r72
+## X-Curse-Packaged-Version: r74
 ## X-Curse-Project-Name: ChatThrottleLib
 ## X-Curse-Project-ID: chatthrottlelib
 ## X-Curse-Repository-ID: wow/chatthrottlelib/mainline

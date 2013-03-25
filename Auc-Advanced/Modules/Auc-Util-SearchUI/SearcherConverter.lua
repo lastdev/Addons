@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Converter
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: SearcherConverter.lua 5331 2012-08-19 02:43:59Z ccox $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: SearcherConverter.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -29,6 +29,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 --]]
 -- Create a new instance of our lib with our parent
+if not AucSearchUI then return end
 local lib, parent, private = AucSearchUI.NewSearcher("Converter")
 if not lib then return end
 --local print,decode,_,_,replicate,empty,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals()
@@ -227,14 +228,6 @@ function lib.Processor(event, subevent)
 end
 
 
-lib.Processors = {}
-function lib.Processors.selecttab(event, subevent)
-	if subevent == lib.tabname and private.doValidation then
-		private.doValidation()
-	end
-end
-
-
 -- This function is automatically called when we need to create our search parameters
 function lib:MakeGuiConfig(gui)
 	-- Get our tab and populate it with our controls
@@ -277,10 +270,6 @@ function lib:MakeGuiConfig(gui)
 	gui:AddControl(id, "Selectbox",         0.42, 1, resources.selectorAuctionLength, "converter.adjust.deplength")
 	gui:AddControl(id, "Slider",            0.42, 1, "converter.adjust.listings", 1, 10, .1, "Ave relistings: %0.1fx")
 
-	--gui:AddControl(id, "Subhead",           0.42,  "Appraiser Value Origination")
-	--gui:AddControl(id, "Checkbox",          0.42, 1, "converter.matching.check", "Use Market Matched")
-	--gui:AddControl(id, "Checkbox",          0.42, 1, "converter.buyout.check", "Use buyout not bid")
-
 	gui:SetLast(id, last)
 end
 
@@ -320,7 +309,7 @@ function lib.Search (item)
 	end
 	if get("converter.adjust.deposit") then
 		-- note: GetDepositCost can handle numerical itemIDs instead of links
-		local amount = GetDepositCost(newID, get("converter.adjust.deplength"), resources.faction, count)
+		local amount = GetDepositCost(newID, get("converter.adjust.deplength"), resources.Faction, count)
 		if amount then
 			market = market - amount * get("converter.adjust.listings")
 		end
@@ -335,4 +324,4 @@ function lib.Search (item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherConverter.lua $", "$Rev: 5331 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherConverter.lua $", "$Rev: 5368 $")

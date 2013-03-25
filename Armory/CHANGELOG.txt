@@ -1,5 +1,86 @@
 ﻿Armory has been released into the public domain on November 2007.
 The project page can be found on http://wow.curseforge.com/addons/armory/.
+The Armory archive can be found on http://www.wow-neighbours.com/.
+
+Thanks for using Armory. You can show your appreciation and support future development by donating!
+
+==== v10.5.0 ====
+Note: The database will be upgraded.
+
+# Adjustments have been made for patch 5.2.0.
+# Glyphs could show up as learnable while they were already known; this has been fixed (needs ARMORY_BUZZ_WORDS translation for other languages).
+# Obsolete GetLFGDungeonRewardCapBarInfo and related UI elements have been removed.
+# Valor point tooltip in summary now shows weekly maximum instead of the old Cataclysm related data.
+# Caged battle pets in inventory caused a tooltip error; this has been fixed.
+# ArmoryGuildBank now handles caged pets properly (synchronization will be incompatible with older versions).
+# Fixed an issue with tooltip enhancement not updating correctly when switching between different link types.
+# Added workaround for GetTradeSkillReagentItemLink returning nil in PTR.
+
+==== v10.4.3 ====
+# Hovering realm first achievement links caused an error; this has been fixed.
+
+==== v10.4.2 ====
+# "You are not in a raid" message appeared when in LFR; this has been fixed.
+# The selected stats in the paperdoll were reset after changing the selection; this has been fixed.
+# PlayerScore integration has been re-enabled.
+
+==== v10.4.1 ====
+# The achievement module could result in game freeze, FPS drop or 'script ran too long' error on some systems; this should have been fixed now.
+
+==== v10.4.0 ====
+# Tooltip module has been adapted to the new way tooltips are generated. Most, if not all, tooltip enhancements should work again.
+# Events module now stores one consolidated event for Pandaria gem research.
+# Added a hack for tradeskill cooldowns because API still returns midnight when the cd is activated (but the correct time after a reload! argh).
+# Fixed an issue with localized /ar guildbank|gb chat command not being recognized.
+# A new chat command "/ar cooldown|cd" has been added to display current tradeskill cooldowns.
+# When color blind mode is enabled the tradeskill frame caused an error; this has been fixed.
+# Precautions have been taken to prevent an error from occuring when hovering over Armory socket info frames.
+# An option has been added to enable item counts per bag/bank slot.
+# Inventory guild tab caused an error if no guild bank data is available; this has been fixed.
+# An option has been added to include item counts for the current and selected character's guild only.
+# Static popups have been replaced to prevent a possible taint issue.
+# Hunter pet without a specialization could result in an error; this has been fixed.
+# Achievements module has been included again, but it now stores relevant achievements in progress only.
+# An option has been added to show skill ranks in profession button tooltips.
+
+==== v10.3.0 ====
+# Raid module didn't include LFR anymore; this has been fixed.
+# LFG completions weren't properly registered anymore in quest history module; this has been fixed.
+# World boss defeats have been added to the quest history module.
+# Offhand attack speed was not displayed properly; this has been fixed.
+# Friendship reputation was not displayed properly; this has been fixed.
+# Adjustments have been made for patch 5.1.0.
+# A slider and mouse wheel support has been added to the stats pane(s) because the number of stats can now exceed the available space.
+
+==== v10.2.0 ====
+# Summary icons are now cropped (reducing line height).
+# Cooldowns were not properly stored when using simple tradeskill storage which also caused a tooltip error; this has been fixed.
+# Collapse/expand all in inventory icon view didn't work properly; this has been fixed.
+# Displaying bag layout didn't work anymore; this has been fixed.
+# Friends and events didn't show properly with a scrollbar present; this has been fixed.
+# If the current character has a pet, browsing through characters didn't adjust the spellbook tabs; this has been fixed.
+# Fixed a minor issue with tab tooltips.
+# Added value property to LDB integration.
+# Option "Enable LDB label display" now adds "Armory:" to the text property. This option is off by default.
+# Quest log didn't show the quest objective but the quest description instead; this has been fixed (rescan needed).
+# Item suffixes ("... of the ...") are now taken into account (rescan needed).
+
+==== v10.1.4 ====
+# Tradeskill window didn't show the number of skill-ups and hovering over it would result in an error; this has been fixed.
+# With multiple subheaders tradeskills where unintentionally filtered due to a lot of nil values returned by the API call; this has been fixed.
+# Parent removed from tooltip allocation.
+# Window of an unscanned tradeskill didn't close when switching characters; this has been fixed.
+# Link references to tradeskills from characters on another realm have been removed because they are invalid anyhow.
+# Core adapted to changed GetItemQualityColor API
+# Known glyphs were shown as learnable; this has been fixed.
+
+==== v10.1.3 ====
+# Another attempt to fix tradeskill subheaders...
+
+==== v10.1.2 ====
+# Positioning in reputation frame has been adjusted.
+# Subheaders were not shown in tradeskill frame; this has been fixed.
+# Some minor DB changes.
 
 ==== v10.1.1 ====
 # A recipe was shown as learnable when the reputation requirement was met but the rank wasn't; this has been fixed.

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(133, "DBM-Party-Cataclysm", 3, 71)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(40319)
 mod:SetModelID(31792)
 mod:SetZone()
@@ -41,13 +41,13 @@ end
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(75328) then
 		DBM.BossHealth:RemoveBoss(40320)
-	elseif args:IsSpellID(75317, 90964) and args:IsPlayer() then
+	elseif args:IsSpellID(75317) and args:IsPlayer() then
 		specWarnSeepingTwilight:Show()
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(75321, 90973) then
+	if args:IsSpellID(75321) then
 		warnFlame:Show()
 		timerFlame:Start()
 	elseif args:IsSpellID(90950) then
@@ -58,7 +58,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_SUMMON(args)
-	if args:IsSpellID(75271, 90966) then
+	if args:IsSpellID(75271) then
 		warnShredding:Show()
 		timerShredding:Start()
 	end

@@ -6,8 +6,8 @@ local conf
 local percD	= "%d"..PERCENT_SYMBOL
 local perc1F = "%.1f"..PERCENT_SYMBOL
 
-XPerl_SetModuleRevision("$Revision: 776 $")
-XPerl_RequestConfig(function(New) conf = New end, "$Revision: 776 $")
+XPerl_RequestConfig(function(New) conf = New end, "$Revision: 839 $")
+XPerl_SetModuleRevision("$Revision: 839 $")
 
 --Some local copies for speed
 local strsub = strsub
@@ -180,6 +180,8 @@ XPerl_AnchorList = {"TOP", "LEFT", "BOTTOM", "RIGHT"}
 -- FindABandage()
 local function FindABandage()
 	local bandages = {
+		[72986] = true, -- Heavy Windwool Bandage
+		[72985] = true, -- Windwool Bandage
 		[53051] = true, -- Dense Embersilk Bandage
 		[53050] = true, -- Heavy Embersilk Bandage
 		[53049] = true, -- Embersilk Bandage
@@ -265,9 +267,9 @@ local function DoRangeCheck(unit, opt)
 			else
 				range = CheckInteractDistance(unit, opt.interact)
 			end
-			-- 1 = Inspect = 30 yards
+			-- 1 = Inspect = 28 yards
 			-- 2 = Trade = 11.11 yards
-			-- 3 = Duel = 10 yards
+			-- 3 = Duel = 9.9 yards
 			-- 4 = Follow = 28 yards
 		elseif (opt.spell) then
 			range = IsSpellInRange(opt.spell, unit)
@@ -500,12 +502,6 @@ do
 	function XPerl_RegisterSMBarTextures()
 		if (LibStub) then
 			media = LibStub("LibSharedMedia-3.0", true)
-			if (not media) then
-				media = LibStub("SharedMedia-2.0", true)
-				if (not media) then
-					media = LibStub("SharedMedia-1.0", true)
-				end
-			end
 		end
 
 		shortlist = {
@@ -1211,23 +1207,31 @@ function XPerl_MinimapButton_Details(tt, ldb)
 	tt.updateTooltip = 1
 end
 
+function XPerl_GetDisplayedPowerType(unitID) -- copied from CompactUnitFrame.lua
+	local barType, minPower, startInset, endInset, smooth, hideFromOthers, showOnRaid, opaqueSpark, opaqueFlash, powerName, powerTooltip = UnitAlternatePowerInfo(unitID);
+	if ( showOnRaid and (UnitInParty(unitID) or UnitInRaid(unitID)) ) then
+		return ALTERNATE_POWER_INDEX;
+	else
+		return UnitPowerType(unitID);
+	end
+end
 
 -- XPerl_SetManaBarType
 local ManaColours = {
-	[0] = "mana",
-	[1] = "rage",
-	[2] = "focus",
-	[3] = "energy",
-	[4] = "happiness",
-	[5] = "runes",
-	[6] = "runic_power",
+	[SPELL_POWER_MANA] = "mana",
+	[SPELL_POWER_RAGE] = "rage",
+	[SPELL_POWER_FOCUS] = "focus",
+	[SPELL_POWER_ENERGY] = "energy",
+	[SPELL_POWER_RUNES] = "runes",
+	[SPELL_POWER_RUNIC_POWER] = "runic_power",
+	[SPELL_POWER_ALTERNATE_POWER] = "energy", -- used by some bosses, show it as energy bar
 }
 function XPerl_SetManaBarType(self)
 	local m = self.statsFrame.manaBar
 	if (m and not self.statsFrame.greyMana) then
 		local unit = self.partyid		-- SecureButton_GetUnit(self)
 		if (unit) then
-			local p = UnitPowerType(unit)
+			local p = XPerl_GetDisplayedPowerType(unit)
 			if (p) then
 				local c = conf.colour.bar[ManaColours[p]]
 				if (c) then
@@ -1459,27 +1463,6 @@ function XPerl_CombatFlashSetFrames(self)
 	end
 end
 
-local function GetTalentPosition(findName)
-	for i = 1,GetNumSpecializations() do
-		for j = 1,GetNumTalents(i) do
-			local name = GetTalentInfo(i, j)
-			if (name == findName) then
-				return i, j
-			end
-		end
-	end
-end
-
-local function GetTalentValueByName(name)
-	local group = GetActiveSpecGroup()
-	local tab, index = GetTalentPosition(name)
-	if (index) then
-		local name, iconPath, tier, column, currentRank, maxRank, isExceptional, meetsPrereq = GetTalentInfo(tab, index, nil, nil, group)
-		return currentRank
-	end
-	return 0
-end
-
 --[[local MagicCureTalents = {
 	["DRUID"] = GetSpellInfo(88423),			-- Nature's Cure
 	["PALADIN"] = GetSpellInfo(53551),			-- Sacred Cleansing
@@ -1495,7 +1478,6 @@ local MagicCureTalents = {
 
 local function CanClassCureMagic(class)
 	if (MagicCureTalents[class]) then
-		--return GetTalentValueByName(MagicCureTalents[class]) > 0
 		return (GetSpecialization() == MagicCureTalents[class])--IsSpellKnown(MagicCureTalents[class])	
 	end
 end
@@ -2293,7 +2275,7 @@ end
 -- XPerl_SecureUnitButton_OnLoad
 function XPerl_SecureUnitButton_OnLoad(self, unit, menufunc, m1, m2)
 	self:SetAttribute("*type1", "target")
-	self:SetAttribute("type2", "menu")
+	self:SetAttribute("type2", "togglemenu")
 	if (unit) then
 		self:SetAttribute("unit", unit)
 	end
@@ -2361,7 +2343,7 @@ local function HideSetFocus()
 		end
 	end
 end
-hooksecurefunc("UnitPopup_HideButtons", HideSetFocus)
+-- hooksecurefunc("UnitPopup_HideButtons", HideSetFocus)
 
 -- XPerl_ShowGenericMenu
 -- self, unit, button are passed from secure template handler (SecureTemplates.lua, line 288 in SecureActionButton_OnClick)
@@ -2433,7 +2415,7 @@ function XPerl_GetBuffButton(self, buffnum, debuff, createIfAbsent, newID)
 		end
 
 		buffIconCount = buffIconCount + 1
-		button = CreateFrame("Button", "XPerlBuff"..buffIconCount, parent, format("XPerl_Cooldown_%sTemplate", buffType))
+			button = CreateFrame("Button", "XPerlBuff"..buffIconCount, parent, format("XPerl_Cooldown_%sTemplate", buffType))
 		button:Hide()
 		--button.cooldown.noCooldownCount = true				-- OmniCC to NOT show cooldown
 
@@ -2780,7 +2762,7 @@ end
 
 -- XPerl_Unit_BuffPositions
 function XPerl_Unit_BuffPositions(self, buffList1, buffList2, size1, size2)
-	local optMix = format("%d%d%d%d%d%d%d", self.perlBuffs or 0, self.perlDebuffs or 0, self.perlBuffsMine or 0, self.perlDebuffsMine or 0, UnitCanAttack("player", self.partyid) or 2, (UnitManaMax(self.partyid) > 0 and 1) or 0, (self.creatureTypeFrame and self.creatureTypeFrame:IsVisible() and 1) or 0)
+	local optMix = format("%d%d%d%d%d%d%d", self.perlBuffs or 0, self.perlDebuffs or 0, self.perlBuffsMine or 0, self.perlDebuffsMine or 0, UnitCanAttack("player", self.partyid) or 2, (UnitPowerMax(self.partyid) > 0 and 1) or 0, (self.creatureTypeFrame and self.creatureTypeFrame:IsVisible() and 1) or 0)
 	if (optMix ~= self.buffOptMix) then
 		WieghAnchor(self)
 

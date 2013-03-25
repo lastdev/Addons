@@ -28,6 +28,8 @@
 		DruidOptions = "드루이드 옵션",
 		DruidSingleClick = "변신 상태에서 다른 변신 형태로 한번의 클릭으로 변경", -- Needs review
 		EnableAutoDismount = "자동 탈것 내리기 활성화",
+		ExtraPassengerMounts = "Extra Passenger Mounts", -- Requires localization
+		ExtraPassengerMountsDescription = "This list of passenger mounts is used to add passenger mounts to the random selection only when the Passenger Mount button is pressed.  This will allow you to set preferred mount lists excluding passenger mounts but still have them available when using the Passenger Mount button.  These mounts will not be used if they are marked as excluded mounts globally or for the current zone you are in.", -- Requires localization
 		Favorites = "즐겨찾기",
 		GlobalExclusions = "공통 제외", -- Needs review
 		GlobalExclusionsDescription = "탈것을 항상 무시합니다. 여기에 선택된 탈것을 즐겨찾기로 설정하더라도 사용할 수 없습니다.", -- Needs review

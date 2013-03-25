@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 525 2012-09-20T09:02:14Z
+    Revision: 585 2013-03-02T14:19:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -34,14 +34,6 @@ ARMORY_TOOLTIP_COLUMN_SEPARATOR = "\029";
 ARMORY_TOOLTIP_TEXTURE_SEPARATOR = "\030";
 ARMORY_TOOLTIP_CONTENT_SEPARATOR = "\031";
 
-StaticPopupDialogs["ARMORY_DB_INCOMPATIBLE"] = {
-    text = ARMORY_DB_INCOMPATIBLE,
-    button1 = OKAY,
-    showAlert = 1,
-    timeout = 0,
-    whileDead = 1,
-}
-
 if ( not Armory ) then
     Armory = {
         debug = false, 
@@ -49,7 +41,7 @@ if ( not Armory ) then
 
         title = ARMORY_TITLE,
         version = GetAddOnMetadata("Armory", "Version"),
-        dbVersion = 28,
+        dbVersion = 31,
         interface = _G.GetBuildInfo(),
     };
 end
@@ -65,7 +57,7 @@ end
 
 function cellPrototype:SetupCell(tooltip, value, justification, font)
     local _, height = baseCellPrototype.SetupCell(self, tooltip, format("|T%s:0|t", value), "CENTER");
-    return baseCellPrototype.SetupCell(self, tooltip, format("|T%s:%d|t", value, height + 6), "CENTER");
+    return baseCellPrototype.SetupCell(self, tooltip, format("|T%s:%2$d:%2$d:0:0:64:64:4:60:4:60|t", value, height), "CENTER");
 end
 
 function Armory:PlayWarningSound()
@@ -258,6 +250,8 @@ function Armory:SetCommand(label, func, afterLabel)
         params = strjoin("|", unpack(cat));
     elseif ( label == "ARMORY_CMD_CHECK" and not self:HasInventory() ) then
         return;
+    elseif ( label == "ARMORY_CMD_CHECKCD" and not self:HasTradeSkills() ) then
+        return;
     elseif ( _G[label] == command ) then
         params = "";
     else
@@ -298,7 +292,9 @@ function Armory:SetCommand(label, func, afterLabel)
         table.insert(self.usage, {usage, help, command, label});
     end
 
-    self.commands[command] = func;
+    for _, command in ipairs(self:StringSplit("|", command)) do
+        self.commands[command] = func;
+    end
 end
 
 function Armory:GetUsageLine(index)
@@ -440,6 +436,7 @@ function Armory:Init()
     self:SetCommand("ARMORY_CMD_RESET_FRAME", function(...) return Armory:Reset(...) end);
     self:SetCommand("ARMORY_CMD_RESET_SETTINGS", function(...) return Armory:Reset(...) end);
     self:SetCommand("ARMORY_CMD_CHECK", function(...) Armory:CheckMailItems(nil, ...) end);
+    self:SetCommand("ARMORY_CMD_CHECKCD", function(...) Armory:CheckTradeSkillCooldowns(...) end);
     self:SetCommand("ARMORY_CMD_FIND", function(...) return Armory:Find(Armory:ParseArgs(...)) end);
     self:SetCommand("ARMORY_CMD_LOOKUP", function(...) ArmoryLookupFrame_Toggle(...) end);
 
@@ -912,6 +909,57 @@ function Armory:IsDbCompatible()
             dbEntry:SetValue(2, "General", "IgnoreCollectinatorPets", nil);
             
             upgraded = false; -- wipe db
+            
+        -- convert from 28 to 29
+        elseif ( dbVersion == 28 ) then
+            for _, class in ipairs(CLASS_SORT_ORDER) do
+                if ( ArmoryShared[class] ) then
+                    ArmoryShared[class].Specializations = nil;
+                end
+            end
+            
+            upgraded = true;
+            
+        -- convert from 29 to 30
+        elseif ( dbVersion == 29 ) then
+            dbEntry:SetValue(2, "General", "HideLDBLabel", nil);
+            
+            upgraded = true;
+            
+        -- convert from 30 to 31
+        elseif ( dbVersion == 30 ) then
+            for realm in pairs(ArmoryDB) do
+                for character in pairs(ArmoryDB[realm]) do
+                    entry = ArmoryDB[realm][character];
+                    if ( entry.Glyphs ) then
+                        for i = 1, 2 do
+                            if ( entry.Glyphs[i] ) then
+                                for k, v in ipairs(entry.Glyphs[i]) do
+                                    if ( entry.Glyphs[i][k]["1"] ) then
+                                        entry.Glyphs[i][k]["1"] = self:GetGlyphKey(entry.Glyphs[i][k]["1"]);
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+
+            for class in pairs(ArmoryShared) do
+                entry = ArmoryShared[class];
+                if ( entry.Glyphs ) then
+                    local names = {};
+                    for name in pairs(entry.Glyphs) do
+                        table.insert(names, name);
+                    end
+                    for _, name in pairs(names) do
+                        entry.Glyphs[self:GetGlyphKey(name)] = entry.Glyphs[name];
+                        entry.Glyphs[name] = nil;
+                    end
+                end
+            end
+            
+            upgraded = true;
 
 --[[
         -- convert from 20 to 21
@@ -983,7 +1031,7 @@ function Armory:IsDbCompatible()
         end
 
         dbEntry:SetValue("DbVersion", self.dbVersion);
-        StaticPopup_Show("ARMORY_DB_INCOMPATIBLE");
+        ArmoryStaticPopup_Show("ARMORY_DB_INCOMPATIBLE");
         return false;
     end
 
@@ -1380,10 +1428,11 @@ end
 function Armory:SetProfile(profile)
     self:SelectProfile(profile);
     self.LDB.icon = Armory:GetPortraitTexture("player");
+    self.LDB.value = profile.character;
     if ( self:GetConfigLDBLabel() ) then
-        self.LDB.text = profile.character;
+        self.LDB.text = ARMORY_TITLE..": "..profile.character;
     else
-        self.LDB.text = "";
+        self.LDB.text = profile.character;
     end
 end
 
@@ -1692,9 +1741,10 @@ function Armory:GetItemCount(link)
                     end
 
                     local count, bagCount, bankCount, mailCount, auctionCount, voidCount = 0, 0, 0, 0, 0, 0;
+                    local perSlotCount;
                     local equipCount = self:GetEquipCount(link);
                     if ( self:HasInventory() ) then
-                        count, bagCount, bankCount, mailCount, auctionCount, voidCount = self:ScanInventory(link);
+                        count, bagCount, bankCount, mailCount, auctionCount, voidCount, perSlotCount = self:ScanInventory(link);
                         if ( suspended and equipCount == 0 ) then
                             name = name..RED_FONT_COLOR_CODE.." ("..ARMORY_UPDATE_SUSPENDED..")"..FONT_COLOR_CODE_CLOSE;
                         end
@@ -1708,7 +1758,7 @@ function Armory:GetItemCount(link)
                             table.insert(itemCounts, {name=name, count=0});
                         end
                     else
-                        table.insert(itemCounts, {name=name, count=count, bags=bagCount, bank=bankCount, mail=mailCount, auction=auctionCount, equipped=equipCount, void=voidCount, mine=mine});
+                        table.insert(itemCounts, {name=name, count=count, bags=bagCount, bank=bankCount, mail=mailCount, auction=auctionCount, equipped=equipCount, void=voidCount, perSlot=perSlotCount, mine=mine});
                     end
                 end
             end
@@ -1745,7 +1795,7 @@ function Armory:GetMultipleItemCount(items)
                 end
                 for k, v in ipairs(result) do
                     if ( v.count > 0 ) then
-                        table.insert(multipleItemCounts[k], {name=name, count=v.count, bags=v.bags, bank=v.bank, mail=v.mail, auction=v.auction, void=v.void, mine=mine});
+                        table.insert(multipleItemCounts[k], {name=name, count=v.count, bags=v.bags, bank=v.bank, mail=v.mail, auction=v.auction, void=v.void, perSlot=v.perSlot, mine=mine});
                     elseif ( suspended ) then
                         table.insert(multipleItemCounts[k], {name=name, count=0});
                     end
@@ -1759,14 +1809,26 @@ function Armory:GetMultipleItemCount(items)
 end
 
 local detailCounts = {};
-function Armory:GetCountDetails(bagCount, bankCount, mailCount, auctionCount, altCount, guildCount, equipCount, voidCount)
+function Armory:GetCountDetails(bagCount, bankCount, mailCount, auctionCount, altCount, guildCount, equipCount, voidCount, perSlotCount)
     local details = "";
     table.wipe(detailCounts);
     if ( (bagCount or 0) > 0 ) then
-        table.insert(detailCounts, ARMORY_BAGS.." "..bagCount);
+        if ( perSlotCount and perSlotCount.bags ) then
+            for k, v in pairs(perSlotCount.bags) do
+                table.insert(detailCounts, BAGSLOT.." "..k.." "..v);
+            end
+        else
+            table.insert(detailCounts, ARMORY_BAGS.." "..bagCount);
+        end
     end
     if ( (bankCount or 0) > 0 ) then
-        table.insert(detailCounts, ARMORY_BANK_CONTAINER_NAME.." "..bankCount);
+        if ( perSlotCount and perSlotCount.bank ) then
+            for k, v in pairs(perSlotCount.bank) do
+                table.insert(detailCounts, ARMORY_BANK_CONTAINER_NAME.." "..k.." "..v);
+            end
+        else
+            table.insert(detailCounts, ARMORY_BANK_CONTAINER_NAME.." "..bankCount);
+        end
     end
     if ( (mailCount or 0) > 0 ) then
         table.insert(detailCounts, MAIL_LABEL.." "..mailCount);
@@ -1787,6 +1849,7 @@ function Armory:GetCountDetails(bagCount, bankCount, mailCount, auctionCount, al
         table.insert(detailCounts, ARMORY_VOID_STORAGE_ABBR.." "..voidCount);
     end
     if ( #detailCounts > 0 ) then
+        table.sort(detailCounts);
         details = "("..table.concat(detailCounts, ", ")..")";
     end
     table.wipe(detailCounts);
@@ -1836,8 +1899,9 @@ function Armory:GetFullDate(timestamp)
     return weekdayName, monthName, date.day, date.year, date.month, date.hour, date.min;
 end
 
-function Armory:MinutesTime(timestamp)
-    return floor((timestamp or time()) / 60) * 60;
+function Armory:MinutesTime(timestamp, tens)
+    local factor = tens and 600 or 60;
+    return self:Round((timestamp or time()) / factor) * factor;
 end
 
 function Armory:GetServerTime()
@@ -1870,8 +1934,8 @@ function Armory:GetLocalTimeAsServerTime(timestamp)
 end
 
 function Armory:Round(num, idp)
-    local mult = 10^(idp or 0);
-    return math.floor(num * mult + 0.5) / mult;
+    local factor = 10^(idp or 0);
+    return math.floor(num * factor + 0.5) / factor;
     --return tonumber(string.format("%." .. (idp or 0) .. "f", num))
 end
 
@@ -1959,10 +2023,22 @@ function Armory:CopyTable(src, dest)
 end
 
 function Armory:FillTable(t, ...)
-    local key;
     table.wipe(t);
+
     for i = 1, select("#", ...) do
         t[i] = select(i, ...);
+    end
+end
+
+function Armory:FillUnbrokenTable(t, ...)
+    local value;
+    table.wipe(t);
+
+    for i = 1, select("#", ...) do
+        value = select(i, ...);
+        if ( value ~= nil ) then
+            table.insert(t, value);
+        end
     end
 end
 
@@ -2008,11 +2084,11 @@ function Armory:String2Text(s)
 end
 
 function Armory:GetItemLinkInfo(link)
-    local itemColor, itemId, itemName;
+    local itemColor, itemString, itemName;
     if ( link ) then
-        itemColor, itemId, itemName = link:match("(|c%x+)|Hitem:([-%d:]+)|h%[(.-)%]|h|r");
+        itemColor, itemString, itemName = link:match("(|c%x+)|Hitem:([-%d:]+)|h%[(.-)%]|h|r");
     end
-    return itemName, itemId, itemColor;
+    return itemName, itemString, itemColor;
 end
 
 function Armory:GetLinkInfo(link)
@@ -2024,9 +2100,28 @@ function Armory:GetLinkInfo(link)
 end
 
 function Armory:GetItemId(link)
-    local itemId;
+    local itemId, suffixId;
     if ( link ) then
-        itemId = link:match("item:([-%d]+)");
+        itemId, suffixId = link:match("item:([-%d]+):.-:.-:.-:.-:.-:([-%d]+)");
+        if ( not itemId ) then
+            itemId = link:match("item:([-%d]+)");
+        end
+    end
+    return itemId, suffixId;
+end
+
+function Armory:GetUniqueItemId(link)
+    local itemId, suffixId = self:GetItemId(link);
+    if ( suffixId and suffixId ~= "0" ) then
+        return itemId..":"..suffixId;
+    end
+    return itemId;
+end
+
+function Armory:GetQualifiedItemId(link)
+    local itemId, suffixId = self:GetItemId(link);
+    if ( suffixId and suffixId ~= "0" ) then
+        return itemId..":0:0:0:0:0:"..suffixId;
     end
     return itemId;
 end
@@ -2057,6 +2152,8 @@ function Armory:GetLink(kind, id, name, color)
         color = "|cffffff00";
     elseif ( kind == "glyph" ) then
         color = "|cff66bbff";
+    elseif ( kind == "battlepet" ) then
+        color = "|cff1eff00";
     elseif ( not color ) then
         color = "|cffffd000";
     end
@@ -2133,7 +2230,7 @@ end
 
 function Armory:GetItemString(link)
     local _, itemString = self:GetItemLinkInfo(link);
-    -- itemId:enchantId:jewelId1:jewelId2:jewelId3:jewelId4:suffixId:uniqueId:linkLevel
+    -- itemId:enchantId:jewelId1:jewelId2:jewelId3:jewelId4:suffixId:uniqueId:linkLevel...
     if ( itemString ) then
         local ids = self:StringSplit(":", itemString);
         if ( #ids > 8 ) then
@@ -2219,7 +2316,7 @@ local sockets = { {}, {}, {}, {} };
 function Armory:GetSocketInfo(link)
     local numGems = 0;
     if ( link ) then    
-        local itemId = self:GetItemId(link);
+        local itemId = self:GetQualifiedItemId(link);
         if ( itemId and IsEquippableItem(itemId) ) then
             local tooltip = self:AllocateTooltip();
             self:SetHyperlink(tooltip, "item:"..itemId);
@@ -2293,7 +2390,7 @@ function Armory:GetQualityFromColor(color)
     if ( color ) then
         for i = 0, 7 do
             local _, _, _, hex = GetItemQualityColor(i);
-            if color == hex then
+            if color == "|c"..hex then
                 return i
             end
         end
@@ -2481,6 +2578,20 @@ function Armory:HasTradeSkills(value)
         self:SetModule("Professions", value);
     end
     return self:GetModule("Professions");
+end
+
+function Armory:HasAchievements(value)
+    if ( value ~= nil ) then
+        self:SetModule("Achievements", value);
+    end
+    return self:GetModule("Achievements");
+end
+
+function Armory:HasStatistics(value)
+    if ( value ~= nil ) then
+        self:SetModule("Statistics", value);
+    end
+    return self:GetModule("Statistics");
 end
 
 function Armory:HasDataSharing(value)

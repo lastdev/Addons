@@ -28,6 +28,8 @@
 		DruidOptions = "Druiden-Optionen",
 		DruidSingleClick = "Einfacher Klick für den Wechsel in Reisegestalten",
 		EnableAutoDismount = "Automatisches Absitzen aktivieren",
+		ExtraPassengerMounts = "Extra Passenger Mounts", -- Requires localization
+		ExtraPassengerMountsDescription = "This list of passenger mounts is used to add passenger mounts to the random selection only when the Passenger Mount button is pressed.  This will allow you to set preferred mount lists excluding passenger mounts but still have them available when using the Passenger Mount button.  These mounts will not be used if they are marked as excluded mounts globally or for the current zone you are in.", -- Requires localization
 		Favorites = "Favoriten",
 		GlobalExclusions = "Globale Ausnahmen", -- Needs review
 		GlobalExclusionsDescription = "Reittiere werden immer ignoroert. Selbst dann, wenn die hier angegebenen Reittiere als Favoriten festgelegt wurden, werden sie nicht verwendet.", -- Needs review

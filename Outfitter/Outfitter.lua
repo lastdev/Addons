@@ -73,6 +73,7 @@ Outfitter.CreditPlayersByRealm =
 		["Echobravo"] = 1,
 		["MacGregor"] = 1,
 		["LaoTseu"] = 1,
+		["Irozal"] = 1,
 	},
 	["Tester"] =
 	{
@@ -601,6 +602,16 @@ Outfitter.cUniqueGemItemIDs =
 	[83150] = "PRISM3", -- Brilliant Serpent's Eye
 	[83151] = "PRISM3", -- Delicate Serpent's Eye
 	[83152] = "PRISM3", -- Flashing Serpent's Eye
+	
+	-- MoP Cogwheel
+	[77540] = 77540, -- Subtle Tinker's Gear
+	[77541] = 77541, -- Smooth Tinker's Gear
+	[77542] = 77542, -- Quick Tinker's Gear
+	[77543] = 77543, -- Precise Tinker's Gear
+	[77544] = 77544, -- Flashing Tinker's Gear
+	[77545] = 77545, -- Rigid Tinker's Gear
+	[77546] = 77546, -- Sparkling Tinker's Gear
+	[77547] = 77547, -- Fractured Tinker's Gear
 }
 
 StaticPopupDialogs.OUTFITTER_CANT_RELOADUI =
@@ -1030,45 +1041,45 @@ Outfitter.cZoneSpecialIDs =
 
 Outfitter.cZoneSpecialIDMap =
 {
-	[Outfitter.LZ["Western Plaguelands"]] = {"ArgentDawn"},
-	[Outfitter.LZ["Eastern Plaguelands"]] = {"ArgentDawn"},
-	[Outfitter.LZ["Stratholme"]] = {"ArgentDawn"},
-	[Outfitter.LZ["Scholomance"]] = {"ArgentDawn"},
-	[Outfitter.LZ["Naxxramas"]] = {"Naxx"},
-	[Outfitter.LZ["Alterac Valley"]] = {"Battleground", "AV"},
-	[Outfitter.LZ["Arathi Basin"]] = {"Battleground", "AB"},
-	[Outfitter.LZ["Warsong Gulch"]] = {"Battleground", "WSG"},
-	[Outfitter.LSZ["Silverwing Hold"]] = {"Battleground", "WSG"},
-	[Outfitter.LSZ["Warsong Lumber Mill"]] = {"Battleground", "WSG"},
-	[Outfitter.LZ["Eye of the Storm"]] = {"Battleground", "EotS"},
-	[Outfitter.LZ["Strand of the Ancients"]] = {"Battleground", "SotA"},
-	[Outfitter.LZ["Isle of Conquest"]] = {"Battleground", "IoC"},
-	[Outfitter.LZ["Wintergrasp"]] = {"Battleground", "Wintergrasp"},
-	[Outfitter.LZ["Battle for Gilneas"]] = {"Battleground", "Gilneas"},
-	[Outfitter.LZ["Twin Peaks"]] = {"Battleground", "TwinPeaks"},
-	[Outfitter.LSZ["Wildhammer Stronghold"]] = {"Battleground", "TwinPeaks"},
-	[Outfitter.LSZ["Dragonmaw Stronghold"]] = {"Battleground", "TwinPeaks"},
+	[GetMapNameByID(22)] = {"ArgentDawn"}, -- Western Plaguelands
+	[GetMapNameByID(23)] = {"ArgentDawn"}, -- Eastern Plaguelands
+	[GetMapNameByID(765)] = {"ArgentDawn"}, -- Stratholme
+	[GetMapNameByID(763)] = {"ArgentDawn"}, -- Scholomance
+	[GetMapNameByID(535)] = {"Naxx"}, -- Naxxramas
+	[GetMapNameByID(401)] = {"Battleground", "AV"}, -- Alterac Valley
+	[GetMapNameByID(461)] = {"Battleground", "AB"}, -- Arathi Basin
+	[GetMapNameByID(443)] = {"Battleground", "WSG"}, -- Warsong Gulch
+	[Outfitter.LSZ["Silverwing Hold"]] = {"Battleground", "WSG"}, -- Silverwing Hold
+	[Outfitter.LSZ["Warsong Lumber Mill"]] = {"Battleground", "WSG"}, -- Warsong Lumber Mill
+	[GetMapNameByID(482)] = {"Battleground", "EotS"}, -- Eye of the Storm
+	[GetMapNameByID(512)] = {"Battleground", "SotA"}, -- Strand of the Ancients
+	[GetMapNameByID(540)] = {"Battleground", "IoC"}, -- Isle of Conquest
+	[GetMapNameByID(501)] = {"Battleground", "Wintergrasp"}, -- Wintergrasp
+	[GetMapNameByID(736)] = {"Battleground", "Gilneas"}, -- Battle for Gilneas
+	[GetMapNameByID(626)] = {"Battleground", "TwinPeaks"}, -- Twin Peaks
+	[Outfitter.LSZ["Wildhammer Stronghold"]] = {"Battleground", "TwinPeaks"}, -- Wildhammer Stronghold
+	[Outfitter.LSZ["Dragonmaw Stronghold"]] = {"Battleground", "TwinPeaks"}, -- Dragonmaw Stronghold
 	
-	[Outfitter.LZ["Dalaran Sewers"]] = {"Battleground", "Arena", "Sewers"},
-	[Outfitter.LZ["The Ring of Valor"]] = {"Battleground", "Arena", "RingOfValor"},
+	-- Arenas
+--	[GetMapNameByID(Dalaran Sewers)] = {"Battleground", "Arena", "Sewers"}, -- Dalaran Sewers
+--	[GetMapNameByID(The Ring of Valor)] = {"Battleground", "Arena", "RingOfValor"}, -- The Ring of Valor
+--	[GetMapNameByID(Blade's Edge Arena)] = {"Battleground", "BladesEdgeArena", "Arena"}, -- Blade's Edge Arena
+--	[GetMapNameByID(Nagrand Arena)] = {"Battleground", "NagrandArena", "Arena"}, -- Nagrand Arena
+--	[GetMapNameByID(Ruins of Lordaeron)] = {"Battleground", "LordaeronArena", "Arena"}, -- Ruins of Lordaeron
 	
-	[Outfitter.LZ["Blade's Edge Arena"]] = {"Battleground", "BladesEdgeArena", "Arena"},
-	[Outfitter.LZ["Nagrand Arena"]] = {"Battleground", "NagrandArena", "Arena"},
-	[Outfitter.LZ["Ruins of Lordaeron"]] = {"Battleground", "LordaeronArena", "Arena"},
-	
-	[Outfitter.LZ["Ironforge"]] = {"City"},
-	[Outfitter.LSZ["City of Ironforge"]] = {"City"},
-	[Outfitter.LSZ["Miwana's Longhouse"]] = {"City"},
-	[Outfitter.LZ["Darnassus"]] = {"City"},
-	[Outfitter.LZ["Stormwind"]] = {"City"},
-	[Outfitter.LZ["Stormwind City"]] = {"City"},
-	[Outfitter.LZ["Orgrimmar"]] = {"City"},
-	[Outfitter.LZ["Thunder Bluff"]] = {"City"},
-	[Outfitter.LZ["Undercity"]] = {"City"},
-	[Outfitter.LZ["Silvermoon City"]] = {"City"},
-	[Outfitter.LZ["The Exodar"]] = {"City"},
-	[Outfitter.LZ["Shattrath City"]] = {"City"},
-	[Outfitter.LZ["Dalaran"]] = {"City"},
+	[GetMapNameByID(341)] = {"City"}, -- Ironforge
+	[Outfitter.LSZ["City of Ironforge"]] = {"City"}, -- City of Ironforge
+	[Outfitter.LSZ["Miwana's Longhouse"]] = {"City"}, -- Miwana's Longhouse
+	[GetMapNameByID(381)] = {"City"}, -- Darnassus
+--	[GetMapNameByID(Stormwind)] = {"City"}, -- Stormwind
+	[GetMapNameByID(301)] = {"City"}, -- Stormwind City
+	[GetMapNameByID(321)] = {"City"}, -- Orgrimmar
+	[GetMapNameByID(362)] = {"City"}, -- Thunder Bluff
+	[GetMapNameByID(382)] = {"City"}, -- Undercity
+	[GetMapNameByID(480)] = {"City"}, -- Silvermoon City
+	[GetMapNameByID(471)] = {"City"}, -- The Exodar
+	[GetMapNameByID(481)] = {"City"}, -- Shattrath City
+	[GetMapNameByID(504)] = {"City"}, -- Dalaran
 }
 
 -- As of patch 3.3 automated combat swaps aren't allowed.  I'm
@@ -5079,10 +5090,10 @@ function Outfitter:UpdateZone()
 	-- that it doesn't register as the Wintergrasp
 	-- PvP zone
 	
-	if vCurrentZone == self.LZ["Wintergrasp"] then
+	if vCurrentZone == GetMapNameByID(501) then -- Wintergrasp
 		local vMinimapZone = GetMinimapZoneText()
 		
-		if vMinimapZone == self.LZ["Vault of Archavon"] then
+		if vMinimapZone == GetMapNameByID(532) then -- Vault of Archavon
 			vCurrentZone = vMinimapZone
 		end
 	end
@@ -5307,13 +5318,11 @@ function Outfitter:Initialize()
 	end
 	
 	-- Unregister the initialization events
-	
 	for vEventID, _ in pairs(self.cInitializationEvents) do
 		self.EventLib:UnregisterEvent(vEventID, self.InitializationCheck, self)
 	end
 	
-	-- Makes sure they're not upgrading with a reloadui when there are new files
-	
+	-- Make sure they're not upgrading with a reloadui when there are new files
 	if tonumber(GetAddOnMetadata("Outfitter", "X-ReloadTag")) ~= 1 then
 		OutfitterMinimapButton:Hide() -- Remove access to Outfitter so more errors don't start coming up
 		OutfitterButtonFrame:Hide()
@@ -5322,44 +5331,40 @@ function Outfitter:Initialize()
 	end
 	
 	-- Get the basic player info
-	
 	self.PlayerName = UnitName("player")
 	self.RealmName = GetRealmName()
-	
 	local _, vPlayerClass = UnitClass("player")
-	
 	self.PlayerClass = vPlayerClass
 	
 	-- Swap in the Horde Lance for the Alliance Lance mapping
-	
 	if UnitFactionGroup("player") == "Horde" then
 		Outfitter.cItemAliases[46106] = 46070 -- Argent Lance -> Horde Lance
 	end
 	
-	--
-	
+	-- Initialize the global settings if they didn't get loaded
 	if not gOutfitter_GlobalSettings then
 		self:InitializeGlobalSettings()
 	end
 	
+	-- Refuse to load for douchebags
 	if (self.Douchebags[self.RealmName]
 	and self.Douchebags[self.RealmName][self.PlayerName])
 	or gOutfitter_GlobalSettings.Banned then
 		gOutfitter_GlobalSettings.Banned = true
-		
 		OutfitterMinimapButton:Hide()
 		OutfitterButtonFrame:Hide()
 		self:ErrorMessage("Your character is banned from Outfitter.  Use something else for your gear management.")
 		return
 	end
-
+	
+	-- Hook onto C_PetJournal.SummonPetByGUID so that the cooldown can be monitored
+	hooksecurefunc(C_PetJournal, "SummonPetByGUID", function () self.SummonPetByGUIDTime = GetTime() end)
+	self.SummonPetByGUIDTime = GetTime()
+	
 	self.MenuManager = self:New(self._MenuManager)
 	-- self.MenuManager:Test()
 	
-	--
-	
 	-- Initialize the main UI tabs
-	
 	self._SidebarWindowFrame.Construct(OutfitterFrame)
 	
 	PanelTemplates_SetNumTabs(OutfitterFrame, #self.cPanelFrames)
@@ -6933,7 +6938,7 @@ end
 
 --[[
 function UIDropDownMenu_Refresh(frame, useValue, dropdownLevel)
-	Outfitter:DebugMessage("UIDropDownMenu_Refresh: frame selected value is %s", UIDropDownMenu_GetSelectedValue(frame) or "nil")
+	--Outfitter:DebugMessage("UIDropDownMenu_Refresh: frame selected value is %s", UIDropDownMenu_GetSelectedValue(frame) or "nil")
 	
 	local button, checked, checkImage, normalText, width;
 	local maxWidth = 0;
@@ -6945,7 +6950,7 @@ function UIDropDownMenu_Refresh(frame, useValue, dropdownLevel)
 	-- Just redraws the existing menu
 	for i=1, UIDROPDOWNMENU_MAXBUTTONS do
 		button = _G["DropDownList"..dropdownLevel.."Button"..i]
-		Outfitter:DebugMessage(" Examinging button %d, title %s, value is %s", i, button:GetText() or "nil", button.value or "nil")
+		--Outfitter:DebugMessage(" Examinging button %d, title %s, value is %s", i, button:GetText() or "nil", button.value or "nil")
 		
 		checked = nil;
 		-- See if checked or not
@@ -8873,7 +8878,7 @@ function Outfitter:SummonCompanionByName(pName, pDelay)
 		local vPetID, vSpeciesID, vIsOwned, vCustomName, vLevel, vFavorite, vIsRevoked, vName = C_PetJournal.GetPetInfoByIndex(vIndex, false)
 		
 		if vName:lower() == vLowerName then
-			self:SummonCompanionByID(vPetID, pDelay)
+			self:SummonCompanionByGUID(vPetID, pDelay)
 			return true
 		end
 	end
@@ -8891,35 +8896,108 @@ function Outfitter:GetCompanionIDByName(pName)
 end
 
 function Outfitter:GetSummonedCompanionID()
-	return C_PetJournal.GetSummonedPetID()
+	return C_PetJournal.GetSummonedPetGUID()
 end
 
-function Outfitter:SummonCompanionByID(pID, pDelay)
+function Outfitter:SummonCompanionByGUID(pID, pDelay)
+	--Outfitter:DebugMessage("SummonCompanionByGUID: %s delay =%s", tostring(pID), tostring(pDelay))
 	if not pID then return end
-	local vIsSummoned = C_PetJournal.GetSummonedPetID() == pID
-	if not vIsSummoned then
-		if pDelay then
-			Outfitter.SchedulerLib:ScheduleTask(2, function () C_PetJournal.SummonPetByID(pID) end)
-		else
-			C_PetJournal.SummonPetByID(pID)
-		end
+	self.SummonPetID = pID
+	self.DismissPetID = nil
+	if pDelay then
+		Outfitter.SchedulerLib:ScheduleTask(2, self.SynchronizeCompanionState, self)
+	else
+		self:SynchronizeCompanionState()
+	end
+end
+
+function Outfitter:DismissCompanionByGUID(pID, pDelay)
+	--Outfitter:DebugMessage("DismissCompanionByGUID: %s delay =%s", tostring(pID), tostring(pDelay))
+	if not pID then return end
+	
+	-- Cancel an existing summon request if possible
+	if pID == self.SummonPetID then
+		self.SummonPetID = nil
+		return
 	end
 	
+	-- Save the desired state
+	self.DismissPetID = pID
+	self.SummonPetID = nil
+	
+	-- Synchronize the state or schedule synchronization if desired
+	if pDelay then
+		Outfitter.SchedulerLib:ScheduleTask(2, self.SynchronizeCompanionState, self)
+	else
+		self:SynchronizeCompanionState()
+	end
+end
+
+function Outfitter:CanSummonOrDismissCompanion()
+	if IsFlying()
+	or self.InCombat
+	or self.IsDead
+	or self.IsFeigning
+	or self.IsCasting
+	or self.IsChanneling
+	or (GetTime() - self.SummonPetByGUIDTime < 3) then
+		return false
+	end
 	return true
 end
 
-function Outfitter:DismissCompanionByID(pID, pDelay)
-	if not pID then return end
-	local vIsSummoned = C_PetJournal.GetSummonedPetID() == pID
-	if vIsSummoned then
-		if pDelay then
-			Outfitter.SchedulerLib:ScheduleTask(2, function () C_PetJournal.SummonPetByID(pID) end)
+function Outfitter:SynchronizeCompanionState()
+	-- Just return if we're not trying to summon or dismiss a pet
+	if not self.SummonPetID and not self.DismissPetID then
+		--Outfitter:DebugMessage("SynchronizeCompanionState: no pet ID to summon/dismiss. Canceling.")
+		return
+	end
+	
+	-- If the state can't be adjusted right now (ie, flying or channeling/casting)
+	-- then reschedule
+	if not self:CanSummonOrDismissCompanion() then
+		Outfitter.SchedulerLib:ScheduleTask(1, function() self:SynchronizeCompanionState() end)
+		return
+	end
+	
+	local vSummonedPetID = C_PetJournal.GetSummonedPetGUID()
+	--Outfitter:DebugMessage("SynchronizeCompanionState: SummonedPetID = %s", tostring(vSummonedPetID))
+	
+	-- If there's not a pet summoned but there's a pet to be dismissed
+	-- then reschedule in order to watch for the pet getting auto-summoned
+	-- by the game.  For example, if you summon Ragnaros upon opening the
+	-- cooking window, then mount up and fly off without closing the window,
+	-- there will no longer be a pet summoned.  If you then close the cooking
+	-- window it will try to dismiss Ragnaros but won't see anything currently
+	-- summoned (the game auto-dismissed Ragnaros when you started flying).
+	-- We want to watch for a pet to be auto-summoned by the game and then dismiss
+	-- it if it's the one we were trying to get rid of
+	
+	if self.DismissPetID then
+		if not vSummonedPetID then
+			--Outfitter:DebugMessage("SynchronizeCompanionState: Rescheduling dismissal of %s because no pet is summoned", tostring(self.DismissPetID))
+			Outfitter.SchedulerLib:ScheduleTask(1, function() self:SynchronizeCompanionState() end)
 		else
-			C_PetJournal.SummonPetByID(pID)
+			if vSummonedPetID == self.DismissPetID then
+				C_PetJournal.SummonPetByGUID(self.DismissPetID)
+			end
+			-- Clear the ID since the pet has now been dismissed or some other pet was summoned
+			--Outfitter:DebugMessage("Finished dismissing pet %s", tostring(self.DismissPetID))
+			self.DismissPetID = nil
+			return
 		end
 	end
 	
-	return true
+	if self.SummonPetID then
+		if vSummonedPetID ~= self.SummonPetID then
+			--Outfitter:DebugMessage("SynchronizeCompanionState: Summoning %s", tostring(self.SummonPetID))
+			C_PetJournal.SummonPetByGUID(self.SummonPetID)
+		end
+		-- Clear the ID since the desired pet is the summoned pet
+		--Outfitter:DebugMessage("Finished summoning pet %s", tostring(self.SummonPetID))
+		self.SummonPetID = nil
+		return
+	end
 end
 
 function Outfitter:GetTalentTreeName(pIndex)

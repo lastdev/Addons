@@ -17,8 +17,8 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program; if not, write to:
 --
--- Free Software Foundation, Inc., 
--- 51 Franklin Street, Fifth Floor, 
+-- Free Software Foundation, Inc.,
+-- 51 Franklin Street, Fifth Floor,
 -- Boston, MA  02110-1301, USA.
 --
 --
@@ -43,7 +43,7 @@ Prat:AddModuleToLoad(function()
     ["Party Channel"] = true,
     ["Raid Channel"] = true,
     ["Raid Warning Channel"] = true,
-    ["Battleground Channel"] = true,
+    ["Instance Channel"] = true,
     ["Say"] = true,
     ["Yell"] = true,
     ["Whisper"] = true,
@@ -64,10 +64,10 @@ Prat:AddModuleToLoad(function()
   --@non-debug@
   L:AddLocale("enUS",
   {
-	["Battleground Channel"] = true,
 	["Channel %d"] = true,
 	["Copy Selected Chat Frame"] = true,
 	["Guild Channel"] = true,
+	["Instance Channel"] = true,
 	["Next Chat Tab"] = true,
 	["Officer Channel"] = true,
 	["Party Channel"] = true,
@@ -86,10 +86,10 @@ Prat:AddModuleToLoad(function()
   )
   L:AddLocale("frFR",
   {
-	["Battleground Channel"] = "Canal Champ de bataille",
 	["Channel %d"] = "Canal %d",
 	["Copy Selected Chat Frame"] = "Copier la fenêtre de Chat sélectionné",
 	["Guild Channel"] = "Canal de Guilde",
+	["Instance Channel"] = "Canal Champ de bataille", -- Needs review
 	-- ["Next Chat Tab"] = "",
 	["Officer Channel"] = "Canal Officier",
 	["Party Channel"] = "Canal de Groupe",
@@ -108,10 +108,10 @@ Prat:AddModuleToLoad(function()
   )
   L:AddLocale("deDE",
   {
-	["Battleground Channel"] = "Schlachtfeld-Kanal",
 	["Channel %d"] = "Kanal %d",
 	["Copy Selected Chat Frame"] = "Kopiere ausgewählte Chat-Rahmen",
 	["Guild Channel"] = "Gildenkanal",
+	["Instance Channel"] = "Schlachtfeld-Kanal",
 	["Next Chat Tab"] = "Nächster Chat-Tab",
 	["Officer Channel"] = "Offizierskanal",
 	["Party Channel"] = "Gruppenkanal",
@@ -130,10 +130,10 @@ Prat:AddModuleToLoad(function()
   )
   L:AddLocale("koKR",
   {
-	["Battleground Channel"] = "전장",
 	["Channel %d"] = "채널 %d",
 	["Copy Selected Chat Frame"] = "선택한 대화창 복사",
 	["Guild Channel"] = "길드",
+	["Instance Channel"] = "전장", -- Needs review
 	["Next Chat Tab"] = "다음 채팅 탭",
 	["Officer Channel"] = "관리자",
 	["Party Channel"] = "파티",
@@ -152,10 +152,10 @@ Prat:AddModuleToLoad(function()
   )
   L:AddLocale("esMX",
   {
-	-- ["Battleground Channel"] = "",
 	-- ["Channel %d"] = "",
 	-- ["Copy Selected Chat Frame"] = "",
 	-- ["Guild Channel"] = "",
+	-- ["Instance Channel"] = "",
 	-- ["Next Chat Tab"] = "",
 	-- ["Officer Channel"] = "",
 	-- ["Party Channel"] = "",
@@ -174,10 +174,10 @@ Prat:AddModuleToLoad(function()
   )
   L:AddLocale("ruRU",
   {
-	["Battleground Channel"] = "Канал полей сражений",
 	["Channel %d"] = "Канал %d",
 	["Copy Selected Chat Frame"] = "Копирование выбранного окна чата",
 	["Guild Channel"] = "Канал Гильдии",
+	["Instance Channel"] = "Канал Подземелий",
 	["Next Chat Tab"] = "Следующее окно чата",
 	["Officer Channel"] = "Офицерский Канал",
 	["Party Channel"] = "Канал Группы",
@@ -196,10 +196,10 @@ Prat:AddModuleToLoad(function()
   )
   L:AddLocale("zhCN",
   {
-	["Battleground Channel"] = "战场频道",
 	["Channel %d"] = "频道 %d",
 	["Copy Selected Chat Frame"] = "复制选定的聊天框体",
 	["Guild Channel"] = "公会频道",
+	["Instance Channel"] = "战场频道", -- Needs review
 	["Next Chat Tab"] = "下一个聊天标签", -- Needs review
 	["Officer Channel"] = "官员频道",
 	["Party Channel"] = "小队频道",
@@ -218,10 +218,10 @@ Prat:AddModuleToLoad(function()
   )
   L:AddLocale("esES",
   {
-	["Battleground Channel"] = "Canal Campo de Batalla",
 	["Channel %d"] = "Canal %d",
 	["Copy Selected Chat Frame"] = "Copiar el Marco de Chat Seleccionado",
 	["Guild Channel"] = "Canal de Hermandad",
+	["Instance Channel"] = "Canal Campo de Batalla", -- Needs review
 	["Next Chat Tab"] = "Siguiente Pestaña de Chat",
 	["Officer Channel"] = "Canal Oficial",
 	["Party Channel"] = "Canal del Grupo",
@@ -240,10 +240,10 @@ Prat:AddModuleToLoad(function()
   )
   L:AddLocale("zhTW",
   {
-	["Battleground Channel"] = "戰場頻道",
 	["Channel %d"] = "頻道 %d",
 	["Copy Selected Chat Frame"] = "複製選取的聊天視窗",
 	["Guild Channel"] = "公會頻道",
+	["Instance Channel"] = "戰場頻道", -- Needs review
 	["Next Chat Tab"] = "次個聊天標籤",
 	["Officer Channel"] = "幹部頻道",
 	["Party Channel"] = "小隊頻道",
@@ -272,7 +272,7 @@ Prat:AddModuleToLoad(function()
       BINDING_NAME_party = L["Party Channel"]
       BINDING_NAME_raid = L["Raid Channel"]
       BINDING_NAME_raidwarn = L["Raid Warning Channel"]
-      BINDING_NAME_battleground = L["Battleground Channel"]
+      BINDING_NAME_instance = L["Instance Channel"]
       BINDING_NAME_say = L["Say"]
       BINDING_NAME_yell = L["Yell"]
       BINDING_NAME_whisper = L["Whisper"]
@@ -297,7 +297,7 @@ Prat:AddModuleToLoad(function()
     local current = FCFDock_GetSelectedWindow(GENERAL_CHAT_DOCK)
     local idx
     local dockedFrames = FCFDock_GetChatFrames(GENERAL_CHAT_DOCK)
-    
+
     for i, v in ipairs(dockedFrames) do
       if v == current then
         idx = i

@@ -1,4 +1,4 @@
-<!-- Revision: 344 2010-10-14T15:13:01Z -->
+<!-- Revision: 585 2013-03-02T14:19:03Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\FrameXML\UI.xsd">
   <Script file="ArmoryInventoryListViewFrame.lua"/>
@@ -8,9 +8,7 @@
         GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT", 80, 5);
         ArmoryInventoryListItemButton_OnEnter(self);
       </OnEnter>
-      <OnLeave>
-        GameTooltip:Hide();
-      </OnLeave>
+      <OnLeave function="GameTooltip_Hide" />
     </Scripts>
   </Button>
   <Frame name="ArmoryInventoryListViewFrame" parent="ArmoryInventoryFrame" hidden="true">

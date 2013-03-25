@@ -28,6 +28,8 @@
 		DruidOptions = "Options pour Druides",
 		DruidSingleClick = "Passer à une forme de voyage en un seul clic",
 		EnableAutoDismount = "Activer la descente de monture automatique",
+		ExtraPassengerMounts = "Extra Passenger Mounts", -- Requires localization
+		ExtraPassengerMountsDescription = "This list of passenger mounts is used to add passenger mounts to the random selection only when the Passenger Mount button is pressed.  This will allow you to set preferred mount lists excluding passenger mounts but still have them available when using the Passenger Mount button.  These mounts will not be used if they are marked as excluded mounts globally or for the current zone you are in.", -- Requires localization
 		Favorites = "Favoris",
 		GlobalExclusions = "Exclusions globales",
 		GlobalExclusionsDescription = "Ces montures seront toujours ignorées. Même si ces montures sont désignées comme favorites, elles ne seront pas utilisées.",

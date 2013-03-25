@@ -1,6 +1,6 @@
 --[[
 Name: LibBabble-CreatureType-3.0
-Revision: $Rev: 115 $
+Revision: $Rev: 125 $
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-creaturetype-3-0/
 Dependencies: None
@@ -8,7 +8,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-CreatureType-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 115 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 125 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)
@@ -17,6 +17,7 @@ if not lib then return end
 local GAME_LOCALE = GetLocale()
 
 lib:SetBaseTranslations {
+	Basilisk = "Basilisk",
 	Bat = "Bat",
 	Bear = "Bear",
 	Beast = "Beast",
@@ -28,6 +29,7 @@ lib:SetBaseTranslations {
 	Chimaera = "Chimaera",
 	["Core Hound"] = "Core Hound",
 	Crab = "Crab",
+	Crane = "Crane",
 	Critter = "Critter",
 	Crocolisk = "Crocolisk",
 	Demon = "Demon",
@@ -43,6 +45,7 @@ lib:SetBaseTranslations {
 	["Gas Cloud"] = "Gas Cloud",
 	Ghoul = "Ghoul",
 	Giant = "Giant",
+	Goat = "Goat",
 	Gorilla = "Gorilla",
 	Humanoid = "Humanoid",
 	Hyena = "Hyena",
@@ -53,6 +56,8 @@ lib:SetBaseTranslations {
 	["Nether Ray"] = "Nether Ray",
 	["Non-combat Pet"] = "Non-combat Pet",
 	["Not specified"] = "Not specified",
+	Porcupine = "Porcupine",
+	Quilen = "Quilen",
 	Raptor = "Raptor",
 	Ravager = "Ravager",
 	["Remote Control"] = "Remote Control",
@@ -73,6 +78,7 @@ lib:SetBaseTranslations {
 	["Warp Stalker"] = "Warp Stalker",
 	Wasp = "Wasp",
 	["Water Elemental"] = "Water Elemental",
+	["Water Strider"] = "Water Strider",
 	["Wind Serpent"] = "Wind Serpent",
 	Wolf = "Wolf",
 	Worm = "Worm",
@@ -83,6 +89,7 @@ if GAME_LOCALE == "enUS" then
 	lib:SetCurrentTranslations(true)
 elseif GAME_LOCALE == "deDE" then
 	lib:SetCurrentTranslations {
+	Basilisk = "Basilisk",
 	Bat = "Fledermaus",
 	Bear = "Bär",
 	Beast = "Wildtier",
@@ -94,6 +101,7 @@ elseif GAME_LOCALE == "deDE" then
 	Chimaera = "Schimäre",
 	["Core Hound"] = "Kernhund",
 	Crab = "Krebs",
+	Crane = "Kranich",
 	Critter = "Tier",
 	Crocolisk = "Krokilisk",
 	Demon = "Dämon",
@@ -109,6 +117,7 @@ elseif GAME_LOCALE == "deDE" then
 	["Gas Cloud"] = "Gaswolke",
 	Ghoul = "Ghul",
 	Giant = "Riese",
+	Goat = "Ziege",
 	Gorilla = "Gorilla",
 	Humanoid = "Humanoid",
 	Hyena = "Hyäne",
@@ -119,6 +128,8 @@ elseif GAME_LOCALE == "deDE" then
 	["Nether Ray"] = "Netherrochen",
 	["Non-combat Pet"] = "Haustier",
 	["Not specified"] = "Nicht spezifiziert",
+	Porcupine = "Stachelschwein",
+	Quilen = "Qilen",
 	Raptor = "Raptor",
 	Ravager = "Felshetzer",
 	["Remote Control"] = "Ferngesteuert",
@@ -139,12 +150,14 @@ elseif GAME_LOCALE == "deDE" then
 	["Warp Stalker"] = "Sphärenjäger",
 	Wasp = "Wespe",
 	["Water Elemental"] = "Wasserelementar",
+	["Water Strider"] = "Wasserschreiter",
 	["Wind Serpent"] = "Windnatter",
 	Wolf = "Wolf",
 	Worm = "Wurm",
 }
 elseif GAME_LOCALE == "frFR" then
 	lib:SetCurrentTranslations {
+	-- Basilisk = "",
 	Bat = "Chauve-souris",
 	Bear = "Ours",
 	Beast = "Bête",
@@ -156,6 +169,7 @@ elseif GAME_LOCALE == "frFR" then
 	Chimaera = "Chimère",
 	["Core Hound"] = "Chien du Magma",
 	Crab = "Crabe",
+	-- Crane = "",
 	Critter = "Bestiole",
 	Crocolisk = "Crocilisque",
 	Demon = "Démon",
@@ -171,6 +185,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Gas Cloud"] = "Nuage de gaz",
 	Ghoul = "Goule",
 	Giant = "Géant",
+	-- Goat = "",
 	Gorilla = "Gorille",
 	Humanoid = "Humanoïde",
 	Hyena = "Hyène",
@@ -181,6 +196,8 @@ elseif GAME_LOCALE == "frFR" then
 	["Nether Ray"] = "Raie du Néant",
 	["Non-combat Pet"] = "Familier pacifique",
 	["Not specified"] = "Non spécifié",
+	-- Porcupine = "",
+	-- Quilen = "",
 	Raptor = "Raptor",
 	Ravager = "Ravageur",
 	["Remote Control"] = "Télécommande",
@@ -201,12 +218,14 @@ elseif GAME_LOCALE == "frFR" then
 	["Warp Stalker"] = "Traqueur dim.",
 	Wasp = "Guêpe",
 	["Water Elemental"] = "Elémentaire d'eau",
+	-- ["Water Strider"] = "",
 	["Wind Serpent"] = "Serpent des vents",
 	Wolf = "Loup",
 	Worm = "Ver",
 }
 elseif GAME_LOCALE == "koKR" then
 	lib:SetCurrentTranslations {
+	-- Basilisk = "",
 	Bat = "박쥐",
 	Bear = "곰",
 	Beast = "야수",
@@ -218,6 +237,7 @@ elseif GAME_LOCALE == "koKR" then
 	Chimaera = "키메라",
 	["Core Hound"] = "심장부 사냥개",
 	Crab = "게",
+	-- Crane = "",
 	Critter = "동물",
 	Crocolisk = "악어",
 	Demon = "악마",
@@ -233,6 +253,7 @@ elseif GAME_LOCALE == "koKR" then
 	["Gas Cloud"] = "가스",
 	Ghoul = "구울",
 	Giant = "거인",
+	-- Goat = "",
 	Gorilla = "고릴라",
 	Humanoid = "인간형",
 	Hyena = "하이에나",
@@ -243,6 +264,8 @@ elseif GAME_LOCALE == "koKR" then
 	["Nether Ray"] = "황천의 가오리",
 	["Non-combat Pet"] = "애완동물",
 	["Not specified"] = "기타",
+	-- Porcupine = "",
+	-- Quilen = "",
 	Raptor = "랩터",
 	Ravager = "칼날발톱",
 	["Remote Control"] = "무선조종 장난감",
@@ -263,12 +286,14 @@ elseif GAME_LOCALE == "koKR" then
 	["Warp Stalker"] = "차원의 추적자",
 	Wasp = "말벌",
 	["Water Elemental"] = "물 정령",
+	-- ["Water Strider"] = "",
 	["Wind Serpent"] = "천둥매",
 	Wolf = "늑대",
 	Worm = "벌레",
 }
 elseif GAME_LOCALE == "esES" then
 	lib:SetCurrentTranslations {
+	-- Basilisk = "",
 	Bat = "Murciélago",
 	Bear = "Oso",
 	Beast = "Bestia",
@@ -280,6 +305,7 @@ elseif GAME_LOCALE == "esES" then
 	Chimaera = "Quimera",
 	["Core Hound"] = "Can del Núcleo",
 	Crab = "Cangrejo",
+	-- Crane = "",
 	Critter = "Alma",
 	Crocolisk = "Crocolisco",
 	Demon = "Demonio",
@@ -295,6 +321,7 @@ elseif GAME_LOCALE == "esES" then
 	["Gas Cloud"] = "Nube de Gas",
 	Ghoul = "Necrófago",
 	Giant = "Gigante",
+	-- Goat = "",
 	Gorilla = "Gorila",
 	Humanoid = "Humanoide",
 	Hyena = "Hiena",
@@ -305,6 +332,8 @@ elseif GAME_LOCALE == "esES" then
 	["Nether Ray"] = "Raya abisal",
 	["Non-combat Pet"] = "Mascota no combatiente",
 	["Not specified"] = "No especificado",
+	-- Porcupine = "",
+	-- Quilen = "",
 	Raptor = "Raptor",
 	Ravager = "Devastador",
 	["Remote Control"] = "Control remoto",
@@ -325,12 +354,14 @@ elseif GAME_LOCALE == "esES" then
 	["Warp Stalker"] = "Acechador deformado",
 	Wasp = "Avispa",
 	["Water Elemental"] = "Elemental de agua",
+	-- ["Water Strider"] = "",
 	["Wind Serpent"] = "Serpiente alada",
 	Wolf = "Lobo",
 	Worm = "Gusano",
 }
 elseif GAME_LOCALE == "esMX" then
 	lib:SetCurrentTranslations {
+	-- Basilisk = "",
 	Bat = "Murciélago",
 	Bear = "Oso",
 	Beast = "Bestia",
@@ -342,6 +373,7 @@ elseif GAME_LOCALE == "esMX" then
 	Chimaera = "Quimera",
 	["Core Hound"] = "Can del Núcleo",
 	Crab = "Cangrejo",
+	-- Crane = "",
 	Critter = "Alma",
 	Crocolisk = "Crocolisco",
 	Demon = "Demonio",
@@ -357,6 +389,7 @@ elseif GAME_LOCALE == "esMX" then
 	["Gas Cloud"] = "Nube de Gas", -- Needs review
 	Ghoul = "Necrófago",
 	Giant = "Gigante",
+	-- Goat = "",
 	Gorilla = "Gorila",
 	Humanoid = "Humanoide",
 	Hyena = "Hiena",
@@ -367,6 +400,8 @@ elseif GAME_LOCALE == "esMX" then
 	["Nether Ray"] = "Raya abisal",
 	["Non-combat Pet"] = "Mascota mansa",
 	["Not specified"] = "Sin especificar",
+	-- Porcupine = "",
+	-- Quilen = "",
 	Raptor = "Raptor",
 	Ravager = "Devastador",
 	["Remote Control"] = "Control remoto",
@@ -387,12 +422,14 @@ elseif GAME_LOCALE == "esMX" then
 	["Warp Stalker"] = "Acechador deformado",
 	Wasp = "Avispa",
 	["Water Elemental"] = "Elemental de agua",
+	-- ["Water Strider"] = "",
 	["Wind Serpent"] = "Serpiente alada",
 	Wolf = "Lobo",
 	Worm = "Gusano",
 }
 elseif GAME_LOCALE == "ptBR" then
 	lib:SetCurrentTranslations {
+	-- Basilisk = "",
 	Bat = "Morcego", -- Needs review
 	Bear = "Urso", -- Needs review
 	Beast = "Fera", -- Needs review
@@ -404,6 +441,7 @@ elseif GAME_LOCALE == "ptBR" then
 	Chimaera = "Quimera", -- Needs review
 	["Core Hound"] = "Cão Feroz", -- Needs review
 	Crab = "Carangueijo", -- Needs review
+	-- Crane = "",
 	Critter = "Bicho", -- Needs review
 	Crocolisk = "Crocodilo", -- Needs review
 	Demon = "Demônio", -- Needs review
@@ -419,6 +457,7 @@ elseif GAME_LOCALE == "ptBR" then
 	["Gas Cloud"] = "Gasoso", -- Needs review
 	Ghoul = "Vampiro", -- Needs review
 	Giant = "Gigante", -- Needs review
+	-- Goat = "",
 	Gorilla = "Gorila", -- Needs review
 	Humanoid = "Humanoide", -- Needs review
 	Hyena = "Hiena", -- Needs review
@@ -429,6 +468,8 @@ elseif GAME_LOCALE == "ptBR" then
 	["Nether Ray"] = "Raio Etéreo", -- Needs review
 	-- ["Non-combat Pet"] = "",
 	["Not specified"] = "Não especificado", -- Needs review
+	-- Porcupine = "",
+	-- Quilen = "",
 	Raptor = "Raptor", -- Needs review
 	Ravager = "Devastador", -- Needs review
 	["Remote Control"] = "Controle Remoto", -- Needs review
@@ -449,74 +490,82 @@ elseif GAME_LOCALE == "ptBR" then
 	-- ["Warp Stalker"] = "",
 	Wasp = "Vespa", -- Needs review
 	["Water Elemental"] = "Elemental da Água", -- Needs review
+	-- ["Water Strider"] = "",
 	["Wind Serpent"] = "Cobra Naja", -- Needs review
 	Wolf = "Lobo", -- Needs review
 	Worm = "Minhoca", -- Needs review
 }
 elseif GAME_LOCALE == "itIT" then
 	lib:SetCurrentTranslations {
-	-- Bat = "",
-	-- Bear = "",
-	-- Beast = "",
-	-- Beetle = "",
-	-- ["Bird of Prey"] = "",
-	-- Boar = "",
-	-- ["Carrion Bird"] = "",
-	-- Cat = "",
-	-- Chimaera = "",
-	-- ["Core Hound"] = "",
-	-- Crab = "",
-	-- Critter = "",
-	-- Crocolisk = "",
-	-- Demon = "",
-	-- Devilsaur = "",
-	-- Dog = "",
-	-- Doomguard = "",
-	-- Dragonhawk = "",
-	-- Dragonkin = "",
-	-- Elemental = "",
-	-- Felguard = "",
-	-- Felhunter = "",
-	-- Fox = "",
-	-- ["Gas Cloud"] = "",
-	-- Ghoul = "",
-	-- Giant = "",
-	-- Gorilla = "",
-	-- Humanoid = "",
-	-- Hyena = "",
-	-- Imp = "",
-	-- Mechanical = "",
-	-- Monkey = "",
-	-- Moth = "",
-	-- ["Nether Ray"] = "",
-	-- ["Non-combat Pet"] = "",
-	-- ["Not specified"] = "",
-	-- Raptor = "",
-	-- Ravager = "",
-	-- ["Remote Control"] = "",
-	-- Rhino = "",
-	-- Scorpid = "",
-	-- Serpent = "",
-	-- ["Shale Spider"] = "",
-	-- Silithid = "",
-	-- Spider = "",
-	-- ["Spirit Beast"] = "",
-	-- Sporebat = "",
-	-- Succubus = "",
-	-- Tallstrider = "",
-	-- Totem = "",
-	-- Turtle = "",
-	-- Undead = "",
-	-- Voidwalker = "",
-	-- ["Warp Stalker"] = "",
-	-- Wasp = "",
-	-- ["Water Elemental"] = "",
-	-- ["Wind Serpent"] = "",
-	-- Wolf = "",
-	-- Worm = "",
+	Basilisk = "Basilisco",
+	Bat = "Pipistrello",
+	Bear = "Orso",
+	Beast = "Bestia",
+	Beetle = "Scarafaggio",
+	["Bird of Prey"] = "Rapace",
+	Boar = "Cinghiale",
+	["Carrion Bird"] = "Mangiacarogne",
+	Cat = "Gatto",
+	Chimaera = "Chimera",
+	["Core Hound"] = "Segugio del Nucleo",
+	Crab = "Granchio",
+	Crane = "Gru",
+	Critter = "Animale",
+	Crocolisk = "Coccodrillo",
+	Demon = "Demone",
+	Devilsaur = "Sauro Demoniaco",
+	Dog = "Cane",
+	Doomguard = "Demone Guardiano",
+	Dragonhawk = "Dragofalco",
+	Dragonkin = "Dragoide",
+	Elemental = "Elementale",
+	Felguard = "Vilguardia",
+	Felhunter = "Vilsegugio",
+	Fox = "Volpe",
+	["Gas Cloud"] = "Nube di Gas",
+	Ghoul = "Ghoul",
+	Giant = "Gigante",
+	Goat = "Capra",
+	Gorilla = "Gorilla",
+	Humanoid = "Umanoide",
+	Hyena = "Iena",
+	Imp = "Folletto",
+	Mechanical = "Meccanico",
+	Monkey = "Scimmia",
+	Moth = "Falena",
+	["Nether Ray"] = "Manta Fatua",
+	["Non-combat Pet"] = "Animale Non combattente",
+	["Not specified"] = "Non Specificato",
+	Porcupine = "Istrice",
+	Quilen = "Quilen",
+	Raptor = "Raptor",
+	Ravager = "Devastatore ",
+	["Remote Control"] = "Telecomando",
+	Rhino = "Rinoceronte",
+	Scorpid = "Scorpione",
+	Serpent = "Serpente",
+	["Shale Spider"] = "Ragno D'argilla",
+	Silithid = "Silitide",
+	Spider = "Ragno",
+	["Spirit Beast"] = "Spirito di Bestia",
+	Sporebat = "Sporofago",
+	Succubus = "Succube",
+	Tallstrider = "Zampalunga",
+	Totem = "Totem",
+	Turtle = "Tartaruga",
+	Undead = "Non Morto",
+	Voidwalker = "Ombra del Vuoto",
+	["Warp Stalker"] = "Camminatore Distorto",
+	Wasp = "Vespa",
+	["Water Elemental"] = "Elementale d'Acqua",
+	["Water Strider"] = "Gerride",
+	["Wind Serpent"] = "Serpente Volante",
+	Wolf = "Lupo",
+	Worm = "Verme",
 }
 elseif GAME_LOCALE == "ruRU" then
 	lib:SetCurrentTranslations {
+	-- Basilisk = "",
 	Bat = "Летучая мышь",
 	Bear = "Медведь",
 	Beast = "Животное",
@@ -528,6 +577,7 @@ elseif GAME_LOCALE == "ruRU" then
 	Chimaera = "Химера",
 	["Core Hound"] = "Гончая Недр",
 	Crab = "Краб",
+	-- Crane = "",
 	Critter = "Существо",
 	Crocolisk = "Кроколиск",
 	Demon = "Демон",
@@ -543,6 +593,7 @@ elseif GAME_LOCALE == "ruRU" then
 	["Gas Cloud"] = "Газовое облако",
 	Ghoul = "Вурдалак",
 	Giant = "Великан",
+	-- Goat = "",
 	Gorilla = "Горилла",
 	Humanoid = "Гуманоид",
 	Hyena = "Гиена",
@@ -553,6 +604,8 @@ elseif GAME_LOCALE == "ruRU" then
 	["Nether Ray"] = "Скат Пустоты",
 	["Non-combat Pet"] = "Спутник",
 	["Not specified"] = "Не указано",
+	-- Porcupine = "",
+	-- Quilen = "",
 	Raptor = "Ящер",
 	Ravager = "Опустошитель",
 	["Remote Control"] = "Управление",
@@ -573,12 +626,14 @@ elseif GAME_LOCALE == "ruRU" then
 	["Warp Stalker"] = "Прыгуана",
 	Wasp = "Оса",
 	["Water Elemental"] = "Элементаль воды",
+	-- ["Water Strider"] = "",
 	["Wind Serpent"] = "Крылатый змей",
 	Wolf = "Волк",
 	Worm = "Червь",
 }
 elseif GAME_LOCALE == "zhCN" then
 	lib:SetCurrentTranslations {
+	Basilisk = "石化蜥蜴",
 	Bat = "蝙蝠",
 	Bear = "熊",
 	Beast = "野兽",
@@ -590,6 +645,7 @@ elseif GAME_LOCALE == "zhCN" then
 	Chimaera = "奇美拉",
 	["Core Hound"] = "熔岩犬",
 	Crab = "螃蟹",
+	Crane = "鹤",
 	Critter = "小动物",
 	Crocolisk = "鳄鱼",
 	Demon = "恶魔",
@@ -605,6 +661,7 @@ elseif GAME_LOCALE == "zhCN" then
 	["Gas Cloud"] = "气体云雾",
 	Ghoul = "食尸鬼",
 	Giant = "巨人",
+	Goat = "山羊",
 	Gorilla = "猩猩",
 	Humanoid = "人型生物",
 	Hyena = "土狼",
@@ -615,6 +672,8 @@ elseif GAME_LOCALE == "zhCN" then
 	["Nether Ray"] = "虚空鳐",
 	["Non-combat Pet"] = "非战斗宠物",
 	["Not specified"] = "未指定",
+	Porcupine = "箭猪",
+	Quilen = "魁麟",
 	Raptor = "迅猛龙",
 	Ravager = "掠食者",
 	["Remote Control"] = "远程控制",
@@ -635,12 +694,14 @@ elseif GAME_LOCALE == "zhCN" then
 	["Warp Stalker"] = "迁跃捕猎者",
 	Wasp = "巨蜂",
 	["Water Elemental"] = "水元素",
+	["Water Strider"] = "水黾",
 	["Wind Serpent"] = "风蛇",
 	Wolf = "狼",
 	Worm = "蠕虫",
 }
 elseif GAME_LOCALE == "zhTW" then
 	lib:SetCurrentTranslations {
+	Basilisk = "蜥蜴",
 	Bat = "蝙蝠",
 	Bear = "熊",
 	Beast = "野獸",
@@ -652,6 +713,7 @@ elseif GAME_LOCALE == "zhTW" then
 	Chimaera = "奇美拉",
 	["Core Hound"] = "熔核犬",
 	Crab = "螃蟹",
+	Crane = "鶴",
 	Critter = "小動物",
 	Crocolisk = "鱷魚",
 	Demon = "惡魔",
@@ -667,6 +729,7 @@ elseif GAME_LOCALE == "zhTW" then
 	["Gas Cloud"] = "氣體雲",
 	Ghoul = "食屍鬼",
 	Giant = "巨人",
+	Goat = "山羊",
 	Gorilla = "猩猩",
 	Humanoid = "人型生物",
 	Hyena = "土狼",
@@ -677,6 +740,8 @@ elseif GAME_LOCALE == "zhTW" then
 	["Nether Ray"] = "虛空鰭刺",
 	["Non-combat Pet"] = "非戰鬥寵物",
 	["Not specified"] = "不明",
+	Porcupine = "豪豬",
+	Quilen = "麒麟獸",
 	Raptor = "迅猛龍",
 	Ravager = "劫毀者",
 	["Remote Control"] = "遙控",
@@ -697,6 +762,7 @@ elseif GAME_LOCALE == "zhTW" then
 	["Warp Stalker"] = "扭曲巡者",
 	Wasp = "黃蜂",
 	["Water Elemental"] = "水元素",
+	["Water Strider"] = "水黽",
 	["Wind Serpent"] = "風蛇",
 	Wolf = "狼",
 	Worm = "蟲",

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Xariona", "DBM-Party-Cataclysm", 15)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(50061)
 mod:SetModelID(32229)
 mod:SetZone(640)--Deepholm
@@ -102,9 +102,3 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName)
 		end
 	end
 end
---[[
-			"<7.8> [REGEN_DISABLED]  ++ > Regen Disabled : Entering combat! ++ > ", -- [11]
-			"<9.8> Xariona:Possible Target<Omegal>:target:Fury of the Twilight Flight::0:93554", -- [1]
-			"<39.9> Xariona:Possible Target<Omegal>:target:Fury of the Twilight Flight::0:93554", -- [7]
-			"<75.9> Xariona:Possible Target<Omegal>:target:Unleashed Magic::0:93556", -- [16]
---]]

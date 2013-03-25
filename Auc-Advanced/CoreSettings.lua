@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: CoreSettings.lua 5361 2012-09-21 10:54:27Z brykrys $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: CoreSettings.lua 5378 2012-11-12 19:49:23Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	Settings GUI
@@ -144,6 +144,8 @@ local settingDefaults = {
 	["core.scan.pregetalldelay"] = 0,
 	["core.tooltip.altchatlink_leftclick"] = false,
 	["core.tooltip.enableincombat"] = false,
+	["core.tooltip.depositcost"] = true,
+	["core.tooltip.depositduration"] = 48,
 }
 
 local function getDefault(setting)
@@ -633,6 +635,8 @@ function lib.MakeGuiConfig()
 	gui:AddTip(id, _TRANS('ADV_HelpTooltip_MktPrice')) --"Enables the display of Marketprice in the tooltip.  Holding down Shift will also show the prices that went into marketprice"
 	gui:AddControl(id, "Checkbox",   0, 2, "tooltip.marketprice.stacksize", _TRANS('ADV_Interface_MultiplyStack')) --"Multiply by Stack Size"
 	gui:AddTip(id, _TRANS('ADV_HelpTooltip_MultiplyStack')) --"Multiplies by current stack size if enabled"
+	gui:AddControl(id, "Checkbox",   0, 1, "core.tooltip.depositcost", _TRANS('ADV_Interface_ShowDepositInTooltip')) --Show deposit cost in tooltip
+	gui:AddControl(id, "Selectbox", 0, 1, AucAdvanced.selectorAuctionLength, "core.tooltip.depositduration", _TRANS("ADV_Interface_DepositDuration")) --Auction duration for deposit cost
 	gui:AddControl(id, "Note",       0, 1, nil, nil, " ")
 
 	gui:AddHelp(id, "what is scandata",
@@ -745,4 +749,4 @@ function private.CheckObsolete()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreSettings.lua $", "$Rev: 5361 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreSettings.lua $", "$Rev: 5378 $")

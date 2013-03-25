@@ -23,7 +23,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS["stack"]:format(6, 113315)
+	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(6, 113315)
 })
 
 -----------------------
@@ -60,7 +60,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	SpecWarnFizzyBubbles	= "$spell:114459 효과가 없을 경우 특수 경고 보기",
-	RangeFrame				= "$spell:106546 주문의 영향을 받은 경우 거리 프레임 표시(10m)"
+	RangeFrame				= "$spell:106546 주문의 영향을 받은 경우 거리 창 보기(10m)"
 })
 
 -----------------------
@@ -70,6 +70,14 @@ L:SetOptionLocalization({
 -- Gu Cloudstrike --
 -----------------------
 L= DBM:GetModLocalization(673)
+
+L:SetWarningLocalization({
+	warnStaticField	= "%s"
+})
+
+L:SetOptionLocalization({
+	warnStaticField	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(106923)
+})
 
 -----------------------
 -- Snowdrift --
@@ -94,13 +102,17 @@ L:SetMiscLocalization({
 -----------------------
 L= DBM:GetModLocalization(685)
 
+L:SetMiscLocalization({
+	Kill		= "네 가슴이 폭력에 물들어 있는 한... 난... 다시... 돌아올 것이다.",
+})
+
 -----------------------
 -- Taran Zhu --
 -----------------------
 L= DBM:GetModLocalization(686)
 
 L:SetOptionLocalization({
-	InfoFrame			= "$journal:5827 정보 프레임 보기"
+	InfoFrame			= "$journal:5827 정보 창 보기"
 })
 
 -----------------------
@@ -174,7 +186,7 @@ L= DBM:GetModLocalization(693)
 L= DBM:GetModLocalization(738)
 
 L:SetTimerLocalization({
-	TimerWave	= "적 등장 : %s"
+	TimerWave	= "적 : %s"
 })
 
 L:SetOptionLocalization({
@@ -219,7 +231,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	SpecWarnGetBoned	= "$spell:113996 효과가 없을 경우 특수 경고 보기",
-	InfoFrame			= "$spell:113996 효과 없음에 대한 정보 프레임 보기"
+	InfoFrame			= "$spell:113996 효과 없음에 대한 정보 창 보기"
 })
 
 L:SetMiscLocalization({

@@ -9,7 +9,7 @@ local AceGUI = LibStub("AceGUI-3.0")
 local candy = LibStub("LibCandyBar-3.0")
 local media = LibStub("LibSharedMedia-3.0")
 
-module.VERSION = tonumber(("$Revision: 546 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 559 $"):sub(12, -3))
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -35,7 +35,7 @@ local glyphCooldowns = {
 	[63270] = {51490, 10},     -- Thunderstorm, -10sec
 	[63328] = {23920, 5},      -- Spell Reflection, -5sec
 	[59219] = {1850, 60},      -- Dash, -60sec
-        [58673] = {48792, "30"},   -- Icebound Fortitude, -50%
+	[58673] = {48792, "30"},   -- Icebound Fortitude, -50%
 	[56368] = {11129, "-100"}, -- Combustion, +100%
 	[58686] = {47528, 2},      -- Mind Freeze, -2sec
 	[116216] = {80964, -10, 80965}, -- Skull Bash (both versions), +10sec
@@ -61,7 +61,7 @@ local spells = {
 		[78675] = 60,   -- Solar Beam
 		[78674] = 15,   -- Starsurge
 		[18562] = 15,   -- Swiftmend
-		[132469] = 20,  -- Typhoon
+		[132469] = 30,  -- Typhoon
 		[33831] = 60,   -- Force of Nature
 		[48505] = 90,   -- Starfall
 		[16979] = 15,   -- Wild Charge (Bear)
@@ -76,14 +76,15 @@ local spells = {
 		[740]   = 480,  -- Tranquility
 		[77761] = 120,  -- Stampeding Roar
 		[48438] = 8,    -- Wild Growth
+		[102342] = 120, -- Ironbark
 	},
 	HUNTER = {
 		[34477] = 30,   -- Misdirection
 		[5384]  = 30,   -- Feign Death
 		[781]   = 25,   -- Disengage
 		[19263] = 120,  -- Deterrence
-		[34490] = 20,   -- Silencing Shot
-		[19386] = 60,   -- Wyvern Sting
+		[34490] = 24,   -- Silencing Shot
+		[19386] = 45,   -- Wyvern Sting
 		[23989] = 300,  -- Readiness
 		[13809] = 30,   -- Ice Trap
 		[82941] = 30,   -- Ice Trap + Launcher
@@ -101,6 +102,8 @@ local spells = {
 		[13795] = 30,   -- Immolation Trap
 		[82945] = 30,   -- Immolation Trap + Launcher
 		[51753] = 60,   -- Camouflage
+		[126393] = 600, -- Eternal Guardian
+		[90355] = 360,  -- Ancient Hysteria
 		-- XXX Pets missing
 	},
 	MAGE = {
@@ -121,7 +124,7 @@ local spells = {
 		[11129] = 45,   -- Combustion
 		[31661] = 20,   -- Dragon's Breath
 		[44572] = 30,   -- Deep Freeze
-		[113724] = 30,  -- Ring of Frost
+		[113724] = 45,  -- Ring of Frost
 		[80353] = 300,  -- Time Warp
 	},
 	PALADIN = {
@@ -160,7 +163,7 @@ local spells = {
 		[47788] = 180,  -- Guardian Spirit
 		[15487] = 45,   -- Silence
 		[47585] = 120,  -- Dispersion
-		[47540] = 10,   -- Penance
+		[47540] = 9,   -- Penance
 		[88625] = 30,   -- Holy Word: Chastise
 		[88684] = 10,   -- Holy Word: Serenity
 		[88685] = 40,   -- Holy Word: Sanctuary
@@ -171,14 +174,16 @@ local spells = {
 		[64044] = 120,  -- Psychic Horror
 		[33076] = 10,   -- Prayer of Mending
 		[73325] = 90,   -- Leap of Faith
+		[15286]  = 180, -- Vampiric Embrace
+		[109964]  = 60, -- Spirit Shell
 	},
 	ROGUE = {
 		[5277]  = 180,  -- Evasion
 		[1766]  = 15,   -- Kick
-		[1856]  = 180,  -- Vanish
+		[1856]  = 120,  -- Vanish
 		[1725]  = 30,   -- Distract
-		[2094]  = 180,  -- Blind
-		[31224] = 120,  -- Cloak of Shadows
+		[2094]  = 120,  -- Blind
+		[31224] = 60,  -- Cloak of Shadows
 		[57934] = 30,   -- Tricks of the Trade
 		[14185] = 300,  -- Preparation
 		[79140] = 120,  -- Vendetta
@@ -206,7 +211,7 @@ local spells = {
 		[73680] = 15,   -- Unleash Elements
 		[51505] = 8,    -- Lava Burst
 		[51490] = 45,   -- Thunderstorm
-		[16166] = 120,  -- Elemental Mastery
+		[16166] = 90,  -- Elemental Mastery
 		[79206] = 120,  -- Spiritwalker's Grace
 		[51533] = 120,  -- Feral Spirit
 		[30823] = 60,   -- Shamanistic Rage
@@ -217,7 +222,11 @@ local spells = {
 		[98008] = 180,  -- Spirit Link Totem
 		[120668] = 300, -- Stormlash Totem
 		[5394] = 30,    -- Healing Stream Totem
-                [108280] = 180, -- Healing Tide Totem
+		[108280] = 180, -- Healing Tide Totem
+		[108281] = 120, -- Ancestral Guidance
+		[108273] = 60,  -- Windwalk Totem
+		[108271] = 120, -- Astral Shift
+		[114049] = 180, -- Ascendance
 	},
 	WARLOCK = {
 		[20707] = 600,  -- Soulstone Resurrection
@@ -238,7 +247,7 @@ local spells = {
 		[1719]  = 300,  -- Recklessness
 		[2565]  = 90,   -- Shield Block
 		[6552]  = 15,   -- Pummel
-		[5246]  = 60,   -- Intimidating Shout
+		[5246]  = 90,   -- Intimidating Shout
 		[871]   = 300,  -- Shield Wall
 		[64382] = 300,  -- Shattering Throw
 		[55694] = 60,   -- Enraged Regeneration
@@ -250,18 +259,21 @@ local spells = {
 		[46924] = 90,   -- Bladestorm
 		[12292] = 60,   -- Bloodbath
 		[676]   = 60,   -- Disarm
-		[46968] = 20,   -- Shockwave
+		[46968] = 40,   -- Shockwave
 		[86346] = 20,   -- Colossus Smash
 		[6544]  = 45,   -- Heroic Leap
 		[97462] = 180,  -- Rallying Cry
 		[114028] = 60,  -- Mass Spell Reflection
 		[114029] = 30,  -- Safeguard
 		[114030] = 120, -- Vigilance
+		[114203] = 180, -- Demoralizing Banner
+		[114207] = 180, -- Skull Banner
+		[114192] = 180, -- Mocking Banner
 	},
 	DEATHKNIGHT = {
 		[49576] = 25,   -- Death Grip
 		[47528] = 15,   -- Mind Freeze
-		[47476] = 120,  -- Strangulate
+		[47476] = 60,  -- Strangulate
 		[48792] = 180,  -- Icebound Fortitude
 		[48707] = 45,   -- Anti-Magic Shell
 		[61999] = 600,  -- Raise Ally
@@ -279,6 +291,18 @@ local spells = {
 		[57330] = 20,   -- Horn of Winter
 		[47568] = 300,  -- Empower Rune Weapon
 		[48743] = 120,  -- Death Pact
+		[108199] = 60,  -- Gorefiend's Grasp
+	},
+	MONK = {
+		[115213] = 180, -- Avert Harm
+		[115176] = 180, -- Zen Meditation
+		[122278] = 90,  -- Dampen Harm
+		[115310] = 180, -- Revival
+		[116849] = 120, -- Life Cocoon
+		[115203] = 180, -- Fortifying Brew
+		[119381] = 45,  -- Leg Sweep
+		[122470] = 90,  -- Touch of Karma
+		[116705] = 15,  -- Spear Hand Strike
 	},
 }
 
@@ -1068,6 +1092,10 @@ end
 
 local talentScanners = {
 	PALADIN = function()
+		local spec = select(2, GetSpecializationInfo(GetSpecialization()))
+		if (spec == "Retribution") then
+			addMod(31884, 60) -- 60 seconds off Avenging Wrath
+		end
 	end,
 	SHAMAN = function()
 	end,
@@ -1087,6 +1115,14 @@ local talentScanners = {
 		end
 	end,
 	MAGE = function()
+		local rank = getRank(10) -- Greater Invis
+		if (rank) then
+			addMod(66, 210) -- 210 secs off Invisibility
+		end
+		rank = getRank(16) -- Invocation
+		if (rank) then
+			addMod(12051, -120) -- Evocation goes to 0
+		end
 	end,
 	PRIEST = function()
 	end,
@@ -1099,6 +1135,8 @@ local talentScanners = {
 	DRUID = function()
 	end,
 	WARLOCK = function()
+	end,
+	MONK = function()
 	end,
 }
 

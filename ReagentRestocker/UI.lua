@@ -79,6 +79,10 @@ local Menu = {
 		text = "Misc",
 		value = "misc"
 	},
+	{
+		text = "Profiles",
+		value = "profiles"
+	},
 --	{
 --		text = "Global",
 --		value = "global"
@@ -710,6 +714,100 @@ function showMisc()
 --	addButton("Toggle new UI", function() merchantFrame:ToggleHide() end)
 end
 
+function showProfiles(text)
+	--dprint(RRAceDB)
+			
+	-- Load the profile names
+	profileNames = {}
+	
+	for k, v in pairs(RRAceDB:GetProfiles()) do
+		profileNames[v] = v
+	end
+	
+	--RRAceDB:GetProfiles(profileNames)
+
+	-- UI setup
+	selectTree:ReleaseChildren()
+	defaultStatus = "Profiles";
+
+	if text ~= nil then
+		addLabel(text .. "\n")
+	end
+	
+	addLabel("Note that |cFFFFFF00default|r is always overwritten when the game is realoaded, do not use for shared profiles!")
+
+	addLabel("|nProfiles are currently not saved automatically - you have to manually save them.")
+	
+	addLabel("|nCurrent profile is: " .. RRAceDB:GetCurrentProfile());
+	
+	addInput("Save to profile: ", "Name of profile to save to", "", 
+		function(x)
+			if type(x)=="table" and type(x.lasttext) ~="nil" then
+				-- Called from Ace, have to get text from a table.
+				x = x.lasttext
+				--RRAceDB.profile[x] = ReagentRestockerDB;
+			elseif type(x)=="string" then
+				--RRAceDB.profile[x] = ReagentRestockerDB;
+			else
+				derror(x);
+			end
+			--dprint(x)
+			RRAceDB:SetProfile(x)
+			
+			-- 
+			if profileNames[x] == nil then
+				-- If the profile doesn't already exist, create a new one by copying the old one.
+				RRAceDB.profile.db = deepcopy(ReagentRestockerDB)
+			else
+				RRAceDB.profile.db = ReagentRestockerDB
+			end
+			showProfiles("|cFFFFFF00Profile |r".. x .." |cFFFFFF00saved.|r");
+			refreshShoppingList();
+			selectTree:RefreshTree();
+		end)
+
+		
+	addLabel("Select an active profile (NOTE: Profiles are not automatically saved yet)")
+	local profileSelect = GUI:Create("Dropdown")
+	profileSelect:SetList(profileNames)
+	profileSelect:SetText("Select a profile")
+	profileSelect:SetCallback("OnValueChanged",
+		function(key)
+			if key.value == RRAceDB:GetCurrentProfile() then
+				showProfiles("|cFFFF0000The current profile is already loaded.|r")
+			else
+				RRAceDB:SetProfile(key.value)
+				ReagentRestockerDB = RRAceDB.profile.db
+				showProfiles("|cFFFFFF00Profile |r".. key.value .." |cFFFFFF00loaded.|r")
+				refreshShoppingList();
+				selectTree:RefreshTree();
+			end
+		end)
+	selectTree:AddChild(profileSelect)
+
+	--addLabel("Load from profile")
+	--local profileLoad = GUI:Create("Dropdown")
+	--profileLoad:SetList(profileNames)
+	--profileLoad:SetText("Select a profile")
+	--profileLoad:SetCallback("OnValueChanged",function(key) ReagentRestockerDB = RRAceDB.profile[key.value]; showProfiles("|cFFFFFF00Profile |r".. key.value .." |cFFFFFF00loaded.|r"); end)
+	--selectTree:AddChild(profileLoad)
+	
+	addLabel("|nRemove profile |cFFFF0000(WARNING: Currently does not ask for confirmation!)|r")
+	local profileRemove = GUI:Create("Dropdown")
+	profileRemove:SetList(profileNames)
+	profileRemove:SetText("Select a profile")
+	profileRemove:SetCallback("OnValueChanged",
+		function(key)
+			--dprint(key)
+			RRAceDB:DeleteProfile(key.value)
+			--RRAceDB.profile[key.value] = nil
+			showProfiles("|cFFFF0000Profile |r".. key.value .." |cFFFF0000removed.|r");
+		end)
+		
+	selectTree:AddChild(profileRemove)
+
+end
+
 function showAbout()
 	selectTree:ReleaseChildren();
 	addLabel("Reagent Restocker version " .. GetAddOnMetadata(addonName, "Version") .. "\n");
@@ -718,13 +816,11 @@ function showAbout()
 	addLabel("License: " .. GetAddOnMetadata(addonName, "X-License") .. "\n");
 	addCopyBox("Website: ",GetAddOnMetadata(addonName, "X-Website") .. "\n");
 	addCopyBox("Google+: ","https://plus.google.com/101127866821396020019" .. "\n");
-
+	addCopyBox("Facebook: ","https://www.facebook.com/ReagentRestocker" .. "\n");
 	addCopyBox("Bug reports and feature requests: ",GetAddOnMetadata(addonName, "X-Bugs") .. "\n");
 
 	local version, build, date, tocversion = GetBuildInfo();
 	addLabel("\nDesigned for UI version " .. GetAddOnMetadata(addonName, "X-Interface") .. ", current UI version is " .. tostring(tocversion) .. ".\n");
-	addLabel("Current UI version is " .. tostring(tocversion) .. ".\n");
-	
 	
 	--local function addButton("Test", click)
 end
@@ -937,6 +1033,8 @@ selectTree:SetCallback("OnGroupSelected",
 			showRepair();
 		elseif group=="misc" then
 			showMisc();
+		elseif group=="profiles" then
+			showProfiles();
 		elseif group=="global" then
 			showGlobals();
 		elseif group=="receipts" then

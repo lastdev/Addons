@@ -9,7 +9,7 @@
 ## X-Curse-Project-Name: LibReforgingInfo-1.0
 ## X-Curse-Project-ID: libreforginginfo-1-0
 ## X-Curse-Repository-ID: wow/libreforginginfo-1-0/mainline
-## X-Curse-Packaged-Version: v2.2.1
+## X-Curse-Packaged-Version: v2.4
 ## X-Curse-Project-Name: Reforgenator
 ## X-Curse-Project-ID: reforgenator
 ## X-Curse-Repository-ID: wow/reforgenator/mainline

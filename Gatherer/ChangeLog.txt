@@ -1,6 +1,16 @@
 CHANGELOG
 ---------------------------------------
 
+4.2.0
+========
+Version Issue List: N/A (Jira Down)
+- added zone tokens for new zones introduced in WoW 5.2
+
+4.1.0
+========
+Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10653
+- GATH-201: update to latest version of Astrolabe which supports custom Minimaps
+
 4.0.6
 ========
 Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10656
@@ -569,4 +579,4 @@ Deleted a rogue print2 statement.
 - Added giant clam treasure
 
 --------------
-Revision: $Id: ChangeLog.txt 1050 2012-11-02 01:56:53Z Esamynn $
+Revision: $Id: ChangeLog.txt 1079 2013-03-08 06:48:49Z Esamynn $

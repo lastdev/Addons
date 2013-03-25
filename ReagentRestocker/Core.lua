@@ -78,15 +78,15 @@ local moduleName = 'ReagentRestocker'
 
 -- Item property labels
 ITEM_NAME = "item_name"
-ITEM_LINK = "1"
-ITEM_RARITY = "2"
-ITEM_LEVEL = "3"
-ITEM_MIN_LEVEL = "4"
-ITEM_TYPE = "5"
-ITEM_SUB_TYPE = "6"
-ITEM_STACK_COUNT = "7"
-ITEM_EQUIP_LOC = "8"
-ITEM_TEXTURE = "9"
+ITEM_LINK = "item_link"
+ITEM_RARITY = "item_rarity"
+ITEM_LEVEL = "item_level"
+ITEM_MIN_LEVEL = "item_min_level"
+ITEM_TYPE = "item_type"
+ITEM_SUB_TYPE = "item_sub_type"
+ITEM_STACK_COUNT = "item_stack_count"
+ITEM_EQUIP_LOC = "item_euip_loc"
+ITEM_TEXTURE = "item_texture"
 ITEM_SELL_PRICE="item_sell"
 QUANTITY_TO_STOCK = "qty"
 LOW_WARNING="low_warning"
@@ -274,6 +274,24 @@ function getReputationName(number)
 	end
 end
 
+-- Does a deep copy of a table - used for creating new profiles.
+-- Modified to work with WoW. 
+-- http://lua-users.org/wiki/CopyTable
+function deepcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in pairs(orig) do
+            copy[deepcopy(orig_key)] = deepcopy(orig_value)
+        end
+        -- setmetatable(copy, deepcopy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
 --========================--
 -- Reagent Restocker Core --
 --========================--
@@ -301,17 +319,17 @@ function ReagentRestocker:safeGetItemInfo(itemID)
 			local _, _, _, tocversion = GetBuildInfo()
 			if ReagentRestockerDB.Items[itemID].tocversion ~= tocversion then
 				-- Item may have been deleted from WoW
-				return ReagentRestockerDB.Items[itemID].item_name.." (outdated)",ReagentRestockerDB.Items[itemID][ITEM_LINK],ReagentRestockerDB.Items[itemID][ITEM_RARITY],ReagentRestockerDB.Items[itemID][ITEM_LEVEL],ReagentRestockerDB.Items[itemID][ITEM_MIN_LEVEL],ReagentRestockerDB.Items[itemID][ITEM_TYPE],ReagentRestockerDB.Items[itemID][ITEM_SUB_TYPE],ReagentRestockerDB.Items[itemID][ITEM_STACK_COUNT],ReagentRestockerDB.Items[itemID][ITEM_EQUIP_LOC],ReagentRestockerDB.Items[itemID][ITEM_TEXTURE],ReagentRestockerDB.Items[itemID][ITEM_SELL_PRICE]
+				return ReagentRestockerDB.Items[itemID].item_name.." (outdated)",ReagentRestockerDB.Items[itemID].item_link,ReagentRestockerDB.Items[itemID].item_rarity,ReagentRestockerDB.Items[itemID].item_level,ReagentRestockerDB.Items[itemID].item_min_level,ReagentRestockerDB.Items[itemID].item_type,ReagentRestockerDB.Items[itemID].item_sub_type,ReagentRestockerDB.Items[itemID].item_stack_count,ReagentRestockerDB.Items[itemID].item_euip_loc,ReagentRestockerDB.Items[itemID].item_texture,ReagentRestockerDB.Items[itemID][ITEM_SELL_PRICE]
 			else
 				-- Item is current, but server has been reset (usually Tuesdays)
-				return ReagentRestockerDB.Items[itemID].item_name,ReagentRestockerDB.Items[itemID][ITEM_LINK],ReagentRestockerDB.Items[itemID][ITEM_RARITY],ReagentRestockerDB.Items[itemID][ITEM_LEVEL],ReagentRestockerDB.Items[itemID][ITEM_MIN_LEVEL],ReagentRestockerDB.Items[itemID][ITEM_TYPE],ReagentRestockerDB.Items[itemID][ITEM_SUB_TYPE],ReagentRestockerDB.Items[itemID][ITEM_STACK_COUNT],ReagentRestockerDB.Items[itemID][ITEM_EQUIP_LOC],ReagentRestockerDB.Items[itemID][ITEM_TEXTURE],ReagentRestockerDB.Items[itemID][ITEM_SELL_PRICE]
+				return ReagentRestockerDB.Items[itemID].item_name,ReagentRestockerDB.Items[itemID].item_link,ReagentRestockerDB.Items[itemID].item_rarity,ReagentRestockerDB.Items[itemID].item_level,ReagentRestockerDB.Items[itemID].item_min_level,ReagentRestockerDB.Items[itemID].item_type,ReagentRestockerDB.Items[itemID].item_sub_type,ReagentRestockerDB.Items[itemID].item_stack_count,ReagentRestockerDB.Items[itemID].item_euip_loc,ReagentRestockerDB.Items[itemID].item_texture,ReagentRestockerDB.Items[itemID][ITEM_SELL_PRICE]
 			end
 		else
 			local _, _, _, tocversion = GetBuildInfo()
-			ReagentRestockerDB.Items[itemID].item_name,ReagentRestockerDB.Items[itemID][ITEM_LINK],ReagentRestockerDB.Items[itemID][ITEM_RARITY],ReagentRestockerDB.Items[itemID][ITEM_LEVEL],ReagentRestockerDB.Items[itemID][ITEM_MIN_LEVEL],ReagentRestockerDB.Items[itemID][ITEM_TYPE],ReagentRestockerDB.Items[itemID][ITEM_SUB_TYPE],ReagentRestockerDB.Items[itemID][ITEM_STACK_COUNT],ReagentRestockerDB.Items[itemID][ITEM_EQUIP_LOC],ReagentRestockerDB.Items[itemID][ITEM_TEXTURE],ReagentRestockerDB.Items[itemID][ITEM_SELL_PRICE] = _G.GetItemInfo(itemID)
+			ReagentRestockerDB.Items[itemID].item_name,ReagentRestockerDB.Items[itemID].item_link,ReagentRestockerDB.Items[itemID].item_rarity,ReagentRestockerDB.Items[itemID].item_level,ReagentRestockerDB.Items[itemID].item_min_level,ReagentRestockerDB.Items[itemID].item_type,ReagentRestockerDB.Items[itemID].item_sub_type,ReagentRestockerDB.Items[itemID].item_stack_count,ReagentRestockerDB.Items[itemID].item_euip_loc,ReagentRestockerDB.Items[itemID].item_texture,ReagentRestockerDB.Items[itemID][ITEM_SELL_PRICE] = _G.GetItemInfo(itemID)
 			ReagentRestockerDB.Items[itemID].tocversion = tocversion -- Update toc version
 			if RRGlobal ~= nil and RRGlobal.Options.UseCache then RRGlobal.ItemCache[itemID]=ReagentRestockerDB.Items[itemID] end
-			return ReagentRestockerDB.Items[itemID].item_name,ReagentRestockerDB.Items[itemID][ITEM_LINK],ReagentRestockerDB.Items[itemID][ITEM_RARITY],ReagentRestockerDB.Items[itemID][ITEM_LEVEL],ReagentRestockerDB.Items[itemID][ITEM_MIN_LEVEL],ReagentRestockerDB.Items[itemID][ITEM_TYPE],ReagentRestockerDB.Items[itemID][ITEM_SUB_TYPE],ReagentRestockerDB.Items[itemID][ITEM_STACK_COUNT],ReagentRestockerDB.Items[itemID][ITEM_EQUIP_LOC],ReagentRestockerDB.Items[itemID][ITEM_TEXTURE],ReagentRestockerDB.Items[itemID][ITEM_SELL_PRICE]
+			return ReagentRestockerDB.Items[itemID].item_name,ReagentRestockerDB.Items[itemID].item_link,ReagentRestockerDB.Items[itemID].item_rarity,ReagentRestockerDB.Items[itemID].item_level,ReagentRestockerDB.Items[itemID].item_min_level,ReagentRestockerDB.Items[itemID].item_type,ReagentRestockerDB.Items[itemID].item_sub_type,ReagentRestockerDB.Items[itemID].item_stack_count,ReagentRestockerDB.Items[itemID].item_euip_loc,ReagentRestockerDB.Items[itemID].item_texture,ReagentRestockerDB.Items[itemID][ITEM_SELL_PRICE]
 		end
 	elseif RRGlobal ~= nil and RRGlobal.Options.UseCache and RRGlobal.ItemCache[itemID] then
 	
@@ -324,15 +342,15 @@ function ReagentRestocker:safeGetItemInfo(itemID)
 			local _, _, _, tocversion = GetBuildInfo()
 			if RRGlobal.ItemCache[itemID].tocversion ~= tocversion then
 				-- Item may have been deleted from WoW
-				return RRGlobal.ItemCache[itemID].item_name.." (outdated)",RRGlobal.ItemCache[itemID][ITEM_LINK],RRGlobal.ItemCache[itemID][ITEM_RARITY],RRGlobal.ItemCache[itemID][ITEM_LEVEL],RRGlobal.ItemCache[itemID][ITEM_MIN_LEVEL],RRGlobal.ItemCache[itemID][ITEM_TYPE],RRGlobal.ItemCache[itemID][ITEM_SUB_TYPE],RRGlobal.ItemCache[itemID][ITEM_STACK_COUNT],RRGlobal.ItemCache[itemID][ITEM_EQUIP_LOC],RRGlobal.ItemCache[itemID][ITEM_TEXTURE],RRGlobal.ItemCache[itemID][ITEM_SELL_PRICE]
+				return RRGlobal.ItemCache[itemID].item_name.." (outdated)",RRGlobal.ItemCache[itemID].item_link,RRGlobal.ItemCache[itemID].item_rarity,RRGlobal.ItemCache[itemID].item_level,RRGlobal.ItemCache[itemID].item_min_level,RRGlobal.ItemCache[itemID].item_type,RRGlobal.ItemCache[itemID].item_sub_type,RRGlobal.ItemCache[itemID].item_stack_count,RRGlobal.ItemCache[itemID].item_euip_loc,RRGlobal.ItemCache[itemID].item_texture,RRGlobal.ItemCache[itemID][ITEM_SELL_PRICE]
 			else
-				return RRGlobal.ItemCache[itemID].item_name,RRGlobal.ItemCache[itemID][ITEM_LINK],RRGlobal.ItemCache[itemID][ITEM_RARITY],RRGlobal.ItemCache[itemID][ITEM_LEVEL],RRGlobal.ItemCache[itemID][ITEM_MIN_LEVEL],RRGlobal.ItemCache[itemID][ITEM_TYPE],RRGlobal.ItemCache[itemID][ITEM_SUB_TYPE],RRGlobal.ItemCache[itemID][ITEM_STACK_COUNT],RRGlobal.ItemCache[itemID][ITEM_EQUIP_LOC],RRGlobal.ItemCache[itemID][ITEM_TEXTURE],RRGlobal.ItemCache[itemID][ITEM_SELL_PRICE]
+				return RRGlobal.ItemCache[itemID].item_name,RRGlobal.ItemCache[itemID].item_link,RRGlobal.ItemCache[itemID].item_rarity,RRGlobal.ItemCache[itemID].item_level,RRGlobal.ItemCache[itemID].item_min_level,RRGlobal.ItemCache[itemID].item_type,RRGlobal.ItemCache[itemID].item_sub_type,RRGlobal.ItemCache[itemID].item_stack_count,RRGlobal.ItemCache[itemID].item_euip_loc,RRGlobal.ItemCache[itemID].item_texture,RRGlobal.ItemCache[itemID][ITEM_SELL_PRICE]
 			end
 		else
 			local _, _, _, tocversion = GetBuildInfo()
-			RRGlobal.ItemCache[itemID].item_name,RRGlobal.ItemCache[itemID][ITEM_LINK],RRGlobal.ItemCache[itemID][ITEM_RARITY],RRGlobal.ItemCache[itemID][ITEM_LEVEL],RRGlobal.ItemCache[itemID][ITEM_MIN_LEVEL],RRGlobal.ItemCache[itemID][ITEM_TYPE],RRGlobal.ItemCache[itemID][ITEM_SUB_TYPE],RRGlobal.ItemCache[itemID][ITEM_STACK_COUNT],RRGlobal.ItemCache[itemID][ITEM_EQUIP_LOC],RRGlobal.ItemCache[itemID][ITEM_TEXTURE],RRGlobal.ItemCache[itemID][ITEM_SELL_PRICE] = _G.GetItemInfo(itemID)
+			RRGlobal.ItemCache[itemID].item_name,RRGlobal.ItemCache[itemID].item_link,RRGlobal.ItemCache[itemID].item_rarity,RRGlobal.ItemCache[itemID].item_level,RRGlobal.ItemCache[itemID].item_min_level,RRGlobal.ItemCache[itemID].item_type,RRGlobal.ItemCache[itemID].item_sub_type,RRGlobal.ItemCache[itemID].item_stack_count,RRGlobal.ItemCache[itemID].item_euip_loc,RRGlobal.ItemCache[itemID].item_texture,RRGlobal.ItemCache[itemID][ITEM_SELL_PRICE] = _G.GetItemInfo(itemID)
 			RRGlobal.ItemCache[itemID].tocversion = tocversion -- Update toc version
-			return RRGlobal.ItemCache[itemID].item_name,RRGlobal.ItemCache[itemID][ITEM_LINK],RRGlobal.ItemCache[itemID][ITEM_RARITY],RRGlobal.ItemCache[itemID][ITEM_LEVEL],RRGlobal.ItemCache[itemID][ITEM_MIN_LEVEL],RRGlobal.ItemCache[itemID][ITEM_TYPE],RRGlobal.ItemCache[itemID][ITEM_SUB_TYPE],RRGlobal.ItemCache[itemID][ITEM_STACK_COUNT],RRGlobal.ItemCache[itemID][ITEM_EQUIP_LOC],RRGlobal.ItemCache[itemID][ITEM_TEXTURE],RRGlobal.ItemCache[itemID][ITEM_SELL_PRICE]
+			return RRGlobal.ItemCache[itemID].item_name,RRGlobal.ItemCache[itemID].item_link,RRGlobal.ItemCache[itemID].item_rarity,RRGlobal.ItemCache[itemID].item_level,RRGlobal.ItemCache[itemID].item_min_level,RRGlobal.ItemCache[itemID].item_type,RRGlobal.ItemCache[itemID].item_sub_type,RRGlobal.ItemCache[itemID].item_stack_count,RRGlobal.ItemCache[itemID].item_euip_loc,RRGlobal.ItemCache[itemID].item_texture,RRGlobal.ItemCache[itemID][ITEM_SELL_PRICE]
 		end
 	
 	else
@@ -1262,6 +1280,25 @@ function ReagentRestocker:isUseless(itemID)
 
 		-- Warriors can use any weapon except the wands O.O
 		if itemType=="Weapon" then
+			if itemSubType=="Wands" then return true end;
+		end
+	end
+	
+	if myClass=="MONK" then
+		if itemType=="Armor" then
+			if itemSubType=="Shields" then return true end;
+			if itemSubType=="Plate" then return true end;
+			if itemSubType=="Mail" then return true end;
+		end
+		if itemType=="Weapon" then
+			if itemSubType=="Daggers" then return true end;
+			if itemSubType=="Two-Handed Axes" then return true end;
+			if itemSubType=="Two-Handed Swords" then return true end;
+			if itemSubType=="Two-Handed Maces" then return true end;
+			if itemSubType=="Bows" then return true end;
+			if itemSubType=="Crossbows" then return true end;
+			if itemSubType=="Guns" then return true end;
+			if itemSubType=="Thrown" then return true end;
 			if itemSubType=="Wands" then return true end;
 		end
 	end

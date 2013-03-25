@@ -6,7 +6,7 @@ XPerl_ProductName		= "|cFFD00000X-Perl|r UnitFrames"
 XPerl_ShortProductName	= "|cFFD00000X-Perl|r"
 XPerl_Author			= "|cFFFF8080Zek|r"
 XPerl_Description		= XPerl_ProductName.." by "..XPerl_Author
-XPerl_VersionNumber 	= "3.6.11"
+XPerl_VersionNumber 	= "3.6.30"
 XPerl_Version			= XPerl_Description.." - "..XPerl_VersionNumber
 XPerl_LongDescription	= "UnitFrame replacement for new look Player, Pet, Party, Target, Target's Target, Focus, Raid"
 XPerl_ModMenuIcon		= "Interface\\Icons\\INV_Misc_Gem_Pearl_02"
@@ -139,6 +139,10 @@ XPERL_HIGHLIGHT_SPELLS = {
 		[GetSpellInfo(33763)] = 8,			-- Lifebloom
 		[GetSpellInfo(28880)] = 15,			-- Gift of the Naaru (Racial)
 		[GetSpellInfo(61295)] = 15,			-- Riptide
+		[GetSpellInfo(115151)] = 18,		-- Renewing Mist
+		[GetSpellInfo(115175)] = 8,			-- Soothing Mist
+		[GetSpellInfo(124682)] = 6,			-- Enveloping Mist
+		[GetSpellInfo(124682)] = 30,		-- Eternal Flame
 	},
 	pomSpells = {
 		[GetSpellInfo(33076)] = 30			-- Prayer of Mending
@@ -147,37 +151,6 @@ XPERL_HIGHLIGHT_SPELLS = {
 		[GetSpellInfo(17)] = 30,			-- Power Word: Shield
 		[GetSpellInfo(76669)] = 6,			-- Illuminated Healing
 		[GetSpellInfo(974)] = 600			-- Earth Shield	(old id 32594)
-	},
-	healSpells = {
-		[GetSpellInfo(2061)] = 1.5,			-- Flash of Light (old id 25235)
-		[GetSpellInfo(2060)] = 3,			-- Greater Heal (old id 25213)
-		[GetSpellInfo(2050)] = 3,			-- Heal (old id 6064)
-		[GetSpellInfo(5185)] = 3,			-- Healing Touch (old id 26979)
-		[GetSpellInfo(8936)] = 1.5,			-- Regrowth (old id 26980)
-		[GetSpellInfo(331)] = 3,			-- Healing Wave (old id 25396)
-		[GetSpellInfo(8004)] = 1.5,			-- Lesser Healing Wave (old id 25420)
-		[GetSpellInfo(19750)] = 1.5,		-- Flash Heal (old id 27137)
-		[GetSpellInfo(635)] = 2.5,			-- Holy Light (old id 27136)
-		[GetSpellInfo(50464)] = 3.0			-- Nourish
-	},
-	buffSpells = {
-		PRIEST = {
-			[GetSpellInfo(21532)] = true	-- Power Word: Fortitude (old id 25389)
-		},
-	    DRUID = {
-			[GetSpellInfo(1126)] = true		-- Mark of the Wild (old id 26990)
-		},
-	    MAGE = {
-			[GetSpellInfo(1459)] = true		-- Arcane Intellect (old id 27126)
-		},
-	    PALADIN = {
-			[GetSpellInfo(19740)] = true,	-- Blessing of Might
-			[GetSpellInfo(20217)] = true	-- Blessing of Kings
-		},
-	},
-	groupHealSpells = {
-		[GetSpellInfo(596)] = 2.5,			-- Prayer of Healing (old id 25308)
-		[GetSpellInfo(1064)] = 2.5,			-- Chain Heal
 	},
 }
 

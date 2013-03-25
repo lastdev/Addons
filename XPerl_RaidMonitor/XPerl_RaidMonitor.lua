@@ -12,7 +12,7 @@ local GetNumGroupMembers = GetNumGroupMembers
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 
-XPerl_SetModuleRevision("$Revision: 761 $")
+XPerl_SetModuleRevision("$Revision: 825 $")
 
 XPERL_RAIDMON_UNIT_WIDTH_MIN = 50
 XPERL_RAIDMON_UNIT_WIDTH_MAX = 150
@@ -189,7 +189,7 @@ local function UpdateUnit(self)
 		self.bar.name:SetText(UnitName(id))
 
 		self.powerType = UnitPowerType(id)
-		self.mana, self.manaMax = UnitMana(id), UnitManaMax(id)
+		self.mana, self.manaMax = UnitPower(id), UnitPowerMax(id)
 		self.bar:SetMinMaxValues(0, self.manaMax)
 		self.bar:SetValue(self.mana)
 
@@ -477,7 +477,7 @@ function cast:UNIT_MANA(unit)
 		local id = SecureButton_GetUnit(u)
 		if (id) then
 			u.powerType = UnitPowerType(id)
-			u.mana, u.manaMax = UnitMana(id), UnitManaMax(id)
+			u.mana, u.manaMax = UnitPower(id), UnitPowerMax(id)
 			u.bar:SetMinMaxValues(0, u.manaMax)
 			u.bar:SetValue(u.mana)
 			ScaleBarColour(u.bar, u.mana / u.manaMax, "rbg")

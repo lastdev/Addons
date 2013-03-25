@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - WoWEcon price statistics module
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 	Revision: $Id: WOWEcon.lua 5323 2012-08-16 15:31:03Z brykrys $
 	URL: http://auctioneeraddon.com/
 

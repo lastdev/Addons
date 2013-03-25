@@ -6,11 +6,12 @@ DBM_HOW_TO_USE_MOD					= "歡迎使用DBM。在聊天頻道輸入 /dbm 打開設
 DBM_CORE_LOAD_MOD_ERROR				= "載入%s模組時發生錯誤：%s"
 DBM_CORE_LOAD_MOD_SUCCESS			= "成功載入%s模組。輸入/dbm或/dbm help有更多選項。"
 DBM_CORE_LOAD_GUI_ERROR				= "無法載入圖形介面：%s"
+DBM_CORE_LOAD_GUI_COMBAT			= "圖形介面不能在戰鬥中初始化。請先在於戰鬥外讀取圖形介面，這樣就能夠在戰鬥中使用。"
 
 DBM_CORE_COMBAT_STARTED				= "%s開戰。祝好運與盡興! :)"
 DBM_CORE_BOSS_DOWN					= "擊敗%s，經過%s!"
-DBM_CORE_BOSS_DOWN_L				= "擊敗%s!本次經過%s，上次經過%s，最快紀錄為%s。你總共擊殺了%d次。"
-DBM_CORE_BOSS_DOWN_NR				= "擊敗%s!經過%s! 這是一個新記錄! (舊紀錄為%s) 你總共擊殺了%d次。"
+DBM_CORE_BOSS_DOWN_L				= "擊敗%s!本次經過%s，上次經過%s，最快紀錄為%s。你總共戰勝了%d次。"
+DBM_CORE_BOSS_DOWN_NR				= "擊敗%s!經過%s! 這是一個新記錄! (舊紀錄為%s) 你總共戰勝了%d次。"
 DBM_CORE_COMBAT_ENDED_AT			= "%s(%s)的戰鬥經過%s結束。"
 DBM_CORE_COMBAT_ENDED_AT_LONG		= "%s(%s)的戰鬥經過%s結束。你在這個難度總共滅團了%d次。"
 DBM_CORE_COMBAT_STATE_RECOVERED		= "%s的戰鬥在%s前開始，恢復計時器中..."
@@ -84,6 +85,7 @@ DBM_CORE_RANGECHECK_OPTION_SLOW		= "慢(CPU使用量低)"
 DBM_CORE_RANGECHECK_OPTION_AVERAGE	= "中"
 DBM_CORE_RANGECHECK_OPTION_FAST		= "快(幾近即時)"
 DBM_CORE_RANGERADAR_HEADER			= "距離雷達(%d碼)"
+DBM_CORE_RANGERADAR_IN_RANGE_TEXT	= "%d玩家在範圍內"
 
 DBM_CORE_INFOFRAME_LOCK				= "鎖定框架"
 DBM_CORE_INFOFRAME_HIDE				= "隱藏"
@@ -112,7 +114,11 @@ DBM_CORE_BOSSHEALTH_HIDE_FRAME		= "關閉血量框架"
 DBM_CORE_ALLIANCE				= "聯盟"
 DBM_CORE_HORDE					= "部落"
 
-DBM_CORE_UNKNOWN				= "未知"
+DBM_CORE_UNKNOWN					= "未知"
+DBM_CORE_LEFT						= "左"
+DBM_CORE_RIGHT						= "右"
+DBM_CORE_BACK						= "後"
+DBM_CORE_FRONT						= "前"
 
 DBM_CORE_BREAK_START				= "現在開始休息-你有%s分鐘!"
 DBM_CORE_BREAK_MIN					= "%s分鐘後休息時間結束!"
@@ -207,7 +213,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
 	you						= "你中了%s",
 	target					= "%%s中了%s",
 	close					= "你附近的%%s中了%s",
-	move					= "%s - 快離開",
+	move					= "%s - 快移動",
 	run						= "%s - 快跑開",
 	cast					= "%s - 停止施法",
 	stack					= "%s(%%d)",

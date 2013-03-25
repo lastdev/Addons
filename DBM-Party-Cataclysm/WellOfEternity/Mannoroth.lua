@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(292, "DBM-Party-Cataclysm", 13, 185)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetCreatureID(54969)
 mod:SetModelID(38996)
 mod:SetZone()
@@ -21,6 +21,7 @@ local timerFelStormCD			= mod:NewCDTimer(29, 103888)
 local timerTyrandeHelp			= mod:NewTimer(82, "TimerTyrandeHelp", 102472)
 
 local felstorms = 0
+
 function mod:OnCombatStart(delay)
 	timerFelStormCD:Start(15-delay)
 	timerTyrandeHelp:Start(-delay)

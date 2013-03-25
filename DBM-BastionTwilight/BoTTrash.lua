@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BoTrash", "DBM-BastionTwilight")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
 mod:SetModelID(37193)
 mod:SetZone()
 
@@ -46,7 +46,7 @@ end
 
 function mod:RuptureTarget(sGUID)
 	local targetname = nil
-	for i=1, DBM:GetGroupMembers() do
+	for i=1, DBM:GetNumGroupMembers() do
 		if UnitGUID("raid"..i.."target") == sGUID then
 			targetname = DBM:GetUnitFullName("raid"..i.."targettarget")
 			break
@@ -58,7 +58,7 @@ end
 
 function mod:FlameStrikeTarget(sGUID)
 	local targetname = nil
-	for i=1, DBM:GetGroupMembers() do
+	for i=1, DBM:GetNumGroupMembers() do
 		if UnitGUID("raid"..i.."target") == sGUID then
 			targetname = DBM:GetUnitFullName("raid"..i.."targettarget")
 			break
@@ -93,7 +93,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(93362, 93383) then
+	if args:IsSpellID(93362) then
 		self:ScheduleMethod(0.2, "FlameStrikeTarget", args.sourceGUID)
 		self:SetFlamestrike()
 	elseif args:IsSpellID(93377) then
@@ -102,8 +102,8 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
-function mod:SPELL_DAMAGE(sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId)
-	if (spellId == 93383 or spellId == 93362) and destGUID == UnitGUID("player") and self:AntiSpam() then
+function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+	if spellId == 93362 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnFlameStrike:Show()
 	end
 end

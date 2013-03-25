@@ -1,3 +1,50 @@
+== Version 3.3.2
+NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
+* May be slightly nicer for lower level warriors who do not yet have Colossus Smash.
+
+== Version 3.3.1
+* Fury: Bugfix - fixed a Lua error encountered during some of the rarer cases Wild Strike should flash.
+
+== Version 3.3.0
+NOTE: Your options will be reset when you upgrade to this version.
+* Slightly tweaked how it chooses which shout to flash.
+* Repackaging so that Bitten's SpellFlash Library is included with the addon, instead of downloaded separately.
+* Several other internal changes.
+* Arms & Fury: Updated rotations to the lastest in Simulationcraft.
+* All: Removed Deadly Calm.
+* All: Adjusted uses of Impending Victory for heals to the new values in 5.2.
+
+== Version 3.2.0
+* Arms & Fury: Added Avatar & Bloodbath.
+* Arms & Fury: Researched & updated the rotations for higher dps.
+* Arms & Fury: Detects 4pT14 & adjusts flashing for cooldowns accordingly.
+* Arms & Fury: Added Enraged Regeneration.
+* Arms & Fury: Now flashes Impending Victory / Victory Rush if you could use the heal.
+* Arms & Fury: No longer flashes Heroic Leap when solo.
+* Fury: Bugfix - Wild Strike was not flashing with less than 30 rage, even with Bloodsurge.
+* Protection: Bugfix - Enraged Regeneration was not flashing with less than 60 rage, even when enraged.
+* All: Added Sunder Armor (in case, for some reason, you are the one maintaining it).
+
+== Version 3.1.0
+* Protection: Tweaked the mitigation cooldown priorities.
+* Protection: Berserker Rage will not flash when you are not the current tank.
+
+== Version 3.0.1
+* Arms: Allow for either Battle or Berserker Stance.
+* Arms: Bugfix - Bladestorm was depending on the cooldown of Bloodthirst (which is obviously never on cooldown in Arms) instead of Mortal Strike.
+* Fury: Deadly Calm now only flashes in the Execute phase when you have very high rage, since Heroic Strike will not flash until that time anyway.
+* Arms/Fury: Bugfix - The Protection rotation inadvertently changed when Arms & Fury would flash Impending Victory.  Fixed to make them independent, like they should be.
+
+== Version 3.0.0
+* Protection: Added a protection rotation.
+
+== Version 2.2.4
+* Making the "Out of Date" status go away.  Please report any real issues w/ the new patch.
+
+== Version 2.2.3
+* Fury: Now flashes Pummel to interrupt (was previously only working for Arms).
+* All: Now flashes Disrupting Shout to interrupt.
+
 == Version 2.2.2
 * Fury: Bugfix - the execute phase was not being flashed like it should.
 * Fury: Bugfix - the changes to Deadly Calm in the last release were being applied to Fury, when they are meant only for Arms.

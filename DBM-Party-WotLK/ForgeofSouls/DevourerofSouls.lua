@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("DevourerofSouls", "DBM-Party-WotLK", 14)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(36502)
 mod:SetModelID(30148)
 
@@ -26,14 +26,14 @@ local specwarnPhantomBlast		= mod:NewSpecialWarningInterrupt(68982, false)
 mod:AddBoolOption("SetIconOnMirroredTarget", true)
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(68982, 70322) then						-- Phantom Blast
+	if args:IsSpellID(68982) then						-- Phantom Blast
 		warnPhantomBlast:Show()
 		specwarnPhantomBlast:Show(args.sourceName)
-	elseif args:IsSpellID(68820) then							-- Well of Souls
+	elseif args:IsSpellID(68820) then					-- Well of Souls
 		warnWellofSouls:Show()
-	elseif args:IsSpellID(68939) then							-- Unleashed Souls
+	elseif args:IsSpellID(68939) then					-- Unleashed Souls
 		warnUnleashedSouls:Show()
-	elseif args:IsSpellID(68899, 70324) then					-- Wailing Souls
+	elseif args:IsSpellID(68899) then					-- Wailing Souls
 		warnWailingSouls:Show()
 		specwarnWailingSouls:Show()
 	end

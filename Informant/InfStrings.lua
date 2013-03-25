@@ -5,7 +5,7 @@
 
 	AddOn: Informant
 	Revision: $Id: InfStrings.lua 5346 2012-09-06 04:00:44Z LocalizerAutoCommit $
-	Version: 5.15.5365 (LikeableLyrebird)
+	Version: 5.15.5380 (LikeableLyrebird)
 
 	License:
 		This program is free software; you can redistribute it and/or

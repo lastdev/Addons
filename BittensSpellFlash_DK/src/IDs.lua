@@ -1,7 +1,12 @@
-local AddonName, a = ...
-if a.BuildFail(50000) then return end
+local addonName, a = ...
+local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
+
+a.AddonName = addonName
+c.Init(a)
 
 a.SpellIDs = {
+	["Anti-Magic Shell"] = 48707,
+	["Anti-Magic Zone"] = 50461,
 	["Blood Boil"] = 48721,
 	["Blood Charge"] = 114851,
 	["Blood Plague"] = 55078,
@@ -20,6 +25,7 @@ a.SpellIDs = {
 	["Death Pact"] = 48743,
 	["Death Siphon"] = 108196,
 	["Death Strike"] = 49998,
+	["Ebon Plaguebringer"] = 51160,
 	["Empower Rune Weapon"] = 47568,
 	["Festering Strike"] = 85948,
 	["Freezing Fog"] = 59052,
@@ -57,11 +63,6 @@ a.SpellIDs = {
 	["Vampiric Blood"] = 55233,
 	
 	-- Items
-	["Fire of the Deep"] = 77117,
-	["Elusive"] = 107951,
-	["Master Tactician Heroic"] = 109776,
-	["Master Tactician LFR"] = 109774, 
-	["Master Tactician"] = 107986,
 }
 
 a.TalentIDs = {
@@ -74,9 +75,15 @@ a.TalentIDs = {
 }
 
 a.GlyphIDs = {
-	
+	["Icebound Fortitude"] = 58673,
 }
 
 a.EquipmentSets = {
-	
+	BloodT14 = {
+	    HeadSlot = { 86656, 85316, 86920 },
+	    ShoulderSlot = { 86654, 85314, 86922 },
+	    ChestSlot = { 86658, 85318, 86918 },
+	    HandsSlot = { 86657, 85317, 86919 },
+	    LegsSlot = { 86655, 85315, 86921 },
+	}
 }

@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 498 2012-09-05T10:34:56Z
+    Revision: 560 2012-11-12T23:10:02Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -138,14 +138,14 @@ function Armory:AddEquipmentSet(tooltip)
         if ( link and IsEquippableItem(link) ) then
             local _, _, _, _, _, _, _, _, equipLoc = GetItemInfo(link);
             if ( equipLoc ~= "" ) then
-                local itemId = tonumber(self:GetItemId(link));
+                local itemId = self:GetItemId(link);
                 local name;
                 table.wipe(gearSets);
                 for id = 1, numSets do
                     name = self:GetEquipmentSetInfo(id);
                     self:GetEquipmentSetItemIDs(id, gearSetItems);
                     for i = EQUIPPED_FIRST, EQUIPPED_LAST do
-                        if ( gearSetItems[i] == itemId ) then
+                        if ( gearSetItems[i] == tonumber(itemId) ) then
                             table.insert(gearSets, name);
                             break;
                         end  

@@ -1,9 +1,170 @@
-<!-- Revision: 490 2012-09-04T09:42:28Z -->
+<!-- Revision: 585 2013-03-02T14:19:03Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\FrameXML\UI.xsd">
   <Script file="ArmoryPVPFrame.lua"/>
-  <Button name="ArmoryPVPTeamBorderTemplate" inherits="PVPTeamBorderTemplate" virtual="true">
+  <Frame name="ArmoryPVPTeamStandardTemplate" virtual="true">
+    <Size>
+      <AbsDimension x="64" y="64"/>
+    </Size>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture name="$parentBar" file="Interface\PVPFrame\UI-Character-PVP-Elements">
+          <Size>
+            <AbsDimension x="50" y="13"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="-8" y="6"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0" right="0.099609375" top="0.91015625" bottom="0.935546875"/>
+        </Texture>
+      </Layer>
+      <Layer level="BORDER">
+        <Texture name="$parentBanner">
+          <Size>
+            <AbsDimension x="45" y="90"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOP" relativeTo="$parentBar" relativePoint="TOP">
+              <Offset>
+                <AbsDimension x="5" y="-2"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+      </Layer>
+      <Layer level="ARTWORK">
+        <Texture name="$parentBorder">
+          <Size>
+            <AbsDimension x="45" y="90"/>
+          </Size>
+          <Anchors>
+            <Anchor point="CENTER" relativeTo="$parentBanner" relativePoint="CENTER"/>
+          </Anchors>
+        </Texture>
+      </Layer>
+      <Layer level="OVERLAY">
+        <Texture name="$parentEmblem">
+          <Size>
+            <AbsDimension x="24" y="24"/>
+          </Size>
+          <Anchors>
+            <Anchor point="CENTER" relativeTo="$parentBorder" relativePoint="CENTER">
+              <Offset>
+                <AbsDimension x="-5" y="17"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+      </Layer>
+    </Layers>
     <Scripts>
+      <OnLoad>
+        self:SetAlpha(0.1);
+      </OnLoad>
+    </Scripts>
+  </Frame>
+  <Button name="ArmoryPVPTeamBorderTemplate" virtual="true">
+    <Size>
+      <AbsDimension x="300" y="78"/>
+    </Size>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture name="$parentTop" file="Interface\PVPFrame\UI-Character-PVP-Elements">
+          <Size>
+            <AbsDimension x="279" y="11"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="0" y="-1"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0" right="0.544921875" top="0.849609375" bottom="0.87109375"/>
+        </Texture>
+        <Texture name="$parentLeft" file="Interface\PVPFrame\UI-Character-PVP-Elements">
+          <Size>
+            <AbsDimension x="10" y="55"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parentTop" relativePoint="BOTTOMLEFT">
+              <Offset>
+                <AbsDimension x="0" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0.556640625" right="0.576171875" top="0.705078125" bottom="0.82421875"/>
+        </Texture>
+        <Texture name="$parentBackground">
+          <Size>
+            <AbsDimension x="265" y="65"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parentLeft" relativePoint="TOPRIGHT">
+              <Offset>
+                <AbsDimension x="-1" y="4"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <Color r="0" g="0" b="0"/>
+        </Texture>
+        <Texture name="$parentRight" file="Interface\PVPFrame\UI-Character-PVP-Elements">
+          <Size>
+            <AbsDimension x="10" y="55"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPRIGHT" relativeTo="$parentTop" relativePoint="BOTTOMRIGHT">
+              <Offset>
+                <AbsDimension x="0" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0.576171875" right="0.595703125" top="0.705078125" bottom="0.82421875"/>
+        </Texture>
+        <Texture name="$parentBottom" file="Interface\PVPFrame\UI-Character-PVP-Elements">
+          <Size>
+            <AbsDimension x="279" y="17"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parentLeft" relativePoint="BOTTOMLEFT">
+              <Offset>
+                <AbsDimension x="0" y="1"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0" right="0.544921875" top="0.87109375" bottom="0.90625"/>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Frame name="$parentHighlight" hidden="true">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentTop">
+            <Offset>
+              <AbsDimension x="-3" y="7"/>
+            </Offset>
+          </Anchor>
+          <Anchor point="BOTTOMRIGHT" relativeTo="$parentBottom">
+            <Offset>
+              <AbsDimension x="8" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Backdrop edgeFile="Interface\PVPFrame\UI-Character-PVP-Highlight" tile="true">
+          <EdgeSize>
+            <AbsValue val="32"/>
+          </EdgeSize>
+        </Backdrop>
+      </Frame>
+    </Frames>
+    <Scripts>
+      <OnLoad>
+        self:SetAlpha(0.4);
+      </OnLoad>
       <OnEnter>
         ArmoryPVPTeam_OnEnter(self);
       </OnEnter>
@@ -229,14 +390,14 @@
         </Layers>
         <Scripts>
           <OnEnter>
-            self:GetParent():LockHighlight();
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-            if ( self.tooltip ) then
-              GameTooltip:SetText(self.tooltip);
+            self:GetParent():LockHighlight(); 
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT"); 
+            if ( self.tooltip ) then 
+              GameTooltip:SetText(self.tooltip); 
             end
           </OnEnter>
           <OnLeave>
-            self:GetParent():UnlockHighlight();
+            self:GetParent():UnlockHighlight(); 
             GameTooltip:Hide();
           </OnLeave>
         </Scripts>
@@ -693,7 +854,7 @@
         </Layers>
       </Frame>
       <!-- Arena Teams -->
-      <Frame name="ArmoryPVPTeam1Standard" inherits="PVPTeamStandardTemplate">
+      <Frame name="ArmoryPVPTeam1Standard" inherits="ArmoryPVPTeamStandardTemplate">
         <Anchors>
           <Anchor point="LEFT" relativeTo="ArmoryPVPFrameBackground">
             <Offset>
@@ -731,7 +892,7 @@
           </Frame>
         </Frames>
       </Button>
-      <Frame name="ArmoryPVPTeam2Standard" inherits="PVPTeamStandardTemplate">
+      <Frame name="ArmoryPVPTeam2Standard" inherits="ArmoryPVPTeamStandardTemplate">
         <Anchors>
           <Anchor point="LEFT" relativeTo="ArmoryPVPFrameBackground">
             <Offset>
@@ -769,7 +930,7 @@
           </Frame>
         </Frames>
       </Button>
-      <Frame name="ArmoryPVPTeam3Standard" inherits="PVPTeamStandardTemplate">
+      <Frame name="ArmoryPVPTeam3Standard" inherits="ArmoryPVPTeamStandardTemplate">
         <Anchors>
           <Anchor point="LEFT" relativeTo="ArmoryPVPFrameBackground">
             <Offset>
@@ -1015,7 +1176,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>
-            WhoFrameColumn_SetWidth(self, 110);
+            WhoFrameColumn_SetWidth(self, 110); 
             self.sortType = "name";
           </OnLoad>
         </Scripts>
@@ -1030,7 +1191,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>
-            WhoFrameColumn_SetWidth(self, 80);
+            WhoFrameColumn_SetWidth(self, 80); 
             self.sortType = "class";
           </OnLoad>
         </Scripts>
@@ -1045,7 +1206,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>
-            WhoFrameColumn_SetWidth(self, 55);
+            WhoFrameColumn_SetWidth(self, 55); 
             self.sortType = "seasonplayed";
           </OnLoad>
         </Scripts>
@@ -1060,8 +1221,8 @@
         </Anchors>
         <Scripts>
           <OnLoad>
-            WhoFrameColumn_SetWidth(self, 75);
-            self:GetFontString():SetWidth(75);	--Deal with a problem of size in Russian client
+            WhoFrameColumn_SetWidth(self, 75); 
+            self:GetFontString():SetWidth(75);	--Deal with a problem of size in Russian client 
             self.sortType = "seasonwon";
           </OnLoad>
         </Scripts>
@@ -1076,7 +1237,7 @@
         </Anchors>
         <Scripts>
           <OnLoad>
-            WhoFrameColumn_SetWidth(self, 59);
+            WhoFrameColumn_SetWidth(self, 59); 
             self.sortType = "rating";
           </OnLoad>
         </Scripts>

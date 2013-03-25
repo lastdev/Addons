@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 521 2012-09-16T10:38:05Z
+    Revision: 580 2013-01-22T20:01:17Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -268,8 +268,8 @@ function ArmoryLookupChannelDropDown_Initialize()
         CHANNEL = function() return Armory.channel end,
         TARGET = ArmoryLookupFrame_IsTargetSelected,
         GUILD = function() return IsInGuild() end,
-        RAID = function() return IsInRaid() end,
-        PARTY = function() return IsInGroup() and not IsInRaid() end
+        RAID = function() return IsInRaid() and not IsPartyLFG() end,
+        PARTY = function() return IsInGroup() and not (IsInRaid() or IsPartyLFG()) end
     };
 
     info.func = ArmoryLookupChannelDropDown_OnClick;
@@ -982,7 +982,7 @@ function ArmoryLookupFrame_FindItem(exact, search)
                 for index = 1, numSlots do
                     link = Armory:GetContainerItemLink(id, index);
                     name = Armory:GetNameFromLink(link);
-                    itemId = Armory:GetItemId(link);
+                    itemId = Armory:GetQualifiedItemId(link);
                     if ( itemId and ArmoryLookupFrame_IsMatch(name, search, exact) ) then
                         _, itemCount = Armory:GetContainerItemInfo(id, index);
                         if ( itemCounts[itemId] ) then
@@ -1257,15 +1257,15 @@ function ArmoryLookupFrame_ParseCharacterTalents(owner, talentGroup, fields)
     
     if ( talentGroup == 1 ) then
         if ( active ) then
-            name = TALENT_SPEC_PRIMARY_ACTIVE;
+            name = SPECIALIZATION_PRIMARY_ACTIVE;
         else
-            name = TALENT_SPEC_PRIMARY;
+            name = SPECIALIZATION_PRIMARY;
         end
     else
         if ( active ) then
-            name = TALENT_SPEC_SECONDARY_ACTIVE;
+            name = SPECIALIZATION_SECONDARY_ACTIVE;
         else
-            name = TALENT_SPEC_SECONDARY;
+            name = SPECIALIZATION_SECONDARY;
         end
     end
     name = name.." (".._G[role]..")";

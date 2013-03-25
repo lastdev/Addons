@@ -186,8 +186,18 @@ AddArtifact(64459, 90988, 0,  45)  -- Intricate Treasure Chest Key
 AddArtifact(64461, 91008, 0,  45)  -- Scramseax
 AddArtifact(64467, 91084, 0,  45)  -- Thorned Necklace
 
--- currentRace = 10	-- Other
--- AddArtifact(0, 0, 0,  0)  -- Placeholder
+currentRace = 10	-- Mantid
+AddArtifact(95391, 139786, 3, 180)	-- Mantid Sky Reaver
+AddArtifact(95392, 139787, 3, 180)	-- Sonic Pulse Generator
+
+AddArtifact(95375, 139776, 0, 50)	-- Banner of the Mantid Empire
+AddArtifact(95376, 139779, 0, 50)	-- Ancient Sap Feeder
+AddArtifact(95377, 139780, 0, 50)	-- The Praying Mantid
+AddArtifact(95378, 139781, 0, 50)	-- Inert Sound Beacon
+AddArtifact(95379, 139782, 0, 50)	-- Remains of a Paragon
+AddArtifact(95380, 139783, 0, 50)	-- Mantid Lamp
+AddArtifact(95381, 139784, 0, 50)	-- Pollen Collector
+AddArtifact(95382, 139785, 0, 50)	-- Kypari Sap Container
 
 currentRace = 11	-- Pandaren
 AddArtifact(89685, 113981, 3, 180)  -- Spear of Xuen

@@ -15,7 +15,7 @@ L:SetOptionLocalization{
 	TimerAddsSpawn	= "Show timer for first adds spawning"
 }
 L:SetMiscLocalization{
-	Phase2Emote	= "Orb of Domination loses power and shuts off!",
+	Phase2Emote	= "loses power and shuts off!",
 	YellPull 	= "Intruders have breached the hatchery! Sound the alarm! Protect the eggs at all costs!\r\n"--Yes this yell actually has a return and new line in it. as grabbed by transcriptor
 }
 -------------------
@@ -24,7 +24,7 @@ L:SetMiscLocalization{
 L = DBM:GetModLocalization("Vaelastrasz")
 
 L:SetGeneralLocalization{
-	name = "Vaelastrasz the Corrupt"
+	name				= "Vaelastrasz the Corrupt"
 }
 
 L:SetTimerLocalization{
@@ -44,7 +44,11 @@ L:SetMiscLocalization{
 L = DBM:GetModLocalization("Broodlord")
 
 L:SetGeneralLocalization{
-	name = "Broodlord Lashlayer"
+	name	= "Broodlord Lashlayer"
+}
+
+L:SetMiscLocalization{
+	Pull	= "None of your kind should be here!  You've doomed only yourselves!"
 }
 
 ---------------
@@ -138,5 +142,6 @@ L:SetMiscLocalization{
 	YellWarlock	= "Warlocks, you shouldn't be playing with magic you don't understand. See what happens?",
 	YellHunter	= "Hunters and your annoying pea-shooters!",
 	YellMage	= "Mages too? You should be more careful when you play with magic...",
-	YellDK		= "Death Knights... get over here!"
+	YellDK		= "Death Knights... get over here!",
+	YellMonk	= "Monk",
 }

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI
-	Version: 5.15.5365 (LikeableLyrebird)
-	Revision: $Id: SearchMain.lua 5331 2012-08-19 02:43:59Z ccox $
+	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: SearchMain.lua 5373 2012-10-06 06:23:34Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This Addon provides a Search tab on the AH interface, which allows
@@ -152,6 +152,7 @@ do -- limit scope of locals
 
 	local function EnchantrixFunc(model, link, serverKey)
 		-- GetReagentPrice does not handle serverKey, and it does not return a seen count
+		if serverKey and serverKey ~= coreResources.ServerKeyCurrent then return end
 		local extra, mkt, five, _
 		_, extra = Enchantrix.Util.GetPricingModel()
 		_, _, mkt, five = Enchantrix.Util.GetReagentPrice(link, extra)
@@ -203,26 +204,53 @@ else
 		end)
 	end
 end
---code taken from appraiser
 --The rescan method is a button that is displayed only if the searcher implements a rescan function. The searcher then passes any itemlinks it wants refrreshed data on
---this will accept a text search term as well as a itemlink
+--Will accept either full search details or a link (item or battlepet)
 function lib.RescanAuctionHouse(name, minUseLevel, maxUseLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
-	if not name or type(name) ~= "string" then aucPrint("Invalid input SearchUI RescanAuctionHouse", name, minUseLevel, maxUseLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex) return end
-	--if we are passed just a itemlink extract what data we can to filter our scan
-	if name and name:match("^(|c%x+|Hitem.+|h%[.+%])") then
-		--look up the itemlink info or pass it as a plain text if no info is returned
-		name, _, qualityIndex, _, minUseLevel, itemType, itemSubType, _ = GetItemInfo(name)
-
-		for catId, catName in pairs(AucAdvanced.Const.CLASSES) do
-			if catName == itemType then
-				classIndex = catId
-				for subId, subName in pairs(AucAdvanced.Const.SUBCLASSES[classIndex]) do
-					if subName == itemSubType then
-						subclassIndex = subId
-						break
-					end
+	if not name or type(name) ~= "string" then return end
+	-- we should either have a plain name or a link: a link will contain eaxctly 5 '|' characters
+	-- a plain text name should not contain any
+	local _, hasBar, link, _, _, has5Bar, has6Bar = strsplit("|", name)
+	if hasBar then -- contains at least 1 '|'
+		if has6Bar or not has5Bar then -- check there are exactly 5 '|'
+			return
+		end
+		local hyperlink = name
+		name = nil
+		local lType, id, _, quality = strsplit(":", link)
+		-- note: lType should have a leading 'H'
+		if lType == "Hitem" then
+			local na, _, qu, _, ulvl, itype, isub = GetItemInfo(hyperlink)
+			if na then
+				-- override function parameters with values for this link
+				name = na
+				minUseLevel = ulvl
+				maxUseLevel = ulvl
+				invTypeIndex = nil
+				classIndex = Const.CLASSESREV[itype]
+				if classIndex then
+					subclassIndex = Const.SUBCLASSESREV[itype][isub]
+				else
+					subclassIndex = nil
 				end
-				break
+				isUsable = nil
+				qualityIndex = qu
+			end
+		elseif lType == "Hbattlepet" then
+			id = tonumber(id)
+			if id then
+				local na, _, ty = C_PetJournal.GetPetInfoBySpeciesID(id)
+				if na then
+					local _, _, _, _, ulvl, itype = GetItemInfo(82800) -- Pet Cage
+					name = na
+					minUseLevel = ulvl
+					maxUseLevel = ulvl
+					invTypeIndex = nil
+					classIndex = Const.CLASSESREV[itype]
+					subclassIndex = ty
+					isUsable = nil
+					qualityIndex = tonumber(quality)
+				end
 			end
 		end
 	end
@@ -302,9 +330,13 @@ function lib.Processors.buyqueue(callbackType, ...)
 	end
 end
 
-function lib.Processors.tooltip(callbackType, tooltip, name, hyperlink, quality, quantity, cost, additional)
+function lib.Processors.itemtooltip(callbackType, tooltip, hyperlink, serverKey, quantity, decoded, additional, order)
 	if not additional or additional.event ~= "SetAuctionItem" then
 		--this isn't an auction, so we're not interested
+		return
+	end
+	if order ~= 1 then
+		-- only once per tooltip
 		return
 	end
 	if not lib.GetSetting("debug.show") then
@@ -317,53 +349,8 @@ function lib.Processors.tooltip(callbackType, tooltip, name, hyperlink, quality,
 		id = button:GetID() + FauxScrollFrame_GetOffset(BrowseScrollFrame) --without CompactUI
 	end
 
-	local name, _, count, _, canUse, level, levelColHeader, minBid, minInc, buyout, curBid, isHigh, owner = GetAuctionItemInfo("list", id)
-	local price
-	if curBid > 0 then
-		price = curBid + minInc
-		if buyout > 0 and price > buyout then
-			price = buyout
-		end
-	elseif minBid > 0 then
-		price = minBid
-	else
-		price = 1
-	end
-	if not level or levelColHeader ~= "REQ_LEVEL_ABBR" then
-		level = 1
-	end
-	owner = owner or ""
-	local linkType, itemid, suffix, factor, enchant, seed = AucAdvanced.DecodeLink(hyperlink)
-	if linkType ~= "item" then return end -- temp fix: ignore battlepet links
-	local timeleft = GetAuctionItemTimeLeft("list", id)
-	local _, _, _, iLevel, _, iType, iSubType, stack, iEquip = GetItemInfo(hyperlink)
-	if not iType then return end
-	iEquip = Const.EquipEncode[iEquip]
-	local ItemTable = {}
-	-- put the data into a table laid out the same way as the AAdv Scandata, as that's what the searchers need
-	ItemTable[Const.LINK]    = hyperlink
-	ItemTable[Const.ILEVEL]  = iLevel
-	ItemTable[Const.ITYPE]   = iType
-	ItemTable[Const.ISUB]    = iSubType
-	ItemTable[Const.IEQUIP]  = iEquip
-	ItemTable[Const.PRICE]   = price
-	ItemTable[Const.TLEFT]   = timeleft
-	ItemTable[Const.NAME]    = name
-	ItemTable[Const.COUNT]   = count
-	ItemTable[Const.QUALITY] = quality
-	ItemTable[Const.CANUSE]  = canUse
-	ItemTable[Const.ULEVEL]  = level
-	ItemTable[Const.MINBID]  = minBid
-	ItemTable[Const.MININC]  = minInc
-	ItemTable[Const.BUYOUT]  = buyout
-	ItemTable[Const.CURBID]  = curBid
-	ItemTable[Const.AMHIGH]  = isHigh
-	ItemTable[Const.SELLER]  = owner
-	ItemTable[Const.ITEMID]  = itemid
-	ItemTable[Const.SUFFIX]  = suffix
-	ItemTable[Const.FACTOR]  = factor
-	ItemTable[Const.ENCHANT]  = enchant
-	ItemTable[Const.SEED]  = seed
+	local ItemTable = AucAdvanced.Scan.GetAuctionItem("list", id)
+	if not ItemTable then return end
 
 	tooltip:AddLine("SearchUI:", 1, 0.7, 0.3)
 
@@ -389,6 +376,7 @@ function lib.Processors.tooltip(callbackType, tooltip, name, hyperlink, quality,
 		tooltip:AddLine("  No debugging enabled", 1, 0.7, 0.3)
 	end
 end
+lib.Processors.battlepettooltip = lib.Processors.itemtooltip
 
 -- Default setting values
 local settingDefaults = {
@@ -1204,13 +1192,6 @@ function private.MakeGuiConfig()
 	gui.saves:SetPoint("TOPRIGHT", gui, "TOPRIGHT", -5,-7)
 	gui.saves:SetPoint("LEFT", gui:GetButton(1), "RIGHT", 10,0)
 	gui.saves:SetHeight(28)
---	gui.saves:SetBackdrop({
---		bgFile = "Interface/Tooltips/ChatBubble-Background",
---		edgeFile = "Interface/Tooltips/ChatBubble-BackDrop",
---		tile = true, tileSize = 32, edgeSize = 18,
---		insets = { left = 20, right = 20, top = 20, bottom = 20 }
---	})
---	gui.saves:SetBackdropColor(0, 0, 0, 1)
 
 	gui.saves.title = gui.saves:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
 	gui.saves.title:SetPoint("LEFT", gui.saves, "LEFT", 10,0)
@@ -1329,9 +1310,10 @@ function private.MakeGuiConfig()
 
 	function lib.OnEnterSheet(button, row, index)
 		if gui.sheet.rows[row][index]:IsShown() then --Hide tooltip for hidden cells
-			local link, count
-			link = gui.sheet.rows[row][index]:GetText()
-			if link and link:find("\124Hitem:%d") then
+			local link = gui.sheet.rows[row][index]:GetText()
+			local linkType = link and strmatch(link, "|H(%l+):%d")
+			if linkType then
+				local count
 				if gui.sheet.order then
 					for i, label in pairs(gui.sheet.labels) do
 						if  label:GetText() == "Stk" then --need to localize this when we localize the rest of searchUI
@@ -1343,8 +1325,14 @@ function private.MakeGuiConfig()
 					count = tonumber(gui.sheet.rows[row][4]:GetText() )
 				end
 
-				GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
-				AucAdvanced.ShowItemLink(GameTooltip, link, count)
+				if linkType == "item" then
+					GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
+					AucAdvanced.ShowItemLink(GameTooltip, link, count)
+				elseif linkType == "battlepet" then
+					AucAdvanced.ShowPetLink(BattlePetTooltip, link, count)
+					BattlePetTooltip:ClearAllPoints()
+					BattlePetTooltip:SetPoint("BOTTOMLEFT", button, "TOPRIGHT")
+				end
 			end
 		end
 	end
@@ -1362,7 +1350,13 @@ function private.MakeGuiConfig()
 			if not link then
 				return
 			end
-			local itemName = GetItemInfo(link)
+			local itemName
+			local header, id = strsplit(":", link)
+			if header:sub(-9) == "battlepet" then
+				itemName = C_PetJournal.GetPetInfoBySpeciesID(tonumber(id) or 0)
+			else
+				itemName = GetItemInfo(link)
+			end
 			if not itemName then
 				return
 			end
@@ -1426,6 +1420,7 @@ function private.MakeGuiConfig()
 			lib.OnEnterSheet(button, row, column)
 		elseif (callback == "OnLeaveCell") then
 			GameTooltip:Hide()
+			BattlePetTooltip:Hide()
 		elseif (callback == "OnClickCell") then
 			lib.OnClickSheet(button, row, column)
 		elseif (callback == "ColumnSort") then
@@ -2187,4 +2182,4 @@ end
 private.updater = CreateFrame("Frame", nil, UIParent)
 private.updater:SetScript("OnUpdate", private.OnUpdate)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5331 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5373 $")
