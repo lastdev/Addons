@@ -1,0 +1,9 @@
+## Interface: 50200
+## Title: HealBot Russian Localization
+## Author: Strife
+## Notes: HealBot Localization for ruRU
+## RequiredDeps: HealBot
+## LoadOnDemand: 1
+## Version: 5.2.0.0
+
+HealBot_Localization.ru.lua

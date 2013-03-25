@@ -1,0 +1,73 @@
+------------------------------------------------------------------------
+r131 | thaoky | 2013-03-12 09:51:02 +0000 (Tue, 12 Mar 2013) | 3 lines
+Changed paths:
+   M /trunk/Modules/Altoholic_Grids/Grid_Archeology.lua
+   A /trunk/Modules/Altoholic_Grids/Grid_Dailies.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Mounts.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Tabards.lua
+   M /trunk/Modules/Altoholic_Grids/Grids.xml
+   M /trunk/Modules/Altoholic_Grids/TabGrids.lua
+   M /trunk/Modules/Altoholic_Grids/TabGrids.xml
+
+5.2.001 Commit
+
+- Added 'grids' updates forgotten in previous commit.
+------------------------------------------------------------------------
+r130 | thaoky | 2013-03-12 09:21:56 +0000 (Tue, 12 Mar 2013) | 3 lines
+Changed paths:
+   M /trunk/Altoholic.toc
+   M /trunk/Core.lua
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Modules/Altoholic_Achievements/Achievements.lua
+   M /trunk/Modules/Altoholic_Achievements/Altoholic_Achievements.toc
+   M /trunk/Modules/Altoholic_Agenda/Altoholic_Agenda.toc
+   M /trunk/Modules/Altoholic_Characters/Altoholic_Characters.toc
+   M /trunk/Modules/Altoholic_Grids/Altoholic_Grids.toc
+   M /trunk/Modules/Altoholic_Guild/Altoholic_Guild.toc
+   M /trunk/Modules/Altoholic_Search/Altoholic_Search.toc
+   M /trunk/Modules/Altoholic_Summary/Altoholic_Summary.toc
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_deDE.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_enUS.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_frFR.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_koKR.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_ruRU.lua
+   M /trunk/Tooltip.lua
+   M /trunk/changelog.txt
+
+5.2.001 Commit.
+
+See changelog.txt for details.
+------------------------------------------------------------------------
+r129 | thaoky | 2013-02-24 12:10:39 +0000 (Sun, 24 Feb 2013) | 3 lines
+Changed paths:
+   M /trunk/AltoholicTemplates.xml
+   M /trunk/Core.lua
+   M /trunk/Modules/Altoholic_Achievements/Achievements.lua
+   M /trunk/Modules/Altoholic_Achievements/TabAchievements.lua
+   M /trunk/Modules/Altoholic_Achievements/TabAchievements.xml
+   M /trunk/Modules/Altoholic_Characters/Frames/Pets.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Pets.xml
+   M /trunk/Modules/Altoholic_Grids/Grid_Tabards.lua
+   M /trunk/Modules/Altoholic_Grids/TabGrids.lua
+   M /trunk/Modules/Altoholic_Grids/TabGrids.xml
+   M /trunk/changelog.txt
+
+5.1.002 Commit.
+
+See changelog.txt for details.
+------------------------------------------------------------------------
+r128 | thaoky | 2012-11-29 16:33:21 +0000 (Thu, 29 Nov 2012) | 1 line
+Changed paths:
+   M /trunk/Altoholic.toc
+   M /trunk/Core.lua
+   M /trunk/Modules/Altoholic_Achievements/Altoholic_Achievements.toc
+   M /trunk/Modules/Altoholic_Agenda/Altoholic_Agenda.toc
+   M /trunk/Modules/Altoholic_Characters/Altoholic_Characters.toc
+   M /trunk/Modules/Altoholic_Grids/Altoholic_Grids.toc
+   M /trunk/Modules/Altoholic_Guild/Altoholic_Guild.toc
+   M /trunk/Modules/Altoholic_Search/Altoholic_Search.toc
+   M /trunk/Modules/Altoholic_Summary/Altoholic_Summary.toc
+   M /trunk/changelog.txt
+
+5.1 ToC update
+------------------------------------------------------------------------

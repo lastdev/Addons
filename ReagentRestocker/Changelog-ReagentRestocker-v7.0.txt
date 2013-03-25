@@ -1,0 +1,19 @@
+------------------------------------------------------------------------
+r103 | cobraa1 | 2013-03-24 03:43:17 +0000 (Sun, 24 Mar 2013) | 5 lines
+Changed paths:
+   A /tags/v7.0 (from /trunk:102)
+
+== v7.0 ==
+* Updated TOC.
+* Relaxed the restriction on guild bank withdrawls. Reagent Restocker will now use all except the last withdrawl for automatic processing. 
+* Various optimizations.
+* Changes made to event processing in an attempt to make overstocking more reliable.
+------------------------------------------------------------------------
+r102 | cobraa1 | 2013-03-24 03:42:27 +0000 (Sun, 24 Mar 2013) | 1 line
+Changed paths:
+   M /trunk/BankBag.lua
+   M /trunk/CHANGELOG.TXT
+   M /trunk/ReagentRestocker.toc
+
+Commit before update.
+------------------------------------------------------------------------

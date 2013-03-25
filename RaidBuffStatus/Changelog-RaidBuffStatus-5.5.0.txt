@@ -1,0 +1,78 @@
+------------------------------------------------------------------------
+r618 | oscarucb | 2013-03-06 11:21:14 +0000 (Wed, 06 Mar 2013) | 1 line
+Changed paths:
+   A /tags/5.5.0 (from /trunk:617)
+
+Tagging as 5.5.0
+------------------------------------------------------------------------
+r616 | oscarucb | 2013-03-05 18:38:07 +0000 (Tue, 05 Mar 2013) | 2 lines
+Changed paths:
+   M /trunk/Buffs.lua
+
+update Dark Intent
+
+------------------------------------------------------------------------
+r615 | oscarucb | 2013-03-05 17:04:41 +0000 (Tue, 05 Mar 2013) | 1 line
+Changed paths:
+   M /trunk/RaidBuffStatus.toc
+
+toc bump
+------------------------------------------------------------------------
+r614 | oscarucb | 2013-03-04 03:59:55 +0000 (Mon, 04 Mar 2013) | 2 lines
+Changed paths:
+   M /trunk/Core.lua
+
+ticket 368: dry-coded fix to error on cross-realm group join (bgs)
+
+------------------------------------------------------------------------
+r613 | oscarucb | 2013-02-27 16:05:01 +0000 (Wed, 27 Feb 2013) | 2 lines
+Changed paths:
+   M /trunk/Core.lua
+
+tweak the IgnoreLastThreeGroups option to only affect instances, and not outdoor world bosses
+
+------------------------------------------------------------------------
+r611 | oscarucb | 2013-02-13 10:44:57 +0000 (Wed, 13 Feb 2013) | 2 lines
+Changed paths:
+   M /trunk/Buffs.lua
+
+fix earthshield reporting
+
+------------------------------------------------------------------------
+r610 | oscarucb | 2013-02-07 00:47:52 +0000 (Thu, 07 Feb 2013) | 2 lines
+Changed paths:
+   M /trunk/Buffs.lua
+
+add mop's slacking flasks
+
+------------------------------------------------------------------------
+r608 | oscarucb | 2013-02-06 23:53:55 +0000 (Wed, 06 Feb 2013) | 2 lines
+Changed paths:
+   M /trunk/Core.lua
+
+only send auto-accept whispers if the feature is enabled
+
+------------------------------------------------------------------------
+r606 | oscarucb | 2013-02-05 08:34:40 +0000 (Tue, 05 Feb 2013) | 2 lines
+Changed paths:
+   M /trunk/Buffs.lua
+
+fix regression in earthshield indicator
+
+------------------------------------------------------------------------
+r604 | oscarucb | 2013-02-04 02:10:00 +0000 (Mon, 04 Feb 2013) | 2 lines
+Changed paths:
+   M /trunk/Core.lua
+
+fix a regression with combat hiding
+
+------------------------------------------------------------------------
+r603 | oscarucb | 2013-02-02 16:19:11 +0000 (Sat, 02 Feb 2013) | 4 lines
+Changed paths:
+   M /trunk/Buffs.lua
+
+add the buffer/buffee list to the symbiosis tooltip
+fix the buffer/buffee list in the earthshield tooltip
+reduce some memory churn
+
+------------------------------------------------------------------------

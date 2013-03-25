@@ -1,0 +1,8 @@
+2013-03-08  sylvanaar  <sylvanaar@mindspring.com>
+
+[a1eac862858c] [3.5.5]
+* services/chatsections.lua:
+
+Get the correct typeId for the chat history.
+
+

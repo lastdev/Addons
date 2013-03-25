@@ -1,0 +1,11 @@
+﻿## Interface: 50200
+## X-BigfootType: 1
+## X-BigfootDesc: HealBot超强治疗助手插件，一个可以在魔兽世界中通过设定进行一键治疗，一键BUFF DEBUFF解除的方便助手。在2.0取消一键解后healbot无疑是你最佳的选择。
+## Title: HealBot Chinese Localization
+## Author: 月夜寒星@银月
+## Notes: HealBot 中文语言文件
+## RequiredDeps: HealBot
+## LoadOnDemand: 1
+## Version: 5.2.0.0
+
+HealBot_Localization.cn.lua

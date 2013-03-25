@@ -1,0 +1,503 @@
+tag 5.2.1
+104cbb7721cd3b8647c1e3918c0bb7c9b93af7fe
+subversion <svn@deadlybossmods.com>
+2013-03-13 00:34:36 +0100
+
+Tagging as 5.2.1
+
+
+--------------------
+
+subversion:
+	- increment version number
+	- tandanu via svn r8892: filter ***-announces from the instance chat
+	- tandanu via svn r8891: fix lua error when faked raid warnings are enabled
+	- tandanu via svn r8890: only delay the unregistration of the SPELL_AURA_REMOVED event, not of all events after combat end
+	- tandanu via svn r8889: remove debug print
+	- tandanu via svn r8888: fix IronQon lua error
+	- Omega via svn r8887: update rising anger timer to new hotfix value
+	- Omega via svn r8886: Add some horridon interrupt warnings in anticipation of heroic mode
+	- ebmor via svn r8885: deDE update
+	- Omega via svn r8884: remove the icon code from primordius, blizzard patched it out of game in an emergency patch.
+	- Omega via svn r8883: Fix it so lei shen actually warns you for SIS after the unavoidable aoe, instead of just warning you that you got hit by aoe then letting you SISlike it was before. oops
+	- Omega via svn r8882: More auto logging improvements. when invoking combat logging from script, no message is printed that logging is on, so we simply add our own print using blizzards global string to notify log success. Also fix the bug causing transcriptor auto logging to always fail, oops.
+	- nbluewiz via svn r8881: # Lei Shi : first Special CD shorter in 5.2
+	- nbluewiz via svn r8880: # koKR update.
+	- nbluewiz via svn r8879: # koKR update. (Throne of Thunder trigger)
+	- Omega via svn r8878: Finish lei shen mod.
+	- Omega via svn r8877: even further tweak pull thing. lets see if this solves it
+	- Omega via svn r8876: change diffusion chain to 8 yards, it seems smaller than 10 for sure but not sure if it's actually 6 or 8, so try 8 for now
+	- Omega via svn r8875: fix some intermission bugs
+	- nbluewiz via svn r8874: # koKR update.
+	- Omega via svn r8873: fix a bug in trash mod
+	- Omega via svn r8872: also adjust timing
+	- Omega via svn r8871: fix bug in autologger
+	- Omega via svn r8870: smarter auto logging that now catches pre potting by starting if a dbm pull timer is initiated. In the event a boss isn't engaged within 3 seconds after a dbm pull timer, autologging is automagically stopped
+	- Omega via svn r8869: Add lei shen trash
+	- Omega via svn r8868: Fix gui in last
+	- Omega via svn r8867: Add automatic boss encounter combat logging using either blizzard combat log, or transcriptor (if installed), or both
+	- Omega via svn r8866: Address the issue with phased player not getting timers/warnings on twin consorts
+	- Omega via svn r8865: last commit spam of night. updated phase 2 timers for lei shen
+	- Omega via svn r8864: and finally, lets get fancy with near warnings and arrows and stuff
+	- Omega via svn r8863: and some timer updates for lei shen
+	- Omega via svn r8862: Remove 5.1 compat code Update Lei shen transition timers with real data now. They should be far more accurate now
+	- Omega via svn r8861: oondasta update. As it stands now. timers are near worthless do to the terrible design that is this fight. shared loot on a field boss so unforgiving = a corpse cannon that no one in world can even TRY to do correctly. Timers vary wildly based on how long he runs around not tanked
+	- Omega via svn r8860: blizzard broke target scanning amber scalpel, so now we have to use a generic no target warning
+	- Omega via svn r8859: Small timer adjust on twin consort as well, they reduced cd on comet again.
+	- Omega via svn r8858: Also account for the throw spear cd reset on phase changes too
+	- Omega via svn r8857: Push some iron qon updates
+	- nbluewiz via svn r8856: # Core : update comment and canceling stuff for timer issues (see comments, Omega) # Tsulong : prevent bad day phase start.
+	- Omega via svn r8855: those situations are super rare, i've seen it once and only once in many weeks and it was in sha mod, i fixed it at mod level with an isincombat check in that mod. try a 1.5 delay instead of 3 and if any mods still act up just fix those. the icon issue effects dozens if not hundreds of mods, your issue is super rare and effects maybe 2 or 3 (i've not seen it yet on will or tsulong TODO< see if tandanu can improve it further to ONLY unregister SPELL_AURA_REMOVED on a delay and not the rest of events
+	- nbluewiz via svn r8854: # Core : If delays unregister events, sometime timer starts even boss died. (espcially ToES Tsulong, MV Will of Emperor). Yeah, I know this can solve icon removing issue, but this produces another timer and warning issues. I think timer issue is more important than icon issue, so disable this hack until timer and warning issues solves. # Salyis : Fix stomp cast warning. # koKR update.
+	- Omega via svn r8853: fix bad spellid with storm energy now that it's re-enabled
+	- Omega via svn r8852: update range finder for spitfire nerf
+	- Omega via svn r8851: fix the fix
+	- Omega via svn r8850: drycode lei shen  intermission change (the change is actually guess work based on feedback alone, logs still needed to make new timers right). Count rampages for healer cds I guess 10 man flocks are 40 seconds even on normal now too beam on durumu definitely lasted more than 60 seconds, unfortunately, it still has no end event so i have to guess timing for now, may still be wrong.
+	- tandanu via svn r8849: fix special warning font size slider range (was 8 to 40, but even the default was 50), it is now 16 to 100
+	- Omega via svn r8848: Attempt to improve the primordius icon setting code
+	- Omega via svn r8847: Some iron qon bugfixes and improvements Some dark animus bugfixes and improvements
+	- Omega via svn r8846: change stack count for 25 man back down to old number
+	- Omega via svn r8845: that was quick, new berserk is 12 min and confirmed
+	- Omega via svn r8844: comment out ironqon berserk for now, it was raised above 10 min to some unknown new value
+	- Omega via svn r8843: some experimental code to mark the bad living fluids so you know which ones not to attack.
+	- Omega via svn r8842: Fixes to durumu cleaned up redundancy
+	- nbluewiz via svn r8841: # koKR update.
+	- Omega via svn r8840: boss spawn timer for horridon
+	- Omega via svn r8839: ji-kun update to fix timers that changed
+	- ebmor via svn r8838: deDE update (Throne of Thunder)
+	- Omega via svn r8837: Fix a significant amount of bugs in durumu
+	- Omega via svn r8836: fix bad spellid in options
+	- Omega via svn r8835: update talen rake values
+	- Omega via svn r8834: fix some locals
+	- Omega via svn r8833: push updated flock code hopefully without breaking stuff
+	- Omega via svn r8832: also add in 10 min berserk for iron qon
+	- Omega via svn r8831: Fix bugs caused by changes from PTR in two bosses Add berserk timer to first boss
+	- Omega via svn r8830: alpha
+	- Omega via svn r8829: People deserve an up to date mod on patch day.
+	- Omega via svn r8828: TOC to 50200 Rename Disorienting roar to Dire Call
+	- nbluewiz via svn r8827: # koKR update.
+	- Omega via svn r8826: Fix filtering since the reg expression in update seemed to break it
+	- Omega via svn r8825: Fix those right way for now, oops.
+	- tandanu via svn r8824: fix missing timers/warnings
+	- ebmor via svn r8823: deDE update (Throne of Thunder)
+	- Omega via svn r8822: Fix canceling of council timers on member deaths. Add icons to durumu ray fixate targets Handle LFR version of Durumu correctly Announce when fogs are revealed
+	- ultrashining via svn r8821: zhTW update
+	- nbluewiz via svn r8820: # koKR update.
+	- Omega via svn r8819: what he casts first is random, it actually seems like a sha type deal. too much work for such a simple world boss though. Will do more with it on live
+	- Omega via svn r8818: Add some debug in for iron qon spears
+	- Omega via svn r8817: calculated mapsizes for that island for now using mage blink
+	- Omega via svn r8816: comment out bad data
+	- Omega via svn r8815: fix a lua error
+	- Omega via svn r8814: a small talak timer tweak, it seems the data today is a little different then data from 2 days ago
+	- DiabloHu via svn r8813: zhCN update
+	- Omega via svn r8812: They fixed Jinrokh's CLEU so no  need to use UNIT_AURA anymore. one down, many to go.
+	- Omega via svn r8811: allow /range 30, instead of capping at range 29
+	- Omega via svn r8810: Add big ooze timer for Primordius
+	- Omega via svn r8809: Plug in rest of nalak data
+	- Omega via svn r8808: comment out some debug on megaera comment out a bunch of timers that flat out are too difficult to implement (number of heads does affect ability cds but in an unpredictable way.) Add a special warning for nest guardians. 10 man heroic is covered. 25 heroic is only covered about 3 min at best until fight is less buggy on live and can get new data
+	- Omega via svn r8807: *Council Of Elders: Fix a bug with frostbite spamming off events we want to ignore Update the twisted fate to work correctly
+	- Omega via svn r8806: some small fix and additional comments
+	- Omega via svn r8805: fix lua erorr
+	- Omega via svn r8804: add 2 more trash mob warnings
+	- ebmor via svn r8803: deDE update
+	- Omega via svn r8802: Start trash module. I have a bunch of other trash logged but it's in about 500MB worth of data and i can't remember the damn mob or spell names to find it right now. I'll just have to take better notes and relog trash for rest of trash mobs that have nasty spread mechanics or debuffs
+	- Omega via svn r8801: Fix spec warning type for dark animus, make interrupting jolt more clear
+	- Omega via svn r8800: Nalak is now up on ptr. Did some facepulls to just get some basic data to feed in. actual CDs will require pulls that last longer than 30 seconds...
+	- Omega via svn r8799: While at it, add a crashing thunder warning
+	- Omega via svn r8798: *Lei Shen Fix tank debuff warning in phase 1 which changed spellids since last test (or maybe 25 man has a diff ID, not sure yet, have both in there for now). Updated intermission timers with latest PTR test data.
+	- Omega via svn r8797: *Twin Consort dusk phase and final phase support for Twin consort. Small timer adjust on comet. It seems the 15 second cd was a heroic only thing and normal is still a crappy 25 second cd one. Fix bug in tank debuff timer *Horridon rest of adds timers
+	- Omega via svn r8796: Fix Jinrokh Range frame properly
+	- nbluewiz via svn r8795: # Twin Consorts : revert changes :)
+	- nbluewiz via svn r8794: # Fix Range Check sound plays on green circle. # koKR update. # Throne of Thunder MODS 1. Change GUI version spellids with spell tooltips. 2. Fix and remove missing, invalid locales. 3. Twin Consorts : Fix lua error (timerNightCD not exists). Also, ej7645, ej7641 spell name are too long, I suggest more short version.
+	- Omega via svn r8793: windstorm CD
+	- Omega via svn r8792: fix lua error, will fix the rest of mod after last test
+	- Omega via svn r8791: push range finder update
+	- Omega via svn r8790: add horridon berserk. will add other add timers and stuff later
+	- ebmor via svn r8789: default sound for SpecialWarning3 replaced with a new shorter one ("Destruction")
+	- DiabloHu via svn r8788: zhCN update
+	- Omega via svn r8787: actually, i'm going to play a hunch on this. the dinos spawn at precisely half way point between doors, which means 56.75 seconds after door emote and 56.75 seconds before next door emote. Lets see how this timing works out, i have a good feeling it's going to be dead on.
+	- Omega via svn r8786: Add a dino mender spawn warning/timer
+	- Omega via svn r8785: fix lua errors on  council of elders
+	- ultrashining via svn r8784: zhTW update
+	- Omega via svn r8783: Add missing loading condition for pandaria world bosses
+	- Omega via svn r8782: improve kick shell message
+	- ebmor via svn r8781: deDE update (Throne of Thunder)
+	- ebmor via svn r8780: deDE update
+	- ebmor via svn r8779: deDE update
+	- Omega via svn r8778: Don't load GUI in combat, it just script too long errors most of time. Instead print a friendly message to load it out of combat (at least the first time)
+	- Omega via svn r8777: Update all mods to conform to new special warning sound standards.
+	- ebmor via svn r8776: cleanup language files as well
+	- tandanu via svn r8775: remove the announce options (no need to keep them as comments)
+	- ebmor via svn r8774: now useless GUI options removed (related to the removed raid warning announce feature, see r8749)
+	- Omega via svn r8773: So yeah, I don't think boss1 is going to work on a field boss, that's just an oversight. small tweak to that. that mod is going to need retesting soon anwyays
+	- Omega via svn r8772: FIx bug in Primordius mod that caused tank warning not to work Remove yell and run warnings for volatile pathogen, the spell was redesigned into a simple "heal this target" spell.
+	- Omega via svn r8771: Move print messages, work around for no CLEU event for ice target,
+	- Omega via svn r8770: fix another bug
+	- Omega via svn r8769: Look slike they did change mnromal megaera, 1 fire is now behind instead of front
+	- Omega via svn r8768: another force fix
+	- Omega via svn r8767: Force actually has 20 second cd, when it's not canceled by either beam phase (it can't be cast in either phase)
+	- Omega via svn r8766: Improve messaging on flock
+	- Omega via svn r8765: Add visions yell back in but disable it in LFR where it's useless LingeringGaze now shows in combat log so we can now warn the targets yay. Force of will no longer shows in combat log so detection method had to be changed Finished phase rotation timing so mod is far more complete now.
+	- Omega via svn r8764: Fix the range check on waterspout, no map there, oops
+	- Omega via svn r8763: Some small fixes a lot more to come later. blizz changed a few events
+	- Omega via svn r8762: add kick shell basic warning TRY again to fix rockfall spam, if this still doesn't work i'm just going to remove the damn thing for 20 seconds after any stomp and just try not being perfect.
+	- Omega via svn r8761: fix a bug where jikun was only firing platform warning for lower platforms. TODO: 1. is there a reason to distinguish upper from lower and maybe include it in warning? 2. See if downdraft is still 110 second cd on normal. it was 90 seconds on heroic.
+	- Omega via svn r8760: say/yell chat filtering OFF by default. it was not well received being on by default
+	- Omega via svn r8759: another tweak to range frame
+	- nbluewiz via svn r8758: # koKR update.
+	- Omega via svn r8757: take that back, it does have a cd, it's 55 seconds
+	- Omega via svn r8756: that roar doesn't seem to have a cd, it's cast out of anger when you force him to smash a door.
+	- Omega via svn r8755: add a water spout near you warning in case player next to you is affected but you are not. range may need tweaking
+	- Omega via svn r8754: same with dread thrash
+	- Omega via svn r8753: naked and afraid timers should not be on by default for dps, guess I overlooked that when reviewing that part of mod.
+	- Omega via svn r8752: #Change interrupt warning for amber monster to use new sound #dry code some heroic stuff for tomorrows testing.
+	- Omega via svn r8751: ##update range frame to accept any valid number under 30 in slash command if in a zone that supports any range (has mapsize data). Remove somee excessive and uncommon sizes from the menu dropdowns in frame itself. use slash for funky uncommon ranges.
+	- Omega via svn r8750: remove yells on "visions of demise"
+	- tandanu via svn r8749: remove ability to announce to the raid warning chat
+	- tandanu via svn r8748: add a checkbox to toggle the new chat filter
+	- tandanu via svn r8747: add chat filter for say and yell messages during combat
+	- Omega via svn r8746: revert last, just need to do it better way
+	- Omega via svn r8745: ##Apply chat filters to say bubbles sent by dbm. The idea behind the bubbles is to SEE where they are, not to clutter raid chat, so hiding them from chat frame should reduce chat frame spam while retaining the actual function of bubble. TODO, filter says sent by other mods as well by simply ignoring any say's sent by player units #Restore the UNIT_DIED stuff for normal iron qon, normal/LFR probably still needs that.
+	- Omega via svn r8744: fix zorlok arrows in alpha
+	- Omega via svn r8743: code improvement to megaera
+	- ultrashining via svn r8742: zhTW update
+	- DiabloHu via svn r8741: zhCN update
+	- Omega via svn r8740: Fix last
+	- Omega via svn r8739: hack in an adds counter for now, maybe do something prettier later. submerge count really is pretty useless though, people only care about adds count
+	- Omega via svn r8738: also add in Primordius 8 min berserk
+	- Omega via svn r8737: twin consorts has a 10 min berserk, even in LFR (for now, i doubt that'll last)
+	- nbluewiz via svn r8736: # typo.
+	- ebmor via svn r8735: deDE update
+	side note:
+	Translators typically add (otherwise useless) duplicates to non-enUS language files because changes are easier to track this way (the diff to enUS using tools like "meld" looks "cleaner").
+	But if you add new lines to enUS, you should avoid to populate such (otherwise useless) duplicates into all language files yourself.
+	- nbluewiz via svn r8734: # Sha of Fear : Cancel Thrash timer on platform sent.
+	- nbluewiz via svn r8733: # koKR update.
+	- Omega via svn r8732: Redo phase changes on ironqon to be heroic compat since the units don't die. Add in phase 1 and phase 2 heroic warnings. (no warnings for phase 3 or 4 are currently supported still, need logs for those phases).
+	- Omega via svn r8731: Fix pull detection of animus on normal. Add what little bit i had in normal and heroic logs in terms of CDs, anything else, drycoded warnings with no timers
+	- Omega via svn r8730: fix spear timer that was coded in that i was too dumb to actually start
+	- Omega via svn r8729: Drycode tank warnings into IronQon since there was no tank debuff when it was tested on normal. this is clearly something new added to make it not be a 1 tank fight. Without a cooldown for it though, it's impossible to know targeted stack count so right now with a 40 sec debuff and an ASSUMED 10 sec cd, i put stack count at 4.
+	- Omega via svn r8728: forgot to put the nether tear warnings in
+	- Omega via svn r8727: Fix script ran too long when zoning into SFK and loading party mods in combat (thanks to a really terrible zone in location) by delaying garbage collect until we leave combat if instance type is a 5 man.
+	- Omega via svn r8726: Twin consorts update for heroic. Still missing dusk phase though.
+	- Omega via svn r8725: Sometimes events fire out of order and mess up head count. do some scheduling work to make sure events always fire in right order. Feign death, die, engage, table wipe of dead heads (in this specific order)
+	- Omega via svn r8724: only warn when YOU are standing in ice, not anyone in raid, oops
+	- Omega via svn r8723: fix some typos
+	- Omega via svn r8722: while at it, push tank spam filter, and 4th tank debuff
+	- Omega via svn r8721: push some heroic tweaks to debug
+	- Omega via svn r8720: add debug for next boss, complete heroic mod for previous boss
+	- Omega via svn r8719: add auto range frame to that as well
+	- Omega via svn r8718: dry code heroic debuff in
+	- ultrashining via svn r8717: zhTW update
+	- Omega via svn r8716: seems on heroic and normal, disintegration phase is entirely based off pull time. Ice wall has no timer, it seems to spawn as soon as you kill all 3 red fogs. This means to kill ice wall in time to have it not block beam, you need to beat that disintegration timer. Still could not get a log that saw a disintegration phase end since it's quite honestly too hard to get through on normal or heroic since the black practically one shots you when it comes out unless you are magically in safe spot to begin with. This mod will need to be fixed in 25 man testing or day 1 on live.
+	- Omega via svn r8715: *Sha of Fear: Speed up the setting of huddle icons if number of affected targets is totaled correctly, slightly reduce speed for when total is short since 0.3 has proven to fail ever so rarely but the 0.5 never has on warning itself so use that. *Garajal: Also apply faster icon setting here too if voodoo doll count is correct.
+	- nbluewiz via svn r8714: # koKR update.
+	- Omega via svn r8713: Moving more common locals to core. Some small mod updates, a few more to do later when not busy with raids.
+	- DiabloHu via svn r8712: zhCN update
+	- Omega via svn r8711: also while add it, add optional special warning for the big rockfall
+	- Omega via svn r8710: recode rockfall to work with newest design. Fix heroic stuff
+	- nbluewiz via svn r8709: # koKR update.
+	- Omega via svn r8708: all of a sudden the missing spellid i needed for durumu is on wowhead, so adding it now
+	- Omega via svn r8707: More heroic drycodes for todays tests
+	- Omega via svn r8706: dry code some heroic stuff for testers. unfortunately i will be unable to test so as usual heroic mod will blow in dbm until after first week on live
+	- Omega via svn r8705: don't needless build guid tables twice in all mods because we forgot to set guidTableBuilt to true on pull Change icons on sha of fear to use group sort method to greater improve healing on huddle targets. ***This will conflict with people not using latest alpha though until we tag a new release***
+	- Omega via svn r8704: Fix kr local if local is same as english file though, isn't it redundant? english is imported first, others secondary and only replacing values if they exist. replacing 1 with 1 is just futile, think that's why tandanu nuked all the duplicate locals that weren't different?
+	- ultrashining via svn r8703: zhTW update
+	- nbluewiz via svn r8702: # koKR update.
+	- tandanu via svn r8701: typo
+	- tandanu via svn r8700: fix typo and missing warning
+	- tandanu via svn r8699: typo
+	- tandanu via svn r8698: new method: DBM:GetBossUnitId(name)
+	gets the unit id of a boss based on its name. This function first checks the boss1-4 ids and the the targets of all players in the group
+	- tandanu via svn r8697: DBM:GetGroupMembers() now returns an iterator for all unit ids of the current group (both raid and party) including yourself.
+	Usage:
+	
+	   for uId, i in DBM:GetGroupMembers() do
+	      print(uId, i)
+	   end
+	
+	This will print the following if you are in a 3-player party:
+	"player", 0
+	"party1", 1
+	"party2", 2
+	
+	In a 3-player raid:
+	"raid1", 1
+	"raid2", 2
+	"raid3", 3
+	
+	The old party/raid member count is available as DBM:GetNumGroupMembers()
+	- Omega via svn r8696: fix bug where countdown on breath of fear wasn't canceled going into phase 2
+	- Omega via svn r8695: give the movement stuff in sha of fear more clarity in options so you can really understand how it works
+	- Omega via svn r8693: LFR is now open for testing on ptr, with all 12 bosses available. As such, removed the loading restriction on the 12 mods for full testing of them. *Known incompletions: 1. Dark Animus (did not get any phase 2 data for dark animus himself) 2. Iron Qon (did not get any real good phase 2-4 stuff do to horde being dicks and not letting alliance test the raid so that's mostly drycoded from wowhead) 3. Twin Consorts (did not get to see a dusk face so that phase has no warnings/timers) 4. Durumu (did not get to see a full Incineration beam face or return back to normal phase so mod is missing many phase based timers) 5. Lei Shen (did not get to see phase 3 so no ability warnings/timers for it)
+	- Omega via svn r8692: on 25 man, naked and afraid is a 50 second debuff, not 25 CD is in fact 30, but can be delayed significantly by submerge if he reappears far away
+	- tandanu via svn r8691: * DBM:Schedule will now throw an error if the function isn't a function * in combat events are now unregistered 3 seconds after combat instead of immediately, this allows removal of icons when auras fade after a fight
+	- tandanu via svn r8690: fix Huddle in Terror and Water Spout warnings, btw: avoid adding stuff that isn't translated to other localization files
+	- ebmor via svn r8689: deDe update
+	- Omega via svn r8688: pvp fix
+	- Omega via svn r8687: missed a local
+	- Omega via svn r8686: Primordius mod
+	- ultrashining via svn r8685: zhTW update
+	- Omega via svn r8684: More Durumu stuff. Mod is incomplete do to not seeing any complete disint phases or able to see a repeat of regular phases thereafter to get repeat timings :\
+	- Omega via svn r8683: see if that fixes wipe detection issues. will find out soon enough
+	- nbluewiz via svn r8682: # koKR update.
+	- Omega via svn r8681: commiting work in progress, much more to do, so little time
+	- Omega via svn r8680: push rest of Jikun mod put in CID for durumu
+	- Omega via svn r8679: commit quills timer for now. will get rest later but this should give some ptr some ease
+	- Omega via svn r8678: Ugg, Megaera mod done. that mod took 4 hours. blizz can suck my ass with not having decent combat events for detecting heads moving in and out and having no unitIDs or even CLEU events for back heads either. Going to need to see if fight has emote whispers i didn't get to see. TODO, more head verification stuff. None the less, the baseline code is in place so adjusting timers based on num of heads forward or back should be easy.
+	- nbluewiz via svn r8677: # Sha of Fear : Change Thrash and special spells count warning. If NewSpellAnnounce called by CLEU, this will ignore player settings, also it will break option order. To prevent this, do not use prototypes on CLEU section.
+	- Omega via svn r8676: remove ptr workaround now that first arg is working again in latest build, especially since in rare cases second arg wasn't reliable (only saw one issue and could not reproduce it next day)
+	- Omega via svn r8675: *Count special casts as well to show were we stand in order *Fix critical bug in specialsCast that didn't account for multiple casts of a single special.
+	- Omega via svn r8674: Also count thrashes in warnings during phase 2
+	- Omega via svn r8673: Kind of clunky but needed. too many fights have too many special warnings for things affecting you and a VERY important one can be drown out by semi important but not as critical ones. as such, now use a custom sound for the most critical of special warnings that differs from regular ones (ie thrash vs dread thrash).
+	- Omega via svn r8672: Some heroic sha special ability tweaks off premise that huddle can never be third ability so if it isn't first, it's always second.
+	- ebmor via svn r8671: deDE update
+	- Omega via svn r8670: Fix two heroic sha of fear bugs 1. Sometimes breath cast 1 second after phase 2 start trigger, we now ignore breath timers/count if phase 2 is started 2. Prevent a very rare issue where platform check runs after combat end
+	- Omega via svn r8669: so yeah, that's not what sha of fear looks like, oops. he's been using sha of anger model all this time
+	- Omega via svn r8668: updated mapsizes
+	- DiabloHu via svn r8667: zhCN update
+	- Omega via svn r8666: missed a local
+	- Omega via svn r8665: This about covers what i logged from twin consort. group wasn't good enough to reach dusk phase to get any data there.
+	- Omega via svn r8664: #Option default tweak for wind lord #Disable range frame on blade lord in LFR, no one uses it anyways. ##Delay unregister events on combat end for 3 seconds. This should make post combat icon clearing much more reliable. Often, boss dies and we unregister events before SPELL_AURA_REMOVED can fire for a lot of icon removal stuff like mind controls, or pheromones, or any other debuff that has icon assigned when boss dies.
+	- Omega via svn r8663: Ok going to bed. but figured i'd throw that in twins mod for now. Seemed to be most important starting place
+	- Omega via svn r8662: that should be good enough for now for tortos mod Add CIDs for consorts Much more to do tomorrow
+	- Omega via svn r8661: Fix bad CID on dark animus Add some basic phase 1 warnings. timers for phase 1, and phase 2 stuff will come later. I need to go back to other two bosses tested yesterday first. Back to back testing plus live raids = having logs for 4 bosses and no good mods yet. ugg. Long saturday ahead!
+	- Omega via svn r8660: dark animus CID
+	- Omega via svn r8659: put in megs actual ID and move heads out of engage
+	- Omega via svn r8658: add some CIDs
+	- Omega via svn r8657: Fix ptr load issues, rechecking on live, it doesn't seem to break anything there either (since when did this have 2 args?)
+	- Omega via svn r8656: Some sun breath requests
+	- Omega via svn r8655: throw some quick stone breath warnings in
+	- Omega via svn r8654: Tortos CID
+	- Omega via svn r8653: try to fix a rare bug where the bosses highest threat target is a valid unit id that is NOT a player (such as a pet). non player units do not appear on map and give bad coords causing no warning to fire. Now, if coords return 0 0 we warn anyways as a failsafe. Hopefully this solves problem. It's rare but it happens.
+	- nbluewiz via svn r8652: # koKR update.
+	- nbluewiz via svn r8651: # Sha of Fear : Fix heroic phase 2 spam. (seen by video) # Gu Cloudstrike : Fix first Static Field timer.
+	- Omega via svn r8650: revert 10 man change for spirit kings, total BS. obviously there was a reason no one had reported that "bug" for so long. because the mod was fine until i "fixed" it off someones bad information
+	- Omega via svn r8649: but don't send raid warnings for a pull of 0 seconds, haha
+	- Omega via svn r8648: accept "/dbm pull 0" as a method for canceling pull timer Also, for ANY /dbm pull timer, cancel any existing ones before making new one.
+	- Omega via svn r8647: some pull timer tweaks
+	- ebmor via svn r8646: deDE update
+	- arta via svn r8645: Landfall - added Alliance support for achievement "Number Five Is Alive"
+	- nbluewiz via svn r8644: # Add revision tag.
+	- nbluewiz via svn r8643: # Lions Landing is only for alliance. So change mod and folder name to neutral and added horde's name and map ids. # koKR update.
+	- arta via svn r8642: Scenario Lion's Landing few warnings for final boss (Divine Storm for melee and Divine Light)
+	- Omega via svn r8641: often, tsulong does NOT emote for first sunbeam. SO we start a backup timer for 2nd sunbeam in event this happens. (first one is only like a couple seconds into pull)
+	- nbluewiz via svn r8640: # koKR update.
+	- nbluewiz via svn r8639: # koKR update.
+	- Omega via svn r8638: fix lua error
+	- ultrashining via svn r8637: zhTW update
+	- Omega via svn r8636: fix more fail
+	- Omega via svn r8635: fix some fail in last
+	- Omega via svn r8634: actually, fix last, so it's uniform to rest of spam options to be off by default and enabling it means blocking it
+	- Omega via svn r8633: add PT options. Let you control which elements you want to keep and which you do not (or if you flat out want to disable all of it)
+	- Omega via svn r8632: actually better, don't block timers when doing them solo, just block the chat messages
+	- Omega via svn r8631: block trying to start break/pull timers when not in group, to avoid "not in party" spam
+	- Omega via svn r8630: Timer Updates 1. chat messages are now spam filtered by DBM and bigwigs (so that they are primarily aimed at people who have neither instead of spamming everyone) 2. Break timers are now disabled in LFR 3. Pull timer now take advantage of a more creative means of counting down for all dbm users. Hopefully the intrusive method of doing it doesn't taint, I'll be keeping an eye on it.
+	- nbluewiz via svn r8629: # koKR update.
+	- nbluewiz via svn r8628: # Sha of Fear : Split onPlatform and platformSent, do not show breath and thrash warning while flying. # Remove double SetOptionLocalization section in enUS and koKR. # koKR update.
+	- Omega via svn r8627: rename the ones that were option off by default to force them on, so we don't have problems with users missing warnings who have bool on but old (and now invisible options) turned off.
+	- Omega via svn r8626: fix options settings for last
+	- Omega via svn r8625: Simplify and trim down sha of fear options to not be too many for same thing
+	- nbluewiz via svn r8624: # Sha of fear : Add Show Breath warning on platform option for raid leader.
+	- nbluewiz via svn r8623: # koKR update.
+	- Omega via svn r8622: Kill range frame on combat end
+	- Omega via svn r8621: Phase 2 stuff
+	- Omega via svn r8620: Use less complicated code
+	- Omega via svn r8619: Remove DisableUIFrameFlash hack. This is now fixed MUCH better by !NoTaint http://www.wowace.com/addons/notaint/
+	- DiabloHu via svn r8618: zhCN update
+	- ultrashining via svn r8617: zhTW update
+	- Omega via svn r8616: add intermission timers, fix a small bug with supercharged bar starting in wrong place I'll add phase 2 timers tomorrow probably. I have those too. I do not have any phase 3 data though.
+	- Omega via svn r8615: Lots more work to do, but this basically covers phase 1 (well minus not having any cd timers for pillars since our strat involved not letting ANY of them gain a level before intermission (thus kiting boss too often to see any of the pillars actual cds)
+	- Omega via svn r8614: add creatureid and tank warning for leishen, more to come
+	- nbluewiz via svn r8613: # koKR update.
+	- Omega via svn r8612: jinrokh mod complete. I'll do more misc stuff later like info frame and maybe some fancy stuff. But this covers pretty much everything important
+	- Omega via svn r8611: jinrokh creatureid
+	- Omega via svn r8610: Count dark of night and light of day. because it helps keep things organized for various strats. Since we are unable to detect spawns of light of day, can only count it off healers taking them, but that's still useful to know who has and a timer for duration.
+	- Omega via svn r8609: small breath timer adjustment
+	- Omega via svn r8608: small breath timer adjustment
+	- Omega via svn r8607: disable wind bomb yell in LFR
+	- Omega via svn r8606: add a heart of fear icon to make it easier for tank to locate Fix it so pull chat message spam is also not sent when fat fingered in combat.
+	- Omega via svn r8605: move some local vars
+	- Omega via svn r8604: they hotixed first crush to be 5 seconds earlier this week
+	- Omega via svn r8603: Add option (OFF by default) to taint UIFrameFlash and render it useless. This fixes taints this stupid function causes like tainting glyphs. There is no GUI toggle for this. it's not meant for average user to turn on. an experienced user that knows this can have serious side effects can do so by editing right saved vars.
+	- nbluewiz via svn r8602: # Some party mod fix.
+	- nbluewiz via svn r8601: # Lei Shi : Add kill detection. Yell detection still remains for backup. Also prevent wipe if she be killed during hide.
+	- nbluewiz via svn r8600: # Core : Also hide Emote frame on timer recovery.
+	- Omega via svn r8599: Some work started on time ignoring for bad in progress mod pulls such as engaging anger at 70% health not fully enabled and maybe logical errors. WIP Sha of anger bitter thoughts warning will now not fire if you are MCed and cannot control your char to move out of it.
+	- ebmor via svn r8598: deDe update
+	- Omega via svn r8597: Redid Raid boss emote thing. Following improvements with new method 1. It's all handled in core now. PVP mods simply call the method in core instead of using their own. 2. No more invasive hooking and hiding. Now we simply unregister events to the blizz frame itself so the frame is actually disabled on blizzards end
+	- ultrashining via svn r8596: zhTW update
+	- Omega via svn r8595: Some comments, maybe better way to code doing it tomorrow to use less cpu and probably be more reliable and cleaner.
+	- nbluewiz via svn r8594: # koKR update.
+	- nbluewiz via svn r8593: # Core : Maybe emote frame bug on 5.2? Currently, on live, there no bug with that function. # Battleground : Add Silvershard Mines and Kotmogu hide function. # Change SetMiscLocalization order.(pvp en locales) # koKR update.
+	- Omega via svn r8592: Fix platform check, among other issues (SPELL_AURA_REMOVED not registered)
+	- Omega via svn r8591: emote frame code is still not working. add some prints to it to see what's going on.
+	- Omega via svn r8590: add a taint debug test
+	- arta via svn r8589: rare cases where it didnt stop based on the score frame update
+	- arta via svn r8588: debug code :)
+	- arta via svn r8587: Temple of Kotmugu stuff: - Estimated win timer (points per second depends on location of the orbs) - Orbs to win & Estimated end-score text
+	- arta via svn r8586: add zone IDs to TOC file
+	- Edoz via svn r8585: # frFR Update
+	- Omega via svn r8584: Simplify special stuff for heroic mode. use less variables, reduce code duplications
+	- Omega via svn r8583: latest build map data for isle of thunder, need to test it later though
+	- Omega via svn r8582: Apply new range frame to IronQon, add a couple more warnings i was able to pull from my incomplete log.
+	- ultrashining via svn r8581: zhTW update
+	- arta via svn r8580: default has to be '1' :P
+	- arta via svn r8579: Range frame feature. Color the radar-circle red based on a certain number. In the 'Show()' function an extra argument is added in which this number can be set.
+	- Omega via svn r8578: fix some bad CIDs
+	- Edoz via svn r8577: # frFR Update
+	- Omega via svn r8576: on that note, use IsEncounterInProgress() for emote frame too. rather than an instance check
+	- Omega via svn r8575: Ignore pull timers if an encounter is in progress. That way if someone fat fingers a macro it doesn't disturb the encounter warnings. I can't think of any practical reason someone would use a pull timer DURING a raid boss, so them being disabled there seems like a good idea.
+	- Omega via svn r8574: Iron Qon mod, pretty much just phase 1. You can thank the horde that made my raid take over an hour to get into the instance.
+	- Omega via svn r8573: More Horridon stuff. for final phase. This mod is for most part done minus maybe target scanning on sand trap targets (if possible, not tested) and other add related stuff.
+	- nbluewiz via svn r8572: # Lei Shi : Fix Scray Fog stuff + failsafe.
+	- nbluewiz via svn r8571: # koKR update.
+	- nbluewiz via svn r8570: # Sha of Fear : Change onPlatform status check. (taking off -> landing) # PvP : Add missed toc. # koKR update.
+	- arta via svn r8569: Silvershard Mines: Added a cart respawn timer (they respawn ~9.5secs after it was captures). Tried something with a win-timer but at the very best it would be a rough estimate timer, so left it out. Temple of Kotmogu: Nothing yet, just a plain empty mod that I have to implement later :)
+	- Edoz via svn r8568: # frFR Update
+	- arta via svn r8567: Throne of Thunder Model IDs taken from Encounter Journal (Ra'den is most likely a PH)
+	- Omega via svn r8566: I have a lot more data still, but been a busy day, i'll compile rest tomorrow, here are a couple more things for horridon
+	- Omega via svn r8565: another CID
+	- Omega via svn r8564: creature IDs
+	- nbluewiz via svn r8563: # Fix some codes and locals. # koKR update.
+	- Omega via svn r8562: Have a lot more mod to upload later but for now i must get ready for next boss and commit progress so far
+	- Omega via svn r8561: Prevent 5.2 boss mods from loading for horde players
+	- Omega via svn r8560: all I managed to get for Horridon was a CID! (and barely even managed that)
+	- Omega via svn r8559: fix bad option default for fixate. the PERSONAL warning isn't spammy and it's important. Also add sound to it as well. On heroic these one shot anyone that's not a plate. Fixed range on Tayak, EJ lies, spell tooltip has correct range
+	- DiabloHu via svn r8558: zhCN update
+	- Edoz via svn r8557: # frFR Update
+	- nbluewiz via svn r8556: # Shekzeer : Fix lfr Dispatch timer. # Meljarak : Change Recklessness trigger. Also Reinforcements special warning changes to scheduler.
+	- Omega via svn r8555: seems dispatch actually has a shared cd between all 6 mobs, so remove spam check. it'll no longer check for any target requirement. dispatch also has a predictable cd that only has a 3 second variation so add this as well.
+	- ultrashining via svn r8554: zhTW update
+	- nbluewiz via svn r8553: # Unsok : fix timer spam.
+	- nbluewiz via svn r8552: # Shekzeer : Fix lua error in heroic.
+	- nbluewiz via svn r8551: # Unsok : Change Destabalize timer. Now this timer also shows debuff stacks. Also changes it to be enabled by default. Debuff stacks very important for heroic version of this encounter.
+	- nbluewiz via svn r8550: # koKR update
+	- nbluewiz via svn r8549: # Tayak : Add countdown for heroic Blade Tempest / Remove Unseen Strike emote hack. Seems emote bug fixed by bliz. # Unsok : Do not show Destabalize warning on pet or on phase 3.
+	- ebmor via svn r8548: deDE update
+	- ultrashining via svn r8547: zhTW update
+	- Omega via svn r8546: Make dbm pull timer more friendly with bigwigs. (it shouldn't be using pizza timer anyways)
+	- Edoz via svn r8545: # frFR Update
+	- ultrashining via svn r8544: zhTW update
+	- DiabloHu via svn r8543: zhCN update
+	- nbluewiz via svn r8542: # Council of Elders : less locales.
+	- Omega via svn r8541: Missed something in last
+	- Omega via svn r8540: Council of Elders mod
+	- nbluewiz via svn r8539: # DBM-GUI : Add global hide setting to range frame and info frame. But we can still use /range command if range frame hide option is selected.
+	- Omega via svn r8538: Don't yell in LFR for jasper chains
+	- Omega via svn r8537: Add a global disable for countdown (by setting voice to none) Add "focus" to interrupt check on Shekzeer Force a defaults reset on Lei shi icon setting and add additional note to option.
+	- ultrashining via svn r8536: zhTW update
+	- nbluewiz via svn r8535: # Meljarak : Add count to Quickening special warning. # Lei Shi : Fix Scary Fog timer showing on normal difficulty. # Sha of Fear : More bug fix and failsafe stuff if you die on platform and revived. (Added check stuff you are on platform or not.)
+	- nbluewiz via svn r8534: # Lei Shi : Improve Scary Fog stuff. (untested, needs review.) For most raids, do not reset Scary Fog debuff every time if debuff is higher than 12~13 stacks. So, Scary Fog bar needs to be consist if nobody resets that debuff. This scheduler may be solve the problem? (also, her do not reset Scary Fog debuff during hide.)
+	- ultrashining via svn r8533: zhTW update
+	- nbluewiz via svn r8532: # Lei Shi : Add failsafe.
+	- nbluewiz via svn r8531: # Zorlok : Show arrows only on your boss.
+	- nbluewiz via svn r8530: # Change heroic spell order to last. # Meljarak : Change Quickening warning to count warning (For Mass Dispel strats). Also Add mob to Reinforcement special warning.
+	- Edoz via svn r8529: # frFR Update
+	- Omega via svn r8528: add a corrupted dissonance field timer
+	- Omega via svn r8527: Some more zorlok fixes. I still keep forgetting to log the damn events to get timing of first attenuation or verve cast by an echo after they spawn
+	- Edoz via svn r8526: # frFR Update
+	- Omega via svn r8525: add warning for when an echo spawns Redo protectors code to not scan the whole damn raid. also add in code so it is future proof when you can enter the zone next expansion outside of a raid group. oondasta tank code should now be functional
+	- Omega via svn r8524: Now that servers have FINALLY restarted, the new normal protector timer is know verified from 5 different logs.
+	- swix via svn r8523: typo
+	- swix via svn r8522: ruRU update
+	- Omega via svn r8521: then 10 mans thing is a valid point,and since that's like 90% of raiders these days, i'll concede to your option defaults. The people turning it off will actually be a minority.
+	- Edoz via svn r8520: # frFR Update
+	- ultrashining via svn r8519: zhTW update
+	- nbluewiz via svn r8518: # Spirit Kings : typo
+	- Omega via svn r8517: fix a reported 10 man timer problem
+	- nbluewiz via svn r8516: # Unsok : Default changes for koKR. See comments.
+	- Omega via svn r8515: option default tweak. that warning will be confusing for most strats. most common strat i seen is perm tank construct interrupts and the dps/healers roll stacks on the boss and have nothing to do with interrupts. If someone uses a diff strat though they can turn the on the warning.
+	- nbluewiz via svn r8514: # Unsok : Add interrupt personal spam warning for Amber Amber Monstrosity's Amber Explosion. Because too many people fails to interrupt Amber Explosion, if it is heroic, it will be AUTO WIPE.
+	- nbluewiz via svn r8513: # Sha of Fear : Fix health frame issues. (UNIT_DIED not fires)
+	- ultrashining via svn r8512: zhTW update
+	- swix via svn r8511: ruRU update
+	- swix via svn r8510: ruRU update
+	- Edoz via svn r8509: # frFR Update
+	- ebmor via svn r8508: deDE update
+	- Omega via svn r8507: Some small tweaks to Shekzeer timers
+	- nbluewiz via svn r8506: # Sha of Fear : Add Huddle In Terror icon function.
+	- nbluewiz via svn r8505: # Spirit Kings : Fix Arrows timer bug.
+	- nbluewiz via svn r8504: # koKR update.
+	- nbluewiz via svn r8503: # Core : Great improve for timer recovery. # Shekzeer : Fix Dissonance Field timer. # Unsok : Change Amber Scalpel timer to next.
+	- nbluewiz via svn r8502: # Elegon : Remove custom health frame option # Shekzeer : Tweak option defaults. Fix timer cancel on phase 2. # koKR update.
+	- Edoz via svn r8501: # frFR Update
+	- Omega via svn r8500: missed one
+	- Omega via svn r8499: even with unit power frequent, it only fires every 2 energy, so odd numbers don't work. just change them all to even Switch back to UNIT_POWER since that should be good enough if frequent isn't working for odds
+	- Omega via svn r8498: add Dissonance field stuff. I remember this stuff didn't show in combat log when i last logged fight ages ago, i wonder when it was fixed? None the less it's here now.
+	- ebmor via svn r8497: deDE update
+	- nbluewiz via svn r8496: # Sha of Fear : Fix health bar issue. Also do not wall check on dead.
+	- nbluewiz via svn r8495: # Shekzeer : Cancel Cry of Terror timer on Phase 2.
+	- Omega via svn r8494: increase huddle in terror targets scheduling based on video that showed 3 warnings going off with target names instead of 1 (they aren't all affected within only 0.3 seconds)
+	- add Throne of Thunders to .pkgmeta
+	- Edoz via svn r8493: # frFR Update
+	- nbluewiz via svn r8492: # Protectors of Endless : fix global leak. # koKR update.
+	- Omega via svn r8491: Fix some logic fail in protectors code
+	- Omega via svn r8490: some experimental protectors stuff. may lua error.
+	- nbluewiz via svn r8489: # Remove unneeded parameter for DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell. # Remove useless locals. # Massive koKR update.
+	- DiabloHu via svn r8488: zhCN update
+	- Omega via svn r8487: countdown for lighting storm. off by default because the CD is SLIGHTLY variable. it's usually within 2 seconds though so countdown is still useful, but i only encourage countdowns on by default for NEXT timers
+	- ultrashining via svn r8486: zhTW update
+	- Omega via svn r8485: Add a counter for asani casts (used for interrupt rotations)
+	- nbluewiz via svn r8484: # Lei Shi : Fix special CD bug.
+	- Omega via svn r8483: significant sha of fear updates from suggestions and private logs sent by good contributor.
+	- nbluewiz via svn r8482: # Garalon : Add count for heroic Crush.
+	- nbluewiz via svn r8481: # Sha of Frar : Missing count warn.
+	- nbluewiz via svn r8480: # koKR update.
+	- Omega via svn r8479: bump sort order for mods. Add blank mods and map data and encounter IDs for 5.2 raid.
+	- Edoz via svn r8478: # frFR Update
+	- Omega via svn r8477: Update pandaria mapsizes for 2 new zones in 5.2
+	- nbluewiz via svn r8476: # Core : Add monk healer to manauser check.
+	- nbluewiz via svn r8475: # koKR update.
+	- nbluewiz via svn r8474: # Gu Cloudstrike : Update Static Field warn text. Previously, we can't disable that warnings, so use variable warning text like Spirit Kings. (All texts from generic, not need locales) # koKR update.
+	- nbluewiz via svn r8473: # Core : Change MONK to melee. # Spirit Kings : Apply variable timer text to Rain of Arrows timer. On heroic, this spell has fixed cd, but on other difficulty, it has variable cd. This timer still displays on heroic as Next, but not heroic, the timer will be displayed as CD bar.
+	- nbluewiz via svn r8472: # Garalon : Phase 2 text warning. # koKR update.
+	- Omega via svn r8471: Cancel crush timer/count in phase2 of garalon. Zorlok, do not show special warning/buffactive timer for attenuation if the source is > 60 yards away. (if it works, if not, it'll just work like it always did. if we can't determine tank it'll just always warn)
+	- nbluewiz via svn r8470: # Sha of Fear : Add submerge count. # KoKR update.
+	- Omega via svn r8469: Probably fix lua error
+	- Omega via svn r8468: Fix bug in last Add loading condition for it to core
+	- Omega via svn r8467: Oondasta mod (4.2 world boss) Bump alpha version to 5.2.0. 5.2 Work has begun.
+	- Omega via svn r8466: revert zorlok change. I'm well aware zorlok is only boss that casts those things. That is the point of check. It's so you do not get exhale/inhale warnings when you are on the ECHO's platforms. Redid exhale warning to work for healers and still filter.
+	- nbluewiz via svn r8465: # Unsok : Update Reshape Life bar on phase changes. Add Monstrosity health bar. # Zorlok : Inhale and Exhale warn only warns boss's skill. Ignore echo.
+	- nbluewiz via svn r8464: # Garajal : Don't warn suicide in lfr.
+	- nbluewiz via svn r8463: # Tayak : Fix Unseen Strike arrow not hiding on near position. # Feng : Cancel Epicenter bar when spell interrupted.
+	- Edoz via svn r8462: # frFR Update
+	- ebmor via svn r8461: deDE update
+	- ultrashining via svn r8460: zhTW update
+	- nbluewiz via svn r8459: # Sha of Fear : Fix some heroic warning and bar by video. Still, I have no log..
+	- nbluewiz via svn r8458: # Add missing locale check to Scenario mod locals. # koKR update.
+	- nbluewiz via svn r8457: # More blank cleanup.
+	- nbluewiz via svn r8456: # Core : Remove useless blank. # Sha of Fear : Fix fearless check. # Lei Shi : Add count to special bar. # Tsulong : Add more next phase check. Add count to Terror warning. # Unsok : Also add count to Reshape bar.
+	- Omega via svn r8455: switch to UNIT_POWER_FREQUENT on unsok, that will probably fix most of warnings not firing. Energy goes down fast and UNIT_POWER misses some of them Also fix registration on combat start that was not supposed to stick around. it's registered as a short time event now only while a construct
+	- ultrashining via svn r8454: zhTW update
+	- Edoz via svn r8453: # frFR Update
+	- Omega via svn r8452: fix lua error in sha of fear
+	- nbluewiz via svn r8451: # Protectors of Endless : Remove lfr berserk. # Lei Shi : 25 man heroic use 6 icons. # Sha of Fear : Add Breath of Fear soon special warning. This warn shows only you are not in wall. And do not show breath of fear bar and countdown if not needed. (on Fearless) Also add platform mob health bar (default ui not supports it).
+	- nbluewiz via svn r8450: # Sha of Fear : Fix Dread Spray bar not canceling, also fix Dread Spray special warning not showing.
+	- nbluewiz via svn r8449: # Meljarak : I'm dumb... add missed firststrike check.
+	- ultrashining via svn r8448: zhTW update
+	- nbluewiz via svn r8447: # Meljarak : Remove sync from Korthik Strike warn. UNIT_AURA is not personal event, so not need syncing. Also Korthik Strike CD more be accruate. # Multi boss health frame stuff, cast bar stuff.
+	- DiabloHu via svn r8446: zhCN update
+	- Edoz via svn r8445: # frFR Update
+	- Edoz via svn r8444: # frFR Update
+	- nbluewiz via svn r8443: # Brawlers : SORRY, I'M DUMB. THIS IS *REAL* FIX....
+	- nbluewiz via svn r8442: # Brawlers : Fix stupid bug.
+	- nbluewiz via svn r8441: # Brawlers : Final fix for Berserk bar starting issue. (Tested completely) # Sha of Anger : Adjust bad Unleashed Wrath CD.
+	- Omega via svn r8440: oops, don't move the arrows though.
+	- Omega via svn r8439: Recode attenuation stuff on zorlok to fix a design oversight in direction IDs. (Direction IDs are ALWAYS cast by vizier. it's non direction ID that identifies echo). Don't special warn first platform.
+	- nbluewiz via svn r8438: # Tsulong : Do not start Nightmare warn if night phase remaining less then 16 sec. # koKR update.
+	- Omega via svn r8437: Only do latency check if not in group. If we are alone we don't want to prevent MatchBegin from firing.
+	- Omega via svn r8436: Move the damage events to the already existing short term events stuff already in place for "hide".
+	- Omega via svn r8435: Some rewording
+	- Omega via svn r8434: save cpu with scheduling, might as well only show it on hide end. that's only time it shows anyways. based on data i'm seeing so far. i can't see any pattern yet. but i'm gonna keep collecting for now.
+	- Omega via svn r8433: Proboskus2. :p
+	- nbluewiz via svn r8432: # koKR update.
+	- nbluewiz via svn r8431: # Brawlers : Fix Match begin late sync. (espcially on Probokus) # Brawlers/Rank6 : Fix unknown.
+	- Omega via svn r8430: Horde yell not same
+	- ultrashining via svn r8429: zhTW update
+	- Edoz via svn r8428: # frFR Update
+	- nbluewiz via svn r8427: # Sha of Fear : Fix platform warning not showing. (on 25 man) # Tsulong : Fix 1st Nightmare countdown double plays.
+	- nbluewiz via svn r8426: # Garajal : Change pull trigger. Since "combat" also works (except lfr), this trigger is main, yell is secondary.
+	- nbluewiz via svn r8425: # Alpha version problem. Check this. (and remove comment if check this) # koKR update.
+	- Omega via svn r8424: - Brawler - General: Raid warning when Zippi Gallox/Willard "Bubbles" Wilcox cast portal to enemy capital, as this is extremely rare, and sad to miss. - Brawler - Blat: Skull on original. - Brawler - Dominika: Skull on original.
+	- tandanu via svn r8423: increment version number for alpha builds

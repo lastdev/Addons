@@ -1,0 +1,15 @@
+tag v3.0.5
+67c506140b618403c220aded0ba8520d3f8220ab
+David Lynch <kemayo@gmail.com>
+2013-03-16 18:31:56 -0500
+
+Tagging v3.0.5
+
+
+--------------------
+
+David Lynch:
+	- Add info to handynotes, and fix display in uldum again (maybe)
+	- Typo
+	- Cunning plan to have notes on rares which aren't just encoded into the name.
+	- I will even run it once more with all locationless rares stripped away.

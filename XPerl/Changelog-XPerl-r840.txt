@@ -1,0 +1,58 @@
+------------------------------------------------------------------------
+r840 | asixandur | 2013-03-11 11:20:27 +0000 (Mon, 11 Mar 2013) | 2 lines
+Changed paths:
+   M /trunk/XPerl.toc
+   M /trunk/XPerl_ArcaneBar/XPerl_ArcaneBar.toc
+   M /trunk/XPerl_CustomHighlight/XPerl_CustomHighlight.toc
+   M /trunk/XPerl_Options/XPerl_Options.toc
+   M /trunk/XPerl_Party/XPerl_Party.toc
+   M /trunk/XPerl_PartyPet/XPerl_PartyPet.toc
+   M /trunk/XPerl_Player/XPerl_Player.toc
+   M /trunk/XPerl_PlayerBuffs/XPerl_PlayerBuffs.toc
+   M /trunk/XPerl_PlayerPet/XPerl_PlayerPet.toc
+   M /trunk/XPerl_RaidAdmin/XPerl_RaidAdmin.toc
+   M /trunk/XPerl_RaidFrames/XPerl_RaidFrames.toc
+   M /trunk/XPerl_RaidHelper/XPerl_RaidHelper.toc
+   M /trunk/XPerl_RaidMonitor/XPerl_RaidMonitor.toc
+   M /trunk/XPerl_RaidPets/XPerl_RaidPets.toc
+   M /trunk/XPerl_Target/XPerl_Target.toc
+   M /trunk/XPerl_TargetTarget/XPerl_TargetTarget.toc
+   M /trunk/localization.lua
+
+Tagging as Release
+TOC bump for 5.2
+------------------------------------------------------------------------
+r839 | asixandur | 2013-03-09 10:32:51 +0000 (Sat, 09 Mar 2013) | 2 lines
+Changed paths:
+   M /trunk/XPerl.lua
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+
+Hey guys, SET FOCUS IS BACK!!
+Not tested extensively. Focus is probably a bit bugged because only a few used it after data
+------------------------------------------------------------------------
+r838 | asixandur | 2013-03-04 11:36:20 +0000 (Mon, 04 Mar 2013) | 1 line
+Changed paths:
+   M /trunk/XPerl.lua
+
+Added few bandages
+------------------------------------------------------------------------
+r837 | asixandur | 2013-02-17 06:21:55 +0000 (Sun, 17 Feb 2013) | 1 line
+Changed paths:
+   M /trunk/XPerl_PlayerPet/XPerl_Player_Pet.lua
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+
+Few workarounds
+------------------------------------------------------------------------
+r836 | tharai | 2013-02-13 06:13:06 +0000 (Wed, 13 Feb 2013) | 1 line
+Changed paths:
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+
+Use float rather then decimal, more precision for health.
+------------------------------------------------------------------------
+r835 | asixandur | 2013-02-02 19:53:33 +0000 (Sat, 02 Feb 2013) | 1 line
+Changed paths:
+   M /trunk/XPerl_Options/XPerl_FrameOptions.xml
+   M /trunk/XPerl_Player/XPerl_Player.lua
+
+Enabled Totem frame for Mages to track Runes of Power
+------------------------------------------------------------------------

@@ -1,0 +1,12 @@
+## Interface: 50200
+## Version: r203
+## Author: Xemnosyst
+## Title: Bitten's SpellFlash Library
+## Notes: This addon does nothing on its own.  It is required to make all other Bitten's SpellFlash addons work.
+## URL: http://www.curse.com/addons/wow/bitten-common
+## Dependencies: SpellFlash
+## X-Curse-Packaged-Version: r203
+## X-Curse-Project-Name: Bitten's SpellFlash Library
+## X-Curse-Project-ID: bitten-common
+## X-Curse-Repository-ID: wow/bitten-common/mainline
+BittensSpellFlashLibrary.xml

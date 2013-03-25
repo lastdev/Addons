@@ -1,0 +1,41 @@
+------------------------------------------------------------------------
+r560 | funkydude | 2013-03-06 00:20:31 +0000 (Wed, 06 Mar 2013) | 1 line
+Changed paths:
+   A /tags/r560-release (from /trunk:559)
+
+Tagging as r560-release
+------------------------------------------------------------------------
+r559 | ywfn | 2013-03-06 00:14:12 +0000 (Wed, 06 Mar 2013) | 2 lines
+Changed paths:
+   M /trunk/modules/Cooldowns.lua
+
+Update various cooldowns for 5.2 changes (and a few 5.1 changes too...)
+
+------------------------------------------------------------------------
+r557 | stanzilla | 2013-03-05 23:23:19 +0000 (Tue, 05 Mar 2013) | 1 line
+Changed paths:
+   M /trunk/oRA3.toc
+
+TOC to 50200
+------------------------------------------------------------------------
+r556 | ywfn | 2013-03-05 22:24:54 +0000 (Tue, 05 Mar 2013) | 2 lines
+Changed paths:
+   M /trunk/modules/ReadyCheck.lua
+
+Oops, fix that fix
+
+------------------------------------------------------------------------
+r555 | ywfn | 2013-03-05 22:15:48 +0000 (Tue, 05 Mar 2013) | 2 lines
+Changed paths:
+   M /trunk/modules/ReadyCheck.lua
+
+Fix 5.2 removal of GetInstanceDifficulty() 
+
+------------------------------------------------------------------------
+r554 | durcyn | 2012-12-28 01:11:35 +0000 (Fri, 28 Dec 2012) | 2 lines
+Changed paths:
+   M /trunk/modules/Invite.lua
+
+No, rank-invite slash command really shouldn't be case sensitive.
+
+------------------------------------------------------------------------

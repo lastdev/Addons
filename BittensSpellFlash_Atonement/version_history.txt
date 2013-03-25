@@ -1,0 +1,37 @@
+== Version 2.2.1
+NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
+
+== Version 2.2.0
+NOTE: Your options will be reset when you upgrade to this version.
+* Updated rotation for 5.2.
+* Repackaging so that Bitten's SpellFlash Library is included with the addon, instead of downloaded separately.
+* Several other internal changes.
+
+== Version 2.1.0
+* Added Mindbender.
+* Shadowfiend now flashes at 76% mana, up from 70%.
+* Improved mana calculations (they now take into account regen while casting).
+
+== Version 2.0.1
+* Making the "Out of Date" status go away.  Please report any real issues w/ the new patch.
+
+== Version 2.0.0
+* Updated for MoP.
+
+== Version 1.1.2
+* Bugfix: Power Word: Shield no longer flashes for a second between the shield being consumed and Rapture being applied.
+
+== Version 1.1.1
+* Bugfix: dead people were tricking it into thinking you needed to heal them!
+
+== Version 1.1.0
+* Now flashes Power Word: Shield during the mana-conscious phase if you can net extra mana from Rapture.
+* Archangel will now flash during the mana-conscious phase regardless of whether anyone needs healing.
+
+== Version 1.0.1
+* No longer tries to announce anything in a raid.  It's too buggy when there are multiple healers.
+* Whispers now work cross-realm.
+* Announcement variables are now localizable.
+
+== Version 1.0.0
+* Initial Release

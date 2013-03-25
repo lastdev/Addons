@@ -1,0 +1,15 @@
+tag 5.2.0.46-Beta
+344de4b5b8218f4efcf28a43a7e23523d6f2c9cb
+tekkub :bear:  <tekkub@gmail.com>
+2013-03-09 17:00:48 -0700
+
+Weekly build
+
+
+--------------------
+
+tekkub :bear: :
+	- Weekly build 5.2.0.46-Beta
+	- Update changelog for 5.2.0.46-Beta
+	- Updating TOC to 50200
+	- Add reagents to the enchanting panda panel

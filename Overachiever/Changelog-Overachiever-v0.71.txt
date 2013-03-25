@@ -1,0 +1,22 @@
+------------------------------------------------------------------------
+r112 | tuhljin | 2013-03-16 22:49:51 +0000 (Sat, 16 Mar 2013) | 1 line
+Changed paths:
+   A /tags/v0.71 (from /trunk:111)
+
+Tagging as v0.71
+------------------------------------------------------------------------
+r111 | tuhljin | 2013-03-16 22:44:42 +0000 (Sat, 16 Mar 2013) | 3 lines
+Changed paths:
+   M /trunk/GameTip.lua
+   M /trunk/Overachiever.toc
+   M /trunk/Overachiever_Tabs/Overachiever_Tabs.toc
+   M /trunk/Overachiever_Tabs/Suggestions.lua
+   M /trunk/Overachiever_Tabs/build.lua
+   M /trunk/Overachiever_Trade/Overachiever_Trade.toc
+   M /trunk/libs/TjBagWatch.lua
+   M /trunk/readme.txt
+
+- Updated for WoW patch 5.2.
+- Tabs module: Corrected a taint issue that could occur when achievements were added to a Watch list from another tab.
+- Suggestions Tab: Added suggestions for Throne of Thunder, Isle of Thunder, and a missing one for Vale of Eternal Blossoms ("Eternally in the Vale").
+------------------------------------------------------------------------

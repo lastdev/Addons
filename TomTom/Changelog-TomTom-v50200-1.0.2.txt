@@ -1,0 +1,12 @@
+tag v50200-1.0.2
+c724d633718309c86762e4cc76a55537266cf0cf
+James Whitehead II <jnwhiteh@gmail.com>
+2013-03-06 03:01:54 +0000
+
+Tagging v50200-1.0.2
+
+
+--------------------
+
+James Whitehead II:
+	- Updating Astrolabe and bumping ToC

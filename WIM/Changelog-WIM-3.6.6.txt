@@ -1,0 +1,60 @@
+------------------------------------------------------------------------
+r370 | funkydude | 2013-03-06 15:27:03 +0000 (Wed, 06 Mar 2013) | 1 line
+Changed paths:
+   A /tags/3.6.6 (from /trunk:369)
+
+Tagging as 3.6.6
+------------------------------------------------------------------------
+r369 | funkydude | 2013-03-05 14:18:10 +0000 (Tue, 05 Mar 2013) | 1 line
+Changed paths:
+   M /trunk/Sources/WindowHandler.lua
+
+Fix some fading issues by using a small delay rather than re-writing the entire thing
+------------------------------------------------------------------------
+r367 | mysticalos | 2013-03-05 02:25:02 +0000 (Tue, 05 Mar 2013) | 1 line
+Changed paths:
+   M /trunk/ChangeLog.lua
+   M /trunk/WIM.lua
+   M /trunk/WIM.toc
+
+TOC to 50200, before Stanzilla does it
+------------------------------------------------------------------------
+r366 | dridzt | 2013-03-03 18:44:07 +0000 (Sun, 03 Mar 2013) | 2 lines
+Changed paths:
+   M /trunk/Modules/WhisperEngine.lua
+   M /trunk/Sources/WindowHandler.lua
+
+- Add missing chatType to a few places that were missed (thx to Lombra for spotting 2 of those)
+- Should fix tickets 358,381 (re-whisper using Shift-R) and ticket 328 (use <Tab> to move between windows or go to next tell target if the relevant option is checked)
+------------------------------------------------------------------------
+r365 | funkydude | 2013-02-24 16:59:02 +0000 (Sun, 24 Feb 2013) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/Libs
+   M /trunk/Libs/Includes.xml
+   M /trunk/Sources/WindowHandler.lua
+   M /trunk/WIM.toc
+
+replace frame fade with animations & embed LibChatAnims
+------------------------------------------------------------------------
+r364 | dridzt | 2013-02-20 13:09:34 +0000 (Wed, 20 Feb 2013) | 1 line
+Changed paths:
+   M /trunk/Modules/Emoticons.lua
+
+- Fix scope error in ticket 379 fix.
+------------------------------------------------------------------------
+r363 | dridzt | 2013-02-20 11:34:25 +0000 (Wed, 20 Feb 2013) | 2 lines
+Changed paths:
+   M /trunk/Modules/ChatEngine.lua
+   M /trunk/Modules/Emoticons.lua
+   M /trunk/Sources/WindowHandler.lua
+
+- Ticket 344, error with chat color if party/instance chat handled by WIM.
+- Ticket 379, do emoticon string replacements in one operation instead of looping to prevent 'script ran too long' errors.
+------------------------------------------------------------------------
+r362 | mysticalos | 2013-02-05 23:13:33 +0000 (Tue, 05 Feb 2013) | 1 line
+Changed paths:
+   M /trunk/Skins/Default/class_icons.tga
+
+update battle.net icon to blizzards new artwork for it
+------------------------------------------------------------------------

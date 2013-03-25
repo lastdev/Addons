@@ -1,0 +1,14 @@
+tag 2.4.6
+d29adcc0e00cf30ab7658f6ea6356ca2831d401c
+James D. Callahan III <jcallahan@curse.com>
+2013-03-05 21:37:52 -0600
+
+
+
+--------------------
+
+James D. Callahan III:
+	- Do tooltip cleanup when the list frame hides, instead of when the main panel does. Nil out the selected_entry as well.
+	- Hide the acquire and spell tooltips when the main panel is hidden.
+	- The plus/minus buttons next to list entries no longer show tooltips, and are now the only way to expand/collapse entries. Clicking on an entry will now select it, and make its tooltip sticky until it is unselected or another entry is selected. The tooltip now has a scrollbar - selecting an entry allows it to be used.
+	- Cleanup.
