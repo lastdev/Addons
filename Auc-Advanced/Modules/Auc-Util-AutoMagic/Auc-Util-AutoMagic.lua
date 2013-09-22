@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: Auc-Util-AutoMagic.lua 5379 2012-11-12 19:53:01Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: Auc-Util-AutoMagic.lua 5390 2012-12-22 00:55:10Z kandoko $
 	URL: http://auctioneeraddon.com/
 
 	AutoMagic is an Auctioneer module which automates mundane tasks for you.
@@ -337,7 +337,7 @@ function lib.setWorkingItem(link)
 	if linkType ~= "item" then return end
 	local name, _, _, _, _, _, _, _, _, texture = GetItemInfo(link)
 	autosellframe.workingname:SetText(name)
-	autosellframe.slot:SetTexture(texture)
+	autosellframe.slot:SetNormalTexture(texture)
 	myworkingtable = {}
 	for k, n in pairs(myworkingtable) do
 		myworkingtable[k] = nil
@@ -369,12 +369,7 @@ end
 
 function autosellframe.ClearIcon()
 	autosellframe.workingname:SetText("Item Name")
-	autosellframe.slot:SetTexture("Interface\\Buttons\\UI-EmptySlot")
-end
-
-
-function autosellframe.IconClicked()
-	autosellframe.ClearIcon()
+	autosellframe.slot:SetNormalTexture(nil)
 end
 
 
@@ -383,6 +378,8 @@ function lib.autoSellIconDrag()
 	ClearCursor()
 	if objtype == "item" then
 		lib.setWorkingItem(link)
+	else
+		autosellframe.ClearIcon()
 	end
 end
 
@@ -561,20 +558,14 @@ function lib.makeautosellgui()
 	local SelectBox = LibStub:GetLibrary("SelectBox")
 	local ScrollSheet = LibStub:GetLibrary("ScrollSheet")
 
-	autosellframe.slot = autosellframe:CreateTexture(nil, "ARTWORK")
+	
+	autosellframe.slot = CreateFrame("Button", "AutoSellFrameSlot", autosellframe, "PopupButtonTemplate")
 	autosellframe.slot:SetPoint("TOPLEFT", autosellframe, "TOPLEFT", 23, -50)
-	autosellframe.slot:SetWidth(45)
-	autosellframe.slot:SetHeight(45)
-	autosellframe.slot:SetTexCoord(0.15, 0.85, 0.15, 0.85)
-	autosellframe.slot:SetTexture("Interface\\Buttons\\UI-EmptySlot")
-
-	autosellframe.icon = CreateFrame("Button", nil, autosellframe)
-	autosellframe.icon:SetPoint("TOPLEFT", autosellframe.slot, "TOPLEFT", 3, -3)
-	autosellframe.icon:SetWidth(38)
-	autosellframe.icon:SetHeight(38)
-	autosellframe.icon:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square.blp")
-	autosellframe.icon:SetScript("OnClick", autosellframe.IconClicked)
-	autosellframe.icon:SetScript("OnReceiveDrag", lib.autoSellIconDrag)
+	autosellframe.slot:SetWidth(38)
+	autosellframe.slot:SetHeight(38)
+	autosellframe.slot:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square.blp")
+	autosellframe.slot:SetScript("OnClick", lib.autoSellIconDrag)
+	autosellframe.slot:SetScript("OnReceiveDrag", lib.autoSellIconDrag)	
 
 	autosellframe.slot.help = autosellframe:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	autosellframe.slot.help:SetPoint("LEFT", autosellframe.slot, "RIGHT", 2, 7)
@@ -710,4 +701,4 @@ function lib.ClientItemCacheRefresh(link)
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AutoMagic/Auc-Util-AutoMagic.lua $", "$Rev: 5379 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-AutoMagic/Auc-Util-AutoMagic.lua $", "$Rev: 5390 $")

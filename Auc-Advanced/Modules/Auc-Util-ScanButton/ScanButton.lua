@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Scan Button module
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: ScanButton.lua 5320 2012-08-08 12:07:37Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: ScanButton.lua 5403 2013-04-03 16:50:32Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer module that adds a textual scan progress
@@ -189,7 +189,7 @@ function private.HookAH()
 	msg.Text = msg:CreateFontString(nil, "HIGH")
 	msg.Text:SetPoint("TOPLEFT", msg, "TOPLEFT", 20, -20)
 	msg.Text:SetPoint("BOTTOMRIGHT", msg.Done, "TOPRIGHT", -10, 10)
-	msg.Text:SetFont("Fonts\\FRIZQT__.TTF",14)
+	msg.Text:SetFont(STANDARD_TEXT_FONT,14)
 	msg.Text:SetJustifyH("LEFT")
 	msg.Text:SetJustifyV("TOP")
 	msg.Text:SetShadowColor(0,0,0)
@@ -241,7 +241,7 @@ function private.UpdateScanProgress(state, _, _, _, _, _, _, scansQueued)
 		progressBarOptions.pending = 0
 		AucAdvanced.API.ProgressBars("ScanButtonLuaStopCount")--hide progress bar
 	end
-	
+
 	private.blink = nil
 	if scanning and not paused then
 		private.buttons.pause:Enable()
@@ -342,15 +342,15 @@ end
 function private.stop()
 	--this just makes the scan queue count decrease by 1 until the next processor event  sets it to a proper # helpfull if user is spamming stop button
 	local count = tonumber(private.buttons.stop.count:GetText() )
-	if count > 0 then 
+	if count > 0 then
 		count = count -1
 		AucAdvanced.API.ProgressBars("ScanButtonLuaStopCount", 100, true, count.." scans remaining", progressBarOptions)
 	else
 		AucAdvanced.API.ProgressBars("ScanButtonLuaStopCount")
 	end
 	private.buttons.stop.count:SetText(count)
-	
-	
+
+
 	AucAdvanced.Scan.SetPaused(false)
 	AucAdvanced.Scan.Cancel()
 	private.UpdateScanProgress()
@@ -546,4 +546,4 @@ function private.AuctionFrameFilters_UpdateClasses()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-ScanButton/ScanButton.lua $", "$Rev: 5320 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-ScanButton/ScanButton.lua $", "$Rev: 5403 $")

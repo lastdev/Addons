@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(727, "DBM-Party-MoP", 6, 324)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8294 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(62205)
-mod:SetModelID(43151)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -30,16 +29,16 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(121447) then
+	if args.spellId == 121447 then
 		warnResin:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnResin:Show()
 		end
-	elseif args:IsSpellID(121443) then
+	elseif args.spellId == 121443 then
 		if args:IsPlayer() then
 			specWarnCausticPitch:Show()
 		end
-	elseif args:IsSpellID(121282) and not windsActive then
+	elseif args.spellId == 121282 and not windsActive then
 		windsActive = true
 		timerResinCD:Cancel()
 		warnGustingWinds:Show()

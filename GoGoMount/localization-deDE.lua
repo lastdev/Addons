@@ -42,6 +42,8 @@
 		PaladinOptions = "Paladin-Einstellungen", -- Needs review
 		RemoveBuffs = "Entferne Buffs die das Aufsitzen verhindern",
 		RemoveBuffs_Long = "GoGoMount wird versuchen, Stärkungszauber und Gestaltwandlungen von Zaubersprüchen und Gegenständen zu entfernen, die das Aufsteigen verhindern. Dies funktioniet nur für bekannte Stärkungszauber und in einigen Fällen muss der GoGoMount-Button zweimal geklickt werden.", -- Needs review
+		ShamanOptions = "Shaman Options", -- Requires localization
+		ShamanSingleClick = "Single click mount from Ghost Wolf Form instead of dismounting", -- Requires localization
 		UnknownMountFound = "Ein unbekanntes Reittier wurde in deiner Liste entdeckt. Bitte melde es, damit es in zukünftige Versionen von GoGoMount integriert werden kann.",
 		UseAspectOfThePackInstead = "Aspekt des Rudels statt Aspekt des Geparden verwenden",
 		UseAspectOfThePackInstead_Long = "Wenn aktiviert, wird GoGoMount den Aspekt des Rudels statt des Aspekt des Geparden verwenden. Lokale Zonen- oder globale Einstellungen überschreiben diese Einstellung. Wenn dies auf Aspekt des Rudels eingestellt ist und du hast Aspekt des Geparden als Zonenfavoriten eingestellt, wird Aspekt des Geparden verwendet.", -- Needs review

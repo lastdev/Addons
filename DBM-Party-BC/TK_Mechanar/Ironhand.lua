@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ironhand", "DBM-Party-BC", 13)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 333 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 494 $"):sub(12, -3))
 mod:SetCreatureID(19710)
 mod:SetModelID(21191)--Bad angle, but not terrible enough to disable i guess
 
@@ -14,16 +14,12 @@ mod:RegisterEvents(
 	"RAID_BOSS_EMOTE"
 )
 
-local isDispeller = select(2, UnitClass("player")) == "MAGE"
-				 or select(2, UnitClass("player")) == "PRIEST"
-				 or select(2, UnitClass("player")) == "SHAMAN"
-
 local warnShadowpower       = mod:NewSpellAnnounce(35322)
 local timerShadowpower      = mod:NewBuffActiveTimer(15, 35322)
 local timerJackhammer       = mod:NewBuffActiveTimer(8, 39194)
 local WarnJackHammer		= mod:NewSpellAnnounce(39194)
 local specWarnJackHammer	= mod:NewSpecialWarningRun(39194, mod:IsMelee())
-local specWarnShadowpower   = mod:NewSpecialWarningDispel(35322, isDispeller)
+local specWarnShadowpower   = mod:NewSpecialWarningDispel(35322, mod:IsMagicDispeller())
 
 local soundJackhammer = mod:NewSound(39194, nil, mod:IsMelee())
 

@@ -15,13 +15,10 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnAttenuation		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(127834),
-	warnEcho			= "메아리 생성시 알림 보기",
-	warnEchoDown		= "메아리 처치시 알림 보기",
-	specwarnAttenuation	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(127834),
-	specwarnPlatform	= "조르로크가 단상 이동시 특수 경고 보기",
-	ArrowOnAttenuation	= "$spell:127834 시전 중에 이동해야 될 방향을 DBM 화살표로 보기",
-	MindControlIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122740)
+	warnEcho			= "메아리 생성 알림 보기",
+	warnEchoDown		= "메아리 처치 알림 보기",
+	specwarnPlatform	= "단상 이동 특수 경고 보기",
+	ArrowOnAttenuation	= "$spell:127834 활성화 중에 이동해야 될 방향을 DBM 화살표로 보기"
 })
 
 L:SetMiscLocalization({
@@ -35,8 +32,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(744)
 
 L:SetOptionLocalization({
-	UnseenStrikeArrow	= "$spell:122949 주문의 영향을 누군가 받은 경우 DBM 화살표 보기",
-	RangeFrame			= "$spell:123175 주문에 대한 거리 창 보기(10m)"
+	UnseenStrikeArrow	= "$spell:122949 대상이 정해진 경우 DBM 화살표 보기"
 })
 
 -------------------------------
@@ -50,10 +46,8 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnCrush		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(122774),
 	specwarnUnder	= "가랄론의 보라색 원 안에 있을때 특수 경고 보기",
-	countdownCrush	= DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT:format(122774).."(영웅 난이도만)",
-	PheromonesIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122835)
+	countdownCrush	= DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT:format(122774).."(영웅 난이도만)"
 })
 
 L:SetMiscLocalization({
@@ -66,10 +60,6 @@ L:SetMiscLocalization({
 ----------------------
 L= DBM:GetModLocalization(741)
 
-L:SetOptionLocalization({
-	AmberPrisonIcons	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(121885)
-})
-
 ------------
 -- Amber-Shaper Un'sok --
 ------------
@@ -77,12 +67,12 @@ L= DBM:GetModLocalization(737)
 
 L:SetWarningLocalization({
 	warnReshapeLife				= "%s : >%s< (%d)",
-	warnReshapeLifeTutor		= "1: 대상 차단/공격, 2: 본인 차단, 3: 체력/의지력 회복, 4: 피조물에서 탈출",
+	warnReshapeLifeTutor		= "1: 대상 차단/중첩 생성, 2: 본인 차단, 3: 체력/의지력 회복(주로 3단계에서 사용), 4: 피조물에서 탈출(1,2단계에서 사용)",
 	warnAmberExplosion			= "주문시전 %2$s : >%1$s<",
 	warnAmberExplosionAM		= "호박석 괴수가 호박석 폭발 시전 중 - 지금 차단!",--personal warning.
 	warnInterruptsAvailable		= "%s의 호박석 폭발 차단 가능: >%s<",
 	warnWillPower				= "현재 의지력 : %s",
-	specwarnWillPower			= "의지력 낮음! - 약 5초 남음",
+	specwarnWillPower			= "의지력 낮음 - 피조물에서 탈출하거나 바닥을 드세요!",
 	specwarnAmberExplosionYou	= "당신에게 %s 사용 - 2번으로 차단!",
 	specwarnAmberExplosionAM	= "%s 시전: %s - 1번으로 차단!",
 	specwarnAmberExplosionOther	= "%s 시전: %s - 1번으로 차단!"
@@ -94,20 +84,18 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnReshapeLife				= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(122784),
-	warnReshapeLifeTutor		= "돌연변이 피조물 탑승시 피조물 주문에 대한 설명 보기",
-	warnAmberExplosion			= "$spell:122398 시전시 알림 보기(시전자 포함)",
-	warnAmberExplosionAM		= "호박석 괴수가 $spell:122402 주문을 시전할 때 개별 알림 보기(차단)",
-	warnInterruptsAvailable		= "누가 $spell:122402 주문을 차단할 수 있는지에 대한 알림 보기",
+	warnReshapeLifeTutor		= "돌연변이 피조물 탑승시 피조물 능력에 대한 설명 보기",
+	warnAmberExplosion			= "$spell:122398 시전 알림 보기(당신 포함)",
+	warnAmberExplosionAM		= "호박석 괴수가 $spell:122402을 시전할 때 개인 차단 알림 보기",
+	warnInterruptsAvailable		= "누가 $spell:122402을 차단할 수 있는지에 대한 알림 보기",
 	warnWillPower				= "의지력이 80, 50, 30, 10, 4 일때 알림 보기",
 	specwarnWillPower			= "피조물 탑승 도중 의지력이 낮을 때 특수 경고 보기",
-	specwarnAmberExplosionYou	= "당신의 피조물이 $spell:122402 주문을 시전할때 특수 경고 보기(차단)",
-	specwarnAmberExplosionAM	= "호박석 괴수가 $spell:122402 주문을 시전할때 특수 경고 보기(차단)",
-	specwarnAmberExplosionOther	= "탑승자가 없는 피조물이 $spell:122398 주문을 시전할때 특수 경고 보기(차단)",
-	timerDestabalize			= DBM_CORE_AUTO_TIMER_OPTIONS.target:format(123059),
-	timerAmberExplosionAMCD		= "호박석 괴수의 다음 $spell:122402 바 표시",
-	InfoFrame					= "의지력 정보 창 보기",
-	FixNameplates				= "피조물 탑승시 이름표 겹침 기능 끄기\n(전투 종료시에 원래 설정대로 돌아감)"
+	specwarnAmberExplosionYou	= "당신의 피조물이 $spell:122402을 시전할때 차단 특수 경고 보기",
+	specwarnAmberExplosionAM	= "호박석 괴수가 $spell:122402을 시전할때 차단 특수 경고 보기",
+	specwarnAmberExplosionOther	= "탑승자가 없는 피조물이 $spell:122398을 시전할때 차단 특수 경고 보기",
+	timerAmberExplosionAMCD		= "호박석 괴수의 다음 $spell:122402 바 보기",
+	InfoFrame					= "의지력 정보를 정보 창으로 보기",
+	FixNameplates				= "피조물 탑승시 이름표 겹침 기능 끄기<br/>(전투 종료 후 원래대로 복구됨)"
 })
 
 L:SetMiscLocalization({
@@ -120,18 +108,28 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(743)
 
 L:SetWarningLocalization({
-	warnAmberTrap		= "호박석 덪 생성중 (%d/5)",
+	warnAmberTrap		= "호박석 덪 생성중 (%d/5)"
 })
 
 L:SetOptionLocalization({
 	warnAmberTrap		= "$spell:125826 생성 과정 알림 보기", 
-	InfoFrame			= "$spell:125390 주문의 영향을 받은 대상을 정보 창에서 보기",
-	RangeFrame			= "$spell:123735 주문에 대한 거리 창 보기(5m)",
-	StickyResinIcons	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(124097),
-	HeartOfFearIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(123845)
+	InfoFrame			= "$spell:125390 대상을 정보 창으로 보기"
 })
 
 L:SetMiscLocalization({
 	PlayerDebuffs		= "시선 집중 대상",
 	YellPhase3			= "변명은 이제 지겹다, 여제! 당장 이 멍청이들을 쓸어버리지 않으면 내가 몸소 널 죽이겠다!"
+})
+
+-------------
+--  Trash  --
+-------------
+L = DBM:GetModLocalization("HoFTrash")
+
+L:SetGeneralLocalization({
+	name =	"공포의 심장: 일반구간"
+})
+
+L:SetOptionLocalization({
+	UnseenStrikeArrow	= "$spell:122949 대상이 정해진 경우 DBM 화살표 보기"
 })

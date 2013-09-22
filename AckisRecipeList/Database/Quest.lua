@@ -2,10 +2,10 @@
 ************************************************************************
 Quest.lua
 ************************************************************************
-File date: 2013-02-12T01:48:38Z
-File hash: de80792
-Project hash: f922565
-Project version: 2.4.6
+File date: 2013-09-10T13:23:20Z
+File hash: 4bcba04
+Project hash: 4bcba04
+Project version: 2.5.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -108,6 +108,9 @@ function addon:InitQuest()
 	AddQuest(26623,	Z.DUSKWOOD,			73.8,	43.6,	"Alliance")
 	AddQuest(26860,	Z.LOCH_MODAN,			34.9,	49.1,	"Alliance")
 	AddQuest(31539,	Z.THE_JADE_FOREST,		54.8,	45.0,	"Neutral")
+	AddQuest(33022, Z.VALLEY_OF_THE_FOUR_WINDS,	53.6,	51.2,	"Neutral")
+	AddQuest(33024, Z.VALLEY_OF_THE_FOUR_WINDS,	53.6,	51.2,	"Neutral")
+	AddQuest(33027, Z.VALLEY_OF_THE_FOUR_WINDS,	53.6,	51.2,	"Neutral")
 
 	self.InitQuest = nil
 end

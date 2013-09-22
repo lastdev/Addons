@@ -1,6 +1,6 @@
 --[[
 	Configator - A library to help you create a gui config
-	Version: 5.15.5380 (LikeableLyrebird)
+	Version: 5.18.5433 (PassionatePhascogale)
 	Revision: $Id: Configator.lua 344 2012-10-06 15:56:26Z Esamynn $
 	URL: http://auctioneeraddon.com/dl/
 

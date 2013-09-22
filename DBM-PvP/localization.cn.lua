@@ -53,15 +53,11 @@ L:SetMiscLocalization({
 ----------------------
 --  Alterac Valley  --
 ----------------------
-L = DBM:GetModLocalization("AlteracValley")
-
-L:SetGeneralLocalization({
-	name = "奥特兰克山谷"
-})
+L = DBM:GetModLocalization("z30")
 
 L:SetTimerLocalization({
 	TimerTower = "%s",
-	TimerGY = "%s",
+	TimerGY = "%s"
 })
 
 L:SetOptionLocalization({
@@ -73,11 +69,7 @@ L:SetOptionLocalization({
 --------------------
 --  Arathi Basin  --
 --------------------
-L = DBM:GetModLocalization("ArathiBasin")
-
-L:SetGeneralLocalization({
-	name = "阿拉希盆地"
-})
+L = DBM:GetModLocalization("z529")
 
 L:SetMiscLocalization({
 	ScoreExpr 	= "(%d+)/1600",
@@ -89,7 +81,7 @@ L:SetMiscLocalization({
 })
 
 L:SetTimerLocalization({
-	TimerCap = "%s",
+	TimerCap = "%s"
 })
 
 L:SetOptionLocalization({
@@ -102,14 +94,9 @@ L:SetOptionLocalization({
 ------------------------
 --  Eye of the Storm  --
 ------------------------
-L = DBM:GetModLocalization("EyeoftheStorm")
-
-L:SetGeneralLocalization({
-	name = "风暴之眼"
-})
+L = DBM:GetModLocalization("z566")
 
 L:SetMiscLocalization({
-	ZoneName 		= "风暴之眼",
 	ScoreExpr	 	= "(%d+)/1600",
 	Alliance 		= "联盟",
 	Horde 			= "部落",
@@ -122,58 +109,50 @@ L:SetMiscLocalization({
 })
 
 L:SetTimerLocalization({
-	TimerFlag = "旗帜重置",
+	TimerFlag = "旗帜重置"
 })
 
 L:SetOptionLocalization({
 	TimerWin 		= "计时条：获胜",
 	TimerFlag 		= "计时条：旗帜重置",
-	ShowPointFrame 	= "显示旗帜携带着和预计获胜点数",
+	ShowPointFrame 	= "显示旗帜携带着和预计获胜点数"
 })
 
 ---------------------
 --  Warsong Gulch  --
 ---------------------
-L = DBM:GetModLocalization("WarsongGulch")
-
-L:SetGeneralLocalization({
-	name = "战歌峡谷"
-})
+L = DBM:GetModLocalization("z489")
 
 L:SetMiscLocalization({
 	BgStart60 = "战歌峡谷战斗将在1分钟内开始。",
 	BgStart30 = "战歌峡谷战斗将在30秒钟内开始。做好准备！",
 	Alliance = "联盟",
-	Horde = "部落",	
+	Horde = "部落",
 	InfoErrorText = "携带旗帜者目标功能会在你脱离战斗后恢复。",
 	ExprFlagPickUp = "(.+)的旗帜被(.+)拔起了！",
 	ExprFlagCaptured = "(.+)夺取了(.+)的旗帜！",
 	ExprFlagReturn = "(.+)的旗帜被(.+)还到了它的基地中！",
 	FlagAlliance = "联盟: ",
 	FlagHorde = "部落: ",
-	FlagBase = "基地",
+	FlagBase = "基地"
 })
 
 L:SetTimerLocalization({
-	TimerStart = "战斗即将开始", 
-	TimerFlag = "旗帜重置",
+	TimerStart = "战斗即将开始",
+	TimerFlag = "旗帜重置"
 })
 
 L:SetOptionLocalization({
 	TimerStart  = "计时条：战斗开始",
 	TimerFlag = "计时条：旗帜重置",
 	ShowFlagCarrier = "显示旗帜携带者",
-	ShowFlagCarrierErrorNote = "战斗中显示旗帜携带者错误信息",
+	ShowFlagCarrierErrorNote = "战斗中显示旗帜携带者错误信息"
 })
 
 ------------------------
 --  Isle of Conquest  --
 ------------------------
-L = DBM:GetModLocalization("IsleofConquest")
-
-L:SetGeneralLocalization({
-	name 				= "征服之岛"
-})
+L = DBM:GetModLocalization("z628")
 
 L:SetWarningLocalization({
 	WarnSiegeEngine			= "攻城机具准备好了！",
@@ -209,18 +188,13 @@ L:SetMiscLocalization({
 ------------------
 --  Twin Peaks  --
 ------------------
-L = DBM:GetModLocalization("TwinPeaks")
-
-L:SetGeneralLocalization({
-	name = "双子峰"
-})
+L = DBM:GetModLocalization("z726")
 
 L:SetMiscLocalization({
 	BgStart60 = "战斗将在1分钟内开始。",
 	BgStart30 = "战斗将在30秒钟内开始。做好准备！",
-	ZoneName 			= "双子峰",
 	Alliance 			= "联盟",
-	Horde 				= "部落",	
+	Horde 				= "部落",
 	InfoErrorText		= "携带旗帜者目标功能会在你脱离战斗后恢复。",
 	ExprFlagPickUp = "(.+)的旗帜被(.+)拔起了！",
 	ExprFlagCaptured = "(.+)夺取了(.+)的旗帜！",
@@ -233,25 +207,21 @@ L:SetMiscLocalization({
 })
 
 L:SetTimerLocalization({
-	TimerStart = "战斗即将开始", 
-	TimerFlag = "旗帜重置",
+	TimerStart = "战斗即将开始",
+	TimerFlag = "旗帜重置"
 })
 
 L:SetOptionLocalization({
 	TimerStart  = "计时条：战斗开始",
 	TimerFlag = "计时条：旗帜重置",
 	ShowFlagCarrier = "显示旗帜携带者",
-	ShowFlagCarrierErrorNote = "战斗中显示旗帜携带者错误信息",
+	ShowFlagCarrierErrorNote = "战斗中显示旗帜携带者错误信息"
 })
 
 --------------------------
 --  Battle for Gilneas  --
 --------------------------
-L = DBM:GetModLocalization("Gilneas")
-
-L:SetGeneralLocalization({
-	name = "吉尔尼斯之战"
-})
+L = DBM:GetModLocalization("z761")
 
 L:SetMiscLocalization({
 	ScoreExpr = "(%d+)/2000",
@@ -263,7 +233,7 @@ L:SetMiscLocalization({
 })
 
 L:SetTimerLocalization({
-	TimerCap = "%s",
+	TimerCap = "%s"
 })
 
 L:SetOptionLocalization({
@@ -277,11 +247,7 @@ L:SetOptionLocalization({
 -------------------------
 --  Silvershard Mines  --
 -------------------------
-L = DBM:GetModLocalization("SilvershardMines")
-
-L:SetGeneralLocalization({
-	name = "碎银矿脉"
-})
+L = DBM:GetModLocalization("z727")
 
 L:SetTimerLocalization({
 	TimerCart	= "矿车刷新"
@@ -298,11 +264,7 @@ L:SetMiscLocalization({
 -------------------------
 --  Temple of Kotmogu  --
 -------------------------
-L = DBM:GetModLocalization("Kotmogu")
-
-L:SetGeneralLocalization({
-	name = "寇魔古寺"
-})
+L = DBM:GetModLocalization("z998")
 
 L:SetOptionLocalization({
 	TimerWin			= "计时条：获胜",

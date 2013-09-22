@@ -37,11 +37,11 @@ L["debug is disabled"] = "디버깅이 비활성화되었습니다."
 L["debug is enabled"] = "디버깅이 활성화되었습니다."
 
 elseif GetLocale() == "esMX" then -- Latin American Spanish
--- L["all events registered"] = ""
--- L["all events unregistered"] = ""
--- L["all settings cleared"] = ""
--- L["debug is disabled"] = ""
--- L["debug is enabled"] = ""
+L["all events registered"] = "Todos los eventos registrados"
+L["all events unregistered"] = "Todos los eventos no registrados"
+L["all settings cleared"] = "Se borrarán todos los ajustes"
+L["debug is disabled"] = "Depuración está desactivada"
+L["debug is enabled"] = "Depuración está habilitada"
 
 elseif GetLocale() == "ruRU" then -- Russian
 -- L["all events registered"] = ""
@@ -58,11 +58,11 @@ L["debug is disabled"] = "除错停用"
 L["debug is enabled"] = "除错启用"
 
 elseif GetLocale() == "esES" then -- Spanish
--- L["all events registered"] = ""
--- L["all events unregistered"] = ""
--- L["all settings cleared"] = ""
--- L["debug is disabled"] = ""
--- L["debug is enabled"] = ""
+L["all events registered"] = "Todos los eventos registrados"
+L["all events unregistered"] = "Todos los eventos no registrados"
+L["all settings cleared"] = "Se borrarán todos los ajustes"
+L["debug is disabled"] = "Depuración está desactivada"
+L["debug is enabled"] = "Depuración está habilitada"
 
 elseif GetLocale() == "zhTW" then -- Traditional Chinese
 L["all events registered"] = "所有事件已註冊"

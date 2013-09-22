@@ -4,9 +4,8 @@ local Anshal	= EJ_GetSectionInfo(3166)
 local Nezir	= EJ_GetSectionInfo(3178)
 local Rohash	= EJ_GetSectionInfo(3172)
 
-mod:SetRevision(("$Revision: 43 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(45870, 45871, 45872)
-mod:SetModelID(35232)
 mod:SetZone()
 
 mod:SetBossHealthInfo(
@@ -25,7 +24,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_MISSED",
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
-	"UNIT_POWER",
+	"UNIT_POWER_FREQUENT boss1 boss2 boss3",
 	"RAID_BOSS_EMOTE"
 )
 
@@ -67,14 +66,14 @@ local windBlastCounter = 0
 local poisonCounter = 0
 local breezeCounter = 0
 local scansDone = 0
-local GatherStrengthwarned = false
+local deadBoss = {}
 
 function mod:OnCombatStart(delay)
 	windBlastCounter = 0
 	breezeCounter = 0
 	poisonCounter = 0
 	scansDone = 0
-	GatherStrengthwarned = false
+	table.wipe(deadBoss)
 	warnSpecialSoon:Schedule(80-delay)
 	timerSpecial:Start(90-delay)
 	enrageTimer:Start(-delay)
@@ -116,16 +115,16 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			timerSlicingGale:Start()
 		end
-	elseif args:IsSpellID(84651) and args:GetDestCreatureID() == 45870 and self:AntiSpam(3, 1) then--Zephyr stacks on Anshal
+	elseif args.spellId == 84651 and args:GetDestCreatureID() == 45870 and self:AntiSpam(3, 1) then--Zephyr stacks on Anshal
 		if (args.amount or 1) >= 15 then--Special has ended when he's at 15 stacks.
 			warnSpecialSoon:Cancel()
 			warnSpecialSoon:Schedule(85)
 			timerSpecial:Start()
-			if self:GetUnitCreatureId("target") == 45870 or self:GetUnitCreatureId("focus") == 45870 or self:GetUnitCreatureId("target") == 45812 or not self.Options.OnlyWarnforMyTarget then--Anshal and his flowers
+			if (self:GetUnitCreatureId("target") == 45870 or self:GetUnitCreatureId("focus") == 45870 or self:GetUnitCreatureId("target") == 45812 or not self.Options.OnlyWarnforMyTarget) and not deadBoss[Anshal] then--Anshal and his flowers
 				timerSoothingBreezeCD:Start(16)
 				timerNurture:Start()
 			end
-			if self:GetUnitCreatureId("target") == 45872 or self:GetUnitCreatureId("focus") == 45872 or not self.Options.OnlyWarnforMyTarget then--Rohash
+			if (self:GetUnitCreatureId("target") == 45872 or self:GetUnitCreatureId("focus") == 45872 or not self.Options.OnlyWarnforMyTarget) and self:IsDifficulty("heroic10", "heroic25") and not deadBoss[Rohash] then--Rohash
 				timerStormShieldCD:Start()
 			end
 		end
@@ -138,11 +137,11 @@ function mod:SPELL_AURA_REMOVED(args)
 		warnSpecialSoon:Cancel()
 		warnSpecialSoon:Schedule(85)
 		timerSpecial:Start()
-		if self:GetUnitCreatureId("target") == 45870 or self:GetUnitCreatureId("focus") == 45870 or self:GetUnitCreatureId("target") == 45812 or not self.Options.OnlyWarnforMyTarget then--Anshal and his flowers
+		if (self:GetUnitCreatureId("target") == 45870 or self:GetUnitCreatureId("focus") == 45870 or self:GetUnitCreatureId("target") == 45812 or not self.Options.OnlyWarnforMyTarget) and not deadBoss[Anshal] then--Anshal and his flowers
 			timerSoothingBreezeCD:Start(16)
 			timerNurture:Start()
 		end
-		if self:GetUnitCreatureId("target") == 45872 or self:GetUnitCreatureId("focus") == 45872 or not self.Options.OnlyWarnforMyTarget then--Rohash
+		if (self:GetUnitCreatureId("target") == 45872 or self:GetUnitCreatureId("focus") == 45872 or not self.Options.OnlyWarnforMyTarget) and self:IsDifficulty("heroic10", "heroic25") and not deadBoss[Rohash] then--Rohash
 			timerStormShieldCD:Start()
 		end
 	end
@@ -156,7 +155,7 @@ end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(86205) then
+	if args.spellId == 86205 then
 		breezeCounter = breezeCounter + 1
 		scansDone = 0
 		if self:GetUnitCreatureId("target") == 45870 or self:GetUnitCreatureId("focus") == 45870 or self:GetUnitCreatureId("target") == 45812 or not self.Options.OnlyWarnforMyTarget then--Anshal and his flowers
@@ -166,7 +165,7 @@ function mod:SPELL_CAST_START(args)
 				timerSoothingBreezeCD:Start()
 			end
 		end
-	elseif args:IsSpellID(86192) then
+	elseif args.spellId == 86192 then
 		if self:GetUnitCreatureId("target") == 45872 or self:GetUnitCreatureId("focus") == 45872 or not self.Options.OnlyWarnforMyTarget then
 			warnSummonTornados:Show()
 		end
@@ -174,14 +173,14 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(85422) then
+	if args.spellId == 85422 then
 		if self:GetUnitCreatureId("target") == 45870 or self:GetUnitCreatureId("focus") == 45870 or self:GetUnitCreatureId("target") == 45812 or not self.Options.OnlyWarnforMyTarget then--Anshal and his flowers
 			warnNurture:Show()
 			if self:IsDifficulty("heroic10", "heroic25") then
 				timerPoisonToxicCD:Start()
 			end
 		end
-	elseif args:IsSpellID(86082) then -- 93233 removed in mop, it seems that replaced with 86082
+	elseif args.spellId == 86082 then -- 93233 removed in mop, it seems that replaced with 86082
 		if self:GetUnitCreatureId("target") == 45871 or self:GetUnitCreatureId("focus") == 45871 or not self.Options.OnlyWarnforMyTarget then--Nezir
 			timerPermaFrostCD:Start()
 		end
@@ -191,7 +190,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerSpecialActive:Start()
 		poisonCounter = 0
 		breezeCounter = 0
-		if self:GetUnitCreatureId("target") == 45871 or self:GetUnitCreatureId("focus") == 45871 or not self.Options.OnlyWarnforMyTarget then--Nezir
+		if (self:GetUnitCreatureId("target") == 45871 or self:GetUnitCreatureId("focus") == 45871 or not self.Options.OnlyWarnforMyTarget) and not deadBoss[Nezir] then--Nezir
 			timerPermaFrostCD:Start(15)--This is gonna slap you in face the instance special ends.
 		end
 	elseif args:IsSpellID(93059, 95865) then-- Storm Shield Warning (Heroic mode skill)
@@ -199,7 +198,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			warnStormShield:Show()
 			specWarnShield:Show()
 		end
-	elseif args:IsSpellID(86281) and self:AntiSpam(3, 3) then-- Poison Toxic Warning (at Heroic, Poison Toxic damage is too high, so warning needed)
+	elseif args.spellId == 86281 and self:AntiSpam(3, 3) then-- Poison Toxic Warning (at Heroic, Poison Toxic damage is too high, so warning needed)
 		if self:GetUnitCreatureId("target") == 45870 or self:GetUnitCreatureId("focus") == 45870 or self:GetUnitCreatureId("target") == 45812 or not self.Options.OnlyWarnforMyTarget then
 			warnPoisonToxic:Show()
 			timerPoisonToxic:Show()
@@ -212,7 +211,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self:GetUnitCreatureId("target") == 45871 or self:GetUnitCreatureId("focus") == 45871 or not self.Options.OnlyWarnforMyTarget then--Nezir
 			timerWindChill:Start()
 		end
-	elseif args:IsSpellID(86193) then
+	elseif args.spellId == 86193 then
 		windBlastCounter = windBlastCounter + 1
 		if self:GetUnitCreatureId("target") == 45872 or self:GetUnitCreatureId("focus") == 45872 or not self.Options.OnlyWarnforMyTarget then--Rohash
 			warnWindBlast:Show()
@@ -228,7 +227,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 -- Posion Toxic can do casts during stun, so if Poison Toxic cancelled, Next Poision Toxic timer known by boss`s power.
-function mod:UNIT_POWER(uId)
+function mod:UNIT_POWER_FREQUENT(uId)
 	if self:GetUnitCreatureId(uId) == 45870 and UnitPower(uId) == 62 and poisonCounter == 0 and self:IsDifficulty("heroic10", "heroic25") then
 		if self:GetUnitCreatureId("target") == 45870 or self:GetUnitCreatureId("focus") == 45870 or self:GetUnitCreatureId("target") == 45812 or not self.Options.OnlyWarnforMyTarget then
 			timerPoisonToxicCD:Start(10)
@@ -244,16 +243,21 @@ function mod:RAID_BOSS_EMOTE(msg, boss)
 	end
 end
 
+local function bossRevive(boss)
+	if not boss then return end
+	deadBoss[boss] = false
+end
+
 function mod:OnSync(msg, boss)
 	if msg == "GatherStrength" and self:IsInCombat() then
+		deadBoss[boss or ""] = true
 		warnGatherStrength:Show(boss)
-		if not GatherStrengthwarned then
-			if self:IsDifficulty("heroic10", "heroic25") then
-				timerGatherStrength:Start(boss)
-			else
-				timerGatherStrength:Start(120, boss)--2 minutes on normal as of 4.2
-			end
-			GatherStrengthwarned = true
+		if self:IsDifficulty("heroic10", "heroic25") then
+			timerGatherStrength:Start(nil, boss)
+			self:Schedule(60, bossRevive, boss)
+		else
+			timerGatherStrength:Start(120, boss)--2 minutes on normal as of 4.2
+			self:Schedule(120, bossRevive, boss)
 		end
 	end
 end

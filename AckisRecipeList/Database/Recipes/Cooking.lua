@@ -2,10 +2,10 @@
 ************************************************************************
 Cooking.lua
 ************************************************************************
-File date: 2012-12-24T22:39:10Z
-File hash: 83109cf
-Project hash: f922565
-Project version: 2.4.6
+File date: 2013-09-10T13:23:20Z
+File hash: 4bcba04
+Project hash: 4bcba04
+Project version: 2.5.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -52,7 +52,7 @@ function addon:InitCooking()
 	recipe = AddRecipe(2538, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetCraftedItem(2679, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Spiced Wolf Meat -- 2539
@@ -60,13 +60,13 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(10, 10, 50, 70, 90)
 	recipe:SetCraftedItem(2680, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Roasted Boar Meat -- 2540
 	recipe = AddRecipe(2540, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetCraftedItem(2681, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Coyote Steak -- 2541
@@ -74,7 +74,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(50, 50, 90, 110, 130)
 	recipe:SetCraftedItem(2684, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Goretusk Liver Pie -- 2542
 	recipe = AddRecipe(2542, V.ORIG, Q.COMMON)
@@ -98,7 +98,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(75, 75, 115, 135, 155)
 	recipe:SetCraftedItem(2683, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Cooked Crab Claw -- 2545
 	recipe = AddRecipe(2545, V.ORIG, Q.COMMON)
@@ -114,7 +114,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(80, 80, 120, 140, 160)
 	recipe:SetCraftedItem(2687, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Redridge Goulash -- 2547
 	recipe = AddRecipe(2547, V.ORIG, Q.COMMON)
@@ -206,7 +206,8 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(110, 110, 150, 170, 190)
 	recipe:SetRecipeItem(3734, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(3726, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.RETIRED, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RETIRED, F.HEALER, F.CASTER)
+	recipe:AddCustom("REMOVED_FROM_GAME")
 
 	-- Hot Lion Chops -- 3398
 	recipe = AddRecipe(3398, V.ORIG, Q.COMMON)
@@ -214,7 +215,7 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(3735, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(3727, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddVendor(3489, 12245)
+	recipe:AddVendor(3489)
 
 	-- Tasty Lion Steak -- 3399
 	recipe = AddRecipe(3399, V.ORIG, Q.COMMON)
@@ -222,7 +223,7 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(3736, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(3728, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Soothing Turtle Bisque -- 3400
 	recipe = AddRecipe(3400, V.ORIG, Q.COMMON)
@@ -230,7 +231,7 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(3737, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(3729, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Barbecued Buzzard Wing -- 4094
 	recipe = AddRecipe(4094, V.ORIG, Q.COMMON)
@@ -238,7 +239,7 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(4609, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(4457, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Kaldorei Spider Kabob -- 6412
 	recipe = AddRecipe(6412, V.ORIG, Q.COMMON)
@@ -246,15 +247,14 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(5482, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5472, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Scorpid Surprise -- 6413
 	recipe = AddRecipe(6413, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(20, 20, 60, 80, 100)
 	recipe:SetRecipeItem(5483, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5473, "BIND_ON_EQUIP")
-	recipe:SetRequiredFaction("Horde")
-	recipe:AddFilters(F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3881)
 
 	-- Roasted Kodo Meat -- 6414
@@ -262,8 +262,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(35, 35, 75, 95, 115)
 	recipe:SetRecipeItem(5484, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5474, "BIND_ON_EQUIP")
-	recipe:SetRequiredFaction("Horde")
-	recipe:AddFilters(F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3081)
 
 	-- Fillet of Frenzy -- 6415
@@ -272,19 +271,18 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(5485, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5476, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Strider Stew -- 6416
 	recipe = AddRecipe(6416, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(50, 50, 90, 110, 130)
 	recipe:SetRecipeItem(5486, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5477, "BIND_ON_EQUIP")
-	recipe:SetRequiredFaction("Horde")
-	recipe:AddFilters(F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddVendor(3482)
 
 	-- Dig Rat Stew -- 6417
-	recipe = AddRecipe(6417, V.WOTLK, Q.UNCOMMON)
+	recipe = AddRecipe(6417, V.ORIG, Q.UNCOMMON)
 	recipe:SetSkillLevels(90, 90, 130, 150, 170)
 	recipe:SetRecipeItem(78342, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(5478, "BIND_ON_EQUIP")
@@ -296,8 +294,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(100, 100, 140, 160, 180)
 	recipe:SetRecipeItem(5488, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5479, "BIND_ON_EQUIP")
-	recipe:SetRequiredFaction("Horde")
-	recipe:AddFilters(F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddVendor(3482)
 
 	-- Lean Venison -- 6419
@@ -305,29 +302,29 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(110, 110, 150, 170, 190)
 	recipe:SetRecipeItem(5489, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5480, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddLimitedVendor(12245, 1)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RETIRED, F.HEALER, F.CASTER)
+	recipe:AddCustom("REMOVED_FROM_GAME")
 
 	-- Boiled Clams -- 6499
 	recipe = AddRecipe(6499, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(50, 50, 90, 110, 130)
 	recipe:SetCraftedItem(5525, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Goblin Deviled Clams -- 6500
 	recipe = AddRecipe(6500, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(125, 125, 165, 185, 205)
 	recipe:SetCraftedItem(5527, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Clam Chowder -- 6501
 	recipe = AddRecipe(6501, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(90, 90, 130, 150, 170)
 	recipe:SetRecipeItem(5528, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5526, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(4305)
 
 	-- Giant Clam Scorcho -- 7213
@@ -367,7 +364,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(50, 50, 90, 110, 130)
 	recipe:SetRecipeItem(6329, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(6316, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(1684)
 
 	-- Bristle Whisker Catfish -- 7755
@@ -406,7 +403,7 @@ function addon:InitCooking()
 	recipe = AddRecipe(8604, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetCraftedItem(6888, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Smoked Bear Meat -- 8607
@@ -430,14 +427,15 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(175, 175, 175, 190, 205)
 	recipe:SetCraftedItem(10841, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.INSTANCE)
-	recipe:AddCustom("HENRY_STERN_RFD")
+	recipe:AddTrainer(8696)
 
 	-- Lean Wolf Steak -- 15853
 	recipe = AddRecipe(15853, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(125, 125, 165, 185, 205)
 	recipe:SetRecipeItem(12227, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12209, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.RETIRED, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RETIRED, F.HEALER, F.CASTER)
+	recipe:AddCustom("REMOVED_FROM_GAME")
 
 	-- Roast Raptor -- 15855
 	recipe = AddRecipe(15855, V.ORIG, Q.COMMON)
@@ -445,7 +443,7 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(12228, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12210, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddVendor(734, 1148, 2810, 2821, 4879, 4897, 12245)
+	recipe:AddVendor(734, 1148, 2810, 2821, 4879, 4897)
 
 	-- Hot Wolf Ribs -- 15856
 	recipe = AddRecipe(15856, V.ORIG, Q.COMMON)
@@ -461,7 +459,7 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(12231, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12212, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddVendor(734, 1148, 12245)
+	recipe:AddVendor(734, 1148)
 
 	-- Carrion Surprise -- 15863
 	recipe = AddRecipe(15863, V.ORIG, Q.COMMON)
@@ -469,7 +467,7 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(12232, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12213, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddVendor(989, 4879, 9636, 12245)
+	recipe:AddVendor(989, 4879, 9636)
 
 	-- Mystery Stew -- 15865
 	recipe = AddRecipe(15865, V.ORIG, Q.COMMON)
@@ -493,7 +491,7 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(12240, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12215, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddVendor(8150, 9636, 12245)
+	recipe:AddVendor(8150, 9636)
 
 	-- Spiced Chili Crab -- 15915
 	recipe = AddRecipe(15915, V.ORIG, Q.COMMON)
@@ -516,8 +514,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetRecipeItem(12226, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12224, "BIND_ON_EQUIP")
-	recipe:SetRequiredFaction("Horde")
-	recipe:AddFilters(F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(2118)
 
 	-- Spotted Yellowtail -- 18238
@@ -526,7 +523,7 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(13939, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(6887, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Cooked Glossy Mightfish -- 18239
 	recipe = AddRecipe(18239, V.ORIG, Q.COMMON)
@@ -542,7 +539,7 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(13942, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(13928, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Filet of Redgill -- 18241
 	recipe = AddRecipe(18241, V.ORIG, Q.COMMON)
@@ -566,7 +563,7 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(13945, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(13931, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Poached Sunscale Salmon -- 18244
 	recipe = AddRecipe(18244, V.ORIG, Q.COMMON)
@@ -574,7 +571,7 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(13946, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(13932, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Lobster Stew -- 18245
 	recipe = AddRecipe(18245, V.ORIG, Q.COMMON)
@@ -625,7 +622,7 @@ function addon:InitCooking()
 	recipe:AddVendor(13420, 13429, 13432, 13433, 13435, 23010, 23012, 23064)
 	recipe:AddSeason("WINTER_VEIL")
 
-	-- Egg Nog -- 21144
+	-- Winter Veil Egg Nog -- 21144
 	recipe = AddRecipe(21144, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(35, 35, 75, 95, 115)
 	recipe:SetRecipeItem(17201, "BIND_ON_EQUIP")
@@ -639,7 +636,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(200, 200, 225, 237, 250)
 	recipe:SetCraftedItem(17222, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Tender Wolf Steak -- 22480
 	recipe = AddRecipe(22480, V.ORIG, Q.COMMON)
@@ -662,8 +659,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(150, 150, 160, 180, 200)
 	recipe:SetRecipeItem(20075, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(20074, "BIND_ON_EQUIP")
-	recipe:SetRequiredFaction("Horde")
-	recipe:AddFilters(F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddVendor(4879)
 
 	-- Smoked Desert Dumplings -- 24801
@@ -711,8 +707,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetRecipeItem(27685, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27635, "BIND_ON_EQUIP")
-	recipe:SetRequiredFaction("Horde")
-	recipe:AddFilters(F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(16262)
 
 	-- Roasted Moongraze Tenderloin -- 33277
@@ -720,8 +715,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetRecipeItem(27686, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(24105, "BIND_ON_EQUIP")
-	recipe:SetRequiredFaction("Alliance")
-	recipe:AddFilters(F.ALLIANCE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddQuest(9454)
 
 	-- Bat Bites -- 33278
@@ -849,7 +843,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(1, 1, 30, 35, 38)
 	recipe:SetCraftedItem(30816, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Mok'Nathal Shortribs -- 38867
 	recipe = AddRecipe(38867, V.TBC, Q.COMMON)
@@ -876,21 +870,21 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(320, 320, 335, 345, 355)
 	recipe:SetCraftedItem(33048, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19186, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19186, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Fisherman's Feast -- 42302
 	recipe = AddRecipe(42302, V.TBC, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 375, 380, 385)
 	recipe:SetCraftedItem(33052, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19186, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19186, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Hot Buttered Trout -- 42305
 	recipe = AddRecipe(42305, V.TBC, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 375, 380, 385)
 	recipe:SetCraftedItem(33053, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19186, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19186, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Skullfish Soup -- 43707
 	recipe = AddRecipe(43707, V.TBC, Q.UNCOMMON)
@@ -960,42 +954,42 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34748, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Shoveltusk Steak -- 45550
 	recipe = AddRecipe(45550, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34749, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Worm Delight -- 45551
 	recipe = AddRecipe(45551, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34750, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Roasted Worg -- 45552
 	recipe = AddRecipe(45552, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34751, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Rhino Dogs -- 45553
 	recipe = AddRecipe(45553, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34752, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Great Feast -- 45554
 	recipe = AddRecipe(45554, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(375, 375, 375, 400, 425)
 	recipe:SetCraftedItem(34753, "BIND_ON_PICKUP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Mega Mammoth Meal -- 45555
 	recipe = AddRecipe(45555, V.WOTLK, Q.UNCOMMON)
@@ -1042,49 +1036,49 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(350, 350, 350, 365, 380)
 	recipe:SetCraftedItem(34759, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Grilled Bonescale -- 45561
 	recipe = AddRecipe(45561, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 365, 380)
 	recipe:SetCraftedItem(34760, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Sauteed Goby -- 45562
 	recipe = AddRecipe(45562, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 365, 380)
 	recipe:SetCraftedItem(34761, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Grilled Sculpin -- 45563
 	recipe = AddRecipe(45563, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34762, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Smoked Salmon -- 45564
 	recipe = AddRecipe(45564, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34763, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Poached Nettlefish -- 45565
 	recipe = AddRecipe(45565, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34764, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Pickled Fangtooth -- 45566
 	recipe = AddRecipe(45566, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34765, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Poached Northern Sculpin -- 45567
 	recipe = AddRecipe(45567, V.WOTLK, Q.UNCOMMON)
@@ -1107,7 +1101,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(42942, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Imperial Manta Steak -- 45570
 	recipe = AddRecipe(45570, V.WOTLK, Q.UNCOMMON)
@@ -1140,7 +1134,7 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(35564, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(35563, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Juicy Bear Burger -- 46688
 	recipe = AddRecipe(46688, V.WOTLK, Q.COMMON)
@@ -1148,7 +1142,7 @@ function addon:InitCooking()
 	recipe:SetRecipeItem(35566, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(35565, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Kungaloosh -- 53056
 	recipe = AddRecipe(53056, V.WOTLK, Q.COMMON)
@@ -1267,7 +1261,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(43268, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Tasty Cupcake -- 58512
 	recipe = AddRecipe(58512, V.WOTLK, Q.UNCOMMON)
@@ -1377,7 +1371,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(400, 400, 400, 412, 425)
 	recipe:SetCraftedItem(45932, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Bread of the Dead -- 65454
 	recipe = AddRecipe(65454, V.WOTLK, Q.COMMON)
@@ -1456,7 +1450,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(425, 425, 450, 457, 465)
 	recipe:SetCraftedItem(62676, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Broiled Dragon Feast -- 88011
 	recipe = AddRecipe(88011, V.CATA, Q.RARE)
@@ -1496,7 +1490,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(415, 415, 430, 435, 440)
 	recipe:SetCraftedItem(62790, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Delicious Sagefish Tail -- 88016
 	recipe = AddRecipe(88016, V.CATA, Q.UNCOMMON)
@@ -1687,7 +1681,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(40, 40, 80, 100, 120)
 	recipe:SetCraftedItem(67230, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 45550, 46709, 47405, 49789, 54232)
+	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3399, 4210, 4552, 5159, 5482, 6286, 16253, 16719, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 45550, 46709, 47405, 49789, 54232)
 
 	-- Scalding Murglesnout -- 96133
 	recipe = AddRecipe(96133, V.CATA, Q.UNCOMMON)
@@ -1699,17 +1693,17 @@ function addon:InitCooking()
 
 	-- Golden Carp Consomme -- 104237
 	recipe = AddRecipe(104237, V.MOP, Q.COMMON)
-	recipe:SetSkillLevels(270, 270, 280, 285, 290)
+	recipe:SetSkillLevels(500, 500, 510, 515, 520)
 	recipe:SetCraftedItem(74636, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(3399, 45550, 46709, 56707, 64231)
+	recipe:AddTrainer(3399, 42288, 45550, 46709, 56707, 64231)
 
 	-- Fish Cake -- 104297
 	recipe = AddRecipe(104297, V.MOP, Q.COMMON)
-	recipe:SetSkillLevels(300, 300, 310, 315, 320)
+	recipe:SetSkillLevels(500, 500, 510, 515, 520)
 	recipe:SetCraftedItem(74641, "BIND_ON_EQUIP")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(3399, 45550, 46709, 56707, 64231)
+	recipe:AddTrainer(3399, 42288, 45550, 46709, 56707, 64231)
 
 	-- Charbroiled Tiger Steak -- 104298
 	recipe = AddRecipe(104298, V.MOP, Q.COMMON)
@@ -2100,7 +2094,7 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(600, 600, 600, 602, 605)
 	recipe:SetRecipeItem(86393, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(87264, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("FOUR_SENSES_BREW")
 
 	-- Banana Infused Rum -- 126655
@@ -2108,8 +2102,107 @@ function addon:InitCooking()
 	recipe:SetSkillLevels(600, 600, 600, 602, 605)
 	recipe:SetRecipeItem(87266, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(86432, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WORLD_DROP)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("BANANA_INFUSED_RUM")
+
+	-- Noodle Cart Kit -- 145038
+	recipe = AddRecipe(145038, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetRecipeItem(101631, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(101630, "BIND_ON_EQUIP")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.QUEST)
+	recipe:AddQuest(33022)
+	recipe:AddCustom("TIMELESS_ISLE_COOKING")
+
+	-- Deluxe Noodle Cart Kit -- 145061
+	recipe = AddRecipe(145061, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetRecipeItem(101664, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(101661, "BIND_ON_EQUIP")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.QUEST)
+	recipe:AddQuest(33024)
+	recipe:AddCustom("TIMELESS_ISLE_COOKING")
+
+	-- Pandaren Treasure Noodle Cart Kit -- 145062
+	recipe = AddRecipe(145062, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 600, 600, 611)
+	recipe:SetRecipeItem(101663, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(101662, "BIND_ON_EQUIP")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddQuest(33027)
+	recipe:AddCustom("TIMELESS_ISLE_COOKING")
+
+	-- Grand Noodle Cart Kit -- 145167
+	recipe = AddRecipe(145167, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetRecipeItem(101728, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(101727, "BIND_ON_EQUIP")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.QUEST)
+	recipe:AddWorldDrop(Z.VALE_OF_ETERNAL_BLOSSOMS)
+
+	-- Grand Deluxe Noodle Cart Kit -- 145170
+	recipe = AddRecipe(145170, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 600, 600, 610)
+	recipe:SetRecipeItem(101739, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(101729, "BIND_ON_EQUIP")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.QUEST)
+	recipe:AddWorldDrop(Z.VALE_OF_ETERNAL_BLOSSOMS)
+
+	-- Grand Pandaren Treasure Noodle Cart Kit -- 145197
+	recipe = AddRecipe(145197, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 600, 600, 612)
+	recipe:SetRecipeItem(101741, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(101740, "BIND_ON_EQUIP")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddWorldDrop(Z.VALE_OF_ETERNAL_BLOSSOMS)
+
+	-- Seasoned Pomfruit Slices -- 145305
+	recipe = AddRecipe(145305, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetRecipeItem(101765, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(101746, "BIND_ON_EQUIP")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddWorldDrop(Z.VALE_OF_ETERNAL_BLOSSOMS)
+
+	-- Spiced Blossom Soup -- 145307
+	recipe = AddRecipe(145307, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetRecipeItem(101766, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(101748, "BIND_ON_EQUIP")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddWorldDrop(Z.VALE_OF_ETERNAL_BLOSSOMS)
+
+	-- Mango Ice -- 145308
+	recipe = AddRecipe(145308, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetRecipeItem(101767, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(101745, "BIND_ON_EQUIP")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddWorldDrop(Z.VALE_OF_ETERNAL_BLOSSOMS)
+
+	-- Farmer's Delight -- 145309
+	recipe = AddRecipe(145309, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetRecipeItem(101768, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(101747, "BIND_ON_EQUIP")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddWorldDrop(Z.VALE_OF_ETERNAL_BLOSSOMS)
+
+	-- Stuffed Lushrooms -- 145310
+	recipe = AddRecipe(145310, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetRecipeItem(101769, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(101749, "BIND_ON_EQUIP")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddWorldDrop(Z.VALE_OF_ETERNAL_BLOSSOMS)
+
+	-- Fluffy Silkfeather Omelet -- 145311
+	recipe = AddRecipe(145311, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetRecipeItem(101770, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(101750, "BIND_ON_EQUIP")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddWorldDrop(Z.VALE_OF_ETERNAL_BLOSSOMS)
 
 	self.InitCooking = nil
 end

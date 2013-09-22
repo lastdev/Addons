@@ -12,10 +12,6 @@ local L
 -----------------------
 L= DBM:GetModLocalization(672)
 
-L:SetOptionLocalization({
-	SetIconOnAdds	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej5616")
-})
-
 -----------------------
 -- Lorewalker Stonestep --
 -----------------------
@@ -23,10 +19,6 @@ L= DBM:GetModLocalization(664)
 
 L:SetWarningLocalization({
 	SpecWarnIntensity	= "%s sur %s (%d)"
-})
-
-L:SetOptionLocalization({
-	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(6, 113315)
 })
 
 -----------------------
@@ -78,10 +70,6 @@ L:SetWarningLocalization({
 	warnStaticField	= "%s"
 })
 
-L:SetOptionLocalization({
-	warnStaticField	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(106923)
-})
-
 -----------------------
 -- Snowdrift --
 -----------------------
@@ -107,7 +95,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(685)
 
 L:SetMiscLocalization({
-	Kill		= "Tant que la violence sera tapie dans vos cœurs... je... reviendrai...",
+	Kill		= "Tant que la violence sera tapie dans vos cœurs... je... reviendrai..."
 })
 
 -----------------------
@@ -126,10 +114,6 @@ L:SetOptionLocalization({
 -- Kiptilak --
 ---------------------
 L= DBM:GetModLocalization(655)
-
-L:SetOptionLocalization({
-	IconOnSabotage	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(107268)
-})
 
 -------------
 -- Gadok --
@@ -235,7 +219,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	SpecWarnGetBoned	= "Alerte spéciale quand vous n'avez pas $spell:113996",
-	InfoFrame			= "Afficher le cadre d'informations pour les joueurs n'étant pas touché par\n$spell:113996"
+	InfoFrame			= "Afficher le cadre d'informations pour les joueurs n'étant pas touché par<br/>$spell:113996"
 })
 
 L:SetMiscLocalization({
@@ -292,7 +276,7 @@ L= DBM:GetModLocalization(688)
 L= DBM:GetModLocalization(671)
 
 L:SetOptionLocalization({
-	KickArrow	= "Voir la flèche DBM lorsque $spell:114487 est près de vous",
+	KickArrow	= "Voir la flèche DBM lorsque $spell:114487 est près de vous"
 })
 
 -----------------------

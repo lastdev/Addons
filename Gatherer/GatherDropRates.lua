@@ -1,6 +1,6 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.2.0 (<%codename%>)
+	Version: 4.4.0 (<%codename%>)
 	Revision: $Id: GatherDropRates.lua 955 2012-08-28 16:39:14Z Esamynn $
 
 	License:
@@ -25,7 +25,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherDropRates.lua $", "$Rev: 955 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.0/Gatherer/GatherDropRates.lua $", "$Rev: 955 $")
 
 local ArchaeologyCurrencies = Gatherer.Constants.ArchaeologyCurrencies
 

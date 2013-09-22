@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: CoreBuy.lua 5362 2012-09-21 17:59:48Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: CoreBuy.lua 5427 2013-07-13 09:28:05Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -228,11 +228,12 @@ function lib.QueueBuy(link, seller, count, minbid, buyout, price, reason, nosear
 		else
 			local lType, speciesID, _, petQuality = strsplit(":", link)
 			lType = lType:sub(-9)
+			speciesID = tonumber(speciesID)
 			if lType == "battlepet" and speciesID then
 				-- it's a pet
 				local _,_,_,_,iMin, iType = GetItemInfo(82800) -- Pet Cage
 				-- all caged pets should have the default pet name (custom names are removed when caging)
-				local petName, _, petType = C_PetJournal.GetPetInfoBySpeciesID(tonumber(speciesID))
+				local petName, _, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
 				if not petType then
 					-- indicates it's not a recognized Pet species
 					return QueueBuyErrorHelper(link, "NoPet")
@@ -377,7 +378,7 @@ function lib.ScanPage(startat)
 				if link == BuyRequest.link then
 					local price = BuyRequest.price
 					local brSeller = BuyRequest.sellername
-					local name, texture, count, _, _, _, _, minBid, minIncrement, buyout, curBid, ishigh, owner = GetAuctionItemInfo("list", ind)
+					local name, texture, count, _, _, _, _, minBid, minIncrement, buyout, curBid, ishigh, owner = AucAdvanced.GetAuctionItemInfo("list", ind)
 					if (not owner or brSeller == "" or owner == brSeller)
 					and (count == BuyRequest.count)
 					and (minBid == BuyRequest.minbid)
@@ -448,7 +449,7 @@ function private.PerformPurchase()
 	end
 	local link = GetAuctionItemLink("list", index)
 	link = AucAdvanced.SanitizeLink(link)
-	local name, texture, count, _, _, _, _, minBid, minIncrement, buyout, curBid, ishigh, owner = GetAuctionItemInfo("list", index)
+	local name, texture, count, _, _, _, _, minBid, minIncrement, buyout, curBid, ishigh, owner = AucAdvanced.GetAuctionItemInfo("list", index)
 
 	if (private.CurRequest.link ~= link) then
 		aucPrint(highlight.."Cancelling bid: "..index.." link does not match")
@@ -567,7 +568,7 @@ local function OnEvent(frame, event, message, ...)
 			local link = GetAuctionItemLink("list", index)
 			link = AucAdvanced.SanitizeLink(link)
 			if link == request.link then
-				local _, _, count, _, _, _, _, minBid, minIncrement, buyout, curBid, ishigh, owner = GetAuctionItemInfo("list", index)
+				local _, _, count, _, _, _, _, minBid, minIncrement, buyout, curBid, ishigh, owner = AucAdvanced.GetAuctionItemInfo("list", index)
 				if count == request.count and minBid == request.minbid and buyout == request.buyout then
 					local price = request.price
 					local sellername = request.sellername
@@ -743,4 +744,4 @@ private.Prompt.DragBottom:SetHighlightTexture("Interface\\FriendsFrame\\UI-Frien
 private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreBuy.lua $", "$Rev: 5362 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreBuy.lua $", "$Rev: 5427 $")

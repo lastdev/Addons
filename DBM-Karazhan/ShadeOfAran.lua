@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Aran", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 434 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 515 $"):sub(12, -3))
 mod:SetCreatureID(16524)
 mod:SetModelID(16621)
 mod:RegisterCombat("combat")
@@ -11,17 +11,15 @@ mod:RegisterEvents(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
-	"SPELL_SUMMON",
-	"SPELL_PERIODIC_DAMAGE",
-	"SPELL_PERIODIC_MISSED"
+	"SPELL_SUMMON"
 )
 
 local warningFlameCast		= mod:NewCastAnnounce(30004, 4)
+local warningFlameTargets	= mod:NewTargetAnnounce(29946, 4)
 local warningArcaneCast		= mod:NewCastAnnounce(29973, 4)
 local warningBlizzard		= mod:NewSpellAnnounce(29969, 3)
 local warningElementals		= mod:NewSpellAnnounce(37053, 3)
 local warningChains			= mod:NewTargetAnnounce(29991, 2)
-local warningFlameTargets	= mod:NewTargetAnnounce(29946, 4)
 
 local specWarnDontMove		= mod:NewSpecialWarning("DBM_ARAN_DO_NOT_MOVE")
 local specWarnArcane		= mod:NewSpecialWarningRun(29973)
@@ -30,9 +28,8 @@ local specWarnBlizzard		= mod:NewSpecialWarningMove(29951)
 local timerSpecial			= mod:NewTimer(30, "timerSpecial", "Interface\\Icons\\INV_Enchant_EssenceMagicLarge")
 local timerFlameCast		= mod:NewCastTimer(5, 30004)
 local timerArcaneExplosion	= mod:NewCastTimer(10, 29973)
-local timerBlizzadCast		= mod:NewCastTimer(3.7, 29969)
 local timerFlame			= mod:NewBuffActiveTimer(20.5, 29946)
-local timerBlizzad			= mod:NewBuffActiveTimer(40, 29951)
+local timerBlizzad			= mod:NewBuffActiveTimer(30, 29951)
 local timerElementals		= mod:NewBuffActiveTimer(90, 37053)
 local timerChains			= mod:NewTargetTimer(10, 29991)
 
@@ -56,32 +53,41 @@ function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
 	flameWreathIcon = 8
 	table.wipe(WreathTargets)
+	if not self:IsTrivial(85) then
+		self:RegisterShortTermEvents(
+			"SPELL_PERIODIC_DAMAGE",
+			"SPELL_PERIODIC_MISSED"
+		)
+	end
+end
+
+function mod:OnCombatEnd()
+	self:UnregisterShortTermEvents()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(30004) then
+	if args.spellId == 30004 then
 		warningFlameCast:Show()
 		timerFlameCast:Start()
 		timerSpecial:Start()
-	elseif args:IsSpellID(29973) then
+	elseif args.spellId == 29973 then
 		warningArcaneCast:Show()
 		timerArcaneExplosion:Start()
 		specWarnArcane:Show()
 		soundArcane:Play()
 		timerSpecial:Start()
-	elseif args:IsSpellID(29969) then
+	elseif args.spellId == 29969 then
 		warningBlizzard:Show()
-		timerBlizzadCast:Show()
-		timerBlizzad:Schedule(3.7)--may need tweaking
+		timerBlizzad:Start()
 		timerSpecial:Start()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(29991) then
+	if args.spellId == 29991 then
 		warningChains:Show(args.destName)
 		timerChains:Start(args.destName)
-	elseif args:IsSpellID(29946) then
+	elseif args.spellId == 29946 then
 		WreathTargets[#WreathTargets + 1] = args.destName
 		timerFlame:Start()
 		if args:IsPlayer() then
@@ -97,8 +103,10 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(29991) then
+	if args.spellId == 29991 then
 		timerChains:Cancel(args.destName)
+	elseif args.spellId == 29946 and self.Options.WreathIcon then
+		self:SetIcon(args.destName, 0)
 	end
 end
 
@@ -145,7 +153,7 @@ do
 	end, 1)
 end
 
-function mod:SPELL_PERIODIC_DAMAGE(sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId)
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 29951 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnBlizzard:Show()
 	end

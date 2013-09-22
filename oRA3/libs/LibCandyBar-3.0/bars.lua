@@ -14,8 +14,11 @@
 -- @class file
 -- @name LibCandyBar-3.0
 
+local GetTime, floor, next, wipe = GetTime, floor, next, wipe
+local CreateFrame, error, setmetatable, UIParent = CreateFrame, error, setmetatable, UIParent
+
 local major = "LibCandyBar-3.0"
-local minor = tonumber(("$Rev: 51 $"):match("(%d+)")) or 1
+local minor = tonumber(("$Rev: 68 $"):match("(%d+)")) or 1
 if not LibStub then error("LibCandyBar-3.0 requires LibStub.") end
 local cbh = LibStub:GetLibrary("CallbackHandler-1.0")
 if not cbh then error("LibCandyBar-3.0 requires CallbackHandler-1.0") end
@@ -28,94 +31,100 @@ lib.dummyFrame = lib.dummyFrame or CreateFrame("Frame")
 lib.barFrameMT = lib.barFrameMT or {__index = lib.dummyFrame}
 lib.barPrototype = lib.barPrototype or setmetatable({}, lib.barFrameMT)
 lib.barPrototype_mt = lib.barPrototype_mt or {__index = lib.barPrototype}
-lib.availableBars = lib.availableBars or {}
+lib.barCache = lib.barCache or {}
 
 local bar = {}
 local barPrototype = lib.barPrototype
 local barPrototype_meta = lib.barPrototype_mt
-local availableBars = lib.availableBars
-local GetTime = GetTime
-local floor = floor
-local next = next
+local barCache = lib.barCache
 
 local scripts = {
-	"OnUpdate",
-	"OnDragStart", "OnDragStop",
-	"OnEnter", "OnLeave",
-	"OnHide", "OnShow",
-	"OnMouseDown", "OnMouseUp", "OnMouseWheel",
-	"OnSizeChanged", "OnEvent"
+	"OnUpdate", "OnDragStart", "OnDragStop",
+	"OnEnter", "OnLeave", "OnHide",
+	"OnShow", "OnMouseDown", "OnMouseUp",
+	"OnMouseWheel", "OnSizeChanged", "OnEvent"
 }
+local GameFontHighlightSmallOutline = GameFontHighlightSmallOutline
 local _fontName, _fontSize = GameFontHighlightSmallOutline:GetFont()
+local _fontShadowX, _fontShadowY = GameFontHighlightSmallOutline:GetShadowOffset()
+local _fontShadowR, _fontShadowG, _fontShadowB, _fontShadowA = GameFontHighlightSmallOutline:GetShadowColor()
+
 local function stopBar(bar)
-	bar.anim:Stop()
+	bar.updater:Stop()
 	if bar.data then wipe(bar.data) end
 	if bar.funcs then wipe(bar.funcs) end
 	bar.running = nil
 	bar:Hide()
 end
-local function resetBar(bar)
-	bar.flip = nil
-	bar.showTime = true
-	for i, script in next, scripts do
-		bar:SetScript(script, nil)
-	end
 
-	bar.candyBarBar:GetStatusBarTexture():SetHorizTile(false)
-	bar.candyBarBackground:SetVertexColor(0.5, 0.5, 0.5, 0.3)
-	bar:ClearAllPoints()
-	bar:SetWidth(bar.width)
-	bar:SetHeight(bar.height)
-	bar:SetMovable(1)
-	bar:SetScale(1)
-	bar:SetAlpha(1)
-	bar.candyBarLabel:SetTextColor(1,1,1,1)
-	bar.candyBarLabel:SetJustifyH("CENTER")
-	bar.candyBarLabel:SetJustifyV("MIDDLE")
-	bar.candyBarLabel:SetFont(_fontName, _fontSize)
-	bar.candyBarLabel:SetFontObject("GameFontHighlightSmallOutline")
-
-	bar.candyBarDuration:SetTextColor(1,1,1,1)
-	bar.candyBarDuration:SetJustifyH("CENTER")
-	bar.candyBarDuration:SetJustifyV("MIDDLE")
-	bar.candyBarDuration:SetFont(_fontName, _fontSize)
-	bar.candyBarDuration:SetFontObject("GameFontHighlightSmallOutline")
-end
-
-local tformat1 = "%s%d:%02d"
-local tformat2 = "%s%.1f"
-local tformat3 = "%s%.0f"
-local function barUpdate(anim)
-	local self = anim.parent
+local tformat1 = "%d:%02d"
+local tformat2 = "%.1f"
+local tformat3 = "%.0f"
+local function barUpdate(updater)
+	local bar = updater.parent
 	local t = GetTime()
-	if t >= self.exp then
-		self:Stop()
+	if t >= bar.exp then
+		bar:Stop()
 	else
-		local time = self.exp - t
-		self.remaining = time
+		local time = bar.exp - t
+		bar.remaining = time
 
-		if self.fill then
-			self.candyBarBar:SetValue(t)
-		else
-			self.candyBarBar:SetValue(time)
-		end
+		bar.candyBarBar:SetValue(bar.fill and t - bar.start or time)
 
 		if time > 3599.9 then -- > 1 hour
 			local h = floor(time/3600)
 			local m = time - (h*3600)
-			self.candyBarDuration:SetFormattedText(tformat1, self.isApproximate, h, m)
+			bar.candyBarDuration:SetFormattedText(tformat1, h, m)
 		elseif time > 59.9 then -- 1 minute to 1 hour
 			local m = floor(time/60)
 			local s = time - (m*60)
-			self.candyBarDuration:SetFormattedText(tformat1, self.isApproximate, m, s)
+			bar.candyBarDuration:SetFormattedText(tformat1, m, s)
 		elseif time < 10 then -- 0 to 10 seconds
-			self.candyBarDuration:SetFormattedText(tformat2, self.isApproximate, time)
+			bar.candyBarDuration:SetFormattedText(tformat2, time)
 		else -- 10 seconds to one minute
-			self.candyBarDuration:SetFormattedText(tformat3, self.isApproximate, time)
+			bar.candyBarDuration:SetFormattedText(tformat3, time)
 		end
 
-		if self.funcs then
-			for i, v in next, self.funcs do v(self) end
+		if bar.funcs then
+			for i = 1, #bar.funcs do
+				bar.funcs[i](bar)
+			end
+		end
+	end
+end
+
+local tformat4 = "~%d:%02d"
+local tformat5 = "~%.1f"
+local tformat6 = "~%.0f"
+local function barUpdateApprox(updater)
+	local bar = updater.parent
+	local t = GetTime()
+	if t >= bar.exp then
+		bar:Stop()
+	else
+		local time = bar.exp - t
+		bar.remaining = time
+
+		bar.candyBarBar:SetValue(bar.fill and t - bar.start or time)
+
+		if time > 3599.9 then -- > 1 hour
+			local h = floor(time/3600)
+			local m = time - (h*3600)
+			bar.candyBarDuration:SetFormattedText(tformat4, h, m)
+		elseif time > 59.9 then -- 1 minute to 1 hour
+			local m = floor(time/60)
+			local s = time - (m*60)
+			bar.candyBarDuration:SetFormattedText(tformat4, m, s)
+		elseif time < 10 then -- 0 to 10 seconds
+			bar.candyBarDuration:SetFormattedText(tformat5, time)
+		else -- 10 seconds to one minute
+			bar.candyBarDuration:SetFormattedText(tformat6, time)
+		end
+
+		if bar.funcs then
+			for i = 1, #bar.funcs do
+				bar.funcs[i](bar)
+			end
 		end
 	end
 end
@@ -149,15 +158,17 @@ end
 --- Set whether the bar should drain (default) or fill up.
 -- @param fill Boolean true/false
 function barPrototype:SetFill(fill)
-	if self.running then error("Can't set the fill/drain behavior on a running bar.") end
 	self.fill = fill
+	if self.running then
+		self.candyBarBar:SetMinMaxValues(0, (GetTime()-self.start)+self.remaining)
+	end
 end
 --- Adds a function to the timerbar. The function will run every update and will receive the bar as a parameter.
 -- @param func Function to run every update.
 -- @usage
 -- -- The example below will print the time remaining to the chatframe every update. Yes, that's a whole lot of spam
 -- mybar:AddUpdateFunction( function(bar) print(bar.remaining) end )
-function barPrototype:AddUpdateFunction(func) if not self.funcs then self.funcs = {} end; tinsert(self.funcs, func) end
+function barPrototype:AddUpdateFunction(func) if not self.funcs then self.funcs = {} end; self.funcs[#self.funcs+1] = func end
 --- Sets user data in the timerbar object.
 -- @param key Key to use for the data storage.
 -- @param data Data to store.
@@ -178,7 +189,6 @@ function barPrototype:SetColor(...) self.candyBarBar:SetStatusBarColor(...) end
 -- @param texture Path to the bar texture.
 function barPrototype:SetTexture(texture)
 	self.candyBarBar:SetStatusBarTexture(texture)
-	self.candyBarBar:GetStatusBarTexture():SetHorizTile(false)
 	self.candyBarBackground:SetTexture(texture)
 end
 --- Sets the label on the bar.
@@ -194,20 +204,19 @@ function barPrototype:SetTimeVisibility(bool) self.showTime = bool; restyleBar(s
 --- Sets the duration of the bar.
 -- This can also be used while the bar is running to adjust the time remaining, within the bounds of the original duration.
 -- @param duration Duration of the bar in seconds.
-function barPrototype:SetDuration(duration, isApprox) self.remaining = duration; self.isApproximate = isApprox and "~" or "" end
+function barPrototype:SetDuration(duration, isApprox) self.remaining = duration; self.isApproximate = isApprox end
 --- Shows the bar and starts it.
 function barPrototype:Start()
 	self.running = true
 	restyleBar(self)
-	if self.fill then
-		local t = GetTime()
-		self.candyBarBar:SetMinMaxValues(t, t + self.remaining)
-	else
-		self.candyBarBar:SetMinMaxValues(0, self.remaining)
-	end
-	self.exp = GetTime() + self.remaining
-	self.anim:SetScript("OnLoop", barUpdate)
-	self.anim:Play()
+	self.start = GetTime()
+	self.exp = self.start + self.remaining
+
+	self.candyBarBar:SetMinMaxValues(0, self.remaining)
+	self.candyBarBar:SetValue(self.fill and 0 or self.remaining)
+
+	self.updater:SetScript("OnLoop", self.isApproximate and barUpdateApprox or barUpdate)
+	self.updater:Play()
 	self:Show()
 end
 --- Stops the bar.
@@ -222,17 +231,12 @@ end
 function barPrototype:Stop()
 	cb:Fire("LibCandyBar_Stop", self)
 	stopBar(self)
-	availableBars[#availableBars + 1] = self
+	barCache[self] = true
 end
 
 -- ------------------------------------------------------------------------------
 -- Library functions
 --
-
-local function setValue(self, value)
-	local min, max = self:GetMinMaxValues()
-	self:GetStatusBarTexture():SetTexCoord(0, (value - min) / (max - min), 0, 1)
-end
 
 --- Creates a new timerbar object and returns it. Don't forget to set the duration, label and :Start the timer bar after you get a hold of it!
 -- @paramsig texture, width, height
@@ -242,51 +246,91 @@ end
 -- @usage
 -- mybar = LibStub("LibCandyBar-3.0"):New("Interface\\AddOns\\MyAddOn\\media\\statusbar", 100, 16)
 function lib:New(texture, width, height)
-	local bar = tremove(availableBars)
+	local bar = next(barCache)
 	if not bar then
 		local frame = CreateFrame("Frame", nil, UIParent)
-		--frame:SetFrameStrata("DIALOG")
 		bar = setmetatable(frame, barPrototype_meta)
+
 		local icon = bar:CreateTexture(nil, "LOW")
 		icon:SetPoint("TOPLEFT")
 		icon:SetPoint("BOTTOMLEFT")
 		icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 		bar.candyBarIconFrame = icon
+
 		local statusbar = CreateFrame("StatusBar", nil, bar)
 		statusbar:SetPoint("TOPRIGHT")
 		statusbar:SetPoint("BOTTOMRIGHT")
-		hooksecurefunc(statusbar, "SetValue", setValue)
 		bar.candyBarBar = statusbar
+
 		local bg = statusbar:CreateTexture(nil, "BACKGROUND")
 		bg:SetAllPoints()
 		bar.candyBarBackground = bg
-		local duration = statusbar:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmallOutline")
+
+		local duration = statusbar:CreateFontString(nil, "ARTWORK", GameFontHighlightSmallOutline)
 		duration:SetPoint("RIGHT", statusbar, "RIGHT", -2, 0)
 		bar.candyBarDuration = duration
-		local name = statusbar:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmallOutline")
+
+		local name = statusbar:CreateFontString(nil, "ARTWORK", GameFontHighlightSmallOutline)
 		name:SetPoint("LEFT", statusbar, "LEFT", 2, 0)
 		name:SetPoint("RIGHT", statusbar, "RIGHT", -2, 0)
 		bar.candyBarLabel = name
+
+		local updater = bar:CreateAnimationGroup()
+		updater:SetLooping("REPEAT")
+		updater.parent = bar
+		local anim = updater:CreateAnimation()
+		anim:SetDuration(0.04)
+		bar.updater = updater
 	else
-		bar:SetLabel(nil)
-		bar:SetIcon(nil)
-		bar:SetDuration(nil)
+		barCache[bar] = nil
 	end
 
-	if not bar.anim then
-		bar.anim = bar:CreateAnimationGroup()
-		bar.anim:SetLooping("REPEAT")
-		bar.anim.parent = bar
-		local update = bar.anim:CreateAnimation()
-		update:SetOrder(1)
-		update:SetDuration(0.04)
+	if not bar.candyBarBackdrop then
+		-- Merge this into the above if statement at some point, stays here for upgrade reasons right now
+		bar.candyBarBackdrop = CreateFrame("Frame", nil, bar) -- Used by bar stylers for backdrops
 	end
 
 	bar.candyBarBar:SetStatusBarTexture(texture)
 	bar.candyBarBackground:SetTexture(texture)
 	bar.width = width
 	bar.height = height
-	resetBar(bar)
+
+	-- RESET ALL THE THINGS!
+	bar.fill = nil
+	bar.showTime = true
+	for i = 1, 12 do -- Update if scripts table is changed, faster than doing #scripts
+		bar:SetScript(scripts[i], nil)
+	end
+
+	bar.candyBarBackground:SetVertexColor(0.5, 0.5, 0.5, 0.3)
+	bar.candyBarBackdrop:Hide()
+	bar:ClearAllPoints()
+	bar:SetWidth(width)
+	bar:SetHeight(height)
+	bar:SetMovable(1)
+	bar:SetScale(1)
+	bar:SetAlpha(1)
+	bar:SetClampedToScreen(false)
+
+	bar.candyBarLabel:SetTextColor(1,1,1,1)
+	bar.candyBarLabel:SetJustifyH("CENTER")
+	bar.candyBarLabel:SetJustifyV("MIDDLE")
+	bar.candyBarLabel:SetFont(_fontName, _fontSize)
+	bar.candyBarLabel:SetShadowOffset(_fontShadowX, _fontShadowY)
+	bar.candyBarLabel:SetShadowColor(_fontShadowR, _fontShadowG, _fontShadowB, _fontShadowA)
+
+	bar.candyBarDuration:SetTextColor(1,1,1,1)
+	bar.candyBarDuration:SetJustifyH("CENTER")
+	bar.candyBarDuration:SetJustifyV("MIDDLE")
+	bar.candyBarDuration:SetFont(_fontName, _fontSize)
+	bar.candyBarDuration:SetShadowOffset(_fontShadowX, _fontShadowY)
+	bar.candyBarDuration:SetShadowColor(_fontShadowR, _fontShadowG, _fontShadowB, _fontShadowA)
+
+
+	bar:SetLabel()
+	bar:SetIcon()
+	bar:SetDuration()
+
 	return bar
 end
 

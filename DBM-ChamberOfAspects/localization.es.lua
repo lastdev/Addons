@@ -102,8 +102,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	WarningSplitSoon	= "Mostrar pre-aviso para Separación (54%)",
-	RangeFrame			= "Mostrar distancia (12 yardas)",
-	SetIconOnBrand		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(74505)
+	RangeFrame			= "Mostrar distancia (12 yardas)"
 })
 
 L:SetMiscLocalization({
@@ -124,8 +123,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	SpecialWarningTranq		= "Mostrar aviso especial para $spell:78722 (para tranquilizar)",
-	RangeFrame				= "Mostrar distancia (10 yardas)",
-	BeaconIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(74453)
+	RangeFrame				= "Mostrar distancia (10 yardas)"
 })
 
 L:SetMiscLocalization{
@@ -152,8 +150,7 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	WarnAdds		= "Anunciar nuevos adds",
-	TimerAdds		= "Mostrar tiempo para nuevos adds",
-	warnCleaveArmor	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(74367)
+	TimerAdds		= "Mostrar tiempo para nuevos adds"
 })
 
 L:SetMiscLocalization({
@@ -183,7 +180,6 @@ L:SetOptionLocalization({
 	AnnounceAlternatePhase	= "Mostrar también avisos/tiempos de la fase en la que no estás",
 	SoundOnConsumption		= "Reproducir sonido en $spell:74562 y $spell:74792",
 	SetIconOnConsumption	= "Poner iconos en los objetivos de $spell:74562 y $spell:74792",
-	YellOnConsumption		= "Gritar cuando tengas $spell:74562 o $spell:74792",
 	WhisperOnConsumption	= "Enviar susurro a los objetivos de $spell:74562 o $spell:74792"
 })
 
@@ -193,9 +189,7 @@ L:SetMiscLocalization({
 	Phase2					= "En el reino del crepúsculo solo encontraréis sufrimiento. ¡Entrad si os atrevéis!",
 	Phase3					= "¡Yo soy la luz y la oscuridad! ¡Temed, mortales, la llegada de Alamuerte!",
 	twilightcutter			= "¡Las esferas que orbitan emiten energía oscura!",
-	YellCombustion			= "¡Combustión en mi!",
 	WhisperCombustion		= "¡Combustion en ti! ¡Corre a la pared!",
-	YellConsumption			= "¡Consumo en mi!",
 	WhisperConsumption		= "¡Consumo en ti! ¡Corre a la pared!",
 	Kill					= "Disfrutad la victoria, mortales, porque será la última. ¡Este mundo arderá cuando vuelva el maestro!"
 })

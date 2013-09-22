@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(333, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 40 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(56173)
-mod:SetModelID(40087)
 mod:SetModelSound("sound\\CREATURE\\Deathwing\\VO_DS_DEATHWING_MAELSTROMEVENT_01.OGG", "sound\\CREATURE\\Deathwing\\VO_DS_DEATHWING_MAELSTROMSPELL_04.OGG")
 mod:SetZone()
 mod:SetUsedIcons(8)
@@ -19,7 +18,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED",
 	"SPELL_SUMMON",
 	"UNIT_DIED",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"UNIT_SPELLCAST_SUCCEEDED boss1 target"--Target needed for bolt died detection
 )
 
 local warnMutated					= mod:NewSpellAnnounce("ej4112", 3, 61618)
@@ -116,9 +115,9 @@ end
 function mod:ScanParasite()
 	local unitID
 	local founded = false
-	for i = 1, DBM:GetNumGroupMembers() do
-		if UnitName("raid"..i.."target") == parasite then
-			unitID = "raid"..i.."target"
+	for uId in DBM:GetGroupMembers() do
+		if UnitName(uId.."target") == parasite then
+			unitID = uId.."target"
 			founded = true
 			break
 		end
@@ -158,7 +157,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(107018) then
+	if args.spellId == 107018 then
 		parasiteCasted = false
 		if firstAspect then--The abilities all come 15seconds earlier for first one only
 			firstAspect = false
@@ -188,17 +187,17 @@ function mod:SPELL_CAST_START(args)
 			end
 			timerCataclysmCD:Start()
 		end
-	elseif args:IsSpellID(106523) then
+	elseif args.spellId == 106523 then
 		warnCataclysm:Show()
 		timerCataclysm:Start()
-	elseif args:IsSpellID(108813) then
+	elseif args.spellId == 108813 then
 		parasiteScan = 0
 		self:ScanParasite()
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(105651) then
+	if args.spellId == 105651 then
 		warnElementiumBolt:Show()
 		specWarnElementiumBolt:Show()
 		if not UnitBuff("player", GetSpellInfo(106027)) and not UnitIsDeadOrGhost("player") then--Check for Nozdormu's Presence
@@ -210,27 +209,27 @@ function mod:SPELL_CAST_SUCCESS(args)
 			timerElementiumBlast:Start(20)
 			specWarnElementiumBoltDPS:Schedule(7.5)
 		end
-	elseif args:IsSpellID(110063) then--Astral Recall. Thrall teleports off back platform back to front on defeat.
+	elseif args.spellId == 110063 then--Astral Recall. Thrall teleports off back platform back to front on defeat.
 		self:SendSync("MadnessDown")
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(106548) then--Arm/Wing Transition
+	if args.spellId == 106548 then--Arm/Wing Transition
 		timerElementiumBoltCD:Cancel()
 		timerHemorrhageCD:Cancel()--Does this one cancel in event you super overgear this and stomp his ass this fast?
 		timerCataclysm:Cancel()
 		timerCataclysmCD:Cancel()
-	elseif args:IsSpellID(106834) then--Phase 2
+	elseif args.spellId == 106834 then--Phase 2
 		warnPhase2:Show()
 		timerFragmentsCD:Start(10.5)
 		timerTerrorCD:Start(35.5)
 		if self:IsDifficulty("heroic10", "heroic25") then--Only register on heroic, we don't need on normal.
 			self:RegisterShortTermEvents(
-				"UNIT_HEALTH_FREQUENT"
+				"UNIT_HEALTH_FREQUENT boss1"
 			)
 		end
-	elseif args:IsSpellID(106400) then
+	elseif args.spellId == 106400 then
 		warnImpale:Show(args.destName)
 		timerImpale:Start(args.destName)
 		timerImpaleCD:Start()
@@ -239,7 +238,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			specWarnImpaleOther:Show(args.destName)
 		end
-	elseif args:IsSpellID(106794) then
+	elseif args.spellId == 106794 then
 		shrapnelTargets[#shrapnelTargets + 1] = args.destName
 		self:Unschedule(warnShrapnelTargets)
 		if args:IsPlayer() then
@@ -252,7 +251,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			self:Schedule(0.3, warnShrapnelTargets)
 		end
-	elseif args:IsSpellID(108649) then
+	elseif args.spellId == 108649 then
 		warnParasite:Show(args.destName)
 		timerParasite:Start(args.destName)
 		self:updateRangeFrame()
@@ -268,7 +267,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerParasiteCD:Start()
 			parasiteCasted = true
 		end
-	elseif args:IsSpellID(106730) then -- Debuffs from adds
+	elseif args.spellId == 106730 then -- Debuffs from adds
 		warnTetanus:Show(args.destName, args.amount or 1)
 		timerTetanus:Start(args.destName)
 		if (args.amount or 1) >= 4 then
@@ -289,12 +288,12 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(106444) then
+	if args.spellId == 106444 then
 		timerImpale:Cancel(args.destName)
-	elseif args:IsSpellID(106794) and args:IsPlayer() then
+	elseif args.spellId == 106794 and args:IsPlayer() then
 		timerShrapnel:Cancel()
 		countdownShrapnel:Cancel()
-	elseif args:IsSpellID(108649) then
+	elseif args.spellId == 108649 then
 		specWarnParasiteDPS:Show()
 		if self.Options.SetIconOnParasite then
 			self:SetIcon(args.destName, 0)
@@ -302,13 +301,13 @@ function mod:SPELL_AURA_REMOVED(args)
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Hide()
 		end
-	elseif args:IsSpellID(106730) then -- Debuffs from adds
+	elseif args.spellId == 106730 then -- Debuffs from adds
 		timerTetanus:Cancel(args.destName)
 	end
 end
 
 function mod:SPELL_SUMMON(args)
-	if args:IsSpellID(109091) and self:AntiSpam(10, 1) then--They spawn over like 8 seconds, not at same time, so we need a large anti spam.
+	if args.spellId == 109091 and self:AntiSpam(10, 1) then--They spawn over like 8 seconds, not at same time, so we need a large anti spam.
 		specWarnCongealingBlood:Show()
 	end
 end
@@ -332,19 +331,19 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 110663 and self:AntiSpam(2, 3) then--Elementium Meteor Transform (apparently this doesn't fire UNIT_DIED anymore, need to use this alternate method)
 		self:SendSync("BoltDied")--Send sync because Elementium bolts do not have a bossN arg, which means event only fires if it's current target/focus.
 	-- Actually i have a pretty good idea what problem is now. thinking about it, with no uId filter, it's triggering off a rogue in raid (also have hemorrhage spell)
-	elseif spellId == 105863 and self:AntiSpam(2, 2) then
+	elseif spellId == 105863 then
 		warnHemorrhage:Show()
 		specWarnHemorrhage:Show()
-	elseif spellId == 105551 and self:AntiSpam(2, 2) then--Spawn Blistering Tentacles
+	elseif spellId == 105551 then--Spawn Blistering Tentacles
 		if not UnitBuff("player", GetSpellInfo(106028)) then--Check for Alexstrasza's Presence
 			warnTentacle:Show()
 			specWarnTentacle:Show()
 		end
-	elseif spellId == 106775 and self:AntiSpam(2, 2) then--Summon Impaling Tentacle (Fragments summon)
+	elseif spellId == 106775 then--Summon Impaling Tentacle (Fragments summon)
 		warnFragments:Show()
 		specWarnFragments:Show()
 		timerFragmentsCD:Start()
-	elseif spellId == 106765 and self:AntiSpam(2, 2) then--Summon Elementium Terror (Big angry add)
+	elseif spellId == 106765 then--Summon Elementium Terror (Big angry add)
 		activateTetanusTimers = false
 		warnTerror:Show()
 		specWarnTerror:Show()
@@ -361,18 +360,16 @@ function mod:OnSync(msg)
 end
 
 function mod:UNIT_HEALTH_FREQUENT(uId)
-	if uId == "boss1" then
-		local hp = UnitHealth(uId) / UnitHealthMax(uId) * 100
-		if hp > 15 and hp < 16.5 and warnedCount == 0 then
-			warnedCount = 1
-			warnCongealingBloodSoon:Show()
-		elseif hp > 10 and hp < 11.5 and warnedCount == 1 then
-			warnedCount = 2
-			warnCongealingBloodSoon:Show()
-		elseif hp > 5 and hp < 6.5 and warnedCount == 2 then
-			warnedCount = 3
-			warnCongealingBloodSoon:Show()
-			self:UnregisterShortTermEvents()
-		end
+	local hp = UnitHealth(uId) / UnitHealthMax(uId) * 100
+	if hp > 15 and hp < 16.5 and warnedCount == 0 then
+		warnedCount = 1
+		warnCongealingBloodSoon:Show()
+	elseif hp > 10 and hp < 11.5 and warnedCount == 1 then
+		warnedCount = 2
+		warnCongealingBloodSoon:Show()
+	elseif hp > 5 and hp < 6.5 and warnedCount == 2 then
+		warnedCount = 3
+		warnCongealingBloodSoon:Show()
+		self:UnregisterShortTermEvents()
 	end
 end

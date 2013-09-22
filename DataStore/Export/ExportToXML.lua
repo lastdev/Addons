@@ -35,7 +35,8 @@ print("** DataStore Export **")
 local INPUT_DIR = "D:\\World of Warcraft\\WTF\\Account\\YOUR_ACCOUNT\\SavedVariables"
 local OUTPUT_DIR = "E:\\Wow\\Export DataStore"
 
-local USE_XSL = true		-- adds a line that refers to a basic .xsl file to display exported content, comment this line if you don't want an xsl reference.
+local USE_XSL = true				-- adds a line that refers to a basic .xsl file to display exported content, comment this line if you don't want an xsl reference.
+local EMPTY_TAG_VALUE = ""		-- change this constant to whatever you want to print as value for an empty tag, ex: "", "Not Found", "Empty" ...
 
 local format = string.format
 
@@ -174,9 +175,9 @@ end
 
 function SingleLineTag(file, level, tag, value, attributes)
 	if attributes then
-		WriteXMLLine(file, level, format("<%s %s>%s</%s>", tag, attributes, value, tag))	
+		WriteXMLLine(file, level, format("<%s %s>%s</%s>", tag, attributes, value or EMPTY_TAG_VALUE, tag))	
 	else
-		WriteXMLLine(file, level, format("<%s>%s</%s>", tag, value, tag))	
+		WriteXMLLine(file, level, format("<%s>%s</%s>", tag, value or "Not found", tag))	
 	end
 end
 

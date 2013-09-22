@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(668, "DBM-Party-MoP", 2, 302)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7834 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(56637)
-mod:SetModelID(39498)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -27,7 +26,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(106651) then
+	if args.spellId == 106651 then
 		warnBananas:Show(args.destName, args.amount or 1)
 	end
 end
@@ -47,7 +46,7 @@ I'd like more data to decide on if it has pattern
 12.1
 --]]
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(106807) then
+	if args.spellId == 106807 then
 		warnGroundPound:Show()
 		specWarnGroundPound:Show()
 		timerGroundPoundCD:Start()

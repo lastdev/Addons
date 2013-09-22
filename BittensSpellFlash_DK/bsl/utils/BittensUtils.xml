@@ -1,0 +1,20 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+
+	<!--  BittensGlobalTables.lua must be first -->
+	<Script file="src\BittensGlobalTables.lua" />
+	
+	<!-- Most other files depend on Tables.lua -->
+	<Script file="src\Tables.lua" />
+	
+	<Script file="src\EventHandlers.lua" />
+	<Script file="src\Functions.lua" />
+	<Script file="src\Heaps.lua" />
+	<Script file="src\Localization.lua" />
+	<Script file="src\OptionsPanels.lua" />
+	<Script file="src\SlashCommands.lua" />
+	<Script file="src\Strings.lua" />
+	
+	<!-- Scheduling.lua depends on Heaps -->
+	<Script file="src\Scheduling.lua" />
+</Ui>

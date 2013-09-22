@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Hydross", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 399 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 511 $"):sub(12, -3))
 mod:SetCreatureID(21216)
 mod:SetModelID(20162)
 mod:SetZone()
@@ -21,7 +21,6 @@ local warnSludge	= mod:NewTargetAnnounce(38246)
 local specWarnMark	= mod:NewSpecialWarning("SpecWarnMark")
 
 local timerMark		= mod:NewTimer(15, "TimerMark", 28730)
-local timerTomb		= mod:NewBuffActiveTimer(5, 38235)
 local timerSludge	= mod:NewTargetTimer(24, 38246)
 
 local berserkTimer	= mod:NewBerserkTimer(600)
@@ -44,7 +43,6 @@ local damageNext = {
 local function showTombTargets()
 	warnTomb:Show(table.concat(warnTombTargets, "<, >"))
 	table.wipe(warnTombTargets)
-	timerTomb:Show()
 end
 
 function mod:OnCombatStart(delay)
@@ -63,11 +61,11 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(38235) then
+	if args.spellId == 38235 then
 		warnTombTargets[#warnTombTargets + 1] = args.destName
 		self:Unschedule(showTombTargets)
 		self:Schedule(0.3, showTombTargets)
-	elseif args:IsSpellID(38246) then
+	elseif args.spellId == 38246 then
 		warnSludge:Show(args.destName)
 		timerSludge:Start(args.destName)
 	end
@@ -83,7 +81,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		specWarnMark:Show(args.spellName, damage[args.spellId] or "10%")
 		timerMark:Cancel()
 		timerMark:Show(args.spellName, damageNext[args.spellId] or "10%")
-	elseif args:IsSpellID(25035) and self:AntiSpam(2) then
+	elseif args.spellId == 25035 and self:AntiSpam(2) then
 		timerMark:Cancel()
 		if args:GetSrcCreatureID() == 22035 then
 			warnPhase:Show(L.Frost)

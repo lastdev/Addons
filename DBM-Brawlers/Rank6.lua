@@ -1,8 +1,7 @@
 local mod	= DBM:NewMod("BrawlRank6", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8431 $"):sub(12, -3))
---mod:SetCreatureID(60491)
+mod:SetRevision(("$Revision: 9886 $"):sub(12, -3))
 mod:SetModelID(39166)
 mod:SetZone()
 
@@ -13,17 +12,13 @@ mod:RegisterEvents(
 	"SPELL_AURA_REMOVED"
 )
 
-local isDispeller = select(2, UnitClass("player")) == "MAGE"
-	    		 or select(2, UnitClass("player")) == "PRIEST"
-	    		 or select(2, UnitClass("player")) == "SHAMAN"
-
 local warnFallenKin				= mod:NewStackAnnounce(134789, 3)
 local warnShadowStrikes			= mod:NewSpellAnnounce(126209, 3)
 local warnChainLightning		= mod:NewSpellAnnounce(39945, 3)
 local warnToughLuck				= mod:NewStackAnnounce(134624, 1)
 local warnShieldWaller			= mod:NewSpellAnnounce(134650, 2)
 
-local specWarnShadowStrikes		= mod:NewSpecialWarningDispel(126209, isDispeller)
+local specWarnShadowStrikes		= mod:NewSpecialWarningDispel(126209, mod:IsMagicDispeller())
 local specWarnChainLightning	= mod:NewSpecialWarningInterrupt(39945)
 
 local timerFallenKin			= mod:NewBuffActiveTimer(2, 134789)
@@ -38,7 +33,7 @@ local brawlersMod = DBM:GetModByName("Brawlers")
 
 function mod:SPELL_CAST_START(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
-	if args:IsSpellID(39945) then
+	if args.spellId == 39945 then
 		warnChainLightning:Show()
 		timerChainLightningCD:Start()
 		if brawlersMod:PlayerFighting() then
@@ -49,16 +44,16 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
-	if args:IsSpellID(134650) then
+	if args.spellId == 134650 then
 		warnShieldWaller:Show()
 		timerShieldWaller:Start()
-	elseif args:IsSpellID(108043) then
+	elseif args.spellId == 108043 then
 		warnToughLuck:Show(args.destName, args.amount or 1)
-	elseif args:IsSpellID(134789) then
+	elseif args.spellId == 134789 then
 		warnFallenKin:Cancel()
 		warnFallenKin:Schedule(0.5, args.destName, args.amount or 1)
 		timerFallenKin:Start()
-	elseif args:IsSpellID(126209) then
+	elseif args.spellId == 126209 then
 		warnShadowStrikes:Show()
 		timerShadowStrikes:Start()
 		if brawlersMod:PlayerFighting() then
@@ -70,9 +65,9 @@ mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
-	if args:IsSpellID(134650) then
+	if args.spellId == 134650 then
 		timerShieldWaller:Cancel()
-	elseif args:IsSpellID(126209) then
+	elseif args.spellId == 126209 then
 		timerShadowStrikes:Cancel()
 	end
 end

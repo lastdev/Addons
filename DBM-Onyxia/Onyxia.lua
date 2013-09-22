@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Onyxia", "DBM-Onyxia")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 90 $"):sub(12, -3))
 mod:SetCreatureID(10184)
+mod:SetZone()
 mod:SetModelID(8570)
 
 mod:RegisterCombat("combat")
@@ -12,14 +13,14 @@ mod:RegisterEvents(
 	"SPELL_CAST_START",
 	"SPELL_DAMAGE",
 	"UNIT_DIED",
-	"UNIT_HEALTH"
+	"UNIT_HEALTH target focus mouseover"
 )
 
 local warnWhelpsSoon		= mod:NewAnnounce("WarnWhelpsSoon", 1, 69004)
 local warnPhase2			= mod:NewPhaseAnnounce(2)
 local warnPhase3			= mod:NewPhaseAnnounce(3)
-local warnPhase2Soon		= mod:NewAnnounce("WarnPhase2Soon", 1, "Interface\\Icons\\Spell_Nature_WispSplode")
-local warnPhase3Soon		= mod:NewAnnounce("WarnPhase3Soon", 1, "Interface\\Icons\\Spell_Nature_WispSplode")
+local warnPhase2Soon		= mod:NewPrePhaseAnnounce(2)
+local warnPhase3Soon		= mod:NewPrePhaseAnnounce(3)
 
 local specWarnBreath		= mod:NewSpecialWarningSpell(18584, nil, nil, nil, true)
 local specWarnBlastNova		= mod:NewSpecialWarningRun(68958, mod:IsMelee())
@@ -28,8 +29,6 @@ local timerNextFlameBreath	= mod:NewCDTimer(20, 18435)--Breath she does on groun
 local timerNextDeepBreath	= mod:NewCDTimer(35, 18584)--Range from 35-60seconds in between based on where she moves to.
 local timerBreath			= mod:NewCastTimer(8, 18584)
 local timerWhelps			= mod:NewTimer(105, "TimerWhelps", 10697)
-local timerAchieve			= mod:NewAchievementTimer(300, 4405, "TimerSpeedKill") 
-local timerAchieveWhelps	= mod:NewAchievementTimer(10, 4406, "TimerWhelps") 
 
 local soundBlastNova		= mod:NewSound(68958, nil, mod:IsMelee())
 local soundDeepBreath 		= mod:NewSound(18584)
@@ -43,10 +42,10 @@ function mod:OnCombatStart(delay)
 	phase = 1
     warned_preP2 = false
 	warned_preP3 = false
-	timerAchieve:Start(-delay)
 	sndFunny:Play("Interface\\AddOns\\DBM-Onyxia\\sounds\\dps-very-very-slowly.ogg")
 	sndFunny:Schedule(20, "Interface\\AddOns\\DBM-Onyxia\\sounds\\hit-it-like-you-mean-it.ogg")
 	sndFunny:Schedule(30, "Interface\\AddOns\\DBM-Onyxia\\sounds\\now-hit-it-very-hard-and-fast.ogg")
+	--Show correct achievement text
 end
 
 function mod:Whelps()--Not right, need to fix
@@ -67,7 +66,6 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		phase = 2
 		warnPhase2:Show()
 		timerNextDeepBreath:Start(77)
-		timerAchieveWhelps:Start()
 		timerNextFlameBreath:Cancel()
 		self:ScheduleMethod(5, "Whelps")
 		sndFunny:Schedule(10, "Interface\\AddOns\\DBM-Onyxia\\sounds\\throw-more-dots.ogg")
@@ -87,7 +85,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(68958) then
+	if args.spellId == 68958 then
         specWarnBlastNova:Show()
 		soundBlastNova:Play()
 	elseif args:IsSpellID(17086, 18351, 18564, 18576) or args:IsSpellID(18584, 18596, 18609, 18617) then	-- 1 ID for each direction
@@ -95,7 +93,7 @@ function mod:SPELL_CAST_START(args)
 		soundDeepBreath:Play()
 		timerBreath:Start()
 		timerNextDeepBreath:Start()
-	elseif args:IsSpellID(18435) then        -- Flame Breath (Ground phases)
+	elseif args.spellId == 18435 then        -- Flame Breath (Ground phases)
 		timerNextFlameBreath:Start()
 	end
 end

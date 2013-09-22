@@ -1,7 +1,7 @@
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "OptionsFrames", 3) then
+if u.SkipOrUpgrade(c, "OptionsFrames", 4) then
 	return
 end
 
@@ -17,8 +17,8 @@ local GetAddOnInfo = GetAddOnInfo
 local GetAddOnMetadata = GetAddOnMetadata
 local GetLFGQueueStats = GetLFGQueueStats
 local InterfaceOptions_AddCategory = InterfaceOptions_AddCategory
-local UnitInRange = UnitInRange
 local UnitIsUnit = UnitIsUnit
+local UnitIsVisible = UnitIsVisible
 local pairs = pairs
 local print = print
 local select = select
@@ -80,10 +80,18 @@ function c.AddSoloSwitch()
 	}
 end
 
-function c.IsSolo(checkIfQueued)
-	return not s.InRaidOrParty()
+function c.IsSolo(considerFutureGroup)
+	local solo = true
+	for member in c.GetGroupMembers() do
+		if not UnitIsUnit(member, "player") 
+			and (considerFutureGroup or UnitIsVisible(member)) then
+			
+			solo = false
+		end
+	end
+	return solo
 		and (not c.HasOption("SoloMode") or c.GetOption("SoloMode"))
-		and not (checkIfQueued
+		and not (considerFutureGroup
 			and (GetLFGQueueStats(LE_LFG_CATEGORY_LFD)
 				or GetLFGQueueStats(LE_LFG_CATEGORY_LFR)
 				or GetLFGQueueStats(LE_LFG_CATEGORY_RF)

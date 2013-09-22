@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: Core.lua 5380 2012-11-12 19:58:06Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: Core.lua 5415 2013-06-11 15:18:58Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	AutoMagic is an Auctioneer module which automates mundane tasks for you.
@@ -31,6 +31,7 @@
 if not AucAdvanced then return end
 
 local lib = AucAdvanced.Modules.Util.AutoMagic
+if not lib then return end
 local print,decode,_,_,replicate,empty,get,set,default,debugPrint,fill = AucAdvanced.GetModuleLocals()
 local AppraiserValue, DisenchantValue, ProspectValue, VendorValue, bestmethod, bestvalue, runstop, _
 
@@ -238,6 +239,7 @@ local isHerb =
 	[8839] = true, --  Blindweed
 	[8845] = true, --  Ghost Mushroom
 	[8846] = true, --  Gromsblood
+	[10286] = true, -- Heart of the Wild
 	[13463] = true, --  Dreamfoil
 	[13464] = true, --  Golden Sansam
 	[13465] = true, --  Mountain Silversage
@@ -286,38 +288,6 @@ local isHerb =
 	[89639] = true,--Desecrated Herb
 	}
 
---what armor each class can use localized
-local _, CLOTH, LEATHER, MAIL, PLATE = GetAuctionItemSubClasses(2) --only way I found to get a localized subtype
-local isClass = {
-	["DEATHKNIGHT"] = PLATE,
-	["MAGE"] = CLOTH,
-	["PRIEST"] = CLOTH,
-	["WARLOCK"] = CLOTH,
-	["DRUID"] = LEATHER,
-	["MONK"] = LEATHER,
-	["ROGUE"] = LEATHER,
-	--lvl 40
-	["WARRIOR"] = PLATE,
-	["WARRIORLOW"] = MAIL, --warriors and paladins plate does not appear before 40,
-	["PALADIN"] = PLATE,
-	["PALADINLOW"] = MAIL,
-	["HUNTER"] = MAIL,
-	["HUNTERLOW"] = LEATHER,
-	["SHAMAN"] = MAIL,
-	["SHAMANLOW"] = LEATHER,
-}
-
-local playerArmorType
-function lib.playerArmor()
-	local _, class =  UnitClass("player")
-	local level = UnitLevel("player")
-	if not isClass[class] then print("Unknown player class..", class) return end
-
-	if level < 40 and (class == "WARRIOR" or class == "PALADIN" or class == "HUNTER" or class == "SHAMAN") then
-		class = class.."LOW"
-	end
-	return isClass[class]
-end
 --Inv slot types, used to help define what gear is usable via tooltip parse
 local InventoryTypes = {
 	[INVTYPE_2HWEAPON] = INVTYPE_2HWEAPON,
@@ -357,13 +327,6 @@ local ScanTip3 = AppraiserTipTextLeft3
 local ScanTipRight2  = AppraiserTipTextRight2
 local ScanTipRight3 = AppraiserTipTextRight3
 function lib.cannotUse(itemSubType)
-	--check desirable armor types
-	if itemSubType == CLOTH or itemSubType == LEATHER or itemSubType == MAIL or itemSubType == PLATE then
-		if playerArmorType ~= itemSubType then
---~ 			print(1, AppraiserTipTextLeft1:GetText(), ScanTip2:GetText(), playerArmorType ,itemSubType)
-			return true
-		end
-	end
 	--scan tooltip  if its a valid equip text, look at color
 	if InventoryTypes[ScanTip2:GetText()] or InventoryTypes[ScanTip3:GetText()] then
 		local hex,r,g,b
@@ -416,9 +379,9 @@ end
 
 lib.vendorlist = {}
 function lib.vendorAction(autovendor)
-	if not playerArmorType then
-		 playerArmorType = lib.playerArmor()--create the players localized usable armor
-	end
+--~ 	if not playerArmorType then
+--~ 		 playerArmorType = lib.playerArmor()--create the players localized usable armor
+--~ 	end
 	empty(lib.vendorlist) --this needs to be cleared on every vendor open
 --~ 	local  ignoredItemsFound --used to alert players that some vendor items were skipped
 	for bag=0,4 do
@@ -489,173 +452,79 @@ function lib.vendorAction(autovendor)
 
 end
 
-function lib.disenchantAction()
-	MailFrameTab_OnClick(nil, 2)
-	for bag=0,4 do
-		for slot=1,GetContainerNumSlots(bag) do
-			if (GetContainerItemLink(bag,slot)) then
-				local itemLink, itemCount = GetContainerItemLink(bag,slot)
-				if (itemLink == nil) then return end
-				if itemCount == nil then _, itemCount = GetContainerItemInfo(bag, slot) end
-				if itemCount == nil then itemCount = 1 end
-				runstop = 0
-				local linkType, itemID, _, _, _, _ = decode(itemLink)
-				if linkType == "item" then
-					local itemName, _, itemRarity, _, _, _, _, _, _, _ = GetItemInfo(itemLink)
-					if (AucAdvanced.Modules.Util.ItemSuggest and get("util.automagic.overidebtmmail") == true) then
-						local aimethod = AucAdvanced.Modules.Util.ItemSuggest.itemsuggest(itemLink, itemCount)
-						if(aimethod == "Disenchant") then
-							if (get("util.automagic.chatspam")) then
-								print("AutoMagic has loaded", itemName, " due to Item Suggest(Disenchant)")
-							end
-							UseContainerItem(bag, slot)
-							runstop = 1
-						end
-					else --look for btmScan or SearchUI reason codes if above fails
-						local reason, text = lib.getReason(itemLink, itemName, itemCount, "disenchant")
-						if reason and text then
-							if (get("util.automagic.chatspam")) then
-								print("AutoMagic has loaded", itemName, " due to", text ,"Rule(Disenchant)")
-							end
-							UseContainerItem(bag, slot)
-						end
-					end
-				end
+function lib.disenchantAction(bag, slot, itemLink, itemID, itemCount)
+	if (AucAdvanced.Modules.Util.ItemSuggest and get("util.automagic.overidebtmmail") == true) then
+		local aimethod = AucAdvanced.Modules.Util.ItemSuggest.itemsuggest(itemLink, itemCount)
+		if(aimethod == "Disenchant") then
+			if (get("util.automagic.chatspam")) then
+				print("AutoMagic has loaded", itemName, " due to Item Suggest(Disenchant)")
 			end
+			UseContainerItem(bag, slot)
+		end
+	else --look for btmScan or SearchUI reason codes if above fails
+		local reason, text = lib.getReason(itemLink, itemName, itemCount, "disenchant")
+		if reason and text then
+			if (get("util.automagic.chatspam")) then
+				print("AutoMagic has loaded", itemName, " due to", text ,"Rule(Disenchant)")
+			end
+			UseContainerItem(bag, slot)
 		end
 	end
 end
 
-function lib.prospectAction()
-	MailFrameTab_OnClick(nil, 2)
-	for bag=0,4 do
-		for slot=1,GetContainerNumSlots(bag) do
-			if (GetContainerItemLink(bag,slot)) then
-				local itemLink, itemCount = GetContainerItemLink(bag,slot)
-				if (itemLink == nil) then return end
-				if itemCount == nil then _, itemCount = GetContainerItemInfo(bag, slot) end
-				if itemCount == nil then itemCount = 1 end
-				local linkType, itemID, _, _, _, _ = decode(itemLink)
-				if linkType == "item" then
-					local itemName, _, itemRarity, _, _, _, _, _, _, _ = GetItemInfo(itemLink)
-					runstop = 0
-					if (AucAdvanced.Modules.Util.ItemSuggest and get("util.automagic.overidebtmmail") == true) then
-						local aimethod = AucAdvanced.Modules.Util.ItemSuggest.itemsuggest(itemLink, itemCount)
-						if(aimethod == "Prospect") then
-							if (get("util.automagic.chatspam")) then
-								print("AutoMagic has loaded", itemName, " due to Item Suggest(Prospect)")
-							end
-							UseContainerItem(bag, slot)
-							runstop = 1
-						end
-					else --look for btmScan or SearchUI reason codes if above fails
-						local reason, text = lib.getReason(itemLink, itemName, itemCount, "prospect")
-						if reason and text then
-							if (get("util.automagic.chatspam")) then
-								print("AutoMagic has loaded", itemName, " due to", text ,"Rule(Prospect)")
-							end
-							UseContainerItem(bag, slot)
-						end
-					end
-				end
+function lib.prospectAction(bag, slot, itemLink, itemID, itemCount)
+	if (AucAdvanced.Modules.Util.ItemSuggest and get("util.automagic.overidebtmmail") == true) then
+		local aimethod = AucAdvanced.Modules.Util.ItemSuggest.itemsuggest(itemLink, itemCount)
+		if(aimethod == "Prospect") then
+			if (get("util.automagic.chatspam")) then
+				print("AutoMagic has loaded", itemName, " due to Item Suggest(Prospect)")
 			end
+			UseContainerItem(bag, slot)
+		end
+	else --look for btmScan or SearchUI reason codes if above fails
+		local reason, text = lib.getReason(itemLink, itemName, itemCount, "prospect")
+		if reason and text then
+			if (get("util.automagic.chatspam")) then
+				print("AutoMagic has loaded", itemName, " due to", text ,"Rule(Prospect)")
+			end
+			UseContainerItem(bag, slot)
 		end
 	end
 end
 
-function lib.gemAction()
-	MailFrameTab_OnClick(nil, 2)
-	for bag=0,4 do
-		for slot=1,GetContainerNumSlots(bag) do
-			if (GetContainerItemLink(bag,slot)) then
-				local itemLink, itemCount = GetContainerItemLink(bag,slot)
-				if (itemLink == nil) then return end
-				if itemCount == nil then _, itemCount = GetContainerItemInfo(bag, slot) end
-				if itemCount == nil then itemCount = 1 end
-				local linkType, itemID, _, _, _, _ = decode(itemLink)
-				if linkType == "item" then
-					local itemName, _, itemRarity, _, _, _, _, _, _, _ = GetItemInfo(itemLink)
-					if isGem[ itemID ] then
-						if (get("util.automagic.chatspam")) then
-							print("AutoMagic has loaded", itemName, " because it is a gem!")
-						end
-						UseContainerItem(bag, slot)
-					end
-				end
-			end
+function lib.gemAction(bag, slot, itemLink, itemID, itemCount)
+	if isGem[ itemID ] then
+		if (get("util.automagic.chatspam")) then
+			print("AutoMagic has loaded", itemName, " because it is a gem!")
 		end
+		UseContainerItem(bag, slot)
 	end
 end
 
-function lib.dematAction()
-	MailFrameTab_OnClick(nil, 2)
-	for bag=0,4 do
-		for slot=1,GetContainerNumSlots(bag) do
-			if (GetContainerItemLink(bag,slot)) then
-				local itemLink, itemCount = GetContainerItemLink(bag,slot)
-				if (itemLink == nil) then return end
-				if itemCount == nil then _, itemCount = GetContainerItemInfo(bag, slot) end
-				if itemCount == nil then itemCount = 1 end
-				local linkType, itemID, _, _, _, _ = decode(itemLink)
-				if linkType == "item" then
-					local itemName, _, itemRarity, _, _, _, _, _, _, _ = GetItemInfo(itemLink)
-					if isDEMats[ itemID ] then
-						if (get("util.automagic.chatspam")) then
-							print("AutoMagic has loaded", itemName, " because it is a mat used for enchanting.")
-						end
-						UseContainerItem(bag, slot)
-					end
-				end
-			end
+function lib.dematAction(bag, slot, itemLink, itemID, itemCount)
+	if isDEMats[ itemID ] then
+		if (get("util.automagic.chatspam")) then
+			print("AutoMagic has loaded", itemName, " because it is a mat used for enchanting.")
 		end
+		UseContainerItem(bag, slot)
 	end
 end
 
-function lib.pigmentAction()
-	MailFrameTab_OnClick(nil, 2)
-	for bag=0,4 do
-		for slot=1,GetContainerNumSlots(bag) do
-			if (GetContainerItemLink(bag,slot)) then
-				local itemLink, itemCount = GetContainerItemLink(bag,slot)
-				if (itemLink == nil) then return end
-				if itemCount == nil then _, itemCount = GetContainerItemInfo(bag, slot) end
-				if itemCount == nil then itemCount = 1 end
-				local linkType, itemID, _, _, _, _ = decode(itemLink)
-				if linkType == "item" then
-					local itemName, _, itemRarity, _, _, _, _, _, _, _ = GetItemInfo(itemLink)
-					if isPigmentMats[ itemID ] then
-						if (get("util.automagic.chatspam")) then
-							print("AutoMagic has loaded", itemName, " because it is a pigment used for milling.")
-						end
-						UseContainerItem(bag, slot)
-					end
-				end
-			end
+function lib.pigmentAction(bag, slot, itemLink, itemID, itemCount)
+	if isPigmentMats[ itemID ] then
+		if (get("util.automagic.chatspam")) then
+			print("AutoMagic has loaded", itemName, " because it is a pigment used for milling.")
 		end
+		UseContainerItem(bag, slot)
 	end
 end
 
-function lib.herbAction()
-	MailFrameTab_OnClick(nil, 2)
-	for bag=0,4 do
-		for slot=1,GetContainerNumSlots(bag) do
-			if (GetContainerItemLink(bag,slot)) then
-				local itemLink, itemCount = GetContainerItemLink(bag,slot)
-				if (itemLink == nil) then return end
-				if itemCount == nil then _, itemCount = GetContainerItemInfo(bag, slot) end
-				if itemCount == nil then itemCount = 1 end
-				local linkType, itemID, _, _, _, _ = decode(itemLink)
-				if linkType == "item" then
-					local itemName, _, itemRarity, _, _, _, _, _, _, _ = GetItemInfo(itemLink)
-					if isHerb[ itemID ] then
-						if (get("util.automagic.chatspam")) then
-							print("AutoMagic has loaded", itemName, " because it is a herb.")
-						end
-						UseContainerItem(bag, slot)
-					end
-				end
-			end
+function lib.herbAction(bag, slot, itemLink, itemID, itemCount)
+	if isHerb[ itemID ] then
+		if (get("util.automagic.chatspam")) then
+			print("AutoMagic has loaded", itemName, " because it is a herb.")
 		end
+		UseContainerItem(bag, slot)
 	end
 end
 
@@ -716,6 +585,26 @@ function lib.customAction(button)
 		end
 	end
 end
+--Consolidate function to read all bags
+function lib.scanBags(actionFunction)
+	MailFrameTab_OnClick(nil, 2)
+	for bag=0,4 do
+		for slot=1,GetContainerNumSlots(bag) do
+			if (GetContainerItemLink(bag,slot)) then
+				local itemLink, itemCount = GetContainerItemLink(bag,slot)
+				if (itemLink == nil) then return end
+				if itemCount == nil then _, itemCount = GetContainerItemInfo(bag, slot) end
+				if itemCount == nil then itemCount = 1 end
+				local linkType, itemID, _, _, _, _ = decode(itemLink)
+				if linkType == "item" then
+					local itemName, _, itemRarity, _, _, _, _, _, _, _ = GetItemInfo(itemLink)
+					actionFunction(bag, slot, itemLink, itemID, itemCount)
+				end
+			end
+		end
+	end
+end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AutoMagic/Core.lua $", "$Rev: 5380 $")
+
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-AutoMagic/Core.lua $", "$Rev: 5415 $")

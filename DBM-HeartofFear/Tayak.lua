@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(744, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8664 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10296 $"):sub(12, -3))
 mod:SetCreatureID(62543)
-mod:SetModelID(43141)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -15,18 +14,19 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 local warnTempestSlash					= mod:NewSpellAnnounce(125692, 2)
 local warnOverwhelmingAssault			= mod:NewStackAnnounce(123474, 3, nil, mod:IsTank() or mod:IsHealer())
 local warnWindStep						= mod:NewTargetAnnounce(123175, 3)
-local warnUnseenStrike					= mod:NewTargetAnnounce(123017, 4)
+local warnUnseenStrike					= mod:NewTargetAnnounce(122949, 4, 123017)
 local warnIntensify						= mod:NewStackAnnounce(123471, 2)
 local warnBladeTempest					= mod:NewCastAnnounce(125310, 4)--Phase 1 heroic
 local warnStormUnleashed				= mod:NewSpellAnnounce(123815, 3)--Phase 2
 
-local specWarnUnseenStrike				= mod:NewSpecialWarningTarget(122949)--Everyone needs to know this, and run to this person.
+local specWarnUnseenStrike				= mod:NewSpecialWarningYou(122949)
+local specWarnUnseenStrikeOther			= mod:NewSpecialWarningTarget(122949)--Everyone needs to know this, and run to this person.
 local yellUnseenStrike					= mod:NewYell(122949)
 local specWarnOverwhelmingAssault		= mod:NewSpecialWarningStack(123474, mod:IsTank(), 2)
 local specWarnOverwhelmingAssaultOther	= mod:NewSpecialWarningTarget(123474, mod:IsTank())
@@ -84,7 +84,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(123474) then
+	if args.spellId == 123474 then
 		warnOverwhelmingAssault:Show(args.destName, args.amount or 1)
 		timerOverwhelmingAssault:Start(args.destName)
 		if args:IsPlayer() then
@@ -96,7 +96,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnOverwhelmingAssaultOther:Show(args.destName)--So nudge you to taunt it off other tank already.
 			end
 		end
-	elseif args:IsSpellID(123471) then
+	elseif args.spellId == 123471 then
 		if phase2 and (args.amount or 1) % 3 == 0 or not phase2 then
 			warnIntensify:Show(args.destName, args.amount or 1)
 		end
@@ -106,13 +106,13 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(123474) then
+	if args.spellId == 123474 then
 		timerOverwhelmingAssault:Cancel(args.destName)
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(125310) then
+	if args.spellId == 125310 then
 		warnBladeTempest:Show()
 		specWarnBladeTempest:Show()
 		soundBladeTempest:Play()
@@ -123,9 +123,9 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(123474) then
+	if args.spellId == 123474 then
 		timerOverwhelmingAssaultCD:Start()--Start CD here, since this might miss.
-	elseif args:IsSpellID(123175) then
+	elseif args.spellId == 123175 then
 		warnWindStep:Show(args.destName)
 		if self:IsDifficulty("lfr25") then
 			timerWindStepCD:Start(30)
@@ -137,21 +137,24 @@ end
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg:find("spell:122949") then--Does not show in combat log except for after it hits. IT does fire a UNIT_SPELLCAST event but has no target info. You can get target 1 sec faster with UNIT_AURA but it's more cpu and not worth the trivial gain IMO
+		local target = DBM:GetUnitFullName(target)
 		warnUnseenStrike:Show(target)
-		specWarnUnseenStrike:Show(target)
 		timerUnseenStrike:Start()
 		timerUnseenStrikeCD:Start()
 		if target == UnitName("player") then
+			specWarnUnseenStrike:Show()
 			yellUnseenStrike:Yell()
-		end
-		if self.Options.UnseenStrikeArrow then
-			DBM.Arrow:ShowRunTo(target, 3, 3, 5)
+		else
+			specWarnUnseenStrikeOther:Show(target)
+			if self.Options.UnseenStrikeArrow then
+				DBM.Arrow:ShowRunTo(target, 3, 3, 5)
+			end
 		end
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if spellId == 122839 and self:AntiSpam(2, 1) then--Tempest Slash. DO NOT ADD OTHER SPELLID. 122839 is primary cast, 122842 is secondary cast 3 seconds later. We only need to warn for primary and start CD off it and it alone.
+	if spellId == 122839 then--Tempest Slash. DO NOT ADD OTHER SPELLID. 122839 is primary cast, 122842 is secondary cast 3 seconds later. We only need to warn for primary and start CD off it and it alone.
 		warnTempestSlash:Show()
 		if self:IsDifficulty("lfr25") then
 			timerTempestSlashCD:Start(20)

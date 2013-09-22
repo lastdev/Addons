@@ -11,9 +11,200 @@
 <body>
 
 <font face="Verdana, sans-serif"><span style="color: rgb(51, 51, 255);">
-<a href="http://www.healbot.info/">HealBot Continued</a> - Change Log
+<a href="http://healbot.darktech.org/">HealBot Continued</a> - Change Log
 </span><br>
 <br>
+v5.4.0.2<br>
+=================<br>
+* Improvements to Workaround for sliders not stepping correctly in WoW 5.4<br>
+* Page step attribute set for sliders, clicking on the sliders bar will now increment the value appropriate to the Min/Max slider values<br>
+* More custom Debuffs added for 5.4 boss fights - Thanks to Spankyham on HealBot site for all work done for this<br>
+* Fix for rare bug when joining a raid with headers used<br>
+<br>
+v5.4.0.1<br>
+=================<br>
+* Workaround for sliders not stepping correctly in WoW 5.4<br>
+<br>
+v5.4.0.0 <B>Recommend: "Reset Custom Debuffs" using commands dropdown on the options General tab</B><br>
+=================<br>
+* Number of additions to tracked Shaman buffs and a few deletions<br>
+* Boss unit id's included as Raid when units are friendly<br>
+* Additional check and exclusions for boss units from enemy frame when friendly<br>
+* Enable mouse wheel only set out of combat, turn ON the option no longer requires UI reload<br>
+* Custom Debuffs added for 5.4 boss fights - Thanks to Spankyham on HealBot site for all work done for this<br>
+* Fix for Renewing Mist Icon issue on Portuguese (ptBR) client, should now show Brumas da Renovação for buff only<br>
+* TOC's updated<br>
+<br>
+v5.3.0.9<br>
+=================<br>
+* Fixed a number of localization issues in Healbot option tabs<br>
+* Updated Chinese localizations<br>
+* Updated Taiwanese localizations<br>
+* Minor performance improvement<br>
+<br>
+v5.3.0.8<br>
+=================<br>
+* Added option on General tab: Profile for Spells/Buffs/Cures, can be set to Character or Class<br>
+* Added option on Skins>Healing tab: Target: Only show Friendly<br>
+* Added option on Skins>Healing tab: Focus: Only show Friendly<br>
+* Change to Alert Level on Skins>Healing tab, can now be set for In Combat and Out of Combat<br>
+* Fix taint cause when frames manually moved while in combat<br>
+* Shaman debuffs spells should now show in all specs<br>
+<br>
+v5.3.0.7<br>
+=================<br>
+* Fixed a minor issue that was generating messages in the FrameXML file<br>
+* Improved update notice with TitanHealBot<br>
+* Fixes to Private Tanks and My Targets<br>
+* Improved handling of data when updating from older version of Healbot<br>
+* Fix to target health not correct when first targeted<br>
+* Fix to border size larger than expected with some settings<br>
+* Target and Focus now show Friendly and Hostile units<br>
+* Fixed wrong OOR opacity on bars showing debuffs<br>
+<br>
+v5.3.0.6<br>
+=================<br>
+* Improved reduction of duplicate data sent in Share Skins<br>
+* Minor fix with per character Default Skin settings<br>
+* Fix for nil spells causing failed load when switching characters<br>
+* Aggro indicators on enemy bars no longer shown<br>
+* Low mana indicators on enemy bars no longer shown<br>
+<br>
+v5.3.0.5 <B>Note: If your Healbot frame is normally in the bottom left corner, you may need to reposition the frame</B><br>
+=================<br>
+* Power bar on Enemy bars now used as Cast Bar, power information such as Mana can still be seen in the tooltip<br>
+* Anchors now set to a Percentage instead of absolute pixel location, means moving between resolutions will be much easier<br>
+* Skin data truncated where possible, reduces memory and makes sharing skins easier<br>
+* Share Skin improvements<br>
+<br>
+v5.3.0.4<br>
+================= <br>
+* Added Skins>Enemy tab with options to show Enemy bars<br>
+* Added 3rd option "Enemy bars at all times" to Set Spells For on Spells tab<br>
+* Select spells frame updated to include harmful spells<br>
+* Fixed nil error when incorrect case used with Spell Name text<br>
+* Share Skins externally is now done without the need to open WTF files and no need to logout or reload UI<br>
+* Sharing Skins externally no longer takes a screenshot automatically<br>
+* Fixed all frames updated when changing settings in 1 frame, this only happened after a skin load when all frames for a tab were identical<br>
+* Fixed group header appears in 2 frames issue when Group and Raid are used in separate frames with Headers turned on<br>
+* Improved health and mana display in tooltips<br>
+* Shaman Purify Spirit now shows when Restoration active<br>
+<br>
+v5.3.0.3<br>
+================= <br>
+* Added Alias option for Frames on the Skins>Frames tab, the alias will show instead of the frame number in the frame dropdown.<br>
+* Moved Frame dropdown to above the sub tab, now shows for all relevant tabs.<br>
+* Weakened Soul always shown when Power Word Shield expires<br>
+* Showing + for Power Word Shield while active is possible by using the switch "/hb pws"<br>
+* Minor improvements to Test Bars<br>
+* Fixed debuffs not showing when "All debuffType" used on Cure>Custom tab<br>
+* Fixed nil error with debuffs when filtered by caster<br>
+* Header settings can now applies to individual frames<br>
+* Bars settings can now applies to individual frames<br>
+* Bar Colour settings can now applies to individual frames<br>
+* Bar Text settings can now applies to individual frames<br>
+* Icons settings can now applies to individual frames<br>
+* Icon Text settings can now applies to individual frames<br>
+* Added Button Apply current tab settings to all Frames<br>
+* Added Profile dropdown to test bars tab, profile options are Party, Raid 10, Raid 25 or Raid 40<br>
+* Complete rewrite of Skin Sharing code<br>
+* Defaults no longer reset spells, to reset spells run the command on the General tab<br>
+* Updates to Class and Role icons<br>
+* Improvements to fastHealth, retains the fast while limiting the load (cpu usage/effect on FPS)<br>
+* fastHealth automatically turned off in ToT when a player has Crystal Shell<br>
+* Set Class/Role on bar switch now immediate<br>
+* Minor bug fixes and improvements<br>
+* Skin Resets on logon with a character not used since v5.1.x of HealBot removed<br>
+* Fixed new skin settings affect the skin that was current when new skin created<br>
+<br>
+v5.3.0.2<br>
+================= <br>
+* Fixed HoT icon occasionally showing on wrong side<br>
+* Fixed HoT icon skipping 1st position when debuff icon active<br>
+* Improved priority checking of debuffs<br>
+* Power word shield now shows Weakened Soul when present<br>
+* Fixed Healbot white focus bar to display in correct frame<br>
+* Fixed flickering debuff icon<br>
+* Improved aggro monitoring<br>
+* Disabled Healbot fastHealth in Heroic Throne of Thunder, see if this fixes incorrect health with Crystal Shell<br>
+<br>
+v5.3.0.1<br>
+================= <br>
+* Fix for nil value issues<br>
+* Fix for Debuff icon not immediately removed when Debuff spell on CD and ignore debuffs when spell on CD is active<br>
+* Tuned up timer changes made in 5.3.0.0<br>
+<br>
+v5.3.0.0<br>
+================= <br>
+* Major stability update, changes to the tracking of units and GUIDs, as Blizzard's SecureButtonTemplates only binds to units, GUID's are significantly less used in this version<br>
+* The stability update has included a number of bug fixes and performance improvements<br>
+* Added new options tab Skins>Frames<br>
+* Added option Grow Direction on Skins>Frames tab, control if bars grow vertically or horizontally away from the anchors<br>
+* Frame Scale option moved to Skins>Frames tab, now applies to individual frames<br>
+* Frame Anchor option moved to Skins>Frames tab, now applies to individual frames<br>
+* Bars Anchor option moved to Skins>Frames tab, now applies to individual frames<br>
+* Frame Locked option moved to Skins>Frames tab, now applies to individual frames<br>
+* Auto Close option moved to Skins>Frames tab, now applies to individual frames<br>
+* Play Sound on Open option moved to Skins>Frames tab, now applies to individual frames<br>
+* Tooltip Position option moved to Skins>Frames tab, now applies to individual frames<br>
+* Background and Border colour setting bars moved to Skins>Frames tab, now applies to individual frames<br>
+* Added button Assign Heal Groups on Skins>Frames tab on open Skins>Healing tab<br>
+* Added button Tooltip Position on Tips tab on open Skins>Frames tab<br>
+* Added options Frame Title and Show Title on Skins>Frames tab, ability to name frames<br>
+* Added font options for Frame Title on Skins>Frames tab<br>
+* Fixes to name changes in combat and raid icons<br>
+* Anyone updating from a pre 5.2.0.0 version will have all settings reset.<br>
+* Reset Skins now prompts for a UI Reload<br>
+* Update Range/Aggro/Aura frequency, this setting now affects all healbot timers, default settings should be suitable for all clients with playable FPS.<br>
+* Significantly reduced memory overhead of HealBot_MountsPets, addon consolidated back into HealBot<br>
+* Improvements to dislike mount option when random Mounts or Pets are used with MouseWheel options<br>
+* Added command to exclude mounts when random Mounts or Pets are used with MouseWheel options. Commands are on the General tab<br>
+* Added Hide Mini Boss Frames option to Skins>General<br>
+* TOC's updated<br>
+<br>
+v5.2.0.6<br>
+================= <br>
+* Default for most skins now only use 1 frame, options to use additional frames are under Skin>Healing<br>
+* Fixed nil error when tooltips not used<br>
+* Fixed nil error when crash protection used<br>
+<br>
+v5.2.0.5<br>
+================= <br>
+* Added option to show Healing Groups in different frames<br>
+* Another fix for non English clients<br>
+* Change to update checker, anyone updating from a pre 5.1.0.0 version will have all settings reset.<br>
+* Fixed rare bug where buffs/icons don't update until next aura event<br>
+* Performance improvements and bug fixes<br>
+<br>
+v5.2.0.4 <B>Note: This version resets Healing Groups</B><br>
+=================<br>
+* Option to keep static (Class/Role/Raid) Icons visible, see Skins>Icons tab<br>
+* Major fix for non English clients<br>
+<br>
+v5.2.0.3 <B>Note: This version resets Healing Groups</B><br>
+=================<br>
+* Custom order of Healing Groups can now be set, see Skins>Healing options<br>
+* Focus is now contained in it's own Healing Group, similar to Target<br>
+* Minor improvement to texture on Cure>Warning tab<br>
+* Minor bug fix to contents in Options<br>
+* Minor performance improvement to contents in Options<br>
+<br>
+v5.2.0.2<br>
+=================<br>
+* Removed Main Assist from Skins>Healing tab, Off Tanks now grouped with Main Tanks<br>
+* Added Healers to Skins>Healing tab<br>
+* Fixed Background bar to include power bar<br>
+* Added Outline option to Background bar on the Skins>Bars tab<br>
+* Minor fixes to bar positioning<br>
+* Healbot Tooltip, moved away from Blizzard tooltip background texture, 100% Opacity is now 100%<br>
+* Updated libraries<br>
+<br>
+v5.2.0.1<br>
+=================<br>
+* Improvements to Absorption, custom colours<br>
+* Monitor for missing buffs: Priest's Fortitude ignored when Warrior's Commanding Shout or Warlock's Dark Intent is buffed<br>
+* Monitor for missing buffs: Warrior's Commanding Shout ignored when Priest's Fortitude or Warlock's Dark Intent is buffed<br>
+* Monitor for missing buffs: Warlock's Dark Intent ignored when Warrior's Commanding Shout or Priest's Fortitude is buffed<br>
 <br>
 v5.2.0.0<br>
 =================<br>
@@ -87,7 +278,7 @@ v5.1.0.0<br>
 * Added a number of missing mounts - Thanks to daddyweight for reporting<br>
 * Added Language option to General tab, gives the ability to use alternative language in the options frames<br>
 * Legacy of the White Tiger ignored when Arcane Brilliance or Dalaran Brilliance present<br>
-* Localizations separated into load on demand addons, for more information and availability see <a href="http://www.healbot.info/dokuwiki/doku.php?id=healbot:localizations">HealBot Localizations</a><br>
+* Localizations separated into load on demand addons<br>
 <br>
 v5.0.5.7<br>
 =================<br>

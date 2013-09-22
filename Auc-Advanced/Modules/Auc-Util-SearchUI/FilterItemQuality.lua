@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemQuality
-	Version: 5.15.5380 (LikeableLyrebird)
+	Version: 5.18.5433 (PassionatePhascogale)
 	Revision: $Id: FilterItemQuality.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -114,4 +114,4 @@ function lib.Filter(item, searcher)
 	return false
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/FilterItemQuality.lua $", "$Rev: 5368 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-SearchUI/FilterItemQuality.lua $", "$Rev: 5368 $")

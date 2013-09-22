@@ -1,11 +1,9 @@
-local mod	= DBM:NewMod("Ick", "DBM-Party-WotLK", 15)
+local mod	= DBM:NewMod(609, "DBM-Party-WotLK", 15, 278)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(36476)
-mod:SetModelID(30347)
 mod:SetUsedIcons(8)
---mod:SetMinSyncRevision(4343)
 mod:SetMinSyncRevision(7)--Could break if someone is running out of date version with higher revision
 
 mod:RegisterCombat("combat")
@@ -21,11 +19,11 @@ mod:RegisterEvents(
 
 local warnPursuitCast			= mod:NewCastAnnounce(68987, 3)
 local warnPoisonNova			= mod:NewCastAnnounce(68989, 3)
-local warnPursuit				= mod:NewAnnounce("warnPursuit", 4, 68987)
+local warnPursuit				= mod:NewTargetAnnounce(68987, 4)--TODO, just switch to UNIT_AURA, syncing not reliable especially with older zones.
 
 local specWarnToxic				= mod:NewSpecialWarningMove(69024)
 local specWarnMines				= mod:NewSpecialWarningRun(69015)
-local specWarnPursuit			= mod:NewSpecialWarning("specWarnPursuit")
+local specWarnPursuit			= mod:NewSpecialWarningYou(68987)
 local specWarnPoisonNova		= mod:NewSpecialWarningRun(68989, mod:IsMelee())
 
 local timerPursuitCast			= mod:NewCastTimer(5, 68987)
@@ -34,26 +32,18 @@ local timerPoisonNova			= mod:NewCastTimer(5, 68989)
 
 local soundPoisonNova			= mod:NewSound(68989, nil, mod:IsMelee())
 local soundPursuit				= mod:NewSound(68987)
+
 mod:AddBoolOption("SetIconOnPursuitTarget", true)
 
-local guids = {}
-local function buildGuidTable()
-	table.wipe(guids)
-	guids[UnitGUID("player")] = DBM:GetUnitFullName("player")
-	for i = 1, DBM:GetNumGroupMembers() do
-		guids[UnitGUID("party"..i) or "none"] = DBM:GetUnitFullName("party"..i)
-	end
-end
-
 function mod:OnCombatStart(delay)
-	buildGuidTable()
+
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(68987) then							-- Pursuit
+	if args.spellId == 68987 then							-- Pursuit
 		warnPursuitCast:Show()
 		timerPursuitCast:Start()
-	elseif args:IsSpellID(68989) then				-- Poison Nova
+	elseif args.spellId == 68989 then				-- Poison Nova
 		warnPoisonNova:Show()
 		timerPoisonNova:Start()
 		specWarnPoisonNova:Show()
@@ -62,7 +52,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(69029) then							-- Pursuit Confusion
+	if args.spellId == 69029 then							-- Pursuit Confusion
 		timerPursuitConfusion:Show(args.destName)
 	end
 end
@@ -89,8 +79,11 @@ function mod:RAID_BOSS_WHISPER(msg)
 end 
 
 function mod:OnSync(msg, guid) 
+	local target
+	if guid then
+		target = DBM:GetFullPlayerNameByGUID(guid)
+	end
 	if msg == "Pursuit" and guid then 
-		local target = guids[guid]
 		if target then
 			warnPursuit:Show(target)
 			if self.Options.SetIconOnPursuitTarget then 

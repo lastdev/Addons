@@ -1,4 +1,4 @@
-## Interface: 50200
+## Interface: 50400
 ## X-Min-Interface: 50000
 ## Title: Recount
 ## Notes: Records Damage and Healing for Graph Based Display
@@ -10,7 +10,7 @@
 ## SavedVariables: RecountDB
 ## SavedVariablesPerCharacter: RecountPerCharDB
 ## X-Category: Combat
-## X-Curse-Packaged-Version: v5.2.0 release
+## X-Curse-Packaged-Version: v5.4.0 release
 ## X-Curse-Project-Name: Recount
 ## X-Curse-Project-ID: recount
 ## X-Curse-Repository-ID: wow/recount/mainline

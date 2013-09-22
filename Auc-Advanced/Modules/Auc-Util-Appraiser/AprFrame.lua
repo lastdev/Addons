@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: AprFrame.lua 5372 2012-10-05 13:45:15Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: AprFrame.lua 5427 2013-07-13 09:28:05Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -32,6 +32,7 @@
 if not AucAdvanced then return end
 
 local lib = AucAdvanced.Modules.Util.Appraiser
+if not lib then return end
 local private = lib.Private
 local Const = AucAdvanced.Const
 local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
@@ -138,7 +139,7 @@ function private.CreateFrames()
 		if frame.showAuctions then
 			local auctionStart = #ItemList + 1
 			for auc=1, GetNumAuctionItems("owner") do
-				local name, texture, count, quality, _, _, _, _, _, _, _, _, _, _, itemId  = GetAuctionItemInfo("owner", auc)
+				local name, texture, count, quality, _, _, _, _, _, _, _, _, _, _, itemId  = AucAdvanced.GetAuctionItemInfo("owner", auc)
 				local link = GetAuctionItemLink("owner", auc)
 
 				local sig, linkType = SigFromLink(link)
@@ -1439,9 +1440,22 @@ function private.CreateFrames()
 			local mode
 
 			-- Keeping old ability for Ctrl+Alt+Shift for users used to using this modifer setup.
-			if (a and c and s) or (GetMouseButtonClicked() == "RightButton") then mode = "autopost" end
-			if a and not c and not s then mode = "refresh" end
-			if not a and not c and s then mode = "list" end
+			if (a and c and s) or (not (a or c or s) and GetMouseButtonClicked() == "RightButton") then mode = "autopost" end
+			if a and not (c or s) then
+				if GetMouseButtonClicked() == "RightButton" then
+					-- toggle batch posting for current selected item
+					local sig = frame.selected
+					if sig then
+						local curBulk = get('util.appraiser.item.'..sig..".bulk")
+						set("util.appraiser.item."..sig..".bulk", not curBulk)
+						frame.GenerateList() -- refresh the list and frame after toggling the bulk option.
+					end
+					return
+				else
+					mode = "refresh"
+				end
+			end
+			if not (a or c) and s then mode = "list" end
 
 			if not mode then
 				message(_TRANS('APPR_Help_BatchUnknownKeyCombo') )--Unknown key combination pressed while clicking batch post button.
@@ -2858,4 +2872,4 @@ function private.CreateFrames()
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5372 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5427 $")

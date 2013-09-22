@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - ScanData
-	Version: 5.15.5380 (LikeableLyrebird)
+	Version: 5.18.5433 (PassionatePhascogale)
 	Revision: $Id: ScanData.lua 5364 2012-09-24 09:32:39Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -646,4 +646,4 @@ if Resources.PlayerFaction == "Neutral" then
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-ScanData/ScanData.lua $", "$Rev: 5364 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-ScanData/ScanData.lua $", "$Rev: 5364 $")

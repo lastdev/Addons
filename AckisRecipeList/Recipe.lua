@@ -12,7 +12,6 @@ local type = _G.type
 
 -- Libraries
 local bit = _G.bit
-local string = _G.string
 local table = _G.table
 
 -----------------------------------------------------------------------
@@ -250,7 +249,7 @@ do
 			diff_color = "impossible"
 		end
 		local display_name = ("|c%s%s|r"):format(quality_color, recipe_name)
-		local level_text = private.SetTextColor(private.DIFFICULTY_COLORS[diff_color], SKILL_LEVEL_FORMAT):format(recipe_level)
+		local level_text = private.SetTextColor(private.DIFFICULTY_COLORS[diff_color].hex, SKILL_LEVEL_FORMAT):format(recipe_level)
 
 		if addon.db.profile.skill_view then
 			display_name = ("%s - %s"):format(level_text, display_name)
@@ -451,7 +450,7 @@ function recipe_prototype:AddSeason(...)
 	self:AddFilters(private.FILTER_IDS.SEASONAL)
 end
 
-function recipe_prototype:AddRepVendor(faction_id, rep_level, ...)
+function recipe_prototype:AddRepVendor(reputation_id, rep_level, ...)
 	local location_list = private.location_list
 	local acquire_list = private.acquire_list
 	local vendor_list = private.vendor_list
@@ -461,11 +460,11 @@ function recipe_prototype:AddRepVendor(faction_id, rep_level, ...)
 		self.acquire_data[A.REPUTATION] = {}
 		acquire = self.acquire_data[A.REPUTATION]
 	end
-	local faction = acquire[faction_id]
+	local faction = acquire[reputation_id]
 
 	if not faction then
-		acquire[faction_id] = {}
-		faction = acquire[faction_id]
+		acquire[reputation_id] = {}
+		faction = acquire[reputation_id]
 		faction[rep_level] = {}
 	end
 	local num_vars = select('#', ...)
@@ -476,7 +475,7 @@ function recipe_prototype:AddRepVendor(faction_id, rep_level, ...)
 		local vendor_id = select(cur_var, ...)
 		cur_var = cur_var + 1
 
-		if private.reputation_list[faction_id] then
+		if private.reputation_list[reputation_id] then
 			if vendor_id and vendor_list[vendor_id] then
 				faction[rep_level][vendor_id] = true
 
@@ -485,13 +484,14 @@ function recipe_prototype:AddRepVendor(faction_id, rep_level, ...)
 				affiliation = rep_vendor.faction
 				location_name = rep_vendor.location
 
+				rep_vendor.reputation_id = reputation_id
 				rep_vendor.item_list = rep_vendor.item_list or {}
 				rep_vendor.item_list[self.spell_id] = true
 			else
 				addon:Debug("Spell ID %d: Reputation Vendor ID %s does not exist in the database.", self.spell_id, tostring(vendor_id))
 			end
 		else
-			addon:Debug("Spell ID %d: Faction ID %d does not exist in the database.", self.spell_id, faction_id)
+			addon:Debug("Spell ID %d: Faction ID %d does not exist in the database.", self.spell_id, reputation_id)
 		end
 		acquire_list[A.REPUTATION] = acquire_list[A.REPUTATION] or {}
 		acquire_list[A.REPUTATION].recipes = acquire_list[A.REPUTATION].recipes or {}
@@ -537,36 +537,42 @@ local IMPLICIT_FLAGS = {
 	WORLD_DROP = true,
 }
 
-function recipe_prototype:Dump()
-	local output = private.TextDump
+function recipe_prototype:Dump(output, use_genesis)
+	local genesis_val = (use_genesis and tonumber(private.GAME_VERSIONS[self.genesis]) or nil)
 
-	output:AddLine(("-- %s -- %d"):format(self.name, self.spell_id))
-	output:AddLine(("recipe = AddRecipe(%d, V.%s, Q.%s)"):format(self.spell_id, self.genesis, private.ITEM_QUALITY_NAMES[self.quality]))
-	output:AddLine(("recipe:SetSkillLevels(%d, %d, %d, %d, %d)"):format(self.skill_level, self.optimal_level, self.medium_level, self.easy_level, self.trivial_level))
+	if genesis_val and output:Lines(genesis_val) == 0 then
+		output:AddLine("-------------------------------------------------------------------------------", genesis_val)
+		output:AddLine(("-- %s."):format(_G["EXPANSION_NAME" .. genesis_val - 1]), genesis_val)
+		output:AddLine("-------------------------------------------------------------------------------", genesis_val)
+	end
+
+	output:AddLine(("-- %s -- %d"):format(self.name, self.spell_id), genesis_val)
+	output:AddLine(("recipe = AddRecipe(%d, V.%s, Q.%s)"):format(self.spell_id, self.genesis, private.ITEM_QUALITY_NAMES[self.quality]), genesis_val)
+	output:AddLine(("recipe:SetSkillLevels(%d, %d, %d, %d, %d)"):format(self.skill_level, self.optimal_level, self.medium_level, self.easy_level, self.trivial_level), genesis_val)
 
 	if self.recipe_item_id then
-		output:AddLine(("recipe:SetRecipeItem(%d, \"%s\")"):format(self.recipe_item_id, self.recipe_item_binding))
+		output:AddLine(("recipe:SetRecipeItem(%d, \"%s\")"):format(self.recipe_item_id, self.recipe_item_binding), genesis_val)
 	end
 
 	if self.crafted_item_id then
-		output:AddLine(("recipe:SetCraftedItem(%d, \"%s\")"):format(self.crafted_item_id, self.crafted_item_binding))
+		output:AddLine(("recipe:SetCraftedItem(%d, \"%s\")"):format(self.crafted_item_id, self.crafted_item_binding), genesis_val)
 	end
 	local previous_rank_recipe = private.profession_recipe_list[self.profession][self:PreviousRankID()]
 
 	if previous_rank_recipe then
-		output:AddLine(("recipe:SetPreviousRankID(%d)"):format(previous_rank_recipe.spell_id))
+		output:AddLine(("recipe:SetPreviousRankID(%d)"):format(previous_rank_recipe.spell_id), genesis_val)
 	end
 
 	if self.specialty then
-		output:AddLine(("recipe:SetSpecialty(%d)"):format(self.specialty))
+		output:AddLine(("recipe:SetSpecialty(%d)"):format(self.specialty), genesis_val)
 	end
 
 	if self.required_faction then
-		output:AddLine(("recipe:SetRequiredFaction(\"%s\")"):format(self.required_faction))
+		output:AddLine(("recipe:SetRequiredFaction(\"%s\")"):format(self.required_faction), genesis_val)
 	end
 
 	if self.item_filter_type then
-		output:AddLine(("recipe:SetItemFilterType(\"%s\")"):format(self.item_filter_type:upper()))
+		output:AddLine(("recipe:SetItemFilterType(\"%s\")"):format(self.item_filter_type:upper()), genesis_val)
 	end
 	local flag_string
 
@@ -600,7 +606,7 @@ function recipe_prototype:Dump()
 	end
 
 	if flag_string then
-		output:AddLine(("recipe:AddFilters(%s)"):format(flag_string))
+		output:AddLine(("recipe:AddFilters(%s)"):format(flag_string), genesis_val)
 	end
 	local ZL = private.ZONE_LABELS_FROM_NAME
 
@@ -637,7 +643,7 @@ function recipe_prototype:Dump()
 							values = vendor_id
 						end
 					end
-					output:AddLine(("recipe:AddRepVendor(%s, %s, %s)"):format(faction_string, rep_string, values))
+					output:AddLine(("recipe:AddRepVendor(%s, %s, %s)"):format(faction_string, rep_string, values), genesis_val)
 				end
 			end
 		elseif acquire_type == A.VENDOR then
@@ -679,11 +685,11 @@ function recipe_prototype:Dump()
 			end
 
 			if values then
-				output:AddLine(("recipe:AddVendor(%s)"):format(values))
+				output:AddLine(("recipe:AddVendor(%s)"):format(values), genesis_val)
 			end
 
 			if limited_values then
-				output:AddLine(("recipe:AddLimitedVendor(%s)"):format(limited_values))
+				output:AddLine(("recipe:AddLimitedVendor(%s)"):format(limited_values), genesis_val)
 			end
 		elseif DUMP_FUNCTION_FORMATS[acquire_type] then
 			local values
@@ -715,7 +721,7 @@ function recipe_prototype:Dump()
 					values = saved_id
 				end
 			end
-			output:AddLine((DUMP_FUNCTION_FORMATS[acquire_type]):format(values))
+			output:AddLine((DUMP_FUNCTION_FORMATS[acquire_type]):format(values), genesis_val)
 		else
 			for identifier in pairs(acquire_info) do
 				local saved_id
@@ -736,9 +742,9 @@ function recipe_prototype:Dump()
 	end
 
 	if flag_string then
-		output:AddLine(("recipe:AddAcquireData(%s)"):format(flag_string))
+		output:AddLine(("recipe:AddAcquireData(%s)"):format(flag_string), genesis_val)
 	end
-	output:AddLine(" ")
+	output:AddLine(" ", genesis_val)
 end
 
 function recipe_prototype:DumpTrainers(registry)

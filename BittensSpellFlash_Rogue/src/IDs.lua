@@ -9,6 +9,8 @@ a.NoBackstab = {
 	[56587] = true, -- Twilight Assault Drake during Warmaster Blackhorn
 	[56855] = true, -- Twilight Assault Drake during Warmaster Blackhorn
 	[23777] = true, -- Proto-Drake Egg
+	[56754] = true, -- Azure Serpent
+	[60709] = true, -- Qiang the Merciless
 }
 
 a.NoShadowstep = {
@@ -30,6 +32,7 @@ a.NoKillingSpree = {
 a.SpellIDs = {
 	["Adrenaline Rush"] = 13750,
 	["Ambush"] = 8676,
+	["Anticipation"] = 114015,
 	["Backstab"] = 53,
 	["Blade Flurry"] = 13877,
 	["Blindside"] = 121153,
@@ -60,12 +63,17 @@ a.SpellIDs = {
 	["Relentless Strikes"] = 98440,
 	["Revealing Strike"] = 84617,
 	["Rupture"] = 1943,
+	["Ruthlessness"] = 14161,
+	["Ruthlessness Energize"] = 139546,
 	["Shadow Blades"] = 121471,
 	["Shadow Dance"] = 51713,
 	["Shallow Insight"] = 84745,
+	["Shiv"] = 5938,
+	["Shuriken Toss"] = 114014,
 	["Sinister Strike"] = 1752,
 	["Slice and Dice"] = 5171,
 	["Stealth"] = 115191,
+	["Subterfuge"] = 108208,
 	["Tricks of the Trade"] = 57934,
 	["Vanish"] = 1856,
 	["Venomous Wounds"] = 79134,
@@ -78,6 +86,7 @@ a.TalentIDs = {
 	["Shadow Focus"] = 108209,
 	["Subterfuge"] = 108208,
 	["Cloak and Dagger"] = 138106,
+	["Anticipation"] = 114015,
 }
 
 a.GlyphIDs = {
@@ -93,5 +102,12 @@ a.EquipmentSets = {
 		ChestSlot = { 86643, 85303, 87124 },
 		HandsSlot = { 86642, 85302, 87125 },
 		LegsSlot = { 86640, 85300, 87127 },
+	},
+	T15 = {
+		HeadSlot = { 95937, 95307, 96681 },
+		ShoulderSlot = { 95939, 95309, 96683 },
+		ChestSlot = { 95935, 95305, 96679 },
+		HandsSlot = { 95936, 95306, 96680 },
+		LegsSlot = { 95938, 95308, 96682 },
 	},
 }

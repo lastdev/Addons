@@ -15,10 +15,9 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnGroupOrder		= "警报：针对$spell:118191的小队循环\n（当前仅支持25人模式的5/2/2/2战术）",
-	specWarnYourGroup	= "特殊警报：当轮到你的小队需要应对$spell:118191时\n（仅25人模式）",
-	RangeFrame			= "距离监视（8码）：$spell:111850\n当你受到效果影响时会显示其他所有没有受到效果影响的队友",
-	SetIconOnPrison		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(117436)
+	warnGroupOrder		= "警报：针对$spell:118191的小队循环<br/>（当前仅支持25人模式的5/2/2/2战术）",
+	specWarnYourGroup	= "特殊警报：当轮到你的小队需要应对$spell:118191时<br/>（仅25人模式）",
+	RangeFrame			= "距离监视（8码）：$spell:111850<br/>当你受到效果影响时会显示其他所有没有受到效果影响的队友"
 })
 
 
@@ -26,10 +25,6 @@ L:SetOptionLocalization({
 -- Tsulong --
 ------------
 L= DBM:GetModLocalization(742)
-
-L:SetOptionLocalization({
-	warnLightOfDay	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(123716)
-})
 
 L:SetMiscLocalization{
 	Victory	= "谢谢你，陌生人。我自由了。"
@@ -42,8 +37,7 @@ L:SetMiscLocalization{
 L= DBM:GetModLocalization(729)
 
 L:SetWarningLocalization({
-	warnHideOver			= "%s 结束",
-	warnHideProgress		= "命中：%s，伤害：%s，时间：%s"
+	warnHideOver			= "%s 结束"
 })
 
 L:SetTimerLocalization({
@@ -52,10 +46,9 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	warnHideOver			= "特殊警报：$spell:123244效果结束时",
-	warnHideProgress		= "警报：$spell:123244阶段的战斗统计",
 	timerSpecialCD			= "计时条：特殊能力冷却",
-	SetIconOnProtector		= "为$journal:6224的目标添加团队标记\n（当有多名团队助理时该功能不可靠）",
-	RangeFrame				= "距离监视（3码）：应对$spell:123121\n（隐藏阶段时显示所有人，其余时仅显示坦克位置）",
+	SetIconOnProtector		= "为$journal:6224的目标添加团队标记<br/>（当有多名团队助理时该功能不可靠）",
+	RangeFrame				= "距离监视（3码）：应对$spell:123121<br/>（隐藏阶段时显示所有人，其余时仅显示坦克位置）",
 	GWHealthFrame			= "生命值监视：移除$spell:123461还需要的伤害"
 })
 
@@ -87,14 +80,10 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnThrash					= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(131996),
 	warnBreathOnPlatform		= "警报：当你在平台时的$spell:119414（不推荐，为团长准备）",
 	specWarnBreathOfFearSoon	= "特殊警报：当没有$spell:117964效果需要躲避$spell:119414时",
-	specWarnMovement			= "特殊警报：$spell:120047时的移动\n（详见：http://mysticalos.com/terraceofendlesssprings.jpg）",
+	specWarnMovement			= "特殊警报：$spell:120047时的移动<br/>（详见：http://mysticalos.com/terraceofendlesssprings.jpg）",
 	specWarnMovement			= "特殊警报：$spell:120047时的移动",
-	warnWaterspout				= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(120519),
-	warnHuddleInTerror			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(120629),
 	timerSpecialAbility			= "计时条：下一次特殊能力",
-	RangeFrame					= "距离监视（2码）：应对$spell:119519",
-	SetIconOnHuddle				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(120629)
+	RangeFrame					= "距离监视（2码）：应对$spell:119519"
 })

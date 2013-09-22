@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Auriaya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 73 $"):sub(12, -3))
 
 mod:SetCreatureID(33515)--34014--Add this (kitties) to pull detection when it can be ignored in kill
 mod:SetModelID(28651)
@@ -60,7 +60,7 @@ end
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(64678, 64389) then -- Sentinel Blast
 		specWarnBlast:Show()
-	elseif args:IsSpellID(64386) then -- Terrifying Screech
+	elseif args.spellId == 64386 then -- Terrifying Screech
 		warnFear:Show()
 		timerFear:Start()
 		timerNextFear:Schedule(2)
@@ -73,18 +73,18 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(64396) then -- Guardian Swarm
+	if args.spellId == 64396 then -- Guardian Swarm
 		warnSwarm:Show(args.destName)
 		timerNextSwarm:Start()
-	elseif args:IsSpellID(64455) then -- Feral Essence
+	elseif args.spellId == 64455 and DBM.BossHealth:IsShown() then -- Feral Essence
 		DBM.BossHealth:AddBoss(34035, L.Defender:format(9))
-	elseif args:IsSpellID(64386) and args:IsPlayer() then
+	elseif args.spellId == 64386 and args:IsPlayer() then
 		isFeared = true		
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(64386) and args:IsPlayer() then
+	if args.spellId == 64386 and args:IsPlayer() then
 		isFeared = false	
 	end
 end
@@ -101,12 +101,12 @@ function mod:UNIT_DIED(args)
 				warnCatDied:Show(catLives)
 				timerDefender:Start()
          	end
-			if self.Options.HealthFrame then
+			if DBM.BossHealth:IsShown() then
 				DBM.BossHealth:RemoveBoss(34035)
 				DBM.BossHealth:AddBoss(34035, L.Defender:format(catLives))
 			end
 		else
-			if self.Options.HealthFrame then
+			if DBM.BossHealth:IsShown() then
 				DBM.BossHealth:RemoveBoss(34035)
 			end
 		end

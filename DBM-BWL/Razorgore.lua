@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Razorgore", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 425 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 436 $"):sub(12, -3))
 mod:SetCreatureID(12435, 99999)--Bogus detection to prevent invalid kill detection if razorgore happens to die in phase 1
 mod:SetModelID(10115)
 mod:SetMinSyncRevision(168)
@@ -29,14 +29,14 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(23023) and args:IsDestTypePlayer() then
+	if args.spellId == 23023 and args:IsDestTypePlayer() then
 		warnConflagration:Show(args.destName)
 		timerConflagration:Start(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(23023) then
+	if args.spellId == 23023 then
 		timerConflagration:Start(args.destName)
 	end
 end

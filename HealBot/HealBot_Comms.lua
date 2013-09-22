@@ -1,26 +1,13 @@
-local HealBotAddonMsgType=nil
-local tmpttl=0
-local HealBotcAddonSummary={}
 local HealBotcommAddonSummary={}
 local HealBotAddonSummaryNoCommsCPU={}
 local HealBotAddonSummaryNoCommsMem={}
 local HealBotAddonSummaryNoCommsSort={}
 local sortorder={}
-local AddonName=nil
-local AddonEnabled=nil
-local hbcommver={}
 local hbtmpver={}
-local linenum=0
-local addon_id=nil
-local sender_id=nil
-local i,v,x,z=nil,nil,nil,nil
-local g=nil
-local HBclient=nil
-local HB_errtext=nil
 local _
 
 function HealBot_Comms_About()
-    hbcommver=HealBot_GetInfo()
+    local hbcommver=HealBot_GetInfo()
 
     for x,_ in pairs(hbtmpver) do
         hbtmpver[x]=nil
@@ -43,7 +30,7 @@ function HealBot_Comms_About()
     else
         HealBot_Error_Versionx:SetText(HEALBOT_OPTIONS_LANG.."="..GetLocale())
     end
-    HealBot_Error_Classx:SetText(HEALBOT_SORTBY_CLASS.."="..HealBot_PlayerClassEN)
+    HealBot_Error_Classx:SetText(HEALBOT_SORTBY_CLASS.."="..UnitClass("player"))
     HealBot_Comms_AcceptSkins()
     HealBot_Comms_MacroSuppressError()
     HealBot_Comms_MacroSuppressSound()
@@ -53,9 +40,10 @@ function HealBot_Comms_Info()
 
     UpdateAddOnCPUUsage()
     UpdateAddOnMemoryUsage()
-    HealBotcAddonSummary=HealBot_RetHealBotAddonSummary()
+    local HealBotcAddonSummary=HealBot_RetHealBotAddonSummary()
+    local z=0
 
-    linenum=1
+    local linenum=1
     for x,_ in pairs(HealBotAddonSummaryNoCommsCPU) do
         HealBotAddonSummaryNoCommsCPU[x]=nil;
         HealBotAddonSummaryNoCommsSort[x]=nil;
@@ -65,7 +53,7 @@ function HealBot_Comms_Info()
         sortorder[x]=nil;
     end
     for i=1, GetNumAddOns() do
-        AddonName,_,_,AddonEnabled = GetAddOnInfo(i);
+        local AddonName,_,_,AddonEnabled = GetAddOnInfo(i);
         if AddonEnabled and not HealBotAddonSummaryNoCommsSort[AddonName] then
             if HealBot_Options_CPUProfiler:GetChecked() then
                 z=HealBot_Comm_round(GetAddOnCPUUsage(AddonName)/1000, 2)
@@ -125,14 +113,14 @@ function HealBot_Comms_Info()
 end
 
 function HealBot_Comms_Print_IncHealsSum(sender_id,addon_id,HealsCnt,linenum)
-    g=_G["HBIncH"..linenum.."Healer"]
+    local g=_G["HBIncH"..linenum.."Healer"]
     g:SetText(sender_id);
     g=_G["HBIncH"..linenum.."Ver"]
     g:SetText(addon_id);
 end
 
 function HealBot_Comms_Print_AddonCPUSum(Addon,CPU,MEM,linenum)
-    g=_G["HBMod"..linenum.."Name1"]
+    local g=_G["HBMod"..linenum.."Name1"]
     g:SetText(Addon);
     g=_G["HBMod"..linenum.."CPU"]
     g:SetText(CPU);
@@ -141,19 +129,14 @@ function HealBot_Comms_Print_AddonCPUSum(Addon,CPU,MEM,linenum)
 end
 
 function HealBot_Comms_Print_AddonCommsSum(Addon,Comms,linenum)
-    g=_G["HBMod"..linenum.."Name2"]
+    local g=_G["HBMod"..linenum.."Name2"]
     g:SetText(Addon);
     g=_G["HBMod"..linenum.."Comm"]
     g:SetText(Comms);
 end
 
-function HealBot_Comms_TargetInfo()
-    HealBot_AddChat(HEALBOT_CHAT_ADDONID.."  UnitHealth="..UnitHealth("target").."   UnitHealthMax="..UnitHealthMax("target"))
-    HealBot_AddChat(HEALBOT_CHAT_ADDONID.."  UnitMana="..UnitMana("target").."   UnitManaMax="..UnitManaMax("target"))
-end
-
 function HealBot_Comms_Zone()
-    HealBotAddonMsgType=HealBot_GetHealBot_AddonMsgType()
+    local HealBotAddonMsgType=HealBot_GetHealBot_AddonMsgType()
     HealBot_AddChat(HEALBOT_CHAT_ADDONID.."Zone="..GetRealZoneText())
     if HealBotAddonMsgType==1 then
         HealBot_AddChat(HEALBOT_CHAT_ADDONID.."AddonComms=BATTLEGROUND")
@@ -167,23 +150,19 @@ function HealBot_Comms_Zone()
     HealBot_AddChat(HEALBOT_CHAT_ADDONID.."#Group="..GetNumGroupMembers())
 end
 
-local mult = 0
 function HealBot_Comm_round(num, idp)
-    mult = 10^(idp or 0)
+    local mult = 10^(idp or 0)
     return math.floor(num * mult + 0.5) / mult
 end
 
 local HealBot_MsgUpdateAvail=nil
 local hbMajor, hbMinor, hbPatch, hbHealbot = string.split(".", HEALBOT_VERSION)
-local tMajor, tMinor, tPatch, tHealbot = 0,0,0,0
 local hbVersionChecked = {}
-local tNewVer=nil
 function HealBot_Comms_CheckVer(userName, version)
     if not hbVersionChecked[userName] then
-        tNewVer=nil
-		hbMajor, hbMinor, hbPatch, hbHealbot = string.split(".", HEALBOT_VERSION)
+        local tNewVer=nil
         hbVersionChecked[userName]=true
-        tMajor, tMinor, tPatch, tHealbot = string.split(".", version)
+        local tMajor, tMinor, tPatch, tHealbot = string.split(".", version)
         if tonumber(tMajor)>tonumber(hbMajor) then 
             tNewVer=true
         elseif tonumber(tMajor)==tonumber(hbMajor) and tonumber(tMinor)>tonumber(hbMinor) then 
@@ -209,12 +188,8 @@ function HealBot_Comms_CheckVer(userName, version)
     end
 end
 
-function HealBot_Comms_ReportVer()
+function HealBot_Comms_ReportVer()  -- Used by TitanHealbot
     return HealBot_MsgUpdateAvail
-end
-
-function HealBot_Comms_OnShow(self)
-
 end
 
 function HealBot_Comms_AcceptSkins()
@@ -246,23 +221,3 @@ function HealBot_Comms_MacroSuppressSound()
         HealBot_Info_SuppressSoundsVal:SetTextColor(0.88,0.1,0.1)
     end
 end    
-    
-function HealBot_Comms_OnHide(self)
-    HealBot_StopMoving(self);
-end
-
-function HealBot_Comms_OnDragStart(self)
-    HealBot_StartMoving(self);
-end
-
-function HealBot_Comms_OnDragStop(self)
-    HealBot_StopMoving(self);
-end
-
-local hbMountsReported={}
-function HealBot_ReportMissingMount(mountName, mountID)
-    if not HealBot_Config.hbMountsReported[mountID] and (strsub(GetLocale(),1,2)=="en") then
-        HealBot_AddChat("HealBot: Missing Mount: "..mountName.." ("..mountID..") - Please report to "..HEALBOT_ABOUT_URL);
-    end
-    HealBot_Config.hbMountsReported[mountID]=mountName
-end

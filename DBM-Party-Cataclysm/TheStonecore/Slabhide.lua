@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(111, "DBM-Party-Cataclysm", 7, 67)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(43214)
-mod:SetModelID(36476)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -57,14 +56,14 @@ end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE--Because we still want people to move out of stuff before they eat up an entire PWS in it.
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(92265) then
+	if args.spellId == 92265 then
 		warnCrystalStorm:Show()
 		specWarnCrystalStorm:Show()
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(92265) then
+	if args.spellId == 92265 then
 		timerCrystalStorm:Start()
 	end
 end

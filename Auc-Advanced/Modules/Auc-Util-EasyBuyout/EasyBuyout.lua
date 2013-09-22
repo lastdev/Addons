@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - EasyBuyout Utility Module
 	Version: 1.2.5 (GhostfromTexas)
-	Revision: $Id: EasyBuyout.lua 5347 2012-09-06 06:26:15Z Esamynn $
+	Revision: $Id: EasyBuyout.lua 5427 2013-07-13 09:28:05Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This Auctioneer module allows for the ability to purchase items from
@@ -253,7 +253,7 @@ function private.BrowseButton_OnClick(...)
 		end
 		local link = GetAuctionItemLink("list", id)
 		if link then
-            local _,_,count = GetAuctionItemInfo("list", id)
+            local _,_,count = AucAdvanced.GetAuctionItemInfo("list", id)
             private.EBMessage("Rightclick - buying auction of " .. (count or "?") .. "x" .. link)
         else
             private.EBMessage("Rightclick - not finding anything to buy. If you are mass clicking - try going from the bottom up!")
@@ -291,7 +291,7 @@ end
 
 function private.EasyBuyoutAuction()
     local EasyBuyoutIndex = GetSelectedAuctionItem("list");
-    local EasyBuyoutPrice = select(10, GetAuctionItemInfo("list", EasyBuyoutIndex))
+    local EasyBuyoutPrice = select(10, AucAdvanced.GetAuctionItemInfo("list", EasyBuyoutIndex))
 
 	-- Easy Gold Limit for EasyBuyout
 	if get("util.EasyBuyout.EGL.EBuy.active") then
@@ -357,7 +357,7 @@ function private.EasyCancel(self, button)
 
 	local link = GetAuctionItemLink("owner", self:GetID() + FauxScrollFrame_GetOffset(AuctionsScrollFrame))
 	if link then
-		local _,_,count = GetAuctionItemInfo("owner", self:GetID() + FauxScrollFrame_GetOffset(AuctionsScrollFrame))
+		local _,_,count = AucAdvanced.GetAuctionItemInfo("owner", self:GetID() + FauxScrollFrame_GetOffset(AuctionsScrollFrame))
 		private.EBMessage("Rightclick - cancelling auction of " .. (count or "?") .. "x" .. link)
 	else
 		return private.EBMessage("Rightclick - not finding anything to cancel. If you are mass clicking - try going from the bottom up!")
@@ -384,12 +384,12 @@ function private.NewOnDoubleClick(self, button)
 	end
 	local link = GetAuctionItemLink("list", id)
 	if button == 'LeftButton' then
-		if (select(12, GetAuctionItemInfo("list", id))) then
+		if (select(12, AucAdvanced.GetAuctionItemInfo("list", id))) then
 			private.EBMessage("You are already the highest bidder on this item!")
 			return
 		end
 		if link then
-			local _,_,count = GetAuctionItemInfo("list", id)
+			local _,_,count = AucAdvanced.GetAuctionItemInfo("list", id)
 			private.EBMessage("Doubleclick - bidding on auction of " .. (count or "?") .. "x" .. link)
 		else
 			private.EBMessage("Doubleclick - not finding anything to bid on. If you are mass clicking - try going from the bottom up!")
@@ -403,9 +403,9 @@ end
 
 -- Function to place a bid on a specific auction using EasyBid
 function private.EasyBidAuction(getID)
-    local EasyBidPrice = select(11, GetAuctionItemInfo("list", getID)) + select(9, GetAuctionItemInfo("list", getID))
+    local EasyBidPrice = select(11, AucAdvanced.GetAuctionItemInfo("list", getID)) + select(9, AucAdvanced.GetAuctionItemInfo("list", getID))
 	if EasyBidPrice == 0 then
-		EasyBidPrice = EasyBidPrice + select(8, GetAuctionItemInfo("list", getID))
+		EasyBidPrice = EasyBidPrice + select(8, AucAdvanced.GetAuctionItemInfo("list", getID))
 	end
 
 	-- Easy Gold Limit for EasyBid
@@ -434,4 +434,4 @@ function private.EBMessage(messageString)
 	print(messageString)
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-EasyBuyout/EasyBuyout.lua $", "$Rev: 5347 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-EasyBuyout/EasyBuyout.lua $", "$Rev: 5427 $")

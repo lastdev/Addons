@@ -35,6 +35,9 @@ local mount_mobs = {
 	[50062] = true, -- Aeonaxx
 	[50409] = true, -- Mysterious Camel
 	[64403] = true, -- Alani
+	[69769] = true, -- Zandalari Warbringer (Slate)
+	[69841] = true, -- Zandalari Warbringer (Amber)
+	[69842] = true, -- Zandalari Warbringer (Jade)
 }
 local boss_mobs = {
 	[50009] = true, -- Mobus
@@ -201,13 +204,20 @@ function module:Seen(callback, id, name, zone, ...)
 		return
 	end
 
-	local exp = core.guess_expansion(zone)
-	if exp and not self.db.profile.expansions[exp] then
+	if not self:CareAboutZone(zone) then
 		Debug("Skipping due to expansion", exp)
 		return
 	end
 
 	core.events:Fire("Announce", id, name, zone, ...)
+end
+
+function module:CareAboutZone(zone)
+	local exp = core.guess_expansion(zone)
+	if exp and not self.db.profile.expansions[exp] then
+		return
+	end
+	return true
 end
 
 core.RegisterCallback("SD Announce Sink", "Announce", function(callback, id, name, zone, x, y, dead, newloc, source)
@@ -410,6 +420,9 @@ do
 		[873] = "TheHiddenPass",
 		[903] = "ShrineofTwoMoons",
 		[905] = "ShrineofSevenStars",
+		[928] = "IsleoftheThunderKing",
+		[929] = "IsleOfGiants",
+		[951] = "TimelessIsle",
 		-- starting zones
 		[889] = "ValleyofTrialsStart",
 	}

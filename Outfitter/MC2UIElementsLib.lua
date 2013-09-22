@@ -2576,7 +2576,7 @@ function Addon.UIElementsLib._PowerDot:Construct(pParent)
 	vAlphaAnimation = self.deactivate:CreateAnimation("Alpha")
 	vAlphaAnimation:SetChange(-1)
 	vAlphaAnimation:SetDuration(0.3)
-	vAlphaAnimation:SetOrder(1)
+	vAlphaAnimation:SetOrder(2)
 end
 
 function Addon.UIElementsLib._PowerDot:SetValue(pValue)

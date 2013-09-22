@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer - Price Level Utility module
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: CompactUI.lua 5367 2012-09-28 15:28:32Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: CompactUI.lua 5427 2013-07-13 09:28:05Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a price level indicator
@@ -549,16 +549,18 @@ function private.RetrievePage()
 
 			local name, texture, count, quality, canUse, level,
 				levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount,
-				highBidder, owner, saleStatus, itemId  = GetAuctionItemInfo("list", i)
-			local _, _, _, itemLevel, itemMinLevel = GetItemInfo(itemId)
+				highBidder, owner, saleStatus, itemId  = AucAdvanced.GetAuctionItemInfo("list", i)
+			local _, _, _, itemLevel, itemDetail = GetItemInfo(itemId)
 
 			if levelColHeader == "ITEM_LEVEL_ABBR" then
 				itemLevel = level
-			elseif levelColHeader == "REQ_LEVEL_ABBR" then
-				itemMinLevel = level
+			else
+				-- itemDetail is used for special values if present, e.g slot count for bags, skill level for recipes,
+				-- otherwise displays min user level
+				itemDetail = level
 			end
 			itemLevel = tonumber(itemLevel) or 1 -- extra safety checking - these values may be used by our sort function
-			itemMinLevel = tonumber(itemMinLevel) or 1
+			itemDetail = tonumber(itemDetail) or 1
 
 			local timeLeft = GetAuctionItemTimeLeft("list", i)
 			if (timeLeft == 4) then timeLeftText = "48h"
@@ -598,7 +600,7 @@ function private.RetrievePage()
 			item[5] = quality
 			item[6] = name
 			item[7] = link
-			item[8] = itemMinLevel
+			item[8] = itemDetail
 			item[9] = itemLevel
 			item[10] = timeLeft
 			item[11] = owner or ""
@@ -628,11 +630,11 @@ function lib.GetContents(pos)
 	if private.pageContents[pos] then
 		return unpack(private.pageContents[pos])
 	end
-	-- id, selected, count, texture, itemRarity, name, link, itemMinLevel, itemLevel, timeLeft, owner, minBid, bidAmount, minIncrement, requiredBid, buyoutPrice, requiredBidEach, buyoutPriceEach, timeLeftText, highBidder, priceLevel, perItem, r, g, b
+	-- id, selected, count, texture, itemRarity, name, link, itemDetail, itemLevel, timeLeft, owner, minBid, bidAmount, minIncrement, requiredBid, buyoutPrice, requiredBidEach, buyoutPriceEach, timeLeftText, highBidder, priceLevel, perItem, r, g, b
 end
 
 function private.SetAuction(button, pos)
-	local id, selected, count, texture, itemRarity, name, link, itemMinLevel, itemLevel, timeLeft, owner, minBid, bidAmount, minIncrement, requiredBid, buyoutPrice, requiredBidEach, buyoutPriceEach, timeLeftText, highBidder, priceLevel, perItem, r, g, b = lib.GetContents(pos)
+	local id, selected, count, texture, itemRarity, name, link, itemDetail, itemLevel, timeLeft, owner, minBid, bidAmount, minIncrement, requiredBid, buyoutPrice, requiredBidEach, buyoutPriceEach, timeLeftText, highBidder, priceLevel, perItem, r, g, b = lib.GetContents(pos)
 
 	if not id then
 		button:Hide()
@@ -695,12 +697,12 @@ function private.SetAuction(button, pos)
 	end
 
 	if itemLevel == 0 then itemLevel = "" end
-	if itemMinLevel == 0 then itemMinLevel = "" end
+	if itemDetail == 0 then itemDetail = "" end
 
 	button.Count:SetText(count)
 	button.Icon:SetTexture(texture)
 	button.Name:SetText(link)
-	button.rLevel:SetText(itemMinLevel)
+	button.rLevel:SetText(itemDetail)
 	button.iLevel:SetText(itemLevel)
 	button.tLeft:SetText(timeLeftText)
 	button.Owner:SetText(owner)
@@ -859,4 +861,4 @@ function private.SetupConfigGui(gui)
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 5367 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 5427 $")

@@ -1,9 +1,8 @@
-local mod	= DBM:NewMod("Taldaram", "DBM-Party-WotLK", 1)
+local mod	= DBM:NewMod(581, "DBM-Party-WotLK", 1, 271)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
 mod:SetCreatureID(29308)
-mod:SetModelID(27406)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -22,7 +21,7 @@ local timerFlameCD		= mod:NewCDTimer(17, 55959)
 
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(55931) then
+	if args.spellId == 55931 then
 		warningFlame:Show()
 		timerFlameCD:Start()
 	end

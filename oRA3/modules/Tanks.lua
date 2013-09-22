@@ -1,10 +1,10 @@
 local oRA = LibStub("AceAddon-3.0"):GetAddon("oRA3")
 local util = oRA.util
-local module = oRA:NewModule("Tanks", "AceEvent-3.0")
+local module = oRA:NewModule("Tanks")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 local AceGUI = LibStub("AceGUI-3.0")
 
-module.VERSION = tonumber(("$Revision: 483 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 645 $"):sub(12, -3))
 
 local frame = nil
 local indexedTanks = {} -- table containing the final tank list
@@ -59,7 +59,7 @@ end
 function module:OnEnable()
 	self:RegisterEvent("PLAYER_REGEN_ENABLED")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
-	self:RegisterEvent("PLAYER_ROLES_ASSIGNED","CheckRoleAssignments")
+	self:RegisterEvent("PLAYER_ROLES_ASSIGNED", "CheckRoleAssignments")
 end
 
 local function sortTanks()
@@ -69,7 +69,7 @@ local function sortTanks()
 			indexedTanks[#indexedTanks + 1] = tank
 		end
 	end
-	if oRA:InRaid() then
+	if IsInRaid() then
 		oRA.callbacks:Fire("OnTanksUpdated", indexedTanks)
 	end
 end
@@ -95,7 +95,7 @@ function module:OnDemoted(event, status)
 end
 
 function module:OnGroupChanged(event, status, members, updateSort)
-	if oRA:InRaid() then
+	if IsInRaid() then
 		wipe(tmpTanks)
 		for tank, v in pairs(namedTanks) do
 			tmpTanks[tank] = v
@@ -137,7 +137,7 @@ function module:OnTanksChanged(event, tanks, updateSort)
 	end
 	for tank, v in pairs(tmpTanks) do
 		-- remove any leftover tanks that are not persistent or set for the session
-		if not namedPersistent[tank] and not sessionTanks[tank] then 
+		if not namedPersistent[tank] and not sessionTanks[tank] then
 			for kk, vv in next, allIndexedTanks do
 				if vv == tank then
 					table.remove(allIndexedTanks, kk)
@@ -157,13 +157,13 @@ function module:OnTanksChanged(event, tanks, updateSort)
 end
 
 function module:CheckRoleAssignments()
-	if oRA:InRaid() then
+	if IsInRaid() then
 		local updateSort = false
 		local members = oRA:GetGroupMembers()
 		for k,member in next, members do
 			local role = UnitGroupRolesAssigned(member)
 			--[[ IF requested at a later to auto-remove non tank role from tank list this can accomplish that.
-			if role ~= "TANK" and util:inTable(allIndexedTanks, member) then
+			if role ~= "TANK" and util.inTable(allIndexedTanks, member) then
 				for k, v in next, allIndexedTanks do
 					if v == member and not namedPersistent[member] then
 						table.remove(allIndexedTanks, k)
@@ -176,7 +176,7 @@ function module:CheckRoleAssignments()
 				end
 			end
 			--]]
-			if role == "TANK" and not deletedTanks[member] and not util:inTable(allIndexedTanks, member) then
+			if role == "TANK" and not deletedTanks[member] and not util.inTable(allIndexedTanks, member) then
 				allIndexedTanks[#allIndexedTanks + 1] = member
 				sessionTanks[member] = true
 				namedTanks[member] = true
@@ -220,7 +220,7 @@ end
 local function topScrollDeleteClick(self)
 	local value = self:GetParent().unitName
 	local btanks = oRA:GetBlizzardTanks()
-	if util:inTable(btanks, value) then return end
+	if util.inTable(btanks, value) then return end
 	-- remove from persistent if in there
 	for k, v in next, module.db.persistentTanks do
 		if v == value then
@@ -257,7 +257,7 @@ end
 
 local function topScrollSaveClick(self)
 	local value = self:GetParent().unitName
-	local k = util:inTable(module.db.persistentTanks, value)
+	local k = util.inTable(module.db.persistentTanks, value)
 	if k then
 		PlaySound("igMainMenuOptionCheckBoxOff")
 		table.remove(module.db.persistentTanks, k)
@@ -277,7 +277,7 @@ local function topScrollSaveClick(self)
 end
 
 local function topScrollUpClick(self)
-	local k = util:inTable(allIndexedTanks, self.unitName)
+	local k = util.inTable(allIndexedTanks, self.unitName)
 	local temp = allIndexedTanks[k]
 	if k == 1 then
 		allIndexedTanks[k] = allIndexedTanks[#allIndexedTanks]
@@ -298,7 +298,7 @@ end
 
 local function bottomScrollClick(self)
 	local value = self.unitName
-	if util:inTable(allIndexedTanks, value) then return true end
+	if util.inTable(allIndexedTanks, value) then return true end
 	allIndexedTanks[#allIndexedTanks + 1] = value
 	sessionTanks[value] = true
 	namedTanks[value] = true
@@ -342,7 +342,7 @@ function module:CreateFrame()
 	frame.topscroll:SetPoint("BOTTOMRIGHT", centerBar, "TOPRIGHT", -25, -2)
 
 	frame.bottomscroll = CreateFrame("ScrollFrame", "oRA3TankBottomScrollFrame", frame, "FauxScrollFrameTemplate")
-	frame.bottomscroll:SetPoint("TOPLEFT", centerBar, "BOTTOMLEFT", 4, 2) 
+	frame.bottomscroll:SetPoint("TOPLEFT", centerBar, "BOTTOMLEFT", 4, 2)
 	frame.bottomscroll:SetPoint("BOTTOMRIGHT", frame, -20, 0)
 
 	if oRA.db.profile.showHelpTexts then
@@ -351,7 +351,7 @@ function module:CreateFrame()
 		help:SetPoint("TOPLEFT")
 		help:SetPoint("BOTTOMRIGHT", topBar, "TOPRIGHT", -32, 0)
 		help:SetText(L.tankTabTopText)
-	
+
 		local helpButton = createButton(frame)
 		helpButton:SetWidth(24)
 		helpButton:SetHeight(24)
@@ -391,7 +391,7 @@ function module:CreateFrame()
 		hidden.tooltipTitle = L.Show
 		hidden.tooltipText = L.showButtonHelp
 		t.hidden = hidden
-		
+
 		local name = oRA:CreateScrollEntry(t)
 		name:SetPoint("TOPLEFT", hidden, "TOPRIGHT", 4, 0)
 		name:SetText(L["Name"])
@@ -416,7 +416,7 @@ function module:CreateFrame()
 		tank.tooltipTitle = L["Blizzard Main Tank"]
 		tank.tooltipText = L.tankButtonHelp
 		t.tank = tank
-		
+
 		if not InCombatLockdown() then
 			local stank = createButton(t, "SecureActionButtonTemplate")
 			stank:SetPoint("TOPRIGHT", delete, "TOPLEFT", -2, 0)
@@ -433,7 +433,7 @@ function module:CreateFrame()
 			t.stank = stank
 			t.tank:Hide()
 		end
-		
+
 		local save = createButton(t)
 		save:SetPoint("TOPRIGHT", tank, "TOPLEFT", -2, 0)
 		save.icon:SetTexture(READY_CHECK_READY_TEXTURE)
@@ -465,7 +465,7 @@ function module:CreateFrame()
 		b.unitName = L["Name"]
 		bottom[i] = b
 	end
-	
+
 	local function updTopScroll() module:UpdateTopScroll() end
 	local function updBottomScroll() module:UpdateBottomScroll() end
 	frame.topscroll:SetScript("OnVerticalScroll", function(self, offset)
@@ -491,7 +491,7 @@ function module:UpdateTopScroll()
 		local j = i + FauxScrollFrame_GetOffset(frame.topscroll)
 		if j <= nr then
 			local name = allIndexedTanks[j]
-			if util:inTable(btanks, name) then
+			if util.inTable(btanks, name) then
 				v.tank:SetAlpha(1)
 				if v.stank then v.stank:SetAlpha(1) end
 				v.delete:SetAlpha(.3)
@@ -522,7 +522,7 @@ end
 
 function module:PLAYER_REGEN_ENABLED()
 	if not frame then return end
-	
+
 	for i = 1, 10 do
 		top[i].tank:Hide()
 		if not top[i].stank then

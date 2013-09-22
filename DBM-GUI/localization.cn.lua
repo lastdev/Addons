@@ -48,9 +48,6 @@ L.BossStatistics			= "首领统计"
 L.Statistic_Kills			= "击杀："
 L.Statistic_Wipes			= "失败："
 L.Statistic_BestKill		= "最好成绩："
-L.Statistic_Heroic			= "英雄模式"
-L.Statistic_10Man			= "10人"
-L.Statistic_25Man			= "25人"
 
 -- Tab: General Options
 L.General 					= "DBM综合设置"
@@ -144,7 +141,7 @@ L.ClickThrough				= "禁用鼠标点击事件（允许你点击计时条后面�
 L.Panel_SpecWarnFrame		= "特殊警报"
 L.Area_SpecWarn				= "特殊警报设置"
 L.SpecWarn_Enabled			= "显示首领技能特殊警报"
-L.SpecWarn_LHFrame			= "特殊警报时屏幕边缘泛光"
+L.SpecWarn_FlashFrame		= "特殊警报时屏幕边缘泛光"
 L.SpecWarn_Font				= "特殊警报字体"
 L.SpecWarn_DemoButton		= "测试警报"
 L.SpecWarn_MoveMe			= "设置位置"

@@ -12,7 +12,7 @@ XPerl_RequestConfig(function(new)
 				if (XPerl_TargetTarget) then XPerl_TargetTarget.conf = conf.targettarget end
 				if (XPerl_FocusTarget) then XPerl_FocusTarget.conf = conf.focustarget end
 				if (XPerl_PetTarget) then XPerl_PetTarget.conf = conf.pettarget end
-			end, "$Revision: 832 $")
+			end, "$Revision: 852 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 local format = format
@@ -46,7 +46,7 @@ function XPerl_Target_OnLoad(self, partyid)
 
 	local events = {"UNIT_COMBAT", "PLAYER_FLAGS_CHANGED",
 		"PARTY_MEMBER_DISABLE", "PARTY_MEMBER_ENABLE", "RAID_TARGET_UPDATE", "GROUP_ROSTER_UPDATE",
-		"PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "UNIT_THREAT_LIST_UPDATE","UNIT_SPELLMISS", "UNIT_FACTION", "UNIT_DYNAMIC_FLAGS", "UNIT_FLAGS",
+		"PARTY_LEADER_CHANGED", "PARTY_LOOT_METHOD_CHANGED", "UNIT_THREAT_LIST_UPDATE","UNIT_SPELLMISS", "UNIT_FACTION", "UNIT_FLAGS",
 			"UNIT_CLASSIFICATION_CHANGED", "UNIT_PORTRAIT_UPDATE", "UNIT_AURA", "UNIT_HEALTH_FREQUENT","UNIT_POWER_FREQUENT", "UNIT_MAXPOWER", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"}
 	for i,event in pairs(events) do
 		self:RegisterEvent(event)
@@ -117,10 +117,6 @@ function XPerl_Target_OnLoad(self, partyid)
 	XPerl_SecureUnitButton_OnLoad(self, partyid, nil, TargetFrameDropDown, XPerl_ShowGenericMenu)				--TargetFrame.menu)
 
 	--RegisterUnitWatch(self)
-
-	--XPerl_UnitEvents(self, XPerl_Target_Events, {"UNIT_SPELLMISS", "UNIT_FACTION", "UNIT_DYNAMIC_FLAGS", "UNIT_FLAGS",
-	--			"UNIT_CLASSIFICATION_CHANGED", "UNIT_PORTRAIT_UPDATE", "UNIT_AURA", "UNIT_HEALTH"})
-	--XPerl_RegisterBasics(self, XPerl_Target_Events)
 
 	--self.PlayerFlash = 0
 	self.perlBuffs, self.perlDebuffs, self.RangeUpdate = 0, 0, 0
@@ -1264,14 +1260,12 @@ function XPerl_Target_Events:UNIT_HEALTH_FREQUENT()
 end
 XPerl_Target_Events.UNIT_MAXHEALTH = XPerl_Target_Events.UNIT_HEALTH_FREQUENT
 
--- UNIT_DYNAMIC_FLAGS
-function XPerl_Target_Events:UNIT_DYNAMIC_FLAGS()
+-- UNIT_FLAGS
+function XPerl_Target_Events:UNIT_FLAGS()
 	XPerl_Target_UpdateName(self)
 	XPerl_Target_UpdatePVP(self)
 	XPerl_Target_Update_Combat(self)
 end
-
-XPerl_Target_Events.UNIT_FLAGS = XPerl_Target_Events.UNIT_DYNAMIC_FLAGS
 
 -- RAID_TARGET_UPDATE
 function XPerl_Target_Events:RAID_TARGET_UPDATE()

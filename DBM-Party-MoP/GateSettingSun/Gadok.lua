@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(675, "DBM-Party-MoP", 4, 303)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7834 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(56589)
-mod:SetModelID(43275)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -35,7 +34,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(106933) then
+	if args.spellId == 106933 then
 		warnPreyTime:Show(args.destName)
 		timerPreyTime:Start(args.destName)
 		timerPreyTimeCD:Start()
@@ -43,13 +42,13 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(106933) then
+	if args.spellId == 106933 then
 		timerPreyTime:Start(args.destName)
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(107047) then
+	if args.spellId == 107047 then
 		warnImpalingStrike:Show(args.destName)
 		timerImpalingStrikeCD:Start()
 	end

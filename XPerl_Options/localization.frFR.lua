@@ -495,8 +495,6 @@ if (GetLocale() == "frFR") then
         XPERL_CONF_RAID_HIGHLIGHTS_SHIELDS_DESC	        = "Accentuera les unités avec une fronti\195\168re pourpre qui ont |c00FFFF80Votre|r buffs de bouclier (ie: PW:Shield)"
 	XPERL_CONF_RAID_SPACING				= "Espacement"
 	XPERL_CONF_RAID_SPACING_DESC			= "D\195\169finir l'espacement des cadres de raid"
-	XPERL_CONF_RAID_PERC                    	= "Raid Pourcentage"
-	XPERL_CONF_RAID_PERC_DESC               	= "Permettre l'affichage de la vie/mana des membres du raid en pourcentage"
 	XPERL_CONF_RAID_BUFFS				= "Buffs du raid"
 	XPERL_CONF_RAID_BUFFS_DESC			= "Permettre l'affichage des 4 premiers buffs du raid"
 	XPERL_CONF_RAID_DEBUFFS				= "Debuffs du raid"

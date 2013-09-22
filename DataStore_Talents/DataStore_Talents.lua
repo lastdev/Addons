@@ -503,9 +503,9 @@ local function _GetGlyphInfoByID(glyphID)
 	local NamesRef = addon.db.global.Reference.GlyphNames
 
 	local spellID = addon.GlyphIDToSpellID[glyphID]
-	local name, icon, link
+	local name, rank, icon, link
 	if spellID then
-		name, _, icon = GetSpellInfo(spellID)
+		name, rank, icon = GetSpellInfo(spellID)
 		
 		if name then
 			link = format("|cff66bbff|Hglyph:%s|h[%s]|h|r", glyphID, name)

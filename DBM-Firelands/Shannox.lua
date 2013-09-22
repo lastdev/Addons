@@ -3,9 +3,8 @@ local L		= mod:GetLocalizedStrings()
 local Riplimb	= EJ_GetSectionInfo(2581)
 local Rageface	= EJ_GetSectionInfo(2583)
 
-mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(53691)
-mod:SetModelID(38448)
 mod:SetZone()
 mod:SetUsedIcons(6, 8) -- cross(7) is hard to see in redish environment?
 mod:SetModelSound("Sound\\Creature\\SHANNOX\\VO_FL_SHANNOX_SPAWN.wav", "Sound\\Creature\\SHANNOX\\VO_FL_SHANNOX_KILL_04.wav")
@@ -21,7 +20,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
 	"SPELL_SUMMON",
-	"UNIT_HEALTH",
+	"UNIT_HEALTH boss1 boss2 boss3", -- probably needs just one (?)
 	"UNIT_DIED"
 )
 
@@ -114,23 +113,23 @@ function mod:CrystalTrapTarget(targetname)
 end
 
 local function getBossuId()
-	local uId
+	local UnitID
 	if UnitExists("boss1") or UnitExists("boss2") or UnitExists("boss3") then
 		for i = 1, 3 do
 			if UnitName("boss"..i) == L.name then
-				uId = "boss"..i
+				UnitID = "boss"..i
 				break
 			end
 		end
 	else
-		for i = 1, DBM:GetNumGroupMembers() do
-			if UnitName("raid"..i.."target") == L.name and not UnitIsPlayer("raid"..i.."target") then
-				uId = "raid"..i.."target"
+		for uId in DBM:GetGroupMembers() do
+			if UnitName(uId.."target") == L.name and not UnitIsPlayer(uId.."target") then
+				UnitID = uId.."target"
 				break
 			end			
 		end
 	end
-	return uId
+	return UnitID
 end
 
 local function isTank(unit)
@@ -186,7 +185,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(100415) then
+	if args.spellId == 100415 then
 		warnRage:Show(args.destName)
 		timerRage:Start(args.destName)
 		if args:IsPlayer() then
@@ -195,16 +194,16 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.SetIconOnRage then
 			self:SetIcon(args.destName, 6, 15)
 		end
-	elseif args:IsSpellID(100167) then
+	elseif args.spellId == 100167 then
 		warnWary:Show(args.destName)
 		timerWary:Start(args.destName)
-	elseif args:IsSpellID(99837) then--Filter when the dogs get it?
+	elseif args.spellId == 99837 then--Filter when the dogs get it?
 		if args:IsDestTypePlayer() then
 			warnCrystalPrisonTrapped:Show(args.destName)
 		else--It's a trapped dog
 			timerCrystalPrison:Start(args.destName)--make a 10 second timer for how long dog is trapped.
 		end
-	elseif args:IsSpellID(99937) then
+	elseif args.spellId == 99937 then
 		if (args.amount or 1) % 3 == 0 then	--Warn every 3 stacks
 			warnTears:Show(args.destName, args.amount or 1)
 		end
@@ -222,28 +221,28 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(99945) then
+	if args.spellId == 99945 then
 		if self.Options.SetIconOnFaceRage then
 			self:SetIcon(args.destName, 0)
 		end
-	elseif args:IsSpellID(99937) then
+	elseif args.spellId == 99937 then
 		timerTears:Cancel(args.destName)
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(100002) then
+	if args.spellId == 100002 then
 		warnSpear:Show()--Only valid until rip dies
 		specWarnSpear:Show()
 		timerSpearCD:Start()
-	elseif args:IsSpellID(99840) and ripLimbDead then	--This is cast after Riplimb dies.
+	elseif args.spellId == 99840 and ripLimbDead then	--This is cast after Riplimb dies.
 		warnMagmaRupture:Show()
 		timerMagmaRuptureCD:Start()
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(99947) then
+	if args.spellId == 99947 then
 		warnFaceRage:Show(args.destName)
 		specWarnFaceRage:Show(args.destName)
 		timerFaceRageCD:Start()
@@ -254,11 +253,11 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:SPELL_SUMMON(args)
-	if args:IsSpellID(99836) then
+	if args.spellId == 99836 then
 		timerCrystalPrisonCD:Start()
 		trapScansDone = 0
 		self:TrapHandler(99836)
-	elseif args:IsSpellID(99839) then
+	elseif args.spellId == 99839 then
 		trapScansDone = 0
 		self:TrapHandler(99839)
 	end

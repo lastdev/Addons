@@ -1,9 +1,8 @@
-local mod	= DBM:NewMod("Confessor", "DBM-Party-WotLK", 13)
+local mod	= DBM:NewMod(636, "DBM-Party-WotLK", 13, 284)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
 mod:SetCreatureID(34928)
-mod:SetModelID(29490)
 --mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -35,34 +34,34 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(66515) then												-- Shield Gained
+	if args.spellId == 66515 then												-- Shield Gained
 		warnReflectiveShield:Show(args.destName)
 		shielded = true
-	elseif args:IsSpellID(66537) and not args:IsDestTypePlayer() then	-- Renew
+	elseif args.spellId == 66537 and not args:IsDestTypePlayer() then	-- Renew
 		if args.destName == L.name and shielded then
 			-- nothing, she casted it on herself and you cant dispel
 		else
             warnRenew:Show(args.destName)
 			specwarnRenew:Show(args.destName)
 		end
-	elseif args:IsSpellID(66620) then									-- Old Wounds
+	elseif args.spellId == 66620 then									-- Old Wounds
 		warnOldWounds:Show(args.destName)
 		timerOldWounds:Show(args.destName)
-	elseif args:IsSpellID(66538) and args:IsDestTypePlayer() then	-- Holy Fire
+	elseif args.spellId == 66538 and args:IsDestTypePlayer() then	-- Holy Fire
 		warnHolyFire:Show(args.destName)
 		timerHolyFire:Show(args.destName)
-	elseif args:IsSpellID(66619) then									-- Shadows of the Past
+	elseif args.spellId == 66619 then									-- Shadows of the Past
 		warnShadows:Show(args.destName)
 		timerShadows:Show(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(66515) then
+	if args.spellId == 66515 then
 		shielded = false
-	elseif args:IsSpellID(66538) then									-- Holy Fire
+	elseif args.spellId == 66538 then									-- Holy Fire
 		timerHolyFire:Cancel(args.destName)
-	elseif args:IsSpellID(66619) then									-- Shadows of the Past
+	elseif args.spellId == 66619 then									-- Shadows of the Past
 		timerShadows:Cancel(args.destName)
 	end
 end

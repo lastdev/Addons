@@ -581,8 +581,6 @@ function Altoholic:FormatDelay(timeStamp)
 	return RecentTimeDate(year, month, day, hour)
 end
 
-
-
 function addon:GetSuggestion(index, level)
 	if addon.Suggestions[index] then 
 		for _, v in pairs( addon.Suggestions[index] ) do
@@ -594,20 +592,27 @@ function addon:GetSuggestion(index, level)
 end
 
 function addon:GetRecipeLevel(link, tooltip)
-	if not tooltip then	-- if no tooltip is provided for scanning, let's make one
-		tooltip = AltoTooltip
+	-- if not tooltip then	-- if no tooltip is provided for scanning, let's make one
+		-- tooltip = AltoTooltip
 		
-		tooltip:ClearLines();	
-		tooltip:SetOwner(AltoholicFrame, "ANCHOR_LEFT");
-		tooltip:SetHyperlink(link)
-	end
+		-- tooltip:ClearLines();	
+		-- tooltip:SetOwner(AltoholicFrame, "ANCHOR_LEFT");
+		-- tooltip:SetHyperlink(link)
+	-- end
 
+	local tooltip = AltoScanningTooltip
+	
+	tooltip:ClearLines()
+	tooltip:SetHyperlink(link)
+	
 	local tooltipName = tooltip:GetName()
-	for i = 2, tooltip:NumLines() do			-- parse all tooltip lines, one by one
+	
+	for i = tooltip:NumLines(), 2, -1 do			-- parse all tooltip lines, from last to second
 		local tooltipText = _G[tooltipName .. "TextLeft" .. i]:GetText()
 		if tooltipText then
-			if string.find(tooltipText, "%d+") then	-- try to find a numeric value .. 
-				return tonumber(string.sub(tooltipText, string.find(tooltipText, "%d+")))	-- required level found
+			local _, _, rLevel = string.find(tooltipText, "%((%d+)%)") -- find number encloded in brackets
+			if rLevel then
+				return tonumber(rLevel)
 			end
 		end
 	end

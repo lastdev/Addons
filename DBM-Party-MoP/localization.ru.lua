@@ -10,10 +10,6 @@ local L
 -----------------------
 L= DBM:GetModLocalization(672)
 
-L:SetOptionLocalization({
-	SetIconOnAdds	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej5616")
-})
-
 -----------------------
 -- Lorewalker Stonestep --
 -----------------------
@@ -21,10 +17,6 @@ L= DBM:GetModLocalization(664)
 
 L:SetWarningLocalization({
 	SpecWarnIntensity	= "%s на %s (%d)"
-})
-
-L:SetOptionLocalization({
-	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(6, 113315)
 })
 
 -----------------------
@@ -60,8 +52,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	SpecWarnFizzyBubbles	= "Спец-предупреждение, когда на вас нет $spell:114459",
-	RangeFrame				= "Показывать окно проверки дистанции (10 м) для $spell:106546"
+	SpecWarnFizzyBubbles	= "Спец-предупреждение, когда на вас нет $spell:114459"
 })
 
 -----------------------
@@ -76,10 +67,6 @@ L:SetWarningLocalization({
 	warnStaticField	= "%s"
 })
 
-L:SetOptionLocalization({
-	warnStaticField	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(106923)
-})
-
 -----------------------
 -- Snowdrift --
 -----------------------
@@ -90,7 +77,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnRemainingNovice	= "Показывать сколько осталось учеников"
+	warnRemainingNovice	= "Показывать количество оставшихся учеников"
 })
 
 L:SetMiscLocalization({
@@ -105,7 +92,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(685)
 
 L:SetMiscLocalization({
-	Kill		= "Пока в ваших сердцах есть место жестокости... я могу вернуться...",
+	Kill		= "Пока в ваших сердцах есть место жестокости... я могу вернуться..."
 })
 
 -----------------------
@@ -124,10 +111,6 @@ L:SetOptionLocalization({
 -- Kiptilak --
 ---------------------
 L= DBM:GetModLocalization(655)
-
-L:SetOptionLocalization({
-	IconOnSabotage	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(107268)
-})
 
 -------------
 -- Gadok --
@@ -192,7 +175,7 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	TimerWave	= "Отсчет времени до следующей волны подкреплений"
+	TimerWave	= "Отсчёт времени до следующей волны подкреплений"
 })
 
 L:SetMiscLocalization({
@@ -290,7 +273,7 @@ L= DBM:GetModLocalization(688)
 L= DBM:GetModLocalization(671)
 
 L:SetOptionLocalization({
-	KickArrow	= "Показывать стрелку DBM, когда $spell:114487 около вас",
+	KickArrow	= "Показывать стрелку DBM, когда $spell:114487 около вас"
 })
 
 -----------------------

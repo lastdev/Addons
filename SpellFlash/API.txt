@@ -1764,7 +1764,7 @@ Determines if you have an item equipped that is not broken.
 
 This checks for buffs.
 
-<<code lua>>found = s.Buff(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)<</code>>
+<<code lua>>found = s.Buff(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)<</code>>
 
 ===== ** Arguments:
 
@@ -1780,6 +1780,8 @@ This checks for buffs.
 :		(boolean) If true will check to see if the buff is from a spell that you have.
 ; ** UseBuffID
 :		(boolean) If true will compare the buff Spell ID to the provided Spell ID.
+; ** Type
+:		(string or nil) Checks to see if the buff is a spell type: "Magic", "Disease", "Poison" or "Curse".
 
 ===== ** Returns:
 
@@ -1794,7 +1796,7 @@ This checks for buffs.
 
 Determines the amount of applications for a buff.
 
-<<code lua>>applications = s.BuffStack(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)<</code>>
+<<code lua>>applications = s.BuffStack(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)<</code>>
 
 ===== ** Arguments:
 
@@ -1810,6 +1812,8 @@ Determines the amount of applications for a buff.
 :		(boolean) If true will check to see if the buff is from a spell that you have.
 ; ** UseBuffID
 :		(boolean) If true will compare the buff Spell ID to the provided Spell ID.
+; ** Type
+:		(string or nil) Checks to see if the buff is a spell type: "Magic", "Disease", "Poison" or "Curse".
 
 ===== ** Returns:
 
@@ -1824,7 +1828,7 @@ Determines the amount of applications for a buff.
 
 Determines the remaining time left on a buff.
 
-<<code lua>>remaining = s.BuffDuration(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)<</code>>
+<<code lua>>remaining = s.BuffDuration(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)<</code>>
 
 ===== ** Arguments:
 
@@ -1840,6 +1844,8 @@ Determines the remaining time left on a buff.
 :		(boolean) If true will check to see if the buff is from a spell that you have.
 ; ** UseBuffID
 :		(boolean) If true will compare the buff Spell ID to the provided Spell ID.
+; ** Type
+:		(string or nil) Checks to see if the buff is a spell type: "Magic", "Disease", "Poison" or "Curse".
 
 ===== ** Returns:
 
@@ -1854,7 +1860,7 @@ Determines the remaining time left on a buff.
 
 This checks for buffs that came from you.
 
-<<code lua>>found = s.MyBuff(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)<</code>>
+<<code lua>>found = s.MyBuff(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)<</code>>
 
 ===== ** Arguments:
 
@@ -1870,6 +1876,8 @@ This checks for buffs that came from you.
 :		(boolean) If true will check to see if the buff is from a spell that you have.
 ; ** UseBuffID
 :		(boolean) If true will compare the buff Spell ID to the provided Spell ID.
+; ** Type
+:		(string or nil) Checks to see if the buff is a spell type: "Magic", "Disease", "Poison" or "Curse".
 
 ===== ** Returns:
 
@@ -1884,7 +1892,7 @@ This checks for buffs that came from you.
 
 Determines the amount of applications for a buff that came from you.
 
-<<code lua>>applications = s.MyBuffStack(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)<</code>>
+<<code lua>>applications = s.MyBuffStack(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)<</code>>
 
 ===== ** Arguments:
 
@@ -1900,6 +1908,8 @@ Determines the amount of applications for a buff that came from you.
 :		(boolean) If true will check to see if the buff is from a spell that you have.
 ; ** UseBuffID
 :		(boolean) If true will compare the buff Spell ID to the provided Spell ID.
+; ** Type
+:		(string or nil) Checks to see if the buff is a spell type: "Magic", "Disease", "Poison" or "Curse".
 
 ===== ** Returns:
 
@@ -1914,7 +1924,7 @@ Determines the amount of applications for a buff that came from you.
 
 Determines the remaining time left on a buff that came from you.
 
-<<code lua>>remaining = s.MyBuffDuration(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)<</code>>
+<<code lua>>remaining = s.MyBuffDuration(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)<</code>>
 
 ===== ** Arguments:
 
@@ -1930,6 +1940,8 @@ Determines the remaining time left on a buff that came from you.
 :		(boolean) If true will check to see if the buff is from a spell that you have.
 ; ** UseBuffID
 :		(boolean) If true will compare the buff Spell ID to the provided Spell ID.
+; ** Type
+:		(string or nil) Checks to see if the buff is a spell type: "Magic", "Disease", "Poison" or "Curse".
 
 ===== ** Returns:
 
@@ -1944,7 +1956,7 @@ Determines the remaining time left on a buff that came from you.
 
 This checks for buffs that are cast from the same unit that you are checking.
 
-<<code lua>>found = s.SelfBuff(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)<</code>>
+<<code lua>>found = s.SelfBuff(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)<</code>>
 
 ===== ** Arguments:
 
@@ -1960,6 +1972,8 @@ This checks for buffs that are cast from the same unit that you are checking.
 :		(boolean) If true will check to see if the buff is from a spell that you have.
 ; ** UseBuffID
 :		(boolean) If true will compare the buff Spell ID to the provided Spell ID.
+; ** Type
+:		(string or nil) Checks to see if the buff is a spell type: "Magic", "Disease", "Poison" or "Curse".
 
 ===== ** Returns:
 

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: CoreManifest.lua 5345 2012-09-05 11:17:00Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: CoreManifest.lua 5423 2013-06-15 18:11:00Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -30,51 +30,34 @@
 		You have an implicit license to use this AddOn with these facilities
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
+
+	CoreManifest is the first Auctioneer file to be loaded
+
+	CoreManifest will:
+		Set up the AucAdvanced global table and its basic framework
+		Load external libraries
+		Set up basic debugging and logging functions
+		Perform startup checks
+
+	About the ABORTLOAD flag
+		CoreManifest, and certain other Core modules, will set the ABORTLOAD flag
+		if they detect a critical problem during loading.
+
+		The ABORTLOAD flag will block the loading or activation of certain key functions
+		of Auctioneer, but allows most other Core components to install regardless.
+		This should, in most cases, avoid large (and confusing) error cascades.
 ]]
-local _,_,_,tocVersion = GetBuildInfo()
-if (tocVersion < 30000) then
-	local msg = CreateFrame("Frame", nil, UIParent)
-	msg:Hide()
-	msg:SetPoint("CENTER", "UIParent", "CENTER")
-	msg:SetFrameStrata("DIALOG")
-	msg:SetHeight(280)
-	msg:SetWidth(500)
-	msg:SetBackdrop({
-		bgFile = "Interface/Tooltips/UI-Tooltip-Background",
-		edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
-		tile = true, tileSize = 32, edgeSize = 32,
-		insets = { left = 9, right = 9, top = 9, bottom = 9 }
-	})
-	msg:SetBackdropColor(0,0,0, 1)
 
-	msg.Done = CreateFrame("Button", "", msg, "OptionsButtonTemplate")
-	msg.Done:SetText("Done")
-	msg.Done:SetPoint("BOTTOMRIGHT", msg, "BOTTOMRIGHT", -10, 10)
-	msg.Done:SetScript("OnClick", function() msg:Hide() end)
-
-	msg.Text = msg:CreateFontString(nil, "HIGH")
-	msg.Text:SetPoint("TOPLEFT", msg, "TOPLEFT", 20, -20)
-	msg.Text:SetPoint("BOTTOMRIGHT", msg.Done, "TOPRIGHT", -10, 10)
-	msg.Text:SetFont("Fonts\\FRIZQT__.TTF",17)
-	msg.Text:SetJustifyH("LEFT")
-	msg.Text:SetJustifyV("TOP")
-	msg.Text:SetShadowColor(0,0,0)
-	msg.Text:SetShadowOffset(3,-3)
-
-	msg.Text:SetText("|c00ff4400Auctioneer Error:|r\n\nNote: This development build of Auctioneer is only for use with game client versions 3.0 or higher!\n\nYour Auctioneer AddOn will now be disabled.\n\nPlease download a release version and re-enable it from the AddOns window on your character selection screen.\n\nURL:    |c005599ffhttp://auctioneeraddon.com/dl|r")
-
-	msg:Show()
-
-	DisableAddOn("Auc-Advanced")
-	return
-end
-
-AucAdvanced = {}
+AucAdvanced = {Modules = {Filter={}, Match={}, Stat={}, Util={}}}
 local lib = AucAdvanced
 
-lib.Version="5.15.5380";
+local DEV_VERSION = "5.18.DEV"
+local MINIMUM_TOC = 50200
+local MINIMUM_CLIENT = "5.2"
+
+lib.Version="5.18.5433";
 if (lib.Version == "<".."%version%>") then
-	lib.Version = "5.15.DEV";
+	lib.Version = DEV_VERSION
 end
 local major, minor, release, revision = strsplit(".", lib.Version)
 lib.MajorVersion = major
@@ -82,22 +65,87 @@ lib.MinorVersion = minor
 lib.RelVersion = release
 lib.Revision = revision
 
-local versionPrefix = lib.MajorVersion.."."..lib.MinorVersion.."."..lib.RelVersion.."."
+-- Single instance of a 'no operation' function
+lib.NOPFUNCTION = function() end
 
+-- Test for load failure conditions in priority order
+
+-- Check TOC version meets minimum requirements
+local _,_,_,tocVersion = GetBuildInfo()
+if (tocVersion < MINIMUM_TOC) then
+	message("Auctioneer requires game client version "..MINIMUM_CLIENT.." or higher.")
+	lib.ABORTLOAD = "Incorrect WoW client version"
+end
+
+-- Check that Stubby exists
+if not Stubby then
+	-- Can only occur if the Stubby AddOn has loaded, but failed to create the Stubby global table
+	-- Assume Stubby has already thrown an error in this case.
+	lib.ABORTLOAD = "Missing library: Stubby"
+end
+
+-- Test load libraries
+local LibRevision, DebugLib, Configator, Babylonian, TipHelper, LibDataBroker
+if LibStub then
+	LibRevision = LibStub("LibRevision", true)
+	DebugLib = LibStub("DebugLib", true)
+	Configator = LibStub("Configator", true)
+	Babylonian = LibStub("Babylonian", true)
+	TipHelper = LibStub("nTipHelper:1", true)
+	LibDataBroker = LibStub("LibDataBroker-1.1", true)
+else -- missing LibStub - for now we'll assume Stubby has already thrown an error for this
+	if not lib.ABORTLOAD then lib.ABORTLOAD = "Missing library: LibStub" end
+end
+-- Check essential libraries
+if not (Configator and Babylonian and TipHelper) then
+	if not lib.ABORTLOAD then -- only report error if not already aborting load
+		local missing = ""
+		if not Configator then
+			missing = missing.." Configator"
+		end
+		if not Babylonian then
+			missing = missing.." Babylonian"
+		end
+		if not TipHelper then
+			missing = missing.." Tiphelper"
+		end
+		lib.ABORTLOAD = "Missing library(s):"..missing
+		geterrorhandler()("Auctioneer was unable to load one or more libraries:"..missing)
+	end
+end
+
+lib.Libraries = {
+	LibRevision = LibRevision,
+	DebugLib = DebugLib,
+	Configator = Configator,
+	Babylonian = Babylonian,
+	TipHelper = TipHelper,
+	LibDataBroker = LibDataBroker,
+}
+
+
+-- Auctioneer's revision information functions
+
+local versionPrefix = lib.MajorVersion.."."..lib.MinorVersion.."."..lib.RelVersion.."."
 lib.moduledetail = {}
 lib.revisions = {}
 lib.distribution = {--[[<%revisions%>]]} --Currently unused, needs a change in the build script
 
-local libRevision = LibStub("LibRevision")
+if LibRevision then
+	function lib.RegisterRevision(path, revision)
+		if (not path and revision) then return end
 
-function lib.RegisterRevision(path, revision)
-	if (not path and revision) then return end
-
-	local detail, file, rev = libRevision:Set(path, revision, versionPrefix, "auctioneer", "libs")
-	if file then
-		lib.revisions[file] = rev
+		local detail, file, rev = LibRevision:Set(path, revision, versionPrefix, "auctioneer", "libs")
+		if file then
+			lib.revisions[file] = rev
+		end
+		return detail, file, rev
 	end
-	return detail, file, rev
+else
+	-- LibRevision failed to load. We consider this non-essential, as it is primarily used for extra info in error reports
+	lib.RegisterRevision = lib.NOPFUNCTION
+	 -- Notify in chat only. AucPrint is not available here, so use plain lua 'print'
+	print("Auctioneer Manifest: LibRevision is missing")
 end
 
 function lib.GetCurrentRevision()
@@ -121,8 +169,86 @@ function lib.GetDistributionList()
 	return lib.distribution
 end
 
-function lib.ValidateInstall()
-	return true --NoOp for the moment
+
+-- Auctioneer's debug functions
+
+lib.Debug = {}
+local addonName = "Auctioneer" -- the addon's name as it will be displayed in the debug messages
+
+if DebugLib then
+	-------------------------------------------------------------------------------
+	-- Prints the specified message to nLog.
+	--
+	-- syntax:
+	--    errorCode, message = debugPrint([message][, category][, title][, errorCode][, level])
+	--
+	-- parameters:
+	--    message   - (string) the error message
+	--                nil, no error message specified
+	--    category  - (string) the category of the debug message
+	--                nil, no category specified
+	--    title     - (string) the title for the debug message
+	--                nil, no title specified
+	--    errorCode - (number) the error code
+	--                nil, no error code specified
+	--    level     - (string) nLog message level
+	--                         Any nLog.levels string is valid.
+	--                nil, no level specified
+	--
+	-- returns:
+	--    errorCode - (number) errorCode, if one is specified
+	--                nil, otherwise
+	--    message   - (string) message, if one is specified
+	--                nil, otherwise
+	-------------------------------------------------------------------------------
+	function lib.Debug.DebugPrint(message, category, title, errorCode, level)
+		return DebugLib.DebugPrint(addonName, message, category, title, errorCode, level)
+	end
+
+	-------------------------------------------------------------------------------
+	-- Brings the Level parameter into the auctioneer API fold.
+	-- Level is a lookup table for validating the 'level' parameter used in DebugPrint
+	-- example AucAdvanced.Debug.Level.Critical
+	lib.Debug.Level = DebugLib.Level
+
+	-------------------------------------------------------------------------------
+	-- Used to make sure that conditions are met within functions.
+	-- If test is false, the error message will be written to nLog and the user's
+	-- default chat channel.
+	--
+	-- syntax:
+	--    assertion = assert(test, message)
+	--
+	-- parameters:
+	--    test    - (any)     false/nil, if the assertion failed
+	--                        anything else, otherwise
+	--    message - (string)  the message which will be output to the user
+	--
+	-- returns:
+	--    assertion - (boolean) true, if the test passed
+	--                          false, otherwise
+	-------------------------------------------------------------------------------
+	function lib.Debug.Assert(test, message)
+		return DebugLib.Assert(addonName, test, message)
+	end
+
+
+else
+	-- DebugLib failed to load. Again this is considered non-essential as it is primarily used for info logging and debugging
+	-- DebugPrint is used for logging to nLog - it does nothing if nLog is not installed
+	lib.Debug.DebugPrint = lib.NOPFUNCTION
+	lib.Debug.Level = {}
+	lib.Debug.Assert = assert
+	print("Auctioneer Manifest: DebugLib is missing")
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreManifest.lua $", "$Rev: 5345 $")
+
+function lib.ValidateInstall()
+	if lib.ABORTLOAD then
+		return nil, lib.ABORTLOAD
+	end
+	return lib.Resources and lib.Resources.Active
+end
+
+
+lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreManifest.lua $", "$Rev: 5423 $")

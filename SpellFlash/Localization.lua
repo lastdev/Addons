@@ -12,8 +12,8 @@ if GetLocale() == "ptBR" then -- Brazilian Portuguese
 L["Asleep"] = "Adormecido"
 L["Blink Spells"] = "Piscar das Magias"
 L["Configure Class Module"] = "Configure o módulo de classe"
-L["Default Proc Highlighting"] = "Default Proc Highlighting" -- Needs review
--- L["Error loading:"] = ""
+L["Default Proc Highlighting"] = "Padrão Destacar Proc" -- Needs review
+L["Error loading:"] = "Erro ao carregar" -- Needs review
 L["Flash Brightness:"] = "Intensidade do Brilho:"
 L["Flash Macros"] = "Macros de Brilho"
 L["Flash Size:"] = "Tamanho do Brilho:"
@@ -25,7 +25,7 @@ L["Shields"] = "Escudo"
 L["Spell Flashing"] = "Brilho do Feitiço"
 L["SpellFlash settings have been reset for all players"] = "Brilho do Feitiço foram redefinidas para todos os jogadores"
 L["<SPELL> has not been defined in a table!"] = "<SPELL> não foi definido em uma função!" -- Needs review
--- L["This module has not been updated to work with the latest expansion:"] = ""
+L["This module has not been updated to work with the latest expansion:"] = "Este módulo não foi atualizado para trabalhar com a mais recente expansão:" -- Needs review
 L["Use All Class Modules"] = "Use todos os módulos de classe"
 
 elseif GetLocale() == "frFR" then -- French
@@ -89,24 +89,24 @@ L["SpellFlash settings have been reset for all players"] = "SpellFlash 설정이
 L["Use All Class Modules"] = "모든 직업 모듈 사용"
 
 elseif GetLocale() == "esMX" then -- Latin American Spanish
-L["Asleep"] = "Dormido" -- Needs review
-L["Blink Spells"] = "Parpadear hechizos" -- Needs review
-L["Configure Class Module"] = "Configurar Módulo de Clase" -- Needs review
--- L["Default Proc Highlighting"] = ""
--- L["Error loading:"] = ""
-L["Flash Brightness:"] = "Brillo de Destello:" -- Needs review
-L["Flash Macros"] = "Hacer destellar las Macros" -- Needs review
-L["Flash Size:"] = "Tamaño de Destello:" -- Needs review
-L["In Combat Only"] = "Sólo en combate" -- Needs review
-L["Movement Check"] = "Comprobación de Movimiento" -- Needs review
-L["Range Check"] = "Comprobación de Rango" -- Needs review
-L["Selected Class Module:"] = "Módulo de Clase Seleccionado:" -- Needs review
-L["Shields"] = "Escudos" -- Needs review
-L["Spell Flashing"] = "Destello de Hechizo" -- Needs review
-L["SpellFlash settings have been reset for all players"] = "Las opciones de SpellFlash han sido reiniciadas para todos los personajes" -- Needs review
--- L["<SPELL> has not been defined in a table!"] = ""
--- L["This module has not been updated to work with the latest expansion:"] = ""
-L["Use All Class Modules"] = "Usar Todos los Módulos de Clase" -- Needs review
+L["Asleep"] = "Dormido"
+L["Blink Spells"] = "Parpadear hechizos"
+L["Configure Class Module"] = "Configurar módulo de clase"
+L["Default Proc Highlighting"] = "Resaltar proc por defecto"
+L["Error loading:"] = "Error de carga:"
+L["Flash Brightness:"] = "Brillo de destello:"
+L["Flash Macros"] = "Hacer destellar las macros"
+L["Flash Size:"] = "Tamaño de destello:"
+L["In Combat Only"] = "Sólo en combate"
+L["Movement Check"] = "Comprobación de movimiento"
+L["Range Check"] = "Comprobación de rango"
+L["Selected Class Module:"] = "Módulo de clase seleccionado:"
+L["Shields"] = "Escudos"
+L["Spell Flashing"] = "Destello de hechizo"
+L["SpellFlash settings have been reset for all players"] = "Las opciones de SpellFlash han sido reiniciadas para todos los personajes"
+L["<SPELL> has not been defined in a table!"] = "¡<SPELL> no se ha definido en una tabla!"
+L["This module has not been updated to work with the latest expansion:"] = "Este módulo no ha sido actualizado para trabajar con la última expansión:"
+L["Use All Class Modules"] = "Usar todos los módulos de clase"
 
 elseif GetLocale() == "ruRU" then -- Russian
 L["Asleep"] = "Сон"
@@ -133,7 +133,7 @@ L["Asleep"] = "睡眠" -- Needs review
 L["Blink Spells"] = "闪动法术" -- Needs review
 L["Configure Class Module"] = "设置职业分类" -- Needs review
 L["Default Proc Highlighting"] = "默认Proc闪动" -- Needs review
--- L["Error loading:"] = ""
+L["Error loading:"] = "加载错误:" -- Needs review
 L["Flash Brightness:"] = "闪动亮度" -- Needs review
 L["Flash Macros"] = "闪动集合" -- Needs review
 L["Flash Size:"] = "闪动尺寸" -- Needs review
@@ -145,7 +145,7 @@ L["Shields"] = "盾牌" -- Needs review
 L["Spell Flashing"] = "法术闪动" -- Needs review
 L["SpellFlash settings have been reset for all players"] = "重置所有角色的SpellFlash设定" -- Needs review
 L["<SPELL> has not been defined in a table!"] = "<SPELL> 还没有定义在函数式中" -- Needs review
--- L["This module has not been updated to work with the latest expansion:"] = ""
+L["This module has not been updated to work with the latest expansion:"] = "这个模组没有升级至最新版本,可能无法正常工作:" -- Needs review
 L["Use All Class Modules"] = "使用所有职业分类" -- Needs review
 
 elseif GetLocale() == "esES" then -- Spanish
@@ -173,7 +173,7 @@ L["Asleep"] = "睡眠"
 L["Blink Spells"] = "閃爍的法術"
 L["Configure Class Module"] = "設定職業模組"
 L["Default Proc Highlighting"] = "預設Proc顏色"
--- L["Error loading:"] = ""
+L["Error loading:"] = "載入錯誤:"
 L["Flash Brightness:"] = "閃爍亮度"
 L["Flash Macros"] = "閃爍巨集"
 L["Flash Size:"] = "閃爍尺寸"
@@ -185,7 +185,7 @@ L["Shields"] = "盾牌"
 L["Spell Flashing"] = "法術閃爍"
 L["SpellFlash settings have been reset for all players"] = "重設所有角色的法術閃爍設定"
 L["<SPELL> has not been defined in a table!"] = "<SPELL> 還沒有定義在函式中" -- Needs review
--- L["This module has not been updated to work with the latest expansion:"] = ""
+L["This module has not been updated to work with the latest expansion:"] = "這個模組沒有升級至最新版本,可能無法正常使用:"
 L["Use All Class Modules"] = "使用所有職業模組"
 
 end

@@ -1,6 +1,6 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.2.0 (<%codename%>)
+	Version: 4.4.0 (<%codename%>)
 	Revision: $Id: GatherConvert.lua 955 2012-08-28 16:39:14Z Esamynn $
 
 	License:
@@ -27,7 +27,7 @@
 
 	Database conversion/merging code and conversion data tables
 --]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherConvert.lua $", "$Rev: 955 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.0/Gatherer/GatherConvert.lua $", "$Rev: 955 $")
 
 local metatable = { __index = getfenv(0) }
 setmetatable( Gatherer.Convert, metatable )

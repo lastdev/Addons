@@ -1,7 +1,7 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: EnxTooltip.lua 5291 2012-04-18 19:27:33Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: EnxTooltip.lua 5407 2013-05-11 09:17:57Z brykrys $
 	URL: http://enchantrix.org/
 
 	Tooltip functions.
@@ -28,7 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix/EnxTooltip.lua $", "$Rev: 5291 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Enchantrix/EnxTooltip.lua $", "$Rev: 5407 $")
 
 -- Global functions
 local addonLoaded	-- Enchantrix.Tooltip.AddonLoaded()
@@ -303,6 +303,8 @@ function itemTooltip(tooltip, name, link, itemType, itemId, quality, count)
 	else 
 		Enchantrix.Settings.SetSetting("ModTTShow", "always")
 	end
+
+	local embed = Enchantrix.Settings.GetSetting('ToolTipEmbedInGameTip')
 	
 	-- see if this is a simple reagent produced from disenchanting, prospecting or milling
 	if ( Enchantrix.Settings.GetSetting('TooltipShowMatSources') ) then
@@ -314,7 +316,7 @@ function itemTooltip(tooltip, name, link, itemType, itemId, quality, count)
 			if (lowest and highest) then
 				local deText = format( _ENCH('FrmtDEItemLevels'), lowest, highest )
 				tooltip:SetColor(0.8,0.8,0.2);
-				tooltip:AddLine(deText, nil, embed)
+				tooltip:AddLine(deText, true, embed)
 				return
 			end
 		end
@@ -328,7 +330,7 @@ function itemTooltip(tooltip, name, link, itemType, itemId, quality, count)
 			end
 			local prospectText = format( _ENCH('FrmtProspectFrom'), oreString )
 			tooltip:SetColor(0.8,0.8,0.2);
-			tooltip:AddLine( prospectText, nil, embed)
+			tooltip:AddLine( prospectText, true, embed) -- the "true" enables line wrapping
 			return
 		end
 		
@@ -337,7 +339,7 @@ function itemTooltip(tooltip, name, link, itemType, itemId, quality, count)
 			local pigmentString = Enchantrix.Util.GetReagentInfo( inkList[1] )
 			local inkText = format( _ENCH('FrmtInkFrom'), pigmentString )
 			tooltip:SetColor(0.8,0.8,0.2);
-			tooltip:AddLine(inkText, nil, embed)
+			tooltip:AddLine(inkText, true, embed)
 			return
 		end
 	
@@ -426,8 +428,6 @@ function itemTooltip(tooltip, name, link, itemType, itemId, quality, count)
 	totalMed = totalMed * count;
 	totalMkt = totalMkt * count;
 	totalFive = totalFive * count;
-
-	local embed = Enchantrix.Settings.GetSetting('ToolTipEmbedInGameTip')
 
 	tooltip:SetColor(0.8,0.8,0.2);
 	if (Enchantrix.Settings.GetSetting('TooltipShowDisenchantMats')) then
@@ -750,7 +750,7 @@ function callbackAltChatLinkTooltip(link, text, button, chatFrame)
 end
 
 Enchantrix.Tooltip = {
-	Revision		= "$Revision: 5291 $",
+	Revision		= "$Revision: 5407 $",
 
 	AddonLoaded		= addonLoaded,
 	Format			= tooltipFormat,

@@ -1,7 +1,7 @@
 --[[
 	Norganna's Tooltip Helper class
 	Version: 1,4
-	Revision: $Id: nTipHelper.lua 343 2012-09-21 16:49:14Z brykrys $
+	Revision: $Id: nTipHelper.lua 351 2013-05-11 09:07:58Z brykrys $
 	URL: http://norganna.org/tthelp
 
 	This is a slide-in helper class for the Norganna's AddOns family of AddOns
@@ -43,7 +43,7 @@
 if not LibStub then -- LibStub is included in LibExtraTip
 	error("TipHelper cannot load because LibExtraTip is not loaded (LibStub missing)")
 end
-local MAJOR,MINOR,REVISION = "nTipHelper", 1, 5
+local MAJOR,MINOR,REVISION = "nTipHelper", 1, 6
 local LIBSTRING = MAJOR..":"..MINOR
 local lib = LibStub:NewLibrary(LIBSTRING,REVISION)
 if not lib then return end
@@ -373,22 +373,25 @@ do -- tooltip class definition
 		return coins(amount, graphic)
 	end
 
-	--[[
+	--[=[
 	  Adds a line of text to the tooltip.
 
 	  Supported calling formats:
-	  lib:AddLine(text, [rightText | amount], [red, green, blue], [embed])
-	]]
+	  lib:AddLine(text [, {rightText | amount | useWrapping | nil} [, red, green, blue] [, embed]])
+	  lib:AddLine(text, red, green, blue [, embed])
+	]=]
 	function lib:AddLine(...)
-		assert(inLayout, "Error, no tooltip to add line to in nTipHelper:AddLine()")
+		if not inLayout then
+			error("No tooltip to add line to in nTipHelper:AddLine()")
+		end
 
-		local left, right, amount, red,green,blue, embed
+		local left, right, amount, red,green,blue, embed, wrap
 		local numArgs = select("#", ...)
 		local left = ...
 		left = tostring(left)
 
-		if numArgs > 1 then
-			-- Check if the last arg is a boolean
+		if numArgs > 2 then
+			-- Check if the last arg is a boolean, and is after arg2
 			local lastArg = select(numArgs, ...)
 			if type(lastArg) == "boolean" then
 				-- Strip it off
@@ -411,17 +414,21 @@ do -- tooltip class definition
 		end
 
 		if numArgs > 1 then
-			-- There's a second parameter, if it's a number, it's a money amount
+			-- There's a second parameter: if it's a number, it's a money amount,
+			-- if boolean it flags text wrapping,
 			-- otherwise it's the right-aligned text.
 			local secondArg = select(2, ...)
-			if type(secondArg) == "number" then
+			local secondType = type(secondArg)
+			if secondType == "number" then
 				if asText then
 					right = coins(secondArg)
 				else
 					amount = secondArg
 				end
-			elseif right ~= nil then
-				right = tostring(secondArg)
+			elseif secondType == "boolean" then
+				wrap = secondArg
+			elseif secondType == "string" then
+				right = secondArg
 			end
 		end
 
@@ -442,7 +449,7 @@ do -- tooltip class definition
 		elseif right then
 			libTT:AddDoubleLine(curFrame, left, right, red, green, blue, embed)
 		else
-			libTT:AddLine(curFrame, left, red, green, blue, embed)
+			libTT:AddLine(curFrame, left, red, green, blue, embed, wrap)
 		end
 	end
 
@@ -469,4 +476,4 @@ do -- tooltip class definition
 
 end -- tooltip class definition
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/TipHelper/nTipHelper.lua $","$Rev: 343 $","5.12.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/TipHelper/nTipHelper.lua $","$Rev: 351 $","5.12.DEV.", 'auctioneer', 'libs')

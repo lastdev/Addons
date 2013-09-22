@@ -51,11 +51,7 @@ L:SetMiscLocalization({
 ---------------
 --  Alterac  --
 ---------------
-L = DBM:GetModLocalization("AlteracValley")
-
-L:SetGeneralLocalization({
-	name = "Valle de Alterac"
-})
+L = DBM:GetModLocalization("z30")
 
 L:SetTimerLocalization({
 	TimerTower		= "%s",
@@ -71,11 +67,7 @@ L:SetOptionLocalization({
 ---------------
 --  Arathi  --
 ---------------
-L = DBM:GetModLocalization("ArathiBasin")
-
-L:SetGeneralLocalization({
-	name = "Cuenca de Arathi"
-})
+L = DBM:GetModLocalization("z529")
 
 L:SetMiscLocalization({
 	ScoreExpr 		= "(%d+)/1600",
@@ -100,14 +92,9 @@ L:SetOptionLocalization({
 -----------------------
 --  Eye of the Storm --
 -----------------------
-L = DBM:GetModLocalization("EyeoftheStorm")
-
-L:SetGeneralLocalization({
-	name = "Ojo de la Tormenta"
-})
+L = DBM:GetModLocalization("z566")
 
 L:SetMiscLocalization({
-	ZoneName		= "Ojo de la Tormenta",
 	ScoreExpr		= "(%d+)/1600",
 	Alliance 		= "Alianza",
 	Horde 			= "Horda",
@@ -132,17 +119,13 @@ L:SetOptionLocalization({
 --------------------
 --  Warsong Gulch --
 --------------------
-L = DBM:GetModLocalization("WarsongGulch")
-
-L:SetGeneralLocalization({
-	name = "Garganta Grito de Guerra"
-})
+L = DBM:GetModLocalization("z489")
 
 L:SetMiscLocalization({
 	BgStart60 			= "La batalla comienza en 1 minuto.",
 	BgStart30 			= "La batalla comienza en 30 segundos. ¡Preparaos!",
 	Alliance 			= "Alianza",
-	Horde 				= "Horda",	
+	Horde 				= "Horda",
 	InfoErrorText 			= "The flag carrier targeting function will be restored when you are out of combat.",
 	ExprFlagPickUp 			= "¡(.+) ha cogido la bandera de la (%w+)!",
 	ExprFlagCaptured 		= "¡(.+) ha capturado la bandera de la (%w+)!",
@@ -153,7 +136,7 @@ L:SetMiscLocalization({
 })
 
 L:SetTimerLocalization({
-	TimerStart 			= "La batalla va comenzar", 
+	TimerStart 			= "La batalla va comenzar",
 	TimerFlag 			= "La bandera se resetea en"
 })
 
@@ -167,12 +150,7 @@ L:SetOptionLocalization({
 ------------------------
 --  Isle of Conquest  --
 ------------------------
-
-L = DBM:GetModLocalization("IsleofConquest")
-
-L:SetGeneralLocalization({
-	name = "Isla de la Conquista"
-})
+L = DBM:GetModLocalization("z628")
 
 L:SetWarningLocalization({
 	WarnSiegeEngine		= "Máquina de asedio Lista!",
@@ -208,18 +186,13 @@ L:SetMiscLocalization({
 ------------------
 --  Twin Peaks  --
 ------------------
-L = DBM:GetModLocalization("TwinPeaks")
-
-L:SetGeneralLocalization({
-	name = "Cumbres Gemelas"
-})
+L = DBM:GetModLocalization("z726")
 
 L:SetMiscLocalization({
 	BgStart60 			= "La batalla comienza en 1 minuto.",
 	BgStart30 			= "La batalla comienza en 30 segundos. ¡Preparaos!",
-	ZoneName 			= "Twin",	-- translate
 	Alliance 			= "Alianza",
-	Horde 				= "Horda",	
+	Horde 				= "Horda",
 	InfoErrorText		= "La función de targetear al portador de la bandera se restaurará cuando estés fuera de combate.",
 	ExprFlagPickUp		= "¡(.+) ha cogido la bandera de la (%w+)!",
 	ExprFlagCaptured	= "¡(.+) ha capturado la bandera de la (%w+)!",
@@ -232,7 +205,7 @@ L:SetMiscLocalization({
 })
 
 L:SetTimerLocalization({
-	TimerStart	= "Empieza la batalla", 
+	TimerStart	= "Empieza la batalla",
 	TimerFlag	= "Reaparición de la bandera"
 })
 
@@ -246,11 +219,7 @@ L:SetOptionLocalization({
 --------------------------
 --  Battle for Gilneas  --
 --------------------------
-L = DBM:GetModLocalization("Gilneas")
-
-L:SetGeneralLocalization({
-	name = "La Batalla por Gilneas"
-})
+L = DBM:GetModLocalization("z761")
 
 L:SetMiscLocalization({
 	ScoreExpr 		= "(%d+)/2000",

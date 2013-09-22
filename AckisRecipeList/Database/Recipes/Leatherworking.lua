@@ -3,10 +3,10 @@
 Leatherworking.lua
 Leatherworking data for all of Ackis Recipe List
 ************************************************************************
-File date: 2013-03-03T23:10:33Z
-File hash: e3a6786
-Project hash: f922565
-Project version: 2.4.6
+File date: 2013-09-10T13:23:20Z
+File hash: 4bcba04
+Project hash: 4bcba04
+Project version: 2.5.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -45,12 +45,15 @@ function addon:InitLeatherworking()
 
 	local recipe
 
+	-------------------------------------------------------------------------------
+	-- Classic.
+	-------------------------------------------------------------------------------
 	-- Handstitched Leather Boots -- 2149
 	recipe = AddRecipe(2149, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(1, 1, 40, 55, 70)
 	recipe:SetCraftedItem(2302, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Light Armor Kit -- 2152
@@ -58,7 +61,7 @@ function addon:InitLeatherworking()
 	recipe:SetSkillLevels(1, 1, 30, 45, 60)
 	recipe:SetCraftedItem(2304, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_ITEM_ENHANCEMENT")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Handstitched Leather Pants -- 2153
@@ -174,7 +177,7 @@ function addon:InitLeatherworking()
 	recipe:SetSkillLevels(1, 1, 20, 30, 40)
 	recipe:SetCraftedItem(2318, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_MATERIALS")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Handstitched Leather Belt -- 3753
@@ -406,7 +409,7 @@ function addon:InitLeatherworking()
 	recipe:AddTrainer(1385, 1632, 3007, 3365, 3549, 3605, 3967, 4212, 4588, 5127, 5564, 5784, 8153, 11097, 11098, 16278, 16688, 16728, 17442, 18754, 18771, 19187, 21087, 26911, 26998, 28700, 29507, 29508, 29509, 33581, 33612, 33635, 33681, 65121)
 
 	-- Raptor Hide Harness -- 4096
-	recipe = AddRecipe(4096, V.WOTLK, Q.UNCOMMON)
+	recipe = AddRecipe(4096, V.ORIG, Q.UNCOMMON)
 	recipe:SetSkillLevels(165, 165, 185, 195, 205)
 	recipe:SetRecipeItem(13287, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(4455, "BIND_ON_EQUIP")
@@ -486,7 +489,7 @@ function addon:InitLeatherworking()
 	recipe:SetSkillLevels(1, 1, 40, 55, 70)
 	recipe:SetCraftedItem(5957, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Fine Leather Pants -- 7133
@@ -590,7 +593,7 @@ function addon:InitLeatherworking()
 	recipe:SetSkillLevels(1, 1, 40, 55, 70)
 	recipe:SetCraftedItem(7276, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_BACK")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Handstitched Leather Bracers -- 9059
@@ -598,7 +601,7 @@ function addon:InitLeatherworking()
 	recipe:SetSkillLevels(1, 1, 40, 55, 70)
 	recipe:SetCraftedItem(7277, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Rugged Leather Pants -- 9064
@@ -1475,7 +1478,7 @@ function addon:InitLeatherworking()
 	recipe:SetRecipeItem(15769, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(15138, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_BACK")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.MISC1)
 	recipe:AddQuest(7493, 7497)
 	recipe:AddCustom("ONYXIA_HEAD_QUEST")
 
@@ -1654,7 +1657,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(18251, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.TANK)
-	recipe:AddCustom("MC_RANDOM")
+	recipe:AddWorldDrop(Z.MOLTEN_CORE)
 
 	-- Gordok Ogre Suit -- 22815
 	recipe = AddRecipe(22815, V.ORIG, Q.COMMON)
@@ -1947,8 +1950,8 @@ function addon:InitLeatherworking()
 	recipe:SetRecipeItem(21548, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(21278, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddMobDrop(14454, 14457)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RETIRED, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddCustom("REMOVED_FROM_GAME")
 
 	-- Polar Tunic -- 28219
 	recipe = AddRecipe(28219, V.ORIG, Q.EPIC)
@@ -2025,6 +2028,9 @@ function addon:InitLeatherworking()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.CENARION_CIRCLE)
 	recipe:AddRepVendor(FAC.CENARION_CIRCLE, REP.FRIENDLY, 15293)
 
+	-------------------------------------------------------------------------------
+	-- The Burning Crusade.
+	-------------------------------------------------------------------------------
 	-- Knothide Leather -- 32454
 	recipe = AddRecipe(32454, V.TBC, Q.COMMON)
 	recipe:SetSkillLevels(300, 300, 300, 305, 310)
@@ -2826,7 +2832,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(30042, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS)
-	recipe:AddCustom("SSC_RANDOM", "TK_RANDOM")
+	recipe:AddWorldDrop(Z.SERPENTSHRINE_CAVERN, Z.TEMPEST_KEEP)
 
 	-- Belt of Deep Shadow -- 36351
 	recipe = AddRecipe(36351, V.TBC, Q.EPIC)
@@ -2835,7 +2841,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(30040, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.CASTER)
-	recipe:AddCustom("SSC_RANDOM", "TK_RANDOM")
+	recipe:AddWorldDrop(Z.SERPENTSHRINE_CAVERN, Z.TEMPEST_KEEP)
 
 	-- Belt of the Black Eagle -- 36352
 	recipe = AddRecipe(36352, V.TBC, Q.EPIC)
@@ -2844,7 +2850,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(30046, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("SSC_RANDOM", "TK_RANDOM")
+	recipe:AddWorldDrop(Z.SERPENTSHRINE_CAVERN, Z.TEMPEST_KEEP)
 
 	-- Monsoon Belt -- 36353
 	recipe = AddRecipe(36353, V.TBC, Q.EPIC)
@@ -2853,7 +2859,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(30044, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("SSC_RANDOM", "TK_RANDOM")
+	recipe:AddWorldDrop(Z.SERPENTSHRINE_CAVERN, Z.TEMPEST_KEEP)
 
 	-- Boots of Natural Grace -- 36355
 	recipe = AddRecipe(36355, V.TBC, Q.EPIC)
@@ -2862,7 +2868,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(30041, "BIND_ON_PICKUP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("SSC_RANDOM", "TK_RANDOM")
+	recipe:AddWorldDrop(Z.SERPENTSHRINE_CAVERN, Z.TEMPEST_KEEP)
 
 	-- Boots of Utter Darkness -- 36357
 	recipe = AddRecipe(36357, V.TBC, Q.EPIC)
@@ -2871,7 +2877,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(30039, "BIND_ON_PICKUP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("SSC_RANDOM", "TK_RANDOM")
+	recipe:AddWorldDrop(Z.SERPENTSHRINE_CAVERN, Z.TEMPEST_KEEP)
 
 	-- Boots of the Crimson Hawk -- 36358
 	recipe = AddRecipe(36358, V.TBC, Q.EPIC)
@@ -2880,7 +2886,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(30045, "BIND_ON_PICKUP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("SSC_RANDOM", "TK_RANDOM")
+	recipe:AddWorldDrop(Z.SERPENTSHRINE_CAVERN, Z.TEMPEST_KEEP)
 
 	-- Hurricane Boots -- 36359
 	recipe = AddRecipe(36359, V.TBC, Q.EPIC)
@@ -2889,7 +2895,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(30043, "BIND_ON_PICKUP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("SSC_RANDOM", "TK_RANDOM")
+	recipe:AddWorldDrop(Z.SERPENTSHRINE_CAVERN, Z.TEMPEST_KEEP)
 
 	-- Boots of Shackled Souls -- 39997
 	recipe = AddRecipe(39997, V.TBC, Q.COMMON)
@@ -2961,7 +2967,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(32582, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.HEALER, F.CASTER)
-	recipe:AddCustom("BT_RANDOM")
+	recipe:AddWorldDrop(Z.BLACK_TEMPLE)
 
 	-- Shoulderpads of Renewed Life -- 41157
 	recipe = AddRecipe(41157, V.TBC, Q.EPIC)
@@ -2970,7 +2976,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(32583, "BIND_ON_PICKUP")
 	recipe:SetItemFilterType("LEATHERWORKING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.HEALER, F.CASTER)
-	recipe:AddCustom("BT_RANDOM", "HYJAL_RANDOM")
+	recipe:AddWorldDrop(Z.BLACK_TEMPLE, Z.MOUNT_HYJAL)
 
 	-- Swiftstrike Bracers -- 41158
 	recipe = AddRecipe(41158, V.TBC, Q.EPIC)
@@ -2979,7 +2985,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(32580, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS)
-	recipe:AddCustom("BT_RANDOM", "HYJAL_RANDOM")
+	recipe:AddWorldDrop(Z.BLACK_TEMPLE, Z.MOUNT_HYJAL)
 
 	-- Swiftstrike Shoulders -- 41160
 	recipe = AddRecipe(41160, V.TBC, Q.EPIC)
@@ -2988,7 +2994,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(32581, "BIND_ON_PICKUP")
 	recipe:SetItemFilterType("LEATHERWORKING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS)
-	recipe:AddCustom("BT_RANDOM")
+	recipe:AddWorldDrop(Z.BLACK_TEMPLE)
 
 	-- Bindings of Lightning Reflexes -- 41161
 	recipe = AddRecipe(41161, V.TBC, Q.EPIC)
@@ -2997,7 +3003,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(32574, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS)
-	recipe:AddCustom("BT_RANDOM", "HYJAL_RANDOM")
+	recipe:AddWorldDrop(Z.BLACK_TEMPLE, Z.MOUNT_HYJAL)
 
 	-- Shoulders of Lightning Reflexes -- 41162
 	recipe = AddRecipe(41162, V.TBC, Q.EPIC)
@@ -3006,7 +3012,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(32575, "BIND_ON_PICKUP")
 	recipe:SetItemFilterType("LEATHERWORKING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS)
-	recipe:AddCustom("BT_RANDOM")
+	recipe:AddWorldDrop(Z.BLACK_TEMPLE)
 
 	-- Living Earth Bindings -- 41163
 	recipe = AddRecipe(41163, V.TBC, Q.EPIC)
@@ -3015,7 +3021,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(32577, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.HEALER, F.CASTER)
-	recipe:AddCustom("BT_RANDOM")
+	recipe:AddWorldDrop(Z.BLACK_TEMPLE)
 
 	-- Living Earth Shoulders -- 41164
 	recipe = AddRecipe(41164, V.TBC, Q.EPIC)
@@ -3024,7 +3030,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(32579, "BIND_ON_PICKUP")
 	recipe:SetItemFilterType("LEATHERWORKING_SHOULDER")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.HEALER, F.CASTER)
-	recipe:AddCustom("BT_RANDOM", "HYJAL_RANDOM")
+	recipe:AddWorldDrop(Z.BLACK_TEMPLE, Z.MOUNT_HYJAL)
 
 	-- Cloak of Darkness -- 42546
 	recipe = AddRecipe(42546, V.TBC, Q.RARE)
@@ -3103,7 +3109,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(34372, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.HEALER, F.CASTER)
-	recipe:AddCustom("SUNWELL_RANDOM")
+	recipe:AddWorldDrop(Z.SUNWELL_PLATEAU)
 
 	-- Fletcher's Gloves of the Phoenix -- 46133
 	recipe = AddRecipe(46133, V.TBC, Q.EPIC)
@@ -3112,7 +3118,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(34374, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS)
-	recipe:AddCustom("SUNWELL_RANDOM")
+	recipe:AddWorldDrop(Z.SUNWELL_PLATEAU)
 
 	-- Gloves of Immortal Dusk -- 46134
 	recipe = AddRecipe(46134, V.TBC, Q.EPIC)
@@ -3121,7 +3127,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(34370, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS)
-	recipe:AddCustom("SUNWELL_RANDOM")
+	recipe:AddWorldDrop(Z.SUNWELL_PLATEAU)
 
 	-- Sun-Drenched Scale Gloves -- 46135
 	recipe = AddRecipe(46135, V.TBC, Q.EPIC)
@@ -3130,7 +3136,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(34376, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.HEALER, F.CASTER)
-	recipe:AddCustom("SUNWELL_RANDOM")
+	recipe:AddWorldDrop(Z.SUNWELL_PLATEAU)
 
 	-- Leather Chestguard of the Sun -- 46136
 	recipe = AddRecipe(46136, V.TBC, Q.EPIC)
@@ -3139,7 +3145,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(34371, "BIND_ON_PICKUP")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.HEALER, F.CASTER)
-	recipe:AddCustom("SUNWELL_RANDOM")
+	recipe:AddWorldDrop(Z.SUNWELL_PLATEAU)
 
 	-- Embrace of the Phoenix -- 46137
 	recipe = AddRecipe(46137, V.TBC, Q.EPIC)
@@ -3148,7 +3154,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(34373, "BIND_ON_PICKUP")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS)
-	recipe:AddCustom("SUNWELL_RANDOM")
+	recipe:AddWorldDrop(Z.SUNWELL_PLATEAU)
 
 	-- Carapace of Sun and Shadow -- 46138
 	recipe = AddRecipe(46138, V.TBC, Q.EPIC)
@@ -3157,7 +3163,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(34369, "BIND_ON_PICKUP")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS)
-	recipe:AddCustom("SUNWELL_RANDOM")
+	recipe:AddWorldDrop(Z.SUNWELL_PLATEAU)
 
 	-- Sun-Drenched Scale Chestguard -- 46139
 	recipe = AddRecipe(46139, V.TBC, Q.EPIC)
@@ -3166,8 +3172,11 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(34375, "BIND_ON_PICKUP")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.HEALER, F.CASTER)
-	recipe:AddCustom("SUNWELL_RANDOM")
+	recipe:AddWorldDrop(Z.SUNWELL_PLATEAU)
 
+	-------------------------------------------------------------------------------
+	-- Wrath of the Lich King.
+	-------------------------------------------------------------------------------
 	-- Heavy Borean Leather -- 50936
 	recipe = AddRecipe(50936, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(390, 390, 390, 395, 405)
@@ -4191,7 +4200,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(45553, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("ULDUAR_RANDOM")
+	recipe:AddWorldDrop(Z.ULDUAR)
 
 	-- Boots of Living Scale -- 63195
 	recipe = AddRecipe(63195, V.WOTLK, Q.EPIC)
@@ -4200,7 +4209,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(45095, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("ULDUAR_RANDOM")
+	recipe:AddWorldDrop(Z.ULDUAR)
 
 	-- Blue Belt of Chaos -- 63196
 	recipe = AddRecipe(63196, V.WOTLK, Q.EPIC)
@@ -4209,7 +4218,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(45096, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("ULDUAR_RANDOM")
+	recipe:AddWorldDrop(Z.ULDUAR)
 
 	-- Lightning Grounded Boots -- 63197
 	recipe = AddRecipe(63197, V.WOTLK, Q.EPIC)
@@ -4218,7 +4227,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(45097, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("ULDUAR_RANDOM")
+	recipe:AddWorldDrop(Z.ULDUAR)
 
 	-- Death-warmed Belt -- 63198
 	recipe = AddRecipe(63198, V.WOTLK, Q.EPIC)
@@ -4227,7 +4236,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(45098, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("ULDUAR_RANDOM")
+	recipe:AddWorldDrop(Z.ULDUAR)
 
 	-- Footpads of Silence -- 63199
 	recipe = AddRecipe(63199, V.WOTLK, Q.EPIC)
@@ -4236,7 +4245,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(45099, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("ULDUAR_RANDOM")
+	recipe:AddWorldDrop(Z.ULDUAR)
 
 	-- Belt of Arctic Life -- 63200
 	recipe = AddRecipe(63200, V.WOTLK, Q.EPIC)
@@ -4245,7 +4254,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(45100, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("ULDUAR_RANDOM")
+	recipe:AddWorldDrop(Z.ULDUAR)
 
 	-- Boots of Wintry Endurance -- 63201
 	recipe = AddRecipe(63201, V.WOTLK, Q.EPIC)
@@ -4254,7 +4263,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(45101, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("ULDUAR_RANDOM")
+	recipe:AddWorldDrop(Z.ULDUAR)
 
 	-- Borean Leather -- 64661
 	recipe = AddRecipe(64661, V.WOTLK, Q.COMMON)
@@ -4272,7 +4281,8 @@ function addon:InitLeatherworking()
 	recipe:SetRequiredFaction("Alliance")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Black Chitin Bracers -- 67081
 	recipe = AddRecipe(67081, V.WOTLK, Q.EPIC)
@@ -4282,7 +4292,8 @@ function addon:InitLeatherworking()
 	recipe:SetRequiredFaction("Alliance")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Crusader's Dragonscale Breastplate -- 67082
 	recipe = AddRecipe(67082, V.WOTLK, Q.EPIC)
@@ -4292,7 +4303,8 @@ function addon:InitLeatherworking()
 	recipe:SetRequiredFaction("Alliance")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Crusader's Dragonscale Bracers -- 67083
 	recipe = AddRecipe(67083, V.WOTLK, Q.EPIC)
@@ -4302,7 +4314,8 @@ function addon:InitLeatherworking()
 	recipe:SetRequiredFaction("Alliance")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Lunar Eclipse Robes -- 67084
 	recipe = AddRecipe(67084, V.WOTLK, Q.EPIC)
@@ -4310,8 +4323,10 @@ function addon:InitLeatherworking()
 	recipe:SetRecipeItem(47632, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(47602, "BIND_ON_EQUIP")
 	recipe:SetRequiredFaction("Alliance")
+	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Moonshadow Armguards -- 67085
 	recipe = AddRecipe(67085, V.WOTLK, Q.EPIC)
@@ -4319,8 +4334,10 @@ function addon:InitLeatherworking()
 	recipe:SetRecipeItem(47633, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(47583, "BIND_ON_EQUIP")
 	recipe:SetRequiredFaction("Alliance")
+	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Knightbane Carapace -- 67086
 	recipe = AddRecipe(67086, V.WOTLK, Q.EPIC)
@@ -4328,8 +4345,10 @@ function addon:InitLeatherworking()
 	recipe:SetRecipeItem(47634, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(47599, "BIND_ON_EQUIP")
 	recipe:SetRequiredFaction("Alliance")
+	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Bracers of Swift Death -- 67087
 	recipe = AddRecipe(67087, V.WOTLK, Q.EPIC)
@@ -4337,8 +4356,10 @@ function addon:InitLeatherworking()
 	recipe:SetRecipeItem(47635, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(47581, "BIND_ON_PICKUP")
 	recipe:SetRequiredFaction("Alliance")
+	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.RAID)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Ensorcelled Nerubian Breastplate -- 67136
 	recipe = AddRecipe(67136, V.WOTLK, Q.EPIC)
@@ -4348,7 +4369,8 @@ function addon:InitLeatherworking()
 	recipe:SetRequiredFaction("Horde")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Black Chitin Bracers -- 67137
 	recipe = AddRecipe(67137, V.WOTLK, Q.EPIC)
@@ -4358,7 +4380,8 @@ function addon:InitLeatherworking()
 	recipe:SetRequiredFaction("Horde")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Crusader's Dragonscale Breastplate -- 67138
 	recipe = AddRecipe(67138, V.WOTLK, Q.EPIC)
@@ -4368,7 +4391,8 @@ function addon:InitLeatherworking()
 	recipe:SetRequiredFaction("Horde")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Bracers of Swift Death -- 67139
 	recipe = AddRecipe(67139, V.WOTLK, Q.EPIC)
@@ -4378,7 +4402,8 @@ function addon:InitLeatherworking()
 	recipe:SetRequiredFaction("Horde")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Lunar Eclipse Robes -- 67140
 	recipe = AddRecipe(67140, V.WOTLK, Q.EPIC)
@@ -4388,7 +4413,8 @@ function addon:InitLeatherworking()
 	recipe:SetRequiredFaction("Horde")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Moonshadow Armguards -- 67141
 	recipe = AddRecipe(67141, V.WOTLK, Q.EPIC)
@@ -4398,7 +4424,8 @@ function addon:InitLeatherworking()
 	recipe:SetRequiredFaction("Horde")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Knightbane Carapace -- 67142
 	recipe = AddRecipe(67142, V.WOTLK, Q.EPIC)
@@ -4408,7 +4435,8 @@ function addon:InitLeatherworking()
 	recipe:SetRequiredFaction("Horde")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Crusader's Dragonscale Bracers -- 67143
 	recipe = AddRecipe(67143, V.WOTLK, Q.EPIC)
@@ -4417,8 +4445,9 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(47577, "BIND_ON_EQUIP")
 	recipe:SetRequiredFaction("Horde")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
-	recipe:AddFilters(F.HORDE, F.RAID, F.DPS)
-	recipe:AddCustom("TOC25_RANDOM")
+	recipe:AddFilters(F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddWorldDrop(Z.TRIAL_OF_THE_CRUSADER)
+	recipe:AddCustom("NORMAL")
 
 	-- Drums of Forgotten Kings -- 69386
 	recipe = AddRecipe(69386, V.WOTLK, Q.COMMON)
@@ -4508,6 +4537,9 @@ function addon:InitLeatherworking()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER, F.ASHEN_VERDICT)
 	recipe:AddRepVendor(FAC.ASHEN_VERDICT, REP.HONORED, 37687)
 
+	-------------------------------------------------------------------------------
+	-- Cataclysm.
+	-------------------------------------------------------------------------------
 	-- Savage Armor Kit -- 78379
 	recipe = AddRecipe(78379, V.CATA, Q.COMMON)
 	recipe:SetSkillLevels(425, 425, 450, 452, 455)
@@ -5107,7 +5139,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(69939, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("FIRELANDS_RANDOM")
+	recipe:AddWorldDrop(Z.FIRELANDS)
 
 	-- Gloves of Unforgiving Flame -- 99445
 	recipe = AddRecipe(99445, V.CATA, Q.EPIC)
@@ -5116,7 +5148,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(69941, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("FIRELANDS_RANDOM")
+	recipe:AddWorldDrop(Z.FIRELANDS)
 
 	-- Clutches of Evil -- 99446
 	recipe = AddRecipe(99446, V.CATA, Q.EPIC)
@@ -5125,7 +5157,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(69942, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("FIRELANDS_RANDOM")
+	recipe:AddWorldDrop(Z.FIRELANDS)
 
 	-- Heavenly Gloves of the Moon -- 99447
 	recipe = AddRecipe(99447, V.CATA, Q.EPIC)
@@ -5134,7 +5166,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(69943, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("FIRELANDS_RANDOM")
+	recipe:AddWorldDrop(Z.FIRELANDS)
 
 	-- Earthen Scale Sabatons -- 99455
 	recipe = AddRecipe(99455, V.CATA, Q.EPIC)
@@ -5143,7 +5175,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(69949, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("FIRELANDS_RANDOM")
+	recipe:AddWorldDrop(Z.FIRELANDS)
 
 	-- Footwraps of Quenched Fire -- 99456
 	recipe = AddRecipe(99456, V.CATA, Q.EPIC)
@@ -5152,7 +5184,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(69950, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("FIRELANDS_RANDOM")
+	recipe:AddWorldDrop(Z.FIRELANDS)
 
 	-- Treads of the Craft -- 99457
 	recipe = AddRecipe(99457, V.CATA, Q.EPIC)
@@ -5161,7 +5193,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(69951, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("FIRELANDS_RANDOM")
+	recipe:AddWorldDrop(Z.FIRELANDS)
 
 	-- Ethereal Footfalls -- 99458
 	recipe = AddRecipe(99458, V.CATA, Q.EPIC)
@@ -5170,7 +5202,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(69952, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("FIRELANDS_RANDOM")
+	recipe:AddWorldDrop(Z.FIRELANDS)
 
 	-- Vicious Hide Cloak -- 99535
 	recipe = AddRecipe(99535, V.CATA, Q.COMMON)
@@ -5222,7 +5254,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(71986, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("DRAGONSOUL_RANDOM")
+	recipe:AddWorldDrop(Z.DRAGON_SOUL)
 
 	-- Deathscale Leggings -- 101934
 	recipe = AddRecipe(101934, V.CATA, Q.EPIC)
@@ -5231,7 +5263,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(71988, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("DRAGONSOUL_RANDOM")
+	recipe:AddWorldDrop(Z.DRAGON_SOUL)
 
 	-- Bladeshadow Leggings -- 101935
 	recipe = AddRecipe(101935, V.CATA, Q.EPIC)
@@ -5240,7 +5272,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(71985, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.CASTER)
-	recipe:AddCustom("DRAGONSOUL_RANDOM")
+	recipe:AddWorldDrop(Z.DRAGON_SOUL)
 
 	-- Rended Earth Leggings -- 101936
 	recipe = AddRecipe(101936, V.CATA, Q.EPIC)
@@ -5249,7 +5281,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(71987, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("DRAGONSOUL_RANDOM")
+	recipe:AddWorldDrop(Z.DRAGON_SOUL)
 
 	-- Bracers of Flowing Serenity -- 101937
 	recipe = AddRecipe(101937, V.CATA, Q.EPIC)
@@ -5258,7 +5290,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(71995, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("DRAGONSOUL_RANDOM")
+	recipe:AddWorldDrop(Z.DRAGON_SOUL)
 
 	-- Thundering Deathscale Wristguards -- 101939
 	recipe = AddRecipe(101939, V.CATA, Q.EPIC)
@@ -5267,7 +5299,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(71997, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("DRAGONSOUL_RANDOM")
+	recipe:AddWorldDrop(Z.DRAGON_SOUL)
 
 	-- Bladeshadow Wristguards -- 101940
 	recipe = AddRecipe(101940, V.CATA, Q.EPIC)
@@ -5276,7 +5308,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(71994, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("DRAGONSOUL_RANDOM")
+	recipe:AddWorldDrop(Z.DRAGON_SOUL)
 
 	-- Bracers of the Hunter-Killer -- 101941
 	recipe = AddRecipe(101941, V.CATA, Q.EPIC)
@@ -5285,8 +5317,11 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(71996, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("DRAGONSOUL_RANDOM")
+	recipe:AddWorldDrop(Z.DRAGON_SOUL)
 
+	-------------------------------------------------------------------------------
+	-- Mists of Pandaria.
+	-------------------------------------------------------------------------------
 	-- Sha-Touched Leg Armor -- 124124
 	recipe = AddRecipe(124124, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(545, 545, 560, 580, 600)
@@ -5947,7 +5982,7 @@ function addon:InitLeatherworking()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(3007, 3365, 3967, 4212, 4588, 5127, 5564, 21087, 26998, 28700, 29507, 29509, 33581, 33612, 33635, 65121)
 
-	-- Cloak of the Mists -- 124635
+	-- Misthide Drape -- 124635
 	recipe = AddRecipe(124635, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(555, 555, 570, 582, 595)
 	recipe:SetCraftedItem(85851, "BIND_ON_EQUIP")
@@ -5978,7 +6013,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(85788, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("MOP_RAIDS_RANDOM")
+	recipe:AddWorldDrop(Z.HEART_OF_FEAR, Z.MOGUSHAN_VAULTS, Z.TERRACE_OF_ENDLESS_SPRING)
 
 	-- Murderer's Gloves -- 124639
 	recipe = AddRecipe(124639, V.MOP, Q.EPIC)
@@ -5987,7 +6022,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(85828, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("MOP_RAIDS_RANDOM")
+	recipe:AddWorldDrop(Z.HEART_OF_FEAR, Z.MOGUSHAN_VAULTS, Z.TERRACE_OF_ENDLESS_SPRING)
 
 	-- Nightfire Robe -- 124640
 	recipe = AddRecipe(124640, V.MOP, Q.EPIC)
@@ -5996,7 +6031,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(85829, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.HEALER, F.CASTER)
-	recipe:AddCustom("MOP_RAIDS_RANDOM")
+	recipe:AddWorldDrop(Z.HEART_OF_FEAR, Z.MOGUSHAN_VAULTS, Z.TERRACE_OF_ENDLESS_SPRING)
 
 	-- Liferuned Leather Gloves -- 124641
 	recipe = AddRecipe(124641, V.MOP, Q.EPIC)
@@ -6005,7 +6040,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(85827, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("MOP_RAIDS_RANDOM")
+	recipe:AddWorldDrop(Z.HEART_OF_FEAR, Z.MOGUSHAN_VAULTS, Z.TERRACE_OF_ENDLESS_SPRING)
 
 	-- Stormbreaker Chestguard -- 124642
 	recipe = AddRecipe(124642, V.MOP, Q.EPIC)
@@ -6014,7 +6049,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(85840, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("MOP_RAIDS_RANDOM")
+	recipe:AddWorldDrop(Z.HEART_OF_FEAR, Z.MOGUSHAN_VAULTS, Z.TERRACE_OF_ENDLESS_SPRING)
 
 	-- Fists of Lightning -- 124643
 	recipe = AddRecipe(124643, V.MOP, Q.EPIC)
@@ -6023,7 +6058,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(85821, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("MOP_RAIDS_RANDOM")
+	recipe:AddWorldDrop(Z.HEART_OF_FEAR, Z.MOGUSHAN_VAULTS, Z.TERRACE_OF_ENDLESS_SPRING)
 
 	-- Raiment of Blood and Bone -- 124644
 	recipe = AddRecipe(124644, V.MOP, Q.EPIC)
@@ -6032,7 +6067,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(85830, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("MOP_RAIDS_RANDOM")
+	recipe:AddWorldDrop(Z.HEART_OF_FEAR, Z.MOGUSHAN_VAULTS, Z.TERRACE_OF_ENDLESS_SPRING)
 
 	-- Raven Lord's Gloves -- 124645
 	recipe = AddRecipe(124645, V.MOP, Q.EPIC)
@@ -6041,7 +6076,7 @@ function addon:InitLeatherworking()
 	recipe:SetCraftedItem(85831, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS, F.HEALER, F.CASTER)
-	recipe:AddCustom("MOP_RAIDS_RANDOM")
+	recipe:AddWorldDrop(Z.HEART_OF_FEAR, Z.MOGUSHAN_VAULTS, Z.TERRACE_OF_ENDLESS_SPRING)
 
 	-- Magnificent Hide -- 131865
 	recipe = AddRecipe(131865, V.MOP, Q.COMMON)
@@ -6091,7 +6126,7 @@ function addon:InitLeatherworking()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DRUID)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
-	-- Crafted Dreadful Gladiator's Belt of Meditation  -- 137814
+	-- Crafted Dreadful Gladiator's Belt of Meditation -- 137814
 	recipe = AddRecipe(137814, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93463, "BIND_ON_EQUIP")
@@ -6099,7 +6134,7 @@ function addon:InitLeatherworking()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DRUID, F.MONK)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
-	-- Crafted Dreadful Gladiator's Leather Footguards of Meditation  -- 137815
+	-- Crafted Dreadful Gladiator's Leather Footguards of Meditation -- 137815
 	recipe = AddRecipe(137815, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93464, "BIND_ON_EQUIP")
@@ -6107,7 +6142,7 @@ function addon:InitLeatherworking()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DRUID, F.MONK)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
-	-- Crafted Dreadful Gladiator's Bindings of Meditation  -- 137816
+	-- Crafted Dreadful Gladiator's Bindings of Meditation -- 137816
 	recipe = AddRecipe(137816, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93465, "BIND_ON_EQUIP")
@@ -6155,7 +6190,7 @@ function addon:InitLeatherworking()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DRUID)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
-	-- Crafted Dreadful Gladiator's Belt of Cruelty  -- 137822
+	-- Crafted Dreadful Gladiator's Belt of Cruelty -- 137822
 	recipe = AddRecipe(137822, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93472, "BIND_ON_EQUIP")
@@ -6163,7 +6198,7 @@ function addon:InitLeatherworking()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DRUID, F.MONK)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
-	-- Crafted Dreadful Gladiator's Leather Footguards of Alacrity  -- 137823
+	-- Crafted Dreadful Gladiator's Leather Footguards of Alacrity -- 137823
 	recipe = AddRecipe(137823, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93473, "BIND_ON_EQUIP")
@@ -6171,7 +6206,7 @@ function addon:InitLeatherworking()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DRUID, F.MONK)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
-	-- Crafted Dreadful Gladiator's Bindings of Prowess  -- 137824
+	-- Crafted Dreadful Gladiator's Bindings of Prowess -- 137824
 	recipe = AddRecipe(137824, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93474, "BIND_ON_EQUIP")
@@ -6224,7 +6259,7 @@ function addon:InitLeatherworking()
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93504, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MONK, F.ROGUE, F.DRUID)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DRUID, F.ROGUE, F.MONK)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
 	-- Crafted Dreadful Gladiator's Boots of Alacrity -- 137831
@@ -6232,7 +6267,7 @@ function addon:InitLeatherworking()
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93505, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MONK, F.ROGUE, F.DRUID)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DRUID, F.ROGUE, F.MONK)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
 	-- Crafted Dreadful Gladiator's Armwraps of Accuracy -- 137832
@@ -6240,7 +6275,7 @@ function addon:InitLeatherworking()
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93506, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MONK, F.ROGUE, F.DRUID)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DRUID, F.ROGUE, F.MONK)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
 	-- Crafted Dreadful Gladiator's Ironskin Gloves -- 137833
@@ -6328,7 +6363,7 @@ function addon:InitLeatherworking()
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93566, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MONK, F.ROGUE, F.DRUID)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DRUID, F.ROGUE, F.MONK)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
 	-- Crafted Dreadful Gladiator's Boots of Cruelty -- 137844
@@ -6336,7 +6371,7 @@ function addon:InitLeatherworking()
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93567, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_FEET")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MONK, F.ROGUE, F.DRUID)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DRUID, F.ROGUE, F.MONK)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
 	-- Crafted Dreadful Gladiator's Armwraps of Alacrity -- 137845
@@ -6344,10 +6379,10 @@ function addon:InitLeatherworking()
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93568, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MONK, F.ROGUE, F.DRUID)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DRUID, F.ROGUE, F.MONK)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
-	-- Crafted Dreadful Gladiator's Leather Armor  -- 137846
+	-- Crafted Dreadful Gladiator's Leather Tunic -- 137846
 	recipe = AddRecipe(137846, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93569, "BIND_ON_EQUIP")
@@ -6355,7 +6390,7 @@ function addon:InitLeatherworking()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.ROGUE)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
-	-- Crafted Dreadful Gladiator's Leather Gauntlets -- 137847
+	-- Crafted Dreadful Gladiator's Leather Gloves -- 137847
 	recipe = AddRecipe(137847, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93570, "BIND_ON_EQUIP")
@@ -6371,7 +6406,7 @@ function addon:InitLeatherworking()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.ROGUE)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
-	-- Crafted Dreadful Gladiator's Leather Leggings -- 137849
+	-- Crafted Dreadful Gladiator's Leather Legguards -- 137849
 	recipe = AddRecipe(137849, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93572, "BIND_ON_EQUIP")
@@ -6435,7 +6470,7 @@ function addon:InitLeatherworking()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HUNTER, F.SHAMAN)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
-	-- Crafted Dreadful Gladiator's Chain Armor  -- 137857
+	-- Crafted Dreadful Gladiator's Chain Armor -- 137857
 	recipe = AddRecipe(137857, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 605, 610, 615)
 	recipe:SetCraftedItem(93494, "BIND_ON_EQUIP")
@@ -6708,28 +6743,712 @@ function addon:InitLeatherworking()
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
 
 	-- Magnificence of Leather -- 140040
-	recipe = AddRecipe(140040, V.MOP, Q.COMMON)
+	recipe = AddRecipe(140040, V.MOP, Q.UNCOMMON)
 	recipe:SetSkillLevels(550, 550, 560, 565, 570)
+	recipe:SetRecipeItem(95467, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(72163, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(65121)
+	recipe:AddWorldDrop(Z.PANDARIA)
 
 	-- Magnificence of Scales -- 140041
-	recipe = AddRecipe(140041, V.MOP, Q.COMMON)
+	recipe = AddRecipe(140041, V.MOP, Q.UNCOMMON)
 	recipe:SetSkillLevels(550, 550, 560, 565, 570)
+	recipe:SetRecipeItem(95468, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(72163, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_MATERIALS")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
-	recipe:AddTrainer(65121)
+	recipe:AddWorldDrop(Z.PANDARIA)
 
-	-- Magnificent Hide Bag -- 140185
+	-- Magnificent Hide Pack -- 140185
 	recipe = AddRecipe(140185, V.MOP, Q.UNCOMMON)
 	recipe:SetSkillLevels(595, 595, 595, 597, 600)
 	recipe:SetCraftedItem(95536, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_BAG")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_LW_PANDARIA")
+
+	-- Pennyroyal Leggings -- 142952
+	recipe = AddRecipe(142952, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 612, 618)
+	recipe:SetCraftedItem(98600, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Krasari Prowler Britches -- 142953
+	recipe = AddRecipe(142953, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 612, 618)
+	recipe:SetCraftedItem(98601, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Snow Lily Britches -- 142956
+	recipe = AddRecipe(142956, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 612, 618)
+	recipe:SetCraftedItem(98613, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Gorge Stalker Legplates -- 142957
+	recipe = AddRecipe(142957, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 612, 618)
+	recipe:SetCraftedItem(98605, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Pennyroyal Belt -- 142961
+	recipe = AddRecipe(142961, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 612, 618)
+	recipe:SetCraftedItem(98609, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Krasari Prowler Belt -- 142962
+	recipe = AddRecipe(142962, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 612, 618)
+	recipe:SetCraftedItem(98610, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Snow Lily Belt -- 142965
+	recipe = AddRecipe(142965, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 612, 618)
+	recipe:SetCraftedItem(98613, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Gorge Stalker Belt -- 142966
+	recipe = AddRecipe(142966, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 612, 618)
+	recipe:SetCraftedItem(98614, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Hardened Magnificent Hide -- 142976
+	recipe = AddRecipe(142976, V.MOP, Q.RARE)
+	recipe:SetSkillLevels(600, 600, 605, 612, 618)
+	recipe:SetRecipeItem(100864, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(98617, "BIND_ON_PICKUP")
+	recipe:SetItemFilterType("LEATHERWORKING_MATERIALS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddWorldDrop(Z.PANDARIA)
+
+	-- Crafted Malevolent Gladiator's Dragonhide Gloves -- 143089
+	recipe = AddRecipe(143089, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98789, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Dragonhide Helm -- 143090
+	recipe = AddRecipe(143090, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98790, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HEAD")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Dragonhide Legguards -- 143091
+	recipe = AddRecipe(143091, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98791, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Dragonhide Robes -- 143092
+	recipe = AddRecipe(143092, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98792, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Dragonhide Spaulders -- 143093
+	recipe = AddRecipe(143093, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98793, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_SHOULDER")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Belt of Meditation -- 143094
+	recipe = AddRecipe(143094, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98794, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Footguards of Meditation -- 143095
+	recipe = AddRecipe(143095, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98795, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_FEET")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Bindings of Meditation -- 143096
+	recipe = AddRecipe(143096, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98796, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Kodohide Gloves -- 143097
+	recipe = AddRecipe(143097, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98797, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Kodohide Helm -- 143098
+	recipe = AddRecipe(143098, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98798, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HEAD")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Kodohide Legguards -- 143099
+	recipe = AddRecipe(143099, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98799, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Kodohide Robes -- 143100
+	recipe = AddRecipe(143100, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98800, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Kodohide Spaulders -- 143101
+	recipe = AddRecipe(143101, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98801, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_SHOULDER")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Belt of Cruelty -- 143102
+	recipe = AddRecipe(143102, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98802, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Footguards of Alacrity -- 143103
+	recipe = AddRecipe(143103, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98803, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_FEET")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Bindings of Prowess -- 143104
+	recipe = AddRecipe(143104, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 615)
+	recipe:SetCraftedItem(98804, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Wyrmhide Gloves -- 143105
+	recipe = AddRecipe(143105, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98805, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Wyrmhide Helm -- 143106
+	recipe = AddRecipe(143106, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98806, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HEAD")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Wyrmhide Legguards -- 143107
+	recipe = AddRecipe(143107, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98807, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Wyrmhide Robes -- 143108
+	recipe = AddRecipe(143108, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98808, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Wyrmhide Spaulders -- 143109
+	recipe = AddRecipe(143109, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98809, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_SHOULDER")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Waistband of Cruelty -- 143110
+	recipe = AddRecipe(143110, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98830, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Boots of Alacrity -- 143111
+	recipe = AddRecipe(143111, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98831, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_FEET")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Armwraps of Accuracy -- 143112
+	recipe = AddRecipe(143112, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98832, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Ironskin Gloves -- 143113
+	recipe = AddRecipe(143113, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98833, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Ironskin Helm -- 143114
+	recipe = AddRecipe(143114, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98834, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HEAD")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Ironskin Legguards -- 143115
+	recipe = AddRecipe(143115, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98835, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Ironskin Spaulders -- 143116
+	recipe = AddRecipe(143116, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98836, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_SHOULDER")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Ironskin Tunic -- 143117
+	recipe = AddRecipe(143117, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98837, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Copperskin Gloves -- 143118
+	recipe = AddRecipe(143118, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98838, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Copperskin Helm -- 143119
+	recipe = AddRecipe(143119, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98839, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HEAD")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Copperskin Legguards -- 143120
+	recipe = AddRecipe(143120, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98840, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Copperskin Spaulders -- 143121
+	recipe = AddRecipe(143121, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98841, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_SHOULDER")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Copperskin Tunic -- 143122
+	recipe = AddRecipe(143122, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98842, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Waistband of Accuracy -- 143123
+	recipe = AddRecipe(143123, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98881, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Boots of Cruelty -- 143124
+	recipe = AddRecipe(143124, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98882, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Armwraps of Alacrity -- 143125
+	recipe = AddRecipe(143125, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98883, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Leather Tunic -- 143126
+	recipe = AddRecipe(143126, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98884, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Leather Gloves -- 143127
+	recipe = AddRecipe(143127, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98885, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Leather Helm -- 143128
+	recipe = AddRecipe(143128, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98886, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HEAD")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Leather Legguards -- 143129
+	recipe = AddRecipe(143129, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98887, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Leather Spaulders -- 143130
+	recipe = AddRecipe(143130, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98888, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_SHOULDER")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Links of Cruelty -- 143131
+	recipe = AddRecipe(143131, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98814, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Links of Accuracy -- 143132
+	recipe = AddRecipe(143132, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98815, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Sabatons of Cruelty -- 143133
+	recipe = AddRecipe(143133, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98816, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_FEET")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Sabatons of Alacrity -- 143134
+	recipe = AddRecipe(143134, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98817, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_FEET")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Wristguards of Alacrity -- 143135
+	recipe = AddRecipe(143135, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98818, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Wristguards of Accuracy -- 143136
+	recipe = AddRecipe(143136, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98819, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Chain Armor -- 143137
+	recipe = AddRecipe(143137, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98820, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Chain Gauntlets -- 143138
+	recipe = AddRecipe(143138, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98821, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Chain Helm -- 143139
+	recipe = AddRecipe(143139, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98822, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HEAD")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Chain Helm -- 143140
+	recipe = AddRecipe(143140, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98823, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Chain Spaulders -- 143141
+	recipe = AddRecipe(143141, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98824, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_SHOULDER")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Waistguard of Meditation -- 143142
+	recipe = AddRecipe(143142, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98889, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Footguards of Alacrity -- 143143
+	recipe = AddRecipe(143143, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98890, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_FEET")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Footguards of Meditation -- 143144
+	recipe = AddRecipe(143144, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98891, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_FEET")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Armbands of Prowess -- 143145
+	recipe = AddRecipe(143145, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98892, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Armbands of Meditation -- 143146
+	recipe = AddRecipe(143146, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98893, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Ringmail Armor -- 143147
+	recipe = AddRecipe(143147, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98894, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Ringmail Gauntlets -- 143148
+	recipe = AddRecipe(143148, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98895, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Ringmail Helm -- 143149
+	recipe = AddRecipe(143149, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98896, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HEAD")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Ringmail Leggings -- 143150
+	recipe = AddRecipe(143150, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98897, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Ringmail Leggings -- 143151
+	recipe = AddRecipe(143151, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98898, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_SHOULDER")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Linked Armor -- 143152
+	recipe = AddRecipe(143152, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98899, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Linked Gauntlets -- 143153
+	recipe = AddRecipe(143153, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98900, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Linked Helm -- 143154
+	recipe = AddRecipe(143154, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98901, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HEAD")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Linked Leggings -- 143155
+	recipe = AddRecipe(143155, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98902, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Linked Spaulders -- 143156
+	recipe = AddRecipe(143156, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98903, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_SHOULDER")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Waistguard of Cruelty -- 143157
+	recipe = AddRecipe(143157, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98904, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_WAIST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Mail Armor -- 143158
+	recipe = AddRecipe(143158, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98905, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_CHEST")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Mail Gauntlets -- 143159
+	recipe = AddRecipe(143159, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98906, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HANDS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Mail Helm -- 143160
+	recipe = AddRecipe(143160, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98907, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_HEAD")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Mail Leggings -- 143161
+	recipe = AddRecipe(143161, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98908, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_LEGS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Crafted Malevolent Gladiator's Mail Spaulders -- 143162
+	recipe = AddRecipe(143162, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 611, 616)
+	recipe:SetCraftedItem(98909, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("LEATHERWORKING_SHOULDER")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
+
+	-- Drums of Rage -- 146613
+	recipe = AddRecipe(146613, V.MOP, Q.UNCOMMON)
+	recipe:SetSkillLevels(600, 600, 600, 600, 600)
+	recipe:SetRecipeItem(102513, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(102351, "BIND_ON_PICKUP")
+	recipe:SetItemFilterType("LEATHERWORKING_CREATED_ITEM")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddWorldDrop(Z.PANDARIA)
+
+	-- Accelerated Hardened Magnificent Hide -- 146923
+	recipe = AddRecipe(146923, V.MOP, Q.COMMON)
+	recipe:SetSkillLevels(600, 600, 605, 612, 618)
+	recipe:SetCraftedItem(98617, "BIND_ON_PICKUP")
+	recipe:SetItemFilterType("LEATHERWORKING_MATERIALS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddDiscovery("DISCOVERY_LW_HARDENED_PANDARIA")
 
 	self.InitLeatherworking = nil
 end

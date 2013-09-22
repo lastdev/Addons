@@ -27,8 +27,9 @@ L.slashCommands = [[
 oRA3 supporte toute une série de commandes « / » (ou slash) pour vous aider rapidement en raid.
 
 |cff44ff44/radur|r - ouvre la liste des durabilités.
+|cff44ff44/ragear|r - ouvre la liste des vérifications de l'équipement.
+|cff44ff44/ralag|r - ouvre la liste des latences.
 |cff44ff44/razone|r - ouvre la liste des zones.
-|cff44ff44/rares|r - ouvre la liste des résistances.
 |cff44ff44/radisband|r - dissout instantanément le raid sans vérification.
 |cff44ff44/raready|r - fait l'appel.
 |cff44ff44/rainv|r - invite l'entièreté de la guilde dans votre groupe de raid.
@@ -43,7 +44,7 @@ L["Ready"] = "Prêt"
 L["Not Ready"] = "Pas prêt"
 L["No Response"] = "Pas de réponse"
 L["Offline"] = "Hors ligne"
-L["Play a sound when a ready check is performed."] = "Joue un son quand un appel est lancé."
+L["Play the ready check sound using the Master sound channel when a ready check is performed. This will play the sound while \"Sound Effects\" is disabled and at a higher volume."] = "Joue le son de l'appel en utilisant le canal principal du son quand un appel est effectué. Ceci jouera le son même si \"Effets sonores\" est désactivé et à un volume supérieur."
 L["Show window"] = "Afficher la fenêtre"
 L["Show the window when a ready check is performed."] = "Affiche la fenêtre quand un appel est lancé."
 L["Hide window when done"] = "Cacher la fenêtre une fois fini"
@@ -61,19 +62,11 @@ L["Average"] = "Moyenne"
 L["Broken"] = "Cassé"
 L["Minimum"] = "Minimum"
 
--- Resistances module
-L["Resistances"] = "Résistances"
-L["Frost"] = "Givre"
-L["Fire"] = "Feu"
-L["Shadow"] = "Ombre"
-L["Nature"] = "Nature"
-L["Arcane"] = "Arcanes"
-
 -- Invite module
 L["Invite"] = "Invit."
 L["All max level characters will be invited to raid in 10 seconds. Please leave your groups."] = "Tous les personnages de niveau maximal seront invités dans le raid dans 10 sec. Veuillez quitter vos groupes."
 L["All characters in %s will be invited to raid in 10 seconds. Please leave your groups."] = "Tous les personnages se trouvant à %s seront invités dans le raid rans 10 sec. Veuillez quitter vos groupes."
-L["All characters of rank %s or higher will be invited to raid in 10 seconds. Please leave your groups."] = "Tous les personnages de rang %s ou supérieur seront invités dans le raid dans 10 sec. Veuillez quitter vos groupes." 
+L["All characters of rank %s or higher will be invited to raid in 10 seconds. Please leave your groups."] = "Tous les personnages de rang %s ou supérieur seront invités dans le raid dans 10 sec. Veuillez quitter vos groupes."
 L["<oRA3> Sorry, the group is full."] = "<oRA3> Désolé, le groupe de raid est complet."
 L["Invite all guild members of rank %s or higher."] = "Invite tous les membres de votre guilde ayant le rang %s ou supérieur."
 L["Keyword"] = "Mot-clé"
@@ -87,6 +80,7 @@ L["Invite zone"] = "Inviter la zone"
 L["Invite everyone in your guild who are in the same zone as you."] = "Invite tous les membres de votre guilde se trouvant dans la même zone que vous."
 L["Guild rank invites"] = "Invitation selon le rang de guilde"
 L["Clicking any of the buttons below will invite anyone of the selected rank AND HIGHER to your group. So clicking the 3rd button will invite anyone of rank 1, 2 or 3, for example. It will first post a message in either guild or officer chat and give your guild members 10 seconds to leave their groups before doing the actual invites."] = "En cliquant sur un des boutons ci-dessous, vous inviterez toutes les personnes du rang choisi ainsi que ceux des rangs SUPÉRIEURS dans votre groupe de raid. Un délai de 10 secondes est accordé avant l'envoi des invitations."
+L["Only invite on keyword if in a raid group"] = "Inviter uniquement par mot-clé si dans un groupe de raid"
 
 -- Promote module
 L["Demote everyone"] = "Dégrader tout le monde"
@@ -123,6 +117,9 @@ L["Toggle whether the cooldown display should never show your own cooldowns. For
 L["Cooldowns"] = "Recharge"
 L["Right-Click me for options!"] = "Clic droit pour les options !"
 L["Bar Settings"] = "Paramètres des barres"
+L["Label Text Settings"] = "Paramètre du texte du libellé"
+L["Duration Text Settings"] = "Paramètres du texte de durée"
+L["Text Settings"] = "Paramètres du texte"
 L["Spawn test bar"] = "Afficher une barre de test"
 L["Use class color"] = "Couleur de classe"
 L["Custom color"] = "Couleur personnalisée"
@@ -135,10 +132,14 @@ L["Duration"] = "Durée"
 L["Unit name"] = "Nom unité"
 L["Spell name"] = "Nom du sort"
 L["Short Spell name"] = "Nom des sorts raccourcis"
+L["Label Font"] = "Police du libellé"
+L["Label Font Size"] = "Taille de police du libellé"
 L["Label Align"] = "Alignement du libellé"
 L["Left"] = "Gauche"
 L["Right"] = "Droite"
 L["Center"] = "Centre"
+L["Duration Font"] = "Police de la durée"
+L["Duration Font Size"] = "Taille de police de la durée"
 L["Grow up"] = "Ajouter vers le haut"
 
 -- Zone module
@@ -164,3 +165,15 @@ L["Sort"] = "Trier"
 L["Click to move this tank up."] = "Cliquez pour faire monter ce tank."
 L["Show"] = "Afficher"
 L.showButtonHelp = "Affiche ce tank dans votre affichage des tanks personnels. Cette option n'a des effets que localement et ne changera pas son statut de tank pour tous les autres membres du groupe."
+
+-- Latency Module
+L["Latency"] = "Latence"
+L["Home"] = "Domicile"
+L["World"] = "Monde"
+
+-- Gear Module
+L["Gear"] = "Équipement"
+L["Item Level"] = "Niveau d'objet"
+L["Missing Gems"] = "Gemmes manquantes"
+L["Missing Enchants"] = "Enchantements manquants"
+

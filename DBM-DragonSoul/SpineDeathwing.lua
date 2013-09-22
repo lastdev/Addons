@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(318, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 37 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(53879)
-mod:SetModelID(35268)
 mod:SetModelSound("sound\\CREATURE\\Deathwing\\VO_DS_DEATHWING_BACKEVENT_01.OGG", "sound\\CREATURE\\Deathwing\\VO_DS_DEATHWING_BACKSLAY_01.OGG")
 mod:SetZone()
 mod:SetUsedIcons(6, 5, 4, 3, 2, 1)
@@ -50,7 +49,6 @@ local countdownGrip			= mod:NewCountdown(32, 105490, false)--Can get confusing i
 
 local soundNuclearBlast		= mod:NewSound(105845, nil, mod:IsMelee())
 
-mod:RemoveOption("HealthFrame")
 mod:AddBoolOption("InfoFrame", true)
 mod:AddBoolOption("SetIconOnGrip", true)
 mod:AddBoolOption("ShowShieldInfo", false)--on 25 man this is quite frankly a spammy nightmare, especially on heroic. off by default since it's really only sensible in 10 man. Besides I may be adding an alternate frame option for "grip damage needed"
@@ -113,6 +111,7 @@ do
 	mod.SPELL_PERIODIC_HEAL = mod.SPELL_HEAL
 
 	local function updatePlasmaTargets()
+		if not mod.Options.ShowShieldInfo then return end
 		local maxAbsorb =	mod:IsDifficulty("heroic25") and 420000 or
 							mod:IsDifficulty("heroic10") and 280000 or
 							mod:IsDifficulty("normal25") and 300000 or
@@ -168,7 +167,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(105845) then
+	if args.spellId == 105845 then
 		warnNuclearBlast:Show()
 		specWarnNuclearBlast:Show()
 		soundNuclearBlast:Play()
@@ -180,7 +179,7 @@ function mod:SPELL_CAST_START(args)
 		else
 			timerSealArmor:Start()
 		end
-	elseif args:IsSpellID(109379) then
+	elseif args.spellId == 109379 then
 		if not corruptionActive[args.sourceGUID] then
 			corruptionActive[args.sourceGUID] = 0
 			if self:IsDifficulty("normal25", "heroic25") then
@@ -206,13 +205,13 @@ end
 
 -- not needed guid check. This is residue creation step.
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(105219) then 
+	if args.spellId == 105219 then 
 		residueNum = residueNum + 1
 		diedOozeGUIDS[args.sourceGUID] = GetTime()
 		self:Unschedule(warningResidue)
 		self:Schedule(1.25, warningResidue)
 		if residueDebug then print("created", residueNum) end
-	elseif args:IsSpellID(105248) and diedOozeGUIDS[args.sourceGUID] then
+	elseif args.spellId == 105248 and diedOozeGUIDS[args.sourceGUID] then
 		residueNum = residueNum - 1
 		diedOozeGUIDS[args.sourceGUID] = nil
 		self:Unschedule(warningResidue)
@@ -237,10 +236,10 @@ end
 mod.SWING_MISSED = mod.SWING_DAMAGE
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(105248) then
+	if args.spellId == 105248 then
 		warnAbsorbedBlood:Cancel()--Just a little anti spam
 		warnAbsorbedBlood:Schedule(1.25, args.destName, 1)
-	elseif args:IsSpellID(105490) then
+	elseif args.spellId == 105490 then
 		gripTargets[#gripTargets + 1] = args.destName
 		timerGripCD:Cancel(args.sourceGUID)
 		countdownGrip:Cancel(args.sourceGUID)
@@ -256,7 +255,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		self:Unschedule(showGripWarning)
 		self:Schedule(0.3, showGripWarning)
-	elseif args:IsSpellID(105479) then
+	elseif args.spellId == 105479 then
 		if self.Options.ShowShieldInfo then
 			setPlasmaTarget(args.destGUID, args.destName)
 		end
@@ -264,7 +263,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end		
 
 function mod:SPELL_AURA_APPLIED_DOSE(args)
-	if args:IsSpellID(105248) then
+	if args.spellId == 105248 then
 		warnAbsorbedBlood:Cancel()--Just a little anti spam
 		if args.amount == 9 then
 			warnAbsorbedBlood:Show(args.destName, 9)
@@ -275,11 +274,11 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(105490) then
+	if args.spellId == 105490 then
 		if self.Options.SetIconOnGrip then
 			self:SetIcon(args.destName, 0)
 		end
-	elseif args:IsSpellID(105479) then
+	elseif args.spellId == 105479 then
 		if self.Options.ShowShieldInfo then
 			clearPlasmaTarget(args.destGUID, args.destName)
 		end

@@ -13,7 +13,7 @@ a.SpellIDs = {
 	["Chaos Bolt"] = 116858,
 	["Conflagrate"] = 17962,
 	["Conflagrate AoE"] = 108685,
-	["Corruption"] = 172,
+	["Corruption"] = 146739,
 	["Curse of the Elements"] = 1490,
 	["Dark Intent"] = 109773,
 	["Dark Regeneration"] = 108359,
@@ -40,6 +40,7 @@ a.SpellIDs = {
 	["Incinerate AoE"] = 114654,
 	["Life Tap"] = 1454,
 	["Malefic Grasp"] = 103103,
+	["Mannoroth's Fury"] = 108508,
 	["Metamorphosis"] = 103958,
 	["Molten Core"] = 122355,
 	["Pandemic"] = 131973,
@@ -51,6 +52,8 @@ a.SpellIDs = {
 	["Shadowflame"] = 47960,
 	["Soul Fire"] = 6353,
 	["Soul Swap"] = 86121,
+	["Soul Swap Exhale"] = 86213,
+	["Soul Swap Soulburn"] = 119678,
 	["Soulburn"] = 74434,
 	["Soulshatter"] = 29858,
 	["Soulstone"] = 20707,
@@ -68,7 +71,9 @@ a.SpellIDs = {
 	
 	-- pet spells
 	["Axe Toss"] = 103131,
+	["Clone Magic"] = 115284,
 	["Command Spell Lock"] = 132409,
+	["Devour Magic"] = 19505,
 	["Felbolt"] = 115746,
 	["Felstorm"] = 119914,
 	["Firebolt"] = 3110,
@@ -83,6 +88,7 @@ a.SpellIDs = {
 }
 
 a.TalentIDs = {
+	["Archimonde's Darkness"] = 108505,
 	["Grimoire of Sacrifice"] = 108503,
 }
 
@@ -97,5 +103,12 @@ a.EquipmentSets = {
 	    ChestSlot = { 78825, 76340, 78730 },
 	    HandsSlot = { 78776, 76343, 78681 },
 	    LegsSlot = { 78816, 76341, 78721 },
+	},
+	T15 = {
+	    HeadSlot = { 95982, 95326, 96726 },
+	    ShoulderSlot = { 95985, 95329, 96729 },
+	    ChestSlot = { 95984, 95328, 96728 },
+	    HandsSlot = { 95981, 95325, 96725 },
+	    LegsSlot = { 95983, 95327, 96727 },
 	},
 }

@@ -2,62 +2,67 @@
 -- http://wow.curseforge.com/addons/bittens-spellflash-dk/localization/
 
 local addonName, a = ...
-local function DefaultFunction(_, key) return key end
-a.Localize = setmetatable({}, {__index = DefaultFunction})
+a.Localize = setmetatable({ }, { __index = function(_, key) return key end })
 local L = a.Localize
-
-if GetLocale() == "ptBR" then -- Brazilian Portuguese
+local locale = GetLocale()
+if locale == "ptBR" then -- Brazilian Portuguese
 -- L["Flash Blood"] = ""
 -- L["Flash Frost"] = ""
 -- L["Flash Unholy"] = ""
 -- L["Solo Mode when not Grouped"] = ""
 
-elseif GetLocale() == "frFR" then -- French
+elseif locale == "frFR" then -- French
 -- L["Flash Blood"] = ""
 -- L["Flash Frost"] = ""
 -- L["Flash Unholy"] = ""
--- L["Solo Mode when not Grouped"] = ""
+L["Solo Mode when not Grouped"] = "Mode solo si pas groupé" -- Needs review
 
-elseif GetLocale() == "deDE" then -- German
+elseif locale == "deDE" then -- German
 L["Flash Blood"] = "Aufblitzen bei Blut" -- Needs review
 L["Flash Frost"] = "Aufblitzen bei Frost" -- Needs review
 L["Flash Unholy"] = "Aufblitzen bei Unheilig" -- Needs review
 L["Solo Mode when not Grouped"] = "Solo Modus wenn nicht in einer Gruppe" -- Needs review
 
-elseif GetLocale() == "koKR" then -- Korean
+elseif locale == "itIT" then -- Italian
+-- L["Flash Blood"] = ""
+-- L["Flash Frost"] = ""
+-- L["Flash Unholy"] = ""
+L["Solo Mode when not Grouped"] = "Modalità Solitaria quando non in Gruppo" -- Needs review
+
+elseif locale == "koKR" then -- Korean
 -- L["Flash Blood"] = ""
 -- L["Flash Frost"] = ""
 -- L["Flash Unholy"] = ""
 -- L["Solo Mode when not Grouped"] = ""
 
-elseif GetLocale() == "esMX" then -- Latin American Spanish
+elseif locale == "esMX" then -- Latin American Spanish
 -- L["Flash Blood"] = ""
 -- L["Flash Frost"] = ""
 -- L["Flash Unholy"] = ""
 -- L["Solo Mode when not Grouped"] = ""
 
-elseif GetLocale() == "ruRU" then -- Russian
+elseif locale == "ruRU" then -- Russian
 -- L["Flash Blood"] = ""
 -- L["Flash Frost"] = ""
 -- L["Flash Unholy"] = ""
 -- L["Solo Mode when not Grouped"] = ""
 
-elseif GetLocale() == "zhCN" then -- Simplified Chinese
+elseif locale == "zhCN" then -- Simplified Chinese
+-- L["Flash Blood"] = ""
+-- L["Flash Frost"] = ""
+-- L["Flash Unholy"] = ""
+L["Solo Mode when not Grouped"] = "无队伍时使用单人模式" -- Needs review
+
+elseif locale == "esES" then -- Spanish
 -- L["Flash Blood"] = ""
 -- L["Flash Frost"] = ""
 -- L["Flash Unholy"] = ""
 -- L["Solo Mode when not Grouped"] = ""
 
-elseif GetLocale() == "esES" then -- Spanish
+elseif locale == "zhTW" then -- Traditional Chinese
 -- L["Flash Blood"] = ""
 -- L["Flash Frost"] = ""
 -- L["Flash Unholy"] = ""
--- L["Solo Mode when not Grouped"] = ""
-
-elseif GetLocale() == "zhTW" then -- Traditional Chinese
--- L["Flash Blood"] = ""
--- L["Flash Frost"] = ""
--- L["Flash Unholy"] = ""
--- L["Solo Mode when not Grouped"] = ""
+L["Solo Mode when not Grouped"] = "無組隊時使用單人模式" -- Needs review
 
 end

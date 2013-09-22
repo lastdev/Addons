@@ -26,7 +26,7 @@
 --    * Share Alike. If you alter, transform, or build upon this work, you may distribute the resulting work only under the same or similar license to this one.
 --
 
-local Revision = ("$Revision: 86 $"):sub(12, -3)
+local Revision = ("$Revision: 93 $"):sub(12, -3)
 
 local default_bartext = "%spell: %player"
 local default_bartextwtarget = "%spell: %player on %target"	-- Added by Florin Patan
@@ -39,28 +39,20 @@ local default_settings = {
 	show_portal = true,
 	spells = {
 		{ spell = 48792, bartext = "%spell on %player", cooldown = 12 },-- Death Knight: Icebound Fortitude Duration (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 61999, bartext = default_bartext, cooldown = 600 },	-- Death Knight: Raise Ally
 		{ spell = 61336, bartext = "%spell on %player", cooldown = 12 },-- Druid: Survival Instincts Duration (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 20484, bartext = default_bartext, cooldown = 600 },	-- Druid: Rebirth
---		{ spell = 29166, bartext = default_bartext, cooldown = 180 },	-- Druid: Innervate
---		{ spell = 34477, bartext = default_bartext, cooldown = 30 },	-- Hunter: Misdirect
-		{ spell = 80353, bartext = default_bartext, cooldown = 300 },	-- Mage: Time Warp
+		{ spell = 29166, bartext = default_bartext, cooldown = 180 },	-- Druid: Innervate
 		{ spell = 6940, bartext = "%spell on %target", cooldown = 12 }, -- Paladin: Hand of Sacrifice Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 498, bartext = "%spell on %player", cooldown = 10 },	-- Paladin: Divine Protection Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 31850, bartext = "%spell on %player", cooldown = 10 },-- Paladin: Argent Defender Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 86659, bartext = "%spell on %player", cooldown = 12 },-- Paladin: Guardian of Ancient Kings (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 31821, bartext = default_bartext, cooldown = 180 },	-- Paladin: Devotion Aura
---		{ spell = 6346, bartext = default_bartext, cooldown = 180 },	-- Priest: Fear Ward
+		{ spell = 6346, bartext = default_bartext, cooldown = 180 },	-- Priest: Fear Ward
 		{ spell = 73325, bartext = default_bartext, cooldown = 90 },	-- Priest: Leap of Faith (Life Grip)
 		{ spell = 33206, bartext = "%spell on %target", cooldown = 8 }, -- Priest: Pain Suppression Duration (for Healers to see how long cooldown runs)
 		{ spell = 47788, bartext = "%spell on %target", cooldown = 10 },-- Priest: Guardian Spirit (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 62618, bartext = default_bartext, cooldown = 180 },	-- Priest: Power Word: Barrier
---		{ spell = 57934, bartext = default_bartext, cooldown = 30 },	-- Rogue: Tricks of the Trade
-		{ spell = 32182, bartext = default_bartext, cooldown = 300 },	-- Shaman: Heroism (alliance)
-		{ spell = 2825, bartext = default_bartext, cooldown = 300 },	-- Shaman: Bloodlust (horde)
 		{ spell = 98008, bartext = default_bartext, cooldown = 180 },	-- Shaman: Spirit Link Totem
 		{ spell = 20608, bartext = default_bartext, cooldown = 1800 },	-- Shaman: Reincarnation
-		{ spell = 95750, bartext = default_bartext, cooldown = 900 },	-- Warlock: Soulstone Resurrection
 		{ spell = 871, bartext = "%spell on %player", cooldown = 12 },	-- Warrior: Shieldwall Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 12975, bartext = "%spell on %player", cooldown = 20 },-- Warrior: Last Stand Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 97462, bartext = default_bartext, cooldown = 180 },	-- Warrior: Rallying Cry CD (for Healers/Tanks to see how long cooldown runs)
@@ -82,6 +74,7 @@ local default_settings = {
 		{ spell = 53142, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Dalaran
 		{ spell = 88345, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Tol Barad
 		{ spell = 132620, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Vale of eternal Blossoms
+		{ spell = 120146, bartext = default_bartext, cooldown = 60 }, 	-- Ancient Portal: Dalaran
 	},
 	portal_horde = {
 		{ spell = 11417, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Orgrimmar
@@ -93,6 +86,7 @@ local default_settings = {
 		{ spell = 53142, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Dalaran
 		{ spell = 88346, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Tol Barad
 		{ spell = 132626, bartext = default_bartext, cooldown = 60 }, 	-- Portal: Vale of eternal Blossoms
+		{ spell = 120146, bartext = default_bartext, cooldown = 60 }, 	-- Ancient Portal: Dalaran
 	}
 }
 DBM_SpellTimers_Settings = {}
@@ -306,6 +300,7 @@ do
 
 	local myportals = {}
 	local lastmsg = "";
+	local encounterStarted = false
 	local mainframe = CreateFrame("frame", "DBM_SpellTimers", UIParent)
 	local spellEvents = {
 	  ["SPELL_CAST_SUCCESS"] = true,
@@ -318,6 +313,8 @@ do
 		if event == "ADDON_LOADED" and select(1, ...) == "DBM-SpellTimers" then
 			self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 			self:RegisterEvent("PLAYER_ENTERING_BATTLEGROUND")
+			self:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT")
+			self:RegisterEvent("PLAYER_REGEN_ENABLED")
 
 			-- Update settings of this Addon
 			settings = DBM_SpellTimers_Settings
@@ -363,6 +360,13 @@ do
 
 			-- now we filter if cast is from outside raidgrp (we don't want to see mass spam in Dalaran/...)
 			if settings.only_from_raid and DBM:GetRaidUnitId(fromplayer) == "none" then return end
+			
+		elseif settings.enabled and event == "INSTANCE_ENCOUNTER_ENGAGE_UNIT" and IsEncounterInProgress() and not encounterStarted then--Encounter Started
+			encounterStarted = true
+			
+		elseif settings.enabled and event == "PLAYER_REGEN_ENABLED" and not IsEncounterInProgress() and encounterStarted then--Encounter Ended
+			encounterStarted = false
+			--Reset all CDs that are > 3 minutes EXCEPT shaman reincarnate
 
       guikey = SpellIDIndex[spellid]
       v = (guikey and settings.spells[guikey])
@@ -413,4 +417,3 @@ do
 	end)
 	mainframe:RegisterEvent("ADDON_LOADED")
 end
-

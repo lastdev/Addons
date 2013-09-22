@@ -1,9 +1,8 @@
-local mod	= DBM:NewMod("Drake", "DBM-Party-BC", 11)
+local mod	= DBM:NewMod(538, "DBM-Party-BC", 11, 251)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 315 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 494 $"):sub(12, -3))
 mod:SetCreatureID(17848)
-mod:SetModelID(17386)
 
 mod:RegisterCombat("combat")
 
@@ -16,14 +15,14 @@ local warnShot      = mod:NewTargetAnnounce(33792)
 local timerShot     = mod:NewTargetTimer(6, 33792)
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(33792) then
+	if args.spellId == 33792 then
 		warnShot:Show(args.destName)
 		timerShot:Start(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(33792) then
+	if args.spellId == 33792 then
 		timerShot:Cancel(args.destName)
 	end
 end

@@ -1,29 +1,25 @@
-local IsleOfConquest	= DBM:NewMod("IsleofConquest", "DBM-PvP", 2)
-local L					= IsleOfConquest:GetLocalizedStrings()
+local mod		= DBM:NewMod("z628", "DBM-PvP", 2)
+local L			= mod:GetLocalizedStrings()
 
-IsleOfConquest:SetZone(DBM_DISABLE_ZONE_DETECTION)
+mod:SetRevision(("$Revision: 6 $"):sub(12, -3))
+mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
-IsleOfConquest:RegisterEvents(
-	"ZONE_CHANGED_NEW_AREA", 	-- Required for BG start
-	"CHAT_MSG_MONSTER_YELL",
-	"CHAT_MSG_BG_SYSTEM_ALLIANCE",
-	"CHAT_MSG_BG_SYSTEM_HORDE",
-	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"UNIT_DIED",
-	"SPELL_BUILDING_DAMAGE"
+mod:RegisterEvents(
+	"ZONE_CHANGED_NEW_AREA" 	-- Required for BG start
 )
 
-IsleOfConquest:RemoveOption("HealthFrame")
-IsleOfConquest:RemoveOption("SpeedKillTimer")
+mod:RemoveOption("HealthFrame")
+mod:RemoveOption("SpeedKillTimer")
 
-local warnSiegeEngine 		= IsleOfConquest:NewAnnounce("WarnSiegeEngine", 3)
-local warnSiegeEngineSoon 	= IsleOfConquest:NewAnnounce("WarnSiegeEngineSoon", 2) 
+local warnSiegeEngine 		= mod:NewAnnounce("WarnSiegeEngine", 3)
+local warnSiegeEngineSoon 	= mod:NewAnnounce("WarnSiegeEngineSoon", 2) 
 
-local POITimer 			= IsleOfConquest:NewTimer(61, "TimerPOI", "Interface\\Icons\\Spell_Misc_HellifrePVPHonorHoldFavor")	-- point of interest
-local timerSiegeEngine 	= IsleOfConquest:NewTimer(180, "TimerSiegeEngine", 15048)
+local POITimer 			= mod:NewTimer(61, "TimerPOI", "Interface\\Icons\\Spell_Misc_HellifrePVPHonorHoldFavor")	-- point of interest
+local timerSiegeEngine 	= mod:NewTimer(180, "TimerSiegeEngine", 15048)
 
-IsleOfConquest:AddBoolOption("ShowGatesHealth", true)
+mod:AddBoolOption("ShowGatesHealth", true)
 
+local GetMapLandmarkInfo, GetNumMapLandmarks = GetMapLandmarkInfo, GetNumMapLandmarks
 local allyTowerIcon = "Interface\\AddOns\\DBM-PvP\\Textures\\GuardTower"
 local allyColor = {r = 0, g = 0, b = 1}
 local hordeTowerIcon = "Interface\\AddOns\\DBM-PvP\\Textures\\OrcTower"
@@ -63,8 +59,16 @@ end
 local bgzone = false
 do
 	local function initialize(self)
-		if select(2, IsInInstance()) == "pvp" and GetCurrentMapAreaID() == 540 then
+		if DBM:GetCurrentArea() == 628 then
 			bgzone = true
+			mod:RegisterShortTermEvents(
+				"CHAT_MSG_MONSTER_YELL",
+				"CHAT_MSG_BG_SYSTEM_ALLIANCE",
+				"CHAT_MSG_BG_SYSTEM_HORDE",
+				"CHAT_MSG_RAID_BOSS_EMOTE",
+				"UNIT_DIED",
+				"SPELL_BUILDING_DAMAGE"
+			)
 			for i=1, GetNumMapLandmarks(), 1 do
 				local name, _, textureIndex = GetMapLandmarkInfo(i)
 				if name and textureIndex then
@@ -76,15 +80,18 @@ do
 			gateHP = {}
 			DBM.BossHealth:Clear()
 		elseif bgzone then
+			mod:UnregisterShortTermEvents()
 			DBM.BossHealth:Clear()
 			DBM.BossHealth:Hide()
-			self:Stop()
+			mod:Stop()
 			bgzone = false
 		end
 	end
 	
-	IsleOfConquest.OnInitialize = initialize
-	IsleOfConquest.ZONE_CHANGED_NEW_AREA = initialize
+	mod.OnInitialize = initialize
+	function mod:ZONE_CHANGED_NEW_AREA()
+		self:Schedule(1, initialize)
+	end
 end
 
 do
@@ -120,7 +127,7 @@ do
 		self:Schedule(1, checkForUpdates)
 	end
 	
-	function IsleOfConquest:CHAT_MSG_MONSTER_YELL(msg)
+	function mod:CHAT_MSG_MONSTER_YELL(msg)
 		if msg == L.GoblinStartAlliance or msg == L.GoblinBrokenAlliance or msg:find(L.GoblinStartAlliance) or msg:find(L.GoblinBrokenAlliance) then
 			self:SendSync("SEStart", "Alliance")
 		elseif msg == L.GoblinStartHorde or msg == L.GoblinBrokenHorde or msg:find(L.GoblinStartHorde) or msg:find(L.GoblinBrokenHorde) then
@@ -138,12 +145,12 @@ do
 		end
 	end
 	
-	IsleOfConquest.CHAT_MSG_BG_SYSTEM_ALLIANCE = scheduleCheck
-	IsleOfConquest.CHAT_MSG_BG_SYSTEM_HORDE = scheduleCheck
-	IsleOfConquest.CHAT_MSG_RAID_BOSS_EMOTE = scheduleCheck
+	mod.CHAT_MSG_BG_SYSTEM_ALLIANCE = scheduleCheck
+	mod.CHAT_MSG_BG_SYSTEM_HORDE = scheduleCheck
+	mod.CHAT_MSG_RAID_BOSS_EMOTE = scheduleCheck
 end
 
-function IsleOfConquest:UNIT_DIED(args)
+function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 34476 then
 		self:SendSync("SEBroken", "Alliance")
@@ -152,7 +159,7 @@ function IsleOfConquest:UNIT_DIED(args)
 	end
 end
 
-function IsleOfConquest:SPELL_BUILDING_DAMAGE(sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId, spellName, spellSchool, amount)
+function mod:SPELL_BUILDING_DAMAGE(sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId, spellName, spellSchool, amount)
 	if sourceGUID == nil or destName == nil or destGUID == nil or amount == nil or not bgzone then
 		return
 	end
@@ -173,7 +180,7 @@ function IsleOfConquest:SPELL_BUILDING_DAMAGE(sourceGUID, sourceName, sourceFlag
 	end
 end
 
-function IsleOfConquest:OnSync(msg, arg)
+function mod:OnSync(msg, arg)
 	if msg == "SEStart" then
 		timerSiegeEngine:Start(178)
 		warnSiegeEngineSoon:Schedule(168)

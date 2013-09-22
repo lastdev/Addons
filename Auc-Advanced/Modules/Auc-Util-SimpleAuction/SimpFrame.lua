@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Simplified Auction Posting
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: SimpFrame.lua 5362 2012-09-21 17:59:48Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: SimpFrame.lua 5415 2013-06-11 15:18:58Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a simple dialog for
@@ -32,6 +32,7 @@
 if not AucAdvanced then return end
 
 local lib = AucAdvanced.Modules.Util.SimpleAuction
+if not lib then return end
 local private = lib.Private
 local aucPrint,decode,_,_,replicate,_,get,set,default,debugPrint,fill = AucAdvanced.GetModuleLocals()
 local Const = AucAdvanced.Const
@@ -101,7 +102,9 @@ function private.GetKey(link)
 	-- for items this matches itemId, suffix and factor
 	-- for pets this matches speciesId, level and quality
 	local id, property = GetStoreKeyFromLink(link, 1)
-	return id..":"..property
+	if id then -- only need to check id, property should also be non nil in this case
+		return id..":"..property
+	end
 end
 function private.IsMatchingKey(key, item)
 	itemlink = item[Const.LINK]
@@ -114,6 +117,7 @@ function private.GetMyPrice(link, items)
 	local uBid, uBuy
 	if not link then return end
 	local searchkey = private.GetKey(link)
+	if not searchkey then return end
 	local n = GetNumAuctionItems("owner")
 	if n and n > 0 then
 		for i = 1, n do
@@ -1356,4 +1360,4 @@ function private.CreateFrames()
 	frame:RegisterEvent("BAG_UPDATE")
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 5362 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 5415 $")

@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod("Deathwhisper", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 33 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 85 $"):sub(12, -3))
 mod:SetCreatureID(36855)
 mod:SetModelID(30893)
 mod:SetUsedIcons(4, 5, 6, 7, 8)
-mod:RegisterCombat("yell", L.YellPull)
+mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED",
@@ -15,7 +15,7 @@ mod:RegisterEvents(
 	"SPELL_INTERRUPT",
 	"SPELL_SUMMON",
 	"CHAT_MSG_MONSTER_YELL",
-	"UNIT_TARGET"
+	"UNIT_TARGET_UNFILTERED"
 )
 
 local canPurge = select(2, UnitClass("player")) == "MAGE"
@@ -30,7 +30,7 @@ local warnDarkTransformation		= mod:NewSpellAnnounce(70900, 4)
 local warnDarkEmpowerment			= mod:NewSpellAnnounce(70901, 4)
 local warnPhase2					= mod:NewPhaseAnnounce(2, 1)	
 local warnFrostbolt					= mod:NewCastAnnounce(71420, 2)
-local warnTouchInsignificance		= mod:NewAnnounce("WarnTouchInsignificance", 2, 71204, mod:IsTank() or mod:IsHealer())
+local warnTouchInsignificance		= mod:NewStackAnnounce(71204, 2, nil, mod:IsTank() or mod:IsHealer())
 local warnDarkMartyrdom				= mod:NewSpellAnnounce(71236, 4)
 
 local specWarnCurseTorpor			= mod:NewSpecialWarningYou(71237)
@@ -53,7 +53,6 @@ mod:AddBoolOption("SetIconOnDominateMind", true)
 mod:AddBoolOption("SetIconOnDeformedFanatic", true)
 mod:AddBoolOption("SetIconOnEmpoweredAdherent", false)
 mod:AddBoolOption("ShieldHealthFrame", true)
-mod:RemoveOption("HealthFrame")
 
 local dominateMindTargets = {}
 local dominateMindIcon = 6
@@ -61,11 +60,12 @@ local deformedFanatic
 local empoweredAdherent
 
 function mod:OnCombatStart(delay)
-	if self.Options.ShieldHealthFrame then
+	if DBM.BossHealth:IsShown() and self.Options.ShieldHealthFrame then
+		DBM.BossHealth:Clear()
 		DBM.BossHealth:Show(L.name)
 		DBM.BossHealth:AddBoss(36855, L.name)
-		self:ScheduleMethod(0.5, "CreateShieldHPFrame")
-	end		
+		self:ScheduleMethod(1, "CreateShieldHPFrame")
+	end
 	berserkTimer:Start(-delay)
 	timerAdds:Start(7)
 	warnAddsSoon:Schedule(4)			-- 3sec pre-warning on start
@@ -79,30 +79,21 @@ function mod:OnCombatStart(delay)
 	empoweredAdherent = nil
 end
 
-function mod:OnCombatEnd()
-	DBM.BossHealth:Clear()
-end
-
 do	-- add the additional Shield Bar
 	local last = 100
+	local shieldName = GetSpellInfo(70842)
 	local function getShieldPercent()
-		local guid = UnitGUID("focus")
-		if mod:GetCIDFromGUID(guid) == 36855 then 
-			last = math.floor(UnitMana("focus")/UnitManaMax("focus") * 100)
+		local guid = UnitGUID("boss1")
+		if guid and mod:GetCIDFromGUID(guid) == 36855 then 
+			last = math.floor(UnitMana("boss1")/UnitManaMax("boss1") * 100)
 			return last
 		end
-		for i = 0, DBM:GetNumGroupMembers(), 1 do
-			local unitId = ((i == 0) and "target") or "raid"..i.."target"
-			local guid = UnitGUID(unitId)
-			if mod:GetCIDFromGUID(guid) == 36855 then
-				last = math.floor(UnitMana(unitId)/UnitManaMax(unitId) * 100)
-				return last
-			end
-		end
-		return last
 	end
 	function mod:CreateShieldHPFrame()
-		DBM.BossHealth:AddBoss(getShieldPercent, L.ShieldPercent)
+		local percent = getShieldPercent()
+		if percent then
+			DBM.BossHealth:AddBoss(percent, shieldName)
+		end
 	end
 end
 
@@ -122,13 +113,13 @@ end
 
 function mod:TrySetTarget()
 	if DBM:GetRaidRank() >= 1 then
-		for i = 1, DBM:GetNumGroupMembers() do
-			if UnitGUID("raid"..i.."target") == deformedFanatic and self.Options.SetIconOnDeformedFanatic then
+		for uId in DBM:GetGroupMembers() do
+			if UnitGUID(uId.."target") == deformedFanatic and self.Options.SetIconOnDeformedFanatic then
 				deformedFanatic = nil
-				SetRaidTarget("raid"..i.."target", 8)
-			elseif UnitGUID("raid"..i.."target") == empoweredAdherent and self.Options.SetIconOnEmpoweredAdherent then
+				SetRaidTarget(uId.."target", 8)
+			elseif UnitGUID(uId.."target") == empoweredAdherent and self.Options.SetIconOnEmpoweredAdherent then
 				empoweredAdherent = nil
-				SetRaidTarget("raid"..i.."target", 7)
+				SetRaidTarget(uId.."target", 7)
 			end
 			if not (deformedFanatic or empoweredAdherent) then
 				break
@@ -147,7 +138,7 @@ do
 	end
 	
 	function mod:SPELL_AURA_APPLIED(args)
-		if args:IsSpellID(71289) then
+		if args.spellId == 71289 then
 			dominateMindTargets[#dominateMindTargets + 1] = args.destName
 			if self.Options.SetIconOnDominateMind then
 				self:SetIcon(args.destName, dominateMindIcon, 12)
@@ -159,16 +150,16 @@ do
 			else
 				self:Schedule(0.9, showDominateMindWarning)
 			end
-		elseif args:IsSpellID(71001) then
+		elseif args.spellId == 71001 then
 			if args:IsPlayer() then
 				specWarnDeathDecay:Show()
 			end
-		elseif args:IsSpellID(71237) and args:IsPlayer() then
+		elseif args.spellId == 71237 and args:IsPlayer() then
 			specWarnCurseTorpor:Show()
-		elseif args:IsSpellID(70674) and not args:IsDestTypePlayer() and (UnitName("target") == L.Fanatic1 or UnitName("target") == L.Fanatic2 or UnitName("target") == L.Fanatic3) then
+		elseif args.spellId == 70674 and not args:IsDestTypePlayer() and (UnitName("target") == L.Fanatic1 or UnitName("target") == L.Fanatic2 or UnitName("target") == L.Fanatic3) then
 			specWarnVampricMight:Show(args.destName)
-		elseif args:IsSpellID(71204) then
-			warnTouchInsignificance:Show(args.spellName, args.destName, args.amount or 1)
+		elseif args.spellId == 71204 then
+			warnTouchInsignificance:Show(args.destName, args.amount or 1)
 			timerTouchInsignificance:Start(args.destName)
 			if args:IsPlayer() and (args.amount or 1) >= 3 and self:IsDifficulty("normal10", "normal25") then
 				specWarnTouchInsignificance:Show(args.amount)
@@ -181,7 +172,7 @@ do
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(70842) then
+	if args.spellId == 70842 then
 		warnPhase2:Show()
 		if self:IsDifficulty("normal10", "normal25") then
 			timerAdds:Cancel()
@@ -192,23 +183,23 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(71420) then
+	if args.spellId == 71420 then
 		warnFrostbolt:Show()
 		specWarnFrostbolt:Show(args.sourceName)
 		timerFrostboltCast:Start()
-	elseif args:IsSpellID(70900) then
+	elseif args.spellId == 70900 then
 		warnDarkTransformation:Show()
 		if self.Options.SetIconOnDeformedFanatic then
 			deformedFanatic = args.sourceGUID
 			self:TrySetTarget()
 		end
-	elseif args:IsSpellID(70901) then
+	elseif args.spellId == 70901 then
 		warnDarkEmpowerment:Show()
 		if self.Options.SetIconOnEmpoweredAdherent then
 			empoweredAdherent = args.sourceGUID
 			self:TrySetTarget()
 		end
-	elseif args:IsSpellID(71236) then
+	elseif args.spellId == 71236 then
 		warnDarkMartyrdom:Show()
 		specWarnDarkMartyrdom:Show()
 	end
@@ -221,13 +212,13 @@ function mod:SPELL_INTERRUPT(args)
 end
 
 function mod:SPELL_SUMMON(args)
-	if args:IsSpellID(71426) and self:AntiSpam(5, 1) then -- Summon Vengeful Shade
+	if args.spellId == 71426 and self:AntiSpam(5, 1) then -- Summon Vengeful Shade
 		warnSummonSpirit:Show()
 		timerSummonSpiritCD:Start()
 	end
 end
 
-function mod:UNIT_TARGET()
+function mod:UNIT_TARGET_UNFILTERED()
 	if empoweredAdherent or deformedFanatic then
 		self:TrySetTarget()
 	end

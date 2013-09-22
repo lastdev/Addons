@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 819 $")
+XPerl_SetModuleRevision("$Revision: 852 $")
 
 XPerl_MainTanks = {}
 local MainTankCount, blizzMTanks, ctraTanks = 0, 0, 0
@@ -700,7 +700,6 @@ local function Registration()
 			"PLAYER_REGEN_DISABLED",
 			"PLAYER_ENTERING_WORLD",
 			"CHAT_MSG_ADDON",
-			"UNIT_DYNAMIC_FLAGS",
 			"UNIT_FACTION",
 			"PLAYER_ROLES_ASSIGNED"}
 
@@ -782,8 +781,8 @@ end
 
 Events.UNIT_MAXHEALTH = Events.UNIT_HEALTH
 
--- UNIT_DYNAMIC_FLAGS
-function Events:UNIT_DYNAMIC_FLAGS(u)
+-- UNIT_FACTION
+function Events:UNIT_FACTION(u)
 	if (strfind(u, "^raid%d")) then
 		for k,unit in pairs(XUnits) do
 			if (unit.type == "MT") then
@@ -805,8 +804,6 @@ function Events:UNIT_DYNAMIC_FLAGS(u)
 		end
 	end
 end
-
-Events.UNIT_FACTION = Events.UNIT_DYNAMIC_FLAGS
 
 -- CheckArrowPosition
 local function CheckArrowPosition()

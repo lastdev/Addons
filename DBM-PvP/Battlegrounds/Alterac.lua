@@ -1,29 +1,23 @@
 -- Alterac mod v3.0
 -- rewrite by Nitram and Tandanu
 
-local Alterac	= DBM:NewMod("AlteracValley", "DBM-PvP", 2)
-local L			= Alterac:GetLocalizedStrings()
+local mod	= DBM:NewMod("z30", "DBM-PvP", 2)
+local L		= mod:GetLocalizedStrings()
 
-Alterac:SetZone(DBM_DISABLE_ZONE_DETECTION)
+mod:SetRevision(("$Revision: 6 $"):sub(12, -3))
+mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
-Alterac:AddBoolOption("AutoTurnIn")
-Alterac:RemoveOption("HealthFrame")
-Alterac:RemoveOption("SpeedKillTimer")
+mod:AddBoolOption("AutoTurnIn")
+mod:RemoveOption("HealthFrame")
+mod:RemoveOption("SpeedKillTimer")
 
-Alterac:RegisterEvents(
-	"ZONE_CHANGED_NEW_AREA", 	-- Required for BG start
-	"CHAT_MSG_MONSTER_YELL",
-	"CHAT_MSG_BG_SYSTEM_ALLIANCE",
-	"CHAT_MSG_BG_SYSTEM_HORDE",
-	"CHAT_MSG_BG_SYSTEM_NEUTRAL",
-	"RAID_BOSS_EMOTE",
-	"GOSSIP_SHOW",
-	"QUEST_PROGRESS",
-	"QUEST_COMPLETE"
+mod:RegisterEvents(
+	"ZONE_CHANGED_NEW_AREA" 	-- Required for BG start
 )
 
-local towerTimer = Alterac:NewTimer(243, "TimerTower", "Interface\\Icons\\Spell_Shadow_HellifrePVPCombatMorale")
-local gyTimer = Alterac:NewTimer(243, "TimerGY", "Interface\\Icons\\Spell_Shadow_AnimateDead")
+local GetMapLandmarkInfo, GetNumMapLandmarks = GetMapLandmarkInfo, GetNumMapLandmarks
+local towerTimer = mod:NewTimer(243, "TimerTower", "Interface\\Icons\\Spell_Shadow_HellifrePVPCombatMorale")
+local gyTimer = mod:NewTimer(243, "TimerGY", "Interface\\Icons\\Spell_Shadow_AnimateDead")
 
 local allyTowerIcon = "Interface\\AddOns\\DBM-PvP\\Textures\\GuardTower"
 local allyColor = {
@@ -69,7 +63,17 @@ end
 local bgzone = false
 do
 	local function AV_Initialize()
-		if select(2, IsInInstance()) == "pvp" and GetCurrentMapAreaID() == 401 then
+		if DBM:GetCurrentArea() == 30 then
+			mod:RegisterShortTermEvents(
+				"CHAT_MSG_MONSTER_YELL",
+				"CHAT_MSG_BG_SYSTEM_ALLIANCE",
+				"CHAT_MSG_BG_SYSTEM_HORDE",
+				"CHAT_MSG_BG_SYSTEM_NEUTRAL",
+				"RAID_BOSS_EMOTE",
+				"GOSSIP_SHOW",
+				"QUEST_PROGRESS",
+				"QUEST_COMPLETE"
+			)
 			bgzone = true
 			for i=1, GetNumMapLandmarks(), 1 do
 				local name, _, textureIndex = GetMapLandmarkInfo(i)
@@ -83,10 +87,13 @@ do
 			end
 		elseif bgzone then
 			bgzone = false
+			mod:UnregisterShortTermEvents()
 		end
 	end
-	Alterac.OnInitialize = AV_Initialize
-	Alterac.ZONE_CHANGED_NEW_AREA = AV_Initialize
+	mod.OnInitialize = AV_Initialize
+	function mod:ZONE_CHANGED_NEW_AREA()
+		self:Schedule(1, AV_Initialize)
+	end
 end
 
 do
@@ -140,11 +147,11 @@ do
 		self:Schedule(1, check_for_updates)
 	end
 
-	Alterac.CHAT_MSG_MONSTER_YELL = schedule_check
-	Alterac.CHAT_MSG_BG_SYSTEM_ALLIANCE = schedule_check
-	Alterac.CHAT_MSG_BG_SYSTEM_HORDE = schedule_check
-	Alterac.RAID_BOSS_EMOTE = schedule_check
-	Alterac.CHAT_MSG_BG_SYSTEM_NEUTRAL = schedule_check
+	mod.CHAT_MSG_MONSTER_YELL = schedule_check
+	mod.CHAT_MSG_BG_SYSTEM_ALLIANCE = schedule_check
+	mod.CHAT_MSG_BG_SYSTEM_HORDE = schedule_check
+	mod.RAID_BOSS_EMOTE = schedule_check
+	mod.CHAT_MSG_BG_SYSTEM_NEUTRAL = schedule_check
 end
 
 local quests
@@ -196,8 +203,8 @@ do
 	}	
 	
 	loadQuests() -- requests the quest information from the server
-	Alterac:Schedule(5, loadQuests) -- information should be available now....load it
-	Alterac:Schedule(15, loadQuests) -- sometimes this requires a lot more time, just to be sure!
+	mod:Schedule(5, loadQuests) -- information should be available now....load it
+	mod:Schedule(15, loadQuests) -- sometimes this requires a lot more time, just to be sure!
 end
 
 local function isQuestAutoTurnInQuest(name)
@@ -233,7 +240,7 @@ local function checkItems(item, amount)
 	return found >= amount
 end
 
-function Alterac:GOSSIP_SHOW()
+function mod:GOSSIP_SHOW()
 	if not bgzone or not self.Options.AutoTurnIn then return end
 	local quest = quests[tonumber(self:GetCIDFromGUID(UnitGUID("target") or "")) or 0]
 	if quest and type(quest[1]) == "table" then
@@ -248,13 +255,13 @@ function Alterac:GOSSIP_SHOW()
 	end
 end
 
-function Alterac:QUEST_PROGRESS()
+function mod:QUEST_PROGRESS()
 	if bgzone and isQuestAutoTurnInQuest(GetTitleText()) then
 		CompleteQuest()
 	end
 end
 
-function Alterac:QUEST_COMPLETE()
+function mod:QUEST_COMPLETE()
 	if bgzone and isQuestAutoTurnInQuest(GetTitleText()) then
 		GetQuestReward(0)
 	end

@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: Informant
-	Revision: $Id: InfStrings.lua 5346 2012-09-06 04:00:44Z LocalizerAutoCommit $
-	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: InfStrings.lua 5409 2013-05-24 15:54:42Z localizerautocommit $
+	Version: 5.18.5433 (PassionatePhascogale)
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -946,6 +946,8 @@ InformantLocalizations = {
 		["INF_Help_Off"]	= "Apagado";
 		["INF_Help_On"]	= "Encendido";
 		["INF_Help_OptLocale"]	= "<Lenguaje>";
+		["INF_Help_ShowBindingTTHeading"]	= "Mostrar comportamiento de ligamiento en la ventana emergente";
+		["INF_Help_ShowBindingTTText"]	= "El comportamiento de ligamiento e tu alma (ligado al usarse, al equiparse, al recogerse) y los comportamientos de ligamiento especiales (ligado a la cuenta, ligado a tu hermandad) pueden ser mostrados en la ventana de Informant si lo deseas. por defecto está desactivado, ya que la información está disponible a traves de la ventana emergente de blizzard al hacer click en un objeto.";
 		["INF_Help_Toggle"]	= "Cambiar";
 		["INF_Help_Welcome"]	= "Informant v%s cargado";
 		["INF_Help_WhatIs"]	= "¿Que es Informant?";
@@ -953,6 +955,7 @@ InformantLocalizations = {
 
 		-- Section: HelpTooltip
 		["INF_HelpTooltip_ActivateProfile"]	= "Selecciona el perfil que quieres usar para este personaje";
+		["INF_HelpTooltip_AltChatLink"]	= "Habilita el abir una ventana emergente haciendo Click-izquierdo en el link de un chat mientras la tecla Alt es presionada";
 		["INF_HelpTooltip_AutoUpdate"]	= "Permitir a Informant escanear tus bolsas y el inventario de los mercaderes por actualizaciones";
 		["INF_Helptooltip_DefaultProfile"]	= "Resetear todas las opciones para el perfil actual";
 		["INF_HelpTooltip_DeleteProfile"]	= "Borra el perfil actual";
@@ -961,6 +964,7 @@ InformantLocalizations = {
 		["INF_HelpTooltip_ModTTShow"]	= "Previene que se muestre el tooltip extra de Informant a menos que se pulse Alt.";
 		["INF_HelpTooltip_ProfileName"]	= "Introduce el nombre del perfil que quieres crear";
 		["INF_HelpTooltip_ProfileSave"]	= "Pulsa este botón para crear o sobrescribir el perfil con el nombre especificado";
+		["INF_HelpTooltip_ShowBindinginTT"]	= "Mostrar como se vincula un objeto (al usarse, al equiparlo, al recogerlo, etc) en la ventana informativa";
 		["INF_HelpTooltip_ShowCrafted"]	= "Activar esta opción hace que se muestre el objeto construido y su valor de subasta, desencantamiento y venta (si aplica) en el tooltip de una receta, plan, esquema, patrón y diseño.";
 		["INF_HelpTooltip_ShowIlevel"]	= "Muestra u oculta el nivel del objeto (no tiene nada que ver con el nivel necesario para poder usarlo)";
 		["INF_HelpTooltip_ShowLink"]	= "Muestra u oculta el enlace al objeto (el enlace solo puede mostrarse en el tooltip de Informant)";
@@ -977,6 +981,7 @@ InformantLocalizations = {
 
 		-- Section: Interface
 		["INF_Interface_ActivateProfile"]	= "Perfil actual";
+		["INF_Interface_AltChatLink"]	= "Abrir ventanas emergentes desde los links del chat al hacer Alt-click-derecho";
 		["INF_Interface_AutoUpdate"]	= "Actualizar automaticamente la información en los mercaderes";
 		["INF_Interface_BindingHeader"]	= "Informant";
 		["INF_Interface_BindingTitle"]	= "Cambiar ventana de información";
@@ -1002,9 +1007,18 @@ InformantLocalizations = {
 		["INF_Interface_InfWinVendorCount"]	= "Disponible en %d mercaderes:";
 		["INF_Interface_InfWinVendorName"]	= "%s";
 		["INF_Interface_ModTTShow"]	= "Mostrar solo el tooltip si se pulsa Alt";
+		["INF_Interface_MTS_Alt"]	= "Cuando la tecla Alt está siendo presionada";
+		["INF_Interface_MTS_Always"]	= "Siempre";
+		["INF_Interface_MTS_Ctrl"]	= "Cuando la tecla Ctrl Está siendo presionada";
+		["INF_Interface_MTS_Never"]	= "Nunca";
+		["INF_Interface_MTS_NoAlt"]	= "Cuando la tecla Alt está siendo presionada";
+		["INF_Interface_MTS_NoCtrl"]	= "Cuando la tecla Ctrl NO está siendo presionada";
+		["INF_Interface_MTS_NoShift"]	= "Cuando la tecla Shift NO está siendo presionada";
+		["INF_Interface_MTS_Shift"]	= "Cuando la tecla Shift está siendo presionada";
 		["INF_Interface_ProfileName"]	= "Nombre de perfil nuevo";
 		["INF_Interface_SaveProfile"]	= "Guardar";
 		["INF_Interface_SetupProfiles"]	= "Configurar y modificar perfiles";
+		["INF_Interface_ShowBindinginTT"]	= "Mostrar el comportamiento de vinculación en la ventana emergente?";
 		["INF_Interface_ShowCrafted"]	= "Mostrar objeto construido y su valor.";
 		["INF_Interface_ShowIlevel"]	= "Mostrar el nivel del objeto";
 		["INF_Interface_ShowLink"]	= "Mostrar link del objeto";
@@ -1157,6 +1171,11 @@ InformantLocalizations = {
 		["INF_Tooltip_SkillTailoring"]	= "Sastrería";
 		["INF_Tooltip_SkillWarlock"]	= "Conjuro de brujo";
 		["INF_Tooltip_SkillWarrior"]	= "Habilidad de guerrero";
+		["INF_Tooltip_SoulBindEquip"]	= "Vinculado al equiparlo";
+		["INF_Tooltip_SoulBindPickup"]	= "Vinculado al recogerlo";
+		["INF_Tooltip_SoulBindUse"]	= "Vinculado al usarlo";
+		["INF_Tooltip_SpecialBindAccount"]	= "Vinculado a cuenta";
+		["INF_Tooltip_SpecialBindGuild"]	= "Vinculado a hermandad";
 		["INF_Tooltip_StackSize"]	= "Se apila en lotes de %d";
 		["INF_Tooltip_Use"]	= "Usado por: %s";
 

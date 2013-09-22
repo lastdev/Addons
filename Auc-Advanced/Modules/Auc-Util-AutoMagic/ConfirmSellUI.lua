@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: ConfirmSellUI.lua 5345 2012-09-05 11:17:00Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: ConfirmSellUI.lua 5415 2013-06-11 15:18:58Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	AutoMagic is an Auctioneer module which automates mundane tasks for you.
@@ -31,6 +31,7 @@
 if not AucAdvanced then return end
 
 local lib = AucAdvanced.Modules.Util.AutoMagic
+if not lib then return end
 local print,decode,_,_,replicate,empty,get,set,default,debugPrint,fill = AucAdvanced.GetModuleLocals()
 local GetPrice = function() return 0,0 end --fake getPrice when Appraiser is not available
 if AucAdvanced.Modules.Util.Appraiser then
@@ -331,4 +332,4 @@ function lib.makeconfirmsellui()
 end
 
 lib.makeconfirmsellui()
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AutoMagic/ConfirmSellUI.lua $", "$Rev: 5345 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-AutoMagic/ConfirmSellUI.lua $", "$Rev: 5415 $")

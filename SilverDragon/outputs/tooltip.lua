@@ -7,6 +7,7 @@ local achievements = {
 	[2257] = {}, -- Frostbitten (Wrath mobs)
 	[7439] = {}, -- Glorious! (Pandaria mobs)
 	[8103] = {}, -- Champions of Lei Shen (Thunder Isle)
+	[8714] = {}, -- Timeless Champion (Timeless Isle)
 }
 local mobs_to_achievement = {
 	-- [43819] = 2257,
@@ -71,6 +72,20 @@ function module:LoadAchievementMobs(achievement)
 	end
 end
 
+function module:AchievementMobStatus(id)
+	if not achievements_loaded then
+		self:LoadAllAchievementMobs()
+	end
+	local achievement = mobs_to_achievement[id]
+	if not achievement then
+		return
+	end
+	local criteria = achievements[achievement][id]
+	local _, name = GetAchievementInfo(achievement)
+	local _, _, completed = GetAchievementCriteriaInfo(achievement, criteria)
+	return achievement, name, completed
+end
+
 function module:UPDATE_MOUSEOVER_UNIT()
 	self:UpdateTooltip(core:UnitID('mouseover'))
 end
@@ -87,15 +102,8 @@ function module:UpdateTooltip(id)
 	end
 
 	if self.db.profile.achievement then
-		if not achievements_loaded then
-			self:LoadAllAchievementMobs()
-		end
-
-		if mobs_to_achievement[id] then
-			local achievement = mobs_to_achievement[id]
-			local criteria = achievements[achievement][id]
-			local _, name = GetAchievementInfo(achievement)
-			local _, _, completed = GetAchievementCriteriaInfo(achievement, criteria)
+		local achievement, name, completed = self:AchievementMobStatus(id)
+		if achievement then
 			GameTooltip:AddDoubleLine(name, completed and ACTION_PARTY_KILL or NEED,
 				1, 1, 0,
 				completed and 0 or 1, completed and 1 or 0, 0

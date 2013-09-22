@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Advanced
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: CoreAPI.lua 5369 2012-09-29 09:52:45Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: CoreAPI.lua 5429 2013-08-11 17:40:25Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -957,7 +957,7 @@ function lib.GetLinkFromSig(sig)
 		if qual == -1 then
 			qual_col = NORMAL_FONT_COLOR_CODE
 		else
-			qual_col = ITEM_QUALITY_COLORS[tonumber(s4)] -- "|cffxxxxxx"
+			qual_col = ITEM_QUALITY_COLORS[qual] -- "|cffxxxxxx"
 		end
 		if not qual_col then return end
 		local name = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
@@ -1070,38 +1070,38 @@ end
 -- Statistical devices created by Matthew 'Shirik' Del Buono
 -- For Auctioneer
 -------------------------------------------------------------------------------
-local sqrtpi = math.sqrt(math.pi);
-local sqrtpiinv = 1/sqrtpi;
-local sq2pi = math.sqrt(2*math.pi);
-local pi = math.pi;
-local exp = math.exp;
+local pi = math.pi
+local sqrtpi = math.sqrt(pi)
+local sqrtpiinv = 1 / sqrtpi
+local sqrt2pi = math.sqrt(2 * pi)
+local exp = math.exp
 local bellCurveMeta = {
-    __index = {
-        SetParameters = function(self, mean, stddev)
-            if (stddev == 0) then
-                error("Standard deviation cannot be zero");
-            elseif (stddev ~= stddev) then
-                error("Standard deviation must be a real number");
-            end
-			if stddev < .1 then --need to prevent obsurdly small stddevs like 1e-11, as they cause freeze-ups
-				stddev = .1
+	__index = {
+		SetParameters = function(self, mean, stddev, area)
+			if stddev == 0 then
+				error("Standard deviation cannot be zero")
+			elseif stddev ~= stddev then
+				error("Standard deviation must be a real number")
 			end
-            self.mean = mean;
-            self.stddev = stddev;
-            self.param1 = 1/(stddev*sq2pi);     -- Make __call a little faster where we can
-            self.param2 = 2*stddev^2;
-        end
-    },
-    -- Simple bell curve call
-    __call = function(self, x)
-        local n = self.param1*exp(-(x-self.mean)^2/self.param2);
-        -- if n ~= n then
-            -- DEFAULT_CHAT_FRAME:AddMessage("-----------------");
-            -- DevTools_Dump{param1 = self.param1, param2 = self.param2, x = x, mean = self.mean, stddev = self.stddev, exp = exp(-(x-self.mean)^2/self.param2)};
-            -- error(x.." produced NAN ("..tostring(n)..")");
-        -- end
-        return n;
-    end
+
+			--need to prevent obsurdly small stddevs like 1e-11, as they cause freeze-ups
+			if stddev < 0.1 then
+				stddev = 0.1
+			end
+
+			area = area or 1 -- area is an optional parameter, defaulting to 1
+			self.area = area
+			self.mean = mean
+			self.stddev = stddev
+			self.param1 = area / (stddev * sqrt2pi)
+			self.param2 = 2 * stddev^2
+		end
+	},
+
+	-- Simple bell curve call
+	__call = function(self, x)
+		return self.param1 * exp(-(x - self.mean)^2 / self.param2)
+	end
 }
 -------------------------------------------------------------------------------
 -- Creates a bell curve object that can then be manipulated to pass
@@ -1111,25 +1111,25 @@ local bellCurveMeta = {
 --
 -- Note: This creates a bell curve with a standard deviation of 1 and
 -- mean of 0. You will probably want to update it to your own desired
--- values by calling return:SetParameters(mean, stddev)
+-- values by calling return:SetParameters(mean, stddev, area)
 -------------------------------------------------------------------------------
 function lib.GenerateBellCurve()
-    return setmetatable({mean=0, stddev=1, param1=sqrtpiinv, param2=2}, bellCurveMeta);
+    return setmetatable({mean=0, stddev=1, param1=sqrtpiinv, param2=2, area=1}, bellCurveMeta)
 end
 
 -- Dumps out market pricing information for debugging. Only handles bell curves for now.
 function lib.DumpMarketPrice(itemLink, serverKey)
-	local modules = AucAdvanced.GetAllModules(nil, "Stat");
+	local modules = AucAdvanced.GetAllModules(nil, "Stat")
 	for pos, engineLib in ipairs(modules) do
-		local success, result = pcall(engineLib.GetItemPDF, itemLink, serverKey);
+		local success, result = pcall(engineLib.GetItemPDF, itemLink, serverKey)
 		if success then
 			if getmetatable(result) == bellCurveMeta then
-				print(engineLib.GetName() .. ": Mean = " .. result.mean .. ", Standard Deviation = " .. result.stddev);
+				print(engineLib.GetName()..": Mean = "..result.mean..", Standard Deviation = "..result.stddev..", Area = "..result.area)
 			else
-				print(engineLib.GetName() .. ": Non-Standard PDF: " .. tostring(result));
+				print(engineLib.GetName() .. ": Non-BellCurve PDF: " .. tostring(result))
 			end
 		else
-			print(engineLib.GetName() .. ": Reported error: " .. tostring(result));
+			print(engineLib.GetName() .. ": Reported error: " .. tostring(result))
 		end
 	end
 end
@@ -1183,4 +1183,4 @@ do
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreAPI.lua $", "$Rev: 5369 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreAPI.lua $", "$Rev: 5429 $")

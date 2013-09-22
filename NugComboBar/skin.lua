@@ -1,218 +1,190 @@
-local aX, aY = 0,0-- values to fix model display on different aspect ratios 
---default aspect ratio is 16:9
-local resolution4x3 = {
-    ["800x600"] = true,
-    ["1024x768"] = true,
-    ["1280x960"] = true,
-    ["1440x1080"] = true,
-    ["1600x1200"] = true,
-}
-local resolution16x10 = {
-    ["1280x800"] = true,
-    ["1440x900"] = true,
-    ["1920x1200"] = true,
-    ["1680x1050"] = true,
-    ["2560x1600"] = true,
-}
-local resolution5x4 = {
-    ["1280x1024"] = true,
-    ["2560x2048"] = true,
-}
-local resolution5x2 = {
- ["2560x1024"] = true,
-}
 
-local res = GetCVar("gxResolution")
-if res then
-    if resolution4x3[res] then
-        aX, aY = 6, 6
-    elseif resolution16x10[res] then
-        aX, aY = 2, 2
-    elseif resolution5x4[res] then
-        aX, aY = 7, 7
-    elseif resolution5x2[res] then
-        aX, aY = -11, -5
-    end
-end
-
--- function NugComboBar.Skin3DAdjustOffset(self, newoffset)
---     local prev
---     for i=1,NugComboBar.MAX_POINTS do
---         local point = self.p[i]
---         point:Show()
---         if prev
---             then f:SetPoint("CENTER", prev, "CENTER", 50+newoffset, 0)
---             else f:SetPoint("LEFT", self, "LEFT", 0, 0)
---         end
---         prev = point
---     end 
--- end
 
 -- local spells = {
---         purple1 = { model = "spells\\seedofcorruption_state.mdx", scale = 1 },
---         purple2 = { model = "spells\\gouge_precast_state_hand.mdx", scale = 3 }, -- good, warlock, rogue
+--         purple1 = { model = "spells\\seedofcorruption_state.m2", scale = 1 },
+--         purple2 = { model = "spells\\gouge_precast_state_hand.m2", scale = 3 }, -- good, warlock, rogue
 
---         funnel1 = { model = "spells\\manafunnel_impact_chest.mdx", scale = 1.8 }, -- monk
---         funnel2 = { model = "lifetap_state_chest.mdx      funnel3 = { model = "spells\\soulfunnel_impact_chest.mdx", scale = 3 },
---         funnel4 = { model = "spells\\healrag_state_chest.mdx", scale = 1.8 },
+--         funnel1 = { model = "spells\\manafunnel_impact_chest.m2", scale = 1.8 }, -- monk
+--         funnel2 = { model = "lifetap_state_chest.m2      funnel3 = { model = "spells\\soulfunnel_impact_chest.m2", scale = 3 },
+--         funnel4 = { model = "spells\\healrag_state_chest.m2", scale = 1.8 },
 
---         green1 = { model = "spells\\nature_precast_chest.mdx", scale = 2.5 },
---         spark1 = { model = "spells\\dispel_low_recursive.mdx", scale = 30 }, 
---         spark2 = { model = "spells\\detectmagic_recursive.mdx", scale = 30 },
---         fire1 = { model = "spells\\fire_blue_precast_uber_hand.mdx", scale = 5 }, --blue
---         fire2 = { model = "spells\\fire_precast_uber_hand.mdx", scale = 5 }, --orange
---         fire3 = { model = "spells\\fel_fire_precast_hand.mdx", scale = 5 }, --green
+--         green1 = { model = "spells\\nature_precast_chest.m2", scale = 2.5 },
+--         spark1 = { model = "spells\\dispel_low_recursive.m2", scale = 30 }, 
+--         spark2 = { model = "spells\\detectmagic_recursive.m2", scale = 30 },
+--         fire1 = { model = "spells\\fire_blue_precast_uber_hand.m2", scale = 5 }, --blue
+--         fire2 = { model = "spells\\fire_precast_uber_hand.m2", scale = 5 }, --orange
+--         fire3 = { model = "spells\\fel_fire_precast_hand.m2", scale = 5 }, --green
 
-        -- electric1 = { model = "spells\\lightningboltivus_missile.mdx", scale = .3 }, --blue long
-        -- electric2 = { model = "spells\\lightning_precast_low_hand.mdx", scale = 6 }, --blue
-        -- electric3 = { model = "spells\\lightning_fel_precast_low_hand.mdx", scale = 6 }, --green
-        -- electric4 = { model = "spells\\wrath_precast_hand.mdx", scale = 6 }, --green long
+        -- electric1 = { model = "spells\\lightningboltivus_missile.m2", scale = .3 }, --blue long
+        -- electric2 = { model = "spells\\lightning_precast_low_hand.m2", scale = 6 }, --blue
+        -- electric3 = { model = "spells\\lightning_fel_precast_low_hand.m2", scale = 6 }, --green
+        -- electric4 = { model = "spells\\wrath_precast_hand.m2", scale = 6 }, --green long
 
-        -- spin1 = { model = "spells\\blessingoffreedom_state.mdx", scale = 1 }, --paladin
+        -- spin1 = { model = "spells\\blessingoffreedom_state.m2", scale = 1 }, --paladin
     -- }
 NugComboBar.presets = {
+    --- model, cameraReset, scale, xOffset, yOffset
     ["glowPurple"] = {
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 5 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 4, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
     },
     ["funnelPurple"] = {
-        { "spells\\soulfunnel_impact_chest.mdx", 1.7 },
-        { "spells\\soulfunnel_impact_chest.mdx", 1.7 },
-        { "spells\\soulfunnel_impact_chest.mdx", 1.7 },
-        { "spells\\soulfunnel_impact_chest.mdx", 1.7 },
-        { "spells\\soulfunnel_impact_chest.mdx", 1.7 },
-        { "spells\\soulfunnel_impact_chest.mdx", 3 },
-        { "spells\\soulfunnel_impact_chest.mdx", 1.7 },
-        { "spells\\soulfunnel_impact_chest.mdx", 1.7 },
+        { "spells\\soulfunnel_impact_chest.m2", true, 1.7 },
+        { "spells\\soulfunnel_impact_chest.m2", true, 1.7 },
+        { "spells\\soulfunnel_impact_chest.m2", true, 1.7 },
+        { "spells\\soulfunnel_impact_chest.m2", true, 1.7 },
+        { "spells\\soulfunnel_impact_chest.m2", true, 1.7 },
+        { "spells\\soulfunnel_impact_chest.m2", true, 3 },
+        { "spells\\soulfunnel_impact_chest.m2", true, 1.7 },
+        { "spells\\soulfunnel_impact_chest.m2", true, 1.7 },
     },
     ["glow_funnelPurple"] = {
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\soulfunnel_impact_chest.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\soulfunnel_impact_chest.m2", true, 3, 0,0,0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
     },
     ["funnelRed"] = {
-        { "spells\\healrag_state_chest.mdx", 1.7 },
-        { "spells\\healrag_state_chest.mdx", 1.7 },
-        { "spells\\healrag_state_chest.mdx", 1.7 },
-        { "spells\\healrag_state_chest.mdx", 1.7 },
-        { "spells\\healrag_state_chest.mdx", 1.7 },
-        { "spells\\healrag_state_chest.mdx", 3 },
-        { "spells\\healrag_state_chest.mdx", 1.7 },
-        { "spells\\healrag_state_chest.mdx", 1.7 },
+        { "spells\\healrag_state_chest.m2", true, 1.7 },
+        { "spells\\healrag_state_chest.m2", true, 1.7 },
+        { "spells\\healrag_state_chest.m2", true, 1.7 },
+        { "spells\\healrag_state_chest.m2", true, 1.7 },
+        { "spells\\healrag_state_chest.m2", true, 1.7 },
+        { "spells\\healrag_state_chest.m2", true, 3 },
+        { "spells\\healrag_state_chest.m2", true, 1.7 },
+        { "spells\\healrag_state_chest.m2", true, 1.7 },
     },
     ["funnelGreen"] = {
-        { "spells\\lifetap_state_chest.mdx", 1.7 },
-        { "spells\\lifetap_state_chest.mdx", 1.7 },
-        { "spells\\lifetap_state_chest.mdx", 1.7 },
-        { "spells\\lifetap_state_chest.mdx", 1.7 },
-        { "spells\\lifetap_state_chest.mdx", 1.7 },
-        { "spells\\lifetap_state_chest.mdx", 3 },
-        { "spells\\lifetap_state_chest.mdx", 1.7 },
-        { "spells\\lifetap_state_chest.mdx", 1.7 },
+        { "spells\\lifetap_state_chest.m2", true, 1.7 },
+        { "spells\\lifetap_state_chest.m2", true, 1.7 },
+        { "spells\\lifetap_state_chest.m2", true, 1.7 },
+        { "spells\\lifetap_state_chest.m2", true, 1.7 },
+        { "spells\\lifetap_state_chest.m2", true, 1.7 },
+        { "spells\\lifetap_state_chest.m2", true, 3 },
+        { "spells\\lifetap_state_chest.m2", true, 1.7 },
+        { "spells\\lifetap_state_chest.m2", true, 1.7 },
     },
     ["funnelBlue"] = {
-        { "spells\\manafunnel_impact_chest.mdx", 1.7 },
-        { "spells\\manafunnel_impact_chest.mdx", 1.7 },
-        { "spells\\manafunnel_impact_chest.mdx", 1.7 },
-        { "spells\\manafunnel_impact_chest.mdx", 1.7 },
-        { "spells\\manafunnel_impact_chest.mdx", 1.7 },
-        { "spells\\manafunnel_impact_chest.mdx", 3 },
-        { "spells\\manafunnel_impact_chest.mdx", 1.7 },
-        { "spells\\manafunnel_impact_chest.mdx", 1.7 },
+        { "spells\\manafunnel_impact_chest.m2", true, 1.7 },
+        { "spells\\manafunnel_impact_chest.m2", true, 1.7 },
+        { "spells\\manafunnel_impact_chest.m2", true, 1.7 },
+        { "spells\\manafunnel_impact_chest.m2", true, 1.7 },
+        { "spells\\manafunnel_impact_chest.m2", true, 1.7 },
+        { "spells\\manafunnel_impact_chest.m2", true, 3 },
+        { "spells\\manafunnel_impact_chest.m2", true, 1.7 },
+        { "spells\\manafunnel_impact_chest.m2", true, 1.7 },
     },
     ["glowFreedom"] = {
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\blessingoffreedom_state.mdx", 1 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
-        { "spells\\gouge_precast_state_hand.mdx", 3 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\blessingoffreedom_state.m2",  true,  1, 0, -0.0004,0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+        { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
     },
     ["fireBlue"] = {
-        { "spells\\fire_blue_precast_uber_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fire_blue_precast_uber_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fire_blue_precast_uber_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fire_blue_precast_uber_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fire_blue_precast_uber_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fire_blue_precast_uber_hand.mdx", 5.5, 0, 0.0017 },
-        { "spells\\fire_blue_precast_uber_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fire_blue_precast_uber_hand.mdx", 4, 0, 0.0015 },
+        { "spells\\fire_blue_precast_uber_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fire_blue_precast_uber_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fire_blue_precast_uber_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fire_blue_precast_uber_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fire_blue_precast_uber_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fire_blue_precast_uber_hand.m2", true, 5.5, 0, 0.0017 },
+        { "spells\\fire_blue_precast_uber_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fire_blue_precast_uber_hand.m2", true, 4, 0, 0.0015 },
     },
     ["fireOrange"] = {
-        { "spells\\fire_precast_uber_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fire_precast_uber_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fire_precast_uber_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fire_precast_uber_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fire_precast_uber_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fire_precast_uber_hand.mdx", 5.5, 0, 0.0017 },
-        { "spells\\fire_precast_uber_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fire_precast_uber_hand.mdx", 4, 0, 0.0015 },
+        { "spells\\fire_precast_uber_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fire_precast_uber_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fire_precast_uber_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fire_precast_uber_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fire_precast_uber_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fire_precast_uber_hand.m2", true, 5.5, 0, 0.0017 },
+        { "spells\\fire_precast_uber_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fire_precast_uber_hand.m2", true, 4, 0, 0.0015 },
     },
     ["fireGreen"] = {
-        { "spells\\fel_fire_precast_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fel_fire_precast_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fel_fire_precast_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fel_fire_precast_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fel_fire_precast_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fel_fire_precast_hand.mdx", 5.5, 0, 0.0017 },
-        { "spells\\fel_fire_precast_hand.mdx", 4, 0, 0.0015 },
-        { "spells\\fel_fire_precast_hand.mdx", 4, 0, 0.0015 },
+        { "spells\\fel_fire_precast_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fel_fire_precast_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fel_fire_precast_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fel_fire_precast_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fel_fire_precast_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fel_fire_precast_hand.m2", true, 5.5, 0, 0.0017 },
+        { "spells\\fel_fire_precast_hand.m2", true, 4, 0, 0.0015 },
+        { "spells\\fel_fire_precast_hand.m2", true, 4, 0, 0.0015 },
     },
-    -- ["electricBlue"] = {
-    --     { "spells\\lightningboltivus_missile.mdx", .25 },
-    --     { "spells\\lightningboltivus_missile.mdx", .25 },
-    --     { "spells\\lightningboltivus_missile.mdx", .25 },
-    --     { "spells\\lightningboltivus_missile.mdx", .25 },
-    --     { "spells\\lightningboltivus_missile.mdx", .25 },
-    --     { "spells\\lightningboltivus_missile.mdx", .4 },
-    --     { "spells\\lightningboltivus_missile.mdx", .25 },
-    --     { "spells\\lightningboltivus_missile.mdx", .25 },
+    -- ["Shadowflame"] = {
+    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 3, 0, 0 },
+    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 3, 0, 0 },
+    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 3, 0, 0 },
+    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 3, 0, 0 },
+    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 3, 0, 0 },
+    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 4, 0, 0 },
+    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 3, 0, 0 },
+    --     { "SPELLS/Shadowflame_Cast_Hand.m2", true, 3, 0, 0 },
     -- },
+    -- ["electricBlueOld"] = {
+    --     { "spells\\lightningboltivus_missile.m2", true, .25 },
+    --     { "spells\\lightningboltivus_missile.m2", true, .25 },
+    --     { "spells\\lightningboltivus_missile.m2", true, .25 },
+    --     { "spells\\lightningboltivus_missile.m2", true, .25 },
+    --     { "spells\\lightningboltivus_missile.m2", true, .25 },
+    --     { "spells\\lightningboltivus_missile.m2", true, .4 },
+    --     { "spells\\lightningboltivus_missile.m2", true, .25 },
+    --     { "spells\\lightningboltivus_missile.m2", true, .25 },
+    -- },
+    ["electricBlue"] = {
+        { "spells\\lightningbolt_missile.m2", true, 2.3 },
+        { "spells\\lightningbolt_missile.m2", true, 2.3 },
+        { "spells\\lightningbolt_missile.m2", true, 2.3 },
+        { "spells\\lightningbolt_missile.m2", true, 2.3 },
+        { "spells\\lightningbolt_missile.m2", true, 2.3 },
+        { "spells\\lightningbolt_missile.m2", true, 3},
+        { "spells\\lightningbolt_missile.m2", true, 2.3 },
+        { "spells\\lightningbolt_missile.m2", true, 2.3 },
+    },
 }
 
 
 local barBottom = false
 
 local ActivateFunc = function(self)
-    if self:GetAlpha() == 1 then return end
     if self.dag:IsPlaying() then self.dag:Stop() end
+    if self.rag:IsPlaying() then self.rag:Stop() end
+    if self:GetAlpha() == 1 then return end
     self.aag:Play()
     if self.glow2 then self.glow2:Play() end
 end
 local DeactivateFunc = function(self)
-    if self:GetAlpha() == 0 then return end
     if self.aag:IsPlaying() then self.aag:Stop() end
+    if self.rag:IsPlaying() then self.rag:Stop() end
+    if self:GetAlpha() == 0 then return end
     self.dag:Play()
 end
-local SetColorFunc = function(self,r,g,b)
-    self.t:SetVertexColor(r,g,b)
-    if self.ani then self.ani.tex:SetVertexColor(r,g,b) end
-end
-local SetPresetFunc = function ( self, name )
-    local ps = NugComboBar.presets[name]
-    if not ps then return false end
-    local settings = ps[self.id]
-    local model, scale, ox, oy = unpack(settings)
-    self:SetModel(model)
-    self:SetModelScale(0.01*scale)
-    ox = ox or 0
-    oy = oy or 0
-    local x,y,z = unpack(self.position)
-    self:SetPosition(x+ox, y+oy, z)
-    return true
+    local OnFinishedScript = function(self)
+        local f = self:GetParent()
+        f:dagfunc()
+        f:Activate()
+        f.dagfunc = nil
+        self:SetScript("OnFinished", nil)
+    end
+local ReappearFunc = function(self, func, arg)
+    if self.aag:IsPlaying() then self.aag:Stop() end
+    if self.dag:IsPlaying() then self.dag:Stop() end
+    self.ragfunc = func
+    self.ragfuncarg = arg
+    self.rag:Play()
 end
 
 local pointtex = {
@@ -329,6 +301,13 @@ function NugComboBar.SetMaxPoints(self, n, special)
 end
 
 
+-------------------------
+-- 2D Point
+-------------------------
+local SetColorFunc = function(self,r,g,b)
+    self.t:SetVertexColor(r,g,b)
+    if self.ani then self.ani.tex:SetVertexColor(r,g,b) end
+end
 
 function NugComboBar.Create2DPoint(self, id, opts)
     local size = opts.psize
@@ -340,8 +319,6 @@ function NugComboBar.Create2DPoint(self, id, opts)
     t1:SetTexture(tex)
     t1:SetAllPoints(f)
     f.t = t1
-
-
 
     local f2 = CreateFrame("Frame",nil,f)
     f2:SetHeight(size+3); f2:SetWidth(size+3);
@@ -374,15 +351,99 @@ function NugComboBar.Create2DPoint(self, id, opts)
     return f
 end
 
+------------------------------
+-- 3D Point (Model Frame Type)
+------------------------------
+
+local SetPresetFunc = function ( self, name, noreset )
+    local ps = NugComboBar.presets[name]
+    if not ps then return false end
+    local settings = ps[self.id]
+    local model, cameraReset, scale, ox, oy, oz = unpack(settings)
+
+    -- print(">>>>", self:GetModelScale(), "POS>", self:GetPosition(), "LIGHT>",self:GetLight())
+
+    -- self:SetModelScale(1)
+    -- self:SetPosition(0,0,0)
+    -- self:ClearModel()
+    -- self:ClearFog()
+    -- self:RefreshCamera()
+    -- if notreset and cameraReset then -- cameraReset here simply means Model frame type
+        -- if self.model:GetModel() == model then return end
+    -- end
+    self.currentPreset = name
+
+    ox = ox or 0
+    oy = oy or 0
+    oz = oz or 0
+    if cameraReset then
+        -- self:SetCamera(0)
+        self.playermodel:Hide()
+        self.model:Show()
+        self.model:SetModel(model)
+        self.model:SetModelScale(0.01*scale)
+        
+
+        -- local x,y,z = unpack(self.model.position)
+        local x,y,z = NugComboBarDB_Global.adjustX/100, NugComboBarDB_Global.adjustY/100, 0
+        self.model:SetPosition(x+ox, y+oy, z)
+
+        -- self.playermodel:ClearModel()
+        
+    else
+        self.playermodel:Show()
+        self.model:Hide()
+        self.playermodel:SetModel(model)
+        self.playermodel:SetModelScale(1*scale)
+        
+
+        self.playermodel:SetPosition(0+oz,0+ox,0+oz)
+
+        -- self.model:ClearModel()
+        
+    end
+    return true
+end
+
+local SetColor3DFunc = function(self, r,g,b)
+    local enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB
+    if NugComboBarDB.colors3d then
+        enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = 1, 0, 0, 1, 0, 1, r,g,b, 1, r,g,b
+    else
+        enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB = 1, 0, 0, 1, 0, 1, 0.69999, 0.69999, 0.69999, 1, 0.8, 0.8, 0.63999
+    end
+    self.model:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+    self.playermodel:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+end
+
 function NugComboBar.Create3DPoint(self, id, opts)
     local size = 64
-    local f = CreateFrame("Model","NugComboBarPoint"..id,self)
+    local f = CreateFrame("Frame","NugComboBarPoint"..id,self)
     f:SetHeight(size); f:SetWidth(size);
-    f.SetPreset = PointSetModelFunc
-    f:SetLight( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 );
-    f.position = { 0.0205,0.021,0 }
-    f:SetPosition(unpack(f.position))
-    f:SetFacing(0)
+
+    -- :SetLight( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 );
+    local enabled, omni, dirX, dirY, dirZ,
+          ambIntensity, ambR, ambG, ambB,
+          dirIntensity, dirR, dirG, dirB = 1, 0, 0, 1, 0, 1, 0.69999, 0.69999, 0.69999, 1, 0.8, 0.8, 0.63999
+          -- dirIntensity, dirR, dirG, dirB = 1, 0, 0, 1, 0, 1, 1.0, 0.0, 0.0, 1, 1.0, 1.0, 1.0
+
+
+    local pm = CreateFrame("PlayerModel","NugComboBarPointPlayerModel"..id,f)
+    pm:SetAllPoints(f)
+    -- pm:SetScript("OnUpdateModel", function() print("PM model update")     end)
+    pm:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+
+    local m = CreateFrame("Model","NugComboBarPointModel"..id,f)
+    -- pm:SetScript("OnUpdateModel", function() print("M model update") end)
+    m:SetAllPoints(f)
+    m:SetLight(enabled, omni, dirX, dirY, dirZ, ambIntensity, ambR, ambG, ambB, dirIntensity, dirR, dirG, dirB )
+
+    -- m.position = { 0.0205,0.021,0 }
+    -- m:SetPosition(unpack(m.position))
+
+
+    f.playermodel = pm
+    f.model = m
 
     -- if prev
         -- then f:SetPoint("CENTER", prev, "CENTER", 50, 0)
@@ -397,11 +458,48 @@ function NugComboBar.Create3DPoint(self, id, opts)
     -- f:SetBackdrop(backdrop)
     -- f:SetBackdropColor(0, 0, 0, 0.7)
 
-    f.SetColor = function() end
+    f.SetColor = SetColor3DFunc --function() end
     f.SetPreset = SetPresetFunc
 
     return f
 end
+
+-- -------------------------------------
+-- -- 3D Point (PlayerModel Frame Type)
+-- -------------------------------------
+
+-- local SetPresetFunc_PlayerModel = function ( self, name )
+--     -- local ps = NugComboBar.presets[name]
+--     -- if not ps then return false end
+--     -- local settings = ps[self.id]
+--     -- local model, scale, ox, oy = unpack(settings)
+--     -- self:SetModel(model)
+--     -- self:SetModelScale(0.01*scale)
+--     -- ox = ox or 0
+--     -- oy = oy or 0
+--     -- local x,y,z = unpack(self.position)
+--     -- self:SetPosition(x+ox, y+oy, z)
+--     return true
+-- end
+
+-- function NugComboBar.Create3DPoint_PlayerModel(self, id, opts)
+--     local size = 64
+--     local f = CreateFrame("Model","NugComboBarPointPM"..id,self)
+--     f:SetHeight(size); f:SetWidth(size);
+--     -- f:SetLight( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 );
+--     f:SetLight( 1, 0, 0, 1, 0, 1, 0.69999, 0.69999, 0.69999, 1, 0.8, 0.8, 0.63999 );
+--     f:SetModel([[SPELLS/SnowFlakeCreature_Var1_Missile.m2]])
+--     f:SetModelScale(0.01)
+
+--     f.position = { 0.0205,0.021,0 }
+--     f:SetPosition(unpack(f.position))
+--     f:SetFacing(0)
+
+--     f.SetColor = function() end
+--     f.SetPreset = SetPresetFunc_PlayerModel
+
+--     return f
+-- end
 
 
 NugComboBar.Create = function(self)
@@ -432,10 +530,10 @@ NugComboBar.Create = function(self)
 
         local is3D = NugComboBarDB.enable3d
         local f = is3D  and self:Create3DPoint(i, ts) or self:Create2DPoint(i, ts)
-        if is3D then
-            ts.poffset_x = ts.poffset_x + aX
-            ts.poffset_y = ts.poffset_y + aY
-        end
+        -- if is3D then
+            -- ts.poffset_x = ts.poffset_x
+            -- ts.poffset_y = ts.poffset_y
+        -- end
 
         f:SetAlpha(0)
         f:SetPoint("CENTER", t, "TOPLEFT", ts.poffset_x, ts.poffset_y)
@@ -464,9 +562,28 @@ NugComboBar.Create = function(self)
             self:GetParent():SetAlpha(0)
         end)
         
+
+        local rag = f:CreateAnimationGroup()
+        f.rag = rag
+        local r1 = rag:CreateAnimation("Alpha")
+        r1:SetChange(-0.7)
+        r1:SetDuration(0.20)
+        r1:SetOrder(1)
+        r1:SetScript("OnFinished", function(self)
+            local p = self:GetParent():GetParent()
+            p:ragfunc(p.ragfuncarg)
+        end)
+        local r2 = rag:CreateAnimation("Alpha")
+        r2:SetChange(0.7)
+        r2:SetDuration(0.40)
+        r2:SetOrder(2)
+        rag:SetScript("OnFinished",function(self)
+            self:GetParent():SetAlpha(1)
+        end)
         
         f.Activate = ActivateFunc
         f.Deactivate = DeactivateFunc
+        f.Reappear = ReappearFunc
     end
 
 
@@ -526,8 +643,8 @@ NugComboBar.Create = function(self)
         self:ClearAllPoints()
         NugComboBar.SetScale = normalSetScale
         NugComboBar.SetAlpha = normalSetAlpha
-        NugComboBar.Show = nil -- return to normal
-        NugComboBar.Hide = nil
+        NugComboBar.Show = normalShow
+        NugComboBar.Hide = normalHide
         if barBottom then 
             self:SetPoint("TOPLEFT", NugComboBar, "BOTTOMLEFT", 14, 4)
         else

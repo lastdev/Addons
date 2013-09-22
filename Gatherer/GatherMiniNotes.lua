@@ -1,6 +1,6 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.2.0 (<%codename%>)
+	Version: 4.4.0 (<%codename%>)
 	Revision: $Id: GatherMiniNotes.lua 1056 2012-12-10 04:10:54Z Esamynn $
 
 	License:
@@ -27,7 +27,7 @@
 
 	Minimap Drawing Routines
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherMiniNotes.lua $", "$Rev: 1056 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.0/Gatherer/GatherMiniNotes.lua $", "$Rev: 1056 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient

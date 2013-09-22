@@ -1,6 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.15.5380 (LikeableLyrebird)
+	Version: 5.18.5433 (PassionatePhascogale)
 	Revision: $Id: EnxConstants.lua 4632 2010-01-24 02:33:54Z ccox $
 	URL: http://enchantrix.org/
 
@@ -413,7 +413,7 @@ local DARKFLAME_INK = 43125
 local BLACKFALLOW_INK = 61978
 local INFERNO_INK = 61981
 local INK_DREAMS = 79254
-local STARLIGHT_INK = 79253
+local STARLIGHT_INK = 79255
 
 const.ReverseInkList = {
 

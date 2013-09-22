@@ -28,8 +28,9 @@ L.slashCommands = [[
 oRA3 sports a range of slash commands to aid you in fast-paced raiding. In case you weren't around in the old CTRA days, here's a little reference. All of the slash commands have various shorthands and also longer, more descriptive alternatives in some cases, for convenience.
 
 |cff44ff44/radur|r - Opens the durability list.
+|cff44ff44/ragear|r - Opens the gear check list.
+|cff44ff44/ralag|r - Opens the latency list.
 |cff44ff44/razone|r - Opens the zone list.
-|cff44ff44/rares|r - Opens the resistance list.
 |cff44ff44/radisband|r - Instantly disbands the raid with no verification.
 |cff44ff44/raready|r - Performs a ready check.
 |cff44ff44/rainv|r - Invites the whole guild to your group.
@@ -44,7 +45,7 @@ L["Ready"] = "준비 완료"
 L["Not Ready"] = "준비 안됨"
 L["No Response"] = "응답 없음"
 L["Offline"] = "오프라인"
-L["Play a sound when a ready check is performed."] = "준비 확인 수행시 소리를 재생합니다."
+L["Play the ready check sound using the Master sound channel when a ready check is performed. This will play the sound while \"Sound Effects\" is disabled and at a higher volume."] = true
 L["Show window"] = "창 표시"
 L["Show the window when a ready check is performed."] = "전투 준비 확인시 창을 표시합니다."
 L["Hide window when done"] = "완료시 창 닫기"
@@ -62,14 +63,6 @@ L["Average"] = "평균"
 L["Broken"] = "파손"
 L["Minimum"] = "최소"
 
--- Resistances module
-L["Resistances"] = "저항력"
-L["Frost"] = "냉기"
-L["Fire"] = "화염"
-L["Shadow"] = "암흑"
-L["Nature"] = "자연"
-L["Arcane"] = "비전"
-
 -- Resurrection module
 L["%s is ressing %s."] = "%s 가 %s 를 부활중입니다."
 
@@ -77,7 +70,7 @@ L["%s is ressing %s."] = "%s 가 %s 를 부활중입니다."
 L["Invite"] = "초대"
 L["All max level characters will be invited to raid in 10 seconds. Please leave your groups."] = "10초 동안 최대 레벨 이상인 길드원들을 공격대에 초대합니다. 파티에서 나와 주세요."
 L["All characters in %s will be invited to raid in 10 seconds. Please leave your groups."] = "10초 동안 %s 내의 모든 길드원을 공격대에 초대합니다. 파티에서 나와 주세요."
-L["All characters of rank %s or higher will be invited to raid in 10 seconds. Please leave your groups."] = "10초 동안 %s 등급 이상인 길드원들을 공격대에 초대합니다. 파티에서 나와 주세요." 
+L["All characters of rank %s or higher will be invited to raid in 10 seconds. Please leave your groups."] = "10초 동안 %s 등급 이상인 길드원들을 공격대에 초대합니다. 파티에서 나와 주세요."
 L["<oRA3> Sorry, the group is full."] = "<oRA3> 죄송합니다. 공격대의 정원이 찼습니다."
 L["Invite all guild members of rank %s or higher."] = "%s 등급 이상인 모든 길드원을 공격대에 초대합니다."
 L["Keyword"] = "키워드"
@@ -91,6 +84,7 @@ L["Invite zone"] = "지역 초대"
 L["Invite everyone in your guild who are in the same zone as you."] = "현재 지역 내의 모든 길드원을 공격대에 초대합니다."
 L["Guild rank invites"] = "길드 등급 초대"
 L["Clicking any of the buttons below will invite anyone of the selected rank AND HIGHER to your group. So clicking the 3rd button will invite anyone of rank 1, 2 or 3, for example. It will first post a message in either guild or officer chat and give your guild members 10 seconds to leave their groups before doing the actual invites."] = "지정된 등급 이상의 모든 길드원을 공격대에 초대합니다."
+L["Only invite on keyword if in a raid group"] = true
 
 -- Promote module
 L["Demote everyone"] = "모두 강등"
@@ -127,6 +121,7 @@ L["Toggle whether the cooldown display should never show your own cooldowns. For
 L["Cooldowns"] = "재사용 대기시간"
 L["Right-Click me for options!"] = "옵션 설정은 우-클릭!"
 L["Bar Settings"] = "바 설정"
+L["Text Settings"] = true
 L["Spawn test bar"] = "테스트 바 표시"
 L["Use class color"] = "직업 색상 사용"
 L["Custom color"] = "사용자 색상"
@@ -139,10 +134,14 @@ L["Duration"] = "지속 시간"
 L["Unit name"] = "유닛 이름"
 L["Spell name"] = "주문 이름"
 L["Short Spell name"] = "짧은 주문 이름"
+L["Label Font"] = true
+L["Label Font Size"] = true
 L["Label Align"] = "Label 정렬"
 L["Left"] = "좌측"
 L["Right"] = "우측"
 L["Center"] = "중앙"
+L["Duration Font"] = true
+L["Duration Font Size"] = true
 L["Grow up"] = "성장 방향"
 
 -- Zone module
@@ -152,7 +151,7 @@ L["Zone"] = "지역"
 L["Let oRA3 to automatically set the loot mode to what you specify below when entering a party or raid."] = "파티나 공격대에 참여시 자동적으로 전리품 획득 방식을 oRA3을 통해 설정합니다."
 L["Set the loot mode automatically when joining a group"] = "참가한 그룹이 있을때 자동적으로 전리품 획득 방식을 설정합니다."
 L["Leave empty to make yourself Master Looter."] = "자신이 담당자 획득이면 비워 둡니다."
- 
+
 -- Tanks module
 L["Tanks"] = "탱커"
 L.tankTabTopText = "하단의 목록에서 플레이어를 클릭하여 개인적인 탱커를 지정합니다. 만약에 옵션에 대한 도움이 필요하다면 물음표 표시에 마우스를 올려놓으세요."
@@ -168,4 +167,15 @@ L["Sort"] = "정렬"
 L["Click to move this tank up."] = "탱커를 위로 이동하려면 클릭하세요."
 L["Show"] = "표시"
 L.showButtonHelp = "이 탱커를 정렬 탱커 목록에 표시를 합니다. 이 옵션은 당신에게만 적용되며 그룹에서 다른 사람의 탱커가 변경되지 않습니다."
+
+-- Latency Module
+L["Latency"] = "Latency"
+L["Home"] = "Home"
+L["World"] = "World"
+
+-- Gear Module
+L["Gear"] = "Gear"
+L["Item Level"] = "Item Level"
+L["Missing Gems"] = "Missing Gems"
+L["Missing Enchants"] = "Missing Enchants"
 

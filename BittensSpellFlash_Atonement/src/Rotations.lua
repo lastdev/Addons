@@ -4,147 +4,104 @@ local s = SpellFlashAddon
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
 local GetPowerRegen = GetPowerRegen
-local GetSpellLink = GetSpellLink
+local GetSpellCooldown = GetSpellCooldown
 local GetTime = GetTime
-local GetUnitName = GetUnitName
-local SendChatMessage = SendChatMessage
-local UnitExists = UnitExists
 local UnitInRange = UnitInRange
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitIsUnit = UnitIsUnit
 local select = select
 local string = string
+local tostring = tostring
 
 a.Rotations = {}
 
-local oorTime = {}
-local oorCount = {}
-local announceTimes = {}
-local lastRapture = 0
-local shieldBurst = 0
-
-local function healingNeeded()
+local function setHealingNeeded()
 	for unit in c.GetGroupMembers() do
 		if s.HealthPercent(unit) < c.GetOption("HealPercent")
 			and (UnitInRange(unit) or UnitIsUnit(unit, "player"))
 			and not UnitIsDeadOrGhost(unit) then
 			
-			return true
+			a.HealingNeeded = true
+			return
 		end
 	end
+	a.HealingNeeded = false
 end
 
-local function getMessage(name)
-	local message = c.GetOption("Announcement")
-	if name then
-		message = string.gsub(message, "<player>", name)
-		message = string.gsub(message, "<Player>", name)
-		message = string.gsub(message, "<is/are>", L["is"])
-	else
-		message = string.gsub(message, "<player>", L["you"])
-		message = string.gsub(message, "<Player>", L["You"])
-		message = string.gsub(message, "<is/are>", L["are"])
-	end
-	message = string.gsub(
-		message, "<Atonement>", GetSpellLink(c.GetID("Atonement")))
-	return message
-end
-
-local function announceFor(name)
-	local now = GetTime()
-	local last = announceTimes[name]
-	if last ~= nil and now - last < 6 then
-		return
-	end
-	
-	if not c.GetOption("InParty") and s.InParty() then
-		SendChatMessage(getMessage(name), "PARTY")
-	end
-	if c.GetOption("InSay") then
-		SendChatMessage(getMessage(name))
-	end
-	if c.GetOption("InWhisper") then
-		SendChatMessage(getMessage(), "WHISPER", nil, name)
-	end
-	announceTimes[name] = now
-end
-
-local function announceUnder(percentage)
-	for unit in c.GetGroupMembers() do
-		local p = s.HealthPercent(unit)
-		local name = string.gsub(GetUnitName(unit, true), " ", "", 2)
-		if p / 100 < percentage
-			and UnitInRange(unit)
-			and not UnitIsDeadOrGhost(unit) then
-			
-			c.Debug("Announce", name, p, "<", percentage)
-			local count = oorCount[name]
-			if count == nil then
-				count = 1
-			else
-				count = count + 1
-			end
-			local now = GetTime()
-			if count > 2 and now - oorTime[name] < 3 then
-				announceFor(name)
-			end
-			oorCount[name] = count
-			oorTime[name] = now
-		else
-			oorCount[name] = nil
-		end
-	end
-end
+local penCdUp = 0
+local penDropPend = 0
 
 a.Rotations.Atonement = {
 	Spec = 1,
 	
+	UsefulStats = { "Intellect", "Spirit", "Crit", "Haste" },
+	
 	FlashInCombat = function()
-		local now = GetTime()
-		if s.MyBuff(c.GetID("Power Word: Shield"), a.ShieldTarget) then
-			shieldBurst = now
-		end
-		a.HealingNeeded = healingNeeded()
+		setHealingNeeded()
 		a.Mana = 
 			100 * c.GetPower(select(2, GetPowerRegen())) / s.MaxPower("player")
-		
-		local conserve = a.Mana < c.GetOption("ConservePercent")
-		if conserve then
-			if (now - lastRapture > 12 and now - shieldBurst > 2) then
-				c.FlashAll("Power Word: Shield")
+		if c.HasBuff("Lucidity") then
+			a.Conserve = false
+			a.Neutral = false
+			a.OnlyHeal = false
+		else
+			a.Conserve = a.Mana < c.GetOption("ConservePercent")
+			if c.IsSolo() then
+				a.Neutral = false
+				a.OnlyHeal = false
+			else
+				a.Neutral = a.Mana < c.GetOption("NeutralPercent")
+				a.OnlyHeal = a.Mana < c.GetOption("OnlyHealPercent")
 			end
 		end
-		c.FlashAll("Shadowfiend", "Mindbender")
 		
-		if not a.HealingNeeded 
-			and a.Mana < c.GetOption("OnlyHealPercent") then
-			
-			c.PriorityFlash("Power Word: Solace")
-			return
+		local now = GetTime()
+		local start, duration = GetSpellCooldown(c.GetID("Penance"))
+		local cdUp = start + duration
+		a.PenanceCD = cdUp - now - c.GetBusyTime()
+		if now - penDropPend < .8 then
+			if cdUp < penCdUp or cdUp < now then
+				penDropPend = 0
+				c.Debug("Event", "Penance CD drop happened")
+			else
+				a.PenanceCD = a.PenanceCD - .5
+			end
+		elseif c.IsCasting("Smite") then
+			a.PenanceCD = a.PenanceCD - .5
 		end
+		penCdUp = cdUp
 		
-		c.FlashAll("Power Infusion")
-		if conserve then
-c.Debug("Flash", a.Mana, a.HealingNeeded, "Conservative",
-			c.PriorityFlash(
+		c.FlashAll(
+			"Shadowfiend", 
+			"Mindbender", 
+			"Soothing Talisman of the Shado-Pan Assault",
+			"Desperate Prayer", 
+			"Dispel Magic")
+		if a.OnlyHeal and not a.HealingNeeded then
+			c.PriorityFlash("Power Word: Solace")
+		elseif a.Conserve then
+			c.FlashAll("Power Infusion")
+			c.DelayPriorityFlash(
 				"Power Word: Solace",
 				"Penance",
+				"Penance Delay",
 				"Holy Fire",
 				"Shadow Word: Death",
+				"Shadow Word: Pain Refresh",
 				"Smite Glyphed",
-				"Shadow Word: Pain",
 				"Smite")
-)
 		else
-c.Debug("Flash", a.Mana, a.HealingNeeded, "All Out",
-			c.PriorityFlash(
+			c.FlashAll("Power Infusion")
+			c.DelayPriorityFlash(
+				"Shadow Word: Pain Apply",
 				"Shadow Word: Death",
 				"Penance",
-				"Shadow Word: Pain",
 				"Power Word: Solace",
 				"Holy Fire",
+				"Shadow Word: Pain Refresh",
+				"Penance Delay",
+				"Smite Glyphed",
 				"Smite")
-)
 		end
 	end,
 	
@@ -153,33 +110,19 @@ c.Debug("Flash", a.Mana, a.HealingNeeded, "All Out",
 	end,
 	
 	CastSucceeded = function(info)
-		if c.InfoMatches(info, "Power Word: Shield") then
-			a.ShieldTarget = info.Target
-			c.Debug("Event", "PW:S on", a.ShieldTarget)
+		if c.InfoMatches(info, "Smite") then
+			penDropPend = GetTime()
+			c.Debug("Event", "Penance Drop Queued")
 		end
 	end,
 	
-	SpellHeal = function(spellID, target, amount)
-		if not s.InRaid()
-			and c.IdMatches(spellID, "Atonement", "Power Word: Solace Heal")
-			and UnitExists(target) then
-			
-			announceUnder((s.Health(target) - amount) / s.MaxHealth(target))
-		end
+	ExtraDebugInfo = function()
+		return string.format("%.1f c:%s n:%s o:%s n:%s p:%.1f", 
+			a.Mana, 
+			tostring(a.Conserve),
+			tostring(a.Neutral),
+			tostring(a.OnlyHeal),
+			tostring(a.HealingNeeded),
+			a.PenanceCD)
 	end,
-	
-	Energized = function(spellID)
-		if spellID == c.GetID("Rapture") then
-			lastRapture = GetTime()
-			shieldBurst = 0
-			c.Debug("Event", "Rapture!")
-		end
-	end,
-	
-	LeftCombat = function()
-		oorTime = {}
-		oorCount = {}
-		announceTimes = {}
-		c.Debug("Event", "Clearing announcement history")
-	end
 }

@@ -13,6 +13,14 @@
 	
 	<GameTooltip name="AltoTooltip" inherits="GameTooltipTemplate" parent="UIParent" hidden="true" />
 
+	<GameTooltip name="AltoScanningTooltip" inherits="GameTooltipTemplate">
+		<Scripts>
+			<Onload>
+				self:SetOwner(WorldFrame, "ANCHOR_NONE");
+			</Onload>
+		</Scripts>
+	</GameTooltip>
+	
 	<Button name="AltoholicMinimapButton" parent="Minimap" toplevel="true">
 		<Size>
 			<AbsDimension x="33" y="33"/>

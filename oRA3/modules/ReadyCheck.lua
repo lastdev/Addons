@@ -1,24 +1,17 @@
 local oRA = LibStub("AceAddon-3.0"):GetAddon("oRA3")
-local module = oRA:NewModule("ReadyCheck", "AceEvent-3.0", "AceConsole-3.0")
+local module = oRA:NewModule("ReadyCheck", "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 
-module.VERSION = tonumber(("$Revision: 556 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 667 $"):sub(12, -3))
 
-local nameCache = {} -- Player names without the realm suffix, cleared every ready check
 local readycheck = {} -- table containing ready check results
 local frame -- will be filled with our GUI frame
 
-local readyAuthor = nil -- author of the current readycheck
 local playerName = UnitName("player")
+local _, playerClass = UnitClass("player")
 local topMemberFrames, bottomMemberFrames = {}, {} -- ready check member frames
 
--- local constants
-local RD_RAID_MEMBERS_NOTREADY = L["The following players are not ready: %s"]
-local RD_READY_CHECK_OVER_IN = L["Ready Check (%d seconds)"]
-local RD_READY = L["Ready"]
-local RD_NOTREADY = L["Not Ready"]
-local RD_NORESPONSE = L["No Response"]
-local RD_OFFLINE = L["Offline"]
+local readychecking = nil
 
 local defaults = {
 	profile = {
@@ -30,7 +23,7 @@ local defaults = {
 		relayReady = false
 	}
 }
-local function colorize(input) return "|cfffed000" .. input .. "|r" end
+local function colorize(input) return ("|cfffed000%s|r"):format(input) end
 local options
 local function getOptions()
 	if not options then
@@ -43,7 +36,7 @@ local function getOptions()
 				sound = {
 					type = "toggle",
 					name = colorize(SOUND_LABEL),
-					desc = L["Play a sound when a ready check is performed."],
+					desc = L["Play the ready check sound using the Master sound channel when a ready check is performed. This will play the sound while \"Sound Effects\" is disabled and at a higher volume."],
 					width = "full",
 					descStyle = "inline",
 					order = 1,
@@ -120,10 +113,8 @@ local function createTopFrame()
 	local f = CreateFrame("Frame", nil, frame)
 	table.insert(topMemberFrames, f)
 	local num = #topMemberFrames
-	local xoff = 15
-	local yoff = -17
-	if num % 2 == 0 then xoff = 160 end
-	yoff = yoff + ((math.floor(num / 2) + (num % 2)) * -14)
+	local xoff = num % 2 == 0 and 160 or 15
+	local yoff = 0 - ((math.floor(num / 2) + (num % 2)) * 14) - 17
 	f:SetWidth(150)
 	f:SetHeight(14)
 	f:SetPoint("TOPLEFT", frame, "TOPLEFT", xoff, yoff)
@@ -135,10 +126,8 @@ local function createBottomFrame()
 	local f = CreateFrame("Frame", nil, frame)
 	table.insert(bottomMemberFrames, f)
 	local num = #bottomMemberFrames
-	local xoff = 7
-	local yoff = 5
-	if num % 2 == 0 then xoff = 160 end
-	yoff = yoff + ((math.floor(num / 2) + (num % 2)) * -14)
+	local xoff = num % 2 == 0 and 152 or 7
+	local yoff = 0 - ((math.floor(num / 2) + (num % 2)) * 14) + 4
 	f:SetWidth(150)
 	f:SetHeight(14)
 	f:SetPoint("TOPLEFT", frame.bar, "TOPLEFT", xoff, yoff)
@@ -147,27 +136,29 @@ local function createBottomFrame()
 end
 
 local function setMemberStatus(num, bottom, name, class)
+	if not name or not class then return end
 	local f
 	if bottom then
 		f = bottomMemberFrames[num] or createBottomFrame()
 	else
 		f = topMemberFrames[num] or createTopFrame()
 	end
-	local color = RAID_CLASS_COLORS[class]
-	f.NameText:SetText(name)
+	local color = oRA.classColors[class]
+	f.NameText:SetText(name:gsub("%-.*$", ""))
 	f.NameText:SetTextColor(color.r, color.g, color.b)
 	f:SetAlpha(1)
-	f:Show()
-	if readycheck[name] == RD_READY then
+
+	local status = readycheck[name]
+	if status == "ready" then
 		f.bg:Hide()
 		f.IconTexture:SetTexture(READY_CHECK_READY_TEXTURE)
 		if module.db.profile.hideReady then
 			f:Hide()
 		end
-	elseif readycheck[name] == RD_NOTREADY then
+	elseif status == "notready" then
 		f.bg:Show()
 		f.IconTexture:SetTexture(READY_CHECK_NOT_READY_TEXTURE)
-	elseif readycheck[name] == RD_OFFLINE then
+	elseif status == "offline" then
 		f:SetAlpha(.5)
 		f.bg:Show()
 		f.IconTexture:SetTexture(READY_CHECK_AFK_TEXTURE)
@@ -175,67 +166,59 @@ local function setMemberStatus(num, bottom, name, class)
 		f.bg:Show()
 		f.IconTexture:SetTexture(READY_CHECK_WAITING_TEXTURE)
 	end
+	f:Show()
 end
 
 local function updateWindow()
-	for i, v in next, topMemberFrames do v:Hide() end
-	for i, v in next, bottomMemberFrames do v:Hide() end
-
+	for _, v in next, topMemberFrames do v:Hide() end
+	for _, v in next, bottomMemberFrames do v:Hide() end
 	frame.bar:Hide()
 
-	local total = 0
-	if oRA:InRaid() then
-		--GetInstanceInfo() and GetInstanceDifficulty() don't match, blizz screwup.
-		--It's likely one of these apis will get fixed soonª, which may break these numbers again if GetInstanceDifficulty() is one that changes, keep an eye on em
+	local height = 0
+	if IsInRaid() then
 		local _, _, diff = GetInstanceInfo()
-		diff = diff + 1
-		local highgroup = 8 -- 40 man it
-		if diff and diff == 4 or diff == 6 then -- 10 man
-			highgroup = 2
-		elseif diff and diff == 5 or diff == 7 or diff == 8 then -- 25 man
-			highgroup = 5
+		local highgroup
+		if diff == 3 or diff == 5 then -- 10 man
+			highgroup = 3
+		elseif diff == 4 or diff == 6 or diff == 7 then -- 25 man
+			highgroup = 6
+		else -- 40 man
+			highgroup = 9
 		end
 
 		local bottom, top = 0, 0
 		for i = 1, GetNumGroupMembers() do
-			local rname, _, subgroup, _, _, fileName = GetRaidRosterInfo(i)
-			if rname then
-				if not nameCache[rname] then
-					nameCache[rname] = rname:gsub("^(.*)%-.*$", "%1")
-				end
-				if subgroup > highgroup then
-					bottom = bottom + 1
-					setMemberStatus(bottom, true, nameCache[rname], fileName)
-				else
-					top = top + 1
-					setMemberStatus(top, false, nameCache[rname], fileName)
-				end
+			local name, _, subgroup, _, _, class = GetRaidRosterInfo(i)
+			if subgroup < highgroup then
+				top = top + 1
+				setMemberStatus(top, false, name, class)
+			else
+				bottom = bottom + 1
+				setMemberStatus(bottom, true, name, class)
 			end
 		end
-		total = bottom + top / 2
+		height = math.ceil(top / 2) * 14 + 43
 
 		-- position the spacer
-		local yoff = ((math.ceil(top / 2) * 14) + 37) * -1
-		frame.bar:ClearAllPoints()
-		frame.bar:SetPoint("TOPLEFT", frame, 8, yoff)
-		frame.bar:SetPoint("TOPRIGHT", frame, -6, yoff)
-
 		if bottom > 0 then
+			height = height + 14 + (math.ceil(bottom / 2) * 14)
+			local yoff = 0 - (math.ceil(top / 2) * 14) - 34
+			frame.bar:ClearAllPoints()
+			frame.bar:SetPoint("TOPLEFT", frame, 8, yoff)
+			frame.bar:SetPoint("TOPRIGHT", frame, -6, yoff)
 			frame.bar:Show()
 		end
 	else
-		total = 1
-		setMemberStatus(total, false, playerName, select(2, UnitClass("player")))
-		for i = 1, MAX_PARTY_MEMBERS do
-			if UnitExists("party"..i) then
-				total = total + 1
-				setMemberStatus(total, false, UnitName("party"..i), select(2,UnitClass("party"..i)) )
-			end
+		setMemberStatus(1, false, playerName, playerClass)
+		for i = 1, GetNumSubgroupMembers() do
+			local unit = ("party%d"):format(i)
+			local name = module:UnitName(unit)
+			local _, class = UnitClass(unit)
+			setMemberStatus(i+1, false, name, class)
 		end
 	end
 
-	local height = math.max((total * 14) + 66, 128)
-	frame:SetHeight(height)
+	frame:SetHeight(math.max(height, 128))
 end
 
 local function createWindow()
@@ -356,24 +339,47 @@ local function createWindow()
 	barmiddle:SetAllPoints(bar)
 	barmiddle:SetTexCoord(0.29296875, 1, 0, 0.25)
 
-	frame:SetScript("OnUpdate", function(self, elapsed)
-		if self.timer and self.timer > 0 then
-			self.timer = self.timer - elapsed
-			if self.oldtimer - self.timer >= 1 or self.oldtimer == -1 then
-				self.oldtimer = self.timer
-				title:SetText(RD_READY_CHECK_OVER_IN:format(floor(self.timer)))
+
+	local animFader = f:CreateAnimationGroup()
+	animFader:SetLooping("NONE")
+
+	local fader = animFader:CreateAnimation("Alpha")
+	fader:SetChange(-1)
+	fader:SetStartDelay(2.5)
+	fader:SetDuration(1)
+	fader:SetScript("OnFinished", function(self) f:Hide() end)
+
+	local animUpdater = f:CreateAnimationGroup()
+	animUpdater:SetLooping("REPEAT")
+	animUpdater:SetScript("OnLoop", function(self)
+		local timer = GetReadyCheckTimeLeft()
+		if timer > 0 then
+			title:SetText(L["Ready Check (%d seconds)"]:format(timer))
+		else
+			title:SetText(READY_CHECK_FINISHED)
+			self:Stop()
+			if module.db.profile.autohide then
+				animFader:Play()
 			end
 		end
-		if self.fadeTimer and self.fadeTimer > 0 then
-			self.fadeTimer = self.fadeTimer - elapsed
-			if self.fadeTimer <= 0 then
-				self:SetAlpha(1) -- reset
-				self.fadeTimer = nil -- reset
-				self:Hide()
-			else
-				self:SetAlpha(self.fadeTimer)
-			end
-		end
+	end)
+
+	local timer = animUpdater:CreateAnimation()
+	timer:SetStartDelay(1)
+	timer:SetDuration(0.3)
+
+	f:SetScript("OnShow", function(self)
+		animFader:Stop()
+		title:SetText(READY_CHECK)
+		self:SetAlpha(1)
+		animUpdater:Play()
+		updateWindow()
+		module:RegisterEvent("GROUP_ROSTER_UPDATE", updateWindow) -- pick up group changes
+	end)
+	f:SetScript("OnHide", function(self)
+		module:UnregisterEvent("GROUP_ROSTER_UPDATE")
+		animUpdater:Stop()
+		animFader:Stop()
 	end)
 end
 
@@ -389,8 +395,9 @@ function module:OnEnable()
 	self:RegisterEvent("READY_CHECK_FINISHED")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
 
-	self:RegisterChatCommand("rar", DoReadyCheck)
-	self:RegisterChatCommand("raready", DoReadyCheck)
+	SLASH_ORAREADYCHECK1 = "/rar"
+	SLASH_ORAREADYCHECK2 = "/raready"
+	SlashCmdList.ORAREADYCHECK = SlashCmdList.READYCHECK
 end
 
 function module:PLAYER_REGEN_DISABLED()
@@ -398,115 +405,112 @@ function module:PLAYER_REGEN_DISABLED()
 	frame:Hide()
 end
 
-function module:READY_CHECK(event, name, duration)
+function module:READY_CHECK(initiator, duration)
 	if self.db.profile.sound then PlaySoundFile("Sound\\interface\\levelup2.wav", "Master") end
-	if not oRA:IsPromoted() then return end
 
-	wipe(nameCache)
+	self:CancelTimer(readychecking)
+	readychecking = self:ScheduleTimer("READY_CHECK_FINISHED", duration+1) -- for preempted finishes (READY_CHECK_FINISHED fires before READY_CHECK)
+
 	wipe(readycheck)
-	-- fill with default 'no response'
-	if oRA:InRaid() then
+	local c = ChatTypeInfo["SYSTEM"]
+	local promoted = oRA:IsPromoted()
+	-- fill with default "No Response" and set the initiator "Ready"
+	if IsInRaid() then
 		for i = 1, GetNumGroupMembers() do
-			local rname, _, _, _, _, _, _, online = GetRaidRosterInfo(i)
-			-- GetRaidRosterInfo returns name/server like "Name-Server", however
-			-- GetUnitName returns name/server like "Name - Server", which we have
-			-- to use for party checks (see below).
-			-- Instead of stripping the spaces (which the server name might have) or
-			-- rewriting the name with a * at the end (which is useless),
-			-- we just strip it all. So we might get a false positive once in a while.
-			-- Who cares :P
-			nameCache[rname] = rname:gsub("^(.*)%-.*$", "%1")
-			readycheck[nameCache[rname]] = online and RD_NORESPONSE or RD_OFFLINE
+			local name, _, _, _, _, _, _, online = GetRaidRosterInfo(i)
+			local status = not online and "offline" or GetReadyCheckStatus(name)
+			readycheck[name] = status
+			if not promoted and (status == "offline" or status == "notready") then
+				DEFAULT_CHAT_FRAME:AddMessage(RAID_MEMBER_NOT_READY:format(name), c.r, c.g, c.b, c.id)
+			end
 		end
 	else
-		readycheck[playerName] = -1
-		for i = 1, MAX_PARTY_MEMBERS do
-			if UnitExists("party"..i) then
-				readycheck[UnitName("party"..i)] = RD_NORESPONSE
+		readycheck[playerName] = GetReadyCheckStatus("player")
+		for i = 1, GetNumSubgroupMembers() do
+			local unit = ("party%d"):format(i)
+			local name = self:UnitName(unit)
+			if name and name ~= UNKNOWN then
+				local status = not UnitIsConnected(unit) and "offline" or GetReadyCheckStatus(name)
+				readycheck[name] = status
+				if not promoted and (status == "offline" or status == "notready") then
+					DEFAULT_CHAT_FRAME:AddMessage(RAID_MEMBER_NOT_READY:format(name), c.r, c.g, c.b, c.id)
+				end
 			end
 		end
 	end
-	readycheck[name] = RD_READY -- the sender is always ready
-	readyAuthor = name
 
 	-- show the readycheck result frame
 	if self.db.profile.gui then
 		createWindow()
-		frame:SetAlpha(1) -- if we happen to have a readycheck while we're hiding
-		frame.fadeTimer = nil -- if we happend to have a readycheck while we're hiding
+		frame:Hide()
 		frame:Show()
-		frame.timer = duration
-		frame.oldtimer = -1
-		updateWindow()
 	end
 end
 
-function module:READY_CHECK_CONFIRM(event, id, confirm)
-	-- this event only fires when promoted, no need to check
-	local name = UnitName(id)
-	--if not readycheck[name] then
-		-- Debug
-		--print(name .. " was not found in the ready check table, wtf?")
-	--end
-	if confirm then -- ready
-		readycheck[name] = RD_READY
-	elseif readycheck[name] ~= RD_OFFLINE then -- not ready, ignore offline
-		readycheck[name] = RD_NOTREADY
+function module:READY_CHECK_CONFIRM(unit, ready)
+	if not readychecking then return end
+	if unit:find("party", nil, true) and IsInRaid() then return end -- prevent multiple prints if you're in their party
+	local name = self:UnitName(unit)
+	if not name then return end
+
+	if ready then
+		readycheck[name] = "ready"
+	elseif readycheck[name] ~= "offline" then -- not ready, ignore offline
+		readycheck[name] = "notready"
+		if not oRA:IsPromoted() then
+			local c = ChatTypeInfo["SYSTEM"]
+			DEFAULT_CHAT_FRAME:AddMessage(RAID_MEMBER_NOT_READY:format(name), c.r, c.g, c.b, c.id)
+		end
 	end
 	if self.db.profile.gui and frame then
 		updateWindow()
 	end
 end
 
-local function sysPrint(msg)
-	local c = ChatTypeInfo["SYSTEM"]
-	DEFAULT_CHAT_FRAME:AddMessage(msg, c.r, c.g, c.b, c.id)
-end
-
 do
 	local noReply = {}
 	local notReady = {}
-	function module:READY_CHECK_FINISHED(event, someBoolean)
-		-- This seems to be true in 5mans and false in raids, no matter what people actually click.
-		if someBoolean then return end
-		if not oRA:IsPromoted() then return end
+	function module:READY_CHECK_FINISHED(preempted)
+		if not readychecking or preempted then return end -- is a dungeon group ready check
 
-		if frame then
-			if self.db.profile.autohide then frame.fadeTimer = 1 end
-			frame.timer = 0
-			frame.title:SetText(READY_CHECK_FINISHED)
-		end
+		self:CancelTimer(readychecking)
+		readychecking = nil
 
-		wipe(noReply); wipe(notReady)
-		for name, ready in pairs(readycheck) do
-			if ready == RD_NORESPONSE then
-				noReply[#noReply + 1] = name
-			elseif ready == RD_NOTREADY then
-				notReady[#notReady + 1] = name
+		wipe(noReply)
+		wipe(notReady)
+		for name, ready in next, readycheck do
+			if ready == "waiting" or ready == "offline" then
+				noReply[#noReply + 1] = name:gsub("%-.*$", "")
+			elseif ready == "notready" then
+				notReady[#notReady + 1] = name:gsub("%-.*$", "")
 			end
 		end
 
+		local c = ChatTypeInfo["SYSTEM"]
+		local promoted = oRA:IsPromoted()
+		local send = self.db.profile.relayReady and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE)
 		if #noReply == 0 and #notReady == 0 then
-			sysPrint(READY_CHECK_ALL_READY)
-			if self.db.profile.relayReady then
+			if not promoted then
+				DEFAULT_CHAT_FRAME:AddMessage(READY_CHECK_ALL_READY, c.r, c.g, c.b, c.id)
+			elseif send and promoted > 1 then
 				SendChatMessage(READY_CHECK_ALL_READY, "RAID")
 			end
-			return
-		end
-
-		if #noReply > 0 then
-			local afk = RAID_MEMBERS_AFK:format(table.concat(noReply, ", "))
-			sysPrint(afk)
-			if self.db.profile.relayReady then
-				SendChatMessage(afk, "RAID")
+		else
+			if #noReply > 0 then
+				local afk = RAID_MEMBERS_AFK:format(table.concat(noReply, ", "))
+				if not promoted then
+					DEFAULT_CHAT_FRAME:AddMessage(afk, c.r, c.g, c.b, c.id)
+				elseif send and promoted > 1 then
+					SendChatMessage(afk, "RAID")
+				end
 			end
-		end
-
-		if #notReady > 0 then
-			local no = RD_RAID_MEMBERS_NOTREADY:format(table.concat(notReady, ", "))
-			sysPrint(no)
-			if self.db.profile.relayReady then
-				SendChatMessage(no, "RAID")
+			if #notReady > 0 then
+				local no = L["The following players are not ready: %s"]:format(table.concat(notReady, ", "))
+				if not promoted then
+					DEFAULT_CHAT_FRAME:AddMessage(no, c.r, c.g, c.b, c.id)
+				elseif send and promoted > 1 then
+					SendChatMessage(no, "RAID")
+				end
 			end
 		end
 	end

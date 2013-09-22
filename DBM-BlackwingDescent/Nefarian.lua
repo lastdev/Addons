@@ -3,9 +3,8 @@ local L		= mod:GetLocalizedStrings()
 local Nefarian	= EJ_GetSectionInfo(3279)
 local Onyxia	= EJ_GetSectionInfo(3283)
 
-mod:SetRevision(("$Revision: 43 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(41376, 41270)
-mod:SetModelID(32716)
 mod:SetZone()
 mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_Event09.wav", "Sound\\Creature\\Nefarian\\VO_BD_Nefarian_Event13.wav")
 --"Ha ha ha ha ha! The heroes have made it to the glorious finale. I take it you are in good spirits? Prepared for the final battle? Then gaze now upon my ultimate creation! RISE, SISTER!" = "Nefarian\\VO_BD_Nefarian_Event01",
@@ -181,7 +180,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(77826) then
+	if args.spellId == 77826 then
 		if args:GetSrcCreatureID() == 41270 then--Source is onyxia
 			warnOnyShadowflameBreath:Show()
 			timerOnyBreathCD:Start()
@@ -189,8 +188,8 @@ function mod:SPELL_CAST_START(args)
 			warnNefShadowflameBreath:Show()
 			timerNefBreathCD:Start()
 		end
-	elseif args:IsSpellID(80734) then
-		if not DBM.BossHealth:HasBoss(args.sourceGUID) then
+	elseif args.spellId == 80734 then
+		if not DBM.BossHealth:HasBoss(args.sourceGUID) and DBM.BossHealth:IsShown() then
 			DBM.BossHealth:AddBoss(args.sourceGUID, args.sourceName)
 		end
 		if args.sourceGUID == UnitGUID("target") then--Only show warning/timer for your own target.
@@ -206,7 +205,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(79339) then
+	if args.spellId == 79339 then
 		cinderTargets[#cinderTargets + 1] = args.destName
 		playerDebuffs = playerDebuffs + 1
 		if args:IsPlayer() then
@@ -225,7 +224,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			self:Schedule(0.3, warnCinderTargets)
 		end
-	elseif args:IsSpellID(79318) then
+	elseif args.spellId == 79318 then
 		dominionTargets[#dominionTargets + 1] = args.destName
 		if args:IsPlayer() then
 			specWarnDominion:Show()
@@ -240,13 +239,13 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_APPLIED_DOSE(args)
-	if args:IsSpellID(80627) and args:IsPlayer() and (args.amount or 1) >= 150 then
+	if args.spellId == 80627 and args:IsPlayer() and (args.amount or 1) >= 150 then
 		specWarnStolenPower:Show(args.amount)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(79339) then
+	if args.spellId == 79339 then
 		playerDebuffs = playerDebuffs - 1
 		if args:IsPlayer() and self.Options.RangeFrame and playerDebuffs >= 1 then
 			DBM.RangeCheck:Show(10, cindersDebuffFilter)--Change to debuff filter based check since theirs is gone but there are still cinders in raid.
@@ -261,7 +260,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(77827) then
+	if args.spellId == 77827 then
 		if args:GetSrcCreatureID() == 41270 then
 			warnOnyTailSwipe:Show()
 			timerOnySwipeCD:Start()
@@ -272,7 +271,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	end
 end
 
-function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
+function mod:SPELL_DAMAGE(sourceGUID, sourceName, sourceFlags, _, destGUID, _, _, _, spellId)
 	if spellId == 81007 and destGUID == UnitGUID("player") and self:AntiSpam(4) then
 		specWarnShadowblaze:Show()
 	elseif spellId ~= 50288 and self:GetCIDFromGUID(destGUID) == 41918 and bit.band(sourceFlags, COMBATLOG_OBJECT_TYPE_PLAYER) ~= 0 and self:IsInCombat() then--Any spell damage except for starfall
@@ -347,9 +346,9 @@ end
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 41948 then--Also remove from boss health when they die based on GUID
+	if cid == 41948 and DBM.BossHealth:IsShown() then--Also remove from boss health when they die based on GUID
 		DBM.BossHealth:RemoveBoss(args.destGUID)
-	elseif cid == 41270 then
+	elseif cid == 41270 and DBM.BossHealth:IsShown() then
 		DBM.BossHealth:RemoveBoss(cid)
 	end
 end

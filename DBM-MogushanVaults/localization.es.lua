@@ -7,12 +7,12 @@ local L
 L= DBM:GetModLocalization(679)
 
 L:SetWarningLocalization({
-	SpecWarnOverloadSoon	= "¡%s casteable en 7s!",
+	SpecWarnOverloadSoon		= "¡%s casteable en 7s!",
 	specWarnBreakJasperChains	= "¡Rompe las cadenas de jade!"
 })
 
 L:SetOptionLocalization({
-	SpecWarnOverloadSoon	= "Mostrar aviso especial antes de sobrecarga",
+	SpecWarnOverloadSoon		= "Mostrar aviso especial antes de sobrecarga",
 	specWarnBreakJasperChains	= "Mostrar un aviso especial cuando sea seguro romper break $spell:130395",
 	ArrowOnJasperChains			= "Mostrar flecha cuando te afecten $spell:130395",
 	InfoFrame					= "Mostrar información para poder del boss, petrificación de jugador y que boss está canalizando petrificación"
@@ -50,10 +50,6 @@ L:SetMiscLocalization({
 -------------------------------
 L= DBM:GetModLocalization(682)
 
-L:SetOptionLocalization({
-	SetIconOnVoodoo		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122151)
-})
-
 L:SetMiscLocalization({
 	Pull		= "¡Ya es hora de morir!"
 })
@@ -90,8 +86,7 @@ L:SetTimerLocalization({
 L:SetOptionLocalization({
 	specWarnDespawnFloor		= "Mostrar aviso especial antes de que el suelo se desaparezca",
 	timerDespawnFloor			= "Mostrar tiempo para que el suelo desaparezca",
-	SetIconOnCreature		= "Poner iconos en $journal:6193",
-	SetIconOnDestabilized	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(132226)
+	SetIconOnCreature			= "Poner iconos en $journal:6193"
 })
 
 
@@ -102,7 +97,8 @@ L= DBM:GetModLocalization(677)
 
 L:SetOptionLocalization({
 	InfoFrame		= "Mostrar información de jugadores a los que les afecta $spell:116525",
-	ArrowOnCombo	= "Mostrar flecha durante $journal:5673\nNOTA: Esto asume que el tanque está delante del boss y todos los demás detrás."
+	CountOutCombo	= "Cuenta lanzamientos de $journal:5673<br/>NOTA: Solo en la versión de voz femenina.",
+	ArrowOnCombo	= "Mostrar flecha durante $journal:5673<br/>NOTA: Esto asume que el tanque está delante del boss y todos los demás detrás."
 })
 
 L:SetMiscLocalization({

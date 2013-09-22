@@ -1,9 +1,8 @@
-local mod	= DBM:NewMod("NovosTheSummoner", "DBM-Party-WotLK", 4)
+local mod	= DBM:NewMod(589, "DBM-Party-WotLK", 4, 273)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(26631)
-mod:SetModelID(26292)
 mod:SetZone()
 
 mod:RegisterCombat("yell", L.YellPull)
@@ -14,10 +13,10 @@ mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_YELL"
 )
 
-local WarnCrystalHandler 	= mod:NewAnnounce("WarnCrystalHandler", 2, 59910)
+local WarnCrystalHandler 	= mod:NewCountAnnounce("ej6378", 2, 59910)
 local warnPhase2			= mod:NewPhaseAnnounce(2)
 
-local timerCrystalHandler 	= mod:NewTimer(20, "timerCrystalHandler", 59910)
+local timerCrystalHandler 	= mod:NewNextTimer(20, "ej6378", nil, nil, nil, 59910)
 
 local CrystalHandlers = 4
 

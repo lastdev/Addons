@@ -45,6 +45,8 @@ if GetLocale() == "itIT" then
 		PaladinOptions = "Opzioni Paladin", -- Needs review
 		RemoveBuffs = "Rimuovere gli appassionati che possono prevenire il montaggio", -- Needs review
 		RemoveBuffs_Long = "GoGoMount cercheranno di rimuovere buff e shapeforms che provengono da incantesimi e oggetti che impediscono il montaggio. Questo funziona solo per gli appassionati di note e, in alcuni casi richiedono 2 clic del tuo pulsante GoGoMount da montare.", -- Needs review
+		ShamanOptions = "Shaman Options", -- Requires localization
+		ShamanSingleClick = "Single click mount from Ghost Wolf Form instead of dismounting", -- Requires localization
 		UnknownMountFound = "Un supporto sconosciuto è stato trovato in te nell'elenco dei monti. Si prega di segnalare questo in modo che può essere aggiunto alle future versioni di GoGoMount.", -- Needs review
 		UseAspectOfThePackInstead = "Utilizzare Aspect of the Pack invece di Aspect Of The Cheeta", -- Needs review
 		UseAspectOfThePackInstead_Long = "Quando è abilitato, GoGoMount lancerà Aspect of the Pack invece di Aspect of the Cheetah. Zona locale o le impostazioni globali ignorare questa impostazione. Se questo è impostato per utilizzare Aspect of the Pack e si ha Aspect of the Cheetah come preferito zona, Aspect of the Cheetah verrà utilizzato.", -- Needs review

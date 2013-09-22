@@ -871,6 +871,8 @@ addon.Loots = {}
 local ns = addon.Loots		-- ns = namespace
 
 function ns:GetSource(searchedID)
+	if InCombatLockdown() then	return nil end		-- exit if combat lockdown restrictions are active
+
 	DataProviders = DataProviders or {			-- list of sources that have a :GetSource() method
 		DataStore_Reputations,
 		DataStore_Crafts,

@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("LordMarrowgar", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 69 $"):sub(12, -3))
 mod:SetCreatureID(36612)
 mod:SetModelID(31119)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_START",
@@ -19,7 +19,7 @@ mod:RegisterEvents(
 
 local preWarnWhirlwind   	= mod:NewSoonAnnounce(69076, 3)
 local warnBoneSpike			= mod:NewCastAnnounce(69057, 2)
-local warnImpale			= mod:NewAnnounce("WarnImpale", 4, 72669)
+local warnImpale			= mod:NewTargetAnnounce(72669, 3)
 
 local specWarnColdflame		= mod:NewSpecialWarningMove(69146)
 local specWarnWhirlwind		= mod:NewSpecialWarningRun(69076)
@@ -27,7 +27,7 @@ local specWarnWhirlwind		= mod:NewSpecialWarningRun(69076)
 local timerBoneSpike		= mod:NewCDTimer(18, 69057)
 local timerWhirlwindCD		= mod:NewCDTimer(90, 69076)
 local timerWhirlwind		= mod:NewBuffActiveTimer(20, 69076)
-local timerBoned			= mod:NewAchievementTimer(8, 4610, "AchievementBoned")
+local timerBoned			= mod:NewAchievementTimer(8, 4610)
 
 local berserkTimer			= mod:NewBerserkTimer(600)
 
@@ -51,7 +51,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(69076) then						-- Bone Storm (Whirlwind)
+	if args.spellId == 69076 then						-- Bone Storm (Whirlwind)
 		specWarnWhirlwind:Show()
 		timerWhirlwindCD:Start()
 		preWarnWhirlwind:Schedule(85)
@@ -66,11 +66,11 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(69065) then						-- Impaled
+	if args.spellId == 69065 then						-- Impaled
 		if self.Options.SetIconOnImpale then
 			self:SetIcon(args.destName, 0)
 		end
-	elseif args:IsSpellID(69076) then
+	elseif args.spellId == 69076 then
 		if self:IsDifficulty("normal10", "normal25") then
 			timerBoneSpike:Start(15)					-- He will do Bone Spike Graveyard 15 seconds after whirlwind ends on normal
 		end
@@ -78,7 +78,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(69057) then	-- Bone Spike Graveyard
+	if args.spellId == 69057 then	-- Bone Spike Graveyard
 		warnBoneSpike:Show()
 		timerBoneSpike:Start()
 	end

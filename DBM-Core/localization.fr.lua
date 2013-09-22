@@ -10,8 +10,9 @@ DBM_CORE_COMBAT_STARTED				= "%s engagé. Bonne chance et amusez-vous bien ! :)"
 DBM_CORE_BOSS_DOWN					= "%s vaincu après %s !"
 DBM_CORE_BOSS_DOWN_L				= "%s vaincu après %s ! Votre dernier temps était de %s et votre record de %s. Vous l'avez tué au total %d fois."
 DBM_CORE_BOSS_DOWN_NR				= "%s vaincu après %s ! C'est un nouveau record ! (l'ancien record était de %s). Vous l'avez tué au total %d fois."
-DBM_CORE_COMBAT_ENDED_AT			= "Combat face à %s terminé après %s."
-DBM_CORE_COMBAT_ENDED_AT_LONG		= "Combat face à %s terminé après %s. Vous cumulez un total de %d wipes dans ce mode de difficulté."
+
+DBM_CORE_COMBAT_ENDED_AT			= "Combat face à %s (%s) terminé après %s."
+DBM_CORE_COMBAT_ENDED_AT_LONG		= "Combat face à %s (%s) terminé après %s. Vous cumulez un total de %d wipes dans ce mode de difficulté."
 DBM_CORE_COMBAT_STATE_RECOVERED		= "%s a été engagé il y a %s, récupération des délais..."
 
 DBM_CORE_TIMER_FORMAT_SECS			= "%d |4seconde:secondes;"
@@ -28,6 +29,8 @@ DBM_CORE_OK							= "Okay"
 DBM_CORE_GENERIC_WARNING_BERSERK	= "Enrage dans %s %s"
 DBM_CORE_GENERIC_TIMER_BERSERK		= "Enrage"
 DBM_CORE_OPTION_TIMER_BERSERK		= "Montrer les chronos pour $spell:26662"
+DBM_CORE_GENERIC_TIMER_COMBAT		= "Le combat débute dans"
+DBM_CORE_OPTION_TIMER_COMBAT		= "Montre le timer avant le début du combat"
 DBM_CORE_OPTION_HEALTH_FRAME		= "Afficher le cadre de vie des Boss"
 
 DBM_CORE_OPTION_CATEGORY_TIMERS		= "Bars"
@@ -58,9 +61,7 @@ DBM_PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h vous a envoyé un délai DBM:
 DBM_PIZZA_CONFIRM_IGNORE			= "Voulez-vous réellement ignorer les délais DBM de %s de cette session ?"
 DBM_PIZZA_ERROR_USAGE				= "Utilisation: /dbm [broadcast] timer <durée> <texte>"
 
-DBM_CORE_ERROR_DBMV3_LOADED			= "Deadly Boss Mods est exécuté deux fois car DBMv3 et DBMv4 sont tous les deux installés et activés\nCliquez sur \"Okay\" pour désactiver DBMv3 et recharger votre interface.\nIl serait judicieux de nettoyer votre répertoire AddOns en supprimant les vieux répertoires de DBMv3."
-
-DBM_CORE_MINIMAP_TOOLTIP_HEADER		= "Deadly Boss Mods"
+--DBM_CORE_MINIMAP_TOOLTIP_HEADER (Same as English locales)
 DBM_CORE_MINIMAP_TOOLTIP_FOOTER		= "MAJ+clic ou clic-droit pour déplacer\nAlt+MAJ+clic pour une saisie libre"
 
 DBM_CORE_RANGECHECK_HEADER			= "Vérif. de portée (%d m)"
@@ -102,7 +103,7 @@ DBM_CORE_SLASHCMD_HELP				= {
 	"/dbm pull <sec> : lance un délai de pull de <sec> secondes. Donne à tous les membres du raid ayant DBM ce délai de pull (nécessite d'être chef du raid ou assistant).",
 	"/dbm arrow : affiche la flèche DBM, voir /dbm arrow help pour les détails.",
 	"/dbm lockout : demande aux membres du raid leurs verrouillages actuels d'instance de raid (aliases : lockouts, ids) (nécessite d'être chef du raid ou assistant).",
-	"/dbm help : affiche ce message.",
+	"/dbm help : affiche ce message."
 }
 
 DBM_ERROR_NO_PERMISSION				= "Vous n'avez pas la permission requise pour faire cela."
@@ -131,92 +132,80 @@ DBM_CORE_ANNOUNCE_PULL_NOW			= "Pull maintenant !"
 DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "Victoire rapide"
 
 -- Auto-generated Timer Localizations
-DBM_CORE_AUTO_TIMER_TEXTS = {
-	target		= "%s: %%s",
-	cast		= "%s",
-	active		= "%s se termine",--Buff/Debuff/event on boss
-	fades		= "%s se dissipe",--Buff/Debuff on players
-	cd			= "Rech. %s ",
-	cdcount		= "Rech. %s (%%d)",
-	cdsource	= "Rech. %s: %%s",
-	next		= "Proch. %s",
-	nextcount	= "Proch. %s (%%d)",
-	nextsource	= "Proch. %s: %%s",
-	achievement	= "%s"
-}
+DBM_CORE_AUTO_TIMER_TEXTS.target		= "%s: >%%s<"
+DBM_CORE_AUTO_TIMER_TEXTS.cast			= "%s"
+DBM_CORE_AUTO_TIMER_TEXTS.active		= "%s se termine" --Buff/Debuff/event on boss
+DBM_CORE_AUTO_TIMER_TEXTS.fades			= "%s se dissipe" --Buff/Debuff on players
+DBM_CORE_AUTO_TIMER_TEXTS.cd			= "Rech. %s "
+DBM_CORE_AUTO_TIMER_TEXTS.cdcount		= "Rech. %s (%%d)"
+DBM_CORE_AUTO_TIMER_TEXTS.cdsource		= "Rech. %s: >%%s<"
+DBM_CORE_AUTO_TIMER_TEXTS.next			= "Proch. %s"
+DBM_CORE_AUTO_TIMER_TEXTS.nextcount		= "Proch. %s (%%d)"
+DBM_CORE_AUTO_TIMER_TEXTS.nextsource	= "Proch. %s: >%%s<"
+DBM_CORE_AUTO_TIMER_TEXTS.achievement	= "%s"
 
-DBM_CORE_AUTO_TIMER_OPTIONS = {
-	target		= "Durée d'affaiblissement de $spell:%s",
-	cast		= "Durée d'incantation de $spell:%s",
-	active		= "Durée d'activité de $spell:%s",
-	fades		= "Délai avant la dissipation de $spell:%s",
-	cd			= "Durée de recharge de $spell:%s",
-	cdcount		= "Durée de recharge de $spell:%s",
-	cdsource	= "Durée de recharge de $spell:%s",
-	next		= "Délai avant le prochain $spell:%s",
-	nextcount	= "Délai avant le prochain $spell:%s",
-	nextsource	= "Délai avant le prochain $spell:%s",
-	achievement	= "Délai pour réussir %s"
-}
+DBM_CORE_AUTO_TIMER_OPTIONS.target		= "Durée d'affaiblissement de $spell:%s"
+DBM_CORE_AUTO_TIMER_OPTIONS.cast		= "Durée d'incantation de $spell:%s"
+DBM_CORE_AUTO_TIMER_OPTIONS.active		= "Durée d'activité de $spell:%s"
+DBM_CORE_AUTO_TIMER_OPTIONS.fades		= "Délai avant la dissipation de $spell:%s"
+DBM_CORE_AUTO_TIMER_OPTIONS.cd			= "Durée de recharge de $spell:%s"
+DBM_CORE_AUTO_TIMER_OPTIONS.cdcount		= "Durée de recharge de $spell:%s"
+DBM_CORE_AUTO_TIMER_OPTIONS.cdsource	= "Durée de recharge de $spell:%s"
+DBM_CORE_AUTO_TIMER_OPTIONS.next		= "Délai avant le prochain $spell:%s"
+DBM_CORE_AUTO_TIMER_OPTIONS.nextcount	= "Délai avant le prochain $spell:%s"
+DBM_CORE_AUTO_TIMER_OPTIONS.nextsource	= "Délai avant le prochain $spell:%s"
+DBM_CORE_AUTO_TIMER_OPTIONS.achievement	= "Délai pour réussir %s"
 
 -- Auto-generated Warning Localizations
-DBM_CORE_AUTO_ANNOUNCE_TEXTS = {
-	target		= "%s sur >%%s<",
-	targetcount	= "%s (%%d) sur >%%s<",
-	spell		= "%s",
-	adds		= "%s restant: %%d",
-	cast		= "Incantation %s: %.1f sec",
-	soon		= "%s imminent",
-	prewarn		= "%s de %s",
-	phase		= "Phase %s",
-	prephase	= "Phase %s imminente",
-	count		= "%s (%%d)",
-	stack		= "%s sur >%%s< (%%d)"
-}
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.target			= "%s sur >%%s<"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.targetcount	= "%s (%%d) sur >%%s<"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.spell			= "%s"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.adds			= "%s restant: %%d"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.cast			= "Incantation %s: %.1f sec"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.soon			= "%s imminent"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.prewarna		= "%s de %s"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.phase			= "Phase %s"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.prephase		= "Phase %s imminente"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.count			= "%s (%%d)"
+DBM_CORE_AUTO_ANNOUNCE_TEXTS.stack			= "%s sur >%%s< (%%d)"
 
 local prewarnOption = "Alerte préventive concernant $spell:%s"
-DBM_CORE_AUTO_ANNOUNCE_OPTIONS = {
-	target		= "Alerte indiquant le(s) cible(s) de $spell:%s",
-	targetcount	= "Alerte indiquant le(s) cible(s) de $spell:%s",
-	spell		= "Alerte concernant $spell:%s",
-	adds		= "Alerte indiquant le nombre restant de : $spell:%s",
-	cast		= "Alerte quand $spell:%s est incanté",
-	soon		= prewarnOption,
-	prewarn		= prewarnOption,
-	phase		= "Alerte indiquant l'arrivée de la phase %s",
-	prephase	= "Alerte préventive indiquant l'arrivée de la phase %s",
-	count		= "Alerte concernant $spell:%s",
-	stack		= "Alerte indiquant les cumuls de $spell:%s"
-}
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target		= "Alerte indiquant le(s) cible(s) de $spell:%s"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.targetcount	= "Alerte indiquant le(s) cible(s) de $spell:%s"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell		= "Alerte concernant $spell:%s"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.adds			= "Alerte indiquant le nombre restant de : $spell:%s"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.cast			= "Alerte quand $spell:%s est incanté"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.soon			= prewarnOption
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.prewarn		= prewarnOption
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.phase		= "Alerte indiquant l'arrivée de la phase %s"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.prephase		= "Alerte préventive indiquant l'arrivée de la phase %s"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.count		= "Alerte concernant $spell:%s"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS.stack		= "Alerte indiquant les cumuls de $spell:%s"
 
 -- Auto-generated Special Warning Localizations
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
-	spell 		= "Alerte spéciale concernant $spell:%s",
-	dispel 		= "Alerte spéciale quand $spell:%s doit être dissipé/volé",
-	interrupt	= "Alerte spéciale quand $spell:%s doit être interrompu",
-	you 		= "Alerte spéciale quand vous subissez $spell:%s",
-	target 		= "Alerte spéciale quand quelqu'un subit $spell:%s",
-	close 		= "Alerte spéciale quand quelqu'un proche de vous subit $spell:%s",
-	move 		= "Alerte spéciale quand vous subissez $spell:%s",
-	run 		= "Alerte spéciale concernant $spell:%s",
-	cast 		= "Alerte spéciale quand $spell:%s est incanté",
-	stack 		= "Alerte spéciale quand >=%d cumuls de $spell:%s",
-	switch 		= "Alerte spéciale de changement de cible pour\n $spell:%s"
-}
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell 		= "Alerte spéciale concernant $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dispel 		= "Alerte spéciale quand $spell:%s doit être dissipé/volé"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt	= "Alerte spéciale quand $spell:%s doit être interrompu"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you 		= "Alerte spéciale quand vous subissez $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target 		= "Alerte spéciale quand quelqu'un subit $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close 		= "Alerte spéciale quand quelqu'un proche de vous subit $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move 		= "Alerte spéciale quand vous subissez $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run 		= "Alerte spéciale concernant $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.cast 		= "Alerte spéciale quand $spell:%s est incanté"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack 		= "Alerte spéciale quand >=%d cumuls de $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch 		= "Alerte spéciale de changement de cible pour\n $spell:%s"
 
-DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
-	spell = "%s!",
-	dispel = "%s on %%s - dissipez maintenant",
-	interrupt = "%s - interrompez %%s!",
-	you = "%s sur vous",
-	target = "%s sur %%s",
-	close = "%s sur %%s près de vous",
-	move = "%s - écartez-vous",
-	run = "%s - fuyez",
-	cast = "%s - arrêtez d'incanter",
-	stack = "%s (%%d)",
-	switch = "%s - Changer de cible"
-}
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.spell		= "%s!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel	= "%s on >%%s< - dissipez maintenant"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt = "%s - interrompez >%%s<!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.you		= "%s sur vous"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.target	= "%s sur >%%s<"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.close		= "%s sur >%%s< près de vous"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.move		= "%s - écartez-vous"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.run		= "%s - fuyez"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast		= "%s - arrêtez d'incanter"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack		= "%s (%%d)"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch	= ">%s< - Changer de cible"
 
 
 DBM_CORE_AUTO_ICONS_OPTION_TEXT			= "Icônes sur les cibles de $spell:%s"
@@ -224,7 +213,7 @@ DBM_CORE_AUTO_SOUND_OPTION_TEXT			= "Jouer le son \"run away\" pour $spell:%s"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Compte à rebours sonore pour $spell:%s"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Compte à rebours sonore pour ka durée de $spell:%s"
 DBM_CORE_AUTO_YELL_OPTION_TEXT			= "Cri quand vous subissez $spell:%s"
-DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT		= "%s sur moi !"
+DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT		= "%s sur " .. UnitName("player") .. " !"
 
 
 -- New special warnings
@@ -241,7 +230,7 @@ DBM_ARROW_ERROR_USAGE	= {
 	"/dbm arrow <x> <y>  créée une flèche qui pointe vers une position spécifique (0 < x/y < 100)",
 	"/dbm arrow <player>  créée une flèche qui pointe vers un joueur spécifique de votre groupe ou raid",
 	"/dbm arrow hide  masque la flèche",
-	"/dbm arrow move  rend la flèche déplaçable",
+	"/dbm arrow move  rend la flèche déplaçable"
 }
 
 DBM_SPEED_KILL_TIMER_TEXT	= "Record à battre"

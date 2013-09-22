@@ -265,6 +265,15 @@ function addon:NotifyMob(id, name, zone, x, y, is_dead, is_new_location, source,
 	self.events:Fire("Seen", id, name, zone, x, y, is_dead, is_new_location, source, unit)
 end
 
+function addon:ZoneContainsMobs(zone)
+	if not globaldb.mobs_byzoneid[zone] then
+		return
+	end
+	for id, locations in pairs(globaldb.mobs_byzoneid[zone]) do
+		return true
+	end
+end
+
 -- Returns id, addon:GetMob(zone, id)
 function addon:GetMobByCoord(zone, coord)
 	if not globaldb.mobs_byzoneid[zone] then return end
@@ -420,14 +429,14 @@ end
 do
 	-- need to set up a mapfile-to-mapid mapping
 	-- for: imports, and map notes addons
-	local MAX_MAPFILE = 950
+	local MAX_MAPFILE = 1000
 	local mapfile_to_zoneid = {}
 	local zoneid_to_mapfile = {}
 	for zoneid = 1, MAX_MAPFILE do
 		local name = GetMapNameByID(zoneid)
 		if name then
 			SetMapByID(zoneid)
-			local mapfile = GetMapInfo()
+			local mapfile = (GetMapInfo()):gsub("_terrain%d+$", "")
 			if mapfile_to_zoneid[mapfile] then
 				Debug("Duplicate mapfile", mapfile, zoneid_to_mapfile[zoneid])
 			else
@@ -438,7 +447,7 @@ do
 	end
 
 	addon.zoneid_from_mapfile = function(mapfile)
-		return addon:CanonicalZoneId(mapfile_to_zoneid[mapfile]) -- :gsub("_terrain%d+$", "")
+		return addon:CanonicalZoneId(mapfile_to_zoneid[mapfile:gsub("_terrain%d+$", "")])
 	end
 	addon.mapfile_from_zoneid = function(zoneid)
 		return zoneid_to_mapfile[zoneid]

@@ -1,9 +1,9 @@
 local oRA = LibStub("AceAddon-3.0"):GetAddon("oRA3")
 local util = oRA.util
-local module = oRA:NewModule("Zone", "AceEvent-3.0", "AceConsole-3.0")
+local module = oRA:NewModule("Zone")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 
-module.VERSION = tonumber(("$Revision: 150 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 645 $"):sub(12, -3))
 
 local zones = {}
 local factionList = {}
@@ -81,9 +81,12 @@ function module:OnRegister()
 	oRA.RegisterCallback(self, "OnListSelected")
 	oRA.RegisterCallback(self, "OnGroupChanged")
 	oRA.RegisterCallback(self, "OnStartup", "UpdateZoneList")
-	
-	self:RegisterChatCommand("razone", "OpenZoneCheck")
-	self:RegisterChatCommand("raz", "OpenZoneCheck")
+
+	SLASH_ORAZONE1 = "/razone"
+	SLASH_ORAZONE2 = "/raz"
+	SlashCmdList.ORAZONE = function()
+		oRA:OpenToList(L["Zone"])
+	end
 end
 
 function module:OnEnable()
@@ -95,10 +98,6 @@ function module:OnListSelected(event, list)
 	if list == L["Zone"] then
 		self:UpdateZoneList()
 	end
-end
-
-function module:OpenZoneCheck()
-	oRA:OpenToList(L["Zone"])
 end
 
 -- UPDATE_FACTION and getZone were taken from LibDogTag by ckknight with permission.
@@ -127,13 +126,12 @@ function module:UPDATE_FACTION()
 end
 
 function module:OnGroupChanged(event, status, members)
-	self:UpdateZoneList()
 	oRA:UpdateList(L["Zone"])
 end
 
 local function addPlayer(name, zone)
 	if not name then return end
-	local k = util:inTable(zones, name, 1)
+	local k = util.inTable(zones, name, 1)
 	if not k then
 		zones[#zones + 1] = { name }
 		k = #zones
@@ -144,12 +142,12 @@ end
 
 function module:UpdateZoneList()
 	wipe(zones)
-	if oRA:InRaid() then
+	if IsInRaid() then
 		for i = 1, GetNumGroupMembers() do
 			local name, _, _, _, _, _, zone = GetRaidRosterInfo(i)
 			addPlayer(name, zone)
 		end
-	elseif oRA:InParty() then
+	elseif IsInGroup() then
 		if not tip then
 			createTooltip()
 		end

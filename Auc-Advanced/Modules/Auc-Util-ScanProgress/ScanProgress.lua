@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 5.15.5380 (LikeableLyrebird)
+	Version: 5.18.5433 (PassionatePhascogale)
 	Revision: $Id: ScanProgress.lua 4979 2010-10-31 10:59:55Z Prowell $
 	URL: http://auctioneeraddon.com/
 
@@ -241,4 +241,4 @@ function private.ConfigChanged()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-ScanProgress/ScanProgress.lua $", "$Rev: 4979 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-ScanProgress/ScanProgress.lua $", "$Rev: 4979 $")

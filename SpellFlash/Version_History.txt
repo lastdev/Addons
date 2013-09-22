@@ -1,6 +1,27 @@
 
 
 
+== Version 6.8.1
+
+* Bumped the toc file interface number to 50400.
+
+
+== Version 6.8
+
+* Added a one second delay to most of the functions that look for talent and spell changes.
+
+
+== Version 6.7.1
+
+* Updated to the 2.0.3 version of SpellFlashCore.
+
+
+== Version 6.7
+
+* Added a Type argument to the buff checking functions.
+* Added Bitten's SpellFlash Library as an embedded library.
+
+
 == Version 6.6
 
 * Fixed error with the s.UnitSelection and s.UnitID functions.

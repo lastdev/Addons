@@ -1,8 +1,8 @@
 --[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: InfTooltip.lua 5010 2010-11-10 07:33:41Z Hirsute $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: InfTooltip.lua 5406 2013-05-10 10:30:00Z brykrys $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
 	Tooltip handler. Assumes the responsibility of filling the tooltip
@@ -23,7 +23,7 @@
 		along with this program(see GPL.txt); if not, write to the Free Software
 		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ]]
-Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Informant/InfTooltip.lua $", "$Rev: 5010 $")
+Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Informant/InfTooltip.lua $", "$Rev: 5406 $")
 
 local nilSafeString			-- nilSafeString(String)
 local whitespace			-- whitespace(length)
@@ -56,7 +56,7 @@ function Informant.TooltipHandler(frame, item, count, name, link, quality)
 	end
 	if (not itemInfo) then return end
 	Informant.itemInfo = itemInfo
-	
+
 	-- safety, some other addons can pass in strings for count by mistake
 	count = tonumber(count) or 1
 
@@ -107,7 +107,7 @@ function Informant.TooltipHandler(frame, item, count, name, link, quality)
 		elseif getFilter("ModTTShow") == "ctrl" and not IsControlKeyDown() then
 			return
 		end
-	else 
+	else
 		setFilter("ModTTShow", "always")
 	end
 
@@ -116,19 +116,19 @@ function Informant.TooltipHandler(frame, item, count, name, link, quality)
 	tooltip:SetColor(1,1,1)
 	if (getFilter('show-ilevel')) then
 		if (itemInfo.itemLevel) then
-			tooltip:AddLine(_TRANS('INF_Tooltip_ItemLevel'):format(itemInfo.itemLevel), embedded)
+			tooltip:AddLine(_TRANS('INF_Tooltip_ItemLevel'):format(itemInfo.itemLevel), nil, embedded)
 		end
 	end
 
 	if (getFilter('show-binding')) and itemInfo.soulBindText then
-		tooltip:AddLine(itemInfo.soulBindText,embedded)
+		tooltip:AddLine(itemInfo.soulBindText, nil, embedded)
 	end
 	if (getFilter('show-binding')) and itemInfo.specialBindText then
-		tooltip:AddLine(itemInfo.specialBindText,embedded)
+		tooltip:AddLine(itemInfo.specialBindText, nil, embedded)
 	end
 
 	if (getFilter('show-link')) then
-		tooltip:AddLine(_TRANS('INF_Tooltip_ItemLink'):format((":"):join(itemID, enchant, gemSlot1, gemSlot2, gemSlot3, gemSlotBonus, randomProp, uniqID), nil, embedded))
+		tooltip:AddLine(_TRANS('INF_Tooltip_ItemLink'):format((":"):join(itemID, enchant, gemSlot1, gemSlot2, gemSlot3, gemSlotBonus, randomProp, uniqID)), nil, embedded)
 	end
 
 	--DEFAULT_CHAT_FRAME:AddMessage("Got vendor: "..(buy or 0).."/"..(sell or 0))
@@ -162,7 +162,7 @@ function Informant.TooltipHandler(frame, item, count, name, link, quality)
 			tooltip:AddLine(_TRANS('INF_Tooltip_StackSize'):format(stacks), nil, embedded)
 		end
 	end
-	
+
 	if (getFilter('show-merchant')) then
 		if (itemInfo.vendors) then
 			local merchantCount = #itemInfo.vendors
@@ -181,28 +181,28 @@ function Informant.TooltipHandler(frame, item, count, name, link, quality)
 			end
 		end
 	end
-	
+
 	if (getFilter('show-usage')) then
 		tooltip:SetColor(0.6, 0.4, 0.8)
 		local reagentInfo = ""
 		if (itemInfo.classText) then
 			reagentInfo = _TRANS('INF_Tooltip_Class'):format(itemInfo.classText)
-			tooltip:AddLine(reagentInfo, embedded)
+			tooltip:AddLine(reagentInfo, nil, embedded)
 		end
 		if (itemInfo.usedList and itemInfo.usageText) then
 			if (#itemInfo.usedList > 2) then
 
 				local currentUseLine = nilSafeString(itemInfo.usedList[1])..", "..nilSafeString(itemInfo.usedList[2])..","
 				reagentInfo = _TRANS('INF_Tooltip_Use'):format(currentUseLine)
-				tooltip:AddLine(reagentInfo, embedded)
+				tooltip:AddLine(reagentInfo, nil, embedded)
 
 				for index = 3, #itemInfo.usedList, 2 do
 					if (itemInfo.usedList[index+1]) then
 						reagentInfo = whitespace(#_TRANS('INF_Tooltip_Use') + 3)..nilSafeString(itemInfo.usedList[index])..", "..nilSafeString(itemInfo.usedList[index+1])..","
-						tooltip:AddLine(reagentInfo, embedded)
+						tooltip:AddLine(reagentInfo, nil, embedded)
 					else
 						reagentInfo = whitespace(#_TRANS('INF_Tooltip_Use') + 3)..nilSafeString(itemInfo.usedList[index])
-						tooltip:AddLine(reagentInfo, embedded)
+						tooltip:AddLine(reagentInfo, nil, embedded)
 					end
 				end
 			else
@@ -217,14 +217,14 @@ function Informant.TooltipHandler(frame, item, count, name, link, quality)
 		local crafted_item = itemInfo.crafts
 		local itemName, itemLink, itemQuality, itemLevel, playerLevel, itemType, itemSubType, stackCount, equipLoc, texture, sellPrice = GetItemInfo( tonumber( crafted_item ) )
 		local item_craft_count = itemInfo.craftsCount or 1
-		
+
 		tooltip:SetColor(0.6, 0.4, 0.8)
-		
+
 		-- show item that this recipe teaches, in quality color
 		if (itemLink) then	-- sometimes GetInfo fails
-			tooltip:AddLine( ("Crafts: %s"):format(itemLink), embedded)
+			tooltip:AddLine( ("Crafts: %s"):format(itemLink), nil, embedded)
 		else
-			tooltip:AddLine( "Crafts item: "..crafted_item, embedded)
+			tooltip:AddLine( "Crafts item: "..crafted_item, nil, embedded)
 		end
 
 		-- show AucAdv value
@@ -234,7 +234,7 @@ function Informant.TooltipHandler(frame, item, count, name, link, quality)
 				tooltip:AddLine( "        AucAdv: ", item_craft_count*price5, embedded)
 			end
 		end
-		
+
 		-- show DE value if non-zero
 		if (Enchantrix and Enchantrix.Storage) then
 			local _, _, baseline, aucadv = Enchantrix.Storage.GetItemDisenchantTotals( crafted_item )
@@ -243,19 +243,19 @@ function Informant.TooltipHandler(frame, item, count, name, link, quality)
 				tooltip:AddLine( "        Disenchant: ", item_craft_count*(aucadv or baseline), embedded)
 			end
 		end
-		
+
 		-- show vendor value if non-zero
 		if (sellPrice) then
 			tooltip:AddLine( "        Vendor: ", item_craft_count*sellPrice, embedded)
 		end
 	end
-	
+
 	if (getFilter('show-quest')) then
 		if (itemInfo.quests) then
 			local questCount = itemInfo.questCount
 			if (questCount > 0) then
 				tooltip:SetColor(0.5, 0.5, 0.8)
-				tooltip:AddLine(_TRANS('INF_Interface_InfWinQuest'):format(questCount), embedded)
+				tooltip:AddLine(_TRANS('INF_Interface_InfWinQuest'):format(questCount), nil, embedded)
 			end
 		end
 	end

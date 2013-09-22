@@ -1,5 +1,5 @@
-## Interface: 50200
-## Version: 3.1.3
+## Interface: 50400
+## Version: 50400.1.1
 ## Author: Xemnosyst
 ## Title: Bitten's SpellFlash: Rogue
 ## Notes: Replaces Blizzard's default proc highlighting to flash a maximum dps rotation.
@@ -8,10 +8,11 @@
 ## OptionalDeps: BittensSpellFlashLibrary
 ## LoadOnDemand: 1
 ## X-SpellFlashAddon-LoadWith: Rogue
-## X-Curse-Packaged-Version: 3.1.3
+## X-Curse-Packaged-Version: 50400.1.1
 ## X-Curse-Project-Name: Bitten's SpellFlash: Rogue
 ## X-Curse-Project-ID: bittens-spellflash-rogue
 ## X-Curse-Repository-ID: wow/bittens-spellflash-rogue/mainline
+utils\BittensUtils.xml
 bsl\BittensSpellFlashLibrary.xml
 src\Localization.lua
 src\IDs.lua

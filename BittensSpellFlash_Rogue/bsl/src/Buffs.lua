@@ -1,16 +1,16 @@
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "Buffs", 3) then
+if u.SkipOrUpgrade(c, "Buffs", 9) then
 	return
 end
 
 local s = SpellFlashAddon
 
-local type = type
-local select = select
-local pairs = pairs
 local math = math
+local pairs = pairs
+local select = select
+local type = type
 
 c.STAT_BUFFS = {
 	1126, -- Mark of the Wild
@@ -51,14 +51,16 @@ c.MELEE_HASTE_BUFFS = {
 c.SPELL_HASTE_BUFFS = {
 	24907, -- Moonkin Aura
 	15473, -- Shadowform
-	49868, -- Mind Quickening
+	49868, -- Mind Quickening (applied to raid members by Shadowform)
 	51470, -- Elemental Oath
+	135678, -- Energizing Spores
 }
 
 c.CRIT_BUFFS = {
 	17007, -- Leader of the Pack
 	1459, -- Arcane Brilliance
 	61316, -- Dalaran Brialliance
+	116781, -- Legacy of the White Tiger
 	97229, -- Bellowing Roar
 	24604, -- Furious Howl
 	90309, -- Terrifying Roar
@@ -107,6 +109,52 @@ c.SLOW_CASTING_DEBUFFS = {
 
 c.MORTAL_WOUNDS_DEBUFFS = 115804
 
+c.COMMON_TANKING_BUFFS = {
+	
+	-- from DKs
+	50461, -- Anti-Magic Zone
+	
+	-- from Druids
+	102342, -- Ironbark
+	
+	-- from Hunters
+	53480, -- Roar of Sacrifice
+	
+	-- from Monks
+	115213, -- Avert Harm (both caster and raid members)
+	116844, -- Ring of Peace
+	115176, -- Zen Meditation (on raid members)
+	131523, -- Zen Meditation (on caster)
+	
+	-- from Paladins
+	1022, -- Hand of Protection
+	6940, -- Hand of Sacrifice
+	31821, -- Devotion Aura
+	114039, -- Hand of Purity
+	
+	-- from Priests
+	33206, -- Pain Suppression
+	81782, -- Power Word: Barrier
+	47788, -- Guardian Spirit
+	
+	-- from Rogues
+	76577, -- Smoke Bomb
+	
+	-- from Shamans
+	8178, -- Grounding Totem Effect
+	
+	-- from Warriors
+	114028, -- Mass Spell Reflection
+	46947, -- Safeguard
+	114030, -- Vigilance
+	--114203, -- Demoralizing Banner
+	
+	-- from Items
+	116660, -- River's Song (buff from the weapon enchant)
+	105698, -- Potion of the Mountains
+	137593, -- Fortitude (proc from Indomitable Primal Diamond)
+}
+
 local function getScore(buff)
 	return (type(buff) == "string"
 			and c.A.Spells[buff]
@@ -116,23 +164,23 @@ end
 
 local function isUp(buff)
 	if type(buff) ~= "string" then
-		return c.HasBuff(buff)
+		return c.HasBuff(buff, false, true)
 	end
 	
 	local spell = c.A.Spells[buff]
 	if spell == nil then
-		return c.HasBuff(buff)
+		return c.HasBuff(buff, false, true)
 	end
 	
 	if spell.RunFirst ~= nil then
 		spell:RunFirst()
 	end
 	
-	if spell.Enabled ~= nil and not spell:Enabled() then
+	if spell.Enabled and not spell:Enabled() then
 		return false
 	end
 	
-	if spell.IsUp ~= nil then
+	if spell.IsUp then
 		return spell:IsUp()
 	end
 	
@@ -155,7 +203,7 @@ local function getCurrentScore(buff)
 		return score
 	end
 	
---c.Debug("mitigation", buff, isUp(buff))
+--c.Debug("getCurrentScore", buff, isUp(buff))
 	return isUp(buff) and getScore(buff) or 0
 end
 
@@ -199,22 +247,50 @@ function c.FlashMitigationBuffs(targetScore, ...)
 	end
 end
 
-function c.HasBuff(name, noGCD, matchSpellID)
-	local duration = s.BuffDuration(
-		c.GetID(name), "player", nil, nil, nil, matchSpellID)
+local function isApplied(name, ...)
+	for i = 1, select("#", ...) do
+		local applied = select(i, ...)
+		if applied == true then
+			applied = name
+		end
+		if c.IsAuraPendingFor(applied) then
+			return true
+		end
+	end
+end
+
+local function getAppliedDuration(name, ...)
+	return isApplied(name, ...) and 9001
+end
+
+local function hasAura(
+	name, noGCD, matchSpellID, checkFunction, durationFunction, target, ...)
+	
+	local id = c.GetID(name)
+	if isApplied(name, ...) then
+		return true
+	end
+	
+	local duration = durationFunction(id, target, nil, nil, nil, matchSpellID)
 	if duration == 0 then
 		-- duration == 0 for permanent buffs
-		return s.Buff(c.GetID(name), "player", nil, nil, nil, matchSpellID)
+		return checkFunction(id, target, nil, nil, nil, matchSpellID)
 	else
 		return duration > c.GetBusyTime(noGCD)
 	end
 end
 
-function c.GetBuffDuration(name, noGCD, matchSpellID)
-	return math.max(
-		0, 
-		s.BuffDuration(c.GetID(name), "player", nil, nil, nil, matchSpellID)
-			- c.GetBusyTime(noGCD))
+function c.HasBuff(name, noGCD, matchSpellID, ...)
+	return hasAura(
+		name, noGCD, matchSpellID, s.Buff, s.BuffDuration, "player", ...)
+end
+
+function c.GetBuffDuration(name, noGCD, matchSpellID, ...)
+	return getAppliedDuration(name, ...)
+		or math.max(
+			0, 
+			s.BuffDuration(c.GetID(name), "player", nil, nil, nil, matchSpellID)
+				- c.GetBusyTime(noGCD))
 end
 
 function c.GetBuffStack(name, noGCD, matchSpellID)
@@ -226,8 +302,38 @@ function c.GetBuffStack(name, noGCD, matchSpellID)
 	end
 end
 
-function c.HasMyDebuff(name, noGCD, matchSpellID)
-	return c.GetMyDebuffDuration(name, noGCD, matchSpellID) > 0
+function c.HasMyBuff(name, noGCD, matchSpellID, ...)
+	return hasAura(
+		name, 
+		noGCD, 
+		matchSpellID, 
+		s.MyBuff, 
+		s.MyBuffDuration, 
+		"player", 
+		...)
+end
+
+function c.GetMyBuffDuration(name, noGCD, matchSpellID, ...)
+	return getAppliedDuration(name, ...)
+		or math.max(
+			0, 
+			s.MyBuffDuration(
+					c.GetID(name), "player", nil, nil, nil, matchSpellID)
+				- c.GetBusyTime(noGCD))
+end
+
+function c.GetMyBuffStack(name, noGCD, matchSpellID)
+	local id = c.GetID(name)
+	if c.HasMyBuff(id, noGCD, matchSpellID) then -- ensure won't to expire
+		return s.MyBuffStack(id, "player", nil, nil, nil, matchSpellID)
+	else
+		return 0
+	end
+end
+
+function c.HasMyDebuff(name, noGCD, matchSpellID, ...)
+	return hasAura(
+		name, noGCD, matchSpellID, s.MyDebuff, s.MyDebuffDuration, nil, ...)
 end
 
 function c.GetMyDebuffStack(name, noGCD, matchSpellID)
@@ -238,15 +344,17 @@ function c.GetMyDebuffStack(name, noGCD, matchSpellID)
 	end
 end
 
-function c.GetMyDebuffDuration(name, noGCD, matchSpellID)
-	return math.max(
-		0, 
-		s.MyDebuffDuration(c.GetID(name), nil, nil, nil, nil, matchSpellID) 
-			- c.GetBusyTime(noGCD))
+function c.GetMyDebuffDuration(name, noGCD, matchSpellID, ...)
+	return getAppliedDuration(name, ...)
+		or math.max(
+			0, 
+			s.MyDebuffDuration(c.GetID(name), nil, nil, nil, nil, matchSpellID) 
+				- c.GetBusyTime(noGCD))
 end
 
-function c.HasDebuff(name, noGCD, matchSpellID)
-	return c.GetDebuffDuration(name, noGCD, matchSpellID) > 0
+function c.HasDebuff(name, noGCD, matchSpellID, ...)
+	return hasAura(
+		name, noGCD, matchSpellID, s.Debuff, s.DebuffDuration, nil, ...)
 end
 
 function c.GetDebuffStack(name, noGCD, matchSpellID)
@@ -257,11 +365,12 @@ function c.GetDebuffStack(name, noGCD, matchSpellID)
 	end
 end
 
-function c.GetDebuffDuration(name, noGCD, matchSpellID)
-	return math.max(
-		0, 
-		s.DebuffDuration(c.GetID(name), nil, nil, nil, nil, matchSpellID) 
-			- c.GetBusyTime(noGCD))
+function c.GetDebuffDuration(name, noGCD, matchSpellID, ...)
+	return getAppliedDuration(name, ...)
+		or math.max(
+			0, 
+			s.DebuffDuration(c.GetID(name), nil, nil, nil, nil, matchSpellID) 
+				- c.GetBusyTime(noGCD))
 end
 
 function c.SelfBuffNeeded(name)

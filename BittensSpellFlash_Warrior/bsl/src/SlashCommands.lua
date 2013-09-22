@@ -1,7 +1,7 @@
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "SlashCommands", 3) then
+if u.SkipOrUpgrade(c, "SlashCommands", 6) then
 	return
 end
 
@@ -45,7 +45,7 @@ function c.Debug(tag, ...)
 end
 
 function c.ToggleDebugging(tag)
-	if tag == nil then
+	if tag == nil or tag == "" then
 		tag = "Debugging Info"
 	end
 	c.ShouldPrint[tag] = c.ShouldPrint[tag] == false
@@ -67,13 +67,40 @@ function c.ToggleFloatingCombatText()
 	if GetCVar("CombatDamage") == "0" then
 		SetCVar("CombatDamage", 1)
 		SetCVar("enableCombatText", 1)
+		SHOW_COMBAT_TEXT = "1"
 		libPrint("Floating Combat Text on")
 	else
 		SetCVar("CombatDamage", 0)
 		SetCVar("enableCombatText", 0)
+		SHOW_COMBAT_TEXT = "0"
 		libPrint("Floating Combat Text off")
+	end
+	if (CombatText_UpdateDisplayedMessages) then
+		CombatText_UpdateDisplayedMessages() 
 	end
 end
 
 regCommand("floatingcombattext", c.ToggleFloatingCombatText)
 regCommand("fct", c.ToggleFloatingCombatText)
+
+--------------------------------------------------------------- Bliz Highlights
+function c.ToggleAlwaysShowBlizHighlights()
+	c.AlwaysShowBlizHighlights = not c.AlwaysShowBlizHighlights
+	libPrint("Use Blizzard Proc Animations:", c.AlwaysShowBlizHighlights)
+end
+
+regCommand("blizprocs", c.ToggleAlwaysShowBlizHighlights)
+
+--------------------------------------------------------- Damage Mode in Groups
+function c.InDamageMode()
+	return c.IsSolo() 
+		and c.GetHealthPercent("player") > 50 
+		or c.DamageModeInGroups
+end
+
+function c.ToggleDamageModeInGroups()
+	c.DamageModeInGroups = not c.DamageModeInGroups
+	libPrint("Damage Mode in Groups:", c.DamageModeInGroups)
+end
+
+regCommand("damage", c.ToggleDamageModeInGroups)

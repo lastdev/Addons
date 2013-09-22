@@ -1,99 +1,96 @@
-== Version 2.8.0
-NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
-* Balance: Updated Moonfire/Sunfire priorities for a slight dps gain.
-* Balance: Starfall is now held to line up with Incarnation if applicable (a dps gain).
-* Balance: Incarnation stops flashing once you start moving toward the next eclipse.
+== Version 50400.1.2
+* Bugfix update to Bitten's SpellFlash Library.
 
-== Version 2.7.1
-* Feral: Bugfix - Savage Roar was not flashing when glyphed.  The rotation needs work when it's glyphed, but at least it flashes now.
+== Version 50400.1.1
+* Update for the new version of Bitten's SpellFlash Library.
 
-== Version 2.7.0
-NOTE: Your options will be reset when you upgrade to this version.
-* Repackaging so that Bitten's SpellFlash Library is included with the addon, instead of downloaded separately.
-* Several other internal changes.
-* Guardian: Mangle with Soul of the Forest now grants 10 rage, instead of 7.
+== Version 50400.1.0
+* Balance: Added flashing for Astral Communion when you have Astral Insight (new for this patch).
+* Feral: Glyphed Frenzied Regen now takes 50 rage (was 60 before this patch).
+* Feral & Guardian: Removed Nature's Swiftness (since it's no longer available in this patch).
+* Guardian: Anticipates rage accoring to the new behavior of Soul of the Forest.
+* Restoration: Updated the calculation for Innervate.
+* Restoration: You can only have 1 Wild Mushroom out now.
+* All: Exact calculations to determine whether you can use a Healing Touch without overhealing (unless it crits).
 
-== Version 2.6.2
-* Feral: Bugfix - removed the REST of the Tier 13 code, so the addon actually works again ...
+== Version 3.3.3
+* Guardian: Now checks for the proc from Indomitable Primal Diamond before flashing your mitigation cooldowns.
+* Guardian: Now checks for a number of external mitigation cooldowns before flashing one of your own.
 
-== Version 2.6.1
-* Feral: Removed Tier 13 code.
-* Guardian: Increased the priority of Might of Ursoc when its cooldown is 2 minutes (2pT14, unglyphed).
-* Guardian: Savage Defense now only flashes when in melee range.
-* Guardian: Bugfix - glyphed Frenzied Regeneration no longer flashes when you have under 60 rage.
-* Guardian: Bugfix - activating Heart of the Wild caused a Lua error.
+== Version 3.3.2
+* Bugfix to Bitten's SpellFlash Library.
 
-== Version 2.6.0
-* Guardian: Added a Guardian rotation.
-* All: Bugfix - Faery Fire was not flashing if you took the Faerie Swarm talent.
+== Version 3.3.1
+* Guardian: Changed the AoE flash color to improve visibility.
+* Guardian: Added another priority level for Thrash when in damage mode, to keep up the bleed at a higher priority.
+* Guardian: Do not flash Maul if a bleed is not detected on the target (though the detection is not perfect).
+* Guardian: Do not flash Rejuvenation in damage mode.
 
-== Version 2.5.0
-* Balance: Updating the rotation based on research with Simulationcraft.
+== Version 3.3.0
+* Balance: Smoothed out some quirkiness in the flashing.
+* Balance: Better tracking of DoT tick times.
+* Balance: Don't refresh DoTs early when their Eclipse is not up (should be a dps gain).
+* Guardian: Don't flash Thrash at its higher priority for Weakened Blows when in damage mode.
 
-== Version 2.4.4
-* Making the "Out of Date" status go away.  Please report any real issues w/ the new patch.
+== Version 3.2.3
+* Guardian: Damage mode is now linked with the hidden option to toggle it in groups (see the website for more info).
+* Guardian: Berserk and Incarnation are now top priority cooldowns in damage mode.
+* Guardian: Might of Ursoc is now only used for its heal; other cooldowns may now flash while it is up.
+* Guardian: Frenzied Regeneration no longer flashes when its buff is already up (from the glyph).
 
-== Version 2.4.3
-* Balance: Continue flashing to the next priority after Starfall, in case you can't use it because it would pull a room.
-* All: Forms now only flash when in combat.
+== Version 3.2.2
+* Feral: Improved the condition to switch back to Cat Form when Rip is expiring.
+* Restoration: Healing Touch and Regrowth now flash small when neither Harmony nor Clearcasting are up.
 
-== Version 2.4.2
-* All: Added Symbiosis (thanks Olgren!).
+== Version 3.2.1
+* Restoration: Added flashing for Wild Mushroom.
+* All except Guardian: Added flashing for Soothe.
+* All except Restoration: Forms now flash before entering combat, when you have an enemy targeted.
+* All: Added flashing for food buffs.
+* All: Bugfix - Force of Nature was not flashing when in a macro.
 
-== Version 2.4.1
-* Balance: Added Solar Beam.
-* Feral: Added Skull Bash.
+== Version 3.2.0
+Update for patch 5.3.
+* Balance: Now flashes Wild Mushroom: Detonate during Solar Eclipse when all three mushrooms are out.
+* Balance & Feral: Adjusted Force of Nature flashing for the new patch.
+* Feral: Bugfix - the addon was not recognizing the execute phase!
+* Feral: Shred is now used under Berserk as well as Clearcasting.
+* Feral: Ferocious Bite is now used during the last 2 ticks of Rip no matter how many combo points, since waiting until the last tick sometimes failed due to lag, reaction time, etc.
+* Feral: Improved the condition preventing the suggestion for Bear Form if the time on Rip is getting low.
+* Feral: Faerie Fire now flashes in Bear Form when the debuff is down.
+* Feral: Skull Bash now flashes in Bear Form.
+* Feral: Maul no longer flashes if its cooldown will not be up by the time you should shift back to Cat Form.
+* Feral: Healing Touch and Renewal now flash in Bear Form when you can use the heal.
+* Feral: Healing Touch no longer flashes when you need a heal if casting it could cause your energy to cap.
+* Feral: Added Qiang the Merciless to the no-Shred list.
+* Feral & Guardian: Now anticipates rage from Primal Fury.
+* Restoration: Added Force of Nature flashing.
+* Restoration: Bugfix for a Lua error.
 
-== Version 2.4.0
-* Balance: Added a Balance rotation.
-* Feral: Added Proto-Drake Egg to the list of things not to shred.
-* All: Will not flash forms while mounted or in a traveling form.
+== Version 3.1.0
+* Feral: Added an AoE rotation.
+* Feral: Added predictive flashing for Maul if it will be available just before swapping to Cat Form.
+* Feral: Played around with Bear Form and its abilities against trivial mobs.
+* Feral & Guardian: Other spells will no longer get confused when Maul is queued.
+* Guardian: Rage predictions account for 4pT15 (very minor impact on flashing).
 
-== Version 2.3.3
-* Feral: Bugfix - there was an error when soloing with Glyph of Shred.
+== Version 3.0.0
+* Balance: Added Nature's Vigil.
+* Balance & Feral: Added Renewal.
+* Feral: Bugfix - Do not flash Thrash(Bear Form) if its bleed is already up.
+* Feral: Bugfix - The no-Shred list had an issue.
+* Guardian: Small green flashes are now used to show you which spell will be next when waiting for one to come off cooldown.
+* Guardian: Added Bone Shield and Elusive Brew (Symbiosis abilities).
+* Guardian: Added Berserk and Incarnation as mitigation cooldowns.
+* Guardian: Tweaked the priority of the other survival cooldowns a little.
+* Guardian: Added Swipe and an extra Thrash priority when in AoE mode.
+* Guardian: Calculations for Frenzied Regeneration (unglyphed) are now exact.
+* Guardian: Frenzied Regeneration and Savage Defense can now flash when the other is up if you have at least 90 rage.
+* Guardian: Unglyphed Frenzied Regeneration can now flash even when you are not tanking.
+* Guardian: Maul is flashed more freely when you are not tanking.
+* Restoration: Added flashing for Restoration.
 
-== Version 2.3.2
-* Feral: Mangle flashing was broken.
-* Feral: Incarnation flashing was a little wonky.
-
-== Version 2.3.1
-* Feral: there were bugs during the execute phase.
-
-== Version 2.3.0
-* Added a Feral rotation for the MoP beta.
-
-== Version 2.2.0
-* Bear: Only flashes Challenging Roar if your target is in melee range.
-* Cat: No longer flashes Ravage! for the moment between casting it and Stampede actually being consumed.
-* Resto: No longer flashes Swiftmend, to be consistant with other healing modules.
-* Resto: Now flashes things in yellow, to be consistant with other healing modules.
-* All: Improved timings of a few things in light of queued spells, especially for Cats.
-
-== Version 2.1.1
-* Taking out of beta.
-
-== Version 2.1.0 beta
-This beta release uses Bitten's SpellFlash Library version 3.  If you update you will also need to update any of your other Bitten's SpellFlash modules to their latest version, which may also be in beta.
-* Balance: Improved travel time detection (for calculating energy gains that are in the air).
-* Balance & Resto: Workaround for a bug in the Blizzard UI that sometimes reports the wrong cast time for a spell.
-* Bear: Will immediately consider Lacerate as a priority when you cast Pulverize (slight improvement last release, but now it's totally fixed).
-* Bear: Checks for the required talents before flashing for Infected Wounds.
-* Bear: Bugfix - will no longer flash Berserk for the second between Pulverize going up and Lacerate being consumed.
-* Cat: Checks for the required talents before flashing for Blood in the Water
-
-== Version 2.0.0
-* Balance: There is now a Balance rotation!
-* Bear: Lacerate no longer hesitates to flash after Pulverize.
-* Cat: This rotation has pretty much been rewritten.
-* All: Flashes raid buffs.
-* All: Detects feral T13 set bonuses automatically, instead of having to set it in the options.
-* All: Many talent/glyph related spells are now checked instead of assumed.
-* All: Added German localization (thanks Gucki!)
-
-== Version 1.0.1
-* Removes some stray debugging output.
-* Adds localization support.
-* Plays nicer with other addons.
-
-== Version 1.0.0 beta
-* Initial Release
+== Version 2.10.0
+* Feral: More rotation tweaks.
+* Feral: Add Azure Serpent to the list of things not to shred.
+* Feral: Bugfix - Heart of the Wild was not flashing.

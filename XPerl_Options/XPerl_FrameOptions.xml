@@ -2225,7 +2225,7 @@
 								self.varGet = function() return (XPerlDB and XPerlDB.party.anchor) or "TOP" end
 								self.varSet = function(n) XPerlDB.party.anchor = n end
 								self.setFunc = function() if (XPerl_Party_SetMainAttributes) then XPerl_Party_SetMainAttributes() XPerl_Party_Virtual(true) end end
-								XPerl_Options_Anchor_OnLoad(self)
+								--XPerl_Options_Anchor_OnLoad(self)
 							</OnLoad>
 							<OnShow>
 								XPerl_Options_Anchor_OnLoad(self)
@@ -2357,7 +2357,7 @@
 								self.varGet = function() return (XPerlDB and XPerlDB.raid.anchor) or "TOP" end
 								self.varSet = function(n) XPerlDB.raid.anchor = n end
 								self.setFunc = XPerl_Raid_ChangeAttributes
-								XPerl_Options_Anchor_OnLoad(self)
+								--XPerl_Options_Anchor_OnLoad(self)
 							</OnLoad>
 							<OnShow>
 								XPerl_Options_Anchor_OnLoad(self)
@@ -4518,7 +4518,7 @@
 						<Scripts>
 							<OnLoad>
 								XPerl_Options_RegisterProtected(_G[self:GetName().."Button"])
-								XPerl_Options_LoadSettings_OnLoad(self)
+								--XPerl_Options_LoadSettings_OnLoad(self)
 							</OnLoad>
 							<OnShow>
 								XPerl_Options_LoadSettings_OnLoad(self)
@@ -4652,6 +4652,7 @@
 
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_SHOW_RUNES")
 								self.configBase = "XPerlDB.player"
+								self.flashFrame = XPerl_Player and XPerl_Player.runes;
 								self.configIndex = "showRunes"
 								self.configClick = XPerl_Player_Reset
 								self.Validate = function()
@@ -4677,6 +4678,7 @@
 
 								XPerl_OptionsSetMyText(self, "XPERL_CONF_PLAYER_DOCKRUNES")
 								self.configBase = "XPerlDB.player"
+								self.flashFrame = XPerl_Player and XPerl_Player.runes;
 								self.configIndex = "dockRunes"
 								self.configClick = XPerl_Player_Reset
 							</OnLoad>
@@ -10171,7 +10173,24 @@
 								XPerlDB.raid.values = nil
 								XPerl_Raid_OptionActions()
 								XPerl_Options_CheckRadio(self,{"Percent", "Values"})
+								XPerl_Options_EnableCheck(_G[self:GetParent():GetName().."_precisionPercent"], true)
 							</OnClick>
+						</Scripts>
+					</CheckButton>
+					
+					<CheckButton name="$parent_precisionPercent" inherits="XPerlCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="$parent_Percent" relativePoint="TOPRIGHT">
+								<Offset><AbsDimension x="100" y="4"/></Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_PRECISIONPERCENTS")
+								self.configBase = "XPerlDB.raid"
+								self.configIndex = "precisionPercent"
+								self.configClick = XPerl_Raid_OptionActions
+							</OnLoad>
 						</Scripts>
 					</CheckButton>
 
@@ -10187,12 +10206,14 @@
 							</OnLoad>
 							<OnShow>
 								self:SetChecked(XPerlDB.raid.values)
+								XPerl_Options_EnableCheck(_G[self:GetParent():GetName().."_precisionPercent"], not XPerlDB.raid.values)
 							</OnShow>
 							<OnClick>
 								self:SetChecked(true)
 								XPerlDB.raid.values = 1
 								XPerl_Raid_OptionActions()
 								XPerl_Options_CheckRadio(self,{"Percent", "Values"})
+								XPerl_Options_EnableCheck(_G[self:GetParent():GetName().."_precisionPercent"], false)
 							</OnClick>
 						</Scripts>
 					</CheckButton>
@@ -10231,6 +10252,25 @@
 								self.configIndex = "manaPercent"
 								self.configClick = XPerl_Raid_OptionActions
 								XPerl_Options_RegisterProtected(self)
+								self.Validate = function()
+									XPerl_Options_EnableSibling(self, "precisionManaPercent")
+								end
+							</OnLoad>
+						</Scripts>
+					</CheckButton>
+					
+					<CheckButton name="$parent_precisionManaPercent" inherits="XPerlCheckButtonTemplate">
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="$parent_ManaPercent" relativePoint="TOPRIGHT">
+								<Offset><AbsDimension x="100" y="2"/></Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_MANAPRECISIONPERCENT")
+								self.configBase = "XPerlDB.raid"
+								self.configIndex = "precisionManaPercent"
+								self.configClick = XPerl_Raid_OptionActions
 							</OnLoad>
 						</Scripts>
 					</CheckButton>
@@ -10814,7 +10854,31 @@
 										self.configIndex = "sortByClass"
 										self.configClick = function() XPerl_Raid_ChangeAttributes() XPerl_Raid_OptionActions() end
 										XPerl_Options_RegisterProtected(self)
+										self.Validate = function()
+											XPerl_Options_EnableCheck(_G[self:GetParent():GetName().."_sortByRole"], not XPerlDB.raid.sortByClass)
+										end
 									</OnLoad>
+								</Scripts>
+							</CheckButton>
+							
+							<CheckButton name="$parent_sortByRole" inherits="XPerlCheckButtonTemplate">
+								<Anchors>
+									<Anchor point="TOPRIGHT" relativeTo="$parent_ByClass" relativePoint="BOTTOMLEFT">
+										<Offset><AbsDimension x="200" y="30"/></Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_RAID_SORTBYROLE", true)
+										self.configBase = "XPerlDB.raid"
+										self.configIndex = "sortByRole"
+										self.configClick = function() XPerl_Raid_ChangeAttributes() XPerl_Raid_OptionActions() end
+										XPerl_Options_RegisterProtected(self)
+										self.Validate = function()
+											XPerl_Options_EnableCheck(_G[self:GetParent():GetName().."_ByClass"], not XPerlDB.raid.sortByRole)
+										end
+									</OnLoad>
+									
 								</Scripts>
 							</CheckButton>
 

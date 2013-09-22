@@ -2,10 +2,10 @@
 ************************************************************************
 Vendor.lua
 ************************************************************************
-File date: 2013-03-01T16:12:43Z
-File hash: f595a95
-Project hash: f922565
-Project version: 2.4.6
+File date: 2013-09-10T13:23:20Z
+File hash: 4bcba04
+Project hash: 4bcba04
+Project version: 2.5.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -206,8 +206,8 @@ function addon:InitVendor()
 	AddVendor(12022,	L["Lorelae Wintersong"],		Z.MOONGLADE,			48.3,	40.1,	"Neutral")
 	AddVendor(12033,	L["Wulan"],				Z.DESOLACE,			26.2,	69.7,	"Horde")
 	AddVendor(12043,	L["Kulwia"],				Z.STONETALON_MOUNTAINS,		48.6,	61.6,	"Horde")
-	AddVendor(12245,	L["Vendor-Tron 1000"],			Z.DESOLACE,			60.3,	38.1,	"Neutral")
-	AddVendor(12246,	L["Super-Seller 680"],			Z.DESOLACE,			40.5,	79.3,	"Neutral")
+--	AddVendor(12245,	L["Vendor-Tron 1000"],			Z.DESOLACE,			60.3,	38.1,	"Neutral")
+--	AddVendor(12246,	L["Super-Seller 680"],			Z.DESOLACE,			40.5,	79.3,	"Neutral")
 	AddVendor(12941,	L["Jase Farlane"],			Z.EASTERN_PLAGUELANDS,		74.8,	51.8,	"Neutral")
 	AddVendor(12942,	L["Leonard Porter"],			Z.WESTERN_PLAGUELANDS,		43.0,	84.3,	"Alliance")
 	AddVendor(12943,	L["Werg Thickblade"],			Z.TIRISFAL_GLADES,		83.2,	69.7,	"Horde")
@@ -419,8 +419,8 @@ function addon:InitVendor()
 	AddVendor(52644,	L["Tarien Silverdew"],			Z.DARNASSUS,			54.4,	30.7,	"Alliance") -- COMPLETELY UPDATED
 	AddVendor(52655,	L["Palehoof's Big Bag of Parts"],	Z.THUNDER_BLUFF,		36.2,	60.2,	"Horde") -- COMPLETELY UPDATED
 	AddVendor(52658,	L["Paku Cloudchaser"],			Z.THUNDER_BLUFF,		34.7,	53.5,	"Horde") -- COMPLETELY UPDATED
-	AddVendor(53214,	L["Damek Bloombeard"],			Z.MOUNT_HYJAL,			47.0,	90.2,	"Neutral")
-	AddVendor(53881,	L["Ayla Shadowstorm"],			Z.MOUNT_HYJAL,			72.5,	36.2,	"Neutral")
+	AddVendor(53214,	L["Damek Bloombeard"],			Z.MOLTEN_FRONT,			47.0,	90.6,	"Neutral")
+	AddVendor(53881,	L["Ayla Shadowstorm"],			Z.MOLTEN_FRONT,			44.8,	86.6,	"Neutral")
 	AddVendor(54232,	L["Mrs. Gant"],				Z.THE_CAPE_OF_STRANGLETHORN,	42.6,	72.8,	"Neutral") -- COMPLETLY UPDATED
 	AddVendor(56925,	L["Farrah Facet"],			Z.STORMWIND_CITY,		63.8,	61.6,	"Alliance") -- COMPLETLY UPDATED
 	AddVendor(57922,	L["Taryssa Lazuria"],			Z.ORGRIMMAR,			72.4,	34.6,	"Horde") -- COMPLETLY UPDATED
@@ -442,6 +442,7 @@ function addon:InitVendor()
 	AddVendor(64595,	L["Rushi the Fox"],			Z.TOWNLONG_STEPPES,		48.8,	70.6,	"Neutral")
 	AddVendor(64599,	L["Ambersmith Zikk"],			Z.DREAD_WASTES,			55.0,	35.6,	"Neutral")
 	AddVendor(67976,	L["Tinkmaster Overspark"],		Z.KRASARANG_WILDS,		16.5,	79.3,	"Alliance")
+	AddVendor(73293,	L["Whizzig"],				Z.TIMELESS_ISLE,		42.8,	59.2,	"Neutral") -- COMPLETELY UPDATED
 
 	self.InitVendor = nil
 end

@@ -114,11 +114,11 @@ L:SetGeneralLocalization({
 
 L:SetWarningLocalization({
 	WarningTeleportNow	= "¡Teletransportado!",
-	WarningTeleportSoon	= "Teletransporte en %d seg",
+	WarningTeleportSoon	= "Teletransporte en %d seg"
 })
 
 L:SetTimerLocalization({
-	TimerTeleport		= "Treletransporte",
+	TimerTeleport		= "Treletransporte"
 })
 
 L:SetOptionLocalization({
@@ -212,7 +212,7 @@ L:SetMiscLocalization({
 	Boss1 = "Feugen",
 	Boss2 = "Stalagg",
 	Charge1 = "negativo",
-	Charge2 = "positivo",
+	Charge2 = "positivo"
 })
 
 L:SetOptionLocalization({
@@ -229,7 +229,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionCatLocalization({
-	Arrows	= "Flechas",
+	Arrows	= "Flechas"
 })
 
 
@@ -320,14 +320,14 @@ L:SetTimerLocalization({
 L:SetWarningLocalization({
 	WarningMarkSoon				= "Marca %d en 3 seg",
 	WarningMarkNow				= "Marca %d!",
-	SpecialWarningMarkOnPlayer	= "%s: %s",
+	SpecialWarningMarkOnPlayer	= "%s: %s"
 })
 
 L:SetMiscLocalization({
 	Korthazz	= "Señor feudal Korth'azz",
 	Rivendare	= "Barón Osahendido",
 	Blaumeux	= "Lady Blaumeux",
-	Zeliek		= "Sir Zeliek",
+	Zeliek		= "Sir Zeliek"
 })
 
 
@@ -360,7 +360,7 @@ L:SetWarningLocalization({
 	WarningAirPhaseSoon		= "Fase Aerea en 10 seg",
 	WarningAirPhaseNow		= "Fase Aerea",
 	WarningLanded			= "Sapphiron aterrizo",
-	WarningDeepBreath		= "Respira hondo!",
+	WarningDeepBreath		= "Respira hondo!"
 })
 
 L:SetTimerLocalization({
@@ -384,9 +384,6 @@ L:SetOptionLocalization({
 	TimerPhase2			= "Mostrar tiempo para Fase 2",
 	specwarnP2Soon	= "Mostrar aviso especial 10 segundos antes de que Kel'Thuzad salga",
 	warnAddsSoon	= "Mostrar pre-aviso para Guardianes de Corona de Hielo",
-	SetIconOnMC			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(28410),
-	SetIconOnManaBomb	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(27819),
-	SetIconOnFrostTomb	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(27808),
 	ShowRange		= "Mostrar distancia cuando empieze la fase 2"
 })
 

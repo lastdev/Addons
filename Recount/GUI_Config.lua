@@ -666,6 +666,8 @@ function me:CreateTextureSelection(parent)
 
 	local theFrame=me.TextureOptions
 	local BarTextures=SM:List("statusbar")
+	
+	SM:RegisterCallback("LibSharedMedia_Registered", me.RefreshStatusBars)
 
 	theFrame:SetHeight(parent:GetHeight()-34)
 	theFrame:SetWidth(200)
@@ -992,6 +994,7 @@ end
 local ZoneLabels = 
 {
 	["none"] = L["Outside Instances"],
+	["scenario"] = L["Scenario Instances"],
 	["party"] = L["Party Instances"],
 	["raid"] = L["Raid Instances"],
 	["pvp"] = L["Battlegrounds"],
@@ -1007,7 +1010,7 @@ local GroupLabels =
 
 local ZoneOrder = 
 {
-	"none", "party", "raid", "pvp", "arena"
+	"none", "scenario", "party", "raid", "pvp", "arena"
 }
 
 function me:SetupMiscOptions(parent)
@@ -1417,6 +1420,8 @@ function me:CreateConfigWindow()
 	me:CreateAppearanceOptions(theFrame)
 	me:CreateWindowOptions(theFrame)
 	me:CreateColorOptions(theFrame)
+	
+	theFrame:SetFrameStrata("DIALOG")
 	
 	--Need to add it to our window ordering system
 	Recount:AddWindow(theFrame)

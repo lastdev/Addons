@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(654, "DBM-Party-MoP", 8, 311)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7834 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
 mod:SetCreatureID(58632)
-mod:SetModelID(40293)
 
 mod:RegisterCombat("combat")
 
@@ -38,14 +37,14 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(111217) then
+	if args.spellId == 111217 then
 		warnDragonsReach:Show()
 		timerDragonsReachCD:Start()
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(111216) then
+	if args.spellId == 111216 then
 		warnBladesofLight:Show()
 		specWarnBladesofLight:Show()
 		timerDragonsReachCD:Cancel()
@@ -53,7 +52,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(111216) then
+	if args.spellId == 111216 then
 		timerBladesofLightCD:Start()
 	end
 end

@@ -12,7 +12,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	SpecWarnOverloadSoon	= "Mostra un avviso speciale prima del Sovraccarico",
+	SpecWarnOverloadSoon	= "Mostra un avviso speciale prima del Sovraccarico"
 })
 
 L:SetMiscLocalization({
@@ -45,10 +45,6 @@ L:SetMiscLocalization({
 -- Gara'jal the Spiritbinder --
 -------------------------------
 L= DBM:GetModLocalization(682)
-
-L:SetOptionLocalization({
-	SetIconOnVoodoo		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122151)
-})
 
 L:SetMiscLocalization({
 	Pull		= "È giunta l'ora di schiattare!" -- ChatLog

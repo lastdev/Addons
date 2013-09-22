@@ -11,6 +11,7 @@ a.SpellIDs = {
 	["Chi Brew"] = 115399,
 	["Chi Burst"] = 123986,
 	["Chi Sphere"] = 121283,
+	["Chi Torpedo"] = 115008,
 	["Chi Wave"] = 115098,
 	["Combo Breaker: Blackout Kick"] = 116768,
 	["Combo Breaker: Tiger Palm"] = 118864,
@@ -57,6 +58,7 @@ a.SpellIDs = {
 	["Stance of the Fierce Tiger"] = 103985,
 	["Stance of the Sturdy Ox"] = 115069,
 	["Stance of the Wise Serpent"] = 115070,
+	["Storm, Earth, and Fire"] = 137639,
 	["Summon Black Ox Statue"] = 115315,
 	["Summon Jade Serpent Statue"] = 115313,
 	["Surging Mist"] = 116694,
@@ -67,8 +69,11 @@ a.SpellIDs = {
 	["Touch of Death"] = 115080,
 	["Uplift"] = 116670,
 	["Vital Mists"] = 118674,
-	["Zen Meditation"] = 115176,
 	["Zen Sphere"] = 124081,
+	
+	-- Items
+	["Purifier"] = 138237,
+	["Staggering"] = 138233,
 }
 
 a.TalentIDs = {
@@ -84,4 +89,18 @@ a.GlyphIDs = {
 }
 
 a.EquipmentSets = {
+--	BMT15 = {
+--	    HeadSlot = { 95907, 95277, 96651 },
+--	    ShoulderSlot = { 95909, 95279, 96653 },
+--	    ChestSlot = { 95905, 95275, 96649 },
+--	    HandsSlot = { 95906, 95276, 96650 },
+--	    LegsSlot = { 95908, 95278, 96652 },
+--	},
+	WWT15 = {
+	    HeadSlot = { 95897, 95267, 96641 },
+	    ShoulderSlot = { 95899, 95269, 96643 },
+	    ChestSlot = { 95895, 95265, 96639 },
+	    HandsSlot = { 95896, 95266, 96640 },
+	    LegsSlot = { 95898, 95268, 96642 },
+	},
 }

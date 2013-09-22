@@ -3,18 +3,37 @@ if GetLocale() ~= "deDE" then return end
 DBM_CORE_NEED_SUPPORT				= "Hey, bist du ein Programmierer oder gut in Fremdsprachen? Falls ja, benötigt das DBM-Team deine Hilfe, damit DBM das beste Boss Mod für WoW bleibt. Trete dem Team auf www.deadlybossmods.com bei oder sende eine E-Mail an tandanu@deadlybossmods.com oder nitram@deadlybossmods.com."
 DBM_HOW_TO_USE_MOD					= "Willkommen bei DBM. Tippe /dbm help für eine Liste unterstützter Kommandos. Für den Zugriff auf Einstellungen tippe /dbm in den Chat um die Konfiguration zu beginnen. Lade gewünschte Zonen manuell um jegliche Boss-spezifische Einstellungen nach deinen Wünschen zu konfigurieren. DBM versucht dies für dich zu tun, indem es beim ersten Start deine Spezialisierung scannt, aber du kannst zusätzliche Einstellungen aktivieren."
 
+DBM_FORUMS_MESSAGE					= "Du hast einen Bug oder einen falschen Timer gefunden? Du glaubst einige Mods würden zusätzliche Warnungen, Timer oder Spezialfeatures benötigen?\nBesuche die neuen Deadly Boss Mods Foren für Diskussionen, Fehlermeldungen und Featurewünsche: |HDBM:forums|h|cff3588ffhttp://www.deadlybossmods.com|r (Du kannst auf den Link klicken um ihn zu kopieren.)"
+DBM_FORUMS_COPY_URL_DIALOG			= "Besuche unsere neuen Diskussions- und Support-Foren\r\n(gehostet von Elitist Jerks!)"
+
 DBM_CORE_LOAD_MOD_ERROR				= "Fehler beim Laden der Boss Mods für %s: %s"
 DBM_CORE_LOAD_MOD_SUCCESS			= "Boss Mods für '%s' geladen. Für weitere Einstellungen /dbm oder /dbm help im Chatfenster eingeben!"
+DBM_CORE_LOAD_MOD_COMBAT			= "Laden von '%s' verzögert bis du den Kampf verlässt"
 DBM_CORE_LOAD_GUI_ERROR				= "Konnte die grafische Benutzeroberfläche nicht laden: %s"
 DBM_CORE_LOAD_GUI_COMBAT			= "Die grafische Benutzeroberfläche kann nicht im Kampf geladen werden. Zur Vornahme von Einstellungen bitte diese zunächst außerhalb des Kampfes laden. Danach steht sie auch im Kampf zur Verfügung."
+DBM_CORE_BAD_LOAD					= "Dein Boss Mod für diese Instanz konnte nicht vollständig korrekt im Kampf geladen werden. Bitte führe baldmöglichst nach Kampfende /reload aus."
+
+DBM_CORE_LOOT_SPEC_REMINDER			= "Deine aktuelle Spezialisierung ist %s. Deine aktuelle Beutespezialisierung ist %s."
+
+DBM_CORE_BIGWIGS_ICON_CONFLICT		= "DBM hat festgestellt, dass du das Setzen von Schlachtzugzeichen in \"BigWigs\" und in \"DBM\" aktiviert hast. Bitte deaktiviere das Setzen von Zeichen in einem der beiden Addons um Konflikte zu vermeiden."
 
 DBM_CORE_COMBAT_STARTED				= "Kampf gegen %s hat begonnen. Viel Glück! :)";
-DBM_CORE_BOSS_DOWN					= "%s tot nach %s!"
-DBM_CORE_BOSS_DOWN_L				= "%s tot nach %s! Dein letzter Sieg hat %s gedauert und der schnellste %s. Das war dein %d. Sieg."
-DBM_CORE_BOSS_DOWN_NR				= "%s tot nach %s! Das ist ein neuer Rekord! (Der alte Rekord war %s.) Das war dein %d. Sieg."
+DBM_CORE_COMBAT_STARTED_IN_PROGRESS	= "Du wurdest in den laufenden Kampf gegen %s verwickelt. Viel Glück! :)"
+DBM_CORE_SCENARIO_STARTED			= "%s gestartet. Viel Glück! :)"
+DBM_CORE_BOSS_DOWN					= "%s besiegt nach %s!"
+DBM_CORE_BOSS_DOWN_I				= "%s besiegt! Das war dein %d. Sieg."
+DBM_CORE_BOSS_DOWN_L				= "%s besiegt nach %s! Dein letzter Sieg hat %s gedauert und der schnellste %s. Das war dein %d. Sieg."
+DBM_CORE_BOSS_DOWN_NR				= "%s besiegt nach %s! Das ist ein neuer Rekord! (Der alte Rekord war %s.) Das war dein %d. Sieg."
+DBM_CORE_SCENARIO_COMPLETE			= "%s abgeschlossen nach %s!"
+DBM_CORE_SCENARIO_COMPLETE_L		= "%s abgeschlossen nach %s! Dein letzter Abschluss hat %s gedauert und der schnellste %s. Das war dein %d. Abschluss."
+DBM_CORE_SCENARIO_COMPLETE_NR		= "%s abgeschlossen nach %s! Das ist ein neuer Rekord! (Der alte Rekord war %s.) Das war dein %d. Abschluss."
 DBM_CORE_COMBAT_ENDED_AT			= "Kampf gegen %s (%s) hat nach %s aufgehört."
 DBM_CORE_COMBAT_ENDED_AT_LONG		= "Kampf gegen %s (%s) hat nach %s aufgehört. Das war deine %d. Niederlage auf diesem Schwierigkeitsgrad."
+DBM_CORE_SCENARIO_ENDED_AT			= "%s abgebrochen nach %s."
+DBM_CORE_SCENARIO_ENDED_AT_LONG		= "%s abgebrochen nach %s. Das war dein %d. Abbruch auf diesem Schwierigkeitsgrad."
 DBM_CORE_COMBAT_STATE_RECOVERED		= "Kampf gegen %s hat vor %s begonnen, Neukalibrierung der Timer erfolgt..."
+DBM_CORE_TRANSCRIPTOR_LOG_START		= "\"Transcriptor\"-Aufzeichnung gestartet."
+DBM_CORE_TRANSCRIPTOR_LOG_END		= "\"Transcriptor\"-Aufzeichnung beendet."
 
 DBM_CORE_TIMER_FORMAT_SECS			= "%d |4Sekunde:Sekunden;"
 DBM_CORE_TIMER_FORMAT_MINS			= "%d |4Minute:Minuten;"
@@ -24,35 +43,49 @@ DBM_CORE_MIN						= "Min"
 DBM_CORE_MIN_FMT					= "%d Min"
 DBM_CORE_SEC						= "Sek"
 DBM_CORE_SEC_FMT					= "%d Sek"
-DBM_CORE_DEAD						= "Tot"
-DBM_CORE_OK							= "Okay"
 
+DBM_CORE_GENERIC_WARNING_DUPLICATE	= "Einer der %s"
 DBM_CORE_GENERIC_WARNING_BERSERK	= "Berserker in %s %s"
 DBM_CORE_GENERIC_TIMER_BERSERK		= "Berserker"
 DBM_CORE_OPTION_TIMER_BERSERK		= "Zeige Zeit bis $spell:26662"
+DBM_CORE_GENERIC_TIMER_COMBAT		= "Kampfbeginn"
+DBM_CORE_OPTION_TIMER_COMBAT		= "Zeige Zeit bis Kampfbeginn"
 DBM_CORE_OPTION_HEALTH_FRAME		= "Zeige Lebensanzeige"
 
 DBM_CORE_OPTION_CATEGORY_TIMERS		= "Timer"
 DBM_CORE_OPTION_CATEGORY_WARNINGS	= "Ansagen"
-DBM_CORE_OPTION_CATEGORY_MISC		= "Verschiedenes"
 
 DBM_CORE_AUTO_RESPONDED						= "Automatisch geantwortet."
 DBM_CORE_STATUS_WHISPER						= "%s: %s, %d/%d Spieler am Leben"
+--Bosses
 DBM_CORE_AUTO_RESPOND_WHISPER				= "%s ist damit beschäftigt gegen %s zu kämpfen! (%s, %d/%d Spieler am Leben)"
 DBM_CORE_WHISPER_COMBAT_END_KILL			= "%s hat %s besiegt!"
 DBM_CORE_WHISPER_COMBAT_END_KILL_STATS		= "%s hat %s besiegt! Das war der %d. Sieg."
 DBM_CORE_WHISPER_COMBAT_END_WIPE_AT			= "%s war %s bei %s unterlegen."
 DBM_CORE_WHISPER_COMBAT_END_WIPE_STATS_AT	= "%s war %s bei %s unterlegen. Das war die %d. Niederlage auf diesem Schwierigkeitsgrad."
+--Scenarios (no percents. words like "fighting" or "wipe" changed to better fit scenarios)
+DBM_CORE_AUTO_RESPOND_WHISPER_SCENARIO		= "%s ist beschäftigt in %s (%d/%d Spieler am Leben)"
+DBM_CORE_WHISPER_SCENARIO_END_KILL			= "%s hat %s abgeschlossen!"
+DBM_CORE_WHISPER_SCENARIO_END_KILL_STATS	= "%s hat %s abgeschlossen! Das war der %d. Abschluss."
+DBM_CORE_WHISPER_SCENARIO_END_WIPE			= "%s hat %s abgebrochen."
+DBM_CORE_WHISPER_SCENARIO_END_WIPE_STATS	= "%s hat %s abgebrochen. Das war der %d. Abbruch auf diesem Schwierigkeitsgrad."
 
-DBM_CORE_VERSIONCHECK_HEADER		= "Deadly Boss Mods - Versionen"
+DBM_CORE_VERSIONCHECK_HEADER		= "Boss Mod - Versionen"
 DBM_CORE_VERSIONCHECK_ENTRY			= "%s: %s (r%d)"
-DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s: DBM nicht installiert"
-DBM_CORE_VERSIONCHECK_FOOTER		= "%d Spieler mit Deadly Boss Mods gefunden"
-DBM_CORE_YOUR_VERSION_OUTDATED      = "Deine Version von Deadly Boss Mods ist veraltet! Bitte besuche http://dev.deadlybossmods.com um die neueste Version herunterzuladen."
+DBM_CORE_VERSIONCHECK_ENTRY_TWO		= "%s: %s (r%d) und %s (r%d)"
+DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s: Kein Boss Mod installiert"
+DBM_CORE_VERSIONCHECK_FOOTER		= "%d Spieler mit DBM und %d Spieler mit BigWigs gefunden"
+DBM_CORE_YOUR_VERSION_OUTDATED      = "Deine Version von Deadly Boss Mods ist veraltet! Bitte besuche http://www.deadlybossmods.com um die neueste Version herunterzuladen."
+DBM_CORE_OUTDATED_PVP_MODS			= "Deine PvP-Mods von DBM sind veraltet. Die PvP-Mods sind nicht mehr im \"DBM-Core\"-Download enthalten. Die aktuellsten PvP-Mods findest du unter http://www.deadlybossmods.com als separaten Download. Bitte lösche den Ordner \"DBM-PvP\" (unterhalb des Ordners \"...\\Interface\\AddOns\"), falls du die PvP-Mods nicht benutzt."
+--DBM_BIG_WIGS
+--DBM_BIG_WIGS_ALPHA
 
-DBM_CORE_UPDATEREMINDER_HEADER		= "Deine Version von Deadly Boss Mods ist veraltet.\n Version %s (r%d) ist hier zum Download verfügbar:"
-DBM_CORE_UPDATEREMINDER_FOOTER		= "Drücke  " .. (IsMacClient() and "Cmd-C" or "Strg+C")  ..  " um den Downloadlink in die Zwischenablage zu kopieren."
-DBM_CORE_UPDATEREMINDER_NOTAGAIN	= "Zeige Popup, wenn eine neue Version verfügbar ist"
+DBM_CORE_UPDATEREMINDER_HEADER			= "Deine Version von Deadly Boss Mods ist veraltet.\n Version %s (r%d) ist hier zum Download verfügbar:"
+DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "Deine Alphaversion von Deadly Boss Mods ist veraltet.\nDu liegst mindestens %d Revisionen zurück. Es wird empfohlen, die neueste Alphaversion oder neueste stabile Version von DBM zu benutzen. Die Funktionalität veralteter Alphaversionen kann schlecht oder unvollständig sein."
+DBM_CORE_UPDATEREMINDER_FOOTER			= "Drücke " .. (IsMacClient() and "Cmd-C" or "Strg+C")  ..  " um den Downloadlink in die Zwischenablage zu kopieren."
+DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "Drücke " .. (IsMacClient() and "Cmd-C" or "Strg+C")  ..  " um den Link in die Zwischenablage zu kopieren."
+DBM_CORE_UPDATEREMINDER_NOTAGAIN		= "Zeige Popup, wenn eine neue Version verfügbar ist"
+--DBM_CORE_UPDATEREMINDER_DISABLE -- not translated, players should never be able to disable mods of other players..
 
 DBM_CORE_MOVABLE_BAR				= "Zieh mich!"
 
@@ -60,9 +93,7 @@ DBM_PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h hat dir einen DBM-Timer gesch
 DBM_PIZZA_CONFIRM_IGNORE			= "Willst du wirklich DBM-Timer von %s für diese Sitzung ignorieren?"
 DBM_PIZZA_ERROR_USAGE				= "Benutzung: /dbm [broadcast] timer <Sekunden> <Text>"
 
-DBM_CORE_ERROR_DBMV3_LOADED			= "Deadly Boss Mods läuft doppelt, da du DBMv3 und DBMv4 installiert und aktiviert hast!\nKlick auf \"Okay\" um DBMv3 zu deaktivieren und dein Interface neu zu laden.\nAußerdem solltest du deinen AddOn-Ordner aufräumen, indem du die alten DBMv3-Ordner löschst."
-
-DBM_CORE_MINIMAP_TOOLTIP_HEADER		= "Deadly Boss Mods"
+--DBM_CORE_MINIMAP_TOOLTIP_HEADER
 DBM_CORE_MINIMAP_TOOLTIP_FOOTER		= "Shift+Klick oder Rechtsklick zum Bewegen\nAlt+Shift+Klick zum freien Bewegen"
 
 DBM_CORE_RANGECHECK_HEADER			= "Abstandscheck (%dm)"
@@ -73,22 +104,14 @@ DBM_CORE_RANGECHECK_SOUND_OPTION_2	= "Sound, falls mehr als ein Spieler in Reich
 DBM_CORE_RANGECHECK_SOUND_0			= "Kein Sound"
 DBM_CORE_RANGECHECK_SOUND_1			= "Standard-Sound"
 DBM_CORE_RANGECHECK_SOUND_2			= "Nerviges Piepsen"
-DBM_CORE_RANGECHECK_HIDE			= "Verstecken"
 DBM_CORE_RANGECHECK_SETRANGE_TO		= "%dm"
-DBM_CORE_RANGECHECK_LOCK			= "Fenster sperren"
 DBM_CORE_RANGECHECK_OPTION_FRAMES	= "Fenster"
 DBM_CORE_RANGECHECK_OPTION_RADAR	= "Zeige Radarfenster"
 DBM_CORE_RANGECHECK_OPTION_TEXT		= "Zeige Textfenster"
 DBM_CORE_RANGECHECK_OPTION_BOTH		= "Zeige beide Fenster"
-DBM_CORE_RANGECHECK_OPTION_SPEED	= "Aktualisierungsrate (Reload erforderlich)"
-DBM_CORE_RANGECHECK_OPTION_SLOW		= "Langsam (geringste CPU-Last)"
-DBM_CORE_RANGECHECK_OPTION_AVERAGE	= "Mittel"
-DBM_CORE_RANGECHECK_OPTION_FAST		= "Schnell (nahezu Echtzeit)"
 DBM_CORE_RANGERADAR_HEADER			= "Abstandsradar (%dm)"
 DBM_CORE_RANGERADAR_IN_RANGE_TEXT	= "%d Spieler in Reichweite"
 
-DBM_CORE_INFOFRAME_LOCK				= "Fenster sperren"
-DBM_CORE_INFOFRAME_HIDE				= "Verstecken"
 DBM_CORE_INFOFRAME_SHOW_SELF		= "Eigene Stärke immer anzeigen" -- Always show your own power value even if you are below the threshold
 
 DBM_LFG_INVITE						= "Einladung der Gruppensuche"
@@ -104,15 +127,12 @@ DBM_CORE_SLASHCMD_HELP				= {
 	"/dbm pull <sec>: Startet einen Pull-Timer für <sec> Sekunden. Schickt allen Schlachzugsmitgliedern mit DBM einen Pull-Timer (nur als Leiter/Assistent).",
 	"/dbm arrow: Zeigt den DBM-Pfeil, siehe /dbm arrow help für Details.",
 	"/dbm lockout: Fragt die Schlachtzugsmitglieder nach ihren derzeitigen Instanzsperren (IDs) (nur als Leiter/Assistent).",
-	"/dbm help: Zeigt diese Hilfe.",
+	"/dbm help: Zeigt diese Hilfe."
 }
 
 DBM_ERROR_NO_PERMISSION				= "Du hast nicht die benötigte Berechtigung für diesen Befehl!"
 
 DBM_CORE_BOSSHEALTH_HIDE_FRAME		= "Verstecken"
-
-DBM_CORE_ALLIANCE					= "Allianz"
-DBM_CORE_HORDE						= "Horde"
 
 DBM_CORE_UNKNOWN					= "unbekannt"
 DBM_CORE_LEFT						= "Links"
@@ -130,20 +150,95 @@ DBM_CORE_TIMER_PULL					= "Pull in"
 DBM_CORE_ANNOUNCE_PULL				= "Pull in %d Sek"
 DBM_CORE_ANNOUNCE_PULL_NOW			= "Pull jetzt!"
 
-DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "Speed Kill (Erfolg)"
+DBM_CORE_ACHIEVEMENT_TIMER_SPEED_KILL = "Zeit für Erfolg"
+
+-- Auto-generated Warning Localizations
+DBM_CORE_AUTO_ANNOUNCE_TEXTS = {
+	target		= "%s auf >%%s<",
+	targetcount	= "%s (%%d) auf >%%s<",
+	spell		= "%s",
+	ends 		= "%s ist beendet",
+	fades		= "%s ist beendet",
+	adds		= "%s verbleibend: %%d",
+	cast		= "Wirkt %s: %.1f Sek",
+	soon		= "%s bald",
+	prewarn		= "%s in %s",
+	phase		= "Phase %s",
+	prephase	= "Phase %s bald",
+	count		= "%s (%%d)",
+	stack		= "%s auf >%%s< (%%d)"
+}
+
+local prewarnOption = "Zeige Vorwarnung für $spell:%s"
+DBM_CORE_AUTO_ANNOUNCE_OPTIONS = {
+	target		= "Verkünde Ziele von $spell:%s",
+	targetcount	= "Verkünde Ziele von $spell:%s",
+	spell		= "Zeige Warnung für $spell:%s",
+	ends		= "Zeige Warnung, wenn $spell:%s beendet ist",
+	fades		= "Zeige Warnung, wenn $spell:%s beendet ist",
+	adds		= "Verkünde die Anzahl der verbleibenden $spell:%s",
+	cast		= "Zeige Warnung, wenn $spell:%s gewirkt wird",
+	soon		= prewarnOption,
+	prewarn 	= prewarnOption,
+	phase		= "Verkünde Phase %s",
+	prephase	= "Zeige Vorwarnung für Phase %s",
+	count		= "Zeige Warnung für $spell:%s",
+	stack		= "Verkünde $spell:%s Stapel"
+}
+
+DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
+	spell		= "%s!",
+	ends		= "%s beendet",
+	fades		= "%s beendet",
+	soon		= "%s bald",
+	prewarn		= "%s in %s",
+	dispel		= "%s auf >%%s< - jetzt reinigen",
+	interrupt	= "%s - unterbreche >%%s<!",
+	you			= "%s auf dir",
+	target		= "%s auf >%%s<",
+	close		= "%s auf >%%s< in deiner Nähe",
+	move		= "%s - geh weg",
+	run			= "%s - lauf weg",
+	cast		= "%s - stoppe Zauber",
+	reflect		= "%s - stoppe Angriffe",
+	count		= "%s! (%%d)",
+	stack		= "%%d Stapel von %s auf dir",
+	switch		= ">%s< - Ziel wechseln"
+}
+
+-- Auto-generated Special Warning Localizations
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
+	spell 		= "Spezialwarnung für $spell:%s",
+	ends 		= "Spezialwarnung, wenn $spell:%s beendet ist",
+	fades 		= "Spezialwarnung, wenn $spell:%s beendet ist",
+	soon 		= "Spezialvorwarnung für $spell:%s",
+	prewarn 	= "Spezialvorwarnung %d Sekunden vor $spell:%s",
+	dispel 		= "Spezialwarnung zum Reinigen/Rauben von $spell:%s",
+	interrupt	= "Spezialwarnung zum Unterbrechen von $spell:%s",
+	you 		= "Spezialwarnung, wenn du von $spell:%s betroffen bist",
+	target 		= "Spezialwarnung, wenn jemand von $spell:%s betroffen ist",
+	close 		= "Spezialwarnung, wenn jemand in deiner Nähe von $spell:%s betroffen ist",
+	move 		= "Spezialwarnung zum Herausgehen aus $spell:%s",
+	run 		= "Spezialwarnung zum Weglaufen vor $spell:%s",
+	cast 		= "Spezialwarnung zum Zauberstopp bei $spell:%s",
+	reflect 	= "Spezialwarnung zum Angriffsstopp auf $spell:%s",
+	count 		= "Spezialwarnung für $spell:%s",
+	stack 		= "Spezialwarnung bei >=%d Stapel von $spell:%s auf dir",
+	switch		= "Spezialwarnung für Zielwechsel auf $spell:%s"
+}
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS = {
-	target		= "%s: %%s",
+	target		= "%s: >%%s<",
 	cast		= "%s",
 	active		= "%s endet",--Buff/Debuff/event on boss
 	fades		= "%s schwindet",--Buff/Debuff on players
 	cd			= "%s CD",
 	cdcount		= "%s CD (%%d)",
-	cdsource	= "%s CD: %%s",
+	cdsource	= "%s CD: >%%s<",
 	next		= "Nächster %s",
 	nextcount	= "Nächster %s (%%d)",
-	nextsource	= "Nächster %s: %%s",
+	nextsource	= "Nächster %s: >%%s<",
 	achievement	= "%s"
 }
 
@@ -161,72 +256,16 @@ DBM_CORE_AUTO_TIMER_OPTIONS = {
 	achievement	= "Zeit für %s anzeigen"
 }
 
--- Auto-generated Warning Localizations
-DBM_CORE_AUTO_ANNOUNCE_TEXTS = {
-	target		= "%s auf >%%s<",
-	targetcount	= "%s (%%d) auf >%%s<",
-	spell		= "%s",
-	adds		= "%s verbleibend: %%d",
-	cast		= "Wirkt %s: %.1f Sek",
-	soon		= "%s bald",
-	prewarn 	= "%s in %s",
-	phase		= "Phase %s",
-	prephase	= "Phase %s bald",
-	count		= "%s (%%d)",
-	stack		= "%s auf >%%s< (%%d)"
-}
-
-local prewarnOption = "Zeige Vorwarnung für $spell:%s"
-DBM_CORE_AUTO_ANNOUNCE_OPTIONS = {
-	target		= "Verkünde Ziele von $spell:%s",
-	targetcount	= "Verkünde Ziele von $spell:%s",
-	spell		= "Zeige Warnung für $spell:%s",
-	adds		= "Verkünde die Anzahl der verbleibenden $spell:%s",
-	cast		= "Zeige Warnung, wenn $spell:%s gewirkt wird",
-	soon		= prewarnOption,
-	prewarn 	= prewarnOption,
-	phase		= "Verkünde Phase %s",
-	prephase	= "Zeige Vorwarnung für Phase %s",
-	count		= "Zeige Warnung für $spell:%s",
-	stack		= "Verkünde $spell:%s Stapel"
-}
-
--- Auto-generated Special Warning Localizations
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
-	spell 		= "Zeige Spezialwarnung für $spell:%s",
-	dispel 		= "Zeige Spezialwarnung zum Reinigen/Rauben von $spell:%s",
-	interrupt	= "Zeige Spezialwarnung zum Unterbrechen von $spell:%s",
-	you 		= "Zeige Spezialwarnung, wenn du von $spell:%s betroffen bist",
-	target 		= "Zeige Spezialwarnung, wenn jemand von $spell:%s betroffen ist",
-	close 		= "Zeige Spezialwarnung, wenn jemand in deiner Nähe von\n$spell:%s betroffen ist",
-	move 		= "Zeige Spezialwarnung, wenn du von $spell:%s betroffen bist",
-	run 		= "Zeige Spezialwarnung zum Weglaufen vor $spell:%s",
-	cast 		= "Zeige Spezialwarnung zum Zauberstopp bei $spell:%s",
-	stack 		= "Zeige Spezialwarnung für >=%d Stapel von $spell:%s",
-	switch 		= "Zeige Spezialwarnung für Zielwechsel auf $spell:%s"
-}
-
-DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
-	spell = "%s!",
-	dispel = "%s auf %%s - jetzt reinigen",
-	interrupt = "%s - unterbreche %%s!",
-	you = "%s auf dir",
-	target = "%s auf %%s",
-	close = "%s auf %%s in deiner Nähe",
-	move = "%s - geh weg",
-	run = "%s - lauf weg",
-	cast = "%s - stoppe Zauber",
-	stack = "%s (%%d)",
-	switch = "%s - Ziel wechseln"
-}
-
 
 DBM_CORE_AUTO_ICONS_OPTION_TEXT			= "Setze Zeichen auf Ziele von $spell:%s"
 DBM_CORE_AUTO_SOUND_OPTION_TEXT			= "Spiele \"Lauf weg!\"-Sound für $spell:%s"
-DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Spiele Countdown-Sound für $spell:%s"
-DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Spiele Countout-Sound für Dauer von $spell:%s"
+DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Spiele akustischen Countdown bis $spell:%s gewirkt wird"
+DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2	= "Spiele akustischen Countdown bis $spell:%s schwindet"
+DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Zähle akustisch die Dauer von $spell:%s"
 DBM_CORE_AUTO_YELL_OPTION_TEXT			= "Schreie, wenn du von $spell:%s betroffen bist"
-DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT		= "%s auf mir!"
+DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT		= "%s auf " .. UnitName("player") .. "!"
+DBM_CORE_AUTO_RANGE_OPTION_TEXT			= "Zeige Abstandsfenster (%sm) für $spell:%s"
+DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT	= "Zeige Abstandsfenster (%sm)"
 
 
 -- New special warnings
@@ -243,11 +282,12 @@ DBM_ARROW_ERROR_USAGE	= {
 	"/dbm arrow <x> <y>  erzeugt einen Pfeil, der auf bestimmte Koordinaten zeigt (0 < x/y < 100)",
 	"/dbm arrow <player>  erzeugt einen Pfeil, der auf einen bestimmten Spieler in deiner Gruppe oder deinem Schlachtzug zeigt",
 	"/dbm arrow hide  versteckt den Pfeil",
-	"/dbm arrow move  macht den Pfeil beweglich",
+	"/dbm arrow move  macht den Pfeil beweglich"
 }
 
-DBM_SPEED_KILL_TIMER_TEXT	= "Speed Kill"
+DBM_SPEED_KILL_TIMER_TEXT	= "Rekordzeit"
 DBM_SPEED_KILL_TIMER_OPTION	= "Zeige einen Timer zur Verbesserung deines schnellsten Siegs"
+DBM_SPEED_CLEAR_TIMER_TEXT	= "Abschlussbestzeit"
 
 
 DBM_REQ_INSTANCE_ID_PERMISSION		= "%s möchte deine aktuellen Instanzsperren (IDs) einsehen.\n Möchtest Du diese Informationen an %s senden? Dieser Spieler wird in der Lage sein, diese Informationen während deiner aktuellen Sitzung abzufragen (also bis du dich neu einloggst)."

@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 585 2013-03-02T14:19:03Z
+    Revision: 590 2013-03-11T20:16:07Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -563,7 +563,7 @@ function Armory:BuildSummary()
                 if ( characterInfo.Honor > 0 ) then
                     summary.Honor = {
                         Name = currencyName or "Honor Points",
-                        Icon = currencyIcon and "Interface\\Icons\\"..currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
+                        Icon = currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
                     };
                 end
                 local earnedThisWeek, earnablePerWeek;
@@ -572,7 +572,7 @@ function Armory:BuildSummary()
                 if ( characterInfo.Conquest > 0 ) then
                     summary.Conquest = {
                         Name = currencyName or "Conquest Points",
-                        Icon = currencyIcon and "Interface\\Icons\\"..currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
+                        Icon = currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
                     };
                     if ( earnablePerWeek ) then
                         characterInfo.ConquestEarned = earnedThisWeek;
@@ -584,7 +584,7 @@ function Armory:BuildSummary()
                 if ( characterInfo.Justice > 0 ) then
                     summary.Justice = {
                         Name = currencyName or "Justice Points",
-                        Icon = currencyIcon and "Interface\\Icons\\"..currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
+                        Icon = currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
                     };
                 end
                 currencyName, currencyAmount, currencyIcon, earnedThisWeek, earnablePerWeek = self:GetCurrencyInfo(VALOR_CURRENCY);
@@ -592,7 +592,7 @@ function Armory:BuildSummary()
                 if ( characterInfo.Valor > 0 ) then
                     summary.Valor = {
                         Name = currencyName or "Valor Points",
-                        Icon = currencyIcon and "Interface\\Icons\\"..currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
+                        Icon = currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
                     };
                     if ( earnablePerWeek ) then
                         characterInfo.ValorEarned = earnedThisWeek;

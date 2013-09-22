@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: EnchantrixBarker
-	Revision: $Id: BarkerStrings.lua 5325 2012-08-17 15:56:13Z brykrys $
-	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: BarkerStrings.lua 5402 2013-04-01 14:03:25Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -460,7 +460,7 @@ EnchantrixBarkerLocalizations = {
 		["BarkerOptionsItemsPriority"]	= "Allgemeine Gegenstandspriorität";
 		["BarkerOptionsItemsPriorityTooltip"]	= "Dies stellt ein, wie wichtig der Gegenstand im Verhältnis zur Gesamtpriorität für die Werbung ist.";
 		["BarkerOptionsLowestPriceTitle"]	= "Niedrigster Preis";
-		["BarkerOptionsLowestPriceTooltip"]	= "Niedrigster Angebotspreis für eine Entzauberung. ";
+		["BarkerOptionsLowestPriceTooltip"]	= "Niedrigster Angebotspreis für eine Entzauberung.";
 		["BarkerOptionsMana"]	= "Mana";
 		["BarkerOptionsManaTooltip"]	= "Die Prioritätsstufe für Manaverzauberungen.";
 		["BarkerOptionsNatureResistance"]	= "Naturwiderstand";
@@ -867,7 +867,7 @@ EnchantrixBarkerLocalizations = {
 		["BarkerOptionsArmorPriority"]	= "armadura";
 		["BarkerOptionsArmorPriorityTooltip"]	= "La prioridad de puntuación para los encantamientos de armadura.";
 		["BarkerOptionsBootsPriorityTooltip"]	= "La prioridad de puntuación para los encantamientos de botas.";
-		["BarkerOptionsBracerPriorityTooltip"]	= "La prioridad de puntuación para los encantamientos de brazaletes. ";
+		["BarkerOptionsBracerPriorityTooltip"]	= "La prioridad de puntuación para los encantamientos de brazaletes.";
 		["BarkerOptionsChestPriorityTooltip"]	= "La prioridad de puntuación para los encantamientos del pecho.";
 		["BarkerOptionsCloakPriorityTooltip"]	= "La prioridad de puntuación para los encantamientos de capa.";
 		["BarkerOptionsDamage"]	= "daño";
@@ -888,7 +888,7 @@ EnchantrixBarkerLocalizations = {
 		["BarkerOptionsIntellectPriority"]	= "inteligencia";
 		["BarkerOptionsIntellectPriorityTooltip"]	= "La prioridad de puntuación para los encantamientos de inteligencia.";
 		["BarkerOptionsItemsPriority"]	= "Prioridad total de los objetos.";
-		["BarkerOptionsItemsPriorityTooltip"]	= "Esto fija cuan importante es el artículo a la prioridad total para hacer publicidad. ";
+		["BarkerOptionsItemsPriorityTooltip"]	= "Esto fija cuan importante es el artículo a la prioridad total para hacer publicidad.";
 		["BarkerOptionsLowestPriceTitle"]	= "Precio Más Bajo";
 		["BarkerOptionsLowestPriceTooltip"]	= "El precio mínimo para mencionar un encantamiento.";
 		["BarkerOptionsMana"]	= "Mana";
@@ -906,7 +906,7 @@ EnchantrixBarkerLocalizations = {
 		["BarkerOptionsRandomFactorTitle"]	= "Factor Aleatorio";
 		["BarkerOptionsRandomFactorTooltip"]	= "La cantidad de aleatoriedad que se aplica a la hora de elegir qué encantamientos se anuncian.";
 		["BarkerOptionsResiliencePriority"]	= "Resiliencia";
-		["BarkerOptionsResiliencePriorityTooltip"]	= "La puntuación de prioridad para la resistencia encanta.\n";
+		["BarkerOptionsResiliencePriorityTooltip"]	= "La puntuación de prioridad para la resistencia encanta.";
 		["BarkerOptionsRingPriorityTooltip"]	= "La prioridad de puntuación para los encantamientos de anillo.";
 		["BarkerOptionsShadowResistance"]	= "resistencia a la oscuridad";
 		["BarkerOptionsShadowResistanceTooltip"]	= "La prioridad de puntuación para los encantamientos de resistencia a la oscuridad.";
@@ -1141,8 +1141,8 @@ EnchantrixBarkerLocalizations = {
 	itIT = {
 
 		-- Section: Command Messages
-		["BarkerEnxWindowNotOpen"]	= "Enchantrix: la finestra per gli enchantments non è aperta. La finestra degli enchantments deve essere aperta per usare il barker";
-		["BarkerNoEnchantsAvail"]	= "Enchantrix: non hai nessun enchantment o non hai ireagenti per poterlo fare";
+		["BarkerEnxWindowNotOpen"]	= "Enchantrix: la finestra per gli incantamenti non è aperta. La finestra degli incantamenti deve essere aperta per usare il barker";
+		["BarkerNoEnchantsAvail"]	= "Enchantrix: non hai nessun incantamento o non hai i reagenti per poterlo fare";
 
 		-- Section: Commands
 		["CmdBarker"]	= "Imbonitore";
@@ -1168,21 +1168,60 @@ EnchantrixBarkerLocalizations = {
 
 		-- Section: Game Constants
 		["AnyWeapon"]	= "Ogni Arma";
-		["BarkerOpening"]	= "Vendo:";
+		["BarkerOpening"]	= "Incantamenti in vendita:";
 		["Boots"]	= "Stivali";
 		["Bracer"]	= "Bracciale";
 		["Chest"]	= "Torace";
 		["Cloak"]	= "Cappa";
 		["Darnassus"]	= "Darnassus";
-		["Enchanting"]	= "Enchanting";
+		["Enchanting"]	= "Incantamento";
+		["EnchSearchAgility"]	= "agilità";
+		["EnchSearchAllResistance1"]	= "resistenza a tutte le scuole di magia";
+		["EnchSearchAllResistance2"]	= "resistenza a tutte le scuole di magia";
+		["EnchSearchAllResistance3"]	= "tutte le resistenze";
+		["EnchSearchAllStats"]	= "tutte le statistiche";
+		["EnchSearchArmor"]	= "armeria";
+		["EnchSearchBattlemaster"]	= "cura i membri del gruppo in prossimità";
+		["EnchSearchBeastslayer"]	= "danno alle bestie";
+		["EnchSearchBoarSpeed"]	= "velocità di movimento aumentata e [0-9]+ tempra";
+		["EnchSearchCatSwiftness"]	= "velocità di movimento aumentata e [0-9]+ agilità";
+		["EnchSearchCrusader"]	= "guarisci da [0-9]+ a [0-9]+ e aumenta la forza";
+		["EnchSearchDamage1"]	= "punti? danno";
+		["EnchSearchDamage2"]	= "\+[0-9]+ danno";
+		["EnchSearchDefense"]	= "difesa";
+		["EnchSearchDMGAbsorption"]	= "assorbimento";
+		["EnchSearchFireRes"]	= "resistenza al fuoco";
+		["EnchSearchFrostRes"]	= "resistenza al ghiaccio";
+		["EnchSearchHealing"]	= "cura";
+		["EnchSearchHealth"]	= "salute";
+		["EnchSearchIntellect"]	= "intelletto";
+		["EnchSearchMana"]	= "mana";
+		["EnchSearchManaPerFive"]	= "mana ogni 5 secondi";
+		["EnchSearchMongoose"]	= "aumenta l'agilità di [0-9]+ e la velocità di attacco";
+		["EnchSearchNatureRes"]	= "resistenza ai danni naturali";
+		["EnchSearchResFire"]	= "resistenza al fuoco";
+		["EnchSearchResilience"]	= "Impatto";
+		["EnchSearchResShadow"]	= "resistenza ai danni ombra";
+		["EnchSearchSoulfrost"]	= "magie di ghiaccio e ombra";
+		["EnchSearchSpellPower1"]	= "danno magico";
+		["EnchSearchSpellPower2"]	= "danni a tutte le magie";
+		["EnchSearchSpellPower3"]	= "potenza magica";
+		["EnchSearchSpirit"]	= "spirito";
+		["EnchSearchStamina"]	= "tempra";
+		["EnchSearchStrength"]	= "forza";
+		["Gloves"]	= "Guanti";
 		["OneLetterGold"]	= "g";
 		["OneLetterSilver"]	= "s";
-		["ShortDarnassus"]	= "Darn.";
+		["Ring"]	= "Anello";
+		["Shield"]	= "Scudo";
+		["ShortDarnassus"]	= "Dar";
 		["ShortIronForge"]	= "IF";
 		["ShortOrgrimmar"]	= "Org";
 		["ShortStormwind"]	= "SW";
 		["ShortThunderBluff"]	= "TB";
 		["ShortUndercity"]	= "UC";
+		["TwoHandWeapon"]	= "Arma a due mani";
+		["Weapon"]	= "Arma";
 
 		-- Section: Generic Messages
 		["BarkerLoaded"]	= "Enchantrix Barker modulo caricato....";
@@ -1220,6 +1259,7 @@ EnchantrixBarkerLocalizations = {
 		["FrmtWarnAuctNotLoaded"]	= "[Auctioneer non caricato, uso i prezzi nascosti]";
 		["FrmtWarnNoPrices"]	= "[Prezzi non disponibili]";
 		["FrmtWarnPriceUnavail"]	= "[Alcuni prezzi non disponibili]";
+		["OpenBarkerWindow"]	= "Apre la finestra di scambio.";
 
 		-- Section: User Interface
 		["BarkerOptionsHighestPriceForFactorTitle"]	= "Massimo prezzo di costo";
@@ -1254,7 +1294,7 @@ EnchantrixBarkerLocalizations = {
 		["CmdFindBidauct"]	= "입찰중개인";
 		["CmdFindBidauctShort"]	= "bb";
 		["CmdFindBuyauct"]	= "이하확률";
-		["CmdFindBuyauctShort"]	= "pl ";
+		["CmdFindBuyauctShort"]	= "pl";
 		["CmdHelp"]	= "도움말";
 		["CmdLocale"]	= "지역";
 		["CmdOff"]	= "끔";
@@ -1288,7 +1328,7 @@ EnchantrixBarkerLocalizations = {
 		["EnchSearchBoarSpeed"]	= "이동속도를 약간 증가시키고 체력을 [0-9]만큼 증가";
 		["EnchSearchCatSwiftness"]	= "이동속도를 약간 증가시키고 민첩성을 [0-9]만큼 증가";
 		["EnchSearchCrusader"]	= "[0-9]~[0-9]의 생명력을 회복하고 힘을 증가";
-		["EnchSearchDamage1"]	= "points? of damage ";
+		["EnchSearchDamage1"]	= "points? of damage";
 		["EnchSearchDamage2"]	= "\+[0-9]+ 피해";
 		["EnchSearchDefense"]	= "방어";
 		["EnchSearchDMGAbsorption"]	= "흡수";
@@ -1420,7 +1460,7 @@ EnchantrixBarkerLocalizations = {
 		["BarkerOptionsIntellectPriority"]	= "지능";
 		["BarkerOptionsIntellectPriorityTooltip"]	= "지능 마부에 우선순위를 둡니다.";
 		["BarkerOptionsItemsPriority"]	= "전체 아이템 정책";
-		["BarkerOptionsItemsPriorityTooltip"]	= "This sets how important the item is to the overall priority for advertising. ";
+		["BarkerOptionsItemsPriorityTooltip"]	= "This sets how important the item is to the overall priority for advertising.";
 		["BarkerOptionsLowestPriceTitle"]	= "최저 가격";
 		["BarkerOptionsLowestPriceTooltip"]	= "마법부여에 대한 시세가 최저 현금 가격으로 평가됩니다.";
 		["BarkerOptionsMana"]	= "마나";
@@ -1430,7 +1470,7 @@ EnchantrixBarkerLocalizations = {
 		["BarkerOptionsOther"]	= "기타";
 		["BarkerOptionsOtherTooltip"]	= "무두질, 채광, 탈것 마부에 우선순위를 둡니다.";
 		["BarkerOptionsPricePriorityTitle"]	= "전체 가격 정책";
-		["BarkerOptionsPricePriorityTooltip"]	= "가격 중요도가 광고에 대한 전체 우선순위에서 얼마나 될지 설정합니다. ";
+		["BarkerOptionsPricePriorityTooltip"]	= "가격 중요도가 광고에 대한 전체 우선순위에서 얼마나 될지 설정합니다.";
 		["BarkerOptionsPriceSweetspotTitle"]	= "가격요건 관심구매가격";
 		["BarkerOptionsPriceSweetspotTooltip"]	= "광고에 대해 이가격에 가까운 마법부여 우선순위를 결정한는데 사용됩니다.";
 		["BarkerOptionsProfitMarginTitle"]	= "이윤폭";
@@ -1448,7 +1488,7 @@ EnchantrixBarkerLocalizations = {
 		["BarkerOptionsStaminaPriority"]	= "체력";
 		["BarkerOptionsStaminaPriorityTooltip"]	= "체력 마부에 우선순위를 둡니다.";
 		["BarkerOptionsStatsPriority"]	= "전체 가격 정책";
-		["BarkerOptionsStatsPriorityTooltip"]	= "This sets how important the stat is to the overall priority for advertising. ";
+		["BarkerOptionsStatsPriorityTooltip"]	= "This sets how important the stat is to the overall priority for advertising.";
 		["BarkerOptionsStrengthPriority"]	= "힘";
 		["BarkerOptionsStrengthPriorityTooltip"]	= "힘 마부에 우선순위를 둡니다.";
 		["BarkerOptionsTab1Title"]	= "이익과 가격 우선순위";
@@ -1528,8 +1568,8 @@ EnchantrixBarkerLocalizations = {
 		["ShortThunderBluff"]	= "TB";
 		["ShortUndercity"]	= "UC";
 		["SilvermoonCity"]	= "Silvermoon City";
-		["StormwindCity"]	= "Stormwind City ";
-		["TheExodar"]	= "The Exodar ";
+		["StormwindCity"]	= "Stormwind City";
+		["TheExodar"]	= "The Exodar";
 		["ThunderBluff"]	= "Thunder Bluff";
 		["TradeChannel"]	= "Handel - Stad";
 		["TwoHandWeapon"]	= "2H Wapen";
@@ -1538,7 +1578,7 @@ EnchantrixBarkerLocalizations = {
 
 		-- Section: Generic Messages
 		["BarkerLoaded"]	= "Enchantrix Barker Geladen...";
-		["BarkerNotTradeZone"]	= "Enchantrix Barker: Je bent niet in een handelsgebied. ";
+		["BarkerNotTradeZone"]	= "Enchantrix Barker: Je bent niet in een handelsgebied.";
 
 		-- Section: Generic Strings
 		["AGI"]	= "AGI";
@@ -1577,7 +1617,7 @@ EnchantrixBarkerLocalizations = {
 		["FrmtSuggestedPrice"]	= "Voorstel Prijs:";
 		["FrmtTotal"]	= "Totaal";
 		["FrmtWarnAuctNotLoaded"]	= "Auctioneer niet geladen. Opgeslagen waardes worden gebruikt.";
-		["FrmtWarnNoPrices"]	= "Geen prijs beschikbaar ";
+		["FrmtWarnNoPrices"]	= "Geen prijs beschikbaar";
 		["FrmtWarnPriceUnavail"]	= "Sommige prijzen niet beschikbaar";
 		["OpenBarkerWindow"]	= "Opent het handel omroep scherm.";
 
@@ -1638,7 +1678,7 @@ EnchantrixBarkerLocalizations = {
 		["EnchSearchCatSwiftness"]	= "velocidade de movimento mininmamente e aumentando em [0-9]+ a agilidade";
 		["EnchSearchCrusader"]	= "cure de [0-9]+ a [0-9]+ pontos de vida e aumente em [0-9]+ a força";
 		["EnchSearchDamage1"]	= "dano? causado";
-		["EnchSearchDamage2"]	= "[0-9]+ de dano ";
+		["EnchSearchDamage2"]	= "[0-9]+ de dano";
 		["EnchSearchDefense"]	= "defesa";
 		["EnchSearchDMGAbsorption"]	= "absorção";
 		["EnchSearchFireRes"]	= "resistência ao fogo";
@@ -1848,17 +1888,17 @@ EnchantrixBarkerLocalizations = {
 		["CmdBarker"]	= "зазывала";
 		["CmdClear"]	= "Очистить";
 		["CmdDefault"]	= "Стандартные";
-		["CmdDisable"]	= "выведите из строя\n";
-		["CmdFindBidauct"]	= "bidbroker ";
-		["CmdFindBidauctShort"]	= "bb ";
-		["CmdFindBuyauct"]	= "percentless ";
-		["CmdFindBuyauctShort"]	= "pl ";
-		["CmdHelp"]	= "помощь\n";
+		["CmdDisable"]	= "выведите из строя";
+		["CmdFindBidauct"]	= "bidbroker";
+		["CmdFindBidauctShort"]	= "bb";
+		["CmdFindBuyauct"]	= "percentless";
+		["CmdFindBuyauctShort"]	= "pl";
+		["CmdHelp"]	= "помощь";
 		["CmdOff"]	= "off";
-		["CmdOn"]	= "на\n";
-		["CmdPrintin"]	= "print-in ";
+		["CmdOn"]	= "на";
+		["CmdPrintin"]	= "print-in";
 		["CmdToggle"]	= "переключить";
-		["ShowCount"]	= "отсчеты\n";
+		["ShowCount"]	= "отсчеты";
 		["ShowTerse"]	= "краткий";
 
 		-- Section: Game Constants
@@ -2146,7 +2186,7 @@ EnchantrixBarkerLocalizations = {
 		["ShortSilvermoon"]	= "银月";
 		["ShortStormwind"]	= "暴风";
 		["ShortThunderBluff"]	= "雷霆";
-		["ShortUndercity"]	= "幽暗 ";
+		["ShortUndercity"]	= "幽暗";
 		["SilvermoonCity"]	= "银月城";
 		["StormwindCity"]	= "暴风城";
 		["TheExodar"]	= "埃索达";
@@ -2408,8 +2448,8 @@ EnchantrixBarkerLocalizations = {
 		["STR"]	= "力量";
 
 		-- Section: Tooltip Messages
-		["FrmtBarkerPrice"]	= "Barker 價格 (%d%% 保証金) ";
-		["FrmtPriceEach"]	= "(%s 每個) ";
+		["FrmtBarkerPrice"]	= "Barker 價格 (%d%% 保証金)";
+		["FrmtPriceEach"]	= "(%s 每個)";
 		["FrmtSuggestedPrice"]	= "建議價格：";
 		["FrmtTotal"]	= "總共";
 		["FrmtWarnAuctNotLoaded"]	= "[Auctioneer未載入，使用暫存區價格]";

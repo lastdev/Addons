@@ -1,10 +1,10 @@
-local mod	= DBM:NewMod("Landfall", "DBM-Scenario-MoP")
+local mod	= DBM:NewMod("Landfall", "DBM-Scenario-MoP")--Alliance : 590, Horde : 595
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8701 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9883 $"):sub(12, -3))
 mod:SetZone()
 
-mod:RegisterCombat("scenario", 911, 920)
+mod:RegisterCombat("scenario", 1103, 1102)
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
@@ -48,10 +48,10 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(135403) then
+	if args.spellId == 135403 then
 		warnDivineLight:Show()
-		specWarnDivineLight:Show()
-	elseif args:IsSpellID(135404) then
+		specWarnDivineLight:Show(args.sourceName)
+	elseif args.spellId == 135404 then
 		warnDivineStorm:Show()
 	end
 end

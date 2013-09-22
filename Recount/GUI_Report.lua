@@ -2,7 +2,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale( "Recount" )
 local me={}
 
-local revision = tonumber(string.sub("$Revision: 1226 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1240 $", 12, -3))
 local Recount = _G.Recount
 if Recount.Version < revision then Recount.Version = revision end
 
@@ -161,6 +161,8 @@ function me:CreateReportWindow()
 	me.Rows={}
 	me.NumRows=0
 
+	theFrame:SetFrameStrata("DIALOG")
+	
 	--Need to add it to our window ordering system
 	Recount:AddWindow(theFrame)
 end

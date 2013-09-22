@@ -1,9 +1,8 @@
-local mod	= DBM:NewMod("SvalaSorrowgrave", "DBM-Party-WotLK", 11)
+local mod	= DBM:NewMod(641, "DBM-Party-WotLK", 11, 286)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
 mod:SetCreatureID(26668)
-mod:SetModelID(26096)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -18,9 +17,9 @@ local timerSacrifice	= mod:NewBuffActiveTimer(25, 48276)
 local timerRoleplay		= mod:NewTimer(67, "timerRoleplay", "Interface\\Icons\\Spell_Holy_BorrowedTime")--roleplay for boss is active
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(48267) then
+	if args.spellId == 48267 then
 		warningSacrifice:Show(args.destName)
-	elseif args:IsSpellID(48276) then
+	elseif args.spellId == 48276 then
 		timerSacrifice:Start()
 	end
 end

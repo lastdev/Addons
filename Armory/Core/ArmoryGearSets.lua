@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 560 2012-11-12T23:10:02Z
+    Revision: 592 2013-05-21T13:24:07Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -70,8 +70,8 @@ function Armory:UpdateGearSets()
                 else
                     name = _G.GetEquipmentSetInfo(i);
                     dbEntry:SetValue(2, container, i, _G.GetEquipmentSetInfo(i));
-                    dbEntry:SetValue(3, container, i, "Items", unpack(_G.GetEquipmentSetItemIDs(name)));
-                    dbEntry:SetValue(3, container, i, "Locations", unpack(_G.GetEquipmentSetLocations(name)));
+                    dbEntry:SetValue(3, container, i, "Items", unpack(_G.GetEquipmentSetItemIDs(name) or {}));
+                    dbEntry:SetValue(3, container, i, "Locations", unpack(_G.GetEquipmentSetLocations(name) or {}));
                 end
             end
         end

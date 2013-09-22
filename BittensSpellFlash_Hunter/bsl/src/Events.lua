@@ -1,7 +1,7 @@
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "Events", 4) then
+if u.SkipOrUpgrade(c, "Events", 13) then
 	return
 end
 
@@ -10,8 +10,11 @@ local s = SpellFlashAddon
 local GetActionInfo = GetActionInfo
 local GetMacroSpell = GetMacroSpell
 local GetNetStats = GetNetStats
+local GetSpellInfo = GetSpellInfo
 local GetTime = GetTime
+local UnitGUID = UnitGUID
 local UnitIsUnit = UnitIsUnit
+local UnitName = UnitName
 local math = math
 local next = next
 local pairs = pairs
@@ -23,13 +26,17 @@ local wipe = wipe
 
 local managedDots = { }
 local registeredAddons = { }
+local initiatingIDs = { }
 local currentSpells = { }
 --[[
 	Name = "Localized Spell Name",
 	Target = "Unit ID",
+	TargetID = "GUID", -- in rare cases, could be nil
 	ID = spellID, -- nil until CAST
 	Status = "Queued/Casting/Channeling/Interrupted",
-	Cost = Mana/Focus/etc cost, -- nil until CAST
+	Cost = {  -- nil until CAST
+		[POWER_TYPE] = number,
+	}
 	GCDStart = GetTime(),
 	CastStart = GetTime(),
 --]]
@@ -41,6 +48,8 @@ local currentSpells = { }
 
 -------------------------------------------------------------- Public Functions
 c.LastGCD = 1.5
+
+c.AutoAttackID = 6603
 
 function c.RegisterForEvents()
 	registeredAddons[c.A] = true
@@ -66,11 +75,15 @@ function c.GetCastingInfo()
 end
 
 function c.GetQueuedInfo()
+	local queued
 	for _, info in pairs(currentSpells) do
-		if info.Status == "Queued" then
-			return info
+		if info.Status == "Queued" 
+			and (queued == nil or queued.NoGCD and not info.NoGCD) then
+			
+			queued = info
 		end
 	end
+	return queued
 end
 
 local function nameMatches(info, name)
@@ -110,9 +123,21 @@ function c.IsCasting(...)
 	end
 end
 
+function c.IsCastingAt(target, ...)
+	for _, info in pairs(currentSpells) do
+		if c.InfoMatches(info, ...) and UnitIsUnit(info.Target, target) then
+			return true
+		end
+	end
+end
+
 --function c.RegisterAoEDetector(name)
 --	aoeDetectors[c.GetID(name)] = true
 --end
+
+function c.RegisterInitiatingSpell(initiator, initiated)
+	initiatingIDs[c.GetID(initiated)] = c.GetID(initiator)
+end
 
 ------------------------------------------------------------------ Travel Times
 local metaTravelInfo = { }
@@ -146,7 +171,7 @@ local function getTrimmed(table, max, spellID, target, magically)
 	else
 		table = u.GetFromTable(table, spellID, target)
 		if table == nil then
-			return
+			return nil
 		end
 	end
 	
@@ -188,7 +213,7 @@ end
 
 local function startTravelTime(spellID, target)
 	if target == nil then
-		return
+		target = "aoe"
 	end
 	
 --c.Debug("startTravelTime", s.SpellName(spellID), spellID, target, GetTime())
@@ -222,7 +247,11 @@ local function endTravelTime(spellID, target, pendAura)
 	return runOnRelatedIDs(spellID, function(spellID)
 		local oldest = removeOldest(getTrimmedLaunches(spellID, target))
 		if oldest == nil then
-			return false
+			target = "aoe"
+			oldest = removeOldest(getTrimmedLaunches(spellID, target))
+			if oldest == nil then
+				return false
+			end
 		end
 		
 		local now = GetTime()
@@ -251,6 +280,10 @@ local function endAuraDelay(spellID, target)
 	
 	runOnRelatedIDs(spellID, function(spellID)
 		local oldest = removeOldest(getTrimmedLandings(spellID, target))
+		if oldest == nil then
+			target = "aoe"
+			oldest = removeOldest(getTrimmedLandings(spellID, target))
+		end
 --if oldest then
 --c.Debug("endAuraDelay", "   ", GetTime() - oldest, s.SpellName(spellID))
 --else
@@ -509,24 +542,42 @@ local function fireEvent(functionName, ...)
 	end
 end
 
+local lastAuraApplied, lastAuraAppliedAt
+
 local function handleLogEvent(...)
+--c.Debug("Lib", GetTime(), ...)
 	local source = select(5, ...)
-	if source == nil or not UnitIsUnit(source, "player") then
+	if source == nil then
 		return
 	end
---c.Debug("Lib", ...)
 	
 	local event = select(2, ...)
-	local targetID = select(8, ...)
 	local target = select(9, ...)
+	if not UnitIsUnit(source, "player") then
+		if target 
+			and UnitIsUnit(target, "player") 
+			and event:match("MISSED") then
+			
+			local missType = select(12, ...)
+			fireEvent("Avoided", missType)
+		end
+		return
+	end
+	
 	local spellID = select(12, ...)
 	if spellID == nil then
 		return
 	end
 	
-	c.Debug("Log Event", event, target, spellID)
+	local targetID = select(8, ...)
+	local name = select(13, ...)
+	local now = GetTime()
+	
+	c.Debug("Log Event", now, event, target, spellID, name)
 	if event == "SPELL_CAST_SUCCESS" then
-		startTravelTime(spellID, target)
+		if spellID ~= lastAuraApplied or now ~= lastAuraAppliedAt then
+			startTravelTime(spellID, target)
+		end
 	elseif event == "SPELL_DAMAGE" or event == "SPELL_PERIODIC_DAMAGE" then
 		if event == "SPELL_DAMAGE" then
 			endTravelTime(spellID, target, true)
@@ -557,6 +608,8 @@ local function handleLogEvent(...)
 		or event == "SPELL_AURA_APPLIED_DOSE" then
 		
 		endAuraDelay(spellID, target)
+		lastAuraApplied = spellID
+		lastAuraAppliedAt = now
 		fireEvent("AuraApplied", spellID, target, targetID)
 	elseif event == "SPELL_AURA_REMOVED"
 		or event == "SPELL_AURA_REMOVED_DOSE" then
@@ -566,9 +619,12 @@ local function handleLogEvent(...)
 		local amount = select(15, ...)
 		local overheal = select(16, ...)
 		fireEvent("SpellHeal", spellID, target, amount)
-	elseif event == "SPELL_ENERGIZE" then
+	elseif event == "SPELL_ENERGIZE" or event == "SPELL_PERIODIC_ENERGIZE" then
 		local amount = select(15, ...)
 		fireEvent("Energized", spellID, amount)
+	elseif event == "SWING_DAMAGE" then
+		local critical = select(18, ...)
+		fireEvent("AutoAttack", c.AutoAttackID, target, targetID, critical)
 	end
 end
 
@@ -589,6 +645,50 @@ s.AddSettingsListener(
 )
 
 local lastInfo
+
+local function findMatchingInfo(event, lineID, spellID)
+	if lastInfo and lineID == lastInfo.LineID then
+		return lastInfo
+	end
+	
+	if event == "UNIT_SPELLCAST_CHANNEL_STOP" then
+		return c.GetCastingInfo()
+	end
+	
+	local initiatingID = initiatingIDs[spellID]
+	if not initiatingID then
+		return nil
+	end
+	
+	local minID
+	local minInfo
+	for lineID, info in pairs(currentSpells) do
+		if nameMatches(info, initiatingID) 
+			and (not minID or lineID < minID) then
+			
+			minID = lineID
+			minInfo = info
+		end
+	end
+	return minInfo
+end
+
+local function updateLastGCD(localizedName)
+	if c.A and not c.A.SpecialGCDs[localizedName] then
+		local gcd, totalGcd = s.GlobalCooldown()
+		if totalGcd and totalGcd > 0 then
+			c.LastGCD = totalGcd
+		end
+	end
+end
+
+local function setCost(info)
+	local _, _, _, cost, _, type = GetSpellInfo(info.Name)
+	if type and not info.Cost[type] then
+		info.Cost[type] = cost
+	end
+end
+
 frame:SetScript("OnEvent", 
 	function(self, event, ...)
 		if event == "ADDON_LOADED" then
@@ -598,11 +698,6 @@ frame:SetScript("OnEvent",
 				hookLAB(labButtons)
 			end
 			return
-		end
-
-		local gcd, totalGcd = s.GlobalCooldown()
-		if totalGcd and totalGcd > 0 then
-			c.LastGCD = totalGcd
 		end
 		 
 		if event == "COMBAT_LOG_EVENT_UNFILTERED" then
@@ -619,12 +714,12 @@ frame:SetScript("OnEvent",
 		end
 		
 		local unitID = select(1, ...)
-		local spell = select(2, ...)
+		local localizedName = select(2, ...)
 		if unitID ~= "player" then
 			return
 		end
 		
-		c.Debug("Cast Event", event, spell)
+--		c.Debug("Cast Event", GetTime(), event, localizedName)
 		--c.Debug("Cast Event", event, ...)
 		local info
 		if event == "UNIT_SPELLCAST_SENT" then
@@ -634,14 +729,25 @@ frame:SetScript("OnEvent",
 			local lag = select(3, GetNetStats()) / 1000
 			info = {
 				LineID = lineID,
-				Name = spell,
+				Name = localizedName,
 				Target = target,
 				Status = "Queued",
 				GCDStart = gcdStart,
 				CastStart = math.max(gcdStart, GetTime() + 2 * lag),
+				Cost = { },
 			}
+			if target then
+				if target == UnitName("target") then
+					info.TargetID = UnitGUID("target")
+				elseif target == UnitName("focus") then
+					info.TargetID = UnitGUID("focus")
+				elseif target == UnitName("mouseover") then
+					info.TargetID = UnitGUID("mouseover")
+				end
+			end
 			currentSpells[lineID] = info
 			fireEvent("CastQueued", info)
+c.Debug("Cast Event", GetTime(), event, localizedName, lineID)
 			printCurrentSpells()
 			return
 		end
@@ -650,16 +756,8 @@ frame:SetScript("OnEvent",
 		local spellID = select(5, ...)
 		info = currentSpells[lineID]
 		if info == nil then
-			if lastInfo ~= nil and lineID == lastInfo.LineID then
-				info = lastInfo
-			elseif event == "UNIT_SPELLCAST_CHANNEL_STOP" then
-				info = c.GetCastingInfo()
-				if info == nil then
-					c.Debug("Cast Event", "    no record of spell", lineID)
-					printCurrentSpells()
-					return
-				end
-				
+			info = findMatchingInfo(event, lineID, spellID)
+			if info then
 				lineID = info.LineID
 			else
 				c.Debug("Cast Event", "    no record of spell", lineID)
@@ -670,10 +768,11 @@ frame:SetScript("OnEvent",
 		lastInfo = info
 		info.ID = spellID
 		
---c.Debug("Cast Event", event, spell, spellID, lineID)
+c.Debug("Cast Event", GetTime(), event, localizedName, spellID, lineID)
 		if event == "UNIT_SPELLCAST_START" then
 			info.Status = "Casting"
-			info.Cost = s.SpellCost(info.Name)
+			setCost(info)
+			updateLastGCD(localizedName)
 			fireEvent("CastStarted", info)
 			
 		elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
@@ -694,9 +793,10 @@ frame:SetScript("OnEvent",
 						end
 					end
 					info.Status = "Channeling"
-					info.Cost = s.SpellCost(info.Name)
+					setCost(info)
 					fireEvent("CastStarted", info)
 				else
+					updateLastGCD(localizedName)
 					fireEvent("CastSucceeded", info)
 					currentSpells[lineID] = nil
 				end
@@ -708,6 +808,8 @@ frame:SetScript("OnEvent",
 			if info.Status == "Casting" then
 				fireEvent(
 					"CastFailed", info, event == "UNIT_SPELLCAST_FAILED_QUIET")
+			else
+				fireEvent("UncastSpellFailed", info)
 			end
 			currentSpells[lineID] = nil
 			

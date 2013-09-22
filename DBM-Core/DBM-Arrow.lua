@@ -7,6 +7,7 @@
 DBM.Arrow = {}
 
 -- locals
+local arrowFrame = DBM.Arrow
 local runAwayArrow
 local targetType
 local targetPlayer
@@ -60,19 +61,9 @@ end
 
 local calculateDistance
 do
-	local mapSizes = DBM.MapSizes
 	function calculateDistance(x1, y1, x2, y2)
-		local mapName = GetMapInfo()
-		local floors = mapSizes[mapName]
-		if not floors then
-			return
-		end
-		local dims = floors[GetCurrentMapDungeonLevel()]
-		if not dims and floors and GetCurrentMapDungeonLevel() == 0 then -- we are in a known zone but the dungeon level seems to be wrong
-			SetMapToCurrentZone() -- fixes the dungeon level (if it was wrong for some reason)
-			dims = floors[GetCurrentMapDungeonLevel()] -- try again
-		end
-		if not dims then -- we are in an unknown dungeon :(
+		local dims = DBM:GetMapSizes()
+		if not dims then
 			return
 		end
 		local dX = (x1 - x2) * dims[1]
@@ -202,7 +193,8 @@ end
 ----------------------
 local function show(runAway, x, y, distance, time)
 	local player
-	SetMapToCurrentZone()
+	SetMapToCurrentZone()--Set map to current zone before checking other stuff
+	DBM:UpdateMapSizes()--Force a mapsize update after SetMapToCurrentZone to ensure our information is current
 	if type(x) == "string" then
 		player, hideDistance, hideTime = x, y, hideDistance
 	end
@@ -223,16 +215,16 @@ local function show(runAway, x, y, distance, time)
 	end
 end
 
-function DBM.Arrow:ShowRunTo(...)
+function arrowFrame:ShowRunTo(...)
 	return show(false, ...)
 end
 
-function DBM.Arrow:ShowRunAway(...)
+function arrowFrame:ShowRunAway(...)
 	return show(true, ...)
 end
 
 -- shows a static arrow
-function DBM.Arrow:ShowStatic(angle, time)
+function arrowFrame:ShowStatic(angle, time)
 	runAwayArrow = false
 	hideDistance = 0
 	targetType = "static"
@@ -245,16 +237,20 @@ function DBM.Arrow:ShowStatic(angle, time)
 	frame:Show()
 end
 
-function DBM.Arrow:Hide(autoHide)
+function arrowFrame:IsShown()
+	return frame and frame:IsShown()
+end
+
+function arrowFrame:Hide(autoHide)
 	frame:Hide()
 end
 
 local function endMove()
 	frame:EnableMouse(false)
-	DBM.Arrow:Hide()
+	arrowFrame:Hide()
 end
 
-function DBM.Arrow:Move()
+function arrowFrame:Move()
 	targetType = "rotate"
 	runAwayArrow = false
 	hideDistance = 5
@@ -265,6 +261,6 @@ function DBM.Arrow:Move()
 	DBM:Schedule(25, endMove)
 end
 
-function DBM.Arrow:LoadPosition()
+function arrowFrame:LoadPosition()
 	frame:SetPoint(DBM.Options.ArrowPoint, DBM.Options.ArrowPosX, DBM.Options.ArrowPosY)
 end

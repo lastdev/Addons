@@ -3,7 +3,7 @@
 	it also has a few functions to help determine distance and directions.
 --]]
 local MAJOR = "LibMapData-1.0"
-local MINOR = 1000 + tonumber(("$Revision: 123 $"):match("%d+"))
+local MINOR = 1000 + tonumber(("$Revision: 138 $"):match("%d+"))
 assert(LibStub, MAJOR.." requires LibStub")
 
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
@@ -1665,7 +1665,7 @@ do
 		mapData[800] = { 
 			['floors'] = 3, ['name'] = "Firelands", ['rzti'] = 720, ['map_type'] = 2, ['continent'] = 0, ['transform'] = 0,
 			[1] = {1587.4999389648438,1058.3332824707031,-718.75,424.9999694824219,868.7499389648438,-633.3333129882812},
-			[2] = { 375.0,250.0,-302.08331298828125,343.75,-677.0833129882812,593.75 },
+			[2] = { 375.0,250.0,-302.0830078125,343.75,-677.0830078125,593.75 },
 			[3] = { 1440.0,960.0,770.0,265.0,-670.0,1225.0 },
 			['micro'] = {
 	
@@ -2044,7 +2044,7 @@ do
 			},	
 		}
 		mapData[899] = { 
-			['floors'] = 1, ['name'] = "ProvingGrounds", ['rzti'] = 1031, ['map_type'] = 5, ['continent'] = 0, ['transform'] = 0,
+			['floors'] = 0, ['name'] = "ProvingGrounds", ['rzti'] = 1148, ['map_type'] = 0, ['continent'] = 0, ['transform'] = 0,
 			[1] = { 212.490234375,141.66015625,-418.7548828125,3726.669921875,-631.2451171875,3868.330078125 },
 			['micro'] = {
 	
@@ -2152,7 +2152,119 @@ do
 		}
 		mapData[925] = { 
 			['floors'] = 0, ['name'] = "BrawlgarArena", ['rzti'] = 1043, ['map_type'] = 0, ['continent'] = 0, ['transform'] = 0,
-			[1] = { 215.009765625,143.3399658203125,4857.5048828125,1963.3299560546875,4642.4951171875,2106.669921875 },
+			[1] = { 215.009765625,143.3399658203125,4857.5048828125,1958.3299560546875,4642.4951171875,2101.669921875 },
+			['micro'] = {
+	
+			},	
+		}
+		mapData[928] = { 
+			['floors'] = 2, ['name'] = "IsleoftheThunderKing", ['rzti'] = 1064, ['map_type'] = 0, ['continent'] = 0, ['transform'] = 0,
+			[1] = { 480.0,320.0,-5292.5,7210.0,-5772.5,7530.0 },
+			[2] = { 362.0,241.3330078125,-4969.0,6999.99853515625,-5331.0,7241.33154296875 },
+			['micro'] = {
+	
+			},	
+		}
+		mapData[929] = { 
+			['floors'] = 0, ['name'] = "IsleOfGiants", ['rzti'] = 870, ['map_type'] = 0, ['continent'] = 6, ['transform'] = 0,
+			[1] = {1787.5009765625,1191.666015625,-2004.1669921875,6697.916015625,-216.666015625,5506.25},
+			['micro'] = {
+	
+			},	
+		}
+		mapData[930] = { 
+			['floors'] = 8, ['name'] = "ThunderKingRaid", ['rzti'] = 1098, ['map_type'] = 0, ['continent'] = 0, ['transform'] = 0,
+			[1] = { 1285.0,856.6669921875,-5742.5,5256.66650390625,-7027.5,6113.33349609375 },
+			[2] = { 1550.009765625,1033.33984375,-4624.9951171875,5213.330078125,-6175.0048828125,6246.669921875 },
+			[3] = { 1030.0,686.6669921875,-4215.0,5919.16650390625,-5245.0,6605.83349609375 },
+			[4] = { 591.280029296875,394.18701171875,-4018.360107421875,5918.6865234375,-4609.64013671875,6312.87353515625 },
+			[5] = { 1030.0,686.6669921875,-4215.0,5441.66650390625,-5245.0,6128.33349609375 },
+			[6] = { 910.0,606.6669921875,-4040.0,5796.16650390625,-4950.0,6402.83349609375 },
+			[7] = { 810.0,540.0,-3695.0,5445.0,-4505.0,5985.0 },
+			[8] = { 617.5,411.6669921875,-4361.25,5321.66650390625,-4978.75,5733.33349609375 },
+			['micro'] = {
+	
+			},	
+		}
+		mapData[933] = { 
+			['floors'] = 0, ['name'] = "IsleoftheThunderKingScenario", ['rzti'] = 1126, ['map_type'] = 0, ['continent'] = 0, ['transform'] = 0,
+			[1] = { 480.0,320.0,-5292.5,7210.0,-5772.5,7530.0 },
+			['micro'] = {
+	
+			},	
+		}
+		mapData[934] = { 
+			['floors'] = 0, ['name'] = "ThunderKingLootRoom", ['rzti'] = 1135, ['map_type'] = 0, ['continent'] = 0, ['transform'] = 0,
+			[1] = { 1532.5,1021.6667175292969,-100.0,-665.8333740234375,-1632.5,355.8333435058594 },
+			['micro'] = {
+	
+			},	
+		}
+		mapData[935] = { 
+			['floors'] = 0, ['name'] = "GoldRush", ['rzti'] = 1105, ['map_type'] = 0, ['continent'] = 0, ['transform'] = 0,
+			[1] = {1083.333984375,722.91796875,-1068.75,189.583984375,14.583984375,-533.333984375},
+			['micro'] = {
+	
+			},	
+		}
+		mapData[937] = { 
+			['floors'] = 0, ['name'] = "ValeOfEternalBlossomsScenario", ['rzti'] = 1144, ['map_type'] = 0, ['continent'] = 0, ['transform'] = 0,
+			[1] = { 570.0,380.0,-781.25,620.0,-1351.25,1000.0 },
+			['micro'] = {
+	
+			},	
+		}
+		mapData[938] = { 
+			['floors'] = 0, ['name'] = "EmberdeepScenario", ['rzti'] = 1131, ['map_type'] = 0, ['continent'] = 0, ['transform'] = 0,
+			[1] = { 540.0,360.0,-670.0,1243.0,-1210.0,1603.0 },
+			['micro'] = {
+	
+			},	
+		}
+		mapData[939] = { 
+			['floors'] = 0, ['name'] = "DunMoroghScenario", ['rzti'] = 1130, ['map_type'] = 0, ['continent'] = 0, ['transform'] = 0,
+			[1] = {833.333984375,556.25,-145.833984375,-4904.166015625,687.5,-5460.416015625},
+			['micro'] = {
+	
+			},	
+		}
+		mapData[940] = { 
+			['floors'] = 0, ['name'] = "tempKrasarangHordeBase", ['rzti'] = 1099, ['map_type'] = 0, ['continent'] = 0, ['transform'] = 0,
+			[1] = {697.916015625,464.583984375,3818.75,2560.4169921875,4516.666015625,2095.8330078125},
+			['micro'] = {
+	
+			},	
+		}
+		mapData[951] = { 
+			['floors'] = 0, ['name'] = "TimelessIsle", ['rzti'] = 870, ['map_type'] = 0, ['continent'] = 6, ['transform'] = 0,
+			[1] = {2400.0,1600.0,4083.333984375,233.333984375,6483.333984375,-1366.666015625},
+			['micro'] = {
+	
+			},	
+		}
+		mapData[953] = { 
+			['floors'] = 14, ['name'] = "OrgrimmarRaid", ['rzti'] = 1136, ['map_type'] = 0, ['continent'] = 0, ['transform'] = 0,
+			[1] = { 950.0150146484375,633.34326171875,-199.9949951171875,1095.828369140625,-1150.010009765625,1729.171630859375 },
+			[2] = { 562.5,375.0,-716.25,625.0,-1278.75,1000.0 },
+			[3] = { 1141.669921875,761.1132202148438,5162.5,893.4033813476562,4020.830078125,1654.5166015625 },
+			[4] = { 1210.416015625,806.25,5000.0,1318.75,3789.583984375,2125.0 },
+			[5] = { 362.08984375,241.3931884765625,4526.06005859375,1690.87841796875,4163.97021484375,1932.2716064453125 },
+			[6] = { 600.0,400.0,4837.5,1500.0,4237.5,1900.0 },
+			[7] = { 885.0,590.0,5467.5,1575.0,4582.5,2165.0 },
+			[8] = { 1210.0,806.666748046875,5700.0,1059.1666259765625,4490.0,1865.8333740234375 },
+			[9] = { 645.0,430.0001220703125,5875.0,1727.0799560546875,5230.0,2157.080078125 },
+			[10] = { 885.0,590.0,5967.5,1200.0,5082.5,1790.0 },
+			[11] = { 472.5,315.0,5876.25,960.0,5403.75,1275.0 },
+			[12] = { 830.005859375,553.3370361328125,6010.0029296875,650.8330078125,5179.9970703125,1204.1700439453125 },
+			[13] = { 345.0,230.0,5567.5,985.0,5222.5,1215.0 },
+			[14] = { 262.5,175.0,5971.6298828125,975.0,5709.1298828125,1150.0 },
+			['micro'] = {
+	
+			},	
+		}
+		mapData[955] = { 
+			['floors'] = 0, ['name'] = "CelestialChallenge", ['rzti'] = 1161, ['map_type'] = 0, ['continent'] = 0, ['transform'] = 0,
+			[1] = {2400.0,1600.0,4083.333984375,233.333984375,6483.333984375,-1366.666015625},
 			['micro'] = {
 	
 			},	
@@ -2172,7 +2284,7 @@ do
 	for k,v in pairs(idToMap) do
 		local m,e = string.find(k,"_terrain%d")
 		if m then
-			rmap = k:sub(1,m-1)
+			local rmap = k:sub(1,m-1)
 			idToMap[k] = idToMap[rmap]
 		end
 	end
@@ -2406,7 +2518,7 @@ function lib:Distance(mapfile,floor, srcX,srcY,dstX,dstY)
 	local fl = data[floor]
 	if floor and floor <= data['floors'] and floor > 0 then
 		width, height  = fl[1],fl[2] 
-	elseif floor and floor > 0 and data['micro'][floor] then
+	elseif floor and floor > 0 and data['micro'] and data['micro'][floor] then
 		width, height  = data['micro'][floor][1],data['micro'][floor][2] 
 	else
 		fl = data[1]
@@ -2535,7 +2647,7 @@ function lib:PointToYards(mapfile,floor, x, y)
 	local fl = data[floor]
 	if floor and floor <= data['floors'] and floor > 0 then
 		width, height  = fl[1],fl[2] 
-	elseif floor and floor > 0 and data['micro'][floor] then
+	elseif floor and floor > 0 and data['micro'] and data['micro'][floor] then
 		width, height  = data['micro'][floor][1],data['micro'][floor][2] 
 	else
 		fl = data[1]
@@ -2562,7 +2674,7 @@ function lib:YardsToPoint(mapfile,floor,x,y)
 	local fl = data[floor]
 	if floor and floor <= data['floors'] and floor > 0 then
 		width, height  = fl[1],fl[2] 
-	elseif floor and floor > 0 and data['micro'][floor] then
+	elseif floor and floor > 0 and data['micro'] and data['micro'][floor] then
 		width, height  = data['micro'][floor][1],data['micro'][floor][floor][2] 
 	else
 		fl = data[1]
@@ -2624,7 +2736,7 @@ function lib:MapArea(mapfile,floor)
 	local fl = data[floor]
 	if floor and floor <= data['floors'] and floor > 0 then
 		return fl[1],fl[2] 	
-	elseif floor and floor > 0 and data['micro'][floor] then
+	elseif floor and floor > 0 and data['micro'] and data['micro'][floor] then
 		return data['micro'][floor][1],data['micro'][floor][2] 
 	else
 		if floor and floor > 0 then
@@ -2651,7 +2763,7 @@ function lib:GetMapUpperLeft(mapfile, floor)
 	local fl = data[floor + 1]
 	if floor and floor <= data['floors'] then
 		return fl[3],fl[4]
-	elseif floor and floor > 0 and data['micro'][floor] then
+	elseif floor and floor > 0 and data['micro'] and data['micro'][floor] then
 		return data['micro'][floor][3],data['micro'][floor][4]
 	else
 		if floor and floor > 0 then
@@ -2677,7 +2789,7 @@ function lib:GetMapLowerRight(mapfile, floor)
 	local fl = data[floor + 1]
 	if floor and floor <= data['floors'] then
 		return fl[5],fl[6]
-	elseif floor and floor > 0 and data['micro'][floor] then
+	elseif floor and floor > 0 and data['micro'] and data['micro'][floor] then
 		return data['micro'][floor][5],data['micro'][floor][6]
 	else
 		if floor and floor > 0 then

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: CoreScan.lua 5352 2012-09-14 13:17:35Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: CoreScan.lua 5427 2013-07-13 09:28:05Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -146,7 +146,7 @@ if (not _G.AucAdvanced.Scan) then _G.AucAdvanced.Scan = {} end
 
 local SCANDATA_VERSION = "A" -- must match Auc-ScanData INTERFACE_VERSION
 
-local TOLERANCE_LOWERLIMIT = 250
+local TOLERANCE_LOWERLIMIT = 50
 local TOLERANCE_TAPERLIMIT = 10000
 
 local lib = _G.AucAdvanced.Scan
@@ -576,7 +576,9 @@ local function processBeginEndStats(processors, operation, querySizeInfo, Tempcu
 			local f = x.Func
 			local pOK, errormsg = pcall(f, operation, querySizeInfo, TempcurScanStats)
 			if (not pOK) then
-				if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_WARNING, "ScanProcessor Error", ("ScanProcessor %s Returned Error %s"):format(x and x.Name or "??", errormsg)) end
+				local text = ("Error trapped for ScanProcessor '%s' in module %s:\n%s"):format(operation, x.Name, errormsg)
+				if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "ScanProcessor Error", text) end
+				geterrorhandler()(text)
 			end
 		end
 	end
@@ -610,7 +612,9 @@ local function processStats(processors, operation, curItem, oldItem)
 				end
 			else
 				if (_G.nLog) then
-					_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_WARNING, "AuctionFilter Error", ("AuctionFilter %s Returned Error %s"):format(x and x.Name or "??", result or "??"))
+					local text = ("Error trapped for AuctionFilter in module %s:\n%s"):format(x.Name, errormsg)
+					if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "AuctionFilter Error", text) end
+					geterrorhandler()(text)
 				end
 			end
 		end
@@ -628,13 +632,10 @@ local function processStats(processors, operation, curItem, oldItem)
 			local x = po[i]
 			local f = x.Func
 			local pOK, errormsg = pcall(f, operation, statItem, oldItem and statItemOld or nil)
-			--if (oldItem) then
-			--	pOK, errormsg = pcall(func,operation, statItem, statItemOld)
-			--else
-			--	pOK, errormsg = pcall(func,operation, statItem)
-			--end
 			if (not pOK) then
-				if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_WARNING, "ScanProcessor Error", ("ScanProcessor %s Returned Error %s"):format(x and x.Name or "??", errormsg)) end
+				local text = ("Error trapped for ScanProcessor '%s' in module %s:\n%s"):format(operation, x.Name, errormsg)
+				if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "ScanProcessor Error", text) end
+				geterrorhandler()(text)
 			end
 		end
 	end
@@ -995,9 +996,11 @@ local Commitfunction = function()
 					local _, speciesID, level = strsplit(":", data[Const.LINK])
 					speciesID, level = tonumber(speciesID), tonumber(level)
 					data[Const.ILEVEL] = data[Const.ILEVEL] or level -- should have been obtained from GetAuctionItemInfo anyway
-					local _, _, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
-					if petType then
-						data[Const.ISUB] = cSubtypeLookup[petType]
+					if speciesID then
+						local _, _, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
+						if petType then
+							data[Const.ISUB] = cSubtypeLookup[petType]
+						end
 					end
 				end
 			else
@@ -1054,7 +1057,7 @@ local Commitfunction = function()
 	if scanCount > TOLERANCE_LOWERLIMIT then -- don't use tolerance for tiny scans
 		tolerance = get("core.scan.unresolvedtolerance")
 		if scanCount < TOLERANCE_TAPERLIMIT then -- taper tolerance for smaller scans
-			tolerance = tolerance * scanCount / TOLERANCE_TAPERLIMIT
+			tolerance = ceil(tolerance * scanCount / TOLERANCE_TAPERLIMIT)
 		end
 	end
 	if unresolvedCount > tolerance then
@@ -1681,7 +1684,7 @@ function private.GetAuctionItem(list, page, index, itemLinksTried, itemData)
 		return itemData
 	end
 
-	local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner, saleStatus, itemId = GetAuctionItemInfo(list, index)
+	local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner, saleStatus, itemId = AucAdvanced.GetAuctionItemInfo(list, index)
 	-- Check critical values (if we got those, assume we got the rest as well - except possibly owner)
 	if not (itemId and minBid) then
 		return itemData
@@ -1749,14 +1752,9 @@ function private.GetAuctionItem(list, page, index, itemLinksTried, itemData)
 			itemData[Const.IEQUIP] = nil -- always nil for Pet Cages
 			uLevel = uLevel or cUseLevel
 			-- get the proper subtype
-			local header, speciesID = strsplit(":", itemLink)
-			if header:sub(-4) == "item" then
-				-- extra special handling for certain bugged pet cages on the Beta, that have an "item" link type
-				-- these are all Pet Cages for pets that cannot be caged! (created before Blizzard decided to make some pets non-tradeable)
-				-- ### this section of code to be removed when the beta ends ###
-				itemData[Const.ISUB] = "BattlePet"
-			else
-				speciesID = tonumber(speciesID)
+			local _, speciesID = strsplit(":", itemLink)
+			speciesID = tonumber(speciesID)
+			if speciesID then
 				local _, _, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
 				if petType then
 					itemData[Const.ISUB] = cSubtypeLookup[petType]
@@ -1771,7 +1769,6 @@ function private.GetAuctionItem(list, page, index, itemLinksTried, itemData)
 		itemData[Const.ENCHANT] = 0
 		itemData[Const.SEED] = 0
 	else
-
 		local itemInfo = private.GetItemInfoCache(itemId, itemLinksTried) -- {iType, iSubtype, Const.EquipEncode[equipLoc], iLevel, uLevel}
 		if itemInfo then
 			itemData[Const.ITYPE] = itemInfo[1]
@@ -2166,7 +2163,7 @@ local StorePageFunction = function()
 				maxTries, #retries, all_missed, names_missed, links_missed, ld_and_names_missed, link_data_missed ))
 		end
 
-		if (storecount > 0) then
+		if storecount > 0 or page == 0 then
 			qryinfo.page = page
 			curPages[page] = true -- we have pulled this page
 		end
@@ -2986,4 +2983,18 @@ end
 internal.Scan.Logout = lib.Logout
 internal.Scan.AHClosed = lib.AHClosed
 
-_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreScan.lua $", "$Rev: 5352 $")
+_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreScan.lua $", "$Rev: 5427 $")
+
+-- Hybrid mode GetAuctionItemInfo for transition from WoW 5.3 to 5.4
+-- Temporary - do not use in new code!
+local _,_,_,toc = GetBuildInfo()
+if toc < 50400 then
+	print("GetAuctionItemInfo for version 5.3")
+	AucAdvanced.GetAuctionItemInfo = GetAuctionItemInfo
+else
+	print("GetAuctionItemInfo for version 5.4")
+	function AucAdvanced.GetAuctionItemInfo(...)
+		local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName, saleStatus, itemId, hasAllInfo =  GetAuctionItemInfo(...)
+		return name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner, saleStatus, itemId, hasAllInfo
+	end
+end

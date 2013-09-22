@@ -12,8 +12,8 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	SpecWarnOverloadSoon		= "Zeige Spezialwarnung bevor eine Überladung gewirkt werden kann",
-	specWarnBreakJasperChains	= "Zeige Spezialwarnung, wenn es sicher ist die $spell:130395 zu sprengen",
+	SpecWarnOverloadSoon		= "Spezialwarnung bevor eine Überladung gewirkt werden kann",
+	specWarnBreakJasperChains	= "Spezialwarnung, wenn es sicher ist die $spell:130395 zu sprengen",
 	ArrowOnJasperChains			= "Zeige DBM-Pfeil, wenn du von $spell:130395 betroffen bist",
 	InfoFrame					= "Zeige Infofenster für Bossenergie, Spielerversteinerung und welcher Boss Versteinerung wirkt"
 })
@@ -22,21 +22,20 @@ L:SetMiscLocalization({
 	Overload	= "%s überlädt sich gleich!"
 })
 
-
 ------------
 -- Feng the Accursed --
 ------------
 L= DBM:GetModLocalization(689)
 
 L:SetWarningLocalization({
-	WarnPhase	= "Phase %d"
+	WarnPhase			= "Phase %d",
+	specWarnBarrierNow	= "JETZT Nullifikationsbarriere benutzen!"
 })
 
 L:SetOptionLocalization({
-	WarnPhase	= "Verkünde Phasenwechsel",
-	RangeFrame	= "Zeige Abstandsfenster (6m) während Arkanphase",
-	SetIconOnWS	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(116784),
-	SetIconOnAR	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(116417)
+	WarnPhase			= "Verkünde Phasenwechsel",
+	specWarnBarrierNow	= "Spezialwarnung, wenn von dir erwartet wird $spell:115817 zu benutzen (nur bei Schlachtzugsbrowserkämpfen)",
+	RangeFrame	= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format("6") .. " während Arkanphase"
 })
 
 L:SetMiscLocalization({
@@ -46,20 +45,14 @@ L:SetMiscLocalization({
 	Shadow		= "Große Seele vergangener Helden! Gewährt mir Euren Schild!"
 })
 
-
 -------------------------------
 -- Gara'jal the Spiritbinder --
 -------------------------------
 L= DBM:GetModLocalization(682)
 
-L:SetOptionLocalization({
-	SetIconOnVoodoo		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(122151)
-})
-
 L:SetMiscLocalization({
 	Pull		= "Jetzt is' Sterbenszeit!"
 })
-
 
 ----------------------
 -- The Spirit Kings --
@@ -77,11 +70,8 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	DarknessSoon		= "Zeige Vorwarnungscountdown für $spell:117697 (5s zuvor)",
-	timerUSRevive		= "Zeige Zeit bis sich $spell:117506 neu formen",
-	timerRainOfArrowsCD = DBM_CORE_AUTO_TIMER_OPTIONS.cd:format(118122),
-	RangeFrame			= "Zeige Abstandsfenster (8m)"
+	timerUSRevive		= "Zeige Zeit bis sich $spell:117506 neu formen"
 })
-
 
 ------------
 -- Elegon --
@@ -97,11 +87,10 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	specWarnDespawnFloor	= "Zeige Spezialwarnung bevor der Boden (Energievortex) verschwindet",
+	specWarnDespawnFloor	= "Spezialwarnung bevor der Boden (Energievortex) verschwindet",
 	timerDespawnFloor		= "Zeige Zeit bis der Boden (Energievortex) verschwindet",
-	SetIconOnDestabilized	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(132222)
+	SetIconOnCreature		= "Setze Zeichen auf $journal:6193"
 })
-
 
 ------------
 -- Will of the Emperor --
@@ -110,8 +99,8 @@ L= DBM:GetModLocalization(677)
 
 L:SetOptionLocalization({
 	InfoFrame		= "Zeige Infofenster für Spieler, welche von $spell:116525 betroffen sind",
-	CountOutCombo	= "Zähle akkustisch die Anzahl der $journal:5673 Wirkungen\nHINWEIS: Dafür ist derzeit nur die weibliche Stimme verfügbar.",
-	ArrowOnCombo	= "Zeige DBM-Pfeil während $journal:5673  HINWEIS: Nimmt an,\ndass sich der Tank vor dem Boss befindet und alle anderen dahinter."
+	CountOutCombo	= "Zähle akustisch die Anzahl der $journal:5673 Wirkungen<br/>HINWEIS: Dafür ist derzeit nur die weibliche Stimme verfügbar.",
+	ArrowOnCombo	= "Zeige DBM-Pfeil während $journal:5673  HINWEIS: Nimmt an,<br/>dass sich der Tank vor dem Boss befindet und alle anderen dahinter."
 })
 
 L:SetMiscLocalization({
@@ -121,4 +110,3 @@ L:SetMiscLocalization({
 	Courage		= "Der Mut des Kaisers erscheint in den Erkern!",
 	Boss		= "In den riesigen Erkern erscheinen zwei Titanenkonstrukte!"
 })
-

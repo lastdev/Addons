@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(692, "DBM-Party-MoP", 6, 324)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8294 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10185 $"):sub(12, -3))
 mod:SetCreatureID(61485)
-mod:SetModelID(43120)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -71,9 +70,11 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(119476) then
-		local shieldname = GetSpellInfo(119476)
-		showShieldHealthBar(self, args.destGUID, shieldname, 1500000)
+	if args.spellId == 119476 then
+		if DBM.BossHealth:IsShown() then
+			local shieldname = GetSpellInfo(119476)
+			showShieldHealthBar(self, args.destGUID, shieldname, 1500000)
+		end
 		phase = phase + 1
 		warnBulwark:Show()
 		specWarnBulwark:Show()
@@ -83,16 +84,16 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(119476) then--When bullwark breaks, he will instantly cast either tempest or blade rush, need more logs to determine if it's random or set.
+	if args.spellId == 119476 and DBM.BossHealth:IsShown() then--When bullwark breaks, he will instantly cast either tempest or blade rush, need more logs to determine if it's random or set.
 		hideShieldHealthBar()
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(124283) then--he do not target anything. so can't use target scan.
+	if args.spellId == 124283 then--he do not target anything. so can't use target scan.
 		warnBladeRush:Show()
 		timerBladeRushCD:Start()
-	elseif args:IsSpellID(119875) then
+	elseif args.spellId == 119875 then
 		warnTempest:Show()
 		specWarnTempest:Show()
 		timerBladeRushCD:Start(7)--always 7-7.5 seconds after tempest.

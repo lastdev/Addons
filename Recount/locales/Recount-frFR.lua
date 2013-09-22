@@ -300,6 +300,7 @@ L["Runic Power Gained"] = "Puissance runique gagnée"
 L["RunicPower Sources"] = "des sources de puissance runique"
 L["'s Absorbs"] = "Absorbe"
 L["Say"] = "Dire"
+L["Scenario Instances"] = "Instances de scénarios" -- Needs review
 L["'s Dispels"] = " : dissipations"
 L["'s DOT Uptime"] = "DOT actifs"
 L["'s DPS"] = " : DPS"

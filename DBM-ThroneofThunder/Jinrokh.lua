@@ -1,20 +1,18 @@
 local mod	= DBM:NewMod(827, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8862 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10296 $"):sub(12, -3))
 mod:SetCreatureID(69465)
-mod:SetModelID(47552)
+mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
+	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
-	"SPELL_PERIODIC_DAMAGE",
-	"SPELL_PERIODIC_MISSED",
-	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"RAID_BOSS_WHISPER"
+	"CHAT_MSG_RAID_BOSS_EMOTE"
 )
 
 local warnFocusedLightning			= mod:NewTargetAnnounce(137399, 4)
@@ -29,124 +27,154 @@ local specWarnStaticBurst			= mod:NewSpecialWarningYou(137162, mod:IsTank())
 local specWarnStaticBurstOther		= mod:NewSpecialWarningTarget(137162, mod:IsTank())
 local specWarnThrow					= mod:NewSpecialWarningYou(137175, mod:IsTank())
 local specWarnThrowOther			= mod:NewSpecialWarningTarget(137175, mod:IsTank())
+local specWarnWaterMove				= mod:NewSpecialWarning("specWarnWaterMove")
 local specWarnStorm					= mod:NewSpecialWarningSpell(137313, nil, nil, nil, 2)
 local specWarnElectrifiedWaters		= mod:NewSpecialWarningMove(138006)
 local specWarnIonization			= mod:NewSpecialWarningSpell(138732, not mod:IsTank(), nil, nil, 2)
 
 local timerFocusedLightningCD		= mod:NewCDTimer(10, 137399)--10-18 second variation, tends to lean toward 11-12 except when delayed by other casts such as throw or storm. Pull one also seems to variate highly
-local timerStaticBurstCD			= mod:NewCDTimer(19, 137162, mod:IsTank())
-local timerThrowCD					= mod:NewNextTimer(33, 137175)--90-93 variable (but always 33 seconds after storm, the only variation is between first and second one really)
-local timerStormCD					= mod:NewNextTimer(60, 137313)--90-93 variable (but ALWAYS 60 seconds after throw, so we use throw as trigger point)
-local timerIonizationCD				= mod:NewCDTimer(60, 138732)
-
-local soundFocusedLightning			= mod:NewSound(137422)
+local timerStaticBurstCD			= mod:NewCDTimer(19, 137162, nil, mod:IsTank())
+local timerThrowCD					= mod:NewCDTimer(26, 137175)--90-93 variable (26-30 seconds after storm. verified in well over 50 logs)
+local timerStorm					= mod:NewBuffActiveTimer(17, 137313)--2 second cast, 15 second duration
+local timerStormCD					= mod:NewCDTimer(60.5, 137313)--90-93 variable (60.5~67 seconds after throw)
+local timerIonization				= mod:NewBuffFadesTimer(24, 138732)
+local timerIonizationCD				= mod:NewNextTimer(61.5, 138732)
 
 local berserkTimer					= mod:NewBerserkTimer(540)
 
+local soundFocusedLightning			= mod:NewSound(137422)
+
+local countdownIonization			= mod:NewCountdown(61.5, 138732)
+
 mod:AddBoolOption("RangeFrame")
 
-local scansDone = 0
+local scanFailed = false
 
-local function isTank(unit)
-	-- 1. check blizzard tanks first
-	-- 2. check blizzard roles second
-	-- 3. check boss1's highest threat target
-	if GetPartyAssignment("MAINTANK", unit, 1) then
-		return true
+local function checkWaterIonization()
+	if UnitDebuff("player", GetSpellInfo(138002)) and UnitDebuff("player", GetSpellInfo(138732)) and not UnitIsDeadOrGhost("player") then
+		specWarnWaterMove:Show(GetSpellInfo(138732))
 	end
-	if UnitGroupRolesAssigned(unit) == "TANK" then
-		return true
-	end
-	if UnitExists("boss1target") and UnitDetailedThreatSituation(unit, "boss1") then
-		return true
-	end
-	return false
 end
 
-function mod:TargetScanner(Force)
-	scansDone = scansDone + 1
-	local targetname, uId = self:GetBossTarget(69465)
-	if UnitExists(targetname) then
-		if isTank(uId) and not Force then
-			if scansDone < 12 then
-				self:ScheduleMethod(0.025, "TargetScanner")
-			else
-				self:TargetScanner(true)
-			end
-		else
-			warnFocusedLightning:Show(targetname)
-		end
+local function checkWaterStorm()
+	if UnitDebuff("player", GetSpellInfo(138002)) and not UnitIsDeadOrGhost("player") then
+		specWarnWaterMove:Show(GetSpellInfo(137313))
+	end
+end
+
+function mod:FocusedLightningTarget(targetname, uId)
+	if not targetname then return end
+	if self:IsTanking(uId, "boss1") then--Focused Lightning never target tanks, so if target is tank, that means scanning failed.
+		scanFailed = true
 	else
-		if scansDone < 12 then
-			self:ScheduleMethod(0.025, "TargetScanner")
+		warnFocusedLightning:Show(targetname)
+		if targetname == UnitName("player") then
+			specWarnFocusedLightning:Show()
+			yellFocusedLightning:Yell()
+			soundFocusedLightning:Play()
+			if self.Options.RangeFrame and not self:IsDifficulty("lfr25") then
+				DBM.RangeCheck:Show(8)
+			end
 		end
 	end
 end
 
 function mod:OnCombatStart(delay)
-	timerFocusedLightningCD:Start(-delay)
+	scanFailed = false
+	timerFocusedLightningCD:Start(8-delay)
 	timerStaticBurstCD:Start(13-delay)
 	timerThrowCD:Start(30-delay)
 	if self:IsDifficulty("heroic10", "heroic25") then
 		timerIonizationCD:Start(60-delay)
+		countdownIonization:Start(60-delay)
+		berserkTimer:Start(360-delay)
+	else
+		berserkTimer:Start(-delay)
 	end
-	berserkTimer:Start(-delay)
 end
 
 function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
+	self:UnregisterShortTermEvents()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(137399) then
-		scansDone = 0
-		self:TargetScanner()
+	if args.spellId == 137399 then
+		self:BossTargetScanner(69465, "FocusedLightningTarget", 0.025, 12)
 		timerFocusedLightningCD:Start()
-	elseif args:IsSpellID(137313) then
+	elseif args.spellId == 137313 then
 		warnStorm:Show()
 		specWarnStorm:Show()
-		timerStaticBurstCD:Start(22.5)--May need tweaking
+		timerStorm:Start()
+		timerStaticBurstCD:Start(20.5)--May need tweaking (20.1-24.2)
 		timerThrowCD:Start()
 		if self:IsDifficulty("heroic10", "heroic25") then
-			timerIonizationCD:Start(61.5)
+			timerIonizationCD:Start()
+			countdownIonization:Start()
 		end
-	elseif args:IsSpellID(138732) then
+		--Only register electrified waters events during storm. Avoid high cpu events during rest of fight.
+		self:RegisterShortTermEvents(
+			"SPELL_PERIODIC_DAMAGE",
+			"SPELL_PERIODIC_MISSED"
+		)
+	elseif args.spellId == 138732 then
 		warnIonization:Show()
 		specWarnIonization:Show()
+		if timerStaticBurstCD:GetTime() == 0 or timerStaticBurstCD:GetTime() > 5 then -- Static Burst will be delayed by Ionization
+			timerStaticBurstCD:Start(12)
+		end
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 137162 then
+		timerStaticBurstCD:Start()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(137162) then
+	if args.spellId == 137162 then
 		warnStaticBurst:Show(args.destName)
-		timerStaticBurstCD:Start()
 		if args:IsPlayer() then
 			specWarnStaticBurst:Show()
 		else
 			specWarnStaticBurstOther:Show(args.destName)
 		end
-	elseif args:IsSpellID(138732) and args:IsPlayer() then
-		if self.Options.RangeFrame then
+	elseif args.spellId == 137422 and scanFailed then--Use cleu target if scanning is failed (slower than target scanning)
+		scanFailed = false
+		self:FocusedLightningTarget(args.destName)
+	elseif args.spellId == 138732 and args:IsPlayer() then
+		timerIonization:Start()
+		self:Schedule(19, checkWaterIonization)--Extremely dangerous. (if conducted, then auto wipe). So check before 5 sec.
+		if self.Options.RangeFrame and not UnitDebuff("player", GetSpellInfo(137422)) then--if you have 137422 then you have range 8 open and we don't want to make it 4
 			DBM.RangeCheck:Show(4)
 		end
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(138732) and args:IsPlayer() then
-		if self.Options.RangeFrame then
+	if args.spellId == 138732 and args:IsPlayer() then
+		timerIonization:Cancel()
+		self:Unschedule(checkWaterIonization)
+		if self.Options.RangeFrame and not UnitDebuff("player", GetSpellInfo(137422)) then--if you have 137422 we don't want to hide it either.
 			DBM.RangeCheck:Hide()
 		end
-	elseif args:IsSpellID(137422) and args:IsPlayer() then
+	elseif args.spellId == 137422 and args:IsPlayer() then
 		if self.Options.RangeFrame then
-			DBM.RangeCheck:Hide()
+			if UnitDebuff("player", GetSpellInfo(138732)) then--if you have 138732 then switch to 4 yards
+				DBM.RangeCheck:Show(4)
+			else
+				DBM.RangeCheck:Hide()
+			end
 		end
+	elseif args.spellId == 137313 then
+		self:UnregisterShortTermEvents()
 	end
 end
 
-function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId)
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 138006 and destGUID == UnitGUID("player") and self:AntiSpam() then
 		specWarnElectrifiedWaters:Show()
 	end
@@ -155,24 +183,14 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg:find("spell:137175") then
+		local target = DBM:GetUnitFullName(target)
 		warnThrow:Show(target)
 		timerStormCD:Start()
+		self:Schedule(55.5, checkWaterStorm)--check before 5 sec.
 		if target == UnitName("player") then
 			specWarnThrow:Show()
 		else
 			specWarnThrowOther:Show(target)
-		end
-	end
-end
-
---"<294.8 20:14:02> [RAID_BOSS_WHISPER] RAID_BOSS_WHISPER#|TInterface\\Icons\\ability_vehicle_electrocharge:20|t%s's |cFFFF0000|Hspell:137422|h[Focused Lightning]|h|r fixates on you. Run!#Jin'rokh the Breaker#0#false", -- [12425]
-function mod:RAID_BOSS_WHISPER(msg)
-	if msg:find("spell:137422") then--In case target scanning fails, personal warnings still always go off. Target scanning is just so everyone else in raid knows who it's on (since only target sees this emote)
-		specWarnFocusedLightning:Show()
-		yellFocusedLightning:Yell()
-		soundFocusedLightning:Play()
-		if self.Options.RangeFrame then
-			DBM.RangeCheck:Show(8)
 		end
 	end
 end

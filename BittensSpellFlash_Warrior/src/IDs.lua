@@ -17,6 +17,7 @@ a.SpellIDs = {
 	["Charge"] = 100,
 	["Colossus Smash"] = 86346,
 	["Commanding Shout"] = 469,
+	["Cleave"] = 845,
 	["Defensive Stance"] = 71,
 	["Demoralizing Shout"] = 1160,
 	["Devestate"] = 20243,
@@ -31,10 +32,12 @@ a.SpellIDs = {
 	["Incite"] = 122016,
 	["Impending Victory"] = 103840,
 	["Last Stand"] = 12975,
+	["Meat Cleaver"] = 85739,
 	["Mortal Strike"] = 12294,
 	["Overpower"] = 7384,
 	["Pummel"] = 6552,
 	["Raging Blow"] = 85288,
+	["Raging Blow!"] = 131116,
 	["Rallying Cry"] = 97462,
 	["Recklessness"] = 1719,
 	["Revenge"] = 6572,
@@ -49,6 +52,7 @@ a.SpellIDs = {
 	["Storm Bolt"] = 107570,
 	["Sudden Execute"] = 139958,
 	["Sunder Armor"] = 7386,
+	["Sweeping Strikes"] = 12328,
 	["Sword and Board"] = 50227,
 	["Taste for Blood"] = 60503,
 	["Taunt"] = 355,
@@ -57,6 +61,7 @@ a.SpellIDs = {
 	["Victorious"] = 32216,
 	["Victory Rush"] = 34428,
 	["Wild Strike"] = 100130,
+	["Whirlwind"] = 1680,
 }
 
 a.TalentIDs = {
@@ -66,6 +71,7 @@ a.TalentIDs = {
 }
 
 a.GlyphIDs = {
+	["Hoarse Voice"] = 58387,
 	["Incite"] = 122013,
 	["Shield Wall"] = 63329,
 	["Victory Rush"] = 58382,
@@ -79,11 +85,11 @@ a.EquipmentSets = {
 	    HandsSlot = { 86671, 85331, 87194 },
 	    LegsSlot = { 86670, 85330, 87195 },
 	},
---	ProtT14 = {
---	    HeadSlot = { , ,  },
---	    ShoulderSlot = { , ,  },
---	    ChestSlot = { , ,  },
---	    HandsSlot = { , ,  },
---	    LegsSlot = { , ,  },
---	},
+	ProtT15 = {
+	    HeadSlot = { 95993, 95337, 96737 },
+	    ShoulderSlot = { 95995, 95339, 96739 },
+	    ChestSlot = { 95991, 95335, 96735 },
+	    HandsSlot = { 95992, 95336, 96736 },
+	    LegsSlot = { 95994, 95338, 96738 },
+	},
 }

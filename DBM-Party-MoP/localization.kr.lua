@@ -9,10 +9,6 @@ local L
 -----------------------
 L= DBM:GetModLocalization(672)
 
-L:SetOptionLocalization({
-	SetIconOnAdds	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej5616")
-})
-
 -----------------------
 -- Lorewalker Stonestep --
 -----------------------
@@ -20,10 +16,6 @@ L= DBM:GetModLocalization(664)
 
 L:SetWarningLocalization({
 	SpecWarnIntensity	= "%s : %s (%d)"
-})
-
-L:SetOptionLocalization({
-	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(6, 113315)
 })
 
 -----------------------
@@ -59,8 +51,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	SpecWarnFizzyBubbles	= "$spell:114459 효과가 없을 경우 특수 경고 보기",
-	RangeFrame				= "$spell:106546 주문의 영향을 받은 경우 거리 창 보기(10m)"
+	SpecWarnFizzyBubbles	= "$spell:114459 효과가 없을 경우 특수 경고 보기"
 })
 
 -----------------------
@@ -75,10 +66,6 @@ L:SetWarningLocalization({
 	warnStaticField	= "%s"
 })
 
-L:SetOptionLocalization({
-	warnStaticField	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(106923)
-})
-
 -----------------------
 -- Snowdrift --
 -----------------------
@@ -89,7 +76,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnRemainingNovice	= "음영파 신입생 남은 횟수 알림 보기"
+	warnRemainingNovice	= "음영파 신입생 남은횟수 알림 보기"
 })
 
 L:SetMiscLocalization({
@@ -103,7 +90,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(685)
 
 L:SetMiscLocalization({
-	Kill		= "네 가슴이 폭력에 물들어 있는 한... 난... 다시... 돌아올 것이다.",
+	Kill		= "네 가슴이 폭력에 물들어 있는 한... 난... 다시... 돌아올 것이다."
 })
 
 -----------------------
@@ -112,7 +99,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(686)
 
 L:SetOptionLocalization({
-	InfoFrame			= "$journal:5827 정보 창 보기"
+	InfoFrame			= "$journal:5827 정보를 정보 창으로 보기"
 })
 
 -----------------------
@@ -122,10 +109,6 @@ L:SetOptionLocalization({
 -- Kiptilak --
 ---------------------
 L= DBM:GetModLocalization(655)
-
-L:SetOptionLocalization({
-	IconOnSabotage	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(107268)
-})
 
 -------------
 -- Gadok --
@@ -190,7 +173,7 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	TimerWave	= "적 등장 바 표시"
+	TimerWave	= "적 등장 바 보기"
 })
 
 L:SetMiscLocalization({
@@ -288,7 +271,7 @@ L= DBM:GetModLocalization(688)
 L= DBM:GetModLocalization(671)
 
 L:SetOptionLocalization({
-	KickArrow	= "$spell:114487 주문이 근처에 시전된 경우 DBM 화살표 보기",
+	KickArrow	= "$spell:114487 대상이 가까이 있을 경우 DBM 화살표 보기"
 })
 
 -----------------------

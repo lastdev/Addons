@@ -2,10 +2,10 @@
 ************************************************************************
 Panel.lua
 ************************************************************************
-File date: 2013-03-06T03:34:20Z
-File hash: f922565
-Project hash: f922565
-Project version: 2.4.6
+File date: 2013-03-08T02:43:03Z
+File hash: 1b54116
+Project hash: 4bcba04
+Project version: 2.5.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -383,7 +383,7 @@ function private.InitializeFrame()
 		local current_prof = ORDERED_PROFESSIONS[self.current_profession]
 
 		if not self.is_expanded then
-			self.title_bar:SetFormattedText(SetTextColor(private.BASIC_COLORS["normal"], "ARL (%s) - %s"), addon.version, current_prof)
+			self.title_bar:SetFormattedText(SetTextColor(private.BASIC_COLORS.normal.hex, "ARL (%s) - %s"), addon.version, current_prof)
 			return
 		end
 		local total, active = 0, 0
@@ -396,7 +396,7 @@ function private.InitializeFrame()
 				total = total + 1
 			end
 		end
-		self.title_bar:SetFormattedText(SetTextColor(private.BASIC_COLORS["normal"], "ARL (%s) - %s (%d/%d %s)"), addon.version, current_prof, active, total, _G.FILTERS)
+		self.title_bar:SetFormattedText(SetTextColor(private.BASIC_COLORS.normal.hex, "ARL (%s) - %s (%d/%d %s)"), addon.version, current_prof, active, total, _G.FILTERS)
 	end
 
 	-------------------------------------------------------------------------------

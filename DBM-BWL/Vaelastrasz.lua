@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Vaelastrasz", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 389 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 501 $"):sub(12, -3))
 mod:SetCreatureID(13020)
 mod:SetModelID(13992)
 mod:RegisterCombat("combat")
@@ -19,20 +19,17 @@ local specWarnAdrenaline	= mod:NewSpecialWarningYou(18173)
 
 local timerBreath			= mod:NewCastTimer(2, 23461)
 local timerAdrenaline		= mod:NewTargetTimer(20, 18173)
-local timerCombatStart		= mod:NewTimer(43, "TimerCombatStart", 2457)
-
-function mod:OnCombatStart(delay)
-end
+local timerCombatStart		= mod:NewCombatTimer(43)
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(23461) then
+	if args.spellId == 23461 then
 		warnBreath:Show()
 		timerBreath:Start()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(18173) then
+	if args.spellId == 18173 then
 		warnAdrenaline:Show(args.destName)
 		timerAdrenaline:Start(args.destName)
 		if args:IsPlayer() then

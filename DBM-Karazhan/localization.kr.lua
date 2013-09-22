@@ -8,12 +8,6 @@ L:SetGeneralLocalization{
 	name = "사냥꾼 어튜멘"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetOptionLocalization{
-}
-
 L:SetMiscLocalization{
 	DBM_ATH_YELL_1		= "이랴! 이 오합지졸을 데리고 실컷 놀아보자!",
 	KillAttumen			= "아아! 언젠간 나도... 당할 날이 올 줄... 알았다..."
@@ -47,35 +41,12 @@ L:SetGeneralLocalization{
 	name = "고결의 여신"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetOptionLocalization{
-	RangeFrame			= "거리 창 보기(10m)"
-}
-
-L:SetMiscLocalization{
-}
-
 
 -- Romulo and Julianne
 L = DBM:GetModLocalization("RomuloAndJulianne")
 
 L:SetGeneralLocalization{
 	name = "로밀로와 줄리엔"
-}
-
-L:SetWarningLocalization{
-	warningPosion	= "%s : >%s< (%d)",
-}
-
-L:SetTimerLocalization{
-	TimerCombatStart	= "전투 시작"
-}
-
-L:SetOptionLocalization{
-	TimerCombatStart	= "전투 시작 바 표시",
-	warningPosion		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(30830)
 }
 
 L:SetMiscLocalization{
@@ -94,180 +65,8 @@ L:SetGeneralLocalization{
 	name = "커다란 나쁜 늑대"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetOptionLocalization{
-	RRHIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(30753)
-}
-
 L:SetMiscLocalization{
 	DBM_BBW_YELL_1			= "잡아 먹기 좋으라고 그런거지!"
-}
-
-
--- Curator
-L = DBM:GetModLocalization("Curator")
-
-L:SetGeneralLocalization{
-	name = "전시 관리인"
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-	RangeFrame			= "거리 창 보기(10m)"
-}
-
-L:SetMiscLocalization{
-	DBM_CURA_YELL_PULL		= "박물관에는 초대받은 손님만 입장하실 수 있습니다.",
-	DBM_CURA_YELL_OOM		= "현재 요청하신 내용은 처리가 불가능합니다."
-}
-
-
--- Terestian Illhoof
-L = DBM:GetModLocalization("TerestianIllhoof")
-
-L:SetGeneralLocalization{
-	name = "테레스티안 일후프"
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-}
-
-L:SetMiscLocalization{
-	DBM_TI_YELL_PULL		= "아, 때맞춰 와줬군. 막 의식을 시작하려던 참이었다!",
-	Kilrek					= "킬렉",
-	DChains					= "악마의 사슬"
-}
-
-
--- Shade of Aran
-L = DBM:GetModLocalization("Aran")
-
-L:SetGeneralLocalization{
-	name = "아란의 망령"
-}
-
-L:SetWarningLocalization{
-	DBM_ARAN_DO_NOT_MOVE	= "화염의 고리 - 이동 금지!"
-}
-
-L:SetTimerLocalization{
-	timerSpecial			= "다음 신비한 폭발"
-}
-
-L:SetOptionLocalization{
-	timerSpecial			= "다음 신비한 폭발 바 표시",
-	DBM_ARAN_DO_NOT_MOVE	= "$spell:30004 시전시 특수 경고 보기",
-	ElementalIcons			= "$spell:37053 대상에게 전술 목표 아이콘 설정",
-	WreathIcons				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(29946)
-}
-
-L:SetMiscLocalization{
-}
-
-
---Netherspite
-L = DBM:GetModLocalization("Netherspite")
-
-L:SetGeneralLocalization{
-	name = "황천의 원령"
-}
-
-L:SetWarningLocalization{
-	DBM_NS_WARN_PORTAL_SOON	= "5초 후 차원문 단계",
-	DBM_NS_WARN_BANISH_SOON	= "5초 후 소멸 단계",
-	warningPortal			= "차원문 단계",
-	warningBanish			= "소멸 단계"
-}
-
-L:SetTimerLocalization{
-	timerPortalPhase	= "차원문 단계 종료",
-	timerBanishPhase	= "소멸 단계 종료"
-}
-
-L:SetOptionLocalization{
-	DBM_NS_WARN_PORTAL_SOON	= "차원문 단계 사전 알림 보기",
-	DBM_NS_WARN_BANISH_SOON	= "소멸 단계 사전 알림 보기",
-	warningPortal			= "차원문 단계 알림 보기",
-	warningBanish			= "소멸 단계 알림 보기",
-	timerPortalPhase		= "차원문 단계 유지시간 바 표시",
-	timerBanishPhase		= "소멸 단계 유지시간 바 표시"
-}
-
-L:SetMiscLocalization{
-	DBM_NS_EMOTE_PHASE_2	= "%s|1이;가; 황천의 기운을 받고 분노에 휩싸입니다!",
-	DBM_NS_EMOTE_PHASE_1	= "%s|1이;가; 물러나며 고함을 지르더니 황천의 문을 엽니다."
-}
-
-
---Prince Malchezaar
-L = DBM:GetModLocalization("Prince")
-
-L:SetGeneralLocalization{
-	name = "공작 말체자르"
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-}
-
-L:SetMiscLocalization{
-	DBM_PRINCE_YELL_PULL	= "여기까지 오다니 정신이 나간 놈들이 분명하구나. 소원이라면 파멸을 시켜주마!",
-	DBM_PRINCE_YELL_P2		= "바보 같으니! 시간은 너의 몸을 태우는 불길이 되리라!",
-	DBM_PRINCE_YELL_P3		= "어찌 감히 이렇게 압도적인 힘에 맞서기를 꿈꾸느냐?",
-	DBM_PRINCE_YELL_INF1	= "모든 차원과 실체가 나를 향해 열려 있노라!",
-	DBM_PRINCE_YELL_INF2	= "이 말체자르님은 혼자가 아니시다. 너희는 나의 군대와 맞서야 한다!"
-}
-
-
--- Nightbane
-L = DBM:GetModLocalization("Nightbane")
-
-L:SetGeneralLocalization{
-	name = "파멸의 어둠"
-}
-
-L:SetWarningLocalization{
-	DBM_NB_DOWN_WARN 		= "15초 후 착지",
-	DBM_NB_DOWN_WARN2 		= "5초 후 착지",
-	DBM_NB_AIR_WARN			= "공중 단계"
-}
-
-L:SetTimerLocalization{
-	timerNightbane			= "전투 시작",
-	timerAirPhase			= "공중 단계 종료"
-}
-
-L:SetOptionLocalization{
-	DBM_NB_AIR_WARN			= "공중 단계 알림 보기",
-	PrewarnGroundPhase		= "착지 사전 알림 보기",
-	timerNightbane			= "전투 시작 바 표시",
-	timerAirPhase			= "공중 단계 유지시간 바 표시"
-}
-
-L:SetMiscLocalization{
-	DBM_NB_EMOTE_PULL		= "멀리에서 고대의 존재가 깨어납니다...",
-	DBM_NB_YELL_PULL		= "정말 멍청하군! 고통 없이 빨리 끝내주마!",
-	DBM_NB_YELL_AIR			= "이 더러운 기생충들, 내가 하늘에서 너희의 씨를 말리리라!",
-	DBM_NB_YELL_GROUND		= "그만! 내 친히 내려가서 너희를 짓이겨주마!",
-	DBM_NB_YELL_GROUND2		= "하루살이 같은 놈들! 나의 힘을 똑똑히 보여주겠다!"
 }
 
 
@@ -295,8 +94,7 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	AnnounceBosses			= "우두머리 등장 알림 보기",
-	ShowBossTimers			= "우두머리 등장 바 표시",
-	DBM_OZ_OPTION_1			= "2 단계에서 거리 창 보기"
+	ShowBossTimers			= "우두머리 등장 바 보기"
 }
 
 L:SetMiscLocalization{
@@ -305,6 +103,158 @@ L:SetMiscLocalization{
 	DBM_OZ_YELL_STRAWMAN	= "너희를 어떻게 해주면 좋을까? 아무 생각도 나지 않아!",
 	DBM_OZ_YELL_TINHEAD		= "나도 심장 갖고 싶어. 너희들 것 나한테 주면 안 될까?",
 	DBM_OZ_YELL_CRONE		= "곧 모두 다 끝장날 것이다!"
+}
+
+
+-- Curator
+L = DBM:GetModLocalization("Curator")
+
+L:SetGeneralLocalization{
+	name = "전시 관리인"
+}
+
+L:SetWarningLocalization{
+	warnAdd		= "별의 섬광"
+}
+
+L:SetOptionLocalization{
+	warnAdd		= "별의 섬광 알림 보기"
+}
+
+L:SetOptionLocalization{
+	RangeFrame			= "거리 창 보기(10m)"
+}
+
+L:SetMiscLocalization{
+	DBM_CURA_YELL_PULL		= "박물관에는 초대받은 손님만 입장하실 수 있습니다."
+}
+
+
+-- Terestian Illhoof
+L = DBM:GetModLocalization("TerestianIllhoof")
+
+L:SetGeneralLocalization{
+	name = "테레스티안 일후프"
+}
+
+L:SetMiscLocalization{
+	DBM_TI_YELL_PULL		= "아, 때맞춰 와줬군. 막 의식을 시작하려던 참이었다!",
+	Kilrek					= "킬렉",
+	DChains					= "악마의 사슬"
+}
+
+
+-- Shade of Aran
+L = DBM:GetModLocalization("Aran")
+
+L:SetGeneralLocalization{
+	name = "아란의 망령"
+}
+
+L:SetWarningLocalization{
+	DBM_ARAN_DO_NOT_MOVE	= "화염의 고리 - 이동 금지!"
+}
+
+L:SetTimerLocalization{
+	timerSpecial			= "다음 신폭/고리/눈보라"
+}
+
+L:SetOptionLocalization{
+	timerSpecial			= "다음 $spell:30004 또는 $spell:29973 또는 $spell:29969 바 보기",
+	DBM_ARAN_DO_NOT_MOVE	= "$spell:30004 특수 경고 보기",
+	ElementalIcons			= "$spell:37053 대상에게 전술 목표 아이콘 설정"
+}
+
+--Netherspite
+L = DBM:GetModLocalization("Netherspite")
+
+L:SetGeneralLocalization{
+	name = "황천의 원령"
+}
+
+L:SetWarningLocalization{
+	warningPortal			= "차원문 단계",
+	warningBanish			= "소멸 단계"
+}
+
+L:SetTimerLocalization{
+	timerPortalPhase	= "차원문 단계 종료",
+	timerBanishPhase	= "소멸 단계 종료"
+}
+
+L:SetOptionLocalization{
+	warningPortal			= "차원문 단계 알림 보기",
+	warningBanish			= "소멸 단계 알림 보기",
+	timerPortalPhase		= "차원문 단계 유지시간 바 보기",
+	timerBanishPhase		= "소멸 단계 유지시간 바 보기"
+}
+
+L:SetMiscLocalization{
+	DBM_NS_EMOTE_PHASE_2	= "%s|1이;가; 황천의 기운을 받고 분노에 휩싸입니다!",
+	DBM_NS_EMOTE_PHASE_1	= "%s|1이;가; 물러나며 고함을 지르더니 황천의 문을 엽니다."
+}
+
+--Chess
+L = DBM:GetModLocalization("Chess")
+
+L:SetGeneralLocalization{
+	name = "체스 이벤트"
+}
+
+L:SetTimerLocalization{
+	timerCheat	= "속임수 가능"
+}
+
+L:SetOptionLocalization{
+	timerCheat	= "속임수 대기시간 바 보기"
+}
+
+L:SetMiscLocalization{
+	EchoCheats	= "메디브의 메아리!"
+}
+
+--Prince Malchezaar
+L = DBM:GetModLocalization("Prince")
+
+L:SetGeneralLocalization{
+	name = "공작 말체자르"
+}
+
+L:SetMiscLocalization{
+	DBM_PRINCE_YELL_PULL	= "여기까지 오다니 정신이 나간 놈들이 분명하구나. 소원이라면 파멸을 시켜주마!",
+	DBM_PRINCE_YELL_P2		= "바보 같으니! 시간은 너의 몸을 태우는 불길이 되리라!",
+	DBM_PRINCE_YELL_P3		= "어찌 감히 이렇게 압도적인 힘에 맞서기를 꿈꾸느냐?",
+	DBM_PRINCE_YELL_INF1	= "모든 차원과 실체가 나를 향해 열려 있노라!",
+	DBM_PRINCE_YELL_INF2	= "이 말체자르님은 혼자가 아니시다. 너희는 나의 군대와 맞서야 한다!"
+}
+
+
+-- Nightbane
+L = DBM:GetModLocalization("Nightbane")
+
+L:SetGeneralLocalization{
+	name = "파멸의 어둠"
+}
+
+L:SetWarningLocalization{
+	DBM_NB_AIR_WARN			= "공중 단계"
+}
+
+L:SetTimerLocalization{
+	timerAirPhase			= "공중 단계 종료"
+}
+
+L:SetOptionLocalization{
+	DBM_NB_AIR_WARN			= "공중 단계 알림 보기",
+	timerAirPhase			= "공중 단계 유지시간 바 보기"
+}
+
+L:SetMiscLocalization{
+	DBM_NB_EMOTE_PULL		= "멀리에서 고대의 존재가 깨어납니다...",
+	DBM_NB_YELL_PULL		= "정말 멍청하군! 고통 없이 빨리 끝내주마!",
+	DBM_NB_YELL_AIR			= "이 더러운 기생충들, 내가 하늘에서 너희의 씨를 말리리라!",
+	DBM_NB_YELL_GROUND		= "그만! 내 친히 내려가서 너희를 짓이겨주마!",
+	DBM_NB_YELL_GROUND2		= "하루살이 같은 놈들! 나의 힘을 똑똑히 보여주겠다!"
 }
 
 

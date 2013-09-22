@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: Enchantrix
-	Revision: $Id: EnxStrings.lua 5370 2012-10-02 04:00:48Z LocalizerAutoCommit $
-	Version: 5.15.5380 (LikeableLyrebird)
+	Revision: $Id: EnxStrings.lua 5419 2013-06-12 04:01:17Z LocalizerAutoCommit $
+	Version: 5.18.5433 (PassionatePhascogale)
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -487,7 +487,7 @@ EnchantrixLocalizations = {
 		["ArgSpellProspectingName"]	= "Sondieren";
 		["Enchanting"]	= "Verzauberkunst";
 		["Inscription"]	= "Inschriftenkunde";
-		["Jewelcrafting"]	= "Juwelenschleifen";
+		["Jewelcrafting"]	= "Juwelierskunst";
 		["PatReagents"]	= "Reagenzien: (.+)";
 		["TextCombat"]	= "Kampflog";
 		["TextGeneral"]	= "Allgemein";
@@ -1076,6 +1076,7 @@ EnchantrixLocalizations = {
 		["MesgAuctVersion"]	= "Enchantrix requiere la versión 3.4 o mayor de Auctioneer. Algunas características no estarán disponibles hasta que actualices tu instalación de Auctioneer.";
 
 		-- Section: Help Text
+		["GuiAltChatlink"]	= "Mostrar herramientas desde los links del chat pulsando Alt-Click-Izquierdo";
 		["GuiClearall"]	= "Elimina toda la información de Enchantrix";
 		["GuiClearallButton"]	= "Eliminar Todo";
 		["GuiClearallHelp"]	= "Clic aquí para eliminar toda la información de Enchantrix sobre el reino-facción actual.";
@@ -1101,6 +1102,7 @@ EnchantrixLocalizations = {
 		["GuiValuateEnable"]	= "Activa Valoración";
 		["GuiValuateHeader"]	= "Valoración";
 		["GuiValuateMedian"]	= "Valora con Promedios de Auctioneer";
+		["HelpAltChatlink"]	= "Habilita el abrir una herramienta haciendo Click-Izquierdo en el link de un item en el chat mientras la tecla Alt esta siendo presionada";
 		["HelpClear"]	= "Elimina la información sobre el objeto especificado (debes usar clic-mayúsculas para incluir el/los objeto(s) en el comando) También puedes especificar las palabra clave \"todo\"";
 		["HelpDefault"]	= "Establece una opción de Enchantrix a su valor por defecto. También puedes especificar la palabra clave especial \"todo\" para establecer todas las opciones de Enchantrix a sus valores por defecto.";
 		["HelpDisable"]	= "Impide que Enchantrix se cargue automáticamente la próxima vez que te conectes";
@@ -1156,6 +1158,7 @@ EnchantrixLocalizations = {
 		["FrmtPctlessSkipped"]	= "Saltadas %d subastas que están por debajo del margen de beneficios (%s)";
 
 		-- Section: Tooltip Messages
+		["Click"]	= "Click";
 		["FrmtBarkerPrice"]	= "Precio de Pregonero (margen de %d%%)";
 		["FrmtDEItemLevels"]	= "Se desencantan de niveles %d a %d del artículo.";
 		["FrmtDisinto"]	= "Se desencanta en:";
@@ -1186,6 +1189,11 @@ EnchantrixLocalizations = {
 		["FrmtWarnAuctNotLoaded"]	= "[Auctioneer no se ha cargado, usando los precios guardados]";
 		["FrmtWarnNoPrices"]	= "[No hay precios disponibles]";
 		["FrmtWarnPriceUnavail"]	= "[Algunos precios no están disponibles]";
+		["RightClick"]	= "Click-Derecho";
+		["ShiftClick"]	= "Shift-click";
+		["TipOpenConfig"]	= "Para editar la configuracion.";
+		["TipOpenEnchant"]	= "para abrir la ventana de encantamiento.";
+		["TipOpenJewel"]	= "para abrir la ventana de jollería.";
 		["TooltipMillingLevel"]	= "Habilidad de moler requerida %d";
 		["TooltipProspectLevel"]	= "Habilidad de prospección requerida %d";
 		["TooltipShowDisenchantLevel"]	= "Habilidad de desencantamiento requerida %d";
@@ -1268,6 +1276,14 @@ EnchantrixLocalizations = {
 		["GuiWeightSettings"]	= "Conveniencia de desencantar reactivo";
 		["GuiYes"]	= "Si";
 		["ModTTShow"]	= "Solo mostrar el globo de ayuda extra si Alt está pulsado.";
+		["ModTTShow_alt"]	= "Cuando se presiona la tecla Alt";
+		["ModTTShow_always"]	= "Siempre";
+		["ModTTShow_ctrl"]	= "Cuando se presiona la tecla Ctrl";
+		["ModTTShow_never"]	= "Nunca";
+		["ModTTShow_noalt"]	= "Cuando la tecla Alt no está siendo presionada";
+		["ModTTShow_noctrl"]	= "Cuando la tecla Ctrl no está siendo presionada";
+		["ModTTShow_noshift"]	= "Cuando la tecla Shift no está siendo presionada";
+		["ModTTShow_shift"]	= "Cuando la tecla Shift está siendo presionada";
 
 	};
 
@@ -1429,6 +1445,7 @@ EnchantrixLocalizations = {
 		["GuiValuateEnable"]	= "Activer l'évaluation";
 		["GuiValuateHeader"]	= "Évaluation";
 		["GuiValuateMedian"]	= "Évaluer avec les moyennes d'Auctioneer";
+		["HelpAltChatlink"]	= "Permet l'ouverture d'une info-bulle par un clic gauche sur un lien d'objet dans le chat pendant que la touche Alt est enfoncée.";
 		["HelpClear"]	= "Efface les données de l'objet spécifié (vous devez maj-cliquer le ou les objets dans la ligne de commande) Vous pouvez également spécifier le mot-clef \"tout\"";
 		["HelpDefault"]	= "Réinitialise une option d'Enchantrix à sa valeur par défaut. Vous pouvez spécifier le mot-clef \"tout\" pour réinitialiser toutes les options d'Enchantrix.";
 		["HelpDisable"]	= "Empêche le chargement automatique d'Enchantrix lors de votre prochaine connexion.";
@@ -2792,7 +2809,7 @@ EnchantrixLocalizations = {
 		-- Section: Commands
 		["CmdClear"]	= "Очистить";
 		["CmdDefault"]	= "Стандартные";
-		["CmdDisable"]	= "выведите из строя";
+		["CmdDisable"]	= "Выключить";
 		["CmdFindBidauct"]	= "bidbroker";
 		["CmdFindBidauctShort"]	= "bb";
 		["CmdFindBuyauct"]	= "percentless";
@@ -2807,6 +2824,7 @@ EnchantrixLocalizations = {
 		["ShowDEMaterials"]	= "материалы";
 		["ShowEmbed"]	= "вставлять";
 		["ShowGuessAuctioneerVal"]	= "оценить-val";
+		["ShowGuessBaseline"]	= "базовая оценка";
 		["ShowTerse"]	= "сжатый";
 		["ShowUI"]	= "показать";
 		["ShowValue"]	= "Оценка стоимости";
@@ -2814,9 +2832,9 @@ EnchantrixLocalizations = {
 		["StatOn"]	= "Показывать сконфигурированные данные по зачаровыванию";
 
 		-- Section: Config Text
-		["GuiLoad"]	= "Load Enchantrix";
-		["GuiLoad_Always"]	= "always";
-		["GuiLoad_Never"]	= "never";
+		["GuiLoad"]	= "Загрузка Enchantrix";
+		["GuiLoad_Always"]	= "всегда";
+		["GuiLoad_Never"]	= "никогда";
 
 		-- Section: Game Constants
 		["ArgSpellMillingName"]	= "Измельчение";
@@ -2967,7 +2985,7 @@ EnchantrixLocalizations = {
 		["GuiAutoDeEpicItems"]	= "Автораспыление превосходных предметов (\"эпиков\")";
 		["GuiAutoDeOptions"]	= "Автоматизация";
 		["GuiAutoDePromptLine1"]	= "Вы хотите распылить:";
-		["GuiAutoDePromptLine3"]	= "Оценено:";
+		["GuiAutoDePromptLine3"]	= "Оценено: %s";
 		["GuiAutoDEPurchaseReason"]	= "Куплен за %s";
 		["GuiAutoDeRareItems"]	= "Автораспыление редких (\"синих\") предметов";
 		["GuiAutoDESuggestion"]	= "Предложение: %s за эту вещь";
@@ -3142,13 +3160,14 @@ EnchantrixLocalizations = {
 		["MesgAuctVersion"]	= "Enchantrix 需要Auctioneer v4.0 或更新的版本。部份功能在您未更新您的Auctioneer前无法使用。";
 
 		-- Section: Help Text
+		["GuiAltChatlink"]	= "使用Alt左键点击聊天链接打开工具提示";
 		["GuiClearall"]	= "清除全部附魔助手数据。";
 		["GuiClearallButton"]	= "全部清除";
 		["GuiClearallHelp"]	= "点此清除对于当前服务器-阵营的全部附魔助手数据。";
 		["GuiClearallNote"]	= "对于当前服务器-阵营";
 		["GuiDefaultAll"]	= "重置所有Enchantrix选项";
 		["GuiDefaultAllButton"]	= "全部重置";
-		["GuiDefaultAllHelp"]	= "点此重置全部附魔助手选项为默认值。警告：此操作无法还原。";
+		["GuiDefaultAllHelp"]	= "点此重置全部附魔助手选项为默认值。\n警告：此操作无法还原。";
 		["GuiDefaultOption"]	= "重置该设置";
 		["GuiDELevels"]	= "在提示中显示分解需要的等级";
 		["GuiDEMaterials"]	= "在提示中显示分解材料信息";
@@ -3167,6 +3186,7 @@ EnchantrixLocalizations = {
 		["GuiValuateEnable"]	= "启用估价";
 		["GuiValuateHeader"]	= "估价";
 		["GuiValuateMedian"]	= "以拍卖助手中位数进行估价。";
+		["HelpAltChatlink"]	= "允许在聊天时用Alt+左键点击一个链接打开提示。";
 		["HelpClear"]	= "清除指定物品的数据(必须Shift+点击将物品插入命令)。你也可以指定特定关键字\"all\"。";
 		["HelpDefault"]	= "设置某个附魔助手选项为默认值。你也可以输入特定关键字\"all\" 来设置所有附魔助手选项为默认值。";
 		["HelpDisable"]	= "阻止附魔助手下一次登录时自动加载。";

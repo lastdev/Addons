@@ -4,7 +4,7 @@
 <Script file="libs\LibStub\LibStub.lua"/>
 <Script file="libs\CallbackHandler-1.0\CallbackHandler-1.0.lua"/>
 <Script file="libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua"/>
-<Include file="Libs\LibTalentQuery-1.0\lib.xml" />
+<Script file="Libs\LibTalentQuery-1.0\LibTalentQuery-1.0.lua" />
 <Script file="libs\UTF8\utf8data.lua"/>
 <Script file="libs\UTF8\utf8.lua"/>
 

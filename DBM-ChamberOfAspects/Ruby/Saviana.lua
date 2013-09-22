@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Saviana", "DBM-ChamberOfAspects", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
 mod:SetCreatureID(39747)
 mod:SetModelID(31577)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
@@ -56,18 +56,18 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(74403) then
+	if args.spellId == 74403 then
 		warningWarnBreath:Show()
 		timerBreath:Start()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(78722) then
+	if args.spellId == 78722 then
 		warningWarnEnrage:Show()
 		specWarnTranq:Show()
 		timerEnrage:Start()
-	elseif args:IsSpellID(74453) then
+	elseif args.spellId == 74453 then
 		beaconTargets[#beaconTargets + 1] = args.destName
 		timerConflagCD:Start()
 		timerBeacon:Start()
@@ -85,7 +85,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(78722) then
+	if args.spellId == 78722 then
 		timerEnrage:Cancel()
 	end
 end

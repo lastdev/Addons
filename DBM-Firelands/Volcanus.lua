@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Volcanus", "DBM-Firelands")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 48 $"):sub(12, -3))
 mod:SetCreatureID(53833)
 --7/14 23:59:03.242  UNIT_DIED,0x0000000000000000,nil,0x80000000,0x80000000,0xF130D2490000CE02,"Volcanus",0x10a48,0x0
 mod:SetModelID(38592)
@@ -28,7 +28,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(100146) then
+	if args.spellId == 100146 then
 		warnRoots:Show()
 		timerRootsCD:Start()
 	end

@@ -163,6 +163,35 @@ aeldra@sonnenkinder.org
 Changes: 
 Rev     Date        Description
 ------  ----------  -----------------------
+5.4a    2013-09-12  Fixed LUA errors with sliders
+                    Fixed action button position issue
+                    Updated TOC
+
+5.3b    2013-06-03  Fixed action button position issue
+                    Thanks for donation: Isabela, Ronald G. :)
+
+5.3a    2013-05-23  UI cleanup, removed old raid options
+                    Added buffs: Warlock (Blood Horror), Mage (Ice Ward), Hunter (Camouflage)
+                    Added items: Burning Seed, Orb of the Sin'dorei
+                    Added option to change the buff reminder icon size
+                    Added basic help system
+                    Fixed battleground LUA error
+                    Fixed item cooldown issue
+                    Updated TOC
+                    Thanks for donation: Ronald G. :)
+
+5.1d    2013-01-08  Fixed Warlock pet based buff issue
+                    Fixed Rogue poisons issue if a fishing pole is equiped
+                    Updated monk group buffs
+                    Updated buff check (player characters)
+                    Updated buff timer check for channeled buffs
+                    Updated traditional chinese (Taiwan) localization, thanks to reiswind
+                    Thanks for donation: reiswind :)
+
+5.1c    2012-12-21  Added buffs: Warlock (Grimoire of Sacrifice), Druid (Symbiosis)
+                    Added conjured items: Mage (Conjure Refreshment)
+                    Added item: Ancient Pandaren Fishing Charm
+
 5.1b    2012-12-10  Updated support for Water Elemental (Mage)
 
 5.1a    2012-12-06  Fixed battlefield LUA error

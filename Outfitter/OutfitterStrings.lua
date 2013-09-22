@@ -1,4 +1,4 @@
-﻿Outfitter.cVersion = "5.8.2"
+﻿Outfitter.cVersion = "5.9.2"
 
 Outfitter.cTitle = "Outfitter"
 Outfitter.cTitleVersion = Outfitter.cTitle.." "..Outfitter.cVersion
@@ -133,7 +133,7 @@ Outfitter.cFlyingMountSpeedFormat = "Increases flight speed by (%d+)%%%."; -- Fo
 Outfitter.cBagsFullError = "Can't remove %s because all bags are full"
 Outfitter.cDepositBagsFullError = "Can't deposit %s because all bank bags are full"
 Outfitter.cWithdrawBagsFullError = "Can't withdraw %s because all bags are full"
-Outfitter.cItemNotFoundError = "Can't find item %s"
+Outfitter.cItemNotFoundError = "Can't find item %s for slot %s"
 Outfitter.cItemAlreadyUsedError = "Can't put %s in the %s slot because it's already being used in another slot"
 Outfitter.cAddingItem = "Adding %s to %s outfit"
 Outfitter.cNameAlreadyUsedError = "Error: That name is already being used"

@@ -44,12 +44,7 @@ L = DBM:GetModLocalization("Fankriss")
 L:SetGeneralLocalization{
 	name = "Fankriss the Unyielding"
 }
-L:SetWarningLocalization{
-	WarnWound	= "%s on >%s< (%s)"
-}
-L:SetOptionLocalization{
-	WarnWound = DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(25646)
-}
+
 --------------
 -- Viscidus --
 --------------
@@ -64,7 +59,7 @@ L:SetWarningLocalization{
 }
 L:SetOptionLocalization{
 	WarnFreeze	= "Announce Freeze status",
-	WarnShatter	= "Announce Shatter status",
+	WarnShatter	= "Announce Shatter status"
 }
 L:SetMiscLocalization{
 	Slow	= "begins to slow",
@@ -81,12 +76,6 @@ L = DBM:GetModLocalization("Huhuran")
 
 L:SetGeneralLocalization{
 	name = "Princess Huhuran"
-}
-L:SetWarningLocalization{
-	WarnAcid	= "%s on >%s< (%s)"
-}
-L:SetOptionLocalization{
-	WarnAcid	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(26180)
 }
 ---------------
 -- Twin Emps --
@@ -109,8 +98,26 @@ L = DBM:GetModLocalization("CThun")
 L:SetGeneralLocalization{
 	name = "C'Thun"
 }
+L:SetWarningLocalization{
+	WarnEyeTentacle			= "Eye Tentacle",
+	WarnWeakened			= "C'Thun Weaken",
+	SpecWarnWeakened		= "C'Thun Weaken!"
+}
+L:SetTimerLocalization{
+	TimerEyeTentacle		= "Next Eye Tentacle",
+	TimerWeakened			= "Weaken ends"
+}
 L:SetOptionLocalization{
-	RangeFrame	= "Show range frame"
+	WarnEyeTentacle			= "Show warning for Eye Tentacle",
+	WarnWeakened			= "Show warning when boss weaken",
+	SpecWarnWeakened		= "Show special warning when boss weaken",
+	TimerEyeTentacle		= "Show timer for next Eye Tentacle",
+	TimerWeakened			= "Show timer for boss weaken duration",
+	RangeFrame				= "Show range frame (10)"
+}
+L:SetMiscLocalization{
+	Eye			= "Eye of C'Thun",
+	Weakened 	= "weaken"
 }
 ----------------
 -- Ouro --
@@ -122,9 +129,7 @@ L:SetGeneralLocalization{
 }
 L:SetWarningLocalization{
 	WarnSubmerge		= "Submerge",
-	WarnEmerge			= "Emerge",
-	WarnSubmergeSoon	= "Submerge soon",
-	WarnEmergeSoon		= "Emerge soon"
+	WarnEmerge			= "Emerge"
 }
 L:SetTimerLocalization{
 	TimerSubmerge		= "Submerge",
@@ -132,9 +137,7 @@ L:SetTimerLocalization{
 }
 L:SetOptionLocalization{
 	WarnSubmerge		= "Show warning for submerge",
-	WarnSubmergeSoon	= "Show pre-warning for submerge",
 	TimerSubmerge		= "Show timer for submerge",
 	WarnEmerge			= "Show warning for emerge",
-	WarnEmergeSoon		= "Show pre-warning for emerge",
 	TimerEmerge			= "Show timer for emerge"
 }

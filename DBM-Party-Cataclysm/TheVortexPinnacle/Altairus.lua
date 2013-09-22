@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(115, "DBM-Party-Cataclysm", 8, 68)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(43873)
-mod:SetModelID(34265)
 mod:SetZone()
 mod:SetUsedIcons(8)
 
@@ -54,10 +53,10 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(88282) and args:IsPlayer() and activeWind ~= "up" then
+	if args.spellId == 88282 and args:IsPlayer() and activeWind ~= "up" then
 		warnUpwind:Show()
 		activeWind = "up"
-	elseif args:IsSpellID(88286) and args:IsPlayer() and activeWind ~= "down" then
+	elseif args.spellId == 88286 and args:IsPlayer() and activeWind ~= "down" then
 		warnDownwind:Show()
 		specWarnDownwind:Show()
 		activeWind = "down"
@@ -65,7 +64,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(88308) then
+	if args.spellId == 88308 then
 		self:ScheduleMethod(0.2, "BreathTarget")
 		timerBreath:Start()
 		timerBreathCD:Start()

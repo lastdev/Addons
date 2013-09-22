@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("TeronGorefiend", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 389 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 444 $"):sub(12, -3))
 mod:SetCreatureID(22871)
 mod:SetModelID(21254)
 mod:SetZone()
@@ -12,6 +12,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEvents(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_APPLIED_DOSE",
+	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_SUCCESS"
 )
 
@@ -41,7 +42,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(40243) then
+	if args.spellId == 40243 then
 		warnCrushedTargets[#warnCrushedTargets + 1] = args.destName
 		timerCrushed:Start()
 		self:Unschedule(showCrushedTargets)
@@ -54,7 +55,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			self:Schedule(0.3, showCrushedTargets)
 		end
-	elseif args:IsSpellID(40251) then
+	elseif args.spellId == 40251 then
 		warnDeath:Show(args.destName)
 		timerDeath:Start(args.destName)
 		timerVengefulSpirit:Schedule(55, args.destName)
@@ -63,11 +64,18 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	end
 end
+mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
-function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(40239) then
-		warnIncinerate:Show(args.destName)
+function mod:SPELL_AURA_REMOVED(args)
+	if args.spellId == 40243 then
+		if self.Options.CrushIcon then
+			self:SetIcon(args.destName, 0)
+		end
 	end
 end
 
-mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 40239 then
+		warnIncinerate:Show(args.destName)
+	end
+end

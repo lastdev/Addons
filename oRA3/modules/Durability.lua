@@ -4,12 +4,12 @@
 
 local oRA = LibStub("AceAddon-3.0"):GetAddon("oRA3")
 local util = oRA.util
-local module = oRA:NewModule("Durability", "AceEvent-3.0", "AceConsole-3.0")
+local module = oRA:NewModule("Durability")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 
-module.VERSION = tonumber(("$Revision: 328 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 645 $"):sub(12, -3))
 
-local durability = {} 
+local durability = {}
 
 function module:OnRegister()
 	-- should register durability table with the oRA3 core GUI for sortable overviews
@@ -23,37 +23,29 @@ function module:OnRegister()
 	)
 	oRA.RegisterCallback(self, "OnStartup")
 	oRA.RegisterCallback(self, "OnShutdown")
-	oRA.RegisterCallback(self, "OnCommDurability")
-	oRA.RegisterCallback(self, "OnCommRequestUpdate")
-	
-	self:RegisterChatCommand("radur", "OpenDurabilityCheck")
-	self:RegisterChatCommand("radurability", "OpenDurabilityCheck")
+	oRA.RegisterCallback(self, "OnCommReceived")
+
+	SLASH_ORADURABILITY1 = "/radur"
+	SLASH_ORADURABILITY2 = "/radurability"
+	SlashCmdList.ORADURABILITY = function()
+		oRA:OpenToList(L["Durability"])
+	end
 end
 
 function module:OnStartup()
 	self:RegisterEvent("PLAYER_DEAD", "CheckDurability")
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "CheckDurability")
 	self:RegisterEvent("MERCHANT_CLOSED", "CheckDurability")
-	
+
 	self:CheckDurability()
 end
 
 function module:OnShutdown()
 	wipe(durability)
-	self:UnregisterEvent("PLAYER_DEAD")
-	self:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
-	self:UnregisterEvent("MERCHANT_CLOSED")
+	self:UnregisterAllEvents()
 end
 
-function module:OpenDurabilityCheck()
-	oRA:OpenToList(L["Durability"])
-end
-
-function module:OnCommRequestUpdate()
-	self:CheckDurability()
-end
-
-function module:CheckDurability(event)
+function module:CheckDurability()
 	local cur, max, broken, vmin = 0, 0, 0, 100
 	for i = 1, 18 do
 		local imin, imax = GetInventoryItemDurability(i)
@@ -65,20 +57,23 @@ function module:CheckDurability(event)
 		end
 	end
 	local perc = math.floor(cur / max * 100)
-	oRA:SendComm("Durability", perc, vmin, broken)
+	self:SendComm("Durability", perc, vmin, broken)
 end
 
--- Durability answer
-function module:OnCommDurability(commType, sender, perc, minimum, broken)
-	local k = util:inTable(durability, sender, 1)
-	if not k then
-		durability[#durability + 1] = { sender }
-		k = #durability
-	end
-	durability[k][2] = perc
-	durability[k][3] = minimum
-	durability[k][4] = broken
+function module:OnCommReceived(_, sender, prefix, perc, minimum, broken)
+	if prefix == "RequestUpdate" then
+		self:CheckDurability()
+	elseif prefix == "Durability" then
+		local k = util.inTable(durability, sender, 1)
+		if not k then
+			durability[#durability + 1] = { sender }
+			k = #durability
+		end
+		durability[k][2] = perc
+		durability[k][3] = minimum
+		durability[k][4] = broken
 
-	oRA:UpdateList(L["Durability"])
+		oRA:UpdateList(L["Durability"])
+	end
 end
 

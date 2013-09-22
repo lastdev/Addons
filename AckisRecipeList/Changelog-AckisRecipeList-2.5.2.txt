@@ -1,0 +1,12 @@
+tag 2.5.2
+0c3c9ef6937e049020ccda5c3890aa933e0942d3
+Ressy <resa1983@hotmail.com>
+2013-09-10 09:25:43 -0400
+
+2.5.2 Release for 5.4
+
+
+--------------------
+
+Ressy:
+	- Update for 5.4, bump TOC

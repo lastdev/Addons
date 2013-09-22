@@ -6,7 +6,7 @@ local XPerl_Player_Events = {}
 local isOutOfControl = nil
 local playerClass, playerName
 local conf, pconf
-XPerl_RequestConfig(function(new) conf = new pconf = conf.player if (XPerl_Player) then XPerl_Player.conf = conf.player end end, "$Revision: 835 $")
+XPerl_RequestConfig(function(new) conf = new pconf = conf.player if (XPerl_Player) then XPerl_Player.conf = conf.player end end, "$Revision: 849 $")
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
 
@@ -62,8 +62,9 @@ function XPerl_Player_OnLoad(self)
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("PLAYER_ALIVE")
 	
-	
-	
+	if(HealBot_Options_EnablePlayerFrame) then
+		HealBot_Options_EnablePlayerFrame = function () end
+	end
 
 	self.EnergyLast = 0
 	self.tutorialPage = 2
@@ -1513,7 +1514,7 @@ end
 -- XPerl_Player_InitDK
 function XPerl_Player_InitDK(self)
 	if (select(2, UnitClass("player")) == "DEATHKNIGHT") then
-		if (not RuneFrame or RuneFrame:GetParent() ~= UIParent or not RuneFrame:IsShown()) then
+		if (not RuneFrame or RuneFrame:GetParent() ~= PlayerFrame or not RuneFrame:IsShown()) then
 			-- Only hijack runes if not already done so by another mod
 			return
 		end

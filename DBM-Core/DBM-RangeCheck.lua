@@ -57,6 +57,8 @@ local frame
 local createFrame
 local radarFrame
 local createRadarFrame
+local dbmRadarEvents = CreateFrame("Frame")
+local radarEventsRegistered = false
 local onUpdate
 local onUpdateRadar
 local dropdownFrame
@@ -64,6 +66,15 @@ local initializeDropdown
 local initRangeCheck -- initializes the range check for a specific range (if necessary), returns false if the initialization failed (because of a map range check in an unknown zone)
 local dots = {}
 local charms = {}
+
+--------------------------------------------------------
+--  Cache frequently used global variables in locals  --
+--------------------------------------------------------
+local GetPlayerMapPosition = GetPlayerMapPosition
+local GetPlayerFacing = GetPlayerFacing
+local UnitIsUnit = UnitIsUnit
+local GetCurrentMapDungeonLevel = GetCurrentMapDungeonLevel
+local GetRaidTargetIndex = GetRaidTargetIndex
 
 -- for Phanx' Class Colors
 local RAID_CLASS_COLORS = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
@@ -164,7 +175,7 @@ do
 			UIDropDownMenu_AddButton(info, 1)
 
 			info = UIDropDownMenu_CreateInfo()
-			info.text = DBM_CORE_RANGECHECK_LOCK
+			info.text = LOCK_FRAME
 			if DBM.Options.RangeFrameLocked then
 				info.checked = true
 			end
@@ -172,7 +183,7 @@ do
 			UIDropDownMenu_AddButton(info, 1)
 
 			info = UIDropDownMenu_CreateInfo()
-			info.text = DBM_CORE_RANGECHECK_HIDE
+			info.text = HIDE
 			info.notCheckable = true
 			info.func = rangeCheck.Hide
 			info.arg1 = rangeCheck
@@ -617,8 +628,7 @@ do
 				radarFrame.text:SetText(DBM_CORE_RANGERADAR_HEADER:format(range))
 			end
 
-			local mapName = GetMapInfo()
-			local dims  = DBM.MapSizes[mapName] and DBM.MapSizes[mapName][GetCurrentMapDungeonLevel()]
+			local dims = DBM:GetMapSizes()
 			if not dims then -- This ALWAYS happens when leaving a zone that has a map and moving into one that does not.
 				if select(3, radarFrame.circle:GetVertexColor()) < 0.5 then
 					radarFrame.circle:SetVertexColor(1,1,1)
@@ -642,7 +652,7 @@ do
 					numPlayers = GetNumSubgroupMembers()
 				end
 				if numPlayers < (prevNumPlayers or 0) then
-					for i=numPlayers, prevNumPlayers do
+					for i = numPlayers, prevNumPlayers do
 						if dots[i] then
 							if dots[i].dot then
 								dots[i].dot:Hide()		-- Hide dots when people leave the group
@@ -681,6 +691,7 @@ do
 					else
 						if dots[i] and dots[i].dot then
 							dots[i].dot:Hide()
+							dots[i].tooClose = false
 						end
 					end
 				end
@@ -732,6 +743,13 @@ do
 	end
 end
 
+dbmRadarEvents:SetScript("OnEvent", function(self, event, ...)
+	if (event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" or event == "ZONE_CHANGED_NEW_AREA") then
+		if rangeCheck:IsShown() then--If either arrow or range frame are shown when we change areas, force a map update
+			DBM:UpdateMapSizes()
+		end
+	end
+end)
 
 -----------------------
 --  Check functions  --
@@ -751,12 +769,13 @@ end
 
 local getDistanceBetween
 do
-	local mapSizes = DBM.MapSizes
-
 	function getDistanceBetween(uId, x, y)
+		-- alternative arguments: uId, uId2
+		if type(x) == "string" then
+			x, y = GetPlayerMapPosition(x)
+		end
 		local startX, startY = GetPlayerMapPosition(uId)
-		local mapName = GetMapInfo()
-		local dims  = mapSizes[mapName] and mapSizes[mapName][GetCurrentMapDungeonLevel()]
+		local dims = DBM:GetMapSizes()
 		if not dims then
 			return
 		end
@@ -773,26 +792,7 @@ do
 		if checkFuncs[range] ~= mapRangeCheck then
 			return true
 		end
-		local pX, pY = GetPlayerMapPosition("player")
-		if pX == 0 and pY == 0 then
-			SetMapToCurrentZone()
-			pX, pY = GetPlayerMapPosition("player")
-		end
-		local levels = mapSizes[GetMapInfo()]
-		if not levels then
-			return false
-		end
-		local dims = levels[GetCurrentMapDungeonLevel()]
-		if not dims and levels and GetCurrentMapDungeonLevel() == 0 then -- we are in a known zone but the dungeon level seems to be wrong
-			SetMapToCurrentZone() -- fixes the dungeon level
-			dims = levels[GetCurrentMapDungeonLevel()] -- try again
-			if not dims then -- there is actually a level 0 in this zone but we don't know about it...too bad :(
-				return false
-			end
-		elseif not dims then
-			return false
-		end
-		return true -- everything ok!
+		return DBM:GetMapSizes() and true or false
 	end
 
 	setmetatable(checkFuncs, {
@@ -821,7 +821,7 @@ end
 ---------------
 function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers)
 	if DBM.Options.DontShowRangeFrame and not forceshow then return end
-	SetMapToCurrentZone()--Set map to current zone before checking other stuff, work around annoying bug i hope?
+	DBM:UpdateMapSizes()--Force a mapsize update after SetMapToCurrentZone to ensure our information is current
 	if type(range) == "function" then -- the first argument is optional
 		return self:Show(nil, range)
 	end
@@ -834,27 +834,41 @@ function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers)
 	frame.range = range
 	frame.filter = filter
 	frame.redCircleNumPlayers = redCircleNumPlayers
-	if DBM.Options.RangeFrameFrames == "text" or DBM.Options.RangeFrameFrames == "both" or DBM.MapSizes[mapName] == nil or (DBM.MapSizes[mapName] and DBM.MapSizes[mapName][GetCurrentMapDungeonLevel()] == nil) then
+	if DBM.Options.RangeFrameFrames == "text" or DBM.Options.RangeFrameFrames == "both" or DBM:GetMapSizes() == nil then
 		frame:Show()
 		frame:SetOwner(UIParent, "ANCHOR_PRESERVE")
 		onUpdate(frame, 0)
 	end
-	if (DBM.Options.RangeFrameFrames == "radar" or DBM.Options.RangeFrameFrames == "both") and (DBM.MapSizes[GetMapInfo()] and DBM.MapSizes[mapName][GetCurrentMapDungeonLevel()] ~= nil) then
+	if (DBM.Options.RangeFrameFrames == "radar" or DBM.Options.RangeFrameFrames == "both") and DBM:GetMapSizes() then
 		onUpdateRadar(radarFrame, 1)
+	end
+	if not radarEventsRegistered then
+		radarEventsRegistered = true
+		dbmRadarEvents:RegisterEvent("ZONE_CHANGED")
+		dbmRadarEvents:RegisterEvent("ZONE_CHANGED_INDOORS")
+		dbmRadarEvents:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 	end
 end
 
 function rangeCheck:Hide()
 	if frame then frame:Hide() end
 	if radarFrame then radarFrame:Hide() end
+	if radarEventsRegistered then
+		radarEventsRegistered = false
+		dbmRadarEvents:UnregisterAllEvents()
+	end
 end
 
 function rangeCheck:IsShown()
 	return frame and frame:IsShown() or radarFrame and radarFrame:IsShown()
 end
 
+-- GetDistance(uId) -- distance between you and the given uId
+-- GetDistance(uId, x, y) -- distance between uId and the coordinates
+-- GetDistance(uId, uId2) -- distance between the two uIds
 function rangeCheck:GetDistance(...)
 	if initRangeCheck() then
+		DBM:UpdateMapSizes()--Force a mapsize update after SetMapToCurrentZone to ensure our information is current
 		return getDistanceBetween(...)
 	end
 end

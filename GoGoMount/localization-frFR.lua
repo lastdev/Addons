@@ -42,6 +42,8 @@
 		PaladinOptions = "Options pour paladins",
 		RemoveBuffs = "Supprimer les buffs qui empêchent l'utilisation des montures",
 		RemoveBuffs_Long = "GoGoMount va tenter d'annuler les buffs et formes activés par des sorts ou objets et qui empêchent d'invoquer une monture. Ceci fonctionne seulement pour les buffs connus et nécessite parfois de cliquer 2 fois sur le bouton de GoGoMount.",
+		ShamanOptions = "Shaman Options", -- Requires localization
+		ShamanSingleClick = "Single click mount from Ghost Wolf Form instead of dismounting", -- Requires localization
 		UnknownMountFound = "Une monture inconnue a été trouvée dans votre liste. Veuillez la communiquer afin qu'elle soit ajoutée à une future version de GoGoMount",
 		UseAspectOfThePackInstead = "Utiliser Aspect de la meute au lieu d'Aspect du guépard",
 		UseAspectOfThePackInstead_Long = "Si activé, GoGoMount lancera Aspect de la meute plutôt qu'Aspect du guépard. Les préférences locales ou globales outrepassent ce réglage. Si c'est activé pour utiliser Aspect de la meute et que votre préférence de zone est réglée sur Aspect du guépard, ce dernier sera utilisé.",

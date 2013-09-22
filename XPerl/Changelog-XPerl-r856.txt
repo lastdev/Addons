@@ -1,0 +1,62 @@
+------------------------------------------------------------------------
+r856 | asixandur | 2013-09-15 05:44:37 +0000 (Sun, 15 Sep 2013) | 3 lines
+Changed paths:
+   M /trunk/XPerl.toc
+   M /trunk/XPerl_Options/XPerl_FrameOptions.lua
+   M /trunk/XPerl_Options/XPerl_FrameOptions.xml
+   M /trunk/XPerl_Options/localization.deDE.lua
+   M /trunk/XPerl_Options/localization.esES.lua
+   M /trunk/XPerl_Options/localization.frFR.lua
+   M /trunk/XPerl_Options/localization.itIT.lua
+   M /trunk/XPerl_Options/localization.koKR.lua
+   M /trunk/XPerl_Options/localization.lua
+   M /trunk/XPerl_Options/localization.ruRU.lua
+   M /trunk/XPerl_Options/localization.zhCN.lua
+   M /trunk/XPerl_Options/localization.zhTW.lua
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+   M /trunk/localization.lua
+
+New setting to disable the decimal digit in the raid mana and health percentages (thanks ooblushy88oo for the suggestion)
+Tag as 3.7.3
+Removed unused translations
+------------------------------------------------------------------------
+r855 | asixandur | 2013-09-12 10:50:13 +0000 (Thu, 12 Sep 2013) | 2 lines
+Changed paths:
+   M /trunk/XPerl.toc
+   M /trunk/XPerl_ArcaneBar/XPerl_ArcaneBar.toc
+   M /trunk/XPerl_CustomHighlight/XPerl_CustomHighlight.toc
+   M /trunk/XPerl_Options/XPerl_Options.toc
+   M /trunk/XPerl_Party/XPerl_Party.toc
+   M /trunk/XPerl_PartyPet/XPerl_PartyPet.toc
+   M /trunk/XPerl_Player/XPerl_Player.toc
+   M /trunk/XPerl_PlayerBuffs/XPerl_PlayerBuffs.toc
+   M /trunk/XPerl_PlayerPet/XPerl_PlayerPet.toc
+   M /trunk/XPerl_RaidAdmin/XPerl_RaidAdmin.toc
+   M /trunk/XPerl_RaidFrames/XPerl_RaidFrames.toc
+   M /trunk/XPerl_RaidHelper/XPerl_RaidHelper.toc
+   M /trunk/XPerl_RaidMonitor/XPerl_RaidMonitor.toc
+   M /trunk/XPerl_RaidPets/XPerl_RaidPets.toc
+   M /trunk/XPerl_Target/XPerl_Target.toc
+   M /trunk/XPerl_TargetTarget/XPerl_TargetTarget.toc
+   M /trunk/localization.lua
+
+Tag as 3.7.2
+Toc update
+------------------------------------------------------------------------
+r854 | asixandur | 2013-09-11 13:24:46 +0000 (Wed, 11 Sep 2013) | 3 lines
+Changed paths:
+   M /trunk/XPerl.lua
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+
+Revert "Don't know while doing this causes a lua error. Can someone look into that issue?"
+
+This reverts commit 6bed4f4a33733d3324b997e28da33b17a22fa37b.
+------------------------------------------------------------------------
+r853 | asixandur | 2013-06-23 13:25:41 +0000 (Sun, 23 Jun 2013) | 2 lines
+Changed paths:
+   M /trunk/XPerl.lua
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+
+Don't know while doing this causes a lua error. Can someone look into that issue?
+Try to report in BGs, revert if doesn't work.
+------------------------------------------------------------------------

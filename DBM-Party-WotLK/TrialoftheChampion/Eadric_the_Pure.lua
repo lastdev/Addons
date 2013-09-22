@@ -1,9 +1,8 @@
-local mod	= DBM:NewMod("EadricthePure", "DBM-Party-WotLK", 13)
+local mod	= DBM:NewMod(635, "DBM-Party-WotLK", 13, 284)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
 mod:SetCreatureID(35119)
-mod:SetModelID(29616)
 mod:SetUsedIcons(8)
 --mod:SetZone()
 
@@ -28,21 +27,21 @@ local specwarnHammerofJustice	= mod:NewSpecialWarningDispel(66940, isDispeller)
 mod:AddBoolOption("SetIconOnHammerTarget", true)
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(66935) then					-- Radiance Look Away!
+	if args.spellId == 66935 then					-- Radiance Look Away!
 		specwarnRadiance:Show()
-	elseif args:IsSpellID(66867) then				-- Hammer of the Righteous
+	elseif args.spellId == 66867 then				-- Hammer of the Righteous
 		warnHammerofRighteous:Show()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(66940) then								-- Hammer of Justice on <Player>
+	if args.spellId == 66940 then								-- Hammer of Justice on <Player>
 		if self.Options.SetIconOnHammerTarget then
 			self:SetIcon(args.destName, 8, 6)
 		end
 		warnHammerofJustice:Show(args.destName)
 		specwarnHammerofJustice:Show(args.destName)
-	elseif args:IsSpellID(66889) then							-- Vengeance
+	elseif args.spellId == 66889 then							-- Vengeance
 		warnVengeance:Show(args.destName)
 		timerVengeance:Start(args.destName)
 	end

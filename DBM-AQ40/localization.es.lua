@@ -45,12 +45,6 @@ L = DBM:GetModLocalization("Fankriss")
 L:SetGeneralLocalization{
 	name = "Fankriss el Implacable"
 }
-L:SetWarningLocalization{
-	WarnWound	= "%s en >%s< (%s)"
-}
-L:SetOptionLocalization{
-	WarnWound = DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(25646)
-}
 --------------
 -- Viscidus --
 --------------
@@ -65,7 +59,7 @@ L:SetWarningLocalization{
 }
 L:SetOptionLocalization{
 	WarnFreeze	= "Anunciar el estado de Congelación",
-	WarnShatter	= "Anunciar el estado de rotura",
+	WarnShatter	= "Anunciar el estado de rotura"
 }
 L:SetMiscLocalization{
 	Phase4 	= "empieza a agrietarse",
@@ -79,12 +73,6 @@ L = DBM:GetModLocalization("Huhuran")
 
 L:SetGeneralLocalization{
 	name = "Princesa Huhuran"
-}
-L:SetWarningLocalization{
-	WarnAcid	= "%s en >%s< (%s)"
-}
-L:SetOptionLocalization{
-	WarnAcid	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(26180)
 }
 ---------------
 -- Twin Emps --

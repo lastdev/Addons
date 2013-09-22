@@ -1,0 +1,109 @@
+------------------------------------------------------------------------
+r33 | zensunim | 2013-09-16 05:10:44 +0000 (Mon, 16 Sep 2013) | 6 lines
+Changed paths:
+   A /tags/4.24 (from /trunk:32)
+
+4.24
+* Added additional detection to prevent false friendly-fire alerts
+* Added Pandaria spells for Siege of Orgrimmar
+* Added Pandaria spells for Pandaria (world)
+* Added Pandaria spells for Temple of the Jade Serpent
+* Added Pandaria spells for Gate of the Setting Sun
+------------------------------------------------------------------------
+r32 | zensunim | 2013-09-16 05:09:15 +0000 (Mon, 16 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_FF_MP.lua
+   M /trunk/GTFO_Fail_MP.lua
+
+Preparing for 4.24 release
+------------------------------------------------------------------------
+r31 | zensunim | 2013-09-15 22:54:02 +0000 (Sun, 15 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/GTFO_FF_MP.lua
+   M /trunk/GTFO_Spells_MP.lua
+
+Friendly-Fire Siege of Orgrimmar alerts, Timeless Isle alerts
+------------------------------------------------------------------------
+r30 | zensunim | 2013-09-15 20:06:57 +0000 (Sun, 15 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO_Fail_MP.lua
+   M /trunk/GTFO_Spells_MP.lua
+
+Timeless Isle and Noodle Cooking Quest alerts
+------------------------------------------------------------------------
+r29 | zensunim | 2013-09-14 07:08:40 +0000 (Sat, 14 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO_Fail_MP.lua
+   M /trunk/GTFO_Spells_MP.lua
+
+Added Timeless Isle alerts
+------------------------------------------------------------------------
+r28 | zensunim | 2013-09-13 20:03:27 +0000 (Fri, 13 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_Fail_MP.lua
+
+Added some Sha of Fear alerts
+------------------------------------------------------------------------
+r26 | zensunim | 2013-09-13 01:58:38 +0000 (Fri, 13 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_Fail_MP.lua
+
+Prepping for 4.23.8 release
+------------------------------------------------------------------------
+r25 | zensunim | 2013-09-12 07:16:37 +0000 (Thu, 12 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/GTFO_Fail_MP.lua
+   M /trunk/GTFO_Spells_MP.lua
+
+Added Pandaria spells for Siege of Orgrimmar
+------------------------------------------------------------------------
+r24 | zensunim | 2013-09-12 04:28:08 +0000 (Thu, 12 Sep 2013) | 2 lines
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO_Fail_MP.lua
+   M /trunk/GTFO_Spells_MP.lua
+
+- Added Pandaria spells for Siege of Orgrimmar
+- Added Pandaria spells for Pandaria (world)
+------------------------------------------------------------------------
+r23 | zensunim | 2013-09-11 07:03:37 +0000 (Wed, 11 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_Fail_MP.lua
+   M /trunk/GTFO_Spells_MP.lua
+
+Added Pandaria spells for Siege of Orgrimmar
+------------------------------------------------------------------------
+r21 | zensunim | 2013-09-10 06:09:39 +0000 (Tue, 10 Sep 2013) | 5 lines
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_FF_MP.lua
+   M /trunk/GTFO_Fail_MP.lua
+   M /trunk/GTFO_Spells_MP.lua
+
+- Preparing for 4.23.7 release
+- Updated for patch 5.4
+- Added Pandaria spells for Proving Grounds
+- Added Pandaria spells for Throne of Thunder
+- Added Pandaria spells for Siege of Orgrimmar
+------------------------------------------------------------------------
+r20 | zensunim | 2013-07-21 16:35:36 +0000 (Sun, 21 Jul 2013) | 1 line
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_Fail_MP.lua
+   M /trunk/GTFO_Mobs.lua
+   M /trunk/GTFO_Spells_MP.lua
+
+v4.23.6
+------------------------------------------------------------------------

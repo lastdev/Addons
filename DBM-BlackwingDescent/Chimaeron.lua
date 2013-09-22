@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(172, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(43296)
-mod:SetModelID(33308)
 mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_ChimaronIntro01.wav", nil)
@@ -19,7 +18,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
-	"UNIT_HEALTH"
+	"UNIT_HEALTH boss1"
 )
 
 mod:RegisterEvents(
@@ -116,21 +115,21 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(82881) then
+	if args.spellId == 82881 then
 		if not phase2 then
 			warnBreak:Show(args.destName, args.amount or 1)
 			timerBreak:Start(args.destName)
 			timerBreakCD:Start()
 		end
-	elseif args:IsSpellID(88826) then
+	elseif args.spellId == 88826 then
 		warnDoubleAttack:Show()
 		specWarnDoubleAttack:Show()
-	elseif args:IsSpellID(88853) then
+	elseif args.spellId == 88853 then
 		botOffline = true
 		massacreCast = 0
 		specWarnFailure:Show()
 		timerFailure:Start()
-	elseif not botOffline and args:IsSpellID(82935) and args:IsDestTypePlayer() then
+	elseif not botOffline and args.spellId == 82935 and args:IsDestTypePlayer() then
 		slimeTargets[#slimeTargets + 1] = args.destName
 		if self.Options.SetIconOnSlime then
 			table.insert(slimeTargetIcons, DBM:GetRaidUnitId(args.destName))
@@ -147,22 +146,22 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REFRESH(args)
-	if args:IsSpellID(82881) then--Once a tank is at 4 stacks, it just spell aura refreshes instead. Track this so we can keep an accurate CD and debuff timer.
+	if args.spellId == 82881 then--Once a tank is at 4 stacks, it just spell aura refreshes instead. Track this so we can keep an accurate CD and debuff timer.
 		timerBreak:Start(args.destName)
 		timerBreakCD:Start()
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(88853) then
+	if args.spellId == 88853 then
 		botOffline = false
-	elseif args:IsSpellID(82881) then
+	elseif args.spellId == 82881 then
 		timerBreak:Cancel(args.destName)
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(82848) then
+	if args.spellId == 82848 then
 		warnMassacre:Show()
 		specWarnMassacre:Show()
 		timerMassacre:Start()
@@ -175,9 +174,9 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(88872) then
+	if args.spellId == 88872 then
 		warnFeud:Show()
-	elseif args:IsSpellID(82934) then
+	elseif args.spellId == 82934 then
 		phase2 = true
 		warnPhase2:Show()
 		timerCausticSlime:Cancel()

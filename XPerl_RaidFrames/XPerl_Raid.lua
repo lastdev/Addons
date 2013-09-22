@@ -11,7 +11,8 @@ local ResArray = {}		-- List of currently active resserections in progress
 local buffUpdates = {}		-- Queue for buff updates after a roster change
 local raidLoaded
 local rosterUpdated
-local percD = "%.1f"..PERCENT_SYMBOL
+local percF = "%.1f"..PERCENT_SYMBOL
+local percD = "%d"..PERCENT_SYMBOL
 local lastNamesList, lastName, lastWith, lastNamesCount -- Stores with/without buff list (OnUpdate optimization)
 local fullyInitiallized
 
@@ -50,7 +51,7 @@ local XPerl_ColourHealthBar = XPerl_ColourHealthBar
 -- TODO - Watch for:	 ERR_FRIEND_OFFLINE_S = "%s has gone offline."
 
 local conf, rconf
-XPerl_RequestConfig(function(newConf) conf = newConf rconf = conf.raid end, "$Revision: 839 $")
+XPerl_RequestConfig(function(newConf) conf = newConf rconf = conf.raid end, "$Revision: 856 $")
 
 XPERL_RAIDGRP_PREFIX	= "XPerl_Raid_Grp"
 
@@ -88,11 +89,12 @@ local raidHeaders = {}
 function XPerl_Raid_OnLoad(self)
 	local events = {"CHAT_MSG_ADDON",
 			"PLAYER_ENTERING_WORLD", "VARIABLES_LOADED", "GROUP_ROSTER_UPDATE",
-			"UNIT_DYNAMIC_FLAGS", "UNIT_FLAGS", "UNIT_AURA", "UNIT_POWER", "UNIT_MAXPOWER",
+			"UNIT_FLAGS", "UNIT_AURA", "UNIT_POWER", "UNIT_MAXPOWER",
 			"UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_NAME_UPDATE", "PLAYER_FLAGS_CHANGED",
 			"UNIT_COMBAT", "UNIT_SPELLCAST_START", "UNIT_SPELLCAST_STOP", "UNIT_SPELLCAST_FAILED",
 			"UNIT_SPELLCAST_INTERRUPTED", "READY_CHECK", "READY_CHECK_CONFIRM", "READY_CHECK_FINISHED",
-			"RAID_TARGET_UPDATE", "PLAYER_LOGIN", "ROLE_CHANGED_INFORM", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE","UNIT_CONNECTION","PLAYER_REGEN_ENABLED"
+			"RAID_TARGET_UPDATE", "PLAYER_LOGIN", "ROLE_CHANGED_INFORM", 
+			"PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE","UNIT_CONNECTION","PLAYER_REGEN_ENABLED"
 			}
 			
 			
@@ -206,89 +208,6 @@ function XPerl_MainTankSet_OnClick(self, value)
 		end
 	end
 	CloseMenus()
-end
-
--- XPerl_RaidFrameDropDown_Initialize
-function XPerl_RaidFrameDropDown_Initialize(self, ct)
---[[
-	if (type(ct) ~= "table") then
-		ct = nil
-	end
-
-	local info
-	if (XPerl_MainTanks and type(UIDROPDOWNMENU_MENU_VALUE) == "table" and UIDROPDOWNMENU_MENU_VALUE[1] == "Main Tanks") then
-		info = UIDropDownMenu_CreateInfo()
-		info.text = XPERL_RAID_DROPDOWN_MAINTANKS
-		info.isTitle = 1
-		info.notCheckable = 1
-		UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL)
-		for i = 1,10 do
-			info = UIDropDownMenu_CreateInfo()
-			info.notCheckable = 1
-			if (XPerl_MainTanks[i] and XPerl_MainTanks[i][2] == UIDROPDOWNMENU_MENU_VALUE[2]) then
-				info.text = format("|c00FFFF80"..XPERL_RAID_DROPDOWN_REMOVEMT.."|r", i)
-				info.value = {UIDROPDOWNMENU_MENU_VALUE[1], UIDROPDOWNMENU_MENU_VALUE[2], i, 1}
-			else
-				info.text = format(XPERL_RAID_DROPDOWN_SETMT, i)
-				info.value = {UIDROPDOWNMENU_MENU_VALUE[1], UIDROPDOWNMENU_MENU_VALUE[2], i}
-			end
-			info.func = XPerl_MainTankSet_OnClick
-			UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL)
-		end
-		return
-	end
-
-	RaidFrameDropDown_Initialize(self)
-
-	if (UIDROPDOWNMENU_MENU_LEVEL > 1) then
-		return
-	end
-
-	local titleDone
-	if (DropDownList1.numButtons == 0 and (IsRaidOfficer() or (ct and CT_RATab_AutoPromotions))) then
-		titleDone = true
-		info = UIDropDownMenu_CreateInfo()
-		info.text = self.name
-		if (self.server) then
-			info.text = info.text.."-"..self.server
-		end
-		info.isTitle = 1
-		info.notCheckable = 1
-		UIDropDownMenu_AddButton(info)
-	end
-
-	if (IsRaidOfficer() and XPerl_MainTanks) then
-		if (not titleDone and DropDownList1.numButtons > 0) then
-			-- We want our MT option above the Cancel option, so we trick the menu into thinking it's got 1 less button
-			DropDownList1.numButtons = DropDownList1.numButtons - 1
-		end
-
-		info = UIDropDownMenu_CreateInfo()
-		info.text = XPERL_RAID_DROPDOWN_MAINTANKS
-		info.value = {"Main Tanks", self.name, self.id}			-- Must be 'this'
-		info.hasArrow = 1
-		info.dist = 0
-		info.notCheckable = 1
-		UIDropDownMenu_AddButton(info)
-
-		-- Re-add the cancel button after our MT option
-		info = UIDropDownMenu_CreateInfo()
-		info.text = XPERL_CANCEL
-		info.value = "CANCEL"
-		info.owner = "RAID"
-		info.func = UnitPopup_OnClick
-		info.notCheckable = 1
-		UIDropDownMenu_AddButton(info)
-	end
-
-	if (ct and CT_RATab_AutoPromotions) then
-		info = UIDropDownMenu_CreateInfo()
-		info.text = XPERL_RAID_AUTOPROMOTE
-		info.checked = CT_RATab_AutoPromotions[self.name]	-- Must be 'this'
-		info.value = self.id -- Must be 'this'
-		info.func = CT_RATab_AutoPromote_OnClick
-		UIDropDownMenu_AddButton(info)
-	end--]]
 end
 
 -- ShowPopup
@@ -558,10 +477,11 @@ function XPerl_Raid_UpdateHealth(self)
 			if (rconf.healerMode.enable) then
 				self.statsFrame.healthBar.text:SetText(-(healthmax - health))
 			else
-				if (rconf.values) then
+				if rconf.values then
 					self.statsFrame.healthBar.text:SetFormattedText("%d/%d", health, healthmax)
+				elseif rconf.precisionPercent then
+					self.statsFrame.healthBar.text:SetFormattedText(percF, (percentHp) * 100)
 				else
-					--self.statsFrame.healthBar.text:SetFormattedText(percD, (percentHp + 0.005) * 100)
 					self.statsFrame.healthBar.text:SetFormattedText(percD, (percentHp) * 100)
 				end
 			end
@@ -623,7 +543,13 @@ local function XPerl_Raid_UpdateMana(self)
 					pmanaPct = mana / manamax--Everything is dandy, so just do it right way.
 				end
 				--end division by 0 check
-				self.statsFrame.manaBar.text:SetFormattedText(percD, pmanaPct * 100)	-- XPerl_Percent[floor(pmanaPct)])
+				
+				if rconf.precisionManaPercent then
+					self.statsFrame.manaBar.text:SetFormattedText(percF, pmanaPct * 100)
+				else
+					self.statsFrame.manaBar.text:SetFormattedText(percD, pmanaPct * 100)
+				end
+				
 			end
 		else
 			self.statsFrame.manaBar.text:SetText("")
@@ -669,8 +595,8 @@ local function taintable(self)
 	--self.nameFrame:SetAttribute("*type1", "target")
 	--self.nameFrame:SetAttribute("type2", "menu")
 	--self.nameFrame.menu = XPerl_Raid_ShowPopup --Again, doesnt seem todo anything...
-	XPerl_SecureUnitButton_OnLoad(self.nameFrame, partyid, nil, TargetFrameDropDown, XPerl_ShowGenericMenu)		--TargetFrame.menu)
-	XPerl_SecureUnitButton_OnLoad(self, partyid, nil, TargetFrameDropDown, XPerl_ShowGenericMenu)
+	XPerl_SecureUnitButton_OnLoad(self.nameFrame, partyid, nil, TargetFrameDropDown, XPerl_ShowGenericMenu, 1)
+	XPerl_SecureUnitButton_OnLoad(self, partyid, nil, TargetFrameDropDown, XPerl_ShowGenericMenu, 1)
 end
 
 -- XPerl_Raid_Single_OnLoad
@@ -967,11 +893,8 @@ end
 local function XPerl_Raid_UpdatePlayerFlags(self, partyid,...)
 
 	if (not partyid) then
-
 		partyid = self:GetAttribute("unit")
 	end
-
-
 
 	local f = FrameArray[partyid]
 	if (f) then
@@ -1393,8 +1316,6 @@ end
 function XPerl_Raid_Events:UNIT_FLAGS()
 	XPerl_Raid_UpdateCombat(self)
 end
-
-XPerl_Raid_Events.UNIT_DYNAMIC_FLAGS = XPerl_Raid_Events.UNIT_FLAGS
 
 function XPerl_Raid_Events:PLAYER_FLAGS_CHANGED(unit,...)
 	XPerl_Raid_UpdatePlayerFlags(self, unit,...)
@@ -2197,40 +2118,10 @@ function XPerl_RaidTipExtra(unitid)
 	end
 end
 
--- This code appears to be never run, so why is it here and when did it use to get run?
--- initialConfigFunction
-local function initialConfigFunction(self)
-	-- This is the only place we're allowed to set attributes whilst in combat
-
-	self:SetScript("OnAttributeChanged", onAttrChanged)
-	XPerl_RegisterClickCastFrame(self)
-	XPerl_RegisterClickCastFrame(self.nameFrame)
-
-	Setup1RaidFrame(self)
-
-	self:SetAttribute("*type1", "target")
-	self:SetAttribute("type2", "togglemenu")
-	self.menu = XPerl_Raid_ShowPopup
-
-	-- Does AllowAttributeChange work for children?
-	self.nameFrame:SetAttribute("useparent-unit", true)
-	self.nameFrame:SetAttribute("*type1", "target")
-	self.nameFrame:SetAttribute("type2", "togglemenu")
-	self.nameFrame.menu = XPerl_Raid_ShowPopup
-
-	if (rconf.mana) then
-		self:SetAttribute("initial-height", 43)
-	else
-		self:SetAttribute("initial-height", 38)
-	end
-end
-
 -- SetMainHeaderAttributes
 local function SetMainHeaderAttributes(self)
 
 	self:Hide()
-
-	self.initialConfigFunction = initialConfigFunction
 
 	if (rconf.sortAlpha) then
 		self:SetAttribute("sortMethod", "NAME")
@@ -2332,9 +2223,22 @@ function XPerl_Raid_ChangeAttributes()
 
 		-- Hide this when we change attributes, so the whole re-calc is only done once, instead of for every attribute change
 		groupHeader:Hide()
-
-		groupHeader:SetAttribute("strictFiltering", not rconf.sortByClass)
-		groupHeader:SetAttribute("groupFilter", GroupFilter(i))
+		
+		if rconf.sortByRole then
+			groupHeader:SetAttribute("groupBy", "ASSIGNEDROLE")
+			groupHeader:SetAttribute("groupingOrder", "TANK,HEALER,DAMAGER,NONE")
+			groupHeader:SetAttribute("startingIndex", (i-1)*5+1)
+			groupHeader:SetAttribute("unitsPerColumn", 5)
+			groupHeader:SetAttribute("strictFiltering", nil)
+			groupHeader:SetAttribute("groupFilter", nil)
+		else
+			groupHeader:SetAttribute("strictFiltering", not rconf.sortByClass)
+			groupHeader:SetAttribute("groupFilter", GroupFilter(i))
+			groupHeader:SetAttribute("groupBy", nil)
+			groupHeader:SetAttribute("groupingOrder", nil)
+			groupHeader:SetAttribute("startingIndex", 1)
+			groupHeader:SetAttribute("unitsPerColumn", nil)
+		end
 		SetMainHeaderAttributes(groupHeader)
 	end
 
@@ -2347,19 +2251,6 @@ end
 function XPerl_Raid_Set_Bits(self)
 	if (raidLoaded) then
 		XPerl_ProtectedCall(XPerl_Raid_HideShowRaid)
-	end
-
-	if rconf then
-		if (not rconf.hideframemanager) then
-			rconf.hideframemanager = { --messy fix for missing config
-				enable = 0,
-			}
-		end
-		if (not rconf.hideframecontainer) then
-			rconf.hideframecontainer = { --messy fix for missing config
-				enable = 1,
-			}
-		end
 	end
 
 	SkipHighlightUpdate = nil

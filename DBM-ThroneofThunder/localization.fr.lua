@@ -15,16 +15,16 @@ L= DBM:GetModLocalization(827)
 L= DBM:GetModLocalization(819)
 
 L:SetTimerLocalization({
-	timerDoor		= "Prochaine Porte Tribale",
+	timerDoor		= "Prochaine Porte Tribale"
 })
 
 L:SetOptionLocalization({
-	timerDoor		= "Afficher le temps pour la prochain phase de Porte Tribale",
+	timerDoor		= "Afficher le temps pour la prochain phase de Porte Tribale"
 })
 
 L:SetMiscLocalization({
-	newForces		= "forces pour from the",--Farraki forces pour from the Farraki Tribal Door!
-	chargeTarget	= "stamps his tail!"--Horridon sets his eyes on Eraeshio and stamps his tail!
+	newForces		= "surgissent de la porte",--Farraki forces pour from the Farraki Tribal Door!
+	chargeTarget	= "fait battre sa queue"--Horridon sets his eyes on Eraeshio and stamps his tail!
 })
 
 ---------------------------
@@ -33,7 +33,6 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(816)
 
 L:SetOptionLocalization({
-	warnSandBolt		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(136189),
 	RangeFrame			= "Afficher le cadre de distance"
 })
 
@@ -52,6 +51,10 @@ L= DBM:GetModLocalization(821)
 -- Ji-Kun --
 ------------
 L= DBM:GetModLocalization(828)
+
+L:SetMiscLocalization({
+	eggsHatch		= "commencent à éclore"
+})
 
 --------------------------
 -- Durumu the Forgotten --
@@ -74,7 +77,7 @@ L= DBM:GetModLocalization(824)
 L= DBM:GetModLocalization(817)
 
 L:SetOptionLocalization({
-	RangeFrame		= "Afficher le cadre de distance dynamique\n(Un cadre de distance intelligent qui indique quand trop de joueurs sont trop proches)"
+	RangeFrame		= "Afficher le cadre de distance dynamique<br/>(Un cadre de distance intelligent qui indique quand trop de joueurs sont trop proches)"
 })
 
 

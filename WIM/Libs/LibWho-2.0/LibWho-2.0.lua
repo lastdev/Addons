@@ -16,7 +16,7 @@ assert(LibStub, "LibWho-2.0 requires LibStub")
 
 
 local major_version = 'LibWho-2.0'
-local minor_version = tonumber("121") or 99999
+local minor_version = tonumber("127") or 99999
 
 local lib = LibStub:NewLibrary(major_version, minor_version)
 
@@ -504,7 +504,7 @@ function lib:ReturnWho()
 	dbg("RESULT: "..self.Args.query)
 	dbg('[' .. self.Args.queue .. '] returned "' .. self.Args.query .. '", total=' .. self.Total ..' , queues=' .. #self.Queue[1] .. '/'.. #self.Queue[2] .. '/'.. #self.Queue[3])
 	local now = time()
-	local complete = self.Total == #self.Result
+	local complete = (self.Total == #self.Result) and (self.Total < MAX_WHOS_FROM_SERVER)
 	for _,v in pairs(self.Result)do
 		if(self.Cache[v.Name] == nil)then
 			self.Cache[v.Name] = { inqueue = false, callback = {} }

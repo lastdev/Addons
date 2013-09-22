@@ -1,6 +1,16 @@
 
 
 
+== Version 2.0.4
+
+* Bumped the toc file interface number to 50400.
+
+
+== Version 2.0.3
+
+* Bumped the toc file interface number to 50300.
+
+
 == Version 2.0.2
 
 * Bumped the toc file interface number to 50200.

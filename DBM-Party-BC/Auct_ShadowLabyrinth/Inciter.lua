@@ -1,10 +1,9 @@
-local mod = DBM:NewMod("Inciter", "DBM-Party-BC", 10)
+local mod = DBM:NewMod(545, "DBM-Party-BC", 10, 253)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 315 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 494 $"):sub(12, -3))
 
 mod:SetCreatureID(18667)
-mod:SetModelID(18058)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
@@ -12,6 +11,7 @@ mod:RegisterEvents(
 )
 
 local warnChaos         = mod:NewSpellAnnounce(33676)
+
 local timerChaos        = mod:NewBuffActiveTimer(15, 33676)
 local timerNextChaos    = mod:NewNextTimer(70, 33676)
 

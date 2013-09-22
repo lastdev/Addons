@@ -25,15 +25,22 @@ local baseLengths = {
 	["Immolate"] = 15,
 }
 
-local function expiresWithin(name, time)
-	if name == "Immolate" and c.GetMyDebuffDuration("Immolate AoE") > time then
-		return false
+local function getDoTDuration(name)
+	local duration = c.GetMyDebuffDuration(name)
+	if name == "Immolate" then
+		duration = math.max(duration, c.GetMyDebuffDuration("Immolate AoE"))
 	end
 	
-	return not c.IsCastingOrInAir(name) 
-		and not c.IsQueued("Soul Swap") 
-		and not (name == "Corruption" and a.SoCExplosionPending)
-		and c.GetMyDebuffDuration(name) < time
+	if c.IsCastingOrInAir(name)
+		or c.IsCasting("Soul Swap")
+		or GetTime() - a.SwapCast < .8
+		or (name == "Corruption" and a.SocExplosionPending) then
+		
+		local base = baseLengths[name]
+		return math.min(1.5 * base, duration + base)
+	else
+		return duration
+	end
 end
 
 local function gcdCheck(name, padding)
@@ -41,7 +48,7 @@ local function gcdCheck(name, padding)
 	if padding ~= nil then
 		time = time + padding
 	end
-	return expiresWithin(name, time)
+	return getDoTDuration(name) < time
 end
 
 local function soonCheck(name, considerCastTime)
@@ -51,17 +58,17 @@ local function soonCheck(name, considerCastTime)
 		return false -- this is UA, and it is casting
 	end
 	
-	if s.HasSpell(c.GetID("Pandemic")) then
+	if c.HasSpell("Pandemic") then
 		time = 2 * time
 	end
 	if considerCastTime then
 		time = time + c.GetCastTime(name)
 	end
-	return expiresWithin(name, time)
+	return getDoTDuration(name) < time
 end
 
 local function pandemicCheck(name, z, castTime)
-	if not s.HasSpell(c.GetID("Pandemic")) then
+	if not c.HasSpell("Pandemic") then
 		return false
 	end
 	
@@ -69,7 +76,7 @@ local function pandemicCheck(name, z, castTime)
 	if castTime then
 		time = time + castTime
 	end
-	if not expiresWithin(name, time) then
+	if getDoTDuration(name) > time then
 		return false
 	end
 	
@@ -86,6 +93,23 @@ local function pandemicCheck(name, z, castTime)
 		end
 	end
 	return true
+end
+
+local function doDarkSoul(z, easyCheck, hardCheck)
+	if c.HasBuff(z.ID, false, false, true) then
+		return false
+	end
+	
+	if c.HasTalent("Archimonde's Darkness") then
+		local charges, tilNext, tilMax = c.GetChargeInfo(z.ID)
+		if tilMax == 0 then
+			return easyCheck
+		elseif charges > 0 then
+			return hardCheck
+		end
+	else
+		return easyCheck and c.GetCooldown(z.ID, false, 120) == 0
+	end
 end
 
 ------------------------------------------------------------------------ Common
@@ -126,7 +150,9 @@ c.AddOptionalSpell("Curse of the Elements", nil, {
 c.AddOptionalSpell("Soulstone", nil, {
 	NoRangeCheck = true,
 	CheckFirst = function()
-		return c.SelfBuffNeeded("Soulstone") and c.IsSolo(true)
+		return x.EnemyDetected 
+			and c.SelfBuffNeeded("Soulstone") 
+			and c.IsSolo(true)
 	end
 })
 
@@ -169,6 +195,31 @@ c.AddOptionalSpell("Soulshatter", nil, {
 	end
 })
 
+c.AddOptionalSpell("Clone Magic", nil, {
+	Type = "pet",
+	FlashColor = "aqua",
+	CheckFirst = function()
+		local unit = s.UnitSelection()
+		if unit == nil or not s.Enemy(unit) then
+			return false
+		end
+		
+		for i = 1, 10000 do
+			local _, _, _, _, _, _, _, _, isStealable, _, spellID
+				= UnitBuff(unit, i)
+			if spellID == nil then
+				return false
+			elseif isStealable then
+				return true
+			end
+		end
+	end
+})
+
+c.AddDispel("Devour Magic", nil, "Magic", {
+	Type = "pet",
+})
+
 c.AddInterrupt("Spell Lock", nil, {
 	NoGCD = true,
 })
@@ -182,17 +233,54 @@ c.AddInterrupt("Optical Blast", nil, {
 })
 
 -------------------------------------------------------------------- Affliction
+local function getCorruptionWithMiseryDuration()
+	if u.GetFromTable(
+		a.Snapshots, 
+		"Corruption", 
+		UnitGUID(s.UnitSelection()), 
+		"Miserable") then
+		
+		return getDoTDuration("Corruption")
+	else
+		return 0
+	end
+end
+
+local function getMinUntilMisery()
+	if not c.HasTalent("Archimonde's Darkness") then
+		return c.GetCooldown("Dark Soul: Misery", false, 120)
+	end
+	
+	local min
+	local charges, tilNext, tilMax = c.GetChargeInfo("Dark Soul: Misery")
+	if charges > 0 then
+		min = 0
+	else
+		min = tilNext
+	end
+	min = math.max(min, getCorruptionWithMiseryDuration())
+	return min
+end
+
+local function getMaxUntilMisery()
+	if not c.HasTalent("Archimonde's Darkness") then
+		return c.GetCooldown("Dark Soul: Misery", false, 120)
+	end
+	
+	local charges, tilNext, tilMax = c.GetChargeInfo("Dark Soul: Misery")
+	return tilMax
+end
+
 local function sizeForDarkSoul(z, ...)
-	if a.Shards == 0 then
+	if a.Shards == 0 or a.DarkSoul then
 		z.FlashSize = nil
 		return
 	end
 	
+	local untilMisery = getMaxUntilMisery()
 	for i = 1, select("#", ...) do
 		local name = select(i, ...)
-		if c.GetMyDebuffDuration(name) < c.GetCooldown("Dark Soul: Misery") 
-			or c.HasBuff("Dark Soul: Misery") then
-			
+		if c.GetMyDebuffDuration(name) < untilMisery then
 			z.FlashSize = nil
 			return
 		end
@@ -203,28 +291,48 @@ end
 c.RegisterForFullChannels("Malefic Grasp", 4)
 c.AssociateTravelTimes(.8, "Haunt")
 
-c.AddSpell("Soulburn", "under Dark Soul: Misery", {
-	CheckFirst = function()
-		if not c.HasBuff("Dark Soul: Misery") 
-			or c.HasBuff("Soulburn") 
-			or c.IsCasting("Soulburn") then
-			
-			return false
-		elseif s.HasSpell(c.GetID("Pandemic")) then
-			return pandemicCheck("Agony")
-				or pandemicCheck("Unstable Affliction")
-				or pandemicCheck("Corruption")
+local function burnable()
+	if c.HasSpell("Pandemic") then
+		return pandemicCheck("Agony")
+			or pandemicCheck("Unstable Affliction")
+			or pandemicCheck("Corruption")
+	else
+		return soonCheck("Agony")
+			or soonCheck("Unstable Affliction")
+			or soonCheck("Corruption")
+	end
+end
+
+c.AddOptionalSpell("Dark Soul: Misery", nil, {
+	NextFlashID = { 
+		"Soulburn", "Soul Swap", "Soul Swap Soulburn", "Soul Swap Exhale" }, 
+	Override = function(z)
+		if burnable() then
+			z.PredictFlashID = z.NextFlashID
 		else
-			return soonCheck("Agony")
-				or soonCheck("Unstable Affliction")
-				or soonCheck("Corruption")
+			z.PredictFlashID = nil
 		end
+		return getMinUntilMisery() == 0
+			and doDarkSoul(
+				z, 
+				a.Shards > 0, 
+				a.Shards >= 3 and c.HasMyDebuff("Haunt", false, false, true))
+	end
+})
+
+c.AddSpell("Soulburn", "under Dark Soul: Misery", {
+	PredictFlashID = { "Soul Swap", "Soul Swap Soulburn", "Soul Swap Exhale" }, 
+	CheckFirst = function(z)
+		return a.DarkSoul 
+			and burnable()
+			and not c.HasBuff("Soulburn", false, false, true)
 	end
 })
 
 c.AddSpell("Soulburn", "during Execute", {
+	PredictFlashID = { "Soul Swap", "Soul Swap Soulburn", "Soul Swap Exhale" }, 
 	CheckFirst = function(z)
-		if c.HasBuff("Soulburn") or c.IsCasting("Soulburn") then
+		if c.HasBuff("Soulburn", false, false, true) then
 			return false
 		end
 		
@@ -243,7 +351,7 @@ c.AddSpell("Soulburn", "during Execute", {
 			or pandemicCheck("Unstable Affliction", z)
 			or pandemicCheck("Corruption", z) then
 			
-			if c.HasBuff("Dark Soul: Misery") then
+			if a.DarkSoul then
 				z.FlashColor = nil
 				z.Continue = nil
 			else
@@ -254,21 +362,11 @@ c.AddSpell("Soulburn", "during Execute", {
 	end
 })
 
-c.AddSpell("Soul Swap", "under Soulburn", {
+c.AddSpell("Soul Swap", nil, {
+	FlashID = { "Soul Swap", "Soul Swap Exhale", "Soul Swap Soulburn" },
 	CheckFirst = function()
-		return c.HasBuff("Soulburn")
-	end
-})
-
-c.AddSpell("Soul Swap", "during Execute", {
-	CheckFirst = function()
-		return c.HasBuff("Soulburn")
-	end
-})
-
-c.AddOptionalSpell("Dark Soul: Misery", nil, {
-	Override = function()
-		return a.Shards > 0 and c.GetCooldown("Dark Soul: Misery") == 0
+		return c.HasBuff("Soulburn", false, false, true)
+			and not c.IsCasting("Soul Swap")
 	end
 })
 
@@ -282,8 +380,9 @@ c.AddSpell("Haunt", nil, {
 			return false
 		end
 		
-		if a.Shards >= s.MaxPower("player", SPELL_POWER_SOUL_SHARDS) - 1 
-			or c.HasBuff("Dark Soul: Misery") then
+		if a.Shards >= (c.HasTalent("Archimonde's Darkness") and 4 or 3) 
+			or a.DarkSoul 
+			or getCorruptionWithMiseryDuration() > 6 then
 			
 			z.FlashColor = nil
 			z.Continue = nil
@@ -293,12 +392,7 @@ c.AddSpell("Haunt", nil, {
 		
 		z.Continue = true
 		z.FlashColor = "yellow"
-		local miseryCD = c.GetCooldown("Dark Soul: Misery")
-		if miseryCD < 35 then
-			z.FlashSize = s.FlashSizePercent() / 2
-		else
-			z.FlashSize = nil
-		end
+		c.MakeMini(z, getMinUntilMisery() < 35)
 		return true
 	end
 })
@@ -334,7 +428,7 @@ c.AddSpell("Agony", "Soon", {
 c.AddSpell("Agony", "before Malefic Grasp", {
 	CheckFirst = function(z)
 		sizeForDarkSoul(z, "Agony")
-		return expiresWithin("Agony", c.GetHastedTime(4))
+		return getDoTDuration("Agony") < c.GetHastedTime(4)
 	end
 })
 
@@ -371,7 +465,7 @@ c.AddOptionalSpell("Unstable Affliction", "with Pandemic", {
 	CheckFirst = function(z)
 		sizeForDarkSoul(z, "Unstable Affliction")
 		local castTime = 0
-		if a.Shards == 0 or not c.HasBuff("Dark Soul: Misery") then
+		if a.Shards == 0 or not a.DarkSoul then
 			castTime = c.GetCastTime("Unstable Affliction")
 		end
 		return pandemicCheck("Unstable Affliction", z, castTime)
@@ -381,15 +475,13 @@ c.AddOptionalSpell("Unstable Affliction", "with Pandemic", {
 c.AddSpell("Unstable Affliction", "Soon", {
 	CheckFirst = function(z)
 		sizeForDarkSoul(z, "Unstable Affliction")
-		return soonCheck(
-			"Unstable Affliction", 
-			a.Shards == 0 or not c.HasBuff("Dark Soul: Misery"))
+		return soonCheck("Unstable Affliction", a.Shards == 0 or not a.DarkSoul)
 	end
 })
 
 c.AddOptionalSpell("Life Tap", "for Affliction", {
 	CheckFirst = function()
-		if c.HasBuff("Dark Soul: Misery") or c.HasBuff(c.BLOODLUST_BUFFS) then
+		if a.DarkSoul or c.HasBuff(c.BLOODLUST_BUFFS) then
 			return false
 		end
 		
@@ -402,17 +494,35 @@ c.AddOptionalSpell("Life Tap", "for Affliction", {
 })
 
 -------------------------------------------------------------------- Demonology
-c.AddOptionalSpell("Dark Soul: Knowledge")
+local function hasFuryFor(amount)
+	if c.WearingSet(2, "T15") then
+		amount = amount * .7
+	end
+	return a.Fury >= amount
+end
+
+local function getRange(normal, mannoroth)
+	if c.HasBuff("Mannoroth's Fury", false, false, true) then
+		return normal
+	else
+		return mannoroth or normal * 5
+	end
+end
+
+c.AddOptionalSpell("Dark Soul: Knowledge", nil, {
+	Override = function(z)
+		return doDarkSoul(z, true, a.Fury > 950)
+	end,
+})
 
 c.AddOptionalSpell("Grimoire: Felguard")
 
 c.AddOptionalSpell("Aura of the Elements", nil, {
 	FlashID = { "Curse of the Elements", "Aura of the Elements" },
+	Range = 20, -- not affected by Mannoroth's Fury
+	Debuff = c.MAGIC_VULNERABILITY_DEBUFFS,
 	Override = function()
-		return a.Fury >= 150 
-			and not c.HasDebuff(c.MAGIC_VULNERABILITY_DEBUFFS)
-			and not c.HasBuff("Aura of the Elements")
-			and c.DistanceAtTheMost() <= 20
+		return hasFuryFor(150) and not c.HasBuff("Aura of the Elements")
 	end
 })
 
@@ -431,8 +541,7 @@ c.AddOptionalSpell("Wrathstorm", nil, {
 c.AddOptionalSpell("Metamorphosis", nil, {
 	Type = "form",
 	CheckFirst = function()
-		local ds = c.GetBuffDuration("Dark Soul: Knowledge")
-		if a.Fury > 950 or (ds > 0 and a.Fury / 32 > ds) then
+		if a.Fury > 950 or (a.DarkSoul > 0 and a.Fury / 32 > a.DarkSoul) then
 			return true
 		end
 		
@@ -447,7 +556,7 @@ c.AddOptionalSpell("Metamorphosis", nil, {
 				needed = 60
 			end
 		end
-		return needed > 0 and a.Fury >= needed
+		return needed > 0 and hasFuryFor(needed)
 	end
 })
 
@@ -455,19 +564,17 @@ c.AddOptionalSpell("Metamorphosis", "Cancel", {
 	Type = "form",
 	FlashColor = "red",
 	Override = function(z)
-		return a.Fury < 650 and not c.HasBuff("Dark Soul: Knowledge")
+		return a.Fury < 650 and a.DarkSoul == 0
 	end
 })
 
 c.AddOptionalSpell("Metamorphosis", "AoE", {
 	Type = "form",
 	CheckFirst = function()
-		if a.Fury < 40 then
+		if not hasFuryFor(40) then
 			return false
 		end
-		return a.Fury > 950
-			or c.HasBuff("Dark Soul: Knowledge")
-			or c.GetMyDebuffDuration("Corruption") < 10
+		return a.Fury > 950 or a.DarkSoul > 0
 	end
 })
 
@@ -477,23 +584,20 @@ c.AddOptionalSpell("Metamorphosis", "Cancel AoE", {
 	Override = function(z)
 		return a.Fury < 650
 			and not c.HasBuff("Immolation Aura")
-			and c.GetMyDebuffDuration("Corruption") > 10
-			and not c.HasBuff("Dark Soul: Knowledge")
+			and a.DarkSoul == 0
 	end
 })
 
 c.AddSpell("Corruption", "for Demonology", {
 	FlashID = { "Corruption", "Doom" },
-	CheckFirst = function()
-		return not c.HasMyDebuff("Corruption")
-	end
+	MyDebuff = "Corruption", 
 })
 
 c.AddOptionalSpell("Doom", nil, {
 	FlashID = { "Corruption", "Doom" },
 	EarlyRefresh = 15,
 	Override = function(z)
-		if a.Fury < 60 then
+		if not hasFuryFor(60) then
 			return false
 		end
 		
@@ -517,7 +621,7 @@ c.AddSpell("Hand of Gul'dan", nil, {
 c.AddSpell("Touch of Chaos", nil, {
 	FlashID = { "Touch of Chaos", "Shadow Bolt", "Shadow Bolt Glyphed" },
 	Override = function()
-		return a.Fury >= 40
+		return hasFuryFor(40)
 	end
 })
 
@@ -525,7 +629,7 @@ c.AddSpell("Touch of Chaos", "to Save Corruption", {
 	FlashID = { "Touch of Chaos", "Shadow Bolt", "Shadow Bolt Glyphed" },
 	Override = function()
 		local duration = c.GetMyDebuffDuration("Corruption")
-		return a.Fury >= 40 and duration > 0 and duration < 1.7
+		return hasFuryFor(40) and duration > 0 and duration < 1.7
 	end
 })
 
@@ -533,7 +637,7 @@ c.AddSpell("Touch of Chaos", "to Extend Corruption", {
 	FlashID = { "Touch of Chaos", "Shadow Bolt", "Shadow Bolt Glyphed" },
 	Override = function()
 		local duration = c.GetMyDebuffDuration("Corruption")
-		return a.Fury >= 40 and duration > 0 and duration < 20
+		return hasFuryFor(40) and duration > 0 and duration < 20
 	end
 })
 
@@ -547,15 +651,14 @@ c.AddSpell("Soul Fire", nil, {
 			return false
 		end
 		
-		local ds = c.GetBuffDuration("Dark Soul: Knowledge")
-		if c.GetCastTime("Soul Fire") < ds then
+		if c.GetCastTime("Soul Fire") < a.DarkSoul then
 			return true
 		end
 		
 		if a.Morphed then
-			return ds == 0
+			return a.DarkSoul == 0
 		else
-			return c.GetCastTime("Shadow Bolt") > ds
+			return c.GetCastTime("Shadow Bolt") > a.DarkSoul
 		end
 	end
 })
@@ -566,48 +669,32 @@ c.AddSpell("Shadow Bolt", nil, {
 
 c.AddSpell("Immolation Aura", nil, {
 	FlashID = { "Hellfire", "Immolation Aura" },
+	RunFirst = function(z)
+		z.Range = getRange(10, 20)
+	end,
 	Override = function()
 		return not c.HasBuff("Immolation Aura")
-			and c.DistanceAtTheMost() <= 10
 	end
 })
 
 c.AddSpell("Void Ray", nil, {
 	FlashID = { "Fel Flame", "Void Ray" },
-	Override = function()
-		return a.Fury >= 40
-			and c.DistanceAtTheMost() <= 20
-	end
-})
-
-c.AddSpell("Void Ray", "for Corruption", {
-	FlashID = { "Fel Flame", "Void Ray" },
-	Override = function()
-		local corr = c.GetMyDebuffDuration("Corruption")
-		return a.Fury >= 40
-			and corr > 0
-			and corr < 10
-			and c.DistanceAtTheMost() <= 20
+	Range = 20, -- not affected by Mannoroth's Fury
+	Override = function(z)
+		return hasFuryFor(40)
 	end
 })
 
 c.AddSpell("Hellfire", nil, {
 	FlashID = { "Hellfire", "Immolation Aura" },
-	CheckFirst = function()
-		return c.DistanceAtTheMost() <= 10
-	end
+	RunFirst = function(z)
+		z.Range = getRange(10, 20)
+	end,
 })
 
 c.AddSpell("Hellfire", "Out of Range", {
 	FlashColor = "red",
 	FlashID = { "Hellfire", "Immolation Aura" },
-})
-
-c.AddSpell("Harvest Life", "for Demonology", {
-	CheckFirst = function()
-		return true
-			and c.DistanceAtTheLeast() >= 10
-	end
 })
 
 c.AddInterrupt("Axe Toss", nil, {
@@ -631,7 +718,11 @@ local function getImmolateCastTime()
 	end
 end
 
-c.AddOptionalSpell("Dark Soul: Instability")
+c.AddOptionalSpell("Dark Soul: Instability", nil, {
+	Override = function(z)
+		return doDarkSoul(z, true, a.Embers > 3.5)
+	end,
+})
 
 c.AddOptionalSpell("Grimoire: Imp")
 
@@ -658,25 +749,50 @@ c.AddOptionalSpell("Immolate", "Pandemic", {
 	end
 })
 
-c.AddSpell("Chaos Bolt", nil, {
+c.AddSpell("Conflagrate", "Single Target", {
+	CheckFirst = function(z)
+		if c.GetChargeInfo("Conflagrate") == 0 then
+			return false
+		end
+		
+		c.MakeOptional(
+			z, 
+			a.DarkSoul == 0
+				and (a.Backdraft > 0 
+					or (c.HasBuff("Backlash") 
+						and not c.IsCasting("Incinerate", "Incinerate AoE"))))
+		return true
+	end,
+})
+
+c.AddSpell("Conflagrate", "at Cap", {
 	CheckFirst = function()
-		return a.Backdraft < 3
-			and (c.GetPower(select(2, GetPowerRegen())) / s.MaxPower("player") 
-					< .8
-				or not s.InRaidOrParty())
-			and (s.MaxPower("player", SPELL_POWER_BURNING_EMBERS) - a.Embers 
-					< .5
-				or c.GetBuffDuration("Dark Soul: Instability") 
-					> c.GetCastTime("Chaos Bolt"))
+		local _, _, tilMax = c.GetChargeInfo("Conflagrate")
+		return tilMax < c.GetCastTime("Incinerate")
+			or c.GetBuffDuration("Backdraft", false, false, "Conflagrate")
+				< c.GetCastTime("Chaos Bolt")
 	end
 })
 
-c.AddSpell("Conflagrate", nil, {
+c.AddSpell("Conflagrate", "AoE", {
 	CheckFirst = function()
-		return a.Backdraft == 0
-			and (not c.HasBuff("Backlash") 
-				or c.IsCasting("Incinerate") 
-				or c.IsCasting("Incinerate AoE"))
+		return c.GetChargeInfo("Conflagrate") == 0
+			or (a.Backdraft == 0
+				and (not c.HasBuff("Backlash") 
+					or c.IsCasting("Incinerate") 
+					or c.IsCasting("Incinerate AoE")))
+	end
+})
+
+c.AddSpell("Chaos Bolt", nil, {
+	CheckFirst = function(z)
+		if a.Embers < a.T15EmberCost() or a.Backdraft >= 3 then
+			return false
+		end
+		
+		c.MakeOptional(
+			z, a.Embers < 3.5 and a.DarkSoul < c.GetCastTime("Chaos Bolt"))
+		return true
 	end
 })
 
@@ -694,18 +810,37 @@ c.AddOptionalSpell("Ember Tap", nil, {
 	end
 })
 
+local function rofCheck()
+	return not ((c.HasBuff("Rain of Fire") and c.HasMyDebuff("Rain of Fire"))
+		or c.IsCasting("Rain of Fire")
+		or GetTime() - a.RoFCast < .8)
+end
+
 c.AddOptionalSpell("Rain of Fire", nil, {
+	NoRangeCheck = true,
+	CheckFirst = rofCheck,
+})
+
+c.AddOptionalSpell("Rain of Fire", "Single Target", {
+	NoRangeCheck = true,
 	CheckFirst = function()
-		return not c.HasBuff("Rain of Fire") 
-			or not c.HasMyDebuff("Rain of Fire")
+		return rofCheck() and c.GetPowerPercent() > 50
 	end
 })
 
-c.AddOptionalSpell("Rain of Fire", "above 50", {
-	MyDebuff = "Rain of Fire",
+c.AddOptionalSpell("Fire and Brimstone", nil, {
+	Buff = "Fire and Brimstone",
+	BuffUnit = "player",
+	NoGCD = true,
 	CheckFirst = function()
-		return s.PowerPercent("player") > 50
-			and (not c.HasBuff("Rain of Fire") 
-				or not c.HasMyDebuff("Rain of Fire"))
+		return a.Embers >= 1
+	end
+})
+
+c.AddOptionalSpell("Fire and Brimstone", "Cancel", {
+	FlashColor = "red",
+	NoGCD = true,
+	Override = function()
+		return a.Embers >= 1 and c.HasBuff("Fire and Brimstone")
 	end
 })

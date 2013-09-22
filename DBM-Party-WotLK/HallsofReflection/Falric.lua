@@ -1,9 +1,8 @@
-local mod = DBM:NewMod("Falric", "DBM-Party-WotLK", 16)
+local mod = DBM:NewMod(601, "DBM-Party-WotLK", 16, 276)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
 mod:SetCreatureID(38112)
-mod:SetModelID(30972)
 
 mod:RegisterCombat("combat")
 
@@ -21,22 +20,22 @@ local timerImpendingDespair		= mod:NewTargetTimer(6, 72426)
 local timerQuiveringStrike		= mod:NewTargetTimer(5, 72422)
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(72422) then
+	if args.spellId == 72422 then
 		timerQuiveringStrike:Start(args.destName)
 		warnQuiveringStrike:Show(args.destName)
-	elseif args:IsSpellID(72426) then
+	elseif args.spellId == 72426 then
 		timerImpendingDespair:Start(args.destName)
 		warnImpendingDespair:Show(args.destName)
-	elseif args:IsSpellID(72435) and self:AntiSpam() then
+	elseif args.spellId == 72435 and self:AntiSpam() then
 		warnFear:Show()
 		timerFear:Start()
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(72422) then
+	if args.spellId == 72422 then
 		timerQuiveringStrike:Cancel(args.destName)
-	elseif args:IsSpellID(72426) then
+	elseif args.spellId == 72426 then
 		timerImpendingDespair:Cancel(args.destName)
 	end
 end

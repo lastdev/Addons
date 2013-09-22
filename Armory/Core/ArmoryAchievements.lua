@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 578 2013-01-15T22:05:28Z
+    Revision: 592 2013-05-21T13:24:07Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -240,6 +240,7 @@ function Armory:UpdateAchievement(achievementId, index, dbEntry)
     end
 
     local id, _, _, completed, _, _, _, _, flags = _G.GetAchievementInfo(achievementId, index);
+    flags = flags or 0;
     if ( not id ) then
         return;
     elseif ( bit.band(flags, ACHIEVEMENT_FLAGS_ACCOUNT) == ACHIEVEMENT_FLAGS_ACCOUNT ) then
@@ -254,6 +255,7 @@ function Armory:UpdateAchievement(achievementId, index, dbEntry)
     if ( not completed ) then
         for i = 1, _G.GetAchievementNumCriteria(id) do
             local _, criteriaType, completed, quantityNumber, reqQuantity, _, flags, _, quantityString = _G.GetAchievementCriteriaInfo(id, i);
+            flags = flags or 0;
             if ( criteriaType ~= CRITERIA_TYPE_ACHIEVEMENT ) then            
                 if ( bit.band(flags, EVALUATION_TREE_FLAG_PROGRESS_BAR) == EVALUATION_TREE_FLAG_PROGRESS_BAR ) then
                     if ( quantityString and quantityString:find("Gold") ) then

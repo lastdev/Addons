@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Gehennas", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 337 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 436 $"):sub(12, -3))
 mod:SetCreatureID(12259)--, 11661
 mod:SetModelID(13030)
 mod:RegisterCombat("combat")
@@ -31,16 +31,16 @@ function mod:warnFistTargets()
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(19716) then
+	if args.spellId == 19716 then
 		timerCurse:Start()
 		warnCurse:Show()
---	elseif args:IsSpellID(19717) and self:IsInCombat() then
+--	elseif args.spellId == 19717 and self:IsInCombat() then
 --		warnRainFire:Show()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(20277) and args:IsDestTypePlayer() then
+	if args.spellId == 20277 and args:IsDestTypePlayer() then
 		self:UnscheduleMethod("warnFistTargets")
 		FistTargets[#FistTargets + 1] = args.destName
 		self:ScheduleMethod(0.3, "warnFistTargets")

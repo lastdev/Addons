@@ -1,3 +1,56 @@
+== Version 50400.1.0
+* All: Updating flashing for Impending Victory according to its changes this patch.
+* All: Rotations do a better job at anticipating queued spells, switching to your next spell sooner when you press a button.
+* All: Smoothed out some quirky flashing.
+
+== Version 3.5.3
+* Protection: Now checks for the proc from Indomitable Primal Diamond before flashing your mitigation cooldowns.
+* Protection: Now checks for a number of external mitigation cooldowns before flashing one of your own.
+
+== Version 3.5.2
+* Protection: Bugfix - Victory Rush was flashing regardless of whether you had Victorious.
+
+== Version 3.5.1
+* Arms: Only uses Impending Victory when it's free.
+* Arms & Fury: Now uses Impending Victory even during the execute phase when it's free.
+* Protection: Damage mode is now linked with the hidden option to toggle it in groups (see the website for more info).
+* Protection: Shield Block and Shield Barrier no longer flash in damage mode.
+* Protection: Only flashes the lower piority Thund Clap in damage mode.
+* Protection: Shield Slam and Revenge now flash regardless of rage when in damage mode.
+* Protection: Now anticipates the cooldown reset on Revenge from dodges and parries.
+* Protection: Now waits up to .5 seconds for a rage generating ability instead of using a damage ability.
+
+== Version 3.5.0
+* Arms: Updated the rotation based on new research.
+* Arms & Fury: Added AoE modes.
+* Arms & Fury: Smoothed out some quirks in the flashing.
+* Fury: Heroic Strike now flashes more often.
+* Fury: Execute is never saved to build rage when solo.
+* All: Shouts now flash if the raid buff is needed out of combat, if an enemy target is detected.
+
+== Version 3.4.0
+* Protection: Added an AoE mode.
+* Protection: Added a solo mode.
+* Protection: Added flashing for level 60 talents.
+* Protection: Added flashing for Storm Bolt.
+* Protection: Heroic Strike now flashes when you are not tanking and rage is high.
+* All: Now factors in Glyph of Hoarse Voice when deciding if shouts will cap your rage.
+
+== Version 3.3.6
+* All: Bugfix for a Lua error.
+
+== Version 3.3.5
+* All: Now flashes food buffs.
+
+== Version 3.3.4
+Update for patch 5.3.
+* Most spells that depending on your health now account for incoming heals.
+
+== Version 3.3.3
+* Arms & Fury: Heroic Leap flashes at 1/2 size.
+* Protection: Improved Rage calculations, including accounting for 4pT15.
+* All: Shouts will flash any time they can be used to buff you.
+
 == Version 3.3.2
 NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
 * May be slightly nicer for lower level warriors who do not yet have Colossus Smash.
@@ -40,42 +93,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 
 == Version 2.2.4
 * Making the "Out of Date" status go away.  Please report any real issues w/ the new patch.
-
-== Version 2.2.3
-* Fury: Now flashes Pummel to interrupt (was previously only working for Arms).
-* All: Now flashes Disrupting Shout to interrupt.
-
-== Version 2.2.2
-* Fury: Bugfix - the execute phase was not being flashed like it should.
-* Fury: Bugfix - the changes to Deadly Calm in the last release were being applied to Fury, when they are meant only for Arms.
-
-== Version 2.2.1
-* Arms: Only flash Colossus Smash when the debuff would fall off.
-* Arms: Only flash Deadly Calm when you can use Heroic Strike at least twice during Colossus Smash.
-
-== Version 2.2.0
-* Added Arms.
-
-== Version 2.1.0
-* Added a Fury rotation for the MoP beta.
-* Protection: Thunderclap will now only be flashed to refresh Rend if you have 2/2 Blood and Thunder.
-
-== Version 2.0.0
-* Taking out of beta.
-* This doesn't really deserve a major version bump - but all my other modules went to 2.x when they got all 3 specs defined, so I'm just making things consistent.
-
-== Version 1.1.1 beta
-This beta release uses Bitten's SpellFlash Library version 3.  If you update you will also need to update any of your other Bitten's SpellFlash modules, which may also be in beta.
-* Prot: Bugfix - 2pT13 Revenge was 1 notch too low on the priority scheme.
-
-== Version 1.1.0
-* Arms: No longer flashes Enraged Regeneration.
-* Fury: No longer flashes Enraged Regeneration.
-* Prot: Now flashes Vigilance.
-* Prot: Revenge is now prioritized above Shield Slam when wearing 2pT13.
-* Prot: Now flashes Taunt.
-* Prot: Now flashes Challenging Shout.
-* All: No longer flashes shouts out of combat.
-
-== Version 1.0.0
-* Initial Release

@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(679, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8777 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10151 $"):sub(12, -3))
 mod:SetCreatureID(60051, 60043, 59915, 60047)--Cobalt: 60051, Jade: 60043, Jasper: 59915, Amethyst: 60047
-mod:SetModelID(41892)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -13,7 +12,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
 	"RAID_BOSS_EMOTE",
-	"UNIT_SPELLCAST_SUCCEEDED",
+	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4",
 	"UNIT_DIED"
 )
 
@@ -31,9 +30,6 @@ local specWarnOverloadSoon			= mod:NewSpecialWarning("SpecWarnOverloadSoon", nil
 local specWarnJasperChains			= mod:NewSpecialWarningYou(130395)
 local specWarnBreakJasperChains		= mod:NewSpecialWarning("specWarnBreakJasperChains", false)
 local yellJasperChains				= mod:NewYell(130395, nil, false)
---local specWarnCobaltMine			= mod:NewSpecialWarningYou(129424)
-local specWarnCobaltMineNear		= mod:NewSpecialWarningClose(129424)
---local yellCobaltMine				= mod:NewYell(129424)
 local specWarnAmethystPool			= mod:NewSpecialWarningMove(130774)
 local specWarnPowerDown				= mod:NewSpecialWarningSpell(116529, not mod:IsTank())
 
@@ -59,7 +55,6 @@ local Overload = {
 	["Jasper"] = GetSpellInfo(115843),
 	["Amethyst"] = GetSpellInfo(115844)
 }
---local scansDone = 0
 local activePetrification = nil
 local playerHasChains = false
 local jasperChainsTargets = {}
@@ -87,66 +82,6 @@ local function warnJasperChainsTargets()
 	table.wipe(jasperChainsTargets)
 end
 
-local function isTank(unit)
-	if GetPartyAssignment("MAINTANK", unit, 1) then
-		return true
-	end
-	if UnitGroupRolesAssigned(unit) == "TANK" then
-		return true
-	end
-	local uId = DBM:GetBossUnitId(Cobalt)
-	if uId and UnitExists(uId.."target") and UnitDetailedThreatSituation(unit, uId) then
-		return true
-	end
-	return false
-end
-
---[[
-function mod:ClobaltMineTarget(targetname)
-	warnCobaltMine:Show(targetname)
-	if targetname == UnitName("player") then
-		specWarnCobaltMine:Show()
-		yellCobaltMine:Yell()
-	else
-		local uId = DBM:GetRaidUnitId(targetname)
-		if uId then
-			local x, y = GetPlayerMapPosition(uId)
-			if x == 0 and y == 0 then
-				SetMapToCurrentZone()
-				x, y = GetPlayerMapPosition(uId)
-			end
-			local inRange = DBM.RangeCheck:GetDistance("player", x, y)
-			if inRange and inRange < 8 then
-				specWarnCobaltMineNear:Show(targetname)
-			end
-		end
-	end
-end
-
-
-function mod:ScanHandler(ScansCompleted)
-	scansDone = scansDone + 1
-	local targetname, uId = self:GetBossTarget(60051)
-	-- UnitExists also accepts not unit id but unitname. so we can use unitname as UnitExists parameter. and it also works with player controlled pet.
-	if UnitExists(targetname) then
-		if isTank(uId) and not ScansCompleted then--He's targeting a tank.
-			if scansDone < 12 then--Make sure no infinite loop.
-				self:ScheduleMethod(0.05, "ScanHandler")--Check multiple times to be sure it's not on something other then tank.
-			else
-				self:ScanHandler(true)--It's still on tank, force true isTank and activate else rule and warn trap is on tank.
-			end
-		else--He's not targeting a tank target (or isTank was set to true after 12 scans) so this has to be right target.
-			self:UnscheduleMethod("ScanHandler")--Unschedule all checks just to be sure none are running, we are done.
-			self:ClobaltMineTarget(targetname)
-		end
-	else--target was nil, lets schedule a rescan here too.
-		if scansDone < 12 then--Make sure not to infinite loop here as well.
-			self:ScheduleMethod(0.05, "ScanHandler")
-		end
-	end
-end
---]]
-
 function mod:ThreeBossStart(delay)
 	for i = 1, 5 do
 		local id = self:GetUnitCreatureId("boss"..i)
@@ -168,11 +103,14 @@ end
 
 function mod:OnCombatStart(delay)
 	activePetrification = nil
---	scansDone = 0
 	playerHasChains = false
 	table.wipe(jasperChainsTargets)
 	table.wipe(amethystPoolTargets)
-	berserkTimer:Start()--7 min berserk on heroic 10 and 25 at least, unsure about normal/LFR, since i've never seen a log reach 7 min yet in LFR or normal
+	if self:IsDifficulty("heroic10", "heroic25") then
+		berserkTimer:Start(-delay)
+	else
+		berserkTimer:Start(485-delay)
+	end
 	if self:IsDifficulty("normal25", "heroic25") then
 		timerCobaltMineCD:Start(-delay)
 		timerJadeShardsCD:Start(-delay)
@@ -195,7 +133,7 @@ function mod:OnCombatEnd()
 end 
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(130395) then
+	if args.spellId == 130395 then
 		jasperChainsTargets[#jasperChainsTargets + 1] = args.destName
 		timerJasperChainsCD:Start()
 		self:Unschedule(warnJasperChainsTargets)
@@ -221,13 +159,13 @@ function mod:SPELL_AURA_APPLIED(args)
 				DBM.Arrow:Hide()
 			end
 		end
-	elseif args:IsSpellID(130774) and args:IsPlayer() then
+	elseif args.spellId == 130774 and args:IsPlayer() then
 		specWarnAmethystPool:Show()
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(130395) and args:IsPlayer() then
+	if args.spellId == 130395 and args:IsPlayer() then
 		playerHasChains = false
 		if self.Options.ArrowOnJasperChains then
 			DBM.Arrow:Hide()
@@ -236,31 +174,31 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(115840) then -- Cobalt
+	if args.spellId == 115840 then -- Cobalt
 		warnCobaltOverload:Show()
 		if activePetrification == "Cobalt" then
 			timerPetrification:Cancel()
 		end
 		activePetrification = nil
-	elseif args:IsSpellID(115842) then -- Jade
+	elseif args.spellId == 115842 then -- Jade
 		warnJadeOverload:Show()
 		if activePetrification == "Jade" then
 			timerPetrification:Cancel()
 		end
 		activePetrification = nil
-	elseif args:IsSpellID(115843) then -- Jasper
+	elseif args.spellId == 115843 then -- Jasper
 		warnJasperOverload:Show()
 		if activePetrification == "Jasper" then
 			timerPetrification:Cancel()
 		end
 		activePetrification = nil
-	elseif args:IsSpellID(115844) then -- Amethyst
+	elseif args.spellId == 115844 then -- Amethyst
 		warnAmethystOverload:Show()
 		if activePetrification == "Amethyst" then
 			timerPetrification:Cancel()
 		end
 		activePetrification = nil
-	elseif args:IsSpellID(116223) then
+	elseif args.spellId == 116223 then
 		warnJadeShards:Show()
 		timerJadeShardsCD:Start()
 	elseif args:IsSpellID(116235, 130774) then--is 116235 still used? my logs show ONLY 130774 being used.
@@ -299,21 +237,21 @@ function mod:UNIT_DIED(args)
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if spellId == 115852 and self:AntiSpam(2, 1) then
+	if spellId == 115852 then
 		activePetrification = "Cobalt"
 		timerPetrification:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(Cobalt)
 			DBM.InfoFrame:Show(5, "enemypower", 1, nil, nil, ALTERNATE_POWER_INDEX)
 		end
-	elseif spellId == 116006 and self:AntiSpam(2, 2) then
+	elseif spellId == 116006 then
 		activePetrification = "Jade"
 		timerPetrification:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(Jade)
 			DBM.InfoFrame:Show(5, "enemypower", 1, nil, nil, ALTERNATE_POWER_INDEX)
 		end
-	elseif spellId == 116036 and self:AntiSpam(2, 3) then
+	elseif spellId == 116036 then
 		activePetrification = "Jasper"
 		timerPetrification:Start()
 		if self.Options.InfoFrame then
@@ -327,16 +265,14 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 				DBM.Arrow:Hide()
 			end
 		end
-	elseif spellId == 116057 and self:AntiSpam(2, 4) then
+	elseif spellId == 116057 then
 		activePetrification = "Amethyst"
 		timerPetrification:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(Amethyst)
 			DBM.InfoFrame:Show(5, "enemypower", 1, nil, nil, ALTERNATE_POWER_INDEX)
 		end
-	elseif spellId == 129424 and self:AntiSpam(2, 5) then
---		scansDone = 0
---		self:ScanHandler()
+	elseif spellId == 129424 then
 		warnCobaltMine:Show()
 		if self:IsDifficulty("lfr25") then
 			timerCobaltMineCD:Start(10.5)
@@ -345,12 +281,3 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		end
 	end
 end
-
--- overload this to handle the 10-men version (which only has 3 of the bosses) properly
-function mod:GetHP()
-	-- shared health pool, we only need to find one of these mobs, reporting all of them would be pointless
-	local cobaltHp = self:GetBossHPString(60051)
-	local jadeHp = self:GetBossHPString(60043)
-	return cobaltHp ~= DBM_CORE_UNKNOWN and cobaltHp or jadeHp
-end
-

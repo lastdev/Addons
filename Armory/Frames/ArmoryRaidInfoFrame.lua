@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 585 2013-03-02T14:19:03Z
+    Revision: 592 2013-05-21T13:24:07Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -102,7 +102,6 @@ end
 
 function ArmoryRaidInfoFrame_OnShow(self)
     ArmoryRaidInfoFrame_Update();
-    ArmoryRaidInfoFrame_UpdateCapBar();
 end
 
 function ArmoryRaidInfoFrame_Update(scrollToSelected)

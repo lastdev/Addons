@@ -3,25 +3,11 @@ local L = a.Localize
 local s = SpellFlashAddon
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
+local GetTime = GetTime
 local UnitStat = UnitStat
 local select = select
 
-local function modSpell(damageOnly, spell)
-	spell.NoStopChannel = true
-	if damageOnly then
-		spell.CheckLast = function()
-			return not a.HealingNeeded
-		end
-	end
-end
-
-local function addSpell(damageOnly, name, tag, attributes)
-	modSpell(damageOnly, c.AddSpell(name, tag, attributes))
-end
-
-local function addOptionalSpell(damageOnly, name, tag, attributes)
-	modSpell(damageOnly, c.AddOptionalSpell(name, tag, attributes))
-end
+c.RegisterForFullChannels("Penance", 2)
 
 c.AddOptionalSpell("Power Word: Fortitude", nil, {
     NoRangeCheck = true,
@@ -35,69 +21,163 @@ c.AddOptionalSpell("Inner Fire", nil, {
     BuffUnit = "player",
 })
 
-addOptionalSpell(false, "Power Word: Shield", nil, {
-	Override = function(z)
-		if s.MyBuff(z.ID, a.ShieldTarget) then
-			return false
-		end
-		
-		local manaReturn = 1.5 * select(2, UnitStat("player", 5))
-		return manaReturn > c.GetCost("Power Word: Shield")
+c.AddOptionalSpell("Shadowfiend", nil, {
+	CheckFirst = function(z)
+--		c.MakeMini(z, a.HealingNeeded)
+		return a.Mana < 76
 	end
 })
 
-addOptionalSpell(false, "Shadowfiend", nil, {
-    CheckFirst = function()
-        return not a.HealingNeeded and a.Mana < 76
-    end
-})
-
-addOptionalSpell(false, "Mindbender", nil, {
-	CheckFirst = function()
-		return not a.HealingNeeded and a.Mana < 85
+c.AddOptionalSpell("Mindbender", nil, {
+	CheckFirst = function(z)
+--		c.MakeMini(z, a.HealingNeeded)
+		return a.Mana < 82
 	end
 })
 
-addOptionalSpell(false, "Power Infusion", nil, { 
+c.AddOptionalSpell("Desperate Prayer", nil, {
+	NoGCD = true,
+	Override = function()
+		return c.GetHealthPercent("player") < 70
+			and c.GetCooldown("Desperate Prayer") == 0
+	end
+})
+
+c.AddOptionalSpell("Power Infusion", nil, { 
 	NoRangeCheck = true, 
+	NoGCD = true,
+	CheckFirst = function()
+		return (a.HealingNeeded or not a.Neutral or c.IsSolo())
+			and c.GetCastTime("Smite") > 1.2
+	end,
 })
 
-addSpell(false, "Penance")
-c.RegisterForFullChannels("Penance", 2)
+c.AddOptionalSpell("Soothing Talisman of the Shado-Pan Assault", nil, {
+	Type = "item",
+	CheckFirst = function()
+		return s.MaxPower("player") * (1 - a.Mana / 100) > 40000
+	end,
+})
 
-addSpell(false, "Holy Fire", nil, {
+c.AddDispel("Dispel Magic", nil, "Magic")
+
+c.AddSpell("Penance", nil, {
+	GetDelay = function()
+		return a.PenanceCD
+	end
+})
+
+c.AddSpell("Penance", "Delay", {
+	IsMinDelayDefinition = true,
+	GetDelay = function()
+		return a.PenanceCD, .5
+	end,
+})
+
+c.AddSpell("Holy Fire", nil, {
+	FlashID = { "Power Word: Solace", "Holy Fire" },
+	Cooldown = 10,
 	CheckFirst = function()
 		return not c.HasTalent("Solace and Insanity")
 	end
 })
 
-addSpell(false, "Power Word: Solace", nil, {
-	CheckFirst = function()
-		return c.HasTalent("Solace and Insanity")
-	end
+c.AddSpell("Power Word: Solace", nil, {
+	FlashID = { "Power Word: Solace", "Holy Fire" },
+	Cooldown = 10,
 })
 
-addSpell(false, "Smite")
-
-addSpell(false, "Smite", "Glyphed", {
+c.AddSpell("Smite", nil, {
 	CheckFirst = function()
-		local dot = "Holy Fire"
-		if c.HasTalent("Solace and Insanity") then
-			dot = "Power Word: Solace"
+		if a.HealingNeeded then
+			return true
+		elseif a.HealOnly or a.Neutral then
+			return false
+		elseif a.Conserve then
+			return not c.HasGlyph("Smite")
+		else
+			return true
 		end
-		return c.HasGlyph("Smite") 
-			and (c.IsAuraPendingFor(dot) 
-				or c.GetMyDebuffDuration(dot) > c.GetCastTime("Smite"))
+	end,
+})
+
+c.AddSpell("Smite", "Glyphed", {
+	CheckFirst = function()
+		if not c.HasGlyph("Smite") then
+			return false
+		end
+		
+		local dot = 
+			c.HasTalent("Solace and Insanity") 
+				and "Power Word: Solace" 
+				or "Holy Fire"
+		if c.GetMyDebuffDuration(dot, false, false, true) 
+				< c.GetCastTime("Smite") then
+			
+			return false
+		end
+		
+		if a.HealingNeeded then
+			return true
+		elseif a.Neutral then
+			return false
+		else
+			return true
+		end
 	end
 })
 
-addOptionalSpell(true, "Shadow Word: Pain", nil, {
+c.AddOptionalSpell("Shadow Word: Pain", "Apply", {
     MyDebuff = "Shadow Word: Pain",
-})
-c.ManageDotRefresh("Shadow Word: Pain", 3)
-
-addSpell(true, "Shadow Word: Death", nil, {
     CheckFirst = function()
-        return s.HealthPercent() < 20
+    	return not a.HealingNeeded
+    end,
+})
+
+c.AddOptionalSpell("Shadow Word: Pain", "Refresh", {
+    MyDebuff = "Shadow Word: Pain",
+    Tick = 3,
+    CheckFirst = function()
+    	return not a.HealingNeeded
+    end,
+})
+
+c.AddOptionalSpell("Shadow Word: Death", nil, {
+	Cooldown = 8,
+    CheckFirst = function()
+        return not a.HealingNeeded and s.HealthPercent() < 20
     end
 })
+
+--c.AddOptionalSpell("Divine Star", nil, {
+--	NoRangeCheck = true,
+--	Cooldown = 15,
+--	RunFirst = function(z)
+--		if c.DistanceAtTheMost() > 24 then
+--			z.FlashColor = "red"
+--		else
+--			z.FlashColor = "yellow"
+--		end
+--	end
+--})
+--
+--c.AddSpell("Cascade", nil, {
+--	NoRangeCheck = true,
+--	CheckFirst = function(z)
+--		if a.HealingNeeded then
+--			return false
+--		end
+--		
+--		local dist = c.DistanceAtTheLeast()
+--		if dist >= 40 then
+--			return false
+--		elseif dist >= 30 then
+--			z.FlashColor = "green"
+--		elseif dist >= 20 then
+--			z.FlashColor = "yellow"
+--		else
+--			z.FlashColor = "red"
+--		end
+--		return true
+--	end
+--})

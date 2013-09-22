@@ -1,10 +1,10 @@
 -------------------------------------------------------------------------------
 -- Constants.lua
 -------------------------------------------------------------------------------
--- File date: 2013-03-03T23:11:34Z
--- File hash: 4c8bad9
--- Project hash: f922565
--- Project version: 2.4.6
+-- File date: 2013-09-10T13:23:20Z
+-- File hash: 4bcba04
+-- Project hash: 4bcba04
+-- Project version: 2.5.2
 -------------------------------------------------------------------------------
 -- Please see http://www.wowace.com/addons/arl/ for more information.
 -------------------------------------------------------------------------------
@@ -189,12 +189,12 @@ private.COMMON_FLAGS_WORD1 = {
 	MOB_DROP	= 0x00000400,	-- 11
 	DISC		= 0x00000800,	-- 12
 	RETIRED		= 0x00001000,	-- 13
-	UNUSED1		= 0x00002000,	-- 14
-	UNUSED2		= 0x00004000,	-- 15
-	UNUSED3		= 0x00008000,	-- 16
-	UNUSED4		= 0x00010000,	-- 17
-	UNUSED5		= 0x00020000,	-- 18
-	UNUSED6		= 0x00040000,	-- 19
+	MISC1		= 0x00002000,	-- 14
+	UNUSED1		= 0x00004000,	-- 15
+	UNUSED2		= 0x00008000,	-- 16
+	UNUSED3		= 0x00010000,	-- 17
+	UNUSED4		= 0x00020000,	-- 18
+	UNUSED5		= 0x00040000,	-- 19
 	DPS		= 0x00080000,	-- 20
 	TANK		= 0x00100000,	-- 21
 	HEALER		= 0x00200000,	-- 22
@@ -338,6 +338,7 @@ private.ITEM_FILTER_TYPES = {
 	ALCHEMY_POTION = true,
 	ALCHEMY_TRANSMUTE = true,
 	ALCHEMY_TRINKET = true,
+	ALCHEMY_MOUNT = true,
 	-------------------------------------------------------------------------------
 	-- Blacksmithing
 	-------------------------------------------------------------------------------
@@ -411,6 +412,7 @@ private.ITEM_FILTER_TYPES = {
 	INSCRIPTION_STAFF = true,
 	INSCRIPTION_SCROLL = true,
 	INSCRIPTION_PET = true,
+	INSCRIPTION_TRINKET = true,
 	-------------------------------------------------------------------------------
 	-- Jewelcrafting
 	-------------------------------------------------------------------------------
@@ -866,6 +868,7 @@ private.ZONE_NAMES = {
 	MOUNT_HYJAL = _G.GetMapNameByID(606),
 	SOUTHERN_BARRENS = _G.GetMapNameByID(607),
 	VASHJIR = _G.GetMapNameByID(613),
+	ABYSSAL_DEPTHS = _G.GetMapNameByID(614),
 	DEEPHOLM = _G.GetMapNameByID(640),
 	THE_CAPE_OF_STRANGLETHORN = _G.GetMapNameByID(673),
 	THE_TEMPLE_OF_ATALHAKKAR = _G.GetMapNameByID(687),
@@ -895,12 +898,14 @@ private.ZONE_NAMES = {
 	THE_DEADMINES = _G.GetMapNameByID(756),
 	RAZORFEN_DOWNS = _G.GetMapNameByID(760),
 	STRATHOLME = _G.GetMapNameByID(765),
+	AHNQIRAJ = _G.GetMapNameByID(766),
 	TWILIGHT_HIGHLANDS = _G.GetMapNameByID(770),
 	AHNQIRAJ_THE_FALLEN_KINGDOM = _G.GetMapNameByID(772),
 	HYJAL_SUMMIT = _G.GetMapNameByID(775),
 	SERPENTSHRINE_CAVERN = _G.GetMapNameByID(780),
 	TEMPEST_KEEP = _G.GetMapNameByID(782),
 	SUNWELL_PLATEAU = _G.GetMapNameByID(789),
+	MOLTEN_FRONT = _G.GetMapNameByID(795),
 	BLACK_TEMPLE = _G.GetMapNameByID(796),
 	MAGISTERS_TERRACE = _G.GetMapNameByID(798),
 	KARAZHAN = _G.GetMapNameByID(799),
@@ -915,22 +920,25 @@ private.ZONE_NAMES = {
 	THE_VEILED_STAIR = _G.GetMapNameByID(873),
 	KUN_LAI_SUMMIT = _G.GetMapNameByID(879),
 	THE_JADE_FOREST = _G.GetMapNameByID(880),
+	TERRACE_OF_ENDLESS_SPRING = _G.GetMapNameByID(886),
+	MOGUSHAN_VAULTS = _G.GetMapNameByID(896),
 	HEART_OF_FEAR = _G.GetMapNameByID(897),
 	SCHOLOMANCE = _G.GetMapNameByID(898),
 	SHRINE_OF_TWO_MOONS = _G.GetMapNameByID(903),
 	SHRINE_OF_SEVEN_STARS = _G.GetMapNameByID(905),
 	ISLE_OF_THUNDER = _G.GetMapNameByID(928),
+	TIMELESS_ISLE = _G.GetMapNameByID(951),
 }
 
 do
 	local continent_names = { _G.GetMapContinents() }
 
-	private.ZONE_NAMES["KALIMDOR"] = continent_names[1]
-	private.ZONE_NAMES["EASTERN_KINGDOMS"] = continent_names[2]
-	private.ZONE_NAMES["OUTLAND"] = continent_names[3]
-	private.ZONE_NAMES["NORTHREND"] = continent_names[4]
-	private.ZONE_NAMES["THE_MAELSTROM"] = continent_names[5]
-	private.ZONE_NAMES["PANDARIA"] = continent_names[6]
+	private.ZONE_NAMES.KALIMDOR = continent_names[1]
+	private.ZONE_NAMES.EASTERN_KINGDOMS = continent_names[2]
+	private.ZONE_NAMES.OUTLAND = continent_names[3]
+	private.ZONE_NAMES.NORTHREND = continent_names[4]
+	private.ZONE_NAMES.THE_MAELSTROM = continent_names[5]
+	private.ZONE_NAMES.PANDARIA = continent_names[6]
 end
 
 private.ZONE_LABELS_FROM_NAME = {}
@@ -985,57 +993,61 @@ private.BOSS_NAMES = {
 -------------------------------------------------------------------------------
 -- Colors.
 -------------------------------------------------------------------------------
-local function RGBtoHEX(r, g, b)
-	return ("%02x%02x%02x"):format(r * 255, g * 255, b * 255)
-end
 
-local function GetColorsFromTable(dict)
-	return dict.r, dict.g, dict.b
+-- Utility function for adding new colors.
+--function HexToRGB(hex)
+--	hex = hex:gsub("#", "")
+--	return tonumber("0x" .. hex:sub(1, 2)) / 255, tonumber("0x" .. hex:sub(3, 4)) / 255, tonumber("0x" .. hex:sub(5, 6)) / 255
+--end
+
+local function CreateColorTable(dict)
+	local r, g, b = dict.r, dict.g, dict.b
+	return { hex = ("%02x%02x%02x"):format(r * 255, g * 255, b * 255), r = r, g = g, b = b }
 end
 
 private.REPUTATION_COLORS = {
-	["exalted"]	= RGBtoHEX(GetColorsFromTable(_G.FACTION_BAR_COLORS[8])),
-	["revered"]	= RGBtoHEX(GetColorsFromTable(_G.FACTION_BAR_COLORS[7])),
-	["honored"]	= RGBtoHEX(GetColorsFromTable(_G.FACTION_BAR_COLORS[6])),
-	["friendly"]	= RGBtoHEX(GetColorsFromTable(_G.FACTION_BAR_COLORS[5])),
-	["neutral"]	= RGBtoHEX(GetColorsFromTable(_G.FACTION_BAR_COLORS[4])),
-	["unfriendly"]	= RGBtoHEX(GetColorsFromTable(_G.FACTION_BAR_COLORS[3])),
-	["hostile"]	= RGBtoHEX(GetColorsFromTable(_G.FACTION_BAR_COLORS[2])),
-	["hated"]	= RGBtoHEX(GetColorsFromTable(_G.FACTION_BAR_COLORS[1])),
+	exalted		= CreateColorTable(_G.FACTION_BAR_COLORS[8]),
+	revered		= CreateColorTable(_G.FACTION_BAR_COLORS[7]),
+	honored		= CreateColorTable(_G.FACTION_BAR_COLORS[6]),
+	friendly	= CreateColorTable(_G.FACTION_BAR_COLORS[5]),
+	neutral		= CreateColorTable(_G.FACTION_BAR_COLORS[4]),
+	unfriendly	= CreateColorTable(_G.FACTION_BAR_COLORS[3]),
+	hostile		= CreateColorTable(_G.FACTION_BAR_COLORS[2]),
+	hated		= CreateColorTable(_G.FACTION_BAR_COLORS[1]),
 }
 
 -- Recipe difficulty colors.
 private.DIFFICULTY_COLORS = {
-	["trivial"]	= "808080",
-	["easy"]	= "40bf40",
-	["medium"]	= "ffff00",
-	["optimal"]	= "ff8040",
-	["impossible"]	= "ff0000",
+	trivial		= { hex = "808080",	r = 0.50,	g = 0.50,	b = 0.50 },
+	easy		= { hex = "40bf40",	r = 0.25,	g = 0.75,	b = 0.25 },
+	medium		= { hex = "ffff00",	r = 1,		g = 1,		b = 0 },
+	optimal		= { hex = "ff8040",	r = 1,		g = 0.50,	b = 0.25 },
+	impossible	= { hex = "ff0000",	r = 1,		g = 0,		b = 0 },
 }
 
 private.BASIC_COLORS = {
-	["grey"]	= "666666",
-	["white"]	= "ffffff",
-	["yellow"]	= "ffff00",
-	["normal"]	= "ffd100",
+	grey	= { hex = "666666",	r = 0.40,	g = 0.40,	b = 0.40 },
+	white	= { hex = "ffffff",	r = 1,		g = 1,		b = 1 },
+	yellow	= { hex = "ffff00",	r = 1,		g = 1,		b = 0 },
+	normal	= { hex = "ffd100",	r = 1,		g = 0.81,	b = 0 },
 }
 
 -- Colors used in tooltips and the recipe list.
 private.CATEGORY_COLORS = {
 	-- Acquire type colors
-	["achievement"]	= "faeb98",
-	["custom"]	= "73b7ff",
-	["discovery"]	= "ff9500",
-	["mobdrop"]	= "962626",
-	["quest"]	= "dbdb2c",
-	["reputation"]	= "855a99",
-	["seasonal"]	= "80590e",
-	["trainer"]	= "c98e26",
-	["vendor"]	= "aad372",
+	achievement	= { hex = "faeb98",	r = 0.98,	g = 0.92,	b = 0.59 },
+	custom		= { hex = "73b7ff",	r = 0.45,	g = 0.71,	b = 1 },
+	discovery	= { hex = "ff9500",	r = 1,		g = 0.58,	b = 0 },
+	mobdrop		= { hex = "962626",	r = 0.59,	g = 0.15,	b = 0.15 },
+	quest		= { hex = "dbdb2c",	r = 0.86,	g = 0.86,	b = 0.17 },
+	reputation	= { hex = "855a99",	r = 0.52,	g = 0.35,	b = 0.6 },
+	seasonal	= { hex = "80590e",	r = 0.50,	g = 0.35,	b = 0.05 },
+	trainer		= { hex = "c98e26",	r = 0.79,	g = 0.56,	b = 0.14 },
+	vendor		= { hex = "aad372",	r = 0.67,	g = 0.83,	b = 0.45 },
 
 	-- Miscellaneous
-	["coords"]	= "d1ce6f",
-	["location"]	= "ffecc1",
-	["repname"]	= "6a9ad9",
-
+	coords		= { hex = "d1ce6f",	r = 0.82,	g = 0.81,	b = 0.44 },
+	hint		= { hex = "c9c781",	r = 0.79,	g = 0.78,	b = 0.51 },
+	location	= { hex = "ffecc1",	r = 1,		g = 0.93,	b = 0.76 },
+	repname		= { hex = "6a9ad9",	r = 0.42,	g = 0.60,	b = 0.85 },
 }

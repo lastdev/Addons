@@ -1,14 +1,14 @@
-﻿## Interface: 50200
+﻿## Interface: 50400
 ## Title: SilverDragon (Data)
 ## Notes: Default set of rares for SilverDragon
-## Version: v3.0.5
+## Version: 3.0.8
 ## Author: Kemayo
 ## eMail: kemayo at gmail dot com
 ## X-Category: Interface Enhancements
 ## X-Donate: PayPal:kemayo AT gmail DOT com
 ## Dependencies: SilverDragon
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: v3.0.5
+## X-Curse-Packaged-Version: 3.0.8
 ## X-Curse-Project-Name: SilverDragon
 ## X-Curse-Project-ID: silver-dragon
 ## X-Curse-Repository-ID: wow/silver-dragon/mainline

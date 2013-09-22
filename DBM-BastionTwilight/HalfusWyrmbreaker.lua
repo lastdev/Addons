@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(156, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(44600)
-mod:SetModelID(34816)
 mod:SetZone()
 mod:SetModelSound("Sound\\Creature\\Chogall\\VO_BT_Chogall_BotEvent02.wav", "Sound\\Creature\\Halfus\\VO_BT_Halfus_Event07.wav")
 --Long: Halfus! Hear me! The master calls, the master wants! Protect our secrets, Halfus! Destroy the intruders! Murder for his glory, murder for his hunger!
@@ -48,13 +47,13 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(87683) then
+	if args.spellId == 87683 then
 		warnVengeance:Show()
-	elseif args:IsSpellID(84030) then
+	elseif args.spellId == 84030 then
 		warnParalysis:Show()
 		timerParalysis:Start()
 		timerParalysisCD:Start()
-	elseif args:IsSpellID(83601, 83603, 83611) and self.Options.ShowDrakeHealth then
+	elseif args:IsSpellID(83601, 83603, 83611) and self.Options.ShowDrakeHealth and DBM.BossHealth:IsShown() then
 		DBM.BossHealth:AddBoss(self:GetCIDFromGUID(args.sourceGUID), args.sourceName)
 	elseif args:IsSpellID(83908, 86158, 86157, 86159) then
 		timerMalevolentStrike:Start(args.destName)
@@ -62,29 +61,30 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_APPLIED_DOSE(args)
-	if args:IsSpellID(87683) then
+	if args.spellId == 87683 then
 		warnVengeance:Show()
-	elseif args:IsSpellID(83908) then
+	elseif args.spellId == 83908 then
+		local amount = args.amount or 1
 		timerMalevolentStrike:Start(args.destName)
-		if args.amount % 4 == 0 or args.amount >= 10 then		-- warn every 4th stack and every stack if 10 or more
-			warnMalevolentStrike:Show(args.destName, args.amount)
+		if amount % 4 == 0 or amount >= 10 then		-- warn every 4th stack and every stack if 10 or more
+			warnMalevolentStrike:Show(args.destName, amount)
 		end
-		if args:IsPlayer() and (args.amount or 1) >= 8 then
-			specWarnMalevolent:Show(args.amount)
+		if args:IsPlayer() and amount >= 8 then
+			specWarnMalevolent:Show(amount)
 		end
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(83710) and self:AntiSpam(6) then
+	if args.spellId == 83710 and self:AntiSpam(6) then
 		warnFuriousRoar:Show()
 		timerFuriousRoar:Cancel()--We Cancel any scheduled roar timers before doing anything else.
 		timerFuriousRoar:Start()--And start a fresh one.
 		timerFuriousRoar:Schedule(30)--If it comes off CD while he's stunned by paralysis, he no longer waits to casts it after stun, it now consumes his CD as if it was cast on time. This is why we schedule this timer. So we get a timer for next roar after a stun.
-	elseif args:IsSpellID(83707) then
+	elseif args.spellId == 83707 then
 		warnBreath:Show()
 		timerBreathCD:Start()
-	elseif args:IsSpellID(83703) then
+	elseif args.spellId == 83703 then
 		warnShadowNova:Show()
 		specWarnShadowNova:Show(args.sourceName)
 		timerNovaCD:Start()
@@ -92,14 +92,14 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(83612) then
+	if args.spellId == 83612 and self.Options.ShowDrakeHealth and DBM.BossHealth:IsShown() then
 		DBM.BossHealth:AddBoss(self:GetCIDFromGUID(args.sourceGUID), args.sourceName)
 	end
 end
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
-	if self.Options.ShowDrakeHealth and (cid == 44652 or cid == 44645 or cid == 44797 or cid == 44650) then
+	if self.Options.ShowDrakeHealth and (cid == 44652 or cid == 44645 or cid == 44797 or cid == 44650) and DBM.BossHealth:IsShown() then
 		DBM.BossHealth:RemoveBoss(cid)
 	end
 end

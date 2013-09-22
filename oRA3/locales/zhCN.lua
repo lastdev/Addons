@@ -13,8 +13,30 @@ L["Click to open/close oRA3"] = "打开/关闭 oRA3"
 L["Unknown"] = "未知"
 
 -- Core
-L["You can configure some options here. All the actual actions are done from the panel at the RaidFrame."] = "你可以在这里调整设置, 所有实际操作都在团队面板进行"
-L.uiHidden = "你正在战斗中.\noRA3 面板暂时被关闭.\n\n脱离战斗后恢复."
+
+L["Toggle oRA3 Pane"] = true
+L["Open with raid pane"] = true
+L.toggleWithRaidDesc = "Opens and closes the oRA3 pane automatically along with the Blizzard raid pane. If you disable this option you can still open the oRA3 pane using the keybinding or with one of the slash commands, such as |cff44ff44/radur|r."
+L["Show interface help"] = true
+L.showHelpTextsDesc = "The oRA3 interface is full of helpful texts intended to better describe what is going on and what the different interface elements actually do. Disabling this option will remove them, limiting the clutter on each pane. |cffff4411Requires a interface reload on some panes.|r"
+L["Ensure guild repairs are enabled for all ranks present in raid"] = true
+L.ensureRepairDesc = "If you are the Guild Master, whenever you join a raid group and is the leader or promoted, you will ensure that it is enabled for the duration of the raid (up to 300g). Once you leave the group, the flags will be restored to their original state |cffff4411provided you have not crashed during the raid.|r"
+L.repairEnabled = "Enabled guild repairs for %s for the duration of this raid."
+
+L["Slash commands"] = true
+L.slashCommands = [[
+oRA3 sports a range of slash commands to aid you in fast-paced raiding. In case you weren't around in the old CTRA days, here's a little reference. All of the slash commands have various shorthands and also longer, more descriptive alternatives in some cases, for convenience.
+
+|cff44ff44/radur|r - Opens the durability list.
+|cff44ff44/ragear|r - Opens the gear check list.
+|cff44ff44/ralag|r - Opens the latency list.
+|cff44ff44/razone|r - Opens the zone list.
+|cff44ff44/radisband|r - Instantly disbands the raid with no verification.
+|cff44ff44/raready|r - Performs a ready check.
+|cff44ff44/rainv|r - Invites the whole guild to your group.
+|cff44ff44/razinv|r - Invites guild members in the same zone as you.
+|cff44ff44/rarinv <rank name>|r - Invites guild members of the given rank.
+]]
 
 -- Ready check module
 L["The following players are not ready: %s"] = "下列队员未准备好:%s"
@@ -23,7 +45,7 @@ L["Ready"] = "准备好"
 L["Not Ready"] = "未准备好"
 L["No Response"] = "未确认"
 L["Offline"] = "离线"
-L["Play a sound when a ready check is performed."] = "就绪检查时播放提示音效"
+L["Play the ready check sound using the Master sound channel when a ready check is performed. This will play the sound while \"Sound Effects\" is disabled and at a higher volume."] = true
 L["GUI"] = "面板"
 L["Show the oRA3 Ready Check GUI when a ready check is performed."] = "就绪检查时显示oRA3的就绪检查面板"
 L["Auto Hide"] = "自动隐藏"
@@ -35,14 +57,6 @@ L["Average"] = "平均"
 L["Broken"] = "损坏"
 L["Minimum"] = "最少"
 
--- Resistances module
-L["Resistances"] = "抗性"
-L["Frost"] = "冰霜"
-L["Fire"] = "火焰"
-L["Shadow"] = "暗影"
-L["Nature"] = "自然"
-L["Arcane"] = "奥术"
-
 -- Resurrection module
 L["%s is ressing %s."] = "%s正在复活%s"
 
@@ -50,7 +64,7 @@ L["%s is ressing %s."] = "%s正在复活%s"
 L["Invite"] = "邀请"
 L["All max level characters will be invited to raid in 10 seconds. Please leave your groups."] = "公告：公会中所有满级玩家会被在10秒内被邀请，请保持没有队伍！"
 L["All characters in %s will be invited to raid in 10 seconds. Please leave your groups."] = "公告：公会中所有在%s的玩家会被在10秒内被邀请，请保持没有队伍！"
-L["All characters of rank %s or higher will be invited to raid in 10 seconds. Please leave your groups."] = "公告：公会中所有会阶在%s以上的玩家会被在10秒内被邀请，请保持没有队伍！" 
+L["All characters of rank %s or higher will be invited to raid in 10 seconds. Please leave your groups."] = "公告：公会中所有会阶在%s以上的玩家会被在10秒内被邀请，请保持没有队伍！"
 L["<oRA3> Sorry, the group is full."] = "抱歉，队伍已满。"
 L["Invite all guild members of rank %s or higher."] = "邀请公会中所有会阶在%s以上的玩家"
 L["Keyword"] = "组队关键字"
@@ -64,6 +78,7 @@ L["Invite zone"] = "地区邀请"
 L["Invite everyone in your guild who are in the same zone as you."] = "邀请公会中在指定地区的玩家"
 L["Guild rank invites"] = "会阶邀请"
 L["Clicking any of the buttons below will invite anyone of the selected rank AND HIGHER to your group. So clicking the 3rd button will invite anyone of rank 1, 2 or 3, for example. It will first post a message in either guild or officer chat and give your guild members 10 seconds to leave their groups before doing the actual invites."] = "自动邀请会阶高于等于所选等级的工会成员，按下该按钮会自动在工会和官员频道发送要求10秒内离队待组的消息，10秒后自动开始组人"
+L["Only invite on keyword if in a raid group"] = true
 
 -- Promote module
 L["Demote everyone"] = "降级所有人"
@@ -99,6 +114,7 @@ L["Toggle whether the cooldown display should never show your own cooldowns. For
 L["Cooldowns"] = "冷却"
 L["Right-Click me for options!"] = "右键打开设置"
 L["Bar Settings"] = "计时条设置"
+L["Text Settings"] = true
 L["Spawn test bar"] = "显示测试计时条"
 L["Use class color"] = "使用职业颜色"
 L["Height"] = "高度"
@@ -110,10 +126,14 @@ L["Duration"] = "时间"
 L["Unit name"] = "名字"
 L["Spell name"] = "技能"
 L["Short Spell name"] = "技能缩写"
+L["Label Font"] = true
+L["Label Font Size"] = true
 L["Label Align"] = "标签位置"
 L["Left"] = "左"
 L["Right"] = "右"
 L["Center"] = "中间"
+L["Duration Font"] = true
+L["Duration Font Size"] = true
 L["Grow up"] = "向上递增"
 
 -- Zone module
@@ -121,7 +141,7 @@ L["Zone"] = "地区"
 
 -- Loot module
  L["Leave empty to make yourself Master Looter."] = "留空表示设置你自己为拾取者"
- 
+
 -- Tanks module
 L["Tanks"] = "坦克"
 L.tankTabTopText = "点击下方列表将其设为坦克. 将鼠标移动到按钮上可看到操作提示."
@@ -139,4 +159,15 @@ L["Sort"] = "排序"
 L["Click to move this tank up."] = "点击往上移动坦克。"
 L["Show"] = "显示"
 L.showButtonHelp = "在你个人的坦克排列中显示这个坦克. 此项只对本地有效, 不会影响团队中其他人的配置"
+
+-- Latency Module
+L["Latency"] = "Latency"
+L["Home"] = "Home"
+L["World"] = "World"
+
+-- Gear Module
+L["Gear"] = "Gear"
+L["Item Level"] = "Item Level"
+L["Missing Gems"] = "Missing Gems"
+L["Missing Enchants"] = "Missing Enchants"
 

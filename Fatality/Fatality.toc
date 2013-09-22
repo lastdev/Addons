@@ -1,0 +1,21 @@
+﻿## Interface: 50200
+## Title: Fatality
+## Notes: Announces player deaths to chat. Type |cff00d4ed/fatality|r for options.
+## SavedVariables: FatalityStatusDB
+## SavedVariablesPerCharacter: FatalityDB
+## Author: Moop
+## Version: 2.4a
+
+Locales\enUS.lua
+Locales\deDE.lua
+Locales\esES_esMX.lua
+Locales\frFR.lua
+Locales\itIT.lua
+Locales\koKR.lua
+Locales\ptBR.lua
+Locales\ruRU.lua
+Locales\zhCN.lua
+Locales\zhTW.lua
+
+Fatality.lua
+Fatality_Options.lua

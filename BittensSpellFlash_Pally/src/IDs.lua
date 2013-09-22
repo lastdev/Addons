@@ -18,9 +18,11 @@ a.SpellIDs = {
 	["Daybreak"] = 88819,
 	["Devotion Aura"] = 31821,
 	["Divine Light"] = 82326,
+	["Divine Plea"] = 54428,
 	["Divine Protection"] = 498,
 	["Divine Purpose"] = 86172,
 	["Divine Shield"] = 642,
+	["Divine Storm"] = 53385,
 	["Eternal Flame"] = 114163,
 	["Execution Sentence"] = 114157,
 	["Exorcism"] = 879,
@@ -42,6 +44,7 @@ a.SpellIDs = {
 	["Inquisition"] = 84963,
 	["Judgment"] = 20271,
 	["Judgments of the Bold"] = 111529,
+	["Judgments of the Wise"] = 105424,
 	["Lay on Hands"] = 633,
 	["Light of Dawn"] = 85222,
 	["Light's Hammer"] = 114158,
@@ -54,6 +57,10 @@ a.SpellIDs = {
 	["Shield of the Righteous"] = 53600,
 	["Templar's Verdict"] = 85256,
 	["Word of Glory"] = 85673,
+	
+	-- Items
+	["Ret 4pT15 Buff"] = 138169, -- (the name is "Templar's Verdict")
+	["Shield of Glory"] = 138242, -- Prot 2pT15 Buff
 }
 
 a.TalentIDs = {
@@ -67,11 +74,12 @@ a.TalentIDs = {
 }
 
 a.GlyphIDs = {
+	["Avenging Wrath"] = 54927,
+	["Consecration"] = 54928,
+	["Divine Plea"] = 63223,
 	["Divine Protection"] = 54924,
 	["Holy Wrath"] = 54923,
-	["Consecration"] = 54928,
 	["Mass Exorcism"] = 122028,
-	["Avenging Wrath"] = 54927,
 }
 
 a.EquipmentSets = {
@@ -81,5 +89,19 @@ a.EquipmentSets = {
 	    ChestSlot = { 86663, 85323, 87109 },
 	    HandsSlot = { 86662, 85322, 87110 },
 	    LegsSlot = { 86660, 85320, 87112 },
-	}
+	},
+	ProtT15 = {
+	    HeadSlot = { 95922, 95292, 96666 },
+	    ShoulderSlot = { 95924, 95294, 96668 },
+	    ChestSlot = { 95920, 95290, 96664 },
+	    HandsSlot = { 95921, 95291, 96665 },
+	    LegsSlot = { 95923, 95293, 96667 },
+	},
+	RetT15 = {
+	    HeadSlot = { 95912, 95282, 96656 },
+	    ShoulderSlot = { 95914, 95284, 96658 },
+	    ChestSlot = { 95910, 95280, 96654 },
+	    HandsSlot = { 95911, 95281, 96655 },
+	    LegsSlot = { 95913, 95283, 96657 },
+	},
 }

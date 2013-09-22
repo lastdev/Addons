@@ -1,8 +1,8 @@
-## Interface: 50200
+## Interface: 50300
 ## Title: Armory
 ## Title-frFR: Armory [Armurerie]
 ## Title-koKR: Armory [케릭터 정보 열람]
-## Version: v10.5.0
+## Version: v10.6.0
 ## Notes: Provides an overview of equipment, stats, inventory, professions, quests, spells and more for all your characters
 ## Notes-deDE: Ermöglicht einen Überblick über Ausrüstung, Werte, Inventar, Berufe, Quests, Zauber und viel mehr für alle deine Charaktere
 ## Notes-frFR: Donne un aperçu de l'équipement, stats, sacs, métiers, quêtes, sorts et plus encore pour tous vos personnages
@@ -14,7 +14,7 @@
 ## X-Donate: PayPal:warmexx AT wow-neighbours DOT com
 ## X-Website: http://www.wow-neighbours.com/
 ## X-Category: Inventory
-## X-Curse-Packaged-Version: v10.5.0
+## X-Curse-Packaged-Version: v10.6.0
 ## X-Curse-Project-Name: Armory
 ## X-Curse-Project-ID: armory
 ## X-Curse-Repository-ID: wow/armory/mainline

@@ -1,7 +1,7 @@
 local mod = DBM:NewMod("Commander", "DBM-Party-WotLK", 8)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
 
 if UnitFactionGroup("player") == "Alliance" then
 	mod:SetCreatureID(26798)
@@ -25,7 +25,7 @@ local timerWhirlwindCD	= mod:NewCDTimer(15, 38619)
 
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(19134) and self:IsInCombat() then
+	if args.spellId == 19134 and self:IsInCombat() then
 		warningFear:Show()
 		timerFearCD:Start()
 	end

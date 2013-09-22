@@ -12,7 +12,7 @@ L:SetGeneralLocalization{
 L:SetWarningLocalization{
 	WarnMark 		= "%s : %s",
 	WarnPhase		= "%s Phase",
-	SpecWarnMark	= "%s : %s",
+	SpecWarnMark	= "%s : %s"
 }
 
 L:SetTimerLocalization{
@@ -24,7 +24,7 @@ L:SetOptionLocalization{
 	WarnPhase		= "Show warning for next phase",
 	SpecWarnMark	= "Show warning when Marks debuff damage over 100%",
 	TimerMark		= "Show timer for next Marks",
-	RangeFrame		= "Show range frame (10 yards)"
+	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(10)
 }
 
 L:SetMiscLocalization{
@@ -43,27 +43,19 @@ L:SetGeneralLocalization{
 
 L:SetWarningLocalization{
 	WarnSubmerge		= "Submerged",
-	WarnSubmergeSoon	= "Submerge in 10 sec",
-	WarnEmerge			= "Emerged",
-	WarnEmergeSoon		= "Emerge in 10 sec"
+	WarnEmerge			= "Emerged"
 }
 
 L:SetTimerLocalization{
-	TimerSubmerge		= "Sumberge",
-	TimerEmerge			= "Emerge"
+	TimerSubmerge		= "Sumberge CD",
+	TimerEmerge			= "Emerge CD"
 }
 
 L:SetOptionLocalization{
 	WarnSubmerge		= "Show warning when submerge",
-	WarnSubmergeSoon	= "Show pre-warning for submerge",
 	WarnEmerge			= "Show warning when emerge",
-	WarnEmergeSoon		= "Show pre-warning for emerge",
 	TimerSubmerge		= "Show time for submerge",
 	TimerEmerge			= "Show time for emerge"
-}
-
-L:SetMiscLocalization{
-	Spout	= "%s takes a deep breath!"
 }
 
 --------------------------
@@ -76,8 +68,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetWarningLocalization{
-	WarnPhase		= "%s Phase",
-	WarnPhaseSoon	= "%s Phase in 5 sec"
+	WarnPhase		= "%s Phase"
 }
 
 L:SetTimerLocalization{
@@ -86,7 +77,6 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	WarnPhase		= "Show warning for next phase",
-	WarnPhaseSoon	= "Show pre-warning for next phase",
 	TimerPhase		= "Show time for next phase",
 	DemonIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(37676)
 }
@@ -134,7 +124,7 @@ L:SetGeneralLocalization{
 
 L:SetWarningLocalization{
 	WarnMurlocs		= "Murlocs",
-	SpecWarnMurlocs	= "Murlocs Coming!",
+	SpecWarnMurlocs	= "Murlocs Coming!"
 }
 
 L:SetTimerLocalization{
@@ -166,14 +156,14 @@ L:SetWarningLocalization{
 	WarnNaga			= "Naga Soon (%s)",
 	WarnShield			= "Shield %d/4 down",
 	WarnLoot			= "Tainted Core on >%s<",
-	SpecWarnElemental	= "Tainted Elemental Soon!",
-	SpecWarnCore		= "Tainted Core on YOU!"
+	SpecWarnElemental	= "Tainted Elemental - Switch!"
 }
 
 L:SetTimerLocalization{
-	TimerElemental		= "Next Elemental (%d)",
-	TimerStrider		= "Next Strider (%d)",
-	TimerNaga			= "Next Naga (%d)"
+	TimerElementalActive	= "Elemental Active",
+	TimerElemental			= "Elemental CD (%d)",
+	TimerStrider			= "Next Strider (%d)",
+	TimerNaga				= "Next Naga (%d)"
 }
 
 L:SetOptionLocalization{
@@ -182,16 +172,18 @@ L:SetOptionLocalization{
 	WarnNaga			= "Show pre-warning for next Naga",
 	WarnShield			= "Show warning for Phase 2 shield down",
 	WarnLoot			= "Show warning for Tainted Core loot",
-	TimerElemental		= "Show time for next Tainted Elemental",
-	TimerStrider		= "Show time for next Strider",
-	TimerNaga			= "Show time for next Naga",
+	TimerElementalActive	= "Show timer for how long Tainted Elemental is active",
+	TimerElemental		= "Show timer for Tainted Elemental cooldown",
+	TimerStrider		= "Show timer for next Strider",
+	TimerNaga			= "Show timer for next Naga",
 	SpecWarnElemental	= "Show special warning when Tainted Elemental coming",
-	SpecWarnCore		= "Show special warning if you receive a Tainted Core",
 	RangeFrame			= "Show range frame (10 yards)",
 	ChargeIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(38280),
-	LootIcon			= "Set icon on players with a Tainted Core"
+	AutoChangeLootToFFA	= "Switch loot mode to Free for All in Phase 2"
 }
 
 L:SetMiscLocalization{
-	DBM_VASHJ_YELL_PHASE2	= "The time is now! Leave none standing!"
+	DBM_VASHJ_YELL_PHASE2	= "The time is now! Leave none standing!",
+	DBM_VASHJ_YELL_PHASE3	= "You may want to take cover.",
+	LootMsg					= "([^%s]+).*Hitem:(%d+)"
 }

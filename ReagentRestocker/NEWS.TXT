@@ -6,8 +6,6 @@ If you like it, feel free to donate! I highly recommend donating to your favorit
 
 NOTE: I've been seeing copies of Reagent Restocker popping up at other download sites. The only two places I currently upload the addon to are curse.com, wowinterface.com. I cannot guarantee the integrity of any other download sites.
 
-Safety feature: Right now, it will not use up more than half of your withdrawls if your guild has withdrawl limits on the guild bank.
-
 What can you do with Reagent Restocker? Well, you can do the following:
 
 * Automatically buy items from vendors.

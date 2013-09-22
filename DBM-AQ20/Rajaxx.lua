@@ -1,11 +1,10 @@
 local mod	= DBM:NewMod("Rajaxx", "DBM-AQ20", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 311 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 500 $"):sub(12, -3))
 mod:SetCreatureID(15341)
 mod:SetModelID(15376)
-mod:RegisterCombat("yell", L.Wave1)
-mod:SetMinCombatTime(60)
+mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
 	"SPELL_AURA_APPLIED",
@@ -13,17 +12,18 @@ mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_YELL"
 )
 
-local warnWave		= mod:NewAnnounce("WarnWave", 2)
-local warnOrder		= mod:NewTargetAnnounce(25471)
-local warnCloud		= mod:NewSpellAnnounce(26550)
+local warnWave			= mod:NewAnnounce("WarnWave", 2)
+local warnOrder			= mod:NewTargetAnnounce(25471)
+local warnCloud			= mod:NewSpellAnnounce(26550)
+local warnThundercrash	= mod:NewSpellAnnounce(25599)
 
-local specWarnOrder	= mod:NewSpecialWarningYou(25471)
+local specWarnOrder		= mod:NewSpecialWarningYou(25471)
 
-local timerOrder	= mod:NewTargetTimer(10, 25471)
-local timerCloud	= mod:NewBuffActiveTimer(15, 26550)
+local timerOrder		= mod:NewTargetTimer(10, 25471)
+local timerCloud		= mod:NewBuffActiveTimer(15, 26550)
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(25471) then
+	if args.spellId == 25471 then
 		warnOrder:Show(args.destName)
 		timerOrder:Start(args.destName)
 		if args:IsPlayer() then
@@ -33,15 +33,17 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(26550) then
+	if args.spellId == 26550 then
 		warnCloud:Show()
 		timerCloud:Start()
+	elseif args.spellId == 25599 then
+		warnThundercrash:Show()
 	end
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)--some of these yells have line breaks that message match doesn't grab, so will try find.
-	if msg == L.Wave1 or msg:find(L.Wave1) then
-		self:SendSync("Wave", 1)
+	if msg == L.Wave12 or msg:find(L.Wave12) then
+		self:SendSync("Wave", "1, 2")
 	elseif msg == L.Wave3 or msg:find(L.Wave3) then
 		self:SendSync("Wave", 3)
 	elseif msg == L.Wave4 or msg:find(L.Wave4) then

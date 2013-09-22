@@ -4,18 +4,16 @@ local L		= mod:GetLocalizedStrings()
 mod:SetRevision(("$Revision: 183 $"):sub(12, -3))
 mod:SetCreatureID(17711)
 mod:SetModelID(21435)
-mod:SetZone(473)--SMV
+mod:SetZone()
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED"
 )
 
-local warningChargeSoon		= mod:NewSoonAnnounce(32637, 2)
 local warnCharge			= mod:NewSpellAnnounce(32637, 3)
-local warningQuakeSoon		= mod:NewSoonAnnounce(32686, 2)
 local warnQuake				= mod:NewSpellAnnounce(32686, 3)
 
 local timerChargeCD			= mod:NewCDTimer(42, 32637)
@@ -37,20 +35,16 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(32637) and self:AntiSpam(10, 1) then
+	if args.spellId == 32637 and self:AntiSpam(10, 1) then
 		warnCharge:Show()
 		timerChargeCD:Show()
-		warningChargeSoon:Cancel()
-		warningChargeSoon:Schedule(36)
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(32686) and self:AntiSpam(30, 2) then
+	if args.spellId == 32686 and self:AntiSpam(30, 2) then
 		warnQuake:Show()
 		timerQuake:Start()
 		timerQuakeCD:Show()
-		warningQuakeSoon:Cancel()
-		warningQuakeSoon:Schedule(47)
 	end
 end

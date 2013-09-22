@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Sapphiron", "DBM-Naxx", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 27 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 51 $"):sub(12, -3))
 mod:SetCreatureID(15989)
 mod:SetModelID(16033)
 mod:RegisterCombat("combat")
@@ -44,7 +44,7 @@ end
 
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(28522) and args:IsPlayer() and self.Options.WarningIceblock then
+	if args.spellId == 28522 and args:IsPlayer() and self.Options.WarningIceblock then
 		SendChatMessage(L.WarningYellIceblock, "YELL")
 	end
 end
@@ -85,10 +85,10 @@ end
 mod:RegisterOnUpdateHandler(function(self, elapsed)
 	if not self:IsInCombat() then return end
 		local foundBoss, target
-		for i = 1, DBM:GetNumGroupMembers() do
-			local uId = "raid"..i.."target"
-			if self:GetUnitCreatureId(uId) == 15989 and UnitAffectingCombat(uId) then
-				target = DBM:GetUnitFullName(uId.."target")
+		for uId in DBM:GetGroupMembers() do
+			local unitID = uId.."target"
+			if self:GetUnitCreatureId(unitID) == 15989 and UnitAffectingCombat(unitID) then
+				target = DBM:GetUnitFullName(unitID.."target")
 				foundBoss = true
 				break
 			end

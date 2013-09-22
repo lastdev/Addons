@@ -7,53 +7,103 @@ local GetSpellCharges = GetSpellCharges
 local GetTime = GetTime
 local IsMounted = IsMounted
 local SPELL_POWER_CHI = SPELL_POWER_CHI
+local UnitGUID = UnitGUID
+local UnitInRange = UnitInRange
+local UnitIsDeadOrGhost = UnitIsDeadOrGhost
+local UnitIsUnit = UnitIsUnit
+local UnitPowerMax = UnitPowerMax
 local math = math
 local select = select
 local string = string
 
 local spellCosts = {}
 
-local function setCost(name, energy, chi)
-	spellCosts[s.SpellName(c.GetID(name))] = { Energy = energy, Chi = chi }
+local function setCost(name, energy, chi, freeBuff)
+	spellCosts[s.SpellName(c.GetID(name))] = { 
+		Energy = energy, 
+		Chi = chi,
+		FreeBuff = freeBuff and c.GetID(freeBuff),
+	}
 end
 
-function a.GetEnergyCost(localName)
-	return spellCosts[localName] and spellCosts[localName].Energy
+local function nameMatches(localizedName, name)
+	return s.SpellName(c.GetID(name), true) == localizedName
 end
 
-function a.GetChiCost(localName)
-	return spellCosts[localName] and spellCosts[localName].Chi
+function a.GetEnergyCost(localizedName)
+	return spellCosts[localizedName] and spellCosts[localizedName].Energy
+end
+
+function a.GetChiCost(localizedName)
+	local cost = spellCosts[localizedName]
+	if cost == nil then
+		return nil
+	end
+	
+	
+	if cost.FreeBuff and s.Buff(cost.FreeBuff, "player") then
+		return 0
+	end
+	
+	local cost = cost.Chi
+	if nameMatches(localizedName, "Jab") 
+			or nameMatches(localizedName, "Expel Harm") then
+		
+		if s.Form(c.GetID("Stance of the Fierce Tiger")) then
+			cost = cost - 1
+			if nameMatches(localizedName, "Jab") 
+				and c.HasBuff("Power Strikes") then
+				
+				cost = cost - 1
+			end
+		end
+	elseif nameMatches(localizedName, "Tiger Palm") then
+		if a.Trained then
+			cost = 0
+		end
+	end
+	return cost
 end
 
 setCost("Jab", 40, -1)
 setCost("Expel Harm", 40, -1)
 setCost("Keg Smash", 40, -2)
-setCost("Blackout Kick", 0, 2)
-setCost("Tiger Palm", 0, 1)
+setCost("Blackout Kick", 0, 2, "Combo Breaker: Blackout Kick")
+setCost("Tiger Palm", 0, 1, "Combo Breaker: Tiger Palm")
 setCost("Rising Sun Kick", 0, 2)
 setCost("Fists of Fury", 0, 3)
 setCost("Spinning Crane Kick", 40, -1)
+setCost("Rushing Jade Wind", 40, -1)
 setCost("Breath of Fire", 0, 2)
 setCost("Touch of Death", 0, 3)
 setCost("Guard", 0, 2)
-setCost("Purifying Brew", 0, 1)
+setCost("Purifying Brew", 0, 1, "Purifier")
 setCost("Enveloping Mist", 0, 3)
 setCost("Surging Mist", 0, -1)
 setCost("Renewing Mist", 0, -1)
 setCost("Uplift", 0, 2)
 
+local function checkChiBrew(z, chiPad)
+	local charges, tilNext, tilMax = c.GetChargeInfo("Chi Brew")
+	if a.MissingChi < 2 + chiPad or charges == 0 then
+		return false
+	end
+	
+	c.MakeMini(z, tilMax > 0)
+	return true
+end
+
 ------------------------------------------------------------------------ Common
 local function modSpell(spell)
-	spell.NoStopChannel = true
-	
-	local cost = spellCosts[s.SpellName(spell.ID)]
+	local localizedName = s.SpellName(spell.ID)
+	local cost = spellCosts[localizedName]
 	if cost then
 		spell.EvenIfNotUsable = true
 		spell.NoPowerCheck = true
-		spell.NoStopChannel = true
 		spell.CheckLast = function()
---c.Debug("CheckLast", s.SpellName(spell.ID), a.Power, cost.Energy, a.Chi, cost.Chi)
-			return a.Power >= cost.Energy and a.Chi >= cost.Chi
+--c.Debug("CheckLast", s.SpellName(spell.ID), cost.Energy, a.GetChiCost(localizedName))
+			return a.Power >= cost.Energy 
+				and a.Chi >= a.GetChiCost(localizedName)
 		end
 	end
 end
@@ -66,9 +116,10 @@ local function addOptionalSpell(name, tag, attributes)
 	modSpell(c.AddOptionalSpell(name, tag, attributes))
 end
 
-c.RegisterForFullChannels("Spinning Crane Kick", 2)
+c.RegisterForFullChannels("Spinning Crane Kick", 2, true)
 
 addOptionalSpell("Roll", nil, {
+	FlashID = { "Roll", "Chi Torpedo" },
 	FlashSize = s.FlashSizePercent() / 2,
 	CheckFirst = function(z)
 		if IsMounted() or not s.Moving("player") then
@@ -107,45 +158,43 @@ addOptionalSpell("Touch of Death", nil, {
 
 addOptionalSpell("Expel Harm", nil, {
 	CheckFirst = function()
-		return s.HealthPercent("player") < 80
+		return c.GetHealthPercent("player") < 80
 	end
 })
 
-addOptionalSpell("Chi Brew", nil, {
-	CheckFirst = function()
-		return a.Chi == 0
-	end
+addSpell("Chi Burst", nil, {
+	NotWhileMoving = true,
+	NotIfActive = true,
+	Cooldown = 30,
 })
 
-addOptionalSpell("Rushing Jade Wind")
+c.AddSpell("Zen Sphere", nil, {
+	NoRangeCheck = true,
+	MyBuff = "Zen Sphere",
+	BuffUnit = "player",
+})
 
-addOptionalSpell("Invoke Xuen, the White Tiger")
+addOptionalSpell("Invoke Xuen, the White Tiger", nil, { NoGCD = true })
 
 addSpell("Spinning Crane Kick", nil, {
+	Melee = true,
 	Override = function()
-		return a.Power >= 40 and s.MeleeDistance()
+		return a.Power >= 40
+	end
+})
+
+addSpell("Rushing Jade Wind", nil, {
+	Melee = true,
+	Buff = "Rushing Jade Wind",
+	BuffUnit = "player",
+	Override = function()
+		return a.Power >= 40
 	end
 })
 
 c.AddInterrupt("Spear Hand Strike")
 
 -------------------------------------------------------------------- Brewmaster
-local function canUseAndStillShuffle(chi)
-	if not s.HasSpell(c.GetID("Brewmaster Training")) then
-		return true
-	end
-	
-	local timeToNextShuffle = c.GetBuffDuration("Shuffle")
-	if timeToNextShuffle < 1 then
-		return false
-	end
-	
-	local chiByNextShuffle = a.Chi - chi + math.min(
-		timeToNextShuffle - 1, 
-		(a.Power + timeToNextShuffle * a.Regen) / 40)
-	return chiByNextShuffle >= 2
-end
-
 c.AddOptionalSpell("Summon Black Ox Statue", nil, {
 	NoRangeCheck = true,
 	CheckFirst = function()
@@ -159,9 +208,9 @@ addOptionalSpell("Fortifying Brew", nil, {
 	NoGCD = true,
 	ShouldHold = function()
 		if c.HasGlyph("Fortifying Brew") then
-			return s.HealthPercent("player") > 90
+			return c.GetHealthPercent("player") > 90
 		else
-			return s.HealthPercent("player") > 80
+			return c.GetHealthPercent("player") > 80
 		end
 	end
 })
@@ -193,42 +242,76 @@ addOptionalSpell("Guard", nil, {
 	NoGCD = true,
 	CheckFirst = function()
 		return a.Chi >= 4 -- leave enough Chi for Blackout Kick
-			and (c.HasBuff("Power Guard")
-				or not s.HasSpell(c.GetID("Brewmaster Training")))
+			and (c.HasBuff("Power Guard") or not a.Trained)
+			and not c.InDamageMode()
 	end
 })
 
 addOptionalSpell("Purifying Brew", nil, {
 	NoGCD = true,
 	CheckFirst = function()
-		if c.HasBuff("Healing Elixirs") and s.HealthPercent("player") > 85 then
+		if (c.HasBuff("Healing Elixirs") and s.HealthPercent("player") > 85)
+			or c.IsCasting("Purifying Brew") then
+			
 			return false
 		end
+		
 		return s.Debuff(c.GetID("Moderate Stagger"), "player")
 			or s.Debuff(c.GetID("Heavy Stagger"), "player")
-			or (s.Debuff(c.GetID("Light Stagger"), "player") and a.Chi > 2)
+			or (s.Debuff(c.GetID("Light Stagger"), "player") 
+				and (a.Chi > 2 or c.HasBuff("Purifier", true)))
 	end	
+})
+
+addOptionalSpell("Chi Brew", "for Brewmaster", {
+	CheckFirst = function(z)
+		return checkChiBrew(z, 2) 
+			and a.Power + a.Regen <= UnitPowerMax("player")
+			and c.GetBuffStack("Elusive Brew Stacker", false, true) < 8
+	end
 })
 
 c.AddOptionalSpell("Stance of the Sturdy Ox", nil, {
 	Type = "form",
 })
 
+addSpell("Blackout Kick")
+
 addSpell("Blackout Kick", "for Shuffle", {
 	Applies = { "Shuffle" },
 	CheckFirst = function(z)
-		return c.GetBuffDuration("Shuffle") < 2
+		return a.Shuffle < 1
 			and not c.IsAuraPendingFor("Blackout Kick")
-			and s.HasSpell(c.GetID("Brewmaster Training"))
+			and a.Trained
+			and not c.InDamageMode()
+	end
+})
+
+addSpell("Blackout Kick", "for Extended Shuffle", {
+	CheckFirst = function(z)
+		return (a.MissingChi == 0 
+				or (a.MissingChi == 1 
+					and c.GetCooldown("Keg Smash") < c.LastGCD)) 
+			and a.Trained
+	end
+})
+
+addSpell("Blackout Kick", "for AoE", {
+	CheckFirst = function(z)
+		return (a.Shuffle < 2 or a.MissingChi <= 1) 
+			and a.Trained 
+			and not c.InDamageMode()
 	end
 })
 
 addSpell("Keg Smash", nil, {
 	Melee = true,
+	Cooldown = 8,
 })
 
 addSpell("Keg Smash", "for Dizzying Haze", {
 	Melee = true,
+	Cooldown = 8,
 	CheckFirst = function()
 		return not s.Debuff(c.GetID("Dizzying Haze"), nil, 2 + c.GetBusyTime())
 			and not c.IsAuraPendingFor("Keg Smash")
@@ -237,8 +320,10 @@ addSpell("Keg Smash", "for Dizzying Haze", {
 
 addSpell("Keg Smash", "for Chi", {
 	Melee = true,
+	Cooldown = 8,
+	Applies = { "Dizzying Haze" },
 	CheckFirst = function()
-		if s.MaxPower("player") - a.Power < a.Regen then
+		if UnitPowerMax("player") - a.Power < a.Regen then
 			return true -- we will cap within 1 second
 		end
 		
@@ -252,57 +337,77 @@ addSpell("Keg Smash", "for Chi", {
 	end
 })
 
+
 addSpell("Jab", "for Brewmaster", {
 	CheckFirst = function()
-		if s.MaxPower("player") - a.Power < a.Regen then
-			return true -- we will cap within 1 second
-		end
-		
-		if a.MissingChi == 0 then
-			return false -- don't waste chi
+		local timeToCap = (UnitPowerMax("player") - a.Power) / a.Regen
+		if timeToCap < 1 
+			or (timeToCap < 2 and (a.Shuffle < 2 or a.MissingChi < 2)) then
+			
+			return true
 		end
 		
 		-- gen unless we can wait and get better use out of expel harm/keg smash
-		return a.Power - 40 
-			>= math.max(0, 40 - c.GetCooldown("Keg Smash") * a.Regen)
-				+ math.max(0, 40 - c.GetCooldown("Expel Harm") * a.Regen)
+		local wanted = 0
+		local function addWanted(name)
+			wanted = wanted + math.max(0, 40 - c.GetCooldown(name) * a.Regen)
+		end
+		addWanted("Keg Smash")
+		if c.InDamageMode() then
+			if c.AoE then
+				addWanted("Rushing Jade Wind")
+			end
+		else
+			addWanted("Expel Harm")
+		end
+		return a.Power - 40 >= wanted
 	end
 })
 
 addSpell("Expel Harm", "for Brewmaster", {
 	CheckFirst = function()
-		return s.HealthPercent("player") < 90
+		return c.GetHealthPercent("player") < 85
 	end
 })
 
 c.AddSpell("Tiger Palm", "for Brewmaster", {
 	Override = function()
-		return s.MeleeDistance()
-			and s.HasSpell(c.GetID("Brewmaster Training"))
+		return s.MeleeDistance() and a.Trained
 	end
 })
 
 addSpell("Chi Wave", "for Brewmaster", {
+	Cooldown = 15,
 	CheckFirst = function()
-		return s.HealthPercent("player") < 90
-	end
-})
-
-addSpell("Zen Sphere", "for Brewmaster", {
-	NoRangeCheck = true,
-	CheckFirst = function()
-		return (not c.HasBuff("Zen Sphere") or s.HealthPercent("player") < 90)
-			and not c.IsCasting("Zen Sphere")
+		return c.GetHealthPercent("player") < 90
 	end
 })
 
 addSpell("Chi Burst", "for Brewmaster", {
+	NotWhileMoving = true,
+	NotIfActive = true,
+	Cooldown = 30,
 	CheckFirst = function()
-		return s.HealthPercent("player") < 90
+		return c.GetHealthPercent("player") < 90
 	end
 })
 
-addSpell("Rushing Jade Wind", "for Brewmaster")
+addSpell("Breath of Fire", nil, {
+	Melee = true,
+	CheckFirst = function()
+		return c.InDamageMode()
+	end,
+})
+
+addSpell("Breath of Fire", "for DoT", {
+	Melee = true,
+	MyDebuff = "Breath of Fire",
+	Tick = 2,
+	CheckFirst = function()
+		return c.InDamageMode() 
+			and c.HasMyDebuff("Dizzying Haze", nil, nil, "Keg Smash")
+	end,
+})
 
 c.AddTaunt("Provoke", nil, { NoGCD = true })
 
@@ -344,10 +449,29 @@ c.AddOptionalSpell("Mana Tea", nil, {
 	end
 })
 
+addOptionalSpell("Chi Brew", "for Mistweaver", {
+	CheckFirst = function(z)
+		return checkChiBrew(z, 1) 
+			and c.GetBuffStack("Mana Tea") < 16
+	end
+})
+
 c.AddOptionalSpell("Surging Mist", nil, {
 	Override = function()
-		return a.SoothDamage > 50
-			or (a.MissingChi > 0 and c.GetBuffStack("Vital Mists") == 5)
+		if a.SoothDamage > 50 then
+			return true
+		end
+		
+		if a.MissingChi > 0 and c.GetBuffStack("Vital Mists") == 5 then
+			for member in c.GetGroupMembers() do
+				if c.GetHealthPercent(member) < 80
+					and (UnitInRange(member) or UnitIsUnit(member, "player"))
+					and not UnitIsDeadOrGhost(member) then
+					
+					return true
+				end
+			end
+		end
 	end
 })
 
@@ -380,39 +504,47 @@ c.AddOptionalSpell("Uplift", nil, {
 
 c.AddOptionalSpell("Touch of Death", "for Mistweaver", {
 	FlashSize = s.FlashSizePercent() / 2,
+	Melee = true,
 	Override = function()
 		return a.Chi >= 3
 			and s.Health() < s.MaxHealth("player")
-			and s.MeleeDistance()
+			and c.GetCooldown("Touch of Death") == 0
 	end
 })
 
 c.AddSpell("Blackout Kick", "for Serpent's Zeal", {
 	FlashSize = s.FlashSizePercent() / 2,
+	Melee = true,
+	Buff = "Serpent's Zeal",
+	BuffUnit = "player",
+	EarlyRefresh = 1,
 	Override = function()
-		return (a.MissingChi == 0 
-				or (a.Chi >= 2 and c.HasBuff("Muscle Memory")))
-			and not c.HasBuff("Serpent's Zeal")
-			and not c.IsCasting("Blackout Kick")
-			and s.MeleeDistance()
+		return (a.MissingChi == 0 or (a.Chi >= 2 and a.MuscleMemory))
+			and not c.IsMissingTotem(1)
 	end
+})
+
+c.AddSpell("Chi Wave", "for Mistweaver", {
+	FlashSize = s.FlashSizePercent() / 2,
+	Cooldown = 15,
 })
 
 c.AddSpell("Tiger Palm", "for Mistweaver", {
 	FlashSize = s.FlashSizePercent() / 2,
+	Melee = true,
 	Override = function()
-		return (a.MissingChi == 0 
-				or (a.Chi >= 1 
-					and c.HasBuff("Muscle Memory") 
-					and c.HasBuff("Serpent's Zeal")))
-			and s.MeleeDistance()
+		return (a.MissingChi == 0 and not c.AoE) 
+			or (a.Chi >= 1 
+				and a.MuscleMemory 
+				and (c.HasBuff("Serpent's Zeal", false, false, "Blackout Kick") 
+					or c.IsMissingTotem(1)))
 	end
 })
 
 c.AddSpell("Expel Harm", "for Mistweaver", {
 	FlashSize = s.FlashSizePercent() / 2,
 	Override = function()
-		return s.HealthPercent("player") < 80 
+		return c.GetHealthPercent("player") < 80 
 			and s.MeleeDistance()
 			and c.GetCooldown("Expel Harm") == 0
 	end
@@ -424,6 +556,24 @@ c.AddSpell("Jab", "for Mistweaver", {
 
 c.AddSpell("Crackling Jade Lightning", nil, {
 	FlashSize = s.FlashSizePercent() / 2,
+})
+
+c.AddSpell("Spinning Crane Kick", "for Mistweaver", {
+	Melee = true,
+	EvenIfNotUsable = true,
+	CheckFirst = function()
+		return c.AoE
+	end,
+})
+
+c.AddSpell("Rushing Jade Wind", "for Mistweaver", {
+	Melee = true,
+	Buff = "Rushing Jade Wind",
+	BuffUnit = "player",
+	EvenIfNotUsable = true,
+	CheckFirst = function()
+		return c.AoE
+	end,
 })
 
 -------------------------------------------------------------------- Windwalker
@@ -438,37 +588,55 @@ c.AddOptionalSpell("Legacy of the White Tiger", nil, {
 	end
 })
 
+c.AddSpell("Storm, Earth, and Fire", nil, {
+	CheckFirst = function(z)
+		if a.SefTargets[UnitGUID(s.UnitSelection())] then
+			z.FlashColor = "red"
+			return true
+		elseif c.AoE and c.GetBuffStack("Storm, Earth, and Fire") < 2 then
+			z.FlashColor = "yellow"
+			return true
+		end
+	end
+})
+
 addOptionalSpell("Energizing Brew", nil, {
 	CheckFirst = function()
-		return (s.MaxPower("player") - a.Power) / a.Regen > 5
+		return (UnitPowerMax("player") - a.Power) / a.Regen > 5
 	end
 })
 
 addOptionalSpell("Tigereye Brew", nil, {
-	CheckFirst = function()
-		local isUp = c.HasBuff("Tigereye Brew", false, true)
-		if isUp and a.BrewIsBuffed then
-			return false
-		end
-		
-		if c.GetBuffStack("Tigereye Brew Stacker", false, true) >= 20 then
+	NoGCD = true,
+	CheckFirst = function(z)
+		if c.GetBuffStack("Tigereye Brew Stacker", false, true) 
+			>= (c.WearingSet(4, "WWT15") and 18 or 19) then
+			
+			z.FlashColor = "red"
 			return true
+		else
+			z.FlashColor = "yellow"
 		end
 		
-		local normalTime = a.Chi >= 2
-			and c.GetCooldown("Rising Sun Kick") == 0
-			and not isUp
-			and c.HasBuff("Tiger Power")
-			and c.HasMyDebuff("Rising Sun Kick")
-		
-		local syncBuff = c.GetOption("TigerSyncBuff")
-		if string.len(syncBuff) == 0 then
-			return normalTime
+		local isUp = c.HasBuff("Tigereye Brew", false, true)
+		if c.IsSolo() then
+			return not isUp
 		end
 		
-		local syncDur = math.max(
-			0, s.BuffDuration(syncBuff, "player") - c.GetBusyTime())
-		return syncDur > 0 and (normalTime or syncDur < 2)
+		return not isUp
+			and ((a.Chi >= 2
+					and c.GetCooldown("Rising Sun Kick") == 0
+					and c.HasBuff("Tiger Power")
+					and c.HasMyDebuff("Rising Sun Kick"))
+				or c.IsSolo())
+	end
+})
+
+addOptionalSpell("Chi Brew", "for Windwalker", {
+	CheckFirst = function(z)
+		return checkChiBrew(z, 1) 
+			and a.Power + a.Regen <= UnitPowerMax("player")
+			and c.GetBuffStack("Tigereye Brew Stacker", false, true) < 16
 	end
 })
 
@@ -476,17 +644,16 @@ addSpell("Rising Sun Kick")
 
 addSpell("Rising Sun Kick", "for Debuff", {
 	CheckFirst = function()
-		return not c.HasMyDebuff("Rising Sun Kick")
-			and not c.IsAuraPendingFor("Rising Sun Kick")
+		return not c.HasMyDebuff("Rising Sun Kick", nil, nil, true)
 	end
 })
 
 addSpell("Tiger Palm", "for Tiger Power", {
 	CheckFirst = function()
 		return not c.HasBuff("Tiger Power")
-			and (not s.HasSpell("Rising Sun Kick") 
+			and (not c.HasSpell("Rising Sun Kick") 
 				or c.HasMyDebuff("Rising Sun Kick"))
-			and a.Power + a.Regen <= s.MaxPower("player")
+			and a.Power + a.Regen <= UnitPowerMax("player")
 			and not c.IsCasting("Tiger Palm")
 	end
 })
@@ -498,32 +665,24 @@ addSpell("Tiger Palm", "under Combo Breaker", {
 	end
 })
 
-addSpell("Fists of Fury", nil, {
+addOptionalSpell("Fists of Fury", nil, {
 	Melee = true,
 	NoRangeCheck = true,
 	NotWhileMoving = true,
 	CheckFirst = function(z)
-		if c.GetCooldown("Energizing Brew") == 0 then
-			z.FlashSize = s.FlashSizePercent() / 2
-			z.FlashColor = "yellow"
-			z.Continue = true
-		else
-			z.FlashSize = nil
-			z.FlashColor = nil
-			z.Continue = nil
-		end
-		
+		c.MakeMini(z, c.GetCooldown("Energizing Brew") == 0)
 		local castTime = c.GetHastedTime(4)
 		return not c.HasBuff("Energizing Brew") 
-			and a.Power + a.Regen * castTime < s.MaxPower("player")
+			and a.Power + a.Regen * castTime < UnitPowerMax("player")
 			and c.GetBuffDuration("Tiger Power") > castTime
 	end
 })
 c.RegisterForFullChannels("Fists of Fury", 4)
 
 c.AddSpell("Chi Wave", "for Windwalker", {
+	Cooldown = 15,
 	CheckFirst = function()
-		return a.Power + a.Regen * 2 <= s.MaxPower("player")
+		return a.Power + a.Regen * 2 <= UnitPowerMax("player")
 	end
 })
 
@@ -544,22 +703,16 @@ addSpell("Blackout Kick", "without blocking RSK", {
 
 addOptionalSpell("Expel Harm", "for Windwalker", {
 	CheckFirst = function()
-		return s.HealthPercent("player") < 80
-			and a.Chi + 2 <= s.MaxPower("player", SPELL_POWER_CHI)
+		return c.GetHealthPercent("player") < 80
+			and a.Chi + 2 <= UnitPowerMax("player", SPELL_POWER_CHI)
 	end
 })
 
 addSpell("Jab", "for Windwalker", {
 	CheckFirst = function()
-		return a.Chi + 2 <= s.MaxPower("player", SPELL_POWER_CHI)
+		return a.Chi + 2 <= UnitPowerMax("player", SPELL_POWER_CHI)
+			and (not c.AoE or a.Power + a.Regen >= 80)
 	end
 })
 
-c.AddOptionalSpell("Flying Serpent Kick 1")
-
-c.AddSpell("Zen Sphere", "for Windwalker", {
-	NoRangeCheck = true,
-	CheckFirst = function()
-		return not c.HasBuff("Zen Sphere")
-	end
-})
+c.MakeMini(c.AddOptionalSpell("Flying Serpent Kick 1"))

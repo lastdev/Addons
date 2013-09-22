@@ -7,6 +7,7 @@ c.Init(a)
 a.SpellIDs = {
 	["Anti-Magic Shell"] = 48707,
 	["Anti-Magic Zone"] = 50461,
+	["Asphyxiate"] = 108194,
 	["Blood Boil"] = 48721,
 	["Blood Charge"] = 114851,
 	["Blood Plague"] = 55078,
@@ -55,6 +56,7 @@ a.SpellIDs = {
 	["Soul Reaper - Frost"] = 130735,
 	["Soul Reaper - Unholy"] = 130736,
 	["Shadow Infusion"] = 91342,
+	["Strangulate"] = 47476,
 	["Sudden Doom"] = 81340,
 	["Summon Gargoyle"] = 49206,
 	["Unholy Blight"] = 115989,
@@ -76,6 +78,7 @@ a.TalentIDs = {
 
 a.GlyphIDs = {
 	["Icebound Fortitude"] = 58673,
+	["Loud Horn"] = 146646,
 }
 
 a.EquipmentSets = {
@@ -85,5 +88,12 @@ a.EquipmentSets = {
 	    ChestSlot = { 86658, 85318, 86918 },
 	    HandsSlot = { 86657, 85317, 86919 },
 	    LegsSlot = { 86655, 85315, 86921 },
-	}
+	},
+	DpsT15 = {
+	    HeadSlot = { 95827, 96571, 95227 },
+	    ShoulderSlot = { 95829, 96573, 95229 },
+	    ChestSlot = { 95825, 96569, 95225 },
+	    HandsSlot = { 95826, 96570, 95226 },
+	    LegsSlot = { 95828, 96572, 95228 },
+	},
 }

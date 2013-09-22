@@ -1,8 +1,8 @@
 ﻿--[[
 	Gatherable Nodes, type groupings definitions
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.2.0 (<%codename%>)
-	Revision: $Id: GatherCategories.lua 1074 2013-03-03 05:00:04Z LocalizerAutoCommit $
+	Version: 4.4.0 (<%codename%>)
+	Revision: $Id: GatherCategories.lua 1085 2013-06-04 06:15:18Z LocalizerAutoCommit $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -232,6 +232,7 @@ ObjectCategories = {
 	[207190] = "ARCH_TOLVIR", -- Tol'vir Archaeology Find
 	[211163] = "ARCH_PANDAREN", -- Pandaren Archaeology Find
 	[211174] = "ARCH_MOGU", -- Mogu Archaeology Find
+	[218950] = "ARCH_MANTID", -- Mantid Archaeology Find
 }
 
 
@@ -417,6 +418,7 @@ CategoryNames = {
 	["ARCH_VRYKUL"] = ARCH_VRYKUL,
 	["ARCH_PANDAREN"] = ARCH_PANDAREN,
 	["ARCH_MOGU"] = ARCH_MOGU,
+	["ARCH_MANTID"] = ARCH_MANTID,
 }
 
 for category, id in pairs(CategoryNames) do

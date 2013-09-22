@@ -1,17 +1,18 @@
- local oRA = LibStub("AceAddon-3.0"):GetAddon("oRA3")
-local module = oRA:NewModule("Invite", "AceEvent-3.0", "AceConsole-3.0")
+local oRA = LibStub("AceAddon-3.0"):GetAddon("oRA3")
+local module = oRA:NewModule("Invite", "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 local AceGUI = LibStub("AceGUI-3.0")
 
-module.VERSION = tonumber(("$Revision: 554 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 662 $"):sub(12, -3))
 
 local frame = nil
 local db = nil
 local peopleToInvite = {}
 local rankButtons = {}
+local difficultyDropdown, updateDifficultyDropdown = nil, nil -- a lot of effort for simply keeping the dialog in sync with the setting
 
 local function canInvite()
-	return (oRA:InGroup() and oRA:IsPromoted()) or not oRA:InGroup()
+	return not IsInGroup() or oRA:IsPromoted()
 end
 
 local function showConfig()
@@ -30,69 +31,70 @@ local function hideConfig()
 end
 
 local doActualInvites = nil
-local actualInviteFrame = CreateFrame("Frame")
-local aiTotal = 0
-local function _convertToRaid(self, elapsed)
-	aiTotal = aiTotal + elapsed
-	if aiTotal > 1 then
-		aiTotal = 0
-		if UnitInRaid("player") then
+do
+	local function waitForRaid()
+		if IsInRaid() then
 			doActualInvites()
-			self:SetScript("OnUpdate", nil)
+		else
+			module:ScheduleTimer(waitForRaid, 1)
 		end
 	end
-end
 
-local function _waitForParty(self, elapsed)
-	aiTotal = aiTotal + elapsed
-	if aiTotal > 1 then
-		aiTotal = 0
-		if GetNumSubgroupMembers() > 0 and not IsInRaid() then--Do not remove isinraid check. GetNumSubgroupMembers() is always true in a subgroup, INCLUDING a raid, we don't want to try converting a raid to a raid
-			ConvertToRaid()
-			self:SetScript("OnUpdate", _convertToRaid)
-		end
-	end
-end
-
-function doActualInvites()
-	if not UnitInRaid("player") then
-		local pNum = GetNumSubgroupMembers() + 1 -- 1-5
-		if pNum == 5 then
-			if #peopleToInvite > 0 then
+	local function waitForParty()
+		if IsInGroup() then
+			if not IsInRaid() then
 				ConvertToRaid()
-				actualInviteFrame:SetScript("OnUpdate", _convertToRaid)
+			end
+			module:ScheduleTimer(waitForRaid, 1)
+		else
+			module:ScheduleTimer(waitForParty, 1)
+		end
+	end
+
+	function doActualInvites()
+		if #peopleToInvite == 0 then return end
+
+		if not IsInRaid() then
+			local pNum = GetNumSubgroupMembers() + 1 -- 1-5
+			if pNum == 5 then
+				-- party is full, convert to raid and invite the rest
+				ConvertToRaid()
+				module:ScheduleTimer(waitForRaid, 1)
+			else
+				-- invite people until the party is full
+				for i = 1, math.min(5 - pNum, #peopleToInvite) do
+					local player = tremove(peopleToInvite)
+					InviteUnit(player)
+				end
+				-- invite the rest
+				if #peopleToInvite > 0 then
+					if not IsInGroup() then
+						-- need someone to accept an invite before we can make a raid
+						module:ScheduleTimer(waitForParty, 1)
+					else
+						ConvertToRaid()
+						module:ScheduleTimer(waitForRaid, 1)
+					end
+				end
 			end
 		else
-			local tmp = {}
-			for i = 1, (5 - pNum) do
-				local u = table.remove(peopleToInvite)
-				if u then tmp[u] = true end
+			for _, player in next, peopleToInvite do
+				InviteUnit(player)
 			end
-			if #peopleToInvite > 0 then
-				actualInviteFrame:SetScript("OnUpdate", _waitForParty)
-			end
-			for k in pairs(tmp) do
-				InviteUnit(k)
-			end
+			wipe(peopleToInvite)
 		end
-		return
 	end
-	for i, v in next, peopleToInvite do
-		InviteUnit(v)
-	end
-	wipe(peopleToInvite)
 end
 
 local function doGuildInvites(level, zone, rank)
 	for i = 1, GetNumGuildMembers() do
 		local name, _, rankIndex, unitLevel, _, unitZone, _, _, online = GetGuildRosterInfo(i)
-		if name and online and not UnitInParty(name) and not UnitInRaid(name) and not (name == UnitName("player")) then
+		if name and online and not UnitInParty(name) and not UnitInRaid(name) and not UnitIsUnit(name, "player") then
 			if level and level <= unitLevel then
 				peopleToInvite[#peopleToInvite + 1] = name
 			elseif zone and zone == unitZone then
 				peopleToInvite[#peopleToInvite + 1] = name
-			-- See the wowwiki docs for GetGuildRosterInfo, need to add +1 to the rank index
-			elseif rank and (rankIndex + 1) <= rank then
+			elseif rank and rankIndex <= rank then
 				peopleToInvite[#peopleToInvite + 1] = name
 			end
 		end
@@ -100,53 +102,20 @@ local function doGuildInvites(level, zone, rank)
 	doActualInvites()
 end
 
-local inviteFrame = CreateFrame("Frame")
-local total = 0
-local function onUpdate(self, elapsed)
-	total = total + elapsed
-	if total > 10 then
-		doGuildInvites(self.level, self.zone, self.rank)
-		self:SetScript("OnUpdate", nil)
-		total = 0
-	end
-end
-
-local function chat(msg, channel)
-	SendChatMessage(msg, channel)
-	--print(msg .. "#" .. channel)
-end
-
 local function inviteGuild()
 	if not canInvite() then return end
 	GuildRoster()
---	local max = GetMaxPlayerLevel()--Do not use this, this reports level 90, making entire invite function non functional on live until sept 25th
---	Compatable workaround that knows proper max level based on inviters current expansion level.
-	local max
-	local currentExp = GetExpansionLevel()
-	if currentExp == 4 then
-		max = 90
-	elseif currentExp == 3 then
-		max = 85
-	elseif currentExp == 2 then
-		max = 80
-	end
-
-	chat((L["All max level characters will be invited to raid in 10 seconds. Please leave your groups."]):format(max), "GUILD")
-	inviteFrame.level = max
-	inviteFrame.zone = nil
-	inviteFrame.rank = nil
-	inviteFrame:SetScript("OnUpdate", onUpdate)
+	local maxLevel = MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
+	SendChatMessage(L["All max level characters will be invited to raid in 10 seconds. Please leave your groups."], "GUILD")
+	module:ScheduleTimer(doGuildInvites, 10, maxLevel, nil, nil)
 end
 
 local function inviteZone()
 	if not canInvite() then return end
 	GuildRoster()
 	local currentZone = GetRealZoneText()
-	chat((L["All characters in %s will be invited to raid in 10 seconds. Please leave your groups."]):format(currentZone), "GUILD")
-	inviteFrame.level = nil
-	inviteFrame.zone = currentZone
-	inviteFrame.rank = nil
-	inviteFrame:SetScript("OnUpdate", onUpdate)
+	SendChatMessage((L["All characters in %s will be invited to raid in 10 seconds. Please leave your groups."]):format(currentZone), "GUILD")
+	module:ScheduleTimer(doGuildInvites, 10, nil, currentZone, nil)
 end
 
 local function inviteRank(rank, name)
@@ -155,31 +124,26 @@ local function inviteRank(rank, name)
 	GuildControlSetRank(rank)
 	local _, _, ochat = GuildControlGetRankFlags()
 	local channel = ochat and "OFFICER" or "GUILD"
-	chat((L["All characters of rank %s or higher will be invited to raid in 10 seconds. Please leave your groups."]):format(name), channel)
-	inviteFrame.level = nil
-	inviteFrame.zone = nil
-	inviteFrame.rank = rank
-	inviteFrame:SetScript("OnUpdate", onUpdate)
+	SendChatMessage((L["All characters of rank %s or higher will be invited to raid in 10 seconds. Please leave your groups."]):format(name), channel)
+	module:ScheduleTimer(doGuildInvites, 10, nil, nil, rank-1)
 end
 
 local function inviteRankCommand(input)
-	local ranks = oRA:GetGuildRanks()
-	local r, n = nil, nil
-	for i, rank in next, ranks do
-		if rank:lower():find(input:lower()) then
-			r = i
-			n = rank
-			break
+	if not canInvite() or type(input) ~= "string" then return end
+	input = input:lower()
+	for index, rank in next, oRA:GetGuildRanks() do
+		if rank:lower():find(input, nil, true) then
+			inviteRank(index, rank)
+			return
 		end
 	end
-	if not r or not n then return end
-	inviteRank(r, n)
 end
 
 function module:OnRegister()
 	local database = oRA.db:RegisterNamespace("Invite", {
 		global = {
 			keyword = nil,
+			raidonly = false,
 		},
 	})
 	db = database.global
@@ -190,47 +154,97 @@ function module:OnRegister()
 		hideConfig
 	)
 	oRA.RegisterCallback(self, "OnGuildRanksUpdate")
+	oRA.RegisterCallback(self, "OnStartup", updateDifficultyDropdown)
+	oRA.RegisterCallback(self, "OnShutdown", updateDifficultyDropdown)
+	oRA.RegisterCallback(self, "OnDifficultyChanged", updateDifficultyDropdown)
 
-	self:RegisterChatCommand("rainv", inviteGuild)
-	self:RegisterChatCommand("rainvite", inviteGuild)
-	self:RegisterChatCommand("razinv", inviteZone)
-	self:RegisterChatCommand("razinvite", inviteZone)
-	self:RegisterChatCommand("rarinv", inviteRankCommand)
-	self:RegisterChatCommand("rarinvite", inviteRankCommand)
+	SLASH_ORAINVITE_GUILD1 = "/rainv"
+	SLASH_ORAINVITE_GUILD2 = "/rainvite"
+	SlashCmdList.ORAINVITE_GUILD = inviteGuild
+
+	SLASH_ORAINVITE_ZONE1 = "/razinv"
+	SLASH_ORAINVITE_ZONE2 = "/razinvite"
+	SlashCmdList.ORAINVITE_ZONE = inviteZone
+
+	SLASH_ORAINVITE_RANK1 = "/rarinv"
+	SLASH_ORAINVITE_RANK2 = "/rarinvite"
+	SlashCmdList.ORAINVITE_RANK = inviteRankCommand
 end
 
-local function handleWhisper(event, msg, author)
-	local low = msg:lower()
-	if (db.keyword and low == db.keyword) or (db.guildkeyword and low == db.guildkeyword and oRA:IsGuildMember(author)) and canInvite() then
-		local isIn, instanceType = IsInInstance()
-		local party = GetNumSubgroupMembers()
-		local raid = IsInRaid() and GetNumGroupMembers() or 0--Again, do not change. ORA3 expects raid count to be 0 in a party, so we ensure that it's 0 if group is NOT a raid group.
-		if isIn and instanceType == "party" and party == 4 then
-			SendChatMessage(L["<oRA3> Sorry, the group is full."], "WHISPER", nil, author)
-		elseif party == 4 and raid == 0 then
-			peopleToInvite[#peopleToInvite + 1] = author
-			doActualInvites()
-		elseif raid == 40 then
-			SendChatMessage(L["<oRA3> Sorry, the group is full."], "WHISPER", nil, author)
+local function inQueue()
+	-- LFG
+	for i=1, NUM_LE_LFG_CATEGORYS do
+		if GetLFGMode(i) then
+			return true
+		end
+	end
+
+	-- PvP
+	for i=1, GetMaxBattlefieldID() do
+		local status = GetBattlefieldStatus(i)
+		if status and status ~= "none" then
+			return true
+		end
+	end
+
+	-- World PvP (WG/TB)
+	--for i=1, MAX_WORLD_PVP_QUEUES do
+	--	local status = GetWorldPVPQueueStatus(i)
+	--	if status and status ~= "none" then
+	--		return true
+	--	end
+	--end
+
+	-- Pet Battle PvP
+	--if C_PetBattles.GetPVPMatchmakingInfo() then
+	--	return true
+	--end
+end
+
+local function getBattleNetToon(presenceId)
+	local friendIndex = BNGetFriendIndex(presenceId)
+	for i=1, BNGetNumFriendToons(friendIndex) do
+		local _, toonName, client, realmName, realmId, faction = BNGetFriendToonInfo(friendIndex, i)
+		if client == BNET_CLIENT_WOW and faction == UnitFactionGroup("player") and realmId > 0 then
+			if realmName ~= GetRealmName() then
+				toonName = toonName.."-"..realmName
+			end
+			return toonName
+		end
+	end
+end
+
+local function handleWhisper(msg, sender, _, _, _, _, _, _, _, _, _, _, presenceId)
+	if not canInvite() then return end
+	if db.raidonly and not IsInRaid() then return end
+
+	if presenceId > 0 then
+		sender = getBattleNetToon(presenceId)
+		if not sender then return end
+	end
+
+	msg = msg:trim():lower()
+	if ( (db.keyword and msg == db.keyword:lower()) or (db.guildkeyword and msg == db.guildkeyword:lower() and oRA:IsGuildMember(sender)) )
+		and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and not inQueue()
+	then
+		local _, instanceType = IsInInstance()
+		if (instanceType == "party" and GetNumSubgroupMembers() == 4) or GetNumGroupMembers() == 40 then
+			if presenceId > 0 then
+				BNSendWhisper(L["<oRA3> Sorry, the group is full."], presenceId)
+			else
+				SendChatMessage(L["<oRA3> Sorry, the group is full."], "WHISPER", nil, sender)
+			end
 		else
-			InviteUnit(author)
+			peopleToInvite[#peopleToInvite + 1] = sender
+			doActualInvites()
 		end
 	end
 end
 
 function module:OnEnable()
-	self:RegisterEvent("CHAT_MSG_BN_WHISPER")
+	self:RegisterEvent("CHAT_MSG_BN_WHISPER", handleWhisper)
 	self:RegisterEvent("CHAT_MSG_WHISPER", handleWhisper)
-end
-
-function module:CHAT_MSG_BN_WHISPER(event, msg, author, _, _, _, _, _, _, _, _, _, _, presenceId)
-	for i = 1, BNGetNumFriends() do
-		local friendPresenceId, _, _, _, toonName, _, client = BNGetFriendInfo(i)
-		if client == BNET_CLIENT_WOW and presenceId == friendPresenceId then
-			handleWhisper(event, msg, toonName)
-			break
-		end
-	end
+	self:RegisterEvent("PARTY_LEADER_CHANGED", updateDifficultyDropdown)
 end
 
 local function onControlEnter(widget, event, value)
@@ -287,12 +301,48 @@ local function saveKeyword(widget, event, value)
 	widget:SetText(value)
 end
 
+function updateDifficultyDropdown()
+	if not frame then return end
+	if not IsInGroup() or UnitIsGroupLeader("player") then
+		difficultyDropdown:SetDisabled(false)
+	else
+		difficultyDropdown:SetDisabled(true)
+	end
+	difficultyDropdown:SetValue(GetRaidDifficultyID())
+	frame:ResumeLayout()
+	frame:DoLayout()
+end
+
+local function difficultyCallback(widget, event, index, value)
+	SetRaidDifficultyID(index)
+end
+
+local function raidOnlyCallback(widget, event, value)
+	db.raidonly = value and true or false
+end
+
 function module:CreateFrame()
 	if frame then return end
 	local inGuild = IsInGuild()
 	frame = AceGUI:Create("ScrollFrame")
 	frame:PauseLayout()
 	frame:SetLayout("Flow")
+
+	local modes = {
+		[3] = RAID_DIFFICULTY1,
+		[4] = RAID_DIFFICULTY2,
+		[5] = RAID_DIFFICULTY3,
+		[6] = RAID_DIFFICULTY4,
+	}
+	local difficulty = AceGUI:Create("Dropdown")
+	difficulty:SetMultiselect(false)
+	difficulty:SetLabel(RAID_DIFFICULTY)
+	difficulty:SetList(modes)
+	difficulty:SetValue(GetRaidDifficultyID())
+	difficulty:SetCallback("OnValueChanged", difficultyCallback)
+	difficulty:SetFullWidth(true)
+	difficulty:SetDisabled(IsInGroup() and not UnitIsGroupLeader("player"))
+	difficultyDropdown = difficulty
 
 	local kwDescription = AceGUI:Create("Label")
 	kwDescription:SetText(L["When people whisper you the keywords below, they will automatically be invited to your group. If you're in a party and it's full, you will convert to a raid group. The keywords will only stop working when you have a full raid of 40 people. Setting a keyword to nothing will disable it."])
@@ -308,7 +358,7 @@ function module:CreateFrame()
 	keyword:SetCallback("OnLeave", onControlLeave)
 	keyword:SetCallback("OnEnterPressed", saveKeyword)
 	keyword:SetRelativeWidth(0.5)
-	
+
 	local guildonlykeyword = AceGUI:Create("EditBox")
 	guildonlykeyword:SetLabel(L["Guild Keyword"])
 	guildonlykeyword:SetText(db.guildkeyword)
@@ -318,7 +368,13 @@ function module:CreateFrame()
 	guildonlykeyword:SetCallback("OnLeave", onControlLeave)
 	guildonlykeyword:SetCallback("OnEnterPressed", saveKeyword)
 	guildonlykeyword:SetRelativeWidth(0.5)
-	
+
+	local raidonly = AceGUI:Create("CheckBox")
+	raidonly:SetLabel(L["Only invite on keyword if in a raid group"])
+	raidonly:SetValue(db.raidonly)
+	raidonly:SetCallback("OnValueChanged", raidOnlyCallback)
+	raidonly:SetFullWidth(true)
+
 	local guild, zone, rankHeader, rankDescription
 	if inGuild then
 		guild = AceGUI:Create("Button")
@@ -332,7 +388,7 @@ function module:CreateFrame()
 		-- left, middle and right, so making it higher actually stretches the texture.
 		--guild:SetHeight(24 * 2)
 		guild:SetFullWidth(true)
-	
+
 		zone = AceGUI:Create("Button")
 		zone:SetText(L["Invite zone"])
 		zone:SetUserData("tooltip", L["Invite everyone in your guild who are in the same zone as you."])
@@ -344,7 +400,7 @@ function module:CreateFrame()
 		rankHeader = AceGUI:Create("Heading")
 		rankHeader:SetText(L["Guild rank invites"])
 		rankHeader:SetFullWidth(true)
-	
+
 		rankDescription = AceGUI:Create("Label")
 		rankDescription:SetText(L["Clicking any of the buttons below will invite anyone of the selected rank AND HIGHER to your group. So clicking the 3rd button will invite anyone of rank 1, 2 or 3, for example. It will first post a message in either guild or officer chat and give your guild members 10 seconds to leave their groups before doing the actual invites."])
 		rankDescription:SetFullWidth(true)
@@ -353,15 +409,15 @@ function module:CreateFrame()
 
 	if inGuild then
 		if oRA.db.profile.showHelpTexts then
-			frame:AddChildren(guild, zone, kwDescription, keyword, guildonlykeyword, rankHeader, rankDescription)
+			frame:AddChildren(difficulty, guild, zone, kwDescription, keyword, guildonlykeyword, raidonly, rankHeader, rankDescription)
 		else
-			frame:AddChildren(guild, zone, keyword, guildonlykeyword, rankHeader)
+			frame:AddChildren(difficulty, guild, zone, keyword, guildonlykeyword, raidonly, rankHeader)
 		end
 	else
 		if oRA.db.profile.showHelpTexts then
-			frame:AddChildren(kwDescription, keyword)
+			frame:AddChildren(difficulty, kwDescription, keyword, raidonly)
 		else
-			frame:AddChild(keyword)
+			frame:AddChild(difficulty, keyword, raidonly)
 		end
 	end
 

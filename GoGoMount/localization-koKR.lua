@@ -42,6 +42,8 @@
 		PaladinOptions = "성기사 옵션", -- Needs review
 		RemoveBuffs = "탈것을 방해하는 버프 제거",
 		RemoveBuffs_Long = "GoGoMount will attempt to remove buffs and shapeforms that come from spells and items that prevent mounting.  This only works for known buffs and in some cases require 2 clicks of your GoGoMount button to mount.", -- Requires localization
+		ShamanOptions = "Shaman Options", -- Requires localization
+		ShamanSingleClick = "Single click mount from Ghost Wolf Form instead of dismounting", -- Requires localization
 		UnknownMountFound = "알 수 없는 탈것이 당신의 목록에서 발견되었습니다. 이것을 GoGoMount의 다음 버전에 추가될 수 있도록 알리십시오.",
 		UseAspectOfThePackInstead = "치타의 상 대신 치타 무리의 상 사용",
 		UseAspectOfThePackInstead_Long = "When enabled, GoGoMount will cast Aspect of the Pack instead of Aspect of the Cheetah.  Local zone or global settings override this setting.  If this is set to use Aspect of the Pack and you have Aspect of the Cheetah as a zone favorite, Aspect of the Cheetah will be used.", -- Requires localization

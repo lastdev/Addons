@@ -1,3 +1,25 @@
+== Version 50400.1.1
+* Update for the new version of Bitten's SpellFlash Library.
+
+== Version 50400.1.0
+* Beast Mastery: If you use Multi-Shot, it will flash when Beast Cleave wears off.  This is far from real AoE support, but it's something.
+* All: Readiness was removed with this patch.
+
+== Version 3.1.1
+* All: Now flashes Tranquilizing Shot.
+* All: Now flashes food buffs.
+* All: Bugfix - the conditions to spend focus in anticipation of Ferver were broken on non-English clients.
+
+== Version 3.1.0
+Update for patch 5.3:
+* Removed Blink Strike.
+
+== Version 3.0.3
+* Marksmanship: Made Aimed Shot flashing optional when you are moving and it cannot be cast at the same time.
+* All: Added flashing for Exhilaration.
+* All: Added flashing for Heart of the Phoenix.
+* All: Separated flashing for Call Pet and Revive Pet.
+
 == Version 3.0.2
 * Update to Bitten's SpellFlash Library to fix at least one reported error.
 
@@ -69,17 +91,3 @@ This beta release uses Bitten's SpellFlash Library version 3.  If you update you
 * All: Updated to the new event system - it should be calculating Focus more accurately.
 * All: Many spells will now flash when you *will* have enough focus for them by the time your current cast is finished.
 * All: 2pT13 is now automatically detected, instead of being an option.
-
-== Version 1.1.0
-* All: Now automatically detects 2pT13, instead of using an option.
-* All: Improved focus calculations (e.g. it can now flash Black Arrow or Kill Command when you *will* have enough focus by the time your current cast finishes).
-* All: Now flashes the various call pet spells and revive pet when you don't have a pet out.
-* All: No longer flashes Aspect of the Hawk when you are moving, or when using Aspect of the Wild.
-* All: Should now work on non-English clients.
-* All: Added localization support.
-
-== Version 1.0.1
-* No longer require a macro to prevent Explosive Shot from firing more than twice in a row.
-
-== Version 1.0.0
-* Initial Release

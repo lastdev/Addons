@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BPCouncil", "DBM-Icecrown", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 29 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 99 $"):sub(12, -3))
 mod:SetCreatureID(37970, 37972, 37973)
 mod:SetModelID(30858)
 mod:SetUsedIcons(7, 8)
@@ -14,14 +14,14 @@ mod:SetBossHealthInfo(
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_SUMMON",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"UNIT_TARGET",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"UNIT_TARGET_UNFILTERED",
+	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3"
 )
 
 local warnTargetSwitch			= mod:NewAnnounce("WarnTargetSwitch", 3, 70952)
@@ -35,8 +35,9 @@ local warnEmpoweredShockVortex	= mod:NewCastAnnounce(72039, 4)					-- 4,5sec cas
 local warnKineticBomb			= mod:NewSpellAnnounce(72053, 3, nil, mod:IsRanged())
 local warnDarkNucleus			= mod:NewSpellAnnounce(71943, 1, nil, false)	-- instant cast
 
-local specWarnVortex			= mod:NewSpecialWarning("SpecWarnVortex")
-local specWarnVortexNear		= mod:NewSpecialWarning("SpecWarnVortexNear")
+local specWarnVortex			= mod:NewSpecialWarningYou(72037)
+local yellVortex				= mod:NewYell(72037)
+local specWarnVortexNear		= mod:NewSpecialWarningClose(72037)
 local specWarnEmpoweredShockV	= mod:NewSpecialWarningRun(72039)
 local specWarnEmpoweredFlames	= mod:NewSpecialWarningRun(72040)
 local specWarnShadowPrison		= mod:NewSpecialWarningStack(72999, nil, 6)
@@ -52,11 +53,11 @@ local timerShadowPrison			= mod:NewBuffActiveTimer(10, 72999)		-- Hard mode debu
 local berserkTimer				= mod:NewBerserkTimer(600)
 
 local soundEmpoweredFlames		= mod:NewSound(72040)
+
 mod:AddBoolOption("EmpoweredFlameIcon", true)
 mod:AddBoolOption("ActivePrinceIcon", false)
 mod:AddBoolOption("RangeFrame", true)
 mod:AddBoolOption("VortexArrow")
---mod:AddBoolOption("BypassLatencyCheck", false)--Use old scan method without syncing or latency check (less reliable but not dependant on other DBM users in raid)
 
 local activePrince
 local glitteringSparksTargets	= {}
@@ -84,14 +85,13 @@ function mod:OnCombatEnd()
 	end
 end
 
-function mod:ShockVortexTarget()
-	local targetname = self:GetBossTarget(37970)
+function mod:ShockVortexTarget(targetname, uId)
 	if not targetname then return end
-		warnShockVortex:Show(targetname)
+	warnShockVortex:Show(targetname)
 	if targetname == UnitName("player") then
 		specWarnVortex:Show()
-	elseif targetname then
-		local uId = DBM:GetRaidUnitId(targetname)
+		yellVortex:Yell()
+	else
 		if uId then
 			local inRange = CheckInteractDistance(uId, 2)
 			local x, y = GetPlayerMapPosition(uId)
@@ -100,7 +100,7 @@ function mod:ShockVortexTarget()
 				x, y = GetPlayerMapPosition(uId)
 			end
 			if inRange then
-				specWarnVortexNear:Show()
+				specWarnVortexNear:Show(targetname)
 				if self.Options.VortexArrow then
 					DBM.Arrow:ShowRunAway(x, y, 10, 5)
 				end
@@ -115,10 +115,10 @@ end
 
 function mod:TrySetTarget()
 	if DBM:GetRaidRank() >= 1 and self.Options.ActivePrinceIcon then
-		for i = 1, DBM:GetNumGroupMembers() do
-			if UnitGUID("raid"..i.."target") == activePrince then
+		for uId in DBM:GetGroupMembers() do
+			if UnitGUID(uId.."target") == activePrince then
 				activePrince = nil
-				SetRaidTarget("raid"..i.."target", 8)
+				SetRaidTarget(uId.."target", 8)
 			end
 			if not (activePrince) then
 				break
@@ -128,24 +128,24 @@ function mod:TrySetTarget()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(72037) then		-- Shock Vortex
+	if args.spellId == 72037 then		-- Shock Vortex
 		timerShockVortex:Start()
-		self:ScheduleMethod(0.2, "ShockVortexTarget")
-	elseif args:IsSpellID(72039) then
+		self:BossTargetScanner(37970, "ShockVortexTarget", 0.05, 6)
+	elseif args.spellId == 72039 then
 		warnEmpoweredShockVortex:Show()
 		specWarnEmpoweredShockV:Show()
 		timerShockVortex:Start()
-	elseif args:IsSpellID(71718) then	-- Conjure Flames
+	elseif args.spellId == 71718 then	-- Conjure Flames
 		warnConjureFlames:Show()
 		timerConjureFlamesCD:Start()
-	elseif args:IsSpellID(72040) then	-- Conjure Empowered Flames
+	elseif args.spellId == 72040 then	-- Conjure Empowered Flames
 		warnEmpoweredFlamesCast:Show()
 		timerConjureFlamesCD:Start()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(70952) then
+	if args.spellId == 70952 then
 		activePrince = args.destGUID
 		if self:IsInCombat() then
 			warnTargetSwitch:Show(L.Valanar)
@@ -155,7 +155,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				DBM.RangeCheck:Show(12)
 			end
 		end
-	elseif args:IsSpellID(70981) and self:IsInCombat() then
+	elseif args.spellId == 70981 and self:IsInCombat() then
 		warnTargetSwitch:Show(L.Keleseth)
 		warnTargetSwitchSoon:Schedule(42)
 		timerTargetSwitch:Start()
@@ -163,7 +163,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.RangeFrame then
 			self:ScheduleMethod(4.5, "HideRange")--delay hiding range frame for a few seconds after change incase valanaar got a last second vortex cast off
 		end
-	elseif args:IsSpellID(70982) and self:IsInCombat() then
+	elseif args.spellId == 70982 and self:IsInCombat() then
 		warnTargetSwitch:Show(L.Taldaram)
 		warnTargetSwitchSoon:Schedule(42)
 		timerTargetSwitch:Start()
@@ -171,14 +171,14 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.RangeFrame then
 			self:ScheduleMethod(4.5, "HideRange")--delay hiding range frame for a few seconds after change incase valanaar got a last second vortex cast off
 		end
-	elseif args:IsSpellID(72999) then	--Shadow Prison (hard mode)
+	elseif args.spellId == 72999 then	--Shadow Prison (hard mode)
 		if args:IsPlayer() then
 			timerShadowPrison:Start()
 			if (args.amount or 1) >= 6 then	--Placeholder right now, might use a different value
 				specWarnShadowPrison:Show(args.amount)
 			end
 		end
-	elseif args:IsSpellID(71807) and args:IsDestTypePlayer() then	-- Glittering Sparks(Dot/slow, dangerous on heroic during valanaar)
+	elseif args.spellId == 71807 and args:IsDestTypePlayer() then	-- Glittering Sparks(Dot/slow, dangerous on heroic during valanaar)
 		glitteringSparksTargets[#glitteringSparksTargets + 1] = args.destName
 		self:Unschedule(warnGlitteringSparksTargets)
 		self:Schedule(1, warnGlitteringSparksTargets)
@@ -188,7 +188,7 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_SUMMON(args)
-	if args:IsSpellID(71943) then
+	if args.spellId == 71943 then
 		warnDarkNucleus:Show()
 		timerDarkNucleusCD:Start()
 	end
@@ -196,6 +196,7 @@ end
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg:match(L.EmpoweredFlames) then
+		local target = DBM:GetUnitFullName(target)
 		warnEmpoweredFlames:Show(target)
 		if target == UnitName("player") then
 			specWarnEmpoweredFlames:Show()
@@ -207,7 +208,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	end
 end
 
-function mod:UNIT_TARGET()
+function mod:UNIT_TARGET_UNFILTERED()
 	if activePrince then
 		self:TrySetTarget()
 	end

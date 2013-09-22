@@ -3,8 +3,10 @@ local s = SpellFlashAddon
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
 local GetPowerRegen = GetPowerRegen
+local GetTime = GetTime
 local IsMounted = IsMounted
 local UnitExists = UnitExists
+local UnitIsDead = UnitIsDead
 local math = math
 
 c.AssociateTravelTimes(
@@ -17,7 +19,8 @@ c.AssociateTravelTimes(
 	"Kill Shot",
 	"Steady Shot",
 	"Chimera Shot",
-	"Aimed Shot")
+	"Aimed Shot",
+	"Tranquilizing Shot")
 
 local function sufficientResources(z)
 	return c.GetCost(z.ID) <= a.Focus
@@ -38,7 +41,7 @@ local function addOptionalSpell(name, tag, attributes)
 end
 
 local function generatorWillCap(padding)
-	if s.HasSpell("Fervor") and c.GetCooldown("Fervor") < 3 then
+	if c.GetCooldown("Fervor") < 3 then
 		padding = padding + 50
 	end
 	local castTime = c.GetCastTime("Cobra Shot")
@@ -51,17 +54,17 @@ end
 
 ------------------------------------------------------------------------ Common
 c.AddOptionalSpell("Mend Pet", nil, {
+	Buff = "Mend Pet",
+	BuffUnit = "pet",
+	EarlyRefresh = 2,
 	CheckFirst = function()
-		return s.HealthPercent("pet") < 80
-			and not s.Buff(c.GetID("Mend Pet"), "pet", c.GetBusyTime() + 2)
+		return c.GetHealthPercent("pet") < 80
 	end
 })
 
 addOptionalSpell("Serpent Sting", nil, {
 	Applies = { "Serpent Sting Debuff", "Improved Serpent Sting" },
 	CheckFirst = function(z)
---		return not s.MyDebuff(c.GetID("Serpent Sting"))
---			and not c.IsCastingOrInAir("Serpent Sting")
 		return c.ShouldCastToRefresh(
 			"Serpent Sting", "Serpent Sting", 0, true, 
 			"Cobra Shot", "Chimera Shot")
@@ -87,10 +90,15 @@ c.AddOptionalSpell("Call Pet", nil, {
 		"Call Pet 3",
 		"Call Pet 4",
 		"Call Pet 5",
-		"Revive Pet",
 	},
 	CheckFirst = function()
-		return not IsMounted() and not UnitExists("pet")
+		return not UnitExists("pet")
+	end
+})
+
+c.AddOptionalSpell("Revive Pet", nil, {
+	CheckFirst = function()
+		return UnitIsDead("pet")
 	end
 })
 
@@ -101,21 +109,39 @@ c.AddOptionalSpell("Fervor", nil, {
 	end
 })
 
+c.AddOptionalSpell("Exhilaration", nil, {
+	NoGCD = true,
+	NoRangeCheck = true,
+	CheckFirst = function(z)
+		local forMe = c.GetHealthPercent("player") < 70
+		local forPet = c.GetHealthPercent("pet") < 25
+		c.MakeMini(z, not (forMe and forPet))
+		if forPet then
+			z.FlashColor = "red"
+		else
+			z.FlashColor = "yellow"
+		end
+		return forMe or forPet
+	end,
+})
+
+c.AddOptionalSpell("Heart of the Phoenix", nil, {
+	Type = "pet",
+	NoRangeCheck = true,
+	Override = function()
+		return UnitIsDead("pet") 
+			and c.GetCooldown("Heart of the Phoenix", true) == 0
+	end
+})
+
 addOptionalSpell("A Murder of Crows", nil, {
 	MyDebuff = "A Murder of Crows",
 })
 
 addSpell("Powershot", nil, {
-	CheckFirst = function(z)
-		if s.Moving("player") then
-			z.Continue = true
-			z.FlashColor = "yellow"
-		else
-			z.Continue = nil
-			z.FlashColor = nil
-		end
-		return true
-	end
+	RunFirst = function(z)
+		c.MakeOptional(z, s.Moving("player"))
+	end,
 })
 
 addSpell("Barrage")
@@ -142,19 +168,10 @@ c.AddOptionalSpell("Lynx Rush", nil, {
 	end
 })
 
-c.AddSpell("Blink Strike")
-
 c.AddOptionalSpell("Rapid Fire", nil, {
 	CheckFirst = function()
 		return not s.Buff(c.BLOODLUST_BUFFS, "player")
 			and not c.HasBuff("Rapid Fire")
-	end
-})
-
-c.AddOptionalSpell("Readiness", nil, {
-	FlashSize = s.FlashSizePercent() / 2,
-	CheckFirst = function()
-		return c.GetCooldown("Rapid Fire") > 2.5 * 60
 	end
 })
 
@@ -167,15 +184,14 @@ c.AddOptionalSpell("Stampede", nil, {
 
 addSpell("Cobra Shot", "for Serpent Sting", {
 	CheckFirst = function()
---		return c.GetMyDebuffDuration("Serpent Sting") < 4
---			and not c.IsCastingOrInAir("Cobra Shot")
---			and not c.IsCastingOrInAir("Serpent Sting")
 		return c.ShouldCastToRefresh(
 			"Cobra Shot", "Serpent Sting", 4, false, "Serpent Sting")
 	end
 })
 
 addSpell("Glaive Toss")
+
+c.AddDispel("Tranquilizing Shot", nil, "")
 
 ----------------------------------------------------------------- Beast Mastery
 c.AddOptionalSpell("Focus Fire", nil, {
@@ -206,6 +222,16 @@ c.AddOptionalSpell("Rapid Fire", "for BM", {
 	end
 })
 
+addOptionalSpell("Multi-Shot", "for Beast Cleave", {
+	FlashSize = s.FlashSizePercent() / 2,
+	CheckFirst = function()
+		local betweenMultis = 
+			GetTime() - a.LastMultiShot 
+				+ c.GetBusyTime() + c.GetCastTime("Multi-Shot")
+		return betweenMultis < 13.5 and betweenMultis > 3.5
+	end,
+})
+
 ------------------------------------------------------------------ Marksmanship
 local function underCarefulAim()
 	return s.HealthPercent() > 90 and not c.GetOption("NoCarefulAim")
@@ -220,7 +246,6 @@ local function nextMMCooldown()
 		c.GetCooldown("A Murder of Crows"),
 		c.GetCooldown("Stampede"),
 		c.GetCooldown("Lynx Rush"),
-		c.GetCooldown("Blink Strike"),
 		c.GetCooldown("Fervor"))
 end
 
@@ -246,22 +271,18 @@ c.AddSpell("Steady Shot", "Opportunistic", {
 		end
 		time = time - .5 -- we're ok with a little waste
 		return a.Focus + gain < 100 and nextMMCooldown() > time
-	end
+	end,
 })
 
 addSpell("Chimera Shot", nil, {
-	CheckFirst = function()
-		return not c.IsCasting("Chimera Shot")
-	end
+	NotIfActive = true,
 })
 
 addSpell("Chimera Shot", "to save Serpent Sting", {
 	CheckFirst = function()
---		local dur = c.GetMyDebuffDuration("Serpent Sting")
---		return dur > 1 and dur < 4
 		return c.ShouldCastToRefresh(
 			"Chimera Shot", "Serpent Sting", 1, false, "Serpent Sting")
-	end
+	end,
 })
 
 addOptionalSpell("Stampede", "for Marksmanship", {
@@ -269,39 +290,41 @@ addOptionalSpell("Stampede", "for Marksmanship", {
 	CheckFirst = function()
 		return (c.HasBuff("Rapid Fire") or c.HasBuff(c.BLOODLUST_BUFFS))
 			and c.HasBuff("Steady Focus")
-	end
+	end,
 })
 
 addSpell("Aimed Shot", nil, {
 	FlashID = { "Aimed Shot", "Aimed Shot!" },
-	Override = function()
-		return (c.HasBuff("Fire!") and not c.IsQueued("Aimed Shot"))
+	Override = function(z)
+		local instant = c.HasBuff("Fire!")
+		c.MakeOptional(
+			z, 
+			not instant and s.Moving("player") and not c.HasGlyph("Aimed Shot"))
+		return (instant and not c.IsQueued("Aimed Shot"))
 			or (a.Focus >= 50
 				and (underCarefulAim() or c.GetCastTime("Aimed Shot") < 1.4))
-	end
+	end,
 })
 
 addSpell("Arcane Shot", "for Marksmanship", {
 	CheckFirst = function()
-		return not underCarefulAim()
+		return (not underCarefulAim() 
+				or (s.Moving("player") and not c.HasGlyph("Aimed Shot")))
 			and (a.Focus >= 60
-				or (a.Focus >= 43 and (
-					c.GetCooldown("Chimera Shot") 
-						>= c.GetCastTime("Steady Shot"))))
-	end
+				or (a.Focus >= 43 and a.CSCool >= c.GetCastTime("Steady Shot")))
+	end,
 })
 
 ---------------------------------------------------------------------- Survival
 addSpell("Explosive Shot", nil, {
 	CheckFirst = function()
 		return not c.IsCasting("Explosive Shot") or c.HasBuff("Lock and Load")
-	end
+	end,
 })
 
 addSpell("Black Arrow", nil, {
 	EarlyRefresh = 1,
 	CheckFirst = function(z)
---		return not c.HasMyDebuff("Black Arrow")
 		return c.ShouldCastToRefresh(
 			"Black Arrow", "Black Arrow", z.EarlyRefresh, true)
 	end

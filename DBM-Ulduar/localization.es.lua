@@ -44,16 +44,6 @@ L:SetGeneralLocalization{
 	name = "Ignis el Maestro de la Caldera"
 }
 
-L:SetTimerLocalization{
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetOptionLocalization{
-	SlagPotIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63477)
-}
-
 ------------------
 --  Razorscale  --
 ------------------
@@ -65,7 +55,7 @@ L:SetGeneralLocalization{
 
 L:SetWarningLocalization{	
 	warnTurretsReadySoon		= "La torreta estara lista en 20 segundos",
-	warnTurretsReady		    = "La torreta esta LISTA",
+	warnTurretsReady		    = "La torreta esta LISTA"
 }
 L:SetTimerLocalization{
 	timerTurret1			    = "Torreta 1",
@@ -102,17 +92,6 @@ L:SetGeneralLocalization{
 	name = "Desarmador XA-002"
 }
 
-L:SetTimerLocalization{
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetOptionLocalization{
-	SetIconOnLightBombTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(65121),
-	SetIconOnGravityBombTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(64234)
-}
-
 -------------------
 --  IronCouncil  --
 -------------------
@@ -129,15 +108,13 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	SetIconOnOverwhelmingPower	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(61888),
-	SetIconOnStaticDisruption	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(61912),
 	AlwaysWarnOnOverload			= "Siempre avisar de $spell:63481 (Sino solo se avisara cuando sea objetivo)"
 }
 
 L:SetMiscLocalization{
 	Steelbreaker		= "Rompeacero",
 	RunemasterMolgeim	= "Maestro de runas Molgeim",
-	StormcallerBrundir 	= "Clamatormentas Brundir",
+	StormcallerBrundir 	= "Clamatormentas Brundir"
 }
 
 
@@ -202,9 +179,7 @@ L:SetOptionLocalization{
 	timerLeftArm			= "Mostrar tiempo para Brazo izquierdo",
 	timerRightArm			= "Mostrar tiempo para Brazo derecho",
 	achievementDisarmed		= "Mostrar tiempo para el logro Desarmar",
-	SetIconOnGripTarget		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(64292),
-	SetIconOnEyebeamTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63346),
-	YellOnBeam				= "Gritar cuando tengas $spell:63346",
+	YellOnBeam				= "Gritar cuando tengas $spell:63346"
 }
 
 L:SetMiscLocalization{
@@ -293,7 +268,7 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	TimerHardmode	= "Mostrar tiempo para modo heroico",
 	RangeFrame		= "Mostrar distancia",
-	AnnounceFails	= "Anunciar los fallos de $spell:62017 en el chat de banda\n(require 'anunciar' habilitado y líder o ayudante de banda)"
+	AnnounceFails	= "Anunciar los fallos de $spell:62017 en el chat de banda<br/>(require 'anunciar' habilitado y líder o ayudante de banda)"
 }
 
 L:SetMiscLocalization{
@@ -327,7 +302,7 @@ L:SetWarningLocalization{
 }
 
 L:SetTimerLocalization{
-	TimerSimulKill		= "Resurrección",
+	TimerSimulKill		= "Resurrección"
 }
 
 L:SetOptionLocalization{
@@ -390,9 +365,7 @@ L:SetOptionLocalization{
 	TimerHardmode			= "Mostrar tiempo para Modo Difícil",
 	ShockBlastWarningInP1	= "Mostrar aviso especial para $spell:63631 en Fase 1",
 	ShockBlastWarningInP4	= "Mostrar aviso especial para $spell:63631 en Fase 4",
-	RangeFrame				= "Mostrar distancia en Fase 1 (6 yardas)",
-	SetIconOnNapalm			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(65026),
-	SetIconOnPlasmaBlast	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(62997)
+	RangeFrame				= "Mostrar distancia en Fase 1 (6 yardas)"
 }
 
 L:SetMiscLocalization{
@@ -436,7 +409,7 @@ L:SetOptionLocalization{
 	YellOnShadowCrash				= "Gritar si eres objetivo de $spell:62660",
 	hardmodeSpawn					= "Mostrar tiempo para salida de Animus de saronita (Modo Difícil)",
 	CrashArrow						= "Mostrar una flecha cuando $spell:62660 va a caer cerca de ti",
-	BypassLatencyCheck				= "No usar la comprobación de sincronización basada en latencia para $spell:62660\n(sólo usar esta opción si tienes problemas de otro modo)"
+	BypassLatencyCheck				= "No usar la comprobación de sincronización basada en latencia para $spell:62660<br/>(sólo usar esta opción si tienes problemas de otro modo)"
 }
 
 L:SetMiscLocalization{

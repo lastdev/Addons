@@ -1,0 +1,45 @@
+------------------------------------------------------------------------
+r225 | xinhuan | 2011-01-02 15:27:13 +0000 (Sun, 02 Jan 2011) | 1 line
+Changed paths:
+   A /tags/v1.2.0 (from /trunk:224)
+
+Tag release v1.2.0.
+------------------------------------------------------------------------
+r224 | xinhuan | 2011-01-01 03:26:43 +0000 (Sat, 01 Jan 2011) | 1 line
+Changed paths:
+   M /trunk/HandyNotes.lua
+
+Manually map the "Cosmic" and "World" map to mapID -1 and 0 respectively to match Astrolabe-1.0.
+------------------------------------------------------------------------
+r223 | xinhuan | 2011-01-01 00:16:35 +0000 (Sat, 01 Jan 2011) | 1 line
+Changed paths:
+   M /trunk/HandyNotes.lua
+
+Add a 6th optional return value "dungeonLevel" to the pluginHandler:GetNodes() API. This value is used if it is different from the input dungeonLevel, similar to the 2nd return's "mapFile".
+------------------------------------------------------------------------
+r222 | xinhuan | 2010-12-31 08:32:25 +0000 (Fri, 31 Dec 2010) | 1 line
+Changed paths:
+   M /trunk/HandyNotes.toc
+
+Update version to 1.2.0
+------------------------------------------------------------------------
+r221 | xinhuan | 2010-12-31 08:26:13 +0000 (Fri, 31 Dec 2010) | 1 line
+Changed paths:
+   M /trunk/HandyNotes_EditFrame.lua
+
+Place the New Handy Note dialog box above the World Map by parenting to it if the World Map is open.
+------------------------------------------------------------------------
+r220 | xinhuan | 2010-12-31 08:24:48 +0000 (Fri, 31 Dec 2010) | 1 line
+Changed paths:
+   M /trunk/HandyNotes_HandyNotes.lua
+
+Fix the /hnnew slash command to work with Astrolabe-1.0.
+------------------------------------------------------------------------
+r219 | xinhuan | 2010-12-31 07:28:18 +0000 (Fri, 31 Dec 2010) | 2 lines
+Changed paths:
+   M /trunk/HandyNotes.lua
+   M /trunk/HandyNotes_HandyNotes.lua
+
+Fix HandyNotes to use Astrolabe-1.0 instead of Astrolabe-0.4.
+Update to work in Cataclysm.
+------------------------------------------------------------------------

@@ -1,0 +1,60 @@
+tag v1.0
+6aad33a3be6ee8b298df358a81350eeb5a519676
+Ethan Centaurai <ethancentaurai@outlook.com>
+2013-06-28 15:45:26 +0100
+
+Tagging as v1.0
+
+
+--------------------
+
+Ethan Centaurai:
+	- Add marker pins for stealing flames from Alliance cities.
+	- Correct Horde bonfire quest IDs in Northrend.
+	- Fix the Horde bonfires in Uldum.
+	- Fix the Horde bonfires in Twilight Highlands.
+	- Correct Horde bonfire quest IDs in Outland.
+	- Correct Horde bonfire quest IDs in Eastern Kingdoms.
+	- Correct Horde bonfire quest IDs in Kalimdor.
+	- Round up a few stray bits of data.
+	- Remove debug.
+	- Add mostly-working data for Horde players.
+	Icons are accurate and correct but won't hide yet when the quest is
+	completed.
+	- Use different icons for honouring, desecrating and stealing flames.
+	- Show bonfire marker pins on the continent map.
+	- Add the flames of the enemy cities.
+	- A slight clean-up...
+	- Fix the bonfires in Deepholm and Vashj'ir.
+	- Improve the accuracy of Alliance bonfires in Northrend.
+	- Improve the accuracy of Alliance bonfires in Outland.
+	- Improve the accuracy of Alliance bonfires in Kalimdor.
+	- Fix the bonfires in Tanaris.
+	- Fix the bonfires in Winterspring.
+	- Improve the accuracy of Alliance bonfires in Eastern Kingdoms.
+	- Fix the bonfires in Southern Stranglethorn.
+	- Fix the Alliance bonfire in Swamp of Sorrows.
+	- Add Alliance bonfire data.
+	- Fix a copy/paste fail in the continent data array.
+	- Add Pandaria bonfire markers to the continent map.
+	- Improve the accuracy of Pandaria bonfire markers.
+	- Wording tweaks.
+	- Added Pandaria bonfire data.
+	- Internal tweaks.
+	- Bump Interface number to 50300.
+	- Upvalue the database array.
+	- Bump Interface number to 50200.
+	- Fix icons not showing up in phased zones.
+	- Emphasize headings.
+	- Update readme.
+	- Remove the date check used to determine if the festival is active.
+	- Fix an error that occurs when closing the dropdown menu.
+	- Update README.
+	- Fix dates of the Midsummer Fesival.
+	- Update readme.
+	- Bump Interface number to 50100.
+	- Remove byte-order-mark.
+	- Plumbing.
+	- Update readme.
+	- Add git related stuff.
+	- Initial commit

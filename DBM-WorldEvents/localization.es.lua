@@ -14,11 +14,7 @@ L:SetGeneralLocalization({
 -----------------------
 --  Apothecary Trio  --
 -----------------------
-L = DBM:GetModLocalization("ApothecaryTrio")
-
-L:SetGeneralLocalization({
-	name = "Los Tres Boticarios"
-})
+L = DBM:GetModLocalization("d288")
 
 L:SetTimerLocalization{
 	HummelActive	= "Hummel se activa",
@@ -37,31 +33,23 @@ L:SetMiscLocalization({
 -----------------------
 --  Lord Ahune  --
 -----------------------
-L = DBM:GetModLocalization("Ahune")
-
-L:SetGeneralLocalization({
-	name = "Ahune"
-})
+L = DBM:GetModLocalization("d286")
 
 L:SetWarningLocalization({
-	Submerged		= "Ahune se sumerge",
 	Emerged			= "Ahune emerge",
 	specWarnAttack	= "Ahune es vulnerable ¡Ataca ahora!"
 })
 
 L:SetTimerLocalization{
 	SubmergTimer	= "Se sumerge",
-	EmergeTimer		= "Emerge",
-	TimerCombat		= "Inicio del combate"
+	EmergeTimer		= "Emerge"
 }
 
 L:SetOptionLocalization({
-	Submerged		= "Mostrar aviso cuando Ahune se sumerge",
 	Emerged			= "Mostrar aviso cuando Ahune emerge",
 	specWarnAttack	= "Mostrar aviso especial cuando Ahune es vulnerable",
 	SubmergTimer	= "Mostrar tiempo para sumersión",
-	EmergeTimer		= "Mostrar tiempo para emersión",
-	TimerCombat		= "Mostrar tiempo para inicio del combate",
+	EmergeTimer		= "Mostrar tiempo para emersión"
 })
 
 L:SetMiscLocalization({
@@ -71,11 +59,7 @@ L:SetMiscLocalization({
 -------------------
 -- Coren Direbrew --
 -------------------
-L = DBM:GetModLocalization("CorenDirebrew")
-
-L:SetGeneralLocalization({
-	name = "Coren Cerveza Temible"
-})
+L = DBM:GetModLocalization("d287")
 
 L:SetWarningLocalization({
 	specWarnBrew		= "¡Bebete la cerveza antes de que lanze otra!",
@@ -95,11 +79,7 @@ L:SetMiscLocalization({
 -------------------
 -- Headless Horseman --
 -------------------
-L = DBM:GetModLocalization("HeadlessHorseman")
-
-L:SetGeneralLocalization({
-	name = "El Jinete decapitado"
-})
+L = DBM:GetModLocalization("d285")
 
 L:SetWarningLocalization({
 	WarnPhase				= "Fase %d",
@@ -107,13 +87,8 @@ L:SetWarningLocalization({
 	warnHorsemanHead		= "¡Torbellino! ¡Mata a la cabeza!"
 })
 
-L:SetTimerLocalization{
-	TimerCombatStart		= "Empieza el combate"
-}
-
 L:SetOptionLocalization({
 	WarnPhase				= "Mostrar un aviso para cada cambio de fase",
-	TimerCombatStart		= "Mostrar tiempo para inicio del combate",	
 	warnHorsemanSoldiers	= "Mostrar aviso a la llegada de Calabazas con pulso",
 	warnHorsemanHead		= "Mostrar un aviso para torbellino (2ª i posteriores apariciones de cabeza)"
 })
@@ -175,7 +150,7 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	SetBubbles			= "Desactiva los bocadillos de chat durante $spell:101871\n(se restauran una vez finalizada la partida)"
+	SetBubbles			= "Desactiva los bocadillos de chat durante $spell:101871<br/>(se restauran una vez finalizada la partida)"
 })
 
 ----------------------

@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 			for k,v in pairs(PartyFrames) do
 				v.conf = pconf
 			end
-		end, "$Revision: 834 $")
+		end, "$Revision: 852 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -43,7 +43,7 @@ local XPerl_Party_HighlightCallback
 function XPerl_Party_Events_OnLoad(self)
 	-- Added UNIT_POWER/UNIT_MAXPOWER to events list for 4.0 (By PlayerLin)
 	local events = {"PLAYER_ENTERING_WORLD", "PARTY_MEMBER_ENABLE", "PARTY_MEMBER_DISABLE", "GROUP_ROSTER_UPDATED",
-			"UNIT_PHASE", "UNIT_COMBAT", "UNIT_SPELLMISS", "UNIT_FACTION", "UNIT_DYNAMIC_FLAGS", "UNIT_FLAGS", "UNIT_AURA", "UNIT_PORTRAIT_UPDATE",
+			"UNIT_PHASE", "UNIT_COMBAT", "UNIT_SPELLMISS", "UNIT_FACTION", "UNIT_FLAGS", "UNIT_AURA", "UNIT_PORTRAIT_UPDATE",
 			"UNIT_TARGET", "UNIT_POWER", "UNIT_MAXPOWER", "UNIT_HEALTH_FREQUENT", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE", "PLAYER_FLAGS_CHANGED",
 			"RAID_TARGET_UPDATE", "READY_CHECK", "READY_CHECK_CONFIRM", "READY_CHECK_FINISHED", "PLAYER_LOGIN", "UNIT_THREAT_LIST_UPDATE",
 			"PLAYER_TARGET_CHANGED","PARTY_LOOT_METHOD_CHANGED", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"}
@@ -1188,7 +1188,6 @@ function XPerl_Party_Events:UNIT_FACTION(unit)
 end
 
 XPerl_Party_Events.UNIT_FLAGS = XPerl_Party_Events.UNIT_FACTION
-XPerl_Party_Events.UNIT_DYNAMIC_FLAGS = XPerl_Party_Events.UNIT_FACTION
 
 function XPerl_Party_Events:UNIT_TARGET()
 	XPerl_Party_UpdateTarget(self)

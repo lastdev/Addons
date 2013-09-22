@@ -2,10 +2,10 @@
 ************************************************************************
 Alchemy.lua
 ************************************************************************
-File date: 2013-03-03T23:05:21Z
-File hash: ae98b42
-Project hash: f922565
-Project version: 2.4.6
+File date: 2013-07-28T17:10:35Z
+File hash: 8f9dd9a
+Project hash: 4bcba04
+Project version: 2.5.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -56,7 +56,7 @@ function addon:InitAlchemy()
 	recipe:SetSkillLevels(1, 1, 55, 75, 95)
 	recipe:SetCraftedItem(2454, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("ALCHEMY_ELIXIR")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Minor Healing Potion -- 2330
@@ -64,7 +64,7 @@ function addon:InitAlchemy()
 	recipe:SetSkillLevels(1, 1, 55, 75, 95)
 	recipe:SetCraftedItem(118, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("ALCHEMY_POTION")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Minor Mana Potion -- 2331
@@ -330,7 +330,7 @@ function addon:InitAlchemy()
 	recipe:SetSkillLevels(1, 1, 55, 75, 95)
 	recipe:SetCraftedItem(5997, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("ALCHEMY_ELIXIR")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TANK)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TANK, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Holy Protection Potion -- 7255
@@ -465,7 +465,7 @@ function addon:InitAlchemy()
 	recipe:SetRecipeItem(10644, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(9061, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("ALCHEMY_MISC")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("CRAFTED_ENGINEERS")
 
 	-- Superior Healing Potion -- 11457
@@ -865,15 +865,6 @@ function addon:InitAlchemy()
 	recipe:AddMobDrop(1853)
 	recipe:AddVendor(11278)
 
-	-- Alchemist Stone -- 17632
-	recipe = AddRecipe(17632, V.TBC, Q.COMMON)
-	recipe:SetSkillLevels(350, 350, 365, 372, 380)
-	recipe:SetRecipeItem(13517, "BIND_ON_PICKUP")
-	recipe:SetCraftedItem(13503, "BIND_ON_PICKUP")
-	recipe:SetItemFilterType("ALCHEMY_TRINKET")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER, F.SHATAR)
-	recipe:AddRepVendor(FAC.SHATAR, REP.REVERED, 21432)
-
 	-- Potion of Petrification -- 17634
 	recipe = AddRecipe(17634, V.ORIG, Q.UNCOMMON)
 	recipe:SetSkillLevels(300, 300, 315, 322, 330)
@@ -882,37 +873,6 @@ function addon:InitAlchemy()
 	recipe:SetItemFilterType("ALCHEMY_POTION")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddWorldDrop(Z.EASTERN_KINGDOMS, Z.KALIMDOR)
-
-	-- Flask of the Titans -- 17635
-	recipe = AddRecipe(17635, V.TBC, Q.UNCOMMON)
-	recipe:SetSkillLevels(300, 300, 315, 322, 330)
-	recipe:SetRecipeItem(31354, "BIND_ON_PICKUP")
-	recipe:SetCraftedItem(13510, "BIND_ON_EQUIP")
-	recipe:SetItemFilterType("ALCHEMY_FLASK")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.INSTANCE, F.SHATAR)
-	recipe:AddMobDrop(10363)
-	recipe:AddRepVendor(FAC.SHATAR, REP.EXALTED, 21432)
-
-	-- Flask of Distilled Wisdom -- 17636
-	recipe = AddRecipe(17636, V.TBC, Q.UNCOMMON)
-	recipe:SetSkillLevels(300, 300, 315, 322, 330)
-	recipe:SetRecipeItem(31356, "BIND_ON_PICKUP")
-	recipe:SetCraftedItem(13511, "BIND_ON_EQUIP")
-	recipe:SetItemFilterType("ALCHEMY_FLASK")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.INSTANCE, F.HEALER, F.CASTER, F.CENARION_EXPEDITION)
-	recipe:AddRepVendor(FAC.CENARION_EXPEDITION, REP.EXALTED, 17904)
-	recipe:AddMobDrop(10813)
-
-	-- Flask of Supreme Power -- 17637
-	recipe = AddRecipe(17637, V.TBC, Q.UNCOMMON)
-	recipe:SetSkillLevels(300, 300, 315, 322, 330)
-	recipe:SetRecipeItem(31355, "BIND_ON_PICKUP")
-	--recipe:SetCraftedItem(13512, "BIND_ON_EQUIP")
-	recipe:SetItemFilterType("ALCHEMY_FLASK")
-	--recipe:AddFilters(F.ALLIANCE, F.HORDE, F.INSTANCE, F.HEALER, F.CASTER, F.KOT)
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER, F.KOT)
-	--recipe:AddMobDrop(10508)
-	recipe:AddRepVendor(FAC.KEEPERS_OF_TIME, REP.EXALTED, 21643)
 
 	-- Elixir of Frost Power -- 21923
 	recipe = AddRecipe(21923, V.ORIG, Q.COMMON)
@@ -930,7 +890,7 @@ function addon:InitAlchemy()
 	recipe:SetCraftedItem(18253, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("ALCHEMY_POTION")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID)
-	recipe:AddCustom("MC_RANDOM")
+	recipe:AddWorldDrop(Z.MOLTEN_CORE)
 
 	-- Elixir of Greater Water Breathing -- 22808
 	recipe = AddRecipe(22808, V.ORIG, Q.COMMON)
@@ -1001,6 +961,43 @@ function addon:InitAlchemy()
 	recipe:SetItemFilterType("ALCHEMY_ELIXIR")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RETIRED, F.HEALER, F.CASTER)
 	recipe:AddCustom("REMOVED_FROM_GAME")
+
+	-- Alchemist Stone -- 17632
+	recipe = AddRecipe(17632, V.ORIG, Q.COMMON)
+	recipe:SetSkillLevels(350, 350, 365, 372, 380)
+	recipe:SetRecipeItem(13517, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(13503, "BIND_ON_PICKUP")
+	recipe:SetItemFilterType("ALCHEMY_TRINKET")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER, F.SHATAR)
+	recipe:AddRepVendor(FAC.SHATAR, REP.REVERED, 21432)
+
+	-- Flask of the Titans -- 17635
+	recipe = AddRecipe(17635, V.ORIG, Q.UNCOMMON)
+	recipe:SetSkillLevels(300, 300, 315, 322, 330)
+	recipe:SetRecipeItem(31354, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(13510, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("ALCHEMY_FLASK")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.INSTANCE, F.SHATAR)
+	recipe:AddMobDrop(10363)
+	recipe:AddRepVendor(FAC.SHATAR, REP.EXALTED, 21432)
+
+	-- Flask of Distilled Wisdom -- 17636
+	recipe = AddRecipe(17636, V.ORIG, Q.UNCOMMON)
+	recipe:SetSkillLevels(300, 300, 315, 322, 330)
+	recipe:SetRecipeItem(31356, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(13511, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("ALCHEMY_FLASK")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.INSTANCE, F.HEALER, F.CASTER, F.CENARION_EXPEDITION)
+	recipe:AddRepVendor(FAC.CENARION_EXPEDITION, REP.EXALTED, 17904)
+	recipe:AddMobDrop(10813)
+
+	-- Flask of Supreme Power -- 17637
+	recipe = AddRecipe(17637, V.ORIG, Q.UNCOMMON)
+	recipe:SetSkillLevels(300, 300, 315, 322, 330)
+	recipe:SetRecipeItem(31355, "BIND_ON_PICKUP")
+	recipe:SetItemFilterType("ALCHEMY_FLASK")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER, F.KOT)
+	recipe:AddRepVendor(FAC.KEEPERS_OF_TIME, REP.EXALTED, 21643)
 
 	-- Elixir of Camouflage -- 28543
 	recipe = AddRecipe(28543, V.TBC, Q.COMMON)
@@ -2459,8 +2456,8 @@ function addon:InitAlchemy()
 	recipe:SetSkillLevels(525, 525, 525, 530, 535)
 	recipe:SetRecipeItem(67538, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(65891, "BIND_ON_EQUIP")
-	recipe:SetItemFilterType("ALCHEMY_MISC")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:SetItemFilterType("ALCHEMY_MOUNT")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("ARCH_DROP_ULD")
 
 	-- Draught of War -- 93935

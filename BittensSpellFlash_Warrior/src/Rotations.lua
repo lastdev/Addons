@@ -5,33 +5,82 @@ local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
 local GetPowerRegen = GetPowerRegen
 local GetTime = GetTime
+local UnitPowerMax = UnitPowerMax
 local math = math
 local select = select
+local string = string
+local tostring = tostring
 
 a.Rotations = {}
 
+local function t15RageBump(amount)
+	if c.WearingSet(4, "ProtT15") 
+		and s.Debuff(c.GetID("Demoralizing Shout")) then
+		
+		a.Rage = a.Rage + 1.5 * amount
+	else
+		a.Rage = a.Rage + amount
+	end
+end
+
+local smashPending = 0
+
+local monitorSmashPending = function(info)
+	if c.InfoMatches(info, "Colossus Smash") then
+		smashPending = GetTime()
+		c.Debug("Event", "Colossus Smash Pending")
+	end
+end
+
+local monitorSmashApplied = function(spellID)
+	if c.IdMatches(spellID, "Colossus Smash") then
+		smashPending = 0
+		c.Debug("Event", "Colossus Smash Applied")
+	end
+end
+
 function a.PreFlash()
 	a.InExecute = s.HealthPercent() < 20
-	a.Rage = c.GetPower(select(2, GetPowerRegen()))
+	a.Rage = c.GetPower(0)
 	a.Enraged = c.HasBuff("Enrage", true)
-	if c.IsQueued("Bloodthirst", "Mortal Strike") then
-		a.Rage = a.Rage + 10
-	elseif c.IsQueued("Berserker Rage") then
+	if c.IsQueued("Berserker Rage") then
 		a.Rage = a.Rage + 10
 		a.Enraged = true
-	elseif c.IsQueued("Battle Shout", "Commanding Shout", "Charge") then
+	end
+	if c.IsQueued("Charge") then
+		t15RageBump(20)
+	end		
+	if c.IsQueued("Bloodthirst", "Mortal Strike") then
+		a.Rage = a.Rage + 10
+	elseif c.IsQueued("Battle Shout", "Commanding Shout") then
 		a.Rage = a.Rage + 20
 	elseif c.IsQueued("Shield Slam") then
-		if s.Buff("player", c.GetID("Sword and Board")) then
-			a.Rage = a.Rage + 25
+		if s.Buff(c.GetID("Sword and Board"), "player") then
+			t15RageBump(25)
 		else
-			a.Rage = a.Rage + 20
+			t15RageBump(20)
 		end
 	elseif c.IsQueued("Revenge") then
-		a.Rage = a.Rage + 15
+		t15RageBump(15)
 	end
-	a.Rage = math.min(s.MaxPower("player"), a.Rage)
-	a.EmptyRage = s.MaxPower("player") - a.Rage
+	local max = UnitPowerMax("player")
+	a.Rage = math.min(max, a.Rage)
+	a.EmptyRage = max - a.Rage
+	
+	if c.IsCasting("Colossus Smash") or GetTime() - smashPending < .8 then
+		a.Smash = 6
+	else
+		a.Smash = c.GetMyDebuffDuration("Colossus Smash", false, 6)
+	end
+	a.SmashCD = c.GetCooldown("Colossus Smash", false, 20)
+	
+	if c.IsCasting("Victory Rush", "Impending Victory") then
+		a.VictoriousDuration = 0
+	else
+		a.VictoriousDuration = c.GetBuffDuration("Victorious")
+	end
+	
+	a.Bloodbath = c.HasBuff("Bloodbath", false, false, true)
 end
 
 -------------------------------------------------------------------------- Arms
@@ -40,6 +89,8 @@ local tastePending = 0
 a.Rotations.Arms = {
 	Spec = 1,
 	
+	UsefulStats = { "Strength", "Melee Hit", "Crit", "Haste" },
+	
 	FlashInCombat = function()
 		a.TasteStacks = c.GetBuffStack("Taste for Blood")
 		if c.IsCasting("Mortal Strike") or GetTime() - tastePending < .8 then
@@ -47,12 +98,19 @@ a.Rotations.Arms = {
 		elseif c.IsCasting("Overpower") then
 			a.TasteStacks = a.TasteStacks - 1
 		end
+		
+		a.OverpowerIsFree = 
+			c.IsCasting("Execute") 
+				or (c.HasBuff("Sudden Execute") 
+						and not c.IsCasting("Overpower"))
+		a.CanOverpower = 
+			a.TasteStacks > 0 and (a.Rage >= 10 or a.OverpowerIsFree)
+		
 		c.FlashAll(
 			"Recklessness for Arms",
 			"Avatar",
 			"Bloodbath",
 			"Berserker Rage for Arms",
-			"Heroic Strike for Arms",
 			"Heroic Leap",
 			"Impending Victory for Heals, Optional",
 			"Victory Rush for Heals, Optional",
@@ -60,33 +118,53 @@ a.Rotations.Arms = {
 			"Sunder Armor",
 			"Pummel",
 			"Disrupting Shout")
-c.Debug("Flash", a.Rage, a.InExecute, not not a.Enraged, a.TasteStacks,
-		c.PriorityFlash(
-			"Mortal Strike",
-			"Colossus Smash for Arms",
-			"Storm Bolt for Arms",
-			"Execute under Smash",
-			"Dragon Roar",
-			"Execute",
-			"Impending Victory unless Execute",
-			"Victory Rush unless Execute",
-			"Slam with High Rage",
-			"Overpower",
-			"Slam",
-			"Shockwave",
-			"Shout for Rage",
-			"Heroic Throw")
-)
+		if c.AoE then
+			c.FlashAll("Cleave for Arms", "Sweeping Strikes")
+			c.PriorityFlash(
+				"Mortal Strike",
+				"Bladestorm",
+				"Shockwave",
+				"Dragon Roar",
+				"Thunder Clap",
+				"Whirlwind for Arms",
+				"Colossus Smash",
+				"Overpower AoE",
+				"Shout for Rage",
+				"Storm Bolt",
+				"Heroic Throw")
+		else
+			c.FlashAll("Heroic Strike for Arms")
+			c.PriorityFlash(
+				"Mortal Strike",
+				"Storm Bolt for Arms",
+				"Dragon Roar Prime for Arms",
+				"Colossus Smash for Arms",
+				"Execute Prime for Arms",
+				"Dragon Roar for Arms",
+				"Slam Double Prime",
+				"Overpower at 3",
+				"Slam Prime",
+				"Overpower unless Execute",
+				"Execute",
+				"Slam",
+				"Shout for Rage",
+				"Shockwave",
+				"Impending Victory for Free",
+				"Victory Rush",
+				"Heroic Throw")
+		end
 	end,
 	
 	FlashAlways = function()
-		c.FlashAll("Dps Stance")
+		c.FlashAll("Dps Stance", "Shout for Buff")
 	end,
 	
 	CastSucceeded = function(info)
 		if c.InfoMatches(info, "Mortal Strike") then
 			tastePending = GetTime()
 			c.Debug("Event", "Taste for Blood pending")
+		else
+			monitorSmashPending(info)
 		end
 	end,
 	
@@ -94,13 +172,32 @@ c.Debug("Flash", a.Rage, a.InExecute, not not a.Enraged, a.TasteStacks,
 		if c.IdMatches(spellID, "Taste for Blood") then
 			tastePending = 0
 			c.Debug("Event", "Taste for Blood applied")
+		else
+			monitorSmashApplied(spellID)
 		end
-	end
+	end,
+	
+	ExtraDebugInfo = function()
+		return string.format("b:%.1f r:%d e:%s e:%s t:%d o:%s f:%s s:%.1f", 
+			c.GetBusyTime(), 
+			a.Rage, 
+			tostring(a.InExecute), 
+			tostring(not not a.Enraged), 
+			a.TasteStacks,
+			tostring(a.CanOverpower),
+			tostring(a.OverpowerIsFree),
+			a.Smash)
+	end,
 }
 
 -------------------------------------------------------------------------- Fury
+a.CleaverPending = 0
+a.CleaverDumpPending = 0
+
 a.Rotations.Fury = {
 	Spec = 2,
+	
+	UsefulStats = { "Strength", "Melee Hit", "Crit", "Haste" },
 	
 	FlashInCombat = function()
 		c.FlashAll(
@@ -108,7 +205,6 @@ a.Rotations.Fury = {
 			"Avatar",
 			"Bloodbath for Fury",
 			"Berserker Rage for Fury",
-			"Heroic Strike for Fury",
 			"Heroic Leap",
 			"Impending Victory for Heals, Optional",
 			"Victory Rush for Heals, Optional",
@@ -116,8 +212,21 @@ a.Rotations.Fury = {
 			"Sunder Armor",
 			"Pummel",
 			"Disrupting Shout")
-		
-c.Debug("Flash", a.Rage, a.InExecute, not not a.Enraged,
+		if c.AoE then
+			c.FlashAll("Cleave for Fury")
+			c.PriorityFlash(
+				"Dragon Roar",
+				"Shockwave",
+				"Bladestorm",
+				"Bloodthirst",
+				"Colossus Smash",
+				"Raging Blow AoE",
+				"Whirlwind",
+				"Shout for Rage",
+				"Storm Bolt",
+				"Heroic Throw")
+		else
+			c.FlashAll("Heroic Strike for Fury")
 			c.PriorityFlash(
 				"Raging Blow Prime",
 				"Bloodthirst",
@@ -134,14 +243,49 @@ c.Debug("Flash", a.Rage, a.InExecute, not not a.Enraged,
 				"Shout for Rage unless Colossus Smash",
 				"Wild Strike under Colossus Smash",
 				"Impending Victory unless Execute",
-				"Victory Rush unless Execute",
+				"Victory Rush",
 				"Wild Strike with High Rage",
 				"Shout for Rage")
-)
+		end
 	end,
 	
 	FlashAlways = function()
-		c.FlashAll("Dps Stance")
+		c.FlashAll("Dps Stance", "Shout for Buff")
+	end,
+	
+	CastSucceeded = function(info)
+		if c.InfoMatches(info, "Whirlwind") then
+			a.CleaverPending = GetTime()
+			c.Debug("Event", "Meat Cleaver Pending")
+		elseif c.InfoMatches(info, "Raging Blow") then
+			a.CleaverDumpPending = GetTime()
+			c.Debug("Event", "Meat Cleaver Spend Pending")
+		else
+			monitorSmashPending(info)
+		end
+	end,
+	
+	AuraApplied = function(spellID)
+		if c.IdMatches(spellID, "Meat Cleaver") then
+			a.CleaverPending = 0
+			c.Debug("Event", "Meat Cleaver Applied")
+		else
+			monitorSmashApplied(spellID)
+		end
+	end,
+	
+	AuraRemoved = function(spellID)
+		if c.IdMatches(spellID, "Meat Cleaver") then
+			a.CleaverDumpPending = 0
+			c.Debug("Event", "Meat Cleaver Spend Happened")
+		end
+	end,
+	
+	ExtraDebugInfo = function()
+		return string.format("r:%d e:%s e:%s", 
+			a.Rage, 
+			tostring(a.InExecute), 
+			tostring(not not a.Enraged))
 	end,
 }
 
@@ -149,17 +293,20 @@ c.Debug("Flash", a.Rage, a.InExecute, not not a.Enraged,
 local uncontrolledMitigationCooldowns = {
 	"Second Wind",
 	"Spell Reflection",
-	"Rallying Cry",
-	-- demoralizing banner?
 }
+
+a.RevengeReset = 0
 
 a.Rotations.Protection = {
 	Spec = 3,
+	
+	UsefulStats = { "Stamina", "Strength", "Dodge", "Parry", "Tanking Hit" },
 	
 	FlashInCombat = function()
 		c.FlashMitigationBuffs(
 			1,
 			uncontrolledMitigationCooldowns,
+			c.COMMON_TANKING_BUFFS,
 			"No Mitigation if Victory Available",
 			"Demoralizing Shout",
 			"Enraged Regeneration for Prot",
@@ -170,13 +317,13 @@ a.Rotations.Protection = {
 			"Shield Block",
 			"Shield Barrier",
 			"Berserker Rage for Prot",
-			"Heroic Strike for free",
+			"Heroic Strike for Prot",
+			"Cleave for Prot",
 			"Taunt",
 			"Sunder Armor",
 			"Pummel",
 			"Disrupting Shout")
-c.Debug("Flash", a.Rage,
-		c.PriorityFlash(
+		c.DelayPriorityFlash(
 --			"Shockwave for Stun",
 --			"Dragon's Roar for Stun",
 			"Thunder Clap for Debuff",
@@ -185,12 +332,39 @@ c.Debug("Flash", a.Rage,
 			"Shield Slam",
 			"Revenge",
 			"Shout for Rage",
+			"Delay for Prot Rage Generator",
 			"Thunder Clap for Refresh",
+			"Devestate for Debuff unless AoE",
+			"Bladestorm",
+			"Shockwave",
+			"Dragon Roar",
+			"Storm Bolt",
 			"Devestate")
-)
 	end,
 	
 	FlashAlways = function()
-		c.FlashAll("Defensive Stance")
+		c.FlashAll("Defensive Stance", "Shout for Buff")
+	end,
+	
+	Avoided = function(missType)
+		if missType == "DODGE" or missType == "PARRY" then
+			a.RevengeReset = GetTime()
+			c.Debug("Event", "Revenge Reset Pending")
+		end
+	end,
+	
+	CastSucceeded = function(info)
+		if c.InfoMatches(info, "Revenge") then
+			a.RevengeReset = 0
+			c.Debug("Event", "Revenge Cast")
+		end
+	end,
+	
+	ExtraDebugInfo = function()
+		return string.format("r:%d e:%s e:%s, r:%.1f", 
+			a.Rage, 
+			tostring(a.InExecute), 
+			tostring(not not a.Enraged),
+			s.SpellCooldown(c.GetID("Revenge")))
 	end,
 }

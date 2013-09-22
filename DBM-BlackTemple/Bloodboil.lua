@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Bloodboil", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 410 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 501 $"):sub(12, -3))
 mod:SetCreatureID(22948)
 mod:SetModelID(21443)
 mod:SetZone()
@@ -14,22 +14,28 @@ mod:RegisterEvents(
 )
 
 local warnBlood			= mod:NewTargetAnnounce(42005, 3)
-local warnRage			= mod:NewTargetAnnounce(40604, 3)
-local warnRageSoon		= mod:NewPreWarnAnnounce(40604, 5, 3)
-local warnRageEnd		= mod:NewAnnounce("WarnRageEnd", 3, 40604)
+local warnWound			= mod:NewStackAnnounce(40481, 2)
+local warnStrike		= mod:NewTargetAnnounce(40491, 3)
+local warnRage			= mod:NewTargetAnnounce(40604, 4)
+local warnRageSoon		= mod:NewSoonAnnounce(40604, 3)
+local warnRageEnd		= mod:NewEndAnnounce(40604, 4)
 
 local specWarnBlood		= mod:NewSpecialWarningYou(42005)
 local specWarnRage		= mod:NewSpecialWarningYou(40604)
 
 local timerBlood		= mod:NewCDTimer(10, 42005)
+local timerWound		= mod:NewTargetTimer(60, 40481)
+local timerStrikeCD		= mod:NewCDTimer(30, 40491)
 local timerRage			= mod:NewCDTimer(52, 40604)
-local timerRageEnd		= mod:NewTimer(28, "TimerRageEnd", 38739)
+local timerRageEnd		= mod:NewBuffActiveTimer(28, 40604)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
 local warnBloodTargets = {}
+local rage = false
 
 local function nextRage()
+	rage = false
 	warnRageEnd:Show()
 	timerRage:Start()
 	warnRageSoon:Schedule(47)
@@ -44,15 +50,17 @@ local function showBlood()
 end
 
 function mod:OnCombatStart(delay)
+	rage = false
 	berserkTimer:Start(-delay)
-	timerRage:Start(-delay)
-	warnRageSoon:Schedule(52-delay)
+	warnRageSoon:Schedule(47-delay)
 	timerBlood:Start(11.5-delay)
+	timerStrikeCD:Start(37-delay)
+	timerRage:Start(-delay)
 	table.wipe(warnBloodTargets)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(42005) then
+	if args.spellId == 42005 then
 		warnBloodTargets[#warnBloodTargets + 1] = args.destName
 		self:Unschedule(showBlood)
 		if #warnBloodTargets >= 6 then
@@ -63,7 +71,17 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnBlood:Show()
 		end
-	elseif args:IsSpellID(40604) then
+	elseif args.spellId == 40481 and not rage then
+		local amount = args.amount or 1
+		if (amount == 1) or (amount % 3 == 0) then
+			warnWound:Show(args.destName, amount)
+			timerWound:Show(args.destName)
+		end
+	elseif args.spellId == 40491 then
+		warnStrike:Show(args.destName)
+		timerStrikeCD:Start()
+	elseif args.spellId == 40604 then
+		rage = true
 		warnRage:Show(args.destName)
 		timerBlood:Cancel()
 		timerRageEnd:Start()
@@ -73,5 +91,4 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	end
 end
-
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED

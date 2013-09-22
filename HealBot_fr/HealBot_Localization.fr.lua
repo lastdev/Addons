@@ -1,4 +1,4 @@
-ï»¿-- French version (by Kubik of Vol'Jin) 2012-10-21 / V. 5.0.5.5
+ï»¿-- French version (by Kubik of Vol'Jin) 2013-07-21 / V. 5.3.0.8
 -- à = \195\160
 -- â = \195\162
 -- ç = \195\167
@@ -753,12 +753,10 @@ HEALBOT_CUSTOM_DEBUFF_CATS = {
     HEALBOT_ABOUT_WEBSITE                  = "Site Web :"
     HEALBOT_ABOUT_AUTHORH                  = "Auteur :"
     HEALBOT_ABOUT_AUTHORD                  = "Strife"
-    HEALBOT_ABOUT_EMAILH                   = "Email :"
-    HEALBOT_ABOUT_EMAILD                   = "healbot@outlook.com"
     HEALBOT_ABOUT_CATH                     = "Cat\195\169gorie :"
     HEALBOT_ABOUT_CATD                     = "Unit Frames, Buffs and Debuffs, Combat:Healer"
     HEALBOT_ABOUT_CREDITH                  = "Cr\195\169dits :"
-    HEALBOT_ABOUT_CREDITD                  = "Acirac, Kubik, Von, Aldetal, Brezza"  -- Anyone taking on translations (if required), feel free to add yourself here.
+    HEALBOT_ABOUT_CREDITD                  = "Acirac, Kubik, Von, Aldetal, Brezza, CT, Moonlight Han Xing"  -- Anyone taking on translations (if required), feel free to add yourself here.
     HEALBOT_ABOUT_LOCALH                   = "Traductions :"
     HEALBOT_ABOUT_LOCALD                   = "deDE, enUK, esES, frFR, huHU, itIT, koKR, ruRU, poBR, zhCN, zhTW"
     HEALBOT_ABOUT_FAQH                     = "FAQ"
@@ -944,21 +942,75 @@ HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "Vous surveillez les buffs manquants \
     
     HEALBOT_OPTIONS_IN_A_GROUP              = "Seulement en groupe ou en raid"
     
-    HEALBOT_OPTIONS_CONTENT_SKINS_GENERAL   = "        " .. HEALBOT_OPTIONS_TAB_GENERAL
-    HEALBOT_OPTIONS_CONTENT_SKINS_HEALING   = "        " .. HEALBOT_OPTIONS_TAB_HEALING
+    HEALBOT_OPTIONS_CONTENT_SKINS_GENERAL   = "    " .. HEALBOT_OPTIONS_TAB_GENERAL
+    HEALBOT_OPTIONS_CONTENT_SKINS_HEALING   = "    " .. HEALBOT_OPTIONS_TAB_HEALING
     HEALBOT_OPTIONS_CONTENT_SKINS_HEADERS   = "        " .. HEALBOT_OPTIONS_TAB_HEADERS
     HEALBOT_OPTIONS_CONTENT_SKINS_BARS      = "        " .. HEALBOT_OPTIONS_TAB_BARS
     HEALBOT_OPTIONS_CONTENT_SKINS_ICONS     = "        " .. HEALBOT_OPTIONS_TAB_ICONS
-    HEALBOT_OPTIONS_CONTENT_SKINS_AGGRO     = "        " .. HEALBOT_OPTIONS_TAB_AGGRO
-    HEALBOT_OPTIONS_CONTENT_SKINS_PROT      = "        " .. HEALBOT_OPTIONS_TAB_PROTECTION
-    HEALBOT_OPTIONS_CONTENT_SKINS_CHAT      = "        " .. HEALBOT_OPTIONS_TAB_CHAT
+    HEALBOT_OPTIONS_CONTENT_SKINS_AGGRO     = "    " .. HEALBOT_OPTIONS_TAB_AGGRO
+    HEALBOT_OPTIONS_CONTENT_SKINS_PROT      = "    " .. HEALBOT_OPTIONS_TAB_PROTECTION
+    HEALBOT_OPTIONS_CONTENT_SKINS_CHAT      = "    " .. HEALBOT_OPTIONS_TAB_CHAT
     HEALBOT_OPTIONS_CONTENT_SKINS_TEXT      = "        " .. HEALBOT_OPTIONS_TAB_TEXT
     HEALBOT_OPTIONS_CONTENT_SKINS_ICONTEXT  = "        " .. HEALBOT_OPTIONS_TAB_ICONTEXT
 
-    HEALBOT_OPTIONS_CONTENT_CURE_DEBUFF     = "        " .. HEALBOT_SKIN_DEBTEXT
-    HEALBOT_OPTIONS_CONTENT_CURE_CUSTOM     = "        " .. HEALBOT_CLASSES_CUSTOM
-    HEALBOT_OPTIONS_CONTENT_CURE_WARNING    = "        " .. HEALBOT_OPTIONS_TAB_WARNING
+    HEALBOT_OPTIONS_CONTENT_CURE_DEBUFF     = "    " .. HEALBOT_SKIN_DEBTEXT
+    HEALBOT_OPTIONS_CONTENT_CURE_CUSTOM     = "    " .. HEALBOT_CLASSES_CUSTOM
+    HEALBOT_OPTIONS_CONTENT_CURE_WARNING    = "    " .. HEALBOT_OPTIONS_TAB_WARNING
     
     HEALBOT_SKIN_ABSORBCOL_TEXT             = "Effets d'absorption";
     HEALBOT_OPTIONS_BARALPHAABSORB          = "Opacit\195\169  des effets d'absorption";
+    HEALBOT_OPTIONS_OUTLINE                 = "Contour"
+    HEALBOT_OPTIONS_FRAME                   = "Cadre"
+    HEALBOT_OPTION_NUMHEALERS               = "Nombre de soigneurs"
+    HEALBOT_OPTIONS_CONTENT_SKINS_FRAMES    = "    " .. "Cadres"
+    HEALBOT_OPTIONS_FRAMESOPTTEXT           = "Options  de cadres"
+    HEALBOT_OPTIONS_SETTOOLTIP_POSITION     = "Position tooltip"
+    HEALBOT_OPTIONS_FRAME_TITLE             = "Titre du cadre"
+    HEALBOT_OPTIONS_FRAME_TITLE_SHOW        = "Afficher le titre"
+    HEALBOT_OPTIONS_GROW_DIRECTION          = "Sens d\'accroissement"
+    HEALBOT_OPTIONS_GROW_HORIZONTAL         = "Horizontal"
+    HEALBOT_OPTIONS_GROW_VERTICAL           = "Vertical"
+    HEALBOT_OPTIONS_FONT_OFFSET             = "Offset police"
+    HEALBOT_OPTIONS_SET_FRAME_HEALGROUPS    = "Assigner les groupes de soins"
+    HEALBOT_OPTION_EXCLUDEMOUNT_ON          = "Exclure le monture maintenant"
+    HEALBOT_OPTION_EXCLUDEMOUNT_OFF         = "Ne plus exclure la monture"
+    HEALBOT_CMD_TOGGLEEXCLUDEMOUNT          = "Bascule 'Exclure la monture'"
+    HEALBOT_OPTIONS_HIDEMINIBOSSFRAMES      = "Masquer les portraits des mini boss";
+    HEALBOT_OPTIONS_HIDERAIDFRAMES          = "Masquer les portraits de raid";
+    HEALBOT_OPTIONS_FRAME_ALIAS             = "Alias"
+    HEALBOT_OPTIONS_CONTENT_SKINS_HEALGROUP = "        " .. "Groupes de soins"
+    HEALBOT_OPTIONS_CONTENT_SKINS_BARCOLOUR = "        " .. "Couleur des barres";
+    HEALBOT_OPTIONS_SET_ALL_FRAMES          = "Appliquer ces r\195\169glages \195\160 tous les cadres"
+    HEALBOT_WORDS_PROFILE                   = "Profil";
+    HEALBOT_SHARE_SCREENSHOT                = "Copie d'\195\169cran faite"
+    HEALBOT_SHARE_INSTRUCTION               = "Allez sur le site internet pour les instructions de partage : "..HEALBOT_ABOUT_URL
+    HEALBOT_ENEMY_SHOW_BARS                 = "Afficher des barres pour les ennemis"
+    HEALBOT_ENEMY_USE_FRAME                 = "Utiliser le cadre"
+    HEALBOT_ENEMY_INCLUDE_SELF              = "Inclure ma cible"
+    HEALBOT_ENEMY_INCLUDE_TANKS             = "Inclure les cibles des tanks"
+    HEALBOT_OPTIONS_ENEMY_OPT               = "Options pour les ennemis";
+    HEALBOT_OPTIONS_SHARE_OPT               = "Partage des options";
+    HEALBOT_OPTIONS_CONTENT_SKINS_SHARE     = "    " .. "Partager"
+    HEALBOT_OPTIONS_CONTENT_SKINS_ENEMY     = "    " .. "Ennemi"
+    HEALBOT_OPTIONS_BUTTONLOADSKIN          = "Charger skin"
+    HEALBOT_ENEMY_NO_TARGET                 = "Pas de cible"
+    HEALBOT_OPTIONS_ENEMYBARS               = "Barres des ennemis"
+	HEALBOT_OPTIONS_HARMFUL_SPELLS          = "Sorts de d\195\169g\195\162ts"
+	HEALBOT_ENEMY_INCLUDE_MYTARGETS         = "Inclure la cible de ma cible"
+	HEALBOT_ENEMY_NUMBER_BOSSES             = "Nombre de boss"
+	HEALBOT_ENEMY_HIDE_OUTOFCOMBAT          = "Cacher les barres hors combat"
+	HEALBOT_ENEMY_EXISTS_SHOW               = "N\'afficher que si l\'unit\195\169".."\n".."existe au d\195\169but du combat"
+	HEALBOT_ENEMY_EXISTS_SHOW_PTARGETS      = "Cibles des joueurs"
+	HEALBOT_ENEMY_EXISTS_SHOW_BOSSES        = "Barres des boss"
+    HEALBOT_OPTIONS_TARGET_ONLY_FRIEND      = "Cible : Uniquement si amicale"
+    HEALBOT_OPTIONS_FOCUS_ONLY_FRIEND       = "Focus : Uniquement si amicale"
+    HEALBOT_OPTIONS_PROFILE                 = "Profil pour".."\n".."Sorts/Buffs/Debuffs"
+    HEALBOT_OPTIONS_PROFILE_CHARACTER       = "Personnage"
+    HEALBOT_OPTIONS_PROFILE_CLASS           = "Classe"
+    HEALBOT_OPTIONS_INCOMBATALERTLEVEL      = "Niveau d\'alerte - En combat";
+    HEALBOT_OPTIONS_OUTCOMBATALERTLEVEL     = "Niveau d\'alerte - Hors combat";
+end
+
+if (GetLocale() == "frFR") then
+    HealBot_Lang_frFR()
 end

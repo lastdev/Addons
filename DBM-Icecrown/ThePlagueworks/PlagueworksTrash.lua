@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("PlagueworksTrash", "DBM-Icecrown", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 45 $"):sub(12, -3))
 mod:SetModelID(30483)
+mod.isTrashMod = true
 
 mod:RegisterEvents(
 	"SPELL_AURA_APPLIED",
@@ -14,11 +15,11 @@ mod:RegisterEvents(
 )
 
 local warnZombies			= mod:NewSpellAnnounce(71159, 2)
-local warnMortalWound		= mod:NewAnnounce("WarnMortalWound", 2, 71127, false)
+local warnMortalWound		= mod:NewStackAnnounce(71127, 2, nil, mod:IsTank() or mod:IsHealer())
 local warnDecimateSoon		= mod:NewSoonAnnounce(71123, 3)
 
 local specWarnDecimate		= mod:NewSpecialWarningSpell(71123)
-local specWarnMortalWound	= mod:NewSpecialWarningStack(71127, nil, 5)
+local specWarnMortalWound	= mod:NewSpecialWarningStack(71127, mod:IsTank() or mod:IsHealer(), 5)
 local specWarnTrap			= mod:NewSpecialWarning("SpecWarnTrap")
 local specWarnBlightBomb	= mod:NewSpecialWarningSpell(71088)
 
@@ -31,11 +32,12 @@ mod:RemoveOption("HealthFrame")
 mod:RemoveOption("SpeedKillTimer")
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(71127) then
-		warnMortalWound:Show(args.spellName, args.destName, args.amount or 1)
+	if args.spellId == 71127 then
+		local amount = args.amount or 1
+		warnMortalWound:Show(args.destName, amount)
 		timerMortalWound:Start(args.destName)
-		if args:IsPlayer() and (args.amount or 1) >= 5 then
-			specWarnMortalWound:Show(args.amount)
+		if args:IsPlayer() and amount >= 5 then
+			specWarnMortalWound:Show(amount)
 		end
 	end
 end
@@ -43,19 +45,19 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_SUMMON(args)
-	if args:IsSpellID(71159) and self:AntiSpam(5) then
+	if args.spellId == 71159 and self:AntiSpam(5) then
 		warnZombies:Show()
 		timerZombies:Start()
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(71123) then
+	if args.spellId == 71123 then
 		specWarnDecimate:Show()
 		warnDecimateSoon:Cancel()	-- in case the first 1 is inaccurate, you wont have an invalid soon warning
 		warnDecimateSoon:Schedule(28)
 		timerDecimate:Start()
-	elseif args:IsSpellID(71088) then
+	elseif args.spellId == 71088 then
 		specWarnBlightBomb:Show()
 		timerBlightBomb:Start()
 	end

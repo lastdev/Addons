@@ -1,20 +1,19 @@
-local mod = DBM:NewMod("Skyriss", "DBM-Party-BC", 15)
+local mod = DBM:NewMod(551, "DBM-Party-BC", 15, 254)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 337 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 494 $"):sub(12, -3))
 
 mod:SetCreatureID(20912)
-mod:SetModelID(19943)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_YELL",
 	"SPELL_AURA_APPLIED",
-	"UNIT_HEALTH"
+	"UNIT_HEALTH target focus mouseover"
 )
 
-local warnSplitSoon     = mod:NewAnnounce("warnSplitSoon")
-local warnSplit         = mod:NewAnnounce("warnSplit")
+local warnSplitSoon     = mod:NewSoonAnnounce("ej5335", 2)
+local warnSplit         = mod:NewSpellAnnounce("ej5335", 3)
 local warnMindControl   = mod:NewTargetAnnounce(39019)
 local timerMindControl  = mod:NewTargetTimer(6, 39019)
 local warnMindRend      = mod:NewTargetAnnounce(39017)
@@ -32,7 +31,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(39019, 37162) then
 		warnMindControl:Show(args.destName)
 		timerMindControl:Start(args.destName)
-	elseif args:IsSpellID(39017) then
+	elseif args.spellId == 39017 then
 		warnMindRend:Show(args.destName)
 		timerMindRend:Start(args.destName)
 	end

@@ -11,6 +11,15 @@ local select = select
 local string = string
 local tostring = tostring
 
+a.LastRuneCast = 0
+
+local function processCast(info)
+	if c.InfoMatches(info, "Rune of Power") then
+		a.LastRuneCast = GetTime()
+		c.Debug("Event", "Rune of Power cast")
+	end
+end
+
 a.Rotations = {}
 
 function a.PreFlash()
@@ -18,6 +27,7 @@ function a.PreFlash()
 	
 	local mana = c.GetPower(select(2, GetPowerRegen()))
 	a.ManaPercent = mana / s.MaxPower("player") * 100
+	a.AlterTime = c.HasBuff("Alter Time", false, false, true)
 end
 
 s.AddSettingsListener(
@@ -40,6 +50,8 @@ end
 
 a.Rotations.Arcane = {
 	Spec = 1,
+	
+	UsefulStats = { "Intellect", "Spell Hit", "Crit", "Haste" },
 	
 	FlashInCombat = function()
 		a.ChargeStacks = s.DebuffStack(c.GetID("Arcane Charge"), "player")
@@ -82,8 +94,11 @@ a.Rotations.Arcane = {
 			end
 		end
 		
+		a.ArcanePower = c.HasBuff("Arcane Power", false, false, true)
+		
 		c.FlashAll(
 			"Arcane Power",
+			"Presence of Mind before AT",
 			"Alter Time for Arcane", 
 			"Rune of Power",
 			"Evocation for Arcane",
@@ -91,6 +106,7 @@ a.Rotations.Arcane = {
 			"Mirror Image",
 			"Mana Gem",
 			"Brilliant Mana Gem",
+			"Cold Snap",
 			"Counterspell", 
 			"Spellsteal")
 		if c.AoE then
@@ -98,10 +114,11 @@ a.Rotations.Arcane = {
 				"Nether Tempest",
 				"Living Bomb",
 				"Frost Bomb",
+				"Presence of Mind before Flamestrike",
 				"Flamestrike",
+				"Arcane Explosion",
 				"Arcane Barrage for AoE",
 				"Arcane Missiles for AoE",
-				"Arcane Explosion",
 				"Arcane Blast")
 		else
 			c.PriorityFlash(
@@ -111,25 +128,43 @@ a.Rotations.Arcane = {
 				"Frost Bomb",
 				"Arcane Missiles",
 				"Arcane Barrage",
-				"Presence of Mind",
+				"Presence of Mind before AB",
 				"Arcane Blast")
 		end
 	end,
 	
+	MovementFallthrough = function()
+		c.PriorityFlash(
+			"Arcane Barrage when Moving",
+			"Fire Blast",
+			"Ice Lance")
+	end,
+	
 	FlashOutOfCombat = function()
-		c.FlashAll("Conjure Mana Gem", "Evocation for Health")
+		c.FlashAll(
+			"Conjure Mana Gem", 
+			"Evocation for Health",
+			"Evocation for Invoker's Energy Pre-Combat",
+			"Rune of Power Pre-Combat")
 	end,
 	
 	FlashAlways = function()
 		c.FlashAll(
 			"Mage Armor",
 			"Arcane Brilliance",
-			"Dalaran Brilliance")
+			"Dalaran Brilliance",
+			"Ice Barrier")
 	end,
 	
+	CastSucceeded = processCast,
+	
 	ExtraDebugInfo = function()
-		return string.format("%d, %d, %.1f, %.1f",
-			a.MissilesStacks, a.ChargeStacks, a.ChargeDuration, a.ManaPercent)
+		return string.format("m:%d c:%d c:%.1f m:%.1f a:%s",
+			a.MissilesStacks, 
+			a.ChargeStacks, 
+			a.ChargeDuration, 
+			a.ManaPercent,
+			tostring(a.AlterTime))
 	end
 }
 
@@ -158,6 +193,8 @@ end
 
 a.Rotations.Fire = {
 	Spec = 2,
+	
+	UsefulStats = { "Intellect", "Spell Hit", "Crit", "Haste" },
 	
 	FlashInCombat = function()
 		
@@ -202,40 +239,52 @@ str = str .. "pyroConsume->"
 		
 		-- Flash
 		c.FlashAll(
+			"Combustion",
+			"Alter Time for Fire",
+			"Presence of Mind for Fire",
+			"Rune of Power for Fire",
+			"Evocation for Invoker's Energy for Fire",
+			"Cold Snap",
 			"Counterspell", 
-			"Spellsteal", 
-			"Mana Gem", 
-			"Brilliant Mana Gem",
-			"Rune of Power",
-			"Evocation for Invoker's Energy")
+			"Spellsteal")
 		c.PriorityFlash(
-			"Combustion when Big",
 			"Pyroblast",
 			"Inferno Blast",
+			"Mirror Image",
 			"Nether Tempest",
 			"Living Bomb",
 			"Frost Bomb",
-			"Combustion",
-			"Mirror Image",
-			"Presence of Mind",
+			"Evocation for Invoker's Energy at 5",
+			"Rune of Power at 5",
+			"Mana Gem at 10",
+			"Brilliant Mana Gem at 10",
 			"Evocation",
-			"Scorch",
 			"Frostfire Bolt",
 			"Fireball")
 	end,
 	
+	MovementFallthrough = function()
+		c.FlashAll("Scorch")
+	end,
+	
 	FlashOutOfCombat = function()
-		c.FlashAll("Conjure Mana Gem", "Evocation for Health")
+		c.FlashAll(
+			"Conjure Mana Gem", 
+			"Evocation for Health",
+			"Evocation for Invoker's Energy Pre-Combat",
+			"Rune of Power Pre-Combat")
 	end,
 	
 	FlashAlways = function()
 		c.FlashAll(
 			"Molten Armor",
 			"Arcane Brilliance",
-			"Dalaran Brilliance")
+			"Dalaran Brilliance",
+			"Ice Barrier")
 	end,
 	
 	CastSucceeded = function(info)
+		processCast(info)
 		if c.InfoMatches(info, "Inferno Blast") then
 			pendingBlast = true
 			c.Debug("Event", "blast pending")
@@ -298,77 +347,113 @@ local blizzFingerCount = -1
 a.FingerCount = blizzFingerCount
 
 a.Rotations.Frost = {
-    Spec = 3,
-    
-    FlashInCombat = function()
-        c.FlashAll(
-        	"Deep Freeze",
-            "Counterspell",
-            "Spellsteal",
-            "Presence of Mind",
-			"Rune of Power")
-        c.PriorityFlash(
-        	"Ice Lance within 2",
-        	"Frost Bomb",
-        	"Living Bomb",
-        	"Nether Tempest",
-            "Frozen Orb",
-            "Icy Veins", 
-            "Mirror Image",
-            "Evocation for Invoker's Energy",
-            "Ice Lance within 5",
-            "Frostbolt for Debuff",
-            "Freeze",
-            "Ice Lance",
-            "Frostfire Bolt under Brain Freeze",
-            "Mana Gem",
-            "Evocation",
-            "Frostbolt")
-    end,
-    
-    FlashOutOfCombat = function()
-        c.FlashAll("Conjure Mana Gem", "Evocation for Health")
-    end,
-    
-    FlashAlways = function()
-        c.FlashAll(
-            "Frost Armor", 
-            "Summon Water Elemental", 
-            "Arcane Brilliance", 
-            "Dalaran Brilliance")
-    end,
-    
-    CastSucceeded = function(info)
-        if c.InfoMatches(info, "Ice Lance") then
-            a.FingerCount = math.max(0, a.FingerCount - 1)
-            c.Debug("Event", "Pretend FoF is now at", a.FingerCount)
-        end
-    end,
-    
-    AuraApplied = function(spellID)
-        if spellID == c.GetID("Fingers of Frost") then
-            local stack = c.GetBuffStack("Fingers of Frost")
-            if a.FingerCount == blizzFingerCount - 1 then
-                a.FingerCount = stack - 1
-            else
-                a.FingerCount = stack
-            end
-            c.Debug("Event",
-                "Gained FoF. Stack =", stack, "Pretend =", a.FingerCount)
-            blizzFingerCount = stack
-        end
-    end,
-    
-    AuraRemoved = function(spellID)
-        if spellID == c.GetID("Fingers of Frost") then
-            local stack = c.GetBuffStack("Fingers of Frost")
-            a.FingerCount = stack
-            c.Debug("Event", "Lost FoF. Stack =", stack)
-            blizzFingerCount = stack
-        end
-    end, 
-    
-    ExtraDebugInfo = function()
-    	return string.format("%d, %d", a.FingerCount, blizzFingerCount)
-    end
+	Spec = 3,
+	
+	UsefulStats = { "Intellect", "Spell Hit", "Crit", "Haste" },
+	
+	FlashInCombat = function()
+		a.BrainFreeze = c.HasBuff("Brain Freeze") 
+			and not c.IsCasting("Frostfire Bolt")
+		if c.HasGlyph("Icy Veins") then
+			a.VeinsID = c.GetID("Icy Veins Glyphed")
+		else
+			a.VeinsID = c.GetID("Icy Veins")
+		end
+		a.VeinsCD = c.GetCooldown(a.VeinsID)
+		a.HoldProcs =
+			((c.HasGlyph("Icy Veins") and a.VeinsCD < 2)
+					or c.GetCooldown("Alter Time") < 2)
+				and not c.IsSolo()
+		
+		c.FlashAll(
+			"Mirror Image",
+			"Evocation for Invoker's Energy for Frost",
+			"Rune of Power for Frost",
+			"Frozen Orb",
+			"Icy Veins",
+			"Presence of Mind for Frost", 
+			"Alter Time for Frost",
+			"Freeze",
+			"Deep Freeze",
+			"Cold Snap",
+			"Counterspell",
+			"Spellsteal")
+		c.PriorityFlash(
+			"Frostfire Bolt Prime",
+			"Ice Lance Prime",
+			"Nether Tempest",
+			"Living Bomb",
+			"Frost Bomb",
+			"Frostfire Bolt under Brain Freeze",
+			"Ice Lance before Cap",
+			"Ice Lance when Frozen",
+			"Evocation for Invoker's Energy at 5",
+			"Rune of Power at 5",
+			"Mana Gem at 10",
+			"Brilliant Mana Gem at 10",
+			"Evocation",
+			"Frostbolt")
+	end,
+	
+	MovementFallthrough = function()
+		c.PriorityFlash("Fire Blast", "Ice Lance")
+	end,
+	
+	FlashOutOfCombat = function()
+		c.FlashAll(
+			"Conjure Mana Gem", 
+			"Evocation for Health",
+			"Evocation for Invoker's Energy Pre-Combat",
+			"Rune of Power Pre-Combat")
+	end,
+	
+	FlashAlways = function()
+		c.FlashAll(
+			"Frost Armor", 
+			"Summon Water Elemental", 
+			"Arcane Brilliance", 
+			"Dalaran Brilliance",
+			"Ice Barrier")
+	end,
+	
+	CastSucceeded = function(info)
+		processCast(info)
+		if c.InfoMatches(info, "Ice Lance") then
+			a.FingerCount = math.max(0, a.FingerCount - 1)
+			c.Debug("Event", "Pretend FoF is now at", a.FingerCount)
+		end
+	end,
+	
+	AuraApplied = function(spellID)
+		if spellID == c.GetID("Fingers of Frost") then
+			local stack = c.GetBuffStack("Fingers of Frost")
+			if a.FingerCount == blizzFingerCount - 1 then
+				a.FingerCount = stack - 1
+			else
+				a.FingerCount = stack
+			end
+			c.Debug("Event",
+				"Gained FoF. Stack =", stack, "Pretend =", a.FingerCount)
+			blizzFingerCount = stack
+		end
+	end,
+	
+	AuraRemoved = function(spellID)
+		if spellID == c.GetID("Fingers of Frost") then
+			local stack = c.GetBuffStack("Fingers of Frost")
+			a.FingerCount = stack
+			c.Debug("Event", "Lost FoF. Stack =", stack)
+			blizzFingerCount = stack
+		end
+	end, 
+	
+	ExtraDebugInfo = function()
+		return string.format("f:%d, f:%d h:%s f:%d b:%s a:%s", 
+			blizzFingerCount, 
+			a.FingerCount, 
+			tostring(a.HoldProcs), 
+			a.FBStacks, 
+			tostring(a.BrainFreeze),
+			tostring(a.AlterTime))
+	end
 }

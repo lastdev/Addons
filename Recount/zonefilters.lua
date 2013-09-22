@@ -90,6 +90,7 @@ function Recount:UpdateZoneGroupFilter()
 			instanceType = "pvp"
 		end
 	end
+--	Recount:DPrint("IT: "..instanceType)
 	if not UnitIsGhost(Recount.PlayerName) then Recount:SetZoneGroupFilter(instanceType, groupType) end -- Use zone-based filters.
 end
 

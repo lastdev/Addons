@@ -1,15 +1,15 @@
 ## Title: LibExtraTip |cff224477(lib)
 ## Notes: Assists in the management of additional tooltip information.
 ##
-## Interface: 50001
+## Interface: 50400
 ## LoadOnDemand: 0
 ##
-## Version: 5.15.5380 (LikeableLyrebird)
-## Revision: $Id: LibExtraTip.toc 329 2012-08-17 17:48:31Z brykrys $
+## Version: 5.18.5433 (PassionatePhascogale)
+## Revision: $Id: LibExtraTip.toc 357 2013-09-10 08:25:55Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Libraries
 ## X-Category: Library
-## X-Max-Interface: 50001
+## X-Max-Interface: 50400
 ## X-URL: http://zip.norganna.org/libs/LibExtraTip/
 ## X-Feedback: http://forums.norganna.org
 ##

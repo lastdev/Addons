@@ -2,53 +2,57 @@
 -- http://wow.curseforge.com/addons/bittens-spellflash-warrior/localization/
 
 local addonName, a = ...
-local function DefaultFunction(_, key) return key end
-a.Localize = setmetatable({}, {__index = DefaultFunction})
+a.Localize = setmetatable({ }, { __index = function(_, key) return key end })
 local L = a.Localize
-
-if GetLocale() == "ptBR" then -- Brazilian Portuguese
+local locale = GetLocale()
+if locale == "ptBR" then -- Brazilian Portuguese
 -- L["Flash Arms"] = ""
 -- L["Flash Fury"] = ""
 -- L["Flash Protection"] = ""
 
-elseif GetLocale() == "frFR" then -- French
+elseif locale == "frFR" then -- French
 -- L["Flash Arms"] = ""
 -- L["Flash Fury"] = ""
 -- L["Flash Protection"] = ""
 
-elseif GetLocale() == "deDE" then -- German
+elseif locale == "deDE" then -- German
 -- L["Flash Arms"] = ""
 -- L["Flash Fury"] = ""
 -- L["Flash Protection"] = ""
 
-elseif GetLocale() == "koKR" then -- Korean
+elseif locale == "itIT" then -- Italian
 -- L["Flash Arms"] = ""
 -- L["Flash Fury"] = ""
 -- L["Flash Protection"] = ""
 
-elseif GetLocale() == "esMX" then -- Latin American Spanish
+elseif locale == "koKR" then -- Korean
 -- L["Flash Arms"] = ""
 -- L["Flash Fury"] = ""
 -- L["Flash Protection"] = ""
 
-elseif GetLocale() == "ruRU" then -- Russian
+elseif locale == "esMX" then -- Latin American Spanish
 -- L["Flash Arms"] = ""
 -- L["Flash Fury"] = ""
 -- L["Flash Protection"] = ""
 
-elseif GetLocale() == "zhCN" then -- Simplified Chinese
+elseif locale == "ruRU" then -- Russian
 -- L["Flash Arms"] = ""
 -- L["Flash Fury"] = ""
 -- L["Flash Protection"] = ""
 
-elseif GetLocale() == "esES" then -- Spanish
+elseif locale == "zhCN" then -- Simplified Chinese
+L["Flash Arms"] = "武器闪光" -- Needs review
+L["Flash Fury"] = "狂怒闪光" -- Needs review
+L["Flash Protection"] = "防护闪光" -- Needs review
+
+elseif locale == "esES" then -- Spanish
 -- L["Flash Arms"] = ""
 -- L["Flash Fury"] = ""
 -- L["Flash Protection"] = ""
 
-elseif GetLocale() == "zhTW" then -- Traditional Chinese
--- L["Flash Arms"] = ""
--- L["Flash Fury"] = ""
--- L["Flash Protection"] = ""
+elseif locale == "zhTW" then -- Traditional Chinese
+L["Flash Arms"] = "武器閃光" -- Needs review
+L["Flash Fury"] = "狂怒閃光" -- Needs review
+L["Flash Protection"] = "防護閃光" -- Needs review
 
 end

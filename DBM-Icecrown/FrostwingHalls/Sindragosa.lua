@@ -1,32 +1,31 @@
 local mod	= DBM:NewMod("Sindragosa", "DBM-Icecrown", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 86 $"):sub(12, -3))
 mod:SetCreatureID(36853)
---mod:SetModelID(30362)--Does not scale correctly
+mod:SetModelID(30362)
 mod:SetUsedIcons(3, 4, 5, 6, 7, 8)
---mod:SetMinSyncRevision(3712)
 mod:SetMinSyncRevision(7)--Could break if someone is running out of date version with higher revision
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_SUCCESS",
-	"UNIT_HEALTH",
+	"UNIT_HEALTH boss1",
 	"CHAT_MSG_MONSTER_YELL"
 )
 
 local warnAirphase				= mod:NewAnnounce("WarnAirphase", 2, 43810)
 local warnGroundphaseSoon		= mod:NewAnnounce("WarnGroundphaseSoon", 2, 43810)
-local warnPhase2soon			= mod:NewAnnounce("WarnPhase2soon", 1)
+local warnPhase2soon			= mod:NewPrePhaseAnnounce(2)
 local warnPhase2				= mod:NewPhaseAnnounce(2, 2)
-local warnInstability			= mod:NewAnnounce("WarnInstability", 2, 69766, false)
-local warnChilledtotheBone		= mod:NewAnnounce("WarnChilledtotheBone", 2, 70106, false)
-local warnMysticBuffet			= mod:NewAnnounce("WarnMysticBuffet", 2, 70128, false)
+local warnInstability			= mod:NewCountAnnounce(69766, 2, nil, false)
+local warnChilledtotheBone		= mod:NewCountAnnounce(70106, 2, nil, false)
+local warnMysticBuffet			= mod:NewCountAnnounce(70128, 2, nil, false)
 local warnFrostBeacon			= mod:NewTargetAnnounce(70126, 4)
 local warnBlisteringCold		= mod:NewSpellAnnounce(70123, 3)
 local warnFrostBreath			= mod:NewSpellAnnounce(69649, 2, nil, mod:IsTank() or mod:IsHealer())
@@ -176,7 +175,7 @@ function mod:SPELL_CAST_START(args)
 end	
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(70126) then
+	if args.spellId == 70126 then
 		beaconTargets[#beaconTargets + 1] = args.destName
 		if args:IsPlayer() then
 			playerBeaconed = true
@@ -209,7 +208,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			self:Schedule(0.3, warnBeaconTargets)
 		end
-	elseif args:IsSpellID(69762) then
+	elseif args.spellId == 69762 then
 		unchainedTargets[#unchainedTargets + 1] = args.destName
 		if args:IsPlayer() then
 			playerUnchained = true
@@ -225,7 +224,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			self:Schedule(0.3, warnUnchainedTargets)
 		end
-	elseif args:IsSpellID(70106) then	--Chilled to the bone (melee)
+	elseif args.spellId == 70106 then	--Chilled to the bone (melee)
 		if args:IsPlayer() then
 			warnChilledtotheBone:Show(args.amount or 1)
 			timerChilledtotheBone:Start()
@@ -233,7 +232,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnChilledtotheBone:Show(args.amount)
 			end
 		end
-	elseif args:IsSpellID(69766) then	--Instability (casters)
+	elseif args.spellId == 69766 then	--Instability (casters)
 		if args:IsPlayer() then
 			warnInstability:Show(args.amount or 1)
 			timerInstability:Start()
@@ -269,7 +268,7 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(70117) then--Icy Grip Cast, not blistering cold, but adds an extra 1sec to the warning
+	if args.spellId == 70117 then--Icy Grip Cast, not blistering cold, but adds an extra 1sec to the warning
 		warnBlisteringCold:Show()
 		specWarnBlisteringCold:Show()
 		timerBlisteringCold:Start()
@@ -279,21 +278,21 @@ function mod:SPELL_CAST_SUCCESS(args)
 end	
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(69762) then
+	if args.spellId == 69762 then
 		if self.Options.SetIconOnUnchainedMagic and not activeBeacons then
 			self:SetIcon(args.destName, 0)
 		end
-	elseif args:IsSpellID(70157) then
+	elseif args.spellId == 70157 then
 		if self.Options.SetIconOnFrostBeacon then
 			self:SetIcon(args.destName, 0)
 		end
-	elseif args:IsSpellID(70126) then
+	elseif args.spellId == 70126 then
 		activeBeacons = false
-	elseif args:IsSpellID(70106) then	--Chilled to the bone (melee)
+	elseif args.spellId == 70106 then	--Chilled to the bone (melee)
 		if args:IsPlayer() then
 			timerChilledtotheBone:Cancel()
 		end
-	elseif args:IsSpellID(69766) then	--Instability (casters)
+	elseif args.spellId == 69766 then	--Instability (casters)
 		if args:IsPlayer() then
 			timerInstability:Cancel()
 		end

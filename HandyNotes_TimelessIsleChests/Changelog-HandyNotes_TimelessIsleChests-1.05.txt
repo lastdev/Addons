@@ -1,0 +1,71 @@
+------------------------------------------------------------------------
+r14 | nagboy87 | 2013-09-13 04:58:06 +0000 (Fri, 13 Sep 2013) | 1 line
+Changed paths:
+   A /tags/1.05 (from /trunk:13)
+
+Added option to always show the chests.
+------------------------------------------------------------------------
+r13 | nagboy87 | 2013-09-13 04:51:22 +0000 (Fri, 13 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/HandyNotes_TimelessIsleChests.lua
+   M /trunk/HandyNotes_TimelessIsleChests.toc
+
+Added option to always show the chests.
+------------------------------------------------------------------------
+r11 | nagboy87 | 2013-09-13 00:00:04 +0000 (Fri, 13 Sep 2013) | 2 lines
+Changed paths:
+   M /trunk/HandyNotes_TimelessIsleChests.lua
+   M /trunk/HandyNotes_TimelessIsleChests.toc
+
+Corrected the location of One-Time Chest - Ordo Lake Lower
+Swapped the Carry Bird chests around.
+------------------------------------------------------------------------
+r9 | nagboy87 | 2013-09-12 20:32:00 +0000 (Thu, 12 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+Fixed .pkgmeta
+------------------------------------------------------------------------
+r7 | nagboy87 | 2013-09-12 20:00:21 +0000 (Thu, 12 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/HandyNotes_TimelessIsleChests.lua
+   M /trunk/HandyNotes_TimelessIsleChests.toc
+   M /trunk/embeds.xml
+
+Fixed library issues
+------------------------------------------------------------------------
+r6 | nagboy87 | 2013-09-12 19:49:50 +0000 (Thu, 12 Sep 2013) | 2 lines
+Changed paths:
+   A /trunk/Artwork
+   A /trunk/Artwork/chest_normal_daily.tga
+   A /trunk/Artwork/chest_normal_daily_end.tga
+   M /trunk/HandyNotes_TimelessIsleChests.lua
+   M /trunk/embeds.xml
+
+Fixed minimaps pin not hiding
+Added chests for Extreme Treasure Hunter and Where There's Pirates, There's Booty
+------------------------------------------------------------------------
+r4 | nagboy87 | 2013-09-11 18:38:17 +0000 (Wed, 11 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/HandyNotes_TimelessIsleChests.lua
+   M /trunk/HandyNotes_TimelessIsleChests.toc
+
+Added tooltips
+------------------------------------------------------------------------
+r2 | nagboy87 | 2013-09-11 05:00:01 +0000 (Wed, 11 Sep 2013) | 1 line
+Changed paths:
+   A /trunk/.pkgmeta
+   A /trunk/HandyNotes_TimelessIsleChests.lua
+   A /trunk/HandyNotes_TimelessIsleChests.toc
+   A /trunk/embeds.xml
+
+Initial Upload
+------------------------------------------------------------------------
+r1 | svn | 2013-09-11 04:46:50 +0000 (Wed, 11 Sep 2013) | 1 line
+Changed paths:
+   A /branches
+   A /tags
+   A /trunk
+
+timelessislechests/mainline: Initial Import
+------------------------------------------------------------------------

@@ -4,8 +4,8 @@ Trainer.lua
 ************************************************************************
 File date: 2012-09-17T22:19:59Z
 File hash: 8a447e5
-Project hash: f922565
-Project version: 2.4.6
+Project hash: 4bcba04
+Project version: 2.5.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************

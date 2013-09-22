@@ -1,54 +1,37 @@
 ﻿-------------------------------------------------------------------------------
--- Taiwan Localization 
+-- Taiwan Localization
+-- Big thanks to:
+-- 血之谷-萬年卡奴
 -------------------------------------------------------------------------------
 if (GetLocale() == "zhTW") then
 
--- Mage
-SMARTBUFF_MAGE_PATTERN = {"%a+甲術$"};
-
--- Warlock
-SMARTBUFF_WARLOCK_PATTERN = {"^惡魔%a+"};
-
--- Hunter
-SMARTBUFF_HUNTER_PATTERN = {"^%a+守護$"};
-
--- Shaman
-SMARTBUFF_SHAMAN_PATTERN = {"%a+之盾$"};
-
--- Paladin
-SMARTBUFF_PALADIN_PATTERN = {"^%a+聖印$"};
-
--- Death Knight
-SMARTBUFF_DEATHKNIGHT_PATTERN = {"%a+領域$"};
-
--- Druid
--- Priest
--- Warrior
--- Rogue
-
 -- Weapon types
 SMARTBUFF_WEAPON_STANDARD = {"匕首", "斧", "劍", "錘", "法杖", "拳套", "長柄武器", "投擲武器"};
-SMARTBUFF_WEAPON_BLUNT = {"魔杖", "法杖", "拳套"};
+SMARTBUFF_WEAPON_BLUNT = {"錘", "法杖", "拳套"};
 SMARTBUFF_WEAPON_BLUNT_PATTERN = "平衡石$";
 SMARTBUFF_WEAPON_SHARP = {"匕首", "斧", "劍", "長柄武器"};
 SMARTBUFF_WEAPON_SHARP_PATTERN = "磨刀石$";
 
 -- Creature types
-SMARTBUFF_HUMANOID  = "人型生物";
+SMARTBUFF_HUMANOID  = "人形生物";
 SMARTBUFF_DEMON     = "惡魔";
 SMARTBUFF_BEAST     = "野獸";
 SMARTBUFF_ELEMENTAL = "元素生物";
 SMARTBUFF_DEMONTYPE = "小鬼";
+SMARTBUFF_UNDEAD    = "不死";
 
 -- Classes
-SMARTBUFF_CLASSES = {"德魯伊", "獵人", "法師", "聖騎士", "牧師", "盜賊", "薩滿", "術士", "戰士", "死亡騎士", "武僧", "獵人寵物", "術士寵物", "Death Knight Pet", "Tank", "Healer", "Damage Dealer"};
+SMARTBUFF_CLASSES = {"德魯伊", "獵人", "法師", "聖騎士", "牧師", "盜賊", "薩滿", "術士", "戰士", "死亡騎士", "武僧", "獵人寵物", "術士寵物", "死騎寵物", "坦克", "補師", "DD"};
 
 -- Templates and Instances
-SMARTBUFF_TEMPLATES = {"自我", "隊伍", "團隊", "戰場", "MC", "Ony", "BWL", "Naxx", "AQ", "ZG", "自定義 1", "自定義 2", "自定義 3", "自定義 4", "自定義 5"};
-SMARTBUFF_INSTANCES = {"熔火之心", "奧妮克希亞的巢穴", "黑翼之巢", "安其拉", "祖爾格拉布", "奧特蘭克山谷", "阿拉希盆地", "戰歌峽谷", "劍刃競技場", "納葛蘭競技場"};
+SMARTBUFF_TEMPLATES = {"自我", "隊伍", "團隊", "戰場", "競技場", "ICC", "TOC", "Ulduar", "MC", "Ony", "BWL", "Naxx", "AQ", "ZG", "自定義 1", "自定義 2", "自定義 3", "自定義 4", "自定義 5"};
+SMARTBUFF_INSTANCES = {"冰冠城塞", "十字軍的試煉", "奧杜亞", "熔火之心", "奧妮克希亞的巢穴", "黑翼之巢", "納克薩瑪斯", "安其拉", "祖爾格拉布"};
 
 -- Mount
 SMARTBUFF_MOUNT = "速度提高(%d+)%%.";
+
+-- Abbreviations
+SMARTBUFF_ABBR_CHARGES_OL = "%d c";
 
 -- Bindings
 BINDING_NAME_SMARTBUFF_BIND_TRIGGER = "觸發";
@@ -85,7 +68,6 @@ SMARTBUFF_OFT_HIDEMMBUTTON   = "隱藏小地圖按鈕";
 SMARTBUFF_OFT_REBUFFTIMER    = "重新buff計時器";
 SMARTBUFF_OFT_AUTOSWITCHTMP  = "自動切換方案";
 SMARTBUFF_OFT_SELFFIRST      = "自己優先";
-SMARTBUFF_OFT_SCROLLWHEEL    = "滑鼠滾輪觸發";
 SMARTBUFF_OFT_SCROLLWHEELUP  = "滑鼠滾輪向上";
 SMARTBUFF_OFT_SCROLLWHEELDOWN= "下";
 SMARTBUFF_OFT_TARGETSWITCH   = "目標改變觸發";
@@ -96,8 +78,6 @@ SMARTBUFF_OFT_CHECKCHARGES   = "次數檢查";
 SMARTBUFF_OFT_RBT            = "重置計時器";
 SMARTBUFF_OFT_BUFFINCITIES   = "在城市內buff";
 SMARTBUFF_OFT_UISYNC         = "UI同步";
-SMARTBUFF_OFT_ADVGRPBUFFCHECK = "團隊buff檢查";
-SMARTBUFF_OFT_ADVGRPBUFFRANGE = "團隊範圍檢查";
 SMARTBUFF_OFT_BLDURATION     = "忽略";
 SMARTBUFF_OFT_COMPMODE       = "相容模式";
 SMARTBUFF_OFT_MINIGRP        = "小團隊";
@@ -106,6 +86,16 @@ SMARTBUFF_OFT_HIDESABUTTON   = "隱藏動作按鈕";
 SMARTBUFF_OFT_INCOMBAT       = "戰鬥中";
 SMARTBUFF_OFT_SMARTDEBUFF    = "SmartDebuff";
 SMARTBUFF_OFT_INSHAPESHIFT   = "變身型態下";
+SMARTBUFF_OFT_LINKGRPBUFFCHECK  = "團隊buff檢查";
+SMARTBUFF_OFT_LINKSELFBUFFCHECK = "自我buff檢查";
+SMARTBUFF_OFT_RESETALL       = "重置設定";
+SMARTBUFF_OFT_RESETLIST      = "重置法術清單";
+SMARTBUFF_OFT_YES            = "是";
+SMARTBUFF_OFT_NO             = "否";
+SMARTBUFF_OFT_PURGE_DATA     = "你確定要重置Smartbuff 所有的資料嗎? 這個動作將會重啟你的UI介面!";
+SMARTBUFF_OFT_SPLASHICON     = "顯示圖示";
+SMARTBUFF_OFT_SPLASHMSGSHORT = "簡短訊息";
+
 
 -- Options Frame Tooltip Text
 SMARTBUFF_OFTT               = "SmarBuff 開/關";
@@ -134,8 +124,6 @@ SMARTBUFF_OFTT_AUTOSWITCHTMPINST = "切換副本時,自動切換方案";
 SMARTBUFF_OFTT_CHECKCHARGES  = "當buff次數過低時警告.";
 SMARTBUFF_OFTT_BUFFINCITIES  = "當你在城市內仍然buff.\n如果你在PvP狀態下,不論任何情況皆會buff";
 SMARTBUFF_OFTT_UISYNC        = "啟動UI同步自身施放給其他玩家的buff剩餘時間.";
-SMARTBUFF_OFTT_ADVGRPBUFFCHECK = "檢查團體buff會一併檢查單體buff.";
-SMARTBUFF_OFTT_ADVGRPBUFFRANGE = "檢查施放團隊中,\n是否每個人都在有效範圍內";
 SMARTBUFF_OFTT_BLDURATION    = "忽略玩家秒數\n0 = 停用";
 SMARTBUFF_OFTT_COMPMODE      = "相容模式\n警示!!!\n除非無法buff自己,否則不勾選";
 SMARTBUFF_OFTT_MINIGRP       = "以獨立可移動小視窗顯示Raid各小隊設定.";
@@ -146,6 +134,8 @@ SMARTBUFF_OFTT_INCOMBAT      = "只對自己作用.\n被勾選為'戰鬥中'的�
 SMARTBUFF_OFTT_SMARTDEBUFF   = "顯示SmartDebuff視窗.";
 SMARTBUFF_OFTT_SPLASHDURATION= "閃爍訊息持續秒數.";
 SMARTBUFF_OFTT_INSHAPESHIFT  = "在變身型態下是否也施放buff.";
+SMARTBUFF_OFTT_LINKGRPBUFFCHECK  = "檢查其他職業\n是否已經施放\n相同類型的buff.";
+SMARTBUFF_OFTT_LINKSELFBUFFCHECK = "檢查自己身上\n是否有只能\n單一存在的Buff.";
 
 -- Buffsetup Frame Text
 SMARTBUFF_BST_SELFONLY       = "僅對自己施法";
@@ -160,7 +150,7 @@ SMARTBUFF_BST_MANALIMIT      = "力能底線";--力能是技能施放來源,如�
 
 -- Buffsetup Frame Tooltip Text
 SMARTBUFF_BSTT_SELFONLY      = "僅對自己施法,不對其他隊友施法.";
-SMARTBUFF_BSTT_SELFNOT       = "除了自己,也buff所有勾選職業.";
+SMARTBUFF_BSTT_SELFNOT       = "除了自己,buff所有勾選職業.";
 SMARTBUFF_BSTT_COMBATIN      = "在戰鬥狀態時保持自動觸發技能.";
 SMARTBUFF_BSTT_COMBATOUT     = "在非戰鬥狀態時保持自動觸發技能.";
 SMARTBUFF_BSTT_MAINHAND      = "Buff主手.";
@@ -195,6 +185,7 @@ SMARTBUFF_MSG_REBUFF         = "Rebuff:";
 SMARTBUFF_MSG_LEFT           = "剩餘";
 SMARTBUFF_MSG_CLASS          = "職業";
 SMARTBUFF_MSG_CHARGES        = "次";
+SMARTBUFF_MSG_SPECCHANGED    = "天賦已更改(%s), 重設buff模組...";
 
 -- Support
 SMARTBUFF_MINIMAP_TT         = "左鍵: 選項視窗\n右鍵: 開/關\nAlt-左鍵: SmartDebuff\nShift拖曳: 移動按鈕";
@@ -203,18 +194,4 @@ SMARTBUFF_FUBAR_TT           = "\n左鍵: 開啟選項\nShift-左鍵: 開/關\nA
 
 SMARTBUFF_DEBUFF_TT          = "Shift-左鍵拖曳: 移動視窗\n|cff20d2ff- S 按鈕 -|r\n左鍵: 依職業顯示\nShift-左鍵: 職業顏色\nAlt-左鍵: 高亮度 L/R\n|cff20d2ff- P 按鈕 -|r\n左鍵: 隱藏寵物 開/關";
 
-
--- Code table
---  : \195\160     : \195\168     : \195\172     : \195\178     : \195\185
---  : \195\161     : \195\169     : \195\173     : \195\179     : \195\186
---  : \195\162     : \195\170     : \195\174     : \195\180     : \195\187
---  : \195\163     : \195\171     : \195\175     : \195\181     : \195\188
---  : \195\164                     : \195\177     : \195\182
---  : \195\166                                     : \195\184
---  : \195\167                                     : \197\147
--- 
---  : \195\132
---  : \195\150
---  : \195\156
---  : \195\159
 end

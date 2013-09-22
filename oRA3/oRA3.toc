@@ -1,8 +1,8 @@
-## Interface: 50200
-## Name: oRA3
+## Interface: 50400
+## Title: oRA3
 ## Notes: Raid and Party Assist
-## Author: Ammo, Rabbit
-## X-Curse-Packaged-Version: r560-release
+## Author: Funkydude, Nebula169, Ammo, Rabbit
+## X-Curse-Packaged-Version: r671-release
 ## X-Curse-Project-Name: oRA3
 ## X-Curse-Project-ID: ora3
 ## X-Curse-Repository-ID: wow/ora3/mainline
@@ -11,34 +11,35 @@
 
 ## SavedVariables: oRA3DB
 
-## OptionalDeps: Ace3, LibCandyBar-3.0, LibSharedMedia-3.0
-
-## LoadManagers: AddonLoader
-## X-LoadOn-Always: true
+## OptionalDeps: Ace3, LibCandyBar-3.0, LibSharedMedia-3.0, LibDDI-1.0, LibGroupInSpecT-1.0, LibDualSpec-1.0
 
 #@no-lib-strip@
 libs.xml
 #@end-no-lib-strip@
 
 locales\enUS.lua
+locales\itIT.lua
+locales\ptBR.lua
 locales\ruRU.lua
 locales\koKR.lua
 locales\zhCN.lua
 locales\zhTW.lua
 locales\frFR.lua
 locales\deDE.lua
+locales\esES.lua
 
 oRA3.lua
 modulePrototype.lua
 
 modules\ReadyCheck.lua
 modules\Durability.lua
-modules\Resistance.lua
+modules\Gear.lua
+modules\Latency.lua
 modules\Zone.lua
 modules\Invite.lua
 modules\Promote.lua
 modules\Cooldowns.lua
 modules\Tanks.lua
 modules\Loot.lua
-modules\Inventory.lua
+modules\Difficulty.lua
 

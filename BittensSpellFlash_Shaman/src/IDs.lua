@@ -21,6 +21,7 @@ a.SpellIDs = {
 	["Flametongue Weapon"] = 8024,
   	["Healing Stream Totem"] = 5394,
   	["Healing Surge"] = 8004,
+  	["Lava Beam"] = 114074,
 	["Lava Burst"] = 51505,
 	["Lava Lash"] = 60103,
 	["Lava Surge"] = 77762,
@@ -29,6 +30,7 @@ a.SpellIDs = {
 	["Maelstrom Weapon"] = 53817,
 	["Magma Totem"] = 8190,
 	["Mana Tide Totem"] = 16190,
+	["Purge"] = 370,
 	["Rolling Thunder"] = 88764,
 	["Searing Flame"] = 77661,
 	["Searing Totem"] = 3599,
@@ -46,14 +48,25 @@ a.SpellIDs = {
 }
 
 a.TalentIDs = {
+	["Echo of the Elements"] = 108283,
+	["Totemic Persistence"] = 108284,
 	["Unleashed Fury"] = 117012,
 }
 
 a.GlyphIDs = {
+	["Chain Lightning"] = 55449,
 	["Telluric Currents"] = 55453,
+	["Thunderstorm"] = 62132,
 }
 
 a.EquipmentSets = {
+	ElementalT15 = {
+		HeadSlot = { 95952, 95322, 96696 },
+		ShoulderSlot = { 95954, 95324, 96698 },
+		ChestSlot = { 95950, 95320, 96694 },
+		HandsSlot = { 95951, 95321, 96695 },
+		LegsSlot = { 95953, 95323, 96697 },
+	},
 	EnhanceT15 = {
 		HeadSlot = { 95947, 95317, 96691 },
 		ShoulderSlot = { 95949, 95319, 96693 },

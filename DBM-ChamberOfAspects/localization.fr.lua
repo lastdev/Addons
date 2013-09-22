@@ -97,8 +97,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	WarningSplitSoon	= "Show pre-warning for Split",
-	RangeFrame			= "Show range frame (12 yards)",
-	SetIconOnBrand		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(74505)
+	RangeFrame			= "Show range frame (12 yards)"
 })
 
 L:SetMiscLocalization({
@@ -119,8 +118,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	SpecialWarningTranq		= "Show special warning for $spell:78722 (to tranq)",
-	RangeFrame				= "Show range frame (10 yards)",
-	BeaconIcon				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(74453)
+	RangeFrame				= "Show range frame (10 yards)"
 })
 
 L:SetMiscLocalization{
@@ -146,8 +144,7 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	WarnAdds		= "Announce new adds",
-	TimerAdds		= "Show timer for new adds",
-	warnCleaveArmor	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(74367)
+	TimerAdds		= "Show timer for new adds"
 })
 
 L:SetMiscLocalization({
@@ -175,8 +172,7 @@ L:SetOptionLocalization({
 	TwilightCutterCast		= "Show warning when $spell:77844 is being cast",
 	AnnounceAlternatePhase	= "Show warnings/timers for phase you aren't in as well",
 	SoundOnConsumption		= "Play sound on $spell:74562 or $spell:74792",--We use localized text for these functions
-	SetIconOnConsumption	= "Set icons on $spell:74562 or $spell:74792 targets",--So we can use single functions for both versions of spell.
-	YellOnConsumption		= "Yell on $spell:74562 or $spell:74792"
+	SetIconOnConsumption	= "Set icons on $spell:74562 or $spell:74792 targets"--So we can use single functions for both versions of spell.
 })
 
 L:SetMiscLocalization({
@@ -184,7 +180,5 @@ L:SetMiscLocalization({
 	Phase2					= "Vous ne trouverez que souffrance au royaume du crépuscule ! Entrez si vous l'osez !",
 	Phase3					= "Je suis la lumière et l'ombre ! Tremblez, mortels, devant le héraut d'Aile-de-mort !",--needs Verification
 	twilightcutter			= "Les sphères volantes rayonnent d'énergie noire !",
-	YellCombustion			= "Combustion on me!",--needs translation
-	YellConsumption			= "Consumption on me!",--needs translation
 	Kill					= "Relish this victory, mortals, for it will be your last. This world will burn with the master's return!"--needs translation
 })

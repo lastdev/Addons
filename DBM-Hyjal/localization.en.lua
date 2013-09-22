@@ -9,17 +9,8 @@ L:SetGeneralLocalization{
 	name = "Rage Winterchill"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
 L:SetOptionLocalization{
 	IceBoltIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(31249)
-}
-
-L:SetMiscLocalization{
 }
 
 -----------------
@@ -31,18 +22,6 @@ L:SetGeneralLocalization{
 	name = "Anetheron"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-}
-
-L:SetMiscLocalization{
-}
-
 ----------------
 --  Kazrogal  --
 ----------------
@@ -50,20 +29,6 @@ L = DBM:GetModLocalization("Kazrogal")
 
 L:SetGeneralLocalization{
 	name = "Kaz'rogal"
-}
-
-L:SetWarningLocalization{
-	WarnMark = "Mark of Kaz'rogal (%d)"
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-	WarnMark = "Show warning for $spell:31447"
-}
-
-L:SetMiscLocalization{
 }
 
 ---------------
@@ -75,17 +40,8 @@ L:SetGeneralLocalization{
 	name = "Azgalor"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
 L:SetOptionLocalization{
 	DoomIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(31347)
-}
-
-L:SetMiscLocalization{
 }
 
 ------------------
@@ -97,19 +53,8 @@ L:SetGeneralLocalization{
 	name = "Archimonde"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
 L:SetOptionLocalization{
-	YellOnBurst	= "Yell on $spell:32014",
 	BurstIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(32014)
-}
-
-L:SetMiscLocalization{
-	YellBurst	= "Air Burst on ME!"
 }
 
 ----------------
@@ -122,14 +67,12 @@ L:SetGeneralLocalization{
 }
 L:SetWarningLocalization{
 	WarnWave	= "%s",
-	WarnWaveSoon= "New wave soon"
 }
 L:SetTimerLocalization{
 	TimerWave	= "Next wave"
 }
 L:SetOptionLocalization{
 	WarnWave		= "Warn when a new wave is incoming",
-	WarnWaveSoon	= "Warn when a new wave is incoming soon",
 	DetailedWave	= "Detailed warning when a new wave is incoming (which mobs)",
 	TimerWave		= "Show a timer for next wave"
 }
@@ -137,10 +80,11 @@ L:SetMiscLocalization{
 	HyjalZoneName	= "Hyjal Summit",
 	Thrall			= "Thrall",
 	Jaina			= "Lady Jaina Proudmoore",
-	RageWinterchill	= "Rage Winterchill",
-	Anetheron		= "Anetheron",
-	Kazrogal		= "Kazrogal",
-	Azgalor			= "Azgalor",
+	GeneralBoss		= "Boss incoming",
+	RageWinterchill	= "Rage Winterchill incoming",
+	Anetheron		= "Anetheron incoming",
+	Kazrogal		= "Kazrogal incoming",
+	Azgalor			= "Azgalor incoming",
 	WaveCheck		= "Current Wave = (%d+) of 8",
 	WarnWave_0		= "Wave %s/8",
 	WarnWave_1		= "Wave %s/8 - %s %s",

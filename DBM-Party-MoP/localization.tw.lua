@@ -9,10 +9,6 @@ local L
 -----------------------
 L= DBM:GetModLocalization(672)
 
-L:SetOptionLocalization({
-	SetIconOnAdds	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej5616")
-})
-
 -----------------------
 -- Lorewalker Stonestep --
 -----------------------
@@ -20,10 +16,6 @@ L= DBM:GetModLocalization(664)
 
 L:SetWarningLocalization({
 	SpecWarnIntensity	= "%s在%s有(%d)層"
-})
-
-L:SetOptionLocalization({
-	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(6, 113315)
 })
 
 -----------------------
@@ -59,8 +51,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	SpecWarnFizzyBubbles	= "當你缺少$spell:114459時顯示特別警告",
-	RangeFrame				= "為$spell:106546顯示距離框"
+	SpecWarnFizzyBubbles	= "當你缺少$spell:114459時顯示特別警告"
 })
 
 -----------------------
@@ -73,10 +64,6 @@ L= DBM:GetModLocalization(673)
 
 L:SetWarningLocalization({
 	warnStaticField	= "%s"
-})
-
-L:SetOptionLocalization({
-	warnStaticField	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(106923)
 })
 
 -----------------------
@@ -103,7 +90,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(685)
 
 L:SetMiscLocalization({
-	Kill			= "只要你們心中還存有暴力，我就..會回來...",
+	Kill			= "只要你們心中還存有暴力，我就..會回來..."
 })
 
 -----------------------
@@ -122,10 +109,6 @@ L:SetOptionLocalization({
 -- Kiptilak --
 ---------------------
 L= DBM:GetModLocalization(655)
-
-L:SetOptionLocalization({
-	IconOnSabotage	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(107268)
-})
 
 -------------
 -- Gadok --
@@ -288,7 +271,7 @@ L= DBM:GetModLocalization(688)
 L= DBM:GetModLocalization(671)
 
 L:SetOptionLocalization({
-	KickArrow	= "當$spell:114487在你附近時顯示DBM箭頭",
+	KickArrow	= "當$spell:114487在你附近時顯示DBM箭頭"
 })
 
 -----------------------

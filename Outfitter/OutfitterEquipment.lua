@@ -19,22 +19,22 @@ function Outfitter:ShowEquipError(pOutfitItem, pIgnoredItem, pInventorySlot)
 		return
 	end
 	
+	local vSlotDisplayName = self.cSlotDisplayNames[pInventorySlot]
+	
+	if not vSlotDisplayName then
+		vSlotDisplayName = pInventorySlot or "nil"
+	end
+	
 	if pOutfitItem.Name then
 		if pIgnoredItem then
-			local vSlotDisplayName = self.cSlotDisplayNames[pInventorySlot]
-			
-			if not vSlotDisplayName then
-				vSlotDisplayName = pInventorySlot
-			end
-			
 			self:ErrorMessage(format(self.cItemAlreadyUsedError, self:GenerateItemLink(pOutfitItem), vSlotDisplayName))
-			self:DebugMessage("item already used for slot %s", tostring(pInventorySlot))
+			self:DebugMessage("item already used for slot %s", vSlotDisplayName)
 		else
-			self:ErrorMessage(format(self.cItemNotFoundError, self:GenerateItemLink(pOutfitItem)))
-			self:DebugMessage("can't find item for slot %s", tostring(pInventorySlot))
+			self:ErrorMessage(format(self.cItemNotFoundError, self:GenerateItemLink(pOutfitItem), vSlotDisplayName))
+			self:DebugMessage("can't find item for slot %s", vSlotDisplayName)
 		end
 	else
-		self:ErrorMessage(format(self.cItemNotFoundError, "unknown"))
+		self:ErrorMessage(format(self.cItemNotFoundError, "unknown", vSlotDisplayName))
 	end
 end
 

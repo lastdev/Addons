@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NorthrendBeasts", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 99 $"):sub(12, -3))
 mod:SetCreatureID(34797)
 mod:SetModelID(21601)
 mod:SetMinCombatTime(30)
@@ -84,14 +84,16 @@ local function updateHealthFrame(phase)
 		return
 	end
 	phases[phase] = true
-	if phase == 1 then
-		DBM.BossHealth:Clear()
-		DBM.BossHealth:AddBoss(34796, L.Gormok)
-	elseif phase == 2 then
-		DBM.BossHealth:AddBoss(35144, L.Acidmaw)
-		DBM.BossHealth:AddBoss(34799, L.Dreadscale)
-	elseif phase == 3 then
-		DBM.BossHealth:AddBoss(34797, L.Icehowl)
+	if DBM.BossHealth:IsShown() then
+		if phase == 1 then
+			DBM.BossHealth:Clear()
+			DBM.BossHealth:AddBoss(34796, L.Gormok)
+		elseif phase == 2 then
+			DBM.BossHealth:AddBoss(35144, L.Acidmaw)
+			DBM.BossHealth:AddBoss(34799, L.Dreadscale)
+		elseif phase == 3 then
+			DBM.BossHealth:AddBoss(34797, L.Icehowl)
+		end
 	end
 end
 
@@ -171,20 +173,20 @@ function mod:WormsSubmerge()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(66331) then		-- Impale
+	if args.spellId == 66331 then		-- Impale
 		timerNextImpale:Start()
 		warnImpaleOn:Show(args.destName)
-	elseif args:IsSpellID(66759) then	-- Frothing Rage
+	elseif args.spellId == 66759 then	-- Frothing Rage
 		warnRage:Show()
 		specWarnTranq:Show()
-	elseif args:IsSpellID(66823) then	-- Paralytic Toxin
+	elseif args.spellId == 66823 then	-- Paralytic Toxin
 		self:UnscheduleMethod("warnToxin")
 		toxinTargets[#toxinTargets + 1] = args.destName
 		if args:IsPlayer() then
 			specWarnToxin:Show()
 		end
 		self:ScheduleMethod(0.2, "warnToxin")
-	elseif args:IsSpellID(66869) then		-- Burning Bile
+	elseif args.spellId == 66869 then		-- Burning Bile
 		self:UnscheduleMethod("warnBile")
 		bileTargets[#bileTargets + 1] = args.destName
 		if args:IsPlayer() then
@@ -195,18 +197,18 @@ function mod:SPELL_AURA_APPLIED(args)
 			burnIcon = burnIcon - 1
 		end
 		self:ScheduleMethod(0.2, "warnBile")
-	elseif args:IsSpellID(66758) then
+	elseif args.spellId == 66758 then
 		timerStaggeredDaze:Start()
-	elseif args:IsSpellID(66636) then						-- Rising Anger
+	elseif args.spellId == 66636 then						-- Rising Anger
 		WarningSnobold:Show()
 		timerRisingAnger:Show()
-	elseif args:IsSpellID(68335) then
+	elseif args.spellId == 68335 then
 		warnEnrageWorm:Show()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED_DOSE(args)
-	if args:IsSpellID(66331) then		-- Impale
+	if args.spellId == 66331 then		-- Impale
 		timerNextImpale:Start()
 		warnImpaleOn:Show(args.destName)
 		if (args.amount >= 3 and not self:IsDifficulty("heroic10", "heroic25") ) or ( args.amount >= 2 and self:IsDifficulty("heroic10", "heroic25") ) then 
@@ -214,7 +216,7 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 				specWarnImpale3:Show(args.amount)
 			end
 		end
-	elseif args:IsSpellID(66636) then						-- Rising Anger
+	elseif args.spellId == 66636 then						-- Rising Anger
 		WarningSnobold:Show()
 		if args.amount <= 3 then
 			timerRisingAnger:Show()
@@ -225,34 +227,34 @@ function mod:SPELL_AURA_APPLIED_DOSE(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(66689) then			-- Arctic Breath
+	if args.spellId == 66689 then			-- Arctic Breath
 		timerBreath:Start()
 		warnBreath:Show()
-	elseif args:IsSpellID(66313) then							-- FireBomb (Impaler)
+	elseif args.spellId == 66313 then							-- FireBomb (Impaler)
 		warnFireBomb:Show()
-	elseif args:IsSpellID(66330) then		-- Staggering Stomp
+	elseif args.spellId == 66330 then		-- Staggering Stomp
 		timerNextStomp:Start()
 		specWarnSilence:Schedule(19)							-- prewarn ~1,5 sec before next
-	elseif args:IsSpellID(66794) then		-- Sweep stationary worm
+	elseif args.spellId == 66794 then		-- Sweep stationary worm
 		timerSweepCD:Start()
-	elseif args:IsSpellID(66821) then							-- Molten spew
+	elseif args.spellId == 66821 then							-- Molten spew
 		timerMoltenSpewCD:Start()
-	elseif args:IsSpellID(66818) then							-- Acidic Spew
+	elseif args.spellId == 66818 then							-- Acidic Spew
 		timerAcidicSpewCD:Start()
-	elseif args:IsSpellID(66901) then		-- Paralytic Spray
+	elseif args.spellId == 66901 then		-- Paralytic Spray
 		timerParalyticSprayCD:Start()
-	elseif args:IsSpellID(66902) then		-- Burning Spray
+	elseif args.spellId == 66902 then		-- Burning Spray
 		timerBurningSprayCD:Start()
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(66883) then			-- Slime Pool Cloud Spawn
+	if args.spellId == 66883 then			-- Slime Pool Cloud Spawn
 		warnSlimePool:Show()
 		timerSlimePoolCD:Show()
-	elseif args:IsSpellID(66824) then		-- Paralytic Bite
+	elseif args.spellId == 66824 then		-- Paralytic Bite
 		timerParalyticBiteCD:Start()
-	elseif args:IsSpellID(66879) then		-- Burning Bite
+	elseif args.spellId == 66879 then		-- Burning Bite
 		timerBurningBiteCD:Start()
 	end
 end
@@ -268,6 +270,7 @@ mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg:match(L.Charge) or msg:find(L.Charge) then
+		local target = DBM:GetUnitFullName(target)
 		warnCharge:Show(target)
 		timerNextCrash:Start()
 		if self.Options.ClearIconsOnIceHowl then
@@ -330,7 +333,9 @@ function mod:UNIT_DIED(args)
 		specWarnSilence:Cancel()
 		timerNextStomp:Stop()
 		timerNextImpale:Stop()
-		DBM.BossHealth:RemoveBoss(cid) -- remove Gormok from the health frame
+		if DBM.BossHealth:IsShown() then
+			DBM.BossHealth:RemoveBoss(cid) -- remove Gormok from the health frame
+		end
 	elseif cid == 35144 then
 		AcidmawDead = true
 		timerParalyticSprayCD:Cancel()
@@ -342,9 +347,11 @@ function mod:UNIT_DIED(args)
 			timerSlimePoolCD:Cancel()
 		end
 		if DreadscaleDead then
-			DBM.BossHealth:RemoveBoss(35144)
-			DBM.BossHealth:RemoveBoss(34799)
 			timerNextBoss:Cancel()
+			if DBM.BossHealth:IsShown() then
+				DBM.BossHealth:RemoveBoss(35144)
+				DBM.BossHealth:RemoveBoss(34799)
+			end
 		end
 	elseif cid == 34799 then
 		DreadscaleDead = true
@@ -357,9 +364,11 @@ function mod:UNIT_DIED(args)
 			timerSweepCD:Cancel()
 		end
 		if AcidmawDead then
-			DBM.BossHealth:RemoveBoss(35144)
-			DBM.BossHealth:RemoveBoss(34799)
 			timerNextBoss:Cancel()
+			if DBM.BossHealth:IsShown() then
+				DBM.BossHealth:RemoveBoss(35144)
+				DBM.BossHealth:RemoveBoss(34799)
+			end
 		end
 	end
 end

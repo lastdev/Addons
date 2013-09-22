@@ -1,6 +1,6 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.2.0 (<%codename%>)
+	Version: 4.4.0 (<%codename%>)
 	Revision: $Id: GatherConfig.lua 1039 2012-10-06 16:28:36Z Esamynn $
 
 	License:
@@ -27,7 +27,7 @@
 
 	Saved Variables Configuration and management code
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherConfig.lua $", "$Rev: 1039 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.0/Gatherer/GatherConfig.lua $", "$Rev: 1039 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient

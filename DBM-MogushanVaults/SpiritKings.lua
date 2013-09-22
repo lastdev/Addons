@@ -1,10 +1,10 @@
 local mod	= DBM:NewMod(687, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8777 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10296 $"):sub(12, -3))
 mod:SetCreatureID(60701, 60708, 60709, 60710)--Adds: 60731 Undying Shadow, 60958 Pinning Arrow
-mod:SetModelID(41813)
 mod:SetZone()
+mod:SetBossHPInfoToHighest()
 
 mod:RegisterCombat("combat")
 
@@ -15,14 +15,10 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_DAMAGE",
 	"SPELL_MISSED",
-	"UNIT_SPELLCAST_SUCCEEDED",
+	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"CHAT_MSG_MONSTER_YELL"
 )
-
-local isDispeller = select(2, UnitClass("player")) == "MAGE"
-	    		 or select(2, UnitClass("player")) == "PRIEST"
-	    		 or select(2, UnitClass("player")) == "SHAMAN"
 
 --on heroic 2 will be up at same time, so most announces are "target" type for source distinction.
 --Unless it's a spell that doesn't directly affect the boss (ie summoning an add isn't applied to boss, it's a new mob).
@@ -58,7 +54,7 @@ local yellFixate				= mod:NewYell(118303)
 local specWarnCoalescingShadows	= mod:NewSpecialWarningMove(117558)
 local specWarnShadowBlast		= mod:NewSpecialWarningInterrupt(117628, false)--very spammy. better to optional use
 local specWarnShieldOfDarkness	= mod:NewSpecialWarningTarget(117697, nil, nil, nil, 3)--Heroic Ability
-local specWarnShieldOfDarknessD	= mod:NewSpecialWarningDispel(117697, isDispeller)--Heroic Ability
+local specWarnShieldOfDarknessD	= mod:NewSpecialWarningDispel(117697, mod:IsMagicDispeller())--Heroic Ability
 --Meng
 local specWarnMaddeningShout	= mod:NewSpecialWarningSpell(117708, nil, nil, nil, 2)
 local specWarnCrazyThought		= mod:NewSpecialWarningInterrupt(117833, false)--At discretion of whoever to enable. depending on strat, you may NOT want to interrupt these (or at least not all of them)
@@ -154,20 +150,20 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(117539) and not diedShadow[args.destGUID] then--They only ressurrect once so only start timer once per GUID
+	if args.spellId == 117539 and not diedShadow[args.destGUID] then--They only ressurrect once so only start timer once per GUID
 		diedShadow[args.destGUID] = true
 		timerUSRevive:Start(args.destGUID)--Basically, the rez timer for a defeated Undying Shadow that is going to re-animate in 60 seconds.
-	elseif args:IsSpellID(117837) then
+	elseif args.spellId == 117837 then
 		warnDelirious:Show(args.destName)
 		specWarnDelirious:Show(args.destName)
 		timerDeliriousCD:Start()
-	elseif args:IsSpellID(117756) then
+	elseif args.spellId == 117756 then
 		warnCowardice:Show(args.destName)
-	elseif args:IsSpellID(117737) then
+	elseif args.spellId == 117737 then
 		warnCrazed:Show(args.destName)
-	elseif args:IsSpellID(117697) then
+	elseif args.spellId == 117697 then
 		specWarnShieldOfDarknessD:Show(args.destName)
-	elseif args:IsSpellID(118303) then
+	elseif args.spellId == 118303 then
 		warnFixate:Show(args.destName)
 		timerFixate:Start(args.destName)
 		if args:IsPlayer() then
@@ -175,7 +171,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellFixate:Yell()
 			soundFixate:Play()
 		end
-	elseif args:IsSpellID(118135) then
+	elseif args.spellId == 118135 then
 		pinnedTargets[#pinnedTargets + 1] = args.destName
 		self:Unschedule(warnPinnedDownTargets)
 		self:Schedule(0.3, warnPinnedDownTargets)
@@ -183,23 +179,23 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(118303) then
+	if args.spellId == 118303 then
 		timerFixate:Cancel(args.destName)
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(117685) then
+	if args.spellId == 117685 then
 		warnChargedShadows:Show(args.destName)
 		timerChargingShadowsCD:Start()
-	elseif args:IsSpellID(117506) then
+	elseif args.spellId == 117506 then
 		warnUndyingShadows:Show()
 		if zianActive then
 			timerUndyingShadowsCD:Start()
 		else
 			timerUndyingShadowsCD:Start(85)
 		end
-	elseif args:IsSpellID(117910) then
+	elseif args.spellId == 117910 then
 		warnFlankingOrders:Show()
 		specWarnFlankingOrders:Show()
 		if qiangActive then
@@ -211,17 +207,17 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(118162) then
+	if args.spellId == 118162 then
 		warnSleightOfHand:Show(args.sourceName)
 		specWarnSleightOfHand:Show(args.sourceName)
 		timerSleightOfHand:Start()
 		timerSleightOfHandCD:Start()
-	elseif args:IsSpellID(117506) then
+	elseif args.spellId == 117506 then
 		warnUndyingShadows:Show()
 		timerUndyingShadowsCD:Start()
-	elseif args:IsSpellID(117628) then
+	elseif args.spellId == 117628 then
 		specWarnShadowBlast:Show(args.sourceName)
-	elseif args:IsSpellID(117697) then
+	elseif args.spellId == 117697 then
 		warnShieldOfDarkness:Show(args.sourceName)
 		specWarnShieldOfDarkness:Show(args.sourceName)
 		warnShieldOfDarknessSoon:Schedule(37.5, 5)--Start pre warning with regular warnings only as you don't move at this point yet.
@@ -231,10 +227,10 @@ function mod:SPELL_CAST_START(args)
 		warnShieldOfDarknessSoon:Schedule(41.5, 1)
 		timerShieldOfDarknessCD:Start()
 		countdownShieldOfDarkness:Start()
-	elseif args:IsSpellID(117833) then
+	elseif args.spellId == 117833 then
 		warnCrazyThought:Show()
 		specWarnCrazyThought:Show(args.sourceName)
-	elseif args:IsSpellID(117708) then
+	elseif args.spellId == 117708 then
 		warnMaddeningShout:Show()
 		specWarnMaddeningShout:Show()
 		if mengActive then
@@ -242,7 +238,7 @@ function mod:SPELL_CAST_START(args)
 		else
 			timerMaddeningShoutCD:Start(77)
 		end
-	elseif args:IsSpellID(117948) then
+	elseif args.spellId == 117948 then
 		warnAnnihilate:Show()
 		specWarnAnnihilate:Show()
 		if self:IsDifficulty("heroic10", "heroic25") then
@@ -250,7 +246,7 @@ function mod:SPELL_CAST_START(args)
 		else
 			timerAnnihilateCD:Start()
 		end
-	elseif args:IsSpellID(117961) then
+	elseif args.spellId == 117961 then
 		warnImperviousShield:Show(args.sourceName)
 		specWarnImperviousShield:Show(args.sourceName)
 		timerImperviousShieldCD:Start()
@@ -339,6 +335,7 @@ end
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg:find("spell:118047") then
+		local target = DBM:GetUnitFullName(target)
 		if subetaiActive then
 			timerPillageCD:Start()
 		else
@@ -348,6 +345,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 			warnPillage:Show(target)
 			if target == UnitName("player") then
 				specWarnPillage:Show()
+			else
 				local uId = DBM:GetRaidUnitId(target)
 				if uId then
 					local x, y = GetPlayerMapPosition(uId)

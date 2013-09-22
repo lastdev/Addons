@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(167, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(43324)
-mod:SetModelID(34576)
 mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:SetModelSound("Sound\\Creature\\Chogall\\VO_BT_Chogall_BotEvent15.wav", "Sound\\Creature\\Chogall\\VO_BT_Chogall_BotEvent42.wav")
@@ -19,8 +18,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS",
 	"SPELL_DAMAGE",
 	"SPELL_MISSED",
-	"UNIT_HEALTH",
-	"UNIT_AURA",
+	"UNIT_HEALTH boss1",
+	"UNIT_AURA player",
 	"UNIT_DIED"
 )
 
@@ -97,9 +96,9 @@ end
 
 function mod:CorruptingCrashTarget(sGUID)
 	local targetname = nil
-	for i=1, DBM:GetNumGroupMembers() do
-		if UnitGUID("raid"..i.."target") == sGUID then
-			targetname = DBM:GetUnitFullName("raid"..i.."targettarget")
+	for uId in DBM:GetGroupMembers() do
+		if UnitGUID(uId.."target") == sGUID then
+			targetname = DBM:GetUnitFullName(uId.."targettarget")
 			break
 		end
 	end
@@ -156,7 +155,7 @@ function mod:OnCombatEnd()
 end 
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(91317) then
+	if args.spellId == 91317 then
 		worshipTargets[#worshipTargets + 1] = args.destName
 		if self.Options.SetIconOnWorship then
 			self:SetIcon(args.destName, worshipIcon)
@@ -168,23 +167,23 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			self:Schedule(0.3, showWorshipWarning)
 		end
-	elseif args:IsSpellID(81194) then
+	elseif args.spellId == 81194 then
 		warnFlamingDestruction:Show()
 		if self:GetUnitCreatureId("target") == 43324 or self:GetBossTarget(43324) == DBM:GetUnitFullName("target") then--Add tank doesn't need this spam, just tank on chogal and healers healing that tank.
 			specwarnFlamingDestruction:Show()
 		end
 		timerFlamingDestruction:Start()
-	elseif args:IsSpellID(81572) then
+	elseif args.spellId == 81572 then
 		warnEmpoweredShadows:Show()
 		specWarnEmpoweredShadows:Show()
 		timerEmpoweredShadows:Start()
-	elseif args:IsSpellID(82518) then
+	elseif args.spellId == 82518 then
 		specwarnFury:Show(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(91317) then
+	if args.spellId == 91317 then
 		if self.Options.SetIconOnWorship then
 			self:SetIcon(args.destName, 0)
 		end
@@ -192,11 +191,11 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(81628) then
+	if args.spellId == 81628 then
 		warnAdherent:Show()
 		timerAdherent:Start()
 		timerFesterBlood:Start()
-	elseif args:IsSpellID(82524) then
+	elseif args.spellId == 82524 then
 		warnFury:Show()
 		timerFuryCD:Start()
 		if not firstFury then--85% fury of chogal, it resets cd on worship and changes cd to 36
@@ -207,13 +206,13 @@ function mod:SPELL_CAST_START(args)
 			timerShadowsOrders:Cancel()--Cancel shadows orders timer, flame is going to be next.
 			timerFlamesOrders:Start(15)--Flames orders is 15 seconds after first fury, regardless whether or not shadow was last.
 		end
-	elseif args:IsSpellID(82411) then -- Creatures are channeling after their spawn.
+	elseif args.spellId == 82411 then -- Creatures are channeling after their spawn.
 		if self.Options.SetIconOnCreature and not creatureIcons[args.sourceGUID] then
 			creatureIcons[args.sourceGUID] = creatureIcon
 			creatureIcon = creatureIcon - 1
 		end
-	elseif args:IsSpellID(81713 then
-		if not DBM.BossHealth:HasBoss(args.sourceGUID) then--Check if added to boss health
+	elseif args.spellId == 81713 then
+		if not DBM.BossHealth:HasBoss(args.sourceGUID) and DBM.BossHealth:IsShown() then--Check if added to boss health
 			DBM.BossHealth:AddBoss(args.sourceGUID, args.sourceName)--And add if not.
 		end
 		if args.sourceGUID == UnitGUID("target") then--Only show warning for your own target.
@@ -229,8 +228,8 @@ end
 
 mod:RegisterOnUpdateHandler(function(self)
 	if self.Options.SetIconOnCreature and (DBM:GetRaidRank() > 0 and not (iconsSet == 8 and self:IsDifficulty("normal25", "heroic25") or iconsSet == 4 and self:IsDifficulty("normal10", "heroic10"))) then
-		for i = 1, DBM:GetNumGroupMembers() do
-			local uId = "raid"..i.."target"
+		for uId in DBM:GetGroupMembers() do
+			local uId = uId.."target"
 			local guid = UnitGUID(uId)
 			if creatureIcons[guid] then
 				SetRaidTarget(uId, creatureIcons[guid])
@@ -242,7 +241,7 @@ mod:RegisterOnUpdateHandler(function(self)
 end, 1)
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(82414) then
+	if args.spellId == 82414 then
 		warnCreations:Show()
 		resetCreatureIconState()
 		if self:IsDifficulty("heroic10", "heroic25") then -- other difficulty not sure, only comfirmed 25 man heroic
@@ -250,14 +249,14 @@ function mod:SPELL_CAST_SUCCESS(args)
 		else
 			timerCreationsCD:Start()
 		end
-	elseif args:IsSpellID(82630) then
+	elseif args.spellId == 82630 then
 		warnPhase2:Show()
 		timerAdherent:Cancel()
 		timerWorshipCD:Cancel()
 		timerFesterBlood:Cancel()
 		timerFlamesOrders:Cancel()
 		timerShadowsOrders:Cancel()
-	elseif args:IsSpellID(81556) then--Shadow's Orders
+	elseif args.spellId == 81556 then--Shadow's Orders
 		if self:IsDifficulty("heroic10", "heroic25") then
 			warnShadowOrders:Show()--No reason to do this warning on normal, nothing spawns so nothing you can do about it.
 			timerEmpoweredShadowsCD:Start()--Time til he actually absorbs elemental and gains it's effects
@@ -265,7 +264,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		else
 			timerEmpoweredShadowsCD:Start(10.8)--Half the time on normal since you don't actually have to kill elementals plus the only thing worth showing on normal.
 		end
-	elseif args:IsSpellID(81171) then--Flame's Orders
+	elseif args.spellId == 81171 then--Flame's Orders
 		if self:IsDifficulty("heroic10", "heroic25") then
 			warnFlameOrders:Show()--No reason to do this warning on normal, nothing spawns so nothing you can do about it.
 			timerFlamingDestructionCD:Start()--Time til he actually absorbs elemental and gains it's effects
@@ -273,8 +272,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		else
 			timerFlamingDestructionCD:Start(10.8)--Half the time on normal since you don't actually have to kill elementals plus the only thing worth showing on normal.
 		end
-	elseif args:IsSpellID(81685) then
-		if not DBM.BossHealth:HasBoss(args.sourceGUID) then--Check if added to boss health
+	elseif args.spellId == 81685 then
+		if not DBM.BossHealth:HasBoss(args.sourceGUID) and DBM.BossHealth:IsShown() then--Check if added to boss health
 			DBM.BossHealth:AddBoss(args.sourceGUID, args.sourceName)--And add if not.
 		end
 		self:ScheduleMethod(0.2, "CorruptingCrashTarget", args.sourceGUID)
@@ -313,7 +312,7 @@ end
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 43622 then--Also remove from boss health when they die based on GUID
+	if cid == 43622 and DBM.BossHealth:IsShown() then--Also remove from boss health when they die based on GUID
 		DBM.BossHealth:RemoveBoss(args.destGUID)
 	end
 end

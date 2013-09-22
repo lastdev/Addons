@@ -1,0 +1,33 @@
+tag 3.0.8
+54e5a49099fac9c1efc7f99480b1255efea0fb0b
+David Lynch <kemayo@gmail.com>
+2013-09-12 19:14:46 -0500
+
+Tagging v3.0.8
+
+
+--------------------
+
+David Lynch:
+	- The max mapid is no longer below 950...
+	- Data TOC
+	- Merge in the 5.4 branch
+	* Include Timeless Champion achievement
+	* Run dataminer, now with Timeless results
+	* Try to scan vignettes
+	* Get the Timeless Isle zoneid in there
+	* An embed was missing from the list
+	* TOC
+	
+	Dataminer internals:
+	* A few unit tests for the miner
+	* Fix the search in wowdb to work on the PTR
+	* Make strip_empties the default, too
+	* Switch to the PTR via a command line flag, already
+	- Add achievement status to broker and handynotes
+	- Update the zoom when the zone changes, too
+	- Add a range display ring to the minimap
+	- Rerun the miner. Picks up new rares.
+	- Fix wowhead locale loading
+	- Was missing Throne of Thunder
+	- Bump data TOC as well

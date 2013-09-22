@@ -1,10 +1,10 @@
 -------------------------------------------------------------------------------
 -- Waypoint.lua
 -------------------------------------------------------------------------------
--- File date: 2012-09-13T18:19:29Z
--- File hash: 5b03947
--- Project hash: f922565
--- Project version: 2.4.6
+-- File date: 2013-07-08T05:21:15Z
+-- File hash: 090adbc
+-- Project hash: 4bcba04
+-- Project version: 2.5.2
 -------------------------------------------------------------------------------
 -- Please see http://www.wowace.com/addons/arl/ for more information.
 -------------------------------------------------------------------------------
@@ -344,9 +344,8 @@ local WAYPOINT_FUNCS = {
 			return
 		end
 		local vendor = private.vendor_list[id_num]
-		local vendor_faction = vendor.faction
 
-		if vendor_faction == private.Player.faction or vendor_faction == "Neutral" then
+		if private.Player.reputation_levels[private.reputation_list[vendor.reputation_id].name] then
 			return vendor
 		end
 	end,
@@ -391,26 +390,26 @@ local function AddRecipeWaypoints(recipe_id, acquire_id, location_id, npc_id)
 
 		if waypoint_func and (not acquire_id or acquire_type == acquire_id) then
 			for id_num, id_info in pairs(acquire_info) do
-				if not npc_id or id_num == npc_id then
-					if acquire_type == A.REPUTATION then
-						for rep_level, level_info in pairs(id_info) do
-							for vendor_id in pairs(level_info) do
-								local waypoint = waypoint_func(vendor_id, recipe)
+				if acquire_type == A.REPUTATION then
+					for rep_level, level_info in pairs(id_info) do
+						for vendor_id in pairs(level_info) do
+							local waypoint = waypoint_func(vendor_id, recipe)
 
-								if waypoint and (not location_id or waypoint.location == location_id) then
-									waypoint.acquire_type = acquire_type
-									current_waypoints[waypoint] = recipe_id
-								end
+							-- TODO: Figure out why this changes on-click when there are two different locations for the same recipe
+							--							addon:Debug("location_id: %s waypoint.location: %s", tostring(location_id), waypoint and tostring(waypoint.location) or "nil")
+							if waypoint and (not location_id or waypoint.location == location_id) then
+								waypoint.acquire_type = acquire_type
+								current_waypoints[waypoint] = recipe_id
 							end
 						end
-					else
-						local waypoint = waypoint_func(id_num, recipe)
+					end
+				elseif not npc_id or id_num == npc_id then
+					local waypoint = waypoint_func(id_num, recipe)
 
-						if waypoint and (not location_id or waypoint.location == location_id) then
-							waypoint.acquire_type = acquire_type
-							waypoint.reference_id = id_num
-							current_waypoints[waypoint] = recipe_id
-						end
+					if waypoint and (not location_id or waypoint.location == location_id) then
+						waypoint.acquire_type = acquire_type
+						waypoint.reference_id = id_num
+						current_waypoints[waypoint] = recipe_id
 					end
 				end
 			end
@@ -514,7 +513,7 @@ function addon:AddWaypoint(recipe_id, acquire_id, location_id, npc_id)
 		local recipe = recipe_list[spell_id]
 		local _, _, _, quality_color = _G.GetItemQualityColor(recipe.quality)
 		local acquire_str = private.ACQUIRE_STRINGS[waypoint.acquire_type]:lower():gsub("_","")
-		local color_code = private.CATEGORY_COLORS[acquire_str] or "ffffff"
+		local color_code = private.CATEGORY_COLORS[acquire_str].hex or "ffffff"
 
 		if waypoint.acquire_type == A.QUEST then
 			name = ("Quest: |cff%s%s|r (|c%s%s|r)"):format(color_code, private.quest_names[waypoint.reference_id], quality_color, recipe.name)
@@ -536,6 +535,9 @@ function addon:AddWaypoint(recipe_id, acquire_id, location_id, npc_id)
 		elseif NORTHREND_IDNUMS[location_name] then
 			continent = 4
 			zone = NORTHREND_IDNUMS[location_name]
+		elseif PANDARIA_IDNUMS[location_name] then
+			continent = 6
+			zone = PANDARIA_IDNUMS[location_name]
 		elseif INSTANCE_LOCATIONS[location_name] then
 			local info = INSTANCE_LOCATIONS[location_name]
 

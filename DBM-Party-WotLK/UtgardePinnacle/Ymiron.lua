@@ -1,9 +1,8 @@
-local mod	= DBM:NewMod("Ymiron", "DBM-Party-WotLK", 11)
+local mod	= DBM:NewMod(644, "DBM-Party-WotLK", 11, 286)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
 mod:SetCreatureID(26861)
-mod:SetModelID(28019)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -22,7 +21,7 @@ function mod:APELL_AURA_APPLIED(args)
 	if args:IsSpellID(48294, 59301) then
 		warningBane:Show()
 		timerBane:Start()
-	elseif args:IsSpellID(51750) then
+	elseif args.spellId == 51750 then
 		warningScreams:Show()
 		timerScreams:Start()
 	end

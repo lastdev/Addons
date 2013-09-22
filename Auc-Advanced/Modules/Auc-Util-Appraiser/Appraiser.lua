@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: Appraiser.lua 5362 2012-09-21 17:59:48Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: Appraiser.lua 5427 2013-07-13 09:28:05Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -366,23 +366,25 @@ function private.GetPriceCore(sig, link, serverKey, match)
 	local stack = get("util.appraiser.item."..sig..".stack") or get("util.appraiser.stack")
 	local number = get("util.appraiser.item."..sig..".number") or get("util.appraiser.number")
 	local  _, _, _, _, _, _, _, maxStack = GetItemInfo(link)
+	if not maxStack then maxStack = 1 end
 	--we only officially accept "max" or a number, but user could have input any random string, so add some sanitization
 	stack = tonumber(stack)
 	if stack then
-		if maxStack and stack > maxStack then
+		if stack > maxStack then
 			stack = maxStack --never allow a saved stack value larger than the item can really stack to
 		elseif stack < 1 then
 			stack = 1
 		end
 	else
-		stack = maxStack or 1
+		stack = maxStack
 	end
 	if number == "maxplus" then
 		number = -1
 	elseif number == "maxfull" then
 		number = -2
+	else
+		number = tonumber(number)
 	end
-	number = tonumber(number)
 
 	-- generate bid value
 	if curModel ~= "fixed" and newBuy then
@@ -437,7 +439,7 @@ function lib.GetOwnAuctionDetails()
 	local numBatchAuctions, totalAuctions = GetNumAuctionItems("owner");
 	if totalAuctions >0 then
 		for i=1, totalAuctions do
-			local name, _, count, _, _, _, _, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner  = GetAuctionItemInfo("owner", i)
+			local name, _, count, _, _, _, _, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner  = AucAdvanced.GetAuctionItemInfo("owner", i)
 			if name and (count>0) then
 				if not results[name] then
 					results[name] = {}
@@ -464,4 +466,4 @@ function lib.GetOwnAuctionDetails()
 end
 Stubby.RegisterEventHook("AUCTION_OWNED_LIST_UPDATE", "Auc-Util-Appraiser", lib.GetOwnAuctionDetails)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-Appraiser/Appraiser.lua $", "$Rev: 5362 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-Appraiser/Appraiser.lua $", "$Rev: 5427 $")

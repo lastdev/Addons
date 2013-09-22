@@ -1,6 +1,6 @@
 --[[
 Name: LibBabble-Inventory-3.0
-Revision: $Rev: 165 $
+Revision: $Rev: 167 $
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-inventory-3-0/
 Dependencies: None
@@ -8,7 +8,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-Inventory-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 165 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 167 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)
@@ -375,7 +375,7 @@ elseif GAME_LOCALE == "frFR" then
 	lib:SetCurrentTranslations {
 	Alchemy = "Alchimie",
 	["Ammo Pouch"] = "Giberne",
-	-- Aquatic = "",
+	Aquatic = "Aquatique", -- Needs review
 	Archaeology = "Archéologie",
 	Armor = "Armure",
 	["Armor Enchantment"] = "Enchantement d'armure",
@@ -384,7 +384,7 @@ elseif GAME_LOCALE == "frFR" then
 	Back = "Dos",
 	Bag = "Sac",
 	Bandage = "Bandage",
-	-- Beast = "",
+	Beast = "Bête", -- Needs review
 	Blacksmithing = "Forge",
 	Blue = "Bleu",
 	Book = "Livre",
@@ -400,7 +400,7 @@ elseif GAME_LOCALE == "frFR" then
 	Consumable = "Consommable",
 	Container = "Conteneur",
 	Cooking = "Cuisine",
-	-- Critter = "",
+	Critter = "Bestiole", -- Needs review
 	Crossbow = "Arbalète",
 	Crossbows = "Arbalètes",
 	Dagger = "Dague",
@@ -428,7 +428,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Fist Weapon"] = "Arme de pugilat",
 	["Fist Weapons"] = "Armes de pugilat",
 	Flask = "Flacon",
-	-- Flying = "",
+	Flying = "Volant", -- Needs review
 	["Flying Mount"] = "Monture volante",
 	Food = "Ration",
 	["Food & Drink"] = "Nourriture & boissons",
@@ -446,7 +446,7 @@ elseif GAME_LOCALE == "frFR" then
 	Herbalism = "Herboristerie",
 	["Herb Bag"] = "Sac d'herbes",
 	Holiday = "Vacances",
-	-- Humanoid = "",
+	Humanoid = "Humanoïde", -- Needs review
 	Hunter = "Chasseur",
 	Hydraulic = "Hydraulique",
 	Idol = "Idole",
@@ -466,19 +466,19 @@ elseif GAME_LOCALE == "frFR" then
 	Librams = "Librams",
 	Mace = "Masse",
 	Mage = "Mage",
-	-- Magic = "",
+	Magic = "Magique", -- Needs review
 	Mail = "Mailles",
 	["Main Hand"] = "Main droite",
 	Materials = "Matériaux",
 	Meat = "Viande",
-	-- Mechanical = "",
+	Mechanical = "Mécanique", -- Needs review
 	Meta = "Méta",
 	["Metal & Stone"] = "Métal & pierre",
 	Mining = "Minage",
 	["Mining Bag"] = "Sac de mineur",
 	Miscellaneous = "Divers",
 	Money = "Argent",
-	-- Monk = "",
+	Monk = "Moine", -- Needs review
 	Mount = "Monture",
 	Mounts = "Montures",
 	Neck = "Cou",
@@ -536,7 +536,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Two-Handed Axes"] = "Haches à deux mains",
 	["Two-Handed Maces"] = "Masses à deux mains",
 	["Two-Handed Swords"] = "Epées à deux mains",
-	-- Undead = "",
+	Undead = "Mort-vivant", -- Needs review
 	Waist = "Taille",
 	Wand = "Baguette",
 	Wands = "Baguettes",

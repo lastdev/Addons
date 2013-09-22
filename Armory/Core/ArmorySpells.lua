@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 573 2013-01-07T23:24:43Z
+    Revision: 590 2013-03-11T20:16:07Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -74,10 +74,17 @@ local function SaveSpellBook(dbEntry, oldNum, newNum, bookType)
     
     if ( bookType == BOOKTYPE_PET ) then
         family = _G.UnitCreatureFamily("pet");
+        if ( family ) then
+            Armory:SetClassValue("player", 2, container, family, nil);
+        end
+
         _, isHunterPet = _G.HasPetUI();
         if ( isHunterPet ) then
             spec = _G.GetSpecialization(false, true) or 1;
             specSpells = { _G.GetSpecializationSpells(spec, nil, true) };
+            if ( spec ) then
+                Armory:SetClassValue("pet", 2, container, spec, nil);
+            end
         end
     end
     
@@ -148,9 +155,11 @@ local function GetPetSpells(specialization)
                 for spellID in pairs(spells) do
                     local subSpellName = Armory:GetClassValue("pet", container, spec, spellID);
                     spellName = _G.GetSpellInfo(spellID);
-                    table.insert(petSpells, { spellID=spellID, name=spellName, subName=subSpellName });
+                    if ( spellName ) then
+                        table.insert(petSpells, { spellID=spellID, name=spellName, subName=subSpellName });
+                        hasSpecSpells = true;
+                    end
                 end
-                hasSpecSpells = true;
             end
         end
 
@@ -159,7 +168,9 @@ local function GetPetSpells(specialization)
             for spellID in pairs(spells) do
                 local subSpellName = Armory:GetClassValue("player", container, family, spellID);
                 spellName = _G.GetSpellInfo(spellID);
-                table.insert(petSpells, { spellID=spellID, name=spellName, subName=subSpellName });
+                if ( spellName ) then
+                    table.insert(petSpells, { spellID=spellID, name=spellName, subName=subSpellName });
+                end
             end
         end
        

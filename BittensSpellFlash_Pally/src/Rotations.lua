@@ -1,8 +1,12 @@
 local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
-local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
+local g = BittensGlobalTables
+local c = g.GetTable("BittensSpellFlashLibrary")
+local u = g.GetTable("BittensUtilities")
 
+local GetSpecialization = GetSpecialization
+local GetSpellBonusDamage = GetSpellBonusDamage
 local SPELL_POWER_HOLY_POWER = SPELL_POWER_HOLY_POWER
 local math = math
 local select = select
@@ -17,15 +21,15 @@ end
 local selflessStackPending = false
 local selflessClearPending = false
 
-local function bumpHolyPower()
+local function bumpHolyPower(amount)
 	if s.Buff(c.GetID("Holy Avenger"), "player") then
 		a.HolyPower = math.min(5, a.HolyPower + 3)
 	else
-		a.HolyPower = math.min(5, a.HolyPower + 1)
+		a.HolyPower = math.min(5, a.HolyPower + amount)
 	end
 end
 
-a.Rotations = {}
+a.Rotations = { }
 
 function a.PreFlash()
 	
@@ -33,9 +37,8 @@ function a.PreFlash()
 	a.HolyPower = s.Power("player", SPELL_POWER_HOLY_POWER)
     
     -- bump it from spells that are casting
-    local info = c.GetCastingInfo()
-    if castGivesHP(info) then
-        bumpHolyPower()
+    if castGivesHP(c.GetCastingInfo()) then
+        bumpHolyPower(1)
     end
     
     -- bump/consume it from spells that are queued
@@ -52,19 +55,27 @@ function a.PreFlash()
 			a.HolyPower = math.max(0, a.HolyPower - 3)
 		end
 	else
-		local info = c.GetQueuedInfo()
-		if c.IsQueued(
+		if c.IsQueued("Judgment") 
+			and c.HasTalent("Sanctified Wrath") 
+			and c.HasBuff("Avenging Wrath", false, false, true) 
+			and GetSpecialization() == 2 then
+			
+			bumpHolyPower(2)
+		elseif c.IsQueued(
 				"Crusader Strike", 
 				"Hammer of the Righteous",
 				"Exorcism",
 				"Hammer of Wrath")
 			or (c.IsQueued("Judgment") 
-				and s.HasSpell(c.GetID("Judgments of the Bold")))
+				and (c.HasSpell("Judgments of the Bold")
+					or c.HasSpell("Judgments of the Wise")
+					or (GetSpecialization() == 1 
+						and c.HasTalent("Selfless Healer"))))
 			or (c.IsQueued("Avenger's Shield")
 				and s.Buff(c.GetID("Grand Crusader"), "player"))
-	    	or castGivesHP(info) then
+	    	or castGivesHP(c.GetQueuedInfo()) then
 			
-			bumpHolyPower()
+			bumpHolyPower(1)
 		end
 		if s.Buff(c.GetID("Divine Purpose"), "player") then
 			a.RawHolyPower = a.HolyPower
@@ -86,10 +97,22 @@ function a.PreFlash()
 		end
 		if c.IsQueued("Judgment") then
 			a.SelflessHealer = math.min(3, a.SelflessHealer + 1)
-		elseif c.IsQueued("Flash of Light") then
+		elseif c.IsQueued(
+			"Divine Light", "Holy Radiance", "Flash of Light") then
+			
 			a.SelflessHealer = 0
 		end
 	end
+	
+	-- buff/cooldown timers
+	a.Judgment = c.GetCooldown("Judgment", false, 6)
+	if c.IsCasting("Crusader Strike", "Hammer of the Righteous") then
+		a.Crusader = 4.5
+	else
+		a.Crusader = c.GetCooldown("Crusader Strike")
+	end
+	
+	a.HoWPhase = s.HealthPercent() <= 20
 end
 
 local function selflessTriggerMonitor(info)
@@ -97,7 +120,9 @@ local function selflessTriggerMonitor(info)
 		if c.InfoMatches(info, "Judgment") then
 			selflessStackPending = true
 			c.Debug("Event", "Selfless Healer stack pending")
-		elseif c.InfoMatches(info, "Flash of Light") then
+		elseif c.InfoMatches(
+			info, "Divine Light", "Holy Radiance", "Flash of Light") then
+			
 			selflessClearPending = true
 			c.Debug("Event", "Selfless Healer clear pending")
 		end
@@ -161,17 +186,17 @@ end
 a.Rotations.Holy = {
 	Spec = 1,
 	
+	UsefulStats = { "Intellect", "Spirit", "Crit", "Haste" },
+	
 	FlashInCombat = function()
-c.Debug("Flash", a.HolyPower)
 		c.FlashAll(
 			"Sacred Shield for Holy",
 			"Word of Glory for Holy",
-			"Eternal Flame for Holy",
 			"Light of Dawn for Holy",
 			"Holy Shock under 5 with Daybreak",
-			"Judgment to Save Selfless Healer",
-			"Flash of Light to Save Selfless Healer",
-			"Flash of Light under Selfless Healer",
+			"Save Selfless Healer",
+			"Consume Selfless Healer",
+			"Divine Plea",
 			"Rebuke")
 	end,
 	
@@ -180,30 +205,50 @@ c.Debug("Flash", a.HolyPower)
 		flashRaidBuffs()
 	end,
 	
+	CastSucceeded = selflessTriggerMonitor,
+	
+	SpellMissed = function(spellID)
+		clearSelflessPending(spellID, "Judgment")
+	end,
+	
+	AuraApplied = function(spellID)
+		if c.IdMatches(spellID, "Sacred Shield") then
+			a.SacredShieldPower = GetSpellBonusDamage(2)
+			c.Debug("Event", "Sacred Shield applied at", a.SacredShieldPower)
+		end
+	end,
+	
+	AuraRemoved = clearSelflessMonitor,
+	
 	AuraApplied = function(spellID, target)
-		if spellID == c.GetID("Beacon of Light") then
+		if c.IdMatches(spellID, "Beacon of Light") then
 			a.BeaconTarget = target
 			c.Debug("Event", "Beacon target:", target)
-		elseif spellID == c.GetID("Sacred Shield") then
+		elseif c.IdMatches(spellID, "Sacred Shield") then
 			a.SacredShieldTarget = target
 			c.Debug("Event", "Sacred Shield target:", target)
+		else
+			clearSelflessPending(spellID, "Selfless Healer")
 		end
 	end,
 }
 
 -------------------------------------------------------------------------- Prot
 local uncontrolledMitigationBuffs = { 
-	"Devotion Aura",
 	"Divine Shield",
-	"Hand of Protection",
 }
+
+a.SacredShieldPower = 0
 
 a.Rotations.Protection = {
 	Spec = 2,
 	
+	UsefulStats = { 
+		"Stamina", "Strength", "Dodge", "Parry", "Tanking Hit", "Haste" 
+	},
+	
 	FlashInCombat = function()
 		c.FlashAll(
-			"Avenging Wrath if Plain", 
 			"Hand of Reckoning", 
 			"Rebuke",
 			"Word of Glory for Prot",
@@ -213,44 +258,81 @@ a.Rotations.Protection = {
 		c.FlashMitigationBuffs(
 			1,
 			uncontrolledMitigationBuffs,
+			c.COMMON_TANKING_BUFFS,
+			"Holy Avenger Damage Mode",
+			"Avenging Wrath Damage Mode",
+			"Holy Prism for Prot",
 			"Hand of Purity",
 			"Divine Protection", 
+--			"Light's Hammer for Prot",
+			"Execution Sentence for Prot",
 			"Holy Avenger for Prot",
 			"Ardent Defender 2pT14",
-			"Avenging Wrath if Cool for Prot",
+			"Avenging Wrath for Prot",
 			"Guardian of Ancient Kings", 
 			"Ardent Defender")
 		
-		local flashing = c.PriorityFlash(
+		local flashing, delay = c.DelayPriorityFlash(
 			
 			-- mitigation
 			"Holy Wrath to Stun",
 			"Hammer of the Righteous for Debuff",
-			"Eternal Flame for Prot",
+			"Crusader Strike for Debuff",
 			"Sacred Shield for Prot",
 			"Flash of Light for Prot",
 			
 			-- holy power
-			"Crusader Strike",
+			"Judgment under Sanctified Wrath",
+			"Judgment under Sanctified Wrath Delay",
+			"Hammer of the Righteous for Prot AoE",
+			"Crusader Strike for Prot",
+			"Crusader Strike Delay",
 			"Judgment",
 			"Avenger's Shield under Grand Crusader",
+			"Prot HP Gen Delay",
 			
-			-- thinking ahead mitigation
+			-- think-ahead mitigation
 			"Sacred Shield Refresh",
 			
 			-- damage
+			"Consecration for AoE",
 			"Avenger's Shield",
+			"Holy Wrath",
 			"Hammer of Wrath",
-			"Consecration",
-			"Holy Wrath")
+			"Consecration")
 		
-		if (flashing == "Hammer of the Righteous for Debuff"
-				or flashing == "Crusader Strike"
-				or flashing == "Judgment"
-				or flashing == "Avenger's Shield under Grand Crusader")
-			and a.HolyPower + (c.HasBuff("Holy Avenger") and 3 or 1) > 5 then
-			
+		-- All of the following is logic for when to flash Shield of the 
+		-- Righteous
+		
+		if c.InDamageMode() then
 			c.FlashAll("Shield of the Righteous")
+			return
+		end
+		
+		if not flashing then
+			return
+		end
+		
+		local bump = 0
+		if flashing == "Judgment under Sanctified Wrath" then
+			bump = 2
+		elseif u.StartsWith(flashing, "Crusader Strike") 
+			or u.StartsWith(flashing, "Hammer of the Righteous") 
+			or u.StartsWith(flashing, "Judgment") 
+			or u.StartsWith(flashing, "Judgment")
+			or flashing == "Avenger's Shield under Grand Crusader" then
+			
+			bump = 1
+		end
+		if bump == 1 and c.HasBuff("Holy Avenger", false, true) then
+			bump = 3
+		end
+		if a.HolyPower + bump > 5 then
+			if delay then
+				c.FlashAll("Shield of the Righteous Predictor")
+			else
+				c.FlashAll("Shield of the Righteous")
+			end
 		end
 	end,
 	
@@ -268,7 +350,12 @@ a.Rotations.Protection = {
 	end,
 	
 	AuraApplied = function(spellID)
-		clearSelflessPending(spellID, "Selfless Healer")
+		if c.IdMatches(spellID, "Sacred Shield") then
+			a.SacredShieldPower = GetSpellBonusDamage(2)
+			c.Debug("Event", "Sacred Shield applied at", a.SacredShieldPower)
+		else
+			clearSelflessPending(spellID, "Selfless Healer")
+		end
 	end,
 	
 	AuraRemoved = clearSelflessMonitor,
@@ -282,25 +369,45 @@ a.Rotations.Protection = {
 a.Rotations.Retribution = {
 	Spec = 3,
 	
+	UsefulStats = { "Strength", "Melee Hit", "Crit", "Haste" },
+	
 	FlashInCombat = function()
+		a.Inquisition = c.GetBuffDuration("Inquisition", false, false, true)
+		if c.HasGlyph("Mass Exorcism") then
+			a.Exorcism = c.GetCooldown("Glyphed Exorcism", false, 15)
+		else
+			a.Exorcism = c.GetCooldown("Exorcism", false, 15)
+		end
+		a.AvengingWrath = c.GetBuffDuration(
+			"Avenging Wrath", false, false, true)
+		a.HolyAvenger = c.GetBuffDuration("Holy Avenger", false, false, true)
+		
 		c.FlashAll(
 			"Avenging Wrath for Ret", 
 			"Holy Avenger", 
 			"Lay on Hands", 
 			"Rebuke")
-		c.PriorityFlash(
+		c.DelayPriorityFlash(
 			"Inquisition",
 			"Execution Sentence",
-			"Hammer of Wrath for Ret",
 			"Inquisition before Templar's Verdict at 5",
+			"Divine Storm for Ret at 5",
 			"Templar's Verdict at 5",
+			"Exorcism for AoE",
+			"Hammer of Wrath for Ret",
+			"Hammer of the Righteous for Ret",
+			"Templar's Verdict 4pT15",
+			"Crusader Strike 4pT15",
 			"Exorcism",
 			"Judgment unless Wastes GCD",
-			"Crusader Strike",
+			"Crusader Strike for Ret",
+			"Crusader Strike Delay",
 			"Judgment",
+			"HP Gen Delay for Ret",
 			"Light's Hammer",
 			"Holy Prism",
 			"Inquisition before Templar's Verdict",
+			"Divine Storm",
 			"Templar's Verdict",
 			"Sacred Shield for Ret")
 	end,
@@ -312,6 +419,15 @@ a.Rotations.Retribution = {
 	end,
 	
 	ExtraDebugInfo = function()
-		return string.format("%s %s", a.HolyPower, a.RawHolyPower)
+		return string.format(
+			"h:%d h:%d j:%.1f, c:%.1f i:%.1f e:%.1f a:%.1f h:%.1f", 
+			a.HolyPower, 
+			a.RawHolyPower, 
+			a.Judgment, 
+			a.Crusader,
+			a.Inquisition,
+			a.Exorcism,
+			a.AvengingWrath,
+			a.HolyAvenger)
 	end,
 }

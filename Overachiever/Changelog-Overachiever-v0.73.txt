@@ -1,0 +1,32 @@
+------------------------------------------------------------------------
+r118 | tuhljin | 2013-09-10 16:35:45 +0000 (Tue, 10 Sep 2013) | 1 line
+Changed paths:
+   A /tags/v0.73 (from /trunk:117)
+
+Tagging as v0.73
+------------------------------------------------------------------------
+r117 | tuhljin | 2013-09-10 02:46:07 +0000 (Tue, 10 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/Overachiever_Tabs/Suggestions.lua
+   M /trunk/readme.txt
+
+- Suggestions Tab: Added suggestions for Timeless Isle.
+------------------------------------------------------------------------
+r116 | tuhljin | 2013-09-09 21:44:21 +0000 (Mon, 09 Sep 2013) | 3 lines
+Changed paths:
+   M /trunk/Overachiever_Tabs/Suggestions.lua
+   M /trunk/readme.txt
+
+- Suggestions Tab:
+-- Added suggestions for Siege of Orgrimmar and Deepwind Gorge.
+-- Removed suggestions that are now Feats of Strength.
+------------------------------------------------------------------------
+r115 | tuhljin | 2013-09-08 05:27:56 +0000 (Sun, 08 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/Overachiever.toc
+   M /trunk/Overachiever_Tabs/Overachiever_Tabs.toc
+   M /trunk/Overachiever_Trade/Overachiever_Trade.toc
+   M /trunk/readme.txt
+
+- Updated for WoW patch 5.4.
+------------------------------------------------------------------------

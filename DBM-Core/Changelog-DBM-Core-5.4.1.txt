@@ -1,0 +1,64 @@
+tag 5.4.1
+ae156933edbd67c3deb738337ced7d60763d6c8b
+subversion <svn@deadlybossmods.com>
+2013-09-17 12:30:08 +0200
+
+Tagging as 5.4.1
+
+
+--------------------
+
+subversion:
+	- increment version number to 5.4.1
+	- Omega via svn r10320: Fix final garrosh bug
+	- alcortes via svn r10319: ES localization update
+	- ebmor via svn r10318: deDE update (Galakras)
+	- Omega via svn r10317: option default tweak
+	- Omega via svn r10316: fix lei shi for 5.4
+	- Omega via svn r10315: More garrosh updates for final phase. Also disabled a timer that SHOUld be working but isn't (despite the custom 25, it always starts a 145sec timer)
+	- nbluewiz via svn r10314: # koKR update.
+	- Omega via svn r10313: Fix a bug
+	- Omega via svn r10312: remove duplicate code and make look prettier. Add counting to desecrate weapon. Still need to stop being bad and actually LOG phase 3 later tonight to get the final phase implementation complete instead of wiping to phase 3 repeatedly and realizing you didn't log a single attempt. :\
+	- Omega via svn r10311: Add other 2 alliance npcs to Galakras, IEEU doesn't always fire for varian first, sometimes there it fires for jaina or ver and there is a delay on varian that causes delayed pull detection. Probably same problem you saw with horde bluewiz. Probably just need other horde npcs too.
+	- ultrashining via svn r10310: zhTW update
+	- nbluewiz via svn r10309: # Galakras : Add horde Wave 1 quote (koKR only). TODO: Seems that horde combatstart bugged? (Horde, combat starts after first add reached. Need Review this.) # koKR update.
+	- Omega via svn r10308: add timer for the protodrake wave. also, use EJ for adds and reduce locals some
+	- ebmor via svn r10307: SoO: Galakras SetUsedIcons; deDE update
+	- Omega via svn r10306: Change couple things to count warnings
+	- Omega via svn r10305: fix error
+	- Omega via svn r10304: fix countdown bug
+	- ultrashining via svn r10303: zhTW update
+	- nbluewiz via svn r10302: # Core: Remove GetFullNameByShortName function completely. That not needed at all because 5.4 API UnitName() changes.
+	- Omega via svn r10301: Add next realm timer New desecratescan works so remove old one
+	- Omega via svn r10300: how did i overlook this, whirling corruption timer added
+	- Omega via svn r10299: Prescanning is not working at all, lets try going back to live scanning
+	- Omega via svn r10298: ru update
+	- Omega via svn r10297: remove unneeded global with 5.4
+	- Omega via svn r10296: Fix rest of short names too. that function is now useless because it breaks on virtual realm players. when i tested on paragons, GetUnitFullName worked fine so i'll use that for now (but maybe that's not needed at all, untested)
+	- Omega via svn r10295: Added some notes.
+	- nbluewiz via svn r10294: # Core : fix stupid.
+	- nbluewiz via svn r10293: # Core : Remove all StaticPopupDialog to avoid taint problem. # Durumu : Fix life drain target warning.
+	- alcortes via svn r10292: ES localization update
+	- Omega via svn r10291: Oh, and make that annihilate special warning off by default
+	- Omega via svn r10290: Rest of garrosh updates
+	- ebmor via svn r10289: deDE update (Pandaria)
+	- Omega via svn r10288: Quick push of paragons for injection Fix more bugs with scanning on garrosh. going through logs in a bit to fix remaining issues on garrosh
+	- Omega via svn r10287: fix bug
+	- ultrashining via svn r10286: zhTW update
+	- ebmor via svn r10285: deDE update
+	- nbluewiz via svn r10284: # koKR update.
+	- nbluewiz via svn r10283: # Pandaria : Fix various bug. # koKR update in Pandaria.
+	- Omega via svn r10282: also, displaced energy goes out slow, change it to 0.5 to see if that catches them all now.
+	- Omega via svn r10281: fix some observed bad option defaults
+	- Omega via svn r10280: Fixed a bug that caused quake timer to say "spiritfire" instead for Niuzao Fixed add/tower timers on Galakras (For alliance at least) Fixed Spammy tank warnings on Malkorok Reduced spam a little more on Thok's aoe *Possibly fixed area filter not working on DarkShaman and Spoils, causing several warnings not to work. (Unable to verify this week, can someone else?) Fixed an invalid spellid for Windstorm on Spoils
+	- Omega via svn r10279: adjust projection to be higher emphesis
+	- Omega via svn r10278: ru update
+	- Omega via svn r10277: disable cinematic skipping in SoO because it breaks like hell on the timeless quest chain.
+	- Omega via svn r10276: Honor disabled mods. There is really no reason to be intrusive. This should also make DBM play nicer with VEM so users are more free to use our Core to load certain packages without having it enable unused packages.
+	- Omega via svn r10275: Fix sha of pride timers Fix norushen Berserk timer Fix ordos marking and announcing of debuffs
+	- Omega via svn r10274: push alternate immerseus win detection. the unit power thing which worked 100% of time on ptr, all of a sudden doesn't work, so now we need to localize it :\
+	- Omega via svn r10273: fix interrupt bug
+	- Omega via svn r10272: fix more then that lua error
+	- Omega via svn r10271: fix lua error
+	- Omega via svn r10270: Start sending the mapid again. since the 5.4 fixes the parsing of it
+	- tandanu via svn r10269: increment alpha version number

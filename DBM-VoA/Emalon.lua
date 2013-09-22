@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Emalon", "DBM-VoA")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 51 $"):sub(12, -3))
 mod:SetCreatureID(33993)
 mod:SetModelID(27108)
 mod:SetUsedIcons(8)
@@ -11,7 +11,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEvents(
 	"SPELL_CAST_START",
 	"SPELL_HEAL",
-	"UNIT_TARGET",
+	"UNIT_TARGET_UNFILTERED",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED"
 )
@@ -59,7 +59,7 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
-function mod:UNIT_TARGET()
+function mod:UNIT_TARGET_UNFILTERED()
 	if overchargedMob then
 		self:TrySetTarget(overchargedMob)
 	end
@@ -69,10 +69,10 @@ function mod:TrySetTarget(target, icon)
 	icon = icon or 8
 	if DBM:GetRaidRank() >= 1 then
 		local found = false
-		for i = 1, DBM:GetNumGroupMembers() do
-			if UnitGUID("raid"..i.."target") == target then
+		for uId in DBM:GetGroupMembers() do
+			if UnitGUID(uId.."target") == target then
 				found = true
-				SetRaidTarget("raid"..i.."target", icon)
+				SetRaidTarget(uId.."target", icon)
 				break
 			end
 		end
@@ -84,7 +84,7 @@ function mod:TrySetTarget(target, icon)
 	end
 end
 
-function mod:SPELL_HEAL(_, _, _, _, _, _, _, _, spellId)
+function mod:SPELL_HEAL(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 64218 then
 		warnOverCharge:Show()
 		timerOvercharge:Start()

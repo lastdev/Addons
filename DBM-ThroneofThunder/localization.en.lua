@@ -5,10 +5,14 @@ local L
 --------------------------
 L= DBM:GetModLocalization(827)
 
-L:SetOptionLocalization({
-	RangeFrame		= "Show range frame"
+L:SetWarningLocalization({
+	specWarnWaterMove	= "%s soon - get out from Conductive Water!"
 })
 
+L:SetOptionLocalization({
+	specWarnWaterMove	= "Show special warning if you standing in $spell:138470<br/>(Warns at $spell:137313 pre-cast or $spell:138732 debuff fades shortly)",
+	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format("8/4")
+})
 
 --------------
 -- Horridon --
@@ -16,23 +20,30 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(819)
 
 L:SetWarningLocalization({
-	warnAdds	= "%s"
+	warnAdds				= "%s",
+	warnOrbofControl		= "Orb of Control dropped",
+	specWarnOrbofControl	= "Orb of Control dropped!"
 })
 
 L:SetTimerLocalization({
-	timerDoor		= "Next Tribal Door",
-	timerAdds		= "Next %s"
+	timerDoor				= "Next Tribal Door",
+	timerAdds				= "Next %s"
 })
 
 L:SetOptionLocalization({
-	warnAdds		= "Announce when new adds jump down",
-	timerDoor		= "Show timer for next Tribal Door phase",
-	timerAdds		= "Show timer for when next add jumps down"
+	warnAdds				= "Announce when new adds jump down",
+	warnOrbofControl		= "Announce when $journal:7092 dropped",
+	specWarnOrbofControl	= "Show special warning when $journal:7092 dropped",
+	timerDoor				= "Show timer for next Tribal Door phase",
+	timerAdds				= "Show timer for when next add jumps down",
+	SetIconOnAdds			= "Set icons on balcony adds",
+	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(5, 136480),
+	SetIconOnCharge			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(136769)
 })
 
 L:SetMiscLocalization({
-	newForces		= "forces pour from the",--Farraki forces pour from the Farraki Tribal Door!
-	chargeTarget	= "stamps his tail!"--Horridon sets his eyes on Eraeshio and stamps his tail!
+	newForces				= "forces pour from the",--Farraki forces pour from the Farraki Tribal Door!
+	chargeTarget			= "stamps his tail!"--Horridon sets his eyes on Eraeshio and stamps his tail!
 })
 
 ---------------------------
@@ -40,10 +51,18 @@ L:SetMiscLocalization({
 ---------------------------
 L= DBM:GetModLocalization(816)
 
+L:SetWarningLocalization({
+	specWarnPossessed		= "%s on %s - switch targets"
+})
+
 L:SetOptionLocalization({
-	warnPossessed	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(136442),
-	warnSandBolt	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(136189),
-	RangeFrame		= "Show range frame"
+	warnPossessed		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(136442),
+	specWarnPossessed	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch:format(136442),
+	PHealthFrame		= "Show remaining health frame for $spell:136442 fades<br/>(Requires boss health frame enabled)",
+	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(5),
+	AnnounceCooldowns	= "Count out (up to 3) which $spell:137166 cast it is for raid cooldowns",
+	SetIconOnBitingCold	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(136992),
+	SetIconOnFrostBite	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(136922)
 })
 
 ------------
@@ -58,8 +77,11 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	warnKickShell			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(134031),
-	specWarnCrystalShell	= "Show special warning when you are missing $spell:137633 debuff",
-	InfoFrame				= "Show info frame for players without $spell:137633"
+	specWarnCrystalShell	= "Show special warning when you are missing<br/> $spell:137633 debuff and are above 90% health",
+	InfoFrame				= "Show info frame for players without $spell:137633",
+	SetIconOnTurtles		= "Set icons on $journal:7129",
+	ClearIconOnTurtles		= "Clear icons on $journal:7129 when affected by $spell:133971",
+	AnnounceCooldowns		= "Count out which $spell:134920 cast it is for raid cooldowns"
 })
 
 L:SetMiscLocalization({
@@ -71,6 +93,23 @@ L:SetMiscLocalization({
 -------------
 L= DBM:GetModLocalization(821)
 
+L:SetTimerLocalization({
+	timerBreathsCD			= "Next Breath"
+})
+
+L:SetOptionLocalization({
+	timerBreaths			= "Show timer for next breath",
+	SetIconOnCinders		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(139822),
+	SetIconOnTorrentofIce	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(139889),
+	AnnounceCooldowns		= "Count out which Rampage cast it is for raid cooldowns",
+	Never					= "Never",
+	Every					= "Every (consecutive)",
+	EveryTwo				= "Cooldown order of 2",
+	EveryThree				= "Cooldown order of 3",
+	EveryTwoExcludeDiff		= "Cooldown order of 2 (Exluding Diffusion)",
+	EveryThreeExcludeDiff	= "Cooldown order of 3 (Exluding Diffusion)"
+})
+
 L:SetMiscLocalization({
 	rampageEnds	= "Megaera's rage subsides."
 })
@@ -81,8 +120,10 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(828)
 
 L:SetWarningLocalization({
-	warnFlock		= "%s %s (%d)",
-	specWarnFlock	= "%s %s (%d)"
+	warnFlock			= "%s %s %s",
+	specWarnFlock		= "%s %s %s",
+	specWarnBigBird		= "Nest Guardian: %s",
+	specWarnBigBirdSoon	= "Nest Guardian Soon: %s"
 })
 
 L:SetTimerLocalization({
@@ -90,18 +131,38 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnFlock		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.count:format("ej7348"),
-	specWarnFlock	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch:format("ej7348"),
-	timerFlockCD	= DBM_CORE_AUTO_TIMER_OPTIONS.nextcount:format("ej7348"),
-	RangeFrame		= "Show range frame (8) for $spell:138923"
+	warnFlock			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.count:format("ej7348"),
+	specWarnFlock		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch:format("ej7348"),
+	specWarnBigBird		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch:format("ej7827"),
+	specWarnBigBirdSoon	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.soon:format("ej7827"),
+	timerFlockCD		= DBM_CORE_AUTO_TIMER_OPTIONS.nextcount:format("ej7348"),
+	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 138923),
+	ShowNestArrows		= "Show DBM arrow for nest activations",
+	Never				= "Never",
+	Northeast			= "Blue - Lower & Upper NE",
+	Southeast			= "Green - Lower & Upper SE",
+	Southwest			= "Purple/Red - Lower SW & Upper SW(25) or Upper Middle(10)",
+	West				= "Red - Lower W & Upper Middle (25 only)",
+	Northwest			= "Yellow - Lower & Upper NW (25 only)",
+	Guardians			= "Nest Guardians"
 })
 
 L:SetMiscLocalization({
-	eggsHatchL		= "The eggs in one of the lower nests begin to hatch!",
-	eggsHatchU		= "The eggs in one of the upper nests begin to hatch!",
+	eggsHatch		= "nests begin to hatch!",
 	Upper			= "Upper",
 	Lower			= "Lower",
-	UpperAndLower	= "Upper & Lower"
+	UpperAndLower	= "Upper & Lower",
+	TrippleD		= "Tripple (2xDwn)",
+	TrippleU		= "Tripple (2xUp)",
+	NorthEast		= "|cff0000ffNE|r",--Blue
+	SouthEast		= "|cFF088A08SE|r",--Green
+	SouthWest		= "|cFF9932CDSW|r",--Purple
+	West			= "|cffff0000W|r",--Red
+	NorthWest		= "|cffffff00NW|r",--Yellow
+	Middle10		= "|cFF9932CDMiddle|r",--Purple (Middle is upper southwest on 10 man/LFR)
+	Middle25		= "|cffff0000Middle|r",--Red (Middle is upper west on 25 man)
+	ArrowUpper		= " |TInterface\\Icons\\misc_arrowlup:12:12|t ",
+	ArrowLower		= " |TInterface\\Icons\\misc_arrowdown:12:12|t "
 })
 
 --------------------------
@@ -110,21 +171,30 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(818)
 
 L:SetWarningLocalization({
+	warnBeamNormal				= "Beam - |cffff0000Red|r : >%s<, |cff0000ffBlue|r : >%s<",
+	warnBeamHeroic				= "Beam - |cffff0000Red|r : >%s<, |cff0000ffBlue|r : >%s<, |cffffff00Yellow|r : >%s<",
 	warnAddsLeft				= "Fogs remaining: %d",
+	specWarnBlueBeam			= "Blue Beam on you - Avoid Moving",
 	specWarnFogRevealed			= "%s revealed!",
 	specWarnDisintegrationBeam	= "%s (%s)"
 })
 
 L:SetOptionLocalization({
+	warnBeam					= "Announce beam targets",
 	warnAddsLeft				= "Announce how many Fogs remain",
 	specWarnFogRevealed			= "Show special warning when a fog is revealed",
+	specWarnBlueBeam			= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format(139202),
 	specWarnDisintegrationBeam	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format("ej6882"),
 	ArrowOnBeam					= "Show DBM Arrow during $journal:6882 to indicate which direction to move",
-	SetIconRays					= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej6891")
+	SetIconRays					= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej6891"),
+	SetIconLifeDrain			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(133795),
+	SetIconOnParasite			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(133597),
+	InfoFrame					= "Show info frame for $spell:133795 stacks",
+	SetParticle					= "Automatically set particle density to low on pull<br/>(Restores previous setting on combat end)"
 })
 
 L:SetMiscLocalization({
-	Eye		= "Eye"--What to localize here, "<72.0 20:04:19> [CHAT_MSG_MONSTER_EMOTE] CHAT_MSG_MONSTER_EMOTE#The Bright  Light reveals an Amber Fog!#Amber Fog###--------->Yellow Eye<---------##0#0##0#309#nil#0#false#false", -- [13413]
+	LifeYell		= "Life Drain on %s (%d)"
 })
 
 ----------------
@@ -132,8 +202,14 @@ L:SetMiscLocalization({
 ----------------
 L= DBM:GetModLocalization(820)
 
+L:SetWarningLocalization({
+	warnDebuffCount				= "Mutate progress : %d/5 good & %d bad"
+})
+
 L:SetOptionLocalization({
-	RangeFrame			= "Show range frame (5/2)"
+	warnDebuffCount				= "Show debuff count warnings when you absorb pools",
+	RangeFrame					= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format("5/3"),
+	SetIconOnBigOoze			= "Set icon on $journal:6969"
 })
 
 -----------------
@@ -146,7 +222,8 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnMatterSwapped	= "Announce targets swapped by $spell:138618"
+	warnMatterSwapped	= "Announce targets swapped by $spell:138618",
+	SetIconOnFont           = DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(138707)
 })
 
 L:SetMiscLocalization({
@@ -163,9 +240,10 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnDeadZone	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(137229),
-	RangeFrame		= "Show dynamic range frame\n(This is a smart range frame that shows when too many are too close)",
-	InfoFrame		= "Show info frame for players with $spell:136193"
+	warnDeadZone			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(137229),
+	SetIconOnLightningStorm	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(136192),
+	RangeFrame				= "Show dynamic range frame (10)<br/>(This is a smart range frame that shows when too many are too close)",
+	InfoFrame				= "Show info frame for players with $spell:136193"
 })
 
 -------------------
@@ -173,12 +251,28 @@ L:SetOptionLocalization({
 -------------------
 L= DBM:GetModLocalization(829)
 
+L:SetWarningLocalization({
+	warnNight		= "Night phase",
+	warnDay			= "Day phase",
+	warnDusk		= "Dusk phase"
+})
+
+L:SetTimerLocalization({
+	timerDayCD		= "Next day phase",
+	timerDuskCD		= "Next dusk phase"
+})
+
 L:SetOptionLocalization({
-	RangeFrame		= "Show range frame (8)"
+	warnNight		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej7641"),
+	warnDay			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej7645"),
+	warnDusk		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format("ej7633"),
+	timerDayCD		= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej7645"),
+	timerDuskCD		= DBM_CORE_AUTO_TIMER_OPTIONS.next:format("ej7633"),
+	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(5)
 })
 
 L:SetMiscLocalization({
-	DuskPhase		= "Lu'lin! Lend me your strength!"--Not in use, but a backup just in case, so translate in case it's switched to on moments notice on live or next PTR test
+	DuskPhase		= "Lu'lin! Lend me your strength!"
 })
 
 --------------
@@ -186,18 +280,48 @@ L:SetMiscLocalization({
 --------------
 L= DBM:GetModLocalization(832)
 
+L:SetWarningLocalization({
+	specWarnIntermissionSoon	= "Intermission soon",
+	warnDiffusionChainSpread	= "%s spread on >%s<"
+})
+
+L:SetTimerLocalization({
+	timerConduitCD				= "First Conduit CD"
+})
+
 L:SetOptionLocalization({
-	RangeFrame			= "Show range frame",--For two different spells
-	StaticShockArrow	= "Show DBM Arrow when someone is affected by $spell:135695",
-	OverchargeArrow		= "Show DBM Arrow when someone is affected by $spell:136295",
-	SetIconOnOvercharge	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(136295),
-	SetIconOnStaticShock= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(135695)
+	specWarnIntermissionSoon	= "Show pre-special warning before Intermission",
+	warnDiffusionChainSpread	= "Announce $spell:135991 spread targets",
+	timerConduitCD				= "Show timer for first conduit ability cooldown",
+	RangeFrame					= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format("8/6"),--For two different spells
+	StaticShockArrow			= "Show DBM Arrow when someone is affected by $spell:135695",
+	OverchargeArrow				= "Show DBM Arrow when someone is affected by $spell:136295",
+	SetIconOnOvercharge			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(136295),
+	SetIconOnStaticShock		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(135695)
+})
+
+L:SetMiscLocalization({
+	StaticYell		= "Static Shock on %s (%d)"
 })
 
 ------------
 -- Ra-den --
 ------------
 L= DBM:GetModLocalization(831)
+
+L:SetWarningLocalization({
+	specWarnUnstablVitaJump		= "Unstable Vita jumped to you!"
+})
+
+L:SetOptionLocalization({
+	specWarnUnstablVitaJump	= "Show special warning when $spell:138297 jumps to you",
+	SetIconsOnVita			= "Set icons on $spell:138297 debuffed player and furthest player from them"
+})
+
+L:SetMiscLocalization({
+	Defeat						= "Wait!",
+	BigWigsRecommendation		= "If you need a vita soaker list, it's recommended you use BigWigs and BigWigs Ra-den assist for this boss"
+})
 
 -------------
 --  Trash  --
@@ -209,5 +333,5 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	RangeFrame		= "Show range frame (10)"--For 3 different spells
+	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT:format(10)--For 3 different spells
 })

@@ -1,4 +1,4 @@
-<!-- Revision: 585 2013-03-02T14:19:03Z -->
+<!-- Revision: 592 2013-05-21T13:24:07Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\FrameXML\UI.xsd">
   <Script file="ArmoryRaidInfoFrame.lua"/>
@@ -103,24 +103,14 @@
         </Offset>
       </Anchor>
     </Anchors>
-    <Layers>
-      <Layer level="BACKGROUND" textureSubLevel="1">
-        <Texture name="$parentTopBg" file="Interface\FrameGeneral\UI-Background-Rock" horizTile="true" vertTile="true">
-          <Anchors>
-            <Anchor point="TOPLEFT" x="10" y="-5"/>
-            <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" x="-12" y="-55"/>
-          </Anchors>
-        </Texture>
-      </Layer>
-    </Layers>
     <Frames>
       <ScrollFrame name="ArmoryRaidInfoScrollFrame" inherits="HybridScrollFrameTemplate">
         <Size>
-          <AbsDimension x="305" y="302"/>
+          <AbsDimension x="305" y="348"/>
         </Size>
         <Anchors>
           <Anchor point="TOPLEFT">
-            <Offset x="16" y="-58"/>
+            <Offset x="16" y="-12"/>
           </Anchor>
         </Anchors>
         <Frames>

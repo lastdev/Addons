@@ -277,7 +277,7 @@ function ns:Update()
 					_G[entry..i.."Played"]:SetText(Characters:GetField(line, "played"))
 					_G[entry..i.."XP"]:SetText("")
 					_G[entry..i.."Rested"]:SetText("")
-					_G[entry..i.."AvgILevelNormalText"]:SetText("")
+					_G[entry..i.."AvgILevelNormalText"]:SetText(WHITE..format("%.1f", Characters:GetField(line, "realmAiL")))
 				end
 				_G[ entry..i ]:SetID(line)
 				_G[ entry..i ]:Show()

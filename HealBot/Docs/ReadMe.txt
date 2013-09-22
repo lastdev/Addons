@@ -17,8 +17,6 @@ Installing and Updating
 4: Logon to WoW on your main Healer.
 5: As a priority you should open the options and configure spells, cures and buffs.
 
-Install guide: http://www.healbot.info/dokuwiki/doku.php?id=healbot:install
-
 
 
 Updating Troubles

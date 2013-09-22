@@ -10,14 +10,14 @@ L:SetGeneralLocalization{
 	name = "폭군 서슬송곳니"
 }
 L:SetTimerLocalization{
-	TimerAddsSpawn	= "추가 병력 소환"
+	TimerAddsSpawn	= "추가 병력 등장"
 }
 L:SetOptionLocalization{
-	TimerAddsSpawn	= "첫번째 추가 병력 소환 바 표시"
+	TimerAddsSpawn	= "첫번째 추가 병력 등장 바 보기"
 }
 L:SetMiscLocalization{
-	Phase2Emote	= "Orb of Domination loses power and shuts off!",--확인필요
-	YellPull 	= "Intruders have breached the hatchery! Sound the alarm! Protect the eggs at all costs!"--확인필요
+	Phase2Emote	= "지배의 수정구가 힘을 잃고 작동을 멈춥니다!",
+	YellPull 	= "침입자들이 들어왔다! 어떤 희생이 있더라도 알을 반드시 수호하라!"
 }
 -------------------
 --  Vaelastrasz  --
@@ -28,16 +28,8 @@ L:SetGeneralLocalization{
 	name = "타락한 밸라스트라즈"
 }
 
-L:SetTimerLocalization{
-	TimerCombatStart	= "전투 시작"
-}
-
-L:SetOptionLocalization{
-	TimerCombatStart	= "전투 시작 바 표시"
-}
-
 L:SetMiscLocalization{
-	Event				= "Too late, friends! Nefarius' corruption has taken hold...I cannot...control myself."--확인필요
+	Event	= "너무 늦었어! 네파리우스의 타락이 뿌리를 내려... 난... 나 자신을 통제할 수가 없어."
 }
 -----------------
 --  Broodlord  --
@@ -49,7 +41,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
-	Pull	= "None of your kind should be here!  You've doomed only yourselves!"--확인필요
+	Pull	= "너희 같은 놈들이 올 곳은 아닌데... 죽음을 자초했구나!"
 }
 
 ---------------
@@ -88,18 +80,14 @@ L:SetGeneralLocalization{
 	name = "크로마구스"
 }
 L:SetWarningLocalization{
-	WarnBreathSoon	= "곧 숨결",
 	WarnBreath		= "%s",
-	WarnPhase2Soon	= "곧 2 단계"
 }
 L:SetTimerLocalization{
 	TimerBreathCD	= "다음 %s"
 }
 L:SetOptionLocalization{
-	WarnBreathSoon	= "숨결 사전 알림 보기",
-	WarnBreath		= "숨결 시전시 알림 보기",
-	TimerBreathCD	= "다음 숨결 바 표시",
-	WarnPhase2Soon	= "2 단계 사전 알림 보기"
+	WarnBreath		= "숨결 알림 보기",
+	TimerBreathCD	= "다음 숨결 바 보기"
 }
 L:SetMiscLocalization{
 	Breath1	= "숨결 (1)",
@@ -112,37 +100,33 @@ L:SetMiscLocalization{
 L = DBM:GetModLocalization("Nefarian-Classic")
 
 L:SetGeneralLocalization{
-	name = "네파리안(오리지널)"
+	name = "네파리안"
 }
 L:SetWarningLocalization{
-	WarnClassCallSoon	= "곧 직업 지목",
 	WarnClassCall		= "직업 지목: %s",
-	WarnPhaseSoon		= "곧 %s 단계",
 	WarnPhase			= "%s 단계"
 }
 L:SetTimerLocalization{
 	TimerClassCall		= "직업 지목: %s"
 }
 L:SetOptionLocalization{
-	TimerClassCall		= "직업 지목 타이머 보기",
-	WarnClassCallSoon	= "직업 지목 사전 경고 보기",
-	WarnClassCall		= "직업 지목 경고 보기",
-	WarnPhaseSoon		= "단계 전환 사전 경고 보기",
-	WarnPhase			= "단계 전환 경고 보기"
+	TimerClassCall		= "직업 지목 바 보기",
+	WarnClassCall		= "직업 지목 알림 보기",
+	WarnPhase			= "단계 전환 알림 보기"
 }
 L:SetMiscLocalization{
-	YellPull	= "흐흐흐흐... 게임을 시작하자!",--확인필요
-	YellP2		= "잘했다! 적들의 사기가 떨어지고 있다! 검은바위 첨탑의 군주에게 도전한 대가를 치르게 해주자!",--확인필요
-	YellP3		= "말도 안 돼! 일어나라! 다시 한 번 너희 주인을 섬겨라!",--확인필요
-	YellShaman	= "주술사",
-	YellPaladin	= "성기사",
-	YellDruid	= "드루이드",
-	YellPriest	= "사제",
-	YellWarrior	= "전사",
-	YellRogue	= "도적",
-	YellWarlock	= "흑마법사",
-	YellHunter	= "사냥꾼",
-	YellMage	= "마법사",
-	YellMonk	= "수도사",
-	YellDeathKnight	= "죽음의 기사"
+	YellPull		= "흐흐흐흐... 게임을 시작하자!",
+	YellP2			= "잘했다! 적들의 사기가 떨어지고 있다! 검은바위 첨탑의 군주에게 도전한 대가를 치르게 해주자!",
+	YellP3			= "말도 안 돼! 일어나라! 다시 한 번 너희 주인을 섬겨라!",
+	YellShaman		= "주술사",
+	YellPaladin		= "성기사",
+	YellDruid		= "드루이드",
+	YellPriest		= "사제",
+	YellWarrior		= "전사",
+	YellRogue		= "도적",
+	YellWarlock		= "흑마법사",
+	YellHunter		= "사냥꾼",
+	YellMage		= "마법사",
+	YellDeathKnight	= "죽음의 기사",
+	YellMonk		= "수도사"
 }

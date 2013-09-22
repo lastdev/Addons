@@ -1,0 +1,29 @@
+tag v1.0.3
+b85b424c867cdce29e4f047cb38eee1cd2f3af33
+Ethan Centaurai <ethancentaurai@outlook.com>
+2013-09-14 11:49:04 +0100
+
+
+
+--------------------
+
+Ethan Centaurai:
+	- Update event dates for Hallow's End 2013.
+	- Bump Interface number for Patch 5.4.
+	- Upvalue the database array.
+	- Emphasize headings.
+	- Fix icons not showing up in phased zones.
+	- Fix childish typo.
+	- Bump Interface number to 50200.
+	- Update readme.
+	- Remove the date check used to determine if the festival is active.
+	- Small tweak.
+	- Fix an error that occurs when closing the dropdown menu.
+	- Update README.
+	- Update readme.
+	- Bump Interface number to 50100.
+	- Remove byte-order-mark.
+	- Update readme.
+	- Reference the function instead of creating a function that calls the function.
+	- Sort the upvalues in alphabetical order.
+	- More upvalues.

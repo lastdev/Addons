@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Baltharus", "DBM-ChamberOfAspects", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 47 $"):sub(12, -3))
 mod:SetCreatureID(39751)
 mod:SetModelID(31761)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -11,7 +11,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEvents(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
-	"UNIT_HEALTH"
+	"UNIT_HEALTH target focus mouseover"
 )
 
 local warningSplitSoon		= mod:NewAnnounce("WarningSplitSoon", 2)
@@ -58,7 +58,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(74509) then
+	if args.spellId == 74509 then
 		warningRepellingWave:Show()
 		specWarnRepellingWave:Show()
 		timerRepellingWave:Show()
@@ -66,10 +66,10 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(75125) then
+	if args.spellId == 75125 then
 		warnWhirlwind:Show()
 		timerWhirlwind:Show()
-	elseif args:IsSpellID(74505) and self:IsInCombat() then--Only do this when boss is actually engaged, otherwise it doesn't really matter and just spams.
+	elseif args.spellId == 74505 and self:IsInCombat() then--Only do this when boss is actually engaged, otherwise it doesn't really matter and just spams.
 		brandTargets[#brandTargets + 1] = args.destName
 		if args:IsPlayer() then
 			specWarnBrand:Show()

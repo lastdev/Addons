@@ -33,7 +33,7 @@ L:SetGeneralLocalization{
 L = DBM:GetModLocalization("Garr-Classic")
 
 L:SetGeneralLocalization{
-	name = "Garr (Classic)"
+	name = "Garr"
 }
 
 --------------
@@ -75,12 +75,6 @@ L = DBM:GetModLocalization("Golemagg")
 L:SetGeneralLocalization{
 	name = "Golemagg the Incinerator"
 }
-L:SetWarningLocalization{
-	WarnP2Soon	= "Phase 2 soon"
-}
-L:SetOptionLocalization{
-	WarnP2Soon 	= "Warn when phase 2 is about to start"
-}
 
 -----------------
 --  Majordomo  --
@@ -101,26 +95,20 @@ L:SetMiscLocalization{
 L = DBM:GetModLocalization("Ragnaros-Classic")
 
 L:SetGeneralLocalization{
-	name = "Ragnaros (Classic)"
+	name = "Ragnaros"
 }
 L:SetWarningLocalization{
 	WarnSubmerge		= "Submerge",
-	WarnSubmergeSoon	= "Submerge soon",
-	WarnEmerge			= "Emerge",
-	WarnEmergeSoon		= "EmergeSoon"
+	WarnEmerge			= "Emerge"
 }
 L:SetTimerLocalization{
-	TimerCombatStart	= "Combat starts",
 	TimerSubmerge		= "Submerge",
 	TimerEmerge			= "Emerge"
 }
 L:SetOptionLocalization{
-	TimerCombatStart	= "Show time for start of combat",
 	WarnSubmerge		= "Show warning for submerge",
-	WarnSubmergeSoon	= "Show pre-warning for submerge",
 	TimerSubmerge		= "Show timer for submerge",
 	WarnEmerge			= "Show warning for emerge",
-	WarnEmergeSoon		= "Show pre-warning for emerge",
 	TimerEmerge			= "Show timer for emerge"
 }
 L:SetMiscLocalization{

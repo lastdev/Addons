@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: CorePost.lua 5371 2012-10-02 11:44:05Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: CorePost.lua 5398 2013-03-27 19:22:01Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -73,6 +73,8 @@ local ScanTip2 = _G["AppraiserTipTextLeft2"]
 local ScanTip3 = _G["AppraiserTipTextLeft3"]
 local ScanTip4 = _G["AppraiserTipTextLeft4"]
 local ScanTip5 = _G["AppraiserTipTextLeft5"]
+local ScanTip6 = _G["AppraiserTipTextLeft6"]
+local ScanTip7 = _G["AppraiserTipTextLeft7"]
 
 -- control constants used in the posting mechanism
 local LAG_ADJUST = (4 / 1000)
@@ -525,8 +527,8 @@ function lib.IsAuctionable(bag, slot)
 	ScanTip:SetOwner(UIParent, "ANCHOR_NONE")
 	ScanTip:ClearLines()
 	ScanTip:SetBagItem(bag, slot)
-	local test = BindTypes[ScanTip2:GetText()] or BindTypes[ScanTip3:GetText()]
-		or BindTypes[ScanTip4:GetText()] or BindTypes[ScanTip5:GetText()]
+	local test = BindTypes[ScanTip2:GetText()] or BindTypes[ScanTip3:GetText()]	or BindTypes[ScanTip4:GetText()]
+		or BindTypes[ScanTip5:GetText()] or BindTypes[ScanTip6:GetText()] or BindTypes[ScanTip7:GetText()]
 	ScanTip:Hide()
 	if test then
 		return false, test
@@ -900,8 +902,11 @@ function private.LoadAuctionSlot(request)
 	if itemId == 82800 then
 		-- battlepet special handling
 		local _, speciesID, _, breedQuality = strsplit(":", link)
-		checkname = C_PetJournal.GetPetInfoBySpeciesID(tonumber(speciesID))
-		checkquality = tonumber(breedQuality)
+		speciesID = tonumber(speciesID)
+		if speciesID then
+			checkname = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
+			checkquality = tonumber(breedQuality)
+		end
 	else
 		local na,_,qu = GetItemInfo(link)
 		checkname, checkquality = na, qu
@@ -1376,4 +1381,4 @@ private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CorePost.lua $", "$Rev: 5371 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CorePost.lua $", "$Rev: 5398 $")

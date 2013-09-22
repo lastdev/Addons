@@ -6,13 +6,23 @@ local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
 
+local GetInventoryItemID = GetInventoryItemID
+local GetItemInfo = GetItemInfo
 local GetTime = GetTime
 local GetTotemInfo = GetTotemInfo
 local IsSwimming = IsSwimming
 local UnitGUID = UnitGUID
 local math = math
+local select = select
+
+local fishingPoleType = select(17, GetAuctionItemSubClasses(1))
 
 local function shouldFlashImbue(buffTooltipName, offhand)
+	local mhID = GetInventoryItemID("player", 16)
+	if mhID == nil or select(7, GetItemInfo(mhID)) == fishingPoleType then
+		return false
+	end
+	
 	local min
 	if s.InCombat() then
 		min = 0
@@ -28,6 +38,12 @@ local function shouldFlashImbue(buffTooltipName, offhand)
 	end
 end
 
+local function walkingCheck(z)
+	z.CanCastWhileMoving 
+		= c.HasBuff("Spiritwalker's Grace", false, false, true)
+			or c.GetCastTime(z.ID) == 0
+end
+
 ------------------------------------------------------------------------ Common
 c.AddOptionalSpell("Lightning Shield", nil, {
 	Override = function()
@@ -36,9 +52,9 @@ c.AddOptionalSpell("Lightning Shield", nil, {
 	end
 })
 
-c.AddOptionalSpell("Ancestral Swiftness", nil, {
+c.AddOptionalSpell("Spiritwalker's Grace", nil, {
 	CheckFirst = function()
-		return not c.HasBuff("Ascendance")
+		return s.Moving("player")
 	end
 })
 
@@ -58,6 +74,7 @@ c.AddOptionalSpell("Elemental Mastery")
 
 c.AddSpell("Elemental Blast", nil, {
 	NotIfActive = true,
+	RunFirst = walkingCheck,
 })
 
 c.AddOptionalSpell("Searing Totem", nil, {
@@ -68,7 +85,7 @@ c.AddOptionalSpell("Searing Totem", nil, {
 
 c.AddOptionalSpell("Healing Surge", "when Solo", {
 	Override = function()
-		return c.IsSolo() and s.HealthPercent("player") < 80
+		return c.IsSolo() and c.GetHealthPercent("player") < 80
 	end
 })
 
@@ -78,31 +95,58 @@ c.AddOptionalSpell("Water Walking", nil, {
 	end
 })
 
+c.AddDispel("Purge", nil, "Magic")
+
 c.AddInterrupt("Wind Shear")
 
 --------------------------------------------------------------------- Elemental
-c.AddOptionalSpell("Elemental Mastery", "unless Bloodlust", {
+local function burstCheck(z)
+	walkingCheck(z)
+	return a.Ascended 
+		or (c.GetCooldown("Lava Burst") == 0 and not c.IsCasting("Lava Burst"))
+		or (c.HasBuff("Lava Surge") and not c.IsQueued("Lava Burst"))
+end
+
+c.AddOptionalSpell("Flametongue Weapon", nil, {
+	FlashID = { "Flametongue Weapon", "Weapon Imbues" },
+	Override = function()
+		return shouldFlashImbue("Flametongue")
+	end
+})
+
+c.AddOptionalSpell("Ancestral Swiftness", "for Elemental", {
 	CheckFirst = function()
-		return not c.HasBuff(c.BLOODLUST_BUFFS)
+		return c.GetCastTime("Lightning Bolt") > 1.2
 	end
 })
 
 c.AddOptionalSpell("Ascendance", "for Elemental", {
-	CheckFirst = function()
-		return c.GetMyDebuffDuration("Flame Shock") >= 15
-			and (c.GetCooldown("Lava Burst") > 0 or c.IsCasting("Lava Burst"))
-			and not c.HasBuff("Ascendance")
+	Buff = "Ascendance",
+	BuffUnit = "player",
+	CheckFirst = function(z)
+		if c.AoE then
+			z.PredictFlashID = nil
+			return true
+		end
+		
+		z.PredictFlashID = c.GetID("Lava Burst")
+		return (c.GetCooldown("Lava Burst") > 0 or c.IsCasting("Lava Burst"))
+			and c.GetMyDebuffDuration("Flame Shock") > 15
 	end
 })
 
+c.AddSpell("Flame Shock", "Prime for Elemental", {
+	NotIfActive = true,
+	CheckFirst = function()
+		return c.GetMyDebuffDuration("Flame Shock") 
+			<= c.GetCastTime("Lava Burst") + .1
+	end,
+})
+
 c.AddSpell("Flame Shock", "for Elemental", {
-	EarlyRefresh = 0,
+	Tick = 3,
 	NotIfActive = true,
 	CheckFirst = function(z)
-		if c.HasBuff("Ascendance") then
-			return false
-		end
-		
 		local duration = c.GetMyDebuffDuration("Flame Shock")
 		if c.HasBuff("Elemental Mastery") or c.HasBuff(c.BLOODLUST_BUFFS) then
 			return duration <= 2 * z.EarlyRefresh
@@ -111,16 +155,37 @@ c.AddSpell("Flame Shock", "for Elemental", {
 		end
 	end
 })
-c.ManageDotRefresh("Flame Shock for Elemental", 3, "Flame Shock")
+
+c.AddSpell("Flame Shock", "AoE", {
+	MyDebuff = "Flame Shock",
+	Tick = 3,
+	CheckFirst = function(z)
+		c.MakeOptional(
+			z, 
+			c.HasGlyph("Chain Lightning") 
+				and c.HasTalent("Echo of the Elements"))
+		return c.WearingSet(4, "ElementalT15")
+	end
+})
+
+c.AddSpell("Flame Shock", "Early", {
+	MyDebuff = "Flame Shock",
+	EarlyRefresh = 6,
+})
 
 c.AddSpell("Lava Burst", nil, {
-	CheckFirst = function()
-		return (c.GetMyDebuffDuration("Flame Shock")
-					> c.GetCastTime("Lava Burst") + .1
-				or c.IsAuraPendingFor("Flame Shock"))
-			and (not c.IsCasting("Lava Burst")
-				or (c.HasBuff("Lava Surge") and not c.IsQueued("Lava Burst")) 
-				or c.HasBuff("Ascendance"))
+	EvenIfNotUsable = true,
+	CheckFirst = burstCheck,
+})
+
+c.AddSpell("Lava Burst", "AoE", {
+	EvenIfNotUsable = true,
+	CheckFirst = function(z)
+		c.MakeOptional(
+			z, 
+			c.HasGlyph("Chain Lightning") 
+				and c.HasTalent("Echo of the Elements"))
+		return c.WearingSet(4, "ElementalT15") and burstCheck(z)
 	end
 })
 
@@ -138,7 +203,7 @@ c.AddSpell("Earth Shock", "for Fulmination", {
 
 c.AddSpell("Unleash Elements", "for Elemental", {
 	CheckFirst = function()
-		return c.HasTalent("Unleashed Fury") and not c.HasBuff("Ascendance")
+		return c.HasTalent("Unleashed Fury") and not a.Ascended
 	end
 })
 
@@ -150,15 +215,35 @@ c.AddOptionalSpell("Searing Totem", "for Elemental", {
 })
 
 c.AddOptionalSpell("Thunderstorm", nil, {
+	NotIfActive = true,
 	CheckFirst = function()
 		return s.PowerPercent("player") < 85
 	end
 })
 
-c.AddOptionalSpell("Flametongue Weapon", nil, {
-	FlashID = { "Flametongue Weapon", "Weapon Imbues" },
+c.AddSpell("Lightning Bolt", nil, {
+	CanCastWhileMoving = true,
+})
+
+c.AddSpell("Lava Beam", nil, {
+	FlashID = { "Chain Lightning", "Lava Beam" },
 	Override = function()
-		return shouldFlashImbue("Flametongue")
+		return a.Ascended
+	end,
+})
+
+c.AddOptionalSpell("Magma Totem", nil, {
+	CheckFirst = function()
+		return c.IsMissingTotem(1) 
+			and c.GetCooldown("Fire Elemental Totem") > 15
+	end
+})
+
+c.AddSpell("Chain Lightning", nil, {
+	FlashID = { "Chain Lightning", "Lava Beam" },
+	RunFirst = walkingCheck,
+	CheckFirst = function()
+		return s.PowerPercent("player") > 10
 	end
 })
 
@@ -180,7 +265,7 @@ c.AddOptionalSpell("Flametongue Weapon", "Offhand", {
 c.AddOptionalSpell("Ascendance", "for Enhancement", {
 	CheckFirst = function()
 		return c.GetCooldown("Stormstrike") > 3
-			and not c.HasBuff("Ascendance")
+			and not a.Ascended
 	end
 })
 
@@ -188,6 +273,14 @@ c.AddSpell("Unleash Elements", "with Unleashed Fury", {
 	CheckFirst = function()
 		return c.HasTalent("Unleashed Fury")
 	end
+})
+
+c.AddSpell("Elemental Blast", "for Enhance", {
+	Cooldown = 12,
+	CheckFirst = function(z)
+		c.MakeOptional(z, s.Moving("player") and a.Maelstrom < 5)
+		return a.Maelstrom > 0
+	end,
 })
 
 c.AddSpell("Stormblast", nil, {
@@ -208,17 +301,15 @@ c.AddSpell("Lightning Bolt", "at 5", {
 c.AddSpell("Lightning Bolt", "at 3", {
 	CheckFirst = function()
 		return a.Maelstrom >= 3 
-			and not c.HasBuff("Ascendance")
+			and not a.Ascended
 			and (not s.Moving("player") or c.HasBuff("Spiritwalker's Grace"))
 	end
 })
 
 c.AddSpell("Lightning Bolt", "at 2", {
-	NotWhileMoving = true,
 	CheckFirst = function()
 		return a.Maelstrom >= 2 
-			and not c.HasBuff("Ascendance")
-			and (not s.Moving("player") or c.HasBuff("Spiritwalker's Grace"))
+			and not a.Ascended
 			and c.GetMinCooldown(
 					"Lava Lash", 
 					"Unleash Elements",
@@ -232,11 +323,9 @@ c.AddSpell("Lightning Bolt", "at 2", {
 })
 
 c.AddSpell("Lightning Bolt", "2pT15", {
-	NotWhileMoving = true,
 	CheckFirst = function()
 		return a.Maelstrom >= 4 
-			and not c.HasBuff("Ascendance")
-			and (not s.Moving("player") or c.HasBuff("Spiritwalker's Grace"))
+			and not a.Ascended
 			and c.WearingSet(2, "EnhanceT15")
 	end
 })
@@ -344,13 +433,14 @@ c.AddOptionalSpell("Earth Shield", nil, {
 
 c.AddOptionalSpell("Healing Stream Totem", nil, {
 	CheckFirst = function()
-		return c.IsMissingTotem(3)
+		return c.IsMissingTotem(3) or c.HasTalent("Totemic Persistence")
 	end
 })
 
 c.AddOptionalSpell("Mana Tide Totem", nil, {
 	CheckFirst = function()
-		return c.IsMissingTotem(3) and s.PowerPercent("player") < 75
+		return c.GetPowerPercent() < 75
+			and (c.IsMissingTotem(3) or c.HasTalent("Totemic Persistence"))
 	end
 })
 

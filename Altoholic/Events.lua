@@ -30,7 +30,12 @@ local function GetEventExpiry(event)
 	timeTable.hour = tonumber(hour)
 	timeTable.min = tonumber(minute)
 
-	return difftime(time(timeTable), time() + DataStore:GetClientServerTimeGap())	-- in seconds
+	local gap = 0
+	if DataStore_Agenda then
+		gap = DataStore:GetClientServerTimeGap()
+	end
+	
+	return difftime(time(timeTable), time() + gap)	-- in seconds
 end
 
 -- ** Event Types **
@@ -331,6 +336,27 @@ local function ToggleWarningThreshold(self)
 	addon:SetOption("WarningType"..id, table.concat(t, "|"))		-- Sets something like "15|5|10|1"
 end
 
+local function GetTimeToCooldownExpiry()
+	-- returns the amount of seconds to profession cooldown expiry 
+	-- now set at 3am since 5.1, but wrongly returned by the game's API
+	local timeTable = {}
+	
+	timeTable.year = date("%Y")
+	timeTable.month = date("%m")
+	timeTable.day = date("%d")
+	timeTable.hour = 3
+	timeTable.min = 0
+
+	local now = time()
+	local resetTime = time(timeTable)
+
+	if now >= resetTime then				-- it's now 9am, reset was earlier ..
+		return resetTime + 86400			-- so add 1 day
+	else											-- it's now 1am, reset to happen in 2 hours
+		return resetTime
+	end
+end
+
 
 function ns:Get(index)
 	return eventList[index]
@@ -428,12 +454,12 @@ function ns:BuildList()
 	eventList = eventList or {}
 	wipe(eventList)
 
-	local timeGap = DataStore:GetClientServerTimeGap()
+	local timeGap = DataStore:GetClientServerTimeGap() or 0
 	
 	for realm in pairs(DataStore:GetRealms()) do
 		for characterName, character in pairs(DataStore:GetCharacters(realm)) do
 			-- add all timers, even expired ones. Expiries will be handled elsewhere.
-
+			
 			-- Profession Cooldowns
 			local professions = DataStore:GetProfessions(character)
 			if professions then
@@ -448,8 +474,9 @@ function ns:BuildList()
 					if supportsSharedCD then
 						local sharedCDFound		-- is there a shared cd for this profession ?
 						for i = 1, DataStore:GetNumActiveCooldowns(profession) do
-							local name, _, reset, lastCheck = DataStore:GetCraftCooldownInfo(profession, i)
-							local expires = reset + lastCheck + timeGap
+							-- local name, _, reset, lastCheck = DataStore:GetCraftCooldownInfo(profession, i)
+							-- local expires = reset + lastCheck + timeGap
+							local expires = GetTimeToCooldownExpiry()
 
 							if not sharedCDFound then
 								sharedCDFound = true
@@ -458,8 +485,9 @@ function ns:BuildList()
 						end
 					else
 						for i = 1, DataStore:GetNumActiveCooldowns(profession) do
-							local name, _, reset, lastCheck = DataStore:GetCraftCooldownInfo(profession, i)
-							local expires = reset + lastCheck + timeGap
+							-- local name, _, reset, lastCheck = DataStore:GetCraftCooldownInfo(profession, i)
+							-- local expires = reset + lastCheck + timeGap
+							local expires = GetTimeToCooldownExpiry()
 
 							AddEvent(COOLDOWN_LINE, date("%Y-%m-%d",expires), date("%H:%M",expires), characterName, realm, i, profession)
 						end

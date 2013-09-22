@@ -1,6 +1,6 @@
 --[[
 Name: LibBabble-Zone-3.0
-Revision: $Rev: 362 $
+Revision: $Rev: 364 $
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-zone-3-0/
 Dependencies: None
@@ -8,7 +8,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-Zone-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 362 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 364 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)
@@ -778,7 +778,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Halls of Origination"] = "Salles de l'Origine",
 	["Halls of Reflection"] = "Les salles des Reflets",
 	["Halls of Stone"] = "Les salles de Pierre",
-	["Heart of Fear"] = "Cœur de la peur", -- Needs review
+	["Heart of Fear"] = "Cœur de la Peur", -- Needs review
 	["Hellfire Citadel"] = "Citadelle des Flammes infernales",
 	["Hellfire Peninsula"] = "Péninsule des Flammes infernales",
 	["Hellfire Ramparts"] = "Remparts des Flammes infernales",
@@ -813,7 +813,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Marshlight Lake"] = "Lac des furoles",
 	["Menethil Harbor"] = "Port de Menethil",
 	["Mogu'Shan Palace"] = "Palais de Mogu'shan", -- Needs review
-	["Mogu'shan Vaults"] = "Caveaux de Mogu'shan", -- Needs review
+	["Mogu'shan Vaults"] = "Caveaux Mogu’shan", -- Needs review
 	["Molten Core"] = "Cœur du Magma",
 	["Molten Front"] = "Front du Magma",
 	Moonglade = "Reflet-de-Lune",
@@ -925,7 +925,7 @@ elseif GAME_LOCALE == "frFR" then
 	["The Great Sea"] = "La Grande mer",
 	["The Halls of Winter"] = "Les salles de l'Hiver",
 	["The Hinterlands"] = "Les Hinterlands",
-	["The Jade Forest"] = "La forêt de Jade", -- Needs review
+	["The Jade Forest"] = "La Forêt de Jade", -- Needs review
 	["The Lost Isles"] = "Les îles Perdues",
 	["The Maelstrom"] = "Le Maelström",
 	["The Mechanar"] = "Le Méchanar",

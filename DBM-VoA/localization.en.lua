@@ -35,9 +35,6 @@ L:SetGeneralLocalization{
 	name = "Emalon the Storm Watcher"
 }
 
-L:SetWarningLocalization{
-}
-
 L:SetTimerLocalization{
 	timerMobOvercharge	= "Overcharge explosion",
 	EmalonEnrage		= "Emalon berserk"
@@ -93,7 +90,7 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	Frostbite	= "Show warning for $spell:72004",
+	Frostbite	= "Show warning for $spell:72004"
 }
 
 L:SetMiscLocalization{

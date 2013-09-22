@@ -18,7 +18,7 @@ end
 
 --[[
 	Auctioneer - Stat's API Example module
-	Version: 5.15.5380 (LikeableLyrebird)
+	Version: 5.18.5433 (PassionatePhascogale)
 	Revision: $Id: StatExample2.lua 5365 2012-09-24 17:33:48Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -255,4 +255,4 @@ end
 function private.Baz()
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/Modules/Auc-Stat-Example2/StatExample2.lua $", "$Rev: 5365 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/Modules/Auc-Stat-Example2/StatExample2.lua $", "$Rev: 5365 $")

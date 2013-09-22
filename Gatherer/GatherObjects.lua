@@ -1,6 +1,6 @@
 --[[
 -	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.2.0 (<%codename%>)
+	Version: 4.4.0 (<%codename%>)
 	Revision: $Id: GatherObjects.lua 754 2008-10-14 04:43:39Z Esamynn $
 
 	License:
@@ -25,7 +25,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherObjects.lua $", "$Rev: 754 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.0/Gatherer/GatherObjects.lua $", "$Rev: 754 $")
 
 Gatherer = {
 	Api = {},

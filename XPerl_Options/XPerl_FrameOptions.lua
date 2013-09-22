@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 761 $")
+XPerl_SetModuleRevision("$Revision: 856 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
@@ -1978,6 +1978,7 @@ function XPerl_Options_ImportOldConfig(old)
 		raid = {
 			enable			= Convert(old.ShowRaid),
 			sortByClass		= Convert(old.SortRaidByClass),
+			sortByRole		= Convert(old.sortByRole),
 			sortAlpha		= Convert(old.SortRaidAlpha),
 			group = {
 				Convert(old.ShowGroup1),
@@ -2427,6 +2428,7 @@ local function XPerl_Raid_ConfigDefault(default)
 	default.raid = {
 		enable			= 1,
 --		sortByClass		= nil,
+		sortByRole 		= 0,
 --		sortAlpha		= nil,
 		group = {1, 1, 1, 1, 1, 1, 1, 1, 1,1},
 		class = {
@@ -2444,6 +2446,8 @@ local function XPerl_Raid_ConfigDefault(default)
 		},
 		titles			= 1,
 		percent			= 1,
+		precisionPercent = 1,
+		precisionManaPercent = 1,
 		scale			= 0.8,
 		spacing			= 0,
 		buffs = {
@@ -3137,6 +3141,15 @@ if (XPerl_UpgradeSettings) then
 
 			if (oldVersion < "3.1.2") then
 				old.xperlOldroleicons = 1
+			end
+			
+			if (oldVersion < "3.7.1") then
+				old.raid.sortByRole = 0
+			end
+			
+			if (oldVersion < "3.7.3") then
+				old.raid.precisionPercent = 1
+				old.raid.precisionManaPercent = 1
 			end
 		end
 	end

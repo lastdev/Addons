@@ -1,4 +1,4 @@
-﻿## Interface: 50200
+﻿## Interface: 50400
 ## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Terrace of Endless Spring|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Терраса Вечной Весны|r
@@ -7,24 +7,18 @@
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0永春台|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Veranda de la Primavera Eterna|r
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Terrasse Printanière|r
+## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0豐泉台|r
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
 ## SavedVariablesPerCharacter: DBMTerraceofEndlessSpring_SavedVars, DBMTerraceofEndlessSpring_SavedStats
 ## X-DBM-Mod: 1
+## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: MOP
-## X-DBM-Mod-Has-Heroic-Mode: 1
-## X-DBM-Mod-Name: Terrace of Endless Spring
-## X-DBM-Mod-Name-koKR: 영원한 봄의 정원
-## X-DBM-Mod-Name-deDE: Terrasse des Endlosen Frühlings
-## X-DBM-Mod-Name-zhTW: 豐泉台
-## X-DBM-Mod-Name-zhCN: 永春台
-## X-DBM-Mod-Name-esES: Veranda de la Primavera Eterna
-## X-DBM-Mod-Name-frFR: Terrasse Printanière
-## X-DBM-Mod-Name-ruRU: Терраса Вечной Весны
-## X-DBM-Mod-Sort: 2
-## X-DBM-Mod-LoadZoneID: 886
-## X-Curse-Packaged-Version: 5.2.1
+## X-DBM-Mod-Has-LFR : 1
+## X-DBM-Mod-Sort: 3
+## X-DBM-Mod-MapID: 996
+## X-Curse-Packaged-Version: 5.4.1
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
@@ -36,7 +30,6 @@ localization.cn.lua
 localization.es.lua
 localization.fr.lua
 localization.ru.lua
-MapSizes.lua
 ProtectorsofEndless.lua
 Tsulong.lua
 LeiShi.lua

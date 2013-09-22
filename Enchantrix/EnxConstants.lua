@@ -1,7 +1,7 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: EnxConstants.lua 5363 2012-09-24 02:36:04Z ccox $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: EnxConstants.lua 5418 2013-06-11 20:40:25Z brykrys $
 	URL: http://enchantrix.org/
 
 	Enchantrix Constants.
@@ -28,7 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix/EnxConstants.lua $", "$Rev: 5363 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Enchantrix/EnxConstants.lua $", "$Rev: 5418 $")
 
 local const = Enchantrix.Constants
 
@@ -73,7 +73,7 @@ const.StaticPrices = {
 	[10939] =   6000, -- Greater Magic Essence
 
 	[74250] = 300000, -- Mysterious Essence
-	[52717] =  80000, -- Lesser Celestial Essence
+	[52718] =  80000, -- Lesser Celestial Essence
 	[34056] =  75000, -- Lesser Cosmic Essence
 	[22447] =  38000, -- Lesser Planar Essence
 	[16202] =  52500, -- Lesser Eternal Essence

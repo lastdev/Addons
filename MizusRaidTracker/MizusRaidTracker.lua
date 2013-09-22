@@ -4,10 +4,12 @@
 -- ********************************************************
 --
 -- This addon is written and copyrighted by:
---    * Mizukichan @ EU-Thrall (2010-2012)
+--    * Mîzukichan @ EU-Antonidas (2010-2013)
 --
 -- Contributors:
 --    * Kevin (HTML-Export) (2010)
+--    * Knoxa (various MoP fixes) (2013)
+--    * Kravval (various MoP fixes, enhancements to boss kill detection) (2013)
 --
 --    This file is part of Mizus RaidTracker.
 --
@@ -37,6 +39,9 @@ MRT_NumOfLastBoss = nil;
 MRT_Options = {};
 MRT_RaidLog = {};
 MRT_PlayerDB = {};
+
+MRT_ArrayBossID = {};
+MRT_ArrayBosslast = nil;
 
 local MRT_Defaults = {
     ["Options"] = {
@@ -99,8 +104,6 @@ local LBB = LibStub("LibBabble-Boss-3.0");
 local LBBL = LBB:GetUnstrictLookupTable();
 local LBI = LibStub("LibBabble-Inventory-3.0");
 local LBIR = LBI:GetReverseLookupTable();
-local LBZ = LibStub("LibBabble-Zone-3.0");
-local LBZR = LBZ:GetReverseLookupTable();
 local EPGPCalc = LibStub("LibEPGP-GPCalculator-1.0");
 local ScrollingTable = LibStub("ScrollingTable");
 local tinsert = tinsert;
@@ -151,7 +154,10 @@ function MRT_MainFrame_OnLoad(frame)
     frame:RegisterEvent("PARTY_CONVERTED_TO_RAID");
     frame:RegisterEvent("PARTY_INVITE_REQUEST");
     frame:RegisterEvent("PLAYER_ENTERING_WORLD");
+    frame:RegisterEvent("PLAYER_REGEN_DISABLED");
     frame:RegisterEvent("RAID_INSTANCE_WELCOME");
+    frame:RegisterEvent("ZONE_CHANGED_NEW_AREA");
+    
     if (uiVersion >= 50001) then
         frame:RegisterEvent("RAID_ROSTER_UPDATE");
     end
@@ -191,14 +197,12 @@ function MRT_OnEvent(frame, event, ...)
         if (not MRT_Options["General_MasterEnable"]) then return end;
         if (not MRT_NumOfCurrentRaid) then return; end
         local monsteryell, sourceName = ...;
-        local localInstance = GetZoneText();
-        if (not localInstance) then return; end
-        local instance = LBZR[localInstance];
-        if (not instance) then return; end
-        if (MRT_L.Bossyells[instance] and MRT_L.Bossyells[instance][monsteryell]) then
+        local areaID = GetCurrentMapAreaID();
+        if (not areaID) then return; end
+        if (MRT_L.Bossyells[areaID] and MRT_L.Bossyells[areaID][monsteryell]) then
             MRT_Debug("NPC Yell from Bossyelllist detected. Source was "..sourceName);
-            local bossName = LBBL[MRT_L.Bossyells[instance][monsteryell]] or MRT_L.Bossyells[instance][monsteryell];
-            local NPCID = MRT_ReverseBossIDList[MRT_L.Bossyells[instance][monsteryell]];
+            local bossName = LBBL[MRT_L.Bossyells[areaID][monsteryell]] or MRT_L.Bossyells[areaID][monsteryell];
+            local NPCID = MRT_ReverseBossIDList[MRT_L.Bossyells[areaID][monsteryell]];
             MRT_AddBosskill(bossName, nil, NPCID);
         end
     
@@ -244,13 +248,13 @@ function MRT_OnEvent(frame, event, ...)
         end);
         
     
-    elseif (event == "RAID_INSTANCE_WELCOME") then
-        MRT_Debug("Event RAID_INSTANCE_WELCOME fired.");
+    elseif (event == "ZONE_CHANGED_NEW_AREA") then
+        MRT_Debug("Event ZONE_CHANGED_NEW_AREA fired.");
         if (not MRT_Options["General_MasterEnable"]) then 
             MRT_Debug("MRT seems to be disabled. Ignoring Event.");
             return; 
         end;
-        -- The WoW-Client randomly returns wrong zone information directly after a zone change for a relativly long period of time.
+        -- The WoW-Client randomly returns wrong zone information directly after a zone change for a relatively long period of time.
         -- Use the DBM approach: wait 10 seconds after RIW-Event and then check instanceInfo stuff. Hopefully this fixes the problem....
         -- A generic function to schedule functions would be nice! <- FIXME!
         MRT_Debug("Setting up instance check timer - raid status will be checked in 10 seconds.");
@@ -261,6 +265,10 @@ function MRT_OnEvent(frame, event, ...)
                 MRT_CheckZoneAndSizeStatus();
             end
         end);
+    
+    elseif(event == "PLAYER_REGEN_DISABLED") then 
+        wipe(MRT_ArrayBossID)
+        --MRT_Debug("Tabelle gelöscht");
     
     elseif (event == "GROUP_ROSTER_UPDATE" or event == "RAID_ROSTER_UPDATE") then
         MRT_Debug("GROUP_ROSTER_UPDATE or RAID_ROSTER_UPDATE fired!");
@@ -301,14 +309,26 @@ function MRT_CombatLogHandler(...)
         local NPCID = MRT_GetNPCID(destGUID);
         --MRT_Debug("localBossName: "..localBossName.." - NPCID: "..NPCID);
         if (MRT_BossIDList[NPCID]) then
-            --MRT_Debug("Valid NPCID found... - Match on "..MRT_BossIDList[NPCID]);
-            if (MRT_BossRenameList[NPCID]) then
-                --MRT_Debug("Rename entry for NPCID found...");
-                englishBossName = MRT_BossRenameList[NPCID];
-                localBossName = LBBL[englishBossName] or englishBossName;
-                --MRT_Debug("New local bossname is "..localBossName);
+            MRT_Debug("Valid NPCID found... - Match on "..MRT_BossIDList[NPCID]);
+            localBossName = LBBL[MRT_BossIDList[NPCID]] or MRT_BossIDList[NPCID];
+            if(MRT_ArrayBossIDList[MRT_BossIDList[NPCID]]) then
+                local count = 0;
+                local bosses = getn(MRT_ArrayBossIDList[MRT_BossIDList[NPCID]]);
+                MRT_ArrayBossID[NPCID] = NPCID;
+                MRT_Debug("Tabelle erweitert um "..NPCID);
+                for key, val in pairs(MRT_ArrayBossID) do
+                    if(tContains(MRT_ArrayBossIDList[MRT_BossIDList[NPCID]], val)) then
+                        count = count +1;
+                    end
+                end
+                if (bosses == count) then
+                    if (MRT_ArrayBosslast ~= localBossName) then
+                        MRT_AddBosskill(localBossName, nil, NPCID);
+                    end
+                end
+            else 
+                MRT_AddBosskill(localBossName, nil, NPCID);
             end
-            MRT_AddBosskill(localBossName, nil, NPCID);
         end
     end
     if (combatEvent == "SPELL_CAST_SUCCESS") then
@@ -771,13 +791,12 @@ end
 function MRT_CheckZoneAndSizeStatus()
     -- Use GetInstanceInfo() for informations about the zone! / Track bossdifficulty at bosskill (important for ICC)
     local _, instanceInfoType, instanceInfoDifficulty = MRT_GetInstanceInfo();
-    local localInstanceInfoName = GetZoneText();
+    local areaID = GetCurrentMapAreaID();
+    if (not areaID) then return; end
+    local localInstanceInfoName = GetMapNameByID(areaID);
     local instanceInfoDifficulty2 = MRT_GetInstanceDifficulty();
-    local instanceInfoName = LBZR[localInstanceInfoName];
-    -- if no english name available, return
-    if (instanceInfoName == nil) then MRT_Debug("MRT_CheckZoneAndSizeStatus called - No LBZ-entry for this zone found. Zone is "..localInstanceInfoName); return; end
-    MRT_Debug("MRT_CheckZoneAndSizeStatus called - data: Name="..instanceInfoName.." / Type="..instanceInfoType.." / InfoDiff="..instanceInfoDifficulty.." / GetInstanceDiff="..instanceInfoDifficulty2);
-    if (MRT_RaidZones[instanceInfoName]) then
+    MRT_Debug("MRT_CheckZoneAndSizeStatus called - data: Name="..localInstanceInfoName.." / ID=" ..areaID.." / Type="..instanceInfoType.." / InfoDiff="..instanceInfoDifficulty.." / GetInstanceDiff="..instanceInfoDifficulty2);
+    if (MRT_RaidZones[areaID]) then
         if (uiVersion >= 40300) then
             local isInLFG = nil;
             if (uiVersion >= 50001) then
@@ -796,19 +815,20 @@ function MRT_CheckZoneAndSizeStatus()
         end
         -- check if recognized raidzone is a pvpraid (-> Archavons Vault) and if tracking is enabled
         -- This is the point where to check if the current raidZone is a zone, which should be tracked
-        if (MRT_PvPRaids[instanceInfoName] and not MRT_Options["Tracking_LogAVRaids"]) then 
+        if (MRT_PvPRaids[areaID] and not MRT_Options["Tracking_LogAVRaids"]) then 
             MRT_Debug("This instance is a PvP-Raid and tracking of those is disabled.");
             if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
             return;
         end
-        if (MRT_LegacyRaidZonesWotLK[instanceInfoName] and not MRT_Options["Tracking_LogWotLKRaids"]) then
+        if (MRT_LegacyRaidZonesWotLK[areaID] and not MRT_Options["Tracking_LogWotLKRaids"]) then
             MRT_Debug("This instance is a WotLK-Raid and tracking of those is disabled.");
             if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
             return;
         end
-        if (MRT_LegacyRaidZonesBC[instanceInfoName] and not MRT_Options["Tracking_LogBCRaids"]) then
+        if (MRT_LegacyRaidZonesBC[areaID] and not MRT_Options["Tracking_LogBCRaids"]) then
             MRT_Debug("This instance is a BC-Raid and tracking of those is disabled.");
-            -- FIXME!
+            if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
+            return;
         end
         MRT_CheckTrackingStatus(localInstanceInfoName, instanceInfoDifficulty2);
     else
@@ -1163,6 +1183,8 @@ function MRT_AddBosskill(bossname, man_diff, bossID)
             MRT_StartGuildAttendanceCheck(bossname);
         end
     end
+    MRT_ArrayBosslast = bossname;
+    wipe(MRT_ArrayBossID);
 end
 
 function MRT_EndActiveRaid()
@@ -1694,13 +1716,7 @@ function MRT_GetNPCID(GUID)
     local first3 = tonumber("0x"..strsub(GUID, 3, 5));
     local unitType = bit.band(first3, 0x007);
     if ((unitType == 0x003) or (unitType == 0x005)) then
-        if (uiVersion < 40000) then
-            -- WoW client previous to 4.0.1 (China)
-            return tonumber("0x"..strsub(GUID, 9, 12));
-        else
-            -- WoW client >= 4.0.1 (rest of the world)
-            return tonumber("0x"..strsub(GUID, 7, 10));
-        end
+        return tonumber("0x"..strsub(GUID, 6, 10));
     else
         return nil;
     end
@@ -1776,18 +1792,19 @@ function MRT_GetInstanceDifficulty()
     if (uiVersion < 50001) then
         return GetInstanceDifficulty();
     else
-        local iniDiff = GetInstanceDifficulty();
+        local _, _, iniDiff = GetInstanceInfo();
         local iniDiffMapping = {
-            [1] = nil,
-            [2] = 1,
-            [3] = 2,
-            [4] = 1,
-            [5] = 2,
-            [6] = 3,
-            [7] = 4,
-            [8] = 2,
-            [9] = nil,
-            [10] = 1,
+            [0] = 0, -- fix check outside
+            [1] = 1,
+            [2] = 2,
+            [3] = 1,
+            [4] = 2,
+            [5] = 3,
+            [6] = 4,
+            [7] = 2,
+            [8] = 0,
+            [9] = 1,
+			[14] = 2,
         };
         return iniDiffMapping[iniDiff];
     end

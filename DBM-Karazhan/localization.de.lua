@@ -63,7 +63,7 @@ L = DBM:GetModLocalization("RomuloAndJulianne")
 
 L:SetGeneralLocalization{
 	name = "Romulo und Julianne"
- }
+}
 
 L:SetWarningLocalization{
 	warningPosion	= "%s auf >%s< (%d)",		-- Mortal Wound on >args.destName< (args.amount)
@@ -74,8 +74,7 @@ L:SetTimerLocalization{
 }
 
 L:SetOptionLocalization{
-	TimerCombatStart	= "Zeige Zeit bis Kampfbeginn",
-	warningPosion	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(30830)
+	TimerCombatStart	= "Zeige Zeit bis Kampfbeginn"
 }
 
 L:SetMiscLocalization{
@@ -95,10 +94,6 @@ L:SetGeneralLocalization{
 }
 
 L:SetWarningLocalization{
-}
-
-L:SetOptionLocalization{
-	RRHIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(30753)
 }
 
 L:SetMiscLocalization{
@@ -169,9 +164,8 @@ L:SetTimerLocalization{
 
 L:SetOptionLocalization{
 	timerSpecial			= "Abklingzeit der Spezialfähigkeiten anzeigen",
-	DBM_ARAN_DO_NOT_MOVE	= "Zeige Spezialwarnung für $spell:30004",
-	ElementalIcons			= "Setze Zeichen auf Wasserelementare",
-	WreathIcons				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(29946)
+	DBM_ARAN_DO_NOT_MOVE	= "Spezialwarnung für $spell:30004",
+	ElementalIcons			= "Setze Zeichen auf Wasserelementare"
 }
 
 L:SetMiscLocalization{
@@ -211,6 +205,24 @@ L:SetMiscLocalization{
 	DBM_NS_EMOTE_PHASE_1	= "%s schreit auf und öffnet Tore zum Nether."
 }
 
+--Chess
+L = DBM:GetModLocalization("Chess")
+
+L:SetGeneralLocalization{
+	name = "Schachspiel"
+}
+
+L:SetTimerLocalization{
+	timerCheat	= "Schummeln CD"
+}
+
+L:SetOptionLocalization{
+	timerCheat	= "Abklingzeit von Schummeln anzeigen"
+}
+
+L:SetMiscLocalization{
+	EchoCheats	= "Medivhs Echo schummelt!"
+}
 
 --Prince Malchezaar
 L = DBM:GetModLocalization("Prince")

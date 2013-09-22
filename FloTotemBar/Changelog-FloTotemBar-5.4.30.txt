@@ -1,0 +1,12 @@
+tag 5.4.30
+1cbd41256814708e9b3fce0eec712ba166483a25
+Floraline <floraline@ophiuchus.org>
+2013-09-11 19:46:05 +0200
+
+Tagging for release
+
+
+--------------------
+
+Floraline:
+	- Bump version for 5.4

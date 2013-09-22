@@ -1,10 +1,9 @@
-local mod = DBM:NewMod("WarpSplinter", "DBM-Party-BC", 14)
+local mod = DBM:NewMod(562, "DBM-Party-BC", 14, 257)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 315 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 494 $"):sub(12, -3))
 
 mod:SetCreatureID(17977)
-mod:SetModelID(19438)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
@@ -22,14 +21,14 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(34716) then
+	if args.spellId == 34716 then
 		warnStomp:Show()
 		timerStomp:Start()
 	end
 end
 
 function mod:SPELL_SUMMON(args)
-	if args:IsSpellID(34727) then
+	if args.spellId == 34727 then
 		warnTreants:Show()
 		timerTreants:Start()
 	end

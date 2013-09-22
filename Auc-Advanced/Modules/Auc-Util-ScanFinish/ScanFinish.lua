@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Scan Finish module
-	Version: 5.15.5380 (LikeableLyrebird)
+	Version: 5.18.5433 (PassionatePhascogale)
 	Revision: $Id: ScanFinish.lua 5347 2012-09-06 06:26:15Z Esamynn $
 	URL: http://auctioneeraddon.com/
 
@@ -292,4 +292,4 @@ function private.ConfigChanged()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-ScanFinish/ScanFinish.lua $", "$Rev: 5347 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-ScanFinish/ScanFinish.lua $", "$Rev: 5347 $")

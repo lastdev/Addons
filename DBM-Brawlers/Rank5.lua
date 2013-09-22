@@ -1,14 +1,13 @@
 local mod	= DBM:NewMod("BrawlRank5", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8364 $"):sub(12, -3))
---mod:SetCreatureID(60491)
+mod:SetRevision(("$Revision: 9770 $"):sub(12, -3))
 mod:SetModelID(6923)
 mod:SetZone()
 
 mod:RegisterEvents(
 	"SPELL_CAST_START",
-	"UNIT_SPELLCAST_INTERRUPTED"
+	"UNIT_SPELLCAST_INTERRUPTED target focus"
 )
 
 local warnPolymorph			= mod:NewSpellAnnounce(133362, 4)
@@ -33,25 +32,25 @@ local brawlersMod = DBM:GetModByName("Brawlers")
 
 function mod:SPELL_CAST_START(args)
 	if not brawlersMod.Options.SpectatorMode and not brawlersMod:PlayerFighting() then return end--Spectator mode is disabled, do nothing.
-	if args:IsSpellID(133362) then
+	if args.spellId == 133362 then
 		warnPolymorph:Show()
 		timerPolymorphCD:Start()
 		if brawlersMod:PlayerFighting() then
 			specWarnPolymorph:Show()
 		end
-	elseif args:IsSpellID(133346) then
+	elseif args.spellId == 133346 then
 		warnDarkZone:Show()
 		timerDarkZoneCD:Start()
 		if brawlersMod:PlayerFighting() then
 			specWarnDarkZone:Show()
 		end
-	elseif args:IsSpellID(124860) then
+	elseif args.spellId == 124860 then
 		warnRainDance:Show()
 		timerRainDanceCD:Start()
 		if brawlersMod:PlayerFighting() then
 			specWarnRainDance:Show()
 		end
-	elseif args:IsSpellID(124935) then
+	elseif args.spellId == 124935 then
 		warnTorrent:Show()
 		timerTorrentCD:Start()
 		if brawlersMod:PlayerFighting() then

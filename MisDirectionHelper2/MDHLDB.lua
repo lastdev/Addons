@@ -145,7 +145,13 @@ function MDH:MDHChat()
 	local msg = string.format((uc == "HUNTER") and L["%s Misdirects to %s"] or L["%s casts Tricks of the Trade on %s"], UnitName("player"), misdtarget)
 	local chan = self.db.profile.cChannel or "RAID"
 	local s
-	if chan == "PARTY" and GetNumSubgroupMembers() ~= 0 then s = true
+	--LFD fix courtesy of Eincrou
+	--*****
+	if chan == "PARTY" and GetNumSubgroupMembers() ~= 0 then 
+		if (IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) then chan = "INSTANCE_CHAT" end
+		s = true
+	--*****
+	--if chan == "PARTY" and GetNumSubgroupMembers() ~= 0 then s = true
 	elseif chan == "RAID" and IsInRaid() then s = true
 	elseif chan == "WHISPER" then if UnitIsPlayer(misdtarget) then s = true end end
 	if s then SendChatMessage(msg, chan, nil, misdtarget) end

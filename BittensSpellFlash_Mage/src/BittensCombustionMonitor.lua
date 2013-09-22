@@ -32,7 +32,7 @@ function bcm.PredictDamage(delay, debug)
 		perTick = select(
 			15, 
 			UnitDebuff("target", s.SpellName(c.GetID("Ignite")), nil, "PLAYER"))
-		perTick = perTick / 2
+		perTick = .2 * perTick
 	end
 	
 	local numTicks = floor(.5 + 10 * (1 + UnitSpellHaste("player") / 100))
@@ -134,7 +134,7 @@ local function updateWindow()
 	line1:SetText(floor(crit * 1000 + .5) / 10 .. "%   x" .. numTicks)
 	line2:SetText(
 		floor(damage / 1000) .. "K" 
-			.. " (" .. floor(perTick / 1000 + .5) .. "K" .. ")")
+			.. " (" .. floor(perTick / 1000 + .5) .. "K)")
 end
 
 updateWindow()
@@ -155,33 +155,13 @@ function logHandlers.SPELL_CAST_SUCCESS(spellID, ...)
 	end
 end
 
-function logHandlers.SPELL_AURA_APPLIED(spellID, ...)
-	updateWindow()
-end
-
-function logHandlers.SPELL_AURA_REMOVED(spellID, ...)
-	updateWindow()
-end
-
-function logHandlers.SPELL_AURA_APPLIED_DOSE(spellID, ...)
-	updateWindow()
-end
-
-function logHandlers.SPELL_AURA_REMOVED_DOSE(spellID, ...)
-	updateWindow()
-end
-
-function logHandlers.SPELL_AURA_REFRESH(spellID, ...)
-	updateWindow()
-end
-
-function logHandlers.SPELL_AURA_BROKEN(spellID, ...)
-	updateWindow()
-end
-
-function logHandlers.SPELL_AURA_BROKEN_SPELL(spellID, ...)
-	updateWindow()
-end
+logHandlers.SPELL_AURA_APPLIED = updateWindow
+logHandlers.SPELL_AURA_REMOVED = updateWindow
+logHandlers.SPELL_AURA_APPLIED_DOSE = updateWindow
+logHandlers.SPELL_AURA_REMOVED_DOSE = updateWindow
+logHandlers.SPELL_AURA_REFRESH = updateWindow
+logHandlers.SPELL_AURA_BROKEN = updateWindow
+logHandlers.SPELL_AURA_BROKEN_SPELL = updateWindow
 
 local eventHandlers = {}
 
@@ -191,21 +171,10 @@ function eventHandlers.ADDON_LOADED(addonName)
 	end
 end
 
-function eventHandlers.PLAYER_LOGOUT()
-	saveWindowPosition()
-end
-
-function eventHandlers.UNIT_SPELLCAST_START()
-	updateWindow()
-end
-
-function eventHandlers.UNIT_SPELLCAST_STOP()
-	updateWindow()
-end
-
-function eventHandlers.UNIT_SPELLCAST_SUCCEEDED()
-	updateWindow()
-end
+eventHandlers.PLAYER_LOGOUT = saveWindowPosition
+eventHandlers.UNIT_SPELLCAST_START = updateWindow
+eventHandlers.UNIT_SPELLCAST_STOP = updateWindow
+eventHandlers.UNIT_SPELLCAST_SUCCEEDED = updateWindow
 
 function eventHandlers.COMBAT_LOG_EVENT_UNFILTERED(...)
 	local source = select(5, ...)
@@ -219,9 +188,4 @@ function eventHandlers.COMBAT_LOG_EVENT_UNFILTERED(...)
 	end
 end
 
-for event, _ in pairs(eventHandlers) do
-	window:RegisterEvent(event)
-end
-window:SetScript("OnEvent", function(self, event, ...)
-	eventHandlers[event](...)
-end)
+u.RegisterEventHandler(eventHandlers)

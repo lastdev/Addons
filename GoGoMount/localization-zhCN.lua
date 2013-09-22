@@ -42,6 +42,8 @@
 		PaladinOptions = "圣骑士选项",
 		RemoveBuffs = "移除会影响召唤坐骑的Buffs",
 		RemoveBuffs_Long = "GoGoMount将会尝试移除那些妨碍坐骑的Buf和姿态变形。这个仅为已知的Buff以及一些需要2次点击你的GoGoMount上马时才会执行。",
+		ShamanOptions = "Shaman Options", -- Requires localization
+		ShamanSingleClick = "Single click mount from Ghost Wolf Form instead of dismounting", -- Requires localization
 		UnknownMountFound = "在您的坐骑列表中发现一个未知的坐骑.请报告,以便在未来版本中加入",
 		UseAspectOfThePackInstead = "使用豹群守护替代猎豹守护",
 		UseAspectOfThePackInstead_Long = "When enabled, GoGoMount will cast Aspect of the Pack instead of Aspect of the Cheetah.  Local zone or global settings override this setting.  If this is set to use Aspect of the Pack and you have Aspect of the Cheetah as a zone favorite, Aspect of the Cheetah will be used.", -- Requires localization

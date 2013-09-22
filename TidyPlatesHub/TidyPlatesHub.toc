@@ -1,0 +1,16 @@
+## Interface: 50400
+## Title: Tidy Plates Hub
+## Notes: Provides a common configuration panel for supported themes.
+## Author: Daniel/Binbwen
+## Dependencies: TidyPlates, TidyPlatesWidgets
+## OptionalDeps: TidyPlatesHubDE, TidyPlatesHubES, TidyPlatesHubMX, TidyPlatesHubFR, TidyPlatesHubKR, TidyPlatesHubRU, TidyPlatesHubCN, TidyPlatesHubTW
+## SavedVariables: TidyPlatesHubCache, TidyPlatesHubGlobal
+## SavedVariablesPerCharacter: TidyPlatesHubSettings
+
+Lists.lua
+Defaults.lua
+Helpers.lua
+Templates.lua
+Hub.lua
+Functions.lua
+

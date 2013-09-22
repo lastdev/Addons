@@ -34,7 +34,7 @@ L:SetGeneralLocalization{
 L = DBM:GetModLocalization("Garr-Classic")
 
 L:SetGeneralLocalization{
-	name = "Garr (Classic)"
+	name = "Garr"
 }
 
 --------------
@@ -44,10 +44,6 @@ L = DBM:GetModLocalization("Geddon")
 
 L:SetGeneralLocalization{
 	name = "Baron Geddon"
-}
-
-L:SetOptionLocalization{
-	SetIconOnBombTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(20475)
 }
 
 ----------------
@@ -76,12 +72,6 @@ L = DBM:GetModLocalization("Golemagg")
 L:SetGeneralLocalization{
 	name = "Golemagg der Verbrenner"
 }
-L:SetWarningLocalization{
-	WarnP2Soon	= "Phase 2 bald"
-}
-L:SetOptionLocalization{
-	WarnP2Soon 	= "Warnung bei baldigem Beginn von Phase 2"
-}
 
 -----------------
 --  Majordomo  --
@@ -102,26 +92,20 @@ L:SetMiscLocalization{
 L = DBM:GetModLocalization("Ragnaros-Classic")
 
 L:SetGeneralLocalization{
-	name = "Ragnaros (Classic)"
+	name = "Ragnaros"
 }
 L:SetWarningLocalization{
 	WarnSubmerge		= "Abtauchen",
-	WarnSubmergeSoon	= "Abtauchen bald",
-	WarnEmerge			= "Auftauchen",
-	WarnEmergeSoon		= "Auftauchen bald"
+	WarnEmerge			= "Auftauchen"
 }
 L:SetTimerLocalization{
-	TimerCombatStart	= "Kampfbeginn",
 	TimerSubmerge		= "Abtauchen",
 	TimerEmerge			= "Auftauchen"
 }
 L:SetOptionLocalization{
-	TimerCombatStart	= "Zeige Zeit bis Kampfbeginn",
 	WarnSubmerge		= "Zeige Warnung für Abtauchen",
-	WarnSubmergeSoon	= "Zeige Vorwarnung für Abtauchen",
 	TimerSubmerge		= "Zeige Zeit bis Abtauchen",
 	WarnEmerge			= "Zeige Warnung für Auftauchen",
-	WarnEmergeSoon		= "Zeige Vorwarnung für Auftauchen",
 	TimerEmerge			= "Zeige Zeit bis Auftauchen"
 }
 L:SetMiscLocalization{

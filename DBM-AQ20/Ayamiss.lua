@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ayamiss", "DBM-AQ20", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 311 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 452 $"):sub(12, -3))
 mod:SetCreatureID(15369)
 mod:SetModelID(15431)
 mod:RegisterCombat("combat")
@@ -9,7 +9,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEvents(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
-	"UNIT_HEALTH"
+	"UNIT_HEALTH target focus mouseover"
 )
 
 local warnPhase2	= mod:NewPhaseAnnounce(2)
@@ -23,14 +23,14 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(25725) then
+	if args.spellId == 25725 then
 		warnParalyze:Show(args.destName)
 		timerParalyze:Start(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(25725) then
+	if args.spellId == 25725 then
 		timerParalyze:Cancel()
 	end
 end

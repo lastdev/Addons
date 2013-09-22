@@ -11,12 +11,14 @@ if ( not L ) then
     return;
 end
 
-L["ARMORY_ALTS"] = "Twinks" -- Needs review
+L["ARMORY_ALTS"] = "Twinks"
 L["ARMORY_BAGS"] = "Taschen"
 L["ARMORY_BANK_CONTAINER_NAME"] = "Bank"
 L["ARMORY_BONUS_PATTERN"] = "(.+) Bonus" -- Needs review
-L["ARMORY_BUZZ_WORDS"] = [=[of
-the]=] -- Requires localization
+L["ARMORY_BUZZ_WORDS"] = [=[der
+die
+des
+von]=] -- Needs review
 L["ARMORY_BY_DATE"] = "nach Datum sortieren"
 L["ARMORY_BY_GROUP"] = "nach Gruppe sortieren"
 L["ARMORY_CAN_LEARN"] = "Lernbar von"
@@ -31,13 +33,13 @@ L["ARMORY_CMD_CHECKCD"] = "cooldown|cd" -- Needs review
 L["ARMORY_CMD_CHECKCD_TEXT"] = "Prüft Cooldowns der Handwerksfähigkeiten" -- Needs review
 L["ARMORY_CMD_CHECK_INVALID"] = "Trage eine Anzahl Tage ein, nachdem geprüft werden soll. Nichts für Standardeinstellung." -- Needs review
 L["ARMORY_CMD_CHECK_MENUTEXT"] = "Prüfe auf bald ablaufende Gegenstände"
-L["ARMORY_CMD_CHECK_TEXT"] = "Post auf bald ablaufene Gegenstände prüfen" -- Needs review
+L["ARMORY_CMD_CHECK_TEXT"] = "Post auf bald ablaufene Gegenstände prüfen"
 L["ARMORY_CMD_CONFIG"] = "config"
-L["ARMORY_CMD_CONFIG_TEXT"] = "Konfigurationspanel öffnen" -- Needs review
+L["ARMORY_CMD_CONFIG_TEXT"] = "Konfigurationspanel öffnen"
 L["ARMORY_CMD_DELETE"] = "löschen"
 L["ARMORY_CMD_DELETE_ALL"] = "alle"
 L["ARMORY_CMD_DELETE_ALL_MSG"] = "Armorydatenbank wurde bereinigt."
-L["ARMORY_CMD_DELETE_ALL_TEXT"] = "gesamte Datenbank löschen" -- Needs review
+L["ARMORY_CMD_DELETE_ALL_TEXT"] = "gesamte Datenbank löschen"
 L["ARMORY_CMD_DELETE_CHAR"] = "char"
 L["ARMORY_CMD_DELETE_CHAR_MSG"] = "Armory-Eintrag für '%1$s' auf Realm '%2$s' wurde gelöscht."
 L["ARMORY_CMD_DELETE_CHAR_NOT_FOUND"] = "Armoryeintrag für '%1$s' auf Realm '%2$s' nicht gefunden!"
@@ -66,14 +68,14 @@ L["ARMORY_CMD_FIND_SKILL"] = "Fähigkeit"
 L["ARMORY_CMD_FIND_SPELL"] = "Zauber"
 L["ARMORY_CMD_FIND_TEXT"] = "Suche Information in der lokalen Datenbank"
 L["ARMORY_CMD_HELP"] = "hilfe" -- Needs review
-L["ARMORY_CMD_HELP_TEXT"] = "Zeigt diese Armory-Hilfe" -- Needs review
+L["ARMORY_CMD_HELP_TEXT"] = "Zeigt diese Armory-Hilfe"
 L["ARMORY_CMD_LOOKUP"] = "lookup" -- Needs review
 L["ARMORY_CMD_LOOKUP_MENUTEXT"] = "Hole Informationen"
 L["ARMORY_CMD_LOOKUP_TEXT"] = "Hole Informationen von anderen Spielern"
 L["ARMORY_CMD_RESET"] = "reset"
 L["ARMORY_CMD_RESET_FRAME"] = "frames"
 L["ARMORY_CMD_RESET_FRAME_MENUTEXT"] = "Bildschirmpositionen zurücksetzen"
-L["ARMORY_CMD_RESET_FRAME_SUCCESS"] = "UI neu laden" -- Needs review
+L["ARMORY_CMD_RESET_FRAME_SUCCESS"] = "UI neu laden"
 L["ARMORY_CMD_RESET_FRAME_TEXT"] = "Setze die Bildschirmposition auf die Werkseinstellung zurück"
 L["ARMORY_CMD_RESET_SETTINGS"] = "Einstellungen"
 L["ARMORY_CMD_RESET_SETTINGS_SUCCESS"] = "Alle Einstellungen wurden erfolgreich zurückgesetzt."
@@ -93,7 +95,7 @@ L["ARMORY_CMD_SET_COOLDOWNEVENTS_TEXT"] = "Berufs-Cooldowns in Ereignisliste auf
 L["ARMORY_CMD_SET_COOLDOWNEVENTS_TOOLTIP"] = [=[Aktiv: Berufs-Cooldowns werden in der Armory Ereignisliste aufgeführt
 Inaktiv: Berufs-Cooldowns werden nicht aufgeführt]=] -- Needs review
 L["ARMORY_CMD_SET_COUNTALL_MENUTEXT"] = "Alle Realms in Zählungen einbeziehen"
-L["ARMORY_CMD_SET_COUNTALL_TEXT"] = "Gegenstandsanzahl für alle Realms einbeziehen" -- Needs review
+L["ARMORY_CMD_SET_COUNTALL_TEXT"] = "Gegenstandsanzahl für alle Realms einbeziehen"
 L["ARMORY_CMD_SET_COUNTALL_TOOLTIP"] = [=[Aktiv: Gesamtanzahl wird über alle Realms angezeigt
 Inaktiv: Gesamtanzahl wird nur für diesen Realm angezeigt]=]
 L["ARMORY_CMD_SET_COUNTPERSLOT_MENUTEXT"] = "Summe pro Tasche/Bankfach" -- Needs review

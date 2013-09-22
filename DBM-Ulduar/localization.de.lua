@@ -9,9 +9,6 @@ L = DBM:GetModLocalization("FlameLeviathan")
 L:SetGeneralLocalization{
 	name = "Flammenleviathan"
 }
-
-L:SetTimerLocalization{
-}
 	
 L:SetMiscLocalization{
 	YellPull	= "Feindeinheiten erkannt. Bedrohungsbewertung aktiv. Hauptziel erfasst. Neubewertung in T minus 30 Sekunden.",
@@ -26,10 +23,10 @@ L:SetWarningLocalization{
 }
 
 L:SetOptionLocalization{
-	SpecialPursueWarnYou	= "Zeige Spezialwarnung, wenn du $spell:62374 wirst",
+	SpecialPursueWarnYou	= "Spezialwarnung, wenn du $spell:62374 wirst",
 	PursueWarn				= "Verkünde Ziele von $spell:62374",
 	warnNextPursueSoon		= "Zeige Vorwarnung für nächstes $spell:62374",
-	warnWardofLife			= "Zeige Spezialwarnung, wenn Zauberschutz des Lebens erscheint"
+	warnWardofLife			= "Spezialwarnung, wenn Zauberschutz des Lebens erscheint"
 }
 
 --------------------------------
@@ -39,16 +36,6 @@ L = DBM:GetModLocalization("Ignis")
 
 L:SetGeneralLocalization{
 	name = "Ignis, Meister des Eisenwerks"
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetOptionLocalization{
-	SlagPotIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63477)
 }
 
 ------------------
@@ -99,17 +86,6 @@ L:SetGeneralLocalization{
 	name = "XT-002 Dekonstruktor"
 }
 
-L:SetTimerLocalization{
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetOptionLocalization{
-	SetIconOnLightBombTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(65121),
-	SetIconOnGravityBombTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(64234)
-}
-
 --------------------
 --  Iron Council  --
 --------------------
@@ -119,15 +95,7 @@ L:SetGeneralLocalization{
 	name = "Die Versammlung des Eisens"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
 L:SetOptionLocalization{
-	SetIconOnOverwhelmingPower	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(61888),
-	SetIconOnStaticDisruption	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(61912),
 	AlwaysWarnOnOverload		= "Warne immer bei $spell:63481 (sonst nur wenn Sturmrufer Brundir im Ziel)"
 }
 
@@ -163,7 +131,7 @@ L:SetOptionLocalization{
 	NextCollapsingStar		= "Zeige Zeit bis nächste Kollabierende Sterne erscheinen",
 	TimerCombatStart		= "Zeige Zeit bis Kampfbeginn",
 	WarnPhase2Soon			= "Zeige Vorwarnung für Phase 2 (bei ~23%)",
-	warnStarLow				= "Zeige Spezialwarnung, wenn ein Kollabierender Stern bald stirbt (bei ~25%)"
+	warnStarLow				= "Spezialwarnung, wenn ein Kollabierender Stern bald stirbt (bei ~25%)"
 }
 
 L:SetMiscLocalization{
@@ -184,9 +152,6 @@ L:SetGeneralLocalization{
 	name = "Kologarn"
 }
 
-L:SetWarningLocalization{
-}
-
 L:SetTimerLocalization{
 	timerLeftArm		= "Nachwachsen linker Arm",
 	timerRightArm		= "Nachwachsen rechter Arm",
@@ -196,10 +161,7 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	timerLeftArm			= "Zeige Zeit bis der linke Arm nachwächst",
 	timerRightArm			= "Zeige Zeit bis der rechte Arm nachwächst",
-	achievementDisarmed		= "Zeige Timer für Erfolg 'Arm dran, weil Arm ab'",
-	SetIconOnGripTarget		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(64292),
-	SetIconOnEyebeamTarget	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63346),
-	YellOnBeam				= "Schreie bei $spell:63346 auf dir"
+	achievementDisarmed		= "Zeige Timer für Erfolg 'Arm dran, weil Arm ab'"
 }
 
 L:SetMiscLocalization{
@@ -208,8 +170,7 @@ L:SetMiscLocalization{
 	Health_Body				= "Kologarn",
 	Health_Right_Arm		= "Rechter Arm",
 	Health_Left_Arm			= "Linker Arm",
-	FocusedEyebeam			= "%s fokussiert seinen Blick auf Euch!",
-	YellBeam				= "Fokussierter Augenstrahl auf mir!"
+	FocusedEyebeam			= "%s fokussiert seinen Blick auf Euch!"
 }
 
 ---------------
@@ -233,11 +194,11 @@ L:SetTimerLocalization{
 L:SetWarningLocalization{
 	SpecWarnBlast	= "Schildwachenschlag - Jetzt unterbrechen",
 	WarnCatDied		= "Wilder Verteidiger tot (%d Leben übrig)",
-	WarnCatDiedOne	= "Wilder Verteidiger tot (1 Leben übrig)",
+	WarnCatDiedOne	= "Wilder Verteidiger tot (1 Leben übrig)"
 }
 
 L:SetOptionLocalization{
-	SpecWarnBlast	= "Zeige Spezialwarnung für Schildwachenschlag (zum Unterbrechen)",
+	SpecWarnBlast	= "Spezialwarnung für Schildwachenschlag (zum Unterbrechen)",
 	WarnCatDied		= "Zeige Warnung, wenn der Wilde Verteidiger stirbt",
 	WarnCatDiedOne	= "Zeige Warnung, wenn der Wilde Verteidiger nur noch 1 Leben übrig hat",
 	timerDefender	= "Zeige Zeit bis zur Aktivierung des Wilden Verteidigers"
@@ -250,16 +211,6 @@ L = DBM:GetModLocalization("Hodir")
 
 L:SetGeneralLocalization{
 	name = "Hodir"
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-	SetIconOnStormCloud		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(65133)
 }
 
 L:SetMiscLocalization{
@@ -275,9 +226,6 @@ L:SetGeneralLocalization{
 	name = "Thorim"
 }
 
-L:SetWarningLocalization{
-}
-
 L:SetTimerLocalization{
 	TimerHardmode	= "Hard Mode"
 }
@@ -285,7 +233,7 @@ L:SetTimerLocalization{
 L:SetOptionLocalization{
 	TimerHardmode	= "Zeige Timer für Hard Mode",
 	RangeFrame		= "Zeige Abstandsfenster (10m)",
-	AnnounceFails	= "Verkünde Spieler im Schlachtzugchat, die bei $spell:62466 scheitern\n(benötigt aktivierte Mitteilungen und Leiter-/Assistentenstatus)"
+	AnnounceFails	= "Verkünde Spieler im Schlachtzugchat, die bei $spell:62466 scheitern (benötigt aktivierte Mitteilungen und Leiter-/Assistentenstatus)"
 }
 
 L:SetMiscLocalization{
@@ -310,20 +258,20 @@ L:SetMiscLocalization{
 	WaterSpirit        = "Uralter Wassergeist",
 	Snaplasher         = "Knallpeitscher",
 	StormLasher        = "Sturmpeitscher",
-	YellKill           = "Seine Macht über mich beginnt zu schwinden. Endlich kann ich wieder klar sehen. Ich danke Euch, Helden.",
+	YellKill           = "Seine Macht über mich beginnt zu schwinden. Endlich kann ich wieder klar sehen. Ich danke Euch, Helden."
 }
 
 L:SetWarningLocalization{
-	WarnSimulKill	= "Erster Elementar tot - Wiederbelebung in ~12 Sekunden",
+	WarnSimulKill	= "Erster Elementar tot - Wiederbelebung in ~12 Sekunden"
 }
 
 L:SetTimerLocalization{
-	TimerSimulKill	= "Wiederbelebung",
+	TimerSimulKill	= "Wiederbelebung"
 }
 
 L:SetOptionLocalization{
 	WarnSimulKill	= "Verkünde Tod des ersten Elementars",
-	TimerSimulKill	= "Zeige Zeit bis zur Wiederbelebung der Elementare",
+	TimerSimulKill	= "Zeige Zeit bis zur Wiederbelebung der Elementare"
 }
 
 ----------------------
@@ -333,15 +281,6 @@ L = DBM:GetModLocalization("Freya_Elders")
 
 L:SetGeneralLocalization{
 	name = "Freyas Älteste"
-}
-
-L:SetMiscLocalization{
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetOptionLocalization{
 }
 
 ---------------
@@ -375,11 +314,9 @@ L:SetOptionLocalization{
 	AutoChangeLootToFFA		= "Plündermodus in Phase 3 automatisch auf 'Jeder gegen jeden' einstellen",
 	WarnBombSpawn			= "Zeige Warnung für Bombenbot",
 	TimerHardmode			= "Zeige Timer für Hard Mode",
-	ShockBlastWarningInP1	= "Zeige Spezialwarnung für $spell:63631 in Phase 1",
-	ShockBlastWarningInP4	= "Zeige Spezialwarnung für $spell:63631 in Phase 4",
-	RangeFrame				= "Zeige Abstandsfenster in Phase 1 (6m)",
-	SetIconOnNapalm			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(65026),
-	SetIconOnPlasmaBlast	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(62997)
+	ShockBlastWarningInP1	= "Spezialwarnung für $spell:63631 in Phase 1",
+	ShockBlastWarningInP4	= "Spezialwarnung für $spell:63631 in Phase 4",
+	RangeFrame				= "Zeige Abstandsfenster in Phase 1 (6m)"
 }
 
 L:SetMiscLocalization{
@@ -416,9 +353,9 @@ L:SetWarningLocalization{
 L:SetOptionLocalization{
 	SetIconOnShadowCrash			= "Setze Zeichen auf Ziele von $spell:62660 (Totenkopf)",
 	SetIconOnLifeLeach				= "Setze Zeichen auf Ziele von $spell:63276 (Kreuz)",
-	SpecialWarningShadowCrash		= "Zeige Spezialwarnung, wenn du von $spell:62660 betroffen bist\n(muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
-	SpecialWarningShadowCrashNear	= "Zeige Spezialwarnung, wenn jemand in deiner Nähe von $spell:62660\nbetroffen ist",
-	SpecialWarningLLNear			= "Zeige Spezialwarnung, wenn jemand in deiner Nähe von\n$spell:63276 betroffen ist",
+	SpecialWarningShadowCrash		= "Spezialwarnung, wenn du von $spell:62660 betroffen bist (muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
+	SpecialWarningShadowCrashNear	= "Spezialwarnung, wenn jemand in deiner Nähe von $spell:62660 betroffen ist",
+	SpecialWarningLLNear			= "Spezialwarnung, wenn jemand in deiner Nähe von $spell:63276 betroffen ist",
 	hardmodeSpawn					= "Zeige Zeit bis zum Erscheinen des Saronitanimus (Hard Mode)",
 	CrashArrow						= "Zeige DBM-Pfeil, wenn $spell:62660 in deiner Nähe ist"
 }
@@ -465,19 +402,15 @@ L:SetOptionLocalization{
 	WarningGuardianSpawned			= "Zeige Warnung, wenn ein Wächter des Yogg-Saron erscheint",
 	WarningCrusherTentacleSpawned	= "Zeige Warnung, wenn ein Schmettertentakel erscheint",
 	WarningSanity					= "Zeige Warnung, wenn deine $spell:63050 niedrig ist",
-	SpecWarnSanity					= "Zeige Spezialwarnung, wenn deine $spell:63050 sehr niedrig ist",
-	SpecWarnGuardianLow				= "Zeige Spezialwarnung, wenn ein Wächter des Yogg-Saron (Phase 1) fast tot ist (für DDs)",
+	SpecWarnSanity					= "Spezialwarnung, wenn deine $spell:63050 sehr niedrig ist",
+	SpecWarnGuardianLow				= "Spezialwarnung, wenn ein Wächter des Yogg-Saron (Phase 1) fast tot ist (für DDs)",
 	WarnBrainPortalSoon				= "Zeige Vorwarnung für Gehirnportale",
-	SpecWarnMadnessOutNow			= "Zeige Spezialwarnung kurz bevor $spell:64059 zu Ende gewirkt wird",
-	SetIconOnFearTarget				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63881),
-	SpecWarnFervorCast				= "Zeige Spezialwarnung, wenn $spell:63138 auf dich gewirkt wird\n(muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
-	specWarnBrainPortalSoon			= "Zeige Spezialwarnung für nächste Gehirnportale",
+	SpecWarnMadnessOutNow			= "Spezialwarnung kurz bevor $spell:64059 zu Ende gewirkt wird",
+	SpecWarnFervorCast				= "Spezialwarnung, wenn $spell:63138 auf dich gewirkt wird (muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
+	specWarnBrainPortalSoon			= "Spezialwarnung für nächste Gehirnportale",
 	WarningSqueeze					= "Schreie bei Quetschen auf dir",
 	NextPortal						= "Zeige Zeit bis nächste Gehirnportale",
-	SetIconOnFervorTarget			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63138),
-	ShowSaraHealth					= "Zeige Lebensanzeige für Sara in Phase 1\n(muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
-	SpecWarnMaladyNear				= "Zeige Spezialwarnung, wenn jemand in deiner Nähe von $spell:63881\nbetroffen ist",
-	SetIconOnBrainLinkTarget		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(63802),
+	ShowSaraHealth					= "Zeige Lebensanzeige für Sara in Phase 1 (muss anvisiert oder im Fokus mindestens eines Schlachtzugmitglieds sein)",
+	SpecWarnMaladyNear				= "Spezialwarnung, wenn jemand in deiner Nähe von $spell:63881 betroffen ist",
 	MaladyArrow						= "Zeige DBM-Pfeil, wenn $spell:63881 in deiner Nähe ist"
 }
-

@@ -123,27 +123,41 @@ do
                     togglebliz = {
                         name = L"Disable Default",
                         type = "toggle",
-                        width = "double",
                         desc = L"Hides default combat point (and other) frames",
                         get = function(info) return NugComboBarDB.disableBlizz end,
                         set = function(info, s) NugComboBar.Commands.toggleblizz() end,
                         order = 9,
                     },
+                    secondLayer = {
+                        name = L"Second Layer",
+                        desc = L"For Anticipation talent",
+                        type = "toggle",
+                        get = function(info) return NugComboBarDB.secondLayer end,
+                        set = function(info, s) NugComboBar.Commands.secondlayer() end,
+                        order = 10,
+                    },
+                    hideWithoutTarget = {
+                        name = L"Hide w/o Target",
+                        desc = L"(Only for combat points)",
+                        type = "toggle",
+                        get = function(info) return NugComboBarDB.hideWithoutTarget end,
+                        set = function(info, s) NugComboBar.Commands.hidewotarget() end,
+                        order = 11,
+                    },
+                    disableProgress = {
+                        name = L"Disable Progress Bar",
+                        type = "toggle",
+                        get = function(info) return NugComboBarDB.disableProgress end,
+                        set = function(info, s) NugComboBar.Commands.toggleprogress() end,
+                        order = 12,
+                    },
                 }
             },
-            enable2d = {
-                        name = L"2D Mode",
-                        type = 'toggle',
-                        desc = L"(Color settings only available in 2D mode)",
-                        order = 3,
-                        get = function(info) return (not NugComboBarDB.enable3d) end,
-                        set = function(info, s) NugComboBar.Commands.toggle3d() end,
-                    },
             showColor = {
                 type = "group",
-                name = L"2D Mode settings",
+                name = L"Colors",
                 guiInline = true,
-                order = 4,
+                order = 3,
                 args = {
                     color1 = {
                         name = "1",
@@ -266,8 +280,30 @@ do
                             NugComboBar.SetColor("bar2",r,g,b)
                         end,
                     },
+                    color_layer2 = {
+                        name = L"Second Layer",
+                        type = 'color',
+                        get = function(info)
+                            local r,g,b = unpack(NugComboBarDB.colors["layer2"])
+                            return r,g,b
+                        end,
+                        set = function(info, r, g, b)
+                            local tbl = NugComboBarDB.colors["layer2"]
+                            tbl[1] = r
+                            tbl[2] = g
+                            tbl[3] = b
+                        end,
+                    },
                 },
             },
+            enable2d = {
+                        name = L"2D Mode",
+                        type = 'toggle',
+                        desc = L"(Color settings only available in 2D mode)",
+                        order = 4,
+                        get = function(info) return (not NugComboBarDB.enable3d) end,
+                        set = function(info, s) NugComboBar.Commands.toggle3d() end,
+                    },
             enable3d = {
                         name = L"3D Mode",
                         -- desc = L"(Activates 3D Mode)",
@@ -286,6 +322,7 @@ do
                     preset = {
                         name = L"Preset",
                         type = 'select',
+                        order = 1,
                         values = function()
                             local p = {}
                             for k,_ in pairs(NugComboBar.presets) do
@@ -295,7 +332,54 @@ do
                         end,
                         get = function(info) return NugComboBarDB.preset3d end,
                         set = function( info, v ) NugComboBar.Commands.preset3d(v) end,
-                    }
+                    },
+                    preset_layer2 = {
+                        name = L"Second Layer Preset",
+                        type = 'select',
+                        order = 2,
+                        values = function()
+                            local p = {}
+                            for k,_ in pairs(NugComboBar.presets) do
+                                p[k] = k
+                            end
+                            return p
+                        end,
+                        get = function(info) return NugComboBarDB.preset3dlayer2 end,
+                        set = function( info, v ) NugComboBar.Commands.preset3dlayer2(v) end,
+                    },
+
+                    colors3d = {
+                        name = L"Use colors",
+                        desc = L"Only some effects can be altered using colored lightning",
+                        type = 'toggle',
+                        order = 3,
+                        get = function(info) return NugComboBarDB.colors3d end,
+                        set = function( info, v ) NugComboBar.Commands.colors3d(v) end,
+                    },
+
+                    adjustX = {
+                        name = L"X Offset",
+                        type = "range",
+                        desc = L"Use these to calibrate point position on resolutions with aspect ratio other than 16:9",
+                        get = function(info) return NugComboBarDB_Global.adjustX end,
+                        set = function(info, v) NugComboBar.Commands.adjustx(v) end,
+                        min = -10,
+                        max = 10,
+                        step = 0.01,
+                        order = 4,
+                    },
+
+                    adjustY = {
+                        name = L"Y Offset",
+                        type = "range",
+                        desc = L"Use these to calibrate point position on resolutions with aspect ratio other than 16:9",
+                        get = function(info) return NugComboBarDB_Global.adjustY end,
+                        set = function(info, v) NugComboBar.Commands.adjusty(v) end,
+                        min = -10,
+                        max = 10,
+                        step = 0.01,
+                        order = 5,
+                    },
                 },
             },
             disable = {

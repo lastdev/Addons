@@ -1,9 +1,25 @@
 CHANGELOG
 ---------------------------------------
 
+4.4.0
+========
+Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10755
+- GATH-208: updated for WoW v5.4
+
+4.3.1
+========
+Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10754
+- GATH-206: process updated strings from Wowhead for Game Objects 
+
+4.3.0
+========
+Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10753
+- GATH-204: Mantid Archaeology
+- GATH-205: test for WoW 5.3
+
 4.2.0
 ========
-Version Issue List: N/A (Jira Down)
+Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10752
 - added zone tokens for new zones introduced in WoW 5.2
 
 4.1.0
@@ -579,4 +595,4 @@ Deleted a rogue print2 statement.
 - Added giant clam treasure
 
 --------------
-Revision: $Id: ChangeLog.txt 1079 2013-03-08 06:48:49Z Esamynn $
+Revision: $Id: ChangeLog.txt 1104 2013-09-10 07:02:50Z Esamynn $

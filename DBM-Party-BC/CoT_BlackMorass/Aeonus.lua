@@ -1,9 +1,8 @@
-local mod	= DBM:NewMod("Aeonus", "DBM-Party-BC", 12)
+local mod	= DBM:NewMod(554, "DBM-Party-BC", 12, 255)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 315 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 494 $"):sub(12, -3))
 mod:SetCreatureID(17881)
---mod:SetModelID(20510) -- to big :(
 
 mod:RegisterCombat("combat")
 
@@ -12,8 +11,9 @@ mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS"
 )
 
-local warnFrenzy		= mod:NewAnnounce("warnFrenzy", 3)
-local warnTimeStop		= mod:NewSpellAnnounce(31422)
+local warnFrenzy		= mod:NewSpellAnnounce("ej5348", 3)
+local warnTimeStop		= mod:NewSpellAnnounce(31422, 3)
+
 local timerTimeStop		= mod:NewBuffActiveTimer(4, 31422)
 
 function mod:CHAT_MSG_MONSTER_EMOTE(msg)

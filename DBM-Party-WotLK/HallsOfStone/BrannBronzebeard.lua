@@ -1,11 +1,8 @@
-local mod	= DBM:NewMod("BrannBronzebeard", "DBM-Party-WotLK", 7)
+local mod	= DBM:NewMod(606, "DBM-Party-WotLK", 7, 277)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
 mod:SetCreatureID(28070)
-mod:SetModelID(26353)
---mod:SetZone()
---mod:SetMinSyncRevision(2861)
 mod:SetMinSyncRevision(7)--Could break if someone is running out of date version with higher revision
 
 mod:RegisterCombat("yell", L.Pull)
@@ -24,7 +21,7 @@ function mod:OnCombatStart(delay)
 	timerEvent:Start(-delay)
 end
 
-function mod:CHAT_MSG_MONSTER_YELL(msg, sender)
+function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if L.Phase1 == msg then
 		warningPhase:Show(1)
 	elseif msg == L.Phase2 then

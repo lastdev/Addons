@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Maexxna", "DBM-Naxx", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
 mod:SetCreatureID(15952)
 mod:SetModelID(15928)
 mod:RegisterCombat("combat")
@@ -39,7 +39,7 @@ function mod:OnCombatEnd(wipe)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(28622) then -- Web Wrap
+	if args.spellId == 28622 then -- Web Wrap
 		warnWebWrap:Show(args.destName)
 		if args.destName == UnitName("player") then
 			SendChatMessage(L.YellWebWrap, "YELL")

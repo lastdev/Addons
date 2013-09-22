@@ -4,6 +4,7 @@ local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
 local GetPowerRegen = GetPowerRegen
 local GetTime = GetTime
+local SPELL_POWER_FOCUS = SPELL_POWER_FOCUS
 local math = math
 local pairs = pairs
 local select = select
@@ -20,14 +21,14 @@ end
 
 local function adjustCost(info)
 	if c.InfoMatches(info, "Cobra Shot", "Steady Shot") then
-		info.Cost = -a.FocusAdded(
+		info.Cost[SPELL_POWER_FOCUS] = -a.FocusAdded(
 			info.CastStart + s.CastTime(info.Name) - GetTime())
 	elseif c.InfoMatches(info, "Fervor") then
-		info.Cost = -50
+		info.Cost[SPELL_POWER_FOCUS] = -50
 	end
 end
 
-a.Rotations = {}
+a.Rotations = { }
 
 function a.PreFlash()
 	a.Regen = select(2, GetPowerRegen())
@@ -37,20 +38,25 @@ function a.PreFlash()
 	if c.HasBuff("Rapid Recuperation") then
 		a.Regen = a.Regen + 4
 	end
-	adjustCost(c.GetCastingInfo())
-	adjustCost(c.GetQueuedInfo())
-	a.Focus = c.GetPower(a.Regen)
-	if c.IsCasting("Fervor") then
-		a.Focus = math.min(100, a.Focus + 50)
-	end
+	a.Focus = c.GetPower(a.Regen, SPELL_POWER_FOCUS)
 end
 
 ----------------------------------------------------------------- Beast Mastery
+a.LastMultiShot = 0
+
 a.Rotations.BeastMastery = {
 	Spec = 1,
 	
+	UsefulStats = { "Agility", "Melee Hit", "Crit", "Haste" },
+	
 	FlashInCombat = function()
-		c.FlashAll("Fervor", "Bestial Wrath")
+		c.FlashAll(
+			"Fervor", 
+			"Bestial Wrath", 
+			"Multi-Shot for Beast Cleave",
+			"Exhilaration", 
+			"Heart of the Phoenix",
+			"Tranquilizing Shot")
 		c.PriorityFlash(
 			"Serpent Sting", 
 			"Cobra Shot for Serpent Sting",
@@ -59,13 +65,11 @@ a.Rotations.BeastMastery = {
 			"Lynx Rush",
 			"Dire Beast",
 			"Kill Shot",
-			"Blink Strike",
 			"Kill Command",
 			"Glaive Toss",
 			"Arcane Shot under Thrill of the Hunt",
 			"Focus Fire",
 			"Powershot",
-			"Readiness",
 			"Arcane Shot for BM",
 			"Rapid Fire for BM",
 			"Barrage",
@@ -77,7 +81,17 @@ a.Rotations.BeastMastery = {
 			"Aspect of the Hawk",
 			"Aspect of the Iron Hawk", 
 			"Mend Pet", 
-			"Call Pet")
+			"Call Pet", 
+			"Revive Pet")
+	end,
+	
+	CastQueued = adjustCost,
+	
+	CastSucceeded = function(info)
+		if c.InfoMatches(info, "Multi-Shot") then
+			a.LastMultiShot = GetTime()
+			c.Debug("Event", "Multi Shot")
+		end
 	end,
 	
 	ExtraDebugInfo = function()
@@ -96,14 +110,13 @@ local ssUnimprovers = {
 	"Powershot", -- guess
 	"Barrage", -- guess
 	"A Murder of Crows",
-	"Blink Strike",
 	"Dire Beast",
 	"Serpent Sting",
 	"Multi-Shot",
+	"Tranquilizing Shot",
 -- Perhaps the below are not worth including, since they are not part of the
 -- rotation
 --	"Distracting Shot",
---	"Tranquilizing Shot",
 --	"Silencing Shot",
 --	"Wyvern Sting",
 --	"Binding Shot",
@@ -117,7 +130,6 @@ local ssUnimprovers = {
 -- Flare
 -- Hunter's Mark
 -- Mend Pet
--- Readiness
 -- Lynx Rush
 -- Fervor
 
@@ -135,6 +147,8 @@ end
 a.Rotations.Marksmanship = {
 	Spec = 2,
 	
+	UsefulStats = { "Agility", "Melee Hit", "Crit", "Haste" },
+	
 	FlashInCombat = function()
 		
 		-- adjust resources/cooldowns to reflect casting & queued spells
@@ -142,14 +156,14 @@ a.Rotations.Marksmanship = {
 		local queued = c.GetQueuedInfo()
 		a.NextSSIsImproved = getImprovedStatus(casting, nextSSIsImproved)
 		a.NextSSIsImproved = getImprovedStatus(queued, a.NextSSIsImproved)
-		if c.InfoMatches(queued, "Chimera Shot") then
-			a.CSCool = 10
-		else
-			a.CSCool = c.GetCooldown("Chimera Shot")
-		end
+		a.CSCool = c.GetCooldown("Chimera Shot", false, 9)
 		
 		-- flash
-		c.FlashAll("Fervor")
+		c.FlashAll(
+			"Fervor", 
+			"Exhilaration", 
+			"Heart of the Phoenix",
+			"Tranquilizing Shot")
 		c.PriorityFlash(
 			"Steady Shot 2",
 			"Chimera Shot to save Serpent Sting",
@@ -161,9 +175,7 @@ a.Rotations.Marksmanship = {
 			"Chimera Shot",
 			"Kill Shot",
 			"Glaive Toss",
-			"Blink Strike",
 			"Rapid Fire",
-			"Readiness",
 			"Steady Shot Opportunistic",
 			"Arcane Shot under Thrill of the Hunt",
 			"Powershot", 
@@ -178,8 +190,11 @@ a.Rotations.Marksmanship = {
 			"Aspect of the Hawk", 
 			"Aspect of the Iron Hawk", 
 			"Mend Pet", 
-			"Call Pet")
+			"Call Pet", 
+			"Revive Pet")
 	end,
+	
+	CastQueued = adjustCost,
 	
 	CastSucceeded = function(info)
 		nextSSIsImproved = getImprovedStatus(info, nextSSIsImproved)
@@ -195,8 +210,14 @@ a.Rotations.Marksmanship = {
 a.Rotations.Survival = {
 	Spec = 3,
 	
+	UsefulStats = { "Agility", "Melee Hit", "Crit", "Haste" },
+	
 	FlashInCombat = function()
-		c.FlashAll("Fervor")
+		c.FlashAll(
+			"Fervor", 
+			"Exhilaration", 
+			"Heart of the Phoenix",
+			"Tranquilizing Shot")
 		c.PriorityFlash(
 			"Serpent Sting",
 			"Cobra Shot for Serpent Sting",
@@ -208,10 +229,8 @@ a.Rotations.Survival = {
 			"Kill Shot",
 			"Explosive Shot",
 			"Glaive Toss",
-			"Blink Strike",
 			"Arcane Shot under Thrill of the Hunt",
 			"Powershot",
-			"Readiness",
 			"Arcane Shot for Survival",
 			"Rapid Fire",
 			"Barrage",
@@ -223,8 +242,11 @@ a.Rotations.Survival = {
 			"Aspect of the Hawk",
 			"Aspect of the Iron Hawk", 
 			"Mend Pet", 
-			"Call Pet")
+			"Call Pet", 
+			"Revive Pet")
 	end,
+	
+	CastQueued = adjustCost,
 	
 	ExtraDebugInfo = function()
 		return string.format("%.1f", a.Focus)

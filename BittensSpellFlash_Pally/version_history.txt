@@ -1,3 +1,56 @@
+== Version 50400.1.1
+* Protection: Removed some leftover debug output.  Sorry about that!
+
+== Version 50400.1.0
+* Holy: Added flashing for Divine Plea.
+* Holy: Now flashes Divine Light and Holy Radiance to consume Selfless Healer, instead of Flash of Light.
+* Holy: Anticipates changes to Selfless Healer.
+* Protection: Now uses Crusader Strike to apply Weakened Blows, unless you are in AoE mode.
+* Protection: Updated Holy Wrath to know it can stun Abberations if glyphed (localizations must be updated for this to work with non-English clients).
+* All: Updated holy power anticipation with changes from this patch.
+
+== Version 3.6.1
+* Protection: No more small green flashes for Sacred Shield when out of melee range.  That was easy to confuse with the large green flashes it uses normally.
+* Protection: Now checks for the proc from Indomitable Primal Diamond before flashing your mitigation cooldowns.
+* Protection: Now checks for a number of external mitigation cooldowns before flashing one of your own.
+
+== Version 3.6.0
+* Protection: Added a solo/damage mode.
+* Protection: Sacred Shield now flashes green to refresh it with higher absorb values.
+* Protection: Now saves Avenging Wrath as a mitigation cooldown regardless of whether you took Sanctified Wrath.
+* Protection: Increased the priority of Judgment when under Sanctified Wrath.
+* Protection: Increased the priority of Holy Wrath.
+* Protection: Bugfix - Mitigation cooldowns were broken.
+* Protection & Retribution: Added AoE modes.
+* Retribution: Bugfix - Sacred Shield was broken.
+
+== Version 3.5.2
+* All: Bugfix for a Lua error.
+
+== Version 3.5.1
+* Holy & Protection: Bugfix - error in Word of Glory / Eternal Flame flashing on non-English clients.
+* All: Now flashes food buffs.
+
+== Version 3.5.0
+Update for patch 5.3.
+* Holy: Holy Shock now flashes small at 1 stack of Daybreak, and normally at 2.
+
+== Version 3.4.1
+* Protection: Bugfix for Lua error.
+
+== Version 3.4.0
+* Protection: Added level 90 talents as survival cooldowns.
+* Protection: Spells will now flash small and green if they will be next but are still on cooldown.
+* Protection: Eternal Flame is now used just like Word of Glory, instead of as a HoT.
+* Protection: Word of Glory's / Eternal Flame's flash color is now red if you are wearing 2pT15 and the buff has less than 3 seconds remaining.
+* Protection: Damage-only abilities will no longer take priority if an HP generating ability is just about to come off cooldown.
+* Protection & Retribution: Healing spells now consider your incoming heals (except Lay on Hands).
+* Retribution: Added an extra priority for Templar's Verdict having to do with 4pT15.
+
+== Version 3.3.0
+* Retribution: Updated the priorities with new research, including a change when wearing 4pT15.
+* Retribution: Small green flashes now always warn you which spell will be next during wait periods.
+
 == Version 3.2.5
 NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
 
@@ -43,84 +96,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 * Protection: Bugfix - no longer counts Avenging Wrath as a mitigation buff when it isn't.
 * Protection: Bugfix - Now properly caps Word of Glory at 3 Holy Power when calculating if you can use the full heal.
 * All: Improved internal Holy Avenger handling.
-
-== Version 2.5.4
-* Making the "Out of Date" status go away.  Please report any real issues w/ the new patch.
-
-== Version 2.5.3
-* Prot: Bugfix to Avenging Wrath, which will also remove the chat frame spam from the latest release of Bitten's SpellFlash Library.
-
-== Version 2.5.2
-* Ret: Exorcism was totally broken when you had Glyph of Mass Exorcism.
-
-== Version 2.5.1
-* Prot: Hammer of Wrath was misbehaving a bit.
-
-== Version 2.5.0
-* Added Prot.
-
-== Version 2.4.0
-* Now flashes a Ret rotation in the MoP beta.
-
-== Version 2.3.0
-* Protection: Added an AoE rotation.  Visit your keybindings to activate it.
-* Ret: The AoE rotation is now triggered by your keybindings, instead of Seal of Righteousness.
-* Ret: Now prioritizes Judgement higher when wearing 2pT13.
-* Ret: Now anticipates Holy Power gained from 2pT13 (for the second between casting Judgement and actually receiving the holy power).
-
-== Version 2.2.1
-* Protection/Retribution: Consecration and Holy Wrath now only flash when you are in melee range of your target.
-* All: Bugfix - was not respecting when you use Resistance Aura.
-
-== Version 2.2.0
-* Ret: Now detects and reacts to Divine Purpose.  That was a major oversight before!
-* Ret: Now flashes Divine Storm in place of Crusader Strike if you are using Seal of Righteousness.
-* Ret: Does not flash Zealotry when you are using Seal of Righteousness.
-* Ret: Bugfix - Seal of Truth was still flashing when you put up Seal of Righteousness.
-* All: Now anticipates holy power changes from your queued spell.
-
-== Version 2.1.1 beta
-This beta release uses Bitten's SpellFlash Library version 3.  If you update you will also need to update any of your other Bitten's SpellFlash modules, which may also be in beta.
-* Prot: A couple of the tanking cooldowns were not working correctly on non-English clients.
-
-== Version 2.1.0
-* Holy: Holy Shock now only flashes when under Daybreak (as well as still having less than 3 holy power).
-* Holy: Flash of Light now flashes when under Infusion of Light.
-* Prot: Automatically detects 2pT13 (instead of using an option for it).
-* Prot: Seal of Insight now stops flashing if you have Seal of Truth or Seal of Justice.
-* Prot: Bugfix - Crusader Strike was not properly detecting Vindication, making it flash with highest priority at all times.  Now it is prioritized as described.
-* Ret: Seal of Truth now stops flashing if you have Seal of Justice or Seal of Righteousness.
-* All: Now flashes Rebuke.
-
-== Version 2.0.0
-* Holy: anticipates holy power from Divine Light and Holy Radiance.
-* Holy: flashes Holy Radiance when under Infusion of Light.
-* Holy: flashes Light of Dawn when you are at 3 holy power.
-* Holy: flashes Holy Shock whenever you are under 3 holy power, instead of only when you also have Daybreak.
-* Prot: flashes Hand of Reckoning and Righteous Defense when your target aggros to a non-tank.
-* Prot: flashes Shield of the Righteous slightly more often.
-* All: now flashes raid buffs.
-* All: flashes your auras if you are not in one.
-* All: seals now flash at 5 minutes remaining out of combat, down from 15.
-* All: added German localization (thanks Gucki!).
-
-== Version 1.1.2
-* Bugfix: apparently the last release broke everything.  Sorry!
-
-== Version 1.1.1
-* Bugfix: error when the module was loaded, but all flashing was disabled in SpellFlash.
-* Bugfix: non-gcd cooldowns were flashing white instead of yellow.
-
-== Version 1.1.0
-* Moved from priority flashing to flashing all buttons that indicate buffs/debuffs in Holy.
-* Added Beacon of Light to the Holy rotation.
-* Move to Bitten's SpellFlash Library 2.0.
-* Should now work on non-English clients.
-* Added localization support.
-* Plays nicer with other addons.
-
-== Version 1.0.2
-* Fix null pointer.
-
-== Version 1.0.0
-* Initial Alpha Release

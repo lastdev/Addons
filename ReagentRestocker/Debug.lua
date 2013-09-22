@@ -68,6 +68,8 @@ local function rprint(depth, ...)
 				else
 					print(colorize .. spaces .. "\"" .. x .. "\"=" .. "false (type: boolean)")
 				end
+			elseif type(y)=="userdata" then
+				print(colorize .. spaces .. x .. " is userdata.")
 			else
 				if type(x)=="string" then
 					rprint(depth+1,spaces .. "\""..x.."\"="..y.." (type: "..type(y).."),");

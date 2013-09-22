@@ -4,8 +4,8 @@ Seasonal.lua
 ************************************************************************
 File date: 2012-08-18T04:52:05Z
 File hash: 4d6b8e4
-Project hash: f922565
-Project version: 2.4.6
+Project hash: 4bcba04
+Project version: 2.5.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************

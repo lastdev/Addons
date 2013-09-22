@@ -10,18 +10,12 @@ L:SetGeneralLocalization{
 	name = "Al'ar"
 }
 
-L:SetWarningLocalization{
-}
-
 L:SetTimerLocalization{
-	NextPlatform	= "Nächste Plattform"
+	NextPlatform	= "Max. Plattformdauer"
 }
 
 L:SetOptionLocalization{
-	NextPlatform	= "Zeige Zeit bis Al'ar die Plattform wechselt"
-}
-
-L:SetMiscLocalization{
+	NextPlatform	= "Zeige Zeit bis Al'ar spätestens die Plattform wechselt<br/>(wechselt möglicherweise früher, aber fast nie später)"
 }
 
 ------------------
@@ -31,20 +25,6 @@ L = DBM:GetModLocalization("VoidReaver")
 
 L:SetGeneralLocalization{
 	name = "Leerhäscher"
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-	YellOnOrb	= "Schreie, wenn $spell:34172 auf dich gewirkt wird"
-}
-
-L:SetMiscLocalization{
-	YellOrb	= "Arkane Kugel kommt auf MICH!"
 }
 
 --------------------------------
@@ -78,7 +58,6 @@ L:SetOptionLocalization{
 	TimerSplit		= "Zeige Zeit bis Verschwinden",
 	TimerAgent		= "Zeige Zeit bis Agenten erscheinen",
 	TimerPriest		= "Zeige Zeit bis Priester und Solarian erscheinen",
-	WrathIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(42783),
 	WrathWhisper	= "Ziele von $spell:42783 anflüstern (benötigt Schlachtzugleitung)"
 }
 
@@ -117,15 +96,14 @@ L:SetOptionLocalization{
 	WarnGaze		= "Zeige Warnung für Ziele von Thaladreds Blick",
 	WarnMobDead		= "Zeige Warnung für getötete Waffen in Phase 2",
 	WarnEgg			= "Zeige Warnung, wenn Phönixei erscheint",
-	SpecWarnGaze	= "Zeige Spezialwarnung, wenn dich Thaladred anblickt",
-	SpecWarnEgg		= "Zeige Spezialwarnung, wenn Phönixei erscheint",
+	SpecWarnGaze	= "Spezialwarnung, wenn dich Thaladred anblickt",
+	SpecWarnEgg		= "Spezialwarnung, wenn Phönixei erscheint",
 	TimerPhase		= "Zeige Zeit bis nächste Phase",
 	TimerPhase1mob	= "Zeige Zeit bis Berater in Phase 1 aktiv werden",
 	TimerNextGaze	= "Zeige Zeit bis Thaladred ein neues Ziel anblickt",
 	TimerRebirth	= "Zeige Zeit bis Phönix aus Phönixei schlüpft",
 	RangeFrame		= "Zeige Abstandsfenster (10m)",
 	GazeWhisper		= "Thaladreds Blickziel anflüstern (benötigt Schlachtzugleitung)",
-	MCIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(36797),
 	GazeIcon		= "Zeichen auf Thaladreds Ziel setzen"
 }
 

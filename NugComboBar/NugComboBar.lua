@@ -1,4 +1,4 @@
-NugComboBar = CreateFrame("Frame",nil, UIParent)
+NugComboBar = CreateFrame("Frame", "NugComboBar", UIParent)
 local NugComboBar = NugComboBar
 
 local user
@@ -8,6 +8,7 @@ local allowedUnit = "player"
 local allowedCaster = "player"
 local showEmpty, showAlways, onlyCombat
 local hideSlowly
+local secondLayerEnabled
 local fadeAfter = 6
 local combatFade = true -- whether to fade in combat
 local defaultValue = 0
@@ -52,16 +53,30 @@ local AuraTimerOnUpdate = function(self, time)
     self:SetValue(progress)
 end
 
+-- local min = math.min
+-- local max = math.max
 function NugComboBar:LoadClassSettings()
         local class = select(2,UnitClass("player"))
         self.MAX_POINTS = nil
         if self.bar then self.bar:SetColor(unpack(NugComboBarDB.colors.bar1)) end
         if class == "ROGUE" then
             local anticipationBuffName = GetSpellInfo(115189)
+            local checkAnticipation = true
             local ComboPointsWithAnticipation = function(unit)
-                local name, _,_, count = UnitBuff("player", anticipationBuffName, nil)
-                return RogueGetComboPoints(unit), count
+                local _,anticipation
+                if checkAnticipation then
+                    _,_,_,anticipation = UnitBuff("player", anticipationBuffName, nil)
+                end
+                anticipation = anticipation or 0
+                local cp = RogueGetComboPoints(unit)
+                if not secondLayerEnabled or (anticipation > 0 and cp < anticipation) then
+                    return cp, anticipation, nil, 0
+                else
+                    return cp, nil,nil, anticipation
+                end
             end
+            GetComboPoints = ComboPointsWithAnticipation
+
             self:SetMaxPoints(5)
             self.UNIT_AURA = self.UNIT_COMBO_POINTS
             self:RegisterEvent("UNIT_COMBO_POINTS")
@@ -71,11 +86,11 @@ function NugComboBar:LoadClassSettings()
                 if IsPlayerSpell(114015) then -- Anticipation
                     self:EnableBar(0, 5, "Long")
                     self:RegisterUnitEvent("UNIT_AURA", "player")
-                    GetComboPoints = ComboPointsWithAnticipation
+                    checkAnticipation = true
                 else
                     self:DisableBar()
                     self:UnregisterEvent("UNIT_AURA")
-                    GetComboPoints = RogueGetComboPoints
+                    checkAnticipation = false
                 end
             end
             self:SPELLS_CHANGED()
@@ -135,6 +150,7 @@ function NugComboBar:LoadClassSettings()
             self.UPDATE_SHAPESHIFT_FORM = function(self)
                 self:UnregisterEvent("UNIT_AURA")
                 self:UnregisterEvent("UNIT_COMBO_POINTS")
+                self:UnregisterEvent("PLAYER_TARGET_CHANGED")
                 self:UnregisterEvent("PLAYER_TOTEM_UPDATE")
                 local spec = GetSpecialization()
                 local form = GetShapeshiftFormID()
@@ -170,6 +186,20 @@ function NugComboBar:LoadClassSettings()
             local GetChi = function(unit)
                 return UnitPower(unit, SPELL_POWER_CHI)
             end
+            local GetChiAndStagger = function(unit)
+                --just to fill the second arg, everything is done in OnUpdate
+                local stagger = UnitStagger("player")
+                return UnitPower(unit, SPELL_POWER_CHI), (stagger and stagger > 0) and stagger or nil
+            end
+
+            local StaggerOnUpdate = function(self, time)
+                self._elapsed = (self._elapsed or 0) + time
+                if self._elapsed < 0.5 then return end
+                self._elapsed = 0
+
+                NugComboBar:UNIT_COMBO_POINTS(nil, "player")
+            end
+
             self:SetMaxPoints(4)
             self:RegisterEvent("UNIT_POWER")
             self.UNIT_POWER = function(self,event,unit,ptype)
@@ -178,12 +208,35 @@ function NugComboBar:LoadClassSettings()
             end
             GetComboPoints = GetChi
 
+
+            self.UNIT_MAXHEALTH = function(self, event, unit)
+                self.bar:SetMinMaxValues(0, UnitHealthMax("player"))
+            end
+            self.UNIT_HEALTH = self.UNIT_COMBO_POINTS
+
             self:RegisterEvent("SPELLS_CHANGED")
             self.SPELLS_CHANGED = function(self, event)
                 if IsSpellKnown(115396)  -- Ascension
                     then self:SetMaxPoints(5)
                     else self:SetMaxPoints(4)
                 end
+
+                local spec = GetSpecialization()
+                if spec == 1 then
+                    GetComboPoints = GetChiAndStagger
+                    self:EnableBar(0, UnitHealthMax("player"),"Long")
+                    if self.bar then
+                        self.bar:SetScript("OnUpdate", StaggerOnUpdate)
+                        self:RegisterUnitEvent("UNIT_MAXHEALTH", "player")
+                        self:RegisterUnitEvent("UNIT_HEALTH", "player")
+                    end
+                else
+                    GetComboPoints = GetChi
+                    self:UnregisterEvent("UNIT_MAXHEALTH")
+                    self:UnregisterEvent("UNIT_HEALTH")
+                    self:DisableBar()
+                end
+
                 self:UNIT_COMBO_POINTS(nil,"player")
             end
             self:SPELLS_CHANGED()
@@ -274,6 +327,7 @@ function NugComboBar:LoadClassSettings()
             self.SPELLS_CHANGED = function(self, event)
                 showEmpty = true
                 self:UnregisterEvent("UNIT_AURA")
+                -- self:DisableBar()
                 local spec = GetSpecialization()
                 if      spec == 3 then
                     self:EnableBar(0, MAX_POWER_PER_EMBER, "Small")
@@ -313,11 +367,21 @@ function NugComboBar:LoadClassSettings()
             self.GLYPH_REMOVED = self.GLYPH_UPDATED
             self:SPELLS_CHANGED()
         elseif class == "WARRIOR" then
-            local tfb_bar = function(self)
-                self:EnableBar(0, 15, "Long")
-                if self.bar then self.bar:SetScript("OnUpdate", AuraTimerOnUpdate) end
+            local tfbAuraName = GetSpellInfo(60503)
+            local GetTasteForBlood = function(unit)
+                local _,_,_,count = UnitBuff("player", tfbAuraName, nil)
+                count = count or 0
+                local over3 = 0
+                if count > 3 then over3 = count - 3; count = 3; end
+                if not secondLayerEnabled then
+                    if over3 == 0 then over3 = nil end
+                    return count, over3, nil, 0
+                else
+                    return count, nil,nil, over3
+                end
             end
-            self:SetMaxPoints(5)
+
+            self:SetMaxPoints(4)
             -- self:RegisterEvent("UNIT_AURA")
             self.UNIT_AURA = self.UNIT_COMBO_POINTS
             allowedUnit = "player"
@@ -332,11 +396,13 @@ function NugComboBar:LoadClassSettings()
                     if self.bar then self.bar:SetScript("OnUpdate", AuraTimerOnUpdate) end
                     self:SetMaxPoints(3)
                     scanAura = GetSpellInfo(85739) -- Meatcleaver
+                    GetComboPoints = GetAuraStack
                 elseif spec == 1 then
-                    self:EnableBar(0, 15, "Long")
-                    if self.bar then self.bar:SetScript("OnUpdate", AuraTimerOnUpdate) end
-                    self:SetMaxPoints(5)
-                    scanAura = GetSpellInfo(125831) -- Taste for blood
+                    self:EnableBar(0, 2, "Small")
+                    if self.bar then self.bar:SetScript("OnUpdate", nil) end
+
+                    self:SetMaxPoints(3)
+                    GetComboPoints = GetTasteForBlood
                 else
                     self:UnregisterEvent("UNIT_AURA")
                 end
@@ -416,7 +482,7 @@ function NugComboBar:LoadClassSettings()
                 GetComboPoints = GetShadowOrbs
             end
             local evangelism = function()
-                self:SetMaxPoints(3)
+                self:SetMaxPoints(5)
                 self:EnableBar(0, 15, "Long")
                 if self.bar then self.bar:SetScript("OnUpdate", AuraTimerOnUpdate) end
                 self:RegisterEvent("UNIT_AURA")
@@ -479,11 +545,19 @@ local defaults = {
         [6] = {0.77,0.26,0.29},
         ["bar1"] = { 0.9,0.1,0.1 },
         ["bar2"] = { .9,0.1,0.4 },
+        ["layer2"] = { 0.80, 0.23, 0.79 },
     },
     enable3d = true,
     preset3d = "glowPurple",
+    preset3dlayer2 = "fireOrange",
+    secondLayer = true,
+    colors3d = true,
     showAlways = false,
     onlyCombat = false,
+    disableProgress = false,
+    adjustX = 2.05,
+    adjustY = 2.1,
+    hideWithoutTarget = false,
 }
 NugComboBar.defaults = defaults
 
@@ -559,6 +633,8 @@ do
 
             if not NugComboBarDB.apoint and NugComboBarDB.point then NugComboBarDB.apoint = NugComboBarDB.point end
             SetupDefaults(NugComboBarDB, defaults)
+            if not NugComboBarDB_Global.adjustX then NugComboBarDB_Global.adjustX = defaults.adjustX end
+            if not NugComboBarDB_Global.adjustY then NugComboBarDB_Global.adjustY = defaults.adjustY end
 
             NugComboBar.isDisabled = nil
             if type(NugComboBarDB.disabled) == "table" then NugComboBarDB.disabled = nil end --old format bugfix
@@ -571,7 +647,7 @@ do
             -- self:RegisterEvent("PLAYER_LOGIN")
             self:RegisterEvent("PLAYER_LOGOUT")
 
-            NugComboBar.toggleBlizz() --even if disabled
+            if NugComboBarDB.disableBlizz then NugComboBar.disableBlizz() end
 
             if initial then
                 local f = CreateFrame('Frame', nil, InterfaceOptionsFrame) -- helper frame to load GUI and to watch specialization changes
@@ -601,11 +677,19 @@ do
     local initial = true
     function NugComboBar.PLAYER_LOGIN(self, event)
         if initial then self:Create() end
+
+        if NugComboBarDB.disableProgress then
+            NugComboBar.EnableBar_ = NugComboBar.EnableBar
+            NugComboBar.EnableBar = NugComboBar.DisableBar
+            NugComboBar:DisableBar()
+        end
+
         self:LoadClassSettings()
         if showEmpty == nil then showEmpty = NugComboBarDB.showEmpty end;
         if showAlways == nil then showAlways = NugComboBarDB.showAlways end;
         if onlyCombat == nil then onlyCombat = NugComboBarDB.onlyCombat end;
         if hideSlowly == nil then hideSlowly = NugComboBarDB.hideSlowly end;
+        if secondLayerEnabled == nil then secondLayerEnabled = NugComboBarDB.secondLayer end;
         self:SetAlpha(0)
         self:SetScale(NugComboBarDB.scale)
         self.Commands.anchorpoint(NugComboBarDB.anchorpoint)
@@ -677,6 +761,9 @@ end
 
 function NugComboBar.PLAYER_TARGET_CHANGED(self, event)
     self:UNIT_COMBO_POINTS(event, allowedUnit)
+    if not UnitExists("target") and NugComboBarDB.hideWithoutTarget then
+        self:Hide()
+    end
 end
 function NugComboBar.PLAYER_REGEN_ENABLED(self)
     self:UNIT_COMBO_POINTS(event, allowedUnit, nil, true)
@@ -717,6 +804,22 @@ function NugComboBar.DisableBar(self)
     self.bar:Hide()
 end
 
+local function AnticipationIn(point, i)
+    local r,g,b = unpack(NugComboBarDB.colors["layer2"])
+    point:SetColor(r,g,b)
+    point.anticipationColor = true
+
+    point:SetPreset(NugComboBarDB.preset3dlayer2)
+end
+
+local function AnticipationOut(point, i)
+    local r,g,b = unpack(NugComboBarDB.colors[i])
+    point:SetColor(r,g,b)
+    point.anticipationColor = false
+
+    point:SetPreset(NugComboBarDB.preset3d)
+end
+
 
 local comboPointsBefore = 0
 function NugComboBar.UNIT_COMBO_POINTS(self, event, unit, ptype, forced)
@@ -724,7 +827,7 @@ function NugComboBar.UNIT_COMBO_POINTS(self, event, unit, ptype, forced)
 
     if onlyCombat and not UnitAffectingCombat("player") then return self:Hide() else self:Show() end -- usually frame is set to 0 alpha
     -- local arg1, arg2
-    local comboPoints, arg1, arg2 = GetComboPoints(unit);
+    local comboPoints, arg1, arg2, secondLayerPoints = GetComboPoints(unit);
     local progress = not arg2 and arg1 or nil
     if self.bar and self.bar.enabled then
         if arg1 then
@@ -741,15 +844,39 @@ function NugComboBar.UNIT_COMBO_POINTS(self, event, unit, ptype, forced)
         end
     end
 
-
     for i = 1, self.MAX_POINTS do
+        local point = self.p[i]
         if i <= comboPoints then
-            self.p[i]:Activate()
+            point:Activate()
         end
         if i > comboPoints then
-            self.p[i]:Deactivate()
+            point:Deactivate()
+        end
+
+        if secondLayerPoints then -- Anticipation stuff
+            if i <= secondLayerPoints then              
+                if  (point.currentPreset and point.currentPreset ~= NugComboBarDB.preset3dlayer2)
+                    or
+                    (not point.anticipationColor) then
+
+
+                    point:Reappear(AnticipationIn, i)
+                end
+            else
+                if  (point.currentPreset and point.currentPreset ~= NugComboBarDB.preset3d)
+                    or
+                    (point.anticipationColor) then
+
+                    if i <= comboPoints then
+                        point:Reappear(AnticipationOut, i)
+                    else
+                        AnticipationOut(point, i)
+                    end
+                end
+            end
         end
     end
+
     -- print("progress", progress)
     -- print (comboPoints == defaultValue, (progress == nil or progress == defaultProgress), not UnitAffectingCombat("player"), not showEmpty)
     if  not showAlways and
@@ -786,7 +913,13 @@ function NugComboBar.UNIT_COMBO_POINTS(self, event, unit, ptype, forced)
 end
 
 function NugComboBar.SetColor(point, r, g, b)
-    NugComboBarDB.colors[point] = {r,g,b}
+    if b then
+        NugComboBarDB.colors[point] = {r,g,b}
+    else
+        local clr = NugComboBarDB.colors[point]
+        if not clr then return end
+        r,g,b = unpack(clr)
+    end
     if NugComboBar.bar and point == "bar1" then
         return NugComboBar.bar:SetColor(r,g,b)
     end
@@ -835,9 +968,10 @@ function NugComboBar.CreateAnchor(frame)
     self:EnableMouse(true)
     self:RegisterForDrag("LeftButton")
     self:SetMovable(true)
-    self:SetScript("OnDragStart",function(self) self:StartMoving() end)
+    self:SetScript("OnDragStart",function(self) self:StartMoving(); self:SetUserPlaced(false) end)
     self:SetScript("OnDragStop",function(self)
         self:StopMovingOrSizing();
+        self:SetUserPlaced(false)
         NugComboBarDB.apoint, _, NugComboBarDB.point, NugComboBarDB.x, NugComboBarDB.y = self:GetPoint(1)
         NugComboBarDB.parent = "UIParent"
     end)
@@ -864,7 +998,7 @@ function NugComboBar.ShowColorPicker(self,color)
             r,g,b = ColorPickerFrame:GetColorRGB();
         end
         if color == 0 then
-            for i=1,#self.points do
+            for i=1,#self.point do
                 NugComboBar.SetColor(i,r,g,b)
             end
         else
@@ -953,7 +1087,7 @@ NugComboBar.Commands = {
     end,
     ["toggleblizz"] = function(v)
         NugComboBarDB.disableBlizz = not NugComboBarDB.disableBlizz
-        NugComboBar.toggleBlizz()
+        print ("NCB> Changes will take effect after /reload")
     end,
     ["scale"] = function(v)
         local num = tonumber(v)
@@ -982,6 +1116,27 @@ NugComboBar.Commands = {
             NugComboBar:ShowColorPicker(num)
         end
     end,
+    ["adjustx"] = function(v)
+        local num = tonumber(v)
+        if num then
+            NugComboBarDB_Global.adjustX = num
+            for i,point in ipairs(NugComboBar.point) do
+                point:SetPreset(point.currentPreset)
+            end
+        end
+    end,
+    ["adjusty"] = function(v)
+        local num = tonumber(v)
+        if num then
+            NugComboBarDB_Global.adjustY = num
+            for i,point in ipairs(NugComboBar.point) do
+                point:SetPreset(point.currentPreset)
+            end
+        end
+    end,
+    ["hidewotarget"] = function(v)
+        NugComboBarDB.hideWithoutTarget = not NugComboBarDB.hideWithoutTarget
+    end,
     ["charspec"] = function(v)
         if NugComboBarDB_Character.charspec then
             NugComboBarDB_Character.charspec = nil
@@ -1003,6 +1158,21 @@ NugComboBar.Commands = {
 
         NugComboBar:Reinitialize()
     end,
+    ["secondlayer"] = function(v)
+        NugComboBarDB.secondLayer = not NugComboBarDB.secondLayer
+        secondLayerEnabled = NugComboBarDB.secondLayer
+    end,
+    ["toggleprogress"] = function(v)
+        NugComboBarDB.disableProgress = not NugComboBarDB.disableProgress
+        if NugComboBarDB.disableProgress then
+            NugComboBar.EnableBar_ = NugComboBar.EnableBar
+            NugComboBar.EnableBar = NugComboBar.DisableBar
+            NugComboBar:DisableBar()
+        else
+            NugComboBar.EnableBar = NugComboBar.EnableBar_
+            NugComboBar:LoadClassSettings()
+        end
+    end,
     ["toggle3d"] = function(v)
         NugComboBarDB.enable3d = not NugComboBarDB.enable3d
         print (string.format("NCB> 3D mode is %s, it will take effect after /reload", NugComboBarDB.enable3d and "enabled" or "disabled"))
@@ -1013,6 +1183,18 @@ NugComboBar.Commands = {
         end
         NugComboBarDB.preset3d = v
         NugComboBar:Set3DPreset(v)
+    end,
+    ["preset3dlayer2"] = function(v)
+        if not NugComboBar.presets[v] then
+            return print(string.format("Preset '%s' does not exist", v))
+        end
+        NugComboBarDB.preset3dlayer2 = v
+    end,
+    ["colors3d"] = function(v)
+        NugComboBarDB.colors3d = not NugComboBarDB.colors3d
+        for i=1,#NugComboBar.point do
+            NugComboBar.SetColor(i)
+        end
     end,
     ["gui"] = function(v)
         LoadAddOn('NugComboBarGUI')
@@ -1070,9 +1252,8 @@ function NugComboBar.SlashCmd(msg)
 end
 
 
-function NugComboBar.toggleBlizz()
+function NugComboBar.disableBlizz()
     local class = select(2,UnitClass("player"))
-    if NugComboBarDB.disableBlizz then
         if class == "ROGUE" or class == "DRUID" then
             ComboFrame:UnregisterAllEvents()
             ComboFrame:Hide()
@@ -1101,42 +1282,46 @@ function NugComboBar.toggleBlizz()
             MonkHarmonyBar._Show = MonkHarmonyBar.Show
             MonkHarmonyBar.Show = MonkHarmonyBar.Hide
         end
-    else
-        if class == "ROGUE" or class == "DRUID" then
-            ComboFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
-            ComboFrame:RegisterEvent("UNIT_COMBO_POINTS")
-            ComboFrame_Update()
-        end
-        if class == "WARLOCK" then
-            WarlockPowerFrame.Show = WarlockPowerFrame._Show
-            WarlockPowerFrame:Show()
-            WarlockPowerFrame_OnLoad(WarlockPowerFrame)
-            -- WarlockPowerFrame_Update()
-        end
-        if class == "PALADIN" then
-            PaladinPowerBar.Show = PaladinPowerBar._Show
-            PaladinPowerBar:Show()
-            if not PaladinPowerBar:GetParent().unit then
-                PaladinPowerBar:GetParent().unit = "player"
-            end
-            if not PaladinPowerBar:GetParent():IsVisible() then
-                return
-            end
-            PaladinPowerBar_OnLoad(PaladinPowerBar)
-            PaladinPowerBar_Update(PaladinPowerBar)
-        end
-        if class == "PRIEST" then
-            PriestBarFrame.Show = PriestBarFrame._Show
-            PriestBarFrame:Show()
-            PriestBarFrame.spec = nil
-            PriestBarFrame_OnLoad(PriestBarFrame)
-        end
-        if class == "MONK" then
-            MonkHarmonyBar.Show = MonkHarmonyBar._Show
-            MonkHarmonyBar:Show()
-            MonkHarmonyBar_OnLoad(MonkHarmonyBar)
-        end
-    end
+    -- else
+    --     if class == "ROGUE" or class == "DRUID" then
+    --         ComboFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
+    --         ComboFrame:RegisterEvent("UNIT_COMBO_POINTS")
+    --         if not PlayerFrame.unit then PlayerFrame.unit = "player" end
+    --         -- if not PlayerFrame:IsVisible() then return end
+    --         ComboFrame_Update()
+    --     end
+    --     if class == "WARLOCK" then
+    --         WarlockPowerFrame.Show = WarlockPowerFrame._Show
+    --         WarlockPowerFrame:Show()
+    --         if not PlayerFrame.unit then PlayerFrame.unit = "player" end
+    --         -- if not PlayerFrame:IsVisible() then return end
+    --         WarlockPowerFrame_OnLoad(WarlockPowerFrame)
+    --         -- WarlockPowerFrame_Update()
+    --     end
+    --     if class == "PALADIN" then
+    --         PaladinPowerBar.Show = PaladinPowerBar._Show
+    --         PaladinPowerBar:Show()
+    --         if not PlayerFrame.unit then PlayerFrame.unit = "player" end
+    --         -- if not PlayerFrame:IsVisible() then return end
+    --         PaladinPowerBar_OnLoad(PaladinPowerBar)
+    --         PaladinPowerBar_Update(PaladinPowerBar)
+    --     end
+    --     if class == "PRIEST" then
+    --         PriestBarFrame.Show = PriestBarFrame._Show
+    --         PriestBarFrame:Show()
+    --         if not PlayerFrame.unit then PlayerFrame.unit = "player" end
+    --         -- if not PlayerFrame:IsVisible() then return end
+    --         PriestBarFrame.spec = nil
+    --         PriestBarFrame_OnLoad(PriestBarFrame)
+    --     end
+    --     if class == "MONK" then
+    --         MonkHarmonyBar.Show = MonkHarmonyBar._Show
+    --         MonkHarmonyBar:Show()
+    --         if not PlayerFrame.unit then PlayerFrame.unit = "player" end
+    --         -- if not PlayerFrame:IsVisible() then return end
+    --         MonkHarmonyBar_OnLoad(MonkHarmonyBar)
+    --     end
+    -- end
 end
 
 function NugComboBar:OnSpecChanged()

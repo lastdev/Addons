@@ -3,7 +3,6 @@
 -------------------------------------------------------------------------------
 local _G = getfenv(0)
 
-local string = _G.string
 local table = _G.table
 local math = _G.math
 
@@ -189,7 +188,7 @@ function private.InitializeListFrame()
 		end
 	end
 
-	ScrollUpButton:SetScript("OnClick", function(self, button, down)
+	ScrollUpButton:SetScript("OnClick", function(self, _, _)
 		if _G.IsAltKeyDown() then
 			local min_val = ScrollBar:GetMinMaxValues()
 			ScrollBar:SetValue(min_val)
@@ -198,7 +197,7 @@ function private.InitializeListFrame()
 		end
 	end)
 
-	ScrollDownButton:SetScript("OnClick", function(self, button, down)
+	ScrollDownButton:SetScript("OnClick", function(self, _, _)
 		if _G.IsAltKeyDown() then
 			local _, max_val = ScrollBar:GetMinMaxValues()
 			ScrollBar:SetValue(max_val)
@@ -241,7 +240,7 @@ function private.InitializeListFrame()
 		if ListFrame.selected_entry then
 			return
 		end
-		ListItem_ShowTooltip(self, ListFrame.entries[self.string_index])
+		ListItem_ShowTooltip(ListFrame.entries[self.string_index])
 	end
 
 	local function Bar_OnLeave()
@@ -252,24 +251,7 @@ function private.InitializeListFrame()
 		spell_tip:Hide()
 	end
 
-	local function Bar_OnClick(self)
-		local old_selected = ListFrame.selected_entry
-		ListFrame.selected_entry = nil
-
-		if old_selected then
-			old_selected.button.selected_texture:Hide()
-			Bar_OnLeave(old_selected.button)
-		end
-		Bar_OnEnter(self)
-
-		local entry = ListFrame.entries[self.string_index]
-		if old_selected ~= entry then
-			self.selected_texture:Show()
-			ListFrame.selected_entry = entry
-		end
-	end
-
-	local function ListItem_OnClick(self, button, down)
+	local function ListItem_OnClick(self, _, _)
 		local clicked_index = self.string_index
 
 		-- Don't do anything if they've clicked on an empty button
@@ -382,6 +364,28 @@ function private.InitializeListFrame()
 		ListFrame:Update(nil, true)
 	end
 
+	local function Bar_OnClick(self)
+		local old_selected = ListFrame.selected_entry
+		ListFrame.selected_entry = nil
+
+		if old_selected and old_selected.button then
+			old_selected.button.selected_texture:Hide()
+			Bar_OnLeave(old_selected.button)
+		end
+		Bar_OnEnter(self)
+
+		local entry = ListFrame.entries[self.string_index]
+		if old_selected ~= entry then
+			self.selected_texture:Show()
+			ListFrame.selected_entry = entry
+		end
+
+		if _G.IsModifierKeyDown() then
+			ListItem_OnClick(self)
+		end
+
+	end
+
 	-------------------------------------------------------------------------------
 	-- The state and entry buttons and the container frames which hold them.
 	-------------------------------------------------------------------------------
@@ -457,27 +461,10 @@ function private.InitializeListFrame()
 
 		if parent_entry then
 			if parent_entry ~= entry then
-				local recipe_id = parent_entry.recipe_id
-				local acquire_id = parent_entry.acquire_id
-				local location_id = parent_entry.location_id
-				local npc_id = parent_entry.npc_id
-
-				-- These checks are necessary: Simply nilling fields will break things.
-				if recipe_id then
-					entry.recipe_id = recipe_id
-				end
-
-				if acquire_id then
-					entry.acquire_id = acquire_id
-				end
-
-				if location_id then
-					entry.location_id = location_id
-				end
-
-				if npc_id then
-					entry.npc_id = npc_id
-				end
+				entry.recipe_id = entry.recipe_id or parent_entry.recipe_id
+				entry.acquire_id = entry.acquire_id or parent_entry.acquire_id
+				entry.location_id = entry.location_id or parent_entry.location_id
+				entry.npc_id = entry.npc_id or parent_entry.npc_id
 				entry.parent = parent_entry
 			else
 				addon:Debug("Attempting to parent an entry to itself.")
@@ -515,7 +502,6 @@ function private.InitializeListFrame()
 	do
 		local filter_db		= addon.db.profile.filters
 
-		local binding_filters	= filter_db.binding
 		local player_filters	= filter_db.player
 		local obtain_filters	= filter_db.obtain
 		local general_filters	= filter_db.general
@@ -535,26 +521,27 @@ function private.InitializeListFrame()
 			------------------------------------------------------------------------------------------------
 			-- Player Type flags.
 			------------------------------------------------------------------------------------------------
-			["melee"]	= { flag = COMMON1.DPS,		field = "common1",	sv_root = player_filters },
-			["tank"]	= { flag = COMMON1.TANK,	field = "common1",	sv_root = player_filters },
-			["healer"]	= { flag = COMMON1.HEALER,	field = "common1",	sv_root = player_filters },
-			["caster"]	= { flag = COMMON1.CASTER,	field = "common1",	sv_root = player_filters },
+			melee	= { flag = COMMON1.DPS,		field = "common1",	sv_root = player_filters },
+			tank	= { flag = COMMON1.TANK,	field = "common1",	sv_root = player_filters },
+			healer	= { flag = COMMON1.HEALER,	field = "common1",	sv_root = player_filters },
+			caster	= { flag = COMMON1.CASTER,	field = "common1",	sv_root = player_filters },
 		}
 
 		local SOFT_FILTERS = {
-			["achievement"]	= { flag = COMMON1.ACHIEVEMENT,	field = "common1",	sv_root = obtain_filters },
-			["discovery"]	= { flag = COMMON1.DISC,	field = "common1",	sv_root = obtain_filters },
-			["instance"]	= { flag = COMMON1.INSTANCE,	field = "common1",	sv_root = obtain_filters },
-			["mobdrop"]	= { flag = COMMON1.MOB_DROP,	field = "common1",	sv_root = obtain_filters },
-			["pvp"]		= { flag = COMMON1.PVP,		field = "common1",	sv_root = obtain_filters },
-			["quest"]	= { flag = COMMON1.QUEST,	field = "common1",	sv_root = obtain_filters },
-			["raid"]	= { flag = COMMON1.RAID,	field = "common1",	sv_root = obtain_filters },
-			["retired"]	= { flag = COMMON1.RETIRED,	field = "common1",	sv_root = general_filters },
-			["reputation"]	= { flag = COMMON1.REPUTATION,	field = "common1",	sv_root = obtain_filters},
-			["seasonal"]	= { flag = COMMON1.SEASONAL,	field = "common1",	sv_root = obtain_filters },
-			["trainer"]	= { flag = COMMON1.TRAINER,	field = "common1",	sv_root = obtain_filters },
-			["vendor"]	= { flag = COMMON1.VENDOR,	field = "common1",	sv_root = obtain_filters },
-			["worlddrop"]	= { flag = COMMON1.WORLD_DROP,	field = "common1",	sv_root = obtain_filters },
+			achievement	= { flag = COMMON1.ACHIEVEMENT,	field = "common1",	sv_root = obtain_filters },
+			discovery	= { flag = COMMON1.DISC,	field = "common1",	sv_root = obtain_filters },
+			instance	= { flag = COMMON1.INSTANCE,	field = "common1",	sv_root = obtain_filters },
+			mobdrop		= { flag = COMMON1.MOB_DROP,	field = "common1",	sv_root = obtain_filters },
+			pvp		= { flag = COMMON1.PVP,		field = "common1",	sv_root = obtain_filters },
+			quest		= { flag = COMMON1.QUEST,	field = "common1",	sv_root = obtain_filters },
+			raid		= { flag = COMMON1.RAID,	field = "common1",	sv_root = obtain_filters },
+			retired		= { flag = COMMON1.RETIRED,	field = "common1",	sv_root = general_filters },
+			reputation	= { flag = COMMON1.REPUTATION,	field = "common1",	sv_root = obtain_filters },
+			seasonal	= { flag = COMMON1.SEASONAL,	field = "common1",	sv_root = obtain_filters },
+			trainer		= { flag = COMMON1.TRAINER,	field = "common1",	sv_root = obtain_filters },
+			vendor		= { flag = COMMON1.VENDOR,	field = "common1",	sv_root = obtain_filters },
+			worlddrop	= { flag = COMMON1.WORLD_DROP,	field = "common1",	sv_root = obtain_filters },
+			misc1		= { flag = COMMON1.MISC1,	field = "common1",	sv_root = obtain_filters },
 		}
 
 		local REP1 = private.REP_FLAGS_WORD1
@@ -770,7 +757,7 @@ function private.InitializeListFrame()
 			local recipes_known, recipes_known_filtered = 0, 0
 			local recipes_total, recipes_total_filtered = 0, 0
 
-			for recipe_id, recipe in pairs(profession_recipes) do
+			for _, recipe in pairs(profession_recipes) do
 				local can_display = false
 				recipe:RemoveState("VISIBLE")
 
@@ -838,6 +825,10 @@ function private.InitializeListFrame()
 			-------------------------------------------------------------------------------
 			local current_tab = MainPanel.tabs[addon.db.profile.current_tab]
 			local expanded_button = current_tab["expand_button_"..MainPanel.current_profession]
+
+			QTip:Release(acquire_tip)
+			spell_tip:Hide()
+			self.selected_entry = nil
 
 			if expanded_button then
 				MainPanel.expand_button:Expand(current_tab)
@@ -1036,7 +1027,12 @@ function private.InitializeListFrame()
 			cur_button:SetText(cur_entry.text)
 			cur_button:SetScript("OnEnter", Bar_OnEnter)
 			cur_button:SetScript("OnLeave", Bar_OnLeave)
-			cur_button:SetScript("OnClick", Bar_OnClick)
+
+			if cur_entry.type == "entry" then
+				cur_button:SetScript("OnClick", ListItem_OnClick)
+			else
+				cur_button:SetScript("OnClick", Bar_OnClick)
+			end
 			cur_button:Enable()
 
 			-- This function could possibly have been called from a mouse click or by scrolling. Since, in those cases, the list entries have
@@ -1065,11 +1061,11 @@ function private.InitializeListFrame()
 	-- Changes the color of "name" based on faction type.
 	local function ColorNameByFaction(name, faction)
 		if faction == "Neutral" then
-			name = SetTextColor(private.REPUTATION_COLORS["neutral"], name)
+			name = SetTextColor(private.REPUTATION_COLORS.neutral.hex, name)
 		elseif faction == private.Player.faction then
-			name = SetTextColor(private.REPUTATION_COLORS["exalted"], name)
+			name = SetTextColor(private.REPUTATION_COLORS.exalted.hex, name)
 		else
-			name = SetTextColor(private.REPUTATION_COLORS["hated"], name)
+			name = SetTextColor(private.REPUTATION_COLORS.hated.hex, name)
 		end
 		return name
 	end
@@ -1085,11 +1081,11 @@ function private.InitializeListFrame()
 		local coord_text = ""
 
 		if trainer.coord_x ~= 0 and trainer.coord_y ~= 0 then
-			coord_text = SetTextColor(CATEGORY_COLORS["coords"], COORD_FORMAT:format(trainer.coord_x, trainer.coord_y))
+			coord_text = SetTextColor(CATEGORY_COLORS.coords.hex, COORD_FORMAT:format(trainer.coord_x, trainer.coord_y))
 		end
 		local entry = AcquireTable()
 
-		entry.text = ("%s%s %s"):format(PADDING, hide_type and "" or SetTextColor(CATEGORY_COLORS["trainer"], L["Trainer"]) .. ":", name)
+		entry.text = ("%s%s %s"):format(PADDING, hide_type and "" or SetTextColor(CATEGORY_COLORS.trainer.hex, L["Trainer"]) .. ":", name)
 		entry.recipe_id = recipe_id
 		entry.npc_id = id_num
 
@@ -1099,7 +1095,7 @@ function private.InitializeListFrame()
 			return entry_index
 		end
 		entry = AcquireTable()
-		entry.text = ("%s%s%s %s"):format(PADDING, PADDING, hide_location and "" or SetTextColor(CATEGORY_COLORS["location"], trainer.location), coord_text)
+		entry.text = ("%s%s%s %s"):format(PADDING, PADDING, hide_location and "" or SetTextColor(CATEGORY_COLORS.location.hex, trainer.location), coord_text)
 		entry.recipe_id = recipe_id
 		entry.npc_id = id_num
 
@@ -1120,12 +1116,12 @@ function private.InitializeListFrame()
 		local coord_text = ""
 
 		if vendor.coord_x ~= 0 and vendor.coord_y ~= 0 then
-			coord_text = SetTextColor(CATEGORY_COLORS["coords"], COORD_FORMAT:format(vendor.coord_x, vendor.coord_y))
+			coord_text = SetTextColor(CATEGORY_COLORS.coords.hex, COORD_FORMAT:format(vendor.coord_x, vendor.coord_y))
 		end
 		local entry = AcquireTable()
 		local quantity = vendor.item_list[recipe_id]
 
-		entry.text = ("%s%s %s%s"):format(PADDING, hide_type and "" or SetTextColor(CATEGORY_COLORS["vendor"], L["Vendor"]) .. ":", name, type(quantity) == "number" and SetTextColor(BASIC_COLORS["white"], (" (%d)"):format(quantity)) or "")
+		entry.text = ("%s%s %s%s"):format(PADDING, hide_type and "" or SetTextColor(CATEGORY_COLORS.vendor.hex, L["Vendor"]) .. ":", name, type(quantity) == "number" and SetTextColor(BASIC_COLORS.white.hex, (" (%d)"):format(quantity)) or "")
 		entry.recipe_id = recipe_id
 		entry.npc_id = id_num
 
@@ -1135,7 +1131,7 @@ function private.InitializeListFrame()
 			return entry_index
 		end
 		entry = AcquireTable()
-		entry.text = ("%s%s%s %s"):format(PADDING, PADDING, hide_location and "" or SetTextColor(CATEGORY_COLORS["location"], vendor.location), coord_text)
+		entry.text = ("%s%s%s %s"):format(PADDING, PADDING, hide_location and "" or SetTextColor(CATEGORY_COLORS.location.hex, vendor.location), coord_text)
 		entry.recipe_id = recipe_id
 		entry.npc_id = id_num
 
@@ -1148,11 +1144,11 @@ function private.InitializeListFrame()
 		local coord_text = ""
 
 		if mob.coord_x ~= 0 and mob.coord_y ~= 0 then
-			coord_text = SetTextColor(CATEGORY_COLORS["coords"], COORD_FORMAT:format(mob.coord_x, mob.coord_y))
+			coord_text = SetTextColor(CATEGORY_COLORS.coords.hex, COORD_FORMAT:format(mob.coord_x, mob.coord_y))
 		end
 		local entry = AcquireTable()
 
-		entry.text = ("%s%s %s"):format(PADDING, hide_type and "" or SetTextColor(CATEGORY_COLORS["mobdrop"], L["Mob Drop"]) .. ":", SetTextColor(private.REPUTATION_COLORS["hostile"], mob.name))
+		entry.text = ("%s%s %s"):format(PADDING, hide_type and "" or SetTextColor(CATEGORY_COLORS.mobdrop.hex, L["Mob Drop"]) .. ":", SetTextColor(private.REPUTATION_COLORS.hostile.hex, mob.name))
 		entry.recipe_id = recipe_id
 		entry.npc_id = id_num
 
@@ -1162,7 +1158,7 @@ function private.InitializeListFrame()
 			return entry_index
 		end
 		entry = AcquireTable()
-		entry.text = ("%s%s%s %s"):format(PADDING, PADDING, hide_location and "" or SetTextColor(CATEGORY_COLORS["location"], mob.location), coord_text)
+		entry.text = ("%s%s%s %s"):format(PADDING, PADDING, hide_location and "" or SetTextColor(CATEGORY_COLORS.location.hex, mob.location), coord_text)
 		entry.recipe_id = recipe_id
 		entry.npc_id = id_num
 
@@ -1180,10 +1176,10 @@ function private.InitializeListFrame()
 		local coord_text = ""
 
 		if quest.coord_x ~= 0 and quest.coord_y ~= 0 then
-			coord_text = SetTextColor(CATEGORY_COLORS["coords"], COORD_FORMAT:format(quest.coord_x, quest.coord_y))
+			coord_text = SetTextColor(CATEGORY_COLORS.coords.hex, COORD_FORMAT:format(quest.coord_x, quest.coord_y))
 		end
 		local entry = AcquireTable()
-		entry.text = ("%s%s %s"):format(PADDING, hide_type and "" or SetTextColor(CATEGORY_COLORS["quest"], L["Quest"]) .. ":", name)
+		entry.text = ("%s%s %s"):format(PADDING, hide_type and "" or SetTextColor(CATEGORY_COLORS.quest.hex, L["Quest"]) .. ":", name)
 		entry.recipe_id = recipe_id
 
 		entry_index = ListFrame:InsertEntry(entry, parent_entry, entry_index, entry_type, true)
@@ -1192,15 +1188,15 @@ function private.InitializeListFrame()
 			return entry_index
 		end
 		entry = AcquireTable()
-		entry.text = ("%s%s%s %s"):format(PADDING, PADDING, hide_location and "" or SetTextColor(CATEGORY_COLORS["location"], quest.location), coord_text)
+		entry.text = ("%s%s%s %s"):format(PADDING, PADDING, hide_location and "" or SetTextColor(CATEGORY_COLORS.location.hex, quest.location), coord_text)
 		entry.recipe_id = recipe_id
 
 		return ListFrame:InsertEntry(entry, parent_entry, entry_index, entry_type, true)
 	end
 
-	local function ExpandSeasonalData(entry_index, entry_type, parent_entry, id_num, recipe_id, hide_location, hide_type)
+	local function ExpandSeasonalData(entry_index, entry_type, parent_entry, id_num, recipe_id, _, hide_type)
 		local entry = AcquireTable()
-		entry.text = ("%s%s %s"):format(PADDING, hide_type and "" or SetTextColor(CATEGORY_COLORS["seasonal"], private.ACQUIRE_NAMES[A.SEASONAL]) .. ":", SetTextColor(CATEGORY_COLORS["seasonal"], private.seasonal_list[id_num].name))
+		entry.text = ("%s%s %s"):format(PADDING, hide_type and "" or SetTextColor(CATEGORY_COLORS.seasonal.hex, private.ACQUIRE_NAMES[A.SEASONAL]) .. ":", SetTextColor(CATEGORY_COLORS.seasonal.hex, private.seasonal_list[id_num].name))
 		entry.recipe_id = recipe_id
 		return ListFrame:InsertEntry(entry, parent_entry, entry_index, entry_type, true)
 	end
@@ -1218,24 +1214,23 @@ function private.InitializeListFrame()
 			local rep_color = private.REPUTATION_COLORS
 
 			FACTION_LABELS = {
-				[0] = SetTextColor(rep_color["neutral"], FAC["Neutral"] .. " : "),
-				[1] = SetTextColor(rep_color["friendly"], FAC["Friendly"] .. " : "),
-				[2] = SetTextColor(rep_color["honored"], FAC["Honored"] .. " : "),
-				[3] = SetTextColor(rep_color["revered"], FAC["Revered"] .. " : "),
-				[4] = SetTextColor(rep_color["exalted"], FAC["Exalted"] .. " : ")
+				[0] = SetTextColor(rep_color.neutral.hex, FAC["Neutral"] .. " : "),
+				[1] = SetTextColor(rep_color.friendly.hex, FAC["Friendly"] .. " : "),
+				[2] = SetTextColor(rep_color.honored.hex, FAC["Honored"] .. " : "),
+				[3] = SetTextColor(rep_color.revered.hex, FAC["Revered"] .. " : "),
+				[4] = SetTextColor(rep_color.exalted.hex, FAC["Exalted"] .. " : ")
 			}
 		end
 
-		local name = ColorNameByFaction(rep_vendor.name, rep_vendor.faction)
 		local entry = AcquireTable()
-		entry.text = ("%s%s %s"):format(PADDING, hide_type and "" or SetTextColor(CATEGORY_COLORS["reputation"], _G.REPUTATION) .. ":", SetTextColor(CATEGORY_COLORS["repname"], private.reputation_list[rep_id].name))
+		entry.text = ("%s%s %s"):format(PADDING, hide_type and "" or SetTextColor(CATEGORY_COLORS.reputation.hex, _G.REPUTATION) .. ":", SetTextColor(CATEGORY_COLORS.repname.hex, private.reputation_list[rep_id].name))
 		entry.recipe_id = recipe_id
 		entry.npc_id = vendor_id
 
 		entry_index = ListFrame:InsertEntry(entry, parent_entry, entry_index, entry_type, true)
 
 		entry = AcquireTable()
-		entry.text = PADDING .. PADDING .. FACTION_LABELS[rep_level] .. name
+		entry.text = PADDING .. PADDING .. FACTION_LABELS[rep_level] .. ColorNameByFaction(rep_vendor.name, rep_vendor.faction)
 		entry.recipe_id = recipe_id
 		entry.npc_id = vendor_id
 
@@ -1244,29 +1239,29 @@ function private.InitializeListFrame()
 		local coord_text = ""
 
 		if rep_vendor.coord_x ~= 0 and rep_vendor.coord_y ~= 0 then
-			coord_text = SetTextColor(CATEGORY_COLORS["coords"], COORD_FORMAT:format(rep_vendor.coord_x, rep_vendor.coord_y))
+			coord_text = SetTextColor(CATEGORY_COLORS.coords.hex, COORD_FORMAT:format(rep_vendor.coord_x, rep_vendor.coord_y))
 		end
 
 		if coord_text == "" and hide_location then
 			return entry_index
 		end
 		entry = AcquireTable()
-		entry.text = ("%s%s%s%s %s"):format(PADDING, PADDING, PADDING, hide_location and "" or SetTextColor(CATEGORY_COLORS["location"], rep_vendor.location), coord_text)
+		entry.text = ("%s%s%s%s %s"):format(PADDING, PADDING, PADDING, hide_location and "" or SetTextColor(CATEGORY_COLORS.location.hex, rep_vendor.location), coord_text)
 		entry.recipe_id = recipe_id
 		entry.npc_id = vendor_id
 
 		return ListFrame:InsertEntry(entry, parent_entry, entry_index, entry_type, true)
 	end
 
-	local function ExpandWorldDropData(entry_index, entry_type, parent_entry, identifier, recipe_id, hide_location, hide_type)
-		local drop_location = type(identifier) == "string" and SetTextColor(CATEGORY_COLORS["location"], identifier)
+	local function ExpandWorldDropData(entry_index, entry_type, parent_entry, identifier, recipe_id, _, _)
+		local drop_location = type(identifier) == "string" and SetTextColor(CATEGORY_COLORS.location.hex, identifier)
 
 		if drop_location then
 			local recipe_item_id = private.recipe_list[recipe_id]:RecipeItem()
 			local recipe_item_level = recipe_item_id and select(4, _G.GetItemInfo(recipe_item_id))
 
 			if recipe_item_level then
-				drop_location = (": %s %s"):format(drop_location, SetTextColor(CATEGORY_COLORS["location"], "(%d - %d)"):format(recipe_item_level - 5, recipe_item_level + 5))
+				drop_location = (": %s %s"):format(drop_location, SetTextColor(CATEGORY_COLORS.location.hex, "(%d - %d)"):format(recipe_item_level - 5, recipe_item_level + 5))
 			else
 				drop_location = (": %s"):format(drop_location)
 			end
@@ -1280,26 +1275,26 @@ function private.InitializeListFrame()
 		return ListFrame:InsertEntry(entry, parent_entry, entry_index, entry_type, true)
 	end
 
-	local function ExpandCustomData(entry_index, entry_type, parent_entry, id_num, recipe_id, hide_location, hide_type)
+	local function ExpandCustomData(entry_index, entry_type, parent_entry, id_num, recipe_id, _, _)
 		local entry = AcquireTable()
-		entry.text = PADDING .. SetTextColor(CATEGORY_COLORS["custom"], private.custom_list[id_num].name)
+		entry.text = PADDING .. SetTextColor(CATEGORY_COLORS.custom.hex, private.custom_list[id_num].name)
 		entry.recipe_id = recipe_id
 
 		return ListFrame:InsertEntry(entry, parent_entry, entry_index, entry_type, true)
 	end
 
-	local function ExpandDiscoveryData(entry_index, entry_type, parent_entry, id_num, recipe_id, hide_location, hide_type)
+	local function ExpandDiscoveryData(entry_index, entry_type, parent_entry, id_num, recipe_id, _, _)
 		local entry = AcquireTable()
-		entry.text = PADDING .. SetTextColor(CATEGORY_COLORS["discovery"], private.discovery_list[id_num].name)
+		entry.text = PADDING .. SetTextColor(CATEGORY_COLORS.discovery.hex, private.discovery_list[id_num].name)
 		entry.recipe_id = recipe_id
 
 		return ListFrame:InsertEntry(entry, parent_entry, entry_index, entry_type, true)
 	end
 
-	local function ExpandAchievementData(entry_index, entry_type, parent_entry, id_num, recipe_id, hide_location, hide_type)
+	local function ExpandAchievementData(entry_index, entry_type, parent_entry, id_num, recipe_id, _, hide_type)
 		local entry = AcquireTable()
-		entry.text = ("%s%s %s"):format(PADDING, hide_type and "" or SetTextColor(CATEGORY_COLORS["achievement"], _G.ACHIEVEMENTS) .. ":",
-					    SetTextColor(BASIC_COLORS["normal"], select(2, _G.GetAchievementInfo(id_num))))
+		entry.text = ("%s%s %s"):format(PADDING, hide_type and "" or SetTextColor(CATEGORY_COLORS.achievement.hex, _G.ACHIEVEMENTS) .. ":",
+						SetTextColor(BASIC_COLORS.normal.hex, select(2, _G.GetAchievementInfo(id_num))))
 		entry.recipe_id = recipe_id
 
 		return ListFrame:InsertEntry(entry, parent_entry, entry_index, entry_type, true)
@@ -1325,8 +1320,7 @@ function private.InitializeListFrame()
 			elseif acquire_type == A.REPUTATION then
 				for rep_level, level_info in pairs(info) do
 					for vendor_id in pairs(level_info) do
-						entry_index =  ExpandReputationData(entry_index, entry_type, parent_entry, vendor_id, id_num,
-										    rep_level, recipe_id, hide_location, hide_type)
+						entry_index =  ExpandReputationData(entry_index, entry_type, parent_entry, vendor_id, id_num, rep_level, recipe_id, hide_location, hide_type)
 					end
 				end
 			elseif acquire_type == A.WORLD_DROP and obtain_filters.worlddrop then
@@ -1547,9 +1541,9 @@ do
 			textSize,		-- add to or subtract from addon.db.profile.tooltip.acquire_fontsize to get fontsize
 			narrow,			-- if 1, use ARIALN instead of FRITZQ
 			str1,			-- left-hand string
-			hexcolor1,		-- hex color code for left-hand side
+			color_table1,		-- color values for left-hand side
 			str2,			-- if present, this is the right-hand string
-			hexcolor2)		-- if present, hex color code for right-hand side
+			color_table2)		-- if present, color vaues for right-hand side
 
 		-- are we changing fontsize or narrow?
 		local fontSize
@@ -1565,12 +1559,12 @@ do
 		end
 
 		-- Add in our left hand padding
-		local loopPad = leftPad
-		local leftStr = str1
+		local padding = leftPad
+		local left_text = str1
 
-		while loopPad > 0 do
-			leftStr = "    " .. leftStr
-			loopPad = loopPad - 1
+		while padding > 0 do
+			left_text = "    " .. left_text
+			padding = padding - 1
 		end
 		-- Set maximum width to match fontSize to maintain uniform tooltip size. -Torhal
 		local width = math.ceil(fontSize * 37.5)
@@ -1579,35 +1573,57 @@ do
 		if str2 then
 			width = width / 2
 
-			acquire_tip:SetCell(line, 1, "|cff"..hexcolor1..leftStr.."|r", "LEFT", nil, nil, 0, 0, width, width)
-			acquire_tip:SetCell(line, 2, "|cff"..hexcolor2..str2.."|r", "RIGHT", nil, nil, 0, 0, width, width)
+			acquire_tip:SetCell(line, 1, left_text, "LEFT", nil, nil, 0, 0, width, width)
+			acquire_tip:SetCellTextColor(line, 1, color_table1.r, color_table1.g, color_table1.b)
+
+			acquire_tip:SetCell(line, 2, str2, "RIGHT", nil, nil, 0, 0, width, width)
+			acquire_tip:SetCellTextColor(line, 2, color_table2.r, color_table2.g, color_table2.b)
 		else
-			acquire_tip:SetCell(line, 1, "|cff"..hexcolor1..leftStr.."|r", nil, "LEFT", 2, nil, 0, 0, width, width)
+			acquire_tip:SetCell(line, 1, left_text, nil, "LEFT", 2, nil, 0, 0, width, width)
+			acquire_tip:SetCellTextColor(line, 1, color_table1.r, color_table1.g, color_table1.b)
 		end
 	end
 
 	local function GetTipFactionInfo(comp_faction)
 		local display_tip
-		local color
+		local color_table
 
 		if comp_faction == "Neutral" then
-			color = private.REPUTATION_COLORS["neutral"]
+			color_table = private.REPUTATION_COLORS.neutral
 			display_tip = true
 		elseif comp_faction == private.Player.faction then
-			color = private.REPUTATION_COLORS["exalted"]
+			color_table = private.REPUTATION_COLORS.exalted
 			display_tip = true
 		else
-			color = private.REPUTATION_COLORS["hated"]
+			color_table = private.REPUTATION_COLORS.hated
 			display_tip = addon.db.profile.filters.general.faction
 		end
-		return display_tip, color
+		return display_tip, color_table
 	end
+
+	-------------------------------------------------------------------------------
+	-- Memoizing table for recipe qualities.
+	-------------------------------------------------------------------------------
+	local RECIPE_QUALITY_COLORS = _G.setmetatable({}, {
+		__index = function(t, recipe_quality)
+			local r, g, b = _G.GetItemQualityColor(recipe_quality)
+			local rgb_values = {
+				hex = private.ColorRGBtoHEX(r, g, b),
+				r = r,
+				g = g,
+				b = b
+			}
+
+			t[recipe_quality] = rgb_values
+			return rgb_values
+		end
+	})
 
 	-------------------------------------------------------------------------------
 	-- Functions for adding individual acquire type data to the tooltip.
 	-------------------------------------------------------------------------------
 	local TOOLTIP_ACQUIRE_FUNCS = {
-		[A.TRAINER] = function(recipe_id, identifier, location, acquire_info, addline_func)
+		[A.TRAINER] = function(_, identifier, location, _, addline_func)
 			local trainer = private.trainer_list[identifier]
 
 			if not trainer or (location and trainer.location ~= location) then
@@ -1618,15 +1634,15 @@ do
 			if not display_tip then
 				return
 			end
-			addline_func(0, -2, false, L["Trainer"], CATEGORY_COLORS["trainer"], trainer.name, name_color)
+			addline_func(0, -2, false, L["Trainer"], CATEGORY_COLORS.trainer, trainer.name, name_color)
 
 			if trainer.coord_x ~= 0 and trainer.coord_y ~= 0 then
-				addline_func(1, -2, true, trainer.location, CATEGORY_COLORS["location"], COORD_FORMAT:format(trainer.coord_x, trainer.coord_y), CATEGORY_COLORS["coords"])
+				addline_func(1, -2, true, trainer.location, CATEGORY_COLORS.location, COORD_FORMAT:format(trainer.coord_x, trainer.coord_y), CATEGORY_COLORS.coords)
 			else
-				addline_func(1, -2, true, trainer.location, CATEGORY_COLORS["location"], "", CATEGORY_COLORS["coords"])
+				addline_func(1, -2, true, trainer.location, CATEGORY_COLORS.location, "", CATEGORY_COLORS.coords)
 			end
 		end,
-		[A.VENDOR] = function(recipe_id, identifier, location, acquire_info, addline_func)
+		[A.VENDOR] = function(recipe_id, identifier, location, _, addline_func)
 			local vendor = private.vendor_list[identifier]
 
 			if not vendor or (location and vendor.location ~= location) then
@@ -1637,35 +1653,35 @@ do
 			if not display_tip then
 				return
 			end
-			addline_func(0, -1, false, L["Vendor"], CATEGORY_COLORS["vendor"], vendor.name, name_color)
+			addline_func(0, -1, false, L["Vendor"], CATEGORY_COLORS.vendor, vendor.name, name_color)
 
 			if vendor.coord_x ~= 0 and vendor.coord_y ~= 0 then
-				addline_func(1, -2, true, vendor.location, CATEGORY_COLORS["location"], COORD_FORMAT:format(vendor.coord_x, vendor.coord_y), CATEGORY_COLORS["coords"])
+				addline_func(1, -2, true, vendor.location, CATEGORY_COLORS.location, COORD_FORMAT:format(vendor.coord_x, vendor.coord_y), CATEGORY_COLORS.coords)
 			else
-				addline_func(1, -2, true, vendor.location, CATEGORY_COLORS["location"], "", CATEGORY_COLORS["coords"])
+				addline_func(1, -2, true, vendor.location, CATEGORY_COLORS.location, "", CATEGORY_COLORS.coords)
 			end
 			local quantity = vendor.item_list[recipe_id]
 
 			if type(quantity) == "number" then
-				addline_func(2, -2, true, L["LIMITED_SUPPLY"], CATEGORY_COLORS["vendor"], ("(%d)"):format(quantity), BASIC_COLORS["white"])
+				addline_func(2, -2, true, L["LIMITED_SUPPLY"], CATEGORY_COLORS.vendor, ("(%d)"):format(quantity), BASIC_COLORS.white)
 			end
 		end,
-		[A.MOB_DROP] = function(recipe_id, identifier, location, acquire_info, addline_func)
+		[A.MOB_DROP] = function(_, identifier, location, _, addline_func)
 			local mob = private.mob_list[identifier]
 
 			if not mob or (location and mob.location ~= location) then
 				return
 			end
-			addline_func(0, -1, false, L["Mob Drop"], CATEGORY_COLORS["mobdrop"], mob.name, private.REPUTATION_COLORS["hostile"])
+			addline_func(0, -1, false, L["Mob Drop"], CATEGORY_COLORS.mobdrop, mob.name, private.REPUTATION_COLORS.hostile)
 
 			if mob.coord_x ~= 0 and mob.coord_y ~= 0 then
-				addline_func(1, -2, true, mob.location, CATEGORY_COLORS["location"], COORD_FORMAT:format(mob.coord_x, mob.coord_y), CATEGORY_COLORS["coords"])
+				addline_func(1, -2, true, mob.location, CATEGORY_COLORS.location, COORD_FORMAT:format(mob.coord_x, mob.coord_y), CATEGORY_COLORS.coords)
 			else
-				addline_func(1, -2, true, mob.location, CATEGORY_COLORS["location"], "", CATEGORY_COLORS["coords"])
+				addline_func(1, -2, true, mob.location, CATEGORY_COLORS.location, "", CATEGORY_COLORS.coords)
 
 			end
 		end,
-		[A.QUEST] = function(recipe_id, identifier, location, acquire_info, addline_func)
+		[A.QUEST] = function(_, identifier, location, _, addline_func)
 			local quest = private.quest_list[identifier]
 
 			if not quest or (location and quest.location ~= location) then
@@ -1676,19 +1692,19 @@ do
 			if not display_tip then
 				return
 			end
-			addline_func(0, -1, false, L["Quest"], CATEGORY_COLORS["quest"], private.quest_names[identifier], name_color)
+			addline_func(0, -1, false, L["Quest"], CATEGORY_COLORS.quest, private.quest_names[identifier], name_color)
 
 			if quest.coord_x ~= 0 and quest.coord_y ~= 0 then
-				addline_func(1, -2, true, quest.location, CATEGORY_COLORS["location"], COORD_FORMAT:format(quest.coord_x, quest.coord_y), CATEGORY_COLORS["coords"])
+				addline_func(1, -2, true, quest.location, CATEGORY_COLORS.location, COORD_FORMAT:format(quest.coord_x, quest.coord_y), CATEGORY_COLORS.coords)
 			else
-				addline_func(1, -2, true, quest.location, CATEGORY_COLORS["location"], "", CATEGORY_COLORS["coords"])
+				addline_func(1, -2, true, quest.location, CATEGORY_COLORS.location, "", CATEGORY_COLORS.coords)
 			end
 		end,
-		[A.SEASONAL] = function(recipe_id, identifier, location, acquire_info, addline_func)
-			local hex_color = CATEGORY_COLORS["seasonal"]
+		[A.SEASONAL] = function(_, identifier, _, _, addline_func)
+			local hex_color = CATEGORY_COLORS.seasonal
 			addline_func(0, -1, 0, private.ACQUIRE_NAMES[A.SEASONAL], hex_color, private.seasonal_list[identifier].name, hex_color)
 		end,
-		[A.REPUTATION] = function(recipe_id, identifier, location, acquire_info, addline_func)
+		[A.REPUTATION] = function(_, identifier, location, acquire_info, addline_func)
 			for rep_level, level_info in pairs(acquire_info) do
 				for vendor_id in pairs(level_info) do
 					local rep_vendor = private.vendor_list[vendor_id]
@@ -1697,31 +1713,31 @@ do
 						local display_tip, name_color = GetTipFactionInfo(rep_vendor.faction)
 
 						if display_tip then
-							addline_func(0, -1, false, _G.REPUTATION, CATEGORY_COLORS["reputation"], private.reputation_list[identifier].name, CATEGORY_COLORS["repname"])
+							addline_func(0, -1, false, _G.REPUTATION, CATEGORY_COLORS.reputation, private.reputation_list[identifier].name, CATEGORY_COLORS.repname)
 
 							if rep_level == 0 then
-								addline_func(1, -2, false, FAC["Neutral"], private.REPUTATION_COLORS["neutral"], rep_vendor.name, name_color)
+								addline_func(1, -2, false, FAC["Neutral"], private.REPUTATION_COLORS.neutral, rep_vendor.name, name_color)
 							elseif rep_level == 1 then
-								addline_func(1, -2, false, FAC["Friendly"], private.REPUTATION_COLORS["friendly"], rep_vendor.name, name_color)
+								addline_func(1, -2, false, FAC["Friendly"], private.REPUTATION_COLORS.friendly, rep_vendor.name, name_color)
 							elseif rep_level == 2 then
-								addline_func(1, -2, false, FAC["Honored"], private.REPUTATION_COLORS["honored"], rep_vendor.name, name_color)
+								addline_func(1, -2, false, FAC["Honored"], private.REPUTATION_COLORS.honored, rep_vendor.name, name_color)
 							elseif rep_level == 3 then
-								addline_func(1, -2, false, FAC["Revered"], private.REPUTATION_COLORS["revered"], rep_vendor.name, name_color)
+								addline_func(1, -2, false, FAC["Revered"], private.REPUTATION_COLORS.revered, rep_vendor.name, name_color)
 							else
-								addline_func(1, -2, false, FAC["Exalted"], private.REPUTATION_COLORS["exalted"], rep_vendor.name, name_color)
+								addline_func(1, -2, false, FAC["Exalted"], private.REPUTATION_COLORS.exalted, rep_vendor.name, name_color)
 							end
 
 							if rep_vendor.coord_x ~= 0 and rep_vendor.coord_y ~= 0 then
-								addline_func(2, -2, true, rep_vendor.location, CATEGORY_COLORS["location"], COORD_FORMAT:format(rep_vendor.coord_x, rep_vendor.coord_y), CATEGORY_COLORS["coords"])
+								addline_func(2, -2, true, rep_vendor.location, CATEGORY_COLORS.location, COORD_FORMAT:format(rep_vendor.coord_x, rep_vendor.coord_y), CATEGORY_COLORS.coords)
 							else
-								addline_func(2, -2, true, rep_vendor.location, CATEGORY_COLORS["location"], "", CATEGORY_COLORS["coords"])
+								addline_func(2, -2, true, rep_vendor.location, CATEGORY_COLORS.location, "", CATEGORY_COLORS.coords)
 							end
 						end
 					end
 				end
 			end
 		end,
-		[A.WORLD_DROP] = function(recipe_id, identifier, location, acquire_info, addline_func)
+		[A.WORLD_DROP] = function(recipe_id, identifier, location, _, addline_func)
 			local drop_location = type(identifier) == "string" and identifier or _G.UNKNOWN
 
 			if location and drop_location ~= location then
@@ -1730,7 +1746,6 @@ do
 			local recipe = private.recipe_list[recipe_id]
 			local recipe_item_id = recipe:RecipeItem()
 			local recipe_item_level = recipe_item_id and select(4, _G.GetItemInfo(recipe_item_id))
-			local quality_color = select(4, _G.GetItemQualityColor(recipe.quality)):sub(3)
 			local location_text
 
 			if recipe_item_level then
@@ -1738,23 +1753,23 @@ do
 			else
 				location_text = drop_location
 			end
-			addline_func(0, -1, false, L["World Drop"], quality_color, location_text, CATEGORY_COLORS["location"])
+			addline_func(0, -1, false, L["World Drop"], RECIPE_QUALITY_COLORS[recipe.quality], location_text, CATEGORY_COLORS.location)
 		end,
-		[A.ACHIEVEMENT] = function(recipe_id, identifier, location, acquire_info, addline_func)
+		[A.ACHIEVEMENT] = function(recipe_id, identifier, _, _, addline_func)
 			local recipe = private.recipe_list[recipe_id]
 			local _, achievement_name, _, _, _, _, _, achievement_desc = _G.GetAchievementInfo(identifier)
 
 			-- The recipe is an actual reward from an achievement if flagged - else we're just using the text to describe how to get it.
 			if recipe:HasFilter("common1", "ACHIEVEMENT") then
-				addline_func(0, -1, false, _G.ACHIEVEMENTS, CATEGORY_COLORS["achievement"], achievement_name, BASIC_COLORS["normal"])
+				addline_func(0, -1, false, _G.ACHIEVEMENTS, CATEGORY_COLORS.achievement, achievement_name, BASIC_COLORS.normal)
 			end
-			addline_func(0, -1, false, achievement_desc, CATEGORY_COLORS["achievement"])
+			addline_func(0, -1, false, achievement_desc, CATEGORY_COLORS.achievement)
 		end,
-		[A.DISCOVERY] = function(recipe_id, identifier, location, acquire_info, addline_func)
-			addline_func(0, -1, false, private.discovery_list[identifier].name, CATEGORY_COLORS["discovery"])
+		[A.DISCOVERY] = function(_, identifier, _, _, addline_func)
+			addline_func(0, -1, false, private.discovery_list[identifier].name, CATEGORY_COLORS.discovery)
 		end,
-		[A.CUSTOM] = function(recipe_id, identifier, location, acquire_info, addline_func)
-			addline_func(0, -1, false, private.custom_list[identifier].name, CATEGORY_COLORS["custom"])
+		[A.CUSTOM] = function(_, identifier, _, _, addline_func)
+			addline_func(0, -1, false, private.custom_list[identifier].name, CATEGORY_COLORS.custom)
 		end,
 	}
 
@@ -1778,7 +1793,7 @@ do
 					if populate_func then
 						populate_func(recipe_id, identifier, location, info, addline_func)
 					else
-						addline_func(0, -1, 0, L["Unhandled Recipe"], BASIC_COLORS["normal"])
+						addline_func(0, -1, 0, L["Unhandled Recipe"], BASIC_COLORS.normal)
 					end
 				end
 			end
@@ -1886,7 +1901,7 @@ do
 		[A.DISCOVERY] = true,
 	}
 
-	function ListItem_ShowTooltip(owner, list_entry)
+	function ListItem_ShowTooltip(list_entry)
 		if not list_entry then
 			return
 		end
@@ -1901,7 +1916,8 @@ do
 			return
 		end
 		acquire_tip:AddHeader()
-		acquire_tip:SetCell(1, 1, "|c"..select(4, _G.GetItemQualityColor(recipe.quality))..recipe.name, "CENTER", 2)
+		acquire_tip:SetCell(1, 1, recipe.name, "CENTER", 2)
+		acquire_tip:SetCellTextColor(1, 1, _G.GetItemQualityColor(recipe.quality))
 
 		local recipe_item_texture = recipe.crafted_item_id and _G.select(10, _G.GetItemInfo(recipe.crafted_item_id))
 
@@ -1911,7 +1927,7 @@ do
 		end
 
 		if addon.db.profile.exclusionlist[list_entry.recipe_id] then
-			ttAdd(0, -1, true, L["RECIPE_EXCLUDED"], "ff0000")
+			ttAdd(0, -1, true, L["RECIPE_EXCLUDED"], private.DIFFICULTY_COLORS.impossible)
 		end
 
 		-- Add in skill level requirement, colored correctly
@@ -1931,19 +1947,19 @@ do
 		else
 			color_type = "trivial"
 		end
-		ttAdd(0, -1, false, ("%s:"):format(_G.SKILL_LEVEL), BASIC_COLORS["normal"], recipe.skill_level, private.DIFFICULTY_COLORS[color_type])
+		ttAdd(0, -1, false, ("%s:"):format(_G.SKILL_LEVEL), BASIC_COLORS.normal, recipe.skill_level, private.DIFFICULTY_COLORS[color_type])
 		acquire_tip:AddSeparator()
 
 		local _, recipe_item_binding = recipe:RecipeItem()
 
 		if recipe_item_binding then
-			ttAdd(0, -1, true, RECIPE_BINDING_TYPES[recipe_item_binding], BASIC_COLORS["normal"])
+			ttAdd(0, -1, true, RECIPE_BINDING_TYPES[recipe_item_binding], BASIC_COLORS.normal)
 		end
 
 		local _, crafted_item_binding = recipe:RecipeItem()
 
 		if crafted_item_binding then
-			ttAdd(0, -1, true, ITEM_BINDING_TYPES[crafted_item_binding], BASIC_COLORS["normal"])
+			ttAdd(0, -1, true, ITEM_BINDING_TYPES[crafted_item_binding], BASIC_COLORS.normal)
 		end
 
 		acquire_tip:AddSeparator()
@@ -1951,28 +1967,27 @@ do
 		local recipe_specialty = recipe.specialty
 
 		if recipe_specialty then
-			local hex_color = (recipe_specialty == private.current_profession_specialty) and BASIC_COLORS["white"] or private.DIFFICULTY_COLORS["impossible"]
-
-			ttAdd(0, -1, false, _G.ITEM_REQ_SKILL:format(_G.GetSpellInfo(recipe_specialty)), hex_color)
+			local color_table = (recipe_specialty == private.current_profession_specialty) and BASIC_COLORS.white or private.DIFFICULTY_COLORS.impossible
+			ttAdd(0, -1, false, _G.ITEM_REQ_SKILL:format(_G.GetSpellInfo(recipe_specialty)), color_table)
 			acquire_tip:AddSeparator()
 		end
-		ttAdd(0, -1, false, L["Obtained From"] .. " : ", BASIC_COLORS["normal"])
+		ttAdd(0, -1, false, L["Obtained From"] .. " : ", BASIC_COLORS.normal)
 
 		addon:DisplayAcquireData(list_entry.recipe_id, list_entry.acquire_id, list_entry.location_id, ttAdd)
 
 		if not addon.db.profile.hide_tooltip_hint then
-			local HINT_COLOR = "c9c781"
-			local acquire_id = list_entry.acquire_id
+			local hint_color = private.CATEGORY_COLORS.hint
 
 			acquire_tip:AddSeparator()
 			acquire_tip:AddSeparator()
 
-			ttAdd(0, -1, 0, L["ALT_CLICK"], HINT_COLOR)
-			ttAdd(0, -1, 0, L["CTRL_CLICK"], HINT_COLOR)
-			ttAdd(0, -1, 0, L["SHIFT_CLICK"], HINT_COLOR)
+			ttAdd(0, -1, 0, L["CLICK"], hint_color)
+			ttAdd(0, -1, 0, L["ALT_CLICK"], hint_color)
+			ttAdd(0, -1, 0, L["CTRL_CLICK"], hint_color)
+			ttAdd(0, -1, 0, L["SHIFT_CLICK"], hint_color)
 
-			if not NON_COORD_ACQUIRES[acquire_id] and _G.TomTom and (addon.db.profile.worldmap or addon.db.profile.minimap) then
-				ttAdd(0, -1, 0, L["CTRL_SHIFT_CLICK"], HINT_COLOR)
+			if not NON_COORD_ACQUIRES[list_entry.acquire_id] and _G.TomTom and (addon.db.profile.worldmap or addon.db.profile.minimap) then
+				ttAdd(0, -1, 0, L["CTRL_SHIFT_CLICK"], hint_color)
 			end
 		end
 		acquire_tip:Show()

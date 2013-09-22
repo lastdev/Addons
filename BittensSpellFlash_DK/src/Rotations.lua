@@ -6,6 +6,7 @@ local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 local GetRuneCooldown = GetRuneCooldown
 local GetTime = GetTime
 local OffhandHasWeapon = OffhandHasWeapon
+local UnitGUID = UnitGUID
 local UnitIsUnit = UnitIsUnit
 local math = math
 local select = select
@@ -17,16 +18,19 @@ local rpBumpExpires = 0
 local suppressKM = false
 a.Runes = { 0, 0, 0, 0, 0, 0 }
 a.PendingDeathRunes = 0
-a.Rotations = {}
+a.Rotations = { }
 
-local function getBump(name, freezingFog)
+local function getBump(name, freezingFog, crimsonScourge)
 	local cost = a.Costs[name]
 	if cost == nil then
 		return 0
 	end
 	
 	local bump = cost.BonusRP or 0
-	if not cost.Rime or freezingFog == 0 then
+	if (not cost.Rime or freezingFog == 0)
+		and (name ~= s.SpellName(c.GetID("Blood Boil")) 
+			or not crimsonScourge) then
+		
 		bump = bump + math.max(0, 10 * (cost.Blood + cost.Frost + cost.Unholy))
 	end
 	if c.HasBuff("Frost Presence") then
@@ -35,29 +39,17 @@ local function getBump(name, freezingFog)
 	return bump
 end
 
-local function consumeRune(runeID, mustBeDeath)
+local function consumeRune(runeID, needed, forbidDeath)
+	if needed == 0 or (forbidDeath and a.IsDeathRune(runeID)) then
+		return needed
+	end
+	
 	local start, duration = GetRuneCooldown(runeID)
 	if start + duration < GetTime() then
 		a.Runes[runeID] = 100
-		return true
-	end
-end
-
-local function consumeRunes(toConsume, rune1, rune2, deathNeeded)
-	if toConsume == 0 or consumeRune(rune1) or consumeRune(rune2) then
-		return deathNeeded
+		return needed - 1
 	else
-		return deathNeeded + 1
-	end
-end
-
-local function consumeDeathRunes(deathNeeded)
-	for i = 1, 6 do
-		if deathNeeded == 0 then
-			return
-		elseif a.IsDeathRune(i) and consumeRune(i, true) then
-			deathNeeded = deathNeeded - 1
-		end
+		return needed
 	end
 end
 
@@ -68,9 +60,11 @@ end
 a.LastSoulReaper = 0
 local function adjustResourcesForSuccessfulCast(info)
 	local cost = s.SpellCost(info.Name)
-	if cost == 0 and not c.InfoMatches(info, "Blood Boil") then
+	if cost == 0 then
 		local bump = getBump(
-			info.Name, s.BuffStack(c.GetID("Freezing Fog"), "player"))
+			info.Name, 
+			s.BuffStack(c.GetID("Freezing Fog"), "player"), 
+			s.Buff(c.GetID("Crimson Scourge"), "player"))
 		if bump > 0 then
 			rpBumped = s.Power("player") + bump
 			rpBumpExpires = GetTime() + .8
@@ -79,11 +73,34 @@ local function adjustResourcesForSuccessfulCast(info)
 			info, "Soul Reaper - Frost", "Soul Reaper - Unholy") then
 			
 			a.LastSoulReaper = info.GCDStart
+			c.Debug("Event", "Soul Reaper Cast", info.GCDStart, GetTime())
 		end
 --c.Debug("Resources", info.Name, "bump", bump, "->", rpBumped)
 	elseif GetTime() < rpBumpExpires then
 		rpBumped = rpBumped - cost
 	end
+end
+
+local function getGenericDebugInfo()
+	return string.format(
+		"b:%.1f r:%d %s:%.1f %s:%.1f %s:%.1f %s:%.1f %s:%.1f %s:%.1f d:%d b:%d c:%s",
+		c.GetBusyTime(),
+		a.RP,
+		a.IsDeathRune(1) and "d" or "b",
+		math.max(0, math.min(9.9, a.Runes[1])),
+		a.IsDeathRune(2) and "d" or "b",
+		math.max(0, math.min(9.9, a.Runes[2])),
+		a.IsDeathRune(5) and "d" or "f",
+		math.max(0, math.min(9.9, a.Runes[5])),
+		a.IsDeathRune(6) and "d" or "f",
+		math.max(0, math.min(9.9, a.Runes[6])),
+		a.IsDeathRune(3) and "d" or "u",
+		math.max(0, math.min(9.9, a.Runes[3])),
+		a.IsDeathRune(4) and "d" or "u",
+		math.max(0, math.min(9.9, a.Runes[4])),
+		a.PendingDeathRunes,
+		a.BloodCharges,
+		tostring(a.CrimsonScourge))
 end
 
 local spellIfCapped
@@ -93,7 +110,8 @@ local function flashNoCap(...)
 		local name = select(i, ...)
 		local spell = c.GetSpell(name)
 		if s.Flashable(spell.ID) and s.Castable(spell) then
-			local bump = getBump(s.SpellName(spell.ID), a.FreezingFog)
+			local bump = getBump(
+				s.SpellName(spell.ID), a.FreezingFog, a.CrimsonScourge)
 			if bump == 0 or a.RP + bump <= s.MaxPower("player") then
 				local color = spell.FlashColor
 				if c.AoE and color == nil then
@@ -103,6 +121,7 @@ local function flashNoCap(...)
 				if spell.Continue then
 					flashed = name
 				else
+					c.Debug("Flash", getGenericDebugInfo(), name)
 					return name
 				end
 			elseif spellIfCapped ~= nil then
@@ -114,21 +133,29 @@ local function flashNoCap(...)
 	return flashed
 end
 
-local function getGenericDebugInfo()
-	return string.format(
-		"%d %.1f %.1f %.1f %.1f %.1f %.1f %d %d",
-		a.RP,
-		math.max(0, math.min(9.9, a.Runes[1])),
-		math.max(0, math.min(9.9, a.Runes[2])),
-		math.max(0, math.min(9.9, a.Runes[5])),
-		math.max(0, math.min(9.9, a.Runes[6])),
-		math.max(0, math.min(9.9, a.Runes[3])),
-		math.max(0, math.min(9.9, a.Runes[4])),
-		a.PendingDeathRunes,
-		a.BloodCharges)
+local function flashInterrupts()
+	if c.FlashAll("Mind Freeze") then
+		return
+	end
+	if c.HasSpell("Asphyxiate") then
+		c.FlashAll("Asphyxiate")
+	else
+		c.FlashAll("Strangulate")
+	end
+end
+
+function a.HornOfWinterBonus()
+	if c.HasGlyph("Loud Horn") then
+		return 20
+	else
+		return 10
+	end
 end
 
 function a.PreFlash()
+	
+	a.Costs[s.SpellName(c.GetID("Horn of Winter"))].BonusRP = 
+		a.HornOfWinterBonus()
 	
 	-- grab RP	
 	a.RP = s.Power("player")
@@ -154,10 +181,16 @@ function a.PreFlash()
 	-- grab Freezing Fog
 	a.FreezingFog = c.GetBuffStack("Freezing Fog")
 	
+	-- grab Crimson Scourge
+	a.CrimsonScourge = c.HasBuff("Crimson Scourge")
+	
 	-- grab Blood Charge
 	a.BloodCharges = c.GetBuffStack("Blood Charge")
-	if c.IsCasting("Blood Charge") then
+	if c.IsCasting("Blood Tap") then
 		a.BloodCharges = a.BloodCharges - 5
+	end
+	if c.IsCasting("Rune Strike", "Death Coil", "Frost Strike") then
+		a.BloodCharges = a.BloodCharges + 2
 	end
 	
 	-- adjust resources for queued spell
@@ -168,49 +201,88 @@ function a.PreFlash()
 		if cost > 0 then
 			a.RP = a.RP - cost
 		else
-			a.RP = a.RP + getBump(info.Name, a.FreezingFog)
+			a.RP = a.RP + getBump(info.Name, a.FreezingFog, a.CrimsonScourge)
 		end
 		local cost = a.Costs[info.Name]
-		if cost then
-			local deathNeeded = cost.Death
-			local frostNeeded = s.If(
-				cost.Rime and a.FreezingFog > 0, 0, cost.Frost)
-			deathNeeded = consumeRunes(cost.Blood, 1, 2, deathNeeded)
-			deathNeeded = consumeRunes(frostNeeded, 5, 6, deathNeeded)
-			deathNeeded = consumeRunes(cost.Unholy, 3, 4, deathNeeded)
-			consumeDeathRunes(deathNeeded)
+		if s.Buff(c.GetID("Crimson Scourge"), "player") 
+			and c.InfoMatches(info, "Blood Boil", "Death and Decay") then
+			
+			a.CrimsonScourge = false
+		elseif cost then
+			local blood = cost.Blood
+			local frost = cost.Rime and a.FreezingFog > 0 and 0 or cost.Frost
+			local unholy = cost.Unholy
+			
+			-- consume colored runes
+			blood = consumeRune(1, blood, true)
+			blood = consumeRune(2, blood, true)
+			frost = consumeRune(5, frost, true)
+			frost = consumeRune(6, frost, true)
+			unholy = consumeRune(3, unholy, true)
+			unholy = consumeRune(4, unholy, true)
+			
+			-- consume matching-color death runes
+			blood = consumeRune(1, blood)
+			blood = consumeRune(2, blood)
+			frost = consumeRune(5, frost)
+			frost = consumeRune(6, frost)
+			unholy = consumeRune(3, unholy)
+			unholy = consumeRune(4, unholy)
+			
+			-- consume death runes indiscriminately
+			local death = cost.Death + blood + frost + unholy
+			death = consumeRune(1, death)
+			death = consumeRune(2, death)
+			death = consumeRune(5, death)
+			death = consumeRune(6, death)
+			death = consumeRune(3, death)
+			death = consumeRune(4, death)
 		end
 		if consumesKM(info) then
 			a.KillingMachine = false
-		elseif a.FreezingFog > 0
-			and c.InfoMatches(info, "Howling Blast", "Icy Touch") then
+		end
+		if a.FreezingFog > 0
+			and c.IsQueued("Howling Blast", "Icy Touch") then
 			
 			a.FreezingFog = a.FreezingFog - 1
-		elseif c.InfoMatches(info, "Blood Tap", "Plague Leech") then
-			a.PendingDeathRunes = 1
+		end
+		if c.IsQueued("Blood Tap") then
+			a.PendingDeathRunes = a.PendingDeathRunes + 1
+		end
+		if c.IsQueued("Plague Leech") then
+			a.PendingDeathRunes = a.PendingDeathRunes + 2
 		end
 	end
+	
+	a.InExecute = s.HealthPercent() < (c.WearingSet(4, "DpsT15") and 45 or 35)
 end
 
 ------------------------------------------------------------------------- Blood
 local uncontrolledMitigationBuffs = {
 	"Anti-Magic Shell",
-	"Anti-Magic Zone",
 }
+
+a.BloodPlagueRefreshPending = 0
 
 a.Rotations.Blood = {
 	Spec = 1,
 	
+	UsefulStats = { 
+		"Stamina", "Strength", "Dodge", "Parry", "Melee Hit", "Haste" 
+	},
+	
 	FlashInCombat = function()
+		flashInterrupts()
 		c.FlashAll(
 			"Rune Tap", 
-			"Mind Freeze", 
 			"Dark Command", 
 			"Death Grip",
-			"Conversion Cancel")
+			"Conversion Cancel",
+			"Horn of Winter for Buff, Optional")
 		c.FlashMitigationBuffs(
 			2,
 			uncontrolledMitigationBuffs,
+			c.COMMON_TANKING_BUFFS,
 			"Death Pact",
 			"Dancing Rune Weapon",
 			"Bone Shield",
@@ -229,16 +301,16 @@ a.Rotations.Blood = {
 						"Death and Decay Free",
 						"Blood Boil for AoE B or Free",
 						"Heart Strike B",
-						"Rune Strike unless DRW",
+						"Rune Strike",
 						"Horn of Winter")
 				else
 					flashNoCap(
 						"Death and Decay",
 						"Outbreak",
-						"Blood Boil for AoE",
+						"Blood Boil for AoE or Free",
 						"Heart Strike",
 						"Death Strike",
-						"Rune Strike unless DRW",
+						"Rune Strike",
 						"Horn of Winter")
 				end
 			else
@@ -249,10 +321,10 @@ a.Rotations.Blood = {
 					"Plague Strike for Blood Plague",
 					"Death Strike",
 					"Heart Strike BB",
-					"Blood Boil for Runic Power",
-					"Rune Strike for Resources unless DRW",
+					"Blood Boil Free",
+					"Rune Strike for Resources",
 					"Heart Strike",
-					"Rune Strike unless DRW",
+					"Rune Strike",
 					"Horn of Winter")
 			end
 		else
@@ -261,16 +333,18 @@ a.Rotations.Blood = {
 				"Death Strike to Save Shield",
 				"Blood Tap for Death Strike",
 				"Death Siphon for Health",
-				"Outbreak for Blood Plague",
-				"Plague Strike for Blood Plague",
+				"Outbreak for Weakened Blows",
+				"Plague Strike for Weakened Blows",
 				"Rune Strike for Resources if Capped",
 				"Death Strike if Two Available",
-				"Blood Boil for Blood Plague",
+				"Blood Boil for Weakened Blows",
 				"Rune Strike for Resources",
 				"Horn of Winter for Buff",
 				"Heart Strike for Runic Power unless AoE",
 				"Blood Boil for Runic Power",
 				"Horn of Winter for Runic Power",
+				"Plague Leech if Outbreak",
+				"Blood Boil Free",
 				"Outbreak Early")
 		end
 	end,
@@ -288,15 +362,26 @@ a.Rotations.Blood = {
 		if c.InfoMatches(info, "Blood Boil") 
 			and s.MyDebuff(c.GetID("Blood Plague")) then
 			
-			a.BloodPlagueRefreshPending = true
+			a.BloodPlagueRefreshPending = GetTime()
 			c.Debug("Event", "Blood Plague refresh pending")
 		end
 	end,
 	
-	AuraApplied = function(spellID)
+	SpellMissed = function(spellID, _, targetID)
+		if c.IdMatches(spellID, "Blood Boil") then
+			if targetID == UnitGUID("target") then
+				a.BloodPlagueRefreshPending = 0
+				c.Debug("Event", "Blood Plague refresh missed")
+			end
+		end
+	end,
+	
+	AuraApplied = function(spellID, _, targetID)
 		if spellID == c.GetID("Blood Plague") then
-			a.BloodPlagueRefreshPending = nil
-			c.Debug("Event", "Blood Plague applied")
+			if targetID == UnitGUID("target") then
+				a.BloodPlagueRefreshPending = 0
+				c.Debug("Event", "Blood Plague applied")
+			end
 		elseif spellID == c.GetID("Scent of Blood") then
 			c.Debug("Event", "Scent of Blood")
 		end
@@ -309,13 +394,16 @@ a.Rotations.Blood = {
 a.Rotations.Frost = {
 	Spec = 2,
 	
+	UsefulStats = { "Strength", "Melee Hit", "Crit", "Haste" },
+	
 	FlashInCombat = function()
 		a.SetCost(0, 1, 0, 0, "Soul Reaper - Frost")
+		flashInterrupts()
 		c.FlashAll(
 			"Pillar of Frost", 
 			"Raise Dead",
-			"Mind Freeze",
-			"Death Siphon")
+			"Death Siphon",
+			"Horn of Winter for Buff, Optional")
 		local flashing
 		if c.AoE then
 			flashing = c.PriorityFlash(
@@ -417,7 +505,7 @@ a.Rotations.Frost = {
 	end,
 	
 	ExtraDebugInfo = function()
-		return string.format("%s %s %d",
+		return string.format("%s k:%s f:%d",
 			getGenericDebugInfo(),
 			tostring(a.KillingMachine),
 			a.FreezingFog)
@@ -426,16 +514,20 @@ a.Rotations.Frost = {
 
 ------------------------------------------------------------------------ Unholy
 --a.LastPestilence = 0
+a.DTCast = 0
 
 a.Rotations.Unholy = {
 	Spec = 3,
 	
+	UsefulStats = { "Strength", "Melee Hit", "Crit", "Haste" },
+	
 	FlashInCombat = function()
 		a.SetCost(0, 0, 1, 0, "Soul Reaper - Unholy")
+		flashInterrupts()
 		c.FlashAll(
 			"Unholy Frenzy",
-			"Mind Freeze",
-			"Death Siphon")
+			"Death Siphon",
+			"Horn of Winter for Buff, Optional")
 		local flashing
 --		if c.AoE then
 --			flashNoCap(
@@ -496,6 +588,9 @@ a.Rotations.Unholy = {
 --		elseif c.InfoMatches(info, "Pestilence") then
 --			a.LastPestilence = GetTime()
 --			c.Debug("Event", "Pestilence cast")
+		elseif c.InfoMatches(info, "Dark Transformation") then
+			a.DTCast = GetTime()
+			c.Debug("Event", "Dark Transformation Cast")
 		end
 	end,
 	
@@ -521,10 +616,9 @@ a.Rotations.Unholy = {
 --	end,
 	
 	ExtraDebugInfo = function()
-		return string.format("%s %d %s %s",
+		return string.format("%s i:%d i:%s",
 			getGenericDebugInfo(),
 			s.BuffStack(c.GetID("Shadow Infusion"), "pet"),
-			tostring(a.ShadowInfusionPending),
-tostring(not not c.IsAuraPendingFor("Plague Strike")))
+			tostring(a.ShadowInfusionPending))
 	end,
 }

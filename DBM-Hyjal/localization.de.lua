@@ -10,19 +10,6 @@ L:SetGeneralLocalization{
 	name = "Furor Winterfrost"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-	IceBoltIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(31249)
-}
-
-L:SetMiscLocalization{
-}
-
 -----------------
 --  Anetheron  --
 -----------------
@@ -30,18 +17,6 @@ L = DBM:GetModLocalization("Anetheron")
 
 L:SetGeneralLocalization{
 	name = "Anetheron"
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-}
-
-L:SetMiscLocalization{
 }
 
 ----------------
@@ -53,20 +28,6 @@ L:SetGeneralLocalization{
 	name = "Kaz'rogal"
 }
 
-L:SetWarningLocalization{
-	WarnMark = "Mal von Kaz'rogal (%d)"
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-	WarnMark = "Zeige Warnung für $spell:31447"
-}
-
-L:SetMiscLocalization{
-}
-
 ---------------
 --  Azgalor  --
 ---------------
@@ -76,19 +37,6 @@ L:SetGeneralLocalization{
 	name = "Azgalor"
 }
 
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-	DoomIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(31347)
-}
-
-L:SetMiscLocalization{
-}
-
 ------------------
 --  Archimonde  --
 ------------------
@@ -96,21 +44,6 @@ L = DBM:GetModLocalization("Archimonde")
 
 L:SetGeneralLocalization{
 	name = "Archimonde"
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-	YellOnBurst	= "Schreie bei $spell:32014 auf dir",
-	BurstIcon	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(32014)
-}
-
-L:SetMiscLocalization{
-	YellBurst	= "Windbö auf MIR!"
 }
 
 ----------------
@@ -123,14 +56,12 @@ L:SetGeneralLocalization{
 }
 L:SetWarningLocalization{
 	WarnWave	= "%s",
-	WarnWaveSoon= "Nächste Welle bald"
 }
 L:SetTimerLocalization{
 	TimerWave	= "Nächste Welle"
 }
 L:SetOptionLocalization{
 	WarnWave		= "Warne, wenn eine neue Welle kommt",
-	WarnWaveSoon	= "Warne, wenn bald eine neue Welle kommt",
 	DetailedWave	= "Detaillierte Warnung, wenn eine neue Welle kommt (welche Mobs)",
 	TimerWave		= "Zeige Zeit bis nächste Welle"
 }
@@ -138,10 +69,11 @@ L:SetMiscLocalization{
 	HyjalZoneName	= "Hyjalgipfel",
 	Thrall			= "Thrall",
 	Jaina			= "Lady Jaina Prachtmeer",
-	RageWinterchill	= "Furor Winterfrost",
-	Anetheron		= "Anetheron",
-	Kazrogal		= "Kaz'rogal",
-	Azgalor			= "Azgalor",
+	GeneralBoss		= "Boss kommt",
+	RageWinterchill	= "Furor Winterfrost kommt",
+	Anetheron		= "Anetheron kommt",
+	Kazrogal		= "Kaz'rogal kommt",
+	Azgalor			= "Azgalor kommt",
 	WaveCheck		= "Derzeitige Welle = (%d+) von 8",
 	WarnWave_0		= "Welle %s/8",
 	WarnWave_1		= "Welle %s/8 - %s %s",

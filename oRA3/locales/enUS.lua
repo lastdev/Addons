@@ -19,7 +19,7 @@ L.toggleWithRaidDesc = "Opens and closes the oRA3 pane automatically along with 
 L["Show interface help"] = true
 L.showHelpTextsDesc = "The oRA3 interface is full of helpful texts intended to better describe what is going on and what the different interface elements actually do. Disabling this option will remove them, limiting the clutter on each pane. |cffff4411Requires a interface reload on some panes.|r"
 L["Ensure guild repairs are enabled for all ranks present in raid"] = true
-L.ensureRepairDesc = "If you are the Guild Master, whenever you join a raid group and is the leader or promoted, you will ensure that it is enabled for the duration of the raid (up to 300g). Once you leave the group, the flags will be restored to their original state |cffff4411provided you have not crashed during the raid.|r"
+L.ensureRepairDesc = "If you are the Guild Master, whenever you join a raid group and are the leader or promoted, you will ensure that guild repairs are enabled for the duration of the raid (up to 300g). Once you leave the group, the flags will be restored to their original state |cffff4411provided you have not crashed during the raid.|r"
 L.repairEnabled = "Enabled guild repairs for %s for the duration of this raid."
 
 L["Slash commands"] = true
@@ -27,8 +27,9 @@ L.slashCommands = [[
 oRA3 sports a range of slash commands to aid you in fast-paced raiding. In case you weren't around in the old CTRA days, here's a little reference. All of the slash commands have various shorthands and also longer, more descriptive alternatives in some cases, for convenience.
 
 |cff44ff44/radur|r - Opens the durability list.
+|cff44ff44/ragear|r - Opens the gear check list.
+|cff44ff44/ralag|r - Opens the latency list.
 |cff44ff44/razone|r - Opens the zone list.
-|cff44ff44/rares|r - Opens the resistance list.
 |cff44ff44/radisband|r - Instantly disbands the raid with no verification.
 |cff44ff44/raready|r - Performs a ready check.
 |cff44ff44/rainv|r - Invites the whole guild to your group.
@@ -43,7 +44,7 @@ L["Ready"] = true
 L["Not Ready"] = true
 L["No Response"] = true
 L["Offline"] = true
-L["Play a sound when a ready check is performed."] = true
+L["Play the ready check sound using the Master sound channel when a ready check is performed. This will play the sound while \"Sound Effects\" is disabled and at a higher volume."] = true
 L["Show window"] = true
 L["Show the window when a ready check is performed."] = true
 L["Hide window when done"] = true
@@ -60,14 +61,6 @@ L["Durability"] = true
 L["Average"] = true
 L["Broken"] = true
 L["Minimum"] = true
-
--- Resistances module
-L["Resistances"] = true
-L["Frost"] = true
-L["Fire"] = true
-L["Shadow"] = true
-L["Nature"] = true
-L["Arcane"] = true
 
 -- Invite module
 L["Invite"] = true
@@ -87,6 +80,7 @@ L["Invite zone"] = true
 L["Invite everyone in your guild who are in the same zone as you."] = true
 L["Guild rank invites"] = true
 L["Clicking any of the buttons below will invite anyone of the selected rank AND HIGHER to your group. So clicking the 3rd button will invite anyone of rank 1, 2 or 3, for example. It will first post a message in either guild or officer chat and give your guild members 10 seconds to leave their groups before doing the actual invites."] = true
+L["Only invite on keyword if in a raid group"] = true
 
 -- Promote module
 L["Demote everyone"] = true
@@ -123,6 +117,8 @@ L["Toggle whether the cooldown display should never show your own cooldowns. For
 L["Cooldowns"] = true
 L["Right-Click me for options!"] = true
 L["Bar Settings"] = true
+L["Label Text Settings"] = true
+L["Duration Text Settings"] = true
 L["Spawn test bar"] = true
 L["Use class color"] = true
 L["Custom color"] = true
@@ -135,10 +131,15 @@ L["Duration"] = true
 L["Unit name"] = true
 L["Spell name"] = true
 L["Short Spell name"] = true
+L["Font"] = true
+L["Font Size"] = true
 L["Label Align"] = true
 L["Left"] = true
 L["Right"] = true
 L["Center"] = true
+L["Outline"] = true
+L["Thick"] = true
+L["Thin"] = true
 L["Grow up"] = true
 
 -- Zone module
@@ -164,4 +165,15 @@ L["Sort"] = true
 L["Click to move this tank up."] = true
 L["Show"] = true
 L.showButtonHelp = "Show this tank in your personal sorted tank display. This option only has effect locally and will not change this tanks status for anyone else in your group."
+
+-- Latency Module
+L["Latency"] = true
+L["Home"] = true
+L["World"] = true
+
+-- Gear Module
+L["Gear"] = true
+L["Item Level"] = true
+L["Missing Gems"] = true
+L["Missing Enchants"] = true
 

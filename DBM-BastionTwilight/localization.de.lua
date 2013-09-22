@@ -19,9 +19,7 @@ L:SetOptionLocalization({
 	TBwarnWhileBlackout		= "Warne auch bei aktivem $spell:86788 vor $spell:86369",
 	TwilightBlastArrow		= "Zeige DBM-Pfeil, falls $spell:86369 in deiner Nähe ist",
 	RangeFrame				= "Zeige Abstandsfenster (10m)",
-	BlackoutShieldFrame		= "Zeige Lebensanzeige mit einem Balken für $spell:86788",
-	BlackoutIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(86788),
-	EngulfingIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(86622)
+	BlackoutShieldFrame		= "Zeige Lebensanzeige mit einem Balken für $spell:86788"
 })
 
 L:SetMiscLocalization({
@@ -45,20 +43,13 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	specWarnBossLow			= "Zeige Spezialwarnung, wenn Bosse unter 30% Lebenspunkten sind",
-	SpecWarnGrounded		= "Zeige Spezialwarnung, falls dir der $spell:83581 Buff fehlt\n(~10 Sekunden vor dem Wirken von $spell:83067)",
-	SpecWarnSearingWinds	= "Zeige Spezialwarnung, falls dir der $spell:83500 Buff fehlt\n(~10 Sekunden vor dem Wirken von $spell:83565)",
+	specWarnBossLow			= "Spezialwarnung, wenn Bosse unter 30% Lebenspunkten sind",
+	SpecWarnGrounded		= "Spezialwarnung, falls dir der $spell:83581 Buff fehlt<br/>(~10 Sekunden vor dem Wirken von $spell:83067)",
+	SpecWarnSearingWinds	= "Spezialwarnung, falls dir der $spell:83500 Buff fehlt<br/>(~10 Sekunden vor dem Wirken von $spell:83565)",
 	timerTransition			= "Dauer des Phasenübergangs anzeigen",
 	RangeFrame				= "Zeige Abstandsfenster automatisch bei Bedarf",
-	yellScrewed				= "Schreie, wenn du gleichzeitig von $spell:83099 und $spell:92307\nbetroffen bist",
-	InfoFrame				= "Zeige Infofenster für Spieler ohne $spell:83581 bzw. $spell:83500",
-	HeartIceIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(82665),
-	BurningBloodIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(82660),
-	LightningRodIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(83099),
-	GravityCrushIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(84948),
-	FrostBeaconIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92307),
-	StaticOverloadIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92067),
-	GravityCoreIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(92075)
+	yellScrewed				= "Schreie, wenn du gleichzeitig von $spell:83099 und $spell:92307 betroffen bist",
+	InfoFrame				= "Zeige Infofenster für Spieler ohne $spell:83581 bzw. $spell:83500"
 })
 
 L:SetMiscLocalization({
@@ -80,7 +71,6 @@ L:SetOptionLocalization({
 	CorruptingCrashArrow	= "Zeige DBM-Pfeil, falls $spell:81685 nahe bei dir ist",
 	InfoFrame				= "Zeige Infofenster für $journal:3165",
 	RangeFrame				= "Zeige Abstandsfenster (5m) für $journal:3165",
-	SetIconOnWorship		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(91317),
 	SetIconOnCreature		= "Setze Zeichen auf Verfinsterte Geschöpfe"
 })
 
@@ -104,16 +94,16 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	WarnOrbSoon			= "Zeige Vorwarnung für Schattenkugeln (5s zuvor, sekündlich)\n(voraussichtlich, kann ungenau sein, kann spammen)",
+	WarnOrbSoon			= "Zeige Vorwarnung für Schattenkugeln (5s zuvor, sekündlich)<br/>(voraussichtlich, kann ungenau sein, kann spammen)",
 	warnWrackJump		= "Verkünde Sprungziele von $spell:89421",
-	warnAggro			= "Verkünde Spieler mit Aggro, wenn Schattenkugeln erscheinen\n(mögliches Ziel der Schattenkugeln)",
-	SpecWarnAggroOnYou	= "Zeige Spezialwarnung, falls du Aggro hast, wenn Schattenkugeln\nerscheinen (mögliches Ziel der Schattenkugeln)",
-	SpecWarnOrbs		= "Zeige Spezialwarnung, wenn Schattenkugeln erscheinen (voraussichtlich)",
+	warnAggro			= "Verkünde Spieler mit Aggro, wenn Schattenkugeln erscheinen<br/>(mögliches Ziel der Schattenkugeln)",
+	SpecWarnAggroOnYou	= "Spezialwarnung, falls du Aggro hast, wenn Schattenkugeln erscheinen (mögliches Ziel der Schattenkugeln)",
+	SpecWarnOrbs		= "Spezialwarnung, wenn Schattenkugeln erscheinen (voraussichtlich)",
 	TimerEggWeakening	= "Zeige Timer, wenn $spell:87654 zerfällt",
 	TimerEggWeaken		= "Dauer der Erneuerung des $spell:87654 anzeigen",
-	TimerOrbs			= "Zeige Zeit bis nächste Schattenkugeln erscheinen\n(voraussichtlich, kann ungenau sein)",
-	SetIconOnOrbs		= "Setze Zeichen auf Spieler mit Aggro, wenn Schattenkugeln erscheinen\n(mögliches Ziel der Schattenkugeln)",
-	OrbsCountdown		= "Spiele Countdown-Sound für Schattenkugeln",
+	TimerOrbs			= "Zeige Zeit bis nächste Schattenkugeln erscheinen<br/>(voraussichtlich, kann ungenau sein)",
+	SetIconOnOrbs		= "Setze Zeichen auf Spieler mit Aggro, wenn Schattenkugeln erscheinen<br/>(mögliches Ziel der Schattenkugeln)",
+	OrbsCountdown		= "Spiele akustischen Countdown für Schattenkugeln",
 	InfoFrame			= "Zeige Infofenster für Spieler mit Aggro"
 })
 

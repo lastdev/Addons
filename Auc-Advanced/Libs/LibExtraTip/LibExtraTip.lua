@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 local LIBNAME = "LibExtraTip"
 local VERSION_MAJOR = 1
-local VERSION_MINOR = 325
+local VERSION_MINOR = 329
 -- Minor Version cannot be a SVN Revison in case this library is used in multiple repositories
 -- Should be updated manually with each (non-trivial) change
 
@@ -37,7 +37,7 @@ local LIBSTRING = LIBNAME.."_"..VERSION_MAJOR.."_"..VERSION_MINOR
 local lib = LibStub:NewLibrary(LIBNAME.."-"..VERSION_MAJOR, VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/LibExtraTip/LibExtraTip.lua $","$Rev: 342 $","5.15.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/LibExtraTip/LibExtraTip.lua $","$Rev: 355 $","5.15.DEV.", 'auctioneer', 'libs')
 
 -- Call function to deactivate any outdated version of the library.
 -- (calls the OLD version of this function, NOT the one defined in this
@@ -90,6 +90,9 @@ local iconpath = "Interface\\MoneyFrame\\UI-"
 local goldicon = "%d|T"..iconpath.."GoldIcon:0|t"
 local silvericon = "%s|T"..iconpath.."SilverIcon:0|t"
 local coppericon = "%s|T"..iconpath.."CopperIcon:0|t"
+
+-- Other constants
+local MATHHUGE = math.huge
 
 -- Function that calls all the interested tooltips
 local function ProcessCallbacks(reg, tiptype, tooltip, ...)
@@ -269,7 +272,7 @@ local function OnTooltipSetBattlePet(tooltip, data)
 		local maxHealth = data.maxHealth
 		local power = data.power
 		local speed = data.speed
-		local battlePetID = data.battlePetID or 0
+		local battlePetID = data.battlePetID or "0x0000000000000000"
 		local name = data.name
 		local customName = data.customName
 		local petType = data.petType
@@ -278,7 +281,7 @@ local function OnTooltipSetBattlePet(tooltip, data)
 			colcode = NORMAL_FONT_COLOR_CODE
 			r, g, b = NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b
 		else
-			local coltable = ITEM_QUALITY_COLORS[breedQuality]
+			local coltable = ITEM_QUALITY_COLORS[breedQuality] or ITEM_QUALITY_COLORS[0]
 			colcode = coltable.hex
 			r, g, b = coltable.r, coltable.g, coltable.b
 		end
@@ -288,7 +291,7 @@ local function OnTooltipSetBattlePet(tooltip, data)
 		local link = reg.item
 		if not link then
 			-- it's a bit of a pain that we need to reconstruct a link here, just so it can be chopped up again...
-			link = format("%s|Hbattlepet:%d:%d:%d:%d:%d:%d:%d|h[%s]|h|r", colcode, speciesID, level, breedQuality, maxHealth, power, speed, battlePetID, customName or name)
+			link = format("%s|Hbattlepet:%d:%d:%d:%d:%d:%d:%s|h[%s]|h|r", colcode, speciesID, level, breedQuality, maxHealth, power, speed, battlePetID, customName or name)
 		end
 
 		reg.hasItem = true
@@ -645,28 +648,29 @@ end
 	Adds a line to a registered tooltip.
 	@param tooltip GameTooltip object
 	@param text the contents of the tooltip line
-	@param r red component of the tooltip line color (optional)
-	@param g green component of the tooltip line color (optional)
-	@param b blue component of the tooltip line color (optional)
-	@param embed override the lib's embedMode setting (optional)
+	@param r (0-1) red component of the tooltip line color (optional)
+	@param g (0-1) green component of the tooltip line color (optional)
+	@param b (0-1) blue component of the tooltip line color(optional)
+	@param embed (boolean) override the lib's embedMode setting (optional)
+	@param wrap (boolean) specify line-wrapping for long lines (optional)
 	@see SetEmbedMode
 	@since 1.0
 ]]
-function lib:AddLine(tooltip,text,r,g,b,embed)
+function lib:AddLine(tooltip, text, r, g, b, embed, wrap)
 	local reg = self.tooltipRegistry[tooltip]
 	if not reg then return end
 
 	if reg.NoColumns then
 		embed = false
 	else
-		if r and not g then embed = r r = nil end
+		if r and not g then embed = r r = nil end -- deprecated: (tooltip, text, embed) form
 		if embed == nil then embed = self.embedMode end
 	end
 	if not embed then
-		reg.extraTip:AddLine(text,r,g,b)
+		reg.extraTip:AddLine(text, r, g, b, wrap)
 		reg.extraTipUsed = true
 	else
-		tooltip:AddLine(text,r,g,b)
+		tooltip:AddLine(text, r, g, b, wrap)
 	end
 end
 
@@ -800,7 +804,6 @@ end
 
 --[[-
 	Set a (BattlePet) tooltip to (battlepetpet)link
-	(partially based on Blizzard code in BattlePetTooltip.lua)
 	Although Pet Cages cannot be stacked, some Addons may wish to group identical Pets together for display purposes
 	@param tooltip Frame(BattlePetTooltipTemplate) object
 	@param link battlepet link to display in the tooltip
@@ -808,6 +811,9 @@ end
 	@param detail additional detail items to set for the callbacks (optional)
 	@return true if successful
 	@since 1.325
+
+	-- ref: BattlePetToolTip_Show in FrameXML\BattlePetTooltip.lua
+	-- ref: FloatingBattlePet_Show in FrameXML\FloatingPetBattleTooltip.lua
 ]]
 local BATTLE_PET_TOOLTIP = {}
 function lib:SetBattlePetAndCount(tooltip, link, quantity, detail)
@@ -832,9 +838,9 @@ function lib:SetBattlePetAndCount(tooltip, link, quantity, detail)
 	BATTLE_PET_TOOLTIP.speed = tonumber(speed)
 	local customName = strmatch(tail, "%[(.+)%]")
 	if (customName ~= BATTLE_PET_TOOLTIP.name) then
-		BATTLE_PET_TOOLTIP.customName = customName;
+		BATTLE_PET_TOOLTIP.customName = customName
 	else
-		BATTLE_PET_TOOLTIP.customName = nil;
+		BATTLE_PET_TOOLTIP.customName = nil
 	end
 
 	-- set up reg
@@ -852,6 +858,28 @@ function lib:SetBattlePetAndCount(tooltip, link, quantity, detail)
 	-- load the tooltip (will trigger a call to OnTooltipSetBattlePet)
 	reg.ignoreOnCleared = true
 	BattlePetTooltipTemplate_SetBattlePet(tooltip, BATTLE_PET_TOOLTIP)
+
+	local owned = C_PetJournal.GetOwnedBattlePetString(speciesID)
+	tooltip.Owned:SetText(owned)
+	if owned == nil then
+		if tooltip.Delimiter then
+			-- if .Delimiter is present it requires special handling (FloatingBattlePetTooltip)
+			tooltip:SetSize(260,150)
+			tooltip.Delimiter:ClearAllPoints()
+			tooltip.Delimiter:SetPoint("TOPLEFT",tooltip.SpeedTexture,"BOTTOMLEFT",-6,-5)
+		else
+			tooltip:SetSize(260,122)
+		end
+	else
+		if tooltip.Delimiter then
+			tooltip:SetSize(260,164)
+			tooltip.Delimiter:ClearAllPoints()
+			tooltip.Delimiter:SetPoint("TOPLEFT",tooltip.SpeedTexture,"BOTTOMLEFT",-6,-19)
+		else
+			tooltip:SetSize(260,136)
+		end
+	end
+
 	tooltip:Show()
 	reg.ignoreOnCleared = nil
 	return true
@@ -957,6 +985,18 @@ end
 	@since 1.0
 	Addendum: generates 2 method tables, for prehooks and posthooks. Where the prehook sets a flag, a posthook must be installed to clear it. Specifically: reg.ignoreOnCleared
 ]]
+-- Hybrid mode GetAuctionItemInfo for transition from WoW 5.3 to 5.4
+-- Temporary - do not use in new code!
+local _,_,_,toc = GetBuildInfo()
+local hybridGetAuctionItemInfo
+if toc < 50400 then
+	hybridGetAuctionItemInfo = GetAuctionItemInfo
+else
+	function hybridGetAuctionItemInfo(...)
+		local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName, saleStatus, itemId, hasAllInfo =  GetAuctionItemInfo(...)
+		return name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner, saleStatus, itemId, hasAllInfo
+	end
+end
 function lib:GenerateTooltipMethodTable() -- Sets up hooks to give the quantity of the item
 	local tooltipRegistry = self.tooltipRegistry
 	self.GenerateTooltipMethodTable = nil -- only run once
@@ -969,7 +1009,7 @@ function lib:GenerateTooltipMethodTable() -- Sets up hooks to give the quantity 
 			OnTooltipCleared(self)
 			local reg = tooltipRegistry[self]
 			reg.ignoreOnCleared = true
-			local _,_,q,_,cu,_,_,minb,inc,bo,ba,hb,own = GetAuctionItemInfo(type,index)
+			local _,_,q,_,cu,_,_,minb,inc,bo,ba,hb,own = hybridGetAuctionItemInfo(type,index)
 			reg.quantity = q
 			reg.additional.event = "SetAuctionItem"
 			reg.additional.eventType = type

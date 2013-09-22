@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(175, "DBM-Party-Cataclysm", 11, 76)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(52155)
-mod:SetModelID(37788)
 mod:SetZone()
 mod:SetUsedIcons(7, 8)
 
@@ -56,7 +55,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(96477) then
+	if args.spellId == 96477 then
 		toxicLinkTargets[#toxicLinkTargets + 1] = args.destName
 		if self:IsInCombat() then--only start cd timer on boss fight, not when trash does it.
 			timerToxicLinkCD:Start()
@@ -77,12 +76,12 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		self:Unschedule(warnToxicLinkTargets)
 		self:Schedule(0.2, warnToxicLinkTargets)
-	elseif args:IsSpellID(96509) then
+	elseif args.spellId == 96509 then
 		warnBreathHethiss:Show()
 		timerBreathHethiss:Start()
-	elseif args:IsSpellID(96512) then
+	elseif args.spellId == 96512 then
 		warnBlessing:Show()
-	elseif args:IsSpellID(96466) and args:IsDestTypePlayer() then
+	elseif args.spellId == 96466 and args:IsDestTypePlayer() then
 		warnWhisperHethiss:Show(args.destName)
 		timerWhisperHethiss:Start(args.destName)
 		specWarnWhisperHethiss:Show(args.sourceName)
@@ -90,9 +89,9 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(96466) then
+	if args.spellId == 96466 then
 		timerWhisperHethiss:Cancel(args.destName)
-	elseif args:IsSpellID(96477) then
+	elseif args.spellId == 96477 then
 		DBM.Arrow:Hide()
 		if self.Options.SetIconOnToxicLink then
 			self:SetIcon(args.destName, 0)
@@ -101,7 +100,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(96842) then
+	if args.spellId == 96842 then
 		warnBloodvenom:Show()
 		specWarnBloodvenom:Show()
 	end

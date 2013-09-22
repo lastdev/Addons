@@ -1,7 +1,7 @@
 ﻿--[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: EnxAutoDisenchant.lua 5345 2012-09-05 11:17:00Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: EnxAutoDisenchant.lua 5422 2013-06-15 18:03:26Z brykrys $
 	URL: http://enchantrix.org/
 
 	Automatic disenchant scanner.
@@ -28,7 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix/EnxAutoDisenchant.lua $", "$Rev: 5345 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Enchantrix/EnxAutoDisenchant.lua $", "$Rev: 5422 $")
 
 local auto_de_session_ignore_list = {}
 local auto_de_frame
@@ -523,11 +523,13 @@ function showPrompt(link, bag, slot, value, spell)
 		end
 	end
 
-	if (AucAdvanced and AucAdvanced.Modules and AucAdvanced.Modules.Util
-		and AucAdvanced.Modules.Util.ItemSuggest) then
-		local suggestion = AucAdvanced.Modules.Util.ItemSuggest.itemsuggest( link, count )
-		if (suggestion) then
-			auto_de_prompt.Lines[5]:SetText( format( _ENCH("GuiAutoDESuggestion"), suggestion)  );
+	if AucAdvanced then
+		local itemSuggest = AucAdvanced.GetModule("ItemSuggest")
+		if itemSuggest then
+			local suggestion = itemSuggest.GetSuggestText(itemSuggest.Suggest( link, count ), "auto")
+			if suggestion ~= "Unknown" then
+				auto_de_prompt.Lines[5]:SetText( format( _ENCH("GuiAutoDESuggestion"), suggestion)  );
+			end
 		end
 	end
 
@@ -639,10 +641,10 @@ local function initUI()
 		auto_de_prompt.Lines[i] = auto_de_prompt:CreateFontString("AutoDisenchantPromptLine"..i, "HIGH")
 		if (i == 1) then
 			auto_de_prompt.Lines[i]:SetPoint("TOPLEFT", auto_de_prompt.Item, "TOPRIGHT", 5, 5)
-			auto_de_prompt.Lines[i]:SetFont("Fonts\\FRIZQT__.TTF",16)
+			auto_de_prompt.Lines[i]:SetFont(STANDARD_TEXT_FONT,16)
 		else
 			auto_de_prompt.Lines[i]:SetPoint("TOPLEFT", auto_de_prompt.Lines[i-1], "BOTTOMLEFT", 0, -5)
-			auto_de_prompt.Lines[i]:SetFont("Fonts\\FRIZQT__.TTF",13)
+			auto_de_prompt.Lines[i]:SetFont(STANDARD_TEXT_FONT,13)
 		end
 		auto_de_prompt.Lines[i]:SetWidth(350)
 		auto_de_prompt.Lines[i]:SetJustifyH("LEFT")

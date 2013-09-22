@@ -1,6 +1,6 @@
 --[[
 	SelectBox
-	Version: 5.15.5380 (LikeableLyrebird)
+	Version: 5.18.5433 (PassionatePhascogale)
 	Revision: $Id: SelectBox.lua 312 2011-06-14 07:33:25Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 

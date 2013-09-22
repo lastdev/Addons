@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod("Omen", "DBM-WorldEvents", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7834 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9843 $"):sub(12, -3))
 mod:SetCreatureID(15467)
 mod:SetModelID(15879)
-mod:SetZone(241)--Moonglade
+mod:SetReCombatTime(10)
+mod:SetZone()
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS",
 	"SPELL_PERIODIC_DAMAGE",
 	"SPELL_PERIODIC_MISSED"
@@ -28,10 +29,10 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(104903) then
+	if args.spellId == 104903 then
 		warnCleave:Show()
 		timerCleaveCD:Start()
-	elseif args:IsSpellID(26540) then
+	elseif args.spellId == 26540 then
 		warnStarfall:Show()
 		timerStarfallCD:Start()
 	end

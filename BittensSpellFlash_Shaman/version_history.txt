@@ -1,3 +1,30 @@
+== Version 50400.1.1
+* Bugfix update to Bitten's SpellFlash Library.
+
+== Version 50400.1.0
+* Restoration: It's now possible to suggest both Water totems at once if you have the new Totemic Persistence talent.
+
+== Version 3.7.2
+* All: No longer flash weapon imbues when a fishing pole is equipped.
+
+== Version 3.7.1
+* All: Now flashes food buffs.
+* All: Now flashes Purge.
+
+== Version 3.7.0
+Updated for patch 5.3:
+* Elemental: Changed the conditions for Ancestral Swiftness, since it's fine to use on Lava Burst now that it has a 2 second cast time.
+* Elemental & Enhancement: Adjusted the flashing while moving to take into account that Lightning Bolt can always be cast.
+* Enhancement: Elemental Blast waits for at least 1 stack of Maelstrom Weapon, and turns into an optional flash while you are moving.
+
+== Version 3.6.0
+* Elemental: Added an AoE rotation.
+* Elemental: Flame Shock can now flash during Ascendance.
+* Elemental: Lava Burst can now flash when Flame Shock is not up if Flame Shock is on cooldown.
+* Elemental: Lava Burst flashes small and green at the same time that Ascendance flashes (single target), to remind you that will be next if you press Ascendance.
+* Elemental: Added suggested flashing for when you are moving.
+* Elemental: Thunderstorm can now flash during combat, in case you are weaving in Chain Lightnings for 2-target AoE.
+
 == Version 3.5.1
 * Enhancement: Fix for an occasional Lua error.
 
@@ -79,20 +106,3 @@ This beta release uses Bitten's SpellFlash Library version 3.  If you update you
 == Version 2.0.0
 * Enhancement: Added an Enhancement rotation!
 * All: Flashes Wind Shear.
-
-== Version 1.2.1
-* Added German localization (thanks Gucki!)
-
-== Version 1.2.0
-* Add Earth Shield flashing for Resto.
-* Add fire totem flashing for Elemental.
-* Disables Blizzard's default proc hilighting when one of the rotations is in use.
-* Should now work on non-English clients.
-* Added localization support.
-* Plays nicer with other addons.
-
-== Version 1.1.0
-* Remove the attempts at Unleash Elements - it's to tricky to get the timing and the best case scenario is a very minimal dps gain.
-
-== Version 1.0.0
-* Initial Alpha Release

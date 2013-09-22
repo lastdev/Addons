@@ -999,11 +999,17 @@ function ReagentRestocker:purchaseItems(itemID, toBuy)
 	end
 end	
 
-MyScanningTooltip = _G.CreateFrame( "GameTooltip", "MyScanningTooltip", nil, "GameTooltipTemplate" ); -- Tooltip name cannot be nil
+--MyScanningTooltip = _G.CreateFrame( "GameTooltip", "MyScanningTooltip", nil, "GameTooltipTemplate" ); -- Tooltip name cannot be nil
+_G.CreateFrame( "GameTooltip", "MyScanningTooltip", nil, "GameTooltipTemplate" ); -- Tooltip name cannot be nil
+MyScanningTooltip = _G.MyScanningTooltip
 MyScanningTooltip:SetOwner( WorldFrame, "ANCHOR_NONE" );
+--MyScanningTooltip:AddFontStrings(
+--	MyScanningTooltip:CreateFontString( "$parentTextLeft1", nil, "GameTooltipText" ),
+--	MyScanningTooltip:CreateFontString( "$parentTextRight1", nil, "GameTooltipText" ) );
 
 -- Returns true if the item is able to be sold and if preferences dictate it should be; false otherwise
-function ReagentRestocker:isToBeSold(itemID)
+-- bagID,bagSlotID needed for proper tooltip scanning.
+function ReagentRestocker:isToBeSold(itemID,bagID,bagSlotID)
 
 	-- Can't sell it if we don't know what it is.
 	if self:safeGetItemInfo(itemID) == nil then
@@ -1011,10 +1017,11 @@ function ReagentRestocker:isToBeSold(itemID)
 	end
 	
 	local _, itemLink, quality = self:safeGetItemInfo(itemID)
-	if ReagentRestockerDB.Items[itemID] ~= nil then
+	--dprint("Item link: "..itemLink)
+	--if ReagentRestockerDB.Items[itemID] ~= nil then
 		--dprint("Item name: " .. ReagentRestockerDB.Items[itemID]["0"])
 		--dprint("Sell price: " .. nCTS(ReagentRestocker:getSellPrice(itemID)))
-	end
+	--end
 		--[[
 		 IF:
 		 	--We are automatically selling greys and it is in fact a grey, or
@@ -1026,32 +1033,37 @@ function ReagentRestocker:isToBeSold(itemID)
 		]]--
 
 		--Don't sell BoE, Soulbound items if the user doesn't want them sold.
---		if itemLink then
---			-- Experimental tooltip scanning, mostly borrowed form WoWWiki
---			--MyScanningTooltip:SetOwner( WorldFrame, "ANCHOR_NONE" );
---
---			MyScanningTooltip:ClearLines()
---
---			if bagID == _G.BANK_CONTAINER then
---				MyScanningTooltip:SetInventoryItem("player", _G.BankButtonIDToInvSlotID(bagSlotID));
---			elseif bagID == _G.KEYRING_CONTAINER then
---				MyScanningTooltip:SetInventoryItem("player", _G.KeyRingButtonIDToInvSlotID(bagSlotID));
---			else
---				MyScanningTooltip:SetBagItem(bagID, bagSlotID);
---			end
---			
---			if tooltipsContain(MyScanningTooltip, _G.ITEM_BIND_ON_EQUIP, MyScanningTooltip:GetRegions()) and ReagentRestockerDB.Options.KeepBindOnEquip then
---				--dprint(ReagentRestockerDB.Items[itemID].item_name .. " is BOE")
---				return false
---			end
---			
---			if tooltipsContain(MyScanningTooltip, _G.ITEM_SOULBOUND, MyScanningTooltip:GetRegions()) and ReagentRestockerDB.Options.KeepSoulbound then
---				--dprint(ReagentRestockerDB.Items[itemID].item_name .. " is Soulbound")
---				return false
---			end
---			
---			if itemID == 66933 then dprint(itemID .. " wasn't identified as junk") end
---		end
+		
+		if itemLink then
+			-- Experimental tooltip scanning, mostly borrowed form WoWWiki
+			--MyScanningTooltip:SetOwner( WorldFrame, "ANCHOR_NONE" );
+			--dprint("Checking for soulbound")
+			
+			MyScanningTooltip:ClearLines()
+				
+			if bagID == _G.BANK_CONTAINER then
+				--dprint("BANK")
+				MyScanningTooltip:SetInventoryItem("player", _G.BankButtonIDToInvSlotID(bagSlotID));
+			elseif bagID == _G.KEYRING_CONTAINER then
+				--dprint("KEYRING")
+				MyScanningTooltip:SetInventoryItem("player", _G.KeyRingButtonIDToInvSlotID(bagSlotID));
+			else
+				--dprint("BAG")
+				MyScanningTooltip:SetBagItem(bagID, bagSlotID);
+			end
+			
+			if tooltipsContain(MyScanningTooltip, _G.ITEM_BIND_ON_EQUIP) and ReagentRestockerDB.Options.KeepBindOnEquip then
+				--dprint(ReagentRestockerDB.Items[itemID].item_name .. " is BOE")
+				return false
+			end
+			
+			if tooltipsContain(MyScanningTooltip, _G.ITEM_SOULBOUND) and ReagentRestockerDB.Options.KeepSoulbound then
+				--dprint(ReagentRestockerDB.Items[itemID].item_name .. " is Soulbound")
+				return false
+			end
+			
+			if itemID == 66933 then dprint(itemID .. " wasn't identified as junk") end
+		end
 
 		local sellConsumable = false;
 		
@@ -1487,23 +1499,25 @@ end
 local regions;
 
 -- Require regions from {tooltip:GetRegions()} to save memory
-function tooltipsContain(tooltip, string, ...)
+function tooltipsContain(tooltip, string)
 	-- initialize outside loop to prevent creating losts of copies that take lots of memory.
 	local text;
-	local region;
 	
-    for i = 1, select("#", ...) do
-        region = select(i, ...)
+	--dprint("# lines: "..MyScanningTooltip:NumLines())
+	
+    for i = 1, MyScanningTooltip:NumLines() do
 
-        if region and region:GetObjectType() == "FontString" then
-            text = region:GetText() -- string or nil
-            if text ~= nil then
-            	dprint("TEXT: " .. text .. " Looking for: " .. string)
-            	if string.find(text, string)~=nil then
-					return true
-				end
-            end
-        end
+    	local left = _G["MyScanningTooltipTextLeft"..i]:GetText()
+	if left and string.find(left, string)~=nil then
+	    	--dprint(left)
+		return true
+	end
+
+    	local right = _G["MyScanningTooltipTextRight"..i]:GetText()
+	if right and string.find(right, string)~=nil then
+	    	--dprint(right)
+		return true
+	end
     end
     return false
 end
@@ -1523,7 +1537,7 @@ function ReagentRestocker:sell()
 				local itemID = getIDFromItemLink(itemLink);
 				
 				-- If if can and should be sold, sell it
-				if self:isToBeSold(itemID) then
+				if self:isToBeSold(itemID,bagID,bagSlotID) then
 					local _, qty = GetContainerItemInfo(bagID, bagSlotID)
 					UseContainerItem(bagID,bagSlotID)
 					

@@ -3,10 +3,10 @@
 Core.lua
 Core functions for Ackis Recipe List
 ************************************************************************
-File date: 2012-12-19T03:08:12Z
-File hash: c79d759
-Project hash: f922565
-Project version: 2.4.6
+File date: 2013-08-13T03:20:46Z
+File hash: e9738aa
+Project hash: 4bcba04
+Project version: 2.5.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -401,7 +401,7 @@ function addon:OnInitialize()
 		if not addon.db.profile.recipes_in_tooltips then
 			return
 		end
-		local name, tooltip_unit = self:GetUnit()
+		local _, tooltip_unit = self:GetUnit()
 
 		if not tooltip_unit then
 			return
@@ -537,13 +537,16 @@ local TRADESKILL_ADDON_INITS = {
 		scan_button:SetWidth(80)
 		_G.Skillet:AddButtonToTradeskillWindow(scan_button)
 	end,
+	TSMCraftingTradeSkillFrame = function(scan_button)
+		local anchor = _G.TSMCraftingTradeSkillFrame
+		scan_button:SetParent(anchor)
+		scan_button:SetPoint("TOPRIGHT", anchor, "TOPRIGHT", -30, -3)
+		scan_button:Show()
+	end,
 }
 
-function addon:CreateScanButton()
-	local scan_button = _G.CreateFrame("Button", nil, _G.TradeSkillFrame, "UIPanelButtonTemplate")
-	scan_button:SetHeight(20)
-	scan_button:RegisterForClicks("LeftButtonUp")
-	scan_button:SetText(L["Scan"])
+function addon:InitializeScanButton()
+	local scan_button = self.scan_button
 
 	-------------------------------------------------------------------------------
 	-- Grab the first lucky Trade Skill AddOn that exists and hand the scan button to it.
@@ -559,46 +562,6 @@ function addon:CreateScanButton()
 	scan_button:SetFrameLevel(scan_parent:GetFrameLevel() + 1)
 	scan_button:SetFrameStrata(scan_parent:GetFrameStrata())
 	scan_button:Enable()
-
-	scan_button:SetScript("OnClick", function(self, button, down)
-		local main_panel = addon.Frame
-		local prev_profession
-
-		if main_panel then
-			prev_profession = private.ORDERED_PROFESSIONS[main_panel.current_profession]
-		end
-		local shift_pressed = _G.IsShiftKeyDown()
-		local alt_pressed = _G.IsAltKeyDown()
-		local ctrl_pressed = _G.IsControlKeyDown()
-
-		if shift_pressed and not alt_pressed and not ctrl_pressed then
-			addon:Scan(true)
-		elseif alt_pressed and not shift_pressed and not ctrl_pressed then
-			addon:ClearWaypoints()
-		elseif ctrl_pressed and not shift_pressed and not alt_pressed then
-			local current_prof = _G.GetTradeSkillLine()
-			addon:DumpProfession(current_prof)
-		elseif not shift_pressed and not alt_pressed and not ctrl_pressed then
-			if main_panel and main_panel:IsVisible() and prev_profession == _G.GetTradeSkillLine() then
-				main_panel:Hide()
-			else
-				addon:Scan(false)
-				addon:AddWaypoint()
-			end
-		end
-	end)
-
-	scan_button:SetScript("OnEnter", function(self)
-		local tooltip = _G.GameTooltip
-
-		_G.GameTooltip_SetDefaultAnchor(tooltip, self)
-		tooltip:SetText(L["SCAN_RECIPES_DESC"])
-		tooltip:Show()
-	end)
-	scan_button:SetScript("OnLeave", function() _G.GameTooltip:Hide() end)
-
-	self.scan_button = scan_button
-	return scan_button
 end
 
 function addon:TRADE_SKILL_SHOW()
@@ -613,9 +576,62 @@ function addon:TRADE_SKILL_SHOW()
 	local scan_button = self.scan_button
 
 	if not scan_button then
-		scan_button = self:CreateScanButton()
-		self.CreateScanButton = nil
+		scan_button = _G.CreateFrame("Button", nil, _G.TradeSkillFrame, "UIPanelButtonTemplate")
+		scan_button:SetHeight(20)
+		scan_button:RegisterForClicks("LeftButtonUp")
+		scan_button:SetText(L["Scan"])
+
+		scan_button:SetScript("OnClick", function(self, _, _)
+			local main_panel = addon.Frame
+			local prev_profession
+
+			if main_panel then
+				prev_profession = private.ORDERED_PROFESSIONS[main_panel.current_profession]
+			end
+			local shift_pressed = _G.IsShiftKeyDown()
+			local alt_pressed = _G.IsAltKeyDown()
+			local ctrl_pressed = _G.IsControlKeyDown()
+
+			if shift_pressed and not alt_pressed and not ctrl_pressed then
+				addon:Scan(true)
+			elseif alt_pressed and not shift_pressed and not ctrl_pressed then
+				addon:ClearWaypoints()
+				--[===[@debug@
+			elseif ctrl_pressed then
+				local current_prof = _G.GetTradeSkillLine()
+
+				if shift_pressed and not alt_pressed then
+					addon:ScanProfession(current_prof)
+				elseif not shift_pressed and not alt_pressed then
+					addon:DumpProfession(current_prof)
+				end
+				--@end-debug@]===]
+			elseif not shift_pressed and not alt_pressed and not ctrl_pressed then
+				if main_panel and main_panel:IsVisible() and prev_profession == _G.GetTradeSkillLine() then
+					main_panel:Hide()
+				else
+					addon:Scan(false)
+					addon:AddWaypoint()
+				end
+			end
+		end)
+
+		scan_button:SetScript("OnEnter", function(self)
+			local tooltip = _G.GameTooltip
+
+			_G.GameTooltip_SetDefaultAnchor(tooltip, self)
+			tooltip:SetText(L["SCAN_RECIPES_DESC"])
+			--[===[@debug@
+			tooltip:AddLine("Control-click to generate a Lua code dump.")
+			tooltip:AddLine("Control-Shift-click to scan for issues.")
+			--@end-debug@]===]
+			tooltip:Show()
+		end)
+		scan_button:SetScript("OnLeave", function() _G.GameTooltip:Hide() end)
+
+		self.scan_button = scan_button
 	end
+	self:InitializeScanButton()
 
 	if scan_button:GetParent() == _G.TradeSkillFrame then
 		scan_button:ClearAllPoints()
@@ -797,21 +813,16 @@ do
 	}
 
 	local function SetPreviousRanksKnown(previous_rank_id, profession_recipes, tradeskill_is_linked)
-
 		local previous_rank_recipe = profession_recipes[previous_rank_id]
 
 		if previous_rank_recipe then
 			previous_rank_recipe:SetAsKnownOrLinked(tradeskill_is_linked)
-		else
-			self:Debug("%s (%d): %s", entry_name, previous_rank_id, L["MissingFromDB"])
 		end
-
 		local nested_previous_rank_id = previous_rank_recipe:PreviousRankID()
 
 		if nested_previous_rank_id then
 			SetPreviousRanksKnown(nested_previous_rank_id, profession_recipes, tradeskill_is_linked)
 		end
-
 	end
 
 	--- Causes a scan of the tradeskill to be conducted. Function called when the scan button is clicked.   Parses recipes and displays output
@@ -871,7 +882,7 @@ do
 		local profession_specialties = SpecialtyTable[profession_name]
 
 		if profession_specialties then
-			for index, book_index in ipairs(specialtices_indices) do
+			for _, book_index in ipairs(specialtices_indices) do
 				local spell_name = _G.GetSpellBookItemName(book_index, _G.BOOKTYPE_PROFESSION)
 
 				if not spell_name then
@@ -924,7 +935,7 @@ do
 		local profession_recipes = private.profession_recipe_list[profession_name]
 		local recipes_found = 0
 
-		for spell_id, recipe in pairs(profession_recipes) do
+		for _, recipe in pairs(profession_recipes) do
 			recipe:RemoveState("KNOWN")
 			recipe:RemoveState("RELEVANT")
 			recipe:RemoveState("VISIBLE")
@@ -949,7 +960,7 @@ do
 				else
 					--[===[@debug@
 					local profession_id
-					for name, profession_spell_id in pairs(private.PROFESSION_SPELL_IDS) do
+					for _, profession_spell_id in pairs(private.PROFESSION_SPELL_IDS) do
 						if profession_name == _G.GetSpellInfo(profession_spell_id) then
 							profession_id = profession_spell_id
 							break
@@ -975,7 +986,7 @@ do
 			_G.MRTAPI:PopFilterSelection()
 		else
 			for skill_index = _G.GetNumTradeSkills(), 1, -1 do
-				local entry_name, _, _, is_expanded = _G.GetTradeSkillInfo(skill_index)
+				local entry_name = _G.GetTradeSkillInfo(skill_index)
 
 				if header_list[entry_name] then
 					_G.CollapseTradeSkillSubClass(skill_index)
@@ -1001,8 +1012,7 @@ do
 		-- Everything is ready - display the GUI or dump the list to text.
 		-------------------------------------------------------------------------------
 		if textdump then
-			private.TextDump:AddLine(self:GetTextDump(profession_name))
-			private.TextDump:Display()
+			self:GetTextDump(profession_name)
 		else
 			if private.InitializeFrame then
 				private.InitializeFrame()
@@ -1016,7 +1026,6 @@ do
 	-------------------------------------------------------------------------------
 	-- Dumps recipe output in the format requested by the user
 	-------------------------------------------------------------------------------
-	local text_table = {}
 	local acquire_list = {}
 
 	local GetFilterFlagNames
@@ -1053,6 +1062,7 @@ do
 				HEALER = _G.HEALER,
 				CASTER = _G.DAMAGER,
 				ACHIEVEMENT = _G.ACHIEVEMENTS,
+				REPUTATION = _G.REPUTATION,
 				-------------------------------------------------------------------------------
 				-- Class flags.
 				-------------------------------------------------------------------------------
@@ -1133,7 +1143,7 @@ do
 				BREWMASTERS
 				NAT_PAGLE
 				BLACKPRINCE]]--
-				TUSHUI_HUOJIN =	isAlliance and FAC["Tushui Pandaren"]	or FAC["Huojin Pandaren"]
+				TUSHUI_HUOJIN =	is_alliance and FAC["Tushui Pandaren"]	or FAC["Huojin Pandaren"]
 			}
 			return FILTER_FLAG_NAMES
 		end
@@ -1141,17 +1151,18 @@ do
 
 	--- Dumps the recipe database in a format that is readable to humans (or machines)
 	function addon:GetTextDump(profession_name)
-		local output = addon.db.profile.textdumpformat or "Comma"
-		table.wipe(text_table)
+		local output_format = addon.db.profile.textdumpformat or "Comma"
+		local output = private.TextDump
+		output:Clear()
 
-		if output == "Comma" then
-			table.insert(text_table, ("Ackis Recipe List Text Dump for %s's %s, in the form of Comma Separated Values.\n  "):format(private.PLAYER_NAME, profession_name))
-			table.insert(text_table, "Spell ID,Recipe Name,Skill Level,ARL Filter Flags,Acquire Methods,Known\n")
-		elseif output == "BBCode" then
-			table.insert(text_table, ("Ackis Recipe List Text Dump for %s's %s, in the form of BBCode.\n"):format(private.PLAYER_NAME, profession_name))
-		elseif output == "XML" then
-			table.insert(text_table, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>")
-			table.insert(text_table, "\n<profession>")
+		if output_format == "Comma" then
+			output:AddLine(("Ackis Recipe List Text Dump for %s's %s, in the form of Comma Separated Values.\n  "):format(private.PLAYER_NAME, profession_name))
+			output:AddLine("Spell ID,Recipe Name,Skill Level,ARL Filter Flags,Acquire Methods,Known\n")
+		elseif output_format == "BBCode" then
+			output:AddLine(("Ackis Recipe List Text Dump for %s's %s, in the form of BBCode.\n"):format(private.PLAYER_NAME, profession_name))
+		elseif output_format == "XML" then
+			output:AddLine("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>")
+			output:AddLine("\n<profession>")
 		end
 
 		local profession_recipes = private.profession_recipe_list[profession_name]
@@ -1160,28 +1171,28 @@ do
 			local recipe = profession_recipes[recipe_id]
 			local is_known = recipe:HasState("KNOWN")
 
-			if output == "Comma" then
+			if output_format == "Comma" then
 				-- Add Spell ID, Name and Skill Level to the list
-				table.insert(text_table, recipe_id)
-				table.insert(text_table, ",")
-				table.insert(text_table, recipe.name)
-				table.insert(text_table, ",")
-				table.insert(text_table, recipe.skill_level)
-				table.insert(text_table, ",\"")
-			elseif output == "BBCode" then
+				output:AddLine(recipe_id)
+				output:AddLine(",")
+				output:AddLine(recipe.name)
+				output:AddLine(",")
+				output:AddLine(recipe.skill_level)
+				output:AddLine(",\"")
+			elseif output_format == "BBCode" then
 				-- Make the entry red
-				table.insert(text_table, ("\n%s[b]%d[/b] - %s (%d)%s\n"):format(is_known and "" or "[color=red]", recipe_id, recipe.name, recipe.skill_level, is_known and "" or "[/color]"))
+				output:AddLine(("\n%s[b]%d[/b] - %s (%d)%s\n"):format(is_known and "" or "[color=red]", recipe_id, recipe.name, recipe.skill_level, is_known and "" or "[/color]"))
 
-				table.insert(text_table, "\nRecipe Flags:\n[list]\n")
-			elseif output == "XML" then
-				table.insert(text_table, "\n<recipe>\n")
-				table.insert(text_table, "  <id>" .. recipe_id .. "</id>\n")
-				table.insert(text_table, "  <name>" .. recipe.name .. "</name>\n")
-				table.insert(text_table, "  <skilllevel>" .. recipe.skill_level .. "</skilllevel>\n")
-				table.insert(text_table, "  <known>" .. tostring(is_known) .. "</known>\n")
-				table.insert(text_table, "  <flags>\n")
-			elseif output == "Name" then
-				table.insert(text_table, recipe.name)
+				output:AddLine("\nRecipe Flags:\n[list]\n")
+			elseif output_format == "XML" then
+				output:AddLine("\n<recipe>\n")
+				output:AddLine("  <id>" .. recipe_id .. "</id>\n")
+				output:AddLine("  <name>" .. recipe.name .. "</name>\n")
+				output:AddLine("  <skilllevel>" .. recipe.skill_level .. "</skilllevel>\n")
+				output:AddLine("  <known>" .. tostring(is_known) .. "</known>\n")
+				output:AddLine("  <flags>\n")
+			elseif output_format == "Name" then
+				output:AddLine(recipe.name)
 			end
 
 			-- Add in all the filter flags
@@ -1194,28 +1205,34 @@ do
 					local bitfield = recipe.flags[private.FLAG_MEMBERS[table_index]]
 
 					if bitfield and bit.band(bitfield, flag) == flag then
-						if output == "Comma" then
+						local filter_name = filter_names[flag_name] or _G.UNKNOWN
+
+						if filter_name == _G.UNKNOWN then
+							addon:Debug("%s is unknown", flag_name)
+						end
+
+						if output_format == "Comma" then
 							if prev then
-								table.insert(text_table, ",")
+								output:AddLine(",")
 							end
-							table.insert(text_table, filter_names[flag_name])
+							output:AddLine(filter_name)
 							prev = true
-						elseif output == "BBCode" then
-							table.insert(text_table, "[*]" .. filter_names[flag_name] .. "\n")
-						elseif output == "XML" then
-							table.insert(text_table, "    <flag>" .. filter_names[flag_name] .. "</flag>")
+						elseif output_format == "BBCode" then
+							output:AddLine("[*]" .. filter_name .. "\n")
+						elseif output_format == "XML" then
+							output:AddLine("    <flag>" .. filter_name .. "</flag>")
 						end
 					end
 				end
 			end
 
-			if output == "Comma" then
-				table.insert(text_table, "\",\"")
-			elseif output == "BBCode" then
-				table.insert(text_table, "[/list]\nAcquire Methods:\n[list]\n")
-			elseif output == "XML" then
-				table.insert(text_table, "  </flags>")
-				table.insert(text_table, "  <acquire>")
+			if output_format == "Comma" then
+				output:AddLine("\",\"")
+			elseif output_format == "BBCode" then
+				output:AddLine("[/list]\nAcquire Methods:\n[list]\n")
+			elseif output_format == "XML" then
+				output:AddLine("  </flags>")
+				output:AddLine("  <acquire>")
 			end
 
 			-- Find out which unique acquire methods we have
@@ -1229,38 +1246,33 @@ do
 			-- Add all the acquire methods in
 			prev = false
 
-			for i in pairs(acquire_list) do
-				if output == "Comma" then
+			for acquire_name in pairs(acquire_list) do
+				if output_format == "Comma" then
 					if prev then
-						table.insert(text_table, ",")
+						output:AddLine(",")
 					end
-					table.insert(text_table, i)
+					output:AddLine(acquire_name)
 					prev = true
-				elseif output == "BBCode" then
-					table.insert(text_table, "[*] " .. i)
-				elseif output == "XML" then
-					table.insert(text_table, "<acquiremethod>" .. i .. "</acquiremethod>")
+				elseif output_format == "BBCode" then
+					output:AddLine("[*] " .. acquire_name)
+				elseif output_format == "XML" then
+					output:AddLine("<acquiremethod>" .. acquire_name .. "</acquiremethod>")
 				end
 			end
 
-			if output == "Comma" then
-				table.insert(text_table, "\"," .. tostring(is_known) .. "\n")
-				--if is_known then
-				--	table.insert(text_table, "\",true\n")
-				--else
-				--	table.insert(text_table, "\",false\n")
-				--end
-			elseif output == "BBCode" then
-				table.insert(text_table, "\n[/list]\n")
-			elseif output == "XML" then
-				table.insert(text_table, "  </acquire>")
-				table.insert(text_table, "</recipe>")
+			if output_format == "Comma" then
+				output:AddLine("\"," .. tostring(is_known) .. "\n")
+			elseif output_format == "BBCode" then
+				output:AddLine("\n[/list]\n")
+			elseif output_format == "XML" then
+				output:AddLine("  </acquire>")
+				output:AddLine("</recipe>")
 			end
 		end -- for
 
-		if output == "XML" then
-			table.insert(text_table, "\n</profession>")
+		if output_format == "XML" then
+			output:AddLine("\n</profession>")
 		end
-		return table.concat(text_table, "")
+		output:Display("")
 	end
 end

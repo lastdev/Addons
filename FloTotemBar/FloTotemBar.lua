@@ -6,7 +6,7 @@
 -- Constants
 -------------------------------------------------------------------------------
 
-local VERSION = "5.2.29"
+local VERSION = "5.4.30"
 
 -------------------------------------------------------------------------------
 -- Variables
@@ -61,7 +61,7 @@ function FloTotemBar_OnLoad(self)
 	local button = _G[thisName.."Button1"];
 
 	if thisName == "FloBarTRAP" then
-		button:SetPoint("LEFT", thisName.."Countdown4", "RIGHT", 5, 0);
+		button:SetPoint("LEFT", thisName.."Countdown3", "RIGHT", 5, 0);
 	elseif thisName ~= "FloBarCALL" then
 		button:SetPoint("LEFT", thisName.."Countdown", "RIGHT", 5, 0);
 	end
@@ -138,6 +138,16 @@ function FloTotemBar_OnEvent(self, event, arg1, ...)
 	if event == "PLAYER_ENTERING_WORLD" or event == "LEARNED_SPELL_IN_TAB" or event == "PLAYER_ALIVE" or event == "PLAYER_LEVEL_UP" or event == "CHARACTER_POINTS_CHANGED" then
 		if not changingSpec then
 			FloLib_Setup(self);
+
+			if FLO_CLASS_NAME == "HUNTER" then
+				-- check trap launcher
+				local name = GetSpellInfo(77769);
+				local buff = UnitBuff("player", name);
+				if buff ~= nil then
+					FloTotemBar_StartTimer(FloBarTRAP, name);
+				end
+			end
+
 		end
 		
 	elseif event == "UNIT_SPELLCAST_SUCCEEDED"  then
@@ -167,7 +177,9 @@ function FloTotemBar_OnEvent(self, event, arg1, ...)
 		hooksecurefunc("SetActiveSpecGroup", function() changingSpec = true; end);
 
 	elseif event == "UPDATE_BINDINGS" then
-		FloLib_UpdateBindings(self, "FLOTOTEM"..self.totemtype);
+		local totemtype = self.totemtype;
+		if totemtype == "TRAP" then totemtype = "EARTH" end
+		FloLib_UpdateBindings(self, "FLOTOTEM"..totemtype);
 
 	elseif event == "ACTIVE_TALENT_GROUP_CHANGED" then
 		if FLOTOTEMBAR_OPTIONS.active ~= arg1 then
@@ -278,6 +290,7 @@ function FloTotemBar_CheckTalentGroup(grp)
 	end
 	FloTotemBar_SetScale(ACTIVE_OPTIONS.scale);
 	FloTotemBar_SetBorders(nil, ACTIVE_OPTIONS.borders);
+
 end
 
 function FloTotemBar_MigrateVars()
@@ -424,9 +437,9 @@ function FloTotemBar_CheckTrapLauncherTime(self, timestamp, spellIdx, event, hid
     local name = string.upper(spell.name);
 
     if event == "SPELL_AURA_REMOVED" and string.find(string.upper(spellName), name, 1, true) then
-        if CombatLog_Object_IsA(sourceFlags, COMBATLOG_FILTER_ME) then
-            FloTotemBar_ResetTimer(self, spell.school);
-        end
+	if CombatLog_Object_IsA(sourceFlags, COMBATLOG_FILTER_ME) then
+	    FloTotemBar_ResetTimer(self, spell.school);
+	end
     end
 end
 
@@ -682,7 +695,9 @@ end
 function FloTotemBar_TimerRed(self, school)
 
 	local countdown = _G[self:GetName().."Countdown"..school];
-	countdown:SetStatusBarColor(0.5, 0.5, 0.5);
+	if countdown then
+		countdown:SetStatusBarColor(0.5, 0.5, 0.5);
+	end
 
 end
 
@@ -726,8 +741,10 @@ function FloTotemBar_StartTimer(self, spellName, rank)
 		self["startTime"..school] = startTime;
 
 		countdown = _G[self:GetName().."Countdown"..school];
-		countdown:SetMinMaxValues(0, duration);
-		countdown:SetStatusBarColor(unpack(SCHOOL_COLORS[school]));
+		if countdown then
+			countdown:SetMinMaxValues(0, duration);
+			countdown:SetStatusBarColor(unpack(SCHOOL_COLORS[school]));
+		end
 		FloTotemBar_OnUpdate(self);
 
 	end
@@ -757,17 +774,21 @@ function FloTotemBar_OnUpdate(self)
 			if self["activeSpell"..k] == i then
 
 				countdown = _G[name.."Countdown"..k];
-				_, duration = countdown:GetMinMaxValues();
+				if countdown then
+					_, duration = countdown:GetMinMaxValues();
 
-				timeleft = self["startTime"..k] + duration - GetTime();
-				isActive = timeleft > 0;
+					timeleft = self["startTime"..k] + duration - GetTime();
+					isActive = timeleft > 0;
 
-				if (isActive) then
-					countdown:SetValue(timeleft);
-					break;
+					if (isActive) then
+						countdown:SetValue(timeleft);
+						break;
+					else
+						self["activeSpell"..k] = nil;
+						countdown:SetValue(0);
+					end
 				else
-					self["activeSpell"..k] = nil;
-					countdown:SetValue(0);
+					isActive = self["startTime"..k] ~= 0;
 				end
 			end
 		end

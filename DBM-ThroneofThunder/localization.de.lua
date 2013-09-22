@@ -6,10 +6,13 @@ local L
 --------------------------
 L= DBM:GetModLocalization(827)
 
-L:SetOptionLocalization({
-	RangeFrame		= "Zeige Abstandsfenster"
+L:SetWarningLocalization({
+	specWarnWaterMove	= "%s bald - Raus aus dem leitfähigen Wasser!"
 })
 
+L:SetOptionLocalization({
+	specWarnWaterMove	= "Spezialwarnung, falls du in $spell:138470 stehst (warnt bevor $spell:137313 gewirkt wird und kurz bevor $spell:138732 ausläuft)"
+})
 
 --------------
 -- Horridon --
@@ -17,23 +20,28 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(819)
 
 L:SetWarningLocalization({
-	warnAdds	= "%s"
+	warnAdds				= "%s",
+	warnOrbofControl		= "Kugel der Kontrolle fallen gelassen",
+	specWarnOrbofControl	= "Kugel der Kontrolle fallen gelassen!"
 })
 
 L:SetTimerLocalization({
-	timerDoor		= "Nächstes Stammestor",
-	timerAdds		= "Nächster %s"
+	timerDoor				= "Nächstes Stammestor",
+	timerAdds				= "Nächster %s"
 })
 
 L:SetOptionLocalization({
-	warnAdds		= "Verkünde das Herunterspringen neuer Gegner",
-	timerDoor		= "Zeige Zeit bis nächste Stammestorphase",
-	timerAdds		= "Zeige Zeit bis der nächste Gegner herunterspringt"
+	warnAdds				= "Verkünde das Herunterspringen neuer Gegner",
+	warnOrbofControl		= "Verkünde das Fallenlassen einer $journal:7092",
+	specWarnOrbofControl	= "Spezialwarnung beim Fallenlassen einer $journal:7092",
+	timerDoor				= "Zeige Zeit bis nächste Stammestorphase",
+	timerAdds				= "Zeige Zeit bis der nächste Gegner herunterspringt",
+	SetIconOnAdds			= "Setze Zeichen auf Balkongegner"
 })
 
 L:SetMiscLocalization({
-	newForces		= "stürmen aus dem Stammestor",
-	chargeTarget	= "schlägt mit dem Schwanz auf den Boden!"
+	newForces				= "stürmen aus dem Stammestor",
+	chargeTarget			= "schlägt mit dem Schwanz auf den Boden!"
 })
 
 ---------------------------
@@ -41,10 +49,13 @@ L:SetMiscLocalization({
 ---------------------------
 L= DBM:GetModLocalization(816)
 
+L:SetWarningLocalization({
+	specWarnPossessed		= "%s auf %s - Ziel wechseln"
+})
+
 L:SetOptionLocalization({
-	warnPossessed	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(136442),
-	warnSandBolt	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(136189),
-	RangeFrame		= "Zeige Abstandsfenster"
+	PHealthFrame		= "Zeige in Lebensanzeige den benötigten Schaden bis $spell:136442 endet<br/>(benötigt aktivierte Lebensanzeige)",
+	AnnounceCooldowns	= "Zähle akustisch die Anzahl der $spell:137166 Wirkungen<br/>(für \"Raid-Cooldowns\")"
 })
 
 ------------
@@ -58,9 +69,11 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnKickShell			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(134031),
-	specWarnCrystalShell	= "Zeige Spezialwarnung, falls dir der $spell:137633 Buff fehlt",
-	InfoFrame				= "Zeige Infofenster für Spieler ohne $spell:137633"
+	specWarnCrystalShell	= "Spezialwarnung, falls dir der $spell:137633 Buff fehlt",
+	InfoFrame				= "Zeige Infofenster für Spieler ohne $spell:137633<br/>mit mehr als 90% Lebenspunkten",
+	SetIconOnTurtles		= "Setze Zeichen auf $journal:7129",
+	ClearIconOnTurtles		= "Entferne Zeichen von $journal:7129 im Zustand $spell:133971",
+	AnnounceCooldowns		= "Zähle akustisch die Anzahl der $spell:134920 Wirkungen<br/>(für \"Raid-Cooldowns\")"
 })
 
 L:SetMiscLocalization({
@@ -72,8 +85,23 @@ L:SetMiscLocalization({
 -------------
 L= DBM:GetModLocalization(821)
 
+L:SetTimerLocalization({
+	timerBreathsCD			= "Nächster Atem"
+})
+
+L:SetOptionLocalization({
+	timerBreaths			= "Zeige Zeit bis nächster Atem<br/>($spell:139843 / $spell:137731 / $spell:139840 / $spell:139993)",
+	AnnounceCooldowns		= "Zähle akustisch die Anzahl der \"Toben\"-Wirkungen (für \"Raid-Cooldowns\")",
+	Never					= "Nie",
+	Every					= "Jede (fortlaufende Zählung)",
+	EveryTwo				= "Jede (zyklisch bis 2)",
+	EveryThree				= "Jede (zyklisch bis 3)",
+	EveryTwoExcludeDiff		= "Ohne Diffusion (zyklisch bis 2)",
+	EveryThreeExcludeDiff	= "Ohne Diffusion (zyklisch bis 3)"
+})
+
 L:SetMiscLocalization({
-	rampageEnds	= "Megaeras Wut lässt nach." --needs to be verified (PTR screenshot-captured translation)
+	rampageEnds	= "Megaeras Wut lässt nach."
 })
 
 ------------
@@ -82,8 +110,10 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(828)
 
 L:SetWarningLocalization({
-	warnFlock		= "%s %s (%d)",
-	specWarnFlock	= "%s %s (%d)"
+	warnFlock			= "%s - %s %s",
+	specWarnFlock		= "%s - %s %s",
+	specWarnBigBird		= "Nestwächter: %s",
+	specWarnBigBirdSoon	= "Nestwächter bald: %s"
 })
 
 L:SetTimerLocalization({
@@ -91,18 +121,30 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnFlock		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.count:format("ej7348"),
-	specWarnFlock	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch:format("ej7348"),
-	timerFlockCD	= DBM_CORE_AUTO_TIMER_OPTIONS.nextcount:format("ej7348"),
-	RangeFrame		= "Zeige Abstandsfenster (8m) für $spell:138923"
+	ShowNestArrows		= "Zeige DBM-Pfeil für Nestaktivierung",
+	Never				= "Nie",
+	Northeast			= "Blau - Unten NO & Oben NO",
+	Southeast			= "Grün - Unten SO & Oben SO",
+	Southwest			= "Violett/Rot - Unten SW & Oben SW/Mitte (25er/10er)",
+	West				= "Rot - Unten W & Oben Mitte (nur 25er)",
+	Northwest			= "Gelb - Unten NW & Oben NW (nur 25er)",
+	Guardians			= "Nestwächter"
 })
 
 L:SetMiscLocalization({
-	eggsHatchL		= "Die Eier in den unteren Nestern beginnen zu schlüpfen!", --needs to be verified (PTR video-captured translation), maybe "Die Eier in einem der unteren Nester beginnen, aufzubrechen!" instead
-	eggsHatchU		= "Die Eier in den oberen Nestern beginnen zu schlüpfen!", --needs to be verified (guessed), maybe "Die Eier in einem der oberen Nester beginnen, aufzubrechen!" instead
-	Upper			= "Obere",
-	Lower			= "Untere",
-	UpperAndLower	= "Obere & Untere"
+	eggsHatch		= "Nester beginnen, aufzubrechen!",
+	Upper			= "Oben",
+	Lower			= "Unten",
+	UpperAndLower	= "Oben & Unten",
+	TrippleD		= "Dreifach (2xUnten)",
+	TrippleU		= "Dreifach (2xOben)",
+	NorthEast		= "|cff0000ffNO|r",
+	SouthEast		= "|cFF088A08SO|r",
+	SouthWest		= "|cFF9932CDSW|r",
+	West			= "|cffff0000W|r",
+	NorthWest		= "|cffffff00NW|r",
+	Middle10		= "|cFF9932CDMitte|r",
+	Middle25		= "|cffff0000Mitte|r"
 })
 
 --------------------------
@@ -111,21 +153,25 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(818)
 
 L:SetWarningLocalization({
+	warnBeamNormal				= "Strahlen - |cffff0000Rot|r : >%s<, |cff0000ffBlau|r : >%s<",
+	warnBeamHeroic				= "Strahlen - |cffff0000Rot|r : >%s<, |cff0000ffBlau|r : >%s<, |cffffff00Gelb|r : >%s<",
 	warnAddsLeft				= "Nebel verbleibend: %d",
+	specWarnBlueBeam			= "Blaue Strahlen auf dir - Bleib möglichst stehen",
 	specWarnFogRevealed			= "%s offenbart!",
 	specWarnDisintegrationBeam	= "%s (%s)"
 })
 
 L:SetOptionLocalization({
+	warnBeam					= "Verkünde Ziele der Farbstrahlen",
 	warnAddsLeft				= "Verkünde die Anzahl der verbleibenden Nebel",
-	specWarnFogRevealed			= "Zeige Spezialwarnung, wenn ein Nebel offenbart wird",
-	specWarnDisintegrationBeam	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell:format("ej6882"),
+	specWarnFogRevealed			= "Spezialwarnung, wenn ein Nebel offenbart wird",
 	ArrowOnBeam					= "Zeige DBM-Pfeil während $journal:6882 zur Anzeige der Ausweichrichtung",
-	SetIconRays					= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej6891")
+	InfoFrame					= "Zeige Infofenster für $spell:133795 Stapel",
+	SetParticle					= "Grafikeinstellung 'Partikeldichte' automatisch auf 'Niedrig' setzen<br/>(wird nach dem Kampfende auf die vorherige Einstellung zurückgesetzt)"
 })
 
 L:SetMiscLocalization({
-	Eye		= "Auge" --needs to be verified (guessed)
+	LifeYell		= "Lebensentzug auf %s (%d)"
 })
 
 ----------------
@@ -133,8 +179,13 @@ L:SetMiscLocalization({
 ----------------
 L= DBM:GetModLocalization(820)
 
+L:SetWarningLocalization({
+	warnDebuffCount				= "Mutationen: %d/5 gute, %d schlechte"
+})
+
 L:SetOptionLocalization({
-	RangeFrame			= "Zeige Abstandsfenster (5m/2m)"
+	warnDebuffCount				= "Zeige Warnung für die Debuffanzahl, wenn du Pfützen absorbierst",
+	SetIconOnBigOoze			= "Setze Zeichen auf $journal:6969"
 })
 
 -----------------
@@ -151,7 +202,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Pull		= "Die Kugel explodiert!" --needs to be verified (PTR video-captured translation)
+	Pull		= "Die Kugel explodiert!"
 })
 
 --------------
@@ -164,9 +215,8 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnDeadZone	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(137229),
-	RangeFrame		= "Zeige dynamisches Abstandsfenster\n(mit Indikator für zuviele Spieler in Reichweite)",
-	InfoFrame		= "Zeige Infofenster für Spieler mit $spell:136193"
+	RangeFrame				= "Zeige dynamisches Abstandsfenster (10m)<br/>(mit Indikator für zuviele Spieler in Reichweite)",
+	InfoFrame				= "Zeige Infofenster für Spieler mit $spell:136193"
 })
 
 -------------------
@@ -174,12 +224,19 @@ L:SetOptionLocalization({
 -------------------
 L= DBM:GetModLocalization(829)
 
-L:SetOptionLocalization({
-	RangeFrame		= "Zeige Abstandsfenster (8m)"
+L:SetWarningLocalization({
+	warnNight		= "Nachtphase",
+	warnDay			= "Tagphase",
+	warnDusk		= "Dämmerungsphase"
+})
+
+L:SetTimerLocalization({
+	timerDayCD		= "Nächste Tagphase",
+	timerDuskCD		= "Nächste Dämmerungsphase"
 })
 
 L:SetMiscLocalization({
-	DuskPhase		= "Lu'lin! Lend me your strength!"--translate (trigger) (not in use)
+	DuskPhase		= "Lu'lin, leiht mir Eure Kraft!"
 })
 
 --------------
@@ -187,18 +244,45 @@ L:SetMiscLocalization({
 --------------
 L= DBM:GetModLocalization(832)
 
+L:SetWarningLocalization({
+	specWarnIntermissionSoon	= "Unterbrechung bald",
+	warnDiffusionChainSpread	= "%s gesprungen auf >%s<"
+})
+
+L:SetTimerLocalization({
+	timerConduitCD				= "Erste Leitung CD"
+})
+
 L:SetOptionLocalization({
-	RangeFrame			= "Zeige Abstandsfenster",
-	StaticShockArrow	= "Zeige DBM-Pfeil, wenn jemand von $spell:135695 betroffen ist",
-	OverchargeArrow		= "Zeige DBM-Pfeil, wenn jemand von $spell:136295 betroffen ist",
-	SetIconOnOvercharge	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(136295),
-	SetIconOnStaticShock= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(135695)
+	specWarnIntermissionSoon	= "Spezialvorwarnung für Unterbrechung",
+	warnDiffusionChainSpread	= "Verkünde Sprungziele von $spell:135991",
+	timerConduitCD				= "Abklingzeit der Fähigkeit der ersten Leitung anzeigen",
+	StaticShockArrow			= "Zeige DBM-Pfeil, wenn jemand von $spell:135695 betroffen ist",
+	OverchargeArrow				= "Zeige DBM-Pfeil, wenn jemand von $spell:136295 betroffen ist"
+})
+
+L:SetMiscLocalization({
+	StaticYell		= "Elektroschock auf %s (%d)"
 })
 
 ------------
 -- Ra-den --
 ------------
 L= DBM:GetModLocalization(831)
+
+L:SetWarningLocalization({
+	specWarnUnstablVitaJump		= "Instabile Vita ist auf dich übergesprungen!"
+})
+
+L:SetOptionLocalization({
+	specWarnUnstablVitaJump	= "Spezialwarnung, wenn $spell:138297 auf dich überspringt",
+	SetIconsOnVita			= "Setze Zeichen auf den Spieler mit dem Debuff $spell:138297 und den am weitesten davon entfernten Spieler"
+})
+
+L:SetMiscLocalization({
+	Defeat						= "Wartet!",--needs to be verified (video-captured translation)
+	BigWigsRecommendation		= "Tipp: Du solltest für diesen Gegner die Mods \"BigWigs\" und \"BigWigs_Ra-denAssist\" nutzen, falls du eine automatische Einteilung der Spieler als Ziel für Instabile Vita benötigst."
+})
 
 -------------
 --  Trash  --
@@ -207,8 +291,4 @@ L = DBM:GetModLocalization("ToTTrash")
 
 L:SetGeneralLocalization({
 	name =	"Trash des Thron des Donners"
-})
-
-L:SetOptionLocalization({
-	RangeFrame		= "Zeige Abstandsfenster (10m)"
 })

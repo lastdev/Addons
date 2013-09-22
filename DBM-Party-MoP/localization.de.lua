@@ -9,10 +9,6 @@ local L
 -----------------------
 L= DBM:GetModLocalization(672)
 
-L:SetOptionLocalization({
-	SetIconOnAdds	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej5616")
-})
-
 -----------------------
 -- Lorewalker Stonestep --
 -----------------------
@@ -20,10 +16,6 @@ L= DBM:GetModLocalization(664)
 
 L:SetWarningLocalization({
 	SpecWarnIntensity	= "%s auf %s (%d)"
-})
-
-L:SetOptionLocalization({
-	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(6, 113315)
 })
 
 -----------------------
@@ -59,8 +51,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	SpecWarnFizzyBubbles	= "Zeige Spezialwarnung, falls dir der $spell:114459 Buff fehlt",
-	RangeFrame				= "Zeige Abstandsfenster (10m) für $spell:106546"
+	SpecWarnFizzyBubbles	= "Spezialwarnung, falls dir der $spell:114459 Buff fehlt"
 })
 
 -----------------------
@@ -75,9 +66,6 @@ L:SetWarningLocalization({
 	warnStaticField	= "%s"
 })
 
-L:SetOptionLocalization({
-	warnStaticField	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(106923)
-})
 
 -----------------------
 -- Snowdrift --
@@ -104,7 +92,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(685)
 
 L:SetMiscLocalization({
-	Kill		= "So lange die Gewalt in Euren Herzen wohnt... werde ich... zurückkehren...",
+	Kill		= "So lange die Gewalt in Euren Herzen wohnt... werde ich... zurückkehren..."
 })
 
 -----------------------
@@ -119,14 +107,11 @@ L:SetOptionLocalization({
 -----------------------
 -- <<<The Gate of the Setting Sun>>> --
 -----------------------
+
 ---------------------
 -- Kiptilak --
 ---------------------
 L= DBM:GetModLocalization(655)
-
-L:SetOptionLocalization({
-	IconOnSabotage	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(107268)
-})
 
 -------------
 -- Gadok --
@@ -231,7 +216,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	SpecWarnGetBoned	= "Zeige Spezialwarnung, falls dir der $spell:113996 Buff fehlt",
+	SpecWarnGetBoned	= "Spezialwarnung, falls dir der $spell:113996 Buff fehlt",
 	InfoFrame			= "Zeige Infofenster für Spieler, denen der $spell:113996 Buff fehlt"
 })
 

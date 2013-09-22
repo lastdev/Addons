@@ -1,0 +1,18 @@
+## Interface: 50400
+## Title: HandyNotes_TimelessIsle_RareElites
+## Version: 1.01
+## Notes: Shows location of Rare Elites on the Timeless Isle
+## Author: Phone
+## OptionalDeps: Ace3, HandyNotes
+## X-Embeds: Ace3
+## SavedVariables: TimelessIsle_RareElitesDB
+## X-Curse-Packaged-Version: 1.01
+## X-Curse-Project-Name: HandyNotes_TimelessIsle_RareElites
+## X-Curse-Project-ID: timelessisle_RareElites
+## X-Curse-Repository-ID: wow/timelessislechests/mainline
+
+#@no-lib-strip@
+embeds.xml
+#@end-no-lib-strip@
+
+HandyNotes_TimelessIsle_RareElites.lua

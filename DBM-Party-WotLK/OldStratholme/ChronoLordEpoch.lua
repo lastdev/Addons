@@ -1,9 +1,8 @@
-local mod	= DBM:NewMod("ChronoLordEpoch", "DBM-Party-WotLK", 3)
+local mod	= DBM:NewMod(613, "DBM-Party-WotLK", 3, 279)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
 mod:SetCreatureID(26532)
-mod:SetModelID(26580)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -27,14 +26,14 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(52772) then
+	if args.spellId == 52772 then
 		warningCurse:Show(args.destName)
 		timerCurse:Start(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(52772) then
+	if args.spellId == 52772 then
 		timerCurse:Cancel(args.destName)
 	end
 end

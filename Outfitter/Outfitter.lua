@@ -590,18 +590,18 @@ Outfitter.cUniqueGemItemIDs =
 	
 	-- MoP JC
 	
-	[83141] = "PRISM3", -- Bold Serpent's Eye
-	[83142] = "PRISM3", -- Quick Serpent's Eye
-	[83143] = "PRISM3", -- Fractured Serpent's Eye
-	[83144] = "PRISM3", -- Rigid Serpent's Eye
-	[83145] = "PRISM3", -- Subtle Serpent's Eye
-	[83146] = "PRISM3", -- Smooth Serpent's Eye
-	[83147] = "PRISM3", -- Precise Serpent's Eye
-	[83148] = "PRISM3", -- Solid Serpent's Eye
-	[83149] = "PRISM3", -- Sparkling Serpent's Eye
-	[83150] = "PRISM3", -- Brilliant Serpent's Eye
-	[83151] = "PRISM3", -- Delicate Serpent's Eye
-	[83152] = "PRISM3", -- Flashing Serpent's Eye
+	[83141] = "FACET2", -- Bold Serpent's Eye
+	[83142] = "FACET2", -- Quick Serpent's Eye
+	[83143] = "FACET2", -- Fractured Serpent's Eye
+	[83144] = "FACET2", -- Rigid Serpent's Eye
+	[83145] = "FACET2", -- Subtle Serpent's Eye
+	[83146] = "FACET2", -- Smooth Serpent's Eye
+	[83147] = "FACET2", -- Precise Serpent's Eye
+	[83148] = "FACET2", -- Solid Serpent's Eye
+	[83149] = "FACET2", -- Sparkling Serpent's Eye
+	[83150] = "FACET2", -- Brilliant Serpent's Eye
+	[83151] = "FACET2", -- Delicate Serpent's Eye
+	[83152] = "FACET2", -- Flashing Serpent's Eye
 	
 	-- MoP Cogwheel
 	[77540] = 77540, -- Subtle Tinker's Gear
@@ -612,6 +612,14 @@ Outfitter.cUniqueGemItemIDs =
 	[77545] = 77545, -- Rigid Tinker's Gear
 	[77546] = 77546, -- Sparkling Tinker's Gear
 	[77547] = 77547, -- Fractured Tinker's Gear
+	
+	-- MoP JC
+	[93404] = "FACET2", -- Resplendent
+	[93405] = "FACET2", -- Lucent
+	[93406] = "FACET2", -- Willful
+	[93408] = "FACET2", -- Tense
+	[93409] = "FACET2", -- Assassin's
+	[93410] = "FACET2", -- Mysterious
 }
 
 StaticPopupDialogs.OUTFITTER_CANT_RELOADUI =
@@ -5085,7 +5093,8 @@ end
 
 function Outfitter:UpdateZone()
 	local vCurrentZone = GetZoneText()
-	
+	local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceMapID = GetInstanceInfo()
+
 	-- Treat Vault of Archavon as its own zone so
 	-- that it doesn't register as the Wintergrasp
 	-- PvP zone
@@ -5145,6 +5154,8 @@ function Outfitter:GetCurrentZoneIDs(pRecycleTable)
 		end
 	end
 	
+	local inInstance, instanceType = IsInInstance()
+	vZoneIDs.Battleground = instanceType == "pvp" or instanceType == "arena"
 	return vZoneIDs
 end
 
@@ -5153,7 +5164,8 @@ function Outfitter:InZoneType(pZoneType)
 end
 
 function Outfitter:InBattlegroundZone()
-	return self:InZoneType("Battleground")
+	local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceMapID = GetInstanceInfo()
+	return instanceType == "pvp" or instanceType == "arena"
 end
 
 function Outfitter:SetAllSlotEnables(pEnable)
@@ -8870,20 +8882,6 @@ function Outfitter:GetIconIndex(pTexture)
 	end
 end
 
-function Outfitter:SummonCompanionByName(pName, pDelay)
-	local vNumPets = C_PetJournal.GetNumPets(false)
-	local vLowerName = pName:lower()
-
-	for vIndex = 1, vNumPets do
-		local vPetID, vSpeciesID, vIsOwned, vCustomName, vLevel, vFavorite, vIsRevoked, vName = C_PetJournal.GetPetInfoByIndex(vIndex, false)
-		
-		if vName:lower() == vLowerName then
-			self:SummonCompanionByGUID(vPetID, pDelay)
-			return true
-		end
-	end
-end
-
 function Outfitter:GetCompanionIDByName(pName)
 	local vNumPets = C_PetJournal.GetNumPets(false)
 	local vLowerName = pName:lower()
@@ -8893,6 +8891,7 @@ function Outfitter:GetCompanionIDByName(pName)
 			return vPetID
 		end
 	end
+	Outfitter:DebugMessage("GetCompanionByName(%s): Not found", tostring(pName))
 end
 
 function Outfitter:GetSummonedCompanionID()
@@ -8900,7 +8899,7 @@ function Outfitter:GetSummonedCompanionID()
 end
 
 function Outfitter:SummonCompanionByGUID(pID, pDelay)
-	--Outfitter:DebugMessage("SummonCompanionByGUID: %s delay =%s", tostring(pID), tostring(pDelay))
+	Outfitter:DebugMessage("SummonCompanionByGUID: %s delay =%s", tostring(pID), tostring(pDelay))
 	if not pID then return end
 	self.SummonPetID = pID
 	self.DismissPetID = nil
@@ -8911,8 +8910,16 @@ function Outfitter:SummonCompanionByGUID(pID, pDelay)
 	end
 end
 
+function Outfitter:SummonCompanionByName(pName, pDelay)
+	Outfitter:DebugMessage("SummonCompanionByName(%s, %s)", tostring(pName), tostring(pDelay))
+	local vPetID = self:GetCompanionIDByName(pName)
+	if not vPetID then return false end
+	self:SummonCompanionByGUID(vPetID, pDelay)
+	return true
+end
+
 function Outfitter:DismissCompanionByGUID(pID, pDelay)
-	--Outfitter:DebugMessage("DismissCompanionByGUID: %s delay =%s", tostring(pID), tostring(pDelay))
+	Outfitter:DebugMessage("DismissCompanionByGUID: %s delay =%s", tostring(pID), tostring(pDelay))
 	if not pID then return end
 	
 	-- Cancel an existing summon request if possible
@@ -8933,6 +8940,14 @@ function Outfitter:DismissCompanionByGUID(pID, pDelay)
 	end
 end
 
+function Outfitter:DismissCompanionByName(pName)
+	Outfitter:DebugMessage("DismissCompanionByName(%s)", tostring(pName))
+	local vPetID = self:GetCompanionIDByName(pName)
+	if not vPetID then return false end
+	self:DismissCompanionByGUID(vPetID)
+	return true
+end
+
 function Outfitter:CanSummonOrDismissCompanion()
 	if IsFlying()
 	or self.InCombat
@@ -8949,7 +8964,7 @@ end
 function Outfitter:SynchronizeCompanionState()
 	-- Just return if we're not trying to summon or dismiss a pet
 	if not self.SummonPetID and not self.DismissPetID then
-		--Outfitter:DebugMessage("SynchronizeCompanionState: no pet ID to summon/dismiss. Canceling.")
+		Outfitter:DebugMessage("SynchronizeCompanionState: no pet ID to summon/dismiss. Canceling.")
 		return
 	end
 	
@@ -8961,7 +8976,7 @@ function Outfitter:SynchronizeCompanionState()
 	end
 	
 	local vSummonedPetID = C_PetJournal.GetSummonedPetGUID()
-	--Outfitter:DebugMessage("SynchronizeCompanionState: SummonedPetID = %s", tostring(vSummonedPetID))
+	Outfitter:DebugMessage("SynchronizeCompanionState: SummonedPetID = %s", tostring(vSummonedPetID))
 	
 	-- If there's not a pet summoned but there's a pet to be dismissed
 	-- then reschedule in order to watch for the pet getting auto-summoned
@@ -8975,14 +8990,14 @@ function Outfitter:SynchronizeCompanionState()
 	
 	if self.DismissPetID then
 		if not vSummonedPetID then
-			--Outfitter:DebugMessage("SynchronizeCompanionState: Rescheduling dismissal of %s because no pet is summoned", tostring(self.DismissPetID))
+			Outfitter:DebugMessage("SynchronizeCompanionState: Rescheduling dismissal of %s because no pet is summoned", tostring(self.DismissPetID))
 			Outfitter.SchedulerLib:ScheduleTask(1, function() self:SynchronizeCompanionState() end)
 		else
 			if vSummonedPetID == self.DismissPetID then
 				C_PetJournal.SummonPetByGUID(self.DismissPetID)
 			end
 			-- Clear the ID since the pet has now been dismissed or some other pet was summoned
-			--Outfitter:DebugMessage("Finished dismissing pet %s", tostring(self.DismissPetID))
+			Outfitter:DebugMessage("Finished dismissing pet %s", tostring(self.DismissPetID))
 			self.DismissPetID = nil
 			return
 		end
@@ -8990,11 +9005,11 @@ function Outfitter:SynchronizeCompanionState()
 	
 	if self.SummonPetID then
 		if vSummonedPetID ~= self.SummonPetID then
-			--Outfitter:DebugMessage("SynchronizeCompanionState: Summoning %s", tostring(self.SummonPetID))
+			Outfitter:DebugMessage("SynchronizeCompanionState: Summoning %s", tostring(self.SummonPetID))
 			C_PetJournal.SummonPetByGUID(self.SummonPetID)
 		end
 		-- Clear the ID since the desired pet is the summoned pet
-		--Outfitter:DebugMessage("Finished summoning pet %s", tostring(self.SummonPetID))
+		Outfitter:DebugMessage("Finished summoning pet %s", tostring(self.SummonPetID))
 		self.SummonPetID = nil
 		return
 	end

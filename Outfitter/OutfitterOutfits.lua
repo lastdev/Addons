@@ -653,7 +653,7 @@ function Outfitter._OutfitMethodsEM:GetItem(pSlotName)
 end
 
 function Outfitter._OutfitMethodsEM:UnpackLocation(pLocation)
-	local vOnPlayer, vInBank, vInBags, vSlotIndex, vBagIndex = EquipmentManager_UnpackLocation(pLocation)
+	local vOnPlayer, vInBank, vInBags, vVoidStorage, vSlotIndex, vBagIndex = EquipmentManager_UnpackLocation(pLocation)
 	
 	if vInBags
 	and Outfitter:IsBankBagIndex(vBagIndex) then
@@ -682,7 +682,7 @@ function Outfitter._OutfitMethodsEM:GetItemEM(pSlotName, pLocations)
 	end
 	
 	local vLocation = pLocations[Outfitter.cSlotIDs[pSlotName]]
-	
+
 	if not vLocation
 	or vLocation == 1 then
 		return

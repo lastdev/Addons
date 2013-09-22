@@ -1,7 +1,7 @@
 --[[
 	Stubby AddOn for World of Watcraft (tm)
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: Stubby.lua 275 2010-10-03 14:00:39Z kandoko $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: Stubby.lua 354 2013-06-12 18:04:49Z brykrys $
 	URL: http://auctioneeraddon.com/dl/Stubby/
 
 	Stubby is an addon that allows you to register boot code for
@@ -163,7 +163,7 @@
 	This constant is Stubby's revision number, a simple positive
 	integer that will increase by an arbitrary amount with each
 	new version of Stubby.
-	Current $Revision: 275 $
+	Current $Revision: 354 $
 
 	Example:
 	-------------------------------------------
@@ -196,7 +196,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Stubby/Stubby.lua $","$Rev: 275 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Stubby/Stubby.lua $","$Rev: 354 $","5.1.DEV.", 'auctioneer', 'libs')
 
 -------------------------------------------------------------------------------
 -- Error codes
@@ -219,13 +219,14 @@ local config = {
 	events = {},
 }
 
-local DebugLib = LibStub("DebugLib")
-local debug, assert
+local DebugLib = LibStub("DebugLib", true)
+local debug
+local assert = assert -- fallback to standard lua assert function
 if DebugLib then
 	debug, assert = DebugLib("Stubby")
 else
 	function debug() end
-	assert = debug
+	-- leave assert as it is
 end
 
 StubbyConfig = {}
@@ -1024,7 +1025,7 @@ end
 
 -- Extract the revision number from SVN keyword string
 function getRevision()
-	return tonumber(("$Revision: 275 $"):match("(%d+)"))
+	return tonumber(("$Revision: 354 $"):match("(%d+)"))
 end
 
 -------------------------------------------------------------------------------

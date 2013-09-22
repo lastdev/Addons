@@ -1,7 +1,7 @@
 --[[
 	Enchantrix:Barker Addon for World of Warcraft(tm).
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: BarkerManifest.lua 3581 2008-10-11 12:36:19Z Norganna $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: BarkerManifest.lua 5403 2013-04-03 16:50:32Z brykrys $
 	URL: http://enchantrix.org/
 
 	EnchantrixBarker Manifest
@@ -80,7 +80,7 @@ function manifest.ShowMessage(msg)
 		messageFrame.text = messageFrame:CreateFontString("", "HIGH")
 		messageFrame.text:SetPoint("TOPLEFT", messageFrame, "TOPLEFT", 10, -10)
 		messageFrame.text:SetPoint("BOTTOMRIGHT", messageFrame.done, "TOPRIGHT")
-		messageFrame.text:SetFont("Fonts\\FRIZQT__.TTF",13)
+		messageFrame.text:SetFont(STANDARD_TEXT_FONT,13)
 		messageFrame.text:SetJustifyH("LEFT")
 		messageFrame.text:SetJustifyV("TOP")
 	end
@@ -105,4 +105,4 @@ function manifest.Validate()
 	return true
 end
 
-EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix-Barker/BarkerManifest.lua $", "$Rev: 3581 $")
+EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Enchantrix-Barker/BarkerManifest.lua $", "$Rev: 5403 $")

@@ -10,12 +10,17 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
+	warnQueuePosition	= "You're %d in queue",
+	specWarnYourNext	= "You're next!",
 	specWarnYourTurn	= "You're up!"
 })
 
 L:SetOptionLocalization({
+	warnQueuePosition	= "Announce your current position in queue whenever it changes",
+	specWarnYourNext	= "Show special warning when you're next in line",
 	specWarnYourTurn	= "Show special warning when it's your match",
-	SpectatorMode		= "Show warnings/timers when spectating fights\n(Personal 'Special Warning' messages not shown to spectators)"
+	SpectatorMode		= "Show warnings/timers when spectating fights<br/>(Personal 'Special Warning' messages not shown to spectators)",
+	SpeakOutQueue		= "Count out your number in the queue when it updates"
 })
 
 L:SetMiscLocalization({
@@ -30,6 +35,8 @@ L:SetMiscLocalization({
 	Rank6			= "Rank 6",
 	Rank7			= "Rank 7",
 	Rank8			= "Rank 8",
+	Rank9			= "Rank 9",
+	Rank10			= "Rank 10",
 	Proboskus		= "Oh dear... I'm sorry, but it looks like you're going to have to fight Proboskus.",--Alliance
 	Proboskus2		= "Ha ha ha! What bad luck you have! It's Proboskus! Ahhh ha ha ha! I've got twenty five gold that says you die in the fire!"--Horde
 })
@@ -112,4 +119,50 @@ L= DBM:GetModLocalization("BrawlRank8")
 
 L:SetGeneralLocalization({
 	name = "Brawlers: Rank 8"
+})
+
+------------
+-- Rank 9 --
+------------
+L= DBM:GetModLocalization("BrawlRank9")
+
+L:SetGeneralLocalization({
+	name = "Brawlers: Rank 9"
+})
+
+-------------
+-- Rares 1 --
+-------------
+L= DBM:GetModLocalization("BrawlRare1")
+
+L:SetGeneralLocalization({
+	name = "Brawlers: Challenges 1"
+})
+
+L:SetOptionLocalization({
+	ArrowOnBoxing	= "Show DBM Arrow during $spell:140868 and $spell:140862 and $spell:140886"
+})
+
+-------------
+-- Rares 2 --
+-------------
+L= DBM:GetModLocalization("BrawlRare2")
+
+L:SetGeneralLocalization({
+	name = "Brawlers: Challenges 2"
+})
+
+L:SetWarningLocalization({
+	specWarnRPS			= "Use %s!"
+})
+
+L:SetOptionLocalization({
+	specWarnRPS			= "Show special warning on what to use for $spell:141206",
+	SpeakOutStrikes		= "Count out number of $spell:141190 attacks"
+})
+
+L:SetMiscLocalization({
+	rock			= "Rock",
+	paper			= "Paper",
+	scissors		= "Scissors"
 })

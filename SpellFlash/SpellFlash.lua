@@ -177,6 +177,8 @@ a.DummyIDNumbers = {
 	[46647] = "Training Dummy",
 	[5652] = "Undercity Practice Dummy",
 	[32543] = "Veteran's Training Dummy",
+	[1591] = "Training Dummy",
+	[31146] = "Raider's Training Dummy",
 }
 
 
@@ -907,7 +909,7 @@ function Event.COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 						end
 						LAST_SPELL_TRAVEL_TIME_END[GUID][SpellName] = Time
 						LAST_SPELL_TRAVEL_TIME[GUID][SpellName] = TravelTime
-						--a.print("(Actual)", Time - (LastTimeTable[2] or Time), "-", "(Estimate)", Time - (LastTimeTable[1] or Time), "=", (Time - (LastTimeTable[2] or Time)) - (Time - (LastTimeTable[1] or Time)))
+						--a.print(SpellName, "(Actual)", Time - (LastTimeTable[2] or Time), "-", "(Estimate)", Time - (LastTimeTable[1] or Time), "=", (Time - (LastTimeTable[2] or Time)) - (Time - (LastTimeTable[1] or Time)))
 					end
 					a:RecycleTable(LastTimeTable)
 				end
@@ -977,18 +979,21 @@ function Event.UNIT_SPELLCAST_SUCCEEDED(event, unit, SpellName, rank, ID)
 	end
 end
 
+local function RegisterGlobalCooldownSpell()
+	if not GLOBAL_COOLDOWN_SPELL and s.HasSpell(GLOBALCOOLDOWNSPELL[CLASS]) then
+		GLOBAL_COOLDOWN_SPELL = GLOBALCOOLDOWNSPELL[CLASS]
+	end
+end
 
 local function RegisterAll()
 	LAST_SPELL_TRAVEL_TIME = a:CreateTable(LAST_SPELL_TRAVEL_TIME, 1)
 	LAST_SPELL_TRAVEL_TIME_END = a:CreateTable(LAST_SPELL_TRAVEL_TIME_END, 1)
-	RegisterSpells()
-	RegisterPetSpells()
-	RegisterTalents()
-	RegisterOtherAuras()
-	a:SetTimer("RegisterOutsideMeleeDistanceSpell", 0.5, 0, RegisterOutsideMeleeDistanceSpell)
-	if not GLOBAL_COOLDOWN_SPELL and s.HasSpell(GLOBALCOOLDOWNSPELL[CLASS]) then
-		GLOBAL_COOLDOWN_SPELL = GLOBALCOOLDOWNSPELL[CLASS]
-	end
+	a:SetTimer("RegisterSpells", 1, 0, RegisterSpells)
+	a:SetTimer("RegisterPetSpells", 1, 0, RegisterPetSpells)
+	a:SetTimer("RegisterTalents", 1, 0, RegisterTalents)
+	a:SetTimer("RegisterOtherAuras", 1, 0, RegisterOtherAuras)
+	a:SetTimer("RegisterOutsideMeleeDistanceSpell", 1, 0, RegisterOutsideMeleeDistanceSpell)
+	a:SetTimer("RegisterGlobalCooldownSpell", 1, 0, RegisterGlobalCooldownSpell)
 end
 
 local function StartUp()
@@ -2605,33 +2610,33 @@ function s.Healer(unit)
 	return nil
 end
 
-function s.Buff(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)
-	return CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)
+function s.Buff(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)
+	return CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)
 end
 
-function s.BuffStack(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)
-	return CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, nil, nil, nil, 1)
+function s.BuffStack(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)
+	return CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type, nil, nil, 1)
 end
 
-function s.BuffDuration(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)
-	return CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, nil, nil, 1)
+function s.BuffDuration(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)
+	return CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type, nil, 1)
 end
 
-function s.MyBuff(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)
-	return CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, nil, "player")
+function s.MyBuff(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)
+	return CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type, "player")
 end
 
-function s.MyBuffStack(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)
-	return CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, nil, "player", nil, 1)
+function s.MyBuffStack(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)
+	return CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type, "player", nil, 1)
 end
 
-function s.MyBuffDuration(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)
-	return CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, nil, "player", 1)
+function s.MyBuffDuration(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)
+	return CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type, "player", 1)
 end
 
-function s.SelfBuff(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID)
+function s.SelfBuff(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type)
 	local unit = s.UnitSelection(unit)
-	return CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, nil, unit)
+	return CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type, unit)
 end
 
 function s.Debuff(SpellName, unit, DurationRemainingGreaterThan, Stealable, Dispelable, UseDebuffID, Type)

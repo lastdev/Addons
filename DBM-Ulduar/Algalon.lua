@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Algalon", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 47 $"):sub(12, -3))
 mod:SetCreatureID(32871)
 mod:SetModelID(28641)
 mod:SetModelSound("Sound\\Creature\\AlgalonTheObserver\\UR_Algalon_Aggro01.wav", "Sound\\Creature\\AlgalonTheObserver\\UR_Algalon_Slay02.wav")
@@ -16,7 +16,7 @@ mod:RegisterEvents(
 	"SPELL_AURA_APPLIED_DOSE",
 	"RAID_BOSS_EMOTE",
 	"CHAT_MSG_MONSTER_YELL",
-	"UNIT_HEALTH"
+	"UNIT_HEALTH target focus mouseover"
 )
 
 local announceBigBang			= mod:NewSpellAnnounce(64584, 4)
@@ -84,7 +84,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(64412) then
+	if args.spellId == 64412 then
 		timerNextPhasePunch:Start()
 		local amount = args.amount or 1
 		if args:IsPlayer() and amount >= 4 then

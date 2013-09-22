@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Najentus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 409 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 504 $"):sub(12, -3))
 mod:SetCreatureID(22887)
 mod:SetModelID(21174)
 mod:SetZone()
@@ -23,15 +23,20 @@ local timerShield		= mod:NewCDTimer(58, 39872)
 
 local berserkTimer		= mod:NewBerserkTimer(480)
 
+mod:AddBoolOption("SpineIcon")
+mod:AddBoolOption("InfoFrame", false)
 mod:AddBoolOption("RangeFrame", true)
-mod:AddBoolOption("SpineIcon", true)
 
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
-	timerShield:Start(60-delay)
-	warnShieldSoon:Schedule(50-delay)
+	timerShield:Start(58-delay)
+	warnShieldSoon:Schedule(48-delay)
 	if self.Options.RangeFrame then
-		DBM.RangeCheck:Show()
+		DBM.RangeCheck:Show(8)
+	end
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:SetHeader(L.HealthInfo)
+		DBM.InfoFrame:Show(5, "health", 8800)
 	end
 end
 
@@ -39,14 +44,17 @@ function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
+	if self.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(39872) then
+	if args.spellId == 39872 then
 		warnShield:Show()
 		warnShieldSoon:Schedule(48)
 		timerShield:Start()
-	elseif args:IsSpellID(39837) then
+	elseif args.spellId == 39837 then
 		warnSpine:Show(args.destName)
 		if self.Options.SpineIcon then
 			self:SetIcon(args.destName, 8)
@@ -58,7 +66,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(39837) then
+	if args.spellId == 39837 then
 		if self.Options.SpineIcon then
 			self:SetIcon(args.destName, 0)
 		end

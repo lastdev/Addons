@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(741, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8664 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9886 $"):sub(12, -3))
 mod:SetCreatureID(62397)
-mod:SetModelID(42645)
 mod:SetZone()
 mod:SetUsedIcons(1, 2)
 
@@ -24,12 +23,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_PERIODIC_MISSED",
 	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED",
-	"UNIT_AURA"
+	"UNIT_AURA_UNFILTERED"
 )
-
-local isDispeller = select(2, UnitClass("player")) == "MAGE"
-	    		 or select(2, UnitClass("player")) == "PRIEST"
-	    		 or select(2, UnitClass("player")) == "SHAMAN"
 
 local warnWhirlingBlade					= mod:NewTargetAnnounce(121896, 4)--Target scanning not tested
 local warnRainOfBlades					= mod:NewSpellAnnounce(122406, 4)
@@ -38,7 +33,7 @@ local warnImpalingSpear					= mod:NewPreWarnAnnounce(122224, 10, 3)--Pre warn yo
 local warnAmberPrison					= mod:NewTargetAnnounce(121881, 3)
 local warnCorrosiveResin				= mod:NewTargetAnnounce(122064, 3)
 local warnMending						= mod:NewCastAnnounce(122193, 4)
-local warnQuickening					= mod:NewCountAnnounce(122149, 4)--for Mass Dispel
+local warnQuickening					= mod:NewTargetCountAnnounce(122149, 4)
 local warnKorthikStrike					= mod:NewTargetAnnounce(123963, 3)
 local warnWindBomb						= mod:NewTargetAnnounce(131830, 4)
 
@@ -52,14 +47,14 @@ local specWarnCorrosiveResin			= mod:NewSpecialWarningRun(122064)
 local yellCorrosiveResin				= mod:NewYell(122064, nil, false)
 local specWarnCorrosiveResinPool		= mod:NewSpecialWarningMove(122125)
 local specWarnMending					= mod:NewSpecialWarningInterrupt(122193)--Whoever is doing this or feels responsible should turn it on.
-local specWarnQuickening				= mod:NewSpecialWarningTarget(122149, isDispeller)--^^
+local specWarnQuickening				= mod:NewSpecialWarningCount(122149, mod:IsMagicDispeller())--This is not stack warning.
 local specWarnKorthikStrike				= mod:NewSpecialWarningYou(123963)
 local specWarnKorthikStrikeOther		= mod:NewSpecialWarningTarget(123963, mod:IsHealer())
 local yellKorthikStrike					= mod:NewYell(123963)
-local specWarnWindBomb					= mod:NewSpecialWarningMove(131830)
+local specWarnWindBomb					= mod:NewSpecialWarningMove(131830, nil, nil, nil, 3)
 local specWarnWhirlingBladeMove			= mod:NewSpecialWarningMove(121898)
 local yellWindBomb						= mod:NewYell(131830)
-local specWarnReinforcements			= mod:NewSpecialWarningTarget("ej6554", not mod:IsHealer())--Also important to dps. (Espcially CC classes)
+local specWarnReinforcements			= mod:NewSpecialWarningTarget("ej6554", not mod:IsHealer(), "specWarnReinforcements")--Also important to dps. (Espcially CC classes)
 
 local timerRainOfBladesCD				= mod:NewCDTimer(48, 122406)--48-64 sec variation now. so much for it being a precise timer.
 local timerRainOfBlades					= mod:NewBuffActiveTimer(7.5, 122406)
@@ -120,17 +115,19 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(122224) and args.sourceName == UnitName("player") then
+	if args.spellId == 122224 and args.sourceName == UnitName("player") then
 		warnImpalingSpear:Cancel()
 		warnImpalingSpear:Schedule(40)
 		countdownImpalingSpear:Cancel()
 		countdownImpalingSpear:Start()
 		timerImpalingSpear:Start(args.destName)
-	elseif args:IsSpellID(121881) then--Not a mistake, 121881 is targeting spellid.
+	elseif args.spellId == 121881 then--Not a mistake, 121881 is targeting spellid.
 		amberPrisonTargets[#amberPrisonTargets + 1] = args.destName
 		if args:IsPlayer() then
 			specWarnAmberPrison:Show()
-			yellAmberPrison:Yell()
+			if not self:IsDifficulty("lfr25") then
+				yellAmberPrison:Yell()
+			end
 		end
 		self:Unschedule(warnAmberPrisonTargets)
 		self:Schedule(0.3, warnAmberPrisonTargets)
@@ -143,13 +140,13 @@ function mod:SPELL_AURA_APPLIED(args)
 				amberPrisonIcon = 2
 			end
 		end
-	elseif args:IsSpellID(122064) then
+	elseif args.spellId == 122064 then
 		warnCorrosiveResin:Show(args.destName)
 		if args:IsPlayer() and self:AntiSpam(3, 5) then
 			specWarnCorrosiveResin:Show()
 			yellCorrosiveResin:Yell()
 		end
-	elseif args:IsSpellID(122055) and args:IsPlayer() then
+	elseif args.spellId == 122055 and args:IsPlayer() then
 		local _, _, _, _, _, duration, expires, _, _ = UnitDebuff("player", args.spellName)
 		timerResidue:Start(expires-GetTime())
 	end
@@ -157,45 +154,48 @@ end
 mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(122224) and args.sourceName == UnitName("player") then
+	if args.spellId == 122224 and args.sourceName == UnitName("player") then
 		warnImpalingSpear:Cancel()
 		countdownImpalingSpear:Cancel()
 		timerImpalingSpear:Cancel(args.destName)
-	elseif args:IsSpellID(121885) and self.Options.AmberPrisonIcons then--Not a mistake, 121885 is frozon spellid
+	elseif args.spellId == 121885 and self.Options.AmberPrisonIcons then--Not a mistake, 121885 is frozon spellid
 		self:SetIcon(args.destName, 0)
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(122406) then
+	if args.spellId == 122406 then
 		warnRainOfBlades:Show()
 		specWarnRainOfBlades:Show()
 		timerRainOfBlades:Start()
 		timerRainOfBladesCD:Start()
-	elseif args:IsSpellID(121876) then
+	elseif args.spellId == 121876 then
 		timerAmberPrisonCD:Start(36, args.sourceGUID)
-	elseif args:IsSpellID(122064) then
+	elseif args.spellId == 122064 then
 		timerCorrosiveResinCD:Start(36, args.sourceGUID)
-	elseif args:IsSpellID(122193) then
+	elseif args.spellId == 122193 then
 		warnMending:Show()
 		timerMendingCD:Start(nil, args.sourceGUID)
 		if args.sourceGUID == UnitGUID("target") or args.sourceGUID == UnitGUID("focus") then
 			specWarnMending:Show(args.sourceName)
 		end
-	elseif args:IsSpellID(122149) then
+	elseif args.spellId == 122149 then
 		if not zarthikGUIDS[args.sourceGUID] then
 			zarthikCount = zarthikCount + 1
 			zarthikGUIDS[args.sourceGUID] = zarthikCount
 		end
-		warnQuickening:Show(zarthikGUIDS[args.sourceGUID] or 0)--maybe better to warn when spell applied?
-		specWarnQuickening:Show("("..(zarthikGUIDS[args.sourceGUID] or 0)..") - "..args.sourceName)--This should be redone to spam every 2 seconds above 5 stacks. above 10 stacks it should ignore option default. above 15 stacks it should post a chat message every 0.5 seconds. MAYBE lFR will stop wiping to this then
+		local count = zarthikGUIDS[args.sourceGUID] -- This is set counter for dispel(1, 2, 3, 1, 2, 3.. repeats). Especailly for mass dispel. Very useful for PRIEST. NO SPAM. DO NOT REMOVE THIS. 
+		warnQuickening:Show(count, args.sourceName)
+		specWarnQuickening:Show(count)
 		timerQuickeningCD:Start(nil, args.sourceGUID)
 	end
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId)
 	if spellId == 131830 then
-		windBombTargets[#windBombTargets + 1] = destName
+		if #windBombTargets < 6 then -- prevent target warning spam.
+			windBombTargets[#windBombTargets + 1] = destName
+		end
 		self:Unschedule(warnWindBombTargets)
 		self:Schedule(0.3, warnWindBombTargets)
 		if destGUID == UnitGUID("player") and self:AntiSpam(3, 3) then
@@ -255,7 +255,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	end
 end
 
-function mod:UNIT_AURA(uId)
+function mod:UNIT_AURA_UNFILTERED(uId)
 	if UnitDebuff(uId, strikeSpell) and not strikeTarget then
 		strikeTarget = uId
 		local name = DBM:GetUnitFullName(uId)

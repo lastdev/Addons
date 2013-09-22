@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Viscidus", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 433 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 500 $"):sub(12, -3))
 mod:SetCreatureID(15299)
 mod:SetModelID(15686)
 mod:SetMinSyncRevision(428)
@@ -12,8 +12,8 @@ mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_EMOTE"
 )
 
-local warnFreeze		= mod:NewAnnounce("WarnFreeze", 2)
-local warnShatter		= mod:NewAnnounce("WarnShatter", 2)
+local warnFreeze		= mod:NewAnnounce("WarnFreeze", 2, 33395)
+local warnShatter		= mod:NewAnnounce("WarnShatter", 2, 12982)
 
 local timerFrozen		= mod:NewBuffActiveTimer(30, 25937)
 
@@ -48,6 +48,9 @@ function mod:RANGE_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, _, _, _, overk
 	if cid == 15299 then
 		meleeHits = meleeHits + 1
 		print(meleeHits)
+		if meleeHits > 30 then
+			self:UnregisterShortTermEvents()
+		end
 	end
 end
 
@@ -56,6 +59,9 @@ function mod:SWING_DAMAGE(_, _, _, _, destGUID, _, _, _, _, overkill)
 	if cid == 15299 then
 		meleeHits = meleeHits + 1
 		print(meleeHits)
+		if meleeHits > 30 then
+			self:UnregisterShortTermEvents()
+		end
 	end
 end
 

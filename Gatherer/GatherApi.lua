@@ -1,6 +1,6 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.2.0 (<%codename%>)
+	Version: 4.4.0 (<%codename%>)
 	Revision: $Id: GatherApi.lua 959 2012-08-29 03:56:28Z Esamynn $
 
 	License:
@@ -28,7 +28,7 @@
 	These functions can be used by external addons for interfacing with
 	Gatherer. We will try and keep these functions as unchanged as possible.
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/trunk/Gatherer/GatherApi.lua $", "$Rev: 959 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.0/Gatherer/GatherApi.lua $", "$Rev: 959 $")
 
 -- reference to the Astrolabe mapping library
 local Astrolabe = DongleStub(Gatherer.AstrolabeVersion)

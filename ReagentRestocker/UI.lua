@@ -509,16 +509,16 @@ function showSelling()
 		function() return ReagentRestockerDB.Options.UnusableQualityLevel end,
 		function(self, name, x) if type(x)~="number" then error("x must be a number!") end; ReagentRestockerDB.Options.UnusableQualityLevel = x; end);
 
-	addDisabledCheckBox("Keep bind on equip items",
-		"DISABLED UNTIL FIXED. Prevent Reagent Restocker from selling items marked as " .. _G.ITEM_BIND_ON_EQUIP,
---		function() return ReagentRestockerDB.Options.KeepBindOnEquip end,
-		function() return false end,
+	addCheckBox("Keep bind on equip items",
+		"Prevent Reagent Restocker from selling items marked as " .. _G.ITEM_BIND_ON_EQUIP,
+		function() return ReagentRestockerDB.Options.KeepBindOnEquip end,
+--		function() return false end,
 		function(x) ReagentRestockerDB.Options.KeepBindOnEquip = x end);
 
-	addDisabledCheckBox("Keep soulbound items",
-		"DISABLED UNTIL FIXED. Prevent Reagent Restocker from selling items marked as " .. _G.ITEM_SOULBOUND,
---		function() return ReagentRestockerDB.Options.KeepSoulbound end,
-		function() return false end,
+	addCheckBox("Keep soulbound items",
+		"Prevent Reagent Restocker from selling items marked as " .. _G.ITEM_SOULBOUND,
+		function() return ReagentRestockerDB.Options.KeepSoulbound end,
+--		function() return false end,
 		function(x) ReagentRestockerDB.Options.KeepSoulbound = x end);
 
 		

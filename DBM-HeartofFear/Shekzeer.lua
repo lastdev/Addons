@@ -1,9 +1,8 @@
 local mod	= DBM:NewMod(743, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8765 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9668 $"):sub(12, -3))
 mod:SetCreatureID(62837)--62847 Dissonance Field, 63591 Kor'thik Reaver, 63589 Set'thik Windblade
-mod:SetModelID(42730)
 mod:SetZone()
 mod:SetUsedIcons(1, 2)
 
@@ -16,7 +15,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS",
 	"SPELL_CAST_START",
 	"CHAT_MSG_MONSTER_YELL",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 local warnScreech				= mod:NewSpellAnnounce(123735, 3, nil, false)--Not useful.
@@ -37,7 +36,7 @@ local warnConsumingTerror		= mod:NewSpellAnnounce(124849, 4, nil, not mod:IsTank
 local warnHeartOfFear			= mod:NewTargetAnnounce(125638, 4)
 
 local specwarnSonicDischarge	= mod:NewSpecialWarningSpell(123504, nil, nil, nil, true)
-local specWarnEyes				= mod:NewSpecialWarningStack(123707, mod:IsTank(), 4)--4 is max, 2 is actually the smartest time to taunt though. i may change it to 2 at some point
+local specWarnEyes				= mod:NewSpecialWarningStack(123707, mod:IsTank(), 3)--4 is max, 2 is actually the smartest time to taunt though. i may change it to 2 at some point
 local specWarnEyesOther			= mod:NewSpecialWarningTarget(123707, mod:IsTank())
 local specwarnCryOfTerror		= mod:NewSpecialWarningYou(123788)
 local specWarnRetreat			= mod:NewSpecialWarningSpell(125098)
@@ -123,36 +122,36 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(123707) then
+	if args.spellId == 123707 then
 		warnEyes:Show(args.destName, args.amount or 1)
 		timerEyes:Start(args.destName)
 		timerEyesCD:Start()
-		if args:IsPlayer() and (args.amount or 1) >= 4 then
+		if args:IsPlayer() and (args.amount or 1) >= 3 then
 			specWarnEyes:Show(args.amount)
 		else
-			if (args.amount or 1) >= 3 and not UnitDebuff("player", GetSpellInfo(123735)) and not UnitIsDeadOrGhost("player") then
+			if (args.amount or 1) >= 2 and not UnitDebuff("player", GetSpellInfo(123735)) and not UnitIsDeadOrGhost("player") then
 				specWarnEyesOther:Show(args.destName)
 			end
 		end
-	elseif args:IsSpellID(123788) then
+	elseif args.spellId == 123788 then
 		warnCryOfTerror:Show(args.destName)
 		timerCryOfTerror:Start(args.destName)
 		timerCryOfTerrorCD:Start()
 		if args:IsPlayer() then
 			specwarnCryOfTerror:Show()
 		end
-	elseif args:IsSpellID(124748) then
+	elseif args.spellId == 124748 then
 		warnAmberTrap:Show(args.amount or 1)
 		table.wipe(resinTargets)
-	elseif args:IsSpellID(125822) then
+	elseif args.spellId == 125822 then
 		warnTrapped:Show(args.destName)
-	elseif args:IsSpellID(125390) then
+	elseif args.spellId == 125390 then
 		warnFixate:Show(args.destName)
-		if args:IsPlayer() then
+		if args:IsPlayer() and not self:IsDifficulty("lfr25") then--in LFR, they are not dangerous, you stack mobs up, don't want to run mobs out of clump
 			specwarnFixate:Show()
 			soundFixate:Play()
 		end
-	elseif args:IsSpellID(124862) then
+	elseif args.spellId == 124862 then
 		visonsTargets[#visonsTargets + 1] = args.destName
 		if args:IsPlayer() then
 			specwarnVisions:Show()
@@ -162,7 +161,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		self:Unschedule(warnVisionsTargets)
 		self:Schedule(0.3, warnVisionsTargets)
-	elseif args:IsSpellID(124097) then
+	elseif args.spellId == 124097 then
 		if args:IsPlayer() and self:AntiSpam(5, 2) then --prevent spam in heroic
 			specwarnStickyResin:Show()
 			yellStickyResin:Yell()
@@ -179,14 +178,14 @@ function mod:SPELL_AURA_APPLIED(args)
 				end
 			end
 		end
-	elseif args:IsSpellID(124077) then
+	elseif args.spellId == 124077 then
 		specWarnDispatch:Show(args.sourceName)
 		if self:IsDifficulty("normal25", "heroic25", "lfr25") then
 			timerDispatchCD:Start()--25 is about 12-15 variation
 		else
 			timerDispatchCD:Start(21)--Longer Cd on 10 man (21-24 variation)
 		end
-	elseif args:IsSpellID(123845) then
+	elseif args.spellId == 123845 then
 		warnHeartOfFear:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnHeartOfFear:Show()
@@ -201,13 +200,13 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(123788) then
+	if args.spellId == 123788 then
 		timerCryOfTerror:Cancel(args.destName)
-	elseif args:IsSpellID(124097) then
+	elseif args.spellId == 124097 then
 		if self.Options.StickyResinIcons then
 			self:SetIcon(args.destName, 0)
 		end
-	elseif args:IsSpellID(123845) then
+	elseif args.spellId == 123845 then
 		if self.Options.HeartOfFearIcon then
 			self:SetIcon(args.destName, 0)
 		end
@@ -215,18 +214,18 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(123735) then
+	if args.spellId == 123735 then
 		warnScreech:Show()
 		timerScreechCD:Start()
-	elseif args:IsSpellID(125826) then
+	elseif args.spellId == 125826 then
 		specwarnAmberTrap:Show()
-	elseif args:IsSpellID(124845) then
+	elseif args.spellId == 124845 then
 		warnCalamity:Show()
 		timerCalamityCD:Start()
 	--"<33.5 22:57:49> [CHAT_MSG_MONSTER_YELL] CHAT_MSG_MONSTER_YELL#No more excuses, Empress! Eliminate these cretins or I will kill you myself!#Sha of Fear###Grand Empress Shek'zeer
 	--"<36.8 22:57:52> [CLEU] SPELL_CAST_SUCCESS#false#0xF130F9C600007497#Sha of Fear#2632#0#0x0000000000000000#nil#-2147483648#-2147483648#125451#Ultimate Corruption#1", -- [7436]
 	--backup phase 3 trigger for unlocalized languages
-	elseif args:IsSpellID(125451) and not phase3Started then
+	elseif args.spellId == 125451 and not phase3Started then
 		phase3Started = true
 		self:UnregisterShortTermEvents()
 		if self.Options.RangeFrame then
@@ -240,7 +239,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerVisionsCD:Start(4)
 		timerCalamityCD:Start(9)
 		timerConsumingTerrorCD:Start(11)
-	elseif args:IsSpellID(123255) and self:AntiSpam(2, 3) then
+	elseif args.spellId == 123255 and self:AntiSpam(2, 3) then
 		fieldCount = fieldCount + 1
 		warnDissonanceField:Show(fieldCount)
 		if fieldCount < 2 then
@@ -257,7 +256,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(124849) then
+	if args.spellId == 124849 then
 		warnConsumingTerror:Show()
 		specWarnConsumingTerror:Show()
 		timerConsumingTerrorCD:Start()
@@ -287,7 +286,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if spellId == 125098 and self:AntiSpam(2, 1) then--Yell is about 1.5 seconds faster then this event, BUT, it also requires localizing. I don't think doing it this way hurts anything.
+	if spellId == 125098 then--Yell is about 1.5 seconds faster then this event, BUT, it also requires localizing. I don't think doing it this way hurts anything.
 		self:UnregisterShortTermEvents()
 		table.wipe(resinTargets)
 		timerScreechCD:Cancel()
@@ -304,7 +303,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Hide()
 		end
-	elseif spellId == 125304 and self:AntiSpam(2, 1) then
+	elseif spellId == 125304 then
 		fieldCount = 0
 		timerPhase1:Cancel()--If you kill everything it should end early.
 		warnAdvance:Show()

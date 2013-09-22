@@ -1,20 +1,22 @@
-local mod = DBM:NewMod("Freywinn", "DBM-Party-BC", 14)
+local mod = DBM:NewMod(559, "DBM-Party-BC", 14, 257)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 315 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 494 $"):sub(12, -3))
 
 mod:SetCreatureID(17975)
-mod:SetModelID(19045)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS"
 )
 
-local WarnTranq   = mod:NewAnnounce("WarnTranq", 3, 34550)
+local WarnTranq		= mod:NewSpellAnnounce("ej5457", 3)
+
+local specWarnTranq	= mod:NewSpecialWarningSwitch("ej5458", mod:IsDps())
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(34557) then      --Summon Frayer Protector
+	if args.spellId == 34557 then      --Summon Frayer Protector
 		WarnTranq:Show()
+		specWarnTranql:Show()
 	end
 end

@@ -1,10 +1,9 @@
 local mod	= DBM:NewMod(332, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(56598)--56427 is Boss, but engage trigger needs the ship which is 56598
 mod:SetMainBossID(56427)
-mod:SetModelID(39399)
 mod:SetModelSound("sound\\CREATURE\\WarmasterBlackhorn\\VO_DS_BLACKHORN_INTRO_01.OGG", "sound\\CREATURE\\WarmasterBlackhorn\\VO_DS_BLACKHORN_SLAY_01.OGG")
 mod:SetZone()
 mod:SetUsedIcons()
@@ -23,7 +22,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_MISSED",
 	"RAID_BOSS_EMOTE",
 	"UNIT_DIED",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
 local warnDrakesLeft				= mod:NewAddsLeftAnnounce("ej4192", 2, 61248)
@@ -159,38 +158,38 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(107588) then
+	if args.spellId == 107588 then
 		twilightOnslaughtCount = twilightOnslaughtCount + 1
 		warnTwilightOnslaught:Show(twilightOnslaughtCount)
 		specWarnTwilightOnslaught:Show()
 		timerTwilightOnslaught:Start()
 		timerTwilightOnslaughtCD:Start(nil, twilightOnslaughtCount + 1)
 		countdownTwilightOnslaught:Start()
-	elseif args:IsSpellID(108046) then
+	elseif args.spellId == 108046 then
 		self:ScheduleMethod(0.2, "ShockwaveTarget")
 		timerShockwaveCD:Start()
-	elseif args:IsSpellID(110212) then
+	elseif args.spellId == 110212 then
 		warnTwilightBreath:Show()
 		timerTwilightBreath:Start()
-	elseif args:IsSpellID(108039) then
+	elseif args.spellId == 108039 then
 		warnReloading:Show()
 		timerReloadingCast:Start(args.sourceGUID)
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(108044) then
+	if args.spellId == 108044 then
 		warnRoar:Show()
 		timerRoarCD:Start()
-	elseif args:IsSpellID(108042) then
+	elseif args.spellId == 108042 then
 		timerDevastateCD:Start()
-	elseif args:IsSpellID(107558) then
+	elseif args.spellId == 107558 then
 		timerDegenerationCD:Start(args.sourceGUID)
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(108043) then
+	if args.spellId == 108043 then
 		warnSunder:Show(args.destName, args.amount or 1)
 		timerSunder:Start(args.destName)
 		if args:IsPlayer() then
@@ -202,7 +201,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnSunderOther:Show(args.destName)
 			end
 		end
-	elseif args:IsSpellID(108038) then
+	elseif args.spellId == 108038 then
 		if self:AntiSpam(5, 1) then -- Use time check for harpooning warning. It can be avoid bad casts also.
 			warnHarpoon:Show(args.destName)
 			specWarnHarpoon:Show(args.destName)
@@ -213,7 +212,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		elseif self:IsDifficulty("normal10", "normal25") then
 			timerHarpoonActive:Start(25, args.destGUID)
 		end
-	elseif args:IsSpellID(108040) and not phase2Started then--Goriona is being shot by the ships Artillery Barrage (phase 2 trigger)
+	elseif args.spellId == 108040 and not phase2Started then--Goriona is being shot by the ships Artillery Barrage (phase 2 trigger)
 		timerTwilightOnslaughtCD:Cancel()
 		countdownTwilightOnslaught:Cancel()
 		timerBroadsideCD:Cancel()
@@ -224,7 +223,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if DBM.BossHealth:IsShown() then
 			DBM.BossHealth:AddBoss(56427, L.name)
 		end
-	elseif args:IsSpellID(110214) then
+	elseif args.spellId == 110214 then
 		warnConsumingShroud:Show(args.destName)
 		timerConsumingShroud:Start()
 	end
@@ -232,13 +231,13 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(108043) then
+	if args.spellId == 108043 then
 		timerSunder:Cancel(args.destName)
 	end
 end
 
 function mod:SPELL_SUMMON(args)
-	if args:IsSpellID(108051) then
+	if args.spellId == 108051 then
 		warnTwilightFlames:Show()
 		timerTwilightFlamesCD:Start()
 	end

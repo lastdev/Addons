@@ -1,8 +1,0 @@
-<Bindings>
-  <Binding name="POJ_TOGGLE" header="POJ">PoJ_ToggleFrame(PoJ_Options)</Binding>
-  <Binding name="POJ_TOGGLENOTES">PoJ_ToggleFrame(PoJ_Notes, true)</Binding>
-  <Binding name="POJ_ACTION1">PoJ_DoAction(1)</Binding>
-  <Binding name="POJ_ACTION2">PoJ_DoAction(2)</Binding>
-  <Binding name="POJ_ACTION3">PoJ_DoAction(3)</Binding>
-  <Binding name="POJ_ACTION4">PoJ_DoAction(4)</Binding>
-</Bindings>

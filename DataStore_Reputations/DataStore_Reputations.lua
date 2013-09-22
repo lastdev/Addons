@@ -168,6 +168,14 @@ local FactionUIDs = {
 	BF["Tina Mudclaw"],
 	BF["Tushui Pandaren"],
 	BF["Huojin Pandaren"],
+	
+	BF["Operation: Shieldwall"],
+	BF["Kirin Tor Offensive"],
+	BF["Akama's Trust"],
+	BF["Dominance Offensive"],
+	BF["Sunreaver Onslaught"],
+	BF["Shado-Pan Assault"],
+	BF["Darkspear Rebellion"],	
 }
 
 local FactionUIDsRev = {}

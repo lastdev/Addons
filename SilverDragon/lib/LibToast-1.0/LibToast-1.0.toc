@@ -1,13 +1,13 @@
-## Interface: 50200
+## Interface: 50300
 ## Title: Lib: Toast-1.0
 ## Notes: Provides one or many informational windows with optional interactive widgets.
 ## Author: Torhal
-## Version: r25
+## Version: r27
 ## LoadOnDemand: 1
-## X-Date: 2013-03-05T11:16:01Z
+## X-Date: 2013-06-13T03:29:30Z
 ## X-Category: Libraries
 ## X-License: All Rights Reserved
-## X-Curse-Packaged-Version: r25
+## X-Curse-Packaged-Version: r27
 ## X-Curse-Project-Name: LibToast-1.0
 ## X-Curse-Project-ID: libtoast-1-0
 ## X-Curse-Repository-ID: wow/libtoast-1-0/mainline

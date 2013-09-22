@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 587 2013-03-05T17:39:39Z
+    Revision: 592 2013-05-21T13:24:07Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -143,7 +143,7 @@ local function EnhanceItemTooltip(tooltip, id, link)
         if ( itemType == ARMORY_RECIPE ) then
             local _, reqProfession, reqRank, reqReputation, reqStanding, reqSkill, _, _, reagents = GetRequirements(tooltip);
             -- Recipe tooltips are built in stages (last stage shows rank)
-            if ( not reagents ) then
+            if ( not reqRank ) then
                 return;
             end
             knownBy, hasSkill, canLearn = Armory:GetRecipeAltInfo(name, link, reqProfession, reqRank, reqReputation, reqStanding, reqSkill);
@@ -318,6 +318,7 @@ local function EnhanceAchievementTooltip(tooltip, id, link)
     table.wipe(tooltipLines);
     
     local id, _, _, completed, month, day, year, _, flags, _, _, isGuild, _, earnedBy = GetAchievementInfo(id);
+    flags = flags or 0;
     if ( isGuild ) then
         return;
     elseif ( completed ) then
@@ -349,6 +350,7 @@ local function EnhanceAchievementTooltip(tooltip, id, link)
                 local started;
                 for i = 1, GetAchievementNumCriteria(id) do
                     local _, criteriaType, completed, quantityNumber, reqQuantity, _, flags, assetId, quantityString = GetAchievementCriteriaInfo(id, i);
+                    flags = flags or 0;
                     if ( criteriaType == CRITERIA_TYPE_ACHIEVEMENT and assetId ) then
                         _, _, _, completed = _G.GetAchievementInfo(assetId);
                         totalQuantity = totalQuantity + 1;

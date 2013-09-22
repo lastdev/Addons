@@ -1,8 +1,8 @@
-﻿## Interface: 50200
+﻿## Interface: 50400
 ## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
-## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Поля Боя|r
+## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
 ## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0PvP|r
@@ -15,8 +15,9 @@
 ## RequiredDeps: DBM-Core
 ## SavedVariablesPerCharacter: DBMPvP_SavedVars
 ## X-DBM-Mod: 1
-## X-DBM-Mod-Category: MOP
-## X-DBM-Mod-Has-Heroic-Mode: 0
+## X-DBM-Mod-Type: OTHER
+## X-DBM-Mod-Category: PvP
+## X-DBM-Mod-No-Statistics: 1
 ## X-DBM-Mod-SubCategories: Arena,Battlegrounds
 ## X-DBM-Mod-SubCategories-deDE: Arena,Schlachtfelder
 ## X-DBM-Mod-SubCategories-ruRU: Арена,Поля боя
@@ -30,19 +31,15 @@
 ## X-DBM-Mod-Name: PvP
 ## X-DBM-Mod-Name-deDE: PvP
 ## X-DBM-Mod-Name-frFR: PvP
-## X-DBM-Mod-Name-ruRU: Игрок против игрока
+## X-DBM-Mod-Name-ruRU: PvP
 ## X-DBM-Mod-Name-zhTW: PvP
 ## X-DBM-Mod-Name-zhCN: PvP
 ## X-DBM-Mod-Name-koKR: PvP
 ## X-DBM-Mod-Name-esES: JcJ
 ## X-DBM-Mod-Name-esMX: JcJ
 ## X-DBM-Mod-Name-ptBR: JxJ
-## X-DBM-Mod-Sort: 75
-## X-DBM-Mod-LoadZoneID: 461,443,401,540,482,856,860
-## X-Curse-Packaged-Version: 5.2.1
-## X-Curse-Project-Name: Deadly Boss Mods
-## X-Curse-Project-ID: deadly-boss-mods
-## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
+## X-DBM-Mod-MapID: 529,489,30,628,566,998,726,727,761
+## X-DBM-Mod-Sort: 999
 localization.en.lua
 localization.de.lua
 localization.tw.lua

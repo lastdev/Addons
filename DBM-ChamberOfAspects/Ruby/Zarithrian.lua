@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Zarithrian", "DBM-ChamberOfAspects", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
 mod:SetCreatureID(39746)
 mod:SetModelID(32179)
 
@@ -30,14 +30,14 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(74384) then
+	if args.spellId == 74384 then
 		warningFear:Show()
 		timerFearCD:Start()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(74367) then
+	if args.spellId == 74367 then
 		warnCleaveArmor:Show(args.spellName, args.destName, args.amount or 1)
 		timerCleaveArmor:Start(args.destName)
 		if args:IsPlayer() and (args.amount or 1) >= 2 then

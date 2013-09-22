@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - AH-WindowControl
-	Version: 5.15.5380 (LikeableLyrebird)
+	Version: 5.18.5433 (PassionatePhascogale)
 	Revision: $Id: Auc-Util-AHWindowControl.lua 5347 2012-09-06 06:26:15Z Esamynn $
 	URL: http://auctioneeraddon.com/
 
@@ -329,4 +329,4 @@ function lib.ToggleDebug()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AHWindowControl/Auc-Util-AHWindowControl.lua $", "$Rev: 5347 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-AHWindowControl/Auc-Util-AHWindowControl.lua $", "$Rev: 5347 $")

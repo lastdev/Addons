@@ -1,3 +1,52 @@
+== Version 50400.1.2
+* Bugfix update to Bitten's SpellFlash Library.
+
+== Version 50400.1.1
+* Forgot to update the .toc, so WoW was still reporting the addon as "out of date".
+
+== Version 50400.1.0
+* Almost no change needed for this patch.  Adjusted flashing for the buff to Mindbender.
+
+== Version 3.0.4
+* All: Now flashes food buffs.
+* All: Now flashes Dispel Magic.
+
+== Version 3.0.3
+Update for patch 5.3.
+* Discipline: Power Word: Shield no longer flashes under Borrowed Time, since it will now consume the buff. 
+
+== Version 3.0.2
+* Updating to the latest Library again, hopefully to actually fix the bug this time!  (Sorry.)
+
+== Version 3.0.1
+* Updated to latest Bitten's SpellFlash Library for a bugfix.
+
+== Version 3.0.0
+* Holy: Added flashing for Holy.
+
+== Version 2.9.2
+* Shadow: Bugfix for some users from whom Divine Star, Cascade and Halo stopped flashing.
+
+== Version 2.9.1
+* Shadow: More small tweaks to the rotation.
+* Shadow: Improved prediction/detection of whether the cooldown of Shadow Word: Death will trigger.
+
+== Version 2.9.0-beta
+* Shadow: Flashing should be smoother, with better indications when to interrupt channeling.  E.g. Mind Blast will start flashing small and green as soon as you start a Mind Flay channel, if it will be the next spell, then switch to normal flashing once the cooldown is up.
+* Shadow: Tweaked rotation for a slight dps gain (according to simulations).
+* Shadow: Added flashing for Silence.
+* Shadow: Added flashing for Vampiric Embrace.
+* Shadow: Bugfix - Devouring Plague ticks every second, not every 3.
+
+== Version 2.8.1
+* Shadow: Bugfix - Divine Star was actually not flashing yet.  Now it flashes red & yellow depending on range.
+
+== Version 2.8.0-beta
+* Shadow: Mind Flay now has a high priority when under the affects of Solace and Insanity.
+* Shadow: Devouring Plague is now always prioritized above the level 90 talents.
+* Shadow: Added flashing for Divine Star.  It is worth casting now, even for single target fights.
+* Shadow: Added a couple semi-helpful flashes while moving (for Shadow Words: Death and Pain).
+
 == Version 2.7.2
 NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
 
@@ -47,35 +96,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 * Discipline/Holy: Now flashes Desperate Prayer.
 * Shadow: Devouring Plague now flashes yellow and continues to the next priority, in case you are multi-dotting.
 * Shadow: No longer flashes Mind Flay to stack up Dark Evangelism if you don't have the talent.
-
-== Version 2.2.2
-* Taking out of beta.
-
-== Version 2.2.1 beta
-This beta release uses Bitten's SpellFlash Library version 3.  If you update you will also need to update any of your other Bitten's SpellFlash modules, which may also be in beta.
-* Discipline/Holy: Now anticipates Seredipity stacks/consumption as you are casting Flash Heal, Binding Heal, Greater Heal or Prayer of Healing.
-
-== Version 2.2.0
-* Discipline: Now flashes Binding Heal.
-* Discipline: No longer flashes Pennance.
-* Holy: Now flashes Binding Heal.
-* Holy: No longer flashes Holy Word: Serenity.
-* Shadow: Bugfix - Mind Flay for Dark Evangelism was never flashing.
-
-== Version 2.1.0
-* Discipline: Bugfix - Power Word: Shield no longer flashes for targets with Weakened Soul.
-* Discipline: Spells will flash correctly taking into account the channeling time of Pennance.
-* Shadow: Dot refreshing is managed accurately based on haste.
-* Shadow: Spells will flash correctly taking into account the channeling time of Mind Flay.
-* Added German localization (thanks Gucki!)
-
-== Version 2.0.0
-* Adds flashing for Holy and Discipline.
-* Flashes Power Word: Fortitude and Shadow Protection.
-* Move to Bitten's SpellFlash Library 2.0.
-* Should now work on non-English clients.
-* Adds localization support.
-* Plays nicer with other addons.
-
-== Version 1.0.0 beta
-* Initial Release

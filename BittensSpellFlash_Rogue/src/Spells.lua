@@ -15,6 +15,14 @@ function a.CanBackstab()
 	return not a.NoBackstab[targetID] and not c.IsTanking()
 end
 
+local function getCost(spell)
+	return s.SpellCost(s.SpellName(spell.ID))
+end
+
+local function hasSufficientEnergy(spell)
+	return a.Energy >= getCost(spell)
+end
+
 local function modSpell(spell)
 	local origColor = spell.FlashColor
 	spell.NoPowerCheck = true
@@ -22,13 +30,7 @@ local function modSpell(spell)
 		if spell.FlashColor ~= origColor and spell.FlashColor ~= "green" then
 			origColor = spell.FlashColor
 		end
-		if a.Energy < s.SpellCost(s.SpellName(spell.ID)) then
-			spell.FlashColor = "green"
-			spell.FlashSize = s.FlashSizePercent() / 2
-		else
-			spell.FlashColor = origColor
-			spell.FlashSize = nil
-		end
+		c.MakePredictor(spell, not hasSufficientEnergy(spell), origColor)
 		return true
 	end
 end
@@ -42,7 +44,7 @@ local function addOptionalSpell(name, tag, attributes)
 end
 
 ------------------------------------------------------------------------ Common
-local function canAmbush()
+function a.CanAmbush()
 	local _, targetID = s.UnitInfo()
 	return a.CanBackstab()
 		and (not c.HasTalent("Cloak and Dagger") 
@@ -109,9 +111,12 @@ c.AddOptionalSpell("Preparation", nil, {
 	end
 })
 
+c.AddOptionalSpell("Shadow Blades")
+
 c.AddOptionalSpell("Marked for Death", nil, {
 	CheckFirst = function()
 		return a.CP == 0
+			and not c.HasBuff("Shadow Blades", false, false, true)
 	end
 })
 
@@ -138,21 +143,30 @@ c.AddOptionalSpell("Expose Armor", nil, {
 })
 
 addSpell("Ambush", nil, {
-	CheckFirst = canAmbush,
-})
-
-c.AddInterrupt("Kick", nil, {
-	NoGCD = true,
+	CheckFirst = a.CanAmbush,
 })
 
 c.AddOptionalSpell("Recuperate", nil, {
-	NoRangeCheck = true,
-	CheckFirst = function()
-		return a.CP == 5
-			and c.IsSolo()
-			and not c.HasBuff("Recuperate")
-			and c.HasGlyph("Deadly Momentum")
+	Buff = "Recuperate",
+	BuffUnit = "player",
+	Override = function(z)
+		c.MakePredictor(z, not hasSufficientEnergy(z), "yellow")
+		return a.CP >= 5 and c.IsSolo() and c.HasGlyph("Deadly Momentum")
 	end
+})
+
+c.AddSpell("Shuriken Toss", nil, {
+	CheckFirst = function()
+		return not s.MeleeDistance()
+			and (a.Energy >= 75
+				or not c.HasBuff("Shuriken Toss", false, false, true))
+	end,
+})
+
+c.AddDispel("Shiv", nil, "")
+
+c.AddInterrupt("Kick", nil, {
+	NoGCD = true,
 })
 
 ----------------------------------------------------------------- Assassination
@@ -161,133 +175,142 @@ local function canDispatch()
 		or (c.HasBuff("Blindside") and not c.IsCasting("Dispatch"))
 end
 
-addSpell("Mutilate", nil, {
-	CheckFirst = function()
-		if c.HasBuff("Vanish") 
-			and c.HasTalent("Shadow Focus") 
-			and not c.IsCasting("Mutilate") then
-			
-			return true
-		end
-		
-		if a.CP < 4 then
-			return true
-		end
-		
-		if a.CP == 5 then
-			return false
-		end
-		
-		-- If we can just wait at 4 combo points for a rupture, do that.
-		local dur = c.GetMyDebuffDuration("Rupture") 
-		return dur == 0
-			or a.Energy + a.Regen * dur > s.MaxPower("player") - 10
-	end
-})
-
-addSpell("Dispatch", nil, {
-	CheckFirst = function()
-		return a.CP < 5 and canDispatch()
-	end
-})
-
-addSpell("Slice and Dice", "for Assassination", {
-	NoRangeCheck = true,
-	CheckFirst = function(z)
-		if c.IsSolo() then
-			z.FlashColor = "yellow"
-			z.Continue = true
-		else
-			z.FlashColor = nil
-			z.Continue = nil
-		end
-		return not c.HasBuff("Slice and Dice") 
-			and not c.IsCasting("Slice and Dice")
-	end
-})
-
-addSpell("Envenom", nil, {
-	CheckFirst = function()
-		if c.HasBuff("Vanish") 
-			and c.HasTalent("Nightstalker") 
-			and not c.IsCasting("Envenom") then
-			
-			return true
-		end
-		
-		if a.CP < 5 then
-			return false
-		end
-		
-		if c.IsSolo() then
-			return true
-		end
-		
-		local untilCap = s.MaxPower("player") - a.Energy - 10
-		return untilCap <= 0
-			or (c.GetMyDebuffDuration("Rupture") > untilCap / a.Regen 
-				and not c.HasBuff("Envenom"))
-	end
-})
-
-addSpell("Envenom", "to refresh Slice and Dice", {
-	CheckFirst = function()
-		local snd = c.GetBuffDuration("Slice and Dice")
-		return snd > .1 and snd < 3
-	end
-})
-
-addOptionalSpell("Rupture", "for Assassination", {
-	MyDebuff = "Rupture",
-	CheckFirst = function(z)
-		if c.IsSolo() then
-			return false
-		end
-		
-		if a.CP < a.LastRuptureCP then
-			z.EarlyRefresh = nil
-		else
-			z.EarlyRefresh = 1.9
-		end
-		
-		local t = 0
-		local e = a.Energy
-		
-		-- sim casting rupture
-		t = t + 1
-		e = e - 25 + a.Regen
-		if a.CP == 5 then
-			e = e + 25
-		end
-		
-		-- sim generating at least one combo point
-		t = t + 1
-		if canDispatch() then
-			e = e - 30 + a.Regen
-		else
-			e = e - 55 + a.Regen
-		end
-		
-		-- ensure we can cast envenom before SnD wears off
-		t = c.GetBuffDuration("Slice and Dice") - t
-		e = e + t * a.Regen
-		return t > .5 and e >= 35
-	end
-})
-
 c.AddOptionalSpell("Vendetta")
 
-c.AddOptionalSpell("Vanish", nil, {
+c.AddOptionalSpell("Vanish", "for Assassination", {
 	NoGCD = true,
 	CheckFirst = function()
 		return not c.IsSolo() and not c.HasBuff("Stealth")
 	end
 })
 
+c.AddSpell("Slice and Dice", "for Assassination", {
+	NoRangeCheck = true,
+	CheckFirst = function(z)
+		c.MakeOptional(z, c.IsSolo())
+		return a.SnD == 0
+	end
+})
+
+c.AddSpell("Dispatch", nil, {
+	Melee = true,
+	CheckFirst = canDispatch,
+})
+
+c.AddSpell("Dispatch", "pre-Rupture", {
+	Melee = true,
+	CheckFirst = function(z)
+		if not canDispatch() then
+			return false
+		end
+		if c.HasBuff("Blindside") then	
+			return a.CP < 5 and a.Rupture < 3
+		else
+			return a.CP < 5 
+				and a.Rupture == 0 
+				and a.Energy + a.Regen - getCost(z) >= 25
+		end
+	end
+})
+
+c.AddSpell("Dispatch", "pre-Envenom", {
+	Melee = true,
+	CheckFirst = function()
+		if not c.HasTalent("Anticipation") or not canDispatch() then
+			return false
+		end
+		
+		local empty = a.EmptyCP - 2
+		if c.HasBuff("Shadow Blades", false, false, true) then
+			empty = empty - 1
+		end
+		return empty >= 0 
+			and (c.HasBuff("Blindside") or a.Energy + 1.5 * a.Regen < 90)
+	end
+})
+
+c.AddSpell("Mutilate", nil, {
+	NoPowerCheck = true,
+	CheckFirst = hasSufficientEnergy,
+})
+
+c.AddSpell("Mutilate", "pre-Rupture", {
+	CheckFirst = function(z)
+		return a.CP < 5
+			and a.Rupture == 0
+			and a.Energy + a.Regen - getCost(z) >= 25
+			and not canDispatch()
+	end
+})
+
+c.AddSpell("Mutilate", "pre-Envenom", {
+	NoPowerCheck = true,
+	CheckFirst = function(z)
+		c.MakePredictor(z, not hasSufficientEnergy(z))
+		return a.CP >= 5
+			and a.CP < 7
+			and not canDispatch()
+			and c.HasTalent("Anticipation")
+			and not c.HasBuff("Shadow Blades", false, false, true)
+	end
+})
+
+c.AddSpell("Rupture", "for Assassination", {
+	NoPowerCheck = true,
+	CheckFirst = function(z)
+		local cost = getCost(z)
+		c.MakeOptional(z, c.IsSolo())
+		c.MakePredictor(z, a.Energy < cost, z.FlashColor)
+		
+		local dur = a.Rupture
+		if a.Energy < cost then
+			dur = dur - (cost - a.Energy) / a.Regen
+		end
+		return (a.CP > 0 and dur <= 0) or (a.CP >= 5 and dur < 2)
+	end
+})
+
+c.AddSpell("Envenom", nil, {
+	Melee = true,
+	NoPowerCheck = true,
+	CheckFirst = function(z)
+		c.MakePredictor(z, not hasSufficientEnergy(z))
+		return a.CP >= 5
+	end
+})
+
+c.AddSpell("Envenom", "for Buff", {
+	Melee = true,
+	NoPowerCheck = true,
+	CheckFirst = function(z)
+		local cost = getCost(z)
+		c.MakePredictor(z, a.Energy < cost)
+		return a.CP >= 5
+			and c.GetBuffDuration("Envenom", false, false, true) 
+					- (cost - a.Energy) / a.Regen 
+				< 1
+	end
+})
+
+c.AddSpell("Envenom", "to refresh Slice and Dice", {
+	Melee = true,
+	CheckFirst = function()
+		return a.SnD > .1 and a.SnD < 3
+	end
+})
+
 ------------------------------------------------------------------------ Combat
 local function shouldSpendCpCombat()
-	-- this should have more logic once I implement Anticipation
-	return a.CP == 5
+	if a.CP < 5 then
+		return false
+	end
+	
+	return not c.HasTalent("Anticipation")
+		or a.EmptyCP < 2
+		or (a.EmptyCP < 3 and c.HasBuff("Shadow Blades"))
+		or a.DeepInsight > 0 
+		or (c.GetCooldown("Shadow Blades") < 3 
+			and not c.IsCasting("Shadow Blades"))
 end
 
 local function shouldSpendEnergyCombat()
@@ -346,8 +369,8 @@ c.AddOptionalSpell("Vanish", "for Combat", {
 	CheckFirst = function()
 		if c.IsSolo() 
 			or c.HasBuff("Stealth") 
-			or a.CP > 3
-			or (c.HasBuff("Shadow Blades") and a.CP > 2) then
+			or a.EmptyCP < 2
+			or (c.HasBuff("Shadow Blades") and a.EmptyCP < 3) then
 			
 			return false
 		end
@@ -362,23 +385,28 @@ c.AddOptionalSpell("Vanish", "for Combat", {
 	end
 })
 
+c.AddOptionalSpell("Marked for Death", "for Combat", {
+	CheckFirst = function()
+		return a.CP <= 1
+			and not c.HasBuff("Shadow Blades", false, false, true)
+	end
+})
+
 addSpell("Slice and Dice", "for Combat", {
 	NoRangeCheck = true,
 	CheckFirst = function(z)
-		local duration = c.GetBuffDuration("Slice and Dice")
 		if c.IsSolo() then
 			z.FlashColor = "yellow"
 			z.Continue = true
 			if c.HasGlyph("Deadly Momentum") then
-				return duration == 0 and a.CP == 5
+				return a.SnD == 0 and a.CP >= 5
 			else
-				return duration < 2
+				return a.SnD < 2
 			end
 		else
 			z.FlashColor = nil
 			z.Continue = nil
-			return duration < 2 
-				or (a.Guile == 11 and duration < 16 and a.CP >= 4)
+			return a.SnD < 2 or (a.Guile == 11 and a.SnD < 16 and a.CP >= 4)
 		end
 		
 	end
@@ -387,7 +415,7 @@ addSpell("Slice and Dice", "for Combat", {
 addOptionalSpell("Rupture", "for Combat", {
 	CheckFirst = function()
 		return shouldSpendCpCombat()
-			and c.GetMyDebuffDuration("Rupture") < 2
+			and a.Rupture < 2
 			and not c.HasBuff("Blade Flurry")
 			and not c.IsSolo()
 	end
@@ -398,91 +426,198 @@ addSpell("Eviscerate", "for Combat", {
 })
 
 c.AddSpell("Revealing Strike", nil, {
-	Override = function()
-		return a.Energy >= 40
-			and c.GetMyDebuffDuration("Revealing Strike") < 2
-			and not c.IsAuraPendingFor("Revealing Strike")
-			and shouldSpendEnergyCombat()
+	Melee = true,
+	Override = function(z)
+		if c.GetMyDebuffDuration("Revealing Strike") > 2
+			or c.IsAuraPendingFor("Revealing Strike")
+			or not shouldSpendEnergyCombat() then
+			
+			return false
+		end
+		
+		c.MakePredictor(z, not hasSufficientEnergy(z))
+		return true
 	end
 })
 
 c.AddSpell("Revealing Strike", "if Down", {
+	Melee = true,
 	Override = function(z)
 		local duration = c.GetMyDebuffDuration("Revealing Strike")
-		if a.Energy < 40 then
-			duration = duration + (40 - a.Energy) * a.Regen
+		local cost = getCost(z)
+		if a.Energy < cost then
+			duration = duration + (cost - a.Energy) * a.Regen
 		end
 		if duration > .1 or c.IsAuraPendingFor("Revealing Strike") then
 			return false
 		end
 		
-		if a.Energy < 40 then
-			z.FlashSize = s.FlashSizePercent() / 2
-			z.FlashColor = "green"
-		else
-			z.FlashSize = nil
-			z.FlashColor = nil
-		end
+		c.MakePredictor(z, a.Energy < cost)
 		return true
 	end
 })
 
 c.AddSpell("Sinister Strike", nil, {
-	Override = function()
-		return a.Energy >= 40 
-			and shouldSpendEnergyCombat() 
-			and s.MeleeDistance()
+	Melee = true,
+	Override = function(z)
+		return hasSufficientEnergy(z) and shouldSpendEnergyCombat() 
 	end,
 })
 
 ---------------------------------------------------------------------- Subtlety
+local function getEnergyIn(delay)
+	local energy = a.Energy + delay * a.Regen
+	if a.RecoveryDelay < 0 then
+		return energy
+	elseif delay < a.SnD then
+		return energy + 8 * math.floor((delay - a.RecoveryDelay) / 2)
+	else
+		return energy + 4 * (a.SnD - a.RecoveryDelay)
+	end
+end
+
+local function getDelay(needed)
+	needed = needed - a.Energy
+	local delay = math.max(0, needed / a.Regen)
+--	if a.SnD == 0
+--		or delay <= a.RecoveryTick 
+--		or not c.HasSpell("Energetic Recovery") then
+		
+		return delay
+--	end
+--	
+--	delay = a.RecoveryTick
+--	local snd = a.SnD
+--	local energy = a.Energy + delay
+--	while energy < needed do
+--		local nextneeded = needed - 2 * a.Regen
+--		if nextneeded <= 0 then
+--			return delay + needed / a.Regen
+--		end
+--		
+--		delay = delay + 2
+--		if snd > 1 then
+--			snd = snd - 2
+--			needed = nextneeded - 8
+--		end
+--		if needed <= 0 then
+--			return delay
+--		end
+--	end
+end
+
+local function modForDelay(spell, normalColor)
+	local delay = getDelay(getCost(spell))
+	c.MakePredictor(spell, delay > 0, normalColor)
+	return delay
+end
+
+local function sizeForPooling(spell)
+	c.MakeMini(
+		spell, 
+		a.Energy > 80
+			and not c.HasBuff("Shadow Dance", false, false, true)
+			and not c.HasBuff("Master of Subtlety", false, false, true)
+			and not c.HasMyDebuff("Find Weakness", false, false, "Ambush")
+			and (getEnergyIn(c.GetCooldown("Shadow Dance")) < 80
+				or getEnergyIn(c.GetCooldown("Vanish")) < 60))
+end
+
+local function shouldAmbushForSubtlety()
+	if c.HasTalent("Anticipation") then
+		return a.EmptyCP >= 3 and a.CanAmbush()
+	else
+		return a.CP < 5 and a.CanAmbush()
+	end
+end
+
+c.AddOptionalSpell("Premeditation", nil, {
+	CheckFirst = function()
+		return a.EmptyCP >= 4
+	end
+})
+
+addSpell("Ambush", "for Subtlety", {
+	Melee = true,
+	Applies = { "Find Weakness" },
+	CheckFirst = shouldAmbushForSubtlety,
+})
+
+c.AddOptionalSpell("Shadow Dance", nil, {
+	Melee = true,
+	CheckFirst = function(z)
+		c.MakePredictor(z, a.Energy < 75, "yellow")
+		return a.NoStealthiness and a.NeedsWeakness
+	end
+})
+
+c.AddOptionalSpell("Vanish", "for Subtlety", {
+	Melee = true,
+	CheckFirst = function(z)
+		c.MakePredictor(z, a.Energy < 45, "yellow")
+		return a.Energy < 80
+			and a.NoStealthiness
+			and a.NeedsWeakness
+			and not c.HasBuff("Master of Subtlety")
+			and (not a.CanAmbush() or shouldAmbushForSubtlety())
+			and not c.IsSolo()
+	end
+})
+
 addSpell("Slice and Dice", "for Subtlety", {
 	NoRangeCheck = true,
 	CheckFirst = function(z)
-		local duration = c.GetBuffDuration("Slice and Dice")
-		if c.IsSolo() then
-			z.FlashColor = "yellow"
-			z.Continue = true
-			if c.HasGlyph("Deadly Momentum") then
-				return duration == 0 and a.CP == 5
-			else
-				return duration < 3
-			end
+		c.MakeOptional(z, c.IsSolo())
+		local delay = modForDelay(z, z.FlashColor)
+		local dur = a.SnD - delay
+		if c.IsSolo() and c.HasGlyph("Deadly Momentum") then
+			return dur <= 0 and a.CP >= 5
 		else
-			z.FlashColor = nil
-			z.Continue = nil
-			return duration < 3
+			return dur < 4
 		end
 	end
 })
 
-addOptionalSpell("Rupture", nil, {
-	CheckFirst = function()
-		return not c.IsSolo() and c.GetMyDebuffDuration("Rupture") < 5
+c.AddSpell("Rupture", "for Subtlety", {
+	Melee = true,
+	NoPowerCheck = true,
+	CheckFirst = function(z)
+		c.MakeOptional(z, c.IsSolo())
+		return a.Rupture - modForDelay(z, z.FlashColor) < 4
 	end
 })
 
-addSpell("Ambush", "for Last Second Find Weakness", {
-	CheckFirst = function()
-		return canAmbush() and c.GetBuffDuration("Shadow Dance") < 2
+addSpell("Eviscerate", "for Subtlety", {
+	Melee = true,
+})
+
+c.AddSpell("Hemorrhage", "for Bleed", {
+	Melee = true,
+	NoPowerCheck = true,
+	CheckFirst = function(z)
+		local delay = modForDelay(z)
+		if delay == 0 then
+			sizeForPooling(z)
+		end
+		return c.GetMyDebuffDuration("Hemorrhage", false, false, true) - delay 
+			< 3
 	end
 })
 
-addSpell("Eviscerate")
-
-addSpell("Hemorrhage")
-
-addSpell("Hemorrhage", "for Bleed", {
-	CheckFirst = function()
-		return c.GetMyDebuffDuration("Hemorrhage") < 4
-			and not c.IsAuraPendingFor("Hemorrhage")
+c.AddSpell("Hemorrhage", "if no Backstab", {
+	Melee = true,
+	NoPowerCheck = true,
+	RunFirst = sizeForPooling,
+	CheckFirst = function(z)
+		return a.Energy > 30 and not a.CanBackstab()
 	end
 })
 
-addSpell("Backstab", nil, {
-	CheckFirst = a.CanBackstab
+c.AddSpell("Backstab", nil, {
+	Melee = true,
+	NoPowerCheck = true,
+	RunFirst = sizeForPooling,
+	CheckFirst = function()
+		return a.Energy > 35 and a.CanBackstab()
+	end
 })
-
-c.AddOptionalSpell("Shadow Dance")
-
-c.AddOptionalSpell("Premeditation")

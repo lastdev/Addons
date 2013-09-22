@@ -1,3 +1,40 @@
+5.2.8:
+ - Taste for Blood now rolls over to second layer after 3 points
+
+5.2.7:
+ - Updated for new Taste for Blood
+ - GUI module toc updated
+
+5.2.6:
+ - ToC updated to 50300
+ - removed the possibility to return default class frames without reloading ui, along with any ties to ShadowedUF stuff
+
+5.2.5:
+ - Bugfix for offset adjustment on non-global configurations.
+   (It's always global now)
+
+5.2.4:
+ - Hide w/o target option
+ - Custom point offset for weird resolutions
+ - Demonology->Destruction switch bug fixed
+ - Anticipation is now correcly consumed only on damaging finishers.
+   When anticipation charges are exceeding current amount of CPs,
+   they're displayed in status bar.
+
+5.2.3a:
+ - electricBlue skin restored
+
+5.2.3:
+ - added option to toggle second layer
+ - fixed glitchy animation of second layer transitions
+ - updated ruRU localization
+ - Makina and Striped skins updated
+5.2.2:
+ - Anticipation as second layer
+ - Colored light for 3d effects
+ - PlayerModel type support (unused, buggy)
+ - Evangelism bugfix
+ - Druid 2pc setbonus should no longer cause bug with 1st point animation
 5.2.0a:
  - Arcane Mage now using 4 point layout
 

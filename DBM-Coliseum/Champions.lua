@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Champions", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
 mod:SetCreatureID(34458, 34451, 34459, 34448, 34449, 34445, 34456, 34447, 34441, 34454, 34444, 34455, 34450, 34453, 34461, 34460, 34469, 34467, 34468, 34471, 34465, 34466, 34473, 34472, 34470, 34463, 34474, 34475)
 
 mod:RegisterCombat("combat")
@@ -90,19 +90,19 @@ local soundBladestorm		= mod:NewSound(65947, nil, mod:IsMelee())
 function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(65816, 68145, 68146, 68147) then		-- Warlock Hellfire
 		warnHellfire:Show()
-	elseif args:IsSpellID(65947) then						-- Warrior Bladestorm
+	elseif args.spellId == 65947 then						-- Warrior Bladestorm
 		warnBladestorm:Show()
 		timerBladestorm:Start()
 		timerBladestormCD:Start()
 		preWarnBladestorm:Schedule(85)                      -- Pre-Warn will only announce for 2nd and later bladestorm.
 		soundBladestorm:Play()
-	elseif args:IsSpellID(65983) then						-- Shamen Heroism
+	elseif args.spellId == 65983 then						-- Shamen Heroism
 		warnHeroism:Show()
-	elseif args:IsSpellID(65980) then						-- Shamen Blood lust
+	elseif args.spellId == 65980 then						-- Shamen Blood lust
 		warnBloodlust:Show()
 	elseif args:IsSpellID(68758, 68757, 68756, 66115) and not args:IsDestTypePlayer() then	-- Paladin Hand of Freedom on <mobname>
 		warnHandofFreedom:Show(args.destName)
-	elseif args:IsSpellID(66009) then						-- Paladin Hand of Protection on <mobname>
+	elseif args.spellId == 66009 then						-- Paladin Hand of Protection on <mobname>
 		warnHandofProt:Show(args.destName)
 		specWarnHandofProt:Show(args.destName)
 	elseif args:IsSpellID(66178, 68759, 68760, 68761) then	-- Rogue Shadowstep
@@ -123,15 +123,15 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(66010) then                                      -- Divine Shield on <mobname>
+	if args.spellId == 66010 then                                      -- Divine Shield on <mobname>
 		warnDivineShield:Show(args.destName)
 		specWarnDivineShield:Show(args.destName)
-	elseif args:IsSpellID(65802) then                                  -- Iceblock on <mobname>
+	elseif args.spellId == 65802 then                                  -- Iceblock on <mobname>
 		warnIceBlock:Show(args.destName)
 		specWarnIceBlock:Show(args.destName)
-	elseif args:IsSpellID(65859) and args:IsDestTypePlayer() then      -- Cyclone on <playername>
+	elseif args.spellId == 65859 and args:IsDestTypePlayer() then      -- Cyclone on <playername>
 		warnCyclone:Show(args.destName)
-	elseif args:IsSpellID(65801) and args:IsDestTypePlayer() then      -- Sheep on <playername>
+	elseif args.spellId == 65801 and args:IsDestTypePlayer() then      -- Sheep on <playername>
 		warnSheep:Show(args.destName)
 	end
 end

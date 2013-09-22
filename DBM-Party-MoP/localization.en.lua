@@ -59,7 +59,7 @@ L:SetWarningLocalization({
 
 L:SetOptionLocalization({
 	SpecWarnFizzyBubbles	= "Show special warning when you are missing $spell:114459 debuff",
-	RangeFrame				= "Show range frame (10) for $spell:106546"
+	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 106546)
 })
 
 -----------------------
@@ -103,7 +103,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(685)
 
 L:SetMiscLocalization({
-	Kill		= "So long has violence lurks in your heart...I will return...",
+	Kill		= "So long has violence lurks in your heart...I will return..."
 })
 
 -----------------------
@@ -118,6 +118,7 @@ L:SetOptionLocalization({
 -----------------------
 -- <<<The Gate of the Setting Sun>>> --
 -----------------------
+
 ---------------------
 -- Kiptilak --
 ---------------------
@@ -288,7 +289,7 @@ L= DBM:GetModLocalization(688)
 L= DBM:GetModLocalization(671)
 
 L:SetOptionLocalization({
-	KickArrow	= "Show DBM arrow when $spell:114487 is near you",
+	KickArrow	= "Show DBM arrow when $spell:114487 is near you"
 })
 
 -----------------------

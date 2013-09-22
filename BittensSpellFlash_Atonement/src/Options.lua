@@ -3,35 +3,21 @@ local L = a.Localize
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
 a.Options = {
-	InParty = {
-		Widget = "LeftCheckButton1",
-		Label = L["Announce Out of Range in Party"],
-		Default = true,
-	},
-	InSay = {
-		Widget = "LeftCheckButton2",
-		Label = L["Announce Out of Range in Say"],
-		Default = false,
-	},
-	InWhisper = {
-		Widget = "LeftCheckButton3",
-		Label = L["Announce Out of Range in Whisper"],
-		Default = false,
-	},
-	
-	Announcement = {
-		Type = "editbox",
-		Widget = "LeftEditBox1",
-		Label = L["Out of range announcement:"],
-		Default = L["<Player> <is/are> out of range of <Atonement>."],
-	},
 	HealPercent = {
 		Type = "editbox",
-		Widget = "LeftEditBox2",
+		Widget = "LeftEditBox1",
 		Label = L["Prioritize healing under % health:"],
 		MaxCharacters = 2,
 		Numeric = true,
 		Default = 90,
+	},
+	NeutralPercent = {
+		Type = "editbox",
+		Widget = "LeftEditBox2",
+		Label = L["Mana-neutral rotation under % mana:"],
+		MaxCharacters = 3,
+		Numeric = true,
+		Default = 50,
 	},
 	ConservePercent = {
 		Type = "editbox",
@@ -39,7 +25,7 @@ a.Options = {
 		Label = L["Mana-conscious rotation under % mana:"],
 		MaxCharacters = 3,
 		Numeric = true,
-		Default = 50,
+		Default = 75,
 	},
 	OnlyHealPercent = {
 		Type = "editbox",
@@ -51,4 +37,5 @@ a.Options = {
 	},
 }
 
+c.AddSoloSwitch()
 c.RegisterAddon()

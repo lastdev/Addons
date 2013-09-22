@@ -21,7 +21,7 @@ end
 
 local addon = BigBrother
 addon.vars = vars
-vars.svnrev["BigBrother.lua"] = tonumber(("$Revision: 375 $"):match("%d+"))
+vars.svnrev["BigBrother.lua"] = tonumber(("$Revision: 379 $"):match("%d+"))
 
 local bit, math, date, string, select, table, time, tonumber, unpack, wipe, pairs, ipairs = 
       bit, math, date, string, select, table, time, tonumber, unpack, wipe, pairs, ipairs
@@ -1446,16 +1446,12 @@ function addon:COMBAT_LOG_EVENT_UNFILTERED(timestamp, subevent, hideCaster, ...)
 	sendspam(L["%s interrupted %s casting %s"]:format(SRC, DST, SPELL(extraspellID)))
   elseif self.db.profile.Dispel and is_playersrc and is_hostiledst and subevent == "SPELL_DISPEL" then
         local extra = ""
-	if extraspellID and extraspellID > 0 then
-	  extra = " ("..SPELL(extraspellID)..")"
+	if spellID and spellID > 0 then
+	  extra = " ("..SPELL(spellID)..")"
 	end
-	sendspam(L["%s dispelled %s on %s"]:format(SRC, SPELL(spellID), DST)..extra)
+	sendspam(L["%s dispelled %s on %s"]:format(SRC, SPELL(extraspellID or spellID), DST)..extra)
   elseif self.db.profile.Dispel and is_playersrc and is_hostiledst and subevent == "SPELL_STOLEN" then
-        local extra = ""
-	if extraspellID and extraspellID > 0 then
-	  extra = " ("..SPELL(extraspellID)..")"
-	end
-	sendspam(L["%s stole %s from %s"]:format(SRC, SPELL(spellID), DST)..extra)
+	sendspam(L["%s stole %s from %s"]:format(SRC, SPELL(extraspellID or spellID), DST))
   end
 end
 

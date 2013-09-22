@@ -1309,7 +1309,7 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
-								XPerl_Check_Channels_OnLoad(self)
+								--XPerl_Check_Channels_OnLoad(self)
 							</OnLoad>
 							<OnShow>
 								XPerl_Check_Channels_OnLoad(self)

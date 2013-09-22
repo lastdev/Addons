@@ -547,13 +547,15 @@ end
 -- $SETTING Enable5Man ={type="boolean", label="Equip in 5-man instances", default=true}
 -- $SETTING EnableRaid={type="boolean", label="Equip in Raid instances", default=false}
 -- $SETTING EnableBG={type="boolean", label="Equip in Battleground instances", default=false}
+-- $SETTING EnableArena={type="boolean", label="Equip in Arena instances", default=false}
  
 local inInstance, instanceType = IsInInstance()
  
 if inInstance
 and ((setting.Enable5Man and instanceType == "party")
     or (setting.EnableRaid and instanceType == "raid")
-    or (setting.EnableBG and instanceType == "battleground")) then
+    or (setting.EnableBG and instanceType == "pvp")
+	or (setting.EnableBG and instanceType == "arena")) then
         equip = true
 else
     equip = false
@@ -1676,11 +1678,11 @@ end
 if setting.Ragnaros and equip ~= nil then
     if equip then
         self.savedCompanionID = Outfitter:GetSummonedCompanionID()
-        Outfitter:SummonCompanionByGUID("0x00000000000393c9", 0.2)
+        Outfitter:SummonCompanionByName("Lil' Ragnaros", 0.2)
     elseif self.savedCompanionID then
         Outfitter:SummonCompanionByGUID(self.savedCompanionID, 0.2)
     else
-        Outfitter:DismissCompanionByGUID("0x00000000000393c9")
+        Outfitter:DismissCompanionByName("Lil' Ragnaros")
     end
 end
 ]],

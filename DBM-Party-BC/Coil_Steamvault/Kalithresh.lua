@@ -1,9 +1,8 @@
-local mod	= DBM:NewMod("Kalithresh", "DBM-Party-BC", 6)
+local mod	= DBM:NewMod(575, "DBM-Party-BC", 6, 261)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 337 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 494 $"):sub(12, -3))
 mod:SetCreatureID(17798)
-mod:SetModelID(20235)
 
 mod:RegisterCombat("combat")
 
@@ -12,19 +11,25 @@ mod:RegisterEvents(
 	"SPELL_AURA_APPLIED"
 )
 
-local WarnChannel   = mod:NewAnnounce("WarnChannel", 2, 31543)
-local WarnReflect   = mod:NewSpellAnnounce(31534)
+local WarnChannel   = mod:NewSpellAnnounce("ej6001", 2, 31543)
+local WarnReflect   = mod:NewSpellAnnounce(31534, 4)
+
+local specWarnChannel	= mod:NewSpecialWarningSwitch("ej6001", false)
+local specWarnReflect	= mod:NewSpecialWarningSpell(31534, not mod:IsMelee())
+
 local timerReflect  = mod:NewBuffActiveTimer(8, 31534)
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(31543) then
+	if args.spellId == 31543 then
 		WarnChannel:Show()
+		specWarnChannel:Show()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(31534) then
+	if args.spellId == 31534 then
 		WarnReflect:Show(args.destName)
 		timerReflect:Start(args.destName)
+		specWarnReflect:Show()
 	end
 end

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: CoreUtil.lua 5359 2012-09-21 09:12:12Z brykrys $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: CoreUtil.lua 5423 2013-06-15 18:11:00Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -31,14 +31,10 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-if not AucAdvanced then return end
 
 local lib = AucAdvanced
 local private, internalUtil = {}, {}
-local coremodule, internal = AucAdvanced.GetCoreModule("CoreUtil")
-if not (coremodule and internal) then return end -- Someone has explicitely broken us
-internal.Util = internalUtil
-local tooltip = LibStub("nTipHelper:1")
+local tooltip = lib.Libraries.TipHelper
 local Const = lib.Const
 local Resources = lib.Resources
 
@@ -49,35 +45,52 @@ local pcall = pcall
 local strmatch = strmatch
 local select = select
 
-function coremodule.OnLoad(addon)
-	if addon == "auc-advanced" then
-		private.FactionOnLoad()
-	end
-end
+local coremodule, internal = lib.GetCoreModule("CoreUtil")
+if coremodule and internal then
+	internal.Util = internalUtil
 
-coremodule.Processors = {}
-function coremodule.Processors.auctionopen()
-	-- temporary check
-	if private.checkAuthorizedModules then
-		private.checkAuthorizedModules()
+	function coremodule.OnLoad(addon)
+		if addon == "auc-advanced" then
+			private.FactionOnLoad()
+		end
 	end
-end
-function coremodule.Processors.newmodule(event, libType, libName)
-	-- the only newmodule messages should come from AucAdvanced.NewModule
-	-- ### this is a temporary check, until we are sure nothing else is still sending these messages
-	if private.newmoduleCheckName ~= libName then
-		error("Auctioneer has detected unauthorized newmodule message")
+
+	coremodule.Processors = {}
+	function coremodule.Processors.auctionopen()
+		-- temporary check
+		if private.checkAuthorizedModules then
+			private.checkAuthorizedModules()
+		end
+	end
+	function coremodule.Processors.newmodule(event, libType, libName)
+		-- the only newmodule messages should come from AucAdvanced.NewModule
+		-- ### this is a temporary check, until we are sure nothing else is still sending these messages
+		if private.newmoduleCheckName ~= libName then
+			error("Auctioneer has detected unauthorized newmodule message")
+		end
+	end
+else
+	-- if there's aleady an abort error condition, we should avoid throwing unneccesary additional errors
+	if not lib.ABORTLOAD then
+		local errtext = "CoreUtil was unable to register with CoreModule"
+		lib.ABORTLOAD = errtext
+		geterrorhandler()("Auctioneer load error: "..errtext)
 	end
 end
 
 --Localization via babylonian
-local Babylonian = LibStub("Babylonian")
-assert(Babylonian, "Babylonian is not installed")
-local babylonian = Babylonian(AuctioneerLocalizations)
-function lib.localizations(stringKey)
-	local locale = lib.Settings.GetSetting("SelectedLocale")--locales are user choose-able
-	-- translated key or english Key or Raw Key
-	return babylonian(locale, stringKey) or babylonian[stringKey] or stringKey
+local Babylonian = lib.Libraries.Babylonian
+if Babylonian then
+	local babylonian = Babylonian(AuctioneerLocalizations)
+	function lib.localizations(stringKey)
+		local locale = lib.Settings.GetSetting("SelectedLocale")--locales are user choose-able
+		-- translated key or english Key or Raw Key
+		return babylonian(locale, stringKey) or babylonian[stringKey] or stringKey
+	end
+else
+	function lib.localizations(stringKey)
+		return stringKey
+	end
 end
 
 --The following function will build tables correlating Chat Frame names with their index numbers, and return different formats according to an option passed in.
@@ -582,76 +595,79 @@ do -- Module Functions
 	  addonName (optional) if provided must exactly match the name of the AddOn calling this function
 	    (not needed if the AddOn name matches the Module name, according to the "Auc-libType-libName" convention)
 
-	  Note: ### for debugging purposes NewModule will currently throw errors for invalid parameters
-	  the caller should still check for a nil return from NewModule as shown in the example above
-		(even though a nil return is technically not possible with the current version)
+	  Note: the caller must always check the return return from NewModule, and abort loading if it is nil
 
 	--]]
-	function lib.NewModule(libType, libName, libTable, noExtras, addonName)
-		local tmp = moduleTypeLookup[libType] -- use a temp variable so we can report libType in the error message
-		if not tmp then
-			error("Invalid libType specified for NewModule: "..tostring(libType), 2)
-		end
-		libType = tmp
-		if type(libName) ~= "string" then
-			error("Module name must be a string for NewModule", 2)
-		end
-		if libTable and type(libTable) ~= "table" then
-			error("Invalid module table provided to NewModule", 2)
-		end
-		local lowerName = libName:lower()
-		if moduleNameLower[lowerName] then
-			error("Module name "..lowerName.." already in use by NewModule", 2)
-		end
-		if moduleTypeLookup[lowerName] then
-			-- block using one of the libTypes as a name (may add more reserved names in future)
-			error("Module name "..lowerName.." is not a valid name", 2)
-		end
-		local typeTable = lib.Modules[libType] -- ### temp
-		assert(typeTable) -- ### temp
-		assert(not typeTable[libName]) -- ### temp
-		if addonName then
-			if type(addonName) ~= "string" then
-				error("AddOn name must be a string or nil for NewModule", 2)
+	if lib.ABORTLOAD then
+		-- if we have a load abort error condition, block registration of modules to avoid unnecessary additional errors
+		lib.NewModule = lib.NOPFUNCTION
+	else
+		function lib.NewModule(libType, libName, libTable, noExtras, addonName)
+			local tmp = moduleTypeLookup[libType] -- use a temp variable so we can report libType in the error message
+			if not tmp then
+				error("Invalid libType specified for NewModule: "..tostring(libType), 2)
 			end
-			addonName = addonName:lower()
-			if moduleOnLoadNames and moduleOnLoadNames[addonName] then
-				error("AddOn name already registered with NewModule", 2)
+			libType = tmp
+			if type(libName) ~= "string" then
+				error("Module name must be a string for NewModule", 2)
 			end
-			-- if addonName matches the Auc naming convention we do not need to take any special action with it
-			-- also explicitly block "auc-advanced" as only Core modules should use that name, and they get special handling
-			if addonName == "auc-advanced" or addonName == strjoin("-", "Auc", libType, libName):lower() then
-				addonName = nil
+			if libTable and type(libTable) ~= "table" then
+				error("Invalid module table provided to NewModule", 2)
 			end
-		end
-
-		local module = libTable or {}
-		module.libName = libName
-		module.libType = libType
-		module.GetName = function() return libName end
-		module.GetLibType = function() return libType end
-		if not module.GetLocalName then -- don't create if it already exists
-			module.GetLocalName = module.GetName
-		end
-		if not noExtras and not module.Private then
-			module.Private = {} -- assign a private table if it is wanted and does not already exist
-		end
-
-		UpdateModuleTables(module, libName, libType, lowerName)
-		if addonName then
-			if not moduleOnLoadNames then
-				moduleOnLoadNames = {}
+			local lowerName = libName:lower()
+			if moduleNameLower[lowerName] then
+				error("Module name "..lowerName.." already in use by NewModule", 2)
 			end
-			moduleOnLoadNames[addonName] = module
+			if moduleTypeLookup[lowerName] then
+				-- block using one of the libTypes as a name (may add more reserved names in future)
+				error("Module name "..lowerName.." is not a valid name", 2)
+			end
+			local typeTable = lib.Modules[libType] -- ### temp
+			assert(typeTable) -- ### temp
+			assert(not typeTable[libName]) -- ### temp
+			if addonName then
+				if type(addonName) ~= "string" then
+					error("AddOn name must be a string or nil for NewModule", 2)
+				end
+				addonName = addonName:lower()
+				if moduleOnLoadNames and moduleOnLoadNames[addonName] then
+					error("AddOn name already registered with NewModule", 2)
+				end
+				-- if addonName matches the Auc naming convention we do not need to take any special action with it
+				-- also explicitly block "auc-advanced" as only Core modules should use that name, and they get special handling
+				if addonName == "auc-advanced" or addonName == strjoin("-", "Auc", libType, libName):lower() then
+					addonName = nil
+				end
+			end
+
+			local module = libTable or {}
+			module.libName = libName
+			module.libType = libType
+			module.GetName = function() return libName end
+			module.GetLibType = function() return libType end
+			if not module.GetLocalName then -- don't create if it already exists
+				module.GetLocalName = module.GetName
+			end
+			if not noExtras and not module.Private then
+				module.Private = {} -- assign a private table if it is wanted and does not already exist
+			end
+
+			UpdateModuleTables(module, libName, libType, lowerName)
+			if addonName then
+				if not moduleOnLoadNames then
+					moduleOnLoadNames = {}
+				end
+				moduleOnLoadNames[addonName] = module
+			end
+
+			private.resetPriceModels()
+			private.ResetSPMArray()
+
+			private.newmoduleCheckName = libName -- ### temp
+			lib.SendProcessorMessage("newmodule", libType, libName)
+			private.newmoduleCheckName = nil -- ### temp
+			return module, lib, module.Private
 		end
-
-		private.resetPriceModels()
-		private.ResetSPMArray()
-
-		private.newmoduleCheckName = libName -- ### temp
-		lib.SendProcessorMessage("newmodule", libType, libName)
-		private.newmoduleCheckName = nil -- ### temp
-		return module, lib, module.Private
 	end
 
 	--[[
@@ -842,61 +858,70 @@ end -- end of Module Functions
 
 
 local spmArray = {}
-function lib.SendProcessorMessage(spmMsg, ...)
-	local spmp = spmArray[spmMsg]
-	if (spmp) then
-		for i=1,#spmp do
-			local x = spmp[i]
-			local f = x.Func
---if (nLog) then nLog.AddMessage("Auctioneer", "Coreutil", N_INFO, ("SendProcessorMessage Called %s For %s"):format(x.Name, spmMsg), ("SendProcessorMessage Called %s For %s"):format(x.Name, spmMsg)) end
+if lib.ABORTLOAD then
+	-- if we have a load abort error condition, block all processor messages to avoid unnecessary additional errors
+	lib.SendProcessorMessage = lib.NOPFUNCTION
+else
+	function lib.SendProcessorMessage(spmMsg, ...)
+		local spmp = spmArray[spmMsg]
+		if (spmp) then
+			for i=1,#spmp do
+				local x = spmp[i]
+				local f = x.Func
 
-			local good,msg=pcall(f, spmMsg, ...)
-			if not good then
-				lib.Debug.DebugPrint(msg, "SendProcessorMessage", "Processor Error in "..(x.Name or "??"), 0, "Debug")
-			end
-		end
-	else
-		spmp = {}
-		spmArray[spmMsg] = spmp
-
-		local modules = lib.GetAllModules("Processors")
-		for pos, engineLib in ipairs(modules) do
-			local f = engineLib.Processors[spmMsg]
-			if f then
-				local x = {}
-				x.Name = engineLib.GetName()
-				if (spmMsg=="tooltip") then
-					local f1 = f
-					x.Func = function(spmMsg, ...)
-						-- TODO: Make these defaults configurable
-						tooltip:SetColor(0.3, 0.9, 0.8)
-						tooltip:SetMoneyAsText(false)
-						tooltip:SetEmbed(false)
-						f1(spmMsg, ...)
-					end
-				else
-					x.Func = f
-				end
-				tinsert(spmp, x)
---if (nLog) then nLog.AddMessage("Auctioneer", "Coreutil", N_INFO, ("SendProcessorMessage Called %s For %s (using Processors)"):format(x.Name, spmMsg), ("SendProcessorMessage Called %s For %s"):format(x.Name, spmMsg)) end
 				local good,msg=pcall(f, spmMsg, ...)
 				if not good then
-					lib.Debug.DebugPrint(msg, "SendProcessorMessage", "Processor Error in "..(x.Name or "??"), 0, "Debug")
+					msg = "Error trapped for Processor message '"..spmMsg.."' in module "..x.Name..":\n"..msg
+					lib.Debug.DebugPrint(msg, "SendProcessorMessage", "Processor Error in "..x.Name, 0, "Debug")
+					geterrorhandler()(msg)
 				end
 			end
-		end
+		else
+			spmp = {}
+			spmArray[spmMsg] = spmp
 
-		modules = lib.GetAllModules("Processor")
-		for pos, engineLib in ipairs(modules) do
-			if (not engineLib.Processors) then
-				local x = {}
-				x.Name = engineLib.GetName()
-				x.Func = engineLib.Processor
-				lib.Debug.DebugPrint("Module Using Deprecated Processor to recieve "..(spmMsg or "Unknown").." processor messages.", "SendProcessorMessage", "Deprecated Function Seen in "..(x.Name or "??"), 0, "Warning")
-				tinsert(spmp, x)
-				local good,msg=pcall(engineLib.Processor, spmMsg, ...)
-				if not good then
-					lib.Debug.DebugPrint(msg, "SendProcessorMessage", "Processor Error in "..(x.Name or "??"), 0, "Debug")
+			local modules = lib.GetAllModules("Processors")
+			for pos, engineLib in ipairs(modules) do
+				local f = engineLib.Processors[spmMsg]
+				if f then
+					local x = {}
+					x.Name = engineLib.GetName()
+					if (spmMsg=="tooltip") then
+						local f1 = f
+						x.Func = function(spmMsg, ...)
+							-- TODO: Make these defaults configurable
+							tooltip:SetColor(0.3, 0.9, 0.8)
+							tooltip:SetMoneyAsText(false)
+							tooltip:SetEmbed(false)
+							f1(spmMsg, ...)
+						end
+					else
+						x.Func = f
+					end
+					tinsert(spmp, x)
+					local good,msg=pcall(f, spmMsg, ...)
+					if not good then
+						msg = "Error trapped for Processor message '"..spmMsg.."' in module "..x.Name..":\n"..msg
+						lib.Debug.DebugPrint(msg, "SendProcessorMessage", "Processor Error in "..x.Name, 0, "Debug")
+						geterrorhandler()(msg)
+					end
+				end
+			end
+
+			modules = lib.GetAllModules("Processor")
+			for pos, engineLib in ipairs(modules) do
+				if (not engineLib.Processors) then
+					local x = {}
+					x.Name = engineLib.GetName()
+					x.Func = engineLib.Processor
+					lib.Debug.DebugPrint("Module "..x.Name.." using deprecated 'Processor' function for "..(spmMsg or "Unknown").." processor messages.", "SendProcessorMessage", "Deprecated Function Seen in "..x.Name, 0, "Warning")
+					tinsert(spmp, x)
+					local good,msg=pcall(engineLib.Processor, spmMsg, ...)
+					if not good then
+						msg = "Error trapped for Processor message '"..spmMsg.."' in module "..x.Name..":\n"..msg
+						lib.Debug.DebugPrint(msg, "SendProcessorMessage", "Processor Error in "..x.Name, 0, "Debug")
+						geterrorhandler()(msg)
+					end
 				end
 			end
 		end
@@ -922,4 +947,4 @@ function lib.CreateMoney(height)
 	return (tooltip:CreateMoney(height))
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreUtil.lua $", "$Rev: 5359 $")
+lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreUtil.lua $", "$Rev: 5423 $")

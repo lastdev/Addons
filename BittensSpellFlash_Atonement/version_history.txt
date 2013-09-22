@@ -1,3 +1,34 @@
+== Version 50400.1.1
+* Adjusted the flashing for Mindbender, since it now returns more mana.
+* Bugfix update to Bitten's SpellFlash Library.
+
+== Version 50400.1.0
+* Removed flashing for Power Word: Shield, since it can never return more mana than it costs w/ this patch.
+* No longer tries to conserve mana during Lucidity (the proc from the healing epic meta gem).
+* Removed flashing for Divine Star; it hasn't scaled with gear as well as Smite.
+* Bumped up the priorities of Shadow Words Death and Pain because to fit their new, buffed damage levels this patch.
+* Some tweaks when solo.
+
+== Version 2.4.0
+* Added Soothing Talisman of the Shado-Pan Assault.
+* Added a delay when Penance will be off cooldown soon (a dps/healing increase).
+* Now anticipated the reduction in Penance's cooldown from Smite.
+* Flashes Power Infusion in more situations.
+* Bugfix: Smite was not being skipped at times when it should.
+
+== Version 2.3.0
+* Added a mana-neutral phase.
+* Reworked the rotations.
+* Now flashes Divine Star.
+* Now flashes Desperate Prayer.
+* Now flashes Dispel Magic.
+* Now flashes food buffs.
+* Added an option for solo mode.
+
+== Version 2.2.2
+Update for patch 5.3.
+* Removed all announcement/whisper capabilities.
+
 == Version 2.2.1
 NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
 

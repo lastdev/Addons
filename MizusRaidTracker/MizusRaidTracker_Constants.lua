@@ -59,64 +59,80 @@ MRT_ItemValues = {
 ----------------------
 MRT_RaidZones = {
     -- Wrath of the Lich King
-	["The Eye of Eternity"] = true,
-	["The Obsidian Sanctum"] = true,
-	["Vault of Archavon"] = true,
-	["Naxxramas"] = true,
-	["Ulduar"] = true,
-	["Trial of the Crusader"] = true,
-	["Onyxia's Lair"] = true,
-	["Icecrown Citadel"] = true,
-    ["The Ruby Sanctum"] = true,
+    [527] = true,       -- The Eye of Eternity
+    [531] = true,       -- The Obsidian Sanctum
+    [532] = true,       -- Vault of Archavon
+    [535] = true,       -- Naxxramas
+    [529] = true,       -- Ulduar
+    [543] = true,       -- Trial of the Crusader
+    [718] = true,       -- Onyxia's Lair
+    [604] = true,       -- Icecrown Citadel
+    [609] = true,       -- The Ruby Sanctum
     -- Cataclysm
-    ["Baradin Hold"] = true,
-    ["Blackwing Descent"] = true,
-    ["The Bastion of Twilight"] = true,
-    ["Throne of the Four Winds"] = true,
-    ["Firelands"] = true,
-    ["Dragon Soul"] = true,
+    [752] = true,       -- Baradin Hold
+    [754] = true,       -- Blackwing Descent
+    [758] = true,       -- The Bastion of Twilight
+    [773] = true,       -- Throne of the Four Winds
+    [800] = true,       -- Firelands
+    [824] = true,       -- Dragon Soul
     -- Mists of Pandaria
-    ["Mogu'shan Vaults"] = true,
-    ["Terrace of the Endless Spring"] = true,
-    ["Heart of Fear"] = true,
+    [886] = true,       -- Terrace of Endless Spring
+    [896] = true,       -- Mogu'shan Vaults
+    [897] = true,       -- Heart of Fear
+    [930] = true,       -- Throne of Thunder
+	[953] = true,		-- Siege of Orgrimmar
+}
+
+MRT_LegacyRaidZonesPanadria = {
+    [886] = true,       -- Terrace of Endless Spring
+    [896] = true,       -- Mogu'shan Vaults
+    [897] = true,       -- Heart of Fear
+    [930] = true,       -- Throne of Thunder
+	[953] = true,		-- Siege of Orgrimmar
 }
 
 MRT_LegacyRaidZonesCataclysm = {
-    ["Baradin Hold"] = true,
-    ["Blackwing Descent"] = true,
-    ["The Bastion of Twilight"] = true,
-    ["Throne of the Four Winds"] = true,
-    ["Firelands"] = true,
-    ["Dragon Soul"] = true,
+    [752] = true,       -- Baradin Hold
+    [754] = true,       -- Blackwing Descent
+    [758] = true,       -- The Bastion of Twilight
+    [773] = true,       -- Throne of the Four Winds
+    [800] = true,       -- Firelands
+    [824] = true,       -- Dragon Soul
 }
 
 MRT_LegacyRaidZonesWotLK = {
-	["The Eye of Eternity"] = true,
-	["The Obsidian Sanctum"] = true,
-	["Vault of Archavon"] = true,
-	["Naxxramas"] = true,
-	["Ulduar"] = true,
-	["Trial of the Crusader"] = true,
-	["Onyxia's Lair"] = true,
-	["Icecrown Citadel"] = true,
-    ["The Ruby Sanctum"] = true,
+    [527] = true,       -- The Eye of Eternity
+    [531] = true,       -- The Obsidian Sanctum
+    [532] = true,       -- Vault of Archavon
+    [535] = true,       -- Naxxramas
+    [529] = true,       -- Ulduar
+    [543] = true,       -- Trial of the Crusader
+    [718] = true,       -- Onyxia's Lair
+    [604] = true,       -- Icecrown Citadel
+    [609] = true,       -- The Ruby Sanctum
 }
 
 MRT_LegacyRaidZonesBC = {
-    ["Karazhan"] = true,
-    ["Gruul's Lair"] = true,
-    ["Magtheridon's Lair"] = true,
-    ["Zul'Aman"] = true,
-    ["Serpentshrine Cavern"] = true,
-    ["Tempest Keep"] = true,
-    ["Hyjal Summit"] = true,
-    ["Black Temple"] = true,
-    ["Sunwell Plateau"] = true,
+    [799] = true,       -- Karazhan
+    [776] = true,       -- Gruul's Lair
+    [779] = true,       -- Magtheridon's Lair
+    [780] = true,       -- Serpentshrine Cavern
+    [782] = true,       -- Tempest Keep
+    [775] = true,       -- Hyjal Summit
+    [796] = true,       -- Black Temple
+    [789] = true,       -- Sunwell Plateau
+}
+
+MRT_LegacyRaidZonesClassic = {
+    [755] = true,       -- Blackwing Lair
+    [696] = true,       -- Molten Core
+    [717] = true,       -- Ruins of Ahn'Qiraj
+    [766] = true,       -- Temple of Ahn'Qiraj
 }
 
 MRT_PvPRaids = {
-    ["Baradin Hold"] = true,
-    ["Vault of Archavon"] = true,
+    [752] = true,       -- Baradin Hold
+    [532] = true,       -- Vault of Archavon
 }
 
 
@@ -254,30 +270,101 @@ MRT_BossIDList = {
     --  Mists of Pandaria  --
     -------------------------
     -- Mogu'shan Vaults
-    [60047] = "Stone Guard",                    -- Council type - will probably need bossyell
+    [60047] = "The Stone Guard",
     [60009] = "Feng the Accursed",
     [60143] = "Gara'jal the Spriritbinder",
-    [61429] = "The Spirit Kings",               -- Council type - will probably need bossyell
+    [60708] = "The Spirit Kings", -- Meng
+	[60701] = "The Spirit Kings", -- Zian
+	[60709] = "The Spirit Kings", -- Qiang
+	[60710] = "The Spirit Kings", -- Subetai
     [60410] = "Elegon",
-    [60400] = "Will of the Emperor",            -- Council type, shared HP pool
+    [60399] = "Will of the Emperor", -- qin-xi
+	[60400] = "Will of the Emperor", -- jan-xi
     
-    -- Terrace of the Endless Spring
-    [60583] = "Protectors of the Endless",      -- Like Atramedes dwarf trash - will need bossyell
-    [60491] = "Sha of Anger",
-    [62346] = "Salyis's Warband",               -- unsure, FIXME
-    [62442] = "Tsulong",
-    [63099] = "Lei Shi",
+    -- Terrace of Endless Spring
+    [60583] = "Protectors of the Endless", -- Kaolan
+	[60586] = "Protectors of the Endless", -- Asani
+	[60585] = "Protectors of the Endless", -- Regail
+        -- Tsulong via boss yell
+        -- Lei Shi via boss yell
     [60999] = "Sha of Fear",
     
     -- Heart of Fear
-    [66791] = "Imperial Vizier Zor'lok",
+    [62980] = "Imperial Vizier Zor'lok",
     [62543] = "Blade Lord Ta'yak",
     [62164] = "Garalon",
-    [65501] = "Wind Lord Mel'jarak",
-    [63666] = "Amber-Shaper Un'sok",
+    [62397] = "Wind Lord Mel'jarak",
+    [62511] = "Amber-Shaper Un'sok",
     [62837] = "Grand Empress Shek'zeer",
+
+    -- Throne of Thunder
+    -- Last Stand of the Zandalari
+    [69465] = "Jin'rokh the Breaker",
+    [68476] = "Horridon",
+    [69134] = "Council of Elders", 		-- kazra'jin
+    [69078] = "Council of Elders", 		-- sul
+    [69131] = "Council of Elders", 		-- Malakk
+    [69132] = "Council of Elders", 		-- Marli
+    -- Forgotten Depths
+    [67977] = "Tortos",
+    [68065] = "Megaera",
+    [69712] = "Ji-Kun",
+    -- Halls of Flesh-Shaping
+    [68036] = "Durumu the Forgotten",
+    [69017] = "Primordius",
+    [69427] = "Dark Animus",
+    -- Pinnacle of Storms
+    [68078] = "Iron Qon", 				-- <Master of Quilen>
+    [68905] = "Twin Consorts", 			-- Lu'lin <Mistress of Solitude>, Twin Consorts
+    [68904] = "Twin Consorts", 			-- Suen <Mistress of Anger>, Twin Consorts
+    [68397] = "Lei Shen", 				-- <The Thunder King>
+		-- Ra-den <Fallen Keeper of Storms> via boss yell (doesn't die)
+	-- Siege of Orgrimmar
+		-- Immerseus via boss yell (doesn't die)
+    [71475] = "The Fallen Protectors",  -- ID of Rook Stonetoe
+    [71479] = "The Fallen Protectors",  -- ID of He Softfoot
+    [71480] = "The Fallen Protectors",  -- ID of Sun Tenderheart
+	[72276] = "Norushen", 				-- ID of Amalgam of Corruption
+	[71734] = "Sha of Pride",
+	[72249] = "Galakras",
+	[71466] = "Iron Juggernaut",
+	[71858] = "Kor'kron Dark Shaman", 	-- ID of Wavebinder Kardris - shared healthpool
+	[71515] = "General Nazgrim",
+	[71454] = "Malkorok",
+		-- Spoils of Pandaria via boss yell (no boss)
+	[71529] = "Thok the Bloodthirsty",
+	[71504] = "Siegecrafter Blackfuse",
+	[71152] = "Paragons of the Klaxxi",	-- ID of Skeer the Bloodseeker
+	[71153] = "Paragons of the Klaxxi", -- ID of Hisek the Swarmkeeper
+	[71154] = "Paragons of the Klaxxi", -- ID of Ka'roz the Locust
+	[71155] = "Paragons of the Klaxxi", -- ID of Korven the Prime
+	[71156] = "Paragons of the Klaxxi", -- ID of Kaz'tik the Manipulator
+	[71157] = "Paragons of the Klaxxi", -- ID of Xaril the Poisoned Mind
+	[71158] = "Paragons of the Klaxxi", -- ID of Rik'kal the Dissector
+	[71160] = "Paragons of the Klaxxi", -- ID of Iyyokuk the Lucid
+	[71161] = "Paragons of the Klaxxi", -- ID of Kil'ruk the Wind-Reaver
+	[71865] = "Garrosh Hellscream",
 }
 
+-- ARRAY 
+-- :>
+MRT_ArrayBossIDList = {}
+MRT_ArrayBossIDList_cache = {}
+
+for key, val in pairs(MRT_BossIDList) do
+	MRT_ArrayBossIDList_cache[val] = MRT_ArrayBossIDList_cache[val] or { }
+	table.insert(MRT_ArrayBossIDList_cache[val], key) 
+end
+
+for key, val in pairs(MRT_ArrayBossIDList_cache) do
+	local nc = table.getn(val);
+
+	if( nc > 1) then
+		MRT_ArrayBossIDList[key]= val;
+	end
+end
+
+wipe(MRT_ArrayBossIDList_cache);
 
 -- SpellID list - A list of spell IDs which indicates a dead boss
 -- Format: [<SpellID>] = { "<English boss name>", <BossID> }
@@ -319,13 +406,7 @@ MRT_BossRenameList = {
     -- Dragon Soul
     [53879] = "Spine of Deathwing",   
     [56173] = "Madness of Deathwing",
-    
-    -------------------------
-    --  Mists of Pandaria  --
-    -------------------------
-    [60047] = "The Stone Guard",
-    [61429] = "The Spirit Kings",
-    [60400] = "Will of the Emperor",
+  
 }
 
 
@@ -350,6 +431,19 @@ MRT_ReverseBossIDList = {
     --  Cataclysm  --
     -----------------
     ["Conclave of Wind"] = 45871,
+
+    ------------------------
+    --  Mist of Pandaria  --
+    ------------------------
+    ["Tsulong"] = 62442,
+    ["Lei Shi"] = 62983,
+    
+    ["Wind Lord Mel'jarak"] = 62397,
+    ["Amber-Shaper Un'sok"] = 62511,
+    ["Grand Empress Shek'zeer"] = 62837,
+	
+	["Immerseus"] = 71543,
+	["Spoils of Pandaria"] = 71889,		-- ID of ... something
 }
 
 
@@ -373,7 +467,21 @@ MRT_IgnoredItemIDList = {
     [36925] = true,  -- Majestic Zircon
     
     -- Shards
+    [20725] = true,  -- Nexus Crystal
+    [22450] = true,  -- Void Crystal
     [34057] = true,  -- Abyss Crystal
+    [52722] = true,  -- Maelstrom Crystal
+    [74248] = true,  -- Sha Crystal
+    
+    -- Sigils of...
+    [87208] = true,  -- Sigil of Power
+    [87209] = true,  -- Sigil of Wisdom
+    
+    -- Wrathion Legendary Questline
+    [87210] = true,  -- Chimera of Fear
+    [94593] = true,  -- Secrets of the Empire
+    [94594] = true,  -- Titan Runestones
+    [94867] = true,  -- Heart of the Thunder King
 }
 
 

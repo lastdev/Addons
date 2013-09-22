@@ -20,6 +20,9 @@ local MSG_SEND_LOGIN								= 1	-- Sends a login message, to request crafts to o
 local MSG_LOGIN_REPLY							= 2	-- ..reply
 local MSG_SEND_PROFESSION						= 3	-- Sends a profession link, or profession id if no full link
 
+local SECONDSPERDAY = 86400
+local THREEOCLOCK = 10800
+
 local AddonDB_Defaults = {
 	global = {
 		Options = {
@@ -342,10 +345,38 @@ local function RestoreHeaders()
 	wipe(headersState)
 end
 
+-- local function ScanCooldowns()
+	-- local tradeskillName = GetTradeSkillLine()
+	-- local char = addon.ThisCharacter
+	-- local profession = char.Professions[tradeskillName]
+	
+	-- wipe(profession.Cooldowns)
+	-- for i = 1, GetNumTradeSkills() do
+		-- local skillName, skillType = GetTradeSkillInfo(i)
+		
+		-- if skillType ~= "header" then
+			-- local cooldown = GetTradeSkillCooldown(i)
+			-- if cooldown then
+				-- table.insert(profession.Cooldowns, skillName .. "|" .. cooldown .. "|" .. time())
+			-- end
+		-- end
+	-- end
+-- end
+
+
 local function ScanCooldowns()
+	-- Updated by RGriedel
 	local tradeskillName = GetTradeSkillLine()
 	local char = addon.ThisCharacter
 	local profession = char.Professions[tradeskillName]
+
+	local serverClock = time()
+	-- local locYear, locMonth, locDay, locHour, locMinute, locSecond = string.match(date("%Y %m %d %H %M %S"), "(%d*) (%d*) (%d*) (%d*) (%d*) (%d*)")
+	local hour, minute, second = string.match(date("%H %M %S"), "(%d*) (%d*) (%d*)")
+	local serverDate = floor ( serverClock / SECONDSPERDAY ) * SECONDSPERDAY
+	local serverTime = serverClock - serverDate
+	local localTime = second + ( minute + ( hour * 60 )) * 60
+	local timediff = localTime - serverTime
 	
 	wipe(profession.Cooldowns)
 	for i = 1, GetNumTradeSkills() do
@@ -354,7 +385,16 @@ local function ScanCooldowns()
 		if skillType ~= "header" then
 			local cooldown = GetTradeSkillCooldown(i)
 			if cooldown then
-				table.insert(profession.Cooldowns, skillName .. "|" .. cooldown .. "|" .. time())
+				local cooldownTime = localTime + cooldown
+				if math.abs (( cooldownTime < THREEOCLOCK and SECONDSPERDAY or 0 ) + cooldownTime - SECONDSPERDAY ) < 300 then
+					if serverTime > THREEOCLOCK then
+						table.insert(profession.Cooldowns, skillName .. "|" .. THREEOCLOCK .. "|" .. serverDate - timediff + SECONDSPERDAY)
+					else
+						table.insert(profession.Cooldowns, skillName .. "|" .. THREEOCLOCK .. "|" .. serverDate - timediff)
+					end
+				else
+					table.insert(profession.Cooldowns, skillName .. "|" .. cooldown .. "|" .. serverClock)
+				end
 			end
 		end
 	end
@@ -608,7 +648,7 @@ local function _GetProfessionInfo(profession)
 	
 	local rank, maxRank, spellID
 	local link
-	
+
 	if type(profession) == "table" then
 		rank = profession.Rank
 		maxRank = profession.MaxRank 
@@ -618,7 +658,8 @@ local function _GetProfessionInfo(profession)
 	end
 	
 	if link then
-		spellID, rank, maxRank = link:match("trade:(%d+):(%d+):(%d+):")
+		-- _, spellID, rank, maxRank = link:match("trade:(%w+):(%d+):(%d+):(%d+):")
+		_, spellID = link:match("trade:(%w+):(%d+)")		-- Fix 5.4, rank no longer in the profession link
 	end
 	
 	return tonumber(rank) or 0, tonumber(maxRank) or 0, tonumber(spellID)
@@ -927,6 +968,7 @@ function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_ALIVE")
 	addon:UnregisterEvent("TRADE_SKILL_SHOW")
 	addon:UnregisterEvent("CHAT_MSG_SKILL")
+	addon:UnregisterEvent("CHAT_MSG_SYSTEM")
 end
 
 function addon:GetSource(searchedID)

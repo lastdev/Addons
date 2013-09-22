@@ -6,8 +6,13 @@ c.Init(a)
 
 a.SpellIDs = {
 	["Atonement"] = 81751,
+	["Cascade"] = 121135,
+	["Desperate Prayer"] = 19236,
+	["Dispel Magic"] = 528,
+	["Divine Star"] = 110744,
 	["Holy Fire"] = 14914,
 	["Inner Fire"] = 588,
+	["Lucidity"] = 137323,
 	["Mindbender"] = 123040,
 	["Penance"] = 47540,
 	["Power Infusion"] = 10060,
@@ -20,6 +25,9 @@ a.SpellIDs = {
 	["Shadow Word: Death"] = 32379,
 	["Shadow Word: Pain"] = 589,
 	["Smite"] = 585,
+	
+	-- Items
+	["Soothing Talisman of the Shado-Pan Assault"] = 94509,
 }
 
 a.TalentIDs = {
@@ -28,6 +36,7 @@ a.TalentIDs = {
 
 a.GlyphIDs = {
 	["Smite"] = 55692,
+	["Penance"] = 119866,
 }
 
 a.EquipmentSets = {

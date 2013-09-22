@@ -75,6 +75,8 @@ local function AddRealm(AccountName, RealmName)
 	local realmFreeBagSlots = 0
 	local realmBankSlots = 0
 	local realmFreeBankSlots = 0
+	local realmAiL = 0
+	local numCharacters = 0
 
 	-- 1) Add the realm name
 	table.insert(characterList, { linetype = INFO_REALM_LINE + (realmCount*3),
@@ -110,6 +112,9 @@ local function AddRealm(AccountName, RealmName)
 		realmFreeBagSlots = realmFreeBagSlots + (DataStore:GetNumFreeBagSlots(character) or 0)
 		realmBankSlots = realmBankSlots + (DataStore:GetNumBankSlots(character) or 0)
 		realmFreeBankSlots = realmFreeBankSlots + (DataStore:GetNumFreeBankSlots(character) or 0)
+		realmAiL = realmAiL + (DataStore:GetAverageItemLevel(character) or 0)
+		
+		numCharacters = numCharacters + 1
 	end		-- end char
 
 	-- 3) Add the totals
@@ -120,7 +125,8 @@ local function AddRealm(AccountName, RealmName)
 		bagSlots = realmBagSlots,
 		freeBagSlots = realmFreeBagSlots,
 		bankSlots = realmBankSlots,
-		freeBankSlots = realmFreeBankSlots
+		freeBankSlots = realmFreeBankSlots,
+		realmAiL = (realmAiL / numCharacters),
 	} )
 
 	totalMoney = totalMoney + realmMoney

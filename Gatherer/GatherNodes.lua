@@ -1,7 +1,7 @@
 ﻿--[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.2.0 (<%codename%>)
-	Revision: $Id: GatherNodes.lua 1074 2013-03-03 05:00:04Z LocalizerAutoCommit $
+	Version: 4.4.0 (<%codename%>)
+	Revision: $Id: GatherNodes.lua 1097 2013-06-15 04:00:07Z LocalizerAutoCommit $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -208,12 +208,13 @@ if (region == "deDE") then -- German
 		["Archäologischer Fund der Tol'vir"] = 207190, -- Tol'vir Archaeology Find
 		["Archäologischer pandarischer Fund"] = 211163, -- Pandaren Archaeology Find
 		["Archäologischer Fund der Mogu"] = 211174, -- Mogu Archaeology Find
+		["Archäologischer Fund der Mantis"] = 218950, -- Mantid Archaeology Find
 
 
 		-- Missing Node Names
 		["Tattered Chest"] = 2844,
 	}
-elseif (region == "enUS") then -- Engligh
+elseif (region == "enUS") then -- English
 	Gatherer.Nodes.Names = {
 		["Small Thorium Vein"] = 324,
 		["Incendicite Mineral Vein"] = 1610,
@@ -385,6 +386,7 @@ elseif (region == "enUS") then -- Engligh
 		["Tol'vir Archaeology Find"] = 207190,
 		["Pandaren Archaeology Find"] = 211163,
 		["Mogu Archaeology Find"] = 211174,
+		["Mantid Archaeology Find"] = 218950,
 	}
 elseif (region == "esES") then -- Spanish
 	Gatherer.Nodes.Names = {
@@ -484,10 +486,12 @@ elseif (region == "esES") then -- Spanish
 		["Colátigo"] = 202752, -- Whiptail
 		["Hoja de té verde"] = 209349, -- Green Tea Leaf
 		["Hierba sedosa"] = 209350, -- Silkweed
+		["Hierbaseda"] = 209350, -- Silkweed
 		["Lirio de las nieves"] = 209351, -- Snow Lily
 		["Amapola de lluvia"] = 209353, -- Rain Poppy
 		["Loto dorado"] = 209354, -- Golden Lotus
 		["Flor del inocente"] = 209355, -- Fool's Cap
+		["Seta del inocente"] = 209355, -- Fool's Cap
 		["Hierba influenciada por el sha"] = 214510, -- Sha-Touched Herb
 		["Caja fuerte oculta"] = 2039, -- Hidden Strongbox
 		["Almeja gigante"] = 2744, -- Giant Clam
@@ -527,6 +531,7 @@ elseif (region == "esES") then -- Spanish
 		["Arcón de prácticas"] = 178244, -- Practice Lockbox
 		["Baúl maltrecho"] = 179486, -- Battered Footlocker
 		["Baúl con marcas de agua"] = 179487, -- Waterlogged Footlocker
+		["Baúl encharcado"] = 179487, -- Waterlogged Footlocker
 		["Baúl abollado"] = 179492, -- Dented Footlocker
 		["Baúl mohoso"] = 179493, -- Mossy Footlocker
 		["Baúl Escarlata"] = 179498, -- Scarlet Footlocker
@@ -557,10 +562,10 @@ elseif (region == "esES") then -- Spanish
 		["Hallazgo arqueológico de los orcos"] = 207187, -- Orc Archaeology Find
 		["Hallazgo arqueológico de los draenei"] = 207188, -- Draenei Archaeology Find
 		["Hallazgo arqueológico de los vrykuls"] = 207189, -- Vrykul Archaeology Find
-		["Vrykul Archaeology Chest 01"] = 207189, -- Vrykul Archaeology Find
 		["Hallazgo arqueológico de los Tol'vir"] = 207190, -- Tol'vir Archaeology Find
 		["Hallazgo arqueológico pandaren"] = 211163, -- Pandaren Archaeology Find
 		["Hallazgo arqueológico mogu"] = 211174, -- Mogu Archaeology Find
+		["Hallazgo arqueológico mántide"] = 218950, -- Mantid Archaeology Find
 	}
 elseif (region == "esMX") then -- Latin American Spanish (Mapped from esES)
 	Gatherer.Nodes.Names = {
@@ -660,10 +665,12 @@ elseif (region == "esMX") then -- Latin American Spanish (Mapped from esES)
 		["Colátigo"] = 202752, -- Whiptail
 		["Hoja de té verde"] = 209349, -- Green Tea Leaf
 		["Hierba sedosa"] = 209350, -- Silkweed
+		["Hierbaseda"] = 209350, -- Silkweed
 		["Lirio de las nieves"] = 209351, -- Snow Lily
 		["Amapola de lluvia"] = 209353, -- Rain Poppy
 		["Loto dorado"] = 209354, -- Golden Lotus
 		["Flor del inocente"] = 209355, -- Fool's Cap
+		["Seta del inocente"] = 209355, -- Fool's Cap
 		["Hierba influenciada por el sha"] = 214510, -- Sha-Touched Herb
 		["Caja fuerte oculta"] = 2039, -- Hidden Strongbox
 		["Almeja gigante"] = 2744, -- Giant Clam
@@ -703,6 +710,7 @@ elseif (region == "esMX") then -- Latin American Spanish (Mapped from esES)
 		["Arcón de prácticas"] = 178244, -- Practice Lockbox
 		["Baúl maltrecho"] = 179486, -- Battered Footlocker
 		["Baúl con marcas de agua"] = 179487, -- Waterlogged Footlocker
+		["Baúl encharcado"] = 179487, -- Waterlogged Footlocker
 		["Baúl abollado"] = 179492, -- Dented Footlocker
 		["Baúl mohoso"] = 179493, -- Mossy Footlocker
 		["Baúl Escarlata"] = 179498, -- Scarlet Footlocker
@@ -733,10 +741,10 @@ elseif (region == "esMX") then -- Latin American Spanish (Mapped from esES)
 		["Hallazgo arqueológico de los orcos"] = 207187, -- Orc Archaeology Find
 		["Hallazgo arqueológico de los draenei"] = 207188, -- Draenei Archaeology Find
 		["Hallazgo arqueológico de los vrykuls"] = 207189, -- Vrykul Archaeology Find
-		["Vrykul Archaeology Chest 01"] = 207189, -- Vrykul Archaeology Find
 		["Hallazgo arqueológico de los Tol'vir"] = 207190, -- Tol'vir Archaeology Find
 		["Hallazgo arqueológico pandaren"] = 211163, -- Pandaren Archaeology Find
 		["Hallazgo arqueológico mogu"] = 211174, -- Mogu Archaeology Find
+		["Hallazgo arqueológico mántide"] = 218950, -- Mantid Archaeology Find
 	}
 elseif (region == "frFR") then -- French
 	Gatherer.Nodes.Names = {
@@ -909,11 +917,11 @@ elseif (region == "frFR") then -- French
 		["Trouvaille archéologique fossile"] = 206836, -- Fossil Archaeology Find
 		["Trouvaille archéologique orque"] = 207187, -- Orc Archaeology Find
 		["Trouvaille archéologique draeneï"] = 207188, -- Draenei Archaeology Find
-		["Coffre d'archéologie vrykul 01"] = 207189, -- Vrykul Archaeology Find
 		["Trouvaille archéologique vrykule"] = 207189, -- Vrykul Archaeology Find
 		["Trouvaille archéologique tol'vir"] = 207190, -- Tol'vir Archaeology Find
 		["Trouvaille archéologique pandarène"] = 211163, -- Pandaren Archaeology Find
 		["Trouvaille archéologique mogu"] = 211174, -- Mogu Archaeology Find
+		["Trouvaille archéologique mantide"] = 218950, -- Mantid Archaeology Find
 
 
 		-- Missing Node Names
@@ -1037,6 +1045,7 @@ elseif (region == "itIT") then -- Italian
 		["Scoperta Archeologica Tol'vir"] = 207190, -- Tol'vir Archaeology Find
 		["Scoperta Archeologica Pandaren"] = 211163, -- Pandaren Archaeology Find
 		["Scoperta Archeologica Mogu"] = 211174, -- Mogu Archaeology Find
+		["Scoperta Archeologica Mantid"] = 218950, -- Mantid Archaeology Find
 
 
 		-- Missing Node Names
@@ -1185,6 +1194,7 @@ elseif (region == "koKR") then -- Korean
 		["검은 토양"] = 210565, -- Dark Soil
 		["판다렌 고고학 발굴품"] = 211163, -- Pandaren Archaeology Find
 		["모구 고고학 발굴품"] = 211174, -- Mogu Archaeology Find
+		["사마귀 고고학 발굴품"] = 218950, -- Mantid Archaeology Find
 
 
 		-- Missing Node Names
@@ -1275,7 +1285,6 @@ elseif (region == "ptBR") then -- Portuguese (Brazilian)
 	Gatherer.Nodes.Names = {
 		["Veio de Tório Escasso"] = 324, -- Small Thorium Vein
 		["Veio de Tório Pequeno"] = 324, -- Small Thorium Vein
-		["Incendicite Mineral Vein"] = 1610, -- Incendicite Mineral Vein
 		["Veio de Incendicita"] = 1610, -- Incendicite Mineral Vein
 		["Veio de Cobre"] = 1731, -- Copper Vein
 		["Veio de Estanho"] = 1732, -- Tin Vein
@@ -1284,7 +1293,6 @@ elseif (region == "ptBR") then -- Portuguese (Brazilian)
 		["Depósito de Ferro"] = 1735, -- Iron Deposit
 		["Depósito de Mithril"] = 2040, -- Mithril Deposit
 		["Depósito de Veraprata"] = 2047, -- Truesilver Deposit
-		["Lesser Bloodstone Deposit"] = 2653, -- Lesser Bloodstone Deposit
 		["Veio de Prata Coberto de Gosma"] = 73940, -- Ooze Covered Silver Vein
 		["Veio de Ouro Coberto de Gosma"] = 73941, -- Ooze Covered Gold Vein
 		["Depósito de Veraprata Coberto de Gosma"] = 123309, -- Ooze Covered Truesilver Deposit
@@ -1378,61 +1386,37 @@ elseif (region == "ptBR") then -- Portuguese (Brazilian)
 		["Lótus Dourado"] = 209354, -- Golden Lotus
 		["Chapéu dos Tolos"] = 209355, -- Fool's Cap
 		["Planta Tocada pelo Sha"] = 214510, -- Sha-Touched Herb
-		["Hidden Strongbox"] = 2039, -- Hidden Strongbox
 		["Marisco Gigante"] = 2744, -- Giant Clam
-		["Battered Chest"] = 2843, -- Battered Chest
 		["Baú Desgastado"] = 2843, -- Battered Chest
 		["Baú Gasto"] = 2844, -- Tattered Chest
-		["Solid Chest"] = 2850, -- Solid Chest
 		["Barril de Água"] = 3658, -- Water Barrel
 		["Barril de Suco de Melão"] = 3659, -- Barrel of Melon Juice
-		["Armor Crate"] = 3660, -- Armor Crate
 		["Caixote de Armaduras"] = 3660, -- Armor Crate
 		["Caixote de Armas"] = 3661, -- Weapon Crate
-		["Weapon Crate"] = 3661, -- Weapon Crate
 		["Caixote de Comida"] = 3662, -- Food Crate
 		["Barril de Leite"] = 3705, -- Barrel of Milk
-		["Barrel of Sweet Nectar"] = 3706, -- Barrel of Sweet Nectar
-		["Alliance Strongbox"] = 3714, -- Alliance Strongbox
 		["Caixa de Peças Sortidas"] = 19019, -- Box of Assorted Parts
-		["Scattered Crate"] = 28604, -- Scattered Crate
 		["Baú Grande Reforçado com Ferro"] = 74447, -- Large Iron Bound Chest
 		["Baú Grande Sólido"] = 74448, -- Large Solid Chest
-		["Large Solid Chest"] = 74448, -- Large Solid Chest
 		["Baú Desgastado Grande"] = 75293, -- Large Battered Chest
 		["Caixa-forte dos Bucaneiros"] = 123330, -- Buccaneer's Strongbox
 		["Baú Grande Reforçado com Mithril"] = 131978, -- Large Mithril Bound Chest
-		["Horde Supply Crate"] = 142191, -- Horde Supply Crate
-		["Un'Goro Dirt Pile"] = 157936, -- Un'Goro Dirt Pile
+		["Caixote de Suprimentos da Horda"] = 142191, -- Horde Supply Crate
 		["Cristal de Poder Azul"] = 164658, -- Blue Power Crystal
 		["Cristal de Poder Verde"] = 164659, -- Green Power Crystal
 		["Cristal de Poder Vermelho"] = 164660, -- Red Power Crystal
 		["Cristal de Poder Amarelo"] = 164661, -- Yellow Power Crystal
-		["Cleansed Night Dragon"] = 164881, -- Cleansed Night Dragon
-		["Cleansed Songflower"] = 164882, -- Cleansed Songflower
-		["Cleansed Windblossom"] = 164884, -- Cleansed Windblossom
 		["Broto de Pétala Sangrenta"] = 164958, -- Bloodpetal Sprout
-		["Cleansed Whipper Root"] = 174622, -- Cleansed Whipper Root
-		["Blood of Heroes"] = 176213, -- Blood of Heroes
 		["Armadilha de Lagostim"] = 176582, -- Shellfish Trap
-		["Shellfish Trap"] = 176582, -- Shellfish Trap
-		["Practice Lockbox"] = 178244, -- Practice Lockbox
 		["Maleta Surrada"] = 179486, -- Battered Footlocker
 		["Maleta Encharcada"] = 179487, -- Waterlogged Footlocker
-		["Dented Footlocker"] = 179492, -- Dented Footlocker
 		["Maleta Amassada"] = 179492, -- Dented Footlocker
 		["Maleta Mofada"] = 179493, -- Mossy Footlocker
-		["Mossy Footlocker"] = 179493, -- Mossy Footlocker
 		["Maleta Escarlate"] = 179498, -- Scarlet Footlocker
 		["Baú de Enterro"] = 181665, -- Burial Chest
-		["Fel Iron Chest"] = 181798, -- Fel Iron Chest
-		["Heavy Fel Iron Chest"] = 181800, -- Heavy Fel Iron Chest
-		["Adamantite Bound Chest"] = 181802, -- Adamantite Bound Chest
-		["Felsteel Chest"] = 181804, -- Felsteel Chest
 		["Chapéu-opalino"] = 182053, -- Glowcap
 		["Baú de Vime"] = 184740, -- Wicker Chest
 		["Baú Primitivo"] = 184793, -- Primitive Chest
-		["Solid Fel Iron Chest"] = 184930, -- Solid Fel Iron Chest
 		["Ovo da Asa Etérea"] = 185915, -- Netherwing Egg
 		["Lasca de Gelo Eterno"] = 193997, -- Everfrost Chip
 		["Baú do Tesouro Reforçado com Prata"] = 207472, -- Silverbound Treasure Chest
@@ -1454,12 +1438,33 @@ elseif (region == "ptBR") then -- Portuguese (Brazilian)
 		["Descoberta Arqueológica Tol'vírica"] = 207190, -- Tol'vir Archaeology Find
 		["Descoberta Arqueológica Pandaren"] = 211163, -- Pandaren Archaeology Find
 		["Descoberta Arqueológica Mogu"] = 211174, -- Mogu Archaeology Find
+		["Descoberta Arqueológica Mantídea"] = 218950, -- Mantid Archaeology Find
+
+
+		-- Missing Node Names
+		["Lesser Bloodstone Deposit"] = 2653,
+		["Hidden Strongbox"] = 2039,
+		["Solid Chest"] = 2850,
+		["Barrel of Sweet Nectar"] = 3706,
+		["Alliance Strongbox"] = 3714,
+		["Scattered Crate"] = 28604,
+		["Un'Goro Dirt Pile"] = 157936,
+		["Cleansed Night Dragon"] = 164881,
+		["Cleansed Songflower"] = 164882,
+		["Cleansed Windblossom"] = 164884,
+		["Cleansed Whipper Root"] = 174622,
+		["Blood of Heroes"] = 176213,
+		["Practice Lockbox"] = 178244,
+		["Fel Iron Chest"] = 181798,
+		["Heavy Fel Iron Chest"] = 181800,
+		["Adamantite Bound Chest"] = 181802,
+		["Felsteel Chest"] = 181804,
+		["Solid Fel Iron Chest"] = 184930,
 	}
 elseif (region == "ptPT") then -- Portuguese (Mapped from ptBR)
 	Gatherer.Nodes.Names = {
 		["Veio de Tório Escasso"] = 324, -- Small Thorium Vein
 		["Veio de Tório Pequeno"] = 324, -- Small Thorium Vein
-		["Incendicite Mineral Vein"] = 1610, -- Incendicite Mineral Vein
 		["Veio de Incendicita"] = 1610, -- Incendicite Mineral Vein
 		["Veio de Cobre"] = 1731, -- Copper Vein
 		["Veio de Estanho"] = 1732, -- Tin Vein
@@ -1468,7 +1473,6 @@ elseif (region == "ptPT") then -- Portuguese (Mapped from ptBR)
 		["Depósito de Ferro"] = 1735, -- Iron Deposit
 		["Depósito de Mithril"] = 2040, -- Mithril Deposit
 		["Depósito de Veraprata"] = 2047, -- Truesilver Deposit
-		["Lesser Bloodstone Deposit"] = 2653, -- Lesser Bloodstone Deposit
 		["Veio de Prata Coberto de Gosma"] = 73940, -- Ooze Covered Silver Vein
 		["Veio de Ouro Coberto de Gosma"] = 73941, -- Ooze Covered Gold Vein
 		["Depósito de Veraprata Coberto de Gosma"] = 123309, -- Ooze Covered Truesilver Deposit
@@ -1562,61 +1566,37 @@ elseif (region == "ptPT") then -- Portuguese (Mapped from ptBR)
 		["Lótus Dourado"] = 209354, -- Golden Lotus
 		["Chapéu dos Tolos"] = 209355, -- Fool's Cap
 		["Planta Tocada pelo Sha"] = 214510, -- Sha-Touched Herb
-		["Hidden Strongbox"] = 2039, -- Hidden Strongbox
 		["Marisco Gigante"] = 2744, -- Giant Clam
-		["Battered Chest"] = 2843, -- Battered Chest
 		["Baú Desgastado"] = 2843, -- Battered Chest
 		["Baú Gasto"] = 2844, -- Tattered Chest
-		["Solid Chest"] = 2850, -- Solid Chest
 		["Barril de Água"] = 3658, -- Water Barrel
 		["Barril de Suco de Melão"] = 3659, -- Barrel of Melon Juice
-		["Armor Crate"] = 3660, -- Armor Crate
 		["Caixote de Armaduras"] = 3660, -- Armor Crate
 		["Caixote de Armas"] = 3661, -- Weapon Crate
-		["Weapon Crate"] = 3661, -- Weapon Crate
 		["Caixote de Comida"] = 3662, -- Food Crate
 		["Barril de Leite"] = 3705, -- Barrel of Milk
-		["Barrel of Sweet Nectar"] = 3706, -- Barrel of Sweet Nectar
-		["Alliance Strongbox"] = 3714, -- Alliance Strongbox
 		["Caixa de Peças Sortidas"] = 19019, -- Box of Assorted Parts
-		["Scattered Crate"] = 28604, -- Scattered Crate
 		["Baú Grande Reforçado com Ferro"] = 74447, -- Large Iron Bound Chest
 		["Baú Grande Sólido"] = 74448, -- Large Solid Chest
-		["Large Solid Chest"] = 74448, -- Large Solid Chest
 		["Baú Desgastado Grande"] = 75293, -- Large Battered Chest
 		["Caixa-forte dos Bucaneiros"] = 123330, -- Buccaneer's Strongbox
 		["Baú Grande Reforçado com Mithril"] = 131978, -- Large Mithril Bound Chest
-		["Horde Supply Crate"] = 142191, -- Horde Supply Crate
-		["Un'Goro Dirt Pile"] = 157936, -- Un'Goro Dirt Pile
+		["Caixote de Suprimentos da Horda"] = 142191, -- Horde Supply Crate
 		["Cristal de Poder Azul"] = 164658, -- Blue Power Crystal
 		["Cristal de Poder Verde"] = 164659, -- Green Power Crystal
 		["Cristal de Poder Vermelho"] = 164660, -- Red Power Crystal
 		["Cristal de Poder Amarelo"] = 164661, -- Yellow Power Crystal
-		["Cleansed Night Dragon"] = 164881, -- Cleansed Night Dragon
-		["Cleansed Songflower"] = 164882, -- Cleansed Songflower
-		["Cleansed Windblossom"] = 164884, -- Cleansed Windblossom
 		["Broto de Pétala Sangrenta"] = 164958, -- Bloodpetal Sprout
-		["Cleansed Whipper Root"] = 174622, -- Cleansed Whipper Root
-		["Blood of Heroes"] = 176213, -- Blood of Heroes
 		["Armadilha de Lagostim"] = 176582, -- Shellfish Trap
-		["Shellfish Trap"] = 176582, -- Shellfish Trap
-		["Practice Lockbox"] = 178244, -- Practice Lockbox
 		["Maleta Surrada"] = 179486, -- Battered Footlocker
 		["Maleta Encharcada"] = 179487, -- Waterlogged Footlocker
-		["Dented Footlocker"] = 179492, -- Dented Footlocker
 		["Maleta Amassada"] = 179492, -- Dented Footlocker
 		["Maleta Mofada"] = 179493, -- Mossy Footlocker
-		["Mossy Footlocker"] = 179493, -- Mossy Footlocker
 		["Maleta Escarlate"] = 179498, -- Scarlet Footlocker
 		["Baú de Enterro"] = 181665, -- Burial Chest
-		["Fel Iron Chest"] = 181798, -- Fel Iron Chest
-		["Heavy Fel Iron Chest"] = 181800, -- Heavy Fel Iron Chest
-		["Adamantite Bound Chest"] = 181802, -- Adamantite Bound Chest
-		["Felsteel Chest"] = 181804, -- Felsteel Chest
 		["Chapéu-opalino"] = 182053, -- Glowcap
 		["Baú de Vime"] = 184740, -- Wicker Chest
 		["Baú Primitivo"] = 184793, -- Primitive Chest
-		["Solid Fel Iron Chest"] = 184930, -- Solid Fel Iron Chest
 		["Ovo da Asa Etérea"] = 185915, -- Netherwing Egg
 		["Lasca de Gelo Eterno"] = 193997, -- Everfrost Chip
 		["Baú do Tesouro Reforçado com Prata"] = 207472, -- Silverbound Treasure Chest
@@ -1638,6 +1618,28 @@ elseif (region == "ptPT") then -- Portuguese (Mapped from ptBR)
 		["Descoberta Arqueológica Tol'vírica"] = 207190, -- Tol'vir Archaeology Find
 		["Descoberta Arqueológica Pandaren"] = 211163, -- Pandaren Archaeology Find
 		["Descoberta Arqueológica Mogu"] = 211174, -- Mogu Archaeology Find
+		["Descoberta Arqueológica Mantídea"] = 218950, -- Mantid Archaeology Find
+
+
+		-- Missing Node Names
+		["Lesser Bloodstone Deposit"] = 2653,
+		["Hidden Strongbox"] = 2039,
+		["Solid Chest"] = 2850,
+		["Barrel of Sweet Nectar"] = 3706,
+		["Alliance Strongbox"] = 3714,
+		["Scattered Crate"] = 28604,
+		["Un'Goro Dirt Pile"] = 157936,
+		["Cleansed Night Dragon"] = 164881,
+		["Cleansed Songflower"] = 164882,
+		["Cleansed Windblossom"] = 164884,
+		["Cleansed Whipper Root"] = 174622,
+		["Blood of Heroes"] = 176213,
+		["Practice Lockbox"] = 178244,
+		["Fel Iron Chest"] = 181798,
+		["Heavy Fel Iron Chest"] = 181800,
+		["Adamantite Bound Chest"] = 181802,
+		["Felsteel Chest"] = 181804,
+		["Solid Fel Iron Chest"] = 184930,
 	}
 elseif (region == "ruRU") then -- Russian
 	Gatherer.Nodes.Names = {
@@ -1736,6 +1738,7 @@ elseif (region == "ruRU") then -- Russian
 		["Цветущее сердце"] = 202750, -- Heartblossom
 		["Сумеречный жасмин"] = 202751, -- Twilight Jasmine
 		["Хлыстохвост"] = 202752, -- Whiptail
+		["Лист зеленого чая"] = 209349, -- Green Tea Leaf
 		["Листья зеленого чая"] = 209349, -- Green Tea Leaf
 		["Ваточник"] = 209350, -- Silkweed
 		["Снежная лилия"] = 209351, -- Snow Lily
@@ -1766,6 +1769,7 @@ elseif (region == "ruRU") then -- Russian
 		["Большой сундук, окованный мифрилом"] = 131978, -- Large Mithril Bound Chest
 		["Окованный мифрилом большой сундук"] = 131978, -- Large Mithril Bound Chest
 		["Ящик Орды с припасами"] = 142191, -- Horde Supply Crate
+		["Ящик с припасами Орды"] = 142191, -- Horde Supply Crate
 		["Куча земли Ун'Горо"] = 157936, -- Un'Goro Dirt Pile
 		["Синий кристалл силы"] = 164658, -- Blue Power Crystal
 		["Зеленый кристалл силы"] = 164659, -- Green Power Crystal
@@ -1816,6 +1820,7 @@ elseif (region == "ruRU") then -- Russian
 		["Тол'вирская археологическая находка"] = 207190, -- Tol'vir Archaeology Find
 		["Пандаренская археологическая находка"] = 211163, -- Pandaren Archaeology Find
 		["Археологическая находка могу"] = 211174, -- Mogu Archaeology Find
+		["Археологическая находка богомолов"] = 218950, -- Mantid Archaeology Find
 	}
 elseif (region == "zhCN") then -- Chinese
 	Gatherer.Nodes.Names = {
@@ -1956,6 +1961,7 @@ elseif (region == "zhCN") then -- Chinese
 		["枫木宝箱"] = 207529, -- Maplewood Treasure Chest
 		["符文石宝箱"] = 207533, -- Runestone Treasure Chest
 		["黑色泥土"] = 210565, -- Dark Soil
+		["螳螂妖考古发现"] = 218950, -- Mantid Archaeology Find
 
 
 		-- Missing Node Names
@@ -2158,6 +2164,7 @@ elseif (region == "zhTW") then -- Traditional Chinese
 		["托維爾考古學文物"] = 207190, -- Tol'vir Archaeology Find
 		["熊貓人考古學文物"] = 211163, -- Pandaren Archaeology Find
 		["魔古考古學文物"] = 211174, -- Mogu Archaeology Find
+		["螳螂人考古學文物"] = 218950, -- Mantid Archaeology Find
 
 
 		-- Missing Node Names
@@ -2348,6 +2355,7 @@ Gatherer.Nodes.Objects = {
 	[207190] = "ARCH", -- Tol'vir Archaeology Find
 	[211163] = "ARCH", -- Pandaren Archaeology Find
 	[211174] = "ARCH", -- Mogu Archaeology Find
+	[218950] = "ARCH", -- Mantid Archaeology Find
 }
 
 Gatherer.Nodes.PrimaryItems = {

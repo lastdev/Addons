@@ -9,14 +9,10 @@ L:SetGeneralLocalization({
 	name = "Omen"
 })
 
------------------------
---  Apothecary Trio  --
------------------------
-L = DBM:GetModLocalization("ApothecaryTrio")
-
-L:SetGeneralLocalization({
-	name = "Apothecary Trio"
-})
+------------------------------
+--  The Crown Chemical Co.  --
+------------------------------
+L = DBM:GetModLocalization("d288")
 
 L:SetTimerLocalization{
 	HummelActive		= "Hummel becomes active",
@@ -32,34 +28,26 @@ L:SetMiscLocalization({
 	SayCombatStart		= "Did they bother to tell you who I am and why I am doing this?"
 })
 
--------------
---  Ahune  --
--------------
-L = DBM:GetModLocalization("Ahune")
-
-L:SetGeneralLocalization({
-	name = "Ahune"
-})
+----------------------------
+--  The Frost Lord Ahune  --
+----------------------------
+L = DBM:GetModLocalization("d286")
 
 L:SetWarningLocalization({
-	Submerged		= "Ahune has submerged",
-	Emerged			= "Ahune has emerged",
+	Emerged			= "Emerged",
 	specWarnAttack	= "Ahune is vulnerable - Attack now!"
 })
 
 L:SetTimerLocalization{
 	SubmergTimer	= "Submerge",
-	EmergeTimer		= "Emerge",
-	TimerCombat		= "Combat starts"
+	EmergeTimer		= "Emerge"
 }
 
 L:SetOptionLocalization({
-	Submerged		= "Show warning when Ahune submerges",
 	Emerged			= "Show warning when Ahune emerges",
 	specWarnAttack	= "Show special warning when Ahune becomes vulnerable",
 	SubmergTimer	= "Show timer for submerge",
-	EmergeTimer		= "Show timer for emerge",
-	TimerCombat		= "Show timer for start of combat",
+	EmergeTimer		= "Show timer for emerge"
 })
 
 L:SetMiscLocalization({
@@ -69,11 +57,7 @@ L:SetMiscLocalization({
 ----------------------
 --  Coren Direbrew  --
 ----------------------
-L = DBM:GetModLocalization("CorenDirebrew")
-
-L:SetGeneralLocalization({
-	name = "Coren Direbrew"
-})
+L = DBM:GetModLocalization("d287")
 
 L:SetWarningLocalization({
 	specWarnBrew		= "Get rid of the brew before she tosses you another one!",
@@ -90,14 +74,10 @@ L:SetMiscLocalization({
 	YellBarrel			= "Barrel on me!"
 })
 
--------------------------
---  Headless Horseman  --
--------------------------
-L = DBM:GetModLocalization("HeadlessHorseman")
-
-L:SetGeneralLocalization({
-	name = "Headless Horseman"
-})
+-----------------------------
+--  The Headless Horseman  --
+-----------------------------
+L = DBM:GetModLocalization("d285")
 
 L:SetWarningLocalization({
 	WarnPhase				= "Phase %d",
@@ -105,13 +85,8 @@ L:SetWarningLocalization({
 	warnHorsemanHead		= "Head of the Horseman Active"
 })
 
-L:SetTimerLocalization{
-	TimerCombatStart		= "Combat starts"
-}
-
 L:SetOptionLocalization({
 	WarnPhase				= "Show a warning for each phase change",
-	TimerCombatStart		= "Show timer for start of combat",
 	warnHorsemanSoldiers	= "Show warning for Pulsing Pumpkin spawn",
 	warnHorsemanHead		= "Show warning for Head of the Horseman spawning"
 })
@@ -173,7 +148,7 @@ L:SetGeneralLocalization({
 })
 
 L:SetOptionLocalization({
-	SetBubbles			= "Automatically disable chat bubbles during $spell:101871\n(restores them when game ends)"
+	SetBubbles			= "Automatically disable chat bubbles during $spell:101871<br/>(restores them when game ends)"
 })
 
 ----------------------

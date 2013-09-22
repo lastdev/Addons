@@ -1,4 +1,4 @@
-## Interface: 50200
+## Interface: 50400
 ## 
 ## Title: Gatherer Heads-Up Display Plugin
 ## Title-frFR: Gatherer Heads-Up Display Plugin
@@ -8,13 +8,13 @@
 ## Notes-frFR: The HUD is a navigation component that allows you to track the location of gatherables on your screen in a heads-up style overlay.
 ## Notes-deDE: The HUD is a navigation component that allows you to track the location of gatherables on your screen in a heads-up style overlay.
 ## 
-## Version: 4.2.0
+## Version: 4.4.0
 ## Author: Norganna
 ## 
 ## LoadOnDemand: 1
 ## X-Gatherer-Plugin-Name: HUD
 ## 
-## Revision: $Id: Gatherer_HUD.toc 1076 2013-03-08 06:35:16Z Esamynn $
+## Revision: $Id: Gatherer_HUD.toc 1102 2013-09-10 06:19:12Z Esamynn $
 ## Dependencies: Gatherer
 
 # Localization

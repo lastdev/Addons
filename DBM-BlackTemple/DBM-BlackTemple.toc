@@ -1,23 +1,18 @@
-## Interface: 50200
+## Interface: 50400
 ## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Black Temple|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0검은 사원|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Der Schwarze Tempel|r
+## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0黑暗神廟|r
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
 ## SavedVariablesPerCharacter: DBMBlackTemple_SavedVars, DBMBlackTemple_SavedStats
 ## X-DBM-Mod: 1
+## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: BC
-## X-DBM-Mod-Has-Heroic-Mode: 0
-## X-DBM-Mod-Name: Black Temple
-## X-DBM-Mod-Name-zhCN: 黑暗神殿
-## X-DBM-Mod-Name-zhTW: 黑暗神廟
-## X-DBM-Mod-Name-ruRU: Черный храм
-## X-DBM-Mod-Name-esES: Templo Oscuro
-## X-DBM-Mod-Name-koKR: 검은 사원
-## X-DBM-Mod-Name-deDE: Der Schwarze Tempel
+## X-DBM-Mod-Has-Single-Format: 1
+## X-DBM-Mod-MapID: 564
 ## X-DBM-Mod-Sort: 301
-## X-DBM-Mod-LoadZoneID: 796
 localization.en.lua
 localization.cn.lua
 localization.de.lua
@@ -25,7 +20,6 @@ localization.es.lua
 localization.kr.lua
 localization.ru.lua
 localization.tw.lua
-MapSizes.lua
 Najentus.lua
 Supremus.lua
 ShadeOfAkama.lua

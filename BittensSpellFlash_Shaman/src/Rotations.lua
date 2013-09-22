@@ -1,6 +1,5 @@
 local addonName, a = ...
 
-local L = a.Localize
 local s = SpellFlashAddon
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
@@ -12,27 +11,52 @@ local GetSpellCritChance = GetSpellCritChance
 
 a.Rotations = { }
 
+function a.PreFlash()
+	a.Ascended = c.HasBuff("Ascendance", false, false, true)
+end
+
 --------------------------------------------------------------------- Elemental
 a.Rotations.Elemental = {
 	Spec = 1,
 	
+	UsefulStats = { 
+		"Intellect", "Spell Hit", "Hit from Spirit", "Crit", "Haste" 
+	},
+	
 	FlashInCombat = function()
 		c.FlashAll(
 			"Elemental Mastery", 
+			"Ancestral Swiftness for Elemental",
 			"Ascendance for Elemental",
-			"Ancestral Swiftness",
-			"Wind Shear")
-		c.PriorityFlash(
 			"Fire Elemental Totem",
-			"Unleash Elements for Elemental",
-			"Lava Burst",
-			"Flame Shock for Elemental",
-			"Elemental Blast",
-			"Earth Shock for Fulmination",
-			"Earth Elemental Totem",
-			"Searing Totem for Elemental",
-			"Lightning Bolt")
+			"Spiritwalker's Grace",
+			"Purge",
+			"Wind Shear")
+		if c.AoE then
+			c.PriorityFlash(
+				"Lava Beam",
+				"Magma Totem",
+				"Flame Shock AoE",
+				"Lava Burst AoE",
+				"Thunderstorm",
+				"Chain Lightning",
+				"Lightning Bolt")
+		else
+			c.PriorityFlash(
+				"Unleash Elements for Elemental",
+				"Flame Shock Prime for Elemental",
+				"Lava Burst",
+				"Flame Shock for Elemental",
+				"Elemental Blast",
+				"Earth Shock for Fulmination",
+				"Earth Elemental Totem",
+				"Searing Totem for Elemental",
+				"Thunderstorm",
+				"Lightning Bolt")
+		end
 	end,
+	
+	MovementFallthrough = function() end,
 	
 	FlashOutOfCombat = function()
 		c.FlashAll("Thunderstorm", "Water Walking")
@@ -63,6 +87,8 @@ end
 a.Rotations.Enhancement = {
 	Spec = 2,
 	
+	UsefulStats = { "Agility", "Melee Hit", "Strength", "Crit", "Haste" },
+	
 	FlashInCombat = function()
 		if c.IsCasting("Lightning Bolt") 
 			and not c.HasBuff("Ancestral Swiftness") then
@@ -77,10 +103,11 @@ a.Rotations.Enhancement = {
 			"Fire Elemental Totem",
 			"Searing Totem",
 			"Ascendance for Enhancement", 
+			"Purge",
 			"Wind Shear")
 		c.PriorityFlash(
 			"Unleash Elements with Unleashed Fury",
-			"Elemental Blast",
+			"Elemental Blast for Enhance",
 			"Lightning Bolt at 5",
 			"Feral Spirit 4pT15",
 			"Flame Shock Empowered Apply",
@@ -136,12 +163,15 @@ a.Rotations.Enhancement = {
 a.Rotations.Restoration = {
 	Spec = 3,
 	
+	UsefulStats = { "Intellect", "Spirit", "Crit", "Haste" },
+	
 	FlashInCombat = function()
 		c.FlashAll(
-			"Wind Shear",
 			"Healing Stream Totem",
 			"Mana Tide Totem",
-			"Lightning Bolt for Mana")
+			"Lightning Bolt for Mana",
+			"Purge",
+			"Wind Shear")
 	end,
 	
 	FlashOutOfCombat = function()

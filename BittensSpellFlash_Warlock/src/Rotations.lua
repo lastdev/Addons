@@ -51,7 +51,7 @@ local function flashSummon(...)
 	end
 end
 
-a.Snapshots = {}
+a.Snapshots = { }
 local dotInfo = {
 	["Agony"] = {
 		Tick = 2,
@@ -108,35 +108,41 @@ function a.GetDps(name)
 		tick
 end
 
-local function recordSnapshots(spellID, _, targetID)
-	if spellID == c.GetID("Immolate AoE") then
-		spellID = c.GetID("Immolate")
-	end
+local function recordSnapshot(spellID, _, targetID)
 	for name, _ in pairs(dotInfo) do
 		if spellID == c.GetID(name) then
 			local snap = u.GetOrMakeTable(a.Snapshots, name, targetID)
 			snap.Dps, snap.Tick = a.GetDps(name)
-			c.Debug("Event", name, "applied at", snap.Dps, "dps")
-			return
+			snap.Miserable = s.Buff(c.GetID("Dark Soul: Misery"), "player")
+			c.Debug("Event", name, "applied at", snap.Dps, "dps", 
+				snap.Miserable and "with" or "without", "misery")
+			return snap
 		end
 	end
 end
 
 -------------------------------------------------------------------- Affliction
 local empoweredSoCTarget
+local agonyMiss = 0
+local agonySuccess = 0
+local agonyTarget
+a.SwapCast = 0
 
 a.Rotations.Afliction = {
 	Spec = 1,
 	
+	UsefulStats = { "Intellect", "Spell Hit", "Crit", "Haste" },
+	
 	FlashInCombat = function()
 		a.Shards = s.Power("player", SPELL_POWER_SOUL_SHARDS)
-		if c.IsQueued("Soulburn", "Haunt") or c.IsCasting("Haunt") then
+		if c.IsCasting("Soulburn", "Haunt") then
 			a.Shards = a.Shards - 1
 		end
+		a.DarkSoul = c.HasBuff("Dark Soul: Misery", false, false, true)
 		
 		if empoweredSoCTarget ~= nil
 			or (c.IsQueued("Seed of Corruption") 
-				and (c.HasBuff("Soulburn") or c.IsQueued("Soulburn"))) then
+				and c.HasBuff("Soulburn", false, false, true)) then
 			
 			a.SoCExplosionPending = true
 		else
@@ -159,6 +165,8 @@ a.Rotations.Afliction = {
 			"Curse of the Elements",
 			"Dark Soul: Misery",
 			"Grimoire: Felhunter",
+			"Clone Magic",
+			"Devour Magic",
 			"Spell Lock",
 			"Optical Blast",
 			"Command Spell Lock",
@@ -167,12 +175,13 @@ a.Rotations.Afliction = {
 			c.PriorityFlash(
 				"Soulburn during Execute",
 				"Haunt during Execute",
-				"Soul Swap during Execute",
+				"Soul Swap",
 				"Life Tap for Affliction",
 				"Drain Soul")
 		else
 			c.PriorityFlash(
 				"Soulburn under Dark Soul: Misery",
+				"Soul Swap",
 				"Agony within GCD",
 				"Haunt",
 				"Corruption within GCD",
@@ -191,16 +200,22 @@ a.Rotations.Afliction = {
 	
 	FlashAlways = function()
 		c.FlashAll(
-			"Soul Swap under Soulburn", 
 			"Dark Intent", 
 			"Soulstone", 
 			"Dark Regeneration",
 			"Underwater Breath")
 		flashSummon("Felhunter", "Observer")
+		
+		if agonySuccess > 0 then
+			if agonySuccess ~= agonyMiss then
+				recordSnapshot(c.GetID("Agony"), nil, agonyTarget)
+			end
+			agonySuccess = 0
+		end
 	end,
 	
 	FlashOutOfCombat = function()
-		c.FlashAll("Life Tap")
+		c.FlashAll("Life Tap", "Soul Swap")
 	end,
 	
 	CastStarted = function(info)
@@ -232,10 +247,35 @@ a.Rotations.Afliction = {
 		end
 	end,
 	
-	AuraApplied = recordSnapshots,
+	-- Agony uses AuraApplied when stacking, but not when re-applying
+	-- Agony SUCCESS -> Agony MISSED
+	-- Agony MISSED -> Soul Swap SUCCESS
+	
+	CastSucceeded_FromLog = function(spellID, _, targetID)
+		if c.IdMatches(spellID, "Agony", "Soul Swap Soulburn") then
+			agonySuccess = GetTime()
+			agonyTarget = targetID
+			if c.IdMatches(spellID, "Soul Swap Soulburn") then
+				a.SwapCast = GetTime()
+			end
+		end
+	end,
+	
+	SpellMissed = function(spellID)
+		if c.IdMatches(spellID, "Agony") then
+			agonyMiss = GetTime()
+		end
+	end,
+	
+	AuraApplied = function(spellID, _, targetID)
+		if c.IdMatches(spellID, "Corruption", "Unstable Affliction") then
+			recordSnapshot(spellID, nil, targetID)
+			a.SwapCast = 0
+		end
+	end,
 	
 	AuraRemoved = function(spellID, _, targetID)
-		if spellID == c.GetID("Seed of Corruption") then
+		if c.IdMatches(spellID, "Seed of Corruption") then
 			local now = GetTime()
 			local snap = u.GetFromTable(
 				a.Snapshots, "Seed of Corruption", targetID)
@@ -247,7 +287,7 @@ a.Rotations.Afliction = {
 	end,
 	
 	LeftCombat = function()
-		a.Snapshots = {}
+		a.Snapshots = { }
 		c.Debug("Event", "Left Combat")
 	end,
 	
@@ -275,11 +315,22 @@ local furyTick = {
 	["Corruption"] = 4,
 }
 
+local function bumpFury(amount)
+	if c.WearingSet(4, "T15") then	
+		amount = amount * 1.1
+	end
+	a.Fury = a.Fury + amount
+end
+
 a.Rotations.Demonology = {
 	Spec = 2,
 	
+	UsefulStats = { "Intellect", "Spell Hit", "Crit", "Haste" },
+	
 	FlashInCombat = function()
 		a.Fury = s.Power("player", SPELL_POWER_DEMONIC_FURY)
+		a.DarkSoul = c.GetBuffDuration(
+			"Dark Soul: Knowledge", false, false, true)
 		a.Morphed = s.Form(c.GetID("Metamorphosis"))
 		if a.Morphed then
 			for name, cost in pairs(furyCosts) do
@@ -290,7 +341,7 @@ a.Rotations.Demonology = {
 		else
 			for name, bonus in pairs(furyBonuses) do
 				if c.IsCasting(name) then
-					a.Fury = a.Fury + bonus
+					bumpFury(bonus)
 				end
 			end
 		end
@@ -300,7 +351,7 @@ a.Rotations.Demonology = {
 			local tick = u.GetFromTable(
 				a.Snapshots, name, UnitGUID(s.UnitSelection()), "Tick")
 			if dur > 0 and tick ~= nil and busy > dur % tick then
-				a.Fury = a.Fury + bonus
+				bumpFury(bonus)
 			end
 		end
 
@@ -309,6 +360,11 @@ a.Rotations.Demonology = {
 			"Felstorm",
 			"Wrathstorm",
 			"Grimoire: Felguard",
+			"Clone Magic",
+			"Devour Magic",
+			"Spell Lock",
+			"Optical Blast",
+			"Command Spell Lock",
 			"Axe Toss",
 			"Super Axe Toss",
 			"Soulshatter")
@@ -318,7 +374,6 @@ a.Rotations.Demonology = {
 				c.PriorityFlash(
 					"Metamorphosis Cancel AoE",
 					"Immolation Aura",
-					"Void Ray for Corruption",
 					"Doom",
 					"Void Ray")
 			else
@@ -327,7 +382,6 @@ a.Rotations.Demonology = {
 					"Hand of Gul'dan",
 					"Metamorphosis AoE",
 					"Hellfire",
-					"Harvest Life for Demonology",
 					"Life Tap",
 					"Hellfire Out of Range")
 			end
@@ -364,10 +418,10 @@ a.Rotations.Demonology = {
 		c.FlashAll("Life Tap")
 	end,
 	
-	AuraApplied = recordSnapshots,
+	AuraApplied = recordSnapshot,
 	
 	LeftCombat = function()
-		a.Snapshots = {}
+		a.Snapshots = { }
 		c.Debug("Event", "Left combat")
 	end,
 	
@@ -381,12 +435,26 @@ local lastEmbers = nil
 local pendingEmberBump = 0
 local pendingEmberDrop = false
 
+a.RoFCast = 0
+
+function a.T15EmberCost()
+	if c.WearingSet(2, "T15") then
+		return .8
+	else
+		return 1
+	end		
+end
+
 a.Rotations.Destruction = {
 	Spec = 3,
+	
+	UsefulStats = { "Intellect", "Spell Hit", "Crit", "Haste" },
 	
 	FlashInCombat = function()
 		a.Embers = UnitPower("player", SPELL_POWER_BURNING_EMBERS, true) 
 			/ MAX_POWER_PER_EMBER
+		a.DarkSoul = c.GetBuffDuration(
+			"Dark Soul: Instability", false, false, true)
 		if lastEmbers ~= nil then
 			if a.Embers > lastEmbers then
 				pendingEmberBump = math.max(
@@ -403,12 +471,11 @@ a.Rotations.Destruction = {
 			a.Embers = a.Embers - 1
 		end
 		
-		if c.IsCasting("Incinerate") or c.IsCasting("Conflagrate") then
+		if c.IsCasting("Incinerate", "Conflagrate") then
 			a.Embers = a.Embers + .1
-		elseif c.IsCasting("Chaos Bolt") 
-			or c.IsCasting("Shadowburn") 
-			or c.IsCasting("Fire and Brimstone") then
-			
+		elseif c.IsCasting("Chaos Bolt", "Shadowburn") then
+			a.Embers = a.Embers - a.T15EmberCost()
+		elseif c.IsCasting("Fire and Brimstone") then
 			a.Embers = a.Embers - 1
 		end
 		
@@ -416,7 +483,7 @@ a.Rotations.Destruction = {
 		if a.Backdraft > 0 and c.IsCasting("Incinerate") then
 			a.Backdraft = a.Backdraft - 1
 		elseif c.IsCasting("Conflagrate") then
-			a.Backdraft = 3
+			a.Backdraft = a.Backdraft + 3
 		end
 		
 		
@@ -425,29 +492,34 @@ a.Rotations.Destruction = {
 			"Dark Soul: Instability",
 			"Grimoire: Felhunter",
 			"Ember Tap",
+			"Clone Magic",
+			"Devour Magic",
 			"Spell Lock",
 			"Optical Blast",
 			"Command Spell Lock",
 			"Soulshatter")
 		if c.AoE then
 			local flashing = c.PriorityFlash(
-				"Immolate",
 				"Rain of Fire",
-				"Conflagrate",
+				"Immolate",
+				"Conflagrate AoE",
 				"Incinerate")
 			if flashing == "Immolate" 
 				or (a.Embers >= 2 and flashing == "Incinerate") then
 				
-				c.PriorityFlash("Fire and Brimstone")
+				c.FlashAll("Fire and Brimstone")
+			else
+				c.FlashAll("Fire and Brimstone Cancel")
 			end
 		else
 			c.PriorityFlash(
 				"Shadowburn",
 				"Immolate",
-				"Rain of Fire above 50",
-				"Chaos Bolt",
-				"Conflagrate",
 				"Immolate Pandemic",
+				"Conflagrate at Cap",
+				"Chaos Bolt",
+				"Rain of Fire Single Target",
+				"Conflagrate Single Target",
 				"Incinerate",
 				"Chaos Bolt")
 		end
@@ -481,6 +553,8 @@ a.Rotations.Destruction = {
 			
 			pendingEmberDrop = true
 			c.Debug("Event", "Ember drop pending:", info.Name)
+		elseif c.InfoMatches(info, "Rain of Fire") then
+			a.RoFCast = GetTime()
 		end
 	end,
 	
@@ -499,10 +573,19 @@ a.Rotations.Destruction = {
 		end
 	end,
 	
-	AuraApplied = recordSnapshots,
+	AuraApplied = function(spellId, _, targetId)
+		if c.IdMatches(spellId, "Rain of Fire") then
+			a.RoFCast = 0
+		else
+			if spellId == c.GetID("Immolate AoE") then
+				spellId = c.GetID("Immolate")
+			end
+			recordSnapshot(spellId, _, targetId)
+		end
+	end,
 	
 	LeftCombat = function()
-		a.Snapshots = {}
+		a.Snapshots = { }
 		lastEmbers = nil
 		pendingEmberBump = 0
 		pendingEmberDrop = false

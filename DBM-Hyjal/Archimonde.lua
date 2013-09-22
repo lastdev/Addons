@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Archimonde", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 334 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 477 $"):sub(12, -3))
 mod:SetCreatureID(17968)
 mod:SetModelID(20939)
 mod:SetZone()
@@ -22,11 +22,11 @@ local timerFearCD		= mod:NewCDTimer(41, 31970)
 
 local specWarnGrip		= mod:NewSpecialWarningYou(31972)
 local specWarnBurst		= mod:NewSpecialWarningYou(32014)
+local yellBurst			= mod:NewYell(32014)
 
 local berserkTimer		= mod:NewBerserkTimer(600)
 
 mod:AddBoolOption("BurstIcon", true)
-mod:AddBoolOption("YellOnBurst", true, "announce")
 
 function mod:BurstTarget()
 	local targetname = self:GetBossTarget(17968)
@@ -34,9 +34,7 @@ function mod:BurstTarget()
 	warnBurst:Show(targetname)
 	if targetname == UnitName("player") then
 		specWarnBurst:Show()
-		if self.Options.YellOnBurst then
-			SendChatMessage(L.YellBurst, "SAY")
-		end
+		yellBurst:Yell()
 		if self.Options.BurstIcon then
 			self:SetIcon(targetname, 8, 5)
 		end
@@ -50,16 +48,16 @@ end
 
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(31972) then
+	if args.spellId == 31972 then
 		warnGrip:Show(args.destName)
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(31970) then
+	if args.spellId == 31970 then
 		warnFear:Show()
 		timerFearCD:Start()
-	elseif args:IsSpellID(32014) then
+	elseif args.spellId == 32014 then
 		self:ScheduleMethod(0.2, "BurstTarget")
 	end
 end

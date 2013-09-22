@@ -1,6 +1,6 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.15.5380 (LikeableLyrebird)
+	Version: 5.18.5433 (PassionatePhascogale)
 	Revision: $Id: CoreSettings.lua 5378 2012-11-12 19:49:23Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -749,4 +749,4 @@ function private.CheckObsolete()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreSettings.lua $", "$Rev: 5378 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreSettings.lua $", "$Rev: 5378 $")

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Hodir", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
 mod:SetCreatureID(32845)
 mod:SetModelID(28743)
 mod:SetUsedIcons(7, 8)
@@ -44,7 +44,7 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(61968) then
+	if args.spellId == 61968 then
 		timerFlashFreeze:Start()
 		warnFlashFreeze:Show()
 		timerFlashFrCD:Start()

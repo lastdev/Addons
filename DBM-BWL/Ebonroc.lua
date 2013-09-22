@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ebonroc", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 311 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 436 $"):sub(12, -3))
 mod:SetCreatureID(14601)
 mod:SetModelID(6377)
 mod:RegisterCombat("combat")
@@ -25,24 +25,24 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)--did not see ebon use any of these abilities
-	if args:IsSpellID(23339) and self:IsInCombat() then
+	if args.spellId == 23339 and self:IsInCombat() then
 		warnWingBuffet:Show()
 		timerWingBuffet:Start()
-	elseif args:IsSpellID(22539) and self:IsInCombat() then
+	elseif args.spellId == 22539 and self:IsInCombat() then
 		timerShadowFlame:Start()
 		warnShadowFlame:Show()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(23340) then
+	if args.spellId == 23340 then
 		warnShadow:Show(args.destName)
 		timerShadow:Start(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(23340) then
+	if args.spellId == 23340 then
 		timerShadow:Cancel(args.destName)
 	end
 end

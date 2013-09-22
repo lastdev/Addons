@@ -12,10 +12,9 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnGroupOrder		= "提示$spell:118191的隊伍輪班(目前只支援25人5,2,2,2,戰術)",
-	specWarnYourGroup	= "為$spell:118191顯示特別警告當輪到你的隊伍時\n(只適用於25人)",
-	RangeFrame			= "為$spell:111850顯示距離框(8碼)(當你有debuff時只顯示其他沒有debuff的玩家)",
-	SetIconOnPrison		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(117436)
+	warnGroupOrder		= "提示$spell:118191的隊伍輪班<br/>(目前只支援25人5,2,2,2,戰術)",
+	specWarnYourGroup	= "為$spell:118191顯示特別警告當輪到你的隊伍時(只適用於25人)",
+	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(8, 111850) .. "<br/>(當你有debuff時只顯示其他沒有debuff的玩家)"
 })
 
 
@@ -23,10 +22,6 @@ L:SetOptionLocalization({
 -- Tsulong --
 ------------
 L= DBM:GetModLocalization(742)
-
-L:SetOptionLocalization({
-	warnLightOfDay	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(123716)
-})
 
 L:SetMiscLocalization{
 	Victory					= "謝謝你，陌生人。我重獲自由了。"
@@ -39,8 +34,7 @@ L:SetMiscLocalization{
 L= DBM:GetModLocalization(729)
 
 L:SetWarningLocalization({
-	warnHideOver			= "%s結束",
-	warnHideProgress		= "擊中:%s. 傷害:%s. 時間:%s"
+	warnHideOver			= "%s結束"
 })
 
 L:SetTimerLocalization({
@@ -49,15 +43,14 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	warnHideOver			= "為$spell:123244結束顯示警告",
-	warnHideProgress		= "當$spell:123244結束後顯示統計",
 	timerSpecialCD			= "為下一次特別技能冷卻顯示計時器",
 	SetIconOnProtector		= "為$journal:6224標示團隊圖示(超過一名以上的團隊助理時不可靠)",
-	RangeFrame				= "為$spell:123121顯示距離框(3碼)(只有顯示坦)",
-	GWHealthFrame			= "為$spell:123461顯示需求血量框架(首領血量框架需要開啟)" -- maybe bad wording, needs review
+	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(3, 123121) .. "<br/>(消失時顯示所有玩家其餘時間只有顯示坦)",
+	GWHealthFrame			= "為$spell:123461退去顯示血量框架(首領血量框架需要開啟)" -- maybe bad wording, needs review
 })
 
 L:SetMiscLocalization{
-	Victory					= "我...啊..喔!我曾經...?我是不是...?這一切...都太...模糊了。"--wtb alternate and less crappy victory event.
+	Victory					= "我...啊..喔!我曾經...?我是不是...?這一切...都太...模糊了。"
 }
 
 
@@ -67,8 +60,6 @@ L:SetMiscLocalization{
 L= DBM:GetModLocalization(709)
 
 L:SetWarningLocalization({
-	warnWaterspout				= "%s (%d) : >%s<",
-	warnHuddleInTerror			= "%s (%d) : >%s<",
 	MoveForward					= "向前穿過去",
 	MoveRight					= "向右移動",
 	MoveBack					= "回到原本位置",
@@ -83,13 +74,8 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
-	warnThrash					= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(131996),
-	warnBreathOnPlatform		= "當你在平台時顯示$spell:119414警告(不建議使用，給團隊隊長)",
+	warnBreathOnPlatform		= "當你在平台時顯示$spell:119414警告<br/>(不建議使用，團隊隊長使用)",
 	specWarnBreathOfFearSoon	= "為$spell:119414顯示提前特別警告如果你身上沒有$spell:117964增益",
-	specWarnMovement			= "當$spell:120047施放時顯示移動的特別警告(http://mysticalos.com/terraceofendlesssprings.jpg)",
-	warnWaterspout				= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(120519),
-	warnHuddleInTerror			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.target:format(120629),
-	timerSpecialAbility 		= "為下一次特別技能施放顯示計時器",
-	RangeFrame					= "為$spell:119519顯示距離框(2碼)",
-	SetIconOnHuddle				= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(120629)
+	specWarnMovement			= "當$spell:120047施放時顯示移動的特別警告<br/>(點擊去複製連結<a href=\"http://mysticalos.com/terraceofendlesssprings.jpg\">|cff3588ffhttp://mysticalos.com/terraceofendlesssprings.jpg|r</a>)",
+	timerSpecialAbility 		= "為下一次特別技能施放顯示計時器"
 })

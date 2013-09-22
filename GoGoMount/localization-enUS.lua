@@ -41,6 +41,8 @@
 		PaladinOptions = "Paladin Options",
 		RemoveBuffs = "Remove buffs that can prevent mounting",
 		RemoveBuffs_Long = "GoGoMount will attempt to remove buffs and shapeforms that come from spells and items that prevent mounting.  This only works for known buffs and in some cases require 2 clicks of your GoGoMount button to mount.",
+		ShamanOptions = "Shaman Options",
+		ShamanSingleClick = "Single click mount from Ghost Wolf Form instead of dismounting",
 		UnknownMountFound = "An unknown mount has been found in you list of mounts.  Please report this so that it can be added to future versions of GoGoMount.",
 		UseAspectOfThePackInstead = "Use Aspect Of The Pack instead of Aspect Of The Cheeta",
 		UseAspectOfThePackInstead_Long = "When enabled, GoGoMount will cast Aspect of the Pack instead of Aspect of the Cheetah.  Local zone or global settings override this setting.  If this is set to use Aspect of the Pack and you have Aspect of the Cheetah as a zone favorite, Aspect of the Cheetah will be used.", -- Needs review

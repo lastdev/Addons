@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.15.5380 (LikeableLyrebird)
-	Revision: $Id: BeanCounterConfig.lua 5347 2012-09-06 06:26:15Z Esamynn $
+	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: BeanCounterConfig.lua 5420 2013-06-12 17:27:06Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	BeanCounterConfig - Controls Configuration data
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounterConfig.lua $","$Rev: 5347 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.18/BeanCounter/BeanCounterConfig.lua $","$Rev: 5420 $","5.1.DEV.", 'auctioneer', 'libs')
 
 --Most of this code is from enchantrix by ccox
 local lib = BeanCounter
@@ -83,14 +83,14 @@ private.settingDefaults = {
 
 	--["util.beancounter.dateFormat"] = "%c",
 	["dateString"] = "%c",
-	
+
 	--Data storage
 	["monthstokeepdata"] = 48,
-	
+
 	--Color gradient
 	["colorizeSearch"] = true,
 	["colorizeSearchopacity"] = 0.2,
-	
+
 	--Search settings
 	["numberofdisplayedsearchs"] = 500,
 
@@ -110,8 +110,8 @@ private.settingDefaults = {
 	["columnwidth.".._BC("UiFee")] = 70,
 	["columnwidth.".._BC('UiReason')] = 70,
 	["columnwidth.".._BC('UiDateHeader')] = 250,
-	
-	["columnwidth.".._BC('UiProfit')] = 65, 
+
+	["columnwidth.".._BC('UiProfit')] = 65,
 	["ModTTShow"] = false,
     }
 
@@ -154,7 +154,7 @@ end
 local function setter(setting, value, server, player)
 	if not setting then debugPrint("No setting passed DEBUG STRING REMOVE", setting, value, server, player) return end
 	if type(setting) ~= "string" then debugPrint( setting, value, type(setting) ) return end
-	
+
 	local DB = BeanCounterDBSettings
 	-- turn value into a canonical true or false
 	if value == 'on' then
@@ -163,16 +163,11 @@ local function setter(setting, value, server, player)
 		value = false
 	end
 
-	-- Don't save default values, still need to pass nil values on
-	if value ~= nil and (value == 'default' or value == getDefault(setting)) then
-		return
-	end
-
-	--button to check database integrity pushed
+	-- Settings that require special handling
 	if (setting ==  "monthstokeepdata") then
 		local text = format("Enable purging transactions older than %s months from the database. \nYou must hold the SHIFT key to check this box since this will DELETE data.", gui.elements.monthstokeepdata:GetValue()/100 or 48)
 		gui.elements.oldDataExpireEnabled.textEl:SetText(text)
-		
+
 		--Always uncheck and set value to off when they change the slider value as a safety precaution
 		DB["oldDataExpireEnabled"] = false
 		gui.elements.oldDataExpireEnabled:SetChecked(false)
@@ -181,18 +176,21 @@ local function setter(setting, value, server, player)
 			print("You will need to hold down the SHIFT key to check this box")
 			lib.SetSetting("oldDataExpireEnabled", false)
 			return
-		end 
-	end
-		
-	--This is used to do the DateString
-	if (setting == "dateString") then --used to update the Config GUI when a user enters a new date string
+		end
+	elseif (setting == "dateString") then --used to update the Config GUI when a user enters a new date string
 		value = private.DateStringUpdate(value)
 	end
+
+	-- For default values 'store' a value of nil, to delete any non-default value previously held in this setting
+	if value == 'default' or value == getDefault(setting) then
+		value = nil
+	end
+
 	-- Set the value for this setting
 	if server and player then
 		if not DB[server] then DB[server] = {} end
 		if not DB[server][player] then DB[server][player] = {} end
-		
+
 		DB[server][player][setting] = value
 		return
 	end
@@ -211,7 +209,7 @@ local function getter(setting, server, player)
 	if not setting then return end
 	local DB = BeanCounterDBSettings
 
-	
+
 	if server and player then
 		if DB[server] and DB[server][player] then
 			return DB[server][player][setting]
@@ -257,7 +255,7 @@ function lib.MakeGuiConfig()
 
 	gui:AddControl(id, "Checkbox",   0, 1, "util.beancounter.externalSearch", _BC('C_ExtenalSearch')) --"Allow External Addons to use BeanCounter's Search?")
 	gui:AddTip(id, _BC('TTExtenalSearch')) --"When entering a search in another addon, BeanCounter will also display a search for that item.")
-	
+
 	gui:AddControl(id, "Checkbox",   0, 1, "sendSearchBrowseFrame", _BC('C_SendToSearch')) --Add BeanCounter's searched item to the Main Auction House Window?
 	gui:AddTip(id, _BC('TT_sendtosearch')) --"When entering a search in BeanCounter it will also add the string to the AH browse frame.
 
@@ -281,12 +279,12 @@ function lib.MakeGuiConfig()
 	gui:AddControl(id, "NumeriSlider", 0, 3, "colorizeSearchopacity",    0, 1, 0.1,  _BC('C_OpacityLevel')) --Opacity level
 	gui:AddTip(id,  _BC('TT_OpacityLevel')) --This controls the level of opacity for the colored bars in the BeanCounter search window (if enabled)
 
-	
+
 	gui:AddControl(id, "Subhead",     0,    _BC('C_SearchConfiguration')) --Search Configuration
-	
+
 	gui:AddControl(id, "NumeriSlider", 0, 1, "numberofdisplayedsearchs",    500, 5000, 250,  _BC('C_MaxDisplayedResults')) --Max displayed search results (from each database)
 	gui:AddTip(id, _BC('TT_MaxDisplayedResults')) --This controls the total number of results displayed in the scroll frame.
-	
+
 	gui:AddHelp(id, "what is invoice",
 		_BC('Q_MailInvoiceTimeout'), --"What is Mail Invoice Timeout?",
 		_BC('A_MailInvoiceTimeout') --"The length of time BeanCounter will wait on the server to respond to an invoice request. A invoice is the who, what, how of an Auction house mail"
@@ -317,7 +315,7 @@ function lib.MakeGuiConfig()
 	gui:MakeScrollable(id)
 	gui:AddControl(id, "Header",     0,    _BC('C_BeanCounterDatabaseMaintenance')) --"BeanCounter Database Maintenance"
 
-	
+
 --~ 	local sort, prune, compact = get("sortArray", private.serverName, private.playerName) or 0 , get("prunePostedDB", private.serverName, private.playerName) or 0, get("compactDB", private.serverName, private.playerName) or 0
 --~ 	local a = "The next database sort for %s is scheduled to occur in %s day(s)"
 --~ 	local b = "The pruning of the posted database for %s is scheduled to occur in %s day(s)"
@@ -329,9 +327,9 @@ function lib.MakeGuiConfig()
 
 	gui:AddControl(id, "Subhead",    0,    _BC('C_ScanDatabase')) --"Scan Database for errors: Use if you have errors when searching BeanCounter. \n Backup BeanCounter's saved variables before using."
 	--makes button call a function rather than a SV
-	local valButton = gui:AddControl(id, "Button",     0, 1, function(...)end, _BC('C_ValidateDatabase')) 
+	local valButton = gui:AddControl(id, "Button",     0, 1, function(...)end, _BC('C_ValidateDatabase'))
 	valButton:SetScript("OnClick", function() private.integrityCheck(true) end)
-	
+
 	gui:AddTip(id, _BC('TTValidateDatabase')) --"This will scan Beancounter's Data and attempt to correct any error it may find. Use if you are getting errors on search"
 
 	gui:AddControl(id, "Subhead",    0,    _BC('C_DatabaseLength')) --"Determines how long BeanCounter will save Auction House Transactions."
@@ -342,9 +340,9 @@ function lib.MakeGuiConfig()
 	id = gui:AddTab("BeanCounter Debug")
 	gui:AddControl(id, "Header",     0,    "BeanCounter Debug")
 	gui:AddControl(id, "Checkbox",   0, 1, "util.beancounter.debug", "Turn on BeanCounter Debugging text. Dont check unless asked to do so")
-	
+
 	gui:AddControl(id, "Subhead",    0,    "Reports From Specific Modules")
-	
+
 	gui:AddControl(id, "Checkbox",   0, 2, "util.beancounter.debugMail", "Mail")
 	gui:AddControl(id, "Checkbox",   0, 2, "util.beancounter.debugCore", "Core")
 	gui:AddControl(id, "Checkbox",   0, 2, "util.beancounter.debugConfig", "Config")

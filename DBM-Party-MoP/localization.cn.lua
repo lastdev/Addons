@@ -12,10 +12,6 @@ local L
 -----------------------
 L= DBM:GetModLocalization(672)
 
-L:SetOptionLocalization({
-	SetIconOnAdds	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format("ej5616")
-})
-
 -----------------------
 -- Lorewalker Stonestep --
 -----------------------
@@ -23,10 +19,6 @@ L= DBM:GetModLocalization(664)
 
 L:SetWarningLocalization({
 	SpecWarnIntensity	= "%s -> %s (%d)"
-})
-
-L:SetOptionLocalization({
-	SpecWarnIntensity	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack:format(6, 113315)
 })
 
 -----------------------
@@ -78,10 +70,6 @@ L:SetWarningLocalization({
 	warnStaticField	= "%s"
 })
 
-L:SetOptionLocalization({
-	warnStaticField	= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(106923)
-})
-
 -----------------------
 -- Snowdrift --
 -----------------------
@@ -116,7 +104,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Kill		= "只要你们心中的暴虐不除……我……就会……回来的……",
+	Kill		= "只要你们心中的暴虐不除……我……就会……回来的……"
 })
 
 -----------------------
@@ -126,10 +114,6 @@ L:SetMiscLocalization({
 -- Kiptilak --
 ---------------------
 L= DBM:GetModLocalization(655)
-
-L:SetOptionLocalization({
-	IconOnSabotage	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(107268)
-})
 
 -------------
 -- Gadok --
@@ -292,7 +276,7 @@ L= DBM:GetModLocalization(688)
 L= DBM:GetModLocalization(671)
 
 L:SetOptionLocalization({
-	KickArrow	= "DBM箭头：$spell:114487接近你时",
+	KickArrow	= "DBM箭头：$spell:114487接近你时"
 })
 
 -----------------------

@@ -1,4 +1,4 @@
-﻿## Interface: 50200
+﻿## Interface: 50400
 ## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Pandaria|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0판다리아|r
@@ -6,25 +6,19 @@
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Пандария|r
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0潘达利亚|r
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Pandarie|r
-## Author: MysticalOS/BlueNyx
+## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0潘達利亞|r
+## Author: MysticalOS/nBlueWiz
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
 ## SavedVariablesPerCharacter: DBMPandaria_SavedVars, DBMPandaria_SavedStats
 ## X-DBM-Mod: 1
+## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: MOP
-## X-DBM-Mod-Has-Heroic-Mode: 0
-## X-DBM-Mod-Name: Pandaria
-## X-DBM-Mod-Name-koKR: 판다리아
-## X-DBM-Mod-Name-deDE: Pandaria
-## X-DBM-Mod-Name-ruRU: Пандария
-## X-DBM-Mod-Name-esES: Pandaria
-## X-DBM-Mod-Name-esMX: Pandaria
-## X-DBM-Mod-Name-ptBR: Pandaria
-## X-DBM-Mod-Name-zhTW: 潘達利亞
-## X-DBM-Mod-Name-zhCN: 潘达利亚
-## X-DBM-Mod-Name-frFR: Pandarie
-## X-DBM-Mod-Sort: 5
-## X-Curse-Packaged-Version: 5.2.1
+## X-DBM-Mod-Has-Single-Format: 1
+## X-DBM-Mod-Sort: 6
+## X-DBM-Mod-MapID: 870,1064
+## X-DBM-Mod-LoadCID: 62346,60491,69161,69099,71952,71954,72057,71953,71955
+## X-Curse-Packaged-Version: 5.4.1
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
@@ -37,8 +31,12 @@ localization.ru.lua
 localization.tw.lua
 localization.cn.lua
 localization.br.lua
-MapSizes.lua
 Anger.lua
 Salyis.lua
-Oondasta.lua
 Nalak.lua
+Oondasta.lua
+ChiJi.lua
+Yulon.lua
+Niuzao.lua
+Xuen.lua
+Ordos.lua

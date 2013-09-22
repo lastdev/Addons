@@ -10,7 +10,7 @@ XPerl_RequestConfig(function(new)
 			if (XPerl_Player_Pet) then
 				XPerl_Player_Pet.conf = pconf
 			end
-		end, "$Revision: 837 $")
+		end, "$Revision: 852 $")
 local XPerl_Player_Pet_HighlightCallback
 
 -- XPerl_Player_Pet_OnLoad
@@ -70,17 +70,13 @@ function XPerl_Player_Pet_OnLoad(self)
 					"UNIT_HEALTH", "UNIT_MAXHEALTH", "UNIT_LEVEL", "UNIT_POWER_FREQUENT",
 					"UNIT_MAXPOWER", "UNIT_DISPLAYPOWER", "UNIT_NAME_UPDATE",
 					"UNIT_FACTION", "UNIT_PORTRAIT_UPDATE",
-					"UNIT_FLAGS", "UNIT_DYNAMIC_FLAGS", "UNIT_AURA",
+					"UNIT_FLAGS", "UNIT_AURA",
 					"UNIT_PET", "PET_ATTACK_START", "UNIT_COMBAT", "UNIT_SPELLMISS", "VARIABLES_LOADED",
 					"PLAYER_REGEN_ENABLED", "PLAYER_ENTERING_WORLD", "UNIT_ENTERED_VEHICLE", "UNIT_EXITED_VEHICLE",
 					"UNIT_THREAT_LIST_UPDATE", "PLAYER_TARGET_CHANGED", "UNIT_TARGET", "PET_BATTLE_OPENING_START","PET_BATTLE_CLOSE"}
 	for i,event in pairs(events) do
 		self:RegisterEvent(event)
 	end
-
-	--XPerl_UnitEvents(self, XPerl_Player_Pet_Events, {"UNIT_FACTION", "UNIT_PORTRAIT_UPDATE", "UNIT_FLAGS", "UNIT_DYNAMIC_FLAGS",
-	--					"UNIT_AURA"})
-	--XPerl_RegisterBasics(self, XPerl_Player_Pet_Events)
 
 	self.time = 0
 
@@ -383,14 +379,13 @@ function XPerl_Player_Pet_Events:UNIT_SPELLMISS(...)
 	end
 end
 
--- UNIT_DYNAMIC_FLAGS
+-- UNIT_FACTION
 function XPerl_Player_Pet_Events:UNIT_FACTION()
 	XPerl_Player_Pet_UpdateName(self)
 	XPerl_Player_Pet_UpdateCombat(self)
 end
 
 XPerl_Player_Pet_Events.UNIT_FLAGS = XPerl_Player_Pet_Events.UNIT_FACTION
-XPerl_Player_Pet_Events.UNIT_DYNAMIC_FLAGS = XPerl_Player_Pet_Events.UNIT_FACTION
 
 -- PLAYER_REGEN_ENABLED
 function XPerl_Player_Pet_Events:PLAYER_REGEN_ENABLED()

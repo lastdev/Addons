@@ -28,14 +28,6 @@ L:SetGeneralLocalization{
 	name				= "Vaelastrasz der Verdorbene"
 }
 
-L:SetTimerLocalization{
-	TimerCombatStart	= "Kampfbeginn"
-}
-
-L:SetOptionLocalization{
-	TimerCombatStart	= "Zeige Zeit bis Kampfbeginn"
-}
-
 L:SetMiscLocalization{
 	Event				= "Zu spät, Freunde! Nefarius üble Macht wirkt bereits... Ich habe mich nicht... nicht mehr unter Kontrolle.."
 }
@@ -88,18 +80,14 @@ L:SetGeneralLocalization{
 	name = "Chromaggus"
 }
 L:SetWarningLocalization{
-	WarnBreathSoon	= "Atem bald",
-	WarnBreath		= "%s",
-	WarnPhase2Soon	= "Phase 2 bald"
+	WarnBreath		= "%s"
 }
 L:SetTimerLocalization{
 	TimerBreathCD	= "%s CD"
 }
 L:SetOptionLocalization{
-	WarnBreathSoon	= "Zeige Vorwarnung für die Atem des Chromaggus",
 	WarnBreath		= "Zeige Warnung, wenn Chromaggus einen seiner Atem wirkt",
-	TimerBreathCD	= "Abklingzeit der Atem anzeigen",
-	WarnPhase2Soon	= "Verkünde baldigen Beginn von Phase 2"
+	TimerBreathCD	= "Abklingzeit der Atem anzeigen"
 }
 L:SetMiscLocalization{
 	Breath1	= "Erster Atem",
@@ -115,9 +103,7 @@ L:SetGeneralLocalization{
 	name = "Nefarian"
 }
 L:SetWarningLocalization{
-	WarnClassCallSoon	= "Klassenruf bald",
 	WarnClassCall		= "%s Ruf",
-	WarnPhaseSoon		= "Phase %s bald",
 	WarnPhase			= "Phase %s"
 }
 L:SetTimerLocalization{
@@ -125,9 +111,7 @@ L:SetTimerLocalization{
 }
 L:SetOptionLocalization{
 	TimerClassCall		= "Dauer der Klassenrufe anzeigen",
-	WarnClassCallSoon	= "Zeige Vorwarnung für Klassenrufe",
 	WarnClassCall		= "Verkünde Klassenrufe",
-	WarnPhaseSoon		= "Verkünde baldigen Phasenwechsel",
 	WarnPhase			= "Verkünde Phasenwechsel"
 }
 L:SetMiscLocalization{
@@ -140,8 +124,9 @@ L:SetMiscLocalization{
 	YellPriest	= "Priester! Wenn Ihr weiterhin so heilt, können wir es auch gerne etwas interessanter gestalten!",
 	YellWarrior	= "Krieger, Ich bin mir sicher, dass ihr kräftiger als das zuschlagen könnt!",
 	YellRogue	= "Schurken? Kommt aus den Schatten und zeigt Euch!",
-	YellWarlock	= "Hexenmeister, ihr solltet nicht mit Magie spielen, die ihr nicht versteht. Seht ihr was ich meine?", --needs to be verified (current translation source: rpguides)
+	YellWarlock	= "Hexenmeister, Ihr solltet nicht mit Magie spielen, die Ihr nicht versteht. Seht Ihr was ich meine?",--needs to be verified (wowhead-captured translation)
 	YellHunter	= "Jäger und ihre lästigen Knallbüchsen!",
 	YellMage	= "Auch Magier? Ihr solltet vorsichtiger sein, wenn Ihr mit Magie spielt...",
-	YellDK		= "Todesritter... kommt hierher!"
+	YellDK		= "Todesritter... kommt hierher!",
+	YellMonk	= "Mönche, macht Euch dieses Herumrollen denn nicht schwindlig?"--needs to be verified (wowhead-captured translation)
 }

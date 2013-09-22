@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("RomuloAndJulianne", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 334 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 515 $"):sub(12, -3))
 mod:SetCreatureID(17534, 17533, 99999)--99999 bogus screature id to keep mod from pre mature combat end.
 mod:SetModelID(17068)
 mod:RegisterCombat("yell", L.RJ_Pull)
@@ -21,14 +21,14 @@ local warnPhase3		= mod:NewPhaseAnnounce(3)
 local warningHeal		= mod:NewCastAnnounce(30878, 4)
 local warningDaring		= mod:NewTargetAnnounce(30841, 3)
 local warningDevotion	= mod:NewTargetAnnounce(30887, 3)
-local warningPosion		= mod:NewAnnounce("warningPosion", 2, 30830, mod:IsHealer() or mod:IsTank())
+local warningPosion		= mod:NewStackAnnounce(30830, 2, nil, mod:IsHealer() or mod:IsTank())
 
 local timerHeal			= mod:NewCastTimer(2.5, 30878)
 local timerDaring		= mod:NewTargetTimer(8, 30841)
 local timerDevotion		= mod:NewTargetTimer(10, 30887)
-local timerCombatStart	= mod:NewTimer(55, "TimerCombatStart", 2457)
+local timerCombatStart	= mod:NewCombatTimer(55)
 
-mod:AddBoolOption("HealthFrame", true)
+mod:AddBoolOption("HealthFrame", false)
 
 local phase	= 0
 local JulianneDied = 0
@@ -43,20 +43,21 @@ end
 
 function mod:NextPhase()
 	phase = phase + 1
-	if phase == 1 then
-		DBM.BossHealth:Clear()
-		DBM.BossHealth:AddBoss(17534, L.Julianne)
-	elseif phase == 2 then
-		DBM.BossHealth:AddBoss(17533, L.Romulo)
-		warnPhase2:Show()
-	elseif phase == 3 then
-		DBM.BossHealth:AddBoss(17534, L.Julianne)
-		DBM.BossHealth:AddBoss(17533, L.Romulo)
+	if DBM.BossHealth:IsShown() then
+		if phase == 1 then
+			DBM.BossHealth:Clear()
+			DBM.BossHealth:AddBoss(17534, L.Julianne)
+		elseif phase == 2 then
+			DBM.BossHealth:AddBoss(17533, L.Romulo)
+		elseif phase == 3 then
+			DBM.BossHealth:AddBoss(17534, L.Julianne)
+			DBM.BossHealth:AddBoss(17533, L.Romulo)
+		end
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(30878) then
+	if args.spellId == 30878 then
 		warningHeal:Show()
 		timerHeal:Start()
 	end
@@ -64,11 +65,11 @@ end
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(30822, 30830) then
-		warningPosion:Show(args.spellName, args.destName, args.amount or 1)
-	elseif args:IsSpellID(30841) then
+		warningPosion:Show(args.destName, args.amount or 1)
+	elseif args.spellId == 30841 then
 		warningDaring:Show(args.destName)
 		timerDaring:Start(args.destName)
-	elseif args:IsSpellID(30887) then
+	elseif args.spellId == 30887 then
 		warningDevotion:Show(args.destName)
 		timerDevotion:Start(args.destName)
 	end
@@ -77,9 +78,9 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(30841) then
+	if args.spellId == 30841 then
 		timerDaring:Cancel(args.destName)
-	elseif args:IsSpellID(30887) then
+	elseif args.spellId == 30887 then
 		timerDevotion:Cancel(args.destName)
 	end
 end
@@ -103,7 +104,10 @@ function mod:UNIT_DIED(args)
 				DBM:EndCombat(self)
 			end
 		else
-			DBM.BossHealth:RemoveBoss(cid)
+			if DBM.BossHealth:IsShown() then
+				DBM.BossHealth:RemoveBoss(cid)
+			end
+			warnPhase2:Show()
 			self:NextPhase()--Trigger phase 2
 		end
 	elseif cid == 17533 and self:IsInCombat() then
@@ -112,7 +116,7 @@ function mod:UNIT_DIED(args)
 			if (GetTime() - JulianneDied) < 10 then
 				DBM:EndCombat(self)
 			end
-		else
+		elseif DBM.BossHealth:IsShown() then 
 			DBM.BossHealth:RemoveBoss(cid)
 		end
 	end

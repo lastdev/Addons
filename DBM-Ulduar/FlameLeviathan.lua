@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FlameLeviathan", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 27 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 50 $"):sub(12, -3))
 
 mod:SetCreatureID(33113)
 mod:SetModelID(28875)
@@ -32,8 +32,10 @@ local soundPursued			= mod:NewSound(62374)
 local guids = {}
 local function buildGuidTable()
 	table.wipe(guids)
-	for i = 1, DBM:GetNumGroupMembers() do
-		guids[UnitGUID("raid"..i.."pet") or "none"] = GetRaidRosterInfo(i)
+	for uId in DBM:GetGroupMembers() do
+		local name, server = UnitName(uId)
+		local fullName = name .. (server and server ~= "" and ("-" .. server) or "")
+		guids[UnitGUID(uId.."pet") or "none"] = fullName
 	end
 end
 
@@ -42,18 +44,18 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_SUMMON(args)
-	if args:IsSpellID(62907) then		-- Ward of Life spawned (Creature id: 34275)
+	if args.spellId == 62907 then		-- Ward of Life spawned (Creature id: 34275)
 		warnWardofLife:Show()
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(62396) then		-- Flame Vents
+	if args.spellId == 62396 then		-- Flame Vents
 		timerFlameVents:Start()
-	elseif args:IsSpellID(62475) then	-- Systems Shutdown / Overload
+	elseif args.spellId == 62475 then	-- Systems Shutdown / Overload
 		timerSystemOverload:Start()
 		warnSystemOverload:Show()
-	elseif args:IsSpellID(62374) then	-- Pursued
+	elseif args.spellId == 62374 then	-- Pursued
 		local target = guids[args.destGUID]
 		warnNextPursueSoon:Schedule(25)
 		timerPursued:Start()
@@ -64,7 +66,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				soundPursued:Play()
 			end
 		end
-	elseif args:IsSpellID(62297) then		-- Hodir's Fury (Person is frozen)
+	elseif args.spellId == 62297 then		-- Hodir's Fury (Person is frozen)
 		local target = guids[args.destGUID]
 		if target then
 			warnHodirsFury:Show(target)
@@ -73,7 +75,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(62396) then
+	if args.spellId == 62396 then
 		timerFlameVents:Stop()
 	end
 end

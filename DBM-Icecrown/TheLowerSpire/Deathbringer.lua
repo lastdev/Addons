@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Deathbringer", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 85 $"):sub(12, -3))
 mod:SetCreatureID(37813)
 mod:SetModelID(30790)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
@@ -9,21 +9,24 @@ mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_YELL"
+)
+
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
 	"SPELL_SUMMON",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
-	"UNIT_HEALTH",
-	"CHAT_MSG_MONSTER_YELL"
+	"UNIT_HEALTH boss1"
 )
 
-local warnFrenzySoon		= mod:NewAnnounce("WarnFrenzySoon", 2, 72737, mod:IsTank() or mod:IsHealer())
+local warnFrenzySoon		= mod:NewSoonAnnounce(72737, 2, nil, mod:IsTank() or mod:IsHealer())
 local warnAddsSoon			= mod:NewPreWarnAnnounce(72173, 10, 3)
 local warnAdds				= mod:NewSpellAnnounce(72173, 4)
 local warnFrenzy			= mod:NewSpellAnnounce(72737, 2, nil, mod:IsTank() or mod:IsHealer())
 local warnBloodNova			= mod:NewSpellAnnounce(72378, 2)
-local warnMark 				= mod:NewAnnounce("warnMark", 4, 72293)
+local warnMark 				= mod:NewTargetCountAnnounce(72293, 4, 72293)
 local warnBoilingBlood		= mod:NewTargetAnnounce(72385, 2, nil, mod:IsHealer())
 local warnRuneofBlood		= mod:NewTargetAnnounce(72410, 3, nil, mod:IsTank() or mod:IsHealer())
 
@@ -42,7 +45,6 @@ mod:AddBoolOption("RangeFrame", mod:IsRanged())
 mod:AddBoolOption("RunePowerFrame", true, "misc")
 mod:AddBoolOption("BeastIcons", true)
 mod:AddBoolOption("BoilingBloodIcons", false)
-mod:RemoveOption("HealthFrame")
 
 local warned_preFrenzy = false
 local boilingBloodTargets = {}
@@ -56,10 +58,11 @@ local function warnBoilingBloodTargets()
 end
 
 function mod:OnCombatStart(delay)
-	if self.Options.RunePowerFrame then
+	if DBM.BossHealth:IsShown() and self.Options.RunePowerFrame then
+		DBM.BossHealth:Clear()
 		DBM.BossHealth:Show(L.name)
 		DBM.BossHealth:AddBoss(37813, L.name)
-		self:ScheduleMethod(0.5, "CreateBossRPFrame")
+		self:ScheduleMethod(1, "CreateBossRPFrame")
 	end
 	if self:IsDifficulty("heroic10", "heroic25") then
 		enrageTimer:Start(360-delay)
@@ -84,41 +87,34 @@ function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
-	DBM.BossHealth:Clear()
 end
 
 do	-- add the additional Rune Power Bar
 	local last = 0
 	local function getRunePowerPercent()
-		local guid = UnitGUID("focus")
-		if mod:GetCIDFromGUID(guid) == 37813 then 
-			last = math.floor(UnitPower("focus")/UnitPowerMax("focus") * 100)
+		local guid = UnitGUID("boss1")
+		if guid and mod:GetCIDFromGUID(guid) == 37813 then 
+			last = math.floor(UnitPower("boss1")/UnitPowerMax("boss1") * 100)
 			return last
 		end
-		for i = 0, DBM:GetNumGroupMembers(), 1 do
-			local unitId = ((i == 0) and "target") or "raid"..i.."target"
-			local guid = UnitGUID(unitId)
-			if mod:GetCIDFromGUID(guid) == 37813 then
-				last = math.floor(UnitPower(unitId)/UnitPowerMax(unitId) * 100)
-				return last
-			end
-		end
-		return last
 	end
 	function mod:CreateBossRPFrame()
-		DBM.BossHealth:AddBoss(getRunePowerPercent, L.RunePower)
+		local percent = getShieldPercent()
+		if percent then
+			DBM.BossHealth:AddBoss(getRunePowerPercent, L.RunePower)
+		end
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(72378) then	-- Blood Nova (only 2 cast IDs, 4 spell damage IDs, and one dummy)
+	if args.spellId == 72378 then	-- Blood Nova (only 2 cast IDs, 4 spell damage IDs, and one dummy)
 		warnBloodNova:Show()
 		timerBloodNova:Start()
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(72410) then
+	if args.spellId == 72410 then
 		warnRuneofBlood:Show(args.destName)
 		specwarnRuneofBlood:Show(args.destName)
 		timerRuneofBlood:Start()
@@ -155,11 +151,11 @@ do
 	
 	mod:RegisterOnUpdateHandler(function(self)
 		if self.Options.BeastIcons and (DBM:GetRaidRank() > 0 and not (iconsSet == 5 and self:IsDifficulty("normal25", "heroic25") or iconsSet == 2 and self:IsDifficulty("normal10", "heroic10"))) then
-			for i = 1, DBM:GetNumGroupMembers() do
-				local uId = "raid"..i.."target"
-				local guid = UnitGUID(uId)
+			for uId in DBM:GetGroupMembers() do
+				local unitId = uId.."target"
+				local guid = UnitGUID(unitId)
 				if beastIcon[guid] then
-					SetRaidTarget(uId, beastIcon[guid])
+					SetRaidTarget(unitId, beastIcon[guid])
 					iconsSet = iconsSet + 1
 					beastIcon[guid] = nil
 				end
@@ -169,11 +165,11 @@ do
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(72293) then		-- Mark of the Fallen Champion
+	if args.spellId == 72293 then		-- Mark of the Fallen Champion
 		Mark = Mark + 1
 		warnMark:Show(Mark, args.destName)
 		specwarnMark:Show(args.destName)
-	elseif args:IsSpellID(72385) then	-- Boiling Blood
+	elseif args.spellId == 72385 then	-- Boiling Blood
 		boilingBloodTargets[#boilingBloodTargets + 1] = args.destName
 		timerBoilingBlood:Start()
 		if self.Options.BoilingBloodIcons then
@@ -186,13 +182,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			self:Schedule(0.3, warnBoilingBloodTargets)
 		end
-	elseif args:IsSpellID(72737) then						-- Frenzy
+	elseif args.spellId == 72737 then						-- Frenzy
 		warnFrenzy:Show()
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(72385) then
+	if args.spellId == 72385 then
 		self:SetIcon(args.destName, 0)
 	end
 end
@@ -208,6 +204,6 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg:find(L.PullAlliance, 1, true) then
 		timerCombatStart:Start()
 	elseif msg:find(L.PullHorde, 1, true) then
-		timerCombatStart:Start(99)
+		timerCombatStart:Start(97.5)
 	end
 end

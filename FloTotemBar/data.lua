@@ -9,7 +9,7 @@ FLO_TOTEM_SPELLS = {
 			{ id = 13809, id2 = 82941, school = 2 },
 			{ id = 13813, id2 = 82939, school = 1 },
 			{ id = 34600, id2 = 82948, school = 3 },
-			{ id = 77769, duration = 15, school = 4 }
+			{ id = 77769, school = 4 }
 		}
 	},
 	["SHAMAN"] = {

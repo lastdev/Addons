@@ -4,11 +4,11 @@
 
 local oRA = LibStub("AceAddon-3.0"):GetAddon("oRA3")
 local util = oRA.util
-local module = oRA:NewModule("Promote", "AceEvent-3.0", "AceHook-3.0")
+local module = oRA:NewModule("Promote", "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 local AceGUI = LibStub("AceGUI-3.0")
 
-module.VERSION = tonumber(("$Revision: 539 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 661 $"):sub(12, -3))
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -18,6 +18,7 @@ local guildRankDb = nil
 local factionDb = nil
 local queuePromotes = nil
 local dontPromoteThisSession = {}
+local hasSetEveryoneAssistant = nil -- prevent re-enabling if changed later
 
 --------------------------------------------------------------------------------
 -- GUI
@@ -26,7 +27,7 @@ local dontPromoteThisSession = {}
 local demoteButton = nil
 local function updateDemoteButton()
 	if not demoteButton then return end
-	if UnitIsGroupLeader("player") then
+	if IsInRaid() and UnitIsGroupLeader("player") then
 		demoteButton:SetDisabled(false)
 	else
 		demoteButton:SetDisabled(true)
@@ -73,7 +74,7 @@ do
 
 	local function addCallback(widget, event, value)
 		if type(value) ~= "string" or value:trim():len() < 3 then return true end
-		if util:inTable(factionDb.promotes, value) then return true end
+		if util.inTable(factionDb.promotes, value) then return true end
 		table.insert(factionDb.promotes, value)
 		add:SetText()
 		delete:SetList(factionDb.promotes)
@@ -90,10 +91,13 @@ do
 
 	local function demoteRaid()
 		if not UnitIsGroupLeader("player") then return end
+		if IsEveryoneAssistant() then
+			SetEveryoneIsAssistant(false)
+		end
 		for i = 1, GetNumGroupMembers() do
-			local n, rank = GetRaidRosterInfo(i)
-			if n and rank == 1 then
-				DemoteAssistant(n)
+			local name, rank = GetRaidRosterInfo(i)
+			if rank == 1 then
+				DemoteAssistant(name)
 			end
 		end
 	end
@@ -126,6 +130,7 @@ do
 		everyone:SetCallback("OnLeave", onControlLeave)
 		everyone:SetCallback("OnValueChanged", everyoneCallback)
 		everyone:SetUserData("tooltip", L["Promote everyone automatically."])
+		--everyone:SetUserData("tooltip", L["Set \"Make Everyone Assistant\" automatically."])
 		everyone:SetFullWidth(true)
 
 		if guildRankDb then
@@ -185,7 +190,7 @@ do
 				frame:AddChildren(demoteButton, massHeader, everyone, guild, ranks, spacer, individualHeader, add, delete)
 			end
 		else
-			if oRA.db.profile.showHelpTexts then 
+			if oRA.db.profile.showHelpTexts then
 				frame:AddChildren(demoteButton, massHeader, everyone, spacer, individualHeader, description, add, delete)
 			else
 				frame:AddChildren(demoteButton, massHeader, everyone, spacer, individualHeader, add, delete)
@@ -223,7 +228,7 @@ function module:OnRegister()
 		},
 	})
 	factionDb = database.factionrealm
-	
+
 	oRA:RegisterPanel(
 		L["Promote"],
 		showPane,
@@ -231,55 +236,59 @@ function module:OnRegister()
 	)
 	oRA.RegisterCallback(self, "OnGroupChanged")
 	oRA.RegisterCallback(self, "OnGuildRanksUpdate")
-	oRA.RegisterCallback(self, "OnPromoted")
+	oRA.RegisterCallback(self, "OnPromoted", "OnGroupChanged")
+	hooksecurefunc("DemoteAssistant", function(player)
+		if module:IsEnabled() then
+			dontPromoteThisSession[player] = true
+		end
+	end)
 end
 
 do
 	local function shouldPromote(name)
 		if dontPromoteThisSession[name] then return false end
-		local gML = oRA:GetGuildMembers()
-		if factionDb.promoteAll then return true
-		elseif factionDb.promoteGuild and gML[name] then return true
-		elseif gML[name] and guildRankDb[gML[name]] then return true
-		elseif util:inTable(factionDb.promotes, name) then return true
+		local guildMembers = oRA:GetGuildMembers()
+		if factionDb.promoteGuild and guildMembers[name] then return true
+		elseif guildMembers[name] and guildRankDb[guildMembers[name]] then return true
+		elseif util.inTable(factionDb.promotes, name) then return true
 		end
 	end
 
-	local promotes = {}
+	local promotes, scheduled = {}, nil
+	local function doPromotes()
+		for name in next, promotes do
+			PromoteToAssistant(name)
+		end
+		wipe(promotes)
+		scheduled = nil
+	end
 
-	local f = CreateFrame("Frame")
-	f:Hide()
-	local total = 0
-	f:SetScript("OnHide", function() total = 0 end)
-	f:SetScript("OnUpdate", function(self, elapsed)
-		total = total + elapsed
-		if total < 2 then return end
-		for k in pairs(promotes) do
-			PromoteToAssistant(k)
-			promotes[k] = nil
-		end
-		f:Hide()
-	end)
 	function queuePromotes()
-		if f:IsShown() then f:Hide() end
-		if not UnitIsGroupLeader("player") then return end
-		for i = 1, GetNumGroupMembers() do
-			local n, r = GetRaidRosterInfo(i)
-			if n and r == 0 and shouldPromote(n) then
-				promotes[n] = true
+		if not IsInRaid() or not UnitIsGroupLeader("player") then return end
+		if factionDb.promoteAll then
+			if not IsEveryoneAssistant() and not hasSetEveryoneAssistant then
+				SetEveryoneIsAssistant(true)
+				hasSetEveryoneAssistant = true
 			end
-		end
-		if next(promotes) then
-			f:Show()
+		else
+			if hasSetEveryoneAssistant then
+				SetEveryoneIsAssistant(false)
+				hasSetEveryoneAssistant = nil
+			end
+			if not IsEveryoneAssistant() then
+				for i = 1, GetNumGroupMembers() do
+					local name, rank = GetRaidRosterInfo(i)
+					if rank == 0 and shouldPromote(name) then
+						promotes[name] = true
+					end
+				end
+				if not scheduled and next(promotes) then
+					scheduled = module:ScheduleTimer(doPromotes, 2)
+				end
+			end
 		end
 	end
 	function module:OnGroupChanged(event, status, members)
-		updateDemoteButton()
-		if #members > 0 then
-			queuePromotes()
-		end
-	end
-	function module:OnPromoted()
 		updateDemoteButton()
 		queuePromotes()
 	end
@@ -287,9 +296,6 @@ do
 	function module:OnEnable()
 		self:OnGuildRanksUpdate(nil, oRA:GetGuildRanks())
 		self:RegisterEvent("GUILD_ROSTER_UPDATE")
-		self:SecureHook("DemoteAssistant", function(player)
-			dontPromoteThisSession[player] = true
-		end)
 	end
 end
 
@@ -300,10 +306,10 @@ function module:GUILD_ROSTER_UPDATE()
 	end
 end
 
-function module:OnGuildRanksUpdate(event, r)
+function module:OnGuildRanksUpdate(event, guildRanks)
 	if ranks then
-		ranks:SetList(r)
-		for i, v in next, r do
+		ranks:SetList(guildRanks)
+		for i, v in next, guildRanks do
 			ranks:SetItemValue(i, guildRankDb[i])
 		end
 	end

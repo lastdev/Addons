@@ -1,3 +1,30 @@
+== Version 50400.1.1
+* Bugfix update to Bitten's SpellFlash Library.
+
+== Version 50400.1.0
+* Combat: Anticipates combo points from Ruthlessness.
+* Combat: Use Marked for Death even with 1 combo point, since with Ruthlessness you will rarely be at 0.
+* All: Slightly improved resource anticipation.
+
+== Version 3.3.1
+* All: Now flashes food buffs.
+* All: Now flashes Shiv to dispel enrage effects.
+
+== Version 3.3.0
+Update for patch 5.3:
+* Combat & Subtlety: Shuriken Toss is now only used when out of melee range (its dps benefit came from its low energy cost).
+* All: The "No Backsab List" now includes Qiang the Merciless.
+
+== Version 3.2.1
+* Assassination: Bugfix - the Mutilate-before-Rupture priority was broken.
+* All: Improved energy calculations when wearing 4pT15.
+* All: The "No Backstab List" now includes Azure Serpent.
+
+== Version 3.2.0
+* All: Revisited all three rotations, updating them with Shadow Blades and level 90 talents, along with other changes from new research.
+* Combat: Now tracks Bandit's Guile correctly when you miss.
+* Subtlety: Improved energy prediction (w/ Energetic Recovery).
+
 == Version 3.1.3
 NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
 * Combat: Sinister Strike will no longer flash outside of melee range.  This release is mostly about the update to the library.
@@ -55,61 +82,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 * Assassination/Subtlety: There is now a blacklist of mobs on which to flash Backstab (like Ultraxion).  Please see the description to see what they are, and leave comments to have it adjusted.
 * Combat: There is now a blacklist of mobs on which to flash Killing Spree (like Deathwing's Head).  Please see the description to see what they are, and leave comments to have it adjusted.
 * Subtlety: There is now a blacklist of mobs on which to flash Shadowstep (like Ultraxion).  Please see the description to see what they are, and leave comments to have it adjusted.
-
-== Version 2.1.0
-* Assassination: No longer suggests to cast a 4 cp Rupture during the last tick of a 5 cp Rupture.  This does not completely eliminate "A more powerful spell is already active," but it helps.
-* Assassination: Energy calculations now guestimate Venomous Wounds procs.
-* Assassination/Subtlety: Smarter flashing during Vanish.
-* Subtlety: Pools to 85 energy in preparation for cooldowns, down from 90.
-* Subtlety: Dynamically calculates the time to start pooling energy for cooldowns, instead of always starting 7 seconds before.
-* Subtlety: No longer waits for the 5th combo point during Shadow Dance.
-* Subtlety: Stops waiting for the 5th combo point sooner, to better avoid energy capping.
-* Subtlety: Now factors Energetic Recovery into future energy calculations.
-* Subtlety: No longer pauses at 5 combo points to wait for a higher priority finisher.
-* Subtlety: Vanish now only flashes when you have less than 3 combo points.
-* Subtlety: Energy calculations now guestimate Energetic Recovery procs.
-* All: Added Redirect.
-* All: All CP and energy calculations now take into account queued spells.
-
-== Version 2.0.2
-* Taking out of beta.
-
-== Version 2.0.1
-This beta release uses Bitten's SpellFlash Library version 3.  If you update you will also need to update any of your other Bitten's SpellFlash modules, which may also be in beta.
-* All: It now checks for instant poison specifically on your main hand, and deadly on your off.
-
-== Version 2.0.0
-* Assassination: Solo Mode now flashes Slice and Dice.
-* Combat: Solo Mode now flashes Slice and Dice.
-* Subtlety: There is not a Subtlety rotation!
-* All: Now flashes Kick.
-* All: Now flashes Tricks of the Trade.
-* All: Now only flashes Recuperate out of combat when in Solo Mode.
-
-== Version 1.2.0
-* Assassination: Rupture no longer flashes when it would not leave you with enough time or energy to Envenom to refresh Slice and Dice.
-* Assassination: Now only suggests Backstab if you have 2/2 Merderous Intent.
-* All: Added "Solo Mode when not Grouped", so you can turn off the simplified solo rotations to do tests on a target dummy.
-
-== Version 1.1.0
-* Assassination: No longer flashes Wound Poison.
-* Assassination: No longer flashes Backstab if you are "tanking".
-* Assassination: Rupture now flashes yellow and continues down the priority scheme, in case the target won't live long enough to make Rupture worthwhile.
-* Both: Flashes a simplified rotation when not in a group (e.g. for soloing quests).
-* Both: Flashes Recouperate out of combat.
-* Added German localization (thanks Gucki!)
-
-== Version 1.0.3
-* Envenom's calculation now takes into account its own energy cost.
-
-== Version 1.0.2 beta
-* Fixed typo that totally broke Assassination.
-
-== Version 1.0.1 beta
-* Added an Assassination rotation.
-* Flashes poisons.
-* Tweaked the Combat rotation a bit.  I think it's improving.
-* Fixed Killing Spree (it will actually flash now).
-
-== Version 1.0.0 beta
-* Initial beta release

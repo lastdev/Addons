@@ -1,16 +1,15 @@
 local mod	= DBM:NewMod(674, "DBM-Party-MoP", 9, 316)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 8292 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 9656 $"):sub(12, -3))
 mod:SetCreatureID(60040, 99999)--3977 is High Inquisitor Whitemane and 60040 is Commander Durand, we don't really need to add her ID, because we don't ever engage her, and he true death is at same time as her.
-mod:SetModelID(2043) -- 41220=Durand | 2043=Whitemane
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
-	"UNIT_SPELLCAST_SUCCEEDED",
+	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2",
 	"UNIT_DIED"
 )
 
@@ -41,14 +40,14 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(113134) then
+	if args.spellId == 113134 then
 		warnMassRes:Show()
 		specWarnMassRes:Show(args.sourceName)
 		timerMassResCD:Start()
-	elseif args:IsSpellID(12039) then
+	elseif args.spellId == 12039 then
 		warnHeal:Show()
 		specWarnHeal:Show(args.sourceName)
-	elseif args:IsSpellID(130857) then
+	elseif args.spellId == 130857 then
 		warnMC:Show()
 		specWarnMC:Show(args.sourceName)
 	end
@@ -58,7 +57,7 @@ end
 --3/28 16:22:43.001  SWING_DAMAGE,0x0100000000009810,"Omegal",0x511,0x0,0xF1300F8900000065,"High Inquisitor Whitemane",0x10a48,0x0,10172,-1,1,0,0,410,1,nil,nil
 --3/28 16:22:43.810  SPELL_CAST_SUCCESS,0xF1300F8900000065,"High Inquisitor Whitemane",0xa48,0x0,0x0000000000000000,nil,0x80000000,0x80000000,9256,"Deep Sleep",0x20
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(9256) then--Phase 3
+	if args.spellId == 9256 then--Phase 3
 		phase = 3
 		warnDeepSleep:Show()
 		timerDeepSleep:Start()

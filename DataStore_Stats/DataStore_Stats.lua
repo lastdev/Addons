@@ -101,6 +101,7 @@ local function ScanStats()
 	stats["PVP"] = table.concat(t, "|")	--	["PVP"] = "honorable kills | dishonorable kills"
 	
 	-- *** Arena Teams ***
+	--[[
 	for i = 1, MAX_ARENA_TEAMS do
 		local teamName, teamSize = GetArenaTeam(i)
 		if teamName then
@@ -108,6 +109,7 @@ local function ScanStats()
 			-- more info here : http://www.wowwiki.com/API_GetArenaTeam
 		end
 	end
+	--]]
 	
 	addon.ThisCharacter.lastUpdate = time()
 end

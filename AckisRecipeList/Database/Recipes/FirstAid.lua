@@ -2,10 +2,10 @@
 ************************************************************************
 FirstAid.lua
 ************************************************************************
-File date: 2012-12-24T22:39:10Z
-File hash: 83109cf
-Project hash: f922565
-Project version: 2.4.6
+File date: 2013-07-28T17:10:35Z
+File hash: 8f9dd9a
+Project hash: 4bcba04
+Project version: 2.5.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -54,7 +54,7 @@ function addon:InitFirstAid()
 	recipe = AddRecipe(3275, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(1, 1, 30, 45, 60)
 	recipe:SetCraftedItem(1251, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Heavy Linen Bandage -- 3276

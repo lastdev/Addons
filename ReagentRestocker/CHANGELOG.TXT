@@ -1,10 +1,17 @@
-While Reagent Restocker is an open source addon, I do take donations. I would love to have the next version of "World of Warcraft Programming" and other resources that would make maintaining this addon easier :).
+While Reagent Restocker is an open source addon, I do take donations.
 
 Reagent Restocker has its own pages on Google+ and Facebook:
 https://plus.google.com/101127866821396020019
 https://www.facebook.com/ReagentRestocker
 
 NOTE: I've been seeing copies of Reagent Restocker popping up at other download sites. The only two places I currently upload the addon to are curse.com and wowinterface.com. I cannot guarantee the integrity of any other download sites.
+
+== v8.1 ==
+* Updated TOC.
+* Sorry for the infrequent updates. This is a volunteer thing, it's hard to give it a lot of time.
+
+== v8.0 ==
+* The ability to keep Soulbound and Bind on Equip items is BACK!! After a rather lengthy debugging session and the help of the Blizzard forums, I was *finally* able to track down and fix the bug that was preventing tooltip scanning from working.
 
 == v7.0 ==
 * Updated TOC.

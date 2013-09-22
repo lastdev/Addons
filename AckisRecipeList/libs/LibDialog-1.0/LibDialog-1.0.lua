@@ -26,7 +26,7 @@ local MAJOR = "LibDialog-1.0"
 
 _G.assert(LibStub, MAJOR .. " requires LibStub")
 
-local MINOR = 1 -- Should be manually increased
+local MINOR = 2 -- Should be manually increased
 local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not lib then
@@ -739,11 +739,10 @@ function lib:Spawn(reference, data)
             local dialog = active_dialogs[index]
 
             if dialog.delegate.is_exclusive then
-                dialog:Hide()
-
                 if dialog.delegate.on_cancel then
                     dialog.delegate.oncancel(dialog, dialog.data, "override")
                 end
+                dialog:Hide()
             end
         end
     end

@@ -9,18 +9,12 @@ L:SetGeneralLocalization{
 	name = "Al'ar"
 }
 
-L:SetWarningLocalization{
-}
-
 L:SetTimerLocalization{
-	NextPlatform	= "Next Platform"
+	NextPlatform	= "Max Platform length"
 }
 
 L:SetOptionLocalization{
-	NextPlatform	= "Show timer for when Al'ar changes platforms"
-}
-
-L:SetMiscLocalization{
+	NextPlatform	= "Show timer for when how long Al'ar may stay at platform (May leave sooner but almost never any later)"
 }
 
 ------------------
@@ -30,20 +24,6 @@ L = DBM:GetModLocalization("VoidReaver")
 
 L:SetGeneralLocalization{
 	name = "Void Reaver"
-}
-
-L:SetWarningLocalization{
-}
-
-L:SetTimerLocalization{
-}
-
-L:SetOptionLocalization{
-	YellOnOrb	= "Yell on $spell:34172"
-}
-
-L:SetMiscLocalization{
-	YellOrb	= "Arcane Orb on ME!"
 }
 
 --------------------------------
@@ -77,12 +57,10 @@ L:SetOptionLocalization{
 	TimerSplit		= "Show timer for Split",
 	TimerAgent		= "Show timer for Agents spawn",
 	TimerPriest		= "Show timer for Priests and Solarian spawn",
-	WrathIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(42783),
-	WrathWhisper	= "Send whisper to $spell:42783 targets (requires Raid Leader)"
+	WrathIcon		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(42783)
 }
 
 L:SetMiscLocalization{
-	WrathWhisper	= "Wrath on you!",
 	YellSplit1		= "I will crush your delusions of grandeur!",
 	YellSplit2		= "You are hopelessly outmatched!",
 	YellPhase2		= "I become"
@@ -100,9 +78,9 @@ L:SetGeneralLocalization{
 L:SetWarningLocalization{
 	WarnGaze		= "Gaze on >%s<",
 	WarnMobDead		= "%s down",
-	WarnEgg			= "Pheonix Egg spawned",
+	WarnEgg			= "Phoenix Egg spawned",
 	SpecWarnGaze	= "Gaze on YOU - Run away!",
-	SpecWarnEgg		= "Pheonix Egg spawned - Change Target!"
+	SpecWarnEgg		= "Phoenix Egg spawned - Change Target!"
 }
 
 L:SetTimerLocalization{
@@ -122,10 +100,9 @@ L:SetOptionLocalization{
 	TimerPhase1mob	= "Show time for Phase 1 mob active",
 	TimerNextGaze	= "Show timer for Thaladred's Gaze target changes",
 	TimerRebirth	= "Show timer for Phoenix Egg rebirth remaining",
-	RangeFrame		= "Show range frame (10 yards)",
-	GazeWhisper		= "Send whisper to Thaladred's Gaze target (requires Raid Leader)",
+	GazeIcon		= "Set icon on Thaladred's Gaze target",
 	MCIcon			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(36797),
-	GazeIcon		= "Set icon on Thaladred's Gaze target"
+	RangeFrame		= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 37018)
 }
 
 L:SetMiscLocalization{
@@ -139,7 +116,6 @@ L:SetMiscLocalization{
 	YellCaper	= "Capernian will see to it that your stay here is a short one.",
 	YellTelo	= "Well done, you have proven worthy to test your skills against my master engineer, Telonicus.",
 	EmoteGaze	= "sets eyes on ([^%s]+)!",
-	GazeWhisper	= "Gaze on YOU!",
 	Thaladred	= "Thaladred the Darkener",
 	Sanguinar	= "Lord Sanguinar",
 	Capernian	= "Grand Astromancer Capernian",

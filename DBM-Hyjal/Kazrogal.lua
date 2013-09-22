@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Kazrogal", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 334 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 504 $"):sub(12, -3))
 mod:SetCreatureID(17888)
 mod:SetModelID(17886)
 mod:SetZone()
@@ -9,12 +9,15 @@ mod:SetZone()
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
-	"SPELL_CAST_START"
+	"SPELL_CAST_START",
+	"SPELL_CAST_SUCCESS"
 )
 
-local warnMark			= mod:NewAnnounce("WarnMark", 3 , 31447)
+local warnMark		= mod:NewCountAnnounce(31447, 3)
+local warnStomp		= mod:NewSpellAnnounce(31480, 2)
 
-local timerMark			= mod:NewCDTimer(45, 31447)
+local timerMark		= mod:NewBuffFadesTimer(6.2, 31447)
+local timerMarkCD	= mod:NewNextCountTimer(45, 31447)
 
 local count = 0
 local time = 45
@@ -26,12 +29,19 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(31447) then
+	if args.spellId == 31447 then
 		count = count + 1
 		if time > 10 then
 			time = time - 5
 		end
 		warnMark:Show(count)
-		timerMark:Start(time)
+		timerMark:Start()
+		timerMarkCD:Start(nil, time)
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args.spellId == 31447 then
+		warnStomp:Show()
 	end
 end

@@ -42,6 +42,8 @@
 		PaladinOptions = "Paladin Options", -- Requires localization
 		RemoveBuffs = "Снять положительные эффекты, не позволяющие сесть верхом", -- Needs review
 		RemoveBuffs_Long = "GoGoMount will attempt to remove buffs and shapeforms that come from spells and items that prevent mounting.  This only works for known buffs and in some cases require 2 clicks of your GoGoMount button to mount.", -- Requires localization
+		ShamanOptions = "Shaman Options", -- Requires localization
+		ShamanSingleClick = "Single click mount from Ghost Wolf Form instead of dismounting", -- Requires localization
 		UnknownMountFound = "В списке ваших транспортных средств обнаружено неизвестное средство передвижения. Пожалуйста, сообщите о нем, чтобы мы могли добавить его в будущих версиях GoGoMount.",
 		UseAspectOfThePackInstead = "Использовать Дух стаи вместо Духа гепарда", -- Needs review
 		UseAspectOfThePackInstead_Long = "When enabled, GoGoMount will cast Aspect of the Pack instead of Aspect of the Cheetah.  Local zone or global settings override this setting.  If this is set to use Aspect of the Pack and you have Aspect of the Cheetah as a zone favorite, Aspect of the Cheetah will be used.", -- Requires localization

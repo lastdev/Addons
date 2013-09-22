@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ThreeBugs", "DBM-AQ40", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 399 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 436 $"):sub(12, -3))
 mod:SetCreatureID(15544, 15511, 15543)
 mod:SetModelID(15657)
 mod:RegisterCombat("combat")
@@ -26,14 +26,14 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(26580) and self:AntiSpam() then
+	if args.spellId == 26580 and self:AntiSpam() then
 		warnFear:Show()
 		timerFear:Start()
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(25807) then
+	if args.spellId == 25807 then
 		warnHeal:Show()
 		timerHeal:Start()
 	end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(285, "DBM-Party-Cataclysm", 12, 184)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 44 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
 mod:SetCreatureID(54445)
 mod:SetModelID(38802)
 mod:SetZone()
@@ -19,7 +19,7 @@ local warnFrostBlades			= mod:NewSpellAnnounce(101339, 3)
 local specWarnFlarecore			= mod:NewSpecialWarningSpell(101927, nil, nil, nil, true)
 
 local timerFlarecore			= mod:NewCDTimer(20, 101927)
-local timerFlarecoreDetonate	= mod:NewTimer(10, "TimerFlarecoreDetonate")
+local timerFlarecoreDetonate	= mod:NewTimer(10, "TimerFlarecoreDetonate", 101927)
 local timerFrostBlades			= mod:NewNextTimer(25, 101339)
 
 function mod:OnCombatStart(delay)
@@ -28,12 +28,12 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(101927) then
+	if args.spellId == 101927 then
 		warnFlarecore:Show()
 		specWarnFlarecore:Show()
 		timerFlarecore:Start()
 		timerFlarecoreDetonate:Start()
-	elseif args:IsSpellID(101812) then	-- Frost Blades is cast immediately after Blink (Frost Blades = 3 events, Blink = 1 event)
+	elseif args.spellId == 101812 then	-- Frost Blades is cast immediately after Blink (Frost Blades = 3 events, Blink = 1 event)
 		warnFrostBlades:Show()
 		timerFrostBlades:Start()
 	end

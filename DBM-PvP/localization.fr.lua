@@ -52,15 +52,11 @@ L:SetMiscLocalization({
 ---------------
 --  Alterac  --
 ---------------
-L = DBM:GetModLocalization("AlteracValley")
-
-L:SetGeneralLocalization({
-	name = "Vallée d'Alterac"
-})
+L = DBM:GetModLocalization("z30")
 
 L:SetTimerLocalization({
 	TimerTower		= "%s",
-	TimerGY			= "%s",
+	TimerGY			= "%s"
 })
 
 L:SetOptionLocalization({
@@ -72,11 +68,7 @@ L:SetOptionLocalization({
 ---------------
 --  Arathi  --
 ---------------
-L = DBM:GetModLocalization("ArathiBasin")
-
-L:SetGeneralLocalization({
-	name = "Bassin d'Arathi"
-})
+L = DBM:GetModLocalization("z529")
 
 L:SetMiscLocalization({
 	ScoreExpr 				= "(%d+)/1600",
@@ -88,7 +80,7 @@ L:SetMiscLocalization({
 })
 
 L:SetTimerLocalization({
-	TimerCap 				= "%s",
+	TimerCap 				= "%s"
 })
 
 L:SetOptionLocalization({
@@ -101,14 +93,9 @@ L:SetOptionLocalization({
 -----------------------
 --  Eye of the Storm --
 -----------------------
-L = DBM:GetModLocalization("EyeoftheStorm")
-
-L:SetGeneralLocalization({
-	name = "L'Œil du cyclone"
-})
+L = DBM:GetModLocalization("z566")
 
 L:SetMiscLocalization({
-	ZoneName			= "L'Œil du cyclone",
 	ScoreExpr			= "(%d+)/1600",
 	Alliance 			= "Alliance",
 	Horde 				= "Horde",
@@ -121,58 +108,50 @@ L:SetMiscLocalization({
 })
 
 L:SetTimerLocalization({
-	TimerFlag 			= "Respawn du drapeau",
+	TimerFlag 			= "Respawn du drapeau"
 })
 
 L:SetOptionLocalization({
 	TimerWin 			= "Montre le timer de la victoire",
 	TimerFlag 			= "Montre le timer du respawn du drapeau",
-	ShowPointFrame 		= "Montre les porteurs des drapeaux et les points estimés",
+	ShowPointFrame 		= "Montre les porteurs des drapeaux et les points estimés"
 })
 
 --------------------
 --  Warsong Gulch --
 --------------------
-L = DBM:GetModLocalization("WarsongGulch")
-
-L:SetGeneralLocalization({
-	name = "Goulet des Chanteguerres"
-})
+L = DBM:GetModLocalization("z489")
 
 L:SetMiscLocalization({
 	BgStart60 					= "Début de la bataille pour le goulet des Chanteguerres dans 1 minute.",
 	BgStart30 					= "Début de la bataille pour le goulet des Chanteguerres dans 30 secondes. Préparez-vous !",
 	Alliance 					= "Alliance",
-	Horde 						= "Horde",	
+	Horde 						= "Horde",
 	InfoErrorText 				= "Le ciblage du drapeau est restoré lorsque vous êtes hors de combat.",
 	ExprFlagPickUp 				= "Le Drapeau (%w+) a été pris par (.+) !",
 	ExprFlagCaptured 			= "(.+) a capturé le drapeau (%w+) !",
 	ExprFlagReturn 				= "Le Drapeau (%w+) a été renvoyé à la base par (.+) !",
 	FlagAlliance 				= "Drapeau de l'alliance: ",
 	FlagHorde					= "Drapeau de la horde: ",
-	FlagBase					= "Base",
+	FlagBase					= "Base"
 })
 
 L:SetTimerLocalization({
-	TimerStart 					= "Début de la bataille dans", 
-	TimerFlag 					= "Respawn du drapeau",
+	TimerStart 					= "Début de la bataille dans",
+	TimerFlag 					= "Respawn du drapeau"
 })
 
 L:SetOptionLocalization({
 	TimerStart  				= "Voir: Temps de départ du BG",
 	TimerFlag 					= "Montre le timer du respawn du drapeau",
 	ShowFlagCarrier				= "Montre le porteur du drapeau",
-	ShowFlagCarrierErrorNote 	= "Montre un message d'erreur au porteur du drapeau lorsqu'il est en combat",
+	ShowFlagCarrierErrorNote 	= "Montre un message d'erreur au porteur du drapeau lorsqu'il est en combat"
 })
 
 ------------------------
 --  Isle of Conquest  --
 ------------------------
-L = DBM:GetModLocalization("IsleofConquest")
-
-L:SetGeneralLocalization({
-	name = "Île des Conquérants"
-})
+L = DBM:GetModLocalization("z628")
 
 L:SetWarningLocalization({
 	WarnSiegeEngine		= "Engins de Siège prêt!",
@@ -180,13 +159,13 @@ L:SetWarningLocalization({
 })
 
 L:SetTimerLocalization({
-	TimerStart			= "Début de la bataille dans", 
+	TimerStart			= "Début de la bataille dans",
 	TimerPOI			= "%s",
 	TimerSiegeEngine	= "Engins de Siège prêt"
 })
 
 L:SetOptionLocalization({
-	TimerStart			= "Voir: Temps de départ du BG", 
+	TimerStart			= "Voir: Temps de départ du BG",
 	TimerPOI			= "Montre le timer pour les captures",
 	TimerSiegeEngine	= "Montre le timer de la construction des Engins de Siège",
 	WarnSiegeEngine		= "Alerter lorsque l'Engin de Siège est prêt",
@@ -214,18 +193,13 @@ L:SetMiscLocalization({
 ------------------
 --  Twin Peaks  --
 ------------------
-L = DBM:GetModLocalization("TwinPeaks")
-
-L:SetGeneralLocalization({
-	name = "Pics-Jumeaux"
-})
+L = DBM:GetModLocalization("z726")
 
 L:SetMiscLocalization({
 	BgStart60 			= "Début de la bataille dans 60 secondes.",
 	BgStart30 			= "Début de la bataille dans 30 secondes. Préparez vous!",
-	ZoneName 			= "Pics-Jumeaux",
 	Alliance 			= "Alliance",
-	Horde 				= "Horde",	
+	Horde 				= "Horde",
 	InfoErrorText		= "Le ciblage du drapeau est restoré lorsque vous êtes hors de combat.",
 	ExprFlagPickUp		= "Le  Drapeau (%w+) a été pris par (.+) !",
 	ExprFlagCaptured		= "(.+) a capturé le drapeau (%w+) !",
@@ -238,7 +212,7 @@ L:SetMiscLocalization({
 })
 
 L:SetTimerLocalization({
-	TimerStart	= "Début de la bataille dans", 
+	TimerStart	= "Début de la bataille dans",
 	TimerFlag	= "Respawn du drapeau"
 })
 
@@ -254,11 +228,7 @@ L:SetOptionLocalization({
 --------------------------
 --  Battle for Gilneas  --
 --------------------------
-L = DBM:GetModLocalization("Gilneas")
-
-L:SetGeneralLocalization({
-	name = "Bataille de Gilnéas"
-})
+L = DBM:GetModLocalization("z761")
 
 L:SetMiscLocalization({
 	ScoreExpr 				= "(%d+)/2000",
@@ -270,7 +240,7 @@ L:SetMiscLocalization({
 })
 
 L:SetTimerLocalization({
-	TimerCap 				= "%s",
+	TimerCap 				= "%s"
 })
 
 L:SetOptionLocalization({
@@ -283,11 +253,7 @@ L:SetOptionLocalization({
 -------------------------
 --  Silvershard Mines  --
 -------------------------
-L = DBM:GetModLocalization("SilvershardMines")
-
-L:SetGeneralLocalization({
-	name = "Mines d'Éclargent"
-})
+L = DBM:GetModLocalization("z727")
 
 L:SetMiscLocalization({
 	Capture = "pris le contrôle"
@@ -304,8 +270,4 @@ L:SetOptionLocalization({
 -------------------------
 --  Temple of Kotmogu  --
 -------------------------
-L = DBM:GetModLocalization("Kotmogu")
-
-L:SetGeneralLocalization({
-	name = "Temple de Kotmogu"
-})
+L = DBM:GetModLocalization("z998")
