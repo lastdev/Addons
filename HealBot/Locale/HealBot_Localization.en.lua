@@ -283,11 +283,11 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_HOTBARRIGHT             = "Right side";
     HEALBOT_OPTIONS_HOTBARLEFT              = "Left side";
 
-    HEALBOT_ZONE_AB                         = "Arathi Basin";
-    HEALBOT_ZONE_AV                         = "Alterac Valley";
-    HEALBOT_ZONE_ES                         = "Eye of the Storm";
-    HEALBOT_ZONE_IC                         = "Isle of Conquest";
-    HEALBOT_ZONE_SA                         = "Strand of the Ancients";
+    HEALBOT_ZONE_AB                         = GetMapNameByID(461) or "Arathi Basin";
+    HEALBOT_ZONE_AV                         = GetMapNameByID(401) or "Alterac Valley";
+    HEALBOT_ZONE_ES                         = GetMapNameByID(482) or "Eye of the Storm";
+    HEALBOT_ZONE_IC                         = GetMapNameByID(540) or "Isle of Conquest";
+    HEALBOT_ZONE_SA                         = GetMapNameByID(512) or "Strand of the Ancients";
 
     HEALBOT_OPTION_AGGROTRACK               = "Monitor Aggro"
     HEALBOT_OPTION_AGGROBAR                 = "Bar"
@@ -358,26 +358,27 @@ function HealBot_Lang_enALL()
 
     HEALBOT_HELP={ [1] = "[HealBot] /hb h -- Display help",
                    [2] = "[HealBot] /hb o -- Toggles options",
-                   [3] = "[HealBot] /hb ri -- Reset HealBot",
-                   [4] = "[HealBot] /hb t -- Toggle Healbot between disabled and enabled",
-                   [5] = "[HealBot] /hb bt -- Toggle Buff Monitor between disabled and enabled",
-                   [6] = "[HealBot] /hb dt -- Toggle Debuff Monitor between disabled and enabled",
-                   [7] = "[HealBot] /hb skin <skinName> -- Switch Skins",
-                   [8] = "[HealBot] /hb ui -- Reload UI",
-                   [9] = "[HealBot] /hb hs -- Display additional slash commands",
+                   [3] = "[HealBot] /hb t -- Toggle Healbot between disabled and enabled",
+                   [4] = "[HealBot] /hb bt -- Toggle Buff Monitor between disabled and enabled",
+                   [5] = "[HealBot] /hb dt -- Toggle Debuff Monitor between disabled and enabled",
+                   [6] = "[HealBot] /hb skin <skinName> -- Switch Skins",
+                   [7] = "[HealBot] /hb d -- Reset options to default",
+                   [8] = "[HealBot] /hb spt -- Self Pet toggle",
+                   [9] = "[HealBot] /hb flb -- Toggle frame lock bypass (frame always moves with Ctrl+Alt+Left click)",
+                   [10] = "[HealBot] /hb hs -- Display additional slash commands",
                   }
 
-    HEALBOT_HELP2={ [1] = "[HealBot] /hb d -- Reset options to default",
+    HEALBOT_HELP2={ [1] = "[HealBot] /hb rtb -- Toggle restrict target bar to Left=SmartCast and Right=add/remove to/from My Targets",
                     [2] = "[HealBot] /hb aggro 2 <n> -- Set aggro level 2 on threat percentage <n>",
                     [3] = "[HealBot] /hb aggro 3 <n> -- Set aggro level 3 on threat percentage <n>",
                     [4] = "[HealBot] /hb tr <Role> -- Set highest role priority for SubSort by Role. Valid Roles are 'TANK', 'HEALER' or 'DPS'",
                     [5] = "[HealBot] /hb use10 -- Automatically use Engineering slot 10",
                     [6] = "[HealBot] /hb pcs <n> -- Adjust the size of the Holy power charge indicator by <n>, Default value is 7 ",
-                    [7] = "[HealBot] /hb spt -- Self Pet toggle",
+                    [7] = "[HealBot] /hb hrfm -- Toggle method for hiding Blizzard raid frames, disable completly or just hide",
                     [8] = "[HealBot] /hb ws -- Toggle Hide/Show the Weaken Soul icon instead of the PW:S with a -",
                     [9] = "[HealBot] /hb rld <n> -- In seconds, how long the players name stays green after a res",
-                    [10] = "[HealBot] /hb flb -- Toggle frame lock bypass (frame always moves with Ctrl+Alt+Left click)",
-                    [11] = "[HealBot] /hb rtb -- Toggle restrict target bar to Left=SmartCast and Right=add/remove to/from My Targets",
+                    [10] = "[HealBot] /hb shhp <n> -- Show HYMN OF HOPE Buff only when mana is below <n>",
+                    [11] = "[HealBot] - Also see Commands on the General tab in Options",
                   }
                   
     HEALBOT_OPTION_HIGHLIGHTACTIVEBAR       = "Highlight mouseover"
@@ -547,7 +548,10 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_MOUSEWHEEL              = "Use mouse wheel"
     HEALBOT_OPTIONS_MOUSEUP                 = "Wheel up"
     HEALBOT_OPTIONS_MOUSEDOWN               = "Wheel down"
-    HEALBOT_CMD_DELCUSTOMDEBUFF10           = "Delete custom debuffs on priority 10"
+    HEALBOT_CMD_DELCUSTOMDEBUFF9            = "Delete custom debuffs on priority 9"
+	HEALBOT_CMD_DELCUSTOMDEBUFF10           = "Delete custom debuffs on priority 10"
+	HEALBOT_CMD_DELCUSTOMDEBUFF11           = "Delete custom debuffs on priority 11"
+	HEALBOT_CMD_DELCUSTOMDEBUFF12           = "Delete custom debuffs on priority 12"
     HEALBOT_ACCEPTSKINS                     = "Accept Skins from others"
     HEALBOT_SUPPRESSSOUND                   = "Auto Trinket: Suppress sound"
     HEALBOT_SUPPRESSERROR                   = "Auto Trinket: Suppress errors"
@@ -609,8 +613,6 @@ function HealBot_Lang_enALL()
     HEALBOT_FRAMELOCK_BYPASS_ON             = "Frame lock bypass (Ctl+Alt+Left) turned On"
     HEALBOT_RESTRICTTARGETBAR_ON            = "Restrict Target bar turned On"
     HEALBOT_RESTRICTTARGETBAR_OFF           = "Restrict Target bar turned Off"
-    HEALBOT_PRELOADOPTIONS_ON               = "PreLoad Options turned On"
-    HEALBOT_PRELOADOPTIONS_OFF              = "PreLoad Options turned Off"
     HEALBOT_AGGRO2_ERROR_MSG                = "To set aggro level 2, threat percentage must be between 25 and 95"
     HEALBOT_AGGRO3_ERROR_MSG                = "To set aggro level 3, threat percentage must be between 75 and 100"
     HEALBOT_AGGRO2_SET_MSG                  = "Aggro level 2 set at threat percentage "
@@ -648,317 +650,386 @@ function HealBot_Lang_enALL()
 
     HEALBOT_CUSTOM_CATEGORY                 = "Category"
     HEALBOT_CUSTOM_CAT_CUSTOM               = "Custom"
-    HEALBOT_CUSTOM_CAT_02                   = "A - B" 
-    HEALBOT_CUSTOM_CAT_03                   = "C - D"
-    HEALBOT_CUSTOM_CAT_04                   = "E - F"
-    HEALBOT_CUSTOM_CAT_05                   = "G - H"
-    HEALBOT_CUSTOM_CAT_06                   = "I - J"
-    HEALBOT_CUSTOM_CAT_07                   = "K - L"
-    HEALBOT_CUSTOM_CAT_08                   = "M - N"
-    HEALBOT_CUSTOM_CAT_09                   = "O - P"
-    HEALBOT_CUSTOM_CAT_10                   = "Q - R"
-    HEALBOT_CUSTOM_CAT_11                   = "S - T"
-    HEALBOT_CUSTOM_CAT_12                   = "U - V"
-    HEALBOT_CUSTOM_CAT_13                   = "W - X"
-    HEALBOT_CUSTOM_CAT_14                   = "Y - Z"
+    HEALBOT_CUSTOM_CAT_02                   = "A-B" 
+    HEALBOT_CUSTOM_CAT_03                   = "C-D"
+    HEALBOT_CUSTOM_CAT_04                   = "E-F"
+    HEALBOT_CUSTOM_CAT_05                   = "G-H"
+    HEALBOT_CUSTOM_CAT_06                   = "I-J"
+    HEALBOT_CUSTOM_CAT_07                   = "K-L"
+    HEALBOT_CUSTOM_CAT_08                   = "M-N"
+    HEALBOT_CUSTOM_CAT_09                   = "O-P"
+    HEALBOT_CUSTOM_CAT_10                   = "Q-R"
+    HEALBOT_CUSTOM_CAT_11                   = "S-T"
+    HEALBOT_CUSTOM_CAT_12                   = "U-V"
+    HEALBOT_CUSTOM_CAT_13                   = "W-X"
+    HEALBOT_CUSTOM_CAT_14                   = "Y-Z"
 
     HEALBOT_CUSTOM_CASTBY_EVERYONE          = "Everyone"
     HEALBOT_CUSTOM_CASTBY_ENEMY             = "Enemy"
     HEALBOT_CUSTOM_CASTBY_FRIEND            = "Friend"
-
+    
+    HEALBOT_CUSTOM_CAT_CUSTOM_IMPORTANT     = "Important Debuffs"
+	HEALBOT_CUSTOM_CAT_CUSTOM_DAMAGE        = "Damaging Debuffs"
+    HEALBOT_CUSTOM_CAT_CUSTOM_EFFECT        = "Effect Debuffs"
+    HEALBOT_CUSTOM_CAT_CUSTOM_MISC          = "Other Debuffs"
     HEALBOT_CUSTOM_DEBUFF_CATS = {
-             -- A-B 2
-			[HEALBOT_DEBUFF_ACID_BREATH]           = 2,
-			[HEALBOT_DEBUFF_ACID_DRENCHED_MANDIBLES] = 2,
-            [HEALBOT_DEBUFF_AIM]                   = 2,
-			[HEALBOT_ANCIENT_BARRIER]              = 2,
-			[HEALBOT_DEBUFF_ANCIENT_FLAME]         = 2,
-			[HEALBOT_DEBUFF_ANCIENT_MIASMA]        = 2,
-			[HEALBOT_DEBUFF_ANIMA_FONT]            = 2,
-		    [HEALBOT_DEBUFF_ANIMA_RING]            = 2,
-			[HEALBOT_DEBUFF_ARCING_LIGHTNING]      = 2,
-			[HEALBOT_DEBUFF_AGONIZING_FLAMES]      = 2,
-            [HEALBOT_DEBUFF_ANCIENT_VENOM]         = 2,
-			[HEALBOT_DEBUFF_ARCTIC_FREEZE]         = 2,
-			[HEALBOT_DEBUFF_ARCTIC_FREEZE]         = 2,
-			[HEALBOT_DEBUFF_ARTERIAL_CUT]          = 2,
-			[HEALBOT_DEBUFF_ASSASSINS_MARK]        = 2,
-			[HEALBOT_DEBUFF_AURA_OF_PRIDE]         = 2,
-			[HEALBOT_DEBUFF_BANISHMENT]            = 2,
-			[HEALBOT_DEBUFF_BEAST_OF_NIGHTMARES]   = 2,
-			[HEALBOT_DEBUFF_BEAST_OF_NIGHTMARES]   = 2,
-			[HEALBOT_DEBUFF_BITING_COLD]           = 2,
-			[HEALBOT_DEBUFF_BLUE_RAY_TRACKING]     = 2,  
-			[HEALBOT_DEBUFF_BLUE_RAYS]             = 2,
-			[HEALBOT_DEBUFF_BODY_HEAT]             = 2,
-			[HEALBOT_DEBUFF_BOILING_BLOOD]         = 2,
-            [HEALBOT_DEBUFF_BONECRACKER]           = 2,
-			[HEALBOT_DEBUFF_BOTTOMLESS_PIT]        = 2,
-			[HEALBOT_DEBUFF_BRIGHT_LIGHT]          = 2,
-			[HEALBOT_DEBUFF_BURN]                  = 2,
-            [HEALBOT_DEBUFF_BURNING_BILE]          = 2,
-            [HEALBOT_DEBUFF_BURNING_BLOOD]         = 2,
-			[HEALBOT_DEBUFF_BURNING_SOUL]          = 2,
-			-- C-D 3
-			[HEALBOT_DEBUFF_CARNIVOROUS_BITE]      = 3,
-			[HEALBOT_DEBUFF_CAUSTIC_AMBER]         = 3,
-			[HEALBOT_DEBUFF_CAUSTIC_BLOOD]         = 3,
-			[HEALBOT_DEBUFF_CHILLED_BONE]          = 3,
-            [HEALBOT_DEBUFF_CHOKING_GAS]           = 3, 
-			[HEALBOT_DEBUFF_CHOKING_MISTS]         = 3, 
-			[HEALBOT_DEBUFF_COCOON]                = 3,
-			[HEALBOT_DEBUFF_COMBUSTION]            = 3,
-            [HEALBOT_DEBUFF_CONFLAGRATION]         = 3,
-            [HEALBOT_DEBUFF_CONSUMING_FLAMES]      = 3,
-            [HEALBOT_DEBUFF_CONSUMPTION]           = 3,
-            [HEALBOT_DEBUFF_CORROSION]             = 3,
-			[HEALBOT_DEBUFF_CORROSIVE_BLAST]       = 3,
-			[HEALBOT_DEBUFF_CORROSIVE_BREATH]      = 3,   
-			[HEALBOT_DEBUFF_CORRUPTED_BREW]        = 3,
-			[HEALBOT_DEBUFF_CORRUPTED_PRISON]      = 3,
-			[HEALBOT_DEBUFF_CORRUPTION]            = 3,
-			[HEALBOT_DEBUFF_CORRUPTION_KICK]       = 3,
-			[HEALBOT_DEBUFF_CRASHING_THUNDER]      = 3, 
-			[HEALBOT_DEBUFF_CRIMSON_WAKE]          = 3,  
-			[HEALBOT_DEBUFF_CRUSH_ARMOR]           = 3, 
-			[HEALBOT_DEBUFF_CRYSTAL_SHELL]         = 3,
-            [HEALBOT_DEBUFF_CRYSTAL_SHELL_FULL_CAPACITY] = 3,
-			[HEALBOT_DEBUFF_DAEDALIAN_WINGS]       = 3,
-			[HEALBOT_DEBUFF_DARK_BARRAGE]          = 3,
-            [HEALBOT_DEAD_ZONE]                    = 3,
-			[HEALBOT_DEBUFF_DEBILITATION]          = 3,
-			[HEALBOT_DEBUFF_DECAPITATE]            = 3, 
-			[HEALBOT_DEBUFF_DEFILE]                = 3,
-            [HEALBOT_DEBUFF_DEFILED_GROUND]        = 3,
-			[HEALBOT_DEBUFF_DELIRIOUS_SLASH]       = 3,
-            [HEALBOT_DEBUFF_DISCHARGED_ENERGY]     = 3,
-			[HEALBOT_DEBUFF_DISHEARTENING_LAUGH]   = 3,
-			[HEALBOT_DEBUFF_DOOMFIRE]              = 3,
-            -- E-F 4
-			[HEALBOT_DEBUFF_ELECTROSTATIC_CHARGE]  = 4,
-			[HEALBOT_DEBUFF_ELECTRICAL_SHOCK]      = 4,
-			[HEALBOT_EMBODIED_DOUBT]               = 4,
-			[HEALBOT_DEBUFF_EMPOWERED_GRIPPING_DESPAIR] = 4,
-			[HEALBOT_DEBUFF_EMPOWERED_TOUCH_OF_YSHAARJ] = 4,
-			[HEALBOT_DEBUFF_ENCAPSULATE]           = 4,
-            [HEALBOT_DEBUFF_ENCAPSULATED_PHEROMONES] = 4,
-			[HEALBOT_DEBUFF_ESSENCE_BLOOD_QUEEN]   = 4,
-            [HEALBOT_DEBUFF_EXPLOSIVE_CINDERS]     = 4,
-            [HEALBOT_DEBUFF_EXPLOSIVE_DESPAIR]     = 4, 
-			[HEALBOT_DEBUFF_EXPLOSIVE_SLAM]        = 4,
-			[HEALBOT_DEBUFF_EXPLOSIVE_TAR]         = 4, 
-			[HEALBOT_DEBUFF_EXPOSE_WEAKNESS]       = 4,
-            [HEALBOT_DEBUFF_EXPOSED_VEINS]         = 4,
-			[HEALBOT_DEBUFF_FALLEN_CHAMPION]       = 4,
-			[HEALBOT_DEBUFF_FAN_OF_FLAMES]         = 4,
-			[HEALBOT_DEBUFF_FATAL_ATTRACTION]      = 4,
-            [HEALBOT_DEBUFF_FATAL_STRIKE]          = 4,
-			[HEALBOT_DEBUFF_FEED_POOL]             = 4,
-			[HEALBOT_DEBUFF_FEL_RAGE]              = 4,
-            [HEALBOT_DEBUFF_FEL_RAGE2]             = 4,
-            [HEALBOT_DEBUFF_FERAL_POUNCE]          = 4, 
-            [HEALBOT_DEBUFF_FIERY_COMBUSTION]      = 4,
-            [HEALBOT_DEBUFF_FIRE_BLOOM]            = 4,
-            [HEALBOT_DEBUFF_FIRE_BOMB]             = 4,
-            [HEALBOT_DEBUFF_FIERY_EDGE]            = 4,
-			[HEALBOT_DEBUFF_FIXATE]                = 4,
-			[HEALBOT_DEBUFF_FLAME_ARROWS]          = 4, 
-			[HEALBOT_DEBUFF_FLAMES_OF_GALAKROND]   = 4,
-			[HEALBOT_DEBUFF_FLAMES_OF_PASSION]     = 4,
-			[HEALBOT_DEBUFF_FLAME_SEAR]            = 4, 
-            [HEALBOT_DEBUFF_FLASH_FREEZE]          = 4,
-            [HEALBOT_DEBUFF_FLIGHT]                = 4,
-			[HEALBOT_DEBUFF_FOCUSED_LIGHTNING]     = 4,
-			[HEALBOT_DEBUFF_FOUL_GEYSER]           = 4, 
-			[HEALBOT_DEBUFF_FRACTURE]              = 4,
-			[HEALBOT_DEBUFF_FREEZE]                = 4,
-			[HEALBOT_DEBUFF_FREEZING_BREATH]       = 4,
-			[HEALBOT_DEBUFF_FRIGID_ASSAULT]        = 4,
-			[HEALBOT_DEBUFF_FRIGID_ASSAULT]        = 4, 
-			[HEALBOT_DEBUFF_FROSTBITE]             = 4,
-			[HEALBOT_DEBUFF_FROST_BEACON]          = 4,
-            [HEALBOT_DEBUFF_FROST_BLAST]           = 4,
-            [HEALBOT_DEBUFF_FROST_BREATH]          = 4,
-            [HEALBOT_DEBUFF_FROSTSTORM_STRIKE]     = 4,
-			[HEALBOT_DEBUFF_FROST_TOMB]            = 4,
-            -- G-H 5
-			[HEALBOT_DEBUFF_GARROTE]               = 5,
-			[HEALBOT_DEBUFF_GAS_SPORE]             = 5,
-            [HEALBOT_DEBUFF_GASEOUS_BLOAT]         = 5,
-            [HEALBOT_DEBUFF_GASTRIC_BLOAT]         = 5,
-			[HEALBOT_DEBUFF_GENETIC_ALTERATION]    = 5,
-			[HEALBOT_DEBUFF_GIFT_OF_THE_TITANS]    = 5,
-			[HEALBOT_DEBUFF_GLITTERING_SPARKS]     = 5,
-            [HEALBOT_DEBUFF_GNAWED_UPON]           = 5,
-			[HEALBOT_DEBUFF_GOUGE]                 = 5, 
-			[HEALBOT_DEBUFF_GOUGE]                 = 5,
-			[HEALBOT_DEBUFF_GRAVITY_BOMB]          = 5,
-            [HEALBOT_DEBUFF_GRAVITY_CORE]          = 5,
-            [HEALBOT_DEBUFF_GRAVITY_CRUSH]         = 5,
-            [HEALBOT_DEBUFF_GRIEVOUS_BITE]         = 5,         
-            [HEALBOT_DEBUFF_GRIEVOUS_THROW]        = 5,
-            [HEALBOT_DEBUFF_GRIPPING_DESPAIR]      = 5,
-			[HEALBOT_DEBUFF_GROWING_OVERCONFIDENCE] = 5,
-			[HEALBOT_DEBUFF_GUSTING_BOMB]          = 5,
-			[HEALBOT_DEBUFF_GUT_SPRAY]             = 5,
-            [HEALBOT_DEBUFF_HAMSTRING]             = 5,
-			[HEALBOT_DEBUFF_HARVEST_SOUL]          = 5,
-            [HEALBOT_DEBUFF_HELM_OF_COMMAND]       = 5,
-			[HEALBOT_DEBUFF_HEWN]                  = 5,
-			[HEALBOT_DEBUFF_HUNGER]                = 5,
-			[HEALBOT_DEBUFF_HUNTERS_MARK]          = 5,
-			-- I-J 6
-			[HEALBOT_DEBUFF_ICEBOLT]               = 6,
-            [HEALBOT_DEBUFF_ICE_TOMB]              = 6,
-            [HEALBOT_DEBUFF_ICY_BLOOD]             = 6,
-			[HEALBOT_DEBUFF_ICY_GROUND]            = 6,
-			[HEALBOT_DEBUFF_ICY_FEAR]              = 6,
-			[HEALBOT_DEBUFF_IGNITE_ARMOUR]         = 6, 
-			[HEALBOT_DEBUFF_IGNITE_FLESH]          = 6,
-			[HEALBOT_DEBUFF_IMPALE]                = 6,
-            [HEALBOT_DEBUFF_IMPALE]                = 6,
-			[HEALBOT_DEBUFF_IMPALED]               = 6,
-            [HEALBOT_DEBUFF_IMPALING_SPINE]        = 6,
-            [HEALBOT_DEBUFF_INCINERATE_FLESH]      = 6,
-            [HEALBOT_DEBUFF_INFECTED_TALONS]       = 6,
-			[HEALBOT_DEBUFF_INFEST]                = 6,
-            [HEALBOT_DEBUFF_INFRARED_LIGHT]        = 6,
-			[HEALBOT_DEBUFF_INFRARED_TRACKING]     = 6,
-			[HEALBOT_DEBUFF_INJECTION]             = 6,
-			[HEALBOT_DEBUFF_INSTABILITY]           = 6,
-            [HEALBOT_DEBUFF_IRON_ROOTS]            = 6,
-            [HEALBOT_DEBUFF_IRON_PRISON]           = 6,
-			[HEALBOT_DEBUFF_IRON_TOMB]             = 6,
-			[HEALBOT_DEBUFF_JAGGED_KNIFE]          = 6, 
-            [HEALBOT_DEBUFF_JEALOUSY]              = 6, 
-			-- K-L 7
-			[HEALBOT_DEBUFF_KEG_TOSS]              = 7,
-			[HEALBOT_DEBUFF_LANGUISH]              = 7,
-			[HEALBOT_DEBUFF_LASER_BURN]            = 7,
-			[HEALBOT_DEBUFF_LEGION_FLAME]          = 7, 
-            [HEALBOT_DEBUFF_LESSER_SHA_RESIDUE]    = 7,
-			[HEALBOT_DEBUFF_LESSONS_OF_ICARUS]     = 7,
-			[HEALBOT_DEBUFF_LIFE_DRAIN]            = 7,
-			[HEALBOT_DEBUFF_LIGHTNING_ROD]         = 7,
-            [HEALBOT_DEBUFF_LIGHTNING_TETHER]      = 7,
-			[HEALBOT_DEBUFF_LINGERING_GAZE]        = 7, 
-			[HEALBOT_DEBUFF_LINGERING_GAZE]        = 7,
-			[HEALBOT_DEBUFF_LOCKED_ON]             = 7,
-			-- M-N 8
-			[HEALBOT_DEBUFF_MAGNETIC_CRUSH]        = 8,
-			[HEALBOT_DEBUFF_MALFORMED_BLOOD]       = 8, 
-			[HEALBOT_DEBUFF_MARK_OF_ANGUISH]       = 8,
-            [HEALBOT_DEBUFF_MARK_OF_ARROGANCE]     = 8,
-			[HEALBOT_DEBUFF_MARKED_SOUL]           = 8,
-			[HEALBOT_DEBUFF_MEDITATIVE_FIELD]      = 8, 
-			[HEALBOT_DEBUFF_MEZMERIZE]             = 8,
-			[HEALBOT_DEBUFF_MISTRESS_KISS]         = 8,
-            [HEALBOT_DEBUFF_MUTATED_INFECTION]     = 8,
-            [HEALBOT_DEBUFF_MUTATED_PLAGUE]        = 8,
-            [HEALBOT_DEBUFF_MYSTIC_BUFFET]         = 8,
-            [HEALBOT_DEBUFF_NAPALM_SHELL]          = 8,
-            [HEALBOT_DEBUFF_NECROTIC_PLAGUE]       = 8,
-            [HEALBOT_DEBUFF_NECROTIC_STRIKE]       = 8,
-            -- O-P 9
-			[HEALBOT_DEBUFF_OVERCOME]              = 9,
-			[HEALBOT_DEBUFF_OVERCHARGED]           = 9,
-			[HEALBOT_DEBUFF_OVERLOAD]              = 9,
-			[HEALBOT_DEBUFF_PACT_DARKFALLEN]       = 9,
-            [HEALBOT_DEBUFF_PANIC]                 = 9,
-			[HEALBOT_DEBUFF_PARALYTIC_TOXIN]       = 9,
-            [HEALBOT_DEBUFF_PARASITIC_INFECT]      = 9,
-            [HEALBOT_DEBUFF_PARASITIC_SHADOWFIEND] = 9,
-            [HEALBOT_DEBUFF_PATTERN_RECOGNITION]   = 9,
-			[HEALBOT_DEBUFF_PENETRATING_COLD]      = 9,
-            [HEALBOT_DEBUFF_POISON_CLOUD]          = 9,
-			[HEALBOT_DEBUFF_POOL_OF_FIRE]          = 9,
-			[HEALBOT_DEBUFF_POWER_OF_THE_TITANS]   = 9,
-			[HEALBOT_DEBUFF_PRIMAL_NUTRIMENT]      = 9,
-			[HEALBOT_DEBUFF_PURIFIED]              = 9,
-			[HEALBOT_DEBUFF_PURIFIED_RESIDUE]      = 9, 
-			-- Q-R 10
-			[HEALBOT_DEBUFF_REND]                  = 10,
-			[HEALBOT_DEBUFF_RENDING_CHARGE]        = 10,  
-			[HEALBOT_DEBUFF_RESONATING_AMBER]      = 10,
-			[HEALBOT_DEBUFF_ROT_ARMOR]             = 10,
-			[HEALBOT_DEBUFF_RUNE_OF_BLOOD]         = 10,
-            -- S-T 11
-			[HEALBOT_DEBUFF_SACRIFICE]             = 11,
-            [HEALBOT_DEBUFF_SARA_BLESSING]         = 11,
-            [HEALBOT_DEBUFF_SCORCHED]              = 11,
-			[HEALBOT_DEBUFF_SCORCHING_BREATH]      = 11,
-			[HEALBOT_DEBUFF_SELF_DOUBT]            = 11,
-			[HEALBOT_DEBUFF_SERIOUS_WOUND]         = 11, 
-			[HEALBOT_DEBUFF_SET_TO_BLOW]           = 11,
-			[HEALBOT_DEBUFF_SHA_RESIDUE]           = 11,
-			[HEALBOT_DEBUFF_SHA_SEAR]              = 11,
-			[HEALBOT_DEBUFF_SHA_SPLASH]            = 11,
-			[HEALBOT_DEBUFF_SHADOW_PRISON]         = 11,
-            [HEALBOT_DEBUFF_SHADOWED_SOUL]         = 11,
-			[HEALBOT_DEBUFF_SHADOWED_WEAKNESS]     = 11,
-			[HEALBOT_DEBUFF_SHALE_SHARDS]          = 11,
-			[HEALBOT_DEBUFF_SHIELD_BASH]           = 11,
-			[HEALBOT_DEBUFF_SLASHING_TALONS]       = 11,
-			[HEALBOT_DEBUFF_SLAG_POT]              = 11,
-            [HEALBOT_DEBUFF_SLIMED]                = 11,
-			[HEALBOT_DEBUFF_SNOBOLLED]             = 11,
-            [HEALBOT_DEBUFF_SOUL_CONSUMPTION]      = 11,
-            [HEALBOT_DEBUFF_SOUL_FRAGMENT]         = 11,
-			[HEALBOT_DEBUFF_SPINNING_PAIN_SPIKE]   = 11,
-            [HEALBOT_STRONG_ANCIENT_BARRIER]       = 11,
-			[HEALBOT_DEBUFF_STATIC_SHOCK]          = 11, 
-			[HEALBOT_DEBUFF_STATIC_WOUND]          = 11,
-			[HEALBOT_DEBUFF_STONE_GRIP]            = 11,
-            [HEALBOT_DEBUFF_STORMCLOUD]            = 11,
-			[HEALBOT_DEBUFF_STORMCLOUD]            = 11,
-			[HEALBOT_STORM_CLOUD]                  = 11,
-			[HEALBOT_DEBUFF_STORM_ENERGY]          = 11,
-			[HEALBOT_DEBUFF_SUNDERING_BLOW]        = 11,
-			[HEALBOT_DEBUFF_SUPERHEATED]           = 11,
-			[HEALBOT_DEBUFF_SWARMING_SHADOWS]      = 11,
-            [HEALBOT_DEBUFF_TAIL_LASH]             = 11,
-			[HEALBOT_DEBUFF_TALON_RAKE]            = 11,
-			[HEALBOT_DEBUFF_TENDERZING_STRIKES]    = 11,
-			[HEALBOT_DEBUFF_THUNDERING_THROW]      = 11,
-			[HEALBOT_DEBUFF_TORMENT]               = 11,
-			[HEALBOT_DEBUFF_TORRENT_OF_ICE]        = 11,
-			[HEALBOT_DEBUFF_TOUCH_OF_ANIMUS]       = 11,
-			[HEALBOT_DEBUFF_TOUCH_OF_DARKNESS]     = 11,
-            [HEALBOT_DEBUFF_TOUCH_OF_LIGHT]        = 11,
-            [HEALBOT_DEBUFF_TOUCH_OF_YSHAARJ]      = 11,
-			[HEALBOT_DEBUFF_TOXICITY]              = 11, 
-			[HEALBOT_DEBUFF_TOXIC_MIST]            = 11,
-			[HEALBOT_DEBUFF_TOXIC_SPORES]          = 11,
-            [HEALBOT_DEBUFF_TRIPLE_PUNCTURE]       = 11,
-			-- U-V 12
-			[HEALBOT_DEBUFF_ULTIMATE_DESPAIR]      = 12,
-			[HEALBOT_UNSTABLE_VITA]                = 12,
-			[HEALBOT_DEBUFF_VILE_GAS]              = 12,
-            [HEALBOT_DEBUFF_VENGEFUL_STRIKES]      = 12,
-			[HEALBOT_VITA_SENSITIVITY]             = 12,
-			[HEALBOT_DEBUFF_VOLATILE_OOZE]         = 12,
-            [HEALBOT_DEBUFF_VOLATILE_PATHOGEN]     = 12, 
-			-- W-X 13
-			[HEALBOT_DEBUFF_WATERLOGGED]           = 13,
-            [HEALBOT_WEEK_ANCIENT_BARRIER]         = 13,
-			[HEALBOT_DEBUFF_WEAKENED_RESOLVE]      = 13,
-			[HEALBOT_DEBUFF_WINDBURN]              = 13,  
-			[HEALBOT_DEBUFF_WEB_WRAP]              = 13,
-			[HEALBOT_DEBUFF_WHIRLING]              = 13,
-			[HEALBOT_DEBUFF_WHIRLING_CORRUPTION]   = 13,
-			[HEALBOT_DEBUFF_WOUNDED_PRIDE]         = 13,
-			[HEALBOT_DEBUFF_WOUNDING_STRIKE]       = 13,
-			-- Y-Z 14
-        }
+             -- Defaults
+            [HEALBOT_CUSTOM_CAT_CUSTOM_IMPORTANT]  = 1,
+			[HEALBOT_CUSTOM_CAT_CUSTOM_DAMAGE]     = 1,
+            [HEALBOT_CUSTOM_CAT_CUSTOM_EFFECT]     = 1,
+            [HEALBOT_CUSTOM_CAT_CUSTOM_MISC]       = 1,
 
-    HEALBOT_ABOUT_DESC1                    = "Add a panel with skinable bars for healing, decursive, buffing, ressing and aggro tracking"
+			--Class Profession Debuffs
+			[HEALBOT_DARK_BARGAIN]             = 3, --Warlock
+			[HEALBOT_SHROUD_OF_PURGATORY]      = 11, --Death Knight
+			[HEALBOT_DEBUFF_ROCKET_FUEL_LEAK]  = 10, --Engineering
+			
+			--Scenario, Proving Grounds
+			[HEALBOT_DEBUFF_CHOMP]             = 3, -- Healer Challenge 
+			[HEALBOT_DEBUFF_LAVA_BURNS]        = 7, -- Healer Challenge	
+			
+		    --[[World Bosses
+	        Sha of Anger]]
+		    [HEALBOT_DEBUFF_SEETHE]             = 11, -- Sha of Anger      
+	        [HEALBOT_DEBUFF_AGGRESSIVE_BEHAVIOR] = 2, -- Sha of Anger      
+	        --HEALBOT_DEBUFF_BITTER_THOUGHTS]      = 2, -- Sha of Anger 
+			--Oondasta
+			[HEALBOT_DEBUFF_CRUSH]             = 3, -- Oondasta    
+			--Nalak, the Storm Lord
+			[HEALBOT_DEBUFF_LIGHTNING_TETHER]  = 7, -- Nalak, the Storm Lord      
+			[HEALBOT_DEBUFF_STORMCLOUD]        = 11, -- Nalak, the Storm Lord 
+			--Celestials
+			[HEALBOT_DEBUFF_SPECTRAL_SWIPE]    = 11, --Xuen   
+			--[HEALBOT_DEBUFF_JADEFLAME_BUFFET]  = 6, --Chi Ji       
+			--Ordos
+			[HEALBOT_DEBUFF_BURNING_SOUL]      = 2, --Ordos            
+			[HEALBOT_DEBUFF_POOL_OF_FIRE]      = 9, --Ordos       
+			[HEALBOT_DEBUFF_ANCIENT_FLAME]     = 2, --Ordos        
+									
+			--Scenario, Proving Grounds
+			[HEALBOT_DEBUFF_CHOMP]             = 3, -- Healer Challenge 
+			[HEALBOT_DEBUFF_LAVA_BURNS]        = 7, -- Healer Challenge	
+			
+		    --[[World Bosses
+	        Sha of Anger]]
+		    [HEALBOT_DEBUFF_SEETHE]             = 11, -- Sha of Anger      
+	        [HEALBOT_DEBUFF_AGGRESSIVE_BEHAVIOR] = 2, -- Sha of Anger      
+	        --HEALBOT_DEBUFF_BITTER_THOUGHTS]      = 2, -- Sha of Anger 
+			--Oondasta
+			[HEALBOT_DEBUFF_CRUSH]             = 3, -- Oondasta    
+			--Nalak, the Storm Lord
+			[HEALBOT_DEBUFF_LIGHTNING_TETHER]  = 7, -- Nalak, the Storm Lord      
+			[HEALBOT_DEBUFF_STORMCLOUD]        = 11, -- Nalak, the Storm Lord 
+			--Celestials
+			[HEALBOT_DEBUFF_SPECTRAL_SWIPE]    = 11, --Xuen   
+			--[HEALBOT_DEBUFF_JADEFLAME_BUFFET]  = 6, --Chi Ji       
+			--Ordos
+			[HEALBOT_DEBUFF_BURNING_SOUL]      = 2, --Ordos            
+			[HEALBOT_DEBUFF_POOL_OF_FIRE]      = 9, --Ordos       
+			[HEALBOT_DEBUFF_ANCIENT_FLAME]     = 2, --Ordos        
+									
+			--[[Updated 5.2 Mists of Pandaria Expansion by Ariá - Silvermoon EU
+			= GetMapNameByID(896) or "--Mogu'shan Vaults"]]
+			[HEALBOT_DEBUFF_SUNDERING_BITE]    = 11, -- Trash       
+			[HEALBOT_DEBUFF_FULLY_PETRIFIED]   = 4, -- Trash
+			[HEALBOT_DEBUFF_FOCUSED_ASSAULT]   = 4, -- Trash        
+			[HEALBOT_DEBUFF_GROUND_SLAM]       = 5, -- Trash         
+			[HEALBOT_DEBUFF_IMPALE]            = 6, -- Trash         
+			[HEALBOT_DEBUFF_PYROBLAST]         = 9, -- Trash              
+			[HEALBOT_DEBUFF_TROLL_RUSH]        = 11, -- Trash
+			[HEALBOT_DEBUFF_SUNDER_ARMOR]      = 11, -- Trash			
+			[HEALBOT_DEBUFF_AMETHYST_POOL]     = 2, -- The Stone Guard         
+			[HEALBOT_DEBUFF_REND_FLESH]        = 10, -- The Stone Guard     
+			[HEALBOT_DEBUFF_LIVING_AMETHYST]   = 7, -- The Stone Guard Heroic     
+			[HEALBOT_DEBUFF_LIVING_COBALT]     = 7, -- The Stone Guard Heroic     
+			[HEALBOT_DEBUFF_LIVING_JADE]       = 7, -- The Stone Guard Heroic     
+			[HEALBOT_DEBUFF_LIVING_JASPER]     = 7, -- The Stone Guard Heroic
+			--[HEALBOT_DEBUFF_JASPER_CHAINS]     = 6, -- The Stone Guard 			
+			[HEALBOT_DEBUFF_LIGHTNING_LASH]    = 7, -- Feng the Accursed  
+			[HEALBOT_DEBUFF_LIGHTNING_CHARGE]  = 7, -- Feng the Accursed   
+			[HEALBOT_DEBUFF_FLAMING_SPEAR]     = 4, -- Feng the Accursed    
+			[HEALBOT_DEBUFF_WILDFIRE_SPARK]    = 13, -- Feng the Accursed   
+			[HEALBOT_DEBUFF_ARCANE_SHOCK]      = 2, -- Feng the Accursed   
+			[HEALBOT_DEBUFF_ARCANE_RESONANCE]  = 2, -- Feng the Accursed    
+			[HEALBOT_DEBUFF_SHADOWBURN]        = 11, -- Feng the Accursed Heroic      
+			--[HEALBOT_DEBUFF_EPICENTRE          = 4, -- Feng the Accursed         
+			[HEALBOT_DEBUFF_VOODOO_DOLL]       = 12, -- Gara'jal the Spiritbinder 
+			--[[[HEALBOT_DEBUFF_CROSSED_OVER]      = 3, -- Gara'jal the Spiritbinder 
+			[HEALBOT_DEBUFF_SOUL_SEVER]        = 11, -- Gara'jal the Spiritbinder]]
+			[HEALBOT_DEBUFF_PINNED_DOWN]       = 9, -- The Spirit Kings
+			[HEALBOT_DEBUFF_UNDYING_SHADOWS]   = 12, -- The Spirit Kings 
+			--[[[HEALBOT_DEBUFF_PILLAGED]          = 9, -- The Spirit Kings
+			[HEALBOT_DEBUFF_ROBBED_BLIND]      = 10, -- The Spirit Kings Heroic]]
+			--[HEALBOT_DEBUFF_OVERCHARGED]       = 9, -- Elegon  
+			[HEALBOT_DEBUFF_FOCUSED_ASSAULT]   = 4, -- Will of the Emporer
+			[HEALBOT_DEBUFF_ENERGIZING_SMASH]  = 4, -- Will of the Emporer 
+			[HEALBOT_DEBUFF_IMPEDING_THRUST]   = 6, -- Will of the Emporer   
+			[HEALBOT_DEBUFF_FOCUSED_DEFENSE]   = 4, -- Will of the Emporer 
+			[HEALBOT_DEBUFF_DEVASTATING_ARC]   = 3, -- Will of the Emporer 
+			[HEALBOT_DEBUFF_STOMP]             = 11, -- Will of the Emporer      
+			--[[[HEALBOT_DEBUFF_FOCUSED_ENERGY]    = 4, -- Will of the Emporer Heroic
+			[HEALBOT_DEBUFF_TITAN_GAS]         = 11, -- Will of the Emporer]]
+			
+			--= GetMapNameByID(897) or "--Heart of Fear"
+			[HEALBOT_DEBUFF_ARTERIAL_BLEEDING] = 2, -- Trash         
+			[HEALBOT_DEBUFF_DISMANTLED_ARMOR] = 3, -- Trash          
+			[HEALBOT_DEBUFF_STUNNING_STRIKE]  = 11, -- Trash         
+			[HEALBOT_DEBUFF_GALE_FORCE_WINDS] = 5, -- Trash 
+			[HEALBOT_DEBUFF_MORTAL_REND]      = 8, -- Trash        
+			[HEALBOT_DEBUFF_GRIEVOUS_WHIRL]   = 5, -- Trash        
+			[HEALBOT_DEBUFF_BURNING_STING]    = 2, -- Trash         
+			[HEALBOT_DEBUFF_SLAM]             = 11, -- Trash 
+			[HEALBOT_DEBUFF_ZEALOUS_PARASITE] = 14, -- Trash
+			[HEALBOT_DEBUFF_EXHALE]           = 4, -- Imperial Vizier Zor'lok       
+			[HEALBOT_DEBUFF_CONVERT]          = 3, -- Imperial Vizier Zor'lok          
+			--[HEALBOT_DEBUFF_PHEROMONES_OF_ZEAL] = 9, -- Imperial Vizier Zor'lok  
+			[HEALBOT_DEBUFF_OVERWHELMING_ASSAULT] = 9, -- Blade Lord Ta'yak      
+			[HEALBOT_DEBUFF_WIND_STEP]        = 13, -- Blade Lord Ta'yak			 
+			[HEALBOT_DEBUFF_UNSEEN_STRIKE]    = 12, -- Blade Lord Ta'yak  
+			[HEALBOT_DEBUFF_PHEROMONES]      = 9, -- Garalon		    
+			--[HEALBOT_DEBUFF_PUNGENCY]      	 = 9, -- Garalon
+			[HEALBOT_DEBUFF_AMBER_PRISON]     = 2, -- Wind Lord Mel'jarak 		 
+			[HEALBOT_DEBUFF_CORROSIVE_RESIN]  = 3, -- Wind Lord Mel'jarak  		
+			[HEALBOT_DEBUFF_KORTHIK_STRIKE]   = 7, -- Wind Lord Mel'jarak 
+			[HEALBOT_DEBUFF_RESHAPE_LIFE]     = 10, -- Amber-Shaper Un'sok		
+			[HEALBOT_DEBUFF_PARASITIC_GROWTH] = 9, -- Amber-Shaper Un'sok    	 
+			[HEALBOT_DEBUFF_FLING]     	      = 4, -- Amber-Shaper Un'sok      
+			[HEALBOT_DEBUFF_AMBER_GLOBULE]    = 2, -- Amber-Shaper Un'sok Heroic 
+			[HEALBOT_DEBUFF_EYES_OF_THE_EMPRESS] = 4, -- Grand Empress Shek'zeer 
+			[HEALBOT_DEBUFF_CRY_OF_TERROR]    = 3, -- Grand Empress Shek'zeer 	    
+			[HEALBOT_DEBUFF_STICKY_RESIN]     = 11, -- Grand Empress Shek'zeer	         
+			[HEALBOT_DEBUFF_POISON_BOMB]      = 9, -- Grand Empress Shek'zeer	         
+			[HEALBOT_DEBUFF_POISON_DRENCHED_ARMOR] = 9, -- Grand Empress Shek'zeer    
+			[HEALBOT_DEBUFF_VISIONS_OF_DEMISE] = 12, -- Grand Empress Shek'zeer  
+			[HEALBOT_DEBUFF_HEART_OF_FEAR]    = 5, -- Grand Empress Shek'zeer Heroic				
+			
+			--= GetMapNameByID(886) or "--Terrace of Endless Spring"
+			[HEALBOT_DEBUFF_TOUCH_OF_SHA]      = 11, -- Protectors of the Endless      
+			[HEALBOT_DEBUFF_DEFILED_GROUND]    = 3, -- Protectors of the Endless       
+			--[HEALBOT_DEBUFF_OVERWHELMING_CORRUPTION] = 9, -- Protectors of the Endless 
+			[HEALBOT_DEBUFF_SHADOW_BREATH]     = 11, -- Tsulong     
+			--[HEALBOT_DEBUFF_DREAD_SHADOWS]     = 3, -- Tsulong       
+			[HEALBOT_DEBUFF_SPRAY]             = 11, -- Lei Shi       
+			[HEALBOT_DEBUFF_SCARY_FOG]         = 11, -- Lei Shi Heroic     
+			[HEALBOT_DEBUFF_PENETRATING_BOLT]  =9, -- Sha of Fear              
+			[HEALBOT_DEBUFF_NAKED_AND_AFRAID]  = 8, -- Sha of Fear Heroic 
+			[HEALBOT_DEBUFF_HUDDLE_IN_TERROR]  = 5, -- Sha of Fear Heroic 
+			[HEALBOT_DEBUFF_CHAMPION_OF_THE_LIGHT] = 3, -- Sha of Fear Heroic 
+			[HEALBOT_DEBUFF_OMINOUS_CACKLE]    = 9, -- Sha of Fear 
+			--[HEALBOT_DEBUFF_DREAD_SPRAY]       = 3, -- Sha of Fear 
+			
+			--[[Updated 5.3 Mists of Pandaria Expansion by Ariá - Silvermoon EU      
+			= GetMapNameByID(930) or "--Throne of Thunder"]]
+			[HEALBOT_DEBUFF_WOUNDING_STRIKE]   = 13, -- Trash
+			[HEALBOT_DEBUFF_STORM_ENERGY]      = 11, -- Trash
+			[HEALBOT_DEBUFF_ANCIENT_VENOM]     = 2, -- Trash 
+			[HEALBOT_DEBUFF_TORMENT]           = 11, -- Trash
+			[HEALBOT_DEBUFF_CRUSH_ARMOR]       = 3, -- Trash
+			[HEALBOT_DEBUFF_STORMCLOUD]        = 11, -- Trash
+			[HEALBOT_DEBUFF_SLASHING_TALONS]   = 11, -- Trash
+			[HEALBOT_DEBUFF_SHALE_SHARDS]      = 11, -- Trash
+			[HEALBOT_DEBUFF_CHOKING_MISTS]     = 3, -- Trash
+			[HEALBOT_DEBUFF_CORROSIVE_BREATH]  = 3, -- Trash
+			[HEALBOT_DEBUFF_COCOON]            = 3, -- Trash   
+			[HEALBOT_DEBUFF_CHOKING_GAS]       = 3, -- Trash
+			[HEALBOT_DEBUFF_GNAWED_UPON]       = 5, -- Trash
+			[HEALBOT_DEBUFF_RETRIEVE_SPEAR]    = 10, -- Trash
+			[HEALBOT_DEBUFF_STATIC_WOUND]      = 11, -- Jin'rokh the Breaker
+			[HEALBOT_DEBUFF_THUNDERING_THROW]  = 11, -- Jin'rokh the Breaker
+			[HEALBOT_DEBUFF_FOCUSED_LIGHTNING] = 4, -- Jin'rokh the Breaker
+			[HEALBOT_DEBUFF_ELECTRIFIED_WATERS] = 4, -- Jin'rokh the Breaker 
+			[HEALBOT_DEBUFF_TRIPLE_PUNCTURE]   = 11, -- Horridon
+			[HEALBOT_DEBUFF_RENDING_CHARGE]    = 10, -- Horridon
+			[HEALBOT_DEBUFF_FROZEN_BOLT]       = 4, -- Horridon
+			[HEALBOT_DEBUFF_FRIGID_ASSAULT]    = 4, -- Council of Elders 
+			[HEALBOT_DEBUFF_BITING_COLD]       = 2, -- Council of Elders    
+			[HEALBOT_DEBUFF_FROSTBITE]         = 4, -- Council of Elders  
+			[HEALBOT_DEBUFF_BODY_HEAT]         = 2, -- Council of Elders Heroic
+			[HEALBOT_DEBUFF_MARKED_SOUL]       = 8, -- Council of Elders
+			[HEALBOT_DEBUFF_SOUL_FRAGMENT]     = 11, -- Council of Elders Heroic
+			--[HEALBOT_DEBUFF_SHADOWED_SOUL]     = 11, -- Council of Elders Heroic
+			[HEALBOT_DEBUFF_ENTRAPPED]         = 4, -- Council of Elders Magic
+			[HEALBOT_DEBUFF_QUAKE_STOMP]       = 10, -- Tortos
+			[HEALBOT_DEBUFF_CRYSTAL_SHELL]     = 3, -- Tortos
+			[HEALBOT_DEBUFF_CRYSTAL_SHELL_FULL_CAPACITY] = 3, -- Tortos 
+			[HEALBOT_DEBUFF_IGNITE_FLESH]      = 6, -- Megaera  
+			[HEALBOT_DEBUFF_ARCTIC_FREEZE]     = 2, -- Megaera  
+			[HEALBOT_DEBUFF_ROT_ARMOR]         = 10, -- Megaera 
+			[HEALBOT_DEBUFF_TORRENT_OF_ICE]    = 11, -- Megaera
+			--[HEALBOT_DEBUFF_ICY_GROUND]        = 6, -- Megaera  		
+			[HEALBOT_DEBUFF_TALON_RAKE]        = 11, -- Ji-Kun
+			[HEALBOT_DEBUFF_INFECTED_TALONS]   = 6, -- ji-Kun
+			[HEALBOT_DEBUFF_FEED_POOL]         = 4, -- ji-Kun
+			[HEALBOT_DEBUFF_SLIMED]            = 11, -- ji-Kun      
+			[HEALBOT_DEBUFF_SERIOUS_WOUND]     = 11, -- Durumu the Forgotten
+			[HEALBOT_DEBUFF_ARTERIAL_CUT]      = 2, -- Durumu the Forgotten
+			[HEALBOT_DEBUFF_LINGERING_GAZE]    = 7, -- Durumu the Forgotten
+			[HEALBOT_DEBUFF_LIFE_DRAIN]        = 7, -- Durumu the Forgotten
+			--[[[HEALBOT_DEBUFF_BLUE_RAY_TRACKING] = 2, -- Durumu the Forgotten       
+			[HEALBOT_DEBUFF_BLUE_RAYS]         = 2, -- Durumu the Forgotten       
+			[HEALBOT_DEBUFF_INFRARED_TRACKING] = 6, -- Durumu the Forgotten       
+			[HEALBOT_DEBUFF_INFRARED_LIGHT]    = 6, -- Durumu the Forgotten       
+			[HEALBOT_DEBUFF_BRIGHT_LIGHT]      = 2,]] -- Durumu the Forgotten 
+			[HEALBOT_DEBUFF_MALFORMED_BLOOD]   = 8, -- Primordius
+			[HEALBOT_DEBUFF_VOLATILE_PATHOGEN] = 12, -- Primordius
+			[HEALBOT_DEBUFF_CRIMSON_WAKE]      = 3, -- Dark Animus
+			[HEALBOT_DEBUFF_EXPLOSIVE_SLAM]    = 4, -- Dark Animus
+			[HEALBOT_DEBUFF_ANIMA_RING]        = 2, -- Dark Animus
+			[HEALBOT_DEBUFF_TOUCH_OF_ANIMUS]   = 11, -- Dark Animus
+			--[HEALBOT_DEBUFF_ANIMA_FONT]        = 2, -- Dark Animus
+			[HEALBOT_DEBUFF_SCORCHED]          = 11, -- Iron Qon
+			[HEALBOT_DEBUFF_FREEZE]            = 4, -- Iron Qon
+			[HEALBOT_DEBUFF_STORM_CLOUD]       = 11, -- Iron Qon
+			--[HEALBOT_DEBUFF_ARCING_LIGHTNING]  = 2, -- Iron Qon   
+			[HEALBOT_DEBUFF_FAN_OF_FLAMES]     = 4, -- Twin Consorts 
+			[HEALBOT_DEBUFF_BEAST_OF_NIGHTMARES] = 2, -- Twin Consorts
+			[HEALBOT_DEBUFF_CORRUPTED_HEALING] = 3, -- Twin Consorts 
+			--[HEALBOT_DEBUFF_FLAMES_OF_PASSION] = 4, -- Twin Consorts
+			[HEALBOT_DEBUFF_DECAPITATE]        = 3, -- Lei Shen 
+			[HEALBOT_DEBUFF_STATIC_SHOCK]      = 11, -- Lei Shen
+			[HEALBOT_DEBUFF_OVERCHARGED]       = 9, -- Lei Shen
+			[HEALBOT_DEBUFF_HELM_OF_COMMAND]   = 5, -- Lei Shen Heroic
+			[HEALBOT_DEBUFF_ELECTRICAL_SHOCK]  = 4, -- Lei Shen 
+			--[[[HEALBOT_DEBUFF_CRASHING_THUNDER]  = 3, -- Lei Shen
+			[HEALBOT_DEBUFF_DISCHARGED_ENERGY] = 3, -- Lei Shen        
+			[HEALBOT_DEBUFF_WINDBURN]          = 13, -- Lei Shen]]
+			[HEALBOT_DEBUFF_UNSTABLE_VITA]     = 12, -- Ra-Den
+			[HEALBOT_DEBUFF_VITA_SENSITIVITY]  = 12, -- Ra-Den
+			
+			--[[Updated 5.4 Mists of Pandaria Expansion by Ariá - Silvermoon EU 	   			
+			= GetMapNameByID(953) or "--Siege of Orgrimmar"]]                       
+			[HEALBOT_DEBUFF_LOCKED_ON]         = 7, -- Trash        
+			[HEALBOT_DEBUFF_OBLITERATING_STRIKE] = 9,-- Trash
+			[HEALBOT_DEBUFF_PIERCE]            = 9, --Trash 
+			[HEALBOT_DEBUFF_BLOOD_OF_YSHAARJ]  = 2, -- Trash
+			[HEALBOT_DEBUFF_REAPING_WHIRLWIND] = 10, -- Trash 
+			[HEALBOT_DEBUFF_FIRE_PIT]          = 4, -- Trash
+			[HEALBOT_DEBUFF_OVERCONFIDENCE]    = 9, -- Trash            
+			[HEALBOT_DEBUFF_JEALOUSY]          = 6, -- Trash  			
+			[HEALBOT_DEBUFF_GROWING_OVERCONFIDENCE] = 5, -- Trash
+			[HEALBOT_DEBUFF_BRIBE]             = 2, -- Trash 
+			[HEALBOT_DEBUFF_INTIMIDATING_SHOUT] = 6, -- Trash
+			[HEALBOT_DEBUFF_FULL_OF_MEAT]      = 4, -- Trash
+			[HEALBOT_DEBUFF_SCORCHED_EARTH]    = 11, -- Trash
+			[HEALBOT_DEBUFF_DREAD_HOWL]        = 3, -- Trash  
+			[HEALBOT_DEBUFF_SLOW_AND_STEADY]   = 11, -- Trash 
+			[HEALBOT_DEBUFF_RESONATING_AMBER]  = 10, -- Trash 
+			[HEALBOT_DEBUFF_CORROSIVE_BLAST]   = 3, -- Immerseus 
+			[HEALBOT_DEBUFF_SHA_POOL]          = 11, -- Immerseus
+			--[HEALBOT_DEBUFF_SHA_SPLASH]        = 11, -- Immerseus  
+			[HEALBOT_DEBUFF_NOXIOUS_POISON]    = 8, -- The Fallen Protectors       
+			[HEALBOT_DEBUFF_DEFILED_GROUND]    = 3, -- The Fallen Protectors                  
+			[HEALBOT_DEBUFF_VENGEFUL_STRIKES]  = 12, -- The Fallen Protectors     
+			[HEALBOT_DEBUFF_CORRUPTION_KICK]   = 3, -- The Fallen Protectors    
+			[HEALBOT_DEBUFF_GARROTE]           = 5, -- The Fallen Protectors     
+			[HEALBOT_DEBUFF_GOUGE]             = 5, -- The Fallen Protectors    
+			[HEALBOT_DEBUFF_MARK_OF_ANGUISH]   = 8, -- The Fallen Protectors         
+			[HEALBOT_DEBUFF_SHA_SEAR]          = 11, -- The Fallen Protectors
+			[HEALBOT_DEBUFF_FIXATE]            = 4, -- The Fallen Protectors
+			--[[[HEALBOT_DEBUFF_DEBILITATION]      = 3, -- The Fallen Protectors
+			HEALBOT_DEBUFF_SHADOWED_WEAKNESS]  = 11, -- The Fallen Protectors
+			[HEALBOT_DEBUFF_CORRUPTED_BREW]    = 3, -- The Fallen Protectors]] 			     
+			[HEALBOT_DEBUFF_SELF_DOUBT]        = 11, -- Norushen
+			[HEALBOT_DEBUFF_BOTTOMLESS_PIT]    = 2, -- Norushen
+			[HEALBOT_DEBUFF_DISHEARTENING_LAUGH] = 3, -- Norushen  
+			--[[[HEALBOT_DEBUFF_DESPAIR]             = 3, -- Norushen 
+			[HEALBOT_DEBUFF_TEST_OF_SERENITY]  = 11, -- Norushen       
+			[HEALBOT_DEBUFF_TEST_OF_RELIANCE]  = 11, -- Norushen       
+			[HEALBOT_DEBUFF_TEST_OF_CONDIDENCE] = 11,]] -- Norushen  
+			[HEALBOT_DEBUFF_WOUNDED_PRIDE]     = 13, -- Sha of Pride
+			[HEALBOT_DEBUFF_CORRUPTED_PRISON]  = 3, -- Sha of Pride  
+			[HEALBOT_DEBUFF_BANISHMENT]        = 2, -- Sha of Pride Heroic            
+			[HEALBOT_DEBUFF_REACHING_ATTACK]   = 10, -- Sha of Pride 
+			[HEALBOT_DEBUFF_AURA_OF_PRIDE]     = 2, -- Sha of Pride 
+			[HEALBOT_DEBUFF_MARK_OF_ARROGANCE] = 8, -- Sha of Pride Magic   
+			[HEALBOT_DEBUFF_FRACTURE]          = 4, -- Galakras
+			[HEALBOT_DEBUFF_POISON_CLOUD]      = 9, -- Galakras
+			--[[[HEALBOT_DEBUFF_FLAME_ARROWS]      = 4, -- Galakras
+			[HEALBOT_DEBUFF_FLAMES_OF_GALAKROND] = 4, -- Galakras]]
+			[HEALBOT_DEBUFF_LASER_BURN]        = 7, -- Iron Juggernaut
+			[HEALBOT_DEBUFF_IGNITE_ARMOUR]     = 6, -- Iron Juggernaut
+			[HEALBOT_DEBUFF_EXPLOSIVE_TAR]     = 4, -- Iron Juggernaut
+			[HEALBOT_DEBUFF_CUTTER_LASER_TARGET] = 3, -- Iron Juggernaut
+			[HEALBOT_DEBUFF_REND]              = 10, -- Kor'kron Dark Shaman
+			[HEALBOT_DEBUFF_FROSTSTORM_STRIKE] = 4, -- Kor'kron Dark Shaman
+			[HEALBOT_DEBUFF_TOXIC_MIST]        = 11, -- Kor'kron Dark Shaman
+			[HEALBOT_DEBUFF_IRON_PRISON]       = 6, -- Kor'kron Dark Shaman Heroic
+			--[HEALBOT_DEBUFF_FOUL_GEYSER]       = 4, -- Kor'kron Dark Shaman
+			--[HEALBOT_DEBUFF_TOXICITY]          = 11, -- Kor'kron Dark Shaman
+			[HEALBOT_DEBUFF_SUNDERING_BLOW]    = 11, -- General Nazgrim
+			[HEALBOT_DEBUFF_BONECRACKER]       = 2, -- General Nazgrim
+			[HEALBOT_DEBUFF_ASSASSINS_MARK]    = 2, -- General Nazgrim
+			[HEALBOT_DEBUFF_HUNTERS_MARK]      = 5, -- General Nazgrim Heroic
+			[HEALBOT_DEBUFF_FATAL_STRIKE]      = 4, -- Malkorok                         
+			[HEALBOT_WEEK_ANCIENT_BARRIER]     = 13, -- Malkorok       
+			[HEALBOT_ANCIENT_BARRIER]          = 2, -- Malkorok 
+			[HEALBOT_STRONG_ANCIENT_BARRIER]   = 11, -- Malkorok   
+			--[[HEALBOT_DEBUFF_ANCIENT_MIASMA]    = 2, -- Malkorok               
+			[HEALBOT_DEBUFF_LANGUISH]          = 7, -- Malkorok Heroic]] 
+			[HEALBOT_DEBUFF_SET_TO_BLOW]       = 11, -- Spoils of Pandaria
+			[HEALBOT_DEBUFF_CARNIVOROUS_BITE]  = 3, -- Spoils of Pandaria
+			[HEALBOT_DEBUFF_ENCAPSULATED_PHEROMONES] = 4, -- Spoils of Pandaria
+			[HEALBOT_DEBUFF_KEG_TOSS]          = 7, -- Spoils of Pandaria
+			[HEALBOT_DEBUFF_GUSTING_BOMB]      = 5, -- Spoils of Pandaria 
+			--[HEALBOT_DEBUFF_UNSTABLE_DEFENSE_SYSTEMS] = 12, -- Spoils of Pandaria 
+			[HEALBOT_DEBUFF_PANIC]             = 9, -- Thok the Bloodthirsty      
+			[HEALBOT_DEBUFF_TAIL_LASH]         = 11, -- Thok the Bloodthirsty     
+			[HEALBOT_DEBUFF_FIXATE]            = 4, -- Thok the Bloodthirsty     
+			[HEALBOT_DEBUFF_ACID_BREATH]       = 2, -- Thok the Bloodthirsty     
+			[HEALBOT_DEBUFF_FREEZING_BREATH]   = 4, -- Thok the Bloodthirsty         
+			[HEALBOT_DEBUFF_SCORCHING_BREATH]  = 11, -- Thok the Bloodthirsty    
+			--[[[HEALBOT_DEBUFF_BURNING_BLOOD]     = 2, -- Thok the Bloodthirsty 
+			[HEALBOT_DEBUFF_ICY_BLOOD]         = 6, -- Thok the Bloodthirsty
+			[HEALBOT_DEBUFF_BLOODIED]          = 2, -- Thok the Bloodthirsty]]     
+			[HEALBOT_DEBUFF_ELECTROSTATIC_CHARGE] = 4, --Siegecrafter Blackfuse
+			[HEALBOT_DEBUFF_OVERLOAD]          = 9, -- Siegecrafter Blackfuse           
+			[HEALBOT_DEBUFF_SUPERHEATED]       = 11, -- Siegecrafter Blackfuse          
+			--HEALBOT_DEBUFF_MAGNETIC_CRUSH]    = 8, -- Siegecrafter Blackfuse 
+			[HEALBOT_DEBUFF_MUTATE]            = 8, -- Paragons of the Klaxxi
+			[HEALBOT_DEBUFF_EXPOSED_VEINS]     = 4, -- Paragons of the Klaxxi 
+			[HEALBOT_DEBUFF_GOUGE]             = 5, -- Paragons of the Klaxxi 
+			[HEALBOT_DEBUFF_CAUSTIC_BLOOD]     = 3, -- Paragons of the Klaxxi 
+			[HEALBOT_DEBUFF_TENDERZING_STRIKES] = 11, -- Paragons of the Klaxxi 
+			[HEALBOT_DEBUFF_MEZMERIZE]         = 8, -- Paragons of the Klaxxi 
+			[HEALBOT_DEBUFF_SHIELD_BASH]       = 11, -- Paragons of the Klaxxi 
+			[HEALBOT_DEBUFF_CAUSTIC_AMBER]     = 3, -- Paragons of the Klaxxi 
+			[HEALBOT_DEBUFF_HEWN]              = 5, -- Paragons of the Klaxxi 
+			[HEALBOT_DEBUFF_GENETIC_ALTERATION] = 5, -- Paragons of the Klaxxi
+			[HEALBOT_DEBUFF_INJECTION]         = 6, -- Paragons of the Klaxxi 
+			[HEALBOT_DEBUFF_AIM]               = 2, -- Paragons of the Klaxxi 
+			[HEALBOT_DEBUFF_WHIRLING]          = 13, -- Paragons of the Klaxxi
+			[HEALBOT_DEBUFF_FIERY_EDGE]        = 4, -- Paragons of the Klaxxi 
+			[HEALBOT_DEBUFF_FEED]              = 4, -- Paragons of the Klaxxi 
+			[HEALBOT_DEBUFF_NOXIOUS_VAPORS]    = 8, -- Paragons of the Klaxxi
+			[HEALBOT_DEBUFF_CANNED_HEAT]       = 3, -- Paragons of the Klaxxi Heroic      
+			[HEALBOT_DEBUFF_EERIE_FOG]         = 4, -- Paragons of the Klaxxi Heroic
+			--[[[HEALBOT_DEBUFF_CHILLED_TO_THE_BONE] = 3, -- Paragons of the Klaxxi Heroic 
+			[HEALBOT_DEBUFF_HUNGER]            = 5, -- Paragons of the Klaxxi]]
+			[HEALBOT_DEBUFF_HAMSTRING]         = 5, -- Garrosh Hellscream   
+			[HEALBOT_DEBUFF_EMBODIED_DOUBT]    = 4, -- Garrosh Hellscream
+			[HEALBOT_DEBUFF_TOUCH_OF_YSHAARJ]  = 11, -- Garrosh Hellscream 
+			[HEALBOT_DEBUFF_EMPOWERED_TOUCH_OF_YSHAARJ] = 4, -- Garrosh Hellscream
+			[HEALBOT_DEBUFF_GRIPPING_DESPAIR]  = 5, -- Garrosh Hellscream
+			[HEALBOT_DEBUFF_EMPOWERED_GRIPPING_DESPAIR] = 4, -- Garrosh Hellscream
+            [HEALBOT_DEBUFF_MALICE]            = 8, -- Garrosh Hellscream Heroic
+			[HEALBOT_DEBUFF_MALICIOUS_BLAST]   = 8, -- Garrosh Hellscream Heroic 
+			[HEALBOT_DEBUFF_FIXATE]            = 4, -- Garrosh Hellscream Heroic 
+			[HEALBOT_DEBUFF_NAPALM]            = 8, -- Garrosh Hellscream Heroic
+			[HEALBOT_DEBUFF_EXPLOSIVE_DESPAIR] = 4, -- Garrosh Hellscream
+			[HEALBOT_DEBUFF_FAITH]             = 4, -- Garrosh Hellscream Buff
+			[HEALBOT_DEBUFF_HOPE]              = 5, -- Garrosh Hellscream Buff 
+			[HEALBOT_DEBUFF_COURAGE]           = 3, -- Garrosh Hellscream Buff 
+			--[HEALBOT_DEBUFF_DESECRATED]        = 3, -- Garrosh Hellscream]] 
+			}
+
+    HEALBOT_ABOUT_DESC1                    = "Add frames with skinable bars for healing, decursive, buffing, ressing, aggro tracking"
     HEALBOT_ABOUT_WEBSITE                  = "Website:"
     HEALBOT_ABOUT_AUTHORH                  = "Author:"
     HEALBOT_ABOUT_AUTHORD                  = "Strife"
     HEALBOT_ABOUT_CATH                     = "Category:"
     HEALBOT_ABOUT_CATD                     = "Unit Frames, Buffs and Debuffs, Combat:Healer"
     HEALBOT_ABOUT_CREDITH                  = "Credits:"
-    HEALBOT_ABOUT_CREDITD                  = "Acirac, Kubik, Von, Aldetal, Brezza, CT, Moonlight Han Xing, CTShammy, Hermis"  -- Anyone taking on translations (if required), feel free to add yourself here.
+    HEALBOT_ABOUT_CREDITD                  = "Acirac, Kubik, Von, Aldetal, Brezza, Moonlight Han Xing, CTShammy, Hermis, Ariá"  -- Anyone taking on translations (if required), feel free to add yourself here.
     HEALBOT_ABOUT_LOCALH                   = "Localizations:"
     HEALBOT_ABOUT_LOCALD                   = "deDE, enUK, esES, frFR, huHU, itIT, koKR, poBR, ruRU, zhCN, zhTW"
     HEALBOT_ABOUT_FAQH                     = "Frequently Asked Questions"
@@ -966,7 +1037,7 @@ function HealBot_Lang_enALL()
     HEALBOT_ABOUT_FAQ_ANSWER               = "Answer"
 
     HEALBOT_ABOUT_FAQ_QUESTIONS = {   [1]   = "Buffs - All the bars are White, what happened",
-                                      [2]   = "Casting - Sometimes the cursor turns blue and I can't do anything",
+									  [2]   = "Casting - Sometimes the cursor turns blue and I can't do anything",
                                       [3]   = "Macros - Do you have any cooldown examples",
                                       [4]   = "Macros - Do you have any spell casting examples",
                                       [5]   = "Mouse - How do I use my mouseover macros with the mouse wheel",
@@ -974,7 +1045,7 @@ function HealBot_Lang_enALL()
                                       [7]   = "Options - Can I hide all the bars and only show those needing a debuff removed",
                                       [8]   = "Options - Can I hide the incoming heals",
                                       [9]   = "Options - Healbot does not save my options when i logout/logon",
-                                      [10]   = "Options - How do I always use enabled settings",
+                                      [10]  = "Options - How do I always use enabled settings",
                                       [11]  = "Options - How do I disable healbot automatically",
                                       [12]  = "Options - How do I make the bars grow a different direction",
                                       [13]  = "Options - How do I setup 'My Targets'",
@@ -987,13 +1058,13 @@ function HealBot_Lang_enALL()
 
     HEALBOT_ABOUT_FAQ_SPELLS_ANSWER01       = "This is due to options set on the Spells tab \n" ..
                                               "try changing the following and testing: \n\n" ..
-                                              "     1: On the spells tab: Turn on Always Use Enabled \n" ..
-                                              "     2: On the spells tab: Turn off SmartCast \n\n" ..
+                                              "1: On the spells tab: Turn on Always Use Enabled \n" ..
+                                              "2: On the spells tab: Turn off SmartCast \n\n" ..
                                               "Note: It is expected that most users will want to \n"..
-                                              "          turn SmartCast back on \n\n" ..
+                                              "turn SmartCast back on \n\n" ..
                                               "Note: It is expected that experienced users will want to \n" ..
-                                              "          turn off Always Use Enabled  \n" ..
-                                              "          and set the spells for disabled bars"
+                                              "turn off Always Use Enabled  \n" ..
+                                              "and set the spells for disabled bars"
                                               
     HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "You are monitoring for missing buffs \n\n" .. 
                                               "This can be turned off on the buffs tab \n" ..
@@ -1002,113 +1073,110 @@ function HealBot_Lang_enALL()
                                               "Using the standard blizzard frames, \n" ..
                                               "try casting a spell thats on Cooldown \n" ..
                                               "Notice how the cursor turns blue. \n\n" ..
-                                              "Note: Nothing can be done to prevent this while \n" ..
-                                              "in combat, since WoW 2.0 Blizzard has locked down \n" ..
-                                              "the ui while in combat stopping all addons from \n" ..
-                                              "changing spells or targets from what has been predefined \n\n" ..
-                                              "It may help to monitor the spell cooldown in the tooltips",
-                                      [3]   = "Yes \n\n"..
+                                              "On the spells tab, use Avoid Blue Cursor",
+									  [3]   = "Yes \n\n"..
                                               "Paladin Hand of Salvation cooldown macro example: \n\n" ..
-                                              "    #show Hand of Salvation \n" ..
-                                              '    /script local n=UnitName("hbtarget"); ' .. "\n" ..
-                                              '    if GetSpellCooldown("Hand of Salvation")==0 then ' .. " \n" ..
-                                              '        SendChatMessage("Hand of Salvation on "..n,"YELL") ' .. "\n" ..
-                                              '        SendChatMessage("Hand of Salvation!","WHISPER",nil,n) ' .. "\n" ..
-                                              "    end; \n" ..
-                                              "    /cast [@hbtarget] Hand of Salvation",
+                                              "#show Hand of Salvation \n" ..
+                                              '/script local n=UnitName("hbtarget"); ' .. "\n" ..
+                                              'if GetSpellCooldown("Hand of Salvation")==0 then ' .. " \n" ..
+                                              'SendChatMessage("Hand of Salvation on "..n,"YELL") ' .. "\n" ..
+                                              'SendChatMessage("Hand of Salvation!","WHISPER",nil,n) ' .. "\n" ..
+                                              "end; \n" ..
+                                              "/cast [@hbtarget] Hand of Salvation",
                                       [4]   = "Yes \n\n"..
-                                              "Preist Flash Heal, example using both trinkets: \n\n" ..
-                                              "    #show Flash Heal \n" ..
-                                              "    /script UIErrorsFrame:Hide() \n" ..
-                                              "    /console Sound_EnableSFX 0 \n" ..
-                                              "    /use 13 \n" ..
-                                              "    /use 14 \n" ..
-                                              "    /console Sound_EnableSFX 1 \n" ..
-                                              "    /cast [@hbtarget] Flash Heal \n" ..
-                                              "    /script UIErrorsFrame:Clear(); UIErrorsFrame:Show()",
+											  "Preist Flash Heal, example using both trinkets: \n\n" ..
+                                              "#show Flash Heal \n" ..
+                                              "/script UIErrorsFrame:Hide() \n" ..
+                                              "/console Sound_EnableSFX 0 \n" ..
+                                              "/use 13 \n" ..
+                                              "/use 14 \n" ..
+                                              "/console Sound_EnableSFX 1 \n" ..
+                                              "/cast [@hbtarget] Flash Heal \n" ..
+                                              "/script UIErrorsFrame:Clear(); UIErrorsFrame:Show()",
                                       [5]   = "1: On the Mouse Wheel tab: Turn off Use Mouse Wheel \n" ..
-                                              "2: Bind your macros to blizzard's bindings with [@mouseover] \n\n\n" ..
+                                              "2: Bind your macros to blizzard's bindings with\n[@mouseover] \n\n\n" ..
                                               "Eample macro: \n\n" ..
-                                              "    #showtooltip Flash Heal \n" ..
-                                              "    /cast [@mouseover] Flash Heal \n",
+                                              "#showtooltip Flash Heal \n" ..
+                                              "/cast [@mouseover] Flash Heal \n",
                                       [6]   = "Yes \n\n\n"..
                                               "With Headers: \n" ..
-                                              "     1: On the Skins>Headers tab, switch on Show Headers \n" ..
-                                              "     2: On the Skins>Bars tab, set Number of Groups per column \n\n" ..
+                                              "1: On the Skins>Headers tab, switch on Show Headers \n" ..
+                                              "2: On the Skins>Bars tab, set Number of Groups per\ncolumn \n\n" ..
                                               "Without Headers: \n" ..
-                                              "     1: On the Skins>Bars tab, switch on Use Groups per Column \n" ..
-                                              "     2: On the Skins>Bars tab, set Number of Groups per column ",
+                                              "1: On the Skins>Bars tab, switch on Use Groups per\nColumn \n" ..
+                                              "2: On the Skins>Bars tab, set Number of Groups per\ncolumn ",
                                       [7]   = "Yes \n\n"..
                                               "1: On the Skins>Healing>Alert tab, set Alert Level to 0 \n" ..
                                               "2: On the Skins>Aggro tab, turn off the Aggro Monitor \n" .. 
                                               "3: On the Skins>Bars tab, set Disabled opacity to 0 \n" ..
                                               "4: On the Skins>Bars tab, set Background opacity to 0 \n" ..
                                               "5: On the Skins>Bar Text tab, click on the bar Disabled \n" ..
-                                              "     and set the Disabled text opacity to 0 \n" ..
-                                              "6: On the Skins>General tab, click on the bar Background \n" ..
-                                              "     and set the Background opacity to 0 \n" ..
+                                              "and set the Disabled text opacity to 0 \n" ..
+                                              "6: On the Skins>General tab, click on the bar\n" ..
+                                              "Background and set the Background opacity to 0 \n" ..
                                               "7: On the Cure tab, Turn on debuff monitoring",
                                       [8]   = "Yes \n\n"..
-                                              "1: On the Skins>Bars tab, set Incoming Heals to Dont Show \n" ..
+                                              "1: On the Skins>Bars tab, set Incoming Heals to Dont\nShow\n" ..
                                               "2: On the Skins>Bar Text tab, \n" ..
-                                              "          set Show Health on Bar to No Incoming Heals",
+                                              "set Show Health on Bar to No Incoming Heals",
                                       [9]   = "This has been present since a change in WoW 3.2, \n" ..
                                               "it can affects characters with weird letters in their name \n\n" ..
                                               "If your on Vista or Win7, try the follow: \n"..
-                                              "     change system locale to English (for non-unicode programs) \n" ..
-                                              "     in Control Panel > Region and Language > Administrative Tab",
-
+                                              "change system locale to English\n(for non-unicode programs) \n" ..
+                                              "in Control Panel > Region and Language >\nAdministrative Tab",
                                       [10]   = "On the spells tab turn on Always Use Enabled \n\n" ..
                                               "Some my also want to set the Alert Level to 100 \n" ..
                                               "This can be done on the Skins>Healing>Alert tab",
                                       [11]  = "Disable for a character: \n\n" ..
-                                              "     1: Open the General tab \n" ..
-                                              "     2: Turn on the Disable option \n\n\n" ..
+                                              "1: Open the General tab \n" ..
+                                              "2: Turn on the Disable option \n\n\n" ..
                                               "Disable when solo: \n\n" ..
-                                              "     1: Open the General tab \n" ..
-                                              "     2: To the right of the Disable option, Select only when solo \n" ..
-                                              "     3: Turn on the Disable option",
-                                      [12]  = "Change the Bars Anchor setting on the Skins>General tab  \n\n" ..
-                                              "     Top Right:        the bars will grow Down and Left \n" ..
-                                              "     Top Left:          the bars will grow Down and Right \n" ..
-                                              "     Bottom Right:  the bars will grow Up and Left \n" ..
-                                              "     Bottom Left:     the bars will grow Up and Right",
-                                      [13]  = "My Targets allows you to create a list of Targets you want to \n" ..
-                                              "group separately from others, similar to the MT group \n\n" ..
+                                              "1: Open the General tab \n" ..
+                                              "2: To the right of the Disable option, Select only when\nsolo \n" ..
+                                              "3: Turn on the Disable option",
+                                      [12]  = "Change the Bars Anchor setting on the Skins>General\ntab  \n\n" ..
+                                              "Top Right: the bars will grow Down and Left \n" ..
+                                              "Top Left: the bars will grow Down and Right \n" ..
+                                              "Bottom Right: the bars will grow Up and Left \n" ..
+                                              "Bottom Left: the bars will grow Up and Right",
+                                      [13]  = "My Targets allows you to create a list of Targets you \n" ..
+                                              "want to group separately from others, similar to the\nMT group \n\n" ..
                                               "The following options are available for \n" .. 
                                               "adding/removing people to/from the My Targets group \n\n" ..
-                                              "     - Shift+Ctrl+Alt+Right click on the bar \n" ..
-                                              '     - Use the Healbot Menu, enter "hbmenu" on the spells tab ' .. "\n" ..
-                                              "     - Use the Mouse Wheel, set on the Mouse Wheel tab",
+                                              "- Shift+Ctrl+Alt+Right click on the bar \n" ..
+                                              '- Use the Healbot Menu, enter "hbmenu" on the spells\ntab ' .. "\n" ..
+                                              "- Use the Mouse Wheel, set on the Mouse Wheel tab",
                                       [14]  = "Private Tanks can be added to the Main Tanks list, \n" ..
                                               "the Private tanks are only visible in your Healbot \n" ..
                                               "and do not affect other players or addons \n\n" ..
                                               "The following options are available for \n" ..
                                               "adding/removing people to/from the Tanks list \n\n" ..
-                                              '     - Use the Healbot Menu, enter "hbmenu" on the spells tab ' .. "\n" ..
-                                              "     - Use the Mouse Wheel, set on the Mouse Wheel tab",
-                                      
+                                              '- Use the Healbot Menu, enter "hbmenu" on the spells\ntab ' .. "\n" ..
+                                              "- Use the Mouse Wheel, set on the Mouse Wheel tab",                                     
                                       [15]  = "Yes \n\n"..
-                                              "     1: On the Skins>Healing tab, turn on Focus \n" ..
-                                              "     2: set your focus on the NPC (or PC not in raid/party) \n" ..
-                                              "          Healbot will create a bar in your My Targets list \n\n" ..
-                                              "Note: If in a combat situation where you zone in and out while \n" ..
-                                              "          in combat and need to reset focus on an NPC \n" ..
-                                              "          on the Skins>Healing tab set Focus: always show to on \n" ..
-                                              "          This will keep the bar available during combat. \n\n" ..
-                                              "Note: The HealBot Menu has the option 'Set HealBot Focus' \n" ..
-                                              "          This can make setting focus easy on NPC's and \n" ..
-                                              "          serves as a reminder to set focus. \n\n" ..
-                                              "          Enter 'hbmenu' on the spells tab to use HealBot Menu \n" ..
-                                              "          or use the Mouse Wheel tab to and set HealBot Menu",
-                                      [16]  = "1:  On the Skins>Bars tab, adjust the disabled bar opacity \n" ..
-                                              "2:  On the Skins>Bars Text tab, adjust the disabled text opacity \n" ..
-                                              "       To do this click on the bar labeled Disabled. \n\n" ..
+                                              "1: On the Skins>Healing tab, turn on Focus \n" ..
+                                              "2: set your focus on the NPC (or PC not in raid/party) \n" ..
+                                              "Healbot will create a bar in your My Targets list \n\n" ..
+                                              "Note: If in a combat situation where you zone in and out\nwhile \n" ..
+                                              "in combat and need to reset focus on an NPC \n" ..
+                                              "on the Skins>Healing tab set Focus: always show to on \n" ..
+                                              "This will keep the bar available during combat. \n\n" ..
+                                              "Note: The HealBot Menu has the option\n'Set HealBot Focus' \n" ..
+                                              "This can make setting focus easy on NPC's and \n" ..
+                                              "serves as a reminder to set focus. \n\n" ..
+                                              "Enter 'hbmenu' on the spells tab to use HealBot Menu \n" ..
+                                              "or use the Mouse Wheel tab to and set HealBot Menu",
+                                      [16]  = "1: On the Skins>Bars tab, adjust the disabled bar\nopacity \n" ..
+                                              "2: On the Skins>Bars Text tab, adjust the disabled text \n" ..
+                                              "opacity to do this click on the bar labeled Disabled. \n\n" ..
                                               "Some my also want to set the Alert Level to 100 \n" ..
                                               "This can be done on the Skins>Healing>Alert tab",
                                       [17]  = "Actually Healbot is casting exacly as the setup. \n\n" .. HEALBOT_ABOUT_FAQ_SPELLS_ANSWER01,
                                       [18]  = HEALBOT_ABOUT_FAQ_SPELLS_ANSWER01,
                                   }
+								  
+	HEALBOT_ABOUT_FAQ_ANSWERS_BUTTON = { [1] = "Not used - Buttons!",
+	                                   }
 
     HEALBOT_OPTIONS_SKINAUTHOR              = "Skin Author"
     HEALBOT_OPTIONS_AVOIDBLUECURSOR         = "Avoid\nBlue Cursor"
@@ -1202,6 +1270,9 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_PROFILE_CLASS           = "Class"
     HEALBOT_OPTIONS_INCOMBATALERTLEVEL      = "Alert Level - In Combat";
     HEALBOT_OPTIONS_OUTCOMBATALERTLEVEL     = "Alert Level - Out of Combat";
+    HEALBOT_OPTION_NUMENEMYS                = "Number of Enemys"
+    HEALBOT_WORD_AUTO                       = "Auto"
+	HEALBOT_OPTIONS_ENABLEAUTOCOMBAT        = "Enable HealBot autoCombat"
 end
 
 if (GetLocale() == "enUK") then

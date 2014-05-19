@@ -20,6 +20,7 @@ Sample:
 		alwaysAlert = true;
 		applicationOnly = true;
 		minimumStacks = 1;
+		maximumStacks = 5;
 		specificMobs = { 123, 234, 345 };
 		test = true;
 		vehicle = true;

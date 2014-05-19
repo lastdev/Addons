@@ -10,7 +10,7 @@ local DropdownFrame = CreateFrame("Frame", "TidyPlatesDropdownFrame", UIParent, 
 local ButtonTexture = "Interface\\Addons\\TidyPlates\\media\\TidyPlatesIcon"
 
 local function GetCurrentSpec()
-	if TidyPlatesUtility.GetSpec(false, false) == 2 then return "secondary" 
+	if TidyPlatesUtility.GetSpec(false, false) == 2 then return "secondary"
 	else return "primary" end
 end
 
@@ -39,7 +39,7 @@ local function InitializeDropdownMenu()
 	DropdownSpacer.text = ""
 	DropdownSpacer.notCheckable = 1
 	DropdownSpacer.isTitle = 1
-	
+
 	-- Title
 	DropdownTitle.text = "Tidy Plates"
 	DropdownTitle.notCheckable = 1
@@ -47,7 +47,7 @@ local function InitializeDropdownMenu()
 	DropdownTitle.padding = 16
 	UIDropDownMenu_AddButton(DropdownTitle)
 	UIDropDownMenu_AddButton(DropdownSpacer)
-	
+
 	-- Theme Choices
 	for name, theme in pairs(TidyPlatesThemeList) do
 		DropdownButton.text = name
@@ -58,13 +58,13 @@ local function InitializeDropdownMenu()
 		else
 			DropdownButton.checked = false
 		end
-		DropdownButton.func = function() SetCurrentTheme(name) end 
+		DropdownButton.func = function() SetCurrentTheme(name) end
 		UIDropDownMenu_AddButton(DropdownButton)
 	end
 
 	if CurrentThemeHasConfigPanel() then
 		UIDropDownMenu_AddButton(DropdownSpacer)
-		
+
 		-- Configure Current
 		DropdownConfigure.text = "Configure Theme"
 		DropdownConfigure.padding = 16
@@ -73,14 +73,14 @@ local function InitializeDropdownMenu()
 		DropdownConfigure.func = ConfigureCurrentTheme
 		UIDropDownMenu_AddButton(DropdownConfigure)
 	end
-	
+
 	--[[ Future Features
 		Toggle Enemy Nameplates
-		Toggle Friendly Nameplates 
+		Toggle Friendly Nameplates
 		Allow overlap
 	--]]
-	
-	
+
+
 end
 
 ----------------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ end
 local function CreateStandaloneIcon()
 	if TidyPlatesIconFrame and TidyPlatesIconFrame.Show then return end
 	local ButtonFrame = CreateFrame("Button", "TidyPlatesIconFrame", UIParent)
-	
+
 	--ButtonFrame:SetUserPlaced()
 	ButtonFrame:SetWidth(31)
 	ButtonFrame:SetHeight(31)
@@ -116,7 +116,7 @@ local function CreateStandaloneIcon()
 	local function OnMouseDown() ButtonIcon:SetTexCoord(-0.1,.9,-0.1,.9) end
 	local function OnMouseUp() ButtonIcon:SetTexCoord(0,1,0,1) end
 
-	local function OnEnter() 
+	local function OnEnter()
 		GameTooltip_SetDefaultAnchor(GameTooltip,UIParent)
 		GameTooltip:AddLine("Tidy Plates")
 		GameTooltip:AddLine("Right-Click: Quick Menu|nLeft-Click: Theme Panel|nMiddle-Click: Tidy Plates Panel",.8,.8,.8,1)
@@ -125,8 +125,8 @@ local function CreateStandaloneIcon()
 
 	local function OnLeave() GameTooltip:Hide() end
 
-	local function OnDragStart() 
-		OnMouseDown() 
+	local function OnDragStart()
+		OnMouseDown()
 		ButtonFrame:StartMoving()
 	end
 
@@ -151,7 +151,7 @@ local function CreateStandaloneIcon()
 	ButtonFrame:EnableMouse(true)
 	ButtonFrame:SetMovable(true)
 	ButtonFrame:SetClampedToScreen(true)
-		
+
 	ButtonFrame:RegisterForClicks("LeftButtonUp","RightButtonUp","MiddleButtonUp")
 	ButtonFrame:SetScript("OnClick",OnClick)
 
@@ -165,7 +165,7 @@ local function CreateStandaloneIcon()
 	ButtonFrame:SetScript("OnDragStop",OnDragStop)
 
 	ButtonFrame:SetPoint("CENTER", UIParent)
-	
+
 	TidyPlatesIconFrame = ButtonFrame
 end
 
@@ -177,7 +177,7 @@ end
 local LibIcon, LibDataBroker
 
 local function CreateDataBrokerIcon()
-	
+
 
 	local ButtonFrameObject = LibDataBroker:NewDataObject(addonName, {
 		type = "launcher",
@@ -210,7 +210,7 @@ local function CreateDataBrokerIcon()
 
 	TidyPlatesOptions.LDB = TidyPlatesOptions.LDB or {}
 	LibIcon:Register(addonName, ButtonFrameObject, TidyPlatesOptions.LDB)
-	
+
 	--[[
 	local ToggleTidyPlatesButton = CreateFrame("CheckButton", "TidyPlatesOptions_HideTidyPlatesButtonFrame", TidyPlatesInterfaceOptions, "InterfaceOptionsCheckButtonTemplate")
 	_G[ToggleTidyPlatesButton:GetName().."Text"]:SetText("Hide Minimap Icon")
@@ -272,6 +272,8 @@ end
 
 SLASH_TIDYPLATESICON1 = '/tidyplatesicon'
 SlashCmdList['TIDYPLATESICON'] = EnableTidyPlatesMiniButton;
-	
-	
+
+
+
+
 

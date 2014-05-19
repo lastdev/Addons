@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Search UI - Filter IgnoreItemauctionhistory
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 	Revision: $Id: FilterItemAuctionHistory.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -138,4 +138,4 @@ function lib.Filter(item, searcher)
 	return false
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-SearchUI/FilterItemAuctionHistory.lua $", "$Rev: 5368 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-SearchUI/FilterItemAuctionHistory.lua $", "$Rev: 5368 $")

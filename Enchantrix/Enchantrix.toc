@@ -1,5 +1,5 @@
 ## Title: Enchantrix
-## Notes: Display information in item tooltips pertaining to disenchanting, prospecting, and milling results.  [5.18.5433] This AddOn is licensed under the GNU GPL, see GPL.txt for details.
+## Notes: Display information in item tooltips pertaining to disenchanting, prospecting, and milling results.  [5.19.5445] This AddOn is licensed under the GNU GPL, see GPL.txt for details.
 ##
 ## Interface: 50400
 ## LoadOnDemand: 1
@@ -8,7 +8,7 @@
 ## SavedVariables: EnchantConfig, EnchantedLocal, EnchantedItemTypes, NonDisenchantablesLocal, ProspectedLocal, MillingLocal
 ## SavedVariablesPerCharacter: AutoDisenchantIgnoreList
 ##
-## Version: 5.18.5433 (PassionatePhascogale)
+## Version: 5.19.5445 (QuiescentQuoll)
 ## Revision: $Id: Enchantrix.toc 5432 2013-09-10 07:59:18Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

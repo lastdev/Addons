@@ -1,8 +1,11 @@
 local mod	= DBM:NewMod(666, "DBM-Party-MoP", 7, 246)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11007 $"):sub(12, -3))
 mod:SetCreatureID(58722)--58722 is Body, 58791 is soul. Body is engaged first
+mod:SetEncounterID(1429)
+mod:SetMinSyncRevision(11007)
+mod:SetReCombatTime(180, 15)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -68,7 +71,7 @@ function mod:SPELL_CAST_START(args)
 		specWarnDeathsGrasp:Show()
 		timerDeathsGraspCD:Start()
 		timerShadowShivCD:Start()--Resets CD when she casts Grasp
-	elseif args:IsSpellID(111775, 115362) then
+	elseif args.spellId == 111775 then
 		warnShadowShiv:Show()
 		timerShadowShivCD:Start()
 	elseif args.spellId == 114262 then--Phase 3, body rezzed and you have soul and body up together.
@@ -86,7 +89,7 @@ end
 
 -- he dies before health 1, so can't use overkill hack.
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId, _, _, _, overkill)
-	if (spellId == 111628 or spellId == 115361) and destGUID == UnitGUID("player") and self:AntiSpam(2) then
+	if spellId == 111628 and destGUID == UnitGUID("player") and self:AntiSpam(2) then
 		specWarnDarkBlaze:Show()
 	end
 end

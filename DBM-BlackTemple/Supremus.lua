@@ -1,18 +1,19 @@
 local mod	= DBM:NewMod("Supremus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 507 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
 mod:SetCreatureID(22898)
 mod:SetModelID(21145)
 mod:SetZone()
 mod:SetUsedIcons(8)
+
+mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_DAMAGE",
 	"SPELL_MISSED",
 	"RAID_BOSS_EMOTE"
 )
-mod:RegisterCombat("combat")
 
 local warnPhase			= mod:NewAnnounce("WarnPhase", 4, 42052)
 local warnKite			= mod:NewAnnounce("WarnKite", 3, 42052)

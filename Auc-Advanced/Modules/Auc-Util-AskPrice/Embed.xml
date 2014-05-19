@@ -4,6 +4,6 @@
 	<Script file="AskPrice.lua"/>
 
 	<Script>
-		AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-AskPrice/Embed.xml $", "$Rev: 3175 $")
+		AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-AskPrice/Embed.xml $", "$Rev: 3175 $")
 	</Script>
 </Ui>

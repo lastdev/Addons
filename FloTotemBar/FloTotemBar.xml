@@ -41,6 +41,18 @@
 					</Anchor>
 				</Anchors>
 			</StatusBar>
+			<StatusBar name="$parentCountdown4" inherits="FloCountdown">
+				<Size>
+					<AbsDimension x="6" y="30"/>
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentCountdown3" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="2" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</StatusBar>
 		</Frames>
 		<Scripts>
 			<OnLoad>
@@ -139,15 +151,4 @@
 			</OnUpdate>
 		</Scripts>
 	</Frame>
-
-	<Frame name="FloBarSEAL" inherits="FloTotemBarTemplate">
-		<Anchors>
-			<Anchor point="TOPLEFT" relativeTo="UIParent" relativePoint="TOPLEFT">
-				<Offset>
-					<AbsDimension x="0" y="120"/>
-				</Offset>
-			</Anchor>
-		</Anchors>
-	</Frame>
-
 </Ui>

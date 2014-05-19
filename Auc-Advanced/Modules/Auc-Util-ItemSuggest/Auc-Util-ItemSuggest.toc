@@ -3,7 +3,7 @@
 ## OptionalDependencies:
 ## Dependencies: Auc-Advanced
 ##
-## Version: 5.18.5433 (PassionatePhascogale)
+## Version: 5.19.5445 (QuiescentQuoll)
 ## Revision: $Id: Auc-Util-ItemSuggest.toc 5432 2013-09-10 07:59:18Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

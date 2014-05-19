@@ -5,7 +5,7 @@
 
 	AddOn: EnchantrixBarker
 	Revision: $Id: BarkerStrings.lua 5402 2013-04-01 14:03:25Z brykrys $
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 
 	License:
 		This program is free software; you can redistribute it and/or

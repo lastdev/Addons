@@ -1,6 +1,6 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.0 (<%codename%>)
+	Version: 4.4.1 (<%codename%>)
 	Revision: $Id: GatherCommand.lua 927 2011-10-05 01:25:05Z kjasi $
 
 	License:
@@ -27,7 +27,7 @@
 
 	Command parsing and processing
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.0/Gatherer/GatherCommand.lua $", "$Rev: 927 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherCommand.lua $", "$Rev: 927 $")
 
 SLASH_GATHERER1 = "/gather"
 SLASH_GATHERER2 = "/gatherer"

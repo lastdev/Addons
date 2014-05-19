@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("Kal", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 503 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 530 $"):sub(12, -3))
 mod:SetCreatureID(24850)
 mod:SetModelID(26628)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_APPLIED",
@@ -69,7 +69,7 @@ end
 
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 44987 and args:IsPlayer() and self:IsHealer() then
+	if args.spellId == 44978 and args:IsPlayer() and self:IsHealer() then
 		specWarnWildMagic:Show(L.Heal)
 	elseif args.spellId == 45001 and args:IsPlayer() then
 		specWarnWildMagic:Show(L.Haste)

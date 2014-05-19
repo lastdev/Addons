@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 	Revision: $Id: CoreModule.lua 5313 2012-07-27 13:29:49Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -154,4 +154,4 @@ function lib.CoreModuleOnLoad(addon)
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreModule.lua $", "$Rev: 5313 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/CoreModule.lua $", "$Rev: 5313 $")

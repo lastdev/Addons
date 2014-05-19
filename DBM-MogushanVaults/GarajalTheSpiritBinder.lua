@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod(682, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 9663 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10980 $"):sub(12, -3))
 mod:SetCreatureID(60143)
+mod:SetEncounterID(1434)
 mod:SetZone()
 mod:SetUsedIcons(5, 6, 7, 8)
 mod:SetMinSyncRevision(7751)
@@ -10,10 +11,10 @@ mod:SetMinSyncRevision(7751)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REFRESH",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_SUCCESS",
+	"SPELL_AURA_APPLIED 122151 116161 116260 116278 117543 117549 117723 117752",
+	"SPELL_AURA_REFRESH 122151 116161 116260 116278 117543 117549 117723 117752",
+	"SPELL_AURA_REMOVED 116161 116260 116278 122151 117543 115749 117723",
+	"SPELL_CAST_SUCCESS 116174 116272",
 	"UNIT_SPELLCAST_SUCCEEDED boss1"
 )
 
@@ -113,8 +114,9 @@ function mod:OnCombatStart(delay)
 	end
 end
 
-function mod:SPELL_AURA_APPLIED(args)--We don't use spell cast success for actual debuff on >player< warnings since it has a chance to be resisted.
-	if args.spellId == 122151 then
+function mod:SPELL_AURA_APPLIED(args)
+	local spellId = args.spellId
+	if spellId == 122151 then--We don't use spell cast success for actual debuff on >player< warnings since it has a chance to be resisted.
 		if args:IsPlayer() then
 			specWarnVoodooDollsYou:Show()
 		end
@@ -134,23 +136,23 @@ function mod:SPELL_AURA_APPLIED(args)--We don't use spell cast success for actua
 			self:Unschedule(warnCrossedOverTargets)
 			self:Schedule(0.3, warnCrossedOverTargets)		
 		end
-	elseif args.spellId == 116278 then--this is tank spell, no delays?
+	elseif spellId == 116278 then--this is tank spell, no delays?
 		if args:IsPlayer() then--no latency check for personal notice you aren't syncing.
 			timerSoulSever:Start()
 			countdownCrossedOver:Start(29)
 			warnSuicide:Schedule(25)
 		end
-	elseif args.spellId == 117543 and args:IsPlayer() then -- 117543 is healer spell, 117549 is dps spell
+	elseif spellId == 117543 and args:IsPlayer() then -- 117543 is healer spell, 117549 is dps spell
 		timerSpiritualInnervation:Start()
-	elseif args.spellId == 117549 and args:IsPlayer() then -- 117543 is healer spell, 117549 is dps spell
+	elseif spellId == 117549 and args:IsPlayer() then -- 117543 is healer spell, 117549 is dps spell
 		if self:IsDifficulty("lfr25") then
 			timerSpiritualInnervation:Start(40)
 		else
 			timerSpiritualInnervation:Start()
 		end
-	elseif args.spellId == 117723 and args:IsPlayer() then
+	elseif spellId == 117723 and args:IsPlayer() then
 		timerFrailSoul:Start()
-	elseif args.spellId == 117752 then
+	elseif spellId == 117752 then
 		warnFrenzy:Show()
 		if not self:IsDifficulty("lfr25") then--lfr continuing summon totem below 20%
 			timerTotemCD:Cancel()
@@ -159,30 +161,32 @@ function mod:SPELL_AURA_APPLIED(args)--We don't use spell cast success for actua
 end
 mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED
 
-function mod:SPELL_AURA_REMOVED(args)--We don't use spell cast success for actual debuff on >player< warnings since it has a chance to be resisted.
+function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
 	if args:IsSpellID(116161, 116260) and args:IsPlayer() then
 		if not self:IsDifficulty("lfr25") then
 			warnSuicide:Cancel()
 		end
 		timerCrossedOver:Cancel()
 		countdownCrossedOver:Cancel()
-	elseif args.spellId == 116278 and args:IsPlayer() then
+	elseif spellId == 116278 and args:IsPlayer() then
 		warnSuicide:Cancel()
 		timerSoulSever:Cancel()
 		countdownCrossedOver:Cancel()
-	elseif args.spellId == 122151 then
+	elseif spellId == 122151 then
 		self:SendSync("VoodooGoneTargets", args.destGUID)
 	elseif args:IsSpellID(117543, 117549) and args:IsPlayer() then
 		timerSpiritualInnervation:Cancel()
-	elseif args.spellId == 117723 and args:IsPlayer() then
+	elseif spellId == 117723 and args:IsPlayer() then
 		timerFrailSoul:Cancel()
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 116174 and self:LatencyCheck() then
+	local spellId = args.spellId
+	if spellId == 116174 and self:LatencyCheck() then
 		self:SendSync("SummonTotem")
-	elseif args.spellId == 116272 then
+	elseif spellId == 116272 then
 		if args:IsPlayer() then--no latency check for personal notice you aren't syncing.
 			specWarnBanishment:Show()
 		end

@@ -3,6 +3,8 @@ local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+local LCI = LibStub("LibCraftInfo-1.0")
+local LCR = LibStub("LibCraftReagents-1.0")
 
 local WHITE				= "|cFFFFFFFF"
 local TEAL				= "|cFF00FF9A"
@@ -95,7 +97,7 @@ local function BuildView()
 					hideLine = true
 				elseif currentSlots ~= ALL_INVENTORY_SLOTS then
 					if info then	-- on a data line, info contains the itemID and is numeric
-						local itemID = DataStore:GetCraftInfo(info)
+						local itemID = LCI:GetCraftResultItem(info)
 						if itemID then
 							local _, _, _, _, _, itemType, _, _, itemEquipLoc = GetItemInfo(itemID)
 
@@ -154,8 +156,6 @@ function ns:Update()
 	local profession = DataStore:GetProfession(character, currentProfession)
 	
 	_G[parent .. "Info"]:Show()
-
-	local curRank, maxRank = DataStore:GetProfessionInfo(DataStore:GetProfession(character, currentProfession))
 	
 	local offset = FauxScrollFrame_GetOffset( _G[ parent.."ScrollFrame" ] );
 	local DisplayedCount = 0
@@ -218,7 +218,8 @@ function ns:Update()
 				_G[entry..i.."Collapse"]:Hide()
 
 				local _, color, spellID = DataStore:GetCraftLineInfo(profession, s)
-				local itemID, reagents = DataStore:GetCraftInfo(spellID)
+				local itemID = LCI:GetCraftResultItem(spellID)
+				local reagents = LCR:GetCraftReagents(spellID)
 				
 				if itemID then
 					Altoholic:SetItemButtonTexture(entry..i.."Craft", GetItemIcon(itemID), 18, 18);
@@ -240,10 +241,10 @@ function ns:Update()
 				local j = 1
 				
 				if reagents then
-					-- "2996x2;2318x1;2320x1"
-					for reagent in reagents:gmatch("([^;]+)") do
+					-- "2996,2|2318,1|2320,1"
+					for reagent in reagents:gmatch("([^|]+)") do
 						local itemName = entry..i .. "Item" .. j;
-						local reagentID, reagentCount = strsplit("x", reagent)
+						local reagentID, reagentCount = strsplit(",", reagent)
 						reagentID = tonumber(reagentID)
 						
 						if reagentID then

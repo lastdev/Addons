@@ -1,3 +1,9 @@
+== Version 50400.1.2
+* Destruction: Shadowburn flashing is now optional (yellow) at certain times, to let you pool its usage for procs.
+* Destruction: Stopped Conflagrate from flashing as optional when it's better to use Chaos Bolt.
+* Destruction: Added flashing yor Chaos Bolt / Shadowburn when out of mana for Incinerate.
+* All: Flashes WoW's 9th Anniversary Celebration Package.
+
 == Version 50400.1.1
 * Destruction: Updated the priorities based on new research.
 

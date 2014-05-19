@@ -53,6 +53,7 @@ a.SpellIDs = {
 	["Scarlet Fever"] = 81132,
 	["Scent of Blood"] = 50421,
 	["Scourge Strike"] = 55090,
+	["Soul Reaper - Blood"] = 114866,
 	["Soul Reaper - Frost"] = 130735,
 	["Soul Reaper - Unholy"] = 130736,
 	["Shadow Infusion"] = 91342,
@@ -95,5 +96,12 @@ a.EquipmentSets = {
 	    ChestSlot = { 95825, 96569, 95225 },
 	    HandsSlot = { 95826, 96570, 95226 },
 	    LegsSlot = { 95828, 96572, 95228 },
+	},
+	BloodT16 = {
+	    HeadSlot = { 99190, 99049, 99605, 99323 },
+	    ShoulderSlot = { 99179, 99040, 99652, 99325 },
+	    ChestSlot = { 99188, 99060, 99640, 99330 },
+	    HandsSlot = { 99189, 99048, 99604, 99331 },
+	    LegsSlot = { 99191, 99039, 99564, 99324 },
 	},
 }

@@ -1,8 +1,10 @@
 local mod	= DBM:NewMod(155, "DBM-ThroneFourWinds", nil, 75)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
 mod:SetCreatureID(46753)
+mod:SetEncounterID(1034)
+mod:DisableEEKillDetection()
 mod:SetZone()
 mod:SetUsedIcons(8)
 
@@ -125,11 +127,10 @@ function mod:SPELL_AURA_APPLIED(args)
 			end
 		end
 		if self.Options.LightningRodIcon then
-			self:SetIcon(args.destName, 8)
+			self:SetIcon(args.destName, 8, 5)
 		end
 	end
 end
-
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
@@ -177,7 +178,6 @@ end
 mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
---	"<42.5> [CAST_SUCCEEDED] Al'Akir:Possible Target<Erej>:boss1:Squall Line::0:91129", -- [870]
 	if spellId == 91129 and self:AntiSpam(2, 3) then -- Squall Line (Tornados)
 		warnSquallLine:Show()
 		if not phase2Started then
@@ -185,16 +185,13 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		else
 			timerSquallLineCD:Start()
 		end
---	"<37.6> [CAST_SUCCEEDED] Al'Akir:Possible Target<Erej>:boss1:Ice Storm::0:88239", -- [462]
 	elseif spellId == 88239 and self:AntiSpam(2, 4) then -- Ice Storm (Phase 1)
 		warnIceStorm:Show()
 		timerIceStormCD:Start()
---	"<94.2> [CAST_SUCCEEDED] Al'Akir:Possible Target<Erej>:boss1:Stormling::0:88272", -- [5155]
 	elseif spellId == 88272 and self:AntiSpam(2, 4) then -- Summon Stormling (Phase 2 add)
 		warnAdd:Show()
 		timerAddCD:Start()
---	"<83.2> [CAST_SUCCEEDED] Al'Akir:Possible Target<Erej>:boss1:Acid Rain::0:101452", -- [4307]
-	elseif spellId == 101452 and self:AntiSpam(2, 5) then -- Acid Rain
+	elseif spellId == 88290 and self:AntiSpam(2, 5) then -- Acid Rain
 		if self:IsDifficulty("normal10", "normal25") then
 			timerAcidRainStack:Start(20)
 		else
@@ -205,20 +202,18 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			warnPhase2:Show()
 			timerWindBurstCD:Cancel()
 			timerIceStormCD:Cancel()
+			self:UnregisterShortTermEvents()
 		end
---	"<229.0> [CAST_SUCCEEDED] Al'Akir:Possible Target<Erej>:boss1:Relentless Storm Initial Vehicle Ride Trigger::0:89528", -- [18459]
 	elseif spellId == 89528 and self:AntiSpam(2, 6) then -- Relentless Storm Initial Vehicle Ride Trigger (phase 3 start trigger)
 		warnPhase3:Show()
 		timerLightningCloudCD:Start(15.5)
 		timerWindBurstCD:Start(25)
 		timerLightningRodCD:Start(20)
 		timerAddCD:Cancel()
+		timerSquallLineCD:Cancel()
 		timerAcidRainStack:Cancel()
-		self:UnregisterShortTermEvents()
---	"<244.5> [CAST_SUCCEEDED] Al'Akir:Possible Target<nil>:boss1:Lightning Clouds::0:93304", -- [19368]
-	elseif spellId == 93304 and self:AntiSpam(2, 3) then -- Phase 3 Lightning cloud trigger (only cast once)
+	elseif spellId == 89639 and self:AntiSpam(2, 3) then -- Phase 3 Lightning cloud trigger (only cast once)
 		self:CloudRepeat()
-		--Only needed in phase 2
 		self:RegisterShortTermEvents(
 			"SPELL_DAMAGE",
 			"SPELL_MISSED"

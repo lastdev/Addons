@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("Oz", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 515 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
 mod:SetCreatureID(18168)
 mod:SetModelID(17550)
 mod:RegisterCombat("yell", L.DBM_OZ_YELL_DOROTHEE)
 mod:SetMinCombatTime(25)
 mod:SetWipeTime(30)
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",

@@ -42,7 +42,7 @@ local UpdateStyle
 local UpdateIndicator_CustomScaleText, UpdateIndicator_Standard, UpdateIndicator_CustomAlpha
 local UpdateIndicator_Level, UpdateIndicator_ThreatGlow, UpdateIndicator_RaidIcon
 local UpdateIndicator_EliteIcon, UpdateIndicator_UnitColor, UpdateIndicator_Name
-local UpdateIndicator_HealthBar
+local UpdateIndicator_HealthBar, UpdateIndicator_Target
 local OnUpdateCastbar, OnShowCastbar, OnHideCastbar
 
 -- Event Functions
@@ -133,7 +133,10 @@ do
 				if not plate.isMouseover then
 					plate.isMouseover = true
 					UpdateMe = true
+				--print(GetTime(), extended.unit.name)
+				--print()
 				end
+
 			elseif plate.isMouseover then
 				plate.isMouseover = false
 				UpdateMe = true
@@ -154,9 +157,19 @@ do
 			-- Scaling Animation
 
 			-- Alpha Animation
+			--EnableFadeIn
+			local increment = e * 3
 			if extended.visibleAlpha ~= extended.requestedAlpha then
-				extended:SetAlpha(extended.requestedAlpha)
-				extended.visibleAlpha = extended.requestedAlpha
+
+				if EnableFadeIn and extended.requestedAlpha > extended.visibleAlpha + increment then
+					extended.visibleAlpha = extended.visibleAlpha + increment
+				elseif EnableFadeIn and extended.requestedAlpha < extended.visibleAlpha - (increment * 1.5) then
+					extended.visibleAlpha = extended.visibleAlpha - (increment * 1.5)
+				else
+					extended.visibleAlpha = extended.requestedAlpha
+				end
+
+				extended:SetAlpha(extended.visibleAlpha)
 			end
 
 			-- Restore Carrier
@@ -191,7 +204,6 @@ do
 	-- ApplyPlateExtesion
 	function OnNewNameplate(plate)
 		Plates[plate] = true
-
 
 		-- Blizzard References
 		--------------------------------
@@ -256,8 +268,10 @@ do
         -- Tidy Plates Frame
         --------------------------------
 		local carrier
-		if CompatibilityMode then carrier = CreateFrame("Frame", nil, plate)
-			else carrier = CreateFrame("Frame", nil, WorldFrame) end
+		local frameName = "TidyPlatesCarrier"..numChildren
+
+		if CompatibilityMode then carrier = CreateFrame("Frame", frameName, plate)
+			else carrier = CreateFrame("Frame", frameName, WorldFrame) end
 
 		local extended = CreateFrame("Frame", nil, carrier)
 
@@ -304,10 +318,10 @@ do
 		castbar:SetStatusBarColor(1,.8,0)
 		carrier:SetSize(16, 16)
 		-- Default Fonts
-		visual.customtext:SetFont(NAMEPLATE_FONT, 12, "NONE")
-		visual.name:SetFont(NAMEPLATE_FONT, 12, "NONE")
-		visual.level:SetFont(NAMEPLATE_FONT, 12, "NONE")
-		visual.spelltext:SetFont(NAMEPLATE_FONT, 12, "NONE")
+		visual.customtext:SetFont(STANDARD_TEXT_FONT, 12, "NONE")
+		visual.name:SetFont(STANDARD_TEXT_FONT, 12, "NONE")
+		visual.level:SetFont(STANDARD_TEXT_FONT, 12, "NONE")
+		visual.spelltext:SetFont(STANDARD_TEXT_FONT, 12, "NONE")
 
 		-- Tidy Plates Frame References
 		extended.regions = regions
@@ -563,16 +577,20 @@ do
 	-- UpdateUnitIdentity: Updates Low-volatility Unit Data
 	function UpdateUnitIdentity()
 		unit.name = regions.name:GetText()
+		unit.rawName = gsub(unit.name, " %(%*%)", "")
+
 		unit.isBoss = regions.skullicon:IsShown()
 		unit.isDangerous = unit.isBoss
 		unit.isElite = (regions.eliteicon:IsShown() or 0) == 1
 
 		if bars.group:GetScale() > .9 then
 			unit.platetype = 1
-			unit.isTrivial = false
+			unit.isTrivial = false; unit.isMini = false
+
 		else
 			unit.platetype = 2
-			unit.isTrivial = true
+			unit.isTrivial = true; unit.isMini = true
+
 		end
 
 		if unit.isBoss then
@@ -684,6 +702,7 @@ do
 	-- UpdateIndicator_Name:
 	function UpdateIndicator_Name()
 		visual.name:SetText(unit.name)
+
 		-- Name Color
 		if activetheme.SetNameColor then
 			visual.name:SetTextColor(activetheme.SetNameColor(unit))
@@ -827,12 +846,13 @@ do
 
 		if activetheme.SetCastbarColor then
 			r, g, b, a = activetheme.SetCastbarColor(unit)
-			if not (r and g and b) then return end
+			if not (r and g and b and a) then return end
 		end
 
 		castbar:SetValue( bar:GetValue())
 		castbar:SetMinMaxValues(bar:GetMinMaxValues())
-		castbar:SetStatusBarColor( r, g, b, a or 1)
+		castbar:SetStatusBarColor( r, g, b)
+		castbar:SetAlpha(a or 1)
 
 		visual.spelltext:SetText(unit.spellName)
 
@@ -850,7 +870,7 @@ do
 		local castbar = extended.visual.castbar
 
 		if not unit.health then return end
-		if unit.reaction == "FRIENDLY" then return end
+		--if unit.reaction == "FRIENDLY" then	return end
 
 		OnUpdateCastbar(bar)
 		castbar:Show()
@@ -997,6 +1017,8 @@ do
 		for index = 1, #bargroup do objectname = bargroup[index]; SetBarGroupObject(visual[objectname], style[objectname], extended) end
 		-- Texture
 		for index = 1, #texturegroup do objectname = texturegroup[index]; SetTextureGroupObject(visual[objectname], style[objectname]) end
+		-- Raid Icon Texture
+		visual.raidicon:SetTexture(style.raidicon.texture)
 		-- Font Group
 		for index = 1, #fontgroup do objectname = fontgroup[index];SetFontGroupObject(visual[objectname], style[objectname]) end
 		-- Hide Stuff
@@ -1023,7 +1045,6 @@ function TidyPlates:EnableFadeIn() EnableFadeIn = true; end
 function TidyPlates:DisableFadeIn() EnableFadeIn = nil; end
 function TidyPlates:EnableCompatibilityMode() CompatibilityMode = true; end
 TidyPlates.NameplatesByGUID, TidyPlates.NameplatesAll, TidyPlates.NameplatesByVisible = GUID, Plates, PlatesVisible
-
 
 
 

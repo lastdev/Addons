@@ -7,7 +7,7 @@ local util = oRA.util
 local module = oRA:NewModule("Latency")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 
-module.VERSION = tonumber(("$Revision: 645 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 712 $"):sub(12, -3))
 
 local latency = {}
 
@@ -63,8 +63,8 @@ do
 				k = #latency + 1
 				latency[k] = { sender }
 			end
-			latency[k][2] = latencyHome
-			latency[k][3] = latencyWorld
+			latency[k][2] = tonumber(latencyHome)
+			latency[k][3] = tonumber(latencyWorld)
 
 			oRA:UpdateList(L["Latency"])
 		end

@@ -2,7 +2,7 @@
 local addonName, vars = ...
 vars.SpellData = {}
 vars.svnrev = {}
-vars.svnrev["SpellData.lua"] = tonumber(("$Revision: 363 $"):match("%d+"))
+vars.svnrev["SpellData.lua"] = tonumber(("$Revision: 382 $"):match("%d+"))
 
 
 vars.SpellData.foods = {
@@ -61,6 +61,9 @@ vars.SpellData.flasks = {
 	105693, -- Flask of Falling Leaves
 	105694, -- Flask of the Earth
 	105696, -- Flask of Winter\'s Bite
+	105617, -- Alchemist's Flask - MoP but not as good as other flasks
+        127230, -- Crystal of Insanity - MoP but not as good as other flasks
+
 }
 
 vars.SpellData.elixirGuardian = {

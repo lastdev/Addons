@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 585 2013-03-02T14:19:03Z
+    Revision: 602 2013-12-07T22:13:41Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -220,23 +220,23 @@ function Armory:FindGlyphs(...)
 end
 
 local knownBy = {};
-local function AddKnownBy(name)
-    if ( Armory:GetConfigShowKnownBy() and name ~= Armory.player ) then
-        table.insert(knownBy, name);
+local function AddKnownBy(profile)
+    if ( Armory:GetConfigShowKnownBy() and not Armory:IsPlayerSelected(profile) ) then
+		table.insert(knownBy, Armory:GetQualifiedCharacterName(profile, true));
     end
 end
 
 local canLearn = {};
-local function AddCanLearn(name)
+local function AddCanLearn(profile)
     if ( Armory:GetConfigShowCanLearn() ) then
-        table.insert(canLearn, name);
+        table.insert(canLearn, Armory:GetQualifiedCharacterName(profile, true));
     end
 end
 
 local hasSkill = {};
-local function AddHasSkill(name)
+local function AddHasSkill(profile)
     if ( Armory:GetConfigShowHasSkill() ) then
-        table.insert(hasSkill, name);
+        table.insert(hasSkill, Armory:GetQualifiedCharacterName(profile, true));
     end
 end
 
@@ -248,8 +248,8 @@ function Armory:GetGlyphAltInfo(name, reqClass, reqLevel)
     if ( self:HasGlyphs() ) then
         local currentProfile = self:CurrentProfile();
 
-        for _, character in ipairs(self:CharacterList(self.playerRealm)) do
-            self:LoadProfile(self.playerRealm, character);
+        for _, profile in ipairs(self:GetConnectedProfiles()) do
+            self:SelectProfile(profile);
             
             local class = self:UnitClass("player");
             if ( reqClass == class ) then
@@ -257,15 +257,15 @@ function Armory:GetGlyphAltInfo(name, reqClass, reqLevel)
                 local known = self:GetGlyphInfoByName(name);
                 
                 if ( known ) then
-                    AddKnownBy(character);
+                    AddKnownBy(profile);
                 elseif ( reqLevel ) then
                     local learnable = self:UnitLevel("player") >= reqLevel;
                     local attainable = not learnable;
                     
                     if ( attainable ) then
-                        AddHasSkill(character);
+                        AddHasSkill(profile);
                     elseif ( learnable ) then
-                        AddCanLearn(character);
+                        AddCanLearn(profile);
                     end
                 end
             end

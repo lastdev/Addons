@@ -1,7 +1,7 @@
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "Foods", 2) then
+if u.SkipOrUpgrade(c, "Foods", 4) then
 	return
 end
 
@@ -25,6 +25,7 @@ local foods = {
 		},
 		[300] = {
 			74648, -- Sea Mist Rice Noodles
+			145305, -- Seasoned Pomfruit Slices
 		},
 	},
 	Crit = {
@@ -34,6 +35,7 @@ local foods = {
 		[200] = {
 			81410, -- Green Curry Fish
 			98123, -- Whale Shark Caviar
+			104344, -- Lucky Mushroom Noodle
 		},
 	}, 
 	Dodge = {
@@ -43,6 +45,7 @@ local foods = {
 		[200] = {
 			81412, -- Blanched Needle Mushrooms
 			98125, -- Shaved Zangar Truffles
+			104340, -- Crazy Snake Noodles
 		},
 	},
 	Expertise = {
@@ -52,6 +55,7 @@ local foods = {
 		[200] = {
 			89121, -- Amberseed Bun
 			81408, -- Red Bean Bun
+			104343, -- Golden Dragon Noodles
 		},
 		[275] = {
 			86069, -- Rice Pudding
@@ -67,6 +71,7 @@ local foods = {
 		[200] = {
 			98122, -- Camembert du Clefthoof
 			81409, -- Tangy Yogurt
+			104341, -- Steaming Goat Noodles
 		},
 	},
 	Hit = {
@@ -76,6 +81,7 @@ local foods = {
 		[200] = {
 			98126, -- Mechanopeep Foie Gras
 			81413, -- Skewered Peanut Chicken
+			104342, -- Spicy Mushan Noodles
 		},
 		[275] = {
 			86070, -- Wildfowl Ginseng Soup
@@ -93,6 +99,7 @@ local foods = {
 		},
 		[300] = {
 			74650, -- Mogu Fish Stew
+			145307, -- Spiced Blossom Soup
 		},
 	},
 	Mastery = {
@@ -105,6 +112,9 @@ local foods = {
 			94535, -- Grilled Dinosaur Haunch
 			81414, -- Pearl Milk Tea
 		},
+		[300] = {
+			145308, -- Mango Ice
+		},
 	},
 	Parry = {
 		[100] = {
@@ -113,6 +123,18 @@ local foods = {
 		[200] = {
 			98124, -- Bloodberry Tart
 			81411, -- Peach Pie
+			104339, -- Harmonious River Noodles
+		},
+	},
+	Smart = {
+		[250] = {
+			101616, -- Noodle Soup
+		},
+		[275] = {
+			101617, -- Deluxe Noodle Soup
+		},
+		[300] = {
+			101618, -- Pandaren Treasure Noodle Soup
 		},
 	},
 	Spirit = {
@@ -124,6 +146,7 @@ local foods = {
 		},
 		[300] = {
 			74653, -- Steamed Crab Surprise
+			145309, -- Farmer's Delight
 		},
 	},
 	Stamina = {
@@ -135,6 +158,7 @@ local foods = {
 		},
 		[450] = {
 			74656, -- Chun Tian Spring Rolls
+			145310, -- Stuffed Lushrooms
 		},
 	},
 	Stats = {
@@ -151,6 +175,7 @@ local foods = {
 		},
 		[300] = {
 			74646, -- Black Pepper Ribs and Shrimp
+			145311, -- Fluffy Silkfeather Omlet
 		},
 	},
 }
@@ -180,6 +205,7 @@ function c.FlashFoods(stats)
 	
 	flashFoods("Mastery")
 	flashFoods("Stats")
+	flashFoods("Smart")
 	
 	for _, stat in pairs(stats) do
 		if stat == "Spell Hit" then

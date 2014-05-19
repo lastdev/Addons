@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod(688, "DBM-Party-MoP", 9, 316)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10805 $"):sub(12, -3))
 mod:SetCreatureID(59789)
+mod:SetEncounterID(1423)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -34,14 +35,14 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsSpellID(115297, 116648) then
+	if args.spellId == 115297 then
 		warnEvictSoul:Show(args.destName)
 		timerEvictSoul:Start(args.destName)
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args:IsSpellID(115297, 116648) then
+	if args.spellId == 115297 then
 		timerEvictSoul:Cancel(args.destName)
 	end
 end

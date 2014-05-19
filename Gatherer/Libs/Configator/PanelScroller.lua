@@ -1,6 +1,6 @@
 --[[
 	PanelScroller
-	Version: 4.4.0 (<%codename%>)
+	Version: 4.4.1 (<%codename%>)
 	Revision: $Id: PanelScroller.lua 312 2011-06-14 07:33:25Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 

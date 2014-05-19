@@ -10,7 +10,7 @@ local candy = LibStub("LibCandyBar-3.0")
 local media = LibStub("LibSharedMedia-3.0")
 local LGIST = LibStub("LibGroupInSpecT-1.0")
 
-module.VERSION = tonumber(("$Revision: 663 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 684 $"):sub(12, -3))
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -72,7 +72,7 @@ local spells = {
 		[1850]  = 180,  -- Dash
 		[740]   = 480,  -- Tranquility
 		[77761] = 120,  -- Stampeding Roar
-		[102342] = 120, -- Ironbark
+		[102342] = 60, -- Ironbark
 		[102359] = 30,  -- Mass Entanglement
 		[106731] = 180, -- Incarnation --XXX does this need the different stance versions? z.z
 		[106737] = 180, -- Force of Nature  --XXX does this need the different stance versions? z.z
@@ -80,11 +80,11 @@ local spells = {
 	HUNTER = {
 		[34477] = 30,   -- Misdirection
 		[5384]  = 30,   -- Feign Death
-		[781]   = 25,   -- Disengage
-		[19263] = 120,  -- Deterrence
+		[781]   = 20,   -- Disengage
+		[19263] = 180,  -- Deterrence --- XXX need to figure out how to deal with multiple charges (cd doesn't start until the second charge is used, second charge cd doesn't start until first charge is off cd)
 		[34490] = 24,   -- Silencing Shot
+		[147362] = 24,  -- Counter Shot
 		[19386] = 45,   -- Wyvern Sting
-		[23989] = 300,  -- Readiness
 		[13809] = 30,   -- Ice Trap
 		[82941] = 30,   -- Ice Trap + Launcher
 		[1499]  = 30,   -- Freezing Trap
@@ -677,7 +677,19 @@ do
 		GameTooltip:Hide()
 	end
 
-	local function sortBySpellName(a, b) return GetSpellInfo(a) < GetSpellInfo(b) end
+	local function sortBySpellName(a, b)
+		local spellA = GetSpellInfo(a)
+		if not spellA then
+			print("oRA: Invalid spell id:", a)
+			return
+		end
+		local spellB = GetSpellInfo(b)
+		if not spellB then
+			print("oRA: Invalid spell id:", b)
+			return
+		end
+		return spellA < spellB
+	end
 	local function dropdownGroupCallback(widget, event, key)
 		widget:PauseLayout()
 		widget:ReleaseChildren()

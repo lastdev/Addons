@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Rotface", "DBM-Icecrown", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 58 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 120 $"):sub(12, -3))
 mod:SetCreatureID(36627)
+mod:SetEncounterID(1104)
 mod:SetModelID(31005)
 mod:SetUsedIcons(7, 8)
 mod:RegisterCombat("combat")
@@ -110,7 +111,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args:IsPlayer() and args.spellId == 71208 then
+	if args:IsPlayer() and args.spellId == 69774 then
 		specWarnStickyOoze:Show()
 	elseif args.spellId == 69760 then
 		warnRadiatingOoze:Show()

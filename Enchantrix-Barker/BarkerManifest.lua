@@ -1,6 +1,6 @@
 --[[
 	Enchantrix:Barker Addon for World of Warcraft(tm).
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 	Revision: $Id: BarkerManifest.lua 5403 2013-04-03 16:50:32Z brykrys $
 	URL: http://enchantrix.org/
 
@@ -105,4 +105,4 @@ function manifest.Validate()
 	return true
 end
 
-EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Enchantrix-Barker/BarkerManifest.lua $", "$Rev: 5403 $")
+EnchantrixBarker_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Enchantrix-Barker/BarkerManifest.lua $", "$Rev: 5403 $")

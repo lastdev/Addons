@@ -1,6 +1,6 @@
 ** HealBot Continued **
 
-Latest Download from Curse: http://www.curse.com/addons/wow/heal-bot-continued
+Visit the Healbot website for latest download and information on Healbot: http://healbot.darktech.org
 
 
 

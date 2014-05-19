@@ -2,7 +2,7 @@ local oRA = LibStub("AceAddon-3.0"):GetAddon("oRA3")
 local module = oRA:NewModule("ReadyCheck", "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 
-module.VERSION = tonumber(("$Revision: 667 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 708 $"):sub(12, -3))
 
 local readycheck = {} -- table containing ready check results
 local frame -- will be filled with our GUI frame
@@ -10,6 +10,13 @@ local frame -- will be filled with our GUI frame
 local playerName = UnitName("player")
 local _, playerClass = UnitClass("player")
 local topMemberFrames, bottomMemberFrames = {}, {} -- ready check member frames
+
+local roleIcons = {
+	["TANK"] = INLINE_TANK_ICON,
+	["HEALER"] = INLINE_HEALER_ICON,
+	["DAMAGER"] = INLINE_DAMAGER_ICON,
+	["NONE"] = "",
+}
 
 local readychecking = nil
 
@@ -144,7 +151,8 @@ local function setMemberStatus(num, bottom, name, class)
 		f = topMemberFrames[num] or createTopFrame()
 	end
 	local color = oRA.classColors[class]
-	f.NameText:SetText(name:gsub("%-.*$", ""))
+	local cleanName = name:gsub("%-.+", "*")
+	f.NameText:SetFormattedText("%s%s", roleIcons[UnitGroupRolesAssigned(name)], cleanName)
 	f.NameText:SetTextColor(color.r, color.g, color.b)
 	f:SetAlpha(1)
 
@@ -383,6 +391,31 @@ local function createWindow()
 	end)
 end
 
+local function sysprint(msg)
+	local filters = ChatFrame_GetMessageEventFilters("CHAT_MSG_SYSTEM")
+	if filters then
+		for _, func in next, filters do
+			local filter, newMsg = func(nil, "CHAT_MSG_SYSTEM", msg)
+			if filter then
+				return true
+			elseif newMsg then
+				msg = newMsg
+			end
+		end
+	end
+
+	local info = ChatTypeInfo["SYSTEM"]
+	for i=1, NUM_CHAT_WINDOWS do
+		local frame = _G["ChatFrame"..i]
+		for _, msgType in ipairs(frame.messageTypeList) do
+			if msgType == "SYSTEM" then
+				frame:AddMessage(msg, info.r, info.g, info.b, info.id)
+				break
+			end
+		end
+	end
+end
+
 function module:OnRegister()
 	self.db = oRA.db:RegisterNamespace("ReadyCheck", defaults)
 	oRA:RegisterModuleOptions("ReadyCheck", getOptions, READY_CHECK)
@@ -412,16 +445,17 @@ function module:READY_CHECK(initiator, duration)
 	readychecking = self:ScheduleTimer("READY_CHECK_FINISHED", duration+1) -- for preempted finishes (READY_CHECK_FINISHED fires before READY_CHECK)
 
 	wipe(readycheck)
-	local c = ChatTypeInfo["SYSTEM"]
 	local promoted = oRA:IsPromoted()
 	-- fill with default "No Response" and set the initiator "Ready"
 	if IsInRaid() then
 		for i = 1, GetNumGroupMembers() do
 			local name, _, _, _, _, _, _, online = GetRaidRosterInfo(i)
-			local status = not online and "offline" or GetReadyCheckStatus(name)
-			readycheck[name] = status
-			if not promoted and (status == "offline" or status == "notready") then
-				DEFAULT_CHAT_FRAME:AddMessage(RAID_MEMBER_NOT_READY:format(name), c.r, c.g, c.b, c.id)
+			if name then -- Can be nil when performed whilst logging on
+				local status = not online and "offline" or GetReadyCheckStatus(name)
+				readycheck[name] = status
+				if not promoted and (status == "offline" or status == "notready") then
+					sysprint(RAID_MEMBER_NOT_READY:format(name))
+				end
 			end
 		end
 	else
@@ -433,7 +467,7 @@ function module:READY_CHECK(initiator, duration)
 				local status = not UnitIsConnected(unit) and "offline" or GetReadyCheckStatus(name)
 				readycheck[name] = status
 				if not promoted and (status == "offline" or status == "notready") then
-					DEFAULT_CHAT_FRAME:AddMessage(RAID_MEMBER_NOT_READY:format(name), c.r, c.g, c.b, c.id)
+					sysprint(RAID_MEMBER_NOT_READY:format(name))
 				end
 			end
 		end
@@ -458,8 +492,7 @@ function module:READY_CHECK_CONFIRM(unit, ready)
 	elseif readycheck[name] ~= "offline" then -- not ready, ignore offline
 		readycheck[name] = "notready"
 		if not oRA:IsPromoted() then
-			local c = ChatTypeInfo["SYSTEM"]
-			DEFAULT_CHAT_FRAME:AddMessage(RAID_MEMBER_NOT_READY:format(name), c.r, c.g, c.b, c.id)
+			sysprint(RAID_MEMBER_NOT_READY:format(name))
 		end
 	end
 	if self.db.profile.gui and frame then
@@ -470,6 +503,7 @@ end
 do
 	local noReply = {}
 	local notReady = {}
+	module.stripservers = true
 	function module:READY_CHECK_FINISHED(preempted)
 		if not readychecking or preempted then return end -- is a dungeon group ready check
 
@@ -479,19 +513,21 @@ do
 		wipe(noReply)
 		wipe(notReady)
 		for name, ready in next, readycheck do
+			if module.stripservers then -- this is a hook for other addons to enable unambiguous character names
+				name = name:gsub("%-.*$", "")
+			end
 			if ready == "waiting" or ready == "offline" then
-				noReply[#noReply + 1] = name:gsub("%-.*$", "")
+				noReply[#noReply + 1] = name
 			elseif ready == "notready" then
-				notReady[#notReady + 1] = name:gsub("%-.*$", "")
+				notReady[#notReady + 1] = name
 			end
 		end
 
-		local c = ChatTypeInfo["SYSTEM"]
 		local promoted = oRA:IsPromoted()
 		local send = self.db.profile.relayReady and not IsInGroup(LE_PARTY_CATEGORY_INSTANCE)
 		if #noReply == 0 and #notReady == 0 then
 			if not promoted then
-				DEFAULT_CHAT_FRAME:AddMessage(READY_CHECK_ALL_READY, c.r, c.g, c.b, c.id)
+				sysprint(READY_CHECK_ALL_READY)
 			elseif send and promoted > 1 then
 				SendChatMessage(READY_CHECK_ALL_READY, "RAID")
 			end
@@ -499,7 +535,7 @@ do
 			if #noReply > 0 then
 				local afk = RAID_MEMBERS_AFK:format(table.concat(noReply, ", "))
 				if not promoted then
-					DEFAULT_CHAT_FRAME:AddMessage(afk, c.r, c.g, c.b, c.id)
+					sysprint(afk)
 				elseif send and promoted > 1 then
 					SendChatMessage(afk, "RAID")
 				end
@@ -507,7 +543,7 @@ do
 			if #notReady > 0 then
 				local no = L["The following players are not ready: %s"]:format(table.concat(notReady, ", "))
 				if not promoted then
-					DEFAULT_CHAT_FRAME:AddMessage(no, c.r, c.g, c.b, c.id)
+					sysprint(no)
 				elseif send and promoted > 1 then
 					SendChatMessage(no, "RAID")
 				end

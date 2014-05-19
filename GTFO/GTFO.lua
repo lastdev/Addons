@@ -718,7 +718,50 @@ Change Log:
 		- Added Pandaria spells for Pandaria (world)
 		- Added Pandaria spells for Temple of the Jade Serpent
 		- Added Pandaria spells for Gate of the Setting Sun
-		
+	v4.24.1
+		- Added Pandaria spells for Siege of Orgrimmar
+	v4.24.2
+		- Added Pandaria spells for Siege of Orgrimmar
+		- Added Pandaria spells for Pandaria (world)
+		- Fixed Pandaria spells for The Secrets of Ragefire
+	v4.24.3
+		- Fixed Pandaria spells for Siege of Orgrimmar
+	v4.25
+		- Added support for maximum stacks for alerts
+		- Added Pandaria spells for Siege of Orgrimmar
+		- Added Pandaria spells for Pandaria (world)
+	v4.26
+		- Updated PowerAuras integration
+		- Added Pandaria spells for Siege of Orgrimmar
+		- Added Pandaria spells for Pandaria (world)
+		- Added Pandaria spells for Darkmoon Faire
+	v4.26.1
+		- Added Pandaria spells for Siege of Orgrimmar
+		- Added Pandaria spells for Brawler's Guild
+	v4.27
+		- Updated PowerAuras integration
+		- Added Pandaria spells for Siege of Orgrimmar
+	v4.27.1
+		- Added Pandaria spells for Siege of Orgrimmar (Heroic)
+		- Added Pandaria spells for Feast of Winter Veil
+	v4.27.2
+		- Added Pandaria spells for Siege of Orgrimmar (Heroic)
+	v4.28
+		- Fixed a bug with GTFO options causing Trivial damage filters to stop working
+		- Added Pandaria spells for Siege of Orgrimmar (Heroic)
+		- Updated spells for Love is in the Air
+	v4.29
+		- Updated for patch 5.4.7, resolved communication issues
+		- Raised default trivial % from .5% HP (200+ ticks to death) to 2% of HP (50+ ticks to death)
+		- Trivial slider increments in .5% intervals with .5% as the minimum
+		- /gtfo options now opens directly to the options frame
+		- Added Pandaria spells for Pandaria (world)
+	v4.30
+		- Disabled tank alerts when soloing
+		- Added Pandaria spells for Pandaria (world)
+		- Added Pandaria spells for Siege of Orgrimmar (Heroic)
+	v4.30.1
+		- Added Pandaria spells for Siege of Orgrimmar (Heroic)
 
 ]]--
 GTFO = {
@@ -733,10 +776,10 @@ GTFO = {
 		NoVersionReminder = nil;
 		Volume = 3; -- Volume setting, 3 = default
 		IgnoreOptions = { };
-		TrivialDamagePercent = .5; -- Minimum % of HP lost required for an alert to be trivial
+		TrivialDamagePercent = 2; -- Minimum % of HP lost required for an alert to be trivial
 	};
-	Version = "4.24"; -- Version number (text format)
-	VersionNumber = 42400; -- Numeric version number for checking out-of-date clients
+	Version = "4.30.1"; -- Version number (text format)
+	VersionNumber = 43001; -- Numeric version number for checking out-of-date clients
 	DataLogging = nil; -- Indicate whether or not the addon needs to run the datalogging function (for hooking)
 	DataCode = "4"; -- Saved Variable versioning, change this value to force a reset to default
 	CanTank = nil; -- The active character is capable of tanking
@@ -858,7 +901,18 @@ function GTFO_OnEvent(self, event, ...)
 
 		-- Power Auras Integration
 		if (IsAddOnLoaded("PowerAuras")) then
-			if (PowaAuras and PowaAuras.AurasByType) then
+			local PowaAurasEnabled
+			if (PowaAuras_GlobalTrigger) then
+				PowaAurasEnabled = PowaAuras_GlobalTrigger()
+			end
+			-- Power Auras 5.x
+			if (PowaAuras and PowaAuras.MarkAuras) then
+				GTFO.PowerAuras = true;
+			-- Power Auras 4.24.2+
+			elseif (PowaAurasEnabled) then
+				GTFO.PowerAuras = true;
+			-- Power Auras 4.x
+			elseif (PowaAuras and PowaAuras.AurasByType) then
 				if (PowaAuras.AurasByType.GTFOHigh) then
 					GTFO.PowerAuras = true;
 				else
@@ -967,8 +1021,8 @@ function GTFO_OnEvent(self, event, ...)
 							end
 							local damage = tonumber(misc4) or 0
 							if ((GTFO.FFSpellID[SpellID].trivialPercent or 0) >= 0 and not GTFO.FFSpellID[SpellID].alwaysAlert and not GTFO.Settings.TrivialMode) then
-								local damagePercent = (damage * 100) / UnitHealthMax("player");
-							 	if (((GTFO.FFSpellID[SpellID].trivialPercent or 0) == 0 and damagePercent < GTFO.Settings.TrivialDamagePercent) or (GTFO.FFSpellID[SpellID].trivialPercent and GTFO.FFSpellID[SpellID].trivialPercent > 0 and damagePercent < GTFO.FFSpellID[SpellID].trivialPercent)) then
+								local damagePercent = tonumber((damage * 100) / UnitHealthMax("player"));
+							 	if (((GTFO.FFSpellID[SpellID].trivialPercent or 0) == 0 and damagePercent < tonumber(GTFO.Settings.TrivialDamagePercent)) or (GTFO.FFSpellID[SpellID].trivialPercent and GTFO.FFSpellID[SpellID].trivialPercent > 0 and damagePercent < GTFO.FFSpellID[SpellID].trivialPercent)) then
 									--GTFO_DebugPrint("Won't alert "..SpellName.." ("..SpellID..") on "..tostring(destName).." - Trivial spell - Damage %");
 									-- Trivial mode is off, ignore trivial spell based on damage %
 									return;
@@ -990,7 +1044,7 @@ function GTFO_OnEvent(self, event, ...)
 		if (SpellType == "ENVIRONMENTAL_DAMAGE") then
 			local environment = string.upper(tostring(misc1))
 			local damage = tonumber(misc2) or 0
-			local damagePercent = (damage * 100) / UnitHealthMax("player")
+			local damagePercent = tonumber((damage * 100) / UnitHealthMax("player"))
 			-- Environmental detection
 			GTFO_ScanPrint(SpellType.." - "..environment);
 			local alertID;
@@ -1010,14 +1064,14 @@ function GTFO_OnEvent(self, event, ...)
 					--GTFO_DebugPrint("Won't alert LAVA - Magma debuff found");
 					return;
 				end
-				if (not GTFO.Settings.TrivialMode and damagePercent < GTFO.Settings.TrivialDamagePercent) then
+				if (not GTFO.Settings.TrivialMode and damagePercent < tonumber(GTFO.Settings.TrivialDamagePercent)) then
 					-- Trivial
 					--GTFO_DebugPrint("Won't alert LAVA - Trivial");
 					return;
 				end
 			elseif (environment ~= "FALLING") then
 				alertID = 2;
-				if (not GTFO.Settings.TrivialMode and damagePercent < GTFO.Settings.TrivialDamagePercent) then
+				if (not GTFO.Settings.TrivialMode and damagePercent < tonumber(GTFO.Settings.TrivialDamagePercent)) then
 					-- Trivial
 					--GTFO_DebugPrint("Won't alert "..tostring(environment).." - Trivial");
 					return;
@@ -1107,8 +1161,8 @@ function GTFO_OnEvent(self, event, ...)
 						return;
 					end
 					if ((GTFO.SpellID[SpellID].trivialPercent or 0) >= 0 and not GTFO.SpellID[SpellID].alwaysAlert and (SpellType=="SPELL_PERIODIC_DAMAGE" or SpellType=="SPELL_DAMAGE")) then
-						local damagePercent = (damage * 100) / UnitHealthMax("player");
-					 	if (((GTFO.SpellID[SpellID].trivialPercent or 0) == 0 and damagePercent < GTFO.Settings.TrivialDamagePercent) or (GTFO.SpellID[SpellID].trivialPercent and GTFO.SpellID[SpellID].trivialPercent > 0 and damagePercent < GTFO.SpellID[SpellID].trivialPercent)) then
+						local damagePercent = tonumber((damage * 100) / UnitHealthMax("player"));
+					 	if (((GTFO.SpellID[SpellID].trivialPercent or 0) == 0 and damagePercent < tonumber(GTFO.Settings.TrivialDamagePercent)) or (GTFO.SpellID[SpellID].trivialPercent and GTFO.SpellID[SpellID].trivialPercent > 0 and damagePercent < GTFO.SpellID[SpellID].trivialPercent)) then
 							--GTFO_DebugPrint("Won't alert "..SpellName.." ("..SpellID..") - Trivial spell - Damage %");
 							-- Trivial mode is off, ignore trivial spell based on damage %
 							return;
@@ -1126,14 +1180,20 @@ function GTFO_OnEvent(self, event, ...)
 					return;
 				end
 				if (GTFO.SpellID[SpellID].applicationOnly) then
-					if (GTFO.SpellID[SpellID].minimumStacks) then
+					if (GTFO.SpellID[SpellID].minimumStacks or GTFO.SpellID[SpellID].maximumStacks) then
 						if (SpellType ~= "SPELL_AURA_APPLIED_DOSE" or not misc5) then
 							--GTFO_DebugPrint("Won't alert "..SpellName.." ("..SpellID..") - Application only w/ minimum stacks & not a dosage event");
 							-- Not a dose application event
 							return;
-						elseif (tonumber(misc5) <= tonumber(GTFO.SpellID[SpellID].minimumStacks)) then
+						end
+						local stacks = tonumber(misc5);
+						if (GTFO.SpellID[SpellID].minimumStacks and stacks <= tonumber(GTFO.SpellID[SpellID].minimumStacks)) then
 							--GTFO_DebugPrint("Won't alert "..SpellName.." ("..SpellID..") - Application only w/ minimum stacks & not enough stacks");
-							-- Not a dose application event or not enough stacks
+							-- Not enough stacks
+							return;
+						elseif (GTFO.SpellID[SpellID].maximumStacks and stacks >= tonumber(GTFO.SpellID[SpellID].maximumStacks)) then
+							--GTFO_DebugPrint("Won't alert "..SpellName.." ("..SpellID..") - Application only w/ maximum stacks & too many stacks");
+							-- Too many stacks
 							return;
 						end
 					elseif (not (SpellType == "SPELL_AURA_APPLIED" or SpellType == "SPELL_AURA_APPLIED_DOSE" or SpellType == "SPELL_AURA_REFRESH")) then
@@ -1588,8 +1648,8 @@ function GTFO_RenderOptions()
 	getglobal(GTFO_TrivialDamageSlider:GetName().."Text"):SetText(GTFOLocal.UI_TrivialSlider);
 	getglobal(GTFO_TrivialDamageSlider:GetName().."High"):SetText(" ");
 	getglobal(GTFO_TrivialDamageSlider:GetName().."Low"):SetText(" ");
-	TrivialDamageSlider:SetMinMaxValues(.1,10);
-	TrivialDamageSlider:SetValueStep(.1);
+	TrivialDamageSlider:SetMinMaxValues(.5,10);
+	TrivialDamageSlider:SetValueStep(.5);
 	TrivialDamageSlider:SetValue(GTFO.Settings.TrivialDamagePercent);
 	GTFO_Option_SetTrivialDamageText(GTFO.Settings.TrivialDamagePercent);
 
@@ -1787,17 +1847,21 @@ function GTFO_Command_Version()
 	if (raidmembers > 0 or partymembers > 0) then
 		if (raidmembers > 0) then
 			for i = 1, raidmembers, 1 do
+				local displayName;
 				local name, server = UnitName("raid"..i);
 				local fullname = name;
 				if (server and server ~= "") then
-					fullname = name.."-"..server
+					fullname = name.."-"..server;
+					displayName = fullname;
+				else
+					fullname = name.."-"..GetRealmName()
+					displayName = name;
 				end
-				
 				if (GTFO.Users[fullname]) then
-					GTFO_ChatPrint(fullname..": "..GTFO_ParseVersionColor(GTFO.Users[fullname]));
+					GTFO_ChatPrint(displayName..": "..GTFO_ParseVersionColor(GTFO.Users[fullname]));
 					users = users + 1;
 				else
-					GTFO_ChatPrint(fullname..": |cFF999999"..GTFOLocal.Group_None.."|r");
+					GTFO_ChatPrint(displayName..": |cFF999999"..GTFOLocal.Group_None.."|r");
 				end
 			end
 			GTFO_ChatPrint(string.format(GTFOLocal.Group_RaidMembers, users, raidmembers));
@@ -1805,16 +1869,21 @@ function GTFO_Command_Version()
 			GTFO_ChatPrint(UnitName("player")..": "..GTFO_ParseVersionColor(GTFO.VersionNumber));
 			users = 1;
 			for i = 1, partymembers, 1 do
+				local displayName;
 				local name, server = UnitName("party"..i);
 				local fullname = name;
 				if (server and server ~= "") then
 					fullname = name.."-"..server
+					displayName = fullname;
+				else
+					fullname = name.."-"..GetRealmName()
+					displayName = name;
 				end
 				if (GTFO.Users[fullname]) then
-					GTFO_ChatPrint(fullname..": "..GTFO_ParseVersionColor(GTFO.Users[fullname]));
+					GTFO_ChatPrint(displayName..": "..GTFO_ParseVersionColor(GTFO.Users[fullname]));
 					users = users + 1;
 				else
-					GTFO_ChatPrint(fullname..": |cFF999999"..GTFOLocal.Group_None.."|r");
+					GTFO_ChatPrint(displayName..": |cFF999999"..GTFOLocal.Group_None.."|r");
 				end
 			end
 			GTFO_ChatPrint(string.format(GTFOLocal.Group_PartyMembers, users, (partymembers + 1)));
@@ -1890,7 +1959,9 @@ function GTFO_SendUpdateRequest()
 end
 
 function GTFO_Command_Options()
-	InterfaceOptionsFrame_OpenToCategory("GTFO")
+	InterfaceOptionsFrame_OpenToCategory("GTFO");
+	InterfaceOptionsFrame_OpenToCategory("GTFO");
+	InterfaceOptionsFrame_OpenToCategory("GTFO");
 end
 
 function GTFO_Option_SetVolume()
@@ -2178,12 +2249,13 @@ function GTFO_GetAlertID(alert, target)
 	local alertLevel;
 	local tankAlert = false;
 
-	if (UnitIsUnit("player", target)) then
-		if (alert.tankSound and GTFO.TankMode) then
-			tankAlert = true;
-		end
-	else
-		if (alert.tankSound and GTFO_IsTank(target)) then
+	if (alert.tankSound) then
+		if (UnitIsUnit("player", target)) then
+			if (GTFO.TankMode or (GTFO.RaidMembers == 0 and GTFO.PartyMembers == 0)) then
+				-- Tank or soloing
+				tankAlert = true;
+			end
+		elseif (GTFO_IsTank(target)) then
 			tankAlert = true;
 		end
 	end

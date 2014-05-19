@@ -4,6 +4,40 @@ The Armory archive can be found on http://www.wow-neighbours.com/.
 
 Thanks for using Armory. You can show your appreciation and support future development by donating!
 
+==== v11.2.0 ====
+# Included updated German translations.
+# The summary now shows '0' if there is mail that doesn't expire.
+# Some weekly data wasn't correctly reset; this has been fixed.
+# Added quest log entries to the summary. 
+# World bosses have been moved from quest log to raid info.
+# Raid module didn't include LFR anymore; this has been fixed (again).
+# Added raid info to the summary sheet.
+# If Armory is visible in the add-on list it will now be selected with /ar config.
+# Another attempt to get the trade skill cooldown hack right.
+# All currencies known to Armory can now be selected to be displayed in the summary sheet.
+
+==== v11.1.1 ====
+# In some special cases Armory was not able to determine which gems are socketed; this has been fixed.
+# Some items were erroneously considered to be non-equipable; this has been fixed.
+
+==== v11.1.0 ====
+# The hack for trade skill cooldowns didn't work if server and local time were different.
+# Connected realms are now treated as if they are one with the current realm.
+# A money total of 0 copper was not shown in the money tooltip; this has been fixed.
+# Sending mail between connected realms didn't update the inventory; this has been fixed.
+# The ability to open a profession directly from the summary sheet has been restored.
+# Added experimental tooltip feature to show who may benefit from a Timeless armor token (based on item level).
+# Blizzard fixed raid instance event so original code has been re-enabled.
+# Included updated French translations.
+
+==== v11.0.0 ====
+# Adjustments have been made for patch 5.4.0.
+# Explicitly disabled mouse support for message frame.
+# Removed arena teams because the data is no longer available.
+# PVP frame redesigned.
+# Trade skill links have been removed because they are not usable anymore.
+# Included updated Korean translations.
+
 ==== v10.6.0 ====
 # Adjustments have been made for patch 5.3.0.
 # Viewing raid info resulted in an error; this has been fixed.

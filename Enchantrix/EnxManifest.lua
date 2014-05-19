@@ -1,6 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 	Revision: $Id: EnxManifest.lua 5403 2013-04-03 16:50:32Z brykrys $
 	URL: http://enchantrix.org/
 
@@ -101,4 +101,4 @@ function manifest.Validate()
 	return true
 end
 
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Enchantrix/EnxManifest.lua $", "$Rev: 5403 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Enchantrix/EnxManifest.lua $", "$Rev: 5403 $")

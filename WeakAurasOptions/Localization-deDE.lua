@@ -16,7 +16,7 @@ L["Add to group %s"] = "Zur Gruppe %s hinzufügen"
 L["Add to new Dynamic Group"] = "Neue dynamische Gruppe hinzufügen"
 L["Add to new Group"] = "Neue Gruppe hinzufügen"
 L["Add Trigger"] = "Auslöser hinzufügen"
-L["A group that dynamically controls the positioning of its children"] = "Eine Gruppe die dynamisch die Position ihrer Kinder steuert"
+L["A group that dynamically controls the positioning of its children"] = "Eine Gruppe, die dynamisch die Position ihrer Kinder steuert"
 L["Align"] = "Ausrichten"
 L["Allow Full Rotation"] = "Erlaubt eine vollständige Rotation"
 L["Alpha"] = "Transparenz"
@@ -39,8 +39,8 @@ L["Aura(s)"] = "Auren"
 L["Auto"] = "Auto"
 L["Auto-cloning enabled"] = "Auto-Klonen aktiviert"
 L["Automatic Icon"] = "Automatisches Symbol"
--- L["Backdrop Color"] = ""
--- L["Backdrop Style"] = ""
+L["Backdrop Color"] = "Hintergrundfarbe" -- Needs review
+L["Backdrop Style"] = "Hintergrundstil" -- Needs review
 L["Background"] = "Hintergrund"
 L["Background Color"] = "Hintergrundfarbe"
 L["Background Inset"] = "Hintergrundeinzug"
@@ -48,8 +48,8 @@ L["Background Offset"] = "Hintergrundversatz"
 L["Background Texture"] = "Hintergrundtextur"
 L["Bar Alpha"] = "Balkentransparenz"
 L["Bar Color"] = "Balkenfarbe"
--- L["Bar Color Settings"] = ""
--- L["Bar in Front"] = ""
+L["Bar Color Settings"] = "Balkenfarben Einstellungen" -- Needs review
+L["Bar in Front"] = "Balken im Vordergrund" -- Needs review
 L["Bar Texture"] = "Balkentextur"
 L["Battle"] = "Angriff"
 L["Bear"] = "Bär"
@@ -57,12 +57,12 @@ L["Berserker"] = "Berserker"
 L["Blend Mode"] = "Blendmodus"
 L["Blood"] = "Blut"
 L["Border"] = "Rand"
--- L["Border Color"] = ""
--- L["Border Inset"] = ""
+L["Border Color"] = "Randfarbe" -- Needs review
+L["Border Inset"] = "Rahmeneinlassung" -- Needs review
 L["Border Offset"] = "Randversatz"
--- L["Border Settings"] = ""
--- L["Border Size"] = ""
--- L["Border Style"] = ""
+L["Border Settings"] = "Rahmeneinstellungen" -- Needs review
+L["Border Size"] = "Rahmengröße" -- Needs review
+L["Border Style"] = "Rahmenstil" -- Needs review
 L["Bottom Text"] = "Text unten"
 L["Button Glow"] = "Aktionsleisten Glanz"
 L["Can be a name or a UID (e.g., party1). Only works on friendly players in your group."] = "Kann ein Name oder eine UID (zb. party1) sein. Funktioniert nur für freundliche Spieler innerhalb deiner Gruppe."
@@ -90,7 +90,7 @@ L["Compress"] = "Stauchen"
 L["Concentration"] = "Konzentration"
 L["Constant Factor"] = "Konstanter Faktor"
 L["Control-click to select multiple displays"] = "|cFF8080FF(CTRL-Klick)|r Mehrere Anzeigen auswählen"
-L["Controls the positioning and configuration of multiple displays at the same time"] = "Gruppe die die Position und  Konfiguration ihrer Kinder kontrolliert."
+L["Controls the positioning and configuration of multiple displays at the same time"] = "Eine Gruppe, die die Position und Konfiguration ihrer Kinder kontrolliert"
 L["Convert to..."] = "Umwandeln zu..."
 L["Cooldown"] = "Abklingzeit"
 L["Copy"] = "Kopieren"
@@ -105,24 +105,21 @@ L["Crop Y"] = "Abschneiden (Y)"
 L["Crusader"] = "Kreuzfahrer"
 L["Custom Code"] = "Benutzerdefinierter Code"
 L["Custom Trigger"] = "Benutzerdefinierter Auslöser"
-L["Custom trigger event tooltip"] = [=[
-Wähle die Events die den benutzerdefinierten Auslöser zum testen aufrufen sollen.
-Mehrere Events können durch Koma, oder Leerzeichen verwendet werden.
+L["Custom trigger event tooltip"] = [=[Wähle die Events, die den benutzerdefinierten Auslöser aufrufen sollen.
+Mehrere Events können durch Komma oder Leerzeichen getrennt werden.
 
 |cFF4444FFBeispiel:|r
 UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
-L["Custom trigger status tooltip"] = [=[
-Wähle die Events die den benutzerdefinierten Auslöser zum testen aufrufen sollen.
+L["Custom trigger status tooltip"] = [=[Wähle die Events, die den benutzerdefinierten Auslöser aufrufen sollen.
 Da es sich um einen Zustands-Auslöser handelt, kann es passieren, dass WeakAuras nicht die in der WoW-API spezifizierten Argumente übergibt.
-Mehrere Events können durch Koma, oder Leerzeichen verwendet werden.
+Mehrere Events können durch Komma oder Leerzeichen getrennt werden.
 
 |cFF4444FFBeispiel:|r
 UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 L["Custom Untrigger"] = "Benutzerdefinierter Umkehr-Auslöser"
-L["Custom untrigger event tooltip"] = [=[
-Wähle die Events die den benutzerdefinierten Umkehr-Auslöser zum testen aufrufen sollen.
+L["Custom untrigger event tooltip"] = [=[Wähle die Events, die den benutzerdefinierten Umkehr-Auslöser aufrufen sollen.
 Diese Events müssen nicht denen der benutzerdefinierten Auslöser entsprechen.
-Mehrere Events können durch Koma, oder Leerzeichen verwendet werden.
+Mehrere Events können durch Komma oder Leerzeichen getrennt werden.
 
 |cFF4444FFBeispiel:|r
 UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
@@ -174,9 +171,9 @@ L["Finish"] = "Endanimation"
 L["Fire Resistance"] = "Feuerresistenz"
 L["Flight(Non-Feral)"] = "Flug"
 L["Font"] = "Schriftart"
--- L["Font Flags"] = ""
+L["Font Flags"] = "Schrifteinstellungen" -- Needs review
 L["Font Size"] = "Schriftgröße"
--- L["Font Type"] = ""
+L["Font Type"] = "Schriftart" -- Needs review
 L["Foreground Color"] = "Vordergrundfarbe"
 L["Foreground Texture"] = "Vordergrundtextur"
 L["Form (Druid)"] = "Form (Druide)"
@@ -226,7 +223,7 @@ L["Message Prefix"] = "Nachrichtenprefix"
 L["Message Suffix"] = "Nachrichtensuffix"
 L["Metamorphosis"] = "Metamorphose"
 L["Mirror"] = "Spiegeln"
-L["Model"] = "Model"
+L["Model"] = "Modell"
 L["Moonkin/Tree/Flight(Feral)"] = "Mondkin"
 L["Move Down"] = "Runter bewegen"
 L["Move this display down in its group's order"] = "Anzeige innerhalb der Gruppe nach unten bewegen"
@@ -301,12 +298,12 @@ L["Shadow Resistance"] = "Schattenresistenz"
 L["Shift-click to create chat link"] = "|cFF8080FF(Shift-Klick)|r Chatlink erstellen"
 L["Show all matches (Auto-clone)"] = "Alle Treffer anzeigen (Auto-Klonen)"
 L["Show players that are |cFFFF0000not affected"] = "Zeige Spieler die |cFFFF0000nicht|r betroffen sind"
-L["Shows a 3D model from the game files"] = "Zeigt ein 3D Model"
-L["Shows a custom texture"] = "Benutzerdefinierte Texture anzeigen"
+L["Shows a 3D model from the game files"] = "Zeigt ein 3D Modell"
+L["Shows a custom texture"] = "Zeigt eine benutzerdefinierte Textur"
 L["Shows a progress bar with name, timer, and icon"] = "Zeigt einen Fortschrittsbalken mit Name, Zeitanzeige und Symbol"
-L["Shows a spell icon with an optional a cooldown overlay"] = "Zeigt ein (Zauber-) Symbol mit optionalem Abklingdauer-Overlay"
-L["Shows a texture that changes based on duration"] = "Zeigt eine Texture die sich über Zeit verändert"
-L["Shows one or more lines of text, which can include dynamic information such as progress or stacks"] = "Zeigt ein oder mehrere Zeilen Text an, der dynamische Informationen anzeigen kann, zb. Fortschritt, Stacks, ect."
+L["Shows a spell icon with an optional a cooldown overlay"] = "Zeigt ein (Zauber-) Symbol mit optionalem Abklingzeit-Overlay"
+L["Shows a texture that changes based on duration"] = "Zeigt eine Textur, die sich über die Zeit verändert"
+L["Shows one or more lines of text, which can include dynamic information such as progress or stacks"] = "Zeigt ein oder mehrere Zeilen Text an, der dynamische Informationen anzeigen kann, z.B. Fortschritt oder Stacks"
 L["Shows the remaining or expended time for an aura or timed event"] = "Zeigt die verbleibende oder verstrichene Zeit einer Aura oder eines zeitlichen Ereignisses"
 L["Show this group's children"] = "Kinder der Gruppe anzeigen"
 L["Size"] = "Größe"
@@ -314,9 +311,9 @@ L["Slide"] = "Gleiten"
 L["Slide In"] = "Einschieben"
 L["Slide Out"] = "Ausschieben"
 L["Sort"] = "Sortieren"
-L["Sound"] = "Geräuch"
+L["Sound"] = "Sound"
 L["Sound Channel"] = "Soundkanal"
-L["Sound File Path"] = "Geräuchdatei (Relative zu \"Interface\")"
+L["Sound File Path"] = "Sounddatei"
 L["Space"] = "Abstand"
 L["Space Horizontally"] = "Horizontaler Abstand"
 L["Space Vertically"] = "Verticaler Abstand"
@@ -352,7 +349,7 @@ L["This display is currently loaded"] = "Diese Anzeige ist zur Zeit geladen"
 L["This display is not currently loaded"] = "Diese Anzeige ist zur Zeit nicht geladen"
 L["This display will only show when |cFF00FF00%s"] = "Diese Anzeige wird nur eingezeigt, wenn |cFF00FF00%s"
 L["This display will only show when |cFFFF0000 Not %s"] = "Diese Anzeige wird nur eingezeigt, wenn |cFF00FF00 nicht %s"
--- L["This region of type \"%s\" has no configuration options."] = ""
+L["This region of type \"%s\" has no configuration options."] = "Diese Region vom Typ \"%s\" besitzt keine Einstellungsmöglichkeiten." -- Needs review
 L["Time in"] = "Zeit in"
 L["Timer"] = "Zeitgeber"
 L["Timer Settings"] = "Timer Einstellungen"
@@ -376,7 +373,7 @@ L["Unholy"] = "Unheilig"
 L["Unit Exists"] = "Einheit existiert"
 L["Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."] = "Anders als die Start- und Endanimation wird die Hauptanimation immer wieder wiederholt, bis die Anzeige in den Endstatus versetzt wird."
 L["Unstealthed"] = "Entarnt"
-L["Update Custom Text On..."] = "Aktualisiere Benutzerdefiniert Text wenn..."
+L["Update Custom Text On..."] = "Aktualisiere benutzerdefinierten Text bei..."
 L["Use Full Scan (High CPU)"] = "Alle Auren scannen (CPU-Intensiv)"
 L["Use tooltip \"size\" instead of stacks"] = "Benutzte Tooltipgröße anstatt Stacks"
 L["Vertical Align"] = "Vertikale Ausrichtung"

@@ -1,6 +1,6 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 	Revision: $Id: CoreMain.lua 5423 2013-06-15 18:11:00Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -399,4 +399,4 @@ do -- ScheduleMessage handler
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreMain.lua $", "$Rev: 5423 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/CoreMain.lua $", "$Rev: 5423 $")

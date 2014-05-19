@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Histogram Statistics module
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 	Revision: $Id: StatHistogram.lua 5154 2011-05-13 23:15:57Z kandoko $
 	URL: http://auctioneeraddon.com/
 
@@ -840,4 +840,4 @@ function private.refactor(pmax, precision)
 	stattable["count"] = count
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Stat-Histogram/StatHistogram.lua $", "$Rev: 5154 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Stat-Histogram/StatHistogram.lua $", "$Rev: 5154 $")

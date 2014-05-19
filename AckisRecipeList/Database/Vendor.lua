@@ -2,10 +2,10 @@
 ************************************************************************
 Vendor.lua
 ************************************************************************
-File date: 2013-09-10T13:23:20Z
-File hash: 4bcba04
-Project hash: 4bcba04
-Project version: 2.5.2
+File date: 2014-02-14T05:23:40Z
+File hash: 04922c6
+Project hash: fbca907
+Project version: 2.6.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -29,14 +29,15 @@ local addon = LibStub("AceAddon-3.0"):GetAddon(private.addon_name)
 local L = LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
 local BB = LibStub("LibBabble-Boss-3.0"):GetLookupTable()
 
+-----------------------------------------------------------------------
+-- Imports.
+-----------------------------------------------------------------------
 local BN = private.BOSS_NAMES
 local Z = private.ZONE_NAMES
 
-private.vendor_list = {}
-
 function addon:InitVendor()
 	local function AddVendor(id_num, name, zone_name, x, y, faction)
-		private:AddListEntry(private.vendor_list, id_num, name, zone_name, x, y, faction)
+		private.AcquireTypes.Vendor:AddEntity(id_num, name, zone_name, x, y, faction)
 	end
 
 	AddVendor(66,		L["Tharynn Bouden"],			Z.ELWYNN_FOREST,		41.9,	67.1,	"Alliance")
@@ -132,6 +133,7 @@ function addon:InitVendor()
 	AddVendor(4226,		L["Ulthir"],				Z.DARNASSUS,			54.6,	38.9,	"Alliance") -- COMPLETELY UPDATED
 	AddVendor(4228,		L["Vaean"],				Z.DARNASSUS,			56.4,	32.2,	"Alliance") -- COMPLETELY UPDATED
 	AddVendor(4229,		L["Mythrin'dir"],			Z.DARNASSUS,			58.1,	34.2,	"Alliance") -- COMPLETELY UPDATED
+	AddVendor(4259,		L["Thurgrum Deepforge"],		Z.IRONFORGE,			51.5,	42.7,	"Alliance")
 	AddVendor(4265,		L["Nyoma"],				Z.TELDRASSIL,			56.6,	53.6,	"Alliance") -- COMPLETELY UPDATED
 	AddVendor(4305,		L["Kriggon Talsone"],			Z.WESTFALL,			36.2,	90.1,	"Alliance")
 	AddVendor(4553,		L["Ronald Burch"],			Z.UNDERCITY,			62.3,	43.1,	"Horde") -- COMPLETELY UPDATED
@@ -145,6 +147,7 @@ function addon:InitVendor()
 	AddVendor(4775,		L["Felicia Doan"],			Z.UNDERCITY,			64.1,	50.6,	"Horde") -- COMPLETELY UPDATED
 	AddVendor(4782,		L["Truk Wildbeard"],			Z.THE_HINTERLANDS,		14.4,	42.5,	"Alliance")
 	AddVendor(4879,		L["Ogg'marr"],				Z.DUSTWALLOW_MARSH,		36.7,	31.0,	"Horde")
+	AddVendor(4894,		L["Craig Nollward"],			Z.DUSTWALLOW_MARSH,		66.9,	45.2,	"Alliance")
 	AddVendor(4897,		L["Helenia Olden"],			Z.DUSTWALLOW_MARSH,		66.4,	51.5,	"Alliance")
 	AddVendor(5128,		L["Bombus Finespindle"],		Z.IRONFORGE,			39.6,	34.5,	"Alliance") -- COMPLETELY UPDATED
 	AddVendor(5154,		L["Poranna Snowbraid"],			Z.IRONFORGE,			43.0,	28.3,	"Alliance") -- COMPLETELY UPDATED
@@ -187,7 +190,7 @@ function addon:InitVendor()
 	AddVendor(8178,		L["Nina Lightbrew"],			Z.BLASTED_LANDS,		62.4,	16.0,	"Alliance")
 	AddVendor(8307,		L["Tarban Hearthgrain"],		Z.NORTHERN_BARRENS,		55.1,	61.7,	"Horde")  -- UPDATED
 	AddVendor(8363,		L["Shadi Mistrunner"],			Z.THUNDER_BLUFF,		40.6,	64.0,	"Horde") -- COMPLETELY UPDATED
-	AddVendor(8508,		L["Gretta Ganter"],			Z.DUN_MOROGH,			38.6,	42.9,	"Alliance") -- COMPLETELY UPDATED
+	AddVendor(8508,		L["Gretta Ganter"],			Z.NEW_TINKERTOWN,		51.7,	50.0,	"Alliance") -- COMPLETELY UPDATED
 	AddVendor(8679,		L["Knaz Blunderflame"],			Z.NORTHERN_STRANGLETHORN,	67.7,	61.1,	"Neutral")   -- UPDATED
 	AddVendor(8681,		L["Outfitter Eric"],			Z.IRONFORGE,			43.2,	29.2,	"Alliance")
 	AddVendor(8878,		L["Muuran"],				Z.DESOLACE,			55.6,	56.5,	"Horde")
@@ -271,7 +274,6 @@ function addon:InitVendor()
 	AddVendor(18664,	L["Aged Dalaran Wizard"],		Z.OLD_HILLSBRAD_FOOTHILLS,	0,	0,	"Neutral")
 	AddVendor(18672,	L["Thomas Yance"],			Z.OLD_HILLSBRAD_FOOTHILLS,	0,	0,	"Neutral")
 	AddVendor(18753,	L["Felannia"],				Z.HELLFIRE_PENINSULA,		52.3,	36.1,	"Horde")
-	AddVendor(18772,	L["Hama"],				Z.HELLFIRE_PENINSULA,		54.1,	63.6,	"Alliance")
 	AddVendor(18773,	L["Johan Barnes"],			Z.HELLFIRE_PENINSULA,		53.7,	66.1,	"Alliance")
 	AddVendor(18775,	L["Lebowski"],				Z.HELLFIRE_PENINSULA,		55.7,	65.5,	"Alliance")
 	AddVendor(18802,	L["Alchemist Gribble"],			Z.HELLFIRE_PENINSULA,		53.8,	65.8,	"Alliance")
@@ -393,12 +395,13 @@ function addon:InitVendor()
 	AddVendor(46359,	L["Punra"],				Z.ORGRIMMAR,			45.0,	76.8,	"Horde") -- COMPLETELY UPDATED
 	AddVendor(46572,	L["Goram"],				Z.ORGRIMMAR,			48.2,	75.6,	"Horde")
 	AddVendor(46602,	L["Shay Pressler"],			Z.STORMWIND_CITY,		64.6,	76.8,	"Alliance") --COMPLETELY UPDATED
+	AddVendor(46708,	L["Suja"],				Z.ORGRIMMAR,			56.5,	61.2,	"Horde") --COMPLETELY UPDATED
 	AddVendor(48060,	L["\"Chef\" Overheat"],			Z.BADLANDS,			65.1,	39.1,	"Neutral") -- COMPLETELY UPDATED
 	AddVendor(49701,	L["Bario Matalli"],			Z.STORMWIND_CITY, 		50.4,	71.9,	"Alliance") -- COMPLETELY UPDATED
 	AddVendor(49703,	L["Casandra Downs"],			Z.TWILIGHT_HIGHLANDS,		78.6,	76.2,	"Alliance")
 	AddVendor(49737,	L["Shazdar"],				Z.ORGRIMMAR,			56.8,	62.3,	"Horde") -- COMPLETELY UPDATED
 	AddVendor(49918,	L["Buckslappy"],			Z.BADLANDS,			90.9,	38.8,	"Neutral") -- COMPLETELY UPDATED
-	AddVendor(50129,	L["Daleohm"],				Z.WINTERSPRING,			58.0,	63.8,	"Horde") -- COMPLETELY UPDATED
+	AddVendor(50129,	L["Daleohm"],				Z.WINTERSPRING,			58.0,	63.8,	"Neutral") -- COMPLETELY UPDATED
 	AddVendor(50134,	L["Senthii"],				Z.TWILIGHT_HIGHLANDS,		78.7,	77.0,	"Alliance")
 	AddVendor(50146,	L["Agatian Fallanos"],			Z.TWILIGHT_HIGHLANDS,		76.7,	49.5,	"Horde") -- COMPLETELY UPDATED
 	AddVendor(50172,	L["Threm Blackscalp"],			Z.TWILIGHT_HIGHLANDS,		75.2,	50.1,	"Horde")
@@ -420,8 +423,10 @@ function addon:InitVendor()
 	AddVendor(52655,	L["Palehoof's Big Bag of Parts"],	Z.THUNDER_BLUFF,		36.2,	60.2,	"Horde") -- COMPLETELY UPDATED
 	AddVendor(52658,	L["Paku Cloudchaser"],			Z.THUNDER_BLUFF,		34.7,	53.5,	"Horde") -- COMPLETELY UPDATED
 	AddVendor(53214,	L["Damek Bloombeard"],			Z.MOLTEN_FRONT,			47.0,	90.6,	"Neutral")
+	AddVendor(53410,	L["Lissah Spellwick"],			Z.DUSTWALLOW_MARSH,		66.0,	49.7,	"Alliance") -- COMPLETELY UPDATED
 	AddVendor(53881,	L["Ayla Shadowstorm"],			Z.MOLTEN_FRONT,			44.8,	86.6,	"Neutral")
 	AddVendor(54232,	L["Mrs. Gant"],				Z.THE_CAPE_OF_STRANGLETHORN,	42.6,	72.8,	"Neutral") -- COMPLETLY UPDATED
+	AddVendor(56069,	L["Tatia Brine"],			Z.DARKMOON_ISLAND,		52.5,	88.6,	"Neutral")
 	AddVendor(56925,	L["Farrah Facet"],			Z.STORMWIND_CITY,		63.8,	61.6,	"Alliance") -- COMPLETLY UPDATED
 	AddVendor(57922,	L["Taryssa Lazuria"],			Z.ORGRIMMAR,			72.4,	34.6,	"Horde") -- COMPLETLY UPDATED
 	AddVendor(58414,	L["San Redscale"],			Z.THE_JADE_FOREST,		56.6,	44.4,	"Neutral")

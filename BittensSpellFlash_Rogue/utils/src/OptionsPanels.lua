@@ -1,5 +1,5 @@
 local u = BittensGlobalTables.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(u, "Options Panels", 4) then
+if u.SkipOrUpgrade(u, "Options Panels", 5) then
 	return
 end
 
@@ -85,11 +85,14 @@ end
 function u.CreateOptionsPanel(name, parent)	
 	local panel = CreateFrame("Frame")
 	panel.name = name
+	panel.Children = { }
 	if parent then
 		panel.parent = parent.name
 		panel.Settings = parent.Settings
 		panel.Defaults = parent.Defaults
 		panel.WidgetBaseName = parent.WidgetBaseName .. name
+		panel.ParentPanel = parent
+		parent.Children[panel] = true
 	else
 		panel.Settings = { }
 		panel.Defaults = { }
@@ -211,7 +214,18 @@ function u.CreateOptionsPanel(name, parent)
 	
 	function panel.default()
 		wipe(panel.Settings)
-		panel.apply()
+		local parent = panel
+		while parent.ParentPanel do
+			parent = parent.ParentPanel
+		end
+		local function updateAll(p)
+			p.apply()
+			p.refresh()
+			for child in u.Keys(p.Children) do
+				updateAll(child)
+			end
+		end
+		updateAll(parent)
 	end
 	
 	function panel.refresh()

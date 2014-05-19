@@ -1,7 +1,98 @@
 Pack Command:  		zip -vr TP_Release.zip TidyPlates* -x@exclude.lst
 Exclusion List: 	*.svn*   *.DS_Store*   exclude.lst   *.db   *.png   *.gif   *.jpg   *.tif   *.txt   *.psd   *.bmp
 
-6.12.2
+6.13.4
+---------------------------
+* Core: Raised the default Dropdown Menu strata to TOOLTIP
+
+6.13.3
+---------------------------
+* Core: Added XML Template, TidyPlatesDropdownDrawerTemplate
+* Core: Dropdown Menu Replacement (Trying to fix Blocked Action/Protected UI Taint issues in Panels and Hub)
+* Core: Updated PanelHelpers.CreateDropdownFrame to use "TidyPlatesDropdownDrawerTemplate" and Dropdown Menu Replacement
+* Core: Alpha transition animation has been restored.  You can disable it in the /tidyplates panel.
+* Themes: Fixed Neon and Quatre Headline font size (bumped them down a few pts)
+* Widgets: UnitCache: Fixed Connected Realm Class Caching
+
+
+6.13.2
+---------------------------
+* Widgets: Fixed UnitCache to account for changes to the guild roster format
+* Themes: Update Grey and Graphite to the new font variable
+* Themes: Reduced "Roboto Condensed" size to better match the old font
+
+6.13.1
+---------------------------
+* Widgets: Re-Fixed Class Icon
+
+6.13.0 (Cumulative)
+---------------------------
+* Core: Added: unit.isMini = boolean.  This will eventually replace "unit.platetype" and "unit.isTrivial". Not anytime soon, though.
+* Widgets: Fixed the Class Icon widget. Finally.  Added class-colored borders to each icon.
+* Hub: Added a new checkbox to "Scale"; "Auto-Scale Mini Mobs", which will downscale those tiny guys, ironically making it easier to target.
+* Hub: Added a new checkbox to "Unit Filter", "Override Target Scale", which will maintain the filtered scale of Targeted Mobs.
+* Hub: "Use Blizzard font" should work properly again.
+* Hub: Moved "Health Bar" to the top of the Hub page
+* Hub: Merged "Style" into "Headline Mode"
+* Hub: Raised "Buffs & Debuffs" upward in the Hub page
+* Hub: "Health Bar" gets a couple new choices; Namely, separate coloring options for Friendly vs Enemy plates.
+* Hub: Pruned the Color Mode lists
+* Hub: Removed the "Warning Border Glow Mode" selector; Don't worry!  There's still a Warning Glow, but it's turned on/off within the "Threat" category.
+* Hub: Added an option to "Spell Casting", "Enable Friendly Castbars"
+* Themes: More fixes for text issues.
+* Themes: New Font: Started replacing "Accidental Presidency" with "Roboto Condensed" across the bundled themes.
+
+
+6.13.Beta3
+---------------------------
+* Themes: More fixes for text issues.
+* Widgets: Fixed the Class Icon widget. Finally.  Added class-colored borders to each icon.
+* Hub: Added a new checkbox to "Scale"; "Auto-Scale Mini Mobs", which will downscale those tiny guys, ironically making it easier to target.
+* Hub: Added a new checkbox to "Unit Filter", "Override Target Scale", which will maintain the filtered scale of Targeted Mobs.
+* Core: Added: unit.isMini = boolean.  This will eventually replace "unit.platetype" and "unit.isTrivial". Not anytime soon, though.
+* Quatre & Neon: Increased the text size by 1pt to reduce specific scaling concerns.
+
+
+6.13.Beta2
+---------------------------
+* Removed the "Unit Spotlight" system, for the moment.  Don't worry- It will come back to the beta release!  I just need to get a solid release done to fix some issues.  Thanks for your patience :-)
+* Replaced "Accidental Presidency" with "Roboto Condensed" for Quatre.
+* Hub: "Use Blizzard font" should work properly again.
+
+
+6.13.Beta1
+---------------------------
+* Moved "Health Bar" to the top of the Hub page
+* Merged "Style" into "Headline Mode"
+* Raised "Buffs & Debuffs" upward in the Hub page
+* "Health Bar" gets a couple new choices; Namely, separate coloring options for Friendly vs Enemy plates.
+* Pruned the Color Mode lists
+* Removed the "Warning Border Glow Mode" selector; Don't worry!  There's still a Warning Glow, but it's turned on/off within the "Threat" category.
+* Added a new category of features, "Unit Spotlight", which allows you to highlight specific mobs with color, opacity, and scale.  You could use it to highlight important mobs in Raids.
+* Added an option to "Spell Casting", "Enable Friendly Castbars"
+* New Font: Started replacing "Accidental Presidency" with "Roboto Condensed" across the bundled themes.  Looks similar, but contains more complete character sets; Important for non-English languages.
+
+
+
+6.12.6
+---------------------------
+- Widgets: Combo Point: Anticipation "fix"
+- Hub: Cached class colors in instances
+
+6.12.5
+---------------------------
+- Widgets: Unit Cache: Stores non-local units with a " (*)" suffix.
+- Hub: Class colors on cached units shoud work properly
+
+6.12.4
+---------------------------
+- Core: New unit data: unit.rawName, strips the (*) from nameplate names.
+- Core: The carrier frame is now globally labeled with a unique frame name.
+- Hub: Healer Tracking: Now uses unit.rawName rather than unit.name
+- Widgets: Aura Tracker: Now uses unit.rawName to associate on-screen PvP names
+- Widgets: Unit Cache: Will now properly filter non-realm units (ex. coalesced or battlegroup)
+
+6.12.2/3
 ---------------------------
 - Revert fix for viewport mod interaction.  Needs a bit more external testing, apparently.
 
@@ -10,8 +101,6 @@ Exclusion List: 	*.svn*   *.DS_Store*   exclude.lst   *.db   *.png   *.gif   *.j
 - TOC Bump
 - Core: OnShowCastbar will now check for unit health before proceeding, hopefully avoiding errors when the Castbar's OnShow handler is called early.
 - * Fix for Viewport Mods (specifically, Sunn), particularly, when the actual vertical viewport is decreased.
-
-* This should reduce or eliminate the need for Compatibility Mode.
 
 6.12.0
 ---------------------------
@@ -884,3 +973,33 @@ More specifically, I've made new paths for update requests
 which avoid updating every single piece of data when only
 a single value has changed.
 - Cleaned up some code, and added some new comments
+
+
+In-Progress
+--------
+
+* Restore Fade-In
+* Smart Aura Mode
+* Reorganize Themes to make 'em prettier.
+* Ku-theme
+* Metro-theme
+* Customization
+* Core Anchoring Options
+
+* Tidy Plates 7.0 Theme Format
+* Cube Frame Widget
+* "Resolution Independence"
+* Easy Scaling
+
+In Progress
+---------------------------
+* Aura Widget: Filtering Expansion
+* Health Text Display Customizer (3 channel)
+* Font Tweaker
+* Raid Icon to Target/Spotlight Opacity
+* Hub + Neon Theme: Raid Icon Repositioning Test; Raid Icon appears above the health bar, unless Auras are displayed.
+* "Highlight" Feature, to bind a key to Mark units to a Saved List, which can be used for Spotlight Functions
+* Combo Point vs Debuff Widget Repositioning, within style?
+* Drowndown Frame: 	Add: - Description Text Field on Top, which displays tooltip Text, Textures, Close/Cancel Button
+
+

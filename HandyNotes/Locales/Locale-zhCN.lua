@@ -5,24 +5,25 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes", "zhCN")
 if not L then return end
 
-L[ [=[
-Alt+Right Click To Add a HandyNote]=] ] = "Alt+右键点击添加小本本"
-L["(No Title)"] = "(无标题)"
 L["Add Handy Note"] = "添加标记"
 L["Add this location to Cartographer_Waypoints"] = "将这个位置添加到Cartographer_Waypoints插件去"
 L["Add this location to TomTom waypoints"] = "将这个位置添加到TomTom插件去"
+L[ [=[
+Alt+Right Click To Add a HandyNote]=] ] = "Alt+右键点击添加小本本"
+L["|cFF00FF00Hint: |cffeda55fCtrl+Shift+LeftDrag|cFF00FF00 to move a note"] = "|cFF00FF00提示：|cffeda55fCtrl+Shift+左键拖拽|cFF00FF00可以移动一个标记"
 L["Configuration for each individual plugin database."] = "配置每个独立的数据插件"
 L["Delete Handy Note"] = "删除标记"
 L["Description/Notes:"] = "说明/注释："
-L["ERROR_CREATE_NOTE1"] = "HandyNotes cannot create a note here as it is unable to obtain your current location. Usually this is because there is no map for the zone you are in."
 L["Edit Handy Note"] = "编辑标记"
 L["Enable HandyNotes"] = "启用HandyNotes"
 L["Enable or disable HandyNotes"] = "启用或者禁用HandyNotes"
+L["ERROR_CREATE_NOTE1"] = "HandyNotes不能创建注释，因为它无法获得您当前所在的位置。这通常是因为您所在的区域没有地图" -- Needs review
 L["HandyNotes"] = "HandyNotes"
 L["Icon Alpha"] = "图标透明度"
 L["Icon Scale"] = "图标缩放"
 L["Minimap Icon Alpha"] = "小地图图标透明度"
 L["Minimap Icon Scale"] = "小地图图标缩放"
+L["(No Title)"] = "(无标题)"
 L["Overall settings"] = "全局设置"
 L["Overall settings that affect every database"] = "作用于所有数据库的全局设置"
 L["Plugin databases"] = "数据插件"
@@ -42,5 +43,4 @@ L["These settings control the look and feel of the HandyNotes icons."] = "这些
 L["Title"] = "标题"
 L["World Map Icon Alpha"] = "世界地图图标透明度"
 L["World Map Icon Scale"] = "世界地图图标缩放"
-L["|cFF00FF00Hint: |cffeda55fCtrl+Shift+LeftDrag|cFF00FF00 to move a note"] = "|cFF00FF00提示：|cffeda55fCtrl+Shift+左键拖拽|cFF00FF00可以移动一个标记"
 

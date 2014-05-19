@@ -35,9 +35,7 @@ end
 function HealBot_Init_Spells_Defaults()
     local i = GetSpecialization()
     local specID = 0
-    if i then
-        specID = GetSpecializationInfo(i,false,false) 
-    end
+    if i then specID = GetSpecializationInfo(i,false,false) end
     HealBot_Spells={}
     
     local nTabs=GetNumSpellTabs()

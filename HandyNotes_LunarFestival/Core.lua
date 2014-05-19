@@ -9,7 +9,7 @@
 
 -- declaration
 local _, LunarFestival = ...
-local points = LunarFestival.points
+LunarFestival.points = {}
 
 
 -- our db and defaults
@@ -20,6 +20,7 @@ local defaults = { profile = { completed = false, icon_scale = 1.4, icon_alpha =
 -- upvalues
 local _G = getfenv(0)
 
+local CalendarGetDate = _G.CalendarGetDate
 local CloseDropDownMenus = _G.CloseDropDownMenus
 local GameTooltip = _G.GameTooltip
 local GetAchievementCriteriaInfo = _G.GetAchievementCriteriaInfo
@@ -38,6 +39,8 @@ local Cartographer_Waypoints = _G.Cartographer_Waypoints
 local HandyNotes = _G.HandyNotes
 local NotePoint = _G.NotePoint
 local TomTom = _G.TomTom
+
+local points = LunarFestival.points
 
 
 -- plugin handler for HandyNotes
@@ -141,7 +144,6 @@ do
 	dropdown.initialize = generateMenu
 
 	function LunarFestival:OnClick(button, down, mapFile, coord)
-
 		if button == "RightButton" and not down then
 			currentZone = mapFile
 			currentCoord = coord
@@ -224,10 +226,16 @@ local options = {
 
 -- initialise
 function LunarFestival:OnEnable()
-	HandyNotes:RegisterPluginDB("LunarFestival", self, options)
-	self:RegisterEvent("QUEST_FINISHED", "Refresh")
+	local _, month, day = CalendarGetDate()
 
-	db = LibStub("AceDB-3.0"):New("HandyNotes_LunarFestivalDB", defaults, "Default").profile
+	if ( month == 1 and day >= 20 ) or ( month == 2 and day <= 2 ) then
+		HandyNotes:RegisterPluginDB("LunarFestival", self, options)
+		self:RegisterEvent("QUEST_FINISHED", "Refresh")
+
+		db = LibStub("AceDB-3.0"):New("HandyNotes_LunarFestivalDB", defaults, "Default").profile
+	else
+		self:Disable()
+	end
 end
 
 function LunarFestival:Refresh()

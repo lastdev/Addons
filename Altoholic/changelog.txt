@@ -8,6 +8,23 @@ IMPORTANT NOTE: If you're upgrading from 4.x :
 - Make sure you delete the addon's databases in SavedVariables. ie: Altoholic.lua and all DataStore*.lua.
 - Make sure to delete the old addon directories (Altoholic & all DataStore modules) as many files have changed/moved. A patch like this one is always a good opportunity for a fresh install.
 
+5.4.004 (07/10/2013)
+
+- Fixed showing the item source for crafts in the tooltip.
+- Fixed LibCraftInfo.
+
+5.4.003 (06/10/2013)
+
+- Created and added support for 3 new libraries : LibCraftInfo, LibCraftLevels, LibCraftReagents.
+These libraries intend to replace the lost functionality caused by tables reset to zero in LibPeriodicTable.
+I now have my own dataminer, so these tables should be easier to maintain when a patch hits.
+I also cleaned up some hard coded tables to now use the libraries instead.
+Overall, the addon now consumes a little bit more memory, but the data sources are way more complete than before.
+- Replaced the internal list of recipes by LibCraftInfo.
+- Fixed the Characters -> Profession pane no longer showing reagents due to LPT changes.
+- Fixed the Grids -> Tradeskills pane no longer correct due to LPT changes.
+
+
 5.4.002 (17/09/2013)
 
 - Fixed profession levels reported as 0.

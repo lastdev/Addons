@@ -67,3 +67,7 @@ GTFO.FFSpellID["146818"] = {
 	sound = 1;
 };
 
+GTFO.FFSpellID["142928"] = {
+	--desc = "Displaced Energy (Malkorok)";
+	sound = 3;
+};

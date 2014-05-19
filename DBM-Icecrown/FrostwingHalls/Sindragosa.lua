@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Sindragosa", "DBM-Icecrown", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 86 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 122 $"):sub(12, -3))
 mod:SetCreatureID(36853)
+mod:SetEncounterID(1105)
 mod:SetModelID(30362)
 mod:SetUsedIcons(3, 4, 5, 6, 7, 8)
 mod:SetMinSyncRevision(7)--Could break if someone is running out of date version with higher revision
@@ -15,7 +16,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_SUCCESS",
-	"UNIT_HEALTH boss1",
+	"UNIT_HEALTH target focus mouseover",
 	"CHAT_MSG_MONSTER_YELL"
 )
 
@@ -29,7 +30,7 @@ local warnMysticBuffet			= mod:NewCountAnnounce(70128, 2, nil, false)
 local warnFrostBeacon			= mod:NewTargetAnnounce(70126, 4)
 local warnBlisteringCold		= mod:NewSpellAnnounce(70123, 3)
 local warnFrostBreath			= mod:NewSpellAnnounce(69649, 2, nil, mod:IsTank() or mod:IsHealer())
-local warnUnchainedMagic		= mod:NewTargetAnnounce(69762, 2, nil, not mod:IsMelee())
+local warnUnchainedMagic		= mod:NewTargetAnnounce("OptionVersion2", 69762, 2, nil, not mod:IsMelee() or mod:IsHealer())
 
 local specWarnUnchainedMagic	= mod:NewSpecialWarningYou(69762)
 local specWarnFrostBeacon		= mod:NewSpecialWarningYou(70126)
@@ -45,9 +46,9 @@ local timerNextBlisteringCold	= mod:NewCDTimer(67, 70123)
 local timerNextBeacon			= mod:NewNextTimer(16, 70126)
 local timerBlisteringCold		= mod:NewCastTimer(6, 70123)
 local timerUnchainedMagic		= mod:NewCDTimer(30, 69762)
-local timerInstability			= mod:NewBuffActiveTimer(5, 69766)
-local timerChilledtotheBone		= mod:NewBuffActiveTimer(8, 70106)
-local timerMysticBuffet			= mod:NewBuffActiveTimer(10, 70128)
+local timerInstability			= mod:NewBuffFadesTimer(5, 69766)
+local timerChilledtotheBone		= mod:NewBuffFadesTimer(8, 70106)
+local timerMysticBuffet			= mod:NewBuffFadesTimer(10, 70128)
 local timerNextMysticBuffet		= mod:NewNextTimer(6, 70128)
 local timerMysticAchieve		= mod:NewAchievementTimer(30, 4620, "AchievementMystic")
 
@@ -168,7 +169,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(69649, 71056, 71057, 71058) or args:IsSpellID(73061, 73062, 73063, 73064) then--Frost Breath
+	if args:IsSpellID(69649, 73061) then--Frost Breath
 		warnFrostBreath:Show()
 		timerNextFrostBreath:Start()
 	end
@@ -240,7 +241,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnInstability:Show(args.amount)
 			end
 		end
-	elseif args:IsSpellID(70127, 72528, 72529, 72530) then	--Mystic Buffet (phase 3 - everyone)
+	elseif args.spellId == 70127 then	--Mystic Buffet (phase 3 - everyone)
 		if args:IsPlayer() then
 			warnMysticBuffet:Show(args.amount or 1)
 			timerMysticBuffet:Start()

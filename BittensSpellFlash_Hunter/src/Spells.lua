@@ -6,7 +6,11 @@ local GetPowerRegen = GetPowerRegen
 local GetTime = GetTime
 local IsMounted = IsMounted
 local UnitExists = UnitExists
+local UnitGroupRolesAssigned = UnitGroupRolesAssigned
+local UnitInParty = UnitInParty
+local UnitInRaid = UnitInRaid
 local UnitIsDead = UnitIsDead
+local UnitIsUnit = UnitIsUnit
 local math = math
 
 c.AssociateTravelTimes(
@@ -45,23 +49,13 @@ local function generatorWillCap(padding)
 		padding = padding + 50
 	end
 	local castTime = c.GetCastTime("Cobra Shot")
-	return a.Focus 
-			+ a.FocusAdded(c.GetBusyTime() + castTime) 
-			+ castTime * a.Regen 
-			+ padding
-		> s.MaxPower("player")
+	return a.EmptyFocus 
+			- a.FocusAdded(c.GetBusyTime() + castTime) 
+			- castTime * a.Regen 
+		< padding
 end
 
 ------------------------------------------------------------------------ Common
-c.AddOptionalSpell("Mend Pet", nil, {
-	Buff = "Mend Pet",
-	BuffUnit = "pet",
-	EarlyRefresh = 2,
-	CheckFirst = function()
-		return c.GetHealthPercent("pet") < 80
-	end
-})
-
 addOptionalSpell("Serpent Sting", nil, {
 	Applies = { "Serpent Sting Debuff", "Improved Serpent Sting" },
 	CheckFirst = function(z)
@@ -105,7 +99,7 @@ c.AddOptionalSpell("Revive Pet", nil, {
 c.AddOptionalSpell("Fervor", nil, {
 	CheckFirst = function()
 		return not c.HasBuff("Fervor")
-			and s.MaxPower("player") - a.Focus > 55
+			and a.EmptyFocus > 55
 	end
 })
 
@@ -125,30 +119,26 @@ c.AddOptionalSpell("Exhilaration", nil, {
 	end,
 })
 
-c.AddOptionalSpell("Heart of the Phoenix", nil, {
-	Type = "pet",
-	NoRangeCheck = true,
-	Override = function()
-		return UnitIsDead("pet") 
-			and c.GetCooldown("Heart of the Phoenix", true) == 0
-	end
-})
-
 addOptionalSpell("A Murder of Crows", nil, {
 	MyDebuff = "A Murder of Crows",
 })
 
 addSpell("Powershot", nil, {
-	RunFirst = function(z)
+	Cooldown = 45,
+	CechkFirst = function(z)
 		c.MakeOptional(z, s.Moving("player"))
+		return s.EmptyFocus > a.Regen * c.GetCastTime("Powershot")
 	end,
 })
 
-addSpell("Barrage")
+addSpell("Barrage", nil, {
+	Cooldown = 30,
+})
+c.RegisterForFullChannels("Barrage", 3)
 
 c.AddSpell("Dire Beast", nil, {
 	CheckFirst = function()
-		return s.MaxPower("player") - a.Focus > a.Regen
+		return a.EmptyFocus > a.Regen
 	end
 })
 
@@ -189,9 +179,80 @@ addSpell("Cobra Shot", "for Serpent Sting", {
 	end
 })
 
-addSpell("Glaive Toss")
+addSpell("Glaive Toss", nil, {
+	Cooldown = 15,
+})
+
+c.AddOptionalSpell("Bullheaded", nil, {
+	Type = "pet",
+	CheckFirst = function()
+		return c.IsTanking("pet")
+	end,
+})
+
+c.AddOptionalSpell("Cower", nil, {
+	Type = "pet",
+	CheckFirst = function()
+		return c.IsTanking("pet")
+	end,
+})
+
+c.AddOptionalSpell("Growl", nil, {
+	Type = "pet",
+	FlashColor = "red",
+	CheckFirst = function(z)
+		local primaryTarget = s.GetPrimaryThreatTarget()
+		return primaryTarget
+			and (UnitIsUnit(primaryTarget, "player")
+				or UnitInRaid(primaryTarget)
+				or UnitInParty(primaryTarget))
+			and UnitGroupRolesAssigned(primaryTarget) ~= "TANK"
+	end,
+})
+
+c.AddOptionalSpell("Heart of the Phoenix", nil, {
+	Type = "pet",
+	NoRangeCheck = true,
+	Override = function()
+		return UnitIsDead("pet") 
+			and c.GetCooldown("Heart of the Phoenix", true) == 0
+	end,
+})
+
+c.AddOptionalSpell("Last Stand", nil, {
+	FlashColor = "red",
+	CheckFirst = function()
+		return c.GetHealthPercent("pet") < 25
+	end,
+})
+
+c.AddOptionalSpell("Mend Pet", nil, {
+	Buff = "Mend Pet",
+	BuffUnit = "pet",
+	EarlyRefresh = 2,
+	CheckFirst = function()
+		return c.GetHealthPercent("pet") < 80
+	end,
+})
+
+c.AddOptionalSpell("Mend Pet", "at 50", {
+	Buff = "Mend Pet",
+	BuffUnit = "pet",
+	EarlyRefresh = 2,
+	CheckFirst = function()
+		return c.GetHealthPercent("pet") < 50
+	end,
+})
+
+c.AddOptionalSpell("Rabid", nil, {
+	Type = "pet",
+})
 
 c.AddDispel("Tranquilizing Shot", nil, "")
+
+c.AddInterrupt("Counter Shot", nil, {
+	NoGCD = true,
+})
 
 ----------------------------------------------------------------- Beast Mastery
 c.AddOptionalSpell("Focus Fire", nil, {
@@ -201,7 +262,9 @@ c.AddOptionalSpell("Focus Fire", nil, {
 	end
 })
 
-addSpell("Kill Command")
+addSpell("Kill Command", nil, { 
+	Cooldown = 6,
+})
 
 addSpell("Arcane Shot", "for BM", {
 	CheckFirst = function()
@@ -211,8 +274,7 @@ addSpell("Arcane Shot", "for BM", {
 
 c.AddOptionalSpell("Bestial Wrath", nil, {
 	CheckFirst = function()
-		return a.Focus > 60
-			and not c.HasBuff("The Beast Within")
+		return a.Focus > 60 and not c.HasBuff("The Beast Within")
 	end
 })
 
@@ -222,13 +284,25 @@ c.AddOptionalSpell("Rapid Fire", "for BM", {
 	end
 })
 
-addOptionalSpell("Multi-Shot", "for Beast Cleave", {
+local function doMiniAoE()
+	return GetTime() - a.LastMultiShot < 10
+end
+
+c.AddOptionalSpell("Explosive Trap", "for Mini-AoE", {
+	FlashSize = s.FlashSizePercent() / 2,
+	FlashID = { "Explosive Trap", "Explosive Trap Launched" },
+	NoRangeCheck = true,
+	CheckFirst = function()
+		return doMiniAoE()
+	end,
+})
+
+addOptionalSpell("Multi-Shot", "for Mini-AoE", {
 	FlashSize = s.FlashSizePercent() / 2,
 	CheckFirst = function()
-		local betweenMultis = 
-			GetTime() - a.LastMultiShot 
-				+ c.GetBusyTime() + c.GetCastTime("Multi-Shot")
-		return betweenMultis < 13.5 and betweenMultis > 3.5
+		return doMiniAoE() 
+			and GetTime() - a.LastMultiShot 
+				+ c.GetBusyTime() + c.GetCastTime("Multi-Shot") > 3.5
 	end,
 })
 

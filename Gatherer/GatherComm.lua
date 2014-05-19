@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.0 (<%codename%>)
-	Revision: $Id: GatherComm.lua 997 2012-09-11 03:14:32Z Esamynn $
+	Version: 4.4.1 (<%codename%>)
+	Revision: $Id: GatherComm.lua 1106 2014-02-23 01:00:37Z Esamynn $
 
 	License:
 	This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.0/Gatherer/GatherComm.lua $", "$Rev: 997 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherComm.lua $", "$Rev: 1106 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient
@@ -104,7 +104,7 @@ function Gatherer.Comm.SendMsg( sendType, target, objectId, gatherType, indoorNo
 end
 
 local lastMessage = ""
-local playerName = UnitName("player")
+local playerNameFull = UnitName("player").."-"..((GetRealmName()):gsub(" ", ""))
 function Gatherer.Comm.Receive( message, how, who )
 	local setting = Gatherer.Config.GetSetting
 	local msgtype = "raid"
@@ -115,7 +115,7 @@ function Gatherer.Comm.Receive( message, how, who )
 		return
 	end
 
-	if ( message ~= lastMessage and who ~= playerName ) then
+	if ( message ~= lastMessage and who ~= playerNameFull ) then
 		if (how == "GUILD") then msgtype = "guild" end
 		if (how == "WHISPER") then
 			msgtype = "whisper"

@@ -59,6 +59,10 @@ end
 
 a.LastSoulReaper = 0
 local function adjustResourcesForSuccessfulCast(info)
+	if c.InfoMatches(info, "Blood Boil") then
+		return -- Blood Boil's RP return is before the cast succeeds
+	end
+	
 	local cost = s.SpellCost(info.Name)
 	if cost == 0 then
 		local bump = getBump(
@@ -70,7 +74,10 @@ local function adjustResourcesForSuccessfulCast(info)
 			rpBumpExpires = GetTime() + .8
 		end
 		if c.InfoMatches(
-			info, "Soul Reaper - Frost", "Soul Reaper - Unholy") then
+			info, 
+			"Soul Reaper - Frost", 
+			"Soul Reaper - Unholy", 
+			"Soul Reaper - Blood") then
 			
 			a.LastSoulReaper = info.GCDStart
 			c.Debug("Event", "Soul Reaper Cast", info.GCDStart, GetTime())
@@ -108,8 +115,8 @@ local function flashNoCap(...)
 	local flashed
 	for i = 1, select("#", ...) do
 		local name = select(i, ...)
-		local spell = c.GetSpell(name)
-		if s.Flashable(spell.ID) and s.Castable(spell) then
+		if c.Flashable(name) then
+			local spell = c.GetSpell(name)
 			local bump = getBump(
 				s.SpellName(spell.ID), a.FreezingFog, a.CrimsonScourge)
 			if bump == 0 or a.RP + bump <= s.MaxPower("player") then
@@ -203,6 +210,18 @@ function a.PreFlash()
 		else
 			a.RP = a.RP + getBump(info.Name, a.FreezingFog, a.CrimsonScourge)
 		end
+		if c.IsQueued("Empower Rune Weapon") then
+			for i = 1, 6 do
+				a.Runes[i] = 0
+			end
+		else
+			if c.IsQueued("Blood Tap") then
+				a.PendingDeathRunes = a.PendingDeathRunes + 1
+			end
+			if c.IsQueued("Plague Leech") then
+				a.PendingDeathRunes = a.PendingDeathRunes + 2
+			end
+		end
 		local cost = a.Costs[info.Name]
 		if s.Buff(c.GetID("Crimson Scourge"), "player") 
 			and c.InfoMatches(info, "Blood Boil", "Death and Decay") then
@@ -237,6 +256,7 @@ function a.PreFlash()
 			death = consumeRune(6, death)
 			death = consumeRune(3, death)
 			death = consumeRune(4, death)
+			a.PendingDeathRunes = a.PendingDeathRunes - death
 		end
 		if consumesKM(info) then
 			a.KillingMachine = false
@@ -245,12 +265,6 @@ function a.PreFlash()
 			and c.IsQueued("Howling Blast", "Icy Touch") then
 			
 			a.FreezingFog = a.FreezingFog - 1
-		end
-		if c.IsQueued("Blood Tap") then
-			a.PendingDeathRunes = a.PendingDeathRunes + 1
-		end
-		if c.IsQueued("Plague Leech") then
-			a.PendingDeathRunes = a.PendingDeathRunes + 2
 		end
 	end
 	
@@ -273,6 +287,7 @@ a.Rotations.Blood = {
 	
 	FlashInCombat = function()
 		flashInterrupts()
+		a.SetCost(1, 0, 0, 0, "Soul Reaper - Blood")
 		c.FlashAll(
 			"Rune Tap", 
 			"Dark Command", 
@@ -284,9 +299,10 @@ a.Rotations.Blood = {
 			uncontrolledMitigationBuffs,
 			c.COMMON_TANKING_BUFFS,
 			"Death Pact",
-			"Dancing Rune Weapon",
+			"Dancing Rune Weapon Prime",
 			"Bone Shield",
 			"Vampiric Blood",
+			"Dancing Rune Weapon",
 			"Icebound Fortitude Glyphed",
 			"Raise Dead for Death Pact",
 			"Conversion",
@@ -300,6 +316,7 @@ a.Rotations.Blood = {
 						"Death Strike",
 						"Death and Decay Free",
 						"Blood Boil for AoE B or Free",
+						"Soul Reaper - Blood B",
 						"Heart Strike B",
 						"Rune Strike",
 						"Horn of Winter")
@@ -308,6 +325,7 @@ a.Rotations.Blood = {
 						"Death and Decay",
 						"Outbreak",
 						"Blood Boil for AoE or Free",
+						"Soul Reaper - Blood",
 						"Heart Strike",
 						"Death Strike",
 						"Rune Strike",
@@ -320,9 +338,11 @@ a.Rotations.Blood = {
 					"Icy Touch for Frost Fever",
 					"Plague Strike for Blood Plague",
 					"Death Strike",
+					"Soul Reaper - Blood BB",
 					"Heart Strike BB",
 					"Blood Boil Free",
 					"Rune Strike for Resources",
+					"Soul Reaper - Blood",
 					"Heart Strike",
 					"Rune Strike",
 					"Horn of Winter")
@@ -340,10 +360,13 @@ a.Rotations.Blood = {
 				"Blood Boil for Weakened Blows",
 				"Rune Strike for Resources",
 				"Horn of Winter for Buff",
+				"Soul Reaper - Blood for Runic Power unless AoE",
 				"Heart Strike for Runic Power unless AoE",
 				"Blood Boil for Runic Power",
 				"Horn of Winter for Runic Power",
+				"Rune Strike for Runic Corruption",
 				"Plague Leech if Outbreak",
+				"Death and Decay without Consequence",
 				"Blood Boil Free",
 				"Outbreak Early")
 		end
@@ -417,32 +440,32 @@ a.Rotations.Frost = {
 				"Frost Strike for Resources",
 				"Plague Strike unless RE",
 				"Blood Tap",
-				"Plague Leech")
+				"Plague Leech",
+				"Horn of Winter")
 		elseif OffhandHasWeapon() then
 			flashing = c.PriorityFlash(
 				"Frost Strike under KM",
 				"Frost Strike at 88",
-				"Plague Leech at 2",
-				"Outbreak at 2",
-				"Unholy Blight at 2",
 				"Soul Reaper - Frost",
 				"Blood Tap for Soul Reaper - Frost",
+				"Howling Blast BB or FF",
+				"Unholy Blight",
 				"Howling Blast for Frost Fever",
 				"Plague Strike for Blood Plague",
 				"Howling Blast under Freezing Fog",
 				"Frost Strike at 76",
-				"Obliterate UU",
-				"Howling Blast BB or FF",
-				"Plague Leech if Outbreak",
-				"Horn of Winter",
-				"Obliterate U",
+				"Obliterate U w/out KM",
 				"Howling Blast",
-				"Frost Strike for Resources except Blood Charge",
+				"Frost Strike for Runic Empowerment",
 				"Blood Tap at 8 or Non-Execute",
-				"Death and Decay",
 				"Frost Strike at 40",
+				"Horn of Winter",
 				"Death Coil at 60",
-				"Empower Rune Weapon")
+				"Blood Tap",
+				"Plague Leech",
+				"Empower Rune Weapon",
+				"Death and Decay U",
+				"Plague Strike U")
 		else
 			flashing = c.PriorityFlash(
 				"Plague Leech at 1",

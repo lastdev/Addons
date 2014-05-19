@@ -1,6 +1,6 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 	Revision: $Id: PostMonitor.lua 5421 2013-06-12 17:58:07Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.18/BeanCounter/PostMonitor.lua $","$Rev: 5421 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.19/BeanCounter/PostMonitor.lua $","$Rev: 5421 $","5.1.DEV.", 'auctioneer', 'libs')
 
 --[[Most of this code is from BC classic]]--
 local libName = "BeanCounter"

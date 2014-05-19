@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(184, "DBM-Party-Cataclysm", 11, 76)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetCreatureID(52053)
 mod:SetZone()
 
@@ -27,7 +27,7 @@ local timerZanzilElixir		= mod:NewCDTimer(30, 96316)
 
 local soundGaze				= mod:NewSound(96342)
 
-mod:AddBoolOption("SetIconOnGaze")
+mod:AddBoolOption("SetIconOnGaze", false)
 mod:AddBoolOption("InfoFrame", mod:IsHealer())--on by default for healers, so they know what numpties to heal through gas
 
 function mod:GazeTarget()
@@ -58,7 +58,7 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 96388 then
+	if args.spellId == 96338 then
 		timerZanzilGas:Start()
 	elseif args.spellId == 96316 then
 		warnZanzilElixir:Show()

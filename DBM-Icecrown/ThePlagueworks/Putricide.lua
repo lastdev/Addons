@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Putricide", "DBM-Icecrown", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 58 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 130 $"):sub(12, -3))
 mod:SetCreatureID(36678)
+mod:SetEncounterID(1102)
 mod:SetModelID(30881)
 mod:SetUsedIcons(5, 6, 7, 8)
 --mod:SetMinSyncRevision(3860)
@@ -54,8 +55,8 @@ local timerSlimePuddleCD			= mod:NewCDTimer(35, 70341)				-- Approx
 local timerUnstableExperimentCD		= mod:NewNextTimer(38, 70351)			-- Used every 38 seconds exactly except after phase changes
 local timerChokingGasBombCD			= mod:NewNextTimer(35.5, 71255)
 local timerMalleableGooCD			= mod:NewCDTimer(25, 72295)
-local timerTearGas					= mod:NewBuffActiveTimer(16, 71615)
-local timerPotions					= mod:NewBuffActiveTimer(30, 73122)
+local timerTearGas					= mod:NewBuffFadesTimer(16, 71615)
+local timerPotions					= mod:NewBuffActiveTimer(30, 71621)
 local timerMutatedPlagueCD			= mod:NewCDTimer(10, 72451)				-- 10 to 11
 local timerUnboundPlagueCD			= mod:NewNextTimer(60, 70911)
 local timerUnboundPlague			= mod:NewBuffActiveTimer(12, 70911)		-- Heroic Ability: we can't keep the debuff 60 seconds, so we have to switch at 12-15 seconds. Otherwise the debuff does to much damage!
@@ -76,8 +77,7 @@ mod:AddBoolOption("GooArrow")
 
 local warned_preP2 = false
 local warned_preP3 = false
-local phase = 0
-local lastGoo = 0
+mod.vb.phase = 0
 
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
@@ -86,8 +86,7 @@ function mod:OnCombatStart(delay)
 	warnUnstableExperimentSoon:Schedule(25-delay)
 	warned_preP2 = false
 	warned_preP3 = false
-	phase = 1
-	lastGoo = 0
+	self.vb.phase = 1
 	if self:IsDifficulty("heroic10", "heroic25") then
 		timerUnboundPlagueCD:Start(10-delay)
 	end
@@ -134,7 +133,7 @@ function mod:SPELL_CAST_START(args)
 		timerSlimePuddleCD:Cancel()
 		timerChokingGasBombCD:Cancel()
 		timerUnboundPlagueCD:Cancel()
-	elseif args.spellId == 72842 then		--Volatile Experiment (heroic phase change begin)
+	elseif args.spellId == 72840 then		--Volatile Experiment (heroic phase change begin)
 		warnVolatileExperiment:Show()
 		warnUnstableExperimentSoon:Cancel()
 		warnChokingGasBombSoon:Cancel()
@@ -143,12 +142,12 @@ function mod:SPELL_CAST_START(args)
 		timerSlimePuddleCD:Cancel()
 		timerChokingGasBombCD:Cancel()
 		timerUnboundPlagueCD:Cancel()
-	elseif args.spellId == 72851 then		--Create Concoction (Heroic phase change end)
+	elseif args.spellId == 71621 then		--Create Concoction (Heroic phase change end)
 		if self:IsDifficulty("heroic10", "heroic25") then
 			self:ScheduleMethod(40, "NextPhase")	--May need slight tweaking +- a second or two
 			timerPotions:Start()
 		end
-	elseif args.spellId == 73121 then		--Guzzle Potions (Heroic phase change end)
+	elseif args.spellId == 71893 then		--Guzzle Potions (Heroic phase change end)
 		if self:IsDifficulty("heroic10") then
 			self:ScheduleMethod(40, "NextPhase")	--May need slight tweaking +- a second or two
 			timerPotions:Start()
@@ -160,8 +159,8 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:NextPhase()
-	phase = phase + 1
-	if phase == 2 then
+	self.vb.phase = self.vb.phase + 1
+	if self.vb.phase == 2 then
 		warnUnstableExperimentSoon:Schedule(15)
 		timerUnstableExperimentCD:Start(20)
 		timerSlimePuddleCD:Start(10)
@@ -171,7 +170,7 @@ function mod:NextPhase()
 		if self:IsDifficulty("heroic10", "heroic25") then
 			timerUnboundPlagueCD:Start(50)
 		end
-	elseif phase == 3 then
+	elseif self.vb.phase == 3 then
 		timerSlimePuddleCD:Start(15)
 		timerMalleableGooCD:Start(9)
 		timerChokingGasBombCD:Start(12)
@@ -185,7 +184,7 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args.spellId == 70341 and self:AntiSpam(5, 1) then
 		warnSlimePuddle:Show()
-		if phase == 3 then
+		if self.vb.phase == 3 then
 			timerSlimePuddleCD:Start(20)--In phase 3 it's faster
 		else
 			timerSlimePuddleCD:Start()
@@ -233,7 +232,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args:IsSpellID(71615, 71618) then	--71615 used in 10 and 25 normal, 71618?
 		timerTearGas:Start()
 	elseif args.spellId == 72451 then	-- Mutated Plague
-		warnMutatedPlague:Show(args.spellName, args.destName, args.amount or 1)
+		warnMutatedPlague:Show(args.destName, args.amount or 1)
 		timerMutatedPlagueCD:Start()
 	elseif args.spellId == 70542 then
 		timerMutatedSlash:Show(args.destName)
@@ -262,7 +261,7 @@ end
 
 function mod:SPELL_AURA_APPLIED_DOSE(args)
 	if args.spellId == 72451 then	-- Mutated Plague
-		warnMutatedPlague:Show(args.spellName, args.destName, args.amount or 1)
+		warnMutatedPlague:Show(args.destName, args.amount or 1)
 		timerMutatedPlagueCD:Start()
 	elseif args.spellId == 70542 then
 		timerMutatedSlash:Show(args.destName)
@@ -303,10 +302,10 @@ end
 
 --values subject to tuning depending on dps and his health pool
 function mod:UNIT_HEALTH(uId)
-	if phase == 1 and not warned_preP2 and self:GetUnitCreatureId(uId) == 36678 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.83 then
+	if self.vb.phase == 1 and not warned_preP2 and self:GetUnitCreatureId(uId) == 36678 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.83 then
 		warned_preP2 = true
 		warnPhase2Soon:Show()	
-	elseif phase == 2 and not warned_preP3 and self:GetUnitCreatureId(uId) == 36678 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.38 then
+	elseif self.vb.phase == 2 and not warned_preP3 and self:GetUnitCreatureId(uId) == 36678 and UnitHealth(uId) / UnitHealthMax(uId) <= 0.38 then
 		warned_preP3 = true
 		warnPhase3Soon:Show()	
 	end

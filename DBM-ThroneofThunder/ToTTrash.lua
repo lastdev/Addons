@@ -1,15 +1,15 @@
 local mod	= DBM:NewMod("ToTTrash", "DBM-ThroneofThunder")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 9678 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10977 $"):sub(12, -3))
 mod:SetModelID(47785)
 mod:SetZone()
 
 mod.isTrashMod = true
 
 mod:RegisterEvents(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
+	"SPELL_CAST_START 139895 136751 139899",
+	"SPELL_AURA_APPLIED 139322 139900 140296",
 	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED target focus"
 )
@@ -68,16 +68,17 @@ local function SpiritFireTarget(sGUID)
 end
 
 function mod:SPELL_CAST_START(args)
-	if not mod.Options.Enabled then return end
-	if args.spellId == 139895 then
+	if not self.Options.Enabled then return end
+	local spellId = args.spellId
+	if spellId == 139895 then
 		self:Schedule(0.2, SpiritFireTarget, args.sourceGUID)
 		timerSpiritfireCD:Start()
 		if self.Options.RangeFrame and not DBM.RangeCheck:IsShown() then
 			DBM.RangeCheck:Show(3)
 		end
-	elseif args.spellId == 136751 and (args.sourceGUID == UnitGUID("target") or args.sourceGUID == UnitGUID("focus")) then
+	elseif spellId == 136751 and (args.sourceGUID == UnitGUID("target") or args.sourceGUID == UnitGUID("focus")) then
 		specWarnSonicScreech:Show(args.sourceName)
-	elseif args.spellId == 139899 then
+	elseif spellId == 139899 then
 		warnShadowNova:Show()
 		specWarnShadowNova:Show()
 		timerShadowNovaCD:Start()
@@ -85,8 +86,9 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if not mod.Options.Enabled then return end
-	if args.spellId == 139322 then--Or 139559, not sure which
+	if not self.Options.Enabled then return end
+	local spellId = args.spellId
+	if spellId == 139322 then--Or 139559, not sure which
 		stormEnergyTargets[#stormEnergyTargets + 1] = args.destName
 		if args:IsPlayer() then
 			specWarnStormEnergy:Show()
@@ -96,7 +98,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		self:Unschedule(warnStormEnergyTargets)
 		self:Schedule(1.5, warnStormEnergyTargets)--For some reason debuffs can go out as slow as 1.2, set to 1.5 in case it can get even worse then that
-	elseif args.spellId == 139900 then
+	elseif spellId == 139900 then
 		stormCloudTargets[#stormCloudTargets + 1] = args.destName
 		if args:IsPlayer() then
 			specWarnStormCloud:Show()
@@ -106,7 +108,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		self:Unschedule(warnStormCloudTargets)
 		self:Schedule(0.5, warnStormCloudTargets)
-	elseif args.spellId == 140296 then
+	elseif spellId == 140296 then
 		warnConductiveShield:Show(args.destName)
 		timerConductiveShield:Start(nil, args.destName)
 		timerConductiveShieldCD:Start(20, args.destName, args.sourceGUID)
@@ -117,7 +119,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:UNIT_DIED(args)
-	if not mod.Options.Enabled then return end
+	if not self.Options.Enabled then return end
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 70308 then--Soul-Fed Construct
 		timerSpiritfireCD:Cancel()
@@ -144,7 +146,7 @@ end
 
 --"<1.0 17:57:05> [UNIT_SPELLCAST_SUCCEEDED] Gastropod [[target:Fixated::0:140306]]", -- [23]
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if not mod.Options.Enabled then return end
+	if not self.Options.Enabled then return end
 	if spellId == 140306 and self:AntiSpam(3, 2) then
 		self:SendSync("OMGSnail", UnitGUID(uId))
 	end

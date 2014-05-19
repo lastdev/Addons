@@ -5,25 +5,26 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes", "deDE")
 if not L then return end
 
-L[ [=[
-Alt+Right Click To Add a HandyNote]=] ] = [=[
-Alt+Rechtsklick um ein HandyNote hinzuzufügen]=]
-L["(No Title)"] = "(Kein Titel)"
 L["Add Handy Note"] = "Notiz hinzufügen"
 L["Add this location to Cartographer_Waypoints"] = "Diese Stelle zu Cartographer_Waypoints hinzufügen"
 L["Add this location to TomTom waypoints"] = "Diese Stelle zu TomTom hinzufügen"
+L[ [=[
+Alt+Right Click To Add a HandyNote]=] ] = [=[
+Alt+Rechtsklick um ein HandyNote hinzuzufügen]=]
+L["|cFF00FF00Hint: |cffeda55fCtrl+Shift+LeftDrag|cFF00FF00 to move a note"] = "|cFF00FF00Hinweis: |cffeda55fStrg+Shift+Linksklick|cFF00FF00 um eine Notiz zu bewegen"
 L["Configuration for each individual plugin database."] = "Konfiguration für jede Plugin Datenbank."
 L["Delete Handy Note"] = "Notiz löschen"
 L["Description/Notes:"] = "Beschreibung/Notizen:"
-L["ERROR_CREATE_NOTE1"] = "HandyNotes konnte hier keine Notiz erstellen, da es nicht möglich ist Deine momentane Position zu ermitteln. Gewöhnlich ist dies der Fall, wenn es keine Karte für die momentane Zone gibt."
 L["Edit Handy Note"] = "Notiz bearbeiten"
 L["Enable HandyNotes"] = "HandyNotes aktivieren"
 L["Enable or disable HandyNotes"] = "HandyNotes aktivieren oder deaktivieren"
+L["ERROR_CREATE_NOTE1"] = "HandyNotes konnte hier keine Notiz erstellen, da es nicht möglich ist Deine momentane Position zu ermitteln. Gewöhnlich ist dies der Fall, wenn es keine Karte für die momentane Zone gibt."
 L["HandyNotes"] = "HandyNotes"
 L["Icon Alpha"] = "Symboltransparenz"
 L["Icon Scale"] = "Symbolgröße"
 L["Minimap Icon Alpha"] = "Transparenz der Minikartensymbole"
 L["Minimap Icon Scale"] = "Größe der Minikartensymbole"
+L["(No Title)"] = "(Kein Titel)"
 L["Overall settings"] = "Allgemeine Einstellungen"
 L["Overall settings that affect every database"] = "Allgemeine Einstellungen für jede Datenbank"
 L["Plugin databases"] = "Plugin Datenbanken"
@@ -43,5 +44,4 @@ L["These settings control the look and feel of the HandyNotes icons."] = "Diese 
 L["Title"] = "Titel"
 L["World Map Icon Alpha"] = "Transparenz der Weltkartensymbole"
 L["World Map Icon Scale"] = "Größe der Weltkartensymbole"
-L["|cFF00FF00Hint: |cffeda55fCtrl+Shift+LeftDrag|cFF00FF00 to move a note"] = "|cFF00FF00Hinweis: |cffeda55fStrg+Shift+Linksklick|cFF00FF00 um eine Notiz zu bewegen"
 

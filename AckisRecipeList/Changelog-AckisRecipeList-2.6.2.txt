@@ -1,0 +1,24 @@
+tag 2.6.2
+922fe07d970bc6c7f8dcf17cae1e0c1bbd175091
+James D. Callahan III <jcallahan@curse.com>
+2014-02-15 19:55:25 -0600
+
+
+
+--------------------
+
+James D. Callahan III:
+	- Finally got around to implementing ticket #996 after roughly three years and ten months.
+	- Moved the "Display Exclusions" and "Skill" checkboxes.
+	- Changed AddAllWaypoints to insert the recipe object into the WAYPOINT_ENTITIES table, rather than its spell id.
+	- Made another reversion to DisplayAcquireData() - GnomeWorks expected the recipe to be a spell ID.
+	- Added SpellID Recipe method.
+	- Moved some things around.
+	- Cleanups and clarifications.
+	- Hrm - recipe.spell_id was inexplicably replaced with recipe.id in a few places. This has been rectified, which also fixes ticket #1605
+	- Replaced private.acquire_list with a table on the AcquireTypes themselves, supported by the AssignRecipe, GetRecipe, GetSortedRecipes, and RecipePairs methods.
+	- Cleanup of Sort_Acquisition(), and changed it to use the actual AcquireTypes.
+	- Cleaned up private.SortRecipeList() and added the sorted list as a return value.
+	- Make sure the AcquireType isn't nil before attempting to get its ID.
+	- AcquireType:Entities()=>AcquireType:EntityPairs()
+	- I overzealously changed a parameter type for DisplayAcquireData, forgetting that it was used as an API for other AddOns (GnomeWorks). Whoops. Reverted.

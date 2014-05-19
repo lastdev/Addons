@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod(741, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 9886 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
 mod:SetCreatureID(62397)
+mod:SetEncounterID(1498)
 mod:SetZone()
 mod:SetUsedIcons(1, 2)
 
@@ -10,19 +11,22 @@ mod:RegisterCombat("combat")
 
 -- CC can be cast before combat. So needs to seperate SPELL_AURA_APPLIED for pre-used CCs before combat.
 mod:RegisterEvents(
-	"SPELL_AURA_REFRESH",
-	"SPELL_AURA_APPLIED"
+	"SPELL_AURA_REFRESH 122224",
+	"SPELL_AURA_APPLIED 122224",
+	"SPELL_AURA_REMOVED 122224"
 )
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",
-	"SPELL_PERIODIC_DAMAGE",
-	"SPELL_PERIODIC_MISSED",
+	"SPELL_AURA_APPLIED 121881 122064 122055",
+	"SPELL_AURA_REFRESH 121881 122064 122055",
+	"SPELL_AURA_REMOVED 121885",
+	"SPELL_CAST_START 122406 121876 122064 122193 122149",
+	"SPELL_DAMAGE 131830 122125 122064 121898",
+	"SPELL_MISSED 131830 122125 122064 121898",
+	"SPELL_PERIODIC_DAMAGE 131830 122125 122064 121898",
+	"SPELL_PERIODIC_MISSED 131830 122125 122064 121898",
 	"UNIT_DIED",
-	"UNIT_SPELLCAST_SUCCEEDED",
+	"UNIT_SPELLCAST_SUCCEEDED boos1",
 	"UNIT_AURA_UNFILTERED"
 )
 
@@ -77,25 +81,17 @@ local countdownImpalingSpear			= mod:NewCountdown(49, 122224, nil, nil, 10) -- l
 mod:AddBoolOption("AmberPrisonIcons", true)
 
 local Reinforcement = EJ_GetSectionInfo(6554)
+local strikeSpell = GetSpellInfo(123963)
 local addsCount = 0
 local amberPrisonIcon = 2
 local zarthikCount = 0
 local firstStriked = false
-local strikeSpell = GetSpellInfo(123963)
 local strikeTarget = nil
-local amberPrisonTargets = {}
 local windBombTargets = {}
 local zarthikGUIDS = {}
 
-local function warnAmberPrisonTargets()
-	warnAmberPrison:Show(table.concat(amberPrisonTargets, "<, >"))
-	table.wipe(amberPrisonTargets)
-end
-
-local function warnWindBombTargets()
-	warnWindBomb:Show(table.concat(windBombTargets, "<, >"))
+local function clearWindBombTargets()
 	table.wipe(windBombTargets)
-	timerWindBombCD:Start()
 end
 
 function mod:OnCombatStart(delay)
@@ -104,7 +100,6 @@ function mod:OnCombatStart(delay)
 	zarthikCount = 0
 	firstStriked = false
 	strikeTarget = nil
-	table.wipe(amberPrisonTargets)
 	table.wipe(windBombTargets)
 	table.wipe(zarthikGUIDS)
 	timerKorthikStrikeCD:Start(18-delay)
@@ -115,23 +110,23 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 122224 and args.sourceName == UnitName("player") then
+	local spellId = args.spellId
+	if spellId == 122224 and args.sourceName == UnitName("player") then
 		warnImpalingSpear:Cancel()
 		warnImpalingSpear:Schedule(40)
 		countdownImpalingSpear:Cancel()
 		countdownImpalingSpear:Start()
 		timerImpalingSpear:Start(args.destName)
-	elseif args.spellId == 121881 then--Not a mistake, 121881 is targeting spellid.
-		amberPrisonTargets[#amberPrisonTargets + 1] = args.destName
+	elseif spellId == 121881 then--Not a mistake, 121881 is targeting spellid.
+		warnAmberPrison:CombinedShow(0.3, args.destName)
 		if args:IsPlayer() then
 			specWarnAmberPrison:Show()
 			if not self:IsDifficulty("lfr25") then
 				yellAmberPrison:Yell()
 			end
+		else
+			specWarnAmberPrisonOther:Show()
 		end
-		self:Unschedule(warnAmberPrisonTargets)
-		self:Schedule(0.3, warnAmberPrisonTargets)
-		specWarnAmberPrisonOther:Show()
 		if self.Options.AmberPrisonIcons then
 			self:SetIcon(args.destName, amberPrisonIcon)
 			if amberPrisonIcon == 2 then
@@ -140,13 +135,13 @@ function mod:SPELL_AURA_APPLIED(args)
 				amberPrisonIcon = 2
 			end
 		end
-	elseif args.spellId == 122064 then
+	elseif spellId == 122064 then
 		warnCorrosiveResin:Show(args.destName)
 		if args:IsPlayer() and self:AntiSpam(3, 5) then
 			specWarnCorrosiveResin:Show()
 			yellCorrosiveResin:Yell()
 		end
-	elseif args.spellId == 122055 and args:IsPlayer() then
+	elseif spellId == 122055 and args:IsPlayer() then
 		local _, _, _, _, _, duration, expires, _, _ = UnitDebuff("player", args.spellName)
 		timerResidue:Start(expires-GetTime())
 	end
@@ -154,32 +149,34 @@ end
 mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 122224 and args.sourceName == UnitName("player") then
+	local spellId = args.spellId
+	if spellId == 122224 and args.sourceName == UnitName("player") then
 		warnImpalingSpear:Cancel()
 		countdownImpalingSpear:Cancel()
 		timerImpalingSpear:Cancel(args.destName)
-	elseif args.spellId == 121885 and self.Options.AmberPrisonIcons then--Not a mistake, 121885 is frozon spellid
+	elseif spellId == 121885 and self.Options.AmberPrisonIcons then--Not a mistake, 121885 is frozon spellid
 		self:SetIcon(args.destName, 0)
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 122406 then
+	local spellId = args.spellId
+	if spellId == 122406 then
 		warnRainOfBlades:Show()
 		specWarnRainOfBlades:Show()
 		timerRainOfBlades:Start()
 		timerRainOfBladesCD:Start()
-	elseif args.spellId == 121876 then
+	elseif spellId == 121876 then
 		timerAmberPrisonCD:Start(36, args.sourceGUID)
-	elseif args.spellId == 122064 then
+	elseif spellId == 122064 then
 		timerCorrosiveResinCD:Start(36, args.sourceGUID)
-	elseif args.spellId == 122193 then
+	elseif spellId == 122193 then
 		warnMending:Show()
 		timerMendingCD:Start(nil, args.sourceGUID)
 		if args.sourceGUID == UnitGUID("target") or args.sourceGUID == UnitGUID("focus") then
 			specWarnMending:Show(args.sourceName)
 		end
-	elseif args.spellId == 122149 then
+	elseif spellId == 122149 then
 		if not zarthikGUIDS[args.sourceGUID] then
 			zarthikCount = zarthikCount + 1
 			zarthikGUIDS[args.sourceGUID] = zarthikCount
@@ -192,12 +189,12 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId)
-	if spellId == 131830 then
-		if #windBombTargets < 6 then -- prevent target warning spam.
-			windBombTargets[#windBombTargets + 1] = destName
-		end
-		self:Unschedule(warnWindBombTargets)
-		self:Schedule(0.3, warnWindBombTargets)
+	if spellId == 131830 and not windBombTargets[destGUID] then
+		windBombTargets[destGUID] = true
+		warnWindBomb:CombinedShow(0.5, destName)
+		timerWindBombCD:Start()
+		self:Unschedule(clearWindBombTargets)
+		self:Schedule(0.3, clearWindBombTargets)
 		if destGUID == UnitGUID("player") and self:AntiSpam(3, 3) then
 			specWarnWindBomb:Show()
 			if not self:IsDifficulty("lfr25") then
@@ -228,7 +225,7 @@ function mod:UNIT_DIED(args)
 		table.wipe(zarthikGUIDS)
 	elseif cid == 62402 then--The Kor'thik
 		timerKorthikStrikeCD:Cancel()--No need for GUID cancelation, this ability seems to be off a timed trigger and they all do it together, unlike other mob sets.
-		if self:IsDifficulty("heroic10", "heroic25") then
+		if self:IsHeroic() then
 			timerKorthikStrikeCD:Start(79)
 		end
 	end

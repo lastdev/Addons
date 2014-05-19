@@ -1,6 +1,6 @@
 ﻿--[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.0 (<%codename%>)
+	Version: 4.4.1 (<%codename%>)
 	Revision: $Id: GatherNodes.lua 1097 2013-06-15 04:00:07Z LocalizerAutoCommit $
 
 	License:

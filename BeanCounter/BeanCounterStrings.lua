@@ -5,7 +5,7 @@
 
 	AddOn: BeanCounter
 	Revision: $Id: BeanCounterStrings.lua 5374 2012-10-29 03:50:21Z kandoko $
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 
 	License:
 		This program is free software; you can redistribute it and/or

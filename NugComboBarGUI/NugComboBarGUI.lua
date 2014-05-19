@@ -151,6 +151,13 @@ do
                         set = function(info, s) NugComboBar.Commands.toggleprogress() end,
                         order = 12,
                     },
+                    vertical = {
+                        name = L"Vertical",
+                        type = "toggle",
+                        get = function(info) return NugComboBarDB.vertical end,
+                        set = function(info, s) NugComboBar.Commands.vertical() end,
+                        order = 13,
+                    },
                 }
             },
             showColor = {
@@ -348,11 +355,26 @@ do
                         set = function( info, v ) NugComboBar.Commands.preset3dlayer2(v) end,
                     },
 
+                    preset_pointbar2 = {
+                        name = L"Second Point Bar Preset",
+                        type = 'select',
+                        order = 3,
+                        values = function()
+                            local p = {}
+                            for k,_ in pairs(NugComboBar.presets) do
+                                p[k] = k
+                            end
+                            return p
+                        end,
+                        get = function(info) return NugComboBarDB.preset3dpointbar2 end,
+                        set = function( info, v ) NugComboBar.Commands.preset3dpointbar2(v) end,
+                    },
+
                     colors3d = {
                         name = L"Use colors",
-                        desc = L"Only some effects can be altered using colored lightning",
+                        desc = L"Only some effects can be altered using colored lighting.\nfireXXXX presets are good for it",
                         type = 'toggle',
-                        order = 3,
+                        order = 4,
                         get = function(info) return NugComboBarDB.colors3d end,
                         set = function( info, v ) NugComboBar.Commands.colors3d(v) end,
                     },
@@ -360,25 +382,27 @@ do
                     adjustX = {
                         name = L"X Offset",
                         type = "range",
+                        disabled = function() return NugComboBar._disableOffsetSettings end,
                         desc = L"Use these to calibrate point position on resolutions with aspect ratio other than 16:9",
                         get = function(info) return NugComboBarDB_Global.adjustX end,
                         set = function(info, v) NugComboBar.Commands.adjustx(v) end,
                         min = -10,
                         max = 10,
                         step = 0.01,
-                        order = 4,
+                        order = 5,
                     },
 
                     adjustY = {
                         name = L"Y Offset",
                         type = "range",
+                        disabled = function() return NugComboBar._disableOffsetSettings end,
                         desc = L"Use these to calibrate point position on resolutions with aspect ratio other than 16:9",
                         get = function(info) return NugComboBarDB_Global.adjustY end,
                         set = function(info, v) NugComboBar.Commands.adjusty(v) end,
                         min = -10,
                         max = 10,
                         step = 0.01,
-                        order = 5,
+                        order = 6,
                     },
                 },
             },

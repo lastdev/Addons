@@ -1,3 +1,9 @@
+== Version 50400.1.3
+* All: Flashes WoW's 9th Anniversary Celebration Package.
+
+== Version 50400.1.2
+* Bugfix: Penance was flashing normally even at the times it should have been flashing small and green.
+
 == Version 50400.1.1
 * Adjusted the flashing for Mindbender, since it now returns more mana.
 * Bugfix update to Bitten's SpellFlash Library.

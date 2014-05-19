@@ -259,9 +259,6 @@ c.AddOptionalSpell("Recklessness", "for Arms", {
 
 c.AddOptionalSpell("Bloodbath", "for Arms", {
 	NoGCD = true,
-	CheckFirst = function()
-		return hasSmashFor(5)
-	end
 })
 
 c.AddOptionalSpell("Berserker Rage", "for Arms", {
@@ -274,10 +271,8 @@ c.AddOptionalSpell("Berserker Rage", "for Arms", {
 c.AddOptionalSpell("Heroic Strike", "for Arms", {
 	NoGCD = true,
 	CheckFirst = function()
-		return not a.InExecute
-			and (a.EmptyRage < 15
-				or (a.EmptyRage < 40 
-					and c.HasMyDebuff("Colossus Smash", true, false, true)))
+		return (a.EmptyRage < 15 and not a.InExecute)
+			or (a.Smash > 0 and a.Rage > 60 and c.WearingSet(2, "DpsT16"))
 	end
 })
 
@@ -313,14 +308,14 @@ c.AddSpell("Storm Bolt", "for Arms", {
 c.AddSpell("Dragon Roar", "for Arms", {
 	Melee = true,
 	CheckFirst = function()
-		return a.Smash == 0 or a.Bloodbath
+		return a.Bloodbath
 	end,
 })
 
 c.AddSpell("Dragon Roar", "Prime for Arms", {
 	Melee = true,
 	CheckFirst = function()
-		return not a.InExecute and a.Smash == 0 and a.Bloodbath
+		return a.Smash == 0
 	end,
 })
 
@@ -330,11 +325,13 @@ c.AddSpell("Colossus Smash", "for Arms", {
 	end
 })
 
-c.AddSpell("Execute", "Prime for Arms", {
+c.AddSpell("Execute", "for Arms", {
 	CheckFirst = function()
-		return a.Smash > 0
-			or s.MaxPower("player") - rageAfterHeroicStrike() < 25
-			or c.HasBuff("Recklessness", false, false, true)
+		return not a.OverpowerIsFree
+			or a.TasteStacks == 0
+			or a.Recklessness
+			or a.EmptyRage < 25
+			or (a.Smash > 0 and not c.WearingSet(2, "DpsT16"))
 	end
 })
 
@@ -354,23 +351,25 @@ c.AddSpell("Slam", "Prime", {
 
 c.AddSpell("Slam", "Double Prime", {
 	CheckFirst = function()
-		return not a.InExecute and a.Smash > 0 and a.Smash < 1
+		return not a.InExecute 
+			and a.Smash > 0 
+			and (a.Smash < 1 or c.HasBuff("Recklessness", false, true))
 	end
 })
 
-c.AddSpell("Overpower", "at 3", {
+c.AddSpell("Overpower", nil, {
+	SpecialGCD = 1,
+	Melee = true,
+	Override = function()
+		return a.CanOverpower and (a.OverpowerIsFree or not a.InExecute)
+	end
+})
+
+c.AddSpell("Overpower", "Prime", {
 	SpecialGCD = 1,
 	Melee = true,
 	Override = function()
 		return a.CanOverpower and a.TasteStacks >= 3 and not a.InExecute
-	end
-})
-
-c.AddSpell("Overpower", "unless Execute", {
-	SpecialGCD = 1,
-	Melee = true,
-	Override = function()
-		return a.CanOverpower and (a.OverpowerIsFree or a.InExecute)
 	end
 })
 

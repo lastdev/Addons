@@ -1,4 +1,4 @@
---[[ $Id: AceGUIWidget-DropDown.lua 997 2010-12-01 18:36:28Z nevcairiel $ ]]--
+--[[ $Id: AceGUIWidget-DropDown.lua 1091 2013-09-13 14:42:34Z nevcairiel $ ]]--
 local AceGUI = LibStub("AceGUI-3.0")
 
 -- Lua APIs
@@ -356,17 +356,19 @@ end
 
 do
 	local widgetType = "Dropdown"
-	local widgetVersion = 24
+	local widgetVersion = 26
 	
 	--[[ Static data ]]--
 	
 	--[[ UI event handler ]]--
 	
 	local function Control_OnEnter(this)
+		this.obj.button:LockHighlight()
 		this.obj:Fire("OnEnter")
 	end
 	
 	local function Control_OnLeave(this)
+		this.obj.button:UnlockHighlight()
 		this.obj:Fire("OnLeave")
 	end
 
@@ -460,6 +462,7 @@ do
 		
 		self:SetHeight(44)
 		self:SetWidth(200)
+		self:SetLabel()
 	end
 	
 	-- exported, AceGUI callback
@@ -471,7 +474,6 @@ do
 		self.pullout = nil
 		
 		self:SetText("")
-		self:SetLabel("")
 		self:SetDisabled(false)
 		self:SetMultiselect(false)
 		
@@ -516,12 +518,14 @@ do
 			self.label:SetText(text)
 			self.label:Show()
 			self.dropdown:SetPoint("TOPLEFT",self.frame,"TOPLEFT",-15,-18)
-			self.frame:SetHeight(44)
+			self:SetHeight(44)
+			self.alignoffset = 30
 		else
 			self.label:SetText("")
 			self.label:Hide()
 			self.dropdown:SetPoint("TOPLEFT",self.frame,"TOPLEFT",-15,0)
-			self.frame:SetHeight(26)
+			self:SetHeight(26)
+			self.alignoffset = 12
 		end
 	end
 	
@@ -665,10 +669,8 @@ do
 		self.SetItemValue = SetItemValue
 		self.SetItemDisabled = SetItemDisabled
 		
-		self.alignoffset = 31
+		self.alignoffset = 30
 		
-		frame:SetHeight(44)
-		frame:SetWidth(200)
 		frame:SetScript("OnHide",Dropdown_OnHide)
 
 		dropdown:ClearAllPoints()
@@ -693,6 +695,14 @@ do
 		button:SetScript("OnEnter",Control_OnEnter)
 		button:SetScript("OnLeave",Control_OnLeave)
 		button:SetScript("OnClick",Dropdown_TogglePullout)
+		
+		local button_cover = CreateFrame("BUTTON",nil,self.frame)
+		button_cover.obj = self
+		button_cover:SetPoint("TOPLEFT",self.frame,"BOTTOMLEFT",0,25)
+		button_cover:SetPoint("BOTTOMRIGHT",self.frame,"BOTTOMRIGHT")
+		button_cover:SetScript("OnEnter",Control_OnEnter)
+		button_cover:SetScript("OnLeave",Control_OnLeave)
+		button_cover:SetScript("OnClick",Dropdown_TogglePullout)
 		
 		local text = _G[dropdown:GetName() .. "Text"]
 		self.text = text

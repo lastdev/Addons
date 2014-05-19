@@ -1,0 +1,21 @@
+tag v1.1.4
+2f240e29c692592d51f0b024b62fd2850aee1e01
+Ethan Centaurai <ethancentaurai@outlook.com>
+2014-01-16 13:25:37 +0000
+
+Tagging as v1.1.4.
+
+
+--------------------
+
+Ethan Centaurai:
+	- Bump Interface number to 50400.
+	- Whoops, got that wrong.
+	- Fix the dates of the 2014 Lunar Festival.
+	- Small tweaks to make the code match the Summer Festival and Hallow's End modules.
+	- Bump Interface number to 50200.
+	- Update readme.
+	- Add zone Elders to continent maps.
+	- Add city Elders to zone maps.
+	- Update Elder Moonlance's position.
+	- Increase the accuracy of the icons to two decimal places.

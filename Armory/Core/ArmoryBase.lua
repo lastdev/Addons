@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 585 2013-03-02T14:19:03Z
+    Revision: 629 2014-04-09T09:00:00Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -41,7 +41,7 @@ if ( not Armory ) then
 
         title = ARMORY_TITLE,
         version = GetAddOnMetadata("Armory", "Version"),
-        dbVersion = 31,
+        dbVersion = 34,
         interface = _G.GetBuildInfo(),
     };
 end
@@ -200,18 +200,13 @@ function Armory:ChatCommand(msg)
         elseif ( command:find("|h") ) then
             self:Find(self:ParseArgs(args[1]));
         else
-            local link = self:GetSkillListLink(args[1], args[2], args[3]);
-            if ( link ) then
-                self:OpenProfession(link);
-            else
-                table.remove(args, 1);
-                if ( self.commands[command] ) then
-                    if ( self.commands[command](unpack(args)) ) then
-                        printUsage(command);
-                    end
-                else
-                    printUsage();
+            table.remove(args, 1);
+            if ( self.commands[command] ) then
+                if ( self.commands[command](unpack(args)) ) then
+                    printUsage(command);
                 end
+            else
+                printUsage();
             end
         end
     else
@@ -401,6 +396,7 @@ function Armory:Init()
     self.hasStats = false;
     self.collapsedHeaders = {};
     self.realms = {};
+    self.postalRealms = {};
     self.characters = {};
     self.qtip = QTip;
     self.qtipIconProvider = iconProvider;
@@ -961,6 +957,54 @@ function Armory:IsDbCompatible()
             
             upgraded = true;
 
+           
+        -- convert from 31 to 32
+        elseif ( dbVersion == 31 ) then
+            for realm in pairs(ArmoryDB) do
+                for character in pairs(ArmoryDB[realm]) do
+                    entry = ArmoryDB[realm][character];
+                    entry.ArenaTeams = nil;
+                    if ( entry.Professions ) then
+                        for profession in pairs(entry.Professions) do
+                            entry.Professions[profession].ListLink = nil;
+                        end
+                    end
+                end
+            end
+            
+            upgraded = true;
+           
+        -- convert from 32 to 33
+        elseif ( dbVersion == 32 ) then
+            for realm in pairs(ArmoryDB) do
+                for character in pairs(ArmoryDB[realm]) do
+                    entry = ArmoryDB[realm][character];
+                    if ( entry.QuestHistory ) then
+						local names = {};
+						for name, data in pairs(entry.QuestHistory) do
+							if ( data["1"] == BOSS ) then
+								table.insert(names, name);
+							end
+						end
+						for _, name in pairs(names) do
+							entry.QuestHistory[name] = nil;
+						end
+                    end
+                end
+            end
+            
+            upgraded = true;
+
+           
+        -- convert from 33 to 34
+        elseif ( dbVersion == 33 ) then
+            dbEntry:SetValue(2, "General", "SummaryCurrency:"..(_G.GetCurrencyInfo(HONOR_CURRENCY)), true);
+            dbEntry:SetValue(2, "General", "SummaryCurrency:"..(_G.GetCurrencyInfo(CONQUEST_CURRENCY)), true);
+            dbEntry:SetValue(2, "General", "SummaryCurrency:"..(_G.GetCurrencyInfo(JUSTICE_CURRENCY)), true);
+            dbEntry:SetValue(2, "General", "SummaryCurrency:"..(_G.GetCurrencyInfo(VALOR_CURRENCY)), true);
+            
+            upgraded = true;
+
 --[[
         -- convert from 20 to 21
         elseif ( dbVersion == 20 ) then
@@ -1288,6 +1332,9 @@ function Armory:Reset(what, silent)
 end
 
 function Armory:OpenConfigPanel()
+	if ( not InterfaceOptionsFrame:IsShown() ) then
+		InterfaceOptionsFrame:Show();
+	end
     InterfaceOptionsFrame_OpenToCategory(ARMORY_TITLE);
 end
 
@@ -1574,16 +1621,89 @@ function Armory:RealmState(realm, collapsed)
     return ArmoryLocalSettings.DropDown;
 end
 
+function Armory:GetPostalRealmName(postalRealm)
+    if ( ArmoryDB and #self.postalRealms == 0 ) then
+        for realm in pairs(ArmoryDB) do
+			self.postalRealms[realm:gsub("[%-%s]", "")] = realm;
+        end
+    end
+    return self.postalRealms[postalRealm] or postalRealm;
+end
+
+function Armory:GetConnectedRealms()
+	if ( not self.connectedRealms ) then
+		self.connectedRealms = {}; 
+		_G.GetAutoCompleteRealms(self.connectedRealms);
+		local numRealms = table.getn(self.connectedRealms);
+		if ( numRealms == 0 ) then
+			self.connectedRealms[1] = self.playerRealm;
+		else
+			for i = 1, numRealms do
+				self.connectedRealms[i] = self:GetPostalRealmName(self.connectedRealms[i]);
+			end
+		end
+	end
+	return self.connectedRealms;
+end
+
+function Armory:IsConnectedRealm(value, explicit)
+	if ( value == self.playerRealm ) then
+		return not explicit;
+	end
+
+	for _, realm in ipairs(self:GetConnectedRealms()) do
+		if ( realm == value ) then
+			return true;
+		end
+	end
+	return false;
+end
+
+function Armory:ConnectedRealmExists()
+	for _, realm in ipairs(self:GetConnectedRealms()) do
+		if ( realm ~= self.characterRealm and ArmoryDB[realm] ) then
+			return true;
+		end
+	end
+	return false;
+end
+
+local connectedProfiles = {};
+function Armory:GetConnectedProfiles()
+	table.wipe(connectedProfiles);
+	for _, realm in ipairs(self:GetConnectedRealms()) do
+		local characters = self:CharacterList(realm);
+		for _, character in ipairs(characters) do
+			table.insert(connectedProfiles, {realm=realm, character=character}); 
+		end
+	end
+	return connectedProfiles;
+end
+
+function Armory:GetQualifiedCharacterName(profile, short)
+	local realm, character;
+    if ( profile ) then
+        realm = profile.realm;
+        character = profile.character;
+    else
+        realm, character = self:GetPaperDollLastViewed();
+    end
+    if ( short and realm == self.playerRealm ) then
+		return character;
+    elseif ( self:IsConnectedRealm(realm, true) ) then
+		realm = realm .. "|TInterface\\FriendsFrame\\UI-FriendsFrame-Link.blp:0|t";
+	end
+	return character .. "@" .. realm;
+end
+
 function Armory:RealmList()
     if ( ArmoryDB and table.getn(self.realms) == 0 ) then
-        if ( self:GetConfigUseFactionFilter() ) then
-            table.insert(self.realms, self.playerRealm or _G.GetRealmName());
-        else
-            for realm in pairs(ArmoryDB) do
-                table.insert(self.realms, realm);
-            end
-            table.sort(self.realms);
+        for realm in pairs(ArmoryDB) do
+			if ( not self:GetConfigUseFactionFilter() or (self:IsConnectedRealm(realm) and table.getn(self:CharacterList(realm)) > 0) ) then
+				table.insert(self.realms, realm);
+			end
         end
+        table.sort(self.realms);
     end
     return self.realms or {};
 end
@@ -1732,12 +1852,12 @@ function Armory:GetItemCount(link)
             local currentProfile = self:CurrentProfile();
             for _, profile in ipairs(self:Profiles()) do
                 self:SelectProfile(profile);
-                if ( (self:GetConfigGlobalItemCount() or profile.realm == self.playerRealm) and (self:GetConfigCrossFactionItemCount() or _G.UnitFactionGroup("player") == self:UnitFactionGroup("player")) ) then
+                if ( (self:GetConfigGlobalItemCount() or self:IsConnectedRealm(profile.realm)) and (self:GetConfigCrossFactionItemCount() or _G.UnitFactionGroup("player") == self:UnitFactionGroup("player")) ) then
                     local mine = self:IsPlayerSelected();
                     local suspended = mine and self.commandHandler:IsPaused();
                     local name = profile.character;
-                    if ( self:GetConfigGlobalItemCount() ) then
-                        name = name.."@"..profile.realm;
+                    if ( self:GetConfigGlobalItemCount() or self:IsConnectedRealm(profile.realm)) then
+                        name = self:GetQualifiedCharacterName(profile, not self:GetConfigGlobalItemCount());
                     end
 
                     local count, bagCount, bankCount, mailCount, auctionCount, voidCount = 0, 0, 0, 0, 0, 0;
@@ -1782,13 +1902,13 @@ function Armory:GetMultipleItemCount(items)
         local currentProfile = self:CurrentProfile();
         for _, profile in ipairs(self:Profiles()) do
             self:SelectProfile(profile);
-            if ( (self:GetConfigGlobalItemCount() or profile.realm == self.playerRealm) and (self:GetConfigCrossFactionItemCount() or _G.UnitFactionGroup("player") == self:UnitFactionGroup("player")) ) then
+            if ( (self:GetConfigGlobalItemCount() or self:IsConnectedRealm(profile.realm)) and (self:GetConfigCrossFactionItemCount() or _G.UnitFactionGroup("player") == self:UnitFactionGroup("player")) ) then
                 local result = self:ScanInventoryItems(items);
                 local mine = self:IsPlayerSelected();
                 local suspended = mine and self.commandHandler:IsPaused();
                 local name = profile.character;
-                if ( self:GetConfigGlobalItemCount() ) then
-                    name = name.."@"..profile.realm;
+                if ( self:GetConfigGlobalItemCount() or self:IsConnectedRealm(profile.realm) ) then
+                    name = self:GetQualifiedCharacterName(profile, not self:GetConfigGlobalItemCount());
                 end
                 if ( suspended ) then
                     name = name..RED_FONT_COLOR_CODE.." ("..ARMORY_UPDATE_SUSPENDED..")"..FONT_COLOR_CODE_CLOSE;
@@ -2274,7 +2394,7 @@ function Armory:GetInventoryItemSocketInfo(tooltip)
     local _, link = tooltip:GetItem();
     local itemId = self:GetItemId(link);
 
-    if ( itemId and IsEquippableItem(itemId) ) then
+    if ( itemId and IsEquippableItem(link) ) then
         local icon, texture, socketType;
 
         local itemTooltip = self:AllocateTooltip();
@@ -2296,7 +2416,7 @@ function Armory:GetInventoryItemSocketInfo(tooltip)
                     end
                 end
             end
-            
+
             icon = _G[tooltip:GetName().."Texture"..i];
             if ( icon and icon:IsShown() ) then
                 texture = strlower(icon:GetTexture() or "");
@@ -2317,7 +2437,7 @@ function Armory:GetSocketInfo(link)
     local numGems = 0;
     if ( link ) then    
         local itemId = self:GetQualifiedItemId(link);
-        if ( itemId and IsEquippableItem(itemId) ) then
+        if ( itemId and IsEquippableItem(link) ) then
             local tooltip = self:AllocateTooltip();
             self:SetHyperlink(tooltip, "item:"..itemId);
 
@@ -2406,7 +2526,7 @@ local function GetNotEquippableText(tooltip, name)
         g = Armory:Round(g, 1);
         b = Armory:Round(b, 1);
         if ( r == RED_FONT_COLOR.r and g == RED_FONT_COLOR.g and b == RED_FONT_COLOR.b ) then
-            return fontString:GetText();
+            return fontString:GetText() or "";
         end
     end
     return "";
@@ -2963,7 +3083,7 @@ function Armory:Find(...)
                 count = self:FindInventory(select(firstArg, ...));
             else
                 for _, profile in ipairs(self:Profiles()) do
-                    if ( self:GetConfigGlobalSearch() or profile.realm == self.playerRealm ) then
+                    if ( self:GetConfigGlobalSearch() or self:IsConnectedRealm(profile.realm) ) then
                         self:SelectProfile(profile);
                         if ( (flags[ARMORY_CMD_FIND_ALL] or flags[ARMORY_CMD_FIND_ITEM]) and self:HasInventory() ) then
                             findResults[ARMORY_CMD_FIND_ITEM] = self:FindItems(select(firstArg, ...));
@@ -2983,8 +3103,8 @@ function Armory:Find(...)
                         
                         for _, list in pairs(findResults) do
                             for _, line in ipairs(list) do
-                                if ( self:GetConfigGlobalSearch() and numRealms > 1 ) then
-                                    self:PrintSearchResult(format("%s (%s)", profile.character, profile.realm), line);
+                                if ( (self:GetConfigGlobalSearch() or self:ConnectedRealmExists()) and numRealms > 1 ) then
+                                    self:PrintSearchResult(self:GetQualifiedCharacterName(profile, not self:GetConfigGlobalSearch()), line);
                                 else
                                     self:PrintSearchResult(profile.character, line);
                                 end

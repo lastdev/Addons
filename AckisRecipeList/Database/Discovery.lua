@@ -2,10 +2,10 @@
 ************************************************************************
 Discovery.lua
 ************************************************************************
-File date: 2013-09-10T13:23:20Z
-File hash: 4bcba04
-Project hash: 4bcba04
-Project version: 2.5.2
+File date: 2014-02-14T05:23:40Z
+File hash: 04922c6
+Project hash: fbca907
+Project version: 2.6.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -28,13 +28,10 @@ local LibStub = _G.LibStub
 local addon = LibStub("AceAddon-3.0"):GetAddon(private.addon_name)
 local L = LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
 
-local Z = private.ZONE_NAMES
-
-private.discovery_list	= {}
 
 function addon:InitDiscovery()
 	local function AddDiscovery(identifier, location, coord_x, coord_y, faction)
-		private:AddListEntry(private.discovery_list, identifier, L[identifier], location, coord_x, coord_y, nil)
+		private.AcquireTypes.Discovery:AddEntity(identifier, L[identifier], location, coord_x, coord_y, faction)
 	end
 
 	AddDiscovery("DISCOVERY_ALCH_ELIXIRFLASK")

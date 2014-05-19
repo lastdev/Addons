@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer - Price Level Utility module
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: CompactUI.lua 5427 2013-07-13 09:28:05Z brykrys $
+	Version: 5.19.5445 (QuiescentQuoll)
+	Revision: $Id: CompactUI.lua 5444 2013-11-29 18:35:10Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a price level indicator
@@ -172,6 +172,7 @@ function private.HookAH()
 		button.IconButton:SetHeight(19)
 		button.IconButton:SetScript("OnEnter", private.IconEnter)
 		button.IconButton:SetScript("OnLeave", private.IconLeave)
+		button.IconButton:SetScript("OnClick", private.IconClick)
 		button.IconButton:SetFrameLevel(button.IconButton:GetFrameLevel() + 5)
 		button.Icon = button.IconButton:CreateTexture()
 		button.Icon:SetPoint("TOPLEFT", button.IconButton, "TOPLEFT", 0,-2)
@@ -206,9 +207,12 @@ function private.HookAH()
 		button.Owner:SetHeight(19)
 		button.Owner:SetJustifyH("LEFT")
 		button.Owner:SetFont(STANDARD_TEXT_FONT, 10)
-		button.OwnerHitBox = CreateFrame("Frame", nil, button) -- we need a Frame to call MouseIsOver
+		button.OwnerHitBox = CreateFrame("Button", nil, button)
 		button.OwnerHitBox:SetPoint("TOPLEFT", button.Owner, "TOPLEFT")
 		button.OwnerHitBox:SetPoint("BOTTOMRIGHT", button.Owner, "BOTTOMRIGHT")
+		button.OwnerHitBox:SetScript("OnEnter", private.OwnerEnter)
+		button.OwnerHitBox:SetScript("OnLeave", private.OwnerLeave)
+		button.OwnerHitBox:SetScript("OnClick", private.OwnerClick)
 		button.Bid = AucAdvanced.CreateMoney(10,110)
 		button.Bid:SetParent(button)
 		button.Bid.SetMoney = private.SetMoney
@@ -274,24 +278,26 @@ function private.HookAH()
 			local dir = private.headers.dir
 			local col = ""
 			if sort then
-				if sort == 1 then            col = "quantity"       -- Count
-				elseif sort == 2 then                      --
-					local pos = private.headers.pos    --
-					if pos == 1 then     col = "name"       -- Name
-					elseif pos == 2 then col = "quality"       -- Quality
-					end                                --
-				elseif sort == 3 then        col = "level"       -- MinLevel
-				--elseif sort == 4 then        col = 9       -- ItemLevel
-				elseif sort == 5 then        col = "duration"      -- TimeLeft
-				elseif sort == 6 then        col = "seller"      -- Owner
-				elseif sort == 7 then                      --
-					local pos = private.headers.pos    --
-					if pos == 1 then     col = "buyoutthenbid"     -- Buy
-					elseif pos == 2 then col = "bid"      -- Bid
-					--elseif pos == 3 then col = 18      -- BuyEach
-					--elseif pos == 4 then col = 17      -- BidEach
-					end                                --
-				--elseif sort == 8 then        col = 21      -- PriceLevel
+				if sort == 1 then col = "quantity" -- Count
+				elseif sort == 2 then
+					local pos = private.headers.pos
+					if pos == 1 then col = "name" -- Name
+					elseif pos == 2 then
+						col = "quality" -- Quality
+						dir = - dir -- server's default quality sort order is the opposite of CompactUI's - so invert to make them match
+					end
+				elseif sort == 3 then col = "level" -- MinLevel
+				--elseif sort == 4 then <?> -- ItemLevel
+				elseif sort == 5 then col = "duration" -- TimeLeft
+				elseif sort == 6 then col = "seller" -- Owner
+				elseif sort == 7 then
+					local pos = private.headers.pos
+					if pos == 1 then col = "minbidbuyout" -- Buy
+					elseif pos == 2 then col = "bid" -- Bid
+					--elseif pos == 3 then <?> -- BuyEach
+					--elseif pos == 4 then <?> -- BidEach
+					end
+				--elseif sort == 8 then <?> -- PriceLevel
 				end
 			end
 			if dir > 0 then
@@ -442,15 +448,24 @@ function private.SetMoney(me, value, hasBid, highBidder)
 	me:Show()
 end
 
+function private.IconClick(self, mouseButton)
+	private.ButtonClick(self:GetParent(), mouseButton)
+end
+
+function private.OwnerClick(self, mouseButton)
+	local mainButton = self:GetParent()
+	if mouseButton == "LeftButton" and IsAltKeyDown() then
+		if AucAdvanced.Modules.Filter.Basic then
+			AucAdvanced.Modules.Filter.Basic.PromptSellerIgnore(mainButton.Owner:GetText(), mainButton, "TOPLEFT", mainButton.Owner, "TOPRIGHT")
+		end
+	else
+		private.ButtonClick(mainButton, mouseButton)
+	end
+end
+
 function private.ButtonClick(me, mouseButton)
 	if IsModifiedClick() then
-		if mouseButton == "LeftButton" and IsAltKeyDown() and MouseIsOver(me.OwnerHitBox) then
-			if AucAdvanced.Modules.Filter.Basic then
-				AucAdvanced.Modules.Filter.Basic.PromptSellerIgnore(me.Owner:GetText(), me, "TOPLEFT", me.Owner, "TOPRIGHT")
-			end
-		else
-			HandleModifiedItemClick(GetAuctionItemLink("list", me.id))
-		end
+		HandleModifiedItemClick(GetAuctionItemLink("list", me.id))
 	else
 		-- Modified from Blizzard_AuctionUI.lua BrowseButton_OnClick function, as the IDs of our buttons are different
 		if GetCVarBool("auctionDisplayOnCharacter") then
@@ -483,6 +498,18 @@ function private.IconLeave(this)
 	ResetCursor()
 end
 
+function private.OwnerEnter(frame)
+	if frame.tooltipText then
+		GameTooltip:SetOwner(frame, "ANCHOR_NONE")
+		GameTooltip:SetPoint("RIGHT", frame, "LEFT")
+		GameTooltip:SetText(frame.tooltipText)
+	end
+end
+
+function private.OwnerLeave(frame)
+	GameTooltip:Hide()
+end
+
 function private.BrowseSort(a, b)
 	local sort = private.headers.sort
 	local dir = private.headers.dir
@@ -500,12 +527,12 @@ function private.BrowseSort(a, b)
 		elseif sort == 6 then        col = 11      -- Owner
 		elseif sort == 7 then                      --
 			local pos = private.headers.pos    --
-			if pos == 1 then     col = 16      -- Buy
-			elseif pos == 2 then col = 15      -- Bid
-			elseif pos == 3 then col = 18      -- BuyEach
-			elseif pos == 4 then col = 17      -- BidEach
+			if pos == 1 then     col = 17      -- Buy
+			elseif pos == 2 then col = 16      -- Bid
+			elseif pos == 3 then col = 19      -- BuyEach
+			elseif pos == 4 then col = 18      -- BidEach
 			end                                --
-		elseif sort == 8 then        col = 21      -- PriceLevel
+		elseif sort == 8 then        col = 22      -- PriceLevel
 		end
 	end
 
@@ -547,10 +574,8 @@ function private.RetrievePage()
 				item[2] = false
 			end
 
-			local name, texture, count, quality, canUse, level,
-				levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount,
-				highBidder, owner, saleStatus, itemId  = AucAdvanced.GetAuctionItemInfo("list", i)
-			local _, _, _, itemLevel, itemDetail = GetItemInfo(itemId)
+			local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName, saleStatus, itemId =  GetAuctionItemInfo("list", i)
+			local _, _, _, itemLevel, itemDetail = GetItemInfo(itemId) -- itemDetail = minUseLevel
 
 			if levelColHeader == "ITEM_LEVEL_ABBR" then
 				itemLevel = level
@@ -604,20 +629,21 @@ function private.RetrievePage()
 			item[9] = itemLevel
 			item[10] = timeLeft
 			item[11] = owner or ""
-			item[12] = minBid
-			item[13] = bidAmount
-			item[14] = minIncrement
-			item[15] = requiredBid
-			item[16] = buyoutPrice
-			item[17] = requiredBid / count
-			item[18] = buyoutPrice / count
-			item[19] = timeLeftText
-			item[20] = highBidder
-			item[21] = priceLevel or 0
-			item[22] = perItem
-			item[23] = r
-			item[24] = g
-			item[25] = b
+			item[12] = ownerFullName
+			item[13] = minBid
+			item[14] = bidAmount
+			item[15] = minIncrement
+			item[16] = requiredBid
+			item[17] = buyoutPrice
+			item[18] = requiredBid / count
+			item[19] = buyoutPrice / count
+			item[20] = timeLeftText
+			item[21] = highBidder
+			item[22] = priceLevel or 0
+			item[23] = perItem
+			item[24] = r
+			item[25] = g
+			item[26] = b
 
 			tinsert(private.pageContents, item)
 		end
@@ -628,13 +654,13 @@ end
 
 function lib.GetContents(pos)
 	if private.pageContents[pos] then
-		return unpack(private.pageContents[pos])
+		return unpack(private.pageContents[pos], 1, 26)
 	end
-	-- id, selected, count, texture, itemRarity, name, link, itemDetail, itemLevel, timeLeft, owner, minBid, bidAmount, minIncrement, requiredBid, buyoutPrice, requiredBidEach, buyoutPriceEach, timeLeftText, highBidder, priceLevel, perItem, r, g, b
+	-- id, selected, count, texture, itemRarity, name, link, itemDetail, itemLevel, timeLeft, owner, ownerFullName, minBid, bidAmount, minIncrement, requiredBid, buyoutPrice, requiredBidEach, buyoutPriceEach, timeLeftText, highBidder, priceLevel, perItem, r, g, b
 end
 
 function private.SetAuction(button, pos)
-	local id, selected, count, texture, itemRarity, name, link, itemDetail, itemLevel, timeLeft, owner, minBid, bidAmount, minIncrement, requiredBid, buyoutPrice, requiredBidEach, buyoutPriceEach, timeLeftText, highBidder, priceLevel, perItem, r, g, b = lib.GetContents(pos)
+	local id, selected, count, texture, itemRarity, name, link, itemDetail, itemLevel, timeLeft, owner, ownerFullName, minBid, bidAmount, minIncrement, requiredBid, buyoutPrice, requiredBidEach, buyoutPriceEach, timeLeftText, highBidder, priceLevel, perItem, r, g, b = lib.GetContents(pos)
 
 	if not id then
 		button:Hide()
@@ -684,11 +710,12 @@ function private.SetAuction(button, pos)
 			end
 		end
 	end
-	--if player is ignored then color name red otherwise set normal
 	if owner and AucAdvanced.Modules.Filter.Basic and AucAdvanced.Modules.Filter.Basic.IsPlayerIgnored and AucAdvanced.Modules.Filter.Basic.IsPlayerIgnored(owner) then
-		button.Owner:SetTextColor(1,0,0)
+		button.Owner:SetTextColor(1,0,0) -- ignored player tinted red
+	elseif ownerFullName then
+		button.Owner:SetTextColor(.7,1,1) -- connected realm player tinted pale blue
 	else
-		button.Owner:SetTextColor(1,1,1)
+		button.Owner:SetTextColor(1,1,1) -- default white
 	end
 
 	local perUnit = 1
@@ -706,6 +733,7 @@ function private.SetAuction(button, pos)
 	button.iLevel:SetText(itemLevel)
 	button.tLeft:SetText(timeLeftText)
 	button.Owner:SetText(owner)
+	button.OwnerHitBox.tooltipText = ownerFullName
 	button.Bid:SetMoney(showBid/perUnit, (bidAmount > 0), highBidder)
 	button.Buy:SetMoney((buyoutPrice > 0) and buyoutPrice/perUnit)
 	button:Show()
@@ -861,4 +889,4 @@ function private.SetupConfigGui(gui)
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 5427 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 5444 $")

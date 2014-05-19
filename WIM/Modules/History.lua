@@ -121,15 +121,16 @@ end
 
 local function recordWhisper(inbound, ...)
     local msg, from = ...;
-    local db = db.history.whispers;     
+    local db = db.history.whispers; 
     local win = windows.active.whisper[from] or windows.active.chat[from] or windows.active.w2w[from];
     if (win and (lists.gm[from] or db.all or (db.friends and (lists.friends[from] or win.isBN)) or (db.guild and lists.guild[from]))) then
         win.widgets.history:SetHistory(true);
-        --If realid whisper, we save them under toonname to avoid caching issues
-        --(ie "from" changes every session, we can't use that to save whispers, plus if user dumps cache, they all return unknown)
+        --If realid/btag whisper, we save them under btag to avoid caching issues
+        --(ie NAME is encoded and changes every session, we can't use that to save whispers, plus if user dumps cache, they all return unknown)
         local pid = _G.BNet_GetPresenceID(from)
         if pid then
-			from = select(5, _G.BNGetFriendInfoByID(pid))
+        	local _, _, btag, _, toonName = _G.BNGetFriendInfoByID(pid)
+			from = btag or toonName--Btag is nill, default to toonname
 		end
         local history = getPlayerHistoryTable(from);
         history.info.gm = lists.gm[from];
@@ -607,6 +608,10 @@ local function createHistoryViewer()
                         if(string.match(original, "^*")) then
                             extra = " |TInterface\\AddOns\\WIM\\Skins\\Default\\minimap.tga:20:20:0:0|t";
                             color = "fff569";
+                        end
+                        if not user then
+                        	_G.print("Your WIM history is damaged beyond repair and must be erased before it can be used again do to having conversation with a realid friend that has no battletag. This bug has been fixed in WIM but your history cannot be repaired")
+                       		return
                         end
                         self.user = user;
                         self.text:SetText("     |cff"..color..user.."|r"..extra..(gmTag == "*" and " |TInterface\\ChatFrame\\UI-ChatIcon-Blizz.blp:0:2:0:0|t" or ""));

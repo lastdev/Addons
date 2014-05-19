@@ -15,7 +15,7 @@ Other services offered by DataStore:
 DataStore = LibStub("AceAddon-3.0"):NewAddon("DataStore", "AceConsole-3.0", "AceEvent-3.0", "AceComm-3.0", "AceSerializer-3.0")
 
 local addon = DataStore
-addon.Version = "v5.2.001"
+addon.Version = "v5.4.001"
 
 local THIS_ACCOUNT = "Default"
 local commPrefix = "DataStore"

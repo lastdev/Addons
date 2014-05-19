@@ -1,6 +1,6 @@
 --[[
 	Babylonian - A sub-addon that manages the locales for other addons.
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 	Revision: $Id: Babylonian.lua 332 2012-09-02 22:14:59Z Esamynn $
 	URL: http://auctioneeraddon.com/dl/
 

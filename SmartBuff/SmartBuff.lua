@@ -40,7 +40,7 @@ GameTooltip:SetUnitDebuff("unit", [index] or ["name", "rank"][, "filter"]);
 * The untilCanceled return value is true if the buff doesn't have its own duration (e.g. stealth)
 ]]--
 
-SMARTBUFF_VERSION       = "v5.4a";
+SMARTBUFF_VERSION       = "v5.4b";
 SMARTBUFF_VERSIONNR     = 50001;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in cast buffs";
@@ -2901,7 +2901,7 @@ function SMARTBUFF_Options_Init(self)
   --DebugChatFrame:AddMessage("Starting init SB");
   
   _, sPlayerClass = UnitClass("player");
-  sRealmName = GetCVar("RealmName");
+  sRealmName = GetRealmName();
   sPlayerName = UnitName("player");
   sID = sRealmName .. ":" .. sPlayerName;
   --AutoSelfCast = GetCVar("autoSelfCast");

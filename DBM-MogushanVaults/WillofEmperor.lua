@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod(677, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 9709 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
 mod:SetCreatureID(60399, 60400)--60396 (Rage), 60397 (Strength), 60398 (Courage), 60480 (Titan Spark), 60399 (Qin-xi), 60400 (Jan-xi)
+mod:SetEncounterID(1407)
 mod:SetZone()
 --mod:SetMinSyncRevision(7708)
 
@@ -10,11 +11,11 @@ mod:RegisterCombat("emote", L.Pull)
 mod:SetMinCombatTime(25)
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 target focus",--For this boss we want target/focus and boss1-2
+	"SPELL_AURA_APPLIED 116525 116778 116829",
 	"CHAT_MSG_MONSTER_YELL",
 	"UNIT_DIED",
-	"UNIT_POWER"
+	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 target focus",--For this boss we want target/focus and boss1-2
+	"UNIT_POWER_FREQUENT boss1 boss2"
 )
 
 mod:RegisterEvents(
@@ -30,8 +31,6 @@ local warnEnergizingSmash		= mod:NewSpellAnnounce(116550, 3, nil, mod:IsMelee())
 --Courage
 local warnCourageActivated		= mod:NewCountAnnounce("ej5676", 3, 116778)
 local warnFocusedDefense		= mod:NewTargetAnnounce(116778, 4)
---Sparks (Heroic Only)
---local warnFocusedEnergy			= mod:NewTargetAnnounce(116829, 4)
 --Jan-xi and Qin-xi
 local warnBossesActivatedSoon	= mod:NewPreWarnAnnounce("ej5726", 10, 3, 116815)
 local warnBossesActivated		= mod:NewSpellAnnounce("ej5726", 3, 116815)
@@ -72,14 +71,15 @@ mod:AddBoolOption("CountOutCombo")
 mod:AddBoolOption("InfoFrame", false)
 mod:AddBoolOption("ArrowOnCombo", mod:IsTank())--Very accurate for tank, everyone else not so much (tanks always in front, and boss always faces tank, so if he spins around on you, you expect it, melee on other hand have backwards arrows if you spun him around.
 
-local comboMob = nil
-local comboCount = 0
-local expectedComboCount = 5
-local titanGasCast = 0
-local courageCount = 0
-local strengthCount = 0
-local rageCount = 0
+--Upvales, don't need variables
 local focusedAssault = GetSpellInfo(116525)
+--Important, needs recover
+mod.vb.comboMob = nil
+mod.vb.comboCount = 0
+mod.vb.titanGasCast = 0
+mod.vb.courageCount = 0
+mod.vb.strengthCount = 0
+mod.vb.rageCount = 0
 
 local rageTimers = {
 	[0] = 15.6,--Varies from heroic vs normal, number here doesn't matter though, we don't start this on pull we start it off first yell (which does always happen).
@@ -99,20 +99,55 @@ local rageTimers = {
 --timers variate slightly so never will be perfect but trying to get as close as possible. seem same in all modes.
 }
 
+local function addsDelay(add)
+	if add == "Courage" then
+		mod.vb.courageCount = mod.vb.courageCount + 1
+		warnCourageActivated:Show(mod.vb.courageCount)
+		specWarnCourageActivated:Show()
+		--Titan gases delay spawns by 50 seconds, even on heroic (even though there is no actual gas phase, the timing stays same on heroic)
+		if mod.vb.courageCount >= 2 then
+			timerCourageActivates:Start(150, mod.vb.courageCount+1)
+		else
+			timerCourageActivates:Start(100, mod.vb.courageCount+1)
+		end
+	elseif add == "Strength" then
+		mod.vb.strengthCount = mod.vb.strengthCount + 1
+		warnStrengthActivated:Show(mod.vb.strengthCount)
+		specWarnStrengthActivated:Show()
+		--Titan gases delay spawns by 50 seconds, even on heroic (even though there is no actual gas phase, the timing stays same on heroic)
+		if mod.vb.strengthCount == 4 or mod.vb.strengthCount == 6 or mod.vb.strengthCount == 8 then--Unverified
+			timerStrengthActivates:Start(100, mod.vb.strengthCount+1)
+		else
+			timerStrengthActivates:Start(50, mod.vb.strengthCount+1)
+		end
+	elseif add == "Rage" then
+		mod.vb.rageCount = mod.vb.rageCount + 1
+		warnRageActivated:Show(mod.vb.rageCount)
+		--Titan gas delay has funny interaction with these and causes 30 or 60 second delays. Pretty much have to use a table.
+		timerRageActivates:Start(rageTimers[mod.vb.rageCount] or 33, mod.vb.rageCount+1)
+		mod:Schedule(rageTimers[mod.vb.rageCount] or 33, addsDelay, "Rage")--Because he doesn't always yell, schedule next one here as a failsafe
+	elseif add == "Boss" then
+		warnBossesActivated:Show()
+		specWarnBossesActivated:Show(10)
+		if not mod:IsHeroic() then
+			timerTitanGasCD:Start(113, 1)
+		end
+	end
+end
+
+
 function mod:OnCombatStart(delay)
-	comboMob = nil
-	comboCount = 0
-	titanGasCast = 0
-	rageCount = 0
-	strengthCount = 0
-	courageCount = 0
-	if self:IsDifficulty("heroic10", "heroic25") then--Heroic trigger is shorter, everything comes about 6 seconds earlier
-		expectedComboCount = 10
+	self.vb.comboMob = nil
+	self.vb.comboCount = 0
+	self.vb.titanGasCast = 0
+	self.vb.rageCount = 0
+	self.vb.strengthCount = 0
+	self.vb.courageCount = 0
+	if self:IsHeroic() then--Heroic trigger is shorter, everything comes about 6 seconds earlier
 		timerStrengthActivates:Start(35-delay, 1)
 		timerCourageActivates:Start(69-delay, 1)
 		timerBossesActivates:Start(101-delay)
 	else
-		expectedComboCount = 5
 		timerStrengthActivates:Start(42-delay, 1)
 		timerCourageActivates:Start(75-delay, 1)
 		timerBossesActivates:Start(-delay)
@@ -134,56 +169,21 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 116525 then
+	local spellId = args.spellId
+	if spellId == 116525 then
 		warnFocusedAssault:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnFocusedAssault:Show()
 		end
-	elseif args.spellId == 116778 then
+	elseif spellId == 116778 then
 		warnFocusedDefense:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnFocusedDefense:Show()
 		end
-	elseif args.spellId == 116829 then
+	elseif spellId == 116829 then
 --		warnFocusedEnergy:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnFocusedEnergy:Show()
-		end
-	end
-end
-
-local function addsDelay(add)
-	if add == "Courage" then
-		courageCount = courageCount + 1
-		warnCourageActivated:Show(courageCount)
-		specWarnCourageActivated:Show()
-		--Titan gases delay spawns by 50 seconds, even on heroic (even though there is no actual gas phase, the timing stays same on heroic)
-		if courageCount >= 2 then
-			timerCourageActivates:Start(150, courageCount+1)
-		else
-			timerCourageActivates:Start(100, courageCount+1)
-		end
-	elseif add == "Strength" then
-		strengthCount = strengthCount + 1
-		warnStrengthActivated:Show(strengthCount)
-		specWarnStrengthActivated:Show()
-		--Titan gases delay spawns by 50 seconds, even on heroic (even though there is no actual gas phase, the timing stays same on heroic)
-		if strengthCount == 4 or strengthCount == 6 or strengthCount == 8 then--Unverified
-			timerStrengthActivates:Start(100, strengthCount+1)
-		else
-			timerStrengthActivates:Start(50, strengthCount+1)
-		end
-	elseif add == "Rage" then
-		rageCount = rageCount + 1
-		warnRageActivated:Show(rageCount)
-		--Titan gas delay has funny interaction with these and causes 30 or 60 second delays. Pretty much have to use a table.
-		timerRageActivates:Start(rageTimers[rageCount] or 33, rageCount+1)
-		mod:Schedule(rageTimers[rageCount] or 33, addsDelay, "Rage")--Because he doesn't always yell, schedule next one here as a failsafe
-	elseif add == "Boss" then
-		warnBossesActivated:Show()
-		specWarnBossesActivated:Show(10)
-		if not mod:IsDifficulty("heroic10", "heroic25") then
-			timerTitanGasCD:Start(113, 1)
 		end
 	end
 end
@@ -192,7 +192,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.Rage or msg:find(L.Rage) then--Apparently boss only yells sometimes, so this isn't completely reliable
 		self:Unschedule(addsDelay, "Rage")--Unschedule any failsafes that triggered and resync to yell
 		self:Schedule(14, addsDelay, "Rage")
-		timerRageActivates:Start(14, rageCount+1)
+		timerRageActivates:Start(14, self.vb.rageCount+1)
 	end
 end
 
@@ -207,92 +207,89 @@ function mod:RAID_BOSS_EMOTE(msg)
 		warnBossesActivatedSoon:Show()
 		self:Schedule(10, addsDelay, "Boss")
 	elseif msg:find("spell:116779") then
-		if self:IsDifficulty("heroic10", "heroic25") then--On heroic the boss activates this perminantly on pull and it's always present
+		if self:IsHeroic() then--On heroic the boss activates this perminantly on pull and it's always present
 			if not self:IsInCombat() then
 				DBM:StartCombat(self, 0)
 			end
 		else--Normal/LFR
-			titanGasCast = titanGasCast + 1
-			warnTitanGas:Show(titanGasCast)
+			self.vb.titanGasCast = self.vb.titanGasCast + 1
+			warnTitanGas:Show(self.vb.titanGasCast)
 			specWarnTitanGas:Show()
-			if titanGasCast < 4 then -- after Titan Gas casted 4 times, Titan Gas lasts permanently. (soft enrage)
+			if self.vb.titanGasCast < 4 then -- after Titan Gas casted 4 times, Titan Gas lasts permanently. (soft enrage)
 				timerTitanGas:Start()
-				timerTitanGasCD:Start(150, titanGasCast+1)
+				timerTitanGasCD:Start(150, self.vb.titanGasCast+1)
 			end
 		end
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
-	if ((uId == "target" or uId == "targettarget" or uId == "focus") or comboMob) and not UnitIsFriend(uId, "player") then
-		if spellId == 116556 then
-			warnEnergizingSmash:Show()
+	if spellId == 116556 then
+		warnEnergizingSmash:Show()
+	end
+	if (self.vb.comboMob or "") == UnitGUID(uId) then
+		if spellId == 116968 then--Arc Left
+			self.vb.comboCount = self.vb.comboCount + 1
+			if self.Options.CountOutCombo and self.vb.comboCount < 11 then
+				DBM:PlayCountSound(self.vb.comboCount)
+			end
+			warnArcLeft:Show(self.vb.comboCount)
+			if self.Options.ArrowOnCombo then
+				if self:IsTank() then--Assume tank is in front of the boss
+					DBM.Arrow:ShowStatic(90, 3)
+				else--Assume anyone else is behind the boss
+					DBM.Arrow:ShowStatic(270, 3)
+				end
+			end
+		elseif spellId == 116971 then--Arc Right
+			self.vb.comboCount = self.vb.comboCount + 1
+			if self.Options.CountOutCombo and self.vb.comboCount < 11 then
+				DBM:PlayCountSound(self.vb.comboCount)
+			end
+			warnArcRight:Show(self.vb.comboCount)
+			if self.Options.ArrowOnCombo then
+				if self:IsTank() then--Assume tank is in front of the boss
+					DBM.Arrow:ShowStatic(270, 3)
+				else--Assume anyone else is behind the boss
+					DBM.Arrow:ShowStatic(90, 3)
+				end
+			end
+		elseif spellId == 116972 then--Arc Center
+			self.vb.comboCount = self.vb.comboCount + 1
+			if self.Options.CountOutCombo and self.vb.comboCount < 11 then
+				DBM:PlayCountSound(self.vb.comboCount)
+			end
+			warnArcCenter:Show(self.vb.comboCount)
+			if self.Options.ArrowOnCombo then
+				if self:IsTank() then--Assume tank is in front of the boss
+					DBM.Arrow:ShowStatic(0, 3)
+				end
+			end
+		elseif spellId == 116969 or spellId == 132425 then--Stomp
+			self.vb.comboCount = self.vb.comboCount + 1
+			if self.Options.CountOutCombo and self.vb.comboCount < 11 then
+				DBM:PlayCountSound(self.vb.comboCount)
+			end
+			warnStomp:Show(self.vb.comboCount)
 		end
-		if comboMob then
-			local castMob = UnitName(uId)
-			if spellId == 116968 and castMob == comboMob and self:AntiSpam(1, 1) then--Arc Left
-				comboCount = comboCount + 1
-				if self.Options.CountOutCombo and comboCount < 11 then
-					DBM:PlayCountSound(comboCount)
-				end
-				warnArcLeft:Show(comboCount)
-				if self.Options.ArrowOnCombo then
-					if self:IsTank() then--Assume tank is in front of the boss
-						DBM.Arrow:ShowStatic(90, 3)
-					else--Assume anyone else is behind the boss
-						DBM.Arrow:ShowStatic(270, 3)
-					end
-				end
-			elseif spellId == 116971 and castMob == comboMob and self:AntiSpam(1, 2) then--Arc Right
-				comboCount = comboCount + 1
-				if self.Options.CountOutCombo and comboCount < 11 then
-					DBM:PlayCountSound(comboCount)
-				end
-				warnArcRight:Show(comboCount)
-				if self.Options.ArrowOnCombo then
-					if self:IsTank() then--Assume tank is in front of the boss
-						DBM.Arrow:ShowStatic(270, 3)
-					else--Assume anyone else is behind the boss
-						DBM.Arrow:ShowStatic(90, 3)
-					end
-				end
-			elseif spellId == 116972 and castMob == comboMob and self:AntiSpam(1, 3) then--Arc Center
-				comboCount = comboCount + 1
-				if self.Options.CountOutCombo and comboCount < 11 then
-					DBM:PlayCountSound(comboCount)
-				end
-				warnArcCenter:Show(comboCount)
-				if self.Options.ArrowOnCombo then
-					if self:IsTank() then--Assume tank is in front of the boss
-						DBM.Arrow:ShowStatic(0, 3)
-					end
-				end
-			elseif (spellId == 116969 or spellId == 132425) and castMob == comboMob and self:AntiSpam(1, 4) then--Stomp
-				comboCount = comboCount + 1
-				if self.Options.CountOutCombo and comboCount < 11 then
-					DBM:PlayCountSound(comboCount)
-				end
-				warnStomp:Show(comboCount)
-			end
-			if comboCount == expectedComboCount then
-				comboMob = nil
-				comboCount = 0
-			end
+		if self.vb.comboCount == (self:IsHeroic() and 10 or 5) then
+			self.vb.comboMob = nil
+			self.vb.comboCount = 0
 		end
 	end
 end
 
-function mod:UNIT_POWER(uId)
-	if (uId == "target" or uId == "targettarget") and not UnitIsFriend(uId, "player") and not comboMob then
+function mod:UNIT_POWER_FREQUENT(uId)
+	if (uId == "target" or uId == "targettarget") and not UnitIsFriend(uId, "player") and not self.vb.comboMob then
 		if UnitPower(uId) == 18 then
-			comboMob = UnitName(uId)
+			self.vb.comboMob = UnitGUID(uId)
 			specWarnCombo:Show()
 		end
 	--split because we want to prefer target over focus. IE I focus other boss while targeting one i'm tanking. previous method bugged out and gave me combo warnings for my focus and NOT my target
 	--Now target should come first and focus should be af allback IF not targeting a boss.
-	elseif (uId == "focus") and not UnitIsFriend(uId, "player") and not comboMob then
+	elseif (uId == "focus") and not UnitIsFriend(uId, "player") and not self.vb.comboMob then
 		if UnitPower(uId) == 18 then
-			comboMob = UnitName(uId)
+			self.vb.comboMob = UnitGUID(uId)
 			specWarnCombo:Show()
 		end
 	end

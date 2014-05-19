@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 494 2012-09-04T21:04:44Z
+    Revision: 596 2013-09-26T19:39:50Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -28,21 +28,31 @@
 
 local Armory, _ = Armory;
 
+ARMORY_CONQUEST_SIZE_STRINGS = { ARENA_2V2, ARENA_3V3, ARENA_5V5, BATTLEGROUND_10V10 };
+ARMORY_CONQUEST_BUTTONS = {};
+local RATED_BG_ID = 4;
+
 function ArmoryPVPFrame_OnLoad(self)
+	ARMORY_CONQUEST_BUTTONS = {ArmoryConquestFrame.Arena2v2, ArmoryConquestFrame.Arena3v3, ArmoryConquestFrame.Arena5v5, ArmoryConquestFrame.RatedBG};
+
     ArmoryPVPFrameLine1:SetAlpha(0.3);
     ArmoryPVPHonorKillsLabel:SetVertexColor(0.6, 0.6, 0.6);
     ArmoryPVPHonorHonorLabel:SetVertexColor(0.6, 0.6, 0.6);
     ArmoryPVPHonorTodayLabel:SetVertexColor(0.6, 0.6, 0.6);
     ArmoryPVPHonorYesterdayLabel:SetVertexColor(0.6, 0.6, 0.6);
     ArmoryPVPHonorLifetimeLabel:SetVertexColor(0.6, 0.6, 0.6);
-    ArmoryPVPFrameArenaLabel:SetText(strupper(PVP_CONQUEST)..":");
+    ArmoryConquestFrameLabel:SetText(strupper(PVP_CONQUEST)..":");
 
     self:RegisterEvent("PLAYER_ENTERING_WORLD");
-    self:RegisterEvent("ARENA_TEAM_UPDATE");
-    self:RegisterEvent("ARENA_TEAM_ROSTER_UPDATE");
     self:RegisterEvent("PLAYER_PVP_KILLS_CHANGED");
     self:RegisterEvent("PLAYER_PVP_RANK_CHANGED");
     self:RegisterEvent("CURRENCY_DISPLAY_UPDATE");
+    self:RegisterEvent("GROUP_ROSTER_UPDATE");
+    self:RegisterEvent("PVP_RATED_STATS_UPDATE");
+    self:RegisterEvent("PVP_REWARDS_UPDATE");
+
+    RequestRatedInfo();
+    RequestPVPRewards();
 end
 
 function ArmoryPVPFrame_OnEvent(self, event, ...)
@@ -53,16 +63,16 @@ function ArmoryPVPFrame_OnEvent(self, event, ...)
         self:UnregisterEvent("PLAYER_ENTERING_WORLD");
         ArmoryPVPFrame_SetFaction();
         ArmoryPVPHonor_Update(1);
-    elseif ( event == "ARENA_TEAM_UPDATE" ) then
-        ArmoryPVPFrame_Update();
-    elseif ( event == "ARENA_TEAM_ROSTER_UPDATE" ) then
-        ArmoryPVPFrame_Update();
     else
         ArmoryPVPHonor_Update();
     end
+
+    ArmoryConquestFrame_Update();
 end
 
 function ArmoryPVPFrame_OnShow(self)
+	RequestRatedInfo();
+	RequestPVPRewards();
     ArmoryPVPFrame_Update();
 end
 
@@ -74,310 +84,10 @@ function ArmoryPVPFrame_SetFaction()
     end
 end
 
-function ArmoryPVPFrame_OnHide(self)
-    ArmoryPVPTeamDetails:Hide();
-end
-
 function ArmoryPVPFrame_Update()
-    Armory:UpdateArenaTeams();
-
     ArmoryPVPFrame_SetFaction();
     ArmoryPVPHonor_Update();
-    ArmoryPVPTeam_Update();
-
-    if ( ArmoryPVPTeamDetails:IsShown() ) then
-        local team = Armory:GetArenaTeam(ArmoryPVPTeamDetails.team);
-        if ( team ) then
-            ArmoryPVPTeamDetails_Update(ArmoryPVPTeamDetails.team);
-        else
-            ArmoryPVPTeamDetails:Hide();
-        end
-    end
-end
-
-function ArmoryPVPTeam_Update()
-    -- Display Elements
-    local button, buttonName, highlight, data, standard, emblem, border;
-    -- Data Elements
-    local teamName, teamSize, teamRating, teamPlayed, teamWins, teamLoss, seasonTeamPlayed, seasonTeamWins, playerPlayed, playerPlayedPct, teamRank, playerRating;
-    local background = {};
-    local borderColor = {};
-    local emblemColor = {};
-    local ARENA_TEAMS = {};
-    ARENA_TEAMS[1] = {size = 2};
-    ARENA_TEAMS[2] = {size = 3};
-    ARENA_TEAMS[3] = {size = 5};
-
-    -- Sort teams by size
-
-    local buttonIndex = 0;
-    for index, value in pairs(ARENA_TEAMS) do
-        for i=1, MAX_ARENA_TEAMS do
-            teamName, teamSize = Armory:GetArenaTeam(i);
-            if ( value.size == teamSize ) then
-                value.index = i;
-            end
-        end
-    end
-
-    -- fill out data
-    for index, value in pairs(ARENA_TEAMS) do
-        buttonIndex = buttonIndex + 1;
-        button = _G["ArmoryPVPTeam"..buttonIndex];
-        if ( value.index ) then
-            -- Pull Values
-            teamName, teamSize, teamRating, teamPlayed, teamWins, seasonTeamPlayed, 
-            seasonTeamWins, playerPlayed, seasonPlayerPlayed, teamRank, playerRating,
-            background.r, background.g, background.b, 
-            emblem, emblemColor.r, emblemColor.g, emblemColor.b, 
-            border, borderColor.r, borderColor.g, borderColor.b = Armory:GetArenaTeam(value.index);
-
-            -- Only show season related info
-            teamPlayed = seasonTeamPlayed;
-            teamWins = seasonTeamWins;
-            playerPlayed = seasonPlayerPlayed;
-
-            teamLoss = teamPlayed - teamWins;
-            if ( teamPlayed ~= 0 ) then
-                playerPlayedPct =  floor( ( playerPlayed / teamPlayed ) * 100 );        
-            else
-                playerPlayedPct =  floor( ( playerPlayed / 1 ) * 100 );
-            end
-
-            -- Set button elements to variables 
-            buttonName = "ArmoryPVPTeam"..buttonIndex;
-            data = buttonName.."Data";
-            standard = buttonName.."Standard";
-
-            button:SetID(value.index);
-
-            -- Populate Data
-            _G[data.."TypeLabel"]:SetText(ARENA_THIS_SEASON);
-            _G[data.."Name"]:SetText(teamName);
-            _G[data.."Rating"]:SetText(teamRating);
-            _G[data.."Games"]:SetText(teamPlayed);
-            _G[data.."Wins"]:SetText(teamWins);
-            _G[data.."Loss"]:SetText(teamLoss);
-
-            _G[data.."Played"]:SetText(playerRating);
-            _G[data.."Played"]:SetVertexColor(1.0, 1.0, 1.0);
-            _G[data.."PlayedLabel"]:SetText(RATING);
-
-            -- Set TeamSize Banner
-            _G[standard.."Banner"]:SetTexture("Interface\\PVPFrame\\PVP-Banner-"..teamSize);
-            _G[standard.."Banner"]:SetVertexColor(background.r, background.g, background.b);
-            _G[standard.."Border"]:SetVertexColor(borderColor.r, borderColor.g, borderColor.b);
-            _G[standard.."Emblem"]:SetVertexColor(emblemColor.r, emblemColor.g, emblemColor.b);
-            if ( border ~= -1 ) then
-                _G[standard.."Border"]:SetTexture("Interface\\PVPFrame\\PVP-Banner-"..teamSize.."-Border-"..border);
-            end
-            if ( emblem ~= -1 ) then
-                _G[standard.."Emblem"]:SetTexture("Interface\\PVPFrame\\Icons\\PVP-Banner-Emblem-"..emblem);
-            end
-
-            -- Set visual elements
-            _G[data]:Show();
-            button:SetAlpha(1);
-            _G[buttonName.."Highlight"]:SetAlpha(1);
-            _G[buttonName.."Highlight"]:SetBackdropBorderColor(1.0, 0.82, 0);
-            _G[standard]:SetAlpha(1);
-            _G[standard.."Border"]:Show();
-            _G[standard.."Emblem"]:Show();
-            _G[buttonName.."Background"]:SetVertexColor(0, 0, 0);
-            _G[buttonName.."Background"]:SetAlpha(1);
-            _G[buttonName.."TeamType"]:Hide();
-        else
-            -- Set button elements to variables 
-            buttonName = "ArmoryPVPTeam"..buttonIndex;
-            data = buttonName.."Data";
-            button:SetID(0);
-
-            -- Set standard type
-            local standardBanner = _G[buttonName.."StandardBanner"];
-            standardBanner:SetTexture("Interface\\PVPFrame\\PVP-Banner-"..value.size);
-            standardBanner:SetVertexColor(1, 1, 1);
-
-            -- Hide or Show items
-            button:SetAlpha(0.4);
-            _G[data]:Hide();
-            _G[buttonName.."Background"]:SetVertexColor(0, 0, 0);
-            _G[buttonName.."Standard"]:SetAlpha(0.1);
-            _G[buttonName.."StandardBorder"]:Hide();
-            _G[buttonName.."StandardEmblem"]:Hide();
-            _G[buttonName.."TeamType"]:SetFormattedText(PVP_TEAMSIZE, value.size, value.size);
-            _G[buttonName.."TeamType"]:Show();
-        end
-    end
-end
-
-function ArmoryPVPTeam_OnEnter(self)
-    local highlight = _G[self:GetName().."Highlight"];
-    if ( Armory:GetArenaTeam(self:GetID()) ) then
-        highlight:Show();
-        GameTooltip_AddNewbieTip(self, ARENA_TEAM, 1.0, 1.0, 1.0, CLICK_FOR_DETAILS, 1);
-    end        
-end
-
-function ArmoryPVPTeam_OnLeave(self)
-    _G[self:GetName().."Highlight"]:Hide();	
-    GameTooltip:Hide();
-end
-
-function ArmoryPVPTeamDetails_OnShow(self)
-    PlaySound("igSpellBookOpen");
-end
-
-function ArmoryPVPTeamDetails_OnHide(self)
-    PlaySound("igSpellBookClose");
-end
-
-function ArmoryPVPTeamDetails_Update(id)
-    local numMembers = Armory:GetNumArenaTeamMembers(id, 1);
-    local name, rank, level, class, online, played, win, loss, seasonPlayed, seasonWin, seasonLoss, rating;
-    local teamName, teamSize, teamRating, teamPlayed, teamWins,  seasonTeamPlayed, seasonTeamWins, playerPlayed, seasonPlayerPlayed, teamRank, personalRating = Armory:GetArenaTeam(id);        
-    local button;
-    local teamIndex;
-
-    -- Display General Team Stats
-    ArmoryPVPTeamDetailsName:SetText(teamName);
-    ArmoryPVPTeamDetailsSize:SetFormattedText(PVP_TEAMSIZE, teamSize, teamSize);
-    ArmoryPVPTeamDetailsRank:SetText(teamRank);
-    ArmoryPVPTeamDetailsRating:SetText(teamRating);
-	
-    -- Tidy up team name display if it's too long - mostly for CN
-    ArmoryPVPTeamDetailsName:SetWidth(0);
-    if ( ArmoryPVPTeamDetailsName:GetWidth() > MAX_ARENA_TEAM_NAME_WIDTH ) then
-        ArmoryPVPTeamDetailsName:SetWidth(MAX_ARENA_TEAM_NAME_WIDTH);
-    end
-
-    -- Display General Team Data
-    ArmoryPVPTeamDetailsGames:SetText(seasonTeamPlayed);
-    ArmoryPVPTeamDetailsWins:SetText(seasonTeamWins);
-    ArmoryPVPTeamDetailsLoss:SetText(seasonTeamPlayed - seasonTeamWins);
-    ArmoryPVPTeamDetailsStatsType:SetText(strupper(ARENA_THIS_SEASON));
-
-    local nameText, classText, playedText, winLossWin, winLossLoss, ratingText;
-    local nameButton, classButton, playedButton, winLossButton;
-    -- Display Team Member Specific Info
-    local playedValue, winValue, lossValue, playedPct;
-    for i=1, MAX_ARENA_TEAM_MEMBERS, 1 do
-        button = _G["ArmoryPVPTeamDetailsButton"..i];
-        if ( i > numMembers ) then
-            button:Hide();
-        else
-
-            button.teamIndex = i;
-            -- Get Data
-            name, rank, level, class, online, played, win, seasonPlayed, seasonWin, rating = Armory:GetArenaTeamRosterInfo(id, i);
-            loss = played - win;
-            seasonLoss = seasonPlayed - seasonWin;
-            if ( class ) then
-                button.tooltip = LEVEL.." "..level.." "..class;
-            else
-                button.tooltip = LEVEL.." "..level;
-            end
-
-            -- Populate Data into the display
-            playedValue = seasonPlayed;
-            winValue = seasonWin;
-            lossValue = seasonLoss;
-            teamPlayed = seasonTeamPlayed;
-
-            if ( teamPlayed ~= 0 ) then
-                playedPct =  floor( ( playedValue / teamPlayed ) * 100 );        
-            else
-                playedPct =  floor( (playedValue / 1 ) * 100 );
-            end
-
-            if ( playedPct < 10 ) then
-                _G["ArmoryPVPTeamDetailsButton"..i.."PlayedText"]:SetVertexColor(1.0, 0, 0);
-            else
-                _G["ArmoryPVPTeamDetailsButton"..i.."PlayedText"]:SetVertexColor(1.0, 1.0, 1.0);
-            end
-
-            playedPct = format("%d", playedPct);
-
-            _G["ArmoryPVPTeamDetailsButton"..i.."Played"].tooltip = playedPct.."%";
-
-            nameText = _G["ArmoryPVPTeamDetailsButton"..i.."NameText"];
-            classText = _G["ArmoryPVPTeamDetailsButton"..i.."ClassText"];
-            playedText = _G["ArmoryPVPTeamDetailsButton"..i.."PlayedText"]
-            winLossWin = _G["ArmoryPVPTeamDetailsButton"..i.."WinLossWin"];
-            winLossLoss = _G["ArmoryPVPTeamDetailsButton"..i.."WinLossLoss"];
-            ratingText = _G["ArmoryPVPTeamDetailsButton"..i.."RatingText"];
-
-            --- Not needed after Arena Season 3 change.
-            nameButton = _G["ArmoryPVPTeamDetailsButton"..i.."Name"];
-            classButton = _G["ArmoryPVPTeamDetailsButton"..i.."Class"];
-            playedButton = _G["ArmoryPVPTeamDetailsButton"..i.."Played"]
-            winLossButton = _G["ArmoryPVPTeamDetailsButton"..i.."WinLoss"];
-
-            nameText:SetText(name);
-            classText:SetText(class);
-            playedText:SetText(playedValue);
-            winLossWin:SetText(winValue)
-            winLossLoss:SetText(lossValue);
-            ratingText:SetText(rating);
-
-            -- Color Entries based on Online status
-            local r, g, b;
-            if ( online ) then
-                if ( rank > 0 ) then
-                    r = 1.0;
-                    g = 1.0;
-                    b = 1.0;
-                else
-                    r = 1.0;
-                    g = 0.82;
-                    b = 0.0;
-                end
-            else
-                r = 0.5;
-                g = 0.5;
-                b = 0.5;
-            end
-
-            nameText:SetTextColor(r, g, b);
-            classText:SetTextColor(r, g, b);
-            playedText:SetTextColor(r, g, b);
-            winLossWin:SetTextColor(r, g, b);
-            _G["ArmoryPVPTeamDetailsButton"..i.."WinLoss-"]:SetTextColor(r, g, b);
-            winLossLoss:SetTextColor(r, g, b);
-            ratingText:SetTextColor(r, g, b);
-
-            button:Show();
-        end
-    end
-end
-
-function ArmoryPVPTeam_OnClick(self, id)
-    local teamName, teamSize = Armory:GetArenaTeam(id);
-    if ( not teamName ) then
-        return;
-    else
-        if ( ArmoryPVPTeamDetails:IsShown() and id == ArmoryPVPTeamDetails.team ) then
-            ArmoryPVPTeamDetails:Hide();
-        else
-            ArmoryCloseChildWindows();
-            ArmoryPVPTeamDetails.team = id;
-            ArmoryPVPTeamDetails_Update(id);
-            ArmoryPVPTeamDetails:Show();
-        end
-    end
-end
-
-function ArmoryPVPTeam_OnMouseDown(self)
-    if ( Armory:GetArenaTeam(self:GetID()) ) then
-        local point, relativeTo, relativePoint, offsetX, offsetY = self:GetPoint();
-        self:SetPoint(point, relativeTo, relativePoint, offsetX-2, offsetY-2);
-    end
-end
-
-function ArmoryPVPTeam_OnMouseUp(self)
-    if ( Armory:GetArenaTeam(self:GetID()) ) then
-        local point, relativeTo, relativePoint, offsetX, offsetY = self:GetPoint();
-        self:SetPoint(point, relativeTo, relativePoint, offsetX+2, offsetY+2);
-    end
+    ArmoryConquestFrame_Update();
 end
 
 -- PVP Honor Data
@@ -398,25 +108,105 @@ function ArmoryPVPHonor_Update(updateAll)
     ArmoryPVPHonorTodayKills:SetText(hk);
     ArmoryPVPHonorTodayHonor:SetText(cp);
     ArmoryPVPHonorTodayHonor:SetHeight(14);
-    
 
     local quantity, earnedThisWeek, earnablePerWeek;
 
     _, quantity = Armory:GetCurrencyInfo(HONOR_CURRENCY);
     ArmoryPVPFrameHonorPoints:SetText(quantity);
+end
 
-    _, quantity, _, earnedThisWeek, earnablePerWeek = Armory:GetCurrencyInfo(CONQUEST_CURRENCY);
-    ArmoryPVPFrameArenaPoints:SetText(quantity);    
+function ArmoryConquestFrame_Update()
+    _, quantity = Armory:GetCurrencyInfo(CONQUEST_CURRENCY);
+    ArmoryConquestFramePoints:SetText(quantity);    
 
-    ArmoryPVPFrameConquestBar:SetMinMaxValues(0, earnablePerWeek);
-    ArmoryPVPFrameConquestBar:SetValue(earnedThisWeek);
-    ArmoryPVPFrameConquestBar.pointText:SetText(earnedThisWeek.."/"..earnablePerWeek);
+    local pointsThisWeek, maxPointsThisWeek, tier2Quantity, tier2Limit, tier1Quantity, tier1Limit, randomPointsThisWeek, maxRandomPointsThisWeek, arenaReward, ratedBGReward = Armory:GetPVPRewards();
+
+    ArmoryPVPFrameConquestBar:SetMinMaxValues(0, maxPointsThisWeek);
+    ArmoryPVPFrameConquestBar:SetValue(pointsThisWeek);
+    ArmoryPVPFrameConquestBar.pointText:SetText(pointsThisWeek.."/"..maxPointsThisWeek);
     
     if ( GetMaxPlayerLevel() ~= Armory:UnitLevel("player") ) then
         ArmoryPVPFrameConquestBar:Hide();
-        ArmoryPVPFrameArenaLabel:SetPoint("LEFT", -20, 0);
+        ArmoryConquestFrameLabel:SetPoint("LEFT", -20, 0);
     else
         ArmoryPVPFrameConquestBar:Show();
-        ArmoryPVPFrameArenaLabel:SetPoint("LEFT", -55, 0);
+        ArmoryConquestFrameLabel:SetPoint("LEFT", -55, 0);
     end
+
+	for i = 1, RATED_BG_ID do
+		local button = ARMORY_CONQUEST_BUTTONS[i];
+		local rating, seasonBest, weeklyBest, seasonPlayed, seasonWon, weeklyPlayed, weeklyWon = Armory:GetPersonalRatedInfo(i);
+		button.Wins:SetText(seasonWon);
+		button.BestRating:SetText(weeklyBest);
+		button.CurrentRating:SetText(rating);
+	end
+end
+
+
+--------- Conquest Tooltips ----------
+
+function ArmoryConquestFrame_ShowMaximumRewardsTooltip(self)
+	local currencyName = GetCurrencyInfo(CONQUEST_CURRENCY);
+
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+	GameTooltip:SetText(MAXIMUM_REWARD);
+	GameTooltip:AddLine(format(CURRENCY_RECEIVED_THIS_WEEK, currencyName), 1, 1, 1, true);
+	GameTooltip:AddLine(" ");
+
+	local pointsThisWeek, maxPointsThisWeek, tier2Quantity, tier2Limit, tier1Quantity, tier1Limit, randomPointsThisWeek, maxRandomPointsThisWeek, arenaReward, ratedBGReward = Armory:GetPVPRewards();
+
+	local r, g, b = 1, 1, 1;
+	local capped;
+	if ( pointsThisWeek >= maxPointsThisWeek ) then
+		r, g, b = 0.5, 0.5, 0.5;
+		capped = true;
+	end
+	GameTooltip:AddDoubleLine(FROM_ALL_SOURCES, format(CURRENCY_WEEKLY_CAP_FRACTION, pointsThisWeek, maxPointsThisWeek), r, g, b, r, g, b);
+
+	if ( capped or tier2Quantity >= tier2Limit ) then
+		r, g, b = 0.5, 0.5, 0.5;
+	else
+		r, g, b = 1, 1, 1;
+	end
+	GameTooltip:AddDoubleLine(" -"..FROM_RATEDBG, format(CURRENCY_WEEKLY_CAP_FRACTION, tier2Quantity, tier2Limit), r, g, b, r, g, b);
+
+	if ( capped or tier1Quantity >= tier1Limit ) then
+		r, g, b = 0.5, 0.5, 0.5;
+	else
+		r, g, b = 1, 1, 1;
+	end
+	GameTooltip:AddDoubleLine(" -"..FROM_ARENA, format(CURRENCY_WEEKLY_CAP_FRACTION, tier1Quantity, tier1Limit), r, g, b, r, g, b);
+
+	if ( capped or randomPointsThisWeek >= maxRandomPointsThisWeek ) then
+		r, g, b = 0.5, 0.5, 0.5;
+	else
+		r, g, b = 1, 1, 1;
+	end
+	GameTooltip:AddDoubleLine(" -"..FROM_RANDOMBG, format(CURRENCY_WEEKLY_CAP_FRACTION, randomPointsThisWeek, maxRandomPointsThisWeek), r, g, b, r, g, b);
+
+	GameTooltip:Show();
+end
+
+local CONQUEST_TOOLTIP_PADDING = 30 --counts both sides
+
+function ArmoryConquestFrameButton_OnEnter(self)
+	local tooltip = ArmoryConquestTooltip;
+	
+	local rating, seasonBest, weeklyBest, seasonPlayed, _, weeklyPlayed, _, cap = Armory:GetPersonalRatedInfo(self.id);
+
+    tooltip.WeeklyBest:SetText(PVP_BEST_RATING..weeklyBest);
+    tooltip.WeeklyGamesPlayed:SetText(PVP_GAMES_PLAYED..weeklyPlayed);
+
+    tooltip.SeasonBest:SetText(PVP_BEST_RATING..seasonBest);
+    tooltip.SeasonGamesPlayed:SetText(PVP_GAMES_PLAYED..seasonPlayed);
+
+    tooltip.ProjectedCap:SetText(cap);
+
+    local maxWidth = max(tooltip.WeeklyBest:GetStringWidth(), tooltip.WeeklyGamesPlayed:GetStringWidth(),
+                         tooltip.SeasonBest:GetStringWidth(), tooltip.SeasonGamesPlayed:GetStringWidth(),
+                         tooltip.ProjectedCapLabel:GetStringWidth());
+
+    tooltip:SetWidth(maxWidth + CONQUEST_TOOLTIP_PADDING);
+    tooltip:SetPoint("TOPLEFT", self, "TOPRIGHT", 0, 0);
+    tooltip:Show();
 end

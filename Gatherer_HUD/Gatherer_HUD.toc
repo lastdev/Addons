@@ -8,7 +8,7 @@
 ## Notes-frFR: The HUD is a navigation component that allows you to track the location of gatherables on your screen in a heads-up style overlay.
 ## Notes-deDE: The HUD is a navigation component that allows you to track the location of gatherables on your screen in a heads-up style overlay.
 ## 
-## Version: 4.4.0
+## Version: 4.4.1
 ## Author: Norganna
 ## 
 ## LoadOnDemand: 1

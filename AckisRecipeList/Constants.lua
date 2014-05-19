@@ -1,10 +1,10 @@
 -------------------------------------------------------------------------------
 -- Constants.lua
 -------------------------------------------------------------------------------
--- File date: 2013-09-10T13:23:20Z
--- File hash: 4bcba04
--- Project hash: 4bcba04
--- Project version: 2.5.2
+-- File date: 2014-02-11T18:56:24Z
+-- File hash: b5606e6
+-- Project hash: fbca907
+-- Project version: 2.6.2
 -------------------------------------------------------------------------------
 -- Please see http://www.wowace.com/addons/arl/ for more information.
 -------------------------------------------------------------------------------
@@ -32,6 +32,8 @@ local L		= LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
 -------------------------------------------------------------------------------
 private.PLAYER_NAME = _G.UnitName("player")
 private.REALM_NAME = _G.GetRealmName()
+
+private.COORDINATES_FORMAT = "(%.2f, %.2f)"
 
 -------------------------------------------------------------------------------
 -- Profession data.
@@ -182,7 +184,7 @@ private.COMMON_FLAGS_WORD1 = {
 	VENDOR		= 0x00000008,	-- 4
 	INSTANCE	= 0x00000010,	-- 5
 	RAID		= 0x00000020,	-- 6
-	SEASONAL	= 0x00000040,	-- 7
+	WORLD_EVENTS	= 0x00000040,	-- 7
 	QUEST		= 0x00000080,	-- 8
 	PVP		= 0x00000100,	-- 9
 	WORLD_DROP	= 0x00000200,	-- 10
@@ -469,41 +471,6 @@ private.ITEM_FILTER_TYPES = {
 	TAILORING_WAIST = true,
 	TAILORING_WRIST = true,
 }
-
--------------------------------------------------------------------------------
--- Acquire types.
--------------------------------------------------------------------------------
-private.ACQUIRE_NAMES = {
-	[1]	= L["Trainer"],
-	[2]	= L["Vendor"],
-	[3]	= L["Mob Drop"],
-	[4]	= L["Quest"],
-	[5]	= _G.GetCategoryInfo(155),
-	[6]	= _G.REPUTATION,
-	[7]	= L["World Drop"],
-	[8]	= _G.ACHIEVEMENTS,
-	[9]	= L["Discovery"],
-	[10]	= _G.MISCELLANEOUS,
-}
-
-private.ACQUIRE_STRINGS = {
-	[1]	= "TRAINER",
-	[2]	= "VENDOR",
-	[3]	= "MOB_DROP",
-	[4]	= "QUEST",
-	[5]	= "SEASONAL",
-	[6]	= "REPUTATION",
-	[7]	= "WORLD_DROP",
-	[8]	= "ACHIEVEMENT",
-	[9]	= "DISCOVERY",
-	[10]	= "CUSTOM",
-}
-
-private.ACQUIRE_TYPES = {}
-
-for index = 1, #private.ACQUIRE_STRINGS do
-	private.ACQUIRE_TYPES[private.ACQUIRE_STRINGS[index]] = index
-end
 
 -------------------------------------------------------------------------------
 -- Reputation levels.
@@ -864,6 +831,7 @@ private.ZONE_NAMES = {
 	THE_VIOLET_HOLD = _G.GetMapNameByID(536),
 	GILNEAS = _G.GetMapNameByID(539),
 	TRIAL_OF_THE_CRUSADER = _G.GetMapNameByID(543),
+	THE_LOST_ISLES = _G.GetMapNameByID(544),
 	ICECROWN_CITADEL = _G.GetMapNameByID(604),
 	MOUNT_HYJAL = _G.GetMapNameByID(606),
 	SOUTHERN_BARRENS = _G.GetMapNameByID(607),
@@ -911,8 +879,10 @@ private.ZONE_NAMES = {
 	KARAZHAN = _G.GetMapNameByID(799),
 	FIRELANDS = _G.GetMapNameByID(800),
 	VALLEY_OF_THE_FOUR_WINDS = _G.GetMapNameByID(807),
+	THE_WANDERING_ISLE = _G.GetMapNameByID(808),
 	TOWNLONG_STEPPES = _G.GetMapNameByID(810),
 	VALE_OF_ETERNAL_BLOSSOMS = _G.GetMapNameByID(811),
+	DARKMOON_ISLAND = _G.GetMapNameByID(823),
 	DRAGON_SOUL = _G.GetMapNameByID(824),
 	DUSTWALLOW_MARSH = _G.GetMapNameByID(851),
 	KRASARANG_WILDS = _G.GetMapNameByID(857),
@@ -921,6 +891,7 @@ private.ZONE_NAMES = {
 	KUN_LAI_SUMMIT = _G.GetMapNameByID(879),
 	THE_JADE_FOREST = _G.GetMapNameByID(880),
 	TERRACE_OF_ENDLESS_SPRING = _G.GetMapNameByID(886),
+	NEW_TINKERTOWN = _G.GetMapNameByID(895),
 	MOGUSHAN_VAULTS = _G.GetMapNameByID(896),
 	HEART_OF_FEAR = _G.GetMapNameByID(897),
 	SCHOLOMANCE = _G.GetMapNameByID(898),
@@ -1034,17 +1005,6 @@ private.BASIC_COLORS = {
 
 -- Colors used in tooltips and the recipe list.
 private.CATEGORY_COLORS = {
-	-- Acquire type colors
-	achievement	= { hex = "faeb98",	r = 0.98,	g = 0.92,	b = 0.59 },
-	custom		= { hex = "73b7ff",	r = 0.45,	g = 0.71,	b = 1 },
-	discovery	= { hex = "ff9500",	r = 1,		g = 0.58,	b = 0 },
-	mobdrop		= { hex = "962626",	r = 0.59,	g = 0.15,	b = 0.15 },
-	quest		= { hex = "dbdb2c",	r = 0.86,	g = 0.86,	b = 0.17 },
-	reputation	= { hex = "855a99",	r = 0.52,	g = 0.35,	b = 0.6 },
-	seasonal	= { hex = "80590e",	r = 0.50,	g = 0.35,	b = 0.05 },
-	trainer		= { hex = "c98e26",	r = 0.79,	g = 0.56,	b = 0.14 },
-	vendor		= { hex = "aad372",	r = 0.67,	g = 0.83,	b = 0.45 },
-
 	-- Miscellaneous
 	coords		= { hex = "d1ce6f",	r = 0.82,	g = 0.81,	b = 0.44 },
 	hint		= { hex = "c9c781",	r = 0.79,	g = 0.78,	b = 0.51 },

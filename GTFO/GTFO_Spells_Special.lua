@@ -10,12 +10,14 @@ GTFO.SpellID["68947"] = {
 	--desc = "Irresistible Cologne (Love is in the Air)";
 	sound = 1;
 	tankSound = 0;
+	damageMinimum = 1;
 	trivialPercent = 0;
 };
 
 GTFO.SpellID["68934"] = {
 	--desc = "Concentrated Irresistible Cologne Spill (Love is in the Air)";
 	sound = 1;
+	damageMinimum = 1;
 	trivialPercent = 0;
 };
 
@@ -23,6 +25,7 @@ GTFO.SpellID["68948"] = {
 	--desc = "Irresistible Cologne Spray (Love is in the Air)";
 	sound = 1;
 	tankSound = 0;
+	damageMinimum = 1;
 	trivialPercent = 0;
 };
 
@@ -30,12 +33,14 @@ GTFO.SpellID["68641"] = {
 	--desc = "Alluring Perfume (Love is in the Air)";
 	sound = 1;
 	tankSound = 0;
+	damageMinimum = 1;
 	trivialPercent = 0;
 };
 
 GTFO.SpellID["68927"] = {
 	--desc = "Concentrated Alluring Perfume Spill (Love is in the Air)";
 	sound = 1;
+	damageMinimum = 1;
 	trivialPercent = 0;
 };
 
@@ -43,6 +48,7 @@ GTFO.SpellID["68607"] = {
 	--desc = "Alluring Perfume Spray (Love is in the Air)";
 	sound = 1;
 	tankSound = 0;
+	damageMinimum = 1;
 	trivialPercent = 0;
 };
 
@@ -60,6 +66,11 @@ GTFO.SpellID["43118"] = {
 GTFO.SpellID["42381"] = {
 	--desc = "Horseman's Conflagration (Headless Horseman)";
 	sound = 4;
+};
+
+GTFO.SpellID["144579"] = {
+	--desc = "Moonfang's Tears (Moonfang, Darkmoon Faire)";
+	sound = 1;
 };
 
 -- ==============================================================================
@@ -106,4 +117,14 @@ GTFO.SpellID["42587"] = {
 	--desc = "Horseman's Cleave (Headless Horseman)";
 	sound = 3;
 	tankSound = 0;
+};
+
+GTFO.SpellID["144590"] = {
+	--desc = "Moonfang's Curse (Moonfang, Darkmoon Faire)";
+	sound = 3;
+};
+
+GTFO.SpellID["101873"] = {
+	--desc = "Shrink Heart (The Abominable Greench, Feast of Winter Veil)";
+	sound = 1;
 };

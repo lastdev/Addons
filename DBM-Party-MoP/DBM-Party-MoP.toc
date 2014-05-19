@@ -27,10 +27,6 @@
 ## X-DBM-Mod-Name-frFR: Groupe (MoP)
 ## X-DBM-Mod-Sort: 25
 ## X-DBM-Mod-MapID: 960,961,959,962,994,1011,1007,1001,1004
-## X-Curse-Packaged-Version: 5.4.1
-## X-Curse-Project-Name: Deadly Boss Mods
-## X-Curse-Project-ID: deadly-boss-mods
-## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
 localization.en.lua
 localization.de.lua
 localization.es.lua

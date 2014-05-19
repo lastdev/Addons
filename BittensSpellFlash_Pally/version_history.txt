@@ -1,3 +1,14 @@
+== Version 50400.2.1
+* Retribution: Bugfix - Divine Storm was not flashing for the 4pT16 proc.
+
+== Version 50400.2.0
+* Retribution: Updated the rotation to catch up with gear changes, including 4pT16.
+* Retribution: Added flashing for Guardian of Ancient Kings.
+
+== Version 50400.1.2
+* Retribution: Bugfix - Light's Hammer was not flashing.
+* All: Flashes WoW's 9th Anniversary Celebration Package.
+
 == Version 50400.1.1
 * Protection: Removed some leftover debug output.  Sorry about that!
 
@@ -81,18 +92,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 * Retribution: Added lvl 90 talents.
 * Retribution: Added Sacred Shield, Flash of Light and Word of Glory.
 * Retribution: Hammer of Wrath no longer flashes when you have no target, or when your target is out of range.
-
-== Version 3.0.0
-* Holy: Added a Holy rotation.
-* Protection: Faster reaction to Holy Power being used.
-* All: When solo, raid buffs refresh at 2 minutes (when in a group, still at 5).
-
-== Version 2.6.0
-* Protection: Generally smoothed out some flashing quirks.
-* Protection: Removed code having to do with Cataclysm items & enchants.
-* Protection: Improved detection of when you are about to overflow your Holy Power, to flash Shield of the Righteous at all those times.
-* Protection: Shield of the Righteous will now flash if you are about to lose Holy Avenger.
-* Protection: Increased the priority of Ardent Defender when you are wearing 2pT14.
-* Protection: Bugfix - no longer counts Avenging Wrath as a mitigation buff when it isn't.
-* Protection: Bugfix - Now properly caps Word of Glory at 3 Holy Power when calculating if you can use the full heal.
-* All: Improved internal Holy Avenger handling.

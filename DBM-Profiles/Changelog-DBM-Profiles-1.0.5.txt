@@ -1,0 +1,28 @@
+------------------------------------------------------------------------
+r18 | lombra | 2014-01-11 11:21:11 +0000 (Sat, 11 Jan 2014) | 1 line
+Changed paths:
+   A /tags/1.0.5 (from /trunk:17)
+
+Tagging as 1.0.5
+------------------------------------------------------------------------
+r17 | lombra | 2014-01-10 20:31:41 +0000 (Fri, 10 Jan 2014) | 2 lines
+Changed paths:
+   M /trunk/Core.lua
+
+- Don't use AceDB defaults for mod options, preventing undesired resetting of certain options.
+- Nil out original variables on logout.
+------------------------------------------------------------------------
+r16 | lombra | 2014-01-01 13:26:39 +0000 (Wed, 01 Jan 2014) | 1 line
+Changed paths:
+   M /trunk/Core.lua
+
+- Fix error for mods without statistics support.
+------------------------------------------------------------------------
+r15 | lombra | 2013-10-20 19:54:14 +0000 (Sun, 20 Oct 2013) | 2 lines
+Changed paths:
+   M /trunk/Core.lua
+   M /trunk/DBM-Profiles.toc
+
+- Update for statistics frame changes.
+- ToC bump.
+------------------------------------------------------------------------

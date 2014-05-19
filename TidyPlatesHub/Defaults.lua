@@ -11,13 +11,22 @@ TidyPlatesHubDefaults = {
 
 	-- Style
 	---------------------------------------
-	--ArtDefault = "Blizzard",
-	StyleTheme = 3,
-	StyleEnemyMode = 1,
-	StyleFriendlyMode = 1,
+	ColorEnemyBarMode =  1,
+	--ColorEnemyGlowMode = 1,
+	ColorEnemyNameMode = 1,
+	ColorEnemyStatusTextMode = 1,
+
+	ColorFriendlyBarMode =  1,
+	--ColorFriendlyGlowMode = 1,
+	ColorFriendlyNameMode = 1,
+	ColorFriendlyStatusTextMode = 1,
 
 	-- Headline
-	TextPlateNameColorMode = 4,
+	---------------------------------------
+	StyleEnemyMode = 1,
+	StyleFriendlyMode = 7,
+	HeadlineEnemyColor = 4,
+	HeadlineFriendlyColor = 4,
 	TextPlateFieldMode = 3,
 
 	-- Opacity
@@ -30,10 +39,23 @@ TidyPlatesHubDefaults = {
 	OpacityFullNoTarget = true,				-- Use full opacity when No Target
 	OpacityFullMouseover = false,
 
+	-- Unit Spotlight
+	---------------------------------------
+	UnitSpotlightOpacity = 1,
+	UnitSpotlightScale = 1.4,
+	UnitSpotlightColor = {r = .8, g = 0, b = 0,},
+	UnitSpotlightOpacityEnable = true,
+	UnitSpotlightScaleEnable = true,
+	UnitSpotlightBarEnable = true,
+	UnitSpotlightGlowEnable = true,
+	UnitSpotlightList = "",
+	UnitSpotlightLookup = {},
+
 	-- Filter
 	---------------------------------------
 	OpacityFiltered = 0,
 	ScaleFiltered = .8,
+	FilterScaleLock = false,
 
 	OpacityFilterNeutralUnits = false,		-- OpacityHideNeutral = false,
 	OpacityFilterNonElite = false,			-- OpacityHideNonElites = false,
@@ -54,6 +76,7 @@ TidyPlatesHubDefaults = {
 	ScaleIgnoreNonEliteUnits = false,
 	ScaleIgnoreInactive = false,
 	ScaleCastingSpotlight = false,
+	ScaleMiniMobs = true,
 
 	-- Text
 	---------------------------------------
@@ -71,15 +94,14 @@ TidyPlatesHubDefaults = {
 	ColorEnableOffTank = false,
 
 	-- Threat
+	---------------------------------------
 	ThreatMode = 1,
+	ThreatGlowEnable = true,
 	ColorAttackingMe = {r = .8, g = 0, b = 0,},		-- Orange
 	ColorAggroTransition = {r = 255/255, g = 160/255, b = 0},	-- Yellow
-	--ColorAggroTransition = {r = 255/255, g = 128/255, b = 0},	-- Orange
-	--ColorAttackingOthers = {r = 15/255, g = 133/255, b = 255/255},		-- Bright Blue
 	ColorAttackingOthers = {r = 15/255, g = 150/255, b = 230/255},	-- Bright Blue
 	ColorAttackingOtherTank = {r = 15/255, g = 170/255, b = 200/255},	-- Bright Blue
 	ColorShowPartyAggro = false,
-	--ColorPartyAggro = {r = 255/255, g = 0, b = 0,},
 	ColorPartyAggro = {r = 255/255, g = 0, b = .4,},
 	ColorPartyAggroBar = false,
 	ColorPartyAggroGlow = true,
@@ -106,6 +128,7 @@ TidyPlatesHubDefaults = {
 	---------------------------------------
 	ColorNormalSpellCast = { r = 252/255, g = 140/255, b = 0, },
 	ColorUnIntpellCast = { r = 0.5137243866920471, g = 0.7529395222663879, b = 0.7647042274475098, },
+	SpellCastEnableFriendly = false,
 
 
 	-- Health

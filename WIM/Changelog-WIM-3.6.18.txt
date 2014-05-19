@@ -1,0 +1,20 @@
+------------------------------------------------------------------------
+r420 | mysticalos | 2014-04-11 23:19:04 +0000 (Fri, 11 Apr 2014) | 1 line
+Changed paths:
+   A /tags/3.6.18 (from /trunk:419)
+
+Tagging as 3.6.18
+------------------------------------------------------------------------
+r419 | mysticalos | 2014-04-11 23:17:36 +0000 (Fri, 11 Apr 2014) | 1 line
+Changed paths:
+   M /trunk/ChangeLog.lua
+   M /trunk/WIM.lua
+
+version bump
+------------------------------------------------------------------------
+r418 | mysticalos | 2014-04-03 22:49:05 +0000 (Thu, 03 Apr 2014) | 1 line
+Changed paths:
+   M /trunk/Sources/WindowHandler.lua
+
+Fix battle.net launcher client tag
+------------------------------------------------------------------------

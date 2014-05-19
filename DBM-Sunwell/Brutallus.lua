@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Brutallus", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 503 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
 mod:SetCreatureID(24882)
 mod:SetModelID(22711)
 mod:SetMinSyncRevision(441)--Block bad pulls from old versions
@@ -12,7 +12,7 @@ mod:RegisterCombat("yell", L.Pull)
 mod.disableHealthCombat = true
 
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_APPLIED_DOSE",

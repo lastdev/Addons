@@ -2,62 +2,6 @@
 
 local L
 
----------------------------
---  Trash - Lower Spire  --
----------------------------
-L = DBM:GetModLocalization("LowerSpireTrash")
-
-L:SetGeneralLocalization{
-	name = "Lower Spire trash"
-}
-
-L:SetWarningLocalization{
-	SpecWarnTrap		= "Trap Activated! - Deathbound Ward released"--creatureid 37007
-}
-
-L:SetOptionLocalization{
-	SpecWarnTrap		= "Show special warning for trap activation"
-}
-
-L:SetMiscLocalization{
-	WarderTrap1		= "Who... goes there...?",
-	WarderTrap2		= "I... awaken!",
-	WarderTrap3		= "The master's sanctum has been disturbed!"
-}
-
----------------------------
---  Trash - Plagueworks  --
----------------------------
-L = DBM:GetModLocalization("PlagueworksTrash")
-
-L:SetGeneralLocalization{
-	name = "Plagueworks Trash"
-}
-
-L:SetWarningLocalization{
-	WarnMortalWound	= "%s on >%s< (%s)",		-- Mortal Wound on >args.destName< (args.amount)
-	SpecWarnTrap	= "Trap Activated! - Vengeful Fleshreapers incoming"--creatureid 37038
-}
-
-L:SetOptionLocalization{
-	SpecWarnTrap	= "Show special warning for trap activation"
-}
-
-L:SetMiscLocalization{
-	FleshreaperTrap1		= "Quickly! We'll ambush them from behind!",
-	FleshreaperTrap2		= "You... cannot escape us!",
-	FleshreaperTrap3		= "The living... here?!"
-}
-
----------------------------
---  Trash - Crimson Hall  --
----------------------------
-L = DBM:GetModLocalization("CrimsonHallTrash")
-
-L:SetGeneralLocalization{
-	name = "Crimson Hall Trash"
-}
-
 ----------------------
 --  Lord Marrowgar  --
 ----------------------
@@ -127,14 +71,9 @@ L:SetWarningLocalization{
 	WarnFrenzySoon		= "Frénésie bientôt"
 }
 
-L:SetTimerLocalization{
-	TimerCombatStart	= "Début du combat"
-}
-
 L:SetOptionLocalization{
 	WarnFrenzySoon		= "Montre une pré-alerte pour la Frénésie (à ~33%)",
 	RangeFrame			= "Montre la fenêtre de proximité",
-	TimerCombatStart	= "Montre le timer pour le début du combat",
 	MarkCastIcon		= "Met des icones sur les cibles de $spell:72444 durant l'incantation (Experimental)",
 	RunePowerFrame		= "Montre la barre de vie du boss + la barre de $spell:72371"
 }
@@ -160,13 +99,11 @@ L:SetWarningLocalization{
 }
 
 L:SetOptionLocalization{
-	TimerCombatStart	= "Montre le timer pour le début du combat",
 	WarnAddsSoon		= "Montre une alerte avant que les adds arrivent",
 	TimerAdds			= "Montre le timer pour les nouveaux adds"
 }
 
 L:SetTimerLocalization{
-	TimerCombatStart	= "Le combat débute",
 	TimerAdds			= "Nouveaux Adds"
 }
 
@@ -409,14 +346,12 @@ L:SetWarningLocalization{
 }
 
 L:SetTimerLocalization{
-	TimerCombatStart			= "Le combat débute",
 	TimerRoleplay				= "Jeux de role",
 	PhaseTransition				= "Phase de transition",
 	TimerNecroticPlagueCleanse 	= "Peste nécrotique Dispell"
 }
 
 L:SetOptionLocalization{
-	TimerCombatStart			= "Montre le timer pour le début du combat",
 	TimerRoleplay				= "Montre le timer pour l'event de role",
 	WarnNecroticPlagueJump		= "Annonce sur qui saute la $spell:73912",
 	TimerNecroticPlagueCleanse	= "Montre le timer pour dispell la Peste nécrotique avant le premier tic",
@@ -440,3 +375,33 @@ L:SetMiscLocalization{
 	PlagueWhisper	= "Vous êtes infecter par"
 }
 
+-------------
+--  Trash  --
+-------------
+L = DBM:GetModLocalization("ICCTrash")
+
+L:SetGeneralLocalization{
+	name = "Icecrown Trash"
+}
+
+L:SetWarningLocalization{
+	SpecWarnTrapL		= "Trap Activated! - Deathbound Ward released",
+	SpecWarnTrapP		= "Trap Activated! - Vengeful Fleshreapers incoming",
+	SpecWarnGosaEvent	= "Sindragosa gauntlet started!"
+}
+
+L:SetOptionLocalization{
+	SpecWarnTrapL		= "Show special warning for Deathbound Ward trap activation",
+	SpecWarnTrapP		= "Show special warning for engeful Fleshreapers trap activation",
+	SpecWarnGosaEvent	= "Show special warning for Sindragosa gauntlet event"
+}
+
+L:SetMiscLocalization{
+	WarderTrap1			= "Who... goes there...?",
+	WarderTrap2			= "I... awaken!",
+	WarderTrap3			= "The master's sanctum has been disturbed!",
+	FleshreaperTrap1	= "Quickly! We'll ambush them from behind!",
+	FleshreaperTrap2	= "You... cannot escape us!",
+	FleshreaperTrap3	= "The living... here?!",
+	SindragosaEvent		= "You must not approach the Frost Queen. Quickly, stop them!"
+}

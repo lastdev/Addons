@@ -4,6 +4,6 @@
 	<Script file="AprSettings.lua"/>
 	<Script file="AprFrame.lua"/>
 	<Script>
-		AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-Appraiser/Embed.xml $", "$Rev: 2530 $")
+		AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-Appraiser/Embed.xml $", "$Rev: 2530 $")
 	</Script>
 </Ui>

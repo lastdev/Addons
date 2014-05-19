@@ -21,10 +21,10 @@ elseif locale == "frFR" then -- French
 -- L["T"] = ""
 
 elseif locale == "deDE" then -- German
--- L["B"] = ""
--- L["K"] = ""
--- L["M"] = ""
--- L["T"] = ""
+L["B"] = "Einbuchstabiges Kürzel für (englisch) \"Billion\"" -- Needs review
+L["K"] = "Einbuchstabiges Kürzel für \"Tausend\"" -- Needs review
+L["M"] = "Einbuchstabiges Kürzel für \"Million\"" -- Needs review
+L["T"] = "Einbuchstabiges Kürzel für (englisch) \"Trillion\"" -- Needs review
 
 elseif locale == "itIT" then -- Italian
 -- L["B"] = ""
@@ -53,7 +53,7 @@ elseif locale == "ruRU" then -- Russian
 elseif locale == "zhCN" then -- Simplified Chinese
 -- L["B"] = ""
 -- L["K"] = ""
--- L["M"] = ""
+L["M"] = "百万" -- Needs review
 -- L["T"] = ""
 
 elseif locale == "esES" then -- Spanish
@@ -65,7 +65,7 @@ elseif locale == "esES" then -- Spanish
 elseif locale == "zhTW" then -- Traditional Chinese
 -- L["B"] = ""
 -- L["K"] = ""
--- L["M"] = ""
+L["M"] = "百萬" -- Needs review
 -- L["T"] = ""
 
 end

@@ -4,8 +4,8 @@
 	The Tidy Plates Healer Tracking system uses two concurrent methods:
 		1. Direct query of the Battleground Scoreboard for Talent Specialization
 		2. Active monitoring of the combat log for Healer-Only spells
-		
-		Q: Why do I use TWO methods?  
+
+		Q: Why do I use TWO methods?
 			A: Querying the Battleground Scoreboard is the most accurate method,
 		but it doesn't always work.  In addition, there are PvP encounters where
 		you're not in a battleground.
@@ -14,16 +14,16 @@
 local RoleList = {}
 
 local function IsHealer(name)
-	
-	if name then 
+
+	if name then
 		local Role = RoleList[name]
 		if Role == nil then
 			RequestBattlefieldScoreData()
-		else 
+		else
 			--if Role == "Healer" then print(name, "Marked as Healer") end
-			return Role == "Healer" 
+			return Role == "Healer"
 		end
-	end	
+	end
 end
 
 ---------------------------------------------------------------------------------------------------------
@@ -38,12 +38,12 @@ local WidgetList = {}
 local function UpdateWidgetFrame(self, unit)
 	-- Custom Code I
 	--------------------------------------
-	if unit.type == "PLAYER" and IsHealer(unit.name) then 
+	if unit.type == "PLAYER" and IsHealer(unit.name) then
 		if unit.reaction == "HOSTILE" then
 			self:Show()
-			self.Icon:SetTexture(hostileHealerIcon) 
+			self.Icon:SetTexture(hostileHealerIcon)
 		else self:Show();self.Icon:SetTexture(friendlyHealerIcon) end
-	else self:_Hide() end	
+	else self:_Hide() end
 	--------------------------------------
 	-- End Custom Code
 end
@@ -52,15 +52,15 @@ end
 local function UpdateWidgetContext(self, unit)
 	local guid = unit.guid
 	self.guid = guid
-	
+
 	-- Add to Widget List
 	if guid then
 		WidgetList[guid] = self
 	end
-	
+
 	-- Custom Code II
 	--------------------------------------
-	UpdateWidgetFrame(self, unit) 
+	UpdateWidgetFrame(self, unit)
 	--------------------------------------
 	-- End Custom Code
 end
@@ -77,25 +77,25 @@ end
 local function CreateWidgetFrame(parent)
 	local frame = CreateFrame("Frame", nil, parent)
 	frame:Hide()
-	
+
 	-- Custom Code III
 	--------------------------------------
 	frame:SetHeight(32)
 	frame:SetWidth(64)
 	frame.Icon = frame:CreateTexture(nil, "OVERLAY")
-	frame.Icon:SetAllPoints(frame)	
+	frame.Icon:SetAllPoints(frame)
 	frame.Icon:SetTexture(defaultTexture)
 	frame:SetAlpha(.7)
 	--if not isEnabled then EnableWatcherFrame(true) end
 	--------------------------------------
 	-- End Custom Code
-	
+
 	-- Required Widget Code
 	frame.UpdateContext = UpdateWidgetContext
 	frame.Update = UpdateWidgetFrame
 	frame._Hide = frame.Hide
 	frame.Hide = function() ClearWidgetContext(frame); frame:_Hide() end
-	
+
 	return frame
 end
 
@@ -115,7 +115,7 @@ local function ParseName(identifier)
 end
 
 --[[
-Detection Method 1: 
+Detection Method 1:
 Direct query of the Battleground Scoreboard for Talent Specialization
 --]]
 
@@ -186,16 +186,16 @@ local ClassRoles = {
 local NextUpdate = 0
 local function UpdateRolesViaScoreboard()
 	local now = GetTime()
-	
+
 	if now > NextUpdate then
 		NextUpdate = now + 3		-- Throttles update frequency to every 3 seconds.
 	else return end
-	
+
 	--print("Scoreboard Update", now)
-	
+
 	local UpdateIsNeeded = false
 	local NumScores = GetNumBattlefieldScores()
-	
+
 	-- SetBattlefieldScoreFaction(DisplayFaction) -- faction 0=Horde, 1=Alliance
 
 	if NumScores > 0 then
@@ -209,14 +209,14 @@ local function UpdateRolesViaScoreboard()
 					RoleList[name] = Role
 					--if Role == "Healer" then print(name, Role, faction) end
 					UpdateIsNeeded = true
-				end 
+				end
 			end
 		end
 		if UpdateIsNeeded then TidyPlates:RequestDelegateUpdate() end
 	end
 
 end
-		
+
 local HealerSpells = {
         -- Priest
 		----------
@@ -246,7 +246,7 @@ local HealerSpells = {
         [17116] = "SHAMAN", -- Nature's Swiftness
         [16190] = "SHAMAN", -- Mana Tide Totem
         [61295] = "SHAMAN", -- Riptide
-		
+
 
         -- Paladin
 		----------
@@ -255,7 +255,7 @@ local HealerSpells = {
         [53563] = "PALADIN", -- Beacon of Light
         [31821] = "PALADIN", -- Aura Mastery
         [85222] = "PALADIN", -- Light of Dawn
-		
+
         -- Monk
 		---------
         [115175] = "MONK", -- Soothing Mist
@@ -267,16 +267,16 @@ local HealerSpells = {
         [116995] = "MONK", -- Surging mist
         [119611] = "MONK", -- Renewing mist
         [132120] = "MONK", -- Envelopping Mist
-		
+
 		-- http://www.icy-veins.com/mistweaver-monk-wow-pve-healing-rotation-cooldowns-abilities
 		-- http://www.wowhead.com/spells=-12.10.270
 }
 
-local SpellEvents = { 
-	["SPELL_HEAL"] = true, 
-	["SPELL_AURA_APPLIED"] = true, 
-	["SPELL_CAST_START"] = true, 
-	["SPELL_CAST_SUCCESS"] = true, 
+local SpellEvents = {
+	["SPELL_HEAL"] = true,
+	["SPELL_AURA_APPLIED"] = true,
+	["SPELL_CAST_START"] = true,
+	["SPELL_CAST_SUCCESS"] = true,
 	["SPELL_PERIODIC_HEAL"] = true,
 }
 
@@ -286,7 +286,7 @@ local function IsEnemyPlayer(flags)
 	end
 end
 
-local function WipeLists() 
+local function WipeLists()
 		RoleList = wipe(RoleList)
 		HealerListByGUID = wipe(HealerListByGUID)
 		HealerListByName = wipe(HealerListByName)
@@ -295,13 +295,13 @@ end
 local Events = {}
 
 function Events.PLAYER_ENTERING_WORLD()
-	WipeLists() 
+	WipeLists()
 	return
 end
 
 function Events.UPDATE_BATTLEFIELD_SCORE()
 	--print("UPDATE_BATTLEFIELD_SCORE")
-	UpdateRolesViaScoreboard() 
+	UpdateRolesViaScoreboard()
 	return
 end
 
@@ -316,7 +316,7 @@ function Events.COMBAT_LOG_EVENT_UNFILTERED(...)
 				if RoleList[rawName] ~= "Healer" then
 					RoleList[rawName] = "Healer"
 					TidyPlates:RequestDelegateUpdate()
-				end	
+				end
 			end
 		end
 	end
@@ -327,25 +327,26 @@ local function CombatEventHandler(frame, event, ...)
 	if handler then handler(...) end
 end
 
-local HealerTrackWatcher = CreateFrame("Frame")	
-	
+local HealerTrackWatcher = CreateFrame("Frame")
+
 local function Enable()
 	--print("TidyPlatesWidgets.HealerTrack:Enable")
 	HealerTrackWatcher:SetScript("OnEvent", CombatEventHandler)
 	HealerTrackWatcher:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	HealerTrackWatcher:RegisterEvent("PLAYER_ENTERING_WORLD")
 	HealerTrackWatcher:RegisterEvent("UPDATE_BATTLEFIELD_SCORE")
-	WipeLists() 
+	WipeLists()
 end
 
-local function Disable() 
+local function Disable()
 	HealerTrackWatcher:SetScript("OnEvent", nil)
 	HealerTrackWatcher:UnregisterAllEvents()
-	WipeLists() 
+	WipeLists()
 end
 
 TidyPlatesUtility.EnableHealerTrack = Enable
 TidyPlatesUtility.DisableHealerTrack = Disable
 TidyPlatesUtility.IsHealer = IsHealer
 
-			
+
+

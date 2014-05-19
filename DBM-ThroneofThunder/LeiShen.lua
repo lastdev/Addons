@@ -1,21 +1,22 @@
 local mod	= DBM:NewMod(832, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 10248 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
 mod:SetCreatureID(68397)--Diffusion Chain Conduit 68696, Static Shock Conduit 68398, Bouncing Bolt conduit 68698, Overcharge conduit 68697
+mod:SetEncounterID(1579)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)--All icons can be used, because if a pillar is level 3, it puts out 4 debuffs on 25 man (if both are level 3, then you will have 8)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_PERIODIC_DAMAGE",
-	"SPELL_PERIODIC_MISSED",
+	"SPELL_CAST_START 135095 136850 136478",
+	"SPELL_AURA_APPLIED 135000 134912 135695 136295 135680 135681 139011 136914",
+	"SPELL_AURA_APPLIED_DOSE 136914",
+	"SPELL_CAST_SUCCESS 135991 136543 108199 114028",
+	"SPELL_AURA_REMOVED 135680 135681 135682 135683 135695 136295",
+	"SPELL_PERIODIC_DAMAGE 135153 137176",
+	"SPELL_PERIODIC_MISSED 135153 137176",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"UNIT_SPELLCAST_SUCCEEDED"
 )
@@ -111,13 +112,19 @@ mod:AddBoolOption("StaticShockArrow", false)--Off by default as most static shoc
 mod:AddBoolOption("SetIconOnOvercharge", true)
 mod:AddBoolOption("SetIconOnStaticShock", true)
 
-local phase = 1
-local warnedCount = 0
-local intermissionActive = false--Not in use yet, but will be. This will be used (once we have CD bars for regular phases mapped out) to prevent those cd bars from starting during intermissions and messing up the custom intermission bars
-local northDestroyed = false
-local eastDestroyed = false
-local southDestroyed = false
-local westDestroyed = false
+mod.vb.phase = 1
+mod.vb.warnedCount = 0
+mod.vb.intermissionActive = false--Not in use yet, but will be. This will be used (once we have CD bars for regular phases mapped out) to prevent those cd bars from starting during intermissions and messing up the custom intermission bars
+mod.vb.northDestroyed = false
+mod.vb.eastDestroyed = false
+mod.vb.southDestroyed = false
+mod.vb.westDestroyed = false
+mod.vb.ballsCount = 0
+mod.vb.whipCount = 0
+mod.vb.thunderCount = 0
+mod.vb.goreCount = 0
+mod.vb.reflectCount = 0
+mod.vb.diffusionCastTarget = nil
 local staticshockTargets = {}
 local diffusionTargets = {}
 local staticIcon = 8--Start high and count down
@@ -125,12 +132,6 @@ local overchargeTarget = {}
 local overchargeIcon = 1--Start low and count up
 local helmOfCommandTarget = {}
 local playerName = UnitName("player")
-local ballsCount = 0
-local whipCount = 0
-local thunderCount = 0
-local goreCount = 0
-local reflectCount = 0
-local diffusionCastTarget = nil
 
 local function warnStaticShockTargets()
 	warnStaticShock:Show(table.concat(staticshockTargets, "<, >"))
@@ -157,20 +158,20 @@ end
 function mod:OnCombatStart(delay)
 	table.wipe(staticshockTargets)
 	table.wipe(overchargeTarget)
-	phase = 1
-	warnedCount = 0
 	staticIcon = 8
 	overchargeIcon = 1
-	intermissionActive = false
-	northDestroyed = false
-	eastDestroyed = false
-	southDestroyed = false
-	westDestroyed = false
-	ballsCount = 0
-	whipCount = 0
-	thunderCount = 0
-	goreCount = 0
-	reflectCount = 0
+	self.vb.phase = 1
+	self.vb.warnedCount = 0
+	self.vb.intermissionActive = false
+	self.vb.northDestroyed = false
+	self.vb.eastDestroyed = false
+	self.vb.southDestroyed = false
+	self.vb.westDestroyed = false
+	self.vb.ballsCount = 0
+	self.vb.whipCount = 0
+	self.vb.thunderCount = 0
+	self.vb.goreCount = 0
+	self.vb.reflectCount = 0
 	timerThunderstruckCD:Start(25-delay, 1)
 	countdownThunderstruck:Start(25-delay)
 	timerDecapitateCD:Start(40-delay)--First seems to be 45, rest 50. it's a CD though, not a "next"
@@ -178,8 +179,8 @@ function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
 	self:RegisterShortTermEvents(
 		"UNIT_HEALTH_FREQUENT boss1",
-		"SPELL_DAMAGE",
-		"SPELL_MISSED"
+		"SPELL_DAMAGE 135150 135991",
+		"SPELL_MISSED 135150 135991"
 	)-- Do not use on phase 3.
 end
 
@@ -194,30 +195,31 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 135095 then
-		thunderCount = thunderCount + 1
-		warnThunderstruck:Show(thunderCount)
-		specWarnThunderstruck:Show(thunderCount)
+	local spellId = args.spellId
+	if spellId == 135095 then
+		self.vb.thunderCount = self.vb.thunderCount + 1
+		warnThunderstruck:Show(self.vb.thunderCount)
+		specWarnThunderstruck:Show(self.vb.thunderCount)
 		timerThunderstruck:Start()
-		if phase < 3 then
-			timerThunderstruckCD:Start(nil, thunderCount+1)
+		if self.vb.phase < 3 then
+			timerThunderstruckCD:Start(nil, self.vb.thunderCount+1)
 			countdownThunderstruck:Start()
 		else
-			timerThunderstruckCD:Start(30, thunderCount+1)
+			timerThunderstruckCD:Start(30, self.vb.thunderCount+1)
 			countdownThunderstruck:Start(30)
 		end
 	--"<206.2 20:38:58> [UNIT_SPELLCAST_SUCCEEDED] Lei Shen [[boss1:Lightning Whip::0:136845]]", -- [13762] --This event comes about .5 seconds earlier than SPELL_CAST_START. Maybe worth using?
-	elseif args.spellId == 136850 then
-		whipCount = whipCount + 1
-		warnLightningWhip:Show(whipCount)
-		specWarnLightningWhip:Show(whipCount)
+	elseif spellId == 136850 then
+		self.vb.whipCount = self.vb.whipCount + 1
+		warnLightningWhip:Show(self.vb.whipCount)
+		specWarnLightningWhip:Show(self.vb.whipCount)
 		timerLightningWhip:Start()
-		if phase < 3 then
-			timerLightningWhipCD:Start(nil, whipCount+1)
+		if self.vb.phase < 3 then
+			timerLightningWhipCD:Start(nil, self.vb.whipCount+1)
 		else
-			timerLightningWhipCD:Start(30, whipCount+1)
+			timerLightningWhipCD:Start(30, self.vb.whipCount+1)
 		end
-	elseif args.spellId == 136478 then
+	elseif spellId == 136478 then
 		warnFusionSlash:Show()
 		timerFussionSlashCD:Start()
 		if self:IsDifficulty("lfr25") then return end
@@ -226,6 +228,7 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
+	local spellId = args.spellId
 	if args:IsSpellID(135000, 134912) then--Is 135000 still used on 10 man?
 		warnDecapitate:Show(args.destName)
 		timerDecapitateCD:Start()
@@ -237,13 +240,13 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnDecapitateOther:Show(args.destName)
 		end
 	--Conduit activations
-	elseif args.spellId == 135695 then
+	elseif spellId == 135695 then
 		staticshockTargets[#staticshockTargets + 1] = args.destName
 		if self.Options.SetIconOnStaticShock then
 			self:SetIcon(args.destName, staticIcon)
 			staticIcon = staticIcon - 1
 		end
-		if not intermissionActive then
+		if not self.vb.intermissionActive then
 			timerStaticShockCD:Start()
 		end
 		self:Unschedule(warnStaticShockTargets)
@@ -260,7 +263,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerStaticShock:Start()
 			countdownStaticShockFades:Start()
 		else
-			if not intermissionActive and self:IsMelee() then return end--Melee do not help soak these during normal phases, only during intermissions
+			if not self.vb.intermissionActive and self:IsMelee() then return end--Melee do not help soak these during normal phases, only during intermissions
 			local uId = DBM:GetRaidUnitId(args.destName)
 			if uId then
 				local x, y = GetPlayerMapPosition(uId)
@@ -277,14 +280,14 @@ function mod:SPELL_AURA_APPLIED(args)
 				end
 			end
 		end
-	elseif args.spellId == 136295 then
+	elseif spellId == 136295 then
 		overchargeTarget[#overchargeTarget + 1] = args.destName
 		timerOvercharge:Start()
 		if self.Options.SetIconOnOvercharge then
 			self:SetIcon(args.destName, overchargeIcon)
 			overchargeIcon = overchargeIcon + 1
 		end
-		if not intermissionActive then
+		if not self.vb.intermissionActive then
 			timerOverchargeCD:Start()
 		end
 		self:Unschedule(warnOverchargeTargets)
@@ -293,7 +296,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnOvercharged:Show()
 			yellOvercharged:Yell()
 		else
-			if not intermissionActive and self:IsMelee() then return end--Melee do not help soak these during normal phases, only during intermissions
+			if not self.vb.intermissionActive and self:IsMelee() then return end--Melee do not help soak these during normal phases, only during intermissions
 			local uId = DBM:GetRaidUnitId(args.destName)
 			if uId then
 				local x, y = GetPlayerMapPosition(uId)
@@ -310,20 +313,20 @@ function mod:SPELL_AURA_APPLIED(args)
 				end
 			end
 		end
-	elseif args.spellId == 135680 and args:GetDestCreatureID() == 68397 then--North (Static Shock)
+	elseif spellId == 135680 and args:GetDestCreatureID() == 68397 then--North (Static Shock)
 		--start timers here when we have em
-	elseif args.spellId == 135681 and args:GetDestCreatureID() == 68397 then--East (Diffusion Chain)
+	elseif spellId == 135681 and args:GetDestCreatureID() == 68397 then--East (Diffusion Chain)
 		if self.Options.RangeFrame and self:IsRanged() then--Shouldn't target melee during a normal pillar, only during intermission when all melee are with ranged and out of melee range of boss
 			DBM.RangeCheck:Show(8)--Assume 8 since spell tooltip has no info
 		end
-	elseif args.spellId == 139011 then
+	elseif spellId == 139011 then
 		helmOfCommandTarget[#helmOfCommandTarget + 1] = args.destName
 		if args:IsPlayer() then
 			specWarnHelmOfCommand:Show()
 		end
 		self:Unschedule(warnHelmOfCommandTargets)
 		self:Schedule(0.3, warnHelmOfCommandTargets)
-	elseif args.spellId == 136914 then
+	elseif spellId == 136914 then
 		local amount = args.amount or 1
 		if amount >= 12 and self:AntiSpam(2.5, 6) then
 			if args:IsPlayer() then
@@ -337,64 +340,66 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 135991 then
-		diffusionCastTarget = args.destName
-		warnDiffusionChain:Show(diffusionCastTarget)
-		if not intermissionActive then
+	local spellId = args.spellId
+	if spellId == 135991 then
+		self.vb.diffusionCastTarget = args.destName
+		warnDiffusionChain:Show(self.vb.diffusionCastTarget)
+		if not self.vb.intermissionActive then
 			timerDiffusionChainCD:Start()
-			if not (phase == 2 and westDestroyed) or not self:IsDifficulty("heroic10", "heroic25") then--Disable this countdown in phase 2 if using bouncing bolt strat. so they don't overlap. this is mainly for the diffusion chain strat (ie overloading DC and static shock on heroic vs bouncing and static)
+			if not (self.vb.phase == 2 and self.vb.westDestroyed) or not self:IsHeroic() then--Disable this countdown in phase 2 if using bouncing bolt strat. so they don't overlap. this is mainly for the diffusion chain strat (ie overloading DC and static shock on heroic vs bouncing and static)
 				countdownDiffusionChain:Start()
 			end
 			specWarnDiffusionChainSoon:Schedule(36)
 		end
-	elseif args.spellId == 136543 and self:AntiSpam(2, 1) then
-		ballsCount = ballsCount + 1
-		warnSummonBallLightning:Show(ballsCount)
-		specWarnSummonBallLightning:Show(ballsCount)
-		if phase < 3 then
-			timerSummonBallLightningCD:Start(nil, ballsCount+1)
+	elseif spellId == 136543 and self:AntiSpam(2, 1) then
+		self.vb.ballsCount = self.vb.ballsCount + 1
+		warnSummonBallLightning:Show(self.vb.ballsCount)
+		specWarnSummonBallLightning:Show(self.vb.ballsCount)
+		if self.vb.phase < 3 then
+			timerSummonBallLightningCD:Start(nil, self.vb.ballsCount+1)
 		else
-			timerSummonBallLightningCD:Start(30, ballsCount+1)
+			timerSummonBallLightningCD:Start(30, self.vb.ballsCount+1)
 		end
-	elseif args.spellId == 108199 and self:IsInCombat() then
-		if goreCount == 2 then goreCount = 0 end
-		goreCount = goreCount + 1
-		warnGorefiendsGrasp:Show(goreCount)
-		specWarnGorefiendsGrasp:Show(goreCount)
-	elseif args.spellId == 114028 and self:IsInCombat() then
-		if reflectCount == 2 then reflectCount = 0 end
-		reflectCount = reflectCount + 1
-		warnMassSpellReflect:Show(reflectCount)
-		specWarnMassSpellReflect:Show(reflectCount)
+	elseif spellId == 108199 and self:IsInCombat() then
+		if self.vb.goreCount == 2 then self.vb.goreCount = 0 end
+		self.vb.goreCount = self.vb.goreCount + 1
+		warnGorefiendsGrasp:Show(self.vb.goreCount)
+		specWarnGorefiendsGrasp:Show(self.vb.goreCount)
+	elseif spellId == 114028 and self:IsInCombat() then
+		if self.vb.reflectCount == 2 then self.vb.reflectCount = 0 end
+		self.vb.reflectCount = self.vb.reflectCount + 1
+		warnMassSpellReflect:Show(self.vb.reflectCount)
+		specWarnMassSpellReflect:Show(self.vb.reflectCount)
 		timerMassSpellReflect:Start()
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
+	local spellId = args.spellId
 	--Conduit deactivations
-	if args.spellId == 135680 and args:GetDestCreatureID() == 68397 and not intermissionActive then--North (Static Shock)
+	if spellId == 135680 and args:GetDestCreatureID() == 68397 and not self.vb.intermissionActive then--North (Static Shock)
 		timerStaticShockCD:Cancel()
-	elseif args.spellId == 135681 and args:GetDestCreatureID() == 68397 and not intermissionActive then--East (Diffusion Chain)
+	elseif spellId == 135681 and args:GetDestCreatureID() == 68397 and not self.vb.intermissionActive then--East (Diffusion Chain)
 		timerDiffusionChainCD:Cancel()
 		countdownDiffusionChain:Cancel()
 		specWarnDiffusionChainSoon:Cancel()
 		if self.Options.RangeFrame and self:IsRanged() then--Shouldn't target melee during a normal pillar, only during intermission when all melee are with ranged and out of melee range of boss
-			if phase == 1 then
+			if self.vb.phase == 1 then
 				DBM.RangeCheck:Hide()
 			else
 				DBM.RangeCheck:Show(6)--Switch back to Summon Lightning Orb spell range
 			end
 		end
-	elseif args.spellId == 135682 and args:GetDestCreatureID() == 68397 and not intermissionActive then--South (Overcharge)
+	elseif spellId == 135682 and args:GetDestCreatureID() == 68397 and not self.vb.intermissionActive then--South (Overcharge)
 		timerOverchargeCD:Cancel()
-	elseif args.spellId == 135683 and args:GetDestCreatureID() == 68397 and not intermissionActive then--West (Bouncing Bolt)
+	elseif spellId == 135683 and args:GetDestCreatureID() == 68397 and not self.vb.intermissionActive then--West (Bouncing Bolt)
 		timerBouncingBoltCD:Cancel()
 		countdownBouncingBolt:Cancel()
 		specWarnBouncingBoltSoon:Cancel()
 	--Conduit deactivations
-	elseif args.spellId == 135695 and self.Options.SetIconOnStaticShock then
+	elseif spellId == 135695 and self.Options.SetIconOnStaticShock then
 		self:SetIcon(args.destName, 0)
-	elseif args.spellId == 136295 and self.Options.SetIconOnOvercharge then
+	elseif spellId == 136295 and self.Options.SetIconOnOvercharge then
 		self:SetIcon(args.destName, 0)
 	end
 end
@@ -402,7 +407,7 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId, spellName)
 	if spellId == 135150 and destGUID == UnitGUID("player") and self:AntiSpam(1.5, 4) then
 		specWarnCrashingThunder:Show()
-	elseif spellId == 135991 and destName ~= diffusionCastTarget then--Filter actual target, so we only announce SPREADS
+	elseif spellId == 135991 and destName ~= self.vb.diffusionCastTarget then--Filter actual target, so we only announce SPREADS
 		diffusionTargets[#diffusionTargets + 1] = destName
 		self:Unschedule(warnDiffusionSpreadTargets)
 		if #diffusionTargets >= 1 then
@@ -423,24 +428,24 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg:find("spell:137176") then--Overloaded Circuits (Intermission ending and next phase beginning)
-		intermissionActive = false
-		phase = phase + 1
-		goreCount = 0
-		reflectCount = 0
+		self.vb.intermissionActive = false
+		self.vb.phase = self.vb.phase + 1
+		self.vb.goreCount = 0
+		self.vb.reflectCount = 0
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Hide()
 		end
 		--"<174.8 20:38:26> [CHAT_MSG_RAID_BOSS_EMOTE] CHAT_MSG_RAID_BOSS_EMOTE#|TInterface\\Icons\\spell_nature_unrelentingstorm.blp:20|t The |cFFFF0000|Hspell:135683|h[West Conduit]|h|r has burned out and caused |cFFFF0000|Hspell:137176|h[Overloaded Circuits]|h|r!#Bouncing Bolt Conduit
 		if msg:find("spell:135680") then--North (Static Shock)
-			northDestroyed = true
+			self.vb.northDestroyed = true
 		elseif msg:find("spell:135681") then--East (Diffusion Chain)
-			eastDestroyed = true
+			self.vb.eastDestroyed = true
 		elseif msg:find("spell:135682") then--South (Overcharge)
-			southDestroyed = true
+			self.vb.southDestroyed = true
 		elseif msg:find("spell:135683") then--West (Bouncing Bolt)
-			westDestroyed = true
+			self.vb.westDestroyed = true
 		end
-		if phase == 2 then--Start Phase 2 timers
+		if self.vb.phase == 2 then--Start Phase 2 timers
 			warnPhase2:Show()
 			timerConduitCD:Start(14)--min time, will cast right away unless delayed by heroic special getting cast first or because he's not in range of a conduit yet
 			timerSummonBallLightningCD:Start(15, 1)
@@ -449,56 +454,56 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 			if self.Options.RangeFrame and self:IsRanged() then--Only ranged need it in phase 2 and 3
 				DBM.RangeCheck:Show(6)--Needed for phase 2 AND phase 3
 			end
-			if self:IsDifficulty("heroic10", "heroic25") then
+			if self:IsHeroic() then
 				--Basically a CD, may come later if delayed by other crap
 				--15-19 variation. but you need this timing to hit spell reflect at 15 (it lasts 5 seconds so covers the variation)
-				if northDestroyed then
+				if self.vb.northDestroyed then
 					timerStaticShockCD:Start(14)
 				end
-				if eastDestroyed then
+				if self.vb.eastDestroyed then
 					timerDiffusionChainCD:Start(14)
 					countdownDiffusionChain:Start(14)
 					if self.Options.RangeFrame and self:IsRanged() then
 						DBM.RangeCheck:Show(8)
 					end
 				end
-				if southDestroyed then
+				if self.vb.southDestroyed then
 					timerOverchargeCD:Start(14)
 				end
-				if westDestroyed then
+				if self.vb.westDestroyed then
 					timerBouncingBoltCD:Start(14)
-					if not eastDestroyed or not self:IsDifficulty("heroic10", "heroic25") then--Why in the hell would you do that? Diffusion chaim & bouncing bolts? you must be nuts
+					if not self.vb.eastDestroyed or not self:IsHeroic() then--Why in the hell would you do that? Diffusion chaim & bouncing bolts? you must be nuts
 						countdownBouncingBolt:Start(14)--Of the two, diffusion chains more important so we disable bouncing count
 					end
 				end
 			end
-		elseif phase == 3 then--Start Phase 3 timers
+		elseif self.vb.phase == 3 then--Start Phase 3 timers
 			self:UnregisterShortTermEvents()
-			ballsCount = 0
-			whipCount = 0
-			thunderCount = 0
+			self.vb.ballsCount = 0
+			self.vb.whipCount = 0
+			self.vb.thunderCount = 0
 			warnPhase3:Show()
 			timerViolentGaleWindsCD:Start(20)
 			timerLightningWhipCD:Start(21.5, 1)
 			timerThunderstruckCD:Start(36, 1)
 			countdownThunderstruck:Start(36)
 			timerSummonBallLightningCD:Start(41.5, 1)
-			if self:IsDifficulty("heroic10", "heroic25") then
+			if self:IsHeroic() then
 				--Basically a CD, may come later if delayed by other crap
 				--28-32 variation. but you need this timing to hit spell reflect at 15 (it lasts 5 seconds so covers the variation)
-				if northDestroyed then
+				if self.vb.northDestroyed then
 					timerStaticShockCD:Start(28)
 				end
-				if eastDestroyed then
+				if self.vb.eastDestroyed then
 					timerDiffusionChainCD:Start(28)
-					if not westDestroyed or not self:IsDifficulty("heroic10", "heroic25") then--Why in the fuck would you do that? Diffusion chaim & bouncing bolts? you must be nuts
+					if not self.vb.westDestroyed or not self:IsHeroic() then--Why in the fuck would you do that? Diffusion chaim & bouncing bolts? you must be nuts
 						countdownDiffusionChain:Start(28)
 					end
 				end
-				if southDestroyed then
+				if self.vb.southDestroyed then
 					timerOverchargeCD:Start(28)
 				end
-				if westDestroyed then--Technically also 28, however
+				if self.vb.westDestroyed then--Technically also 28, however
 					timerBouncingBoltCD:Start(32)--Always goes second, over any of other 3 abilities, and that delays it by 4 seconds
 					countdownBouncingBolt:Start(32)
 				end
@@ -508,26 +513,26 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 end
 
 local function LoopIntermission()
-	if not southDestroyed or mod:IsDifficulty("heroic10", "heroic25") then
+	if not mod.vb.southDestroyed or mod:IsHeroic() then
 		if mod:IsDifficulty("lfr25") then
 			timerOverchargeCD:Start(17.5)
 		else
 			timerOverchargeCD:Start(6.5)
 		end
 	end
-	if not eastDestroyed or mod:IsDifficulty("heroic10", "heroic25") then
+	if not mod.vb.eastDestroyed or mod:IsHeroic() then
 		if mod:IsDifficulty("lfr25") then
 			timerDiffusionChainCD:Start(17.5)
 		else
 			timerDiffusionChainCD:Start(8)
 		end
 	end
-	if not westDestroyed or mod:IsDifficulty("heroic10", "heroic25") then
+	if not mod.vb.westDestroyed or mod:IsHeroic() then
 		if mod:IsDifficulty("lfr25") then
 			warnBouncingBolt:Schedule(8.5)
 			specWarnBouncingBolt:Schedule(8.5)
 			timerBouncingBoltCD:Start(8.5)
-		elseif mod:IsDifficulty("heroic10", "heroic25") then
+		elseif mod:IsHeroic() then
 			warnBouncingBolt:Schedule(15.5)--Delayed by second helm of command i believe
 			specWarnBouncingBolt:Schedule(15.5)
 			timerBouncingBoltCD:Start(15.5)
@@ -537,30 +542,28 @@ local function LoopIntermission()
 			timerBouncingBoltCD:Start(14)
 		end
 	end
-	if (not mod:IsDifficulty("lfr25") and not northDestroyed) or mod:IsDifficulty("heroic10", "heroic25") then--Doesn't cast a 2nd one in LFR
+	if (not mod:IsDifficulty("lfr25") and not mod.vb.northDestroyed) or mod:IsHeroic() then--Doesn't cast a 2nd one in LFR
 		timerStaticShockCD:Start(16)
 	end
-	if mod:IsDifficulty("heroic10", "heroic25") then
+	if mod:IsHeroic() then
 		timerHelmOfCommand:Start(15)
 	end
 end
 
 function mod:UNIT_HEALTH_FREQUENT(uId)
-	if UnitName(uId) == L.name then
-		local hp = UnitHealth(uId) / UnitHealthMax(uId) * 100
-		if hp > 65 and hp < 66.5 and warnedCount == 0 then
-			warnedCount = 1
-			specWarnIntermissionSoon:Show()
-		elseif hp > 30 and hp < 31.5 and warnedCount == 1 then
-			warnedCount = 2
-			specWarnIntermissionSoon:Show()
-		end
+	local hp = UnitHealth(uId) / UnitHealthMax(uId) * 100
+	if hp > 65 and hp < 67.5 and self.vb.warnedCount == 0 then
+		self.vb.warnedCount = 1
+		specWarnIntermissionSoon:Show()
+	elseif hp > 30 and hp < 32.5 and self.vb.warnedCount == 1 then
+		self.vb.warnedCount = 2
+		specWarnIntermissionSoon:Show()
 	end
 end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 137146 and self:AntiSpam(2, 2) then--Supercharge Conduits (comes earlier than other events so we use this one)
-		intermissionActive = true
+		self.vb.intermissionActive = true
 		specWarnDiffusionChainSoon:Cancel()
 		specWarnBouncingBoltSoon:Cancel()
 		timerThunderstruckCD:Cancel()
@@ -576,7 +579,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		timerOverchargeCD:Cancel()
 		timerBouncingBoltCD:Cancel()
 		countdownBouncingBolt:Cancel()
-		if not eastDestroyed or self:IsDifficulty("heroic10", "heroic25") then
+		if not self.vb.eastDestroyed or self:IsHeroic() then
 			if self:IsDifficulty("lfr25") then
 				timerDiffusionChainCD:Start(10)
 			else
@@ -586,19 +589,19 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 				DBM.RangeCheck:Show(8)
 			end
 		end
-		if not southDestroyed or self:IsDifficulty("heroic10", "heroic25") then
+		if not self.vb.southDestroyed or self:IsHeroic() then
 			if self:IsDifficulty("lfr25") then
 				timerOverchargeCD:Start(10)
 			else
 				timerOverchargeCD:Start(6)
 			end
 		end
-		if (not westDestroyed and not self:IsDifficulty("lfr25")) or self:IsDifficulty("heroic10", "heroic25") then--Doesn't get cast in first wave in LFR, only second
+		if (not self.vb.westDestroyed and not self:IsDifficulty("lfr25")) or self:IsHeroic() then--Doesn't get cast in first wave in LFR, only second
 			warnBouncingBolt:Schedule(14)
 			specWarnBouncingBolt:Schedule(14)
 			timerBouncingBoltCD:Start(14)
 		end
-		if not northDestroyed or self:IsDifficulty("heroic10", "heroic25") then
+		if not self.vb.northDestroyed or self:IsHeroic() then
 			if self:IsDifficulty("lfr25") then
 				timerStaticShockCD:Start(21)
 			else
@@ -606,14 +609,14 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 			end
 		end
 		self:Schedule(23, LoopIntermission)--Fire function to start second wave of specials timers
-		if self:IsDifficulty("heroic10", "heroic25") then
+		if self:IsHeroic() then
 			timerHelmOfCommand:Start(14)
 		end
-	elseif spellId == 136395 and self:AntiSpam(2, 3) and not intermissionActive then--Bouncing Bolt (During intermission phases, it fires randomly, use scheduler and filter this :\)
+	elseif spellId == 136395 and self:AntiSpam(2, 3) and not self.vb.intermissionActive then--Bouncing Bolt (During intermission phases, it fires randomly, use scheduler and filter this :\)
 		warnBouncingBolt:Show()
 		specWarnBouncingBolt:Show()
 		timerBouncingBoltCD:Start(40)
-		if not (phase == 2 and eastDestroyed) or not self:IsDifficulty("heroic10", "heroic25") then--Disable this countdown in phase 2 if using diffusion strat
+		if not (self.vb.phase == 2 and self.vb.eastDestroyed) or not self:IsHeroic() then--Disable this countdown in phase 2 if using diffusion strat
 			countdownBouncingBolt:Start(40)
 		end
 		specWarnBouncingBoltSoon:Schedule(36)

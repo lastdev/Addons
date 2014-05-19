@@ -1,17 +1,20 @@
 local mod	= DBM:NewMod("Nightbane", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 515 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
 mod:SetCreatureID(17225)
 mod:SetModelID(18062)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_EMOTE"
+)
+
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_APPLIED",
-	"CHAT_MSG_MONSTER_YELL",
-	"CHAT_MSG_MONSTER_EMOTE"
+	"CHAT_MSG_MONSTER_YELL"
 )
 
 local warningFear			= mod:NewSpellAnnounce(36922, 4)

@@ -97,7 +97,7 @@ a.Rotations.Shadow = {
 			else
 				swdInARow = 1
 			end
-		elseif a.SinceSWD > 6 then
+		elseif a.SinceSWD > 9 then
 			swdInARow = 0
 		end
 		a.SinceSWD = a.SinceSWD + c.GetBusyTime()
@@ -134,7 +134,7 @@ a.Rotations.Shadow = {
 			a.Insanity = (a.Insanity % a.FlayTick) + c.GetHastedTime(3)
 		end
 		
-		a.InExecute = s.HealthPercent() < 20
+		a.InExecute = s.HealthPercent() <= 20
 		
 		c.FlashAll(
 			"Power Infusion",
@@ -147,14 +147,14 @@ a.Rotations.Shadow = {
 		c.DelayPriorityFlash(
 			"Mind Blast",
 			"Shadow Word: Death for Orb",
---			"Shadow Word: Death without Orb",
-			"Shadow Word: Pain Application",
-			"Vampiric Touch Application",
+--			"Shadow Word: Pain Application",
+--			"Vampiric Touch Application",
 			"Mind Flay (Insanity)",
 			"Mind Flay (Insanity) Delay",
 			"Mind Spike under Surge of Darkness Cap",
 			"Shadow Word: Pain",
 			"Vampiric Touch",
+			"Shadow Word: Death without Orb",
 			"Devouring Plague",
 			"Cascade",
 			"Divine Star",
@@ -210,7 +210,7 @@ a.Rotations.Shadow = {
 	end,
 	
 	ExtraDebugInfo = function()
-		return string.format("o:%d s:%d s:%d i:%.1f b:%.1f", 
-			a.Orbs, a.Surges, a.SWDinARow, a.Insanity, c.GetBusyTime())
+		return string.format("o:%d s:%d s:%d s:%.1f i:%.1f b:%.1f", 
+			a.Orbs, a.Surges, a.SWDinARow, a.SinceSWD, a.Insanity, c.GetBusyTime())
 	end,
 }

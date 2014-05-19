@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 592 2013-05-21T13:24:07Z
+    Revision: 629 2014-04-09T09:00:00Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -32,10 +32,11 @@ ARMORY_MAX_RAID_INFOS = 20;
 ARMORY_MAX_RAID_INFOS_DISPLAYED = 9;
 
 local VALOR_TIER1_LFG_ID = 301;
+local welcomed;
 
 function ArmoryRaidInfoFrame_OnLoad(self)
     self:RegisterEvent("PLAYER_ENTERING_WORLD");
-    --self:RegisterEvent("UPDATE_INSTANCE_INFO");
+    self:RegisterEvent("UPDATE_INSTANCE_INFO");
     self:RegisterEvent("RAID_INSTANCE_WELCOME");
 end
 
@@ -53,44 +54,49 @@ function ArmoryRaidInfoFrame_OnEvent(self, event, ...)
                 Armory:UpdateRaidFinderInfo(); 
             end
         );
-        
-        -- because the RAID_INSTANCE_WELCOME is no longer fired...
-       Armory:ExecuteDelayed(5,
-            function()
-                if ( IsInLFGDungeon() and GetPartyLFGID() ) then
-                    local dungeonID = GetPartyLFGID();
-                    local instanceName, _, difficultyIndex, difficultyName, maxPlayers = GetInstanceInfo();
-                    local dungeonName = GetLFGDungeonInfo(dungeonID);
-                    local lockExpireTime = Armory:GetRaidReset(instanceName);
-                    if ( lockExpireTime ) then
-                        Armory:SaveRaidFinderInfo(dungeonName, dungeonID, lockExpireTime - time(), difficultyIndex, maxPlayers, difficultyName);
-                    end
-                end
-            end
-        );
 
+        -- because the RAID_INSTANCE_WELCOME is no longer fired for LFG...
+    	Armory:ExecuteDelayed(5,
+			function()
+				if ( welcomed ) then
+					self:UnregisterEvent("PLAYER_ENTERING_WORLD");
+					return
+				end 
+				if ( IsInLFGDungeon() and GetPartyLFGID() ) then
+					local dungeonID = GetPartyLFGID();
+					local instanceName, _, difficultyIndex, difficultyName, maxPlayers = GetInstanceInfo();
+					local dungeonName = GetLFGDungeonInfo(dungeonID);
+					local lockExpireTime = Armory:GetRaidReset(instanceName);
+					if ( lockExpireTime ) then
+						Armory:SaveRaidFinderInfo(dungeonName, dungeonID, lockExpireTime - time(), difficultyIndex, maxPlayers, difficultyName);
+					end
+				end
+			end
+		);
+	
     elseif ( event == "UPDATE_INSTANCE_INFO" ) then
         Armory:Execute(ArmoryRaidInfoFrame_UpdateInfo);
     
-    -- event is no longer fired
-    --elseif ( event == "RAID_INSTANCE_WELCOME" ) then
-        --local lockExpireTime = arg2;
-        --Armory:ExecuteDelayed(5,
-            --function()
-                --if ( IsInLFGDungeon() and GetPartyLFGID() ) then
-                    --for index = 1, GetNumRFDungeons() do
-                        --local dungeonID = GetRFDungeonInfo(index);
-                        --if ( dungeonID == GetPartyLFGID() ) then
-                            --local _, _, difficultyIndex, difficultyName, maxPlayers = GetInstanceInfo();
-                            --local dungeonName = GetLFGDungeonInfo(dungeonID);
-                            --Armory:SaveRaidFinderInfo(dungeonName, dungeonID, lockExpireTime, difficultyIndex, maxPlayers, difficultyName);
-                            --break;
-                        --end
-                    --end
-                --end
-                --self:RegisterEvent("PLAYER_ENTERING_WORLD");
-            --end
-        --);
+    elseif ( event == "RAID_INSTANCE_WELCOME" ) then
+		-- seems event is no longer fired for LFG
+        local lockExpireTime = arg2;
+        Armory:ExecuteDelayed(1,
+            function()
+                if ( IsInLFGDungeon() and GetPartyLFGID() ) then
+					welcomed = true;
+                    for index = 1, GetNumRFDungeons() do
+                        local dungeonID = GetRFDungeonInfo(index);
+                        if ( dungeonID == GetPartyLFGID() ) then
+                            local _, _, difficultyIndex, difficultyName, maxPlayers = GetInstanceInfo();
+                            local dungeonName = GetLFGDungeonInfo(dungeonID);
+                            Armory:SaveRaidFinderInfo(dungeonName, dungeonID, lockExpireTime, difficultyIndex, maxPlayers, difficultyName);
+                            break;
+                        end
+                    end
+                end
+                self:RegisterEvent("PLAYER_ENTERING_WORLD");
+            end
+        );
     end
 end
 
@@ -105,7 +111,7 @@ function ArmoryRaidInfoFrame_OnShow(self)
 end
 
 function ArmoryRaidInfoFrame_Update(scrollToSelected)
-    if ( Armory:UpdateInstancesInProgress() or Armory:UpdateRaidFinderInProgress() ) then
+    if ( Armory:UpdateInstancesInProgress() or Armory:UpdateRaidFinderInProgress() or Armory:UpdateWorldBossesInProgress() ) then
         return;
     end
     ArmoryRaidInfoFrame_UpdateSelectedIndex();
@@ -113,6 +119,7 @@ function ArmoryRaidInfoFrame_Update(scrollToSelected)
     local scrollFrame = ArmoryRaidInfoScrollFrame;
     local savedDungeons = Armory:GetNumRaidFinderDungeons();
     local savedInstances = Armory:GetNumSavedInstances();
+    local savedWorldBosses = Armory:GetNumSavedWorldBosses();
     local instanceName, instanceID, instanceReset, instanceDifficulty, locked, extended, instanceIDMostSig, isRaid, maxPlayers, difficultyName, killed;
     local frameName, frameNameText, frameID, frameReset, width;
     local offset = HybridScrollFrame_GetOffset(scrollFrame);
@@ -144,7 +151,8 @@ function ArmoryRaidInfoFrame_Update(scrollToSelected)
             instanceName, instanceID, instanceReset, instanceDifficulty, locked, maxPlayers, difficultyName, killed = Armory:GetRaidFinderInfo(id);
             extended = nil;
             
-            frame.longInstanceID = string.format("%x", instanceID);
+            frame.instanceID = instanceID;
+            frame.longInstanceID = nil;
             frame.killed = killed;
         
         elseif ( index <= savedDungeons + savedInstances ) then
@@ -156,15 +164,28 @@ function ArmoryRaidInfoFrame_Update(scrollToSelected)
             frame.longInstanceID = string.format("%x%x", instanceIDMostSig, instanceID);
             frame.killed = nil;
         
+        elseif ( index <= savedDungeons + savedInstances + savedWorldBosses ) then
+            index = index - savedDungeons - savedInstances;
+            id = Armory:GetWorldBossLineId(index);
+            instanceName, instanceID, instanceReset = Armory:GetSavedWorldBossInfo(id);
+			locked = true;
+			extended = false;
+			difficultyName = RAID_INFO_WORLD_BOSS;
+
+            frame.longInstanceID = nil;
+            frame.killed = nil;
+        
         else
             instanceID = nil;
         
         end
         
+		frame:SetID(index);
+
         if ( instanceID ) then
             frame.instanceID = instanceID;
 
-            if ( ArmoryRaidInfoFrame.selectedRaidID == frame.longInstanceID ) then
+            if ( ArmoryRaidInfoFrame.selectedIndex == index ) then
                 frame:LockHighlight();
             else
                 frame:UnlockHighlight();
@@ -195,11 +216,12 @@ function ArmoryRaidInfoFrame_Update(scrollToSelected)
             frame:Hide();
         end	
     end
-    HybridScrollFrame_Update(scrollFrame, (savedInstances + savedDungeons) * buttonHeight, scrollFrame:GetHeight());
+    HybridScrollFrame_Update(scrollFrame, (savedInstances + savedDungeons + savedWorldBosses) * buttonHeight, scrollFrame:GetHeight());
 end
 
 function ArmoryRaidInfoFrame_UpdateInfo()
     Armory:UpdateInstances();
+    Armory:UpdateWorldBosses();
     ArmoryRaidInfoFrame_Update(true);
 end
 
@@ -211,7 +233,7 @@ function ArmoryRaidInfoInstance_OnEnter(self)
             GameTooltip:AddLine(self.killed[i], RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b);
         end
         GameTooltip:Show();
-    else
+    elseif ( self.longInstanceID ) then
         local tooltipLines = Armory:GetInstanceTooltip(self:GetID());
         if ( tooltipLines ) then
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
@@ -226,7 +248,7 @@ function ArmoryRaidInfoFrame_UpdateSelectedIndex()
     for index = 1, savedDungeons do
         local id = Armory:GetRaidFinderLineId(index);
         local _, instanceID = Armory:GetRaidFinderInfo(id);
-        if ( format("%x", instanceID) == ArmoryRaidInfoFrame.selectedRaidID ) then
+        if ( instanceID == ArmoryRaidInfoFrame.instanceID ) then
             ArmoryRaidInfoFrame.selectedIndex = index;
             return;
         end
@@ -236,8 +258,18 @@ function ArmoryRaidInfoFrame_UpdateSelectedIndex()
     for index = 1, savedInstances do
         local id = Armory:GetInstanceLineId(index);
         local _, instanceID, _, _, _, _, instanceIDMostSig = Armory:GetSavedInstanceInfo(id);
-        if ( format("%x%x", instanceIDMostSig, instanceID) == ArmoryRaidInfoFrame.selectedRaidID ) then
+        if ( format("%x%x", instanceIDMostSig, instanceID) == ArmoryRaidInfoFrame.longInstanceID ) then
             ArmoryRaidInfoFrame.selectedIndex = index + savedDungeons;
+            return;
+        end
+    end
+    
+    local savedWorldBosses = Armory:GetNumSavedWorldBosses();
+    for index = 1, savedWorldBosses do
+        local id = Armory:GetWorldBossLineId(index);
+        local _, instanceID = Armory:GetSavedWorldBossInfo(id);
+        if ( instanceID == ArmoryRaidInfoFrame.instanceID ) then
+            ArmoryRaidInfoFrame.selectedIndex = index + savedDungeons + savedInstances;
             return;
         end
     end

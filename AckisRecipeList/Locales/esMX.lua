@@ -6,7 +6,7 @@ esMX localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 2.5.2
+Project version: 2.6.2
 ************************************************************************
 Currently maintained by:
 http://www.wowace.com/addons/arl/localization/translators/
@@ -78,6 +78,7 @@ L["Andrew Hilbert"] = true
 L["Andrion Darkspinner"] = "Andrion Giroscuro"
 L["Androd Fadran"] = true
 L["Anger Guard"] = "Guardia de inquina"
+L["Anguished Highborne"] = "Altonato angustioso"
 L["Annora"] = true
 L["Anuur"] = true
 L["Anvilrage Captain"] = "Capitán Yunque Colérico"
@@ -316,6 +317,7 @@ L["Display Exclusions"] = "Mostrar Exclusiones"
 L["DISPLAY_OPTIONS_DESC"] = "Permite personalizar cómo se comporta el GUI."
 L["DM_TRIBUTE"] = "Obtenido del cofre Tributo a Gordok en La Masacre tras hacer un tribute run."
 L["Doba"] = true
+L["Doctor Gustaf VanHowzen"] = true
 L["Doctor Herbert Halsey"] = true
 L["Documentation"] = "Documentación"
 L["Don Carlos"] = true

@@ -205,7 +205,11 @@ function WeakAuras.DecompressDisplay(data)
     WeakAuras.tableAdd(data, WeakAuras.DisplayStub(data.regionType));
 end
 
-local function filterFunc(_, _, msg, ...)
+local function filterFunc(_, event, msg, dirtyplayer, l, cs, t, flag, channelId, ...)
+    if flag == "GM" or flag == "DEV" or (event == "CHAT_MSG_CHANNEL" and type(channelId) == "number" and channelId > 0) then
+        return
+    end
+
     local newMsg = "";
     local remaining = msg;
     local done;
@@ -222,7 +226,22 @@ local function filterFunc(_, _, msg, ...)
         end
     until(done)
     if newMsg ~= "" then
-        return false, newMsg, ...;
+        player = Ambiguate(dirtyplayer, "none")
+        if event == "CHAT_MSG_WHISPER" and not UnitIsInMyGuild(player) and not UnitInRaid(player) and not UnitInParty(player) then
+            local _, num = BNGetNumFriends()
+            for i=1, num do
+                local toon = BNGetNumFriendToons(i)
+                for j=1, toon do
+                    local _, rName, rGame = BNGetFriendToonInfo(i, j)
+                    if rName == player and rGame == "WoW" then
+                        return false, newMsg, player, l, cs, t, flag, channelId, ...; -- Player is a real id friend, allow it
+                    end
+                end
+            end
+            return true -- Filter strangers
+        else
+            return false, newMsg, player, l, cs, t, flag, channelId, ...;
+        end
     end
 end
 
@@ -781,6 +800,16 @@ function WeakAuras.ShowDisplayTooltip(data, children, icon, icons, import, compr
     end
 end
 
+local function scamCheck(data)
+    if type(data) == "table" then
+        for k,v in pairs(data) do
+            scamCheck(v)
+        end
+    elseif type(data) == "string" and (string.find(data, "SendMail") or string.find(data, "SetTradeMoney")) then
+        print("|cffffff00The Aura you are importing contains code to send or trade gold to other players, please watch out!|r")
+    end
+end
+
 function WeakAuras.ImportString(str)
     local received = WeakAuras.StringToTable(str, true);
     if(received and type(received) == "table" and received.m) then
@@ -795,6 +824,8 @@ function WeakAuras.ImportString(str)
             else
                 local data = received.d;
                 WeakAuras.ShowDisplayTooltip(data, received.c, received.i, received.a, "unknown", true)
+                --Scam protection
+                scamCheck(data)
             end
         end
     elseif(type(received) == "string") then
@@ -805,7 +836,9 @@ function WeakAuras.ImportString(str)
     end
 end
 
+local safeSenders = {}
 function WeakAuras.RequestDisplay(characterName, displayName)
+    safeSenders[characterName] = true
     local transmit = {
         m = "dR",
         d = displayName
@@ -834,7 +867,7 @@ function WeakAuras.TransmitDisplay(id, characterName)
 end
 
 WeakAuras:RegisterComm("WeakAurasProg", function(prefix, message, ditribution, sender)
-    if(tooltipLoading and ItemRefTooltip:IsVisible()) then
+    if tooltipLoading and ItemRefTooltip:IsVisible() and safeSenders[sender] then
         local stats = WeakAuras.split(message);
         local done = tonumber(stats[1]);
         local total = tonumber(stats[2]);
@@ -853,7 +886,7 @@ end);
 WeakAuras:RegisterComm("WeakAuras", function(prefix, message, distribution, sender)
     local received = WeakAuras.StringToTable(message);
     if(received and type(received) == "table" and received.m) then
-        if(received.m == "d") then
+        if(received.m == "d") and safeSenders[sender] then
             tooltipLoading = nil;
             if(version ~= received.v) then
                 local errorMsg = version > received.v and L["Version error recevied lower"] or L["Version error recevied higher"]

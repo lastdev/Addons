@@ -53,7 +53,7 @@ elseif locale == "ruRU" then -- Russian
 elseif locale == "zhCN" then -- Simplified Chinese
 -- L["B"] = ""
 -- L["K"] = ""
--- L["M"] = ""
+L["M"] = "百万" -- Needs review
 -- L["T"] = ""
 
 elseif locale == "esES" then -- Spanish
@@ -65,7 +65,7 @@ elseif locale == "esES" then -- Spanish
 elseif locale == "zhTW" then -- Traditional Chinese
 -- L["B"] = ""
 -- L["K"] = ""
--- L["M"] = ""
+L["M"] = "百萬" -- Needs review
 -- L["T"] = ""
 
 end

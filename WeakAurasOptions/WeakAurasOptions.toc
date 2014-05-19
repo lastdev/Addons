@@ -1,7 +1,7 @@
 ﻿## Interface: 50400
 ## Title: WeakAuras Options
 ## Author: Mirrored
-## Version: 2.0
+## Version: 2.0.5
 ## Notes: Options for WeakAuras
 ## Notes-esES: Opciones para WeakAuras
 ## Notes-deDE: Optionen für WeakAuras
@@ -15,7 +15,7 @@
 ## LoadOnDemand: 1
 ## Dependencies: WeakAuras
 ## SavedVariables: WeakAurasOptionsSaved
-## X-Curse-Packaged-Version: 2.0
+## X-Curse-Packaged-Version: 2.0.5
 ## X-Curse-Project-Name: WeakAuras 2
 ## X-Curse-Project-ID: weakauras-2
 ## X-Curse-Repository-ID: wow/weakauras-2/mainline

@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 525 2012-09-20T09:02:14Z
+    Revision: 627 2014-04-08T08:27:25Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -168,7 +168,7 @@ function Armory:GetInstanceTooltip(index)
     local dbEntry = self.selectedDbBaseEntry;
     if ( index and dbEntry ) then
         local id = self:GetInstanceLineId(index);
-        if ( dbEntry:Contains(container, "Tooltip"..id) ) then
+        if ( id and dbEntry:Contains(container, "Tooltip"..id) ) then
             self:FillTable(instanceTooltip, dbEntry:GetValue(container, "Tooltip"..id));
             return instanceTooltip;
         end

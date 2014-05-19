@@ -1,7 +1,7 @@
 --[[
 	Configator - A library to help you create a gui config
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: Configator.lua 344 2012-10-06 15:56:26Z Esamynn $
+	Version: 5.19.5445 (QuiescentQuoll)
+	Revision: $Id: Configator.lua 359 2013-11-05 11:38:29Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 
 	License:
@@ -54,11 +54,11 @@ USAGE:
 ]]
 
 local LIBRARY_VERSION_MAJOR = "Configator"
-local LIBRARY_VERSION_MINOR = 29
+local LIBRARY_VERSION_MINOR = 31
 local lib = LibStub:NewLibrary(LIBRARY_VERSION_MAJOR, LIBRARY_VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/Configator.lua $","$Rev: 344 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Configator/Configator.lua $","$Rev: 359 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local kit = {}
 
@@ -1453,8 +1453,21 @@ function kit:AddControl(id, cType, column, ...)
 			slave:SetNumber((el:GetValue())/100)
 			el.slave = slave
 		end
-		el:SetScript("OnValueChanged", function(...)
-			self:ChangeSetting(...)
+		el:SetScript("OnValueChanged", function(element, value)
+			-- From WoW 5.4, dragging the slider's thumb results in values that are not correctly aligned to ValueStep [CNFG-107]
+			-- Values set by calling SetValue will be correctly aligned: use this to correct any erroneous values
+			-- When calling SetValue from within OnValueChanged, protect against function re-entry
+			-- Retrieve corrected value from GetValue; check it has actually changed before continuing
+			if element.isReEntering then return end
+			element.isReEntering = true
+			element:SetValue(value)
+			element.isReEntering = nil
+			value = element:GetValue()
+			if value == element.prevValue then return end
+			element.prevValue = value
+			-- (this correction code should be removed when Blizzard fixes the problem)
+
+			self:ChangeSetting(element, value)
 			if (slave) then
 				local myVal = el:GetValue()
 				if slave:GetNumber() ~= myVal/100 then

@@ -16,7 +16,7 @@ assert(LibStub, "LibWho-2.0 requires LibStub")
 
 
 local major_version = 'LibWho-2.0'
-local minor_version = tonumber("127") or 99999
+local minor_version = tonumber("136") or 99999
 
 local lib = LibStub:NewLibrary(major_version, minor_version)
 
@@ -165,14 +165,27 @@ function lib.Who(defhandler, query, opts)
 	end
 end
 
+local function ignoreRealm(name)
+	local _, realm = string.split("-", name)
+ 	local connectedServers = GetAutoCompleteRealms()
+ 	if connectedServers then
+		for i = 1, #connectedServers do
+ 	 		if realm == connectedServers[i] then return false end
+		end
+ 	end
+    return true
+end
+
 function lib.UserInfo(defhandler, name, opts)
 	local self, args, usage = lib, {}, 'UserInfo(name, [opts])'
 	local now = time()
 	
     name = self:CheckArgument(usage, 'name', 'string', name)
     if name:len() == 0 then return end
-
-    if name:find("%-") then --[[dbg("ignoring xrealm: "..name)]] return end
+    
+    --There is no api to tell connected realms from cross realm by name. As such, we check known connections table before excluding who inquiry
+    --UnitRealmRelationship and UnitIsSameServer don't work with "name". They require unitID so they are useless here
+    if name:find("%-") and ignoreRealm(name) then return end
 
 	args.name = self:CapitalizeInitial(name)
 	opts = self:CheckArgument(usage, 'opts', 'table', opts, {})
@@ -562,7 +575,7 @@ function lib:ReturnWho()
 		end
 		dbg('Info(' .. name ..') returned: ' .. (cachedName.data.Online == false and 'off' or 'unkn'))
 		for _,v in pairs(cachedName.callback) do
-			self:RaiseCallback(v, self:ReturnUserInfo(v.Name))
+			self:RaiseCallback(v, self:ReturnUserInfo(name))
 		end
 		cachedName.callback = {}
 		self.CacheQueue[self.Args.query] = nil

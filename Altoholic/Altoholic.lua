@@ -7,6 +7,7 @@ local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+local LCI = LibStub("LibCraftInfo-1.0")
 local DS
 
 local WHITE		= "|cFFFFFFFF"
@@ -160,7 +161,6 @@ local Orig_AuctionFrameBrowse_Update
 
 function AuctionFrameBrowse_UpdateHook()
 	-- Courtesy of Tirdal on WoWInterface
-
 	local AuctioneerCompactUI = false;
 
 	Orig_AuctionFrameBrowse_Update()		-- Let default stuff happen first ..
@@ -499,7 +499,7 @@ end
 function addon:GetSpellIDFromRecipeLink(link)
 	-- returns nil if recipe id is not in the DB, returns the spellID otherwise
 	local recipeID = addon:GetIDFromLink(link)
-	return addon.RecipeDB[recipeID]
+	return LCI:GetRecipeLearnedSpell(recipeID)
 end
 
 function addon:GetMoneyString(copper, color, noTexture)

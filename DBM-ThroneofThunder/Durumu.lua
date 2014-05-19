@@ -1,23 +1,24 @@
 local mod	= DBM:NewMod(818, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 10302 $"):sub(12, -3))
-mod:SetCreatureID(68036)--Crimson Fog 69050, 
+mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
+mod:SetCreatureID(68036)--Crimson Fog 69050
+mod:SetEncounterID(1572)
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 1)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",
-	"SPELL_PERIODIC_DAMAGE",
-	"SPELL_PERIODIC_MISS",
+	"SPELL_CAST_START 133765 138467 136154 134587",
+	"SPELL_CAST_SUCCESS 136932 134122 134123 134124 139202 139204",
+	"SPELL_AURA_APPLIED 133767 133597 133598 134626 137727 133798",
+	"SPELL_AURA_APPLIED_DOSE 133767 133798",
+	"SPELL_AURA_REMOVED 133767 137727 133597",
+	"SPELL_DAMAGE 134044",
+	"SPELL_MISSED 134044",
+	"SPELL_PERIODIC_DAMAGE 134755",
+	"SPELL_PERIODIC_MISS 134755",
 	"CHAT_MSG_MONSTER_EMOTE",
 	"UNIT_DIED"
 )
@@ -63,8 +64,8 @@ local timerLifeDrainCD				= mod:NewCDTimer(40, 133795)
 local timerLifeDrain				= mod:NewBuffActiveTimer(18, 133795)
 local timerIceWallCD				= mod:NewNextTimer(120, 134587, nil, nil, nil, 111231)
 local timerDarkParasiteCD			= mod:NewCDTimer(60.5, 133597, nil, mod:IsHealer())--Heroic 60-62. (the timer is tricky and looks far more variable but it really isn't, it just doesn't get to utilize it's true cd timer more than twice per fight)
-local timerDarkParasite				= mod:NewTargetTimer(30, 133597, nil, mod:IsHealer())--Only healer/dispeler needs to know this.
-local timerDarkPlague				= mod:NewTargetTimer(30, 133598)--EVERYONE needs to know this, if dispeler messed up and dispelled parasite too early you're going to get a new add every 3 seconds for remaining duration of this bar.
+local timerDarkParasite				= mod:NewTargetTimer("OptionVersion2", 30, 133597, nil, false)--Spammy bar in 25 man not useful.
+local timerDarkPlague				= mod:NewTargetTimer("OptionVersion2", 30, 133598, nil, false)--Spammy bar in 25 man not useful.
 local timerObliterateCD				= mod:NewNextTimer(80, 137747)--Heroic
 
 local soundLingeringGaze			= mod:NewSound(134044)
@@ -80,10 +81,7 @@ mod:AddBoolOption("SetIconOnParasite", false)
 mod:AddBoolOption("SetParticle", true)
 
 local totalFogs = 3
-local lingeringGazeTargets = {}
 local lingeringGazeCD = 46
-local darkParasiteTargets = {}
-local darkParasiteTargetsIcons = {}
 local lastRed = nil
 local lastBlue = nil
 local lastYellow = nil
@@ -100,19 +98,7 @@ local playerName = UnitName("player")
 local firstIcewall = false
 local CVAR = nil
 local yellowRevealed = 0
-
-local function warnLingeringGazeTargets()
-	warnLingeringGaze:Show(table.concat(lingeringGazeTargets, "<, >"))
-	table.wipe(lingeringGazeTargets)
-end
-
-local function warnDarkParasiteTargets()
-	warnDarkParasite:Show(table.concat(darkParasiteTargets, "<, >"))
-	if not lifeDrained then--Only time spell ever gets to use it's true 60 second cd without one of the two failsafes altering it. very first phase
-		timerDarkParasiteCD:Start()
-	end
-	table.wipe(darkParasiteTargets)
-end
+local scanTime = 0
 
 local function warnBeam()
 	if mod:IsDifficulty("heroic10", "heroic25", "lfr25") then
@@ -122,10 +108,16 @@ local function warnBeam()
 	end
 end
 
+local function HideInfoFrame()
+	if mod.Options.InfoFrame then
+		DBM.InfoFrame:Hide()
+	end
+end
+
 local function BeamEnded()
 	timerLingeringGazeCD:Start(17)
 	timerForceOfWillCD:Start(19)
-	if mod:IsDifficulty("heroic10", "heroic25") then
+	if mod:IsHeroic() then
 		timerDarkParasiteCD:Start(10)
 		timerIceWallCD:Start(32)
 		firstIcewall = true
@@ -141,9 +133,36 @@ local function BeamEnded()
 	end
 end
 
-local function HideInfoFrame()
-	if mod.Options.InfoFrame then
-		DBM.InfoFrame:Hide()
+local function findBeamJump(spellName, spellId)
+	scanTime = scanTime + 1
+	for uId in DBM:GetGroupMembers() do
+		local name = DBM:GetUnitFullName(uId)
+		if spellId == 139202 and UnitDebuff(uId, spellName) and lastBlue ~= name then
+			lastBlue = name
+			if name == UnitName("player") then
+				if mod:IsDifficulty("lfr25") and mod.Options.specWarnBlueBeam then
+					specWarnBlueBeamLFR:Show()
+				else
+					specWarnBlueBeam:Show()
+				end
+			end
+			if mod.Options.SetIconRays then
+				SetRaidTarget(uId, 6)--Square
+			end
+			return
+		elseif spellId == 139204 and UnitDebuff(uId, spellName) and lastRed ~= name then
+			lastRed = name
+			if name == UnitName("player") then
+				specWarnRedBeam:Show()
+			end
+			if mod.Options.SetIconRays then
+				SetRaidTarget(uId, 7)--Cross
+			end
+			return
+		end
+	end
+	if scanTime < 30 then--Scan for 3 sec but not forever.
+		mod:Schedule(0.1, findBeamJump, spellName, spellId)--Check again if we didn't return from either debuff (We checked too soon)
 	end
 end
 
@@ -158,14 +177,12 @@ function mod:OnCombatStart(delay)
 	lfrAmberFogRevealed = false
 	lfrAzureFogRevealed = false
 	CVAR = nil
-	table.wipe(lingeringGazeTargets)
-	table.wipe(darkParasiteTargets)
 	timerHardStareCD:Start(5-delay)
 	timerLingeringGazeCD:Start(15.5-delay)
 	timerForceOfWillCD:Start(33.5-delay)
 	timerLightSpectrumCD:Start(40-delay)
 	countdownLightSpectrum:Start(40-delay)
-	if self:IsDifficulty("heroic10", "heroic25") then
+	if self:IsHeroic() then
 		timerDarkParasiteCD:Start(-delay)
 		timerIceWallCD:Start(127-delay)
 		firstIcewall = false--On pull, we only get one icewall and the CD behavior of parasite unaltered so we make sure to treat first icewall like a 2nd
@@ -198,37 +215,20 @@ function mod:OnCombatEnd()
 	if CVAR then--CVAR was set on pull which means we changed it, change it back
 		SetCVar("particleDensity", CVAR)
 	end
-end
-
-local function ClearParasiteTargets()
-	table.wipe(darkParasiteTargetsIcons)
-end
-
-do
-	local function sort_by_group(v1, v2)
-		return DBM:GetRaidSubgroup(DBM:GetUnitFullName(v1)) < DBM:GetRaidSubgroup(DBM:GetUnitFullName(v2))
-	end
-	function mod:SetParasiteIcons()
-		table.sort(darkParasiteTargetsIcons, sort_by_group)
-		local parasiteIcon = 5
-		for i, v in ipairs(darkParasiteTargetsIcons) do
-			self:SetIcon(v, parasiteIcon)
-			parasiteIcon = parasiteIcon - 1
-		end
-		self:Schedule(1.5, ClearParasiteTargets)--Table wipe delay so if icons go out too early do to low fps or bad latency, when they get new target on table, resort and reapplying should auto correct teh icon within .2-.4 seconds at most.
-	end
+	self:UnregisterShortTermEvents()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 133765 then
+	local spellId = args.spellId
+	if spellId == 133765 then
 		warnHardStare:Show()
 		timerHardStareCD:Start()
-	elseif args.spellId == 138467 then
+	elseif spellId == 138467 then
 		timerLingeringGazeCD:Start(lingeringGazeCD)
-	elseif args.spellId == 136154 and self:IsDifficulty("lfr25") and not lfrCrimsonFogRevealed then--Only use in lfr.
+	elseif spellId == 136154 and self:IsDifficulty("lfr25") and not lfrCrimsonFogRevealed then--Only use in lfr.
 		lfrCrimsonFogRevealed = true
 		specWarnFogRevealed:Show(crimsonFog)
-	elseif args.spellId == 134587 and self:AntiSpam(3, 3) then
+	elseif spellId == 134587 and self:AntiSpam(3, 3) then
 		warnIceWall:Show()
 		if firstIcewall then--if it's first icewall of a two icewall phase, it alters CD of dark parasite to be 50 seconds after this cast (thus preventing it from ever being a 60 second cd between casts for rest of fight do to beam and ice altering it)
 			firstIcewall = false
@@ -237,38 +237,9 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
-local function findBeamJump(spellName, spellId)
-	for uId in DBM:GetGroupMembers() do
-		local name = DBM:GetUnitFullName(uId)
-		if spellId == 139202 and UnitDebuff(uId, spellName) and lastBlue ~= name then
-			lastBlue = name
-			if name == UnitName("player") then
-				if mod:IsDifficulty("lfr25") and mod.Options.specWarnBlueBeam then
-					specWarnBlueBeamLFR:Show()
-				else
-					specWarnBlueBeam:Show()
-				end
-			end
-			if mod.Options.SetIconRays then
-				SetRaidTarget(uId, 6)--Square
-			end
-			return
-		elseif spellId == 139204 and UnitDebuff(uId, spellName) and lastRed ~= name then
-			lastRed = name
-			if name == UnitName("player") then
-				specWarnRedBeam:Show()
-			end
-			if mod.Options.SetIconRays then
-				SetRaidTarget(uId, 7)--Cross
-			end
-			return
-		end
-	end
-	mod:Schedule(0.1, findBeamJump, spellName, spellId)--Check again if we didn't return from either debuff (We checked too soon)
-end
-
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 136932 then--Force of Will Precast
+	local spellId = args.spellId
+	if spellId == 136932 then--Force of Will Precast
 		warnForceOfWill:Show(args.destName)
 		if timerLightSpectrumCD:GetTime() > 22 or timerDisintegrationBeamCD:GetTime() > 110 then--Don't start timer if either beam or spectrum will come first (cause both disable force ability)
 			timerForceOfWillCD:Start()
@@ -290,7 +261,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 				end
 			end
 		end
-	elseif args.spellId == 134122 then--Blue Beam Precas
+	elseif spellId == 134122 then--Blue Beam Precas
 		lingeringGazeCD = not spectrumStarted and 25 or 40 -- First spectrum Lingering Gaze CD = 25, second = 40
 		spectrumStarted = true
 		lastBlue = args.destName
@@ -304,8 +275,13 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self.Options.SetIconRays then
 			self:SetIcon(args.destName, 6)--Square
 		end
+		if self:IsDifficulty("lfr25") then
+			self:RegisterShortTermEvents(
+				"SPELL_DAMAGE"
+			)
+		end
 		self:Schedule(0.5, warnBeam)
-	elseif args.spellId == 134123 then--Red Beam Precast
+	elseif spellId == 134123 then--Red Beam Precast
 		lastRed = args.destName
 		if args:IsPlayer() then
 			specWarnRedBeam:Show()
@@ -313,7 +289,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		if self.Options.SetIconRays then
 			self:SetIcon(args.destName, 7)--Cross
 		end
-	elseif args.spellId == 134124 then--Yellow Beam Precast
+	elseif spellId == 134124 then--Yellow Beam Precast
 		lastYellow = args.destName
 		totalFogs = 3
 		yellowRevealed = 0
@@ -321,7 +297,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		lfrAmberFogRevealed = false
 		lfrAzureFogRevealed = false
 		timerForceOfWillCD:Cancel()
-		if self:IsDifficulty("heroic10", "heroic25") then
+		if self:IsHeroic() then
 			timerObliterateCD:Start()
 			if lifeDrained then -- Check 1st Beam ended.
 				timerIceWallCD:Start(88.5)
@@ -338,64 +314,50 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif args:IsSpellID(139202, 139204) then
 		--The SPELL_CAST_SUCCESS event works, it's the SPELL_AURA_APPLIED/REMOVED events that are busted/
 		--SUCCESS has no target. Still have to find target with UnitDebuff checks
-		self:Schedule(0.1, findBeamJump, args.spellName, args.spellId)
+		scanTime = 0
+		self:Schedule(0.1, findBeamJump, args.spellName, spellId)
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 133767 then
+	local spellId = args.spellId
+	if spellId == 133767 then
+		local amount = args.amount or 1
 		timerSeriousWound:Start(args.destName)
-		if (args.amount or 1) >= 5 then
+		if amount >= 5 then
 			if args:IsPlayer() then
-				specWarnSeriousWound:Show(args.amount)
+				specWarnSeriousWound:Show(amount)
 			else
 				if not UnitDebuff("player", GetSpellInfo(133767)) and not UnitIsDeadOrGhost("player") then
 					specWarnSeriousWoundOther:Show(args.destName)
 				end
 			end
 		end
-	elseif args.spellId == 133597 and not args:IsDestTypeHostile() then--Dark Parasite (filtering the wierd casts they put on themselves periodicly using same spellid that don't interest us and would mess up cooldowns)
-		darkParasiteTargets[#darkParasiteTargets + 1] = args.destName
+	elseif spellId == 133597 and not args:IsDestTypeHostile() then--Dark Parasite (filtering the wierd casts they put on themselves periodicly using same spellid that don't interest us and would mess up cooldowns)
+		warnDarkParasite:CombinedShow(0.5, args.destName)
 		local _, _, _, _, _, duration = UnitDebuff(args.destName, args.spellName)
 		timerDarkParasite:Start(duration, args.destName)
-		self:Unschedule(warnDarkParasiteTargets)
-		if (self:IsDifficulty("heroic25") and #darkParasiteTargets >= 3) or self:IsDifficulty("heroic10") then
-			warnDarkParasiteTargets()
-		else
-			self:Schedule(0.5, warnDarkParasiteTargets)
+		if not lifeDrained then--Only time spell ever gets to use it's true 60 second cd without one of the two failsafes altering it. very first phase
+			timerDarkParasiteCD:DelayedStart(0.5)
 		end
 		if self.Options.SetIconOnParasite and args:IsDestTypePlayer() then--Filter further on icons because we don't want to set icons on grounding totems
-			table.insert(darkParasiteTargetsIcons, DBM:GetRaidUnitId(DBM:GetFullPlayerNameByGUID(args.destGUID)))
-			self:UnscheduleMethod("SetParasiteIcons")
-			if self:LatencyCheck() then--lag can fail the icons so we check it before allowing.
-				if (self:IsDifficulty("heroic25") and #darkParasiteTargets >= 3) or self:IsDifficulty("heroic10") then
-					self:SetParasiteIcons()
-				else
-					self:ScheduleMethod(0.5, "SetParasiteIcons")
-				end
-			end
+			self:SetSortedIcon(0.5, args.destName, 5, 3, true)
 		end
-	elseif args.spellId == 133598 then--Dark Plague
+	elseif spellId == 133598 then--Dark Plague
 		local _, _, _, _, _, duration = UnitDebuff(args.destName, args.spellName)
 		--maybe add a warning/special warning for everyone if duration is too high and many adds expected
 		timerDarkPlague:Start(duration, args.destName)
-	elseif args.spellId == 134626 then
-		lingeringGazeTargets[#lingeringGazeTargets + 1] = args.destName
+	elseif spellId == 134626 then
+		warnLingeringGaze:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnLingeringGaze:Show()
 			yellLingeringGaze:Yell()
 			soundLingeringGaze:Play()
 		end
-		self:Unschedule(warnLingeringGazeTargets)
-		if #lingeringGazeTargets >= 5 and self:IsDifficulty("normal25", "heroic25") or #lingeringGazeTargets >= 2 and self:IsDifficulty("normal10", "heroic10") then--TODO, add LFR number of targets
-			warnLingeringGazeTargets()
-		else
-			self:Schedule(0.5, warnLingeringGazeTargets)
-		end
-	elseif args.spellId == 137727 and self.Options.SetIconLifeDrain then -- Life Drain current target. If target warning needed, insert into this block. (maybe very spammy)
+	elseif spellId == 137727 and self.Options.SetIconLifeDrain then -- Life Drain current target. If target warning needed, insert into this block. (maybe very spammy)
 		self:SetIcon(args.destName, 8)--Skull
-	elseif args.spellId == 133798 and self.Options.InfoFrame and not self:IsDifficulty("lfr25") then -- Force update
-		DBM.InfoFrame:Update("playerdebuffstacks")
+	elseif spellId == 133798 and self.Options.InfoFrame and not self:IsDifficulty("lfr25") then -- Force update
+		DBM.InfoFrame:Update()
 		if args:IsPlayer() then
 			yellLifeDrain:Yell(playerName, args.amount or 1)
 		end
@@ -404,11 +366,12 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 133767 then
+	local spellId = args.spellId
+	if spellId == 133767 then
 		timerSeriousWound:Cancel(args.destName)
-	elseif args.spellId == 137727 and self.Options.SetIconLifeDrain then -- Life Drain current target.
+	elseif spellId == 137727 and self.Options.SetIconLifeDrain then -- Life Drain current target.
 		self:SetIcon(args.destName, 0)
-	elseif args.spellId == 133597 then--Dark Parasite
+	elseif spellId == 133597 then--Dark Parasite
 		if self.Options.SetIconOnParasite then
 			self:SetIcon(args.destName, 0)
 		end
@@ -421,6 +384,7 @@ function mod:SPELL_DAMAGE(_, _, _, _, destGUID, destName, _, _, spellId)
 	end
 	if not lfrEngaged or lfrAmberFogRevealed then return end -- To reduce cpu usage normal and heroic.
 	if destName == amberFog and not lfrAmberFogRevealed then -- Lfr Amger fog do not have CLEU, no unit events and no emote.
+		self:UnregisterShortTermEvents()
 		lfrAmberFogRevealed = true
 		specWarnFogRevealed:Show(amberFog)
 	end
@@ -508,7 +472,6 @@ function mod:UNIT_DIED(args)
 		if self:IsDifficulty("lfr25") then
 			totalFogs = totalFogs - 1
 			if totalFogs >= 1 then
-				self:Unschedule(findBeamJump)
 				--LFR does something completely different than kill 3 crimson adds to end phase. in LFR, they kill 1 of each color (which is completely against what you do in 10N, 25N, 10H, 25H)
 				warnAddsLeft:Show(totalFogs)
 			else--No adds left, force ability is re-enabled
@@ -526,9 +489,7 @@ function mod:UNIT_DIED(args)
 			end
 		end
 	elseif cid == 69052 then--Azure Fog (endlessly respawn in all but LFR, so we ignore them dying anywhere else)
-		--Maybe do something for heroic here too, if timers for the crap this thing does gets added.
 		if self:IsDifficulty("lfr25") then
-			self:Unschedule(findBeamJump)
 			totalFogs = totalFogs - 1
 			if totalFogs >= 1 then
 				--LFR does something completely different than kill 3 crimson adds to end phase. in LFR, they kill 1 of each color (which is completely against what you do in 10N, 25N, 10H, 25H)

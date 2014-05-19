@@ -1,0 +1,33 @@
+## Interface: 50400
+## Title : StaggerMeter
+## Notes: Easily see when you have enough Stagger Damage to make Purge worthwhile
+## Author: Sean Lauren
+## OptionalDeps: BittensUtils
+## SavedVariablesPerCharacter: SMDS_Orientation
+## SavedVariablesPerCharacter: SMDS_DisplayTotalDamage
+## SavedVariablesPerCharacter: SMDS_DisplayDPS
+## SavedVariablesPerCharacter: SMDS_DisplayPercentOfCurrent
+## SavedVariablesPerCharacter: SMDS_DisplayPercentOfMax
+## SavedVariablesPerCharacter: SMDS_DisplayDPSPercentOfCurrent
+## SavedVariablesPerCharacter: SMDS_DisplayDPSPercentOfMax
+## SavedVariablesPerCharacter: SMDS_DisplaySecondsRemaining
+## SavedVariablesPerCharacter: SMDS_MeterWidth
+## SavedVariablesPerCharacter: SMDS_MeterHeight
+## SavedVariablesPerCharacter: SMDS_HideWhenNotStaggering
+## SavedVariablesPerCharacter: SMDS_StaggerColorScheme
+## SavedVariablesPerCharacter: SMDS_CurrentHealth
+## SavedVariablesPerCharacter: SMDS_HealthCompounded
+## SavedVariablesPerCharacter: SMDS_TurnYellow
+## SavedVariablesPerCharacter: SMDS_TurnRed
+## SavedVariablesPerCharacter: SMDS_MeterFillByDamage
+## SavedVariablesPerCharacter: SMDS_YellowSound
+## SavedVariablesPerCharacter: SMDS_RedSound
+## SavedVariablesPerCharacter: StaggerMeterSettings
+## X-Curse-Packaged-Version: 50400.2.1
+## X-Curse-Project-Name: StaggerMeter
+## X-Curse-Project-ID: staggermeter
+## X-Curse-Repository-ID: wow/staggermeter/mainline
+libs\BittensUtils\BittensUtils.xml
+src\Localization.lua
+src\Core.lua
+src\Options.lua

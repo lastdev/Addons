@@ -1,4 +1,4 @@
-<!-- Revision: 573 2013-01-07T23:24:43Z -->
+<!-- Revision: 627 2014-04-08T08:27:25Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\FrameXML\UI.xsd">
   <Script file="Core\ArmoryBackgroundUpdater.lua"/>
@@ -10,10 +10,10 @@
   <Script file="Core\ArmoryConfig.lua"/>
   <Script file="Core\ArmoryStubs.lua"/>
   <Script file="Core\ArmoryFactions.lua"/>
-  <Script file="Core\ArmoryArena.lua"/>
   <Script file="Core\ArmoryInventory.lua"/>
   <Script file="Core\ArmoryQuests.lua"/>
   <Script file="Core\ArmoryQuestHistory.lua"/>
+  <Script file="Core\ArmoryRaidWorldBosses.lua"/>
   <Script file="Core\ArmoryRaid.lua"/>
   <Script file="Core\ArmoryRaidFinder.lua"/>
   <Script file="Core\ArmorySpells.lua"/>

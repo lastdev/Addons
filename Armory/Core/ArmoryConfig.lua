@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 575 2013-01-09T23:30:53Z
+    Revision: 629 2014-04-09T09:00:00Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -1365,6 +1365,62 @@ end
 
 function Armory:GetConfigSummaryCurrency()
     return not self:Setting("General", "HideSummaryCurrency");
+end
+
+local currencyKey = "SummaryCurrency:";
+function Armory:SetConfigSummaryCurrencyEnabled(name, on)
+	if ( name ) then
+		self:Setting("General", currencyKey..name, on);
+	end
+end
+
+function Armory:GetConfigSummaryCurrencyEnabled(name)
+	if ( name ) then
+		return self:Setting("General", currencyKey..name);
+	end
+end
+
+local enabledCurrencies = {};
+function Armory:GetConfigSummaryEnabledCurrencies()
+    local dbEntry = self.settingsDbEntry;
+    local settings = dbEntry and dbEntry:GetValue("General") or {};
+    local count = 0;
+    local name;
+    for k, v in pairs(settings) do 
+		if (strsub(k, 1, #currencyKey) == currencyKey) then
+			name = strsub(k, #currencyKey + 1);
+			if ( v and (self:CurrencyEnabled() or self:IsContentReward(name)) ) then
+				if ( not enabledCurrencies[name] ) then
+					enabledCurrencies[name] = true;
+				end
+				count = count + 1;
+			else
+				enabledCurrencies[name] = nil;
+			end
+		end
+    end
+    return enabledCurrencies, count;
+end
+
+local currencies = {};
+function Armory:GetConfigSummaryCurrencies()
+    local dbEntry = self.settingsDbEntry;
+    local settings = dbEntry and dbEntry:GetValue("General") or {};
+	table.wipe(currencies);
+    for k, v in pairs(settings) do 
+		if (strsub(k, 1, #currencyKey) == currencyKey) then
+			table.insert(currencies, strsub(k, #currencyKey + 1));
+		end
+    end
+    return currencies;
+end
+ 
+function Armory:SetConfigSummaryRaidInfo(on)
+    self:Setting("General", "HideSummaryRaidInfo", not on);
+end
+
+function Armory:GetConfigSummaryRaidInfo()
+    return not self:Setting("General", "HideSummaryRaidInfo");
 end
 
 function Armory:SetConfigSummaryQuest(on)

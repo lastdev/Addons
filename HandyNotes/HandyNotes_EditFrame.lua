@@ -39,14 +39,14 @@ HNEditFrame.titleTexture:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header
 HNEditFrame.titleTexture:SetWidth(300)
 HNEditFrame.titleTexture:SetHeight(64)
 HNEditFrame.titleTexture:SetPoint("TOP", 0, 12)
-HNEditFrame.titleTexture = temp
+--HNEditFrame.titleTexture = temp
 HNEditFrame.title = HNEditFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 HNEditFrame.title:SetPoint("TOP", 0, -3)
 HNEditFrame.title:SetText(L["Add Handy Note"])
 
 -- This creates a transparent textureless draggable frame to move HNEditFrame
 -- It overlaps the above title text and texture (more or less) exactly.
-temp = CreateFrame("Frame", nil, HNEditFrame)
+local temp = CreateFrame("Frame", nil, HNEditFrame)
 temp:SetWidth(150)
 temp:SetHeight(30)
 temp:SetPoint("TOP", 0, 8)
@@ -217,11 +217,11 @@ end
 HNEditFrame.leveldata = {}
 HNEditFrame.leveldropdown.initialize = function(level)
 	wipe(info)
-	for i = 0, #HNEditFrame.leveldata do
-		info.text = HNEditFrame.leveldata[i] or ALL
-		info.arg1 = i
+	for floorNumber, text in pairs(HNEditFrame.leveldata) do
+		info.text = text
+		info.arg1 = floorNumber
 		info.func = HNEditFrame.leveldropdown.OnClick
-		info.checked = HNEditFrame.leveldropdown.selectedValue == i
+		info.checked = HNEditFrame.leveldropdown.selectedValue == floorNumber
 		info.keepShownOnClick = nil
 		UIDropDownMenu_AddButton(info)
 	end
@@ -269,7 +269,7 @@ HNEditFrame:SetScript("OnShow", function(self)
 		HNEditFrame.descinputbox:SetText(data.desc)
 		HNEditFrame.icondropdown.OnClick(nil, data.icon)
 		HNEditFrame.continentcheckbox:SetChecked(data.cont)
-		if #HNEditFrame.leveldata > 0 then
+		if HNEditFrame.leveldata[0] then
 			UIDropDownMenu_EnableDropDown(HNEditFrame.leveldropdown)
 			HNEditFrame.leveldropdown.OnClick(nil, data.level)
 		else
@@ -282,7 +282,7 @@ HNEditFrame:SetScript("OnShow", function(self)
 		HNEditFrame.descinputbox:SetText("")
 		HNEditFrame.icondropdown.OnClick(nil, 1)
 		HNEditFrame.continentcheckbox:SetChecked(nil)
-		if #HNEditFrame.leveldata > 0 then
+		if HNEditFrame.leveldata[0] then
 			UIDropDownMenu_EnableDropDown(HNEditFrame.leveldropdown)
 			HNEditFrame.leveldropdown.OnClick(nil, HNEditFrame.level)
 		else

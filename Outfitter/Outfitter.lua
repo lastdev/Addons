@@ -1088,6 +1088,8 @@ Outfitter.cZoneSpecialIDMap =
 	[GetMapNameByID(471)] = {"City"}, -- The Exodar
 	[GetMapNameByID(481)] = {"City"}, -- Shattrath City
 	[GetMapNameByID(504)] = {"City"}, -- Dalaran
+	[GetMapNameByID(903)] = {"City"}, -- Shrine of Two Moons
+	[GetMapNameByID(905)] = {"City"}, -- Shrine of Seven Stars
 }
 
 -- As of patch 3.3 automated combat swaps aren't allowed.  I'm
@@ -4285,11 +4287,7 @@ function Outfitter:ItemUsesBothWeaponSlots(pItem)
 		self:DebugStack()
 	end
 	
-	local vIsDualWieldable2H = pItem.SubType == Outfitter.LBI["Two-Handed Axes"]
-	                        or pItem.SubType == Outfitter.LBI["Two-Handed Maces"]
-	                        or pItem.SubType == Outfitter.LBI["Two-Handed Swords"]
-	
-	return not vIsDualWieldable2H
+	return false
 end
 
 function Outfitter:GetItemMetaSlot(pItem)
@@ -9046,4 +9044,13 @@ function Outfitter:Run(pText)
 		end
 	end
 	
+end
+
+function Outfitter:LookupZoneID(name)
+	for i = 1, 2000 do
+		local idName = GetMapNameByID(i)
+		if idName and idName == name then
+			return i
+		end
+	end
 end

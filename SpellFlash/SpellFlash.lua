@@ -553,16 +553,18 @@ end
 local function RegisterSpells()
 	wipe(SPELLS)
 	for i = 1, GetNumSpellBookItems() do
-		local spellName, spellSubName = GetSpellBookItemName(i, BOOKTYPE_SPELL)
 		local skillType, spellId = GetSpellBookItemInfo(i, "player")
 		if ( skillType == "SPELL" and IsPlayerSpell(spellId) ) or skillType == "FLYOUT" then
+			local spellName, spellSubName = GetSpellBookItemName(i, BOOKTYPE_SPELL)
 			if spellSubName and spellSubName ~= "" then
 				spellName = spellName.."("..spellSubName..")"
 			end
-			SPELLS[spellName] = 1
-			SPELLS[s.SpellName(spellId) or spellName] = 1
-			SPELLS[spellId or spellName] = 1
-			--a.print(BOOKTYPE_SPELL, i, spellName, skillType, spellId)
+			if spellName or spellId then
+				SPELLS[spellName or spellId] = 1
+				SPELLS[s.SpellName(spellId) or spellName or spellId] = 1
+				SPELLS[spellId or spellName] = 1
+				--a.print(BOOKTYPE_SPELL, i, spellName, skillType, spellId)
+			end
 		end
 	end
 end

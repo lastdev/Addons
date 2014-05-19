@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 571 2013-01-03T00:19:27Z
+    Revision: 604 2013-12-08T18:35:45Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -370,7 +370,7 @@ function Armory:SetContainer(id)
                     elseif ( not _G.InboxItemCanDelete(index) ) then
                         -- original message from player (can be cross faction for account bound items)
                         for _, profile in ipairs(self:Profiles()) do
-                            if ( profile.realm == self.playerRealm and profile.character == sender ) then
+                            if ( self:IsMyMail(sender, profile) ) then
                                 ignorable = true;
                                 break;
                             end
@@ -395,7 +395,7 @@ function Armory:SetContainer(id)
         elseif ( id == ARMORY_AUCTIONS_CONTAINER or id == ARMORY_NEUTRAL_AUCTIONS_CONTAINER ) then
             local saleStatus;
             for i = 1, _G.GetNumAuctionItems("owner") do
-                _, texture, count, quality, _, _, _, _, _, _, _, _, _, saleStatus = _G.GetAuctionItemInfo("owner", i);
+                _, texture, count, quality, _, _, _, _, _, _, _, _, _, _, _, saleStatus = _G.GetAuctionItemInfo("owner", i);
                 if ( texture and saleStatus ~= 1 ) then
                     link = _G.GetAuctionItemLink("owner", i);
                     timeLeft = _G.GetAuctionItemTimeLeft("owner", i);
@@ -510,6 +510,19 @@ function Armory:SetMailReturned(id)
     end
 end
 
+function Armory:IsMyMail(address, profile)
+	local character, realm;
+	local pos = address:find("%-");
+	if ( pos ) then
+		character = address:sub(1, pos - 1);
+		realm = self:GetPostalRealmName(address:sub(pos + 1));
+	else
+		character = address;
+		realm = self.playerRealm;
+	end
+	return strlower(profile.realm .. profile.character) == strlower(realm .. character);
+end
+
 function Armory:AddMail()
     local id = ARMORY_MAIL_CONTAINER;
     local numItems = #mailItems;
@@ -520,7 +533,7 @@ function Armory:AddMail()
         local dbEntry, name, numSlots, bagSlots, remaining, timestamp, index, itemInfo;
         for _, profile in ipairs(self:Profiles()) do
             -- mail can be cross faction (account bound items)
-            if ( profile.realm == self.playerRealm and strlower(profile.character) == strlower(mailTo) ) then
+            if ( self:IsMyMail(mailTo, profile) ) then
                 self:SelectProfile(profile);
 
                 dbEntry = self.selectedDbBaseEntry;
@@ -1054,7 +1067,7 @@ function Armory:FindInventory(...)
     local items = {};
     
     for _, profile in ipairs(self:Profiles()) do
-        if ( self:GetConfigGlobalSearch() or profile.realm == self.playerRealm ) then
+        if ( self:GetConfigGlobalSearch() or self:IsConnectedRealm(profile.realm) ) then
             self:SelectProfile(profile);
 
             for i = 1, #ArmoryInventoryContainers do

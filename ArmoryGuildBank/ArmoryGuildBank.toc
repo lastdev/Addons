@@ -1,9 +1,9 @@
-## Interface: 50300
+## Interface: 50400
 ## Title: ArmoryGuildBank
 ## Title-deDE: ArmoryGuildBank [Armory Gildenbank]
 ## Title-frFR: ArmoryGuildBank [Banque de Guilde]
 ## Title-koKR: ArmoryGuildBank [길드은행 정보 열람]
-## Version: v10.6.0
+## Version: v11.2.0
 ## Notes: Provides guild bank information to Armory users
 ## Notes-deDE: Ermöglicht Gildenbankinformationen für Armorynutzer
 ## Notes-frFR: Fournit des renseignements de la banque de guilde aux utilisateurs de l'Armurerie
@@ -16,7 +16,7 @@
 ## X-Website: http://www.wow-neighbours.com/
 ## X-Category: Inventory
 ## X-Part-Of: Armory
-## X-Curse-Packaged-Version: v10.6.0
+## X-Curse-Packaged-Version: v11.2.0
 ## X-Curse-Project-Name: Armory
 ## X-Curse-Project-ID: armory
 ## X-Curse-Repository-ID: wow/armory/mainline

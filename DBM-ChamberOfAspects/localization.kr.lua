@@ -108,9 +108,6 @@ L:SetOptionLocalization({
 	RangeFrame			= "거리 창 보기(12m)"
 })
 
-L:SetMiscLocalization({
-})
-
 -------------------------
 --  Saviana Ragefire  --
 -------------------------
@@ -120,17 +117,9 @@ L:SetGeneralLocalization({
 	name = "사비아나 레이지파이어"
 })
 
-L:SetWarningLocalization({
-	SpecialWarningTranq		= "격노 - 지금 평정!"
-})
-
 L:SetOptionLocalization({
-	SpecialWarningTranq		= "$spell:78722 해제 특수 경고 보기",
 	RangeFrame				= "거리 창 보기(10m)"
 })
-
-L:SetMiscLocalization{
-}
 
 --------------------------
 --  General Zarithrian  --
@@ -168,14 +157,10 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
-	WarnPhase2Soon		= "곧 2 단계",
-	WarnPhase3Soon		= "곧 3 단계",
 	TwilightCutterCast	= "주문시전 황혼 절단기 : 5 초"
 })
 
 L:SetOptionLocalization({
-	WarnPhase2Soon			= "2 단계 이전에 알림 보기",
-	WarnPhase3Soon			= "3 단계 이전에 알림 보기",
 	TwilightCutterCast		= "$spell:74769 시전 알림 보기",
 	AnnounceAlternatePhase	= "다른 위상 우두머리 알림/바 보기",
 	SoundOnConsumption		= "$spell:74562 또는 $spell:74792 대상이 된 경우 별도 경고음 듣기",

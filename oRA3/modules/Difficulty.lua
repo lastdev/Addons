@@ -1,7 +1,7 @@
 local oRA = LibStub("AceAddon-3.0"):GetAddon("oRA3")
-local module = oRA:NewModule("Difficulty")
+local module = oRA:NewModule("Difficulty", "AceTimer-3.0")
 
-module.VERSION = tonumber(("$Revision: 658 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 692 $"):sub(12, -3))
 
 local db = nil
 
@@ -19,7 +19,7 @@ function module:OnRegister()
 	end)
 end
 
-function module:OnEnable()
+local function restoreDifficulty()
 	if not IsInGroup() then
 		local diff = db.lastRaidDifficulty
 		if GetRaidDifficultyID() ~= diff then
@@ -28,10 +28,23 @@ function module:OnEnable()
 	end
 end
 
-function module:OnShutdown()
-	local diff = db.lastRaidDifficulty
-	if GetRaidDifficultyID() ~= diff then
-		SetRaidDifficultyID(diff)
+function module:OnEnable()
+	if not IsInGroup() then
+		-- GROUP_JOINED fires ~3s after PLAYER_LOGIN when you first login, so IsInGroup() is false until then
+		self:ScheduleTimer(restoreDifficulty, 4)
 	end
+end
+
+function module:OnShutdown()
+	if not IsInInstance() then -- don't change on leaving group while still in the instance
+		SetRaidDifficultyID(db.lastRaidDifficulty)
+	else
+		self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+	end
+end
+
+function module:ZONE_CHANGED_NEW_AREA()
+	self:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
+	self:OnShutdown()
 end
 

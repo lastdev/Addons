@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod(616, "DBM-Party-WotLK", 14, 280)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 142 $"):sub(12, -3))
 mod:SetCreatureID(36502)
+mod:SetEncounterID(831, 832)
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED"
@@ -23,7 +24,7 @@ local specwarnMirroredSoul		= mod:NewSpecialWarningReflect(69051)
 local specwarnWailingSouls		= mod:NewSpecialWarningSpell(68899, nil, nil, nil, 2)
 local specwarnPhantomBlast		= mod:NewSpecialWarningInterrupt(68982, false)
 
-mod:AddBoolOption("SetIconOnMirroredTarget", true)
+mod:AddBoolOption("SetIconOnMirroredTarget", false)
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 68982 then						-- Phantom Blast

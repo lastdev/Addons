@@ -10,7 +10,7 @@
 ## SavedVariables: RecountDB
 ## SavedVariablesPerCharacter: RecountPerCharDB
 ## X-Category: Combat
-## X-Curse-Packaged-Version: v5.4.0 release
+## X-Curse-Packaged-Version: v5.4.0b release
 ## X-Curse-Project-Name: Recount
 ## X-Curse-Project-ID: recount
 ## X-Curse-Repository-ID: wow/recount/mainline

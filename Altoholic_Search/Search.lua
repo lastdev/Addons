@@ -2,7 +2,7 @@ local addonName = "Altoholic"
 local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
--- local LTL = LibStub("LibTradeLinks-1.0")
+local LCI = LibStub("LibCraftInfo-1.0")
 
 local THIS_ACCOUNT = "Default"
 local WHITE		= "|cFFFFFFFF"
@@ -167,7 +167,7 @@ local RealmScrollFrame_Desc = {
 				end,
 			GetItemTexture = function(self, result)
 					local _, _, spellID = DataStore:GetCraftLineInfo(result.profession, result.craftIndex)
-					local itemID = DataStore:GetCraftInfo(spellID)
+					local itemID = LCI:GetCraftResultItem(spellID)
 			
 					return (itemID) and GetItemIcon(itemID) or "Interface\\Icons\\Trade_Engraving"
 				end,
@@ -186,7 +186,7 @@ local RealmScrollFrame_Desc = {
 				end,
 			GetItemID = function(self, result)
 					local _, _, spellID = DataStore:GetCraftLineInfo(result.profession, result.craftIndex)
-					local itemID = DataStore:GetCraftInfo(spellID)
+					local itemID = LCI:GetCraftResultItem(spellID)
 			
 					return itemID
 				end,
@@ -200,7 +200,7 @@ local RealmScrollFrame_Desc = {
 					return GetSpellInfo(result.spellID), source, line
 				end,
 			GetItemTexture = function(self, result)
-					local itemID = DataStore:GetCraftInfo(result.spellID)
+					local itemID = LCI:GetCraftResultItem(result.spellID)
 					if itemID then		-- if the craft is known, return its icon, else return the profession icon
 						return GetItemIcon(itemID)	
 					end
@@ -216,7 +216,7 @@ local RealmScrollFrame_Desc = {
 					return GetRealmName(), THIS_ACCOUNT, UnitFactionGroup("player")
 				end,
 			GetItemID = function(self, result)
-					return DataStore:GetCraftInfo(result.spellID)
+					return LCI:GetCraftResultItem(result.spellID)
 				end,
 		},
 	}

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Najentus", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 504 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 535 $"):sub(12, -3))
 mod:SetCreatureID(22887)
 mod:SetModelID(21174)
 mod:SetZone()
@@ -9,7 +9,7 @@ mod:SetUsedIcons(8)
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED"
 )
@@ -23,7 +23,7 @@ local timerShield		= mod:NewCDTimer(58, 39872)
 
 local berserkTimer		= mod:NewBerserkTimer(480)
 
-mod:AddBoolOption("SpineIcon")
+mod:AddBoolOption("SpineIcon", true)
 mod:AddBoolOption("InfoFrame", false)
 mod:AddBoolOption("RangeFrame", true)
 

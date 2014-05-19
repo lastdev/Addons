@@ -1,6 +1,6 @@
 --[[
 Name: Dewdrop-2.0
-Revision: $Rev: 325 $
+Revision: $Rev: 326 $
 Author(s): ckknight (ckknight@gmail.com)
 Website: http://ckknight.wowinterface.com/
 Documentation: http://wiki.wowace.com/index.php/Dewdrop-2.0
@@ -11,7 +11,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "Dewdrop-2.0"
-local MINOR_VERSION = tonumber(strmatch("$Revision: 325 $", "%d+")) + 90000
+local MINOR_VERSION = tonumber(strmatch("$Revision: 326 $", "%d+")) + 90000
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -363,8 +363,8 @@ local function CheckSize(self, level)
 			extra = extra + 24
 		end
 		button.text:SetFont(STANDARD_TEXT_FONT, button.textHeight)
-		if button.text:GetWidth() + extra > width then
-			width = button.text:GetWidth() + extra
+		if button.text:GetStringWidth() + extra > width then
+			width = button.text:GetStringWidth() + extra
 		end
 	end
 	level:SetWidth(width + 20)

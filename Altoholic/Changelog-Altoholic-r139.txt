@@ -1,0 +1,74 @@
+------------------------------------------------------------------------
+r139 | thaoky | 2013-10-07 16:03:58 +0000 (Mon, 07 Oct 2013) | 1 line
+Changed paths:
+   M /trunk/Core.lua
+   M /trunk/changelog.txt
+
+5.4.004 commit.
+------------------------------------------------------------------------
+r138 | thaoky | 2013-10-07 16:00:49 +0000 (Mon, 07 Oct 2013) | 1 line
+Changed paths:
+   M /trunk/Loots.lua
+
+Updated GetItemSource() to correctly use LibCraftInfo
+------------------------------------------------------------------------
+r137 | thaoky | 2013-10-06 07:28:38 +0000 (Sun, 06 Oct 2013) | 3 lines
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/Altoholic.lua
+   M /trunk/Altoholic.xml
+   M /trunk/Core.lua
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Loots.lua
+   M /trunk/Modules/Altoholic_Characters/Frames/Recipes.lua
+   M /trunk/Modules/Altoholic_Characters/TabCharacters.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Tradeskills.lua
+   M /trunk/Modules/Altoholic_Search/Search.lua
+   D /trunk/RecipeDB.lua
+   M /trunk/changelog.txt
+   M /trunk/embeds.xml
+
+5.4.003 Commit.
+
+See changelog.txt for details.
+------------------------------------------------------------------------
+r136 | thaoky | 2013-09-17 16:19:29 +0000 (Tue, 17 Sep 2013) | 3 lines
+Changed paths:
+   M /trunk/Core.lua
+   M /trunk/changelog.txt
+
+5.4.002 Commit.
+
+See changelog.txt for details.
+------------------------------------------------------------------------
+r135 | thaoky | 2013-09-11 15:30:17 +0000 (Wed, 11 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/Altoholic.toc
+   M /trunk/Core.lua
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Modules/Altoholic_Achievements/Achievements.lua
+   M /trunk/Modules/Altoholic_Achievements/Altoholic_Achievements.toc
+   M /trunk/Modules/Altoholic_Agenda/Altoholic_Agenda.toc
+   M /trunk/Modules/Altoholic_Characters/Altoholic_Characters.toc
+   M /trunk/Modules/Altoholic_Grids/Altoholic_Grids.toc
+   M /trunk/Modules/Altoholic_Guild/Altoholic_Guild.toc
+   M /trunk/Modules/Altoholic_Search/Altoholic_Search.toc
+   M /trunk/Modules/Altoholic_Summary/Altoholic_Summary.toc
+   M /trunk/changelog.txt
+
+5.4.001 Commit
+------------------------------------------------------------------------
+r134 | thaoky | 2013-08-01 12:59:31 +0000 (Thu, 01 Aug 2013) | 3 lines
+Changed paths:
+   M /trunk/Core.lua
+   M /trunk/Events.lua
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Loots.lua
+   M /trunk/Modules/Altoholic_Achievements/Achievements.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Reputations.lua
+   M /trunk/changelog.txt
+
+5.3.003 Commit.
+
+See changelog.txt for details.
+------------------------------------------------------------------------

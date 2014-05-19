@@ -6,7 +6,7 @@
 ## LoadOnDemand: 0
 ## SavedVariables: SlideBarConfig
 ##
-## Version: 5.18.5433 (PassionatePhascogale)
+## Version: 4.4.1 (<%codename%>)
 ## Revision: $Id: SlideBar.toc 357 2013-09-10 08:25:55Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Libraries

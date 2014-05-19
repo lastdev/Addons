@@ -1,7 +1,7 @@
 ## Interface: 50400
 ## Title: WeakAuras 2
 ## Author: Mirrored
-## Version: 2.0
+## Version: 2.0.5
 ## Notes: A powerful, comprehensive utilty for displaying graphics and information based on buffs, debuffs, and other triggers.
 ## Notes-esES: Potente y completa aplicación que te permitirá mostrar por pantalla múltiples diseños, basados en beneficios, perjuicios y otros activadores.
 ## Notes-deDE: Eine leistungsfähiges, umfassendes Addon zur grafischen Darstellung von Informationen über Auren, Cooldowns, Timern und vielem mehr.
@@ -15,7 +15,7 @@
 ## LoadOnDemand: 0
 ## SavedVariables: WeakAurasSaved
 ## OptionalDeps: Ace3, LibCompress, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, Masque, GTFO, LibChatAnims
-## X-Curse-Packaged-Version: 2.0
+## X-Curse-Packaged-Version: 2.0.5
 ## X-Curse-Project-Name: WeakAuras 2
 ## X-Curse-Project-ID: weakauras-2
 ## X-Curse-Repository-ID: wow/weakauras-2/mainline

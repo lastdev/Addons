@@ -1,14 +1,14 @@
 local mod	= DBM:NewMod("Moroes", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 515 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
 mod:SetCreatureID(15687, 19875, 19874, 19872, 17007, 19876, 19873)--Moroes
 mod:SetModelID(16540)
 --19875, 19874, 19872, 17007, 19876, 19873--all the adds, for future use, when pull/kill handling by diff tables work right.
 mod:RegisterCombat("combat")
 --mod:RegisterCombat("yell", L.DBM_MOROES_YELL_START)
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",

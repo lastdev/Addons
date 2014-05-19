@@ -1,6 +1,6 @@
 --[[
 	Stubby AddOn for World of Watcraft (tm)
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 	Revision: $Id: Stubby.lua 354 2013-06-12 18:04:49Z brykrys $
 	URL: http://auctioneeraddon.com/dl/Stubby/
 

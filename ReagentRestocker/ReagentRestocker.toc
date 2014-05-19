@@ -1,4 +1,4 @@
-## Interface: 50300
+## Interface: 50400
 ## Title: Reagent Restocker
 ## Notes: Automatically restocks your reagents, arrows, etc. when you visit the appropriate vendors or your bank.
 ## Author: CobraA1
@@ -7,15 +7,15 @@
 ## OptionalDeps: Ace3, LibPeriodicTable-3.1, LibDBIcon-1.0
 ## SavedVariables: RRGlobal, RRAceDB
 ## SavedVariablesPerCharacter: ReagentRestockerDB
-## X-Interface: 50300
-## X-Compatible-With: 50300
+## X-Interface: 50400
+## X-Compatible-With: 50400
 ## X-Embeds: Ace3
 ## X-License: The MIT License
 ## X-Category: Inventory
 ## X-Credits: Myrren <Just Crusade>, Elune, cheeken
 ## X-Website: http://wow.curse.com/downloads/wow-addons/details/reagent_restocker.aspx
 ## X-Bugs: http://wow.curseforge.com/addons/reagent_restocker/tickets/
-## X-Curse-Packaged-Version: v8.1
+## X-Curse-Packaged-Version: v8.2
 ## X-Curse-Project-Name: Reagent Restocker
 ## X-Curse-Project-ID: reagent_restocker
 ## X-Curse-Repository-ID: wow/reagent_restocker/mainline

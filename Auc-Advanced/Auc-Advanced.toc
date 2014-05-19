@@ -8,7 +8,7 @@
 ## SavedVariables: AucAdvancedConfig, AucAdvancedData
 ## SavedVariablesPerCharacter: AucAdvancedLocal
 ##
-## Version: 5.18.5433 (PassionatePhascogale)
+## Version: 5.19.5445 (QuiescentQuoll)
 ## Revision: $Id: Auc-Advanced.toc 5431 2013-09-10 07:48:29Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

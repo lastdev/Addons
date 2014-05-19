@@ -1,4 +1,4 @@
-## Interface: 50001
+## Interface: 50400
 ## Title: _|cffCCCC88NPCScan|r
 ## Notes: Scans NPCs around you for rare ones.
 ## Notes-deDE: Scant NSCs in deiner Nähe nach seltenen.
@@ -14,7 +14,8 @@
 ## Notes-ruRU: Сканирует область вокруг вас на наличие редких НИПов.
 ## Notes-zhCN: 搜索附近的 NPC 寻找稀有怪物。
 ## Notes-zhTW: 搜尋出沒在你附近的稀有怪。
-## Author: Saiket
+## Author: Torhal, Saiket
+## X-Credits-Maintainer: SLOKnightfall
 ## X-Credits-deDE: Localization: Freydis88, DirtyHarryGermany
 ## X-Credits-enCN: Localization: digmouse, tss1398383123, ananhaid, redsaru, dh0000
 ## X-Credits-enTW: Localization: s8095324, pepper_ep, zhTW, laincat, alpha2009, machihchung
@@ -28,29 +29,32 @@
 ## X-Credits-ruRU: Localization: StingerSoft, Sarymian, KVVV, The_DimoK, ichik, Ant1dotE, tick095, dartraiden
 ## X-Credits-zhCN: Localization: digmouse, tss1398383123, ananhaid, redsaru, dh0000
 ## X-Credits-zhTW: Localization: s8095324, pepper_ep, zhTW, laincat, alpha2009, machihchung
-## Version: 5.0.0.5
-## X-Date: 2012-10-12
+## Version: 5.4.2.4
+## X-Date: 2013-12-24T20:18:38Z
 ## X-Category: Miscellaneous
 ## X-License: GPLv3
-## X-Email: saiket.wow@gmail.com
-## X-Website: http://sites.google.com/site/wowsaiket/Add-Ons/NPCScan
-## X-Feedback: http://code.google.com/p/wow-saiket/issues/list?can=1&q=AddOn:NPCScan
+## X-Email: jcallahan@curse.com
 ## X-WoWI-ID: 12995
-## X-Curse-Project-ID: npcscan
 ## X-Localizations: deDE, enCN, enTW, enUS, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
 ## X-CompatibleLocales: deDE, enCN, enTW, enUS, esES, esMX, frFR, itIT, koKR, ptBR, ptPT, ruRU, zhCN, zhTW
-## X-Embeds: LibTextTable-1.1, LibSharedMedia-3.0
 ## SavedVariables: _NPCScanOptions
 ## SavedVariablesPerCharacter: _NPCScanOptionsCharacter
-## OptionalDeps: Ace3, LibTextTable-1.1, LibSharedMedia-3.0, LibRareSpawns
+## OptionalDeps: Ace3, LibTextDump-1.0, LibTextTable-1.1, LibSharedMedia-3.0
+## X-Curse-Packaged-Version: 5.4.2.4
+## X-Curse-Project-Name: _NPCScan
+## X-Curse-Project-ID: npcscan
+## X-Curse-Repository-ID: wow/npcscan/mainline
 
+#@no-lib-strip@
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\LibTextDump-1.0\Lib.xml
 Libs\LibTextTable-1.1\Lib.xml
 Libs\LibSharedMedia-3.0\lib.xml
 Libs\AceEvent-3.0\AceEvent-3.0.xml
+#@end-no-lib-strip@
 
-# See http://wow.curseforge.com/addons/npcscan/localization/
+# See http://wow.wowace.com/addons/npcscan/localization/
 Locales\Locale-enUS.lua
 Locales\Locale-deDE.lua
 Locales\Locale-esES.lua
@@ -62,9 +66,12 @@ Locales\Locale-ruRU.lua
 Locales\Locale-zhCN.lua
 Locales\Locale-zhTW.lua
 
+Constants.lua
+NPCData.lua
+
 _NPCScan.lua
-_NPCScan.Button.lua
-_NPCScan.Overlays.lua
-_NPCScan.TamableIDs.lua
-_NPCScan.Config.lua
-_NPCScan.Config.Search.lua
+TargetButton.lua
+MapOverlays.lua
+Config.lua
+ConfigSearch.lua
+Vignette.lua

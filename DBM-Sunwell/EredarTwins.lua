@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Twins", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 513 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 535 $"):sub(12, -3))
 mod:SetCreatureID(25165, 25166)
 mod:SetModelID(23334)
 mod:SetZone()
@@ -9,7 +9,7 @@ mod:SetUsedIcons(7, 8)
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_CAST_START",
@@ -47,8 +47,8 @@ local berserkTimer			= mod:NewBerserkTimer(360)
 local soundConflag			= mod:NewSound(45333)
 
 mod:AddBoolOption("RangeFrame", true)
-mod:AddBoolOption("ConflagIcon", true)
-mod:AddBoolOption("NovaIcon", true)
+mod:AddBoolOption("ConflagIcon", false)
+mod:AddBoolOption("NovaIcon", false)
 
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)

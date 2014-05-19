@@ -1,0 +1,18 @@
+## Interface: 50400
+## Title: Deadly Boss Mods Profiles
+## Notes: AceDB profiles for Deadly Boss Mods.
+## Version: 1.0.5
+## Author: Lombra
+## RequiredDeps: DBM-Core
+## SavedVariables: DeadlyBossModsDB
+## X-Curse-Packaged-Version: 1.0.5
+## X-Curse-Project-Name: Deadly Boss Mods Profiles
+## X-Curse-Project-ID: dbm-profiles
+## X-Curse-Repository-ID: wow/dbm-profiles/mainline
+
+Libs\LibStub\LibStub.lua
+Libs\AceDB-3.0\AceDB-3.0.lua
+Libs\LibDualSpec-1.0\LibDualSpec-1.0.lua
+
+AceDBUI.lua
+Core.lua

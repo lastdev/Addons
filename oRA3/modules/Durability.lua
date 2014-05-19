@@ -7,7 +7,7 @@ local util = oRA.util
 local module = oRA:NewModule("Durability")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 
-module.VERSION = tonumber(("$Revision: 645 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 712 $"):sub(12, -3))
 
 local durability = {}
 
@@ -69,9 +69,9 @@ function module:OnCommReceived(_, sender, prefix, perc, minimum, broken)
 			durability[#durability + 1] = { sender }
 			k = #durability
 		end
-		durability[k][2] = perc
-		durability[k][3] = minimum
-		durability[k][4] = broken
+		durability[k][2] = tonumber(perc)
+		durability[k][3] = tonumber(minimum)
+		durability[k][4] = tonumber(broken)
 
 		oRA:UpdateList(L["Durability"])
 	end

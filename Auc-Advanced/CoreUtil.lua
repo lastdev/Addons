@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 	Revision: $Id: CoreUtil.lua 5423 2013-06-15 18:11:00Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -947,4 +947,4 @@ function lib.CreateMoney(height)
 	return (tooltip:CreateMoney(height))
 end
 
-lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreUtil.lua $", "$Rev: 5423 $")
+lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/CoreUtil.lua $", "$Rev: 5423 $")

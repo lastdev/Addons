@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: Gatherer
-	Revision: $Id: GatherStrings.lua 1101 2013-06-22 04:00:10Z LocalizerAutoCommit $
-	Version: 4.4.0 (<%codename%>)
+	Revision: $Id: GatherStrings.lua 1107 2014-02-23 01:03:36Z LocalizerAutoCommit $
+	Version: 4.4.1 (<%codename%>)
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -42,10 +42,17 @@ GathererLocalizations = {
 
 		-- Section: Configuration
 		["CONFIG_ABOUT_LOADED_ENABLE"]	= "Ukaž načtenou zpravu";
+		["CONFIG_ARCH_MAX_NOTES"]	= "Zobraz: %d najbliších";
 		["CONFIG_ENABLE_HERB"]	= "Ukaž pozice kytek";
 		["CONFIG_ENABLE_HERB_HERBALIST_ONLY"]	= "Pouze kytky";
 		["CONFIG_ENABLE_MINE"]	= "Ukaž pozice mineralů";
 		["CONFIG_ENABLE_MINE_MINER_ONLY"]	= "Pouze minerály";
+		["CONFIG_GENERAL_MINIICON_LABEL"]	= "Tlačitko nastavení na minimape";
+		["CONFIG_GENERAL_MINIMAP_TRACKING_LABEL"]	= "Zobrazení surovin na minimape";
+		["CONFIG_GENERAL_WORLDMAP_LABEL"]	= "Nastavení svetové mapy";
+		["CONFIG_IGNORE_PURGE_DONE"]	= "%d záznam(ov) bolo permanentne zmazaných z tvojej Gatherer databáze";
+		["CONFIG_IGNORE_PURGE_QUESTION"]	= "Naozaj chceš zmazať všetky záznamy zdielané týmto hráčom?";
+		["CONFIG_MINIICON_ANGLE"]	= "Uhol tlačítka: %d°";
 
 		-- Section: Database Version Messages
 		["STORAGE_DB_VERSION_INVALID"]	= "POZOR!!!\nGatherer objevil, že vaše verze databáze je zastaralá. Prosím Klikněte na tlačítko potvrdit pro smazání databaze, nebo klikněte na ignorovat a pokuste se databázi opravit manualně.";

@@ -12,6 +12,7 @@ a.NoShred = {
 	[61069] = true, -- Shai Hu
 	[56754] = true, -- Azure Serpent
 	[60709] = true, -- Qiang the Merciless
+--	[7125] = true, -- Fear
 }
 
 a.SymbiosisSelfBuffs = {
@@ -127,6 +128,7 @@ a.SpellIDs = {
 	["Nourish"] = 50464,
 	["Predatory Swiftness"] = 69369,
 	["Primal Fury Rage"] = 16959,
+	["Prowl"] = 5215,
 	["Rake"] = 1822,
 	["Ravage"] = 6785, 
 	["Ravage!"] = 102545, 
@@ -175,10 +177,14 @@ a.SpellIDs = {
 	["Elusive Brew"] = 126453,
 	
 	-- Items
+	["Feral Fury"] = 144865,
+	["Feral Rage"] = 146874,
 	["Flashing Steel"] = 126484,
 	["Flashing Steel Talisman"] = 81265,
-	["Improved Regeneration"] = 138217,
 	["Fortitude of the Zandalari"] = 95677,
+	["Improved Regeneration"] = 138217,
+	["Re-Origination"] = 139121,
+	["Sage Mender"] = 144869,
 	
 	-- Other Bleeds
 	["Deep Wounds"] = 115768,
@@ -221,4 +227,11 @@ a.EquipmentSets = {
 	    HandsSlot = { 95851, 95251, 96595 },
 	    LegsSlot = { 95853, 95253, 96597 },
 	},
+--	RestorationT15 = {
+--	    HeadSlot = { 99013, 99638, 99178, 99436 },
+--	    ShoulderSlot = { 99016, 99583, 99173, 99431 },
+--	    ChestSlot = { 99015, 99582, 99172, 99430 },
+--	    HandsSlot = { 99012, 99637, 99185, 99435 },
+--	    LegsSlot = { 99014, 99581, 99171, 99429 },
+--	},
 }

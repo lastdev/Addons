@@ -1,0 +1,15 @@
+tag 5.4.32
+c5116bd8ad622c4776585822e27fbcaf57012b45
+Floraline <floraline@ophiuchus.org>
+2014-02-13 10:16:35 +0100
+
+Tagging for release
+
+
+--------------------
+
+Floraline:
+	- Fixed displayed state of trap launcher
+	- Added flare spell to trap bar (idea from mpolley)
+	- Removing some useless stuff
+	- Bump version

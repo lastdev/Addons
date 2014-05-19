@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: CoreScan.lua 5427 2013-07-13 09:28:05Z brykrys $
+	Version: 5.19.5445 (QuiescentQuoll)
+	Revision: $Id: CoreScan.lua 5436 2013-09-19 10:21:48Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -612,7 +612,7 @@ local function processStats(processors, operation, curItem, oldItem)
 				end
 			else
 				if (_G.nLog) then
-					local text = ("Error trapped for AuctionFilter in module %s:\n%s"):format(x.Name, errormsg)
+					local text = ("Error trapped for AuctionFilter in module %s:\n%s"):format(x.Name, result)
 					if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "AuctionFilter Error", text) end
 					geterrorhandler()(text)
 				end
@@ -2983,7 +2983,7 @@ end
 internal.Scan.Logout = lib.Logout
 internal.Scan.AHClosed = lib.AHClosed
 
-_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreScan.lua $", "$Rev: 5427 $")
+_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/CoreScan.lua $", "$Rev: 5436 $")
 
 -- Hybrid mode GetAuctionItemInfo for transition from WoW 5.3 to 5.4
 -- Temporary - do not use in new code!

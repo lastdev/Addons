@@ -1,15 +1,16 @@
 local mod	= DBM:NewMod("Hodir", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
-mod:SetCreatureID(32845)
+mod:SetRevision(("$Revision: 147 $"):sub(12, -3))
+mod:SetCreatureID(32845,32926)
+mod:SetEncounterID(1135)
 mod:SetModelID(28743)
 mod:SetUsedIcons(7, 8)
 
-mod:RegisterCombat("combat")
+mod:RegisterCombat("combat_yell", L.Pull)
 mod:RegisterKill("yell", L.YellKill)
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_START",

@@ -1,6 +1,6 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.0 (<%codename%>)
+	Version: 4.4.1 (<%codename%>)
 	Revision: $Id: GatherStorage.lua 1049 2012-11-02 01:52:57Z Esamynn $
 
 	License:
@@ -27,7 +27,7 @@
 
 	Library for accessing and updating the database
 --]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.0/Gatherer/GatherStorage.lua $", "$Rev: 1049 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherStorage.lua $", "$Rev: 1049 $")
 
 
 --------------------------------------------------------------------------

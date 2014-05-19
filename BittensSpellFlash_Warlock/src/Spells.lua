@@ -726,6 +726,21 @@ c.AddOptionalSpell("Dark Soul: Instability", nil, {
 
 c.AddOptionalSpell("Grimoire: Imp")
 
+c.AddSpell("Shadowburn", nil, {
+	CheckFirst = function(z)
+		if a.Embers < 1 then
+			return false
+		end
+		
+		local optional = a.Embers <= 3.5 and a.DarkSoul == 0
+		c.MakeOptional(z, optional)
+--		c.MakeMini(z, optional)
+		return true
+	end,
+})
+
+c.AddSpell("Shadowburn", "Last Resort")
+
 c.AddSpell("Immolate", nil, {
 	FlashID = { "Immolate", "Immolate AoE" },
 	CheckFirst = function()
@@ -751,16 +766,19 @@ c.AddOptionalSpell("Immolate", "Pandemic", {
 
 c.AddSpell("Conflagrate", "Single Target", {
 	CheckFirst = function(z)
-		if c.GetChargeInfo("Conflagrate") == 0 then
+		if c.GetChargeInfo("Conflagrate") == 0
+			or c.Flashing["Shadowburn"] 
+			or c.Flashing["Chaos Bolt"] then
+			
 			return false
 		end
 		
-		c.MakeOptional(
-			z, 
-			a.DarkSoul == 0
-				and (a.Backdraft > 0 
-					or (c.HasBuff("Backlash") 
-						and not c.IsCasting("Incinerate", "Incinerate AoE"))))
+		local optional = a.DarkSoul == 0
+			and (a.Backdraft > 0 
+				or (c.HasBuff("Backlash") 
+					and not c.IsCasting("Incinerate", "Incinerate AoE")))
+		c.MakeOptional(z, optional)
+--		c.MakeMini(z, optional)
 		return true
 	end,
 })
@@ -786,15 +804,22 @@ c.AddSpell("Conflagrate", "AoE", {
 
 c.AddSpell("Chaos Bolt", nil, {
 	CheckFirst = function(z)
-		if a.Embers < a.T15EmberCost() or a.Backdraft >= 3 then
+		if a.Embers < a.T15EmberCost() 
+			or a.Backdraft >= 3 
+			or c.Flashing["Shadowburn"] then
+			
 			return false
 		end
 		
-		c.MakeOptional(
-			z, a.Embers < 3.5 and a.DarkSoul < c.GetCastTime("Chaos Bolt"))
+		local optional = a.Embers <= 3.5 
+			and a.DarkSoul < c.GetCastTime("Chaos Bolt")
+		c.MakeOptional(z, optional)
+--		c.MakeMini(z, optional)
 		return true
 	end
 })
+
+c.AddSpell("Chaos Bolt", "Last Resort")
 
 c.AddSpell("Incinerate", nil, {
 	FlashID = { "Incinerate", "Incinerate AoE" },

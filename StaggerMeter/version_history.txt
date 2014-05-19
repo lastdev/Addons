@@ -1,0 +1,37 @@
+== Version 50400.2.1
+* Bugfix: the meter should never reset to the center of the screen when you log in anymore.
+
+== Version 50400.2.0
+* Added an option to lock the meter so it cannot be moved.
+* Added an option toggle whether right-clicking the icon shows the options.
+* Abbreviated the labels shown on the bar (e.g. "% Max Health (Dps)" => "%mh/s").
+* Reduced the number of decimals shown for some of the numbers on the bar.
+
+== Version 50400.1.0
+* Making the "Out of Date" message go away.
+
+==v2.12
+* Added support for localization into other languages.  Visit http://wow.curseforge.com/addons/staggermeter/localization/ to contribute a translation.
+* Renamed "compounded damage" to "total damage".
+
+==v2.11 beta
+* Right-clicking the icon now opens the options.
+* Now uses Bitten's Utils to work with events, options and slash commands.  If you install libraries separately, you'll need to have Bitten's Utils installed (if you don't know what that means, you should be fine).
+* Major internal simplifications/changes.  Please report any problems.
+
+==v2.10
+* Another bugfix w/ bar filling.  I'll get it right one of these times.
+
+==v2.09
+* Bugfix w/ bar filling.
+
+== v2.08
+* Sounds now play over the master channel.
+
+== v2.07
+* No change, simply taking out of beta.
+
+== v2.06 beta
+* Numbers are now consolidated e.g. from 10184 to 10.2K.
+* Compounded damage is more accurate.
+* Minor performance improvements.

@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 592 2013-05-21T13:24:07Z
+    Revision: 607 2013-12-11T12:16:33Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -72,6 +72,7 @@ end
 local knownBy;
 local fetched;
 
+local accountBoundPattern = "^"..ITEM_BIND_TO_BNETACCOUNT.."$";
 local minLevelPattern = "^"..ITEM_MIN_LEVEL:gsub("(%%d)", "(.+)").."$";
 local rankPattern = "^"..ITEM_MIN_SKILL:gsub("%d%$", ""):gsub("%%s", "(.+)"):gsub("%(%%d%)", "%%((%%d+)%%)").."$";
 local repPattern = "^"..ITEM_REQ_REPUTATION:gsub("%-", "%%-"):gsub("%%s", "(.+)").."$";
@@ -82,12 +83,15 @@ local reagentPattern = "\n"..ITEM_REQ_SKILL:gsub("%d%$", ""):gsub("%%s", "(.+)")
 
 local function GetRequirements(tooltip)
     local text, standing, reagents;
-    local reqLevel, reqProfession, reqRank, reqReputation, reqStanding, reqSkill, reqRaces, reqClasses;
+    local reqLevel, reqProfession, reqRank, reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, accountBound;
 
     for i = 2, tooltip:NumLines() do
         text = Armory:GetTooltipText(tooltip, i);
         if ( (text or "") ~= "" ) then
-           if ( text:find(minLevelPattern) ) then
+			if ( text:find(accountBoundPattern) ) then
+				accountBound = true;
+				
+			elseif ( text:find(minLevelPattern) ) then
                 reqLevel = text:match(minLevelPattern);
                 
             elseif ( text:find(rankPattern) ) then
@@ -119,10 +123,66 @@ local function GetRequirements(tooltip)
         end
     end
     
-    return tonumber(reqLevel), reqProfession, tonumber(reqRank), reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, reagents;
+    return tonumber(reqLevel), reqProfession, tonumber(reqRank), reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, reagents, accountBound;
 end
 
-local gemInfo, crafters, itemCount, hasSkill, canLearn;
+local itemCandidates = {};
+local function GetItemCandidates(minLevel, classes, itemLevel, slotID1, slotID2)
+    local currentProfile = Armory:CurrentProfile();
+
+    table.wipe(itemCandidates);
+
+	local level, class;
+    for _, profile in ipairs(Armory:SelectableProfiles()) do
+        Armory:SelectProfile(profile);
+
+		if ( Armory:UnitLevel("player") >= minLevel and (not classes or classes:find((Armory:UnitClass("player")))) ) then
+			local link1, link2;
+            if ( slotID1 ) then
+                link1 = Armory:GetInventoryItemLink("player", slotID1);
+            end
+            if ( slotID2 ) then
+                link2 = Armory:GetInventoryItemLink("player", slotID2);
+            end
+            if ( not link1 ) then
+                link1 = link2;
+                link2 = nil;
+            end
+            if ( link1 ) then
+                local character = Armory:GetQualifiedCharacterName(profile, true);
+                table.insert(itemCandidates, {name=character, itemLevel=itemLevel, link1=link1, link2=link2});
+            end
+		end
+    end
+    Armory:SelectProfile(currentProfile);
+
+	return itemCandidates;
+end
+
+local function UpdateItemCandidates(candidates)
+	local result = candidates and #candidates > 0;
+	if ( result ) then
+		for i = #candidates, 1, -1 do
+			local itemLevel = candidates[i].itemLevel;
+			if ( not candidates[i].itemLevel1 ) then
+				candidates[i].itemLevel1 = select(4, GetItemInfo(candidates[i].link1));
+			end
+			if ( not candidates[i].link2 ) then
+				candidates[i].itemLevel2 = itemLevel + 1;
+			elseif ( not candidates[i].itemLevel2 ) then
+				candidates[i].itemLevel2 = select(4, GetItemInfo(candidates[i].link2));
+			end
+			if ( candidates[i].itemLevel1 == nil or candidates[i].itemLevel2 == nil ) then
+				result = false;
+			elseif ( candidates[i].itemLevel1 >= itemLevel and candidates[i].itemLevel2 >= itemLevel ) then
+				table.remove(candidates, i);
+			end
+		end
+	end
+	return result;
+end
+
+local gemInfo, crafters, itemCount, hasSkill, canLearn, candidates;
 local function EnhanceItemTooltip(tooltip, id, link)
     local spaceAdded, name;
     
@@ -134,11 +194,12 @@ local function EnhanceItemTooltip(tooltip, id, link)
         canLearn = nil;
         hasSkill = nil;
         crafters = nil;
+        candidates = nil;
         
         -- Need the fully qualified link
         name, link = tooltip:GetItem();
         
-        local _, _, _, _, minLevel, itemType, itemSubType = GetItemInfo(id);
+        local _, _, _, itemLevel, minLevel, itemType, itemSubType, _, equipLoc = GetItemInfo(id);
 
         if ( itemType == ARMORY_RECIPE ) then
             local _, reqProfession, reqRank, reqReputation, reqStanding, reqSkill, _, _, reagents = GetRequirements(tooltip);
@@ -152,7 +213,7 @@ local function EnhanceItemTooltip(tooltip, id, link)
             knownBy, hasSkill, canLearn = Armory:GetGlyphAltInfo(name, itemSubType, minLevel);
             crafters = Armory:GetInscribers(name, itemSubType);
             
-        elseif ( itemSubType ~= PET and itemSubType ~= MOUNT ) then
+        elseif ( itemType and itemSubType ~= PET and itemSubType ~= MOUNT ) then
             if ( Armory:GetConfigShowGems() ) then
                 local numGems;
                 gemInfo, numGems = Armory:GetSocketInfo(link);
@@ -160,6 +221,52 @@ local function EnhanceItemTooltip(tooltip, id, link)
                     gemInfo = nil;
                 end
             end
+
+			-- Note: can't do this for weapons or without class restriction 
+			if ( itemType == ARMOR ) then
+				local _, _, _, _, _, _, _, reqClasses, _, accountBound = GetRequirements(tooltip);
+				if ( reqClasses and accountBound ) then
+					local slot = ARMORY_SLOTINFO[equipLoc];
+					if ( not slot ) then
+						local texture = GetItemIcon(link);
+						if ( texture:find("_HELM") ) then
+							slot = ARMORY_SLOTID.HeadSlot;
+						elseif ( texture:find("_NECK") ) then   
+							slot = ARMORY_SLOTID.NeckSlot;
+						elseif ( texture:find("_SHOULDER") ) then
+							slot = ARMORY_SLOTID.ShoulderSlot;
+						elseif ( texture:find("_CHEST") ) then
+							slot = ARMORY_SLOTID.ChestSlot;
+						elseif ( texture:find("_BELT") ) then
+							slot = ARMORY_SLOTID.WaistSlot;
+						elseif ( texture:find("_PANT") ) then
+							slot = ARMORY_SLOTID.LegsSlot;
+						elseif ( texture:find("_BOOT") ) then
+							slot = ARMORY_SLOTID.FeetSlot;
+						elseif ( texture:find("_BRACER") ) then
+							slot = ARMORY_SLOTID.WristSlot;
+						elseif ( texture:find("_GLOVE") or texture:find("_GAUNTLET") ) then
+							slot = ARMORY_SLOTID.HandsSlot;
+						elseif ( texture:find("_RING") ) then
+							slot = ARMORY_SLOTID.Finger0Slot;
+						elseif ( texture:find("_TRINKET") ) then
+							slot = ARMORY_SLOTID.Trinket0Slot;
+						elseif ( texture:find("_CAPE") ) then
+							slot = ARMORY_SLOTID.BackSlot;
+						end
+					end
+
+					if ( slot ) then
+						if ( slot == ARMORY_SLOTID.Finger0Slot ) then
+							candidates = GetItemCandidates(minLevel, reqClasses, itemLevel, slot, ARMORY_SLOTID.Finger1Slot);
+						elseif ( slot == ARMORY_SLOTID.Trinket0Slot ) then
+							candidates = GetItemCandidates(minLevel, reqClasses, itemLevel, slot, ARMORY_SLOTID.Trinket1Slot);
+						else
+							candidates = GetItemCandidates(minLevel, reqClasses, itemLevel, slot);
+						end
+					end
+				end
+			end
             
             crafters = Armory:GetCrafters(id);
         end
@@ -211,6 +318,26 @@ local function EnhanceItemTooltip(tooltip, id, link)
     spaceAdded = AddAltsText(tooltip, spaceAdded, hasSkill, ARMORY_WILL_LEARN, Armory:GetConfigHasSkillColor());
     spaceAdded = AddAltsText(tooltip, spaceAdded, canLearn, ARMORY_CAN_LEARN, Armory:GetConfigCanLearnColor());
 
+	if ( UpdateItemCandidates(candidates) and #candidates > 0 ) then
+		AddSpacer(tooltip);
+		tooltip:AddLine(ITEM_UPGRADE);
+		local r, g, b = Armory:GetConfigCanLearnColor();
+		for _, candidate in ipairs(candidates) do
+			local link1, level1 = candidate.link1, candidate.itemLevel1;
+			local link2, level2 = candidate.link2, candidate.itemLevel2;
+			if ( level1 >= candidate.itemLevel ) then
+				link1, level1 = link2, level2;
+				link2, level2 = nil, nil;
+			end
+			local color, _, _, name = Armory:GetLinkInfo(link1);
+			tooltip:AddDoubleLine(candidate.name, color..name.." ("..ITEM_LEVEL_ABBR.." "..level1..")", r, g, b, r, g, b);
+			if ( level2 and level2 < candidate.itemLevel ) then
+				color, _, _, name = Armory:GetLinkInfo(link2);
+				tooltip:AddDoubleLine(candidate.name, color..name.." ("..ITEM_LEVEL_ABBR.." "..level2..")", r, g, b, r, g, b);
+			end
+		end
+	end
+	
     tooltip:Show();
     
     return 1;
@@ -462,14 +589,15 @@ local function EnhanceCurrencyTooltip(tooltip, id, link)
     end
 
     local currentProfile = Armory:CurrentProfile();
-    local count;
+    local count, character;
     table.wipe(tooltipLines);
 
-    for _, character in ipairs(Armory:CharacterList(Armory.playerRealm)) do
-        Armory:LoadProfile(Armory.playerRealm, character);
+    for _, profile in ipairs(Armory:GetConnectedProfiles()) do
+        Armory:SelectProfile(profile);
 
         count = Armory:CountCurrency(link);
         if ( count > 0 ) then
+			character = Armory:GetQualifiedCharacterName(profile, true);
             table.insert(tooltipLines, {name=character, count=count});
         end
     end
@@ -503,8 +631,8 @@ local function EnhanceSpellTooltip(tooltip, id, link)
 
         table.wipe(tooltipLines);
 
-        for _, character in ipairs(Armory:CharacterList(Armory.playerRealm)) do
-            Armory:LoadProfile(Armory.playerRealm, character);
+        for _, profile in ipairs(Armory:GetConnectedProfiles()) do
+            Armory:SelectProfile(profile);
             
             local rank, maxRank;
             local tradeSkillLink = select(2, _G.GetSpellLink(id));
@@ -522,6 +650,7 @@ local function EnhanceSpellTooltip(tooltip, id, link)
             end
 
             if ( rank and maxRank ) then
+       			local character = Armory:GetQualifiedCharacterName(profile, true);
                 table.insert(tooltipLines, {name=character, rank=rank, maxRank=maxRank});
             end
         end

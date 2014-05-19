@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: Core.lua 5415 2013-06-11 15:18:58Z brykrys $
+	Version: 5.19.5445 (QuiescentQuoll)
+	Revision: $Id: Core.lua 5443 2013-11-28 11:06:26Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	AutoMagic is an Auctioneer module which automates mundane tasks for you.
@@ -32,7 +32,7 @@ if not AucAdvanced then return end
 
 local lib = AucAdvanced.Modules.Util.AutoMagic
 if not lib then return end
-local print,decode,_,_,replicate,empty,get,set,default,debugPrint,fill = AucAdvanced.GetModuleLocals()
+local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill = AucAdvanced.GetModuleLocals()
 local AppraiserValue, DisenchantValue, ProspectValue, VendorValue, bestmethod, bestvalue, runstop, _
 
 -- This table is validating that each ID within it is a gem from prospecting.
@@ -137,6 +137,7 @@ local isDEMats =
 	{
 	--Pandarian
 	[74248] = true,--Sha Crystal
+	[105718] = true, --Sha Crystal Fragment
 	[74247] = true,--Ethereal Shard
 	[74252] = true,--Small Ethereal Shard
 	[74250] = true,--Mysterious Essence
@@ -334,28 +335,28 @@ function lib.cannotUse(itemSubType)
 		r,g,b = ScanTip2:GetTextColor()
 		hex = string.format("%02x%02x%02x", r*255, g*255, b*255)
 		if ScanTip2:GetText() and hex == "fe1f1f" then
---~ 			print(2, AppraiserTipTextLeft1:GetText(), ScanTip2:GetText())
+--~ 			aucPrint(2, AppraiserTipTextLeft1:GetText(), ScanTip2:GetText())
 			return true
 		end
 
 		r,g,b = ScanTip3:GetTextColor()
 		hex = string.format("%02x%02x%02x", r*255, g*255, b*255)
 		if ScanTip3:GetText() and hex == "fe1f1f" then
---~ 			print(3, AppraiserTipTextLeft1:GetText(), ScanTip3:GetText())
+--~ 			aucPrint(3, AppraiserTipTextLeft1:GetText(), ScanTip3:GetText())
 			return true
 		end
 		--check for red text in right side of tooltip
 		r,g,b = ScanTipRight2:GetTextColor()
 		hex = string.format("%02x%02x%02x", r*255, g*255, b*255)
 		if ScanTipRight2:GetText() and hex == "fe1f1f" then
---~ 			print(4, AppraiserTipTextLeft1:GetText(), ScanTipRight2:GetText())
+--~ 			aucPrint(4, AppraiserTipTextLeft1:GetText(), ScanTipRight2:GetText())
 			return true
 		end
 
 		r,g,b = ScanTipRight3:GetTextColor()
 		hex = string.format("%02x%02x%02x", r*255, g*255, b*255)
 		if ScanTipRight3:GetText() and hex == "fe1f1f" then
---~ 			print(5, AppraiserTipTextLeft1:GetText(), ScanTipRight3:GetText())
+--~ 			aucPrint(5, AppraiserTipTextLeft1:GetText(), ScanTipRight3:GetText())
 			return true
 		end
 
@@ -447,17 +448,17 @@ function lib.vendorAction(autovendor)
 		lib.ASCPrompt()
 	end
 	if ignoredItemsFound then
-		print("Automagic skipped items on vendoring ignore list")
+		aucPrint("Automagic skipped items on vendoring ignore list")
 	end
 
 end
 
-function lib.disenchantAction(bag, slot, itemLink, itemID, itemCount)
+function lib.disenchantAction(bag, slot, itemLink, itemID, itemCount, itemName)
 	if (AucAdvanced.Modules.Util.ItemSuggest and get("util.automagic.overidebtmmail") == true) then
 		local aimethod = AucAdvanced.Modules.Util.ItemSuggest.itemsuggest(itemLink, itemCount)
 		if(aimethod == "Disenchant") then
 			if (get("util.automagic.chatspam")) then
-				print("AutoMagic has loaded", itemName, " due to Item Suggest(Disenchant)")
+				aucPrint("AutoMagic has loaded", itemName, "due to Item Suggest(Disenchant)")
 			end
 			UseContainerItem(bag, slot)
 		end
@@ -465,19 +466,19 @@ function lib.disenchantAction(bag, slot, itemLink, itemID, itemCount)
 		local reason, text = lib.getReason(itemLink, itemName, itemCount, "disenchant")
 		if reason and text then
 			if (get("util.automagic.chatspam")) then
-				print("AutoMagic has loaded", itemName, " due to", text ,"Rule(Disenchant)")
+				aucPrint("AutoMagic has loaded", itemName, "due to", text ,"Rule(Disenchant)")
 			end
 			UseContainerItem(bag, slot)
 		end
 	end
 end
 
-function lib.prospectAction(bag, slot, itemLink, itemID, itemCount)
+function lib.prospectAction(bag, slot, itemLink, itemID, itemCount, itemName)
 	if (AucAdvanced.Modules.Util.ItemSuggest and get("util.automagic.overidebtmmail") == true) then
 		local aimethod = AucAdvanced.Modules.Util.ItemSuggest.itemsuggest(itemLink, itemCount)
 		if(aimethod == "Prospect") then
 			if (get("util.automagic.chatspam")) then
-				print("AutoMagic has loaded", itemName, " due to Item Suggest(Prospect)")
+				aucPrint("AutoMagic has loaded", itemName, "due to Item Suggest(Prospect)")
 			end
 			UseContainerItem(bag, slot)
 		end
@@ -485,44 +486,44 @@ function lib.prospectAction(bag, slot, itemLink, itemID, itemCount)
 		local reason, text = lib.getReason(itemLink, itemName, itemCount, "prospect")
 		if reason and text then
 			if (get("util.automagic.chatspam")) then
-				print("AutoMagic has loaded", itemName, " due to", text ,"Rule(Prospect)")
+				aucPrint("AutoMagic has loaded", itemName, "due to", text ,"Rule(Prospect)")
 			end
 			UseContainerItem(bag, slot)
 		end
 	end
 end
 
-function lib.gemAction(bag, slot, itemLink, itemID, itemCount)
+function lib.gemAction(bag, slot, itemLink, itemID, itemCount, itemName)
 	if isGem[ itemID ] then
 		if (get("util.automagic.chatspam")) then
-			print("AutoMagic has loaded", itemName, " because it is a gem!")
+			aucPrint("AutoMagic has loaded", itemName, "because it is a gem.")
 		end
 		UseContainerItem(bag, slot)
 	end
 end
 
-function lib.dematAction(bag, slot, itemLink, itemID, itemCount)
+function lib.dematAction(bag, slot, itemLink, itemID, itemCount, itemName)
 	if isDEMats[ itemID ] then
 		if (get("util.automagic.chatspam")) then
-			print("AutoMagic has loaded", itemName, " because it is a mat used for enchanting.")
+			aucPrint("AutoMagic has loaded", itemName, "because it is a mat used for enchanting.")
 		end
 		UseContainerItem(bag, slot)
 	end
 end
 
-function lib.pigmentAction(bag, slot, itemLink, itemID, itemCount)
+function lib.pigmentAction(bag, slot, itemLink, itemID, itemCount, itemName)
 	if isPigmentMats[ itemID ] then
 		if (get("util.automagic.chatspam")) then
-			print("AutoMagic has loaded", itemName, " because it is a pigment used for milling.")
+			aucPrint("AutoMagic has loaded", itemName, "because it is a pigment used for milling.")
 		end
 		UseContainerItem(bag, slot)
 	end
 end
 
-function lib.herbAction(bag, slot, itemLink, itemID, itemCount)
+function lib.herbAction(bag, slot, itemLink, itemID, itemCount, itemName)
 	if isHerb[ itemID ] then
 		if (get("util.automagic.chatspam")) then
-			print("AutoMagic has loaded", itemName, " because it is a herb.")
+			aucPrint("AutoMagic has loaded", itemName, "because it is a herb.")
 		end
 		UseContainerItem(bag, slot)
 	end
@@ -574,7 +575,7 @@ function lib.customAction(button)
 					for i, data in pairs (settings[buttonName]) do
 						if data[2] == itemID and not lib.isSoulbound(bag, slot) then
 							if (get("util.automagic.chatspam")) then
-								print("AutoMagic has loaded", itemName, " from custom button.")
+								aucPrint("AutoMagic has loaded", itemName, "from custom button.")
 							end
 							UseContainerItem(bag, slot)
 						end
@@ -597,8 +598,8 @@ function lib.scanBags(actionFunction)
 				if itemCount == nil then itemCount = 1 end
 				local linkType, itemID, _, _, _, _ = decode(itemLink)
 				if linkType == "item" then
-					local itemName, _, itemRarity, _, _, _, _, _, _, _ = GetItemInfo(itemLink)
-					actionFunction(bag, slot, itemLink, itemID, itemCount)
+					local itemName = GetItemInfo(itemLink)
+					actionFunction(bag, slot, itemLink, itemID, itemCount, itemName)
 				end
 			end
 		end
@@ -607,4 +608,4 @@ end
 
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-AutoMagic/Core.lua $", "$Rev: 5415 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-AutoMagic/Core.lua $", "$Rev: 5443 $")

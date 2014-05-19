@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("KaelThas", "DBM-TheEye")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 514 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 535 $"):sub(12, -3))
 mod:SetCreatureID(19622)
 mod:SetModelID(20023)
 mod:SetZone()
@@ -9,7 +9,7 @@ mod:SetZone()
 mod:RegisterCombat("yell", L.YellPull1, L.YellPull2)
 mod:SetUsedIcons(1, 6, 7, 8)
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_APPLIED_DOSE",
@@ -19,7 +19,7 @@ mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_EMOTE",
 	"CHAT_MSG_MONSTER_YELL",
 	"UNIT_DIED",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"UNIT_SPELLCAST_SUCCEEDED target focus"
 )
 
 local warnGaze			= mod:NewAnnounce("WarnGaze", 4, 39414)
@@ -59,7 +59,7 @@ local timerGravity		= mod:NewBuffActiveTimer(32, 35941)
 
 mod:AddBoolOption("HealthFrame", true)
 mod:AddBoolOption("MCIcon", true)
-mod:AddBoolOption("GazeIcon", true)
+mod:AddBoolOption("GazeIcon", false)
 mod:AddBoolOption("RangeFrame", true)
 
 local mcIcon = 8
@@ -67,44 +67,6 @@ local warnConflagTargets = {}
 local warnMCTargets = {}
 local shieldDown = false
 local phase5 = false
-
-local showShieldHealthBar, hideShieldHealthBar
-do
-	local frame = CreateFrame("Frame") -- using a separate frame avoids the overhead of the DBM event handlers which are not meant to be used with frequently occuring events like all damage events...
-	local shieldedMob
-	local absorbRemaining = 0
-	local maxAbsorb = 0
-	local function getShieldHP()
-		return math.max(1, math.floor(absorbRemaining / maxAbsorb * 100))
-	end
-	frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-	frame:SetScript("OnEvent", function(self, event, timestamp, subEvent, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, ...)
-		if shieldedMob == destGUID then
-			local absorbed
-			if subEvent == "SWING_MISSED" then 
-				absorbed = select( 3, ... ) 
-			elseif subEvent == "RANGE_MISSED" or subEvent == "SPELL_MISSED" or subEvent == "SPELL_PERIODIC_MISSED" then 
-				absorbed = select( 6, ... )
-			end
-			if absorbed then
-				absorbRemaining = absorbRemaining - absorbed
-			end
-		end
-	end)
-	
-	function showShieldHealthBar(self, mob, shieldName, absorb)
-		shieldedMob = mob
-		absorbRemaining = absorb
-		maxAbsorb = absorb
-		DBM.BossHealth:RemoveBoss(getShieldHP)
-		DBM.BossHealth:AddBoss(getShieldHP, shieldName)
-		mod:Schedule(10, hideShieldHealthBar)
-	end
-	
-	function hideShieldHealthBar()
-		DBM.BossHealth:RemoveBoss(getShieldHP)
-	end
-end
 
 local function showConflag()
 	warnConflag:Show(table.concat(warnConflagTargets, "<, >"))
@@ -162,7 +124,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif args.spellId == 36815 and not phase5 then
 		shieldDown = false
-		showShieldHealthBar(self, args.destGUID, args.spellName, 80000)
+		self:ShowShieldHealthBar(args.destGUID, args.spellName, 80000)
+		self:ScheduleMethod(10, "RemoveShieldHealthBar", args.destGUID)
 		specWarnShield:Show()
 		timerShieldCD:Start()
 	elseif args.spellId == 35859 and args:IsPlayer() and self:IsInCombat() and (args.amount or 1) >= 2 then
@@ -176,8 +139,8 @@ function mod:SPELL_AURA_REMOVED(args)
 	if args.spellId == 36815 and not phase5 then
 		shieldDown = true
 		specWarnPyro:Show(args.sourceName)
-		self:Unschedule(hideShieldHealthBar)
-		hideShieldHealthBar()
+		self:UnscheduleMethod("RemoveShieldHealthBar", args.destGUID)
+		self:RemoveShieldHealthBar(args.destGUID)
 	elseif args.spellId == 36797 then
 		if self.Options.MCIcon then
 			self:SetIcon(args.destName, 0)
@@ -210,7 +173,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 	elseif args.spellId == 36834 then
 		warnDisruption:Show()
-	elseif args.spellId == 34341 then
+	elseif args.spellId == 34341 and self:IsInCombat() then
 		warnEgg:Show()
 		specWarnEgg:Show()
 		timerRebirth:Show()

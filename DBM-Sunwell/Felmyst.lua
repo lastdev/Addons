@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Felmyst", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 503 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 531 $"):sub(12, -3))
 mod:SetCreatureID(25038)
 mod:SetModelID(22838)
 mod:SetZone()
@@ -9,13 +9,13 @@ mod:SetUsedIcons(8)
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_CAST_START",
 	"SPELL_SUMMON",
 	"RAID_BOSS_EMOTE",
 	"CHAT_MSG_MONSTER_YELL",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"UNIT_SPELLCAST_SUCCEEDED target focus"
 )
 
 local warnGas				= mod:NewSpellAnnounce(45855, 3)
@@ -142,6 +142,12 @@ end
 
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 45661 and self:AntiSpam(2, 1) then
+		self:SendSync("Encapsulate")
+	end
+end
+
+function mod:OnSync(event, arg)
+	if event == "Encapsulate" then
 		self:BossTargetScanner(25038, "EncapsulateTarget", 0.025, 20)
 	end
 end

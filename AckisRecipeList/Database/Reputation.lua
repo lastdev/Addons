@@ -2,10 +2,10 @@
 ************************************************************************
 Reputation.lua
 ************************************************************************
-File date: 2012-09-28T16:01:51Z
-File hash: bf98a49
-Project hash: 4bcba04
-Project version: 2.5.2
+File date: 2014-02-14T05:23:40Z
+File hash: 04922c6
+Project hash: fbca907
+Project version: 2.6.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -24,16 +24,14 @@ local _G = getfenv(0)
 local FOLDER_NAME, private = ...
 
 local LibStub = _G.LibStub
-
 local addon	= LibStub("AceAddon-3.0"):GetAddon(private.addon_name)
 local L		= LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
 
-private.reputation_list	= {}
-
 function addon:InitReputation()
 	local function AddReputation(rep_id, name)
-		private:AddListEntry(private.reputation_list, rep_id, GetFactionInfoByID(rep_id))
+		private.AcquireTypes.Reputation:AddEntity(rep_id, _G.GetFactionInfoByID(rep_id))
 	end
+
 	AddReputation(59)
 	AddReputation(270)
 	AddReputation(529)

@@ -3,6 +3,6 @@
 	<Script file="AucSimple.lua"/>
 	<Script file="SimpFrame.lua"/>
 	<Script>
-		AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-SimpleAuction/Embed.xml $", "$Rev: 4546 $")
+		AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-SimpleAuction/Embed.xml $", "$Rev: 4546 $")
 	</Script>
 </Ui>

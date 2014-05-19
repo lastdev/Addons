@@ -12,9 +12,8 @@ local addon = _G[addonName]
 
 local THIS_ACCOUNT = "Default"
 -- local commPrefix = "DS_Craft"
-local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+
 local L = LibStub("AceLocale-3.0"):GetLocale("DataStore_Crafts")
-local PT = LibStub("LibPeriodicTable-3.1")
 
 local MSG_SEND_LOGIN								= 1	-- Sends a login message, to request crafts to other players
 local MSG_LOGIN_REPLY							= 2	-- ..reply
@@ -708,55 +707,6 @@ local function _ClearExpiredCooldowns(profession)
 	end
 end
 
-local function _GetCraftInfo(spellID)
-	-- get the id of the item that can be crafted by this spellID
-	local itemID = PT:ItemInSet("-"..spellID, "Tradeskill.RecipeLinks")
-	local reagents
-	
-	if itemID then
-		itemID = tonumber(itemID)
-
-		-- ex: itemID 10046 is made with reagents : "2996x2;2318x1;2320x1"
-		reagents = PT:ItemInSet(itemID, "TradeskillResultMats.Forward")
-
-		if itemID == -spellID then		-- enchants that do not yield  an item will return this, ex: enchant 7420 will return itemID -7420
-			itemID = nil
-		end
-	end
-	
-	return itemID, reagents
-end
-
-local function _GetCraftLevels(spellID)
-	-- get the id of the item that can be crafted by this spellID
-	local itemID = PT:ItemInSet("-"..spellID, "Tradeskill.RecipeLinks")
-	
-	if itemID then
-		itemID = tonumber(itemID)
-
-		-- ex: itemID 10046 : levels = "20/50/67/85", the item turns yellow at 50, green at 67, grey at 85
-		local levels = PT:ItemInSet(itemID, "TradeskillLevels")
-
-		if levels then
-			local orange, yellow, green, grey = strsplit("/", levels)
-			return tonumber(orange), tonumber(yellow), tonumber(green), tonumber(grey)
-		end
-	end
-end
-
-local function _GetItemTradeSkillLevel(itemID, profession)
-	-- variant: use item level for more accurate results
-	
-	-- profession should look like : "TradeskillLevels.Cooking",
-	-- refer to LibPeriodicTable-3.1-TradeskillLevels.lua
-	local PT = LibStub("LibPeriodicTable-3.1")
-	
-	local levels = PT:ItemInSet(itemID, profession)
-	if not levels then return end
-	
-	return strsplit("/", levels)
-end
-
 local function _GetNumRecipesByColor(profession)
 	-- counts the number of orange, yellow, green and grey recipes.
 	local counts = { [0] = 0, [1] = 0, [2] = 0, [3] = 0 }
@@ -874,8 +824,6 @@ local PublicMethods = {
 	GetCraftCooldownInfo = _GetCraftCooldownInfo,
 	GetNumActiveCooldowns = _GetNumActiveCooldowns,
 	ClearExpiredCooldowns = _ClearExpiredCooldowns,
-	GetCraftInfo = _GetCraftInfo,
-	GetCraftLevels = _GetCraftLevels,
 	GetNumRecipesByColor = _GetNumRecipesByColor,
 	IsCraftKnown = _IsCraftKnown,
 	GetGuildCrafters = _GetGuildCrafters,
@@ -887,7 +835,6 @@ local PublicMethods = {
 	GetCookingRank = _GetCookingRank,
 	GetFishingRank = _GetFishingRank,
 	GetArchaeologyRank = _GetArchaeologyRank,
-	GetItemTradeSkillLevel = _GetItemTradeSkillLevel,
 	GetArchaeologyRaceArtifacts = _GetArchaeologyRaceArtifacts,
 	GetRaceNumArtifacts = _GetRaceNumArtifacts,
 	GetArtifactInfo = _GetArtifactInfo,
@@ -970,24 +917,6 @@ function addon:OnDisable()
 	addon:UnregisterEvent("CHAT_MSG_SKILL")
 	addon:UnregisterEvent("CHAT_MSG_SYSTEM")
 end
-
-function addon:GetSource(searchedID)
-	local PT = LibStub("LibPeriodicTable-3.1")
-	
-	-- Returns "Profession, level"		ex: "Alchemy", "180"
-	local level, data = PT:ItemInSet(searchedID, "Tradeskill.Crafted")
-	if level and data then
-		local _, _, profession = strsplit(".", data)		-- ex: "Tradeskill.Crafted.Inscription"
-		local localizedProfession
-		if ProfessionSpellID[profession] then
-			localizedProfession = GetSpellInfo(ProfessionSpellID[profession])
-		end
-			
-		return localizedProfession or profession, level
-	end
-end
-
-
 
 function addon:IsTradeSkillWindowOpen()
 	-- note : maybe there's a function in the WoW API to test this, but I did not find it :(

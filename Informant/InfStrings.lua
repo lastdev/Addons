@@ -5,7 +5,7 @@
 
 	AddOn: Informant
 	Revision: $Id: InfStrings.lua 5409 2013-05-24 15:54:42Z localizerautocommit $
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 
 	License:
 		This program is free software; you can redistribute it and/or

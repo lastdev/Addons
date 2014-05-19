@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod("Emalon", "DBM-VoA")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 51 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 144 $"):sub(12, -3))
 mod:SetCreatureID(33993)
+mod:SetEncounterID(1127)
 mod:SetModelID(27108)
 mod:SetUsedIcons(8)
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_HEAL",
 	"UNIT_TARGET_UNFILTERED",
@@ -28,9 +29,10 @@ local timerMobOvercharge	= mod:NewTimer(20, "timerMobOvercharge", 64217)
 
 local timerEmalonEnrage		= mod:NewTimer(360, "EmalonEnrage", 26662)
 
-local soundNova				= mod:NewSound(65279, nil, mod:IsMelee())
+local soundNova				= mod:NewSound(65279, mod:IsMelee())
 
 mod:AddBoolOption("RangeFrame")
+mod:AddSetIconOption("SetIconOnOvercharge", 64218, false, true)
 
 local overchargedMob
 function mod:OnCombatStart(delay)
@@ -88,7 +90,9 @@ function mod:SPELL_HEAL(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 64218 then
 		warnOverCharge:Show()
 		timerOvercharge:Start()
-		self:TrySetTarget(destGUID)
+		if self.Options.SetIconOnOvercharge then
+			self:TrySetTarget(destGUID)
+		end
 	end
 end
 

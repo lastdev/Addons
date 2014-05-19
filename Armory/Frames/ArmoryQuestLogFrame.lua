@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 557 2012-11-11T23:10:00Z
+    Revision: 625 2014-04-07T09:27:58Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -186,18 +186,8 @@ function ArmoryQuestLog_Update()
             end
             -- Save if its a header or not
             questLogTitle.isHeader = isHeader;
-
-            if ( isComplete and isComplete < 0 ) then
-                questTag = FAILED;
-            elseif ( isComplete and isComplete > 0 ) then
-                questTag = COMPLETE;
-            elseif ( isDaily ) then
-                if ( questTag ) then
-                    questTag = format(DAILY_QUEST_TAG_TEMPLATE, questTag);
-                else
-                    questTag = DAILY;
-                end
-            end
+            
+            questTag = ArmoryQuestLog_GetQuestTag(questTag, isComplete, isDaily);
             if ( questTag ) then
                 questTitleTag:SetText("("..questTag..")");
                 -- Shrink text to accomdate quest tags without wrapping
@@ -257,6 +247,21 @@ function ArmoryQuestLog_Update()
         ArmoryQuestLogCollapseAllButton.collapsed = 1;
         ArmoryQuestLogCollapseAllButton:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
     end
+end
+
+function ArmoryQuestLog_GetQuestTag(questTag, isComplete, isDaily)
+	if ( isComplete and isComplete < 0 ) then
+        questTag = FAILED;
+    elseif ( isComplete and isComplete > 0 ) then
+        questTag = COMPLETE;
+    elseif ( isDaily ) then
+        if ( questTag ) then
+            questTag = format(DAILY_QUEST_TAG_TEMPLATE, questTag);
+        else
+            questTag = DAILY;
+        end
+    end
+    return questTag;
 end
 
 function ArmoryQuestLog_SetSelection(questID)

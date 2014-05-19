@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(190, "DBM-Party-Cataclysm", 10, 77)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
 mod:SetCreatureID(24239)
 mod:SetZone()
 
@@ -104,7 +104,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	end
 end
 
-function mod:SPELL_PERIODIC_DAMAGE(sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId)
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 43429 and destGUID == UnitGUID("player") and self:AntiSpam(3) then		--Paladin (Consecration)
 		specWarnConsecration:Show()
 	elseif spellId == 43440 and destGUID == UnitGUID("player") and self:AntiSpam(3) then	--Warlock(Rain of Fire)

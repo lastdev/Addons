@@ -1,7 +1,7 @@
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "Events", 12) then
+if u.SkipOrUpgrade(c, "Events", 16) then
 	return
 end
 
@@ -10,6 +10,7 @@ local s = SpellFlashAddon
 local GetActionInfo = GetActionInfo
 local GetMacroSpell = GetMacroSpell
 local GetNetStats = GetNetStats
+local GetSpellInfo = GetSpellInfo
 local GetTime = GetTime
 local UnitGUID = UnitGUID
 local UnitIsUnit = UnitIsUnit
@@ -33,7 +34,9 @@ local currentSpells = { }
 	TargetID = "GUID", -- in rare cases, could be nil
 	ID = spellID, -- nil until CAST
 	Status = "Queued/Casting/Channeling/Interrupted",
-	Cost = Mana/Focus/etc cost, -- nil until CAST
+	Cost = {  -- nil until CAST
+		[POWER_TYPE] = number,
+	}
 	GCDStart = GetTime(),
 	CastStart = GetTime(),
 --]]
@@ -575,6 +578,7 @@ local function handleLogEvent(...)
 		if spellID ~= lastAuraApplied or now ~= lastAuraAppliedAt then
 			startTravelTime(spellID, target)
 		end
+		fireEvent("CastSucceeded_FromLog", spellID, target, targetID)
 	elseif event == "SPELL_DAMAGE" or event == "SPELL_PERIODIC_DAMAGE" then
 		if event == "SPELL_DAMAGE" then
 			endTravelTime(spellID, target, true)
@@ -679,6 +683,13 @@ local function updateLastGCD(localizedName)
 	end
 end
 
+local function setCost(info)
+	local _, _, _, cost, _, type = GetSpellInfo(info.Name)
+	if type and not info.Cost[type] then
+		info.Cost[type] = cost
+	end
+end
+
 frame:SetScript("OnEvent", 
 	function(self, event, ...)
 		if event == "ADDON_LOADED" then
@@ -724,6 +735,7 @@ frame:SetScript("OnEvent",
 				Status = "Queued",
 				GCDStart = gcdStart,
 				CastStart = math.max(gcdStart, GetTime() + 2 * lag),
+				Cost = { },
 			}
 			if target then
 				if target == UnitName("target") then
@@ -736,7 +748,7 @@ frame:SetScript("OnEvent",
 			end
 			currentSpells[lineID] = info
 			fireEvent("CastQueued", info)
-c.Debug("Cast Event", GetTime(), event, localizedName, lineID)
+--c.Debug("Cast Event", GetTime(), event, localizedName, lineID)
 			printCurrentSpells()
 			return
 		end
@@ -757,10 +769,10 @@ c.Debug("Cast Event", GetTime(), event, localizedName, lineID)
 		lastInfo = info
 		info.ID = spellID
 		
-c.Debug("Cast Event", GetTime(), event, localizedName, spellID, lineID)
+--c.Debug("Cast Event", GetTime(), event, localizedName, spellID, lineID)
 		if event == "UNIT_SPELLCAST_START" then
 			info.Status = "Casting"
-			info.Cost = s.SpellCost(info.Name)
+			setCost(info)
 			updateLastGCD(localizedName)
 			fireEvent("CastStarted", info)
 			
@@ -782,7 +794,7 @@ c.Debug("Cast Event", GetTime(), event, localizedName, spellID, lineID)
 						end
 					end
 					info.Status = "Channeling"
-					info.Cost = s.SpellCost(info.Name)
+					setCost(info)
 					fireEvent("CastStarted", info)
 				else
 					updateLastGCD(localizedName)
@@ -797,6 +809,8 @@ c.Debug("Cast Event", GetTime(), event, localizedName, spellID, lineID)
 			if info.Status == "Casting" then
 				fireEvent(
 					"CastFailed", info, event == "UNIT_SPELLCAST_FAILED_QUIET")
+			else
+				fireEvent("UncastSpellFailed", info)
 			end
 			currentSpells[lineID] = nil
 			

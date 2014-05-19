@@ -1,29 +1,40 @@
 local mod	= DBM:NewMod("GunshipBattle", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 86 $"):sub(12, -3))
-local AddsIcon
+mod:SetRevision(("$Revision: 131 $"):sub(12, -3))
+local addsIcon
+local bossID
+--mod:SetEncounterID(1099)--No ES fires this combat
+mod:RegisterCombat("combat")
+mod:SetCreatureID(37215, 37540) -- Orgrim's Hammer, The Skybreaker
+mod:SetMinSyncRevision(119)
 if UnitFactionGroup("player") == "Alliance" then
-	mod:RegisterCombat("yell", L.PullAlliance)
-	mod:RegisterKill("yell", L.KillAlliance)
-	mod:SetCreatureID(37215)	-- Orgrim's Hammer
+	mod:SetMainBossID(37215)
 	mod:SetModelID(30416)		-- High Overlord Saurfang
-	AddsIcon = 23334
+	addsIcon = 23334
+	bossID = 36939
 else
-	mod:RegisterCombat("yell", L.PullHorde)
-	mod:RegisterKill("yell", L.KillHorde)
-	mod:SetCreatureID(37540)	-- The Skybreaker
+	mod:SetMainBossID(37540)
 	mod:SetModelID(30508)		-- Muradin Bronzebeard
-	AddsIcon = 23336
+	addsIcon = 23336
+	bossID = 36948
 end
-mod:SetMinCombatTime(50)
 
 mod:RegisterEventsInCombat(
-	"CHAT_MSG_MONSTER_YELL",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START"
+	"SPELL_CAST_START",
+	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2"
+)
+
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_YELL"
+)
+
+mod:SetBossHealthInfo(
+	37215, L.Hammer,
+	37540, L.Skybreaker
 )
 
 --TODO, see if IEEU fires here and if we need yell triggers for engage
@@ -31,15 +42,15 @@ local warnBelowZero			= mod:NewSpellAnnounce(69705, 4)
 local warnExperienced		= mod:NewTargetAnnounce(71188, 1, nil, false)		-- might be spammy
 local warnVeteran			= mod:NewTargetAnnounce(71193, 2, nil, false)		-- might be spammy
 local warnElite				= mod:NewTargetAnnounce(71195, 3, nil, false)		-- might be spammy
-local warnBattleFury		= mod:NewStackAnnounce(69638, 2, nil, mod:IsTank())
+local warnBattleFury		= mod:NewStackAnnounce("OptionVersion2", 69638, 2, nil, mod:IsTank() or mod:IsHealer())
 local warnBladestorm		= mod:NewSpellAnnounce(69652, 3, nil, mod:IsMelee())
 local warnWoundingStrike	= mod:NewTargetAnnounce(69651, 2)
-local warnAddsSoon			= mod:NewAnnounce("WarnAddsSoon", 2, AddsIcon)
+local warnAddsSoon			= mod:NewAnnounce("WarnAddsSoon", 2, addsIcon)
 
-local timerCombatStart		= mod:NewTimer(45, "TimerCombatStart", 2457)
-local timerBelowZeroCD		= mod:NewNextTimer(37.5, 69705)
-local timerBattleFuryActive	= mod:NewBuffActiveTimer(17, 69638, nil, mod:IsTank() or mod:IsHealer())
-local timerAdds				= mod:NewTimer(60, "TimerAdds", AddsIcon)
+local timerCombatStart		= mod:NewCombatTimer(45)
+local timerBelowZeroCD		= mod:NewNextTimer(33.5, 69705)
+local timerBattleFuryActive	= mod:NewBuffFadesTimer(17, 69638, nil, mod:IsTank() or mod:IsHealer())
+local timerAdds				= mod:NewTimer(60, "TimerAdds", addsIcon)
 
 mod:RemoveOption("HealthFrame")
 
@@ -54,10 +65,9 @@ function mod:Adds()
 end
 
 function mod:OnCombatStart(delay)
-	timerCombatStart:Show(-delay)
-	timerAdds:Start(60-delay)--First adds might come early or late so timer should be taken as a proximity only.
-	warnAddsSoon:Schedule(55)
-	self:ScheduleMethod(60, "Adds")
+	timerAdds:Start(15-delay)--First adds might come early or late so timer should be taken as a proximity only.
+	warnAddsSoon:Schedule(10)
+	self:ScheduleMethod(15, "Adds")
 	firstMage = false
 end
 
@@ -69,17 +79,17 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args.spellId == 71188 then
 		warnExperienced:Show(args.destName)
 	elseif args.spellId == 69652 then
-		warnBladestorm:Show()			
+		warnBladestorm:Show()
 	elseif args.spellId == 69651 then
 		warnWoundingStrike:Show(args.destName)
-	elseif args.spellId == 69638 and ((UnitFactionGroup("player") == "Alliance" and self:GetCIDFromGUID(args.destGUID) == 36939) or (UnitFactionGroup("player") == "Horde" and self:GetCIDFromGUID(args.destGUID) == 37200)) then
+	elseif args.spellId == 69638 and self:GetCIDFromGUID(args.destGUID) == bossID then
 		timerBattleFuryActive:Start()		-- only a timer for 1st stack
 	end
 end
 
 function mod:SPELL_AURA_APPLIED_DOSE(args)
-	if args.spellId == 69638 and ((UnitFactionGroup("player") == "Alliance" and self:GetCIDFromGUID(args.destGUID) == 36939) or (UnitFactionGroup("player") == "Horde" and self:GetCIDFromGUID(args.destGUID) == 37200)) then
-		if args.amount % 10 == 0 or (args.amount >= 20 and args.amount % 5 == 0) then		-- warn every 10th stack and every 5th stack if more than 20
+	if args.spellId == 69638 and self:GetCIDFromGUID(args.destGUID) == bossID then
+		if args.amount % 5 == 0 then		-- warn every 5 stacks
 			warnBattleFury:Show(args.destName, args.amount or 1)
 		end
 		timerBattleFuryActive:Start()
@@ -98,15 +108,23 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
+function mod:UNIT_SPELLCAST_SUCCEEDED(uId, spellName)
+	if spellName == GetSpellInfo(72340) then
+		DBM:EndCombat(self)
+	end
+end
+
 function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if ((msg == L.AddsAlliance or msg:find(L.AddsAlliance)) or (msg == L.AddsHorde or msg:find(L.AddsHorde))) and self:IsInCombat() then
+	if msg:find(L.PullAlliance) or msg:find(L.PullHorde) then
+		timerCombatStart:Start()
+	elseif (msg:find(L.AddsAlliance) or msg:find(L.AddsHorde)) and self:IsInCombat() then
 		self:Adds()
-	elseif ((msg == L.MageAlliance or msg:find(L.MageAlliance)) or (msg == L.MageHorde or msg:find(L.MageHorde))) and self:IsInCombat() then
+	elseif (msg:find(L.MageAlliance) or msg:find(L.MageHorde)) and self:IsInCombat() then
 		if not firstMage then
-			timerBelowZeroCD:Start(6.5)
+			timerBelowZeroCD:Start(3.2)
 			firstMage = true
 		else
-			timerBelowZeroCD:Update(29, 35)--Update the below zero timer to correct it with yells since it tends to be off depending on how bad your cannon operators are.
+			timerBelowZeroCD:Update(30.3, 33.5)--Update the below zero timer to correct it with yells since it tends to be off depending on how bad your cannon operators are.
 		end
 	end
 end

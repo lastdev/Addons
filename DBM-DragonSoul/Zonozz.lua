@@ -1,19 +1,21 @@
 local mod	= DBM:NewMod(324, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 108 $"):sub(12, -3))
 mod:SetCreatureID(55308)
-mod:SetModelSound("sound\\CREATURE\\WarlordZonozz\\VO_DS_ZONOZZ_INTRO_01.OGG", "sound\\CREATURE\\WarlordZonozz\\VO_DS_ZONOZZ_SPELL_05.OGG")
+mod:SetEncounterID(1294)
+--mod:DisableRegenDetection()--Uncomment in next dbm release
 mod:SetZone()
 mod:SetUsedIcons()
+mod:SetModelSound("sound\\CREATURE\\WarlordZonozz\\VO_DS_ZONOZZ_INTRO_01.OGG", "sound\\CREATURE\\WarlordZonozz\\VO_DS_ZONOZZ_SPELL_05.OGG")
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED",
+	"SPELL_CAST_SUCCESS 104322",
+	"SPELL_AURA_APPLIED 104377 104378 104543 106836 103434",
+	"SPELL_AURA_APPLIED_DOSE 104543 106836",
+	"SPELL_AURA_REMOVED 103434",
 	"UNIT_SPELLCAST_SUCCEEDED boss1",
 	"CHAT_MSG_MONSTER_YELL"
 )
@@ -96,7 +98,8 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 104322 then
+	local spellId = args.spellId
+	if spellId == 104322 then
 		warnPsychicDrain:Show()
 		specWarnPsychicDrain:Show()
 		timerPsychicDrainCD:Start()
@@ -104,6 +107,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end	
 
 function mod:SPELL_AURA_APPLIED(args)
+	local spellId = args.spellId
 	if args:IsSpellID(104377, 104378) and not phase2Started then--Might not need both, but leave just in case, removed the 2 non existant ones though.
 		phase2Started = true
 		timerFocusedAngerCD:Cancel()
@@ -121,13 +125,13 @@ function mod:SPELL_AURA_APPLIED(args)
 				timerVoidofUnmakingCD:Update(54.3, 90.3)
 			end
 		end
-	elseif args.spellId == 104543 then
+	elseif spellId == 104543 then
 		warnFocusedAnger:Show(args.destName, args.amount or 1)
 		timerFocusedAngerCD:Start()
-	elseif args.spellId == 106836 then--Do NOT add 103527 to this, that's a seperate spellid for when BOSS is affected by diffusion, this warning is counting the ball stacks.
+	elseif spellId == 106836 then--Do NOT add 103527 to this, that's a seperate spellid for when BOSS is affected by diffusion, this warning is counting the ball stacks.
 		warnVoidDiffusion:Show(args.destName, args.amount or 1)
 		timerVoidDiffusionCD:Start()
-	elseif args.spellId == 103434 then
+	elseif spellId == 103434 then
 		shadowsTargets[#shadowsTargets + 1] = args.destName
 		if args:IsPlayer() and self:IsDifficulty("heroic10", "heroic25") then
 			specWarnShadows:Show()
@@ -145,7 +149,8 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 103434 and args:IsPlayer() and self:IsDifficulty("heroic10", "heroic25") then
+	local spellId = args.spellId
+	if spellId == 103434 and args:IsPlayer() and self:IsDifficulty("heroic10", "heroic25") then
 		self:updateRangeFrame()
 	end
 end

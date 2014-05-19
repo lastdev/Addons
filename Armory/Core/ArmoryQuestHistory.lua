@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 569 2012-12-04T23:32:59Z
+    Revision: 627 2014-04-08T08:27:25Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -45,11 +45,13 @@ local historyLines = {};
 local questLines = {};
 local dirty = true;
 local owner = "";
+local numQuests = 0;
 
 local function GetQuestLines()
     local dbEntry = Armory.selectedDbBaseEntry;
 
     table.wipe(questLines);
+    numQuests = 0;
 
     if ( dbEntry and dbEntry:Contains(container) ) then
         local questLogFilter = Armory:GetQuestLogFilter();
@@ -61,7 +63,7 @@ local function GetQuestLines()
         table.wipe(groups);        
         table.wipe(historyLines);
 
-        local header, timestamp, isWeekly, tag;
+        local header, timestamp, isWeekly, tag, isTrivial;
         local _, month, day, year = CalendarGetDate();
         local today = Armory:GetLocalTimeAsServerTime(Armory:MakeDate(day, month, year));
         local weekday, hour, minute;
@@ -93,7 +95,13 @@ local function GetQuestLines()
                     historyLines[key] = {};
                     table.insert(groups, key);
                 end
-                table.insert(historyLines[key], {title=title, header=header, tag=tag, trivial=(not isWeekly and days > 0), time=timestamp});
+                if ( isWeekly ) then
+					isTrivial = time() > Armory:GetWeeklyQuestResetTime();
+				else
+					isTrivial = days > 0;
+				end
+                table.insert(historyLines[key], {title=title, header=header, tag=tag, trivial=isTrivial, time=timestamp});
+                numQuests = numQuests + 1;
             end
         end
         
@@ -153,7 +161,6 @@ end
 ----------------------------------------------------------
 
 local randomBG;
-local worldBoss;
 local bosses = {};
 
 local function SaveHistoryEntry(title, header, isWeekly)
@@ -172,21 +179,6 @@ function Armory:SetRandomBattleground()
             break;
         end
     end
-end
-
-function Armory:SetWorldBossBySpell(spellId)
-    local bonus = GetSpellInfo(spellId);
-    local name = bonus and bonus:match(ARMORY_BONUS_PATTERN);
-    worldBoss = nil;
-    if ( name ) then
-        if ( bosses[name] == nil ) then
-            bosses[name] = not IsInInstance();
-        end
-        if ( bosses[name] ) then
-            worldBoss = name;
-        end
-    end
-    return worldBoss;
 end
 
 function Armory:ClearQuestHistory()
@@ -257,11 +249,6 @@ function Armory:UpdateQuestHistory(historyType)
                     end
                 end
             end
-        
-        elseif ( historyType == "worldboss" ) then
-            if ( worldBoss ) then
-                SaveHistoryEntry(worldBoss, BOSS);
-            end
 
         end
         
@@ -288,7 +275,7 @@ function Armory:GetNumQuestHistoryEntries()
     if ( dirty or not self:IsSelectedCharacter(owner) ) then
         GetQuestLines();
     end
-    return #questLines;
+    return #questLines, numQuests;
 end
 
 function Armory:GetQuestHistoryTitle(index)

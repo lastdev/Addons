@@ -1,0 +1,40 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+
+    <Frame name="MwTargetFrame" frameStrata="BACKGROUND" parent="MistWeaverFrame" movable="true" hidden="true">
+        <Size>
+            <AbsDimension x="60" y="20"/>
+        </Size>
+        <Anchors>
+            <Anchor point="TOPRIGHT" relativeTo="MistWeaverFrame" relativePoint="TOPLEFT">
+                <Offset>
+                    <AbsDimension x="-90" y="0"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parentTitle" parentKey="title" inherits="GameFontNormalSmall" justifyH="CENTER" text="TARGET">
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad>
+                MistWeaver_TargetFrameOnLoad(self);
+            </OnLoad>
+            <OnEvent>
+                MistWeaver_TargetFrameOnEvent(self, event, ...);
+            </OnEvent>
+            <OnMouseDown function="MistWeaver_TargetFrameOnMouseDown"/>
+            <OnMouseUp function="MistWeaver_TargetFrameOnMouseUp"/>
+        </Scripts>
+    </Frame>
+
+</Ui>

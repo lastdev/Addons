@@ -106,6 +106,7 @@ function NugComboBar:LoadClassSettings()
                     local haveTotem, name, startTime, duration, icon = GetTotemInfo(i)
                     if icon == mushrooms_icon then mushrooms = mushrooms + 1 end
                 end
+                if GetSpecialization() == 4 and mushrooms == 1 then mushrooms = 3 end
                 return mushrooms
             end
             local shrooms = function()
@@ -251,13 +252,13 @@ function NugComboBar:LoadClassSettings()
                 return (count and count - 1 or 0)
             end
 
-            local show_searing_flames = false
+            local show_searing_flames = true
             local searing_totem_buff = GetSpellInfo(77661)
             local maelstrom_weapon_buff = GetSpellInfo(53817)
             local function mael_searing(unit)
                 local _,_,_, count1 = UnitAura("player", maelstrom_weapon_buff, nil, "HELPFUL")
                 local _,_,_, count2 = UnitAura("player", searing_totem_buff, nil, "HELPFUL")
-                return count1 or 0, count2 or 0
+                return count1 or 0, count2 or 0, nil, nil --,count2 or 0 -- for second line
             end
 
             self:RegisterEvent("SPELLS_CHANGED")
@@ -273,11 +274,13 @@ function NugComboBar:LoadClassSettings()
                     scanAura = GetSpellInfo(51564) -- Tidal Waves
                     GetComboPoints = GetAuraStack
                 else
-                    self:SetMaxPoints(5)
                     if show_searing_flames then
+                        -- self:SetMaxPoints(5, "SHAMANDOUBLE", 5 ) -- second line
+                        self:SetMaxPoints(5)
                         self:EnableBar(0, 5,"Long")
                         GetComboPoints = mael_searing
                     else
+                        self:SetMaxPoints(5)
                         scanAura = GetSpellInfo(53817) -- Maelstrom Weapon
                         GetComboPoints = GetAuraStack
                     end
@@ -318,12 +321,10 @@ function NugComboBar:LoadClassSettings()
                     self.bar:SetColor(unpack(NugComboBarDB.colors.bar1))
                 end
             end
-            self:RegisterEvent("GLYPH_UPDATED")
-            self:RegisterEvent("GLYPH_ADDED")
-            self:RegisterEvent("GLYPH_REMOVED")
-            self:RegisterEvent("SPELLS_CHANGED")
-            self:RegisterEvent("UNIT_POWER")
-            self:SetMaxPoints(3); GetComboPoints = GetShards
+    
+            self:SetMaxPoints(3)
+            GetComboPoints = GetShards
+
             self.SPELLS_CHANGED = function(self, event)
                 showEmpty = true
                 self:UnregisterEvent("UNIT_AURA")
@@ -365,7 +366,14 @@ function NugComboBar:LoadClassSettings()
             self.GLYPH_UPDATED = self.SPELLS_CHANGED
             self.GLYPH_ADDED = self.GLYPH_UPDATED
             self.GLYPH_REMOVED = self.GLYPH_UPDATED
+            
             self:SPELLS_CHANGED()
+
+            self:RegisterEvent("GLYPH_UPDATED")
+            self:RegisterEvent("GLYPH_ADDED")
+            self:RegisterEvent("GLYPH_REMOVED")
+            self:RegisterEvent("SPELLS_CHANGED")
+            self:RegisterEvent("UNIT_POWER")
         elseif class == "WARRIOR" then
             local tfbAuraName = GetSpellInfo(60503)
             local GetTasteForBlood = function(unit)
@@ -543,6 +551,10 @@ local defaults = {
         [4] = {0.77,0.26,0.29},
         [5] = {0.77,0.26,0.29},
         [6] = {0.77,0.26,0.29},
+        [7] = {0.77,0.26,0.29},
+        [8] = {0.77,0.26,0.29},
+        [9] = {0.77,0.26,0.29},
+        [10] = {0.77,0.26,0.29},
         ["bar1"] = { 0.9,0.1,0.1 },
         ["bar2"] = { .9,0.1,0.4 },
         ["layer2"] = { 0.80, 0.23, 0.79 },
@@ -550,6 +562,7 @@ local defaults = {
     enable3d = true,
     preset3d = "glowPurple",
     preset3dlayer2 = "fireOrange",
+    preset3dpointbar2 = "fireOrange",
     secondLayer = true,
     colors3d = true,
     showAlways = false,
@@ -558,6 +571,7 @@ local defaults = {
     adjustX = 2.05,
     adjustY = 2.1,
     hideWithoutTarget = false,
+    vertical = false,
 }
 NugComboBar.defaults = defaults
 
@@ -673,10 +687,49 @@ function NugComboBar.PLAYER_LOGOUT(self, event)
     RemoveDefaults(NugComboBarDB, defaults)
 end
 
+local trim = function(v)
+    return math.floor(v*1000)/1000
+end
+
+local ResolutionOffsets = {
+    [trim(48/9)] = { 0.77, 0.75 },
+    [trim(16/10)] = { 2.25, 2.25 },
+    [trim(16/9)] = { 2.05, 2.1 },
+    [trim(4/3)] = { 2.5, 2.5 },
+}
+
+function NugComboBar:CheckResolution()
+    local maximized = GetCVar("gxMaximize") == "1"
+    -- GetCVar("gxWindow")
+    local aspectratio
+    if maximized then
+        aspectratio = trim(GetMonitorAspectRatio())
+    else
+        local res = GetCVar("gxResolution")
+        local w,h = string.match(res, "(%d+)x(%d+)")
+        aspectratio = trim(w/h)
+    end
+    
+    local offsets = ResolutionOffsets[aspectratio]
+    if not offsets then
+        print("NCB: Unknown game resolution, adjust offsets manually")
+    else
+        NugComboBarDB_Global.adjustX, NugComboBarDB_Global.adjustY = unpack(offsets)
+        self._disableOffsetSettings = true
+    end
+end
+
 do
     local initial = true
     function NugComboBar.PLAYER_LOGIN(self, event)
-        if initial then self:Create() end
+        if initial then
+            self:CheckResolution()
+        end
+        -- backward compatibility to old skins, for default there should be just :Create
+        if not IsAddOnLoaded("NugComboBarMakina") and not  IsAddOnLoaded("NugComboBarStriped") then
+            self:Create()
+        else if initial then self:Create() end
+        end
 
         if NugComboBarDB.disableProgress then
             NugComboBar.EnableBar_ = NugComboBar.EnableBar
@@ -827,7 +880,7 @@ function NugComboBar.UNIT_COMBO_POINTS(self, event, unit, ptype, forced)
 
     if onlyCombat and not UnitAffectingCombat("player") then return self:Hide() else self:Show() end -- usually frame is set to 0 alpha
     -- local arg1, arg2
-    local comboPoints, arg1, arg2, secondLayerPoints = GetComboPoints(unit);
+    local comboPoints, arg1, arg2, secondLayerPoints, secondBarPoints = GetComboPoints(unit);
     local progress = not arg2 and arg1 or nil
     if self.bar and self.bar.enabled then
         if arg1 then
@@ -875,6 +928,19 @@ function NugComboBar.UNIT_COMBO_POINTS(self, event, unit, ptype, forced)
                 end
             end
         end
+    end
+
+    --second bar
+    if self.MAX_POINTS2 then
+    for i = 1, self.MAX_POINTS2 do
+        local point = self.p[i+self.MAX_POINTS]
+        if i <= secondBarPoints then
+            point:Activate()
+        end
+        if i > secondBarPoints then
+            point:Deactivate()
+        end
+    end
     end
 
     -- print("progress", progress)
@@ -1001,6 +1067,11 @@ function NugComboBar.ShowColorPicker(self,color)
             for i=1,#self.point do
                 NugComboBar.SetColor(i,r,g,b)
             end
+        elseif color == -1 then
+            for i=1, self.MAX_POINTS2 do
+                local index = i+self.MAX_POINTS
+                NugComboBar.SetColor(index,r,g,b)
+            end
         else
             NugComboBar.SetColor(color,r,g,b)
         end
@@ -1009,9 +1080,19 @@ function NugComboBar.ShowColorPicker(self,color)
     ColorPickerFrame:Show()
 end
 
-function NugComboBar.Set3DPreset(self, preset)
-    for _, point in pairs(self.point) do
-        point:SetPreset(preset)
+function NugComboBar.Set3DPreset(self, preset, preset2)
+    local e1 = preset or NugComboBarDB.preset3d
+    local e2 = preset2 or NugComboBarDB.preset3dpointbar2
+    -- for _, point in pairs(self.point) do
+    for i = 1, self.MAX_POINTS do
+        local p = self.p[i]
+        p:SetPreset(e1)
+    end
+    if self.MAX_POINTS2 then
+    for i = 1, self.MAX_POINTS2 do
+        local p = self.p[self.MAX_POINTS+i]
+        p:SetPreset(e2)
+    end
     end
 end
 
@@ -1190,6 +1271,13 @@ NugComboBar.Commands = {
         end
         NugComboBarDB.preset3dlayer2 = v
     end,
+    ["preset3dpointbar2"] = function(v)
+        if not NugComboBar.presets[v] then
+            return print(string.format("Preset '%s' does not exist", v))
+        end
+        NugComboBarDB.preset3dpointbar2 = v
+        NugComboBar:Set3DPreset()
+    end,
     ["colors3d"] = function(v)
         NugComboBarDB.colors3d = not NugComboBarDB.colors3d
         for i=1,#NugComboBar.point do
@@ -1199,6 +1287,12 @@ NugComboBar.Commands = {
     ["gui"] = function(v)
         LoadAddOn('NugComboBarGUI')
         InterfaceOptionsFrame_OpenToCategory("NugComboBar")
+    end,
+    ["vertical"] = function(v)
+        NugComboBarDB.vertical = not NugComboBarDB.vertical 
+        NugComboBar:Create()
+        NugComboBar:PLAYER_LOGIN(nil)
+        NugComboBar:PLAYER_ENTERING_WORLD(nil)
     end,
     ["setpos"] = function(v)
         local p = ParseOpts(v)
@@ -1223,7 +1317,7 @@ function NugComboBar.SlashCmd(msg)
           |cff55ff55/ncb toggle3d|r
           |cff55ff55/ncb preset3d <preset>|r
           |cff55ff55/ncb scale|r <0.3 - 2.0>
-          |cff55ff55/ncb changecolor|r <1-6, 0 = all>
+          |cff55ff55/ncb changecolor|r <1-6, 0 = all, -1 = 2nd bar>
           |cff55ff55/ncb anchorpoint|r <left | right>
           |cff55ff55/ncb showempty|r
           |cff55ff55/ncb hideslowly|r

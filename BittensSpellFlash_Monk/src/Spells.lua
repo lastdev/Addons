@@ -8,10 +8,13 @@ local GetTime = GetTime
 local IsMounted = IsMounted
 local SPELL_POWER_CHI = SPELL_POWER_CHI
 local UnitGUID = UnitGUID
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
 local UnitInRange = UnitInRange
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitIsUnit = UnitIsUnit
 local UnitPowerMax = UnitPowerMax
+local UnitStagger = UnitStagger
 local math = math
 local select = select
 local string = string
@@ -85,7 +88,7 @@ setCost("Uplift", 0, 2)
 
 local function checkChiBrew(z, chiPad)
 	local charges, tilNext, tilMax = c.GetChargeInfo("Chi Brew")
-	if a.MissingChi < 2 + chiPad or charges == 0 then
+	if charges == 0 or a.MissingChi < 2 + chiPad then
 		return false
 	end
 	
@@ -250,9 +253,19 @@ addOptionalSpell("Guard", nil, {
 addOptionalSpell("Purifying Brew", nil, {
 	NoGCD = true,
 	CheckFirst = function()
-		if (c.HasBuff("Healing Elixirs") and s.HealthPercent("player") > 85)
-			or c.IsCasting("Purifying Brew") then
-			
+		if c.IsCasting("Purifying Brew") then
+			return false
+		end
+		
+		local heal = 0
+		local max = UnitHealthMax("player")
+		if c.HasBuff("Healing Elixirs") then
+			heal = heal + .15 * max
+		end
+		if c.WearingSet(4, "BrewmasterT16") then
+			heal = heal + .15 * UnitStagger("player")
+		end
+		if heal > 0 and UnitHealth("player") + heal > max then
 			return false
 		end
 		
@@ -268,6 +281,7 @@ addOptionalSpell("Chi Brew", "for Brewmaster", {
 		return checkChiBrew(z, 2) 
 			and a.Power + a.Regen <= UnitPowerMax("player")
 			and c.GetBuffStack("Elusive Brew Stacker", false, true) < 8
+			and (c.IsTanking() or c.InDamageMode())
 	end
 })
 
@@ -451,8 +465,7 @@ c.AddOptionalSpell("Mana Tea", nil, {
 
 addOptionalSpell("Chi Brew", "for Mistweaver", {
 	CheckFirst = function(z)
-		return checkChiBrew(z, 1) 
-			and c.GetBuffStack("Mana Tea") < 16
+		return checkChiBrew(z, 1) and c.GetBuffStack("Mana Tea") < 16
 	end
 })
 

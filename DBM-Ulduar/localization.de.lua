@@ -74,7 +74,7 @@ L:SetMiscLocalization{
 	YellAir				= "Gebt uns einen Moment, damit wir uns auf den Bau der Geschütze vorbereiten können.",
 	YellAir2			= "Feuer einstellen! Lasst uns diese Geschütze reparieren!",
 	YellGround			= "Beeilt Euch! Sie wird nicht lange am Boden bleiben!",
-	EmotePhase2			= "%%s ist dauerhaft an den Boden gebunden!"
+	EmotePhase2			= "ist dauerhaft an den Boden gebunden!"
 }
 
 ----------------------------
@@ -122,8 +122,7 @@ L:SetTimerLocalization{
 L:SetWarningLocalization{
 	WarningPhasePunch		= "Phasenschlag auf >%s< - %d Stapel",
 	WarnPhase2Soon			= "Phase 2 bald",
-	warnStarLow				= "Kollabierender Stern stirbt bald",
-	FirstPullNotice			= "Erster Pull, automatische Timerkorrekturen durchgeführt."
+	warnStarLow				= "Kollabierender Stern stirbt bald"
 }
 
 L:SetOptionLocalization{
@@ -214,6 +213,7 @@ L:SetGeneralLocalization{
 }
 
 L:SetMiscLocalization{
+	Pull		= "Für Euer Eindringen werdet Ihr bezahlen!",
 	YellKill	= "Ich... bin von ihm befreit... endlich."
 }
 

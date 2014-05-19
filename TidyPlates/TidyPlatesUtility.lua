@@ -306,32 +306,145 @@ local function CreateSliderFrame(self, reference, parent, label, val, minval, ma
 	return slider
 end
 
--- http://www.wowwiki.com/UI_Object_UIDropDownMenu
--- item.fontObject
+------------------------------------------------
+-- Alternative Dropdown Menu
+------------------------------------------------
+
+local DropDownMenuFrame = CreateFrame("Frame")
+local MaxDropdownItems = 20
+
+DropDownMenuFrame:SetSize(100, 100)
+DropDownMenuFrame:SetFrameStrata("TOOLTIP");
+DropDownMenuFrame:Hide()
+
+local Border = CreateFrame("Frame", nil, DropDownMenuFrame)
+Border:SetBackdrop(
+		{	bgFile = "Interface/DialogFrame/UI-DialogBox-Background-Dark",
+			--bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+            edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+            --edgeFile = "Interface/DialogFrame/UI-DialogBox-Border",
+            tile = true, tileSize = 16, edgeSize = 16,
+            insets = { left = 4, right = 4, top = 4, bottom = 4 }});
+Border:SetBackdropColor(0,0,0,1);
+Border:SetPoint("TOPLEFT", DropDownMenuFrame, "TOPLEFT")
+Border:SetPoint("TOPRIGHT", DropDownMenuFrame, "TOPRIGHT")
+
+
+for i = 1, MaxDropdownItems do
+	local button = CreateFrame("Button", "TidyPlateDropdownMenuButton"..i, DropDownMenuFrame)
+	DropDownMenuFrame["Button"..i] = button
+
+	button:SetHeight(15)
+	button:SetPoint("RIGHT", DropDownMenuFrame, "RIGHT")
+	button:SetText("Button")
+
+	button._ButtonIndex = i
+
+	if i > 1 then
+		button:SetPoint("TOPLEFT", DropDownMenuFrame["Button"..i-1], "BOTTOMLEFT")
+	else
+		-- Initial Corner Point
+		button:SetPoint("TOPLEFT", DropDownMenuFrame, "TOPLEFT", 10, -8)
+	end
+
+	local region = select(1, button:GetRegions())
+	region:SetJustifyH("LEFT")
+	region:SetPoint("LEFT", button, "LEFT")
+	region:SetPoint("RIGHT", button, "RIGHT")
+
+	--button:SetFrameStrata("DIALOG")
+	button:SetHighlightTexture("Interface/QuestFrame/UI-QuestTitleHighlight")
+	button:SetNormalFontObject("GameFontHighlightSmallLeft")
+	button:SetHighlightFontObject("GameFontNormalSmallLeft")
+	button:Show()
+end
+
+--[[
+local CloseDropdownButton = CreateFrame("Button", nil, DropDownMenuFrame, "UIPanelCloseButton")
+CloseDropdownButton:SetPoint("TOPLEFT", DropDownMenuFrame, "TOPRIGHT")
+CloseDropdownButton:Show()
+--]]
+
+local function HideDropdownMenu()
+	DropDownMenuFrame:Hide()
+end
+
+
+local function ShowDropdownMenu(sourceFrame, menu, script)
+	if DropDownMenuFrame:IsShown() and DropDownMenuFrame.SourceFrame == sourceFrame then
+		HideDropdownMenu()
+		return
+	end
+
+	DropDownMenuFrame.SourceFrame = sourceFrame
+
+	local numOfItems = 0
+	local maxWidth = 0
+	for i = 1, MaxDropdownItems do
+		local item = menu[i]
+
+		local button = DropDownMenuFrame["Button"..i]
+
+		if item then
+			button:SetText(item.text)
+			maxWidth = max(maxWidth, button:GetTextWidth())
+			numOfItems = numOfItems + 1
+			button:SetScript("OnClick", script)
+			button:Show()
+		else
+			button:Hide()
+		end
+
+	end
+
+	DropDownMenuFrame:SetWidth(maxWidth + 18)
+	Border:SetPoint("BOTTOM", DropDownMenuFrame["Button"..numOfItems], "BOTTOM", 0, -12)
+	DropDownMenuFrame:SetPoint("TOPLEFT", sourceFrame, "BOTTOM")
+	DropDownMenuFrame:Show()
+	DropDownMenuFrame:Raise()
+
+	-- Make sure the menu stays visible when displayed
+	local LowerBound = Border:GetBottom() or 0
+	if 0 > LowerBound then DropDownMenuFrame:SetPoint("TOPLEFT", sourceFrame, "BOTTOM", 0, LowerBound * -1) end
+end
+
+
+------------------------------------------------
+-- Creates the Dropdown Drawer object
+------------------------------------------------
 local function CreateDropdownFrame(helpertable, reference, parent, menu, default, label, byName)
-	local dropdown = CreateFrame("Frame", reference, parent, "UIDropDownMenuTemplate" )
+
+	--[[
+
+	Add:
+		- Description Text Field on Top, which displays tooltip Text
+		- Textures
+		- Close/Cancel Button
+
+
+	--]]
+
+	local drawer = CreateFrame("Frame", reference, parent, "TidyPlatesDropdownDrawerTemplate" )
 	local index, item
-	dropdown.Text = _G[reference.."Text"]
-	if byName then dropdown.Text:SetText(default) else dropdown.Text:SetText(menu[default].text) end
-	dropdown.Text:SetWidth(100)
-	dropdown:SetWidth(120)
+	drawer.Text = _G[reference.."Text"]
+	if byName then drawer.Text:SetText(default) else drawer.Text:SetText(menu[default].text) end
+	drawer.Text:SetWidth(100)
+	drawer:SetWidth(120)
 	--
 	if label then
-		dropdown.Label = dropdown:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
-		dropdown.Label:SetPoint("TOPLEFT", 18, 18)
-		dropdown.Label:SetText(label)
+		drawer.Label = drawer:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
+		drawer.Label:SetPoint("TOPLEFT", 18, 18)
+		drawer.Label:SetText(label)
 	end
 
 
-	dropdown.Value = default
+	drawer.Value = default
 
-	local function OnClickDropdownItem(self)
-		dropdown.Text:SetText(self:GetText())
-		dropdown.Value = self:GetID()
-		if dropdown.OnValueChanged then dropdown.OnValueChanged() end
-	end
-
+--[[
+	-- Old Dropdown Method
 	dropdown.initialize = function(self, level)		-- Replaces the default init function
+		--print("Dropdown Init", reference)
+		--print("Plog")
 		for index, item in pairs(menu) do
 			item.value = index
 			item.func = OnClickDropdownItem
@@ -340,19 +453,51 @@ local function CreateDropdownFrame(helpertable, reference, parent, menu, default
 		end
 	end
 
-	dropdown.SetValue = function (self, value)
-		if byName and value then dropdown.Text:SetText(value) else
-			dropdown.Text:SetText(menu[value].text); dropdown.Value = value
+--]]
+
+	drawer.SetValue = function (self, value)
+		if byName and value then drawer.Text:SetText(value) else
+			drawer.Text:SetText(menu[value].text); drawer.Value = value
 		end
 	end
 
-	dropdown.GetValue = function ()
-		if byName then return dropdown.Text:GetText() else
-			return dropdown.Value
+	drawer.GetValue = function ()
+		if byName then return drawer.Text:GetText() else
+			return drawer.Value
 		end
 	end
 
-	return dropdown
+	-- [[
+	------------------------------------------------
+	-- New Dropdown Method
+	------------------------------------------------
+
+
+	local function OnClickItem(self)
+		drawer.Text:SetText(self:GetText())
+		drawer.Value = self._ButtonIndex
+		if drawer.OnValueChanged then drawer.OnValueChanged() end
+		PlaySound("igMainMenuOptionCheckBoxOn");
+		HideDropdownMenu()
+	end
+
+	local function OnClickDropdown()
+
+		PlaySound("igMainMenuOptionCheckBoxOn");
+		ShowDropdownMenu(drawer, menu, OnClickItem)
+	end
+
+	local function OnHideDropdown()
+		HideDropdownMenu()
+	end
+
+	-- Override the default menu display scripts...
+	local button = _G[reference.."Button"]
+	button:SetScript("OnClick", OnClickDropdown)
+	button:SetScript("OnHide", OnHideDropdown)
+	--]]
+
+	return drawer
 end
 
 -- [[ COLOR

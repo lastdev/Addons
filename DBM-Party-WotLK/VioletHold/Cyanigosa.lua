@@ -1,17 +1,21 @@
 local mod	= DBM:NewMod(632, "DBM-Party-WotLK", 12, 283)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(31134)
+mod:SetEncounterID(545, 546)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_YELL"
+)
+
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"CHAT_MSG_MONSTER_YELL"
+	"SPELL_AURA_REMOVED"
 )
 
 local warningVacuum		= mod:NewSpellAnnounce(58694, 1)

@@ -7,7 +7,7 @@ local L
 L= DBM:GetModLocalization(852)
 
 L:SetMiscLocalization({
-	Victory			= "Ah, you have done it!  The waters are pure once more." --TODO need translation
+	Victory			= "¡Ah, lo habéis logrado! Las aguas vuelven a ser puras."
 })
 
 ---------------------------
@@ -15,14 +15,16 @@ L:SetMiscLocalization({
 ---------------------------
 L= DBM:GetModLocalization(849)
 
+L:SetWarningLocalization({
+	warnCalamity		= "%s",
+	specWarnCalamity	= "%s",
+	specWarnMeasures	= "¡Medidas desesperadas pronto (%s)!"
+})
+
 ---------------------------
 -- Norushen --
 ---------------------------
 L= DBM:GetModLocalization(866)
-
-L:SetOptionLocalization({
-	InfoFrame			= "Mostrar marco de información para $journal:8252"
-})
 
 L:SetMiscLocalization({
 	wasteOfTime			= "Muy bien, crearé un campo para mantener aislada vuestra corrupción."
@@ -34,7 +36,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(867)
 
 L:SetOptionLocalization({
-	InfoFrame			= "Mostrar marco de información para $journal:8255"
+	SetIconOnFragment	= "Mostrar icono en fragmento corrupto"
 })
 
 --------------
@@ -42,15 +44,27 @@ L:SetOptionLocalization({
 --------------
 L= DBM:GetModLocalization(868)
 
+L:SetWarningLocalization({
+	warnTowerOpen		= "Torre abierta",
+	warnTowerGrunt		= "Adds defendiendo la torre"
+})
+
 L:SetTimerLocalization({
-	timerTowerCD	= "Siguiente torre"
+	timerTowerCD		= "Siguiente torre",
+	timerTowerGruntCD	= "Siguientes adds defendiendo la torre"
 })
 
 L:SetOptionLocalization({
-	timerTowerCD	= "Mostrar temporizador para el siguiente asalto a la torre"
+	warnTowerOpen		= "Anunciar cuando se abre una torre",
+	warnTowerGrunt		= "Anunciar cuando aparecen nuevos adds defendiendo la torre",
+	timerTowerCD		= "Mostrar temporizador para el siguiente asalto a la torre",
+	timerTowerGruntCD	= "Mostrar temporizador para los siguientes adds defendiendo la torre"
 })
 
 L:SetMiscLocalization({
+	wasteOfTime		= "¡Bien hecho! ¡Grupos de desembarco, formad! ¡Infantería, al frente!",--Alliance Version
+	wasteOfTime2	= "Well done. The first brigade has made landfall.",--Horde Version, TODO needs translation
+	Pull		= "Clan Faucedraco, ¡recuperad los muelles y empujadlos al mar! ¡Por Grito Infernal! ¡Por la Horda auténtica!",
 	newForces1	= "¡Ya vienen!",--Jaina's line, alliance
 	newForces1H	= "Bring her down quick so i can wrap my fingers around her neck.",--Sylva's line, horde, TODO needs translation
 	newForces2	= "¡Faucedraco, avanzad!",
@@ -87,12 +101,13 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	newForces1					= "Warriors, on the double!", --TODO need translation
-	newForces2					= "Defend the gate!", --TODO need translation
-	newForces3					= "Rally the forces!", --TODO need translation
-	newForces4					= "Kor'kron, at my side!", --TODO need translation
-	newForces5					= "Next squad, to the front!", --TODO need translation
-	allForces					= "All Kor'kron... under my command... kill them... NOW!" --TODO need translation
+	newForces1					= "¡Guerreros, paso ligero!",
+	newForces2					= "¡Defended la puerta",
+	newForces3					= "¡Reunid a las tropas!",
+	newForces4					= "¡Kor'kron, conmigo!",
+	newForces5					= "¡Siguiente escuadrón, al frente!",
+	allForces					= "Atención, Korkron: ¡matadlos!",
+	nextAdds					= "Siguientes Adds: "
 })
 
 -----------------
@@ -106,8 +121,9 @@ L= DBM:GetModLocalization(846)
 L= DBM:GetModLocalization(870)
 
 L:SetMiscLocalization({
-	Module1 = "Module 1's all prepared for system reset.", --TODO need translation
-	Victory	= "Module 2's all prepared for system reset" --TODO need translation
+	wasteOfTime		= "¿Estamos grabando? ¿Sí? Vale. Iniciando módulo de control goblin-titán. Atrás.",
+	Module1			= "El módulo 1 está listo para el reinicio del sistema.",
+	Victory			= "El módulo 2 está listo para el reinicio del sistema."
 })
 
 ---------------------------
@@ -116,7 +132,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(851)
 
 L:SetOptionLocalization({
-	RangeFrame	= "Mostrar radar de rango dinámico (10)<br/>(Se muestra cuando llegas a umbral de \"Frenzy\")" --TODO need translation
+	RangeFrame	= "Mostrar radar de rango dinámico (10)<br/>(Se muestra cuando llegas a umbral de Frenesí)"
 })
 
 ----------------------------
@@ -125,8 +141,8 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(865)
 
 L:SetMiscLocalization({
-	newWeapons	= "Unfinished weapons begin to roll out on the assembly line.", --TODO need translation
-	newShredder	= "An Automated Shredder draws near!" --TODO need translation
+	newWeapons	= "La cadena de montaje empieza a sacar armas sin terminar.",
+	newShredder	= "¡Una trituradora automática se acerca!"
 })
 
 ----------------------------
@@ -135,13 +151,13 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(853)
 
 L:SetWarningLocalization({
-	specWarnActivatedVulnerable		= "Eres vulnerable a %s - ¡Esquiva!",
-	specWarnCriteriaLinked			= "!Estás enlazado a %s!"
+	specWarnActivatedVulnerable		= "Eres vulnerable a %s - ¡Evítalo!",
+	specWarnMoreParasites			= "Hacen falta más parásitos - ¡NO mitigues actívamente!"
 })
 
 L:SetOptionLocalization({
-	specWarnActivatedVulnerable		= "Mostrar aviso especial cunado eres vulnerable a activar paragons",
-	specWarnCriteriaLinked			= "Mostrar aviso especial cuando estés enlazado con $spell:144095"
+	specWarnActivatedVulnerable		= "Mostrar aviso especial cuando eres vulnerable a un Dechado",
+	specWarnMoreParasites			= "Mostrar aviso especial cuando se necesiten más parásitos"
 })
 
 L:SetMiscLocalization({
@@ -159,7 +175,7 @@ L:SetMiscLocalization({
 	KorvenFlavor		= "The end of an ancient empire",--http://ptr.wowhead.com/quest=31232  --TODO need translation
 	KorvenFlavor2		= "Take your Gurthani Tablets and choke on them",--http://ptr.wowhead.com/quest=31232  --TODO need translation
 	IyyokukFlavor		= "See opportunities. Exploit them!",--Does not have quests, http://ptr.wowhead.com/npc=65305  --TODO need translation
-	KarozFlavor			= "You won't be leaping anymore!",---Does not have questst, http://ptr.wowhead.com/npc=65303  --TODO need translation
+	KarozFlavor			= "You won't be leaping anymore!",---Does not have quest, http://ptr.wowhead.com/npc=65303  --TODO need translation
 	SkeerFlavor			= "A bloody delight!",--http://ptr.wowhead.com/quest=31178  --TODO need translation
 	RikkalFlavor		= "Specimen request fulfilled"--http://ptr.wowhead.com/quest=31508  --TODO need translation
 })
@@ -168,6 +184,17 @@ L:SetMiscLocalization({
 -- Garrosh Hellscream --
 ------------------------
 L= DBM:GetModLocalization(869)
+
+L:SetOptionLocalization({
+	RangeFrame			= "Mostrar radar dinámico de rango (8)<br/>(Muestra cuando alcanzas el umbral de $spell:147126)",
+	InfoFrame			= "Mostrar cuadro de información para personajes sin reducción de daño durante las interfases",
+	yellMaliceFading	= "Gritar cuando $spell:147209 esté apunto de disiparse"
+})
+
+L:SetMiscLocalization({
+	NoReduce			= "Sin reducción de daño",
+	MaliceFadeYell		= "Malicia disipándose en %s (%d)"
+})
 
 -------------
 --  Trash  --

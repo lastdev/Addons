@@ -8,7 +8,6 @@
 	<Script file="ItemFilters.lua"></Script>
 	<Script file="Loots.lua"></Script>
 	<Script file="Events.lua"></Script>
-	<Script file="RecipeDB.lua"></Script>
 	<Script file="Altoholic.lua"></Script>
 	
 	<GameTooltip name="AltoTooltip" inherits="GameTooltipTemplate" parent="UIParent" hidden="true" />

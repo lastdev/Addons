@@ -1,3 +1,29 @@
+== Versiono 50400.2.2
+* Feral: Making the beta rotation available as on option in a general release, so more people are exposed to it for testing.
+* Feral: Beta - now considers the Nature's Vigil buff when calculating the damage of bleeds.
+* Feral: Beta - updated support for Nature's Vigil and Incarnation.
+* Feral: Beta - only suggests Healing Touch as a self heal when you would otherwise be pooling energy anyway.
+* Feral: Beta - adjusted the CP generators when the enemy is nearing death.
+
+== Version 50400.2.1beta
+* Feral: Bugfix - one of the Rip priorities was being quirky.
+* Feral: Bugfix - the Rake with Re-Origination priority was broken.
+
+== Version 50400.2.0beta
+* Feral: Entirely new single target rotation.  It is not yet perfected, but seems to be a noticable improvement.
+* Feral: The beta rotation considers whether overwriting a bleed may increase its damage.
+* Feral: The beta rotation might play nice with Rune of Re-Origination ... untested.
+* Feral: The beta rotation might play nice with tier 15 & 16 set bonuses ... untested.
+* Feral: There is an option to revert to the old one, so feel free to update, test, and give feedback!
+
+== Version 50400.1.4
+* Guardian: Uses Healing Touch as a "mitigation" cooldown when Dream of Cenarius is up.
+* Guardian: Savage Defense and Frenzied Regeneration are now flashed to overlap freely, since rage generation supports it easily.
+* All: Flashes WoW's 9th Anniversary Celebration Package.
+
+== Version 50400.1.3
+* Restoration: Added flashing for the 2pT16 bonus.  I think.  I don't have the set, so I couldn't test it.
+
 == Version 50400.1.2
 * Bugfix update to Bitten's SpellFlash Library.
 
@@ -6,9 +32,9 @@
 
 == Version 50400.1.0
 * Balance: Added flashing for Astral Communion when you have Astral Insight (new for this patch).
-* Feral: Glyphed Frenzied Regen now takes 50 rage (was 60 before this patch).
 * Feral & Guardian: Removed Nature's Swiftness (since it's no longer available in this patch).
-* Guardian: Anticipates rage accoring to the new behavior of Soul of the Forest.
+* Guardian: Glyphed Frenzied Regen now takes 50 rage (was 60 before this patch).
+* Guardian: Anticipates rage according to the new behavior of Soul of the Forest.
 * Restoration: Updated the calculation for Innervate.
 * Restoration: You can only have 1 Wild Mushroom out now.
 * All: Exact calculations to determine whether you can use a Healing Touch without overhealing (unless it crits).
@@ -66,31 +92,3 @@ Update for patch 5.3.
 * Feral & Guardian: Now anticipates rage from Primal Fury.
 * Restoration: Added Force of Nature flashing.
 * Restoration: Bugfix for a Lua error.
-
-== Version 3.1.0
-* Feral: Added an AoE rotation.
-* Feral: Added predictive flashing for Maul if it will be available just before swapping to Cat Form.
-* Feral: Played around with Bear Form and its abilities against trivial mobs.
-* Feral & Guardian: Other spells will no longer get confused when Maul is queued.
-* Guardian: Rage predictions account for 4pT15 (very minor impact on flashing).
-
-== Version 3.0.0
-* Balance: Added Nature's Vigil.
-* Balance & Feral: Added Renewal.
-* Feral: Bugfix - Do not flash Thrash(Bear Form) if its bleed is already up.
-* Feral: Bugfix - The no-Shred list had an issue.
-* Guardian: Small green flashes are now used to show you which spell will be next when waiting for one to come off cooldown.
-* Guardian: Added Bone Shield and Elusive Brew (Symbiosis abilities).
-* Guardian: Added Berserk and Incarnation as mitigation cooldowns.
-* Guardian: Tweaked the priority of the other survival cooldowns a little.
-* Guardian: Added Swipe and an extra Thrash priority when in AoE mode.
-* Guardian: Calculations for Frenzied Regeneration (unglyphed) are now exact.
-* Guardian: Frenzied Regeneration and Savage Defense can now flash when the other is up if you have at least 90 rage.
-* Guardian: Unglyphed Frenzied Regeneration can now flash even when you are not tanking.
-* Guardian: Maul is flashed more freely when you are not tanking.
-* Restoration: Added flashing for Restoration.
-
-== Version 2.10.0
-* Feral: More rotation tweaks.
-* Feral: Add Azure Serpent to the list of things not to shred.
-* Feral: Bugfix - Heart of the Wild was not flashing.

@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 377 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 419 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,25 +16,24 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
-addEntry("3.6.8", "04/06/2013", [[
-	*Added recognition for Hearthstone (icon work still needed)
+addEntry("3.6.18", "04/11/2014", [[
+	*Fixed icon for battle.net desktop app users.
 ]]);
-addEntry("3.6.7", "04/06/2013", [[
-	*History button on realid whispers will now open history window instead of causing nil error
-	*Don't display the expose border unless we actually hide some windows
+addEntry("3.6.17", "03/05/2014", [[
+	*Fix issue that caused incoming whispers not to record for non battle.net.
+	*Strip realm name from more chat channels if WIM is used for them instead of blizzard chat tabs.
 ]]);
-addEntry("3.6.6", "03/06/2013", [[
-	*Fix fading issue with new animation
+addEntry("3.6.16", "02/20/2014", [[
+	*More fixes to prevent double whisper windows from -realm inconsistencies in blizzards code changes.
 ]]);
-addEntry("3.6.5", "03/05/2013", [[
-	*Replaced frame fade with animations & embed LibChatAnims
-    *Fixed error with chat color if party/instance chat handled by WIM
-    *Fixed lua errors caused by missing chat type args
-    *Changed emoticon string replacements to use one operation to prevent 'script ran too long' errors
+addEntry("3.6.15", "02/20/2014", [[
+	*Much better compatability with patch 5.4.7 whisper changes.
 ]]);
-addEntry("3.6.4", "01/18/2013", [[
-    *Added Monk icon to class icons
-    *Added recognition and icon to Battle.net Desktop App users
+addEntry("3.6.13", "12/31/2014", [[
+	*Improvements for patch 5.4.2 (ie it should again recognize who is in guild)
+	*/w interrcept now works again. It may not work as well with autocomplete as it used to though.
+	*RealID/BattleTag conversations will now be saved under associated battletag instead of whatever tooname person is on.
+	*Updated wholib that now better supports connected realms.
 ]]);
 
 

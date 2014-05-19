@@ -1,6 +1,6 @@
 --[[
 	Slidebar AddOn for World of Warcraft (tm)
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 4.4.1 (<%codename%>)
 	Revision: $Id: SlideMain.lua 312 2011-06-14 07:33:25Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 

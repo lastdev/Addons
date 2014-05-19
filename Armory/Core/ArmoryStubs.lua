@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 585 2013-03-02T14:19:03Z
+    Revision: 624 2014-04-06T08:54:19Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -84,13 +84,13 @@ function Armory:GetCurrencyInfo(index)
     -- 402 Chef's Award
 
     if ( _G.GetCurrencyInfo(index) ) then
-        local name, quantity, icon, earnedThisWeek, earnablePerWeek, cap, isDiscovered = self:SetGetCharacterValue("CurrencyInfo"..index, _G.GetCurrencyInfo(index));
-        
-        if ( time() >= self:GetQuestResetTime() ) then
+        local name, quantity, icon, earnedThisWeek, earnablePerWeek, maxQuantity, isDiscovered, rarity = self:SetGetCharacterValue("CurrencyInfo"..index, _G.GetCurrencyInfo(index));
+
+        if ( time() >= self:GetWeeklyQuestResetTime() ) then
             earnedThisWeek = 0;
         end
 
-        return name, quantity, icon, earnedThisWeek, earnablePerWeek, cap, isDiscovered;
+        return name, quantity, icon, earnedThisWeek, earnablePerWeek, maxQuantity, isDiscovered, rarity;
     end
 end
 
@@ -204,6 +204,16 @@ function Armory:GetParryChance()
     return self:SetGetCharacterValue("ParryChance", _G.GetParryChance());
 end
 
+function Armory:GetPersonalRatedInfo(id)
+    local rating, seasonBest, weeklyBest, seasonPlayed, seasonWon, weeklyPlayed, weeklyWon, cap = self:SetGetCharacterValue("PersonalRatedInfo"..id, _G.GetPersonalRatedInfo(id));
+    if ( time() >= self:GetWeeklyQuestResetTime() ) then
+        weeklyBest = 0;
+        weeklyPlayed = 0;
+        weeklyWon = 0;
+    end
+    return rating or 0, seasonBest or 0, weeklyBest or 0, seasonPlayed or 0, seasonWon or 0, weeklyPlayed or 0, weeklyWon or 0, cap or 0;
+end
+
 function Armory:GetPetExperience()
     return self:SetGetPetValue("Experience", _G.GetPetExperience());
 end
@@ -299,6 +309,15 @@ end
 
 function Armory:GetPVPLifetimeStats()
     return self:SetGetCharacterValue("PVPLifetimeStats", _G.GetPVPLifetimeStats());
+end
+
+function Armory:GetPVPRewards()
+    local pointsThisWeek, maxPointsThisWeek, tier2Quantity, tier2Limit, tier1Quantity, tier1Limit, randomPointsThisWeek, maxRandomPointsThisWeek, arenaReward, ratedBGReward = self:SetGetCharacterValue("PVPRewards", _G.GetPVPRewards());
+    if ( time() >= self:GetWeeklyQuestResetTime() ) then
+        pointsThisWeek = 0;
+        randomPointsThisWeek = 0;
+    end
+    return pointsThisWeek or 0, maxPointsThisWeek or 0, tier2Quantity or 0, tier2Limit or 0, tier1Quantity or 0, tier1Limit or 0, randomPointsThisWeek or 0, maxRandomPointsThisWeek or 0, arenaReward or 0, ratedBGReward or 0;
 end
 
 function Armory:GetPVPSessionStats()
@@ -453,6 +472,17 @@ function Armory:GetUnitSpeed(unit)
         return self:SetGetPetValue("Speed", _G.GetUnitSpeed(unit));
     end
     return self:SetGetCharacterValue("Speed", _G.GetUnitSpeed(unit));
+end
+
+function Armory:GetWeeklyQuestResetTime()
+	local day = 2;
+	-- assume only EU servers reset on wednesday (rest on tuesday)
+	local region = GetCVar("realmList"):match("^[%a.]-(%a+).%a+.%a+.%a+$");
+	if (region and strupper(region) == "EU") then
+		day = 3;
+	end
+	local offset = (7 + day - date("%w", time())) % 7;
+	return self:GetQuestResetTime() + offset * 24 * 60 * 60;
 end
 
 function Armory:GetXPExhaustion()

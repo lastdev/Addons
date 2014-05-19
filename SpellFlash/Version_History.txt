@@ -1,6 +1,11 @@
 
 
 
+== Version 6.9
+
+* Fixed a bug with an internal RegisterSpells function.
+
+
 == Version 6.8.1
 
 * Bumped the toc file interface number to 50400.

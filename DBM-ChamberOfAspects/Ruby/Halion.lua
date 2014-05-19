@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod("Halion", "DBM-ChamberOfAspects", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 73 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(39863)--40142 (twilight form)
+mod:SetEncounterID(1150)
 mod:SetModelID(31952)
 mod:SetUsedIcons(7, 8)
 --mod:SetMinSyncRevision(4358)
@@ -11,7 +12,7 @@ mod:SetMinSyncRevision(7)--Could break if someone is running out of date version
 mod:RegisterCombat("combat")
 --mod:RegisterKill("yell", L.Kill)
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_APPLIED",
@@ -23,8 +24,8 @@ mod:RegisterEvents(
 	"UNIT_HEALTH target focus mouseover"
 )
 
-local warnPhase2Soon				= mod:NewAnnounce("WarnPhase2Soon", 2)
-local warnPhase3Soon				= mod:NewAnnounce("WarnPhase3Soon", 2)
+local warnPhase2Soon				= mod:NewPrePhaseAnnounce(2)
+local warnPhase3Soon				= mod:NewPrePhaseAnnounce(3)
 local warnPhase2					= mod:NewPhaseAnnounce(2)
 local warnPhase3					= mod:NewPhaseAnnounce(3)
 local warningShadowConsumption		= mod:NewTargetAnnounce(74792, 4)
@@ -53,7 +54,7 @@ local timerFieryBreathCD			= mod:NewCDTimer(19, 74525, nil, mod:IsTank() or mod:
 
 local berserkTimer					= mod:NewBerserkTimer(480)
 
-local soundConsumption 				= mod:NewSound(74562, "SoundOnConsumption")
+local soundConsumption 				= mod:NewSound(74562, nil, "SoundOnConsumption")
 
 mod:AddBoolOption("AnnounceAlternatePhase", true, "announce")
 mod:AddBoolOption("WhisperOnConsumption", false, "announce")

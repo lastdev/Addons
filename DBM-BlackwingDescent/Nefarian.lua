@@ -3,8 +3,9 @@ local L		= mod:GetLocalizedStrings()
 local Nefarian	= EJ_GetSectionInfo(3279)
 local Onyxia	= EJ_GetSectionInfo(3283)
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 103 $"):sub(12, -3))
 mod:SetCreatureID(41376, 41270)
+--mod:SetEncounterID(1026) -- ES fires when Nefarian engaged.
 mod:SetZone()
 mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_Event09.wav", "Sound\\Creature\\Nefarian\\VO_BD_Nefarian_Event13.wav")
 --"Ha ha ha ha ha! The heroes have made it to the glorious finale. I take it you are in good spirits? Prepared for the final battle? Then gaze now upon my ultimate creation! RISE, SISTER!" = "Nefarian\\VO_BD_Nefarian_Event01",
@@ -156,7 +157,7 @@ function mod:OnCombatStart(delay)
 	end
 	if self.Options.InfoFrame then
 		DBM.InfoFrame:SetHeader(Charge)
-		DBM.InfoFrame:Show(2, "enemypower", 5, ALTERNATE_POWER_INDEX)
+		DBM.InfoFrame:Show(2, "enemypower", 2, ALTERNATE_POWER_INDEX)
 	end
 	if self.Options.SetWater and GetCVarBool("cameraWaterCollision") then
 		CVAR = true--Cvar was true on pull so we remember that.

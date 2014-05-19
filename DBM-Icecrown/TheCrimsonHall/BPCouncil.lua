@@ -1,8 +1,10 @@
 local mod	= DBM:NewMod("BPCouncil", "DBM-Icecrown", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 99 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 125 $"):sub(12, -3))
 mod:SetCreatureID(37970, 37972, 37973)
+mod:SetEncounterID(1095)
+mod:DisableEEKillDetection()--IEEU fires for this boss.
 mod:SetModelID(30858)
 mod:SetUsedIcons(7, 8)
 
@@ -48,7 +50,7 @@ local timerConjureFlamesCD		= mod:NewCDTimer(20, 71718)				-- every 20-30 second
 local timerGlitteringSparksCD	= mod:NewCDTimer(20, 71807)				-- This is pretty nasty on heroic
 local timerShockVortex			= mod:NewCDTimer(16.5, 72037)			-- Seen a range from 16,8 - 21,6
 local timerKineticBombCD		= mod:NewCDTimer(18, 72053, nil, mod:IsRanged())				-- Might need tweaking
-local timerShadowPrison			= mod:NewBuffActiveTimer(10, 72999)		-- Hard mode debuff
+local timerShadowPrison			= mod:NewBuffFadesTimer(10, 72999)		-- Hard mode debuff
 
 local berserkTimer				= mod:NewBerserkTimer(600)
 

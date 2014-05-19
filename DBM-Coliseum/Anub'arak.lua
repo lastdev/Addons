@@ -1,21 +1,21 @@
 local mod	= DBM:NewMod("Anub'arak_Coliseum", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 142 $"):sub(12, -3))
 mod:SetCreatureID(34564)
+mod:SetEncounterID(1085)
 mod:SetModelID(29268) 
+mod:SetUsedIcons(3, 4, 5, 6, 7, 8)
 
-mod:RegisterCombat("yell", L.YellPull)
+mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REFRESH",
 	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_START",
 	"RAID_BOSS_EMOTE"
 )
-
-mod:SetUsedIcons(3, 4, 5, 6, 7, 8)
 
 local warnAdds				= mod:NewAnnounce("warnAdds", 3, 45419)
 local preWarnShadowStrike	= mod:NewSoonAnnounce(66134, 3)
@@ -29,9 +29,9 @@ local warnSubmerge			= mod:NewAnnounce("WarnSubmerge", 3, "Interface\\AddOns\\DB
 local warnSubmergeSoon		= mod:NewAnnounce("WarnSubmergeSoon", 2, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
 local warnPhase3			= mod:NewPhaseAnnounce(3)
 
-local specWarnPursue		= mod:NewSpecialWarning("SpecWarnPursue")
-local specWarnSubmergeSoon	= mod:NewSpecialWarning("specWarnSubmergeSoon", mod:IsTank())
-local specWarnShadowStrike	= mod:NewSpecialWarning("SpecWarnShadowStrike", mod:IsTank())
+local specWarnPursue		= mod:NewSpecialWarningRun(67574)
+local specWarnSubmergeSoon	= mod:NewSpecialWarningSoon("specWarnSubmergeSoon", mod:IsTank())
+local specWarnShadowStrike	= mod:NewSpecialWarningInterrupt(66134, mod:IsTank())
 local specWarnPCold			= mod:NewSpecialWarningYou(66013, false)
 
 local timerAdds				= mod:NewTimer(45, "timerAdds", 45419)
@@ -46,8 +46,8 @@ local enrageTimer			= mod:NewBerserkTimer(570)	-- 9:30 ? hmpf (no enrage while s
 
 local soundPursue			= mod:NewSound(67574)
 
-mod:AddBoolOption("PursueIcon")
-mod:AddBoolOption("SetIconsOnPCold", true)
+mod:AddSetIconOption("PursueIcon", 67574, true)
+mod:AddSetIconOption("SetIconsOnPCold", 66013, false)
 mod:AddBoolOption("AnnouncePColdIcons", false)
 mod:AddBoolOption("AnnouncePColdIconsRemoved", false)
 
@@ -115,7 +115,7 @@ do
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 67574 then			-- Pursue
+	if args.spellId == 67574 then
 		if args:IsPlayer() then
 			specWarnPursue:Show()
 			soundPursue:Play()
@@ -124,7 +124,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:SetIcon(args.destName, 8, 15)
 		end
 		warnPursue:Show(args.destName)
-	elseif args.spellId == 66013 then		-- Penetrating Cold
+	elseif args.spellId == 66013 then
 		timerPCold:Show()
 		if args:IsPlayer() then
 			specWarnPCold:Show()
@@ -133,17 +133,17 @@ function mod:SPELL_AURA_APPLIED(args)
 			table.insert(PColdTargets, DBM:GetRaidUnitId(args.destName))
 			self:UnscheduleMethod("SetPcoldIcons")
 			if (self:IsDifficulty("normal25", "heroic25") and #PColdTargets >= 5) or (self:IsDifficulty("normal10", "heroic10") and #PColdTargets >= 2) then
-				self:SetPcoldIcons()--Sort and fire as early as possible once we have all targets.
+				self:SetPcoldIcons()
 			else
 				if self:LatencyCheck() then
 					self:ScheduleMethod(0.3, "SetPcoldIcons")
 				end
 			end
 		end
-	elseif args.spellId == 66012 then							-- Freezing Slash
+	elseif args.spellId == 66012 then
 		warnFreezingSlash:Show(args.destName)
 		timerFreezingSlash:Start()
-	elseif args.spellId == 1022 and self:IsInCombat() then		-- Hand of Protection
+	elseif args.spellId == 1022 and self:IsInCombat() then
 		warnHoP:Show(args.destName)
 		timerHoP:Start(args.destName)
 	end
@@ -151,20 +151,20 @@ end
 mod.SPELL_AURA_REFRESH = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 66013 then			-- Penetrating Cold
+	if args.spellId == 66013 then
 		if self.Options.SetIconsOnPCold then
 			self:SetIcon(args.destName, 0)
 			if self.Options.AnnouncePColdIconsRemoved and DBM:GetRaidRank() > 0 then
 				SendChatMessage(L.PcoldIconRemoved:format(args.destName), "RAID")
 			end
 		end
-	elseif args.spellId == 1022 and self:IsInCombat() then		-- Hand of Protection
+	elseif args.spellId == 1022 and self:IsInCombat() then
 		timerHoP:Cancel(args.destName)
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 66118 then			-- Swarm (start p3)
+	if args.spellId == 66118 then
 		warnPhase3:Show()
 		warnEmergeSoon:Cancel()
 		warnSubmergeSoon:Cancel()
@@ -176,7 +176,7 @@ function mod:SPELL_CAST_START(args)
 			warnAdds:Cancel() 
 			self:UnscheduleMethod("Adds")
 		end
-	elseif args.spellId == 66134 then							-- Shadow Strike
+	elseif args.spellId == 66134 then
 		self:ShadowStrike()
 		specWarnShadowStrike:Show()
 		warnShadowStrike:Show()
@@ -205,7 +205,7 @@ function mod:RAID_BOSS_EMOTE(msg)
 			timerShadowStrike:Stop()
 			preWarnShadowStrike:Cancel()
 			self:UnscheduleMethod("ShadowStrike")
-			self:ScheduleMethod(5.5, "ShadowStrike")  -- 35-36sec after Emerge next ShadowStrike
+			self:ScheduleMethod(5.5, "ShadowStrike")
 		end
 	end
 end

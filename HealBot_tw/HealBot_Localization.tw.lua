@@ -668,7 +668,7 @@ HEALBOT_CUSTOM_CASTBY_ENEMY             = "敵方"
 HEALBOT_CUSTOM_CASTBY_FRIEND            = "友方"
 
 HEALBOT_CUSTOM_DEBUFF_CATS = {
-        [HEALBOT_DEBUFF_ACID_DRENCHED_MANDIBLES] = 2,
+        --[[[HEALBOT_DEBUFF_ACID_DRENCHED_MANDIBLES] = 2,
         [HEALBOT_DEBUFF_AGONIZING_FLAMES]      = 2,
         [HEALBOT_DEBUFF_BOILING_BLOOD]         = 2,
         [HEALBOT_DEBUFF_BURN]                  = 2,
@@ -752,7 +752,7 @@ HEALBOT_CUSTOM_DEBUFF_CATS = {
         [HEALBOT_DEBUFF_VILE_GAS]              = 12,
         [HEALBOT_DEBUFF_VOLATILE_OOZE]         = 12,
         [HEALBOT_DEBUFF_WATERLOGGED]           = 13,
-        [HEALBOT_DEBUFF_WEB_WRAP]              = 13,
+        [HEALBOT_DEBUFF_WEB_WRAP]              = 13,]]--
     }
 
 HEALBOT_ABOUT_DESC1                    = "一個可定制樣式的治療、驅散、Buff、繃帶、隨機座騎、範圍檢查和仇恨框架的插件."

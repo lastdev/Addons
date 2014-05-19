@@ -2,7 +2,7 @@
 <!--
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 	Revision: $Id: Informant.xml 4857 2010-09-02 23:33:59Z kandoko $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
@@ -29,7 +29,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 -->
 	<Script>
-		Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Informant/Informant.xml $", "$Rev: 4857 $")
+		Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Informant/Informant.xml $", "$Rev: 4857 $")
 	</Script>
 	
 	<GameTooltip name="Informant_ScanTooltip" frameStrata="TOOLTIP" hidden="true" parent="UIParent" inherits="GameTooltipTemplate">

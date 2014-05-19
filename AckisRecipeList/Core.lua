@@ -3,10 +3,10 @@
 Core.lua
 Core functions for Ackis Recipe List
 ************************************************************************
-File date: 2013-08-13T03:20:46Z
-File hash: e9738aa
-Project hash: 4bcba04
-Project version: 2.5.2
+File date: 2014-02-15T07:41:05Z
+File hash: a9873cc
+Project hash: fbca907
+Project version: 2.6.2
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -52,9 +52,10 @@ _G.ARL = addon
 local L = LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
 local Toast = LibStub("LibToast-1.0")
 
-local debugger = _G.tekDebug and _G.tekDebug:GetFrame(private.addon_name)
+local debugger -- Only defined if needed.
 
 private.build_num = select(2, _G.GetBuildInfo())
+private.TextDump = LibStub("LibTextDump-1.0"):New(private.addon_name)
 
 ------------------------------------------------------------------------------
 -- Constants.
@@ -73,20 +74,25 @@ addon.optionsFrame = {}
 -------------------------------------------------------------------------------
 -- Debugger.
 -------------------------------------------------------------------------------
-function addon:Debug(...)
+local function CreateDebugFrame()
 	if debugger then
-		local text = string.format(...)
-		debugger:AddMessage(text)
-
-		--[===[@debug@
-		Toast:Spawn("ARL_DebugToast", text)
-		--@end-debug@]===]
-	else
-		--[===[@debug@
-		self:Printf(...)
-		--@end-debug@]===]
+		return
 	end
+	debugger = LibStub("LibTextDump-1.0"):New(("%s Debug Output"):format(private.addon_name), 640, 480)
 end
+
+function addon:Debug(...)
+	if not debugger then
+		CreateDebugFrame()
+	end
+	local text = string.format(...)
+	debugger:AddLine(text)
+
+	--[===[@debug@
+	Toast:Spawn("ARL_DebugToast", text)
+	--@end-debug@]===]
+end
+private.Debug = addon.Debug
 
 Toast:Register("ARL_DebugToast", function(toast, ...)
 	toast:SetTitle(("%s - Debug"):format(private.addon_name))
@@ -210,7 +216,6 @@ function addon:OnInitialize()
 					skill = true,
 					known = false,
 					unknown = true,
-					retired = false,
 				},
 				-------------------------------------------------------------------------------
 				-- Obtain Filters
@@ -229,10 +234,12 @@ function addon:OnInitialize()
 					quest = true,
 					raid = true,
 					reputation = true,
+					retired = false,
 					seasonal = true,
 					trainer = true,
 					vendor = true,
 					worlddrop = true,
+					misc1 = true,
 				},
 				-------------------------------------------------------------------------------
 				-- Profession Item Filters
@@ -340,7 +347,6 @@ function addon:OnInitialize()
 					shaman = true,
 					warlock = true,
 					warrior = true,
-					monk = true,
 				},
 			}
 		}
@@ -355,6 +361,8 @@ function addon:OnInitialize()
 		self:Print("Error: Database not loaded correctly.  Please exit out of WoW and delete the ARL database file (AckisRecipeList.lua) found in: \\World of Warcraft\\WTF\\Account\\<Account Name>>\\SavedVariables\\")
 		return
 	end
+	private.db = self.db
+
 	local version = _G.GetAddOnMetadata("AckisRecipeList", "Version")
 	local debug_version = false
 	local alpha_version = false
@@ -403,11 +411,11 @@ function addon:OnInitialize()
 		end
 		local _, tooltip_unit = self:GetUnit()
 
-		if not tooltip_unit then
+		if not tooltip_unit or not _G.UnitGUID(tooltip_unit) then
 			return
 		end
 		local id_num = private.MobGUIDToIDNum(_G.UnitGUID(tooltip_unit))
-		local unit = private.mob_list[id_num] or private.vendor_list[id_num] or private.trainer_list[id_num]
+		local unit = private.AcquireTypes.MobDrop:GetEntity(id_num) or private.AcquireTypes.Vendor:GetEntity(id_num) or private.AcquireTypes.Trainer:GetEntity(id_num)
 
 		if not unit or not unit.item_list then
 			return
@@ -699,7 +707,7 @@ do
 		addon:InitQuest()
 		addon:InitReputation()
 		addon:InitTrainer()
-		addon:InitSeasons()
+		addon:InitWorldEvents()
 		addon:InitVendor()
 
 		InitializeLookups = nil
@@ -726,68 +734,101 @@ do
 	end
 end -- do-block
 
-do
-	-- Code snippet stolen from GearGuage by Torhal and butchered by Ackis
-	local function StrSplit(input)
-		if not input then
-			return nil, nil
+local SUBCOMMAND_FUNCS = {
+	[L["About"]:lower()] = function()
+		if addon.optionsFrame["About"] then
+			_G.InterfaceOptionsFrame_OpenToCategory(addon.optionsFrame["About"])
+		else
+			_G.InterfaceOptionsFrame_OpenToCategory(addon.optionsFrame)
 		end
-		local arg1, arg2, var1
+	end,
+	[L["Documentation"]:lower()] = function()
+		_G.InterfaceOptionsFrame_OpenToCategory(addon.optionsFrame["Documentation"])
+	end,
+	[L["Profile"]:lower()] = function()
+		_G.InterfaceOptionsFrame_OpenToCategory(addon.optionsFrame["Profiles"])
+	end,
+	[L["Scan"]:lower()] = function(input)
+		if not input or input == "" then
+			addon:Print(L["COMMAND_LINE_SCAN"])
+			return
+		end
+		local found
+		input = input:lower()
 
-		arg1, var1 = input:match("^([^%s]+)%s*(.*)$")
-		arg1 = (arg1 and arg1:lower() or input:lower())
-
-		if var1 then
-			-- Small hack to get code to work with first aid.
-			if var1:lower() == private.LOCALIZED_PROFESSION_NAMES.FIRSTAID:lower() then
-				arg2 = var1
-			else
-				local var2
-				arg2, var2 = var1:match("^([^%s]+)%s*(.*)$")
-				arg2 = (arg2 and arg2:lower() or var1:lower())
+		for profession_name in pairs(private.PROFESSION_NAME_MAP) do
+			if input == profession_name:lower() then
+				found = true
+				break
 			end
 		end
-		return arg1, arg2
+
+		if not found then
+			addon:Print(L["COMMAND_LINE_SCAN"])
+			return
+		end
+		_G.CastSpellByName(input)
+
+		if addon.Frame and addon.Frame:IsVisible() then
+			addon.Frame:Hide()
+		else
+			if private.InitializeFrame then
+				private.InitializeFrame()
+			end
+			addon:Scan(false, false)
+		end
+	end,
+	debug = function()
+		if not debugger then
+			CreateDebugFrame()
+		end
+
+		if debugger:Lines() == 0 then
+			debugger:AddLine("Nothing to report.")
+			debugger:Display()
+			debugger:Clear()
+			return
+		end
+		debugger:Display()
+	end,
+	--[===[@debug@
+	dump = function(arg1, arg2)
+		local func = private.DUMP_COMMANDS[arg1]
+
+		if func then
+			func(arg2)
+		else
+			addon:Print("Unknown dump command:")
+
+			for command in pairs(private.DUMP_COMMANDS) do
+				addon:Print(command)
+			end
+		end
+	end,
+	scanprofs = function()
+		addon:ScanProfession("all")
+	end,
+	--@end-debug@]===]
+	tradelinks = function()
+		addon:GenerateLinks()
+	end,
+}
+
+function addon:ChatCommand(input)
+	local arg1, arg2, arg3 = self:GetArgs(input, 3)
+
+	if arg1 then
+		arg1 = arg1:trim():lower()
 	end
 
-	-- Determines what to do when the slash command is called.
-	function addon:ChatCommand(input)
-		local arg1, arg2 = StrSplit(input)
-
-		-- Open About panel if there's no parameters or if we do /arl about
-		if not arg1 or (arg1 and arg1:trim() == "") or arg1 == L["Sorting"]:lower() or arg1 == L["Sort"]:lower() or arg1 == _G.DISPLAY:lower() then
-			_G.InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
-		elseif arg1 == L["About"]:lower() then
-			if self.optionsFrame["About"] then
-				_G.InterfaceOptionsFrame_OpenToCategory(self.optionsFrame["About"])
-			else
-				_G.InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
-			end
-		elseif arg1 == L["Profile"]:lower() then
-			_G.InterfaceOptionsFrame_OpenToCategory(self.optionsFrame["Profiles"])
-		elseif arg1 == L["Documentation"]:lower() then
-			_G.InterfaceOptionsFrame_OpenToCategory(self.optionsFrame["Documentation"])
-		elseif arg1 == L["Scan"]:lower() then
-			if not arg2 or arg2 == "" then
-				self:Print(L["COMMAND_LINE_SCAN"])
-			else
-				_G.CastSpellByName(arg2)
-
-				if self.Frame and self.Frame:IsVisible() then
-					self.Frame:Hide()
-				else
-					if private.InitializeFrame then
-						private.InitializeFrame()
-					end
-					self:Scan(false, false)
-				end
-			end
-		elseif arg1 == "scanprof" then
-			self:ScanProfession("all")
-		elseif arg1 == "tradelinks" then
-			self:GenerateLinks()
+	-- Open About panel if there's no parameters or if we do /arl about
+	if not arg1 or arg1 == L["Sorting"]:lower() or arg1 == L["Sort"]:lower() or arg1 == _G.DISPLAY:lower() then
+		_G.InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
+	else
+		local func = SUBCOMMAND_FUNCS[arg1]
+		if func then
+			func(arg2, arg3)
 		else
-			-- What happens when we get here?
 			LibStub("AceConfigCmd-3.0"):HandleCommand("arl", "Ackis Recipe List", arg1)
 		end
 	end
@@ -1050,7 +1091,7 @@ do
 				VENDOR = L["Vendor"],
 				INSTANCE = _G.INSTANCE,
 				RAID = _G.RAID,
-				SEASONAL = _G.EVENTS_LABEL,
+				WORLD_EVENTS = _G.EVENTS_LABEL,
 				QUEST = L["Quest"],
 				PVP = _G.PVP,
 				WORLD_DROP = L["World Drop"],
@@ -1239,8 +1280,8 @@ do
 			local acquire_data = recipe["acquire_data"]
 			table.wipe(acquire_list)
 
-			for acquire_type in pairs(acquire_data) do
-				acquire_list[private.ACQUIRE_NAMES[acquire_type]] = true
+			for acquire_type_id in pairs(acquire_data) do
+				acquire_list[private.ACQUIRE_TYPES_BY_ID[acquire_type_id]:Name()] = true
 			end
 
 			-- Add all the acquire methods in

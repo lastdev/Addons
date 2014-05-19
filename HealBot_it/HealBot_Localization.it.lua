@@ -662,7 +662,7 @@ function HealBot_Lang_itIT()
     HEALBOT_CUSTOM_CASTBY_FRIEND            = "Amico"
 
     HEALBOT_CUSTOM_DEBUFF_CATS = {
-            [HEALBOT_DEBUFF_ACID_DRENCHED_MANDIBLES] = 2,
+           --[[[HEALBOT_DEBUFF_ACID_DRENCHED_MANDIBLES] = 2,
             [HEALBOT_DEBUFF_AGONIZING_FLAMES]      = 2,
             [HEALBOT_DEBUFF_BOILING_BLOOD]         = 2,
             [HEALBOT_DEBUFF_BURN]                  = 2,
@@ -746,7 +746,7 @@ function HealBot_Lang_itIT()
             [HEALBOT_DEBUFF_VILE_GAS]              = 12,
             [HEALBOT_DEBUFF_VOLATILE_OOZE]         = 12,
             [HEALBOT_DEBUFF_WATERLOGGED]           = 13,
-            [HEALBOT_DEBUFF_WEB_WRAP]              = 13,
+            [HEALBOT_DEBUFF_WEB_WRAP]              = 13,]]--
         }
 
     HEALBOT_ABOUT_DESC1                    = "Aggiunge un pannello con barre skinnabili per curare, decursare, buffare, ressare e trackare aggro"

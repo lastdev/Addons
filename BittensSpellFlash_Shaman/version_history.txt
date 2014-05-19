@@ -1,3 +1,6 @@
+== Version 50400.1.2
+* All: Flashes WoW's 9th Anniversary Celebration Package.
+
 == Version 50400.1.1
 * Bugfix update to Bitten's SpellFlash Library.
 
@@ -92,17 +95,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 
 == Version 2.1.2
 * Taking out of beta.
-
-== Version 2.1.1 beta
-This beta release uses Bitten's SpellFlash Library version 3.  If you update you will also need to update any of your other Bitten's SpellFlash modules, which may also be in beta.
-* Elemental: Lava Burst now flashes in anticipation of the Flame Shock debuff if you just cast it, instead of waiting for the actually debuff to appear.
-* Enhancement: Unleash Elements was probably broken - or at least not perfect - on non-English clients.
-
-== Version 2.1.0
-* Elemental: Tighter timing for refreshing Flame Shock.
-* Elemental: Spends a 7-stack of Fulmination a little sooner when Flame Shock will be falling off soon.
-* Enhancement: No longer flashes Lightning Bolt at 4 stacks while you are moving.
-
-== Version 2.0.0
-* Enhancement: Added an Enhancement rotation!
-* All: Flashes Wind Shear.

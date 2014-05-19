@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Souls", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 507 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 535 $"):sub(12, -3))
 mod:SetCreatureID(23420)
 mod:SetModelID(21483)
 mod:SetZone()
@@ -10,17 +10,14 @@ mod:SetUsedIcons(4, 5, 6, 7, 8)
 mod:RegisterCombat("yell", L.Pull)
 
 mod:RegisterEventsInCombat(
-	"SPELL_DAMAGE",
-	"SPELL_MISSED"
-)
-
-mod:RegisterEvents(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
-	"UNIT_SPELLCAST_SUCCEEDED"
+	"SPELL_DAMAGE",
+	"SPELL_MISSED",
+	"UNIT_SPELLCAST_SUCCEEDED target focus"
 )
 
 local warnFixate		= mod:NewTargetAnnounce(41294, 3)
@@ -50,8 +47,8 @@ local timerNextShield	= mod:NewCDTimer(15, 41431)
 local timerNextSoul		= mod:NewCDTimer(10, 41545)
 local timerNextShock	= mod:NewCDTimer(12, 41426)--Blizz lied, this is a 12-15 second cd. you can NOT solo interrupt these with most classes
 
-mod:AddBoolOption("DrainIcon", true)
-mod:AddBoolOption("SpiteIcon", true)
+mod:AddBoolOption("DrainIcon", false)
+mod:AddBoolOption("SpiteIcon", false)
 
 local warnDrainTargets = {}
 local warnSpiteTargets = {}

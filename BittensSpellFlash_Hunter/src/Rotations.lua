@@ -39,6 +39,7 @@ function a.PreFlash()
 		a.Regen = a.Regen + 4
 	end
 	a.Focus = c.GetPower(a.Regen, SPELL_POWER_FOCUS)
+	a.EmptyFocus = s.MaxPower("player") - a.Focus
 end
 
 ----------------------------------------------------------------- Beast Mastery
@@ -53,9 +54,16 @@ a.Rotations.BeastMastery = {
 		c.FlashAll(
 			"Fervor", 
 			"Bestial Wrath", 
-			"Multi-Shot for Beast Cleave",
+			"Explosive Trap for Mini-AoE",
+			"Multi-Shot for Mini-AoE",
 			"Exhilaration", 
 			"Heart of the Phoenix",
+			"Growl",
+			"Cower",
+			"Last Stand",
+			"Bullheaded",
+			"Mend Pet at 50",
+			"Counter Shot",
 			"Tranquilizing Shot")
 		c.PriorityFlash(
 			"Serpent Sting", 
@@ -69,18 +77,25 @@ a.Rotations.BeastMastery = {
 			"Glaive Toss",
 			"Arcane Shot under Thrill of the Hunt",
 			"Focus Fire",
+			"Rapid Fire for BM",
 			"Powershot",
 			"Arcane Shot for BM",
-			"Rapid Fire for BM",
-			"Barrage",
+--			"Barrage",
+			"Mend Pet", 
 			"Cobra Shot")
+		if c.Flashing["Bestial Wrath"] and c.Flashing["Cobra Shot"] then
+			c.PredictFlash("Arcane Shot")
+		end
+	end,
+	
+	FlashOutOfCombat = function()
+		c.FlashAll("Mend Pet")
 	end,
 	
 	FlashAlways = function()
 		c.FlashAll(
 			"Aspect of the Hawk",
 			"Aspect of the Iron Hawk", 
-			"Mend Pet", 
 			"Call Pet", 
 			"Revive Pet")
 	end,
@@ -163,6 +178,12 @@ a.Rotations.Marksmanship = {
 			"Fervor", 
 			"Exhilaration", 
 			"Heart of the Phoenix",
+			"Growl",
+			"Cower",
+			"Last Stand",
+			"Bullheaded",
+			"Mend Pet at 50",
+			"Counter Shot",
 			"Tranquilizing Shot")
 		c.PriorityFlash(
 			"Steady Shot 2",
@@ -182,14 +203,18 @@ a.Rotations.Marksmanship = {
 			"Aimed Shot",
 			"Arcane Shot for Marksmanship",
 			"Barrage",
+			"Mend Pet",
 			"Steady Shot")
+	end,
+	
+	FlashOutOfCombat = function()
+		c.FlashAll("Mend Pet")
 	end,
 	
 	FlashAlways = function()
 		c.FlashAll(
 			"Aspect of the Hawk", 
 			"Aspect of the Iron Hawk", 
-			"Mend Pet", 
 			"Call Pet", 
 			"Revive Pet")
 	end,
@@ -217,6 +242,12 @@ a.Rotations.Survival = {
 			"Fervor", 
 			"Exhilaration", 
 			"Heart of the Phoenix",
+			"Growl",
+			"Cower",
+			"Last Stand",
+			"Bullheaded",
+			"Mend Pet at 50",
+			"Counter Shot",
 			"Tranquilizing Shot")
 		c.PriorityFlash(
 			"Serpent Sting",
@@ -234,14 +265,18 @@ a.Rotations.Survival = {
 			"Arcane Shot for Survival",
 			"Rapid Fire",
 			"Barrage",
+			"Mend Pet",
 			"Cobra Shot")
+	end,
+	
+	FlashOutOfCombat = function()
+		c.FlashAll("Mend Pet")
 	end,
 	
 	FlashAlways = function()
 		c.FlashAll(
 			"Aspect of the Hawk",
 			"Aspect of the Iron Hawk", 
-			"Mend Pet", 
 			"Call Pet", 
 			"Revive Pet")
 	end,

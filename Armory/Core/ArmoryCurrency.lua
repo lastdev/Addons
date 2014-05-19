@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 525 2012-09-20T09:02:14Z
+    Revision: 629 2014-04-09T09:00:00Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -36,6 +36,8 @@ local container = "Currency";
 local currencyLines = {};
 local dirty = true;
 local owner = "";
+
+local CONTENT_REWARDS = { HONOR_CURRENCY, CONQUEST_CURRENCY, JUSTICE_CURRENCY, VALOR_CURRENCY };
 
 local function GetCurrencyLines()
     local dbEntry = Armory.selectedDbBaseEntry;
@@ -124,10 +126,9 @@ function Armory:UpdateCurrency()
     end
     
     -- force update of currencies used in the summary
-    self:GetCurrencyInfo(HONOR_CURRENCY);
-    self:GetCurrencyInfo(CONQUEST_CURRENCY);
-    self:GetCurrencyInfo(JUSTICE_CURRENCY);
-    self:GetCurrencyInfo(VALOR_CURRENCY);
+    for i = 1, #CONTENT_REWARDS do
+		self:GetCurrencyInfo(CONTENT_REWARDS[i]);
+    end
     
     if ( not self:CurrencyEnabled() ) then
         dbEntry:SetValue(container, nil);
@@ -229,4 +230,45 @@ function Armory:CountCurrency(link)
         end
     end
     return 0;
+end
+
+function Armory:IsContentReward(name)
+	for i = 1, #CONTENT_REWARDS do
+		if ( name == (_G.GetCurrencyInfo(CONTENT_REWARDS[i])) ) then
+			return true;
+		end
+	end
+	return false;
+end
+
+function Armory:GetVirtualNumCurrencies()
+	if ( self:CurrencyEnabled() ) then
+		local dbEntry = self.selectedDbBaseEntry;
+		return dbEntry and dbEntry:GetNumValues(container) or 0;
+	else
+		return #CONTENT_REWARDS;
+	end
+end
+
+function Armory:GetVirtualCurrencyInfo(index, contentReward)
+    local name, isHeader, count, icon, earnedThisWeek, earnablePerWeek;
+	
+	if ( not contentReward and self:CurrencyEnabled() ) then
+		local dbEntry = self.selectedDbBaseEntry;
+        if ( dbEntry ) then
+			name, isHeader, _, _, _, count, icon = dbEntry:GetValue(container, index);
+			for i = 1, #CONTENT_REWARDS do
+				if ( name == (_G.GetCurrencyInfo(CONTENT_REWARDS[i])) ) then
+					return self:GetVirtualCurrencyInfo(i, true);
+				end
+			end
+		end
+	else
+		name, count, icon, earnedThisWeek, earnablePerWeek = self:GetCurrencyInfo(CONTENT_REWARDS[index]);
+		if ( earnablePerWeek and CONTENT_REWARDS[index] == VALOR_CURRENCY ) then
+			earnablePerWeek = floor(earnablePerWeek / 100);
+		end
+	end
+
+	return name, isHeader, count, icon, earnedThisWeek, earnablePerWeek;
 end

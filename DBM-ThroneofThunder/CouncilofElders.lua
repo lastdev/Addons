@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod(816, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 10185 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
 mod:SetCreatureID(69078, 69132, 69134, 69131)--69078 Sul the Sandcrawler, 69132 High Prestess Mar'li, 69131 Frost King Malakk, 69134 Kazra'jin --Adds: 69548 Shadowed Loa Spirit,
+mod:SetEncounterID(1570)
 mod:SetZone()
 mod:SetUsedIcons(7, 6)
 mod:SetBossHPInfoToHighest()
@@ -10,12 +11,12 @@ mod:SetBossHPInfoToHighest()
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",
+	"SPELL_CAST_START 136189 136521 136894 137203 137350 137891 136990",
+	"SPELL_AURA_APPLIED 136442 136903 136992 136922 136860 136878 137359 137166 137641",
+	"SPELL_AURA_APPLIED_DOSE 136903 136878",
+	"SPELL_AURA_REMOVED 136442 136903 136904 137359 136992 136922",
+	"SPELL_DAMAGE 136507",
+	"SPELL_MISSED 136507",
 	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4 boss5"
 )
@@ -113,43 +114,6 @@ local possessesDone = 0
 local dischargeCount = 0
 local darkPowerWarned = false
 
-local showDamagedHealthBar, hideDamagedHealthBar
-do
-	local frame = CreateFrame("Frame") -- using a separate frame avoids the overhead of the DBM event handlers which are not meant to be used with frequently occuring events like all damage events...
-	local damagedMob
-	local hpRemaining = 0
-	local maxhp = 0
-	local function getDamagedHP()
-		return math.max(1, math.floor(hpRemaining / maxhp * 100))
-	end
-	frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-	frame:SetScript("OnEvent", function(self, event, timestamp, subEvent, _, _, _, _, _, destGUID, _, _, _, ...)
-		if damagedMob == destGUID then
-			local damage
-			if subEvent == "SWING_DAMAGE" then 
-				damage = select( 1, ... ) 
-			elseif subEvent == "RANGE_DAMAGE" or subEvent == "SPELL_DAMAGE" or subEvent == "SPELL_PERIODIC_DAMAGE" then 
-				damage = select( 4, ... )
-			end
-			if damage then
-				hpRemaining = hpRemaining - damage
-			end
-		end
-	end)
-	
-	function showDamagedHealthBar(self, mob, spellName, health)
-		damagedMob = mob
-		hpRemaining = health
-		maxhp = health
-		DBM.BossHealth:RemoveBoss(getDamagedHP)
-		DBM.BossHealth:AddBoss(getDamagedHP, spellName)
-	end
-	
-	function hideDamagedHealthBar()
-		DBM.BossHealth:RemoveBoss(getDamagedHP)
-	end
-end
-
 function mod:OnCombatStart(delay)
 	kazraPossessed = false
 	darkPowerWarned = false
@@ -172,37 +136,39 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 136189 then
+	local spellId = args.spellId
+	if spellId == 136189 then
 		if boltCasts == 3 then boltCasts = 0 end
 		boltCasts = boltCasts + 1
 		warnSandBolt:Show(boltCasts)
 		specWarnSandBolt:Show(args.sourceName)
-	elseif args.spellId == 136521 and args:GetSrcCreatureID() == 69078 then--Filter the ones cast by adds dying.
+	elseif spellId == 136521 and args:GetSrcCreatureID() == 69078 then--Filter the ones cast by adds dying.
 		warnQuicksand:Show()
 		timerQuickSandCD:Start()
-	elseif args.spellId == 136894 then
+	elseif spellId == 136894 then
 		warnSandstorm:Show()
 		specWarnSandStorm:Show()
 		timerSandStormCD:Start()
-	elseif args.spellId == 137203 then
+	elseif spellId == 137203 then
 		warnBlessedLoaSpirit:Show()
 		specWarnBlessedLoaSpirit:Show()
 		timerBlessedLoaSpiritCD:Start()
-	elseif args.spellId == 137350 then
+	elseif spellId == 137350 then
 		warnShadowedLoaSpirit:Show()
 		specWarnShadowedLoaSpirit:Show()
 		timerShadowedLoaSpiritCD:Start()
-	elseif args.spellId == 137891 then
+	elseif spellId == 137891 then
 		warnTwistedFate:Show()
 		specWarnTwistedFate:Show()
 		timerTwistedFateCD:Start()
-	elseif args.spellId == 136990 then
+	elseif spellId == 136990 then
 		timerFrostBiteCD:Schedule(1.5)
 	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 136442 then--Possessed
+	local spellId = args.spellId
+	if spellId == 136442 then--Possessed
 		local cid = args:GetDestCreatureID()
 		local uid
 		for i = 1, 5 do
@@ -216,7 +182,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		specWarnPossessed:Show(args.spellName, args.destName)
 		if uid and UnitBuff(uid, lingeringPresence) then
 			local _, _, _, stack = UnitBuff(uid, lingeringPresence)
-			if self:IsDifficulty("heroic10", "heroic25") then
+			if self:IsHeroic() then
 				timerDarkPowerCD:Start(math.floor(68/(0.15*stack+1.0)+0.5))--(68, 59, 52, 47)
 			elseif self:IsDifficulty("normal25") then
 				timerDarkPowerCD:Start(math.floor(68/(0.10*stack+1.0)+0.5))--(68, 62, 57, 52)
@@ -241,7 +207,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			local elapsed, total = timerBlessedLoaSpiritCD:GetTime()
 			timerBlessedLoaSpiritCD:Cancel()
 			if elapsed and total then--If for some reason it was nil, like it JUST came off cd, do nothing, she should cast loa spirit right away.
-				if self:IsDifficulty("heroic10", "heroic25") then
+				if self:IsHeroic() then
 					timerTwistedFateCD:Update(elapsed, total)
 				else
 					timerShadowedLoaSpiritCD:Update(elapsed, total)
@@ -261,23 +227,24 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 		if DBM.BossHealth:IsShown() and self.Options.PHealthFrame then
 			local bossHealth = math.floor(UnitHealthMax(uid or "boss4") * 0.25)
-			showDamagedHealthBar(self, args.destGUID, args.spellName.." : "..args.destName, bossHealth)
+			self:ShowDamagedHealthBar(args.destGUID, args.spellName.." : "..args.destName, bossHealth)
 		end
-	elseif args.spellId == 136903 then--Player Debuff version, not cast version
+	elseif spellId == 136903 then--Player Debuff version, not cast version
+		local amount = args.amount or 1
 		timerFrigidAssault:Start(args.destName)
 		if self:AntiSpam(2.5, 1) then
-			warnFrigidAssault:Show(args.destName, args.amount or 1)
+			warnFrigidAssault:Show(args.destName, amount)
 			if args:IsPlayer() then
-				if (args.amount or 1) >= 9 then
-					specWarnFrigidAssault:Show(args.amount)
+				if amount >= 9 then
+					specWarnFrigidAssault:Show(amount)
 				end
 			else
-				if (args.amount or 1) >= 9 and not UnitDebuff("player", GetSpellInfo(136903)) and not UnitIsDeadOrGhost("player") then
+				if amount >= 9 and not UnitDebuff("player", GetSpellInfo(136903)) and not UnitIsDeadOrGhost("player") then
 					specWarnFrigidAssaultOther:Show(args.destName)
 				end
 			end
 		end
-	elseif args.spellId == 136992 then--Player Debuff version, not cast version
+	elseif spellId == 136992 then--Player Debuff version, not cast version
 		warnBitingCold:Show(args.destName)
 		if self.Options.SetIconOnBitingCold then
 			self:SetIcon(args.destName, 7)--Cross
@@ -288,7 +255,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerBitingCold:Start()
 			yellBitingCold:Yell()
 		end
-	elseif args.spellId == 136922 and (args.amount or 1) == 1 then--Player Debuff version, not cast version (amount is just a spam filter for ignoring SPELL_AURA_APPLIED_DOSE on this event)
+	elseif spellId == 136922 then--Player Debuff version, not cast version (amount is just a spam filter for ignoring SPELL_AURA_APPLIED_DOSE on this event)
 		warnFrostBite:Show(args.destName)
 		if self.Options.SetIconOnFrostBite then
 			self:SetIcon(args.destName, 6)--Square
@@ -299,28 +266,29 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif args:IsSpellID(136860, 136878) and args:IsPlayer() and self:AntiSpam(2, 3) then--Trigger off initial quicksand debuff and ensnared stacks. much less cpu them registering damage events and just as effective.
 		specWarnQuickSand:Show()
-	elseif args.spellId == 137359 then
+	elseif spellId == 137359 then
 		warnMarkedSoul:Show(args.destName)
 		timerMarkedSoul:Start(args.destName)
 		if args:IsPlayer() then
 			specWarnMarkedSoul:Show()
 			soundMarkedSoul:Play()
 		end
-	elseif args.spellId == 137166 then
+	elseif spellId == 137166 then
 		dischargeCount = dischargeCount + 1
 		warnDischarge:Show(dischargeCount)
 		specWarnDischarge:Show(dischargeCount)
 		if self.Options.AnnounceCooldowns then
 			DBM:PlayCountSound(dischargeCount)
 		end
-	elseif args.spellId == 137641 and args:IsPlayer() then
+	elseif spellId == 137641 and args:IsPlayer() then
 		specWarnSoulFragment:Show()
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 136442 then--Possessed
+	local spellId = args.spellId
+	if spellId == 136442 then--Possessed
 		darkPowerWarned = false
 		timerDarkPowerCD:Cancel()
 		if args:GetDestCreatureID() == 69078 then--Sul the Sandcrawler
@@ -328,7 +296,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		elseif args:GetDestCreatureID() == 69132 then--High Prestess Mar'li
 			--Swap timer back
 			local elapsed, total
-			if self:IsDifficulty("heroic10", "heroic25") then
+			if self:IsHeroic() then
 				elapsed, total = timerTwistedFateCD:GetTime()
 			else
 				elapsed, total = timerShadowedLoaSpiritCD:GetTime()
@@ -350,20 +318,20 @@ function mod:SPELL_AURA_REMOVED(args)
 			timerRecklessChargeCD:Cancel()--Because it's not going to be 25 sec anymore. It'll go back to 6 seconds. He'll probably do it right away since more than likely it'll be off CD
 		end
 		if DBM.BossHealth:IsShown() and self.Options.PHealthFrame then
-			hideDamagedHealthBar()
+			self:RemoveDamagedHealthBar()
 		end
-	elseif args.spellId == 136903 then
+	elseif spellId == 136903 then
 		timerFrigidAssault:Cancel(args.destName)
-	elseif args.spellId == 136904 then
+	elseif spellId == 136904 then
 		timerFrigidAssaultCD:Start()
-	elseif args.spellId == 137359 then
+	elseif spellId == 137359 then
 		timerMarkedSoul:Cancel(args.destName)
-	elseif args.spellId == 136992 and self.Options.SetIconOnBitingCold then
+	elseif spellId == 136992 and self.Options.SetIconOnBitingCold then
 		self:SetIcon(args.destName, 0)
 		if args:IsPlayer() then
 			timerBitingCold:Cancel()
 		end
-	elseif args.spellId == 136922 and self.Options.SetIconOnFrostBite then
+	elseif spellId == 136922 and self.Options.SetIconOnFrostBite then
 		self:SetIcon(args.destName, 0)
 		if args:IsPlayer() then
 			timerFrostBite:Cancel()

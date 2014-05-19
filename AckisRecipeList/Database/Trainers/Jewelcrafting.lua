@@ -8,6 +8,7 @@ local Z = private.ZONE_NAMES
 -- What we _really_ came here to see...
 -----------------------------------------------------------------------
 function private:InitializeJewelcraftingTrainers()
+	self:AddTrainer(5388,  "Ingo Woolybush", Z.DUSTWALLOW_MARSH, 66.3, 45.1, "Alliance")
 	self:AddTrainer(15501, "Aleinia", Z.EVERSONG_WOODS, 48.5, 47.5, "Horde")
 	self:AddTrainer(18751, "Kalaen", Z.HELLFIRE_PENINSULA, 56.8, 37.7, "Horde")
 	self:AddTrainer(18774, "Tatiana", Z.HELLFIRE_PENINSULA, 54.6, 63.6, "Alliance")
@@ -28,6 +29,7 @@ function private:InitializeJewelcraftingTrainers()
 	self:AddTrainer(46675, "Lugrah", Z.ORGRIMMAR, 72.49, 34.31, "Horde")
 	self:AddTrainer(52586, "Hanner Gembold", Z.IRONFORGE, 51, 25.4, "Alliance") -- COMPLETELY UPDATED
 	self:AddTrainer(52645, "Aessa Silverdew", Z.DARNASSUS, 54.2, 30.4, "Alliance") -- COMPLETELY UPDATED
+	self:AddTrainer(52657, "Nahari Cloudchaser", Z.THUNDER_BLUFF, 35.0, 54.0, "Horde") -- COMPLETELY UPDATED
 	self:AddTrainer(65098, "Mai the Jade Shaper", Z.THE_JADE_FOREST, 48.1, 35.0, "Neutral")
 
 	self.InitializeJewelcraftingTrainers = nil

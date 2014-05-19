@@ -1,6 +1,6 @@
 ## Interface: 50400
 ## Title: Mizus RaidTracker
-## Version: 0.54.2
+## Version: 0.54.8
 ## Notes: Tracks raid, loot and attendance
 ## Author: Mîzukichan@EU-Antonidas
 ## LoadOnDemand: 0
@@ -9,7 +9,7 @@
 ## X-Max-Interface: 50400
 ## X-Min-Interface: 50001
 ## X-Website: http://nanaki.affenfelsen.de
-## X-Curse-Packaged-Version: v0.54.2
+## X-Curse-Packaged-Version: v0.54.8
 ## X-Curse-Project-Name: Mizus RaidTracker
 ## X-Curse-Project-ID: mizusraidtracker
 ## X-Curse-Repository-ID: wow/mizusraidtracker/mainline

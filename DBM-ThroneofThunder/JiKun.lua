@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod(828, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 10140 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
 mod:SetCreatureID(69712)
+mod:SetEncounterID(1573)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -10,9 +11,9 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"UNIT_SPELLCAST_CHANNEL_START boss1",
 	"UNIT_SPELLCAST_START boss1",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED",
+	"SPELL_AURA_APPLIED 134366 133755 140741 140571",
+	"SPELL_AURA_APPLIED_DOSE 134366 140741",
+	"SPELL_AURA_REMOVED 134366 133755 140741 140571",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"CHAT_MSG_MONSTER_EMOTE"
 )
@@ -73,8 +74,8 @@ function mod:OnCombatStart(delay)
 	end
 	if self.Options.SpecWarn138319move then--specWarnFeedPool is turned on, since it's off by default, no reasont to register high CPU events unless user turns it on
 		self:RegisterShortTermEvents(
-			"SPELL_PERIODIC_DAMAGE",
-			"SPELL_PERIODIC_MISSED"
+			"SPELL_PERIODIC_DAMAGE 138319",
+			"SPELL_PERIODIC_MISSED 138319"
 		)
 	end
 end
@@ -87,7 +88,8 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 134366 then
+	local spellId = args.spellId
+	if spellId == 134366 then
 		local amount = args.amount or 1
 		warnTalonRake:Show(args.destName, amount)
 		timerTalonRake:Start(args.destName)
@@ -101,25 +103,26 @@ function mod:SPELL_AURA_APPLIED(args)
 				specWarnTalonRakeOther:Show(args.destName)
 			end
 		end
-	elseif args.spellId == 133755 and args:IsPlayer() then
+	elseif spellId == 133755 and args:IsPlayer() then
 		timerFlight:Start()
-	elseif args.spellId == 140741 and args:IsPlayer() then
+	elseif spellId == 140741 and args:IsPlayer() then
 		warnPrimalNutriment:Show(args.amount or 1)
 		timerPrimalNutriment:Start()
-	elseif args.spellId == 140571 and args:IsPlayer() then
+	elseif spellId == 140571 and args:IsPlayer() then
 		timerLessons:Start()
 	end
 end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 134366 then
+	local spellId = args.spellId
+	if spellId == 134366 then
 		timerTalonRake:Cancel(args.destName)
-	elseif args.spellId == 133755 and args:IsPlayer() then
+	elseif spellId == 133755 and args:IsPlayer() then
 		timerFlight:Cancel()
-	elseif args.spellId == 140741 and args:IsPlayer() then
+	elseif spellId == 140741 and args:IsPlayer() then
 		timerPrimalNutriment:Cancel()
-	elseif args.spellId == 140571 and args:IsPlayer() then
+	elseif spellId == 140571 and args:IsPlayer() then
 		timerLessons:Cancel()
 	end
 end
@@ -158,7 +161,7 @@ function mod:UNIT_SPELLCAST_START(uId, _, _, _, spellId)
 		warnDowndraft:Show()
 		specWarnDowndraft:Show()
 		timerDowndraft:Start()
-		if self:IsDifficulty("heroic10", "heroic25") then
+		if self:IsHeroic() then
 			timerDowndraftCD:Start(93)
 		else
 			timerDowndraftCD:Start()--Todo, confirm they didn't just change normal to 90 as well. in my normal logs this had a 110 second cd on normal

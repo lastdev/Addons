@@ -1,0 +1,84 @@
+------------------------------------------------------------------------
+r860 | asixandur | 2013-10-14 12:06:46 +0000 (Mon, 14 Oct 2013) | 1 line
+Changed paths:
+   M /trunk/XPerl_Party/XPerl_Party.lua
+   M /trunk/XPerl_Target/XPerl_Target.lua
+   M /trunk/XPerl_TargetTarget/XPerl_TargetTarget.lua
+
+Fixed pvp marks disabling on party, target and target's target
+------------------------------------------------------------------------
+r859 | asixandur | 2013-10-13 16:30:31 +0000 (Sun, 13 Oct 2013) | 4 lines
+Changed paths:
+   M /trunk/XPerl.toc
+   M /trunk/XPerl_Options/XPerl_FrameOptions.lua
+   M /trunk/XPerl_Options/XPerl_FrameOptions.xml
+   M /trunk/localization.lua
+
+Tag as 3.7.5 for settings updating
+Debuffs should now be correctly enabled and disabled in the TTT Frame and also for FocusTarget and PetTarget
+Changing these options in combat is not advised.
+It seems that FocusTarget is not so responsive and sometimes it doesn't refresh correctly.
+------------------------------------------------------------------------
+r858 | asixandur | 2013-10-08 11:27:57 +0000 (Tue, 08 Oct 2013) | 2 lines
+Changed paths:
+   M /trunk/XPerl.toc
+   M /trunk/XPerl_Options/XPerl_FrameOptions.lua
+   M /trunk/XPerl_Options/XPerl_FrameOptions.xml
+   M /trunk/localization.lua
+
+Tag as 3.7.4 for settings updating
+Debuffs are now correctly enabled and disabled in the TTT Frame
+------------------------------------------------------------------------
+r857 | asixandur | 2013-09-22 15:35:13 +0000 (Sun, 22 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/XPerl_Options/XPerl_FrameOptions.xml
+   M /trunk/XPerl_Options/localization.itIT.lua
+   M /trunk/XPerl_Options/localization.lua
+   M /trunk/XPerl_TargetTarget/XPerl_TargetTarget.lua
+
+You can now enable Target's Target Debuffs independently from buffs
+------------------------------------------------------------------------
+r856 | asixandur | 2013-09-15 05:44:37 +0000 (Sun, 15 Sep 2013) | 3 lines
+Changed paths:
+   M /trunk/XPerl.toc
+   M /trunk/XPerl_Options/XPerl_FrameOptions.lua
+   M /trunk/XPerl_Options/XPerl_FrameOptions.xml
+   M /trunk/XPerl_Options/localization.deDE.lua
+   M /trunk/XPerl_Options/localization.esES.lua
+   M /trunk/XPerl_Options/localization.frFR.lua
+   M /trunk/XPerl_Options/localization.itIT.lua
+   M /trunk/XPerl_Options/localization.koKR.lua
+   M /trunk/XPerl_Options/localization.lua
+   M /trunk/XPerl_Options/localization.ruRU.lua
+   M /trunk/XPerl_Options/localization.zhCN.lua
+   M /trunk/XPerl_Options/localization.zhTW.lua
+   M /trunk/XPerl_RaidFrames/XPerl_Raid.lua
+   M /trunk/localization.lua
+
+New setting to disable the decimal digit in the raid mana and health percentages (thanks ooblushy88oo for the suggestion)
+Tag as 3.7.3
+Removed unused translations
+------------------------------------------------------------------------
+r855 | asixandur | 2013-09-12 10:50:13 +0000 (Thu, 12 Sep 2013) | 2 lines
+Changed paths:
+   M /trunk/XPerl.toc
+   M /trunk/XPerl_ArcaneBar/XPerl_ArcaneBar.toc
+   M /trunk/XPerl_CustomHighlight/XPerl_CustomHighlight.toc
+   M /trunk/XPerl_Options/XPerl_Options.toc
+   M /trunk/XPerl_Party/XPerl_Party.toc
+   M /trunk/XPerl_PartyPet/XPerl_PartyPet.toc
+   M /trunk/XPerl_Player/XPerl_Player.toc
+   M /trunk/XPerl_PlayerBuffs/XPerl_PlayerBuffs.toc
+   M /trunk/XPerl_PlayerPet/XPerl_PlayerPet.toc
+   M /trunk/XPerl_RaidAdmin/XPerl_RaidAdmin.toc
+   M /trunk/XPerl_RaidFrames/XPerl_RaidFrames.toc
+   M /trunk/XPerl_RaidHelper/XPerl_RaidHelper.toc
+   M /trunk/XPerl_RaidMonitor/XPerl_RaidMonitor.toc
+   M /trunk/XPerl_RaidPets/XPerl_RaidPets.toc
+   M /trunk/XPerl_Target/XPerl_Target.toc
+   M /trunk/XPerl_TargetTarget/XPerl_TargetTarget.toc
+   M /trunk/localization.lua
+
+Tag as 3.7.2
+Toc update
+------------------------------------------------------------------------

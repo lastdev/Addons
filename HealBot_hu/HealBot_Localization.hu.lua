@@ -664,7 +664,7 @@ function HealBot_Lang_huHU()
     HEALBOT_CUSTOM_CASTBY_FRIEND            = "barát"
 
     HEALBOT_CUSTOM_DEBUFF_CATS = {
-            [HEALBOT_DEBUFF_ACID_DRENCHED_MANDIBLES] = 2,
+            --[[[HEALBOT_DEBUFF_ACID_DRENCHED_MANDIBLES] = 2,
             [HEALBOT_DEBUFF_AGONIZING_FLAMES]      = 2,
             [HEALBOT_DEBUFF_BOILING_BLOOD]         = 2,
             [HEALBOT_DEBUFF_BURN]                  = 2,
@@ -748,7 +748,7 @@ function HealBot_Lang_huHU()
             [HEALBOT_DEBUFF_VILE_GAS]              = 12,
             [HEALBOT_DEBUFF_VOLATILE_OOZE]         = 12,
             [HEALBOT_DEBUFF_WATERLOGGED]           = 13,
-            [HEALBOT_DEBUFF_WEB_WRAP]              = 13,
+            [HEALBOT_DEBUFF_WEB_WRAP]              = 13,]]--
         }
 
     HEALBOT_ABOUT_DESC1                    = "panel Hozzáadása skinable bárok gyogyulás, decursive buffing, újraélesztö és aggro nyomon követése"

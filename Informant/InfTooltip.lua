@@ -1,7 +1,7 @@
 --[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.19.5445 (QuiescentQuoll)
 	Revision: $Id: InfTooltip.lua 5406 2013-05-10 10:30:00Z brykrys $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
@@ -23,7 +23,7 @@
 		along with this program(see GPL.txt); if not, write to the Free Software
 		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ]]
-Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Informant/InfTooltip.lua $", "$Rev: 5406 $")
+Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Informant/InfTooltip.lua $", "$Rev: 5406 $")
 
 local nilSafeString			-- nilSafeString(String)
 local whitespace			-- whitespace(length)

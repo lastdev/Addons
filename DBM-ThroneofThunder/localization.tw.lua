@@ -71,7 +71,6 @@ L:SetWarningLocalization({
 L:SetOptionLocalization({
 	specWarnCrystalShell	= "當你沒有$spell:137633減益並且血量大於90%時顯示特別警告",
 	InfoFrame				= "為玩家沒有$spell:137633顯示訊息框架",
-	SetIconOnTurtles		= "為$journal:7129標示團隊圖示",
 	ClearIconOnTurtles		= "當$journal:7129中了$spell:133971清除團隊圖示",
 	AnnounceCooldowns		= "為團隊冷卻數出$spell:134920施放"
 })
@@ -271,7 +270,7 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(831)
 
 L:SetWarningLocalization({
-	specWarnUnstablVitaJump		= "動盪生命傳到你身上!"
+	specWarnUnstablVitaJump	= "動盪生命傳到你身上!"
 })
 
 L:SetOptionLocalization({
@@ -280,8 +279,8 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Defeat						= "慢著!",
-	BigWigsRecommendation		= "If you need a vita soaker list, it's recommended you use BigWigs and BigWigs Ra-den assist for this boss"
+	Defeat					= "慢著!",
+	BigWigsRecommendation	= "如果你需要動盪生命列表，建議你使用BigWigs和BigWigs Ra-den assist"
 })
 
 -------------

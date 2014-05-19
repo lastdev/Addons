@@ -25,17 +25,17 @@ borderFrame:SetHeight(borderHeight)
 
 borderFrame:SetBackdrop({
 	bgFile=[[Interface\DialogFrame\UI-DialogBox-Background]],
-	edgeFile=[[Interface\AddOns\ReagentRestocker\RRBorders]],
-	--edgeFile=[[Interface\DialogFrame\UI-DialogBox-Border]],
+	--edgeFile=[[Interface\AddOns\ReagentRestocker\RRBorders]],
+	edgeFile=[[Interface\DialogFrame\UI-DialogBox-Border]],
 	tile="true",
 	tileSize=32,
 	edgeSize=32,
 	insets = 
 	{
-		left=1,
-		right=1,
-		top=1,
-		bottom=1
+		left=2,
+		right=2,
+		top=2,
+		bottom=2
 	}
 })
 
@@ -111,12 +111,13 @@ closeFrame:Show();
 
 local titleFrame = _G.CreateFrame("Frame", "RRMerchantTitle", borderFrame);
 titleFrame:SetWidth(150)
-titleFrame:SetHeight(20)
+titleFrame:SetHeight(48)
 titleFrame:SetFrameStrata("DIALOG")
-titleFrame:SetPoint("TOP", borderFrame, "TOP",5,15)
+titleFrame:SetPoint("BOTTOM", borderFrame, "TOP",5,-5)
 titleFrame:SetBackdrop({
 	bgFile=[[Interface\DialogFrame\UI-DialogBox-Background]],
-	edgeFile=[[Interface\AddOns\ReagentRestocker\RRBorders]],
+--	edgeFile=[[Interface\AddOns\ReagentRestocker\RRBorders]],
+	edgeFile=[[Interface\DialogFrame\UI-DialogBox-Border]],
 	tile="true",
 	tileSize=32,
 	edgeSize=32,

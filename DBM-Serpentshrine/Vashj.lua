@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Vashj", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 513 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 535 $"):sub(12, -3))
 mod:SetCreatureID(21212)
 mod:SetModelID(20748)
 mod:SetZone()
@@ -9,7 +9,7 @@ mod:SetUsedIcons(1)
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_START",
@@ -40,7 +40,7 @@ local timerStrider		= mod:NewTimer(63, "TimerStrider", 475)
 local timerNaga			= mod:NewTimer(47.5, "TimerNaga", 2120)
 
 mod:AddBoolOption("RangeFrame", true)
-mod:AddBoolOption("ChargeIcon", true)
+mod:AddBoolOption("ChargeIcon", false)
 mod:AddBoolOption("AutoChangeLootToFFA", true)
 
 local shieldLeft = 4

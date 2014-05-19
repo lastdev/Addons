@@ -124,6 +124,23 @@ local support = {
 
 -- this content will be subject to frequent changes, do not bother translating it !!
 local whatsnew = {
+	{	name = "5.4.003 Changes",
+		bulletedList = {
+			"Created and added support for 3 new libraries : LibCraftInfo, LibCraftLevels, LibCraftReagents.",
+			"These libraries intend to replace the lost functionality caused by tables reset to zero in LibPeriodicTable.",
+			"I now have my own dataminer, so these tables should be easier to maintain when a patch hits.",
+			"I also cleaned up some hard coded tables to now use the libraries instead.",
+			"Overall, the addon now consumes a little bit more memory, but the data sources are way more complete than before.",
+			"Replaced the internal list of recipes by LibCraftInfo.",
+			"Fixed the Characters -> Profession pane no longer showing reagents due to LPT changes.",
+			"Fixed the Grids -> Tradeskills pane no longer correct due to LPT changes.",
+		},
+	},
+	{	name = "5.4.002 Changes",
+		bulletedList = {
+			"Fixed profession levels reported as 0.",
+		},
+	},
 	{	name = "5.4.001 Changes",
 		bulletedList = {
 			"Added new 5.4 achievements.",
