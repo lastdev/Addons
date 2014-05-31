@@ -25,7 +25,13 @@ L["Anchor Point"] = "Ponto da âncora"
 L["Angle"] = "Ângulo"
 L["Animate"] = "Animar"
 L["Animated Expand and Collapse"] = "Animação expande e esvai"
--- L["Animation relative duration description"] = ""
+L["Animation relative duration description"] = [=[A duração da animação relativa ao tempo de duração do display, expresso como fração (1/2), porcentagem (50%), ou decimal. (0.5)
+|cFFFF0000Nota:|r se um display não tiver progresso (o gatilho é não-temporal, é aura sem duração, etc), a animação não irá tocar.
+
+|cFF4444FFFou Exemplo:|r
+Se a duração da animação estiver setada para |cFF00CC0010%|r, e o display do gatilho for um benefício que dure 20 segundos, o começ da animação tocará por 2 segundos.
+Se a duração da animação estiver setada para |cFF00C0010%|r, e o gatilho do display for um benefício que não tem duração, nenhum começõ de animação irá tocar (no entanto, tocaria se voce especificasse uma duração em segundos)."
+WeakAuras → Opções → Opções ]=] -- Needs review
 L["Animations"] = "Animações"
 L["Animation Sequence"] = "Sequência da animação"
 L["Aquatic"] = "Aquático"
@@ -267,16 +273,22 @@ L["Sound Channel"] = "Canal de som"
 L["Sound File Path"] = "Caminho do arquivo de som"
 L["Space"] = "Espaço"
 L["Space Horizontally"] = "Espaço horizontal"
--- L["Space Vertically"] = ""
--- L["Spell ID"] = ""
--- L["Spell ID dialog"] = ""
--- L["Stack Count"] = ""
--- L["Stack Count Position"] = ""
--- L["Stack Info"] = ""
--- L["Stacks Settings"] = ""
+L["Space Vertically"] = "Espaçar Verticalmente" -- Needs review
+L["Spell ID"] = "ID da magia" -- Needs review
+L["Spell ID dialog"] = [=[
+Voce especificou uma aura por |cFFFF0000ID da magia|r.
+
+By default, |cFF8800FFWeakAuras|r cannot distinguish between auras with the same name but different |cFFFF0000spell ID|r.
+However, if the Use Full Scan option is enabled, |cFF8800FFWeakAuras|r can search for specific |cFFFF0000spell ID|rs.
+
+Would you like to enable Use Full Scan to match this |cFFFF0000spell ID|r?]=] -- Needs review
+L["Stack Count"] = "Contagem do Monte" -- Needs review
+L["Stack Count Position"] = "Posição da Contagem do Monte" -- Needs review
+L["Stack Info"] = "Informação do Monte" -- Needs review
+L["Stacks Settings"] = "Configurações do Monte" -- Needs review
 -- L["Stagger"] = ""
 -- L["Stance (Warrior)"] = ""
--- L["Start"] = ""
+L["Start"] = "Início" -- Needs review
 -- L["Stealable"] = ""
 -- L["Stealthed"] = ""
 -- L["Sticky Duration"] = ""

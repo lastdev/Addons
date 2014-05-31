@@ -4,9 +4,7 @@
 
 -- Whats new info
 SMARTBUFF_WHATSNEW = "|cffffffffWhats new:|r\n\n"
-  .."- Fixed LUA errors with sliders\n\n"
-  .."- Fixed action button position issue\n\n"
-  .."- Updated TOC\n\n"
+  .."- Fixed LUA errors with RealmName\n\n"
   .."- Please let me know if anything is missing (buffs/consumables/etc.), thanks!\n\n"
   --.."- Thanks for donation: Isabela, Ronald G. :)\n\n"
   ;

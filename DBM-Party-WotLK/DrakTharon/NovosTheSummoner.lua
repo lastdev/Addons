@@ -1,15 +1,16 @@
 local mod	= DBM:NewMod(589, "DBM-Party-WotLK", 4, 273)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(26631)
+mod:SetEncounterID(371, 372)
 mod:SetZone()
 
 mod:RegisterCombat("yell", L.YellPull)
 mod:RegisterKill("yell", L.YellKill)
 mod:SetWipeTime(25)
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_YELL"
 )
 

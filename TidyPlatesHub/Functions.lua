@@ -53,9 +53,6 @@ local CachedUnitClass = TidyPlatesUtility.CachedUnitClass
 local IsFriend = TidyPlatesUtility.IsFriend
 local IsGuildmate = TidyPlatesUtility.IsGuildmate
 
-
--- InstanceStatus, CachedUnitDescription, CachedUnitGuild, CachedUnitClass, IsFriend, IsGuildmate
-
 local isTanked = TidyPlatesWidgets.IsTankedByAnotherTank
 local function IsTankedByAnotherTank(...)
 	if LocalVars.ColorEnableOffTank and isTanked(...) then return true end
@@ -69,6 +66,8 @@ local CreateComboPointWidget = WidgetLib.CreateComboPointWidget
 local CreateTotemIconWidget = WidgetLib.CreateTotemIconWidget
 
 local function DummyFunction() return end
+
+local MiniMobScale = .7
 
 local ReactionColors = {
 	["FRIENDLY"] = {
@@ -271,7 +270,7 @@ local function AlphaFunctionByThreatHigh (unit)
 	if InCombatLockdown() and unit.reaction == "HOSTILE" then
 		if unit.threatValue > 1 and unit.health > 0 then return LocalVars.OpacitySpotlight end
 	elseif LocalVars.ColorShowPartyAggro and unit.reaction == "FRIENDLY" then
-		if GetAggroCondition(unit.name) then return LocalVars.OpacitySpotlight end
+		if GetAggroCondition(unit.rawName) then return LocalVars.OpacitySpotlight end
 	end
 end
 
@@ -281,7 +280,7 @@ local function AlphaFunctionByThreatLow (unit)
 		if IsTankedByAnotherTank(unit) then return end
 		if unit.threatValue < 2 and unit.health > 0 then return LocalVars.OpacitySpotlight end
 	elseif LocalVars.ColorShowPartyAggro and unit.reaction == "FRIENDLY" then
-		if GetAggroCondition(unit.name) then return LocalVars.OpacitySpotlight end
+		if GetAggroCondition(unit.rawName) then return LocalVars.OpacitySpotlight end
 	end
 end
 	--]]
@@ -297,7 +296,7 @@ end
 			if IsTankedByAnotherTank(unit) then return HEADLINEMODE end
 			if unit.threatValue < 2 and unit.health > 0 then return BARMODE end
 		elseif LocalVars.ColorShowPartyAggro and unit.reaction == "FRIENDLY" then
-			if GetAggroCondition(unit.name) == true then return BARMODE end
+			if GetAggroCondition(unit.rawName) == true then return BARMODE end
 		end
 		return HEADLINEMODE
 	end,
@@ -313,8 +312,6 @@ local function StyleDelegate(unit)
 end
 
 
-
-
 ------------------------------------------------------------------------------------
 -- Binary Plate Styles
 ------------------------------------------------------------------------------------
@@ -323,6 +320,9 @@ local function SetStyleBinaryDelegate(unit)
 	if StyleDelegate(unit) == 2 then return "NameOnly"
 	else return "Default" end
 end
+
+
+
 
 
 
@@ -365,7 +365,8 @@ local function ColorFunctionByClassFriendly(unit)
 
 		-- Return Color
 		if class and RaidClassColors[class] then
-			return RaidClassColors[class] end
+			return RaidClassColors[class]
+		end
 	end
 
 	-- For unit types with no Class info available, the function returns nil (meaning, default reaction color)
@@ -455,9 +456,12 @@ local function ColorFunctionByLevelColor(unit)
 	return tempColor
 end
 
+local FriendlyBarFunctions = {ColorFunctionByReaction, ColorFunctionByClassFriendly,
+								ColorFunctionByHealth, DummyFunction}
 
-
-local ColorFunctions = {DummyFunction, ColorFunctionByClassEnemy, ColorFunctionByThreat, ColorFunctionByReaction, ColorFunctionByLevelColor, ColorFunctionByRaidIcon, ColorFunctionByHealth, ColorFunctionByClassFriendly }
+local EnemyBarFunctions = {ColorFunctionByThreat, ColorFunctionByReaction,
+								ColorFunctionByClassEnemy, ColorFunctionByHealth,
+								DummyFunction}
 
 local function HealthColorDelegate(unit)
 	local color, class
@@ -465,14 +469,27 @@ local function HealthColorDelegate(unit)
 	-- Group Member Aggro Coloring
 	if unit.reaction == "FRIENDLY"  then
 		if LocalVars.ColorShowPartyAggro and LocalVars.ColorPartyAggroBar then
-			if GetAggroCondition(unit.name) then color = LocalVars.ColorPartyAggro end
+			if GetAggroCondition(unit.rawName) then color = LocalVars.ColorPartyAggro end
 		end
 	end
 
 	-- Color Mode / Color Spotlight
 	if not color then
-		local func = ColorFunctions[LocalVars.ColorHealthBarMode] or DummyFunction
+		local mode = 1
+		local func
+
+		if unit.reaction == "FRIENDLY" then
+			func = FriendlyBarFunctions[LocalVars.ColorFriendlyBarMode] or DummyFunction
+		else
+			func = EnemyBarFunctions[LocalVars.ColorEnemyBarMode] or DummyFunction
+		end
+
+		--local func = ColorFunctions[mode] or DummyFunction
 		color = func(unit)
+	end
+
+	if LocalVars.UnitSpotlightBarEnable and LocalVars.UnitSpotlightLookup[unit.name] then
+		color = LocalVars.UnitSpotlightColor
 	end
 
 	if color then
@@ -494,9 +511,9 @@ end
 -- By Enemy Healer
 local function WarningBorderFunctionByEnemyHealer(unit)
 	if unit.reaction == "HOSTILE" and unit.type == "PLAYER" then
-		--if TidyPlatesCache and TidyPlatesCache.HealerListByName[unit.name] then
+		--if TidyPlatesCache and TidyPlatesCache.HealerListByName[unit.rawName] then
 
-		if IsHealer(unit.name) then
+		if IsHealer(unit.rawName) then
 			return RaidClassColors[unit.class or ""] or ReactionColors[unit.reaction][unit.type]
 		end
 	end
@@ -544,14 +561,26 @@ local WarningBorderFunctionsUniversal = { DummyFunction, WarningBorderFunctionBy
 local function ThreatColorDelegate(unit)
 	local color
 
+	--LocalVars.ThreatGlowEnable
+
 	-- Friendly Unit Aggro
 	if LocalVars.ColorShowPartyAggro and LocalVars.ColorPartyAggroGlow and unit.reaction == "FRIENDLY" then
-		if GetAggroCondition(unit.name) then color = LocalVars.ColorPartyAggro end
+		if GetAggroCondition(unit.rawName) then color = LocalVars.ColorPartyAggro end
 
 	-- Enemy Units
 	else
-		local func = WarningBorderFunctionsUniversal[LocalVars.ColorDangerGlowMode] or DummyFunction
-		color = func(unit)
+
+		-- NPCs
+		if LocalVars.ThreatGlowEnable then
+			color = WarningBorderFunctionByThreat(unit)
+		end
+
+		-- Players
+		-- Check for Healer?  By Threat already does this.
+	end
+
+	if LocalVars.UnitSpotlightGlowEnable and LocalVars.UnitSpotlightLookup[unit.name] then
+		color = LocalVars.UnitSpotlightColor
 	end
 
 	if color then return color.r, color.g, color.b, 1
@@ -563,11 +592,15 @@ end
 -- Cast Bar Color
 ------------------------------------------------------------------------------
 local function CastBarDelegate(unit)
-	local color
+	local color, alpha
 	if unit.spellInterruptible then
 		color = LocalVars.ColorNormalSpellCast
 	else color = LocalVars.ColorUnIntpellCast end
-	return color.r, color.g, color.b, 1
+
+	if unit.reaction ~= "FRIENDLY" or LocalVars.SpellCastEnableFriendly then alpha = 1
+	else alpha = 0 end
+
+	return color.r, color.g, color.b, alpha
 end
 
 
@@ -621,12 +654,14 @@ local function NameColorByClass(unit)
 	return NameReactionColors[unit.reaction][unit.type]
 end
 
+
 local function NameColorByFriendlyClass(unit)
 	local class, color
 
 	if unit.type == "PLAYER" and unit.reaction == "FRIENDLY" then
 		-- Determine Unit Class
 		class = GetFriendlyClass(unit.name)
+		--print(unit.name, class)
 
 		-- Return color
 		if class and RaidClassColors[class] then
@@ -636,6 +671,8 @@ local function NameColorByFriendlyClass(unit)
 	-- For unit types with no Class info available, return reaction color
 	return NameReactionColors[unit.reaction][unit.type]
 end
+
+
 
 local function NameColorByEnemyClass(unit)
 	local class, color
@@ -652,30 +689,45 @@ local function NameColorByEnemyClass(unit)
 	return NameReactionColors[unit.reaction][unit.type]
 end
 
+local function NameColorByClass(unit)
+	if unit.reaction == "HOSTILE" then
+		return NameColorByEnemyClass(unit)
+	else
+		return NameColorByFriendlyClass(unit)
+	end
+end
+
 local function NameColorByThreat(unit)
 	if InCombatLockdown() then return ColorFunctionByThreat(unit)
 	else return RaidClassColors[unit.class or ""] or NameReactionColors[unit.reaction][unit.type] end
 end
 
+local SemiWhite = {r=1, g=1, b=1, a=.8}
+local SemiWhiter = {r=1, g=1, b=1, a=.9}
+local SemiYellow = {r=1, g=1, b=.8, a=1}
+-- GoldColor, YellowColor
+local function NameColorDefault(unit)
+	if unit.isTarget then return White
+	elseif unit.isMouseover then return SemiWhiter
+	else return SemiWhite end
+end
 
 local NameColorFunctions = {
 	-- Default
-	function(unit) return White end,
+	NameColorDefault,
 	-- By Class
-	NameColorByEnemyClass,
+	NameColorByClass,
 	--NameColorByClass,
 	-- By Threat
 	NameColorByThreat,
 	-- By Reaction
 	NameColorByReaction,
-	-- By Level Color
-	ColorFunctionByLevelColor,
 	-- By Health
 	ColorFunctionByHealth,
+	-- By Level Color
+	ColorFunctionByLevelColor,
 	-- By Significance
 	NameColorBySignificance,
-	-- By Friendly Class
-	NameColorByFriendlyClass,
 }
 
 local function SetNameColorDelegate(unit)
@@ -684,14 +736,26 @@ local function SetNameColorDelegate(unit)
 	if unit.reaction == "FRIENDLY" then
 		-- Party Aggro Coloring -- Overrides the normal coloring
 		if LocalVars.ColorShowPartyAggro and LocalVars.ColorPartyAggroText then
-			if GetAggroCondition(unit.name) then color = LocalVars.ColorPartyAggro end
+			if GetAggroCondition(unit.rawName) then color = LocalVars.ColorPartyAggro end
 		end
 	end
 
 	if not color then
 		if StyleDelegate(unit) == 2 then
-			colorMode = tonumber(LocalVars.TextPlateNameColorMode)
-		else colorMode = tonumber(LocalVars.TextNameColorMode) end
+
+			if unit.reaction == "FRIENDLY" then
+				colorMode = tonumber(LocalVars.HeadlineFriendlyColor)
+			else
+				colorMode = tonumber(LocalVars.HeadlineEnemyColor)
+			end
+
+		else
+			--colorMode = tonumber(LocalVars.TextNameColorMode)
+			if unit.reaction == "FRIENDLY" then colorMode = LocalVars.ColorFriendlyNameMode
+			else colorMode = LocalVars.ColorEnemyNameMode
+			end
+
+		end
 
 		local func = NameColorFunctions[colorMode or 1] or DummyFunction
 		color = func(unit)
@@ -784,7 +848,7 @@ local function HealthFunctionArenaID(unit)
 	local powercolor = WhiteColor
 	local powerstring = ""
 	local arenastring = ""
-	local arenaindex = GetArenaIndex(unit.name)
+	local arenaindex = GetArenaIndex(unit.rawName)
 
 	--arenaindex = 2	-- Tester
 	if unit.type == "PLAYER" then
@@ -844,7 +908,12 @@ local HealthTextModeFunctions = {
 }
 
 local function HealthTextDelegate(unit)
-	local func = HealthTextModeFunctions[LocalVars.TextHealthTextMode] or DummyFunction
+
+	local mode = 1
+	if unit.reaction == "FRIENDLY" then mode = LocalVars.ColorFriendlyStatusTextMode
+	else mode = LocalVars.ColorEnemyStatusTextMode end
+
+	local func = HealthTextModeFunctions[mode] or DummyFunction
 	if LocalVars.TextShowOnlyOnTargets and not (unit.isTarget or unit.isMouseover) then return end -- or unit.isMouseover
 	return func(unit)
 end
@@ -958,7 +1027,7 @@ local function UnitFilter(unit)
 	elseif LocalVars.OpacityFilterFriendlyNPC and unit.type == "NPC" and unit.reaction == "FRIENDLY" then return true
 	elseif LocalVars.OpacityFilterNPC and unit.type == "NPC" then return true
 	elseif LocalVars.OpacityFilterPlayers and unit.type == "PLAYER" then return true
-	elseif LocalVars.OpacityFilterMini and unit.platetype == 2 then return true
+	elseif LocalVars.OpacityFilterMini and unit.isTrivial then return true
 
 	elseif LocalVars.OpacityFilterNonElite and (not unit.isElite) then return true
 	elseif LocalVars.OpacityFilterInactive then
@@ -990,7 +1059,7 @@ local function ScaleFunctionByThreatHigh(unit)
 	if InCombatLockdown() and unit.reaction ~= "FRIENDLY" then
 		if unit.type == "NPC" and unit.threatValue > 1 and unit.health > 2 then return LocalVars.ScaleSpotlight end
 	elseif LocalVars.ColorShowPartyAggro and unit.reaction == "FRIENDLY" then
-		if GetAggroCondition(unit.name) then return LocalVars.ScaleSpotlight end
+		if GetAggroCondition(unit.rawName) then return LocalVars.ScaleSpotlight end
 	end
 end
 
@@ -1000,7 +1069,7 @@ local function ScaleFunctionByThreatLow(unit)
 		if  IsTankedByAnotherTank(unit) then return end
 		if unit.type == "NPC" and unit.health > 2 and unit.threatValue < 2 then return LocalVars.ScaleSpotlight end
 	elseif LocalVars.ColorShowPartyAggro and unit.reaction == "FRIENDLY" then
-		if GetAggroCondition(unit.name) then return LocalVars.ScaleSpotlight end
+		if GetAggroCondition(unit.rawName) then return LocalVars.ScaleSpotlight end
 	end
 end
 
@@ -1029,8 +1098,8 @@ end
 -- By Enemy Healer
 local function ScaleFunctionByEnemyHealer(unit)
 	if unit.reaction == "HOSTILE" and unit.type == "PLAYER" then
-		--if TidyPlatesCache and TidyPlatesCache.HealerListByName[unit.name] then
-		if IsHealer(unit.name) then
+		--if TidyPlatesCache and TidyPlatesCache.HealerListByName[unit.rawName] then
+		if IsHealer(unit.rawName) then
 			return LocalVars.ScaleSpotlight
 		end
 	end
@@ -1068,13 +1137,19 @@ local function ScaleDelegate(...)
 	local unit = ...
 	local scale
 
+	if LocalVars.UnitSpotlightScaleEnable and LocalVars.UnitSpotlightLookup[unit.name] then
+		return LocalVars.UnitSpotlightScale
+	end
+
 	if LocalVars.ScaleIgnoreNonEliteUnits and (not unit.isElite) then
 	elseif LocalVars.ScaleIgnoreNeutralUnits and unit.reaction == "NEUTRAL" then
 	elseif LocalVars.ScaleIgnoreInactive and not (unit.reaction == "FRIENDLY" and (unit.isInCombat or (unit.threatValue > 0) or (unit.health < unit.healthmax))) then
 	elseif LocalVars.ScaleCastingSpotlight and unit.isCasting then scale = LocalVars.ScaleSpotlight
+	elseif LocalVars.ScaleMiniMobs and unit.isMini then
+		scale = MiniMobScale
 	else
-				-- Filter
-		if UnitFilter(unit) then scale = LocalVars.ScaleFiltered
+		-- Filter
+		if (LocalVars.FilterScaleLock or (not unit.isTarget)) and UnitFilter(unit) then scale = LocalVars.ScaleFiltered
 		else
 			local func = ScaleFunctionsUniversal[LocalVars.ScaleSpotlightMode] or DummyFunction
 			scale = func(...)
@@ -1099,7 +1174,7 @@ local function AlphaFunctionByThreatHigh (unit)
 	if InCombatLockdown() and unit.reaction ~= "FRIENDLY" then
 		if unit.threatValue > 1 and unit.health > 0 then return LocalVars.OpacitySpotlight end
 	elseif LocalVars.ColorShowPartyAggro and unit.reaction == "FRIENDLY" then
-		if GetAggroCondition(unit.name) then return LocalVars.OpacitySpotlight end
+		if GetAggroCondition(unit.rawName) then return LocalVars.OpacitySpotlight end
 	end
 end
 
@@ -1109,7 +1184,7 @@ local function AlphaFunctionByThreatLow (unit)
 		if  IsTankedByAnotherTank(unit) then return end
 		if unit.threatValue < 2 and unit.health > 0 then return LocalVars.OpacitySpotlight end
 	elseif LocalVars.ColorShowPartyAggro and unit.reaction == "FRIENDLY" then
-		if GetAggroCondition(unit.name) then return LocalVars.OpacitySpotlight end
+		if GetAggroCondition(unit.rawName) then return LocalVars.OpacitySpotlight end
 	end
 end
 
@@ -1142,8 +1217,8 @@ end
 -- By Enemy Healer
 local function AlphaFunctionByEnemyHealer(unit)
 	if unit.reaction == "HOSTILE" and unit.type == "PLAYER" then
-		--if TidyPlatesCache and TidyPlatesCache.HealerListByName[unit.name] then
-		if IsHealer(unit.name) then
+		--if TidyPlatesCache and TidyPlatesCache.HealerListByName[unit.rawName] then
+		if IsHealer(unit.rawName) then
 			return LocalVars.OpacitySpotlight
 		end
 	end
@@ -1175,6 +1250,10 @@ local function AlphaDelegate(...)
 	local unit = ...
 	local alpha
 
+	if LocalVars.UnitSpotlightOpacityEnable and LocalVars.UnitSpotlightLookup[unit.name] then
+		return LocalVars.UnitSpotlightOpacity
+	end
+
 	if unit.isTarget then return Diminish(LocalVars.OpacityTarget)
 	elseif unit.isCasting and LocalVars.OpacityFullSpell then return Diminish(LocalVars.OpacityTarget)
 	elseif unit.isMouseover and LocalVars.OpacityFullMouseover then return Diminish(LocalVars.OpacityTarget)
@@ -1195,6 +1274,33 @@ local function AlphaDelegate(...)
 		else return Diminish(LocalVars.OpacityNonTarget) end
 	end
 end
+
+------------------------------------------------------------------
+-- Experimental Style Delegate
+------------------------------------------------------------------
+
+local function IsThereText(unit)
+	local text = CustomTextBinaryDelegate(unit)
+	if text and text ~= "" then return true end
+end
+
+local function SetStyleTrinaryDelegate(unit)
+	local style = StyleDelegate(unit)
+	local widget = unit.frame.widgets.DebuffWidget
+
+	if style == 2 then
+		if IsThereText(unit) then
+			return "NameOnly"
+		else
+			return "NameOnly-NoDescription"
+		end
+	elseif IsAuraShown(widget) then
+		return "Default"
+	else
+		return "Default-NoAura"
+	end
+end
+
 
 ------------------------------------------------------------------------------
 -- Aura Widget
@@ -1321,6 +1427,35 @@ local DebuffFilterModes = {
 	end,
 }
 
+--[[
+Auras 3.0
+
+	My Debuffs
+	My Buffs
+	Smart Search
+	Custom
+
+	Smart Search
+
+	My Debuffs + Any buffs added to the list, or blacklisted
+	My Buffs + Any debuffs added to the list, or blacklisted
+	Smart Search = Debuffs on Enemies, Buffs on Friendlies, + List
+
+
+Auras 4.0
+
+	CC Database
+	Cooldown Counter
+	Ability Counter
+
+
+
+
+
+
+
+--]]
+
 
 local DispelTypeHandlers = {
 	-- Curse
@@ -1361,8 +1496,12 @@ local function DebuffFilter(aura)
 	return func(aura)
 end
 
+
+
 local function Prefilter(spellid, spellname, auratype, auratargetreaction)
-	if (auratargetreaction == AURA_TARGET_FRIENDLY) and (AURA_TYPE[auratype] ~= 1) then return true end
+	-- Store debuffs on friendly units.
+	if (auratargetreaction == AURA_TARGET_FRIENDLY) and (AURA_TYPE[auratype] ~= AURA_TYPE_BUFF) then return true end
+	-- Store auras marked in lookup
 	return ((LocalVars.WidgetsDebuffLookup[tostring(spellid)] or LocalVars.WidgetsDebuffLookup[spellname]) ~= nil)
 end
 
@@ -1562,13 +1701,17 @@ local function EnableWatchers()
 
 	-- Aggro/Threat
 	-- Checks to see if the player is using any of the By Threat modes
-	if ThreatFunctionList[AlphaFunctionsUniversal[LocalVars.OpacitySpotlightMode]] or
-		ThreatFunctionList[ColorFunctions[LocalVars.ColorHealthBarMode]] or
-		ThreatFunctionList[WarningBorderFunctionsUniversal[LocalVars.ColorDangerGlowMode]] or
+	-- FriendlyBarFunctions
+	if	ThreatFunctionList[EnemyBarFunctions[LocalVars.ColorEnemyBarMode]] or
+		ThreatFunctionList[NameColorFunctions[LocalVars.ColorEnemyNameMode]] or
+		ThreatFunctionList[FriendlyBarFunctions[LocalVars.ColorFriendlyBarMode]] or
+		ThreatFunctionList[NameColorFunctions[LocalVars.ColorFriendlyNameMode]] or
+		ThreatFunctionList[AlphaFunctionsUniversal[LocalVars.OpacitySpotlightMode]] or
 		ThreatFunctionList[ScaleFunctionsUniversal[LocalVars.ScaleSpotlightMode]] or
-		ThreatFunctionList[NameColorFunctions[LocalVars.TextPlateNameColorMode]] or
-		ThreatFunctionList[NameColorFunctions[LocalVars.TextNameColorMode]] then
-			--print("SettingThreatWarning")
+		ThreatFunctionList[NameColorFunctions[LocalVars.HeadlineEnemyColor]] or
+		ThreatFunctionList[NameColorFunctions[LocalVars.HeadlineFriendlyColor]]
+		or LocalVars.ThreatGlowEnable then
+
 			SetCVar("threatWarning", 3)
 	end
 
@@ -1622,7 +1765,8 @@ end
 ---------------
 -- Apply customization
 ---------------
-local blizzfont =				NAMEPLATE_FONT
+--local blizzfont =				NAMEPLATE_FONT
+local blizzfont =				STANDARD_TEXT_FONT;
 --local blizz_sansserif =					"FONTS\\ARIALN.TTF"
 --local blizz_serif =					"FONTS\\FRIZQT__.TTF"
 --local default_font =					NAMEPLATE_FONT
@@ -1697,6 +1841,7 @@ TidyPlatesHubFunctions.ApplyStyleCustomization = ApplyStyleCustomization
 TidyPlatesHubFunctions.ApplyThemeCustomization = ApplyThemeCustomization
 TidyPlatesHubFunctions.SetMultistyle = StyleDelegate
 TidyPlatesHubFunctions.SetStyleBinary = SetStyleBinaryDelegate
+TidyPlatesHubFunctions.SetStyleTrinary = SetStyleTrinaryDelegate
 TidyPlatesHubFunctions.SetCustomTextBinary = CustomTextBinaryDelegate
 
 ---------------------------------------------

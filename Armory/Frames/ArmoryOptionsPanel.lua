@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 573 2013-01-07T23:24:43Z
+    Revision: 632 2014-04-19T09:31:41Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -28,11 +28,14 @@
 
 local Armory, _ = Armory;
 
+ARMORY_SUMMARY_CURRENCIES_DISPLAYED = 7;
+ARMORY_SUMMARY_CURRENCIES_HEIGHT = 16;
+
 function ArmoryOptionsPanel_OnLoad(self)
-    self.okay = ArmoryOptionsPanel_Okay;
-    self.cancel = ArmoryOptionsPanel_Cancel;
-    self.default = ArmoryOptionsPanel_Default;
-    self.refresh = ArmoryOptionsPanel_Refresh;
+    self.okay = self.okay or ArmoryOptionsPanel_Okay;
+    self.cancel = self.cancel or ArmoryOptionsPanel_Cancel;
+    self.default = self.default or ArmoryOptionsPanel_Default;
+    self.refresh = self.refresh or ArmoryOptionsPanel_Refresh;
 
     InterfaceOptions_AddCategory(self);
 
@@ -448,6 +451,109 @@ function ArmoryOptionsPanel_SetChannel(value)
     ArmoryAddonMessageFrame_UpdateChannel();
 end
 
+local currencies = {};
+local currencyInfo = {};
+local function GetCurrencies()
+	local getVirtualCurrencies = function()
+		local name, isHeader;
+		for i = 1, Armory:GetVirtualNumCurrencies() do
+			name, isHeader = Armory:GetVirtualCurrencyInfo(i);
+			if ( not isHeader and not currencyInfo[name] ) then
+				table.insert(currencies, name);
+				currencyInfo[name] = true;
+			end
+		end
+	end;
+	
+	table.wipe(currencyInfo);
+	
+	if ( Armory:CurrencyEnabled() ) then
+		local currentProfile = Armory:CurrentProfile();
+		currencies = Armory:GetConfigSummaryCurrencies();
+		for i = 1, #currencies do
+			currencyInfo[currencies[i]] = true;
+		end
+		for _, profile in ipairs(Armory:Profiles()) do
+			Armory:SelectProfile(profile);
+			getVirtualCurrencies();
+		end
+		Armory:SelectProfile(currentProfile);
+	else
+		table.wipe(currencies);
+		getVirtualCurrencies();
+	end
+
+	table.sort(currencies);
+	
+	return currencies;
+end
+
+function ArmoryOptionsSummaryPanel_OnShow(self)
+    if ( not self.currencies ) then
+        self.currencies = {};
+        for name in pairs(Armory:GetConfigSummaryEnabledCurrencies()) do
+            self.currencies[name] = true;
+        end
+    end
+    ArmoryOptionsSummaryPanel_CurrencyContainer_Update();
+end
+
+function ArmoryOptionsSummaryPanel_GetCurrency(self)
+    return ArmoryOptionsSummaryPanel.currencies[self.currency];
+end
+
+function ArmoryOptionsSummaryPanel_SetCurrency(self, enabled)
+    ArmoryOptionsSummaryPanel.currencies[self.currency] = enabled or false;
+end
+
+function ArmoryOptionsSummaryPanel_Okay(self)
+    for name in pairs(self.currencies) do
+        Armory:SetConfigSummaryCurrencyEnabled(name, self.currencies[name]);
+    end
+end
+
+function ArmoryOptionsSummaryPanel_Cancel(self)
+    self.currencies = nil;
+end
+
+function ArmoryOptionsSummaryPanel_CurrencyContainer_Update()
+	local scrollFrame = ArmoryOptionsSummaryPanelCurrencyContainerScrollFrame;
+	local containerFrame = scrollFrame:GetParent();
+
+	local currencies = GetCurrencies();
+	local numCurrencies = #currencies;
+    local showScrollBar = (numCurrencies > ARMORY_SUMMARY_CURRENCIES_DISPLAYED);
+    local offset = FauxScrollFrame_GetOffset(scrollFrame);
+    local button, index;
+    local width = scrollFrame:GetWidth() - 16;
+ 
+	for i = 1, ARMORY_SUMMARY_CURRENCIES_DISPLAYED do
+		index = offset + i;
+		
+        button = _G[containerFrame:GetName().."Button"..i];
+		
+        if ( index > numCurrencies ) then
+            button:Hide();
+		else
+			button.currency = currencies[index];
+			button.Text:SetText(button.currency);
+
+            -- If need scrollbar resize columns
+            if ( showScrollBar ) then
+                button.Text:SetWidth(width - 16);
+            else
+                button.Text:SetWidth(width);
+            end
+
+			button:Show();
+		end
+	end
+	
+	ArmoryOptionsPanel_Refresh(containerFrame:GetParent());
+
+    -- ScrollFrame update
+    FauxScrollFrame_Update(scrollFrame, numCurrencies, ARMORY_SUMMARY_CURRENCIES_DISPLAYED, ARMORY_SUMMARY_CURRENCIES_HEIGHT);
+end
 
 ----------------------------------------------------------
 -- Enable / disable modules
@@ -511,11 +617,11 @@ local function SetTalents(on)
 end
 
 local function SetPVP(on)
-    if ( on ) then
-        Armory:UpdateArenaTeams();
-    else
-        Armory:ClearArenaTeams();
-    end
+    --if ( on ) then
+        --Armory:UpdateArenaTeams();
+    --else
+        --Armory:ClearArenaTeams();
+    --end
 end
 
 local function SetReputation(on)            
@@ -529,9 +635,11 @@ end
 local function SetRaid(on)
     if ( on ) then
         Armory:UpdateInstances();
+        Armory:UpdateWorldBosses();
     else
         Armory:ClearInstances();
         Armory:ClearRaidFinder();
+        Armory:ClearWorldBosses();
     end
 end
 
@@ -631,4 +739,5 @@ function ArmoryOptionsPanel_CheckModule(control, module)
         ArmoryCloseChildWindows();
         Armory:Toggle();
     end
+    Armory:HideSummary(true); 
 end

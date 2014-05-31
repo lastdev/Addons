@@ -1,16 +1,18 @@
 local mod	= DBM:NewMod(634, "DBM-Party-WotLK", 13, 284)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 120 $"):sub(12, -3))
 mod:SetCreatureID(34657, 34701, 34702, 34703, 34705, 35569, 35570, 35571, 35572, 35617)
+mod:SetEncounterID(334, 336)
 mod:SetMinSyncRevision(7)--Could break if someone is running out of date version with higher revision
 
 mod:RegisterCombat("combat")
+mod:SetWipeTime(60)--prevent wipe for no vehicle user
 mod:SetDetectCombatInVehicle(false)
 
 mod:RegisterKill("yell", L.YellCombatEnd)
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_APPLIED"

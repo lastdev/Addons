@@ -55,7 +55,7 @@ L["Block"] = "Blocken"
 L["Blocked"] = "Geblockt"
 L["Blood Rune #1"] = "Blutrune #1"
 L["Blood Rune #2"] = "Blutrune #2"
--- L["Blood runes"] = ""
+L["Blood runes"] = "Blutrunen" -- Needs review
 L["Boss Emote"] = "Bossemote"
 L["Bottom"] = "Unten"
 L["Bottom Left"] = "Unten Links"
@@ -88,13 +88,13 @@ L["Combat Log"] = "Kampflog"
 L["Combo Points"] = "Kombopunkte"
 L["Conditions"] = "Bedingungen"
 L["Contains"] = "Enthält"
-L["Cooldown Progress (Item)"] = "Abklingdauer (Gegenstand)"
-L["Cooldown Progress (Spell)"] = "Abklingdauer (Zauber)"
+L["Cooldown Progress (Item)"] = "Abklingzeit (Gegenstand)"
+L["Cooldown Progress (Spell)"] = "Abklingzeit (Zauber)"
 L["Cooldown Ready (Item)"] = "Abklingzeit vorbei (Gegenstand)"
 L["Cooldown Ready (Spell)"] = "Abklingzeit vorbei (Zauber)"
 L["Create"] = "Erstellen"
 L["Critical"] = "Kritisch"
-L["Crowd Controlled"] = "Gegnerkontrolle"
+L["Crowd Controlled"] = "Kontrollverlust"
 L["Crushing"] = "Zerschmettern"
 L["Curse"] = "Fluch"
 L["Custom"] = "Benutzerdefiniert"
@@ -155,7 +155,7 @@ L["Friendly"] = "Freundlich"
 L["From"] = "Von"
 L["Frost Rune #1"] = "Frost Rune #1"
 L["Frost Rune #2"] = "Frost Rune #2"
--- L["Frost Runes"] = ""
+L["Frost Runes"] = "Frostrunen" -- Needs review
 L["Glancing"] = "Gestreift (GLANCING)"
 L["Global Cooldown"] = "Globale Abklingzeit"
 L["Glow"] = "Leuchten"
@@ -184,9 +184,9 @@ L["Ignore Rune CD"] = "Runen CD ignorieren"
 L["Immune"] = "Immun (IMMUNE)"
 L["Include Bank"] = "Bank einbeziehen"
 L["Include Charges"] = "Aufladungen einbeziehen"
--- L["Include Death Runes"] = ""
+L["Include Death Runes"] = "Todesrunen miteinbeziehen" -- Needs review
 L["In Combat"] = "Im Kampf"
-L["Inherited"] = "Abgeleited"
+L["Inherited"] = "Vererbt"
 L["Inside"] = "Innerhalb"
 L["Instakill"] = "Sofortiger Tod (INSTAKILL)"
 L["Instance Type"] = "Instanztyp"
@@ -219,11 +219,11 @@ L["Miss"] = "Verfehlen"
 L["Missed"] = "Verfehlt (MISSED)"
 L["Missing"] = "Fehlend"
 L["Miss Type"] = "Verfehlengrund"
--- L["Monochrome"] = ""
+L["Monochrome"] = "Schwarz-Weiß" -- Needs review
 L["Monster Yell"] = "NPC-Schrei"
 L["Mounted"] = "Reiten"
 L["Multi-target"] = "Mehrfachziel"
-L["Music"] = "Mudisk"
+L["Music"] = "Musik"
 L["Name"] = "Name"
 L["Never"] = "Nie"
 L["Next"] = "Weiter"
@@ -239,7 +239,7 @@ L["Off Hand"] = "Nebenhand"
 L["Officer"] = "Offizier"
 L["Opaque"] = "Deckend"
 L["Orbit"] = "Orbit"
--- L["Outline"] = ""
+L["Outline"] = "Kontur" -- Needs review
 L["Outside"] = "Außerhalb"
 L["Overhealing"] = "Überheilung"
 L["Overkill"] = "Overkill"
@@ -354,13 +354,13 @@ L["Status"] = "Status"
 L["Stolen"] = "Gestohlen (STOLEN)"
 L["Summon"] = "Herbeirufen (SUMMON)"
 L["Swing"] = "Schwingen (SWING)"
-L["Swing Timer"] = "Swing Timer"
+L["Swing Timer"] = "Schlagtimer"
 L["Talent Specialization"] = "Talentspezialisierung"
 L["Tank"] = "Tank"
 L["Tanking And Highest"] = "Höchster und Aggro"
 L["Tanking But Not Highest"] = "Aggro aber nicht höchster"
 L["Target"] = "Ziel"
--- L["Thick Outline"] = ""
+L["Thick Outline"] = "Dicke Kontur" -- Needs review
 L["Third Tree"] = "Dritter Talentbaum"
 L["Threat Situation"] = "Bedrohungssituation"
 L["Thrown"] = "Wurfwaffe"
@@ -379,7 +379,7 @@ L["Trigger Update"] = "Auslöser Aktualisierung"
 L["Undefined"] = "Undefiniert"
 L["Unholy Rune #1"] = "Unheilig Rune #1"
 L["Unholy Rune #2"] = "Unheilig Rune #2"
--- L["Unholy Runes"] = ""
+L["Unholy Runes"] = "Unheilige Runen" -- Needs review
 L["Unit"] = "Einheit"
 L["Unit Characteristics"] = "Einheitencharakterisierung"
 L["Unit Destroyed"] = "Einheit zerstört"
@@ -392,7 +392,7 @@ L["Warrior"] = "Krieger"
 L["Water"] = "Wasser"
 L["WeakAuras"] = "WeakAuras"
 L["WeakAurasModelPaths"] = "WeakAuras - 3D Modell Pfade"
-L["WeakAurasModelPaths .toc Notes"] = "Anleitungen für WeakAuras"
+L["WeakAurasModelPaths .toc Notes"] = "Stellt eine Liste der meisten 3D Modelle für WA Displays zur Verfügung."
 L["WeakAurasOptions"] = "WeakAuras Optionen"
 L["WeakAurasOptions .toc Notes"] = "Optionen für WeakAuras"
 L["WeakAuras .toc Notes"] = "Eine leistungsfähiges, umfassendes Addon zur grafischen Darstellung von Informationen über Auren, Cooldowns, Timern und vielem mehr."
@@ -415,7 +415,7 @@ L["Options/Add to group %s"] = "Zur Gruppe %s hinzufügen"
 L["Options/Add to new Dynamic Group"] = "Neue dynamische Gruppe hinzufügen"
 L["Options/Add to new Group"] = "Neue Gruppe hinzufügen"
 L["Options/Add Trigger"] = "Auslöser hinzufügen"
-L["Options/A group that dynamically controls the positioning of its children"] = "Eine Gruppe die dynamisch die Position ihrer Kinder steuert"
+L["Options/A group that dynamically controls the positioning of its children"] = "Eine Gruppe, die dynamisch die Position ihrer Kinder steuert"
 L["Options/Align"] = "Ausrichten"
 L["Options/Allow Full Rotation"] = "Erlaubt eine vollständige Rotation"
 L["Options/Alpha"] = "Transparenz"
@@ -438,8 +438,8 @@ L["Options/Aura(s)"] = "Auren"
 L["Options/Auto"] = "Auto"
 L["Options/Auto-cloning enabled"] = "Auto-Klonen aktiviert"
 L["Options/Automatic Icon"] = "Automatisches Symbol"
--- L["Options/Backdrop Color"] = ""
--- L["Options/Backdrop Style"] = ""
+L["Options/Backdrop Color"] = "Hintergrundfarbe" -- Needs review
+L["Options/Backdrop Style"] = "Hintergrundstil" -- Needs review
 L["Options/Background"] = "Hintergrund"
 L["Options/Background Color"] = "Hintergrundfarbe"
 L["Options/Background Inset"] = "Hintergrundeinzug"
@@ -447,8 +447,8 @@ L["Options/Background Offset"] = "Hintergrundversatz"
 L["Options/Background Texture"] = "Hintergrundtextur"
 L["Options/Bar Alpha"] = "Balkentransparenz"
 L["Options/Bar Color"] = "Balkenfarbe"
--- L["Options/Bar Color Settings"] = ""
--- L["Options/Bar in Front"] = ""
+L["Options/Bar Color Settings"] = "Balkenfarben Einstellungen" -- Needs review
+L["Options/Bar in Front"] = "Balken im Vordergrund" -- Needs review
 L["Options/Bar Texture"] = "Balkentextur"
 L["Options/Battle"] = "Angriff"
 L["Options/Bear"] = "Bär"
@@ -456,12 +456,12 @@ L["Options/Berserker"] = "Berserker"
 L["Options/Blend Mode"] = "Blendmodus"
 L["Options/Blood"] = "Blut"
 L["Options/Border"] = "Rand"
--- L["Options/Border Color"] = ""
--- L["Options/Border Inset"] = ""
+L["Options/Border Color"] = "Randfarbe" -- Needs review
+L["Options/Border Inset"] = "Rahmeneinlassung" -- Needs review
 L["Options/Border Offset"] = "Randversatz"
--- L["Options/Border Settings"] = ""
--- L["Options/Border Size"] = ""
--- L["Options/Border Style"] = ""
+L["Options/Border Settings"] = "Rahmeneinstellungen" -- Needs review
+L["Options/Border Size"] = "Rahmengröße" -- Needs review
+L["Options/Border Style"] = "Rahmenstil" -- Needs review
 L["Options/Bottom Text"] = "Text unten"
 L["Options/Button Glow"] = "Aktionsleisten Glanz"
 L["Options/Can be a name or a UID (e.g., party1). Only works on friendly players in your group."] = "Kann ein Name oder eine UID (zb. party1) sein. Funktioniert nur für freundliche Spieler innerhalb deiner Gruppe."
@@ -489,7 +489,7 @@ L["Options/Compress"] = "Stauchen"
 L["Options/Concentration"] = "Konzentration"
 L["Options/Constant Factor"] = "Konstanter Faktor"
 L["Options/Control-click to select multiple displays"] = "|cFF8080FF(CTRL-Klick)|r Mehrere Anzeigen auswählen"
-L["Options/Controls the positioning and configuration of multiple displays at the same time"] = "Gruppe die die Position und  Konfiguration ihrer Kinder kontrolliert."
+L["Options/Controls the positioning and configuration of multiple displays at the same time"] = "Eine Gruppe, die die Position und Konfiguration ihrer Kinder kontrolliert"
 L["Options/Convert to..."] = "Umwandeln zu..."
 L["Options/Cooldown"] = "Abklingzeit"
 L["Options/Copy"] = "Kopieren"
@@ -504,24 +504,21 @@ L["Options/Crop Y"] = "Abschneiden (Y)"
 L["Options/Crusader"] = "Kreuzfahrer"
 L["Options/Custom Code"] = "Benutzerdefinierter Code"
 L["Options/Custom Trigger"] = "Benutzerdefinierter Auslöser"
-L["Options/Custom trigger event tooltip"] = [=[
-Wähle die Events die den benutzerdefinierten Auslöser zum testen aufrufen sollen.
-Mehrere Events können durch Koma, oder Leerzeichen verwendet werden.
+L["Options/Custom trigger event tooltip"] = [=[Wähle die Events, die den benutzerdefinierten Auslöser aufrufen sollen.
+Mehrere Events können durch Komma oder Leerzeichen getrennt werden.
 
 |cFF4444FFBeispiel:|r
 UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
-L["Options/Custom trigger status tooltip"] = [=[
-Wähle die Events die den benutzerdefinierten Auslöser zum testen aufrufen sollen.
+L["Options/Custom trigger status tooltip"] = [=[Wähle die Events, die den benutzerdefinierten Auslöser aufrufen sollen.
 Da es sich um einen Zustands-Auslöser handelt, kann es passieren, dass WeakAuras nicht die in der WoW-API spezifizierten Argumente übergibt.
-Mehrere Events können durch Koma, oder Leerzeichen verwendet werden.
+Mehrere Events können durch Komma oder Leerzeichen getrennt werden.
 
 |cFF4444FFBeispiel:|r
 UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
 L["Options/Custom Untrigger"] = "Benutzerdefinierter Umkehr-Auslöser"
-L["Options/Custom untrigger event tooltip"] = [=[
-Wähle die Events die den benutzerdefinierten Umkehr-Auslöser zum testen aufrufen sollen.
+L["Options/Custom untrigger event tooltip"] = [=[Wähle die Events, die den benutzerdefinierten Umkehr-Auslöser aufrufen sollen.
 Diese Events müssen nicht denen der benutzerdefinierten Auslöser entsprechen.
-Mehrere Events können durch Koma, oder Leerzeichen verwendet werden.
+Mehrere Events können durch Komma oder Leerzeichen getrennt werden.
 
 |cFF4444FFBeispiel:|r
 UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED]=]
@@ -573,9 +570,9 @@ L["Options/Finish"] = "Endanimation"
 L["Options/Fire Resistance"] = "Feuerresistenz"
 L["Options/Flight(Non-Feral)"] = "Flug"
 L["Options/Font"] = "Schriftart"
--- L["Options/Font Flags"] = ""
+L["Options/Font Flags"] = "Schrifteinstellungen" -- Needs review
 L["Options/Font Size"] = "Schriftgröße"
--- L["Options/Font Type"] = ""
+L["Options/Font Type"] = "Schriftart" -- Needs review
 L["Options/Foreground Color"] = "Vordergrundfarbe"
 L["Options/Foreground Texture"] = "Vordergrundtextur"
 L["Options/Form (Druid)"] = "Form (Druide)"
@@ -625,7 +622,7 @@ L["Options/Message Prefix"] = "Nachrichtenprefix"
 L["Options/Message Suffix"] = "Nachrichtensuffix"
 L["Options/Metamorphosis"] = "Metamorphose"
 L["Options/Mirror"] = "Spiegeln"
-L["Options/Model"] = "Model"
+L["Options/Model"] = "Modell"
 L["Options/Moonkin/Tree/Flight(Feral)"] = "Mondkin"
 L["Options/Move Down"] = "Runter bewegen"
 L["Options/Move this display down in its group's order"] = "Anzeige innerhalb der Gruppe nach unten bewegen"
@@ -700,12 +697,12 @@ L["Options/Shadow Resistance"] = "Schattenresistenz"
 L["Options/Shift-click to create chat link"] = "|cFF8080FF(Shift-Klick)|r Chatlink erstellen"
 L["Options/Show all matches (Auto-clone)"] = "Alle Treffer anzeigen (Auto-Klonen)"
 L["Options/Show players that are |cFFFF0000not affected"] = "Zeige Spieler die |cFFFF0000nicht|r betroffen sind"
-L["Options/Shows a 3D model from the game files"] = "Zeigt ein 3D Model"
-L["Options/Shows a custom texture"] = "Benutzerdefinierte Texture anzeigen"
+L["Options/Shows a 3D model from the game files"] = "Zeigt ein 3D Modell"
+L["Options/Shows a custom texture"] = "Zeigt eine benutzerdefinierte Textur"
 L["Options/Shows a progress bar with name, timer, and icon"] = "Zeigt einen Fortschrittsbalken mit Name, Zeitanzeige und Symbol"
-L["Options/Shows a spell icon with an optional a cooldown overlay"] = "Zeigt ein (Zauber-) Symbol mit optionalem Abklingdauer-Overlay"
-L["Options/Shows a texture that changes based on duration"] = "Zeigt eine Texture die sich über Zeit verändert"
-L["Options/Shows one or more lines of text, which can include dynamic information such as progress or stacks"] = "Zeigt ein oder mehrere Zeilen Text an, der dynamische Informationen anzeigen kann, zb. Fortschritt, Stacks, ect."
+L["Options/Shows a spell icon with an optional a cooldown overlay"] = "Zeigt ein (Zauber-) Symbol mit optionalem Abklingzeit-Overlay"
+L["Options/Shows a texture that changes based on duration"] = "Zeigt eine Textur, die sich über die Zeit verändert"
+L["Options/Shows one or more lines of text, which can include dynamic information such as progress or stacks"] = "Zeigt ein oder mehrere Zeilen Text an, der dynamische Informationen anzeigen kann, z.B. Fortschritt oder Stacks"
 L["Options/Shows the remaining or expended time for an aura or timed event"] = "Zeigt die verbleibende oder verstrichene Zeit einer Aura oder eines zeitlichen Ereignisses"
 L["Options/Show this group's children"] = "Kinder der Gruppe anzeigen"
 L["Options/Size"] = "Größe"
@@ -713,9 +710,9 @@ L["Options/Slide"] = "Gleiten"
 L["Options/Slide In"] = "Einschieben"
 L["Options/Slide Out"] = "Ausschieben"
 L["Options/Sort"] = "Sortieren"
-L["Options/Sound"] = "Geräuch"
+L["Options/Sound"] = "Sound"
 L["Options/Sound Channel"] = "Soundkanal"
-L["Options/Sound File Path"] = "Geräuchdatei (Relative zu \"Interface\")"
+L["Options/Sound File Path"] = "Sounddatei"
 L["Options/Space"] = "Abstand"
 L["Options/Space Horizontally"] = "Horizontaler Abstand"
 L["Options/Space Vertically"] = "Verticaler Abstand"
@@ -751,7 +748,7 @@ L["Options/This display is currently loaded"] = "Diese Anzeige ist zur Zeit gela
 L["Options/This display is not currently loaded"] = "Diese Anzeige ist zur Zeit nicht geladen"
 L["Options/This display will only show when |cFF00FF00%s"] = "Diese Anzeige wird nur eingezeigt, wenn |cFF00FF00%s"
 L["Options/This display will only show when |cFFFF0000 Not %s"] = "Diese Anzeige wird nur eingezeigt, wenn |cFF00FF00 nicht %s"
--- L["Options/This region of type \"%s\" has no configuration options."] = ""
+L["Options/This region of type \"%s\" has no configuration options."] = "Diese Region vom Typ \"%s\" besitzt keine Einstellungsmöglichkeiten." -- Needs review
 L["Options/Time in"] = "Zeit in"
 L["Options/Timer"] = "Zeitgeber"
 L["Options/Timer Settings"] = "Timer Einstellungen"
@@ -775,7 +772,7 @@ L["Options/Unholy"] = "Unheilig"
 L["Options/Unit Exists"] = "Einheit existiert"
 L["Options/Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."] = "Anders als die Start- und Endanimation wird die Hauptanimation immer wieder wiederholt, bis die Anzeige in den Endstatus versetzt wird."
 L["Options/Unstealthed"] = "Entarnt"
-L["Options/Update Custom Text On..."] = "Aktualisiere Benutzerdefiniert Text wenn..."
+L["Options/Update Custom Text On..."] = "Aktualisiere benutzerdefinierten Text bei..."
 L["Options/Use Full Scan (High CPU)"] = "Alle Auren scannen (CPU-Intensiv)"
 L["Options/Use tooltip \"size\" instead of stacks"] = "Benutzte Tooltipgröße anstatt Stacks"
 L["Options/Vertical Align"] = "Vertikale Ausrichtung"
@@ -797,74 +794,118 @@ L["Tutorials/Actions and Animations: 4/7"] = "Aktionen und Animationen: 4/7"
 L["Tutorials/Actions and Animations: 5/7"] = "Aktionen und Animationen: 5/7"
 L["Tutorials/Actions and Animations: 6/7"] = "Aktionen und Animationen: 6/7"
 L["Tutorials/Actions and Animations: 7/7"] = "Aktionen und Animationen: 7/7"
--- L["Tutorials/Actions and Animations Text"] = ""
+L["Tutorials/Actions and Animations Text"] = [=[Um die Animation zu testen muss die Anzeige versteckt und wieder eingeblendet werden. Dies lässt sich über den Ansicht-Knopf in der Seitenleiste erreichen.
+
+Durch mehrmaliges Betätigen lässt sich die Start-Animation sehen.]=] -- Needs review
 L["Tutorials/Activation Settings: 1/5"] = "Aktivierungseinstellungen: 1/5"
 L["Tutorials/Activation Settings: 2/5"] = "Aktivierungseinstellungen: 2/5"
 L["Tutorials/Activation Settings: 3/5"] = "Aktivierungseinstellungen: 3/5"
 L["Tutorials/Activation Settings: 4/5"] = "Aktivierungseinstellungen: 4/5"
 L["Tutorials/Activation Settings: 5/5"] = "Aktivierungseinstellungen: 5/5"
--- L["Tutorials/Activation Settings Text"] = ""
--- L["Tutorials/Auto-cloning: 1/10"] = ""
--- L["Tutorials/Auto-cloning 1/10 Text"] = ""
--- L["Tutorials/Beginners Finished Text"] = ""
--- L["Tutorials/Beginners Guide Desc"] = ""
--- L["Tutorials/Beginners Guide Desc Text"] = ""
--- L["Tutorials/Create a Display: 1/5"] = ""
--- L["Tutorials/Create a Display: 2/5"] = ""
--- L["Tutorials/Create a Display: 3/5"] = ""
--- L["Tutorials/Create a Display: 4/5"] = ""
--- L["Tutorials/Create a Display: 5/5"] = ""
--- L["Tutorials/Create a Display Text"] = ""
--- L["Tutorials/Display Options: 1/4"] = ""
--- L["Tutorials/Display Options 1/4 Text"] = ""
--- L["Tutorials/Display Options: 2/4"] = ""
--- L["Tutorials/Display Options 2/4 Text"] = ""
--- L["Tutorials/Display Options: 4/4"] = ""
--- L["Tutorials/Display Options 4/4 Text"] = ""
--- L["Tutorials/Dynamic Group Options: 2/4"] = ""
--- L["Tutorials/Dynamic Group Options 2/4 Text"] = ""
--- L["Tutorials/Dynamic Group Options: 3/4"] = ""
--- L["Tutorials/Dynamic Group Options 3/4 Text"] = ""
--- L["Tutorials/Dynamic Group Options: 4/4"] = ""
--- L["Tutorials/Dynamic Group Options 4/4 Text"] = ""
--- L["Tutorials/Finished"] = ""
--- L["Tutorials/Full-scan Auras: 2/10"] = ""
--- L["Tutorials/Full-scan Auras 2/10 Text"] = ""
--- L["Tutorials/Full-scan Auras: 3/10"] = ""
--- L["Tutorials/Full-scan Auras 3/10 Text"] = ""
--- L["Tutorials/Full-scan Auras: 4/10"] = ""
--- L["Tutorials/Full-scan Auras 4/10 Text"] = ""
--- L["Tutorials/Full-scan Auras: 5/10"] = ""
--- L["Tutorials/Full-scan Auras 5/10 Text"] = ""
--- L["Tutorials/Group Auras 6/10"] = ""
--- L["Tutorials/Group Auras 6/10 Text"] = ""
--- L["Tutorials/Group Auras: 7/10"] = ""
--- L["Tutorials/Group Auras 7/10 Text"] = ""
--- L["Tutorials/Group Auras: 8/10"] = ""
--- L["Tutorials/Group Auras 8/10 Text"] = ""
--- L["Tutorials/Home"] = ""
--- L["Tutorials/Multi-target Auras: 10/10"] = ""
--- L["Tutorials/Multi-target Auras 10/10 Text"] = ""
--- L["Tutorials/Multi-target Auras: 9/10"] = ""
--- L["Tutorials/Multi-target Auras 9/10 Text"] = ""
--- L["Tutorials/New in 1.4:"] = ""
--- L["Tutorials/New in 1.4 Desc:"] = ""
--- L["Tutorials/New in 1.4 Desc Text"] = ""
--- L["Tutorials/New in 1.4 Finnished Text"] = ""
--- L["Tutorials/New in 1.4 Text1"] = ""
--- L["Tutorials/New in 1.4 Text2"] = ""
--- L["Tutorials/Previous"] = ""
--- L["Tutorials/Trigger Options: 1/4"] = ""
--- L["Tutorials/Trigger Options 1/4 Text"] = ""
--- L["Tutorials/Trigger Options: 2/4"] = ""
--- L["Tutorials/Trigger Options 2/4 Text"] = ""
--- L["Tutorials/Trigger Options: 3/4"] = ""
--- L["Tutorials/Trigger Options 3/4 Text"] = ""
--- L["Tutorials/Trigger Options: 4/4"] = ""
--- L["Tutorials/Trigger Options 4/4 Text"] = ""
--- L["Tutorials/WeakAuras Tutorials"] = ""
--- L["Tutorials/Welcome"] = ""
--- L["Tutorials/Welcome Text"] = ""
+L["Tutorials/Activation Settings Text"] = "Da du ein %s bist, kannst du die Spielerklassen-Optionen aktivieren und %s auswählen." -- Needs review
+L["Tutorials/Auto-cloning: 1/10"] = "Auto-Klonen: 1/10" -- Needs review
+L["Tutorials/Auto-cloning 1/10 Text"] = [=[Die größte in |cFF8800FF1.4|r enthaltene Neuerung ist |cFFFF0000Auto-Klonen|r. |cFFFF0000Auto-Klonen|r erlaubt deinen Anzeigen sich automatisch zu vervielfältigen, um Informationen mehrerer Quellen anzuzeigen. Einer Dynamischen Gruppe hinzugefügt erlaubt dies die Anzeige umfangreicher dynamischer Informationssätze.
+
+Es gibt drei Auslöser-Typen, die |cFFFF0000Auto-Klonen|r unterstützen: Voll-Scan Auras, Gruppen-Auras, and Mehrziel-Auras.]=] -- Needs review
+L["Tutorials/Beginners Finished Text"] = [=[Hiermit ist die Einführung abgeschlossen. Allerdings hast du gerade mal einen kleinen Einblick in die Macht von |cFF8800FFWeakAuras|r bekommen.
+
+Zukünftig werden |cFFFFFF00Weitere|r |cFFFF7F00Fortgeschrittene|r |cFFFF0000Tutorials|r veröffentlicht, die einen tieferen Einblick in |cFF8800FFWeakAuras|r endlose Möglichkeiten bieten werden.]=] -- Needs review
+L["Tutorials/Beginners Guide Desc"] = "Einführung" -- Needs review
+L["Tutorials/Beginners Guide Desc Text"] = "Eine Einführung in dir Grundeinstellungsmöglichkeiten von WeakAuras" -- Needs review
+L["Tutorials/Create a Display: 1/5"] = "Eine Anzeige erzeugen: 1/5" -- Needs review
+L["Tutorials/Create a Display: 2/5"] = "Eine Anzeige erzeugen: 2/5" -- Needs review
+L["Tutorials/Create a Display: 3/5"] = "Eine Anzeige erzeugen: 3/5" -- Needs review
+L["Tutorials/Create a Display: 4/5"] = "Eine Anzeige erzeugen: 4/5" -- Needs review
+L["Tutorials/Create a Display: 5/5"] = "Eine Anzeige erzeugen: 5/5" -- Needs review
+L["Tutorials/Create a Display Text"] = [=[Obwohl das Anzeige-Tab Schieberegler zur Steuerung von Breite, Höhe und X-/Y-Positionierung besitzt, gibt es eine einfachere Möglichkeit deine Anzeige zu bewegen und in der Größe anzupassen.
+
+Du kannst deine Anzeige einfach anklicken und irgendwo auf den Bildschirm ziehen oder ihre Ecken anklicken und daran ziehen, um die Größe zu verändern.
+
+Ebenso kannst du Shift drücken, um den Bewegungs-/Größeneinstellungsrahmen für genauere Positionierung zu verstecken.]=] -- Needs review
+L["Tutorials/Display Options: 1/4"] = "Anzeige-Einstellungen: 1/4" -- Needs review
+L["Tutorials/Display Options 1/4 Text"] = "Wähle jetzt eine Fortschrittsbalken-Anzeige aus (oder lege eine neue an)." -- Needs review
+L["Tutorials/Display Options: 2/4"] = "Anzeige-Einstellungen: 2/4" -- Needs review
+L["Tutorials/Display Options 2/4 Text"] = [=[|cFFFFFFFFFortschrittsbalken-|r und |cFFFFFFFFSymbol-Anzeigen|r haben nun eine Einstellungsmöglichkeit Tooltips beim Darüberhalten der Maus anzuzeigen.
+
+Diese Einstellung ist nur verfügbar, wenn die Anzeige einen Auslöser der auf einer Aura, einem Gegenstand, oder einem Zauber basiert besitzt.]=] -- Needs review
+L["Tutorials/Display Options: 4/4"] = "Anzeige-Einstellungen: 4/4" -- Needs review
+L["Tutorials/Display Options 4/4 Text"] = "Zu guter letzt erlaubt der neue Anzeigentyp |cFFFFFFFFModell|r jedes beliebige 3D Modell aus den Spieldateien zu nutzen." -- Needs review
+L["Tutorials/Dynamic Group Options: 2/4"] = "Dynamische Gruppen Einstellungen: 2/4" -- Needs review
+L["Tutorials/Dynamic Group Options 2/4 Text"] = [=[Die größte Verbesserung der |cFFFFFFFFDynamischen Gruppen|r ist eine neue Auswahlmöglichkeit für die Wachstumseinstellung.
+
+Wähle \"Kreisförmig\" um sie im Einsatz zu sehen.]=] -- Needs review
+L["Tutorials/Dynamic Group Options: 3/4"] = "Dynamische Gruppen Einstellungen: 3/4" -- Needs review
+L["Tutorials/Dynamic Group Options 3/4 Text"] = [=[Die Konstanter Faktor Einstellung ermöglicht dir die Kontrolle darüber, wie deine kreisförmige Gruppe wächst.
+
+Eine kreisförmige Gruppe mit konstantem Abstand gewinnt an Radius je mehr Anzeigen hinzugefügt werden, während ein konstanter Radius dazu führt, dass Anzeigen näher aneinander rücken, je mehr hinzugefügt werden.]=] -- Needs review
+L["Tutorials/Dynamic Group Options: 4/4"] = "Dynamische Gruppen Einstellungen: 4/4" -- Needs review
+L["Tutorials/Dynamic Group Options 4/4 Text"] = [=[Dynamische Gruppen können ihre Elemente nun automatisch nach Verbleibender Zeit sortieren..
+
+Anzeigen, die keine Verbleibende Zeit besitzen, werden je nach Auswahl von \"Aufsteigend\" oder \"Absteigend\" entsprechend oben oder unten plaziert..]=] -- Needs review
+L["Tutorials/Finished"] = "Abgeschlossen" -- Needs review
+L["Tutorials/Full-scan Auras: 2/10"] = "Komplett gescannte Auren: 2/10" -- Needs review
+L["Tutorials/Full-scan Auras 2/10 Text"] = "Aktiviere zunächst die Kompletter Scan Einstellung." -- Needs review
+L["Tutorials/Full-scan Auras: 3/10"] = "Komplett gescannte Auren: 3/10" -- Needs review
+L["Tutorials/Full-scan Auras 3/10 Text"] = [=[|cFFFF0000Auto-Klonen|r kann nun über die \"%s\"-Einstellung aktiviert werden.
+
+Dies sorgt dafür, dass für jeden den Parametern entsprechenden Treffer eine neue Anzeige angelegt wird.]=] -- Needs review
+L["Tutorials/Full-scan Auras: 4/10"] = "Komplett gescannte Auren: 4/10" -- Needs review
+L["Tutorials/Full-scan Auras 4/10 Text"] = [=[Ein Popup sollte aufgetaucht sein, das dich darauf hinweist, dass |cFFFF0000auto-geklonte|r Anzeigen im Allgemeinen in Dynamischen Gruppen verwendet werden sollten.
+
+Drücke \"Ja\"um |cFF8800FFWeakAuras|r zu erlauben deine Anzeige automatisch in eine Dynamische Gruppe zu verschieben.]=] -- Needs review
+L["Tutorials/Full-scan Auras: 5/10"] = "Komplett gescannte Auren: 5/10" -- Needs review
+L["Tutorials/Full-scan Auras 5/10 Text"] = "Deaktiviere die Kompletter Scan Einstellung um andere Einheit Einstellungen zu reaktivieren." -- Needs review
+L["Tutorials/Group Auras 6/10"] = "Gruppen Auren: 6/10" -- Needs review
+L["Tutorials/Group Auras 6/10 Text"] = "Wähle jetzt \"Gruppe\" für die Einheiten-Einstellung." -- Needs review
+L["Tutorials/Group Auras: 7/10"] = "Gruppen Auren: 7/10" -- Needs review
+L["Tutorials/Group Auras 7/10 Text"] = [=[|cFFFF0000Auto-Klonen|r wird wieder über die \"%s\" Einstellung aktiviert.
+
+Eine neue Anzeige wird für jedes Gruppenmitglied erstellt, das von der/den angegebenen Aura/Auren betroffen ist.]=] -- Needs review
+L["Tutorials/Group Auras: 8/10"] = "Gruppen Auren: 8/10" -- Needs review
+L["Tutorials/Group Auras 8/10 Text"] = "Aktivieren der %s Einstellung für eine Gruppen Aura mit aktiviertem |cFFFF0000Auto-Klonen|r sorgt dafür, dass für jedes Gruppenmitglied, das |cFFFFFFFFnicht|r von der/den angegebenen Aura/Auren betroffen ist, eine Anzeige erstellt wird." -- Needs review
+L["Tutorials/Home"] = "Startseite" -- Needs review
+L["Tutorials/Multi-target Auras: 10/10"] = "Mehrfachziel-Auren: 10/10" -- Needs review
+L["Tutorials/Multi-target Auras 10/10 Text"] = [=[|cFFFF0000Auto-Klonen|r ist für Mehrfachziel-Auren standardmäßig aktiviert.
+
+Auslöser für Mehrfachziel-Auren unterscheiden sich dadurch von normalen Aura-Auslösern, dass sie auf Kampf-Events reagieren, was heißt, dass sie durch Auren auf Gegnern ausgelöst werden, die niemand als Ziel hat (obwohl gewisse dynamische Informationen nicht verfügbar sind, solange niemand in deiner Gruppe den Gegner als Ziel hat).
+
+Deshalb sind Mehrfachziel-Auren eine gute Wahl zur Verfolgung von DoTs auf mehreren Gegnern.]=] -- Needs review
+L["Tutorials/Multi-target Auras: 9/10"] = "Mehrfachziel-Auren: 9/10" -- Needs review
+L["Tutorials/Multi-target Auras 9/10 Text"] = "Wähle zum Abschluss\"Mehrfachziel\" bei der Einheiten Einstellung." -- Needs review
+L["Tutorials/New in 1.4:"] = "Neu in 1.4:" -- Needs review
+L["Tutorials/New in 1.4 Desc:"] = "Neu in 1.4" -- Needs review
+L["Tutorials/New in 1.4 Desc Text"] = "Wirf einen Blick auf die neuen Features in WeakAuras 1.4" -- Needs review
+L["Tutorials/New in 1.4 Finnished Text"] = [=[Selbstverständlich beinhaltet |cFF8800FFWeakAuras 1.4|r mehr neue Features als auf einmal abgedeckt werden können, auch ohne die zahllosen Bugfixes und Effizienzsteigerungen zu erwähnen.
+
+Hoffentlich hat diese Einführung dich wenigstens über die wichtigsten neuen Funktionen aufgeklärt, die dir zur Verfügung stehen.
+
+Wir danken dir vielmals für die Nutzung von |cFF8800FFWeakAuras|r!]=] -- Needs review
+L["Tutorials/New in 1.4 Text1"] = [=[Version 1.4 von |cFF8800FFWeakAuras|r führt mehrere neu mächtige Features ein.
+
+Diese Einführung bietet einen Überblick der wichtigsten neuen Funktionen und deren Nutzung.]=] -- Needs review
+L["Tutorials/New in 1.4 Text2"] = "Lege zunächst eine neue Anzeige zu Demonstrationszwecken an." -- Needs review
+L["Tutorials/Previous"] = "Zurück" -- Needs review
+L["Tutorials/Trigger Options: 1/4"] = "Auslöser Einstellungen: 1/4" -- Needs review
+L["Tutorials/Trigger Options 1/4 Text"] = [=[Zusätzlich zu \"Mehrfachziel\" gibt es noch eine Alternative für die Einheiten Einstellung: Konkrete Einheit.
+
+Wähle sie aus, um ein neues Textfeld anlegen zu können.]=] -- Needs review
+L["Tutorials/Trigger Options: 2/4"] = "Auslöser Einstellungen: 2/4" -- Needs review
+L["Tutorials/Trigger Options 2/4 Text"] = [=[In diesem Feld kannst du den Namen eines beliebigen Spielers in deiner Gruppe, oder einer speziellen Unit ID angeben. Unit IDs wie \"boss1\", \"boss2\", usw. sind besonders für Schlachtzugsbegegnungen sehr hilfreich.
+
+Alle Auslöser, die die Angabe einer Einheit ermöglichen (nicht nur Aura Auslöser) unterstützen nun die Konkrete Einheit Einstellung.]=] -- Needs review
+L["Tutorials/Trigger Options: 3/4"] = "Auslöser Einstellungen: 3/4" -- Needs review
+L["Tutorials/Trigger Options 3/4 Text"] = [=[|cFF8800FFWeakAuras 1.4|r bringt auch ein paar neue Auslöser-Typen mit sich.
+
+Wähle die Status Kategorie um einen Blick auf sie zu werfen.]=] -- Needs review
+L["Tutorials/Trigger Options: 4/4"] = "Auslöser Einstellungen: 4/4" -- Needs review
+L["Tutorials/Trigger Options 4/4 Text"] = [=[Der |cFFFFFFFFEinheitencharakterisierungs|r Auslöser ermöglicht die Festelellung von Namen, Klasse, Feindseligkeit und ob es sich um einen Spieler- oder Nicht-Spieler-Charakter handelt.
+
+Auslöser für |cFFFFFFFFGlobale Abklingzeit|r und |cFFFFFFFFSwing Timer|r ergänzen den Zauber Auslöser.]=] -- Needs review
+L["Tutorials/WeakAuras Tutorials"] = "WeakAuras Einführungen" -- Needs review
+L["Tutorials/Welcome"] = "Willkommen" -- Needs review
+L["Tutorials/Welcome Text"] = [=[Willkommen zur |cFF8800FFWeakAuras|r Einführung.
+
+Diese Einführung wird dir zeigen, wie WeakAuras genutzt werden kann und dabei grundlegende Einstellungen erläutern.]=] -- Needs review
 
 
 

@@ -3,10 +3,10 @@
 Runeforging.lua
 Runeforging data for all of Ackis Recipe List
 ************************************************************************
-File date: 2012-10-23T23:56:52Z
-File hash: fd4d07f
-Project hash: 4bcba04
-Project version: 2.5.2
+File date: 2014-02-11T01:35:54Z
+File hash: fb233d5
+Project hash: af8bb68
+Project version: 2.6.5
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -32,7 +32,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
 -- Filter flags. Acquire types, and Reputation levels.
 -------------------------------------------------------------------------------
 local F = private.FILTER_IDS
-local A = private.ACQUIRE_TYPES
+local A = private.ACQUIRE_TYPE_IDS
 local Q = private.ITEM_QUALITIES
 local V = private.GAME_VERSIONS
 

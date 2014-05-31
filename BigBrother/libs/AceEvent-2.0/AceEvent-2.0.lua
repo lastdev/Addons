@@ -1,6 +1,6 @@
 --[[
 Name: AceEvent-2.0
-Revision: $Rev: 1115 $
+Revision: $Rev: 1117 $
 Developed by: The Ace Development Team (http://www.wowace.com/index.php/The_Ace_Development_Team)
 Inspired By: Ace 1.x by Turan (turan@gryphon.com)
 Website: http://www.wowace.com/
@@ -13,7 +13,7 @@ License: LGPL v2.1
 ]]
 
 local MAJOR_VERSION = "AceEvent-2.0"
-local MINOR_VERSION = 90000 + tonumber(("$Revision: 1115 $"):match("(%d+)"))
+local MINOR_VERSION = 90000 + tonumber(("$Revision: 1117 $"):match("(%d+)"))
 
 if not AceLibrary then error(MAJOR_VERSION .. " requires AceLibrary") end
 if not AceLibrary:IsNewVersion(MAJOR_VERSION, MINOR_VERSION) then return end
@@ -983,9 +983,11 @@ local function activate(self, oldLib, oldDeactivate)
 	registeringFromAceEvent = true
 	self:RegisterEvent("PLAYER_REGEN_ENABLED")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
+	--[[ oscarucb: this appears to serve no purpose, just spams useless messages to an unregistered prefix, even outside a raid
 	self:RegisterEvent("LOOT_OPENED", function()
 		if GetNumGroupMembers() > 0 or GetNumSubgroupMembers() > 0 then SendAddonMessage("LOOT_OPENED", "", "RAID") end
 	end)
+	--]]
 	inCombat = InCombatLockdown()
 	registeringFromAceEvent = nil
 	

@@ -1,3 +1,11 @@
+== Version 50400.1.3
+* All: Bugfix - the new Recuperate flashing was broken.
+
+== Version 50400.1.2
+* All: Added flashing for Recuperate out of combat when solo.
+* All: Recuperate can now flashing during its last tick, since it will not be lost.
+* All: Flashes WoW's 9th Anniversary Celebration Package.
+
 == Version 50400.1.1
 * Bugfix update to Bitten's SpellFlash Library.
 

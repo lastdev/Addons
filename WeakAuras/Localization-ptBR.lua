@@ -28,19 +28,19 @@ L["Any Triggers"] = "Qualquer Gatilhos"
 L["Arena"] = "Arena"
 L["Ascending"] = "Ascendente"
 L["At Least One Enemy"] = "Pelo Menos Um Inimigo"
--- L["Attackable"] = ""
+L["Attackable"] = "Atacável" -- Needs review
 L["Aura"] = "Aura"
 L["Aura:"] = "Aura:"
 L["Aura Applied"] = "Aura Aplicada"
--- L["Aura Applied Dose"] = ""
+L["Aura Applied Dose"] = "Dose de Aura Aplicada" -- Needs review
 L["Aura Broken"] = "Aura violada"
 L["Aura Broken Spell"] = "Feitiço violar de aura"
 L["Aura Name"] = "Nome da Aura"
 L["Aura Refresh"] = "Aura Restaurada"
 L["Aura Removed"] = "Aura Removida"
--- L["Aura Removed Dose"] = ""
+L["Aura Removed Dose"] = "Dose de Aura Removida" -- Needs review
 L["Auras:"] = "Auras:"
--- L["Aura Stack"] = ""
+L["Aura Stack"] = "Monte da Aura" -- Needs review
 L["Aura Type"] = "Tipo de Aura"
 L["Automatic"] = "Automático"
 -- L["Back and Forth"] = ""
@@ -135,16 +135,16 @@ L["Death Knight Rune"] = "Runa de Cavaleiro da Morte"
 -- L["Environmental"] = ""
 -- L["Environment Type"] = ""
 -- L["Evade"] = ""
--- L["Event"] = ""
--- L["Event(s)"] = ""
--- L["Every Frame"] = ""
--- L["Extra Amount"] = ""
--- L["Extra Attacks"] = ""
--- L["Extra Spell Name"] = ""
+L["Event"] = "Evento" -- Needs review
+L["Event(s)"] = "Evento(s)" -- Needs review
+L["Every Frame"] = "Todo Frame" -- Needs review
+L["Extra Amount"] = "Quantidade Extra" -- Needs review
+L["Extra Attacks"] = "Ataques Extras" -- Needs review
+L["Extra Spell Name"] = "Nome da Magia Extra" -- Needs review
 -- L["Fade In"] = ""
 -- L["Fade Out"] = ""
--- L["Falling"] = ""
--- L["Fatigue"] = ""
+L["Falling"] = "Caindo" -- Needs review
+L["Fatigue"] = "Fadiga" -- Needs review
 -- L["Fire"] = ""
 -- L["First Tree"] = ""
 -- L["Flash"] = ""
@@ -195,9 +195,9 @@ L["Death Knight Rune"] = "Runa de Cavaleiro da Morte"
 -- L["In Vehicle"] = ""
 -- L["Inverse"] = ""
 -- L["Is Exactly"] = ""
--- L["Item"] = ""
--- L["Item Count"] = ""
--- L["Item Equipped"] = ""
+L["Item"] = "Item" -- Needs review
+L["Item Count"] = "Contagem de Item" -- Needs review
+L["Item Equipped"] = "Item Equipado" -- Needs review
 L["Lava"] = "Lava"
 L["Leech"] = "Sugar"
 L["Left"] = "Esquerda"
@@ -404,7 +404,13 @@ L["Options/Anchor Point"] = "Ponto da âncora"
 L["Options/Angle"] = "Ângulo"
 L["Options/Animate"] = "Animar"
 L["Options/Animated Expand and Collapse"] = "Animação expande e esvai"
--- L["Options/Animation relative duration description"] = ""
+L["Options/Animation relative duration description"] = [=[A duração da animação relativa ao tempo de duração do display, expresso como fração (1/2), porcentagem (50%), ou decimal. (0.5)
+|cFFFF0000Nota:|r se um display não tiver progresso (o gatilho é não-temporal, é aura sem duração, etc), a animação não irá tocar.
+
+|cFF4444FFFou Exemplo:|r
+Se a duração da animação estiver setada para |cFF00CC0010%|r, e o display do gatilho for um benefício que dure 20 segundos, o começ da animação tocará por 2 segundos.
+Se a duração da animação estiver setada para |cFF00C0010%|r, e o gatilho do display for um benefício que não tem duração, nenhum começõ de animação irá tocar (no entanto, tocaria se voce especificasse uma duração em segundos)."
+WeakAuras → Opções → Opções ]=] -- Needs review
 L["Options/Animations"] = "Animações"
 L["Options/Animation Sequence"] = "Sequência da animação"
 L["Options/Aquatic"] = "Aquático"
@@ -646,16 +652,22 @@ L["Options/Sound Channel"] = "Canal de som"
 L["Options/Sound File Path"] = "Caminho do arquivo de som"
 L["Options/Space"] = "Espaço"
 L["Options/Space Horizontally"] = "Espaço horizontal"
--- L["Options/Space Vertically"] = ""
--- L["Options/Spell ID"] = ""
--- L["Options/Spell ID dialog"] = ""
--- L["Options/Stack Count"] = ""
--- L["Options/Stack Count Position"] = ""
--- L["Options/Stack Info"] = ""
--- L["Options/Stacks Settings"] = ""
+L["Options/Space Vertically"] = "Espaçar Verticalmente" -- Needs review
+L["Options/Spell ID"] = "ID da magia" -- Needs review
+L["Options/Spell ID dialog"] = [=[
+Voce especificou uma aura por |cFFFF0000ID da magia|r.
+
+By default, |cFF8800FFWeakAuras|r cannot distinguish between auras with the same name but different |cFFFF0000spell ID|r.
+However, if the Use Full Scan option is enabled, |cFF8800FFWeakAuras|r can search for specific |cFFFF0000spell ID|rs.
+
+Would you like to enable Use Full Scan to match this |cFFFF0000spell ID|r?]=] -- Needs review
+L["Options/Stack Count"] = "Contagem do Monte" -- Needs review
+L["Options/Stack Count Position"] = "Posição da Contagem do Monte" -- Needs review
+L["Options/Stack Info"] = "Informação do Monte" -- Needs review
+L["Options/Stacks Settings"] = "Configurações do Monte" -- Needs review
 -- L["Options/Stagger"] = ""
 -- L["Options/Stance (Warrior)"] = ""
--- L["Options/Start"] = ""
+L["Options/Start"] = "Início" -- Needs review
 -- L["Options/Stealable"] = ""
 -- L["Options/Stealthed"] = ""
 -- L["Options/Sticky Duration"] = ""
@@ -766,7 +778,11 @@ L["Options/Space Horizontally"] = "Espaço horizontal"
 -- L["Tutorials/Group Auras 8/10 Text"] = ""
 -- L["Tutorials/Home"] = ""
 -- L["Tutorials/Multi-target Auras: 10/10"] = ""
--- L["Tutorials/Multi-target Auras 10/10 Text"] = ""
+L["Tutorials/Multi-target Auras 10/10 Text"] = [=[Auras de alvos-múltiplos tem |cFFFF0000auto-clonagem|r como padrão.
+
+Gatilhos de auras de alvos-múltiplos são diferentes de gatilhos de Aura normal porque sao baseados em eventos do Log de Combate, que significa que irão olhar auras em monstros que ninguém tem como alvo (no entanto, algumas informações dinâmicas não estão disponíveis sem ter alguem no seu grupo tendo tal unidade como alvo.)
+
+Isso faz as Auras de Multi-alvo uma boa escolha para observar DoTs em inimigos múltiplos.]=] -- Needs review
 -- L["Tutorials/Multi-target Auras: 9/10"] = ""
 -- L["Tutorials/Multi-target Auras 9/10 Text"] = ""
 -- L["Tutorials/New in 1.4:"] = ""
@@ -785,8 +801,10 @@ L["Options/Space Horizontally"] = "Espaço horizontal"
 -- L["Tutorials/Trigger Options: 4/4"] = ""
 -- L["Tutorials/Trigger Options 4/4 Text"] = ""
 -- L["Tutorials/WeakAuras Tutorials"] = ""
--- L["Tutorials/Welcome"] = ""
--- L["Tutorials/Welcome Text"] = ""
+L["Tutorials/Welcome"] = "Welcome" -- Needs review
+L["Tutorials/Welcome Text"] = [=[Bem-vindo ao |cFF8800FFWeakAuras|r Guia para Iniciantes.
+Esse guide irá mostrar como usar WeakAuras, e explicar as opções básicas de configuração.
+]=] -- Needs review
 
 
 

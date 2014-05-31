@@ -48,9 +48,9 @@ elseif locale == "ruRU" then -- Russian
 -- L["Solo Mode when not Grouped"] = ""
 
 elseif locale == "zhCN" then -- Simplified Chinese
--- L["Flash Blood"] = ""
--- L["Flash Frost"] = ""
--- L["Flash Unholy"] = ""
+L["Flash Blood"] = "鲜血闪光" -- Needs review
+L["Flash Frost"] = "冰霜闪光" -- Needs review
+L["Flash Unholy"] = "邪恶闪光" -- Needs review
 L["Solo Mode when not Grouped"] = "无队伍时使用单人模式" -- Needs review
 
 elseif locale == "esES" then -- Spanish
@@ -60,9 +60,9 @@ elseif locale == "esES" then -- Spanish
 -- L["Solo Mode when not Grouped"] = ""
 
 elseif locale == "zhTW" then -- Traditional Chinese
--- L["Flash Blood"] = ""
--- L["Flash Frost"] = ""
--- L["Flash Unholy"] = ""
+L["Flash Blood"] = "血魄閃光" -- Needs review
+L["Flash Frost"] = "冰霜閃光" -- Needs review
+L["Flash Unholy"] = "穢邪閃光" -- Needs review
 L["Solo Mode when not Grouped"] = "無組隊時使用單人模式" -- Needs review
 
 end

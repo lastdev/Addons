@@ -6,7 +6,7 @@ koKR localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 2.5.2
+Project version: 2.6.5
 ************************************************************************
 Original translated by: damjau, next96
 Currently maintained by:
@@ -79,6 +79,7 @@ L["Andrew Hilbert"] = "앤드류 힐버트"
 L["Andrion Darkspinner"] = "안드리온 다크스피너"
 L["Androd Fadran"] = "안드로드 패드랜"
 L["Anger Guard"] = "고통의 경비병"
+L["Anguished Highborne"] = "고통받는 명가의 원혼"
 L["Annora"] = "안노라"
 L["Anuur"] = "아누르"
 L["Anvilrage Captain"] = "성난모루단 대장"
@@ -306,6 +307,7 @@ L["Disembodied Vindicator"] = "실체 없는 구원자" -- Needs review
 L["DISPLAY_EXCLUSION_DESC"] = "제외 목록에 있는 제조법을 표시합니다."
 L["Display Exclusions"] = "제외 목록 표시"
 L["Doba"] = "도바"
+L["Doctor Gustaf VanHowzen"] = "의사 구스타프 밴하우젠"
 L["Doctor Herbert Halsey"] = "학자 허버트 핼시"
 L["Documentation"] = "문서"
 L["Don Carlos"] = "돈 카를로스"

@@ -43,6 +43,7 @@ function a.PreFlash()
     
     -- bump/consume it from spells that are queued
     a.RawHolyPower = -1
+    a.DivinePurpose = s.Buff(c.GetID("Divine Purpose"), "player")
 	if c.IsQueued(
 		"Inquisition", 
 		"Templar's Verdict", 
@@ -51,8 +52,11 @@ function a.PreFlash()
 		"Eternal Flame",
 		"Light of Dawn") then
 		
-		if not s.Buff(c.GetID("Divine Purpose"), "player") then
+		if a.DivinePurpose then
+			a.DivinePurpose = false
+		else
 			a.HolyPower = math.max(0, a.HolyPower - 3)
+			a.DivinePurpose = c.HasBuff("Divine Purpose") -- expires before gcd?
 		end
 	else
 		if c.IsQueued("Judgment") 
@@ -77,9 +81,10 @@ function a.PreFlash()
 			
 			bumpHolyPower(1)
 		end
-		if s.Buff(c.GetID("Divine Purpose"), "player") then
+		if a.DivinePurpose then
 			a.RawHolyPower = a.HolyPower
 			a.HolyPower = math.max(3, a.HolyPower)
+			a.DivinePurpose = c.HasBuff("Divine Purpose") -- expires before gcd?
 		end
 	end
 	if a.RawHolyPower < 0 then
@@ -269,7 +274,7 @@ a.Rotations.Protection = {
 			"Holy Avenger for Prot",
 			"Ardent Defender 2pT14",
 			"Avenging Wrath for Prot",
-			"Guardian of Ancient Kings", 
+			"Guardian of Ancient Kings Prot", 
 			"Ardent Defender")
 		
 		local flashing, delay = c.DelayPriorityFlash(
@@ -381,34 +386,39 @@ a.Rotations.Retribution = {
 		a.AvengingWrath = c.GetBuffDuration(
 			"Avenging Wrath", false, false, true)
 		a.HolyAvenger = c.GetBuffDuration("Holy Avenger", false, false, true)
+		a.DivineCrusader = 
+			c.HasBuff("Divine Crusader") and not c.IsCasting("Divine Storm")
 		
 		c.FlashAll(
 			"Avenging Wrath for Ret", 
 			"Holy Avenger", 
+			"Guardian of Ancient Kings Ret",
 			"Lay on Hands", 
 			"Rebuke")
 		c.DelayPriorityFlash(
 			"Inquisition",
 			"Execution Sentence",
 			"Inquisition before Templar's Verdict at 5",
-			"Divine Storm for Ret at 5",
+			"Divine Storm at 5",
 			"Templar's Verdict at 5",
 			"Exorcism for AoE",
 			"Hammer of Wrath for Ret",
+			"Hammer of Wrath Delay",
 			"Hammer of the Righteous for Ret",
 			"Templar's Verdict 4pT15",
-			"Crusader Strike 4pT15",
-			"Exorcism",
-			"Judgment unless Wastes GCD",
-			"Crusader Strike for Ret",
+			"Crusader Strike",
 			"Crusader Strike Delay",
 			"Judgment",
-			"HP Gen Delay for Ret",
-			"Light's Hammer",
-			"Holy Prism",
+			"Judgment Delay",
+			"Divine Storm with Divine Crusader",
+			"Templar's Verdict with Divine Purpose",
+			"Exorcism",
+			"Exorcism Delay",
 			"Inquisition before Templar's Verdict",
 			"Divine Storm",
 			"Templar's Verdict",
+			"Light's Hammer",
+			"Holy Prism",
 			"Sacred Shield for Ret")
 	end,
 	
@@ -420,7 +430,7 @@ a.Rotations.Retribution = {
 	
 	ExtraDebugInfo = function()
 		return string.format(
-			"h:%d h:%d j:%.1f, c:%.1f i:%.1f e:%.1f a:%.1f h:%.1f", 
+			"h:%d h:%d j:%.1f, c:%.1f i:%.1f e:%.1f a:%.1f h:%.1f d:%s c:%s", 
 			a.HolyPower, 
 			a.RawHolyPower, 
 			a.Judgment, 
@@ -428,6 +438,8 @@ a.Rotations.Retribution = {
 			a.Inquisition,
 			a.Exorcism,
 			a.AvengingWrath,
-			a.HolyAvenger)
+			a.HolyAvenger,
+			a.DivinePurpose and "t" or "f",
+			a.DivineCrusader and "t" or "f")
 	end,
 }

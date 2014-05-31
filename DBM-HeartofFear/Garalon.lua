@@ -1,22 +1,23 @@
 local mod	= DBM:NewMod(713, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
 mod:SetCreatureID(63191)--Also has CID 62164. He has 2 CIDs for a single target, wtf? It seems 63191 is one players attack though so i'll try just it.
+mod:SetEncounterID(1463)
 mod:SetZone()
 mod:SetUsedIcons(2)
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED",
-	"SPELL_AURA_REMOVED_DOSE",
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",
+	"SPELL_AURA_APPLIED 122754 122786 122835 123081",
+	"SPELL_AURA_APPLIED_DOSE 122754 122835 123081",
+	"SPELL_AURA_REMOVED 122786 122835 123081",
+	"SPELL_AURA_REMOVED_DOSE 122786 122835 123081",
+	"SPELL_CAST_START 122735",
+	"SPELL_CAST_SUCCESS 123495",
+	"SPELL_DAMAGE 123120",
+	"SPELL_MISSED 123120",
 	"CHAT_MSG_RAID_BOSS_EMOTE"
 )
 
@@ -62,7 +63,7 @@ local crushCount = 0
 function mod:OnCombatStart(delay)
 	brokenLegs = 0
 	timerFuriousSwipeCD:Start(-delay)--8-11 sec on pull
-	if self:IsDifficulty("heroic10", "heroic25") then
+	if self:IsHeroic() then
 		crushCount = 0
 		timerCrushCD:Start(25.5-delay, 1)
 		countdownCrush:Start(25.5-delay)
@@ -73,17 +74,18 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 122754 and args:GetDestCreatureID() == 63191 then--It applies to both creatureids, so we antispam it
+	local spellId = args.spellId
+	if spellId == 122754 and args:GetDestCreatureID() == 63191 then--It applies to both creatureids, so we antispam it
 		warnFury:Show(args.destName, args.amount or 1)
 		if self:IsDifficulty("lfr25") then
 			timerFury:Start(15)
 		else
 			timerFury:Start()
 		end
-	elseif args.spellId == 122786 and args:GetDestCreatureID() == 63191 then--This one also hits both the leg and the boss, so filter second one here as well.
+	elseif spellId == 122786 and args:GetDestCreatureID() == 63191 then--This one also hits both the leg and the boss, so filter second one here as well.
 		-- this warn seems not works? needs review.
 		warnBrokenLeg:Show(args.destName, args.amount or 1)
-	elseif args.spellId == 122835 then
+	elseif spellId == 122835 then
 		warnPheromones:Show(args.destName)
 		specwarnPheromonesTarget:Show(args.destName)
 		if args:IsPlayer() then
@@ -106,9 +108,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self.Options.PheromonesIcon then
 			self:SetIcon(args.destName, 2)
 		end
-	elseif args.spellId == 123081 and not self:IsDifficulty("lfr25") then
-		if (args.amount or 1) >= 9 and (args.amount or 1) % 3 == 0 then
-			warnPungency:Show(args.destName, args.amount)
+	elseif spellId == 123081 and not self:IsDifficulty("lfr25") then
+		local amount = args.amount or 1
+		if amount >= 9 and amount % 3 == 0 then
+			warnPungency:Show(args.destName, amount)
 		end
 		if args:IsPlayer() then
 			local _, _, _, _, _, duration, expires, _, _ = UnitDebuff("player", args.spellName)
@@ -119,28 +122,31 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 122786 and args:GetDestCreatureID() == 63191 then
+	local spellId = args.spellId
+	if spellId == 122786 and args:GetDestCreatureID() == 63191 then
 		brokenLegs = (args.amount or 0)
 		warnBrokenLeg:Show(args.destName, brokenLegs)
-	elseif args.spellId == 122835 then
+	elseif spellId == 122835 then
 		if self.Options.PheromonesIcon then
 			self:SetIcon(args.destName, 0)
 		end
-	elseif args.spellId == 123081 and args:IsPlayer() then
+	elseif spellId == 123081 and args:IsPlayer() then
 		timerPungency:Cancel()
 	end
 end
 mod.SPELL_AURA_REMOVED_DOSE = mod.SPELL_AURA_REMOVED
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 122735 then
+	local spellId = args.spellId
+	if spellId == 122735 then
 		warnFuriousSwipe:Show()
 		timerFuriousSwipeCD:Start()
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 123495 then
+	local spellId = args.spellId
+	if spellId == 123495 then
 		warnMendLeg:Show()
 		timerMendLegCD:Start()
 		if brokenLegs == 4 then--all his legs were broken when heal was cast, which means dps was on body.
@@ -159,7 +165,7 @@ mod.SPELL_MISSED = mod.SPELL_DAMAGE
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg:find("spell:122774") then
 		timerCrush:Start()
-		if self:IsDifficulty("heroic10", "heroic25") and not msg:find(L.UnderHim) then
+		if self:IsHeroic() and not msg:find(L.UnderHim) then
 			crushCount = crushCount + 1
 			warnCrush:Show(crushCountWarnText:format(crushCount))
 			specwarnCrush:Show()

@@ -433,7 +433,7 @@ a.Rotations.Demonology = {
 ------------------------------------------------------------------- Destruction
 local lastEmbers = nil
 local pendingEmberBump = 0
-local pendingEmberDrop = false
+local pendingEmberDrop = 0
 
 a.RoFCast = 0
 
@@ -461,15 +461,12 @@ a.Rotations.Destruction = {
 					0, pendingEmberBump - (a.Embers - lastEmbers))
 				c.Debug("Flash", "Ember bump occurred")
 			elseif a.Embers < lastEmbers then
-				pendingEmberDrop = false
+				pendingEmberDrop = 0
 				c.Debug("Flash", "Ember drop occurred")
 			end
 		end
 		lastEmbers = a.Embers
-		a.Embers = a.Embers + pendingEmberBump
-		if pendingEmberDrop then
-			a.Embers = a.Embers - 1
-		end
+		a.Embers = a.Embers + pendingEmberBump - pendingEmberDrop
 		
 		if c.IsCasting("Incinerate", "Conflagrate") then
 			a.Embers = a.Embers + .1
@@ -521,7 +518,8 @@ a.Rotations.Destruction = {
 				"Rain of Fire Single Target",
 				"Conflagrate Single Target",
 				"Incinerate",
-				"Chaos Bolt")
+				"Shadowburn Last Resort",
+				"Chaos Bolt Last Resort")
 		end
 	end,
 	
@@ -548,10 +546,11 @@ a.Rotations.Destruction = {
 			
 			pendingEmberBump = pendingEmberBump + .1
 			c.Debug("Event", "Ember bump pending:", info.Name)
-		elseif c.InfoMatches(
-			info, "Chaos Bolt", "Shadowburn", "Fire and Brimstone") then
-			
-			pendingEmberDrop = true
+		elseif c.InfoMatches(info, "Chaos Bolt", "Shadowburn") then
+			pendingEmberDrop = a.T15EmberCost()
+			c.Debug("Event", "Ember drop pending:", info.Name)
+		elseif c.InfoMatches(info, "Fire and Brimstone") then
+			pendingEmberDrop = 1
 			c.Debug("Event", "Ember drop pending:", info.Name)
 		elseif c.InfoMatches(info, "Rain of Fire") then
 			a.RoFCast = GetTime()
@@ -588,15 +587,16 @@ a.Rotations.Destruction = {
 		a.Snapshots = { }
 		lastEmbers = nil
 		pendingEmberBump = 0
-		pendingEmberDrop = false
+		pendingEmberDrop = 0
 		c.Debug("Event", "Left combat")
 	end,
 	
 	ExtraDebugInfo = function()
-		return string.format("%.1f %d %.1f %s", 
+		return string.format("%.1f %d %.1f %d m:%d", 
 			a.Embers, 
 			a.Backdraft, 
 			pendingEmberBump, 
-			tostring(pendingEmberDrop))
+			pendingEmberDrop,
+			c.GetPowerPercent())
 	end,
 }

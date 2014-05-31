@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 586 2013-03-02T15:33:52Z
+    Revision: 628 2014-04-08T09:54:44Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -520,7 +520,8 @@ local function StoreTradeSkillInfo(dbEntry, skillIndex, index)
     local cooldown, isDayCooldown = _G.GetTradeSkillCooldown(skillIndex);
 
     -- HACK: when a cd is activated it will return 00:00, but after a relog it suddenly becomes 03:00
-    if ( cooldown and isDayCooldown and date("*t", time() + cooldown).hour == 0 ) then
+    -- Note: GetServerTime() precision is minutes
+    if ( cooldown and isDayCooldown and date("*t", Armory:GetServerTime() + cooldown + 60).hour == 0 ) then
         cooldown = _G.GetQuestResetTime();
     end
     
@@ -659,7 +660,6 @@ function Armory:UpdateTradeSkill()
             self:PrintDebug("UPDATE", name);
             
             SetProfessionValue(name, "Rank", rank, maxRank, modifier);
-            SetProfessionValue(name, "ListLink", _G.GetTradeSkillListLink());
             if ( self:GetConfigExtendedTradeSkills() ) then
                 if ( _G.GetTradeSkillSubClasses() and _G.GetTradeSkillSubClassFilteredSlots(0) ) then
                     SetProfessionValue(name, "SubClasses", _G.GetTradeSkillSubClasses());
@@ -728,16 +728,6 @@ end);
 ----------------------------------------------------------
 -- TradeSkills Interface
 ----------------------------------------------------------
-
-function Armory:OpenProfession(link)
-    if ( link ) then
-        ShowUIPanel(ItemRefTooltip);
-        if ( not ItemRefTooltip:IsShown() ) then
-            ItemRefTooltip:SetOwner(UIParent, "ANCHOR_PRESERVE");
-        end
-        self:SetHyperlink(ItemRefTooltip, link:match("|H(.-)|h"));
-    end
-end
 
 function Armory:HasTradeSkillLines(name)
     local dbEntry = self.selectedDbBaseEntry;
@@ -1020,12 +1010,6 @@ function Armory:GetTradeSkillInvSlots()
     return GetProfessionValue("InvSlots");
 end
 
-function Armory:GetTradeSkillListLink()
-    if ( self.characterRealm == self.playerRealm ) then
-        return GetProfessionValue("ListLink");
-    end
-end
-
 function Armory:GetTradeSkillDescription(index)
     local id = GetProfessionLineValue(index);
     return GetRecipeValue(id, "Description");
@@ -1146,17 +1130,6 @@ function Armory:FindSkill(itemList, ...)
     return list;
 end
 
-function Armory:GetSkillListLink(name, character, realm)
-    local currentProfile = self:CurrentProfile();
-    local dbEntry = self:LoadProfile(realm, character);
-    local link;
-    if ( dbEntry ) then
-        link = dbEntry:GetValue(container, name, "ListLink");
-    end
-    self:SelectProfile(currentProfile);
-    return link;
-end
-
 local recipeOwners = {};
 function Armory:GetRecipeOwners(id)
     table.wipe(recipeOwners);
@@ -1164,15 +1137,15 @@ function Armory:GetRecipeOwners(id)
     if ( self:HasTradeSkills() and self:GetConfigShowKnownBy() ) then
         local currentProfile = self:CurrentProfile();
 
-        for _, character in ipairs(self:CharacterList(self.playerRealm)) do
-            self:LoadProfile(self.playerRealm, character);
+        for _, profile in ipairs(self:GetConnectedProfiles()) do
+            self:SelectProfile(profile);
 
             local dbEntry = self.selectedDbBaseEntry;
             if ( dbEntry:Contains(container) ) then
                 local data = dbEntry:SelectContainer(container);
                 for profession in pairs(data) do
                     if ( dbEntry:Contains(container, profession, id) ) then
-                        table.insert(recipeOwners, character);
+                        table.insert(recipeOwners, self:GetQualifiedCharacterName(profile, true));
                         break;
                     end
                 end
@@ -1184,9 +1157,9 @@ function Armory:GetRecipeOwners(id)
     return recipeOwners;
 end
 
-local function AddKnownBy(name)
-    if ( Armory:GetConfigShowKnownBy() and name ~= Armory.player ) then
-        table.insert(recipeOwners, name);
+local function AddKnownBy(profile)
+    if ( Armory:GetConfigShowKnownBy() and not Armory:IsPlayerSelected(profile) ) then
+        table.insert(recipeOwners, Armory:GetQualifiedCharacterName(profile, true));
     end
 end
 
@@ -1219,8 +1192,8 @@ function Armory:GetRecipeAltInfo(name, link, profession, reqRank, reqReputation,
                 profession = recipeType;
             end
 
-            for _, character in ipairs(self:CharacterList(self.playerRealm)) do
-                self:LoadProfile(self.playerRealm, character);
+            for _, profile in ipairs(self:GetConnectedProfiles()) do
+                self:SelectProfile(profile);
 
                 dbEntry = self.selectedDbBaseEntry;
 
@@ -1229,12 +1202,13 @@ function Armory:GetRecipeAltInfo(name, link, profession, reqRank, reqReputation,
                     skillName, skillType = dbEntry:GetValue(container, profession, itemContainer, i, "Info");
                     if ( IsRecipe(skillType) and IsSameRecipe(skillName, name) ) then
                         known = true;
-                        AddKnownBy(character);
+                        AddKnownBy(profile);
                         break;
                     end
                 end
 
                 if ( not known and dbEntry:Contains(container, profession) and (self:GetConfigShowHasSkill() or self:GetConfigShowCanLearn()) ) then
+					local character = self:GetQualifiedCharacterName(profile, true);
                     local skillName, subSkillName, standingID, standing;
                     local rank = dbEntry:GetValue(container, profession, "Rank");
                     local learnable = reqRank <= rank;
@@ -1357,12 +1331,14 @@ function Armory:GetCrafters(itemId)
     if ( itemId and self:HasTradeSkills() and self:GetConfigShowCrafters() ) then
         local currentProfile = self:CurrentProfile();
         local dbEntry, buildCache, found, id, link;
+        local character;
 
-        for _, character in ipairs(self:CharacterList(self.playerRealm)) do
-            self:LoadProfile(self.playerRealm, character);
+        for _, profile in ipairs(self:GetConnectedProfiles()) do
+            self:SelectProfile(profile);
 
             dbEntry = self.selectedDbBaseEntry;
             if ( dbEntry:Contains(container) ) then
+				character = self:GetQualifiedCharacterName(profile, true);
                 found = false;
 
                 for profession in pairs(dbEntry:GetValue(container)) do
@@ -1402,9 +1378,10 @@ function Armory:GetInscribers(glyphName, class)
         local profession = ARMORY_TRADE_INSCRIPTION;
         local key = self:GetGlyphKey(glyphName);
         local dbEntry, id, link, name;
+        local character;
 
-        for _, character in ipairs(self:CharacterList(self.playerRealm)) do
-            self:LoadProfile(self.playerRealm, character);
+        for _, profile in ipairs(self:GetConnectedProfiles()) do
+            self:SelectProfile(profile);
 
             dbEntry = self.selectedDbBaseEntry;
             if ( dbEntry:Contains(container, profession) ) then
@@ -1415,6 +1392,7 @@ function Armory:GetInscribers(glyphName, class)
                         link = GetRecipeValue(id, "ItemLink");
                         if ( link ) then
                             local _, _, _, _, _, _, _, reqClass = self:GetRequirementsFromLink(link);
+		                    character = self:GetQualifiedCharacterName(profile, true);
                             if ( not reqClass ) then
                                 table.insert(crafters, character.."(?)");
                                 break;

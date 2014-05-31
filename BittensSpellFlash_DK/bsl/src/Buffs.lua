@@ -1,7 +1,7 @@
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "Buffs", 8) then
+if u.SkipOrUpgrade(c, "Buffs", 9) then
 	return
 end
 
@@ -333,7 +333,7 @@ end
 
 function c.HasMyDebuff(name, noGCD, matchSpellID, ...)
 	return hasAura(
-		name, noGCD, matchSpellID, s.MyDebuff, s.MyDebuffDuration, ...)
+		name, noGCD, matchSpellID, s.MyDebuff, s.MyDebuffDuration, nil, ...)
 end
 
 function c.GetMyDebuffStack(name, noGCD, matchSpellID)
@@ -354,7 +354,7 @@ end
 
 function c.HasDebuff(name, noGCD, matchSpellID, ...)
 	return hasAura(
-		name, noGCD, matchSpellID, s.Debuff, s.DebuffDuration, ...)
+		name, noGCD, matchSpellID, s.Debuff, s.DebuffDuration, nil, ...)
 end
 
 function c.GetDebuffStack(name, noGCD, matchSpellID)

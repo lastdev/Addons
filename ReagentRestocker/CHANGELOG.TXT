@@ -6,6 +6,10 @@ https://www.facebook.com/ReagentRestocker
 
 NOTE: I've been seeing copies of Reagent Restocker popping up at other download sites. The only two places I currently upload the addon to are curse.com and wowinterface.com. I cannot guarantee the integrity of any other download sites.
 
+== v8.2 ==
+* Updated TOC.
+* Minor UI tweaks.
+
 == v8.1 ==
 * Updated TOC.
 * Sorry for the infrequent updates. This is a volunteer thing, it's hard to give it a lot of time.

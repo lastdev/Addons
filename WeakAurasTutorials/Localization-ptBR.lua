@@ -59,7 +59,11 @@ local L = WeakAuras.L
 -- L["Group Auras 8/10 Text"] = ""
 -- L["Home"] = ""
 -- L["Multi-target Auras: 10/10"] = ""
--- L["Multi-target Auras 10/10 Text"] = ""
+L["Multi-target Auras 10/10 Text"] = [=[Auras de alvos-múltiplos tem |cFFFF0000auto-clonagem|r como padrão.
+
+Gatilhos de auras de alvos-múltiplos são diferentes de gatilhos de Aura normal porque sao baseados em eventos do Log de Combate, que significa que irão olhar auras em monstros que ninguém tem como alvo (no entanto, algumas informações dinâmicas não estão disponíveis sem ter alguem no seu grupo tendo tal unidade como alvo.)
+
+Isso faz as Auras de Multi-alvo uma boa escolha para observar DoTs em inimigos múltiplos.]=] -- Needs review
 -- L["Multi-target Auras: 9/10"] = ""
 -- L["Multi-target Auras 9/10 Text"] = ""
 -- L["New in 1.4:"] = ""
@@ -78,8 +82,10 @@ local L = WeakAuras.L
 -- L["Trigger Options: 4/4"] = ""
 -- L["Trigger Options 4/4 Text"] = ""
 -- L["WeakAuras Tutorials"] = ""
--- L["Welcome"] = ""
--- L["Welcome Text"] = ""
+L["Welcome"] = "Welcome" -- Needs review
+L["Welcome Text"] = [=[Bem-vindo ao |cFF8800FFWeakAuras|r Guia para Iniciantes.
+Esse guide irá mostrar como usar WeakAuras, e explicar as opções básicas de configuração.
+]=] -- Needs review
 
 
 

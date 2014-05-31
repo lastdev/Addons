@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod("Saviana", "DBM-ChamberOfAspects", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(39747)
+mod:SetEncounterID(1149)
 mod:SetModelID(31577)
 mod:SetUsedIcons(8, 7, 6, 5, 4)
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED"
@@ -19,7 +20,7 @@ local warningWarnEnrage		= mod:NewSpellAnnounce(78722, 3)
 local warningWarnBreath		= mod:NewSpellAnnounce(74403, 3)
 
 local specWarnBeacon		= mod:NewSpecialWarningYou(74453)--Target scanning may not even work since i haven't done encounter yet it's just a guess.
-local specWarnTranq			= mod:NewSpecialWarning("SpecialWarningTranq", mod:CanRemoveEnrage())
+local specWarnTranq			= mod:NewSpecialWarningDispel(78722, mod:CanRemoveEnrage())
 
 local timerBeacon			= mod:NewBuffActiveTimer(5, 74453)
 local timerConflag			= mod:NewBuffActiveTimer(5, 74456)

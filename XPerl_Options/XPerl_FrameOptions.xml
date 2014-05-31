@@ -5835,7 +5835,10 @@
 										self.flashFrame = XPerl_PetTargetbuffFrame
 										self.configBase = "XPerlDB.pettarget.buffs"
 										self.configIndex = "enable"
-										self.configClick = XPerl_TargetTarget_Set_Bits
+										self.configClick = function()
+											XPerlDB.pettarget.debuffs.enable = XPerlDB.pettarget.buffs.enable
+											XPerl_TargetTarget_Set_Bits()
+										end
 										self.Validate = function()
 											XPerl_Options_EnableSibling(self,"BigBuffs")
 											XPerl_Options_EnableSibling(self,"BigDebuffs")
@@ -7029,9 +7032,10 @@
 										self.Validate = function()
 											XPerl_Options_EnableSibling(self, "TargetsTargetsTarget")
 											XPerl_Options_EnableSibling(self, "Buffs")
+											XPerl_Options_EnableSibling(self, "Debuffs")
 											XPerl_Options_EnableSibling(self, "BigBuffs", "Buffs")
-											XPerl_Options_EnableSibling(self, "BigDebuffs", "Buffs")
-											XPerl_Options_EnableSibling(self, "Above", "Buffs")
+											XPerl_Options_EnableSibling(self, "BigDebuffs", "Debuffs")
+											XPerl_Options_EnableSibling(self, "Above")
 											XPerl_Options_EnableSibling(self, "TTTBuffs", "TargetsTargetsTarget")
 											XPerl_Options_EnableSibling(self, "Level")
 											XPerl_Options_EnableSibling(self, "Values")
@@ -7069,38 +7073,56 @@
 										self.configClick = XPerl_TargetTarget_Reset
 										self.Validate = function()
 											XPerl_Options_EnableSibling(self, "BigBuffs")
-											XPerl_Options_EnableSibling(self, "BigDebuffs")
-											XPerl_Options_EnableSibling(self, "Above")
 										end
 									</OnLoad>
 								</Scripts>
 							</CheckButton>
-
-							<CheckButton name="$parent_Above" inherits="XPerlCheckButtonTemplate">
+							
+							<CheckButton name="$parent_Debuffs" inherits="XPerlCheckButtonTemplate">
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_Buffs" relativePoint="TOPRIGHT">
+										<Offset><AbsDimension x="160" y="5"/></Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGET_DEBUFFS")
+										self.flashFrame = XPerl_TargetTarget_BuffFrame
+										self.configBase = "XPerlDB.targettarget.debuffs"
+										self.configIndex = "enable"
+										self.configClick = XPerl_TargetTarget_Reset
+										self.Validate = function()
+											XPerl_Options_EnableSibling(self, "BigDebuffs")
+										end
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+							
+							<CheckButton name="$parent_BigDebuffs" inherits="XPerlCheckButtonTemplate">
 								<Size><AbsDimension x="26" y="26"/></Size>
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_Buffs" relativePoint="BOTTOM">
+									<Anchor point="TOPLEFT" relativeTo="$parent_Debuffs" relativePoint="BOTTOM">
 										<Offset><AbsDimension x="0" y="7"/></Offset>
 									</Anchor>
 								</Anchors>
 								<Scripts>
 									<OnLoad>
-										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGET_BUFFSABOVE")
-										self.flashFrame = XPerl_TargetTarget_BuffFrame
-										self.configBase = "XPerlDB.targettarget.buffs"
-										self.configIndex = "above"
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGET_BIGDEBUFFS")
+										self.flashFrame = {XPerl_TargetTargetbuffFrame, XPerl_TargetTargetdebuffFrame}
+										self.configBase = "XPerlDB.targettarget.debuffs"
+										self.configIndex = "big"
 										self.configClick = function()
-													XPerlDB.targettargettarget.buffs.above = XPerlDB.targettarget.buffs.above
-													XPerl_TargetTarget_Reset()
-												end
+											XPerlDB.targettargettarget.debuffs.big = XPerlDB.targettarget.debuffs.big
+											XPerl_TargetTarget_Reset()
+										end
 									</OnLoad>
 								</Scripts>
 							</CheckButton>
-
+							
 							<CheckButton name="$parent_BigBuffs" inherits="XPerlCheckButtonTemplate">
 								<Size><AbsDimension x="26" y="26"/></Size>
 								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_Above" relativePoint="BOTTOMLEFT">
+									<Anchor point="TOPLEFT" relativeTo="$parent_Buffs" relativePoint="BOTTOMLEFT">
 										<Offset><AbsDimension x="0" y="7"/></Offset>
 									</Anchor>
 								</Anchors>
@@ -7116,27 +7138,6 @@
 										end
 										self.Validate = function()
 											XPerl_Options_EnableSibling(self, "BigPet")
-										end
-									</OnLoad>
-								</Scripts>
-							</CheckButton>
-
-							<CheckButton name="$parent_BigDebuffs" inherits="XPerlCheckButtonTemplate">
-								<Size><AbsDimension x="26" y="26"/></Size>
-								<Anchors>
-									<Anchor point="TOPLEFT" relativeTo="$parent_BigBuffs" relativePoint="TOPRIGHT">
-										<Offset><AbsDimension x="80" y="0"/></Offset>
-									</Anchor>
-								</Anchors>
-								<Scripts>
-									<OnLoad>
-										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGET_BIGDEBUFFS")
-										self.flashFrame = {XPerl_TargetTargetbuffFrame, XPerl_TargetTargetdebuffFrame}
-										self.configBase = "XPerlDB.targettarget.debuffs"
-										self.configIndex = "big"
-										self.configClick = function()
-											XPerlDB.targettargettarget.debuffs.big = XPerlDB.targettarget.debuffs.big
-											XPerl_TargetTarget_Reset()
 										end
 									</OnLoad>
 								</Scripts>
@@ -7163,10 +7164,31 @@
 								</Scripts>
 							</CheckButton>
 
+							<CheckButton name="$parent_Above" inherits="XPerlCheckButtonTemplate">
+								<Size><AbsDimension x="26" y="26"/></Size>
+								<Anchors>
+									<Anchor point="TOPLEFT" relativeTo="$parent_BigBuffs" relativePoint="BOTTOMLEFT">
+										<Offset><AbsDimension x="0" y="-11"/></Offset>
+									</Anchor>
+								</Anchors>
+								<Scripts>
+									<OnLoad>
+										XPerl_OptionsSetMyText(self, "XPERL_CONF_TARGETTARGET_BUFFSABOVE")
+										self.flashFrame = XPerl_TargetTarget_BuffFrame
+										self.configBase = "XPerlDB.targettarget.buffs"
+										self.configIndex = "above"
+										self.configClick = function()
+													XPerlDB.targettargettarget.buffs.above = XPerlDB.targettarget.buffs.above
+													XPerl_TargetTarget_Reset()
+												end
+									</OnLoad>
+								</Scripts>
+							</CheckButton>
+
 							<CheckButton name="$parent_TargetsTargetsTarget" inherits="XPerlCheckButtonTemplate">
 								<Size><AbsDimension x="26" y="26"/></Size>
 								<Anchors>
-									<Anchor point="TOPRIGHT" relativeTo="$parent_BigPet" relativePoint="BOTTOMLEFT">
+									<Anchor point="TOPLEFT" relativeTo="$parent_Above" relativePoint="BOTTOMLEFT">
 										<Offset><AbsDimension x="0" y="7"/></Offset>
 									</Anchor>
 								</Anchors>
@@ -7179,7 +7201,10 @@
 										self.flashFrame = XPerl_TargetTargetTarget
 										self.configBase = "XPerlDB.targettargettarget"
 										self.configIndex = "enable"
-										self.configClick = XPerl_TargetTarget_Reset
+										self.configClick = function()
+											XPerlDB.targettargettarget.debuffs.enable = XPerlDB.targettargettarget.buffs.enable
+											XPerl_TargetTarget_Reset()
+										end
 										XPerl_Options_RegisterProtected(self)
 									</OnLoad>
 								</Scripts>
@@ -8395,7 +8420,10 @@
 										self.flashFrame = {XPerl_FocusTargetbuffFrame, XPerl_FocusTargetdebuffFrame}
 										self.configBase = "XPerlDB.focustarget.buffs"
 										self.configIndex = "enable"
-										self.configClick = XPerl_TargetTarget_Reset
+										self.configClick = function()
+											XPerlDB.focustarget.debuffs.enable = XPerlDB.focustarget.buffs.enable
+											XPerl_TargetTarget_Reset()
+										end
 										self.Validate = function()
 											XPerl_Options_EnableSibling(self, "Above")
 											XPerl_Options_EnableSibling(self, "BigBuffs")

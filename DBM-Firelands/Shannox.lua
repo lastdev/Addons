@@ -3,8 +3,10 @@ local L		= mod:GetLocalizedStrings()
 local Riplimb	= EJ_GetSectionInfo(2581)
 local Rageface	= EJ_GetSectionInfo(2583)
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
 mod:SetCreatureID(53691)
+mod:SetEncounterID(1205)
+mod:DisableEEKillDetection()
 mod:SetZone()
 mod:SetUsedIcons(6, 8) -- cross(7) is hard to see in redish environment?
 mod:SetModelSound("Sound\\Creature\\SHANNOX\\VO_FL_SHANNOX_SPAWN.wav", "Sound\\Creature\\SHANNOX\\VO_FL_SHANNOX_KILL_04.wav")
@@ -63,8 +65,8 @@ local timerFaceRageCD			= mod:NewCDTimer(27, 99947, nil, false)--Has a 27-30 sec
 
 local berserkTimer				= mod:NewBerserkTimer(600)
 
-mod:AddBoolOption("SetIconOnFaceRage")
-mod:AddBoolOption("SetIconOnRage")
+mod:AddBoolOption("SetIconOnFaceRage", false)
+mod:AddBoolOption("SetIconOnRage", false)
 
 local prewarnedPhase2 = false
 local ripLimbDead = false

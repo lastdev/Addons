@@ -1,15 +1,21 @@
 local mod	= DBM:NewMod("NorthrendBeasts", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 99 $"):sub(12, -3))
-mod:SetCreatureID(34797)
+mod:SetRevision(("$Revision: 142 $"):sub(12, -3))
+mod:SetCreatureID(34796, 35144, 34799, 34797)
+--mod:SetEncounterID(1088)
+mod:SetMinSyncRevision(104)
 mod:SetModelID(21601)
 mod:SetMinCombatTime(30)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 
-mod:RegisterCombat("yell", L.CombatStart)
+mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_YELL"
+)
+
+mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_CAST_START",
@@ -21,7 +27,7 @@ mod:RegisterEvents(
 	"UNIT_DIED"
 )
 
-local warnImpaleOn			= mod:NewTargetAnnounce(66331, 2, nil, mod:IsTank() or mod:IsHealer())
+local warnImpaleOn			= mod:NewStackAnnounce(66331, 2, nil, mod:IsTank() or mod:IsHealer())
 local warnFireBomb			= mod:NewSpellAnnounce(66317, 3, nil, false)
 local warnBreath			= mod:NewSpellAnnounce(66689, 2)
 local warnRage				= mod:NewSpellAnnounce(66759, 3)
@@ -32,19 +38,19 @@ local WarningSnobold		= mod:NewAnnounce("WarningSnobold", 4)
 local warnEnrageWorm		= mod:NewSpellAnnounce(68335, 3)
 local warnCharge			= mod:NewTargetAnnounce(52311, 4)
 
-local specWarnImpale3		= mod:NewSpecialWarning("SpecialWarningImpale3")
-local specWarnAnger3		= mod:NewSpecialWarning("SpecialWarningAnger3", mod:IsTank() or mod:IsHealer())
+local specWarnImpale3		= mod:NewSpecialWarningStack(66331, nil, 3)
+local specWarnAnger3		= mod:NewSpecialWarningStack(66636, mod:IsTank() or mod:IsHealer(), 3)
 local specWarnFireBomb		= mod:NewSpecialWarningMove(66317)
 local specWarnSlimePool		= mod:NewSpecialWarningMove(66883)
-local specWarnToxin			= mod:NewSpecialWarningMove(66823)
+local specWarnToxin			= mod:NewSpecialWarningYou(66823)
 local specWarnBile			= mod:NewSpecialWarningYou(66869)
-local specWarnSilence		= mod:NewSpecialWarning("SpecialWarningSilence")
-local specWarnCharge		= mod:NewSpecialWarning("SpecialWarningCharge")
-local specWarnChargeNear	= mod:NewSpecialWarning("SpecialWarningChargeNear")
-local specWarnTranq			= mod:NewSpecialWarning("SpecialWarningTranq", mod:CanRemoveEnrage())
+local specWarnSilence		= mod:NewSpecialWarningCast(66330)
+local specWarnCharge		= mod:NewSpecialWarningRun(52311)
+local specWarnChargeNear	= mod:NewSpecialWarningClose(52311)
+local specWarnTranq			= mod:NewSpecialWarningDispel(66759, mod:CanRemoveEnrage())
 
 local enrageTimer			= mod:NewBerserkTimer(223)
-local timerCombatStart		= mod:NewTimer(23, "TimerCombatStart", 2457)
+local timerCombatStart		= mod:NewCombatTimer(21.5)
 local timerNextBoss			= mod:NewTimer(190, "TimerNextBoss", 2457)
 local timerSubmerge			= mod:NewTimer(45, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp") 
 local timerEmerge			= mod:NewTimer(10, "TimerEmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
@@ -65,19 +71,20 @@ local timerParalyticBiteCD	= mod:NewCDTimer(25, 66824, nil, mod:IsTank())
 local timerBurningBiteCD	= mod:NewCDTimer(15, 66879, nil, mod:IsTank())
 
 mod:AddBoolOption("PingCharge")
-mod:AddBoolOption("SetIconOnChargeTarget", true)
-mod:AddBoolOption("SetIconOnBileTarget", true)
-mod:AddBoolOption("ClearIconsOnIceHowl", true)
-mod:AddBoolOption("RangeFrame")
+mod:AddSetIconOption("SetIconOnChargeTarget", 52311)
+mod:AddSetIconOption("SetIconOnBileTarget", 66869, false)
+mod:AddBoolOption("ClearIconsOnIceHowl", false)
+mod:AddRangeFrameOption("10")
+
 mod:AddBoolOption("IcehowlArrow")
 
-local bileTargets			= {}
-local toxinTargets			= {}
-local burnIcon				= 8
-local phases				= {}
-local DreadscaleActive		= true  	-- Is dreadscale moving?
-local DreadscaleDead	= false
-local AcidmawDead	= false
+local bileTargets = {}
+local toxinTargets = {}
+local burnIcon = 8
+local phases = {}
+local DreadscaleActive = true
+local DreadscaleDead = false
+local AcidmawDead = false
 
 local function updateHealthFrame(phase)
 	if phases[phase] then
@@ -105,14 +112,13 @@ function mod:OnCombatStart(delay)
 	DreadscaleActive = true
 	DreadscaleDead = false
 	AcidmawDead = false
-	specWarnSilence:Schedule(37-delay)
+	specWarnSilence:Schedule(14-delay)
 	if self:IsDifficulty("heroic10", "heroic25") then
-		timerNextBoss:Start(175 - delay)
-		timerNextBoss:Schedule(170)
+		timerNextBoss:Start(152 - delay)
+		timerNextBoss:Schedule(147)
 	end
-	timerNextStomp:Start(38-delay)
-	timerRisingAnger:Start(48-delay)
-	timerCombatStart:Start(-delay)
+	timerNextStomp:Start(15-delay)
+	timerRisingAnger:Start(25-delay)
 	updateHealthFrame(1)
 end
 
@@ -138,10 +144,10 @@ function mod:WormsEmerge()
 	if not AcidmawDead then
 		if DreadscaleActive then
 			timerSweepCD:Start(16)
-			timerParalyticSprayCD:Start(9)			
+			timerParalyticSprayCD:Start(9)
 		else
 			timerSlimePoolCD:Start(14)
-			timerParalyticBiteCD:Start(5)			
+			timerParalyticBiteCD:Start(5)
 			timerAcidicSpewCD:Start(10)
 		end
 	end
@@ -173,20 +179,20 @@ function mod:WormsSubmerge()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 66331 then		-- Impale
+	if args.spellId == 66331 then
 		timerNextImpale:Start()
-		warnImpaleOn:Show(args.destName)
-	elseif args.spellId == 66759 then	-- Frothing Rage
+		warnImpaleOn:Show(args.destName, 1)
+	elseif args.spellId == 66759 then
 		warnRage:Show()
 		specWarnTranq:Show()
-	elseif args.spellId == 66823 then	-- Paralytic Toxin
+	elseif args.spellId == 66823 then
 		self:UnscheduleMethod("warnToxin")
 		toxinTargets[#toxinTargets + 1] = args.destName
 		if args:IsPlayer() then
 			specWarnToxin:Show()
 		end
 		self:ScheduleMethod(0.2, "warnToxin")
-	elseif args.spellId == 66869 then		-- Burning Bile
+	elseif args.spellId == 66869 then
 		self:UnscheduleMethod("warnBile")
 		bileTargets[#bileTargets + 1] = args.destName
 		if args:IsPlayer() then
@@ -199,8 +205,8 @@ function mod:SPELL_AURA_APPLIED(args)
 		self:ScheduleMethod(0.2, "warnBile")
 	elseif args.spellId == 66758 then
 		timerStaggeredDaze:Start()
-	elseif args.spellId == 66636 then						-- Rising Anger
-		WarningSnobold:Show()
+	elseif args.spellId == 66636 then
+		WarningSnobold:Show(args.destName)
 		timerRisingAnger:Show()
 	elseif args.spellId == 68335 then
 		warnEnrageWorm:Show()
@@ -208,53 +214,55 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_APPLIED_DOSE(args)
-	if args.spellId == 66331 then		-- Impale
+	if args.spellId == 66331 then
+		local amount = args.amount or 1
 		timerNextImpale:Start()
-		warnImpaleOn:Show(args.destName)
-		if (args.amount >= 3 and not self:IsDifficulty("heroic10", "heroic25") ) or ( args.amount >= 2 and self:IsDifficulty("heroic10", "heroic25") ) then 
+		warnImpaleOn:Show(args.destName, amount)
+		if (amount >= 3) or (amount >= 2 and self:IsDifficulty("heroic10", "heroic25")) then 
 			if args:IsPlayer() then
-				specWarnImpale3:Show(args.amount)
+				specWarnImpale3:Show(amount)
 			end
 		end
-	elseif args.spellId == 66636 then						-- Rising Anger
+	elseif args.spellId == 66636 then
+		local amount = args.amount or 1
 		WarningSnobold:Show()
-		if args.amount <= 3 then
+		if amount <= 3 then
 			timerRisingAnger:Show()
-		elseif args.amount >= 3 then
-			specWarnAnger3:Show(args.amount)
+		elseif amount >= 3 then
+			specWarnAnger3:Show(amount)
 		end
 	end
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 66689 then			-- Arctic Breath
+	if args.spellId == 66689 then
 		timerBreath:Start()
 		warnBreath:Show()
-	elseif args.spellId == 66313 then							-- FireBomb (Impaler)
+	elseif args.spellId == 66313 then
 		warnFireBomb:Show()
-	elseif args.spellId == 66330 then		-- Staggering Stomp
+	elseif args.spellId == 66330 then
 		timerNextStomp:Start()
-		specWarnSilence:Schedule(19)							-- prewarn ~1,5 sec before next
-	elseif args.spellId == 66794 then		-- Sweep stationary worm
+		specWarnSilence:Schedule(19)
+	elseif args.spellId == 66794 then
 		timerSweepCD:Start()
-	elseif args.spellId == 66821 then							-- Molten spew
+	elseif args.spellId == 66821 then
 		timerMoltenSpewCD:Start()
-	elseif args.spellId == 66818 then							-- Acidic Spew
+	elseif args.spellId == 66818 then
 		timerAcidicSpewCD:Start()
-	elseif args.spellId == 66901 then		-- Paralytic Spray
+	elseif args.spellId == 66901 then
 		timerParalyticSprayCD:Start()
-	elseif args.spellId == 66902 then		-- Burning Spray
+	elseif args.spellId == 66902 then
 		timerBurningSprayCD:Start()
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 66883 then			-- Slime Pool Cloud Spawn
+	if args.spellId == 66883 then
 		warnSlimePool:Show()
 		timerSlimePoolCD:Show()
-	elseif args.spellId == 66824 then		-- Paralytic Bite
+	elseif args.spellId == 66824 then
 		timerParalyticBiteCD:Start()
-	elseif args.spellId == 66879 then		-- Burning Bite
+	elseif args.spellId == 66879 then
 		timerBurningBiteCD:Start()
 	end
 end
@@ -305,9 +313,11 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 end
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if msg == L.Phase2 or msg:find(L.Phase2) then
+	if msg == L.CombatStart or msg:find(L.CombatStart) then
+		timerCombatStart:Start()
+	elseif msg == L.Phase2 or msg:find(L.Phase2) then
 		self:ScheduleMethod(17, "WormsEmerge")
-		timerCombatStart:Show(15)
+		timerCombatStart:Start(15)
 		updateHealthFrame(2)
 		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(10)
@@ -334,7 +344,7 @@ function mod:UNIT_DIED(args)
 		timerNextStomp:Stop()
 		timerNextImpale:Stop()
 		if DBM.BossHealth:IsShown() then
-			DBM.BossHealth:RemoveBoss(cid) -- remove Gormok from the health frame
+			DBM.BossHealth:RemoveBoss(cid)
 		end
 	elseif cid == 35144 then
 		AcidmawDead = true
@@ -370,5 +380,7 @@ function mod:UNIT_DIED(args)
 				DBM.BossHealth:RemoveBoss(34799)
 			end
 		end
+	elseif cid == 34797 then
+		DBM:EndCombat(self)
 	end
 end

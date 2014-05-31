@@ -5,6 +5,8 @@ local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local BB = LibStub("LibBabble-Boss-3.0"):GetLookupTable()
 local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
 local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
+local LCI = LibStub("LibCraftInfo-1.0")
+local LCL = LibStub("LibCraftLevels-1.0")
 
 local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
@@ -875,7 +877,7 @@ function ns:GetSource(searchedID)
 
 	DataProviders = DataProviders or {			-- list of sources that have a :GetSource() method
 		DataStore_Reputations,
-		DataStore_Crafts,
+		-- DataStore_Crafts,
 		DataStore_Inventory,
 	}
 
@@ -900,6 +902,13 @@ function ns:GetSource(searchedID)
 			end
 		end
 	end
+	
+	local name, spellID = LCI:GetItemSource(searchedID)
+	
+	if name and spellID then
+		return name, LCL:GetCraftLearnedAtLevel(spellID)
+	end	
+	
 	return nil
 end
 

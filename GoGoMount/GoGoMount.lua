@@ -46,8 +46,6 @@ function GoGo_OnEvent(self, event, ...)
 			GoGo_Shaman_Panel()
 		elseif (GoGo_Variables.Player.Class == "HUNTER") then
 			GoGo_Hunter_Panel()
-		elseif (GoGo_Variables.Player.Class == "PALADIN") then
-			GoGo_Paladin_Panel()
 		end --if
 		GoGo_Panel_Options()
 		GoGo_ZoneFavorites_Panel()
@@ -61,12 +59,21 @@ function GoGo_OnEvent(self, event, ...)
 	elseif event == "PLAYER_REGEN_DISABLED" then
 		for i, button in ipairs({GoGoButton, GoGoButton2, GoGoButton3}) do
 			if GoGo_Variables.Player.Class == "SHAMAN" then
+				if GoGo_Variables.Debug >= 10 then 
+					GoGo_DebugAddLine("GoGo_OnEvent: Shaman entering combat.  Setting macro.")
+				end --if
 				GoGo_FillButton(button, GoGo_InBook(GOGO_SPELLS["SHAMAN"]))
 			elseif GoGo_Variables.Player.Class == "DRUID" then
 				if not GoGo_Prefs.DruidDisableInCombat then
 					GoGo_ZoneCheck()  -- Checking to see what we can and can not do in zones
 					GoGo_FillButton(button, GoGo_InBook(GOGO_SPELLS["DRUID"]))
+					if GoGo_Variables.Debug >= 10 then 
+						GoGo_DebugAddLine("GoGo_OnEvent: Druid entering combat.  Setting macro.")
+					end --if
 				else
+					if GoGo_Variables.Debug >= 10 then 
+						GoGo_DebugAddLine("GoGo_OnEvent: Druid entering combat.  Clearing macro because of set option.")
+					end --if
 					GoGo_FillButton(button)
 				end --if
 			end --if
@@ -233,7 +240,7 @@ function GoGo_GetMount()
 	
 	if GoGo_Mount then	-- we have a mount to use so we are mounting
 		GoGo_Macro = GoGo_Macro .. GoGo_RemoveBuffs()	-- remove buffs that could prevent us from mounting
-		GoGo_Macro = GoGo_Macro .. GoGo_CrusaderAura()	-- start Crusader Aura if needed
+--		GoGo_Macro = GoGo_Macro .. GoGo_CrusaderAura()	-- start Crusader Aura if needed  -- no longer available
 		-- if GoGo_Macro ~= "" then ...
 	end --if
 	if GoGo_Macro ~= "" then
@@ -387,10 +394,14 @@ function GoGo_ChooseMount()
 	end --if
 
 	if (GoGo_Variables.Player.Level < 60) then
-		if GoGo_Variables.Debug >= 10 then
-			GoGo_DebugAddLine("GoGo_ChooseMount: Disabling flying - under level 60")
+		if (GoGo_Variables.Player.Level >= 58 and GoGo_Variables.Player.Class == "DRUID") then
+			-- do nothing.. druids can fly at 58
+		else
+			if GoGo_Variables.Debug >= 10 then
+				GoGo_DebugAddLine("GoGo_ChooseMount: Disabling flying - under level 60")
+			end --if
+			GoGo_Variables.NoFlying = true
 		end --if
-		GoGo_Variables.NoFlying = true
 	end --if
 
 --	if GoGo_Variables.ExpansionAccount == 3 then  -- only exists for 4.x with Cataclysm expansion
@@ -731,6 +742,7 @@ function GoGo_Dismount(button)
 	return true
 end --function
 
+--[[   		-- nothing calling this function - no longer needed?
 ---------
 function GoGo_InCompanions(item)
 ---------
@@ -744,6 +756,7 @@ function GoGo_InCompanions(item)
 		end --if
 	end --for
 end --function
+]]
 
 ---------
 function GoGo_BuildMountList()
@@ -994,23 +1007,6 @@ function GoGo_RemoveBuffs(GoGo_Buff)  -- adds lines to button macro to remove re
 			GoGo_Macro = GoGo_Macro .. "/cancelaura " .. GetSpellInfo(GoGo_Variables.DebuffDB[spellid]) .. " \n"
 		end --if
 	end --for
-	return GoGo_Macro
-end --if
-
----------
-function GoGo_CrusaderAura()
----------  called when clicking GoGo Buttons as a Paladin
-	if not GoGo_Variables.Player.Class == "PALADIN" then
-		return ""
-	end --if
-	if not GoGo_Prefs.PaladinUseCrusaderAura then  -- auto cast Crusader Aura not enabled
-		return ""
-	end --if
-	if not GoGo_InBook(GoGo_Variables.Localize.CrusaderAura) then
-		return ""
-	end --if
-	local GoGo_Macro = ""
-	GoGo_Macro = "/cast [nomounted] !" .. GetSpellInfo(GoGo_Variables.Localize.CrusaderAura) .. " \n"
 	return GoGo_Macro
 end --if
 
@@ -1289,8 +1285,14 @@ function GoGo_GetIDName(itemid)
 		local GoGo_TempMount = {}
 		table.insert(GoGo_TempMount, itemid)
 		if (table.getn(GoGo_FilterMountsIn(GoGo_TempMount, 50000)) == 1) then
+			if GoGo_Variables.Debug >= 10 then
+				GoGo_DebugAddLine("GoGo_GetIDName: GetItemID for " .. itemid .. " " .. GetItemInfo(GoGo_Variables.MountDB[itemid][50000]))
+			end --if
 			return GetItemInfo(GoGo_Variables.MountDB[itemid][50000]) or "Unknown Mount"
 		else
+			if GoGo_Variables.Debug >= 10 then
+				GoGo_DebugAddLine("GoGo_GetIDName: GetSpellID for " .. itemid .. " " .. (GetSpellInfo(itemid) or "Unknown Mount"))
+			end --if
 			return GetSpellInfo(itemid) or "Unknown Mount"
 		end --if
 	elseif type(itemid) == "table" then
@@ -1345,7 +1347,14 @@ end --function
 ---------
 function GoGo_FillButton(button, mount)
 ---------
-	if mount then
+	if InCombatLockdown() then
+		-- do nothing - macro should be filled already with available options
+		-- need to exclude calling :SetAttribute while in combat due to some bug collecting
+		-- mods flagging this as an error
+		if GoGo_Variables.Debug >= 10 then 
+			GoGo_DebugAddLine("GoGo_FillButton: In combat.  Casting pre-assigned mount")
+		end --if
+	elseif mount then
 		if GoGo_Variables.Debug >= 10 then 
 			GoGo_DebugAddLine("GoGo_FillButton: Casting " .. mount)
 		end --if
@@ -2037,6 +2046,11 @@ function GoGo_ZoneCheck()
 		else
 			GoGo_Variables.ZoneExclude.CanFly = false
 		end --if
+	elseif GoGo_Variables.Player.ZoneID == 544 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for The Lost Isles")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
 	elseif GoGo_Variables.Player.ZoneID == 604 then
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Icecrown Citadel (25 player instance)")
@@ -2681,6 +2695,20 @@ function GoGo_ZoneCheck()
 		if GoGo_InBook(GoGo_Variables.Localize.FlightMastersLicense) then
 			GoGo_Variables.ZoneExclude.CanFly = true
 		end --if
+	elseif GoGo_Variables.Player.ZoneID == 891 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Echo Isles")
+		end --if
+		if GoGo_InBook(GoGo_Variables.Localize.FlightMastersLicense) then
+			GoGo_Variables.ZoneExclude.CanFly = true  -- to verify
+		end --if
+	elseif GoGo_Variables.Player.ZoneID == 893 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Sunstrider Isle")
+		end --if
+		if GoGo_InBook(GoGo_Variables.Localize.FlightMastersLicense) then
+			GoGo_Variables.ZoneExclude.CanFly = true  -- to verify
+		end --if
 	elseif GoGo_Variables.Player.ZoneID == 895 then
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for New Tinkertown")
@@ -2741,6 +2769,12 @@ function GoGo_ZoneCheck()
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false
 		-- can ride = false
+	elseif GoGo_Variables.Player.ZoneID == 925 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Brawl'gar Arena")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = false
 	elseif GoGo_Variables.Player.ZoneID == 928 then
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Isle of Thunder")
@@ -2785,6 +2819,12 @@ function GoGo_ZoneCheck()
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Timeless Isle")
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false   -- shows Temperal Anomaly buff showing no-flying
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 953 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Siege Of Orgrimmar (raid instance)")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
 		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == -1 then
 		-- Arenas:
@@ -2889,7 +2929,7 @@ function GoGo_CheckSwimSurface()
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_CheckSwimSurface: Don't want to fly from water surface.  Disabling flying.")
 		end --if
-		--GoGo_Variables.SwimSurface = false
+		GoGo_Variables.SwimSurface = false
 		return
 	end --if
 	
@@ -3132,7 +3172,7 @@ function GoGo_UpdateMountData()
 		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10002] = 161
 		GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 161)
 		if GoGo_Variables.Debug >= 10 then
-			GoGo_DebugAddLine("GoGo_UpdateMountData: We're a Druid with Feral Swiftness.  Modifying shape form speed data.")
+			GoGo_DebugAddLine("GoGo_UpdateMountData: We're a Druid with Feline Swiftness.  Modifying shape form speed data.")
 		end --if
 	end --if
 
@@ -3142,13 +3182,28 @@ function GoGo_UpdateMountData()
 		GoGo_Variables.MountDB[GoGo_Variables.Localize.AquaForm][10004] = 135
 		GoGo_TableAddUnique(GoGo_Variables.WaterSurfaceSpeed, 135)
 		if GoGo_Variables.Debug >= 10 then
-			GoGo_DebugAddLine("GoGo_UpdateMountData: We're a druid with Glyph of Aquatic Form.  Modifying Aquatic Form speed data.")
+			GoGo_DebugAddLine("GoGo_UpdateMountData: We're a Druid with Glyph of Aquatic Form.  Modifying Aquatic Form speed data.")
 		end --if
 	end --if
 
 	if (GoGo_Variables.Player.Class == "DRUID") and (GoGo_GlyphActive(GoGo_Variables.Localize.Glyph_Stag) and not GoGo_GlyphActive(GoGo_Variables.Localize.Glyph_Cheetah)) then
 		-- Druid's travel form can carry a passenger
 		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][2] = true
+	end --if
+
+	if (GoGo_Variables.Player.Class == "WARLOCK") and (GoGo_GlyphActive(56232)) then
+		-- spellid:56232 = Warlock's Glyph of Nightmares
+		-- Update Felsteeds / Dreadsteeds water surface speed to player's ground surface mount speed (160 / 200)
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_UpdateMountData: We're a Warlock with Glyph of Nightmares.  Modifying Warlock class mounts' water surface speed data.")
+		end --if
+		if GoGo_GetRidingSkillLevel() >= 150 then  -- increase ground mounts to 200
+			GoGo_UpdateMountSpeedDB(GoGo_Variables.FilteredMounts, 406, 10004, 200)
+			GoGo_TableAddUnique(GoGo_Variables.WaterSurfaceSpeed, 200)
+		else
+			GoGo_UpdateMountSpeedDB(GoGo_Variables.FilteredMounts, 406, 10004, 160)
+			GoGo_TableAddUnique(GoGo_Variables.WaterSurfaceSpeed, 160)
+		end --if	
 	end --if
 	
 	if not GoGo_Variables.ZoneExclude.ThousandNeedles then  -- we are in thousand needles - ground mounts swim faster with buff
@@ -3232,6 +3287,15 @@ function GoGo_UpdateMountData()
 				elseif GoGo_Variables.MountDB[GoGo_TempMountDB[GoGo_TempCounter]][10002] == 100 then
 					GoGo_Variables.MountDB[GoGo_TempMountDB[GoGo_TempCounter]][10002] = 110
 					GoGo_TableAddUnique(GoGo_Variables.GroundSpeed, 110)
+				end --if
+				if GoGo_Variables.MountDB[GoGo_TempMountDB[GoGo_TempCounter]][10004] == 200 then
+					-- warlock mounts with water surface glyph
+					-- water skitter mounts and any other water surface mount riding at ground mount speed
+					GoGo_Variables.MountDB[GoGo_TempMountDB[GoGo_TempCounter]][10004] = 220
+					GoGo_TableAddUnique(GoGo_Variables.WaterSurfaceSpeed, 220)
+				elseif GoGo_Variables.MountDB[GoGo_TempMountDB[GoGo_TempCounter]][10004] == 160 then
+					GoGo_Variables.MountDB[GoGo_TempMountDB[GoGo_TempCounter]][10004] = 176
+					GoGo_TableAddUnique(GoGo_Variables.WaterSurfaceSpeed, 176)
 				end --if
 			end --for
 			GoGo_TempMountDB = GoGo_FilterMountsIn(GoGo_Variables.FilteredMounts, 403) or {}  -- air mounts to modify
@@ -3378,22 +3442,12 @@ GOGO_COMMANDS = {
 		end --if
 	end, --function
 	["druidclickform"] = function()
-		GoGo_Prefs.DruidClickForm = not GoGo_Prefs.DruidClickForm
+		GoGo_SetPref("DruidClickForm", not GoGo_Prefs.DruidClickForm)
 		GoGo_Msg("druidclickform")
-		if GoGo_Prefs.DruidClickForm then
-			GoGo_Druid_Panel_ClickForm:SetChecked(1)
-		else
-			GoGo_Druid_Panel_ClickForm:SetChecked(0)
-		end --if
 	end, --function
 	["druidflightform"] = function()
-		GoGo_Prefs.DruidFlightForm = not GoGo_Prefs.DruidFlightForm
+		GoGo_SetPref("DruidFlightForm", not GoGo_Prefs.DruidFlightForm)
 		GoGo_Msg("druidflightform")
-		if GoGo_Prefs.DruidFlightForm then
-			GoGo_Druid_Panel_FlightForm:SetChecked(1)
-		else
-			GoGo_Druid_Panel_FlightForm:SetChecked(0)
-		end --if
 	end, --function
 	["options"] = function()
 		InterfaceOptionsFrame_OpenToCategory(GoGo_Panel)
@@ -3497,7 +3551,7 @@ GOGO_MESSAGES = {
 function GoGo_DebugAddLine(LogLine)
 ---------
 	if not GoGo_Variables.DebugLine then GoGo_Variables.DebugLine = 1 end --if
-	GoGo_DebugLog[GoGo_Variables.DebugLine] = LogLine
+	GoGo_DebugLog[GoGo_Variables.DebugLine] = time() .. " " .. LogLine
 	GoGo_Msg(LogLine)
 	GoGo_Variables.DebugLine = GoGo_Variables.DebugLine + 1
 	
@@ -3629,22 +3683,12 @@ function GoGo_Panel_Options()
 	GoGo_Panel_RemoveBuffs:SetPoint("TOPLEFT", "GoGo_Panel_DisableWaterFlight", "BOTTOMLEFT", 0, -4)
 	GoGo_Panel_RemoveBuffsText:SetText(GoGo_Variables.Localize.String.RemoveBuffs)
 	GoGo_Panel_RemoveBuffs.tooltipText = GoGo_Variables.Localize.String.RemoveBuffs_Long
+	if GoGo_Prefs.RemoveBuffs then
+		GoGo_Panel_RemoveBuffs:SetChecked(1)
+	end --if
 	GoGo_Panel_RemoveBuffs:SetScript("OnClick",
 		function(self)
-			if GoGo_Panel_RemoveBuffs:GetChecked() then
-				GoGo_Prefs.RemoveBuffs = true
-			else
-				GoGo_Prefs.RemoveBuffs = false
-			end --if
-		end --function
-	)
-	GoGo_Panel_RemoveBuffs:SetScript("OnShow",
-		function(self)
-			if GoGo_Prefs.RemoveBuffs then
-				GoGo_Panel_RemoveBuffs:SetChecked(1)
-			else
-				GoGo_Panel_RemoveBuffs:SetChecked(0)
-			end --if
+			GoGo_SetPref("RemoveBuffs", GoGo_Panel_RemoveBuffs:GetChecked())
 		end --function
 	)
 end --function
@@ -3655,86 +3699,53 @@ function GoGo_Druid_Panel()
 	GoGo_Druid_Panel = CreateFrame("Frame", nil, UIParent)
 	GoGo_Druid_Panel.name = GoGo_Variables.Localize.String.DruidOptions
 	GoGo_Druid_Panel.parent = "GoGoMount"
-	GoGo_Druid_Panel.okay = function (self) GoGo_Panel_Okay("DRUID"); end;
+--	GoGo_Druid_Panel.okay = function (self) GoGo_Panel_Okay("DRUID"); end;
 	GoGo_Druid_Panel.default = function (self) GoGo_Settings_Default("DRUID"); end;  -- use clear command with default button
 	InterfaceOptions_AddCategory(GoGo_Druid_Panel)
 
 	GoGo_Druid_Panel_ClickForm = CreateFrame("CheckButton", "GoGo_Druid_Panel_ClickForm", GoGo_Druid_Panel, "OptionsCheckButtonTemplate")
 	GoGo_Druid_Panel_ClickForm:SetPoint("TOPLEFT", 16, -16)
 	GoGo_Druid_Panel_ClickFormText:SetText(GoGo_Variables.Localize.String.DruidSingleClick)
+	if GoGo_Prefs.DruidClickForm then
+		GoGo_Druid_Panel_ClickForm:SetChecked(1)
+	end --if
 	GoGo_Druid_Panel_ClickForm:SetScript("OnClick",
 		function(self)
-			if GoGo_Druid_Panel_ClickForm:GetChecked() then
-				GoGo_Prefs.DruidClickForm = true
-			else
-				GoGo_Prefs.DruidClickForm = false
-			end --if
-		end --function
-	)
-	GoGo_Druid_Panel_ClickForm:SetScript("OnShow",
-		function(self)
-			if GoGo_Prefs.DruidClickForm then
-				GoGo_Druid_Panel_ClickForm:SetChecked(1)
-			else
-				GoGo_Druid_Panel_ClickForm:SetChecked(0)
-			end --if
+			GoGo_SetPref("DruidClickForm", GoGo_Druid_Panel_ClickForm:GetChecked())
 		end --function
 	)
 
 	GoGo_Druid_Panel_FlightForm = CreateFrame("CheckButton", "GoGo_Druid_Panel_FlightForm", GoGo_Druid_Panel, "OptionsCheckButtonTemplate")
 	GoGo_Druid_Panel_FlightForm:SetPoint("TOPLEFT", "GoGo_Druid_Panel_ClickForm", "BOTTOMLEFT", 0, -4)
 	GoGo_Druid_Panel_FlightFormText:SetText(GoGo_Variables.Localize.String.DruidFlightPreference)
+	if GoGo_Prefs.DruidFlightForm then
+		GoGo_Druid_Panel_FlightForm:SetChecked(1)
+	end --if
 	GoGo_Druid_Panel_FlightForm:SetScript("OnClick",
 		function(self)
-			if GoGo_Druid_Panel_FlightForm:GetChecked() then
-				GoGo_Prefs.DruidFlightForm = true
-			else
-				GoGo_Prefs.DruidFlightForm = false
-			end --if
-		end --function
-	)
-	GoGo_Druid_Panel_FlightForm:SetScript("OnShow",
-		function(self)
-			if GoGo_Prefs.DruidFlightForm then
-				GoGo_Druid_Panel_FlightForm:SetChecked(1)
-			else
-				GoGo_Druid_Panel_FlightForm:SetChecked(0)
-			end --if
+			GoGo_SetPref("DruidFlightForm", GoGo_Druid_Panel_FlightForm:GetChecked())
 		end --function
 	)
 
 	GoGo_Druid_Panel_NoShapeInRandom = CreateFrame("CheckButton", "GoGo_Druid_Panel_NoShapeInRandom", GoGo_Druid_Panel, "OptionsCheckButtonTemplate")
 	GoGo_Druid_Panel_NoShapeInRandom:SetPoint("TOPLEFT", "GoGo_Druid_Panel_FlightForm", "BOTTOMLEFT", 0, -4)
 	GoGo_Druid_Panel_NoShapeInRandomText:SetText(GoGo_Variables.Localize.String.NoShapeInRandom)
+	if GoGo_Prefs.DruidFormNotRandomize then
+		GoGo_Druid_Panel_NoShapeInRandom:SetChecked(1)
+	end --if
 	GoGo_Druid_Panel_NoShapeInRandom:SetScript("OnClick",
 		function(self)
-			if GoGo_Druid_Panel_NoShapeInRandom:GetChecked() then
-				GoGo_Prefs.DruidFormNotRandomize = true
-			else
-				GoGo_Prefs.DruidFormNotRandomize = false
-			end --if
+			GoGo_SetPref("DruidFormNotRandomize", GoGo_Druid_Panel_NoShapeInRandom:GetChecked())
 		end --function
 	)
-	GoGo_Druid_Panel_NoShapeInRandom:SetScript("OnShow",
-		function(self)
-			if GoGo_Prefs.DruidFormNotRandomize then
-				GoGo_Druid_Panel_NoShapeInRandom:SetChecked(1)
-			else
-				GoGo_Druid_Panel_NoShapeInRandom:SetChecked(0)
-			end --if
-		end --function
-	)
+
 	GoGo_Druid_Panel_DisableInCombat = CreateFrame("CheckButton", "GoGo_Druid_Panel_DisableInCombat", GoGo_Druid_Panel, "OptionsCheckButtonTemplate")
 	GoGo_Druid_Panel_DisableInCombat:SetPoint("TOPLEFT", "GoGo_Druid_Panel_NoShapeInRandom", "BOTTOMLEFT", 0, -4)
 	GoGo_Druid_Panel_DisableInCombatText:SetText(GoGo_Variables.Localize.String.DisableInCombat)
 	GoGo_Druid_Panel_DisableInCombat.tooltipText = GoGo_Variables.Localize.String.DisableInCombat_Long
-	GoGo_Druid_Panel_ClickForm:SetScript("OnClick",
+	GoGo_Druid_Panel_DisableInCombat:SetScript("OnClick",
 		function(self)
-			if GoGo_Druid_Panel_DisableInCombat:GetChecked() then
-				GoGo_Prefs.DruidDisableInCombat = true
-			else
-				GoGo_Prefs.DruidDisableInCombat = false
-			end --if
+			GoGo_SetPref("DruidDisableInCombat", GoGo_Druid_Panel_DisableInCombat:GetChecked())
 		end --function
 	)
 	GoGo_Druid_Panel_DisableInCombat:SetScript("OnShow",
@@ -3762,56 +3773,12 @@ function GoGo_Hunter_Panel()
 	GoGo_Hunter_Panel_AspectOfPack:SetPoint("TOPLEFT", 16, -16)
 	GoGo_Hunter_Panel_AspectOfPackText:SetText(GoGo_Variables.Localize.String.UseAspectOfThePackInstead)
 	GoGo_Hunter_Panel_AspectOfPack.tooltipText = GoGo_Variables.Localize.String.UseAspectOfThePackInstead_Long
+	if GoGo_Prefs.AspectPack then
+		GoGo_Hunter_Panel_AspectOfPack:SetChecked(1)
+	end --if
 	GoGo_Hunter_Panel_AspectOfPack:SetScript("OnClick",
 		function(self)
-			if GoGo_Hunter_Panel_AspectOfPack:GetChecked() then
-				GoGo_Prefs.AspectPack = true
-			else
-				GoGo_Prefs.AspectPack = false
-			end --if
-		end --function
-	)
-	GoGo_Hunter_Panel_AspectOfPack:SetScript("OnShow",
-		function(self)
-			if GoGo_Prefs.AspectPack then
-				GoGo_Hunter_Panel_AspectOfPack:SetChecked(1)
-			else
-				GoGo_Hunter_Panel_AspectOfPack:SetChecked(0)
-			end --if
-		end --function
-	)
-end --function
-
----------
-function GoGo_Paladin_Panel()
----------
-	GoGo_Paladin_Panel = CreateFrame("Frame", nil, UIParent)
-	GoGo_Paladin_Panel.name = GoGo_Variables.Localize.String.PaladinOptions
-	GoGo_Paladin_Panel.parent = "GoGoMount"
---	GoGo_Paladin_Panel.okay = function (self) GoGo_Panel_Okay("PALADIN"); end;
-	GoGo_Paladin_Panel.default = function (self) GoGo_Settings_Default("PALADIN"); end;  -- use clear command with default button
-	InterfaceOptions_AddCategory(GoGo_Paladin_Panel)
-
-	GoGo_Paladin_Panel_AutoStartCrusaderAura = CreateFrame("CheckButton", "GoGo_Paladin_Panel_AutoStartCrusaderAura", GoGo_Paladin_Panel, "OptionsCheckButtonTemplate")
-	GoGo_Paladin_Panel_AutoStartCrusaderAura:SetPoint("TOPLEFT", 16, -16)
-	GoGo_Paladin_Panel_AutoStartCrusaderAuraText:SetText(GoGo_Variables.Localize.String.AutoStartCrusaderAura)
-	GoGo_Paladin_Panel_AutoStartCrusaderAura.tooltipText = GoGo_Variables.Localize.String.AutoStartCrusaderAura_Long
-	GoGo_Paladin_Panel_AutoStartCrusaderAura:SetScript("OnClick",
-		function(self)
-			if GoGo_Paladin_Panel_AutoStartCrusaderAura:GetChecked() then
-				GoGo_Prefs.PaladinUseCrusaderAura = true
-			else
-				GoGo_Prefs.PaladinUseCrusaderAura = false
-			end --if
-		end --function
-	)
-	GoGo_Paladin_Panel_AutoStartCrusaderAura:SetScript("OnShow",
-		function(self)
-			if GoGo_Prefs.PaladinUseCrusaderAura then
-				GoGo_Paladin_Panel_AutoStartCrusaderAura:SetChecked(1)
-			else
-				GoGo_Paladin_Panel_AutoStartCrusaderAura:SetChecked(0)
-			end --if
+			GoGo_SetPref("AspectPack", GoGo_Hunter_Panel_AspectOfPack:GetChecked())
 		end --function
 	)
 end --function
@@ -3822,29 +3789,18 @@ function GoGo_Shaman_Panel()
 	GoGo_Shaman_Panel = CreateFrame("Frame", nil, UIParent)
 	GoGo_Shaman_Panel.name = GoGo_Variables.Localize.String.ShamanOptions
 	GoGo_Shaman_Panel.parent = "GoGoMount"
---	GoGo_Shaman_Panel.okay = function (self) GoGo_Panel_Okay("SHAMAN"); end;
 	GoGo_Shaman_Panel.default = function (self) GoGo_Settings_Default("SHAMAN"); end;  -- use clear command with default button
 	InterfaceOptions_AddCategory(GoGo_Shaman_Panel)
 
 	GoGo_Shaman_Panel_ClickForm = CreateFrame("CheckButton", "GoGo_Shaman_Panel_ClickForm", GoGo_Shaman_Panel, "OptionsCheckButtonTemplate")
 	GoGo_Shaman_Panel_ClickForm:SetPoint("TOPLEFT", 16, -16)
 	GoGo_Shaman_Panel_ClickFormText:SetText(GoGo_Variables.Localize.String.ShamanSingleClick)
+	if GoGo_Prefs.ShamanClickForm then
+		GoGo_Shaman_Panel_ClickForm:SetChecked(1)
+	end --if
 	GoGo_Shaman_Panel_ClickForm:SetScript("OnClick",
 		function(self)
-			if GoGo_Shaman_Panel_ClickForm:GetChecked() then
-				GoGo_Prefs.ShamanClickForm = true
-			else
-				GoGo_Prefs.ShamanClickForm = false
-			end --if
-		end --function
-	)
-	GoGo_Shaman_Panel_ClickForm:SetScript("OnShow",
-		function(self)
-			if GoGo_Prefs.ShamanClickForm then
-				GoGo_Shaman_Panel_ClickForm:SetChecked(1)
-			else
-				GoGo_Shaman_Panel_ClickForm:SetChecked(0)
-			end --if
+			GoGo_SetPref("ShamanClickForm", GoGo_Shaman_Panel_ClickForm:GetChecked())
 		end --function
 	)
 end --function
@@ -3886,7 +3842,7 @@ function GoGo_ZoneFavorites_Panel()
 	GoGo_ZoneFavorites_ContentFrameDescription:SetJustifyH('LEFT')
 	GoGo_ZoneFavorites_ContentFrameDescription:SetJustifyV('TOP')
 	GoGo_ZoneFavorites_ContentFrameDescription:SetText(GoGo_Variables.Localize.String.CurrentZoneDescription)
-
+	GoGo_AddOptionCheckboxes("GoGo_ZoneFavorites_ContentFrame")
 	GoGo_ZoneFavorites_ContentFrame:SetScript("OnShow", function(self) GoGo_AddOptionCheckboxes("GoGo_ZoneFavorites_ContentFrame") end)
 end --function
 
@@ -3912,6 +3868,7 @@ function GoGo_GlobalFavorites_Panel()
 	GoGo_GlobalFavorites_ContentFrame:SetHeight(1)
 	GoGo_GlobalFavorites_ContentFrame:SetPoint("TOPLEFT", "GoGo_GlobalFavorites_Panel", "TOPLEFT", 0, 0)
 	GoGo_GlobalFavorites_ContentFrame:SetScript("OnShow", function(self) GoGo_AddOptionCheckboxes("GoGo_GlobalFavorites_ContentFrame") end)
+	GoGo_AddOptionCheckboxes("GoGo_GlobalFavorites_ContentFrame")
 
 	GoGo_GlobalFavorites_ScrollFrame:SetScrollChild(GoGo_GlobalFavorites_ContentFrame)
 
@@ -3969,7 +3926,7 @@ function GoGo_ExtraPassengerMounts_Panel()
 	GoGo_ExtraPassengerMounts_ContentFrameDescription:SetJustifyH('LEFT')
 	GoGo_ExtraPassengerMounts_ContentFrameDescription:SetJustifyV('TOP')
 	GoGo_ExtraPassengerMounts_ContentFrameDescription:SetText(GoGo_Variables.Localize.String.ExtraPassengerMountsDescription)
-
+	GoGo_AddOptionCheckboxes("GoGo_ExtraPassengerMounts_ContentFrame")
 	GoGo_ExtraPassengerMounts_ContentFrame:SetScript("OnShow", function(self) GoGo_AddOptionCheckboxes("GoGo_ExtraPassengerMounts_ContentFrame") end)
 end --function
 
@@ -3994,7 +3951,7 @@ function GoGo_GlobalExclusions_Panel()
 	GoGo_GlobalExclusions_ContentFrame:SetHeight(1)
 	GoGo_GlobalExclusions_ContentFrame:SetPoint("TOPLEFT", "GoGo_GlobalExclusions_Panel", "TOPLEFT", 0, 0)
 	GoGo_GlobalExclusions_ContentFrame:SetScript("OnShow", function(self) GoGo_AddOptionCheckboxes("GoGo_GlobalExclusions_ContentFrame") end)
-
+	GoGo_AddOptionCheckboxes("GoGo_GlobalExclusions_ContentFrame")
 	GoGo_GlobalExclusions_ScrollFrame:SetScrollChild(GoGo_GlobalExclusions_ContentFrame)
 
 	local GoGo_GlobalExclusions_ContentFrameTitle = GoGo_GlobalExclusions_ContentFrame:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightMedium')
@@ -4051,8 +4008,41 @@ function GoGo_ZoneExclusions_Panel()
 	GoGo_ZoneExclusions_ContentFrameDescription:SetJustifyH('LEFT')
 	GoGo_ZoneExclusions_ContentFrameDescription:SetJustifyV('TOP')
 	GoGo_ZoneExclusions_ContentFrameDescription:SetText(GoGo_Variables.Localize.String.ZoneExclusionsDescription)
-
+	GoGo_AddOptionCheckboxes("GoGo_ZoneExclusions_ContentFrame")
 	GoGo_ZoneExclusions_ContentFrame:SetScript("OnShow", function(self) GoGo_AddOptionCheckboxes("GoGo_ZoneExclusions_ContentFrame") end)
+
+end --function
+
+---------
+function GoGo_SetPref(strPref, intValue)
+---------
+	if (not strPref) then
+		return
+	end --if
+	
+	if strPref == "DruidClickForm" then
+		GoGo_Prefs.DruidClickForm = intValue
+		GoGo_Druid_Panel_ClickForm:SetChecked(intValue)
+	elseif strPref == "DruidFlightForm" then
+		GoGo_Prefs.DruidFlightForm = intValue
+		GoGo_Druid_Panel_FlightForm:SetChecked(intValue)
+	elseif strPref == "DruidFormNotRandomize" then
+		GoGo_Prefs.DruidFormNotRandomize = intValue
+		GoGo_Druid_Panel_NoShapeInRandom:SetChecked(intValue)
+	elseif strPref == "ShamanClickForm" then
+		GoGo_Prefs.ShamanClickForm = intValue
+		GoGo_Shaman_Panel_ClickForm:SetChecked(intValue)
+	elseif strPref == "DruidDisableInCombat" then
+		GoGo_Prefs.DruidDisableInCombat = intValue
+		GoGo_Druid_Panel_DisableInCombat:SetChecked(intValue)
+	elseif strPref == "RemoveBuffs" then
+		GoGo_Prefs.RemoveBuffs = intValue
+		GoGo_Panel_RemoveBuffs:SetChecked(intValue)
+	elseif strPref == "AspectPack" then
+		GoGo_Prefs.AspectPack = intValue
+		GoGo_Hunter_Panel_AspectOfPack:SetChecked(intValue)
+	
+	end --if
 
 end --function
 
@@ -4061,19 +4051,16 @@ function GoGo_Settings_Default(Class)
 ---------
 	-- class should only be set if using the default button from the option gui
 	if Class == "DRUID" then
-		GoGo_Prefs.DruidClickForm = true
-		GoGo_Prefs.DruidFlightForm = false
-		GoGo_Prefs.DruidFormNotRandomize = false
-		GoGo_Prefs.DruidDisableInCombat = false
+		GoGo_SetPref("DruidClickForm", true)
+		GoGo_SetPref("DruidFlightForm", false)
+		GoGo_SetPref("DruidFormNotRandomize", false)
+		GoGo_SetPref("DruidDisableInCombat", false)
 		InterfaceOptionsFrame_OpenToCategory(GoGo_Druid_Panel)
 	elseif Class == "HUNTER" then
-		GoGo_Prefs.AspectPack = false
+		GoGo_SetPref("AspectPack", false)
 		InterfaceOptionsFrame_OpenToCategory(GoGo_Hunter_Panel)
 	elseif Class == "SHAMAN" then
-		GoGo_Prefs.ShamanClickForm = false
-	elseif Class == "PALADIN" then
-		GoGo_Prefs.PaladinUseCrusaderAura = false
-		InterfaceOptionsFrame_OpenToCategory(GoGo_Paladin_Panel)
+		GoGo_SetPref("ShamanClickForm", false)
 	elseif Class == "MAIN" then
 		--GoGo_Prefs.autodismount = true
 		GoGo_SetOptionAutoDismount(1)
@@ -4081,8 +4068,8 @@ function GoGo_Settings_Default(Class)
 		GoGo_Prefs.DisableMountNotice = false
 		GoGo_Prefs.GlobalPrefMount = false
 		GoGo_Prefs.DisableWaterFlight = true
-		GoGo_Prefs.RemoveBuffs = true
-		InterfaceOptionsFrame_OpenToCategory(GoGo_Panel)
+		GoGo_SetPref("RemoveBuffs", true)
+		InterfaceOptionsFrame_OpenToCategory(GoGo_Panel_Options)
 	else
 		GoGo_Prefs = {}
 		GoGo_Prefs.Zones = {}
@@ -4093,18 +4080,17 @@ function GoGo_Settings_Default(Class)
 		GoGo_SetOptionAutoDismount(1)
 		GoGo_Prefs.DisableUpdateNotice = false
 		GoGo_Prefs.DisableMountNotice = false
-		GoGo_Prefs.DruidClickForm = true
-		GoGo_Prefs.DruidFlightForm = false
+		GoGo_SetPref("DruidClickForm", true)
+		GoGo_SetPref("DruidFlightForm", false)
 		GoGo_Prefs.UnknownMounts = {}
 		GoGo_Prefs.GlobalPrefMounts = {}
 		GoGo_Prefs.GlobalPrefMount = false
-		GoGo_Prefs.AspectPack = false
-		GoGo_Prefs.DruidFormNotRandomize = false
+		GoGo_SetPref("AspectPack", false)
+		GoGo_SetPref("DruidFormNotRandomize", false)
 		GoGo_Prefs.DisableWaterFlight = true
-		GoGo_Prefs.RemoveBuffs = true
-		GoGo_Prefs.DruidDisableInCombat = false
-		GoGo_Prefs.PaladinUseCrusaderAura = false
-		GoGo_Prefs.ShamanClickForm = false
+		GoGo_SetPref("RemoveBuffs", true)
+		GoGo_SetPref("DruidDisableInCombat", false)
+		GoGo_SetPref("ShamanClickForm", false)
 	end --if
 end --function
 
@@ -4123,7 +4109,6 @@ function GoGo_Settings_SetUpdates()
 	if not GoGo_Prefs.DisableWaterFlight then GoGo_Prefs.DisableWaterFlight = false end
 	if not GoGo_Prefs.RemoveBuffs then GoGo_Prefs.RemoveBuffs = false end
 	if not GoGo_Prefs.DruidDisableInCombat then GoGo_Prefs.DruidDisableInCombat = false end
-	if not GoGo_Prefs.PaladinUseCrusaderAura then GoGo_Prefs.PaladinUseCrusaderAura = false end
 	if not GoGo_Prefs.ShamanClickForm then GoGo_Prefs.ShamanClickForm = false end
 	
 	GoGo_Prefs.UnknownMounts = {}
@@ -4142,7 +4127,8 @@ function GoGo_Settings_SetUpdates()
 	GoGo_Prefs.RemoveDebuffs = nil
 	GoGo_Prefs.checkspells = nil
 	GoGo_Prefs.PaliUseCrusader = nil
-	
+	GoGo_Prefs.PaladinUseCrusaderAura = nil
+
 end --function
 
 ---------
@@ -4291,6 +4277,8 @@ end --function
 function GoGo_DebugCollectInformation()
 ---------
 	GoGo_DebugAddLine("Information: GoGoMount Version " .. GetAddOnMetadata("GoGoMount", "Version"))
+--	GoGo_DebugAddLine("Information: GoGoMount build version:  " ..  GetAddOnMetadata("GoGoMount", "Interface"))
+	GoGo_DebugAddLine("Information: World of Warcraft build version:  " .. select(4, _G.GetBuildInfo()))
 	if GoGo_Variables.ExpansionAccount == 0 then
 		GoGo_DebugAddLine("Information: Account - World of Warcraft (Classic) enabled.")
 	elseif GoGo_Variables.ExpansionAccount == 1 then
@@ -4301,6 +4289,8 @@ function GoGo_DebugCollectInformation()
 		GoGo_DebugAddLine("Information: Account - World of Warcraft: Cataclysm enabled.")
 	elseif GoGo_Variables.ExpansionAccount == 4 then
 		GoGo_DebugAddLine("Information: Account - World of Warcraft: Mists of Pandaria enabled.")
+	elseif GoGo_Variables.ExpansionAccount == 5 then
+		GoGo_DebugAddLine("Information: Account - World of Warcraft: Warlords of Draenor enabled.")
 	end --if
 	if GoGo_Variables.ExpansionGame == 0 then
 		GoGo_DebugAddLine("Information: Game - World of Warcraft (Classic) enabled.")
@@ -4312,6 +4302,8 @@ function GoGo_DebugCollectInformation()
 		GoGo_DebugAddLine("Information: Game - World of Warcraft: Cataclysm enabled.")
 	elseif GoGo_Variables.ExpansionGame == 4 then
 		GoGo_DebugAddLine("Information: Game - World of Warcraft: Mists of Pandaria enabled.")
+	elseif GoGo_Variables.ExpansionGame == 5 then
+		GoGo_DebugAddLine("Information: Game - World of Warcraft: Warlords of Draenor enabled.")
 	end --if
 	GoGo_DebugAddLine("Information: Client locale is " .. GetLocale())
 	GoGo_DebugAddLine("Information: Location = " .. GetRealZoneText() .. " - " .. GetZoneText() .. " - " ..GetSubZoneText() .. " - " .. GetMinimapZoneText())

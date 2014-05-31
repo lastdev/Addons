@@ -8,14 +8,14 @@ local L = u.Localize
 local math = math
 local string = string
 
-function u.StartsWith(text, prefix)
-	local len = string.len(prefix)
-	return len <= string.len(text) and string.sub(text, 1, len) == prefix
+function u.StartsWith(str, pre)
+	local len = pre:len()
+	return len <= str:len() and str:sub(1, len) == pre
 end
 
-function u.EndsWith(text, suffix)
-	local len = string.len(suffix)
-	return len <= string.len(text) and string.sub(text, -len, -1) == suffix
+function u.EndsWith(str, suf)
+	local len = suf:len()
+	return len <= str:len() and str:sub(-len, -1) == suf
 end
 
 -- toCondensedString(76.54,  3) => 76.5

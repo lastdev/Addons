@@ -21,7 +21,7 @@ end
 
 local addon = BigBrother
 addon.vars = vars
-vars.svnrev["BigBrother.lua"] = tonumber(("$Revision: 379 $"):match("%d+"))
+vars.svnrev["BigBrother.lua"] = tonumber(("$Revision: 383 $"):match("%d+"))
 
 local bit, math, date, string, select, table, time, tonumber, unpack, wipe, pairs, ipairs = 
       bit, math, date, string, select, table, time, tonumber, unpack, wipe, pairs, ipairs
@@ -1420,7 +1420,7 @@ function addon:COMBAT_LOG_EVENT_UNFILTERED(timestamp, subevent, hideCaster, ...)
 		   sendspam(spam, nil, tname)
 		end
   elseif self.db.profile.Misdirect and is_playersrc 
-     and subevent == "SPELL_CAST_SUCCESS" and (spellID == 34477 or spellID == 57934) then
+     and subevent == "SPELL_CAST_SUCCESS" and (spellID == 34477 or spellID == 57934 or spellID == 110588) then
 	sendspam(L["%s cast %s on %s"]:format(SRC, SPELL(spellID), DST), nil, dstname)
   elseif self.db.profile.CombatRez and is_playersrc 
      and subevent == "SPELL_RESURRECT" and brezSpellNames[spellname] then

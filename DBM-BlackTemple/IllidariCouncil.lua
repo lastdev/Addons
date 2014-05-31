@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Council", "DBM-BlackTemple")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 501 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 535 $"):sub(12, -3))
 mod:SetCreatureID(22949, 22950, 22951, 22592, 23426)
 mod:SetModelID(21416)
 mod:SetUsedIcons(8)
@@ -9,7 +9,7 @@ mod:SetZone()
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_HEAL",
 	"SPELL_INTERRUPT",
@@ -54,7 +54,7 @@ local timerNextCoH			= mod:NewCDTimer(14, 41455)
 local berserkTimer			= mod:NewBerserkTimer(900)
 
 mod:AddBoolOption("HealthFrame", false)
-mod:AddBoolOption("PoisonIcon", true)
+mod:AddBoolOption("PoisonIcon", false)
 
 function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)

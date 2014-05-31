@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod(621, "DBM-Party-WotLK", 8, 281)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(26723)
+mod:SetEncounterID(526, 527)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_REMOVED"
 )
@@ -15,6 +16,7 @@ mod:RegisterEvents(
 local warningChains		= mod:NewTargetAnnounce(50997, 4)
 local warningNova		= mod:NewSpellAnnounce(48179, 3)
 local warningEnrage		= mod:NewSpellAnnounce(8599, 3)
+
 local timerChains		= mod:NewTargetTimer(10, 50997)
 local timerChainsCD		= mod:NewCDTimer(25, 50997)
 local timerNova			= mod:NewBuffActiveTimer(10, 48179)

@@ -2,7 +2,7 @@
 -- Author: Zek <Boodhoof-EU>
 -- License: GNU GPL v3, 29 June 2007 (see LICENSE.txt)
 
-XPerl_SetModuleRevision("$Revision: 856 $")
+XPerl_SetModuleRevision("$Revision: 859 $")
 
 local localGroups = LOCALIZED_CLASS_NAMES_MALE
 local WoWclassCount = 0
@@ -3150,6 +3150,12 @@ if (XPerl_UpgradeSettings) then
 			if (oldVersion < "3.7.3") then
 				old.raid.precisionPercent = 1
 				old.raid.precisionManaPercent = 1
+			end
+			
+			if (oldVersion < "3.7.5") then
+				old.targettargettarget.debuffs.enable = old.targettargettarget.buffs.enable;
+				old.pettarget.debuffs.enable = old.pettarget.buffs.enable;
+				old.focustarget.debuffs.enable = old.focustarget.buffs.enable;
 			end
 		end
 	end

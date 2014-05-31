@@ -1507,16 +1507,20 @@ function tooltipsContain(tooltip, string)
 	
     for i = 1, MyScanningTooltip:NumLines() do
 
-    	local left = _G["MyScanningTooltipTextLeft"..i]:GetText()
-	if left and string.find(left, string)~=nil then
-	    	--dprint(left)
-		return true
+    	if _G["MyScanningTooltipTextLeft"..i] then
+		local left = _G["MyScanningTooltipTextLeft"..i]:GetText()
+		if left and string.find(left, string)~=nil then
+			--dprint(left)
+			return true
+		end
 	end
 
-    	local right = _G["MyScanningTooltipTextRight"..i]:GetText()
-	if right and string.find(right, string)~=nil then
-	    	--dprint(right)
-		return true
+	if _G["MyScanningTooltipTextRight"..i] then
+		local right = _G["MyScanningTooltipTextRight"..i]:GetText()
+		if right and string.find(right, string)~=nil then
+			--dprint(right)
+			return true
+		end
 	end
     end
     return false

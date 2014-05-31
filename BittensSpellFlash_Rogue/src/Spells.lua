@@ -149,9 +149,20 @@ addSpell("Ambush", nil, {
 c.AddOptionalSpell("Recuperate", nil, {
 	Buff = "Recuperate",
 	BuffUnit = "player",
+	Tick = 3,
 	Override = function(z)
 		c.MakePredictor(z, not hasSufficientEnergy(z), "yellow")
 		return a.CP >= 5 and c.IsSolo() and c.HasGlyph("Deadly Momentum")
+	end
+})
+
+c.AddOptionalSpell("Recuperate", "Out of Combat", {
+	Buff = "Recuperate",
+	BuffUnit = "player",
+	Tick = 3,
+	NoRangeCheck = true,
+	CheckFirst = function(z)
+		return c.GetHealthPercent("player") < 85 and c.IsSolo()
 	end
 })
 
@@ -202,8 +213,7 @@ c.AddSpell("Dispatch", "pre-Rupture", {
 	CheckFirst = function(z)
 		if not canDispatch() then
 			return false
-		end
-		if c.HasBuff("Blindside") then	
+		elseif c.HasBuff("Blindside") then	
 			return a.CP < 5 and a.Rupture < 3
 		else
 			return a.CP < 5 
@@ -309,8 +319,7 @@ local function shouldSpendCpCombat()
 		or a.EmptyCP < 2
 		or (a.EmptyCP < 3 and c.HasBuff("Shadow Blades"))
 		or a.DeepInsight > 0 
-		or (c.GetCooldown("Shadow Blades") < 3 
-			and not c.IsCasting("Shadow Blades"))
+		or c.GetCooldown("Shadow Blades", false, 180) < 3
 end
 
 local function shouldSpendEnergyCombat()
@@ -321,6 +330,7 @@ local function shouldSpendEnergyCombat()
 end
 
 c.AddOptionalSpell("Shadow Blades", "for Combat", {
+	Cooldown = 180,
 	CheckFirst = function()
 		if not c.WearingSet(4, "T14") then
 			return true

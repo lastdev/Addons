@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod(672, "DBM-Party-MoP", 1, 313)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 9469 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10805 $"):sub(12, -3))
 mod:SetCreatureID(56448)
+mod:SetEncounterID(1418)
 mod:SetZone()
 mod:SetUsedIcons(8)
 
@@ -61,7 +62,7 @@ function mod:SPELL_CAST_START(args)
 	end
 end
 
-function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)--120037 is a weak version of same spell by exit points, 115219 is the 50k per second icewall that will most definitely wipe your group if it consumes the room cause you're dps sucks.
+function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 115167 and destGUID == UnitGUID("player") and self:AntiSpam(2, 1) then
 		specWarnCorruptingWaters:Show()
 	end

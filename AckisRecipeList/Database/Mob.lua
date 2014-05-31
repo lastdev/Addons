@@ -2,10 +2,10 @@
 ************************************************************************
 Mob.lua
 ************************************************************************
-File date: 2013-09-10T13:23:20Z
-File hash: 4bcba04
-Project hash: 4bcba04
-Project version: 2.5.2
+File date: 2014-05-26T05:32:25Z
+File hash: dc3909a
+Project hash: af8bb68
+Project version: 2.6.5
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -28,14 +28,15 @@ local addon = LibStub("AceAddon-3.0"):GetAddon(private.addon_name)
 local L = LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
 local BB = LibStub("LibBabble-Boss-3.0"):GetLookupTable()
 
+-----------------------------------------------------------------------
+-- Imports.
+-----------------------------------------------------------------------
 local BN = private.BOSS_NAMES
 local Z = private.ZONE_NAMES
 
-private.mob_list = {}
-
 function addon:InitMob()
 	local function AddMob(mob_id, mob_name, zone_name, coord_x, coord_y)
-		private:AddListEntry(private.mob_list, mob_id, mob_name, zone_name, coord_x, coord_y, nil)
+		private.AcquireTypes.MobDrop:AddEntity(mob_id, mob_name, zone_name, coord_x, coord_y, nil)
 	end
 
 	-- Abyssal Depths
@@ -84,7 +85,6 @@ function addon:InitMob()
 
 	-- Eastern Plaguelands
 	AddMob(1844,	L["Foreman Marcrid"],			Z.EASTERN_PLAGUELANDS,		54.0, 68.0)
-	AddMob(8561,	L["Mossflayer Shadowhunter"],		Z.EASTERN_PLAGUELANDS,		60.9, 21.5)
 	AddMob(9451,	L["Scarlet Archmage"],			Z.EASTERN_PLAGUELANDS,		81.5, 75.4)
 
 	-- Felwood
@@ -211,8 +211,13 @@ function addon:InitMob()
 	AddMob(30448,	L["Plains Mammoth"],			Z.THE_STORM_PEAKS,		66.1, 45.6)
 
 	-- Timeless Isle
+	AddMob(72048,	L["Rattleskew"],			Z.TIMELESS_ISLE,		60.6, 87.8)
+	AddMob(72245,	L["Zesqua"],				Z.TIMELESS_ISLE,		47.0, 87.6)
 	AddMob(72761,	L["Windfeather Nestkeeper"],		Z.TIMELESS_ISLE,		32.8, 69.0)
+	AddMob(72767,	L["Jademist Dancer"],			Z.TIMELESS_ISLE,		25.4, 27.0)
+	AddMob(72769,	L["Spirit of Jadefire"],		Z.TIMELESS_ISLE,		45.0, 38.0)
 	AddMob(72771,	L["Damp Shambler"],			Z.TIMELESS_ISLE,		43.2, 30.8)
+	AddMob(72775,	L["Bufo"],				Z.TIMELESS_ISLE,		65.8, 65.0)
 	AddMob(72777,	L["Gulp Frog"],				Z.TIMELESS_ISLE,		64.8, 75.6)
 	AddMob(72805,	L["Primal Stalker"],			Z.TIMELESS_ISLE,		53.0, 60.8)
 	AddMob(72807,	L["Crag Stalker"],			Z.TIMELESS_ISLE,		53.0, 60.8)
@@ -220,7 +225,14 @@ function addon:InitMob()
 	AddMob(72877,	L["Ashleaf Sprite"],			Z.TIMELESS_ISLE,		66.6, 56.8)
 	AddMob(72892,	L["Ordon Oathguard"],			Z.TIMELESS_ISLE,		52.8, 80.2)
 	AddMob(72895,	L["Burning Berserker"],			Z.TIMELESS_ISLE,		68.8, 55.2)
+	AddMob(72896,	L["Eternal Kilnmaster"],		Z.TIMELESS_ISLE,		69.6, 35.6)
+	AddMob(73018,	L["Spectral Brewmaster"],		Z.TIMELESS_ISLE,		37.8, 74.6)
+	AddMob(73021,	L["Spectral Windwalker"],		Z.TIMELESS_ISLE,		36.8, 80.6)
+	AddMob(73025,	L["Spectral Mistweaver"],		Z.TIMELESS_ISLE,		35.6, 77.0)
+	AddMob(73157,	L["Rock Moss"],				Z.TIMELESS_ISLE,		42.4, 31.8)
 	AddMob(73162,	L["Foreboding Flame"],			Z.TIMELESS_ISLE,		45.0, 36.8)
+	AddMob(73169,	L["Jakur of Ordon"],			Z.TIMELESS_ISLE,		53.6, 83.0)
+	AddMob(73277,	L["Leafmender"],			Z.TIMELESS_ISLE,		67.6, 44.0)
 	AddMob(73703,	L["Southsea Plunderer"],		Z.TIMELESS_ISLE,		72.0, 81.0)
 
 	-- Twilight Highlands
@@ -243,6 +255,7 @@ function addon:InitMob()
 	AddMob(7438,	L["Winterfall Ursa"],			Z.WINTERSPRING,			67.5, 36.3)
 	AddMob(7440,	L["Winterfall Den Watcher"],		Z.WINTERSPRING,			68.0, 35.5)
 	AddMob(7441,	L["Winterfall Totemic"],		Z.WINTERSPRING,			24.2, 50.4)
+	AddMob(7524,	L["Anguished Highborne"],		Z.WINTERSPRING,			50.6, 53.2)
 
 	-- Zul'drak
 	AddMob(28851,	L["Enraged Mammoth"],			Z.ZULDRAK,			72.0, 41.1)
@@ -336,8 +349,6 @@ function addon:InitMob()
 	AddMob(1853,	BN.DARKMASTER_GANDLING,			Z.SCHOLOMANCE,			0, 0)
 	AddMob(10469,	L["Scholomance Adept"],			Z.SCHOLOMANCE,			0, 0)
 	AddMob(10499,	L["Spectral Researcher"],		Z.SCHOLOMANCE,			0, 0)
-	AddMob(10503,	BN.JANDICE_BAROV,			Z.SCHOLOMANCE,			0, 0)
-	AddMob(10508,	BB["Ras Frostwhisper"],			Z.SCHOLOMANCE,			0, 0)
 
 	-- Sethekk Halls
 	AddMob(18322,	L["Sethekk Ravenguard"],		Z.SETHEKK_HALLS,		0, 0)
@@ -401,7 +412,7 @@ function addon:InitMob()
 	AddMob(23954,	BN.INGVAR_THE_PLUNDERER,		Z.UTGARDE_KEEP,			0, 0)
 
 	-- Utgarde Pinnacle
-	AddMob(26861,	BN.KING_YMIRON,			Z.UTGARDE_PINNACLE,		0, 0)
+	AddMob(26861,	BN.KING_YMIRON,			        Z.UTGARDE_PINNACLE,		0, 0)
 
 	self.InitMob = nil
 end

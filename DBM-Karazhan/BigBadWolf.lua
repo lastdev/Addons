@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod("BigBadWolf", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 515 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
 mod:SetCreatureID(17521)
 mod:SetModelID(17053)
 mod:RegisterCombat("yell", L.DBM_BBW_YELL_1)
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED"
 )

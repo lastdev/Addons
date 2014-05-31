@@ -101,9 +101,6 @@ L:SetOptionLocalization({
 	RangeFrame			= "Zeige Abstandsfenster (12m)"
 })
 
-L:SetMiscLocalization({
-})
-
 -------------------------
 --  Saviana Ragefire  --
 -------------------------
@@ -113,17 +110,9 @@ L:SetGeneralLocalization({
 	name = "Saviana Flammenschlund"
 })
 
-L:SetWarningLocalization({
-	SpecialWarningTranq		= "Wutanfall - Einlullen/Beruhigen!"
-})
-
 L:SetOptionLocalization({
-	SpecialWarningTranq		= "Spezialwarnung für $spell:78722",
 	RangeFrame				= "Zeige Abstandsfenster (10m)"
 })
-
-L:SetMiscLocalization{
-}
 
 --------------------------
 --  General Zarithrian  --
@@ -162,14 +151,10 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
-	WarnPhase2Soon		= "Phase 2 bald",
-	WarnPhase3Soon		= "Phase 3 bald",
 	TwilightCutterCast	= "Wirkt Zwielichtschnitter: 5 sec"
 })
 
 L:SetOptionLocalization({
-	WarnPhase2Soon			= "Zeige Vorwarnung für Phase 2 (bei ~79%)",
-	WarnPhase3Soon			= "Zeige Vorwarnung für Phase 3 (bei ~54%)",
 	TwilightCutterCast		= "Zeige Warnung, wenn $spell:74769 gewirkt wird",
 	AnnounceAlternatePhase	= "Zeige auch Warnungen/Timer für Phasen, in denen du dich nicht befindest",
 	SoundOnConsumption		= "Spiele Sound, wenn du von $spell:74562 oder $spell:74792 betroffen bist",

@@ -62,12 +62,12 @@ L["Flash Restoration"] = "Подсвечивать Исцеление" -- Needs 
 L["Windfury"] = "Неистовство ветра" -- Needs review
 
 elseif locale == "zhCN" then -- Simplified Chinese
--- L["Earthliving"] = ""
--- L["Flametongue"] = ""
--- L["Flash Elemental"] = ""
--- L["Flash Enhancement"] = ""
--- L["Flash Restoration"] = ""
--- L["Windfury"] = ""
+L["Earthliving"] = "大地生命" -- Needs review
+L["Flametongue"] = "火舌" -- Needs review
+L["Flash Elemental"] = "元素闪光" -- Needs review
+L["Flash Enhancement"] = "增强闪光" -- Needs review
+L["Flash Restoration"] = "恢复闪光" -- Needs review
+L["Windfury"] = "风怒" -- Needs review
 
 elseif locale == "esES" then -- Spanish
 L["Earthliving"] = "Vida terrestre" -- Needs review

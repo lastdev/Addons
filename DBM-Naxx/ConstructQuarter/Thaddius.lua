@@ -2,14 +2,15 @@
 local mod	= DBM:NewMod("Thaddius", "DBM-Naxx", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 47 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(15928)
+mod:SetEncounterID(1120)
 mod:SetModelID(16137)
 mod:RegisterCombat("yell", L.Yell)
 
 mod:EnableModel()
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"RAID_BOSS_EMOTE",
 	"UNIT_AURA player"

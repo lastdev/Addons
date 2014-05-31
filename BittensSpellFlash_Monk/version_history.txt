@@ -1,3 +1,9 @@
+== Version 50400.1.3
+* All: Flashes WoW's 9th Anniversary Celebration Package.
+
+== Version 50400.1.2
+* Brewmaster: If wearing 4pT16, save Purifying Brew until its heal will be effective.
+
 == Version 50400.1.1
 * Bugfix update to Bitten's SpellFlash Library.
 
@@ -89,6 +95,3 @@ NOTE: This version includes a new version of Bitten's SpellFlash Library that I 
 * Windwalker: Removed Rushing Jade Wind from the single target rotation (Blackout Kick is better dps).
 * Windwalker: Added an option to synchronize Tigereye Brew with a mastery proc.  See the website for more info (especially if you have the Rune of Re-Origination).
 * Windwalker: Fists of Fury now flashes small and yellow if Energizing Brew is off cooldown, to make you less tempted to press them both at the same time.
-
-== Version 3.1.1
-* Windwalker: Bugfix - one of the Blackout Kick conditions was wrong.

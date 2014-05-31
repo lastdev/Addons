@@ -40,7 +40,9 @@ WeakAuras.precision_types = {
   [0] = "12",
   [1] = "12.3",
   [2] = "12.34",
-  [3] = "12.345"
+  [3] = "12.345",
+  [4] = "Dynamic 12.3", -- will show 1 digit precision when time is lower than 3 seconds, hardcoded
+  [5] = "Dynamic 12.34", -- will show 2 digits precision when time is lower than 3 seconds, hardcoded
 };
 WeakAuras.sound_channel_types = {
   Master = L["Master"],
@@ -336,15 +338,27 @@ WeakAuras.orientation_types = {
   VERTICAL = L["Bottom to Top"],
   VERTICAL_INVERSE = L["Top to Bottom"]
 };
-WeakAuras.spec_types = {}
+WeakAuras.spec_types = {
+  [1] = _G.SPECIALIZATION.." 1",
+  [2] = _G.SPECIALIZATION.." 2",
+  [3] = _G.SPECIALIZATION.." 3",
+  [4] = _G.SPECIALIZATION.." 4"
+}
+WeakAuras.spec_types_reduced = {
+  [1] = _G.SPECIALIZATION.." 1",
+  [2] = _G.SPECIALIZATION.." 2",
+  [3] = _G.SPECIALIZATION.." 3"
+}
+WeakAuras.spec_types_specific = {}
 local function update_specs()
-  wipe(WeakAuras.spec_types);
-  local _, eClass, classID = UnitClass("player")
-  local numSpecs = GetNumSpecializationsForClassID(classID)
-  for i=1, numSpecs do
-    local _, tabName = GetSpecializationInfoForClassID(classID, i);
-    if tabName then
-      tinsert(WeakAuras.spec_types, _G.SPECIALIZATION .. " ".. i .. " ("..tabName..")")
+  for classFileName, classID in pairs(WeakAuras.class_ids) do
+    WeakAuras.spec_types_specific[classFileName] = {}
+    local numSpecs = GetNumSpecializationsForClassID(classID)
+    for i=1, numSpecs do
+      local _, tabName, _, icon = GetSpecializationInfoForClassID(classID, i);
+      if tabName then
+        tinsert(WeakAuras.spec_types_specific[classFileName], "|T"..(icon or "error")..":0|t "..(tabName or "error"));
+      end
     end
   end
 end
@@ -358,7 +372,7 @@ do
   while talentId <= numTalents do
     while tier <= numTiers do
       while column <= numColumns do
-        WeakAuras.talent_types[talentId] = L["Tier"]..tier.." - "..column
+        WeakAuras.talent_types[talentId] = L["Tier "]..tier.." - "..column
         column = column + 1
         talentId = talentId + 1
       end
@@ -368,6 +382,7 @@ do
     tier = 1
   end
 end
+
 WeakAuras.totem_types = {
   [1] = L["Fire"],
   [2] = L["Earth"],
@@ -798,7 +813,9 @@ if(WeakAuras.PowerAurasPath ~= "") then
     [WeakAuras.PowerAurasPath.."Aura41"] = "Disorient",
     [WeakAuras.PowerAurasPath.."Aura42"] = "Dispell",
     [WeakAuras.PowerAurasPath.."Aura43"] = "Danger",
-    [WeakAuras.PowerAurasPath.."Aura44"] = "Buff"
+    [WeakAuras.PowerAurasPath.."Aura44"] = "Buff",
+	[WeakAuras.PowerAurasPath.."Aura44"] = "Buff",
+	["Interface\\AddOns\\WeakAuras\\Media\\Textures\\interrupt"] = "Interrupt",
   };
 end
 --[=[
@@ -938,6 +955,7 @@ WeakAuras.group_types = {
   scenario = L["Scenario"],
   party = L["5 Man Dungeon"],
   ten = L["10 Man Raid"],
+  twenty = L["20 Man Raid"],
   twentyfive = L["25 Man Raid"],
   fortyman = L["40 Man Raid"],
   flexible = L["Flex Raid"],
@@ -948,6 +966,7 @@ WeakAuras.difficulty_types = {
   none = L["None"],
   normal = L["Normal"],
   heroic = L["Heroic"],
+  mythic = L["Mythic"],
   lfr = L["Looking for Raid"],
   challenge = L["Challenge"]
 };
@@ -1133,4 +1152,9 @@ WeakAuras.gtfo_types = {
 	[2] = L["Low Damage"],
 	[3] = L["Fail Alert"],
 	[4] = L["Friendly Fire"]
+};
+WeakAuras.pet_behavior_types = {
+  passive = L["Passive"],
+  defensive = L["Defensive"],
+  assist = L["Assist"]
 };

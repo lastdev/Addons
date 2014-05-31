@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod("Tenebron", "DBM-ChamberOfAspects", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(30452)
+mod:SetEncounterID(1092)
 mod:SetModelID(27082)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
     "SPELL_CAST_SUCCESS"
 )
 
@@ -17,7 +18,7 @@ local timerShadowFissure	= mod:NewCastTimer(5, 59128)--Cast timer until Void Bla
 
 
 function mod:SPELL_CAST_SUCCESS(args)
-    if args:IsSpellID(57579, 59127) and self:IsInCombat() then
+    if args:IsSpellID(57579, 59127) then
         warnShadowFissure:Show()
         timerShadowFissure:Start()
     end

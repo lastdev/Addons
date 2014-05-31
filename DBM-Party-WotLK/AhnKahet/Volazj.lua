@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod(584, "DBM-Party-WotLK", 1, 271)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 124 $"):sub(12, -3))
 mod:SetCreatureID(29311)
+mod:SetEncounterID(215, 263)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
-	"UNIT_SPELLCAST_START"
+mod:RegisterEventsInCombat(
+	"UNIT_SPELLCAST_START target focus"
 )
 
 local warningInsanity	= mod:NewCastAnnounce(57496, 3)--Not currently working, no CLEU for it

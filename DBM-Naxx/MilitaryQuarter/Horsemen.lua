@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod("Horsemen", "DBM-Naxx", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(16063, 16064, 16065, 30549)
+mod:SetEncounterID(1121)
 mod:SetModelID(10729)
 mod:RegisterCombat("combat")
 
 mod:EnableModel()
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_APPLIED_DOSE"
 )

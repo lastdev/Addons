@@ -7,8 +7,7 @@ local L
 L= DBM:GetModLocalization(691)
 
 L:SetOptionLocalization({
-	RangeFrame			= "$spell:119622 효과에 맞추어 거리 창 보기",
-	ReadyCheck			= "우두머리 전투 시작시 전투 준비 소리 듣기(대상 선택 유무 무관)"
+	RangeFrame			= "$spell:119622 효과에 맞추어 거리 창 보기"
 })
 
 L:SetMiscLocalization({
@@ -20,10 +19,6 @@ L:SetMiscLocalization({
 -----------------------
 L= DBM:GetModLocalization(725)
 
-L:SetOptionLocalization({
-	ReadyCheck			= "우두머리 전투 시작시 전투 준비 소리 듣기(대상 선택 유무 무관)"
-})
-
 L:SetMiscLocalization({
 	Pull				= "놈들의 시체를 가져와라!"
 })
@@ -33,10 +28,6 @@ L:SetMiscLocalization({
 --------------
 L= DBM:GetModLocalization(826)
 
-L:SetOptionLocalization({
-	ReadyCheck			= "우두머리 전투 시작시 전투 준비 소리 듣기(대상 선택 유무 무관)"
-})
-
 L:SetMiscLocalization({
 	Pull				= "감히 우릴 막겠다고? 잔달라 부족을 막을 순 없다! 이번엔 안 돼!"
 })
@@ -45,10 +36,6 @@ L:SetMiscLocalization({
 -- Nalak, The Storm Lord --
 ---------------------------
 L= DBM:GetModLocalization(814)
-
-L:SetOptionLocalization({
-	ReadyCheck			= "우두머리 전투 시작시 전투 준비 소리 듣기(대상 선택 유무 무관)"
-})
 
 L:SetMiscLocalization({
 	Pull				= "한기어린 바람이 느껴지느냐? 곧 폭풍이 몰아칠 것이다..."
@@ -75,8 +62,9 @@ L= DBM:GetModLocalization(858)
 
 L:SetMiscLocalization({
 	Pull				= "시험을 시작하자!",
-	Wave1				= "너희 행동이 어떤 결과를 낳을지 생각해라!",
+	Wave1				= "시련 때문에 판단력이 흐려져선 안 된다!",
 	Wave2				= "내면의 목소리에 귀를 기울이고, 진실을 찾아라!",
+	Wave3				= "너희 행동이 어떤 결과를 낳을지 생각해라!",
 	Victory				= "이 시험에서 너희의 지혜가 빛을 발했다. 그 지혜가 어두운 곳에서 항상 너희의 등불이 되길."
 })
 
@@ -105,3 +93,7 @@ L:SetMiscLocalization({
 -- Ordos, Fire-God of the Yaungol --
 ------------------------------------
 L= DBM:GetModLocalization(861)
+
+L:SetMiscLocalization({
+	Pull					= "영원한 화로에서 내 자리를 대신해라."
+})

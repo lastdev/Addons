@@ -2,10 +2,10 @@
 ************************************************************************
 Quest.lua
 ************************************************************************
-File date: 2013-09-10T13:23:20Z
-File hash: 4bcba04
-Project hash: 4bcba04
-Project version: 2.5.2
+File date: 2014-02-14T05:23:40Z
+File hash: 04922c6
+Project hash: af8bb68
+Project version: 2.6.5
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -26,9 +26,10 @@ local FOLDER_NAME, private	= ...
 local LibStub = _G.LibStub
 local addon	= LibStub("AceAddon-3.0"):GetAddon(private.addon_name)
 
+-----------------------------------------------------------------------
+-- Imports
+-----------------------------------------------------------------------
 local Z = private.ZONE_NAMES
-
-private.quest_list	= {}
 
 -----------------------------------------------------------------------
 -- Memoizing table for quest names.
@@ -51,7 +52,7 @@ private.quest_names = _G.setmetatable({}, {
 
 function addon:InitQuest()
 	local function AddQuest(quest_id, zone_name, coord_x, coord_y, faction)
-		private:AddListEntry(private.quest_list, quest_id, nil, zone_name, coord_x, coord_y, faction)
+		private.AcquireTypes.Quest:AddEntity(quest_id, nil, zone_name, coord_x, coord_y, faction)
 	end
 
 	AddQuest(384,	Z.DUN_MOROGH,			46.8,	52.5,	"Alliance")
@@ -72,7 +73,6 @@ function addon:InitQuest()
 	AddQuest(7604,	Z.BLACKROCK_DEPTHS,		0,	0,	"Neutral")
 	AddQuest(8313,	Z.SILITHUS,			43.6,	42.0,	"Neutral")
 	AddQuest(8323,	Z.SILITHUS,			67.1,	69.7,	"Neutral")
-	AddQuest(8798,	Z.WINTERSPRING,			59.2,	49.8,	"Neutral")
 	AddQuest(9171,	Z.GHOSTLANDS,			48.3,	30.9,	"Horde")
 	AddQuest(9356,	Z.HELLFIRE_PENINSULA,		49.2,	74.8,	"Neutral")
 	AddQuest(9454,	Z.AZUREMYST_ISLE,		49.8,	51.9,	"Alliance")

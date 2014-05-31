@@ -30,7 +30,8 @@ a.SpellIDs = {
 	["Glyphed Exorcism"] = 122032,
 	["Flash of Light"] = 19750,
 	["Grand Crusader"] = 98057,
-	["Guardian of Ancient Kings"] = 86659,
+	["Guardian of Ancient Kings Prot"] = 86659,
+	["Guardian of Ancient Kings Ret"] = 86698,
 	["Hammer of the Righteous"] = 53595,
 	["Hammer of Wrath"] = 24275,
 	["Hand of Protection"] = 1022,
@@ -61,6 +62,7 @@ a.SpellIDs = {
 	-- Items
 	["Ret 4pT15 Buff"] = 138169, -- (the name is "Templar's Verdict")
 	["Shield of Glory"] = 138242, -- Prot 2pT15 Buff
+	["Divine Crusader"] = 144595, -- Ret 2pT16 Buff
 }
 
 a.TalentIDs = {
@@ -97,11 +99,11 @@ a.EquipmentSets = {
 	    HandsSlot = { 95921, 95291, 96665 },
 	    LegsSlot = { 95923, 95293, 96667 },
 	},
-	RetT15 = {
-	    HeadSlot = { 95912, 95282, 96656 },
-	    ShoulderSlot = { 95914, 95284, 96658 },
-	    ChestSlot = { 95910, 95280, 96654 },
-	    HandsSlot = { 95911, 95281, 96655 },
-	    LegsSlot = { 95913, 95283, 96657 },
-	},
+--	RetT15 = {
+--	    HeadSlot = { 95912, 95282, 96656 },
+--	    ShoulderSlot = { 95914, 95284, 96658 },
+--	    ChestSlot = { 95910, 95280, 96654 },
+--	    HandsSlot = { 95911, 95281, 96655 },
+--	    LegsSlot = { 95913, 95283, 96657 },
+--	},
 }

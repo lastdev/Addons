@@ -40,7 +40,7 @@ local monitorSmashApplied = function(spellID)
 end
 
 function a.PreFlash()
-	a.InExecute = s.HealthPercent() < 20
+	a.InExecute = s.HealthPercent() <= 20
 	a.Rage = c.GetPower(0)
 	a.Enraged = c.HasBuff("Enrage", true)
 	if c.IsQueued("Berserker Rage") then
@@ -99,10 +99,7 @@ a.Rotations.Arms = {
 			a.TasteStacks = a.TasteStacks - 1
 		end
 		
-		a.OverpowerIsFree = 
-			c.IsCasting("Execute") 
-				or (c.HasBuff("Sudden Execute") 
-						and not c.IsCasting("Overpower"))
+		a.OverpowerIsFree = c.HasBuff("Sudden Execute", false, false, "Execute")
 		a.CanOverpower = 
 			a.TasteStacks > 0 and (a.Rage >= 10 or a.OverpowerIsFree)
 		
@@ -139,13 +136,12 @@ a.Rotations.Arms = {
 				"Storm Bolt for Arms",
 				"Dragon Roar Prime for Arms",
 				"Colossus Smash for Arms",
-				"Execute Prime for Arms",
+				"Execute for Arms",
 				"Dragon Roar for Arms",
 				"Slam Double Prime",
-				"Overpower at 3",
+				"Overpower Prime",
 				"Slam Prime",
-				"Overpower unless Execute",
-				"Execute",
+				"Overpower",
 				"Slam",
 				"Shout for Rage",
 				"Shockwave",
@@ -291,7 +287,6 @@ a.Rotations.Fury = {
 
 -------------------------------------------------------------------- Protection
 local uncontrolledMitigationCooldowns = {
-	"Second Wind",
 	"Spell Reflection",
 }
 

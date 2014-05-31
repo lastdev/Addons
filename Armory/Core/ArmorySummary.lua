@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 590 2013-03-11T20:16:07Z
+    Revision: 631 2014-04-12T14:56:13Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -184,19 +184,54 @@ local function CellHideTooltip(self)
 end
 
 local function OnMoneyEnter(self, characterInfo)
-    local total = characterInfo.RealmInfo[characterInfo.Faction];
-    
     SummaryHideDetail();
+
+	local money = {};
+    local addToTotal = function (realmInfo)
+		local realm = realmInfo.Name;
+		local total = realmInfo[characterInfo.Faction] or 0;
+		if ( total > 0 ) then
+			if ( not money[realm] ) then
+				money[realm] = 0;
+			end
+			money[realm] = money[realm] + total;
+		end
+    end;
+
+	if ( characterInfo.RealmInfo.Connected ) then
+		for realmInfo in pairs(characterInfo.RealmInfo.Connected) do
+			addToTotal(realmInfo);
+		end
+	else
+		addToTotal(characterInfo.RealmInfo);
+	end
     
+    local total = money[characterInfo.RealmInfo.Name] or 0;
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
     GameTooltip:SetFrameLevel(self:GetFrameLevel() + 1);
     GameTooltip:AddLine(format(ARMORY_MONEY_TOTAL, characterInfo.RealmInfo.Name, characterInfo.Faction), "", 1, 1, 1);
-    SetTooltipMoney(GameTooltip, total);
+    SetTooltipMoney(GameTooltip, total, "TOOLTIP");
+
+    local multiRealm;
+    for realm, realmTotal in pairs(money) do
+		if ( realm ~= characterInfo.RealmInfo.Name ) then
+			GameTooltip:AddLine(format(ARMORY_MONEY_TOTAL, realm, characterInfo.Faction), "", 1, 1, 1);
+			SetTooltipMoney(GameTooltip, realmTotal);
+			total = total + realmTotal;
+			multiRealm = true;
+		end
+    end
+    if ( multiRealm ) then
+		GameTooltip:AddLine(format(ARMORY_MONEY_TOTAL, "-", characterInfo.Faction), "", 1, 1, 1);
+		SetTooltipMoney(GameTooltip, total);
+    end
+
     if ( characterInfo.MoneyTruncated and characterInfo.Money ~= total ) then
         GameTooltip:AddLine(" ");
         GameTooltip:AddLine(characterInfo.Name..":", "", 1, 1, 1);
         SetTooltipMoney(GameTooltip, characterInfo.Money);
     end
+    
     GameTooltip:Show();
 end
 
@@ -222,8 +257,8 @@ local function OnExpiredEnter(self, characterInfo)
     local iconProvider = Armory.qtipIconProvider;
     local index, column, myColumn;
     local lastVisit, name;
-    local font = Armory.summary:GetHeaderFont();
-    font:SetTextColor(GetTableColor(NORMAL_FONT_COLOR));
+    local headerFont = Armory.summary:GetHeaderFont();
+    headerFont:SetTextColor(GetTableColor(NORMAL_FONT_COLOR));
 
     SummaryHideDetail(tooltip);
 
@@ -246,8 +281,8 @@ local function OnExpiredEnter(self, characterInfo)
         end
     end
     index, column = tooltip:AddLine();
-    myColumn = column; index, column = tooltip:SetCell(index, myColumn, ARMORY_MAIL_LAST_VISIT, font, "LEFT", 2);
-    myColumn = column; index, column = tooltip:SetCell(index, myColumn, lastVisit, font, "RIGHT");
+    myColumn = column; index, column = tooltip:SetCell(index, myColumn, ARMORY_MAIL_LAST_VISIT, headerFont, "LEFT", 2);
+    myColumn = column; index, column = tooltip:SetCell(index, myColumn, lastVisit, headerFont, "RIGHT");
     if ( characterInfo.Expired.MailCount > -1 ) then
         index, column = tooltip:AddLine();
         myColumn = column; index, column = tooltip:SetCell(index, myColumn, ARMORY_MAIL_ITEM_COUNT, nil, "LEFT", 2);
@@ -260,8 +295,8 @@ local function OnExpiredEnter(self, characterInfo)
         if ( characterInfo.Expired.Items ) then    
             index, column = tooltip:AddLine();
             index, column = tooltip:AddHeader();
-            myColumn = column; index, column = tooltip:SetCell(index, myColumn, INBOX, font, "LEFT", 2);
-            myColumn = column; index, column = tooltip:SetCell(index, myColumn, ARMORY_EXPIRATION_LABEL, font, "RIGHT");
+            myColumn = column; index, column = tooltip:SetCell(index, myColumn, INBOX, headerFont, "LEFT", 2);
+            myColumn = column; index, column = tooltip:SetCell(index, myColumn, ARMORY_EXPIRATION_LABEL, headerFont, "RIGHT");
             tooltip:AddSeparator();
 
             for _, item in ipairs(characterInfo.Expired.Items) do
@@ -277,6 +312,204 @@ local function OnExpiredEnter(self, characterInfo)
         end
     end
     
+    tooltip:UpdateScrolling(512);
+    tooltip:Show();
+        
+    SummaryAutoHide(tooltip);
+    tooltip.OnRelease = function() tooltip:SetScale(1); SummaryAutoHide() end;
+end
+
+local function OnRaidInfoEnter(self, characterInfo)
+    if ( table.getn(characterInfo.RaidInfo) == 0 ) then
+        return;
+    end
+
+    local tooltip = Armory.qtip:Acquire("ArmorySummaryRaidInfoTooltip", 2);
+    local index, column, myColumn;
+
+    SummaryHideDetail(tooltip);
+    
+    tooltip:Clear();
+    tooltip:SetScale(Armory:GetConfigFrameScale());
+    tooltip:SetFrameLevel(self:GetFrameLevel() + 1);
+    tooltip:EnableMouse(true);
+    tooltip:SetAutoHideDelay(0.5, self);
+    SetAnchor(tooltip, self, 16);
+    
+    index, column = tooltip:AddLine();
+    myColumn = column; index, column = tooltip:SetCell(index, myColumn, characterInfo.Name, GameTooltipHeaderText, "LEFT", 2);
+
+    tooltip:AddSeparator(2);
+    for _, raidInfo in ipairs(characterInfo.RaidInfo) do
+        index, column = tooltip:AddLine();
+        myColumn = column; index, column = tooltip:SetCell(index, myColumn, NORMAL_FONT_COLOR_CODE..raidInfo.Name..FONT_COLOR_CODE_CLOSE.."\n  "..raidInfo.Difficulty);
+        myColumn = column; index, column = tooltip:SetCell(index, myColumn, raidInfo.Reset.."\n ");
+        if ( raidInfo.Killed ) then
+			index, column = tooltip:AddLine();
+            myColumn = column; index, column = tooltip:SetCell(index, myColumn, "  "..RED_FONT_COLOR_CODE..strjoin(", ", unpack(raidInfo.Killed))..FONT_COLOR_CODE_CLOSE, nil, "LEFT", 2);
+        end
+        tooltip:AddSeparator(2);
+    end
+
+    tooltip:UpdateScrolling(512);
+    tooltip:Show();
+        
+    SummaryAutoHide(tooltip);
+    tooltip.OnRelease = function() tooltip:SetScale(1); SummaryAutoHide() end;
+end
+
+local questHeaderState = {};
+local function DisplayQuests(tooltip, characterInfo)
+    local iconProvider = Armory.qtipIconProvider;
+    local index, column, myColumn;
+    local headerFont = tooltip:GetHeaderFont();
+    headerFont:SetTextColor(GetTableColor(NORMAL_FONT_COLOR));
+
+    tooltip:Clear();
+
+    index, column = tooltip:AddLine();
+    myColumn = column; index, column = tooltip:SetCell(index, myColumn, characterInfo.Name, GameTooltipHeaderText, "LEFT", 4);
+
+    tooltip:AddSeparator(2);
+
+    local currentProfile = Armory:CurrentProfile();
+	Armory:LoadProfile(characterInfo.RealmInfo.Name, characterInfo.Name);
+
+	local numEntries;
+	local questTitleText, level, questTag, isHeader, isCollapsed, isComplete, isDaily, label;
+	local color;
+
+ 	if ( characterInfo.NumQuests > 0 ) then
+        index, column = tooltip:AddLine();
+
+        myColumn = column; index, column = tooltip:SetCell(index, myColumn, format("Interface\\Buttons\\UI-%sButton-Up", questHeaderState.Quests and "Plus" or "Minus"), iconProvider); 
+        tooltip:SetCellScript(index, myColumn, "OnMouseDown", function (self) 
+			questHeaderState.Quests = not questHeaderState.Quests; 
+			DisplayQuests(tooltip, characterInfo); 
+		end);
+
+        myColumn = column; index, column = tooltip:SetCell(index, myColumn, CURRENT_QUESTS, headerFont, "LEFT", 3); 
+        
+        if ( not questHeaderState.Quests ) then
+			numEntries = Armory:GetNumQuestLogEntries();
+			for i = 1, numEntries do
+				questTitleText, level, questTag, _, isHeader, isCollapsed, isComplete, isDaily = Armory:GetQuestLogTitle(i);
+
+				index, column = tooltip:AddLine("");
+
+				if ( isHeader ) then
+					myColumn = column; index, column = tooltip:SetCell(index, myColumn, format("Interface\\Buttons\\UI-%sButton-Up", isCollapsed and "Plus" or "Minus"), iconProvider); 
+					tooltip:SetCellScript(index, myColumn, "OnMouseDown", function (self, id) 
+					    local currentProfile = Armory:CurrentProfile();
+						Armory:LoadProfile(characterInfo.RealmInfo.Name, characterInfo.Name);
+						
+						local isCollapsed = select(6, Armory:GetQuestLogTitle(id));
+						if ( isCollapsed ) then
+							Armory:ExpandQuestHeader(id);
+						else
+							Armory:CollapseQuestHeader(id);
+						end
+						ArmoryQuest_Update();
+						Armory:SelectProfile(currentProfile);
+						
+						DisplayQuests(tooltip, characterInfo);
+					end, i);
+					
+					color = QuestDifficultyColors["header"];
+				else
+					myColumn = column; index, column = tooltip:SetCell(index, myColumn, "");
+					
+					color = ArmoryGetDifficultyColor(level);
+				end
+				color = Armory:HexColor(color);
+				
+				myColumn = column; index, column = tooltip:SetCell(index, myColumn, color..questTitleText..FONT_COLOR_CODE_CLOSE); 
+				myColumn = column; index, column = tooltip:SetCell(index, myColumn, isHeader and "" or color..(ArmoryQuestLog_GetQuestTag(questTag, isComplete, isDaily) or "")..FONT_COLOR_CODE_CLOSE); 
+			end
+		end
+	end
+
+ 	if ( characterInfo.NumQuestHistoryEntries > 0 ) then
+        index, column = tooltip:AddLine();
+
+        myColumn = column; index, column = tooltip:SetCell(index, myColumn, format("Interface\\Buttons\\UI-%sButton-Up", questHeaderState.QuestHistory and "Plus" or "Minus"), iconProvider); 
+        tooltip:SetCellScript(index, myColumn, "OnMouseDown", function (self) 
+			questHeaderState.QuestHistory = not questHeaderState.QuestHistory; 
+			DisplayQuests(tooltip, characterInfo); 
+		end);
+
+        myColumn = column; index, column = tooltip:SetCell(index, myColumn, format("%s / %s", DAILY, CALENDAR_REPEAT_WEEKLY), headerFont, "LEFT", 3); 
+
+        if ( not questHeaderState.QuestHistory ) then
+			numEntries = Armory:GetNumQuestHistoryEntries();
+			for i = 1, numEntries do
+				questTitleText, isHeader, isCollapsed, questTag, label = Armory:GetQuestHistoryTitle(i);
+				color = QuestDifficultyColors[label];
+								
+				index, column = tooltip:AddLine("");
+
+				if ( isHeader ) then
+					myColumn = column; index, column = tooltip:SetCell(index, myColumn, format("Interface\\Buttons\\UI-%sButton-Up", isCollapsed and "Plus" or "Minus"), iconProvider); 
+					tooltip:SetCellScript(index, myColumn, "OnMouseDown", function (self, id) 
+					    local currentProfile = Armory:CurrentProfile();
+						Armory:LoadProfile(characterInfo.RealmInfo.Name, characterInfo.Name);
+						
+						local isCollapsed = select(3, Armory:GetQuestHistoryTitle(id));
+						if ( isCollapsed ) then
+							Armory:ExpandQuestHistoryHeader(id);
+						else
+							Armory:CollapseQuestHistoryHeader(id);
+						end
+						ArmoryQuest_Update();
+						Armory:SelectProfile(currentProfile);
+						
+						DisplayQuests(tooltip, characterInfo);
+					end, i);
+				else
+					myColumn = column; index, column = tooltip:SetCell(index, myColumn, "");
+				end
+				
+				color = Armory:HexColor(color);
+				myColumn = column; index, column = tooltip:SetCell(index, myColumn, color..questTitleText..FONT_COLOR_CODE_CLOSE); 
+				myColumn = column; index, column = tooltip:SetCell(index, myColumn, isHeader and "" or color..questTag..FONT_COLOR_CODE_CLOSE); 
+			end
+		end
+	end
+	
+	Armory:SelectProfile(currentProfile);
+end
+
+local function OnQuestsEnter(self, characterInfo)
+    if ( characterInfo.NumQuests == 0 and characterInfo.NumQuestHistoryEntries == 0 ) then
+        return;
+    end
+
+    local tooltip = Armory.qtip:Acquire("ArmorySummaryQuestsTooltip", 4);
+
+    SummaryHideDetail(tooltip);
+
+    tooltip:SetScale(Armory:GetConfigFrameScale());
+    tooltip:SetFrameLevel(self:GetFrameLevel() + 1);
+    tooltip:EnableMouse(true);
+    tooltip:SetAutoHideDelay(0.5, self);
+	
+	-- force left anchoring because of collapsable headers
+    --SetAnchor(tooltip, self, 16);
+	tooltip:ClearAllPoints();
+	tooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 16, 0);
+	tooltip:SetClampedToScreen(true); -- doesn't work with UpdateScrolling...
+
+	table.wipe(questHeaderState);
+
+ 	if ( characterInfo.NumQuests > 0 ) then
+		if ( Armory:SetQuestLogFilter("") ) then
+			ArmoryQuest_Update();
+		end
+		questHeaderState.Quests = characterInfo.NumQuestHistoryEntries > 0;
+	end
+
+	DisplayQuests(tooltip, characterInfo);
+
     tooltip:UpdateScrolling(512);
     tooltip:Show();
         
@@ -319,16 +552,11 @@ local function OnEventsEnter(self, characterInfo)
     tooltip.OnRelease = function() tooltip:SetScale(1); SummaryAutoHide() end;
 end
 
-local function OnSkillClick(self, link)
-    if ( link ) then
-        if ( IsShiftKeyDown() ) then
-            if ( not ChatEdit_InsertLink(link) ) then
-                ChatFrame_OpenChat(link);
-            end
-        else
-            Armory:OpenProfession(link);
-            Armory:HideSummary();
-        end
+local function OnSkillClick(self, profile, button)
+    if ( profile and profile.skill ) then
+		OnCharacterClick(self, profile, "LeftButton");
+        Armory:SetSelectedProfession(profile.skill);
+        ArmoryTradeSkillFrame_Show();
     end
 end
 
@@ -416,44 +644,15 @@ local function SortSummary(sortColumn)
                 return a.Money < b.Money; 
             end 
         end;
-    elseif ( columnName == "honor" ) then
+
+    elseif ( columnName ) then 
         sorter = function(a, b) 
-            if ( summary.initial ) then 
-                return a.Honor > b.Honor; 
+			local ac = a.CurrencyInfo[columnName] and a.CurrencyInfo[columnName].Count or 0;
+			local bc = b.CurrencyInfo[columnName] and b.CurrencyInfo[columnName].Count or 0;
+			if ( summary.initial ) then 
+                return ac > bc; 
             else 
-                return a.Honor < b.Honor; 
-            end 
-        end;
-    elseif ( columnName == "conquest" ) then
-        sorter = function(a, b) 
-            if ( summary.initial ) then 
-                return a.Conquest > b.Conquest; 
-            else 
-                return a.Conquest < b.Conquest; 
-            end 
-        end;
-    elseif ( columnName == "justice" ) then
-        sorter = function(a, b) 
-            if ( summary.initial ) then 
-                return a.Justice > b.Justice; 
-            else 
-                return a.Justice < b.Justice; 
-            end 
-        end;
-    elseif ( columnName == "valor" ) then
-        sorter = function(a, b) 
-            if ( summary.initial ) then 
-                return a.Valor > b.Valor; 
-            else 
-                return a.Valor < b.Valor; 
-            end 
-        end;
-    elseif ( columnName == "quest" ) then
-        sorter = function(a, b) 
-            if ( summary.initial ) then 
-                return a.NumQuests > b.NumQuests; 
-            else 
-                return a.NumQuests < b.NumQuests; 
+                return ac < bc; 
             end 
         end;
     end
@@ -476,10 +675,11 @@ function Armory:BuildSummary()
     local unknown = GRAY_FONT_COLOR_CODE..UNKNOWN..FONT_COLOR_CODE_CLOSE;
     local unit = "player";
     local realmInfo, characterInfo;
-    local currencyName, currencyAmount, currencyIcon; 
     local factionGroup;
 
     table.wipe(summary);
+    
+	summary.Currencies = self:GetConfigSummaryEnabledCurrencies();
 
     for _, realm in ipairs(realms) do
         realmInfo = { Name=realm, Characters={} };
@@ -558,50 +758,71 @@ function Armory:BuildSummary()
                 characterInfo.MoneyDisplay, characterInfo.MoneyTruncated = GetCoinText(characterInfo.Money);
             end
             if ( self:GetConfigSummaryCurrency() ) then
-                currencyName, currencyAmount, currencyIcon = self:GetCurrencyInfo(HONOR_CURRENCY);
-                characterInfo.Honor = currencyAmount or 0;
-                if ( characterInfo.Honor > 0 ) then
-                    summary.Honor = {
-                        Name = currencyName or "Honor Points",
-                        Icon = currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
-                    };
-                end
-                local earnedThisWeek, earnablePerWeek;
-                currencyName, currencyAmount, currencyIcon, earnedThisWeek, earnablePerWeek = self:GetCurrencyInfo(CONQUEST_CURRENCY);
-                characterInfo.Conquest = currencyAmount or 0;
-                if ( characterInfo.Conquest > 0 ) then
-                    summary.Conquest = {
-                        Name = currencyName or "Conquest Points",
-                        Icon = currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
-                    };
-                    if ( earnablePerWeek ) then
-                        characterInfo.ConquestEarned = earnedThisWeek;
-                        characterInfo.ConquestCap = earnablePerWeek;
-                    end
-                end
-                currencyName, currencyAmount, currencyIcon = self:GetCurrencyInfo(JUSTICE_CURRENCY);
-                characterInfo.Justice = currencyAmount or 0;
-                if ( characterInfo.Justice > 0 ) then
-                    summary.Justice = {
-                        Name = currencyName or "Justice Points",
-                        Icon = currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
-                    };
-                end
-                currencyName, currencyAmount, currencyIcon, earnedThisWeek, earnablePerWeek = self:GetCurrencyInfo(VALOR_CURRENCY);
-                characterInfo.Valor = currencyAmount or 0;
-                if ( characterInfo.Valor > 0 ) then
-                    summary.Valor = {
-                        Name = currencyName or "Valor Points",
-                        Icon = currencyIcon or "Interface\\Icons\\INV_Misc_QuestionMark"
-                    };
-                    if ( earnablePerWeek ) then
-                        characterInfo.ValorEarned = earnedThisWeek;
-                        characterInfo.ValorCap = floor(earnablePerWeek / 100);
-                    end
-                end
+				local name, isHeader, count, icon, earnedThisWeek, earnablePerWeek;
+				local currencyInfo = {};
+				for i = 1, self:GetVirtualNumCurrencies() do
+					name, isHeader, count, icon, earnedThisWeek, earnablePerWeek = self:GetVirtualCurrencyInfo(i);
+					if ( not isHeader and summary.Currencies[name]  ) then
+						if ( icon and type(summary.Currencies[name]) ~= "string" ) then
+							summary.Currencies[name] = icon;
+						end
+						currencyInfo[name] = {
+							Count = count,
+							Earned = earnedThisWeek,
+							Cap = earnablePerWeek
+						};
+					end
+				end
+				characterInfo.CurrencyInfo = currencyInfo;
             end
+			if ( self:GetConfigSummaryRaidInfo() and self:RaidEnabled() ) then
+			    local savedDungeons = self:GetNumRaidFinderDungeons();
+				local savedInstances = self:GetNumSavedInstances();
+				local savedWorldBosses = self:GetNumSavedWorldBosses();
+				local raidInfo = {};
+				local id, index;
+				local instanceName, instanceID, instanceReset, locked, extended, difficultyName, killed;
+				local count = 0;
+				for i = 1, savedDungeons + savedInstances + savedWorldBosses do
+					index = i;
+					if ( index <= savedDungeons ) then
+						id = self:GetRaidFinderLineId(index);
+						instanceName, _, instanceReset, _, locked, _, difficultyName, killed = self:GetRaidFinderInfo(id);
+						extended = nil;
+					elseif ( index <= savedDungeons + savedInstances ) then
+						index = index - savedDungeons;
+						id = self:GetInstanceLineId(index);
+						instanceName, _, instanceReset, _, locked, extended, _, _, _, difficultyName = self:GetSavedInstanceInfo(id);
+						killed = nil;
+					elseif ( index <= savedDungeons + savedInstances + savedWorldBosses ) then
+						index = index - savedDungeons - savedInstances;
+						id = self:GetWorldBossLineId(index);
+						instanceName, instanceID, instanceReset = self:GetSavedWorldBossInfo(id);
+						locked = true;
+						extended = nil;
+						difficultyName = RAID_INFO_WORLD_BOSS;
+						killed = nil;
+					end
+					if ( extended or locked ) then
+						instanceReset = SecondsToTime(instanceReset, true, nil, 3);
+						count = count + 1;
+					else
+						instanceReset = format("|cff808080%s|r", RAID_INSTANCE_EXPIRES_EXPIRED);
+						instanceName = format("|cff808080%s|r", instanceName);
+					end
+					table.insert(raidInfo, {
+						Name = instanceName,
+						Difficulty = difficultyName,
+						Reset = instanceReset,
+						Killed = killed
+					});
+				end
+				characterInfo.RaidInfo = raidInfo;
+				characterInfo.RaidInfoDisplay = #raidInfo > 0 and (count == #raidInfo and count or count.."/"..#raidInfo) or "";
+			end
             if ( self:GetConfigSummaryQuest() and self:HasQuestLog() ) then
                 characterInfo.NumQuests = select(2, self:GetNumQuestLogEntries()) or 0;
+                characterInfo.NumQuestHistoryEntries = select(2, self:GetNumQuestHistoryEntries()) or 0;
             end
             if ( self:GetConfigSummaryExpiration() and self:GetConfigExpirationDays() > 0 and self:HasInventory() ) then
                 local hasMail = self:ContainerExists(ARMORY_MAIL_CONTAINER);
@@ -629,6 +850,8 @@ function Armory:BuildSummary()
                     count = self:GetNumRemainingMailItems();
                     if ( count > 0 or floor(time() / (24 * 60 * 60)) - floor(timestamp / (24 * 60 * 60)) >= 30 - self:GetConfigExpirationDays() ) then
                         text = text..RED_FONT_COLOR_CODE.."!"..FONT_COLOR_CODE_CLOSE;
+                    elseif ( text == "" and numItems > 0 ) then
+						text = "0";
                     end
                 else
                     text = RED_FONT_COLOR_CODE.."!"..FONT_COLOR_CODE_CLOSE;
@@ -677,7 +900,6 @@ function Armory:BuildSummary()
                         if ( rank ) then
                             table.insert(skills, {
                                 Name = name,
-                                Link = self:GetTradeSkillListLink(), 
                                 Icon = self:GetProfessionTexture(name), 
                                 Tooltip = format("%s (%d/%d)", name, rank, maxRank)
                             });
@@ -691,6 +913,14 @@ function Armory:BuildSummary()
         end
     end
     self:SelectProfile(currentProfile);
+
+	local connectedRealms = {};
+	for i = 1, #summary do
+		if ( self:IsConnectedRealm(summary[i].Name) ) then
+			connectedRealms[summary[i]] = i;
+			summary[i].Connected = connectedRealms;
+		end
+	end
 end
 
 function Armory:ShowSummary(parent)
@@ -737,19 +967,11 @@ function Armory:InitializeSummary(parent)
             columns = columns + 1;
         end
         if ( self:GetConfigSummaryCurrency() ) then 
-            if ( summary.Honor ) then  
-                columns = columns + 1;
-            end
-            if ( summary.Conquest ) then  
-                columns = columns + 1;
-            end
-            if ( summary.Justice ) then  
-                columns = columns + 1;
-            end
-            if ( summary.Valor ) then  
-                columns = columns + 1;
-            end
+			columns = columns + select(2, self:GetConfigSummaryEnabledCurrencies());
         end
+		if ( self:GetConfigSummaryRaidInfo() and self:RaidEnabled() ) then
+            columns = columns + 1;
+		end
         if ( self:GetConfigSummaryQuest() and self:HasQuestLog() ) then
             columns = columns + 1;
         end
@@ -799,8 +1021,8 @@ function Armory:DisplaySummary()
     GameTooltip:Hide();
     self.summary:Clear();
 
-    local font = self.summary:GetHeaderFont();
-    font:SetTextColor(GetTableColor(NORMAL_FONT_COLOR));
+    local headerFont = self.summary:GetHeaderFont();
+    headerFont:SetTextColor(GetTableColor(NORMAL_FONT_COLOR));
 
     local index, column = self.summary:AddHeader();
     local myColumn;
@@ -810,72 +1032,58 @@ function Armory:DisplaySummary()
     self.summary:SetCellScript(index, myColumn, "OnLeave", CellHideTooltip); 
     self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnLockClick);
 
-    myColumn = column; index, column = self.summary:SetCell(index, myColumn, NAME, font, "LEFT", 2);
+    myColumn = column; index, column = self.summary:SetCell(index, myColumn, NAME, headerFont, "LEFT", 2);
     self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, "name");
 
     if ( self:GetConfigSummaryClass() ) then   
-        myColumn = column; index, column = self.summary:SetCell(index, myColumn, CLASS, font);
+        myColumn = column; index, column = self.summary:SetCell(index, myColumn, CLASS, headerFont);
         self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, "class");
     end
     if ( self:GetConfigSummaryLevel() ) then   
-        myColumn = column; index, column = self.summary:SetCell(index, myColumn, LEVEL_ABBR, font, "RIGHT");    
+        myColumn = column; index, column = self.summary:SetCell(index, myColumn, LEVEL_ABBR, headerFont, "RIGHT");    
         self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, "level");
     end
     if ( self:GetConfigSummaryItemLevel() ) then   
-        myColumn = column; index, column = self.summary:SetCell(index, myColumn, ITEM_LEVEL_ABBR, font, "CENTER");    
+        myColumn = column; index, column = self.summary:SetCell(index, myColumn, ITEM_LEVEL_ABBR, headerFont, "CENTER");    
         self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, "ilvl");
     end
     if ( self:GetConfigSummaryZone() ) then
-        myColumn = column; index, column = self.summary:SetCell(index, myColumn, ZONE, font);
+        myColumn = column; index, column = self.summary:SetCell(index, myColumn, ZONE, headerFont);
         self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, "zone");
     end
     if ( self:GetConfigSummaryXP() ) then   
-        myColumn = column; index, column = self.summary:SetCell(index, myColumn, XP, font, "CENTER");
+        myColumn = column; index, column = self.summary:SetCell(index, myColumn, XP, headerFont, "CENTER");
         self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, "xp");
     end
     if ( self:GetConfigSummaryPlayed() ) then   
-        myColumn = column; index, column = self.summary:SetCell(index, myColumn, PLAYED, font, "CENTER");    
+        myColumn = column; index, column = self.summary:SetCell(index, myColumn, PLAYED, headerFont, "CENTER");    
         self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, "played");
     end
     if ( self:GetConfigSummaryOnline() ) then   
-        myColumn = column; index, column = self.summary:SetCell(index, myColumn, LASTONLINE, font, "RIGHT");
+        myColumn = column; index, column = self.summary:SetCell(index, myColumn, LASTONLINE, headerFont, "RIGHT");
         self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, "online");
     end
     if ( self:GetConfigSummaryMoney() ) then   
-        myColumn = column; index, column = self.summary:SetCell(index, myColumn, MONEY, font, "CENTER");
+        myColumn = column; index, column = self.summary:SetCell(index, myColumn, MONEY, headerFont, "CENTER");
         self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, "money");
     end
     if ( self:GetConfigSummaryCurrency() ) then  
-        if ( summary.Honor ) then 
-            myColumn = column; index, column = self.summary:SetCell(index, myColumn, summary.Honor.Icon, iconProvider);
-            self.summary:SetCellScript(index, myColumn, "OnEnter", CellShowTooltip, summary.Honor.Name); 
+		for name, icon in pairs(summary.Currencies) do
+            myColumn = column; index, column = self.summary:SetCell(index, myColumn, type(icon) == "string" and icon or "Interface\\Icons\\INV_Misc_QuestionMark", iconProvider);
+            self.summary:SetCellScript(index, myColumn, "OnEnter", CellShowTooltip, name); 
             self.summary:SetCellScript(index, myColumn, "OnLeave", CellHideTooltip); 
-            self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, "honor");
-        end
-        if ( summary.Conquest ) then 
-            myColumn = column; index, column = self.summary:SetCell(index, myColumn, summary.Conquest.Icon, iconProvider);
-            self.summary:SetCellScript(index, myColumn, "OnEnter", CellShowTooltip, summary.Conquest.Name); 
-            self.summary:SetCellScript(index, myColumn, "OnLeave", CellHideTooltip); 
-            self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, "conquest");
-        end
-        if ( summary.Justice ) then 
-            myColumn = column; index, column = self.summary:SetCell(index, myColumn, summary.Justice.Icon, iconProvider);
-            self.summary:SetCellScript(index, myColumn, "OnEnter", CellShowTooltip, summary.Justice.Name); 
-            self.summary:SetCellScript(index, myColumn, "OnLeave", CellHideTooltip); 
-            self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, "justice");
-        end
-        if ( summary.Valor ) then 
-            myColumn = column; index, column = self.summary:SetCell(index, myColumn, summary.Valor.Icon, iconProvider);
-            self.summary:SetCellScript(index, myColumn, "OnEnter", CellShowTooltip, summary.Valor.Name); 
-            self.summary:SetCellScript(index, myColumn, "OnLeave", CellHideTooltip); 
-            self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, "valor");
-        end
+            self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, name);
+		end
+    end
+    if ( self:GetConfigSummaryRaidInfo() and self:RaidEnabled() ) then
+        myColumn = column; index, column = self.summary:SetCell(index, myColumn, "Interface\\PVPFrame\\Icon-Combat", iconProvider);
+        self.summary:SetCellScript(index, myColumn, "OnEnter", CellShowTooltip, RAID_INFO); 
+        self.summary:SetCellScript(index, myColumn, "OnLeave", CellHideTooltip); 
     end
     if ( self:GetConfigSummaryQuest() and self:HasQuestLog() ) then
         myColumn = column; index, column = self.summary:SetCell(index, myColumn, "Interface\\GossipFrame\\AvailableQuestIcon", iconProvider);
         self.summary:SetCellScript(index, myColumn, "OnEnter", CellShowTooltip, QUESTS_LABEL); 
         self.summary:SetCellScript(index, myColumn, "OnLeave", CellHideTooltip); 
-        self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnColumnHeaderClick, "quest");
     end
     if ( self:GetConfigSummaryExpiration() and self:GetConfigExpirationDays() > 0 and self:HasInventory() ) then
         myColumn = column; index, column = self.summary:SetCell(index, myColumn, "Interface\\Icons\\INV_Letter_15", iconProvider);
@@ -888,7 +1096,7 @@ function Armory:DisplaySummary()
         self.summary:SetCellScript(index, myColumn, "OnLeave", CellHideTooltip); 
     end
     if ( self:GetConfigSummaryTradeSkills() and self:HasTradeSkills() ) then  
-        myColumn = column; index, column = self.summary:SetCell(index, myColumn, TRADESKILLS, font, "CENTER", 5);
+        myColumn = column; index, column = self.summary:SetCell(index, myColumn, TRADESKILLS, headerFont, "CENTER", 5);
     end
 
     self.summary:AddSeparator();
@@ -974,29 +1182,27 @@ function Armory:DisplaySummary()
                     end
                 end
                 if ( self:GetConfigSummaryCurrency() ) then
-                    if ( summary.Honor ) then 
-                        myColumn = column; index, column = self.summary:SetCell(index, myColumn, characterInfo.Honor > 0 and characterInfo.Honor or "", nil, "RIGHT");
-                    end
-                    if ( summary.Conquest ) then 
-                        myColumn = column; index, column = self.summary:SetCell(index, myColumn, characterInfo.Conquest > 0 and characterInfo.Conquest or "", nil, "RIGHT");
-                        if ( characterInfo.ConquestCap ) then
-                            self.summary:SetCellScript(index, myColumn, "OnEnter", CellShowTooltip, {summary.Conquest.Name, format(CURRENCY_WEEKLY_CAP, "", characterInfo.ConquestEarned, characterInfo.ConquestCap)} ); 
-                            self.summary:SetCellScript(index, myColumn, "OnLeave", CellHideTooltip); 
-                        end
-                    end
-                    if ( summary.Justice ) then 
-                        myColumn = column; index, column = self.summary:SetCell(index, myColumn, characterInfo.Justice > 0 and characterInfo.Justice or "", nil, "RIGHT");
-                    end
-                    if ( summary.Valor ) then 
-                        myColumn = column; index, column = self.summary:SetCell(index, myColumn, characterInfo.Valor > 0 and characterInfo.Valor or "", nil, "RIGHT");
-                        if ( characterInfo.ValorCap ) then
-                            self.summary:SetCellScript(index, myColumn, "OnEnter", CellShowTooltip, {summary.Valor.Name, format(CURRENCY_WEEKLY_CAP, "", characterInfo.ValorEarned, characterInfo.ValorCap)} ); 
-                            self.summary:SetCellScript(index, myColumn, "OnLeave", CellHideTooltip); 
-                        end
-                    end
+					local currencyInfo;
+					for name in pairs(summary.Currencies) do
+						currencyInfo = characterInfo.CurrencyInfo[name];
+						if ( currencyInfo ) then
+							myColumn = column; index, column = self.summary:SetCell(index, myColumn, currencyInfo.Count > 0 and currencyInfo.Count or "", nil, "RIGHT");
+							if ( currencyInfo.Cap ) then
+								self.summary:SetCellScript(index, myColumn, "OnEnter", CellShowTooltip, {name, format(CURRENCY_WEEKLY_CAP, "", currencyInfo.Earned, currencyInfo.Cap)} ); 
+								self.summary:SetCellScript(index, myColumn, "OnLeave", CellHideTooltip); 
+							end
+						else
+							myColumn = column; index, column = self.summary:SetCell(index, myColumn, "");
+						end
+					end
+                end
+                if ( self:GetConfigSummaryRaidInfo() and self:RaidEnabled() ) then
+                    myColumn = column; index, column = self.summary:SetCell(index, myColumn, characterInfo.RaidInfoDisplay, nil, "CENTER");
+                    self.summary:SetCellScript(index, myColumn, "OnEnter", OnRaidInfoEnter, characterInfo);
                 end
                 if ( self:GetConfigSummaryQuest() and self:HasQuestLog() ) then
-                    myColumn = column; index, column = self.summary:SetCell(index, myColumn, characterInfo.NumQuests > 0 and characterInfo.NumQuests or "", nil, "CENTER");
+                    myColumn = column; index, column = self.summary:SetCell(index, myColumn, (characterInfo.NumQuests > 0 and characterInfo.NumQuests or "")..(characterInfo.NumQuestHistoryEntries > 0 and "/"..characterInfo.NumQuestHistoryEntries or ""), nil, "CENTER");
+                    self.summary:SetCellScript(index, myColumn, "OnEnter", OnQuestsEnter, characterInfo);
                 end
                 if ( self:GetConfigSummaryExpiration() and self:GetConfigExpirationDays() > 0 and self:HasInventory() ) then
                     myColumn = column; index, column = self.summary:SetCell(index, myColumn, characterInfo.ExpiredDisplay, nil, "CENTER");
@@ -1009,13 +1215,9 @@ function Armory:DisplaySummary()
                 if ( self:GetConfigSummaryTradeSkills() and self:HasTradeSkills() ) then
                     for _, skillInfo in ipairs(characterInfo.TradeSkills) do
                         myColumn = column; index, column = self.summary:SetCell(index, myColumn, skillInfo.Icon, iconProvider);
-                        if ( realm == self.playerRealm ) then
-                            self.summary:SetCellScript(index, myColumn, "OnEnter", CellShowTooltip, {character, skillInfo.Tooltip, ARMORY_OPEN_HINT, ARMORY_LINK_HINT}); 
-                            self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnSkillClick, skillInfo.Link);
-                        else
-                            self.summary:SetCellScript(index, myColumn, "OnEnter", CellShowTooltip, {character, skillInfo.Tooltip}); 
-                        end
+                        self.summary:SetCellScript(index, myColumn, "OnEnter", CellShowTooltip, {character, skillInfo.Tooltip, ARMORY_OPEN_HINT}); 
                         self.summary:SetCellScript(index, myColumn, "OnLeave", CellHideTooltip); 
+                        self.summary:SetCellScript(index, myColumn, "OnMouseDown", OnSkillClick, {realm=realm, character=character, skill=skillInfo.Name});
                     end
                 end
             end
@@ -1033,7 +1235,10 @@ function Armory:UpdateSummary()
     self:DisplaySummary();
 end
 
-function Armory:HideSummary()
+function Armory:HideSummary(force)
+	if ( force ) then
+		self.summary.locked = false;
+	end
     if ( self.summary and not self.summary.locked ) then
         self.summary:SetScale(1);
         self.qtip:Release(self.summary);

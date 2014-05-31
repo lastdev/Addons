@@ -1,4 +1,4 @@
-<!-- Revision: 503 2012-09-06T17:15:50Z -->
+<!-- Revision: 598 2013-09-26T20:28:29Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\FrameXML\UI.xsd">
   <Script file="ArmoryTradeSkillFrame.lua"/>
@@ -254,50 +254,6 @@
       </Layer>
     </Layers>
     <Frames>
-      <Button name="ArmoryTradeSkillLinkButton">
-				<Size>
-					<AbsDimension x="32" y="16"/>
-				</Size>
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="ArmoryTradeSkillFrameTitleText" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnClick>
-            local link = Armory:GetTradeSkillListLink();
-            if ( link ) then
-              if ( IsShiftKeyDown() ) then
-                if ( not self.extended ) then
-                  Armory:OpenProfession(link);
-                end
-              elseif ( not ChatEdit_InsertLink(link) ) then
-                ChatFrame_OpenChat(link);
-              end
-            end
-          </OnClick>
-					<OnEnter>
-            _, self.extended = Armory:GetNumTradeSkills();
-            GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT");
-            GameTooltip:SetText(LINK_TRADESKILL_TOOLTIP, nil, nil, nil, nil, 1);
-            if ( not self.extended ) then
-              Armory:TooltipAddHints(GameTooltip, ARMORY_LINK_TRADESKILL_TOOLTIP);
-            end
-            GameTooltip:Show();
-          </OnEnter>
-					<OnLeave>
-						GameTooltip:Hide();
-					</OnLeave>
-				</Scripts>
-				<NormalTexture file="Interface\TradeSkillFrame\UI-TradeSkill-LinkButton">
-					<TexCoords left="0" right="1.0" top="0" bottom="0.5"/>
-				</NormalTexture>
-				<HighlightTexture file="Interface\TradeSkillFrame\UI-TradeSkill-LinkButton" alphaMode="ADD">
-					<TexCoords left="0" right="1.0" top="0.5" bottom="1.0"/>
-				</HighlightTexture>
-			</Button>
       <StatusBar name="ArmoryTradeSkillRankFrame" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="0" enableMouse="false">
         <Size>
           <AbsDimension x="265" y="14"/>

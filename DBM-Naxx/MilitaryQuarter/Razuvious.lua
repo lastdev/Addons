@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod("Razuvious", "DBM-Naxx", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(16061)
+mod:SetEncounterID(1113)
 mod:SetModelID(16582)
 mod:RegisterCombat("yell", L.Yell1, L.Yell2, L.Yell3, L.Yell4)
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS"
 )
 

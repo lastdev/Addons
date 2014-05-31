@@ -1,3 +1,6 @@
+== Version 50400.1.1
+* All: Flashes WoW's 9th Anniversary Celebration Package.
+
 == Version 50400.1.0
 * Fire: Updated the combustion monitor to reflect the nerf from this patch.  You should update your "Minumum Combustion total damage" accordingly.
 * Fire & Frost: No longer tries to re-apply Rune of Power or Invoker's Energy early when solo.  It always waits until it falls off before flashing, because you might just finish your enemy during that time.
@@ -93,6 +96,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 
 == Version 2.12.4
 * Fire: Fixed the combustion monitor to reflect changes in 5.1.0.
-
-== Version 2.12.3
-* Frost: Icy Veins was flashing even when on cooldown if it was glyphed.

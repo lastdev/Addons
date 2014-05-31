@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod(169, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 103 $"):sub(12, -3))
 mod:SetCreatureID(42180, 42178, 42179, 42166)
+mod:SetEncounterID(1027)
 mod:SetZone()
 mod:SetUsedIcons(1, 3, 6, 7, 8)
 mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_OmnitronIntro01.wav", "Sound\\Creature\\Council\\VO_BD_Council_Event01.wav")
@@ -391,7 +392,7 @@ function mod:SPELL_INTERRUPT(args)
 	if (type(args.extraSpellId) == "number" and args.extraSpellId == 79710) and self:AntiSpam(2, 2) then
 		if args.spellId == 2139 then															--Counterspell
 			timerArcaneLockout:Start(7.5)
-		elseif args:IsSpellID(72, 19647) then													--Shield Bash (will be removed in 4.1), Spell Lock (Fel Hunter)
+		elseif args.spellId == 19647 then													--Shield Bash (will be removed in 4.1), Spell Lock (Fel Hunter)
 			timerArcaneLockout:Start(6.5)--Shield bash verified, spell lock assumed since it's same lockout duration.
 		elseif args:IsSpellID(96231, 6552, 47528, 1766) or args:IsSpellID(80964, 80965)  then	--Rebuke, Pummel, Mind Freeze, Kick, Skull Bash (feral and bear)
 			timerArcaneLockout:Start(5)--4 out of 6 verified, skull bash needs logs to review for certainty.

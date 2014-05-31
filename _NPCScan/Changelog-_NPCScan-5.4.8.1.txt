@@ -1,0 +1,18 @@
+tag 5.4.8.1
+a0132dd2e9028270caf680b05cf3320574c4a108
+James D. Callahan III <jcallahan@curse.com>
+2014-05-23 01:03:36 -0500
+
+
+
+--------------------
+
+SLOKnightfall:
+	- Moved stored_options & stored_character_options to old positions.  When they were moved in alpha 4-g804e167, they were getting set after the main option table had been reset to the defaults, resulting in loss of the user's settings.
+James D. Callahan III:
+	- Fixed ticket #59
+	- Use LibDialog-1.0 instead of StaticPopup.
+	- Cleanups/clarifications.
+	- More target icon code cleanups. Use NUM_RAID_ICONS instead of hardcoded value of 8.
+	- Formatting/whitespace cleanup. Removed unnecessary comments and an errant else block.
+	- Cleaned up icon dropdown code.

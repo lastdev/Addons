@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 570 2012-12-06T09:17:26Z
+    Revision: 598 2013-09-26T20:28:29Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -218,12 +218,6 @@ function ArmoryTradeSkillFrame_Show()
     ArmoryTradeSkillListScrollFrameScrollBar.doNotHide = true; 
     ArmoryTradeSkillListScrollFrameScrollBar:SetMinMaxValues(0, 0); 
     ArmoryTradeSkillListScrollFrameScrollBar:SetValue(0);
-
-    if ( Armory:GetPaperDollLastViewed() == Armory.playerRealm ) then
-        ArmoryTradeSkillLinkButton:Show();
-    else
-        ArmoryTradeSkillLinkButton:Hide();
-    end
 
     ArmoryTradeSkillFrame_Update();
 

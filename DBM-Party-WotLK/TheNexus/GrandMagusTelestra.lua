@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod(618, "DBM-Party-WotLK", 8, 281)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(26731)
+mod:SetEncounterID(520, 521)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"UNIT_HEALTH target focus mouseover boss1",
 	"CHAT_MSG_MONSTER_YELL"
 )

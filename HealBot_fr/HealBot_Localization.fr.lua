@@ -1,4 +1,4 @@
-ï»¿-- French version (by Kubik of Vol'Jin) 2013-07-21 / V. 5.3.0.8
+ï»¿-- French version (by Kubik of Vol'Jin) 2014-05-03 / V. 5.4.7.3
 -- à = \195\160
 -- â = \195\162
 -- ç = \195\167
@@ -543,6 +543,9 @@ HEALBOT_INFO_CPUSECS                = "CPU Sec."
     HEALBOT_OPTIONS_MOUSEUP             = "Vers le haut"
     HEALBOT_OPTIONS_MOUSEDOWN           = "Vers le bas"
     HEALBOT_CMD_DELCUSTOMDEBUFF10       = "Effacer les d\195\169buffs personnalis\195\169s de priorit\195\169 10"
+    HEALBOT_CMD_DELCUSTOMDEBUFF9        = "Effacer les debuffs perso. en priorit\195\169 9"
+    HEALBOT_CMD_DELCUSTOMDEBUFF11       = "Effacer les debuffs perso. en priorit\195\169  11"
+    HEALBOT_CMD_DELCUSTOMDEBUFF12       = "Effacer les debuffs perso. en priorit\195\169  12"
     HEALBOT_ACCEPTSKINS                 = "Accepter les Skins"
     HEALBOT_SUPPRESSSOUND               = "Auto Trinket : Suppr. son"
     HEALBOT_SUPPRESSERROR               = "Auto Trinket : Suppr. erreurs"
@@ -604,8 +607,6 @@ HEALBOT_INFO_CPUSECS                = "CPU Sec."
     HEALBOT_FRAMELOCK_BYPASS_ON             = "Bouger le cadre malgr\195\169 le verrouillage : actif  (Ctl+Alt+Gauche)"
     HEALBOT_RESTRICTTARGETBAR_ON            = "Restriction barre de cible Active"
     HEALBOT_RESTRICTTARGETBAR_OFF           = "Restriction barre de cible Inactive"
-    HEALBOT_PRELOADOPTIONS_ON               = "Pr\195\169chargement des options actif"
-    HEALBOT_PRELOADOPTIONS_OFF              = "Pr\195\169chargement des options inactif"
     HEALBOT_AGGRO2_ERROR_MSG                = "Pour r\195\169gler le niveau 2 d\'aggro, le pourcentage de menace doit \195\170tre entre 25 et 95"
     HEALBOT_AGGRO3_ERROR_MSG                = "Pour r\195\169gler le niveau 3 d\'aggro, le pourcentage de menace doit \195\170tre entre 75 et 100"
     HEALBOT_AGGRO2_SET_MSG                  = "Pourcentage de menace du niveau 2 d\'aggro r\195\169gl\195\169 sur "
@@ -660,9 +661,12 @@ HEALBOT_CUSTOM_CAT_14                   = "Y - Z"   -- *************************
     HEALBOT_CUSTOM_CASTBY_EVERYONE          = "Tous"
     HEALBOT_CUSTOM_CASTBY_ENEMY             = "Ennemi"
     HEALBOT_CUSTOM_CASTBY_FRIEND            = "Ami"
+    HEALBOT_CUSTOM_CAT_CUSTOM_DAMAGE        = "Debuffs de dommages"
+    HEALBOT_CUSTOM_CAT_CUSTOM_EFFECT        = "Debuffs \195\160 effets"
+    HEALBOT_CUSTOM_CAT_CUSTOM_MISC          = "Debuffs divers"
 
 HEALBOT_CUSTOM_DEBUFF_CATS = {
-        [HEALBOT_DEBUFF_ACID_DRENCHED_MANDIBLES] = 8,  --Mandibules trempees d'acide
+        --[[[HEALBOT_DEBUFF_ACID_DRENCHED_MANDIBLES] = 8,  --Mandibules trempees d'acide
         [HEALBOT_DEBUFF_AGONIZING_FLAMES]      = 4,  --Flammes agonisantes
         [HEALBOT_DEBUFF_BOILING_BLOOD]         = 11, --Sang bouillonant
         [HEALBOT_DEBUFF_BURN]                  = 2,  --Brulure (?) 
@@ -746,7 +750,7 @@ HEALBOT_CUSTOM_DEBUFF_CATS = {
         [HEALBOT_DEBUFF_VILE_GAS]              = 5,  --Gaz abominable
         [HEALBOT_DEBUFF_VOLATILE_OOZE]         = 2,  --Adhesif de limon volatile
         [HEALBOT_DEBUFF_WATERLOGGED]           = 11,  --Trempe
-        [HEALBOT_DEBUFF_WEB_WRAP]              = 4,  --Entoilage
+        [HEALBOT_DEBUFF_WEB_WRAP]              = 4,  --Entoilage]]--
     }
 
     HEALBOT_ABOUT_DESC1                    = "Ajoute un panneau param\195\169trable de barres pour soigner, buff, debuff, rez et suivi d\'aggro"
@@ -1009,6 +1013,15 @@ HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "Vous surveillez les buffs manquants \
     HEALBOT_OPTIONS_PROFILE_CLASS           = "Classe"
     HEALBOT_OPTIONS_INCOMBATALERTLEVEL      = "Niveau d\'alerte - En combat";
     HEALBOT_OPTIONS_OUTCOMBATALERTLEVEL     = "Niveau d\'alerte - Hors combat";
+    HEALBOT_OPTION_NUMENEMYS                = "Nombre d\'ennemis"
+    HEALBOT_WORD_AUTO                       = "Auto"
+	HEALBOT_OPTIONS_ENABLEAUTOCOMBAT        = "Activer autoCombat HealBot"
+    HEALBOT_WORDS_CUSTOMNAME                = "Nom personnalis\195\169"
+    HEALBOT_WORDS_REMOVETEMPCUSTOMNAME      = "Enlever le nom perso. temporaire"
+    HEALBOT_WORDS_REMOVEPERMCUSTOMNAME      = "Enlever le nom perso. permanent"
+    HEALBOT_WORDS_ADDTEMPCUSTOMNAME         = "Ajouter un nom perso. temporaire"
+    HEALBOT_WORDS_ADDPERMCUSTOMNAME         = "Ajouter un nom perso. permanent"
+    HEALBOT_OPTIONS_ENABLELIBUTF8           = "Activer caract\195\168res UTF8"
 end
 
 if (GetLocale() == "frFR") then

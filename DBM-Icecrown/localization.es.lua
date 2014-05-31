@@ -2,83 +2,6 @@
 
 local L
 
----------------------------
---  Trash - Lower Spire  --
----------------------------
-L = DBM:GetModLocalization("LowerSpireTrash")
-
-L:SetGeneralLocalization{
-	name = "Trash de la Ciudadela Inferior"
-}
-
-L:SetWarningLocalization{
-	SpecWarnTrap		= "¡Trampa activada! ¡Sale un Depositario!"
-}
-
-L:SetOptionLocalization{
-	SpecWarnTrap		= "Mostrar aviso especial cuando se active trampa"
-}
-
-L:SetMiscLocalization{
-	WarderTrap1		= "¿Quién... anda ahí?",
-	WarderTrap2		= "Estoy despierto...",
-	WarderTrap3		= "El sagrario del maestro ha sido perturbado."
-}
-
----------------------------
---  Trash - Plagueworks  --
----------------------------
-L = DBM:GetModLocalization("PlagueworksTrash")
-
-L:SetGeneralLocalization{
-	name = "Precioso y Apestoso"
-}
-
-L:SetWarningLocalization{
-	SpecWarnTrap	= "¡Trampa activada! ¡Salen Siegacarnes vengativos!"--creatureid 37038
-}
-
-L:SetOptionLocalization{
-	SpecWarnTrap		= "Mostrar aviso especial cuando se active trampa"
-}
-
-L:SetMiscLocalization{
-	FleshreaperTrap1		= "Rápido, ¡atacaremos por la espalda!",
-	FleshreaperTrap2		= "¡No... puedes escapar!",
-	FleshreaperTrap3		= "¿Los vivos? ¿¡Aquí!?"
-}
-
----------------------------
---  Trash - Crimson Hall  --
----------------------------
-L = DBM:GetModLocalization("CrimsonHallTrash")
-
-L:SetGeneralLocalization{
-	name = "Trash de La Sala Carmsesí"
-}
-
----------------------------
---  Trash - Frostwing Hall  --
----------------------------
-L = DBM:GetModLocalization("FrostwingHallTrash")
-
-L:SetGeneralLocalization{
-	name = "Trash de Las Cámaras de Alaescarcha"
-}
-
-L:SetWarningLocalization{
-	SpecWarnGosaEvent	= "¡Guantelete de Sindragosa ha empezado!"
-}
-
-L:SetOptionLocalization{
-	SpecWarnGosaEvent	= "Mostrar aviso especial para el guantelete de Sindragosa"
-}
-
-L:SetMiscLocalization{
-	SindragosaEvent		= "No debéis acercaros a la Reina de Escarcha. ¡Detenedlos, rápido!"
-}
-
-
 ----------------------
 --  Lord Marrowgar  --
 ----------------------
@@ -143,13 +66,11 @@ L:SetWarningLocalization{
 }
 
 L:SetOptionLocalization{
-	TimerCombatStart	= "Mostrar tiempo para el inicio del combate",
 	WarnAddsSoon		= "Mostrar pre-aviso para la salida de nuevos adds",
 	TimerAdds			= "Mostrar tiempo para nuevos adds"
 }
 
 L:SetTimerLocalization{
-	TimerCombatStart	= "Empieza el combate",
 	TimerAdds			= "Nuevos adds"
 }
 
@@ -173,12 +94,7 @@ L:SetGeneralLocalization{
 	name = "Libramorte Colmillosauro"
 }
 
-L:SetTimerLocalization{
-	TimerCombatStart		= "Empieza el combate"
-}
-
 L:SetOptionLocalization{
-	TimerCombatStart		= "Mostrar tiempo para inicio del combate",
 	RangeFrame				= "Mostrar distancia (12 yardas)",
 	RunePowerFrame			= "Mostrar barra de vida + barra de $spell:72371",
 	BeastIcons				= "Poner iconos en las Bestias de Sangre"
@@ -399,14 +315,12 @@ L:SetWarningLocalization{
 }
 
 L:SetTimerLocalization{
-	TimerCombatStart	= "Empieza el combate",
 	TimerRoleplay		= "Diálogo",
 	PhaseTransition		= "Transición de fase",
 	TimerNecroticPlagueCleanse = "Purgar Peste necrótica"
 }
 
 L:SetOptionLocalization{
-	TimerCombatStart		= "Mostrar tiempo para el inicio del combate",
 	TimerRoleplay			= "Mostrar tiempo para Diálogo",
 	WarnNecroticPlagueJump	= "Anunciar los objetivos donde $spell:73912 ha saltado",
 	TimerNecroticPlagueCleanse	= "Mostrar tiempo para purgar Peste necrótica<br/>antes de la primera acumulación",
@@ -426,4 +340,35 @@ L:SetMiscLocalization{
 	ValkGrabbed		= "Val'kyr ha agarrado a %s",
 	PlagueStackWarning		= "Aviso: %s tiene %d marcas de Peste Necrótica",
 	AchievementCompleted	= ">> LOGRO COMPLETADO: %s tiene %d marcas de Peste Necrótica <<"
+}
+
+-------------
+--  Trash  --
+-------------
+L = DBM:GetModLocalization("ICCTrash")
+
+L:SetGeneralLocalization{
+	name = "Icecrown Trash"
+}
+
+L:SetWarningLocalization{
+	SpecWarnTrapL		= "¡Trampa activada! ¡Sale un Depositario!",
+	SpecWarnTrapP		= "¡Trampa activada! ¡Salen Siegacarnes vengativos!",
+	SpecWarnGosaEvent	= "Mostrar aviso especial para el guantelete de Sindragosa"
+}
+
+L:SetOptionLocalization{
+	SpecWarnTrapL		= "Mostrar aviso especial cuando se active trampa",
+	SpecWarnTrapP		= "Mostrar aviso especial cuando se active trampa",
+	SpecWarnGosaEvent	= "Mostrar aviso especial para el guantelete de Sindragosa"
+}
+
+L:SetMiscLocalization{
+	WarderTrap1			= "¿Quién... anda ahí?",
+	WarderTrap2			= "Estoy despierto...",
+	WarderTrap3			= "El sagrario del maestro ha sido perturbado.",
+	FleshreaperTrap1	= "Rápido, ¡atacaremos por la espalda!",
+	FleshreaperTrap2	= "¡No... puedes escapar!",
+	FleshreaperTrap3	= "¿Los vivos? ¿¡Aquí!?",
+	SindragosaEvent		= "No debéis acercaros a la Reina de Escarcha. ¡Detenedlos, rápido!"
 }

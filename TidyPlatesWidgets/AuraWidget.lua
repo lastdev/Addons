@@ -202,7 +202,8 @@ local function FindWidgetByName(SearchFor)
 	local widget
 	--local SearchFor = strsplit("-", NameString)
 	for widget in pairs(WidgetList) do
-		if widget.unit.name == SearchFor then
+		--if widget.unit.name == SearchFor then
+		if widget.unit.rawName == SearchFor then
 			return widget
 		end
 	end
@@ -652,14 +653,14 @@ local function CombatEventHandler(frame, event, ...)
 	local timestamp, combatevent, sourceGUID, destGUID, destName, destFlags, destRaidFlag, auraType, spellid, spellname, stackCount = GetCombatEventResults(...)
 
 	-- Evaluate only for enemy units, for now
-	if (bit.band(destFlags, COMBATLOG_OBJECT_REACTION_FRIENDLY) == 0) then							-- FILTER: ENEMY UNIT
+	--if (bit.band(destFlags, COMBATLOG_OBJECT_REACTION_FRIENDLY) == 0) then							-- FILTER: ENEMY UNIT
+	-- COMBATLOG_OBJECT_CONTROL_PLAYER
 
 		local CombatLogUpdateFunction = CombatLogEvents[combatevent]
 		-- Evaluate only for certain combat log events
 		if CombatLogUpdateFunction then
 			-- Evaluate only for debuffs
-			if auraType == "DEBUFF" then 															-- FILTER: DEBUFF
-
+			--if auraType == "DEBUFF" then 															-- FILTER: DEBUFF
 
 				-- Update Auras via API/UnitID Search
 				--if not UpdateAuraByLookup(destGUID) then				--- REMOVE this function, and replace with a function that checks to see if the detected unit is a unitid matcher
@@ -671,26 +672,29 @@ local function CombatEventHandler(frame, event, ...)
 				-- Return values on functions?
 
 				local name, raidicon
-				-- Cache Unit Name for alternative lookup strategy
-				if (bit.band(destFlags, COMBATLOG_OBJECT_CONTROL_PLAYER) > 0) and destName ~= nil then
-					local rawName = strsplit("-", destName)			-- Strip server name from players
-					ByName[rawName] = destGUID
-					name = rawName
-				end
 
-				-- Cache Raid Icon Data for alternative lookup strategy
-				for iconname, bitmask in pairs(RaidIconBit) do
-					if bit.band(destRaidFlag, bitmask) > 0  then
-						ByRaidIcon[iconname] = destGUID
-						raidicon = iconname
-						break
+				if (bit.band(destFlags, COMBATLOG_OBJECT_REACTION_FRIENDLY) == 0) then							-- FILTER: ENEMY UNIT
+					-- Cache Unit Name for alternative lookup strategy
+					if (bit.band(destFlags, COMBATLOG_OBJECT_CONTROL_PLAYER) > 0) and destName ~= nil then
+						local rawName = strsplit("-", destName)			-- Strip server name from players
+						ByName[rawName] = destGUID
+						name = rawName
+					end
+
+					-- Cache Raid Icon Data for alternative lookup strategy
+					for iconname, bitmask in pairs(RaidIconBit) do
+						if bit.band(destRaidFlag, bitmask) > 0  then
+							ByRaidIcon[iconname] = destGUID
+							raidicon = iconname
+							break
+						end
 					end
 				end
 
 				CallForWidgetUpdate(destGUID, raidicon, name)
-			end
+			--end
 		end
-	end
+	--end
 end
 
 -------------------------------------------------------------
@@ -857,7 +861,7 @@ function UpdateWidget(frame)
 
 		if not guid then
 			-- Attempt to ID widget via Name or Raid Icon
-			if unit.type == "PLAYER" then guid = ByName[unit.name]
+			if unit.type == "PLAYER" then guid = ByName[unit.rawName]
 			elseif unit.isMarked then guid = ByRaidIcon[unit.raidIcon] end
 
 
@@ -880,8 +884,8 @@ function UpdateWidget(frame)
 		end
 end
 
-local function UpdateWidgetTarget(frame)
-	UpdateIconGrid(frame, UnitGUID("target"))
+local function UpdateWidgetTarget(frame, unitid)
+	UpdateIconGrid(frame, UnitGUID(unitid))
 end
 
 
@@ -902,7 +906,7 @@ local function UpdateWidgetContextFull(frame, unit)
 		raidicon = unit.raidIcon
 		if guid and raidicon then ByRaidIcon[raidicon] = guid end
 	end
-	if unit.type == "PLAYER" then name = unit.name end
+	if unit.type == "PLAYER" then name = unit.rawName end
 
 	CallForWidgetUpdate(guid, raidicon, name)
 end

@@ -3,10 +3,10 @@
 Config.lua
 Ace3 Configuration options for ARL
 ************************************************************************
-File date: 2012-09-28T15:31:40Z
-File hash: 3cfcb4d
-Project hash: 4bcba04
-Project version: 2.5.2
+File date: 2014-05-26T00:13:59Z
+File hash: d2eafec
+Project hash: af8bb68
+Project version: 2.6.5
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -379,14 +379,6 @@ local function GetDatamineOptions()
 					order	= 2,
 					type	= "description",
 					name	= L["DATAMINE_WARNING_DESC"] .. "\n",
-				},
-				generatelinks = {
-					width	= "double",
-					order	= 10,
-					type	= "execute",
-					name	= L["Generate Tradeskill Links"],
-					desc	= L["GENERATE_LINKS_DESC"],
-					func	= function() addon:GenerateLinks() end,
 				},
 				scantraineracquire = {
 					width	= "double",

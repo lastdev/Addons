@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 499 2012-09-05T15:54:14Z
+    Revision: 603 2013-12-08T16:12:46Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -259,24 +259,56 @@ end
 function ArmoryInventoryMoneyFrame_OnEnter(self)
     local currentRealm, currentCharacter = Armory:GetPaperDollLastViewed();
     local currentFaction = Armory:UnitFactionGroup("player");
-    local money = 0;
-    for _, character in ipairs(Armory:CharacterList(currentRealm)) do
-        Armory:LoadProfile(currentRealm, character);
-        if ( Armory:UnitFactionGroup("player") == currentFaction ) then
-            money = money + Armory:GetMoney();
-        end
-    end
+    local money = {};
+    
+    local addToFactionTotal = function (realm)
+		if ( Armory:UnitFactionGroup("player") == currentFaction ) then
+			if ( not money[realm] ) then
+				money[realm] = 0;
+			end
+			money[realm] = money[realm] + Armory:GetMoney();
+		end
+    end;
+    
+    if ( Armory:IsConnectedRealm(currentRealm) ) then
+		for _, profile in ipairs(Armory:GetConnectedProfiles()) do
+			Armory:SelectProfile(profile);
+			addToFactionTotal(profile.realm);
+		end
+    else
+		for _, character in ipairs(Armory:CharacterList(currentRealm)) do
+			Armory:LoadProfile(currentRealm, character);
+			addToFactionTotal(currentRealm);
+		end
+	end
     Armory:LoadProfile(currentRealm, currentCharacter);
     
+    local total = money[currentRealm];
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
     GameTooltip:AddLine(format(ARMORY_MONEY_TOTAL, currentRealm, currentFaction), "", 1, 1, 1);
-    SetTooltipMoney(GameTooltip, money);
-    if ( self.showTooltip and self.staticMoney ~= money ) then
+    SetTooltipMoney(GameTooltip, total, "TOOLTIP");
+    
+    local multiRealm;
+    for realm, realmTotal in pairs(money) do
+		if ( realm ~= currentRealm ) then
+			GameTooltip:AddLine(format(ARMORY_MONEY_TOTAL, realm, currentFaction), "", 1, 1, 1);
+			SetTooltipMoney(GameTooltip, realmTotal);
+			total = total + realmTotal;
+			multiRealm = true;
+		end
+    end
+    if ( multiRealm ) then
+		GameTooltip:AddLine(format(ARMORY_MONEY_TOTAL, "-", currentFaction), "", 1, 1, 1);
+		SetTooltipMoney(GameTooltip, total);
+    end
+    
+    if ( self.showTooltip and self.staticMoney ~= total ) then
         GameTooltip:AddLine(" ");
         GameTooltip:AddLine(currentCharacter..":", "", 1, 1, 1);
         SetTooltipMoney(GameTooltip, self.staticMoney);
     end
-    GameTooltip:Show();
+	
+	GameTooltip:Show();
 end
 
 function ArmoryInventoryMoneyFrame_OnLeave(self)

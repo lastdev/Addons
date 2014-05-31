@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod("IronCouncil", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 34 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 142 $"):sub(12, -3))
 mod:SetCreatureID(32867, 32927, 32857)
+mod:SetEncounterID(1140)
 mod:SetModelID(28344)
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
 
 mod:RegisterCombat("combat")
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED",
 	"SPELL_CAST_SUCCESS",
@@ -49,8 +50,8 @@ local timerFusionPunchActive	= mod:NewTargetTimer(4, 61903)
 local warnOverwhelmingPower		= mod:NewTargetAnnounce(61888, 2)
 local timerOverwhelmingPower	= mod:NewTargetTimer(25, 61888)
 local warnStaticDisruption		= mod:NewTargetAnnounce(61912, 3) 
-mod:AddBoolOption("SetIconOnOverwhelmingPower")
-mod:AddBoolOption("SetIconOnStaticDisruption")
+mod:AddBoolOption("SetIconOnOverwhelmingPower", false)
+mod:AddBoolOption("SetIconOnStaticDisruption", false)
 
 -- Runemaster Molgeim
 -- Lightning Blast ... don't know, maybe 63491

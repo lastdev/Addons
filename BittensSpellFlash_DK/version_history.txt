@@ -1,7 +1,37 @@
+== Version 50400.4.0
+* Frost: Added an option to switch to a Mastersimple rotation.  See the website for (a few) more details.
+
+== Version 50400.3.2
+* Blood: Adjusted some flashing for Rune Strike when you take Runic Corruption, to waste less Runic Power in certain situations.
+* Blood: Death and Decay flashes when in AoE mode, it is free, and your diseases have plenty of time left.
+* Blood: Bugfix - Smoothed out a quirk having to do with the Runic Power granted by Blood Boil.
+* Blood: Bugfix - one of the Rune Strike priorities was firing at the wrong time.
+
+== Version 50400.3.0
+* Frost: Updated the dual-wield rotation (because there is much more haste on gear now).
+
+== Version 50400.2.2
+* All: Flashes WoW's 9th Anniversary Celebration Package.
+
+== Version 50400.2.1
+* Blood: Bugfix - Soul Reaper and Heart Strike were sometimes flashing when you had no target.
+
+== Version 50400.2.0
+* Blood: Added Soul Reaper.
+
+== Version 50400.1.2
+* Blood: Adjusted the priority and conditions for Dancing Rune Weapon when you have 4pT16.
+* Blood: Does not flash Vampiric Blood when solo until you have runes to cast Death Strike.
+* All: Fixed quirky flashing as you cast Empower Rune Weapon.
+
+== Version 50400.1.1
+* Blood: Lowered the priority of Dancing Rune Weapon.  Since it no longer requires Runic Power, it is no longer necessary take advantage of situations when you have it.  It is still top priority in damage mode.
+* Frost: Added Horn of Winter to the AoE rotation.
+
 == Version 50400.1.0
 * Blood: Updated Dancing Rune Weapon for 5.4.
-* Blood: Bugfix - it was assuming that Blood Boil cast under Crimson Scourge would grant 10 Runic Power (but it does not).
-* All: Accounts for the new Glyph of Long Horn.
+* Blood: Bugfix - it was assuming that Blood Boil cast under Crimson Scourge would grant 10 Runic Power, but it does not.
+* All: Accounts for the new Glyph of the Loud Horn.
 * All: Updated the conditions for Plague Leech for 5.4.
 * All: Added support (but not translations) for Italian localization.  To contribute translations go to http://wow.curseforge.com/addons/bittens-spellflash-dk/localization/.
 * All: Smoothed out some quirky flashing.
@@ -60,37 +90,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 * Blood: Major work to the solo rotation, including AoE.
 * Blood: Solo mode can now be disabled in the options.
 * Frost: Added an AoE rotation.
-
-== Version 3.4.0
-* Blood: Removed code having to do with Cataclysm items/enchants.
-* Blood: Anti-Magic Shell and Anti-Magic Zone now count toward the 2 cooldowns it tries to keep up.
-* Blood: Increase the priority of Icebound Fortitude if it is glyphed for a shorter cooldown.
-* Blood: Factor in 2pT14 when deciding when calculating the minimum Death Strike heal.
-* Blood: Do not flash Dancing Rune Weapon when out of melee range.
-* Blood: Make Death Pact the highest priority cooldown if your ghoul is already out.
-
-== Version 3.3.1
-* Making the "Out of Date" status go away.  Please report any real issues w/ the new patch.
-
-== Version 3.3.0
-* Frost & Unholy: Updated priority lists based on new research.
-* Unholy: Added Soul Reaper.
-* Unholy: Bugfix - Plague Leech was flashing at times that it was not castable.
-
-== Version 3.2.1
-* Blood: Bone Shield will no longer flash when mounted.
-* Blood: Bugfix - there were some circumstances when Blood Tap would flash when no runes were fully depleted.
-* Blood: Bugfix - Blood Boil would never flash if you didn't have a rune available, even if Crimson Scourge proc'd
-* Unholy: Now flashes Death Siphon.  Not sure why I only added it to Frost before.
-
-== Version 3.2.0
-* Blood: Added a Blood soloing rotation, meant for questing as Blood.
-
-== Version 3.1.0
-* Frost: Added a 2-handed Frost rotation.
-* Frost: Now flashes Soul Reaper.
-* Frost: Now flashes Unholy Blight.
-
-== Version 3.0.0
-* Frost: Range checking is back (it won't flash melee spells when you are out of melee range).
-* Unholy: Added an unholy rotation.

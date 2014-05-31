@@ -15,7 +15,7 @@
 ## SavedVariablesPerCharacter: XPerlRaidMonConfig
 ## RequiredDeps: XPerl
 ## DefaultState: Disabled
-## X-Curse-Packaged-Version: r856
+## X-Curse-Packaged-Version: r860
 ## X-Curse-Project-Name: X-Perl UnitFrames
 ## X-Curse-Project-ID: xperl
 ## X-Curse-Repository-ID: wow/xperl/mainline

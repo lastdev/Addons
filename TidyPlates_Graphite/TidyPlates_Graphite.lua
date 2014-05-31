@@ -5,12 +5,14 @@ local Theme = {}
 local ThemeName = "Graphite"
 local CopyTable = TidyPlatesUtility.copyTable
 local EmptyTexture = "Interface\\Addons\\TidyPlatesHub\\shared\\Empty"
-local path = "Interface\\Addons\\TidyPlates_Graphite\\" 
-local font = "Interface\\Addons\\TidyPlatesHub\\shared\\AccidentalPresidency.ttf"
+local path = "Interface\\Addons\\TidyPlates_Graphite\\"
+--local font = "Interface\\Addons\\TidyPlatesHub\\shared\\AccidentalPresidency.ttf"
+local font = "Interface\\Addons\\TidyPlatesHub\\shared\\RobotoCondensed-Bold.ttf"
+--local fontsize = 12;
 
 -- Non-Latin Font Bypass
-local NonLatinLocales = { ["ruRU"] = true, ["koKR"] = true, ["zhCN"] = true, ["zhTW"] = true, }
-if NonLatinLocales[GetLocale()] == true then font = NAMEPLATE_FONT end
+local NonLatinLocales = { ["koKR"] = true, ["zhCN"] = true, ["zhTW"] = true, }
+if NonLatinLocales[GetLocale()] == true then font = STANDARD_TEXT_FONT end
 
 
 local castoffset = 1
@@ -189,7 +191,7 @@ StyleDefault.threatcolor = {
 	MEDIUM = {r = .6, g = 1, b = 0, a = 1,},
 	HIGH = {r = 1, g = 0, b = 0, a= 1,},  }
 
-	
+
 -- No-Bar Style		(6.2)
 local StyleTextOnly = CopyTable(StyleDefault)
 StyleTextOnly.threatborder.texture = EmptyTexture
@@ -271,7 +273,7 @@ Theme.OnApplyThemeCustomization = ApplyDamageCustomization -- Called By Hub Pane
 do
 	local TankTheme = CopyTable(Theme)
 	TidyPlatesThemeList[TankThemeName] = TankTheme
-	
+
 	local function ApplyTankCustomization()
 		ApplyThemeCustomization(TankTheme)
 	end
@@ -282,7 +284,7 @@ do
 			ApplyTankCustomization()
 		end
 	end
-	
+
 	TankTheme.OnActivateTheme = OnActivateTheme -- called by Tidy Plates Core, Theme Loader
 	TankTheme.OnApplyThemeCustomization = ApplyTankCustomization -- Called By Hub Panel
 	TankTheme.ShowConfigPanel = ShowTidyPlatesHubTankPanel

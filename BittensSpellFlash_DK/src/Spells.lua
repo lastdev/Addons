@@ -216,8 +216,11 @@ local function soulReaperIsReady(delay)
 	
 	return a.InExecute
 		and GetTime() + c.GetBusyTime() + delay - a.LastSoulReaper >= 6
-		and not c.IsCasting("Soul Reaper - Frost")
-		and not c.IsCasting("Soul Reaper - Unholy")
+		and s.MeleeDistance()
+		and not c.IsCasting(
+			"Soul Reaper - Frost", 
+			"Soul Reaper - Unholy", 
+			"Soul Reaper - Blood")
 end
 
 c.AddSpell("Horn of Winter", nil, {
@@ -236,12 +239,12 @@ c.AddOptionalSpell("Empower Rune Weapon", "when low", {
 	NoGCD = true,
 	FlashSize = s.FlashSizePercent() / 2,
 	CheckFirst = function()
-		return not runeAvailable(1)
-			and not runeAvailable(2)
-			and not runeAvailable(5)
-			and not runeAvailable(6)
-			and not runeAvailable(3)
-			and not runeAvailable(4)
+		return not (runeAvailable(1)
+				or runeAvailable(2)
+				or runeAvailable(5)
+				or runeAvailable(6)
+				or runeAvailable(3)
+				or runeAvailable(4))
 			and a.PendingDeathRunes == 0
 			and a.RP < 32
 	end
@@ -542,7 +545,14 @@ addSpell("Rune Strike", "for Resources", {
 
 addSpell("Rune Strike", "for Resources if Capped", {
 	CheckFirst = function()
-		return s.MaxPower("player") - a.RP >= 40 and shouldStrikeForResources()
+		return s.MaxPower("player") - a.RP < 40 
+			and (shouldStrikeForResources() or c.HasTalent("Runic Corruption"))
+	end
+})
+
+addSpell("Rune Strike", "for Runic Corruption", {
+	CheckFirst = function()
+		return c.HasTalent("Runic Corruption")
 	end
 })
 
@@ -550,6 +560,16 @@ addOptionalSpell("Death and Decay", "Free", {
 	NoRangeCheck = true,
 	CheckFirst = function()
 		return a.CrimsonScourge
+			and c.GetCooldown("Death and Decay", false, 30) == 0
+	end
+})
+
+addOptionalSpell("Death and Decay", "without Consequence", {
+	NoRangeCheck = true,
+	CheckFirst = function()
+		return c.AoE
+			and a.CrimsonScourge
+			and hasBothDiseases(15)
 			and c.GetCooldown("Death and Decay", false, 30) == 0
 	end
 })
@@ -638,7 +658,37 @@ c.AddSpell("Horn of Winter", "for Runic Power", {
 	end
 })
 
-addSpell("Heart Strike")
+addSpell("Soul Reaper - Blood", nil, {
+	CheckFirst = soulReaperIsReady,
+})
+
+c.AddSpell("Soul Reaper - Blood", "B", {
+	Override = function()
+		return soulReaperIsReady() and sufficientRunes(1, 0, 0, 0, true)
+	end
+})
+
+c.AddSpell("Soul Reaper - Blood", "for Runic Power unless AoE", {
+	Override = function()
+		return not c.AoE
+			and soulReaperIsReady()
+			and s.MaxPower("player") - a.RP >= 30
+			and sufficientRunes(1, 0, 0, 0, true)
+	end
+})
+
+c.AddSpell("Soul Reaper - Blood", "BB", {
+	Override = function()
+		return soulReaperIsReady()
+			and a.BothRunesAvailable("Blood", 1)
+			and not a.IsDeathRune(1)
+			and not a.IsDeathRune(2)
+	end
+})
+
+addSpell("Heart Strike", nil, {
+	Melee = true,
+})
 
 c.AddSpell("Heart Strike", "for Runic Power unless AoE", {
 	Melee = true,
@@ -693,6 +743,22 @@ c.AddOptionalSpell("Rune Tap", nil, {
 c.AddOptionalSpell("Dancing Rune Weapon", nil, {
 	NoGCD = true,
 	Melee = true,
+	CheckFirst = function()
+		return not c.WearingSet(4, "BloodT16")
+	end,
+})
+
+c.AddOptionalSpell("Dancing Rune Weapon", "Prime", {
+	NoGCD = true,
+	Melee = true,
+	CheckFirst = function()
+		return (c.WearingSet(4, "BloodT16")
+				and (not (runeAvailable(1)
+					or runeAvailable(2)
+					or runeAvailable(3)
+					or runeAvailable(4))))
+			or c.InDamageMode()
+	end,
 })
 
 c.AddOptionalSpell("Bone Shield", nil, {
@@ -708,9 +774,12 @@ c.AddOptionalSpell("Bone Shield", nil, {
 
 c.AddOptionalSpell("Vampiric Blood", nil, {
 	NoGCD = true,
+	CheckFirst = function()
+		return not c.IsSolo() or sufficientResources(c.GetID("Death Strike"))
+	end,
 	ShouldHold = function()
 		return s.HealthPercent("player") > 85
-	end
+	end,
 })
 
 c.AddOptionalSpell("Death Pact", nil, {
@@ -820,14 +889,10 @@ addSpell("Frost Strike", "for Resources", {
 	CheckFirst = shouldStrikeForResources
 })
 
-addSpell("Frost Strike", "for Resources except Blood Charge", {
+addSpell("Frost Strike", "for Runic Empowerment", {
 	Melee = true,
 	CheckFirst = function()
-		if c.HasTalent("Runic Empowerment") then
-			return hasFullyDepleted(1, 2, 3, 4, 5, 6)
-		elseif c.HasTalent("Runic Corruption") then
-			return c.GetBuffDuration("Runic Corruption") == 0
-		end
+		return c.HasTalent("Runic Empowerment") and not hasFullyDepleted(5, 6)
 	end
 })
 
@@ -861,12 +926,12 @@ c.AddSpell("Blood Tap", "for OB KM", {
 		return a.KillingMachine
 			and a.BloodCharges >= 5
 			and (a.PendingDeathRunes > 0
-				or runeAvailable(1, 0)
-				or runeAvailable(2, 0)
-				or runeAvailable(5, 0)
-				or runeAvailable(6, 0)
-				or runeAvailable(3, 0)
-				or runeAvailable(4, 0))
+				or runeAvailable(1)
+				or runeAvailable(2)
+				or runeAvailable(5)
+				or runeAvailable(6)
+				or runeAvailable(3)
+				or runeAvailable(4))
 	end
 })
 
@@ -928,11 +993,13 @@ addSpell("Obliterate", "UU", {
 	end
 })
 
-addSpell("Obliterate", "U", {
+addSpell("Obliterate", "U w/out KM", {
 	CheckFirst = function()
 		return hasBothDiseases(0)
 			and ((runeAvailable(3) and not a.IsDeathRune(3))
-				or (runeAvailable(4) and not a.IsDeathRune(4))) 
+				or (runeAvailable(4) and not a.IsDeathRune(4)))
+			and not a.KillingMachine
+			and not c.GetOption("Mastersimple")
 	end
 })
 
@@ -962,6 +1029,21 @@ addSpell("Obliterate", "BB or FF or UU", {
 addOptionalSpell("Death Coil", "at 60", {
 	CheckFirst = function()
 		return a.RP >= 60
+	end
+})
+
+addOptionalSpell("Death and Decay", "U", {
+	NoRangeCheck = true,
+	CheckFirst = function()
+		return c.GetCooldown("Death and Decay", false, 30) == 0 
+			and sufficientRunes(0, 0, 1, 0, true)
+			and c.GetOption("Mastersimple")
+	end
+})
+
+addSpell("Plague Strike", "U", {
+	CheckFirst = function()
+		return sufficientRunes(0, 0, 1, 0, true) and c.GetOption("Mastersimple")
 	end
 })
 

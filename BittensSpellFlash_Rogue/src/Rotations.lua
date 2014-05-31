@@ -189,6 +189,8 @@ a.Rotations.Assassination = {
 	FlashOutOfCombat = function(self)
 		if c.HasBuff("Vanish") then
 			self:FlashInCombat()
+		else
+			c.FlashAll("Recuperate Out of Combat")
 		end
 	end,
 	
@@ -259,6 +261,8 @@ a.Rotations.Combat = {
 	FlashOutOfCombat = function(self)
 		if c.HasBuff("Vanish") then
 			self:FlashInCombat()
+		else
+			c.FlashAll("Recuperate Out of Combat")
 		end
 	end,
 	
@@ -423,6 +427,8 @@ a.Rotations.Subtlety = {
 	FlashOutOfCombat = function(self)
 		if c.HasBuff("Vanish") then
 			self:FlashInCombat()
+		else
+			c.FlashAll("Recuperate Out of Combat")
 		end
 	end,
 	

@@ -51,8 +51,8 @@ elseif locale == "esES" then -- Spanish
 -- L["Flash Protection"] = ""
 
 elseif locale == "zhTW" then -- Traditional Chinese
-L["Flash Arms"] = "武器閃光" -- Needs review
-L["Flash Fury"] = "狂怒閃光" -- Needs review
-L["Flash Protection"] = "防護閃光" -- Needs review
+L["Flash Arms"] = "啟用武器專精" -- Needs review
+L["Flash Fury"] = "啟用狂怒專精" -- Needs review
+L["Flash Protection"] = "啟用防護專精" -- Needs review
 
 end

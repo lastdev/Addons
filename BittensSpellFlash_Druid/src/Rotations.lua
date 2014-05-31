@@ -1,12 +1,16 @@
 local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
-local x = s.UpdatedVariables
+local g = BittensGlobalTables
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 local m = a.CatSimulator
+local u = g.GetTable("BittensUtilities")
 
 local GetComboPoints = GetComboPoints
+local GetCritChance = GetCritChance
+local UnitDamage = UnitDamage
 local GetEclipseDirection = GetEclipseDirection
+local GetMastery = GetMastery
 local GetMeleeHaste = GetMeleeHaste
 local GetPowerRegen = GetPowerRegen
 local GetSpecialization = GetSpecialization
@@ -15,6 +19,8 @@ local IsMounted = IsMounted
 local SPELL_POWER_ENERGY = SPELL_POWER_ENERGY
 local SPELL_POWER_ECLIPSE = SPELL_POWER_ECLIPSE
 local SPELL_POWER_RAGE = SPELL_POWER_RAGE
+local UnitAttackPower = UnitAttackPower
+local UnitGUID = UnitGUID
 local UnitPower = UnitPower
 local math = math
 local select = select
@@ -301,6 +307,57 @@ local function updateRipDuration()
 	end
 end
 
+local castingRipCP = 1
+local bleeds = { }
+local damageCalcs = {
+	Rip = function(physMod, bleedMod, cp)
+		return (113 + cp * (320 + 0.0484 * UnitAttackPower("player")))
+			* bleedMod
+			* physMod
+	end,
+	Rake = function(physMod, bleedMod)
+		return (99 + .3 * UnitAttackPower("player")) * bleedMod * physMod
+	end,
+	Mangle = function()
+		local armor = 24835 * (1 - .04 * c.GetDebuffStack(c.ARMOR_DEBUFFS))
+		local low, high = UnitDamage("player")
+		return (78 + 2.5 * (low + high)) / 2
+			* (1 - armor / (armor + 46257.5))
+	end,
+}
+
+-- TODO this isn't exact (not sure why), but it's close
+function a.CalcDamage(name, cp, roar, fury, dream, vigil)
+	local critMultiplier = 2
+	local physMod = 1
+	if (roar or a.Roar) > 0 then
+		physMod = physMod * 1.4
+	end
+	if (fury or a.TigersFury) > 0 then
+		physMod = physMod * 1.15
+	end
+	if (dream or a.DreamStacks) > 0 then
+		physMod = physMod * 1.3
+	end
+	if (vigil or a.Vigil) > 0 then
+		physMod = physMod * 1.12
+	end
+	local noncrit = damageCalcs[name](
+		physMod, 1 + .0313 * GetMastery(), cp or a.CP)
+	local avg = noncrit * (1 + (critMultiplier - 1) * GetCritChance() / 100)
+	return avg, noncrit
+end
+
+function a.ExistingBleedDamage(name)
+	if c.IsCasting(name) then
+		return a.CalcDamage(name)
+	elseif a[name] == 0 then
+		return 0
+	else
+		return u.GetOrMakeTable(bleeds, name)[UnitGUID(s.UnitSelection())]
+	end
+end
+
 local lastEnergy = 0
 local pendingBiteDrain = 0
 local forestPending = 0
@@ -365,15 +422,15 @@ local function initState()
 		+ forestPending
 	a.Roar = c.GetBuffDuration("Savage Roar", false, false, true)
 	a.Rake = c.GetMyDebuffDuration("Rake", false, false, true)
+	a.ThrashCat = c.GetMyDebuffDuration("Thrash(Cat Form)", false, true, true)
+	a.DreamStacks = c.GetBuffStack("Dream of Cenarius - Feral", false, true)
 	if c.IsCasting("Healing Touch") then
-		a.Swiftness = false
+		a.Swiftness = 0
 		if c.HasTalent("Dream of Cenarius") then
 			a.DreamStacks = 2
 		end
 	else
-		a.Swiftness = c.HasBuff("Predatory Swiftness")
-		a.DreamStacks = c.GetBuffStack(
-			"Dream of Cenarius - Feral", false, true, "Healing Touch")
+		a.Swiftness = c.GetBuffDuration("Predatory Swiftness")
 		if a.DreamStacks > 0 
 			and c.IsCasting(
 				"Shred", 
@@ -402,7 +459,7 @@ local function initState()
 			a.CP = math.min(5, a.CP + 1)
 		elseif c.IsCasting("Rip", "Savage Roar", "Ferocious Bite") then
 			if a.CP == 5 then
-				a.Swiftness = true
+				a.Swiftness = 8
 			end
 			if c.HasTalent("Soul of the Forest") then
 				a.Energy = a.Energy + 4 * a.CP
@@ -430,16 +487,15 @@ local function initState()
 		a.Clearcasting = false
 	end
 	
-	a.Berserk = c.GetBuffDuration("Berserk")
-	if c.IsCasting("Berserk") then
-		a.Berserk = 99
-	end
-	
+	a.Berserk = c.GetBuffDuration("Berserk", false, false, true)
 	a.TigersFury = c.GetBuffDuration("Tiger's Fury", false, false, true)
+	a.TigerCool = c.GetCooldown("Tiger's Fury")
 	a.King = c.GetBuffDuration(
 		"Incarnation: King of the Jungle", false, false, true)
+	a.Vigil = c.GetBuffDuration("Nature's Vigil", false, false, true)
 	
 	a.TimeToCap = (100 - a.Energy) / a.Regen
+	a.Substantial = s.Health() > 1.5 * s.MaxHealth("player") or s.Dummy()
 end
 
 a.TimeToCap = 0
@@ -455,7 +511,6 @@ a.Rotations.Feral = {
 		c.FlashAll(
 			"Force of Nature: Feral", 
 			"Faerie Fire for Debuff",
-			"Healing Touch for Feral Heal",
 			"Renewal",
 			"Soothe",
 			"Skull Bash",
@@ -463,7 +518,7 @@ a.Rotations.Feral = {
 			"Barkskin under 30")
 		
 		if s.Form(c.GetID("Bear Form")) then
-			c.FlashAll("Heart of the Wild")
+			c.FlashAll("Heart of the Wild", "Healing Touch for Feral Heal")
 			local flashing = c.PriorityFlash(
 				"Swipe(Bear Form) Prime for Feral",
 				"Thrash(Bear Form) for Feral",
@@ -485,12 +540,13 @@ a.Rotations.Feral = {
 			return
 		end
 		
-		c.FlashAll(
-			"Tiger's Fury",
-			"Berserk",
-			"Incarnation: King of the Jungle",
-			"Nature's Vigil")
 		if c.AoE then
+			c.FlashAll(
+				"Tiger's Fury", 
+				"Berserk", 
+				"Nature's Vigil",
+				"Healing Touch for Feral Heal",
+				"Incarnation: King of the Jungle")
 			c.PriorityFlash(
 				"Healing Touch for Dream",
 				"Savage Roar for AoE",
@@ -499,7 +555,44 @@ a.Rotations.Feral = {
 				"Bear Form for Feral AoE",
 				"Thrash(Cat Form) for AoE",
 				"Swipe(Cat Form) for Feral")
+		elseif c.GetOption("FeralBeta") then
+			c.DelayPriorityFlash(
+				"Ravage under Stealth",
+				"Healing Touch for Feral Beta",
+				"Ferocious Bite on Last Tick Beta",
+				"Healing Touch for Dream Beta",
+				"Savage Roar at 0",
+				"Incarnation: King of the Jungle Beta",
+				"Tiger's Fury Beta",
+				"Nature's Vigil Beta",
+				"Berserk",
+				"Thrash(Cat Form) under Omen",
+				"Savage Roar at 3 in Execute",
+				"Rip Overwrite",
+				"Ferocious Bite in Execute Pooling",
+				"Ferocious Bite in Execute",
+				"Rip unless Fury Soon",
+				"Savage Roar at 12",
+				"Rake for Re-Origination",
+				"Rake Overwrite",
+				"Thrash(Cat Form) Beta",
+				"Thrash(Cat Form) Delay",
+				"Thrash(Cat Form) Re-Origination",
+				"Thrash(Cat Form) Re-Origination Delay",
+				"Ferocious Bite Pooling",
+				"Ferocious Bite Beta",
+				"Filler Delay",
+				"Ravage Filler",
+				"Rake Filler",
+				"Shred Filler",
+				"Mangle(Cat Form) Filler")
 		else
+			c.FlashAll(
+				"Tiger's Fury", 
+				"Berserk", 
+				"Nature's Vigil",
+				"Healing Touch for Feral Heal",
+				"Incarnation: King of the Jungle")
 			c.PriorityFlash(
 				"Healing Touch for Dream",
 				"Savage Roar",
@@ -534,6 +627,8 @@ a.Rotations.Feral = {
 			cost = cost + math.min(25, energy - cost)
 			info.Cost[SPELL_POWER_ENERGY] = cost
 			c.Debug("Event", "FB will cost", cost)
+		elseif c.InfoMatches(info, "Rip") then
+			castingRipCP = GetComboPoints("player")
 		end
 	end,
 	
@@ -570,6 +665,26 @@ a.Rotations.Feral = {
 			
 			forestPending = 4 * GetComboPoints("player")
 			c.Debug("Event", "Soul of the Forest Pending:", forestPending)
+		end
+	end,
+	
+	CastSucceeded_FromLog = function(spellID, _, targetID)
+		local name = 
+			(c.IdMatches(spellID, "Rip") and "Rip")
+				or (c.IdMatches(spellID, "Rake") and "Rake")
+		if name then
+			local avg, noncrit = 
+				a.CalcDamage(
+					name, 
+					castingRipCP, 
+					s.BuffDuration(c.GetID("Savage Roar"), "player"),
+					s.BuffDuration(c.GetID("Tiger's Fury"), "player"),
+					s.BuffStack(c.GetID("Dream of Cenarius - Feral"), "player"),
+					s.BuffDuration(c.GetID("Nature's Vigil"), "player"))
+			u.GetOrMakeTable(bleeds, name)[targetID] = avg
+			c.Debug("Event", 
+				string.format("%s is ticking for %.1f avg (%.1f noncrit)", 
+					name, avg, noncrit))
 		end
 	end,
 	
@@ -617,15 +732,20 @@ a.Rotations.Feral = {
 		end
 	end,
 	
+	LeftCombat = function()
+		bleeds = { }
+		c.Debug("Event", "Left Combat")
+	end,
+	
 	ExtraDebugInfo = function()
 		return string.format(
-			"b:%.1f r:%.1f e:%.1f c:%d c:%s s:%s d:%d b:%.1f t:%.1f k:%.1f r:%.1f r:%.1f x:%s", 
+			"b:%.1f r:%.1f e:%.1f c:%d c:%s s:%.1f d:%d b:%.1f t:%.1f k:%.1f r:%.1f r:%.1f x:%s", 
 			c.GetBusyTime(),
 			a.Rage,
 			a.Energy, 
 			a.CP,
 			tostring(not not a.Clearcasting),
-			tostring(not not a.Swiftness),
+			a.Swiftness,
 			a.DreamStacks,
 			a.Berserk,
 			a.TigersFury,
@@ -657,6 +777,7 @@ a.Rotations.Guardian = {
 			1,
 			uncontrolledMitigationCooldowns,
 			c.COMMON_TANKING_BUFFS,
+			"Healing Touch Mitigation Delay",
 			"Berserk in Damage Mode",
 			"Incarnation: Son of Ursoc in Damage Mode",
 			"Cenarion Ward for Guardian",

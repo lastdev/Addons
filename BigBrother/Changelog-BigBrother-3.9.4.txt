@@ -1,0 +1,21 @@
+------------------------------------------------------------------------
+r384 | oscarucb | 2013-11-23 00:02:21 +0000 (Sat, 23 Nov 2013) | 1 line
+Changed paths:
+   A /tags/3.9.4 (from /trunk:383)
+
+Tagging as 3.9.4
+------------------------------------------------------------------------
+r383 | oscarucb | 2013-10-25 20:45:29 +0000 (Fri, 25 Oct 2013) | 2 lines
+Changed paths:
+   M /trunk/BigBrother.lua
+
+add symbiosis misdirect
+
+------------------------------------------------------------------------
+r382 | oscarucb | 2013-10-25 02:30:43 +0000 (Fri, 25 Oct 2013) | 2 lines
+Changed paths:
+   M /trunk/SpellData.lua
+
+add Crystal of Insanity and Alchemist's Flask
+
+------------------------------------------------------------------------

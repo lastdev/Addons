@@ -1,10 +1,10 @@
 -------------------------------------------------------------------------------
 -- Constants.lua
 -------------------------------------------------------------------------------
--- File date: 2013-09-10T13:23:20Z
--- File hash: 4bcba04
--- Project hash: 4bcba04
--- Project version: 2.5.2
+-- File date: 2014-05-26T05:32:08Z
+-- File hash: 5c1bd24
+-- Project hash: af8bb68
+-- Project version: 2.6.5
 -------------------------------------------------------------------------------
 -- Please see http://www.wowace.com/addons/arl/ for more information.
 -------------------------------------------------------------------------------
@@ -32,6 +32,8 @@ local L		= LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
 -------------------------------------------------------------------------------
 private.PLAYER_NAME = _G.UnitName("player")
 private.REALM_NAME = _G.GetRealmName()
+
+private.COORDINATES_FORMAT = "(%.2f, %.2f)"
 
 -------------------------------------------------------------------------------
 -- Profession data.
@@ -182,7 +184,7 @@ private.COMMON_FLAGS_WORD1 = {
 	VENDOR		= 0x00000008,	-- 4
 	INSTANCE	= 0x00000010,	-- 5
 	RAID		= 0x00000020,	-- 6
-	SEASONAL	= 0x00000040,	-- 7
+	WORLD_EVENTS	= 0x00000040,	-- 7
 	QUEST		= 0x00000080,	-- 8
 	PVP		= 0x00000100,	-- 9
 	WORLD_DROP	= 0x00000200,	-- 10
@@ -471,41 +473,6 @@ private.ITEM_FILTER_TYPES = {
 }
 
 -------------------------------------------------------------------------------
--- Acquire types.
--------------------------------------------------------------------------------
-private.ACQUIRE_NAMES = {
-	[1]	= L["Trainer"],
-	[2]	= L["Vendor"],
-	[3]	= L["Mob Drop"],
-	[4]	= L["Quest"],
-	[5]	= _G.GetCategoryInfo(155),
-	[6]	= _G.REPUTATION,
-	[7]	= L["World Drop"],
-	[8]	= _G.ACHIEVEMENTS,
-	[9]	= L["Discovery"],
-	[10]	= _G.MISCELLANEOUS,
-}
-
-private.ACQUIRE_STRINGS = {
-	[1]	= "TRAINER",
-	[2]	= "VENDOR",
-	[3]	= "MOB_DROP",
-	[4]	= "QUEST",
-	[5]	= "SEASONAL",
-	[6]	= "REPUTATION",
-	[7]	= "WORLD_DROP",
-	[8]	= "ACHIEVEMENT",
-	[9]	= "DISCOVERY",
-	[10]	= "CUSTOM",
-}
-
-private.ACQUIRE_TYPES = {}
-
-for index = 1, #private.ACQUIRE_STRINGS do
-	private.ACQUIRE_TYPES[private.ACQUIRE_STRINGS[index]] = index
-end
-
--------------------------------------------------------------------------------
 -- Reputation levels.
 -------------------------------------------------------------------------------
 private.REP_LEVEL_STRINGS = {
@@ -686,92 +653,7 @@ private.LOCALIZED_FACTION_STRINGS = {
 	["Nat Pagle"] = _G.GetFactionInfoByID(1358),
 	["The Black Prince"] = _G.GetFactionInfoByID(1359),
 }
---[[
-private.LOCALIZED_FACTION_STRINGS = {
-	["Neutral"] = _G.FACTION_STANDING_LABEL4,
-	["Friendly"] = _G.FACTION_STANDING_LABEL5,
-	["Honored"] = _G.FACTION_STANDING_LABEL6,
-	["Revered"] = _G.FACTION_STANDING_LABEL7,
-	["Exalted"] = _G.FACTION_STANDING_LABEL8,
-	["Horde"] = _G.GetFactionInfoByID(67),
-	["Alliance"] = _G.GetFactionInfoByID(469),
-	["THORIUM_BROTHERHOOD"] = _G.GetFactionInfoByID(59),
-	["ZANDALAR_TRIBE"] = _G.GetFactionInfoByID(270),
-	["ARGENT_DAWN"] = _G.GetFactionInfoByID(529),
-	["TIMBERMAW_HOLD"] = _G.GetFactionInfoByID(576),
-	["WINTERSABER_TRAINERS"] = _G.GetFactionInfoByID(589),
-	["CENARION_CIRCLE"] = _G.GetFactionInfoByID(609),
-	["THE_ALDOR"] = _G.GetFactionInfoByID(932),
-	["THE_CONSORTIUM"] = _G.GetFactionInfoByID(933),
-	["THE_SCRYERS"] = _G.GetFactionInfoByID(934),
-	["THE_SHATAR"] = _G.GetFactionInfoByID(935),
-	["THE_MAGHAR"] = _G.GetFactionInfoByID(941),
-	["CENARION_EXPEDITION"] = _G.GetFactionInfoByID(942),
-	["HONOR_HOLD"] = _G.GetFactionInfoByID(946),
-	["THRALLMAR"] = _G.GetFactionInfoByID(947),
-	["THE_VIOLET_EYE"] = _G.GetFactionInfoByID(967),
-	["SPOREGGAR"] = _G.GetFactionInfoByID(970),
-	["KURENAI"] = _G.GetFactionInfoByID(978),
-	["KEEPERS_OF_TIME"] = _G.GetFactionInfoByID(989),
-	["THE_SCALE_OF_THE_SANDS"] = _G.GetFactionInfoByID(990),
-	["LOWER_CITY"] = _G.GetFactionInfoByID(1011),
-	["ASHTONGUE_DEATHSWORN"] = _G.GetFactionInfoByID(1012),
-	["ALLIANCE_VANGUARD"] = _G.GetFactionInfoByID(1037),
-	["VALIANCE_EXPEDITION"] = _G.GetFactionInfoByID(1050),
-	["HORDE_EXPEDITION"] = _G.GetFactionInfoByID(1052),
-	["THE_TAUNKA"] = _G.GetFactionInfoByID(1064),
-	["THE_HAND_OF_VENGEANCE"] = _G.GetFactionInfoByID(1067),
-	["EXPLORERS_LEAGUE"] = _G.GetFactionInfoByID(1068),
-	["THE_KALUAK"] = _G.GetFactionInfoByID(1073),
-	["SHATTERED_SUN_OFFENSIVE"] = _G.GetFactionInfoByID(1077),
-	["WARSONG_OFFENSIVE"] = _G.GetFactionInfoByID(1085),
-	["KIRIN_TOR"] = _G.GetFactionInfoByID(1090),
-	["THE_WYRMREST_ACCORD"] = _G.GetFactionInfoByID(1091),
-	["THE_SILVER_COVENANT"] = _G.GetFactionInfoByID(1094),
-	["KNIGHTS_OF_THE_EBON_BLADE"] = _G.GetFactionInfoByID(1098),
-	["FRENZYHEART_TRIBE"] = _G.GetFactionInfoByID(1104),
-	["THE_ORACLES"] = _G.GetFactionInfoByID(1105),
-	["ARGENT_CRUSADE"] = _G.GetFactionInfoByID(1106),
-	["THE_SONS_OF_HODIR"] = _G.GetFactionInfoByID(1119),
-	["THE_SUNREAVERS"] = _G.GetFactionInfoByID(1124),
-	["THE_EARTHEN_RING"] = _G.GetFactionInfoByID(1135),
-	["TRANQUILLIEN_CONVERSION"] = _G.GetFactionInfoByID(1136),
-	["THE_ASHEN_VERDICT"] = _G.GetFactionInfoByID(1156),
-	["GUARDIANS_OF_HYJAL"] = _G.GetFactionInfoByID(1158),
-	["THERAZANE"] = _G.GetFactionInfoByID(1171),
-	["DRAGONMAW_CLAN"] = _G.GetFactionInfoByID(1172),
-	["RAMKAHEN"] = _G.GetFactionInfoByID(1173),
-	["WILDHAMMER_CLAN"] = _G.GetFactionInfoByID(1174),
-	["BARADINS_WARDENS"] = _G.GetFactionInfoByID(1177),
-	["HELLSCREAMS_REACH"] = _G.GetFactionInfoByID(1178),
-	["SHANG_XIS_ACADEMY"] = _G.GetFactionInfoByID(1216),
-	["FOREST_HOZEN"] = _G.GetFactionInfoByID(1228),
-	["PEARLFIN_JINYU"] = _G.GetFactionInfoByID(1242),
-	["GOLDEN_LOTUS"] = _G.GetFactionInfoByID(1269),
-	["SHADO_PAN"] = _G.GetFactionInfoByID(1270),
-	["ORDER_OF_THE_CLOUD_SERPENT"] = _G.GetFactionInfoByID(1271),
-	["THE_TILLERS"] = _G.GetFactionInfoByID(1272),
-	["JOGU_THE_DRUNK"] = _G.GetFactionInfoByID(1273),
-	["ELLA"] = _G.GetFactionInfoByID(1275),
-	["OLD_HILLPAW"] = _G.GetFactionInfoByID(1276),
-	["CHEE_CHEE"] = _G.GetFactionInfoByID(1277),
-	["SHO"] = _G.GetFactionInfoByID(1278),
-	["HAOHAN_MUDCLAW"] = _G.GetFactionInfoByID(1279),
-	["TINA_MUDCLAW"] = _G.GetFactionInfoByID(1280),
-	["GINA_MUDCLAW"] = _G.GetFactionInfoByID(1281),
-	["FISH_FELLREED"] = _G.GetFactionInfoByID(1282),
-	["FARMER_FUNG"] = _G.GetFactionInfoByID(1283),
-	["THE_ANGLERS"] = _G.GetFactionInfoByID(1302),
-	["THE_KLAXXI"] = _G.GetFactionInfoByID(1337),
-	["THE_AUGUST_CELESTIALS"] = _G.GetFactionInfoByID(1341),
-	["THE_LOREWALKERS"] = _G.GetFactionInfoByID(1345),
-	["THE_BREWMASTERS"] = _G.GetFactionInfoByID(1351),
-	["HUOJIN_PANDAREN"] = _G.GetFactionInfoByID(1352),
-	["TUSHUI_PANDAREN"] = _G.GetFactionInfoByID(1353),
-	["NAT_PAGLE"] = _G.GetFactionInfoByID(1358),
-	["THE_BLACK_PRINCE"] = _G.GetFactionInfoByID(1359),
-}
-]]--
+
 private.FACTION_IDS = {}
 
 for id, name in pairs(private.FACTION_STRINGS) do
@@ -864,6 +746,7 @@ private.ZONE_NAMES = {
 	THE_VIOLET_HOLD = _G.GetMapNameByID(536),
 	GILNEAS = _G.GetMapNameByID(539),
 	TRIAL_OF_THE_CRUSADER = _G.GetMapNameByID(543),
+	THE_LOST_ISLES = _G.GetMapNameByID(544),
 	ICECROWN_CITADEL = _G.GetMapNameByID(604),
 	MOUNT_HYJAL = _G.GetMapNameByID(606),
 	SOUTHERN_BARRENS = _G.GetMapNameByID(607),
@@ -911,8 +794,10 @@ private.ZONE_NAMES = {
 	KARAZHAN = _G.GetMapNameByID(799),
 	FIRELANDS = _G.GetMapNameByID(800),
 	VALLEY_OF_THE_FOUR_WINDS = _G.GetMapNameByID(807),
+	THE_WANDERING_ISLE = _G.GetMapNameByID(808),
 	TOWNLONG_STEPPES = _G.GetMapNameByID(810),
 	VALE_OF_ETERNAL_BLOSSOMS = _G.GetMapNameByID(811),
+	DARKMOON_ISLAND = _G.GetMapNameByID(823),
 	DRAGON_SOUL = _G.GetMapNameByID(824),
 	DUSTWALLOW_MARSH = _G.GetMapNameByID(851),
 	KRASARANG_WILDS = _G.GetMapNameByID(857),
@@ -921,6 +806,7 @@ private.ZONE_NAMES = {
 	KUN_LAI_SUMMIT = _G.GetMapNameByID(879),
 	THE_JADE_FOREST = _G.GetMapNameByID(880),
 	TERRACE_OF_ENDLESS_SPRING = _G.GetMapNameByID(886),
+	NEW_TINKERTOWN = _G.GetMapNameByID(895),
 	MOGUSHAN_VAULTS = _G.GetMapNameByID(896),
 	HEART_OF_FEAR = _G.GetMapNameByID(897),
 	SCHOLOMANCE = _G.GetMapNameByID(898),
@@ -1034,17 +920,6 @@ private.BASIC_COLORS = {
 
 -- Colors used in tooltips and the recipe list.
 private.CATEGORY_COLORS = {
-	-- Acquire type colors
-	achievement	= { hex = "faeb98",	r = 0.98,	g = 0.92,	b = 0.59 },
-	custom		= { hex = "73b7ff",	r = 0.45,	g = 0.71,	b = 1 },
-	discovery	= { hex = "ff9500",	r = 1,		g = 0.58,	b = 0 },
-	mobdrop		= { hex = "962626",	r = 0.59,	g = 0.15,	b = 0.15 },
-	quest		= { hex = "dbdb2c",	r = 0.86,	g = 0.86,	b = 0.17 },
-	reputation	= { hex = "855a99",	r = 0.52,	g = 0.35,	b = 0.6 },
-	seasonal	= { hex = "80590e",	r = 0.50,	g = 0.35,	b = 0.05 },
-	trainer		= { hex = "c98e26",	r = 0.79,	g = 0.56,	b = 0.14 },
-	vendor		= { hex = "aad372",	r = 0.67,	g = 0.83,	b = 0.45 },
-
 	-- Miscellaneous
 	coords		= { hex = "d1ce6f",	r = 0.82,	g = 0.81,	b = 0.44 },
 	hint		= { hex = "c9c781",	r = 0.79,	g = 0.78,	b = 0.51 },

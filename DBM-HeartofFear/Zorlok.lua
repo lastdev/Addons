@@ -1,19 +1,20 @@
 local mod	= DBM:NewMod(745, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 9668 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
 mod:SetCreatureID(62980)--63554 (Special invisible Vizier that casts the direction based spellid versions of attenuation)
+mod:SetEncounterID(1507)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 mod:RegisterKill("yell", L.Defeat)
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_APPLIED_DOSE",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START",
-	"SPELL_CAST_SUCCESS",
+	"SPELL_AURA_APPLIED 122852 122761 122740",
+	"SPELL_AURA_APPLIED_DOSE 122852",
+	"SPELL_AURA_REMOVED 122761 122740",
+	"SPELL_CAST_START 122713 122474 122496 123721 122479 122497 123722 127834",
+	"SPELL_CAST_SUCCESS 124018",
 	"RAID_BOSS_EMOTE",
 	"UNIT_SPELLCAST_SUCCEEDED boss1",
 	"UNIT_DIED"
@@ -71,7 +72,7 @@ function mod:OnCombatStart(delay)
 	platform = 0
 	EchoAlive = false
 	table.wipe(MCTargets)
-	if self:IsDifficulty("heroic10", "heroic25") then
+	if self:IsHeroic() then
 		berserkTimer:Start(-delay)
 	else
 		berserkTimer:Start(600-delay)--still 10 min on normal. they only raised it to 11 minutes on heroic apparently.
@@ -85,9 +86,10 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 122852 and UnitName("target") == args.sourceName then--probalby won't work for healers but oh well. On heroic if i'm tanking echo i don't want this spam. I only care if i'm tanking zorlok. Healers won't miss this one anyways
+	local spellId = args.spellId
+	if spellId == 122852 and UnitName("target") == args.sourceName then--probalby won't work for healers but oh well. On heroic if i'm tanking echo i don't want this spam. I only care if i'm tanking zorlok. Healers won't miss this one anyways
 		warnInhale:Show(args.destName, args.amount or 1)
-	elseif args.spellId == 122761 then
+	elseif spellId == 122761 then
 		local uId = DBM:GetRaidUnitId(args.destName)
 		if not uId then return end
 		local x, y = GetPlayerMapPosition(uId)
@@ -101,7 +103,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specwarnExhale:Show(args.destName)
 			timerExhale:Start(args.destName)
 		end
-	elseif args.spellId == 122740 then
+	elseif spellId == 122740 then
 		MCTargets[#MCTargets + 1] = args.destName
 		if self.Options.MindControlIcon then
 			self:SetIcon(args.destName, MCIcon)
@@ -114,9 +116,10 @@ end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 122761 then
+	local spellId = args.spellId
+	if spellId == 122761 then
 		timerExhale:Cancel(args.destName)
-	elseif args.spellId == 122740 then
+	elseif spellId == 122740 then
 		if self.Options.MindControlIcon then
 			self:SetIcon(args.destName, 0)
 		end
@@ -124,13 +127,14 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 122713 then
+	local spellId = args.spellId
+	if spellId == 122713 then
 		timerForce:Start()
 	elseif args:IsSpellID(122474, 122496, 123721) then--All direction IDs are cast by an invisible version of Vizier.
 		lastDirection = DBM_CORE_LEFT
 	elseif args:IsSpellID(122479, 122497, 123722) then--We monitor direction, but we need to announce off non invisible mob
 		lastDirection = DBM_CORE_RIGHT
-	elseif args.spellId == 127834 then--This is only id that properly identifies CORRECT boss source
+	elseif spellId == 127834 then--This is only id that properly identifies CORRECT boss source
 		--Example
 		--http://worldoflogs.com/reports/rt-g8ncl718wga0jbuj/xe/?enc=bosses&boss=66791&x=%28spellid+%3D+127834+or+spellid+%3D+122496+or+spellid+%3D+122497%29+and+fulltype+%3D+SPELL_CAST_START
 		local bossCID = args:GetSrcCreatureID()--Figure out CID because GetBossTarget expects a CID.
@@ -169,7 +173,8 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 124018 then
+	local spellId = args.spellId
+	if spellId == 124018 then
 		platform = 4--He moved to middle, it's phase 2, although platform "4" is better then adding an extra variable.
 		timerConvertCD:Cancel()
 	end

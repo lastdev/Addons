@@ -3,10 +3,10 @@
 Scanner.lua
 Vendor/trainer scanning for Ackis Recipe List.
 ************************************************************************
-File date: 2013-07-08T07:24:20Z
-File hash: dce78ec
-Project hash: 4bcba04
-Project version: 2.5.2
+File date: 2014-05-26T00:13:59Z
+File hash: d2eafec
+Project hash: af8bb68
+Project version: 2.6.5
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -50,7 +50,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
 -- Constants
 -------------------------------------------------------------------------------
 local F = private.FILTER_IDS
-local A = private.ACQUIRE_TYPES
+local A = private.ACQUIRE_TYPE_IDS
 
 local NO_ROLE_FLAG	-- Populated at the end of the file.
 
@@ -101,6 +101,14 @@ do
 	local missing_spell_ids, extra_spell_ids, fixed_item_spell_ids = {}, {}, {}
 	local mismatched_item_levels, mismatched_recipe_levels = {}, {}
 	local itemless_spells = {}
+
+	-- Key is recipe ID, value is crafted item ID. Example: Magnificence of Leather and Magnificence of Scale transform materials to Magnificent Hide.
+	-- Both of these are DROPPED. Only the Magnificent Hide skill itself is trained.
+	local FALSE_POSITIVE_RECIPE_TO_ITEM_MAP = {
+		[140040] = 72163, -- Magnificence of Leather / Magnificent Hide
+		[140041] = 72163, -- Magnificence of Scales / Magnificent Hide
+	}
+
 
 	--- Function to compare which recipes are available from a trainer and compare with the internal ARL database.
 	-- @name AckisRecipeList:ScanTrainerData
@@ -174,7 +182,7 @@ do
 		-- Dump out trainer info
 		local trainer_id = private.MobGUIDToIDNum(_G.UnitGUID("target"))
 		local trainer_name = _G.UnitName("target")
-		local trainer_entry = private.trainer_list[trainer_id]
+		local trainer_entry = private.AcquireTypes.Trainer:GetEntity(trainer_id)
 		local trainer_x, trainer_y = _G.GetPlayerMapPosition("player")
 		trainer_x = ("%.2f"):format(trainer_x * 100)
 		trainer_y = ("%.2f"):format(trainer_y * 100)
@@ -197,17 +205,13 @@ do
 		end
 
 		for spell_id, recipe in pairs(recipe_list) do
-			local train_data = recipe.acquire_data[A.TRAINER]
-			local matching_trainer = false
+			local trainer_acquire_data = recipe.acquire_data[A.TRAINER]
+			local matching_trainer = trainer_acquire_data and trainer_acquire_data[trainer_id]
+			local scanned_recipe_skill = scanned_recipes[recipe.name]
+			local scanned_item_skill = scanned_items[recipe:CraftedItem()]
 
-			if train_data and train_data[trainer_id] then
-				matching_trainer = true
-			end
-			local matching_recipe = scanned_recipes[recipe.name]
-			local matching_item = scanned_items[recipe:CraftedItem()]
-
-			if matching_recipe or matching_item then
-				if not matching_trainer then
+			if scanned_recipe_skill or scanned_item_skill then
+				if not matching_trainer and (not scanned_item_skill or FALSE_POSITIVE_RECIPE_TO_ITEM_MAP[spell_id] ~= recipe:CraftedItem()) then
 					table.insert(missing_spell_ids, spell_id)
 
 					if not L[trainer_name] then
@@ -218,20 +222,20 @@ do
 					if not recipe:HasFilter("common1", "TRAINER") then
 						recipe:AddFilters(F.TRAINER)
 
-						if matching_item then
+						if scanned_item_skill then
 							output:AddLine(("Added trainer flag to recipe with spell ID %d. (matching crafted item ID %d)"):format(spell_id, recipe:CraftedItem()))
-						elseif matching_recipe then
+						elseif scanned_recipe_skill then
 							output:AddLine(("Added trainer flag to recipe with spell ID %d. (matching recipe name \"%s\")"):format(spell_id, recipe.name))
 						end
 					end
 				end
 				local recipe_skill = recipe:SkillLevels()
 
-				if matching_item and matching_item ~= recipe_skill then
+				if scanned_item_skill and scanned_item_skill ~= recipe_skill then
 					table.insert(mismatched_item_levels, spell_id)
 				end
 
-				if matching_recipe and matching_recipe ~= recipe_skill then
+				if scanned_recipe_skill and scanned_recipe_skill ~= recipe_skill then
 					table.insert(mismatched_recipe_levels, spell_id)
 				end
 			elseif matching_trainer then
@@ -334,69 +338,6 @@ do
 		_G.SetTrainerServiceTypeFilter("used", used or 0)
 	end
 end	-- do
-
---- Generates tradeskill links for all professions so you can scan them for completeness.
--- @name AckisRecipeList:GenerateLinks
--- @return Generates tradeskill links with all recipes.  Used for testing to see if a recipe is missing from the database or not.
-function addon:GenerateLinks()
-	-- This code adopted from Gnomish Yellow Pages with permission
-
-	-- Listing of all tradeskill professions
-	local tradelist = {
-		51304, -- Alchemy
-		51300, -- Blacksmithing
-		51313, -- Enchanting
-		51306, -- Engineering
-		45363, -- Inscription
-		51311, -- Jewelcrafting
-		51302, -- Leatherworking
-		51309, -- Tailoring
-		51296, -- Cooking
-		45542, -- First Aid
-	}
-
-	--[[
-	local encodingLength = floor((#recipeList+5) / 6)
-
-	local encodedString = ("/"):rep(encodingLength)
-]]--
-	local bitmap = {
-		[45542] = "8bffAA", -- First Aid  100%   17/17 recipes
-		--[51296] = "2/6///7///9f///7//////////g///B", -- Cooking  98.2%  166/169 recipes
-		[51296] = "GEgAGAjmFAwBAxAzfex//DgAgPA6HtgAI8lC",
-		--[51306] = "4/////////////3nFA+///9+/P7//f//n//9dgdJgHA87/3f/TolD", -- Engineering (53)
-		[51306] = "4/////////////3nFA+///9+/P7//f//n//9dgdJgHA87/3f/Tol3B", -- Engineering
-		[51302] = "e+//ff////d//u//v//n+vv7/+ujr7/9////bg/+////f344//dA4I8j/X//B4/vu5/////////////////nvA8/M8/D", -- Leatherworking  85.4%   451/528 recipes
-		[51304] = "2//v//////f////3//v///////5//////////9/////v", -- Alchemy 100%   251/251 recipes
-		[51300] = "2//////f7fM//f/f53/+//7///ze8c6q/f9///P2/////m4BAA2XIG+dFA8//PC////4//z//////////Pwvy//H", -- Blacksmithing 82.9%   413/498 recipes
-		[51309] = "4//+/76J7//v7/ve+/XR9fLb2f3nN3vLc6vS0+Hf8/XG7/VAIh9B+/f6/////3/////9/f1wCB", -- Tailoring   83.37%   341/409 recipes
-		[51311] = "8//3////fzj//u//////v/7///9///33////////Pw////////////////////////3///////////////////////////D", -- Jewelcrafting  97.5%   540/554 recipes
-		[45363] = "g////7////3///////////////////////////////////////////////////f///////////f", --Inscription 99.77%    439/440 recipes
-		[51313] = "4//////////7///////////w//+//9/n7///////3f//////ZsD", -- Enchanting   94.3%    279/296 recipes
-	}
-	for i in pairs(tradelist) do
-		local tradeName = _G.GetSpellInfo(tradelist[i])
-		local tradelink = {
-			"|cffffd000|Htrade:",
-			tradelist[i],
-			":525:525:",
-			_G.UnitGUID("player"):gsub("0x0+", ""),
-			":",
-			bitmap[tradelist[i]],
-			"|h[",
-			tradeName,
-			"]|h|r",
-		}
-
-		if bitmap[tradelist[i]] then
-			self:Print(table.concat(tradelink, ""))
-		else
-			self:Print("There currently is no generated tradeskill link for: " .. tradeName)
-		end
---		/script DEFAULT_CHAT_FRAME:AddMessage(GetTradeSkillListLink():gsub("\124","\124\124"))
-	end
-
-end
 
 -------------------------------------------------------------------------------
 -- Datamining copy frame.
@@ -812,7 +753,7 @@ do
 	local function Sort_AscID(a, b)
 		local reca, recb = private.recipe_list[a], private.recipe_list[b]
 
-		return reca.spell_id < recb.spell_id
+		return reca:SpellID()< recb:SpellID()
 	end
 
 	local function SortRecipesByID()
@@ -1035,13 +976,31 @@ do
 		table.sort(sorted_data)
 
 		for index, identifier in ipairs(sorted_data) do
-			local trainer = private.trainer_list[identifier]
+			local trainer = private.AcquireTypes.Trainer:GetEntity(identifier)
 
 			if trainer then
 				if trainer.spell_id then
-					output:AddLine(("self:AddTrainer(%s, %s, Z.%s, %s, %s, \"%s\")"):format(identifier, trainer.spell_id, private.ZONE_LABELS_FROM_NAME[trainer.location], trainer.coord_x, trainer.coord_y, trainer.faction))
+					output:AddLine(
+						("self:AddTrainer(%s, %s, Z.%s, %s, %s, \"%s\")"):format(
+							identifier,
+							trainer.spell_id,
+							private.ZONE_LABELS_FROM_NAME[trainer.location],
+							trainer.coord_x,
+							trainer.coord_y,
+							trainer.faction
+						)
+					)
 				else
-					output:AddLine(("self:AddTrainer(%s, \"%s\", Z.%s, %s, %s, \"%s\")"):format(identifier, trainer.name:gsub("\"", "\\\""), private.ZONE_LABELS_FROM_NAME[trainer.location], trainer.coord_x, trainer.coord_y, trainer.faction))
+					output:AddLine(
+						("self:AddTrainer(%s, \"%s\", Z.%s, %s, %s, \"%s\")"):format(
+							identifier,
+							trainer.name:gsub("\"", "\\\""),
+							private.ZONE_LABELS_FROM_NAME[trainer.location],
+							trainer.coord_x,
+							trainer.coord_y,
+							trainer.faction
+						)
+					)
 				end
 			end
 		end
@@ -1137,7 +1096,8 @@ do
 				end
 			end
 		end
-		local vendor_entry = private.vendor_list[vendor_id]
+		local vendor_acquire_type = private.AcquireTypes.Vendor
+		local vendor_entry = vendor_acquire_type:GetEntity(vendor_id)
 		local vendor_x, vendor_y = _G.GetPlayerMapPosition("player")
 		vendor_x = ("%.2f"):format(vendor_x * 100)
 		vendor_y = ("%.2f"):format(vendor_y * 100)
@@ -1155,7 +1115,7 @@ do
 				L[vendor_name] = true
 			end
 			_G.SetMapToCurrentZone() -- Make sure were are looking at the right zone
-			private:AddListEntry(private.vendor_list, vendor_id, L[vendor_name], _G.GetRealZoneText(), vendor_x, vendor_y, _G.UnitFactionGroup("target") or "Neutral")
+			vendor_acquire_type:AddEntity(vendor_id, L[vendor_name], _G.GetRealZoneText(), vendor_x, vendor_y, _G.UnitFactionGroup("target") or "Neutral")
 		end
 
 		if matching_vendor and vendor_entry and vendor_entry.item_list then
@@ -1169,7 +1129,7 @@ do
 				output:AddLine(("Unlimited quantity for \"%s\" (%d) found on vendor %d - listed as limited quantity."):format(recipe.name, spell_id, vendor_id))
 			end
 
-			if not recipe:HasFilter("common1", "VENDOR") and not recipe:HasFilter("common1", "SEASONAL") then
+			if not recipe:HasFilter("common1", "VENDOR") and not recipe:HasFilter("common1", "WORLD_EVENTS") then
 				recipe:AddFilters(F.VENDOR)
 				output:AddLine(("%d: Vendor flag was not set."):format(spell_id))
 			end
@@ -1180,7 +1140,7 @@ do
 				recipe:AddVendor(vendor_id)
 			end
 
-			if not recipe:HasFilter("common1", "VENDOR") and not recipe:HasFilter("common1", "SEASONAL") then
+			if not recipe:HasFilter("common1", "VENDOR") and not recipe:HasFilter("common1", "WORLD_EVENTS") then
 				recipe:AddFilters(F.VENDOR)
 				output:AddLine(("%d: Vendor flag was not set."):format(spell_id))
 			end
@@ -1605,10 +1565,10 @@ do
 	local general_issues = {}
 
 	local ACQUIRE_TO_FILTER_MAP = {
-		[A.MOB_DROP]	= F.MOB_DROP,
-		[A.QUEST]	= F.QUEST,
-		[A.SEASONAL]	= F.SEASONAL,
-		[A.WORLD_DROP]	= F.WORLD_DROP,
+		[A.MOB_DROP] = F.MOB_DROP,
+		[A.QUEST] = F.QUEST,
+		[A.WORLD_EVENTS] = F.WORLD_EVENTS,
+		[A.WORLD_DROP] = F.WORLD_DROP,
 	}
 	local FILTER_TO_ACQUIRE_MAP
 
@@ -1620,7 +1580,7 @@ do
 		QUEST = true,
 		RAID = true,
 		REPUTATION = true,
-		SEASONAL = true,
+		WORLD_EVENTS = true,
 		TRAINER = true,
 		VENDOR = true,
 		WORLD_DROP = true,
@@ -1654,7 +1614,7 @@ do
 		-------------------------------------------------------------------------------
 		-- If we're a vendor scan,  do some extra checks
 		if scan_data.is_vendor then
-			if not recipe:HasFilter("common1", "VENDOR") and not recipe:HasFilter("common1", "SEASONAL") then
+			if not recipe:HasFilter("common1", "VENDOR") and not recipe:HasFilter("common1", "WORLD_EVENTS") then
 				recipe:AddFilters(F.VENDOR)
 				table.insert(missing_flags, flag_format:format(FS[F.VENDOR]))
 			end
@@ -1757,11 +1717,11 @@ do
 			end
 		end
 
-		for flag, acquire_type in pairs(FILTER_TO_ACQUIRE_MAP) do
-			if acquire_data[acquire_type] and not recipe:HasFilter("common1", FS[flag]) then
+		for flag, acquire_type_id in pairs(FILTER_TO_ACQUIRE_MAP) do
+			if acquire_data[acquire_type_id] and not recipe:HasFilter("common1", FS[flag]) then
 				local can_add = true
 
-				if (acquire_type == A.WORLD_DROP or acquire_type == A.MOB_DROP) and (recipe:HasFilter("common1", "INSTANCE") or recipe:HasFilter("common1", "RAID")) then
+				if (acquire_type_id == A.WORLD_DROP or acquire_type_id == A.MOB_DROP) and (recipe:HasFilter("common1", "INSTANCE") or recipe:HasFilter("common1", "RAID")) then
 					can_add = false
 				end
 
@@ -1769,10 +1729,10 @@ do
 					recipe:AddFilters(flag)
 					table.insert(missing_flags, flag_format:format(FS[flag]))
 				end
-			elseif not acquire_data[acquire_type] and recipe:HasFilter("common1", FS[flag]) then
+			elseif not acquire_data[acquire_type_id] and recipe:HasFilter("common1", FS[flag]) then
 				local can_remove = true
 
-				if acquire_type == A.WORLD_DROP and (not recipe:HasFilter("common1", "INSTANCE") and not recipe:HasFilter("common1", "RAID")) then
+				if acquire_type_id == A.WORLD_DROP and (not recipe:HasFilter("common1", "INSTANCE") and not recipe:HasFilter("common1", "RAID")) then
 					can_remove = false
 				end
 
@@ -1784,7 +1744,7 @@ do
 		end
 
 		if acquire_data[A.VENDOR] then
-			if not recipe:HasFilter("common1", "VENDOR") and not recipe:HasFilter("common1", "SEASONAL") and not recipe:HasFilter("common1", "REPUTATION") then
+			if not recipe:HasFilter("common1", "VENDOR") and not recipe:HasFilter("common1", "WORLD_EVENTS") and not recipe:HasFilter("common1", "REPUTATION") then
 				recipe:AddFilters(F.VENDOR)
 				table.insert(missing_flags, flag_format:format(FS[F.VENDOR]))
 			end
@@ -2079,7 +2039,7 @@ do
 				output:AddLine("Skill Level Error: " .. tostring(spell_id) .. " " .. recipe_name)
 			end
 		end
-		local recipe_link = _G.GetSpellLink(recipe.spell_id)
+		local recipe_link = _G.GetSpellLink(recipe:SpellID())
 
 		if not recipe_link then
 			if recipe.profession ~= private.LOCALIZED_PROFESSION_NAMES.RUNEFORGING then
@@ -2113,7 +2073,13 @@ do
 
 		if recipe_item_id then
 			if recipe:HasFilter("common1", "TRAINER") and not recipe:HasFilter("common1", "VENDOR") and not recipe:HasFilter("common1", "INSTANCE") and not recipe:HasFilter("common1", "RAID") and not recipe:HasFilter("common1", "WORLD_DROP") then
-				output:AddLine(("Recipe %d (%s): Has Trainer filter flag, but also has a recipe item (%d)."):format(recipe.spell_id, recipe.name, recipe_item_id))
+				output:AddLine(
+					("Recipe %d (%s): Has Trainer filter flag, but also has a recipe item (%d)."):format(
+						recipe:SpellID(),
+						recipe.name,
+						recipe_item_id
+					)
+				)
 			elseif not DO_NOT_SCAN[recipe_item_id] then
 				local item_name, item_link, item_quality = _G.GetItemInfo(recipe_item_id)
 
@@ -2124,7 +2090,12 @@ do
 						ARLDatamineTT:SetHyperlink(item_link)
 						ScanTooltip(recipe_name, recipe_list, reverse_lookup, is_vendor)
 					else
-						output:AddLine(("Recipe %d (%s): Recipe item quality is 0 (junk), which probably means it has been removed from the game."):format(recipe.spell_id, recipe.name))
+						output:AddLine(
+							("Recipe %d (%s): Recipe item quality is 0 (junk), which probably means it has been removed from the game."):format(
+								recipe:SpellID(),
+								recipe.name
+							)
+						)
 					end
 				else
 					output:AddLine(("%s: %d"):format(recipe.name, spell_id))

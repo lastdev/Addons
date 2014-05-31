@@ -163,6 +163,8 @@ aeldra@sonnenkinder.org
 Changes: 
 Rev     Date        Description
 ------  ----------  -----------------------
+5.4b    2013-10-30  Fixed LUA errors with RealmName
+
 5.4a    2013-09-12  Fixed LUA errors with sliders
                     Fixed action button position issue
                     Updated TOC

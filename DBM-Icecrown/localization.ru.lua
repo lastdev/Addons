@@ -2,82 +2,6 @@
 
 local L
 
----------------------------
---  Trash - Lower Spire  --
----------------------------
-L = DBM:GetModLocalization("LowerSpireTrash")
-
-L:SetGeneralLocalization{
-	name = "Треш-мобы Шпиля"
-}
-
-L:SetWarningLocalization{
-	SpecWarnTrap		= "Ловушка активирована! - Заклятый страж освобожден"--creatureid 37007
-}
-
-L:SetOptionLocalization{
-	SpecWarnTrap		= "Спец-предупреждение для активации ловушки",
-}
-
-L:SetMiscLocalization{
-	WarderTrap1		= "Кто... идет?",
-	WarderTrap2		= "Я пробудился...",
-	WarderTrap3		= "В покои господина проникли!"
-}
-
----------------------------
---  Trash - Plagueworks  --
----------------------------
-L = DBM:GetModLocalization("PlagueworksTrash")
-
-L:SetGeneralLocalization{
-	name = "Треш-мобы Чумодельни"
-}
-
-L:SetWarningLocalization{
-	SpecWarnTrap	= "Ловушка активирована! - приближаются Мстительные свежеватели"--creatureid 37038
-}
-
-L:SetOptionLocalization{
-	SpecWarnTrap	= "Спец-предупреждение для активации ловушки"
-}
-
-L:SetMiscLocalization{
-	FleshreaperTrap1		= "Скорей, нападем на них сзади!",
-	FleshreaperTrap2		= "Вам не уйти от нас.",
-	FleshreaperTrap3		= "Живые? Здесь?!"
-}
-
----------------------------
---  Trash - Crimson Hall  --
----------------------------
-L = DBM:GetModLocalization("CrimsonHallTrash")
-
-L:SetGeneralLocalization{
-	name = "Треш-мобы Багрового зала"
-}
-
----------------------------
---  Trash - Frostwing Hall  --
----------------------------
-L = DBM:GetModLocalization("FrostwingHallTrash")
-
-L:SetGeneralLocalization{
-	name = "Треш-мобы Зала Ледокрылых"
-}
-
-L:SetWarningLocalization{
-	SpecWarnGosaEvent	= "Приближаются защитники Синдрагосы!"
-}
-
-L:SetOptionLocalization{
-	SpecWarnGosaEvent	= "Спец-предупреждение для активации защитников Синдрагосы"
-}
-
-L:SetMiscLocalization{
-	SindragosaEvent		= "Они не должны прорваться к Синдрагосе! Скорее, остановите их!"
-}
-
 ----------------------
 --  Lord Marrowgar  --
 ----------------------
@@ -133,13 +57,11 @@ L:SetWarningLocalization{
 }
 
 L:SetOptionLocalization{
-	TimerCombatStart	= "Отсчет времени до начала боя",
 	WarnAddsSoon		= "Предупреждать заранее о призыве помощников",
 	TimerAdds			= "Отсчет времени до новых помощников"
 }
 
 L:SetTimerLocalization{
-	TimerCombatStart	= "Начало боя",
 	TimerAdds			= "Призыв помощников"
 }
 
@@ -163,12 +85,7 @@ L:SetGeneralLocalization{
 	name = "Саурфанг Смертоносный"
 }
 
-L:SetTimerLocalization{
-	TimerCombatStart		= "Начало боя"
-}
-
 L:SetOptionLocalization{
-	TimerCombatStart		= "Отсчет времени до начала боя",
 	RangeFrame				= "Показывать окно проверки дистанции (12 м)",
 	RunePowerFrame			= "Показывать здоровье босса + индикатор для $spell:72371",
 	BeastIcons				= "Устанавливать метки на Кровавые чудовища"
@@ -383,14 +300,12 @@ L:SetWarningLocalization{
 }
 
 L:SetTimerLocalization{
-	TimerCombatStart	= "Начало боя",
 	TimerRoleplay		= "Представление",
 	PhaseTransition		= "Переходная фаза",
 	TimerNecroticPlagueCleanse = "Очищение Мертвящей чумы"
 }
 
 L:SetOptionLocalization{
-	TimerCombatStart		= "Отсчет времени до начала боя",
 	TimerRoleplay			= "Отсчет времени для представления",
 	WarnNecroticPlagueJump	= "Объявлять цели прыжков $spell:73912",
 	TimerNecroticPlagueCleanse	= "Отсчет времени для очищения Мертвящей чумы до первого тика",
@@ -410,4 +325,35 @@ L:SetMiscLocalization{
 	ValkGrabbed				= "Валь'кира схватила %s",
 	PlagueStackWarning		= "Предупреждение: %s получил %d стаков Мертвящей чумы",
 	AchievementCompleted	= ">> ДОСТИЖЕНИЕ ВЫПОЛНЕНО: %s получил %d стаков Мертвящей чумы <<"
+}
+
+-------------
+--  Trash  --
+-------------
+L = DBM:GetModLocalization("ICCTrash")
+
+L:SetGeneralLocalization{
+	name = "Icecrown Trash"
+}
+
+L:SetWarningLocalization{
+	SpecWarnTrapL		= "Ловушка активирована! - Заклятый страж освобожден",
+	SpecWarnTrapP		= "Ловушка активирована! - приближаются Мстительные свежеватели",
+	SpecWarnGosaEvent	= "Приближаются защитники Синдрагосы!"
+}
+
+L:SetOptionLocalization{
+	SpecWarnTrapL		= "Спец-предупреждение для активации ловушки",
+	SpecWarnTrapP		= "Спец-предупреждение для активации ловушки",
+	SpecWarnGosaEvent	= "Спец-предупреждение для активации защитников Синдрагосы"
+}
+
+L:SetMiscLocalization{
+	WarderTrap1			= "Кто... идет?",
+	WarderTrap2			= "Я пробудился...",
+	WarderTrap3			= "В покои господина проникли!",
+	FleshreaperTrap1	= "Скорей, нападем на них сзади!",
+	FleshreaperTrap2	= "Вам не уйти от нас.",
+	FleshreaperTrap3	= "Живые? Здесь?!",
+	SindragosaEvent		= "Они не должны прорваться к Синдрагосе! Скорее, остановите их!"
 }

@@ -9,7 +9,7 @@ XPerl_RequestConfig(function(new)
 				if (XPerl_TargetTargetTarget) then XPerl_TargetTargetTarget.conf = conf.targettargettarget end
 				if (XPerl_FocusTarget) then XPerl_FocusTarget.conf = conf.focustarget end
 				if (XPerl_PetTarget) then XPerl_PetTarget.conf = conf.pettarget end
-			end, "$Revision: 832 $")
+			end, "$Revision: 860 $")
 
 local UnitName = UnitName
 local UnitHealth = UnitHealth
@@ -134,7 +134,7 @@ end
 -- The Update Function --
 -------------------------
 function XPerl_TargetTarget_UpdatePVP(self)
-	local pvp = self.conf.pvpIcon and (UnitIsPVPFreeForAll(self.partyid) and "FFA") or (UnitIsPVP(self.partyid) and (UnitFactionGroup(self.partyid) ~= "Neutral") and UnitFactionGroup(self.partyid))
+	local pvp = self.conf.pvpIcon and ((UnitIsPVPFreeForAll(self.partyid) and "FFA") or (UnitIsPVP(self.partyid) and (UnitFactionGroup(self.partyid) ~= "Neutral") and UnitFactionGroup(self.partyid)))
 	if (pvp) then
 		self.nameFrame.pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..pvp)
 		self.nameFrame.pvpIcon:Show()
@@ -145,7 +145,7 @@ end
 
 -- XPerl_TargetTarget_Buff_UpdateAll
 local function XPerl_TargetTarget_Buff_UpdateAll(self)
-	if (self.conf.buffs.enable) then
+	if (self.conf.buffs.enable or self.conf.debuffs.enable) then
 		self.buffFrame:Show()
 		XPerl_Targets_BuffUpdate(self)
 	else

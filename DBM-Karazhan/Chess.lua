@@ -2,7 +2,7 @@ local mod	= DBM:NewMod("Chess", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
 local playerFactoin = UnitFactionGroup("player")
-mod:SetRevision(("$Revision: 496 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
 --UNIT_DIED firing for king assumed
 if playerFactoin == "Alliance" then
 	mod:SetCreatureID(21752)--Warchief Blackhand
@@ -14,9 +14,12 @@ mod:RegisterCombat("combat")--Actually not how we register combat, bogus because
 mod:SetWipeTime(600)
 
 mod:RegisterEvents(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
+	"SPELL_AURA_APPLIED"
+)
+
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS",
+	"SPELL_AURA_REMOVED",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"UNIT_DIED"
 )

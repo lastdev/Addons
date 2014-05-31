@@ -1,6 +1,6 @@
 --[[
 Name: LibBabble-Inventory-3.0
-Revision: $Rev: 171 $
+Revision: $Rev: 173 $
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-inventory-3-0/
 Dependencies: None
@@ -8,7 +8,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-Inventory-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 171 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 173 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)
@@ -226,8 +226,8 @@ elseif GAME_LOCALE == "deDE" then
 	Consumable = "Verbrauchbar",
 	Container = "Behälter",
 	Cooking = "Kochkunst",
-	-- ["Cooking Bag"] = "",
-	-- Cosmetic = "",
+	["Cooking Bag"] = "Küchentasche",
+	Cosmetic = "Kosmetisch",
 	Critter = "Kleintier",
 	Crossbow = "Armbrust",
 	Crossbows = "Armbrüste",
@@ -1295,8 +1295,8 @@ elseif GAME_LOCALE == "itIT" then
 	Consumable = "Consumabile",
 	Container = "Contenitore",
 	Cooking = "Cucina",
-	-- ["Cooking Bag"] = "",
-	-- Cosmetic = "",
+	["Cooking Bag"] = "Sacca da Cuoco",
+	Cosmetic = "Cosmetico",
 	Critter = "Animale",
 	Crossbow = "Balestra",
 	Crossbows = "Balestre",
@@ -1448,7 +1448,7 @@ elseif GAME_LOCALE == "ruRU" then
 	lib:SetCurrentTranslations {
 	Alchemy = "Алхимия",
 	["Ammo Pouch"] = "Подсумок",
-	Aquatic = "Водный", -- Needs review
+	Aquatic = "Водный",
 	Archaeology = "Археология",
 	Armor = "Доспехи",
 	["Armor Enchantment"] = "Чары для оружия",
@@ -1457,7 +1457,7 @@ elseif GAME_LOCALE == "ruRU" then
 	Back = "Спина",
 	Bag = "Сумка",
 	Bandage = "Бинты",
-	Beast = "Звери", -- Needs review
+	Beast = "Звери",
 	Blacksmithing = "Кузнечное дело",
 	Blue = "Синий",
 	Book = "Книга",
@@ -1468,21 +1468,21 @@ elseif GAME_LOCALE == "ruRU" then
 	Cloth = "Ткань",
 	Cogwheel = "Зубчатое колесо",
 	Companion = "Спутник",
-	["Companion Pets"] = "Петомцы", -- Needs review
+	["Companion Pets"] = "Петомцы",
 	Companions = "Спутники",
 	Consumable = "Расходуемые",
 	Container = "Сумки",
 	Cooking = "Кулинария",
 	-- ["Cooking Bag"] = "",
 	-- Cosmetic = "",
-	Critter = "Существа", -- Needs review
+	Critter = "Существа",
 	Crossbow = "Арбалет",
 	Crossbows = "Арбалеты",
 	Dagger = "Кинжал",
 	Daggers = "Кинжалы",
 	["Death Knight"] = "Рыцарь смерти",
 	Devices = "Устройства",
-	Dragonkin = "Драконий", -- Needs review
+	Dragonkin = "Драконий",
 	Drink = "Питье",
 	Druid = "Друид",
 	Elemental = "Стихии",
@@ -1503,7 +1503,7 @@ elseif GAME_LOCALE == "ruRU" then
 	["Fist Weapon"] = "Кистевое",
 	["Fist Weapons"] = "Кистевое",
 	Flask = "Фляга",
-	Flying = "Летающий", -- Needs review
+	Flying = "Летающий",
 	["Flying Mount"] = "Летающий транспорт",
 	Food = "Еда",
 	["Food & Drink"] = "Еда и напитки",
@@ -1521,7 +1521,7 @@ elseif GAME_LOCALE == "ruRU" then
 	Herbalism = "Травничество",
 	["Herb Bag"] = "Сумка травника",
 	Holiday = "Праздник",
-	Humanoid = "Гуманоид", -- Needs review
+	Humanoid = "Гуманоид",
 	Hunter = "Охотник",
 	Hydraulic = "Оскверненный ша",
 	Idol = "Идол",
@@ -1541,19 +1541,19 @@ elseif GAME_LOCALE == "ruRU" then
 	Librams = "Манускрипты",
 	Mace = "Дробящее",
 	Mage = "Маг",
-	Magic = "Магичский", -- Needs review
+	Magic = "Магичский",
 	Mail = "Кольчуга",
 	["Main Hand"] = "Правая рука",
 	Materials = "Материалы",
 	Meat = "Мясо",
-	Mechanical = "Механический", -- Needs review
+	Mechanical = "Механический",
 	Meta = "Особый",
 	["Metal & Stone"] = "Металл и камень",
 	Mining = "Горное дело",
 	["Mining Bag"] = "Сумка шахтера",
 	Miscellaneous = "Разное",
-	Money = "Деньги", -- Needs review
-	Monk = "Монах", -- Needs review
+	Money = "Деньги",
+	Monk = "Монах",
 	Mount = "Верховые животные",
 	Mounts = "Верховые животные",
 	Neck = "Шея",
@@ -1611,7 +1611,7 @@ elseif GAME_LOCALE == "ruRU" then
 	["Two-Handed Axes"] = "Двуручные топоры",
 	["Two-Handed Maces"] = "Двуручное дробящее",
 	["Two-Handed Swords"] = "Двуручные мечи",
-	Undead = "Нежить", -- Needs review
+	Undead = "Нежить",
 	Waist = "Пояс",
 	Wand = "Жезл",
 	Wands = "Жезлы",
@@ -1651,8 +1651,8 @@ elseif GAME_LOCALE == "zhCN" then
 	Consumable = "消耗品",
 	Container = "容器",
 	Cooking = "烹饪",
-	-- ["Cooking Bag"] = "",
-	-- Cosmetic = "",
+	["Cooking Bag"] = "烹饪包",
+	Cosmetic = "装饰品",
 	Critter = "小动物",
 	Crossbow = "弩",
 	Crossbows = "弩",
@@ -1829,8 +1829,8 @@ elseif GAME_LOCALE == "zhTW" then
 	Consumable = "消耗品",
 	Container = "容器",
 	Cooking = "烹飪",
-	-- ["Cooking Bag"] = "",
-	-- Cosmetic = "",
+	["Cooking Bag"] = "烹飪包",
+	Cosmetic = "造型",
 	Critter = "小動物",
 	Crossbow = "弩",
 	Crossbows = "弩",

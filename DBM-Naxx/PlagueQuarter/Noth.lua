@@ -1,14 +1,18 @@
 local mod	= DBM:NewMod("Noth", "DBM-Naxx", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 21 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(15954)
+mod:SetEncounterID(1117)
 mod:SetModelID(16590)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
-	"SPELL_CAST_SUCCESS",
 	"CHAT_MSG_MONSTER_YELL"
+)
+
+mod:RegisterEventsInCombat(
+	"SPELL_CAST_SUCCESS"
 )
 
 local warnTeleportNow	= mod:NewAnnounce("WarningTeleportNow", 3, 46573)

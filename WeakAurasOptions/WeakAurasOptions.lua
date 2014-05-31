@@ -22,8 +22,8 @@ local GetItemInfo = GetItemInfo;
 
 local font_close,yellow_font,red_font = FONT_COLOR_CODE_CLOSE,YELLOW_FONT_COLOR_CODE,RED_FONT_COLOR_CODE
 local ValidateNumeric = function(info,val)
-	if not tonumber(val) then
-  	return print(fmt("|cff9900FF"..ADDON_NAME..font_close..":"..yellow_font.." %s"..red_font.." is not a number!",tostring(val)))
+  if not tonumber(val) then
+    return print(fmt("|cff9900FF"..ADDON_NAME..font_close..":"..yellow_font.." %s"..red_font.." is not a number!",tostring(val)))
   end
   return true 
 end
@@ -96,6 +96,7 @@ WeakAuras.transmitCache = {};
 
 local iconCache = {};
 local idCache = {};
+local talentCache = {};
 
 local regionOptions = WeakAuras.regionOptions;
 local displayButtons = {};
@@ -316,6 +317,7 @@ local trigger_types = WeakAuras.trigger_types;
 local debuff_types = WeakAuras.debuff_types;
 local unit_types = WeakAuras.unit_types;
 local actual_unit_types = WeakAuras.actual_unit_types;
+local actual_unit_types_with_specific = WeakAuras.actual_unit_types_with_specific;
 local threat_unit_types = WeakAuras.threat_unit_types;
 local unit_threat_situations = WeakAuras.unit_threat_situations;
 local no_unit_threat_situations = WeakAuras.no_unit_threat_situations;
@@ -829,12 +831,18 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
         end
         order = order + 1;
       elseif(arg.type == "select" or arg.type == "unit") then
+        local values;
+        if(type(arg.values) == "function") then
+          values = arg.values(trigger);
+        else
+          values = WeakAuras[arg.values];
+        end
         options[name] = {
           type = "select",
           name = arg.display,
           order = order,
           hidden = hidden,
-          values = WeakAuras[arg.values],
+          values = values,
           disabled = function() return not trigger["use_"..realname]; end,
           get = function()
             if(arg.type == "unit" and trigger["use_specific_"..realname]) then
@@ -915,11 +923,17 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
           order = order + 1;
         end
       elseif(arg.type == "multiselect") then
+        local values;
+        if(type(arg.values) == "function") then
+          values = arg.values(trigger);
+        else
+          values = WeakAuras[arg.values];
+        end
         options[name] = {
           type = "select",
           name = arg.display,
           order = order,
-          values = WeakAuras[arg.values],
+          values = values,
           hidden = function() return hidden or trigger["use_"..realname] == false; end,
           disabled = function() return not trigger["use_"..realname]; end,
           get = function() return trigger["use_"..realname] and trigger[realname] and trigger[realname].single or nil; end,
@@ -951,7 +965,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
           name = arg.display,
           order = order,
           hidden = function() return hidden or trigger["use_"..realname] ~= false; end,
-          values = WeakAuras[arg.values],
+          values = values,
           -- width = "half",
           get = function(info, v)
             if(trigger["use_"..realname] == false and trigger[realname] and trigger[realname].multi) then
@@ -1061,12 +1075,15 @@ loadedFrame:SetScript("OnEvent", function(self, event, addon)
     if(addon == ADDON_NAME) then
       db = WeakAurasSaved;
       WeakAurasOptionsSaved = WeakAurasOptionsSaved or {};
+
       odb = WeakAurasOptionsSaved;
       
       odb.iconCache = odb.iconCache or {};
       iconCache = odb.iconCache;
       odb.idCache = odb.idCache or {};
       idCache = odb.idCache;
+      odb.talentCache = odb.talentCache or {};
+    
       local _, build = GetBuildInfo();
       local locale = GetLocale();
       local version = WeakAuras.versionString
@@ -1089,6 +1106,10 @@ loadedFrame:SetScript("OnEvent", function(self, event, addon)
       for name, icon in pairs(db.tempIconCache) do
         iconCache[name] = icon;
       end
+    
+    --Saves the talent names and icons for the current class
+    --Used for making the Talent Selected load option prettier
+    
     end
   end
 end);
@@ -4338,7 +4359,7 @@ function WeakAuras.ReloadTriggerOptions(data)
       order = 41,
       values = function()
         if(trigger.fullscan) then
-          return actual_unit_types;
+          return actual_unit_types_with_specific;
         else
           return unit_types;
         end
@@ -5755,7 +5776,7 @@ function WeakAuras.CreateFrame()
   closebutton:SetPushedTexture("Interface\\BUTTONS\\UI-Panel-MinimizeButton-Down.blp");
   closebutton:SetHighlightTexture("Interface\\BUTTONS\\UI-Panel-MinimizeButton-Highlight.blp");
   closebutton:SetScript("OnClick", WeakAuras.HideOptions);
-  
+
   local closebg_l = close:CreateTexture(nil, "BACKGROUND")
   closebg_l:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
   closebg_l:SetTexCoord(0.235, 0.275, 0, 0.63)
@@ -5769,6 +5790,58 @@ function WeakAuras.CreateFrame()
   closebg_r:SetPoint("LEFT", closebg, "RIGHT")
   closebg_r:SetWidth(10)
   closebg_r:SetHeight(40)
+
+  local import = CreateFrame("Frame", nil, frame);
+  import:SetWidth(17)
+  import:SetHeight(40)
+  import:SetPoint("TOPRIGHT", -140, 12)  
+  import:Hide()
+  
+  local importbg = import:CreateTexture(nil, "BACKGROUND")
+  importbg:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
+  importbg:SetTexCoord(0.31, 0.67, 0, 0.63)
+  importbg:SetAllPoints(import);
+
+  local importbutton = CreateFrame("CheckButton", nil, import, "OptionsCheckButtonTemplate")
+  importbutton:SetWidth(30);
+  importbutton:SetHeight(30);
+  importbutton:SetPoint("CENTER", import, "CENTER", 1, -1);
+  importbutton:SetChecked()
+  importbutton:SetHitRectInsets(0,0,0,0)
+  importbutton:SetScript("PostClick", function(self) 
+    if self:GetChecked() then 
+      PlaySound("igMainMenuOptionCheckBoxOn")
+    else 
+      PlaySound("igMainMenuOptionCheckBoxOff") 
+    end 
+  end)
+  importbutton:SetScript("OnEnter", ShowTooltip)
+  importbutton:SetScript("OnLeave", HideTooltip)
+
+  local function ShowTooltip(self)
+  GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
+  GameTooltip:SetText("Save Import")  -- This sets the top line of text, in gold.
+  GameTooltip:AddLine("If this option is enabled, you are only enable to import auras from people in your guild/raid/group.", 1, 1, 1)
+  GameTooltip:Show()
+  end
+
+  local function HideTooltip(self)
+  GameTooltip:Hide()
+  end
+  
+  local importbg_l = import:CreateTexture(nil, "BACKGROUND")
+  importbg_l:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
+  importbg_l:SetTexCoord(0.235, 0.275, 0, 0.63)
+  importbg_l:SetPoint("RIGHT", importbg, "LEFT")
+  importbg_l:SetWidth(10)
+  importbg_l:SetHeight(40)
+
+  local importbg_r = import:CreateTexture(nil, "BACKGROUND")
+  importbg_r:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
+  importbg_r:SetTexCoord(0.72, 0.76, 0, 0.63)
+  importbg_r:SetPoint("LEFT", importbg, "RIGHT")
+  importbg_r:SetWidth(10)
+  importbg_r:SetHeight(40)
   
   local titlebg = frame:CreateTexture(nil, "OVERLAY")
   titlebg:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
@@ -6459,11 +6532,11 @@ function WeakAuras.CreateFrame()
     model_x = model_x or self.data.model_x;
     model_y = model_y or self.data.model_y;
     
-	if tonumber(model_path) then
-		self.model:SetDisplayInfo(tonumber(model_path))
-	else
-		self.model:SetModel(model_path);
-	end
+  if tonumber(model_path) then
+    self.model:SetDisplayInfo(tonumber(model_path))
+  else
+    self.model:SetModel(model_path);
+  end
     self.model:SetPosition(model_z,model_x, model_y);
     self.model:SetFacing(rad(self.data.rotation));
     if(self.data.controlledChildren) then
@@ -6492,11 +6565,11 @@ function WeakAuras.CreateFrame()
   
   function modelPick.Open(self, data)
     self.data = data;
-	if tonumber(data.model_path) then
-		model:SetDisplayInfo(tonumber(data.model_path))
-	else
-		model:SetModel(data.model_path);
-	end
+  if tonumber(data.model_path) then
+    model:SetDisplayInfo(tonumber(data.model_path))
+  else
+    model:SetModel(data.model_path);
+  end
     self.model:SetPosition(data.model_z, data.model_x, data.model_y);
     self.model:SetFacing(rad(data.rotation));
     

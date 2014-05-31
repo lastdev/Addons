@@ -14,6 +14,103 @@
 <a href="http://healbot.darktech.org/">HealBot Continued</a> - Change Log
 </span><br>
 <br>
+v5.4.7.3<br>
+=================<br>
+* Minor fix to check self buffs on load<br>
+* A number of performance improvements<br>
+* Improvements with resurrection indicator<br>
+* Improvements with Entering/Leaving combat when using Auto Combat<br>
+* UnitName switched to UnitFullName, avoid possible issue with x-realm players<br>
+* Added option Customise Name to Healbot Menu ("hbmenu" spell command), set custom names on bars<br>
+* Added option Enable UTF8 library to Skins>Frames>Bar Text<br>
+- Enable UTF8 NOTE: This is a global option, not a skin option<br>
+- Enable UTF8 NOTE: If you only play on an English or some Western European servers - Turn this off for a slight performance improvement<br>
+<br>
+v5.4.7.2<br>
+=================<br>
+* Fix Shaman issue introduced in 5.4.7.1<br>
+<br>
+v5.4.7.1  <B>Recommend: "Reset Custom Debuffs" using commands dropdown on the options General tab</B><br>
+=================<br>
+* Localization update<br>
+* Now possible to bind hostile spells on all bars<br>
+* Improvement with custom debuffs when altering priority on a pre defined custom debuff<br>
+* Default custom debuff categories updated by Spankyham<br>
+<br>
+v5.4.7.0<br>
+=================<br>
+* Added Enable HealBot autoCombat option on the General tab<br>
+* Fixed bars remain with "unknown" when leaving a group/raid while in combat<br>
+* Minor bug fix with reset focus on target<br>
+<br>
+v5.4.2.1<br>
+=================<br>
+* Added Seal of Justice buff for Retribution Paladin's<br>
+* Added Trap Launcher buff for Hunters<br>
+* Default custom debuff categories updated by Spankyham<br>
+* Healbot now enters combat mode as soon as any <u>visible</u> unit in the group/raid enters combat with aggro<br>
+* Healbot auto combat mode disabled in battlegrounds and arenas<br>
+* Minor tooltip updates<br>
+* Added html doc in doc folder about 2Moons real time space strategy game<br>
+<br>
+v5.4.2.0  <B>Recommend: "Reset Custom Debuffs" using commands dropdown on the options General tab</B><br>
+=================<br>
+* Fixed highlight targeted unit on bar - option on Skins>Aggro<br>
+* Minor fix to random mount on mouse wheel<br>
+* Added Group to tooltip, uses same location as threat and only shown when in a raid and unit has no threat<br>
+* Default custom debuff categories updated by Spankyham<br>
+* Change of functionality with Bar Colour option on Cures>Custom tab, the option now switches on/off the bar colour for custom debuffs and default custom debuffs<br>
+- Previously this option didn't affect custom default colours, it was designed to allow custom colours to switch between a custom colour and a default custom colour<br>
+* Fixed Enemy bar occasionally shows incoming heal when previous target was friendly with incoming heal<br>
+* Fixed Enemy bars don't show in test bars under certain conditions<br> 
+* Priest's Hymn of Hope buff now only shown when mana below 50%, to change the value use "/hb shhp n" so to set 75% "/hb shhp 75"<br>
+* Healbot now enters combat mode as soon as any unit in the group/raid enters combat with aggro, instead of when the player enter combat<br> 
+* Fixed Enemy bars don't show on first combat encounter after zoning in/out of an instance or ui reload<br> 
+* An optional way to hide Blizzard Raid Frames is available that simply disables the Blizzard addons Blizzard_CompactRaidFrames and Blizzard_CUFProfiles, to toggle between methods use "/hb hrfm"<br>
+* "Reload UI required" message with certain options now gives more information<br>
+<br>
+v5.4.0.6<br>
+=================<br>
+* All non en Localizations updated for changes in 5.4.0.5<br>
+* Fixed minor issue with bar text, seperate incoming heal sometimes appened K when its the value has not been devided by 1000<br>
+<br>
+v5.4.0.5 <B>Recommend: "Reset Custom Debuffs" using commands dropdown on the options General tab</B><br>
+=================<br>
+* More custom Debuffs added for 5.4 boss fights - Thanks to Spankyham on HealBot site for all work done for this<br>
+* New default custom debuffs category Important Debuffs (Priority 9) added<br>
+* Each of the 4 Custom debuffs categories can be deleted the traditional way using commands on the General tab or now directly on the Cures>Custom tab<br>
+* Minor improvements on the Cures>Custom tab<br>
+* Added "Auto" to the Bar Text format, automatically shortens numeric values and sets number of decimal points depending on the value<br>
+* Possible fix for spells not updating after spec change (Although this works for me and unable to replicate the reported issue)<br>
+* Fix for health value displayed when using deltas<br> 
+* Heal groups Tanks, Healers and Pets are now included in the Raid groups mask as set on the Skins>Healing>Raid sub tab<br>
+* Fix for icons disapear when using certain totems<br>
+* Fix for Bottom Bar anchors when using Headers<br>
+<br>
+v5.4.0.4<br>
+=================<br>
+* In boss fights show at least 3 boss bars in Siege of Orgrimmar when Enemy Group used<br>
+* Added Enemy bars to test bars<br>
+* Performance improvements to Test bars and general improvements to Test bars Party profile<br>
+* Default custom debuffs categories can now have colours set per category and priority set per category<br>
+* Improvements and fixes to custom debuffs categories<br>
+* Custom Debuffs cleaned up for 5.x boss fights - Thanks to Spankyham on HealBot site for all work done for this<br>
+* Health on unit frames over 1 Million, now show 1M instead of 1000K providing Bar Text is set to show K<br>
+* Added Healing Stream Totem as a HoT icon<br>
+* Localizations updated<br>
+* Improved Shaman range checking for non restro Shamans<br>
+* Improved rounding of health in tooltips<br>
+* Improvements to fastHealth<br>
+<br>
+v5.4.0.3<br>
+=================<br>
+* Enemy Group now shows unit frames when unit is friendly, Convenient for fights like Norushen<br>
+* Minor improvements to unit frame updates when still in combat and a unit no longer exists<br>
+* Minor improvements to unit frames belonging to the Enemy Group<br>
+* More custom Debuffs added for 5.4 boss fights - Thanks to Spankyham on HealBot site for all work done for this<br>
+* Default custom debuffs split into categories Damage Debuffs (Priority 10), Effect Debuffs (Priority 11) and Misc. Debuffs (Priority 12)<br>
+* Updated libraries<br>
+<br>
 v5.4.0.2<br>
 =================<br>
 * Improvements to Workaround for sliders not stepping correctly in WoW 5.4<br>

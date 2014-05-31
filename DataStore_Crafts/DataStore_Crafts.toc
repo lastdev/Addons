@@ -8,12 +8,11 @@
 ## SavedVariables: DataStore_CraftsDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
-## X-Curse-Packaged-Version: r51
+## X-Curse-Packaged-Version: r53
 ## X-Curse-Project-Name: DataStore_Crafts
 ## X-Curse-Project-ID: datastore_crafts
 ## X-Curse-Repository-ID: wow/datastore_crafts/mainline
 
-embeds.xml
 locale.xml
 
 DataStore_Crafts.lua

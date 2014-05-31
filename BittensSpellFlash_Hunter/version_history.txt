@@ -1,3 +1,17 @@
+== Version 50400.2.2
+* All: Flashes WoW's 9th Anniversary Celebration Package.
+
+== Version 50400.2.1
+* All: Added flashing for Counter Shot.
+* All: Mend Pet now flashes with low priority during combat, unless your pet drops below 50% health, when it will flash as before.
+
+== Version 50400.2.0
+* Beast Mastery: Added flashing for Explosive Trap, triggered after you use Multi-Shot.
+* Beast Mastery: Removed flashing for Barrage.  Using it single target seems to be a dps loss now.
+* Beast Mastery: Bumped up the priority on Rapid Fire a little.
+* All: Added flashing for Growl, Cower, Last Stand and Bullheaded.
+* All: Bugfix - Powershot and Barrage were flashing even while they were being cast.
+
 == Version 50400.1.1
 * Update for the new version of Bitten's SpellFlash Library.
 
@@ -81,13 +95,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 * Marksmanship: Tighter tracking of the Chimera Shot cooldown and Improved Steady Shot buff.
 * Marksmanship: Better tracking of travel times and how that affects when Serpent Sting will be refreshed.
 * All: All spells are now considered for their rotation if the *will* be available by the time your current and queued spells are complete, regardless of whether they are available now.
-
-== Version 2.0.1
-* Taking out of beta.
-
-== Version 2.0.0 beta
-This beta release uses Bitten's SpellFlash Library version 3.  If you update you will also need to update any of your other Bitten's SpellFlash modules, which may also be in beta.
-* Marksmanship: There is now a Marksmanship rotation!
-* All: Updated to the new event system - it should be calculating Focus more accurately.
-* All: Many spells will now flash when you *will* have enough focus for them by the time your current cast is finished.
-* All: 2pT13 is now automatically detected, instead of being an option.

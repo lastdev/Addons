@@ -9,6 +9,7 @@ local GetTime = GetTime
 local UnitInRange = UnitInRange
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitIsUnit = UnitIsUnit
+local math = math
 local select = select
 local string = string
 local tostring = tostring
@@ -66,10 +67,14 @@ a.Rotations.Atonement = {
 			else
 				a.PenanceCD = a.PenanceCD - .5
 			end
+		end
+		penCdUp = cdUp
+		if c.IsCasting("Penance") then
+			a.PenanceCD = 9
 		elseif c.IsCasting("Smite") then
 			a.PenanceCD = a.PenanceCD - .5
 		end
-		penCdUp = cdUp
+		a.PenanceCD = math.max(0, a.PenanceCD)
 		
 		c.FlashAll(
 			"Shadowfiend", 
@@ -117,12 +122,14 @@ a.Rotations.Atonement = {
 	end,
 	
 	ExtraDebugInfo = function()
-		return string.format("%.1f c:%s n:%s o:%s n:%s p:%.1f", 
+		return string.format("b:%.1f m:%.1f c:%s n:%s o:%s n:%s p:%.1f p:%.1f", 
+			c.GetBusyTime(),
 			a.Mana, 
 			tostring(a.Conserve),
 			tostring(a.Neutral),
 			tostring(a.OnlyHeal),
 			tostring(a.HealingNeeded),
-			a.PenanceCD)
+			a.PenanceCD,
+			s.SpellCooldown(c.GetID("Penance")))
 	end,
 }

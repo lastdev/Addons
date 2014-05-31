@@ -1,3 +1,6 @@
+== Version 50400.1.1
+The options panels that are lined (as parent/child/sibling) will now behave better when resetting to default settings.
+
 == Version 50400.1.0
 This version supports the latest release of Bitten's SpellFlash: Pally.
 * Added u.StartsWith().

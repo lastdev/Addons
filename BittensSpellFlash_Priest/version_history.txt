@@ -1,3 +1,10 @@
+== Version 50400.2.0
+* Shadow: Update rotation to catch up with gear, and the change below:
+* Shadow: Blizzard made a change that you must wait 9 seconds after Shadow Word: Death before casting it again grants another a shadow orb (up from 6 seconds).
+
+== Version 50400.1.3
+* All: Flashes WoW's 9th Anniversary Celebration Package.
+
 == Version 50400.1.2
 * Bugfix update to Bitten's SpellFlash Library.
 
@@ -88,11 +95,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 
 == Version 2.4.0
 * Added a Shadow rotation for the MoP beta.
-
-== Version 2.3.1
-* Discipline: Bugfix - the mouseover option was not working for Power Word: Shield.
-
-== Version 2.3.0
-* Discipline/Holy: Now flashes Desperate Prayer.
-* Shadow: Devouring Plague now flashes yellow and continues to the next priority, in case you are multi-dotting.
-* Shadow: No longer flashes Mind Flay to stack up Dark Evangelism if you don't have the talent.

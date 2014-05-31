@@ -1,4 +1,4 @@
-<!-- Revision: 572 2013-01-04T15:34:54Z -->
+<!-- Revision: 595 2013-09-23T19:49:05Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\FrameXML\UI.xsd">
   <Script file="ArmoryFrame.lua"/>
@@ -62,7 +62,7 @@
     <CheckedTexture/>
   </CheckButton>
 
-  <MessageFrame name="ArmoryMessageFrame" displayDuration="1" parent="UIParent" toplevel="true">
+  <MessageFrame name="ArmoryMessageFrame" displayDuration="1" parent="UIParent" toplevel="true" enableMouse="false">
     <Size>
       <AbsDimension x="300" y="60"/>
     </Size>

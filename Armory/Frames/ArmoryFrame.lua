@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 581 2013-01-22T21:06:47Z
+    Revision: 596 2013-09-26T19:39:50Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -32,7 +32,7 @@ ARMORY_MAX_LINE_TABS = 10;
 
 ARMORYFRAME_MAINFRAMES = { "ArmoryFrame", "ArmoryLookupFrame", "ArmoryFindFrame" };
 ARMORYFRAME_SUBFRAMES = { "ArmoryPaperDollFrame", "ArmoryPetFrame", "ArmoryTalentFrame", "ArmoryPVPFrame", "ArmoryOtherFrame" };
-ARMORYFRAME_CHILDFRAMES = { "ArmoryTradeSkillFrame", "ArmoryInventoryFrame", "ArmoryQuestFrame", "ArmorySpellBookFrame", "ArmoryPVPTeamDetails", "ArmoryAchievementFrame", "ArmorySocialFrame" };
+ARMORYFRAME_CHILDFRAMES = { "ArmoryTradeSkillFrame", "ArmoryInventoryFrame", "ArmoryQuestFrame", "ArmorySpellBookFrame", "ArmoryAchievementFrame", "ArmorySocialFrame" };
 
 ARMORY_ID = "Armory";
 ARMORYFRAME_SUBFRAME = "ArmoryPaperDollFrame";

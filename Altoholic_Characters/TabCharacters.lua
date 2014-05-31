@@ -2,6 +2,7 @@ local addonName = "Altoholic"
 local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local LCI = LibStub("LibCraftInfo-1.0")
 
 local THIS_ACCOUNT = "Default"
 local WHITE		= "|cFFFFFFFF"
@@ -575,7 +576,7 @@ local function TalentsIcon_Initialize(self, level)
 	DDM_Add(TALENT_SPEC_PRIMARY, 1, OnTalentChange, nil, nil)
 	DDM_Add(TALENT_SPEC_SECONDARY, 2, OnTalentChange, nil, nil)
 	DDM_AddTitle(" ")
-	DDM_Add(GLYPHS, nil, OnGlyphChange)
+	DDM_Add(GLYPHS, nil, OnGlyphChange, nil, (currentView == VIEW_GLYPHS))
 	
 	DDM_AddCloseMenu()
 end
@@ -784,7 +785,7 @@ local function ProfessionsIcon_Initialize(self, level)
 				local isHeader, _, spellID = DataStore:GetCraftLineInfo(profession, index)
 				
 				if not isHeader then		-- NON header !!
-					local itemID = DataStore:GetCraftInfo(spellID)
+					local itemID = LCI:GetCraftResultItem(spellID)
 					
 					if itemID then
 						local _, _, _, _, _, itemType, _, _, itemEquipLoc = GetItemInfo(itemID)

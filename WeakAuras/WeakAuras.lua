@@ -1,45 +1,4 @@
-﻿--[[
-==================== Welcome to the WeakAuras source code! =====================
-========================= Please enjoy your stay! ==============================
-
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNDNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNND..ONNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN$,.......,DNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN?................,ONNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN:........,NNNNNNN7.....,NNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN8........NNNNNNNNNNNN$.....INNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN:......,DNNNNNNNNNNNNNNN$.....7NNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNO~..NNM...NNNNNNNNNNNNNNNNNNN?.....,NNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNN8......NNND.DNNNNNNNNNNNNNNNNNNNNN7.....ONNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNND.....,NNNNND.NNNNNNNNNNNNNNNNNNNNNNND,....DNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNN... ..NNNNNNN,8NNNNNNNNNNNNNNNNNNNNNNNNN+..,,NNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNN8...INNNNNNNNNNN,NNNNNNNNNNNNND++++++IMNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNN~...,NNNNNNNNNNNN?,NNNNNNNNNNNNNNNONNNNO?NNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNND....,NNNNNNNNNNNNNNN.8NNNNNNNNNNNNN7...,7DNNNNNNNNN8,..ONNNNNNNN
-NNNNNNNNNNNN$....?NNNNNNNNNNNNNNNNN:.8NNNNNNNNNNND..,ID8......+Z=....IMNNNNNNNNN
-NNNNN,......  7NNNNNND,OZ+,,.:8NNN=...NNNNNNO+NN7..=NNNNN8,............DNNNNNNNN
-........ ..,NNNNNNNN,8NNDO:.~ZN$......:NNNNN+DN7...ONNNNNNNN888DNN.....~NNNNNNNN
-======88NNNNNNNNNNND.NND........NZ.....NNNNN+N,..,NNNNNNNNNNNOI:8NN...DNNNNNNNNN
-NNNN88II8DND=NNNNNN=INNN.,.......NN....NNNNNN,..,NNNNN8=+,......8NNNNNNNNNNNNNNN
-DNNNNNNNNI==+NDNNN~.NNM,....::?8NNN....8NNNNN.....~.........,.,ONNNNNNNNNNNNNNNN
-NNNNNNNNNNN=ONI=N:.INN..........NNN+...NNNNN8............:$NNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNN=+ND+N..IN.....IODNNDNNND..,NNNNN8.....=?DNNNNNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNO====DN...ND..........NNN=..NNNNNN,..?NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-8NNNNNNDNNNNNNNNN,..,~8.8NN7,.,ONNO..,NNNNN:.:NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-D$$:,......,:ZDNN8......+8NNNNNNNI..,NNNNND..NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-....................,::,.....,~=..ONNNNNNN:.,NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-..,,,INND$DDNI...,.....:,.........NNNNNNND...NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-.~NNNNNNNNNNNN8NNNNNO,.....7......NNNNNNN:...NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-DNNNNNNNNNNNNNNNNNNNNNN,..8.......7DNNNNO..ZNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNN+ON,........ONNN...=NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNN$........,~N....8NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNN.,:.,ONNZ.......NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNN:.N=NNNNNNN=......NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN......NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN,.,,.DNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN8NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
-]]--
-
+﻿
 -- Lua APIs
 local tinsert, tconcat, tremove, wipe = table.insert, table.concat, table.remove, wipe
 local fmt, tostring, string_char = string.format, tostring, string.char
@@ -280,10 +239,35 @@ function WeakAuras.IsOptionsOpen()
   return false;
 end
 
+local function forbidden()
+  print("|cffffff00A WeakAura that you are using just tried to use a forbidden function but has been blocked from doing so. Please check your auras!|r")
+end
+
+local blockedFunctions = {
+  -- Lua functions that may allow breaking out of the environment
+  getfenv = true,
+  setfenv = true,
+  loadstring = true,
+  -- blocked WoW API
+  SendMail = true,
+  SetTradeMoney = true,
+}
+
+local exec_env = setmetatable({}, { __index = 
+  function(t, k)
+    if k == "_G" then
+      return t
+    elseif blockedFunctions[k] then
+      return forbidden
+    else
+      return _G[k]
+    end
+  end
+})
+
 local function_cache = {};
 function WeakAuras.LoadFunction(string)
-  if(function_cache[string]) then
-  return function_cache[string];
+  if(function_cache[string]) then  return function_cache[string];
   else
   local func;
   local loadedFunction, errorString = loadstring(string);
@@ -291,10 +275,12 @@ function WeakAuras.LoadFunction(string)
     print(errorString);
   else
     func = assert(loadedFunction)();
+    if func then
+      setfenv(func, exec_env)
+    end
     function_cache[string] = func;
   end
-  return func;
-  end
+  return func;  end
 end
 
 local aura_cache = {};
@@ -860,7 +846,7 @@ do
       if(runeCdHandles[id]) then
       timer:CancelTimer(runeCdHandles[id]);
       end
-      RuneCooldownFinished(id, event);
+      RuneCooldownFinished(id);
     end
     end
   end
@@ -1537,6 +1523,49 @@ end
 
 local pending_aura_scans = {};
 
+WeakAuras.talent_types_specific = {}
+function WeakAuras.CreateTalentCache()
+  --Initialize a cache for class-specific talent names and icons
+  --This is in SavedVariables so it can persist between different classes
+  db.talent_cache = db.talent_cache or {}
+  --Initialize types lists for each possible class in both SavedVariable and WeakAuras tables
+  --Some of the impermanent entries will get filled and some won't, depending on what is in the talent cache
+  --The separation is to prevent problems from out-of-date or incorrect info in the talent cache
+  for class in pairs(WeakAuras.class_types) do
+    WeakAuras.talent_types_specific[class] = {};
+    db.talent_cache[class] = db.talent_cache[class] or {};
+  end
+  local _, player_class = UnitClass("player")
+  --Create an entry for the current character's class
+  db.talent_cache[player_class] = db.talent_cache[player_class] or {}
+  local talentId = 1;
+  local numTalents = _G.MAX_NUM_TALENTS;
+  local talentName, talentIcon;
+  while talentId <= numTalents do
+    --Get name and icon info for the current talent of the current class and save it for that class
+    talentName, talentIcon = GetTalentInfo(talentId)
+    db.talent_cache[player_class][talentId] = {
+      name = talentName,
+      icon = talentIcon
+    }
+    --Put an entry in the corresponding index for each specific class
+    --If the talent is in db.talent_cache for that class, it will be "beautified" (show name and icon)
+    --If not, it will be the same as default
+    --Class-specific talent_type lists will only be shown if a Load condition for a certain class is set
+    --Otherwise, the default is used
+    for class in pairs(WeakAuras.class_types) do
+      if(db.talent_cache[class] and db.talent_cache[class][talentId]) then
+        --Get the icon and name from the talent cache and record it in the table that will be used by WeakAurasOptions
+        WeakAuras.talent_types_specific[class][talentId] = "|T"..(db.talent_cache[class][talentId].icon or "error")..":0|t "..(db.talent_cache[class][talentId].name or "error");
+      else
+        --If there is no data in the cache, just use the default
+        WeakAuras.talent_types_specific[class][talentId] = WeakAuras.talent_types[talentId]
+      end
+    end
+    talentId = talentId + 1;
+  end
+end
+
 local frame = CreateFrame("FRAME", "WeakAurasFrame", UIParent);
 WeakAuras.frames["WeakAuras Main Frame"] = frame;
 frame:SetAllPoints(UIParent);
@@ -1565,7 +1594,7 @@ loadedFrame:SetScript("OnEvent", function(self, event, addon)
       db.iconHash = nil;
       
       db.tempIconCache = db.tempIconCache or {};
-  
+      
       db.displays = db.displays or {};
       db.registered = db.registered or {};
       
@@ -1576,7 +1605,7 @@ loadedFrame:SetScript("OnEvent", function(self, event, addon)
       if(id == data.id) then
         tinsert(toAdd, data);
       else
-        error("Corrupt entry in WeakAuras saved displays");
+        error("Corrupt entry in WeakAuras saved displays - '"..tostring(id).."' vs '"..tostring(data.id).."'" );
       end
       end
       WeakAuras.AddMany(toAdd);
@@ -1596,6 +1625,7 @@ loadedFrame:SetScript("OnEvent", function(self, event, addon)
     WeakAuras.myGUID = WeakAuras.myGUID or UnitGUID("player")
     timer:ScheduleTimer(function() WeakAuras.HandleEvent(frame, "WA_DELAYED_PLAYER_ENTERING_WORLD"); end, 0.5);  -- Data not available 
     timer:ScheduleTimer(function() squelch_actions = false; end, db.login_squelch_time);      -- No sounds while loading
+    WeakAuras.CreateTalentCache() -- It seems that GetTalentInfo might give info about whatever class was previously being played, until PLAYER_ENTERING_WORLD
   elseif(event == "PLAYER_REGEN_ENABLED") then
     if (queueshowooc) then
       WeakAuras.OpenOptions(queueshowooc)
@@ -1842,7 +1872,7 @@ function WeakAuras.SetEventDynamics(id, triggernum, data, ending)
       if(data.region.SetDurationInfo) then
       data.region:SetDurationInfo(duration, expirationTime, static, inverse);
       end
-      duration_cache:SetDurationInfo(id, duration, expirationTime, static or true, inverse);
+      duration_cache:SetDurationInfo(id, duration, expirationTime, static, inverse);
     end
     elseif(triggernum == 0) then
     if(data.region.SetDurationInfo) then
@@ -2012,6 +2042,15 @@ function WeakAuras.ScanForLoads(self, event, arg1)
     elseif difficultyIndex == 14 then
       size = "flexible"
       difficulty = "normal"
+    elseif difficultyIndex == 15 then
+      size = "flexible"
+      difficulty = "heroic"
+    elseif difficultyIndex == 16 then
+      size = "twenty"
+      difficulty = "mythic"
+    elseif difficultyIndex == 17 then
+      size = "flexible"
+      difficulty = "lfr"
     end 
   else
     size = "none"
@@ -2336,7 +2375,7 @@ function WeakAuras.ScanAuras(unit)
         -- Show display and handle clones
         db.tempIconCache[name] = icon;
         if(data.autoclone) then
-          local cloneId = name.."-"..casGUID;
+          local cloneId = name.."-"..(casGUID or "unknown");
           if(not clones[id][cloneId] or clones[id][cloneId].expirationTime ~= expirationTime) then
           WeakAuras.SetAuraVisibility(id, triggernum, data, true, unit, duration, expirationTime, name, icon, count, cloneId, index, spellId);
           clones[id][cloneId].expirationTime = expirationTime;
@@ -2904,8 +2943,8 @@ function WeakAuras.Modernize(data)
   local load = data.load;
   -- Convert load options into single/multi format
   for index, prototype in pairs(WeakAuras.load_prototype.args) do
+    local protoname = prototype.name;
     if(prototype.type == "multiselect") then
-      local protoname = prototype.name;
       if(not load[protoname] or type(load[protoname]) ~= "table") then
         local value = load[protoname];
         load[protoname] = {};
@@ -3119,6 +3158,12 @@ function WeakAuras.Modernize(data)
       
       data.fontSize = nil;
     end
+    
+    -- fontFlags (outline)
+    if not data.fontFlags then
+        data.fontFlags = "OUTLINE";
+    end
+    
   end
 end
 
@@ -3540,9 +3585,7 @@ function WeakAuras.pAdd(data)
     end
   end
   
-  if not(temporary) then
   db.displays[id] = data;
-  end
 end
 
 function WeakAuras.SetRegion(data, cloneId)
@@ -4753,18 +4796,6 @@ function WeakAuras.GetAuraTooltipInfo(unit, index, filter)
   return tooltipText, debuffType, tonumber(tooltipSize) or 0;
 end
 
-function WeakAuras.GetTimerTable()
-  return LibStub("AceTimer-3.0").selfs[WeakAurasTimers];
-end
-
-function WeakAuras.GetNumTimers()
-  local num = 0;
-  for i,v in pairs(WeakAuras.GetTimerTable()) do
-  num = num + 1;
-  end
-  return num - 1;
-end
-
 
 local L = WeakAuras.L;
 local function tooltip_draw()
@@ -4803,12 +4834,9 @@ Broker_WeakAuras = LDB:NewDataObject("WeakAuras", {
     if not(WeakAuras.IsOptionsOpen()) then
     WeakAuras.Toggle();
     end
-  elseif(IsControlKeyDown()) then
-    print("|cFF8800FFWeakAuras|r is currently using", WeakAuras.GetNumTimers(), "timers");
   else
     WeakAuras.OpenOptions();
-  end
-  end,
+  end  end,
   OnEnter = function(self)
   colorFrame:SetScript("OnUpdate", function(self, elaps)
     colorElapsed = colorElapsed + elaps;

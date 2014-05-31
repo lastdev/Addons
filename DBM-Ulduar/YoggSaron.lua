@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 73 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 142 $"):sub(12, -3))
 mod:SetCreatureID(33288)
+mod:SetEncounterID(1143)
 mod:SetModelID(28817)
 mod:RegisterCombat("yell", L.YellPull)
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
 	"SPELL_SUMMON",
@@ -57,9 +58,9 @@ local timerNextDeafeningRoar		= mod:NewNextTimer(30, 64189)
 local timerAchieve					= mod:NewAchievementTimer(420, 3012, "TimerSpeedKill")
 
 mod:AddBoolOption("ShowSaraHealth")
-mod:AddBoolOption("SetIconOnFearTarget")
-mod:AddBoolOption("SetIconOnFervorTarget")
-mod:AddBoolOption("SetIconOnBrainLinkTarget")
+mod:AddBoolOption("SetIconOnFearTarget", true)
+mod:AddBoolOption("SetIconOnFervorTarget", false)
+mod:AddBoolOption("SetIconOnBrainLinkTarget", true)
 mod:AddBoolOption("MaladyArrow")
 
 local phase							= 1

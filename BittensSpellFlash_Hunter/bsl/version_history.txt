@@ -1,3 +1,44 @@
+== Version 50400.4.1
+* Added flashing for WoW's 9th Anniversary Celebration Package.
+
+== Version 50400.4.0
+This version is required for the latest Death Kight release.
+* Added c.Flashable().
+
+== Version 50400.3.0
+This version only adds convenience flashing - it is not a required update for any class.
+* Added flashing for some new foods and items from the Timeless Isle.
+
+== Version 50400.2.0
+This version supports the latest Hunter release.
+* c.Flashing{} now contains an entry for every spell that is flashing.
+* c.IsTanking() now accepts a "unit" argument.
+* Removed c.CheckFirstForTaunts().
+
+== Version 50400.1.7
+Updating to this version is not necessary.  It causes flashes for the more new food buffs.
+
+== Version 50400.1.6
+Updating to this version is not necessary.  It causes flashes for the new Noodle food buffs.
+
+== Version 50400.1.5
+Among other things, this is a bugfix release.  Everyone should update.
+* c.GetChargeInfo() now takes into account whether the spell is currently casting.
+* The CastSucceeded_FromLog callback now passes more arguments.
+* Bugfix - c.HasDebuff(), c.HasMyDebuff(), and c.GetPowerPercent() had problems.
+
+== Version 50400.1.4
+This version supports the latest Shaman release.
+* Added c.GetPowerPercent()
+
+== Version 50400.1.3
+This version supports the latest Rogue release.
+* Added a new event callback for rotations: CastSucceeded_FromLog
+
+== Version 50400.1.2
+This version supports the latest Pally release.
+* c.DelayPriorityFlash() returns a second value: true if the flashing spell is only a predictor.
+
 == Version 50400.1.1
 This version breaks backward compatibility for the Druid, Hunter, and Monk modules.
 * Added c.GetChargeInfo().
@@ -53,44 +94,3 @@ This version supports the latest Paladin release.
 * Added c.AddDispel().
 * Removed the unused c.CloneSpell().
 * Bugfix: c.AddInterrupt() and c.AddTaunt() were not respecting the attributes parameter.
-
-== Version 4.10.1
-* Flash food buffs on enemy "detection" instead of targeting.
-* Do not flash food buttons when you don't have any in your bags.
-
-== Version 4.10.0 beta
-* Added c.FlashFoods().
-* c.RegisterAddon() now flashes MoP foods for anything listed in a rotation's UsefulStats.
-
-== Version 4.9.1
-This version supports the latest Warlock release.
-* c.HasMyDebuff() and c.HasBuff() now work on auras without a duration.
-
-== Version 4.9.0
-This version supports the latest Druid release.
-* Added c.PredictFlash()
-* c.RegisterForEvents() has a new callback: AutoAttack.
-* c.IsCastingOrInAir() and c.IsAuraPendingFor() now work for AoE spells that do not have a target.
-* c.FlashAll() and c.PriorityFlash() now automatically assume NotIfActive if Cooldown is defined.
-* Bugfix - the SpecialGCD and NoGCD flags now correctly influence c.GetBusyTime() for spells with sub-names.
-
-== Version 4.8.0
-This version supports the latest Shaman release.
-* New spell tags: Tick and PredictFlash.
-* Added c.AoeColor and c.MovementColor.
-
-== Version 4.7.4
-This version supports the latest Hunter release.
-* c.GetHealth() and g.GetHealthPercent() now work on dead targets (they return 0)
-* Bugfix - the "fct" toggle was not completely turning off floating combat text over the player.
-
-== Version 4.7.3
-* NoRangeCheck is now implied when defining Melee or Range.
-* Bugfix - c.LastGCD was not being updated as often as it should.
-
-== Version 4.7.2
-* Bugfix: 4.7.1 had a conflict with 4.7.0.
-* c.PriorityFlash() and c.FlashAll() now respect spells' UseBuffID flag.
-
-== Version 4.7.1
-* Bugfix for a Lua error w/ some classes.

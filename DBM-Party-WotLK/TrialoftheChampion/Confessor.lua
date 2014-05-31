@@ -1,14 +1,15 @@
 local mod	= DBM:NewMod(636, "DBM-Party-WotLK", 13, 284)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(34928)
+--mod:SetEncounterID(338, 339)--DO NOT ENABLE. Confessor and Eadric are both flagged as same encounterid ("Argent Champion")
 --mod:SetZone()
 
 mod:RegisterCombat("combat")
 mod:RegisterKill("yell", L.YellCombatEnd)
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
    "SPELL_AURA_APPLIED",
    "SPELL_AURA_REMOVED"
 )

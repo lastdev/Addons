@@ -102,9 +102,6 @@ L:SetOptionLocalization({
 	RangeFrame			= "顯示距離框(12碼)"
 })
 
-L:SetMiscLocalization({
-})
-
 -------------------------
 --  Saviana Ragefire  --
 -------------------------
@@ -114,17 +111,9 @@ L:SetGeneralLocalization({
 	name = "薩薇安娜‧怒焰"
 })
 
-L:SetWarningLocalization({
-	SpecialWarningTranq	= "狂怒 - 現在驅散!"
-})
-
 L:SetOptionLocalization({
-	SpecialWarningTranq	= "為狂怒顯示特別警告(驅散用)",
 	RangeFrame			= "顯示距離框(10碼)"
 })
-
-L:SetMiscLocalization{
-}
 
 --------------------------
 --  General Zarithrian  --
@@ -163,14 +152,10 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
-	WarnPhase2Soon		= "第二階段 即將到來",
-	WarnPhase3Soon		= "第三階段 即將到來",
 	TwilightCutterCast	= "施放暮光切割: 5秒後"
 })
 
 L:SetOptionLocalization({
-	WarnPhase2Soon		= "為第二階段顯示預先警告(大約79%)",
-	WarnPhase3Soon		= "為第三階段顯示預先警告(大約54%)",
 	TwilightCutterCast	= "當$spell:77844開始施放時顯示警告",
 	AnnounceAlternatePhase	= "不管你進不進下一階段一樣顯示警告/計時器",
 	SoundOnConsumption	= "為$spell:74562或$spell:74792播放音效",

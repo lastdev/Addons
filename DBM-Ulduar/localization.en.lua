@@ -77,7 +77,7 @@ L:SetMiscLocalization{
 	YellAir				= "Give us a moment to prepare to build the turrets.",
 	YellAir2			= "Fires out! Let's rebuild those turrets!",
 	YellGround			= "Move quickly! She won't remain grounded for long!",
-	EmotePhase2			= "%%s grounded permanently!"
+	EmotePhase2			= "grounded permanently"
 }
 
 ----------------------------
@@ -132,8 +132,7 @@ L:SetTimerLocalization{
 L:SetWarningLocalization{
 	WarningPhasePunch		= "Phase Punch on >%s< - Stack %d",
 	WarnPhase2Soon			= "Phase 2 soon",
-	warnStarLow				= "Collapsing Star is low",
-	FirstPullNotice			= "First pull detected, auto correcting timers."
+	warnStarLow				= "Collapsing Star is low"
 }
 
 L:SetOptionLocalization{
@@ -230,6 +229,7 @@ L:SetOptionLocalization{
 }
 
 L:SetMiscLocalization{
+	Pull		= "You will suffer for this trespass!",
 	YellKill	= "I... I am released from his grasp... at last."
 }
 

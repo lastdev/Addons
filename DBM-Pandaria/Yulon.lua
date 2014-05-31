@@ -1,22 +1,21 @@
-local mod	= DBM:NewMod(858, "DBM-Pandaria", nil, 322)
+local mod	= DBM:NewMod(858, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 10283 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 10978 $"):sub(12, -3))
 mod:SetCreatureID(71955)
+mod:SetReCombatTime(20)
 mod:SetZone()
-mod:SetMinSyncRevision(10162)
+mod:SetMinSyncRevision(10466)
 
-mod:RegisterCombat("combat")
+mod:RegisterCombat("combat_yell", L.Pull)
+mod:RegisterKill("yell", L.Victory)
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",
+	"SPELL_CAST_START 144530",
+	"SPELL_DAMAGE 144538",
+	"SPELL_MISSED 144538",
+	"CHAT_MSG_MONSTER_YELL",
 	"UNIT_SPELLCAST_SUCCEEDED target focus"
-)
-
-mod:RegisterEvents(
-	"CHAT_MSG_MONSTER_YELL"
 )
 
 local warnJadefireBreath		= mod:NewSpellAnnounce(144530, 2, nil, mod:IsTank())
@@ -30,10 +29,9 @@ local timerJadefireBreathCD		= mod:NewCDTimer(18.5, 144530, nil, mod:IsTank())
 local timerJadefireWallCD		= mod:NewNextTimer(60, 144533)
 
 mod:AddBoolOption("RangeFrame", true)--For jadefire bolt/blaze (depending how often it's cast, if it's infrequent i'll kill range finder)
+mod:AddReadyCheckOption(33117, false)
 
-local yellTriggered = false
-
-function mod:OnCombatStart(delay)
+function mod:OnCombatStart(delay, yellTriggered)
 	if yellTriggered then--We know for sure this is an actual pull and not diving into in progress
 		timerJadefireBreathCD:Start(6-delay)
 	end
@@ -46,11 +44,11 @@ function mod:OnCombatEnd()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
-	yellTriggered = false
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 144530 then
+	local spellId = args.spellId
+	if spellId == 144530 then
 		warnJadefireBreath:Show()
 		specWarnJadefireBreath:Show()
 		timerJadefireBreathCD:Start()
@@ -65,14 +63,7 @@ end
 mod.SPELL_MISSED = mod.SPELL_DAMAGE
 
 function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if msg == L.Victory then
-		self:SendSync("Victory")
-	elseif msg == L.Pull and not self:IsInCombat() then
-		if self:GetCIDFromGUID(UnitGUID("target")) == 71955 or self:GetCIDFromGUID(UnitGUID("targettarget")) == 71955 then
-			yellTriggered = true
-			DBM:StartCombat(self, 0)
-		end
-	elseif msg == L.Wave1 or msg == L.Wave2 then
+	if msg == L.Wave1 or msg == L.Wave2 or msg == L.Wave3 then
 		self:SendSync("Wave")
 	end
 end

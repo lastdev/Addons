@@ -1,8 +1,10 @@
 local mod	= DBM:NewMod(157, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 102 $"):sub(12, -3))
 mod:SetCreatureID(45992, 45993)
+mod:SetEncounterID(1032)
+mod:DisableEEKillDetection()
 mod:SetZone()
 mod:SetUsedIcons(6, 7, 8)
 mod:SetModelSound("Sound\\Creature\\Chogall\\VO_BT_Chogall_BotEvent10.wav", "Sound\\Creature\\Valiona\\VO_BT_Valiona_Event06.wav")
@@ -93,37 +95,12 @@ local ValionaLanded = false
 local meteorTarget = GetSpellInfo(88518)
 local fabFlames = GetSpellInfo(86497)
 
-local setBlackoutTarget, clearBlackoutTarget
-do
-	local BlackoutTarget
-	local healed = 0
-	local maxAbsorb = 0
-	local function getShieldHP()
-		return math.max(1, math.floor(healed / maxAbsorb * 100))
-	end
-	
-	function mod:SPELL_HEAL(_, _, _, _, destGUID, _, _, _, _, _, _, _, _, absorbed)
-		if destGUID == BlackoutTarget then
-			healed = healed + (absorbed or 0)
-		end
-	end	
-	mod.SPELL_PERIODIC_HEAL = mod.SPELL_HEAL
-	
-	function setBlackoutTarget(mod, target, name)
-		BlackoutTarget = target
-		healed = 0
-		maxAbsorb = mod:IsDifficulty("heroic25") and 75000 or
-					mod:IsDifficulty("heroic10") and 40000 or
-					mod:IsDifficulty("normal25") and 50000 or
-					mod:IsDifficulty("normal10") and 50000 or 0
-		DBM.BossHealth:RemoveBoss(getShieldHP)
-		DBM.BossHealth:AddBoss(getShieldHP, L.BlackoutTarget:format(name))
-	end
-	
-	function clearBlackoutTarget(self, name)
-		DBM.BossHealth:RemoveBoss(getShieldHP)
-	end
-end
+local absorbHealth = {
+	["heroic25"] = 65000,
+	["heroic10"] = 40000,
+	["normal25"] = 50000,
+	["normal10"] = 50000
+}
 
 local function showEngulfingMagicWarning()
 	warnEngulfingMagic:Show(table.concat(engulfingMagicTargets, "<, >"))
@@ -250,8 +227,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnBlackout:Show()
 		end
 		if self.Options.BlackoutShieldFrame and DBM.BossHealth:IsShown() then
-			setBlackoutTarget(self, args.destGUID, args.destName)
-			self:Schedule(15, clearBlackoutTarget, self, args.destName)
+			self:ShowAbsorbedHealHealthBar(args.destGUID, L.BlackoutTarget:format(args.destName), absorbHealth[(DBM:GetCurrentInstanceDifficulty())])
+			self:ScheduleMethod(15, "RemoveAbsorbedHealHealthBar", args.destGUID)
 		end
 	elseif args.spellId == 86622 then
 		engulfingMagicTargets[#engulfingMagicTargets + 1] = args.destName
@@ -282,7 +259,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerTwilightShiftCD:Start()
 		self:Unschedule(AMSTimerDelay)
 		self:Schedule(20, AMSTimerDelay)--Cause when a DK AMSes it we don't get another timer.
-	elseif args.spellId == 92887 and args:IsPlayer() then
+	elseif args.spellId == 86214 and args:IsPlayer() then
 		if (args.amount or 1) >= 20 and self:AntiSpam(5, 1) then
 			specWarnTwilightZone:Show(args.amount)
 		end
@@ -300,9 +277,9 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetIcon(args.destName, 0)
 		end
 		blackoutActive = false
-		self:Unschedule(clearBlackoutTarget)
 		if self.Options.BlackoutShieldFrame and DBM.BossHealth:IsShown() then
-			clearBlackoutTarget(self, args.destName)
+			self:UnscheduleMethod("RemoveAbsorbedHealHealthBar", args.destGUID)
+			self:RemoveAbsorbedHealHealthBar(args.destGUID)
 		end
 	elseif args.spellId == 86622 then
 		if self.Options.EngulfingIcon then

@@ -662,7 +662,7 @@ HEALBOT_CUSTOM_CASTBY_ENEMY             = "Enemy"
 HEALBOT_CUSTOM_CASTBY_FRIEND            = "Friend"
 
 HEALBOT_CUSTOM_DEBUFF_CATS = {
-        [HEALBOT_DEBUFF_ACID_DRENCHED_MANDIBLES] = 2,
+        --[[[HEALBOT_DEBUFF_ACID_DRENCHED_MANDIBLES] = 2,
         [HEALBOT_DEBUFF_AGONIZING_FLAMES]      = 2,
         [HEALBOT_DEBUFF_BOILING_BLOOD]         = 2,
         [HEALBOT_DEBUFF_BURN]                  = 2,
@@ -746,7 +746,7 @@ HEALBOT_CUSTOM_DEBUFF_CATS = {
         [HEALBOT_DEBUFF_VILE_GAS]              = 12,
         [HEALBOT_DEBUFF_VOLATILE_OOZE]         = 12,
         [HEALBOT_DEBUFF_WATERLOGGED]           = 13,
-        [HEALBOT_DEBUFF_WEB_WRAP]              = 13,
+        [HEALBOT_DEBUFF_WEB_WRAP]              = 13,]]--
     }
 
 HEALBOT_ABOUT_DESC1                    = "Add a panel with skinable bars for healing, decursive, buffing, ressing and aggro tracking"
@@ -990,4 +990,14 @@ HEALBOT_PLAYER_OF_REALM                 = "of"
     HEALBOT_ENEMY_EXISTS_SHOW               = "Entering combat only".."\n".."show when exists"
     HEALBOT_ENEMY_EXISTS_SHOW_PTARGETS      = "Player targets"
     HEALBOT_ENEMY_EXISTS_SHOW_BOSSES        = "Boss bars"
+    HEALBOT_OPTIONS_TARGET_ONLY_FRIEND      = "Target: Only show Friendly"
+    HEALBOT_OPTIONS_FOCUS_ONLY_FRIEND       = "Focus: Only show Friendly"
+    HEALBOT_OPTIONS_PROFILE                 = "Profile for".."\n".."Spells/Buffs/Cures"
+    HEALBOT_OPTIONS_PROFILE_CHARACTER       = "Character"
+    HEALBOT_OPTIONS_PROFILE_CLASS           = "Class"
+    HEALBOT_OPTIONS_INCOMBATALERTLEVEL      = "Alert Level - In Combat";
+    HEALBOT_OPTIONS_OUTCOMBATALERTLEVEL     = "Alert Level - Out of Combat";
+    HEALBOT_OPTION_NUMENEMYS                = "Number of Enemys"
+    HEALBOT_WORD_AUTO                       = "Auto"
+	HEALBOT_OPTIONS_ENABLEAUTOCOMBAT        = "Enable HealBot autoCombat"
 end

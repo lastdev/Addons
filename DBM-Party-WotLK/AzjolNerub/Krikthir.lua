@@ -1,8 +1,9 @@
 local mod	= DBM:NewMod(585, "DBM-Party-WotLK", 2, 272)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 75 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(28684)
+mod:SetEncounterID(216, 264)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -10,7 +11,7 @@ mod:RegisterCombat("combat")
 local warningCurse	= mod:NewSpellAnnounce(52592, 2)
 local timerCurseCD	= mod:NewCDTimer(20, 52592)
 
-mod:RegisterEvents(
+mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED"
 )
 

@@ -1,7 +1,7 @@
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "Events", 15) then
+if u.SkipOrUpgrade(c, "Events", 16) then
 	return
 end
 
@@ -748,7 +748,7 @@ frame:SetScript("OnEvent",
 			end
 			currentSpells[lineID] = info
 			fireEvent("CastQueued", info)
-c.Debug("Cast Event", GetTime(), event, localizedName, lineID)
+--c.Debug("Cast Event", GetTime(), event, localizedName, lineID)
 			printCurrentSpells()
 			return
 		end
@@ -769,7 +769,7 @@ c.Debug("Cast Event", GetTime(), event, localizedName, lineID)
 		lastInfo = info
 		info.ID = spellID
 		
-c.Debug("Cast Event", GetTime(), event, localizedName, spellID, lineID)
+--c.Debug("Cast Event", GetTime(), event, localizedName, spellID, lineID)
 		if event == "UNIT_SPELLCAST_START" then
 			info.Status = "Casting"
 			setCost(info)

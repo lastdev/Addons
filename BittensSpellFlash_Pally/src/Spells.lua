@@ -36,6 +36,12 @@ c.AddSpell("Judgment", nil, {
 	end,
 })
 
+c.AddSpell("Crusader Strike", nil, {
+	GetDelay = function()
+		return a.Crusader
+	end,
+})
+
 c.AddSpell("Crusader Strike", "Delay", {
 	IsMinDelayDefinition = true,
 	GetDelay = function()
@@ -244,7 +250,7 @@ c.AddOptionalSpell("Holy Avenger", "Damage Mode", {
 	end,
 })
 
-c.AddOptionalSpell("Guardian of Ancient Kings", nil, {
+c.AddOptionalSpell("Guardian of Ancient Kings Prot", nil, {
 	NoGCD = true,
 	NoRangeCheck = true,
 })
@@ -485,6 +491,14 @@ c.AddOptionalSpell("Avenging Wrath", "for Ret", {
 	end
 })
 
+c.AddOptionalSpell("Guardian of Ancient Kings Ret", nil, {
+	NoGCD = true,
+	NoRangeCheck = true,
+	CheckFirst = function()
+		return a.Inquisition > 0
+	end
+})
+
 c.AddSpell("Inquisition", nil, {
 	GetDelay = function()
 		return a.HolyPower >= 1 and a.Inquisition
@@ -537,20 +551,51 @@ c.AddSpell("Templar's Verdict", "4pT15", {
 	end,
 })
 
+c.AddSpell("Templar's Verdict", "with Divine Purpose", { 
+	Melee = true,
+	CheckFirst = function(z)
+		return a.HolyPower >= 3 and a.DivinePurpose
+	end
+})
+
+local function howDelay()
+	local cd = c.GetCooldown("Hammer of Wrath", false, 6)
+	return (a.HoWPhase or a.AvengingWrath > 0)
+		and s.SpellInRange(c.GetID("Hammer of Wrath"))
+		and cd
+end
+
 c.AddSpell("Hammer of Wrath", "for Ret", {
-	GetDelay = function(z)
-		local cd = c.GetCooldown("Hammer of Wrath", false, 6)
-		z.WhiteFlashOffset = cd
-		return (a.HoWPhase or a.AvengingWrath > 0)
-			and s.SpellInRange(c.GetID("Hammer of Wrath"))
-			and cd - .2
+	GetDelay = howDelay,
+})
+
+c.AddSpell("Hammer of Wrath", "Delay", {
+	IsMinDelayDefinition = true,
+	GetDelay = function()
+		return howDelay(), .2
 	end,
 })
 
-c.AddSpell("Exorcism", nil, {
+c.AddSpell("Judgment", "Delay", {
+	IsMinDelayDefinition = true,
 	GetDelay = function()
-		return (not c.HasGlyph("Mass Exorcism") or s.MeleeDistance())
-			and a.Exorcism
+		return a.Judgment, .2
+	end
+})
+
+local function exorcismDelay()
+	return (not c.HasGlyph("Mass Exorcism") or s.MeleeDistance())
+		and a.Exorcism
+end
+
+c.AddSpell("Exorcism", nil, {
+	GetDelay = exorcismDelay,
+})
+
+c.AddSpell("Exorcism", "Delay", {
+	IsMinDelayDefinition = true,
+	GetDelay = function()
+		return exorcismDelay(), .2
 	end,
 })
 
@@ -559,62 +604,6 @@ c.AddSpell("Exorcism", "for AoE", {
 	GetDelay = function()
 		return c.AoE and c.HasGlyph("Mass Exorcism") and a.Exorcism
 	end,
-})
-
-local function countCasts(span)
-	local casts = 0
-	if a.Exorcism < span then
-		casts = casts + 1
-	end
-	
-	local hammer = c.GetCooldown("Hammer of Wrath", false, 6)
-	if hammer < span and (a.HoWPhase or a.AvengingWrath >= hammer) then
-		casts = casts + 1
-	end
-	
-	if c.GetCooldown("Execution Sentence", false, 60) < span then
-		casts = casts + 1
-	end
-	
-	if a.HolyAvenger > 0 then
-		casts = casts + 1
-		if a.HolyAvenger > 2 * c.LastGCD then
-			casts = casts + 1
-		end
-	elseif a.RawHolyPower >= 3 then
-		casts = casts + 1
-		if c.HasBuff("Divine Purpose") then
-			casts = casts + 1
-		end
-	end
-	
-	return casts
-end
-
-c.AddSpell("Judgment", "unless Wastes GCD", {
-	Cooldown = 6,
-	CheckFirst = function()
-		return (c.HasTalent("Sanctified Wrath") and a.AvengingWrath > 0)
-			or (countCasts(2 * c.LastGCD) > 0 and countCasts(3 * c.LastGCD) > 1)
-	end
-})
-
-c.AddSpell("Crusader Strike", "for Ret", {
-	GetDelay = function(z)
-		return a.Crusader
-	end,
-})
-
-c.AddSpell("Crusader Strike", "4pT15", {
-	GetDelay = function(z)
-		if c.AoE then
-			return false
-		end
-		z.WhiteFlashOffset = a.Crusader
-		return c.WearingSet(4, "RetT15") 
-			and c.GetBuffDuration("Ret 4pT15 Buff") < a.Crusader + c.LastGCD
-			and a.Crusader - .2
-	end
 })
 
 c.AddSpell("HP Gen Delay for Ret", nil, {
@@ -627,6 +616,7 @@ c.AddSpell("HP Gen Delay for Ret", nil, {
 
 c.AddOptionalSpell("Light's Hammer", nil, {
 	Cooldown = 60,
+	NoRangeCheck = true,
 })
 
 c.AddSpell("Holy Prism", nil, {
@@ -645,22 +635,29 @@ c.AddOptionalSpell("Sacred Shield", "for Ret", {
 
 c.AddSpell("Divine Storm", nil, { 
 	Melee = true,
-	CheckFirst = function(z)
+	CheckFirst = function()
 		return c.AoE and a.HolyPower >= 3
 	end
 })
 
-c.AddSpell("Divine Storm", "for Ret at 5", {
+c.AddSpell("Divine Storm", "at 5", {
 	Melee = true,
-	CheckFirst = function(z)
-		return c.AoE and
+	CheckFirst = function()
+		return (c.AoE or a.DivineCrusader) and
 			(a.HolyPower == 5 
 				or (a.HolyPower >= 3 and a.HolyAvenger > c.LastGCD))
 	end,
 })
 
+c.AddSpell("Divine Storm", "with Divine Crusader", { 
+	Melee = true,
+	CheckFirst = function()
+		return a.DivineCrusader
+	end
+})
+
 c.AddSpell("Hammer of the Righteous", "for Ret", {
-	GetDelay = function(z)
+	GetDelay = function()
 		return c.AoE and a.Crusader
 	end,
 })

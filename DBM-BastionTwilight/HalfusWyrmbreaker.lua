@@ -1,8 +1,10 @@
 local mod	= DBM:NewMod(156, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 99 $"):sub(12, -3))
 mod:SetCreatureID(44600)
+mod:SetEncounterID(1030)
+mod:DisableEEKillDetection()
 mod:SetZone()
 mod:SetModelSound("Sound\\Creature\\Chogall\\VO_BT_Chogall_BotEvent02.wav", "Sound\\Creature\\Halfus\\VO_BT_Halfus_Event07.wav")
 --Long: Halfus! Hear me! The master calls, the master wants! Protect our secrets, Halfus! Destroy the intruders! Murder for his glory, murder for his hunger!
@@ -55,7 +57,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerParalysisCD:Start()
 	elseif args:IsSpellID(83601, 83603, 83611) and self.Options.ShowDrakeHealth and DBM.BossHealth:IsShown() then
 		DBM.BossHealth:AddBoss(self:GetCIDFromGUID(args.sourceGUID), args.sourceName)
-	elseif args:IsSpellID(83908, 86158, 86157, 86159) then
+	elseif args.spellId == 83908 then
 		timerMalevolentStrike:Start(args.destName)
 	end
 end

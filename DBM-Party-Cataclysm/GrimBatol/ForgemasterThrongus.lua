@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(132, "DBM-Party-Cataclysm", 3, 71)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
 mod:SetCreatureID(40177)
 mod:SetZone()
 
@@ -34,7 +34,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args.spellId == 75007 then
 		warnEncumbered:Show()
 		timerEncumbered:Start()
-	elseif args:IsSpellID(74908, 76481) then
+	elseif args.spellId == 74908 then
 		warnPhalanx:Show()
 		timerPhalanx:Start()
 	elseif args.spellId == 75056 then

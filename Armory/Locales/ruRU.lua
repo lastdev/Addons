@@ -93,7 +93,7 @@ L["ARMORY_CMD_SET_COOLDOWNEVENTS_TEXT"] = "include tradeskill cooldowns in event
 L["ARMORY_CMD_SET_COOLDOWNEVENTS_TOOLTIP"] = "If enabled, tradeskill cooldowns will be included in Armory's event list." -- Requires localization
 L["ARMORY_CMD_SET_COUNTALL_MENUTEXT"] = "Включить в расчет все миры" -- Needs review
 L["ARMORY_CMD_SET_COUNTALL_TEXT"] = "включить в количество вещей все миры"
-L["ARMORY_CMD_SET_COUNTALL_TOOLTIP"] = "Если включено, общее показывается для всех серверов; в других случаях только для текущего сервера."
+L["ARMORY_CMD_SET_COUNTALL_TOOLTIP"] = "Если включено, общее показывается для всех серверов; в других случаях только для текущего сервера." -- Needs review
 L["ARMORY_CMD_SET_COUNTPERSLOT_MENUTEXT"] = "Totals per bag/bank slot" -- Requires localization
 L["ARMORY_CMD_SET_COUNTPERSLOT_TEXT"] = "show item counts per bag/bank slot" -- Requires localization
 L["ARMORY_CMD_SET_COUNTPERSLOT_TOOLTIP"] = "If enabled, items counts are shown per bag or bank slot, where slot '0' represents the backpack or bank itself." -- Requires localization
@@ -126,7 +126,7 @@ L["ARMORY_CMD_SET_EXTENDEDTRADE_TOOLTIP"] = [=[Если включено, про
 Если у вас есть проблемы с другими аддонами, вы можете выключить эту функцию, чтобы получить простой список который не вызывает никаких ивентов( Список с категориями будет доступен при нажатии шифт-клик на ссылку).]=] -- Needs review
 L["ARMORY_CMD_SET_GLOBALSEARCH_MENUTEXT"] = "Глобальный поиск"
 L["ARMORY_CMD_SET_GLOBALSEARCH_TEXT"] = "искать на всех серверах, когда используется поиск" -- Needs review
-L["ARMORY_CMD_SET_GLOBALSEARCH_TOOLTIP"] = "Если включено, команда поиска пройдет по введеной базе данных; в другом случае, будет искать только на данном сервере."
+L["ARMORY_CMD_SET_GLOBALSEARCH_TOOLTIP"] = "Если включено, команда поиска пройдет по введеной базе данных; в другом случае, будет искать только на данном сервере." -- Needs review
 L["ARMORY_CMD_SET_HIDELOGON_MENUTEXT"] = "Спрятать предупреждение при входе"
 L["ARMORY_CMD_SET_HIDELOGON_TEXT"] = "не показывать предупреждение при входе"
 L["ARMORY_CMD_SET_HIDELOGON_TOOLTIP"] = "Если включено, предупреждение не будет отображатся при входе."
@@ -274,7 +274,7 @@ L["ARMORY_CMD_SET_USEENCODING_TEXT"] = "предпочитать использ�
 L["ARMORY_CMD_SET_USEENCODING_TOOLTIP"] = "Если включено, данные будут сохранены в двоичном формате, используя меньше памяти, но требуя больше ресурсов процессора для хранения и отображения." -- Needs review
 L["ARMORY_CMD_SET_USEFACTIONFILTER_MENUTEXT"] = "Realm & faction filter" -- Requires localization
 L["ARMORY_CMD_SET_USEFACTIONFILTER_TEXT"] = "enable realm and faction filter" -- Requires localization
-L["ARMORY_CMD_SET_USEFACTIONFILTER_TOOLTIP"] = [=[If enabled, only characters on the current realm and belonging to the current faction will be shown. This will also affect tooltip information.
+L["ARMORY_CMD_SET_USEFACTIONFILTER_TOOLTIP"] = [=[If enabled, only characters on the current and connected realms and belonging to the current faction will be shown. This will also affect tooltip information.
 Note that for item counts there is a separate realm and faction setting.]=] -- Requires localization
 L["ARMORY_CMD_SET_USEINPROGRESSCOLOR_MENUTEXT"] = "Использовать другой цвет для 'в процессе выполнения'" -- Needs review
 L["ARMORY_CMD_SET_USEINPROGRESSCOLOR_TEXT"] = "Расцвечивать 'в процессе выполнения' иначе" -- Needs review

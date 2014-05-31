@@ -1,21 +1,27 @@
 local mod	= DBM:NewMod(610, "DBM-Party-WotLK", 15, 278)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 99 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 125 $"):sub(12, -3))
 mod:SetCreatureID(36658, 36661)
+mod:SetEncounterID(837, 838)
+mod:DisableESCombatDetection()
+mod:SetMinSyncRevision(105)
 mod:SetUsedIcons(8)
 
-mod:RegisterCombat("yell", L.CombatStart)
-mod:RegisterKill("yell", L.YellCombatEnd)
-mod:SetMinCombatTime(40)
+mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_YELL"
+)
+
+mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_APPLIED",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"SPELL_PERIODIC_DAMAGE",
-	"SPELL_PERIODIC_MISSED"
+	"SPELL_PERIODIC_MISSED",
+	"UNIT_DIED"
 )
 
 local warnUnholyPower			= mod:NewSpellAnnounce(69167, 3)
@@ -36,8 +42,7 @@ local timerForcefulSmash		= mod:NewCDTimer(50, 69155) --hotfixed? new combat log
 mod:AddBoolOption("SetIconOnHoarfrostTarget", true)
 
 function mod:OnCombatStart(delay)
-	timerCombatStart:Start(-delay)
-	timerForcefulSmash:Start(40-delay)
+	timerForcefulSmash:Start(9-delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -71,6 +76,12 @@ function mod:SPELL_AURA_APPLIED(args)
 	end
 end
 
+function mod:UNIT_DIED(args)
+	if self:GetCIDFromGUID(args.destGUID) == 36658 then
+		DBM:EndCombat(self)
+	end
+end
+
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	if msg == L.HoarfrostTarget or msg:find(L.HoarfrostTarget) then
 		if not target then return end
@@ -90,5 +101,11 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 		if self.Options.SetIconOnHoarfrostTarget then
 			self:SetIcon(target, 8, 5)
 		end
+	end
+end
+
+function mod:CHAT_MSG_MONSTER_YELL(msg)
+	if (msg == L.CombatStart or msg == L.CombatStart) then
+		timerCombatStart:Start()
 	end
 end

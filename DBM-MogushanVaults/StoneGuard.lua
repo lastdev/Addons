@@ -1,16 +1,17 @@
 local mod	= DBM:NewMod(679, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 10151 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
 mod:SetCreatureID(60051, 60043, 59915, 60047)--Cobalt: 60051, Jade: 60043, Jasper: 59915, Amethyst: 60047
+mod:SetEncounterID(1395)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_SUCCESS",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
+	"SPELL_AURA_APPLIED 130395 130774",
+	"SPELL_AURA_REMOVED 130395",
+	"SPELL_CAST_SUCCESS 115840 115842 115843 115844 116223 116235 130774",
 	"RAID_BOSS_EMOTE",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4",
 	"UNIT_DIED"
@@ -27,7 +28,7 @@ local warnAmethystPool				= mod:NewTargetAnnounce(130774, 3, nil, false)
 local warnPowerDown					= mod:NewSpellAnnounce(116529, 4, nil, not mod:IsTank())
 
 local specWarnOverloadSoon			= mod:NewSpecialWarning("SpecWarnOverloadSoon", nil, nil, nil, 2)
-local specWarnJasperChains			= mod:NewSpecialWarningYou(130395)
+local specWarnJasperChains			= mod:NewSpecialWarningMoveTo(130395)
 local specWarnBreakJasperChains		= mod:NewSpecialWarning("specWarnBreakJasperChains", false)
 local yellJasperChains				= mod:NewYell(130395, nil, false)
 local specWarnAmethystPool			= mod:NewSpecialWarningMove(130774)
@@ -82,6 +83,18 @@ local function warnJasperChainsTargets()
 	table.wipe(jasperChainsTargets)
 end
 
+local function updateInfoFrame()
+	local lines = {}
+	for i = 1, 5 do
+		if UnitExists("boss"..i) then
+			lines[UnitName("boss"..i)] = UnitPower("boss"..i)
+		end
+	end
+	lines[UnitName("player")] = UnitPower("player", ALTERNATE_POWER_INDEX)
+
+	return lines
+end
+
 function mod:ThreeBossStart(delay)
 	for i = 1, 5 do
 		local id = self:GetUnitCreatureId("boss"..i)
@@ -106,7 +119,7 @@ function mod:OnCombatStart(delay)
 	playerHasChains = false
 	table.wipe(jasperChainsTargets)
 	table.wipe(amethystPoolTargets)
-	if self:IsDifficulty("heroic10", "heroic25") then
+	if self:IsHeroic() then
 		berserkTimer:Start(-delay)
 	else
 		berserkTimer:Start(485-delay)
@@ -133,7 +146,8 @@ function mod:OnCombatEnd()
 end 
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 130395 then
+	local spellId = args.spellId
+	if spellId == 130395 then
 		jasperChainsTargets[#jasperChainsTargets + 1] = args.destName
 		timerJasperChainsCD:Start()
 		self:Unschedule(warnJasperChainsTargets)
@@ -142,14 +156,15 @@ function mod:SPELL_AURA_APPLIED(args)
 			if self.Options.ArrowOnJasperChains and #jasperChainsTargets == 2 then
 				if jasperChainsTargets[1] == UnitName("player") then
 					DBM.Arrow:ShowRunTo(jasperChainsTargets[2])
+					specWarnJasperChains:Show(jasperChainsTargets[2])
 				elseif jasperChainsTargets[2] == UnitName("player") then
 					DBM.Arrow:ShowRunTo(jasperChainsTargets[1])
+					specWarnJasperChains:Show(jasperChainsTargets[1])
 				end
 			end
 		end
 		if args:IsPlayer() then
 			playerHasChains = true
-			specWarnJasperChains:Show()
 			if not self:IsDifficulty("lfr25") then
 				yellJasperChains:Yell()
 			end
@@ -159,13 +174,14 @@ function mod:SPELL_AURA_APPLIED(args)
 				DBM.Arrow:Hide()
 			end
 		end
-	elseif args.spellId == 130774 and args:IsPlayer() then
+	elseif spellId == 130774 and args:IsPlayer() then
 		specWarnAmethystPool:Show()
 	end
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 130395 and args:IsPlayer() then
+	local spellId = args.spellId
+	if spellId == 130395 and args:IsPlayer() then
 		playerHasChains = false
 		if self.Options.ArrowOnJasperChains then
 			DBM.Arrow:Hide()
@@ -174,31 +190,32 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 115840 then -- Cobalt
+	local spellId = args.spellId
+	if spellId == 115840 then -- Cobalt
 		warnCobaltOverload:Show()
 		if activePetrification == "Cobalt" then
 			timerPetrification:Cancel()
 		end
 		activePetrification = nil
-	elseif args.spellId == 115842 then -- Jade
+	elseif spellId == 115842 then -- Jade
 		warnJadeOverload:Show()
 		if activePetrification == "Jade" then
 			timerPetrification:Cancel()
 		end
 		activePetrification = nil
-	elseif args.spellId == 115843 then -- Jasper
+	elseif spellId == 115843 then -- Jasper
 		warnJasperOverload:Show()
 		if activePetrification == "Jasper" then
 			timerPetrification:Cancel()
 		end
 		activePetrification = nil
-	elseif args.spellId == 115844 then -- Amethyst
+	elseif spellId == 115844 then -- Amethyst
 		warnAmethystOverload:Show()
 		if activePetrification == "Amethyst" then
 			timerPetrification:Cancel()
 		end
 		activePetrification = nil
-	elseif args.spellId == 116223 then
+	elseif spellId == 116223 then
 		warnJadeShards:Show()
 		timerJadeShardsCD:Start()
 	elseif args:IsSpellID(116235, 130774) then--is 116235 still used? my logs show ONLY 130774 being used.
@@ -242,21 +259,21 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		timerPetrification:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(Cobalt)
-			DBM.InfoFrame:Show(5, "enemypower", 1, nil, nil, ALTERNATE_POWER_INDEX)
+			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 	elseif spellId == 116006 then
 		activePetrification = "Jade"
 		timerPetrification:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(Jade)
-			DBM.InfoFrame:Show(5, "enemypower", 1, nil, nil, ALTERNATE_POWER_INDEX)
+			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 	elseif spellId == 116036 then
 		activePetrification = "Jasper"
 		timerPetrification:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(Jasper)
-			DBM.InfoFrame:Show(5, "enemypower", 1, nil, nil, ALTERNATE_POWER_INDEX)
+			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 		if playerHasChains then
 			local uId = DBM:GetBossUnitId(Jasper)
@@ -270,7 +287,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		timerPetrification:Start()
 		if self.Options.InfoFrame then
 			DBM.InfoFrame:SetHeader(Amethyst)
-			DBM.InfoFrame:Show(5, "enemypower", 1, nil, nil, ALTERNATE_POWER_INDEX)
+			DBM.InfoFrame:Show(5, "function", updateInfoFrame)
 		end
 	elseif spellId == 129424 then
 		warnCobaltMine:Show()

@@ -91,7 +91,7 @@ L["ARMORY_CMD_SET_COOLDOWNEVENTS_TEXT"] = "include tradeskill cooldowns in event
 L["ARMORY_CMD_SET_COOLDOWNEVENTS_TOOLTIP"] = "If enabled, tradeskill cooldowns will be included in Armory's event list." -- Requires localization
 L["ARMORY_CMD_SET_COUNTALL_MENUTEXT"] = "Include all realms in counts" -- Requires localization
 L["ARMORY_CMD_SET_COUNTALL_TEXT"] = "include item counts for all realms" -- Requires localization
-L["ARMORY_CMD_SET_COUNTALL_TOOLTIP"] = "If enabled, totals are shown for all realms; otherwise only for the current realm." -- Requires localization
+L["ARMORY_CMD_SET_COUNTALL_TOOLTIP"] = "If enabled, totals are shown for all realms; otherwise only for the current and connected realms." -- Requires localization
 L["ARMORY_CMD_SET_COUNTPERSLOT_MENUTEXT"] = "Totals per bag/bank slot" -- Requires localization
 L["ARMORY_CMD_SET_COUNTPERSLOT_TEXT"] = "show item counts per bag/bank slot" -- Requires localization
 L["ARMORY_CMD_SET_COUNTPERSLOT_TOOLTIP"] = "If enabled, items counts are shown per bag or bank slot, where slot '0' represents the backpack or bank itself." -- Requires localization
@@ -124,7 +124,7 @@ L["ARMORY_CMD_SET_EXTENDEDTRADE_TOOLTIP"] = [=[If enabled, the professions can b
 If you experience problems with other add-ons you can disable this feature to get a simple list that doesn't trigger any events (a categorized list will be available by shift-clicking the link button).]=] -- Requires localization
 L["ARMORY_CMD_SET_GLOBALSEARCH_MENUTEXT"] = "Global find" -- Requires localization
 L["ARMORY_CMD_SET_GLOBALSEARCH_TEXT"] = "search all realms when using the find command" -- Requires localization
-L["ARMORY_CMD_SET_GLOBALSEARCH_TOOLTIP"] = "If enabled, the find command will go through the entire database; otherwise only the current realm will be searched." -- Requires localization
+L["ARMORY_CMD_SET_GLOBALSEARCH_TOOLTIP"] = "If enabled, the find command will go through the entire database; otherwise only the current and connected realms will be searched." -- Requires localization
 L["ARMORY_CMD_SET_HIDELOGON_MENUTEXT"] = "Hide warning when logging in" -- Requires localization
 L["ARMORY_CMD_SET_HIDELOGON_TEXT"] = "don't show a warning when logging in" -- Requires localization
 L["ARMORY_CMD_SET_HIDELOGON_TOOLTIP"] = "If enabled, the warning will not be displayed when you log in." -- Requires localization
@@ -272,7 +272,7 @@ L["ARMORY_CMD_SET_USEENCODING_TEXT"] = "prefer memory usage over processing spee
 L["ARMORY_CMD_SET_USEENCODING_TOOLTIP"] = "If enabled, data will will stored in a binary encoded format taking up less memory but using more CPU for storage and retrieval. Enabling this option will decrease performance," -- Requires localization
 L["ARMORY_CMD_SET_USEFACTIONFILTER_MENUTEXT"] = "Realm & faction filter" -- Requires localization
 L["ARMORY_CMD_SET_USEFACTIONFILTER_TEXT"] = "enable realm and faction filter" -- Requires localization
-L["ARMORY_CMD_SET_USEFACTIONFILTER_TOOLTIP"] = [=[If enabled, only characters on the current realm and belonging to the current faction will be shown. This will also affect tooltip information.
+L["ARMORY_CMD_SET_USEFACTIONFILTER_TOOLTIP"] = [=[If enabled, only characters on the current and connected realms and belonging to the current faction will be shown. This will also affect tooltip information.
 Note that for item counts there is a separate realm and faction setting.]=] -- Requires localization
 L["ARMORY_CMD_SET_USEINPROGRESSCOLOR_MENUTEXT"] = "Use different color for 'in progress'" -- Requires localization
 L["ARMORY_CMD_SET_USEINPROGRESSCOLOR_TEXT"] = "colorize 'in progress' differently" -- Requires localization

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(181, "DBM-Party-Cataclysm", 11, 76)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
 mod:SetCreatureID(52059)
 mod:SetZone()
 
@@ -38,7 +38,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnTears:Show()
 		specWarnTears:Show(args.sourceName)
 		timerTears:Start()
-	elseif args.spellId == 96423 then -- unconfirmed in mop
+	elseif args.spellId == 96423 then
 		warnLash:Show(args.destName)
 		timerLash:Start(args.destName)
 	elseif args.spellId == 96592 then
@@ -51,7 +51,7 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 96958 then
+	if args.spellId == 96423 then
 		timerLash:Cancel(args.destName)
 	end
 end

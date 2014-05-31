@@ -7,7 +7,6 @@ L= DBM:GetModLocalization(691)
 
 L:SetOptionLocalization({
 	RangeFrame			= "Show dynamic range frame based on player debuff status for<br/>$spell:119622",
-	ReadyCheck			= "Play ready check sound when world boss is pulled (even if it's not targeted)",
 	SetIconOnMC			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(119622)
 })
 
@@ -20,10 +19,6 @@ L:SetMiscLocalization({
 -----------------------
 L= DBM:GetModLocalization(725)
 
-L:SetOptionLocalization({
-	ReadyCheck			= "Play ready check sound when world boss is pulled (even if it's not targeted)"
-})
-
 L:SetMiscLocalization({
 	Pull				= "Bring me their corpses!"
 })
@@ -34,7 +29,6 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(826)
 
 L:SetOptionLocalization({
-	ReadyCheck			= "Play ready check sound when world boss is pulled (even if it's not targeted)",
 	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 137511)
 })
 
@@ -48,7 +42,6 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(814)
 
 L:SetOptionLocalization({
-	ReadyCheck			= "Play ready check sound when world boss is pulled (even if it's not targeted)",
 	RangeFrame			= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(10, 136340)
 })
 
@@ -84,6 +77,7 @@ L:SetMiscLocalization({
 	Pull					= "The trial begins!",
 	Wave1					= "Do not let your judgement be clouded in trying times!",
 	Wave2					= "Listen to your inner voice, and seek out the truth!",
+	Wave3					= "Always consider the consequences of your actions!",
 	Victory					= "Your wisdom has seen you through this trial. May it ever light your way out of dark places."
 })
 
@@ -94,7 +88,7 @@ L= DBM:GetModLocalization(859)
 
 L:SetMiscLocalization({
 	Pull					= "We shall see.",
---	Victory					= "",
+	Victory					= "You are the mountain, unmovable by all but time.",
 	VictoryDem				= "Rakkas shi alar re pathrebosh il zila rethule kiel shi shi belaros rikk kanrethad adare revos shi xi thorje Rukadare zila te lok zekul melar "--Cover all bases and all
 })
 
@@ -108,7 +102,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Pull					= "Ha ha! The trial commences",
+	Pull					= "Ha ha! The trial commences!",
 	Victory					= "You are strong, stronger even than you realize. Carry this thought with you into the darkness ahead, and let it shield you."
 })
 
@@ -120,4 +114,8 @@ L= DBM:GetModLocalization(861)
 L:SetOptionLocalization({
 	SetIconOnBurningSoul	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(144689),
 	RangeFrame				= DBM_CORE_AUTO_RANGE_OPTION_TEXT:format(8, 144689)
+})
+
+L:SetMiscLocalization({
+	Pull					= "You will take my place on the eternal brazier."
 })

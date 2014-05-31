@@ -13,7 +13,7 @@ XPerl_RequestConfig(function(new)
 			for k,v in pairs(PartyFrames) do
 				v.conf = pconf
 			end
-		end, "$Revision: 852 $")
+		end, "$Revision: 860 $")
 
 local percD = "%d"..PERCENT_SYMBOL
 
@@ -586,7 +586,7 @@ end
 
 -- XPerl_Party_UpdatePVP
 local function XPerl_Party_UpdatePVP(self)
-	local pvp = pconf.pvpIcon and (UnitIsPVPFreeForAll(self.partyid) and "FFA") or (UnitIsPVP(self.partyid) and (UnitFactionGroup(self.partyid) ~= "Neutral") and UnitFactionGroup(self.partyid))
+	local pvp = pconf.pvpIcon and ((UnitIsPVPFreeForAll(self.partyid) and "FFA") or (UnitIsPVP(self.partyid) and (UnitFactionGroup(self.partyid) ~= "Neutral") and UnitFactionGroup(self.partyid)))
 	if (pvp) then
 		self.nameFrame.pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..pvp)
 		self.nameFrame.pvpIcon:Show()
@@ -777,9 +777,10 @@ local function XPerl_Party_TargetUpdateHealth(self)
 	else
         tf.combatIcon:Hide()
 	end
-
-	if (pconf.pvpIcon and UnitIsPVP(self.targetid) and (UnitFactionGroup(self.targetid) ~= "Neutral")) then
-		tf.pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..(UnitFactionGroup(self.targetid) or "FFA"))
+	
+	local pvp = pconf.pvpIcon and ((UnitIsPVPFreeForAll(self.targetid) and "FFA") or (UnitIsPVP(self.targetid) and (UnitFactionGroup(self.targetid) ~= "Neutral") and UnitFactionGroup(self.targetid)))
+	if (pvp) then
+		tf.pvpIcon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..pvp)
 		tf.pvpIcon:Show()
 	else
 		tf.pvpIcon:Hide()

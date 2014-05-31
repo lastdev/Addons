@@ -1,3 +1,11 @@
+== Version 50400.2.0
+* Arms: Updated rotation according to new research, including adjusting for 2pT16.
+* All: Execute mode works correctly on the training dummies that drop to exactly 20% health.
+
+== Version 50400.1.1
+* Protection: No longer pause mitigation flashing when Second Wind is up.
+* All: Flashes WoW's 9th Anniversary Celebration Package.
+
 == Version 50400.1.0
 * All: Updating flashing for Impending Victory according to its changes this patch.
 * All: Rotations do a better job at anticipating queued spells, switching to your next spell sooner when you press a button.
@@ -87,9 +95,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 * Arms: Bugfix - Bladestorm was depending on the cooldown of Bloodthirst (which is obviously never on cooldown in Arms) instead of Mortal Strike.
 * Fury: Deadly Calm now only flashes in the Execute phase when you have very high rage, since Heroic Strike will not flash until that time anyway.
 * Arms/Fury: Bugfix - The Protection rotation inadvertently changed when Arms & Fury would flash Impending Victory.  Fixed to make them independent, like they should be.
-
-== Version 3.0.0
-* Protection: Added a protection rotation.
-
-== Version 2.2.4
-* Making the "Out of Date" status go away.  Please report any real issues w/ the new patch.

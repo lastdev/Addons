@@ -1,20 +1,21 @@
 local mod	= DBM:NewMod(687, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 10296 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
 mod:SetCreatureID(60701, 60708, 60709, 60710)--Adds: 60731 Undying Shadow, 60958 Pinning Arrow
+mod:SetEncounterID(1436)
 mod:SetZone()
 mod:SetBossHPInfoToHighest()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_SUCCESS",
-	"SPELL_CAST_START",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",
+	"SPELL_AURA_APPLIED 117539 117837 117756 117737 117697 118303 118135",
+	"SPELL_AURA_REMOVED 118303",
+	"SPELL_CAST_SUCCESS 117685 117506 117910",
+	"SPELL_CAST_START 118162 117506 117628 117697 117833 117708 117948 117961",
+	"SPELL_DAMAGE 117558 117921",
+	"SPELL_MISSED 117558 117921",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 boss3 boss4",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"CHAT_MSG_MONSTER_YELL"
@@ -129,7 +130,7 @@ function mod:OnCombatStart(delay)
 	berserkTimer:Start(-delay)
 	timerAnnihilateCD:Start(10.5)
 	timerFlankingOrdersCD:Start(25)
-	if self:IsDifficulty("heroic10", "heroic25") then
+	if self:IsHeroic() then
 		rainTimerText = DBM_CORE_AUTO_TIMER_TEXTS.next:format(GetSpellInfo(118122))
 		timerImperviousShieldCD:Start(40.7)
 		countdownImperviousShield:Start(40.7)
@@ -150,20 +151,21 @@ function mod:OnCombatEnd()
 end
 
 function mod:SPELL_AURA_APPLIED(args)
-	if args.spellId == 117539 and not diedShadow[args.destGUID] then--They only ressurrect once so only start timer once per GUID
+	local spellId = args.spellId
+	if spellId == 117539 and not diedShadow[args.destGUID] then--They only ressurrect once so only start timer once per GUID
 		diedShadow[args.destGUID] = true
 		timerUSRevive:Start(args.destGUID)--Basically, the rez timer for a defeated Undying Shadow that is going to re-animate in 60 seconds.
-	elseif args.spellId == 117837 then
+	elseif spellId == 117837 then
 		warnDelirious:Show(args.destName)
 		specWarnDelirious:Show(args.destName)
 		timerDeliriousCD:Start()
-	elseif args.spellId == 117756 then
+	elseif spellId == 117756 then
 		warnCowardice:Show(args.destName)
-	elseif args.spellId == 117737 then
+	elseif spellId == 117737 then
 		warnCrazed:Show(args.destName)
-	elseif args.spellId == 117697 then
+	elseif spellId == 117697 then
 		specWarnShieldOfDarknessD:Show(args.destName)
-	elseif args.spellId == 118303 then
+	elseif spellId == 118303 then
 		warnFixate:Show(args.destName)
 		timerFixate:Start(args.destName)
 		if args:IsPlayer() then
@@ -171,7 +173,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			yellFixate:Yell()
 			soundFixate:Play()
 		end
-	elseif args.spellId == 118135 then
+	elseif spellId == 118135 then
 		pinnedTargets[#pinnedTargets + 1] = args.destName
 		self:Unschedule(warnPinnedDownTargets)
 		self:Schedule(0.3, warnPinnedDownTargets)
@@ -179,23 +181,25 @@ function mod:SPELL_AURA_APPLIED(args)
 end
 
 function mod:SPELL_AURA_REMOVED(args)
-	if args.spellId == 118303 then
+	local spellId = args.spellId
+	if spellId == 118303 then
 		timerFixate:Cancel(args.destName)
 	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
-	if args.spellId == 117685 then
+	local spellId = args.spellId
+	if spellId == 117685 then
 		warnChargedShadows:Show(args.destName)
 		timerChargingShadowsCD:Start()
-	elseif args.spellId == 117506 then
+	elseif spellId == 117506 then
 		warnUndyingShadows:Show()
 		if zianActive then
 			timerUndyingShadowsCD:Start()
 		else
 			timerUndyingShadowsCD:Start(85)
 		end
-	elseif args.spellId == 117910 then
+	elseif spellId == 117910 then
 		warnFlankingOrders:Show()
 		specWarnFlankingOrders:Show()
 		if qiangActive then
@@ -207,17 +211,18 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 118162 then
+	local spellId = args.spellId
+	if spellId == 118162 then
 		warnSleightOfHand:Show(args.sourceName)
 		specWarnSleightOfHand:Show(args.sourceName)
 		timerSleightOfHand:Start()
 		timerSleightOfHandCD:Start()
-	elseif args.spellId == 117506 then
+	elseif spellId == 117506 then
 		warnUndyingShadows:Show()
 		timerUndyingShadowsCD:Start()
-	elseif args.spellId == 117628 then
+	elseif spellId == 117628 then
 		specWarnShadowBlast:Show(args.sourceName)
-	elseif args.spellId == 117697 then
+	elseif spellId == 117697 then
 		warnShieldOfDarkness:Show(args.sourceName)
 		specWarnShieldOfDarkness:Show(args.sourceName)
 		warnShieldOfDarknessSoon:Schedule(37.5, 5)--Start pre warning with regular warnings only as you don't move at this point yet.
@@ -227,10 +232,10 @@ function mod:SPELL_CAST_START(args)
 		warnShieldOfDarknessSoon:Schedule(41.5, 1)
 		timerShieldOfDarknessCD:Start()
 		countdownShieldOfDarkness:Start()
-	elseif args.spellId == 117833 then
+	elseif spellId == 117833 then
 		warnCrazyThought:Show()
 		specWarnCrazyThought:Show(args.sourceName)
-	elseif args.spellId == 117708 then
+	elseif spellId == 117708 then
 		warnMaddeningShout:Show()
 		specWarnMaddeningShout:Show()
 		if mengActive then
@@ -238,20 +243,20 @@ function mod:SPELL_CAST_START(args)
 		else
 			timerMaddeningShoutCD:Start(77)
 		end
-	elseif args.spellId == 117948 then
+	elseif spellId == 117948 then
 		warnAnnihilate:Show()
 		specWarnAnnihilate:Show()
-		if self:IsDifficulty("heroic10", "heroic25") then
+		if self:IsHeroic() then
 			timerAnnihilateCD:Start(32.5)
 		else
 			timerAnnihilateCD:Start()
 		end
-	elseif args.spellId == 117961 then
+	elseif spellId == 117961 then
 		warnImperviousShield:Show(args.sourceName)
 		specWarnImperviousShield:Show(args.sourceName)
 		timerImperviousShieldCD:Start()
 		countdownImperviousShield:Cancel()
-		if self:IsDifficulty("heroic10") then
+		if self:IsDifficulty("heroic10") then--Is this still different?
 			warnImperviousShieldSoon:Schedule(57)
 			timerImperviousShieldCD:Start(62)
 			countdownImperviousShield:Start(62)
@@ -278,7 +283,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		specWarnVolley:Show()
 		timerVolleyCD:Start()
 	elseif spellId == 118121 and self:AntiSpam(2, 2) then--Rain of Arrows
-		if self:IsDifficulty("heroic10", "heroic25") then
+		if self:IsHeroic() then
 			timerRainOfArrowsCD:Start(41, rainTimerText)
 		else
 			timerRainOfArrowsCD:Start(nil, rainTimerText)
@@ -372,7 +377,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, boss)
 		zianActive = true
 		timerChargingShadowsCD:Start()
 		timerUndyingShadowsCD:Start(20)
-		if self:IsDifficulty("heroic10", "heroic25") then
+		if self:IsHeroic() then
 			warnShieldOfDarknessSoon:Schedule(35, 5)--Start pre warning with regular warnings only as you don't move at this point yet.
 			warnShieldOfDarknessSoon:Schedule(36, 4)
 			warnShieldOfDarknessSoon:Schedule(37, 3)
@@ -390,7 +395,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, boss)
 	elseif boss == Meng then
 		warnActivated:Show(boss)
 		mengActive = true
-		if self:IsDifficulty("heroic10", "heroic25") then
+		if self:IsHeroic() then
 			timerDeliriousCD:Start()
 			timerMaddeningShoutCD:Start(40)--On heroic, he skips first cast as a failsafe unless you manage to kill it within 20 seconds. otherwise, first cast will actually be after about 40-45 seconds. Since this is VERY hard to do right now, lets just automatically skip it for now. Maybe find a better way to fix it later if it becomes a problem this expansion
 		else
@@ -406,7 +411,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg, boss)
 		subetaiActive = true
 		timerVolleyCD:Start(5)
 		timerPillageCD:Start(25)
-		if self:IsDifficulty("heroic10", "heroic25") then
+		if self:IsHeroic() then
 			timerSleightOfHandCD:Start(40.7)
 			timerRainOfArrowsCD:Start(40, rainTimerText)
 		else

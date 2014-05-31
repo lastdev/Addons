@@ -31,6 +31,7 @@ myframe.icon:SetTexCoord(unpack(coords)); -- cut out the region with our class i
 
 --]]
 
+local CachedUnitClass = TidyPlatesUtility.CachedUnitClass
 
 local function UpdateClassWidget(self, unit, showFriendly)
 	local class
@@ -38,20 +39,21 @@ local function UpdateClassWidget(self, unit, showFriendly)
 
 
 		if showFriendly and unit.reaction == "FRIENDLY" and unit.type == "PLAYER" then
-			class = TidyPlatesUtility.GroupMembers.Class[unit.name]
+			--class = TidyPlatesUtility.GroupMembers.Class[unit.name]
+			class = CachedUnitClass(unit.name) or TidyPlatesUtility.GroupMembers.Class[unit.name]
 		elseif unit.type == "PLAYER" then class = unit.class end
 
 		--class = "DRUID"
-		
+
 		if class and class ~= "UNKNOWN" then
-			--self.Icon:SetTexture(ClassIconTable[class]) 
-			self.Icon:SetTexture(classWidgetPath..class) 
+			--self.Icon:SetTexture(ClassIconTable[class])
+			self.Icon:SetTexture(classWidgetPath..class)
 			self:Show()
 		else self:Hide() end
 	end
-	
+
 	--[[ Testing
-	self.Icon:SetTexture(classWidgetPath.."WARRIOR") 
+	self.Icon:SetTexture(classWidgetPath.."WARRIOR")
 	self:Show()
 	--]]
 end

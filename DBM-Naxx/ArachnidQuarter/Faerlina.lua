@@ -1,15 +1,19 @@
 local mod	= DBM:NewMod("Faerlina", "DBM-Naxx", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 20 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
 mod:SetCreatureID(15953)
+mod:SetEncounterID(1110)
 mod:SetModelID(15940)
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
-	"SPELL_AURA_APPLIED",
-	"UNIT_DIED",
 	"CHAT_MSG_MONSTER_YELL"
+)
+
+mod:RegisterEventsInCombat(
+	"SPELL_AURA_APPLIED",
+	"UNIT_DIED"
 )
 
 local warnEmbraceActive		= mod:NewSpellAnnounce(28732, 1)

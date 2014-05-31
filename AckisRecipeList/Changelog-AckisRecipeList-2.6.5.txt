@@ -1,0 +1,19 @@
+tag 2.6.5
+5c4a4c1d59e5cd4a506ae052bb721133b6d20180
+James D. Callahan III <jcallahan@curse.com>
+2014-05-26 02:04:31 -0500
+
+
+
+--------------------
+
+James D. Callahan III:
+	- Don't require an acquire_type when creating a Waypoint - fixes Ticket #1613
+	- Formatting fix.
+	- Dead code removal.
+	- Since the state_button's highlight texture is the same no matter its expanded state, set it outside the if-check.
+	- Added name comments to AddReputation calls.
+	- Added "reputations" dump command.
+	- Check for 0 lines when dumping boss names, and insert message if so.
+	- Removed useless comments, such as "COMPLETELY UPDATED" - when? During TBC? Wrath? Cata?
+	- Removed code for generating TradeSkill links, since Blizzard broke this functionality in September of 2013 and has shown no signs of fixing it.

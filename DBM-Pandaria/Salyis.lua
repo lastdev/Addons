@@ -1,18 +1,16 @@
-local mod	= DBM:NewMod(725, "DBM-Pandaria", nil, 322)	-- 322 = Pandaria/Outdoor I assume
+local mod	= DBM:NewMod(725, "DBM-Pandaria", nil, 322, 1) -- 322 = Pandaria/Outdoor I assume
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 10106 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11017 $"):sub(12, -3))
 mod:SetCreatureID(62346)--Salyis not die. Only Galleon attackable and dies.
+mod:SetReCombatTime(20)
 mod:SetZone()
+mod:SetMinSyncRevision(10466)
 
-mod:RegisterCombat("combat")
+mod:RegisterCombat("combat_yell", L.Pull)
 
 mod:RegisterEventsInCombat(
 	"RAID_BOSS_EMOTE"
-)
-
-mod:RegisterEvents(
-	"CHAT_MSG_MONSTER_YELL"
 )
 
 local warnCannonBarrage			= mod:NewSpellAnnounce(121600, 3)
@@ -28,19 +26,16 @@ local timerStompCD				= mod:NewNextTimer(60, 121787)
 local timerStomp				= mod:NewCastTimer(3, 121787)
 local timerWarmongerCD			= mod:NewNextTimer(10, "ej6200", nil, nil, nil, 121747)--Comes after Stomp. (Also every 60 sec.)
 
-mod:AddBoolOption("ReadyCheck", false)
+local berserkTimer				= mod:NewBerserkTimer(900)
 
-local yellTriggered = false
+mod:AddReadyCheckOption(32098, false)
 
-function mod:OnCombatStart(delay)
+function mod:OnCombatStart(delay, yellTriggered)
 	if yellTriggered then
 		timerCannonBarrageCD:Start(24-delay)
 		timerStompCD:Start(50-delay)
+		berserkTimer:Start(-delay)
 	end
-end
-
-function mod:OnCombatEnd()
-	yellTriggered = false
 end
 
 function mod:RAID_BOSS_EMOTE(msg)
@@ -56,17 +51,5 @@ function mod:RAID_BOSS_EMOTE(msg)
 		timerStomp:Start()
 		timerWarmongerCD:Start()
 		timerStompCD:Start()
-	end
-end
-
-function mod:CHAT_MSG_MONSTER_YELL(msg)
-	if msg == L.Pull and not self:IsInCombat() then
-		if self:GetCIDFromGUID(UnitGUID("target")) == 62346 or self:GetCIDFromGUID(UnitGUID("targettarget")) == 62346 then--Whole zone gets yell, so lets not engage combat off yell unless he is our target (or the target of our target for healers)
-			yellTriggered = true
-			DBM:StartCombat(self, 0)
-		end
-		if self.Options.ReadyCheck and not IsQuestFlaggedCompleted(32098) then
-			PlaySoundFile("Sound\\interface\\levelup2.ogg", "Master")
-		end
 	end
 end

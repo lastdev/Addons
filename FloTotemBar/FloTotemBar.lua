@@ -6,7 +6,7 @@
 -- Constants
 -------------------------------------------------------------------------------
 
-local VERSION = "5.4.30"
+local VERSION = "5.4.32"
 
 -------------------------------------------------------------------------------
 -- Variables
@@ -18,7 +18,8 @@ local SCHOOL_COLORS = {
 	[1] = { 1.0, 0.3, 0.0 },
 	[2] = { 0.5, 0.5, 1.0 },
 	[3] = { 0.0, 1.0, 0.0 },
-	[4] = { 1.0, 0.7, 0.0 }
+	[4] = { 1.0, 0.7, 0.0 },
+	[5] = { 1.0, 0.7, 0.0 }
 };
 
 local ALGO_TRAP;
@@ -53,7 +54,8 @@ function FloTotemBar_OnLoad(self)
 		[1] = FloTotemBar_CheckTrapLife,
 		[2] = FloTotemBar_CheckTrapLife,
 		[3] = FloTotemBar_CheckTrap2Life,
-		[4] = FloTotemBar_CheckTrapLauncherTime
+		[4] = function() end,
+		[5] = FloTotemBar_CheckTrapLauncherTime
 	};
 	
 	-- Re-anchor the first button, link it to the timer
@@ -61,7 +63,7 @@ function FloTotemBar_OnLoad(self)
 	local button = _G[thisName.."Button1"];
 
 	if thisName == "FloBarTRAP" then
-		button:SetPoint("LEFT", thisName.."Countdown3", "RIGHT", 5, 0);
+		button:SetPoint("LEFT", thisName.."Countdown4", "RIGHT", 5, 0);
 	elseif thisName ~= "FloBarCALL" then
 		button:SetPoint("LEFT", thisName.."Countdown", "RIGHT", 5, 0);
 	end
@@ -121,7 +123,7 @@ function FloTotemBar_OnLoad(self)
 	self:RegisterEvent("UPDATE_BINDINGS");
 
 	if self.totemtype ~= "CALL" then
-		self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
+		self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player");
 		self:RegisterEvent("PLAYER_DEAD");
 
 		-- Destruction detection
@@ -129,6 +131,7 @@ function FloTotemBar_OnLoad(self)
 			self:RegisterEvent("PLAYER_TOTEM_UPDATE");
 		else
 			self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+			self:RegisterUnitEvent("UNIT_AURA", "player");
 		end
 	end
 end
@@ -144,13 +147,20 @@ function FloTotemBar_OnEvent(self, event, arg1, ...)
 				local name = GetSpellInfo(77769);
 				local buff = UnitBuff("player", name);
 				if buff ~= nil then
-					FloTotemBar_StartTimer(FloBarTRAP, name);
+					FloTotemBar_StartTimer(self, name);
 				end
 			end
-
 		end
-		
-	elseif event == "UNIT_SPELLCAST_SUCCEEDED"  then
+
+	elseif event == "UNIT_AURA" then
+		-- check trap launcher
+		local name = GetSpellInfo(77769);
+		local buff = UnitBuff("player", name);
+		if buff ~= nil then
+			FloTotemBar_StartTimer(self, name);
+		end
+
+	elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
 		if arg1 == "player" then
 			FloTotemBar_StartTimer(self, ...);
 		end
@@ -190,7 +200,7 @@ function FloTotemBar_OnEvent(self, event, arg1, ...)
 		-- Events used for totem destruction detection
 		local k, v;
 		for k, v in pairs(SCHOOL_COLORS) do
-			if self["activeSpell"..k] then
+			if arg1 and self["activeSpell"..k] and self.spells[self["activeSpell"..k]] then
 				self.spells[self["activeSpell"..k]].algo(self, arg1, self["activeSpell"..k], ...);
 			end
 		end
@@ -433,14 +443,14 @@ end
 -- Dummy, do nothing here
 function FloTotemBar_CheckTrapLauncherTime(self, timestamp, spellIdx, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId, spellName, ...)
 
-    local spell = self.spells[spellIdx];
-    local name = string.upper(spell.name);
+	local spell = self.spells[spellIdx];
+	local name = string.upper(spell.name);
 
-    if event == "SPELL_AURA_REMOVED" and string.find(string.upper(spellName), name, 1, true) then
-	if CombatLog_Object_IsA(sourceFlags, COMBATLOG_FILTER_ME) then
-	    FloTotemBar_ResetTimer(self, spell.school);
+	if event == "SPELL_AURA_REMOVED" and string.find(string.upper(spellName), name, 1, true) then
+		if CombatLog_Object_IsA(sourceFlags, COMBATLOG_FILTER_ME) then
+			FloTotemBar_ResetTimer(self, spell.school);
+		end
 	end
-    end
 end
 
 function FloTotemBar_SetupSpell(self, spell, pos)
@@ -734,9 +744,6 @@ function FloTotemBar_StartTimer(self, spellName, rank)
 
 	if founded and school then
 
-		if school ~= 4 then
-			self["startTime4"] = 0;
-		end
 		self["activeSpell"..school] = founded;
 		self["startTime"..school] = startTime;
 

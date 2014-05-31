@@ -1,4 +1,4 @@
-HealBot_lastVerSkinUpdate="5.3.0.0"
+HealBot_lastVerSkinUpdate="5.4.0.0"
 
 HealBot_Default_Textures={
     [1]= {name="HealBot 01", file=[[Interface\Addons\HealBot\Images\bar1.tga]]},
@@ -67,6 +67,7 @@ HealBot_Config_SpellsDefaults = {
   EnemySpellTrinket2={},
   EnemyAvoidBlueCursor={},
   ButtonCastMethod = 2,
+  showHymnOfHopePct=50,
 };
 
 HealBot_Config_BuffsDefaults = {
@@ -200,7 +201,7 @@ HealBot_GlobalsDefaults = {
     HealBot_ButtonRadius=78,
     HealBot_ButtonPosition=300,
     ButtonShown=1,
-    TestBars={["BARS"]=25,["PETS"]=4,["TARGETS"]=5,["HEALERS"]=3,["TANKS"]=2,["PROFILE"]=3},
+    TestBars={["BARS"]=25,["PETS"]=4,["TARGETS"]=5,["HEALERS"]=3,["TANKS"]=2,["PROFILE"]=3,["ENEMY"]=2},
     EmergencyFClass = 4,
     MacroSuppressSound = 1,
     MacroSuppressError = 1,
@@ -210,13 +211,16 @@ HealBot_GlobalsDefaults = {
     PowerChargeTxtSizeMod=7,
     FocusMonitor = {},
     OneTimeMsg={},
-    preloadOptions=1,
     dislikeMount={},
     excludeMount={},
     aggro2pct=55,
     aggro3pct=100,
     QueryTalents=1,
     EnLibQuickHealth=1,
+	EnAutoCombat=1,
+    RaidHideMethod=0,
+    useUTF8=1,
+    HealBot_customPermUserName={},
     HealBot_MouseWheelIndex={ ["AltUp"]=2, ["AltDown"]=3 },
     HealBot_MouseWheelTxt={ ["AltUp"]=HEALBOT_BLIZZARD_MENU, ["AltDown"]=HEALBOT_HB_MENU },
     EmergIncRange = {
@@ -244,328 +248,346 @@ HealBot_GlobalsDefaults = {
         [HEALBOT_MONK]     = 1, [HEALBOT_DEATHKNIGHT] = 0, [HEALBOT_MONK]  = 0,
     },
     CDCBarColour = {
-        [HEALBOT_CUSTOM_en] = { R = 0.45, G = 0, B = 0.26, }, -- added by Diacono
+        [HEALBOT_CUSTOM_en.."9"] = { R = 0.45, G = 0, B = 0.45, },
+		[HEALBOT_CUSTOM_en.."10"] = { R = 0.45, G = 0, B = 0.28, },
+        [HEALBOT_CUSTOM_en.."11"] = { R = 0.45, G = 0.17, B = 0.14, },
+        [HEALBOT_CUSTOM_en.."12"] = { R = 0.45, G = 0.34, B = 0.0, },
     },
     HealBot_Custom_Debuffs_RevDur={},
-    HealBot_Custom_Debuffs_ShowBarCol={},
+    HealBot_Custom_Debuffs_ShowBarCol={  
+        [HEALBOT_CUSTOM_CAT_CUSTOM_EFFECT]= 0,
+        [HEALBOT_CUSTOM_CAT_CUSTOM_MISC] = 0,
+    },
     IgnoreCustomDebuff={},
     FilterCustomDebuff={},
     HealBot_Custom_Debuffs = {
-        -- Karazhan
-        [HEALBOT_DEBUFF_ICE_TOMB]         = 10, -- Karazhan - Ice Tomb
-        [HEALBOT_DEBUFF_SACRIFICE]        = 10, -- Illhoof - Sacrifice
-        -- Hyjal    
-        [HEALBOT_DEBUFF_ICEBOLT]          = 10, -- Rage Winterchill - Icebolt
-        [HEALBOT_DEBUFF_DOOMFIRE]         = 10, -- Archimonde - Doomfire
-        -- Black Temple    
-        [HEALBOT_DEBUFF_IMPALING_SPINE]   = 10, -- Naj'entus - Impaling Spine
-        [HEALBOT_DEBUFF_FEL_RAGE]         = 10, -- Bloodboil - Fel Rage
-        [HEALBOT_DEBUFF_FEL_RAGE2]        = 10, -- Bloodboil - Fel Rage 2
-        [HEALBOT_DEBUFF_FATAL_ATTRACTION] = 10, -- Mother Shahraz - Fatal Attraction
-        [HEALBOT_DEBUFF_AGONIZING_FLAMES] = 10, -- Illidan - Agonizing Flames
-        [HEALBOT_DEBUFF_DARK_BARRAGE]     = 10, -- Illidan - Dark Barrage
-        [HEALBOT_DEBUFF_PARASITIC_SHADOWFIEND] = 10, -- Illidan - Parasitic Shadowfiend
-        -- Zul'Aman    
-        [HEALBOT_DEBUFF_GRIEVOUS_THROW]    = 10, -- Zul'jin - Grievous Throw
-        -- Sunwell    
-        [HEALBOT_DEBUFF_BURN]              = 10, -- Brutallus - Burn
-        [HEALBOT_DEBUFF_ENCAPSULATE]       = 10, -- Felymyst - Encapsulate
-        [HEALBOT_DEBUFF_FLAME_SEAR]        = 10, -- Warlock Alythess - Flame Sear        
-        [HEALBOT_DEBUFF_FIRE_BLOOM]        = 10, -- Kil'jaeden - Fire Bloom
-        -- WotLK Dungeons    
-        [HEALBOT_DEBUFF_GRIEVOUS_BITE]     = 10, -- Drak'Tharon Keep - Grievous Bite
-        [HEALBOT_DEBUFF_FROST_TOMB]        = 10, -- Utgarde Keep - Frost Tomb
-        -- Naxxramas    
-        [HEALBOT_DEBUFF_WEB_WRAP]          = 10, -- Maexxna - Web Wrap
-        [HEALBOT_DEBUFF_JAGGED_KNIFE]      = 10, -- Razuvious - Jagged Knife        
-        [HEALBOT_DEBUFF_FROST_BLAST]       = 10, -- Kel'Thuzad - Frost Blast
-        -- Ulduar
-        [HEALBOT_DEBUFF_SLAG_POT]          = 10, -- Ignis - Slag Pot
-        [HEALBOT_DEBUFF_GRAVITY_BOMB]      = 10, -- XT-002 - Gravity Bomb       
-        [HEALBOT_DEBUFF_STONE_GRIP]        = 10, -- Kologarn - Stone Grip
-        [HEALBOT_DEBUFF_FERAL_POUNCE]      = 10, -- Auriaya - Feral Pounce      
-        [HEALBOT_DEBUFF_NAPALM_SHELL]      = 10, -- Mimiron - Napalm Shell
-        [HEALBOT_DEBUFF_IRON_ROOTS]        = 10, -- Freya - Iron Roots
-        [HEALBOT_DEBUFF_SARA_BLESSING]     = 10, -- Yogg-Saron - Sara's Blessing
-        -- Trial of the Crusader
-        [HEALBOT_DEBUFF_IMPALE]            = 10, -- Northrend Beasts - Impale
-        [HEALBOT_DEBUFF_SNOBOLLED]         = 10, -- Northrend Beasts - Snobolled!
-        [HEALBOT_DEBUFF_FIRE_BOMB]         = 10, -- Northrend Beasts - Fire Bomb
-        [HEALBOT_DEBUFF_BURNING_BILE]      = 10, -- Northrend Beasts - Burning Bile
-        [HEALBOT_DEBUFF_PARALYTIC_TOXIN]   = 10, -- Northrend Beasts - Paralytic Toxin
-        [HEALBOT_DEBUFF_INCINERATE_FLESH]  = 10, -- Lord Jaraxxus - Incinerate Flesh
-        [HEALBOT_DEBUFF_LEGION_FLAME]      = 10, -- Lord Jaraxxus - Legion Flame
-        [HEALBOT_DEBUFF_MISTRESS_KISS]     = 10, -- Lord Jaraxxus - Mistress' Kiss
-        [HEALBOT_DEBUFF_SPINNING_PAIN_SPIKE] = 10, -- Lord Jaraxxus - Spinning Pain Spike
-        [HEALBOT_DEBUFF_TOUCH_OF_LIGHT]    = 10, -- Twin Val'kyr - Touch of Light
-        [HEALBOT_DEBUFF_TOUCH_OF_DARKNESS] = 10, -- Twin Val'kyr - Touch of Darkness
-        [HEALBOT_DEBUFF_PENETRATING_COLD]  = 10, -- Anub'arak - Penetrating Cold
-        [HEALBOT_DEBUFF_ACID_DRENCHED_MANDIBLES] = 10, -- Anub'arak - Acid-Drenched Mandibles
-        [HEALBOT_DEBUFF_EXPOSE_WEAKNESS]   = 10, -- Anub'arak - Expose Weakness
-        -- Icecrown Citadel - Lower Spire
-        [HEALBOT_DEBUFF_IMPALED]           = 10, -- Lord Marrowgar - Impaled
-        [HEALBOT_DEBUFF_NECROTIC_STRIKE]   = 10, -- Lady Deathwhisper - Necrotic Strike
-        [HEALBOT_DEBUFF_FALLEN_CHAMPION]   = 10, -- Deathbringer Saurfang - Mark of the Fallen Champion
-        [HEALBOT_DEBUFF_BOILING_BLOOD]     = 10, -- Deathbringer Saurfang - Boiling Blood
-        [HEALBOT_DEBUFF_RUNE_OF_BLOOD]     = 10, -- Deathbringer Saurfang - Rune of Blood
-        -- Icecrown Citadel - The Plagueworks
-        [HEALBOT_DEBUFF_VILE_GAS]          = 10, -- Festergut - Vile Gas
-        [HEALBOT_DEBUFF_GASTRIC_BLOAT]     = 10, -- Festergut - Gastric Bloat   
-        [HEALBOT_DEBUFF_GAS_SPORE]         = 10, -- Festergut - Gas Spore        
-        [HEALBOT_DEBUFF_MUTATED_INFECTION] = 10, -- Rotface - Mutated Infection
-        [HEALBOT_DEBUFF_GASEOUS_BLOAT]     = 10, -- Professor Putricide - Gaseous Bloat
-        [HEALBOT_DEBUFF_VOLATILE_OOZE]     = 10, -- Professor Putricide - Volatile Ooze Adhesive
-        [HEALBOT_DEBUFF_MUTATED_PLAGUE]    = 10, -- Professor Putricide - Mutated Plague
-        -- Icecrown Citadel - The Crimson Hall
-        [HEALBOT_DEBUFF_GLITTERING_SPARKS] = 10, -- Blood Prince Council - Glittering Sparks
-        [HEALBOT_DEBUFF_SHADOW_PRISON]     = 10, -- Blood Prince Council - Shadow Prison
-        [HEALBOT_DEBUFF_SWARMING_SHADOWS]  = 10, -- Queen Lana'thel - Swarming Shadows
-        [HEALBOT_DEBUFF_PACT_DARKFALLEN]   = 10, -- Queen Lana'thel - Pact of the Darkfallen
-        [HEALBOT_DEBUFF_ESSENCE_BLOOD_QUEEN] = 10, -- Queen Lana'thel - Essence of the Blood Queen
-        [HEALBOT_DEBUFF_DELIRIOUS_SLASH]   = 10, -- Queen Lana'thel - Delirious Slash
-        -- Icecrown Citadel - Frostwing Halls
-        [HEALBOT_DEBUFF_CORROSION]         = 10, -- Valithiria Dreamwalker - Corrosion
-        [HEALBOT_DEBUFF_GUT_SPRAY]         = 10, -- Valithiria Dreamwalker - Gut Spray
-        [HEALBOT_DEBUFF_ICE_TOMB]          = 10, -- Sindragosa - Ice Tomb
-        [HEALBOT_DEBUFF_FROST_BEACON]      = 10, -- Sindragosa - Frost Beacon
-        [HEALBOT_DEBUFF_CHILLED_BONE]      = 10, -- Sindragosa - Chilled to the Bone
-        [HEALBOT_DEBUFF_INSTABILITY]       = 10, -- Sindragosa - Instability
-        [HEALBOT_DEBUFF_MYSTIC_BUFFET]     = 10, -- Sindragosa - Mystic Buffet
-        [HEALBOT_DEBUFF_FROST_BREATH]      = 10, -- Sindragosa - Frost Breath
-        -- Icecrown Citadel - The Frozen Throne
-        [HEALBOT_DEBUFF_INFEST]            = 10, -- Lich King - Infest
-        [HEALBOT_DEBUFF_NECROTIC_PLAGUE]   = 10, -- Lich King - Necrotic Plague
-        [HEALBOT_DEBUFF_DEFILE]            = 10, -- Lich King - Defile
-        [HEALBOT_DEBUFF_HARVEST_SOUL]      = 10, -- Lich King - Harvest Soul 
-        -- Ruby Sanctum
-        [HEALBOT_DEBUFF_CONFLAGRATION]     = 10, -- Saviana Ragefire - Conflagration
-        [HEALBOT_DEBUFF_FIERY_COMBUSTION]  = 10, -- Halion - Fiery Combustion
-        [HEALBOT_DEBUFF_COMBUSTION]        = 10, -- Halion (heroic) - Combustion
-        [HEALBOT_DEBUFF_SOUL_CONSUMPTION]  = 10, -- Halion - Soul Consumption
-        [HEALBOT_DEBUFF_CONSUMPTION]       = 10, -- Halion (heroic) - Consumption
-        -- Throne of the Four Winds
-        [HEALBOT_DEBUFF_TOXIC_SPORES]      = 10, -- Conclave of Wind - Toxic Spores
-        [HEALBOT_DEBUFF_LIGHTNING_ROD]     = 10, -- Al'Akir - Lightning Rod
-        -- Blackwing Descent
-        [HEALBOT_DEBUFF_PARASITIC_INFECT]  = 10, -- Magmaw - Parasitic Infection
-        [HEALBOT_DEBUFF_CONSUMING_FLAMES]  = 10, -- Maloriak - Consuming Flames
-        [HEALBOT_DEBUFF_FLASH_FREEZE]      = 10, -- Maloriak - Flash Freeze
-        [HEALBOT_DEBUFF_EXPLOSIVE_CINDERS] = 10, -- Nefarian - Explosive Cinders
-        -- Bastion of Twilight
-        [HEALBOT_DEBUFF_WATERLOGGED]       = 10, -- Ascendant Council - Waterlogged
-        [HEALBOT_DEBUFF_GRAVITY_CORE]      = 10, -- Ascendant Council (heroic) - Gravity Core
-        [HEALBOT_DEBUFF_GRAVITY_CRUSH]     = 10, -- Ascendant Council - Gravity Crush
-		--Updated 5.3 by Ariá - Silvermoon EU 
-		--World Bosses
+        -- Defaults
+        [HEALBOT_CUSTOM_CAT_CUSTOM_IMPORTANT]= 9,
+		[HEALBOT_CUSTOM_CAT_CUSTOM_DAMAGE]= 10,
+        [HEALBOT_CUSTOM_CAT_CUSTOM_EFFECT]= 11,
+        [HEALBOT_CUSTOM_CAT_CUSTOM_MISC]  = 12,
+         
+		--Class Profession Debuffs
+		[HEALBOT_DARK_BARGAIN]             = 9, --Warlock
+        [HEALBOT_SHROUD_OF_PURGATORY]      = 9, --Death Knight
+		[HEALBOT_DEBUFF_ROCKET_FUEL_LEAK]  = 10, --Engineering        
+		
+		--Scenario, Proving Grounds
+		[HEALBOT_DEBUFF_CHOMP]             = 9, -- Healer Challenge 
+        [HEALBOT_DEBUFF_LAVA_BURNS]        = 10, -- Healer Challenge	
+		
+		--[[World Bosses
+	    Sha of Anger]]
+		[HEALBOT_DEBUFF_SEETHE]             = 11, -- Sha of Anger      
+	    [HEALBOT_DEBUFF_AGGRESSIVE_BEHAVIOR] = 12, -- Sha of Anger      
+	    --HEALBOT_DEBUFF_BITTER_THOUGHTS]      = 12, -- Sha of Anger 
 		--Oondasta
-		[HEALBOT_DEBUFF_CRUSH]             = 10, -- Oondasta    
+		[HEALBOT_DEBUFF_CRUSH]             = 11, -- Oondasta    
 		--Nalak, the Storm Lord
 	    [HEALBOT_DEBUFF_LIGHTNING_TETHER]  = 10, -- Nalak, the Storm Lord      
-	    [HEALBOT_DEBUFF_STORMCLOUD]        = 10, -- Nalak, the Storm Lord        
-		--Throne of Thunder
-		[HEALBOT_DEBUFF_WOUNDING_STRIKE]   = 10, -- Trash
-		[HEALBOT_DEBUFF_STORM_ENERGY]      = 10, -- Trash
-		[HEALBOT_DEBUFF_ANCIENT_VENOM]     = 10, -- Trash
-		[HEALBOT_DEBUFF_TORMENT]           = 10, -- Trash
-		[HEALBOT_DEBUFF_CRUSH_ARMOR]       = 10, -- Trash
-		[HEALBOT_DEBUFF_STORMCLOUD]        = 10, -- Trash
-		[HEALBOT_DEBUFF_SLASHING_TALONS]   = 10, -- Trash
-		[HEALBOT_DEBUFF_SHALE_SHARDS]      = 10, -- Trash
-		[HEALBOT_DEBUFF_CHOKING_MISTS]     = 10, -- Trash
-		[HEALBOT_DEBUFF_CORROSIVE_BREATH]  = 10, -- Trash
-		[HEALBOT_DEBUFF_COCOON]            = 10, -- Trash   
-		[HEALBOT_DEBUFF_CHOKING_GAS]       = 10, -- Trash
-		[HEALBOT_DEBUFF_GNAWED_UPON]       = 10, -- Trash
-		[HEALBOT_DEBUFF_STATIC_WOUND]      = 10, -- Jin'rokh the Breaker
-		[HEALBOT_DEBUFF_THUNDERING_THROW]  = 10, -- Jin'rokh the Breaker
-		[HEALBOT_DEBUFF_FOCUSED_LIGHTNING] = 10, -- Jin'rokh the Breaker
-		[HEALBOT_DEBUFF_TRIPLE_PUNCTURE]   = 10, -- Horridon
-		[HEALBOT_DEBUFF_RENDING_CHARGE]    = 10, -- Horridon
-        [HEALBOT_DEBUFF_FRIGID_ASSAULT]    = 10, -- Council of Elders 
-		[HEALBOT_DEBUFF_FRIGID_ASSAULT]    = 10, -- Council of Elders
-		[HEALBOT_DEBUFF_BITING_COLD]       = 10, -- Council of Elders    
-		[HEALBOT_DEBUFF_FROSTBITE]         = 10, -- Council of Elders  
-		[HEALBOT_DEBUFF_BODY_HEAT]         = 10, -- Council of Elders Heroic
-		[HEALBOT_DEBUFF_MARKED_SOUL]       = 10, -- Council of Elders
-		[HEALBOT_DEBUFF_SOUL_FRAGMENT]     = 10, -- Council of Elders Heroic
-		[HEALBOT_DEBUFF_SHADOWED_SOUL]     = 10, -- Council of Elders Heroic
-        [HEALBOT_DEBUFF_CRYSTAL_SHELL]     = 10, -- Tortos
-		[HEALBOT_DEBUFF_CRYSTAL_SHELL_FULL_CAPACITY] = 10, -- Tortos 
-		[HEALBOT_DEBUFF_IGNITE_FLESH]      = 10, -- Megaera  
-		[HEALBOT_DEBUFF_ARCTIC_FREEZE]     = 10, -- Megaera  
-		[HEALBOT_DEBUFF_ARCTIC_FREEZE]     = 10, -- Megaera 
-		[HEALBOT_DEBUFF_ROT_ARMOR]         = 10, -- Megaera 
-		[HEALBOT_DEBUFF_TORRENT_OF_ICE]    = 10, -- Megaera
-        [HEALBOT_DEBUFF_ICY_GROUND]        = 10, -- Megaera  		
-		[HEALBOT_DEBUFF_TALON_RAKE]        = 10, -- Ji-Kun
-		[HEALBOT_DEBUFF_INFECTED_TALONS]   = 10, -- ji-Kun
-		[HEALBOT_DEBUFF_FEED_POOL]         = 10, -- ji-Kun
-		[HEALBOT_DEBUFF_SLIMED]            = 10, -- ji-Kun
-		[HEALBOT_DEBUFF_DAEDALIAN_WINGS]   = 10, -- ji-Kun      
-	    [HEALBOT_DEBUFF_LESSONS_OF_ICARUS] = 10, -- ji-Kun       
-	    [HEALBOT_DEBUFF_FLIGHT]            = 10, -- ji-Kun       
-		[HEALBOT_DEBUFF_PRIMAL_NUTRIMENT]  = 10, -- ji-Kun Buff
-		[HEALBOT_DEBUFF_MALFORMED_BLOOD]   = 10, -- Primordius
-		[HEALBOT_DEBUFF_VOLATILE_PATHOGEN] = 10, -- Primordius
-		[HEALBOT_DEBUFF_CRIMSON_WAKE]      = 10, -- Dark Animus
-		[HEALBOT_DEBUFF_EXPLOSIVE_SLAM]    = 10, -- Dark Animus
-		[HEALBOT_DEBUFF_ANIMA_FONT]        = 10, -- Dark Animus
-		[HEALBOT_DEBUFF_ANIMA_RING]        = 10, -- Dark Animus
-		[HEALBOT_DEBUFF_TOUCH_OF_ANIMUS]   = 10, -- Dark Animus
-		[HEALBOT_DEBUFF_IMPALE]            = 10, -- Iron Qon
-		[HEALBOT_DEBUFF_SCORCHED]          = 10, -- Iron Qon
-		[HEALBOT_DEBUFF_ARCING_LIGHTNING]  = 10, -- Iron Qon
-		[HEALBOT_DEBUFF_FREEZE]            = 10, -- Iron Qon
-		[HEALBOT_STORM_CLOUD]              = 10, -- Iron Qon
-		[HEALBOT_DEAD_ZONE]                = 10, -- Iron Qon
-		[HEALBOT_DEBUFF_SERIOUS_WOUND]     = 10, -- Durumu the Forgotten
-		[HEALBOT_DEBUFF_ARTERIAL_CUT]      = 10, -- Durumu the Forgotten
-		[HEALBOT_DEBUFF_LINGERING_GAZE]    = 10, -- Durumu the Forgotten
-		[HEALBOT_DEBUFF_LINGERING_GAZE]    = 10, -- Durumu the Forgotten
-		[HEALBOT_DEBUFF_LIFE_DRAIN]        = 10, -- Durumu the Forgotten
-		[HEALBOT_DEBUFF_BLUE_RAY_TRACKING] = 10, -- Durumu the Forgotten       
-	    [HEALBOT_DEBUFF_BLUE_RAYS]         = 10, -- Durumu the Forgotten       
-	    [HEALBOT_DEBUFF_INFRARED_TRACKING] = 10, -- Durumu the Forgotten       
-	    [HEALBOT_DEBUFF_INFRARED_LIGHT]    = 10, -- Durumu the Forgotten       
-	    [HEALBOT_DEBUFF_BRIGHT_LIGHT]      = 10, -- Durumu the Forgotten       
-		[HEALBOT_DEBUFF_FAN_OF_FLAMES]     = 10, -- Twin Consorts 
-		[HEALBOT_DEBUFF_FLAMES_OF_PASSION] = 10, -- Twin Consorts
-		[HEALBOT_DEBUFF_BEAST_OF_NIGHTMARES] = 10, -- Twin Consorts
-		[HEALBOT_DEBUFF_BEAST_OF_NIGHTMARES] = 10, -- Twin Consorts
-		[HEALBOT_DEBUFF_DECAPITATE]        = 10, -- Lei Shen 
-   		[HEALBOT_DEBUFF_CRASHING_THUNDER]  = 10, -- Lei Shen
-		[HEALBOT_DEBUFF_STATIC_SHOCK]      = 10, -- Lei Shen
-		[HEALBOT_DEBUFF_OVERCHARGED]       = 10, -- Lei Shen
-		[HEALBOT_DEBUFF_HELM_OF_COMMAND]   = 10, -- Lei Shen Heroic
-		[HEALBOT_DEBUFF_DISCHARGED_ENERGY] = 10, -- Lei Shen
-		[HEALBOT_DEBUFF_ELECTRICAL_SHOCK]  = 10, -- Lei Shen 
-		[HEALBOT_DEBUFF_WINDBURN]          = 10, -- Lei Shen
-		[HEALBOT_UNSTABLE_VITA]            = 10, -- Ra-Den
-		[HEALBOT_VITA_SENSITIVITY]         = 10, -- Ra-Den
-		--Updated 5.4 by Ariá - Silvermoon EU 
-		--World Bosses
+	    [HEALBOT_DEBUFF_STORMCLOUD]        = 10, -- Nalak, the Storm Lord  
+		--Celestials
+		[HEALBOT_DEBUFF_SPECTRAL_SWIPE]    = 11, --Xuen   
+	    --[HEALBOT_DEBUFF_JADEFLAME_BUFFET]  = 11, --Chi Ji       
 		--Ordos
 		[HEALBOT_DEBUFF_BURNING_SOUL]      = 10, --Ordos            
 	    [HEALBOT_DEBUFF_POOL_OF_FIRE]      = 10, --Ordos       
 	    [HEALBOT_DEBUFF_ANCIENT_FLAME]     = 10, --Ordos        
-		-- Siege of Orgrimmar
-	    [HEALBOT_DEBUFF_LESSER_SHA_RESIDUE]= 10, -- Trash Buff
-		[HEALBOT_DEBUFF_GROWING_OVERCONFIDENCE] = 10, -- Trash   
-	    [HEALBOT_DEBUFF_JEALOUSY]          = 10, -- Trash                 
-		[HEALBOT_DEBUFF_LOCKED_ON]         = 10, -- Trash 
-		[HEALBOT_DEBUFF_RESONATING_AMBER]  = 10, -- Trash
-		[HEALBOT_DEBUFF_CORROSIVE_BLAST]   = 10, -- Immerseus
-		[HEALBOT_DEBUFF_SHA_SPLASH]        = 10, -- Immerseus
-		[HEALBOT_DEBUFF_PURIFIED_RESIDUE]  = 10, -- Immerseus Buff      
-	    [HEALBOT_DEBUFF_SHA_RESIDUE]       = 10, -- Immerseus Buff       
-		[HEALBOT_DEBUFF_MEDITATIVE_FIELD]  = 10, -- The Fallen Protectors        
-		[HEALBOT_DEBUFF_CORRUPTED_BREW]    = 10, -- The Fallen Protectors
+				
+		--[[Updated 5.2 Mists of Pandaria Expansion by Ariá - Silvermoon EU
+		= GetMapNameByID(896) or "--Mogu'shan Vaults"]]
+		[HEALBOT_DEBUFF_SUNDERING_BITE]    = 11, -- Trash       
+		[HEALBOT_DEBUFF_FULLY_PETRIFIED]   = 12, -- Trash       
+		[HEALBOT_DEBUFF_FOCUSED_ASSAULT]   = 12, -- Trash        
+		[HEALBOT_DEBUFF_GROUND_SLAM]       = 11, -- Trash         
+		[HEALBOT_DEBUFF_IMPALE]            = 10, -- Trash         
+		[HEALBOT_DEBUFF_PYROBLAST]         = 10, -- Trash             
+		[HEALBOT_DEBUFF_TROLL_RUSH]        = 12, -- Trash
+		[HEALBOT_DEBUFF_SUNDER_ARMOR]      = 11, -- Trash		
+		[HEALBOT_DEBUFF_AMETHYST_POOL]     = 10, -- The Stone Guard        
+		[HEALBOT_DEBUFF_REND_FLESH]        = 10, -- The Stone Guard     
+		[HEALBOT_DEBUFF_LIVING_AMETHYST]   = 10, -- The Stone Guard Heroic     
+		[HEALBOT_DEBUFF_LIVING_COBALT]     = 10, -- The Stone Guard Heroic     
+		[HEALBOT_DEBUFF_LIVING_JADE]       = 10, -- The Stone Guard Heroic     
+		[HEALBOT_DEBUFF_LIVING_JASPER]     = 10, -- The Stone Guard Heroic 
+		--[HEALBOT_DEBUFF_JASPER_CHAINS]     = 12, -- The Stone Guard   		
+		[HEALBOT_DEBUFF_LIGHTNING_LASH]    = 10, -- Feng the Accursed  
+		[HEALBOT_DEBUFF_LIGHTNING_CHARGE]  = 11, -- Feng the Accursed       
+		[HEALBOT_DEBUFF_FLAMING_SPEAR]     = 10, -- Feng the Accursed    
+		[HEALBOT_DEBUFF_WILDFIRE_SPARK]    = 9, -- Feng the Accursed   
+		[HEALBOT_DEBUFF_ARCANE_SHOCK]      = 10, -- Feng the Accursed   
+		[HEALBOT_DEBUFF_ARCANE_RESONANCE]  = 9, -- Feng the Accursed    
+		[HEALBOT_DEBUFF_SHADOWBURN]        = 10, -- Feng the Accursed Heroic      
+		--[HEALBOT_DEBUFF_EPICENTRE          = 10, -- Feng the Accursed         
+		[HEALBOT_DEBUFF_VOODOO_DOLL]       = 9, -- Gara'jal the Spiritbinder 
+		--[[[HEALBOT_DEBUFF_CROSSED_OVER]      = 12, -- Gara'jal the Spiritbinder  
+		[HEALBOT_DEBUFF_SOUL_SEVER]        = 12, -- Gara'jal the Spiritbinder]]
+		[HEALBOT_DEBUFF_PINNED_DOWN]       = 9, -- The Spirit Kings 
+		[HEALBOT_DEBUFF_UNDYING_SHADOWS]   = 10, -- The Spirit Kings       
+		--[[[HEALBOT_DEBUFF_PILLAGED]          = 11, -- The Spirit Kings 
+		[HEALBOT_DEBUFF_ROBBED_BLIND]      = 11, -- The Spirit Kings Heroic]] 
+		--[HEALBOT_DEBUFF_OVERCHARGED]       = 11, -- Elegon      
+		[HEALBOT_DEBUFF_FOCUSED_ASSAULT]   = 12, -- Will of the Emporer
+		[HEALBOT_DEBUFF_ENERGIZING_SMASH]  = 11, -- Will of the Emporer       
+		[HEALBOT_DEBUFF_IMPEDING_THRUST]   = 11, -- Will of the Emporer   
+		[HEALBOT_DEBUFF_FOCUSED_DEFENSE]   = 11, -- Will of the Emporer        
+		[HEALBOT_DEBUFF_DEVASTATING_ARC]   = 11, -- Will of the Emporer
+		[HEALBOT_DEBUFF_STOMP]             = 11, -- Will of the Emporer       		     
+		--[[[HEALBOT_DEBUFF_FOCUSED_ENERGY]    = 12, -- Will of the Emporer Heroic
+		[HEALBOT_DEBUFF_TITAN_GAS]         = 10, -- Will of the Emporer]]     
+		
+		--= GetMapNameByID(897) or "--Heart of Fear"
+		[HEALBOT_DEBUFF_ARTERIAL_BLEEDING] = 10, -- Trash         
+		[HEALBOT_DEBUFF_DISMANTLED_ARMOR] = 11, -- Trash          
+		[HEALBOT_DEBUFF_STUNNING_STRIKE]  = 11, -- Trash         
+		[HEALBOT_DEBUFF_GALE_FORCE_WINDS] = 11, -- Trash  
+		[HEALBOT_DEBUFF_MORTAL_REND]      = 10, -- Trash        
+		[HEALBOT_DEBUFF_GRIEVOUS_WHIRL]   = 10, -- Trash        
+		[HEALBOT_DEBUFF_BURNING_STING]    = 10, -- Trash         
+		[HEALBOT_DEBUFF_SLAM]             = 11, -- Trash
+		[HEALBOT_DEBUFF_ZEALOUS_PARASITE] = 11, -- Trash         		
+		[HEALBOT_DEBUFF_EXHALE]           = 10, -- Imperial Vizier Zor'lok       
+		[HEALBOT_DEBUFF_CONVERT]          = 12, -- Imperial Vizier Zor'lok          
+		--[HEALBOT_DEBUFF_PHEROMONES_OF_ZEAL] = 10, -- Imperial Vizier Zor'lok
+		[HEALBOT_DEBUFF_OVERWHELMING_ASSAULT] = 11, -- Blade Lord Ta'yak      
+		[HEALBOT_DEBUFF_WIND_STEP]        = 10, -- Blade Lord Ta'yak			 
+		[HEALBOT_DEBUFF_UNSEEN_STRIKE]    = 12, -- Blade Lord Ta'yak 
+		[HEALBOT_DEBUFF_PHEROMONES]       = 10, -- Garalon		    
+		--[HEALBOT_DEBUFF_PUNGENCY]      	  = 11, -- Garalon
+		[HEALBOT_DEBUFF_AMBER_PRISON]     = 12, -- Wind Lord Mel'jarak 		 
+		[HEALBOT_DEBUFF_CORROSIVE_RESIN]  = 10, -- Wind Lord Mel'jarak  		
+		[HEALBOT_DEBUFF_KORTHIK_STRIKE]   = 9, -- Wind Lord Mel'jarak 	
+		[HEALBOT_DEBUFF_RESHAPE_LIFE]     = 12, -- Amber-Shaper Un'sok		
+		[HEALBOT_DEBUFF_PARASITIC_GROWTH] = 9, -- Amber-Shaper Un'sok    	 
+		[HEALBOT_DEBUFF_FLING]     	      = 12, -- Amber-Shaper Un'sok      
+		[HEALBOT_DEBUFF_AMBER_GLOBULE]    = 12, -- Amber-Shaper Un'sok Heroic	
+		[HEALBOT_DEBUFF_EYES_OF_THE_EMPRESS] = 12, -- Grand Empress Shek'zeer     	
+		[HEALBOT_DEBUFF_CRY_OF_TERROR]    = 12, -- Grand Empress Shek'zeer 	    
+		[HEALBOT_DEBUFF_STICKY_RESIN]     = 10, -- Grand Empress Shek'zeer	         
+		[HEALBOT_DEBUFF_POISON_BOMB]      = 10, -- Grand Empress Shek'zeer	         
+		[HEALBOT_DEBUFF_POISON_DRENCHED_ARMOR] = 10, -- Grand Empress Shek'zeer    
+		[HEALBOT_DEBUFF_VISIONS_OF_DEMISE] = 12, -- Grand Empress Shek'zeer     	
+		[HEALBOT_DEBUFF_HEART_OF_FEAR]    = 12, -- Grand Empress Shek'zeer Heroic	     	
+		
+		--= GetMapNameByID(886) or "--Terrace of Endless Spring"
+		[HEALBOT_DEBUFF_TOUCH_OF_SHA]      = 10, -- Protectors of the Endless      
+		[HEALBOT_DEBUFF_DEFILED_GROUND]    = 11, -- Protectors of the Endless       
+		[HEALBOT_DEBUFF_OVERWHELMING_CORRUPTION] = 11, -- Protectors of the Endless 
+		[HEALBOT_DEBUFF_SHADOW_BREATH]     = 10, -- Tsulong     
+		[HEALBOT_DEBUFF_DREAD_SHADOWS]     = 11, -- Tsulong       
+		[HEALBOT_DEBUFF_SPRAY]             = 11, -- Lei Shi       
+		[HEALBOT_DEBUFF_SCARY_FOG]         = 11, -- Lei Shi Heroic      
+		[HEALBOT_DEBUFF_PENETRATING_BOLT]  = 11, -- Sha of Fear            
+		[HEALBOT_DEBUFF_NAKED_AND_AFRAID]  = 11, -- Sha of Fear Heroic 
+		[HEALBOT_DEBUFF_HUDDLE_IN_TERROR]  = 10, -- Sha of Fear Heroic        
+		[HEALBOT_DEBUFF_CHAMPION_OF_THE_LIGHT] = 9, -- Sha of Fear Heroic     
+		[HEALBOT_DEBUFF_OMINOUS_CACKLE]    = 12, -- Sha of Fear
+		--[HEALBOT_DEBUFF_DREAD_SPRAY]       = 12, -- Sha of Fear		
+		     
+		--[[Updated 5.3 Mists of Pandaria Expansion by Ariá - Silvermoon EU
+		= GetMapNameByID(930) or "--Throne of Thunder"]]
+		[HEALBOT_DEBUFF_WOUNDING_STRIKE]   = 10, -- Trash     
+		[HEALBOT_DEBUFF_STORM_ENERGY]      = 12, -- Trash
+		[HEALBOT_DEBUFF_ANCIENT_VENOM]     = 10, -- Trash    
+		[HEALBOT_DEBUFF_TORMENT]           = 11, -- Trash
+		[HEALBOT_DEBUFF_CRUSH_ARMOR]       = 11, -- Trash
+		[HEALBOT_DEBUFF_STORMCLOUD]        = 12, -- Trash
+		[HEALBOT_DEBUFF_SLASHING_TALONS]   = 10, -- Trash
+		[HEALBOT_DEBUFF_SHALE_SHARDS]      = 10, -- Trash
+		[HEALBOT_DEBUFF_CHOKING_MISTS]     = 10, -- Trash
+		[HEALBOT_DEBUFF_CORROSIVE_BREATH]  = 11, -- Trash
+		[HEALBOT_DEBUFF_COCOON]            = 12, -- Trash   
+		[HEALBOT_DEBUFF_CHOKING_GAS]       = 10, -- Trash
+		[HEALBOT_DEBUFF_GNAWED_UPON]       = 11, -- Trash
+		[HEALBOT_DEBUFF_RETRIEVE_SPEAR]    = 12, -- Trash 
+		[HEALBOT_DEBUFF_STATIC_WOUND]      = 10, -- Jin'rokh the Breaker
+		[HEALBOT_DEBUFF_THUNDERING_THROW]  = 12, -- Jin'rokh the Breaker
+		[HEALBOT_DEBUFF_FOCUSED_LIGHTNING] = 12, -- Jin'rokh the Breaker
+		[HEALBOT_DEBUFF_ELECTRIFIED_WATERS] = 10, -- Jin'rokh the Breaker       	
+		[HEALBOT_DEBUFF_TRIPLE_PUNCTURE]   = 11, -- Horridon
+		[HEALBOT_DEBUFF_RENDING_CHARGE]    = 10, -- Horridon
+		[HEALBOT_DEBUFF_FROZEN_BOLT]       = 11, -- Horridon
+        [HEALBOT_DEBUFF_FRIGID_ASSAULT]    = 12, -- Council of Elders 
+        [HEALBOT_DEBUFF_BITING_COLD]       = 10, -- Council of Elders    
+		[HEALBOT_DEBUFF_FROSTBITE]         = 9, -- Council of Elders  
+		[HEALBOT_DEBUFF_BODY_HEAT]         = 12, -- Council of Elders Heroic
+		[HEALBOT_DEBUFF_MARKED_SOUL]       = 9, -- Council of Elders
+		[HEALBOT_DEBUFF_SOUL_FRAGMENT]     = 9, -- Council of Elders Heroic
+		[HEALBOT_DEBUFF_ENTRAPPED]         = 9, -- Council of Elders Magic
+        --[HEALBOT_DEBUFF_SHADOWED_SOUL]     = 11, -- Council of Elders Heroic
+		[HEALBOT_DEBUFF_QUAKE_STOMP]       = 12, -- Tortos      
+		[HEALBOT_DEBUFF_CRYSTAL_SHELL]     = 12, -- Tortos
+		[HEALBOT_DEBUFF_CRYSTAL_SHELL_FULL_CAPACITY] = 12, -- Tortos 
+		[HEALBOT_DEBUFF_IGNITE_FLESH]      = 10, -- Megaera  
+		[HEALBOT_DEBUFF_ARCTIC_FREEZE]     = 11, -- Megaera  
+		[HEALBOT_DEBUFF_ROT_ARMOR]         = 11, -- Megaera 
+		[HEALBOT_DEBUFF_TORRENT_OF_ICE]    = 12, -- Megaera
+        --[HEALBOT_DEBUFF_ICY_GROUND]        = 10, -- Megaera  		
+		[HEALBOT_DEBUFF_TALON_RAKE]        = 11, -- Ji-Kun
+		[HEALBOT_DEBUFF_INFECTED_TALONS]   = 10, -- ji-Kun
+		[HEALBOT_DEBUFF_FEED_POOL]         = 10, -- ji-Kun
+		[HEALBOT_DEBUFF_SLIMED]            = 11, -- ji-Kun    
+		[HEALBOT_DEBUFF_SERIOUS_WOUND]     = 11, -- Durumu the Forgotten
+		[HEALBOT_DEBUFF_ARTERIAL_CUT]      = 9, -- Durumu the Forgotten
+		[HEALBOT_DEBUFF_LINGERING_GAZE]    = 12, -- Durumu the Forgotten
+		[HEALBOT_DEBUFF_LIFE_DRAIN]        = 10, -- Durumu the Forgotten
+		--[[HEALBOT_DEBUFF_BLUE_RAY_TRACKING]  = 12, -- Durumu the Forgotten       
+	    [HEALBOT_DEBUFF_BLUE_RAYS]         = 12, -- Durumu the Forgotten       
+	    [HEALBOT_DEBUFF_INFRARED_TRACKING] = 12, -- Durumu the Forgotten       
+	    [HEALBOT_DEBUFF_INFRARED_LIGHT]    = 12, -- Durumu the Forgotten       
+	    [HEALBOT_DEBUFF_BRIGHT_LIGHT]      = 12,]] -- Durumu the Forgotten  
+		[HEALBOT_DEBUFF_MALFORMED_BLOOD]   = 10, -- Primordius
+		[HEALBOT_DEBUFF_VOLATILE_PATHOGEN] = 9, -- Primordius
+		[HEALBOT_DEBUFF_CRIMSON_WAKE]      = 12, -- Dark Animus
+		[HEALBOT_DEBUFF_EXPLOSIVE_SLAM]    = 11, -- Dark Animus
+		[HEALBOT_DEBUFF_ANIMA_RING]        = 11, -- Dark Animus
+		[HEALBOT_DEBUFF_TOUCH_OF_ANIMUS]   = 10, -- Dark Animus
+		--[HEALBOT_DEBUFF_ANIMA_FONT]        = 12, -- Dark Animus
+		[HEALBOT_DEBUFF_SCORCHED]          = 11, -- Iron Qon
+		[HEALBOT_DEBUFF_FREEZE]            = 12, -- Iron Qon
+		[HEALBOT_DEBUFF_STORM_CLOUD]       = 12, -- Iron Qon
+		--[HEALBOT_DEBUFF_ARCING_LIGHTNING]  = 10, -- Iron Qon  
+		[HEALBOT_DEBUFF_FAN_OF_FLAMES]     = 11, -- Twin Consorts 
+		[HEALBOT_DEBUFF_BEAST_OF_NIGHTMARES] = 9, -- Twin Consorts
+		[HEALBOT_DEBUFF_CORRUPTED_HEALING] = 10, -- Twin Consorts       
+        --[HEALBOT_DEBUFF_FLAMES_OF_PASSION] = 10, -- Twin Consorts
+		[HEALBOT_DEBUFF_DECAPITATE]        = 10, -- Lei Shen 
+		[HEALBOT_DEBUFF_STATIC_SHOCK]      = 12, -- Lei Shen
+		[HEALBOT_DEBUFF_OVERCHARGED]       = 12, -- Lei Shen
+		[HEALBOT_DEBUFF_HELM_OF_COMMAND]   = 9, -- Lei Shen Heroic
+		[HEALBOT_DEBUFF_ELECTRICAL_SHOCK]  = 10, -- Lei Shen 
+		--[[[HEALBOT_DEBUFF_CRASHING_THUNDER]  = 10, -- Lei Shen
+		[HEALBOT_DEBUFF_DISCHARGED_ENERGY] = 11, -- Lei Shen        
+		[HEALBOT_DEBUFF_WINDBURN]          = 11, -- Lei Shen]]
+		[HEALBOT_DEBUFF_UNSTABLE_VITA]     = 9, -- Ra-Den
+		[HEALBOT_DEBUFF_VITA_SENSITIVITY]  = 12, -- Ra-Den
+		   		
+		--[[Updated 5.4 Mists of Pandaria Expansion by Ariá - Silvermoon EU
+		= GetMapNameByID(953) or "--Siege of Orgrimmar"]]                                    
+		[HEALBOT_DEBUFF_LOCKED_ON]         = 12, -- Trash         
+		[HEALBOT_DEBUFF_OBLITERATING_STRIKE] = 11, --Trash
+		[HEALBOT_DEBUFF_PIERCE]            = 10, --Trash       
+		[HEALBOT_DEBUFF_BLOOD_OF_YSHAARJ]  = 10, -- Trash
+		[HEALBOT_DEBUFF_REAPING_WHIRLWIND] = 10, -- Trash
+		[HEALBOT_DEBUFF_FIRE_PIT]          = 10, -- Trash
+		[HEALBOT_DEBUFF_OVERCONFIDENCE]    = 10, -- Trash            
+	    [HEALBOT_DEBUFF_JEALOUSY]          = 11, -- Trash
+		[HEALBOT_DEBUFF_GROWING_OVERCONFIDENCE] = 11, -- Trash
+		[HEALBOT_DEBUFF_BRIBE]             = 12, -- Trash 
+		[HEALBOT_DEBUFF_INTIMIDATING_SHOUT] = 11, -- Trash
+		[HEALBOT_DEBUFF_FULL_OF_MEAT]      = 11, -- Trash
+		[HEALBOT_DEBUFF_SCORCHED_EARTH]    = 10, -- Trash
+		[HEALBOT_DEBUFF_DREAD_HOWL]        = 11, -- Trash
+		[HEALBOT_DEBUFF_SLOW_AND_STEADY]   = 11, -- Trash      
+		[HEALBOT_DEBUFF_RESONATING_AMBER]  = 10, -- Trash 
+		[HEALBOT_DEBUFF_CORROSIVE_BLAST]   = 11, -- Immerseus 
+		[HEALBOT_DEBUFF_SHA_POOL]          = 10, -- Immerseus        
+		--[HEALBOT_DEBUFF_SHA_SPLASH]        = 10, -- Immerseus 
+		[HEALBOT_DEBUFF_NOXIOUS_POISON]    = 10, -- The Fallen Protectors       
 		[HEALBOT_DEBUFF_DEFILED_GROUND]    = 10, -- The Fallen Protectors                  
-	    [HEALBOT_DEBUFF_VENGEFUL_STRIKES]  = 10, -- The Fallen Protectors     
+	    [HEALBOT_DEBUFF_VENGEFUL_STRIKES]  = 11, -- The Fallen Protectors     
 	    [HEALBOT_DEBUFF_CORRUPTION_KICK]   = 10, -- The Fallen Protectors    
 	    [HEALBOT_DEBUFF_GARROTE]           = 10, -- The Fallen Protectors     
-	    [HEALBOT_DEBUFF_GOUGE]             = 10, -- The Fallen Protectors    
-	    [HEALBOT_DEBUFF_MARK_OF_ANGUISH]   = 10, -- The Fallen Protectors    
-	    [HEALBOT_DEBUFF_SHADOWED_WEAKNESS] = 10, -- The Fallen Protectors    
-	    [HEALBOT_DEBUFF_DEBILITATION]      = 10, -- The Fallen Protectors    
-	    [HEALBOT_DEBUFF_SHA_SEAR]          = 10, -- The Fallen Protectors    
-		[HEALBOT_DEBUFF_CORRUPTION]        = 10, -- Norushen   
-		[HEALBOT_DEBUFF_SELF_DOUBT]        = 10, -- Norushen
-		[HEALBOT_DEBUFF_ICY_FEAR]          = 10, -- Norushen     
-		[HEALBOT_DEBUFF_BOTTOMLESS_PIT]    = 10, -- Norushen
-		[HEALBOT_DEBUFF_DISHEARTENING_LAUGH] = 10, -- Norushen
-		[HEALBOT_DEBUFF_PURIFIED]          = 10, -- Norushen
-		[HEALBOT_DEBUFF_WOUNDED_PRIDE]     = 10, -- Sha of Pride
-		[HEALBOT_DEBUFF_CORRUPTED_PRISON]  = 10, -- Sha of Pride
-		[HEALBOT_DEBUFF_GIFT_OF_THE_TITANS] = 10, -- Sha of Pride Buff
-		[HEALBOT_DEBUFF_POWER_OF_THE_TITANS] = 10, -- Sha of Pride Buff    
-		[HEALBOT_DEBUFF_BANISHMENT]        = 10, -- Sha of Pride Heroic
-        [HEALBOT_DEBUFF_WEAKENED_RESOLVE]  = 10, -- Sha of Pride Heroic 
-	    [HEALBOT_DEBUFF_OVERCOME]          = 10, -- Sha of Pride              
-	    [HEALBOT_DEBUFF_AURA_OF_PRIDE]     = 10, -- Sha of Pride        		
+	    [HEALBOT_DEBUFF_GOUGE]             = 11, -- The Fallen Protectors    
+	    [HEALBOT_DEBUFF_MARK_OF_ANGUISH]   = 9, -- The Fallen Protectors       
+	    [HEALBOT_DEBUFF_SHA_SEAR]          = 12, -- The Fallen Protectors
+		[HEALBOT_DEBUFF_FIXATE]            = 9, -- The Fallen Protectors      
+		--[[[HEALBOT_DEBUFF_DEBILITATION]      = 11, -- The Fallen Protectors
+		--HEALBOT_DEBUFF_SHADOWED_WEAKNESS]  = 12, -- The Fallen Protectors
+		[HEALBOT_DEBUFF_CORRUPTED_BREW]    = 11, -- The Fallen Protectors]]		  
+		[HEALBOT_DEBUFF_SELF_DOUBT]        = 11, -- Norushen
+        [HEALBOT_DEBUFF_BOTTOMLESS_PIT]    = 10, -- Norushen
+		[HEALBOT_DEBUFF_DISHEARTENING_LAUGH] = 10, -- Norushen 
+		--[[[HEALBOT_DEBUFF_DESPAIR]           = 12, -- Norushen 
+		[HEALBOT_DEBUFF_TEST_OF_SERENITY]  = 12, -- Norushen		
+	    [HEALBOT_DEBUFF_TEST_OF_RELIANCE]  = 12, -- Norushen       
+	    [HEALBOT_DEBUFF_TEST_OF_CONDIDENCE] = 12,]] -- Norushen 
+		[HEALBOT_DEBUFF_WOUNDED_PRIDE]     = 12, -- Sha of Pride
+		[HEALBOT_DEBUFF_CORRUPTED_PRISON]  = 10, -- Sha of Pride  
+		[HEALBOT_DEBUFF_BANISHMENT]        = 10, -- Sha of Pride Heroic              
+        [HEALBOT_DEBUFF_REACHING_ATTACK]   = 11, -- Sha of Pride 
+		[HEALBOT_DEBUFF_MARK_OF_ARROGANCE] = 9, -- Sha of Pride       
+	    [HEALBOT_DEBUFF_AURA_OF_PRIDE]     = 12, -- Sha of Pride
 		[HEALBOT_DEBUFF_FRACTURE]          = 10, -- Galakras
-		[HEALBOT_DEBUFF_FLAME_ARROWS]      = 10, -- Galakras
 		[HEALBOT_DEBUFF_POISON_CLOUD]      = 10, -- Galakras
-		[HEALBOT_DEBUFF_FLAMES_OF_GALAKROND] = 10, -- Galakras
+		--[[[HEALBOT_DEBUFF_FLAME_ARROWS]      = 10, -- Galakras
+		[HEALBOT_DEBUFF_FLAMES_OF_GALAKROND] = 10, -- Galakras]]
 		[HEALBOT_DEBUFF_LASER_BURN]        = 10, -- Iron Juggernaut
 		[HEALBOT_DEBUFF_IGNITE_ARMOUR]     = 10, -- Iron Juggernaut
 		[HEALBOT_DEBUFF_EXPLOSIVE_TAR]     = 10, -- Iron Juggernaut
-		[HEALBOT_DEBUFF_CUTTER_LASER_TARGET] = 10, -- Iron Juggernaut
+		[HEALBOT_DEBUFF_CUTTER_LASER_TARGET] = 9, -- Iron Juggernaut
 		[HEALBOT_DEBUFF_REND]              = 10, -- Kor'kron Dark Shaman
-		[HEALBOT_DEBUFF_FROSTSTORM_STRIKE] = 10, -- Kor'kron Dark Shaman
+		[HEALBOT_DEBUFF_FROSTSTORM_STRIKE] = 11, -- Kor'kron Dark Shaman
 		[HEALBOT_DEBUFF_TOXIC_MIST]        = 10, -- Kor'kron Dark Shaman
-		[HEALBOT_DEBUFF_FOUL_GEYSER]       = 10, -- Kor'kron Dark Shaman
-		[HEALBOT_DEBUFF_IRON_PRISON]       = 10, -- Kor'kron Dark Shaman Heroic
-		[HEALBOT_DEBUFF_IRON_TOMB]         = 10, -- Kor'kron Dark Shaman Heroic
-		[HEALBOT_DEBUFF_TOXICITY]          = 10, -- Kor'kron Dark Shaman
-		[HEALBOT_DEBUFF_SUNDERING_BLOW]    = 10, -- General Nazgrim
+		[HEALBOT_DEBUFF_IRON_PRISON]       = 9, -- Kor'kron Dark Shaman Heroic
+        --[[[HEALBOT_DEBUFF_FOUL_GEYSER]       = 12, -- Kor'kron Dark Shaman
+		[HEALBOT_DEBUFF_TOXICITY]          = 11, -- Kor'kron Dark Shaman]]
+		[HEALBOT_DEBUFF_SUNDERING_BLOW]    = 11, -- General Nazgrim
 		[HEALBOT_DEBUFF_BONECRACKER]       = 10, -- General Nazgrim
-		[HEALBOT_DEBUFF_ASSASSINS_MARK]    = 10, -- General Nazgrim
-		[HEALBOT_DEBUFF_HUNTERS_MARK]      = 10, -- General Nazgrim Heroic
-		[HEALBOT_DEBUFF_FATAL_STRIKE]      = 10, -- Malkorok             
-	    [HEALBOT_DEBUFF_LANGUISH]          = 10, -- Malkorok               
-	    [HEALBOT_DEBUFF_ANCIENT_MIASMA]    = 10, -- Malkorok       
-	    [HEALBOT_WEEK_ANCIENT_BARRIER]     = 10, -- Malkorok       
-		[HEALBOT_ANCIENT_BARRIER]          = 10, -- Malkorok       
-		[HEALBOT_STRONG_ANCIENT_BARRIER]   = 10, -- Malkorok     
-		[HEALBOT_DEBUFF_SET_TO_BLOW]       = 10, -- Spoils of Pandaria
+		[HEALBOT_DEBUFF_ASSASSINS_MARK]    = 9, -- General Nazgrim
+		[HEALBOT_DEBUFF_HUNTERS_MARK]      = 9, -- General Nazgrim Heroic
+		[HEALBOT_DEBUFF_FATAL_STRIKE]      = 11, -- Malkorok                          
+	    [HEALBOT_WEEK_ANCIENT_BARRIER]     = 12, -- Malkorok       
+		[HEALBOT_ANCIENT_BARRIER]          = 12, -- Malkorok
+		[HEALBOT_STRONG_ANCIENT_BARRIER]   = 12, -- Malkorok  
+		--[[HEALBOT_DEBUFF_ANCIENT_MIASMA]     = 10, -- Malkorok       
+		[HEALBOT_DEBUFF_LANGUISH]          = 11, -- Malkorok Heroic]] 		
+		[HEALBOT_DEBUFF_SET_TO_BLOW]       = 9, -- Spoils of Pandaria
 		[HEALBOT_DEBUFF_CARNIVOROUS_BITE]  = 10, -- Spoils of Pandaria
 		[HEALBOT_DEBUFF_ENCAPSULATED_PHEROMONES] = 10, -- Spoils of Pandaria
-	    [HEALBOT_DEBUFF_KEG_TOSS]          = 10, -- Spoils of Pandaria
+	    [HEALBOT_DEBUFF_KEG_TOSS]          = 11, -- Spoils of Pandaria
         [HEALBOT_DEBUFF_GUSTING_BOMB]      = 10, -- Spoils of Pandaria
-		[HEALBOT_DEBUFF_PANIC]             = 10, -- Thok the Bloodthirsty      
-	    [HEALBOT_DEBUFF_TAIL_LASH]         = 10, -- Thok the Bloodthirsty     
-	    [HEALBOT_DEBUFF_FIXATE]            = 10, -- Thok the Bloodthirsty     
-	    [HEALBOT_DEBUFF_ACID_BREATH]       = 10, -- Thok the Bloodthirsty     
-	    [HEALBOT_DEBUFF_FREEZING_BREATH]   = 10, -- Thok the Bloodthirsty     
-	    [HEALBOT_DEBUFF_ICY_BLOOD]         = 10, -- Thok the Bloodthirsty     
+		--[HEALBOT_DEBUFF_UNSTABLE_DEFENSE_SYSTEMS] = 10, -- Spoils of Pandaria 
+		[HEALBOT_DEBUFF_PANIC]             = 11, -- Thok the Bloodthirsty      
+	    [HEALBOT_DEBUFF_TAIL_LASH]         = 11, -- Thok the Bloodthirsty     
+	    [HEALBOT_DEBUFF_FIXATE]            = 12, -- Thok the Bloodthirsty     
+	    [HEALBOT_DEBUFF_ACID_BREATH]       = 11, -- Thok the Bloodthirsty     
+	    [HEALBOT_DEBUFF_FREEZING_BREATH]   = 11, -- Thok the Bloodthirsty        
 	    [HEALBOT_DEBUFF_SCORCHING_BREATH]  = 10, -- Thok the Bloodthirsty    
-	    [HEALBOT_DEBUFF_BURNING_BLOOD]     = 10, -- Thok the Bloodthirsty    
-		[HEALBOT_DEBUFF_ELECTROSTATIC_CHARGE] = 10, --Siegecrafter Blackfuse
+	    --[[[HEALBOT_DEBUFF_BURNING_BLOOD]     = 10, -- Thok the Bloodthirsty
+		[HEALBOT_DEBUFF_ICY_BLOOD]         = 12, -- Thok the Bloodthirsty
+		[HEALBOT_DEBUFF_BLOODIED]          = 12, -- Thok the Bloodthirsty]] 		
+		[HEALBOT_DEBUFF_ELECTROSTATIC_CHARGE] = 11, --Siegecrafter Blackfuse
 	    [HEALBOT_DEBUFF_OVERLOAD]          = 10, -- Siegecrafter Blackfuse           
-	    [HEALBOT_DEBUFF_PATTERN_RECOGNITION] = 10, -- Siegecrafter Blackfuse  
 	    [HEALBOT_DEBUFF_SUPERHEATED]       = 10, -- Siegecrafter Blackfuse          
-	    [HEALBOT_DEBUFF_MAGNETIC_CRUSH]    = 10, -- Siegecrafter Blackfuse       
-		[HEALBOT_DEBUFF_EXPOSED_VEINS]     = 10, -- Paragons of the Klaxxi 
-		[HEALBOT_DEBUFF_GOUGE]             = 10, -- Paragons of the Klaxxi 
+	    --HEALBOT_DEBUFF_MAGNETIC_CRUSH]     = 10, -- Siegecrafter Blackfuse  		
+		[HEALBOT_DEBUFF_MUTATE]            = 12, -- Paragons of the Klaxxi 
+		[HEALBOT_DEBUFF_EXPOSED_VEINS]     = 11, -- Paragons of the Klaxxi 
+		[HEALBOT_DEBUFF_GOUGE]             = 11, -- Paragons of the Klaxxi 
 	    [HEALBOT_DEBUFF_CAUSTIC_BLOOD]     = 10, -- Paragons of the Klaxxi 
-		[HEALBOT_DEBUFF_TENDERZING_STRIKES] = 10, -- Paragons of the Klaxxi 
-		[HEALBOT_DEBUFF_MEZMERIZE]         = 10, -- Paragons of the Klaxxi 
-		[HEALBOT_DEBUFF_SHIELD_BASH]       = 10, -- Paragons of the Klaxxi 
+		[HEALBOT_DEBUFF_TENDERZING_STRIKES] = 11, -- Paragons of the Klaxxi 
+		[HEALBOT_DEBUFF_MEZMERIZE]         = 9, -- Paragons of the Klaxxi 
+		[HEALBOT_DEBUFF_SHIELD_BASH]       = 9, -- Paragons of the Klaxxi 
 		[HEALBOT_DEBUFF_CAUSTIC_AMBER]     = 10, -- Paragons of the Klaxxi 
-		[HEALBOT_DEBUFF_HEWN]              = 10, -- Paragons of the Klaxxi 
-		[HEALBOT_DEBUFF_GENETIC_ALTERATION] = 10, -- Paragons of the Klaxxi
+		[HEALBOT_DEBUFF_HEWN]              = 11, -- Paragons of the Klaxxi 
+		[HEALBOT_DEBUFF_GENETIC_ALTERATION] = 11, -- Paragons of the Klaxxi
 		[HEALBOT_DEBUFF_INJECTION]         = 10, -- Paragons of the Klaxxi 
-		[HEALBOT_DEBUFF_AIM]               = 10, -- Paragons of the Klaxxi 
+		[HEALBOT_DEBUFF_AIM]               = 9, -- Paragons of the Klaxxi 
 		[HEALBOT_DEBUFF_WHIRLING]          = 10, -- Paragons of the Klaxxi
-        [HEALBOT_DEBUFF_HUNGER]            = 10, -- Paragons of the Klaxxi
-        [HEALBOT_DEBUFF_FIERY_EDGE]        = 10, -- Paragons of the Klaxxi 		
-		--Garrosh Hellscream
-		[HEALBOT_DEBUFF_HAMSTRING]         = 10, -- Garrosh Hellscream
-	    [HEALBOT_EMBODIED_DOUBT]           = 10, -- Garrosh Hellscream
-	    [HEALBOT_DEBUFF_ULTIMATE_DESPAIR]  = 10, -- Garrosh Hellscream
-        [HEALBOT_DEBUFF_WHIRLING_CORRUPTION] = 10, -- Garrosh Hellscream 
-        [HEALBOT_DEBUFF_TOUCH_OF_YSHAARJ]  = 10, -- Garrosh Hellscream 
-        [HEALBOT_DEBUFF_EMPOWERED_TOUCH_OF_YSHAARJ] = 10, -- Garrosh Hellscream 
-        [HEALBOT_DEBUFF_GRIPPING_DESPAIR]  = 10, -- Garrosh Hellscream
-        [HEALBOT_DEBUFF_EMPOWERED_GRIPPING_DESPAIR] = 10, -- Garrosh Hellscream 
-        [HEALBOT_DEBUFF_EXPLOSIVE_DESPAIR] = 10, -- Garrosh Hellscream     		
-        [HEALBOT_DEBUFF_MARK_OF_ARROGANCE] = 10, -- Sha of Pride
+        [HEALBOT_DEBUFF_FIERY_EDGE]        = 10, -- Paragons of the Klaxxi 	
+        [HEALBOT_DEBUFF_FEED]              = 10, -- Paragons of the Klaxxi
+ 		[HEALBOT_DEBUFF_NOXIOUS_VAPORS]    = 10, -- Paragons of the Klaxxi  
+		[HEALBOT_DEBUFF_CANNED_HEAT]       = 12, -- Paragons of the Klaxxi Heroic      
+		[HEALBOT_DEBUFF_EERIE_FOG]         = 10, -- Paragons of the Klaxxi Heroic    
+		--[[[HEALBOT_DEBUFF_CHILLED_TO_THE_BONE] = 11, -- Paragons of the Klaxxi Heroic  
+		[HEALBOT_DEBUFF_HUNGER]            = 12, -- Paragons of the Klaxxi]]
+		[HEALBOT_DEBUFF_HAMSTRING]         = 11, -- Garrosh Hellscream   
+        [HEALBOT_DEBUFF_EMBODIED_DOUBT]    = 11, -- Garrosh Hellscream
+		[HEALBOT_DEBUFF_TOUCH_OF_YSHAARJ]  = 9, -- Garrosh Hellscream 
+        [HEALBOT_DEBUFF_EMPOWERED_TOUCH_OF_YSHAARJ] = 9, -- Garrosh Hellscream 
+		[HEALBOT_DEBUFF_GRIPPING_DESPAIR]  = 10, -- Garrosh Hellscream
+        [HEALBOT_DEBUFF_EMPOWERED_GRIPPING_DESPAIR] = 10, -- Garrosh Hellscream
+        [HEALBOT_DEBUFF_EXPLOSIVE_DESPAIR] = 11, -- Garrosh Hellscream
+	    [HEALBOT_DEBUFF_MALICE]            = 9, -- Garrosh Hellscream Heroic
+		[HEALBOT_DEBUFF_MALICIOUS_BLAST]   = 11, -- Garrosh Hellscream Heroic    
+		[HEALBOT_DEBUFF_FIXATE]            = 9, -- Garrosh Hellscream Heroic      
+		[HEALBOT_DEBUFF_NAPALM]            = 10, -- Garrosh Hellscream Heroic     
+		[HEALBOT_DEBUFF_FAITH]             = 11, -- Garrosh Hellscream Buff
+		[HEALBOT_DEBUFF_HOPE]              = 11, -- Garrosh Hellscream Buff     
+		[HEALBOT_DEBUFF_COURAGE]           = 11, -- Garrosh Hellscream Buff     
+		--[HEALBOT_DEBUFF_DESECRATED]        = 10, -- Garrosh Hellscream      
 	},
     Custom_Debuff_Categories=HEALBOT_CUSTOM_DEBUFF_CATS;
-    HoTReserve = {
-        ["DRUI"] = {[1] = 1, [2] = 1, [3] = 1, [4] = 1},
-        ["HUNT"] = {[1] = 1, [2] = 1, [3] = 1, [4] = 1},
-        ["MAGE"] = {[1] = 1, [2] = 1, [3] = 1, [4] = 1},
-        ["PALA"] = {[1] = 1, [2] = 1, [3] = 1, [4] = 1},
-        ["PRIE"] = {[1] = 1, [2] = 1, [3] = 1, [4] = 1},
-        ["ROGU"] = {[1] = 1, [2] = 1, [3] = 1, [4] = 1},
-        ["SHAM"] = {[1] = 1, [2] = 1, [3] = 1, [4] = 1},
-        ["WARL"] = {[1] = 1, [2] = 1, [3] = 1, [4] = 1},
-        ["WARR"] = {[1] = 1, [2] = 1, [3] = 1, [4] = 1},
-        ["DEAT"] = {[1] = 1, [2] = 1, [3] = 1, [4] = 1},
-        ["MONK"] = {[1] = 1, [2] = 1, [3] = 1, [4] = 1},
-    },
     WatchHoT = {
         ["DRUI"] = {
             [HEALBOT_REJUVENATION]=2,
@@ -578,7 +600,8 @@ HealBot_GlobalsDefaults = {
             [HEALBOT_ENRAGED_REGEN]=2,
             [HEALBOT_BARKSKIN]=4,
             [HEALBOT_IRONBARK]=2,
-            [HEALBOT_HARMONY]=2,
+            [HEALBOT_INNERVATE]=2,
+			[HEALBOT_HARMONY]=2,
             [HEALBOT_SURVIVAL_INSTINCTS]=2,
             [HEALBOT_FRENZIED_REGEN]=2,
             [HEALBOT_NATURES_GRASP]=2,
@@ -588,6 +611,7 @@ HealBot_GlobalsDefaults = {
         ["HUNT"] = {
             [HEALBOT_MENDPET]=2,
             [HEALBOT_DETERRENCE]=4,
+            [HEALBOT_TRAP_LAUNCHER]=2,
         }, 
         ["MAGE"] = {
             [HEALBOT_EVOCATION]=2,
@@ -647,11 +671,13 @@ HealBot_GlobalsDefaults = {
         },
         ["ROGU"] = {
             [HEALBOT_VANISH]=4,
+            [HEALBOT_EVASION]=4,
             [HEALBOT_FEINT]=4,
             [HEALBOT_CLOAK_OF_SHADOWS]=4,
         },
         ["SHAM"] = {
             [HEALBOT_RIPTIDE]=2,
+            [HEALBOT_HEALING_STREAM_TOTEM]=2,
             [HEALBOT_EARTH_SHIELD]=3,
             [HEALBOT_WATER_SHIELD]=2,
             [HEALBOT_LIGHTNING_SHIELD]=2,
@@ -715,8 +741,9 @@ HealBot_GlobalsDefaults = {
             [HEALBOT_GUARD]=4,
         },
         ["ALL"] = {
-            [HEALBOT_GIFT_OF_THE_NAARU]=1,
-            [HEALBOT_GUARDIAN_ANCIENT_KINGS]=2,
+            [HEALBOT_GIFT_OF_THE_NAARU]=2,
+			[HEALBOT_DARKFLIGHT]=2,
+			[HEALBOT_STONEFORM]=2,
         },
     },
 };
@@ -1228,85 +1255,85 @@ HealBot_Config_SkinsDefaults = {
                                                    [10] = {["IC"]=4,["IR"]=0,["IG"]=0.5,["IB"]=0,["IA"]=0.52,["AC"]=3,["AR"]=1,["AG"]=1,["AB"]=1,["AA"]=0.4},},
                  },
     BarText  =  {[HEALBOT_SKINS_STD]             = {[1] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [2] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [3] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [4] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [5] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [6] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [7] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [8] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [9] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                    [10] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},},
                [HEALBOT_OPTIONS_GROUPHEALS]      = {[1] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [2] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [3] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [4] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [5] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [6] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [7] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [8] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                     [9] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},
                                                    [10] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=1,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=1},},
                [HEALBOT_OPTIONS_EMERGENCYHEALS]  = {[1] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [2] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [3] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [4] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [5] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [6] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [7] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [8] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [9] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                    [10] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=10,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},},
                [HEALBOT_ZONE_AV]                 = {[1] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=9,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [2] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=9,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [3] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=9,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [4] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=9,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [5] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=9,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [6] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=9,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [7] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=9,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [8] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=9,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                     [9] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=9,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},
                                                    [10] = {["FONT"]=HealBot_Default_Font,["HEIGHT"]=9,["CLASSTYPE"]=1,["SHOWROLE"]=1,["CLASSONBAR"]=0,["NAMEONBAR"]=1,["HLTHONBAR"]=1,["CLASSCOL"]=0,
-                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=1,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},},
+                                                           ["ALIGN"]=2,["DOUBLE"]=1,["INCHEALS"]=2,["NUMFORMAT1"]=11,["NUMFORMAT2"]=1,["OUTLINE"]=1,["HLTHTYPE"]=3},},
                   },
     BarTextCol  =  {[HEALBOT_SKINS_STD]          = {[1] = {["ER"]=1,["EG"]=1,["EB"]=0,["EA"]=1,["DR"]=0.5,["DG"]=0.5,["DB"]=0.5,["DA"]=0.4,["CR"]=1,["CG"]=1,["CB"]=1,["CA"]=1},
                                                     [2] = {["ER"]=1,["EG"]=1,["EB"]=0,["EA"]=1,["DR"]=0.5,["DG"]=0.5,["DB"]=0.5,["DA"]=0.4,["CR"]=1,["CG"]=1,["CB"]=1,["CA"]=1},
@@ -1491,6 +1518,7 @@ HealBot_Class_Spells = {};
 HealBot_Class_Buffs = {};
 HealBot_Class_Cures = {};
 HealBot_MapScale = {};
+HealBot_customTempUserName={}
 
 HealBot_Data={  ["TIPUNIT"] = "NONE",
                 ["TIPTYPE"] = "NONE",
@@ -1502,6 +1530,8 @@ HealBot_Data={  ["TIPUNIT"] = "NONE",
                 ["PGUID"] = false,
                 ["INSPECT"] = false,
                 ["REFRESH"] = 1,
+                ["MAPID"] = 0,
+                ["UNITSLOCK"] = 0,
 };
 HealBot_UnitData={};
 HealBot_UnitGUID={};
