@@ -77,6 +77,40 @@ L:AddLocale("enUS",
 }
 
 )
+L:AddLocale("itIT", 
+{
+	-- afkdnd_desc = "",
+	-- afkdnd_name = "",
+	-- ["A module to provide basic chat filtering."] = "",
+	-- bgjoin_desc = "",
+	-- bgjoin_name = "",
+	-- Filtering = "",
+	-- leavejoin_desc = "",
+	-- leavejoin_name = "",
+	-- notices_desc = "",
+	-- notices_name = "",
+	-- tradespam_desc = "",
+	-- tradespam_name = "",
+}
+
+)
+L:AddLocale("ptBR", 
+{
+	-- afkdnd_desc = "",
+	-- afkdnd_name = "",
+	-- ["A module to provide basic chat filtering."] = "",
+	-- bgjoin_desc = "",
+	-- bgjoin_name = "",
+	-- Filtering = "",
+	-- leavejoin_desc = "",
+	-- leavejoin_name = "",
+	-- notices_desc = "",
+	-- notices_name = "",
+	-- tradespam_desc = "",
+	-- tradespam_name = "",
+}
+
+)
 L:AddLocale("frFR",  
 {
 	-- afkdnd_desc = "",

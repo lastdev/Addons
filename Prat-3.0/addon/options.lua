@@ -262,6 +262,48 @@ L:AddLocale("zhTW",
 }
 
 )
+L:AddLocale("itIT",  
+{
+	-- display_desc = "",
+	-- display_name = "",
+	-- extras_desc = "",
+	-- extras_name = "",
+	-- formatting_desc = "",
+	-- formatting_name = "",
+	-- load_desc = "",
+	-- load_disabled = "",
+	-- load_disabledonrestart = "",
+	-- load_enabled = "",
+	-- load_enabledonrestart = "",
+	-- load_no = "",
+	-- modulecontrol_desc = "",
+	-- modulecontrol_name = "",
+	-- prat = "",
+	-- reload_required = "",
+}
+
+)
+L:AddLocale("ptBR",  
+{
+	display_desc = "Controle de Visualização de Frame de Chat",
+	display_name = "Configurações de Visualização",
+	extras_desc = "Módulos Diversos",
+	-- extras_name = "",
+	-- formatting_desc = "",
+	formatting_name = "Formatação do Chat",
+	-- load_desc = "",
+	load_disabled = "Desativado",
+	-- load_disabledonrestart = "",
+	load_enabled = "Ativado",
+	-- load_enabledonrestart = "",
+	load_no = "Não Carregar",
+	modulecontrol_desc = "Controlar carregamento de módulos permitidos pelo Prat",
+	modulecontrol_name = "Controle de Módulo", -- Needs review
+	prat = "Prat",
+	reload_required = "Essa alteração pode não ter efeitos até você %s sua IU.",
+}
+
+)
 --@end-non-debug@
 
 

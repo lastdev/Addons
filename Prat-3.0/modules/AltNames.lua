@@ -267,7 +267,7 @@ Prat:AddModuleToLoad(function()
 	["Don't use data from the PlayerNames module at all"] = "Ne pas utiliser les donnée du module \"PlayerNames\" du tout",
 	["ERROR: some function sent a blank message!"] = "ERREUR: une fonction a envoyé un message blanc !",
 	["Find characters"] = "Trouver des personnages",
-	["Fix alts"] = "Réparer les personnages secondaires", -- Needs review
+	["Fix alts"] = "Réparer les personnages secondaires",
 	["Fix corrupted entries in your list of alt names."] = "Réparer les entrées corrompues dans votre liste de noms alternatifs.",
 	-- ["Found alt: %s => main: %s"] = "",
 	-- ["guild member alts found and imported: %s"] = "",

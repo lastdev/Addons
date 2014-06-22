@@ -7965,7 +7965,7 @@
                     <Anchors>
                       <Anchor point="TOPLEFT">
                         <Offset>
-                          <AbsDimension x="80" y="-50" />
+                          <AbsDimension x="80" y="-40" />
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -7977,7 +7977,7 @@
                     <Anchors>
                       <Anchor point="TOPLEFT">
                         <Offset>
-                          <AbsDimension x="230" y="-50" />
+                          <AbsDimension x="80" y="-75" />
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -7985,11 +7985,23 @@
                       <OnClick>HealBot_Options_ShowDebuffIcon_OnClick(self)</OnClick>
                     </Scripts>
                   </CheckButton>
+                  <CheckButton name="HealBot_Options_ShowDirection" inherits="OptionsCheckButtonTemplate">
+                    <Anchors>
+                      <Anchor point="TOPLEFT">
+                        <Offset>
+                          <AbsDimension x="320" y="-40" />
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                    <Scripts>
+                      <OnClick>HealBot_Options_ShowDirection_OnClick(self)</OnClick>
+                    </Scripts>
+                  </CheckButton>
                   <CheckButton name="HealBot_Options_ShowReadyCheck" inherits="OptionsCheckButtonTemplate">
                     <Anchors>
                       <Anchor point="TOPLEFT">
                         <Offset>
-                          <AbsDimension x="385" y="-50" />
+                          <AbsDimension x="320" y="-75" />
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -8001,7 +8013,7 @@
                     <Anchors>
                       <Anchor point="TOPLEFT">
                         <Offset>
-                          <AbsDimension x="230" y="-115" />
+                          <AbsDimension x="230" y="-125" />
                         </Offset>
                       </Anchor>
                     </Anchors>

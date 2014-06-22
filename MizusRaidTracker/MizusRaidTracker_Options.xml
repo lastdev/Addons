@@ -133,6 +133,13 @@
           </Layer>
         </Layers>
         <Scripts>
+		 <OnValueChanged>
+           if not self._onsetting then
+             self._onsetting = true
+             self:SetValue(self:GetValue())
+             self._onsetting = false
+           else return end             
+          </OnValueChanged>
           <OnMouseDown>self:SetScript("OnUpdate", function() MRT_Options_MP_Prunning_Slider(self); end)</OnMouseDown>
           <OnMouseUp>self:SetScript("OnUpdate", nil)</OnMouseUp>
         </Scripts>
@@ -142,6 +149,15 @@
           </Size>
         </ThumbTexture>
       </Slider>
+      <Button name="$parent_Reset_GUI_Button" inherits="GameMenuButtonTemplate" hidden="false" test="FIXME!">
+        <Size x="200" y="22"/>
+        <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Prunning_Slider" relativePoint="BOTTOMLEFT" y="-10"/>
+        </Anchors>
+        <Scripts>
+          <OnClick>MRT_Options_MainPanel_ResetGUIPos();</OnClick>
+        </Scripts>
+      </Button>
     </Frames>
     <Scripts>
       <OnLoad>MRT_Options_MainPanel_OnLoad(self);</OnLoad>
@@ -313,6 +329,13 @@
           </Layer>
         </Layers>
         <Scripts>
+		 <OnValueChanged>
+           if not self._onsetting then
+             self._onsetting = true
+             self:SetValue(self:GetValue())
+             self._onsetting = false
+           else return end             
+          </OnValueChanged>
           <OnMouseDown>self:SetScript("OnUpdate", function() MRT_Options_TP_MinItemQualityToLog_Slider(self); end)</OnMouseDown>
           <OnMouseUp>self:SetScript("OnUpdate", nil)</OnMouseUp>
         </Scripts>
@@ -371,6 +394,13 @@
           </Layer>
         </Layers>
         <Scripts>
+         <OnValueChanged>
+           if not self._onsetting then
+             self._onsetting = true
+             self:SetValue(self:GetValue())
+             self._onsetting = false
+           else return end             
+         </OnValueChanged>
           <OnMouseDown>self:SetScript("OnUpdate", function() MRT_Options_TP_MinItemQualityToGetCost_Slider(self); end)</OnMouseDown>
           <OnMouseUp>self:SetScript("OnUpdate", nil)</OnMouseUp>
         </Scripts>
@@ -587,6 +617,13 @@
                   </Layer>
                 </Layers>
                 <Scripts>
+			 <OnValueChanged>
+			   if not self._onsetting then
+				 self._onsetting = true
+				 self:SetValue(self:GetValue())
+				 self._onsetting = false
+			   else return end             
+			  </OnValueChanged>
                   <OnMouseDown>self:SetScript("OnUpdate", function() MRT_Options_AP_GADuration_Slider(); end)</OnMouseDown>
                   <OnMouseUp>self:SetScript("OnUpdate", nil)</OnMouseUp>
                 </Scripts>

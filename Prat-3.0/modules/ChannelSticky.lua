@@ -236,7 +236,7 @@ Prat:SetModuleDefaults(module, {
 	    officer = true,
 	    raid = true,
 	    raid_warning = true,
-	    instance = true,
+	    instance_chat = true,
 	    channel = true,
 	    emote = true,
 	    perframe = false,
@@ -288,7 +288,7 @@ function module:OnModuleEnable()
     self:Stickum("OFFICER",prof.officer)
     self:Stickum("RAID",prof.raid)
     self:Stickum("RAID_WARNING",prof.raid_warning)
-    self:Stickum("INSTANCE_CHAT",prof.instance)
+    self:Stickum("INSTANCE_CHAT",prof.instance_chat)
     self:Stickum("CHANNEL",prof.channel)
     self:Stickum("EMOTE",prof.emote)
 

@@ -1,3 +1,6 @@
+== Version 50400.1.2
+* Arcane & Frost: Added flashing for Ice Floes when you are moving.
+
 == Version 50400.1.1
 * All: Flashes WoW's 9th Anniversary Celebration Package.
 
@@ -93,6 +96,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 * Fire: Lowered the priority of Nether Tempest / Living Bomb.  Simulations showed a dps improvement.
 * Fire: Worked a bit on the Heating Up / Pyroblast! detection, including adjusting some lag tolerances.  I believe it is an improvement.
 * Fire: Removed the 3rd line from the combustion monitor.
-
-== Version 2.12.4
-* Fire: Fixed the combustion monitor to reflect changes in 5.1.0.

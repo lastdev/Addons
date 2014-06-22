@@ -19,6 +19,7 @@ local string = string;
 local table = table;
 local time = time;
 local tonumber = tonumber;
+local playerRealm = GetRealmName()
 
 -- set namespace
 setfenv(1, WIM);
@@ -137,6 +138,7 @@ function Module:GUILD_ROSTER_UPDATE()
       local token = _G.GetTime();
       for i=1, _G.GetNumGuildMembers() do 
 			  local name, _, _, _, _, _, _, _, online, _, _, _, _, isMobile = _G.GetGuildRosterInfo(i);
+			  name = _G.Ambiguate(name, "none")
 			  if name and online and shouldNegotiate("guild", name, token, isMobile) then
 				  Negotiate("WHISPER", name);
 			  end
@@ -147,6 +149,7 @@ function Module:GUILD_ROSTER_UPDATE()
       local token = _G.GetTime();
       for i=1, _G.GetNumGuildMembers() do 
 			  local name, _, _, _, _, _, _, _, online, _, _, _, _, isMobile = _G.GetGuildRosterInfo(i);
+			  name = _G.Ambiguate(name, "none")
 			  if name and online and shouldNegotiate("guild", name, token, isMobile) then
 				  -- do nothing, we're broadcasting...
 			  end
@@ -162,7 +165,7 @@ function Module:GROUP_ROSTER_UPDATE()
             local token = _G.GetTime();
             for i=1, 40 do
                 local unit = "raid"..i;
-                local name, realm = _G.UnitName(unit);
+                local name, realm = _G.GetUnitName(unit, true);
                 name = name and realm and string.len(realm) > 2 and name.."-"..realm or name;
                 if(name and _G.UnitIsConnected(unit) and shouldNegotiate("raid", name, token)) then
                     Negotiate("WHISPER", name);
@@ -174,7 +177,7 @@ function Module:GROUP_ROSTER_UPDATE()
             local token = _G.GetTime();
             for i=1, 40 do
                 local unit = "raid"..i;
-                local name, realm = _G.UnitName(unit);
+                local name, realm = _G.GetUnitName(unit, true);
                 name = name and realm and string.len(realm) > 2 and name.."-"..realm or name;
                 if(name and _G.UnitIsConnected(unit) and shouldNegotiate("raid", name, token)) then
                     -- do nothing, we're broadcasting...
@@ -189,7 +192,7 @@ function Module:GROUP_ROSTER_UPDATE()
             local token = _G.GetTime();
             for i=1, 5 do
                 local unit = "party"..i;
-                local name, realm = _G.UnitName(unit);
+                local name, realm = _G.GetUnitname(unit, true);
                 name = name and realm and string.len(realm) > 2 and name.."-"..realm or name;
                 if(name and _G.UnitIsConnected(unit) and shouldNegotiate("party", name, token)) then
                     Negotiate("WHISPER", name);
@@ -201,7 +204,7 @@ function Module:GROUP_ROSTER_UPDATE()
             local token = _G.GetTime();
             for i=1, 5 do
                 local unit = "party"..i;
-                local name, realm = _G.UnitName(unit);
+                local name, realm = _G.GetUnitName(unit, true);
                 name = name and realm and string.len(realm) > 2 and name.."-"..realm or name;
                 if(name and _G.UnitIsConnected(unit) and shouldNegotiate("party", name, token)) then
                     -- do nothing, we're broadcasting...

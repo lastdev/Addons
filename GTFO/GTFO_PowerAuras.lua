@@ -17,16 +17,23 @@ Change Log:
 
 GTFO_PowerAuras = {"GTFOHigh", "GTFOLow", "GTFOFail", "GTFOFriendlyFire"};
 function GTFO_DisplayAura_PowerAuras(iType)
-	if (not PowaAuras) then return; end
+	local PowaAurasEnabled
+	if (PowaAuras_GlobalTrigger) then
+		PowaAurasEnabled = PowaAuras_GlobalTrigger()
+	end
+	if (not PowaAuras) and (not PowaAurasEnabled) then return; end
 	local auraType = GTFO_PowerAuras[iType];
 	if (not auraType) then return; end
 
 	GTFO.ShowAlert = true;
 	
-	if (PowaAuras.MarkAuras) then 
+	if (PowaAuras and PowaAuras.MarkAuras) then
 		-- PowerAuras 5.x
 		PowaAuras:MarkAuras(auraType);
-	elseif (PowaAuras.AurasByType[auraType]) then 
+	elseif (PowaAurasEnabled) then
+		-- PowerAuras 4.24.2+
+		PowaAuras_GlobalTrigger(auraType);
+	elseif (PowaAuras and PowaAuras.AurasByType[auraType]) then 
 		-- Old and depeciated (for V4.x of PowerAuras)
 		for index, auraid in ipairs(PowaAuras.AurasByType[auraType]) do
 			if (PowaAuras.Auras[auraid]:ShouldShow()) then

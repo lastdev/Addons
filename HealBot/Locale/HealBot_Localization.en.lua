@@ -1280,6 +1280,7 @@ function HealBot_Lang_enALL()
     HEALBOT_WORDS_ADDTEMPCUSTOMNAME         = "Add temporary custom name"
     HEALBOT_WORDS_ADDPERMCUSTOMNAME         = "Add permanent custom name"
     HEALBOT_OPTIONS_ENABLELIBUTF8           = "Enable UTF8 library"
+    HEALBOT_OPTIONS_SHOWDIRECTION           = "Show Out of Range Direction";
 end
 
 if (GetLocale() == "enUK") then

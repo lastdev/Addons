@@ -87,6 +87,52 @@ L:AddLocale("enUS",
 }
 
 )
+L:AddLocale("itIT", 
+{
+	-- Bottom = "",
+	-- ["Chat window scrolling options."] = "",
+	-- ["Control whether text is added to the frame at the top or the bottom."] = "",
+	-- lowdown_desc = "",
+	-- lowdown_name = "",
+	-- modified_speed = "",
+	-- modified_speed_desc = "",
+	-- mousewheel_desc = "",
+	-- mousewheel_name = "",
+	-- Scroll = "",
+	-- ["Set Ctrl+MouseWheel Speed"] = "",
+	-- ["Set MouseWheel Speed"] = "",
+	-- ["Set number of lines mousewheel will scroll."] = "",
+	-- ["Set number of lines mousewheel will scroll when ctrl is pressed."] = "",
+	-- ["Set TheLowDown Delay"] = "",
+	-- ["Set time to wait before jumping to the bottom of chat windows."] = "",
+	-- ["Text scroll direction"] = "",
+	-- Top = "",
+}
+
+)
+L:AddLocale("ptBR", 
+{
+	-- Bottom = "",
+	-- ["Chat window scrolling options."] = "",
+	-- ["Control whether text is added to the frame at the top or the bottom."] = "",
+	-- lowdown_desc = "",
+	-- lowdown_name = "",
+	-- modified_speed = "",
+	-- modified_speed_desc = "",
+	-- mousewheel_desc = "",
+	-- mousewheel_name = "",
+	-- Scroll = "",
+	-- ["Set Ctrl+MouseWheel Speed"] = "",
+	-- ["Set MouseWheel Speed"] = "",
+	-- ["Set number of lines mousewheel will scroll."] = "",
+	-- ["Set number of lines mousewheel will scroll when ctrl is pressed."] = "",
+	-- ["Set TheLowDown Delay"] = "",
+	-- ["Set time to wait before jumping to the bottom of chat windows."] = "",
+	-- ["Text scroll direction"] = "",
+	-- Top = "",
+}
+
+)
 L:AddLocale("frFR",  
 {
 	Bottom = "Bas vers le haut",
@@ -104,7 +150,7 @@ L:AddLocale("frFR",
 	["Set number of lines mousewheel will scroll."] = "Définit le nombre de lignes qui défilent lors d'un coup de molette avec la souris.",
 	["Set number of lines mousewheel will scroll when ctrl is pressed."] = "Définit le nombre de lignes qui défilent lorsque Ctrl est enfoncé.",
 	-- ["Set TheLowDown Delay"] = "",
-	-- ["Set time to wait before jumping to the bottom of chat windows."] = "",
+	["Set time to wait before jumping to the bottom of chat windows."] = "Régler le temps d'attente avant de sauter au bas de la fenêtre de chat.", -- Needs review
 	["Text scroll direction"] = "Direction du texte",
 	Top = "Haut en bas",
 }

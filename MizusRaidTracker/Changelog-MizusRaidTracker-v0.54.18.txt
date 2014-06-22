@@ -1,0 +1,12 @@
+tag v0.54.18
+f7aff4bd909973ea97895102680c252cb71a8de2
+Mizukichan <mizukichan@arcor.de>
+2014-06-01 00:11:39 +0200
+
+Tagging as v0.54.18
+
+
+--------------------
+
+Mizukichan:
+	- TOC bump.

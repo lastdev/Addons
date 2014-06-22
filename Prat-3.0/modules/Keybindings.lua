@@ -89,7 +89,7 @@ Prat:AddModuleToLoad(function()
 	["Channel %d"] = "Canal %d",
 	["Copy Selected Chat Frame"] = "Copier la fenêtre de Chat sélectionné",
 	["Guild Channel"] = "Canal de Guilde",
-	["Instance Channel"] = "Canal Champ de bataille", -- Needs review
+	["Instance Channel"] = "Canal d'Instance",
 	-- ["Next Chat Tab"] = "",
 	["Officer Channel"] = "Canal Officier",
 	["Party Channel"] = "Canal de Groupe",

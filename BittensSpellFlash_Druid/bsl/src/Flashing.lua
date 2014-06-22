@@ -248,6 +248,10 @@ local function getDelay(spell)
 		return false
 	end
 	
+	if spell.Type == "form" and c.IsCasting(spell.ID) then
+		return false
+	end
+	
 	if spell.Range and c.DistanceAtTheMost() > spell.Range then
 		return nil
 	end
@@ -286,6 +290,20 @@ local function delayFlash(spell, delay, minDelay, rotation)
 	end
 end
 
+-- GetDelay (on a spell) can return up to 2 values: "delay" and "modDelay".
+--
+-- "delay" is the time until the spell is ready to flash (in seconds), or a
+-- falsey value to indicate it should be skipped.  "modDelay", if present,
+-- restricts the spell to only flash if "delay" <= "modDelay".
+-- 
+-- However, if the IsMinDelayDefinition flag is set, that changes things.  Then
+-- "delay" is the minimum time all lower priority spells must be delayed.
+-- "modDelay", if present, causes that restriction to only apply to lower
+-- priority spells whose delay would otherwise be > "delay - modDelay".  So,
+-- for example, "Exorcism Delay" causes any spells lower than its priority that
+-- would come off cooldown .2 seconds before Exorcism to pretend they won't come
+-- off cooldown until Exercism.  That causes Exorcism to flash instead, since
+-- it's worth waiting those .2 seconds  (at most).
 function c.DelayPriorityFlash(...)
 	local minDelay = 0
 	local nextDelay = 9999

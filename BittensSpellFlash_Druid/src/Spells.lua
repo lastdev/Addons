@@ -180,7 +180,7 @@ c.AddSpell("Astral Communion", "Instant", {
 })
 
 c.AddSpell("Starsurge", nil, {
-	NotIfActive = true,
+	Cooldown = 15,
 })
 
 c.AddSpell("Starsurge", "under Shooting Stars", {
@@ -313,7 +313,7 @@ c.AddOptionalSpell("Heart of the Wild", nil, {
 c.AddSpell("Thrash(Bear Form)", "for Feral", {
 	FlashID = { "Thrash", "Thrash(Bear Form)", "Thrash(Cat Form)" },
 	Melee = true,
-	NotWhileActive = true,
+	Cooldown = 6,
 	CheckFirst = function()
 		return (c.GetMyDebuffDuration("Thrash(Bear Form)", false, true, true)
 					< 2
@@ -565,7 +565,7 @@ c.AddSpell("Mangle(Cat Form)", nil, {
 c.AddOptionalSpell("Bear Form", "for Feral", {
 	Type = "form",
 	Melee = true,
-	NotWhileActive = true,
+	NotIfActive = true,
 	CheckFirst = function()
 		if a.Energy >= 35
 			or a.TimeToCap < 4
@@ -589,7 +589,7 @@ c.AddOptionalSpell("Bear Form", "for Feral", {
 c.AddOptionalSpell("Bear Form", "for Feral AoE", {
 	Type = "form",
 	Melee = true,
-	NotWhileActive = true,
+	NotIfActive = true,
 	CheckFirst = function()
 		return a.Energy < 45
 			and a.TimeToCap > 4
@@ -603,7 +603,7 @@ c.AddOptionalSpell("Bear Form", "for Feral AoE", {
 c.AddSpell("Swipe(Bear Form)", "for Feral", {
 	FlashID = { "Swipe", "Swipe(Bear Form)", "Swipe(Cat Form)" },
 	Melee = true,
-	NotWhileActive = true,
+	Cooldown = 3,
 	CheckFirst = function()
 		return c.AoE
 	end,
@@ -612,7 +612,7 @@ c.AddSpell("Swipe(Bear Form)", "for Feral", {
 c.AddSpell("Swipe(Bear Form)", "Prime for Feral", {
 	FlashID = { "Swipe", "Swipe(Bear Form)", "Swipe(Cat Form)" },
 	Melee = true,
-	NotWhileActive = true,
+	Cooldown = 3,
 	CheckFirst = function()
 		return c.AoE
 			and a.TimeToCap > (a.Clearcasting and 5.5 or 4.5) 
@@ -676,6 +676,16 @@ c.AddSpell("Healing Touch", "for Dream Beta", {
 		else
 			return a.Swiftness - 1.5
 		end
+	end,
+})
+
+c.AddOptionalSpell("Bear Form", "while Pooling", {
+	Type = "form",
+	Melee = true,
+	NotIfActive = true,
+	WhiteFlashOffset = -4.5,
+	GetDelay = function()
+		return c.GetOption("FeralBear") and a.TigerCool > 0 and 4.5
 	end,
 })
 

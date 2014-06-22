@@ -66,4 +66,13 @@ GTFO.MobID["47175"] = {
 	end
 };
 
+GTFO.MobID["71827"] = {
+	--desc = "Ash Elemental - SoO";
+	sound = 1;
+};
+
+GTFO.MobID["67664"] = {
+	--desc = "Tormented Ghost - Brawler's Guild";
+	sound = 3;		
+}
 

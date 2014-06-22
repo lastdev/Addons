@@ -3,9 +3,9 @@ local L = a.Localize
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
 a.Options = {
-	FeralBeta = {
+	FeralBear = {
 		Widget = "RightCheckButton2",
-		Label = L["Beta Feral Rotation"],
+		Label = L["Incorporate Bear Form"],
 		Default = false,
 	},
 }

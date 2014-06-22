@@ -4,7 +4,7 @@ local BossIDs = LibStub("LibBossIDs-1.0")
 
 local Recount = _G.Recount
 
-local revision = tonumber(string.sub("$Revision: 1244 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1251 $", 12, -3))
 if Recount.Version < revision then Recount.Version = revision end
 
 local dbCombatants
@@ -298,6 +298,7 @@ local AbsorbSpellDuration =
 	[6229] = 30, -- Twilight Ward (partially confirmed), MOP
 	[110913] = 10, -- Dark Bargain (partially confirmed, may not be an absorb), MOP
 	[91711] = 30, -- Nether Ward (may have unverified aura trigger), MOP
+	[145379] = 15, -- Nature's Barrier, Shaman T16 Restoration 2P Bonus, 5.4
 	-- Warrior
 	[112048] = 6, -- Shield Barrier (confirmed), MOP
 	-- Enchants
@@ -383,7 +384,7 @@ local AbsorbSpellDuration =
 local bossIDs = BossIDs.BossIDs
 
 function Recount.IsBoss(GUID)
-   return GUID and bossIDs[tonumber(GUID:sub(7, 10), 16)]
+   return GUID and bossIDs[tonumber(GUID:sub(-13, -9), 16)]
 end
 
 	
@@ -1502,7 +1503,7 @@ end
 
 -- Elsia: Borrowed shamelessly from Threat-2.0
 function Recount:NPCID(guid)
-	return tonumber(guid:sub(-12,-7),16)
+	return tonumber(guid:sub(-13,-7),16)
 end
 
 function Recount:DetectPet(name, nGUID, nFlags)

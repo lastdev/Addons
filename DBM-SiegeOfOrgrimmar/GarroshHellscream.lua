@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(869, "DBM-SiegeOfOrgrimmar", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11261 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11269 $"):sub(12, -3))
 mod:SetCreatureID(71865)
 mod:SetEncounterID(1623)
 mod:SetHotfixNoticeRev(10828)
@@ -119,6 +119,8 @@ local countdownRealm				= mod:NewCountdownFades(60.5, "ej8305", nil, nil, 10)
 local countdownBombardment			= mod:NewCountdown(55, 147120)
 local countdownBombardmentEnd		= mod:NewCountdownFades("Alt13", 147120)
 
+local berserkTimer					= mod:NewBerserkTimer(1080)
+
 mod:AddBoolOption("yellMaliceFading", false)
 mod:AddSetIconOption("SetIconOnShaman", "ej8294", false, true)
 mod:AddSetIconOption("SetIconOnMC", 145071, false)
@@ -204,6 +206,11 @@ function mod:OnCombatStart(delay)
 	timerSiegeEngineerCD:Start(20-delay)
 	timerHellscreamsWarsongCD:Start(22-delay)
 	timerFarseerWolfRiderCD:Start(30-delay)
+	if self:IsDifficulty("lfr25") then
+		berserkTimer:Start(1500-delay)
+	else
+		berserkTimer:Start(-delay)
+	end
 end
 
 function mod:OnCombatEnd()
@@ -525,6 +532,10 @@ function mod:OnSync(msg, guid)
 				DBM:Schedule(13, SendChatMessage, L.MaliceFadeYell:format(playerName, 1), "SAY")
 				DBM:Schedule(12, SendChatMessage, L.MaliceFadeYell:format(playerName, 2), "SAY")
 				DBM:Schedule(11, SendChatMessage, L.MaliceFadeYell:format(playerName, 3), "SAY")
+				DBM:Schedule(10, SendChatMessage, L.MaliceFadeYell:format(playerName, 4), "SAY")
+				DBM:Schedule(8, SendChatMessage, L.MaliceFadeYell:format(playerName, 6), "SAY")
+				DBM:Schedule(6, SendChatMessage, L.MaliceFadeYell:format(playerName, 8), "SAY")
+				DBM:Schedule(4, SendChatMessage, L.MaliceFadeYell:format(playerName, 10), "SAY")
 			end
 		end
 		if self.Options.SetIconOnMalice then

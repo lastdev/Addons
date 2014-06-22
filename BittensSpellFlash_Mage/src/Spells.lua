@@ -9,6 +9,7 @@ local GetItemCount = GetItemCount
 local IsMounted = IsMounted
 local UnitBuff = UnitBuff
 local UnitLevel = UnitLevel
+local math = math
 
 local function getRuneDuration()
 	if c.IsCasting("Rune of Power") then	
@@ -18,6 +19,10 @@ local function getRuneDuration()
 	local t1 = c.GetTotemDuration(1)
 	local t2 = c.GetTotemDuration(2)
 	return math.max(t1, t2)
+end
+
+local function movementCheck(z)
+	z.CanCastWhileMoving = a.Presence or a.FloesStack > 0
 end
 
 ------------------------------------------------------------------------ Common
@@ -247,8 +252,18 @@ c.AddOptionalSpell("Cold Snap", nil, {
 	end
 })
 
-c.AddSpell("Ice Floes", nil, { NoGCD = true })
-c.AddSpell("Temporal Shield", nil, { NoGCD = true })
+c.AddSpell("Ice Floes", nil, {
+	NoGCD = true,
+	FlashColor = c.MovementColor,
+	Override = function()
+		local charges = c.GetChargeInfo("Ice Floes", true)
+		return charges > 0 and a.FloesStack == 0
+	end,
+})
+
+c.AddSpell("Temporal Shield", nil, {
+	NoGCD = true,
+})
 
 ------------------------------------------------------------------------ Arcane
 local function hasT6TalentFor(duration)
@@ -356,6 +371,7 @@ c.AddOptionalSpell("Evocation", "Interrupt", {
 })
 
 c.AddSpell("Arcane Missiles", nil, {
+	RunFirst = movementCheck,
 	CheckFirst = function(z)
 		local apcd = c.GetCooldown("Arcane Power", false, 90)
 		c.MakeOptional(z, a.MissilesStacks == 1 and (apcd == 0 or c.IsSolo()))
@@ -366,7 +382,9 @@ c.AddSpell("Arcane Missiles", nil, {
 	end
 })
 
-c.AddSpell("Arcane Missiles", "for AoE")
+c.AddSpell("Arcane Missiles", "for AoE", {
+	RunFirst = movementCheck,
+})
 
 c.AddSpell("Arcane Barrage", nil, {
 	CheckFirst = function()
@@ -392,11 +410,16 @@ c.AddSpell("Arcane Barrage", "if Losing Stacks", {
 })
 
 c.AddSpell("Arcane Barrage", "when Moving", {
-	NotWhileActive = true,
+	Cooldown = 3,
+})
+
+c.AddSpell("Arcane Blast", nil, {
+	RunFirst = movementCheck,
 })
 
 c.AddOptionalSpell("Flamestrike", nil, {
 	NoRangeCheck = true,
+	RunFirst = movementCheck,
 	CheckFirst = function()
 		return not c.IsCasting("Flamestrike")
 	end
@@ -630,6 +653,7 @@ c.AddOptionalSpell("Deep Freeze", nil, {
 })
 
 c.AddSpell("Frostfire Bolt", "Prime", {
+	RunFirst = movementCheck,
 	CheckFirst = function()
 		return a.BrainFreeze 
 			and (a.AlterTime or c.GetBuffDuration("Brain Freeze") < 2)
@@ -637,6 +661,7 @@ c.AddSpell("Frostfire Bolt", "Prime", {
 })
 
 c.AddSpell("Frostfire Bolt", "under Brain Freeze", {
+	RunFirst = movementCheck,
 	CheckFirst = function(z)
 		c.MakeOptional(z, a.HoldProcs)
 		c.MakeMini(z, a.HoldProcs)
@@ -670,6 +695,10 @@ c.AddSpell("Ice Lance", "before Cap", {
 				or c.CountLandings("Frostbolt", -3, 10) > 0
 				or c.CountLandings("Frostfire Bolt", -3, 10) > 0)
 	end
+})
+
+c.AddSpell("Frostbolt", nil, {
+	RunFirst = movementCheck,
 })
 
 --c.AddOptionalSpell("Frost Nova", nil, {

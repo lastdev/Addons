@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(198, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 113 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 115 $"):sub(12, -3))
 mod:SetCreatureID(52409)
 --mod:SetEncounterID(1203)--Figure out if EE is bad or not
 mod:SetZone()
@@ -98,7 +98,7 @@ local timerEmpoweredSulf	= mod:NewBuffActiveTimer(10, 100604, nil, mod:IsTank())
 local timerDreadFlameCD		= mod:NewCDTimer(40, 100675, nil, false)--Off by default as only the people dealing with them care about it.
 
 local countdownSeeds		= mod:NewCountdown(60, 98495)
-local countdownMeteor		= mod:NewCountdown(45, 99268)
+local countdownMeteor		= mod:NewCountdown("Alt45", 99268)
 local countdownEmpoweredSulf= mod:NewCountdown(56, 100604, mod:IsTank())--56-64sec variations
 local countoutEmpoweredSulf	= mod:NewCountout(10, 100604, mod:IsTank())--Counts out th duration of empowered sulfurus, tanks too busy running around to pay attention to a timer, hearing duration counted should be infinitely helpful.
 

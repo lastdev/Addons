@@ -97,6 +97,60 @@ L:AddLocale("enUS",
 }
 
 )
+L:AddLocale("itIT", 
+{
+	-- BBCode = "",
+	-- BOTTOMLEFT = "",
+	-- BOTTOMRIGHT = "",
+	-- buttonpos_desc = "",
+	-- buttonpos_name = "",
+	-- ChatFrame = "",
+	-- ["Copy all of the text in the selected chat frame into an edit box"] = "",
+	-- CopyChat = "",
+	-- ["Copy Text"] = "",
+	-- ["Copy Text Format"] = "",
+	-- ["Copy text from the active chat window."] = "",
+	-- ["Copy To Editbox"] = "",
+	-- HTML = "",
+	-- ["Message From : %s"] = "",
+	-- Plain = "",
+	-- ["Should the copied text be plain, or formatted so you can see the colors."] = "",
+	-- showbutton_desc = "",
+	-- showbutton_name = "",
+	-- [" Text"] = "",
+	-- TOPLEFT = "",
+	-- TOPRIGHT = "",
+	-- ["Wowace.com Forums"] = "",
+}
+
+)
+L:AddLocale("ptBR", 
+{
+	-- BBCode = "",
+	-- BOTTOMLEFT = "",
+	-- BOTTOMRIGHT = "",
+	-- buttonpos_desc = "",
+	-- buttonpos_name = "",
+	-- ChatFrame = "",
+	-- ["Copy all of the text in the selected chat frame into an edit box"] = "",
+	-- CopyChat = "",
+	-- ["Copy Text"] = "",
+	-- ["Copy Text Format"] = "",
+	-- ["Copy text from the active chat window."] = "",
+	-- ["Copy To Editbox"] = "",
+	-- HTML = "",
+	-- ["Message From : %s"] = "",
+	-- Plain = "",
+	-- ["Should the copied text be plain, or formatted so you can see the colors."] = "",
+	-- showbutton_desc = "",
+	-- showbutton_name = "",
+	-- [" Text"] = "",
+	-- TOPLEFT = "",
+	-- TOPRIGHT = "",
+	-- ["Wowace.com Forums"] = "",
+}
+
+)
 L:AddLocale("frFR",  
 {
 	BBCode = true,
@@ -486,9 +540,7 @@ function module:CopyLineFromPlayerlinkToEdit(origin_frame, ...)
     -- TODO: Consider just using self.clickedFrame (I dont remember why the other code is there)
     local frame = (origin_frame and origin_frame:GetObjectType() == "ScrollingMessageFrame" and origin_frame) or self.clickedframe
 
-    for i=1, #self.lines do
-        self.lines[i] = nil
-    end
+    wipe(self.lines)
 
     self:AddLines(self.lines, frame:GetRegions())
 
@@ -531,10 +583,8 @@ function module:CopyLineFromPlayerlink(origin_frame, ...)
 
     -- TODO: Consider just using self.clickedFrame (I dont remember why the other code is there)
     local frame = (origin_frame and origin_frame:GetObjectType() == "ScrollingMessageFrame" and origin_frame) or self.clickedframe
-    
-    for i=1, #self.lines do
-        self.lines[i] = nil
-    end
+
+    wipe(self.lines)
 
     self:AddLines(self.lines, frame:GetRegions())    
 

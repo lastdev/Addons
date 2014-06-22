@@ -17,24 +17,27 @@ end
 function HealBot_IncHeals_updHealsIn(unit)
     if HealBot_Unit_Button[unit] then
         HealBot_IncHeals_HealsInUpdate(unit)
-        HealBot_Action_ResetUnitStatus(unit)
     end
 end
 
 function HealBot_IncHeals_HealsInUpdate(unit)
     if unit then
         if UnitExists(unit) then
-            hbHealsIn[unit]=UnitGetIncomingHeals(unit)
-            hbAbsorbs[unit]=UnitGetTotalAbsorbs(unit)
+            hbHealsIn[unit]=hbHealsIn[unit] or 0
+            hbAbsorbs[unit]=hbAbsorbs[unit] or 0
 
-            local x=hbHealsIn[unit] or 0
-            local y=hbAbsorbs[unit] or 0
+            local x=UnitGetIncomingHeals(unit) or 0
+            local y=UnitGetTotalAbsorbs(unit) or 0
             if (x+y)==0 then
                 HealBot_setHealsAbsorb(unit, nil)
             else
                 HealBot_setHealsAbsorb(unit, true)
             end
-            HealBot_Action_ResetUnitStatus(unit)
+            if x~=hbHealsIn[unit] or y~=hbAbsorbs[unit] then
+                HealBot_Action_ResetUnitStatus(unit)
+                hbHealsIn[unit]=x
+                hbAbsorbs[unit]=y
+            end
         else
             HealBot_IncHeals_ClearAll(unit)
             HealBot_setHealsAbsorb(unit, nil)

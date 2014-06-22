@@ -1,0 +1,8 @@
+2014-02-20  nebula  <nebula@the-syn.com>
+
+[2da075585786] [3.5.8]
+* modules/ServerNames.lua, services/chatsections.lua:
+
+revert last and Ambiguate in the event handler
+
+

@@ -22,6 +22,8 @@ local function libPrint(...)
 end
 
 ---------------------------------------------------------------------- AoE Mode
+
+-- This variable is considered a public API.  Keep it working.
 c.AoE = false
 
 function c.ToggleAoE()
@@ -92,6 +94,8 @@ end
 regCommand("blizprocs", c.ToggleAlwaysShowBlizHighlights)
 
 --------------------------------------------------------- Damage Mode in Groups
+
+-- This function is considered a public API.  Keep it working.
 function c.InDamageMode()
 	return c.IsSolo() 
 		and c.GetHealthPercent("player") > 50 

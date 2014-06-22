@@ -110,6 +110,7 @@ local HealBot_ShortBuffs = {}
 local HealBot_CheckBuffsTime=nil
 local HealBot_CheckBuffsTimehbGUID=nil
 local HealBot_QueueCheckBuffs={}
+local HealBot_QueueResetHealth={}
 local PlayerBuffsGUID=nil
 local HealBot_BuffWatch={}
 local HealBot_unitHealth={}
@@ -910,20 +911,15 @@ end
 function HealBot_UnitHealth(unit)
     local x,y=nil,nil
     if UnitExists(unit) then
-        if HealBot_unitHealth[unit] then
-            x=HealBot_unitHealth[unit]
-            y=HealBot_unitHealthMax[unit]
-        elseif UnitHealth(unit) then
-            x=UnitHealth(unit)
-            y=UnitHealthMax(unit)
-        end
+        x=HealBot_unitHealth[unit] or UnitHealth(unit) or 100
+        y=HealBot_unitHealthMax[unit] or UnitHealthMax(unit) or x
     elseif HealBot_unitHealth[unit] then
         HealBot_unitHealth[unit]=nil
         HealBot_unitHealthMax[unit]=nil
     end
     if not x or not y then
-        x=500
-        y=1000
+        x=100
+        y=100
     elseif y<1 then
         y=1
     end
@@ -977,6 +973,8 @@ function HealBot_OnEvent_Combat_Log(self, timestamp, event, hideCaster, sourceGU
                 HealBot_unitHealthMax[xUnit]=HealBot_unitHealthMax[xUnit]+y
                 if (HealBot_unitHealth[xUnit]+x)>HealBot_unitHealthMax[xUnit] then
                     HealBot_unitHealth[xUnit]=HealBot_unitHealthMax[xUnit]
+                elseif (HealBot_unitHealth[xUnit]+x)<0 then
+                    HealBot_unitHealth[xUnit]=0
                 else
                     HealBot_unitHealth[xUnit]=HealBot_unitHealth[xUnit]+x
                 end
@@ -986,12 +984,6 @@ function HealBot_OnEvent_Combat_Log(self, timestamp, event, hideCaster, sourceGU
                 HealBot_UnitHealthCheck[xUnit]=GetTime()+0.4
             end
         end
-    end
-end
-
-function HealBot_HealthCheck(unit)
-    if not HealBot_UnitHealthCheck[unit] then
-        HealBot_UnitHealthCheck[unit]=GetTime()+0.5
     end
 end
 
@@ -1024,7 +1016,6 @@ function HealBot_OnLoad(self)
 end
 
 local aSwitch=0
-HealBot_luVars["timerDebug"]=0
 function HealBot_Set_Timers()
     if HealBot_Config.DisabledNow==0 then
         local hbCheckFreqMod=HealBot_Comm_round(HealBot_luVars["qaFR"]/4, 2) 
@@ -1032,10 +1023,7 @@ function HealBot_Set_Timers()
         HealBot_Timers["HB1Th"]=HealBot_Comm_round((2+hbSlowTimerMod)/hbCheckFreqMod, 4) 
         HealBot_Timers["HB2Th"]=HealBot_Comm_round(HealBot_Globals.RangeCheckFreq/hbCheckFreqMod, 4)
         HealBot_Timers["HB3Th"]=HealBot_Comm_round((1+hbSlowTimerMod)/hbCheckFreqMod, 4) 
-        if GetTime()>HealBot_luVars["timerDebug"] then
-            HealBot_AddDebug("qaFR="..HealBot_luVars["qaFR"].."  hbCheckFreqMod="..hbCheckFreqMod)
-            HealBot_luVars["timerDebug"]=GetTime()+300
-        end
+        --HealBot_AddDebug("qaFR="..HealBot_luVars["qaFR"].."  hbCheckFreqMod="..hbCheckFreqMod)
     else
         HealBot_Timers["HB1Th"]=1
         HealBot_Timers["HB2Th"]=(HealBot_Globals.RangeCheckFreq*10)
@@ -1528,12 +1516,25 @@ function HealBot_OnUpdate(self)
                                 Ti=Ti+1
                             end
                         end
-                    else    
+                    elseif HealBot_luVars["caliSwitch"]<7 then
                         for xGUID,xTime in pairs(HealBot_cleanGUIDs) do
                             if Ti<2 then
                                 HealBot_ClearLocalArr(xGUID, xTime)
                                 HealBot_cleanGUIDs[xGUID]=nil
                                 Ti=Ti+1
+                            end
+                        end
+                    else
+                        if HealBot_luVars["CheckAllHealth"] then
+                            HealBot_luVars["CheckAllHealth"]=nil
+                            for xUnit,xButton in pairs(HealBot_Unit_Button) do
+                                local uHlth,uMaxHlth=HealBot_UnitHealth(xUnit)
+                                local hrpct=floor((uHlth/uMaxHlth)*100)
+                                local bar=HealBot_Action_HealthBar(xButton)
+                                local barpct=bar:GetValue()
+                                if barpct~=hrpct then
+                                    HealBot_Action_ResetUnitStatus(xUnit)
+                                end
                             end
                         end
                         HealBot_luVars["caliSwitch"]=0
@@ -1899,6 +1900,10 @@ function HealBot_OnEvent(self, event, ...)
         HealBot_OnEvent_FocusChanged(self);
     elseif (event=="MODIFIER_STATE_CHANGED") then
         HealBot_OnEvent_ModifierStateChange(self,arg1,arg2);
+    elseif (event=="PLAYER_CONTROL_GAINED") then
+        if HealBot_Data["UILOCK"]=="YES" and HealBot_Config_Cures.IgnoreFriendDebuffs==1 then
+            HealBot_CheckAllDebuffs();
+        end
     elseif (event=="UNIT_PET") then
         HealBot_OnEvent_PartyPetChanged(self);
     elseif (event=="ROLE_CHANGED_INFORM") then
@@ -2407,6 +2412,7 @@ function HealBot_Register_Events()
         HealBot:RegisterEvent("UPDATE_MACROS");
         HealBot:RegisterEvent("UNIT_CONNECTION");
         HealBot:RegisterEvent("COMPANION_LEARNED");
+        HealBot:RegisterEvent("PLAYER_CONTROL_GAINED");
         if HealBot_Globals.EnLibQuickHealth==1 then HealBot:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED") end
     end
     HealBot:RegisterEvent("GROUP_ROSTER_UPDATE");
@@ -2506,6 +2512,7 @@ function HealBot_UnRegister_Events()
        -- HealBot:UnregisterEvent("PLAYER_TALENT_UPDATE");
         HealBot:UnregisterEvent("COMPANION_LEARNED");
         HealBot:UnregisterEvent("MODIFIER_STATE_CHANGED");
+        HealBot:UnregisterEvent("PLAYER_CONTROL_GAINED");
         HealBot_UnRegister_Enemy()
     end
 
@@ -2788,7 +2795,7 @@ function HealBot_OnEvent_UnitHealth(isEvent,unit,health,healthMax)
                 HealBot_Action_ResetUnitStatus(xUnit)
             end
         end
-        if not HealBot_unitHealth[hUnit] then
+        if not HealBot_unitHealth[hUnit] or not HealBot_unitHealthMax[hUnit] then
             HealBot_unitHealth[hUnit]=-1
             HealBot_unitHealthMax[hUnit]=-1
         end
@@ -2808,7 +2815,7 @@ function HealBot_Reset_UnitHealth(unit)
         if UnitExists(unit) and not HealBot_EnemyUnits[unit] then
             local x=UnitHealth(unit)
             local y=UnitHealthMax(unit)
-            if not HealBot_unitHealth[unit] then 
+            if not HealBot_unitHealth[unit] or not HealBot_unitHealthMax[unit] then 
                 HealBot_unitHealth[unit]=-1
                 HealBot_unitHealthMax[unit]=-1 
             end
@@ -2818,29 +2825,13 @@ function HealBot_Reset_UnitHealth(unit)
                 HealBot_RecalcHeals(unit)
             end
         end
-    else
-        for xUnit,xButton in pairs(HealBot_Unit_Button) do
-            if UnitExists(xUnit) and not HealBot_EnemyUnits[xUnit] then
-                local x=UnitHealth(xUnit)
-                local y=UnitHealthMax(xUnit)
-                if not HealBot_unitHealth[xUnit] then 
-                    HealBot_unitHealth[xUnit]=-1
-                    HealBot_unitHealthMax[xUnit]=-1 
-                end
-                if x~=HealBot_unitHealth[xUnit] or y~=HealBot_unitHealthMax[xUnit] then
-                    HealBot_unitHealth[xUnit]=x
-                    HealBot_unitHealthMax[xUnit]=y
-                    HealBot_Action_ResetUnitStatus(xUnit)
-                end
-            end
-        end
     end
 end
 
 function HealBot_Set_UnitHealth(unit, uHlth, uMaxHlth, resetStatus)
     if HealBot_Unit_Button[unit] then
-        HealBot_unitHealth[unit]=uHlth
-        HealBot_unitHealthMax[unit]=uMaxHlth
+        HealBot_unitHealth[unit]=uHlth or UnitHealth(unit) or 100
+        HealBot_unitHealthMax[unit]=uMaxHlth or UnitHealthMax(unit) or 100
         if resetStatus then
             HealBot_Action_ResetUnitStatus(unit)
         end
@@ -2999,7 +2990,7 @@ function HealBot_CheckZone()
     HealBot_setOptions_Timer(7950)
   --  HealBot_Data["REFRESH"]=1
     HealBot_SetAuraChecks()
-    HealBot_Action_ResetUnitStatus()
+    --HealBot_Action_ResetUnitStatus()
     local _,z = IsInInstance()
     HealBot_inBG(z)
 end
@@ -3850,7 +3841,7 @@ local needReset=nil
 function HealBot_OnEvent_PlayerRegenDisabled(self)
     if not HealBot_Loaded then return end
     HealBot_Data["UILOCK"]="YES"
-    HealBot_luVars["DelayLockdownCheck"]=GetTime()+15
+    HealBot_luVars["DelayLockdownCheck"]=GetTime()+25
     if not HealBot_Data["PGUID"] then
         HealBot_Load("playerRD")      
         needReset=true
@@ -3885,7 +3876,6 @@ end
 
 function HealBot_OnEvent_PlayerRegenEnabled(self)
     HealBot_luVars["IsReallyFighting"] = true
-    HealBot_Reset_UnitHealth()
 end
 
 function HealBot_Not_Fighting()
@@ -3904,6 +3894,7 @@ function HealBot_Not_Fighting()
     if Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["LOWMANA"]>1 and Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["LOWMANACOMBAT"]==0 then
         HealBot_CheckLowMana()
     end
+    HealBot_luVars["CheckAllHealth"]=true
 end
 
 
@@ -4038,20 +4029,20 @@ function HealBot_EnteringCombat()
 end
 
 function HealBot_OnEvent_UnitNameUpdate(self,unit)
-    local xGUID=HealBot_UnitGUID(unit)
-    if xGUID then
-        if HealBot_UnitData[xGUID] and HealBot_Unit_Button[HealBot_UnitData[xGUID]["UNIT"]] and UnitIsUnit(HealBot_UnitData[xGUID]["UNIT"],unit) then 
-            unit=HealBot_UnitData[xGUID]["UNIT"] 
-        end
-        local xButton=HealBot_Unit_Button[unit]
-        if xButton then
-            if xButton.guid~=xGUID then 
-                HealBot_PrepUnitNameUpdate(unit, xGUID, xButton.guid) 
-            else
-                HealBot_PrepUnitNameUpdate(unit, xGUID)
+    if HealBot_Unit_Button[unit] then
+        local xGUID=HealBot_UnitGUID(unit)
+        if xGUID then
+            local xButton=HealBot_Unit_Button[unit]
+            if xButton then
+                if xButton.guid~=xGUID then 
+                    HealBot_PrepUnitNameUpdate(unit, xGUID, xButton.guid) 
+                else
+                    HealBot_PrepUnitNameUpdate(unit, xGUID)
+                end
             end
         end
     end
+    HealBot_luVars["CheckAllHealth"]=true
  end
  
 function HealBot_PrepUnitNameUpdate(unit, curGUID, oldGUID)
@@ -4091,7 +4082,6 @@ function HealBot_UnitNameUpdate(unUnit,unGUID)
         HealBot_unitHealth[unUnit]=nil
         HealBot_IncHeals_HealsInUpdate(unUnit)
         HealBot_CheckUnitAggro(unUnit)
-        HealBot_HealthCheck(unUnit)
         HealBot_CheckAllUnitVehicle(unUnit)
         HealBot_BarCheck[unUnit]="A"
         if UnitExists(unUnit) then
@@ -4345,6 +4335,7 @@ function HealBot_OnEvent_PartyMembersChanged(self)
         end
         HealBot_Action_CheckReserved()
     end
+    HealBot_luVars["CheckAllHealth"]=true
 end
 
 function HealBot_PartyUpdate_CheckSkin()
@@ -5018,8 +5009,11 @@ function HealBot_CastNotify(unitName,spell,unit)
 end
 
 function HealBot_OnEvent_UnitSpellcastStart(self,unit,spellName)
-    if HealBot_Unit_Button[unit] and spellName==HEALBOT_MASS_RESURRECTION or spellName==HEALBOT_RESURRECTION or spellName==HEALBOT_ANCESTRALSPIRIT or spellName==HEALBOT_REBIRTH or spellName==HEALBOT_REDEMPTION or spellName==HEALBOT_REVIVE or spellName==HEALBOT_RESUSCITATE then
+    if HealBot_Unit_Button[unit] and (spellName==HEALBOT_RESURRECTION or spellName==HEALBOT_ANCESTRALSPIRIT or spellName==HEALBOT_REBIRTH or spellName==HEALBOT_REDEMPTION or spellName==HEALBOT_REVIVE or spellName==HEALBOT_RESUSCITATE) then
         HealBot_Action_ResetUnitStatus(unit)
+    end
+    if spellName==HEALBOT_MASS_RESURRECTION then
+        HealBot_Action_MassRes()
     end
 end
 
@@ -5467,34 +5461,59 @@ function HealBot_UnitInRange(spellName, unit) -- added by Diacono of Ursin
     return uRange
 end
 
-function HealBot_Range_Check(srcUnit, trgUnit, range) 
-    local inRange, hbDist = 0,0
-    local tx, ty, sx, sy, px, py = 0,0,0,0,0,0
-    if (UnitIsVisible(trgUnit) == 1) and (UnitIsVisible(srcUnit) == 1) then
-        tx, ty = GetPlayerMapPosition(trgUnit)
-        sx, sy = GetPlayerMapPosition(srcUnit)
-        
-        if not range then range=40; end
-
-        if calibrateHBScale and HealBot_luVars["RangeUpdates"] then
-            px, py = GetPlayerMapPosition("player")
-            if (CheckInteractDistance(trgUnit, 4)) then
-                hbDist = sqrt((px - tx)^2 + (py - ty)^2)
-                if hbDist > hbScale and (px > 0 or py > 0) then
-                    HealBot_Range_newScale(hbDist)
-                end
-                calibrateHBScale=calibrateHBScale+1
-            end
-            if (CheckInteractDistance(srcUnit, 4)) then
-                hbDist = sqrt((px - sx)^2 + (py - sy)^2)
-                if hbDist > hbScale and (px > 0 or py > 0) then
-                    HealBot_Range_newScale(hbDist)
-                end
-                calibrateHBScale=calibrateHBScale+1
-            end
+HealBot_luVars["mapUpdate"] = 0
+local hbPi = math.pi
+local hbaTan2 = math.atan2
+local hbdMod = 108 / math.pi / 2;
+function HealBot_Direction_Check(unit) 
+    local direction, hbX, hbY = nil,nil,nil
+    local px, py = HealBot_getUnitCoords("player")
+    if px then
+        local tx, ty = HealBot_getUnitCoords(unit)
+        if tx then
+            local pFacing = GetPlayerFacing();
+            pFacing = pFacing < 0 and pFacing + hbPi * 2 or pFacing;
+            direction = hbPi - hbaTan2(px - tx, ty - py) - pFacing;
+            direction = floor(direction * hbdMod + 0.5) % 108
+            hbX, hbY = (direction % 9) * 0.109375, floor(direction / 9) * 0.08203125;
+        elseif HealBot_luVars["mapUpdate"]<GetTime() then
+            HealBot_luVars["mapUpdate"]=GetTime()+5
+            SetMapToCurrentZone()
         end
+    elseif HealBot_luVars["mapUpdate"]<GetTime() then
+        HealBot_luVars["mapUpdate"]=GetTime()+3
+        SetMapToCurrentZone()
+    end
+    return hbX, hbY, direction;
+end
 
-        if (tx > 0 or ty > 0) and (sx > 0 or sy > 0) then
+function HealBot_Range_Check(srcUnit, trgUnit, range) 
+    local inRange = 0
+    if (UnitIsVisible(trgUnit) == 1) and (UnitIsVisible(srcUnit) == 1) then
+        local tx, ty = HealBot_getUnitCoords(trgUnit)
+        local sx, sy = HealBot_getUnitCoords(srcUnit)
+        if tx and sx then
+            if not range then range=40; end
+            local hbDist = 0
+
+            if calibrateHBScale and HealBot_luVars["RangeUpdates"] then
+                local px, py = HealBot_getUnitCoords("player")
+                if px then
+                    if (CheckInteractDistance(trgUnit, 4)) then
+                        hbDist = sqrt((px - tx)^2 + (py - ty)^2)
+                        if hbDist > hbScale then
+                            HealBot_Range_newScale(hbDist)
+                        end
+                    end
+                    if (CheckInteractDistance(srcUnit, 4)) then
+                        hbDist = sqrt((px - sx)^2 + (py - sy)^2)
+                        if hbDist > hbScale then
+                            HealBot_Range_newScale(hbDist)
+                        end
+                    end
+                end
+            end
+
             hbDist = sqrt((sx - tx)^2 + (sy - ty)^2)
             if hbDist <=(hbScale*range/27) then inRange=1 end
         end
@@ -5502,31 +5521,43 @@ function HealBot_Range_Check(srcUnit, trgUnit, range)
     return inRange;
 end
 
+function HealBot_getUnitCoords(unit)
+	local x, y = GetPlayerMapPosition(unit);
+	if x and y and x > 0 and y > 0 then
+		return x, y
+	end
+end
+
 function HealBot_Range_softCalibrateScale(srcUnit, trgUnit)
     local hbDist = 0
-    local tx, ty, sx, sy, px, py = 0,0,0,0,0,0
-    px, py = GetPlayerMapPosition("player")
-    if CheckInteractDistance(trgUnit, 4) then
-        tx, ty = GetPlayerMapPosition(trgUnit)
-        hbDist = sqrt((px - tx)^2 + (py - ty)^2)
-        if hbDist > hbScale and (px > 0 or py > 0) then 
-            HealBot_Range_newScale(hbDist)
+    local px, py = HealBot_getUnitCoords("player")
+    if px then
+        if CheckInteractDistance(trgUnit, 4) then
+            local tx, ty = HealBot_getUnitCoords(trgUnit)
+            if tx then
+                hbDist = sqrt((px - tx)^2 + (py - ty)^2)
+                if hbDist > hbScale then 
+                    HealBot_Range_newScale(hbDist)
+                end
+            end
+        elseif UnitIsVisible(trgUnit) then
+            calibrateHBScale=calibrateHBScale+1
         end
-    elseif UnitIsVisible(trgUnit) then
-        calibrateHBScale=calibrateHBScale+1
-    end
-    if CheckInteractDistance(srcUnit, 4) then
-        sx, sy = GetPlayerMapPosition(srcUnit)
-        hbDist = sqrt((px - sx)^2 + (py - sy)^2)
-        if hbDist > hbScale and (px > 0 or py > 0) then 
-            HealBot_Range_newScale(hbDist)
+        if CheckInteractDistance(srcUnit, 4) then
+            local sx, sy = HealBot_getUnitCoords(srcUnit)
+            if sx then
+                hbDist = sqrt((px - sx)^2 + (py - sy)^2)
+                if hbDist > hbScale then 
+                    HealBot_Range_newScale(hbDist)
+                end
+            end
+        elseif UnitIsVisible(srcUnit) then
+            calibrateHBScale=calibrateHBScale+1
         end
-    elseif UnitIsVisible(srcUnit) then
-        calibrateHBScale=calibrateHBScale+1
     end
-    if calibrateHBScale>50 then 
+    if calibrateHBScale>250 then 
         calibrateHBScale=nil 
-        HealBot_AddDebug("Map Scale calibrate turned off... scale: "..HealBot_luVars["hbInsName"].."="..hbScale)
+        HealBot_AddDebug("Map Scale calibrate turned off... scale: "..HealBot_luVars["hbInsName"].."="..HealBot_MapScale.zScale[HealBot_luVars["hbInsName"]])
     end
 end
 
@@ -5554,8 +5585,8 @@ function HealBot_immediateClearLocalArr(hbGUID)
     if HealBot_UnitData[hbGUID] then
         if HealBot_UnitData[hbGUID]["UNIT"] then
             HealBot_ClearUnitAggro(HealBot_UnitData[hbGUID]["UNIT"]) 
-            HealBot_IncHeals_HealsInUpdate(HealBot_UnitData[hbGUID]["UNIT"])
             if HealBot_UnitAbsorbs[HealBot_UnitData[hbGUID]["UNIT"]] then HealBot_UnitAbsorbs[HealBot_UnitData[hbGUID]["UNIT"]]=nil end
+            HealBot_IncHeals_HealsInUpdate(HealBot_UnitData[hbGUID]["UNIT"])
         end
         HealBot_cleanGUIDs[hbGUID]=GetTime()
     end
@@ -6542,6 +6573,7 @@ function HealBot_Update_Skins()
                 if not Healbot_Config_Skins.Icons[Healbot_Config_Skins.Skins[x]][gl]["DOUBLE"] then Healbot_Config_Skins.Icons[Healbot_Config_Skins.Skins[x]][gl]["DOUBLE"]=0 end
                 if not Healbot_Config_Skins.Icons[Healbot_Config_Skins.Skins[x]][gl]["SHOWDEBUFF"] then Healbot_Config_Skins.Icons[Healbot_Config_Skins.Skins[x]][gl]["SHOWDEBUFF"]=1 end
                 if not Healbot_Config_Skins.Icons[Healbot_Config_Skins.Skins[x]][gl]["SHOWRC"] then Healbot_Config_Skins.Icons[Healbot_Config_Skins.Skins[x]][gl]["SHOWRC"]=1 end
+                if not Healbot_Config_Skins.Icons[Healbot_Config_Skins.Skins[x]][gl]["SHOWDIR"] then Healbot_Config_Skins.Icons[Healbot_Config_Skins.Skins[x]][gl]["SHOWDIR"]=1 end
                 if not Healbot_Config_Skins.Icons[Healbot_Config_Skins.Skins[x]][gl]["SCALE"] then Healbot_Config_Skins.Icons[Healbot_Config_Skins.Skins[x]][gl]["SCALE"]=0.7 end
                 if not Healbot_Config_Skins.Icons[Healbot_Config_Skins.Skins[x]][gl]["I15EN"] then Healbot_Config_Skins.Icons[Healbot_Config_Skins.Skins[x]][gl]["I15EN"]=1 end
                 if not Healbot_Config_Skins.Icons[Healbot_Config_Skins.Skins[x]][gl]["SHOWBUFF"] then Healbot_Config_Skins.Icons[Healbot_Config_Skins.Skins[x]][gl]["SHOWBUFF"]=1 end

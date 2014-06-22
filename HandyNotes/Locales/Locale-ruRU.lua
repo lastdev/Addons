@@ -5,24 +5,25 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes", "ruRU")
 if not L then return end
 
-L[ [=[
-Alt+Right Click To Add a HandyNote]=] ] = "Alt+ПКМ, чтобы добавить HandyNote"
-L["(No Title)"] = "(без названия)"
 L["Add Handy Note"] = "Добавить HandyNote"
 L["Add this location to Cartographer_Waypoints"] = "Добавить это местоположение в Cartographer_Waypoints"
 L["Add this location to TomTom waypoints"] = "Добавить это местоположение в точки назначения TomTom"
+L[ [=[
+Alt+Right Click To Add a HandyNote]=] ] = "Alt+ПКМ, чтобы добавить HandyNote"
+L["|cFF00FF00Hint: |cffeda55fCtrl+Shift+LeftDrag|cFF00FF00 to move a note"] = "|cFF00FF00Подсказка: |cffeda55fCtrl+Shift+ЛКМ|cFF00FF00 для перемещения заметки"
 L["Configuration for each individual plugin database."] = "Конфигурация баз данных модулей расширения (плагинов)"
 L["Delete Handy Note"] = "Удалить HandyNote"
 L["Description/Notes:"] = "Описание/заметки:"
-L["ERROR_CREATE_NOTE1"] = "HandyNotes не может создать заметку, т.к. нет возможности определить координаты текущего местоположения. Это возможно в том случае, когда у местности в которой вы находитесь нет карты."
-L["Edit Handy Note"] = "Редактировать  HandyNote"
+L["Edit Handy Note"] = "Редактировать HandyNote"
 L["Enable HandyNotes"] = "Включить HandyNotes"
 L["Enable or disable HandyNotes"] = "Включить/выключить HandyNotes"
+L["ERROR_CREATE_NOTE1"] = "HandyNotes не может создать заметку, т.к. нет возможности определить координаты текущего местоположения. Это возможно в том случае, когда у местности, в которой вы находитесь, нет карты."
 L["HandyNotes"] = "HandyNotes"
 L["Icon Alpha"] = "Прозрачность значка"
 L["Icon Scale"] = "Масштаб значка"
 L["Minimap Icon Alpha"] = "Прозрачность значка миникарты"
 L["Minimap Icon Scale"] = "Масштаб значка миникарты"
+L["(No Title)"] = "(без названия)"
 L["Overall settings"] = "Общие настройки"
 L["Overall settings that affect every database"] = "Общие установки действуют на все базы данных"
 L["Plugin databases"] = "Базы данных плагинов"
@@ -42,5 +43,4 @@ L["These settings control the look and feel of the HandyNotes icons."] = "Эти
 L["Title"] = "Название"
 L["World Map Icon Alpha"] = "Прозрачность значков карты мира"
 L["World Map Icon Scale"] = "Масштаб значков карты мира"
-L["|cFF00FF00Hint: |cffeda55fCtrl+Shift+LeftDrag|cFF00FF00 to move a note"] = "|cFF00FF00Подсказка: |cffeda55fCtrl+Shift+ЛКМ|cFF00FF00 для перемещения заметки"
 

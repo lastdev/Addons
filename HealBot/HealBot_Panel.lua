@@ -2541,6 +2541,7 @@ function HealBot_Panel_SetupBars()
             bar.txt = _G[bar:GetName().."_text"];
             bar.txt:SetTextColor(0.8,0.8,0.2,0.85);
             bar.txt:SetText(HEALBOT_ACTION_OPTIONS);
+            bar:UnregisterAllEvents()
         elseif onb.frame~=bFrame then
             onb:Hide()
             onb:ClearAllPoints()
@@ -2570,6 +2571,7 @@ function HealBot_Panel_SetupBars()
             local bar = HealBot_Action_HealthBar(fhb)
             bar:SetMinMaxValues(0,100);
             bar:SetValue(100);
+            bar:UnregisterAllEvents()
             HealBot_Action_SethbFocusButtonAttrib(fhb)
             fhb.id=999
             fhb.frame=hbPanelShowhbFocus

@@ -99,6 +99,62 @@ L:AddLocale("enUS",
 }
 
 )
+L:AddLocale("itIT", 
+{
+	-- ["Auto Restore Font Size"] = "",
+	-- ["Chat window font options."] = "",
+	-- Font = "",
+	-- monochrome_desc = "",
+	-- monochrome_name = "",
+	-- None = "",
+	-- Outline = "",
+	-- outlinemode_desc = "",
+	-- outlinemode_name = "",
+	-- rememberfont_desc = "",
+	-- rememberfont_name = "",
+	-- ["Set ChatFrame%d Font Size"] = "",
+	-- ["Set Font Face"] = "",
+	-- ["Set Font Size"] = "",
+	-- ["Set Separately"] = "",
+	-- ["Set text font size."] = "",
+	-- ["Set text font size for each chat window."] = "",
+	-- ["Set the text font face for all chat windows."] = "",
+	-- shadowcolor_desc = "",
+	-- shadowcolor_name = "",
+	-- ["Thick Outline"] = "",
+	-- ["Toggle setting options separately for each chat window."] = "",
+	-- ["Workaround a Blizzard bug which changes the font size when you open a system menu."] = "",
+}
+
+)
+L:AddLocale("ptBR", 
+{
+	-- ["Auto Restore Font Size"] = "",
+	-- ["Chat window font options."] = "",
+	-- Font = "",
+	-- monochrome_desc = "",
+	-- monochrome_name = "",
+	-- None = "",
+	-- Outline = "",
+	-- outlinemode_desc = "",
+	-- outlinemode_name = "",
+	-- rememberfont_desc = "",
+	-- rememberfont_name = "",
+	-- ["Set ChatFrame%d Font Size"] = "",
+	-- ["Set Font Face"] = "",
+	-- ["Set Font Size"] = "",
+	-- ["Set Separately"] = "",
+	-- ["Set text font size."] = "",
+	-- ["Set text font size for each chat window."] = "",
+	-- ["Set the text font face for all chat windows."] = "",
+	-- shadowcolor_desc = "",
+	-- shadowcolor_name = "",
+	-- ["Thick Outline"] = "",
+	-- ["Toggle setting options separately for each chat window."] = "",
+	-- ["Workaround a Blizzard bug which changes the font size when you open a system menu."] = "",
+}
+
+)
 L:AddLocale("frFR",  
 {
 	["Auto Restore Font Size"] = "Restauration automatique de la taille du texte",

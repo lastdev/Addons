@@ -28,6 +28,21 @@ function a.PreFlash()
 	local mana = c.GetPower(select(2, GetPowerRegen()))
 	a.ManaPercent = mana / s.MaxPower("player") * 100
 	a.AlterTime = c.HasBuff("Alter Time", false, false, true)
+	a.FloesStack = c.GetBuffStack("Ice Floes")
+	if c.IsCasting("Ice Floes") then
+		a.FloesStack = a.FloesStack + 1
+	end
+	a.Presence = c.HasBuff("Presence of Mind", false, false, true)
+	if c.IsCasting(
+		"Arcane Blast", 
+		"Arcane Missiles", 
+		"Flamestrike",
+		"Frostfire Bolt",
+		"Frostbolt") then
+		
+		a.FloesStack = a.FloesStack - 1
+		a.Presence = false
+	end
 end
 
 s.AddSettingsListener(
@@ -135,6 +150,7 @@ a.Rotations.Arcane = {
 	
 	MovementFallthrough = function()
 		c.PriorityFlash(
+			"Ice Floes",
 			"Arcane Barrage when Moving",
 			"Fire Blast",
 			"Ice Lance")
@@ -396,7 +412,10 @@ a.Rotations.Frost = {
 	end,
 	
 	MovementFallthrough = function()
-		c.PriorityFlash("Fire Blast", "Ice Lance")
+		c.PriorityFlash(
+			"Ice Floes",
+			"Fire Blast", 
+			"Ice Lance")
 	end,
 	
 	FlashOutOfCombat = function()

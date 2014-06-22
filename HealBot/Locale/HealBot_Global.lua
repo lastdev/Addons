@@ -1,4 +1,4 @@
-HEALBOT_VERSION   = "5.4.7.3";
+HEALBOT_VERSION   = "5.4.8.0";
 HEALBOT_ABOUT_URL = "http://healbot.darktech.org/"
 HEALBOT_2MOONS_URL = "http://freegames.darktech.org/twomoons/uni1/index.php"
 
@@ -301,6 +301,7 @@ function HealBot_globalVars()
     HEALBOT_ANGELIC_BULWARK                 = GetSpellInfo(108945) or "--Angelic Bulwark"
     HEALBOT_DISPERSION                      = GetSpellInfo(47585) or "--Dispersion"
     HEALBOT_TWIST_OF_FATE                   = GetSpellInfo(109142) or "--Twist of Fate";
+    HEALBOT_ABSOLUTION                      = GetSpellInfo(145336) or "--Absolution"
     --Shaman
     HEALBOT_TIDAL_WAVES                     = GetSpellInfo(51564) or "--Tidal Waves";
     HEALBOT_ANACESTRAL_SWIFTNESS            = GetSpellInfo(16188) or "--Ancestral Swiftness";
@@ -379,7 +380,7 @@ function HealBot_globalVars()
     HEALBOT_REVIVE                          = GetSpellInfo(50769) or "--Revive";
     HEALBOT_ANCESTRALSPIRIT                 = GetSpellInfo(2008) or "--Ancestral Spirit";
     HEALBOT_RESUSCITATE                     = GetSpellInfo(115178) or "--Resuscitate"
-
+    HEALBOT_DEBUFF_MASS_RESURRECTED         = GetSpellInfo(95223) or "--Recently Mass Resurrected";
     
 	--Cure Spells
     HEALBOT_CLEANSE                         = GetSpellInfo(4987) or "--Cleanse";

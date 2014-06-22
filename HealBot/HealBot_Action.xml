@@ -501,6 +501,28 @@
             </Layer>
 		</Layers>
       </StatusBar>
+      <StatusBar name="$parentBarDir" inherits="HealBot_StatusBar">
+        <Anchors>
+            <Anchor point="TOP" relativePoint="TOP">
+                <Offset>
+                    <AbsDimension x="0" y="0"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Layers>
+            <Layer level="OVERLAY">
+                <Texture name="$parentIcon17" file="Interface\AddOns\HealBot\Images\arrow.blp">
+                      <Size> <AbsDimension x="16" y="16"/> </Size>					
+                      <Anchors>
+                        <Anchor point="TOP" relativePoint="TOP">
+                            <Offset> <AbsDimension x="0" y="0"/> </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+		</Layers>
+        <BarColor r="0.2" g="0.2" b="0.2" a="0"/>
+      </StatusBar>
       <StatusBar name="$parentBar2" inherits="HealBot_StatusBar">
         <Anchors>
           <Anchor point="TOPLEFT" relativePoint="TOPLEFT">

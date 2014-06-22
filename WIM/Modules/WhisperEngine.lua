@@ -26,6 +26,7 @@ local select = select;
 local unpack = unpack;
 local math = math;
 local time = time;
+local playerRealm = GetRealmName()
 
 -- set name space
 setfenv(1, WIM);
@@ -155,7 +156,7 @@ function WhisperEngine:OnEnableWIM()
         WhisperEngine:RegisterChatEvent("CHAT_MSG_AFK");
         WhisperEngine:RegisterChatEvent("CHAT_MSG_DND");
         WhisperEngine:RegisterChatEvent("CHAT_MSG_SYSTEM");
-	WhisperEngine:RegisterChatEvent("CHAT_MSG_BN_WHISPER");
+        WhisperEngine:RegisterChatEvent("CHAT_MSG_BN_WHISPER");
         WhisperEngine:RegisterChatEvent("CHAT_MSG_BN_WHISPER_INFORM");
 end
 
@@ -165,7 +166,7 @@ function WhisperEngine:OnDisableWIM()
         WhisperEngine:UnregisterChatEvent("CHAT_MSG_AFK");
         WhisperEngine:UnregisterChatEvent("CHAT_MSG_DND");
         WhisperEngine:UnregisterChatEvent("CHAT_MSG_SYSTEM");
-	WhisperEngine:UnregisterChatEvent("CHAT_MSG_BN_WHISPER");
+        WhisperEngine:UnregisterChatEvent("CHAT_MSG_BN_WHISPER");
         WhisperEngine:UnregisterChatEvent("CHAT_MSG_BN_WHISPER_INFORM");
 end
 
@@ -311,6 +312,7 @@ function WhisperEngine:CHAT_MSG_WHISPER(...)
         return; -- ChatFrameEventFilter says don't process
     end
     local color = WIM.db.displayColors.wispIn; -- color contains .r, .g & .b
+    arg2 = _G.Ambiguate(arg2, "none")
     local win = getWhisperWindowByUser(arg2);
     win.unreadCount = win.unreadCount and (win.unreadCount + 1) or 1;
     win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_WHISPER", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
@@ -318,7 +320,7 @@ function WhisperEngine:CHAT_MSG_WHISPER(...)
     _G.ChatEdit_SetLastTellTarget(arg2, "WHISPER");
     win.online = true;
     updateMinimapAlerts();
-    CallModuleFunction("PostEvent_Whisper", ...);
+    CallModuleFunction("PostEvent_Whisper", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
 end
 
 -- CHAT_MSG_WHISPER_INFORM  CONTROLLER (For Supression from Chat Frame)
@@ -340,6 +342,7 @@ function WhisperEngine:CHAT_MSG_WHISPER_INFORM(...)
         return; -- ChatFrameEventFilter says don't process
     end
     local color = db.displayColors.wispOut; -- color contains .r, .g & .b
+    arg2 = _G.Ambiguate(arg2, "none")
     local win = getWhisperWindowByUser(arg2);
     win:AddEventMessage(color.r, color.g, color.b, "CHAT_MSG_WHISPER_INFORM", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
     win:Pop("out");
@@ -381,9 +384,9 @@ function WhisperEngine:CHAT_MSG_BN_WHISPER_INFORM(...)
     win.msgSent = false;
     CallModuleFunction("PostEvent_WhisperInform", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
     addToTableUnique(recentSent, arg1);
-        if(#recentSent > maxRecent) then
-                table.remove(recentSent, 1);
-        end
+	if(#recentSent > maxRecent) then
+		table.remove(recentSent, 1);
+	end
 end
 
 -- CHAT_MSG_BN_WHISPER  CONTROLLER (For Supression from Chat Frame)
@@ -578,18 +581,19 @@ function CF_ExtractTellTarget(editBox, msg)
       return false;
     end
 
-    if (_G.GetAutoCompleteResults(target, tellTargetExtractionAutoComplete.include,
+ --[[   if (_G.GetAutoCompleteResults(target, tellTargetExtractionAutoComplete.include,
       tellTargetExtractionAutoComplete.exclude, 1, nil, true)) then
       --Even if there's a space, we still want to let the person keep typing -- they may be trying to type whatever
       -- -- is in AutoComplete.
       return false;
-    end
+    end--]]
 
     --Keep pulling off everything after the last space until we either have something on the AutoComplete list or
     -- -- only a single word is left.
     while (string.find(target, "%s")) do
       --Pull off everything after the last space.
       target = string.match(target, "(.+)%s+[^%s]*");
+      target = _G.Ambiguate(target, "none")
       if (_G.GetAutoCompleteResults(target, tellTargetExtractionAutoComplete.include,
         tellTargetExtractionAutoComplete.exclude, 1, nil, true)) then
         break;

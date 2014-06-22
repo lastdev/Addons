@@ -34,6 +34,7 @@ Prat:AddModuleToLoad(function()
     ["Use Alt key for cursor movement"] = true,
     ["Requires the Alt key to be held down to move the cursor in chat"] = true,
     ["Font"] = true,
+    currently_broken_alt_behavior = "Arrow key behaviour broken in current WoW client,\n\nUse ALT-UP and ALT-DOWN instead of just UP DOWN to access history",
     ["Select the font to use for the edit box"] = true,
   })
   --@end-debug@]===]
@@ -54,6 +55,9 @@ Prat:AddModuleToLoad(function()
 	["Border texture"] = true,
 	Bottom = true,
 	["Color border by channel"] = true,
+	currently_broken_alt_behavior = [=[Arrow key behaviour broken in current WoW client,
+
+Use ALT-UP and ALT-DOWN instead of just UP DOWN to access history]=],
 	["Edge Size"] = true,
 	Editbox = true,
 	["Editbox options."] = true,
@@ -80,6 +84,7 @@ Prat:AddModuleToLoad(function()
 	["Border texture"] = "Texture de la bordure",
 	Bottom = "Bas",
 	["Color border by channel"] = "Colorier avec le canal",
+	-- currently_broken_alt_behavior = "",
 	["Edge Size"] = "Taille de la bordure",
 	Editbox = "Boite d'édition",
 	["Editbox options."] = "Options de la boite d'édition.",
@@ -106,6 +111,9 @@ Prat:AddModuleToLoad(function()
 	["Border texture"] = "Randtextur",
 	Bottom = "Unten",
 	["Color border by channel"] = "Rand einfärben nach Kanal",
+	currently_broken_alt_behavior = [=[Das Verhalten der Pfeiltasten im Chat ist im aktuellen WoW Client defekt,
+
+verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scrollen.]=], -- Needs review
 	["Edge Size"] = "Kantengröße",
 	Editbox = "Eingabefeld",
 	["Editbox options."] = "Optionen für das Eingabefeld.",
@@ -132,6 +140,7 @@ Prat:AddModuleToLoad(function()
 	["Border texture"] = "테두리 텍스쳐",
 	Bottom = "아래",
 	["Color border by channel"] = "채널 테두리 색상",
+	-- currently_broken_alt_behavior = "",
 	["Edge Size"] = "모서리 크기",
 	Editbox = "대화입력창",
 	["Editbox options."] = "대화입력창을 설정합니다.",
@@ -158,6 +167,7 @@ Prat:AddModuleToLoad(function()
 	-- ["Border texture"] = "",
 	-- Bottom = "",
 	-- ["Color border by channel"] = "",
+	-- currently_broken_alt_behavior = "",
 	-- ["Edge Size"] = "",
 	-- Editbox = "",
 	-- ["Editbox options."] = "",
@@ -184,6 +194,9 @@ Prat:AddModuleToLoad(function()
 	["Border texture"] = "Текстура границы",
 	Bottom = "Внизу",
 	["Color border by channel"] = "Окраска границы по цвету канала",
+	currently_broken_alt_behavior = [=[Поведение стрелок сломано в текущей версии WoW
+
+Используйте ALT-СтрелкаВверх и ALT-СтрелкаВниз вместо просто стрелок вверх и вниз чтобы открыть историю]=], -- Needs review
 	["Edge Size"] = "Размер контура",
 	Editbox = "Поле ввода",
 	["Editbox options."] = "Настройки поля ввода.",
@@ -210,6 +223,7 @@ Prat:AddModuleToLoad(function()
 	["Border texture"] = "边框纹理", -- Needs review
 	Bottom = "底部",
 	["Color border by channel"] = "频道颜色边框", -- Needs review
+	-- currently_broken_alt_behavior = "",
 	["Edge Size"] = "边缘尺寸", -- Needs review
 	Editbox = "输入框",
 	["Editbox options."] = "输入框选项",
@@ -236,6 +250,7 @@ Prat:AddModuleToLoad(function()
 	-- ["Border texture"] = "",
 	Bottom = "Abajo",
 	-- ["Color border by channel"] = "",
+	-- currently_broken_alt_behavior = "",
 	-- ["Edge Size"] = "",
 	Editbox = "Caja de edición",
 	["Editbox options."] = "Opciones de la caja de edición.",
@@ -262,6 +277,7 @@ Prat:AddModuleToLoad(function()
 	["Border texture"] = "邊緣材質",
 	Bottom = "底部",
 	["Color border by channel"] = "顏色邊框由道頻",
+	-- currently_broken_alt_behavior = "",
 	["Edge Size"] = "邊框尺寸",
 	Editbox = "輸入框",
 	["Editbox options."] = "輸入框選單",
@@ -283,6 +299,7 @@ Prat:AddModuleToLoad(function()
 
   local mod = Prat:NewModule(PRAT_MODULE, "AceHook-3.0")
 
+  local mustUseAlt = select(4, _G.GetBuildInfo()) >= 50400
 
   local Media = Prat.Media
   local backgrounds, borders, fonts = {}, {}, {}
@@ -447,7 +464,7 @@ Prat:AddModuleToLoad(function()
         set = function(info, v)
           mod.db.profile.useAltKey = v
           updateEditBox("SetAltArrowKeyMode", v)
-        end
+        end,
       },
       font = {
         type = "select",
@@ -464,7 +481,14 @@ Prat:AddModuleToLoad(function()
           end
         end
       },
-    }
+        info = {
+            name = L.currently_broken_alt_behavior;
+            type = "description",
+            hidden = not mustUseAlt;
+            order = 1000;
+        },
+    },
+
   })
 
   Prat:SetModuleDefaults(mod.name, {
@@ -540,6 +564,33 @@ Prat:AddModuleToLoad(function()
       end
     end)
 
+  local function OnArrowPressed(self, key)
+      if #self.history_lines == 0 then
+          return
+      end
+
+      if key == "DOWN" then
+          self.history_index = self.history_index - 1
+
+          if self.history_index < 1 then
+              self.history_index = #self.history_lines
+          end
+      elseif key == "UP" then
+          self.history_index = self.history_index + 1
+
+          if self.history_index > #self.history_lines then
+              self.history_index = 1
+          end
+      else
+          return -- We don't want to interfere with LEFT/RIGHT because the tab-complete stuff might use it; we're already killing the other two.
+      end
+      self:SetText(self.history_lines[self.history_index])
+  end
+  local function enableArrowKeys(e)
+      e.history_lines =  Prat3CharDB.history.cmdhistory and Prat3CharDB.history.cmdhistory[e:GetName()] or {}
+      e.history_index = e.history_index or 0
+      e:HookScript("OnArrowPressed", OnArrowPressed)
+  end
   function mod:Prat_FramesUpdated(info, name, chatFrame, ...)
     local i = chatFrame:GetID()
     local f = _G["ChatFrame" .. i .. "EditBox"]
@@ -560,8 +611,10 @@ Prat:AddModuleToLoad(function()
     local font, s, m = header:GetFont()
     header:SetFont(Media:Fetch("font", self.db.profile.font), s, m)
 
-    updateEditBox("SetAltArrowKeyMode", mod.db.profile.useAltKey and 1 or nil)
-
+    f:SetAltArrowKeyMode(mod.db.profile.useAltKey and 1 or nil)
+    if (not mod.db.profile.useAltKey) then
+        enableArrowKeys(f)
+    end
     self:SetBackdrop()
     self:UpdateHeight()
   end
@@ -589,8 +642,16 @@ Prat:AddModuleToLoad(function()
       local header = _G[f:GetName() .. "Header"]
       local font, s, m = header:GetFont()
       header:SetFont(Media:Fetch("font", self.db.profile.font), s, m)
+
+      f:SetAltArrowKeyMode(mod.db.profile.useAltKey and 1 or nil)
+      if (not mod.db.profile.useAltKey) then
+          enableArrowKeys(f)
+      end
     end
-    updateEditBox("SetAltArrowKeyMode", mod.db.profile.useAltKey and 1 or nil)
+
+
+    self:SetBackdrop()
+
 
     self:SetAttach(nil, self.db.profile.editX, self.db.profile.editY, self.db.profile.editW)
     self:SecureHook("ChatEdit_DeactivateChat")

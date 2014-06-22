@@ -70,10 +70,6 @@ function HealBot_Action_RefreshTooltip()
     local hlth=UnitHealth(xUnit)
     local maxhlth=UnitHealthMax(xUnit)
     local mana,maxmana=HealBot_UnitMana(xUnit)
-    
-    --if hbhlth~=hlth or hbmaxhlth~=maxhlth then
-    --    HealBot_HealthCheck(xUnit)
-    --end
 
     if hlth>maxhlth then
         maxhlth=HealBot_CorrectPetHealth(xUnit,hlth,maxhlth,xGUID)

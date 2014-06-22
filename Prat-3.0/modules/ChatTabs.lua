@@ -92,6 +92,54 @@ L:AddLocale("enUS",
 }
 
 )
+L:AddLocale("itIT", 
+{
+	-- ["Active Alpha"] = "",
+	-- All = "",
+	-- Always = "",
+	-- ["Chat window tab options."] = "",
+	-- Default = "",
+	-- disableflash_desc = "",
+	-- disableflash_name = "",
+	-- Hidden = "",
+	-- Individual = "",
+	-- ["Not Active Alpha"] = "",
+	-- preventdrag_desc = "",
+	-- preventdrag_name = "",
+	-- ["Set ChatFrame%d Display Mode"] = "",
+	-- ["Set Display Mode"] = "",
+	-- ["Sets alpha of chat tab for active chat frame."] = "",
+	-- ["Sets alpha of chat tab for not active chat frame."] = "",
+	-- ["Set tab display mode for each chat window."] = "",
+	-- ["Set tab display to always, hidden or the Blizzard default."] = "",
+	-- Tabs = "",
+}
+
+)
+L:AddLocale("ptBR", 
+{
+	-- ["Active Alpha"] = "",
+	-- All = "",
+	-- Always = "",
+	-- ["Chat window tab options."] = "",
+	-- Default = "",
+	-- disableflash_desc = "",
+	-- disableflash_name = "",
+	-- Hidden = "",
+	-- Individual = "",
+	-- ["Not Active Alpha"] = "",
+	-- preventdrag_desc = "",
+	-- preventdrag_name = "",
+	-- ["Set ChatFrame%d Display Mode"] = "",
+	-- ["Set Display Mode"] = "",
+	-- ["Sets alpha of chat tab for active chat frame."] = "",
+	-- ["Sets alpha of chat tab for not active chat frame."] = "",
+	-- ["Set tab display mode for each chat window."] = "",
+	-- ["Set tab display to always, hidden or the Blizzard default."] = "",
+	-- Tabs = "",
+}
+
+)
 L:AddLocale("frFR",  
 {
 	["Active Alpha"] = "Transparence",

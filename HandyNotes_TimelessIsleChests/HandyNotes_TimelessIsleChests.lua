@@ -4,13 +4,15 @@ local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes", true)
 if not HandyNotes then return end
 
 --TimelessIsleChest = HandyNotes:NewModule("TimelessIsleChest", "AceConsole-3.0", "AceEvent-3.0")
-local db
+--local db
 local iconDefault = "Interface\\Icons\\TRADE_ARCHAEOLOGY_CHESTOFTINYGLASSANIMALS"
 
 TimelessIsleChest.nodes = { }
 local nodes = TimelessIsleChest.nodes
 
 nodes["TimelessIsle"] = { }
+nodes["CavernofLostSpirits"] = { }
+--nodes["Pandaria"] = { }
 
 nodes["TimelessIsle"][36703410] = { "33170", "Moss-Covered Chest", "One-Time Chest 000" }
 nodes["TimelessIsle"][25502720] = { "33171", "Moss-Covered Chest", "One-Time Chest 001" }
@@ -56,6 +58,11 @@ nodes["TimelessIsle"][47602760] = { "33210", "Blazing Chest", "One-Time Chest - 
 
 nodes["TimelessIsle"][59903130] = { "33201", "Moss-Covered Chest", "One-Time Chest - Ordo Lake Lower" }  -- Needed Correction
 
+nodes["TimelessIsle"][46703230] = { "33203", "Skull-Covered Chest", "One-Time Chest - Cavern of Lost Spirits\nLocated inside the cave below" }
+nodes["CavernofLostSpirits"][62903480] = { "33203", "Skull-Covered Chest", "One-Time Chest - Cavern of Lost Spirits" }
+--nodes["Pandaria"][62903480] = { "33203", "Skull-Covered Chest", "One-Time Chest - Cavern of Lost Spirits" }
+
+
 -- Extreme Treasure Hunter
 nodes["TimelessIsle"][51607460] = { "32969", "Gleaming Treasure Chest", "Pillar Jumping\nStart Here", "Interface\\Addons\\HandyNotes_TimelessIsleChests\\Artwork\\chest_normal_daily.tga" } --Old start 51507360
 nodes["TimelessIsle"][49706940] = { "32969", "Gleaming Treasure Chest", "Pillar Jumping\n|cffffff00[Extreme Treasure Hunter]|r", "Interface\\Addons\\HandyNotes_TimelessIsleChests\\Artwork\\chest_normal_daily_end.tga" }
@@ -80,24 +87,7 @@ function TimelessIsleChest:OnDisable()
 end ]]--
 
 --local handler = {}
-do
-	local function iter(t, prestate)
-		if not t then return nil end
-		local state, value = next(t, prestate)
-		while state do
-			    -- questid, chest type, quest name, icon
-			    if (value[1] and (not IsQuestFlaggedCompleted(value[1]) or db.alwaysshow)) then
-				 --print(state)
-				 local icon = value[4] or iconDefault
-				 return state, nil, icon, db.icon_scale, db.icon_alpha
-				end
-			state, value = next(t, state)
-		end
-	end
-	function TimelessIsleChest:GetNodes(mapFile, isMinimapUpdate, dungeonLevel)
-		return iter, nodes[mapFile], nil
-	end
-end
+
 
 function TimelessIsleChest:OnEnter(mapFile, coord) -- Copied from handynotes
     if (not nodes[mapFile][coord]) then return end
@@ -128,8 +118,8 @@ local options = {
  type = "group",
  name = "TimelessIsleChest",
  desc = "Locations of treasure chests on Timeless Isle.",
- get = function(info) return db[info.arg] end,
- set = function(info, v) db[info.arg] = v; TimelessIsleChest:Refresh() end,
+ get = function(info) return TimelessIsleChest.db.profile[info.arg] end,
+ set = function(info, v) TimelessIsleChest.db.profile[info.arg] = v; TimelessIsleChest:Refresh() end,
  args = {
   desc = {
    name = "These settings control the look and feel of the icon.",
@@ -159,6 +149,11 @@ local options = {
    arg = "alwaysshow",
    order = 2,
   },
+  save = {
+   type = "toggle",
+   name = "Save to SavedVariables",
+   arg = "save",
+  },
  },
 }
 
@@ -168,16 +163,69 @@ function TimelessIsleChest:OnInitialize()
    icon_scale = 1.0,
    icon_alpha = 1.0,
    alwaysshow = false,
+   save = true,
   },
  }
 
- db = LibStub("AceDB-3.0"):New("TimelessIsleChestsDB", defaults, true).profile
- HandyNotes:RegisterPluginDB("TimelessIsleChest", self, options)
- --self:RegisterEvent("WORLD_MAP_UPDATE", "Refresh")
- --self:RegisterEvent("LOOT_CLOSED", "Refresh")
- self:RegisterBucketEvent({ "WORLD_MAP_UPDATE", "LOOT_CLOSED" }, 2, "Refresh")
+ self.db = LibStub("AceDB-3.0"):New("TimelessIsleChestsDB", defaults, true)
+ self:RegisterEvent("PLAYER_ENTERING_WORLD", "WorldEnter")
 end
 
+function TimelessIsleChest:WorldEnter()
+ self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+
+ --self:RegisterEvent("WORLD_MAP_UPDATE", "Refresh")
+ --self:RegisterEvent("LOOT_CLOSED", "Refresh")
+
+ --self:Refresh()
+ self:ScheduleTimer("RegisterWithHandyNotes", 10)
+end
+
+function TimelessIsleChest:RegisterWithHandyNotes()
+do
+	local function iter(t, prestate)
+		if not t then return nil end
+		local state, value = next(t, prestate)
+		while state do
+			    -- questid, chest type, quest name, icon
+			    if (value[1] and not TimelessIsleChest:HasBeenLooted(value)) then
+				 --print(state)
+				 local icon = value[4] or iconDefault
+				 return state, nil, icon, TimelessIsleChest.db.profile.icon_scale, TimelessIsleChest.db.profile.icon_alpha
+				end
+			state, value = next(t, state)
+		end
+	end
+	function TimelessIsleChest:GetNodes(mapFile, isMinimapUpdate, dungeonLevel)
+	    if (mapFile == "CavernofLostSpirits" and isMinimapUpdate) then return iter, nodes["Hack"], nil end
+		return iter, nodes[mapFile], nil
+	end
+end
+ HandyNotes:RegisterPluginDB("TimelessIsleChest", self, options)
+ self:RegisterBucketEvent({ "LOOT_CLOSED" }, 2, "Refresh")
+ self:Refresh()
+end
+ 
+
 function TimelessIsleChest:Refresh()
+ if (not self.db.profile.save) then
+  table.wipe(self.db.char)
+ end
  self:SendMessage("HandyNotes_NotifyUpdate", "TimelessIsleChest")
+end
+
+function TimelessIsleChest:HasBeenLooted(value)
+ if (self.db.profile.alwaysshow) then return false end
+ 
+ if (self.db.char[value[1]] and self.db.profile.save) then return true end
+ 
+ if (IsQuestFlaggedCompleted(value[1])) then
+  if (self.db.profile.save and not value[4]) then  -- Save the chest but not if it's a daily
+   self.db.char[value[1]] = true;
+  end
+  
+  return true
+ end
+  
+ return false
 end

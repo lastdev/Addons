@@ -81,6 +81,44 @@ L:AddLocale("enUS",
 }
 
 )
+L:AddLocale("itIT", 
+{
+	-- ["A module to automaticaly enable chat and combat logging."] = "",
+	-- ChatLog = "",
+	-- ["Chat Log: Disabled"] = "",
+	-- ["Chat Log: Enabled"] = "",
+	-- ["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "",
+	-- ["Combat Log: Disabled"] = "",
+	-- ["Combat Log: Enabled"] = "",
+	-- ["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "",
+	-- quiet_desc = "",
+	-- quiet_name = "",
+	-- ["Toggle Chat Log"] = "",
+	-- ["Toggle chat log on and off."] = "",
+	-- ["Toggle Combat Log"] = "",
+	-- ["Toggle combat log on and off."] = "",
+}
+
+)
+L:AddLocale("ptBR", 
+{
+	-- ["A module to automaticaly enable chat and combat logging."] = "",
+	-- ChatLog = "",
+	-- ["Chat Log: Disabled"] = "",
+	-- ["Chat Log: Enabled"] = "",
+	-- ["Chat log recorded to <WoW Installation>\\Logs\\WoWChatLog.txt only upon logout."] = "",
+	-- ["Combat Log: Disabled"] = "",
+	-- ["Combat Log: Enabled"] = "",
+	-- ["Combat log recorded to <WoW Installation>\\Logs\\WoWCombatLog.txt only upon logout."] = "",
+	-- quiet_desc = "",
+	-- quiet_name = "",
+	-- ["Toggle Chat Log"] = "",
+	-- ["Toggle chat log on and off."] = "",
+	-- ["Toggle Combat Log"] = "",
+	-- ["Toggle combat log on and off."] = "",
+}
+
+)
 L:AddLocale("frFR",  
 {
 	["A module to automaticaly enable chat and combat logging."] = "Un module pour activer automatiquement la journalisation du chat et des combats",

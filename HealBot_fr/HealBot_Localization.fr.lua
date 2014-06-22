@@ -1,4 +1,4 @@
-ï»¿-- French version (by Kubik of Vol'Jin) 2014-05-03 / V. 5.4.7.3
+ï»¿-- French version (by Kubik of Vol'Jin) 2014-05-24 / V. 5.4.8.0
 -- à = \195\160
 -- â = \195\162
 -- ç = \195\167
@@ -1022,6 +1022,7 @@ HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "Vous surveillez les buffs manquants \
     HEALBOT_WORDS_ADDTEMPCUSTOMNAME         = "Ajouter un nom perso. temporaire"
     HEALBOT_WORDS_ADDPERMCUSTOMNAME         = "Ajouter un nom perso. permanent"
     HEALBOT_OPTIONS_ENABLELIBUTF8           = "Activer caract\195\168res UTF8"
+    HEALBOT_OPTIONS_SHOWDIRECTION           = "Indiquer la direction hors d'atteinte";
 end
 
 if (GetLocale() == "frFR") then

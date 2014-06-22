@@ -311,22 +311,22 @@ local castingRipCP = 1
 local bleeds = { }
 local damageCalcs = {
 	Rip = function(physMod, bleedMod, cp)
-		return (113 + cp * (320 + 0.0484 * UnitAttackPower("player")))
+		-- TODO this isn't exact, but it's close
+		return (113 + cp * (320 + 0.05993 * UnitAttackPower("player")))
 			* bleedMod
 			* physMod
 	end,
 	Rake = function(physMod, bleedMod)
 		return (99 + .3 * UnitAttackPower("player")) * bleedMod * physMod
 	end,
-	Mangle = function()
+	Mangle = function(physMod)
 		local armor = 24835 * (1 - .04 * c.GetDebuffStack(c.ARMOR_DEBUFFS))
 		local low, high = UnitDamage("player")
-		return (78 + 2.5 * (low + high)) / 2
+		return (physMod * 78 + 1.25 * (low + high))
 			* (1 - armor / (armor + 46257.5))
 	end,
 }
 
--- TODO this isn't exact (not sure why), but it's close
 function a.CalcDamage(name, cp, roar, fury, dream, vigil)
 	local critMultiplier = 2
 	local physMod = 1
@@ -354,7 +354,7 @@ function a.ExistingBleedDamage(name)
 	elseif a[name] == 0 then
 		return 0
 	else
-		return u.GetOrMakeTable(bleeds, name)[UnitGUID(s.UnitSelection())]
+		return u.GetOrMakeTable(bleeds, name)[UnitGUID(s.UnitSelection())] or 0
 	end
 end
 
@@ -555,10 +555,11 @@ a.Rotations.Feral = {
 				"Bear Form for Feral AoE",
 				"Thrash(Cat Form) for AoE",
 				"Swipe(Cat Form) for Feral")
-		elseif c.GetOption("FeralBeta") then
+		else
 			c.DelayPriorityFlash(
 				"Ravage under Stealth",
 				"Healing Touch for Feral Beta",
+				"Bear Form while Pooling",
 				"Ferocious Bite on Last Tick Beta",
 				"Healing Touch for Dream Beta",
 				"Savage Roar at 0",
@@ -586,28 +587,6 @@ a.Rotations.Feral = {
 				"Rake Filler",
 				"Shred Filler",
 				"Mangle(Cat Form) Filler")
-		else
-			c.FlashAll(
-				"Tiger's Fury", 
-				"Berserk", 
-				"Nature's Vigil",
-				"Healing Touch for Feral Heal",
-				"Incarnation: King of the Jungle")
-			c.PriorityFlash(
-				"Healing Touch for Dream",
-				"Savage Roar",
-				"Ferocious Bite on Last Tick",
-				"Rip",
-				"Savage Roar Early",
-				"Ferocious Bite",
-				"Rake",
-				"Thrash(Cat Form)",
-				"Healing Touch for Vigil",
-				"Rip Delay",
-				"Bear Form for Feral",
-				"Ravage",
-				"Shred",
-				"Mangle(Cat Form)")
 		end
 	end,
 	

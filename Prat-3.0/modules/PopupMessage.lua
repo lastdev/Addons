@@ -100,31 +100,89 @@ L:AddLocale("enUS",
 }
 
 )
+L:AddLocale("itIT", 
+{
+	-- ["Add Nickname"] = "",
+	-- ["Adds an alternate name to show in popups."] = "",
+	-- ["Clear Nickname"] = "",
+	-- ["Clears alternate name to show in popups."] = "",
+	-- framealpha_desc = "",
+	-- framealpha_name = "",
+	-- Popup = "",
+	-- PopupMessage = "",
+	-- ["Remove Nickname"] = "",
+	-- ["Removes an alternate name to show in popups."] = "",
+	-- ["Set Separately"] = "",
+	-- showall_desc = "",
+	-- showall_name = "",
+	-- ["Show All Popups"] = "",
+	-- show_desc = "",
+	-- show_name = "",
+	-- show_perframedesc = "",
+	-- show_perframename = "",
+	-- ["Show Popups"] = "",
+	-- ["Show Popups for all chat windows."] = "",
+	-- ["Show Popups for each window."] = "",
+	-- ["Shows messages in a popup window."] = "",
+	-- ["Shows messages with your name in a popup."] = "",
+	-- ["Toggle setting options separately for each chat window."] = "",
+}
+
+)
+L:AddLocale("ptBR", 
+{
+	-- ["Add Nickname"] = "",
+	-- ["Adds an alternate name to show in popups."] = "",
+	-- ["Clear Nickname"] = "",
+	-- ["Clears alternate name to show in popups."] = "",
+	-- framealpha_desc = "",
+	-- framealpha_name = "",
+	-- Popup = "",
+	-- PopupMessage = "",
+	-- ["Remove Nickname"] = "",
+	-- ["Removes an alternate name to show in popups."] = "",
+	-- ["Set Separately"] = "",
+	-- showall_desc = "",
+	-- showall_name = "",
+	-- ["Show All Popups"] = "",
+	-- show_desc = "",
+	-- show_name = "",
+	-- show_perframedesc = "",
+	-- show_perframename = "",
+	-- ["Show Popups"] = "",
+	-- ["Show Popups for all chat windows."] = "",
+	-- ["Show Popups for each window."] = "",
+	-- ["Shows messages in a popup window."] = "",
+	-- ["Shows messages with your name in a popup."] = "",
+	-- ["Toggle setting options separately for each chat window."] = "",
+}
+
+)
 L:AddLocale("frFR",  
 {
-	["Add Nickname"] = "Ajouter un surnom", -- Needs review
+	["Add Nickname"] = "Ajouter un surnom",
 	-- ["Adds an alternate name to show in popups."] = "",
 	["Clear Nickname"] = "Efface le surnom",
 	-- ["Clears alternate name to show in popups."] = "",
-	framealpha_desc = "Régler la transparence de la popup lorsqu'elle disparait.", -- Needs review
+	framealpha_desc = "Régler la transparence de la popup lorsqu'elle disparait.",
 	framealpha_name = "Transparence des popups",
-	Popup = true, -- Needs review
-	PopupMessage = "Message popup", -- Needs review
+	Popup = true,
+	PopupMessage = "Message popup",
 	["Remove Nickname"] = "Retirer un surnom",
 	-- ["Removes an alternate name to show in popups."] = "",
-	["Set Separately"] = "Afficher séparément", -- Needs review
-	showall_desc = "Afficher les popups pour toutes les fenêtres de discussion.", -- Needs review
-	showall_name = "Afficher toutes les popups", -- Needs review
-	["Show All Popups"] = "Afficher toutes les popups", -- Needs review
-	show_desc = "Afficher les popups pour chaque fenêtre.", -- Needs review
-	show_name = "Afficher les popups", -- Needs review
-	show_perframedesc = "Active ou désactive l'affichage des popups.", -- Needs review
-	show_perframename = "Afficher les popups de la fenêtre de discussion %d", -- Needs review
-	["Show Popups"] = "Afficher les popups", -- Needs review
-	["Show Popups for all chat windows."] = "Afficher les popups pour toutes les fenêtres de discussion.", -- Needs review
-	["Show Popups for each window."] = "Afficher les popups pour chaque fenêtre.", -- Needs review
-	["Shows messages in a popup window."] = "Afficher les messages dans une fenêtre popup.", -- Needs review
-	["Shows messages with your name in a popup."] = "Afficher les messages avec votre nom dans une popup.", -- Needs review
+	["Set Separately"] = "Afficher séparément",
+	showall_desc = "Afficher les popups pour toutes les fenêtres de discussion.",
+	showall_name = "Afficher toutes les popups",
+	["Show All Popups"] = "Afficher toutes les popups",
+	show_desc = "Afficher les popups pour chaque fenêtre.",
+	show_name = "Afficher les popups",
+	show_perframedesc = "Active ou désactive l'affichage des popups.",
+	show_perframename = "Afficher les popups de la fenêtre de discussion %d",
+	["Show Popups"] = "Afficher les popups",
+	["Show Popups for all chat windows."] = "Afficher les popups pour toutes les fenêtres de discussion.",
+	["Show Popups for each window."] = "Afficher les popups pour chaque fenêtre.",
+	["Shows messages in a popup window."] = "Afficher les messages dans une fenêtre popup.",
+	["Shows messages with your name in a popup."] = "Afficher les messages avec votre nom dans une popup.",
 	["Toggle setting options separately for each chat window."] = "Activer des préférences différentes pour chaque fenêtre de discussion.",
 }
 

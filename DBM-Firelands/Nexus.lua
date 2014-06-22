@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NexusLegendary", "DBM-Firelands")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 48 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 115 $"):sub(12, -3))
 mod:SetCreatureID(53472)
 mod:SetModelID(32230)
 mod:SetZone()
@@ -9,9 +9,9 @@ mod:SetZone()
 mod:RegisterCombat("combat")
 
 mod:RegisterEvents(
-	"SPELL_CAST_START",
-	"SPELL_AURA_APPLIED",
-	"SPELL_AURA_REMOVED"
+	"SPELL_CAST_START 99502 99392",
+	"SPELL_AURA_APPLIED 99392",
+	"SPELL_AURA_REMOVED 99392"
 )
 
 local warnBreath				= mod:NewSpellAnnounce(99502, 4)
@@ -27,11 +27,12 @@ function mod:OnCombatStart(delay)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args.spellId == 99502 then
+	local spellId = args.spellId
+	if spellId == 99502 then
 		warnBreath:Show()
 		specwarnBreath:Show()
 		timerBreath:Start()
-	elseif args.spellId == 99392 then
+	elseif spellId == 99392 then
 		warnHeal:Show()
 		specwarnHealInterrupt:Show(args.sourceName)
 	end

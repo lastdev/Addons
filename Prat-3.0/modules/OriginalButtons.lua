@@ -98,6 +98,60 @@ L:AddLocale("enUS",
 }
 
 )
+L:AddLocale("itIT", 
+{
+	-- alpha_desc = "",
+	-- alpha_name = "",
+	-- buttonframe_desc = "",
+	-- buttonframe_name = "",
+	-- ChannelNames = "",
+	-- chatmenu_desc = "",
+	-- chatmenu_name = "",
+	-- ["Chat window button options."] = "",
+	-- Default = "",
+	-- ["Original Buttons"] = "",
+	-- reflow_desc = "",
+	-- reflow_name = "",
+	-- reminder_desc = "",
+	-- reminder_name = "",
+	-- ["Right, Inside Frame"] = "",
+	-- ["Right, Outside Frame"] = "",
+	-- ["Set Position"] = "",
+	-- ["Sets position of chat menu and arrows for all chat windows."] = "",
+	-- ["Show Arrows"] = "",
+	-- ["Show Chat%d Arrows"] = "",
+	-- ["Toggle showing chat arrows for each chat window."] = "",
+	-- ["Toggles navigation arrows on and off."] = "",
+}
+
+)
+L:AddLocale("ptBR", 
+{
+	-- alpha_desc = "",
+	-- alpha_name = "",
+	-- buttonframe_desc = "",
+	-- buttonframe_name = "",
+	ChannelNames = true, -- Needs review
+	-- chatmenu_desc = "",
+	-- chatmenu_name = "",
+	-- ["Chat window button options."] = "",
+	Default = "Padrão", -- Needs review
+	["Original Buttons"] = "Botões Original", -- Needs review
+	-- reflow_desc = "",
+	-- reflow_name = "",
+	-- reminder_desc = "",
+	-- reminder_name = "",
+	["Right, Inside Frame"] = "Direito, Dentro do Frame", -- Needs review
+	-- ["Right, Outside Frame"] = "",
+	["Set Position"] = "Definir Posição", -- Needs review
+	-- ["Sets position of chat menu and arrows for all chat windows."] = "",
+	["Show Arrows"] = "Mostar Setas", -- Needs review
+	-- ["Show Chat%d Arrows"] = "",
+	-- ["Toggle showing chat arrows for each chat window."] = "",
+	-- ["Toggles navigation arrows on and off."] = "",
+}
+
+)
 L:AddLocale("frFR",  
 {
 	alpha_desc = "Définir l'alpha du menu du chat et des flèches pour toutes les fenêtres.",

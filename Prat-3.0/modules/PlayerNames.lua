@@ -186,8 +186,8 @@ Prat:AddModuleToLoad(function()
 	["Enable Alt-Invite"] = "Invitation avec Alt",
 	["Enable Invite Links"] = "Liens d'invitation",
 	["Enable TabComplete"] = "Complétion avec Tab",
-	-- hoverhilight_desc = "",
-	-- hoverhilight_name = "",
+	hoverhilight_desc = "Mettre en surbrillance les lignes de chat d'un joueur spécifique quand la souris survole un lien vers ce joueur", -- Needs review
+	hoverhilight_name = "Surbrillance de noms survolés", -- Needs review
 	["How to color other player's level."] = "Définit la couleur du niveau des autres joueurs.",
 	["How to color player's name."] = "Définit la couleur du nom des joueurs.",
 	["Keep Info"] = "Garder les info.",

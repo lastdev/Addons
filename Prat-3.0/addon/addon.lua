@@ -85,7 +85,7 @@ Version = "Prat |cff8080ff3.0|r (|cff8080ff" .. "DEBUG" .. "|r)"
 --@end-debug@]===]
 
 --@non-debug@
-Version = "Prat |cff8080ff3.0|r (|cff8080ff".."3.5.7".."|r)"
+Version = "Prat |cff8080ff3.0|r (|cff8080ff".."3.5.8".."|r)"
 --@end-non-debug@
 
 
@@ -758,5 +758,8 @@ function(name)
   Prat:PrintLiteral(SplitMessage, SplitMessage.ORG)
 
   local cc = addon:GetModule("CopyChat", true)
+  local activeFrame = _G.FCFDock_GetSelectedWindow(_G.GENERAL_CHAT_DOCK)
+  _G.FCFDock_SelectWindow(_G.GENERAL_CHAT_DOCK,_G.ChatFrame1)
   if cc then cc:ScrapeFullChatFrame(_G.ChatFrame1) end
+  _G.FCFDock_SelectWindow(_G.GENERAL_CHAT_DOCK, activeFrame)
 end)

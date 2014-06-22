@@ -14,7 +14,7 @@ setfenv(1, WIM);
 
 -- Core information
 addonTocName = "WIM";
-version = "3.6.8";
+version = "3.6.18";
 beta = false; -- flags current version as beta.
 debug = false; -- turn debugging on and off.
 useProtocol2 = true; -- test switch for new W2W Protocol. (Dev use only)
@@ -367,7 +367,7 @@ function WIM:VARIABLES_LOADED()
     history = _G.WIM3_History;
     
     -- load some environment data.
-    env.realm = _G.GetCVar("realmName");
+    env.realm = _G.GetRealmName();
     env.character = _G.UnitName("player");
     
     -- inherrit any new default options which wheren't shown in previous releases.
@@ -429,6 +429,7 @@ function WIM:GUILD_ROSTER_UPDATE()
 		for i=1, _G.GetNumGuildMembers(true) do 
 			local name = _G.GetGuildRosterInfo(i);
 			if(name) then
+				name = _G.Ambiguate(name, "none")
 				env.cache[env.realm][env.character].guildList[name] = true; --[set place holder for quick lookup
 			end
 		end
@@ -457,7 +458,7 @@ end
 
 function IsInParty(user)
     for i=1, 4 do
-        if(_G.UnitName("party"..i) == user) then
+        if(_G.GetUnitName("party"..i, true) == user) then
             return true;
         end
     end
@@ -465,8 +466,8 @@ function IsInParty(user)
 end
 
 function IsInRaid(user)
-    for i=1, 40 do
-        if(_G.UnitName("raid"..i) == user) then
+    for i=1, GetNumGroupMembers() do
+        if(_G.GetUnitName("raid"..i, true) == user) then
             return true;
         end
     end

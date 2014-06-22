@@ -76,13 +76,45 @@ L:AddLocale("enUS",
 }
 
 )
+L:AddLocale("itIT", 
+{
+	-- adjustlinks_desc = "",
+	-- adjustlinks_name = "",
+	-- Center = "",
+	-- ["Chat window paragraph options."] = "",
+	-- justification_desc = "",
+	-- justification_name = "",
+	-- Left = "",
+	-- ["Line Spacing"] = "",
+	-- Paragraph = "",
+	-- Right = "",
+	-- ["Set the line spacing for all chat windows."] = "",
+}
+
+)
+L:AddLocale("ptBR", 
+{
+	-- adjustlinks_desc = "",
+	-- adjustlinks_name = "",
+	-- Center = "",
+	-- ["Chat window paragraph options."] = "",
+	-- justification_desc = "",
+	-- justification_name = "",
+	-- Left = "",
+	-- ["Line Spacing"] = "",
+	-- Paragraph = "",
+	-- Right = "",
+	-- ["Set the line spacing for all chat windows."] = "",
+}
+
+)
 L:AddLocale("frFR",  
 {
-	adjustlinks_desc = "Ajuster les liens pour pouvoir cliquer dessus si ils sont centrés ou alignés à droite.", -- Needs review
+	adjustlinks_desc = "Ajuster les liens pour pouvoir cliquer dessus si ils sont centrés ou alignés à droite.",
 	adjustlinks_name = "Répare la position des liens des joueurs/objets",
 	Center = "Centrer",
 	["Chat window paragraph options."] = "Options de paragraphe.",
-	-- justification_desc = "",
+	justification_desc = "Défiinr l'alignement horizontale pour chaque fenêtre de chat", -- Needs review
 	justification_name = "Définir l'alignement",
 	Left = "Gauche",
 	["Line Spacing"] = "Espacement des lignes",

@@ -63,6 +63,28 @@ L:AddLocale("enUS",
 }
 
 )
+L:AddLocale("itIT", 
+{
+	-- ["Addon message options."] = "",
+	-- AddonMsgs = "",
+	-- show_desc = "",
+	-- show_name = "",
+	-- show_perframedesc = "",
+	-- show_perframename = "",
+}
+
+)
+L:AddLocale("ptBR", 
+{
+	-- ["Addon message options."] = "",
+	-- AddonMsgs = "",
+	-- show_desc = "",
+	-- show_name = "",
+	-- show_perframedesc = "",
+	-- show_perframename = "",
+}
+
+)
 L:AddLocale("frFR",  
 {
 	-- ["Addon message options."] = "",

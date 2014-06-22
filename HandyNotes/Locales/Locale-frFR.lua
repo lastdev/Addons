@@ -5,32 +5,33 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes", "frFR")
 if not L then return end
 
-L[ [=[
-Alt+Right Click To Add a HandyNote]=] ] = [=[
-Alt+clic droit pour ajouter une note pratique]=]
-L["(No Title)"] = "(Aucun Titre)"
 L["Add Handy Note"] = "Ajouter une note pratique"
 L["Add this location to Cartographer_Waypoints"] = "Ajouter cette position à Cartographer_Waypoints"
 L["Add this location to TomTom waypoints"] = "Ajouter cette position aux points de naviguation de TomTom"
+L[ [=[
+Alt+Right Click To Add a HandyNote]=] ] = [=[
+Alt+clic droit pour ajouter une note pratique]=]
+L["|cFF00FF00Hint: |cffeda55fCtrl+Shift+LeftDrag|cFF00FF00 to move a note"] = "|cFF00FF00Astuce : |cffeda55fCtrl+Shift+SaisirGauche|cFF00FF00 pour déplacer une note"
 L["Configuration for each individual plugin database."] = "Configuration de chaque base de données des plugins individuels."
 L["Delete Handy Note"] = "Supprimer une note pratique"
 L["Description/Notes:"] = "Description/Notes :"
-L["ERROR_CREATE_NOTE1"] = "HandyNotes ne peut pas créé de note ici car il n'arrive pas à obtenir votre position actuelle. Habituellement, cela arrive quand il n'y a pas de carte de la zone où vous vous trouvez."
 L["Edit Handy Note"] = "Éditer une note pratique"
 L["Enable HandyNotes"] = "Activer HandyNotes"
 L["Enable or disable HandyNotes"] = "Active ou désactive HandyNotes."
+L["ERROR_CREATE_NOTE1"] = "HandyNotes ne peut pas créé de note ici car il n'arrive pas à obtenir votre position actuelle. Habituellement, cela arrive quand il n'y a pas de carte de la zone où vous vous trouvez."
 L["HandyNotes"] = "HandyNotes"
 L["Icon Alpha"] = "Transparence des icônes"
 L["Icon Scale"] = "Échelle des icônes"
 L["Minimap Icon Alpha"] = "Transp. icônes minicarte"
 L["Minimap Icon Scale"] = "Échelle icônes minicarte"
+L["(No Title)"] = "(Aucun titre)"
 L["Overall settings"] = "Paramètres globaux"
 L["Overall settings that affect every database"] = "Définit les paramètres globaux qui affectent toutes les bases de données."
 L["Plugin databases"] = "Bases de données des plugins."
 L["Plugins"] = "Plugins"
 L["Portal"] = "Portail"
 L["Show on continent map"] = "Afficher sur la carte des continents"
-L["Show the following plugins on the map"] = "Montre les plugins suivant sur la carte"
+L["Show the following plugins on the map"] = "Montre les plugins suivants sur la carte"
 L["Syntax:"] = "Syntaxe :"
 L["The alpha transparency of the icons"] = "Définit la transparence des icônes."
 L["The overall alpha transparency of the icons on the Minimap"] = "Définit la transparence globale des icônes de la minicarte."
@@ -43,5 +44,4 @@ L["These settings control the look and feel of the HandyNotes icons."] = "Ces pa
 L["Title"] = "Titre"
 L["World Map Icon Alpha"] = "Transp. icônes carte du monde"
 L["World Map Icon Scale"] = "Échelle icônes carte du monde"
-L["|cFF00FF00Hint: |cffeda55fCtrl+Shift+LeftDrag|cFF00FF00 to move a note"] = "|cFF00FF00Astuce : |cffeda55fCtrl+Shift+SaisirGauche|cFF00FF00 pour déplacer une note"
 

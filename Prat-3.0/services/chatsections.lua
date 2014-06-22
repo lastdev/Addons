@@ -408,6 +408,7 @@ function SplitChatMessage(frame, event, ...)
       -- no link
         s.NONPLAYER = arg2
       else
+        arg2 = _G.Ambiguate(arg2, "none")
         local plr, svr = arg2:match("([^%-]+)%-?(.*)")
 
         s.pP = "["
@@ -586,9 +587,23 @@ function SplitChatMessage(frame, event, ...)
         --
         --				else
         --					s.MESSAGE = string.gsub(s.MESSAGE, tag, "");
+        elseif ( _G.GROUP_TAG_LIST[term] ) then
+            local groupIndex = _G.GROUP_TAG_LIST[term];
+            local groupList = "[";
+            for i=1, _G.GetNumGroupMembers() do
+                local name, rank, subgroup, level, class, classFileName = _G.GetRaidRosterInfo(i);
+                if ( name and subgroup == groupIndex ) then
+                    local r,g,b = GetClassGetColor(classFileName);
+                    name = string.format("\124cff%.2x%.2x%.2x%s\124r", r*255, g*255, b*255, name);
+                    groupList = groupList..(groupList == "[" and "" or _G.PLAYER_LIST_DELIMITER)..name;
+                end
+            end
+            groupList = groupList.."]";
+            s.MESSAGE = string.gsub(s.MESSAGE, tag, groupList);
         end
       end
     end
+
 
     if type == "SYSTEM" or strsub(type, 1, 11) == "ACHIEVEMENT" or strsub(type, 1, 11) == "TARGETICONS" or strsub(type, 1, 18) == "GUILD_ACHIEVEMENT" then
       if strsub(type, 1, 11) == "ACHIEVEMENT" or strsub(type, 1, 18) == "GUILD_ACHIEVEMENT" then

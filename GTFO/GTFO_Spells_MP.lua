@@ -927,7 +927,6 @@ GTFO.SpellID["135496"] = {
 -- * Brawler's Guild *
 -- *******************
 
--- TODO: Fire line (Vian the Volatile)
 GTFO.SpellID["133610"] = {
 	--desc = "Fire Lines - Impact (Vian the Volatile)";
 	sound = 1;
@@ -985,6 +984,17 @@ GTFO.SpellID["133157"] = {
 	applicationOnly = true;
 	minimumStacks = 12;
 };
+
+GTFO.SpellID["141417"] = {
+	--desc = "Artillery Strike (T440 Dual-Mode Robot)";
+	sound = 1;
+};
+
+GTFO.SpellID["141393"] = {
+	--desc = "Fire Patch (Anthracite)";
+	sound = 1;
+};
+
 
 -- TODO: Get Off! (Millhouse Manastorm) -- How does melee avoid it?
 -- TODO: Get Off! (Zen'shar) -- How does melee avoid it?  Does this boss have this ability?
@@ -1307,8 +1317,6 @@ GTFO.SpellID["135153"] = {
 	sound = 1;
 };
 
--- TODO: Ruin (Ra-Den)
-
 -- *********************
 -- * Blood in the Snow *
 -- *********************
@@ -1342,7 +1350,7 @@ GTFO.SpellID["142413"] = {
 	sound = 1;
 };
 
-GTFO.SpellID["142411"] = {
+GTFO.SpellID["142311"] = {
 	--desc = "Ruined Earth (Dark Shaman Xorenth - Heroic)";
 	sound = 1;
 };
@@ -1415,6 +1423,11 @@ GTFO.SpellID["149164"] = {
 	sound = 1;
 };
 
+GTFO.SpellID["147213"] = {
+	--desc = "Rushing Waters (Aqeuous Defender)";
+	sound = 1;
+};
+
 GTFO.SpellID["147321"] = {
 	--desc = "Vortex (Aqeuous Defender)";
 	sound = 1;
@@ -1425,10 +1438,28 @@ GTFO.SpellID["143297"] = {
 	sound = 1;
 };
 
+GTFO.SpellID["143460"] = {
+	--desc = "Sha Pool (Immerseus - Heroic)";
+	soundFunction = function() 
+		local stacks = GTFO_DebuffStackCount("player", 143460);
+		if (stacks > 1) then
+			return 1;
+		else
+			return 2;
+		end
+	end;
+	applicationOnly = true;
+};
+
 GTFO.SpellID["143959"] = {
 	--desc = "Defiled Ground (Rook Stonetoe)";
 	sound = 1;
 	applicationOnly = true;
+};
+
+GTFO.SpellID["144357"] = {
+	--desc = "Defiled Ground (Rook Stonetoe)";
+	sound = 1;
 };
 
 GTFO.SpellID["143010"] = {
@@ -1451,7 +1482,16 @@ GTFO.SpellID["144367"] = {
 GTFO.SpellID["143559"] = {
 	--desc = "Dark Meditation (Sun Tenderheart)";
 	sound = 1;
+	tankSound = 2;
+	tankSoundHeroic = 0;
 	negatingDebuffSpellID = 143564; -- Meditative Field
+};
+
+GTFO.SpellID["143424"] = {
+	--desc = "Sha Sear (Sun Tenderheart)";
+	sound = 4;
+	negatingDebuffSpellID = 143423; -- Sha Sear
+	negatingIgnoreTime = 1;
 };
 
 GTFO.SpellID["145227"] = {
@@ -1469,27 +1509,238 @@ GTFO.SpellID["146818"] = {
 	sound = 4;
 };
 
--- TODO: Aura of Pride (Sha of Pride) -- Friendly fire
+GTFO.SpellID["145219"] = {
+	--desc = "Corruption (Sha of Pride - Heroic)";
+	sound = 1;
+	test = true; -- Verify this is the damage from walls in the Pac-Man room
+};
 
 GTFO.SpellID["147705"] = {
 	--desc = "Poison Cloud (Korgra the Snake)";
 	sound = 1;
-	test = true;
 };
 
--- TODO: [Ground Fire] (Dragonmaw Flameslinger) - Fire AOE residue
--- TODO: Borer Drill (Iron Juggernaut) - 144218 - Avoidable AOE damage?
--- TODO: Laser Burn (Iron Juggernaut) - 144459 - Application only? Avoidable?
--- TODO: Cutter Laser (Iron Juggernaut) - 144918 - Avoidable?
--- TODO: Explosive Tar (Iron Juggernaut) - Low damage warning?
--- TODO: Foul Stream (Earthbreaker Haromm) - 144090 - Avoidable? Fail or persist?
--- TODO: Ashen Wall (Earthbreaker Haromm or Ash Elemental) - NPC #71827 - Avoid these NPCs?
--- TODO: Toxic Storm (Wavebinder Kardris) - Avoidable AOE or just tornado damage?
--- TODO: Foul Geyser (Wavebinder Kardris) - 143993 - Avoidable or must simple run out?
--- TODO: Foulness (Foul Slime) - 144066 - Kite slimes to avoid AOE?
--- TODO: Ravager (General Nazgrim) - 143873 - Avoidable
--- TODO: Ironstorm (Kor'kron Ironblade) - 143421 - Avoidable or bleed? Tank only?
+GTFO.SpellID["147705"] = {
+	--desc = "Poison Cloud (Korgra the Snake)";
+	sound = 1;
+};
 
+GTFO.SpellID["146872"] = {
+	--desc = "Shadow Assault (Dragonmaw Ebon Stalker)";
+	sound = 1;
+	tankSound = 0;
+};
+
+GTFO.SpellID["146779"] = {
+	--desc = "Flame Breath (Dragonmaw Proto-Drake)";
+	sound = 1;
+};
+
+GTFO.SpellID["147824"] = {
+	--desc = "Muzzle Spray (Master Cannoneer Dagryn)";
+	sound = 1;
+};
+
+GTFO.SpellID["144218"] = {
+	--desc = "Borer Drill (Iron Juggernaut)";
+	sound = 1;
+};
+
+GTFO.SpellID["144918"] = {
+	--desc = "Cutter Laser (Iron Juggernaut)";
+	sound = 1;
+};
+
+GTFO.SpellID["144498"] = {
+	--desc = "Explosive Tar (Iron Juggernaut)";
+	sound = 1;
+};
+
+GTFO.SpellID["144017"] = {
+	--desc = "Toxic Storm (Wavebinder Kardris)";
+	sound = 1;
+};
+
+GTFO.SpellID["143993"] = {
+	--desc = "Foul Geyser (Wavebinder Kardris)";
+	sound = 1;
+};
+
+GTFO.SpellID["144066"] = {
+	--desc = "Foulness (Foul Slime)";
+	sound = 2;
+};
+
+GTFO.SpellID["145563"] = {
+	--desc = "Magistrike (Kor'kron Arcweaver)";
+	sound = 1;
+	applicationOnly = true;
+};
+
+GTFO.SpellID["145562"] = {
+	--desc = "Backstab (Kor'kron Assassin)";
+	sound = 1;
+};
+
+GTFO.SpellID["143481"] = {
+	--desc = "Backstab (Kor'kron Assassin)";
+	sound = 1;
+};
+
+GTFO.SpellID["143873"] = {
+	--desc = "Ravager (General Nazgrim)";
+	sound = 1;
+};
+
+GTFO.SpellID["143421"] = {
+	--desc = "Ironstorm (Kor'kron Ironblade)";
+	sound = 2;
+	tankSound = 0;
+};
+
+GTFO.SpellID["143431"] = {
+	--desc = "Magistrike (Kor'kron Arcweaver)";
+	sound = 1;
+	applicationOnly = true;
+};
+
+GTFO.SpellID["145908"] = {
+	--desc = "Serrated Rampage (Kor'kron Skullsplitter)";
+	sound = 1;
+	tankSound = 0;
+};
+
+GTFO.SpellID["146228"] = {
+	--desc = "Scorched Earth (Hellscream Annihilator)";
+	sound = 1;
+};
+
+GTFO.SpellID["142759"] = {
+	--desc = "Pulse (Spark of Life)";
+	sound = 1;
+};
+
+-- TODO: Languish (Living Corruption) -- Avoidable/kitable?
+-- TODO: Crimson Acid (Modified Anima Golem)
+
+GTFO.SpellID["145716"] = {
+	--desc = "Gusting Bomb (Sri'thik Bombardier)";
+	sound = 1;
+};
+
+GTFO.SpellID["145747"] = {
+	--desc = "Encapsulated Pheromones (Amber-Encased Kunchong)";
+	sound = 1;
+};
+
+GTFO.SpellID["145748"] = {
+	--desc = "Encapsulated Pheromones (Amber-Encased Kunchong)";
+	sound = 1;
+};
+
+GTFO.SpellID["146182"] = {
+	--desc = "Gusting Crane Kick (Wise Mistweaver Spirit)";
+	sound = 1;
+};
+
+GTFO.SpellID["146257"] = {
+	--desc = "Path of Blossoms (Nameless Windwalker Spirit)";
+	sound = 1;
+};
+
+GTFO.SpellID["146226"] = {
+	--desc = "Breath of Fire (Ancient Brewmaster Spirit)";
+	sound = 1;
+};
+
+GTFO.SpellID["145817"] = {
+	--desc = "Windstorm (Set'thik the Windwalker)";
+	sound = 1;
+	test = true; -- Verify avoidable and not spammy
+};
+
+GTFO.SpellID["143784"] = {
+	--desc = "Burning Blood - Pool (Thok the Bloodthirsty)";
+	sound = 1;
+};
+
+GTFO.SpellID["146470"] = {
+	--desc = "Drillstorm (Goro'dan)";
+	sound = 1;
+	tankSound = 0;
+};
+
+-- TODO: Overload (Siegecrafter Blackfuse) 145444 - Avoidable at all?
+
+GTFO.SpellID["144335"] = {
+	--desc = "Matter Purification Beam (Siegecrafter Blackfuse)";
+	sound = 1;
+	soundHeroic = 3;
+};
+
+GTFO.SpellID["143856"] = {
+	--desc = "Superheated (Siegecrafter Blackfuse)"; - Vehicle dmg too? 
+	sound = 1;
+	applicationOnly = true;
+};
+
+GTFO.SpellID["143327"] = {
+	--desc = "Serrated Slash (Siegecrafter Blackfuse)"; 
+	sound = 1;
+	vehicle = true;
+};
+
+GTFO.SpellID["146535"] = {
+	--desc = "Frenzied Assault (Kor'thik Honor Guard)"; 
+	sound = 1;
+	tankSound = 0;
+};
+
+GTFO.SpellID["146452"] = {
+	--desc = "Resonating Amber (Kor'thik Honor Guard)"; 
+	sound = 1;
+};
+
+-- TODO: Reave (Kil'ruk the Wind-Reaver) xxxx
+-- TODO: Catalytic Reaction: Yellow (Toxic Cloud) (Xaril the Poisoned Mind) xxxx
+-- TODO: Catalytic Reaction: Purple - Canned Heat (Xaril the Poisoned Mind)
+-- TODO: Catalytic Reaction: Green - Eerie Fog (Xaril the Poisoned Mind) -- People are supposed to stand in this, but how do stacks work?
+-- TODO: Vicious Assault (Korven the Prime) 143977?
+-- TODO: Insane Calculation: Fiery Edge (Iyyokuk the Lucid) -- Fire beams?
+-- TODO: Whirling (Ka'roz the Locust) 143701 -- Avoidable?  How about when stunned?
+
+GTFO.SpellID["142809"] = {
+	--desc = "Fiery Edge (Iyyokuk the Lucid)"; 
+	sound = 4;
+	ignoreSelfInflicted = true;
+	negatingDebuffSpellID = 142808; -- Fiery Edge
+	negatingIgnoreTime = 1;
+};
+
+GTFO.SpellID["143735"] = {
+	--desc = "Caustic Amber (Ka'roz the Locust)"; 
+	sound = 1;
+};
+
+-- TODO: Rapid Fire (Hisek the Swarmkeeper) 143243
+-- TODO: Sonic Projection (Kaz'tik the Manipulator) 143768 - Fail when hit by more than one
+
+GTFO.SpellID["144762"] = {
+	--desc = "Desecrated (Garrosh Hellscream)"; 
+	sound = 1;
+};
+
+GTFO.SpellID["144817"] = {
+	--desc = "Empowered Desecrated (Garrosh Hellscream)"; 
+	sound = 1;
+};
+
+-- TODO: Whirling Corruption (Garrosh Hellscream) 144989 - Less damage further away, need to find threshold
+
+GTFO.SpellID["148718"] = {
+	--desc = "Fire Pit (Garrosh Hellscream)"; 
+	sound = 1;
+};
 
 -- ************
 -- * Pandaria *
@@ -2047,7 +2298,10 @@ GTFO.SpellID["144462"] = {
 	sound = 1;
 };
 
--- TODO: Blazing Nova (Chi-Ji) -- Avoidable?
+GTFO.SpellID["144494"] = {
+	--desc = "Blazing Nova (Chi-Ji)";
+	sound = 1;
+};
 
 GTFO.SpellID["144538"] = {
 	--desc = "Jadefire Blaze (Yu'lon)";
@@ -2104,5 +2358,21 @@ GTFO.SpellID["148731"] = {
 
 GTFO.SpellID["148586"] = {
 	--desc = "Skunky Suds (Skunky Brew Alemental)";
+	sound = 1;
+};
+
+GTFO.SpellID["142629"] = {
+	--desc = "Bananastorm";
+	sound = 1;
+	negatingDebuffSpellID = 142191; -- Amber Globule Detonation
+};
+
+GTFO.SpellID["128141"] = {
+	--desc = "Lightning Pool (Milau)";
+	sound = 1;
+};
+
+GTFO.SpellID["122976"] = {
+	--desc = "Celestial Storm (Shan Bu)";
 	sound = 1;
 };

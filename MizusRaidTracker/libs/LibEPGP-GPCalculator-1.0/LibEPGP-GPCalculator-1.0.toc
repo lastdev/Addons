@@ -3,7 +3,7 @@
 ## Version: 1.0
 ## Notes: Does stuff for Mizukichan
 ## Author: Mizukichan@EU-Thrall
-## X-Curse-Packaged-Version: v0.54.2
+## X-Curse-Packaged-Version: v0.54.18
 ## X-Curse-Project-Name: Mizus RaidTracker
 ## X-Curse-Project-ID: mizusraidtracker
 ## X-Curse-Repository-ID: wow/mizusraidtracker/mainline

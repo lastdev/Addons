@@ -62,6 +62,26 @@ L:AddLocale("enUS",
 }
 
 )
+L:AddLocale("itIT", 
+{
+	-- ["Adds clear text slash commands (/clear)(/cls)(/clearall)(/clsall)."] = "",
+	-- Clear = "",
+	-- Clearall = "",
+	-- ["Clears all chat frames."] = "",
+	-- ["Clears the current chat frame."] = "",
+}
+
+)
+L:AddLocale("ptBR", 
+{
+	-- ["Adds clear text slash commands (/clear)(/cls)(/clearall)(/clsall)."] = "",
+	-- Clear = "",
+	-- Clearall = "",
+	-- ["Clears all chat frames."] = "",
+	-- ["Clears the current chat frame."] = "",
+}
+
+)
 L:AddLocale("frFR",  
 {
 	["Adds clear text slash commands (/clear)(/cls)(/clearall)(/clsall)."] = "Ajoute les commandes slash de nettoyage du texte (/clear)(/cls)(/clearall)(/clsall).",

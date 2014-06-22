@@ -499,6 +499,7 @@ function HealBot_Options_setLists()
         [HEALBOT_DIVINE_INSIGHT]=HEALBOT_PRIEST,
 		[HEALBOT_DIVINE_AEGIS]=HEALBOT_PRIEST,
         [HEALBOT_ECHO_OF_LIGHT]=HEALBOT_PRIEST,
+        [HEALBOT_ABSOLUTION]=HEALBOT_PRIEST,
         [HEALBOT_GRACE]=HEALBOT_PRIEST,
         [HEALBOT_LEVITATE]=HEALBOT_PRIEST,
         [HEALBOT_LIGHTWELL_RENEW]=HEALBOT_PRIEST,
@@ -2778,6 +2779,11 @@ function HealBot_Options_ShowReadyCheck_OnClick(self)
     HealBot_Options_CheckReadyCheckEvent()
 end
 
+function HealBot_Options_ShowDirection_OnClick(self)
+    Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][HealBot_Options_StorePrev["FramesSelFrame"]]["SHOWDIR"] = self:GetChecked() or 0;
+    HealBot_Action_ResetUnitStatus()
+end
+
 function HealBot_Options_CheckReadyCheckEvent()
     local noReadyCheck=true
     for h=1,10 do
@@ -4674,6 +4680,7 @@ function HealBot_Options_ApplyTab2Frames_OnClick()
                 Healbot_Config_Skins.Icons[s][j]["DOUBLE"]=Healbot_Config_Skins.Icons[s][f]["DOUBLE"]
                 Healbot_Config_Skins.Icons[s][j]["SHOWDEBUFF"]=Healbot_Config_Skins.Icons[s][f]["SHOWDEBUFF"]
                 Healbot_Config_Skins.Icons[s][j]["SHOWRC"]=Healbot_Config_Skins.Icons[s][f]["SHOWRC"]
+                Healbot_Config_Skins.Icons[s][j]["SHOWDIR"]=Healbot_Config_Skins.Icons[s][f]["SHOWDIR"]
                 Healbot_Config_Skins.Icons[s][j]["SCALE"]=Healbot_Config_Skins.Icons[s][f]["SCALE"]
                 Healbot_Config_Skins.Icons[s][j]["I15EN"]=Healbot_Config_Skins.Icons[s][f]["I15EN"]
                 Healbot_Config_Skins.Icons[s][j]["SHOWBUFF"]=Healbot_Config_Skins.Icons[s][f]["SHOWBUFF"]
@@ -9248,6 +9255,8 @@ function HealBot_Options_InitSub1(subNo)
             HealBot_Options_SetText(HealBot_Options_ShowDebuffIcon,HEALBOT_OPTIONS_SHOWDEBUFFICON)
             HealBot_Options_ShowReadyCheck:SetChecked(Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][HealBot_Options_StorePrev["FramesSelFrame"]]["SHOWRC"] or 1)
             HealBot_Options_SetText(HealBot_Options_ShowReadyCheck,HEALBOT_OPTIONS_SHOWREADYCHECK)
+            HealBot_Options_ShowDirection:SetChecked(Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][HealBot_Options_StorePrev["FramesSelFrame"]]["SHOWDIR"] or 1)
+            HealBot_Options_SetText(HealBot_Options_ShowDirection,HEALBOT_OPTIONS_SHOWDIRECTION)
             HealBot_Options_val2_OnLoad(HealBot_BarButtonIconScale,HEALBOT_OPTIONS_ICONSCALE,2.5,10,0.5,10)
             HealBot_BarButtonIconScale:SetValue((Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][HealBot_Options_StorePrev["FramesSelFrame"]]["SCALE"] or 7.5)*10)
             HealBot_BarButtonIconScaleText:SetText(HEALBOT_OPTIONS_ICONSCALE..": "..Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][HealBot_Options_StorePrev["FramesSelFrame"]]["SCALE"])
