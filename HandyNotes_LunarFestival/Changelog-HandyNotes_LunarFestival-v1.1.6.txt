@@ -1,0 +1,12 @@
+tag v1.1.6
+0386649507ae36a26d0a0df8a2e45d48033f4514
+Ethan Centaurai <ethancentaurai@outlook.com>
+2014-01-29 11:10:06 +0000
+
+
+
+--------------------
+
+Ethan Centaurai:
+	- Update README.
+	- Fix an unclickable menu entry for users who don’t have TomTom or Cartographer Waypoints installed. Thank you Rainrider for the patch!

@@ -1,0 +1,28 @@
+------------------------------------------------------------------------
+r31 | thaoky | 2014-07-24 16:19:46 +0000 (Thu, 24 Jul 2014) | 1 line
+Changed paths:
+   A /tags/5.4.007 (from /trunk:30)
+
+Tagging as 5.4.007
+------------------------------------------------------------------------
+r30 | thaoky | 2014-07-24 16:08:36 +0000 (Thu, 24 Jul 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/DataStore_Reputations.lua
+   M /trunk/embeds.xml
+
+Removed LibBabble-Faction. Now working with GetFactionInfoByID.
+------------------------------------------------------------------------
+r29 | thaoky | 2014-07-21 10:08:38 +0000 (Mon, 21 Jul 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/DataStore_Reputations.lua
+
+Removed LibBabble-Zone
+------------------------------------------------------------------------
+r28 | thaoky | 2013-09-11 15:29:39 +0000 (Wed, 11 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/DataStore_Reputations.toc
+
+5.4.001 Commit
+------------------------------------------------------------------------

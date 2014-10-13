@@ -1,0 +1,24 @@
+tag v5.4.8-1
+ab70359837c33faf3b4d0e107e9aec48d41090b6
+elvador <>
+2014-09-17 22:58:37 +0200
+
+Tagging as v5.4.8-1
+
+
+--------------------
+
+elvador:
+	- Version update
+	- Version update
+	- Typos
+	- A better looking config (it's still ugly, i know)
+	- Added ptBR rare names (thanks to Zakhai)
+	- Added Going To Need A Bigger Bag support
+	- Improved usability for for new users
+	- Added update / new feature notification box
+	- Clearing waypoints when hiding
+	- Fixed sorting bug and spelling mistakes
+	- Added a config panel to hide rares.
+	- Updated rare location marker icon
+	- Removed the stupid raidicons in chat messages since they annoyed me. Sorry for that 'feature'.

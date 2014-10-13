@@ -1,0 +1,31 @@
+------------------------------------------------------------------------
+r33 | thaoky | 2014-07-24 16:16:45 +0000 (Thu, 24 Jul 2014) | 1 line
+Changed paths:
+   A /tags/5.4.007 (from /trunk:32)
+
+Tagging as 5.4.007
+------------------------------------------------------------------------
+r32 | thaoky | 2014-07-22 13:30:05 +0000 (Tue, 22 Jul 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore_Auctions.lua
+
+Now triggering an event when data is updated
+------------------------------------------------------------------------
+r31 | thaoky | 2014-07-21 16:03:30 +0000 (Mon, 21 Jul 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore_Auctions.lua
+
+Fixed Cleaning AH entries (previous commit failed)
+------------------------------------------------------------------------
+r30 | thaoky | 2014-07-21 15:54:20 +0000 (Mon, 21 Jul 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore_Auctions.lua
+
+Fixed a bug when clearing AH entries
+------------------------------------------------------------------------
+r29 | thaoky | 2013-09-11 15:28:12 +0000 (Wed, 11 Sep 2013) | 1 line
+Changed paths:
+   M /trunk/DataStore_Auctions.toc
+
+5.4.001 Commit
+------------------------------------------------------------------------

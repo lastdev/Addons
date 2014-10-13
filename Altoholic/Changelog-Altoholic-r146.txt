@@ -1,0 +1,128 @@
+------------------------------------------------------------------------
+r146 | thaoky | 2014-08-08 15:13:16 +0000 (Fri, 08 Aug 2014) | 1 line
+Changed paths:
+   M /trunk/Frames/TabOptions.lua
+
+Updated "what's new" info.
+------------------------------------------------------------------------
+r145 | thaoky | 2014-08-08 14:58:21 +0000 (Fri, 08 Aug 2014) | 1 line
+Changed paths:
+   M /trunk/Core.lua
+   M /trunk/Modules/Altoholic_Summary/TabSummary.lua
+   M /trunk/changelog.txt
+
+5.4.009 commit
+------------------------------------------------------------------------
+r144 | thaoky | 2014-07-27 13:29:42 +0000 (Sun, 27 Jul 2014) | 1 line
+Changed paths:
+   M /trunk/Altoholic.toc
+   M /trunk/Core.lua
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Locales/repoenUS.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Archeology.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Currencies.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Equipment.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Mounts.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Reputations.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Tradeskills.lua
+   M /trunk/Modules/Altoholic_Grids/TabGrids.lua
+   M /trunk/Modules/Altoholic_Summary/AccountSummary.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_deDE.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_enUS.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_frFR.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_koKR.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_ruRU.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_zhCN.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_zhTW.lua
+   M /trunk/Modules/Altoholic_Summary/TabSummary.lua
+   M /trunk/Tooltip.lua
+   M /trunk/changelog.txt
+
+5.4.008 Commit
+------------------------------------------------------------------------
+r143 | thaoky | 2014-07-24 16:24:31 +0000 (Thu, 24 Jul 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/Altoholic.toc
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/ItemFilters.lua
+   M /trunk/Modules/Altoholic_Achievements/Achievements.lua
+   M /trunk/Modules/Altoholic_Grids/Data/FactionLeveling_deDE.lua
+   M /trunk/Modules/Altoholic_Grids/Data/FactionLeveling_enUS.lua
+   M /trunk/Modules/Altoholic_Grids/Data/FactionLeveling_frFR.lua
+   M /trunk/Modules/Altoholic_Grids/Data/FactionLeveling_koKR.lua
+   M /trunk/Modules/Altoholic_Grids/Data/FactionLeveling_ruRU.lua
+   M /trunk/Modules/Altoholic_Grids/Data/FactionLeveling_zhCN.lua
+   M /trunk/Modules/Altoholic_Grids/Data/FactionLeveling_zhTW.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Reputations.lua
+   M /trunk/Modules/Altoholic_Search/Search.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_deDE.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_enUS.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_frFR.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_koKR.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_ruRU.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_zhCN.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_zhTW.lua
+   M /trunk/changelog.txt
+   M /trunk/embeds.xml
+
+5.4.007 Commit
+------------------------------------------------------------------------
+r142 | thaoky | 2014-07-22 13:30:51 +0000 (Tue, 22 Jul 2014) | 1 line
+Changed paths:
+   M /trunk/Core.lua
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Modules/Altoholic_Search/Search.lua
+   M /trunk/changelog.txt
+
+5.4.006 Commit
+------------------------------------------------------------------------
+r141 | thaoky | 2014-07-21 10:31:00 +0000 (Mon, 21 Jul 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/Altoholic.toc
+   M /trunk/Core.lua
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Frames/TabOptions.xml
+   M /trunk/Locales/repoenUS.lua
+   M /trunk/Loots.lua
+   M /trunk/Modules/Altoholic_Characters/TabCharacters.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Equipment.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Reputations.lua
+   M /trunk/Modules/Altoholic_Guild/Frames/GuildMembers.lua
+   M /trunk/Modules/Altoholic_Summary/AccountSummary.lua
+   M /trunk/Modules/Altoholic_Summary/Altoholic_Summary.toc
+   A /trunk/Modules/Altoholic_Summary/Currencies.lua
+   A /trunk/Modules/Altoholic_Summary/Currencies.xml
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_deDE.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_enUS.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_frFR.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_koKR.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_ruRU.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_zhCN.lua
+   M /trunk/Modules/Altoholic_Summary/Data/Suggestions_zhTW.lua
+   M /trunk/Modules/Altoholic_Summary/TabSummary.lua
+   M /trunk/Modules/Altoholic_Summary/TabSummary.xml
+   M /trunk/Tooltip.lua
+   M /trunk/changelog.txt
+   M /trunk/embeds.xml
+
+5.4.005 commit.
+------------------------------------------------------------------------
+r140 | seashop | 2013-12-19 17:10:33 +0000 (Thu, 19 Dec 2013) | 12 lines
+Changed paths:
+   M /trunk/Events.lua
+
+Patch for the below error:
+
+Message: ..\AddOns\Altoholic\Events.lua line 529:
+   attempt to perform arithmetic on local 'duration' (a nil value)
+Debug:
+   Altoholic\Events.lua:529: BuildList()
+   Altoholic\Events.lua:548: Init()
+   Altoholic\Altoholic.lua:301:
+      Altoholic\Altoholic.lua:294
+   (tail call): ?
+   [C]: ?
+
+------------------------------------------------------------------------

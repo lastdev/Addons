@@ -1,0 +1,16 @@
+## Interface: 50100
+## Title: HandyNotes_PetTamers
+## Notes: Where the pet tamers are
+## Author: Kemayo
+## Version: 1
+## DefaultState: enabled
+## X-Category: Map
+## X-eMail: kemayo @ gmail DOT com
+## SavedVariables: HandyNotes_PetTamersDB
+## RequiredDeps: HandyNotes
+## X-Curse-Packaged-Version: v3
+## X-Curse-Project-Name: HandyNotes_PetTamers
+## X-Curse-Project-ID: handynotes_pettamers
+## X-Curse-Repository-ID: wow/handynotes_pettamers/mainline
+
+Tamers.lua
