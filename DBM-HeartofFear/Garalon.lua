@@ -1,7 +1,11 @@
 local mod	= DBM:NewMod(713, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 11448 $"):sub(12, -3))
+=======
+mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetCreatureID(63191)--Also has CID 62164. He has 2 CIDs for a single target, wtf? It seems 63191 is one players attack though so i'll try just it.
 mod:SetEncounterID(1463)
 mod:SetZone()

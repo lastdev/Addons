@@ -1,6 +1,10 @@
 --[[
 	Auctioneer - AutoMagic Utility module
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: Auc-Util-AutoMagic.lua 5390 2012-12-22 00:55:10Z kandoko $
 	URL: http://auctioneeraddon.com/
 
@@ -701,4 +705,8 @@ function lib.ClientItemCacheRefresh(link)
 end
 
 
+<<<<<<< HEAD
 AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-AutoMagic/Auc-Util-AutoMagic.lua $", "$Rev: 5390 $")
+=======
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-AutoMagic/Auc-Util-AutoMagic.lua $", "$Rev: 5390 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

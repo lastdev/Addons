@@ -1,6 +1,10 @@
 --[[
 Name: LibSharedMedia-3.0
+<<<<<<< HEAD
 Revision: $Revision: 87 $
+=======
+Revision: $Revision: 86 $
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 Author: Elkano (elkano@gmx.de)
 Inspired By: SurfaceLib by Haste/Otravi (troeks@gmail.com)
 Website: http://www.wowace.com/projects/libsharedmedia-3-0/
@@ -216,11 +220,19 @@ function lib:Register(mediatype, key, data, langmask)
 		error(MAJOR..":Register(mediatype, key, data, langmask) - key must be string, got "..type(key))
 	end
 	mediatype = mediatype:lower()
+<<<<<<< HEAD
 	if mediatype == lib.MediaType.FONT and ((langmask and band(langmask, LOCALE_MASK) == 0) or not (langmask or locale_is_western)) then return false end
 	if not mediaTable[mediatype] then mediaTable[mediatype] = {} end
 	local mtable = mediaTable[mediatype]
 	if mtable[key] then return false end
 
+=======
+	if mediatype == lib.MediaType.FONT  and ((langmask and band(langmask, LOCALE_MASK) == 0) or not (langmask or locale_is_western)) then return false end
+	if not mediaTable[mediatype] then mediaTable[mediatype] = {} end
+	local mtable = mediaTable[mediatype]
+	if mtable[key] then return false end
+	
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	mtable[key] = data
 	rebuildMediaList(mediatype)
 	self.callbacks:Fire("LibSharedMedia_Registered", mediatype, key)

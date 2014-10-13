@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+-- Elsia: For delete on instance entry
+-- Deletes data whenever a new, not the same instance is entered. This should safe-guard against corpse-run-reenters and the like.
+local revision = tonumber(string.sub("$Revision: 1251 $", 12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 local Recount = _G.Recount
 
 local revision = tonumber(string.sub("$Revision: 1266 $", 12, -3))
@@ -102,7 +108,11 @@ function Recount:PartyMembersChanged()
 		break
 	end
 
+<<<<<<< HEAD
 	if ct ~= 0 and Recount.db.profile.DeleteJoinRaid and not Recount.inRaid and not Recount.inScenario and GetNumRaidMembers() > 0 and IsInRaid() and Recount.CurrentDataCollect then
+=======
+	if ct~=0 and Recount.db.profile.DeleteJoinRaid and not Recount.inRaid and not Recount.inScenario and NumRaidMembers > 0 and Recount.CurrentDataCollect then
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		if Recount.db.profile.ConfirmDeleteRaid then
 			--Recount:DPrint("Raid based deletion")
 			Recount:ShowReset() -- Elsia: Confirm & Delete!
@@ -146,14 +156,25 @@ function Recount:PartyMembersChanged()
 		Recount.inRaid = false
 	end
 
+<<<<<<< HEAD
 	if IsInRaid() and IsInScenarioGroup() then
 		change = change or not Recount.inScenario
 		Recount.inScenario = true
+=======
+	if (NumRaidMembers > 0 or UnitInRaid("player")) and IsInScenarioGroup() then
+	   change = change or not Recount.inScenario
+	   Recount.inScenario = true
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	else
 		change = change or Recount.inScenario
 		Recount.inScenario = false
 	end
+<<<<<<< HEAD
 
+=======
+		
+	
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	if change then
 		Recount:UpdateZoneGroupFilter()
 	end

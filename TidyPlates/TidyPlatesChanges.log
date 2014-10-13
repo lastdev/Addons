@@ -1,6 +1,7 @@
 Pack Command:  		zip -vr TP_Release.zip TidyPlates* -x@exclude.lst
 Exclusion List: 	*.svn*   *.DS_Store*   exclude.lst   *.db   *.png   *.gif   *.jpg   *.tif   *.txt   *.psd   *.bmp
 
+<<<<<<< HEAD
 
 
 6.14.Beta2
@@ -52,6 +53,8 @@ Aura Widget:
 * Hub: "Bring Casting Units to Spotlight units" activates only on enemy units
 * Hub: "ScaleIgnoreInactive" should now work properly
 
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 6.13.4
 ---------------------------
 * Core: Raised the default Dropdown Menu strata to TOOLTIP
@@ -1052,6 +1055,7 @@ In Progress
 * "Highlight" Feature, to bind a key to Mark units to a Saved List, which can be used for Spotlight Functions
 * Combo Point vs Debuff Widget Repositioning, within style?
 * Drowndown Frame: 	Add: - Description Text Field on Top, which displays tooltip Text, Textures, Close/Cancel Button
+<<<<<<< HEAD
 * FrameLevel based on screen Y position.
 
 * I was wondering if there's a way to colorize a mob's health bar based on it being tapped by someone else? I know that ElvUI's built-in system does this and I kinda miss it.
@@ -1069,5 +1073,7 @@ In Progress
 
 
 
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 

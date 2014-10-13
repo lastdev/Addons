@@ -70,6 +70,10 @@ function HealBot_Action_RefreshTooltip()
     local hlth=UnitHealth(xUnit)
     local maxhlth=UnitHealthMax(xUnit)
     local mana,maxmana=HealBot_UnitMana(xUnit)
+    
+    --if hbhlth~=hlth or hbmaxhlth~=maxhlth then
+    --    HealBot_HealthCheck(xUnit)
+    --end
 
     if hlth>maxhlth then
         maxhlth=HealBot_CorrectPetHealth(xUnit,hlth,maxhlth,xGUID)
@@ -92,7 +96,11 @@ function HealBot_Action_RefreshTooltip()
     if spellButton4 and strsub(strlower(spellButton4),1,4)==strlower(HEALBOT_TELL) then spellButton4=HEALBOT_TELL end
     if spellButton5 and strsub(strlower(spellButton5),1,4)==strlower(HEALBOT_TELL) then spellButton5=HEALBOT_TELL end
   
+<<<<<<< HEAD
     if not IsModifierKeyDown() and HealBot_Data["UILOCK"]=="NO" and HealBot_Globals.SmartCast and UnitExists(xUnit) and UnitIsFriend("player",xUnit) then 
+=======
+    if not IsModifierKeyDown() and HealBot_Data["UILOCK"]=="NO" and HealBot_Globals.SmartCast==1 and UnitExists(xUnit) and UnitIsFriend("player",xUnit) then 
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
         local z=spellLeft;
         spellLeft=nil;
         spellLeft=HealBot_Action_SmartCast(xButton);
@@ -160,9 +168,26 @@ function HealBot_Action_RefreshTooltip()
             local zone=nil;
             if HealBot_Data["PGUID"]==xGUID or UnitIsVisible(xUnit) then
                 zone=GetRealZoneText();
+<<<<<<< HEAD
             elseif IsInRaid() and xUnit~="target" and xUnit~="focus" and UnitIsPlayer(xUnit) and UnitInRaid(xUnit) then
                 local raidID=UnitInRaid(xUnit)
                 _, _, _, _, _, _, zone, _, _ = GetRaidRosterInfo(raidID);
+=======
+            elseif IsInRaid() and xUnit~="target" and xUnit~="focus" then
+                if strsub(xUnit,1,4)~="raid" then
+                    if UnitInRaid(xUnit) then
+                        for r=1,GetNumGroupMembers() do
+                            if UnitIsUnit("raid"..r,xUnit) then
+                                _, _, _, _, _, _, zone, _, _ = GetRaidRosterInfo(r);
+                                break
+                            end
+                        end
+                    end
+                elseif strsub(xUnit,1,7)~="raidpet" then
+                    local raidID=tonumber(strsub(xUnit,5))
+                    _, _, _, _, _, _, zone, _, _ = GetRaidRosterInfo(raidID);
+                end
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
             else
                 HealBot_TooltipInit();
                 HealBot_ScanTooltip:SetUnit(xUnit)

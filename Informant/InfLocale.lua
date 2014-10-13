@@ -1,7 +1,11 @@
 --[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: InfLocale.lua 4021 2009-01-27 23:01:05Z anaral $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
@@ -29,7 +33,11 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
+<<<<<<< HEAD
 Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Informant/InfLocale.lua $", "$Rev: 4021 $")
+=======
+Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Informant/InfLocale.lua $", "$Rev: 4021 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 local Babylonian = LibStub("Babylonian")
 assert(Babylonian, "Babylonian is not installed")

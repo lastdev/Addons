@@ -1,11 +1,18 @@
 local mod	= DBM:NewMod("Moonfang", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 11379 $"):sub(12, -3))
 mod:SetCreatureID(71992)
 --mod:SetModelID(328)
 mod:SetZone()
 mod:DisableWBEngageSync()
+=======
+mod:SetRevision(("$Revision: 10980 $"):sub(12, -3))
+mod:SetCreatureID(71992)
+--mod:SetModelID(328)
+mod:SetZone()
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 mod:RegisterCombat("combat")
 

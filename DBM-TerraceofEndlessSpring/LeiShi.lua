@@ -1,7 +1,11 @@
 local mod	= DBM:NewMod(729, "DBM-TerraceofEndlessSpring", nil, 320)
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 11365 $"):sub(12, -3))
+=======
+mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetCreatureID(62983)--62995 Animated Protector
 mod:SetEncounterID(1506)
 

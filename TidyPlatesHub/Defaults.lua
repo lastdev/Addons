@@ -11,6 +11,7 @@ TidyPlatesHubDefaults = {
 
 	-- Style
 	---------------------------------------
+<<<<<<< HEAD
 	ColorEnemyBarMode =  2,
 	ColorEnemyNameMode = 1,
 	ColorEnemyStatusTextMode = 1,
@@ -27,6 +28,22 @@ TidyPlatesHubDefaults = {
 	StyleEnemyMode = 1,
 	StyleFriendlyMode = 1,
 
+=======
+	ColorEnemyBarMode =  1,
+	--ColorEnemyGlowMode = 1,
+	ColorEnemyNameMode = 1,
+	ColorEnemyStatusTextMode = 1,
+
+	ColorFriendlyBarMode =  1,
+	--ColorFriendlyGlowMode = 1,
+	ColorFriendlyNameMode = 1,
+	ColorFriendlyStatusTextMode = 1,
+
+	-- Headline
+	---------------------------------------
+	StyleEnemyMode = 1,
+	StyleFriendlyMode = 7,
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	HeadlineEnemyColor = 4,
 	HeadlineFriendlyColor = 4,
 	TextPlateFieldMode = 3,
@@ -65,6 +82,18 @@ TidyPlatesHubDefaults = {
 	UnitSpotlightList = "",
 	UnitSpotlightLookup = {},
 
+	-- Unit Spotlight
+	---------------------------------------
+	UnitSpotlightOpacity = 1,
+	UnitSpotlightScale = 1.4,
+	UnitSpotlightColor = {r = .8, g = 0, b = 0,},
+	UnitSpotlightOpacityEnable = true,
+	UnitSpotlightScaleEnable = true,
+	UnitSpotlightBarEnable = true,
+	UnitSpotlightGlowEnable = true,
+	UnitSpotlightList = "",
+	UnitSpotlightLookup = {},
+
 	-- Filter
 	---------------------------------------
 	OpacityFiltered = 0,
@@ -90,7 +119,10 @@ TidyPlatesHubDefaults = {
 	ScaleIgnoreNonEliteUnits = false,
 	ScaleIgnoreInactive = false,
 	ScaleCastingSpotlight = false,
+<<<<<<< HEAD
 	ScaleTargetSpotlight = false,
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	ScaleMiniMobs = true,
 
 	-- Text
@@ -146,6 +178,7 @@ TidyPlatesHubDefaults = {
 	ColorNormalSpellCast = { r = 252/255, g = 140/255, b = 0, },
 	ColorUnIntpellCast = { r = 0.5137243866920471, g = 0.7529395222663879, b = 0.7647042274475098, },
 	SpellCastEnableFriendly = false,
+<<<<<<< HEAD
 
 	-- Status Text
 	---------------------------------------
@@ -157,6 +190,8 @@ TidyPlatesHubDefaults = {
 	StatusTextCenterColor = true,
 	StatusTextRightColor = true,
 
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 
 	-- Health

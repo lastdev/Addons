@@ -3,10 +3,17 @@
 Config.lua
 Ace3 Configuration options for ARL
 ************************************************************************
+<<<<<<< HEAD
 File date: 2014-05-26T00:13:59Z
 File hash: d2eafec
 Project hash: 5b35dab
 Project version: 3.0.5
+=======
+File date: 2012-09-28T15:31:40Z
+File hash: 3cfcb4d
+Project hash: fbca907
+Project version: 2.6.2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************

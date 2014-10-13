@@ -341,7 +341,11 @@ select( 2, ... ).L = setmetatable( {
 	["50086"] = "Tarvus the Vile",
 	["50089"] = "Julak-Doom",
 	["50138"] = "Karoma",
+<<<<<<< HEAD
 	["50154"] = "Madexx - Brown",
+=======
+	["50154"] = "Madexx",
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["50159"] = "Sambas",
 	["50328"] = "Fangor",
 	["50329"] = "Rrakk",
@@ -469,7 +473,10 @@ select( 2, ... ).L = setmetatable( {
 	["50839"] = "Chromehound",
 	["50840"] = "Major Nanners",
 	["50842"] = "Magmagan",
+<<<<<<< HEAD
 	["50843"] = "Portent",
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["50846"] = "Slavermaw",
 	["50855"] = "Jaxx the Rabid",
 	["50856"] = "Snark",
@@ -558,10 +565,17 @@ select( 2, ... ).L = setmetatable( {
 	["51077"] = "Bushtail",
 	["51078"] = "Ferdinand",
 	["51079"] = "Captain Foulwind",
+<<<<<<< HEAD
 	["51401"] = "Madexx - Red",
 	["51402"] = "Madexx - Green",
 	["51403"] = "Madexx - Black",
 	["51404"] = "Madexx - Blue",
+=======
+	["51401"] = "Madexx",
+	["51402"] = "Madexx",
+	["51403"] = "Madexx",
+	["51404"] = "Madexx",
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["51658"] = "Mogh the Dead",
 	["51661"] = "Tsul'Kalu",
 	["51662"] = "Mahamba",
@@ -819,10 +833,13 @@ select( 2, ... ).L = setmetatable( {
 	CONFIG_ALERT = "Alert Options",
 	CONFIG_ALERT_SCREEN_EDGE_FLASH = "Show Red Screen Edge Flash",
 	CONFIG_ALERT_SCREEN_EDGE_FLASH_DESC = "Enables Red Screen Edge Flash when mob is found.",
+<<<<<<< HEAD
 	CONFIG_ALERT_SHOW_AS_TOAST = "Show As Toast.",
 	CONFIG_ALERT_SHOW_AS_TOAST_DESC = "Show alerts in a Toast window, instead of in the chat log.",
 	CONFIG_ALERT_PERSISTENT_TOAST = "Keep Toast Persistent.",
 	CONFIG_ALERT_PERSISTENT_TOAST_DESC = "The toast will not automatically fade out after being displayed",
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	CONFIG_ALERT_SOUND_DEFAULT = "|cffffd200Default|r",
 	CONFIG_ALERT_SOUND_CLASSIC = "Classic NPCScan",
 	CONFIG_ALERT_SOUND_CLASSIC_DESC = "Classic NPCScan Horn & Drums alert",
@@ -845,8 +862,11 @@ select( 2, ... ).L = setmetatable( {
 	FOUND_TAMABLE_WRONGZONE_FORMAT = "|cffff2020False alarm:|r Found tamable mob |cff808080“%s”|r in %s instead of %s (ID %d); Definitely a pet.",
 	FOUND_UNIT_DEAD = "%s found but is dead.",
 	FOUND_UNIT_TAXI = "%s found during flight path near %d, %d in %s.",
+<<<<<<< HEAD
 	MOUSEOVER_SCAN = "Show alerts for mobs you mouseover",
 	MOUSEOVER_SCAN_DESC = "Show alerts for mobs on mouseover, even if they are already in the cache.",
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	PRINT_FORMAT = "%s_|cffCCCC88NPCScan|r: %s",
 	RAREMOBS = "Rare Mobs",
 	SEARCH_ACHIEVEMENTADDFOUND = "Search for completed Achievement NPCs",

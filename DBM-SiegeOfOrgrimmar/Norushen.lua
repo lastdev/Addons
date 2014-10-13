@@ -1,11 +1,20 @@
 local mod	= DBM:NewMod(866, "DBM-SiegeOfOrgrimmar", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 11310 $"):sub(12, -3))
 mod:SetCreatureID(72276)
 --mod:SetEncounterID(1624)
 mod:SetMinSyncRevision(11309)
 mod:SetHotfixNoticeRev(11309)
+=======
+mod:SetRevision(("$Revision: 11121 $"):sub(12, -3))
+mod:SetCreatureID(72276)
+mod:SetEncounterID(1624)
+mod:DisableESCombatDetection()
+mod:SetMinSyncRevision(10958)
+mod:SetHotfixNoticeRev(10768)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetZone()
 
 mod:RegisterCombat("combat")
@@ -36,7 +45,11 @@ mod:SetBossHealthInfo(
 --Amalgam of Corruption
 local warnSelfDoubt						= mod:NewStackAnnounce(146124, 2, nil, mod:IsTank())
 local warnBlindHatred					= mod:NewSpellAnnounce(145226, 3)
+<<<<<<< HEAD
 local warnManifestation					= mod:NewCountAnnounce("ej8232", 1, 147082)
+=======
+local warnManifestation					= mod:NewSpellAnnounce("ej8232", 1, 147082)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 local warnResidualCorruption			= mod:NewSpellAnnounce(145073)
 local warnLookWithinEnd					= mod:NewEndTargetAnnounce("ej8220", 2, nil, false)
 --Test of Serenity (DPS)
@@ -104,15 +117,23 @@ local playerInside = false
 local previousPower = nil
 --Important, needs recover
 mod.vb.unleashedAngerCast = 0
+<<<<<<< HEAD
 mod.vb.manifestationCount = 0
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 --May be buggy with two adds spawning at exact same time
 --Two different icon functions end up both marking same mob with 8 and 7 and other mob getting no mark.
 --Not sure if GUID table will be fast enough to prevent, we shall see!
 local function addsDelay()
+<<<<<<< HEAD
 	mod.vb.manifestationCount = mod.vb.manifestationCount + 1
 	warnManifestation:Show(mod.vb.manifestationCount)
 	specWarnManifestation:Show(mod.vb.manifestationCount)
+=======
+	warnManifestation:Show()
+	specWarnManifestation:Show()
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end
 
 local function addSync()
@@ -135,7 +156,10 @@ function mod:OnCombatStart(delay)
 	playerInside = false
 	previousPower = nil
 	mod.vb.unleashedAngerCast = 0
+<<<<<<< HEAD
 	mod.vb.manifestationCount = 0
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	table.wipe(residue)
 	timerBlindHatredCD:Start(25-delay)
 	if self:IsDifficulty("lfr25") then

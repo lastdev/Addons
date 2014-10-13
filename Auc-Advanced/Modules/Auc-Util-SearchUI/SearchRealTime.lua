@@ -1,6 +1,10 @@
 --[[
 	Auctioneer - Search UI - Realtime module
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: SearchRealTime.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -534,4 +538,8 @@ function private.HookAH()
 	BrowseRTSButton:SetPoint("TOPRIGHT", AuctionFrameBrowse, "TOPLEFT", 310, -15)
 end
 
+<<<<<<< HEAD
 AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-SearchUI/SearchRealTime.lua $", "$Rev: 5368 $")
+=======
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-SearchUI/SearchRealTime.lua $", "$Rev: 5368 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

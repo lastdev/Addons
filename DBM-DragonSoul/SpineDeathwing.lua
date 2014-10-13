@@ -1,7 +1,11 @@
 local mod	= DBM:NewMod(318, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 119 $"):sub(12, -3))
+=======
+mod:SetRevision(("$Revision: 107 $"):sub(12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetCreatureID(53879)
 mod:SetEncounterID(1291)
 mod:SetZone()
@@ -218,6 +222,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		diedOozeGUIDS[args.sourceGUID] = GetTime()
 		self:Unschedule(warningResidue)
 		self:Schedule(1.25, warningResidue)
+<<<<<<< HEAD
+=======
+		if residueDebug then print("created", residueNum) end
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	elseif spellId == 105248 and diedOozeGUIDS[args.sourceGUID] then
 		residueNum = residueNum - 1
 		diedOozeGUIDS[args.sourceGUID] = nil

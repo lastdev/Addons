@@ -1,7 +1,11 @@
 local mod	= DBM:NewMod(677, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 11347 $"):sub(12, -3))
+=======
+mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetCreatureID(60399, 60400)--60396 (Rage), 60397 (Strength), 60398 (Courage), 60480 (Titan Spark), 60399 (Qin-xi), 60400 (Jan-xi)
 mod:SetEncounterID(1407)
 mod:SetZone()
@@ -73,7 +77,10 @@ mod:AddBoolOption("ArrowOnCombo", mod:IsTank())--Very accurate for tank, everyon
 
 --Upvales, don't need variables
 local focusedAssault = GetSpellInfo(116525)
+<<<<<<< HEAD
 local UnitIsUnit, UnitPower, UnitGUID = UnitIsUnit, UnitPower, UnitGUID
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 --Important, needs recover
 mod.vb.comboMob = nil
 mod.vb.comboCount = 0
@@ -81,7 +88,10 @@ mod.vb.titanGasCast = 0
 mod.vb.courageCount = 0
 mod.vb.strengthCount = 0
 mod.vb.rageCount = 0
+<<<<<<< HEAD
 mod.vb.prevPower = 0
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 local rageTimers = {
 	[0] = 15.6,--Varies from heroic vs normal, number here doesn't matter though, we don't start this on pull we start it off first yell (which does always happen).
@@ -229,11 +239,14 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 	if spellId == 116556 then
 		warnEnergizingSmash:Show()
 	end
+<<<<<<< HEAD
 	--Melee that wasn't targeting boss when it started, but is targeting boss now so activate warnings immediately.
 	--It's safe to assume MELEE are on boss, they are in range of attacks
 	if not self.vb.comboMob and self:IsMelee() and (UnitIsUnit(uId, "boss1") or UnitIsUnit(uId, "boss2")) then
 		self.vb.comboMob = UnitGUID(uId)
 	end
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	if (self.vb.comboMob or "") == UnitGUID(uId) then
 		if spellId == 116968 then--Arc Left
 			self.vb.comboCount = self.vb.comboCount + 1
@@ -282,29 +295,40 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		if self.vb.comboCount == (self:IsHeroic() and 10 or 5) then
 			self.vb.comboMob = nil
 			self.vb.comboCount = 0
+<<<<<<< HEAD
 			self.vb.prevPower = UnitPower(uId)
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		end
 	end
 end
 
 function mod:UNIT_POWER_FREQUENT(uId)
 	if (uId == "target" or uId == "targettarget") and not UnitIsFriend(uId, "player") and not self.vb.comboMob then
+<<<<<<< HEAD
 		local powerLevel = UnitPower(uId)
 		if powerLevel >= 18 then--Give more than 1 second to find comboMob
 			if self.vb.prevPower < powerLevel then--Power is going up, not down, reset comboCount again to be sure
 				self.vb.comboCount = 0
 			end
+=======
+		if UnitPower(uId) == 18 then
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			self.vb.comboMob = UnitGUID(uId)
 			specWarnCombo:Show()
 		end
 	--split because we want to prefer target over focus. IE I focus other boss while targeting one i'm tanking. previous method bugged out and gave me combo warnings for my focus and NOT my target
 	--Now target should come first and focus should be af allback IF not targeting a boss.
 	elseif (uId == "focus") and not UnitIsFriend(uId, "player") and not self.vb.comboMob then
+<<<<<<< HEAD
 		local powerLevel = UnitPower(uId)
 		if powerLevel >= 18 then
 			if self.vb.prevPower < powerLevel then--Power is going up, not down, reset comboCount again to be sure
 				self.vb.comboCount = 0
 			end
+=======
+		if UnitPower(uId) == 18 then
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			self.vb.comboMob = UnitGUID(uId)
 			specWarnCombo:Show()
 		end

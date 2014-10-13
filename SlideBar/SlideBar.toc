@@ -6,7 +6,11 @@
 ## LoadOnDemand: 0
 ## SavedVariables: SlideBarConfig
 ##
+<<<<<<< HEAD
 ## Version: 5.20.5464 (RidiculousRockrat)
+=======
+## Version: 4.4.1 (<%codename%>)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ## Revision: $Id: SlideBar.toc 357 2013-09-10 08:25:55Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Libraries

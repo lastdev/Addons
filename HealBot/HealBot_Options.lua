@@ -508,7 +508,10 @@ function HealBot_Options_setLists()
         [HEALBOT_DISPERSION]=HEALBOT_PRIEST,
 		--Rogue
 		[HEALBOT_VANISH]=HEALBOT_ROGUE,
+<<<<<<< HEAD
         [HEALBOT_EVASION]=HEALBOT_ROGUE,
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
         [HEALBOT_FEINT]=HEALBOT_ROGUE,
         [HEALBOT_CLOAK_OF_SHADOWS]=HEALBOT_ROGUE,
 		--Shaman
@@ -2302,23 +2305,35 @@ function HealBot_Options_UseFluidBars_OnClick(self)
 end
 
 function HealBot_Options_EnableLibQuickHealth_OnClick(self)
+<<<<<<< HEAD
     local reason=HEALBOT_OPTIONS_ENABLELIBQH
     if self:GetChecked() then
         HealBot_Globals.EnLibQuickHealth=true
         reason=reason.." - "..HEALBOT_WORD_ON
     else
         HealBot_Globals.EnLibQuickHealth=false
+=======
+    HealBot_Globals.EnLibQuickHealth = self:GetChecked() or 0;
+    local reason=HEALBOT_OPTIONS_ENABLELIBQH
+    if HealBot_Globals.EnLibQuickHealth==1 then
+        reason=reason.." - "..HEALBOT_WORD_ON
+    else
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
         reason=reason.." - "..HEALBOT_WORD_OFF
     end
     HealBot_Options_ReloadUI(reason)
 end
 
 function HealBot_Options_EnableAutoCombat_OnClick(self)
+<<<<<<< HEAD
     if self:GetChecked() then
         HealBot_Globals.EnAutoCombat=true
     else
         HealBot_Globals.EnAutoCombat=false
     end
+=======
+    HealBot_Globals.EnAutoCombat = self:GetChecked() or 0;
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end
 
 
@@ -2369,6 +2384,7 @@ function HealBot_Options_AggroTxtPct_OnClick(self)
 end
 
 function HealBot_Options_CPUProfiler_OnClick(self)
+<<<<<<< HEAD
     local reason=HEALBOT_OPTION_CPUPROFILE
     if self:GetChecked() then
         reason=reason.." - "..HEALBOT_WORD_ON
@@ -2376,6 +2392,15 @@ function HealBot_Options_CPUProfiler_OnClick(self)
     else
         reason=reason.." - "..HEALBOT_WORD_OFF
         SetCVar("scriptProfile", false)
+=======
+    local CPUProfiler = self:GetChecked() or 0;
+    SetCVar("scriptProfile", CPUProfiler)
+    local reason=HEALBOT_OPTION_CPUPROFILE
+    if CPUProfiler==1 then
+        reason=reason.." - "..HEALBOT_WORD_ON
+    else
+        reason=reason.." - "..HEALBOT_WORD_OFF
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     end
     HealBot_Options_ReloadUI(reason)
 end
@@ -2496,6 +2521,15 @@ function HealBot_Options_CDCCol_OnOff_OnClick(self)
                 HealBot_CheckAllDebuffs(xUnit)
             end
         end
+<<<<<<< HEAD
+=======
+        for xUnit,xButton in pairs(HealBot_Unit_Button) do
+            if xButton.debuff and xButton.debuff.spellId then
+                HealBot_ClearDebuff(xButton,true)
+                HealBot_CheckAllDebuffs(xUnit)
+            end
+        end
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     end
 end
 
@@ -4360,11 +4394,36 @@ function HealBot_Options_FAQ_DropDown()
                         UIDropDownMenu_SetText(HealBot_Options_FAQ, HEALBOT_ABOUT_FAQ_QUESTIONS[HealBot_Options_StorePrev["hbFAQ"]])
                         local g=_G["HealBot_Options_FAQAnswerTextD"] 
                         g:SetText(HEALBOT_ABOUT_FAQ_ANSWERS[HealBot_Options_StorePrev["hbFAQ"]])
+						if 1==0 then --HEALBOT_ABOUT_FAQ_ANSWERS_BUTTON[HealBot_Options_StorePrev["hbFAQ"]] then
+							HealBot_Options_FAQAnswerButton:SetText(HEALBOT_ABOUT_FAQ_ANSWERS_BUTTON[HealBot_Options_StorePrev["hbFAQ"]])
+							HealBot_Options_FAQAnswerButton:Show()
+						else
+							HealBot_Options_FAQAnswerButton:Hide()
+						end
                     end
         info.checked = false;
         if HealBot_Options_StorePrev["hbFAQ"]==j then info.checked = true end
         UIDropDownMenu_AddButton(info);
     end
+end
+
+function HealBot_Options_FAQAnswerButton_OnClick()
+	if HealBot_Options_StorePrev["hbFAQ"]==1 then
+		StaticPopupDialogs["HEALBOT_OPTIONS_FAQ_ANSWERS"] = {
+			text = HEALBOT_ABOUT_FAQ_ANSWERS_BUTTON[1],
+			button1 = CLOSE,
+			timeout = 0,
+			whileDead = 1,
+			hideOnEscape = 1,
+			OnShow = function(self)
+				local g=_G[self:GetName().."WideEditBox"] or _G[self:GetName().."EditBox"]
+				g:SetText(HEALBOT_2MOONS_URL)
+			end,
+			hasEditBox = 1,
+			hasWideEditBox = 1,
+		};
+		StaticPopup_Show("HEALBOT_OPTIONS_FAQ_ANSWERS");
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -7098,6 +7157,7 @@ function HealBot_Options_SetEnableDisableCDBtn()
 end
 
 function HealBot_Options_RevDurCDebuffBtn_OnClick(self)
+<<<<<<< HEAD
     if self:GetChecked() then
         if HealBot_Options_StorePrev["CDebuffcustomName"] and HealBot_Options_StorePrev["CDebuffCatID"]>1 then
             HealBot_Globals.HealBot_Custom_Debuffs_RevDur[HealBot_Options_StorePrev["CDebuffcustomName"]] = true
@@ -7107,6 +7167,18 @@ function HealBot_Options_RevDurCDebuffBtn_OnClick(self)
     else
         if HealBot_Options_StorePrev["CDebuffcustomName"] then
             HealBot_Globals.HealBot_Custom_Debuffs_RevDur[HealBot_Options_StorePrev["CDebuffcustomName"]] = nil
+=======
+    local x=self:GetChecked() or 0
+    if x==0 then
+        if HealBot_Options_StorePrev["CDebuffcustomName"] then
+            HealBot_Globals.HealBot_Custom_Debuffs_RevDur[HealBot_Options_StorePrev["CDebuffcustomName"]] = nil
+        end
+    else
+        if HealBot_Options_StorePrev["CDebuffcustomName"] and HealBot_Options_StorePrev["CDebuffCatID"]>1 then
+            HealBot_Globals.HealBot_Custom_Debuffs_RevDur[HealBot_Options_StorePrev["CDebuffcustomName"]] = x
+        else
+            HealBot_Options_CDCReverseDurC:SetChecked(0)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
         end
     end
 end
@@ -8425,7 +8497,10 @@ function HealBot_Options_EnableMouseWheel_OnClick(self)
         HealBot_Globals.HealBot_Enable_MouseWheel = true
         HealBot_setOptions_Timer(25)
     else
+<<<<<<< HEAD
         HealBot_Globals.HealBot_Enable_MouseWheel = false
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
         HealBot_Options_ReloadUI(HEALBOT_OPTIONS_MOUSEWHEEL.." - "..HEALBOT_WORD_OFF)
     end
 end
@@ -8727,6 +8802,10 @@ end
 function HealBot_Options_idleInit()
     if not DoneInitTab[0] then
         DoneInitTab[0]=100
+<<<<<<< HEAD
+=======
+        HealBot_Options_UpdateMedia(3)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     elseif DoneInitTab[0]>0 then
         if not UIDROPDOWNMENU_OPEN_MENU then
             DoneInitTab[0]=DoneInitTab[0]+1
@@ -8995,7 +9074,10 @@ function HealBot_Options_ResetDoInittab(tabNo)
         DoneInitTab[104]=nil
         DoneInitTab[105]=nil
         DoneInitTab[107]=nil
+<<<<<<< HEAD
         DoneInitTab[108]=nil
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
         if DoneInitTab[0] and (DoneInitTab[0]==0 or DoneInitTab[0]>100) then DoneInitTab[0]=100 end
         HealBot_setOptions_Timer(8000)
     elseif tabNo==2 then
@@ -10850,6 +10932,12 @@ function HealBot_Options_InitSub2(subNo)
         if not DoneInitTab[806] then
             HealBot_Options_FAQ.initialize = HealBot_Options_FAQ_DropDown
             UIDropDownMenu_SetText(HealBot_Options_FAQ, HEALBOT_ABOUT_FAQ_QUESTIONS[1])
+			if 1==0 then --HEALBOT_ABOUT_FAQ_ANSWERS_BUTTON[1] then
+				HealBot_Options_FAQAnswerButton:SetText(HEALBOT_ABOUT_FAQ_ANSWERS_BUTTON[1])
+				HealBot_Options_FAQAnswerButton:Show()
+			else
+				HealBot_Options_FAQAnswerButton:Hide()
+			end
             g=_G["HealBot_Options_FAQAnswerTextD"]
             g:SetTextColor(1,1,1,1);    
             g:SetText(HEALBOT_ABOUT_FAQ_ANSWERS[HealBot_Options_StorePrev["hbFAQ"]])
@@ -11325,7 +11413,11 @@ function HealBot_Options_DisableMiniBossFrame()
 end
 
 function HealBot_Options_DisableRaidFrame()
+<<<<<<< HEAD
     if Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HIDERAIDF"] then
+=======
+    if Healbot_Config_Skins.General[Healbot_Config_Skins.Current_Skin]["HIDERAIDF"]==1 then
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
         if HealBot_Globals.RaidHideMethod==0 then
             if CompactRaidFrameManager then
                 CompactRaidFrameManager:UnregisterAllEvents() 

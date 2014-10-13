@@ -26,7 +26,11 @@ local MAJOR = "LibDialog-1.0"
 
 _G.assert(LibStub, MAJOR .. " requires LibStub")
 
+<<<<<<< HEAD
 local MINOR = 5 -- Should be manually increased
+=======
+local MINOR = 4 -- Should be manually increased
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not lib then
@@ -571,6 +575,12 @@ local function _BuildDialog(delegate, data)
     dialog.text:SetText(delegate.text or "")
     dialog.text:SetJustifyH(delegate.text_justify_h and TEXT_HORIZONTAL_JUSTIFICATIONS[delegate.text_justify_h:upper()] or "CENTER")
     dialog.text:SetJustifyV(delegate.text_justify_v and TEXT_VERTICAL_JUSTIFICATIONS[delegate.text_justify_v:upper()] or "MIDDLE")
+
+    if delegate.no_close_button then
+        dialog.close_button:Hide()
+    else
+        dialog.close_button:Show()
+    end
 
     if delegate.no_close_button then
         dialog.close_button:Hide()

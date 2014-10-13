@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 == Version 50400.2.5
 * The future of Bitten's SpellFlash: Druid is in question.  I no longer wish to maintain this addon, starting with patch 6.0.  If you are interested in taking it over, keeping up with optimal rotations, and you have programming skills, please leave a comment or PM on Curse.
 
@@ -11,6 +12,9 @@
 * Feral: Hopefully a fix for a rare-ish Lua error.
 
 == Version 50400.2.2
+=======
+== Versiono 50400.2.2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 * Feral: Making the beta rotation available as on option in a general release, so more people are exposed to it for testing.
 * Feral: Beta - now considers the Nature's Vigil buff when calculating the damage of bleeds.
 * Feral: Beta - updated support for Nature's Vigil and Incarnation.
@@ -86,3 +90,24 @@
 * All except Restoration: Forms now flash before entering combat, when you have an enemy targeted.
 * All: Added flashing for food buffs.
 * All: Bugfix - Force of Nature was not flashing when in a macro.
+<<<<<<< HEAD
+=======
+
+== Version 3.2.0
+Update for patch 5.3.
+* Balance: Now flashes Wild Mushroom: Detonate during Solar Eclipse when all three mushrooms are out.
+* Balance & Feral: Adjusted Force of Nature flashing for the new patch.
+* Feral: Bugfix - the addon was not recognizing the execute phase!
+* Feral: Shred is now used under Berserk as well as Clearcasting.
+* Feral: Ferocious Bite is now used during the last 2 ticks of Rip no matter how many combo points, since waiting until the last tick sometimes failed due to lag, reaction time, etc.
+* Feral: Improved the condition preventing the suggestion for Bear Form if the time on Rip is getting low.
+* Feral: Faerie Fire now flashes in Bear Form when the debuff is down.
+* Feral: Skull Bash now flashes in Bear Form.
+* Feral: Maul no longer flashes if its cooldown will not be up by the time you should shift back to Cat Form.
+* Feral: Healing Touch and Renewal now flash in Bear Form when you can use the heal.
+* Feral: Healing Touch no longer flashes when you need a heal if casting it could cause your energy to cap.
+* Feral: Added Qiang the Merciless to the no-Shred list.
+* Feral & Guardian: Now anticipates rage from Primal Fury.
+* Restoration: Added Force of Nature flashing.
+* Restoration: Bugfix for a Lua error.
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

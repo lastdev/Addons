@@ -6,7 +6,11 @@ zhCN localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
+<<<<<<< HEAD
 Project version: 3.0.5
+=======
+Project version: 2.6.2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ************************************************************************
 Original translated by: iCat, Kurax, 冰焱妩魅 @ CWDG, ananhaid
 Currently maintained by:
@@ -208,6 +212,10 @@ L["Bryan Landers"] = "比尔亚·兰德斯"
 L["Brynna Wilson"] = "布莱娜·维尔森"
 L["Buckslappy"] = "贝克斯拉皮"
 L["Bufo"] = "布佛"
+<<<<<<< HEAD
+=======
+L["BUGGED"] = "在当前最新版本服务器此配方存在错误！"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Burbik Gearspanner"] = "巴比克·齿轮"
 L["Burko"] = "布尔库"
 L["Burning Berserker"] = "炽燃狂战士"

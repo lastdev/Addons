@@ -8,7 +8,11 @@
 ## SavedVariables: AucAdvancedConfig, AucAdvancedData
 ## SavedVariablesPerCharacter: AucAdvancedLocal
 ##
+<<<<<<< HEAD
 ## Version: 5.20.5464 (RidiculousRockrat)
+=======
+## Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ## Revision: $Id: Auc-Advanced.toc 5431 2013-09-10 07:48:29Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

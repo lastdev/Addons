@@ -3,10 +3,17 @@
 Core.lua
 Core functions for Ackis Recipe List
 ************************************************************************
+<<<<<<< HEAD
 File date: 2014-07-13T09:10:19Z
 File hash: 8f4afc1
 Project hash: 5b35dab
 Project version: 3.0.5
+=======
+File date: 2014-02-15T07:41:05Z
+File hash: a9873cc
+Project hash: fbca907
+Project version: 2.6.2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -59,6 +66,7 @@ local debugger -- Only defined if needed.
 
 private.build_num = select(2, _G.GetBuildInfo())
 private.TextDump = LibStub("LibTextDump-1.0"):New(private.addon_name)
+<<<<<<< HEAD
 
 Dialog:Register("ARL_ModuleErrorDialog", {
 	buttons = {
@@ -92,6 +100,8 @@ Dialog:Register("ARL_NoModulesErrorDialog", {
 		self.text:SetFormattedText("No profession module AddOns were found.\n\nAs of version 3.0, all professions were split into individual module AddOns. These can be obtained either from Curse, from the Curse Client, or from WoWInterface.\n\nThe main %s page on either site contains URLs for all of the module AddOns; download only those you need.", private.addon_name, private.addon_name)
 	end
 })
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 ------------------------------------------------------------------------------
 -- Constants.
@@ -849,6 +859,12 @@ local SUBCOMMAND_FUNCS = {
 		addon:ScanProfession("all")
 	end,
 	--@end-debug@]===]
+<<<<<<< HEAD
+=======
+	tradelinks = function()
+		addon:GenerateLinks()
+	end,
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 }
 
 function addon:ChatCommand(input)

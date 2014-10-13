@@ -98,13 +98,20 @@ DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= (IsMacClient() and "Cmd-C" or "Ctrl-C")
 DBM_CORE_UPDATEREMINDER_URL				= "http://www.inven.co.kr/board/powerbbs.php?come_idx=3716"
 DBM_CORE_UPDATEREMINDER_DISABLE			= "경고: 현재 사용중인 DBM 버전은 지나치게 오래되어 (r%d 가량) 사용하실 수 없습니다. 이것은 당신 및 공격대원에게 잘못된 알림으로 혼동을 주지 않기 위함입니다. 계속 사용하시려면 지금 즉시 최신 버전으로 업데이트하여 주시기 바랍니다."
 DBM_CORE_UPDATEREMINDER_HOTFIX			= "지금 사용하시는 DBM 버전은 이 전투에서 잘못된 경고를 표시합니다. 이 오류는 다음 버전에서 수정되오나, 다음 버전이 없을 경우 최신 alpha 버전으로 업데이트 하면 수정할 수 있습니다."
+<<<<<<< HEAD
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "경고: DBM 버전이 오래되어 현재 게임 버전에서는 작동하지 않을 것입니다. 당신 또는 같은 공격대원에게 잘못된 알림을 보내거나 게임이 느려지는 것을 막기 위함을 양해하여 주시기 바랍니다. 지금 당장 최신 버전으로 업데이트 하여 주시기 바랍니다. 만약 6.0 베타를 실행 중인데 이 메세지가 보인다면, http://forums.elitistjerks.com/topic/132677-deadly-boss-mods-60-testing 에서 6.0 베타 버전을 받으세요."
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 DBM_CORE_MOVABLE_BAR				= "나를 움직이세요~_~"
 
 DBM_PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h님이 당신에게 DBM 바 보냄: '%2$s'\n|HDBM:cancel:%2$s:nil|h|cff3588ff[바 취소]|r|h  |HDBM:ignore:%2$s:%1$s|h|cff3588ff[%1$s 바 차단]|r|h"
 DBM_PIZZA_CONFIRM_IGNORE			= "%s님의 DBM 바를 차단하시겠습니까? 이 공격대에 있는 동안에만 적용됩니다."
+<<<<<<< HEAD
 DBM_PIZZA_ERROR_USAGE				= "사용법: /dbm [broadcast] timer <시간> <글자>. 시간은 1초 이상이어야 합니다."
+=======
+DBM_PIZZA_ERROR_USAGE				= "사용법: /dbm [broadcast] timer <시간> <글자>"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 --DBM_CORE_MINIMAP_TOOLTIP_HEADER (Same as English locales)
 DBM_CORE_MINIMAP_TOOLTIP_FOOTER		= "Shift+클릭 또는 오른쪽 클릭으로 움직이세요.\nAlt+Shift+클릭으로 움직이면 자유롭게 배치할 수 있습니다."
@@ -135,6 +142,7 @@ DBM_CORE_SLASHCMD_HELP				= {
 --	"/dbm version2: 공격대 전체 DBM 버전 확인 + 구버전 귓속말 알림(줄임말: ver2).",
 	"/dbm unlock(move): 20초 동안 바 위치 조정 가능 상태가 됨",
 	"* 아래 명령어의 숫자나 글자를 입력할때 < > 는 입력하지 않음 *",
+<<<<<<< HEAD
 	"/dbm timer/ctimer/ltimer/cltimer <숫자> <글자>: <글자>에 입력한 대로 <숫자>초 동안 지속되는 바를 생성",
 	"/dbm broadcast timer/ctimer/ltimer/cltimer <숫자> <글자>: <글자>에 입력한 대로 <숫자>초 동안 지속되는 바를 생성 후 모든 공격대원에게 보냄(승급 권한 필요)",
 	" - timer: 평범한 바",
@@ -142,6 +150,10 @@ DBM_CORE_SLASHCMD_HELP				= {
 	" - ltimer: 계속 반복되는 바", 
 	" - cltimer: 계속 반복되며, 초읽기 글자 및 숫자가 보이는 바",
 	"/dbm timer endloop: ltimer 또는 cltimer 바의 반복을 멈춤.",
+=======
+	"/dbm timer <숫자> <글자>: <글자>에 입력한 대로 <숫자>초 동안 지속되는 바를 생성",
+	"/dbm broadcast timer <숫자> <글자>: <글자>에 입력한 대로 <숫자>초 동안 지속되는 바를 생성 후 모든 공격대원에게 보냄(승급 권한 필요)",
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	"/dbm break <숫자>: <숫자>분 지속되는 휴식 바를 보냄. DBM을 설치한 모든 공격대원이 볼 수 있음(승급 권한 필요)",
 	"/dbm pull <숫자>: <숫자>초 후 전투 예정 바를 보냄. DBM을 설치한 모든 공격대원이 볼 수 있음(승급 권한 필요)",
 	"/dbm arrow: DBM 화살표 도움말을 봄",
@@ -234,7 +246,11 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you			= "당신이 $spell:%s 대상이 된 경�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target		= "$spell:%s 대상 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.taunt		= "다른 방어 전담이 $spell:%s 대상이 된 경우 도발 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close		= "$spell:%s 대상이 당신 가까이 있을 경우 특수 경고 보기"
+<<<<<<< HEAD
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move		= "$spell:%s 피하기 특수 경고 보기"
+=======
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move		= "$spell:%s 회피 특수 경고 보기"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveaway	= "$spell:%s 이동 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveto		= "$spell:%s 대상에게 이동 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run			= "$spell:%s 도망치기 특수 경고 보기"

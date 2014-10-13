@@ -278,7 +278,11 @@ do
 end -- do-block
 
 function Recipe:SetItemFilterType(filter_type)
+<<<<<<< HEAD
 	if not addon.constants.ITEM_FILTER_TYPES[filter_type:upper()] then
+=======
+	if not private.ITEM_FILTER_TYPES[filter_type:upper()] then
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		addon:Debug("Attempting to set invalid item filter type '%s' for '%s' (%d)", filter_type, self.name, self:SpellID())
 		return
 	end
@@ -491,6 +495,7 @@ function Recipe:AddRepVendor(reputation_id, rep_level, ...)
 		local vendor_id = select(cur_var, ...)
 		cur_var = cur_var + 1
 
+<<<<<<< HEAD
 		local reputation = reputation_acquire_type:GetEntity(reputation_id)
 
 		if reputation then
@@ -509,6 +514,21 @@ function Recipe:AddRepVendor(reputation_id, rep_level, ...)
 
 					reputation.item_list = reputation.item_list or {}
 					reputation.item_list[self:SpellID()] = true
+=======
+		if reputation_acquire_type:GetEntity(reputation_id) then
+			if vendor_id then
+				local rep_vendor = vendor_acquire_type:GetEntity(vendor_id)
+
+				if rep_vendor then
+					faction[rep_level][vendor_id] = true
+
+					affiliation = rep_vendor.faction
+					location_name = rep_vendor.location
+
+					rep_vendor.reputation_id = reputation_id
+					rep_vendor.item_list = rep_vendor.item_list or {}
+					rep_vendor.item_list[self:SpellID()] = true
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 				else
 					addon:Debug("Spell ID %d (%s): Reputation Vendor ID %s does not exist in the %s AcquireType Entity table.",
 						self:SpellID(),
@@ -687,6 +707,7 @@ do
 		return false
 	end
 
+<<<<<<< HEAD
 	--- Scans a specific recipe to determine if it is to be displayed or not.
 	function Recipe:CanDisplay()
 		if InitializeFilters then
@@ -694,6 +715,15 @@ do
 		end
 
 		if addon.db.profile.exclusionlist[self:SpellID()] and not addon.db.profile.ignoreexclusionlist then
+=======
+	---Scans a specific recipe to determine if it is to be displayed or not.
+	 function Recipe:CanDisplay()
+		 if InitializeFilters then
+			 InitializeFilters()
+		 end
+
+		 if addon.db.profile.exclusionlist[self:SpellID()] and not addon.db.profile.ignoreexclusionlist then
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			return false
 		end
 		local general_filters = filter_db.general
@@ -732,9 +762,14 @@ do
 			return false
 		end
 		local item_filter_type = self:ItemFilterType()
+<<<<<<< HEAD
 		local profession_module = addon:GetModule(private.PROFESSION_MODULE_NAMES[private.ORDERED_PROFESSIONS[addon.Frame.current_profession]])
 
 		if item_filter_type and (not profession_module or not profession_module.db.profile.filters.item[item_filter_type]) then
+=======
+
+		if item_filter_type and not addon.db.profile.filters.item[item_filter_type] then
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			return false
 		end
 
@@ -958,7 +993,11 @@ function Recipe:Dump(output, use_genesis)
 				else
 					saved_id = identifier
 				end
+<<<<<<< HEAD
 				local vendor = private.AcquireTypes.Vendor:GetEntity(identifier)
+=======
+				local vendor = private.private.AcquireTypes.Vendor:GetEntity(identifier)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 				local quantity = vendor.item_list[self:SpellID()]
 
 				if type(quantity) == "number" then

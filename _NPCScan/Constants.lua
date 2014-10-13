@@ -17,7 +17,11 @@ local FOLDER_NAME, private = ...
 -- General constants.
 -------------------------------------------------------------------------------
 private.NPC_ID_MAX = 0xFFFFF -- Largest ID that will fit in a GUID's 20-bit NPC ID field.
+<<<<<<< HEAD
 private.NUM_RAID_ICONS = 8
+=======
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 -------------------------------------------------------------------------------
 -- Zones.

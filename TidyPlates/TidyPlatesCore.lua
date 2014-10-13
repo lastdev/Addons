@@ -154,6 +154,8 @@ do
 				if not plate.isMouseover then
 					plate.isMouseover = true
 					UpdateMe = true
+				--print(GetTime(), extended.unit.name)
+				--print()
 				end
 
 			elseif plate.isMouseover then
@@ -179,7 +181,11 @@ do
 
 			-- Alpha Animation
 			--EnableFadeIn
+<<<<<<< HEAD
 			local increment = e * 7
+=======
+			local increment = e * 3
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			if extended.visibleAlpha ~= extended.requestedAlpha then
 
 				if EnableFadeIn and extended.requestedAlpha > extended.visibleAlpha + increment then

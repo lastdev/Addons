@@ -1,6 +1,10 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: EnxConstants.lua 4632 2010-01-24 02:33:54Z ccox $
 	URL: http://enchantrix.org/
 

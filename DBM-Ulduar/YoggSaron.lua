@@ -1,7 +1,11 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 152 $"):sub(12, -3))
+=======
+mod:SetRevision(("$Revision: 142 $"):sub(12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -59,7 +63,11 @@ local timerCastDeafeningRoar		= mod:NewCastTimer(2.3, 64189)
 local timerNextDeafeningRoar		= mod:NewNextTimer(30, 64189)
 local timerAchieve					= mod:NewAchievementTimer(420, 3012, "TimerSpeedKill")
 
+<<<<<<< HEAD
 mod:AddBoolOption("ShowSaraHealth", false)
+=======
+mod:AddBoolOption("ShowSaraHealth")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:AddBoolOption("SetIconOnFearTarget", true)
 mod:AddBoolOption("SetIconOnFervorTarget", false)
 mod:AddBoolOption("SetIconOnBrainLinkTarget", true)

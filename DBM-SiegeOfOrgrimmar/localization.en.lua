@@ -192,22 +192,31 @@ L:SetMiscLocalization({
 ------------------------
 L= DBM:GetModLocalization(869)
 
+<<<<<<< HEAD
 L:SetTimerLocalization({
 	timerRoleplay		= GUILD_INTEREST_RP
 })
 
 L:SetOptionLocalization({
 	timerRoleplay		= "Show timer for Garrosh/Thrall RP",
+=======
+L:SetOptionLocalization({
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	RangeFrame			= "Show dynamic range frame (8)<br/>(This is a smart range frame that shows when you reach $spell:147126 threshold)",
 	InfoFrame			= "Show info frame for players without damage reduction during intermission",
 	yellMaliceFading	= "Yell when $spell:147209 is about to fade"
 })
 
 L:SetMiscLocalization({
+<<<<<<< HEAD
 	wasteOfTime			= "It is not too late, Garrosh. Lay down the mantle of Warchief. We can end this here, now, with no more bloodshed.",
 	NoReduce			= "No damage reduction",
 	MaliceFadeYell		= "Malice fading on %s (%d)",
 	phase3End			= "You think you have WON?"
+=======
+	NoReduce			= "No damage reduction",
+	MaliceFadeYell		= "Malice fading on %s (%d)"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 })
 
 -------------

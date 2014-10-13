@@ -3,10 +3,17 @@
 Scanner.lua
 Vendor/trainer scanning for Ackis Recipe List.
 ************************************************************************
+<<<<<<< HEAD
 File date: 2014-05-26T11:42:13Z
 File hash: ba6ae14
 Project hash: 5b35dab
 Project version: 3.0.5
+=======
+File date: 2014-02-15T08:07:00Z
+File hash: 06133e7
+Project hash: fbca907
+Project version: 2.6.2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************

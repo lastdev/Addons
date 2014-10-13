@@ -18,7 +18,11 @@ end
 
 --[[
 	Auctioneer - Price Level Utility module
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: Example.lua 5347 2012-09-06 06:26:15Z Esamynn $
 	URL: http://auctioneeraddon.com/
 
@@ -187,4 +191,8 @@ end
 function private.Baz()
 end
 
+<<<<<<< HEAD
 AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/Modules/Auc-Util-Example/Example.lua $", "$Rev: 5347 $")
+=======
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/Modules/Auc-Util-Example/Example.lua $", "$Rev: 5347 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

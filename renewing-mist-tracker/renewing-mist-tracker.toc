@@ -1,0 +1,22 @@
+## Interface: 50400
+## Title: Renewing Mist Tracker
+## SavedVariablesPerCharacter: ReMTrackerDB
+## Author: Xpres
+## Version: r20130920172219
+## X-Curse-Packaged-Version: r20130920172219
+## X-Curse-Project-Name: Renewing Mist Tracker
+## X-Curse-Project-ID: renewing-mist-tracker
+## X-Curse-Repository-ID: wow/renewing-mist-tracker/mainline
+
+embeds.xml
+
+Main.lua
+
+Ui.lua
+Data.lua
+
+
+
+
+
+SlashCmd.lua

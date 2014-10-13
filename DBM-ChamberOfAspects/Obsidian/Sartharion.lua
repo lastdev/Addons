@@ -1,9 +1,15 @@
 local mod	= DBM:NewMod("Sartharion", "DBM-ChamberOfAspects", 1)
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 157 $"):sub(12, -3))
 mod:SetCreatureID(28860)
 mod:SetEncounterID(1090)
+=======
+mod:SetRevision(("$Revision: 117 $"):sub(12, -3))
+mod:SetCreatureID(28860)
+mod:SetEncounterID(1090)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetModelID(27035)
 mod:SetZone()
 

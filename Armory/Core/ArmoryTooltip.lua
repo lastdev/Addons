@@ -1,6 +1,10 @@
 --[[
     Armory Addon for World of Warcraft(tm).
+<<<<<<< HEAD
     Revision: 638 2014-10-12T08:05:02Z
+=======
+    Revision: 607 2013-12-11T12:16:33Z
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     URL: http://www.wow-neighbours.com
 
     License:
@@ -73,7 +77,10 @@ local knownBy;
 local fetched;
 
 local accountBoundPattern = "^"..ITEM_BIND_TO_BNETACCOUNT.."$";
+<<<<<<< HEAD
 local levelPattern = "^"..ITEM_LEVEL:gsub("(%%d)", "(.+)").."$";
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 local minLevelPattern = "^"..ITEM_MIN_LEVEL:gsub("(%%d)", "(.+)").."$";
 local rankPattern = "^"..ITEM_MIN_SKILL:gsub("%d%$", ""):gsub("%%s", "(.+)"):gsub("%(%%d%)", "%%((%%d+)%%)").."$";
 local repPattern = "^"..ITEM_REQ_REPUTATION:gsub("%-", "%%-"):gsub("%%s", "(.+)").."$";
@@ -84,17 +91,25 @@ local reagentPattern = "\n"..ITEM_REQ_SKILL:gsub("%d%$", ""):gsub("%%s", "(.+)")
 
 local function GetRequirements(tooltip)
     local text, standing, reagents;
+<<<<<<< HEAD
     local reqLevel, reqProfession, reqRank, reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, accountBound, realName;
+=======
+    local reqLevel, reqProfession, reqRank, reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, accountBound;
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
     for i = 2, tooltip:NumLines() do
         text = Armory:GetTooltipText(tooltip, i);
         if ( (text or "") ~= "" ) then
 			if ( text:find(accountBoundPattern) ) then
 				accountBound = true;
+<<<<<<< HEAD
 
 			elseif ( text:find(levelPattern) ) then
                 realName = strtrim(Armory:GetTooltipText(tooltip, i - 1) or "");
 
+=======
+				
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			elseif ( text:find(minLevelPattern) ) then
                 reqLevel = text:match(minLevelPattern);
                 
@@ -127,7 +142,11 @@ local function GetRequirements(tooltip)
         end
     end
     
+<<<<<<< HEAD
     return tonumber(reqLevel), reqProfession, tonumber(reqRank), reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, reagents, accountBound, realName;
+=======
+    return tonumber(reqLevel), reqProfession, tonumber(reqRank), reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, reagents, accountBound;
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end
 
 local itemCandidates = {};

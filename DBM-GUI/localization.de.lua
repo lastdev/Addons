@@ -56,6 +56,14 @@ L.General 					= "Allgemeine Grundeinstellungen"
 L.EnableDBM 				= "Aktiviere DBM"
 L.EnableMiniMapIcon			= "Aktiviere Minimap-Symbol"
 L.UseMasterVolume			= "Benutze Master-Audiokanal um DBM-Sounddateien abzuspielen"
+<<<<<<< HEAD
+=======
+L.LFDEnhance				= "Spiele \"Bereitschaftscheck\"-Sound für Rollenabfragen und Einladungen der Gruppensuche im Master-Audiokanal"
+L.WorldBossAlert			= "Zeige Alarmmeldung, wenn auf deinem Realm Gildenmitglieder oder Freunde beginnen gegen Weltbosse zu kämpfen"
+L.AutologBosses				= "Automatische Aufzeichnung von Bosskämpfen im spieleigenen Kampflog"
+L.AdvancedAutologBosses		= "Automatische Aufzeichnung von Bosskämpfen mit Addon \"Transcriptor\""
+L.LogOnlyRaidBosses			= "Nur Schlachtzugbosskämpfe aufzeichnen\n(ohne Schlachtzugsbrowser-/Dungeon-/Szenarien-/Weltbosskämpfe)"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L.Latency_Text				= "Maximale Synchronisierungslatenz: %d"
 -- Tab: General Timer Options
 L.TimerGeneral 				= "Allgemeine Einstellungen für Timer"
@@ -187,6 +195,7 @@ L.SpamBlockNoInfoFrame		= "Zeige kein Infofenster an"
 L.SpamBlockNoHealthFrame	= "Zeige keine Lebensanzeige an"
 
 -- Tab: Spam Filter
+<<<<<<< HEAD
 L.Area_SpamFilter			= "Spam-Filter"
 L.StripServerName			= "Entferne den Realmnamen der Spieler in Warnungen und Timern"
 L.SpamBlockBossWhispers		= "Aktiviere Filter für &lt;DBM&gt;-Flüstermitteilungen im Kampf"
@@ -244,6 +253,42 @@ L.PizzaTimer_Mins 			= "Min"
 L.PizzaTimer_Secs 			= "Sek"
 L.PizzaTimer_ButtonStart 	= "Starte Timer"
 L.PizzaTimer_BroadCast		= "Anderen Schlachtzugspielern anzeigen"
+=======
+L.Panel_SpamFilter				= "Filter / Spam-Filter"
+L.Area_SpamFilter				= "Spam-Filter"
+L.StripServerName				= "Entferne den Realmnamen der Spieler in Warnungen und Timern"
+L.SpamBlockBossWhispers			= "Aktiviere Filter für &lt;DBM&gt;-Flüstermitteilungen im Kampf"
+L.BlockVersionUpdateNotice		= "Zeige Update-Meldung im Chatfenster statt als Popup (nicht empfohlen)"
+L.ShowBBOnCombatStart			= "Führe bei Kampfbeginn eine \"BigBrother\"-Buffprüfung durch"
+L.BigBrotherAnnounceToRaid		= "Verkünde Ergebnis der \"BigBrother\"-Buffprüfung zum Schlachtzug"
+
+L.Area_SpamFilter_Outgoing		= "globale Filtereinstellungen"
+L.SpamBlockNoShowAnnounce		= "Zeige keine Mitteilungen und spiele keine Warnungssounds"
+L.SpamBlockNoSendWhisper		= "Sende keine Flüstermitteilungen an andere Spieler"
+L.SpamBlockNoSetIcon			= "Setze keine Zeichen auf Ziele"
+L.SpamBlockNoRangeFrame			= "Zeige kein Abstandsfenster/-radar an"
+L.SpamBlockNoInfoFrame			= "Zeige kein Infofenster an"
+L.SpamBlockNoHealthFrame		= "Zeige keine Lebensanzeige an"
+
+L.Area_PullTimer				= "Filtereinstellungen für Pull-Timer"
+L.DontShowPTNoID				= "Blockiere Pull-Timer, die nicht aus deiner derzeitigen Zone gesendet worden sind"
+L.DontShowPT					= "Zeige keinen Timerbalken für Pull-Timer"
+L.DontShowPTText				= "Zeige keine Mitteilungen für Pull-Timer im Chatfenster"
+L.DontPlayPTCountdown			= "Spiele keinen akustischen Countdown für Pull/Kampfbeginn-Timer"
+L.DontShowPTCountdownText		= "Zeige keinen optischen Countdown für Pull/Kampfbeginn-Timer"
+L.PT_Threshold					= "Zeige keinen optischen Countdown für Pull/Kampfbeginn-Timer über: %d"
+
+
+L.Panel_HideBlizzard			= "Verberge Spielelemente"
+L.Area_HideBlizzard				= "Einstellungen zum Verbergen von Spielelementen"
+L.HideBossEmoteFrame			= "Verberge das Fenster \"RaidBossEmoteFrame\" während Bosskämpfen"
+L.HideWatchFrame				= "Verberge das Fenster für die Questverfolgung während Bosskämpfen"
+L.HideTooltips					= "Verberge Tooltips während Bosskämpfen"
+L.SpamBlockSayYell				= "Sprechblasen-Ansagen im Chatfenster ausblenden"
+L.DisableCinematics				= "Verberge Videosequenzen"
+L.AfterFirst					= "Nach jeweils einmaligem Abspielen"
+L.Always						= "Immer"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 -- Misc
 L.FontHeight	= 16

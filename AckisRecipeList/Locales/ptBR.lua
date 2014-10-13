@@ -6,7 +6,11 @@ ptBR localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
+<<<<<<< HEAD
 Project version: 3.0.5
+=======
+Project version: 2.6.2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ************************************************************************
 Currently maintained by:
 http://www.wowace.com/addons/arl/localization/translators/
@@ -1073,6 +1077,10 @@ L["Scan Vendor"] = "Escanear Vendedor" -- Needs review
 L["SCAN_VENDOR_DESC"] = "Escaneia o vendedor atualmente aberto por receitas e compara a informação com o banco de dados interno." -- Needs review
 L["Scargil"] = true -- Needs review
 L["Scarlet Archmage"] = "Arquimago Escarlate" -- Needs review
+<<<<<<< HEAD
+=======
+L["SCHOLO_BOOK_SPAWN"] = "Depois que você matar Jandice Barov em Scolomântia, um livro aparecerá e voce poderá aprender esta receita." -- Needs review
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Scholomance Adept"] = "Adepto de Scolomântia" -- Needs review
 L["Scribe Lanloer"] = "Escriba Lanloer" -- Needs review
 L["Scribe Rinji"] = "Escriba Yu Ri" -- Needs review

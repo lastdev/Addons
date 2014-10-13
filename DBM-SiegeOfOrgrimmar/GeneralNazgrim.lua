@@ -1,7 +1,11 @@
 local mod	= DBM:NewMod(850, "DBM-SiegeOfOrgrimmar", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 11532 $"):sub(12, -3))
+=======
+mod:SetRevision(("$Revision: 11192 $"):sub(12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetCreatureID(71515)
 mod:SetEncounterID(1603)
 mod:SetZone()
@@ -75,7 +79,11 @@ local specWarnAssassinsMarkOther	= mod:NewSpecialWarningTarget(143480, false)
 local specWarnEarthShield			= mod:NewSpecialWarningDispel(143475, mod:IsMagicDispeller())
 local specWarnHealingTideTotem		= mod:NewSpecialWarningSwitch(143474, false)--Not everyone needs to switch, should be turned on by assigned totem mashing people.
 local specWarnHuntersMark			= mod:NewSpecialWarningYou(143882)
+<<<<<<< HEAD
 local yellHuntersMark				= mod:NewYell(143882, nil, false)
+=======
+local yellHuntersMark				= mod:NewYell(143882)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 local specWarnHuntersMarkOther		= mod:NewSpecialWarningTarget(143882, false)
 
 --Nazgrim Core Abilities
@@ -388,23 +396,39 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
+<<<<<<< HEAD
 function mod:SPELL_DAMAGE(sourceGUID, _, _, _, destGUID, destName, _, _, spellId)
+=======
+function mod:SPELL_DAMAGE(sourceGUID, _, _, _, destGUID, _, _, _, spellId)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	if spellId == 143873 and destGUID == UnitGUID("player") and self:AntiSpam(3, 2) then
 		specWarnRavagerMove:Show()
 	elseif sourceGUID == UnitGUID("player") and destGUID == UnitGUID("boss1") and self:AntiSpam(3, 1) then--If you've been in LFR at all, you'll see that even 3 is generous. 8 is WAY too leaniant.
 		if not UnitDebuff("player", sunder) and self.vb.defensiveActive then
+<<<<<<< HEAD
 			specWarnDefensiveStanceAttack:Show(destName)
+=======
+			specWarnDefensiveStanceAttack:Show()
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		end
 	end
 end
 mod.RANGE_DAMAGE = mod.SPELL_DAMAGE
 mod.SWING_DAMAGE = mod.SPELL_DAMAGE
 
+<<<<<<< HEAD
 function mod:SPELL_PERIODIC_DAMAGE(sourceGUID, _, _, _, destGUID, destName, _, _, spellId)--Prevent spam on DoT
 	if sourceGUID == UnitGUID("player") and destGUID == UnitGUID("boss1") and self:AntiSpam(3, 1) then
 		if not UnitDebuff("player", sunder) and self.vb.defensiveActive and not dotWarned[spellId] then
 			dotWarned[spellId] = true
 			specWarnDefensiveStanceAttack:Show(destName)
+=======
+function mod:SPELL_PERIODIC_DAMAGE(sourceGUID, _, _, _, destGUID, _, _, _, spellId)--Prevent spam on DoT
+	if sourceGUID == UnitGUID("player") and destGUID == UnitGUID("boss1") and self:AntiSpam(3, 1) then
+		if not UnitDebuff("player", sunder) and self.vb.defensiveActive and not dotWarned[spellId] then
+			dotWarned[spellId] = true
+			specWarnDefensiveStanceAttack:Show()
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		end
 	end
 end

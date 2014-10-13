@@ -825,8 +825,11 @@ local ACQUIRE_PROTOTYPES = {
 
 private.ACQUIRE_TYPES_BY_ID = {}
 private.ACQUIRE_TYPE_IDS = {}
+<<<<<<< HEAD
 private.constants.ACQUIRE_TYPE_IDS = private.ACQUIRE_TYPE_IDS
 
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 private.AcquireTypes = {}
 
 for index = 1, #ACQUIRE_PROTOTYPES do
@@ -854,10 +857,16 @@ function AcquireType:AddEntity(identifier, name, location, coord_x, coord_y, fac
 	end
 
 	local entity = {
+<<<<<<< HEAD
 		faction = faction,
 		identifier = identifier,
 		location = location,
 		name = name,
+=======
+		name = name,
+		location = location,
+		faction = faction,
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	}
 
 	if coord_x and coord_y then

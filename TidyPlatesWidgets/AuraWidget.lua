@@ -678,14 +678,22 @@ local function CombatEventHandler(frame, event, ...)
 	-- Evaluate only for enemy units, for now
 	--if (bit.band(destFlags, COMBATLOG_OBJECT_REACTION_FRIENDLY) == 0) then							-- FILTER: ENEMY UNIT
 	-- COMBATLOG_OBJECT_CONTROL_PLAYER
+<<<<<<< HEAD
 
 		-- Check to see if the unit is a party or raid member, and skip; These units are updated via the general event, UNIT_AURA
 		if TidyPlatesUtility.GroupMembers.GUID[destGUID] ~= nil then return end
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 		local CombatLogUpdateFunction = CombatLogEvents[combatevent]
 		-- Evaluate only for certain combat log events
 		if CombatLogUpdateFunction then
+<<<<<<< HEAD
 
+=======
+			-- Evaluate only for debuffs
+			--if auraType == "DEBUFF" then 															-- FILTER: DEBUFF
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 			-- Evaluate only for debuffs
 			--if auraType == "DEBUFF" then 															-- FILTER: DEBUFF

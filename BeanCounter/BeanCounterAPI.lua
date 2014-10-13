@@ -1,7 +1,12 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
 	Revision: $Id: BeanCounterAPI.lua 5449 2014-01-14 15:25:58Z brykrys $
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+	Revision: $Id: BeanCounterAPI.lua 5127 2011-04-21 18:06:00Z kandoko $
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 	BeanCounterAPI - Functions for other addons to get BeanCounter Data
 	URL: http://auctioneeraddon.com/
@@ -28,7 +33,11 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
+<<<<<<< HEAD
 LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.20/BeanCounter/BeanCounterAPI.lua $","$Rev: 5449 $","5.1.DEV.", 'auctioneer', 'libs')
+=======
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.19/BeanCounter/BeanCounterAPI.lua $","$Rev: 5127 $","5.1.DEV.", 'auctioneer', 'libs')
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 local lib = BeanCounter
 lib.API = {}

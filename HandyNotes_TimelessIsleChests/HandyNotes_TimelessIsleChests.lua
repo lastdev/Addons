@@ -163,7 +163,11 @@ function TimelessIsleChest:OnInitialize()
    icon_scale = 1.0,
    icon_alpha = 1.0,
    alwaysshow = false,
+<<<<<<< HEAD
    save = true,
+=======
+   save = false,
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
   },
  }
 

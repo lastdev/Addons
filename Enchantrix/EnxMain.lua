@@ -1,6 +1,10 @@
 ﻿--[[
 	Enchantrix Addon for World of Warcraft(tm).
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: EnxMain.lua 5317 2012-08-03 05:11:38Z ccox $
 	URL: http://enchantrix.org/
 
@@ -30,7 +34,11 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 
 ]]
+<<<<<<< HEAD
 Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Enchantrix/EnxMain.lua $", "$Rev: 5317 $")
+=======
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Enchantrix/EnxMain.lua $", "$Rev: 5317 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 -- Local functions
 local addonLoaded
@@ -41,7 +49,11 @@ local spellTargetItemHook
 local useItemByNameHook
 local onEvent
 
+<<<<<<< HEAD
 Enchantrix.Version = "5.20.5464"
+=======
+Enchantrix.Version = "5.19.5445"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 if (Enchantrix.Version == "<".."%version%>") then
 	Enchantrix.Version = "4.0.DEV"
 end

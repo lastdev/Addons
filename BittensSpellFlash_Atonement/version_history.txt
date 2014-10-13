@@ -1,9 +1,12 @@
+<<<<<<< HEAD
 == Version 50400.1.6
 * I have gotten a pretty good response, so I think (and hope) Bitten's SpellFlash will live on!
 
 == Version 50400.1.5
 * The future of Bitten's SpellFlash: Atonement is in question.  I no longer wish to maintain this addon, starting with patch 6.0.  If you are interested in taking it over, keeping up with optimal rotations, and you have programming skills, please leave a comment or PM on Curse.
 
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 == Version 50400.1.3
 * All: Flashes WoW's 9th Anniversary Celebration Package.
 

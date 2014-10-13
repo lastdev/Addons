@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 == Version 50400.2.5
 * I have gotten a pretty good response, so I think (and hope) Bitten's SpellFlash will live on!
 
@@ -17,6 +18,8 @@
 == Version 50400.1.2
 * Arcane & Frost: Added flashing for Ice Floes when you are moving.
 
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 == Version 50400.1.1
 * All: Flashes WoW's 9th Anniversary Celebration Package.
 
@@ -102,3 +105,19 @@ NOTE: Your options will be reset when you upgrade to this version.
 == Version 3.0.1 beta
 * Arcane: added an AoE rotation.
 * Arcane: no longer prioritize Arcane Blast based on number of Arcane Charges.
+<<<<<<< HEAD
+=======
+
+== Version 3.0.0 beta
+* Arcane: pretty much reworked the whole rotation.
+* All: Living Bomb will refresh within the last tick (instead of waiting until it expires).
+* All: Presence of Mind will not flashes during Alter Time.
+
+== Version 2.13.0
+* Fire: Lowered the priority of Nether Tempest / Living Bomb.  Simulations showed a dps improvement.
+* Fire: Worked a bit on the Heating Up / Pyroblast! detection, including adjusting some lag tolerances.  I believe it is an improvement.
+* Fire: Removed the 3rd line from the combustion monitor.
+
+== Version 2.12.4
+* Fire: Fixed the combustion monitor to reflect changes in 5.1.0.
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

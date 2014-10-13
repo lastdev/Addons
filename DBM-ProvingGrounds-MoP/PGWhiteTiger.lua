@@ -7,7 +7,11 @@
 end)
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 24 $"):sub(12, -3))
+=======
+mod:SetRevision(("$Revision: 23 $"):sub(12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetZone()
 
 --mod:RegisterCombat("scenario", 1148)
@@ -182,6 +186,7 @@ function mod:SCENARIO_UPDATE(newStep)
 		started = true
 		countdownTimer:Cancel()
 		countdownTimer:Start(duration)
+<<<<<<< HEAD
 		if DBM.Options.AutoRespond then--Use global whisper option
 			self:RegisterShortTermEvents(
 				"CHAT_MSG_WHISPER"
@@ -213,5 +218,10 @@ function mod:CHAT_MSG_WHISPER(msg, name, _, _, _, status)
 		elseif self:AntiSpam(30, 12) then--If not "status" then auto respond only once per 30 seconds.
 			SendChatMessage(message, "WHISPER", nil, name)
 		end
+=======
+	elseif started then
+		started = false
+		countdownTimer:Cancel()
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	end
 end

@@ -1,5 +1,9 @@
 ## Interface: 50400
+<<<<<<< HEAD
 ## Version: 50400.1.5
+=======
+## Version: 50400.1.2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ## Author: Xemnosyst
 ## Title: Bitten's SpellFlash: Warlock
 ## Notes: Replaces Blizzard's default proc highlighting to flash a maximum dps rotation.
@@ -8,7 +12,11 @@
 ## OptionalDeps: BittensSpellFlashLibrary
 ## LoadOnDemand: 1
 ## X-SpellFlashAddon-LoadWith: Warlock
+<<<<<<< HEAD
 ## X-Curse-Packaged-Version: 50400.1.5
+=======
+## X-Curse-Packaged-Version: 50400.1.2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ## X-Curse-Project-Name: Bitten's SpellFlash: Warlock
 ## X-Curse-Project-ID: bittens-spellflash-warlock
 ## X-Curse-Repository-ID: wow/bittens-spellflash-warlock/mainline

@@ -342,6 +342,14 @@ local function SetStyleBinaryDelegate(unit)
 end
 
 
+<<<<<<< HEAD
+=======
+
+
+
+
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ------------------------------------------------------------------------------
 -- Health Bar Color
 ------------------------------------------------------------------------------
@@ -724,7 +732,13 @@ local SemiWhiter = {r=1, g=1, b=1, a=.9}
 local SemiYellow = {r=1, g=1, b=.8, a=1}
 -- GoldColor, YellowColor
 local function NameColorDefault(unit)
+<<<<<<< HEAD
 	return White
+=======
+	if unit.isTarget then return White
+	elseif unit.isMouseover then return SemiWhiter
+	else return SemiWhite end
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end
 
 local NameColorFunctions = {
@@ -1020,6 +1034,7 @@ local HealthTextModeFunctions = {
 
 local function HealthTextDelegate(unit)
 
+<<<<<<< HEAD
 	local func
 	local mode = 1
 	local showText = not (LocalVars.TextShowOnlyOnTargets or LocalVars.TextShowOnlyOnActive)
@@ -1038,6 +1053,15 @@ local function HealthTextDelegate(unit)
 	end
 
 	if showText then return func(unit) end
+=======
+	local mode = 1
+	if unit.reaction == "FRIENDLY" then mode = LocalVars.ColorFriendlyStatusTextMode
+	else mode = LocalVars.ColorEnemyStatusTextMode end
+
+	local func = HealthTextModeFunctions[mode] or DummyFunction
+	if LocalVars.TextShowOnlyOnTargets and not (unit.isTarget or unit.isMouseover) then return end -- or unit.isMouseover
+	return func(unit)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end
 
 
@@ -1265,6 +1289,7 @@ local function ScaleDelegate(...)
 
 	if LocalVars.ScaleIgnoreNonEliteUnits and (not unit.isElite) then
 	elseif LocalVars.ScaleIgnoreNeutralUnits and unit.reaction == "NEUTRAL" then
+<<<<<<< HEAD
 	-- old
 	--elseif LocalVars.ScaleIgnoreInactive and not (unit.reaction == "FRIENDLY" and (unit.isInCombat or (unit.threatValue > 0) or (unit.health < unit.healthmax))) then
 
@@ -1277,6 +1302,10 @@ local function ScaleDelegate(...)
 
 
 	elseif LocalVars.ScaleCastingSpotlight and unit.reaction == "HOSTILE" and unit.isCasting then scale = LocalVars.ScaleSpotlight
+=======
+	elseif LocalVars.ScaleIgnoreInactive and not (unit.reaction == "FRIENDLY" and (unit.isInCombat or (unit.threatValue > 0) or (unit.health < unit.healthmax))) then
+	elseif LocalVars.ScaleCastingSpotlight and unit.isCasting then scale = LocalVars.ScaleSpotlight
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	elseif LocalVars.ScaleMiniMobs and unit.isMini then
 		scale = MiniMobScale
 	else
@@ -1633,6 +1662,35 @@ local DebuffFilterModes = {
 	--SmartFilterMode,
 }
 
+--[[
+Auras 3.0
+
+	My Debuffs
+	My Buffs
+	Smart Search
+	Custom
+
+	Smart Search
+
+	My Debuffs + Any buffs added to the list, or blacklisted
+	My Buffs + Any debuffs added to the list, or blacklisted
+	Smart Search = Debuffs on Enemies, Buffs on Friendlies, + List
+
+
+Auras 4.0
+
+	CC Database
+	Cooldown Counter
+	Ability Counter
+
+
+
+
+
+
+
+--]]
+
 
 --[[
 Auras 3.0
@@ -1706,6 +1764,7 @@ local function Prefilter(spellid, spellname, auratype, auratargetreaction)
 	-- Store debuffs on friendly units.
 	if (auratargetreaction == AURA_TARGET_FRIENDLY) and (AURA_TYPE[auratype] ~= AURA_TYPE_BUFF) then return true end
 	-- Store auras marked in lookup
+<<<<<<< HEAD
 	return ((LocalVars.WidgetsDebuffLookup[tostring(spellid)] or LocalVars.WidgetsDebuffLookup[spellname]) ~= nil)
 end
 
@@ -1714,6 +1773,8 @@ local function BasicPrefilter(spellid, spellname, auratype, auratargetreaction)
 	-- Store debuffs on friendly units.
 	if (auratargetreaction == AURA_TARGET_FRIENDLY) and (AURA_TYPE[auratype] ~= AURA_TYPE_BUFF) then return true end
 	-- Store auras marked in lookup
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	return ((LocalVars.WidgetsDebuffLookup[tostring(spellid)] or LocalVars.WidgetsDebuffLookup[spellname]) ~= nil)
 end
 
@@ -1926,8 +1987,12 @@ local function EnableWatchers()
 		ThreatFunctionList[NameColorFunctions[LocalVars.ColorEnemyNameMode]] or
 		ThreatFunctionList[FriendlyBarFunctions[LocalVars.ColorFriendlyBarMode]] or
 		ThreatFunctionList[NameColorFunctions[LocalVars.ColorFriendlyNameMode]] or
+<<<<<<< HEAD
 		ThreatFunctionList[AlphaFunctionsEnemy[LocalVars.EnemyAlphaSpotlightMode]] or
 		ThreatFunctionList[AlphaFunctionsFriendly[LocalVars.FriendlyAlphaSpotlightMode]] or
+=======
+		ThreatFunctionList[AlphaFunctionsUniversal[LocalVars.OpacitySpotlightMode]] or
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		ThreatFunctionList[ScaleFunctionsUniversal[LocalVars.ScaleSpotlightMode]] or
 		ThreatFunctionList[NameColorFunctions[LocalVars.HeadlineEnemyColor]] or
 		ThreatFunctionList[NameColorFunctions[LocalVars.HeadlineFriendlyColor]]

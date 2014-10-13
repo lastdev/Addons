@@ -1,7 +1,11 @@
 ## Interface: 60000
 ## Title: Coordinates
 
+<<<<<<< HEAD
 ## Version: 1.14
+=======
+## Version: 1.13
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ## Author: Szandos
 ## Notes: Adds coordinates to the minimap and the world map
 ## SavedVariables: CoordinatesDB

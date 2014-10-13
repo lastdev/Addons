@@ -1,6 +1,10 @@
 ﻿--[[
 	Enchantrix Addon for World of Warcraft(tm).
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: EnxStorage.lua 5264 2012-01-08 22:30:41Z ccox $
 	URL: http://enchantrix.org/
 
@@ -28,7 +32,11 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
+<<<<<<< HEAD
 Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Enchantrix/EnxStorage.lua $", "$Rev: 5264 $")
+=======
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Enchantrix/EnxStorage.lua $", "$Rev: 5264 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 --[[
 Usages:

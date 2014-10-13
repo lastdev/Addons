@@ -1,7 +1,11 @@
 local mod	= DBM:NewMod(846, "DBM-SiegeOfOrgrimmar", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 11270 $"):sub(12, -3))
+=======
+mod:SetRevision(("$Revision: 11192 $"):sub(12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetCreatureID(71454)
 mod:SetEncounterID(1595)
 mod:SetZone()
@@ -54,9 +58,13 @@ local timerFatalStrike					= mod:NewTargetTimer(30, 142990, nil, mod:IsTank())
 
 local berserkTimer						= mod:NewBerserkTimer(360)
 
+<<<<<<< HEAD
 local countdownImplodingEnergy			= mod:NewCountdown(10, 142986, nil, nil, 5)
 
 local countdownBreathofYShaarj			= mod:NewCountdown(10, 142842, nil, nil, 5, nil, true)
+=======
+local countdownImplodingEnergy			= mod:NewCountdown(10, 142986, nil, nil, 8)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 local soundDisplacedEnergy				= mod:NewSound(142913)
 
@@ -94,7 +102,10 @@ function mod:OnCombatStart(delay)
 	timerSeismicSlamCD:Start(5-delay, 1)
 	timerArcingSmashCD:Start(11-delay, 1)
 	timerBreathofYShaarjCD:Start(68-delay, 1)
+<<<<<<< HEAD
 	countdownBreathofYShaarj:Start(68-delay)
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	if self:IsDifficulty("lfr25") then
 		berserkTimer:Start(720-delay)
 	else
@@ -133,7 +144,10 @@ function mod:SPELL_CAST_START(args)
 			timerSeismicSlamCD:Start(7.5, 1)
 			timerArcingSmashCD:Start(14, 1)
 			timerBreathofYShaarjCD:Start(70, 2)
+<<<<<<< HEAD
 			countdownBreathofYShaarj:Start(70)
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		else--Breath 2
 			if self.Options.BloodrageArrow then
 				for uId in DBM:GetGroupMembers() do
@@ -146,9 +160,12 @@ function mod:SPELL_CAST_START(args)
 					end
 				end
 			end
+<<<<<<< HEAD
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Hide()
 			end
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		end
 	elseif spellId == 143199 then
 		self.vb.breathCast = 0
@@ -159,8 +176,12 @@ function mod:SPELL_CAST_START(args)
 		timerSeismicSlamCD:Start(7.5, 1)
 		timerArcingSmashCD:Start(14, 1)
 		timerBreathofYShaarjCD:Start(70, 1)
+<<<<<<< HEAD
 		countdownBreathofYShaarj:Start(70)
 		if self.Options.RangeFrame and self:IsRanged() then
+=======
+		if self.Options.RangeFrame then
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			DBM.RangeCheck:Show(5)
 		end
 	end

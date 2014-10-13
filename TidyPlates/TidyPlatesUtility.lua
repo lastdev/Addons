@@ -311,7 +311,11 @@ end
 ------------------------------------------------
 
 local DropDownMenuFrame = CreateFrame("Frame")
+<<<<<<< HEAD
 local MaxDropdownItems = 25
+=======
+local MaxDropdownItems = 20
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 DropDownMenuFrame:SetSize(100, 100)
 DropDownMenuFrame:SetFrameStrata("TOOLTIP");
@@ -361,6 +365,7 @@ end
 
 --[[
 local CloseDropdownButton = CreateFrame("Button", nil, DropDownMenuFrame, "UIPanelCloseButton")
+<<<<<<< HEAD
 CloseDropdownButton:SetPoint("TOPLEFT", DropDownMenuFrame, "TOPRIGHT", -4, 0)
 CloseDropdownButton:SetFrameStrata("TOOLTIP");
 CloseDropdownButton:Raise()
@@ -368,6 +373,12 @@ CloseDropdownButton:Show()
 --]]
 
 
+=======
+CloseDropdownButton:SetPoint("TOPLEFT", DropDownMenuFrame, "TOPRIGHT")
+CloseDropdownButton:Show()
+--]]
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 local function HideDropdownMenu()
 	DropDownMenuFrame:Hide()
 end
@@ -379,10 +390,14 @@ local function ShowDropdownMenu(sourceFrame, menu, script)
 		return
 	end
 
+<<<<<<< HEAD
 	local currentSelection
 
 	DropDownMenuFrame.SourceFrame = sourceFrame
 	if sourceFrame.GetValue then currentSelection = sourceFrame:GetValue() end
+=======
+	DropDownMenuFrame.SourceFrame = sourceFrame
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 	local numOfItems = 0
 	local maxWidth = 0
@@ -392,6 +407,7 @@ local function ShowDropdownMenu(sourceFrame, menu, script)
 		local button = DropDownMenuFrame["Button"..i]
 
 		if item then
+<<<<<<< HEAD
 			local itemText = item.text
 			if currentSelection == i then
 				-- Selected Item
@@ -411,6 +427,12 @@ local function ShowDropdownMenu(sourceFrame, menu, script)
 			button:SetScript("OnClick", script)
 
 
+=======
+			button:SetText(item.text)
+			maxWidth = max(maxWidth, button:GetTextWidth())
+			numOfItems = numOfItems + 1
+			button:SetScript("OnClick", script)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			button:Show()
 		else
 			button:Hide()
@@ -418,7 +440,11 @@ local function ShowDropdownMenu(sourceFrame, menu, script)
 
 	end
 
+<<<<<<< HEAD
 	DropDownMenuFrame:SetWidth(maxWidth + 40)
+=======
+	DropDownMenuFrame:SetWidth(maxWidth + 18)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Border:SetPoint("BOTTOM", DropDownMenuFrame["Button"..numOfItems], "BOTTOM", 0, -12)
 	DropDownMenuFrame:SetPoint("TOPLEFT", sourceFrame, "BOTTOM")
 	DropDownMenuFrame:Show()
@@ -478,7 +504,10 @@ local function CreateDropdownFrame(helpertable, reference, parent, menu, default
 
 	drawer.SetValue = function (self, value)
 		if byName and value then drawer.Text:SetText(value) else
+<<<<<<< HEAD
 			--print(value, menu, menu[value], drawer.Value)
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			drawer.Text:SetText(menu[value].text); drawer.Value = value
 		end
 	end
@@ -504,6 +533,10 @@ local function CreateDropdownFrame(helpertable, reference, parent, menu, default
 	end
 
 	local function OnClickDropdown()
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		PlaySound("igMainMenuOptionCheckBoxOn");
 		ShowDropdownMenu(drawer, menu, OnClickItem)
 	end

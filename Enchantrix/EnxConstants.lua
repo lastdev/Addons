@@ -1,6 +1,10 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: EnxConstants.lua 5418 2013-06-11 20:40:25Z brykrys $
 	URL: http://enchantrix.org/
 
@@ -28,7 +32,11 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
+<<<<<<< HEAD
 Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Enchantrix/EnxConstants.lua $", "$Rev: 5418 $")
+=======
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Enchantrix/EnxConstants.lua $", "$Rev: 5418 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 local const = Enchantrix.Constants
 

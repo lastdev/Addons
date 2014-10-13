@@ -205,7 +205,11 @@ function WeakAuras.DecompressDisplay(data)
     WeakAuras.tableAdd(data, WeakAuras.DisplayStub(data.regionType));
 end
 
+<<<<<<< HEAD
 local function filterFunc(_, event, msg, player, l, cs, t, flag, channelId, ...)
+=======
+local function filterFunc(_, event, msg, dirtyplayer, l, cs, t, flag, channelId, ...)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     if flag == "GM" or flag == "DEV" or (event == "CHAT_MSG_CHANNEL" and type(channelId) == "number" and channelId > 0) then
         return
     end
@@ -226,14 +230,23 @@ local function filterFunc(_, event, msg, player, l, cs, t, flag, channelId, ...)
         end
     until(done)
     if newMsg ~= "" then
+<<<<<<< HEAD
         local trimmedPlayer = Ambiguate(player, "none")
         if event == "CHAT_MSG_WHISPER" and not UnitInRaid(trimmedPlayer) and not UnitInParty(trimmedPlayer) then -- XXX Need a guild check
+=======
+        player = Ambiguate(dirtyplayer, "none")
+        if event == "CHAT_MSG_WHISPER" and not UnitIsInMyGuild(player) and not UnitInRaid(player) and not UnitInParty(player) then
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
             local _, num = BNGetNumFriends()
             for i=1, num do
                 local toon = BNGetNumFriendToons(i)
                 for j=1, toon do
                     local _, rName, rGame = BNGetFriendToonInfo(i, j)
+<<<<<<< HEAD
                     if rName == trimmedPlayer and rGame == "WoW" then
+=======
+                    if rName == player and rGame == "WoW" then
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                         return false, newMsg, player, l, cs, t, flag, channelId, ...; -- Player is a real id friend, allow it
                     end
                 end
@@ -812,9 +825,15 @@ local function scamCheck(data)
     if type(data) == "table" then
         for k,v in pairs(data) do
             scamCheck(v)
+<<<<<<< HEAD
         end        
     elseif type(data) == "string" and (string.find(data, "SendMail") or string.find(data, "SetTradeMoney")) then
         print("|cffffff00The Aura you are importing contains code to send mail and/or trade gold to other players!|r")
+=======
+        end
+    elseif type(data) == "string" and (string.find(data, "SendMail") or string.find(data, "SetTradeMoney")) then
+        print("|cffffff00The Aura you are importing contains code to send or trade gold to other players, please watch out!|r")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     end
 end
 
@@ -832,6 +851,7 @@ function WeakAuras.ImportString(str)
             else
                 local data = received.d;
                 WeakAuras.ShowDisplayTooltip(data, received.c, received.i, received.a, "unknown", true)
+<<<<<<< HEAD
                 -- Scam alert
                 local found = nil
                 for _, v in ipairs(data.additional_triggers) do
@@ -843,6 +863,9 @@ function WeakAuras.ImportString(str)
                 if found or data.trigger.type == "custom" then
                     print("|cffff0000The Aura you are importing contains custom code, make sure you can trust the person who sent it!|r")
                 end
+=======
+                --Scam protection
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                 scamCheck(data)
             end
         end
@@ -857,7 +880,10 @@ end
 local safeSenders = {}
 function WeakAuras.RequestDisplay(characterName, displayName)
     safeSenders[characterName] = true
+<<<<<<< HEAD
     safeSenders[Ambiguate(characterName, "none")] = true
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     local transmit = {
         m = "dR",
         d = displayName
@@ -885,11 +911,19 @@ function WeakAuras.TransmitDisplay(id, characterName)
     end
 end
 
+<<<<<<< HEAD
 WeakAuras:RegisterComm("WeakAurasProg", function(prefix, message, distribution, sender)
     if tooltipLoading and ItemRefTooltip:IsVisible() and safeSenders[sender] then
         local done, total, displayName = strsplit(" ", message, 3)
         local done = tonumber(done)
         local total = tonumber(total)
+=======
+WeakAuras:RegisterComm("WeakAurasProg", function(prefix, message, ditribution, sender)
+    if tooltipLoading and ItemRefTooltip:IsVisible() and safeSenders[sender] then
+        local stats = WeakAuras.split(message);
+        local done = tonumber(stats[1]);
+        local total = tonumber(stats[2]);
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
         if(done and total and total >= done) then
             local red = min(255, (1 - done / total) * 511)
             local green = min(255, (done / total) * 511)

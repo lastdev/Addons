@@ -5,11 +5,14 @@ local g = BittensGlobalTables
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 local m = a.CatSimulator
 local u = g.GetTable("BittensUtilities")
+<<<<<<< HEAD
 
 u.Schedule(
     1,
     print,
     "|cFF80A0FFThe future of Bitten's SpellFlash: Druid is in question.  I no longer wish to maintain this addon, starting with patch 6.0.  If you are interested in taking it over, keeping up with optimal rotations, and you have programming skills, please leave a comment or PM on Curse.|r")
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 local GetComboPoints = GetComboPoints
 local GetCritChance = GetCritChance
@@ -316,22 +319,37 @@ local castingRipCP = 1
 local bleeds = { }
 local damageCalcs = {
 	Rip = function(physMod, bleedMod, cp)
+<<<<<<< HEAD
 		-- TODO this isn't exact, but it's close
 		return (113 + cp * (320 + 0.05993 * UnitAttackPower("player")))
+=======
+		return (113 + cp * (320 + 0.0484 * UnitAttackPower("player")))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			* bleedMod
 			* physMod
 	end,
 	Rake = function(physMod, bleedMod)
 		return (99 + .3 * UnitAttackPower("player")) * bleedMod * physMod
 	end,
+<<<<<<< HEAD
 	Mangle = function(physMod)
 		local armor = 24835 * (1 - .04 * c.GetDebuffStack(c.ARMOR_DEBUFFS))
 		local low, high = UnitDamage("player")
 		return (physMod * 78 + 1.25 * (low + high))
+=======
+	Mangle = function()
+		local armor = 24835 * (1 - .04 * c.GetDebuffStack(c.ARMOR_DEBUFFS))
+		local low, high = UnitDamage("player")
+		return (78 + 2.5 * (low + high)) / 2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			* (1 - armor / (armor + 46257.5))
 	end,
 }
 
+<<<<<<< HEAD
+=======
+-- TODO this isn't exact (not sure why), but it's close
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 function a.CalcDamage(name, cp, roar, fury, dream, vigil)
 	local critMultiplier = 2
 	local physMod = 1
@@ -359,7 +377,11 @@ function a.ExistingBleedDamage(name)
 	elseif a[name] == 0 then
 		return 0
 	else
+<<<<<<< HEAD
 		return u.GetOrMakeTable(bleeds, name)[UnitGUID(s.UnitSelection())] or 0
+=======
+		return u.GetOrMakeTable(bleeds, name)[UnitGUID(s.UnitSelection())]
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	end
 end
 
@@ -560,7 +582,39 @@ a.Rotations.Feral = {
 				"Bear Form for Feral AoE",
 				"Thrash(Cat Form) for AoE",
 				"Swipe(Cat Form) for Feral")
+		elseif c.GetOption("FeralBeta") then
+			c.DelayPriorityFlash(
+				"Ravage under Stealth",
+				"Healing Touch for Feral Beta",
+				"Ferocious Bite on Last Tick Beta",
+				"Healing Touch for Dream Beta",
+				"Savage Roar at 0",
+				"Incarnation: King of the Jungle Beta",
+				"Tiger's Fury Beta",
+				"Nature's Vigil Beta",
+				"Berserk",
+				"Thrash(Cat Form) under Omen",
+				"Savage Roar at 3 in Execute",
+				"Rip Overwrite",
+				"Ferocious Bite in Execute Pooling",
+				"Ferocious Bite in Execute",
+				"Rip unless Fury Soon",
+				"Savage Roar at 12",
+				"Rake for Re-Origination",
+				"Rake Overwrite",
+				"Thrash(Cat Form) Beta",
+				"Thrash(Cat Form) Delay",
+				"Thrash(Cat Form) Re-Origination",
+				"Thrash(Cat Form) Re-Origination Delay",
+				"Ferocious Bite Pooling",
+				"Ferocious Bite Beta",
+				"Filler Delay",
+				"Ravage Filler",
+				"Rake Filler",
+				"Shred Filler",
+				"Mangle(Cat Form) Filler")
 		else
+<<<<<<< HEAD
 			c.DelayPriorityFlash(
 				"Ravage under Stealth",
 				"Healing Touch for Feral Beta",
@@ -592,6 +646,29 @@ a.Rotations.Feral = {
 				"Rake Filler",
 				"Shred Filler",
 				"Mangle(Cat Form) Filler")
+=======
+			c.FlashAll(
+				"Tiger's Fury", 
+				"Berserk", 
+				"Nature's Vigil",
+				"Healing Touch for Feral Heal",
+				"Incarnation: King of the Jungle")
+			c.PriorityFlash(
+				"Healing Touch for Dream",
+				"Savage Roar",
+				"Ferocious Bite on Last Tick",
+				"Rip",
+				"Savage Roar Early",
+				"Ferocious Bite",
+				"Rake",
+				"Thrash(Cat Form)",
+				"Healing Touch for Vigil",
+				"Rip Delay",
+				"Bear Form for Feral",
+				"Ravage",
+				"Shred",
+				"Mangle(Cat Form)")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		end
 	end,
 	

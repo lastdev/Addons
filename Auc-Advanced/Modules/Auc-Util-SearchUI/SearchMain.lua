@@ -1,7 +1,12 @@
 --[[
 	Auctioneer - Search UI
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
 	Revision: $Id: SearchMain.lua 5452 2014-01-18 19:02:51Z brykrys $
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+	Revision: $Id: SearchMain.lua 5373 2012-10-06 06:23:34Z brykrys $
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	URL: http://auctioneeraddon.com/
 
 	This Addon provides a Search tab on the AH interface, which allows
@@ -2185,4 +2190,8 @@ end
 private.updater = CreateFrame("Frame", nil, UIParent)
 private.updater:SetScript("OnUpdate", private.OnUpdate)
 
+<<<<<<< HEAD
 AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5452 $")
+=======
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5373 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

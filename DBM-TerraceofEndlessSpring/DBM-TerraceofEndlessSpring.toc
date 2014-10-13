@@ -16,7 +16,11 @@
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: MOP
 ## X-DBM-Mod-Has-LFR : 1
+<<<<<<< HEAD
 ## X-DBM-Mod-Sort: 203
+=======
+## X-DBM-Mod-Sort: 3
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ## X-DBM-Mod-MapID: 996
 localization.en.lua
 localization.kr.lua

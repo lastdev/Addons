@@ -1,7 +1,12 @@
 ﻿--[[
 	Auctioneer
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
 	Revision: $Id: CoreSettings.lua 5461 2014-06-19 10:37:18Z brykrys $
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+	Revision: $Id: CoreSettings.lua 5378 2012-11-12 19:49:23Z brykrys $
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	URL: http://auctioneeraddon.com/
 
 	Settings GUI
@@ -756,4 +761,8 @@ function private.CheckObsolete()
 	end
 end
 
+<<<<<<< HEAD
 AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CoreSettings.lua $", "$Rev: 5461 $")
+=======
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/CoreSettings.lua $", "$Rev: 5378 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

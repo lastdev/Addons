@@ -13,6 +13,7 @@ L.OTabBosses	= "首領模組"
 L.OTabOptions	= GAMEOPTIONS_MENU
 
 L.TabCategory_Options		= "綜合設置"
+<<<<<<< HEAD
 L.TabCategory_MOP	 		= EXPANSION_NAME4
 L.TabCategory_CATA	 		= EXPANSION_NAME3
 L.TabCategory_WOTLK 		= EXPANSION_NAME2
@@ -20,6 +21,15 @@ L.TabCategory_BC 			= EXPANSION_NAME1
 L.TabCategory_CLASSIC		= EXPANSION_NAME0
 L.TabCategory_PVP 			= PVP
 L.TabCategory_OTHER			= "其它首領模組"
+=======
+L.TabCategory_MOP	 		= "潘達利亞之謎"
+L.TabCategory_CATA	 		= "浩劫與重生"
+L.TabCategory_WOTLK 		= "巫妖王之怒"
+L.TabCategory_BC 			= "燃燒的遠征"
+L.TabCategory_CLASSIC		= "經典魔獸世界"
+L.TabCategory_PVP 			= "PvP"
+L.TabCategory_OTHER			= "其它"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 L.BossModLoaded				= "%s狀態"
 L.BossModLoad_now 			= [[該模組尚未載入。
@@ -56,6 +66,14 @@ L.General 					= "DBM綜合設置"
 L.EnableDBM 				= "啟用DBM"
 L.EnableMiniMapIcon			= "顯示小地圖圖示"
 L.UseMasterVolume			= "使用主要聲音頻道來播放DBM音效警報"
+<<<<<<< HEAD
+=======
+L.LFDEnhance				= "使用主要聲音頻道播放準備確認音效給腳色確認和戰場/隨機團隊進場"
+L.WorldBossAlert			= "當你的朋友或工會成員在你的伺服器上與世界首領開戰時顯示警告訊息"
+L.AutologBosses				= "自動使用暴雪戰鬥日誌記錄首領戰鬥"
+L.AdvancedAutologBosses		= "自動使用Transcriptor紀錄首領戰鬥"
+L.LogOnlyRaidBosses			= "只記錄團隊首領的戰鬥(除了隨機團隊/隨機隊伍/隨機事件)"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L.Latency_Text				= "設定最高延遲同步門檻:%d"
 -- Tab: General Timer Options
 L.TimerGeneral 				= "綜合DBM計時器選項"
@@ -188,6 +206,7 @@ L.SpamBlockNoInfoFrame		= "不顯示訊息框架"
 L.SpamBlockNoHealthFrame	= "不顯示血量框架"
 
 -- Tab: Spam Filter
+<<<<<<< HEAD
 L.Area_SpamFilter			= "垃圾過濾選項"
 L.StripServerName			= "隱藏警告和計時器的玩家伺服器名稱"
 L.SpamBlockBossWhispers		= "當戰鬥時過濾 &lt;DBM&gt; 密語警告"
@@ -245,6 +264,42 @@ L.PizzaTimer_Mins 			= "分"
 L.PizzaTimer_Secs 			= "秒"
 L.PizzaTimer_ButtonStart 	= "開始計時"
 L.PizzaTimer_BroadCast		= "向團隊廣播"
+=======
+L.Panel_SpamFilter				= "整體及垃圾過濾"
+L.Area_SpamFilter				= "垃圾過濾選項"
+L.StripServerName				= "隱藏警告和計時器的玩家伺服器名稱"
+L.SpamBlockBossWhispers			= "當戰鬥時過濾 &lt;DBM&gt; 密語警告"
+L.BlockVersionUpdateNotice		= "禁用彈出的更新通知"
+L.ShowBBOnCombatStart			= "戰鬥開始時顯示BigBrother(檢查團隊 增益/精煉UI)"
+L.BigBrotherAnnounceToRaid		= "通告BigBrother的結果給團隊"
+
+L.Area_SpamFilter_Outgoing		= "整體過濾選項"
+L.SpamBlockNoShowAnnounce		= "不顯示提示或播放警告音效"
+L.DontShowFarWarnings			= "不發送距離過遠的事件提示/計時器"
+L.SpamBlockNoSendWhisper		= "不發送密語給其他玩家"
+L.SpamBlockNoSetIcon			= "不設置標記在目標上"
+L.SpamBlockNoRangeFrame			= "不顯示距離框架"
+L.SpamBlockNoInfoFrame			= "不顯示訊息框架"
+L.SpamBlockNoHealthFrame		= "不顯示血量框架"
+
+L.Area_PullTimer				= "開怪計時器過濾選項"
+L.DontShowPTNoID				= "阻擋與你不同區域ID送出的開怪倒數計時條"
+L.DontShowPT					= "不要顯示開怪倒數計時條"
+L.DontShowPTText				= "不要顯示開怪提示文字"
+L.DontPlayPTCountdown			= "不要使用開怪/開戰計時器倒數音效"
+L.DontShowPTCountdownText		= "不要顯示開怪/開戰計時器倒數文字"
+L.PT_Threshold					= "不要顯示高於%d秒以上的開怪/開戰倒數計時器文字"
+
+L.Panel_HideBlizzard			= "隱藏遊戲內建功能"
+L.Area_HideBlizzard				= "隱藏遊戲內建功能選項"
+L.HideBossEmoteFrame			= "在首領戰鬥時隱藏團隊首領表情框架"
+L.HideWatchFrame				= "在首領戰鬥時隱藏注視(物件)框架"
+L.HideTooltips					= "首領戰鬥時隱藏滑鼠提示"
+L.SpamBlockSayYell				= "從聊天頻道隱藏聊天泡泡提示"
+L.DisableCinematics				= "禁用遊戲中的過場動畫"
+L.AfterFirst					= "在每次動畫播放一次之後"
+L.Always						= "總是"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 -- Misc
 L.FontHeight	= 18

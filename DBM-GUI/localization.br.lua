@@ -168,6 +168,7 @@ L.HP_ShowDemo				= "Exibir quadro de vida"
 L.BarWidth				= "Largura da barra: %d"
 
 -- Tab: Spam Filter
+<<<<<<< HEAD
 L.Panel_SpamFilter			= "Filtros Global e de Spam"
 L.Area_SpamFilter			= "Opções do filtro Global"
 L.StripServerName			= "Tira com nome do reino em avisos e temporizadores"
@@ -175,6 +176,15 @@ L.SpamBlockBossWhispers			= "Filtra &lt;DBM&gt; avisos de sussurro enquanto esti
 L.BlockVersionUpdateNotice		= "Desabilitar popup de notificação de atualização (Não recomendado)"
 L.ShowBBOnCombatStart			= "Fazer checagem de Buff com Big Brother no início do combate"
 L.BigBrotherAnnounceToRaid		= "Anunciar resultados do Big Brother para a raide"
+=======
+L.Panel_SpamFilter				= "Filtros Global e de Spam"
+L.Area_SpamFilter				= "Opções do filtro Global"
+L.HideBossEmoteFrame			= "Esconder quadro de emoção de chefe de raid" -- not so sure about that translation
+L.SpamBlockBossWhispers			= "Filtrar sussuros de aviso &lt;DBM&gt; durante a luta."
+L.BlockVersionUpdateNotice		= "Desabilitar pop-up de notificação de atualização."
+L.ShowBBOnCombatStart			= "Realizar checagem de bônus no início do combate."
+L.BigBrotherAnnounceToRaid		= "Anunciar resultados da checagem para a raide"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 L.Area_SpamFilter_Outgoing		= "Opções de Filtro Global"
 L.SpamBlockNoShowAnnounce		= "Não exibir anúncios ou tocar sons de aviso"

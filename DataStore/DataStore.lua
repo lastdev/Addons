@@ -13,9 +13,14 @@ Other services offered by DataStore:
 		Note: a "main" is the currently connected player, "alts" are all his other characters in the same guild. The notions of "main" & "alts" are thus only valid for live data, nothing else.
 --]]
 
+<<<<<<< HEAD
 local addonName, addon = ...
 DataStore = LibStub("AceAddon-3.0"):NewAddon(addon, addonName, "AceConsole-3.0", "AceEvent-3.0", "AceComm-3.0", "AceSerializer-3.0")
 addon.Version = "v" .. GetAddOnMetadata(addonName, "Version")
+=======
+local addon = DataStore
+addon.Version = "v5.4.001"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 local THIS_ACCOUNT = "Default"
 local THIS_REALM = GetRealmName()

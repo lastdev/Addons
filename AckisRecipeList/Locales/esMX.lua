@@ -6,7 +6,11 @@ esMX localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
+<<<<<<< HEAD
 Project version: 3.0.5
+=======
+Project version: 2.6.2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ************************************************************************
 Currently maintained by:
 http://www.wowace.com/addons/arl/localization/translators/

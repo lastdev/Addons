@@ -4,8 +4,13 @@
 	http://localizer.norganna.org/
 
 	AddOn: Informant
+<<<<<<< HEAD
 	Revision: $Id: InfStrings.lua 5456 2014-06-05 11:59:54Z brykrys $
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Revision: $Id: InfStrings.lua 5409 2013-05-24 15:54:42Z localizerautocommit $
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 	License:
 		This program is free software; you can redistribute it and/or

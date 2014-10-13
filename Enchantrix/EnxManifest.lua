@@ -1,6 +1,10 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: EnxManifest.lua 5403 2013-04-03 16:50:32Z brykrys $
 	URL: http://enchantrix.org/
 
@@ -101,4 +105,8 @@ function manifest.Validate()
 	return true
 end
 
+<<<<<<< HEAD
 Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Enchantrix/EnxManifest.lua $", "$Rev: 5403 $")
+=======
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Enchantrix/EnxManifest.lua $", "$Rev: 5403 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

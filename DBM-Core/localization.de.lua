@@ -42,8 +42,13 @@ DBM_CORE_COMBAT_STATE_RECOVERED		= "Kampf gegen %s hat vor %s begonnen, Neukalib
 DBM_CORE_TRANSCRIPTOR_LOG_START		= "\"Transcriptor\"-Aufzeichnung gestartet."
 DBM_CORE_TRANSCRIPTOR_LOG_END		= "\"Transcriptor\"-Aufzeichnung beendet."
 
+<<<<<<< HEAD
 DBM_CORE_WORLDBOSS_ENGAGED			= "Kampf gegen %s wurde möglicherweise auf deinem Realm bei %s Prozent Leben begonnen. (gesendet von %s)"
 DBM_CORE_WORLDBOSS_DEFEATED			= "%s wurde möglichweise auf deinem Realm besiegt. (gesendet von %s)"
+=======
+DBM_CORE_WORLDBOSS_ENGAGED			= "Kampf gegen %s wurde auf deinem Realm bei %s Prozent Leben begonnen."
+DBM_CORE_WORLDBOSS_DEFEATED			= "%s wurde auf deinem Realm besiegt."
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 DBM_CORE_TIMER_FORMAT_SECS			= "%d |4Sekunde:Sekunden;"
 DBM_CORE_TIMER_FORMAT_MINS			= "%d |4Minute:Minuten;"
@@ -97,7 +102,10 @@ DBM_CORE_UPDATEREMINDER_FOOTER			= "Drücke " .. (IsMacClient() and "Cmd-C" or "
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "Drücke " .. (IsMacClient() and "Cmd-C" or "Strg+C")  ..  " um den Link in die Zwischenablage zu kopieren."
 DBM_CORE_UPDATEREMINDER_DISABLE			= "WARNUNG: Da dein Deadly Boss Mods extrem veraltet ist (%d Revisionen), hat es sich bis zu einer Aktualisierung deaktiviert. Derart alter und inkompatibler Code kann zu einem schlechten Spielerlebnis bei dir oder deinen Schlachtzugsmitgliedern führen."
 DBM_CORE_UPDATEREMINDER_HOTFIX			= "Deine Version von DBM wird für diesen Bosskampf falsche Timer und Warnungen anzeigen. Dies wurde in einer neueren Version von DBM korrigiert (oder in einer Alphaversion, falls eine neuere Releaseversion nicht verfügbar ist)."
+<<<<<<< HEAD
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "WARNUNG: Da dein Deadly Boss Mods veraltet und deshalb leider für diesen Major Patch des Spiels nicht mehr geeignet ist, hat es sich bis zu einer Aktualisierung deaktiviert. Alter und inkompatibler Code kann zu einem schlechten Spielerlebnis bei dir oder deinen Schlachtzugsmitgliedern führen. Bitte lade dir baldmöglichst eine neue Version von deadlybossmods.com oder Curse herunter."
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 DBM_CORE_MOVABLE_BAR				= "Zieh mich!"
 
@@ -133,9 +141,14 @@ DBM_CORE_SLASHCMD_HELP				= {
 	"/dbm version: Prüft die Version im gesamten Schlachtzug (Alias: ver).",
 --	"/dbm version2: Prüft die Version im gesamten Schlachtzug und flüstert Mitglieder mit veralteten Versionen an (Alias: ver2).",
 	"/dbm unlock: Zeigt einen bewegbaren Timer an (alias: move).",
+<<<<<<< HEAD
 	"/dbm timer/ctimer/ltimer/cltimer <x> <text>: Startet einen <x> Sekunden langen DBM-Timer mit dem Namen <text>. Unter http://tinyurl.com/kwsfl59 gibt es Erläuterungen zu jedem Timertyp.",
 	"/dbm broadcast timer/ctimer/ltimer/cltimer <x> <text>: Schickt einen <x> Sekunden langen DBM-Timer mit dem Namen <text> an den Schlachtzug (nur als Leiter/Assistent).",
 	"/dbm timer endloop: Stoppt alle ltimer- und cltimer-Schleifen.",
+=======
+	"/dbm timer <x> <text>: Startet einen <x> Sekunden langen DBM-Timer mit dem Namen <text>.",
+	"/dbm broadcast timer <x> <text>: Schickt einen <x> Sekunden langen DBM-Timer mit dem Namen <text> an den Schlachtzug (nur als Leiter/Assistent).",
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	"/dbm break <min>: Startet einen Pause-Timer für <min> Minuten. Schickt allen Schlachzugsmitgliedern mit DBM einen Pause-Timer (nur als Leiter/Assistent).",
 	"/dbm pull <sec>: Startet einen Pull-Timer für <sec> Sekunden. Schickt allen Schlachzugsmitgliedern mit DBM einen Pull-Timer (nur als Leiter/Assistent).",
 	"/dbm arrow: Zeigt den DBM-Pfeil, siehe /dbm arrow help für Details.",
@@ -207,14 +220,21 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel		= "%s auf >%%s< - jetzt reinigen"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt	= "%s - unterbreche >%%s<!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you			= "%s auf dir"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target		= "%s auf >%%s<"
+<<<<<<< HEAD
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt			= "%s auf >%%s< - jetzt spotten"
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close		= "%s auf >%%s< in deiner Nähe"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move		= "%s - geh weg"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveaway	= "%s - geh weg von anderen"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveto		= "%s - geh zu >%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.run			= "%s - lauf weg"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast		= "%s - stoppe Zauber"
+<<<<<<< HEAD
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect		= "%s auf >%%s< - stoppe Angriffe"
+=======
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect		= "%s - stoppe Angriffe"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.count		= "%s! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack		= "%%d Stapel von %s auf dir"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch		= ">%s< - Ziel wechseln"
@@ -229,7 +249,10 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dispel 		= "Spezialwarnung zum Reinigen/Rauben v
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt	= "Spezialwarnung zum Unterbrechen von $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you 		= "Spezialwarnung, wenn du von $spell:%s betroffen bist"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target 		= "Spezialwarnung, wenn jemand von $spell:%s betroffen ist"
+<<<<<<< HEAD
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.taunt 		= "Spezialwarnung zum Spotten, wenn der andere Tank von $spell:%s betroffen ist"
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close 		= "Spezialwarnung, wenn jemand in deiner Nähe von $spell:%s betroffen ist"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move 		= "Spezialwarnung zum Herausgehen aus $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveaway	= "Spezialwarnung zum Weggehen von anderen bei $spell:%s"
@@ -269,8 +292,11 @@ DBM_CORE_AUTO_TIMER_OPTIONS.achievement	= "Zeit für %s anzeigen"
 
 DBM_CORE_AUTO_ICONS_OPTION_TEXT			= "Setze Zeichen auf Ziele von $spell:%s"
 DBM_CORE_AUTO_ICONS_OPTION_TEXT2		= "Setze Zeichen auf $spell:%s"
+<<<<<<< HEAD
 DBM_CORE_AUTO_ARROW_OPTION_TEXT			= "Zeige DBM-Pfeil zum Hingehen zum von $spell:%s betroffenen Ziel"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT2		= "Zeige DBM-Pfeil zum Weggehen vom von $spell:%s betroffenen Ziel"
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 DBM_CORE_AUTO_SOUND_OPTION_TEXT			= "Spiele \"Lauf weg!\"-Sound für $spell:%s"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Spiele akustischen Countdown bis $spell:%s gewirkt wird"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2	= "Spiele akustischen Countdown bis $spell:%s schwindet"

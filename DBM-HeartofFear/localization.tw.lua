@@ -31,6 +31,13 @@ L:SetMiscLocalization({
 ------------
 L= DBM:GetModLocalization(744)
 
+<<<<<<< HEAD
+=======
+L:SetOptionLocalization({
+	UnseenStrikeArrow	= "當某人中了$spell:122949時顯示DBM箭頭"
+})
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 -------------------------------
 -- Garalon --
 -------------------------------

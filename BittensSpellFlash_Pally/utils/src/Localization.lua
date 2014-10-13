@@ -13,7 +13,15 @@ if locale == "ptBR" then -- Brazilian Portuguese
 elseif locale == "frFR" then -- French
 --@localization(locale="frFR", format="lua_additive_table")@
 elseif locale == "deDE" then -- German
+<<<<<<< HEAD
 --@localization(locale="deDE", format="lua_additive_table")@
+=======
+L["B"] = "Einbuchstabiges Kürzel für (englisch) \"Billion\"" -- Needs review
+L["K"] = "Einbuchstabiges Kürzel für \"Tausend\"" -- Needs review
+L["M"] = "Einbuchstabiges Kürzel für \"Million\"" -- Needs review
+L["T"] = "Einbuchstabiges Kürzel für (englisch) \"Trillion\"" -- Needs review
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 elseif locale == "itIT" then -- Italian
 --@localization(locale="itIT", format="lua_additive_table")@
 elseif locale == "koKR" then -- Korean
@@ -23,9 +31,25 @@ elseif locale == "esMX" then -- Latin American Spanish
 elseif locale == "ruRU" then -- Russian
 --@localization(locale="ruRU", format="lua_additive_table")@
 elseif locale == "zhCN" then -- Simplified Chinese
+<<<<<<< HEAD
 --@localization(locale="zhCN", format="lua_additive_table")@
+=======
+-- L["B"] = ""
+-- L["K"] = ""
+L["M"] = "百万" -- Needs review
+-- L["T"] = ""
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 elseif locale == "esES" then -- Spanish
 --@localization(locale="esES", format="lua_additive_table")@
 elseif locale == "zhTW" then -- Traditional Chinese
+<<<<<<< HEAD
 --@localization(locale="zhTW", format="lua_additive_table")@
+=======
+-- L["B"] = ""
+-- L["K"] = ""
+L["M"] = "百萬" -- Needs review
+-- L["T"] = ""
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end

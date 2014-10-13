@@ -1024,7 +1024,11 @@ function HealBot_Lang_enALL()
     HEALBOT_ABOUT_CATH                     = "Category:"
     HEALBOT_ABOUT_CATD                     = "Unit Frames, Buffs and Debuffs, Combat:Healer"
     HEALBOT_ABOUT_CREDITH                  = "Credits:"
+<<<<<<< HEAD
     HEALBOT_ABOUT_CREDITD                  = "Acirac, Kubik, Von, Aldetal, Brezza, Moonlight Han Xing, CTShammy, Hermis, Ariá, Snaomi"  -- Anyone taking on translations (if required), feel free to add yourself here.
+=======
+    HEALBOT_ABOUT_CREDITD                  = "Acirac, Kubik, Von, Aldetal, Brezza, Moonlight Han Xing, CTShammy, Hermis, Ariá"  -- Anyone taking on translations (if required), feel free to add yourself here.
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     HEALBOT_ABOUT_LOCALH                   = "Localizations:"
     HEALBOT_ABOUT_LOCALD                   = "deDE, enUK, esES, frFR, huHU, itIT, koKR, poBR, ruRU, zhCN, zhTW"
     HEALBOT_ABOUT_FAQH                     = "Frequently Asked Questions"
@@ -1169,6 +1173,9 @@ function HealBot_Lang_enALL()
                                       [17]  = "Actually Healbot is casting exacly as the setup. \n\n" .. HEALBOT_ABOUT_FAQ_SPELLS_ANSWER01,
                                       [18]  = HEALBOT_ABOUT_FAQ_SPELLS_ANSWER01,
                                   }
+								  
+	HEALBOT_ABOUT_FAQ_ANSWERS_BUTTON = { [1] = "Not used - Buttons!",
+	                                   }
 
     HEALBOT_OPTIONS_SKINAUTHOR              = "Skin Author"
     HEALBOT_OPTIONS_AVOIDBLUECURSOR         = "Avoid\nBlue Cursor"
@@ -1263,6 +1270,7 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_PROFILE_CLASS           = "Class"
     HEALBOT_OPTIONS_INCOMBATALERTLEVEL      = "Alert Level - In Combat";
     HEALBOT_OPTIONS_OUTCOMBATALERTLEVEL     = "Alert Level - Out of Combat";
+<<<<<<< HEAD
     HEALBOT_OPTION_NUMENEMYS                = "Number of Enemies"
     HEALBOT_WORD_AUTO                       = "Auto"
 	HEALBOT_OPTIONS_ENABLEAUTOCOMBAT        = "Enable HealBot autoCombat"
@@ -1277,6 +1285,11 @@ function HealBot_Lang_enALL()
     HEALBOT_LDB_SHIFTLEFT_TOOLTIP           = "|cffffff00 Shift-Left Click:|r Cycle through HealBot Skins";
     HEALBOT_LDB_RIGHT_TOOLTIP               = "|cffffff00 Right Click:|r Reset HealBot";
     HEALBOT_LDB_SHIFTRIGHT_TOOLTIP          = "|cffffff00 Shift-Right Click:|r Toggle HealBot On/Off";
+=======
+    HEALBOT_OPTION_NUMENEMYS                = "Number of Enemys"
+    HEALBOT_WORD_AUTO                       = "Auto"
+	HEALBOT_OPTIONS_ENABLEAUTOCOMBAT        = "Enable HealBot autoCombat"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end
 
 if (GetLocale() == "enUK") then

@@ -41,6 +41,7 @@ L["(Only for combat points)"] = "(Только для комбопойнтов)"
 L["X Offset"] = "Смещение по Х"
 L["Y Offset"] = "Смещение по Y"
 L["Use these to calibrate point position on resolutions with aspect ratio other than 16:9"] = "Используется, чтобы откалибровать позицию на разрешениях отличиных от 16:9"
+<<<<<<< HEAD
 L["Vertical"] = "Вертикальное положение"
 L["Second Point Bar Preset"] = "Профиль второго ряда"
 L["Disable Progress Bar"] = "Отключить прогрессбар"
@@ -50,3 +51,6 @@ L["Disable Progress Bar"] = "Отключить прогрессбар"
 -- L"(Active only for certain specs)",
 -- L"Play",
 -- L"Custom Sound",
+=======
+L["Vertical"] = "Вертикально"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

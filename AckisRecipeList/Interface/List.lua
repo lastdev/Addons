@@ -270,6 +270,7 @@ function private.InitializeListFrame()
 			local entry_button = entry.button
 
 			ListFrame.selected_entry = nil
+<<<<<<< HEAD
 
 			if old_selected and old_selected.button then
 				old_selected.button.selected_texture:Hide()
@@ -277,6 +278,15 @@ function private.InitializeListFrame()
 			end
 			Bar_OnEnter(entry_button)
 
+=======
+
+			if old_selected and old_selected.button then
+				old_selected.button.selected_texture:Hide()
+				Bar_OnLeave(old_selected.button)
+			end
+			Bar_OnEnter(entry_button)
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			if old_selected ~= entry then
 				entry_button.selected_texture:Show()
 				ListFrame.selected_entry = entry
@@ -286,7 +296,13 @@ function private.InitializeListFrame()
 				if _G.IsShiftKeyDown() then
 					local entry_acquire_type = entry:AcquireType()
 
+<<<<<<< HEAD
 					addon:AddWaypoint(recipe, entry_acquire_type and entry_acquire_type:ID() or nil, entry:LocationID(), entry:NPCID())
+=======
+					if entry_acquire_type then
+						addon:AddWaypoint(recipe, entry_acquire_type:ID(), entry:LocationID(), entry:NPCID())
+					end
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 				else
 					local edit_box = _G.ChatEdit_ChooseBoxForSend()
 
@@ -717,11 +733,20 @@ function private.InitializeListFrame()
 				if list_entry.is_expanded then
 					state_button:SetNormalTexture([[Interface\MINIMAP\UI-Minimap-ZoomOutButton-Up]])
 					state_button:SetPushedTexture([[Interface\MINIMAP\UI-Minimap-ZoomOutButton-Down]])
+<<<<<<< HEAD
 				else
 					state_button:SetNormalTexture([[Interface\MINIMAP\UI-Minimap-ZoomInButton-Up]])
 					state_button:SetPushedTexture([[Interface\MINIMAP\UI-Minimap-ZoomInButton-Down]])
 				end
 				state_button:SetHighlightTexture([[Interface\MINIMAP\UI-Minimap-ZoomButton-Highlight]])
+=======
+					state_button:SetHighlightTexture([[Interface\MINIMAP\UI-Minimap-ZoomButton-Highlight]])
+				else
+					state_button:SetNormalTexture([[Interface\MINIMAP\UI-Minimap-ZoomInButton-Up]])
+					state_button:SetPushedTexture([[Interface\MINIMAP\UI-Minimap-ZoomInButton-Down]])
+					state_button:SetHighlightTexture([[Interface\MINIMAP\UI-Minimap-ZoomButton-Highlight]])
+				end
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 				state_button.entry_index = entry_index
 				state_button:Enable()
 			else

@@ -1,11 +1,19 @@
 local mod	= DBM:NewMod(859, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 11317 $"):sub(12, -3))
 mod:SetCreatureID(71954)
 mod:SetReCombatTime(20)
 mod:SetZone()
 mod:SetMinSyncRevision(11317)
+=======
+mod:SetRevision(("$Revision: 10978 $"):sub(12, -3))
+mod:SetCreatureID(71954)
+mod:SetReCombatTime(20)
+mod:SetZone()
+mod:SetMinSyncRevision(10466)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 mod:RegisterCombat("combat_yell", L.Pull)
 mod:RegisterKill("yell", L.Victory, L.VictoryDem)
@@ -23,8 +31,13 @@ local warnMassiveQuake			= mod:NewSpellAnnounce(144611, 3)
 local warnCharge				= mod:NewSpellAnnounce(144609, 4)
 
 local specWarnHeadbutt			= mod:NewSpecialWarningSpell(144610, mod:IsTank())
+<<<<<<< HEAD
 local specWarnMassiveQuake		= mod:NewSpecialWarningSpell(144611, nil, nil, nil, 2)
 local specWarnCharge			= mod:NewSpecialWarningRun(144609, mod:IsMelee())--66 and 33%. Maybe add pre warns
+=======
+local specWarnMassiveQuake		= mod:NewSpecialWarningSpell(144611, mod:IsHealer())
+local specWarnCharge			= mod:NewSpecialWarningSpell(144609, nil, nil, nil, 2)--66 and 33%. Maybe add pre warns
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 local timerHeadbuttCD			= mod:NewCDTimer(47, 144610, nil, mod:IsTank())
 local timerMassiveQuake			= mod:NewBuffActiveTimer(13, 144611)

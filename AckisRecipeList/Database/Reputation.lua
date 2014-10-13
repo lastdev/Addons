@@ -2,10 +2,17 @@
 ************************************************************************
 Reputation.lua
 ************************************************************************
+<<<<<<< HEAD
 File date: 2014-05-26T04:40:47Z
 File hash: 92e273e
 Project hash: 5b35dab
 Project version: 3.0.5
+=======
+File date: 2014-02-14T05:23:40Z
+File hash: 04922c6
+Project hash: fbca907
+Project version: 2.6.2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -32,6 +39,7 @@ function addon:InitReputation()
 		private.AcquireTypes.Reputation:AddEntity(rep_id, _G.GetFactionInfoByID(rep_id))
 	end
 
+<<<<<<< HEAD
 	AddReputation(59) -- Thorium Brotherhood
 	AddReputation(270) -- Zandalar Tribe
 	AddReputation(529) -- Argent Dawn
@@ -107,6 +115,71 @@ function addon:InitReputation()
 	AddReputation(1353) -- Tushui Pandaren
 	AddReputation(1358) -- Nat Pagle
 	AddReputation(1359) -- The Black Prince
+=======
+	AddReputation(59)
+	AddReputation(270)
+	AddReputation(529)
+	AddReputation(576)
+	AddReputation(609)
+	AddReputation(932)
+	AddReputation(933)
+	AddReputation(934)
+	AddReputation(935)
+	AddReputation(941)
+	AddReputation(942)
+	AddReputation(946)
+	AddReputation(947)
+	AddReputation(967)
+	AddReputation(970)
+	AddReputation(978)
+	AddReputation(989)
+	AddReputation(990)
+	AddReputation(1011)
+	AddReputation(1012)
+	AddReputation(1037)
+	AddReputation(1050)
+	AddReputation(1052)
+	AddReputation(1064)
+	AddReputation(1067)
+	AddReputation(1068)
+	AddReputation(1073)
+	AddReputation(1077)
+	AddReputation(1085)
+	AddReputation(1090)
+	AddReputation(1091)
+	AddReputation(1098)
+	AddReputation(1104)
+	AddReputation(1105)
+	AddReputation(1106)
+	AddReputation(1119)
+	AddReputation(1156)
+	AddReputation(1216)
+	AddReputation(1228)
+	AddReputation(1242)
+	AddReputation(1269)
+	AddReputation(1270)
+	AddReputation(1271)
+	AddReputation(1272)
+	AddReputation(1273)
+	AddReputation(1275)
+	AddReputation(1276)
+	AddReputation(1277)
+	AddReputation(1278)
+	AddReputation(1279)
+	AddReputation(1280)
+	AddReputation(1281)
+	AddReputation(1282)
+	AddReputation(1283)
+	AddReputation(1302)
+	AddReputation(1337)
+	AddReputation(1341)
+	AddReputation(1345)
+	AddReputation(1351)
+	AddReputation(1352)
+	AddReputation(1353)
+	AddReputation(1358)
+	AddReputation(1359)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 	self.InitReputation = nil
 end

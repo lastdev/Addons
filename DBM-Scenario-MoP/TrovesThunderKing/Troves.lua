@@ -1,7 +1,11 @@
 local mod	= DBM:NewMod("d620", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 11506 $"):sub(12, -3))
+=======
+mod:SetRevision(("$Revision: 10370 $"):sub(12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1135)
@@ -72,8 +76,12 @@ function mod:UNIT_AURA(uId)
 		timerStarted = false
 		timerEvent:Cancel()
 		countdownEvent:Cancel()
+<<<<<<< HEAD
 		self:RegisterShortTermEvents(--First need to wait until after loading screen disabled fires before we end combat, to prevent auto recombat.
 			"LOADING_SCREEN_DISABLED"
 		)
+=======
+		DBM:EndCombat(self)--Consider as a victory if you do a loot run.
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	end
 end

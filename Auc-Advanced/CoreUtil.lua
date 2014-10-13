@@ -1,6 +1,10 @@
 --[[
 	Auctioneer
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: CoreUtil.lua 5423 2013-06-15 18:11:00Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -947,4 +951,8 @@ function lib.CreateMoney(height)
 	return (tooltip:CreateMoney(height))
 end
 
+<<<<<<< HEAD
 lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CoreUtil.lua $", "$Rev: 5423 $")
+=======
+lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/CoreUtil.lua $", "$Rev: 5423 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

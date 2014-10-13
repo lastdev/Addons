@@ -1,7 +1,12 @@
 --[[
 	Auctioneer
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
 	Revision: $Id: CoreScan.lua 5460 2014-06-18 17:51:52Z brykrys $
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+	Revision: $Id: CoreScan.lua 5436 2013-09-19 10:21:48Z brykrys $
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -610,9 +615,17 @@ local function processStats(processors, operation, curItem, oldItem)
 					break
 				end
 			else
+<<<<<<< HEAD
 				local text = ("Error trapped for AuctionFilter in module %s:\n%s"):format(x.Name, result)
 				if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "AuctionFilter Error", text) end
 				geterrorhandler()(text)
+=======
+				if (_G.nLog) then
+					local text = ("Error trapped for AuctionFilter in module %s:\n%s"):format(x.Name, result)
+					if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "AuctionFilter Error", text) end
+					geterrorhandler()(text)
+				end
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			end
 		end
 	elseif curItem and bitand(curItem[Const.FLAG] or 0, Const.FLAG_FILTER) == Const.FLAG_FILTER then
@@ -2970,4 +2983,22 @@ end
 internal.Scan.Logout = lib.Logout
 internal.Scan.AHClosed = lib.AHClosed
 
+<<<<<<< HEAD
 _G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CoreScan.lua $", "$Rev: 5460 $")
+=======
+_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/CoreScan.lua $", "$Rev: 5436 $")
+
+-- Hybrid mode GetAuctionItemInfo for transition from WoW 5.3 to 5.4
+-- Temporary - do not use in new code!
+local _,_,_,toc = GetBuildInfo()
+if toc < 50400 then
+	print("GetAuctionItemInfo for version 5.3")
+	AucAdvanced.GetAuctionItemInfo = GetAuctionItemInfo
+else
+	print("GetAuctionItemInfo for version 5.4")
+	function AucAdvanced.GetAuctionItemInfo(...)
+		local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName, saleStatus, itemId, hasAllInfo =  GetAuctionItemInfo(...)
+		return name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner, saleStatus, itemId, hasAllInfo
+	end
+end
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

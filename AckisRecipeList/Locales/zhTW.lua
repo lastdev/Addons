@@ -6,7 +6,11 @@ zhTW localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
+<<<<<<< HEAD
 Project version: 3.0.5
+=======
+Project version: 2.6.2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ************************************************************************
 Original translated by: iCat, apa1102, zhucc
 Currently maintained by:
@@ -208,6 +212,10 @@ L["Bryan Landers"] = "布萊恩·蘭德森"
 L["Brynna Wilson"] = "布萊娜·威爾森"
 L["Buckslappy"] = "巴史萊皮"
 L["Bufo"] = "布弗"
+<<<<<<< HEAD
+=======
+L["BUGGED"] = "在當前最新版本伺服器此配方存在錯誤！"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Burbik Gearspanner"] = "巴比克·齒輪"
 L["Burko"] = "波爾寇"
 L["Burning Berserker"] = "焰刃狂戰士"
@@ -224,7 +232,11 @@ L["Casandra Downs"] = "卡珊德拉·達恩斯"
 L["Catarina Stanford"] = "卡特麗娜·史丹佛"
 L["Catherine Leland"] = "凱薩琳·利蘭"
 L["Cauldron"] = "大鍋"
+<<<<<<< HEAD
 L["Caz Twosprocket"] = "卡茲·雙鏈"
+=======
+L["Caz Twosprocket"] = "卡茲·雙鏈" -- Needs review
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Celie Steelwing"] = "瑟利·鋼翼"
 L["Chapman"] = "查普曼"
 L["Charles Worth"] = "查理斯·沃斯"
@@ -274,7 +286,11 @@ L["Corporal Bluth"] = "布魯斯下士"
 L["Cowardly Crosby"] = "布琳娜·星光"
 L["CRAFTED_ENGINEERS"] = "配方是由工程學製作。"
 L["Crag Stalker"] = "峭壁潛獵者"
+<<<<<<< HEAD
 L["Craig Nollward"] = "克瑞格·諾瓦德"
+=======
+L["Craig Nollward"] = "克瑞格·諾瓦德" -- Needs review
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Crazed Murkblood Foreman"] = "瘋狂的黑暗之血工頭"
 L["Crazed Murkblood Miner"] = "瘋狂的黑暗之血礦工"
 L["Crazk Sparks"] = "克拉賽·斯巴克斯"
@@ -448,7 +464,11 @@ L["Ethereal Priest"] = "伊斯利牧師"
 L["Ethereum Jailor"] = "以太皇族獄卒"
 L["Ethereum Nullifier"] = "以太皇族淨化者"
 L["Eunice Burch"] = "尤奈斯·伯奇"
+<<<<<<< HEAD
 L["Eustace Tanwell"] = "尤斯塔斯·譚威爾"
+=======
+L["Eustace Tanwell"] = "尤斯塔斯·譚威爾" -- Needs review
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Evie Whirlbrew"] = "埃文·維布魯"
 L["EXCLUDECOUNT_DESC"] = "在總配方中包含已排除的配方。"
 L["Exclusion Issues"] = "排除問題"
@@ -458,7 +478,11 @@ L["EXPANSION_DESC_FORMAT"] = "顯示%s的配方"
 L["EXPANSION_FILTER_FORMAT"] = "掃描中包含顯示選擇的%s聲望"
 L["FACTION_DESC_FORMAT"] = "包含配方首先必須由%s玩家獲得。"
 L["Fael Morningsong"] = "菲爾·晨歌"
+<<<<<<< HEAD
 L["Faeyrin Willowmoon"] = "法伊利·柳月"
+=======
+L["Faeyrin Willowmoon"] = "法伊利·柳月" -- Needs review
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Falorn Nightwhisper"] = "法隆·夜語"
 L["Fariel Starsong"] = "法莉爾·星歌"
 L["Farii"] = "法芮"
@@ -493,6 +517,10 @@ L["Firebrand Invoker"] = "火印塑能師"
 L["Firebrand Legionnaire"] = "火印軍團戰士"
 L["Firebrand Pyromancer"] = "火印炎術師"
 L["Firegut Brute"] = "火腹蠻卒"
+<<<<<<< HEAD
+=======
+L["FIRELANDS_RANDOM"] = "火源之界首領隨機掉落。"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Fist Weapon"] = "拳套"
 L["Fizzix Blastbolt"] = "費奇司·爆栓"
 L["Flask"] = "精鍊藥劑"
@@ -601,6 +629,10 @@ L["Gremlock Pilsnor"] = "格雷姆羅克·匹斯諾爾"
 L["Gretta Ganter"] = "格雷塔·甘特"
 L["Grikka"] = "葛利卡"
 L["Grimtak"] = "格瑞姆塔克"
+<<<<<<< HEAD
+=======
+L["Grondal Moonbreeze"] = "格隆達爾·月風"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["GROUP_TOGGLE_FORMAT"] = "點擊選擇或右擊以取消選擇所有%s的過濾器。"
 L["Grumbol Stoutpick"] = "格朗波·固鎬"
 L["Grumnus Steelshaper"] = "格魯努斯·削鋼"
@@ -653,7 +685,11 @@ L["Indu'le Fisherman"] = "因度雷漁夫"
 L["Indu'le Mystic"] = "因度雷秘法師"
 L["Indu'le Warrior"] = "因度雷戰士"
 L["Inessera"] = "伊奈思娜"
+<<<<<<< HEAD
 L["Ingo Woolybush"] = "因格·烏利布希"
+=======
+L["Ingo Woolybush"] = "因格·烏利布希" -- Needs review
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Inkmaster Wei"] = "水墨大師老魏"
 L["Innkeeper Biribi"] = "旅店老闆畢瑞比"
 L["Innkeeper Fizzgrimble"] = "旅店老闆菲茲格瑞博"
@@ -742,7 +778,11 @@ L["K. Lee Smallfry"] = "李小炸"
 L["Knaz Blunderflame"] = "克納茲·槍焰"
 L["Knight Dameron"] = "騎士達美隆"
 L["KNOWN_DESC"] = "掃瞄中包含已知配方。"
+<<<<<<< HEAD
 L["\"Kobold\" Kerik"] = "『礦精』克利克"
+=======
+L["\"Kobold\" Kerik"] = "『礦精』克利克" -- Needs review
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Kol Ironpaw"] = "柯·鐵爪"
 L["Koren"] = "卡爾侖"
 L["Kor'geld"] = "考吉爾德"
@@ -799,7 +839,11 @@ L["Lilyssia Nightbreeze"] = "莉琳希亞·夜風"
 L["LIMITED_SUPPLY"] = "限量出售。"
 L["Linna Bruder"] = "莉娜·布魯德"
 L["Linzy Blackbolt"] = "琳西·黑栓"
+<<<<<<< HEAD
 L["Lissah Spellwick"] = "麗莎亞·史貝爾維克"
+=======
+L["Lissah Spellwick"] = "麗莎亞·史貝爾維克" -- Needs review
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Lizbeth Cromwell"] = "莉茲白·克倫威爾"
 L["Lizna Goldweaver"] = "麗茲娜·金織"
 L["Location"] = "位置"
@@ -842,7 +886,11 @@ L["MAP_ISSUES_DESC"] = "ARL 依照 TomTom 在地圖和小地圖上新增圖示�
 L["MAP_OPTIONS_DESC"] = "允許你變更ARL 整合到世界地圖以及小地圖。"
 L["Margaux Parchley"] = "瑪苟·帕切里"
 L["Maria Lumere"] = "瑪麗亞·盧米爾"
+<<<<<<< HEAD
 L["Marie Holdston"] = "瑪蕾·霍斯頓"
+=======
+L["Marie Holdston"] = "瑪蕾·霍斯頓" -- Needs review
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Mari Stonehand"] = "瑪利·石手"
 L["Marith Lazuria"] = "瑪莉絲·拉撒莉亞"
 L["Marogg"] = "瑪羅格"
@@ -938,6 +986,10 @@ L["NO_DISPLAY"] = "沒有顯示任何配方。如果你看到這個訊息請提�
 L["NoItemLink"] = "這個物品沒有連結或者不存在於你的暫存檔中。"
 L["Noodles"] = "麵麵"
 L["NORMAL"] = "25人團隊普通模式掉落。"
+<<<<<<< HEAD
+=======
+L["NORTH_DUNG"] = "獲得“北裂境地城大師”成就之后可以學習此配方。"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["NOTSCANNED"] = "你還沒掃瞄這個專業，請打開該專業技能，然後按一下掃瞄按鈕。"
 L["NOT_YET_SCANNED"] = "尚未掃描！"
 L["Nula the Butcher"] = "屠夫奴拉"
@@ -980,7 +1032,11 @@ L["Palehoof's Big Bag of Parts"] = "白蹄的大零件袋"
 L["Pand Stonebinder"] = "潘德·縛石"
 L["Paulsta'ats"] = "波斯塔茲"
 L["Penney Copperpinch"] = "本尼·考伯賓奇"
+<<<<<<< HEAD
 L["Periale"] = "派瑞艾爾"
+=======
+L["Periale"] = "派瑞艾爾" -- Needs review
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Phantom Attendant"] = "魅影侍者"
 L["Phantom Stagehand"] = "魅影舞台助手"
 L["Phantom Valet"] = "魅影管理員"
@@ -1231,7 +1287,11 @@ L["Tansy Puddlefizz"] = "坦斯·泥泡"
 L["Tarban Hearthgrain"] = "塔班·熟麥"
 L["Tarien Silverdew"] = "塔瑞安·銀露"
 L["Tari'qa"] = "塔里查"
+<<<<<<< HEAD
 L["Taryel Firestrike"] = "泰利爾·炎擊"
+=======
+L["Taryel Firestrike"] = "泰利爾·炎擊" -- Needs review
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Taryssa Lazuria"] = "泰莉莎·拉蘇莉亞"
 L["Tatia Brine"] = "塔蒂亞·布瑞恩"
 L["Tatiana"] = "塔蒂安娜"
@@ -1250,7 +1310,11 @@ L["Thamner Pol"] = "薩姆諾·普爾"
 L["Tharynn Bouden"] = "薩瑞恩·博丁"
 L["Thaurissan Firewalker"] = "索瑞森馭火者"
 L["The Chef"] = "大廚"
+<<<<<<< HEAD
 L["Theoden Manners"] = "希優頓·曼那斯"
+=======
+L["Theoden Manners"] = "希優頓·曼那斯" -- Needs review
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Theramore Infiltrator"] = "塞拉摩間諜"
 L["Theramore Marine"] = "塞拉摩水兵"
 L["Theramore Preserver"] = "塞拉摩醫師"

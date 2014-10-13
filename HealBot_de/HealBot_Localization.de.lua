@@ -977,6 +977,7 @@ HEALBOT_PLAYER_OF_REALM                 = "von"
     HEALBOT_ENEMY_NUMBER_BOSSES             = "Anzahl der Bosse"
     HEALBOT_ENEMY_HIDE_OUTOFCOMBAT          = "Verstecke Balken au\195\159erhalb eines Kampfes"
     HEALBOT_ENEMY_EXISTS_SHOW               = "Entering combat only".."\n".."show when exists"
+<<<<<<< HEAD
     HEALBOT_ENEMY_EXISTS_SHOW_PTARGETS      = "Ziele des Spielers"
     HEALBOT_ENEMY_EXISTS_SHOW_BOSSES        = "Boss Balken"
     HEALBOT_OPTIONS_TARGET_ONLY_FRIEND      = "Ziel: Nur Freundliche anzeigen"
@@ -1000,4 +1001,18 @@ HEALBOT_PLAYER_OF_REALM                 = "von"
     HEALBOT_LDB_SHIFTLEFT_TOOLTIP           = "|cffffff00 Shift-Linksklick:|r Durch HealBot Skins gehen";
     HEALBOT_LDB_RIGHT_TOOLTIP               = "|cffffff00 Rechtsklick:|r HealBot zurücksetzen";
     HEALBOT_LDB_SHIFTRIGHT_TOOLTIP          = "|cffffff00 Shift-Rechtsklick:|r HealBot An/Aus toggeln";
+=======
+    HEALBOT_ENEMY_EXISTS_SHOW_PTARGETS      = "Player targets"
+    HEALBOT_ENEMY_EXISTS_SHOW_BOSSES        = "Boss bars"
+    HEALBOT_OPTIONS_TARGET_ONLY_FRIEND      = "Target: Only show Friendly"
+    HEALBOT_OPTIONS_FOCUS_ONLY_FRIEND       = "Focus: Only show Friendly"
+    HEALBOT_OPTIONS_PROFILE                 = "Profile for".."\n".."Spells/Buffs/Cures"
+    HEALBOT_OPTIONS_PROFILE_CHARACTER       = "Character"
+    HEALBOT_OPTIONS_PROFILE_CLASS           = "Class"
+    HEALBOT_OPTIONS_INCOMBATALERTLEVEL      = "Alert Level - In Combat";
+    HEALBOT_OPTIONS_OUTCOMBATALERTLEVEL     = "Alert Level - Out of Combat";
+    HEALBOT_OPTION_NUMENEMYS                = "Number of Enemys"
+    HEALBOT_WORD_AUTO                       = "Auto"
+	HEALBOT_OPTIONS_ENABLEAUTOCOMBAT        = "Enable HealBot autoCombat"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end

@@ -1,6 +1,10 @@
 --[[
 	Auctioneer - Stat-Sales module
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: BeanCount.lua 5376 2012-11-06 15:11:47Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -470,4 +474,8 @@ function private.SetupConfigGui(gui)
 	if tooltipID then private.addTooltipControls(tooltipID) end
 end
 
+<<<<<<< HEAD
 AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Stat-Sales/BeanCount.lua $", "$Rev: 5376 $")
+=======
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Stat-Sales/BeanCount.lua $", "$Rev: 5376 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

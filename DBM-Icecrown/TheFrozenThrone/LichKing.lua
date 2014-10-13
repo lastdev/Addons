@@ -1,7 +1,11 @@
 local mod	= DBM:NewMod("LichKing", "DBM-Icecrown", 5)
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 159 $"):sub(12, -3))
+=======
+mod:SetRevision(("$Revision: 148 $"):sub(12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetCreatureID(36597)
 mod:SetEncounterID(1106)
 mod:DisableEEKillDetection()--EE fires at 10%
@@ -23,8 +27,12 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_SUMMON",
 	"UNIT_HEALTH target focus mouseover",
+<<<<<<< HEAD
 	"UNIT_AURA_UNFILTERED",
 	"UNIT_DIED"
+=======
+	"UNIT_AURA_UNFILTERED"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 )
 
 local isPAL = select(2, UnitClass("player")) == "PALADIN"

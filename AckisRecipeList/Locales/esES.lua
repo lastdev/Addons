@@ -6,7 +6,11 @@ esES localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
+<<<<<<< HEAD
 Project version: 3.0.5
+=======
+Project version: 2.6.2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ************************************************************************
 Original translated by: StiviS
 Currently maintained by:
@@ -208,6 +212,11 @@ L["Bryan Landers"] = true
 L["Brynna Wilson"] = true
 L["Buckslappy"] = "Bofetín"
 L["Bufo"] = "Buffo"
+<<<<<<< HEAD
+=======
+L["BUGGED"] = [=[BUGEADO
+ESTA RECETA ESTA ACTUALMENTE BUGEADA EN LA ULTIMA COMPILACION DE LOS SERVIDORES DE JUEGO]=]
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Burbik Gearspanner"] = "Burbik Trazagranaje"
 L["Burko"] = true
 L["Burning Berserker"] = "Rabioso ardiente"

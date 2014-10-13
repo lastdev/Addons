@@ -1,7 +1,11 @@
 local mod	= DBM:NewMod(865, "DBM-SiegeOfOrgrimmar", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 11267 $"):sub(12, -3))
+=======
+mod:SetRevision(("$Revision: 11124 $"):sub(12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetCreatureID(71504)--71591 Automated Shredder
 mod:SetEncounterID(1601)
 mod:SetZone()
@@ -11,7 +15,11 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 143265 144208",
+<<<<<<< HEAD
 	"SPELL_CAST_SUCCESS 145774 143385",
+=======
+	"SPELL_CAST_SUCCESS 145774",
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	"SPELL_SUMMON 143641",
 	"SPELL_AURA_APPLIED 145365 143385 145444 144210 144236 145269 145580 144466 143856",
 	"SPELL_AURA_APPLIED_DOSE 143385 145444 143856",
@@ -240,6 +248,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		local amount = args.amount or 1
 		warnElectroStaticCharge:Show(args.destName, amount)
 		timerElectroStaticCharge:Start(args.destName)
+<<<<<<< HEAD
+=======
+		timerElectroStaticChargeCD:Start()
+		countdownElectroStatic:Start()
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	elseif spellId == 145444 then
 		local amount = args.amount or 1
 		warnOverload:Show(args.destName, amount)

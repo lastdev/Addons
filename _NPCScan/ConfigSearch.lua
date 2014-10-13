@@ -134,7 +134,11 @@ panel_subtext:SetText(L.SEARCH_DESC)
 
 
 local add_found_checkbox = _G.CreateFrame("CheckButton", "_NPCScanSearchAchievementAddFoundCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
+<<<<<<< HEAD
 add_found_checkbox:SetPoint("TOPLEFT", panel_subtext, "BOTTOMLEFT", -2, 0)
+=======
+add_found_checkbox:SetPoint("TOPLEFT", panel_subtext, "BOTTOMLEFT", -2, -32)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 add_found_checkbox.tooltipText = L.SEARCH_ACHIEVEMENTADDFOUND_DESC
 
 panel.add_found_checkbox = add_found_checkbox
@@ -149,6 +153,51 @@ function add_found_checkbox.setFunc(is_enabled)
 	end
 end
 
+<<<<<<< HEAD
+=======
+local viginette_scan_checkbox = _G.CreateFrame("CheckButton", "_NPCScanVignetteScanCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
+viginette_scan_checkbox:SetPoint("BOTTOMLEFT", add_found_checkbox, "TOPLEFT", 0, 0)
+viginette_scan_checkbox.tooltipText = L.VIGNETTE_SCAN_DESC
+
+panel.viginette_scan_checkbox = viginette_scan_checkbox
+
+local viginette_scan_label = _G[viginette_scan_checkbox:GetName() .. "Text"]
+viginette_scan_label:SetText(L.VIGNETTE_SCAN)
+viginette_scan_checkbox:SetHitRectInsets(4, 4 - viginette_scan_label:GetStringWidth(), 4, 4)
+
+function viginette_scan_checkbox.setFunc()
+	if private.OptionsCharacter.TrackVignettes then
+		private.OptionsCharacter.TrackVignettes = false
+		panel.viginette_scan_checkbox:SetChecked(false)
+	else
+		private.OptionsCharacter.TrackVignettes = true
+		panel.viginette_scan_checkbox:SetChecked(true)
+	end
+end
+
+
+local block_flight_scan_checkbox = _G.CreateFrame("CheckButton", "_NPCScanBlockFlightScanCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
+block_flight_scan_checkbox:SetPoint("BOTTOMLEFT", viginette_scan_checkbox, "TOPLEFT", 0, 0)
+block_flight_scan_checkbox.tooltipText = L.BLOCKFLIGHTSCAN_DESC
+
+panel.block_flight_scan_checkbox = block_flight_scan_checkbox
+
+local block_flight_scan_label = _G[block_flight_scan_checkbox:GetName() .. "Text"]
+block_flight_scan_label:SetText(L.BLOCKFLIGHTSCAN)
+block_flight_scan_checkbox:SetHitRectInsets(4, 4 - block_flight_scan_label:GetStringWidth(), 4, 4)
+
+function block_flight_scan_checkbox.setFunc()
+	if private.OptionsCharacter.FlightSupress then
+		private.OptionsCharacter.FlightSupress = false
+		panel.block_flight_scan_checkbox:SetChecked(false)
+	else
+		private.OptionsCharacter.FlightSupress = true
+		panel.block_flight_scan_checkbox:SetChecked(true)
+	end
+end
+
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 local table_container = _G.CreateFrame("Frame", nil, panel)
 table_container:SetBackdrop({
 	bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]]
@@ -500,11 +549,19 @@ do
 			end
 		else
 			tooltip:SetText(TEXT_TAB_TOOLTIPS[tab.identifier] or _G.UNKNOWN, nil, nil, nil, nil, true)
+<<<<<<< HEAD
 			if tab.checkbox then  
 				if not tab.checkbox:GetChecked() then
 					local red = _G.RED_FONT_COLOR
 					tooltip:AddLine(L.SEARCH_ACHIEVEMENT_DISABLED, red.r, red.g, red.b)
 				end
+=======
+
+			local config_section = TEXT_TAB_CONFIG[tab.identifier]
+			if config_section and not private.OptionsCharacter[config_section] then
+				local red = _G.RED_FONT_COLOR
+				tooltip:AddLine(L.SEARCH_ACHIEVEMENT_DISABLED, red.r, red.g, red.b)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			end
 		end
 		tooltip:Show()
@@ -544,10 +601,18 @@ do
 
 		local identifier = checkbox:GetParent().identifier
 		panel.AchievementSetEnabled(identifier, is_enabled)
+<<<<<<< HEAD
 		if identifier == "BEASTS" then
 			private.OptionsCharacter.TrackBeasts = (is_enabled == 1)
 		elseif identifier == "RARENPC" then
 			private.OptionsCharacter.TrackRares = (is_enabled == 1)
+=======
+
+		if identifier == "BEASTS" then
+			private.OptionsCharacter.TrackBeasts = is_enabled or nil
+		elseif identifier == "RARENPC" then
+			private.OptionsCharacter.TrackRares = is_enabled or nil
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		end
 		private.RareMobToggle(identifier, is_enabled)
 		private.CacheListPrint(true)

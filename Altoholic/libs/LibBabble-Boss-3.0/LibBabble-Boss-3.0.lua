@@ -1,6 +1,10 @@
 --[[
 Name: LibBabble-Boss-3.0
+<<<<<<< HEAD
 Revision: $Rev: 413 $
+=======
+Revision: $Rev: 409 $
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-boss-3-0/
 Dependencies: None
@@ -8,7 +12,11 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-Boss-3.0"
+<<<<<<< HEAD
 local MINOR_VERSION = 90000 + tonumber(("$Rev: 413 $"):match("%d+"))
+=======
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 409 $"):match("%d+"))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)

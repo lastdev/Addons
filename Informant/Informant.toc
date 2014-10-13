@@ -1,5 +1,9 @@
 ## Title: Informant
+<<<<<<< HEAD
 ## Notes: Displays detailed item information in tooltips, such as use, vendor sales information, and more.  In additon, extended information can be viewed by binding a key from the keybind menu. [5.20.5464] This AddOn is licensed under the GNU GPL, see GPL.txt for details.
+=======
+## Notes: Displays detailed item information in tooltips, such as use, vendor sales information, and more.  In additon, extended information can be viewed by binding a key from the keybind menu. [5.19.5445] This AddOn is licensed under the GNU GPL, see GPL.txt for details.
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ##
 ## Interface: 50400
 ## LoadOnDemand: 1
@@ -7,7 +11,11 @@
 ## OptionalDeps: !nLog, Babylonian, DebugLib, Configator, SlideBar, LibExtraTip, TipHelper, LibDataBroker
 ## SavedVariables: InformantConfig, InformantLocalUpdates
 ##
+<<<<<<< HEAD
 ## Version: 5.20.5464 (RidiculousRockrat)
+=======
+## Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ## Revision: $Id: Informant.toc 5432 2013-09-10 07:59:18Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

@@ -1,6 +1,10 @@
 --[[
 	StringRope Lib for World of Warcraft (tm)
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: StringRope.lua 3938 2008-12-27 09:35:32Z norganna $
 	URL: http://norganna.org
 

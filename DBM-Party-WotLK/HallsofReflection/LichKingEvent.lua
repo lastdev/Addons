@@ -1,7 +1,11 @@
 local mod = DBM:NewMod(603, "DBM-Party-WotLK", 16, 276)
 local L = mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 155 $"):sub(12, -3))
+=======
+mod:SetRevision(("$Revision: 143 $"):sub(12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 --mod:SetEncounterID(843, 844)
 
 mod:RegisterEvents(
@@ -9,7 +13,11 @@ mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_YELL"
 )
 
+<<<<<<< HEAD
 local WarnWave		= mod:NewAnnounce("WarnWave", 2)
+=======
+local WarnWave	= mod:NewAnnounce("WarnWave", 2)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 local timerEscape	= mod:NewAchievementTimer(360, 4526, "achievementEscape")
 

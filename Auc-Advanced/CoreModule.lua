@@ -1,6 +1,10 @@
 --[[
 	Auctioneer
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: CoreModule.lua 5313 2012-07-27 13:29:49Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -154,4 +158,8 @@ function lib.CoreModuleOnLoad(addon)
 end
 
 
+<<<<<<< HEAD
 AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CoreModule.lua $", "$Rev: 5313 $")
+=======
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/CoreModule.lua $", "$Rev: 5313 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

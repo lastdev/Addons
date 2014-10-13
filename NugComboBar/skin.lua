@@ -56,7 +56,11 @@ NugComboBar.presets = {
     },
     ["glowFreedom"] = {
         NORMAL = { "spells\\gouge_precast_state_hand.m2", true, 3, 0,0, 0.0 },
+<<<<<<< HEAD
         BIG = { "spells\\gouge_precast_state_hand.m2", true, 4, 0,0, 0.0, "spells\\blessingoffreedom_state.m2",  true,  .51, 0, -0.0004,0 },
+=======
+        BIG = { "spells\\blessingoffreedom_state.m2",  true,  1, 0, -0.0004,0 },
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     },
     ["fireBlue"] = {
         NORMAL = { "spells\\fire_blue_precast_uber_hand.m2", true, 4, 0, 0.0015 },
@@ -307,8 +311,12 @@ local mappings = {
     ["SHAMANDOUBLE"] = { 1, 2, 3, 4, 6, SR1, SR2, SR3, SR4, SR6},
     ["PALADIN"] = { 1, 2, 6, 7, 8 },
     ["ARCANE"] = { 1, 2, 3, 6, 7, 8 },
+<<<<<<< HEAD
     ["4NO6"] = { 1, 2, 3, 8 },
     ["5NO6"] = { 1, 2, 3, 4, 8 },
+=======
+    ["NO6"] = { 1, 2, 3, 4, 8 },
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 }
 
 

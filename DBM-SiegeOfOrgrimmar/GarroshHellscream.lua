@@ -1,7 +1,11 @@
 local mod	= DBM:NewMod(869, "DBM-SiegeOfOrgrimmar", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 11588 $"):sub(12, -3))
+=======
+mod:SetRevision(("$Revision: 11110 $"):sub(12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetCreatureID(71865)
 mod:SetEncounterID(1623)
 mod:SetHotfixNoticeRev(10828)
@@ -96,7 +100,11 @@ local timerSiegeEngineerCD			= mod:NewNextTimer(40, "ej8298", nil, nil, nil, 144
 local timerPowerIronStar			= mod:NewCastTimer(16.5, 144616)
 --Intermission: Realm of Y'Shaarj
 local timerEnterRealm				= mod:NewNextTimer(145.5, 144866, nil, nil, nil, 144945)
+<<<<<<< HEAD
 local timerRealm					= mod:NewBuffActiveTimer(60.5, "ej8305", nil, nil, nil, 144945)--May be too long, but intermission makes more sense than protection buff which actually fades before intermission ends if you do it right.
+=======
+local timerYShaarjsProtection		= mod:NewBuffActiveTimer(60.5, "ej8305", nil, nil, nil, 144945)--May be too long, but intermission makes more sense than protection buff which actually fades before intermission ends if you do it right.
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 --Stage Two: Power of Y'Shaarj
 local timerWhirlingCorruptionCD		= mod:NewCDCountTimer(49.5, 144985)--One bar for both, "empowered" makes timer too long
 local timerWhirlingCorruption		= mod:NewBuffActiveTimer("OptionVersion2", 9, 144985, nil, false)
@@ -104,12 +112,16 @@ local timerTouchOfYShaarjCD			= mod:NewCDCountTimer(45, 145071)
 local timerGrippingDespair			= mod:NewTargetTimer(15, 145183, nil, mod:IsTank())
 --Starge Three: MY WORLD
 --Starge Four: Heroic Hidden Phase
+<<<<<<< HEAD
 local timerEnterGarroshRealm		= mod:NewNextTimer(20, 146984, nil, nil, nil, 144945)
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 local timerMaliceCD					= mod:NewNextTimer(29.5, 147209)--29.5-33sec variation
 local timerBombardmentCD			= mod:NewNextTimer(55, 147120)
 local timerBombardment				= mod:NewBuffActiveTimer(13, 147120)
 local timerClumpCheck				= mod:NewNextTimer(3, 147126)
 local timerMaliciousBlast			= mod:NewBuffFadesTimer(3, 147235, nil, false)
+<<<<<<< HEAD
 local timerFixate					= mod:NewTargetTimer(12, 147665)
 
 local soundWhirlingCorrpution		= mod:NewSound("OptionVersion2", 144985, false)--Depends on strat. common one on 25 man is to never run away from it
@@ -130,6 +142,23 @@ mod:AddArrowOption("ShowDesecrateArrow", 144748, false)
 mod:AddBoolOption("InfoFrame", mod:IsHealer())
 --mod:AddBoolOption("RangeFrame")
 
+=======
+
+local soundWhirlingCorrpution		= mod:NewSound("OptionVersion2", 144985, false)--Depends on strat. common one on 25 man is to never run away from it
+local countdownPowerIronStar		= mod:NewCountdown(16.5, 144616)
+local countdownWhirlingCorruption	= mod:NewCountdown(49.5, 144985)
+local countdownTouchOfYShaarj		= mod:NewCountdown("Alt45", 145071, false)--Off by default only because it's a cooldown and it does have a 45-48sec variation
+local countdownRealm				= mod:NewCountdownFades(60.5, "ej8305", nil, nil, 10)
+
+mod:AddBoolOption("yellMaliceFading", false)
+mod:AddSetIconOption("SetIconOnShaman", "ej8294", false, true)
+mod:AddSetIconOption("SetIconOnMC", 145071, false)
+mod:AddSetIconOption("SetIconOnMalice", 147209, false)
+mod:AddArrowOption("ShowDesecrateArrow", 144748, false)
+mod:AddBoolOption("InfoFrame", mod:IsHealer())
+--mod:AddBoolOption("RangeFrame")
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 --Upvales, don't need variables
 local UnitExists, UnitDebuff = UnitExists, UnitDebuff
 local bombardCD = {55, 40, 40, 25, 25}
@@ -263,6 +292,7 @@ function mod:SPELL_CAST_START(args)
 		soundWhirlingCorrpution:Play()
 	elseif spellId == 147120 then
 		self.vb.bombardCount = self.vb.bombardCount + 1
+<<<<<<< HEAD
 		local count = self.vb.bombardCount
 		warnBombardment:Show(count)
 		specWarnBombardment:Show(count)
@@ -271,6 +301,13 @@ function mod:SPELL_CAST_START(args)
 		countdownBombardmentEnd:Start()
 		timerBombardmentCD:Start(bombardCD[count] or 15, count+1)
 		countdownBombardment:Start(bombardCD[count] or 15)
+=======
+		warnBombardment:Show(self.vb.bombardCount)
+		specWarnBombardment:Show(self.vb.bombardCount)
+		specWarnBombardmentOver:Schedule(13)
+		timerBombardment:Start()
+		timerBombardmentCD:Start(bombardCD[self.vb.bombardCount] or 15, self.vb.bombardCount+1)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		timerClumpCheck:Start()
 --[[		if self.Options.RangeFrame then
 			if self:IsDifficulty("heroic10") then
@@ -324,7 +361,11 @@ function mod:SPELL_AURA_APPLIED(args)
 	local spellId = args.spellId
 	if spellId == 144945 then
 		warnYShaarjsProtection:Show(args.destName)
+<<<<<<< HEAD
 		timerRealm:Start()
+=======
+		timerYShaarjsProtection:Start()
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		countdownRealm:Start()
 	elseif args:IsSpellID(145065, 145171) then
 		if spellId == 145065 then
@@ -368,7 +409,10 @@ function mod:SPELL_AURA_APPLIED(args)
 		self:SendSync("MaliceTarget", args.destGUID)
 	elseif spellId == 147665 then
 		warnIronStarFixate:Show(args.destName)
+<<<<<<< HEAD
 		timerFixate:Start(args.destName)
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		if args:IsPlayer() then
 			specWarnISFixate:Show()
 		end
@@ -394,8 +438,11 @@ function mod:SPELL_AURA_REMOVED(args)
 		self:SetIcon(args.destName, 0)
 	elseif spellId == 147209 then
 		self:SendSync("MaliceTargetRemoved", args.destGUID)
+<<<<<<< HEAD
 	elseif spellId == 147665 then
 		timerFixate:Cancel(args.destName)
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	end
 end
 
@@ -437,8 +484,11 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		timerWhirlingCorruptionCD:Cancel()
 		countdownWhirlingCorruption:Cancel()
 	elseif spellId == 144956 then--Jump To Ground (intermission ending)
+<<<<<<< HEAD
 		countdownRealm:Cancel()
 		timerRealm:Cancel()
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		if timerEnterRealm:GetTime() > 0 then--first cast, phase2 trigger.
 			self.vb.phase = 2
 			warnPhase2:Show()
@@ -474,7 +524,10 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, _, spellId)
 		countdownWhirlingCorruption:Start(44.5)
 	elseif spellId == 146984 then--Phase 4 trigger
 		self.vb.phase = 4
+<<<<<<< HEAD
 		self.vb.bombardCount = 0
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		timerEnterRealm:Cancel()
 		timerDesecrateCD:Cancel()
 		timerTouchOfYShaarjCD:Cancel()
@@ -518,6 +571,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 	end
 end
 
+<<<<<<< HEAD
 function mod:CHAT_MSG_MONSTER_YELL(msg)
 	if msg == L.wasteOfTime then
 		self:SendSync("prepull")
@@ -526,6 +580,8 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 	end
 end
 
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 function mod:OnSync(msg, guid)
 	if msg == "MaliceTarget" and guid then
 		local targetName = DBM:GetFullPlayerNameByGUID(guid)
@@ -539,10 +595,13 @@ function mod:OnSync(msg, guid)
 				DBM:Schedule(13, SendChatMessage, L.MaliceFadeYell:format(playerName, 1), "SAY")
 				DBM:Schedule(12, SendChatMessage, L.MaliceFadeYell:format(playerName, 2), "SAY")
 				DBM:Schedule(11, SendChatMessage, L.MaliceFadeYell:format(playerName, 3), "SAY")
+<<<<<<< HEAD
 				DBM:Schedule(10, SendChatMessage, L.MaliceFadeYell:format(playerName, 4), "SAY")
 				DBM:Schedule(8, SendChatMessage, L.MaliceFadeYell:format(playerName, 6), "SAY")
 				DBM:Schedule(6, SendChatMessage, L.MaliceFadeYell:format(playerName, 8), "SAY")
 				DBM:Schedule(4, SendChatMessage, L.MaliceFadeYell:format(playerName, 10), "SAY")
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			end
 		end
 		if self.Options.SetIconOnMalice then
@@ -551,6 +610,7 @@ function mod:OnSync(msg, guid)
 	elseif msg == "MaliceTargetRemoved" and guid and self.Options.SetIconOnMalice then
 		local targetName = DBM:GetFullPlayerNameByGUID(guid)
 		self:SetIcon(targetName, 0)
+<<<<<<< HEAD
 	elseif msg == "prepull" then
 		timerRoleplay:Start()
 	elseif msg == "phase3End" then
@@ -560,5 +620,7 @@ function mod:OnSync(msg, guid)
 		timerWhirlingCorruptionCD:Cancel()
 		countdownWhirlingCorruption:Cancel()
 		timerEnterGarroshRealm:Start()
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	end
 end

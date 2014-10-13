@@ -474,8 +474,12 @@ WeakAuras.load_prototype = {
           end
         end
       end,
+<<<<<<< HEAD
       -- @patch 6.0 compatibility quick fix
       test = MAX_NUM_TALENTS and "select(5, GetTalentInfo(%d)) == true" or "select(4, GetMoPTalentInfo(%d)) == true"
+=======
+      test = "select(5, GetTalentInfo(%d)) == true"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     },
     {
       name = "level",

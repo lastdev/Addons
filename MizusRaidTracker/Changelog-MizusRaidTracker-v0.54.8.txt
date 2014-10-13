@@ -1,0 +1,13 @@
+tag v0.54.8
+56e557db11341f1923d3019e3c2fbf394c226d4b
+Mizukichan <mizukichan@arcor.de>
+2013-10-16 23:10:32 +0200
+
+Tagging as v0.54.8
+
+
+--------------------
+
+Mizukichan:
+	- Fixed lua error regarding localInstanceInfoName, triggered by a missing GetMapNameByID() return value
+	- Fixed typos, formatted code

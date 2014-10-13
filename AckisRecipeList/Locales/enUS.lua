@@ -6,7 +6,11 @@ enUS localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
+<<<<<<< HEAD
 Project version: 3.0.5
+=======
+Project version: 2.6.2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ************************************************************************
 Translation credits: http://www.wowace.com/addons/arl/localization/translators/
 
@@ -218,6 +222,10 @@ L["Bryan Landers"] = true
 L["Brynna Wilson"] = true
 L["Buckslappy"] = true
 L["Bufo"] = true
+<<<<<<< HEAD
+=======
+L["BUGGED"] = "THIS RECIPE IS BUGGED CURRENTLY IN THE LATEST BUILD ON LIVE."
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Burbik Gearspanner"] = true
 L["Burko"] = true
 L["Burning Berserker"] = true
@@ -688,7 +696,10 @@ L["\"Jack\" Pisarek Slamfix"] = true
 L["Jack Trapper"] = true
 L["Jadefire Rogue"] = true
 L["Jademist Dancer"] = true
+<<<<<<< HEAD
 L["Jaiden Trask"] = true
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Jakur of Ordon"] = true
 L["Jalane Ayrole"] = true
 L["Jaluu the Generous"] = true
@@ -868,7 +879,10 @@ L["Marith Lazuria"] = true
 L["Marogg"] = true
 L["Martine Tramblay"] = true
 L["Mary Edras"] = true
+<<<<<<< HEAD
 L["Mary Kearie"] = true
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Master Bier"] = true
 L["Master Cannon"] = true
 L["Master Chang"] = true

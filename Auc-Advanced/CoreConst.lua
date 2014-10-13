@@ -1,7 +1,12 @@
 --[[
 	Auctioneer
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
 	Revision: $Id: CoreConst.lua 5460 2014-06-18 17:51:52Z brykrys $
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+	Revision: $Id: CoreConst.lua 5399 2013-03-28 18:53:54Z brykrys $
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -181,4 +186,8 @@ CompileInvTypes(GetAuctionInvTypes(2, 1))
 
 AucAdvanced.Const = lib
 
+<<<<<<< HEAD
 AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CoreConst.lua $", "$Rev: 5460 $")
+=======
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/CoreConst.lua $", "$Rev: 5399 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

@@ -1,6 +1,10 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: BeancounterVendor.lua 3583 2008-10-11 16:50:02Z Norganna $
 	URL: http://auctioneeraddon.com/
 
@@ -28,7 +32,11 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
+<<<<<<< HEAD
 LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.20/BeanCounter/BeancounterVendor.lua $","$Rev: 3583 $","5.1.DEV.", 'auctioneer', 'libs')
+=======
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.19/BeanCounter/BeancounterVendor.lua $","$Rev: 3583 $","5.1.DEV.", 'auctioneer', 'libs')
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 local libName = "BeanCounter"
 local libType = "Util"

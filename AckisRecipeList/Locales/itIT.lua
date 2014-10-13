@@ -6,7 +6,11 @@ itIT localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
+<<<<<<< HEAD
 Project version: 3.0.5
+=======
+Project version: 2.6.2
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ************************************************************************
 Original translated by: Pettigrow
 Currently maintained by:
@@ -210,6 +214,10 @@ L["Bryan Landers"] = true
 L["Brynna Wilson"] = true
 L["Buckslappy"] = "Pienozeppo"
 L["Bufo"] = true
+<<<<<<< HEAD
+=======
+L["BUGGED"] = "QUESTA RICETTA È ATTUALMENTE BUGGATA NELL'ULTIMA BUILD UFFICIALE."
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Burbik Gearspanner"] = "Burbik Ruotachiavi"
 L["Burko"] = true
 L["Burning Berserker"] = "Berserk Ardente"

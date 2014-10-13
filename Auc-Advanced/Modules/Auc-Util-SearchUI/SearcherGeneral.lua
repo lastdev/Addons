@@ -1,6 +1,10 @@
 --[[
 	Auctioneer - Search UI - Searcher General
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: SearcherGeneral.lua 5368 2012-09-29 09:50:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -354,4 +358,8 @@ function private.PriceSearch(buybid, price)
 	end
 	return false
 end
+<<<<<<< HEAD
 AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-SearchUI/SearcherGeneral.lua $", "$Rev: 5368 $")
+=======
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-SearchUI/SearcherGeneral.lua $", "$Rev: 5368 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

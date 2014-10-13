@@ -1,7 +1,11 @@
 ﻿--[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: InfMain.lua 5261 2012-01-04 13:56:43Z dinesh $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
@@ -27,9 +31,15 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
+<<<<<<< HEAD
 Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Informant/InfMain.lua $","$Rev: 5261 $")
 
 INFORMANT_VERSION = "5.20.5464"
+=======
+Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Informant/InfMain.lua $","$Rev: 5261 $")
+
+INFORMANT_VERSION = "5.19.5445"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 if (INFORMANT_VERSION == "<".."%version%>") then
 	INFORMANT_VERSION = "5.2.DEV"
 end

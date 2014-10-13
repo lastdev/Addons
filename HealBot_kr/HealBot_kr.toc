@@ -4,6 +4,10 @@
 ## Notes: HealBot Localization for koKR
 ## RequiredDeps: HealBot
 ## LoadOnDemand: 1
+<<<<<<< HEAD
 ## Version: 5.4.8.3
+=======
+## Version: 5.4.0.6
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 HealBot_Localization.kr.lua

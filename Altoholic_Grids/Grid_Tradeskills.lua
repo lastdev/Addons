@@ -60,7 +60,11 @@ end
 
 local function OnTradeSkillChange(self)
 	CloseDropDownMenus()
+<<<<<<< HEAD
 	addon:SetOption(OPTION_TRADESKILL, self.value)
+=======
+	currentTradeSkill = self.value
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	addon.Tabs.Grids:Update()
 end
 
@@ -184,9 +188,12 @@ end
 
 local callbacks = {
 	OnUpdate = function() 
+<<<<<<< HEAD
 			local currentXPack = addon:GetOption(OPTION_XPACK)
 			local currentTradeSkill = addon:GetOption(OPTION_TRADESKILL)
 			
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			currentList = LCI:GetProfessionCraftList(tradeskills[currentTradeSkill], currentXPack)
 			if not currentList.isSorted then
 				table.sort(currentList, SortByCraftLevel)
@@ -243,7 +250,11 @@ local callbacks = {
 
 			local text = ICON_NOTREADY
 			local vc = 0.25	-- vertex color
+<<<<<<< HEAD
 			local profession = DataStore:GetProfession(character, GetSpellInfo(tradeskills[addon:GetOption(OPTION_TRADESKILL)]))			
+=======
+			local profession = DataStore:GetProfession(character, GetSpellInfo(tradeskills[currentTradeSkill]))			
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 			if profession.NumCrafts ~= 0 then
 				-- do not enable this yet .. working fine, but better if more filtering allowed. ==> filtering on rarity

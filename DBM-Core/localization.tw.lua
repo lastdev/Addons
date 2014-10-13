@@ -42,8 +42,13 @@ DBM_CORE_COMBAT_STATE_RECOVERED		= "%s的戰鬥在%s前開始，恢復計時器�
 DBM_CORE_TRANSCRIPTOR_LOG_START		= "Transcriptor開始記錄。"
 DBM_CORE_TRANSCRIPTOR_LOG_END		= "Transcriptor結束紀錄。"
 
+<<<<<<< HEAD
 DBM_CORE_WORLDBOSS_ENGAGED			= "在你的伺服器上的%s可能已在%s時開戰(%s發送)。"
 DBM_CORE_WORLDBOSS_DEFEATED			= "在你的伺服器上的%s可能已被擊敗(%s發送)。"
+=======
+DBM_CORE_WORLDBOSS_ENGAGED			= "在你的伺服器上的%s已在%s時開戰(%s發送)。"
+DBM_CORE_WORLDBOSS_DEFEATED			= "在你的伺服器上的%s已被擊敗(%s發送)。"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 DBM_CORE_TIMER_FORMAT_SECS			= "%d秒"
 DBM_CORE_TIMER_FORMAT_MINS			= "%d分鐘"
@@ -204,7 +209,10 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel		= ">%%s<中了%s - 現在驅散"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt		= "%s - 快中斷>%%s< !"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you			= "你中了%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target		= ">%%s<中了%s"
+<<<<<<< HEAD
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.taunt			= ">%%s<中了%s - 快嘲諷"
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close			= "你附近的>%%s<中了%s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move			= "%s - 快移動"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.moveaway		= "%s - 快離開其他人"
@@ -225,7 +233,10 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dispel		= "需對$spell:%s驅散/竊取時顯示
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt	= "需對$spell:%s斷法時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you			= "當你中了$spell:%s時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target		= "當有人中了$spell:%s時顯示特別警告"
+<<<<<<< HEAD
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.taunt 		= "當其他坦克中了$spell:%s顯示特別警告去嘲諷"
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close		= "當你附近有人中了$spell:%s時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move		= "當你中了$spell:%s時顯示特別警告"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveaway	= "為$spell:%s要跑離開其他人時顯示特別警告"
@@ -263,8 +274,11 @@ DBM_CORE_AUTO_TIMER_OPTIONS.achievement		= "為成就:%s顯示計時器"
 
 DBM_CORE_AUTO_ICONS_OPTION_TEXT			= "為$spell:%s的目標設置標記"
 DBM_CORE_AUTO_ICONS_OPTION_TEXT2		= "為$spell:%s設置標記"
+<<<<<<< HEAD
 DBM_CORE_AUTO_ARROW_OPTION_TEXT			= "為跑向中了$spell:%s的目標顯示DBM箭頭"
 DBM_CORE_AUTO_ARROW_OPTION_TEXT2		= "為離開中了$spell:%s的目標顯示DBM箭頭"
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 DBM_CORE_AUTO_SOUND_OPTION_TEXT			= "當你中了$spell:%s時播放音效"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "為$spell:%s的冷卻播放倒數計時音效"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2	= "為$spell:%s的減益播放倒數計時音效"
@@ -280,6 +294,10 @@ DBM_CORE_AUTO_READY_CHECK_OPTION_TEXT	= "當首領開打時撥放準備檢查的
 DBM_CORE_MOVE_SPECIAL_WARNING_BAR	= "可拖動的特別警告"
 DBM_CORE_MOVE_SPECIAL_WARNING_TEXT	= "特別警告"
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 DBM_ARROW_MOVABLE					= "可移動箭頭"
 DBM_ARROW_NO_RAIDGROUP				= "此功能僅作用於團隊副本中的團隊小隊。"
 DBM_ARROW_ERROR_USAGE	= {

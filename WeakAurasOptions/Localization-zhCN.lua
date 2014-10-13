@@ -61,7 +61,11 @@ L["Border Inset"] = "插入边框"
 L["Border Offset"] = "边框偏移"
 L["Border Settings"] = "边框设置"
 L["Border Size"] = "边框大小 "
+<<<<<<< HEAD
 L["Border Style"] = "边框风格"
+=======
+L["Border Style"] = "边框风格" -- Needs review
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Bottom Text"] = "底部文字"
 L["Button Glow"] = "按钮发光"
 L["Can be a name or a UID (e.g., party1). Only works on friendly players in your group."] = "可以是名字或是单位ID(例如，party1)。只作用于你当前队伍/团队中的玩家."

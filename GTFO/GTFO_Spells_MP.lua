@@ -1000,6 +1000,7 @@ GTFO.SpellID["141393"] = {
 	sound = 1;
 };
 
+<<<<<<< HEAD
 GTFO.SpellID["141001"] = {
 	--desc = "Dreadful Poison (Nibbleh)";
 	sound = 1;
@@ -1015,6 +1016,13 @@ GTFO.SpellID["132724"] = {
 	--desc = "Lightning Field (Disruptron)";
 	sound = 1;
 };
+=======
+
+-- TODO: Get Off! (Millhouse Manastorm) -- How does melee avoid it?
+-- TODO: Get Off! (Zen'shar) -- How does melee avoid it?  Does this boss have this ability?
+-- TODO: Laser Disc? (Disruptron)
+-- TODO: Destructolaser (Epicus Maximus)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 -- *****************************
 -- * Trove of the Thunder King *
@@ -1474,6 +1482,19 @@ GTFO.SpellID["143460"] = {
 	applicationOnly = true;
 };
 
+GTFO.SpellID["143460"] = {
+	--desc = "Sha Pool (Immerseus - Heroic)";
+	soundFunction = function() 
+		local stacks = GTFO_DebuffStackCount("player", 143460);
+		if (stacks > 1) then
+			return 1;
+		else
+			return 2;
+		end
+	end;
+	applicationOnly = true;
+};
+
 GTFO.SpellID["143959"] = {
 	--desc = "Defiled Ground (Rook Stonetoe)";
 	sound = 1;
@@ -1532,6 +1553,7 @@ GTFO.SpellID["146818"] = {
 	sound = 4;
 };
 
+<<<<<<< HEAD
 GTFO.SpellID["144774"] = {
 	--desc = "Reaching Attack (Sha of Pride)";
 	sound = 0;
@@ -1541,6 +1563,12 @@ GTFO.SpellID["144774"] = {
 GTFO.SpellID["145219"] = {
 	--desc = "Corruption (Sha of Pride - Heroic)";
 	sound = 1;
+=======
+GTFO.SpellID["145219"] = {
+	--desc = "Corruption (Sha of Pride - Heroic)";
+	sound = 1;
+	test = true; -- Verify this is the damage from walls in the Pac-Man room
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 };
 
 GTFO.SpellID["147705"] = {
@@ -1648,6 +1676,7 @@ GTFO.SpellID["142759"] = {
 	sound = 1;
 };
 
+<<<<<<< HEAD
 GTFO.SpellID["145999"] = {
 	--desc = "Deteriorate (Arcweaver Reinforcements)";
 	sound = 1;
@@ -1659,6 +1688,10 @@ GTFO.SpellID["149280"] = {
 	sound = 1;
 };
 
+=======
+-- TODO: Languish (Living Corruption) -- Avoidable/kitable?
+-- TODO: Crimson Acid (Modified Anima Golem)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 GTFO.SpellID["145716"] = {
 	--desc = "Gusting Bomb (Sri'thik Bombardier)";
@@ -1684,6 +1717,7 @@ GTFO.SpellID["146257"] = {
 	--desc = "Path of Blossoms (Nameless Windwalker Spirit)";
 	sound = 1;
 };
+<<<<<<< HEAD
 
 GTFO.SpellID["146226"] = {
 	--desc = "Breath of Fire (Ancient Brewmaster Spirit)";
@@ -1805,6 +1839,85 @@ GTFO.SpellID["143576"] = {
 	--desc = "Canned Heat (Xaril the Poisoned Mind)"; 
 	sound = 1;
 };
+=======
+
+GTFO.SpellID["146226"] = {
+	--desc = "Breath of Fire (Ancient Brewmaster Spirit)";
+	sound = 1;
+};
+
+GTFO.SpellID["145817"] = {
+	--desc = "Windstorm (Set'thik the Windwalker)";
+	sound = 1;
+	test = true; -- Verify avoidable and not spammy
+};
+
+GTFO.SpellID["143784"] = {
+	--desc = "Burning Blood - Pool (Thok the Bloodthirsty)";
+	sound = 1;
+};
+
+GTFO.SpellID["146470"] = {
+	--desc = "Drillstorm (Goro'dan)";
+	sound = 1;
+	tankSound = 0;
+};
+
+-- TODO: Overload (Siegecrafter Blackfuse) 145444 - Avoidable at all?
+
+GTFO.SpellID["144335"] = {
+	--desc = "Matter Purification Beam (Siegecrafter Blackfuse)";
+	sound = 1;
+	soundHeroic = 3;
+};
+
+GTFO.SpellID["143856"] = {
+	--desc = "Superheated (Siegecrafter Blackfuse)"; - Vehicle dmg too? 
+	sound = 1;
+	applicationOnly = true;
+};
+
+GTFO.SpellID["143327"] = {
+	--desc = "Serrated Slash (Siegecrafter Blackfuse)"; 
+	sound = 1;
+	vehicle = true;
+};
+
+GTFO.SpellID["146535"] = {
+	--desc = "Frenzied Assault (Kor'thik Honor Guard)"; 
+	sound = 1;
+	tankSound = 0;
+};
+
+GTFO.SpellID["146452"] = {
+	--desc = "Resonating Amber (Kor'thik Honor Guard)"; 
+	sound = 1;
+};
+
+-- TODO: Reave (Kil'ruk the Wind-Reaver) xxxx
+-- TODO: Catalytic Reaction: Yellow (Toxic Cloud) (Xaril the Poisoned Mind) xxxx
+-- TODO: Catalytic Reaction: Purple - Canned Heat (Xaril the Poisoned Mind)
+-- TODO: Catalytic Reaction: Green - Eerie Fog (Xaril the Poisoned Mind) -- People are supposed to stand in this, but how do stacks work?
+-- TODO: Vicious Assault (Korven the Prime) 143977?
+-- TODO: Insane Calculation: Fiery Edge (Iyyokuk the Lucid) -- Fire beams?
+-- TODO: Whirling (Ka'roz the Locust) 143701 -- Avoidable?  How about when stunned?
+
+GTFO.SpellID["142809"] = {
+	--desc = "Fiery Edge (Iyyokuk the Lucid)"; 
+	sound = 4;
+	ignoreSelfInflicted = true;
+	negatingDebuffSpellID = 142808; -- Fiery Edge
+	negatingIgnoreTime = 1;
+};
+
+GTFO.SpellID["143735"] = {
+	--desc = "Caustic Amber (Ka'roz the Locust)"; 
+	sound = 1;
+};
+
+-- TODO: Rapid Fire (Hisek the Swarmkeeper) 143243
+-- TODO: Sonic Projection (Kaz'tik the Manipulator) 143768 - Fail when hit by more than one
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 GTFO.SpellID["144762"] = {
 	--desc = "Desecrated (Garrosh Hellscream)"; 
@@ -2457,6 +2570,7 @@ GTFO.SpellID["122976"] = {
 	--desc = "Celestial Storm (Shan Bu)";
 	sound = 1;
 };
+<<<<<<< HEAD
 
 GTFO.SpellID["133710"] = {
 	--desc = "Flak Fire Impact";
@@ -2467,3 +2581,5 @@ GTFO.SpellID["135868"] = {
 	--desc = "Ignite Fuel";
 	sound = 2;
 };
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

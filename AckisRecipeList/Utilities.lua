@@ -67,9 +67,12 @@ do
 		empties = function()
 			addon:ShowEmptySources()
 		end,
+<<<<<<< HEAD
 		lists = function(input)
 			addon:DumpProfessionLists(input)
 		end,
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		phrases = function()
 			addon:DumpPhrases()
 		end,
@@ -94,9 +97,12 @@ do
 			end
 			addon:DumpProfession(input)
 		end,
+<<<<<<< HEAD
 		reputations = function()
 			addon:DumpReps()
 		end,
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		zones = function(input)
 			if not input then
 				addon:Print("Type the name or partial name of a zone.")
@@ -383,6 +389,7 @@ do
 	function addon:ShowEmptySources()
 		private.LoadAllRecipes()
 		output:Clear()
+<<<<<<< HEAD
 
 		find_empties(private.ACQUIRE_TYPE_IDS.TRAINER)
 		find_empties(private.ACQUIRE_TYPE_IDS.VENDOR)
@@ -393,6 +400,17 @@ do
 		find_empties(private.ACQUIRE_TYPE_IDS.WORLD_EVENTS)
 		find_empties(private.ACQUIRE_TYPE_IDS.REPUTATION)
 
+=======
+
+		find_empties(private.ACQUIRE_TYPE_IDS.TRAINER)
+		find_empties(private.ACQUIRE_TYPE_IDS.VENDOR)
+		find_empties(private.ACQUIRE_TYPE_IDS.MOB_DROP)
+		find_empties(private.ACQUIRE_TYPE_IDS.QUEST)
+		find_empties(private.ACQUIRE_TYPE_IDS.CUSTOM)
+		find_empties(private.ACQUIRE_TYPE_IDS.DISCOVERY)
+		find_empties(private.ACQUIRE_TYPE_IDS.WORLD_EVENTS)
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		if output:Lines() == 0 then
 			output:AddLine("Nothing to display.")
 		end

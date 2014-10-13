@@ -762,6 +762,7 @@ Change Log:
 		- Added Pandaria spells for Siege of Orgrimmar (Heroic)
 	v4.30.1
 		- Added Pandaria spells for Siege of Orgrimmar (Heroic)
+<<<<<<< HEAD
 	v4.31
 		- Added support for Warlords of Draenor
 		- Added and fixed Pandaria spells for Siege of Orgrimmar (Heroic)
@@ -796,6 +797,8 @@ Change Log:
 		- Added WoD spells for Highmaul
 		- Added WoD spells for Blackrock Foundry
 		- Added WoD spells for Iron Docks
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 ]]--
 GTFO = {
@@ -813,8 +816,13 @@ GTFO = {
 		IgnoreOptions = { };
 		TrivialDamagePercent = 2; -- Minimum % of HP lost required for an alert to be trivial
 	};
+<<<<<<< HEAD
 	Version = "4.34.1"; -- Version number (text format)
 	VersionNumber = 43401; -- Numeric version number for checking out-of-date clients
+=======
+	Version = "4.30.1"; -- Version number (text format)
+	VersionNumber = 43001; -- Numeric version number for checking out-of-date clients
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	DataLogging = nil; -- Indicate whether or not the addon needs to run the datalogging function (for hooking)
 	DataCode = "4"; -- Saved Variable versioning, change this value to force a reset to default
 	CanTank = nil; -- The active character is capable of tanking
@@ -1962,7 +1970,11 @@ function GTFO_Command_Version()
 					fullname = name.."-"..server;
 					displayName = fullname;
 				else
+<<<<<<< HEAD
 					fullname = name.."-"..GTFO_GetRealmName()
+=======
+					fullname = name.."-"..GetRealmName()
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 					displayName = name;
 				end
 				if (GTFO.Users[fullname]) then
@@ -1984,7 +1996,11 @@ function GTFO_Command_Version()
 					fullname = name.."-"..server
 					displayName = fullname;
 				else
+<<<<<<< HEAD
 					fullname = name.."-"..GTFO_GetRealmName()
+=======
+					fullname = name.."-"..GetRealmName()
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 					displayName = name;
 				end
 				if (GTFO.Users[fullname]) then

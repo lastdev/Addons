@@ -38,6 +38,14 @@ If you have any comments, bug reports or feature requests, please leave a commen
 * * *
 
 
+<<<<<<< HEAD
+=======
+About the Author
+----------------
+
+This addon was lovingly made by Ethan Centaurai, who usually plays as [Ulbrecht](http://eu.battle.net/wow/en/character/ghostlands/ulbrecht/simple) on Ghostlands-EU.
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 * Visit my [website](http://www.ethancentaurai.com/).
 * Follow me on [Twitter](http://twitter.com/StevenBlanchard).
 * Watch me on [GitHub](https://github.com/EthanCentaurai).

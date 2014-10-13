@@ -60,7 +60,11 @@ local NPC_DATA = {
 	[1425]  = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.LOCH_MODAN,                  is_tamable = false, is_achievement = false }, -- Kubb
 	[1531]  = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.TIRISFAL_GLADES,             is_tamable = false, is_achievement = false }, -- Lost Soul
 	[1533]  = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.TIRISFAL_GLADES,             is_tamable = false, is_achievement = false }, -- Tormented Spirit
+<<<<<<< HEAD
 	[1552]  = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.THE_CAPE_OF_STRANGLETHORN,   is_tamable = true,  is_achievement = false }, -- Scale Belly
+=======
+	[1552]  = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.THE_CAPE_OF_STRANGLETHORN,   is_tamable = false, is_achievement = false }, -- Scale Belly
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	[1837]  = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.WESTERN_PLAGUELANDS,         is_tamable = false, is_achievement = false }, -- Scarlet Judge
 	[1838]  = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.WESTERN_PLAGUELANDS,         is_tamable = false, is_achievement = false }, -- Scarlet Interrogator
 	[1839]  = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.WESTERN_PLAGUELANDS,         is_tamable = false, is_achievement = false }, -- Scarlet High Clerist
@@ -375,7 +379,11 @@ local NPC_DATA = {
 	[18681] = { world_id = ZN.OUTLAND,                  map_name = ZN.ZANGARMARSH,                 is_tamable = false, is_achievement = true  }, -- Coilfang Emissary
 	[18682] = { world_id = ZN.OUTLAND,                  map_name = ZN.ZANGARMARSH,                 is_tamable = false, is_achievement = true  }, -- Bog Lurker
 	[18683] = { world_id = ZN.OUTLAND,                  map_name = ZN.NAGRAND,                     is_tamable = false, is_achievement = true  }, -- Voidhunter Yar
+<<<<<<< HEAD
 	[18684] = { world_id = ZN.OUTLAND,                  map_name = ZN.NAGRAND,                     is_tamable = false, is_achievement = false }, -- Bro'Gaz the Clanless
+=======
+	[18684] = { world_id = ZN.OUTLAND,                  map_name = ZN.NAGRAND,                     is_tamable = false, is_achievement = true  }, -- Bro'Gaz the Clanless
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	[18685] = { world_id = ZN.OUTLAND,                  map_name = ZN.TEROKKAR_FOREST,             is_tamable = false, is_achievement = true  }, -- Okrek
 	[18686] = { world_id = ZN.OUTLAND,                  map_name = ZN.TEROKKAR_FOREST,             is_tamable = false, is_achievement = true  }, -- Doomsayer Jurim
 	[18689] = { world_id = ZN.OUTLAND,                  map_name = ZN.TEROKKAR_FOREST,             is_tamable = false, is_achievement = true  }, -- Crippler
@@ -601,10 +609,16 @@ local NPC_DATA = {
 	[50836] = { world_id = ZN.PANDARIA,                 map_name = ZN.DREAD_WASTES,                is_tamable = false, is_achievement = true  }, -- Ik-Ik the Nimble
 	[50837] = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.SWAMP_OF_SORROWS,            is_tamable = true,  is_achievement = false }, -- Kash
 	[50838] = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.BADLANDS,                    is_tamable = true,  is_achievement = false }, -- Tabbs
+<<<<<<< HEAD
 	[50839] = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.BURNING_STEPPES,             is_tamable = true,  is_achievement = false }, -- Chromehound
 	[50840] = { world_id = ZN.PANDARIA,                 map_name = ZN.VALE_OF_ETERNAL_BLOSSOMS,    is_tamable = false, is_achievement = true  }, -- Major Nanners
 	[50842] = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.BURNING_STEPPES,             is_tamable = true,  is_achievement = false }, -- Magmagan
 	[50843] = { world_id = ZN.PANDARIA,                 map_name = ZN.VALE_OF_ETERNAL_BLOSSOMS,    is_tamable = true,  is_achievement = false }, -- Portent
+=======
+	[50839] = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.SEARING_GORGE,               is_tamable = true,  is_achievement = false }, -- Chromehound
+	[50840] = { world_id = ZN.PANDARIA,                 map_name = ZN.VALE_OF_ETERNAL_BLOSSOMS,    is_tamable = false, is_achievement = true  }, -- Major Nanners
+	[50842] = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.BURNING_STEPPES,             is_tamable = true,  is_achievement = false }, -- Magmagan
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	[50846] = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.SEARING_GORGE,               is_tamable = true,  is_achievement = false }, -- Slavermaw
 	[50855] = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.BURNING_STEPPES,             is_tamable = true,  is_achievement = false }, -- Jaxx the Rabid
 	[50856] = { world_id = ZN.EASTERN_KINGDOMS,         map_name = ZN.EASTERN_PLAGUELANDS,         is_tamable = true,  is_achievement = false }, -- Snark

@@ -34,11 +34,14 @@ points["Azeroth"] = {
 	[57175823] = { 29737, 6006, 4 }, -- Elder Firebeard in Twilight Highlands
 	[57305339] = { 29736, 6006, 5 }, -- Elder Darkfeather in Twilight Highlands
 	[35026894] = { 29738, 6006, 8 }, -- Elder Moonlance in Vashj'ir
+<<<<<<< HEAD
 
 	[54007958] = { 8713, 910, 2 }, -- Elder Starsong in Sunken Temple
 	[47636888] = { 8644, 910, 4 }, -- Elder Stonefort in Blackrock Spire
 	[46876760] = { 8619, 910, 5 }, -- Elder Morndeep in Blackrock Depths
 	[52902876] = { 8727, 910, 6 }, -- Elder Farwhisper in Stratholme
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 }
 
 
@@ -59,8 +62,11 @@ points["BlastedLands"] = {
 points["BurningSteppes"] = {
 	[70114539] = { 8636, 912, 9 }, -- Elder Rumblerock
 	[52382394] = { 8683, 912, 10 }, -- Elder Dawnstrider
+<<<<<<< HEAD
 	[24332563] = { 8644, 910, 4 }, -- Elder Stonefort in Blackrock Spire
 	[14610912] = { 8619, 910, 5 }, -- Elder Morndeep in Blackrock Depths
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 }
 
 points["DunMorogh"] = {
@@ -70,7 +76,10 @@ points["DunMorogh"] = {
 points["EasternPlaguelands"] = {
 	[35586881] = { 8688, 912, 15 }, -- Elder Windrun
 	[75735456] = { 8650, 912, 16 }, -- Elder Snowcrown
+<<<<<<< HEAD
 	[27091252] = { 8727, 910, 6 }, -- Elder Farwhisper in Stratholme
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 }
 
 points["Elwynn"] = {
@@ -92,8 +101,11 @@ points["LochModan"] = {
 
 points["SearingGorge"] = {
 	[21307911] = { 8651, 912, 12 }, -- Elder Ironband
+<<<<<<< HEAD
 	[40719570] = { 8644, 910, 4 }, -- Elder Stonefort in Blackrock Spire
 	[26997241] = { 8619, 910, 5 }, -- Elder Morndeep in Blackrock Depths
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 }
 
 points["Silverpine"] = {
@@ -112,10 +124,13 @@ points["StranglethornVale"] = {
 points["Stratholme"] = {
 	-- dungeonLevel 1
 	[78622215] = { 8727, 910, 6 }, -- Elder Farwhisper
+<<<<<<< HEAD
 }
 
 points["SwampOfSorrows"] = {
 	[69665348] = { 8713, 910, 2 }, -- Elder Starsong in Sunken Temple
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 }
 
 points["TheCapeOfStranglethorn"] = {
@@ -180,9 +195,12 @@ points["Kalimdor"] = {
 	[45069550] = { 29741, 6006, 3 }, -- Elder Sekhemi in Uldum
 	[51983408] = { 29739, 6006, 6 }, -- Elder Windsong in Hyjal
 	[56122955] = { 29740, 6006, 7 }, -- Elder Evershade in Hyjal
+<<<<<<< HEAD
 
 	[54237986] = { 8676, 910, 1 }, -- Elder Wildmane in Zul'Farrak
 	[38435797] = { 8635, 910, 3 }, -- Elder Splitrock in Maraudon
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 }
 
 
@@ -205,10 +223,13 @@ points["Darkshore"] = {
 
 points["Darnassus"] = {
 	[39213185] = { 8718, 915, 1 }, -- Elder Bladeswift
+<<<<<<< HEAD
 }
 
 points["Desolace"] = {
 	[29106255] = { 8635, 910, 3 }, -- Elder Splitrock in Maraudon
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 }
 
 points["Durotar"] = {
@@ -250,7 +271,10 @@ points["SouthernBarrens"] = {
 points["Tanaris"] = {
 	[37247906] = { 8671, 911, 15 }, -- Elder Ragetotem
 	[51402881] = { 8684, 911, 16 }, -- Elder Dreamseer
+<<<<<<< HEAD
 	[39212126] = { 8676, 910, 1 }, -- Elder Wildmane in Zul'Farrak
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 }
 
 points["Teldrassil"] = {
@@ -278,6 +302,7 @@ points["Winterspring"] = {
 
 points["ZulFarrak"] = {
 	[34503934] = { 8676, 910, 1 }, -- Elder Wildmane
+<<<<<<< HEAD
 }
 
 
@@ -319,12 +344,50 @@ points["Northrend"] = {
 }
 
 
+=======
+}
+
+
+-------------
+-- Outland --
+-------------
+
+
+---------------
+-- Northrend --
+---------------
+points["Northrend"] = {
+	[22836944] = { 13012, 1396, 1 }, -- Elder Sardis in Borean Tundra
+	[76095108] = { 13013, 1396, 2 }, -- Elder Beldak in Grizzly Hills
+	[40896007] = { 13014, 1396, 3 }, -- Elder Morthie in Dragonblight
+	[53123288] = { 13015, 1396, 4 }, -- Elder Fargal in The Storm Peaks
+	[22286233] = { 13033, 1396, 5 }, -- Elder Arp in Borean Tundra
+	[14625929] = { 13016, 1396, 6 }, -- Elder Northal in Borean Tundra
+	[25114355] = { 13018, 1396, 7 }, -- Elder Sandrene in Sholazar Basin
+	[28553997] = { 13024, 1396, 8 }, -- Elder Wanikaya in Sholazar Basin
+	[81995387] = { 13025, 1396, 9 }, -- Elder Lunaro in Grizzly Hills
+	[35754354] = { 13026, 1396, 10 }, -- Elder Bluewolf in Lake Wintergrasp
+	[71884046] = { 13027, 1396, 11 }, -- Elder Tauros in Zul'Drak
+	[46906711] = { 13019, 1396, 12 }, -- Elder Thoim in Dragonblight
+	[58043729] = { 13028, 1396, 13 }, -- Elder Graymane in The Storm Peaks
+	[54081841] = { 13020, 1396, 14 }, -- Elder Stonebeard in The Storm Peaks
+	[17586423] = { 13029, 1396, 15 }, -- Elder Pamuya in Borean Tundra
+	[77165679] = { 13030, 1396, 16 }, -- Elder Whurain in Grizzly Hills
+	[42585768] = { 13031, 1396, 17 }, -- Elder Skywarden in Dragonblight
+	[67432391] = { 13032, 1396, 18 }, -- Elder Muraco in The Storm Peaks
+}
+
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 points["AzjolNerub"] = {
 	[21774356] = { 13022, 910, 9 }, -- Elder Nurgen
 }
 
 points["BoreanTundra"] = {
+<<<<<<< HEAD
 	[27502598] = { 13021, 910, 8 }, -- Elder Igasho in The Nexus
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	[59096563] = { 13012, 1396, 1 }, -- Elder Sardis
 	[57394373] = { 13033, 1396, 5 }, -- Elder Arp
 	[33803436] = { 13016, 1396, 6 }, -- Elder Northal
@@ -332,7 +395,10 @@ points["BoreanTundra"] = {
 }
 
 points["Dragonblight"] = {
+<<<<<<< HEAD
 	[25945089] = { 13022, 910, 9 }, -- Elder Nurgen in Azjol-Nerub
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	[29755590] = { 13014, 1396, 3 }, -- Elder Morthie
 	[48767818] = { 13019, 1396, 12 }, -- Elder Thoim
 	[35104835] = { 13031, 1396, 17 }, -- Elder Skywarden
@@ -343,7 +409,10 @@ points["DrakTharonKeep"] = {
 }
 
 points["GrizzlyHills"] = {
+<<<<<<< HEAD
 	[17792703] = { 13023, 910, 10 }, -- Elder Kilias in Drak'Tharon Keep
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	[60572768] = { 13013, 1396, 2 }, -- Elder Beldak
 	[80523712] = { 13025, 1396, 9 }, -- Elder Lunaro
 	[64164700] = { 13030, 1396, 16 }, -- Elder Whurain
@@ -351,11 +420,14 @@ points["GrizzlyHills"] = {
 
 points["Gundrak"] = {
 	[45676153] = { 13065, 910, 11 }, -- Elder Ohanzee
+<<<<<<< HEAD
 }
 
 points["HowlingFjord"] = {
 	[57994998] = { 13017, 910, 7 }, -- Elder Jarten in Utgarde Keep
 	[57264668] = { 13067, 910, 13 }, -- Elder Chogan'gada in Utgarde Pinnacle
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 }
 
 points["LakeWintergrasp"] = {

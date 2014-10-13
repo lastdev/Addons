@@ -1,7 +1,11 @@
 local mod	= DBM:NewMod(853, "DBM-SiegeOfOrgrimmar", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
+<<<<<<< HEAD
 mod:SetRevision(("$Revision: 11372 $"):sub(12, -3))
+=======
+mod:SetRevision(("$Revision: 11192 $"):sub(12, -3))
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetCreatureID(71152, 71153, 71154, 71155, 71156, 71157, 71158, 71160, 71161)
 mod:SetEncounterID(1593)
 mod:DisableESCombatDetection()
@@ -18,7 +22,11 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 142528 142232",
 	"SPELL_AURA_APPLIED 143339 142532 142533 142534 142671 142564 143939 143974 143701 143759 143337 143358 142948",
 	"SPELL_AURA_APPLIED_DOSE 143339",
+<<<<<<< HEAD
 	"SPELL_AURA_REMOVED 142564 143939 143974 143700 142948 143339 142671 143542",
+=======
+	"SPELL_AURA_REMOVED 142564 143939 143974 143700 142948 143339 142671",
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	"SPELL_PERIODIC_DAMAGE 143735",
 	"SPELL_PERIODIC_MISSED 143735",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
@@ -100,7 +108,11 @@ local yellCatalystGreen				= mod:NewYell(142730, nil, nil, false)
 --Kaz'tik the Manipulator
 local specWarnMesmerize				= mod:NewSpecialWarningYou(142671)
 local specWarnMesmerizeOther		= mod:NewSpecialWarningTarget(142671, false)--Person who grabs korven's amber wants this
+<<<<<<< HEAD
 local yellMesmerize					= mod:NewYell("OptionVersion2", 142671)
+=======
+local yellMesmerize					= mod:NewYell(142671, nil, false)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 local specWarnKunchongs				= mod:NewSpecialWarningSwitch("ej8043", mod:IsDps())
 --Korven the Prime
 local specWarnShieldBash			= mod:NewSpecialWarningSpell("OptionVersion2", 143974, mod:IsTank())
@@ -258,7 +270,10 @@ mod.vb.whirlCast = 0
 mod.vb.whirlTime = 0
 mod.vb.aimActive = false
 mod.vb.mutateActive = false
+<<<<<<< HEAD
 mod.vb.flashActive = false
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod.vb.toxicInjection = false--Workaround blizzard bug (double check if hotfix live and if workaround still needed on heroic)
 
 local function warnActivatedTargets(vulnerable)
@@ -276,11 +291,16 @@ local function warnActivatedTargets(vulnerable)
 	table.wipe(activatedTargets)
 end
 
+<<<<<<< HEAD
 local function showRangeFrame()--Only called by mutate
+=======
+local function showRangeFrame()
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	DBM.RangeCheck:Show(3)
 	mod.vb.mutateActive = true
 end
 
+<<<<<<< HEAD
 local function hideRangeFrame()--Only called by flash
 	mod.vb.flashActive = false
 	if not mod.vb.aimActive and not mod.vb.mutateActive then
@@ -289,6 +309,13 @@ local function hideRangeFrame()--Only called by flash
 end
 
 local function CheckBosses()
+=======
+local function hideRangeFrame()
+	DBM.RangeCheck:Hide()
+end
+
+local function CheckBosses(ignoreRTF)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	local vulnerable = false
 	for i = 1, 5 do
 		local unitID = "boss"..i
@@ -332,7 +359,11 @@ local function CheckBosses()
 			elseif cid == 71154 then--Ka'roz the Locust
 				timerFlashCD:Start(14)--In final LFR test, he didn't cast this for 20 seconds. TODO check this change
 				timerHurlAmberCD:Start(44)
+<<<<<<< HEAD
 			end--]]
+=======
+			end
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		end
 	end
 	if #activatedTargets >= 1 then
@@ -493,14 +524,17 @@ function mod:OnCombatStart(delay)
 	self.vb.parasitesActive = 0
 	self.vb.aimActive = false
 	self.vb.mutateActive = false
+<<<<<<< HEAD
 	self.vb.flashActive = false
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	self.vb.toxicInjection = false
 	self:RegisterShortTermEvents(
 		"INSTANCE_ENCOUNTER_ENGAGE_UNIT"--We register here to make sure we wipe vb.on pull
 	)
 	timerJumpToCenter:Start(-delay)
 	berserkTimer:Start(-delay)
-	if self:IsDifficulty("normal10", "heroic10") then--Increaased number of people, decrease likelyhood of chat yell so it levels out
+	if self:IsHeroic() then--Increaased number of people, decrease likelyhood of chat yell so it levels out
 		mathNumber = 100
 	else
 		mathNumber = 250--0.4% chance per person in 25 man, LFR, Flex
@@ -601,7 +635,10 @@ function mod:SPELL_CAST_START(args)
 		warnInsaneCalculationFire:Show()
 		specWarnInsaneCalculationFire:Show()
 	elseif spellId == 143709 then
+<<<<<<< HEAD
 		self.vb.flashActive = true
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		warnFlashCast:Show()
 		specWarnFlashCast:Show()
 		timerFlashCD:Start()
@@ -641,7 +678,11 @@ function mod:SPELL_CAST_START(args)
 			if UnitExists(bossUnitID) and UnitGUID(bossUnitID) == args.sourceGUID and UnitDetailedThreatSituation("player", bossUnitID) then
 				local elapsed, total = timerMutateCD:GetTime(self.vb.mutateCount+1)
 				local remaining = total - elapsed
+<<<<<<< HEAD
 				if self:IsHeroic() and (remaining < 20) and (self:IsDifficulty("heroic25") and (self.vb.parasitesActive < 3) or (self.vb.parasitesActive < 1)) and not UnitDebuff("player", GetSpellInfo(143339)) then--We need more parasites to spawn with this attack
+=======
+				if self:IsHeroic() and (remaining < 20) and (self.vb.parasitesActive < 3) and not UnitDebuff("player", GetSpellInfo(143339)) then--We need more parasites to spawn with this attack
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 					specWarnMoreParasites:Show()
 				else--We want to block attack and not spawn anything
 					specWarnInjection:Show()
@@ -747,7 +788,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			timerMutateCD:Start(nil, self.vb.mutateCount+1)
 			if self.Options.RangeFrame then
 				self.vb.mutateActive = false
+<<<<<<< HEAD
 				if not self.vb.aimActive and not self.vb.flashActive then
+=======
+				if not self.vb.aimActive then
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 					DBM.RangeCheck:Hide()--Hide it if aim isn't active, otherwise, delay hide call until hide is called by SPELL_AURA_REMOVED for aim
 				end
 				self:Schedule(26.5, showRangeFrame)--Show about 5 seconds before mutate cast
@@ -803,12 +848,20 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerGouge:Cancel(args.destName)
 	elseif spellId == 143974 then
 		timerShieldBash:Cancel(args.destName)
+<<<<<<< HEAD
 	elseif spellId == 143700 and self.Options.RangeFrame and not self.vb.mutateActive and not self.vb.aimActive and not self.vb.flashActive then
+=======
+	elseif spellId == 143700 and self.Options.RangeFrame and not self.vb.mutateActive and not self.vb.aimActive then
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		DBM.RangeCheck:Hide()
 	elseif spellId == 142948 then
 		self.vb.aimActive = false
 		if self.Options.RangeFrame then
+<<<<<<< HEAD
 			if not self.vb.mutateActive and not self.vb.flashActive then--Don't call hide because frame is needed by mutate and will be hiden after that.
+=======
+			if not self.vb.mutateActive then--Don't call hide because frame is needed by mutate and will be hiden after that.
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 				DBM.RangeCheck:Hide()
 			end
 		end
@@ -816,7 +869,11 @@ function mod:SPELL_AURA_REMOVED(args)
 			self:SetIcon(args.destName, 0)
 		end
 	elseif spellId == 143339 then
+<<<<<<< HEAD
 		if self:IsDifficulty("normal10", "heroic10") then
+=======
+		if self:IsHeroic() then
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			self.vb.parasitesActive = self.vb.parasitesActive + 5
 		else
 			self.vb.parasitesActive = self.vb.parasitesActive + 8

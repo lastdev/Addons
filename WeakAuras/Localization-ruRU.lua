@@ -64,7 +64,10 @@ L["Bottom to Top"] = "Снизу Вверх"
 L["Bounce"] = "Отскок"
 L["Bounce with Decay"] = "Отскок с затуханием"
 L["Buff"] = "Бафф"
+<<<<<<< HEAD
 -- L["Burning Embers"] = ""
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["By |cFF69CCF0Mirrored|r of Dragonmaw(US) Horde"] = "Автор |cFF69CCF0Mirrored|r с Dragonmaw(US) Орда"
 L["Cast"] = "Каст"
 L["Cast Failed"] = "Каст Прерван"
@@ -79,8 +82,12 @@ L["Channel (Spell)"] = "Потоковое"
 L["Character Type"] = "Тип персонажа"
 L["Chat Frame"] = "Окно Чата"
 L["Chat Message"] = "Сообщение в Чат"
+<<<<<<< HEAD
 L["Children:"] = "Разделы:"
 -- L["Chi Power"] = ""
+=======
+L["Children:"] = "Дети:"
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Circle"] = "Круг"
 L["Circular"] = "Круговой"
 L["Class"] = "Класс"
@@ -111,7 +118,10 @@ L["Death Knight Rune"] = "Руна Рыцаря Смерти"
 L["Death Rune"] = "Руна Смерти"
 L["Debuff"] = "Дебафф"
 L["Deflect"] = "Отражено"
+<<<<<<< HEAD
 -- L["Demonic Fury"] = ""
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Descending"] = "По убыванию"
 L["Destination Name"] = "Имя Цели"
 L["Destination Unit"] = "Цель Приемник"
@@ -190,7 +200,10 @@ L["Include Charges"] = "Включая Расходы"
 L["Include Death Runes"] = "Включая Руны Смерти"
 L["In Combat"] = "В Бою"
 L["Inherited"] = "Вложенный"
+<<<<<<< HEAD
 -- L["In Pet Battle"] = ""
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Inside"] = "Внутри"
 L["Instakill"] = "Момент. Убийство"
 L["Instance Type"] = "Тип Подземелья"
@@ -254,7 +267,10 @@ L["Party Kill"] = "Все Мертвы"
 L["Paused"] = "Приостановлено"
 L["Periodic Spell"] = "Периодическое заклинание"
 L["Pet"] = "Питомец"
+<<<<<<< HEAD
 -- L["Pet Behavior"] = ""
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Player"] = "Игрок"
 L["Player Character"] = "Игровой Персонаж"
 L["Player Class"] = "Класс Игрока"
@@ -289,6 +305,233 @@ L["Require Valid Target"] = "Требуется Допустимая Цель"
 L["Resist"] = "Сопротивление"
 L["Resisted"] = "Резист"
 L["Resolve collisions dialog"] = [=[Вы включили аддон в котором определены индикации |cFF8800FFWeakAuras|r которые имеют те же имена, что и существующие.
+<<<<<<< HEAD
+=======
+
+Вы должны переименовать ваши индикации, чтобы не было конфликта.
+
+Resolved: |cFFFF0000]=]
+L["Resolve collisions dialog singular"] = [=[Вы включили аддон в котором определена индикация |cFF8800FFWeakAuras|r которая имеет то же имя, что и существующая.
+
+Вы должны переименовать вашу индикацию, чтобы не было конфликта.
+
+Resolved: |cFFFF0000]=]
+L["Resolve collisions dialog startup"] = [=[Вы включили аддон в котором определены индикации |cFF8800FFWeakAuras|r которые имеют те же имена, что и существующие.
+
+
+Вы должны переименовать ваши индикации, чтобы не было конфликта.
+
+Resolved: |cFFFF0000]=]
+L["Resolve collisions dialog startup singular"] = [=[Вы включили аддон в котором определена индикация |cFF8800FFWeakAuras|r которая имеет то же имя, что и существующая.
+
+Вы должны переименовать вашу индикацию, чтобы не было конфликта.
+
+Resolved: |cFFFF0000]=]
+L["Resting"] = "Отдых"
+L["Resurrect"] = "Воскрешение"
+L["Right"] = "Справа"
+L["Right to Left"] = "Справа налево"
+L["Rogue"] = "Разбойник"
+L["Rotate Left"] = "Вращение Влево"
+L["Rotate Right"] = "Вращение Вправо"
+L["Rune"] = "Руна"
+L["Runic Power"] = "Энергия Рун"
+L["Say"] = "Сказать"
+L["Seconds"] = "Секунды"
+L["Second Tree"] = "Вторая Специализация"
+L["Shake"] = "Дрожь"
+L["Shaman"] = "Шаман"
+L["Shards"] = "Осколки"
+L["Shift-Click to pause"] = "Shift+Клик для паузы"
+L["Shift-Click to resume"] = "Shift+Клик возобновить"
+L["Show"] = "Показать"
+L["Shrink"] = "Обрезать"
+L["Slide from Bottom"] = "Скользить Снизу"
+L["Slide from Left"] = "Скользить Слева"
+L["Slide from Right"] = "Скользить Справа"
+L["Slide from Top"] = "Скользить Сверху"
+L["Slide to Bottom"] = "Скользить Вниз"
+L["Slide to Left"] = "Скользить Влево"
+L["Slide to Right"] = "Скользить Вправо"
+L["Slide to Top"] = "Скользить Вверх"
+L["Slime"] = "Слизь"
+L["Solar"] = "Солнечная"
+L["Solar Power"] = "Солнечная Энергия"
+L["Sound Effects"] = "Звуковые эффекты"
+L["Source Name"] = "Имя Источника"
+L["Source Unit"] = "Источник"
+L["Spacing"] = "Интервал"
+L["Specific Unit"] = "Специфическая Единица"
+L["Spell"] = "Заклинание"
+L["Spell (Building)"] = "Заклинание (Строение)"
+L["Spell Name"] = "Название Заклинания"
+L["Spin"] = "Штопор"
+L["Spiral"] = "Спираль"
+L["Spiral In And Out"] = "Спирально Туда-Сюда"
+L["Stacks"] = "Стаки"
+L["Stance/Form/Aura"] = "Стойка/Форма/Аура"
+L["Status"] = "Статус"
+L["Stolen"] = "Украденный"
+L["Summon"] = "Призыв"
+L["Swing"] = "Размах"
+L["Swing Timer"] = "Таймер Взмаха"
+L["Talent Specialization"] = "Специализация"
+L["Tank"] = "Танк"
+L["Tanking And Highest"] = "Танкует и макс. агро"
+L["Tanking But Not Highest"] = "Танкует, но не макс. агро"
+L["Target"] = "Цель"
+-- L["Thick Outline"] = ""
+L["Third Tree"] = "Третья Специализация"
+L["Threat Situation"] = "Положение в Аггро"
+L["Thrown"] = "Метательное"
+L["Timed"] = "Временная"
+L["Top"] = "Вверх"
+L["Top Left"] = "Вверх Слева"
+L["Top Right"] = "Вверх Справа"
+L["Top to Bottom"] = "Сверху Вниз"
+L["Total"] = "Всего"
+L["Totem"] = "Тотем"
+L["Totem Name"] = "Название Тотема"
+L["Totem Type"] = "Тип Тотема"
+L["Transmission error"] = "Ошибка Передачи"
+L["Trigger:"] = "Триггер:"
+L["Trigger Update"] = "Триггер Обновлен"
+L["Undefined"] = "Неопределено"
+L["Unholy Rune #1"] = "Руна Нечестивости #1"
+L["Unholy Rune #2"] = "Руна Нечестивости #2"
+L["Unholy Runes"] = "Руны Нечестивости"
+L["Unit"] = "Цель"
+L["Unit Characteristics"] = "Характеристики единицы"
+L["Unit Destroyed"] = "Цель Уничтожена"
+L["Unit Died"] = "Цель Мертва"
+L["Up"] = "Вверх"
+L["Version error recevied higher"] = "Эта индикация несовместима с вашей версией WeakAuras - она создана в версии %s, а у вас версия %s. Пожалуста обновите вашу версию WeakAuras."
+L["Version error recevied lower"] = "Эта индикация несовместима с вашей версией WeakAuras - она создана в версии %s, а у вас версия %s. Пожалуста посоветуйте человеку, от которого вы это получили, обновить его версию WeakAuras."
+L["Warlock"] = "Чернокнижник"
+L["Warrior"] = "Воин"
+L["Water"] = "Вода"
+-- L["WeakAuras"] = ""
+-- L["WeakAurasModelPaths"] = ""
+L["WeakAurasModelPaths .toc Notes"] = "Предоставляет список большинства 3D моделей игры, для использования в WA."
+L["WeakAurasOptions"] = "Настройки WeakAuras"
+L["WeakAurasOptions .toc Notes"] = "Интерфейс настроек WeakAuras"
+L["WeakAuras .toc Notes"] = "Мощный, многосторонний инструмент для отображения графики и информации, основанной на баффах, дебаффах и других триггерах."
+L["WeakAurasTutorials"] = "Обучение WeakAuras"
+L["WeakAurasTutorials .toc Notes"] = "Представление и дополнительное обучение по WeakAuras."
+L["Weapon"] = "Оружие"
+L["Weapon Enchant"] = "Улучшение Оружия (зачарование)"
+L["Whisper"] = "Шепот"
+L["Wobble"] = "Колебание"
+L["Yell"] = "Крик"
+L["Zone"] = "Зона"
+L["Options/1 Match"] = "1 Совпадение"
+L["Options/Actions"] = "Действия"
+L["Options/Activate when the given aura(s) |cFFFF0000can't|r be found"] = "Активировать когда заданная аура(ы) |cFFFF0000не|r найдена"
+L["Options/Add a new display"] = "Добавить новую индикацию"
+L["Options/Add Dynamic Text"] = "Добавить Динамический Текст"
+L["Options/Addon"] = "Аддон"
+L["Options/Addons"] = "Аддоны"
+L["Options/Add to group %s"] = "Добавить в группу %s"
+L["Options/Add to new Dynamic Group"] = "Добавить в новую динамическую группу"
+L["Options/Add to new Group"] = "Добавить в новую группу"
+L["Options/Add Trigger"] = "Добавить Триггер"
+L["Options/A group that dynamically controls the positioning of its children"] = "Группа, позволяющая динамично изменять позиции своих элементов"
+L["Options/Align"] = "Выровнять"
+L["Options/Allow Full Rotation"] = "Разрешить полное вращение"
+L["Options/Alpha"] = "Прозрачность"
+L["Options/Anchor"] = "Крепление"
+L["Options/Anchor Point"] = "Точка Крепления"
+L["Options/Angle"] = "Угол"
+L["Options/Animate"] = "Анимация"
+L["Options/Animated Expand and Collapse"] = "Анимированное Сворачивание и Разворачивание"
+L["Options/Animation relative duration description"] = [=[Длительность анимации по отношению к индикации, выраженная в виде дроби (1/2), процентах (50%), или десятично (0.5).
+|cFFFF0000Примечание:|r Если индикация не имеет таймера (например аура без длительности и т.д.), то анимация не проигрывается.
+|cFF4444FFДля Примера:|r
+Если длительность анимации установлена в |cFF00CC0010%|r и триггер индикации это бафф длительностью 20 секунд, стартовая анимация проиграется за 2 секунды.
+Если длительность анимации установлена в |cFF00CC0010%|r и триггер индикации это бесконечная аура, стартовая анимация не будет проигрываться (но проигралась бы, если установить длительность в секундах) .]=]
+L["Options/Animations"] = "Анимация"
+L["Options/Animation Sequence"] = "Цепочка Анимации"
+L["Options/Aquatic"] = "Водная форма"
+L["Options/Aura (Paladin)"] = "Аура (паладин)"
+L["Options/Aura(s)"] = "Эффекты"
+L["Options/Auto"] = "Авто"
+L["Options/Auto-cloning enabled"] = "Авто-клонирование включено"
+L["Options/Automatic Icon"] = "Автоматическая Иконка"
+-- L["Options/Backdrop Color"] = ""
+-- L["Options/Backdrop Style"] = ""
+L["Options/Background"] = "Подложка"
+L["Options/Background Color"] = "Цвет Подложки"
+L["Options/Background Inset"] = "Вложенная подложка"
+L["Options/Background Offset"] = "Смещение Подложки"
+L["Options/Background Texture"] = "Текстура Подложки"
+L["Options/Bar Alpha"] = "Прозрачность Полосы"
+L["Options/Bar Color"] = "Цвет Полосы"
+-- L["Options/Bar Color Settings"] = ""
+-- L["Options/Bar in Front"] = ""
+L["Options/Bar Texture"] = "Текстура Полосы"
+L["Options/Battle"] = "Сражение"
+L["Options/Bear"] = "Медведь"
+L["Options/Berserker"] = "Берсерк"
+L["Options/Blend Mode"] = "Режим Наложения"
+L["Options/Blood"] = "Кровь"
+L["Options/Border"] = "Граница"
+L["Options/Border Color"] = "Цвет Границы"
+-- L["Options/Border Inset"] = ""
+L["Options/Border Offset"] = "Смещение Границы"
+L["Options/Border Settings"] = "Настройки Границы"
+L["Options/Border Size"] = "Размер Границы"
+L["Options/Border Style"] = "Стиль Границы"
+L["Options/Bottom Text"] = "Нижний текст"
+L["Options/Button Glow"] = "Подсветка кнопки"
+L["Options/Can be a name or a UID (e.g., party1). Only works on friendly players in your group."] = "Может быть именем или UID (н.п. party1). Работает только с дружественными целями в вашей группе."
+L["Options/Cancel"] = "Отмена"
+L["Options/Cat"] = "Кошка"
+L["Options/Change the name of this display"] = "Изменить имя индикации"
+L["Options/Channel Number"] = "Номер Канала"
+L["Options/Check On..."] = "Проверять..."
+L["Options/Choose"] = "Выбрать"
+L["Options/Choose Trigger"] = "Выбор Триггера"
+L["Options/Choose whether the displayed icon is automatic or defined manually"] = "Выберите, будет ли значок определен автоматически или вручную"
+L["Options/Clone option enabled dialog"] = [=[Вы активировали опцию |cFFFF0000Авто-клонирования|r.
+
+|cFFFF0000Авто-клонирование|r заставляет индикацию автоматически дубироватся для отображения нескольких источников информации.
+Если вы поместите эту индикацию в |cFF22AA22Динамическую Группу|r, все клоны будут смещаться вверх этой большой кучи.
+
+Вы хотите поместить эту индикацию в новую |cFF22AA22Динамическую Группу|r?]=]
+L["Options/Close"] = "Закрыть"
+L["Options/Collapse"] = "Свернуть"
+L["Options/Collapse all loaded displays"] = "Свернуть все активные индикации"
+L["Options/Collapse all non-loaded displays"] = "Свернуть все неактивные индикации"
+L["Options/Color"] = "Цвет"
+L["Options/Compress"] = "Сжать"
+L["Options/Concentration"] = "Концентрация"
+L["Options/Constant Factor"] = "Постоянный множитель"
+L["Options/Control-click to select multiple displays"] = "Ctrl+клик для выбора нескольких индикаций"
+L["Options/Controls the positioning and configuration of multiple displays at the same time"] = "Управление позиционированием и настройка нескольких индикаций одновременно"
+L["Options/Convert to..."] = "Преобразовать в..."
+L["Options/Cooldown"] = "Кулдаун"
+L["Options/Copy"] = "Копировать"
+L["Options/Copy settings from..."] = "Копировать настройки из..."
+L["Options/Copy settings from another display"] = "Копировать настройки из другой индикации"
+L["Options/Copy settings from %s"] = "Копировать настройки из %s"
+L["Options/Count"] = "Кол-во"
+L["Options/Creating buttons: "] = "Создание кнопок:"
+L["Options/Creating options: "] = "Создание настроек:"
+L["Options/Crop X"] = "Обрезать по X"
+L["Options/Crop Y"] = "Обрезать по Y"
+L["Options/Crusader"] = "Рыцарь"
+L["Options/Custom Code"] = "Свой Код"
+L["Options/Custom Trigger"] = "Свой Триггер"
+L["Options/Custom trigger event tooltip"] = [=[Напишите какие события должны проверятся для активации триггера.
+Несколько событий должны разделятся запятыми или пробелами.
+
+|cFF4444FFДля Примера:|r
+UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
+]=]
+L["Options/Custom trigger status tooltip"] = [=[Напишите какие события должны проверятся для активации триггера.
+Поскольку это триггер состояния, указанные события могут быть вызваны WeakAuras без ожидаемых аргументов.
+Несколько событий должны разделятся запятыми или пробелами.
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 Вы должны переименовать ваши индикации, чтобы не было конфликта.
 

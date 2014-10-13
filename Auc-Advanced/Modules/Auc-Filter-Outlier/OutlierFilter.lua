@@ -1,7 +1,12 @@
 --[[
 	Auctioneer - Outlier Filter
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
 	Revision: $Id: OutlierFilter.lua 5459 2014-06-14 13:01:00Z brykrys $
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+	Revision: $Id: OutlierFilter.lua 5437 2013-10-01 06:52:26Z Shirik $
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -41,7 +46,11 @@ local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill, _TRAN
 local data
 
 local reset = true
+<<<<<<< HEAD
 local valuecache, model, minseen, levels
+=======
+local cache, model, minseen, levels
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 local CFromZ = {};
 
 local GetMarketValue = AucAdvanced.API.GetMarketValue
@@ -87,7 +96,11 @@ function lib.AuctionFilter(operation, itemData)
 	local value = valuecache[key]
 	if not value then
 		local seen
+<<<<<<< HEAD
 		value, seen = GetMarketValue(link, nil, CFromZ[levels[quality]])
+=======
+		value, seen = AucAdvanced.API.GetMarketValue(link, nil, CFromZ[levels[quality]])
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 		if not value or not seen or seen < minseen then
 			value = 0
@@ -107,12 +120,17 @@ function lib.AuctionFilter(operation, itemData)
 	if price <= maxcap then return false end
 
 	-- Otherwise this item needs to be filtered
+<<<<<<< HEAD
 
 	-- debug line commented out: this module is under development so we may need still it
 	--[=[
 	debugPrint(format("Outlier filtered out item %s: price %s is above %.2f%% confidence level %s", link, tostring(price), CFromZ[levels[quality]] * 100, tostring(value)),
 		"Outlier", "Filtered item", "Info")
 	--]=]
+=======
+	nLog.AddMessage("Auctioneer", "Outlier", N_DEBUG, "Filtered item", string.format("Outlier filtered out item %s: price %f is above %d%% confidence level %f",
+		link, price, CFromZ[levels[quality]] * 100, value));
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	return true
 end
 
@@ -211,8 +229,11 @@ function private.SetupConfigGui(gui)
 	gui:AddTip(id, _TRANS('OUTL_HelpTooltip_EnableArtifact') )--Ticking this box will enable outlier filtering on artifact quality items
 	gui:AddControl(id, "WideSlider", 0, 1, "filter.outlier.artifact.level", 0.25, 5, .01, _TRANS('OUTL_Interface_CapGrowthParam'))--Cap growth to:
 	gui:AddTip(id, _TRANS('OUTL_HelpTooltip_MaximumAmt') )--Set the maximum amount that an items price can grow before being filtered
+<<<<<<< HEAD
 
 end
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 do
 	local abs = math.abs;
@@ -237,6 +258,32 @@ do
 	end
 end
 
+<<<<<<< HEAD
+=======
+do 
+	local abs = math.abs;
+	local sqrt = math.sqrt;
+	local exp = math.exp;
+
+	function private.GetCfromZ(Z)
+		-- Estimation of the normal curve CDF based on a magic formula
+		-- Adapted courtesy http://www.johndcook.com/cpp_phi.html
+		local a1 = 0.254829592;
+		local a2 = -0.284496736;
+		local a3 = 1.421413741;
+		local a4 = -1.453152027;
+		local a5 = 1.061405429;
+		local p =  0.3275911;
+
+		local x = abs(Z) / sqrt(2);
+		local t = 1 / (1 + p * x);
+		local y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * exp(-x * x);
+
+		return 0.5 * (1 + (Z < 0 and -y or y));
+	end
+end
+
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 -- Memoizing implementation of private.GetCFromZ()
 setmetatable(CFromZ, {__index = function(t,k)
 	local value = private.GetCfromZ(k);
@@ -245,4 +292,8 @@ setmetatable(CFromZ, {__index = function(t,k)
 end});
 
 
+<<<<<<< HEAD
 AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Filter-Outlier/OutlierFilter.lua $", "$Rev: 5459 $")
+=======
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Filter-Outlier/OutlierFilter.lua $", "$Rev: 5437 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

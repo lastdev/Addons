@@ -1,9 +1,12 @@
+<<<<<<< HEAD
 == Version 50400.1.6
 * I have gotten a pretty good response, so I think (and hope) Bitten's SpellFlash will live on!
 
 == Version 50400.1.5
 * The future of Bitten's SpellFlash: Monk is in question.  I no longer wish to maintain this addon, starting with patch 6.0.  If you are interested in taking it over, keeping up with optimal rotations, and you have programming skills, please leave a comment or PM on Curse.
 
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 == Version 50400.1.3
 * All: Flashes WoW's 9th Anniversary Celebration Package.
 
@@ -92,3 +95,15 @@ Update for patch 5.3.
 
 == Version 3.2.1
 NOTE: This version includes a new version of Bitten's SpellFlash Library that I tried to test well, but if you find any issues please let me know right away.
+<<<<<<< HEAD
+=======
+
+== Version 3.2.0
+* Brewmaster: Elusive Brew now flashes a normal yellow color even at 10 stacks (was red).
+* Mistweaver: Bugfix - Expel Harm was flashing even if it was on cooldown.
+* Mistweaver and Brewmaster: Expel Harm is now used when you are under 80% health (was 85 or 90, depending on spec).
+* Windwalker: Added level 30 talents (because they changed w/ 5.2).
+* Windwalker: Removed Rushing Jade Wind from the single target rotation (Blackout Kick is better dps).
+* Windwalker: Added an option to synchronize Tigereye Brew with a mastery proc.  See the website for more info (especially if you have the Rune of Re-Origination).
+* Windwalker: Fists of Fury now flashes small and yellow if Energizing Brew is off cooldown, to make you less tempted to press them both at the same time.
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

@@ -248,7 +248,10 @@ local blockedFunctions = {
   getfenv = true,
   setfenv = true,
   loadstring = true,
+<<<<<<< HEAD
   pcall = true,
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
   -- blocked WoW API
   SendMail = true,
   SetTradeMoney = true,
@@ -268,6 +271,7 @@ local exec_env = setmetatable({}, { __index =
 
 local function_cache = {};
 function WeakAuras.LoadFunction(string)
+<<<<<<< HEAD
   if function_cache[string] then
     return function_cache[string]
   else
@@ -283,6 +287,22 @@ function WeakAuras.LoadFunction(string)
       end
     end
   end
+=======
+  if(function_cache[string]) then  return function_cache[string];
+  else
+  local func;
+  local loadedFunction, errorString = loadstring(string);
+  if(errorString) then
+    print(errorString);
+  else
+    func = assert(loadedFunction)();
+    if func then
+      setfenv(func, exec_env)
+    end
+    function_cache[string] = func;
+  end
+  return func;  end
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end
 
 local aura_cache = {};
@@ -1541,11 +1561,16 @@ function WeakAuras.CreateTalentCache()
   --Create an entry for the current character's class
   db.talent_cache[player_class] = db.talent_cache[player_class] or {}
   local talentId = 1;
+<<<<<<< HEAD
   local numTalents = _G.MAX_NUM_TALENTS or 21;
   local talentName, talentIcon;
   -- @patch 6.0 compatibility quick fix
   local GetTalentInfo = GetTalentInfo
   if not MAX_NUM_TALENTS then GetTalentInfo = function(t) return select(2, _G.GetTalentInfo(ceil(t/3), (t-1)%3 +1, GetActiveSpecGroup())) end end
+=======
+  local numTalents = _G.MAX_NUM_TALENTS;
+  local talentName, talentIcon;
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
   while talentId <= numTalents do
     --Get name and icon info for the current talent of the current class and save it for that class
     talentName, talentIcon = GetTalentInfo(talentId)
@@ -4812,7 +4837,10 @@ function WeakAuras.GetAuraTooltipInfo(unit, index, filter)
   else
     _, _, tooltipSize = tooltipText:find("(%d+)")
   end
+<<<<<<< HEAD
   end
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
   return tooltipText, debuffType, tonumber(tooltipSize) or 0;
 end
 

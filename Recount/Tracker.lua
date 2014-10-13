@@ -25,6 +25,7 @@ local tonumber = tonumber
 local type = type
 local unpack = unpack
 
+<<<<<<< HEAD
 local GetTime = GetTime
 local UnitHealth = UnitHealth
 local GetSpellInfo = GetSpellInfo
@@ -34,6 +35,10 @@ local UnitHealthMax = UnitHealthMax
 local UnitIsFeignDeath = UnitIsFeignDeath
 local UnitName = UnitName
 local ChatThrottleLib = ChatThrottleLib
+=======
+local revision = tonumber(string.sub("$Revision: 1251 $", 12, -3))
+if Recount.Version < revision then Recount.Version = revision end
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 local dbCombatants
 
@@ -288,6 +293,7 @@ local AbsorbSpellDuration = {
 	[114893]	= 30, -- Stone Bulwark Totem Aura (confirmed), MOP
 	[145379]	= 15, -- Nature's Barrier, Shaman T16 Restoration 2P Bonus, 5.4
 	-- Warlock
+<<<<<<< HEAD
 	[7812]		= 30, -- Sacrifice (warlock) Rank 1
 	[19438]		= 30,
 	[19440]		= 30,
@@ -309,6 +315,27 @@ local AbsorbSpellDuration = {
 	[108366]	= 20, -- Soul Leech
 	[108416]	= 20, -- Sacrificial Pact
 	[131623]	= 30, -- Twilight Ward
+=======
+	[7812] = 30, -- Sacrifice (warlock) Rank 1
+	[19438] = 30,
+	[19440] = 30,
+	[19441] = 30,
+	[19442] = 30,
+	[19443] = 30,
+	[27273] = 30,
+	[47985] = 30,
+	[47986] = 30, -- rank 9
+	[6229] = 30, -- Shadow Ward (warlock) Rank 1
+	[11739] = 30,
+	[11740] = 30,
+	[28610] = 30,
+	[47890] = 30,
+	[47891] = 30, -- Rank 6
+	[6229] = 30, -- Twilight Ward (partially confirmed), MOP
+	[110913] = 10, -- Dark Bargain (partially confirmed, may not be an absorb), MOP
+	[91711] = 30, -- Nether Ward (may have unverified aura trigger), MOP
+	[145379] = 15, -- Nature's Barrier, Shaman T16 Restoration 2P Bonus, 5.4
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	-- Warrior
 	[112048]	= 6, -- Shield Barrier (confirmed), MOP
 	-- Enchants
@@ -395,7 +422,11 @@ local AbsorbSpellDuration = {
 local bossIDs = BossIDs.BossIDs
 
 function Recount.IsBoss(GUID)
+<<<<<<< HEAD
 	return GUID and bossIDs[tonumber(GUID:sub(-13, -9), 16)]
+=======
+   return GUID and bossIDs[tonumber(GUID:sub(-13, -9), 16)]
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end
 
 
@@ -1489,7 +1520,11 @@ end
 
 -- Elsia: Borrowed shamelessly from Threat-2.0
 function Recount:NPCID(guid)
+<<<<<<< HEAD
 	return tonumber(guid:sub(-13, -7), 16)
+=======
+	return tonumber(guid:sub(-13,-7),16)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end
 
 function Recount:DetectPet(name, nGUID, nFlags)

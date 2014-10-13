@@ -679,6 +679,7 @@ c.AddSpell("Healing Touch", "for Dream Beta", {
 	end,
 })
 
+<<<<<<< HEAD
 c.AddOptionalSpell("Bear Form", "while Pooling", {
 	Type = "form",
 	Melee = true,
@@ -689,6 +690,8 @@ c.AddOptionalSpell("Bear Form", "while Pooling", {
 	end,
 })
 
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 c.AddSpell("Ferocious Bite", "on Last Tick Beta", {
 	Melee = true,
 	GetDelay = function()

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ï»¿-- French version (by Kubik of Vol'Jin) 2014-08-25 / V. 5.4.8.3
+=======
+ï»¿-- French version (by Kubik of Vol'Jin) 2014-03-29 / V. 5.4.7.1
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 -- à = \195\160
 -- â = \195\162
 -- ç = \195\167
@@ -1009,6 +1013,7 @@ HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "Vous surveillez les buffs manquants \
     HEALBOT_OPTION_NUMENEMYS                = "Nombre d\'ennemis"
     HEALBOT_WORD_AUTO                       = "Auto"
 	HEALBOT_OPTIONS_ENABLEAUTOCOMBAT        = "Activer autoCombat HealBot"
+<<<<<<< HEAD
     HEALBOT_WORDS_CUSTOMNAME                = "Nom personnalis\195\169"
     HEALBOT_WORDS_REMOVETEMPCUSTOMNAME      = "Enlever le nom perso. temporaire"
     HEALBOT_WORDS_REMOVEPERMCUSTOMNAME      = "Enlever le nom perso. permanent"
@@ -1022,6 +1027,8 @@ HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "Vous surveillez les buffs manquants \
     HEALBOT_LDB_SHIFTLEFT_TOOLTIP           = "|cffffff00 Shift-Clic gauche :|r Skin suivant";
     HEALBOT_LDB_RIGHT_TOOLTIP               = "|cffffff00 Clic droit :|r Reset HealBot";
     HEALBOT_LDB_SHIFTRIGHT_TOOLTIP          = "|cffffff00 Shift-Clic droit :|r HealBot On/Off";
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end
 
 if (GetLocale() == "frFR") then

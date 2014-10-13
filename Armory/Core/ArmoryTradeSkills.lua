@@ -1,6 +1,10 @@
 --[[
     Armory Addon for World of Warcraft(tm).
+<<<<<<< HEAD
     Revision: 638 2014-10-12T08:05:02Z
+=======
+    Revision: 628 2014-04-08T09:54:44Z
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     URL: http://www.wow-neighbours.com
 
     License:
@@ -1186,11 +1190,17 @@ function Armory:GetRecipeAltInfo(name, link, profession, reqRank, reqReputation,
         local currentProfile = self:CurrentProfile();
         local skillName, skillType, dbEntry, character;
 
+<<<<<<< HEAD
         for _, profile in ipairs(self:GetConnectedProfiles()) do
             self:SelectProfile(profile);
+=======
+            for _, profile in ipairs(self:GetConnectedProfiles()) do
+                self:SelectProfile(profile);
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
             dbEntry = self.selectedDbBaseEntry;
 
+<<<<<<< HEAD
             local known;
             for i = 1, dbEntry:GetNumValues(container, profession, itemContainer) do
                 skillName, skillType = dbEntry:GetValue(container, profession, itemContainer, i, "Info");
@@ -1198,9 +1208,20 @@ function Armory:GetRecipeAltInfo(name, link, profession, reqRank, reqReputation,
                     known = true;
                     AddKnownBy(profile);
                     break;
+=======
+                local known;
+                for i = 1, dbEntry:GetNumValues(container, profession, itemContainer) do
+                    skillName, skillType = dbEntry:GetValue(container, profession, itemContainer, i, "Info");
+                    if ( IsRecipe(skillType) and IsSameRecipe(skillName, name) ) then
+                        known = true;
+                        AddKnownBy(profile);
+                        break;
+                    end
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                 end
             end
 
+<<<<<<< HEAD
             if ( not known and dbEntry:Contains(container, profession) and (self:GetConfigShowHasSkill() or self:GetConfigShowCanLearn()) ) then
 				local character = self:GetQualifiedCharacterName(profile, true);
                 local skillName, subSkillName, standingID, standing;
@@ -1217,6 +1238,25 @@ function Armory:GetRecipeAltInfo(name, link, profession, reqRank, reqReputation,
                             if ( skillName == profession ) then
                                 isValid = reqSkill == skillName or reqSkill == subSkillName;
                                 break;
+=======
+                if ( not known and dbEntry:Contains(container, profession) and (self:GetConfigShowHasSkill() or self:GetConfigShowCanLearn()) ) then
+					local character = self:GetQualifiedCharacterName(profile, true);
+                    local skillName, subSkillName, standingID, standing;
+                    local rank = dbEntry:GetValue(container, profession, "Rank");
+                    local learnable = reqRank <= rank;
+                    local attainable = not learnable;
+                    local unknown = false;
+
+                    if ( reqSkill or reqReputation ) then
+                        local isValid = reqSkill == nil;
+                        if ( reqSkill ) then
+                            for i = 1, 6 do
+                                skillName, subSkillName = dbEntry:GetValue(container, tostring(i));
+                                if ( skillName == profession ) then
+                                    isValid = reqSkill == skillName or reqSkill == subSkillName;
+                                    break;
+                                end
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                             end
                         end
                     end

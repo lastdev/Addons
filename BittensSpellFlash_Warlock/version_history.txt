@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 == Version 50400.1.5
 * I have gotten a pretty good response, so I think (and hope) Bitten's SpellFlash will live on!
 
@@ -7,6 +8,8 @@
 == Version 50400.1.3
 * Destruction: Tiny fix for Immolate's timing.
 
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 == Version 50400.1.2
 * Destruction: Shadowburn flashing is now optional (yellow) at certain times, to let you pool its usage for procs.
 * Destruction: Stopped Conflagrate from flashing as optional when it's better to use Chaos Bolt.

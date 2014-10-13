@@ -1,9 +1,12 @@
+<<<<<<< HEAD
 == Version 50400.2.3
 * I have gotten a pretty good response, so I think (and hope) Bitten's SpellFlash will live on!
 
 == Version 50400.2.2
 * The future of Bitten's SpellFlash: Priest is in question.  I no longer wish to maintain this addon, starting with patch 6.0.  If you are interested in taking it over, keeping up with optimal rotations, and you have programming skills, please leave a comment or PM on Curse.
 
+=======
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 == Version 50400.2.0
 * Shadow: Update rotation to catch up with gear, and the change below:
 * Shadow: Blizzard made a change that you must wait 9 seconds after Shadow Word: Death before casting it again grants another a shadow orb (up from 6 seconds).
@@ -95,3 +98,12 @@ NOTE: Your options will be reset when you upgrade to this version.
 
 == Version 2.4.2
 * Shadow: Bugfix - If you could manage to get your mana low, Shadow Word: Death would start flashing as if you could cast it and it would give you mana back.  You can't.  And it won't.
+<<<<<<< HEAD
+=======
+
+== Version 2.4.1
+* Why was there no version 2.4.1?
+
+== Version 2.4.0
+* Added a Shadow rotation for the MoP beta.
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

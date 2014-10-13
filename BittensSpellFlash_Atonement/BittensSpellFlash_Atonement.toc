@@ -1,5 +1,9 @@
 ## Interface: 50400
+<<<<<<< HEAD
 ## Version: 50400.1.6
+=======
+## Version: 50400.1.3
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ## Author: Xemnosyst
 ## Title: Bitten's SpellFlash: Atonement
 ## Notes: Replaces Blizzard's default proc highlighting to flash an atonement healer's rotation.
@@ -8,7 +12,11 @@
 ## OptionalDeps: BittensSpellFlashLibrary
 ## LoadOnDemand: 1
 ## X-SpellFlashAddon-LoadWith: Priest
+<<<<<<< HEAD
 ## X-Curse-Packaged-Version: 50400.1.6
+=======
+## X-Curse-Packaged-Version: 50400.1.3
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ## X-Curse-Project-Name: Bitten's SpellFlash: Atonement
 ## X-Curse-Project-ID: bittens-spellflash-atonement
 ## X-Curse-Repository-ID: wow/bittens-spellflash-atonement/mainline

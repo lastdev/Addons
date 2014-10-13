@@ -1,7 +1,12 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
 	Revision: $Id: AprFrame.lua 5462 2014-06-19 11:01:56Z brykrys $
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+	Revision: $Id: AprFrame.lua 5438 2013-11-05 11:42:26Z brykrys $
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -2967,4 +2972,8 @@ function private.CreateFrames()
 
 end
 
+<<<<<<< HEAD
 AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5462 $")
+=======
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5438 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

@@ -1,6 +1,10 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
+<<<<<<< HEAD
 	Version: 5.20.5464 (RidiculousRockrat)
+=======
+	Version: 5.19.5445 (QuiescentQuoll)
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Revision: $Id: EnxSettings.lua 5347 2012-09-06 06:26:15Z Esamynn $
 	URL: http://enchantrix.org/
 
@@ -63,7 +67,11 @@ Usage:
 
 ]]
 
+<<<<<<< HEAD
 Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Enchantrix/EnxSettings.lua $", "$Rev: 5347 $")
+=======
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Enchantrix/EnxSettings.lua $", "$Rev: 5347 $")
+>>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 local lib = {}
 Enchantrix.Settings = lib
