@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(175, "DBM-Party-Cataclysm", 11, 76)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 124 $"):sub(12, -3))
 mod:SetCreatureID(52155)
 mod:SetZone()
 mod:SetUsedIcons(7, 8)
@@ -9,15 +9,14 @@ mod:SetUsedIcons(7, 8)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_CAST_START",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED"
+	"SPELL_CAST_START"
 )
 
 mod:RegisterEvents(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED"
 )
+mod.onlyHeroic = true
 
 local warnWordHethiss		= mod:NewSpellAnnounce(96560, 2)
 local warnWhisperHethiss	= mod:NewTargetAnnounce(96466, 3)
@@ -52,6 +51,12 @@ function mod:OnCombatStart(delay)
 	timerToxicLinkCD:Start(12-delay)
 	toxicLinkIcon = 8
 	table.wipe(toxicLinkTargets)
+	if not self:IsTrivial(90) then--Only warning that uses these events is remorseless winter and that warning is completely useless spam for level 90s.
+		self:RegisterShortTermEvents(
+			"SPELL_DAMAGE",
+			"SPELL_MISSED"
+		)
+	end
 end
 
 function mod:SPELL_AURA_APPLIED(args)

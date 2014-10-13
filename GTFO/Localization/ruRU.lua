@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------
 --[[
 GTFO Russian Localization
-Translator: pcki11 and D_Angel
+Translator: pcki11 and D_Angel and user_kh
 
 Change Log:
 	v2.8.1
@@ -15,6 +15,8 @@ Change Log:
 	v4.7
 		- Fixed localization issues
 	v4.12
+		- Added untranslated strings
+	v4.32
 		- Added untranslated strings
 		
 ]]--
@@ -39,16 +41,16 @@ GTFOLocal =
 	Help_Suspend = "Выключить/включить аддон",
 	Help_Suspended = "Аддон приостановлен.",
 	Help_TestFail = "Тест звука (неудача)",
-	Help_TestFriendlyFire = "Play a test sound (friendly fire)", -- Requires localization
+	Help_TestFriendlyFire = "Тест звука (friendly fire)", -- Needs review
 	Help_TestHigh = "Тест звука (большие повреждения)",
 	Help_TestLow = "Тест звука (низкие повреждения)",
 	Help_Version = "Показать участников рейда с этим аддоном.",
-	LoadingPopup_Message = "Ваши настройки GTFO были сброшены на стандартные. Хотите изменить настройки сейчас?",
 	Loading_Loaded = "v%s загружена.",
 	Loading_LoadedSuspended = "v%s загружена. (|cFFFF1111Приостановлен|r)",
 	Loading_LoadedWithPowerAuras = "v%s загружена вместе с Power Auras.",
 	Loading_NewDatabase = "v%s: Обнаружена новая версия базы данных, сброс настроек.",
 	Loading_OutOfDate = "v%s доступна для скачивания!  |cFFFFFFFFПожалуйста обновитесь.|r",
+	LoadingPopup_Message = "Ваши настройки GTFO были сброшены на стандартные. Хотите изменить настройки сейчас?",
 	Loading_PowerAurasOutOfDate = "Ваша версия аддона |cFFFFFFFFPower Auras Classic|r устарела! Интеграция GTFO и Power Auras не удалась.",
 	Recount_Environmental = "Environmental", -- Requires localization
 	Recount_Name = "GTFO Alerts", -- Requires localization
@@ -73,16 +75,22 @@ GTFOLocal =
 	UI_HighDamageDescription = "Включить звук напоминания выйти из опасных зон.",
 	UI_LowDamage = "Звук в ПВП / в мире / при низких повреждениях",
 	UI_LowDamageDescription = "Включить звук напоминания о зонах с относительно низким уроном, решайте сами покинуть их или нет.",
+	UI_SoundChannel = "Sound Channel", -- Requires localization
+	UI_SoundChannelDescription = "This is the volume channel that GTFO alert sounds will attach themselves to.", -- Requires localization
+	UI_SpecialAlerts = "Special Alerts", -- Requires localization
+	UI_SpecialAlertsHeader = "Activate Special Alerts", -- Requires localization
 	UI_Test = "Тест",
 	UI_TestDescription = "Тест звука.",
-	UI_TestMode = "Experimental/Beta Mode", -- Requires localization
+	UI_TestMode = "Экспериментальный/Бета режим",
 	UI_TestModeDescription = "Activate untested/unverified alerts (Beta/PTR)", -- Requires localization
-	UI_TestModeDescription2 = "Please report any issues to |cFF44FFFF%s@%s.%s|r", -- Requires localization
+	UI_TestModeDescription2 = "Пожалуйста, сообщайте о любых проблемах на |cFF44FFFF%s@%s.%s|r",
 	UI_Trivial = "Trivial content alerts", -- Requires localization
 	UI_TrivialDescription = "Enable alerts for low-level encounters that would otherwise be considered trivial for your character's current level.", -- Requires localization
+	UI_TrivialDescription2 = "Set the slider to the minimum % amount of HP damage taken for alerts to not be considered trivial.", -- Requires localization
+	UI_TrivialSlider = "Минимальный % HP",
 	UI_Unmute = "Play sounds when muted", -- Requires localization
 	UI_UnmuteDescription = "If you have the master sound muted, GTFO will temporarily turn on sound briefly to play GTFO sounds.", -- Requires localization
-	UI_UnmuteDescription2 = "This requires the master volume slider to be higher than 0%.", -- Requires localization
+	UI_UnmuteDescription2 = "This requires the master volume slider to be higher than 0% and will override the sound channel option.", -- Requires localization
 	UI_Volume = "Громкость GTFO",
 	UI_VolumeDescription = "Установить громкость проигрываемых звуков.",
 	UI_VolumeLoud = "4: громко",
@@ -92,15 +100,9 @@ GTFOLocal =
 	UI_VolumeNormal = "3: Нормальная",
 	UI_VolumeQuiet = "1: Тихая",
 	UI_VolumeSoft = "2: Средняя",
-	-- 4.12
-	UI_SpecialAlerts = "Special Alerts",
-	UI_SpecialAlertsHeader = "Activate Special Alerts",	
-	-- 4.12.3
-	Version_On = "Version reminders on",
-	Version_Off = "Version reminders off",
-	-- 4.19.1
-	UI_TrivialSlider = "Minimum % of HP",
-	UI_TrivialDescription2 = "Set the slider to the minimum % amount of HP damage taken for alerts to not be considered trivial.",
+	Version_Off = "Version update reminders off", -- Requires localization
+	Version_On = "Version update reminders on", -- Requires localization
 }
+
 
 end

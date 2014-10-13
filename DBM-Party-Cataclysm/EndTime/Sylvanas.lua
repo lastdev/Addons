@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(323, "DBM-Party-Cataclysm", 12, 184)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
 mod:SetCreatureID(54123)
 mod:SetZone()
 
@@ -12,6 +12,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED",
 	"SPELL_CAST_SUCCESS"
 )
+mod.onlyHeroic = true
 
 local warnShriek		= mod:NewTargetAnnounce(101412, 3, nil, false)
 local warnCalling		= mod:NewSpellAnnounce(100686, 4)

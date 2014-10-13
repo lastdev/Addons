@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Advanced
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: CoreAPI.lua 5429 2013-08-11 17:40:25Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: CoreAPI.lua 5450 2014-01-15 18:57:22Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -106,15 +106,35 @@ do
         using the algorithms in each of the STAT modules as specified
         by the GetItemPDF() function.
 
-        AucAdvanced.API.GetMarketValue(itemLink, serverKey)
+        AucAdvanced.API.GetMarketValue(itemLink, serverKey, confidence)
+
+	The confidence parameter is the probability that the actual price is less than the returned value.
+	In most cases you will want this to be 50% (and that is the default), representing a 50% chance the
+	value is higher than the returned price, and a 50% chance the value is lower. However, sometimes you
+	may be curious of a different limit (for example, filter modules). In these cases, pass in a different
+	value for confidence. 0.5 = 50%, 0.75 = 75%, etc.
     ]]
-    function lib.GetMarketValue(itemLink, serverKey)
-        local _;
-        if type(itemLink) == 'number' then _, itemLink = GetItemInfo(itemLink) end
+	function lib.GetMarketValue(itemLink, serverKey, confidence)
+		local _;
+		if type(itemLink) == 'number' then _, itemLink = GetItemInfo(itemLink) end
 		if not itemLink then return end
 
 		local cacheSig = lib.GetSigFromLink(itemLink)
 		if not cacheSig then return end -- not a valid item link
+
+		if type(confidence) ~= "number" then
+			if confidence then
+				-- invalid parameter - not a number and not nil
+				-- technically an error, but for the time being we will just log it and use default value
+				debugPrint(format("Invalid 'confidence' parameter for GetMarketValue:%s(%s)\nUsing default value.", tostring(confidence), type(confidence)),
+					"CoreAPI", "GetMarketValue invalid parameter", "Error")
+			end
+			confidence = 0.5
+		end
+		-- need to append confidence level to cacheSig so we don't mix them up later
+		-- Rounded to a level that is effectively irrelevant to avoid FP errors
+		cacheSig = cacheSig .. (confidence == 0.5 and "" or ("-" .. floor(confidence * 10000)));
+
 		serverKey = serverKey or GetFaction() -- call GetFaction once here, instead of in every Stat module
 
         local cacheEntry = cache[serverKey][cacheSig]
@@ -201,7 +221,7 @@ do
             return;                 -- No PDFs available for this item
         end
 
-        local limit = total/2;
+        local limit = total * confidence;
         local midpoint, lastMidpoint = 0, 0;
 
         -- Now find the 50% point
@@ -1183,4 +1203,5 @@ do
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreAPI.lua $", "$Rev: 5429 $")
+
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CoreAPI.lua $", "$Rev: 5450 $")

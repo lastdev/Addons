@@ -65,6 +65,7 @@ L["Bottom to Top"] = "De Bas en Haut"
 L["Bounce"] = "Rebond"
 L["Bounce with Decay"] = "Rebond décroissant"
 L["Buff"] = "Amélioration"
+L["Burning Embers"] = "Braises ardentes" -- Needs review
 L["By |cFF69CCF0Mirrored|r of Dragonmaw(US) Horde"] = "Par |cFF69CCF0Mirrored|r de Dragonmaw(US) Horde"
 L["Cast"] = "Incantation"
 L["Cast Failed"] = "Incantation ratée"
@@ -80,6 +81,7 @@ L["Character Type"] = "Type de Personnage"
 L["Chat Frame"] = "Fenêtre de discussion"
 L["Chat Message"] = "Message écrit"
 L["Children:"] = "Enfant :"
+L["Chi Power"] = "Puissance Chi" -- Needs review
 L["Circle"] = "Cercle"
 L["Circular"] = "Circulaire"
 L["Class"] = "Classe"
@@ -110,6 +112,7 @@ L["Death Knight Rune"] = "Rune de Chevalier de la Mort"
 L["Death Rune"] = "Rune de Mort"
 L["Debuff"] = "Affaiblissement"
 L["Deflect"] = "Déviation"
+L["Demonic Fury"] = "Fureur démoniaque" -- Needs review
 L["Descending"] = "Décroissant"
 L["Destination Name"] = "Nom de destination"
 L["Destination Unit"] = "Unité de destination"
@@ -188,6 +191,7 @@ L["Include Charges"] = "Inclure charges"
 L["Include Death Runes"] = "Inclure Runes de Mort"
 L["In Combat"] = "En Combat"
 L["Inherited"] = "Hérité"
+L["In Pet Battle"] = "En combat de mascottes" -- Needs review
 L["Inside"] = "Dedans"
 L["Instakill"] = "Mort instant."
 L["Instance Type"] = "Type d'instance"
@@ -251,6 +255,7 @@ L["Party Kill"] = "Tué par le groupe"
 L["Paused"] = "En pause"
 L["Periodic Spell"] = "Sort péroidique"
 L["Pet"] = "Familier "
+L["Pet Behavior"] = "Comportement du familier" -- Needs review
 L["Player"] = "Joueur"
 L["Player Character"] = "Personnage Joueur"
 L["Player Class"] = "Classe du joueur"
@@ -320,6 +325,7 @@ L["Runic Power"] = "Puissance Runique"
 L["Say"] = "Dire"
 L["Seconds"] = "Secondes"
 L["Second Tree"] = "Deuxième arbre"
+L["Shadow Orbs"] = "Orbes d'ombre" -- Needs review
 L["Shake"] = "Secouer"
 L["Shaman"] = "Chaman"
 L["Shards"] = "Fragments"
@@ -356,6 +362,7 @@ L["Stolen"] = "Volé"
 L["Summon"] = "Invocation"
 L["Swing"] = "Coup"
 L["Swing Timer"] = "Vitesse d'attaque"
+L["Talent selected"] = "Talent sélectionné" -- Needs review
 L["Talent Specialization"] = "Spécialisation"
 L["Tank"] = "Tank"
 L["Tanking And Highest"] = "Tank et le plus haut"
@@ -405,515 +412,6 @@ L["Whisper"] = "Chuchoter"
 L["Wobble"] = "Osciller"
 L["Yell"] = "Crier"
 L["Zone"] = "Zone"
-L["Options/1 Match"] = "1 Correspondance"
-L["Options/Actions"] = "Actions"
-L["Options/Activate when the given aura(s) |cFFFF0000can't|r be found"] = "Activer quand l'aura |cFFFF0000ne peut|r être trouvée"
-L["Options/Add a new display"] = "Ajouter un nouveau graphique"
-L["Options/Add Dynamic Text"] = "Ajouter du texte dynamique"
-L["Options/Addon"] = "Addon"
-L["Options/Addons"] = "Addons"
-L["Options/Add to group %s"] = "Ajouter au groupe %s"
-L["Options/Add to new Dynamic Group"] = "Ajouter à un nouveau groupe dynamique"
-L["Options/Add to new Group"] = "Ajouter à un nouveau groupe"
-L["Options/Add Trigger"] = "Ajouter un déclencheur"
-L["Options/A group that dynamically controls the positioning of its children"] = "Un groupe qui contrôle dynamiquement le positionnement de ses enfants"
-L["Options/Align"] = "Aligner"
-L["Options/Allow Full Rotation"] = "Permettre une rotation complète"
-L["Options/Alpha"] = "Alpha"
-L["Options/Anchor"] = "Ancrage"
-L["Options/Anchor Point"] = "Point d'ancrage"
-L["Options/Angle"] = "Angle"
-L["Options/Animate"] = "Animer"
-L["Options/Animated Expand and Collapse"] = "Expansion et réduction animés"
-L["Options/Animation relative duration description"] = [=[La durée de l'animation par rapport à la durée du graphique, exprimée en fraction (1/2), pourcentage (50%), ou décimal (0.5).
-|cFFFF0000Note :|r si un graphique n'a pas de progression (déclencheur d'événement sans durée définie, aura sans durée, etc), l'animation ne jouera pas.
-
-|cFF4444FFPar exemple :|r
-Si la durée de l'animation est définie à |cFF00CC0010%|r, et le déclencheur du graphique est une amélioration qui dure 20 secondes, l'animation de début jouera pendant 2 secondes.
-Si la durée de l'animation est définie à |cFF00CC0010%|r, et le déclencheur du graphique n'a pas de durée définie, aucune d'animation de début ne jouera (mais elle jouerait si vous aviez spécifié une durée en secondes).
-]=]
-L["Options/Animations"] = "Animations"
-L["Options/Animation Sequence"] = "Séquence d'animation"
-L["Options/Aquatic"] = "Aquatique"
-L["Options/Aura (Paladin)"] = "Aura (Paladin)"
-L["Options/Aura(s)"] = "Aura(s)"
-L["Options/Auto"] = "Auto"
-L["Options/Auto-cloning enabled"] = "Auto-clonage activé"
-L["Options/Automatic Icon"] = "Icône automatique"
-L["Options/Backdrop Color"] = "Couleur de Fond"
-L["Options/Backdrop Style"] = "Style de Fond"
-L["Options/Background"] = "Arrière-plan"
-L["Options/Background Color"] = "Couleur de fond"
-L["Options/Background Inset"] = "Encart d'arrière-plan"
-L["Options/Background Offset"] = "Décalage du Fond "
-L["Options/Background Texture"] = "Texture du Fond"
-L["Options/Bar Alpha"] = "Alpha de la Barre"
-L["Options/Bar Color"] = "Couleur de barre"
-L["Options/Bar Color Settings"] = "Réglages Couleur de Barre"
-L["Options/Bar in Front"] = "Barre devant"
-L["Options/Bar Texture"] = "Texture de barre"
-L["Options/Battle"] = "Combat"
-L["Options/Bear"] = "Ours"
-L["Options/Berserker"] = "Berserker"
-L["Options/Blend Mode"] = "Mode du fusion"
-L["Options/Blood"] = "Sang"
-L["Options/Border"] = "Bordure"
-L["Options/Border Color"] = "Couleur de Bordure"
-L["Options/Border Inset"] = "Encart Fond"
-L["Options/Border Offset"] = "Décalage Bordure"
-L["Options/Border Settings"] = "Réglages de Bordure"
-L["Options/Border Size"] = "Taille de Bordure"
-L["Options/Border Style"] = "Style de Bordure"
-L["Options/Bottom Text"] = "Texte du bas"
-L["Options/Button Glow"] = "Bouton allumé"
-L["Options/Can be a name or a UID (e.g., party1). Only works on friendly players in your group."] = "Peut être un nom ou un UID (par ex. party1). Fonctionne uniquement pour les joueurs amicaux de votre groupe."
-L["Options/Cancel"] = "Annuler"
-L["Options/Cat"] = "Chat"
-L["Options/Change the name of this display"] = "Changer le nom de ce graphique"
-L["Options/Channel Number"] = "Numéro de canal"
-L["Options/Check On..."] = "Vérifier sur..."
-L["Options/Choose"] = "Choisir"
-L["Options/Choose Trigger"] = "Choisir un déclencheur"
-L["Options/Choose whether the displayed icon is automatic or defined manually"] = "Choisir si l'icône affichée est automatique ou définie manuellement"
-L["Options/Clone option enabled dialog"] = [=[
-Vous avez activé une option qui utilise l'|cFFFF0000Auto-clonage|r.
-
-L'|cFFFF0000Auto-clonage|r permet à un graphique d'être automatiquement dupliqué pour afficher plusieurs sources d'information.
-A moins que vous mettiez ce graphique dans un |cFF22AA22Groupe Dynamique|r, tous les clones seront affichés en tas l'un sur l'autre.
-
-Souhaitez-vous que ce graphiques soit placé dans un nouveau |cFF22AA22Groupe Dynamique|r ?]=]
-L["Options/Close"] = "Fermer"
-L["Options/Collapse"] = "Réduire"
-L["Options/Collapse all loaded displays"] = "Réduire tous les graphiques chargés"
-L["Options/Collapse all non-loaded displays"] = "Réduire tous les graphiques non-chargés"
-L["Options/Color"] = "Couleur"
-L["Options/Compress"] = "Compresser"
-L["Options/Concentration"] = "Concentration"
-L["Options/Constant Factor"] = "Facteur constant"
-L["Options/Control-click to select multiple displays"] = "Contrôle-Clic pour sélectionner plusieurs graphiques"
-L["Options/Controls the positioning and configuration of multiple displays at the same time"] = "Contrôle la position et la configuration de plusieurs graphiques en même temps"
-L["Options/Convert to..."] = "Convertir en..."
-L["Options/Cooldown"] = "Recharge"
-L["Options/Copy"] = "Copier"
-L["Options/Copy settings from..."] = "Copier les réglages de..."
-L["Options/Copy settings from another display"] = "Copier les réglages d'un autre graphique"
-L["Options/Copy settings from %s"] = "Copier les réglages de %s"
-L["Options/Count"] = "Compte"
-L["Options/Creating buttons: "] = "Création de boutons :"
-L["Options/Creating options: "] = "Création d'options :"
-L["Options/Crop X"] = "Couper X"
-L["Options/Crop Y"] = "Couper Y"
-L["Options/Crusader"] = "Croisé"
-L["Options/Custom Code"] = "Code personnalisé"
-L["Options/Custom Trigger"] = "Déclencheur personnalisé"
-L["Options/Custom trigger event tooltip"] = [=[
-Choisissez quels évènements peuvent activer le déclencheur.
-Plusieurs évènements peuvent être spécifiés avec des virgules ou des espaces.
-
-|cFF4444FFPar exemple:|r
-UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
-]=]
-L["Options/Custom trigger status tooltip"] = [=[
-Choisissez quels évènements peuvent activer le déclencheur.
-Comme c'est un déclencheur de type statut, les évènements spécifiés peuvent être appelés par WeakAuras sans les arguments attendus.
-Plusieurs évènements peuvent être spécifiés avec des virgules ou des espaces.
-
-|cFF4444FFPar exemple:|r
-UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
-]=]
-L["Options/Custom Untrigger"] = "Désactivation personnalisée"
-L["Options/Custom untrigger event tooltip"] = [=[
-Choisissez quels évènements peuvent causer la désactivation.
-Cela peut être des évènements différents de ceux du déclencheur.
-Plusieurs évènements peuvent être spécifiés avec des virgules ou des espaces.
-
-|cFF4444FFPar exemple:|r
-UNIT_POWER, UNIT_AURA PLAYER_TARGET_CHANGED
-]=]
-L["Options/Death"] = "Mort"
-L["Options/Death Rune"] = "Rune de Mort"
-L["Options/Debuff Type"] = "Type d'affaiblissement"
-L["Options/Defensive"] = "Défensif"
-L["Options/Delete"] = "Supprimer"
-L["Options/Delete all"] = "Supprimer tout"
-L["Options/Delete children and group"] = "Supprimer enfants et groupe"
-L["Options/Deletes this display - |cFF8080FFShift|r must be held down while clicking"] = "Supprime ce graphique - |cFF8080FFMaj|r doit être maintenu en cliquant"
-L["Options/Delete Trigger"] = "Supprimer le déclencheur"
-L["Options/Desaturate"] = "Dé-saturer"
-L["Options/Devotion"] = "Dévotion"
-L["Options/Disabled"] = "Désactivé"
-L["Options/Discrete Rotation"] = "Rotation individuelle"
-L["Options/Display"] = "Graphique"
-L["Options/Display Icon"] = "Icône du graphique"
-L["Options/Display Text"] = "Texte du graphique"
-L["Options/Distribute Horizontally"] = "Distribuer horizontalement"
-L["Options/Distribute Vertically"] = "Distribuer verticalement"
-L["Options/Do not copy any settings"] = "Ne copier aucun réglage"
-L["Options/Do not group this display"] = "Ne pas grouper ce graphique"
-L["Options/Duplicate"] = "Dupliquer"
-L["Options/Duration Info"] = "Info de durée"
-L["Options/Duration (s)"] = "Durée (s)"
-L["Options/Dynamic Group"] = "Groupe Dynamique"
-L["Options/Dynamic text tooltip"] = [=[
-Il y a plusieurs codes spéciaux disponibles pour rendre ce texte dynamique :
-
-|cFFFF0000%p|r - Progression - Le temps restant sur un compteur, ou une valeur autre
-|cFFFF0000%t|r - Total - La durée maximum d'un compteur, ou le maximum d'une valeur autre
-|cFFFF0000%n|r - Nom - Le nom du graphique (souvent le nom d'une aura), ou l'ID du graphique s'il n'y a pas de nom dynamique
-|cFFFF0000%i|r - Icône - L'icône associée à l'affichage
-|cFFFF0000%s|r - Pile - La taille de la pile d'une aura (généralement)
-|cFFFF0000%c|r - Personnalisé - Vous permet de définir une fonction Lua personnalisée qui donne un texte à afficher]=]
-L["Options/Enabled"] = "Activé"
-L["Options/Enter an aura name, partial aura name, or spell id"] = "Entrez un nom d'aura, nom d'aura partiel ou ID de sort"
-L["Options/Event Type"] = "Type d'évènement"
-L["Options/Expand"] = "Agrandir"
-L["Options/Expand all loaded displays"] = "Agrandir tous graphiques chargés"
-L["Options/Expand all non-loaded displays"] = "Agrandir tous graphiques non-chargés"
-L["Options/Expand Text Editor"] = "Agrandir éditeur de texte"
-L["Options/Expansion is disabled because this group has no children"] = "Agrandissement désactivé car ce groupe n'a pas d'enfants"
-L["Options/Export"] = "Exporter"
-L["Options/Export to Lua table..."] = "Exporter une table Lua..."
-L["Options/Export to string..."] = "Exporter en texte..."
-L["Options/Fade"] = "Fondu"
-L["Options/Finish"] = "Finir"
-L["Options/Fire Resistance"] = "Résistance au Feu"
-L["Options/Flight(Non-Feral)"] = "Vol(non-Féral)"
-L["Options/Font"] = "Police"
-L["Options/Font Flags"] = "Style de Police"
-L["Options/Font Size"] = "Taille de Police"
-L["Options/Font Type"] = "Type de police"
-L["Options/Foreground Color"] = "Couleur premier-plan"
-L["Options/Foreground Texture"] = "Texture premier-plan"
-L["Options/Form (Druid)"] = "Forme (Druide)"
-L["Options/Form (Priest)"] = "Forme (Prêtre)"
-L["Options/Form (Shaman)"] = "Forme (Chaman)"
-L["Options/Form (Warlock)"] = "Forme (Démoniste)"
-L["Options/Frame"] = "Cadre"
-L["Options/Frame Strata"] = "Strate du cadre"
-L["Options/Frost"] = "Givre"
-L["Options/Frost Resistance"] = "Résistance au Givre"
-L["Options/Full Scan"] = "Scan Complet"
-L["Options/Ghost Wolf"] = "Loup fantôme"
-L["Options/Glow Action"] = "Action de l'éclat"
-L["Options/Group aura count description"] = [=[Le nombre de membres du %s qui doivent être affectés par une ou plus des auras désignées pour que le graphique soit déclenché.
-Si le nombre entré est un entier (par ex. 5), le nombre de membres du raid affectés sera comparé au nombre entré.
-Si le nombre entré est decimal (par ex. 0.5), une fraction (par ex. 1/2), ou un pourcentage (par ex. 50%%), alors cette fraction du %s doit être affecté.
-
-|cFF4444FFPar exemple :|r
-|cFF00CC00> 0|r le déclenchera quand n'importe qui du %s est affecté
-|cFF00CC00= 100%%|r le déclenchera quand tout le monde dans le %s est affecté
-|cFF00CC00!= 2|r le déclenchera quand le nombre de membres du %s affectés est différent de 2
-|cFF00CC00<= 0.8|r le déclenchera quand quand moins de 80%% du %s est affecté (4 sur 5 membres du groupe, 8 sur 10 ou 20 sur 25 du raid )
-|cFF00CC00> 1/2|r le déclenchera quand plus de la moitié du %s est affecté
-|cFF00CC00>= 0|r le déclenchera toujours, quoi qu'il arrive
-]=]
-L["Options/Group Member Count"] = "Nombre de membres du groupe"
-L["Options/Group (verb)"] = "Grouper"
-L["Options/Height"] = "Hauteur"
-L["Options/Hide this group's children"] = "Cacher les enfants de ce groupe"
-L["Options/Hide When Not In Group"] = "Cacher hors d'un groupe"
-L["Options/Horizontal Align"] = "Aligner horizontalement"
-L["Options/Icon Info"] = "Info d'icône"
-L["Options/Ignored"] = "Ignoré"
-L["Options/Ignore GCD"] = "Ignorer Recharge Globale"
-L["Options/%i Matches"] = "%i Correspondances"
-L["Options/Import"] = "Importer"
-L["Options/Import a display from an encoded string"] = "Importer un graphique d'un texte encodé"
-L["Options/Justify"] = "Justification"
-L["Options/Left Text"] = "Texte de gauche"
-L["Options/Load"] = "Charger"
-L["Options/Loaded"] = "Chargé"
-L["Options/Main"] = "Principal"
-L["Options/Main Trigger"] = "Déclencheur principal"
-L["Options/Mana (%)"] = "Mana (%)"
-L["Options/Manage displays defined by Addons"] = "Gérer graphiques définis par addons"
-L["Options/Message Prefix"] = "Préfixe du message"
-L["Options/Message Suffix"] = "Suffixe du message"
-L["Options/Metamorphosis"] = "Métamorphose"
-L["Options/Mirror"] = "Miroir"
-L["Options/Model"] = "Modèle"
-L["Options/Moonkin/Tree/Flight(Feral)"] = "Sélénien/Arbre/Vol(Farouche)"
-L["Options/Move Down"] = "Descendre"
-L["Options/Move this display down in its group's order"] = "Descend ce graphique dans l'ordre de son groupe"
-L["Options/Move this display up in its group's order"] = "Monte ce graphique dans l'ordre de son groupe"
-L["Options/Move Up"] = "Monter"
-L["Options/Multiple Displays"] = "Graphiques multiples"
-L["Options/Multiple Triggers"] = "Déclencheur multiples"
-L["Options/Multiselect ignored tooltip"] = [=[
-|cFFFF0000Ignoré|r - |cFF777777Unique|r - |cFF777777Multiple|r
-Cette option ne sera pas utilisée pour déterminer quand ce graphique doit être chargé]=]
-L["Options/Multiselect multiple tooltip"] = [=[
-|cFF777777Ignoré|r - |cFF777777Unique|r - |cFF00FF00Multiple|r
-Plusieurs valeurs peuvent être choisies]=]
-L["Options/Multiselect single tooltip"] = [=[
-|cFF777777Ignoré|r - |cFF00FF00Unique|r - |cFF777777Multiple|r
-Seule une unique valeur peut être choisie]=]
-L["Options/Must be spelled correctly!"] = "Doit être épelé correctement !"
-L["Options/Name Info"] = "Info du nom"
-L["Options/Negator"] = "Pas"
-L["Options/New"] = "Nouveau"
-L["Options/Next"] = "Suivant"
-L["Options/No"] = "Non"
-L["Options/No Children"] = "Pas d'enfant"
-L["Options/Not all children have the same value for this option"] = "Tous les enfants n'ont pas la même valeur pour cette option"
-L["Options/Not Loaded"] = "Non chargé"
-L["Options/No tooltip text"] = "Pas d'infobulle"
-L["Options/% of Progress"] = "% de progression"
-L["Options/Okay"] = "Okay"
-L["Options/On Hide"] = "Au masquage"
-L["Options/Only match auras cast by people other than the player"] = "Ne considérer que les auras lancées par d'autres que le joueur"
-L["Options/Only match auras cast by the player"] = "Ne considérer que les auras lancées par le joueur"
-L["Options/On Show"] = "A l'affichage"
-L["Options/Operator"] = "Opérateur"
-L["Options/or"] = "ou"
-L["Options/Orientation"] = "Orientation"
-L["Options/Other"] = "Autre"
-L["Options/Outline"] = "Contour"
-L["Options/Own Only"] = "Le mien uniquement"
-L["Options/Player Character"] = "Personnage Joueur"
-L["Options/Play Sound"] = "Jouer un son"
-L["Options/Presence (DK)"] = "Présence"
-L["Options/Presence (Rogue)"] = "Présence"
-L["Options/Prevents duration information from decreasing when an aura refreshes. May cause problems if used with multiple auras with different durations."] = "Empêche l'info de durée de décroitre quand une aura est rafraichie. Peut causer des problèmes si utilisé avec plusieurs auras de différentes durées."
-L["Options/Primary"] = "Primaire"
-L["Options/Progress Bar"] = "Barre de progression"
-L["Options/Progress Texture"] = "Texture de progression"
-L["Options/Put this display in a group"] = "Mettre ce graphique dans un groupe"
-L["Options/Ready For Use"] = "Prêt à l'emploi"
-L["Options/Re-center X"] = "Recentrer X"
-L["Options/Re-center Y"] = "Recentrer Y"
-L["Options/Remaining Time Precision"] = "Précision du temps restant"
-L["Options/Remove this display from its group"] = "Retirer ce graphique de son groupe"
-L["Options/Rename"] = "Renommer"
-L["Options/Requesting display information"] = "Demande d'info de graphique à %s..."
-L["Options/Required For Activation"] = "Requis pour l'activation"
-L["Options/Retribution"] = "Vindicte"
-L["Options/Right-click for more options"] = "Clic-droit pour plus d'options"
-L["Options/Right Text"] = "Texte de droite"
-L["Options/Rotate"] = "Tourner"
-L["Options/Rotate In"] = "Rotation entrante"
-L["Options/Rotate Out"] = "Rotation sortante"
-L["Options/Rotate Text"] = "Tourner le texte"
-L["Options/Rotation"] = "Rotation"
-L["Options/Same"] = "Le même"
-L["Options/Search"] = "Chrecher"
-L["Options/Secondary"] = "Secondaire"
-L["Options/Send To"] = "Envoyer vers"
-L["Options/Set tooltip description"] = "Définir description d'infobulle"
-L["Options/Shadow Dance"] = "Danse de l'ombre"
-L["Options/Shadowform"] = "Forme d'Ombre"
-L["Options/Shadow Resistance"] = "Résistance à l'Ombre"
-L["Options/Shift-click to create chat link"] = "Maj-Clic pour créer un |cFF8800FF[Lien]"
-L["Options/Show all matches (Auto-clone)"] = "Montrer toutes correspondances (Auto-Clone)"
-L["Options/Show players that are |cFFFF0000not affected"] = "Montrer les joueurs |cFFFF0000non-affectés"
-L["Options/Shows a 3D model from the game files"] = "Montre un modèle 3D tiré du jeu"
-L["Options/Shows a custom texture"] = "Montre une texture personnalisée"
-L["Options/Shows a progress bar with name, timer, and icon"] = "Affiche une barre de progression avec nom, temps, icône"
-L["Options/Shows a spell icon with an optional a cooldown overlay"] = "Affiche une icône de sort avec optionnellement la recharge sur-imprimée"
-L["Options/Shows a texture that changes based on duration"] = "Affiche une texture qui change selon la durée"
-L["Options/Shows one or more lines of text, which can include dynamic information such as progress or stacks"] = "Affiche une ligne de texte ou plus, qui peut inclure des infos dynamiques telles que progression ou piles."
-L["Options/Shows the remaining or expended time for an aura or timed event"] = "Affiche le temps restant ou étendu d'une aura ou évènement"
-L["Options/Show this group's children"] = "Montrer les enfants de ce groupe"
-L["Options/Size"] = "Taille"
-L["Options/Slide"] = "Glisser"
-L["Options/Slide In"] = "Glisser entrant"
-L["Options/Slide Out"] = "Glisser sortant"
-L["Options/Sort"] = "Trier"
-L["Options/Sound"] = "Son"
-L["Options/Sound Channel"] = "Canal sonore"
-L["Options/Sound File Path"] = "Chemin fichier son"
-L["Options/Space"] = "Espacer"
-L["Options/Space Horizontally"] = "Espacer horizontalement"
-L["Options/Space Vertically"] = "Espacer verticalement"
-L["Options/Spell ID"] = "ID de sort"
-L["Options/Spell ID dialog"] = [=[Vous avez spécifié une aura par |cFFFF0000ID de sort|r.
-
-Par défaut, |cFF8800FFWeakAuras|r ne peut distinguer entre des auras de même nom mais d'|cFFFF0000ID de sort|r différents.
-Cependant, si l'option Scan Complet est activée, |cFF8800FFWeakAuras|r peut chercher des |cFFFF0000ID de sorts|r spécifiques.
-
-Voulez-vous activer le Scan Complet pour chercher cet |cFFFF0000ID de sort|r ?]=]
-L["Options/Stack Count"] = "Nombre de Piles"
-L["Options/Stack Count Position"] = "Position Nombre de Piles"
-L["Options/Stack Info"] = "Info de Piles"
-L["Options/Stacks Settings"] = "Réglages de Piles"
-L["Options/Stagger"] = "Report"
-L["Options/Stance (Warrior)"] = "Posture"
-L["Options/Start"] = "Début"
-L["Options/Stealable"] = "Volable"
-L["Options/Stealthed"] = "Furtif"
-L["Options/Sticky Duration"] = "Durée épinglée"
-L["Options/Temporary Group"] = "Groupe temporaire"
-L["Options/Text"] = "Texte"
-L["Options/Text Color"] = "Couleur Texte"
-L["Options/Text Position"] = "Position Texte"
-L["Options/Text Settings"] = "Réglages de Texte"
-L["Options/Texture"] = "Texture"
-L["Options/The children of this group have different display types, so their display options cannot be set as a group."] = "Les enfants de ce groupe ont différent types de graphiques, leurs options de graphique ne peuvent donc pas être changées en groupe."
-L["Options/The duration of the animation in seconds."] = "La durée de l'animation en secondes."
-L["Options/The type of trigger"] = "Le type de déclencheur"
-L["Options/This condition will not be tested"] = "Cette condition ne sera pas évaluée"
-L["Options/This display is currently loaded"] = "Ce graphique est actuellement chargé"
-L["Options/This display is not currently loaded"] = "Ce graphique n'est pas actuellement chargé"
-L["Options/This display will only show when |cFF00FF00%s"] = "Ce graphique ne s'affichera que quand |cFF00FF00%s"
-L["Options/This display will only show when |cFFFF0000 Not %s"] = "Ce graphique ne s'affichera que quand |cFFFF0000 Pas %s"
-L["Options/This region of type \"%s\" has no configuration options."] = "Cette région de type \"%s\" n'a pas d'options de configuration."
-L["Options/Time in"] = "Temps entrant"
-L["Options/Timer"] = "Chrono"
-L["Options/Timer Settings"] = "Réglages de Chrono"
-L["Options/Toggle the visibility of all loaded displays"] = "Change la visibilité de tous les graphiques chargés"
-L["Options/Toggle the visibility of all non-loaded displays"] = "Change la visibilité de tous les graphiques non-chargés"
-L["Options/Toggle the visibility of this display"] = "Change la visibilité de ce graphique"
-L["Options/to group's"] = "au groupe..."
-L["Options/Tooltip"] = "Infobulle"
-L["Options/Tooltip on Mouseover"] = "Infobulle à la souris"
-L["Options/Top Text"] = "Texte du Haut"
-L["Options/to screen's"] = "à l'écran..."
-L["Options/Total Time Precision"] = "Précision Temps total"
-L["Options/Tracking"] = "Suivi"
-L["Options/Travel"] = "Voyage"
-L["Options/Trigger"] = "Déclencheur"
-L["Options/Trigger %d"] = "Déclencheur %d"
-L["Options/Triggers"] = "Déclencheurs"
-L["Options/Type"] = "Type"
-L["Options/Ungroup"] = "Dégrouper"
-L["Options/Unholy"] = "Impie"
-L["Options/Unit Exists"] = "L'unité existe"
-L["Options/Unlike the start or finish animations, the main animation will loop over and over until the display is hidden."] = "Contrairement aux animations de début et de fin, l'animation principale bouclera tant que le graphique est visible."
-L["Options/Unstealthed"] = "Fin de furtivité"
-L["Options/Update Custom Text On..."] = "Mettre à jour Texte Perso sur..."
-L["Options/Use Full Scan (High CPU)"] = "Utiliser Scan Complet (CPU élevé)"
-L["Options/Use tooltip \"size\" instead of stacks"] = "Utiliser la \"taille\" de l'infobulle plutôt que la pile"
-L["Options/Vertical Align"] = "Aligner verticalement"
-L["Options/View"] = "Vue"
-L["Options/Width"] = "Largeur"
-L["Options/X Offset"] = "Décalage X"
-L["Options/X Scale"] = "Echelle X"
-L["Options/Yes"] = "Oui"
-L["Options/Y Offset"] = "Décalage Y"
-L["Options/Y Scale"] = "Echelle Y"
-L["Options/Z Offset"] = "Décalage Z"
-L["Options/Zoom"] = "Zoom"
-L["Options/Zoom In"] = "Zoom entrant"
-L["Options/Zoom Out"] = "Zoom sortant"
-L["Tutorials/Actions and Animations: 1/7"] = "Actions et Animations: 1/7"
-L["Tutorials/Actions and Animations: 2/7"] = "Actions et Animations: 2/7"
-L["Tutorials/Actions and Animations: 3/7"] = "Actions et Animations: 3/7"
-L["Tutorials/Actions and Animations: 4/7"] = "Actions et Animations: 4/7"
-L["Tutorials/Actions and Animations: 5/7"] = "Actions et Animations: 5/7"
-L["Tutorials/Actions and Animations: 6/7"] = "Actions et Animations: 6/7"
-L["Tutorials/Actions and Animations: 7/7"] = "Actions et Animations: 7/7"
-L["Tutorials/Actions and Animations Text"] = [=[Pour tester votre animation, vous devrez cacher votre graphique et l'afficher à nouveau. Cela peut être fait avec le bouton Vue du graphique sur la barre latérale.
-
-Cliquez le quelques fois pour voir votre animation de début.]=]
-L["Tutorials/Activation Settings: 1/5"] = "Réglages d'activation : 1/5"
-L["Tutorials/Activation Settings: 2/5"] = "Réglages d'activation : 2/5"
-L["Tutorials/Activation Settings: 3/5"] = "Réglages d'activation : 3/5"
-L["Tutorials/Activation Settings: 4/5"] = "Réglages d'activation : 4/5"
-L["Tutorials/Activation Settings: 5/5"] = "Réglages d'activation : 5/5"
-L["Tutorials/Activation Settings Text"] = "Comme vous êtes un %s, vous pouvez activer l'option de Classe du Joueur et choisir %s."
-L["Tutorials/Auto-cloning: 1/10"] = "Auto-clonage : 1/10"
-L["Tutorials/Auto-cloning 1/10 Text"] = [=[La plus grande nouveauté de la version |cFF8800FF1.4|r est l'|cFFFF0000auto-clonage|r. L'|cFFFF0000auto-clonage|r permet à vos graphiques de se dupliquer automatiquement pour montrer plusieurs sources d'information. Placés dans un Groupe Dynamique, cela vous permet de créer de grands ensembles d'information dynamiques.
-
-Il y a trois types de déclencheurs qui supportent l'|cFFFF0000auto-clonage|r : Auras Scan Complet, Auras de Groupe, et Auras Multi-cibles.]=]
-L["Tutorials/Beginners Finished Text"] = [=[C'est tout pour le Guide du Débutant. Cependant, vous avez à peine touché la surface de la puissance de |cFF8800FFWeakAuras|r.
-
-Dans le futur, |cFFFFFF00Plus de|r |cFFFF7F00Didactitiels|r |cFFFF0000Avancés|r seront publiés pour vous guider plus profondément dans les possibilités sans fin de |cFF8800FFWeakAuras|r.]=]
-L["Tutorials/Beginners Guide Desc"] = "Guide du Débutant"
-L["Tutorials/Beginners Guide Desc Text"] = "Un guide détaillant les options de configuration basiques de WeakAuras"
-L["Tutorials/Create a Display: 1/5"] = "Créer un Graphique : 1/5"
-L["Tutorials/Create a Display: 2/5"] = "Créer un Graphique : 2/5"
-L["Tutorials/Create a Display: 3/5"] = "Créer un Graphique : 3/5"
-L["Tutorials/Create a Display: 4/5"] = "Créer un Graphique : 4/5"
-L["Tutorials/Create a Display: 5/5"] = "Créer un Graphique : 5/5"
-L["Tutorials/Create a Display Text"] = [=[Bien que l'onglet Graphique ait des curseurs pour contrôler Largeur, Hauteur, et position X et Y, il y a une façon plus simple de positionner et dimensionner votre graphique.
-
-Vous pouvez simplement cliquer sur le graphique pour le déplacer n'importe où à l'écran, et tirer sur les coins pour changer sa taille.
-
-Vous pouvez aussi maintenir Maj pour cacher le cadre de déplacement/dimensionnement, pour un placement plus précis.]=]
-L["Tutorials/Display Options: 1/4"] = "Options de Graphique : 1/4"
-L["Tutorials/Display Options 1/4 Text"] = "Maintenant, sélectionnez un graphique type Barre de progression (ou créez un nouveau)."
-L["Tutorials/Display Options: 2/4"] = "Options de Graphique : 2/4"
-L["Tutorials/Display Options 2/4 Text"] = [=[Les graphiques |cFFFFFFFFBarre de progression|r et |cFFFFFFFFIcône|r ont désormais une option pour afficher une infobulle au passage de la souris.
-
-Cette option est uniquement disponible si votre graphique est déclenché par une aura, un objet, ou un sort.]=]
-L["Tutorials/Display Options: 4/4"] = "Options de Graphique : 4/4"
-L["Tutorials/Display Options 4/4 Text"] = "Finalement, un nouveau type de graphique, |cFFFFFFFFModèle|r, permet d'utiliser n'importe quel modèle 3D tiré du jeu."
-L["Tutorials/Dynamic Group Options: 2/4"] = "Options de Groupe Dynamique : 2/4"
-L["Tutorials/Dynamic Group Options 2/4 Text"] = [=[La plus grande amélioration des |cFFFFFFFFGroupes Dynamiques|rs est une nouvelle option pour la Croissance.
-
-Sélectionnez \"Circulaire\" pour le voir en action.]=]
-L["Tutorials/Dynamic Group Options: 3/4"] = "Options de Groupe Dynamique : 3/4"
-L["Tutorials/Dynamic Group Options 3/4 Text"] = [=[L'option Facteur Constant vous permet de contrôler comment votre groupe circulaire grandi.
-
-Un groupe circulaire avec un espacement constant grandit en rayon quand des graphiques sont ajoutés, tandis qu'avec un rayon constant vos graphiques se rapprocheront quand on en ajoute.]=]
-L["Tutorials/Dynamic Group Options: 4/4"] = "Options de Groupe Dynamique : 4/4"
-L["Tutorials/Dynamic Group Options 4/4 Text"] = [=[Les Groupes Dynamiques peuvent désormais automatiquement trier leurs enfants selon leur temps restant.
-
-Les graphiques n'ayant pas de temps restant sont placés en haut ou en bas, selon si vous choisissez \"Croissant\" ou \"Décroissant\".]=]
-L["Tutorials/Finished"] = "Terminé"
-L["Tutorials/Full-scan Auras: 2/10"] = "Auras en Scan Complet : 2/10"
-L["Tutorials/Full-scan Auras 2/10 Text"] = "Tout d'abord, activez l'option Scan Complet."
-L["Tutorials/Full-scan Auras: 3/10"] = "Auras en Scan Complet : 3/10"
-L["Tutorials/Full-scan Auras 3/10 Text"] = [=[L'|cFFFF0000auto-clonage|r peut maintenant être activé avec l'option "%s".
-
-Cela cause la création d'un nouveau graphique pour chaque aura qui correspond aux paramètres donnés.]=]
-L["Tutorials/Full-scan Auras: 4/10"] = "Auras en Scan Complet : 4/10"
-L["Tutorials/Full-scan Auras 4/10 Text"] = [=[Un popup doit apparaître, vous informant que les graphiques |cFFFF0000auto-clonés|r devraient généralement être utilisés dans des Groupes Dynamiques.
-
-Cliquez "Oui" pour permettre à |cFF8800FFWeakAuras|r de mettre automatiquement vos graphiques dans un Groupe Dynamique.]=]
-L["Tutorials/Full-scan Auras: 5/10"] = "Auras en Scan Complet : 5/10"
-L["Tutorials/Full-scan Auras 5/10 Text"] = "Désactivez l'option Scan Complet pour ré-activer les autres options d'unité."
-L["Tutorials/Group Auras 6/10"] = "Auras de groupe : 6/10"
-L["Tutorials/Group Auras 6/10 Text"] = "Maintenant, Sélectionnez \"Groupe\" dans l'option Unité."
-L["Tutorials/Group Auras: 7/10"] = "Auras de groupe : 7/10"
-L["Tutorials/Group Auras 7/10 Text"] = [=[L'|cFFFF0000auto-clonage|r est, à nouveau, activé en utilisant l'option \"%s\".
-
-Un nouveau graphique sera créé pour chaque membre du groupe affecté par l'aura spécifiée.]=]
-L["Tutorials/Group Auras: 8/10"] = "Auras de groupe : 8/10"
-L["Tutorials/Group Auras 8/10 Text"] = "Activer l'option %s pour une aura de groupe avec |cFFFF0000auto-clonage|r activé causera un nouveau graphique pour chaque membre du groupe qui |cFFFFFFFFn'est pas|r affecté par l'aura spécifiée."
-L["Tutorials/Home"] = "Accueil"
-L["Tutorials/Multi-target Auras: 10/10"] = "Auras multi-cibles : 10/10"
-L["Tutorials/Multi-target Auras 10/10 Text"] = [=[Les auras multi-cibles ont l'|cFFFF0000auto-clonage|r par défaut.
-
-Les déclencheurs d'aura multi-cibles sont différents des déclencheurs d'aura normaux car ils sont basés sur des évènements du Journal de Combat, ce qui signifie qu'ils suivront les auras sur des monstres que personne ne cible (bien que certaines informations dynamiques ne sont pas disponibles sans que quelqu'un du groupe cible l'unité).
-
-Cela fait des auras multi-cibles un bon choix pour suivre des DoTs sur plusieurs ennemis.]=]
-L["Tutorials/Multi-target Auras: 9/10"] = "Auras multi-cibles : 9/10"
-L["Tutorials/Multi-target Auras 9/10 Text"] = "Enfin, sélectionnez \"Multi-cibles\" comme option d'unité."
-L["Tutorials/New in 1.4:"] = "Nouveau dans la 1.4 :"
-L["Tutorials/New in 1.4 Desc:"] = "Nouveau dans la 1.4"
-L["Tutorials/New in 1.4 Desc Text"] = "Découvrez les nouvelles fonctions de WeakAuras 1.4"
-L["Tutorials/New in 1.4 Finnished Text"] = [=[Bien sûr, il y a plus de nouvelles fonctions dans |cFF8800FFWeakAuras 1.4|r qu'on ne peut discuter en une fois, sans parler des nombreuses corrections de bugs et optimisations.
-
-Nous espérons que ce Didacticiel vous a au moins guidé vers les principales nouvelles possibilités qui vous sont offertes.
-
-Merci d'utiliser |cFF8800FFWeakAuras|r !]=]
-L["Tutorials/New in 1.4 Text1"] = [=[La version 1.4 de |cFF8800FFWeakAuras|r introduit plusieurs nouvelles fonctions puissantes.
-
-Ce didacticiel fournit un aperçu des principales nouvelles possibilités, et comment les utiliser.]=]
-L["Tutorials/New in 1.4 Text2"] = "D'abord, créez un nouveau graphique pour la démonstration."
-L["Tutorials/Previous"] = "Précédent"
-L["Tutorials/Trigger Options: 1/4"] = "Options de Déclencheur : 1/4"
-L["Tutorials/Trigger Options 1/4 Text"] = [=[En plus de \"Multi-cibles\" il y a un autre nouveau réglage pour l'option Unité : Unité Spécifique.
-
-Choisissez-le pour faire apparaître un nouveau champ de texte.]=]
-L["Tutorials/Trigger Options: 2/4"] = "Options de Déclencheur : 2/4"
-L["Tutorials/Trigger Options 2/4 Text"] = [=[Dans ce champ, vous pouvez spécifier le nom de n'importe quel joueur de votre groupe, ou un ID d'unité personnalisé. Les ID d'unités tels que \"boss1\" \"boss2\" etc. sont particulièrement utilises pour les rencontres de raid.
-
-Tous les déclencheurs qui permettent de spécifier une unité (pas seulement les déclencheurs Aura) supportent maintenant l'option Unité Spécifique.]=]
-L["Tutorials/Trigger Options: 3/4"] = "Options de Déclencheur : 3/4"
-L["Tutorials/Trigger Options 3/4 Text"] = [=[|cFF8800FFWeakAuras 1.4|r ajoute aussi de nouveaux types de déclencheurs.
-
-Sélectionnez la catégorie Statut pour y jeter un œil.]=]
-L["Tutorials/Trigger Options: 4/4"] = "Options de Déclencheur : 4/4"
-L["Tutorials/Trigger Options 4/4 Text"] = [=[Le déclencheur |cFFFFFFFFCaractéristique d'unité|r permet de tester le nom d'une unité, sa classe, son hostilité, et si c'est un Joueur ou un Personnage non-Joueur.
-
-Les déclencheurs |cFFFFFFFFRecharge Globale|r et |cFFFFFFFFVitesse d'attaque|r s'ajoutent au déclencheur Incantation.]=]
-L["Tutorials/WeakAuras Tutorials"] = "Didacticiels WeakAuras"
-L["Tutorials/Welcome"] = "Bienvenue"
-L["Tutorials/Welcome Text"] = [=[Bienvenue au Guide du Débutant de |cFF8800FFWeakAuras|r.
-
-Ce guide vous montrera comment utiliser WeakAuras, et expliquera les options de configuration de base.]=]
 
 
 

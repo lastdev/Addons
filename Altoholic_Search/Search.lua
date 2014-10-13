@@ -714,44 +714,48 @@ function ns:FindItem(searchType, searchSubType)
 		return		-- if a search is already happening .. then exit
 	end
 	
-	local value = AltoholicFrame_SearchEditBox:GetText()
-	
-	if not searchType and not searchSubType then		-- if no type & subtype, it's not a menu search, so value may not be empty
-		if not value or strlen(value) == 0 then		-- .. if empty, exit
-			return
-		end
-	end
-	
 	ongoingSearch = true
-	currentValue = strlower(value)
 	
 	-- Set Filters
-	local itemMinLevel = AltoholicTabSearch_MinLevel:GetNumber()
-	local itemMaxLevel = AltoholicTabSearch_MaxLevel:GetNumber()	
-	local itemSlot = UIDropDownMenu_GetSelectedValue(AltoholicTabSearch_SelectSlot)
+	local value = AltoholicFrame_SearchEditBox:GetText() or ""
 	
-	filters:SetFilterValue("itemName", currentValue)
-	filters:SetFilterValue("itemType", searchType)
-	filters:SetFilterValue("itemSubType", searchSubType)
-	filters:SetFilterValue("itemRarity", UIDropDownMenu_GetSelectedValue(AltoholicTabSearch_SelectRarity))
-	filters:SetFilterValue("itemMinLevel", itemMinLevel)
-	filters:SetFilterValue("itemMaxLevel", itemMaxLevel)
-	filters:SetFilterValue("itemSlot", itemSlot)
+	currentValue = strlower(value)
 
-	filters:EnableFilter("Existence")
-	filters:EnableFilter("Type")
-	filters:EnableFilter("SubType")
-	filters:EnableFilter("Rarity")
-	filters:EnableFilter("MinLevel")
-
-	if itemMaxLevel ~= 0 then			-- enable the filter only if a max level has been set
-		filters:EnableFilter("Maxlevel")
+	filters:EnableFilter("Existence")	-- should be first in the list !
+	
+	if value ~= "" then
+		filters:SetFilterValue("itemName", currentValue)
+		filters:EnableFilter("Name")
 	end
 	
+	if searchType then
+		filters:SetFilterValue("itemType", searchType)
+		filters:EnableFilter("Type")
+	end
+
+	if searchSubType then
+		filters:SetFilterValue("itemSubType", searchSubType)
+		filters:EnableFilter("SubType")
+	end
+		
+	local itemMinLevel = AltoholicTabSearch_MinLevel:GetNumber()
+	filters:SetFilterValue("itemMinLevel", itemMinLevel)
+	filters:EnableFilter("MinLevel")
+	
+	local itemMaxLevel = AltoholicTabSearch_MaxLevel:GetNumber()	
+	if itemMaxLevel ~= 0 then			-- enable the filter only if a max level has been set
+		filters:SetFilterValue("itemMaxLevel", itemMaxLevel)
+		filters:EnableFilter("Maxlevel")
+	end	
+	
+	local itemSlot = UIDropDownMenu_GetSelectedValue(AltoholicTabSearch_SelectSlot)
 	if itemSlot ~= 0 then	-- don't apply filter if = 0, it means we take them all
 		filters:EnableFilter("EquipmentSlot")
-	end
-	filters:EnableFilter("Name")
+		filters:SetFilterValue("itemSlot", itemSlot)
+	end	
+	
+	filters:SetFilterValue("itemRarity", UIDropDownMenu_GetSelectedValue(AltoholicTabSearch_SelectRarity))
+	filters:EnableFilter("Rarity")
 	
 	-- Start the search
 	local searchLocation = UIDropDownMenu_GetSelectedValue(AltoholicTabSearch_SelectLocation)
@@ -800,8 +804,6 @@ function ns:FindItem(searchType, searchSubType)
 		end
 	end
 	ongoingSearch = nil 	-- search done
-	
-	-- currentValue = nil				-- don't nil it, it may be required by the task checking guild professions
 	
 	if SearchLoots then
 		addon.Tabs.Search:SetMode("loots")

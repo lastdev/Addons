@@ -69,7 +69,6 @@ GTFOLocal =
 	UI_TrivialDescription = "Ativar alertas para encontros de baixo nível que seriam considerados triviais para o level atual do seu personagem.",
 	UI_Unmute = "Tocar sons quando mudo",
 	UI_UnmuteDescription = "Se você tiver o controle de som mestre mudo, o GTFO irá momentaneamente ligá-lo para tocar os sons do GTFO.",
-	UI_UnmuteDescription2 = "Isso requer que o controle mestre de volume esteja maior que 0%.",
 	UI_Volume = "Volume do GTFO",
 	UI_VolumeDescription = "Definir o volume dos sons tocados.",
 	UI_VolumeLoud = "4: Alto",
@@ -88,6 +87,15 @@ GTFOLocal =
 	-- 4.19.1
 	UI_TrivialSlider = "Minimum % of HP",
 	UI_TrivialDescription2 = "Set the slider to the minimum % amount of HP damage taken for alerts to not be considered trivial.",
+	-- 4.32
+	UI_UnmuteDescription2 = "This requires the master volume slider to be higher than 0% and will override the sound channel option.",
+	UI_SoundChannel = "Sound Channel",
+	UI_SoundChannelDescription = "This is the volume channel that GTFO alert sounds will attach themselves to.",
+	UI_SoundChannel_Master = "Master",
+	UI_SoundChannel_SFX = "Sound Effects",
+	UI_SoundChannel_Ambience = "Ambience",
+	UI_SoundChannel_Music = "Music",
+	UI_SoundChannel_Dialog = "Dialog",
 }
 
 

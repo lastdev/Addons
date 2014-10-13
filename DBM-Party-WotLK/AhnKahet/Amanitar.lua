@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(583, "DBM-Party-WotLK", 1, 271)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 157 $"):sub(12, -3))
 mod:SetCreatureID(30258)
 mod:SetEncounterID(262)
 mod:SetZone()
@@ -11,6 +11,7 @@ mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START"
 )
+mod.onlyHeroic = true
 
 local warningMini	= mod:NewSpellAnnounce(57055, 3)
 local timerMiniCD	= mod:NewCDTimer(30, 57055)

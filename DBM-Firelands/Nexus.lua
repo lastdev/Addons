@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NexusLegendary", "DBM-Firelands")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 115 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
 mod:SetCreatureID(53472)
 mod:SetModelID(32230)
 mod:SetZone()
@@ -13,6 +13,7 @@ mod:RegisterEvents(
 	"SPELL_AURA_APPLIED 99392",
 	"SPELL_AURA_REMOVED 99392"
 )
+mod.noStatistics = true
 
 local warnBreath				= mod:NewSpellAnnounce(99502, 4)
 local specwarnBreath			= mod:NewSpecialWarningCast(99502)

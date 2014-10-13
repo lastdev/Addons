@@ -13,6 +13,9 @@ local spellList
 local currentSpellID
 local currentPetTexture
 
+local OPTION_XPACK = "UI.Tabs.Grids.Companions.CurrentXPack"
+local OPTION_FACTION = "UI.Tabs.Grids.Mounts.CurrentFaction"
+
 local function SortPets(a, b)
 	local textA = GetSpellInfo(a) or ""
 	local textB = GetSpellInfo(b) or ""
@@ -90,35 +93,42 @@ for _, list in pairs(petList) do
 	table.sort(list, SortPets)
 end
 
-local currentXPack = 1					-- default to wow classic
-
 local xPacks = {
 	EXPANSION_NAME0,	-- "Classic"
 	EXPANSION_NAME1,	-- "The Burning Crusade"
 	EXPANSION_NAME2,	-- "Wrath of the Lich King"
 	EXPANSION_NAME3,	-- "Cataclysm"
 	EXPANSION_NAME4,	-- "Mists of Pandaria"
+	L["All-in-one"],
 }
 
+local CAT_ALLINONE = #xPacks
+
 local function OnXPackChange(self)
-	currentXPack = self.value
-	currentDDMText = (currentXPack <= #xPacks) and xPacks[currentXPack] or L["All-in-one"]
-	addon.Tabs.Grids:SetViewDDMText(currentDDMText)
+	local currentXPack = self.value
+	
+	addon:SetOption(OPTION_XPACK, currentXPack)
+
+	addon.Tabs.Grids:SetViewDDMText(xPacks[currentXPack])
 	addon.Tabs.Grids:Update()
 end
 
 local function PetDropDown_Initialize()
+	local currentXPack = addon:GetOption(OPTION_XPACK)
+
 	for i, xpack in pairs(xPacks) do
 		DDM_Add(xpack, i, OnXPackChange, nil, (i==currentXPack))
 	end
-	DDM_Add(L["All-in-one"], 6, OnXPackChange, nil, (currentXPack==6))
 	
 	DDM_AddCloseMenu()
 end
 
 local companionsCallbacks = {
 	OnUpdate = function() 
-			spellList = (currentXPack <= #xPacks) and petList[currentXPack] or DataStore:GetCompanionList()
+			local currentXPack = addon:GetOption(OPTION_XPACK)
+			spellList = (currentXPack <= CAT_ALLINONE) and petList[currentXPack] or DataStore:GetCompanionList()
+
+			addon.Tabs.Grids:SetStatus(xPacks[currentXPack])
 		end,
 	GetSize = function() return #spellList end,
 	RowSetup = function(self, entry, row, dataRowID)
@@ -174,11 +184,9 @@ local companionsCallbacks = {
 			frame:Show()
 			title:Show()
 			
-			currentDDMText = currentDDMText or xPacks[1]
-			
 			UIDropDownMenu_SetWidth(frame, 100) 
 			UIDropDownMenu_SetButtonWidth(frame, 20)
-			UIDropDownMenu_SetText(frame, currentDDMText)
+			UIDropDownMenu_SetText(frame, xPacks[addon:GetOption(OPTION_XPACK)])
 			addon:DDM_Initialize(frame, PetDropDown_Initialize)
 		end,
 }
@@ -192,8 +200,6 @@ local ICON_FACTION_HORDE = "Interface\\Icons\\INV_BannerPVP_01"
 local iconAlliance = addon:TextureToFontstring(ICON_FACTION_ALLIANCE, 18, 18)		-- alliance only
 local iconHorde = addon:TextureToFontstring(ICON_FACTION_HORDE, 18, 18)				-- horde only
 local iconBoth = iconAlliance .. " " .. iconHorde											-- both only
-
-local currentFaction = (UnitFactionGroup("player") == "Alliance") and 1 or 2
 
 local factionLabels = {	
 	FACTION_ALLIANCE,	
@@ -400,6 +406,8 @@ local hordeOnly = {
 }
 
 local function RefreshMountList()
+	local currentFaction = addon:GetOption(OPTION_FACTION)
+
 	if currentFaction == 6 then
 		spellList = DataStore:GetMountList()
 		return
@@ -443,13 +451,18 @@ local function RefreshMountList()
 end
 
 local function OnFactionChange(self)
-	currentFaction = self.value
+	local currentFaction = self.value
+	
+	addon:SetOption(OPTION_FACTION, currentFaction)
+	
 	RefreshMountList()
 	addon.Tabs.Grids:SetViewDDMText(factionLabels[currentFaction])
 	addon.Tabs.Grids:Update()
 end
 
 local function MountDropDown_Initialize(self)
+	local currentFaction = addon:GetOption(OPTION_FACTION)
+	
 	DDM_AddTitle(FACTION)
 	for index, label in ipairs(factionLabels) do
 		DDM_Add(format("%s (%s)", WHITE..label, factionIcons[index]), index, OnFactionChange, nil, (index==currentFaction))
@@ -459,6 +472,9 @@ end
 
 local mountsCallbacks = {
 	OnUpdate = function() end,
+	OnUpdateComplete = function() 
+			addon.Tabs.Grids:SetStatus(factionLabels[addon:GetOption(OPTION_FACTION)])
+		end,
 	GetSize = function() return #spellList end,
 	RowSetup = function(self, entry, row, dataRowID)
 			currentSpellID = spellList[dataRowID]
@@ -523,11 +539,9 @@ local mountsCallbacks = {
 			frame:Show()
 			title:Show()
 
-			currentFaction = currentFaction or ((UnitFactionGroup("player") == "Alliance") and 1 or 2)
-			
 			UIDropDownMenu_SetWidth(frame, 100) 
 			UIDropDownMenu_SetButtonWidth(frame, 20)
-			UIDropDownMenu_SetText(frame, factionLabels[currentFaction])
+			UIDropDownMenu_SetText(frame, factionLabels[addon:GetOption(OPTION_FACTION)])
 			addon:DDM_Initialize(frame, MountDropDown_Initialize)
 			RefreshMountList()
 		end,

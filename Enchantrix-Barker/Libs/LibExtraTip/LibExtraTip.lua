@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 local LIBNAME = "LibExtraTip"
 local VERSION_MAJOR = 1
-local VERSION_MINOR = 329
+local VERSION_MINOR = 330
 -- Minor Version cannot be a SVN Revison in case this library is used in multiple repositories
 -- Should be updated manually with each (non-trivial) change
 
@@ -37,7 +37,7 @@ local LIBSTRING = LIBNAME.."_"..VERSION_MAJOR.."_"..VERSION_MINOR
 local lib = LibStub:NewLibrary(LIBNAME.."-"..VERSION_MAJOR, VERSION_MINOR)
 if not lib then return end
 
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/LibExtraTip/LibExtraTip.lua $","$Rev: 355 $","5.15.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/LibExtraTip/LibExtraTip.lua $","$Rev: 363 $","5.15.DEV.", 'auctioneer', 'libs')
 
 -- Call function to deactivate any outdated version of the library.
 -- (calls the OLD version of this function, NOT the one defined in this
@@ -985,18 +985,6 @@ end
 	@since 1.0
 	Addendum: generates 2 method tables, for prehooks and posthooks. Where the prehook sets a flag, a posthook must be installed to clear it. Specifically: reg.ignoreOnCleared
 ]]
--- Hybrid mode GetAuctionItemInfo for transition from WoW 5.3 to 5.4
--- Temporary - do not use in new code!
-local _,_,_,toc = GetBuildInfo()
-local hybridGetAuctionItemInfo
-if toc < 50400 then
-	hybridGetAuctionItemInfo = GetAuctionItemInfo
-else
-	function hybridGetAuctionItemInfo(...)
-		local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName, saleStatus, itemId, hasAllInfo =  GetAuctionItemInfo(...)
-		return name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner, saleStatus, itemId, hasAllInfo
-	end
-end
 function lib:GenerateTooltipMethodTable() -- Sets up hooks to give the quantity of the item
 	local tooltipRegistry = self.tooltipRegistry
 	self.GenerateTooltipMethodTable = nil -- only run once
@@ -1009,7 +997,7 @@ function lib:GenerateTooltipMethodTable() -- Sets up hooks to give the quantity 
 			OnTooltipCleared(self)
 			local reg = tooltipRegistry[self]
 			reg.ignoreOnCleared = true
-			local _,_,q,_,cu,_,_,minb,inc,bo,ba,hb,own = hybridGetAuctionItemInfo(type,index)
+			local _,_,q,_,cu,_,_,minb,inc,bo,ba,hb,_,own,ownf = GetAuctionItemInfo(type,index)
 			reg.quantity = q
 			reg.additional.event = "SetAuctionItem"
 			reg.additional.eventType = type
@@ -1021,6 +1009,7 @@ function lib:GenerateTooltipMethodTable() -- Sets up hooks to give the quantity 
 			reg.additional.bidAmount = ba
 			reg.additional.highBidder = hb
 			reg.additional.owner = own
+			reg.additional.ownerFull = ownf
 		end,
 
 		SetAuctionSellItem = function(self)

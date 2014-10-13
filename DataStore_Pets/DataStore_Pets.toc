@@ -8,7 +8,7 @@
 ## SavedVariables: DataStore_PetsDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
-## X-Curse-Packaged-Version: r31
+## X-Curse-Packaged-Version: 5.4.007
 ## X-Curse-Project-Name: DataStore_Pets
 ## X-Curse-Project-ID: datastore_pets
 ## X-Curse-Repository-ID: wow/datastore_pets/mainline

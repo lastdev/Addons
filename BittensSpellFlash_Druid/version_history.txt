@@ -1,3 +1,6 @@
+== Version 50400.2.5
+* The future of Bitten's SpellFlash: Druid is in question.  I no longer wish to maintain this addon, starting with patch 6.0.  If you are interested in taking it over, keeping up with optimal rotations, and you have programming skills, please leave a comment or PM on Curse.
+
 == Version 50400.2.4
 * Feral: Moved the beta rotation into production.  The old rotation is gone.
 * Feral: There is an option to toggle swapping to bear form during down time.

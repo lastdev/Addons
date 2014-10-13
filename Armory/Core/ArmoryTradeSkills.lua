@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 628 2014-04-08T09:54:44Z
+    Revision: 638 2014-10-12T08:05:02Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -1182,82 +1182,75 @@ function Armory:GetRecipeAltInfo(name, link, profession, reqRank, reqReputation,
     table.wipe(recipeHasSkill);
     table.wipe(recipeCanLearn);
 
-    if ( name and self:HasTradeSkills() and (self:GetConfigShowKnownBy() or self:GetConfigShowHasSkill() or self:GetConfigShowCanLearn()) ) then
-        local recipeType, name = name:match("^(.-): (.+)$");
+	if ( name and name ~= "" and self:HasTradeSkills() and (self:GetConfigShowKnownBy() or self:GetConfigShowHasSkill() or self:GetConfigShowCanLearn()) ) then
+        local currentProfile = self:CurrentProfile();
+        local skillName, skillType, dbEntry, character;
 
-        if ( name and name ~= "" ) then
-            local currentProfile = self:CurrentProfile();
-            local skillName, skillType, dbEntry, character;
-            if ( not profession ) then
-                profession = recipeType;
+        for _, profile in ipairs(self:GetConnectedProfiles()) do
+            self:SelectProfile(profile);
+
+            dbEntry = self.selectedDbBaseEntry;
+
+            local known;
+            for i = 1, dbEntry:GetNumValues(container, profession, itemContainer) do
+                skillName, skillType = dbEntry:GetValue(container, profession, itemContainer, i, "Info");
+                if ( IsRecipe(skillType) and IsSameRecipe(skillName, name) ) then
+                    known = true;
+                    AddKnownBy(profile);
+                    break;
+                end
             end
 
-            for _, profile in ipairs(self:GetConnectedProfiles()) do
-                self:SelectProfile(profile);
+            if ( not known and dbEntry:Contains(container, profession) and (self:GetConfigShowHasSkill() or self:GetConfigShowCanLearn()) ) then
+				local character = self:GetQualifiedCharacterName(profile, true);
+                local skillName, subSkillName, standingID, standing;
+                local rank = dbEntry:GetValue(container, profession, "Rank");
+                local learnable = reqRank <= rank;
+                local attainable = not learnable;
+                local unknown = false;
 
-                dbEntry = self.selectedDbBaseEntry;
-
-                local known;
-                for i = 1, dbEntry:GetNumValues(container, profession, itemContainer) do
-                    skillName, skillType = dbEntry:GetValue(container, profession, itemContainer, i, "Info");
-                    if ( IsRecipe(skillType) and IsSameRecipe(skillName, name) ) then
-                        known = true;
-                        AddKnownBy(profile);
-                        break;
-                    end
-                end
-
-                if ( not known and dbEntry:Contains(container, profession) and (self:GetConfigShowHasSkill() or self:GetConfigShowCanLearn()) ) then
-					local character = self:GetQualifiedCharacterName(profile, true);
-                    local skillName, subSkillName, standingID, standing;
-                    local rank = dbEntry:GetValue(container, profession, "Rank");
-                    local learnable = reqRank <= rank;
-                    local attainable = not learnable;
-                    local unknown = false;
-
-                    if ( reqSkill or reqReputation ) then
-                        local isValid = reqSkill == nil;
-                        if ( reqSkill ) then
-                            for i = 1, 6 do
-                                skillName, subSkillName = dbEntry:GetValue(container, tostring(i));
-                                if ( skillName == profession ) then
-                                    isValid = reqSkill == skillName or reqSkill == subSkillName;
-                                    break;
-                                end
-                            end
-                        end
-                        if ( not isValid ) then
-                            learnable = false;
-                            attainable = false;
-                        elseif ( reqReputation ) then
-                            if ( not self:HasReputation() ) then
-                                unknown = true;
-                            else
-                                standingID, standing = self:GetFactionStanding(reqReputation);
-                                if ( learnable ) then
-                                    learnable = reqStanding <= standingID;
-                                    attainable = not learnable;
-                                end
+                if ( reqSkill or reqReputation ) then
+                    local isValid = reqSkill == nil;
+                    if ( reqSkill ) then
+                        for i = 1, 6 do
+                            skillName, subSkillName = dbEntry:GetValue(container, tostring(i));
+                            if ( skillName == profession ) then
+                                isValid = reqSkill == skillName or reqSkill == subSkillName;
+                                break;
                             end
                         end
                     end
-
-                    if ( unknown ) then
-                        AddCanLearn(character.." (?)");
-                    elseif ( attainable ) then
-                        character = character.." ("..rank;
-                        if ( reqReputation ) then
-                            character = character.."/"..standing;
+                    if ( not isValid ) then
+                        learnable = false;
+                        attainable = false;
+                    elseif ( reqReputation ) then
+                        if ( not self:HasReputation() ) then
+                            unknown = true;
+                        else
+                            standingID, standing = self:GetFactionStanding(reqReputation);
+                            if ( learnable ) then
+                                learnable = reqStanding <= standingID;
+                                attainable = not learnable;
+                            end
                         end
-                        character = character..")";
-                        AddHasSkill(character);
-                    elseif ( learnable ) then
-                        AddCanLearn(character);
                     end
                 end
+
+                if ( unknown ) then
+                    AddCanLearn(character.." (?)");
+                elseif ( attainable ) then
+                    character = character.." ("..rank;
+                    if ( reqReputation ) then
+                        character = character.."/"..standing;
+                    end
+                    character = character..")";
+                    AddHasSkill(character);
+                elseif ( learnable ) then
+                    AddCanLearn(character);
+                end
             end
-            self:SelectProfile(currentProfile);
         end
+        self:SelectProfile(currentProfile);
     end
 
     return recipeOwners, recipeHasSkill, recipeCanLearn;

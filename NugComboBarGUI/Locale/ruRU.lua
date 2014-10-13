@@ -32,7 +32,7 @@ L["Disable for current character or spec"] = "Выключить для перс
 L["ReloadUI"] = "Перезагрузить UI"
 L["Disabled"] = "Выключено"
 L["Use colors"] = "Использовать цвета"
-L["Only some effects can be altered using colored lightning"] = "Только некоторые эффекты могут быть изменены с помощью цветного освещения"
+L["Only some effects can be altered using colored lighting.\nfireXXXX presets are good for it"] = "Только некоторые эффекты могут быть изменены с помощью цветного освещения.\nfireXXXX хорошо меняются"
 L["Second Layer Preset"] = "Профиль второго слоя"
 L["Second Layer"] = "Второй слой"
 L["For Anticipation talent"] = "Для таланта \"Предчувствие\" (Anticipation)"
@@ -41,3 +41,12 @@ L["(Only for combat points)"] = "(Только для комбопойнтов)"
 L["X Offset"] = "Смещение по Х"
 L["Y Offset"] = "Смещение по Y"
 L["Use these to calibrate point position on resolutions with aspect ratio other than 16:9"] = "Используется, чтобы откалибровать позицию на разрешениях отличиных от 16:9"
+L["Vertical"] = "Вертикальное положение"
+L["Second Point Bar Preset"] = "Профиль второго ряда"
+L["Disable Progress Bar"] = "Отключить прогрессбар"
+-- L["Sound Channel"] = "Канал звука"
+-- L"Sounds" = "Звуки"
+-- L"Max points sound",
+-- L"(Active only for certain specs)",
+-- L"Play",
+-- L"Custom Sound",

@@ -25,6 +25,9 @@ function GoGo_OnEvent(self, event, ...)
 		if not GoGo_Prefs then
 			GoGo_Settings_Default()
 		end --if
+		if not GoGo_Prefs_Template then
+			GoGo_Prefs_Template = {}
+		end --if
 		if not GoGo_Prefs.version then
 			GoGo_Settings_Default()
 		elseif GoGo_Prefs.version ~= GetAddOnMetadata("GoGoMount", "Version") then
@@ -194,6 +197,7 @@ function GoGo_PreClick(button)
 		GoGo_FillButton(button, GoGo_GetMount())
 	end --if
 	
+--[[ --Disabled for now since Blizzard keeps changing group & raid layouts	
 	if not GoGo_Variables.TestVersion then
 		if ( IsInGuild() ) then
 			if GoGo_Variables.Debug >= 5 then
@@ -223,7 +227,7 @@ function GoGo_PreClick(button)
 			end --if
 			SendAddonMessage("GoGoMountVER", GetAddOnMetadata("GoGoMount", "Version"), "RAID")
 		end --if
-	end --if
+	end --if ]]
 	if GoGo_Variables.Debug >= 10 then
 		GoGo_Variables.Debug = 0
 	end --if
@@ -649,19 +653,14 @@ function GoGo_FilterMountsOut(PlayerMounts, FilterID)
 	if table.getn(PlayerMounts) == 0 then
 		return GoGo_FilteringMounts
 	end --if
-	if Value == nil then
-		local Value = true
-	end --if
 	if not GoGo_Variables.MountDB then
 		GoGo_GetMountDB()
 	end --if
 	for a = 1, table.getn(PlayerMounts) do
 		local MountID = PlayerMounts[a]
-		for DBMountID, DBMountData in pairs(GoGo_Variables.MountDB) do
-			if (DBMountID == MountID) and not DBMountData[FilterID] then
-				table.insert(GoGo_FilteringMounts, MountID)
-			end --if
-		end --for
+		if not GoGo_Variables.MountDB[MountID][FilterID] then
+			table.insert(GoGo_FilteringMounts, MountID)
+		end --if
 	end --for
 	return GoGo_FilteringMounts
 end --function
@@ -683,15 +682,13 @@ function GoGo_FilterMountsIn(PlayerMounts, FilterID, Value)
 	
 	for a = 1, table.getn(PlayerMounts) do
 		local MountID = PlayerMounts[a]
-		for DBMountID, DBMountData in pairs(GoGo_Variables.MountDB) do
-			if (DBMountID == MountID) and DBMountData[FilterID] then
-				if Value and DBMountData[FilterID] == Value then
-					table.insert(GoGo_FilteringMounts, MountID)
-				elseif Value == nil then
-					table.insert(GoGo_FilteringMounts, MountID)
-				end --if
+		if GoGo_Variables.MountDB[MountID][FilterID] then
+			if Value and GoGo_Variables.MountDB[MountID][FilterID] == Value then
+				table.insert(GoGo_FilteringMounts, MountID)
+			elseif Value == nil then
+				table.insert(GoGo_FilteringMounts, MountID)
 			end --if
-		end --for
+		end --if
 	end --for
 	return GoGo_FilteringMounts
 end --function
@@ -2814,11 +2811,31 @@ function GoGo_ZoneCheck()
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false
 		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 947 then
+		-- Lunar Fall
+		-- Shadowmoon Valley
+		--(Both in the same area of Warlords of Draenor expansion)
+		-- Need to verify that this zone ID is not used
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Shadowmoon Valley / Lundar Fall")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
+		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == 951 then
+		-- shows Temperal Anomaly buff showing no-flying for the main island
+		-- areas in the water around the island allows for flying even with the Temperal Anomaly buff
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Timeless Isle")
 		end --if
-		GoGo_Variables.ZoneExclude.CanFly = false   -- shows Temperal Anomaly buff showing no-flying
+		-- shows Temperal Anomaly buff showing no-flying for the main island
+		-- areas in the water around the island allows for flying even with the Temperal Anomaly buff
+		-- using IsFlyableArea() for now as the only other method to determine non-flyable area right now is drawing out co-ordinates similar to Dalaran before IsFlyableArea() was introduced
+		if IsFlyableArea() then
+			GoGo_Variables.ZoneExclude.CanFly = true
+		else
+			GoGo_Variables.ZoneExclude.CanFly = false
+		end --if
+
 		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == 953 then
 		if GoGo_Variables.Debug >= 10 then
@@ -3191,6 +3208,14 @@ function GoGo_UpdateMountData()
 		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][2] = true
 	end --if
 
+	if (GoGo_Variables.Player.Class == "SHAMAN") and (GoGo_GlyphActive(19264)) then
+	-- player = shaman and has glyph of Ghost Wolf (cast ghost wolf while dead)
+		GoGo_Variables.MountDB[GoGo_Variables.Localize.GhostWolf][550] = true
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_UpdateMountData: We're a Shaman with Glyph of Ghost Wolf.  Modifying Ghost Wolf to work while the player is dead.")
+		end --if
+	end --if
+	
 	if (GoGo_Variables.Player.Class == "WARLOCK") and (GoGo_GlyphActive(56232)) then
 		-- spellid:56232 = Warlock's Glyph of Nightmares
 		-- Update Felsteeds / Dreadsteeds water surface speed to player's ground surface mount speed (160 / 200)
@@ -3551,7 +3576,7 @@ GOGO_MESSAGES = {
 function GoGo_DebugAddLine(LogLine)
 ---------
 	if not GoGo_Variables.DebugLine then GoGo_Variables.DebugLine = 1 end --if
-	GoGo_DebugLog[GoGo_Variables.DebugLine] = time() .. " " .. LogLine
+	GoGo_DebugLog[GoGo_Variables.DebugLine] = (debugprofilestop()-GoGo_Variables.DebugTimer) .. " " .. LogLine
 	GoGo_Msg(LogLine)
 	GoGo_Variables.DebugLine = GoGo_Variables.DebugLine + 1
 	
@@ -4014,34 +4039,48 @@ function GoGo_ZoneExclusions_Panel()
 end --function
 
 ---------
-function GoGo_SetPref(strPref, intValue)
+function GoGo_SetPref(strPref, intValue, boolNoPanel)
 ---------
+	-- boolNoPanel = set to true to skip updating GUI checkboxes  (called by setdefaults before GUI frames are loaded)
 	if (not strPref) then
 		return
 	end --if
 	
 	if strPref == "DruidClickForm" then
 		GoGo_Prefs.DruidClickForm = intValue
-		GoGo_Druid_Panel_ClickForm:SetChecked(intValue)
+		if (not boolNoPanel) then
+			GoGo_Druid_Panel_ClickForm:SetChecked(intValue)
+		end --if
 	elseif strPref == "DruidFlightForm" then
 		GoGo_Prefs.DruidFlightForm = intValue
-		GoGo_Druid_Panel_FlightForm:SetChecked(intValue)
+		if (not boolNoPanel) then
+			GoGo_Druid_Panel_FlightForm:SetChecked(intValue)
+		end --if
 	elseif strPref == "DruidFormNotRandomize" then
 		GoGo_Prefs.DruidFormNotRandomize = intValue
-		GoGo_Druid_Panel_NoShapeInRandom:SetChecked(intValue)
+		if (not boolNoPanel) then
+			GoGo_Druid_Panel_NoShapeInRandom:SetChecked(intValue)
+		end --if
 	elseif strPref == "ShamanClickForm" then
 		GoGo_Prefs.ShamanClickForm = intValue
-		GoGo_Shaman_Panel_ClickForm:SetChecked(intValue)
+		if (not boolNoPanel) then
+			GoGo_Shaman_Panel_ClickForm:SetChecked(intValue)
+		end --if
 	elseif strPref == "DruidDisableInCombat" then
 		GoGo_Prefs.DruidDisableInCombat = intValue
-		GoGo_Druid_Panel_DisableInCombat:SetChecked(intValue)
+		if (not boolNoPanel) then
+			GoGo_Druid_Panel_DisableInCombat:SetChecked(intValue)
+		end --if
 	elseif strPref == "RemoveBuffs" then
 		GoGo_Prefs.RemoveBuffs = intValue
-		GoGo_Panel_RemoveBuffs:SetChecked(intValue)
+		if (not boolNoPanel) then
+			GoGo_Panel_RemoveBuffs:SetChecked(intValue)
+		end --if
 	elseif strPref == "AspectPack" then
 		GoGo_Prefs.AspectPack = intValue
-		GoGo_Hunter_Panel_AspectOfPack:SetChecked(intValue)
-	
+		if (not boolNoPanel) then
+			GoGo_Hunter_Panel_AspectOfPack:SetChecked(intValue)
+		end --if
 	end --if
 
 end --function
@@ -4080,17 +4119,17 @@ function GoGo_Settings_Default(Class)
 		GoGo_SetOptionAutoDismount(1)
 		GoGo_Prefs.DisableUpdateNotice = false
 		GoGo_Prefs.DisableMountNotice = false
-		GoGo_SetPref("DruidClickForm", true)
-		GoGo_SetPref("DruidFlightForm", false)
+		GoGo_SetPref("DruidClickForm", true, true)
+		GoGo_SetPref("DruidFlightForm", false, true)
 		GoGo_Prefs.UnknownMounts = {}
 		GoGo_Prefs.GlobalPrefMounts = {}
 		GoGo_Prefs.GlobalPrefMount = false
-		GoGo_SetPref("AspectPack", false)
-		GoGo_SetPref("DruidFormNotRandomize", false)
+		GoGo_SetPref("AspectPack", false, true)
+		GoGo_SetPref("DruidFormNotRandomize", false, true)
 		GoGo_Prefs.DisableWaterFlight = true
-		GoGo_SetPref("RemoveBuffs", true)
-		GoGo_SetPref("DruidDisableInCombat", false)
-		GoGo_SetPref("ShamanClickForm", false)
+		GoGo_SetPref("RemoveBuffs", true, true)
+		GoGo_SetPref("DruidDisableInCombat", false, true)
+		GoGo_SetPref("ShamanClickForm", false, true)
 	end --if
 end --function
 

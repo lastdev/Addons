@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(340, "DBM-Party-Cataclysm", 12, 184)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
 mod:SetCreatureID(54431)
 mod:SetZone()
 
@@ -14,6 +14,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS",
 	"SPELL_SUMMON"
 )
+mod.onlyHeroic = true
 
 -- Just adding all I can find, no idea how usefull they will be on Live :)
 

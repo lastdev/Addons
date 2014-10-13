@@ -8,7 +8,7 @@
 ## SavedVariables: DataStore_SpellsDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
-## X-Curse-Packaged-Version: r20
+## X-Curse-Packaged-Version: 5.4.007
 ## X-Curse-Project-Name: DataStore_Spells
 ## X-Curse-Project-ID: datastore_spells
 ## X-Curse-Repository-ID: wow/datastore_spells/mainline

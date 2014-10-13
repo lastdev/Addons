@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: CoreScan.lua 5427 2013-07-13 09:28:05Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: CoreScan.lua 5460 2014-06-18 17:51:52Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -472,7 +472,6 @@ end
 
 function private.Unpack(item, storage)
 	if not storage then storage = {} end
-	storage.id = item[Const.ID]
 	storage.link = item[Const.LINK]
 	storage.useLevel = item[Const.ULEVEL]
 	storage.itemLevel = item[Const.ILEVEL]
@@ -611,11 +610,9 @@ local function processStats(processors, operation, curItem, oldItem)
 					break
 				end
 			else
-				if (_G.nLog) then
-					local text = ("Error trapped for AuctionFilter in module %s:\n%s"):format(x.Name, errormsg)
-					if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "AuctionFilter Error", text) end
-					geterrorhandler()(text)
-				end
+				local text = ("Error trapped for AuctionFilter in module %s:\n%s"):format(x.Name, result)
+				if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "AuctionFilter Error", text) end
+				geterrorhandler()(text)
 			end
 		end
 	elseif curItem and bitand(curItem[Const.FLAG] or 0, Const.FLAG_FILTER) == Const.FLAG_FILTER then
@@ -655,32 +652,6 @@ function private.IsInQuery(curQuery, data)
 		return true
 	end
 	return false
-end
-
-local idLists = {}
-function private.BuildIDList(scandata, serverKey)
-	local idList = idLists[serverKey]
-	if idList then return idList end
-	idList = {0} -- dummy entry ensures that list is never empty and that counting starts from 1
-	idLists[serverKey] = idList
-	local image = scandata.image
-	for i = 1, #image do
-		tinsert(idList, image[i][Const.ID])
-	end
-	table.sort(idList)
-	return idList
-end
-
-function private.GetNextID(idList)
-	local nextId = idList[1] + 1
-	local second = idList[2]
-	while second == nextId do
-		nextId = second + 1
-		tremove(idList, 1)
-		second = idList[2]
-	end
-	idList[1] = nextId
-	return nextId
 end
 
 function lib.GetScanStats(serverKey)
@@ -951,7 +922,6 @@ local Commitfunction = function()
 	local serverKey = TempcurQuery.qryinfo.serverKey or GetFaction()
 	local scandata = private.GetScanData(serverKey)
 	assert(scandata, "Critical error: scandata does not exist for serverKey "..serverKey)
-	local idList = private.BuildIDList(scandata, serverKey)
 	local now = time()
 	if get("scancommit.progressbar") then
 		lib.ProgressBars("CommitProgressBar", 0, true)
@@ -971,7 +941,6 @@ local Commitfunction = function()
 	lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 1")
 	coroutine.yield() -- yield here to allow the bar to display, and help the frame rate a little
 	nextPause = debugprofilestop() + processingTime
-	local missingData = false
 	local pos=#TempcurScan
 	while (pos > 0) do
 		if debugprofilestop() > nextPause then
@@ -981,10 +950,9 @@ local Commitfunction = function()
 		end
 
 		local data = TempcurScan[pos]
-		local entryUnresolved = false
 		local entryUnusable = false
 		progresscounter = progresscounter + 1
-		if (not data[Const.SELLER] or data[Const.SELLER]=="") then data[Const.SELLER], entryUnresolved = "", true end
+		if not data[Const.SELLER] then data[Const.SELLER] = "" end
 
 		if data[Const.ITEMID] and not (data[Const.ILEVEL] and data[Const.ITYPE] and data[Const.ISUB]) then
 			if data[Const.ITEMID] == 82800 then -- Pet Cage
@@ -992,7 +960,7 @@ local Commitfunction = function()
 				if cType then
 					data[Const.ITYPE] = cType
 					data[Const.IEQUIP] = nil
-					data[Const.ULEVEL] = cUseLevel
+					data[Const.ULEVEL] = data[Const.ULEVEL] or cUseLevel
 					local _, speciesID, level = strsplit(":", data[Const.LINK])
 					speciesID, level = tonumber(speciesID), tonumber(level)
 					data[Const.ILEVEL] = data[Const.ILEVEL] or level -- should have been obtained from GetAuctionItemInfo anyway
@@ -1015,14 +983,10 @@ local Commitfunction = function()
 			end
 		end
 		for i = 1, Const.LASTENTRY, 1 do
-			if (i ~= Const.MININC and i ~= Const.BUYOUT and i ~= Const.CURBID and i ~= Const.IEQUIP and i ~= Const.AMHIGH and i ~= Const.CANUSE and i ~= Const.FLAG) then
-				if ((not data[i]) or data[i]=="") then
-					missingData = true
-					entryUnresolved = true
-					if (i ~= Const.SELLER) then
-						entryUnusable = true
-						break
-					end
+			if not data[i] then
+				if i ~= Const.IEQUIP and i ~= Const.AMHIGH and i ~= Const.CANUSE then
+					entryUnusable = true
+					break
 				end
 			end
 		end
@@ -1037,14 +1001,14 @@ local Commitfunction = function()
 					"Level %d, Quality %s, Item Level %s\n",
 					"Item Type %s, Sub Type %s, Equipment Position %s\n",
 					"Price %s, Bid %s, NextBid %s, MinInc %s, Buyout %s\n Time Left %s, Time %s\n",
-					"High Bidder %s  Can Use: %s  ID %s  Item ID %s  Suffix %s  Factor %s  Enchant %s  Seed %s\n",
+					"High Bidder %s  Can Use: %s  (Dep1) %s  Item ID %s  Suffix %s  Factor %s  Enchant %s  Seed %s\n",
 					"Texture: %s")):format(
 					data.PAGE, data.PAGEINDEX, "too broken, can not use at all",
 					data[Const.LINK] or "(nil)", data[Const.COUNT] or -1, data[Const.NAME] or "(nil)", data[Const.SELLER] or "(UNKNOWN)",
 					data[Const.ULEVEL] or -1, data[Const.QUALITY] or -1, data[Const.ILEVEL] or -1,data[Const.ITYPE] or "(UNKNOWN)", data[Const.ISUB] or "(UNKNOWN)", data[Const.IEQUIP] or '(n/a)',
 					data[Const.PRICE] or -1, data[Const.CURBID] or -1, data[Const.MINBID] or -1, data[Const.MININC] or -1, data[Const.BUYOUT] or -1,
 					data[Const.TLEFT] or -1, data[Const.TIME] or "(nil)", data[Const.AMHIGH] and "Yes" or "No",
-					(data[Const.CANUSE]==false and "Yes") or (data[Const.CANUSE] and "No" or "(nil)"), data[Const.ID] or '(nil)', data[Const.ITEMID] or '(nil)',
+					(data[Const.CANUSE]==false and "Yes") or (data[Const.CANUSE] and "No" or "(nil)"), data[Const.DEP1] or '(nil)', data[Const.ITEMID] or '(nil)',
 					data[Const.SUFFIX] or '(nil)', data[Const.FACTOR] or '(nil)', data[Const.ENCHANT] or '(nil)', data[Const.SEED] or '(nil)', data[Const.TEXTURE] or '(nil)'))
 			end
 			tremove(TempcurScan, pos)
@@ -1164,6 +1128,7 @@ local Commitfunction = function()
 
 	local maskNotDirtyUnseen = bitnot(bitor(Const.FLAG_DIRTY, Const.FLAG_UNSEEN)) -- only calculate mask for clearing these flags once
 	local messageCreate = private.FallbackScanData and "fallbackcreate" or "create"
+	local undirtyCount = 0
 
 	processBeginEndStats(processors, "begin", querySizeInfo, nil)
 
@@ -1182,8 +1147,8 @@ local Commitfunction = function()
 
 		if (itemPos) then
 			local oldItem = scandata.image[itemPos]
-			data[Const.ID] = oldItem[Const.ID]
 			data[Const.FLAG] = bitand(oldItem[Const.FLAG], maskNotDirtyUnseen)
+			undirtyCount = undirtyCount + 1
 			if data[Const.SELLER] == "" then -- unknown seller name in new data; copy the old name if it exists
 				data[Const.SELLER] = oldItem[Const.SELLER]
 			end
@@ -1206,7 +1171,7 @@ local Commitfunction = function()
 					end
 				end
 			end
-			scandata.image[itemPos] = replicate(data)
+			scandata.image[itemPos] = data
 		else
 			if (processStats(processors, messageCreate, data)) then
 				newCount = newCount + 1
@@ -1214,11 +1179,11 @@ local Commitfunction = function()
 				data[Const.FLAG] = bitor(data[Const.FLAG] or 0, Const.FLAG_FILTER)
 				filterNewCount = filterNewCount + 1
 			end
-			data[Const.ID] = private.GetNextID(idList)
 			data[Const.FLAG] = bitand(data[Const.FLAG], maskNotDirtyUnseen)
-			tinsert(scandata.image, replicate(data))
+			tinsert(scandata.image, data)
 		end
 	end
+	lut = nil -- release some memory
 
 
 	--[[ *** Stage 4 : Cleanup deleted auctions *** ]]
@@ -1229,9 +1194,21 @@ local Commitfunction = function()
 		-- #scandata.image is probably now larger than when we originally calculated progresstotal -- adjust the step size to compensate
 		progressstep = (progresstotal - progresscounter) / #scandata.image
 	end
+	local loopBegin, loopEnd, loopDirection = #scandata.image, 1, -1
+	local keepmodeImage
+	--[[ Keep mode test
+		Using tremove is extremely inefficient when there are a large number of deletions (particularly if the number of kept entries is also large).
+		If we estimate this will be the case, switch to Keep mode, where we copy the entries we want to keep into a new image, which then replaces the old one.
+
+		Test version 1: use keep mode if scan is complete, and if number of remaining dirty entries exceeds a fixed threshold
+	--]]
+	if not wasIncomplete and (dirtyCount - undirtyCount) > 1000 then
+		loopBegin, loopEnd, loopDirection = 1, #scandata.image, 1 -- process Keep mode in ascending order to keep the new table in the same order
+		keepmodeImage = {} -- new image table; also acts as a flag for Keep mode
+	end
 	nextPause = debugprofilestop() + processingTime
 	lastTime = time()
-	for pos = #scandata.image, 1, -1 do
+	for pos = loopBegin, loopEnd, loopDirection do
 		if debugprofilestop() > nextPause or time() > lastTime then
 			lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 4")
 			coroutine.yield()
@@ -1239,10 +1216,10 @@ local Commitfunction = function()
 			lastTime = time()
 		end
 		local data = scandata.image[pos]
+		local dodelete = false
 		progresscounter = progresscounter + progressstep
 		if (bitand(data[Const.FLAG] or 0, Const.FLAG_DIRTY) == Const.FLAG_DIRTY) then
 			local auctionmaxtime = Const.AucMaxTimes[data[Const.TLEFT]] or 172800
-			local dodelete = false
 
 			if data[Const.TIME] and (now - data[Const.TIME] > auctionmaxtime) then
 				-- delete items that have passed their expiry time - even if scan was incomplete
@@ -1272,16 +1249,26 @@ local Commitfunction = function()
 					end
 				else
 					data[Const.FLAG] = bitor(data[Const.FLAG] or 0, Const.FLAG_UNSEEN)
+					data[Const.FLAG] = bitand(data[Const.FLAG] or 0, bitnot(Const.FLAG_DIRTY))
 					missedCount = missedCount + 1
 				end
 			end
-			if dodelete then
-				if not (bitand(data[Const.FLAG] or 0, Const.FLAG_FILTER) == Const.FLAG_FILTER) then
-					processStats(processors, "delete", data)
-				end
+		end
+		if dodelete then
+			if not (bitand(data[Const.FLAG] or 0, Const.FLAG_FILTER) == Const.FLAG_FILTER) then
+				processStats(processors, "delete", data)
+			end
+			if not keepmodeImage then
 				tremove(scandata.image, pos)
 			end
+		else -- keep
+			if keepmodeImage then
+				tinsert(keepmodeImage, data)
+			end
 		end
+	end
+	if keepmodeImage then
+		scandata.image = keepmodeImage
 	end
 
 
@@ -1648,7 +1635,7 @@ function private.GetAuctionItem(list, page, index, itemLinksTried, itemData)
 		return itemData
 	end
 	itemData[Const.FLAG] = itemData[Const.FLAG] or 0
-	itemData[Const.ID] = itemData[Const.ID] or -1
+	itemData[Const.DEP1] = 0 -- deprecated entry
 
 	local isLogging = nLog and page and list == "list"
 	if isLogging then
@@ -1684,7 +1671,7 @@ function private.GetAuctionItem(list, page, index, itemLinksTried, itemData)
 		return itemData
 	end
 
-	local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner, saleStatus, itemId = AucAdvanced.GetAuctionItemInfo(list, index)
+	local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName, saleStatus, itemId = GetAuctionItemInfo(list, index)
 	-- Check critical values (if we got those, assume we got the rest as well - except possibly owner)
 	if not (itemId and minBid) then
 		return itemData
@@ -2983,18 +2970,4 @@ end
 internal.Scan.Logout = lib.Logout
 internal.Scan.AHClosed = lib.AHClosed
 
-_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreScan.lua $", "$Rev: 5427 $")
-
--- Hybrid mode GetAuctionItemInfo for transition from WoW 5.3 to 5.4
--- Temporary - do not use in new code!
-local _,_,_,toc = GetBuildInfo()
-if toc < 50400 then
-	print("GetAuctionItemInfo for version 5.3")
-	AucAdvanced.GetAuctionItemInfo = GetAuctionItemInfo
-else
-	print("GetAuctionItemInfo for version 5.4")
-	function AucAdvanced.GetAuctionItemInfo(...)
-		local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName, saleStatus, itemId, hasAllInfo =  GetAuctionItemInfo(...)
-		return name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner, saleStatus, itemId, hasAllInfo
-	end
-end
+_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CoreScan.lua $", "$Rev: 5460 $")

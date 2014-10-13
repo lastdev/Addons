@@ -4,6 +4,10 @@ The Armory archive can be found on http://www.wow-neighbours.com/.
 
 Thanks for using Armory. You can show your appreciation and support future development by donating!
 
+==== v11.2.1 ====
+# Included updated Spanish translations.
+# A recipe was shown as learnable in case the recipe's name changes once learned; this has been fixed.
+
 ==== v11.2.0 ====
 # Included updated German translations.
 # The summary now shows '0' if there is mail that doesn't expire.

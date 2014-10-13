@@ -645,12 +645,31 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="$parentMultiAccount" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton name="$parentMergedRealms" inherits="InterfaceOptionsSmallCheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors> 
 					<Anchor point="TOPLEFT" relativeTo="$parentCrossFaction" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension  x="0" y="-10"/>
+						</Offset>
+					</Anchor>
+				</Anchors>      
+				<Scripts>
+					<OnClick>
+						Altoholic:ToggleOption(self, "TooltipConnectedRealms")
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			
+			
+			<CheckButton name="$parentMultiAccount" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+				<Size>
+					<AbsDimension x="20" y="20"/>
+				</Size>
+				<Anchors> 
+					<Anchor point="TOPLEFT" relativeTo="$parentMergedRealms" relativePoint="BOTTOMLEFT">
 						<Offset>
 							<AbsDimension  x="0" y="-10"/>
 						</Offset>

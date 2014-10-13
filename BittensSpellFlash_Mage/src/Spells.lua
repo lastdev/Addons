@@ -280,8 +280,7 @@ local function hasT6TalentFor(duration)
 end
 
 local function doPower()
-	return a.MissilesStacks > 0
-		and a.ChargeStacks > 2
+	return a.ChargeStacks == 4
 		and not a.AlterTime
 		and hasT6TalentFor(15)
 end
@@ -298,14 +297,13 @@ c.AddOptionalSpell("Presence of Mind", "before AT", {
 	CheckFirst = function(z)
 		if c.GetCastTime("Arcane Blast") < 1.2
 			or (not a.ArcanePower 
-				and (not doPower() or c.GetCooldown("Arcane Power") > 0)) then
+				and (a.ArcanePowerCD > 0 or not doPower())) then
 			
 			return false
 		end
 		
 		c.MakePredictor(z, not a.ArcanePower, "yellow")
-		return (a.ArcanePower 
-				or (c.GetCooldown("Arcane Power") == 0 and doPower()))
+		return (a.ArcanePower or (a.ArcanePowerCD == 0 and doPower()))
 			and c.GetCastTime("Arcane Blast") > 1.2
 	end
 })
@@ -328,9 +326,7 @@ c.AddOptionalSpell("Presence of Mind", "before Flamestrike", {
 
 c.AddOptionalSpell("Alter Time", "for Arcane", {
 	CheckFirst = function(z)
-		if not a.ArcanePower 
-			and (not doPower() or c.GetCooldown("Arcane Power") > 0) then
-			
+		if not a.ArcanePower and (not doPower() or a.ArcanePowerCD > 0) then
 			return false
 		end
 		
@@ -344,6 +340,17 @@ c.AddOptionalSpell("Alter Time", "for Arcane", {
 	end
 })
 
+c.AddOptionalSpell("Rune of Power", "for Arcane", {
+	NoRangeCheck = true,
+	NotIfActive = true,
+	CheckFirst = function()
+		local remaining = getRuneDuration()
+		return remaining < c.GetCastTime("Arcane Blast")
+			or (a.ArcanePowerCD < c.GetCastTime("Rune of Power")
+				and remaining < 15 + a.ArcanePowerCD)
+	end
+})
+
 c.AddOptionalSpell("Evocation", "for Arcane", {
 	NotIfActive = true,
 	CheckFirst = function()
@@ -352,7 +359,9 @@ c.AddOptionalSpell("Evocation", "for Arcane", {
 		end
 		
 		if c.HasTalent("Invocation") then
-			return (a.ChargeStacks == 0 and a.ManaPercent < 70)
+			return (a.ChargeStacks == 0 
+					and (a.ManaPercent < 70
+						or (a.ManaPercent < 80 and a.ArcanePowerCD < 5)))
 				or c.GetBuffDuration("Invoker's Energy") 
 					< c.GetCastTime("Arcane Blast")
 		else
@@ -373,12 +382,17 @@ c.AddOptionalSpell("Evocation", "Interrupt", {
 c.AddSpell("Arcane Missiles", nil, {
 	RunFirst = movementCheck,
 	CheckFirst = function(z)
-		local apcd = c.GetCooldown("Arcane Power", false, 90)
-		c.MakeOptional(z, a.MissilesStacks == 1 and (apcd == 0 or c.IsSolo()))
-		c.MakeMini(z, a.MissilesStacks == 1 and apcd < 6)
-		return a.AlterTime
-			or a.MissilesStacks == 2
-			or a.ChargeStacks == 4
+		if a.AlterTime then
+			c.MakeOptional(z, false)
+			c.MakeMini(z, false)
+			return true
+		end
+		
+		local waitForAP = a.ArcanePowerCD == 0 
+			or (a.ArcanePowerCD < 6 and a.MissilesStacks < 2)
+		c.MakeOptional(z, waitForAP)
+		c.MakeMini(z, waitForAP and not c.IsSolo())
+		return a.MissilesStacks == 2 or a.ChargeStacks == 4 or c.IsSolo()
 	end
 })
 
@@ -388,7 +402,7 @@ c.AddSpell("Arcane Missiles", "for AoE", {
 
 c.AddSpell("Arcane Barrage", nil, {
 	CheckFirst = function()
-		return a.ChargeStacks == 4 and not a.AlterTime
+		return a.ChargeStacks == 4 and not a.AlterTime and a.ManaPercent < 95
 	end
 })
 
@@ -415,6 +429,22 @@ c.AddSpell("Arcane Barrage", "when Moving", {
 
 c.AddSpell("Arcane Blast", nil, {
 	RunFirst = movementCheck,
+})
+
+c.AddSpell("Arcane Blast", "with Profound Magic", {
+	RunFirst = movementCheck,
+	CheckFirst = function()
+		local stack = c.GetBuffStack("Profound Magic")
+		if c.IsQueued("Arcane Missiles") then
+			stack = stack + 1
+		elseif c.IsCasting("Arcane Blast") then
+			stack = stack - 1
+		end
+		return stack > 0
+			and not a.AlterTime
+			and a.MissilesStacks < 2
+			and a.ManaPercent > 93
+	end,
 })
 
 c.AddOptionalSpell("Flamestrike", nil, {
@@ -539,11 +569,11 @@ c.AddSpell("Frostfire Bolt", nil, {
 c.AssociateTravelTimes(.7, "Frostbolt")
 
 c.AddOptionalSpell("Summon Water Elemental", nil, {
-    FlashColor = "yellow",
-    CheckFirst = function()
-        return not s.UpdatedVariables.PetAlive
-            and not IsMounted()
-    end
+	FlashColor = "yellow",
+	CheckFirst = function()
+		return not s.UpdatedVariables.PetAlive
+			and not IsMounted()
+	end
 })
 
 c.AddOptionalSpell("Frost Armor", nil, {
@@ -621,23 +651,28 @@ c.AddOptionalSpell("Alter Time", "for Frost", {
 })
 
 c.AddOptionalSpell("Freeze", nil, {
-    Type = "pet",
-    NoRangeCheck = 1,
-    NoGCD = true,
-    CheckFirst = function()
-        if s.SpellCooldown(c.GetID("Freeze")) > 0 or s.Boss() then
-        	return false
-        elseif c.AoE then
-        	return a.FingerCount == 0
-        elseif c.IsSolo() and c.GetCooldown("Deep Freeze") < 25 then
-        	return a.FingerCount == 0
-        		and not a.BrainFreeze
-        		and c.GetCooldown("Deep Freeze") == 0
-        		and s.SpellInRange(c.GetID("Deep Freeze"))
-        else
-        	return a.FingerCount < 2 and not c.HasMyDebuff("Deep Freeze")
-        end
-    end
+	Type = "pet",
+	NoRangeCheck = 1,
+	NoGCD = true,
+	CheckFirst = function()
+		if s.SpellCooldown(c.GetID("Freeze")) > 0 then
+      return false
+		elseif c.AoE and c.HasTalent("Frost Bomb") then
+      local dur = s.MyDebuffDuration(c.GetID("Frost Bomb"));
+      return dur > .5 and dur < 1.5
+		elseif s.Boss() then
+			return false
+		elseif c.AoE then
+	    return a.FingerCount == 0
+		elseif c.IsSolo() and c.GetCooldown("Deep Freeze") < 25 then
+			return a.FingerCount == 0
+				and not a.BrainFreeze
+				and c.GetCooldown("Deep Freeze") == 0
+				and s.SpellInRange(c.GetID("Deep Freeze"))
+		else
+			return a.FingerCount < 2 and not c.HasMyDebuff("Deep Freeze")
+		end
+	end
 })
 
 c.AddOptionalSpell("Deep Freeze", nil, {

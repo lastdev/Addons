@@ -3,10 +3,78 @@ Altoholic Changelog (dates in dd/mm/yyyy)
 
 Join the #altoholic IRC channel on Freenode : irc://irc.freenode.net:6667/
 
-IMPORTANT NOTE: If you're upgrading from 4.x :
+5.4.009 (08/08/2014)
 
-- Make sure you delete the addon's databases in SavedVariables. ie: Altoholic.lua and all DataStore*.lua.
-- Make sure to delete the old addon directories (Altoholic & all DataStore modules) as many files have changed/moved. A patch like this one is always a good opportunity for a fresh install.
+- Uncommented the code that actually deletes linked realms.. silly me !
+- DataStore_Crafts: reworked the processing of events that actually trigger profession scanning. 
+Note: The current implementation is based (not 100%) on how professions are scanned in Ackis Recipe List (thanks Ackis :D).
+So far the tests I have made show a serious improvement, but the way events are triggered may not be 100% consistent, especially with regards to the TRADE_SKILL_UPDATE event.
+The addon should no longer miss scans (please report if you notice problems).
+- DataStore_Mails: fixed some problems related to merged realms, it should now work without problems anymore.
+- DataStore_Mails: fixed issues where mail attachments (sent or returned) could be saved twice in the recipient's mailbox.
+
+Changes by ckaotik (Huge thanks !)
+- DataStore : Read addon version from .toc
+- DataStore : Current character/guild key can now be used by character/guild based methods
+- DataStore : added a few methods to support overriding methods
+- Many minor fixes in DataStore_Achievements, Agenda, Containers, Crafts, Inventory, Mails, Talents
+- DataStore_Quests : fixed tracking of completed quests
+
+5.4.008 (27/07/2014)
+
+- Fixed MoP factions showing up as numbers.
+- Suggested leveling zones are back in the account summary. 
+- Added an option to reset links between merged realms (some realms were marked as linked though they were not)
+	=> DataStore dropdown in the Account Summary
+- Added an option to completely reset the DataStore databases, without having to manually delete the files in the SavedVariables folder
+	=> DataStore dropdown in the Account Summary
+
+- Added an option to remember the faction filter across sessions. (Grids -> Reputations)
+- Added an option to remember the currency filter across sessions. (Grids -> Currencies)
+- Added an option to remember the companion filter across sessions. (Grids -> Companions)
+- Added an option to remember the mount filter across sessions. (Grids -> Mounts)
+- Added an option to remember the tradeskills filter across sessions. (Grids -> Tradeskills)
+- Added an option to remember the archaeology filter across sessions. (Grids -> Archaeology)
+- Item counts for guilds on merged realms should now be visible too (sorry can't test this myself).
+
+5.4.007 (24/07/2014)
+
+- Added missing faction "Emperor Shaohao".
+- Altoholic: removed LibBabble-Faction
+- DataStore_Reputations: removed LibBabble-Faction.
+- Fixed lua error when using the search function.
+
+5.4.006 (22/07/2014)
+
+- Fixed double item counts in the tooltip.
+- Improved the search functionality to be less restrictive.
+- DataStore_Containers now triggers extra events for client addons.
+- DataStore_Inventory now triggers extra events for client addons.
+- DataStore_Auctions now triggers extra events for client addons.
+- DataStore_Mails now triggers extra events for client addons.
+
+5.4.005 (21/07/2014)
+
+- Fixed bugs related to full names (name+realm) in the Guild tab.
+- Added a pane in the account summary to show the PVE & PVP currencies.
+- Added tooltip support for connected realms.
+Note: DataStore needs to learn about connected realms, to do so, send 1 mail to an alt on a connected realm.
+The connection is understood both ways (realm A to B, and B to A) with a single mail.
+If you are connected to more than 1 realm, send 1 mail per link.
+Ex: for 3 realms, send 1 mail from realm A to B, one from A to C, and one from B to C.
+The mail can consist of just text, no attachment or gold required.
+- Added an option to show/hide item count from connected realms.
+- Added support for mails sent to/returned from alts on connected realms. 
+Note: Realm names are packed ("Marécage de Zangar" => "MarécagedeZangar") by Blizzard, this is supported.
+If you notice something weird with your realm, please report it.
+- Altoholic: removed LibBabble-Zone
+- Updated the internal loot table and removed duplicate entries also found in LPT.
+- DataStore_Inventory: removed LibBabble-Zone.
+- DataStore_Reputations: removed LibBabble-Zone.
+- Removed leveling suggestions from the character level tooltip in the account summary, as this information is now part of the game's world map.
+- Updated the AiL tooltip, level 60 & 70 dungeons are now commented (tooltip was getting long), and level 90 was added. (Thanks Pseudopath on WoWinterface)
+- Fixed issues related to scanning void storage (Thanks Lombra !)
+- Several minor fixes (Thanks Lombra again !!)
 
 5.4.004 (07/10/2013)
 

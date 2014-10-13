@@ -1,13 +1,14 @@
 local mod	= DBM:NewMod("PT", "DBM-Party-BC", 12)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 493 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 540 $"):sub(12, -3))
 
 mod:RegisterEvents(
 	"UPDATE_WORLD_STATES",
 	"UNIT_DIED",
 	"CHAT_MSG_MONSTER_YELL"
 )
+mod.noStatistics = true
 
 -- Portals
 local warnWavePortalSoon	= mod:NewAnnounce("WarnWavePortalSoon", 2, 57687)

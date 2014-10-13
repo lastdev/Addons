@@ -295,7 +295,7 @@ end
 
 function c.GetBuffStack(name, noGCD, matchSpellID)
 	local id = c.GetID(name)
-	if c.HasBuff(id, noGCD, matchSpellID) then -- ensure won't to expire
+	if c.HasBuff(id, noGCD, matchSpellID) then -- ensure it won't expire
 		return s.BuffStack(id, "player", nil, nil, nil, matchSpellID)
 	else
 		return 0

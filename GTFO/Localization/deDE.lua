@@ -69,7 +69,6 @@ GTFOLocal =
 	UI_TrivialDescription = "Aktiviert Tonsignale für niedrigstufige Gegner, welche dir auf deinem Level nicht ernsthaft schaden.",
 	UI_Unmute = "Tonsignale abspielen, wenn stummgeschaltet",
 	UI_UnmuteDescription = "Falls Du die allgemeine Tonausgabe oder die Sound-Effekte stummgeschaltet haben solltest, aktiviert GTFO vorübergehend die Audiosignale, um ausschließlich jene von GTFO abzuspielen.", -- Needs review
-	UI_UnmuteDescription2 = "Lautstärkeregler dürfen nicht auf 0% stehen.", -- Needs review
 	UI_Volume = "GTFO-Lautstärke",
 	UI_VolumeDescription = "Audiolautstärke einstellen.",
 	UI_VolumeLoud = "4: Laut",
@@ -88,6 +87,10 @@ GTFOLocal =
 	-- 4.19.1
 	UI_TrivialSlider = "Minimum % of HP",
 	UI_TrivialDescription2 = "Set the slider to the minimum % amount of HP damage taken for alerts to not be considered trivial.",
+	-- 4.32
+	UI_UnmuteDescription2 = "This requires the master volume slider to be higher than 0% and will override the sound channel option.",
+	UI_SoundChannel = "Sound Channel",
+	UI_SoundChannelDescription = "This is the volume channel that GTFO alert sounds will attach themselves to.",
 }
 
 

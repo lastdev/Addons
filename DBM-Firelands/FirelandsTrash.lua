@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("FirelandsTrash", "DBM-Firelands")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 113 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 118 $"):sub(12, -3))
 mod:SetModelID(38765)
 mod:SetZone()
 mod.isTrashMod = true
@@ -91,8 +91,8 @@ function mod:SPELL_CAST_START(args)
 		timerRaiseLavaCD:Start()
 		if not lavaRunning then
 			self:RegisterShortTermEvents(
-				"SPELL_DAMAGE",
-				"SPELL_MISSED"
+				"SPELL_DAMAGE 99510",
+				"SPELL_MISSED 99510"
 			)
 			lavaRunning = true
 		end

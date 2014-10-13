@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: CoreMain.lua 5423 2013-06-15 18:11:00Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: CoreMain.lua 5461 2014-06-19 10:37:18Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -366,6 +366,16 @@ local function OnEvent(self, event, arg1, arg2, ...)
 		end
 	elseif event == "ADDON_LOADED" then
 		OnLoad(arg1)
+	elseif event == "SAVED_VARIABLES_TOO_LARGE" then
+		-- (according to wowpedia) if this occurs it will fire immediately after "ADDON_LOADED"
+		if arg1 == "auc-advanced" then
+			if not AucAdvanced.ABORTLOAD then
+				AucAdvanced.ABORTLOAD = "Auctioneer saved variables too large"
+			end
+		end
+		-- only modules with their own save file need to check for this event
+		-- they should check for their own name (lowercased) in arg1
+		AucAdvanced.SendProcessorMessage("loadfail", arg1, event)
 	elseif event == "PLAYER_LOGOUT" then
 		internal.Scan.Logout()
 		OnUnload()
@@ -376,6 +386,7 @@ end
 
 local EventFrame = CreateFrame("Frame")
 EventFrame:RegisterEvent("ADDON_LOADED")
+EventFrame:RegisterEvent("SAVED_VARIABLES_TOO_LARGE")
 EventFrame:RegisterEvent("PLAYER_LOGOUT")
 EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 EventFrame:SetScript("OnEvent", OnEvent)
@@ -399,4 +410,4 @@ do -- ScheduleMessage handler
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreMain.lua $", "$Rev: 5423 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CoreMain.lua $", "$Rev: 5461 $")

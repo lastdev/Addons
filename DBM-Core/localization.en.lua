@@ -95,7 +95,8 @@ DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "Your alpha version of Deadly Boss Mods i
 DBM_CORE_UPDATEREMINDER_FOOTER			= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the download link to your clipboard."
 DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= "Press " .. (IsMacClient() and "Cmd-C" or "Ctrl-C")  ..  " to copy the link to your clipboard."
 DBM_CORE_UPDATEREMINDER_DISABLE			= "WARNING: Do to your Deadly Boss Mods being drastically out of date (%d revisions), it has been disabled until updated. This is to ensure old and incompatable code doesn't cause poor play experience for yourself or fellow raid members."
-DBM_CORE_UPDATEREMINDER_HOTFIX			= "Your version of DBM will have incorrect timers or warnings during this boss encounter. This is corrected in a newer release (or alpha release if newer release version not available)"
+DBM_CORE_UPDATEREMINDER_HOTFIX			= "Your version of DBM will have incorrect timers or warnings during this boss encounter. This is corrected in a newer release (or alpha release if newer release version not yet available)"
+DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "WARNING: Do to your Deadly Boss Mods being out of date, DBM has been disabled until updated, since this is a major game patch. This is to ensure old and incompatable code doesn't cause poor play experience for yourself or fellow group members. Make sure you download a newer version from deadlybossmods.com or curse as soon as possible. If you are getting this messeage on 6.0 beta, download beta mod here: http://forums.elitistjerks.com/topic/132677-deadly-boss-mods-60-testing"
 
 DBM_CORE_MOVABLE_BAR				= "Drag me!"
 
@@ -217,7 +218,7 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS = {
 	moveto		= "%s - move to >%%s<",
 	run			= "%s - run away",
 	cast		= "%s - stop casting",
-	reflect		= "%s - stop attacking",
+	reflect		= "%s on >%%s< - stop attacking",
 	count		= "%s! (%%d)",
 	stack		= "%%d stacks of %s on you",
 	switch		= ">%s< - switch targets"
@@ -243,7 +244,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS = {
 	cast 		= "Show special warning to stop casting for $spell:%s",--Spell Interrupt
 	reflect 	= "Show special warning to stop attacking $spell:%s",--Spell Reflect
 	count 		= "Show special warning for $spell:%s",
-	stack 		= "Show special warning when you are affected by >=%d stacks of $spell:%s",--too long?
+	stack 		= "Show special warning when you are affected by >=%d stacks of $spell:%s",
 	switch		= "Show special warning to switch targets for $spell:%s"
 }
 

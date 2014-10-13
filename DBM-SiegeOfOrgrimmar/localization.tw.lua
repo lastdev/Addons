@@ -6,10 +6,6 @@ local L
 ---------------
 L= DBM:GetModLocalization(852)
 
-L:SetMiscLocalization({
-	Victory	= "啊，你成功了!水又再次純淨了。"
-})
-
 ---------------------------
 -- The Fallen Protectors --
 ---------------------------
@@ -92,10 +88,6 @@ L= DBM:GetModLocalization(850)
 
 L:SetWarningLocalization({
 	warnDefensiveStanceSoon	= "%d秒後防禦姿態"
-})
-
-L:SetOptionLocalization({
-	warnDefensiveStanceSoon	= "為$spell:143593(五秒前)顯示預先警告倒數"
 })
 
 L:SetMiscLocalization({
@@ -183,14 +175,17 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(869)
 
 L:SetOptionLocalization({
+	timerRoleplay		= "為卡爾洛斯/索爾劇情事件顯示計時器",
 	RangeFrame			= "顯示動態距離框架(10碼)<br/>(這是智慧距離框架，當到達$spell:147126門檻時自動切換)",
 	InfoFrame			= "為玩家在中場階段時沒有傷害減免顯示訊息框架",
 	yellMaliceFading	= "當$spell:147209將要退去時大喊"
 })
 
 L:SetMiscLocalization({
+	wasteOfTime			= "卡爾洛斯，現在還不遲。放下大酋長的權力。我們可以在此時此地就結束，停止流血。",
 	NoReduce			= "無傷害減免",
-	MaliceFadeYell		= "%s的惡意消退中(%d)"
+	MaliceFadeYell		= "%s的惡意消退中(%d)",
+	phase3End			= "你們以為贏了嗎?"
 })
 
 -------------

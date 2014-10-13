@@ -4,8 +4,9 @@
 ## Author: Elvador
 ## DefaultState: Enabled
 ## SavedVariables: RCDB
-## X-Curse-Packaged-Version: v5.4.1-4
+## X-Curse-Packaged-Version: v5.4.8-1
 ## X-Curse-Project-Name: RareCoordinator
 ## X-Curse-Project-ID: rarecoordinator
 ## X-Curse-Repository-ID: wow/rarecoordinator/mainline
 RareCoordinator.lua
+Config.lua

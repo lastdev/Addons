@@ -1,6 +1,6 @@
 --[[
 	StringRope Lib for World of Warcraft (tm)
-	Version: 5.18.5433 (PassionatePhascogale)
+	Version: 5.20.5464 (RidiculousRockrat)
 	Revision: $Id: StringRope.lua 3938 2008-12-27 09:35:32Z norganna $
 	URL: http://norganna.org
 

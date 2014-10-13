@@ -1,3 +1,7 @@
+== Version 50400.4.2
+This version only affectly Feral Druids.
+* Small tweak for flashing forms in c.DelayPriorityFlash.
+
 == Version 50400.4.1
 * Added flashing for WoW's 9th Anniversary Celebration Package.
 
@@ -88,9 +92,3 @@ This version supports the latest Paladin release.
 * Added c.HasSpell().
 * c.RegisterAddon() now causes it to flash Healthstones.
 * c.DelayPriorityFlash() will no longer flash optional spells with a longer delay than the main spell.
-
-== Version 4.11.0
-* c.FlashAll() and c.PriorityFlash() now respect a new "Dispel" flag.
-* Added c.AddDispel().
-* Removed the unused c.CloneSpell().
-* Bugfix: c.AddInterrupt() and c.AddTaunt() were not respecting the attributes parameter.

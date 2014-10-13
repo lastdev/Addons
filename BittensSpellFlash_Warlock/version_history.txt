@@ -1,3 +1,12 @@
+== Version 50400.1.5
+* I have gotten a pretty good response, so I think (and hope) Bitten's SpellFlash will live on!
+
+== Version 50400.1.4
+* The future of Bitten's SpellFlash: Warlock is in question.  I no longer wish to maintain this addon, starting with patch 6.0.  If you are interested in taking it over, keeping up with optimal rotations, and you have programming skills, please leave a comment or PM on Curse.
+
+== Version 50400.1.3
+* Destruction: Tiny fix for Immolate's timing.
+
 == Version 50400.1.2
 * Destruction: Shadowburn flashing is now optional (yellow) at certain times, to let you pool its usage for procs.
 * Destruction: Stopped Conflagrate from flashing as optional when it's better to use Chaos Bolt.
@@ -86,18 +95,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 == Version 3.4.0
 * Affliction: Super-cool green/yellow/red flashing for DoTs now.  Check the description page for what they mean and how you should respond.
 * Affliction: Traded the priority of Corruption and Unstable Affliction unless corruption will expire otherwise.
-
-== Version 3.3.0
-* Affliction: Tweaked the rotation according to more research in Simulationcraft.  DoT logic is more sophisticated, and should produces slightly higher dps.
-* Affliction: Made better use of yellow flashes and small flashes for DoTs.  Consult the description page for more info on what they mean.
-* Affliction: No longer flashes Corruption if you have an empowered Seed of Corruption pending.  (Warning: it will get confused if chain cast Seed of Corruption.)
-* All: Now flashes Underwater Breathing.
-
-== Version 3.2.3
-* Demonology: Bugfix - Touch of Chaos did not always flash when it should.
-
-== Version 3.2.2
-* Affliction: Bugfix - The cast time for Unstable Affliction was not being factored in correctly, causing it to flash later than it should.
-
-== Version 3.2.1
-* All: Bugfix - Dark Regeneration flashing was broken when your pet wasn't out.

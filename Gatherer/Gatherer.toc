@@ -12,7 +12,7 @@
 ## Notes-zhCN: 采集助手(Gatherer)是一个允许你纪录你的采集点位置并显示于你的大小地图和采集助手附加的抬头显示模式的插件。并允许你向你的队友、团队成员以及朋友来分享你的采集数据。
 ## Notes-esES: Gatherer es un addon que te permite recordar las zonas de recolección y verlas ya sea en todo el mapa del mundo o en tu minimapa. Tambien te permite compartir tus zonas de recolección con tu hermandad, raids o amigos.
 ## 
-## Version: 4.4.0
+## Version: 4.4.1
 ## Author: Esamynn
 ## 
 # myAddOns Support Metadata

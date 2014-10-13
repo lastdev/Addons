@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(325, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 118 $"):sub(12, -3))
 mod:SetCreatureID(55312)
 mod:SetEncounterID(1295)
 --mod:DisableRegenDetection()--Uncomment in next dbm release
@@ -14,7 +14,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS 104849 105530 105573 105033 105171",
 	"SPELL_AURA_APPLIED 104849 104901 104896 105027 104897 104894 104898",
 	"SPELL_AURA_APPLIED_DOSE 104849",
-	"SPELL_AURA_REMOVED",
+	"SPELL_AURA_REMOVED 104849 104901 104897 104898",
 	"CHAT_MSG_ADDON",
 	"UNIT_SPELLCAST_SUCCEEDED boss1",
 	"UNIT_DIED"

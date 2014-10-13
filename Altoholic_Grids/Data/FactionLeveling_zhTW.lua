@@ -3,8 +3,6 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 
-local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
-
 local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
 local YELLOW	= "|cFFFFFF00"
@@ -23,7 +21,7 @@ addon.FactionLeveling = {
 	-- 42000 = "崇拜"
 	
 	-- Outland factions: source: http://www.mmo-champion.com/
-	[BF["The Aldor"]] = {
+	[932] = {		-- "The Aldor"
 		[0] = WHITE .. "[懼牙毒囊]|r +250 聲望值\n\n"
 				.. YELLOW .. "懼牙潛伏者,\n懼牙寡婦蛛\n"
 				.. WHITE .. "(泰洛卡森林)",
@@ -31,7 +29,7 @@ addon.FactionLeveling = {
 		[42000] = WHITE .. "[薩格拉斯印記]|r +25 聲望值/每枚\n" 
 				.. GREEN .. "[魔化武器]|r +350 聲望值 (+1 神聖之塵)"
 	},
-	[BF["The Scryers"]] = {
+	[934] = {		-- "The Scryers"
 		[0] = WHITE .. "[濕鱗蜥蜴的眼睛]|r +250 聲望值\n\n"
 				.. YELLOW .. "鐵脊石化者,\n濕鱗吞噬者,\n濕鱗蜥蜴\n"
 				.. WHITE .. "(泰洛卡森林)",
@@ -39,7 +37,7 @@ addon.FactionLeveling = {
 		[42000] = WHITE .. "[日怒徽記]|r +25 聲望值 per mark\n" 
 				.. GREEN .. "[秘法寶典]|r +350 聲望值 (+1 秘法符文)"
 	},
-	[BF["Netherwing"]] = {
+	[1015] = {	-- "Netherwing"
 		[3000] = "重複以下任務:\n\n" 
 				.. YELLOW .. "慢速死亡 (每日)|r +250 聲望值\n"
 				.. YELLOW.. "虛空之塵花粉 (每日)|r +250 聲望值\n"
@@ -59,7 +57,7 @@ addon.FactionLeveling = {
 		[42000] = "重複以下任務:\n\n" 
 				.. YELLOW .. "史上最致命的陷阱 (每日) (3+)|r +500 聲望值"
 	},
-	[BF["Honor Hold"]] = {
+	[946] = {		-- "Honor Hold"
 		[9000] = "\n" 
 				.. YELLOW .. "地獄火半島的任務\n"
 				.. GREEN .. "地獄火壁壘 |r(普通)\n"
@@ -69,7 +67,7 @@ addon.FactionLeveling = {
 				.. GREEN .. "地獄火壁壘 |r(英雄)\n"
 				.. GREEN .. "血熔爐 |r(英雄)"
 	},
-	[BF["Thrallmar"]] = {
+	[947] = {		-- "Thrallmar"
 		[9000] = "\n" 
 				.. YELLOW .. "地獄火半島的任務\n"
 				.. GREEN .. "地獄火壁壘 |r(普通)\n"
@@ -79,7 +77,7 @@ addon.FactionLeveling = {
 				.. GREEN .. "地獄火壁壘 |r(英雄)\n"
 				.. GREEN .. "血熔爐 |r(英雄)"
 	},
-	[BF["Cenarion Expedition"]] = {
+	[942] = {		-- "Cenarion Expedition"
 		[3000] = "\n" 
 				.. WHITE .. "暗潮納迦或者血鱗納迦 (+5 聲望值)\n"
 				.. YELLOW .. "贊格沼澤的任務\n"
@@ -94,18 +92,18 @@ addon.FactionLeveling = {
 				.. GREEN .. "蒸汽洞窟 |r(普通)\n"
 				.. GREEN .. "任何盤牙洞穴的副本 |r(英雄)"
 	},
-	[BF["Keepers of Time"]] = {
+	[989] = {		-- "Keepers of Time"
 		[42000] = "\n" 
 				.. "|r殺入 " .. GREEN .. "舊希爾斯布萊德丘陵|r 和 " .. GREEN .. "黑色沼澤|r 副本\n\n"
 				.. YELLOW .. "最後交任務:\n'舊希爾斯布萊德丘陵'任務線共計 5000 聲望值\n'黑色沼澤'任務線共計 8000 聲望值"
 	},
-	[BF["The Sha'tar"]] = {
+	[935] = {		-- "The Sha'tar"
 		[42000] = "\n" 
 				.. GREEN .. "波塔尼卡 |r(普通或英雄)\n"
 				.. GREEN .. "麥克那爾 |r(普通或英雄)\n"
 				.. GREEN .. "亞克崔茲 |r(普通或英雄)\n"
 	},	
-	[BF["Lower City"]] = {
+	[1011] = {		-- "Lower City"
 		[9000] = "\n" 
 				.. WHITE .. "上繳 [阿拉卡羽毛]x30 (+250 聲望值)\n"
 				.. GREEN .. "暗影迷宮 |r(普通)\n"
@@ -116,7 +114,7 @@ addon.FactionLeveling = {
 				.. GREEN .. "奧奇奈地穴 |r(英雄)\n"
 				.. GREEN .. "塞司克大廳 |r(英雄)"
 	},	
-	[BF["The Consortium"]] = {
+	[933] = {		-- "The Consortium"
 		[3000] = "\n" 
 				.. "|r上繳 [沃舒古水晶碎片] +250 聲望值\n"
 				.. "上繳 [象牙] +250 聲望值\n\n"
@@ -129,23 +127,23 @@ addon.FactionLeveling = {
 				.. "|r上繳 [黑曜石戰爭珠串] +250 聲望值\n\n"
 				.. GREEN .. "法力墓地 |r(英雄)"
 	},
-	[BF["Shattered Sun Offensive"]] = {
+	[1077] = {		--  "Shattered Sun Offensive"
 		[42000] = "\n" 
 					.. YELLOW .. "完成奎爾達納斯島和薩塔斯城的相關每日任務"
 	},
-	[BF["The Mag'har"]] = {
+	[941] = {		-- "The Mag'har"
 		[42000] = "\n" 
 				.. "|r上繳 [黑曜石戰爭珠串] +250 聲望值\n\n"
 				.. WHITE .. "納葛蘭和泰洛卡森林的任何巨魔 (+5-11 聲望值)\n"
 				.. YELLOW .. "完成納葛蘭的任務"
 	},
-	[BF["Kurenai"]] = {
+	[978] = {		-- "Kurenai"
 		[42000] = "\n" 
 				.. "|r上繳 [黑曜石戰爭珠串] +250 聲望值\n\n"
 				.. WHITE .. "納葛蘭和泰洛卡森林的任何巨魔 (+5-11 聲望值)\n"
 				.. YELLOW .. "完成納葛蘭的任務"
 	},
-	[BF["Sporeggar"]] = {
+	[970] = {		-- "Sporeggar"
 		[0] = "\n" 
 				.. "上繳 [成熟的孢子] 或者 [沼澤領主觸鬚] +250 聲望值\n\n"
 				.. YELLOW .. "沼澤領主,\n打開[孢子囊]\n"
@@ -161,7 +159,7 @@ addon.FactionLeveling = {
 				.. "上繳 [成熟的孢子] +250 聲望值\n\n"
 				.. YELLOW .. "現在 我們是朋友了… (可重複)|r +250 聲望值\n"
 	},
-	[BF["Sha'tari Skyguard"]] = {
+	[1031] = {		-- "Sha'tari Skyguard"
 		[42000] = "\n" 
 				.. YELLOW.. "轟炸司凱堤斯 (每日)|r +350 聲望值\n"
 				.. YELLOW.. "逃離司凱堤斯 (每日)|r +350 聲望值\n"
@@ -174,7 +172,7 @@ addon.FactionLeveling = {
 				.. YELLOW.. "放逐更多惡魔 (每日)|r +350 聲望值\n"
 				.. WHITE .. "(劍刃山脈)",
 	},
-	[BF["Ogri'la"]] = {
+	[1038] = {		-- "Ogri'la"
 		[42000] = "\n" 
 				.. YELLOW.. "再度轟炸 (每日)|r +500 聲望值\n"
 				.. YELLOW.. "捆綁更多蒼穹鰭刺 (每日)|r +500 聲望值\n"

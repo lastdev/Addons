@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: Informant
-	Revision: $Id: InfStrings.lua 5409 2013-05-24 15:54:42Z localizerautocommit $
-	Version: 5.18.5433 (PassionatePhascogale)
+	Revision: $Id: InfStrings.lua 5456 2014-06-05 11:59:54Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -3052,6 +3052,23 @@ InformantLocalizations = {
 		["INF_Tooltip_SpecialBindGuild"]	= "Привязано к гильдии";
 		["INF_Tooltip_StackSize"]	= "Количество в пачке: %d шт.";
 		["INF_Tooltip_Use"]	= "Применение: %s";
+
+	};
+
+	trTR = {
+
+		-- Section: Help
+		["INF_Help_ChatProfileDeleted"]	= "Silinmiş profil";
+		["INF_Help_ChatProfileReset"]	= "Profili sıfırla";
+		["INF_Help_ChatProfileSaved"]	= "Kayıtlı profil";
+		["INF_Help_ChatProfileUsing"]	= "Kullanılan profil";
+		["INF_Help_CmdClearAll"]	= "Hepsi";
+		["INF_Help_CmdDefault"]	= "Varsayılan";
+		["INF_Help_CmdDefaultAll"]	= "Bütün ayarlar varsayılana çevrilecek";
+		["INF_Help_CmdDefaultSingle"]	= "Bütün ayarlar varsayılana çevrildi";
+		["INF_Help_CmdDisable"]	= "Devredışı";
+		["INF_Help_CmdHeader"]	= "Informant komutu";
+		["INF_Help_CmdHelp"]	= "Yardım";
 
 	};
 

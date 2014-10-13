@@ -8,9 +8,7 @@ local GREEN		= "|cFF00FF00"
 
 local view
 local isViewValid
-
-local currentTokenType
-local currentDDMText
+local OPTION_TOKEN = "UI.Tabs.Grids.Currencies.CurrentTokenType"
 
 local function HashToSortedArray(hash)
 	local array = {}		-- order them
@@ -72,7 +70,7 @@ local function GetUsedTokens(header)
 end
 
 local function BuildView()
-	view = GetUsedTokens(currentTokenType)
+	view = GetUsedTokens(addon:GetOption(OPTION_TOKEN))
 	isViewValid = true
 end
 
@@ -80,18 +78,16 @@ local DDM_Add = addon.Helpers.DDM_AddWithArgs
 local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
 
 local function OnTokenChange(self, header)
-	currentTokenType = header
-	currentDDMText = currentTokenType
-	addon.Tabs.Grids:SetViewDDMText(currentDDMText)
+	addon:SetOption(OPTION_TOKEN, header)
+	addon.Tabs.Grids:SetViewDDMText(header)
 
 	isViewValid = nil
 	addon.Tabs.Grids:Update()
 end
 
 local function OnTokensAllInOne(self)
-	currentTokenType = nil
-	currentDDMText = L["All-in-one"]
-	addon.Tabs.Grids:SetViewDDMText(currentDDMText)
+	addon:SetOption(OPTION_TOKEN, nil)
+	addon.Tabs.Grids:SetViewDDMText(L["All-in-one"])
 
 	isViewValid = nil
 	addon.Tabs.Grids:Update()
@@ -99,9 +95,9 @@ end
 
 local function DropDown_Initialize()
 	for _, header in ipairs(GetUsedHeaders()) do		-- and add them to the DDM
-		DDM_Add(header, nil, OnTokenChange, header)
+		DDM_Add(header, nil, OnTokenChange, header, nil, (addon:GetOption(OPTION_TOKEN) == header))
 	end
-	DDM_Add(L["All-in-one"], nil, OnTokensAllInOne)
+	DDM_Add(L["All-in-one"], nil, OnTokensAllInOne, nil, nil, (addon:GetOption(OPTION_TOKEN) == nil))
 	DDM_AddCloseMenu()
 end
 
@@ -110,6 +106,8 @@ local callbacks = {
 			if not isViewValid then
 				BuildView()
 			end
+			
+			addon.Tabs.Grids:SetStatus(addon:GetOption(OPTION_TOKEN) or L["All-in-one"])
 		end,
 	GetSize = function() return #view end,
 	RowSetup = function(self, entry, row, dataRowID)
@@ -179,17 +177,14 @@ local callbacks = {
 	InitViewDDM = function(frame, title) 
 			frame:Show()
 			title:Show()
-
-			currentDDMText = currentDDMText or currentTokenType
 			
 			UIDropDownMenu_SetWidth(frame, 100) 
 			UIDropDownMenu_SetButtonWidth(frame, 20)
-			UIDropDownMenu_SetText(frame, currentDDMText)
+			UIDropDownMenu_SetText(frame, addon:GetOption(OPTION_TOKEN) or L["All-in-one"])
 			addon:DDM_Initialize(frame, DropDown_Initialize)
 		end,
 }
 
 local headers = GetUsedHeaders()
-currentTokenType = headers[1]
 
 addon.Tabs.Grids:RegisterGrid(3, callbacks)

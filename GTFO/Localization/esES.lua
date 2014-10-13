@@ -69,7 +69,6 @@ GTFOLocal =
 	UI_TrivialDescription = "Activa alertas para encuentros de bajo nivel que podrian ser triviales para un personaje de tu nivel.",
 	UI_Unmute = "Reproducir sonidos cuando esta en silencio",
 	UI_UnmuteDescription = "Si has silenciado todos los sonidos, o los efectos de sonido, GTFO activará temporalmente los sonidos para reproducir las alertas.", -- Needs review
-	UI_UnmuteDescription2 = "Requiere que las barras de volumen esten a mas del 0%", -- Needs review
 	UI_Volume = "Volumen del GTFO",
 	UI_VolumeDescription = "Configura el volumen de los sonidos.",
 	UI_VolumeLoud = "4: Alto",
@@ -88,6 +87,10 @@ GTFOLocal =
 	-- 4.19.1
 	UI_TrivialSlider = "Minimum % of HP",
 	UI_TrivialDescription2 = "Set the slider to the minimum % amount of HP damage taken for alerts to not be considered trivial.",
+	-- 4.32
+	UI_UnmuteDescription2 = "This requires the master volume slider to be higher than 0% and will override the sound channel option.",
+	UI_SoundChannel = "Sound Channel",
+	UI_SoundChannelDescription = "This is the volume channel that GTFO alert sounds will attach themselves to.",
 }
 
 

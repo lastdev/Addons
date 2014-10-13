@@ -270,13 +270,6 @@ function HealBot_Lang_enALL()
     HEALBOT_STOP                            = "Stop";
     HEALBOT_TELL                            = "Tell";
 
-    HEALBOT_TITAN_SMARTCAST                 = "SmartCast";
-    HEALBOT_TITAN_MONITORBUFFS              = "Monitor buffs";
-    HEALBOT_TITAN_MONITORDEBUFFS            = "Monitor debuffs"
-    HEALBOT_TITAN_SHOWBARS                  = "Show bars for";
-    HEALBOT_TITAN_EXTRABARS                 = "Extra bars";
-    HEALBOT_BUTTON_TOOLTIP                  = "Click to toggle HealBot options panel\nClick and hold to move this icon";
-    HEALBOT_TITAN_TOOLTIP                   = "Left click to toggle HealBot options panel";
     HEALBOT_OPTIONS_SHOWMINIMAPBUTTON       = "Show minimap button";
     HEALBOT_OPTIONS_BARBUTTONSHOWHOT        = "Show HoT";
     HEALBOT_OPTIONS_BARBUTTONSHOWRAIDICON   = "Show Raid Target";
@@ -1031,7 +1024,7 @@ function HealBot_Lang_enALL()
     HEALBOT_ABOUT_CATH                     = "Category:"
     HEALBOT_ABOUT_CATD                     = "Unit Frames, Buffs and Debuffs, Combat:Healer"
     HEALBOT_ABOUT_CREDITH                  = "Credits:"
-    HEALBOT_ABOUT_CREDITD                  = "Acirac, Kubik, Von, Aldetal, Brezza, Moonlight Han Xing, CTShammy, Hermis, Ariá"  -- Anyone taking on translations (if required), feel free to add yourself here.
+    HEALBOT_ABOUT_CREDITD                  = "Acirac, Kubik, Von, Aldetal, Brezza, Moonlight Han Xing, CTShammy, Hermis, Ariá, Snaomi"  -- Anyone taking on translations (if required), feel free to add yourself here.
     HEALBOT_ABOUT_LOCALH                   = "Localizations:"
     HEALBOT_ABOUT_LOCALD                   = "deDE, enUK, esES, frFR, huHU, itIT, koKR, poBR, ruRU, zhCN, zhTW"
     HEALBOT_ABOUT_FAQH                     = "Frequently Asked Questions"
@@ -1176,9 +1169,6 @@ function HealBot_Lang_enALL()
                                       [17]  = "Actually Healbot is casting exacly as the setup. \n\n" .. HEALBOT_ABOUT_FAQ_SPELLS_ANSWER01,
                                       [18]  = HEALBOT_ABOUT_FAQ_SPELLS_ANSWER01,
                                   }
-								  
-	HEALBOT_ABOUT_FAQ_ANSWERS_BUTTON = { [1] = "Not used - Buttons!",
-	                                   }
 
     HEALBOT_OPTIONS_SKINAUTHOR              = "Skin Author"
     HEALBOT_OPTIONS_AVOIDBLUECURSOR         = "Avoid\nBlue Cursor"
@@ -1190,7 +1180,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_LANG_ENUK               = "English (enUK - by Strife)"
     HEALBOT_OPTIONS_LANG_ENUS               = "English (enUS - by Strife)"
     HEALBOT_OPTIONS_LANG_FRFR               = "French (frFR - by Kubik)"
-    HEALBOT_OPTIONS_LANG_DEDE               = "German (deDE - translator required)"
+    HEALBOT_OPTIONS_LANG_DEDE               = "German (deDE - by Snaomi)"
+    HEALBOT_OPTIONS_LANG_GRGR               = "Greek (grGR - by Snaomi)"
     HEALBOT_OPTIONS_LANG_HUHU               = "Hungarian (huHU - by Von)"
     HEALBOT_OPTIONS_LANG_KRKR               = "Korean (krKR - translator required)"
     HEALBOT_OPTIONS_LANG_ITIT               = "Italian (itIT - by Brezza)"
@@ -1280,7 +1271,12 @@ function HealBot_Lang_enALL()
     HEALBOT_WORDS_ADDTEMPCUSTOMNAME         = "Add temporary custom name"
     HEALBOT_WORDS_ADDPERMCUSTOMNAME         = "Add permanent custom name"
     HEALBOT_OPTIONS_ENABLELIBUTF8           = "Enable UTF8 library"
-    HEALBOT_OPTIONS_SHOWDIRECTION           = "Show Out of Range Direction";
+    HEALBOT_OPTIONS_SHOWDIRECTION           = "Show Out of Range Direction"
+    HEALBOT_OPTIONS_SHOWDIRECTIONMOUSE      = "Only on Mouse Over"
+    HEALBOT_LDB_LEFT_TOOLTIP                = "|cffffff00 Left Click:|r Toggle HealBot options panel";
+    HEALBOT_LDB_SHIFTLEFT_TOOLTIP           = "|cffffff00 Shift-Left Click:|r Cycle through HealBot Skins";
+    HEALBOT_LDB_RIGHT_TOOLTIP               = "|cffffff00 Right Click:|r Reset HealBot";
+    HEALBOT_LDB_SHIFTRIGHT_TOOLTIP          = "|cffffff00 Shift-Right Click:|r Toggle HealBot On/Off";
 end
 
 if (GetLocale() == "enUK") then

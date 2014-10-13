@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(196, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 115 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 118 $"):sub(12, -3))
 mod:SetCreatureID(53494)
 mod:SetEncounterID(1200)
 mod:DisableEEKillDetection()
@@ -17,8 +17,8 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 99516 99256 99263 99352 99350 99257",
 	"SPELL_AURA_REFRESH 99257",
 	"SPELL_AURA_REMOVED 99352 99352 99256 99257",
-	"SPELL_DAMAGE",
-	"SPELL_MISSED",
+	"SPELL_DAMAGE 99353 99351",
+	"SPELL_MISSED 99353 99351",
 	"SPELL_CAST_START 99352 99350 99259"
 )
 

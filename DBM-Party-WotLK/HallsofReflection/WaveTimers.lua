@@ -1,7 +1,7 @@
 local mod = DBM:NewMod("HoRWaveTimer", "DBM-Party-WotLK", 16)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 157 $"):sub(12, -3))
 mod:SetCreatureID(30658)
 mod:SetZone()
 
@@ -9,6 +9,7 @@ mod:RegisterEvents(
 	"UPDATE_WORLD_STATES",
 	"UNIT_DIED"
 )
+mod.noStatistics = true
 
 local warnNewWaveSoon	= mod:NewAnnounce("WarnNewWaveSoon", 2)
 local warnNewWave		= mod:NewAnnounce("WarnNewWave", 3)

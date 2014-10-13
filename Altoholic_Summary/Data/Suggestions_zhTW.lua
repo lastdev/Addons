@@ -3,14 +3,14 @@ local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
-local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
-local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 
 if GetLocale() ~= "zhTW" then return end
 
 local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
 local YELLOW	= "|cFFFFFF00"
+
+local continents = { GetMapContinents() };		-- this gets localized names, also avoids hardcoding them.
 
 -- 以下為聲望值、等級、技能等的建議
 addon.Suggestions = {
@@ -317,45 +317,96 @@ addon.Suggestions = {
 		{ 375, "361-375: 泰洛卡森林,高地上:\n尤魯恩湖, 裂石堡西北方\n艾雷諾湖, 艾蘭里堡疊東南方\n黑風湖, 司凱堤斯地區\n需要飛行坐騎" }
 	},
 	
+	[BI["Archaeology"]] = {
+		{ 300, "1~300: " .. continents[1] .. "\n" .. continents[2]},
+		{ 375, "301~375: " .. continents[3]},
+		{ 450, "376~450: " .. continents[4]},
+		{ 525, "451~525: " .. GetMapNameByID(606) .. "\n" .. GetMapNameByID(720) .. "\n" .. GetMapNameByID(700)},
+		{ 600, "526~600: " .. continents[6]},
+	},
+	
+	-- suggested leveling zones, as defined by recommended quest levels. map id's : http://wowpedia.org/MapID
 	-- 建議升級地區，來源眾多，不一一列舉了
 	["Leveling"] = {
 		{ 10, "1-10級: 所有起始地區" },
-		{ 20, "11-20級: "  .. BZ["Loch Modan"] .. "\n" .. BZ["Westfall"] .. "\n" .. BZ["Darkshore"] .. "\n" .. BZ["Bloodmyst Isle"] 
-						.. "\n" .. BZ["Silverpine Forest"] .. "\n" .. BZ["The Barrens"] .. "\n" .. BZ["Ghostlands"]},
-		{ 25, "21-25級: " .. BZ["Wetlands"] .. "\n" .. BZ["Redridge Mountains"] .. "\n" .. BZ["Ashenvale"] 
-						.. "\n" .. BZ["The Barrens"] .. "\n" .. BZ["Stonetalon Mountains"] .. "\n" .. BZ["Hillsbrad Foothills"] },
-		{ 28, "26-28級: " .. BZ["Duskwood"] .. "\n" .. BZ["Wetlands"] .. "\n" .. BZ["Ashenvale"] 
-						.. "\n" .. BZ["Stonetalon Mountains"] .. "\n" .. BZ["Thousand Needles"] },
-		{ 31, "29-31級: " .. BZ["Duskwood"] .. "\n" .. BZ["Thousand Needles"] .. "\n" .. BZ["Ashenvale"] },
-		{ 35, "32-35級: " .. BZ["Thousand Needles"] .. "\n" .. BZ["Stranglethorn Vale"] .. "\n" .. BZ["Alterac Mountains"] 
-						.. "\n" .. BZ["Arathi Highlands"] .. "\n" .. BZ["Desolace"] },
-		{ 40, "36-40級: " .. BZ["Stranglethorn Vale"] .. "\n" .. BZ["Desolace"] .. "\n" .. BZ["Badlands"]
-						.. "\n" .. BZ["Dustwallow Marsh"] .. "\n" .. BZ["Swamp of Sorrows"] },
-		{ 43, "41-43級: " .. BZ["Tanaris"] .. "\n" .. BZ["Stranglethorn Vale"] .. "\n" .. BZ["Badlands"] 
-						.. "\n" .. BZ["Dustwallow Marsh"] .. "\n" .. BZ["Swamp of Sorrows"] },
-		{ 45, "44-45級: " .. BZ["Tanaris"] .. "\n" .. BZ["Feralas"] .. "\n" .. BZ["The Hinterlands"] },
-		{ 48, "46-48級: " .. BZ["Tanaris"] .. "\n" .. BZ["Feralas"] .. "\n" .. BZ["The Hinterlands"] .. "\n" .. BZ["Searing Gorge"] },
-		{ 51, "49-51級: " .. BZ["Tanaris"] .. "\n" .. BZ["Azshara"] .. "\n" .. BZ["Blasted Lands"] 
-						.. "\n" .. BZ["Searing Gorge"] .. "\n" .. BZ["Un'Goro Crater"] .. "\n" .. BZ["Felwood"] },
-		{ 55, "54-55級: " .. BZ["Un'Goro Crater"] .. "\n" .. BZ["Felwood"] .. "\n" .. BZ["Burning Steppes"]
-						.. "\n" .. BZ["Blasted Lands"] .. "\n" .. BZ["Western Plaguelands"] },
-		{ 58, "56-58級: " .. BZ["Winterspring"] .. "\n" .. BZ["Burning Steppes"] .. "\n" .. BZ["Western Plaguelands"] 
-						.. "\n" .. BZ["Eastern Plaguelands"] .. "\n" .. BZ["Silithus"] },
-		{ 60, "59-60級: " .. BZ["Winterspring"] .. "\n" .. BZ["Eastern Plaguelands"] .. "\n" .. BZ["Silithus"] },
-		{ 62, "61-62級: " .. BZ["Hellfire Peninsula"] },
-		{ 64, "63-64級: " .. BZ["Zangarmarsh"] .. "\n" .. BZ["Terokkar Forest"]},
-		{ 65, "65級: " .. BZ["Terokkar Forest"] },
-		{ 66, "66級: " .. BZ["Terokkar Forest"] .. "\n" .. BZ["Nagrand"]},
-		{ 67, "67級: " .. BZ["Nagrand"]},
-		{ 68, "68級: " .. BZ["Blade's Edge Mountains"]},
-		{ 70, "69-70級: " .. BZ["Blade's Edge Mountains"] .. "\n" .. BZ["Netherstorm"] .. "\n" .. BZ["Shadowmoon Valley"]},
-		{ 72, "72級: " .. BZ["Howling Fjord"] .. "\n" .. BZ["Borean Tundra"]},
-		{ 74, "74級: " .. BZ["Grizzly Hills"] .. "\n" .. BZ["Dragonblight"]},
-		{ 76, "76級: " .. BZ["Dragonblight"] .. "\n" .. BZ["Zul'Drak"]},
-		{ 78, "78級: " .. BZ["Zul'Drak"] .. "\n" .. BZ["Sholazar Basin"]},
-		{ 80, "80級: " .. BZ["The Storm Peaks"] .. "\n" .. BZ["Icecrown"]},
+		
+		{ 15, "15級: " .. GetMapNameByID(39)},
+		{ 16, "16級: " .. GetMapNameByID(684)},
+		{ 20, "20級: " .. GetMapNameByID(181) .. "\n" .. GetMapNameByID(35) .. "\n" .. GetMapNameByID(476)
+							.. "\n" .. GetMapNameByID(42) .. "\n" .. GetMapNameByID(21) .. "\n" .. GetMapNameByID(11)
+							.. "\n" .. GetMapNameByID(463) .. "\n" .. GetMapNameByID(36)},
+		{ 25, "25級: " .. GetMapNameByID(34) .. "\n" .. GetMapNameByID(40) .. "\n" .. GetMapNameByID(43) 
+							.. "\n" .. GetMapNameByID(24)},
+		{ 30, "30級: " .. GetMapNameByID(16) .. "\n" .. GetMapNameByID(37) .. "\n" .. GetMapNameByID(81)},
+		{ 35, "35級: " .. GetMapNameByID(673) .. "\n" .. GetMapNameByID(101) .. "\n" .. GetMapNameByID(26)
+							.. "\n" .. GetMapNameByID(607)},
+		{ 40, "40級: " .. GetMapNameByID(141) .. "\n" .. GetMapNameByID(121) .. "\n" .. GetMapNameByID(22)},
+		{ 45, "45級: " .. GetMapNameByID(23) .. "\n" .. GetMapNameByID(61)},
+		{ 48, "48級: " .. GetMapNameByID(17)},
+		{ 50, "50級: " .. GetMapNameByID(161) .. "\n" .. GetMapNameByID(182) .. "\n" .. GetMapNameByID(28)},
+		{ 52, "52級: " .. GetMapNameByID(29)},
+		{ 54, "54級: " .. GetMapNameByID(38)},
+		{ 55, "55級: " .. GetMapNameByID(201) .. "\n" .. GetMapNameByID(281)},
+		{ 58, "58級: " .. GetMapNameByID(19)},
+		{ 60, "60級: " .. GetMapNameByID(32) .. "\n" .. GetMapNameByID(241) .. "\n" .. GetMapNameByID(261)},
+		
+		-- Outland
+		-- 465 Hellfire Peninsula 
+		-- 467 Zangarmarsh 
+		-- 478 Terokkar Forest 
+		-- 477 Nagrand 
+		-- 475 Blade's Edge Mountains 
+		-- 479 Netherstorm 
+		-- 473 Shadowmoon Valley 
+		
+		{ 63, "63級: " .. GetMapNameByID(465)},
+		{ 64, "64級: " .. GetMapNameByID(467)},
+		{ 65, "65級: " .. GetMapNameByID(478)},
+		{ 67, "67級: " .. GetMapNameByID(477)},
+		{ 68, "68級: " .. GetMapNameByID(475)},
+		{ 70, "70級: " .. GetMapNameByID(479) .. "\n" .. GetMapNameByID(473) .. "\n" .. GetMapNameByID(499) .. "\n" .. GetMapNameByID(32)},
+
+		-- Northrend
+		-- 491 Howling Fjord 
+		-- 486 Borean Tundra 
+		-- 488 Dragonblight 
+		-- 490 Grizzly Hills 
+		-- 496 Zul'Drak 
+		-- 493 Sholazar Basin 
+		-- 510 Crystalsong Forest 
+		-- 495 The Storm Peaks 
+		-- 492 Icecrown 
+		
+		{ 72, "72級: " .. GetMapNameByID(491) .. "\n" .. GetMapNameByID(486)},
+		{ 75, "75級: " .. GetMapNameByID(488) .. "\n" .. GetMapNameByID(490)},
+		{ 76, "76級: " .. GetMapNameByID(496)},
+		{ 78, "78級: " .. GetMapNameByID(493)},
+		{ 80, "80級: " .. GetMapNameByID(510) .. "\n" .. GetMapNameByID(495) .. "\n" .. GetMapNameByID(492)},
+		
+		-- Cataclysm
+		-- 606 Mount Hyjal 
+		-- 613 Vashj'ir 
+		-- 640 Deepholm 
+		-- 720 Uldum 
+		-- 700 Twilight Highlands 
+		
+		{ 82, "82級: " .. GetMapNameByID(606) .. "\n" .. GetMapNameByID(613)},
+		{ 83, "83級: " .. GetMapNameByID(640)},
+		{ 84, "84級: " .. GetMapNameByID(720)},
+		{ 85, "85級: " .. GetMapNameByID(700)},
+
+		-- Pandaria
+		-- 806 The Jade Forest 
+		-- 807 Valley of the Four Winds 
+		-- 857 Krasarang Wilds 
+		-- 809 Kun-Lai Summit 
+		-- 810 Townlong Steppes 
+		-- 858 Dread Wastes 
+		
+		{ 86, "86級: " .. GetMapNameByID(806)},
+		{ 87, "87級: " .. GetMapNameByID(807) .. "\n" .. GetMapNameByID(857)},
+		{ 88, "88級: " .. GetMapNameByID(809)},
+		{ 89, "89級: " .. GetMapNameByID(810)},
+		{ 90, "90級: " .. GetMapNameByID(858)},
 	},
-
-
 }
-

@@ -74,6 +74,7 @@ local function _ClearAuctionEntries(character, AHType, AHZone)
 	-- AHType = "Auctions" or "Bids" (the name of the table in the DB)
 	-- AHZone = 0 for player faction, or 1 for goblin
 	local ah = character[AHType]
+	if not ah then return end
 	
 	for i = #ah, 1, -1 do			-- parse backwards to avoid messing up the index
 		local faction = strsplit("|", ah[i])
@@ -172,6 +173,8 @@ local function ScanAuctions()
 			end
 		end
 	end
+	
+	addon:SendMessage("DATASTORE_AUCTIONS_UPDATED")
 end
 
 local function ScanBids()

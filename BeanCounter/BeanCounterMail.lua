@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: BeanCounterMail.lua 5425 2013-07-02 12:08:07Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: BeanCounterMail.lua 5449 2014-01-14 15:25:58Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	BeanCounterMail - Handles recording of all auction house related mail
@@ -28,13 +28,13 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.18/BeanCounter/BeanCounterMail.lua $","$Rev: 5425 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.20/BeanCounter/BeanCounterMail.lua $","$Rev: 5449 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 local private, print, get, set, _BC = lib.getLocals() --_BC localization function
 
 local _G = _G
-local pairs,ipairs,select,type = pairs,ipairs,select,type
+local pairs,ipairs,select,type,next = pairs,ipairs,select,type,next
 local tonumber,tostring,format = tonumber,tostring,format
 local tinsert,tremove = tinsert,tremove
 local strsplit = strsplit
@@ -253,16 +253,17 @@ function private.mailSort()
 		end
 	end
 end
+
 --retrieves the itemID from the DB
-function private.matchDB(text)
+function private.matchDB(text, itemKey)
 	local itemID
-	for itemKey, data in pairs(BeanCounterDBNames) do
+	for itemKey, data in next, BeanCounterDBNames, itemKey do
 		local _, name = strsplit(";", data)
 		if text == name then
 			itemID = string.split(":", itemKey)
 			local itemLink = lib.API.createItemLinkFromArray(itemKey)
 			debugPrint("|CFFFFFF00Searching",data,"for",text,"Sucess: link is",itemLink, "itemID is ", itemID)
-			return itemID, itemLink
+			return itemID, itemLink, itemKey
 		end
 	end
 	debugPrint("Searching DB for ItemID..", text, "Failed Item does not exist in the name array")
@@ -272,24 +273,32 @@ end
 function private.sortCompletedAuctions( i )
 	--Get itemID from database
 	local itemName = private.reconcilePending[i].subject:match(successLocale.."(.*)")
-	local itemID, itemLink = private.matchDB(itemName)
-	if itemID then
-		--Get the Bid,stack size, and a proper itemString
-		local stack, bid, itemString = private.findStackcompletedAuctions("postedAuctions", itemID, itemLink, private.reconcilePending[i].deposit, private.reconcilePending[i]["buyout"], private.reconcilePending[i]["time"])
-		if stack then
-			local value = private.packString(stack, private.reconcilePending[i]["money"], private.reconcilePending[i]["deposit"], private.reconcilePending[i]["fee"], private.reconcilePending[i]["buyout"], bid, private.reconcilePending[i]["Seller/buyer"], private.reconcilePending[i]["time"], "", private.reconcilePending[i]["auctionHouse"])
-			if private.reconcilePending[i]["auctionHouse"] == "A" or private.reconcilePending[i]["auctionHouse"] == "H" then
-				private.databaseAdd("completedAuctions", nil, itemString, value)
-				--debugPrint("databaseAdd completedAuctions", itemID, itemLink)
-			else
-				private.databaseAdd("completedAuctionsNeutral", nil, itemString, value)
+	local itemID, itemLink, itemKey
+
+	while true do
+		itemID, itemLink, itemKey = private.matchDB(itemName, itemKey)
+		if itemID then
+			--Get the Bid,stack size, and a proper itemString
+			local stack, bid, itemString = private.findStackcompletedAuctions("postedAuctions", itemID, itemLink, private.reconcilePending[i].deposit, private.reconcilePending[i]["buyout"], private.reconcilePending[i]["time"])
+			if stack then
+				local value = private.packString(stack, private.reconcilePending[i]["money"], private.reconcilePending[i]["deposit"], private.reconcilePending[i]["fee"], private.reconcilePending[i]["buyout"], bid, private.reconcilePending[i]["Seller/buyer"], private.reconcilePending[i]["time"], "", private.reconcilePending[i]["auctionHouse"])
+				if private.reconcilePending[i]["auctionHouse"] == "A" or private.reconcilePending[i]["auctionHouse"] == "H" then
+					private.databaseAdd("completedAuctions", nil, itemString, value)
+					--debugPrint("databaseAdd completedAuctions", itemID, itemLink)
+				else
+					private.databaseAdd("completedAuctionsNeutral", nil, itemString, value)
+				end
+				break
 			end
 		else
 			debugPrint("Failure for completedAuctions", itemID, itemLink, "index", private.reconcilePending[i].n)
+			break
 		end
+		debugPrint("sortCompletedAuctions: Trying to find another match for", itemName)
 	end
 	tremove(private.reconcilePending, i)
 end
+
 --Find the stack information in postedAuctions to add into the completedAuctions DB on mail arrivial
 function private.findStackcompletedAuctions(key, itemID, itemLink, soldDeposit, soldBuy, soldTime)
 	if not private.playerData[key][itemID] then return end --if no keys present abort
@@ -447,49 +456,64 @@ function private.findCompletedBids(itemID, seller, bid, itemLink)
 		end
 	end
 end
+
 function private.sortFailedBids( i )
 	local itemName = private.reconcilePending[i].subject:match(outbidLocale.."(.*)")
-	local itemID, itemLink = private.matchDB(itemName)
-	local postStack, postSeller, reason, itemString = private.findFailedBids(itemID, itemLink, private.reconcilePending[i]["money"])
-	if itemID and itemString then
+	local postStack, postSeller, reason, itemString = private.findFailedBids(itemName, private.reconcilePending[i]["money"])
+	if itemString then
 		local value = private.packString(postStack, "", "", "", "", private.reconcilePending[i]["money"], postSeller, private.reconcilePending[i]["time"], reason, private.reconcilePending[i]["auctionHouse"])
 		if private.reconcilePending[i]["auctionHouse"] == "A" or private.reconcilePending[i]["auctionHouse"] == "H" then
 			private.databaseAdd("failedBids", nil, itemString, value)
 		else
 			private.databaseAdd("failedBidsNeutral", nil, itemString, value)
 		end
-		--debugPrint("databaseAdd failedBids", itemID, itemLink, value)
+		--debugPrint("databaseAdd failedBids", value)
 	else
-		debugPrint("Failure for failedBids", itemID, itemLink, "index", private.reconcilePending[i].n)
+		debugPrint("Failure for failedBids", itemName, ", index", private.reconcilePending[i].n)
 	end
 	tremove(private.reconcilePending,i)
 end
-function private.findFailedBids(itemID, itemLink, gold)
+
+function private.findFailedBids(itemName, gold)
 	gold = tonumber(gold)
-	if not itemLink then debugPrint("Failed auction ItemStrig nil", itemID, itemLink) return end
-	local DBitemID, DBSuffix = lib.API.decodeLink(itemLink)
-	--DEBUG string for http://jira.norganna.org/browse/BCNT-327
-	if not itemID or not private.playerData["postedBids"] or not private.playerData["postedBids"][itemID] then
-		debugPrint("Missing critical data for FailedBid lookup.", itemID, private.playerData["postedBids"], private.playerData["postedBids"][itemID])
-		return
-	end
-	for itemString,v in pairs (private.playerData["postedBids"][itemID]) do
-		local SearchID, SearchSuffix = lib.API.decodeLink(itemString)
-		if SearchID == DBitemID and  SearchSuffix == DBSuffix then
-			for index, text in pairs(v) do
-				if not text:match(".*USED.*") then
-					local postStack, postBid, postSeller, isBuyout, postTimeLeft, postTime, reason = private.unpackString(text)
-					if tonumber(postBid) == gold then
-						tremove(private.playerData["postedBids"][itemID][itemString], index) --remove the matched item From postedBids DB
-						--private.playerData["postedBids"][itemID][itemString][index] = private.playerData["postedBids"][itemID][itemString][index] ..";USED FAILED"
-						debugPrint("posted Bid removed as Failed", itemString, index, itemLink)
-						return postStack, postSeller, reason, itemString
+	local itemID, itemLink, itemKey
+
+	while true do
+		itemID, itemLink, itemKey = private.matchDB(itemName, itemKey)
+
+		if not itemLink then
+			debugPrint("Failed auction ItemStrig nil", itemID, itemLink)
+			return
+		end
+
+		if not itemID or not private.playerData["postedBids"] then
+			debugPrint("Missing critical data for FailedBid lookup.", itemID, private.playerData["postedBids"], private.playerData["postedBids"][itemID]) 
+			return
+		end
+
+		if private.playerData["postedBids"][itemID] then
+			local DBitemID, DBSuffix = lib.API.decodeLink(itemLink)
+			for itemString,v in pairs (private.playerData["postedBids"][itemID]) do
+				local SearchID, SearchSuffix = lib.API.decodeLink(itemString)
+				if SearchID == DBitemID and SearchSuffix == DBSuffix then
+					for index, text in pairs(v) do
+						if not text:match(".*USED.*") then
+							local postStack, postBid, postSeller, isBuyout, postTimeLeft, postTime, reason = private.unpackString(text)
+							if tonumber(postBid) == gold then
+								tremove(private.playerData["postedBids"][itemID][itemString], index) --remove the matched item From postedBids DB
+								--private.playerData["postedBids"][itemID][itemString][index] = private.playerData["postedBids"][itemID][itemString][index] ..";USED FAILED"
+								debugPrint("posted Bid removed as Failed", itemString, index, itemLink)
+								return postStack, postSeller, reason, itemString
+							end
+						end
 					end
 				end
 			end
 		end
+		debugPrint("findFailedBids: Trying to find another match for", itemName)
 	end
 end
+
 --Hook, take money event, if this still has an unretrieved invoice we delay X sec or invoice retrieved
 local inboxHookMessage = false --Stops spam of the message.
 function private.PreTakeInboxMoneyHook(funcArgs, retVal, index, ignore)

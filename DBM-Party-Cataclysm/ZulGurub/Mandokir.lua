@@ -2,7 +2,7 @@ local mod	= DBM:NewMod(176, "DBM-Party-Cataclysm", 11, 76)
 local L		= mod:GetLocalizedStrings()
 local Ohgan	= EJ_GetSectionInfo(2615)
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
 mod:SetCreatureID(52151)
 mod:SetZone()
 mod:SetUsedIcons(8)
@@ -21,6 +21,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_HEAL",
 	"UNIT_DIED"
 )
+mod.onlyHeroic = true
 
 local warnDecapitate		= mod:NewTargetAnnounce(96684, 2)
 local warnBloodletting		= mod:NewTargetAnnounce(96776, 3)

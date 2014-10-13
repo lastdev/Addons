@@ -5,6 +5,7 @@ local select, pairs, next, type, unpack = select, pairs, next, type, unpack
 local loadstring, assert, error = loadstring, assert, error
 local setmetatable, getmetatable, rawset, rawget = setmetatable, getmetatable, rawset, rawget
 local bit_band, bit_lshift, bit_rshift = bit.band, bit.lshift, bit.rshift
+local coroutine = coroutine
 
 local LDB = LibStub:GetLibrary("LibDataBroker-1.1");
 local AceGUI = LibStub("AceGUI-3.0");
@@ -914,7 +915,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
             get = function() return trigger[realname] end,
             set = function(info, v)
               trigger[realname] = v;
-              if(arg.required and not triggetype) then
+              if(arg.required and not triggertype) then
                 untrigger[realname] = v;
               end
               WeakAuras.Add(data);
@@ -1093,7 +1094,7 @@ loadedFrame:SetScript("OnEvent", function(self, event, addon)
         num = num + 1;
       end
       
-      if(num < 39000 or odb.locale ~= locale or odb.build ~= build or odb.version ~= version or forceCacheReset) then
+      if(num < 39000 or odb.locale ~= locale or odb.build ~= build or odb.version ~= version) then
         WeakAuras.CreateIconCache();
   
         odb.build = build;
@@ -5794,8 +5795,8 @@ function WeakAuras.CreateFrame()
   local import = CreateFrame("Frame", nil, frame);
   import:SetWidth(17)
   import:SetHeight(40)
-  import:SetPoint("TOPRIGHT", -140, 12)  
-  import:Hide()
+  import:SetPoint("TOPRIGHT", -100, 12)  
+  --import:Hide()
   
   local importbg = import:CreateTexture(nil, "BACKGROUND")
   importbg:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
@@ -5806,28 +5807,25 @@ function WeakAuras.CreateFrame()
   importbutton:SetWidth(30);
   importbutton:SetHeight(30);
   importbutton:SetPoint("CENTER", import, "CENTER", 1, -1);
-  importbutton:SetChecked()
   importbutton:SetHitRectInsets(0,0,0,0)
+  importbutton:SetChecked(db.import_disabled)
+
   importbutton:SetScript("PostClick", function(self) 
     if self:GetChecked() then 
       PlaySound("igMainMenuOptionCheckBoxOn")
+      db.import_disabled = true
     else 
       PlaySound("igMainMenuOptionCheckBoxOff") 
+      db.import_disabled = nil
     end 
   end)
-  importbutton:SetScript("OnEnter", ShowTooltip)
-  importbutton:SetScript("OnLeave", HideTooltip)
-
-  local function ShowTooltip(self)
-  GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
-  GameTooltip:SetText("Save Import")  -- This sets the top line of text, in gold.
-  GameTooltip:AddLine("If this option is enabled, you are only enable to import auras from people in your guild/raid/group.", 1, 1, 1)
-  GameTooltip:Show()
-  end
-
-  local function HideTooltip(self)
-  GameTooltip:Hide()
-  end
+  importbutton:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
+      GameTooltip:SetText("Disable Import")
+      GameTooltip:AddLine("If this option is enabled, you are no longer able to import auras.", 1, 1, 1)
+      GameTooltip:Show()
+  end)
+  importbutton:SetScript("OnLeave", GameTooltip_Hide)
   
   local importbg_l = import:CreateTexture(nil, "BACKGROUND")
   importbg_l:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
@@ -6916,8 +6914,6 @@ function WeakAuras.CreateFrame()
     frame.window = "default";
     
     frame:RefreshPick();
-    if(type(id) == "string") then
-    end
   end
   
   local buttonsContainer = AceGUI:Create("InlineGroup");
@@ -6944,6 +6940,8 @@ function WeakAuras.CreateFrame()
   filterInput:SetPoint("BOTTOMLEFT", buttonsContainer.frame, "TOPLEFT", 2, -18);
   filterInput:SetPoint("TOPLEFT", buttonsContainer.frame, "TOPLEFT", 2, -2);
   -- Fix from page 181-182 of World of Warcraft Programming: A Guide and Reference for Creating WoW Addon by James Whitehead
+  -- @patch 6.0 compatibility quick fix
+  if MAX_NUM_TALENTS then
   WeakAurasFilterInputMiddle:ClearAllPoints();
   WeakAurasFilterInputMiddle:SetPoint("BOTTOMLEFT", WeakAurasFilterInputLeft, "BOTTOMRIGHT");
   WeakAurasFilterInputMiddle:SetPoint("TOPRIGHT", WeakAurasFilterInputRight, "TOPLEFT");
@@ -6954,6 +6952,7 @@ function WeakAuras.CreateFrame()
   WeakAurasFilterInputRight:ClearAllPoints();
   WeakAurasFilterInputRight:SetPoint("bottomright", filterInput, "bottomright");
   WeakAurasFilterInputRight:SetPoint("topright", filterInput, "topright");
+  end
   filterInput:SetTextInsets(16, 0, 0, 0);
   local searchIcon = filterInput:CreateTexture(nil, "overlay");
   searchIcon:SetTexture("Interface\\Common\\UI-Searchbox-Icon");

@@ -8,7 +8,7 @@
 ## SavedVariables: DataStore_AchievementsDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
-## X-Curse-Packaged-Version: r29
+## X-Curse-Packaged-Version: r31
 ## X-Curse-Project-Name: DataStore_Achievements
 ## X-Curse-Project-ID: datastore_achievements
 ## X-Curse-Repository-ID: wow/datastore_achievements/mainline

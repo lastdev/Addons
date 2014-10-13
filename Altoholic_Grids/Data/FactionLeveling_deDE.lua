@@ -3,8 +3,6 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 
-local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
-
 local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
 local YELLOW	= "|cFFFFFF00"
@@ -22,7 +20,7 @@ addon.FactionLeveling = {
 	-- 42000 = "Ehrfürchtig"
 	
 	-- Outland factions: source: http://www.mmo-champion.com/
-	[BF["The Aldor"]] = {
+	[932] = {		-- "The Aldor"
 		[0] = WHITE .. "[Schreckensgiftbeutel]|r +250 Ruf\n\n"
 				.. YELLOW .. "Schreckenslauerer,\nSchreckenswitwe\n"
 				.. WHITE .. "(Wälder von Terokkar)",
@@ -30,7 +28,7 @@ addon.FactionLeveling = {
 		[42000] = WHITE .. "[Mal des Sargeras]|r +25 Ruf pro Mal\n" 
 				.. GREEN .. "[Teuflische Waffen]|r +350 Ruf (+1 Heiliger Staub)"
 	},
-	[BF["The Scryers"]] = {
+	[934] = {		-- "The Scryers"
 		[0] = WHITE .. "[Auge eines Dunstschuppenbasilisken]|r +250 Ruf\n\n"
 				.. YELLOW .. "Eisenrückenversteinerer,\nDunstschuppenbeißer,\nDunstschuppenbasilisk\n"
 				.. WHITE .. "(Wälder von Terokkar)",
@@ -38,7 +36,7 @@ addon.FactionLeveling = {
 		[42000] = WHITE .. "[Siegel des Sonnenzorns]|r +25 Ruf pro Siegel\n" 
 				.. GREEN .. "[Arkaner Foliant]|r +350 Ruf (+1 Arkane Rune)"
 	},
-	[BF["Netherwing"]] = {
+	[1015] = {	-- "Netherwing"
 		[3000] = "wiederhole diese Quests:\n\n" 
 				.. YELLOW .. "Ein langsamer Tod (Daily)|r 250 Ruf\n"
 				.. YELLOW.. "Netherstaubpollen (Daily)|r 250 Ruf\n"
@@ -58,7 +56,7 @@ addon.FactionLeveling = {
 		[42000] = "wiederhole diese Quest:\n\n" 
 				.. YELLOW .. "Die tödlichste Falle aller Zeiten (Daily) (3er Gruppenquest)|r 500 Ruf"
 	},
-	[BF["Honor Hold"]] = {
+	[946] = {		-- "Honor Hold"
 		[9000] = "\n" 
 				.. YELLOW .. "Quest in Höllenfeuerhalbinsel\n"
 				.. GREEN .. "Höllenfeuerbollwerk |r(Normal)\n"
@@ -68,7 +66,7 @@ addon.FactionLeveling = {
 				.. GREEN .. "Höllenfeuerbollwerk |r(Heroisch)\n"
 				.. GREEN .. "Der Blutkessel |r(Heroisch)"
 	},
-	[BF["Thrallmar"]] = {
+	[947] = {		-- "Thrallmar"
 		[9000] = "\n"
 				.. YELLOW .. "Quest in Höllenfeuerhalbinsel\n"
 				.. GREEN .. "Höllenfeuerbollwerk |r(Normal)\n"
@@ -78,7 +76,7 @@ addon.FactionLeveling = {
 				.. GREEN .. "Höllenfeuerbollwerk |r(Heroisch)\n"
 				.. GREEN .. "Der Blutkessel |r(Heroisch)"
 	},
-	[BF["Cenarion Expedition"]] = {
+	[942] = {		-- "Cenarion Expedition"
 		[3000] = "\n" 
 				.. WHITE .. "Dunkelkämme & Blutschuppen Nagas (+5 Ruf)\n"
 				.. YELLOW .. "Quest in Zangarmarschen\n"
@@ -93,18 +91,18 @@ addon.FactionLeveling = {
 				.. GREEN .. "Dampfkammer |r(Normal)\n"
 				.. GREEN .. "Jede Echsenkessel Instanz |r(Heroisch)"
 	},
-	[BF["Keepers of Time"]] = {
+	[989] = {		-- "Keepers of Time"
 		[42000] = "\n" 
 				.. "|rGehe in die Instanzen " .. GREEN .. "Durnholde|r & " .. GREEN .. "Der Schwarze Morast\n\n"
 				.. YELLOW .. "Behalte die Quests für später:\nDurnholde Questreihe = 5000 Ruf\nSchwarzer Morast Questreihe = 8000 Ruf"
 	},
-	[BF["The Sha'tar"]] = {
+	[935] = {		-- "The Sha'tar"
 		[42000] = "\n" 
 				.. GREEN .. "Die Botanica |r(Normal & Heroisch)\n"
 				.. GREEN .. "Die Mechanar |r(Normal & Heroisch)\n"
 				.. GREEN .. "Die Arcatraz |r(Normal & Heroisch)\n"
 	},	
-	[BF["Lower City"]] = {
+	[1011] = {		-- "Lower City"
 		[9000] = "\n" 
 				.. WHITE .. "Gebe [Arrakoa Feder] 30x ab (+250 Ruf)\n"
 				.. GREEN .. "Schattenlabyrinth |r(Normal)\n"
@@ -115,7 +113,7 @@ addon.FactionLeveling = {
 				.. GREEN .. "Auchenaikrypta |r(Heroisch)\n"
 				.. GREEN .. "Sethekkhallen |r(Heroisch)"
 	},	
-	[BF["The Consortium"]] = {
+	[933] = {		-- "The Consortium"
 		[3000] = "\n" 
 				.. "|rGebe [Kristallfragment von Oshu'gun] ab (+250 Ruf)\n"
 				.. "Gebe [Paar Elfenbeinstoßzähne] ab (+250 Ruf)\n\n"

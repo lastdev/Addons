@@ -3,10 +3,10 @@
 Scanner.lua
 Vendor/trainer scanning for Ackis Recipe List.
 ************************************************************************
-File date: 2014-05-26T00:13:59Z
-File hash: d2eafec
-Project hash: af8bb68
-Project version: 2.6.5
+File date: 2014-05-26T11:42:13Z
+File hash: ba6ae14
+Project hash: 5b35dab
+Project version: 3.0.5
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -201,7 +201,7 @@ do
 			_G.SetMapToCurrentZone() -- Make sure were are looking at the right zone
 
 			L[trainer_name] = trainer_name
-			private:AddTrainer(trainer_id, trainer_name, _G.GetRealZoneText(), trainer_x, trainer_y, private.Player.faction)
+			addon:AddTrainer(trainer_id, trainer_name, _G.GetRealZoneText(), trainer_x, trainer_y, private.Player.faction)
 		end
 
 		for spell_id, recipe in pairs(recipe_list) do

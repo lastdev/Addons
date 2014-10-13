@@ -24,6 +24,14 @@ GTFO.IgnoreSpellCategory["Fatigue"] = {
 	override = true
 }
 
+GTFO.IgnoreSpellCategory["GarroshDesecrated"] = {
+	-- Garrosh Hellscream
+	spellID = 144762,
+	desc = "Desecrated Axe (Garrosh Phase 1 & 2)",
+	tooltip = "Alert from the Desecrated Axe from Garrosh Hellscream (Phase 1 & 2)",
+	override = true
+}
+
 -- Scanner ignore list
 GTFO.IgnoreScan["124255"] = true; -- Monk's Stagger
 GTFO.IgnoreScan["124275"] = true; -- Monk's Light Stagger
@@ -34,6 +42,10 @@ GTFO.IgnoreScan["114216"] = true; -- Angelic Bulwark
 GTFO.IgnoreScan["6788"] = true; -- Weakened Soul
 GTFO.IgnoreScan["136193"] = true; -- Arcing Lightning
 GTFO.IgnoreScan["139107"] = true; -- Mind Daggers
-
+GTFO.IgnoreScan["156152"] = true; -- Gushing Wounds
+GTFO.IgnoreScan["162510"] = true; -- Tectonic Upheavel
+GTFO.IgnoreScan["98021"] = true; -- Spirit Link (Shaman)
+GTFO.IgnoreScan["148760"] = true; -- Pheromone Cloud
+GTFO.IgnoreScan["175982"] = true; -- Rain of Slag
 
 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Akmahat", "DBM-Party-Cataclysm", 15)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
 mod:SetCreatureID(50063)
 mod:SetModelID(34573)
 mod:SetZone()
@@ -13,6 +13,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED"
 )
+mod.onlyNormal = true
 
 local warnShockwave			= mod:NewSpellAnnounce(94968, 2, nil, mod:IsTank() or mod:IsHealer())
 local warnSandsofTime		= mod:NewTargetAnnounce(93578, 2)

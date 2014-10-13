@@ -225,7 +225,7 @@ end
 function ns:Update()
 	UpdateClassIcons()
 
-	-- update de la frame en cours
+	-- update current frame
 	local numVisibleLines = 8
 	local frame = "AltoholicFrameGrids"
 	_G[frame]:Show()
@@ -281,7 +281,7 @@ function ns:GetRealm()
 end
 
 function ns:SetStatus(text)
-	_G[parent .. "Status"]:SetText(text)
+	_G[parent .. "Status"]:SetText(text or "")
 end
 
 function ns:SetViewDDMText(text)

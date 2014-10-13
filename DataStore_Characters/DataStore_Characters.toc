@@ -8,7 +8,7 @@
 ## SavedVariables: DataStore_CharactersDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
-## X-Curse-Packaged-Version: r23
+## X-Curse-Packaged-Version: 5.4.007
 ## X-Curse-Project-Name: DataStore_Characters
 ## X-Curse-Project-ID: datastore_characters
 ## X-Curse-Repository-ID: wow/datastore_characters/mainline

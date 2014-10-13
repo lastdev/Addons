@@ -1,7 +1,7 @@
 local addon = LibStub("AceAddon-3.0"):NewAddon("oRA3")
 local CallbackHandler = LibStub("CallbackHandler-1.0")
 
-addon.VERSION = tonumber(("$Revision: 662 $"):sub(12, -3))
+addon.VERSION = tonumber(("$Revision: 745 $"):sub(12, -3))
 
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 local oraFrame = CreateFrame("Frame", "oRA3Frame", UIParent)
@@ -59,7 +59,6 @@ function util.inTable(t, value, subindex)
 end
 
 -- Locals
-local playerName = UnitName("player")
 local guildMemberList = {} -- Name:RankIndex
 local guildRanks = {} -- Index:RankName
 local groupMembers = {} -- Index:Name
@@ -104,6 +103,7 @@ local defaults = {
 		positions = {},
 		showHelpTexts = true,
 		toggleWithRaid = true,
+		showRoleIcons = true,
 		lastSelectedPanel = nil,
 		lastSelectedList = nil,
 		ensureRepair = false,
@@ -137,12 +137,20 @@ local function giveOptions()
 					order = 1,
 					width = "full",
 				},
+				showRoleIcons = {
+					type = "toggle",
+					name = colorize(L["Show role icons on raid pane"]),
+					desc = L.showRoleIconsDesc,
+					descStyle = "inline",
+					order = 2,
+					width = "full",
+				},
 				ensureRepair = {
 					type = "toggle",
 					name = colorize(L["Ensure guild repairs are enabled for all ranks present in raid"]),
 					desc = L.ensureRepairDesc,
 					descStyle = "inline",
-					order = 2,
+					order = 3,
 					width = "full",
 					set = function(info, value)
 						db[info[#info]] = value
@@ -158,7 +166,7 @@ local function giveOptions()
 					name = colorize(L["Show interface help"]),
 					desc = L.showHelpTextsDesc,
 					descStyle = "inline",
-					order = 3,
+					order = 4,
 					width = "full",
 				},
 				slashCommands = {
@@ -166,7 +174,7 @@ local function giveOptions()
 					name = L["Slash commands"],
 					width = "full",
 					inline = true,
-					order = 4,
+					order = 5,
 					args = {
 						slashCommandHelp = {
 							type = "description",
@@ -308,12 +316,12 @@ function addon:OnInitialize()
 
 	self:RegisterPanel(L["Checks"], showLists, hideLists)
 
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("oRA3", giveOptions)
+	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("oRA3", giveOptions, true)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("oRA3", "oRA3")
 
 	local profileOptions = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
 	LibStub("LibDualSpec-1.0"):EnhanceOptions(profileOptions, self.db)
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("oRA3 Profile", profileOptions)
+	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("oRA3 Profile", profileOptions, true)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("oRA3 Profile", L["Profile"], "oRA3")
 
 	local function OnRaidHide()
@@ -356,7 +364,7 @@ function addon:OnInitialize()
 end
 
 function addon:RegisterModuleOptions(name, optionTbl, displayName)
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("oRA3"..name, optionTbl)
+	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("oRA3"..name, optionTbl, true)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("oRA3"..name, displayName, "oRA3")
 end
 
@@ -372,6 +380,13 @@ function addon:OnEnable()
 	self.RegisterCallback(addon, "OnGroupChanged", onGroupChanged)
 	self.RegisterCallback(addon, "OnShutdown", onShutdown)
 	self.RegisterCallback(addon, "ConvertParty", onShutdown)
+	
+	SLASH_ORA1 = "/ora"
+	SLASH_ORA2 = "/ora3"
+	SlashCmdList.ORA = function()
+		InterfaceOptionsFrame_OpenToCategory("oRA3")
+		InterfaceOptionsFrame_OpenToCategory("oRA3")
+	end
 
 	SLASH_ORADISBAND1 = "/radisband"
 	SlashCmdList.ORADISBAND = actuallyDisband
@@ -445,6 +460,7 @@ do
 
 	local tmpRanks = {}
 	local tmpMembers = {}
+	local Ambiguate = Ambiguate
 	function addon:GUILD_ROSTER_UPDATE()
 		wipe(tmpRanks)
 		wipe(tmpMembers)
@@ -453,7 +469,9 @@ do
 		end
 		for i = 1, GetNumGuildMembers(true) do
 			local name, _, rankIndex = GetGuildRosterInfo(i)
-			if name then tmpMembers[name] = rankIndex + 1 end
+			if name then
+				tmpMembers[Ambiguate(name, "none")] = rankIndex + 1
+			end
 		end
 		if not isIndexedEqual(tmpRanks, guildRanks) then
 			copyToTable(tmpRanks, guildRanks)
@@ -500,7 +518,7 @@ do
 				end
 			end
 		elseif IsInGroup() then
-			tinsert(tmpGroup, playerName)
+			tinsert(tmpGroup, (UnitName("player")))
 			for i = 1, 4 do
 				local n = UnitName("party" .. i)
 				if n then tmpGroup[#tmpGroup + 1] = n end
@@ -567,7 +585,7 @@ end
 
 function addon:OnCommReceived(prefix, message, distribution, sender)
 	if prefix == "oRA" then
-		self.callbacks:Fire("OnCommReceived", sender, strsplit(" ", message))
+		self.callbacks:Fire("OnCommReceived", Ambiguate(sender, "none"), strsplit(" ", message))
 	end
 end
 

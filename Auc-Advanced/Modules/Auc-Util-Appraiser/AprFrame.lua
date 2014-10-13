@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: AprFrame.lua 5427 2013-07-13 09:28:05Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: AprFrame.lua 5462 2014-06-19 11:01:56Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -42,8 +42,8 @@ local frame
 local NUM_ITEMS = 12
 
 local SigFromLink = AucAdvanced.API.GetSigFromLink
-local GetDistribution -- to be filled in when ScanData loads
-AucAdvanced.RegisterModuleCallback("scandata", function(lib) GetDistribution = lib.GetDistribution end)
+local GetDistribution, GetColored -- to be filled in when ScanData loads
+AucAdvanced.RegisterModuleCallback("scandata", function(lib) GetDistribution = lib.GetDistribution; GetColored = lib.Colored end)
 
 -- Check to see if we are embedded or not
 local embedded = false
@@ -64,7 +64,8 @@ function private.CreateFrames()
 	local DiffFromModel = 0
 	local MatchString = ""
 	frame.list = {}
-	frame.cache = {}
+	frame.distributioncache = {}
+	frame.distributionqueue = {}
 	frame.valuecache = {}
 
 	function frame.GenerateList(repos)
@@ -107,9 +108,12 @@ function private.CreateFrames()
 										name, rarity, stack = na, ra, st
 									elseif linkType == "battlepet" then
 										local _, id, _, qu = strsplit(":", link)
-										name = C_PetJournal.GetPetInfoBySpeciesID(tonumber(id) or 0)
-										rarity = tonumber(qu)
-										stack = 1
+										id = tonumber(id)
+										if id then
+											name = C_PetJournal.GetPetInfoBySpeciesID(id)
+											rarity = tonumber(qu)
+											stack = 1
+										end
 									end
 									if name and rarity then
 										local item = {sig, name, texture, rarity, stack, itemCount, link}
@@ -117,16 +121,6 @@ function private.CreateFrames()
 											item.ignore = true
 										end
 										table.insert(ItemList, item)
-
-										if GetDistribution and not frame.cache[sig] then
-											local exact, suffix, base, colorDist = GetDistribution(link)
-												if exact then
-												frame.cache[sig] = { exact, suffix, base, {} }
-												for k,v in pairs(colorDist.exact) do
-													frame.cache[sig][4][k] = v
-												end
-											end
-										end
 									end
 								end
 							end
@@ -139,7 +133,7 @@ function private.CreateFrames()
 		if frame.showAuctions then
 			local auctionStart = #ItemList + 1
 			for auc=1, GetNumAuctionItems("owner") do
-				local name, texture, count, quality, _, _, _, _, _, _, _, _, _, _, itemId  = AucAdvanced.GetAuctionItemInfo("owner", auc)
+				local name, texture, count, quality, _, _, _, _, _, _, _, _, _, _, _, _, itemId = GetAuctionItemInfo("owner", auc)
 				local link = GetAuctionItemLink("owner", auc)
 
 				local sig, linkType = SigFromLink(link)
@@ -164,16 +158,6 @@ function private.CreateFrames()
 							item.ignore = true
 						end
 						table.insert(ItemList, item)
-
-						if GetDistribution and not frame.cache[sig] then
-							local exact, suffix, base, colorDist = GetDistribution(link)
-							if exact then
-								frame.cache[sig] = { exact, suffix, base, {} }
-								for k,v in pairs(colorDist.exact) do
-									frame.cache[sig][4][k] = v
-								end
-							end
-						end
 					end
 				end
 			end
@@ -248,7 +232,7 @@ function private.CreateFrames()
 			frame.scroller:Show()
 		end
 		-- redraw list buttons
-		frame:SetScroll()
+		frame.SetScroll()
 
 		return pos
 	end
@@ -287,9 +271,12 @@ function private.CreateFrames()
 					name, rarity, stack, texture = na, ra, st, tx
 				elseif linkType == "battlepet" then
 					local _, id, _, qu = strsplit(":", rawlink)
-					name, texture = C_PetJournal.GetPetInfoBySpeciesID(tonumber(id) or 0)
-					rarity = tonumber(qu)
-					stack = 1
+					id = tonumber(id)
+					if id then
+						name, texture = C_PetJournal.GetPetInfoBySpeciesID(id)
+						rarity = tonumber(qu)
+						stack = 1
+					end
 				end
 				if not name and rarity then
 					return
@@ -679,7 +666,10 @@ function private.CreateFrames()
 		if lType == "item" then
 			itemName = GetItemInfo(itemLink)
 		elseif lType == "epet" then -- battlepet
-			itemName = C_PetJournal.GetPetInfoBySpeciesID(tonumber(id) or 0)
+			id = tonumber(id)
+			if id then
+				itemName = C_PetJournal.GetPetInfoBySpeciesID(id)
+			end
 		end
 		if not itemName then return end
 
@@ -712,6 +702,9 @@ function private.CreateFrames()
 	function frame.OnUpdate()
 		if frame.updated then
 			frame.CheckUpdates()
+		end
+		if private.needDistributionUpdate then
+			private.DelayedDistributionUpdate()
 		end
 		if frame.scanFinished then
 			frame.GenerateList()
@@ -760,11 +753,11 @@ function private.CreateFrames()
 			frame.valuecache.numberentry = frame.salebox.numberentry:GetText()
 			set("util.appraiser.item."..frame.salebox.sig..".number", number)
 		elseif numberentry ~= frame.valuecache.numberentry then
-			if numberentry:lower() == _TRANS('APPR_Interface_Full') then --Full
+			if numberentry:lower() == _TRANS('APPR_Interface_Full'):lower() then --Full
 				frame.salebox.number:SetAdjustedValue(-2)
 				numberentry = _TRANS('APPR_Interface_Full') --Full
 				set("util.appraiser.item."..frame.salebox.sig..".number", -2)
-			elseif numberentry:lower() == _TRANS('APPR_Interface_All') then --All
+			elseif numberentry:lower() == _TRANS('APPR_Interface_All'):lower() then --All
 				frame.salebox.number:SetAdjustedValue(-1)
 				numberentry = _TRANS('APPR_Interface_All') --All
 				set("util.appraiser.item."..frame.salebox.sig..".number", -1)
@@ -777,6 +770,7 @@ function private.CreateFrames()
 					frame.salebox.number:SetMinMaxValues(1, numberentry + n)
 				end
 				frame.salebox.number:SetAdjustedValue(numberentry)
+				numberentry = frame.salebox.number:GetAdjustedValue()
 				set("util.appraiser.item."..frame.salebox.sig..".number", numberentry)
 			end
 			frame.salebox.numberentry:SetText(numberentry)
@@ -1361,11 +1355,12 @@ function private.CreateFrames()
 		else
 			local lType, speciesID, _, petQuality = strsplit(":", link)
 			lType = lType:sub(-9)
+			speciesID = tonumber(speciesID)
 			if lType == "battlepet" and speciesID then
 				-- it's a pet
 				local _,_,_,_,iMin, iType = GetItemInfo(82800) -- Pet Cage
 				-- all caged pets should have the default pet name (custom names are removed when caging)
-				local petName, _, petType = C_PetJournal.GetPetInfoBySpeciesID(tonumber(speciesID))
+				local petName, _, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
 				if not petName then
 					-- Reuse same error message as above
 					aucPrint(_TRANS('APPR_Interface_NoItemsSelected') )--No items were selected for refresh.
@@ -1656,15 +1651,98 @@ function private.CreateFrames()
 		aucPrint("-----------------------------------")
 	end
 
+	local function ShowDistInfoOnButton(distinfo, button, item) -- helper function for SetScroll and DelayedDistributionUpdate
+		local info = ""
+		if distinfo then
+			local exact, suffix, base, colordist = unpack(distinfo)
+			if colordist then
+				info = GetColored(true, colordist, nil, true) -- use shortened format
+			end
+			if not info or info == "" then
+				if suffix + base > 0 then
+					-- we need to know what the itemtype is, to determine what suffix and base represent
+					-- inspect the first byte of the sig
+					local firstbyte = strbyte(item[1],1)
+					if firstbyte == 80 then -- 'P' indicates battlepet
+						-- suffix represents same breed and quality but different levels
+						-- base represents different qualities - only possible for some pets
+						if base > 0 then
+							info = exact.." ("..suffix.." lvl + "..base.." qual)"
+						else
+							info = exact.." ("..suffix.." lvl)"
+						end
+					elseif firstbyte >= 48 and firstbyte <= 57 then -- numeric indicates normal item
+						-- base represents same base item with different suffixes
+						-- suffix represents same base item and suffix but different factors - this should never happen!
+						info = exact.." ("..base.." base)"
+					else
+						-- unknown itemtype
+						info = exact.." ???"
+					end
+				else
+					info = tostring(exact)
+				end
+			end
+		end
+		button.info:SetText(info)
+	end
+
+	function private.DelayedDistributionUpdate()
+		private.needDistributionUpdate = false
+		local allow = true -- only allow one GetDistribution call per update
+
+		for button, item in pairs(frame.distributionqueue) do
+			local sig = item[1]
+			local distinfo = frame.distributioncache[sig]
+			if distinfo ~= nil then
+				frame.distributionqueue[button] = nil
+				ShowDistInfoOnButton(distinfo, button, item)
+			elseif allow then
+				local exact, suffix, base, colorDist = GetDistribution(item[7])
+				if exact then
+					distinfo = {exact, suffix, base, nil}
+					frame.distributioncache[sig] = distinfo
+					if exact > 0 then
+						-- colorDist.exact can contain all 0 even if exact > 0 (e.g. if PriceLevel not installed)
+						local hasDist = false
+						for k,v in pairs(colorDist.exact) do
+							if v > 0 then
+								hasDist = true
+								break
+							end
+						end
+						if hasDist then
+							-- only create & copy colordisttable if there were non-zero values
+							local colordisttable = {}
+							for k,v in pairs(colorDist.exact) do
+								colordisttable[k] = v
+							end
+							distinfo[4] = colordisttable
+						end
+					end
+				else -- no distribution info returned for this sig
+					frame.distributioncache[sig] = false
+				end
+				frame.distributionqueue[button] = nil
+				allow = false
+				ShowDistInfoOnButton(distinfo, button, item)
+			else -- distinfo is nil, cannot call GetDistribution again this cycle, schedule another update
+				private.needDistributionUpdate = true
+			end
+		end
+	end
+
 	function frame.SetScroll(...)
+		wipe(frame.distributionqueue)
 		local pos = floor(frame.scroller:GetValue())
 		for i = 1, NUM_ITEMS do
 			local item = frame.list[pos+i]
 			local button = frame.items[i]
 			if item then
+				local sig = item[1]
 				local curIgnore = item.ignore
 				local curAuction = item.auction
-				local curBulk = get('util.appraiser.item.'..item[1]..".bulk") or false
+				local curBulk = get('util.appraiser.item.'..sig..".bulk") or false
 
 				button.icon:SetTexture(item[3])
 				button.icon:SetDrawLayer("ARTWORK");
@@ -1698,16 +1776,21 @@ function private.CreateFrames()
 					button.size:SetAlpha(1)
 				end
 
-				local info = ""
-				if frame.cache[item[1]] and not curIgnore then
-					local exact, suffix, base, dist = unpack(frame.cache[item[1]])
-					info = "Counts: "..exact.." +"..suffix.." +"..base
-					if (dist) then
-						info = AucAdvanced.Modules.Util.ScanData.Colored(true, dist, nil, true)	-- use shortened format
+				local distinfo
+				if GetDistribution and not curIgnore then
+					distinfo = frame.distributioncache[sig]
+					if not distinfo then
+						frame.distributionqueue[button] = item
+						private.needDistributionUpdate = true
+						if frame.olddistributioncache then
+							-- see if there's an old cached entry for this sig that we can use temporarily
+							-- this will be overwritten as soon as we can fetch updated distribution info
+							-- doing this will help prevent the text from flickering after every scan
+							distinfo = frame.olddistributioncache[sig]
+						end
 					end
 				end
-
-				button.info:SetText(info)
+				ShowDistInfoOnButton(distinfo, button, item)
 
 				local background = button.bg
 				local alpha = 0.2
@@ -1718,7 +1801,7 @@ function private.CreateFrames()
 					background:SetVertexColor(1,1,1)
 				end
 
-				if (item[1] == frame.selected) then
+				if (sig == frame.selected) then
 					alpha = 0.6
 				elseif curIgnore then
 					alpha = 0.1
@@ -1732,6 +1815,7 @@ function private.CreateFrames()
 				button:Hide()
 			end
 		end
+		frame.olddistributioncache = nil
 	end
 
 	function frame.SetButtonTooltip(self, text)
@@ -1968,7 +2052,7 @@ function private.CreateFrames()
 		item.info:SetJustifyV("BOTTOM")
 		item.info:SetPoint("BOTTOMLEFT", item.icon, "BOTTOMRIGHT", 3,2)
 		item.info:SetPoint("RIGHT", item, "RIGHT", -10,0)
-		item.info:SetText("11/23/55/112" )
+		item.info:SetText("" )
 
 		item.bg = item:CreateTexture(nil, "ARTWORK")
 		item.bg:SetTexture("Interface\\FriendsFrame\\UI-FriendsFrame-HighlightBar")
@@ -2057,6 +2141,27 @@ function private.CreateFrames()
 	frame.salebox.warn:SetJustifyH("RIGHT")
 	frame.salebox.warn:SetJustifyV("BOTTOM")
 
+	-- Options Slider helper functions
+	local function SliderValueChanged(self, value)
+		-- From WoW 5.4, dragging the slider's thumb results in values that are not correctly aligned to ValueStep [APPR-343]
+		-- Values set by calling SetValue will be correctly aligned: use this to correct any erroneous values
+		-- When calling SetValue from within OnValueChanged, protect against function re-entry
+		-- Retrieve corrected value from GetValue; check it has actually changed before continuing
+		if self.isReEntering then return end
+		self.isReEntering = true
+		self:SetValue(value)
+		self.isReEntering = nil
+		value = self:GetValue()
+		if value == self.prevValue then return end
+		self.prevValue = value
+		-- (this correction code should be removed when Blizzard fixes the problem)
+
+		frame.updated = true
+	end
+	local function SliderMouseWheel(self, delta)
+		self:SetValue(self:GetValue() - delta)
+	end
+
 	frame.salebox.stack = CreateFrame("Slider", "AppraiserSaleboxStack", frame.salebox, "OptionsSliderTemplate")
 	frame.salebox.stack:SetPoint("TOPLEFT", frame.salebox.slot, "BOTTOMLEFT", 0, -5)
 	frame.salebox.stack:SetHitRectInsets(0,0,0,0)
@@ -2064,17 +2169,13 @@ function private.CreateFrames()
 	frame.salebox.stack:SetValueStep(1)
 	frame.salebox.stack:SetValue(20)
 	frame.salebox.stack:SetWidth(180)
-	frame.salebox.stack:SetScript("OnValueChanged", function() frame.updated = true end)
+	frame.salebox.stack:SetScript("OnValueChanged", SliderValueChanged)
 	frame.salebox.stack:SetScript("OnEnter", function(self) return frame.SetButtonTooltip(self, _TRANS('APPR_HelpTooltip_SetNumberPerStack') ) end)--Set the number of items per posted stack
 	frame.salebox.stack:SetScript("OnLeave", function() return GameTooltip:Hide() end)
 	frame.salebox.stack.element = "stack"
 	frame.salebox.stack:Hide()
-
 	frame.salebox.stack:EnableMouseWheel(1)
-	frame.salebox.stack:SetScript("OnMouseWheel", function(self, delta)
-		frame.salebox.stack:SetValue(frame.salebox.stack:GetValue() + -delta)
-	end)
-
+	frame.salebox.stack:SetScript("OnMouseWheel", SliderMouseWheel)
 	AppraiserSaleboxStackLow:SetText("")
 	AppraiserSaleboxStackHigh:SetText("")
 
@@ -2083,6 +2184,34 @@ function private.CreateFrames()
 	frame.salebox.stack.label:SetJustifyH("LEFT")
 	frame.salebox.stack.label:SetJustifyV("CENTER")
 
+	frame.salebox.stackentry = CreateFrame("EditBox", "AppraiserSaleboxStackEntry", frame.salebox, "InputBoxTemplate")
+	frame.salebox.stackentry:SetPoint("LEFT", frame.salebox.stack, "RIGHT", 10, 0)
+	frame.salebox.stackentry:SetNumeric(true)
+	frame.salebox.stackentry:SetNumber(0)
+	frame.salebox.stackentry:SetHeight(16)
+	frame.salebox.stackentry:SetWidth(32)
+	frame.salebox.stackentry:SetAutoFocus(false)
+	frame.salebox.stackentry:SetScript("OnEnter", function(self) return frame.SetButtonTooltip(self, _TRANS('APPR_HelpTooltip_SetNumberPerStack') ) end)--Set the number of items per posted stack
+	frame.salebox.stackentry:SetScript("OnLeave", function() return GameTooltip:Hide() end)
+	frame.salebox.stackentry:SetScript("OnEnterPressed", function()
+		frame.salebox.stackentry:ClearFocus()
+		frame.updated = true
+	end)
+	frame.salebox.stackentry:SetScript("OnTabPressed", function()
+		frame.salebox.numberentry:SetFocus()
+		frame.updated = true
+	end)
+	frame.salebox.stackentry:SetScript("OnTextChanged", function()
+		local text = frame.salebox.stackentry:GetText()
+		if text ~= "" then
+			frame.updated = true
+		end
+	end)
+	frame.salebox.stackentry:SetScript("OnEscapePressed", function()
+		frame.salebox.stackentry:ClearFocus()
+	end)
+	frame.salebox.stackentry:Hide()
+
 	frame.salebox.number = CreateFrame("Slider", "AppraiserSaleboxNumber", frame.salebox, "OptionsSliderTemplate")
 	frame.salebox.number:SetPoint("TOPLEFT", frame.salebox.stack, "BOTTOMLEFT", 0, -15)
 	frame.salebox.number:SetHitRectInsets(0,0,0,0)
@@ -2090,14 +2219,13 @@ function private.CreateFrames()
 	frame.salebox.number:SetValueStep(1)
 	frame.salebox.number:SetValue(1)
 	frame.salebox.number:SetWidth(180)
-	frame.salebox.number:SetScript("OnValueChanged", function() frame.updated = true end)
+	frame.salebox.number:SetScript("OnValueChanged", SliderValueChanged)
 	frame.salebox.number:SetScript("OnEnter", function(self) return frame.SetButtonTooltip(self, _TRANS('APPR_HelpTooltip_SetNumberStacksPosted') ) end)--Set the number of stacks to be posted
 	frame.salebox.number:SetScript("OnLeave", function() return GameTooltip:Hide() end)
 	frame.salebox.number.element = "number"
 	frame.salebox.number:Hide()
 	AppraiserSaleboxNumberLow:SetText("")
 	AppraiserSaleboxNumberHigh:SetText("")
-
 	function frame.salebox.number:GetAdjustedValue()
 		local maxStax = self.maxStax or 0
 		local value = self:GetValue()
@@ -2130,16 +2258,41 @@ function private.CreateFrames()
 		self:SetMinMaxValues(1, maxStax+n)
 		self:SetAdjustedValue(math.min(curVal, maxStax))
 	end
-
 	frame.salebox.number:EnableMouseWheel(1)
-	frame.salebox.number:SetScript("OnMouseWheel", function(self, delta)
-		frame.salebox.number:SetValue(frame.salebox.number:GetValue() + -delta)
-	end)
+	frame.salebox.number:SetScript("OnMouseWheel", SliderMouseWheel)
 
 	frame.salebox.number.label = frame.salebox.number:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
 	frame.salebox.number.label:SetPoint("TOPLEFT", frame.salebox.number, "BOTTOMLEFT", 0,-4)
 	frame.salebox.number.label:SetJustifyH("LEFT")
 	frame.salebox.number.label:SetJustifyV("CENTER")
+
+	frame.salebox.numberentry = CreateFrame("EditBox", "AppraiserSaleboxNumberEntry", frame.salebox, "InputBoxTemplate")
+	frame.salebox.numberentry:SetPoint("LEFT", frame.salebox.number, "RIGHT", 10, 0)
+	frame.salebox.numberentry:SetNumeric(false)
+	frame.salebox.numberentry:SetHeight(16)
+	frame.salebox.numberentry:SetWidth(32)
+	frame.salebox.numberentry:SetNumber(0)
+	frame.salebox.numberentry:SetAutoFocus(false)
+	frame.salebox.numberentry:SetScript("OnEnter", function(self) return frame.SetButtonTooltip(self, _TRANS('APPR_HelpTooltip_SetNumberStacksPosted') ) end)--Set the number of stacks to be posted
+	frame.salebox.numberentry:SetScript("OnLeave", function() return GameTooltip:Hide() end)
+	frame.salebox.numberentry:SetScript("OnEnterPressed", function()
+		frame.salebox.numberentry:ClearFocus()
+		frame.updated = true
+	end)
+	frame.salebox.numberentry:SetScript("OnTabPressed", function()
+		frame.salebox.stackentry:SetFocus()
+		frame.updated = true
+	end)
+	frame.salebox.numberentry:SetScript("OnTextChanged", function()
+		local text = frame.salebox.numberentry:GetText():lower()
+		if (text ~= "") then
+			frame.updated = true
+		end
+	end)
+	frame.salebox.numberentry:SetScript("OnEscapePressed", function()
+		frame.salebox.numberentry:ClearFocus()
+	end)
+	frame.salebox.numberentry:Hide()
 
    	frame.salebox.numberonly = CreateFrame("CheckButton", "AppraiserSaleboxNumberOnly", frame.salebox, "OptionsCheckButtonTemplate")
  	frame.salebox.numberonly:SetScript("OnEnter", function(self) return frame.SetButtonTooltip(self, _TRANS('APPR_HelpTooltip_RestrictActiveAuctions') ) end)--Restrict active auctions to the 'number' value
@@ -2164,7 +2317,7 @@ function private.CreateFrames()
 	frame.salebox.duration:SetValueStep(1)
 	frame.salebox.duration:SetValue(3)
 	frame.salebox.duration:SetWidth(80)
-	frame.salebox.duration:SetScript("OnValueChanged", function() frame.updated = true end)
+	frame.salebox.duration:SetScript("OnValueChanged", SliderValueChanged)
 	frame.salebox.duration:SetScript("OnEnter", function(self) return frame.SetButtonTooltip(self, _TRANS('APPR_HelpTooltip_SetTimePostItem') ) end)--Set the time to post this item for
 	frame.salebox.duration:SetScript("OnLeave", function() return GameTooltip:Hide() end)
 	frame.salebox.duration.element = "duration"
@@ -2173,9 +2326,7 @@ function private.CreateFrames()
 	AppraiserSaleboxDurationHigh:SetText("")
 
 	frame.salebox.duration:EnableMouseWheel(1)
-	frame.salebox.duration:SetScript("OnMouseWheel", function(self, delta)
-		frame.salebox.duration:SetValue(frame.salebox.duration:GetValue() - delta)
-	end)
+	frame.salebox.duration:SetScript("OnMouseWheel", SliderMouseWheel)
 
 	frame.salebox.duration.label = frame.salebox.duration:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
 	frame.salebox.duration.label:SetPoint("LEFT", frame.salebox.duration, "RIGHT", 3,2)
@@ -2761,62 +2912,6 @@ function private.CreateFrames()
 		end
 	end
 
-	frame.salebox.numberentry = CreateFrame("EditBox", "AppraiserSaleboxNumberEntry", frame.salebox, "InputBoxTemplate")
-	frame.salebox.numberentry:SetPoint("LEFT", frame.salebox.number, "RIGHT", 10, 0)
-	frame.salebox.numberentry:SetNumeric(false)
-	frame.salebox.numberentry:SetHeight(16)
-	frame.salebox.numberentry:SetWidth(32)
-	frame.salebox.numberentry:SetNumber(0)
-	frame.salebox.numberentry:SetAutoFocus(false)
-	frame.salebox.numberentry:SetScript("OnEnter", function(self) return frame.SetButtonTooltip(self, _TRANS('APPR_HelpTooltip_SetNumberStacksPosted') ) end)--Set the number of stacks to be posted
-	frame.salebox.numberentry:SetScript("OnLeave", function() return GameTooltip:Hide() end)
-	frame.salebox.numberentry:SetScript("OnEnterPressed", function()
-		frame.salebox.numberentry:ClearFocus()
-		frame.updated = true
-	end)
-	frame.salebox.numberentry:SetScript("OnTabPressed", function()
-		frame.salebox.stackentry:SetFocus()
-		frame.updated = true
-	end)
-	frame.salebox.numberentry:SetScript("OnTextChanged", function()
-		local text = frame.salebox.numberentry:GetText():lower()
-		if (text ~= "") then
-			frame.updated = true
-		end
-	end)
-	frame.salebox.numberentry:SetScript("OnEscapePressed", function()
-		frame.salebox.numberentry:ClearFocus()
-	end)
-	frame.salebox.numberentry:Hide()
-
-	frame.salebox.stackentry = CreateFrame("EditBox", "AppraiserSaleboxStackEntry", frame.salebox, "InputBoxTemplate")
-	frame.salebox.stackentry:SetPoint("LEFT", frame.salebox.stack, "RIGHT", 10, 0)
-	frame.salebox.stackentry:SetNumeric(true)
-	frame.salebox.stackentry:SetNumber(0)
-	frame.salebox.stackentry:SetHeight(16)
-	frame.salebox.stackentry:SetWidth(32)
-	frame.salebox.stackentry:SetAutoFocus(false)
-	frame.salebox.stackentry:SetScript("OnEnter", function(self) return frame.SetButtonTooltip(self, _TRANS('APPR_HelpTooltip_SetNumberPerStack') ) end)--Set the number of items per posted stack
-	frame.salebox.stackentry:SetScript("OnLeave", function() return GameTooltip:Hide() end)
-	frame.salebox.stackentry:SetScript("OnEnterPressed", function()
-		frame.salebox.stackentry:ClearFocus()
-		frame.updated = true
-	end)
-	frame.salebox.stackentry:SetScript("OnTabPressed", function()
-		frame.salebox.numberentry:SetFocus()
-		frame.updated = true
-	end)
-	frame.salebox.stackentry:SetScript("OnTextChanged", function()
-		local text = frame.salebox.stackentry:GetText()
-		if text ~= "" then
-			frame.updated = true
-		end
-	end)
-	frame.salebox.stackentry:SetScript("OnEscapePressed", function()
-		frame.salebox.stackentry:ClearFocus()
-	end)
-	frame.salebox.stackentry:Hide()
-
 	frame.ChangeUI()
 	hooksecurefunc("AuctionFrameTab_OnClick", frame.ScanTab.OnClick)
 
@@ -2872,4 +2967,4 @@ function private.CreateFrames()
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5427 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5462 $")

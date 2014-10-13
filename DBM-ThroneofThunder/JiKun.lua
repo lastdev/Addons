@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(828, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11365 $"):sub(12, -3))
 mod:SetCreatureID(69712)
 mod:SetEncounterID(1573)
 mod:SetZone()
@@ -28,8 +28,8 @@ local warnPrimalNutriment	= mod:NewCountAnnounce(140741, 1)
 
 local specWarnQuills		= mod:NewSpecialWarningSpell(134380, nil, nil, nil, 2)
 local specWarnFlock			= mod:NewSpecialWarning("specWarnFlock", false)--For those assigned in egg/bird killing group to enable on their own (and tank on heroic)
-local specWarnTalonRake		= mod:NewSpecialWarningStack(134366, mod:IsTank(), 2)--Might change to 2 if blizz fixes timing issues with it
-local specWarnTalonRakeOther= mod:NewSpecialWarningTarget(134366, mod:IsTank())
+local specWarnTalonRake		= mod:NewSpecialWarningStack(134366, nil, 2)--Might change to 2 if blizz fixes timing issues with it
+local specWarnTalonRakeOther= mod:NewSpecialWarningTaunt(134366)
 local specWarnDowndraft		= mod:NewSpecialWarningSpell(134370, nil, nil, nil, 2)
 local specWarnFeedYoung		= mod:NewSpecialWarningSpell(137528)
 local specWarnBigBird		= mod:NewSpecialWarning("specWarnBigBird", mod:IsTank())

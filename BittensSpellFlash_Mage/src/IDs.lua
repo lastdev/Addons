@@ -67,10 +67,12 @@ a.SpellIDs = {
 	["Combat Mind LFR"] = 109793,
 	["Combat Mind"] = 107970,
 	["Combat Mind Heroic"] = 109795,
+	["Profound Magic"] = 145252,
 	["Stolen Time"] = 105785,
 }
 
 a.TalentIDs = {
+	["Frost Bomb"] = 112948,
 	["Incanter's Ward"] = 1463,
 	["Invocation"] = 114003,
 	["Rune of Power"] = 116011,

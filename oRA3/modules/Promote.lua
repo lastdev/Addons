@@ -8,7 +8,7 @@ local module = oRA:NewModule("Promote", "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 local AceGUI = LibStub("AceGUI-3.0")
 
-module.VERSION = tonumber(("$Revision: 661 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 741 $"):sub(12, -3))
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -24,17 +24,7 @@ local hasSetEveryoneAssistant = nil -- prevent re-enabling if changed later
 -- GUI
 --
 
-local demoteButton = nil
-local function updateDemoteButton()
-	if not demoteButton then return end
-	if IsInRaid() and UnitIsGroupLeader("player") then
-		demoteButton:SetDisabled(false)
-	else
-		demoteButton:SetDisabled(true)
-	end
-end
-
-local ranks, showPane, hidePane
+local ranks, showPane, hidePane, demoteButton
 do
 	local frame = nil
 	-- Widgets (in order of appearance)
@@ -73,7 +63,7 @@ do
 	end
 
 	local function addCallback(widget, event, value)
-		if type(value) ~= "string" or value:trim():len() < 3 then return true end
+		if type(value) ~= "string" then return true end
 		if util.inTable(factionDb.promotes, value) then return true end
 		table.insert(factionDb.promotes, value)
 		add:SetText()
@@ -96,10 +86,11 @@ do
 		end
 		for i = 1, GetNumGroupMembers() do
 			local name, rank = GetRaidRosterInfo(i)
-			if rank == 1 then
+			if name and rank == 1 then
 				DemoteAssistant(name)
 			end
 		end
+		--wipe(dontPromoteThisSession)
 	end
 
 	local function createFrame()
@@ -117,7 +108,7 @@ do
 		demoteButton:SetCallback("OnLeave", onControlLeave)
 		demoteButton:SetCallback("OnClick", demoteRaid)
 		demoteButton:SetFullWidth(true)
-		updateDemoteButton()
+		demoteButton:SetDisabled(not IsInRaid() or not UnitIsGroupLeader("player"))
 
 		local massHeader = AceGUI:Create("Heading")
 		massHeader:SetText(L["Mass promotion"])
@@ -144,19 +135,17 @@ do
 			guild:SetDisabled(factionDb.promoteAll)
 			guild:SetFullWidth(true)
 
+			local guildRanks = oRA:GetGuildRanks()
 			ranks = AceGUI:Create("Dropdown")
 			ranks:SetMultiselect(true)
 			ranks:SetLabel(L["By guild rank"])
-			ranks:SetList(oRA:GetGuildRanks())
-			ranks:SetCallback("OnValueChanged", ranksCallback)
-			ranks:SetDisabled(factionDb.promoteAll or factionDb.promoteGuild)
-			ranks:SetFullWidth(true)
-
-			local guildRanks = oRA:GetGuildRanks()
 			ranks:SetList(guildRanks)
 			for i, v in next, guildRanks do
 				ranks:SetItemValue(i, guildRankDb[i])
 			end
+			ranks:SetCallback("OnValueChanged", ranksCallback)
+			ranks:SetDisabled(factionDb.promoteAll or factionDb.promoteGuild)
+			ranks:SetFullWidth(true)
 		end
 
 		local individualHeader = AceGUI:Create("Heading")
@@ -247,10 +236,15 @@ end
 do
 	local function shouldPromote(name)
 		if dontPromoteThisSession[name] then return false end
-		local guildMembers = oRA:GetGuildMembers()
-		if factionDb.promoteGuild and guildMembers[name] then return true
-		elseif guildMembers[name] and guildRankDb[guildMembers[name]] then return true
-		elseif util.inTable(factionDb.promotes, name) then return true
+		if UnitIsInMyGuild(name) then
+			if factionDb.promoteGuild then return true end
+			local rank = oRA:IsGuildMember(name)
+			if guildRankDb and guildRankDb[rank] then
+				return true
+			end
+		end
+		if util.inTable(factionDb.promotes, name) then
+			return true
 		end
 	end
 
@@ -278,7 +272,7 @@ do
 			if not IsEveryoneAssistant() then
 				for i = 1, GetNumGroupMembers() do
 					local name, rank = GetRaidRosterInfo(i)
-					if rank == 0 and shouldPromote(name) then
+					if name and rank == 0 and shouldPromote(name) then
 						promotes[name] = true
 					end
 				end
@@ -288,14 +282,17 @@ do
 			end
 		end
 	end
-	function module:OnGroupChanged(event, status, members)
-		updateDemoteButton()
+	function module:OnGroupChanged()
+		if demoteButton then
+			demoteButton:SetDisabled(not IsInRaid() or not UnitIsGroupLeader("player"))
+		end
 		queuePromotes()
 	end
 
 	function module:OnEnable()
 		self:OnGuildRanksUpdate(nil, oRA:GetGuildRanks())
 		self:RegisterEvent("GUILD_ROSTER_UPDATE")
+		self:ScheduleTimer("OnGroupChanged", 5)
 	end
 end
 
@@ -306,7 +303,7 @@ function module:GUILD_ROSTER_UPDATE()
 	end
 end
 
-function module:OnGuildRanksUpdate(event, guildRanks)
+function module:OnGuildRanksUpdate(_, guildRanks)
 	if ranks then
 		ranks:SetList(guildRanks)
 		for i, v in next, guildRanks do

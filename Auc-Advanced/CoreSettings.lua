@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: CoreSettings.lua 5378 2012-11-12 19:49:23Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: CoreSettings.lua 5461 2014-06-19 10:37:18Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	Settings GUI
@@ -83,6 +83,7 @@ local lib = AucAdvanced.Settings
 local private = {}
 local gui
 local Const = AucAdvanced.Const
+local Libraries = AucAdvanced.Libraries
 local UserSig = format("users.%s.%s", Const.PlayerRealm, Const.PlayerName)
 
 local aucPrint,decode,_,_,replicate,empty,_,_,_,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
@@ -93,6 +94,10 @@ function coremodule.OnLoad(addon)
 		private.CheckObsolete()
 	end
 end
+
+coremodule.Processors = {
+	gameactive = function() private.Activate() end,
+}
 
 local function getUserProfileName()
 	return AucAdvancedConfig[UserSig] or "Default"
@@ -403,7 +408,13 @@ function lib.GetSetting(setting, default)
 end
 
 function lib.Show()
-	lib.MakeGuiConfig()
+	if not gui then
+		lib.MakeGuiConfig()
+		-- check that MakeGuiConfig succeeded
+		if not gui then
+			return
+		end
+	end
 	gui:Show()
 end
 
@@ -412,18 +423,6 @@ function lib.Hide()
 		gui:Hide()
 	end
 end
-
---[[ disabled function: currently broken and must not be called
-function lib.UpdateGuiConfig()
-	if gui then
-		if gui:IsVisible() then
-			gui:Hide()
-		end
-		gui = nil -- note: the old gui cannot be garbage collected
-		lib.MakeGuiConfig()
-	end
-end
---]]
 
 function lib.Toggle()
 	if (gui and gui:IsShown()) then
@@ -434,10 +433,13 @@ function lib.Toggle()
 end
 
 function lib.MakeGuiConfig()
-	if gui then return end
+	if private.MakeGuiConfig then private.MakeGuiConfig() end
+end
+function private._MakeGuiConfig() -- Name mangled to block gui creation at first; will be corrected by private.Activate
+	private.MakeGuiConfig = nil -- only run once
 
 	local id, last, cont
-	local Configator = LibStub:GetLibrary("Configator")
+	local Configator = Libraries.Configator
 	gui = Configator:Create(setter, getter)
 	lib.Gui = gui
 	gui:AddCat("Core Options", nil, false)
@@ -660,8 +662,13 @@ function lib.MakeGuiConfig()
 	AucAdvanced.SendProcessorMessage("config", gui)
 end
 
-if LibStub then
-	local LibDataBroker = LibStub:GetLibrary("LibDataBroker-1.1", true)
+function private.Activate()
+	private.Activate = nil
+
+	private.MakeGuiConfig = private._MakeGuiConfig
+	private._MakeGuiConfig = nil
+
+	local LibDataBroker = Libraries.LibDataBroker
 	if LibDataBroker then
 		private.LDBButton = LibDataBroker:NewDataObject("AucAdvanced", {
 					type = "launcher",
@@ -749,4 +756,4 @@ function private.CheckObsolete()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreSettings.lua $", "$Rev: 5378 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CoreSettings.lua $", "$Rev: 5461 $")

@@ -1,7 +1,7 @@
 local mod = DBM:NewMod("PortalTimers", "DBM-Party-WotLK", 12)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 103 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 157 $"):sub(12, -3))
 mod:SetCreatureID(30658)
 mod:SetZone()
 
@@ -10,6 +10,7 @@ mod:RegisterEvents(
 	"UNIT_DIED",
 	"CHAT_MSG_MONSTER_YELL"
 )
+mod.noStatistics = true
 
 local warningPortalNow	= mod:NewAnnounce("WarningPortalNow", 2, 57687)
 local warningPortalSoon	= mod:NewAnnounce("WarningPortalSoon", 1, 57687)

@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(542, "DBM-Party-BC", 9, 252)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 526 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 540 $"):sub(12, -3))
 
 mod:SetCreatureID(23035)
 mod:RegisterCombat("combat")
@@ -13,6 +13,7 @@ mod:RegisterEventsInCombat(
 	"UNIT_HEALTH target focus" ,
 	"CHAT_MSG_MONSTER_EMOTE"
 )
+mod.onlyHeroic = true
 
 local warnBirds             = mod:NewSpellAnnounce("ej5253", 2, 32038)
 local warnStoned            = mod:NewAnnounce("warnStoned", 1, 32810, false)

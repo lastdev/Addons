@@ -8,7 +8,7 @@
 ## SavedVariables: DataStore_ReputationsDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
-## X-Curse-Packaged-Version: r28
+## X-Curse-Packaged-Version: 5.4.007
 ## X-Curse-Project-Name: DataStore_Reputations
 ## X-Curse-Project-ID: datastore_reputations
 ## X-Curse-Repository-ID: wow/datastore_reputations/mainline

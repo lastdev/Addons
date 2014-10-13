@@ -706,7 +706,7 @@ c.AddInterrupt("Super Axe Toss", nil, {
 })
 
 ------------------------------------------------------------------- Destruction
-local function getImmolateCastTime()
+local function getIncinerateCastTime()
 	local cast = c.GetCastTime("Incinerate")
 	local realDraft = s.Buff(c.GetID("Backdraft"), "player")
 	if a.Backdraft > 0 and not realDraft then
@@ -753,14 +753,14 @@ c.AddSpell("Immolate", nil, {
 		return math.max(
 				c.GetMyDebuffDuration("Immolate"), 
 				c.GetMyDebuffDuration("Immolate AoE")) 
-			< c.GetCastTime("Immolate") + getImmolateCastTime() + .1
+			< c.GetCastTime("Immolate") + getIncinerateCastTime() + .1
 	end
 })
 
 c.AddOptionalSpell("Immolate", "Pandemic", {
 	FlashID = { "Immolate", "Immolate AoE" },
 	CheckFirst = function(z)
-		return pandemicCheck("Immolate", z, getImmolateCastTime())
+		return pandemicCheck("Immolate", z, c.GetCastTime("Immolate"))
 	end
 })
 

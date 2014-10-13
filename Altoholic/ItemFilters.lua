@@ -129,7 +129,7 @@ end
 function ns:SetSearchedItem(itemID, itemLink)
 	local s = searchedItem
 	local _
-	
+
 	s.itemID = itemID
 	s.itemName, s.itemLink, s.itemRarity, s.itemLevel,	s.itemMinLevel, s.itemType, s.itemSubType, _, s.itemEquipLoc = GetItemInfo(itemLink or itemID)
 end

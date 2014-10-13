@@ -41,6 +41,7 @@ local AddonDB_Defaults = {
 				XPMax = nil,			-- max xp at current level 
 				RestXP = nil,
 				isResting = nil,		-- nil = out of an inn
+				isXPDisabled = nil,
 				
 				-- ** Guild  **
 				guildName = nil,		-- nil = not in a guild, as returned by GetGuildInfo("player")
@@ -79,8 +80,12 @@ local function OnPlayerGuildUpdate()
 	end
 end
 
+local function ScanXPDisabled()
+	addon.ThisCharacter.isXPDisabled = IsXPUserDisabled() or nil
+end
+
 local function OnPlayerUpdateResting()
-	addon.ThisCharacter.isResting = IsResting();
+	addon.ThisCharacter.isResting = IsResting()
 end
 
 local function OnPlayerXPUpdate()
@@ -92,7 +97,7 @@ local function OnPlayerXPUpdate()
 end
 
 local function OnPlayerMoney()
-	addon.ThisCharacter.money = GetMoney();
+	addon.ThisCharacter.money = GetMoney()
 end
 
 local function OnPlayerAlive()
@@ -111,6 +116,7 @@ local function OnPlayerAlive()
 	OnPlayerXPUpdate()
 	OnPlayerUpdateResting()
 	OnPlayerGuildUpdate()
+	ScanXPDisabled()
 end
 
 local function OnPlayerLogout()
@@ -252,6 +258,10 @@ end
 local function _IsResting(character)
 	return character.isResting
 end
+
+local function _IsXPDisabled(character)
+	return character.isXPDisabled
+end
 	
 local function _GetGuildInfo(character)
 	return character.guildName, character.guildRankName, character.guildRankIndex
@@ -284,6 +294,7 @@ local PublicMethods = {
 	GetRestXP = _GetRestXP,
 	GetRestXPRate = _GetRestXPRate,
 	IsResting = _IsResting,
+	IsXPDisabled = _IsXPDisabled,
 	GetGuildInfo = _GetGuildInfo,
 	GetPlayTime = _GetPlayTime,
 	GetLocation = _GetLocation,
@@ -310,6 +321,7 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetRestXP")
 	DataStore:SetCharacterBasedMethod("GetRestXPRate")
 	DataStore:SetCharacterBasedMethod("IsResting")
+	DataStore:SetCharacterBasedMethod("IsXPDisabled")
 	DataStore:SetCharacterBasedMethod("GetGuildInfo")
 	DataStore:SetCharacterBasedMethod("GetPlayTime")
 	DataStore:SetCharacterBasedMethod("GetLocation")
@@ -322,6 +334,8 @@ function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_MONEY", OnPlayerMoney)
 	addon:RegisterEvent("PLAYER_XP_UPDATE", OnPlayerXPUpdate)
 	addon:RegisterEvent("PLAYER_UPDATE_RESTING", OnPlayerUpdateResting)
+	addon:RegisterEvent("ENABLE_XP_GAIN", ScanXPDisabled)
+	addon:RegisterEvent("DISABLE_XP_GAIN", ScanXPDisabled)
 	addon:RegisterEvent("PLAYER_GUILD_UPDATE", OnPlayerGuildUpdate)				-- for gkick, gquit, etc..
 	addon:RegisterEvent("ZONE_CHANGED", ScanPlayerLocation)
 	addon:RegisterEvent("ZONE_CHANGED_NEW_AREA", ScanPlayerLocation)
@@ -342,6 +356,8 @@ function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_MONEY")
 	addon:UnregisterEvent("PLAYER_XP_UPDATE")
 	addon:UnregisterEvent("PLAYER_UPDATE_RESTING")
+	addon:UnregisterEvent("ENABLE_XP_GAIN")
+	addon:UnregisterEvent("DISABLE_XP_GAIN")
 	addon:UnregisterEvent("PLAYER_GUILD_UPDATE")
 	addon:UnregisterEvent("ZONE_CHANGED")
 	addon:UnregisterEvent("ZONE_CHANGED_NEW_AREA")

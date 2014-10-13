@@ -2,7 +2,6 @@ local addonName = "Altoholic"
 local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
-local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
 
 local INFO_REALM_LINE = 0
 local INFO_CHARACTER_LINE = 1
@@ -171,9 +170,7 @@ function ns:Update()
 	local VisibleLines = 14
 	local frame = "AltoholicFrameSummary"
 	local entry = frame.."Entry"
-	
-
-	
+		
 	local offset = FauxScrollFrame_GetOffset( _G[ frame.."ScrollFrame" ] );
 	local DisplayedCount = 0
 	local VisibleCount = 0
@@ -365,7 +362,7 @@ function ns:Level_OnEnter(frame)
 	if restXP and restXP > 0 then
 		AltoTooltip:AddLine(format("%s: %s", L["Rest XP"], GREEN..restXP),1,1,1)
 	end
-	
+
 	local suggestion = addon:GetSuggestion("Leveling", DS:GetCharacterLevel(character))
 	if suggestion then
 		AltoTooltip:AddLine(" ",1,1,1);
@@ -459,31 +456,31 @@ function addon:AiLTooltip()
 	local tooltip = AltoTooltip
 	
 	tooltip:AddLine(" ",1,1,1);
-	tooltip:AddLine(TEAL .. L["Level"] .. " 60",1,1,1);
-	tooltip:AddDoubleLine(YELLOW .. "58-63", WHITE .. "Tier 0")
-	tooltip:AddDoubleLine(YELLOW .. "66", WHITE .. "Tier 1")
-	tooltip:AddDoubleLine(YELLOW .. "76", WHITE .. "Tier 2")
-	tooltip:AddDoubleLine(YELLOW .. "86-92", WHITE .. "Tier 3")
-	tooltip:AddLine(" ",1,1,1);
+	-- tooltip:AddLine(TEAL .. L["Level"] .. " 60",1,1,1);
+	-- tooltip:AddDoubleLine(YELLOW .. "58-63", WHITE .. "Tier 0")
+	-- tooltip:AddDoubleLine(YELLOW .. "66", WHITE .. "Tier 1")
+	-- tooltip:AddDoubleLine(YELLOW .. "76", WHITE .. "Tier 2")
+	-- tooltip:AddDoubleLine(YELLOW .. "86-92", WHITE .. "Tier 3")
+	-- tooltip:AddLine(" ",1,1,1);
 	
-	tooltip:AddLine(TEAL .. L["Level"] .. " 70",1,1,1);
-	tooltip:AddDoubleLine(YELLOW .. "115", WHITE .. BZ["Karazhan"])
-	tooltip:AddDoubleLine(YELLOW .. "120", WHITE .. "Tier 4")
-	tooltip:AddDoubleLine(YELLOW .. "128", WHITE .. BZ["Zul'Aman"])
-	tooltip:AddDoubleLine(YELLOW .. "133", WHITE .. "Tier 5")
-	tooltip:AddDoubleLine(YELLOW .. "146-154", WHITE .. "Tier 6")
-	tooltip:AddLine(" ",1,1,1);
+	-- tooltip:AddLine(TEAL .. L["Level"] .. " 70",1,1,1);
+	-- tooltip:AddDoubleLine(YELLOW .. "115", WHITE .. GetMapNameByID(799))	-- "Karazhan"
+	-- tooltip:AddDoubleLine(YELLOW .. "120", WHITE .. "Tier 4")
+	-- tooltip:AddDoubleLine(YELLOW .. "128", WHITE .. GetMapNameByID(781))	-- "Zul'Aman"
+	-- tooltip:AddDoubleLine(YELLOW .. "133", WHITE .. "Tier 5")
+	-- tooltip:AddDoubleLine(YELLOW .. "146-154", WHITE .. "Tier 6")
+	-- tooltip:AddLine(" ",1,1,1);
 
 	tooltip:AddLine(TEAL .. L["Level"] .. " 80",1,1,1);
-	tooltip:AddDoubleLine(YELLOW .. "200", WHITE .. BZ["Naxxramas"] .. " (10)")
-	tooltip:AddDoubleLine(YELLOW .. "213", WHITE .. BZ["Naxxramas"] .. " (25)")
-	tooltip:AddDoubleLine(YELLOW .. "200-219", WHITE .. BZ["Trial of the Champion"])
-	tooltip:AddDoubleLine(YELLOW .. "219", WHITE .. BZ["Ulduar"] .. " (10)")
-	tooltip:AddDoubleLine(YELLOW .. "226-239", WHITE .. BZ["Ulduar"] .. " (25)")
-	tooltip:AddDoubleLine(YELLOW .. "232-258", WHITE .. BZ["Trial of the Crusader"] .. " (10)")
-	tooltip:AddDoubleLine(YELLOW .. "245-272", WHITE .. BZ["Trial of the Crusader"] .. " (25)")
-	tooltip:AddDoubleLine(YELLOW .. "251-271", WHITE .. BZ["Icecrown Citadel"] .. " (10)")
-	tooltip:AddDoubleLine(YELLOW .. "264-284", WHITE .. BZ["Icecrown Citadel"] .. " (25)")
+	tooltip:AddDoubleLine(YELLOW .. "200", WHITE .. GetMapNameByID(535) .. " (10)")	-- "Naxxramas"
+	tooltip:AddDoubleLine(YELLOW .. "213", WHITE .. GetMapNameByID(535) .. " (25)")
+	tooltip:AddDoubleLine(YELLOW .. "200-219", WHITE .. GetMapNameByID(542))		-- "Trial of the Champion"
+	tooltip:AddDoubleLine(YELLOW .. "219", WHITE .. GetMapNameByID(529) .. " (10)")	-- "Ulduar"
+	tooltip:AddDoubleLine(YELLOW .. "226-239", WHITE .. GetMapNameByID(529) .. " (25)")
+	tooltip:AddDoubleLine(YELLOW .. "232-258", WHITE .. GetMapNameByID(543) .. " (10)")		-- "Trial of the Crusader"
+	tooltip:AddDoubleLine(YELLOW .. "245-272", WHITE .. GetMapNameByID(543) .. " (25)")
+	tooltip:AddDoubleLine(YELLOW .. "251-271", WHITE .. GetMapNameByID(604) .. " (10)")		-- "Icecrown Citadel"
+	tooltip:AddDoubleLine(YELLOW .. "264-284", WHITE .. GetMapNameByID(604) .. " (25)")
 	tooltip:AddLine(" ",1,1,1);
 	
 	tooltip:AddLine(TEAL .. L["Level"] .. " 85",1,1,1);
@@ -491,6 +488,21 @@ function addon:AiLTooltip()
 	tooltip:AddDoubleLine(YELLOW .. "346", format("%s%s: %s", WHITE, CALENDAR_TYPE_DUNGEON, PLAYER_DIFFICULTY2))
 	tooltip:AddDoubleLine(YELLOW .. "359", format("%s%s: %s", WHITE, CALENDAR_TYPE_RAID, PLAYER_DIFFICULTY1))
 	tooltip:AddDoubleLine(YELLOW .. "372", format("%s%s: %s", WHITE, CALENDAR_TYPE_RAID, PLAYER_DIFFICULTY2))
+	
+	tooltip:AddLine(TEAL .. L["Level"] .. " 90",1,1,1);
+	tooltip:AddDoubleLine(YELLOW .. "358", format("%s%s: %s", WHITE, CALENDAR_TYPE_DUNGEON, PLAYER_DIFFICULTY1))
+	tooltip:AddDoubleLine(YELLOW .. "425", format("%s%s: %s", WHITE, GUILD_CHALLENGE_TYPE4, PLAYER_DIFFICULTY1))
+	tooltip:AddDoubleLine(YELLOW .. "435", format("%s%s: %s", WHITE, CALENDAR_TYPE_DUNGEON, PLAYER_DIFFICULTY2))
+	tooltip:AddDoubleLine(YELLOW .. "480", format("%s%s: %s", WHITE, GUILD_CHALLENGE_TYPE4, PLAYER_DIFFICULTY2))
+	tooltip:AddLine(" ",1,1,1);
+	tooltip:AddDoubleLine(YELLOW .. "460", format("%s%s: %s", WHITE, GetMapNameByID(896), PLAYER_DIFFICULTY3))	-- "Mogu'shan Vaults"
+	tooltip:AddDoubleLine(YELLOW .. "470", format("%s%s: %s", WHITE, GetMapNameByID(897), PLAYER_DIFFICULTY3))	-- "Heart of Fear"
+	tooltip:AddDoubleLine(YELLOW .. "470", format("%s%s: %s", WHITE, GetMapNameByID(886), PLAYER_DIFFICULTY3))	-- "Terrace of Endless Spring"
+	tooltip:AddDoubleLine(YELLOW .. "480", format("%s%s: %s", WHITE, GetMapNameByID(930), PLAYER_DIFFICULTY3))	-- "Throne of Thunder"
+	tooltip:AddDoubleLine(YELLOW .. "496", format("%s%s: %s", WHITE, GetMapNameByID(953), PLAYER_DIFFICULTY3))	-- "Siege of Ogrimmar"
+	tooltip:AddDoubleLine(YELLOW .. "510", format("%s%s: %s", WHITE, GetMapNameByID(953), "10"))
+	tooltip:AddDoubleLine(YELLOW .. "520", format("%s%s: %s", WHITE, GetMapNameByID(953), PLAYER_DIFFICULTY4))
+	tooltip:AddDoubleLine(YELLOW .. "530", format("%s%s: %s", WHITE, GetMapNameByID(953), "25"))
 end
 
 function ns:RightClickMenu_OnLoad()

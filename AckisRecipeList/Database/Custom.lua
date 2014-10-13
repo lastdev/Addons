@@ -4,8 +4,8 @@ Custom.lua
 ************************************************************************
 File date: 2014-02-14T05:23:40Z
 File hash: 04922c6
-Project hash: af8bb68
-Project version: 2.6.5
+Project hash: 5b35dab
+Project version: 3.0.5
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************

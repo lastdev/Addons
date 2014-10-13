@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(820, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11315 $"):sub(12, -3))
 mod:SetCreatureID(69017)--69070 Viscous Horror, 69069 good ooze, 70579 bad ooze (patched out of game, :\)
 mod:SetEncounterID(1574)
 mod:SetZone()
@@ -81,8 +81,8 @@ end
 
 function mod:PLAYER_TARGET_CHANGED()
 	local guid = UnitGUID("target")
-	if guid and (bit.band(guid:sub(1, 5), 0x00F) == 3 or bit.band(guid:sub(1, 5), 0x00F) == 5) then
-		local cId = tonumber(guid:sub(6, 10), 16)
+	if guid and self:IsCreatureGUID(guid) then
+		local cId = self:GetCIDFromGUID(guid)
 		if cId == 69070 and not bigOozeGUIDS[guid] and not UnitIsDead("target") then
 			local icon = 9 - bigOozeAlive--Start with skull for big ooze then subtrack from it based on number of oozes up to choose an unused icon
 			bigOozeGUIDS[guid] = true--NOW we add this ooze to the table now that we're done counting old ones
@@ -95,8 +95,8 @@ end
 
 function mod:UPDATE_MOUSEOVER_UNIT()
 	local guid = UnitGUID("mouseover")
-	if guid and (bit.band(guid:sub(1, 5), 0x00F) == 3 or bit.band(guid:sub(1, 5), 0x00F) == 5) then
-		local cId = tonumber(guid:sub(6, 10), 16)
+	if guid and self:IsCreatureGUID(guid) then
+		local cId = self:GetCIDFromGUID(guid)
 		if cId == 69070 and not bigOozeGUIDS[guid] and not UnitIsDead("mouseover") then
 			local icon = 9 - bigOozeAlive--Start with skull for big ooze then subtrack from it based on number of oozes up to choose an unused icon
 			bigOozeGUIDS[guid] = true--NOW we add this ooze to the table now that we're done counting old ones

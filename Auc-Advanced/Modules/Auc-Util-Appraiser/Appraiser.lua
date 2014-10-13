@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: Appraiser.lua 5427 2013-07-13 09:28:05Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: Appraiser.lua 5462 2014-06-19 11:01:56Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -103,7 +103,8 @@ end
 function lib.Processors.scanstats()
 	-- flush all caches
 	if private.frame then
-		private.frame.cache = {}
+		private.frame.olddistributioncache = private.frame.distributioncache
+		private.frame.distributioncache = {}
 	end
 	wipe(tooltipcache)
 end
@@ -439,7 +440,7 @@ function lib.GetOwnAuctionDetails()
 	local numBatchAuctions, totalAuctions = GetNumAuctionItems("owner");
 	if totalAuctions >0 then
 		for i=1, totalAuctions do
-			local name, _, count, _, _, _, _, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner  = AucAdvanced.GetAuctionItemInfo("owner", i)
+			local name, _, count, _, _, _, _, minBid, _, buyoutPrice, bidAmount = GetAuctionItemInfo("owner", i)
 			if name and (count>0) then
 				if not results[name] then
 					results[name] = {}
@@ -466,4 +467,4 @@ function lib.GetOwnAuctionDetails()
 end
 Stubby.RegisterEventHook("AUCTION_OWNED_LIST_UPDATE", "Auc-Util-Appraiser", lib.GetOwnAuctionDetails)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-Appraiser/Appraiser.lua $", "$Rev: 5427 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-Appraiser/Appraiser.lua $", "$Rev: 5462 $")

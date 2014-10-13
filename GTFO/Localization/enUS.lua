@@ -77,7 +77,6 @@ GTFOLocal =
 	AlertType_FriendlyFire = "Friendly Fire",
 	-- 4.3.1
 	UI_UnmuteDescription = "If you have the master sound muted, GTFO will temporarily turn on sound briefly to play GTFO sounds.",
-	UI_UnmuteDescription2 = "This requires the master volume slider to be higher than 0%.",
 	-- 4.6
 	Skada_AlertList = "GTFO Alert Types",
 	Skada_SpellList = "GTFO Spells",
@@ -91,4 +90,8 @@ GTFOLocal =
 	-- 4.19
 	UI_TrivialSlider = "Minimum % of HP",
 	UI_TrivialDescription2 = "Set the slider to the minimum % amount of HP damage taken for alerts to not be considered trivial.",
+	-- 4.32
+	UI_UnmuteDescription2 = "This requires the master volume (and selected channel) sliders to be higher than 0%.",
+	UI_SoundChannel = "Sound Channel",
+	UI_SoundChannelDescription = "This is the volume channel that GTFO alert sounds will attach themselves to.",
 }

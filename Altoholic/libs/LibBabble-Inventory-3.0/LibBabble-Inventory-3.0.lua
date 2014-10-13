@@ -1,6 +1,6 @@
 --[[
 Name: LibBabble-Inventory-3.0
-Revision: $Rev: 173 $
+Revision: $Rev: 177 $
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-inventory-3-0/
 Dependencies: None
@@ -8,7 +8,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-Inventory-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 173 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 177 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)
@@ -1117,8 +1117,8 @@ elseif GAME_LOCALE == "ptBR" then
 	Consumable = "Consumível",
 	Container = "Recipiente",
 	Cooking = "Culinária",
-	-- ["Cooking Bag"] = "",
-	-- Cosmetic = "",
+	["Cooking Bag"] = "Bolsa de Cozinhar", -- Needs review
+	Cosmetic = "Cosmético", -- Needs review
 	Critter = "Bicho", -- Needs review
 	Crossbow = "Besta",
 	Crossbows = "Bestas",
@@ -1473,8 +1473,8 @@ elseif GAME_LOCALE == "ruRU" then
 	Consumable = "Расходуемые",
 	Container = "Сумки",
 	Cooking = "Кулинария",
-	-- ["Cooking Bag"] = "",
-	-- Cosmetic = "",
+	["Cooking Bag"] = "Сумка повара",
+	Cosmetic = "Косметика",
 	Critter = "Существа",
 	Crossbow = "Арбалет",
 	Crossbows = "Арбалеты",

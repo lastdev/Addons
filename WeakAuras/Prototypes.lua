@@ -9,6 +9,9 @@ local bit_band, bit_lshift, bit_rshift = bit.band, bit.lshift, bit.rshift
 local WeakAuras = WeakAuras;
 local L = WeakAuras.L;
 
+-- @patch 6.0 compatibility quick fix
+function GetMoPTalentInfo(t) return GetTalentInfo(ceil(t/3), (t-1)%3 +1, GetActiveSpecGroup()) end
+
 WeakAuras.function_strings = {
   count = [[
 return function(count)
@@ -381,6 +384,12 @@ WeakAuras.load_prototype = {
       init = "false"
     },
     {
+      name = "petbattle",
+      display = L["In Pet Battle"],
+      type = "tristate",
+      init = "arg"
+    },
+    {
       name = "name",
       display = L["Player Name"],
       type = "string",
@@ -465,7 +474,8 @@ WeakAuras.load_prototype = {
           end
         end
       end,
-      test = "select(5, GetTalentInfo(%d)) == true"
+      -- @patch 6.0 compatibility quick fix
+      test = MAX_NUM_TALENTS and "select(5, GetTalentInfo(%d)) == true" or "select(4, GetMoPTalentInfo(%d)) == true"
     },
     {
       name = "level",
@@ -1680,22 +1690,22 @@ WeakAuras.event_prototypes = {
     end,
     hasItemID = true
   },
-	["GTFO"] = {
-		type = "event",
-		events = {
-	  	"GTFO_DISPLAY"
-		},
-		name = L["GTFO Alert"],
-		args = {
-			{
-		  	name = "alertType",
-		  	display = "Alert Type",
-		  	type = "select",
-		  	init = "arg",
-		  	values = "gtfo_types"
-		  },
-	  },
-	},
+  ["GTFO"] = {
+    type = "event",
+    events = {
+      "GTFO_DISPLAY"
+    },
+    name = L["GTFO Alert"],
+    args = {
+      {
+        name = "alertType",
+        display = "Alert Type",
+        type = "select",
+        init = "arg",
+        values = "gtfo_types"
+      },
+    },
+  },
   ["Global Cooldown"] = {
     type = "status",
     events = {

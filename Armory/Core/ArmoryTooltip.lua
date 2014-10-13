@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 607 2013-12-11T12:16:33Z
+    Revision: 638 2014-10-12T08:05:02Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -73,6 +73,7 @@ local knownBy;
 local fetched;
 
 local accountBoundPattern = "^"..ITEM_BIND_TO_BNETACCOUNT.."$";
+local levelPattern = "^"..ITEM_LEVEL:gsub("(%%d)", "(.+)").."$";
 local minLevelPattern = "^"..ITEM_MIN_LEVEL:gsub("(%%d)", "(.+)").."$";
 local rankPattern = "^"..ITEM_MIN_SKILL:gsub("%d%$", ""):gsub("%%s", "(.+)"):gsub("%(%%d%)", "%%((%%d+)%%)").."$";
 local repPattern = "^"..ITEM_REQ_REPUTATION:gsub("%-", "%%-"):gsub("%%s", "(.+)").."$";
@@ -83,14 +84,17 @@ local reagentPattern = "\n"..ITEM_REQ_SKILL:gsub("%d%$", ""):gsub("%%s", "(.+)")
 
 local function GetRequirements(tooltip)
     local text, standing, reagents;
-    local reqLevel, reqProfession, reqRank, reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, accountBound;
+    local reqLevel, reqProfession, reqRank, reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, accountBound, realName;
 
     for i = 2, tooltip:NumLines() do
         text = Armory:GetTooltipText(tooltip, i);
         if ( (text or "") ~= "" ) then
 			if ( text:find(accountBoundPattern) ) then
 				accountBound = true;
-				
+
+			elseif ( text:find(levelPattern) ) then
+                realName = strtrim(Armory:GetTooltipText(tooltip, i - 1) or "");
+
 			elseif ( text:find(minLevelPattern) ) then
                 reqLevel = text:match(minLevelPattern);
                 
@@ -123,7 +127,7 @@ local function GetRequirements(tooltip)
         end
     end
     
-    return tonumber(reqLevel), reqProfession, tonumber(reqRank), reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, reagents, accountBound;
+    return tonumber(reqLevel), reqProfession, tonumber(reqRank), reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, reagents, accountBound, realName;
 end
 
 local itemCandidates = {};
@@ -202,12 +206,14 @@ local function EnhanceItemTooltip(tooltip, id, link)
         local _, _, _, itemLevel, minLevel, itemType, itemSubType, _, equipLoc = GetItemInfo(id);
 
         if ( itemType == ARMORY_RECIPE ) then
-            local _, reqProfession, reqRank, reqReputation, reqStanding, reqSkill, _, _, reagents = GetRequirements(tooltip);
+            local _, reqProfession, reqRank, reqReputation, reqStanding, reqSkill, _, _, reagents, _, realName = GetRequirements(tooltip);
             -- Recipe tooltips are built in stages (last stage shows rank)
             if ( not reqRank ) then
                 return;
             end
-            knownBy, hasSkill, canLearn = Armory:GetRecipeAltInfo(name, link, reqProfession, reqRank, reqReputation, reqStanding, reqSkill);
+            local recipeType, recipeName = name:match("^(.-): (.+)$");
+
+            knownBy, hasSkill, canLearn = Armory:GetRecipeAltInfo(realName or recipeName, link, reqProfession or recipeType, reqRank, reqReputation, reqStanding, reqSkill);
 
         elseif ( itemType == ARMORY_GLYPH ) then
             knownBy, hasSkill, canLearn = Armory:GetGlyphAltInfo(name, itemSubType, minLevel);

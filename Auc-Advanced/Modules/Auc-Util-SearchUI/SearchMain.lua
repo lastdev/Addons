@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: SearchMain.lua 5373 2012-10-06 06:23:34Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: SearchMain.lua 5452 2014-01-18 19:02:51Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This Addon provides a Search tab on the AH interface, which allows
@@ -1353,7 +1353,10 @@ function private.MakeGuiConfig()
 			local itemName
 			local header, id = strsplit(":", link)
 			if header:sub(-9) == "battlepet" then
-				itemName = C_PetJournal.GetPetInfoBySpeciesID(tonumber(id) or 0)
+				id = tonumber(id)
+				if id then
+					itemName = C_PetJournal.GetPetInfoBySpeciesID(id)
+				end
 			else
 				itemName = GetItemInfo(link)
 			end
@@ -2182,4 +2185,4 @@ end
 private.updater = CreateFrame("Frame", nil, UIParent)
 private.updater:SetScript("OnUpdate", private.OnUpdate)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5373 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5452 $")

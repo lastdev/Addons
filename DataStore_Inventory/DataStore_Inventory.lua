@@ -59,7 +59,7 @@ end
 local function IsEnchanted(link)
 	if not link then return end
 	
-	if not string.find(link, "0:0:0:0:0:0") then	-- only check 6 zeroes, 7th is the UniqueID, which is irrelevant for us
+	if not string.find(link, "item:%d+:0:0:0:0:0:0:%d+:%d+:0:0") then	-- 7th is the UniqueID, 8th LinkLevel which are irrelevant
 		-- enchants/jewels store values instead of zeroes in the link, if this string can't be found, there's at least one enchant/jewel
 		return true
 	end
@@ -154,6 +154,8 @@ local function ScanInventorySlot(slot)
 	local inventory = addon.ThisCharacter.Inventory
 	local link = GetInventoryItemLink("player", slot)
 
+	local currentContent = inventory[slot]
+	
 	if link then 
 		if IsEnchanted(link) then		-- if there's an enchant, save the full link
 			inventory[slot] = link
@@ -162,6 +164,10 @@ local function ScanInventorySlot(slot)
 		end
 	else
 		inventory[slot] = nil
+	end
+	
+	if currentContent ~= inventory[slot] then		-- the content of this slot has actually changed since last scan
+		addon:SendMessage("DATASTORE_INVENTORY_SLOT_UPDATED", slot)
 	end
 end
 
@@ -213,7 +219,7 @@ local function _GetInventoryItemCount(character, searchedID)
 end
 	
 local function _GetAverageItemLevel(character)
-	return character.averageItemLvl
+	return character.averageItemLvl, character.overallAIL
 end
 
 local sentRequests		-- recently sent requests
@@ -352,7 +358,6 @@ end
 
 
 local PT = LibStub("LibPeriodicTable-3.1")
-local BZ = LibStub("LibBabble-Zone-3.0"):GetUnstrictLookupTable()
 local BB = LibStub("LibBabble-Boss-3.0"):GetUnstrictLookupTable()
 
 local DataSources = {
@@ -369,10 +374,14 @@ function addon:GetSource(searchedID)
 		if source then
 			local _, instance, boss = strsplit(".", source)		-- ex: "InstanceLoot.Gnomeregan.Techbot"
 			
-			instance = BZ[instance] or instance
-			if v == "InstanceLootHeroic" then
-				instance = format("%s (%s)", instance, L["Heroic"])
-			elseif v == "CurrencyItems" then
+			-- 21/07/2014: removed the "Heroic" information from the source info, as it is now shown on the item anyway
+			-- This removed the Babble-Zone dependancy
+			
+			-- instance = BZ[instance] or instance
+			-- if v == "InstanceLootHeroic" then
+				-- instance = format("%s (%s)", instance, L["Heroic"])
+								
+			if v == "CurrencyItems" then
 				-- for currency items, there will be no "boss" value, let's return the quantity instead
 				boss = info.."x"
 			end

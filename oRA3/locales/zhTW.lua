@@ -22,6 +22,8 @@ L.showHelpTextsDesc = "oRA3介面充滿幫助性的文字來引導將要做什�
 L["Ensure guild repairs are enabled for all ranks present in raid"] = "為所有在團隊裡出席的階級啟用公會修裝"
 L.ensureRepairDesc = "如果你是公會會長，任何時候你加入到團隊且是隊長或是被提升，你可以啟用公會修裝直到團隊結束(最多300g)。萬一你離開團隊，設定就會被還原到原始狀態|cffff4411預防你在團隊期間不會破產。|r"
 L.repairEnabled = "啟用%s公會修裝直到團隊結束。"
+L["Show role icons on raid pane"] = true
+L.showRoleIconsDesc = "Show role icons and the total count for each role on the Blizzard raid pane. You will need to reopen the raid pane for changes to this setting to take effect."
 
 L["Slash commands"] = "/指令"
 L.slashCommands = [[
@@ -45,7 +47,7 @@ L["Ready"] = "準備好"
 L["Not Ready"] = "未準備好"
 L["No Response"] = "未確認"
 L["Offline"] = "離線"
-L["Play the ready check sound using the Master sound channel when a ready check is performed. This will play the sound while \"Sound Effects\" is disabled and at a higher volume."] = true
+L["Play the ready check sound using the Master sound channel when a ready check is performed. This will play the sound while \"Sound Effects\" is disabled and at a higher volume."] = "當準備確認進行中時使用主要聲音頻道播放準備確認音效。即使\"音效\"被禁用也會也會撥放"
 L["Show window"] = "顯示視窗"
 L["Show the window when a ready check is performed."] = "當準備確認執行顯示視窗。"
 L["Hide window when done"] = "完成時隱藏"
@@ -81,7 +83,7 @@ L["Invite zone"] = "區域邀請"
 L["Invite everyone in your guild who are in the same zone as you."] = "邀請在相同區域的公會成員。"
 L["Guild rank invites"] = "階級邀請"
 L["Clicking any of the buttons below will invite anyone of the selected rank AND HIGHER to your group. So clicking the 3rd button will invite anyone of rank 1, 2 or 3, for example. It will first post a message in either guild or officer chat and give your guild members 10 seconds to leave their groups before doing the actual invites."] = "自動邀請階級高於等於所選等級的公會成員，按下該按鈕會自動在公會和幹部頻道發送要求10秒內離隊待組的消息，10秒後自動開始組人。"
-L["Only invite on keyword if in a raid group"] = true
+L["Only invite on keyword if in a raid group"] = "如果在團隊隊伍只使用關鍵字邀請"
 
 -- Promote module
 L["Demote everyone"] = "降級所有人"
@@ -118,7 +120,7 @@ L["Toggle whether the cooldown display should never show your own cooldowns. For
 L["Cooldowns"] = "冷卻"
 L["Right-Click me for options!"] = "右鍵點擊設定"
 L["Bar Settings"] = "計時條設定"
-L["Text Settings"] = true
+L["Text Settings"] = "文字設定"
 L["Spawn test bar"] = "顯示測試計時條"
 L["Use class color"] = "使用職業顏色"
 L["Custom color"] = "自訂顏色"
@@ -131,14 +133,14 @@ L["Duration"] = "時間"
 L["Unit name"] = "名字"
 L["Spell name"] = "技能"
 L["Short Spell name"] = "技能縮寫"
-L["Label Font"] = true
-L["Label Font Size"] = true
+L["Label Font"] = "標記字型"
+L["Label Font Size"] = "標記字型大小"
 L["Label Align"] = "標記對齊"
 L["Left"] = "左"
 L["Right"] = "右"
 L["Center"] = "中"
-L["Duration Font"] = true
-L["Duration Font Size"] = true
+L["Duration Font"] = "時間字型"
+L["Duration Font Size"] = "時間字型大小"
 L["Grow up"] = "向上遞增"
 
 -- Zone module

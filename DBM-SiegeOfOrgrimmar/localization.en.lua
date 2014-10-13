@@ -5,10 +5,6 @@ local L
 ---------------
 L= DBM:GetModLocalization(852)
 
-L:SetMiscLocalization({
-	Victory			= "Ah, you have done it!  The waters are pure once more."
-})
-
 ---------------------------
 -- The Fallen Protectors --
 ---------------------------
@@ -101,7 +97,7 @@ L:SetWarningLocalization({
 })
 
 L:SetOptionLocalization({
-	warnDefensiveStanceSoon		= "Show pre-warning countdown for $spell:143593 (5s before)"
+	warnDefensiveStanceSoon		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.prewarn:format(143593)
 })
 
 L:SetMiscLocalization({
@@ -210,7 +206,8 @@ L:SetOptionLocalization({
 L:SetMiscLocalization({
 	wasteOfTime			= "It is not too late, Garrosh. Lay down the mantle of Warchief. We can end this here, now, with no more bloodshed.",
 	NoReduce			= "No damage reduction",
-	MaliceFadeYell		= "Malice fading on %s (%d)"
+	MaliceFadeYell		= "Malice fading on %s (%d)",
+	phase3End			= "You think you have WON?"
 })
 
 -------------

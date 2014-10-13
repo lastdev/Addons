@@ -1,6 +1,11 @@
 CHANGELOG
 ---------------------------------------
 
+4.4.1
+========
+Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10852
+- GATH-215: Gatherer processes shared gathers sent by player
+
 4.4.0
 ========
 Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10755
@@ -595,4 +600,4 @@ Deleted a rogue print2 statement.
 - Added giant clam treasure
 
 --------------
-Revision: $Id: ChangeLog.txt 1104 2013-09-10 07:02:50Z Esamynn $
+Revision: $Id: ChangeLog.txt 1108 2014-02-23 01:05:52Z Esamynn $

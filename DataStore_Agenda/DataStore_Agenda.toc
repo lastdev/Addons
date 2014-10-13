@@ -8,7 +8,7 @@
 ## SavedVariables: DataStore_AgendaDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
-## X-Curse-Packaged-Version: r12
+## X-Curse-Packaged-Version: r14
 ## X-Curse-Project-Name: DataStore_Agenda
 ## X-Curse-Project-ID: datastore_agenda
 ## X-Curse-Repository-ID: wow/datastore_agenda/mainline

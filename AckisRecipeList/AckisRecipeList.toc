@@ -14,7 +14,7 @@
 #@debug@
 # ## Title: Ackis Recipe List - Development Version
 #@end-debug@
-## X-Curse-Packaged-Version: 2.6.5
+## X-Curse-Packaged-Version: 3.0.5
 ## X-Curse-Project-Name: Ackis Recipe List
 ## X-Curse-Project-ID: arl
 ## X-Curse-Repository-ID: wow/arl/mainline
@@ -37,13 +37,12 @@
 #@end-debug@
 
 ## Author: Ackis, Torhal, Zhinjio
-## X-Donate: http://www.wowace.com/addons/arl/pages/donations/
 
 ## Interface: 50400
 ## X-Compatible-With: 50400
-## Version: 2.6.5
-## X-Revision: af8bb68
-## X-Date: 2014-02-11T06:09:28Z
+## Version: 3.0.5
+## X-Revision: 5b35dab
+## X-Date: 2014-08-05T23:43:09Z
 
 ## X-Credits: FGWarmonger, Kagaro, Speeddymon, Xinhuan, Aesir, BWMerlin, everyone who translated stuff and more!
 ## X-Category: Tradeskill

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HyjalWaveTimers", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 504 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 540 $"):sub(12, -3))
 
 mod:RegisterEvents(
 	"GOSSIP_SHOW",
@@ -10,6 +10,7 @@ mod:RegisterEvents(
 	"UNIT_DIED",
 	"SPELL_AURA_APPLIED"
 )
+mod.noStatistics = true
 
 local warnWave			= mod:NewAnnounce("WarnWave", 1)
 local warnCannibalize	= mod:NewSpellAnnounce(31538, 2)

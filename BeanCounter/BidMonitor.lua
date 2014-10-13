@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: BidMonitor.lua 5428 2013-07-13 09:31:17Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: BidMonitor.lua 5457 2014-06-11 11:20:23Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	BidMonitor - Records bids posted in the Auctionhouse
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.18/BeanCounter/BidMonitor.lua $","$Rev: 5428 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.20/BeanCounter/BidMonitor.lua $","$Rev: 5457 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local libName = "BeanCounter"
 local libType = "Util"
@@ -44,20 +44,8 @@ end
 -------------------------------------------------------------------------------
 -- Called after PlaceAuctionBid()
 -------------------------------------------------------------------------------
--- Hybrid mode GetAuctionItemInfo for transition from WoW 5.3 to 5.4
--- Temporary - do not use in new code!
-local _,_,_,toc = GetBuildInfo()
-local hybridGetAuctionItemInfo
-if toc < 50400 then
-	hybridGetAuctionItemInfo = GetAuctionItemInfo
-else
-	function hybridGetAuctionItemInfo(...)
-		local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName, saleStatus, itemId, hasAllInfo =  GetAuctionItemInfo(...)
-		return name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner, saleStatus, itemId, hasAllInfo
-	end
-end
 function private.postPlaceAuctionBidHook(_, _, listType, index, bid)
-	local name, texture, count, quality, canUse, level, _, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner = hybridGetAuctionItemInfo(listType, index)
+	local name, texture, count, quality, canUse, level, _, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner = GetAuctionItemInfo(listType, index)
 	local itemLink = GetAuctionItemLink(listType, index)
 	local timeLeft = GetAuctionItemTimeLeft(listType, index)
 	if (name and count and bid) then

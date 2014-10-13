@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(817, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11365 $"):sub(12, -3))
 mod:SetCreatureID(68078, 68079, 68080, 68081)--Ro'shak 68079, Quet'zal 68080, Dam'ren 68081, Iron Qon 68078
 mod:SetEncounterID(1559)
 mod:SetMainBossID(68078)
@@ -41,8 +41,8 @@ local warnPhase4						= mod:NewPhaseAnnounce(4)
 local warnRisingAnger					= mod:NewStackAnnounce(136323, 2, nil, false)
 local warnFistSmash						= mod:NewCountAnnounce(136146, 3)
 
-local specWarnImpale					= mod:NewSpecialWarningStack(134691, mod:IsTank(), 2)
-local specWarnImpaleOther				= mod:NewSpecialWarningTarget(134691, mod:IsTank())
+local specWarnImpale					= mod:NewSpecialWarningStack(134691, nil, 2)
+local specWarnImpaleOther				= mod:NewSpecialWarningTaunt(134691)
 local specWarnThrowSpear				= mod:NewSpecialWarningSpell(134926, nil, nil, nil, 2)
 local specWarnThrowSpearYou				= mod:NewSpecialWarningYou(134926)
 local specWarnThrowSpearNear			= mod:NewSpecialWarningClose(134926)

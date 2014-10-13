@@ -4,6 +4,6 @@
 ## Notes: HealBot Localization for itIT
 ## RequiredDeps: HealBot
 ## LoadOnDemand: 1
-## Version: 5.4.0.6
+## Version: 5.4.8.3
 
 HealBot_Localization.it.lua

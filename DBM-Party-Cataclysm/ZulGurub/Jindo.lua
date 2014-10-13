@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(185, "DBM-Party-Cataclysm", 11, 76)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
 mod:SetCreatureID(52148)
 mod:SetZone()
 mod:SetUsedIcons(8)
@@ -15,6 +15,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_CAST_SUCCESS"
 )
+mod.onlyHeroic = true
 
 local warnDeadzone				= mod:NewSpellAnnounce(97170, 3)
 local warnShadowsOfHakkar		= mod:NewCastAnnounce(97172, 4)

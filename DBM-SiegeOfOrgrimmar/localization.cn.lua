@@ -6,10 +6,6 @@ local L
 ---------------
 L= DBM:GetModLocalization(852)
 
-L:SetMiscLocalization({
-	Victory	= "啊，你成功了!水又再次纯净了。"
-})
-
 ---------------------------
 -- The Fallen Protectors --
 ---------------------------
@@ -92,10 +88,6 @@ L= DBM:GetModLocalization(850)
 
 L:SetWarningLocalization({
 	warnDefensiveStanceSoon	= "%d秒后防御姿态"
-})
-
-L:SetOptionLocalization({
-	warnDefensiveStanceSoon	= "为$spell:143593(五秒前)显示预先警告倒数"
 })
 
 L:SetMiscLocalization({

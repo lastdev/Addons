@@ -158,7 +158,7 @@ local function BuildView()
 	-- 2) sort the highest level
 	table.sort(view, PrimaryLevelSort[viewSortField])
 	
-	-- 3) add the alts whenver applicable
+	-- 3) add the alts whenever applicable
 	for index, line in ipairs(view) do
 		if line.lineType == ALTO_MAIN_LINE then
 			local alts = DataStore:GetGuildMemberAlts(line.name)
@@ -188,6 +188,7 @@ local function BuildView()
 	
 	for i=1, GetNumGuildMembers(true) do		-- browse all players (online & offline)
 		local member = GetGuildRosterInfo(i)
+		member = Ambiguate(member, "guild")		
 		if not onlineMembers[member] then
 			offlineMembers[ #offlineMembers + 1 ] = member
 		end		

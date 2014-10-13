@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Simplified Auction Posting
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: SimpFrame.lua 5415 2013-06-11 15:18:58Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: SimpFrame.lua 5452 2014-01-18 19:02:51Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a simple dialog for
@@ -650,19 +650,24 @@ function private.LoadItemLink(itemLink, size)
 		end
 		if linkType == "item" then
 			local itemName, _, itemRarity, _, _, _, _, _, _, itemTexture = GetItemInfo(itemLink)
-			if not itemName then return private.LoadItemLink() end
 			name = itemName
 			quality = itemRarity
 			texture = itemTexture
 			itemLink = SanitizeLink(itemLink)
 		elseif linkType == "battlepet" then
 			local _, speciesID, _, petQuality = strsplit(":", itemLink)
-			local petName, petIcon = C_PetJournal.GetPetInfoBySpeciesID(tonumber(speciesID) or 0)
-			if not petName then return private.LoadItemLink() end
-			name = petName
-			texture = petIcon
-			quality = tonumber(petQuality) or -1
+			speciesID = tonumber(speciesID)
+			if speciesID then
+				local petName, petIcon = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
+				name = petName
+				texture = petIcon
+				quality = tonumber(petQuality) or -1
+			end
 		end
+		if not name then
+			return private.LoadItemLink()
+		end
+
 		frame.CurItem.link = itemLink
 		frame.CurItem.name = name
 		frame.icon.itemLink = itemLink
@@ -874,7 +879,6 @@ function private.Refresh(background)
 	if not link then return end
 	if strmatch(link, "|Hitem:") then
 		local itemName, _, itemRarity, _, itemMinLevel, itemType, itemSubType = GetItemInfo(link)
-		if not itemName then return end
 		name = itemName
 		minLevel = itemMinLevel
 		typeId = Const.CLASSESREV[itemType]
@@ -885,12 +889,12 @@ function private.Refresh(background)
 	else
 		local lType, speciesID, _, petQuality = strsplit(":", link)
 		lType = lType:sub(-9)
+		speciesID = tonumber(speciesID)
 		if lType == "battlepet" and speciesID then
 			-- it's a pet
 			local _,_,_,_,iMin, iType = GetItemInfo(82800) -- Pet Cage
 			-- all caged pets should have the default pet name (custom names are removed when caging)
-			local petName, _, petType = C_PetJournal.GetPetInfoBySpeciesID(tonumber(speciesID))
-			if not petName then return end
+			local petName, _, petType = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
 			name = petName
 			minLevel = iMin
 			typeId = Const.CLASSESREV[iType]
@@ -898,6 +902,7 @@ function private.Refresh(background)
 			quality = tonumber(petQuality)
 		end
 	end
+	if not name then return end
 	aucPrint(("Refreshing view of {{%s}}"):format(name))--Refreshing view of {{%s}}
 	if background and type(background) == 'boolean' then
 		StartPushedScan(name, minLevel, minLevel, nil, typeId, subtypeId, nil, quality)
@@ -1360,4 +1365,4 @@ function private.CreateFrames()
 	frame:RegisterEvent("BAG_UPDATE")
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 5415 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 5452 $")

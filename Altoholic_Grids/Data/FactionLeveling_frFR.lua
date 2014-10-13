@@ -3,12 +3,9 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 
-local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
-
 local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
 local YELLOW	= "|cFFFFFF00"
-
 
 addon.FactionLeveling = {
 
@@ -23,7 +20,7 @@ addon.FactionLeveling = {
 	-- 42000 = "Exalt\195\169"
 
 	-- Outland factions: source: http://www.mmo-champion.com/
-	[BF["The Aldor"]] = {
+	[932] = {		-- "The Aldor"
 		[0] = WHITE .. "[Glande \195\160 venin de croc-d'effroi]|r +250 rep\n\n"
 				.. YELLOW .. "R\195\180deuse croc-d'effroi,\nVeuve croc-d'effroi\n"
 				.. WHITE .. "(For\195\170t de Terrokar)",
@@ -31,7 +28,7 @@ addon.FactionLeveling = {
 		[42000] = WHITE .. "[Marque de Sargeras]|r +25 rep par marque\n"
 				.. GREEN .. "[Arme gangren\195\169e]|r +350 rep (+1 [Poussi\195\168re sacr\195\169e])"
 	},
-	[BF["The Scryers"]] = {
+	[934] = {		-- "The Scryers"
 		[0] = WHITE .. "[Oeil de basilic tremp\195\169caille]|r +250 rep\n\n"
 				.. YELLOW .. "P\195\169trificateur Echine-de-fer,\nD\195\169voreur Tremp\195\169caille,\nBasilic Tremp\195\169caille\n"
 				.. WHITE .. "(For\195\170t de Terrokar)",
@@ -39,7 +36,7 @@ addon.FactionLeveling = {
 		[42000] = WHITE .. "[Chevali\195\168re Solfurie]|r +25 rep par chevali\195\168re\n"
 				.. GREEN .. "[Tome des arcanes]|r +350 rep (+1 [Rune des arcanes])"
 	},
-	[BF["Netherwing"]] = {
+	[1015] = {	-- "Netherwing"
 		[3000] = "\n"
 				.. YELLOW .. "Une mort lente (Journali\195\168re)|r 250 rep\n"
 				.. YELLOW .. "Du pollen de pruin\195\169ante (Journali\195\168re)|r 250 rep\n"
@@ -59,7 +56,7 @@ addon.FactionLeveling = {
 		[42000] = "r\195\169p\195\169ter cette qu\195\170te:\n\n"
 				.. YELLOW .. "Le plus mortel des pi\195\168ges (Journali\195\168re) (groupe de 3)|r 500 rep"
 	},
-	[BF["Honor Hold"]] = {
+	[946] = {		-- "Honor Hold"
 		[9000] = "\n" 
 				.. YELLOW .. "Qu\195\170tes de la p\195\169ninsule des flammes infernales\n"
 				.. GREEN .. "Faire l'instance : Remparts des flammes infernales |r(Normal)\n"
@@ -69,7 +66,7 @@ addon.FactionLeveling = {
 				.. GREEN .. "Faire l'instance : Remparts des flammes infernales |r(H\195\169roïque)\n"
 				.. GREEN .. "Faire l'instance : La fournaise du sang |r(H\195\169roïque)"
 	},
-	[BF["Thrallmar"]] = {
+	[947] = {		-- "Thrallmar"
 		[9000] = "\n" 
 				.. YELLOW .. "Qu\195\170tes de la p\195\169ninsule des flammes infernales\n"
 				.. GREEN .. "Faire l'instance : Remparts des flammes infernales |r(Normal)\n"
@@ -79,7 +76,7 @@ addon.FactionLeveling = {
 				.. GREEN .. "Faire l'instance : Remparts des flammes infernales |r(H\195\169roïque)\n"
 				.. GREEN .. "Faire l'instance : La fournaise du sang |r(H\195\169roïque)"
 	},
-	[BF["Cenarion Expedition"]] = {
+	[942] = {		-- "Cenarion Expedition"
 		[3000] = "\n" 
 				.. WHITE .. "Tuer les Nagas Sombrecr\195\170te et Ecaille-sanglante (+5 rep)\n"
 				.. YELLOW .. "Qu\195\170tes dans le Mar\195\169cage de Zangar\n"
@@ -94,18 +91,18 @@ addon.FactionLeveling = {
 				.. GREEN .. "Faire l'instance : Les enclos aux esclaves |r(Normal)\n"
 				.. "Faire n'importe quelle instance du " .. GREEN .. "R\195\169servoir de Glissecroc|r (H\195\169roïque)"
 	},
-	[BF["Keepers of Time"]] = {
+	[989] = {		-- "Keepers of Time"
 		[42000] = "\n" 
 				.. "|rFaire les instances " .. GREEN .. "Les Contreforts d'Hautebrande d'antan|r et " .. GREEN .. "Le noir mar\195\169cage\n\n"
 				.. YELLOW .. "Garder les qu\195\170tes pour le plus tard possible:\n s\195\169rie de qu\195\170tes du Hautebrande d'antan = 5000 rep\ns\195\169rie de qu\195\170tes du noir mar\195\169cage = 8000 rep"
 	},
-	[BF["The Sha'tar"]] = {
+	[935] = {		-- "The Sha'tar"
 		[42000] = "\n" 
 				.. GREEN .. "Faire l'instance : La Botanica |r(Normal et H\195\169roïque)\n"
 				.. GREEN .. "Faire l'instance : Le Mechanar |r(Normal et H\195\169roïque)\n"
 				.. GREEN .. "Faire l'instance : L'Arcatraz |r(Normal et H\195\169roïque)\n"
 	}, 
-	[BF["Lower City"]] = {
+	[1011] = {		-- "Lower City"
 		[9000] = "\n" 
 				.. WHITE .. "Rendre les [Plume d'Arakkoa] x30 (+250 rep)\n"
 				.. GREEN .. "Faire l'instance : Labyrinthe des ombres |r(Normal)\n"
@@ -116,7 +113,7 @@ addon.FactionLeveling = {
 				.. GREEN .. "Faire l'instance : Cryptes Auchenai |r(H\195\169roïque)\n"
 				.. GREEN .. "Faire l'instance : Les salles de Sethekk |r(H\195\169roïque)"
 	}, 
-	[BF["The Consortium"]] = {
+	[933] = {		-- "The Consortium"
 		[3000] = "\n" 
 				.. "|rRendre les [Fragment de cristal d'Oshu'gun] +250 rep\n"
 				.. "Rendre les [Paire de d\195\169fenses d'ivoire] +250 rep\n\n"

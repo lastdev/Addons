@@ -97,43 +97,49 @@ local function GuildWhisper(player, messageType, ...)
 	end
 end
 
-local mailAttachments
+local function HasHeirloomAttachment()
+	local link, rarity, _
 
-local function ReadMailAttachments(mailIndex)
-	-- reads the attachments of a mail that is about to be sent or returned
-	
-	wipe(mailAttachments)
-	local name, icon, count, link
-	
-	for attachmentIndex = 1, 12 do
-		if mailIndex then	-- returned mail
-			name, icon, count = GetInboxItem(mailIndex, attachmentIndex)
-			link = GetInboxItemLink(mailIndex, attachmentIndex)
-		else					-- if there is no index, it's a sent mail
-			name, icon, count = GetSendMailItem(attachmentIndex)
-			link = GetSendMailItemLink(attachmentIndex)
-		end
-		
-		if name then				-- if attachment slot is not empty .. save it
-			table.insert(mailAttachments, { ["icon"] = icon, ["link"] = link, ["count"] = count } )		
+	for i = 1, ATTACHMENTS_MAX_SEND do	-- loop through all attachments
+		link = GetSendMailItemLink(i)
+		if link then
+			_, _, rarity = GetItemInfo(link)
+			
+			if rarity == 7 then			-- is this an heirloom ?
+				return true					-- .. yes, return true !
+			end
 		end
 	end
 end
 
-local function SendGuildMail(recipient, subject, body)
+local function SendGuildMail(recipient, subject, body, index)
 	local player = DataStore:GetNameOfMain(recipient)
 	if not player then return end
 		
 	-- this mail is sent to "player", but is for alt  "recipient"
 	GuildWhisper(player, MSG_SENDMAIL_INIT, recipient)
-	if type(mailAttachments) == "table" then
-		for _, attachment in pairs(mailAttachments) do
-			GuildWhisper(player, MSG_SENDMAIL_ATTACHMENT, attachment.icon, attachment.link, attachment.count)
+	
+	-- send attachments
+	local isSentMail = (index == nil) and true or false
+	local item, icon, count, link
+	
+	for attachmentIndex = 1, ATTACHMENTS_MAX_SEND do		-- mandatory, loop through all 12 slots, since attachments could be anywhere (ex: slot 4,5,8)
+		if isSentMail then
+			item, icon, count = GetSendMailItem(attachmentIndex)
+			link = GetSendMailItemLink(attachmentIndex)
+		else
+			item, icon, count = GetInboxItem(index, attachmentIndex)
+			link = GetInboxItemLink(index, attachmentIndex)
+		end
+		
+		if item then
+			GuildWhisper(player, MSG_SENDMAIL_ATTACHMENT, icon, link, count)
 		end
 	end
-		
+			
 	-- .. then save the mail itself + gold if any
 	local money = GetSendMailMoney()
+	body = body or ""
 	if (money > 0) or (strlen(body) > 0) then
 		GuildWhisper(player, MSG_SENDMAIL_BODY, subject, body, money)
 	end
@@ -141,17 +147,29 @@ local function SendGuildMail(recipient, subject, body)
 end
 
 -- *** Scanning functions ***
-local function SaveAttachments(character, index, mailSender, days, wasReturned)
+local function SaveAttachments(character, index, sender, days, wasReturned)
 	-- saves attachments of a given mail index into a given character mailbox
 	
-	for attachmentIndex = 1, 12 do		-- mandatory, loop through all 12 slots, since attachments could be anywhere (ex: slot 4,5,8)
-		local item, mailIcon, itemCount = GetInboxItem(index, attachmentIndex)
+	-- index nil = sent mail => different methods
+	local isSentMail = (index == nil) and true or false
+	
+	local item, icon, count, link
+	
+	for attachmentIndex = 1, ATTACHMENTS_MAX_SEND do		-- mandatory, loop through all 12 slots, since attachments could be anywhere (ex: slot 4,5,8)
+		if isSentMail then
+			item, icon, count = GetSendMailItem(attachmentIndex)
+			link = GetSendMailItemLink(attachmentIndex)
+		else
+			item, icon, count = GetInboxItem(index, attachmentIndex)
+			link = GetInboxItemLink(index, attachmentIndex)
+		end
+		
 		if item then
 			table.insert(character.Mails, {
-				icon = mailIcon,
-				count = itemCount,
-				link = GetInboxItemLink(index, attachmentIndex),
-				sender = mailSender,
+				["icon"] = icon,
+				["count"] = count,
+				["sender"] = sender,
+				["link"] = link,
 				lastCheck = time(),
 				daysLeft = days,
 				returned = wasReturned,
@@ -214,6 +232,8 @@ local function ScanMailbox()
 	
 	-- show mails with the lowest expiry first
 	table.sort(character.Mails, function(a, b) return a.daysLeft < b.daysLeft end)
+	
+	addon:SendMessage("DATASTORE_MAILBOX_UPDATED")
 end
 
 
@@ -224,14 +244,10 @@ local function OnBagUpdate(event, bag)
 	end
 end
 
-local function OnMailInboxUpdate()
+local function OnMailInboxUpdate(a, b, c)
 	-- process only one occurence of the event, right after MAIL_SHOW
 	addon:UnregisterEvent("MAIL_INBOX_UPDATE")
 	ScanMailbox()
-end
-
-local function OnMailSendInfoUpdate()
-	ReadMailAttachments()
 end
 
 local function OnMailClosed()
@@ -244,7 +260,6 @@ local function OnMailClosed()
 	character.lastVisitDate = date("%Y/%m/%d %H:%M")
 	
 	addon:UnregisterEvent("MAIL_SEND_INFO_UPDATE")
-	wipe(mailAttachments)
 end
 
 local function OnMailShow()
@@ -254,10 +269,8 @@ local function OnMailShow()
 	CheckInbox()
 	addon:RegisterEvent("MAIL_CLOSED", OnMailClosed)
 	addon:RegisterEvent("MAIL_INBOX_UPDATE", OnMailInboxUpdate)
-	addon:RegisterEvent("MAIL_SEND_INFO_UPDATE", OnMailSendInfoUpdate)
 
 	-- create a temporary table to hold the attachments that will be sent, keep it local since the event is rare
-	mailAttachments = mailAttachments or {}
 	addon.isOpen = true
 end
 
@@ -282,10 +295,6 @@ local function _GetMailItemCount(character, searchedID)
 		end
 	end
 	return count
-end
-
-local function _GetMailAttachments()
-	return mailAttachments
 end
 
 local function _GetNumMails(character)
@@ -377,7 +386,6 @@ end
 local PublicMethods = {
 	GetMailboxLastVisit = _GetMailboxLastVisit,
 	GetMailItemCount = _GetMailItemCount,
-	GetMailAttachments = _GetMailAttachments,
 	GetNumMails = _GetNumMails,
 	GetMailInfo = _GetMailInfo,
 	GetMailSender = _GetMailSender,
@@ -490,112 +498,119 @@ end
 
 local Orig_SendMail = SendMail
 
-function SendMail(recipient, subject, body, ...)
+local function SendOwnMail(characterKey, subject, body)
+	local character = addon.db.global.Characters[characterKey]
+	
+	SaveAttachments(character, nil, UnitName("player"), MAIL_EXPIRY)
+	
+	-- .. then save the mail itself + gold if any
+	local moneySent = GetSendMailMoney()
+	if (moneySent > 0) or (strlen(body) > 0) then
+		table.insert(character.Mails, {
+			money = moneySent,
+			icon = (moneySent > 0) and ICON_COIN or ICON_NOTE,
+			text = body,
+			subject = subject,
+			sender = UnitName("player"),
+			lastCheck = time(),
+			daysLeft = MAIL_EXPIRY,
+		} )
+	end
+	
+	-- if the alt has never checked his mail before, this value won't be correct, so set it to make sure expiry returns proper results.
+	character.lastUpdate = time()
+	
+	table.sort(character.Mails, function(a, b)		-- show mails with the lowest expiry first
+		return a.daysLeft < b.daysLeft
+	end)
+end
+
+hooksecurefunc("SendMail", function(recipient, subject, body, ...)
 	-- this function takes care of saving mails sent to alts directly into their mailbox, so that client addons don't have to take care about it
 	local isRecipientAnAlt
+
+	local recipientName, recipientRealm = strsplit("-", recipient)
 	
-	for characterName, characterKey in pairs(DataStore:GetCharacters()) do		-- browse alts on current realm
-		if strlower(characterName) == strlower(recipient) then						-- if recipient is a known alt ..
-			local character = addon.db.global.Characters[characterKey]
-			
-			if mailAttachments then
-				for k, v in pairs(mailAttachments) do		--  .. save attachments into his mailbox
-					table.insert(character.Mails, {				-- not in the mail cache, since they arrive directly in an alt's mailbox
-						icon = v.icon,
-						link = v.link,
-						count = v.count,
-						sender = UnitName("player"),
-						lastCheck = time(),
-						daysLeft = MAIL_EXPIRY,
-					} )
+	recipientRealm = recipientRealm or GetRealmName()
+	-- for the current realm, recipientRealm could be
+	-- 	- empty (recipient = "Thaoky")
+	--		- packed named (recipient = "Thaoky-MarécagedeZangar" => realm should be "Marécage de Zangar"
+	
+	-- recipientRealm is nil = current realm
+	-- recipientRealm is not nil = any realm (current or other)
+	
+	-- do we have an alt on the target realm ?
+
+	for realm in pairs(DataStore:GetRealms()) do
+		-- "Marécage de Zangar" becomes "MarécagedeZangar"
+		
+		if strlower(gsub(realm, " ", "")) == strlower(gsub(recipientRealm, " ", "")) then		-- right realm found ? proceed
+			for characterName, characterKey in pairs(DataStore:GetCharacters(realm)) do
+				if strlower(characterName) == strlower(recipientName) then		-- right alt ? proceed
+					SendOwnMail(characterKey, subject, body)
+					if not HasHeirloomAttachment() then
+						DataStore:SetConnectedRealms(realm, GetRealmName())
+					end
+					isRecipientAnAlt = true
+					break
 				end
 			end
-			
-			-- .. then save the mail itself + gold if any
-			local moneySent = GetSendMailMoney()
-			if (moneySent > 0) or (strlen(body) > 0) then
-				local mailIcon
-				if moneySent > 0 then
-					mailIcon = ICON_COIN
-				else
-					mailIcon = ICON_NOTE
-				end
-				table.insert(character.Mails, {
-					money = moneySent,
-					icon = mailIcon,
-					text = body,
-					subject = subject,
-					sender = UnitName("player"),
-					lastCheck = time(),
-					daysLeft = MAIL_EXPIRY,
-				} )
-			end
-			
-			-- if the alt has never checked his mail before, this value won't be correct, so set it to make sure expiry returns proper results.
-			character.lastUpdate = time()
-			
-			table.sort(character.Mails, function(a, b)		-- show mails with the lowest expiry first
-				return a.daysLeft < b.daysLeft
-			end)
-			
-			isRecipientAnAlt = true
-			break
 		end
 	end
 	
 	if not isRecipientAnAlt then	-- if recipient is not an alt, maybe it's a guildmate
-		SendGuildMail(recipient, subject, body)
+		SendGuildMail(recipientName, subject, body)
 	end
+end)
+
+local function ReturnOwnMail(characterKey, index, mailSubject, mailMoney, stationaryIcon, numAttachments)
+	local character = addon.db.global.Characters[characterKey]
+
+	if numAttachments then	-- treat attachments as separate entries
+		SaveAttachments(character, index, UnitName("player"), MAIL_EXPIRY, true)
+	end
+
+	local inboxText = GetInboxText(index)		-- this marks the mail as read, no problem here since the mail is returned anyway
+	
+	if (mailMoney > 0) or inboxText then			-- if there's money or text .. save the entry
 		
-	Orig_SendMail(recipient, subject, body, ...)
+		table.insert(character.Mails, {
+			icon = (mailMoney > 0) and ICON_COIN or stationaryIcon,
+			money = mailMoney,
+			text = inboxText,
+			subject = mailSubject,
+			sender = UnitName("player"),
+			lastCheck = time(),
+			daysLeft = MAIL_EXPIRY,
+			returned = true,				-- this is the mail we're returning, so true
+		} )
+	end
 end
 
-local Orig_ReturnInboxItem = ReturnInboxItem
-
-function ReturnInboxItem(index, ...)
+hooksecurefunc("ReturnInboxItem", function(index, ...)
 	local _, stationaryIcon, mailSender, mailSubject, mailMoney, _, _, numAttachments = GetInboxHeaderInfo(index)
 	local isRecipientAnAlt
 
-	local inboxText = ""
+	local recipientName, recipientRealm = strsplit("-", mailSender)
+
+	recipientRealm = recipientRealm or GetRealmName()
 	
-	for characterName, characterKey in pairs(DataStore:GetCharacters()) do		-- browse alts on current realm
-		if strlower(characterName) == strlower(mailSender) then						-- if recipient is a known alt ..
-			local character = addon.db.global.Characters[characterKey]
-
-			if numAttachments then	-- treat attachments as separate entries
-				SaveAttachments(character, index, UnitName("player"), MAIL_EXPIRY, true)
-			end
-
-			inboxText = GetInboxText(index)		-- this marks the mail as read, no problem here since the mail is returned anyway
-			
-			if (mailMoney > 0) or inboxText then			-- if there's money or text .. save the entry
-				local mailIcon
-				if mailMoney > 0 then
-					mailIcon = ICON_COIN
-				else
-					mailIcon = stationaryIcon
+	-- do we have an alt on the target realm ?
+	for realm in pairs(DataStore:GetRealms()) do
+		
+		-- "Marécage de Zangar" becomes "MarécagedeZangar"
+		if strlower(gsub(realm, " ", "")) == strlower(gsub(recipientRealm, " ", "")) then		-- right realm found ? proceed
+			for characterName, characterKey in pairs(DataStore:GetCharacters(realm)) do
+				if strlower(characterName) == strlower(recipientName) then		-- right alt ? proceed
+					ReturnOwnMail(characterKey, index, mailSubject, mailMoney, stationaryIcon, numAttachments)
+					isRecipientAnAlt = true
+					break
 				end
-				table.insert(character.Mails, {
-					icon = mailIcon,
-					money = mailMoney,
-					text = inboxText,
-					subject = mailSubject,
-					sender = UnitName("player"),
-					lastCheck = time(),
-					daysLeft = MAIL_EXPIRY,
-					returned = true,				-- this is the mail we're returning, so true
-				} )
 			end
-			
-			isRecipientAnAlt = true
-			break
 		end
 	end
-	
+		
 	if not isRecipientAnAlt then	-- if recipient is not an alt, maybe it's a guildmate
-		ReadMailAttachments(index)
-		SendGuildMail(mailSender, mailSubject, inboxText)
+		SendGuildMail(recipientName, mailSubject, GetInboxText(index), index)
 	end
-
-	Orig_ReturnInboxItem(index, ...)
-end
+end)

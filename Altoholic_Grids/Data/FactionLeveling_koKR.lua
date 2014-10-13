@@ -3,8 +3,6 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 
-local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
-
 local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
 local YELLOW	= "|cFFFFFF00"
@@ -22,7 +20,7 @@ addon.FactionLeveling = {
 	-- 42000 = "Exalted", "확고한 동맹"
 	
 	-- Outland factions: source: http://www.mmo-champion.com/
-	[BF["The Aldor"]] = {
+	[932] = {		-- "The Aldor"
 		[0] = WHITE .. "[Dreadfang Venom Sac]|r +250 rep\n\n"
 				.. YELLOW .. "Dreadfang Lurker,\nDreadfang Widow\n"
 				.. WHITE .. "(Terrokar Forest)",
@@ -30,7 +28,7 @@ addon.FactionLeveling = {
 		[42000] = WHITE .. "[Mark of Sargeras]|r +25 rep per mark\n" 
 				.. GREEN .. "[Fel Armament]|r +350 rep (+1 Holy Dust)"
 	},
-	[BF["The Scryers"]] = {
+	[934] = {		-- "The Scryers"
 		[0] = WHITE .. "[Dampscale Basilisk Eye]|r +250 rep\n\n"
 				.. YELLOW .. "Ironspine Petrifier,\nDampscale Devourer,\nDampscale Basilisk\n"
 				.. WHITE .. "(Terrokar Forest)",
@@ -38,7 +36,7 @@ addon.FactionLeveling = {
 		[42000] = WHITE .. "[Sunfury Signet]|r +25 rep per mark\n" 
 				.. GREEN .. "[Arcane Tome]|r +350 rep (+1 Arcane Rune)"
 	},
-	[BF["Netherwing"]] = {
+	[1015] = {	-- "Netherwing"
 		[3000] = "repeat these quests:\n\n" 
 				.. YELLOW .. "A Slow Death (Daily)|r 250 rep\n"
 				.. YELLOW.. "Netherdust Pollen (Daily)|r 250 rep\n"
@@ -58,7 +56,7 @@ addon.FactionLeveling = {
 		[42000] = "repeat this quest:\n\n" 
 				.. YELLOW .. "The greatest trap ever (Daily) (3 man group)|r 500 rep"
 	},
-	[BF["Honor Hold"]] = {
+	[946] = {		-- "Honor Hold"
 		[9000] = "\n" 
 				.. YELLOW .. "Quest in Hellfire Peninsula\n"
 				.. GREEN .. "Hellfire Remparts |r(Normal)\n"
@@ -68,7 +66,7 @@ addon.FactionLeveling = {
 				.. GREEN .. "Hellfire Remparts |r(Heroic)\n"
 				.. GREEN .. "Blood Furnace |r(Heroic)"
 	},
-	[BF["Thrallmar"]] = {
+	[947] = {		-- "Thrallmar"
 		[9000] = "\n" 
 				.. YELLOW .. "Quest in Hellfire Peninsula\n"
 				.. GREEN .. "Hellfire Remparts |r(Normal)\n"
@@ -78,7 +76,7 @@ addon.FactionLeveling = {
 				.. GREEN .. "Hellfire Remparts |r(Heroic)\n"
 				.. GREEN .. "Blood Furnace |r(Heroic)"
 	},
-	[BF["Cenarion Expedition"]] = {
+	[942] = {		-- "Cenarion Expedition"
 		[3000] = "\n" 
 				.. WHITE .. "Darkcrest & Bloodscale Nagas (+5 rep)\n"
 				.. YELLOW .. "Quest in Zangarmarsh\n"
@@ -93,18 +91,18 @@ addon.FactionLeveling = {
 				.. GREEN .. "Steamvault |r(Normal)\n"
 				.. GREEN .. "Any Coilfang instance |r(Heroic)"
 	},
-	[BF["Keepers of Time"]] = {
+	[989] = {		-- "Keepers of Time"
 		[42000] = "\n" 
 				.. "|rRun the " .. GREEN .. "Old Hillsbrad Foothills|r & " .. GREEN .. "The Black Morass\n\n"
 				.. YELLOW .. "Keep quests for later:\nOld Hillsbrad quesline = 5000 rep\nBlack Morass questline = 8000 rep"
 	},
-	[BF["The Sha'tar"]] = {
+	[935] = {		-- "The Sha'tar"
 		[42000] = "\n" 
 				.. GREEN .. "The Botanica |r(Normal & Heroic)\n"
 				.. GREEN .. "The Mechanar |r(Normal & Heroic)\n"
 				.. GREEN .. "The Arcatraz |r(Normal & Heroic)\n"
 	},	
-	[BF["Lower City"]] = {
+	[1011] = {		-- "Lower City"
 		[9000] = "\n" 
 				.. WHITE .. "Turn in [Arrakoa Feather] x30 (+250 rep)\n"
 				.. GREEN .. "Shadow Labyrinth |r(Normal)\n"
@@ -115,7 +113,7 @@ addon.FactionLeveling = {
 				.. GREEN .. "Auchenai Crypts |r(Heroic)\n"
 				.. GREEN .. "Sethekk Halls |r(Heroic)"
 	},	
-	[BF["The Consortium"]] = {
+	[933] = {		-- "The Consortium"
 		[3000] = "\n" 
 				.. "|rTurn in [Oshu'gun Crystal Fragment] +250 rep\n"
 				.. "Turn in [Pair of Ivory Tusks] +250 rep\n\n"

@@ -61,6 +61,7 @@ function SlashCmdList.COORDINATES(msg)
 		end
 	else
 		DEFAULT_CHAT_FRAME:AddMessage(color.."Coordinates by Szandos")
+		DEFAULT_CHAT_FRAME:AddMessage(color.."Version: "..GetAddOnMetadata("Coordinates", "Version"))
 		DEFAULT_CHAT_FRAME:AddMessage(color.."Usage:")
 		DEFAULT_CHAT_FRAME:AddMessage(color.."/coordinates worldmap - Enable/disable coordinates on the world map")
 		DEFAULT_CHAT_FRAME:AddMessage(color.."/coordinates minimap - Enable/disable coordinates on the mini map")
@@ -79,6 +80,9 @@ function Coordinates_eventFrame:VARIABLES_LOADED()
 		CoordinatesDB["fontSize"] = 12
 	end
 	Coordinates_eventFrame:SetScript("OnUpdate", function(self, elapsed) Coordinates_OnUpdate(self, elapsed) end)
+	
+	-- Temp fix for taint introduced by Blizzard in 5.4.1
+	setfenv(WorldMapFrame_OnShow, setmetatable({UpdateMicroButtons=function() end }, { __index = _G}))
 end
 
 function Coordinates_eventFrame:ZONE_CHANGED_NEW_AREA()

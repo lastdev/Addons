@@ -1,6 +1,5 @@
-HEALBOT_VERSION   = "5.4.8.0";
+HEALBOT_VERSION   = "5.4.8.5";
 HEALBOT_ABOUT_URL = "http://healbot.darktech.org/"
-HEALBOT_2MOONS_URL = "http://freegames.darktech.org/twomoons/uni1/index.php"
 
 function HealBot_globalVars()
     --Harmful Spells

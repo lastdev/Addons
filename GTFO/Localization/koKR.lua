@@ -69,7 +69,6 @@ GTFOLocal =
 	UI_TrivialDescription = "현재 레벨의 당신의 캐릭터에게 무시해도 되는 낮은 수준의 경고를 활성화합니다.",
 	UI_Unmute = "소리가 꺼졌을 때에도 소리 재생",
 	UI_UnmuteDescription = "주 음향과 음향효과를 껐을 때에도, GTFO 애드온이 잠시 소리를 켭니다.",
-	UI_UnmuteDescription2 = "이 설정은 볼륨 슬라이드 바가 0보다 커야 작동합니다.",
 	UI_Volume = "GTFO 소리",
 	UI_VolumeDescription = "음향을 재생할 소리 크기",
 	UI_VolumeLoud = "4: 크게",
@@ -88,6 +87,10 @@ GTFOLocal =
 	-- 4.19.1
 	UI_TrivialSlider = "Minimum % of HP",
 	UI_TrivialDescription2 = "Set the slider to the minimum % amount of HP damage taken for alerts to not be considered trivial.",
+	-- 4.32
+	UI_UnmuteDescription2 = "This requires the master volume slider to be higher than 0% and will override the sound channel option.",
+	UI_SoundChannel = "Sound Channel",
+	UI_SoundChannelDescription = "This is the volume channel that GTFO alert sounds will attach themselves to.",
 }
 
 

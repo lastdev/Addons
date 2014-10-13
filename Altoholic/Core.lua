@@ -4,8 +4,8 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v5.4.004"
-addon.VersionNum = 504004
+addon.Version = "v5.4.009"
+addon.VersionNum = 504009
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -115,6 +115,7 @@ local AddonDB_Defaults = {
 			TooltipGatheringNode = 1,		-- display counters when mousing over a gathering node (default:  on)
 			TooltipCrossFaction = 1,		-- display counters for both factions on a pve server
 			TooltipMultiAccount = 1,		-- display counters for all accounts on the same realm
+			TooltipConnectedRealms = 1,	-- display counters for characters on connected realms
 			
 			TooltipGuildBank = 1,
 			TooltipGuildBankCount = 1,		-- total count = alts + guildbank (1) or alts only (0)
@@ -137,6 +138,15 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Characters.ViewVoidStorage"] = 1,
 			
 			["UI.Tabs.Guild.BankItemsRarity"] = 0,		-- rarity filter in the guild bank tab
+			
+			["UI.Tabs.Grids.Reputations.CurrentXPack"] = 1,					-- Current expansion pack 
+			["UI.Tabs.Grids.Reputations.CurrentFactionGroup"] = 1,		-- Current faction group in that xpack
+			["UI.Tabs.Grids.Currencies.CurrentTokenType"] = nil,			-- Current token type (default to nil = all-in-one)
+			["UI.Tabs.Grids.Companions.CurrentXPack"] = 1,					-- Current expansion pack 
+			["UI.Tabs.Grids.Mounts.CurrentFaction"] = 1,						-- Current faction 
+			["UI.Tabs.Grids.Tradeskills.CurrentXPack"] = 1,					-- Current expansion pack 
+			["UI.Tabs.Grids.Tradeskills.CurrentTradeSkill"] = 1,			-- Current tradeskill index
+			["UI.Tabs.Grids.Archaeology.CurrentRace"] = 1,					-- Current race index
 			
 			["UI.AHColorCoding"] = 1,						-- color coded recipes at the AH
 			["UI.VendorColorCoding"] = 1,					-- color coded recipes at vendors

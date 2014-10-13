@@ -1,3 +1,19 @@
+== Version 50400.2.5
+* I have gotten a pretty good response, so I think (and hope) Bitten's SpellFlash will live on!
+
+== Version 50400.2.4
+* The future of Bitten's SpellFlash: Mage is in question.  I no longer wish to maintain this addon, starting with patch 6.0.  If you are interested in taking it over, keeping up with optimal rotations, and you have programming skills, please leave a comment or PM on Curse.
+
+== Version 50400.2.2
+* Frost: In AoE mode, if you have Frost Bomb, Freeze flashes just before the bomb explodes.
+
+== Version 50400.2.1
+* No change, just taking it out of beta.
+
+== Version 50400.2.0beta
+* Arcane: Added a priority for Arcane Blast for use with 2pT16.
+* Arcane: Tweaked the conditions for Arcane Power, Arcane Barrage, Rune of Power and Evocation. 
+
 == Version 50400.1.2
 * Arcane & Frost: Added flashing for Ice Floes when you are moving.
 
@@ -86,13 +102,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 == Version 3.0.1 beta
 * Arcane: added an AoE rotation.
 * Arcane: no longer prioritize Arcane Blast based on number of Arcane Charges.
-
-== Version 3.0.0 beta
-* Arcane: pretty much reworked the whole rotation.
-* All: Living Bomb will refresh within the last tick (instead of waiting until it expires).
-* All: Presence of Mind will not flashes during Alter Time.
-
-== Version 2.13.0
-* Fire: Lowered the priority of Nether Tempest / Living Bomb.  Simulations showed a dps improvement.
-* Fire: Worked a bit on the Heating Up / Pyroblast! detection, including adjusting some lag tolerances.  I believe it is an improvement.
-* Fire: Removed the 3rd line from the combustion monitor.

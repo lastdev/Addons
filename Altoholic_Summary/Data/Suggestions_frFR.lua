@@ -3,14 +3,14 @@ local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
-local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
-local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 
 if GetLocale() ~= "frFR" then return end		-- ** French translation by Laumac **
 
 local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
 local YELLOW	= "|cFFFFFF00"
+
+local continents = { GetMapContinents() };		-- this gets localized names, also avoids hardcoding them.
 
 -- This table contains a list of suggestions to get to the next level of reputation, craft or skill
 addon.Suggestions = {
@@ -425,43 +425,94 @@ addon.Suggestions = {
 		{ 450, "Atteindre 450: Avoir de la patience et des appats\nVoir le maitre des p\195\170cheurs, pas besoin de manuel" }
 	},
 	
-	-- suggested leveling zones, compiled by Thaoky, based on too many sources to list + my own leveling experience on Alliance side
+	[BI["Archaeology"]] = {
+		{ 300, "Atteindre 300: " .. continents[1] .. "\n" .. continents[2]},
+		{ 375, "Atteindre 375: " .. continents[3]},
+		{ 450, "Atteindre 450: " .. continents[4]},
+		{ 525, "Atteindre 525: " .. GetMapNameByID(606) .. "\n" .. GetMapNameByID(720) .. "\n" .. GetMapNameByID(700)},
+		{ 600, "Atteindre 600: " .. continents[6]},
+	},
+	
+	-- suggested leveling zones, as defined by recommended quest levels. map id's : http://wowpedia.org/MapID
 	["Leveling"] = {
 		{ 10, "Atteindre 10: Toute zone de d\195\169part" },
-		{ 20, "Atteindre 20: "  .. BZ["Loch Modan"] .. "\n" .. BZ["Westfall"] .. "\n" .. BZ["Darkshore"] .. "\n" .. BZ["Bloodmyst Isle"] 
-						.. "\n" .. BZ["Silverpine Forest"] .. "\n" .. BZ["The Barrens"] .. "\n" .. BZ["Ghostlands"]},
-		{ 25, "Atteindre 25: " .. BZ["Wetlands"] .. "\n" .. BZ["Redridge Mountains"] .. "\n" .. BZ["Ashenvale"] 
-						.. "\n" .. BZ["The Barrens"] .. "\n" .. BZ["Stonetalon Mountains"] .. "\n" .. BZ["Hillsbrad Foothills"] },
-		{ 28, "Atteindre 28: " .. BZ["Duskwood"] .. "\n" .. BZ["Wetlands"] .. "\n" .. BZ["Ashenvale"] 
-						.. "\n" .. BZ["Stonetalon Mountains"] .. "\n" .. BZ["Thousand Needles"] },
-		{ 31, "Atteindre 31: " .. BZ["Duskwood"] .. "\n" .. BZ["Thousand Needles"] .. "\n" .. BZ["Ashenvale"] },
-		{ 35, "Atteindre 35: " .. BZ["Thousand Needles"] .. "\n" .. BZ["Stranglethorn Vale"] .. "\n" .. BZ["Alterac Mountains"] 
-						.. "\n" .. BZ["Arathi Highlands"] .. "\n" .. BZ["Desolace"] },
-		{ 40, "Atteindre 40: " .. BZ["Stranglethorn Vale"] .. "\n" .. BZ["Desolace"] .. "\n" .. BZ["Badlands"]
-						.. "\n" .. BZ["Dustwallow Marsh"] .. "\n" .. BZ["Swamp of Sorrows"] },
-		{ 43, "Atteindre 43: " .. BZ["Tanaris"] .. "\n" .. BZ["Stranglethorn Vale"] .. "\n" .. BZ["Badlands"] 
-						.. "\n" .. BZ["Dustwallow Marsh"] .. "\n" .. BZ["Swamp of Sorrows"] },
-		{ 45, "Atteindre 45: " .. BZ["Tanaris"] .. "\n" .. BZ["Feralas"] .. "\n" .. BZ["The Hinterlands"] },
-		{ 48, "Atteindre 48: " .. BZ["Tanaris"] .. "\n" .. BZ["Feralas"] .. "\n" .. BZ["The Hinterlands"] .. "\n" .. BZ["Searing Gorge"] },
-		{ 51, "Atteindre 51: " .. BZ["Tanaris"] .. "\n" .. BZ["Azshara"] .. "\n" .. BZ["Blasted Lands"] 
-						.. "\n" .. BZ["Searing Gorge"] .. "\n" .. BZ["Un'Goro Crater"] .. "\n" .. BZ["Felwood"] },
-		{ 55, "Atteindre 55: " .. BZ["Un'Goro Crater"] .. "\n" .. BZ["Felwood"] .. "\n" .. BZ["Burning Steppes"]
-						.. "\n" .. BZ["Blasted Lands"] .. "\n" .. BZ["Western Plaguelands"] },
-		{ 58, "Atteindre 58: " .. BZ["Winterspring"] .. "\n" .. BZ["Burning Steppes"] .. "\n" .. BZ["Western Plaguelands"] 
-						.. "\n" .. BZ["Eastern Plaguelands"] .. "\n" .. BZ["Silithus"] },
-		{ 60, "Atteindre 60: " .. BZ["Winterspring"] .. "\n" .. BZ["Eastern Plaguelands"] .. "\n" .. BZ["Silithus"] },
-		{ 62, "Atteindre 62: " .. BZ["Hellfire Peninsula"] },
-		{ 64, "Atteindre 64: " .. BZ["Zangarmarsh"] .. "\n" .. BZ["Terokkar Forest"]},
-		{ 65, "Atteindre 65: " .. BZ["Terokkar Forest"] },
-		{ 66, "Atteindre 66: " .. BZ["Terokkar Forest"] .. "\n" .. BZ["Nagrand"]},
-		{ 67, "Atteindre 67: " .. BZ["Nagrand"]},
-		{ 68, "Atteindre 68: " .. BZ["Blade's Edge Mountains"]},
-		{ 70, "Atteindre 70: " .. BZ["Blade's Edge Mountains"] .. "\n" .. BZ["Netherstorm"] .. "\n" .. BZ["Shadowmoon Valley"]},
-		{ 72, "Atteindre 72: " .. BZ["Howling Fjord"] .. "\n" .. BZ["Borean Tundra"]},
-		{ 74, "Atteindre 74: " .. BZ["Grizzly Hills"] .. "\n" .. BZ["Dragonblight"]},
-		{ 76, "Atteindre 76: " .. BZ["Dragonblight"] .. "\n" .. BZ["Zul'Drak"]},
-		{ 78, "Atteindre 78: " .. BZ["Zul'Drak"] .. "\n" .. BZ["Sholazar Basin"]},
-		{ 80, "Atteindre 80: " .. BZ["The Storm Peaks"] .. "\n" .. BZ["Icecrown"]},
-	},
+		{ 15, "Atteindre 15: " .. GetMapNameByID(39)},
+		{ 16, "Atteindre 16: " .. GetMapNameByID(684)},
+		{ 20, "Atteindre 20: " .. GetMapNameByID(181) .. "\n" .. GetMapNameByID(35) .. "\n" .. GetMapNameByID(476)
+							.. "\n" .. GetMapNameByID(42) .. "\n" .. GetMapNameByID(21) .. "\n" .. GetMapNameByID(11)
+							.. "\n" .. GetMapNameByID(463) .. "\n" .. GetMapNameByID(36)},
+		{ 25, "Atteindre 25: " .. GetMapNameByID(34) .. "\n" .. GetMapNameByID(40) .. "\n" .. GetMapNameByID(43) 
+							.. "\n" .. GetMapNameByID(24)},
+		{ 30, "Atteindre 30: " .. GetMapNameByID(16) .. "\n" .. GetMapNameByID(37) .. "\n" .. GetMapNameByID(81)},
+		{ 35, "Atteindre 35: " .. GetMapNameByID(673) .. "\n" .. GetMapNameByID(101) .. "\n" .. GetMapNameByID(26)
+							.. "\n" .. GetMapNameByID(607)},
+		{ 40, "Atteindre 40: " .. GetMapNameByID(141) .. "\n" .. GetMapNameByID(121) .. "\n" .. GetMapNameByID(22)},
+		{ 45, "Atteindre 45: " .. GetMapNameByID(23) .. "\n" .. GetMapNameByID(61)},
+		{ 48, "Atteindre 48: " .. GetMapNameByID(17)},
+		{ 50, "Atteindre 50: " .. GetMapNameByID(161) .. "\n" .. GetMapNameByID(182) .. "\n" .. GetMapNameByID(28)},
+		{ 52, "Atteindre 52: " .. GetMapNameByID(29)},
+		{ 54, "Atteindre 54: " .. GetMapNameByID(38)},
+		{ 55, "Atteindre 55: " .. GetMapNameByID(201) .. "\n" .. GetMapNameByID(281)},
+		{ 58, "Atteindre 58: " .. GetMapNameByID(19)},
+		{ 60, "Atteindre 60: " .. GetMapNameByID(32) .. "\n" .. GetMapNameByID(241) .. "\n" .. GetMapNameByID(261)},
+		
+		-- Outland
+		-- 465 Hellfire Peninsula 
+		-- 467 Zangarmarsh 
+		-- 478 Terokkar Forest 
+		-- 477 Nagrand 
+		-- 475 Blade's Edge Mountains 
+		-- 479 Netherstorm 
+		-- 473 Shadowmoon Valley 
+		
+		{ 63, "Atteindre 63: " .. GetMapNameByID(465)},
+		{ 64, "Atteindre 64: " .. GetMapNameByID(467)},
+		{ 65, "Atteindre 65: " .. GetMapNameByID(478)},
+		{ 67, "Atteindre 67: " .. GetMapNameByID(477)},
+		{ 68, "Atteindre 68: " .. GetMapNameByID(475)},
+		{ 70, "Atteindre 70: " .. GetMapNameByID(479) .. "\n" .. GetMapNameByID(473) .. "\n" .. GetMapNameByID(499) .. "\n" .. GetMapNameByID(32)},
 
+		-- Northrend
+		-- 491 Howling Fjord 
+		-- 486 Borean Tundra 
+		-- 488 Dragonblight 
+		-- 490 Grizzly Hills 
+		-- 496 Zul'Drak 
+		-- 493 Sholazar Basin 
+		-- 510 Crystalsong Forest 
+		-- 495 The Storm Peaks 
+		-- 492 Icecrown 
+		
+		{ 72, "Atteindre 72: " .. GetMapNameByID(491) .. "\n" .. GetMapNameByID(486)},
+		{ 75, "Atteindre 75: " .. GetMapNameByID(488) .. "\n" .. GetMapNameByID(490)},
+		{ 76, "Atteindre 76: " .. GetMapNameByID(496)},
+		{ 78, "Atteindre 78: " .. GetMapNameByID(493)},
+		{ 80, "Atteindre 80: " .. GetMapNameByID(510) .. "\n" .. GetMapNameByID(495) .. "\n" .. GetMapNameByID(492)},
+		
+		-- Cataclysm
+		-- 606 Mount Hyjal 
+		-- 613 Vashj'ir 
+		-- 640 Deepholm 
+		-- 720 Uldum 
+		-- 700 Twilight Highlands 
+		
+		{ 82, "Atteindre 82: " .. GetMapNameByID(606) .. "\n" .. GetMapNameByID(613)},
+		{ 83, "Atteindre 83: " .. GetMapNameByID(640)},
+		{ 84, "Atteindre 84: " .. GetMapNameByID(720)},
+		{ 85, "Atteindre 85: " .. GetMapNameByID(700)},
+
+		-- Pandaria
+		-- 806 The Jade Forest 
+		-- 807 Valley of the Four Winds 
+		-- 857 Krasarang Wilds 
+		-- 809 Kun-Lai Summit 
+		-- 810 Townlong Steppes 
+		-- 858 Dread Wastes 
+		
+		{ 86, "Atteindre 86: " .. GetMapNameByID(806)},
+		{ 87, "Atteindre 87: " .. GetMapNameByID(807) .. "\n" .. GetMapNameByID(857)},
+		{ 88, "Atteindre 88: " .. GetMapNameByID(809)},
+		{ 89, "Atteindre 89: " .. GetMapNameByID(810)},
+		{ 90, "Atteindre 90: " .. GetMapNameByID(858)},
+	},
 }

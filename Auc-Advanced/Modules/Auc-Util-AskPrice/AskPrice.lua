@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: AskPrice.lua 5347 2012-09-06 06:26:15Z Esamynn $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: AskPrice.lua 5447 2014-01-14 15:11:43Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	Auctioneer AskPrice created by Mikezter and merged into
@@ -312,7 +312,7 @@ function private.onEventHook(_, _, self, event, arg1, ...)
 end
 
 function private.getData(itemLink)
-	local marketValue, seenCount = AucAdvanced.API.GetMarketValue(itemLink, AucAdvanced.GetFaction())
+	local marketValue, seenCount = AucAdvanced.API.GetMarketValue(itemLink)
 	local vendorPrice = GetSellValue and GetSellValue(itemLink)
 
 	return seenCount or 0, marketValue or 0, vendorPrice or 0
@@ -476,7 +476,7 @@ end
 
 --This function changed after AskPrice revision 2825 to include AucAdvanced's revision number in adition to AskPrice's
 function private.GetVersion()
-	return tonumber(("$Revision: 5347 $"):match("(%d+)")), (AucAdvanced.GetCurrentRevision()) --We just want the first return from GetCurrentRevision()
+	return tonumber(("$Revision: 5447 $"):match("(%d+)")), (AucAdvanced.GetCurrentRevision()) --We just want the first return from GetCurrentRevision()
 end
 
 --This function is used to check if the received request (which should be lowercased before the function is called) is a valid SmartWords request
@@ -597,4 +597,4 @@ function private.SetupConfigGui(gui)
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-AskPrice/AskPrice.lua $", "$Rev: 5347 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-AskPrice/AskPrice.lua $", "$Rev: 5447 $")

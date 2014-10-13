@@ -69,6 +69,15 @@
 					</Anchor>
 				</Anchors>
 			</Button>
+			<Button name="$parentMenuItem5" inherits="AltoSummaryMenuItemTemplate" id="5" text="CURRENCY">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem4" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
 			
 			<Button name="$parent_Sort1" inherits="AltoSortButtonTemplate" id="1">
 				<Size>

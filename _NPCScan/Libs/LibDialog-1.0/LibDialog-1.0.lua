@@ -26,7 +26,7 @@ local MAJOR = "LibDialog-1.0"
 
 _G.assert(LibStub, MAJOR .. " requires LibStub")
 
-local MINOR = 5 -- Should be manually increased
+local MINOR = 6 -- Should be manually increased
 local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not lib then
@@ -406,6 +406,15 @@ local function EditBox_OnEscapePressed(editbox)
     end
 end
 
+local function EditBox_OnShow(editbox)
+    local dialog = editbox:GetParent()
+    local on_show = dialog.delegate.editboxes[editbox:GetID()].on_show
+
+    if on_show then
+        on_show(editbox, dialog.data)
+    end
+end
+
 local function EditBox_OnTextChanged(editbox, user_input)
     if not editbox.autoCompleteParams or not _G.AutoCompleteEditBox_OnTextChanged(editbox, user_input) then
         local dialog = editbox:GetParent()
@@ -417,7 +426,7 @@ local function EditBox_OnTextChanged(editbox, user_input)
     end
 end
 
-local function _AcquireEditBox(parent, index)
+local function _AcquireEditBox(dialog, index)
     local editbox = table.remove(editbox_heap)
 
     if not editbox then
@@ -456,15 +465,16 @@ local function _AcquireEditBox(parent, index)
 
         editbox:SetScript("OnEnterPressed", EditBox_OnEnterPressed)
         editbox:SetScript("OnEscapePressed", EditBox_OnEscapePressed)
+        editbox:SetScript("OnShow", EditBox_OnShow)
         editbox:SetScript("OnTextChanged", EditBox_OnTextChanged)
     end
-    local template = parent.delegate.editboxes[index]
+    local template = dialog.delegate.editboxes[index]
 
     active_editboxes[#active_editboxes + 1] = editbox
 
     editbox.addHighlightedText = true
 
-    editbox:SetParent(parent)
+    editbox:SetParent(dialog)
     editbox:SetID(index)
     editbox:SetWidth(template.width or DEFAULT_EDITBOX_WIDTH)
 
@@ -484,6 +494,7 @@ local function _AcquireEditBox(parent, index)
         editbox.label:Hide()
     end
     editbox:Show()
+
     return editbox
 end
 
@@ -896,6 +907,10 @@ end
 
 function dialog_prototype:Resize()
     local delegate = self.delegate
+    if not delegate then
+        return
+    end
+
     local width = delegate.width or DEFAULT_DIALOG_WIDTH
     local height = delegate.height or 0
 

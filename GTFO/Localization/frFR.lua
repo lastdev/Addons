@@ -69,7 +69,6 @@ GTFOLocal =
 	UI_TrivialDescription = "Activer les alertes pour les rencontres de bas niveau qui seraient autrement jugés futiles pour le niveau actuel du votre personnage.",
 	UI_Unmute = "Jouer les sons lorsque mis en sourdine",
 	UI_UnmuteDescription = "Si vous avez le son principal mis en sourdine, GTFO activera temporairement le son brièvement pour jouer les sons de GTFO.",
-	UI_UnmuteDescription2 = "Cela exige que le curseur du volume principal soit supérieur à 0 %.",
 	UI_Volume = "Volume GTFO",
 	UI_VolumeDescription = "Définissez le volume de la lecture des sons.",
 	UI_VolumeLoud = "4 : Fort",
@@ -88,6 +87,10 @@ GTFOLocal =
 	-- 4.19.1
 	UI_TrivialSlider = "% Minimum de PV",
 	UI_TrivialDescription2 = "Réglez le curseur au montant minimum de % de dégâts de PV prises pour les alertes non considérées comme futiles.",
+	-- 4.32
+	UI_UnmuteDescription2 = "This requires the master volume slider to be higher than 0% and will override the sound channel option.",
+	UI_SoundChannel = "Sound Channel",
+	UI_SoundChannelDescription = "This is the volume channel that GTFO alert sounds will attach themselves to.",
 }
 
 end

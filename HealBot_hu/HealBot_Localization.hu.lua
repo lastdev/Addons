@@ -266,13 +266,6 @@ function HealBot_Lang_huHU()
     HEALBOT_STOP                            = "Stop";
     HEALBOT_TELL                            = "Tell";
 
-    HEALBOT_TITAN_SMARTCAST                 = "SmartCast";
-    HEALBOT_TITAN_MONITORBUFFS              = "figyelt buffok";
-    HEALBOT_TITAN_MONITORDEBUFFS            = "figyelt debuffok"
-    HEALBOT_TITAN_SHOWBARS                  = "Mutasd a bárokat";
-    HEALBOT_TITAN_EXTRABARS                 = "Extra bars";
-    HEALBOT_BUTTON_TOOLTIP                  = "Kattintson a váltáshoz HealBot opciok panel\nKattintson és lenyomva mozogassa ezt az ikont";
-    HEALBOT_TITAN_TOOLTIP                   = "Bal kattintással váltás HealBot opciok panelre";
     HEALBOT_OPTIONS_SHOWMINIMAPBUTTON       = "engedélyez a minimapon egy gyorsgombot";
     HEALBOT_OPTIONS_BARBUTTONSHOWHOT        = "mutasd HoT";
     HEALBOT_OPTIONS_BARBUTTONSHOWRAIDICON   = "mutaasd a Raid Target";
@@ -919,7 +912,7 @@ function HealBot_Lang_huHU()
     HEALBOT_OPTIONS_LANG_ENUK               = "English (enUK - by Strife)"
     HEALBOT_OPTIONS_LANG_ENUS               = "English (enUS - by Strife)"
     HEALBOT_OPTIONS_LANG_FRFR               = "French (frFR - by Kubik)"
-    HEALBOT_OPTIONS_LANG_DEDE               = "German (deDE - translator required)"
+    HEALBOT_OPTIONS_LANG_DEDE               = "Deutsch (deDE - by Snaomi)"
     HEALBOT_OPTIONS_LANG_HUHU               = "Hungarian (huHU - by Von)"
     HEALBOT_OPTIONS_LANG_ITIT               = "Italian (itIT - by Brezza)"
     HEALBOT_OPTIONS_LANG_KRKR               = "Korean (krKR - translator required)"
@@ -992,4 +985,21 @@ function HealBot_Lang_huHU()
     HEALBOT_ENEMY_EXISTS_SHOW               = "Entering combat only".."\n".."show when exists"
     HEALBOT_ENEMY_EXISTS_SHOW_PTARGETS      = "Player targets"
     HEALBOT_ENEMY_EXISTS_SHOW_BOSSES        = "Boss bars"
+    HEALBOT_OPTIONS_TARGET_ONLY_FRIEND      = "Target: Only show Friendly"
+    HEALBOT_OPTIONS_FOCUS_ONLY_FRIEND       = "Focus: Only show Friendly"
+    HEALBOT_OPTIONS_PROFILE                 = "Profile for".."\n".."Spells/Buffs/Cures"
+    HEALBOT_OPTIONS_PROFILE_CHARACTER       = "Character"
+    HEALBOT_OPTIONS_PROFILE_CLASS           = "Class"
+    HEALBOT_OPTIONS_INCOMBATALERTLEVEL      = "Alert Level - In Combat";
+    HEALBOT_OPTIONS_OUTCOMBATALERTLEVEL     = "Alert Level - Out of Combat";
+    HEALBOT_OPTION_NUMENEMYS                = "Number of Enemies"
+    HEALBOT_WORD_AUTO                       = "Auto"
+	HEALBOT_OPTIONS_ENABLEAUTOCOMBAT        = "Enable HealBot autoCombat"
+    HEALBOT_WORDS_REMOVETEMPCUSTOMNAME      = "Remove temporary custom name"
+    HEALBOT_WORDS_REMOVEPERMCUSTOMNAME      = "Remove permanent custom name"
+    HEALBOT_WORDS_ADDTEMPCUSTOMNAME         = "Add temporary custom name"
+    HEALBOT_WORDS_ADDPERMCUSTOMNAME         = "Add permanent custom name"
+    HEALBOT_OPTIONS_ENABLELIBUTF8           = "Enable UTF8 library"
+    HEALBOT_OPTIONS_SHOWDIRECTION           = "Show Out of Range Direction"
+    HEALBOT_OPTIONS_SHOWDIRECTIONMOUSE      = "Only on Mouse Over"
 end

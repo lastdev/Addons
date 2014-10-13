@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(713, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11448 $"):sub(12, -3))
 mod:SetCreatureID(63191)--Also has CID 62164. He has 2 CIDs for a single target, wtf? It seems 63191 is one players attack though so i'll try just it.
 mod:SetEncounterID(1463)
 mod:SetZone()
@@ -87,11 +87,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnBrokenLeg:Show(args.destName, args.amount or 1)
 	elseif spellId == 122835 then
 		warnPheromones:Show(args.destName)
-		specwarnPheromonesTarget:Show(args.destName)
 		if args:IsPlayer() then
 			specwarnPheromonesYou:Show()
 			yellPheromones:Yell()
 		else
+			specwarnPheromonesTarget:Show(args.destName)
 			local uId = DBM:GetRaidUnitId(args.destName)
 			if uId then
 				local x, y = GetPlayerMapPosition(uId)

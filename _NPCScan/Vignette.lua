@@ -18,8 +18,8 @@ local pairs = _G.pairs
 local FOLDER_NAME, private = ...
 local L = private.L
 
-local DEBUGGING = false
 local Debug = private.Debug
+local Toast = _G.LibStub("LibToast-1.0")
 
 -------------------------------------------------------------------------------
 -- Variables.
@@ -28,6 +28,7 @@ local instance_id_registry = {}
 local last_vignette_id = 0
 local vignette_delay
 local vignette_found_count = 0
+local delay_time = 300
 
 private.VFrame = _G.CreateFrame("Frame")
 private.VFrame:RegisterEvent("VIGNETTE_ADDED")
@@ -43,9 +44,7 @@ end)
 
 function private.VFrame:ZONE_CHANGED_NEW_AREA(event, ...)
 	if vignette_delay then
-		if DEBUGGING then
-			Debug("Releasing Delay")
-		end
+		Debug("Releasing Delay")
 		private.VFrame:VIGNETTE_ADDED("VIGNETTE_ADDED", vignette_delay)
 		vignette_delay = nil
 	end
@@ -60,55 +59,44 @@ function private.VFrame:PLAYER_REGEN_ENABLED(event, ...)
 	end
 end
 
-function private.VignetteHandler(instanceid)
-	if instance_id_registry[instanceid] then
-		instance_id_registry[instanceid] = nil
-		vignette_found_count = vignette_found_count - 1
+--Checks to see if enough time has elapsed from the first sighting of a vignette before it triggers an alert again.
+function private.CheckDelay(instanceid)
+	if  not instance_id_registry[instanceid] then
+		instance_id_registry[instanceid] = GetTime()
+		Debug("Vignette not seen before")
+		return true
 	else
-		instance_id_registry[instanceid] = true
-		vignette_found_count = vignette_found_count + 1
-	end
-
-	if vignette_found_count == 0 then
-		if not _G.InCombatLockdown() then
-			last_vignette_id = 0
+		local current_time = GetTime()
+		local recorded_time = instance_id_registry[instanceid]
+		if (current_time - recorded_time) < delay_time then
+			Debug("Not enough time elapsed")
+			return false
+		else
+			instance_id_registry[instanceid] = GetTime()
+			Debug("Enough time has elapsed, sound alert.")
+			return true
 		end
 	end
-
-	if DEBUGGING then
-		Debug("Found: %d  Last ID: %d", vignette_found_count, last_vignette_id)
-	end
 end
-
 
 --Checks to see if achievement mobs are being tracked and filters by zone if an achievement is disabled.
 local function VignetteFilterByAchievement()
 	local currentzone = _G.GetCurrentMapAreaID()
 
 	if not private.OptionsCharacter.Achievements[private.ACHIEVEMENT_IDS.ONE_MANY_ARMY] and currentzone == private.ZONE_IDS.VALE_OF_ETERNAL_BLOSSOMS then
-		if DEBUGGING then
-			Debug("ONE_MANY_ARMY not tracked")
-		end
+		Debug("ONE_MANY_ARMY not tracked")
 		return false
 	elseif not private.OptionsCharacter.Achievements[private.ACHIEVEMENT_IDS.CHAMPIONS_OF_LEI_SHEN] and currentzone == private.ZONE_IDS.ISLE_OF_THUNDER then
-		if DEBUGGING then
-			Debug("CHAMPIONS_OF_LEI_SHEN not tracked")
-		end
+		Debug("CHAMPIONS_OF_LEI_SHEN not tracked")
 		return false
 	elseif not private.OptionsCharacter.Achievements[private.ACHIEVEMENT_IDS.TIMELESS_CHAMPION] and currentzone == private.ZONE_IDS.TIMELESS_ISLE then
-		if DEBUGGING then
-			Debug("TIMELESS_CHAMPION not tracked")
-		end
+		Debug("TIMELESS_CHAMPION not tracked")
 		return false
 	elseif not private.OptionsCharacter.Achievements[private.ACHIEVEMENT_IDS.GLORIOUS] and (currentzone ~= private.ZONE_IDS.VALE_OF_ETERNAL_BLOSSOMS and currentzone ~= private.ZONE_IDS.TIMELESS_ISLE and currentzone ~= private.ZONE_IDS.ISLE_OF_THUNDER) then
-		if DEBUGGING then
-			Debug("GLORIOUS not tracked")
-		end
+		Debug("GLORIOUS not tracked")
 		return false
 	else
-		if DEBUGGING then
-			Debug("Tracking Mob")
-		end
+		Debug("Tracking Mob")
 		return true
 	end
 end
@@ -124,17 +112,13 @@ function private.SetVignetteTarget()
 		private.VignetteBuildList(npc_id)
 		private.Button:Update(npc_id, "Vignette Mob", "Unknown Vignette")
 
-		if DEBUGGING then
-			Debug("Mob Dead")
-		end
+		Debug("Mob Dead")
 		return
 	end
 
 	if npc_id then
 		if _G.InCombatLockdown() then
-			if DEBUGGING then
-				Debug("Combat LockDown")
-			end
+			Debug("Combat LockDown")
 			private.Button.PendingID, private.Button.PendingName, private.Button.PendingSource = npc_id, npc_name, "Vignette Mob"
 		else
 			private.Button:Update(npc_id, npc_name, "Vignette Mob")
@@ -142,9 +126,7 @@ function private.SetVignetteTarget()
 		last_vignette_id = npc_id
 	end
 
-	if DEBUGGING then
-		Debug("Last ID: " .. last_vignette_id)
-	end
+	Debug("Last ID: " .. last_vignette_id)
 end
 
 --Builds a target macro for every rare mob in the current zone
@@ -169,9 +151,7 @@ function private.VignetteBuildList(instanceid)
 	--Delays alerts on login untill the world so current zone can be properly detected
 	if not zone_name then
 		vignette_delay = instanceid
-		if DEBUGGING then
-			Debug("Build List Delayed")
-		end
+		Debug("Build List Delayed")
 		return false
 	end
 
@@ -198,44 +178,56 @@ end
 
 --_G._NPCScan.macrotext
 -- Vignette alert,  VIGNETTE_ADDED Currently does not work corrrectly to bugs with instanceid assignment
--- Will revisit again when 5.4.2 is released to see if issue is resolved
+-- Will revisit again when 6.0 is released to see if issue is resolved
 -- Refrence: http://wowpedia.org/API_C_Vignettes.GetVignetteInfoFromInstanceID
 function private.VFrame:VIGNETTE_ADDED(event, instanceid, ...)
-	private.VignetteHandler(instanceid)
+	vignette_found_count = vignette_found_count + 1
+	Debug("Found: %d  Last ID: %d", vignette_found_count, last_vignette_id)
 
 	if not private.OptionsCharacter.TrackVignettes or
 		not instanceid or
 		not VignetteFilterByAchievement() or
 		-- private.Button:IsShown() or
 		_G.GetUnitName("target") == last_vignette_id or
-		not private.VignetteBuildList(instanceid) then
+		not private.VignetteBuildList(instanceid) or
+		UnitIsDeadOrGhost("player")  or
+		not private.CheckDelay(instanceid) then
 		return
 	end
 
 	local x, y, name, iconid = _G.C_Vignettes.GetVignetteInfoFromInstanceID(instanceid)
+	local alert_text = nil
+
 	-- iconid seems to be 40:chests, 41:mobs
 	if not iconid then --Use case for broken Mob Info
-		if DEBUGGING then
-			Debug("Nul Mob Data Returned")
-		end
-		private.Print(L["FOUND_FORMAT"]:format("Vignette Mob"), _G.GREEN_FONT_COLOR)
+		Debug("Null Mob Data Returned")
+		--private.Print(L["FOUND_FORMAT"]:format("Vignette Mob"), _G.GREEN_FONT_COLOR)
+		alert_text = L["FOUND_FORMAT"]:format("Vignette Mob")
 		private.Button:SetNPC(67490, "Vignette Mob", "Unknown Vignette")
-	elseif iconid == 41 then --Use Case if AIP returns Mob Info
-		if DEBUGGING then
-			Debug("Correct Mob Data Returned")
-		end
-		private.Print(L["FOUND_FORMAT"]:format("Vignette Mob"), _G.GREEN_FONT_COLOR)
+	elseif iconid == 41 then  --Use Case if API returns Mob Info
+		Debug("Correct Mob Data Returned")
+		--private.Print(L["FOUND_FORMAT"]:format("Vignette Mob"), _G.GREEN_FONT_COLOR)
+		alert_text = L["FOUND_FORMAT"]:format("Vignette Mob")
 		private.Button:SetNPC(private.NPC_NAME_TO_ID[name], name, "Vignette Mob")
 	else -- All other cases
-		if DEBUGGING then
-			Debug("Untracked Vigenette")
-		end
+		Debug("Untracked Vigenette")
+	end
+
+	if private.Options.ShowAlertAsToast and alert_text then
+		Toast:Spawn("_NPCScanAlertToast", alert_text)
+	elseif alert_text then
+		private.Print(alert_text, _G.GREEN_FONT_COLOR)
 	end
 end
 
 --Clears last seen mob when vignette is removed from map
 function private.VFrame:VIGNETTE_REMOVED(event, instanceid, ...)
-	private.VignetteHandler(instanceid)
+	vignette_found_count = vignette_found_count - 1
+	if vignette_found_count == 0 then
+		if not _G.InCombatLockdown() then
+			last_vignette_id = 0
+		end
+	end
 end
 
 

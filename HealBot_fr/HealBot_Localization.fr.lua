@@ -1,4 +1,4 @@
-ï»¿-- French version (by Kubik of Vol'Jin) 2014-05-24 / V. 5.4.8.0
+ï»¿-- French version (by Kubik of Vol'Jin) 2014-08-25 / V. 5.4.8.3
 -- à = \195\160
 -- â = \195\162
 -- ç = \195\167
@@ -264,13 +264,6 @@ HEALBOT_MAINASSIST                   = "MainAssist";
 HEALBOT_STOP                         = "Stop";
     HEALBOT_TELL                         = "Dire";
 
-    HEALBOT_TITAN_SMARTCAST              = "Sorts intelligents";
-    HEALBOT_TITAN_MONITORBUFFS           = "Afficher les Buffs";
-    HEALBOT_TITAN_MONITORDEBUFFS         = "Afficher les d\195\169buffs"
-    HEALBOT_TITAN_SHOWBARS               = "Afficher barres pour";
-    HEALBOT_TITAN_EXTRABARS              = "Barres suppl.";
-    HEALBOT_BUTTON_TOOLTIP               = "Clic gauche : options HealBot\nClic-drag droit : d\195\169placer mini bouton";
-    HEALBOT_TITAN_TOOLTIP                = "Clic gauche : options HealBot";
     HEALBOT_OPTIONS_SHOWMINIMAPBUTTON    = "Aff. le bouton sur la minicarte";
     HEALBOT_OPTIONS_BARBUTTONSHOWHOT     = "Afficher les HoT";
     HEALBOT_OPTIONS_BARBUTTONSHOWRAIDICON = "Afficher les ic\195\180nes de raid";
@@ -926,7 +919,7 @@ HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "Vous surveillez les buffs manquants \
     
     HEALBOT_OPTIONS_LANG                    = "Langue"
     HEALBOT_OPTIONS_LANG_ZHCN               = "Chinois (zhCN - par Ydzzs)"
-    HEALBOT_OPTIONS_LANG_DEDE               = "Allemand (deDE - Recherche traducteur)"
+    HEALBOT_OPTIONS_LANG_DEDE               = "Allemand (deDE - par Snaomi)"
     HEALBOT_OPTIONS_LANG_ENUK               = "Anglais (enUK - par Strife)"
     HEALBOT_OPTIONS_LANG_ENUS               = "Anglais (enUS - par Strife)"
     HEALBOT_OPTIONS_LANG_ESES               = "Espagnol (esES - Recherche traducteur)"
@@ -1023,6 +1016,12 @@ HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "Vous surveillez les buffs manquants \
     HEALBOT_WORDS_ADDPERMCUSTOMNAME         = "Ajouter un nom perso. permanent"
     HEALBOT_OPTIONS_ENABLELIBUTF8           = "Activer caract\195\168res UTF8"
     HEALBOT_OPTIONS_SHOWDIRECTION           = "Indiquer la direction hors d'atteinte";
+    HEALBOT_OPTIONS_SHOWDIRECTIONMOUSE      = "Seulement au passage de la souris"
+    --HEALBOT_OPTIONS_SHOWDIRECTIONARROWCOL   = "Couleur de la fl\195\168che"
+    HEALBOT_LDB_LEFT_TOOLTIP                = "|cffffff00 Clic gauche :|r Panneau d\'options HealBot";
+    HEALBOT_LDB_SHIFTLEFT_TOOLTIP           = "|cffffff00 Shift-Clic gauche :|r Skin suivant";
+    HEALBOT_LDB_RIGHT_TOOLTIP               = "|cffffff00 Clic droit :|r Reset HealBot";
+    HEALBOT_LDB_SHIFTRIGHT_TOOLTIP          = "|cffffff00 Shift-Clic droit :|r HealBot On/Off";
 end
 
 if (GetLocale() == "frFR") then

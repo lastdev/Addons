@@ -14,11 +14,11 @@ if locale == "ptBR" then -- Brazilian Portuguese
 -- L["Solo Mode when not Grouped"] = ""
 
 elseif locale == "frFR" then -- French
--- L["Flash Arcane"] = ""
--- L["Flash Fire"] = ""
--- L["Flash Frost"] = ""
--- L["Minumum Combustion total damage:"] = ""
--- L["Show Combustion Monitor"] = ""
+L["Flash Arcane"] = "Flash Arcanes" -- Needs review
+L["Flash Fire"] = "Flash Feu" -- Needs review
+L["Flash Frost"] = "Flash Givre" -- Needs review
+L["Minumum Combustion total damage:"] = "Dégâts minimum de Combustion" -- Needs review
+L["Show Combustion Monitor"] = "Afficher le moniteur de Combustion" -- Needs review
 L["Solo Mode when not Grouped"] = "Mode solo si pas groupé" -- Needs review
 
 elseif locale == "deDE" then -- German

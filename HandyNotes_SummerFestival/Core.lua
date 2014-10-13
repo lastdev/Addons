@@ -20,6 +20,7 @@ local defaults = { profile = { completed = false, icon_scale = 1.4, icon_alpha =
 -- upvalues
 local _G = getfenv(0)
 
+local CalendarGetDate = _G.CalendarGetDate
 local CloseDropDownMenus = _G.CloseDropDownMenus
 local GameTooltip = _G.GameTooltip
 local gsub = _G.string.gsub
@@ -99,9 +100,10 @@ do
 
 			if TomTom or Cartographer_Waypoints then
 				-- waypoint menu item
+				info.notCheckable = nil
 				info.disabled = nil
 				info.isTitle = nil
-				info.notCheckable = nil
+				info.icon = nil
 				info.text = "Create waypoint"
 				info.func = createWaypoint
 				info.arg1 = currentZone
@@ -115,6 +117,9 @@ do
 			info.func = close
 			info.arg1 = nil
 			info.arg2 = nil
+			info.icon = nil
+			info.isTitle = nil
+			info.disabled = nil
 			info.notCheckable = 1
 
 			UIDropDownMenu_AddButton(info, level)
@@ -219,10 +224,16 @@ local options = {
 
 -- initialise
 function SummerFestival:OnEnable()
-	HandyNotes:RegisterPluginDB("SummerFestival", self, options)
-	self:RegisterEvent("QUEST_FINISHED", "Refresh")
+	local _, month, day = CalendarGetDate()
 
-	db = LibStub("AceDB-3.0"):New("HandyNotes_SummerFestivalDB", defaults, "Default").profile
+	if ( month == 6 and day >= 21 ) or ( month == 7 and day <= 4 ) then
+		HandyNotes:RegisterPluginDB("SummerFestival", self, options)
+		self:RegisterEvent("QUEST_FINISHED", "Refresh")
+
+		db = LibStub("AceDB-3.0"):New("HandyNotes_SummerFestivalDB", defaults, "Default").profile
+	else
+		self:Disable()
+	end
 end
 
 function SummerFestival:Refresh()

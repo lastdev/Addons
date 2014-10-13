@@ -62,6 +62,7 @@ local BAG_ICONS = {
 	"Interface\\Icons\\INV_Misc_Bag_25_Mooncloth",
 	"Interface\\Icons\\INV_Misc_Bag_26_Spellfire",
 	"Interface\\Icons\\INV_Misc_Bag_33",
+	"Interface\\Icons\\inv_misc_basket_05",
 }
 
 local ICON_BAGS_HALLOWSEND = "Interface\\Icons\\INV_Misc_Bag_28_Halloween"
@@ -480,7 +481,7 @@ end
 local function OnClearMailboxEntries(self)
 	local character = ns:GetAltKey()
 	DataStore:ClearMailboxEntries(character)
-	addon.Mails:Update()
+	addon.Mail:Update()
 end
 
 
@@ -852,7 +853,7 @@ function ns:OnLoad()
 	local bagIcon = ICON_VIEW_BAGS
 
 	-- bag icon gets better with more chars at lv max
-	local LVMax = 85
+	local LVMax = 90
 	local numLvMax = 0
 	for _, character in pairs(DataStore:GetCharacters()) do
 		if DataStore:GetCharacterLevel(character) >= LVMax then

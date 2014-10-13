@@ -43,11 +43,11 @@ local recipe_meta = {
 -- @name AckisRecipeList:AddRecipe
 -- @usage AckisRecipeList:AddRecipe(28927, 23109, V.TBC, Q.UNCOMMON)
 -- @param spell_id The [[http://www.wowpedia.org/SpellLink|Spell ID]] of the recipe being added to the database
--- @param profession The profession ID that uses the recipe.  See [[API/database-documentation]] for a listing of profession IDs
+-- @param profession_spell_id The profession ID that uses the recipe.  See [[API/database-documentation]] for a listing of profession IDs
 -- @param genesis Game version that the recipe was first introduced in, for example, Original, BC, WoTLK, or Cata
 -- @param quality The quality/rarity of the recipe
 -- @return Resultant recipe table.
-function addon:AddRecipe(spell_id, profession, genesis, quality)
+function addon:AddRecipe(spell_id, profession_spell_id, genesis, quality)
 	local recipe_list = private.recipe_list
 
 	if recipe_list[spell_id] then
@@ -60,7 +60,7 @@ function addon:AddRecipe(spell_id, profession, genesis, quality)
 		flags = {},
 		genesis = private.GAME_VERSION_NAMES[genesis],
 		name = _G.GetSpellInfo(spell_id),
-		profession = _G.GetSpellInfo(profession),
+		profession = _G.GetSpellInfo(profession_spell_id),
 		quality = quality,
 		_spell_id = spell_id,
 	}, recipe_meta)
@@ -278,7 +278,7 @@ do
 end -- do-block
 
 function Recipe:SetItemFilterType(filter_type)
-	if not private.ITEM_FILTER_TYPES[filter_type:upper()] then
+	if not addon.constants.ITEM_FILTER_TYPES[filter_type:upper()] then
 		addon:Debug("Attempting to set invalid item filter type '%s' for '%s' (%d)", filter_type, self.name, self:SpellID())
 		return
 	end
@@ -491,7 +491,9 @@ function Recipe:AddRepVendor(reputation_id, rep_level, ...)
 		local vendor_id = select(cur_var, ...)
 		cur_var = cur_var + 1
 
-		if reputation_acquire_type:GetEntity(reputation_id) then
+		local reputation = reputation_acquire_type:GetEntity(reputation_id)
+
+		if reputation then
 			if vendor_id then
 				local rep_vendor = vendor_acquire_type:GetEntity(vendor_id)
 
@@ -504,6 +506,9 @@ function Recipe:AddRepVendor(reputation_id, rep_level, ...)
 					rep_vendor.reputation_id = reputation_id
 					rep_vendor.item_list = rep_vendor.item_list or {}
 					rep_vendor.item_list[self:SpellID()] = true
+
+					reputation.item_list = reputation.item_list or {}
+					reputation.item_list[self:SpellID()] = true
 				else
 					addon:Debug("Spell ID %d (%s): Reputation Vendor ID %s does not exist in the %s AcquireType Entity table.",
 						self:SpellID(),
@@ -682,13 +687,13 @@ do
 		return false
 	end
 
-	---Scans a specific recipe to determine if it is to be displayed or not.
-	 function Recipe:CanDisplay()
-		 if InitializeFilters then
-			 InitializeFilters()
-		 end
+	--- Scans a specific recipe to determine if it is to be displayed or not.
+	function Recipe:CanDisplay()
+		if InitializeFilters then
+			InitializeFilters()
+		end
 
-		 if addon.db.profile.exclusionlist[self:SpellID()] and not addon.db.profile.ignoreexclusionlist then
+		if addon.db.profile.exclusionlist[self:SpellID()] and not addon.db.profile.ignoreexclusionlist then
 			return false
 		end
 		local general_filters = filter_db.general
@@ -727,8 +732,9 @@ do
 			return false
 		end
 		local item_filter_type = self:ItemFilterType()
+		local profession_module = addon:GetModule(private.PROFESSION_MODULE_NAMES[private.ORDERED_PROFESSIONS[addon.Frame.current_profession]])
 
-		if item_filter_type and not addon.db.profile.filters.item[item_filter_type] then
+		if item_filter_type and (not profession_module or not profession_module.db.profile.filters.item[item_filter_type]) then
 			return false
 		end
 
@@ -952,7 +958,7 @@ function Recipe:Dump(output, use_genesis)
 				else
 					saved_id = identifier
 				end
-				local vendor = private.private.AcquireTypes.Vendor:GetEntity(identifier)
+				local vendor = private.AcquireTypes.Vendor:GetEntity(identifier)
 				local quantity = vendor.item_list[self:SpellID()]
 
 				if type(quantity) == "number" then

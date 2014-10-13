@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: CoreConfig.lua 5213 2011-08-25 12:48:28Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: CoreConfig.lua 5461 2014-06-19 10:37:18Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -182,9 +182,16 @@ function lib.About(all)
 	end
 end
 
-SLASH_AUCADVANCED1 = "/auc"
-SLASH_AUCADVANCED2 = "/aadv"
-SLASH_AUCADVANCED3 = "/auctioneer"
-SlashCmdList["AUCADVANCED"] = function(msg, editbox) private.CommandHandler(editbox, strsplit(" ", msg)) end
+function private.Activate()
+	private.Activate = nil
+	SLASH_AUCADVANCED1 = "/auc"
+	SLASH_AUCADVANCED2 = "/aadv"
+	SLASH_AUCADVANCED3 = "/auctioneer"
+	SlashCmdList["AUCADVANCED"] = function(msg, editbox) private.CommandHandler(editbox, strsplit(" ", msg)) end
+end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Advanced/CoreConfig.lua $", "$Rev: 5213 $")
+coremodule.Processors = {
+	gameactive = function() private.Activate() end,
+}
+
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CoreConfig.lua $", "$Rev: 5461 $")

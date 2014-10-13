@@ -296,7 +296,6 @@ c.AddOptionalSpell("Shield of the Righteous", "to save Buffs", {
 c.AddSpell("Holy Wrath", nil, {
 	Melee = true,
 	NoRangeCheck = true,
-	NotIfActive = true,
 	Cooldown = 9,
 })
 
@@ -309,7 +308,6 @@ local hwStunnable = {
 }
 c.AddSpell("Holy Wrath", "to Stun", {
 	Melee = true,
-	NotIfActive = true,
 	NoRangeCheck = true,
 	Cooldown = 9,
 	CheckFirst = function()

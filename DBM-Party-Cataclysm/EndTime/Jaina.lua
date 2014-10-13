@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(285, "DBM-Party-Cataclysm", 12, 184)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
 mod:SetCreatureID(54445)
 mod:SetModelID(38802)
 mod:SetZone()
@@ -12,6 +12,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS",
 	"SPELL_DAMAGE"
 )
+mod.onlyHeroic = true
 
 local warnFlarecore				= mod:NewSpellAnnounce(101927, 4)
 local warnFrostBlades			= mod:NewSpellAnnounce(101339, 3)

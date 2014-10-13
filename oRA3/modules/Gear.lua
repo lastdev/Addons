@@ -6,7 +6,7 @@ local util = oRA.util
 local module = oRA:NewModule("Gear")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 
-module.VERSION = tonumber(("$Revision: 647 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 712 $"):sub(12, -3))
 
 local gearTbl = {}
 
@@ -76,7 +76,7 @@ do
 				local all, equipped = GetAverageItemLevel()
 				local missingEnchants, emptySockets = 0, 0
 
-				local isBlackSmith = GetSpellInfo((GetSpellInfo(2018))) -- Blacksmithing
+				local isBlacksmith = GetSpellInfo((GetSpellInfo(2018))) -- Blacksmithing
 				local isEnchanter = GetSpellInfo((GetSpellInfo(7411))) -- Enchanting
 
 				enchantableItems[11] = isEnchanter and true or false -- FINGER 1
@@ -103,9 +103,9 @@ do
 						end
 
 						local statsTable = GetItemStats(itemLink)
-						for k in next, statsTable do
+						for k, v in next, statsTable do
 							if k:find("EMPTY_SOCKET_", nil, true) then
-								totalItemSockets = totalItemSockets + 1
+								totalItemSockets = totalItemSockets + v
 							end
 						end
 
@@ -125,9 +125,9 @@ do
 				k = #gearTbl + 1
 				gearTbl[k] = { sender }
 			end
-			gearTbl[k][2] = ilvl
-			gearTbl[k][3] = gems
-			gearTbl[k][4] = enchants
+			gearTbl[k][2] = tonumber(ilvl)
+			gearTbl[k][3] = tonumber(gems)
+			gearTbl[k][4] = tonumber(enchants)
 
 			oRA:UpdateList(L["Gear"])
 		end

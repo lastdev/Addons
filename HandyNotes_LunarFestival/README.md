@@ -1,5 +1,5 @@
-HandyNotes - The Lunar Festival
-===============================
+HandyNotes - Lunar Festival
+===========================
 
 
 What it does
@@ -37,11 +37,6 @@ If you have any comments, bug reports or feature requests, please leave a commen
 
 * * *
 
-
-About the Author
-----------------
-
-This addon was lovingly made by Ethan Centaurai, who usually plays as [Ysaera](http://eu.battle.net/wow/en/character/ghostlands/ysaera/simple) on Ghostlands-EU.
 
 * Visit my [website](http://www.ethancentaurai.com/).
 * Follow me on [Twitter](http://twitter.com/StevenBlanchard).

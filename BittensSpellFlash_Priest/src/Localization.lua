@@ -6,9 +6,9 @@ a.Localize = setmetatable({ }, { __index = function(_, key) return key end })
 local L = a.Localize
 local locale = GetLocale()
 if locale == "ptBR" then -- Brazilian Portuguese
--- L["Flash Discipline"] = ""
--- L["Flash Holy"] = ""
--- L["Flash Shadow"] = ""
+L["Flash Discipline"] = "Flash Disciplina" -- Needs review
+L["Flash Holy"] = "Flash Sagrado" -- Needs review
+L["Flash Shadow"] = "Flash Sombra" -- Needs review
 -- L["PW: Shield & Binding Heal on Mouseover"] = ""
 
 elseif locale == "frFR" then -- French

@@ -31,6 +31,8 @@ Sample:
 		damageMinimum = 50000;
 		ignoreEvent = "IgnoreSpell";
 		category = "TestSpell";
+		casterOnly = true;
+		meleeOnly = true;
 	};
 		
 ]]--

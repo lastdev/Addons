@@ -60,6 +60,8 @@ GTFOLocal =
 	UI_HighDamageDescription = "當你位於會受到高傷害的位置時，立即啟用播放GTFO強烈的警告音效。",
 	UI_LowDamage = "PvP/環境/低傷害音效",
 	UI_LowDamageDescription = "當你還在考慮或是沒離開低傷害區時，啟動GTFO低傷害音效。",
+	UI_SoundChannel = "聲音頻道",
+	UI_SoundChannelDescription = "這是GTFO警告聲音將歸屬的聲音頻道。",
 	UI_SpecialAlerts = "特殊警報",
 	UI_SpecialAlertsHeader = "啟用特殊警報",
 	UI_Test = "測試",
@@ -69,9 +71,11 @@ GTFOLocal =
 	UI_TestModeDescription2 = "如有任何問題，請回報到 |cFF44FFFF%s@%s.%s|r",
 	UI_Trivial = "低等級警報",
 	UI_TrivialDescription = "啟用低等級的副本警報.",
+	UI_TrivialDescription2 = "設定最低能承受傷害的HP值滑塊，警告才不會被認為無關緊要。",
+	UI_TrivialSlider = "最低 % 的HP (玩家血量)",
 	UI_Unmute = "當靜音時播放音效",
 	UI_UnmuteDescription = "如果你關閉了主音量，GTFO將暫時開啟音量來播放GTFO的警報。",
-	UI_UnmuteDescription2 = "這個設定需要主音量高於 0%.",
+	UI_UnmuteDescription2 = "這個設定需要主音量(並且頻道已選)高於 0%.",
 	UI_Volume = "GTFO 音量",
 	UI_VolumeDescription = "設置警報音效的音量.",
 	UI_VolumeLoud = "4: 大聲",
@@ -81,13 +85,8 @@ GTFOLocal =
 	UI_VolumeNormal = "3: 一般 (推薦)",
 	UI_VolumeQuiet = "1: 安靜",
 	UI_VolumeSoft = "2: 柔和",
-	Version_On = "版本更新提醒啟用",
 	Version_Off = "版本更新提醒關閉",
-	-- 4.19.1
-	UI_TrivialSlider = "最低 % 的HP (玩家血量)",
-	UI_TrivialDescription2 = "設定最低能承受傷害的HP值滑塊，警告才不會被認為無關緊要。",
+	Version_On = "版本更新提醒啟用",
 }
-
-
 
 end

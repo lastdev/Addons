@@ -193,7 +193,7 @@ end
 local function IsEnchanted(link)
 	if not link then return end
 	
-	if not string.find(link, "0:0:0:0:0:0") then	-- only check 6 zeroes, 7th is the UniqueID, which is irrelevant for us
+	if not string.find(link, "item:%d+:0:0:0:0:0:0:%d+:%d+:0:0") then	-- 7th is the UniqueID, 8th LinkLevel which are irrelevant
 		-- enchants/jewels store values instead of zeroes in the link, if this string can't be found, there's at least one enchant/jewel
 		return true
 	end
@@ -315,6 +315,7 @@ local function ScanContainer(bagID, containerType)
 	end
 	
 	addon.ThisCharacter.lastUpdate = time()
+	addon:SendMessage("DATASTORE_CONTAINER_UPDATED", bagID, containerType)
 end
 
 local function ScanBagSlotsInfo()
@@ -397,6 +398,7 @@ local function ScanVoidStorage()
 		itemID = GetVoidItemInfo(i)
 		bag.ids[i] = itemID
 	end
+	addon:SendMessage("DATASTORE_VOIDSTORAGE_UPDATED")
 end
 
 -- *** Event Handlers ***
@@ -493,6 +495,8 @@ end
 
 local function OnVoidStorageClosed()
 	addon:UnregisterEvent("VOID_STORAGE_CLOSE")
+	addon:UnregisterEvent("VOID_STORAGE_UPDATE")
+	addon:UnregisterEvent("VOID_STORAGE_CONTENTS_UPDATE")
 	addon:UnregisterEvent("VOID_TRANSFER_DONE")
 end
 
@@ -503,6 +507,8 @@ end
 local function OnVoidStorageOpened()
 	ScanVoidStorage()
 	addon:RegisterEvent("VOID_STORAGE_CLOSE", OnVoidStorageClosed)
+	addon:RegisterEvent("VOID_STORAGE_UPDATE", ScanVoidStorage)
+	addon:RegisterEvent("VOID_STORAGE_CONTENTS_UPDATE", ScanVoidStorage)
 	addon:RegisterEvent("VOID_TRANSFER_DONE", OnVoidStorageTransferDone)
 end
 
@@ -551,7 +557,10 @@ end
 
 local function _GetContainerSize(character, containerID)
 	-- containerID can be number or string
-	return character.Containers["Bag" .. containerID].size
+	if type(containerID) == "number" then
+		return character.Containers["Bag" .. containerID].size
+	end
+	return character.Containers[containerID].size
 end
 
 local function _GetSlotInfo(bag, slotID)

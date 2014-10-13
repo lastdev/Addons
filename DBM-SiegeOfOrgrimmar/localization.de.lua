@@ -6,10 +6,6 @@ local L
 ---------------
 L= DBM:GetModLocalization(852)
 
-L:SetMiscLocalization({
-	Victory			= "Ah, Ihr habt es geschafft! Das Wasser ist wieder rein."
-})
-
 ---------------------------
 -- The Fallen Protectors --
 ---------------------------
@@ -94,10 +90,6 @@ L= DBM:GetModLocalization(850)
 
 L:SetWarningLocalization({
 	warnDefensiveStanceSoon		= "Verteidigungshaltung in %ds"
-})
-
-L:SetOptionLocalization({
-	warnDefensiveStanceSoon		= "Zeige Vorwarnungscountdown für $spell:143593 (5s zuvor)"
 })
 
 L:SetMiscLocalization({
@@ -198,7 +190,8 @@ L:SetOptionLocalization({
 L:SetMiscLocalization({
 	wasteOfTime			= "Es ist noch nicht zu spät, Garrosh. Legt den Mantel des Kriegshäuptlings ab. Wir können dies hier beenden, jetzt, ohne Blutvergießen.",
 	NoReduce			= "Keine Schadensreduzierung",
-	MaliceFadeYell		= "Bösartigkeit schwindet auf %s (%d)"
+	MaliceFadeYell		= "Bösartigkeit schwindet auf %s (%d)",
+	phase3End			= "You think you have WON?" --translate (trigger)
 })
 
 -------------

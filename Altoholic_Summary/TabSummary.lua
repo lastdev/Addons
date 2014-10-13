@@ -20,6 +20,7 @@ local childrenFrames = {
 	"BagUsage",
 	"Skills",
 	"Activity",
+	"Currencies",
 }
 
 local childrenObjects		-- these are the tables that actually contain the BuildView & Update methods. Not really OOP, but enough for our needs
@@ -82,6 +83,7 @@ function ns:MenuItem_OnClick(id)
 		addon.BagUsage,
 		addon.TradeSkills,
 		addon.Activity,
+		addon.Currencies,
 	}
 
 	for _, v in pairs(childrenFrames) do			-- hide all frames
@@ -160,6 +162,16 @@ function ns:SetMode(mode)
 		Columns:Add(BIDS, 60, function(self) addon.Characters:Sort(self, "GetNumBids") end)
 		Columns:Add(L["Visited"], 60, function(self) addon.Characters:Sort(self, "GetAuctionHouseLastVisit") end)
 		Columns:Add(LASTONLINE, 90, function(self) addon.Characters:Sort(self, "GetLastLogout") end)
+	
+	elseif currentMode == 5 then
+		Columns:Add(NAME, 100, function(self) addon.Characters:Sort(self, "GetCharacterName") end)
+		Columns:Add(LEVEL, 60, function(self) addon.Characters:Sort(self, "GetCharacterLevel") end)
+		
+		Columns:Add(L["Justice"], 80, function(self) addon.Characters:Sort(self, "GetJusticePoints") end)
+		Columns:Add(L["Valor / Week"], 90, function(self) addon.Characters:Sort(self, "GetValorPointsPerWeek") end)
+		Columns:Add(L["Valor"], 80, function(self) addon.Characters:Sort(self, "GetValorPoints") end)
+		Columns:Add(L["Honor"], 80, function(self) addon.Characters:Sort(self, "GetHonorPoints") end)
+		Columns:Add(L["Conquest"], 80, function(self) addon.Characters:Sort(self, "GetConquestPoints") end)
 	end
 end
 
@@ -172,6 +184,8 @@ function ns:Refresh()
 		addon.TradeSkills:Update()
 	elseif AltoholicFrameActivity:IsVisible() then
 		addon.Activity:Update()
+	elseif AltoholicFrameCurrencies:IsVisible() then
+		addon.Currencies:Update()
 	end
 end
 
@@ -223,6 +237,41 @@ local NUM_RC_MENUS = 2
 local function ShowOptionsCategory(self)
 	addon:ToggleUI()
 	InterfaceOptionsFrame_OpenToCategory(self.value)
+end
+
+local function ResetAllData_MsgBox_Handler(self, button)
+	if not button then return end
+	
+	DataStore:ClearAllData()
+	addon:Print(L["Information saved in DataStore has been completely deleted !"])
+	
+	-- rebuild the main character table, and all the menus
+	addon.Characters:BuildList()
+	addon.Characters:BuildView()
+	ns:Refresh()
+end
+
+local function ResetAllData()
+	-- reset all data stored in datastore modules
+	addon:SetMsgBoxHandler(ResetAllData_MsgBox_Handler)
+	
+	AltoMsgBox_Text:SetText(L["Wipe database ?\nWarning: all information will be lost !"])
+	AltoMsgBox:Show()
+end
+
+local function ResetConnectedRealms_MsgBox_Handler(self, button)
+	if not button then return end
+	
+	DataStore:ClearAllConnectedRealms()
+	addon:Print(L["Realm links successfully deleted"])
+end
+
+local function ResetConnectedRealms()
+	-- reset connected realms, only the links between realms, not the data from other alts
+	addon:SetMsgBoxHandler(ResetConnectedRealms_MsgBox_Handler)
+	
+	AltoMsgBox_Text:SetText(L["Reset connected realms ?"])
+	AltoMsgBox:Show()
 end
 
 -- ** Menu Icons **
@@ -279,6 +328,9 @@ local function DataStoreOptionsIcon_Initialize(self, level)
 	end
 	
 	DDM_AddTitle(" ")	
+	
+	DDM_Add(L["Reset all data"], nil, ResetAllData)
+	DDM_Add(L["Reset connected realms"], nil, ResetConnectedRealms)
 	DDM_Add(HELP_LABEL, DataStoreHelp, ShowOptionsCategory)
 	DDM_AddCloseMenu()
 end

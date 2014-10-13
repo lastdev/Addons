@@ -366,7 +366,6 @@ local function RightClickMenu_Initialize()
 	DDM_AddCloseMenu()
 end
 
-
 local callbacks = {
 	OnUpdate = function() end,
 	GetSize = function() return ns:GetNumSlotTypes() end,
@@ -468,7 +467,6 @@ local callbacks = {
 					addon:DDM_Initialize(AltoholicFrameGridsRightClickMenu, RightClickMenu_Initialize)
 				end
 				
-				DEFAULT_CHAT_FRAME:AddMessage(link)
 				addon.Search:SetCurrentItem( addon:GetIDFromLink(link) ) 		-- item ID of the item to find an upgrade for
 				local _, class = DataStore:GetCharacterClass(character)
 				addon.Search:SetClass(class)

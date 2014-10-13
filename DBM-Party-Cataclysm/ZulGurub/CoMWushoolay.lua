@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(180, "DBM-Party-Cataclysm", 11, 76, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 88 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
 mod:SetCreatureID(52286)
 mod:SetZone()
 
@@ -11,6 +11,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED"
 )
+mod.onlyHeroic = true
 
 local warnRush			= mod:NewCastAnnounce(96697, 3)
 local warnRod			= mod:NewCastAnnounce(96698, 4)

@@ -8,7 +8,7 @@
 ## SavedVariables: DataStore_StatsDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
-## X-Curse-Packaged-Version: r19
+## X-Curse-Packaged-Version: 5.4.007
 ## X-Curse-Project-Name: DataStore_Stats
 ## X-Curse-Project-ID: datastore_stats
 ## X-Curse-Repository-ID: wow/datastore_stats/mainline

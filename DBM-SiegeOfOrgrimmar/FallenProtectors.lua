@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(849, "DBM-SiegeOfOrgrimmar", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11192 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11291 $"):sub(12, -3))
 mod:SetCreatureID(71479, 71475, 71480)--He-Softfoot, Rook Stonetoe, Sun Tenderheart
 mod:SetEncounterID(1598)
 mod:SetZone()
@@ -90,7 +90,7 @@ local specWarnDarkMeditation		= mod:NewSpecialWarningSpell(143546)
 --Rook Stonetoe
 local timerVengefulStrikesCD		= mod:NewCDTimer(21, 144396, nil, mod:IsTank())
 local timerCorruptedBrewCD			= mod:NewCDTimer(11, 143019)--11-27
-local timerClashCD					= mod:NewCDTimer(49, 143027)--49 second next timer IF none of bosses enter a special between casts, otherwise always delayed by specials (and usually cast within 5 seconds after special ends)
+local timerClashCD					= mod:NewCDTimer(46, 143027)--46 second next timer IF none of bosses enter a special between casts, otherwise always delayed by specials (and usually cast within 5 seconds after special ends)
 ----Rook Stonetoe's Desperate Measures
 local timerDefiledGroundCD			= mod:NewCDTimer(10.5, 143961, nil, mod:IsTank())
 local timerInfernoStrikeCD			= mod:NewNextTimer(9.5, 143962)

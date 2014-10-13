@@ -51,8 +51,8 @@ L["Flash Demonology"] = "Flash demonología"
 L["Flash Destruction"] = "Flash destrucción"
 
 elseif locale == "zhTW" then -- Traditional Chinese
-L["Flash Affliction"] = "痛苦閃光" -- Needs review
-L["Flash Demonology"] = "惡魔閃光" -- Needs review
-L["Flash Destruction"] = "毀滅閃光" -- Needs review
+L["Flash Affliction"] = "啟用痛苦專精" -- Needs review
+L["Flash Demonology"] = "啟用惡魔學識專精" -- Needs review
+L["Flash Destruction"] = "啟用毀滅專精" -- Needs review
 
 end

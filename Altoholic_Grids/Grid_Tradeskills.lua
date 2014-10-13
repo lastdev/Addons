@@ -38,8 +38,9 @@ local xPacks = {
 	EXPANSION_NAME4,	-- "Mists of Pandaria"
 }
 
-local currentXPack = 1					-- default to wow classic
-local currentTradeSkill = 1			-- default to alchemy
+local OPTION_XPACK = "UI.Tabs.Grids.Tradeskills.CurrentXPack"
+local OPTION_TRADESKILL = "UI.Tabs.Grids.Tradeskills.CurrentTradeSkill"
+
 local currentDDMText
 local currentItemID
 local currentList
@@ -49,15 +50,17 @@ local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
 local DDM_AddTitle = addon.Helpers.DDM_AddTitle
 
 local function OnXPackChange(self)
-	currentXPack = self.value
-	currentDDMText = xPacks[currentXPack]
-	addon.Tabs.Grids:SetViewDDMText(currentDDMText)
+	local currentXPack = self.value
+	
+	addon:SetOption(OPTION_XPACK, currentXPack)
+
+	addon.Tabs.Grids:SetViewDDMText(xPacks[currentXPack])
 	addon.Tabs.Grids:Update()
 end
 
 local function OnTradeSkillChange(self)
 	CloseDropDownMenus()
-	currentTradeSkill = self.value
+	addon:SetOption(OPTION_TRADESKILL, self.value)
 	addon.Tabs.Grids:Update()
 end
 
@@ -65,6 +68,9 @@ local function DropDown_Initialize(self, level)
 
 	if not level then return end
 
+	local currentXPack = addon:GetOption(OPTION_XPACK)
+	local currentTradeSkill = addon:GetOption(OPTION_TRADESKILL)
+	
 	local info = UIDropDownMenu_CreateInfo()
 	
 	if level == 1 then
@@ -178,6 +184,9 @@ end
 
 local callbacks = {
 	OnUpdate = function() 
+			local currentXPack = addon:GetOption(OPTION_XPACK)
+			local currentTradeSkill = addon:GetOption(OPTION_TRADESKILL)
+			
 			currentList = LCI:GetProfessionCraftList(tradeskills[currentTradeSkill], currentXPack)
 			if not currentList.isSorted then
 				table.sort(currentList, SortByCraftLevel)
@@ -187,6 +196,7 @@ local callbacks = {
 			local prof = GetSpellInfo(tradeskills[currentTradeSkill])
 			addon.Tabs.Grids:SetStatus(format("%s / %s", GREEN..prof, WHITE .. xPacks[currentXPack]))
 		end,
+	OnUpdateComplete = function() end,
 	GetSize = function() return #currentList end,
 	RowSetup = function(self, entry, row, dataRowID)
 			local spellID = currentList[dataRowID]
@@ -233,7 +243,7 @@ local callbacks = {
 
 			local text = ICON_NOTREADY
 			local vc = 0.25	-- vertex color
-			local profession = DataStore:GetProfession(character, GetSpellInfo(tradeskills[currentTradeSkill]))			
+			local profession = DataStore:GetProfession(character, GetSpellInfo(tradeskills[addon:GetOption(OPTION_TRADESKILL)]))			
 
 			if profession.NumCrafts ~= 0 then
 				-- do not enable this yet .. working fine, but better if more filtering allowed. ==> filtering on rarity
@@ -272,12 +282,10 @@ local callbacks = {
 	InitViewDDM = function(frame, title) 
 			frame:Show()
 			title:Show()
-
-			currentDDMText = currentDDMText or xPacks[1]
 			
 			UIDropDownMenu_SetWidth(frame, 100) 
 			UIDropDownMenu_SetButtonWidth(frame, 20)
-			UIDropDownMenu_SetText(frame, currentDDMText)
+			UIDropDownMenu_SetText(frame, xPacks[addon:GetOption(OPTION_XPACK)])
 			addon:DDM_Initialize(frame, DropDown_Initialize)
 		end,
 }

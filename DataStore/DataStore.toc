@@ -12,7 +12,7 @@
 ## X-eMail: thaoky.altoholic@yahoo.com
 ## X-Donate: http://wow.curse.com/downloads/wow-addons/details/altoholic.aspx
 ## X-Credits: My guild (Odysseüs), all translators, the wowace community, and all users for their invaluable suggestions !
-## X-Curse-Packaged-Version: r42
+## X-Curse-Packaged-Version: r47
 ## X-Curse-Project-Name: DataStore
 ## X-Curse-Project-ID: datastore
 ## X-Curse-Repository-ID: wow/datastore/mainline

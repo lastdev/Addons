@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: BeanCounterAPI.lua 5127 2011-04-21 18:06:00Z kandoko $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: BeanCounterAPI.lua 5449 2014-01-14 15:25:58Z brykrys $
 
 	BeanCounterAPI - Functions for other addons to get BeanCounter Data
 	URL: http://auctioneeraddon.com/
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.18/BeanCounter/BeanCounterAPI.lua $","$Rev: 5127 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.20/BeanCounter/BeanCounterAPI.lua $","$Rev: 5449 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 lib.API = {}
@@ -222,37 +222,43 @@ function lib.API.getAHSoldFailed(player, link, days, serverKey)
 	if not BeanCounterDB[server] or not BeanCounterDB[server][player] then return end
 	local playerData = BeanCounterDB[server][player] --alias
 	
-	local itemID = lib.API.decodeLink(link)
+	local itemID, suffix = lib.API.decodeLink(link)
 	if not itemID then return end
 		
 	local now = time()
-	local success, failed, sucessStack, failedStack = 0, 0, 0, 0
+	local success, failed, successStack, failedStack = 0, 0, 0, 0
 	--if we want to filter to a date range then we use this, if we want EVERY trxn uses second lookup
 	--the second lookup is mesurably  faster but not noticable in real use due to not having to expand the DB. 100 trxns may have a  0.0001 sec diffrence
 	if days then
 		days = days * 86400 --days to seconds
 		if playerData["completedAuctions"][itemID] then
 			for key in pairs(playerData["completedAuctions"][itemID] ) do
-				for i, text in pairs(playerData["completedAuctions"][itemID][key]) do
-					local stack, _, _, _, _, _, _, auctime = strsplit(";", text)
-					auctime, stack = tonumber(auctime), tonumber(stack)
-					
-					if (now - auctime) < (days) then
-						success = success + 1
-						sucessStack = sucessStack + stack
+				local _, suffixDB = lib.API.decodeLink(key)
+				if suffixDB == suffix then
+					for i, text in pairs(playerData["completedAuctions"][itemID][key]) do
+						local stack, _, _, _, _, _, _, auctime = strsplit(";", text)
+						auctime, stack = tonumber(auctime), tonumber(stack)
+						
+						if (now - auctime) < (days) then
+							success = success + 1
+							successStack = successStack + stack
+						end
 					end
 				end
 			end
 		end
 		if playerData["failedAuctions"][itemID] then
 			for key in pairs(playerData["failedAuctions"][itemID]) do
-				for i, text in pairs(playerData["failedAuctions"][itemID][key]) do
-					local stack, _, _, _, _, _, _, auctime = strsplit(";", text)
-					auctime, stack = tonumber(auctime), tonumber(stack)
-					
-					if (now - auctime) < (days) then
-						failed = failed + 1
-						failedStack = failedStack + stack
+				local _, suffixDB = lib.API.decodeLink(key)
+				if suffixDB == suffix then
+					for i, text in pairs(playerData["failedAuctions"][itemID][key]) do
+						local stack, _, _, _, _, _, _, auctime = strsplit(";", text)
+						auctime, stack = tonumber(auctime), tonumber(stack)
+						
+						if (now - auctime) < (days) then
+							failed = failed + 1
+							failedStack = failedStack + stack
+						end
 					end
 				end
 			end
@@ -261,19 +267,27 @@ function lib.API.getAHSoldFailed(player, link, days, serverKey)
 		if private.playerData then
 			if playerData["completedAuctions"][itemID]  then
 				for key in pairs(playerData["completedAuctions"][itemID] ) do
-					success = success + #playerData["completedAuctions"][itemID][key]
+					local _, suffixDB = lib.API.decodeLink(key)
+					if suffixDB == suffix then
+						success = success + #playerData["completedAuctions"][itemID][key]
+					end
 				end
 			end
 			if playerData["failedAuctions"][itemID] then
 				for key in pairs(playerData["failedAuctions"][itemID]) do
-					failed = failed + #playerData["failedAuctions"][itemID][key]
+					local _, suffixDB = lib.API.decodeLink(key)
+					if suffixDB == suffix then
+						failed = failed + #playerData["failedAuctions"][itemID][key]
+					end
 				end
 			end
 		end
 	end
 
-	return success, failed, sucessStack, failedStack
+	return success, failed, successStack, failedStack
 end
+
+
 --[[Change or add a reason code to a transaction]]
 function  lib.API.updatedReason(serverKey, newReason, itemLink, bid, buy, net, stack, sellerName, deposit, fee, currentReason, Time)
 	--to string all number values for comparison to stored data

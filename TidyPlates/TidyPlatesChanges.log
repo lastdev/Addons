@@ -1,6 +1,57 @@
 Pack Command:  		zip -vr TP_Release.zip TidyPlates* -x@exclude.lst
 Exclusion List: 	*.svn*   *.DS_Store*   exclude.lst   *.db   *.png   *.gif   *.jpg   *.tif   *.txt   *.psd   *.bmp
 
+
+
+6.14.Beta2
+---------------------------
+* Fixed some Odd Mouseover Behavior
+* Rearranged and removed some old Hub stuff.  Cleaning out functions, removing ancient code, removed items of questionable utility
+* Removed Threat Wheel widget from Hub
+
+
+
+6.14.Beta1
+---------------------------
+WoD Changes:
+* Fixed Target selection issue; UnitExists() now returns true/false, rather than 1/0
+* Fixed Mouseover issue; 6.0 no longer uses the Highlight region to indicate mouseover; Using Name text color change.
+* Fixed Elite/Dragon Texture being reshown; Using :SetAlpha(0) rather than nilling the texture.
+* Note: The GUID changes made by Blizzard for 6.0 should NOT affect Tidy Plates, since it only uses the GUID as ID, not for deconstruction/forensics.
+
+Framework:
+* Hub: Quick Frame Templates now return the created frame twice (ie. assign two references with a single call)
+
+Hub: Health Bar View:
+* Removed several of the Status Text choices; These will reappear in a more advanced "Custom Text" category  (Working on it...)
+* NOTE: The CUSTOM/ADVANCED Status Text function hasn't been written, yet; Thus, it doesn't do anything at the moment...
+
+Hub: Opacity:
+* Hub: Opacity: Enemy & Friendly units now have their own independent Spotlight Modes
+* Hub: Opacity: Spotlight Modes; Removal of some redundant and underused modes.
+* Hub: Opacity: New Checkbox, "Spotlight Raid Marked"
+* Hub: Opacity: Modified Checkbox, "Bring Mouseovers to Target Opacity" to "Spotlight Mouseover"
+* Hub: Opacity: Modified Checkbox, "Bring Casting Units to Target Opacity" to "Spotlight Casting Units"
+
+Hub:
+* Hub: Reaction Color: New Color, "Tapped Units"
+
+Aura Widget:
+* Widgets: Aura: Combat Log Event Handler now skips units which are group members, relying on the general Unit event handler for their updates.
+* Hub: Buffs & Debuffs: Replaced "Aura Widget Mode" Dropdown with Checkboxes: "Include My Buffs", and "Include My Debuffs".
+* Hub: Buffs & Debuffs: The widget will now use a Smart Mode, where it first evaluates the checkboxes, then evaluates the Aura List.
+* Hub: Buffs & Debuffs: Added the "Not" prefix to the aura list; This new mode allows you to blacklist auras from "Show My Debuffs" etc.
+
+* Hub: Added a button to the Advanced category; "Clear Cache".
+
+
+
+6.13.5
+---------------------------
+* Hub: "Bring Casting Units to Target Opacity": Now activates ONLY for enemy units
+* Hub: "Bring Casting Units to Spotlight units" activates only on enemy units
+* Hub: "ScaleIgnoreInactive" should now work properly
+
 6.13.4
 ---------------------------
 * Core: Raised the default Dropdown Menu strata to TOOLTIP
@@ -1001,5 +1052,22 @@ In Progress
 * "Highlight" Feature, to bind a key to Mark units to a Saved List, which can be used for Spotlight Functions
 * Combo Point vs Debuff Widget Repositioning, within style?
 * Drowndown Frame: 	Add: - Description Text Field on Top, which displays tooltip Text, Textures, Close/Cancel Button
+* FrameLevel based on screen Y position.
+
+* I was wondering if there's a way to colorize a mob's health bar based on it being tapped by someone else? I know that ElvUI's built-in system does this and I kinda miss it.
+
+* Also wondering if there's a way to color hostile totems a different color than hostile mobs.
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -4,23 +4,24 @@ local addon = _G[addonName]
 local ICON_NOTREADY = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t"
 local ICON_READY = "\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t"
 
-local currentRace = 1
-local currentDDMText
+local OPTION_RACE = "UI.Tabs.Grids.Archaeology.CurrentRace"
 local currentItemID
 
 local DDM_Add = addon.Helpers.DDM_Add
 local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
 
 local function OnRaceChange(self)
-	currentRace = self.value
-	currentDDMText = GetArchaeologyRaceInfo(currentRace)
-	addon.Tabs.Grids:SetViewDDMText(currentDDMText)
+	addon:SetOption(OPTION_RACE, self.value)
+
+	addon.Tabs.Grids:SetViewDDMText(GetArchaeologyRaceInfo(self.value))
 	addon.Tabs.Grids:Update()
 end
 
 local function DropDown_Initialize()
 	local numRaces = GetNumArchaeologyRaces()
 	local race, icon
+	
+	local currentRace = addon:GetOption(OPTION_RACE)
 	
 	for i = 1, numRaces do
 		if i ~= 13 then	-- 13 = UNUSED
@@ -33,10 +34,12 @@ local function DropDown_Initialize()
 end
 
 local callbacks = {
-	OnUpdate = function() end,
-	GetSize = function() return DataStore:GetRaceNumArtifacts(currentRace) end,
+	OnUpdate = function()
+			addon.Tabs.Grids:SetStatus(GetArchaeologyRaceInfo(addon:GetOption(OPTION_RACE)))
+		end,
+	GetSize = function() return DataStore:GetRaceNumArtifacts(addon:GetOption(OPTION_RACE)) end,
 	RowSetup = function(self, entry, row, dataRowID)
-			local artifact = DataStore:GetArtifactInfo(currentRace, dataRowID)
+			local artifact = DataStore:GetArtifactInfo(addon:GetOption(OPTION_RACE), dataRowID)
 			currentItemID = artifact.itemID
 			
 			if currentItemID then
@@ -62,7 +65,7 @@ local callbacks = {
 			itemTexture:SetTexCoord(0, 1, 0, 1)
 			itemTexture:SetTexture(GetItemIcon(currentItemID))
 			
-			local artifact = DataStore:GetArtifactInfo(currentRace, dataRowID)
+			local artifact = DataStore:GetArtifactInfo(addon:GetOption(OPTION_RACE), dataRowID)
 			if DataStore:IsArtifactKnown(character, artifact.spellID) then
 				itemTexture:SetVertexColor(1.0, 1.0, 1.0);
 				itemText:SetText(ICON_READY)
@@ -94,12 +97,10 @@ local callbacks = {
 	InitViewDDM = function(frame, title) 
 			frame:Show()
 			title:Show()
-
-			currentDDMText = currentDDMText or GetArchaeologyRaceInfo(currentRace)
 			
 			UIDropDownMenu_SetWidth(frame, 100) 
 			UIDropDownMenu_SetButtonWidth(frame, 20)
-			UIDropDownMenu_SetText(frame, currentDDMText)
+			UIDropDownMenu_SetText(frame, GetArchaeologyRaceInfo(addon:GetOption(OPTION_RACE)))
 			addon:DDM_Initialize(frame, DropDown_Initialize)
 		end,
 }

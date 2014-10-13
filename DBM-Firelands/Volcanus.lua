@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Volcanus", "DBM-Firelands")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 115 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
 mod:SetCreatureID(53833)
 --7/14 23:59:03.242  UNIT_DIED,0x0000000000000000,nil,0x80000000,0x80000000,0xF130D2490000CE02,"Volcanus",0x10a48,0x0
 mod:SetModelID(38592)
@@ -16,6 +16,7 @@ mod:RegisterEvents(
 	"SPELL_CAST_START 100146",
 	"RAID_BOSS_EMOTE"
 )
+mod.noStatistics = true
 
 local warnRoots					= mod:NewSpellAnnounce(100146, 2)--This is cast 2 seconds before a big aoe that blows entire raid off platform. These roots are what keep raid from wiping. You dispel them AFTER the aoe to reduce raid damage, not before!
 local warnPhase2				= mod:NewPhaseAnnounce(2, 3)

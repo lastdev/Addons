@@ -173,12 +173,16 @@ local eventTypes = {
 		GetReadyNowWarning = function(self, event)
 				local character = DataStore:GetCharacter(event.char, event.realm)
 				local item = DataStore:GetItemCooldownInfo(character, event.parentID)
-				return format(L["%s is now ready (%s on %s)"], item, event.char, event.realm)
+				if item then
+					return format(L["%s is now ready (%s on %s)"], item, event.char, event.realm)
+				end
 			end,
 		GetReadySoonWarning = function(self, event, minutes)
 				local character = DataStore:GetCharacter(event.char, event.realm)
 				local item = DataStore:GetItemCooldownInfo(character, event.parentID)
-				return format(L["%s will be ready in %d minutes (%s on %s)"], item, minutes, event.char, event.realm)
+				if item then
+					return format(L["%s will be ready in %d minutes (%s on %s)"], item, minutes, event.char, event.realm)
+				end
 			end,
 		GetInfo = function(self, event)
 				local character = DataStore:GetCharacter(event.char, event.realm)
@@ -526,6 +530,12 @@ function ns:BuildList()
 			num = DataStore:GetNumItemCooldowns(character) or 0
 			for i = 1, num do
 				local _, lastCheck, duration = DataStore:GetItemCooldownInfo(character, key)
+				if duration == nil then
+					duration = 0
+				end
+				if lastCheck == nil then
+					lastCheck = 0
+				end
 				local expires = duration + lastCheck + timeGap
 				AddEvent(TIMER_LINE, date("%Y-%m-%d",expires), date("%H:%M",expires), characterName, realm, k)
 			end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(832, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11365 $"):sub(12, -3))
 mod:SetCreatureID(68397)--Diffusion Chain Conduit 68696, Static Shock Conduit 68398, Bouncing Bolt conduit 68698, Overcharge conduit 68697
 mod:SetEncounterID(1579)
 mod:SetZone()
@@ -54,8 +54,8 @@ local specWarnOverchargedNear			= mod:NewSpecialWarningClose(136295)
 local specWarnBouncingBoltSoon			= mod:NewSpecialWarningPreWarn(136361, nil, 4)
 local specWarnBouncingBolt				= mod:NewSpecialWarningSpell(136361)
 --Phase 1
-local specWarnDecapitate				= mod:NewSpecialWarningRun(134912, mod:IsTank(), nil, nil, 3)
-local specWarnDecapitateOther			= mod:NewSpecialWarningTarget(134912, mod:IsTank())
+local specWarnDecapitate				= mod:NewSpecialWarningRun(134912, nil, nil, nil, 3)
+local specWarnDecapitateOther			= mod:NewSpecialWarningTaunt(134912)
 local specWarnThunderstruck				= mod:NewSpecialWarningCount(135095, nil, nil, nil, 2)
 local specWarnCrashingThunder			= mod:NewSpecialWarningMove(135150)
 local specWarnIntermissionSoon			= mod:NewSpecialWarning("specWarnIntermissionSoon")
@@ -67,8 +67,8 @@ local specWarnOverloadedCircuits		= mod:NewSpecialWarningMove(137176)
 local specWarnGorefiendsGrasp			= mod:NewSpecialWarningCount(108199, false)--For heroic, gorefiends+stun timing is paramount to success
 local specWarnMassSpellReflect			= mod:NewSpecialWarningCount(114028, false)--For heroic, diffusion strat.
 --Phase 3
-local specWarnElectricalShock			= mod:NewSpecialWarningStack(136914, mod:IsTank(), 12)
-local specWarnElectricalShockOther		= mod:NewSpecialWarningTarget(136914, mod:IsTank())
+local specWarnElectricalShock			= mod:NewSpecialWarningStack(136914, nil, 12)
+local specWarnElectricalShockOther		= mod:NewSpecialWarningTaunt(136914)
 --Herioc
 local specWarnHelmOfCommand				= mod:NewSpecialWarningYou(139011, nil, nil, nil, 3)
 

@@ -1,9 +1,9 @@
 ## Interface: 50400
 ## Title: HealBot German Localization
-## Author: Strife
+## Author: Snaomi
 ## Notes: HealBot Localization for deDE
 ## RequiredDeps: HealBot
 ## LoadOnDemand: 1
-## Version: 5.4.0.6
+## Version: 5.4.8.3
 
 HealBot_Localization.de.lua

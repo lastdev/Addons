@@ -2,10 +2,10 @@
 ************************************************************************
 Panel.lua
 ************************************************************************
-File date: 2014-02-16T01:49:10Z
-File hash: fbca907
-Project hash: af8bb68
-Project version: 2.6.5
+File date: 2014-05-26T16:58:52Z
+File hash: 2fb70ce
+Project hash: 5b35dab
+Project version: 3.0.5
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -145,21 +145,6 @@ function private.InitializeFrame()
 	-------------------------------------------------------------------------------
 	-- Displays the main GUI frame.
 	-------------------------------------------------------------------------------
-	local ITEM_FILTER_INIT_FUNCS = {
-		["alchemy"] = private.InitializeItemFilters_Alchemy,
-		["blacksmithing"] = private.InitializeItemFilters_Blacksmithing,
-		["cooking"] = private.InitializeItemFilters_Cooking,
-		["enchanting"] = private.InitializeItemFilters_Enchanting,
-		["engineering"] = private.InitializeItemFilters_Engineering,
-		["firstaid"] = private.InitializeItemFilters_FirstAid,
-		["leatherworking"] = private.InitializeItemFilters_Leatherworking,
-		["smelting"] = private.InitializeItemFilters_Smelting,
-		["tailoring"] = private.InitializeItemFilters_Tailoring,
-		["jewelcrafting"] = private.InitializeItemFilters_Jewelcrafting,
-		["inscription"] = private.InitializeItemFilters_Inscription,
-		["runeforging"] = private.InitializeItemFilters_Runeforging,
-	}
-
 	function MainPanel:Display(profession_name, is_linked)
 		self.is_linked = is_linked
 
@@ -192,7 +177,8 @@ function private.InitializeFrame()
 			private.InitializeFilterPanel()
 		end
 		local prof_name = private.PROFESSION_LABELS[self.current_profession]
-		local init_func = ITEM_FILTER_INIT_FUNCS[prof_name]
+		local profession_module = addon:GetModule(private.PROFESSION_MODULE_NAMES[private.ORDERED_PROFESSIONS[self.current_profession]], true)
+		local init_func = profession_module and profession_module.InitializeItemFilters
 		local panel
 
 		if init_func then
@@ -202,9 +188,7 @@ function private.InitializeFrame()
 			self.filter_menu.item[panel_name] = self.filter_menu[panel_name]
 			self.filter_menu[panel_name] = nil
 
-			init_func(private, panel)
-
-			ITEM_FILTER_INIT_FUNCS[prof_name] = nil
+			init_func(profession_module, panel)
 		else
 			panel = self.filter_menu.item["items_" .. prof_name]
 		end

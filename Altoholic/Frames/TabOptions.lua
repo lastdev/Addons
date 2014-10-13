@@ -124,50 +124,60 @@ local support = {
 
 -- this content will be subject to frequent changes, do not bother translating it !!
 local whatsnew = {
-	{	name = "5.4.003 Changes",
+	{	name = "5.4.009 Changes",
 		bulletedList = {
-			"Created and added support for 3 new libraries : LibCraftInfo, LibCraftLevels, LibCraftReagents.",
-			"These libraries intend to replace the lost functionality caused by tables reset to zero in LibPeriodicTable.",
-			"I now have my own dataminer, so these tables should be easier to maintain when a patch hits.",
-			"I also cleaned up some hard coded tables to now use the libraries instead.",
-			"Overall, the addon now consumes a little bit more memory, but the data sources are way more complete than before.",
-			"Replaced the internal list of recipes by LibCraftInfo.",
-			"Fixed the Characters -> Profession pane no longer showing reagents due to LPT changes.",
-			"Fixed the Grids -> Tradeskills pane no longer correct due to LPT changes.",
+			"Uncommented the code that actually deletes linked realms.",
+			"DataStore_Crafts: reworked the processing of events that actually trigger profession scanning.",
+			"DataStore_Mails: fixed some problems related to merged realms, it should now work without problems anymore.",
+			"DataStore_Mails: fixed issues where mail attachments (sent or returned) could be saved twice in the recipient's mailbox.",
+			"DataStore : Current character/guild key can now be used by character/guild based methods.",
+			"DataStore : added a few methods to support overriding methods.",
+			"DataStore_Quests : fixed tracking of completed quests.",
+			"Many minor fixes in DataStore_Achievements, Agenda, Containers, Crafts, Inventory, Mails, Talents.",
 		},
 	},
-	{	name = "5.4.002 Changes",
+	{	name = "5.4.008 Changes",
 		bulletedList = {
-			"Fixed profession levels reported as 0.",
+			"Fixed MoP factions showing up as numbers.",
+			"Suggested leveling zones are back in the account summary.",
+			"Added an option to reset links between merged realms (some realms were marked as linked though they were not) => DataStore dropdown in the Account Summary.",
+			"Added an option to completely reset the DataStore databases, without having to manually delete the files in the SavedVariables folder => DataStore dropdown in the Account Summary.",
+			"Added an option to remember the faction filter across sessions. (Grids -> Reputations).",
+			"Added an option to remember the currency filter across sessions. (Grids -> Currencies).",
+			"Added an option to remember the companion filter across sessions. (Grids -> Companions).",
+			"Added an option to remember the mount filter across sessions. (Grids -> Mounts).",
+			"Added an option to remember the tradeskills filter across sessions. (Grids -> Tradeskills).",
+			"Added an option to remember the archaeology filter across sessions. (Grids -> Archaeology).",
+			"Item counts for guilds on merged realms should now be visible too (sorry can't test this myself).",
 		},
 	},
-	{	name = "5.4.001 Changes",
+	{	name = "5.4.007 Changes",
 		bulletedList = {
-			"Added new 5.4 achievements.",
-			"Removed a call to GetArenaTeam in DataStore_Stats.",
+			"Added missing faction 'Emperor Shaohao'.",
+			"Altoholic: removed LibBabble-Faction",
+			"DataStore_Reputations: removed LibBabble-Faction.",
+			"Fixed lua error when using the search function.",
 		},
 	},
-	{	name = "5.3.003 Changes",
+	{	name = "5.4.006 Changes",
 		bulletedList = {
-			"Added missing reputations (Thanks Daovan !)",
-			"The source of an item is no longer read/displayed in the tooltip if combat lockdown is active.",
-			"Fixed a risk of profile reset when DataStore_Agenda is disabled.",
-			"Updated glyphs (Thanks Zartsoft)",
-			"Implemented RGriedel's fix for profession cooldown, hopefully they should be correct for both US & EU now (Thanks RGriedel!)",
-			"Fixed a tainting issue in DataStore_Talents. (Thanks Warloxx!)",
+			"Fixed double item counts in the tooltip.",
+			"Improved the search functionality to be less restrictive.",
 		},
 	},
-	{	name = "5.3.002 Changes",
+	{	name = "5.4.005 Changes",
 		bulletedList = {
-			"Fixed skill levels reported as 0.",
+			"Fixed bugs related to full names (name+realm) in the Guild tab.",
+			"Added a pane in the account summary to show the PVE & PVP currencies.",
+			"Added tooltip support for connected realms.",
+			"Added an option to show/hide item count from connected realms.",
+			"Added support for mails sent to/returned from alts on connected realms. ",
 		},
 	},
-	{	name = "5.3.001 Changes",
+	{	name = "5.4.004 Changes",
 		bulletedList = {
-			"Fixed recipe colors at the Auction House (Thanks Elandril !).",
-			"Fixed a lua error when DataStore_Agenda is disabled.",
-			"Fixed profession cooldowns warnings, they are now hardcoded at 3 am (the game sometimes still returns midnight).",
-			"Added a total AiL per realm in the account summary.",
+			"Fixed showing the item source for crafts in the tooltip.",
+			"Fixed LibCraftInfo.",
 		},
 	},
 	{	name = "Earlier changes",
@@ -361,6 +371,7 @@ function addon:SetupOptions()
 	AltoholicTooltipOptionsGatheringNodeText:SetText(L["Show counters on gathering nodes"])
 	AltoholicTooltipOptionsCrossFactionText:SetText(L["Show counters for both factions"])
 	AltoholicTooltipOptionsMultiAccountText:SetText(L["Show counters for all accounts"])
+	AltoholicTooltipOptionsMergedRealmsText:SetText(L["Show counters for connected realms"])
 	AltoholicTooltipOptionsGuildBankText:SetText(L["Show guild bank count"])
 	AltoholicTooltipOptionsGuildBankCountText:SetText(L["Include guild bank count in the total count"])
 	AltoholicTooltipOptionsGuildBankCountPerTabText:SetText(L["Detailed guild bank count"])
@@ -447,6 +458,7 @@ function addon:RestoreOptionsToUI()
 	AltoholicTooltipOptionsGatheringNode:SetChecked(O.TooltipGatheringNode)
 	AltoholicTooltipOptionsCrossFaction:SetChecked(O.TooltipCrossFaction)
 	AltoholicTooltipOptionsMultiAccount:SetChecked(O.TooltipMultiAccount)
+	AltoholicTooltipOptionsMergedRealms:SetChecked(O.TooltipConnectedRealms)
 	
 	AltoholicCalendarOptionsFirstDay:SetChecked(O.WeekStartsMonday)
 	AltoholicCalendarOptionsDialogBox:SetChecked(O.WarningDialogBox)

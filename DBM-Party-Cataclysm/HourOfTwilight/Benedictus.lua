@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(341, "DBM-Party-Cataclysm", 14, 186)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
 mod:SetCreatureID(54938)
 mod:SetZone()
 
@@ -18,6 +18,7 @@ mod:RegisterEventsInCombat(
 mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_SAY"
 )
+mod.onlyHeroic = true
 
 local warnRighteousShear		= mod:NewTargetAnnounce(103151, 2)
 local warnPurifyingLight		= mod:NewSpellAnnounce(103565, 3)

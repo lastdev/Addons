@@ -25,7 +25,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.0/Gatherer/GatherConstants.lua $", "$Rev: 1008 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherConstants.lua $", "$Rev: 1008 $")
 
 local metatable = { __index = getfenv(0) }
 setmetatable( Gatherer.Constants, metatable )

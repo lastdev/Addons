@@ -109,6 +109,8 @@ a.Rotations.Arcane = {
 			end
 		end
 		
+		a.ArcanePowerCD = c.GetCooldown("Arcane Power", false, 90)
+		
 		a.ArcanePower = c.HasBuff("Arcane Power", false, false, true)
 		
 		c.FlashAll(
@@ -141,6 +143,7 @@ a.Rotations.Arcane = {
 				"Nether Tempest",
 				"Living Bomb",
 				"Frost Bomb",
+				"Arcane Blast with Profound Magic",
 				"Arcane Missiles",
 				"Arcane Barrage",
 				"Presence of Mind before AB",
@@ -364,6 +367,7 @@ a.FingerCount = blizzFingerCount
 
 a.Rotations.Frost = {
 	Spec = 3,
+	AoEColor = "pink",
 	
 	UsefulStats = { "Intellect", "Spell Hit", "Crit", "Haste" },
 	

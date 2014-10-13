@@ -229,7 +229,7 @@ local function ScanGlyphSockets()
 	local glyphs = addon.ThisCharacter.Glyphs
 	wipe(glyphs)
 	
-	local enabled, glyphType, spell, glyphID
+	local enabled, glyphType, spell, glyphID, tooltipIndex
 	local link, index
 	local attrib
 
@@ -415,6 +415,7 @@ local function _GetTalentInfo(class, tree, index)
 	if not talentInfo then return end
 	
 	local id, name, icon, tier, column = strsplit("|", talentInfo)
+	local maximumRank = 1
 	
 	return tonumber(id), name, UI_ICONS_PATH..icon, tonumber(tier), tonumber(column), tonumber(maximumRank)
 end

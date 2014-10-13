@@ -69,7 +69,6 @@ GTFOLocal =
 	UI_TrivialDescription = "启用低等级的副本警报.",
 	UI_Unmute = "当静音时播放音效",
 	UI_UnmuteDescription = "如果你禁音了主音效，GTFO将临时开启来播放 GTFO 警报音效.",
-	UI_UnmuteDescription2 = "这个设定需要主音量高于 0%.",
 	UI_Volume = "GTFO 音量",
 	UI_VolumeDescription = "设置警报音效的音量.",
 	UI_VolumeLoud = "4: 高声",
@@ -88,6 +87,10 @@ GTFOLocal =
 	-- 4.19.1
 	UI_TrivialSlider = "Minimum % of HP",
 	UI_TrivialDescription2 = "Set the slider to the minimum % amount of HP damage taken for alerts to not be considered trivial.",
+	-- 4.32
+	UI_UnmuteDescription2 = "This requires the master volume slider to be higher than 0% and will override the sound channel option.",
+	UI_SoundChannel = "Sound Channel",
+	UI_SoundChannelDescription = "This is the volume channel that GTFO alert sounds will attach themselves to.",
 }
 
 

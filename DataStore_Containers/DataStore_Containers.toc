@@ -8,7 +8,7 @@
 ## SavedVariables: DataStore_ContainersDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
-## X-Curse-Packaged-Version: r38
+## X-Curse-Packaged-Version: r44
 ## X-Curse-Project-Name: DataStore_Containers
 ## X-Curse-Project-ID: datastore_containers
 ## X-Curse-Repository-ID: wow/datastore_containers/mainline

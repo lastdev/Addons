@@ -311,7 +311,7 @@ end
 ------------------------------------------------
 
 local DropDownMenuFrame = CreateFrame("Frame")
-local MaxDropdownItems = 20
+local MaxDropdownItems = 25
 
 DropDownMenuFrame:SetSize(100, 100)
 DropDownMenuFrame:SetFrameStrata("TOOLTIP");
@@ -361,9 +361,12 @@ end
 
 --[[
 local CloseDropdownButton = CreateFrame("Button", nil, DropDownMenuFrame, "UIPanelCloseButton")
-CloseDropdownButton:SetPoint("TOPLEFT", DropDownMenuFrame, "TOPRIGHT")
+CloseDropdownButton:SetPoint("TOPLEFT", DropDownMenuFrame, "TOPRIGHT", -4, 0)
+CloseDropdownButton:SetFrameStrata("TOOLTIP");
+CloseDropdownButton:Raise()
 CloseDropdownButton:Show()
 --]]
+
 
 local function HideDropdownMenu()
 	DropDownMenuFrame:Hide()
@@ -376,7 +379,10 @@ local function ShowDropdownMenu(sourceFrame, menu, script)
 		return
 	end
 
+	local currentSelection
+
 	DropDownMenuFrame.SourceFrame = sourceFrame
+	if sourceFrame.GetValue then currentSelection = sourceFrame:GetValue() end
 
 	local numOfItems = 0
 	local maxWidth = 0
@@ -386,10 +392,25 @@ local function ShowDropdownMenu(sourceFrame, menu, script)
 		local button = DropDownMenuFrame["Button"..i]
 
 		if item then
-			button:SetText(item.text)
+			local itemText = item.text
+			if currentSelection == i then
+				-- Selected Item
+				--button:SetAlpha(1)
+				--button:SetBackdrop( { bgFile = "Interface\\QuestFrame\\UI-QuestTitleHighlight", })
+				--button:SetBackdropColor(1,1,1,.7)
+				itemText = "|cffffdd00"..itemText
+			else
+				-- Non-Selected Items
+				--button:SetAlpha(1)
+				--button:SetBackdrop( { bgFile = nil, })
+			end
+
+			button:SetText(itemText)
 			maxWidth = max(maxWidth, button:GetTextWidth())
 			numOfItems = numOfItems + 1
 			button:SetScript("OnClick", script)
+
+
 			button:Show()
 		else
 			button:Hide()
@@ -397,7 +418,7 @@ local function ShowDropdownMenu(sourceFrame, menu, script)
 
 	end
 
-	DropDownMenuFrame:SetWidth(maxWidth + 18)
+	DropDownMenuFrame:SetWidth(maxWidth + 40)
 	Border:SetPoint("BOTTOM", DropDownMenuFrame["Button"..numOfItems], "BOTTOM", 0, -12)
 	DropDownMenuFrame:SetPoint("TOPLEFT", sourceFrame, "BOTTOM")
 	DropDownMenuFrame:Show()
@@ -457,6 +478,7 @@ local function CreateDropdownFrame(helpertable, reference, parent, menu, default
 
 	drawer.SetValue = function (self, value)
 		if byName and value then drawer.Text:SetText(value) else
+			--print(value, menu, menu[value], drawer.Value)
 			drawer.Text:SetText(menu[value].text); drawer.Value = value
 		end
 	end
@@ -482,7 +504,6 @@ local function CreateDropdownFrame(helpertable, reference, parent, menu, default
 	end
 
 	local function OnClickDropdown()
-
 		PlaySound("igMainMenuOptionCheckBoxOn");
 		ShowDropdownMenu(drawer, menu, OnClickItem)
 	end
@@ -561,6 +582,8 @@ PanelHelpers.CreateRadioButtons = CreateRadioButtons
 PanelHelpers.CreateSliderFrame = CreateSliderFrame
 PanelHelpers.CreateDropdownFrame = CreateDropdownFrame
 PanelHelpers.CreateColorBox = CreateColorBox
+PanelHelpers.ShowDropdownMenu = ShowDropdownMenu
+PanelHelpers.HideDropdownMenu = HideDropdownMenu
 
 TidyPlatesUtility.PanelHelpers = PanelHelpers
 

@@ -5,8 +5,8 @@ local L = DBM_GUI_Translations
 
 L.MainFrame = "죽이는 보스 모드"
 
-L.TranslationByPrefix		= "제작/번역: "
-L.TranslationBy 			= "법사세린(Tag: 세린#3105/everfinale@gmail.com)"
+L.TranslationByPrefix		= "제작지원 및 번역: "
+L.TranslationBy 			= "법사세린(everfinale@gmail.com)"
 L.Website					= "문의/건의사항은 DBM 사용자 포럼을 이용하세요. |cFF73C2FB주소는 여기를 클릭|r (와우 인벤 제공)"
 L.WebsiteButton				= "사용자 포럼"
 
@@ -14,12 +14,6 @@ L.OTabBosses	= "우두머리"
 --L.OTabOptions	= GAMEOPTIONS_MENU
 
 L.TabCategory_Options		= "기본 설정"
-L.TabCategory_WoD	 		= "드레노어의 전쟁군주"
---L.TabCategory_MOP	 		= EXPANSION_NAME4
---L.TabCategory_CATA		= EXPANSION_NAME3
---L.TabCategory_WOTLK 		= EXPANSION_NAME2
---L.TabCategory_BC 			= EXPANSION_NAME1
---L.TabCategory_CLASSIC		= EXPANSION_NAME0
 L.TabCategory_PVP	 		= "PvP"
 L.TabCategory_OTHER			= "기타 우두머리 경보"
 
@@ -62,7 +56,6 @@ L.Latency_Text				= "동기화 신호를 보낼 최대 지연시간 설정: %d"
 -- Tab: General Timer Options
 L.TimerGeneral 				= "DBM 바 설정"
 L.SKT_Enabled				= "우두머리별 설정을 무시하고 최고 기록 바 항상 보기"
-L.CRT_Enabled				= "다음 전투 부활 충전 바 보기(6.x 인스턴스에서만 작동)"
 L.ChallengeTimerOptions		= "도전 모드 최고 기록 바 설정"
 L.ChallengeTimerPersonal	= "개인 기록으로 보기"
 L.ChallengeTimerGuild		= "길드 기록으로 보기"
@@ -96,11 +89,11 @@ L.ShowFakedRaidWarnings 	= "알림을 공격대 경보처럼 보기"
 L.WarningIconLeft 			= "알림 왼쪽에 주문 아이콘 보기"
 L.WarningIconRight 			= "알림 오른쪽에 주문 아이콘 보기"
 L.WarningIconChat 			= "대화창 알림 메세지에 주문 아이콘 보기"
-L.ShowCountdownText			= "초읽기를 진행중일때 화면중앙에 초읽기 글자 표시(기본 숫자로 읽을때만 작동)"
+L.ShowCountdownText			= "주 초읽기를 진행중일때 화면중앙에 초읽기 글자 표시"
 L.RaidWarnMessage 			= "<Deadly Boss Mods>를 사용해 주셔셔 감사합니다."
 L.BarWhileMove 				= "알림 위치 수정"
 L.RaidWarnSound				= "알림 소리"
-L.CountdownVoice			= "기본 숫자 읽기 소리 설정"
+L.CountdownVoice			= "주 숫자 읽기 소리 설정"
 L.CountdownVoice2			= "보조 숫자 읽기 소리 설정"
 L.SpecialWarnSound			= "특수 경고 소리 1(SW1)"
 L.SpecialWarnSound2			= "특수 경고 소리 2(SW2)"
@@ -179,16 +172,9 @@ L.HP_GrowUpwards			= "우두머리 체력 바를 위로 쌓기"
 L.HP_ShowDemo				= "체력 바 보기"
 L.BarWidth					= "바 길이: %d"
 
--- Tab: Spam Filter
-L.Panel_SpamFilter			= "기타 설정"
-L.Area_SpamFilter			= "일반 기능 끄기 설정"
-L.StripServerName			= "알림 및 바에서 서버명 보이지 않기"
-L.SpamBlockBossWhispers		= "전투 중 다른 공격대원 또는 파티원이 보낸 &lt;DBM&gt; 귓속말 감추기"
-L.BlockVersionUpdateNotice	= "업데이트 알림 창 끄기(추천하지 않음)"
-L.ShowBBOnCombatStart		= "전투 시작시 BigBrother 버프 체크 실행하기"
-L.BigBrotherAnnounceToRaid	= "BigBrother 버프 체크 결과를 공격대에 알리기"
-
-L.Area_SpamFilter_Outgoing	= "경고 기능 끄기 설정(다른 설정보다 항상 우선됨)"
+-- Tab: Global Filter
+L.Panel_SpamFilter			= "필터 설정"
+L.Area_SpamFilter_Outgoing	= "기능 끄기 설정(다른 설정보다 항상 우선됨)"
 L.SpamBlockNoShowAnnounce	= "알림 보이지 않기"
 L.DontShowFarWarnings		= "멀리 떨어진 곳에서 시전된 주문 알림 및 바를 보이지 않기"
 L.SpamBlockNoSendWhisper	= "다른 공격대원 또는 파티원에게 우두머리 주문 귓속말 알림을 보내지 않기"
@@ -196,6 +182,23 @@ L.SpamBlockNoSetIcon		= "전술 목표 아이콘 설정하지 않기"
 L.SpamBlockNoRangeFrame		= "거리 창 보이지 않기"
 L.SpamBlockNoInfoFrame		= "정보 창 보이지 않기"
 L.SpamBlockNoHealthFrame	= "우두머리 체력 바 보이지 않기"
+
+-- Tab: Spam Filter
+L.Area_SpamFilter			= "일반 필터 설정"
+L.StripServerName			= "알림 및 바에서 서버명 보이지 않기"
+L.SpamBlockBossWhispers		= "전투 중 다른 공격대원 또는 파티원이 보낸 &lt;DBM&gt; 귓속말 감추기"
+L.BlockVersionUpdateNotice	= "업데이트 알림 창 끄기(추천하지 않음)"
+L.ShowBBOnCombatStart		= "전투 시작시 BigBrother 버프 체크 실행하기"
+L.BigBrotherAnnounceToRaid	= "BigBrother 버프 체크 결과를 공격대에 알리기"
+
+L.Area_SpecFilter			= "역할에 따른 경고 설정"
+L.FilterTankSpec			= "방어 전담이 아닐 경우 방어 전담용 경고 보지 않기"
+--Healer and Damager not in use yet. Tank is easily black and white. if not a tank, disable taunt warnings. Pretty obvious.
+--Healer and Damager a bit more tricky, since often times, Healer DO need to switch and kill adds designated a dps roll (hi disc attonement priest)
+--Or a dps does need to handle debuff dispels. Or a dps/tank need to know when aoe damage is going out just as much as healer for personal CDs
+--Etc etc. Point being, I translate these but I'm not sure they could ever actually be used as effectively as the tank spec filter.
+--L.FilterHealerSpec		= "치유 전담이 아닐 경우 치유 전담용 경고 보지 않기"--Not in use
+--L.FilterDamagerSpec		= "공격 전담이 아닐 경우 치유 전담용 경고 보지 않기"--Not in use
 
 L.Area_PullTimer			= "전투 예정, 시작, 사용자 바 기능 설정"
 L.DontShowPTNoID			= "같은 인스턴스에 있지 않은 사용자가 보낸 전투 예정 신호 차단"
@@ -215,7 +218,7 @@ L.DisableCinematics			= "게임 내 동영상 끄기"
 L.AfterFirst				= "1회 이상 본 동영상"
 L.Always					= "모든 동영상"
 
-L.Panel_ExtraFeatures		= "추가 기능"
+L.Panel_ExtraFeatures		= "추가 기능 설정"
 L.Area_ChatAlerts			= "대화창 알림 설정"
 L.RoleSpecAlert				= "공격대 참여시 전문화와 전리품 전문화가 맞지 않을시 대화창에 알림 보기"
 L.WorldBossAlert			= "현재 서버에서 친구 또는 길드원에 의해 야외 우두머리 전투가 시작 된 경우 메세지 보이기(서버 공용지역에서 보낸 경우 부정확할 수 있습니다)"
@@ -224,7 +227,7 @@ L.LFDEnhance				= "전장/공격대 찾기 입장, 역할 확인 소리를 주 �
 L.WorldBossNearAlert		= "근처에서 야외 우두머리 전투가 시작된 경우 전투 준비 소리 듣기(우두머리별 설정 무시)"
 L.AFKHealthWarning			= "자리 비움 상태 도중 체력이 줄면 경고음 듣기"
 L.Area_AutoLogging			= "자동 전투 기록 설정"
-L.AutologBosses				= "우두머리 전투시 블리자드 전투 기록 자동 활성화(<a href=\"http://www.warcraftlogs.com\">|cff3588ffwarcraftlogs.com|r</a>에서 전투 기록을 사용하시려면, /dbm pull 명령어를 사용하세요)"
+L.AutologBosses				= "우두머리 전투시 블리자드 전투 기록 자동 활성화(전투 시작전 주요 정보를 기록하려면, /dbm pull 명령어를 사용하세요)"
 L.AdvancedAutologBosses		= "우두머리 전투시 Transcriptor 기록 자동 활성화"
 L.LogOnlyRaidBosses			= "공격대 우두머리 전투만 기록하기(공격대 찾기 제외)"
 L.Area_Invite				= "파티 초대 설정"

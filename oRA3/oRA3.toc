@@ -1,13 +1,13 @@
 ## Interface: 50400
 ## Title: oRA3
 ## Notes: Raid and Party Assist
-## Author: Funkydude, Nebula169, Ammo, Rabbit
-## X-Curse-Packaged-Version: r671-release
+## Author: Funkydude, Nebula169
+## X-Curse-Packaged-Version: r751-release
 ## X-Curse-Project-Name: oRA3
 ## X-Curse-Project-ID: ora3
 ## X-Curse-Repository-ID: wow/ora3/mainline
 
-## X-Credits: Cladhaire for the sliding/detaching panel
+## X-Credits: Cladhaire for the sliding/detaching panel, Ammo, Rabbit
 
 ## SavedVariables: oRA3DB
 
@@ -31,6 +31,7 @@ locales\esES.lua
 oRA3.lua
 modulePrototype.lua
 
+modules\RoleIcons.lua
 modules\ReadyCheck.lua
 modules\Durability.lua
 modules\Gear.lua

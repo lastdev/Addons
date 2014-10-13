@@ -3,14 +3,14 @@ local addon = _G[addonName]
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local BI = LibStub("LibBabble-Inventory-3.0"):GetLookupTable()
-local BZ = LibStub("LibBabble-Zone-3.0"):GetLookupTable()
-local BF = LibStub("LibBabble-Faction-3.0"):GetLookupTable()
 
 if GetLocale() ~= "ruRU" then return end
 
 local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
 local YELLOW	= "|cFFFFFF00"
+
+local continents = { GetMapContinents() };		-- this gets localized names, also avoids hardcoding them.
 
 -- This table contains a list of suggestions to get to the next level of reputation, craft or skill
 addon.Suggestions = {
@@ -400,43 +400,94 @@ addon.Suggestions = {
 		{ 375, "До 375: Лесу Тероккар, в Скеттисе\nНужено летающее верховое животное" }
 	},
 	
-	-- suggested leveling zones, compiled by Thaoky, based on too many sources to list + my own leveling experience on Alliance side
+	[BI["Archaeology"]] = {
+		{ 300, "До 300: " .. continents[1] .. "\n" .. continents[2]},
+		{ 375, "До 375: " .. continents[3]},
+		{ 450, "До 450: " .. continents[4]},
+		{ 525, "До 525: " .. GetMapNameByID(606) .. "\n" .. GetMapNameByID(720) .. "\n" .. GetMapNameByID(700)},
+		{ 600, "До 600: " .. continents[6]},
+	},
+	
+	-- suggested leveling zones, as defined by recommended quest levels. map id's : http://wowpedia.org/MapID
 	["Leveling"] = {
 		{ 10, "До 10: Любая начальная зона" },
-		{ 20, "До 20: "  .. BZ["Loch Modan"] .. "\n" .. BZ["Westfall"] .. "\n" .. BZ["Darkshore"] .. "\n" .. BZ["Bloodmyst Isle"] 
-						.. "\n" .. BZ["Silverpine Forest"] .. "\n" .. BZ["The Barrens"] .. "\n" .. BZ["Ghostlands"]},
-		{ 25, "До 25: " .. BZ["Wetlands"] .. "\n" .. BZ["Redridge Mountains"] .. "\n" .. BZ["Ashenvale"] 
-						.. "\n" .. BZ["The Barrens"] .. "\n" .. BZ["Stonetalon Mountains"] .. "\n" .. BZ["Hillsbrad Foothills"] },
-		{ 28, "До 28: " .. BZ["Duskwood"] .. "\n" .. BZ["Wetlands"] .. "\n" .. BZ["Ashenvale"] 
-						.. "\n" .. BZ["Stonetalon Mountains"] .. "\n" .. BZ["Thousand Needles"] },
-		{ 31, "До 31: " .. BZ["Duskwood"] .. "\n" .. BZ["Thousand Needles"] .. "\n" .. BZ["Ashenvale"] },
-		{ 35, "До 35: " .. BZ["Thousand Needles"] .. "\n" .. BZ["Stranglethorn Vale"] .. "\n" .. BZ["Alterac Mountains"] 
-						.. "\n" .. BZ["Arathi Highlands"] .. "\n" .. BZ["Desolace"] },
-		{ 40, "До 40: " .. BZ["Stranglethorn Vale"] .. "\n" .. BZ["Desolace"] .. "\n" .. BZ["Badlands"]
-						.. "\n" .. BZ["Dustwallow Marsh"] .. "\n" .. BZ["Swamp of Sorrows"] },
-		{ 43, "До 43: " .. BZ["Tanaris"] .. "\n" .. BZ["Stranglethorn Vale"] .. "\n" .. BZ["Badlands"] 
-						.. "\n" .. BZ["Dustwallow Marsh"] .. "\n" .. BZ["Swamp of Sorrows"] },
-		{ 45, "До 45: " .. BZ["Tanaris"] .. "\n" .. BZ["Feralas"] .. "\n" .. BZ["The Hinterlands"] },
-		{ 48, "До 48: " .. BZ["Tanaris"] .. "\n" .. BZ["Feralas"] .. "\n" .. BZ["The Hinterlands"] .. "\n" .. BZ["Searing Gorge"] },
-		{ 51, "До 51: " .. BZ["Tanaris"] .. "\n" .. BZ["Azshara"] .. "\n" .. BZ["Blasted Lands"] 
-						.. "\n" .. BZ["Searing Gorge"] .. "\n" .. BZ["Un'Goro Crater"] .. "\n" .. BZ["Felwood"] },
-		{ 55, "До 55: " .. BZ["Un'Goro Crater"] .. "\n" .. BZ["Felwood"] .. "\n" .. BZ["Burning Steppes"]
-						.. "\n" .. BZ["Blasted Lands"] .. "\n" .. BZ["Western Plaguelands"] },
-		{ 58, "До 58: " .. BZ["Winterspring"] .. "\n" .. BZ["Burning Steppes"] .. "\n" .. BZ["Western Plaguelands"] 
-						.. "\n" .. BZ["Eastern Plaguelands"] .. "\n" .. BZ["Silithus"] },
-		{ 60, "До 60: " .. BZ["Winterspring"] .. "\n" .. BZ["Eastern Plaguelands"] .. "\n" .. BZ["Silithus"] },
-		{ 62, "До 62: " .. BZ["Hellfire Peninsula"] },
-		{ 64, "До 64: " .. BZ["Zangarmarsh"] .. "\n" .. BZ["Terokkar Forest"]},
-		{ 65, "До 65: " .. BZ["Terokkar Forest"] },
-		{ 66, "До 66: " .. BZ["Terokkar Forest"] .. "\n" .. BZ["Nagrand"]},
-		{ 67, "До 67: " .. BZ["Nagrand"]},
-		{ 68, "До 68: " .. BZ["Blade's Edge Mountains"]},
-		{ 70, "До 70: " .. BZ["Blade's Edge Mountains"] .. "\n" .. BZ["Netherstorm"] .. "\n" .. BZ["Shadowmoon Valley"]},
-		{ 72, "До 72: " .. BZ["Howling Fjord"] .. "\n" .. BZ["Borean Tundra"]},
-		{ 74, "До 74: " .. BZ["Grizzly Hills"] .. "\n" .. BZ["Dragonblight"]},
-		{ 76, "До 76: " .. BZ["Dragonblight"] .. "\n" .. BZ["Zul'Drak"]},
-		{ 78, "До 78: " .. BZ["Zul'Drak"] .. "\n" .. BZ["Sholazar Basin"]},
-		{ 80, "До 80: " .. BZ["The Storm Peaks"] .. "\n" .. BZ["Icecrown"]},
-	},
+		{ 15, "До 15: " .. GetMapNameByID(39)},
+		{ 16, "До 16: " .. GetMapNameByID(684)},
+		{ 20, "До 20: " .. GetMapNameByID(181) .. "\n" .. GetMapNameByID(35) .. "\n" .. GetMapNameByID(476)
+							.. "\n" .. GetMapNameByID(42) .. "\n" .. GetMapNameByID(21) .. "\n" .. GetMapNameByID(11)
+							.. "\n" .. GetMapNameByID(463) .. "\n" .. GetMapNameByID(36)},
+		{ 25, "До 25: " .. GetMapNameByID(34) .. "\n" .. GetMapNameByID(40) .. "\n" .. GetMapNameByID(43) 
+							.. "\n" .. GetMapNameByID(24)},
+		{ 30, "До 30: " .. GetMapNameByID(16) .. "\n" .. GetMapNameByID(37) .. "\n" .. GetMapNameByID(81)},
+		{ 35, "До 35: " .. GetMapNameByID(673) .. "\n" .. GetMapNameByID(101) .. "\n" .. GetMapNameByID(26)
+							.. "\n" .. GetMapNameByID(607)},
+		{ 40, "До 40: " .. GetMapNameByID(141) .. "\n" .. GetMapNameByID(121) .. "\n" .. GetMapNameByID(22)},
+		{ 45, "До 45: " .. GetMapNameByID(23) .. "\n" .. GetMapNameByID(61)},
+		{ 48, "До 48: " .. GetMapNameByID(17)},
+		{ 50, "До 50: " .. GetMapNameByID(161) .. "\n" .. GetMapNameByID(182) .. "\n" .. GetMapNameByID(28)},
+		{ 52, "До 52: " .. GetMapNameByID(29)},
+		{ 54, "До 54: " .. GetMapNameByID(38)},
+		{ 55, "До 55: " .. GetMapNameByID(201) .. "\n" .. GetMapNameByID(281)},
+		{ 58, "До 58: " .. GetMapNameByID(19)},
+		{ 60, "До 60: " .. GetMapNameByID(32) .. "\n" .. GetMapNameByID(241) .. "\n" .. GetMapNameByID(261)},
+		
+		-- Outland
+		-- 465 Hellfire Peninsula 
+		-- 467 Zangarmarsh 
+		-- 478 Terokkar Forest 
+		-- 477 Nagrand 
+		-- 475 Blade's Edge Mountains 
+		-- 479 Netherstorm 
+		-- 473 Shadowmoon Valley 
+		
+		{ 63, "До 63: " .. GetMapNameByID(465)},
+		{ 64, "До 64: " .. GetMapNameByID(467)},
+		{ 65, "До 65: " .. GetMapNameByID(478)},
+		{ 67, "До 67: " .. GetMapNameByID(477)},
+		{ 68, "До 68: " .. GetMapNameByID(475)},
+		{ 70, "До 70: " .. GetMapNameByID(479) .. "\n" .. GetMapNameByID(473) .. "\n" .. GetMapNameByID(499) .. "\n" .. GetMapNameByID(32)},
 
+		-- Northrend
+		-- 491 Howling Fjord 
+		-- 486 Borean Tundra 
+		-- 488 Dragonblight 
+		-- 490 Grizzly Hills 
+		-- 496 Zul'Drak 
+		-- 493 Sholazar Basin 
+		-- 510 Crystalsong Forest 
+		-- 495 The Storm Peaks 
+		-- 492 Icecrown 
+		
+		{ 72, "До 72: " .. GetMapNameByID(491) .. "\n" .. GetMapNameByID(486)},
+		{ 75, "До 75: " .. GetMapNameByID(488) .. "\n" .. GetMapNameByID(490)},
+		{ 76, "До 76: " .. GetMapNameByID(496)},
+		{ 78, "До 78: " .. GetMapNameByID(493)},
+		{ 80, "До 80: " .. GetMapNameByID(510) .. "\n" .. GetMapNameByID(495) .. "\n" .. GetMapNameByID(492)},
+		
+		-- Cataclysm
+		-- 606 Mount Hyjal 
+		-- 613 Vashj'ir 
+		-- 640 Deepholm 
+		-- 720 Uldum 
+		-- 700 Twilight Highlands 
+		
+		{ 82, "До 82: " .. GetMapNameByID(606) .. "\n" .. GetMapNameByID(613)},
+		{ 83, "До 83: " .. GetMapNameByID(640)},
+		{ 84, "До 84: " .. GetMapNameByID(720)},
+		{ 85, "До 85: " .. GetMapNameByID(700)},
+
+		-- Pandaria
+		-- 806 The Jade Forest 
+		-- 807 Valley of the Four Winds 
+		-- 857 Krasarang Wilds 
+		-- 809 Kun-Lai Summit 
+		-- 810 Townlong Steppes 
+		-- 858 Dread Wastes 
+		
+		{ 86, "До 86: " .. GetMapNameByID(806)},
+		{ 87, "До 87: " .. GetMapNameByID(807) .. "\n" .. GetMapNameByID(857)},
+		{ 88, "До 88: " .. GetMapNameByID(809)},
+		{ 89, "До 89: " .. GetMapNameByID(810)},
+		{ 90, "До 90: " .. GetMapNameByID(858)},
+	},
 }

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: PriceLevel.lua 5427 2013-07-13 09:28:05Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: PriceLevel.lua 5458 2014-06-13 10:40:11Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a price level indicator
@@ -249,15 +249,23 @@ function private.ListUpdate()
 		if (index <= numBatchAuctions + (NUM_AUCTION_ITEMS_PER_PAGE * AuctionFrameBrowse.page)) then
 			if AucAdvanced.Modules.Util.CompactUI
 			and AucAdvanced.Modules.Util.CompactUI.inUse then
-				_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,
+				_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,
 				priceLevel,_,r,g,b = AucAdvanced.Modules.Util.CompactUI.GetContents(offset+i)
 				lib.SetBar(i, r,g,b, priceLevel)
 			else
 				link =  GetAuctionItemLink("list", offset + i)
 				if link then
-					_,_, quantity, _,_,_,_, minBid, minInc, buyPrice, bidPrice =  AucAdvanced.GetAuctionItemInfo("list", offset + i)
-					if bidPrice>0 then bidPrice = bidPrice + minInc
-					else bidPrice = minBid end
+					_,_, quantity, _,_,_,_, minBid, minInc, buyPrice, bidPrice = GetAuctionItemInfo("list", offset + i)
+					if bidPrice>0 then
+						bidPrice = bidPrice + minInc
+						if buyPrice > 0 and bidPrice > buyPrice then
+							bidPrice = buyPrice
+						end
+					elseif minBid > 0 then
+						bidPrice = minBid
+					else
+						bidPrice = 1
+					end
 					priceLevel, perItem, r,g,b = lib.CalcLevel(link, quantity, bidPrice, buyPrice)
 					lib.SetBar(i, r,g,b, priceLevel)
 				end
@@ -315,4 +323,4 @@ function lib.CalcLevel(link, quantity, bidPrice, buyPrice, itemWorth, serverKey)
 	return priceLevel, perItem, r,g,b, lvl, itemWorth
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-PriceLevel/PriceLevel.lua $", "$Rev: 5427 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-PriceLevel/PriceLevel.lua $", "$Rev: 5458 $")

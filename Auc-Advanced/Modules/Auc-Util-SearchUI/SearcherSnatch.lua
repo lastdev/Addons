@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Snatch
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: SearcherSnatch.lua 5368 2012-09-29 09:50:29Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: SearcherSnatch.lua 5452 2014-01-18 19:02:51Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -259,15 +259,15 @@ function lib:MakeGuiConfig(gui)
 		end
 	end)
 	--enter key when typing in teh % box should actually do something:
-	frame.pctBox:SetScript("OnEnterPressed", function(self) 
+	frame.pctBox:SetScript("OnEnterPressed", function(self)
 								local text = self:GetText()
-								if text ~= "" and tonumber(text) > 0 then 
-									lib.AddSnatch(private.workingItemLink, nil, text) 
-								end	
-								EditBox_ClearFocus(self) 								
+								if text ~= "" and tonumber(text) > 0 then
+									lib.AddSnatch(private.workingItemLink, nil, text)
+								end
+								EditBox_ClearFocus(self)
 							end)
-	
-	
+
+
 	frame.pctBox.help = frame.pctBox:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	frame.pctBox.help:SetPoint("LEFT", frame.pctBox, "RIGHT", 0, 0)
 	frame.pctBox.help:SetWidth(130)
@@ -310,7 +310,7 @@ function lib:MakeGuiConfig(gui)
 							end)
 	frame.resetList:SetScript("OnEnter", function() lib.buttonTooltips( frame.resetList, "Shift+Ctrl+Alt Click to remove all items from the snatch list") end)
 	frame.resetList:SetScript("OnLeave", function() GameTooltip:Hide() end)
-	
+
 	-- Normal GUI controls
 	-- Anchored to the hidden "Note" control we added earlier
 	gui:AddControl(id, "Subhead",0, "Snatch search settings:")
@@ -594,8 +594,11 @@ function lib.SetWorkingItem(link)
 		texture = GetItemIcon(link)
 	elseif linkType == "battlepet" then
 		local _, id = strsplit(":", link)
-		local _, icon = C_PetJournal.GetPetInfoBySpeciesID(tonumber(id))
-		texture = icon
+		id = tonumber(id)
+		if id then
+			local _, icon = C_PetJournal.GetPetInfoBySpeciesID(id)
+			texture = icon
+		end
 	end
 	frame.icon:SetNormalTexture(texture) --set icon texture
 	frame.slot.help:SetText(link)
@@ -642,4 +645,4 @@ function private.refreshDisplay()
 	frame.pctBox.help:SetText(format("Buy as percent of %s value", get("snatch.price.model") or "market") )
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-Util-SearchUI/SearcherSnatch.lua $", "$Rev: 5368 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-SearchUI/SearcherSnatch.lua $", "$Rev: 5452 $")

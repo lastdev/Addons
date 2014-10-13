@@ -22,12 +22,12 @@ L["Solo Mode when not Grouped"] = "Mode solo si pas groupé" -- Needs review
 -- L["Wound Poison"] = ""
 
 elseif locale == "deDE" then -- German
-L["Deadly Poison"] = "Tödliches Gift" -- Needs review
-L["Flash Assassination"] = "Aufblitzen bei Meucheln" -- Needs review
-L["Flash Combat"] = "Aufblitzen bei Kampf" -- Needs review
-L["Instant Poison"] = "Sofort wirkendes Gift" -- Needs review
-L["Solo Mode when not Grouped"] = "Solo Modus wenn nicht in einer Gruppe" -- Needs review
-L["Wound Poison"] = "Wundgift" -- Needs review
+L["Deadly Poison"] = "Tödliches Gift"
+L["Flash Assassination"] = "Aufblitzen bei Meucheln"
+L["Flash Combat"] = "Aufblitzen bei Kampf"
+L["Instant Poison"] = "Sofort wirkendes Gift"
+L["Solo Mode when not Grouped"] = "Solo Modus wenn nicht in einer Gruppe"
+L["Wound Poison"] = "Wundgift"
 
 elseif locale == "itIT" then -- Italian
 -- L["Deadly Poison"] = ""

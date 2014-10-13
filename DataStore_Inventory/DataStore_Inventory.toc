@@ -8,7 +8,7 @@
 ## SavedVariables: DataStore_InventoryDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
-## X-Curse-Packaged-Version: r31
+## X-Curse-Packaged-Version: r36
 ## X-Curse-Project-Name: DataStore_Inventory
 ## X-Curse-Project-ID: datastore_inventory
 ## X-Curse-Repository-ID: wow/datastore_inventory/mainline

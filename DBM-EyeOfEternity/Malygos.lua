@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod("Malygos", "DBM-EyeOfEternity")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 126 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 160 $"):sub(12, -3))
 mod:SetCreatureID(28859)
 mod:SetEncounterID(1094)
 mod:SetModelID(26752)
 
 mod:RegisterCombat("combat")
+mod:SetWipeTime(45)
 
 mod:RegisterEvents(
 	"CHAT_MSG_MONSTER_YELL"

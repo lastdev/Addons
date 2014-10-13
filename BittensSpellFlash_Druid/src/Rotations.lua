@@ -6,6 +6,11 @@ local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 local m = a.CatSimulator
 local u = g.GetTable("BittensUtilities")
 
+u.Schedule(
+    1,
+    print,
+    "|cFF80A0FFThe future of Bitten's SpellFlash: Druid is in question.  I no longer wish to maintain this addon, starting with patch 6.0.  If you are interested in taking it over, keeping up with optimal rotations, and you have programming skills, please leave a comment or PM on Curse.|r")
+
 local GetComboPoints = GetComboPoints
 local GetCritChance = GetCritChance
 local UnitDamage = UnitDamage

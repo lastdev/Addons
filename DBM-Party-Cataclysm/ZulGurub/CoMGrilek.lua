@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(177, "DBM-Party-Cataclysm", 11, 76, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 88 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
 mod:SetCreatureID(52258)
 mod:SetZone()
 
@@ -11,6 +11,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_SUCCESS",
 	"CHAT_MSG_MONSTER_EMOTE"
 )
+mod.onlyHeroic = true
 
 local warnPursuit				= mod:NewTargetAnnounce(96306, 4)
 local warnRupture				= mod:NewTargetAnnounce(96619, 3)

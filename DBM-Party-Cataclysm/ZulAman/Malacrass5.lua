@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(190, "DBM-Party-Cataclysm", 10, 77)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 96 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
 mod:SetCreatureID(24239)
 mod:SetZone()
 
@@ -15,6 +15,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_PERIODIC_DAMAGE",
 	"SPELL_PERIODIC_MISSED"
 )
+mod.onlyHeroic = true
 
 --Warriors and warlocks can too but only with right spec/pet. So they are not in the defaults.
 local isDispeller = select(2, UnitClass("player")) == "PRIEST"

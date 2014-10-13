@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - ScanData
-	Version: 5.18.5433 (PassionatePhascogale)
-	Revision: $Id: ScanData.lua 5364 2012-09-24 09:32:39Z brykrys $
+	Version: 5.20.5464 (RidiculousRockrat)
+	Revision: $Id: ScanData.lua 5448 2014-01-14 15:16:35Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -565,7 +565,7 @@ function lib.OnUnload()
 	local StringRope = LibStub:GetLibrary("StringRope")
 	local rope = StringRope:New(-1)
 
-	local maxLen = 2^22
+	local maxLen = 2^20
 
 	local now = time()
 	local maxTime = 60 * 60 * 24 * 30 -- 30 days
@@ -646,4 +646,4 @@ if Resources.PlayerFaction == "Neutral" then
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.18/Auc-ScanData/ScanData.lua $", "$Rev: 5364 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-ScanData/ScanData.lua $", "$Rev: 5448 $")

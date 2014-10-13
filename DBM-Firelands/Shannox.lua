@@ -3,7 +3,7 @@ local L		= mod:GetLocalizedStrings()
 local Riplimb	= EJ_GetSectionInfo(2581)
 local Rageface	= EJ_GetSectionInfo(2583)
 
-mod:SetRevision(("$Revision: 115 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 120 $"):sub(12, -3))
 mod:SetCreatureID(53691)
 mod:SetEncounterID(1205)
 mod:DisableEEKillDetection()
@@ -19,7 +19,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 100415 100167 99837 99937",
 	"SPELL_AURA_APPLIED_DOSE 99945 99937",
 	"SPELL_AURA_REMOVED 99945 99937",
-	"SPELL_CAST_STAR 100002 99840T",
+	"SPELL_CAST_START 100002 99840",
 	"SPELL_CAST_SUCCESS 99947",
 	"SPELL_SUMMON 99836 99839",
 	"UNIT_HEALTH boss1 boss2 boss3", -- probably needs just one (?)

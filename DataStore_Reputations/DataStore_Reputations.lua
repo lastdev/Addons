@@ -40,9 +40,6 @@ local BottomLevelNames = {
 
 local BottomLevels = { -42000, -6000, -3000, 0, 3000, 9000, 21000, 42000 }
 
-local BF = LibStub("LibBabble-Faction-3.0"):GetUnstrictLookupTable()
-local BZ = LibStub("LibBabble-Zone-3.0"):GetUnstrictLookupTable()
-
 --[[	*** Faction UIDs ***
 These UIDs have 2 purposes: 
 - avoid saving numerous copies of the same string (the faction name)
@@ -51,137 +48,139 @@ These UIDs have 2 purposes:
 Note: Let the system manage the ids, DO NOT delete entries from this table, if a faction is removed from the game, mark it as OLD_ or whatever.
 --]]
 local FactionUIDs = {
-	BZ["Darnassus"],
-	BF["Exodar"],
-	BZ["Gnomeregan"],
-	BZ["Ironforge"],
-	BF["Stormwind"],
-	BF["Darkspear Trolls"],
-	BZ["Orgrimmar"],
-	BZ["Thunder Bluff"],
-	BZ["Undercity"],
-	BZ["Silvermoon City"],
-	BF["The League of Arathor"],
-	BF["Silverwing Sentinels"],
-	BF["Stormpike Guard"],
-	BF["The Defilers"],
-	BF["Warsong Outriders"],
-	BF["Frostwolf Clan"],
-	BZ["Booty Bay"],
-	BZ["Everlook"],
-	BZ["Gadgetzan"],
-	BZ["Ratchet"],
-	BF["Argent Dawn"],
-	BF["Bloodsail Buccaneers"],
-	BF["Brood of Nozdormu"],
-	BF["Cenarion Circle"],
-	BF["Darkmoon Faire"],
-	BF["Gelkis Clan Centaur"],
-	BF["Hydraxian Waterlords"],
-	BF["Magram Clan Centaur"],
-	BF["Ravenholdt"],
-	BF["Shen'dralar"],
-	BF["Syndicate"],
-	BF["Thorium Brotherhood"],
-	BF["Timbermaw Hold"],
-	BF["Tranquillien"],
-	BF["Wintersaber Trainers"],
-	BF["Zandalar Tribe"],
-	BF["Ashtongue Deathsworn"],
-	BF["Cenarion Expedition"],
-	BF["The Consortium"],
-	BF["Honor Hold"],
-	BF["Kurenai"],
-	BF["The Mag'har"],
-	BF["Netherwing"],
-	BF["Ogri'la"],
-	BF["Sporeggar"],
-	BF["Thrallmar"],
-	BF["Lower City"],
-	BF["Sha'tari Skyguard"],
-	BF["Shattered Sun Offensive"],
-	BF["The Aldor"],
-	BF["The Scryers"],
-	BF["The Sha'tar"],
-	BF["Keepers of Time"],
-	BF["The Scale of the Sands"],
-	BF["The Violet Eye"],
-	BF["Argent Crusade"],
-	BF["Kirin Tor"],
-	BF["The Kalu'ak"],
-	BF["The Wyrmrest Accord"],
-	BF["Knights of the Ebon Blade"],
-	BF["The Sons of Hodir"],
-	BF["The Ashen Verdict"],
-	BF["Alliance Vanguard"],
-	BF["Explorers' League"],
-	BF["The Frostborn"],
-	BF["The Silver Covenant"],
-	BF["Valiance Expedition"],
-	BF["Horde Expedition"],
-	BF["The Hand of Vengeance"],
-	BF["The Sunreavers"],
-	BF["The Taunka"],
-	BF["Warsong Offensive"],
-	BF["Frenzyheart Tribe"],
-	BF["The Oracles"],
-	BF["Alliance"],
-	BF["Horde"],
-	BF["Gilneas"],
-	BF["Bilgewater Cartel"],
-	
+	69,	-- "Darnassus"
+	930,	-- "Exodar"
+	54,	-- "Gnomeregan"
+	47,	-- "Ironforge"
+	72,	-- "Stormwind"
+	530,	-- "Darkspear Trolls"
+	76,	-- "Orgrimmar"
+	81,	-- "Thunder Bluff"
+	68,	-- "Undercity"
+	911,	-- "Silvermoon City"
+	509,	-- "The League of Arathor"
+	890,	-- "Silverwing Sentinels"
+	730,	-- "Stormpike Guard"
+	510,	-- "The Defilers"
+	889,	-- "Warsong Outriders"
+	729,	-- "Frostwolf Clan"
+	21,	-- "Booty Bay"
+	577,	-- "Everlook"
+	369,	-- "Gadgetzan"
+	470,	-- "Ratchet"
+	529,	-- "Argent Dawn"
+	87,	-- "Bloodsail Buccaneers"
+	910,	-- "Brood of Nozdormu"
+	609,	-- "Cenarion Circle"
+	909,	-- "Darkmoon Faire"
+	92,	-- "Gelkis Clan Centaur"
+	749,	-- "Hydraxian Waterlords"
+	93,	-- "Magram Clan Centaur"
+	349,	-- "Ravenholdt"
+	809,	-- "Shen'dralar"
+	70,	-- "Syndicate"
+	59,	-- "Thorium Brotherhood"
+	576,	-- "Timbermaw Hold"
+	922,	-- "Tranquillien"
+	589,	-- "Wintersaber Trainers"
+	270,	-- "Zandalar Tribe"
+	1012,	-- "Ashtongue Deathsworn"
+	942,	-- "Cenarion Expedition"
+	933,	-- "The Consortium"
+	946,	-- "Honor Hold"
+	978,	-- "Kurenai"
+	941,	-- "The Mag'har"
+	1015,	-- "Netherwing"
+	1038,	-- "Ogri'la"
+	970,	-- "Sporeggar"
+	947,	-- "Thrallmar"
+	1011,	-- "Lower City"
+	1031,	-- "Sha'tari Skyguard"
+	1077,	-- "Shattered Sun Offensive"
+	932,	-- "The Aldor"
+	934,	-- "The Scryers"
+	935,	-- "The Sha'tar"
+	989,	-- "Keepers of Time"
+	990,	-- "The Scale of the Sands"
+	967,	-- "The Violet Eye"
+	1106,	-- "Argent Crusade"
+	1090,	-- "Kirin Tor"
+	1073,	-- "The Kalu'ak"
+	1091,	-- "The Wyrmrest Accord"
+	1098,	-- "Knights of the Ebon Blade"
+	1119,	-- "The Sons of Hodir"
+	1156,	-- "The Ashen Verdict"
+	1037,	-- "Alliance Vanguard"
+	1068,	-- "Explorers' League"
+	1126,	-- "The Frostborn"
+	1094,	-- "The Silver Covenant"
+	1050,	-- "Valiance Expedition"
+	1052,	-- "Horde Expedition"
+	1067,	-- "The Hand of Vengeance"
+	1124,	-- "The Sunreavers"
+	1064,	-- "The Taunka"
+	1085,	-- "Warsong Offensive"
+	1104,	-- "Frenzyheart Tribe"
+	1105,	-- "The Oracles"
+	469,	-- "Alliance"
+	67,	-- "Horde"
+	1134,	-- "Gilneas"
+	1133,	-- "Bilgewater Cartel"
+
 	-- cataclysm
-	BF["Guardians of Hyjal"],
-	BF["The Earthen Ring"],
-	BF["Therazane"],
-	BF["Wildhammer Clan"],
-	BF["Ramkahen"],
-	BF["Baradin's Wardens"],
-	BF["Dragonmaw Clan"],
-	BF["Hellscream's Reach"],
-	BF["Avengers of Hyjal"],
-	
+	1158,	-- "Guardians of Hyjal"
+	1135,	-- "The Earthen Ring"
+	1171,	-- "Therazane"
+	1174,	-- "Wildhammer Clan"
+	1173,	-- "Ramkahen"
+	1177,	-- "Baradin's Wardens"
+	1172,	-- "Dragonmaw Clan"
+	1178,	-- "Hellscream's Reach"
+	1204,	-- "Avengers of Hyjal"
+
 	-- pandaria
-	BF["Chee Chee"],
-	BF["Ella"],
-	BF["Farmer Fung"],
-	BF["Fish Fellreed"],
-	BF["Forest Hozen"],
-	BF["Gina Mudclaw"],
-	BF["Golden Lotus"],
-	BF["Haohan Mudclaw"],
-	BF["Jogu the Drunk"],
-	BF["Nat Pagle"],
-	BF["Old Hillpaw"],
-	BF["Order of the Cloud Serpent"],
-	BF["Pearlfin Jinyu"],
-	BF["Shado-Pan"],
-	BF["Shang Xi's Academy"],
-	BF["Sho"],
-	BF["The Anglers"],
-	BF["The August Celestials"],
-	BF["The Black Prince"],
-	BF["The Brewmasters"],
-	BF["The Klaxxi"],
-	BF["The Lorewalkers"],
-	BF["The Tillers"],
-	BF["Tina Mudclaw"],
-	BF["Tushui Pandaren"],
-	BF["Huojin Pandaren"],
-	
-	BF["Operation: Shieldwall"],
-	BF["Kirin Tor Offensive"],
-	BF["Akama's Trust"],
-	BF["Dominance Offensive"],
-	BF["Sunreaver Onslaught"],
-	BF["Shado-Pan Assault"],
-	BF["Darkspear Rebellion"],	
+	1277,	-- "Chee Chee"
+	1275,	-- "Ella"
+	1283,	-- "Farmer Fung"
+	1282,	-- "Fish Fellreed"
+	1228,	-- "Forest Hozen"
+	1281,	-- "Gina Mudclaw"
+	1269,	-- "Golden Lotus"
+	1279,	-- "Haohan Mudclaw"
+	1273,	-- "Jogu the Drunk"
+	1358,	-- "Nat Pagle"
+	1276,	-- "Old Hillpaw"
+	1271,	-- "Order of the Cloud Serpent"
+	1242,	-- "Pearlfin Jinyu"
+	1270,	-- "Shado-Pan"
+	1216,	-- "Shang Xi's Academy"
+	1278,	-- "Sho"
+	1302,	-- "The Anglers"
+	1341,	-- "The August Celestials"
+	1359,	-- "The Black Prince"
+	1351,	-- "The Brewmasters"
+	1337,	-- "The Klaxxi"
+	1345,	-- "The Lorewalkers"
+	1272,	-- "The Tillers"
+	1280,	-- "Tina Mudclaw"
+	1353,	-- "Tushui Pandaren"
+	1352,	-- "Huojin Pandaren"
+
+	1376,	-- "Operation: Shieldwall"
+	1387,	-- "Kirin Tor Offensive"
+	1416,	-- "Akama's Trust"
+	1375,	-- "Dominance Offensive"
+	1388,	-- "Sunreaver Onslaught"
+	1435,	-- "Shado-Pan Assault"
+	1440,	-- "Darkspear Rebellion"	
+	1492, -- "Emperor Shaohao"
 }
 
 local FactionUIDsRev = {}
 
 for k, v in pairs(FactionUIDs) do
-	FactionUIDsRev[v] = k	-- ex : [BZ["Darnassus"]] = 1
+	local name = GetFactionInfoByID(v)
+	FactionUIDsRev[name] = k	-- ex : ["Darnassus"] = 1
 end
 
 -- *** Utility functions ***
@@ -404,7 +403,6 @@ function addon:GetSource(searchedID)
 	local level, repData = PT:ItemInSet(searchedID, "Reputation.Reward")
 	if level and repData then
 		local _, _, faction = strsplit(".", repData)		-- ex: "Reputation.Reward.Sporeggar"
-		faction = BF[faction] or faction		-- localize faction name if possible
 	
 		-- level = 7,  29150:7 where 7 means revered
 		return faction, _G["FACTION_STANDING_LABEL"..level]
