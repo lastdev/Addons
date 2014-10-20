@@ -6,8 +6,8 @@ local conf
 local percD	= "%d"..PERCENT_SYMBOL
 local perc1F = "%.1f"..PERCENT_SYMBOL
 
-XPerl_RequestConfig(function(New) conf = New end, "$Revision: 854 $")
-XPerl_SetModuleRevision("$Revision: 854 $")
+XPerl_RequestConfig(function(New) conf = New end, "$Revision: 878 $")
+XPerl_SetModuleRevision("$Revision: 878 $")
 
 --Some local copies for speed
 local strsub = strsub
@@ -571,8 +571,14 @@ function XPerl_BlizzFrameDisable(self)
 		self:UnregisterAllEvents()
 		self:Hide()
 		-- Make it so it won't be visible, even if shown by another mod
-		self:ClearAllPoints()
-		self:SetPoint("BOTTOMLEFT", UIParent, "TOPLEFT", -400, 500)
+		--[[self:ClearAllPoints()
+		self:SetPoint("BOTTOMLEFT", UIParent, "TOPLEFT", -400, 500)]]
+		self:SetMovable(true)
+		self:SetUserPlaced(false)
+		self:SetMovable(false)
+		self:HookScript("OnShow", function(self)
+			self:Hide()
+		end)
 
 		local healthBar = _G[self:GetName().."HealthBar"]
 		if (healthBar) then
@@ -1807,7 +1813,16 @@ function XPerl_RestoreAllPositions()
 								v.height, v.width = nil, nil
 							end
 						end
-						frame:SetUserPlaced(true)
+						if (k == "XPerl_Runes") then
+                            frame:SetMovable(true)
+                            frame:EnableMouse(true)
+                            frame:RegisterForDrag("LeftButton")
+                            frame:SetScript("OnDragStart", frame.StartMoving)
+                            frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
+                            frame:SetUserPlaced(true)
+                        else
+                            frame:SetUserPlaced(true)
+                        end
 					end
 				end
 			end
@@ -1834,7 +1849,7 @@ local BuffExceptions
 	},
 	HUNTER = {
 		
-		[GetSpellInfo(13165)] = "HUNTER",			-- Aspect of the Hawk
+		--[GetSpellInfo(13165)] = "HUNTER",			-- Aspect of the Hawk
 		[GetSpellInfo(5118)] = "HUNTER",			-- Aspect of the Cheetah
 		[GetSpellInfo(13159)] = true,				-- Aspect of the Pack
 		[GetSpellInfo(61648)] = "HUNTER",			-- Aspect of the Beast
@@ -1863,7 +1878,7 @@ local BuffExceptions
 
 		[GetSpellInfo(25780)] = true,				-- Righteous Fury
 		[GetSpellInfo(20925)] = true,				-- Holy Shield
-		[GetSpellInfo(54428)] = true,				-- Divine Plea
+		--[GetSpellInfo(54428)] = true,				-- Divine Plea
 	},
 }
 
@@ -2763,7 +2778,7 @@ end
 
 -- XPerl_Unit_BuffPositions
 function XPerl_Unit_BuffPositions(self, buffList1, buffList2, size1, size2)
-	local optMix = format("%d%d%d%d%d%d%d", self.perlBuffs or 0, self.perlDebuffs or 0, self.perlBuffsMine or 0, self.perlDebuffsMine or 0, UnitCanAttack("player", self.partyid) or 2, (UnitPowerMax(self.partyid) > 0 and 1) or 0, (self.creatureTypeFrame and self.creatureTypeFrame:IsVisible() and 1) or 0)
+	local optMix = format("%d%d%d%d%d%d%d", self.perlBuffs and 1 or 0, self.perlDebuffs and 1 or 0, self.perlBuffsMine and 1 or 0, self.perlDebuffsMine and 1 or 0, UnitCanAttack("player", self.partyid) and 1 or 2, (UnitPowerMax(self.partyid) > 0 and 1) or 0, (self.creatureTypeFrame and self.creatureTypeFrame:IsVisible() and 1) or 0)
 	if (optMix ~= self.buffOptMix) then
 		WieghAnchor(self)
 
@@ -3525,10 +3540,10 @@ local function scaleMouseEnter(self)
 	self.tex:SetVertexColor(1, 1, 1, 1)
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 	if (self.scalable) then
-		GameTooltip:SetText(XPERL_DRAGHINT1, nil, nil, nil, nil, 1)
+		GameTooltip:SetText(XPERL_DRAGHINT1, nil, nil, nil, nil, true)
 	end
 	if (self.resizable) then
-		GameTooltip:AddLine(XPERL_DRAGHINT2, nil, nil, nil, 1)
+		GameTooltip:AddLine(XPERL_DRAGHINT2, nil, nil, nil, true)
 	end
 	GameTooltip:Show()
 end

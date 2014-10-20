@@ -1076,10 +1076,6 @@ loadedFrame:SetScript("OnEvent", function(self, event, addon)
     if(addon == ADDON_NAME) then
       db = WeakAurasSaved;
       WeakAurasOptionsSaved = WeakAurasOptionsSaved or {};
-<<<<<<< HEAD
-=======
-      save_import = db.save_import or true
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
       odb = WeakAurasOptionsSaved;
       
@@ -1462,6 +1458,12 @@ function WeakAuras.LayoutDisplayButtons(msg)
         if(WeakAuras.regions[data.id].region.SetStacks) then
           WeakAuras.regions[data.id].region:SetStacks(1);
         end
+
+        if (num % 50 == 0) then
+          frame.buttonsScroll:ResumeLayout()
+          frame.buttonsScroll:PerformLayout()
+          frame.buttonsScroll:PauseLayout()
+        end
     
         num = num + 1;
       end
@@ -1470,6 +1472,8 @@ function WeakAuras.LayoutDisplayButtons(msg)
       coroutine.yield();
     end
 
+    frame.buttonsScroll:ResumeLayout()
+    frame.buttonsScroll:PerformLayout()
     WeakAuras.SortDisplayButtons(msg);
   
     for id, button in pairs(displayButtons) do
@@ -1485,8 +1489,9 @@ function WeakAuras.LayoutDisplayButtons(msg)
   
   local func1 = function()
     local num = frame.loadProgressNum or 0;
+    frame.buttonsScroll:PauseLayout()
     for index, id in pairs(loadedSorted) do
-    local data = WeakAuras.GetData(id);
+      local data = WeakAuras.GetData(id);
       if(data) then
         WeakAuras.EnsureDisplayButton(data);
         WeakAuras.UpdateDisplayButton(data);
@@ -1499,6 +1504,12 @@ function WeakAuras.LayoutDisplayButtons(msg)
         end
     
         num = num + 1;
+      end
+
+      if (num % 50 == 0) then
+        frame.buttonsScroll:ResumeLayout()
+        frame.buttonsScroll:PerformLayout()
+        frame.buttonsScroll:PauseLayout()
       end
     
       frame.loadProgress:SetText(L["Creating buttons: "]..num.."/"..total);
@@ -2049,7 +2060,7 @@ function WeakAuras.AddOption(id, data)
           data.actions[field] = data.actions[field] or {};
           data.actions[field][value] = v;
           if(value == "sound" or value == "sound_path") then
-            PlaySoundFile(v);
+            PlaySoundFile(v, data.actions.start.sound_channel);
           end
           WeakAuras.Add(data);
         end,
@@ -5654,6 +5665,11 @@ end
 
 function WeakAuras.AddBorderOptions(input, id, data)
   local borderOptions = {
+  border = {
+    type = "toggle",
+    name = L["Border"],
+    order = 46.05
+  },
   borderEdge = {
     type = "select",
     dialogControl = "LSM30_Border",
@@ -5661,6 +5677,7 @@ function WeakAuras.AddBorderOptions(input, id, data)
     order = 46.1,
     values = AceGUIWidgetLSMlists.border,
     disabled = function() return not data.border end,
+    hidden = function() return not data.border end,
   },
   borderBackdrop = {
     type = "select",
@@ -5669,6 +5686,7 @@ function WeakAuras.AddBorderOptions(input, id, data)
     order = 46.2,
     values = AceGUIWidgetLSMlists.background,
     disabled = function() return not data.border end,
+    hidden = function() return not data.border end,
   },
   borderOffset = {
     type = "range",
@@ -5678,6 +5696,7 @@ function WeakAuras.AddBorderOptions(input, id, data)
     softMax = 32,
     bigStep = 1,
     disabled = function() return not data.border end,
+    hidden = function() return not data.border end,
   },
   borderSize = {
     type = "range",
@@ -5687,6 +5706,7 @@ function WeakAuras.AddBorderOptions(input, id, data)
     softMax = 64,
     bigStep = 1,
     disabled = function() return not data.border end,
+    hidden = function() return not data.border end,
   },
   borderInset = {
     type = "range",
@@ -5696,6 +5716,7 @@ function WeakAuras.AddBorderOptions(input, id, data)
     softMax = 32,
     bigStep = 1,
     disabled = function() return not data.border end,
+    hidden = function() return not data.border end,
   },
   borderColor = {
     type = "color",
@@ -5703,6 +5724,7 @@ function WeakAuras.AddBorderOptions(input, id, data)
     hasAlpha = true,
     order = 46.6,
     disabled = function() return not data.border end,
+    hidden = function() return not data.border end,
   },
   backdropColor = {
     type = "color",
@@ -5710,11 +5732,7 @@ function WeakAuras.AddBorderOptions(input, id, data)
     hasAlpha = true,
     order = 46.8,
     disabled = function() return not data.border end,
-  },
-  border = {
-    type = "toggle",
-    name = L["Border"],
-    order = 46.9
+    hidden = function() return not data.border end,
   },
   }
   
@@ -5799,13 +5817,8 @@ function WeakAuras.CreateFrame()
   local import = CreateFrame("Frame", nil, frame);
   import:SetWidth(17)
   import:SetHeight(40)
-<<<<<<< HEAD
   import:SetPoint("TOPRIGHT", -100, 12)  
   --import:Hide()
-=======
-  import:SetPoint("TOPRIGHT", -140, 12)  
-  import:Hide()
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
   
   local importbg = import:CreateTexture(nil, "BACKGROUND")
   importbg:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
@@ -5816,7 +5829,6 @@ function WeakAuras.CreateFrame()
   importbutton:SetWidth(30);
   importbutton:SetHeight(30);
   importbutton:SetPoint("CENTER", import, "CENTER", 1, -1);
-<<<<<<< HEAD
   importbutton:SetHitRectInsets(0,0,0,0)
   importbutton:SetChecked(db.import_disabled)
 
@@ -5836,34 +5848,6 @@ function WeakAuras.CreateFrame()
       GameTooltip:Show()
   end)
   importbutton:SetScript("OnLeave", GameTooltip_Hide)
-=======
-  importbutton:SetChecked()
-  importbutton:SetHitRectInsets(0,0,0,0)
-  importbutton:SetScript("PostClick", function(self) 
-    if self:GetChecked() then 
-      save_import = true;
-      PlaySound("igMainMenuOptionCheckBoxOn")
-      print(save_import)
-    else 
-      save_import = false;
-      PlaySound("igMainMenuOptionCheckBoxOff") 
-      print(save_import)
-    end 
-  end)
-  importbutton:SetScript("OnEnter", ShowTooltip)
-  importbutton:SetScript("OnLeave", HideTooltip)
-
-  local function ShowTooltip(self)
-  GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
-  GameTooltip:SetText("Save Import")  -- This sets the top line of text, in gold.
-  GameTooltip:AddLine("If this option is enabled, you are only enable to import auras from people in your guild/raid/group.", 1, 1, 1)
-  GameTooltip:Show()
-  end
-
-  local function HideTooltip(self)
-  GameTooltip:Hide()
-  end
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
   
   local importbg_l = import:CreateTexture(nil, "BACKGROUND")
   importbg_l:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
@@ -6056,13 +6040,13 @@ function WeakAuras.CreateFrame()
   minimizebg_r:SetPoint("LEFT", minimizebg, "RIGHT")
   minimizebg_r:SetWidth(10)
   minimizebg_r:SetHeight(40)
-  
+
   local _, _, _, enabled, loadable = GetAddOnInfo("WeakAurasTutorials");
   if(enabled and loadable) then
     local tutorial = CreateFrame("Frame", nil, frame);
     tutorial:SetWidth(17)
     tutorial:SetHeight(40)
-    tutorial:SetPoint("TOPRIGHT", -100, 12)
+    tutorial:SetPoint("TOPRIGHT", -140, 12)
     
     local tutorialbg = tutorial:CreateTexture(nil, "BACKGROUND")
     tutorialbg:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
@@ -6506,7 +6490,7 @@ function WeakAuras.CreateFrame()
   frame.modelPick = modelPick;
   
   local modelPickZ = AceGUI:Create("Slider");
-  modelPickZ:SetSliderValues(-2, 2, 0.05);
+  modelPickZ:SetSliderValues(-20, 20, 0.05);
   modelPickZ:SetLabel(L["Z Offset"]);
   modelPickZ.frame:SetParent(modelPick.frame);
   modelPickZ:SetCallback("OnValueChanged", function()
@@ -6514,7 +6498,7 @@ function WeakAuras.CreateFrame()
   end);
   
   local modelPickX = AceGUI:Create("Slider");
-  modelPickX:SetSliderValues(-2, 2, 0.05);
+  modelPickX:SetSliderValues(-20, 20, 0.05);
   modelPickX:SetLabel(L["X Offset"]);
   modelPickX.frame:SetParent(modelPick.frame);
   modelPickX:SetCallback("OnValueChanged", function()
@@ -6522,7 +6506,7 @@ function WeakAuras.CreateFrame()
   end);
   
   local modelPickY = AceGUI:Create("Slider");
-  modelPickY:SetSliderValues(-2, 2, 0.05);
+  modelPickY:SetSliderValues(-20, 20, 0.05);
   modelPickY:SetLabel(L["Y Offset"]);
   modelPickY.frame:SetParent(modelPick.frame);
   modelPickY:SetCallback("OnValueChanged", function()
@@ -6746,6 +6730,7 @@ function WeakAuras.CreateFrame()
         end
       end);
       importexportbox:SetText("");
+      importexportbox:SetLabel("0");
       importexportbox:SetFocus();
     end
   end

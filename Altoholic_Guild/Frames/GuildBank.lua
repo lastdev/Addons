@@ -81,10 +81,10 @@ local function OnGuildChange(self)
 	local currentGuild = GetGuildInfo("player")
 	if guildName == currentGuild then
 		_G[parent .. "_UpdateIcon"]:Enable()
-		_G[parent .. "_UpdateIconIconTexture"]:SetDesaturated(0)
+		_G[parent .. "_UpdateIconIconTexture"]:SetDesaturated(false)
 	else
 		_G[parent .. "_UpdateIcon"]:Disable()
-		_G[parent .. "_UpdateIconIconTexture"]:SetDesaturated(1)
+		_G[parent .. "_UpdateIconIconTexture"]:SetDesaturated(true)
 	end
 	
 	_G[parent .. "Info1"]:SetText("")
@@ -178,7 +178,7 @@ function ns:Update()
 			
 			addon:CreateButtonBorder(itemButton)
 			itemButton.border:Hide()
-			itemTexture:SetDesaturated(0)
+			itemTexture:SetDesaturated(false)
 			
 			local itemIndex = from + ((columnIndex - 1) * NUM_GUILDBANK_ROWS)
 			
@@ -194,7 +194,7 @@ function ns:Update()
 						itemButton.border:SetVertexColor(r, g, b, 0.5)
 						itemButton.border:Show()
 					else
-						itemTexture:SetDesaturated(1)
+						itemTexture:SetDesaturated(true)
 					end
 				end
 			else
@@ -388,7 +388,7 @@ function ns:OnLoad()
 	if not currentGuild then
 		-- if the guild that will be displayed is not the one the current player is in, then disable the button
 		_G[parent .. "_UpdateIcon"]:Disable()
-		_G[parent .. "_UpdateIconIconTexture"]:SetDesaturated(1)
+		_G[parent .. "_UpdateIconIconTexture"]:SetDesaturated(true)
 	
 		for guildName, guild in pairs(DataStore:GetGuilds(currentRealm, THIS_ACCOUNT)) do
 			local money = DataStore:GetGuildBankMoney(guild)

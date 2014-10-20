@@ -97,3 +97,8 @@ GTFO.SpellID["25656"] = {
 	sound = 3;
 	applicationOnly = true;
 };
+
+GTFO.SpellID["168338"] = {
+	--desc = "Artillery Blast";
+	sound = 3;
+};

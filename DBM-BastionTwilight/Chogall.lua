@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(167, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 99 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 131 $"):sub(12, -3))
 mod:SetCreatureID(43324)
 mod:SetEncounterID(1029)
 mod:DisableEEKillDetection()
@@ -113,14 +113,10 @@ function mod:CorruptingCrashTarget(sGUID)
 		local uId = DBM:GetRaidUnitId(targetname)
 		if uId then
 			local inRange = CheckInteractDistance(uId, 2)
-			local x, y = GetPlayerMapPosition(uId)
-			if x == 0 and y == 0 then
-				SetMapToCurrentZone()
-				x, y = GetPlayerMapPosition(uId)
-			end
 			if inRange then
 				specWarnCorruptingCrashNear:Show(targetname)
 				if self.Options.CorruptingCrashArrow then
+					local x, y = UnitPosition(uId)
 					DBM.Arrow:ShowRunAway(x, y, 10, 5)
 				end
 			end

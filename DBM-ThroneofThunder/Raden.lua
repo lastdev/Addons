@@ -1,11 +1,7 @@
 local mod	= DBM:NewMod(831, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD
-mod:SetRevision(("$Revision: 11506 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 10977 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(69473)--69888
 mod:SetEncounterID(1580, 1581)
 mod:SetZone()
@@ -112,10 +108,6 @@ function mod:OnCombatStart(delay)
 	horrorCount = 0
 	timerCreationCD:Start(11-delay, 1)
 	countdownCreation:Start(11-delay)
-	if not BigWigs and not self.Options.ShowedBigWigsmessage then
-		DBM:AddMsg(L.BigWigsRecommendation)
-		self.Options.ShowedBigWigsmessage = true
-	end
 end
 
 function mod:SPELL_CAST_START(args)

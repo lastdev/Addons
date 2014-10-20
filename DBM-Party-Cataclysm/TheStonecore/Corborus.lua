@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(110, "DBM-Party-Cataclysm", 7, 67)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 123 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 131 $"):sub(12, -3))
 mod:SetCreatureID(43438)
 mod:SetZone()
 
@@ -56,15 +56,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		else
 			local uId = DBM:GetRaidUnitId(args.destName)
 			if uId then--May also not work right if same spellid is applied to people near the target, then will need more work.
-				local x, y = GetPlayerMapPosition(uId)
-				if x == 0 and y == 0 then
-					SetMapToCurrentZone()
-					x, y = GetPlayerMapPosition(uId)
-				end
-				local inRange = DBM.RangeCheck:GetDistance("player", x, y)
+				local inRange = DBM.RangeCheck:GetDistance("player", uId)
 				if inRange and inRange < 6 then
 					specWarnCrystalBarrageClose:Show(args.destName)
 					if self.Options.CrystalArrow then
+						local x, y = UnitPosition(uId)
 						DBM.Arrow:ShowRunAway(x, y, 8, 5)
 					end
 				end

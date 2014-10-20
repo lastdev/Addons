@@ -4,7 +4,7 @@
 -- ********************************************************
 --
 -- This addon is written and copyrighted by:
---    * Mîzukichan @ EU-Antonidas (2010-2013)
+--    * Mîzukichan @ EU-Antonidas (2010-2014)
 --
 -- Contributors:
 --    * Kevin (HTML-Export) (2010)
@@ -66,6 +66,9 @@ local MRT_Defaults = {
         ["Tracking_LogLFRRaids"] = true,                                            -- Track LFR raids: true / nil
         ["Tracking_LogAVRaids"] = false,                                            -- Track PvP raids: true / nil
         ["Tracking_LogWotLKRaids"] = false,                                         -- Track WotLK raid: true / nil
+        ["Tracking_LogCataclysmRaids"] = false,                                     -- Track Catacylsm raid: true / nil
+        ["Tracking_LogMoPRaids"] = true,                                            -- Track MoP raid: true / nil
+        ["Tracking_LogLootModePersonal"] = true,
         ["Tracking_AskForDKPValue"] = true,                                         -- 
         ["Tracking_MinItemQualityToLog"] = 4,                                       -- 0:poor, 1:common, 2:uncommon, 3:rare, 4:epic, 5:legendary, 6:artifact
         ["Tracking_MinItemQualityToGetDKPValue"] = 4,                               -- 0:poor, 1:common, 2:uncommon, 3:rare, 4:epic, 5:legendary, 6:artifact
@@ -153,6 +156,7 @@ function MRT_MainFrame_OnLoad(frame)
     end
     frame:RegisterEvent("PARTY_CONVERTED_TO_RAID");
     frame:RegisterEvent("PARTY_INVITE_REQUEST");
+    frame:RegisterEvent("PARTY_LOOT_METHOD_CHANGED");
     frame:RegisterEvent("PLAYER_ENTERING_WORLD");
     frame:RegisterEvent("PLAYER_REGEN_DISABLED");
     frame:RegisterEvent("RAID_INSTANCE_WELCOME");
@@ -247,6 +251,13 @@ function MRT_OnEvent(frame, event, ...)
             end
         end);
         
+    elseif (event == "PARTY_LOOT_METHOD_CHANGED") then
+        MRT_Debug("Event PARTY_LOOT_METHOD_CHANGED fired.");
+        if (not MRT_Options["General_MasterEnable"]) then 
+            MRT_Debug("MRT seems to be disabled. Ignoring Event.");
+            return; 
+        end;
+        MRT_CheckZoneAndSizeStatus();
     
     elseif (event == "ZONE_CHANGED_NEW_AREA") then
         MRT_Debug("Event ZONE_CHANGED_NEW_AREA fired.");
@@ -572,6 +583,12 @@ function MRT_UpdateSavedOptions()
         MRT_Options["Tracking_LogLFRRaids"] = true;
         MRT_Options["General_OptionsVersion"] = 14;
     end
+    if MRT_Options["General_OptionsVersion"] == 14 then
+        MRT_Options["Tracking_LogCataclysmRaids"] = false;     
+        MRT_Options["Tracking_LogMoPRaids"] = true;            
+        MRT_Options["Tracking_LogLootModePersonal"] = true;
+        MRT_Options["General_OptionsVersion"] = 15;
+    end
 end
 
 
@@ -795,8 +812,9 @@ function MRT_CheckZoneAndSizeStatus()
     local areaID = GetCurrentMapAreaID();
     if (not areaID) then return; end
     local localInstanceInfoName = GetMapNameByID(areaID);
-    local instanceInfoDifficulty2 = MRT_GetInstanceDifficulty();
     if (not localInstanceInfoName) then return; end
+    local instanceInfoDifficulty2 = MRT_GetInstanceDifficulty();
+    if (not instanceInfoDifficulty2) then return; end
     MRT_Debug("MRT_CheckZoneAndSizeStatus called - data: Name="..localInstanceInfoName.." / ID=" ..areaID.." / Type="..instanceInfoType.." / InfoDiff="..instanceInfoDifficulty.." / GetInstanceDiff="..instanceInfoDifficulty2);
     if (MRT_RaidZones[areaID]) then
         if (uiVersion >= 40300) then
@@ -815,10 +833,14 @@ function MRT_CheckZoneAndSizeStatus()
                 return;
             end
         end
-        -- check if recognized raidzone is a pvpraid (-> Archavons Vault) and if tracking is enabled
-        -- This is the point where to check if the current raidZone is a zone, which should be tracked
+        -- Check if the current raidZone is a zone which should be tracked
         if (MRT_PvPRaids[areaID] and not MRT_Options["Tracking_LogAVRaids"]) then 
             MRT_Debug("This instance is a PvP-Raid and tracking of those is disabled.");
+            if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
+            return;
+        end
+        if (MRT_LegacyRaidZonesCataclysm[areaID] and not MRT_Options["Tracking_LogCataclysmRaids"]) then
+            MRT_Debug("This instance is a Cataclysm-Raid and tracking of those is disabled.");
             if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
             return;
         end
@@ -832,6 +854,13 @@ function MRT_CheckZoneAndSizeStatus()
             if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
             return;
         end
+        -- Check if the current loot mode should be tracked
+        if (select(1, GetLootMethod()) == "personalloot" and not MRT_Options["Tracking_LogLootModePersonal"]) then
+            MRT_Debug("Loot method is personal loot and tracking of this loot method is disabled.");
+            if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
+            return;
+        end
+        -- Check tracking status
         MRT_CheckTrackingStatus(localInstanceInfoName, instanceInfoDifficulty2);
     else
         MRT_Debug("This instance is not on the tracking list.");
@@ -839,7 +868,7 @@ function MRT_CheckZoneAndSizeStatus()
 end
 
 function MRT_CheckTrackingStatus(instanceInfoName, instanceInfoDifficulty)
-    -- Create a new raidentry if MRT_Raidzones match and MRT enabled and:
+    -- Create a new raid entry if MRT_Raidzones match and MRT enabled and:
     --  I) If no active raid and 10 player tracking enabled
     --  if 10 player tracking disabled, check for 25 player
     --  II) If changed from 10 men to 25 men
@@ -1715,12 +1744,23 @@ end
 
 -- GetNPCID - returns the NPCID or nil, if GUID was no NPC
 function MRT_GetNPCID(GUID)
-    local first3 = tonumber("0x"..strsub(GUID, 3, 5));
-    local unitType = bit.band(first3, 0x007);
-    if ((unitType == 0x003) or (unitType == 0x005)) then
-        return tonumber("0x"..strsub(GUID, 6, 10));
+    if (uiVersion < 60000) then
+        local first3 = tonumber("0x"..strsub(GUID, 3, 5));
+        local unitType = bit.band(first3, 0x007);
+        if ((unitType == 0x003) or (unitType == 0x005)) then
+            return tonumber("0x"..strsub(GUID, 6, 10));
+        else
+            return nil;
+        end
     else
-        return nil;
+        -- Player-GUID: Player-[server ID]-[player UID]
+        -- other GUID: [Unit type]-0-[server ID]-[instance ID]-[zone UID]-[ID]-[Spawn UID]
+        local unitType, _, _, _, _, ID = strsplit("-", GUID);
+        if (unitType == "Creature") or (unitType == "Vehicle") then
+            return tonumber(ID);
+        else
+            return nil;
+        end
     end
 end
 
@@ -1792,6 +1832,11 @@ end
 
 function MRT_GetInstanceDifficulty()
     if (uiVersion < 50001) then
+        -- legacy instance difficulty IDs, needs a big workaround for Draenor:
+        -- 1 = 5, 10 or 40 players normal
+        -- 2 = 5 or 25 players heroic
+        -- 3 = 10 players heroic
+        -- 4 = 25 players heroic
         return GetInstanceDifficulty();
     else
         local _, _, iniDiff = GetInstanceInfo();
@@ -1809,6 +1854,8 @@ function MRT_GetInstanceDifficulty()
             [11] = 0,
             [12] = 0,
 			[14] = 2,
+            [15] = 2,
+            [16] = 4,
         };
         return iniDiffMapping[iniDiff];
     end

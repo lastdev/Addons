@@ -1,0 +1,7 @@
+## Interface: 60000
+## Title: NugEnergy
+## Notes: Energy monitor
+## Author: d87
+## SavedVariables: NugEnergyDB
+## SavedVariablesPerCharacter: NugEnergyDB_Character
+NugEnergy.lua

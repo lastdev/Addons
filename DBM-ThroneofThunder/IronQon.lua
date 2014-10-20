@@ -1,11 +1,7 @@
 local mod	= DBM:NewMod(817, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD
-mod:SetRevision(("$Revision: 11365 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(68078, 68079, 68080, 68081)--Ro'shak 68079, Quet'zal 68080, Dam'ren 68081, Iron Qon 68078
 mod:SetEncounterID(1559)
 mod:SetMainBossID(68078)
@@ -155,12 +151,7 @@ local function checkSpear()
 			specWarnThrowSpearYou:Show()
 			yellThrowSpear:Yell()
 		else--Not spear target
-			local x, y = GetPlayerMapPosition("boss1target")
-			if x == 0 and y == 0 then
-				SetMapToCurrentZone()
-				x, y = GetPlayerMapPosition("boss1target")
-			end
-			local inRange = DBM.RangeCheck:GetDistance("player", x, y)
+			local inRange = DBM.RangeCheck:GetDistance("player", "boss1target")
 			if inRange and inRange < 10 then
 				specWarnThrowSpearNear:Show(targetname)--Near spear target
 			elseif mod:AntiSpam(15, 6) then--Smart way to do a failsafe in case we never get a valid target

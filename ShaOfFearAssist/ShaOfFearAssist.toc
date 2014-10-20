@@ -1,13 +1,13 @@
 ## Title: Sha of Fear Assist
 ## Notes: Assistance to the dance during Dread Spray
 ## Author: Caleb
-## X-Curse-Packaged-Version: 1.25
+## X-Curse-Packaged-Version: 1.26
 ## X-Curse-Project-Name: ShaOfFearAssist
 ## X-Curse-Project-ID: shaoffearassist
 ## X-Curse-Repository-ID: wow/shaoffearassist/mainline
 
-## Interface: 50400
-## Version: 1.25
+## Interface: 60000
+## Version: 1.26
 ## SavedVariables: ShaAssistDB
 ## LoadManagers: BigWigs
 ## X-BigWigs-LoadOn-ZoneId: 886

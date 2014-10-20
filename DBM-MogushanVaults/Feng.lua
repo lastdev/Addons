@@ -1,11 +1,7 @@
 local mod	= DBM:NewMod(689, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD
-mod:SetRevision(("$Revision: 11365 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 10980 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(60009)--60781 Soul Fragment
 mod:SetEncounterID(1390)
 mod:SetZone()
@@ -65,13 +61,8 @@ local specWarnWildSpark				= mod:NewSpecialWarningYou(116784)
 local specWarnWildfire				= mod:NewSpecialWarningMove(116793)
 local specWarnDrawFlame				= mod:NewSpecialWarningSpell(116711, nil, nil, nil, 2)
 --Arcane/Staff
-<<<<<<< HEAD
 local specWarnArcaneShock			= mod:NewSpecialWarningStack(131790, nil, 2)
 local specWarnArcaneShockOther		= mod:NewSpecialWarningTaunt(131790)
-=======
-local specWarnArcaneShock			= mod:NewSpecialWarningStack(131790, mod:IsTank(), 2)
-local specWarnArcaneShockOther		= mod:NewSpecialWarningTarget(131790, mod:IsTank())
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 local specWarnArcaneResonance		= mod:NewSpecialWarningMoveAway(116417)
 local yellArcaneResonance			= mod:NewYell(116417)
 local specWarnArcaneVelocity		= mod:NewSpecialWarningSpell(116364, nil, nil, nil, 2)

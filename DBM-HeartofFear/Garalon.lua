@@ -1,11 +1,7 @@
 local mod	= DBM:NewMod(713, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD
-mod:SetRevision(("$Revision: 11448 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(63191)--Also has CID 62164. He has 2 CIDs for a single target, wtf? It seems 63191 is one players attack though so i'll try just it.
 mod:SetEncounterID(1463)
 mod:SetZone()
@@ -98,12 +94,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specwarnPheromonesTarget:Show(args.destName)
 			local uId = DBM:GetRaidUnitId(args.destName)
 			if uId then
-				local x, y = GetPlayerMapPosition(uId)
-				if x == 0 and y == 0 then
-					SetMapToCurrentZone()
-					x, y = GetPlayerMapPosition(uId)
-				end
-				local inRange = DBM.RangeCheck:GetDistance("player", x, y)
+				local inRange = DBM.RangeCheck:GetDistance("player", uId)
 				if inRange and inRange < 9 then
 					specwarnPheromonesNear:Show(args.destName)
 				end

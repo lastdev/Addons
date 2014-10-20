@@ -2,6 +2,36 @@ local ADDON_NAME, TalentMacros = ...
 LibStub("AceAddon-3.0"):NewAddon(TalentMacros, ADDON_NAME, "AceEvent-3.0")
 
 local DEFAULT_MACRO = "#showtooltip\n/cast %n"
+local CHECK_TEXTURE = " |T" .. READY_CHECK_READY_TEXTURE .. ":0|t"
+
+local MAX_TALENT_TIERS = MAX_TALENT_TIERS
+local NUM_TALENT_COLUMNS = NUM_TALENT_COLUMNS
+
+local GetTalentDescription
+do
+	local cache = {}
+	local scanner = CreateFrame("GameTooltip")
+	scanner:SetOwner(WorldFrame, "ANCHOR_NONE")
+	local lcache, rcache = {}, {}
+	for i = 1, 6 do
+		lcache[i], rcache[i] = scanner:CreateFontString(), scanner:CreateFontString()
+		lcache[i]:SetFontObject(GameFontNormal); rcache[i]:SetFontObject(GameFontNormal)
+		scanner:AddFontStrings(lcache[i], rcache[i])
+	end
+	function GetTalentDescription(id)
+		if cache[id] then return cache[id] end
+		scanner:ClearLines()
+		scanner:SetTalent(id, nil, GetActiveSpecGroup())
+		for i = scanner:NumLines(), 1, -1 do
+			local desc = lcache[i] and lcache[i]:GetText()
+			if desc and desc ~= TALENT_TOOLTIP_REMOVEPREVIEWPOINT and desc ~= TALENT_TOOLTIP_ADDPREVIEWPOINT then
+				cache[id] = desc
+				return desc
+			end
+		end
+	end
+end
+
 
 local db = nil
 local defaults = {
@@ -27,15 +57,24 @@ local function GetOptions()
 			create = {
 				type = "execute",
 				name = "Create Macros",
-				desc = "Create six general macros named t1-t6 that will be updated when you change talents.",
+				desc = "Create seven general macros named t1-t7 that will be updated when you change talents. Do not edit these directly!",
 				func = "CreateMacros",
+				disabled = function()
+					for tier = 1, MAX_TALENT_TIERS do
+						local name = ("t%d"):format(tier)
+						if GetMacroIndexByName(name) == 0 then
+							return false
+						end
+					end
+					return true
+				end,
 				order = 2,
 				width = "full",
 			},
 			advanced = {
 				type = "toggle",
 				name = "Enable templates for each talent",
-				desc = "Disable to make all macros simply:\n\n#showtooltip\n/cast talent name",
+				desc = "Allows you to edit the macro text for each talent.\n\nDisable to make all macros simply:\n   #showtooltip\n   /cast talentname",
 				get = function() return db.advanced end,
 				set = function(info, value)
 					db.advanced = value
@@ -44,62 +83,67 @@ local function GetOptions()
 				order = 3,
 				width = "full",
 			},
+			advanced_text = {
+				type = "description",
+				name = "|cffffd200Delete all of the macro text and hit accept to reset to the default text.|r",
+				fontSize = "medium",
+				hidden = function() return not db.advanced end,
+			},
 		},
 	}
 
 	if db.advanced then
-		for i = 1, MAX_NUM_TALENTS do
-			local name, iconTexture, tier, column = GetTalentInfo(i)
-			local group = ("Tier %d"):format(tier)
-			if not options.args[group] then
-				options.args[group] = {
-					type = "group",
-					name = group,
-					desc = "",
-					order = 10 * tier,
-					args = {},
+		local spec = GetActiveSpecGroup()
+		for tier = 1, MAX_TALENT_TIERS do
+			for column = 1, NUM_TALENT_COLUMNS do
+				local id, name, iconTexture, selected, available = GetTalentInfo(tier, column, spec)
+				local group = ("Tier %d"):format(tier)
+				if not options.args[group] then
+					options.args[group] = {
+						type = "group",
+						name = group,
+						order = 10 * tier,
+						args = {},
+					}
+				end
+				local title = ("|T%s:0:0:0:0:64:64:4:60:4:60|t %s%s"):format(iconTexture, name, selected and CHECK_TEXTURE or "")
+				options.args[group].desc = options.args[group].desc and ("%s\n%s"):format(options.args[group].desc, title) or title
+
+				options.args[group].args[name] = {
+					type = "input",
+					name = ("|T%s:18:18:3:0:64:64:4:60:4:60|t %s%s"):format(iconTexture, name, selected and CHECK_TEXTURE or ""),
+					desc = GetTalentDescription(id),
+					order = column,
+					get = function()
+						return db.macrotext[id] or DEFAULT_MACRO:gsub("%%n", name)
+					end,
+					set = function(info, value)
+						if type(value) == "string" and value:trim() ~= "" then
+							db.macrotext[id] = value:gsub("%%n", name):sub(1,255)
+						else
+							db.macrotext[id] = nil
+						end
+						TalentMacros:UpdateMacros()
+					end,
+					validate = function(info, value)
+						if type(value) == "string" then
+							value = value:gsub("%%n", name)
+							if #value > 255 then
+								local error = ("Macro is longer than 255 characters! (%d)"):format(#value)
+								TalentMacros:Print(error)
+								return error
+							end
+						end
+						return true
+					end,
+					multiline = 5,
+					width = "full",
 				}
 			end
-			options.args[group].desc = ("%s\n%s"):format(options.args[group].desc, name)
-
-			options.args[group].args[name] = {
-				type = "input",
-				name = ("|T%s:0:0:0:-1|t %s"):format(iconTexture, name),
-				desc = "Delete all of the macro text and hit accept to reset to the default text.",
-				order = column,
-				get = function()
-					return db.macrotext[i] or DEFAULT_MACRO:gsub("%%n", name)
-				end,
-				set = function(info, value)
-					if type(value) == "string" and value:trim() ~= "" then
-						db.macrotext[i] = value:gsub("%%n", name):sub(1,255)
-					else
-						db.macrotext[i] = nil
-					end
-					TalentMacros:UpdateMacros()
-				end,
-				validate = function(info, value)
-					if type(value) == "string" then
-						value = value:gsub("%%n", name)
-						if #value > 255 then
-							local error = ("Macro is longer than 255 characters! (%d)"):format(#value)
-							TalentMacros:Print(error)
-							return error
-						end
-					end
-					return true
-				end,
-				multiline = 6,
-				width = "full",
-			}
 		end
 	end
 
 	return options
-end
-
-function TalentMacros:Print(...)
-	print("|cff33ff99TalentMacros|r:", ...)
 end
 
 function TalentMacros:OnInitialize()
@@ -111,9 +155,29 @@ function TalentMacros:OnInitialize()
 end
 
 function TalentMacros:OnEnable()
+	-- upgrade the db
+	if not db.version or db.version < 1 then
+		local spec = GetActiveSpecGroup()
+		for tier = 1, MAX_TALENT_TIERS do
+			for column = 1, NUM_TALENT_COLUMNS do
+				local index = (tier - 1) * 3 + column
+				if db.macrotext[index] then
+					local id = GetTalentInfo(tier, column, spec)
+					db.macrotext[id] = db.macrotext[index]
+					db.macrotext[index] = nil
+				end
+			end
+		end
+		db.version = 1
+	end
+
 	self:RegisterEvent("PLAYER_TALENT_UPDATE")
 
 	self:UpdateMacros()
+end
+
+function TalentMacros:Print(...)
+	print("|cff33ff99TalentMacros|r:", ...)
 end
 
 function TalentMacros:PLAYER_TALENT_UPDATE()
@@ -132,11 +196,14 @@ function TalentMacros:UpdateMacros()
 		return
 	end
 
-	for i = 1, MAX_NUM_TALENTS do
-		local name, _, tier, _, selected = GetTalentInfo(i)
-		if selected then
-			local body = db.advanced and db.macrotext[i] or DEFAULT_MACRO:gsub("%%n", name)
-			EditMacro(("t%d"):format(tier), nil, "INV_Misc_QuestionMark", body)
+	local spec = GetActiveSpecGroup()
+	for tier = 1, MAX_TALENT_TIERS do
+		for column = 1, NUM_TALENT_COLUMNS do
+			local id, name, iconTexture, selected, available = GetTalentInfo(tier, column, spec)
+			if selected then
+				local body = db.advanced and db.macrotext[id] or DEFAULT_MACRO:gsub("%%n", name)
+				EditMacro(("t%d"):format(tier), nil, "INV_Misc_QuestionMark", body)
+			end
 		end
 	end
 end
@@ -148,7 +215,7 @@ function TalentMacros:CreateMacros()
 	end
 
 	local errors = 0
-	for tier = 1, MAX_NUM_TALENT_TIERS do
+	for tier = 1, MAX_TALENT_TIERS do
 		local name = ("t%d"):format(tier)
 		if GetMacroIndexByName(name) == 0 then
 			local success = pcall(CreateMacro, name, "INV_Misc_QuestionMark", "")
@@ -162,12 +229,14 @@ function TalentMacros:CreateMacros()
 	if errors == 0 then
 		self:Print("Macros created!")
 	else
-		self:Print(("Unable to create %d macros"):format(errors))
+		self:Print("Unable to create all of the macros! (No more general macro space?)")
 	end
 end
 
 SLASH_TALENTMACROS1 = "/talentmacros"
+SLASH_TALENTMACROS2 = "/talentmacro"
 SlashCmdList["TALENTMACROS"] = function()
+	InterfaceOptionsFrame_OpenToCategory(ADDON_NAME)
 	InterfaceOptionsFrame_OpenToCategory(ADDON_NAME)
 end
 

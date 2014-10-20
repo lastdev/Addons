@@ -1,4 +1,4 @@
-﻿## Interface: 50400
+﻿## Interface: 60000
 ## Title: X-Perl |cffeda55fRaid Admin|r by |cFFFF8080Zek|r
 ## Title-itIT: X-Perl |cffeda55fAmministrazione Incursione|r di |cFFFF8080Zek|r
 ## Title-ruRU: X-Perl |cffeda55fРейд админ|r
@@ -9,12 +9,12 @@
 ## Notes-itIT: Fornisce degli strumenti utili agli ufficiali delle incursioni.
 ## Notes-ruRU: Обеспечивает рейд лидера полезными инструментами рейд админа.
 ## Notes-deDE: Bietet Schlachtzugsleitern nützliche Einstellungsmöglichkeiten.
-## Notes-zhTW: 提供團隊工具給予領隊方便的整合人員.
+## Notes-zhTW: 提供團隊管理工具給予領隊以方便地整合人員
 ## Author: Zek
 ## X-License: GNU GPL v3, 29 June 2007
 ## SavedVariablesPerCharacter: XPerl_Admin, XPerl_CheckItems
 ## RequiredDeps: XPerl
-## X-Curse-Packaged-Version: r860
+## X-Curse-Packaged-Version: r879
 ## X-Curse-Project-Name: X-Perl UnitFrames
 ## X-Curse-Project-ID: xperl
 ## X-Curse-Repository-ID: wow/xperl/mainline

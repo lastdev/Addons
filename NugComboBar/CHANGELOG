@@ -1,9 +1,19 @@
-<<<<<<< HEAD
+6.0.4:
+ - Changed fulmination to fill up to 14
+ - Removed mushroom from Restoration Druid
+ - Arance Missiles update (disabled by default)
+ - GUI module ToC updated
+
+6.0.3:
+ - ToC updated to 60000
+ - added Starsurge charges
+ - added Lacerate stacks when pulverize talent is chosen
+ - added Unyielding Strikes
+ - arcane mage arcane missle proc counter removed
+
 5.2.17:
  - added sound notification
 
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 5.2.16:
  - fixed a bug with older skins causing crash
 

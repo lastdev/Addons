@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(687, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(60701, 60708, 60709, 60710)--Adds: 60731 Undying Shadow, 60958 Pinning Arrow
 mod:SetEncounterID(1436)
 mod:SetZone()
@@ -353,12 +353,7 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 			else
 				local uId = DBM:GetRaidUnitId(target)
 				if uId then
-					local x, y = GetPlayerMapPosition(uId)
-					if x == 0 and y == 0 then
-						SetMapToCurrentZone()
-						x, y = GetPlayerMapPosition(uId)
-					end
-					local inRange = DBM.RangeCheck:GetDistance("player", x, y)
+					local inRange = DBM.RangeCheck:GetDistance("player", uId)
 					if inRange and inRange < 9 then
 						specWarnPillage:Show()
 					end

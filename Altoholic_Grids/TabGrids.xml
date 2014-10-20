@@ -294,6 +294,13 @@
 					</Anchor>
 				</Anchors>
 			</Button>
+			<Button name="$parent_Dungeons" inherits="AltoTabGridsMenuIconTemplate" id="10">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeTo="$parent_Dailies" relativePoint="BOTTOMRIGHT" >
+						<Offset x="5" y="0" />
+					</Anchor>
+				</Anchors>
+			</Button>
 		</Frames>
 		<Scripts>
 			<OnLoad>

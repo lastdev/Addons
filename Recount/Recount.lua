@@ -11,7 +11,7 @@ local FilterSize	= 20
 local RampUp		= 5
 local RampDown		= 10
 
-Recount.Version = tonumber(string.sub("$Revision: 1269 $", 12, -3))
+Recount.Version = tonumber(string.sub("$Revision: 1270 $", 12, -3))
 
 local _G = _G
 local abs = abs
@@ -1222,8 +1222,8 @@ function Recount:FindUnitFromFlags(unitname, unitFlags)
 end
 
 Recount.ElementalMobID = {
-	[15430] = "3BF8", -- Earth elemental totem and it's greater elemental
-	[15439] = "3C4E" -- Fire elemental totem
+	[15430] = 15432, -- Earth elemental totem and its greater elemental
+	[15439] = 15438 -- Fire elemental totem
 }
 
 local gopts = {}
@@ -1234,11 +1234,11 @@ function Recount:AddGreaterElemental(opts)
 
 	--Recount:Print(nameGUID)
 
-	local newguid1 = tonumber(nameGUID:sub(-1 - 5, -1), 16)+1
-	local mobid = tonumber(nameGUID:sub(3 + 6, 3 + 9), 16)
-	local newguid2 = tonumber(nameGUID:sub(3, 3 + 5), 16)
-	local nameGUID2 = string_format("0x%06X",newguid2)..Recount.ElementalMobID[mobid]..string_format("%06X",newguid1)
-	--Recount:Print(mobid.." "..nameGUID.." "..nameGUID2)
+    local newGUIDparts = { ('-'):split(nameGUID) }
+	local NPCID = tonumber(newGUIDparts[6])
+	local spawnUID = tonumber(newGUIDparts[7], 16) + 1
+	local nameGUID2 = string_format("%s-%s-%s-%s-%s-%d-%10X", newGUIDparts[1], newGUIDparts[2], newGUIDparts[3], newGUIDparts[4], newGUIDparts[5], Recount.ElementalMobID[NPCID], spawnUID)
+	--Recount:Print(NPCID.." "..nameGUID.." "..nameGUID2)
 
 	RecountTempTooltip:SetOwner(UIParent, "ANCHOR_NONE")
 	RecountTempTooltip:ClearLines()
@@ -1269,11 +1269,11 @@ function Recount:FindGuardianFromTooltip(nameGUID)
 end
 
 function Recount:ScanGUIDTooltip(nameGUID)
-	local newguid1 = tonumber(nameGUID:sub(-1 - 5, -1), 16)
-	local mobid = tonumber(nameGUID:sub(3 + 6, 3 + 9), 16)
-	local newguid2 = tonumber(nameGUID:sub(3, 3 + 5), 16)
-	local nameGUID2 = string_format("0x%06X",newguid2)..string_format("%04X",mobid)..string_format("%06X",newguid1)
-	Recount:Print(mobid.." "..nameGUID.." "..nameGUID2)
+    local newGUIDparts = { ('-'):split(nameGUID) }
+	local NPCID = tonumber(newGUIDparts[6])
+	local spawnUID = tonumber(newGUIDparts[7], 16)
+	local nameGUID2 = string_format("%s-%s-%s-%s-%s-%d-%10X", newGUIDparts[1], newGUIDparts[2], newGUIDparts[3], newGUIDparts[4], newGUIDparts[5], NPCID, spawnUID)
+	Recount:Print(NPCID.." "..nameGUID.." "..nameGUID2)
 
 	RecountTempTooltip:SetOwner(UIParent, "ANCHOR_NONE")
 	RecountTempTooltip:ClearLines()
@@ -1416,9 +1416,9 @@ function Recount:AddPetCombatant(nameGUID, petName, nameFlags, ownerGUID, owner,
 	end
 
 	--local elementschool = petName:match("(.*) Elemental Totem")
-	--Recount:Print(petName.." "..(elementschool or "nil").." "..nameGUID:sub(3,-1))
+	--Recount:Print(petName.." "..(elementschool or "nil").." "..nameGUID:sub(3,-1)) -- This line needs adjusted to 6.0.2 GUID system to ever function
 	--if bit_band(nameFlags, COMBATLOG_OBJECT_TYPE_GUARDIAN) then
-		--[[local mobid = tonumber(nameGUID:sub(3 + 6, 3 + 9), 16) -- Removed this for inheritance testing
+		--[[local mobid = tonumber(nameGUID:sub(3 + 6, 3 + 9), 16) -- Removed this for inheritance testing; this line needs adjusted to 6.0.2 GUID system to ever function
 		if Recount.ElementalMobID[mobid] then -- This really summoned a greater fire elemental totem, which is what we really care about.
 
 			--Recount:Print("Elem!")

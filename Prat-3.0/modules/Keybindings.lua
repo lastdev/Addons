@@ -87,7 +87,7 @@ Prat:AddModuleToLoad(function()
   L:AddLocale("frFR",
   {
 	["Channel %d"] = "Canal %d",
-	["Copy Selected Chat Frame"] = "Copier la fenêtre de Chat sélectionné",
+	["Copy Selected Chat Frame"] = "Copier la fenêtre de chat sélectionné",
 	["Guild Channel"] = "Canal de Guilde",
 	["Instance Channel"] = "Canal d'Instance",
 	-- ["Next Chat Tab"] = "",

@@ -6,11 +6,7 @@ koKR localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-<<<<<<< HEAD
-Project version: 3.0.5
-=======
-Project version: 2.6.2
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+Project version: 3.0.8
 ************************************************************************
 Original translated by: damjau, next96
 Currently maintained by:

@@ -248,13 +248,10 @@ local function getDelay(spell)
 		return false
 	end
 	
-<<<<<<< HEAD
 	if spell.Type == "form" and c.IsCasting(spell.ID) then
 		return false
 	end
 	
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	if spell.Range and c.DistanceAtTheMost() > spell.Range then
 		return nil
 	end
@@ -293,7 +290,6 @@ local function delayFlash(spell, delay, minDelay, rotation)
 	end
 end
 
-<<<<<<< HEAD
 -- GetDelay (on a spell) can return up to 2 values: "delay" and "modDelay".
 --
 -- "delay" is the time until the spell is ready to flash (in seconds), or a
@@ -308,8 +304,6 @@ end
 -- would come off cooldown .2 seconds before Exorcism to pretend they won't come
 -- off cooldown until Exercism.  That causes Exorcism to flash instead, since
 -- it's worth waiting those .2 seconds  (at most).
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 function c.DelayPriorityFlash(...)
 	local minDelay = 0
 	local nextDelay = 9999

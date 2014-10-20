@@ -219,7 +219,6 @@ local CLASSMODULES_ADDONNAMES = {}
 local GLOBAL_COOLDOWN_SPELL = nil
 local CURRENTFORM = nil
 local SHOOT = nil
-local SERVER = nil
 local REALM = nil
 local PLAYER = nil
 local LOADING = true
@@ -341,29 +340,22 @@ local function CheckVariables()
 		return a:SetTimer("CheckVariables", 1, 0, CheckVariables)
 	end
 	REALM = GetRealmName()
-	SERVER = GetCVar("realmList"):lower()
 	if not SpellFlashAddonConfig then
 		SpellFlashAddonConfig = {}
 	end
-	if not SpellFlashAddonConfig.SERVER then
-		SpellFlashAddonConfig.SERVER = {}
+	if not SpellFlashAddonConfig.REALM then
+		SpellFlashAddonConfig.REALM = {}
 	end
-	if not SpellFlashAddonConfig.SERVER[SERVER] then
-		SpellFlashAddonConfig.SERVER[SERVER] = {}
+	if not SpellFlashAddonConfig.REALM[REALM] then
+		SpellFlashAddonConfig.REALM[REALM] = {}
 	end
-	if not SpellFlashAddonConfig.SERVER[SERVER].REALM then
-		SpellFlashAddonConfig.SERVER[SERVER].REALM = {}
+	if not SpellFlashAddonConfig.REALM[REALM].PLAYER then
+		SpellFlashAddonConfig.REALM[REALM].PLAYER = {}
 	end
-	if not SpellFlashAddonConfig.SERVER[SERVER].REALM[REALM] then
-		SpellFlashAddonConfig.SERVER[SERVER].REALM[REALM] = {}
+	if not SpellFlashAddonConfig.REALM[REALM].PLAYER[PLAYER] then
+		SpellFlashAddonConfig.REALM[REALM].PLAYER[PLAYER] = {}
 	end
-	if not SpellFlashAddonConfig.SERVER[SERVER].REALM[REALM].PLAYER then
-		SpellFlashAddonConfig.SERVER[SERVER].REALM[REALM].PLAYER = {}
-	end
-	if not SpellFlashAddonConfig.SERVER[SERVER].REALM[REALM].PLAYER[PLAYER] then
-		SpellFlashAddonConfig.SERVER[SERVER].REALM[REALM].PLAYER[PLAYER] = {}
-	end
-	s.config = SpellFlashAddonConfig.SERVER[SERVER].REALM[REALM].PLAYER[PLAYER]
+	s.config = SpellFlashAddonConfig.REALM[REALM].PLAYER[PLAYER]
 	if not s.config.MODULE then
 		s.config.MODULE = {}
 	end
@@ -381,8 +373,8 @@ s.Spam = {} -- Old code left in to indicate that a module has not been updated t
 local function LoadAddOns()
 	local Loaded, Error
 	for i = 1, GetNumAddOns() do
-		local name, title, notes, enabled = GetAddOnInfo(i)
-		if enabled and not name:lower():match("^spellflash_templateaddon$") then
+		local name, title, notes, enabled, loadable = GetAddOnInfo(i)
+		if ( enabled or loadable ) and not name:lower():match("^spellflash_templateaddon$") then
 			local Metadata = GetAddOnMetadata(name, "X-SpellFlashAddon-LoadWith") or ""
 			if Metadata:match("%w") then
 				local LoadWith = ","..Metadata:upper():gsub("[^A-Z,%+]", ""):gsub("%+", "++")..","
@@ -592,12 +584,17 @@ local function RegisterPetSpells()
 end
 
 local function RegisterTalents()
-	for i = 1, GetNumTalents() do
-		local name, texture, tier, column, selected = GetTalentInfo(i)
-		if name then
-			TALENTS[name] = ( selected and 1 ) or nil
-		end
-	end
+  local group = GetActiveSpecGroup()
+  for row = 1, 99 do
+     for col = 1, 3 do
+        local id, name, texture, selected = GetTalentInfo(row, col, group)
+        if name then
+           TALENTS[name] = ( selected and 1 ) or nil
+        else
+           return
+        end
+     end
+  end
 end
 
 local function RegisterOutsideMeleeDistanceSpell()

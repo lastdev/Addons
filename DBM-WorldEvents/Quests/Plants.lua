@@ -1,11 +1,7 @@
 local mod	= DBM:NewMod("PlantsVsZombies", "DBM-WorldEvents", 2)
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD
 mod:SetRevision(("$Revision: 11506 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 10814 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
@@ -13,10 +9,7 @@ mod:RegisterEvents(
 --	"UNIT_EXITED_VEHICLE player",
 	"RAID_BOSS_WHISPER"
 )
-<<<<<<< HEAD
 mod.noStatistics = true
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 --Note, mod writen and tested in ENdless mode only. The actual quests are unverified
 --Endless mode is only unlockable via unofficial means.

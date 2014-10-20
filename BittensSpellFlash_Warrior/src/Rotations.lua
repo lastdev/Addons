@@ -40,7 +40,7 @@ local monitorSmashApplied = function(spellID)
 end
 
 function a.PreFlash()
-	a.InExecute = s.HealthPercent() <= 20
+	a.InExecute = s.HealthPercent() <= 20 or c.HasBuff("Sudden Death" ,false, false, true)
 	a.Rage = c.GetPower(0)
 	a.Enraged = c.HasBuff("Enrage", true)
 	if c.IsQueued("Berserker Rage") then
@@ -193,15 +193,14 @@ a.CleaverDumpPending = 0
 a.Rotations.Fury = {
 	Spec = 2,
 	
-	UsefulStats = { "Strength", "Melee Hit", "Crit", "Haste" },
+	UsefulStats = { "Strength", "Crit", "Mastery" },  -- "Haste", "Multistrike", "Versatility"},
 	
 	FlashInCombat = function()
 		c.FlashAll(
+		  "Berserker Rage for Fury",
 			"Recklessness for Fury",
 			"Avatar",
 			"Bloodbath for Fury",
-			"Berserker Rage for Fury",
-			"Heroic Leap",
 			"Impending Victory for Heals, Optional",
 			"Victory Rush for Heals, Optional",
 			"Enraged Regeneration",
@@ -209,39 +208,27 @@ a.Rotations.Fury = {
 			"Pummel",
 			"Disrupting Shout")
 		if c.AoE then
-			c.FlashAll("Cleave for Fury")
+			c.FlashAll("Bloodthirst")
 			c.PriorityFlash(
-				"Dragon Roar",
-				"Shockwave",
-				"Bladestorm",
-				"Bloodthirst",
-				"Colossus Smash",
-				"Raging Blow AoE",
-				"Whirlwind",
-				"Shout for Rage",
-				"Storm Bolt",
+	--			"Dragon Roar",
+	--			"Shockwave",
+	--			"Bladestorm",
+	--			"Bloodthirst",
+	--			"Raging Blow AoE",
+	--			"Whirlwind",
+	--			"Shout for Rage",
+	--			"Storm Bolt",
 				"Heroic Throw")
 		else
-			c.FlashAll("Heroic Strike for Fury")
+			c.FlashAll("Bloodthirst")
 			c.PriorityFlash(
-				"Raging Blow Prime",
-				"Bloodthirst",
-				"Wild Strike before Bloodthirst",
-				"Bloodthirst Wait",
-				"Dragon Roar for Fury",
-				"Colossus Smash",
+			  "Wild Strike",
+			  "Raging Blow",
 				"Execute for Fury",
+				"Bloodthirst",
+				"Dragon Roar for Fury",
 				"Storm Bolt",
-				"Raging Blow",
-				"Wild Strike under Bloodsurge",
-				"Shockwave",
-				"Heroic Throw for Fury",
-				"Shout for Rage unless Colossus Smash",
-				"Wild Strike under Colossus Smash",
-				"Impending Victory unless Execute",
-				"Victory Rush",
-				"Wild Strike with High Rage",
-				"Shout for Rage")
+				"Raging Blow")
 		end
 	end,
 	
@@ -253,11 +240,9 @@ a.Rotations.Fury = {
 		if c.InfoMatches(info, "Whirlwind") then
 			a.CleaverPending = GetTime()
 			c.Debug("Event", "Meat Cleaver Pending")
-		elseif c.InfoMatches(info, "Raging Blow") then
-			a.CleaverDumpPending = GetTime()
-			c.Debug("Event", "Meat Cleaver Spend Pending")
-		else
-			monitorSmashPending(info)
+	--	elseif c.InfoMatches(info, "Raging Blow") then
+	--		a.CleaverDumpPending = GetTime()
+	--		c.Debug("Event", "Meat Cleaver Spend Pending")
 		end
 	end,
 	
@@ -265,8 +250,6 @@ a.Rotations.Fury = {
 		if c.IdMatches(spellID, "Meat Cleaver") then
 			a.CleaverPending = 0
 			c.Debug("Event", "Meat Cleaver Applied")
-		else
-			monitorSmashApplied(spellID)
 		end
 	end,
 	
@@ -278,10 +261,24 @@ a.Rotations.Fury = {
 	end,
 	
 	ExtraDebugInfo = function()
-		return string.format("r:%d e:%s e:%s", 
-			a.Rage, 
-			tostring(a.InExecute), 
-			tostring(not not a.Enraged))
+--	  local str = string.format("r:%d RB:%d e:%s b:%s t:%s", 
+--      a.Rage, 
+--      tostring(c.GetBuffDuration("Raging Blow")),
+--      tostring(a.InExecute), 
+--      tostring(c.HasBuff("Sudden Death", false, false, "Execute")),
+--      tostring(c.HasTalent("Sudden Death", false, false, "Execute")))
+--    print(str)
+--		return string.format("r:%d e:%s e:%s", 
+--			a.Rage, 
+--			tostring(a.InExecute), 
+--			tostring(not not a.Enraged))
+--    return string.format("Stack:%d Rage:%d RB Duration:%d RB Casting:%s ER Casting:%s BloodSurge:%s",  -- Execute:%s",
+    return string.format("Rage:%d BloodSurge:%s Execute:%s    ", 
+      a.Rage, 
+--      tostring(c.IsCasting("Raging Blow")),
+--      tostring(c.IsCasting("Enrage")),
+      tostring(c.HasBuff("Bloodsurge")),
+      tostring(a.InExecute and c.HasBuff("Sudden Death", false, false, "Execute") and c.HasTalent("Sudden Death", false, false, "Execute")))
 	end,
 }
 

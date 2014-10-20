@@ -2,28 +2,6 @@
 --[[
 Things to do..
 
-
-
-Aura Filter Documentation:
-
-	function AuraFilterFunction(auraTable)
-
-	"auraTable" contains:
-
-	.caster			GUID of the caster
-	.unit			Unit Table of the target/destintion
-	.type 			Aura Type, Numerical indexed value, (Buff = 1, Curse = 2, Disease, Magic, Poison, Other Debuff = 6)
-	.duration		Aura Duration in seconds
-	.spellid		Aura Spell ID
-	.name			Aura Spell Name
-	.expiration		Aura Expiration Time
-	.stacks			Aura Stack Count
-	.texture		Aura Icon Texture
-	.reaction		Reaction of the target/destination.  AURA_TARGET_HOSTILE = 1, AURA_TARGET_FRIENDLY = 2
-
-
-
-
 - Single Target Mode
 UpdateWidgetContextTargetOnly
 UpdateIconGrid
@@ -674,27 +652,13 @@ local function CombatEventHandler(frame, event, ...)
 	-- Combat Log Unfiltered
 	local timestamp, combatevent, sourceGUID, destGUID, destName, destFlags, destRaidFlag, auraType, spellid, spellname, stackCount = GetCombatEventResults(...)
 
-
 	-- Evaluate only for enemy units, for now
 	--if (bit.band(destFlags, COMBATLOG_OBJECT_REACTION_FRIENDLY) == 0) then							-- FILTER: ENEMY UNIT
 	-- COMBATLOG_OBJECT_CONTROL_PLAYER
-<<<<<<< HEAD
-
-		-- Check to see if the unit is a party or raid member, and skip; These units are updated via the general event, UNIT_AURA
-		if TidyPlatesUtility.GroupMembers.GUID[destGUID] ~= nil then return end
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 		local CombatLogUpdateFunction = CombatLogEvents[combatevent]
 		-- Evaluate only for certain combat log events
 		if CombatLogUpdateFunction then
-<<<<<<< HEAD
-
-=======
-			-- Evaluate only for debuffs
-			--if auraType == "DEBUFF" then 															-- FILTER: DEBUFF
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-
 			-- Evaluate only for debuffs
 			--if auraType == "DEBUFF" then 															-- FILTER: DEBUFF
 
@@ -1163,8 +1127,7 @@ end
 local function SetPrefilter(func)
 	if func and type(func) == 'function' then
 		AuraPrefilterFunction = func or DefaultPrefilterFunction
-	else AuraPrefilterFunction = DefaultPreFilterFunction end
-
+	end
 end
 
 local function SetAuraFilter(func)

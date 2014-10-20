@@ -131,6 +131,8 @@ local GatheringNodes = {			-- Add herb/ore possession info to Plants/Mines, than
 	["Twilight Jasmine"]		= 52987,
 	["Whiptail"]				= 52988,
 	["Deathspore Pod"]			= 52989,
+	["Green Tea Leaf"]			= 72234,
+	["Snow Lily"]					= 79010,
 }
 
 -- *** Utility functions ***
@@ -169,7 +171,7 @@ local cachedItemID, cachedCount, cachedTotal, cachedSource
 local cachedRecipeOwners
 
 local itemCounts = {}
-local itemCountsLabels = {	L["Bags"], L["Bank"], VOID_STORAGE, L["AH"], L["Equipped"], L["Mail"], CURRENCY }
+local itemCountsLabels = {	L["Bags"], L["Bank"], VOID_STORAGE, REAGENT_BANK, L["AH"], L["Equipped"], L["Mail"], CURRENCY }
 local counterLines = {}		-- list of lines containing a counter to display in the tooltip
 
 local function AddCounterLine(owner, counters)
@@ -208,10 +210,10 @@ local function GetRealmsList()
 end
 
 local function GetCharacterItemCount(character, searchedID)
-	itemCounts[1], itemCounts[2], itemCounts[3] = DataStore:GetContainerItemCount(character, searchedID)
-	itemCounts[4] = DataStore:GetAuctionHouseItemCount(character, searchedID)
-	itemCounts[5] = DataStore:GetInventoryItemCount(character, searchedID)
-	itemCounts[6] = DataStore:GetMailItemCount(character, searchedID)
+	itemCounts[1], itemCounts[2], itemCounts[3], itemCounts[4] = DataStore:GetContainerItemCount(character, searchedID)
+	itemCounts[5] = DataStore:GetAuctionHouseItemCount(character, searchedID)
+	itemCounts[6] = DataStore:GetInventoryItemCount(character, searchedID)
+	itemCounts[7] = DataStore:GetMailItemCount(character, searchedID)
 	
 	local charCount = 0
 	for _, v in pairs(itemCounts) do

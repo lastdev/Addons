@@ -4,13 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: Auctioneer
-<<<<<<< HEAD
 	Revision: $Id: CoreStrings.lua 5456 2014-06-05 11:59:54Z brykrys $
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Revision: $Id: CoreStrings.lua 5439 2013-11-05 20:36:27Z brykrys $
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 
 	License:
 		This program is free software; you can redistribute it and/or

@@ -1,11 +1,7 @@
 local mod	= DBM:NewMod("Tonks", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD:DBM-DMF/Tonks.lua
 mod:SetRevision(("$Revision: 11506 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 10922 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23:DBM-DMF/Tonks.lua
 mod:SetZone()
 
 mod:RegisterEvents(
@@ -14,10 +10,7 @@ mod:RegisterEvents(
 	"UNIT_DIED",
 	"UNIT_EXITED_VEHICLE player"
 )
-<<<<<<< HEAD:DBM-DMF/Tonks.lua
 mod.noStatistics = true
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23:DBM-DMF/Tonks.lua
 
 local warnMarked				= mod:NewSpellAnnounce(102341, 4)
 

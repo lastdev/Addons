@@ -4,11 +4,7 @@
 ## Author: d87
 ## SavedVariablesPerCharacter: NugComboBarDB_Character
 ## SavedVariables: NugComboBarDB_Global
-<<<<<<< HEAD
-## X-Curse-Packaged-Version: 6.0.2
-=======
-## X-Curse-Packaged-Version: 5.2.16
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+## X-Curse-Packaged-Version: 6.0.4
 ## X-Curse-Project-Name: NugComboBar
 ## X-Curse-Project-ID: nugie-combo-bar
 ## X-Curse-Repository-ID: wow/nugie-combo-bar/mainline

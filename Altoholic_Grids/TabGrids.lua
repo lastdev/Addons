@@ -44,6 +44,7 @@ local ICON_VIEW_MOUNTS = "Interface\\Icons\\Ability_Mount_RidingHorse"
 local ICON_VIEW_TRADESKILLS = "Interface\\Icons\\Ability_Repair"
 local ICON_VIEW_ARCHEOLOGY = "Interface\\Icons\\trade_archaeology"
 local ICON_VIEW_QUESTS = "Interface\\LFGFrame\\LFGIcon-Quest"
+local ICON_VIEW_DUNGEONS = "Interface\\Icons\\inv_helmet_189"
 
 addon.Tabs.Grids = {}
 
@@ -67,12 +68,12 @@ end
 
 local function EnableIcon(name)
 	_G[name]:Enable()
-	_G[name.."IconTexture"]:SetDesaturated(0)
+	_G[name.."IconTexture"]:SetDesaturated(false)
 end
 
 local function DisableIcon(name)
 	_G[name]:Disable()
-	_G[name.."IconTexture"]:SetDesaturated(1)
+	_G[name.."IconTexture"]:SetDesaturated(true)
 end
 
 local function UpdateMenuIcons()
@@ -113,6 +114,12 @@ local function UpdateMenuIcons()
 		EnableIcon(parent .. "_Dailies")
 	else
 		DisableIcon(parent .. "_Dailies")
+	end
+	
+	if DataStore_Agenda then
+		EnableIcon(parent .. "_Dungeons")
+	else
+		DisableIcon(parent .. "_Dungeons")
 	end
 end
 
@@ -454,6 +461,8 @@ function ns:OnLoad()
 	
 	addon:SetItemButtonTexture(parent .. "_Dailies", ICON_VIEW_QUESTS, size, size)
 	_G[parent .. "_Dailies"].text = "Daily Quests"
+	addon:SetItemButtonTexture(parent .. "_Dungeons", ICON_VIEW_DUNGEONS, size, size)
+	_G[parent .. "_Dungeons"].text = LOOKING_FOR_DUNGEON
 	
 	-- Class Icons
 	for column = 1, CHARS_PER_FRAME do

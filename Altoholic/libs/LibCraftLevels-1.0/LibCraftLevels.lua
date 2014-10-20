@@ -6,7 +6,7 @@ This library contains a database of craft levels.
 
 --]]
 
-local LIB_VERSION_MAJOR, LIB_VERSION_MINOR = "LibCraftLevels-1.0", 1
+local LIB_VERSION_MAJOR, LIB_VERSION_MINOR = "LibCraftLevels-1.0", 2
 local lib = LibStub:NewLibrary(LIB_VERSION_MAJOR, LIB_VERSION_MINOR)
 
 if not lib then return end -- No upgrade needed

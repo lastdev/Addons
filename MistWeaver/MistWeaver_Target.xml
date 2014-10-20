@@ -26,9 +26,6 @@
             </Layer>
         </Layers>
         <Scripts>
-            <OnLoad>
-                MistWeaver_TargetFrameOnLoad(self);
-            </OnLoad>
             <OnEvent>
                 MistWeaver_TargetFrameOnEvent(self, event, ...);
             </OnEvent>

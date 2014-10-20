@@ -1,11 +1,7 @@
 local mod	= DBM:NewMod(194, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD
 mod:SetRevision(("$Revision: 115 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 109 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetCreatureID(52530)
 mod:SetEncounterID(1206)
 mod:DisableEEKillDetection()
@@ -57,10 +53,7 @@ local timerSatiated				= mod:NewBuffActiveTimer(15, 99359, nil, mod:IsTank())
 local timerBlazingClaw			= mod:NewTargetTimer(15, 99844, nil, false)
 
 local countdownFirestorm		= mod:NewCountdown(83, 100744)
-<<<<<<< HEAD
 local countdownCataclysm		= mod:NewCountdown("Alt31", 102111)
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 mod:AddBoolOption("InfoFrame", false)
 
@@ -169,11 +162,7 @@ function mod:SPELL_AURA_REMOVED(args)
 		timerTantrum:Cancel()
 	elseif spellId == 99359 and ((args.sourceGUID == UnitGUID("target") and self:IsTank()) or not self:IsTank() and args.sourceGUID == UnitGUID("targettarget")) then--^^ Same as above only with diff spell
 		timerSatiated:Cancel()
-<<<<<<< HEAD
 	elseif spellId == 99844 then
-=======
-	elseif args.spellId == 99844 then
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		timerBlazingClaw:Cancel(args.destName)
 	end
 end

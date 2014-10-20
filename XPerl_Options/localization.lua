@@ -998,6 +998,8 @@ XPERL_CONF_MONITOR_WARRIOR				= "Show Warrior"
 XPERL_CONF_MONITOR_WARRIOR_DESC			= "Show Warriors the Raid Monitor"
 XPERL_CONF_MONITOR_DEATHKNIGHT			= "Show Death Knight"
 XPERL_CONF_MONITOR_DEATHKNIGHT_DESC		= "Show Death Knights the Raid Monitor"
+XPERL_CONF_MONITOR_MONK			        = "Show Monk"
+XPERL_CONF_MONITOR_MONK_DESC		    = "Show Monks the Raid Monitor"
 
 XPERL_CONF_MONITOR_LOWMANA				= "Low Mana"
 XPERL_CONF_MONITOR_LOWMANA_DESC			= "Set the mana Low point"

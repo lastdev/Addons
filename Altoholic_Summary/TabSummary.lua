@@ -255,7 +255,7 @@ local function ResetAllData()
 	-- reset all data stored in datastore modules
 	addon:SetMsgBoxHandler(ResetAllData_MsgBox_Handler)
 	
-	AltoMsgBox_Text:SetText(L["Wipe database ?\nWarning: all information will be lost !"])
+	AltoMsgBox_Text:SetText(L["WIPE_DATABASE"])
 	AltoMsgBox:Show()
 end
 

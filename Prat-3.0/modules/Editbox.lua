@@ -113,7 +113,7 @@ Use ALT-UP and ALT-DOWN instead of just UP DOWN to access history]=],
 	["Color border by channel"] = "Rand einfärben nach Kanal",
 	currently_broken_alt_behavior = [=[Das Verhalten der Pfeiltasten im Chat ist im aktuellen WoW Client defekt,
 
-verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scrollen.]=], -- Needs review
+verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scrollen.]=],
 	["Edge Size"] = "Kantengröße",
 	Editbox = "Eingabefeld",
 	["Editbox options."] = "Optionen für das Eingabefeld.",
@@ -587,7 +587,7 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
       self:SetText(self.history_lines[self.history_index])
   end
   local function enableArrowKeys(e)
-      e.history_lines =  Prat3CharDB.history.cmdhistory and Prat3CharDB.history.cmdhistory[e:GetName()] or {}
+      e.history_lines = e.history_lines or {}
       e.history_index = e.history_index or 0
       e:HookScript("OnArrowPressed", OnArrowPressed)
   end

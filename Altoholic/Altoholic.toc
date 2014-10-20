@@ -1,11 +1,7 @@
-﻿## Interface: 50400
+﻿## Interface: 60000
 ## Title: Altoholic
 ## Title-zhCN: |cffeedd99 [物品] |r: 全角色统计 Altoholic
-<<<<<<< HEAD
-## X-Curse-Packaged-Version: r146
-=======
-## X-Curse-Packaged-Version: r139
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+## X-Curse-Packaged-Version: r148
 ## X-Curse-Project-Name: Altoholic
 ## X-Curse-Project-ID: altoholic
 ## X-Curse-Repository-ID: wow/altoholic/mainline

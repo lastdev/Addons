@@ -1,10 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: EnxConstants.lua 4632 2010-01-24 02:33:54Z ccox $
 	URL: http://enchantrix.org/
 
@@ -47,6 +43,7 @@ local NETHER_PIGMENT = 39342
 local AZURE_PIGMENT = 39343
 local ASHEN_PIGMENT = 61979
 local SHADOW_PIGMENT = 79251
+local CERULEAN_PIGMENT = 114931
 
 local VERDANT_PIGMENT = 43103
 local BURNT_PIGMENT = 43104
@@ -121,13 +118,22 @@ local HERB_HEARTBLOSSOM = 52986
 local HERB_TWILIGHTJASMINE = 52987
 local HERB_WHIPTAIL = 52988
 
--- Panda herbs
+-- Pandaria herbs
 local HERB_RAINPOPPY = 72237
 local HERB_GREEN_TEA = 72234
 local HERB_SILKWEED = 72235
 local HERB_SNOWLILY = 79010
 local HERB_FOOLSCAP = 79011
 local HERB_DESECRATED = 89639
+
+-- Draenor herbs
+local HERB_FROSTWEED = 109124
+local HERB_FIREWEED = 109125
+local HERB_GORGONDFLYTRAP = 109126
+local HERB_STARFLOWER = 109127
+local HERB_NAGRANDARROWBLOOM = 109128
+local HERB_TALADORORCHID = 109129
+local HERB_CHAMELEONLOTUS = 109130 -- green, but millable!
 
 
 -- only currently used for autoloot in EnxAutoDisenchant.lua
@@ -145,6 +151,7 @@ const.ReversePigmentList = {
 	[AZURE_PIGMENT] = 1,
 	[ASHEN_PIGMENT] = 1,
 	[SHADOW_PIGMENT] = 1,
+	[CERULEAN_PIGMENT] = 1,
 
 	-- rare
 	[VERDANT_PIGMENT] = 1,
@@ -181,6 +188,9 @@ local	ASHEN_PIGMENT_HIGH = "ASHEN_PIGMENT_HIGH"
 local	ASHEN_PIGMENT_MID = "ASHEN_PIGMENT_MID"
 local	SHADOW_PIGMENT_LOW = "SHADOW_PIGMENT_LOW"
 local	SHADOW_PIGMENT_HIGH = "SHADOW_PIGMENT_HIGH"
+local	CERULEAN_PEGMENT_LOW = "CERULEAN_PIGMENT_LOW"
+local	CERULEAN_PEGMENT_HIGH = "CERULEAN_PIGMENT_HIGH"
+
 
 -- skill required, by bracket/result
 const.MillingSkillRequired = {
@@ -206,6 +216,10 @@ const.MillingSkillRequired = {
 	[ASHEN_PIGMENT_HIGH] = 475,
 	[SHADOW_PIGMENT_LOW] = 500,
 	[SHADOW_PIGMENT_HIGH] = 500,
+	
+-- WoD TODO - ccox - confirm values
+	[CERULEAN_PEGMENT_LOW] = 600,
+	[CERULEAN_PEGMENT_HIGH] = 600,
 
 }
 
@@ -286,7 +300,15 @@ const.MillableItems = {
 	[HERB_SILKWEED] = SHADOW_PIGMENT_LOW,
 	[HERB_SNOWLILY] = SHADOW_PIGMENT_LOW,
 	[HERB_FOOLSCAP] = SHADOW_PIGMENT_HIGH,
-	
+
+-- TODO - ccox - confirm groupings
+	[HERB_FROSTWEED] = CERULEAN_PEGMENT_LOW,
+	[HERB_FIREWEED] = CERULEAN_PEGMENT_LOW,
+	[HERB_GORGONDFLYTRAP] = CERULEAN_PEGMENT_LOW,
+	[HERB_STARFLOWER] = CERULEAN_PEGMENT_HIGH,
+	[HERB_NAGRANDARROWBLOOM] = CERULEAN_PEGMENT_HIGH,
+	[HERB_TALADORORCHID] = CERULEAN_PEGMENT_HIGH,
+	[HERB_CHAMELEONLOTUS] = CERULEAN_PEGMENT_LOW,	-- green, but millable!
 }
 
 
@@ -385,7 +407,6 @@ const.MillGroupYields = {
 		[BURNING_EMBERS] = 0.5,
 		},
 
--- measured beta August 25, 2012
 	[SHADOW_PIGMENT_LOW] = {
 		[SHADOW_PIGMENT] = 2.5,
 		[MISTY_PIGMENT] = 0.25,
@@ -394,6 +415,15 @@ const.MillGroupYields = {
 	[SHADOW_PIGMENT_HIGH] = {
 		[SHADOW_PIGMENT] = 3.0,
 		[MISTY_PIGMENT] = 0.56,
+		},
+
+-- TODO - ccox - WoD confirm yields
+	[CERULEAN_PEGMENT_LOW] = {
+		[CERULEAN_PIGMENT] = 2.0,
+		},
+	
+	[CERULEAN_PEGMENT_HIGH] = {
+		[CERULEAN_PIGMENT] = 2.5,
 		},
 }
 
@@ -418,6 +448,7 @@ local BLACKFALLOW_INK = 61978
 local INFERNO_INK = 61981
 local INK_DREAMS = 79254
 local STARLIGHT_INK = 79255
+--local WARBRINGER_INK = 113111		-- not used
 
 const.ReverseInkList = {
 
@@ -432,6 +463,7 @@ const.ReverseInkList = {
 	[ INKOFTHESEA_INK ] = { AZURE_PIGMENT },
 	[ BLACKFALLOW_INK ] = { ASHEN_PIGMENT },
 	[ INK_DREAMS ] = { SHADOW_PIGMENT },
+--	[ WARBRINGER_INK ] = { CERULEAN_PIGMENT },	-- ink not used
 	
 	[ HUNTERS_INK ] = { VERDANT_PIGMENT },
 	[ DAWNSTAR_INK ] = { BURNT_PIGMENT },

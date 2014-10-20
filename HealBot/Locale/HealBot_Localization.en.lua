@@ -314,7 +314,7 @@ function HealBot_Lang_enALL()
     HEALBOT_TOOLTIP_TARGETBAR               = "Target Bar"
     HEALBOT_OPTIONS_MYTARGET                = "My Targets"
 
-    HEALBOT_DISCONNECTED_TEXT               = "<DC>"
+    HEALBOT_DISCONNECTED_TEXT               = "[ DC ]"
     HEALBOT_OPTIONS_SHOWUNITBUFFTIME        = "Show my buffs";
     HEALBOT_OPTIONS_TOOLTIPUPDATE           = "Constantly update";
     HEALBOT_OPTIONS_BUFFSTEXTTIMER          = "Show buff before it expires";
@@ -674,12 +674,14 @@ function HealBot_Lang_enALL()
             [HEALBOT_CUSTOM_CAT_CUSTOM_EFFECT]     = 1,
             [HEALBOT_CUSTOM_CAT_CUSTOM_MISC]       = 1,
 
-			--Class Profession Debuffs
+			--Class Profession & Harmful Debuffs
+			[HEALBOT_DEBUFF_SAVING_GRACE]      = 11, --Priest 
 			[HEALBOT_DARK_BARGAIN]             = 3, --Warlock
 			[HEALBOT_SHROUD_OF_PURGATORY]      = 11, --Death Knight
 			[HEALBOT_DEBUFF_ROCKET_FUEL_LEAK]  = 10, --Engineering
 			
-			--Scenario, Proving Grounds
+	--Enemy Debuffs, Dungeons, Raids And Scenarios	
+    --Scenario, Proving Grounds
 			[HEALBOT_DEBUFF_CHOMP]             = 3, -- Healer Challenge 
 			[HEALBOT_DEBUFF_LAVA_BURNS]        = 7, -- Healer Challenge	
 			
@@ -806,6 +808,7 @@ function HealBot_Lang_enALL()
 			--[HEALBOT_DEBUFF_DREAD_SHADOWS]     = 3, -- Tsulong       
 			[HEALBOT_DEBUFF_SPRAY]             = 11, -- Lei Shi       
 			[HEALBOT_DEBUFF_SCARY_FOG]         = 11, -- Lei Shi Heroic     
+			[HEALBOT_DEBUFF_PARASITIC_CLUTCH]  = 9, -- Lei Shi Achievement
 			[HEALBOT_DEBUFF_PENETRATING_BOLT]  =9, -- Sha of Fear              
 			[HEALBOT_DEBUFF_NAKED_AND_AFRAID]  = 8, -- Sha of Fear Heroic 
 			[HEALBOT_DEBUFF_HUDDLE_IN_TERROR]  = 5, -- Sha of Fear Heroic 
@@ -816,6 +819,7 @@ function HealBot_Lang_enALL()
 			--[[Updated 5.3 Mists of Pandaria Expansion by Ariá - Silvermoon EU      
 			= GetMapNameByID(930) or "--Throne of Thunder"]]
 			[HEALBOT_DEBUFF_WOUNDING_STRIKE]   = 13, -- Trash
+			[HEALBOT_DEBUFF_RETRIEVE_SPEAR]    = 10, -- Trash
 			[HEALBOT_DEBUFF_STORM_ENERGY]      = 11, -- Trash
 			[HEALBOT_DEBUFF_ANCIENT_VENOM]     = 2, -- Trash 
 			[HEALBOT_DEBUFF_TORMENT]           = 11, -- Trash
@@ -828,11 +832,12 @@ function HealBot_Lang_enALL()
 			[HEALBOT_DEBUFF_COCOON]            = 3, -- Trash   
 			[HEALBOT_DEBUFF_CHOKING_GAS]       = 3, -- Trash
 			[HEALBOT_DEBUFF_GNAWED_UPON]       = 5, -- Trash
-			[HEALBOT_DEBUFF_RETRIEVE_SPEAR]    = 10, -- Trash
+			[HEALBOT_DEBUFF_LIGHTNING_STORM]   = 7, -- Trash
 			[HEALBOT_DEBUFF_STATIC_WOUND]      = 11, -- Jin'rokh the Breaker
 			[HEALBOT_DEBUFF_THUNDERING_THROW]  = 11, -- Jin'rokh the Breaker
 			[HEALBOT_DEBUFF_FOCUSED_LIGHTNING] = 4, -- Jin'rokh the Breaker
-			[HEALBOT_DEBUFF_ELECTRIFIED_WATERS] = 4, -- Jin'rokh the Breaker 
+			--[[[HEALBOT_DEBUFF_IMPLOSION]         = 6, -- Jin'rokh the Breaker
+			[HEALBOT_DEBUFF_ELECTRIFIED_WATERS] = 4, -- Jin'rokh the Breaker]] 
 			[HEALBOT_DEBUFF_TRIPLE_PUNCTURE]   = 11, -- Horridon
 			[HEALBOT_DEBUFF_RENDING_CHARGE]    = 10, -- Horridon
 			[HEALBOT_DEBUFF_FROZEN_BOLT]       = 4, -- Horridon
@@ -842,8 +847,10 @@ function HealBot_Lang_enALL()
 			[HEALBOT_DEBUFF_BODY_HEAT]         = 2, -- Council of Elders Heroic
 			[HEALBOT_DEBUFF_MARKED_SOUL]       = 8, -- Council of Elders
 			[HEALBOT_DEBUFF_SOUL_FRAGMENT]     = 11, -- Council of Elders Heroic
-			--[HEALBOT_DEBUFF_SHADOWED_SOUL]     = 11, -- Council of Elders Heroic
+			[HEALBOT_DEBUFF_QUICKSAND]         = 10, -- Council of Elders      
+			[HEALBOT_DEBUFF_ENSNARED]          = 4, -- Council of Elders			
 			[HEALBOT_DEBUFF_ENTRAPPED]         = 4, -- Council of Elders Magic
+			--[HEALBOT_DEBUFF_SHADOWED_SOUL]     = 11, -- Council of Elders Heroic
 			[HEALBOT_DEBUFF_QUAKE_STOMP]       = 10, -- Tortos
 			[HEALBOT_DEBUFF_CRYSTAL_SHELL]     = 3, -- Tortos
 			[HEALBOT_DEBUFF_CRYSTAL_SHELL_FULL_CAPACITY] = 3, -- Tortos 
@@ -873,9 +880,13 @@ function HealBot_Lang_enALL()
 			[HEALBOT_DEBUFF_TOUCH_OF_ANIMUS]   = 11, -- Dark Animus
 			--[HEALBOT_DEBUFF_ANIMA_FONT]        = 2, -- Dark Animus
 			[HEALBOT_DEBUFF_SCORCHED]          = 11, -- Iron Qon
-			[HEALBOT_DEBUFF_FREEZE]            = 4, -- Iron Qon
-			[HEALBOT_DEBUFF_STORM_CLOUD]       = 11, -- Iron Qon
-			--[HEALBOT_DEBUFF_ARCING_LIGHTNING]  = 2, -- Iron Qon   
+			[HEALBOT_DEBUFF_BURNING_CINDERS]   = 2, -- Iron Qon
+			[HEALBOT_DEBUFF_FROZEN_BLOOD]      = 4, -- Iron Qon
+			[HEALBOT_DEBUFF_LIGHTNING_STORM]   = 7, -- Iron Qon
+			[HEALBOT_DEBUFF_FREEZE]            = 4, -- Iron Qon   
+			[HEALBOT_DEBUFF_RUSHING_WINDS]     = 10, -- Iron Qon
+			--[[[HEALBOT_DEBUFF_ARCING_LIGHTNING]  = 2, -- Iron Qon
+			[HEALBOT_DEBUFF_STORM_CLOUD]       = 11, -- Iron Qon]]
 			[HEALBOT_DEBUFF_FAN_OF_FLAMES]     = 4, -- Twin Consorts 
 			[HEALBOT_DEBUFF_BEAST_OF_NIGHTMARES] = 2, -- Twin Consorts
 			[HEALBOT_DEBUFF_CORRUPTED_HEALING] = 3, -- Twin Consorts 
@@ -886,10 +897,12 @@ function HealBot_Lang_enALL()
 			[HEALBOT_DEBUFF_HELM_OF_COMMAND]   = 5, -- Lei Shen Heroic
 			[HEALBOT_DEBUFF_ELECTRICAL_SHOCK]  = 4, -- Lei Shen 
 			--[[[HEALBOT_DEBUFF_CRASHING_THUNDER]  = 3, -- Lei Shen
+			[HEALBOT_DEBUFF_OVERLOADED_CIRCUITS] = 9, -- Lei Shen
 			[HEALBOT_DEBUFF_DISCHARGED_ENERGY] = 3, -- Lei Shen        
 			[HEALBOT_DEBUFF_WINDBURN]          = 13, -- Lei Shen]]
 			[HEALBOT_DEBUFF_UNSTABLE_VITA]     = 12, -- Ra-Den
 			[HEALBOT_DEBUFF_VITA_SENSITIVITY]  = 12, -- Ra-Den
+			[HEALBOT_DEBUFF_UNSTABLE_ANIMA]    = 12, -- Ra-Den
 			
 			--[[Updated 5.4 Mists of Pandaria Expansion by Ariá - Silvermoon EU 	   			
 			= GetMapNameByID(953) or "--Siege of Orgrimmar"]]                       
@@ -939,10 +952,12 @@ function HealBot_Lang_enALL()
 			[HEALBOT_DEBUFF_MARK_OF_ARROGANCE] = 8, -- Sha of Pride Magic   
 			[HEALBOT_DEBUFF_FRACTURE]          = 4, -- Galakras
 			[HEALBOT_DEBUFF_POISON_CLOUD]      = 9, -- Galakras
+			[HEALBOT_DEBUFF_BOMBARD]           = 2, -- Galakras      
 			--[[[HEALBOT_DEBUFF_FLAME_ARROWS]      = 4, -- Galakras
 			[HEALBOT_DEBUFF_FLAMES_OF_GALAKROND] = 4, -- Galakras]]
 			[HEALBOT_DEBUFF_LASER_BURN]        = 7, -- Iron Juggernaut
 			[HEALBOT_DEBUFF_IGNITE_ARMOUR]     = 6, -- Iron Juggernaut
+			[HEALBOT_DEBUFF_BORER_DRILL]       = 2, -- Iron Juggernaut 
 			[HEALBOT_DEBUFF_EXPLOSIVE_TAR]     = 4, -- Iron Juggernaut
 			[HEALBOT_DEBUFF_CUTTER_LASER_TARGET] = 3, -- Iron Juggernaut
 			[HEALBOT_DEBUFF_REND]              = 10, -- Kor'kron Dark Shaman
@@ -1001,6 +1016,7 @@ function HealBot_Lang_enALL()
 			--[[[HEALBOT_DEBUFF_CHILLED_TO_THE_BONE] = 3, -- Paragons of the Klaxxi Heroic 
 			[HEALBOT_DEBUFF_HUNGER]            = 5, -- Paragons of the Klaxxi]]
 			[HEALBOT_DEBUFF_HAMSTRING]         = 5, -- Garrosh Hellscream   
+			[HEALBOT_DEBUFF_DESECRATED]        = 3, -- Garrosh Hellscream
 			[HEALBOT_DEBUFF_EMBODIED_DOUBT]    = 4, -- Garrosh Hellscream
 			[HEALBOT_DEBUFF_TOUCH_OF_YSHAARJ]  = 11, -- Garrosh Hellscream 
 			[HEALBOT_DEBUFF_EMPOWERED_TOUCH_OF_YSHAARJ] = 4, -- Garrosh Hellscream
@@ -1010,12 +1026,43 @@ function HealBot_Lang_enALL()
 			[HEALBOT_DEBUFF_MALICIOUS_BLAST]   = 8, -- Garrosh Hellscream Heroic 
 			[HEALBOT_DEBUFF_FIXATE]            = 4, -- Garrosh Hellscream Heroic 
 			[HEALBOT_DEBUFF_NAPALM]            = 8, -- Garrosh Hellscream Heroic
-			[HEALBOT_DEBUFF_EXPLOSIVE_DESPAIR] = 4, -- Garrosh Hellscream
 			[HEALBOT_DEBUFF_FAITH]             = 4, -- Garrosh Hellscream Buff
 			[HEALBOT_DEBUFF_HOPE]              = 5, -- Garrosh Hellscream Buff 
 			[HEALBOT_DEBUFF_COURAGE]           = 3, -- Garrosh Hellscream Buff 
-			--[HEALBOT_DEBUFF_DESECRATED]        = 3, -- Garrosh Hellscream]] 
-			}
+			--[[[HEALBOT_DEBUFF_EXPLOSIVE_DESPAIR] = 4, -- Garrosh Hellscream
+			HEALBOT_DEBUFF_WEAK_MINDED         = 13, -- Garrosh Hellscream]]
+	
+	--[[Updated Patch ??? Warlords Of Draenor Expansion by Ariá - Silvermoon EU
+	World Bosses
+	Drov The Ruiner]]
+    
+	--Tarlna The Ageless	
+	
+	--Rukhmar
+		
+	--[[= GetMapNameByID(???) or "--Highmaul" 
+	Trash]]
+	--The Butcher
+	--Kargath Bladefist
+	--Twin Ogron 
+	--Ko'ragh
+	--Tectus
+	--Brackenspore 
+	--Imperator Mar'gok 
+
+	--[[= GetMapNameByID(???) or "--Blackrock Foundry"
+	Trash]]
+	--Blackhand
+	--Beastlord Darmac
+	--Flamebender Ka'graz
+	--Operator Thogar 
+	--The Blast Furnace
+	--Hans'gar and Franzok 
+	--Gruul
+	--Kromog
+	--Oregorger
+	--The Iron Maidens	 
+	}
 
     HEALBOT_ABOUT_DESC1                    = "Add frames with skinable bars for healing, decursive, buffing, ressing, aggro tracking"
     HEALBOT_ABOUT_WEBSITE                  = "Website:"
@@ -1024,11 +1071,7 @@ function HealBot_Lang_enALL()
     HEALBOT_ABOUT_CATH                     = "Category:"
     HEALBOT_ABOUT_CATD                     = "Unit Frames, Buffs and Debuffs, Combat:Healer"
     HEALBOT_ABOUT_CREDITH                  = "Credits:"
-<<<<<<< HEAD
     HEALBOT_ABOUT_CREDITD                  = "Acirac, Kubik, Von, Aldetal, Brezza, Moonlight Han Xing, CTShammy, Hermis, Ariá, Snaomi"  -- Anyone taking on translations (if required), feel free to add yourself here.
-=======
-    HEALBOT_ABOUT_CREDITD                  = "Acirac, Kubik, Von, Aldetal, Brezza, Moonlight Han Xing, CTShammy, Hermis, Ariá"  -- Anyone taking on translations (if required), feel free to add yourself here.
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     HEALBOT_ABOUT_LOCALH                   = "Localizations:"
     HEALBOT_ABOUT_LOCALD                   = "deDE, enUK, esES, frFR, huHU, itIT, koKR, poBR, ruRU, zhCN, zhTW"
     HEALBOT_ABOUT_FAQH                     = "Frequently Asked Questions"
@@ -1173,9 +1216,6 @@ function HealBot_Lang_enALL()
                                       [17]  = "Actually Healbot is casting exacly as the setup. \n\n" .. HEALBOT_ABOUT_FAQ_SPELLS_ANSWER01,
                                       [18]  = HEALBOT_ABOUT_FAQ_SPELLS_ANSWER01,
                                   }
-								  
-	HEALBOT_ABOUT_FAQ_ANSWERS_BUTTON = { [1] = "Not used - Buttons!",
-	                                   }
 
     HEALBOT_OPTIONS_SKINAUTHOR              = "Skin Author"
     HEALBOT_OPTIONS_AVOIDBLUECURSOR         = "Avoid\nBlue Cursor"
@@ -1270,7 +1310,6 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_PROFILE_CLASS           = "Class"
     HEALBOT_OPTIONS_INCOMBATALERTLEVEL      = "Alert Level - In Combat";
     HEALBOT_OPTIONS_OUTCOMBATALERTLEVEL     = "Alert Level - Out of Combat";
-<<<<<<< HEAD
     HEALBOT_OPTION_NUMENEMYS                = "Number of Enemies"
     HEALBOT_WORD_AUTO                       = "Auto"
 	HEALBOT_OPTIONS_ENABLEAUTOCOMBAT        = "Enable HealBot autoCombat"
@@ -1285,11 +1324,6 @@ function HealBot_Lang_enALL()
     HEALBOT_LDB_SHIFTLEFT_TOOLTIP           = "|cffffff00 Shift-Left Click:|r Cycle through HealBot Skins";
     HEALBOT_LDB_RIGHT_TOOLTIP               = "|cffffff00 Right Click:|r Reset HealBot";
     HEALBOT_LDB_SHIFTRIGHT_TOOLTIP          = "|cffffff00 Shift-Right Click:|r Toggle HealBot On/Off";
-=======
-    HEALBOT_OPTION_NUMENEMYS                = "Number of Enemys"
-    HEALBOT_WORD_AUTO                       = "Auto"
-	HEALBOT_OPTIONS_ENABLEAUTOCOMBAT        = "Enable HealBot autoCombat"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end
 
 if (GetLocale() == "enUK") then

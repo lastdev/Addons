@@ -7,7 +7,7 @@ local util = oRA.util
 local module = oRA:NewModule("Durability")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 
-module.VERSION = tonumber(("$Revision: 712 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 789 $"):sub(12, -3))
 
 local durability = {}
 
@@ -24,12 +24,17 @@ function module:OnRegister()
 	oRA.RegisterCallback(self, "OnStartup")
 	oRA.RegisterCallback(self, "OnShutdown")
 	oRA.RegisterCallback(self, "OnCommReceived")
+	oRA.RegisterCallback(self, "OnGroupChanged")
 
 	SLASH_ORADURABILITY1 = "/radur"
 	SLASH_ORADURABILITY2 = "/radurability"
 	SlashCmdList.ORADURABILITY = function()
 		oRA:OpenToList(L["Durability"])
 	end
+end
+
+function module:OnGroupChanged()
+	oRA:UpdateList(L["Durability"])
 end
 
 function module:OnStartup()

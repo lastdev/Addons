@@ -383,7 +383,7 @@ local callbacks = {
 			local itemButton = _G[itemName]
 			local itemText = _G[itemName .. "Name"]
 			
-			itemTexture:SetDesaturated(0)
+			itemTexture:SetDesaturated(false)
 			itemTexture:SetVertexColor(1.0, 1.0, 1.0)
 			itemTexture:SetTexCoord(0, 1, 0, 1)
 			

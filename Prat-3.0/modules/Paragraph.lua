@@ -114,7 +114,7 @@ L:AddLocale("frFR",
 	adjustlinks_name = "Répare la position des liens des joueurs/objets",
 	Center = "Centrer",
 	["Chat window paragraph options."] = "Options de paragraphe.",
-	justification_desc = "Défiinr l'alignement horizontale pour chaque fenêtre de chat", -- Needs review
+	justification_desc = "Défiinr l'alignement horizontale pour chaque fenêtre de chat",
 	justification_name = "Définir l'alignement",
 	Left = "Gauche",
 	["Line Spacing"] = "Espacement des lignes",

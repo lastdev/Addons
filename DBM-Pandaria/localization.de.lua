@@ -97,7 +97,6 @@ L= DBM:GetModLocalization(861)
 L:SetMiscLocalization({
 	Pull					= "Ihr werdet meinen Platz in den ewigen Flammen einnehmen."
 })
-<<<<<<< HEAD
 
 -----------------
 --  Zandalari  --
@@ -107,5 +106,3 @@ L = DBM:GetModLocalization("Zandalari")
 L:SetGeneralLocalization({
 	name =	"Zandalari"
 })
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

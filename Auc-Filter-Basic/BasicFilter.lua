@@ -1,10 +1,6 @@
 --[[
 	Auctioneer - BasicFilter
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: BasicFilter.lua 5318 2012-08-06 10:15:53Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -424,8 +420,4 @@ private.IgnorePrompt.no:SetPoint("BOTTOMRIGHT", private.IgnorePrompt, "BOTTOMRIG
 private.IgnorePrompt.no:SetScript("OnClick", private.OnPromptNo)
 private.IgnorePrompt.no:SetText(NO)
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Filter-Basic/BasicFilter.lua $", "$Rev: 5318 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Filter-Basic/BasicFilter.lua $", "$Rev: 5318 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Filter-Basic/BasicFilter.lua $", "$Rev: 5318 $")

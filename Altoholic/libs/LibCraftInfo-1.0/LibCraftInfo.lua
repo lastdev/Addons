@@ -10,7 +10,7 @@ This library contains various information about crafts, namely:
 
 --]]
 
-local LIB_VERSION_MAJOR, LIB_VERSION_MINOR = "LibCraftInfo-1.0", 2
+local LIB_VERSION_MAJOR, LIB_VERSION_MINOR = "LibCraftInfo-1.0", 3
 local lib = LibStub:NewLibrary(LIB_VERSION_MAJOR, LIB_VERSION_MINOR)
 
 if not lib then return end -- No upgrade needed
@@ -158,7 +158,6 @@ function lib:GetProfessionCraftList(professionSpellID, expansionID)
 	return out
 end
 
-
 -- Sets information about a given spellID
 function lib:SetCraftInfo(professionId, spellID, xpack, itemID, recipeID)
 	--[[ ** Stores a new craft into craftInfo **
@@ -175,4 +174,8 @@ function lib:SetCraftInfo(professionId, spellID, xpack, itemID, recipeID)
 	lib.dataSource[spellID] = LShift(recipeID, 28) + LShift(itemID, 8) + LShift(xpack, 4) + professionId
 end
 
-
+-- Removes craft information for a given spellID
+function lib:DeleteCraftInfo(spellID)
+	-- use this method if a datamined spellID is no longer recognized in-game, without touching the automatically generated list
+	lib.dataSource[spellID] = nil
+end

@@ -1,0 +1,15 @@
+## Interface: 60000
+## Title: Broker: Smart|cffffffffBuff|r
+## Version: 6.0a
+## Notes: SmartBuff support for Data Broker
+## Author: |cff20d2ffAeldra|r (EU-Proudmoore)
+## eMail: aeldra@sonnenkinder.org
+## URL: http://magnanimous-majesty.de
+## Dependencies: SmartBuff
+## X-Category: Miscellaneous
+
+LibStub.lua
+CallbackHandler-1.0.lua
+LibDataBroker-1.1.lua
+
+Broker_SmartBuff.lua

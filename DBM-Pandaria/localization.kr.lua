@@ -97,7 +97,6 @@ L= DBM:GetModLocalization(861)
 L:SetMiscLocalization({
 	Pull					= "영원한 화로에서 내 자리를 대신해라."
 })
-<<<<<<< HEAD
 
 -----------------
 --  Zandalari  --
@@ -107,5 +106,3 @@ L = DBM:GetModLocalization("Zandalari")
 L:SetGeneralLocalization({
 	name =	"잔달라 부족"
 })
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

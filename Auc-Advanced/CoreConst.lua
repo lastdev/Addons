@@ -1,12 +1,7 @@
 --[[
 	Auctioneer
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-	Revision: $Id: CoreConst.lua 5460 2014-06-18 17:51:52Z brykrys $
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
-	Revision: $Id: CoreConst.lua 5399 2013-03-28 18:53:54Z brykrys $
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Revision: $Id: CoreConst.lua 5482 2014-10-05 21:37:04Z ccox $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -140,9 +135,9 @@ local lib = {
 	CLASSESREV = { }, -- Table mapping names to index in CLASSES table
 	SUBCLASSESREV = { }, -- Table mapping from CLASS and SUBCLASSES names to index number in SUBCLASSES
 
-	MAXSKILLLEVEL = 600,
-	MAXUSERLEVEL = 90,
-	MAXITEMLEVEL = 550,
+	MAXSKILLLEVEL = 700,
+	MAXUSERLEVEL = 100,
+	MAXITEMLEVEL = 700,
 }
 
 lib.InvTypes = lib.EquipEncode -- backward compatibility - deprecated entry
@@ -186,8 +181,4 @@ CompileInvTypes(GetAuctionInvTypes(2, 1))
 
 AucAdvanced.Const = lib
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CoreConst.lua $", "$Rev: 5460 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/CoreConst.lua $", "$Rev: 5399 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Advanced/CoreConst.lua $", "$Rev: 5482 $")

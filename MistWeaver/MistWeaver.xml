@@ -219,9 +219,12 @@
         <BarColor r="0" g="1.0" b="0"/>
     </StatusBar>
     
-    <Frame name="MistWeaverButtonFrameTemplate" parent="UIParent" virtual="true">
+    <Frame name="MistWeaverButtonFrameTemplate" virtual="true">
         <Frames>
 		    <Button name="$parentButton" parentKey="button" frameStrata="HIGH" inherits="SecureActionButtonTemplate, ActionButtonTemplate" toplevel="true">
+		<Size>
+			<AbsDimension x="36" y="36"/>
+		</Size>
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
                         <Offset>
@@ -233,11 +236,7 @@
                             <AbsDimension x="0" y="0"/>
                         </Offset>
                     </Anchor>
-                </Anchors> 
-			    <Frames>
-			        <Cooldown name="$parentCooldown" inherits="CooldownFrameTemplate" frameStrata="HIGH">
-			        </Cooldown>
-			    </Frames>
+                </Anchors>
 			    <Layers>	    
 		            <Layer level="ARTWORK">
 		                <Texture name="$parentIcon" parentKey="icon">
@@ -269,16 +268,10 @@
 		        </Layers>
 		        <Scripts>
 		            <OnLoad>
-		                self:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN");
                         self:SetNormalTexture(nil);
                         self:SetHighlightTexture("Interface\\Addons\\MistWeaver\\images\\highlight");
                         self:SetPushedTexture("Interface\\Addons\\MistWeaver\\images\\overlay");
                         self:GetPushedTexture():SetVertexColor(1.0, 1.0, 0.6);
-                        
-                        local cooldown = _G[self:GetName().."Cooldown"];   
-                        cooldown:ClearAllPoints();
-                        cooldown:SetPoint("TOPLEFT", self, "TOPLEFT", 4, -4); 
-                        cooldown:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -4, 4); 
 		            </OnLoad>
 		            <OnEvent>
 		                MistWeaver_OnButtonEvent(self, event, ...);
@@ -314,7 +307,7 @@
 		<Frames>
             <Frame name="MwPowerFrame">
                 <Size>
-                    <AbsDimension x="100" y="42"/>
+                    <AbsDimension x="125" y="56"/>
                 </Size>
                 <Anchors>
                     <Anchor point="BOTTOMLEFT" relativeTo="MistWeaverFrame" relativePoint="TOPLEFT"/>

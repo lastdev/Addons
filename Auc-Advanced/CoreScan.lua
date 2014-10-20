@@ -1,12 +1,7 @@
 --[[
 	Auctioneer
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-	Revision: $Id: CoreScan.lua 5460 2014-06-18 17:51:52Z brykrys $
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
-	Revision: $Id: CoreScan.lua 5436 2013-09-19 10:21:48Z brykrys $
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Revision: $Id: CoreScan.lua 5473 2014-09-23 15:44:55Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -177,13 +172,25 @@ private.auctionItemListUpdated = false
 
 function private.LoadScanData()
 	if not private.loadingScanData then
-		local _, _, _, enabled, load, reason = GetAddOnInfo("Auc-ScanData")
-		if not (enabled and load) then
-			private.loadingScanData = "fallback"
-			private.FallbackScanData = reason or "Unknown reason"
-		elseif IsAddOnLoaded("Auc-ScanData") then
-			-- if another AddOn has force-loaded Auc-ScanData
+		local _, _, _, load, reason, security = GetAddOnInfo("Auc-ScanData")
+		if AucAdvanced.HYBRID5 then -- Hybrid mode for WoW5.4; review once WoW6.0 goes live
+			load = load and reason
+			reason = security
+		else
+			load = reason == "DEMAND_LOADED"
+		end
+
+		if IsAddOnLoaded("Auc-ScanData") then
+			-- another AddOn has force-loaded Auc-ScanData
 			private.loadingScanData = "loading"
+		elseif not load then
+			private.loadingScanData = "fallback"
+			if reason then
+				reason = _G["ADDON_"..reason] or reason
+			else
+				reason = "Unknown reason"
+			end
+			private.FallbackScanData = reason
 		else
 			private.loadingScanData = "block" -- prevents re-entry to this function during the LoadAddOn call
 			load, reason = LoadAddOn("Auc-ScanData")
@@ -191,7 +198,7 @@ function private.LoadScanData()
 				private.loadingScanData = "loading"
 			elseif reason then
 				private.loadingScanData = "fallback"
-				private.FallbackScanData = reason
+				private.FallbackScanData = _G["ADDON_"..reason] or reason
 			else
 				-- LoadAddOn sometimes returns nil, nil if called too early during game startup
 				-- assume it needs to be called again at a later stage
@@ -274,13 +281,13 @@ function lib.ClearScanData(key)
 	_print(_TRANS("ADV_Interface_ScanDataNotCleared")) --Scan Data cannot be cleared because {{Auc-ScanData}} is not loaded
 end
 
-function lib.StartPushedScan(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, GetAll, NoSummary)
-	name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex = private.QueryScrubParameters(
-		name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
+function lib.StartPushedScan(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch, options)
+	name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch = private.QueryScrubParameters(
+		name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
 
 	if private.scanStack then
 		for _, scan in ipairs(private.scanStack) do
-			if not scan[8] and private.QueryCompareParameters(scan[3], name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex) then
+			if not scan[8] and private.QueryCompareParameters(scan[3], name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch) then
 				-- duplicate of exisiting queued query
 				if (_G.nLog) then
 					_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_INFO, "Duplicate pushed scan detected, cancelling duplicate")
@@ -292,9 +299,18 @@ function lib.StartPushedScan(name, minLevel, maxLevel, invTypeIndex, classIndex,
 		private.scanStack = {}
 	end
 
-	local query = private.NewQueryTable(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
+	local query = private.NewQueryTable(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
 	query.qryinfo.pushed = true
-	if NoSummary then query.qryinfo.nosummary = true end
+
+	local NoSummary
+	if type(options) == "table" then
+		-- only 1 option so far
+		if options.NoSummary or options.nosummary then
+			NoSummary = true
+		end
+	end
+
+	query.qryinfo.nosummary = NoSummary
 
 	if (_G.nLog) then
 		_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_INFO, ("Starting pushed scan %d (%s)"):format(query.qryinfo.id, query.qryinfo.sig))
@@ -384,7 +400,7 @@ function lib.ProgressBars(name, value, show, text, options)
 	_G.AucAdvanced.API.ProgressBars(name, value, show, text, options)
 end
 
-function lib.StartScan(name, minUseLevel, maxUseLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, GetAll, NoSummary)
+function lib.StartScan(name, minUseLevel, maxUseLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, GetAll, exactMatch, options)
 	if _G.AuctionFrame and _G.AuctionFrame:IsVisible() then
 		if private.isPaused then
 			_G.message("Scanning is currently paused")
@@ -420,10 +436,18 @@ function lib.StartScan(name, minUseLevel, maxUseLevel, invTypeIndex, classIndex,
 		else
 			if not CanQuery then
 				private.queueScan = {
-					name, minUseLevel, maxUseLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, GetAll, NoSummary
+					name, minUseLevel, maxUseLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, GetAll, exactMatch, options
 				}
-				private.queueScanParams = 10 -- must match the number of entries we put into the table, including nils. Used when unpacking
+				private.queueScanParams = 11 -- must match the number of entries we put into the table, including nils. Used when unpacking
 				return
+			end
+		end
+
+		local NoSummary
+		if type(options) == "table" then
+			-- only 1 option so far
+			if options.NoSummary or options.nosummary then
+				NoSummary = true
 			end
 		end
 
@@ -432,13 +456,12 @@ function lib.StartScan(name, minUseLevel, maxUseLevel, invTypeIndex, classIndex,
 		end
 
 		private.isScanning = true
-		private.isNoSummary = NoSummary
 		local startPage = 0
 
 		lib.SetAuctioneerQuery() -- flag the following query as coming from Auctioneer
 		SortAuctionClearSort("list")
 		QueryAuctionItems(name or "", minUseLevel or "", maxUseLevel or "",
-				invTypeIndex, classIndex, subclassIndex, startPage, isUsable, qualityIndex, GetAll)
+				invTypeIndex, classIndex, subclassIndex, startPage, isUsable, qualityIndex, GetAll, exactMatch)
 		if not private.curQuery then
 			-- private.curQuery will have been set if QueryAuctionItems succeeded
 			-- this should never fail? we checked CanSendAuctionQuery() earlier
@@ -452,13 +475,10 @@ function lib.StartScan(name, minUseLevel, maxUseLevel, invTypeIndex, classIndex,
 			return
 		end
 		_G.AuctionFrameBrowse.page = startPage
-		if (NoSummary) then
-			private.curQuery.qryinfo.nosummary = true
-		end
+		private.curQuery.qryinfo.nosummary = NoSummary
 		if GetAll then
 			private.curQuery.qryinfo.getall = true
 		end
-		private.isNoSummary = false
 
 		--Show the progress indicator
 		private.UpdateScanProgress(true, nil, nil, nil, nil, nil, private.curQuery)
@@ -615,17 +635,9 @@ local function processStats(processors, operation, curItem, oldItem)
 					break
 				end
 			else
-<<<<<<< HEAD
 				local text = ("Error trapped for AuctionFilter in module %s:\n%s"):format(x.Name, result)
 				if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "AuctionFilter Error", text) end
 				geterrorhandler()(text)
-=======
-				if (_G.nLog) then
-					local text = ("Error trapped for AuctionFilter in module %s:\n%s"):format(x.Name, result)
-					if (_G.nLog) then _G.nLog.AddMessage("Auctioneer", "Scan", _G.N_ERROR, "AuctionFilter Error", text) end
-					geterrorhandler()(text)
-				end
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			end
 		end
 	elseif curItem and bitand(curItem[Const.FLAG] or 0, Const.FLAG_FILTER) == Const.FLAG_FILTER then
@@ -657,11 +669,16 @@ function private.IsInQuery(curQuery, data)
 			and (not curQuery.subclass or (curQuery.subclass == data[Const.ISUB]))
 			and (not curQuery.minUseLevel or (data[Const.ULEVEL] >= curQuery.minUseLevel))
 			and (not curQuery.maxUseLevel or (data[Const.ULEVEL] <= curQuery.maxUseLevel))
-			and (not curQuery.name or (data[Const.NAME] and data[Const.NAME]:lower():find(curQuery.name, 1, true))) -- curQuery.name is already lowercased
 			and (not curQuery.isUsable or (private.CanUse(data[Const.LINK])))
 			and (not curQuery.invType or (EquipCodeToInvIndex[data[Const.IEQUIP]] == curQuery.invType)) -- must convert iEquip code to invTypeIndex for comparison
 			and (not curQuery.quality or (data[Const.QUALITY] >= curQuery.quality))
 			then
+		if curQuery.name then
+			local dataname = data[Const.NAME]:lower() -- case insensitive; curQuery.name is already lowercased
+			if dataname ~= curQuery.name and (curQuery.exactMatch or not dataname:find(curQuery.name, 1, true)) then
+				return false
+			end
+		end
 		return true
 	end
 	return false
@@ -1565,7 +1582,7 @@ function private.ScanPage(nextPage, really)
 		private.Hook.QueryAuctionItems(private.curQuery.name or "",
 			private.curQuery.minUseLevel or "", private.curQuery.maxUseLevel or "",
 			private.curQuery.invType, private.curQuery.classIndex, private.curQuery.subclassIndex, nextPage,
-			private.curQuery.isUsable, private.curQuery.quality)
+			private.curQuery.isUsable, private.curQuery.quality, nil, private.curQuery.exactMatch)
 
 		_G.AuctionFrameBrowse.page = nextPage
 
@@ -2220,7 +2237,7 @@ local StorePageFunction = function()
 				private.Commit(isGetAllFail, false, true)
 				-- Clear the getall output. We don't want to create a new query so use the hook
 				private.queryStarted = GetTime()
-				private.Hook.QueryAuctionItems("empty page", "", "", nil, nil, nil, nil, nil, nil)
+				private.Hook.QueryAuctionItems("empty page", "", "", nil, nil, nil, nil, nil, nil, nil, nil)
 		elseif private.isScanning then
 			if (page+1 < maxPages) then
 				private.ScanPage(page + 1)
@@ -2324,7 +2341,7 @@ function lib.CreateQuerySig(...)
 	return private.CreateQuerySig(private.QueryScrubParameters(...))
 end
 
-function private.QueryScrubParameters(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
+function private.QueryScrubParameters(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
 	-- Converts the parameters that we will store in our scanQuery table into a consistent format:
 	-- converts each parameter to correct type;
 	-- converts all strings to lowercase;
@@ -2350,13 +2367,18 @@ function private.QueryScrubParameters(name, minLevel, maxLevel, invTypeIndex, cl
 	else
 		isUsable = nil
 	end
+	if name and exactMatch and exactMatch ~= 0 then
+		exactMatch = 1 -- exactMatch is only valid if we have a name
+	else
+		exactMatch = nil
+	end
 	qualityIndex = tonumber(qualityIndex)
 	if qualityIndex and qualityIndex < 1 then qualityIndex = nil end
 
-	return name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex
+	return name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch
 end
 
-function private.CreateQuerySig(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
+function private.CreateQuerySig(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
 	return strjoin("#",
 		name or "",
 		minLevel or "",
@@ -2365,11 +2387,12 @@ function private.CreateQuerySig(name, minLevel, maxLevel, invTypeIndex, classInd
 		classIndex or "",
 		subclassIndex or "",
 		isUsable or "",
-		qualityIndex or ""
+		qualityIndex or "",
+		exactMatch or ""
 	) -- can use strsplit("#", sig) to extract params
 end
 
-function private.QueryCompareParameters(query, name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
+function private.QueryCompareParameters(query, name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
 	-- Returns true if the parameters are identical to the values stored in the specified scanQuery table
 	-- Use this function to avoid creating a duplicate scanQuery table
 	-- Parameters must have been scrubbed first
@@ -2382,6 +2405,7 @@ function private.QueryCompareParameters(query, name, minLevel, maxLevel, invType
 	and query.quality == qualityIndex
 	and query.invType == invTypeIndex
 	and query.isUsable == isUsable
+	and query.exactMatch == exactMatch
 	then
 		return true
 	end
@@ -2389,7 +2413,7 @@ end
 
 private.querycount = 0
 
-function private.NewQueryTable(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
+function private.NewQueryTable(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
 	-- Assumes the parameters have already been scrubbed
 	local class, subclass
 	local query, qryinfo = {}, {}
@@ -2412,11 +2436,12 @@ function private.NewQueryTable(name, minLevel, maxLevel, invTypeIndex, classInde
 	end
 	query.isUsable = isUsable
 	query.quality = qualityIndex
+	query.exactMatch = exactMatch
 
 	qryinfo.page = -1 -- use this to store highest page seen by query, and we haven't seen any yet.
 	qryinfo.id = private.querycount
 	private.querycount = private.querycount+1
-	qryinfo.sig = private.CreateQuerySig(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
+	qryinfo.sig = private.CreateQuerySig(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
 
 	-- the return value from GetFaction() can change when the Auctionhouse closes
 	-- (Neutral Auctionhouse and "Always Home Faction" option enabled - this is on by default)
@@ -2427,7 +2452,8 @@ function private.NewQueryTable(name, minLevel, maxLevel, invTypeIndex, classInde
 	if ((not query.class) and (not query.subclass) and (not query.minUseLevel)
 			and (not query.maxUseLevel)
 			and (not query.name) and (not query.isUsable)
-			and (not query.invType) and (not query.quality)) then
+			and (not query.invType) and (not query.quality)
+			and (not query.exactMatch)) then
 		qryinfo.scanSize = "Full"
 	elseif (query.name and query.class and query.subclass and query.quality) then
 		qryinfo.scanSize = "Micro"
@@ -2511,10 +2537,10 @@ if not isSecure then
 end
 private.CanSend = CanSendAuctionQuery
 
-function QueryAuctionItems(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, page, isUsable, qualityIndex, GetAll, ...)
+function QueryAuctionItems(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, page, isUsable, qualityIndex, GetAll, exactMatch, ...)
 	if not private.isAuctioneerQuery and not get("core.scan.scanallqueries")then
 		-- Optional bypass to handle compatibility problems with other AddOns
-		return private.Hook.QueryAuctionItems(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, page, isUsable, qualityIndex, GetAll, ...)
+		return private.Hook.QueryAuctionItems(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, page, isUsable, qualityIndex, GetAll, exactMatch, ...)
 	end
 
 	private.isAuctioneerQuery = nil
@@ -2534,13 +2560,13 @@ function QueryAuctionItems(name, minLevel, maxLevel, invTypeIndex, classIndex, s
 		lib.StorePage()
 	end
 
-	name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex = private.QueryScrubParameters(
-		name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
+	name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch = private.QueryScrubParameters(
+		name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
 
 	local query
 	if private.curQuery then
 		if not GetAll and not private.isGetAll
-		and private.QueryCompareParameters(private.curQuery, name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex) then
+		and private.QueryCompareParameters(private.curQuery, name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch) then
 			private.StopStorePage()
 			query = private.curQuery
 			if (_G.nLog) then
@@ -2551,7 +2577,7 @@ function QueryAuctionItems(name, minLevel, maxLevel, invTypeIndex, classIndex, s
 		end
 	end
 	if not query then
-		query = private.NewQueryTable(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex)
+		query = private.NewQueryTable(name, minLevel, maxLevel, invTypeIndex, classIndex, subclassIndex, isUsable, qualityIndex, exactMatch)
 		private.scanStartTime = time()
 		private.scanStarted = GetTime()
 		private.totalPaused = 0
@@ -2582,7 +2608,7 @@ function QueryAuctionItems(name, minLevel, maxLevel, invTypeIndex, classIndex, s
 	return private.QuerySent(query, isSearch,
 		private.Hook.QueryAuctionItems(
 			name or "", minLevel or "", maxLevel or "", invTypeIndex, classIndex, subclassIndex,
-			page, isUsable, qualityIndex, GetAll, ...))
+			page, isUsable, qualityIndex, GetAll, exactMatch, ...))
 end
 
 -- Function to indicate that the next call to QueryAuctionItems comes from Auctioneer itself.
@@ -2983,22 +3009,4 @@ end
 internal.Scan.Logout = lib.Logout
 internal.Scan.AHClosed = lib.AHClosed
 
-<<<<<<< HEAD
-_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CoreScan.lua $", "$Rev: 5460 $")
-=======
-_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/CoreScan.lua $", "$Rev: 5436 $")
-
--- Hybrid mode GetAuctionItemInfo for transition from WoW 5.3 to 5.4
--- Temporary - do not use in new code!
-local _,_,_,toc = GetBuildInfo()
-if toc < 50400 then
-	print("GetAuctionItemInfo for version 5.3")
-	AucAdvanced.GetAuctionItemInfo = GetAuctionItemInfo
-else
-	print("GetAuctionItemInfo for version 5.4")
-	function AucAdvanced.GetAuctionItemInfo(...)
-		local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName, saleStatus, itemId, hasAllInfo =  GetAuctionItemInfo(...)
-		return name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner, saleStatus, itemId, hasAllInfo
-	end
-end
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Advanced/CoreScan.lua $", "$Rev: 5473 $")

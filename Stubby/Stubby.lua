@@ -1,11 +1,7 @@
 --[[
 	Stubby AddOn for World of Watcraft (tm)
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-	Revision: $Id: Stubby.lua 354 2013-06-12 18:04:49Z brykrys $
+	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Revision: $Id: Stubby.lua 368 2014-09-20 18:09:11Z brykrys $
 	URL: http://auctioneeraddon.com/dl/Stubby/
 
 	Stubby is an addon that allows you to register boot code for
@@ -167,7 +163,7 @@
 	This constant is Stubby's revision number, a simple positive
 	integer that will increase by an arbitrary amount with each
 	new version of Stubby.
-	Current $Revision: 354 $
+	Current $Revision: 368 $
 
 	Example:
 	-------------------------------------------
@@ -200,7 +196,12 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Stubby/Stubby.lua $","$Rev: 354 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/libs/trunk/Stubby/Stubby.lua $","$Rev: 368 $","5.1.DEV.", 'auctioneer', 'libs')
+
+-- ### Hybrid code to enable use in both WoW5.4 and WoW6.0
+-- ### Set a flag HYBRID5 to indicate when we are *not* in WoW6.0 or later
+local _,_,_,tocVersion = GetBuildInfo()
+local HYBRID5 = (tocVersion < 60000)
 
 -------------------------------------------------------------------------------
 -- Error codes
@@ -892,10 +893,16 @@ end
 
 function searchForNewAddOns()
 	local addonCount = GetNumAddOns()
-	local name, title, notes, enabled, loadable, reason, security, requiresLoad
 	for i=1, addonCount do
-		requiresLoad = false
-		name, title, notes, enabled, loadable, reason, security = GetAddOnInfo(i)
+		local requiresLoad = false
+		local name, title, notes, loadable, reason = GetAddOnInfo(i)
+		if HYBRID5 then
+			loadable = loadable and reason -- in 5.4 these two values are 'enabled' and 'loadable' respectively
+		else
+			-- 6.0 Notes: Load-on-Demand AddOns now always return loadable == false :(
+			-- We should review and tidy this up once 6.0 goes live
+			loadable = reason == "DEMAND_LOADED" or reason == "DEP_DEMAND_LOADED"
+		end
 		if (IsAddOnLoadOnDemand(i) and shouldInspectAddOn(name) and loadable) then
 			local addonDeps = { GetAddOnDependencies(i) }
 			for _, dependancy in pairs(addonDeps) do
@@ -915,8 +922,13 @@ function runBootCodes()
 	if (not StubbyConfig.boots) then return end
 	for addon, boots in pairs(StubbyConfig.boots) do
 		if (not IsAddOnLoaded(addon) and IsAddOnLoadOnDemand(addon)) then
-			local _, _, _, _, loadable = GetAddOnInfo(addon)
-			if (loadable) then
+			local _, _, _, loadable, reason = GetAddOnInfo(addon)
+			if HYBRID5 then
+				loadable = loadable and reason
+			else
+				loadable = reason == "DEMAND_LOADED" or reason == "DEP_DEMAND_LOADED"
+			end
+			if loadable then
 				for bootname, boot in pairs(boots) do
 					RunScript(boot)
 				end
@@ -1029,7 +1041,7 @@ end
 
 -- Extract the revision number from SVN keyword string
 function getRevision()
-	return tonumber(("$Revision: 354 $"):match("(%d+)"))
+	return tonumber(("$Revision: 368 $"):match("(%d+)"))
 end
 
 -------------------------------------------------------------------------------

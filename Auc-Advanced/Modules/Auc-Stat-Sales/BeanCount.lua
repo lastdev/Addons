@@ -1,11 +1,7 @@
 --[[
 	Auctioneer - Stat-Sales module
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-	Revision: $Id: BeanCount.lua 5376 2012-11-06 15:11:47Z brykrys $
+	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Revision: $Id: BeanCount.lua 5476 2014-09-27 18:40:05Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This Auctioneer statistic module calculates a price statistics for items
@@ -41,6 +37,23 @@ local lib,parent,private = AucAdvanced.NewModule(libType, libName)
 if not lib then return end
 local aucPrint,decode,_,_,replicate,_,get,set,default,debugPrint,fill, _TRANS = AucAdvanced.GetModuleLocals()
 
+-- Constants used when creating a PDF:
+local BASE_WEIGHT = 1 -- todo: make base weight user controllable
+-- Clamping limits for stddev relative to mean
+local CLAMP_STDDEV_LOWER = 0.01
+local CLAMP_STDDEV_UPPER = 1
+-- Adjustments when seen count is very low (in this case, auctionscount)
+local LOWSEEN_MINIMUM = 1 -- lowest possible count for a valid PDF
+-- Weight taper for low seen count
+local TAPER_THRESHOLD = 10 -- seen count at which we stop making adjustments
+local TAPER_WEIGHT = .1 -- weight multiplier at LOWSEEN_MINIMUM
+local TAPER_SLOPE = (1 - TAPER_WEIGHT) / (TAPER_THRESHOLD - LOWSEEN_MINIMUM)
+local TAPER_OFFSET = TAPER_WEIGHT - LOWSEEN_MINIMUM * TAPER_SLOPE
+-- StdDev Estimate for low seen count
+local ESTIMATE_THRESHOLD = 10
+local ESTIMATE_FACTOR = 0.33
+
+
 local unpack,pairs,wipe = unpack,pairs,wipe
 local floor,abs,sqrt = floor,abs,sqrt
 local strmatch = strmatch
@@ -69,27 +82,37 @@ function lib.GetItemPDF(hyperlink, serverKey)
 	-- Get the data
 	local average, mean, stddev, variance, confidence, bought, sold, boughtqty, soldqty, boughtseen, soldseen, bought3, sold3, boughtqty3, soldqty3, bought7, sold7, boughtqty7, soldqty7 = lib.GetPrice(hyperlink, serverKey)
 
-	if not mean or mean == 0 then
-		-- No data, cannot determine pricing
-		return
+	if not (average and stddev and soldseen) or average == 0 or soldseen < LOWSEEN_MINIMUM then
+		return -- No data, cannot determine pricing
 	end
 
-	if not stddev or stddev == 0 then
-		if soldqty and soldqty > 0 then
-			-- If the standard deviation is zero, we'll have some issues, so we'll estimate it by saying
-			-- the std dev is 100% of the mean divided by square root of number of views
-			stddev = mean / sqrt(soldqty)
-		else
-			-- Cannot determine stddev
-			return
-		end
+	-- Adjust the weight (area) of the bellcurve to make various adjustments
+	local area = BASE_WEIGHT
+	if soldseen < TAPER_THRESHOLD then
+		-- when seen count is very low, reduce weight
+		area = area * (soldseen * TAPER_SLOPE + TAPER_OFFSET)
 	end
 
-	local lower, upper = mean - 3 * stddev, mean + 3 * stddev
+	-- Extremely large or small values of stddev can cause problems with GetMarketValue
+	-- we shall apply limits relative to the mean of the bellcurve (local 'average')
+	local clamplower, clampupper = average * CLAMP_STDDEV_LOWER, average * CLAMP_STDDEV_UPPER
+	if soldseen < ESTIMATE_THRESHOLD then
+		-- We assume that calculated stddev is unreliable at very low seen counts, so we apply a minimum value based on average and count
+		-- in particular fixes up cases where stddev == 0
+		clamplower = ESTIMATE_FACTOR * average / soldseen
+	end
+	if stddev < clamplower then
+		stddev = clamplower
+	elseif stddev > clampupper then
+		-- Note that even with this adjustment, 'lower' can still be significantly negative!
+		area = area * clampupper / stddev -- as we're hard capping the stddev, reduce weight to compensate
+		stddev = clampupper
+	end
 
-	-- Build the PDF based on standard deviation & mean
-	BellCurve:SetParameters(mean, stddev)
-	return BellCurve, lower, upper -- This has a __call metamethod so it's ok
+	local lower, upper = average - 3 * stddev, average + 3 * stddev
+
+	BellCurve:SetParameters(average, stddev, area)
+	return BellCurve, lower, upper, area -- This has a __call metamethod so it's ok
 end
 
 -----------------------------------------------------------------------------------
@@ -474,8 +497,4 @@ function private.SetupConfigGui(gui)
 	if tooltipID then private.addTooltipControls(tooltipID) end
 end
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Stat-Sales/BeanCount.lua $", "$Rev: 5376 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Stat-Sales/BeanCount.lua $", "$Rev: 5376 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Stat-Sales/BeanCount.lua $", "$Rev: 5476 $")

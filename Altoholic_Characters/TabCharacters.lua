@@ -111,7 +111,7 @@ end
 
 local function EnableIcon(name)
 	_G[name]:Enable()
-	_G[name.."IconTexture"]:SetDesaturated(0)
+	_G[name.."IconTexture"]:SetDesaturated(false)
 end
 
 local DDM_Add = addon.Helpers.DDM_Add
@@ -372,6 +372,8 @@ local function OnContainerChange(self)
 	elseif self.value == 3 then
 		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewVoidStorage")
 	elseif self.value == 4 then
+		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewReagentBank")
+	elseif self.value == 5 then
 		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewBagsAllInOne")
 	end
 	
@@ -538,7 +540,8 @@ local function BagsIcon_Initialize(self, level)
 	DDM_Add(L["Bags"], 1, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewBags") == 1))
 	DDM_Add(L["Bank"], 2, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewBank") == 1))
 	DDM_Add(VOID_STORAGE, 3, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewVoidStorage") == 1))
-	DDM_Add(L["All-in-one"], 4, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewBagsAllInOne") == 1))
+	DDM_Add(REAGENT_BANK , 4, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewReagentBank") == 1))
+	DDM_Add(L["All-in-one"], 5, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewBagsAllInOne") == 1))
 		
 	DDM_AddTitle(" ")
 	DDM_AddTitle("|r" ..RARITY)

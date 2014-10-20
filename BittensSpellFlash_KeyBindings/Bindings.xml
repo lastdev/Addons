@@ -1,0 +1,26 @@
+<Bindings>
+    <Binding
+        name="BITTENS_SPELLFLASH_AOE"
+        header="BITTENS_SPELLFLASH" >
+        
+        BittensGlobalTables.GetTable("BittensSpellFlashLibrary").ToggleAoE()
+    </Binding>
+    <Binding
+        name="BITTENS_SPELLFLASH_DEBUGGING"
+        header="BITTENS_SPELLFLASH" >
+        
+		BittensGlobalTables.GetTable("BittensSpellFlashLibrary").ToggleDebugging()
+    </Binding>
+    <Binding
+        name="BITTENS_SPELLFLASH_FLOATING_TEXT"
+        header="BITTENS_SPELLFLASH" >
+        
+		BittensGlobalTables.GetTable("BittensSpellFlashLibrary").ToggleFloatingCombatText()
+    </Binding>
+    <Binding
+        name="BITTENS_SPELLFLASH_DAMAGE_MODE"
+        header="BITTENS_SPELLFLASH" >
+        
+        BittensGlobalTables.GetTable("BittensSpellFlashLibrary").ToggleDamageModeInGroups()
+    </Binding>
+</Bindings>

@@ -275,7 +275,7 @@ end
 local function safestr(s) return s or "" end
 
 function SplitChatMessage(frame, event, ...)
-  local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15 = ...
+  local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16 = ...
 
   ClearChatSections(SplitMessageOrg)
   ClearChatSections(SplitMessage)
@@ -283,6 +283,11 @@ function SplitChatMessage(frame, event, ...)
   if (strsub((event or ""), 1, 8) == "CHAT_MSG") then
     local type = strsub(event, 10)
     local info = _G.ChatTypeInfo[type]
+
+    if (arg16) then
+      -- hiding sender in letterbox: do NOT even show in chat window (only shows in cinematic frame)
+      return true;
+    end
 
     local s = SplitMessageOrg
 
@@ -299,7 +304,7 @@ function SplitChatMessage(frame, event, ...)
     }
 
     if CHAT_PLAYER_GUIDS then
-      if s.GUID and s.GUID:len() > 0 then
+      if s.GUID and s.GUID:len() > 0 and s.GUID ~= "0000000000000000" then
         s.GUIDINFO = {
           _G.GetPlayerInfoByGUID(s.GUID)
         }
@@ -308,14 +313,14 @@ function SplitChatMessage(frame, event, ...)
     --@end-debug@]===]
 
     --        if NEW_CHATFILTERS then
-    local kill, newarg1, newarg2, newarg3, newarg4, newarg5, newarg6, newarg7, newarg8, newarg9, newarg10, newarg11, newarg12, newarg13, newarg14, newarg15 =
-    RunMessageEventFilters(frame, event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)
+    local kill, newarg1, newarg2, newarg3, newarg4, newarg5, newarg6, newarg7, newarg8, newarg9, newarg10, newarg11, newarg12, newarg13, newarg14, newarg15, newarg16 =
+    RunMessageEventFilters(frame, event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16)
     if kill then
       return true
     end
     if newarg1 ~= nil then
-      arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15 =
-      newarg1, newarg2, newarg3, newarg4, newarg5, newarg6, newarg7, newarg8, newarg9, newarg10, newarg11, newarg12, newarg13, newarg14, newarg15
+      arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,arg16 =
+      newarg1, newarg2, newarg3, newarg4, newarg5, newarg6, newarg7, newarg8, newarg9, newarg10, newarg11, newarg12, newarg13, newarg14, newarg15, newarg16
     end
     --        else
     --            local kill, newarg1 = RunOldMessageEventFilters(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)
@@ -401,14 +406,20 @@ function SplitChatMessage(frame, event, ...)
 
 
     local arg2 = safestr(arg2)
-    if strlen(arg2) > 0 then
+    if strlen(arg2) > 0 then 
 
       if (strsub(type, 1, 7) == "MONSTER" or type == "RAID_BOSS_EMOTE" or
               type == "CHANNEL_NOTICE" or type == "CHANNEL_NOTICE_USER") then
       -- no link
         s.NONPLAYER = arg2
       else
-        arg2 = _G.Ambiguate(arg2, "none")
+          --ambiguate guild chat names
+          if (type == "GUILD") then
+              arg2 = _G.Ambiguate(arg2, "guild")
+          else
+              arg2 = _G.Ambiguate(arg2, "none")
+          end
+
         local plr, svr = arg2:match("([^%-]+)%-?(.*)")
 
         s.pP = "["

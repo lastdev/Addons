@@ -3,6 +3,31 @@ Altoholic Changelog (dates in dd/mm/yyyy)
 
 Join the #altoholic IRC channel on Freenode : irc://irc.freenode.net:6667/
 
+IMPORTANT NOTE: As with every new expansion, many things have changed in the API, and it is REQUIRED to clear your Saved Variables for the addon.
+This means cleaning the following files in \WTF\Account\<your_account>\SavedVariables : Altoholic.lua & All DataStore*.lua
+
+There WILL be bugs if you use your old files without cleaning them first. 
+Some fixes to work around API changes are too time consuming, so cleaning is required. A meager price to pay once per expansion.
+
+6.0.001 (17/10/2014)
+
+- Added a pane in the Grids tab to track LFR lockouts across alts.
+- Added support for the new void storage tab + reagent bank.
+- Updated achievement lists.
+- Updated tradeskills data (Grids tab)
+- Fixed WoD related issues.
+- DataStore_Reputations: fixed WoD compatibility.
+- DataStore_Reputations: LibBabble-Factions is back.
+Note : seriously Blizzard why on earth is GetFactionInfoByID no longer returning data for the opposite faction's reputations?
+- DataStore_Talents: talents & glyph scanning is temporarily fully disabled. UI is still missing too, sorry about that.
+- DataStore_Quests: fixed WoD compatibility.
+- DataStore_Containers: Added support for the new void storage tab.
+- DataStore_Containers: Added support for the new reagent bank.
+- LibCraftInfo: updated for WoD.
+- LibCraftLevels: updated for WoD.
+- LibCraftReagent: updated for WoD.
+- Currencies pane: removed unrequired tooltip.
+
 5.4.009 (08/08/2014)
 
 - Uncommented the code that actually deletes linked realms.. silly me !
@@ -75,23 +100,6 @@ If you notice something weird with your realm, please report it.
 - Updated the AiL tooltip, level 60 & 70 dungeons are now commented (tooltip was getting long), and level 90 was added. (Thanks Pseudopath on WoWinterface)
 - Fixed issues related to scanning void storage (Thanks Lombra !)
 - Several minor fixes (Thanks Lombra again !!)
-
-5.4.004 (07/10/2013)
-
-- Fixed showing the item source for crafts in the tooltip.
-- Fixed LibCraftInfo.
-
-5.4.003 (06/10/2013)
-
-- Created and added support for 3 new libraries : LibCraftInfo, LibCraftLevels, LibCraftReagents.
-These libraries intend to replace the lost functionality caused by tables reset to zero in LibPeriodicTable.
-I now have my own dataminer, so these tables should be easier to maintain when a patch hits.
-I also cleaned up some hard coded tables to now use the libraries instead.
-Overall, the addon now consumes a little bit more memory, but the data sources are way more complete than before.
-- Replaced the internal list of recipes by LibCraftInfo.
-- Fixed the Characters -> Profession pane no longer showing reagents due to LPT changes.
-- Fixed the Grids -> Tradeskills pane no longer correct due to LPT changes.
-
 
 5.4.004 (07/10/2013)
 

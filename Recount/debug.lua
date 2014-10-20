@@ -1,6 +1,6 @@
 local Recount = _G.Recount
 
-local revision = tonumber(string.sub("$Revision: 1258 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1270 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -45,10 +45,10 @@ else
 
 		timestamp = GetTime()
 		eventtype = "SWING_DAMAGE"
-		srcGUID = 0x00000000007DB5FD
+		srcGUID = "Player-0-007DB5FD"
 		srcName = "Renetta"
 		srcFlags = 0x511
-		dstGUID = 0xF530005DDA2EA33A
+		dstGUID = "Creature-0-0-0-0-24026-00002EA33A"
 		--dstName = "Fanggore Worg"
 		dstName = "Archimonde"
 		dstFlags = 0x10a48

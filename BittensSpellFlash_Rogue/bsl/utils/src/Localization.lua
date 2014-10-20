@@ -23,25 +23,9 @@ elseif locale == "esMX" then -- Latin American Spanish
 elseif locale == "ruRU" then -- Russian
 --@localization(locale="ruRU", format="lua_additive_table")@
 elseif locale == "zhCN" then -- Simplified Chinese
-<<<<<<< HEAD
 --@localization(locale="zhCN", format="lua_additive_table")@
-=======
--- L["B"] = ""
--- L["K"] = ""
-L["M"] = "百万" -- Needs review
--- L["T"] = ""
-
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 elseif locale == "esES" then -- Spanish
 --@localization(locale="esES", format="lua_additive_table")@
 elseif locale == "zhTW" then -- Traditional Chinese
-<<<<<<< HEAD
 --@localization(locale="zhTW", format="lua_additive_table")@
-=======
--- L["B"] = ""
--- L["K"] = ""
-L["M"] = "百萬" -- Needs review
--- L["T"] = ""
-
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end

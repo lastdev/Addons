@@ -1,7 +1,7 @@
 local addon = LibStub("AceAddon-3.0"):NewAddon("oRA3")
 local CallbackHandler = LibStub("CallbackHandler-1.0")
 
-addon.VERSION = tonumber(("$Revision: 745 $"):sub(12, -3))
+addon.VERSION = tonumber(("$Revision: 794 $"):sub(12, -3))
 
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 local oraFrame = CreateFrame("Frame", "oRA3Frame", UIParent)
@@ -110,9 +110,6 @@ local defaults = {
 		repairFlagStorage = {},
 		repairAmountStorage = {},
 		open = false,
-	},
-	char = {
-		lastRaidDifficulty = 3,
 	},
 }
 
@@ -296,6 +293,8 @@ end
 --
 
 function addon:OnInitialize()
+	oRA3DB.char = nil -- XXX temp cleanup from Difficulty module
+
 	self.db = LibStub("AceDB-3.0"):New("oRA3DB", defaults, true)
 	LibStub("LibDualSpec-1.0"):EnhanceDatabase(self.db, "oRA3")
 

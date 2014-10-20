@@ -1,6 +1,6 @@
 --[[
 Name: LibGraph-2.0
-Revision: $Rev: 51 $
+Revision: $Rev: 52 $
 Author(s): Cryect (cryect@gmail.com), Xinhuan
 Website: http://www.wowace.com/
 Documentation: http://www.wowace.com/wiki/GraphLib
@@ -11,7 +11,7 @@ Description: Allows for easy creation of graphs
 --Thanks to Nelson Minar for catching several errors where width was being used instead of height (damn copy and paste >_>)
 
 local major = "LibGraph-2.0"
-local minor = 90000 + tonumber(("$Revision: 51 $"):match("(%d+)"))
+local minor = 90000 + tonumber(("$Revision: 52 $"):match("(%d+)"))
 
 
 --Search for just Addon\\ at the front since the interface part often gets trimmed
@@ -241,6 +241,9 @@ local function SetupGraphLineFunctions(graph)
 	graph.SetYLabels = GraphFunctions.SetYLabels
 	graph.OnUpdate = GraphFunctions.OnUpdateGraph
 
+	graph.SetLineTexture = GraphFunctions.SetLineTexture
+	graph.SetBorderSize = GraphFunctions.SetBorderSize
+	
 	graph.LockXMin = GraphFunctions.LockXMin
 	graph.LockXMax = GraphFunctions.LockXMax
 	graph.LockYMin = GraphFunctions.LockYMin
@@ -659,7 +662,7 @@ end
 --Functions for Line Graph Data
 -------------------------------------------------------------------------------
 
-function GraphFunctions:AddDataSeries(points, color, n2)
+function GraphFunctions:AddDataSeries(points, color, n2, linetexture)
 	local data
 	--Make sure there is data points
 	if not points then
@@ -677,7 +680,13 @@ function GraphFunctions:AddDataSeries(points, color, n2)
 		end
 	end
 
-	tinsert(self.Data,{Points = data; Color = color})
+	if linetexture then
+		if not linetexture:find ("\\") and not linetexture:find ("//") then 
+			linetexture = TextureDirectory..linetexture
+		end
+	end
+	
+	tinsert(self.Data,{Points = data; Color = color; LineTexture=linetexture})
 
 	self.NeedsUpdate = true
 end
@@ -1278,6 +1287,43 @@ function GraphFunctions:SetYLabels(Left, Right)
 	self.YLabelsRight = Right
 end
 
+function GraphFunctions:SetLineTexture (texture)
+	if (type (texture) ~= "string") then
+		return assert (false, "Parameter 1 for SetLineTexture must be a string")
+	end
+
+	--> full path
+	if (texture:find ("\\") or texture:find ("//")) then 
+		self.CustomLine = texture
+	--> using an image inside lib-graph folder
+	else 
+		self.CustomLine = TextureDirectory..texture
+	end
+end
+
+function GraphFunctions:SetBorderSize (border, size)
+	border = string.lower (border)
+	
+	if (type (size) ~= "number") then
+		return assert (false, "Parameter 2 for SetBorderSize must be a number")
+	end
+	
+	if (border == "left") then
+		self.CustomLeftBorder = size
+		return true
+	elseif (border == "right") then
+		self.CustomRightBorder = size
+		return true
+	elseif (border == "top") then
+		self.CustomTopBorder = size
+		return true
+	elseif (border == "bottom") then
+		self.CustomBottomBorder = size
+		return true
+	end
+	
+	return assert (false, "Usage: GraphObject:SetBorderSize (LEFT RIGHT TOP BOTTOM, SIZE)")
+end
 
 function GraphFunctions:CreateGridlines()
 	local Width = self:GetWidth()
@@ -1648,17 +1694,37 @@ function GraphFunctions:RefreshLineGraph()
 		YBorder = 0.1 * (MaxY - MinY)
 
 		if not self.LockOnXMin then
-			self.XMin = MinX - XBorder
+			if (self.CustomLeftBorder) then
+				self.XMin=MinX+self.CustomLeftBorder --> custom size of left border
+			else
+				self.XMin=MinX-XBorder
+			end
 		end
+		
 		if not self.LockOnXMax then
-			self.XMax = MaxX + XBorder
+			if (self.CustomRightBorder) then
+				self.XMax=MaxX+self.CustomRightBorder --> custom size of right border
+			else
+				self.XMax=MaxX+XBorder
+			end
 		end
+		
 		if not self.LockOnYMin then
-			self.YMin = MinY - YBorder
+			if (self.CustomBottomBorder) then
+				self.YMin=MinY+self.CustomBottomBorder --> custom size of bottom border
+			else
+				self.YMin=MinY-YBorder
+			end
 		end
+		
 		if not self.LockOnYMax then
-			self.YMax = MaxY + YBorder
+			if (self.CustomTopBorder) then
+				self.YMax=MaxY+self.CustomTopBorder --> custom size of top border
+			else
+				self.YMax=MaxY+YBorder
+			end
 		end
+
 	end
 
 	self:CreateGridlines()
@@ -1677,7 +1743,7 @@ function GraphFunctions:RefreshLineGraph()
 				TPoint.x = Width * (TPoint.x - self.XMin) / (self.XMax - self.XMin)
 				TPoint.y = Height * (TPoint.y - self.YMin) / (self.YMax - self.YMin)
 
-				self:DrawLine(self, LastPoint.x, LastPoint.y, TPoint.x, TPoint.y, 32, series.Color)
+				self:DrawLine(self, LastPoint.x, LastPoint.y, TPoint.x, TPoint.y, 32, series.Color, nil, series.LineTexture)
 
 				LastPoint = TPoint
 			else
@@ -1802,7 +1868,7 @@ local TAXIROUTE_LINEFACTOR_2 = TAXIROUTE_LINEFACTOR / 2 -- Half of that
 -- ex, ey	- Coordinate of end of line
 -- w		- Width of line
 -- relPoint	- Relative point on canvas to interpret coords (Default BOTTOMLEFT)
-function lib:DrawLine(C, sx, sy, ex, ey, w, color, layer)
+function lib:DrawLine(C, sx, sy, ex, ey, w, color, layer, linetexture)
 	local relPoint = "BOTTOMLEFT"
 
 	if sx == ex then
@@ -1821,7 +1887,15 @@ function lib:DrawLine(C, sx, sy, ex, ey, w, color, layer)
 	end
 
 	local T = tremove(C.GraphLib_Lines) or C:CreateTexture(nil, "ARTWORK")
-	T:SetTexture(TextureDirectory.."line")
+	
+	if linetexture then --> this data series texture
+		T:SetTexture(linetexture)
+	elseif C.CustomLine then --> overall chart texture
+		T:SetTexture(C.CustomLine)
+	else --> no texture assigned, use default
+		T:SetTexture(TextureDirectory.."line")
+	end
+	
 	tinsert(C.GraphLib_Lines_Used, T)
 
 	T:SetDrawLayer(layer or "ARTWORK")

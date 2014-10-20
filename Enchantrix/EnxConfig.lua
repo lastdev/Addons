@@ -1,10 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: EnxConfig.lua 3576 2008-10-10 03:07:13Z aesir $
 	URL: http://enchantrix.org/
 
@@ -32,11 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-<<<<<<< HEAD
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Enchantrix/EnxConfig.lua $", "$Rev: 3576 $")
-=======
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Enchantrix/EnxConfig.lua $", "$Rev: 3576 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Enchantrix/EnxConfig.lua $", "$Rev: 3576 $")
 
 -- Global functions
 local addonLoaded		-- Enchantrix.Config.AddonLoaded()

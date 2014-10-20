@@ -4,7 +4,7 @@ local Graph = LibStub:GetLibrary("LibGraph-2.0")
 local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 
-local revision = tonumber(string.sub("$Revision: 1256 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1273 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -2123,12 +2123,12 @@ function Recount:CreateDetailWindow()
 end
 
 function me:DetermineDeathFilters()
-	Recount.db.profile.FilterDeathType.DAMAGE = Recount.DetailWindow.DeathMode.Damage:GetChecked() == 1
-	Recount.db.profile.FilterDeathType.HEAL = Recount.DetailWindow.DeathMode.Heal:GetChecked() == 1
-	Recount.db.profile.FilterDeathType.MISC = Recount.DetailWindow.DeathMode.Misc:GetChecked() == 1
+	Recount.db.profile.FilterDeathType.DAMAGE = Recount.DetailWindow.DeathMode.Damage:GetChecked() == true
+	Recount.db.profile.FilterDeathType.HEAL = Recount.DetailWindow.DeathMode.Heal:GetChecked() == true
+	Recount.db.profile.FilterDeathType.MISC = Recount.DetailWindow.DeathMode.Misc:GetChecked() == true
 
-	Recount.db.profile.FilterDeathIncoming[true] = Recount.DetailWindow.DeathMode.Incoming:GetChecked() == 1
-	Recount.db.profile.FilterDeathIncoming[false] = Recount.DetailWindow.DeathMode.Outgoing:GetChecked() == 1
+	Recount.db.profile.FilterDeathIncoming[true] = Recount.DetailWindow.DeathMode.Incoming:GetChecked() == true
+	Recount.db.profile.FilterDeathIncoming[false] = Recount.DetailWindow.DeathMode.Outgoing:GetChecked() == true
 
 	me:FilterDeathData(Recount.db.profile.FilterDeathType, Recount.db.profile.FilterDeathIncoming)
 	me:RefreshDeathLogDetails()

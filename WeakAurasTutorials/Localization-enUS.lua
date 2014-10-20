@@ -1,4 +1,4 @@
-﻿local L = WeakAuras.L
+local L = WeakAuras.L
 
 -- Options translation
 L["Actions and Animations: 1/7"] = "Actions and Animations: 1/7"

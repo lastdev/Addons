@@ -17,166 +17,206 @@ local pairs = pairs
 
 local foods = {
 	Agility = {
-		[250] = {
+		[28] = {
 			74643, -- Sauteed Carrots
 		},
-		[275] = {
+		[31] = {
 			74647, -- Valley Stir Fry
 		},
-		[300] = {
+		[34] = {
 			74648, -- Sea Mist Rice Noodles
 			145305, -- Seasoned Pomfruit Slices
 		},
 	},
 	Crit = {
-		[100] = {
+		[11] = {
 			81402, -- Toasted Fish Jerky
 		},
-		[200] = {
+		[23] = {
 			81410, -- Green Curry Fish
 			98123, -- Whale Shark Caviar
-			104344, -- Lucky Mushroom Noodle
+			104344, -- Lucky Mushroom Noodles
 		},
+		[50] = {
+		  160962, -- Blackrock Ham
+		  160978, -- Grilled Gulper
+		},
+    [75] = {
+      160986, -- Blackrock Barbeque
+    },
 	}, 
 	Dodge = {
-		[100] = {
+		[11] = {
 			81404, -- Dried Needle Mushrooms
 		},
-		[200] = {
+		[23] = {
 			81412, -- Blanched Needle Mushrooms
 			98125, -- Shaved Zangar Truffles
 			104340, -- Crazy Snake Noodles
 		},
 	},
-	Expertise = {
-		[100] = {
-			81400, -- Pounded Rice Cake
-		},
-		[200] = {
-			89121, -- Amberseed Bun
-			81408, -- Red Bean Bun
-			104343, -- Golden Dragon Noodles
-		},
-		[275] = {
-			86069, -- Rice Pudding
-		},
-		[300] = {
-			86074, -- Spicy Vegetable Chips
-		},
-	},
 	Haste = {
-		[100] = {
+		[11] = {
+			81400, -- Pounded Rice Cake
 			81401, -- Yak Cheese Curds
 		},
-		[200] = {
+    [23] = {
+      89121, -- Amberseed Bun
+      81408, -- Red Bean Bun
+      104343, -- Golden Dragon Noodles
 			98122, -- Camembert du Clefthoof
 			81409, -- Tangy Yogurt
 			104341, -- Steaming Goat Noodles
-		},
+    },
+    [31] = {
+			86069, -- Rice Pudding
+    },
+    [34] = {
+      86074, -- Spicy Vegetable Chips
+    },
+    [50] = {
+      160966, -- Pan-Seared Talbuk
+      160979, -- Sturgeon Stew
+    },
+    [75] = {
+      160987, -- Frosty Stew
+    },
 	},
-	Hit = {
-		[100] = {
-			81405, -- Boiled Silkworm Pupa
-		},
-		[200] = {
-			98126, -- Mechanopeep Foie Gras
-			81413, -- Skewered Peanut Chicken
-			104342, -- Spicy Mushan Noodles
-		},
-		[275] = {
-			86070, -- Wildfowl Ginseng Soup
-		},
-		[300] = {
-			86073, -- Spicy Salmon
-		},
-	},
+--	Hit = {
+--		[11] = {
+--			81405, -- Boiled Silkworm Pupa
+--		},
+--		[23] = {
+--			98126, -- Mechanopeep Foie Gras
+--			81413, -- Skewered Peanut Chicken
+--			104342, -- Spicy Mushan Noodles
+--		},
+--		[31] = {
+--			86070, -- Wildfowl Ginseng Soup
+--		},
+--		[34] = {
+--			86073, -- Spicy Salmon
+--		},
+--	},
 	Intellect = {
-		[250] = {
+		[28] = {
 			74644, -- Swirling Mist Soup
 		},
-		[275] = {
+		[31] = {
 			74649, -- Braised Turtle
 		},
-		[300] = {
+		[34] = {
 			74650, -- Mogu Fish Stew
 			145307, -- Spiced Blossom Soup
 		},
 	},
 	Mastery = {
-		[100] = {
+		[11] = {
 			81406, -- Roasted Barley Tea
 			90457, -- Mah's Warm Yak-Tail Stew
 		},
-		[200] = {
+		[23] = {
 			98127, -- Dented Can of Kaja'Cola
 			94535, -- Grilled Dinosaur Haunch
 			81414, -- Pearl Milk Tea
 		},
-		[300] = {
+		[34] = {
 			145308, -- Mango Ice
 		},
+		[50] = {
+		  160968, -- Braised Riverbeast
+		  160981, -- Fat Sleeper Cakes
+		},
+    [75] = {
+      160989, -- Sleeper Surprise
+    },
+	},
+	Multistrike = {
+    [50] = {
+      160982, -- Fiery Calamari
+      160969, -- Rylak Crepes
+    },
+    [75] = {
+      160999, -- Calamari Crepes
+    },
 	},
 	Parry = {
-		[100] = {
+		[11] = {
 			81403, -- Dried Peaches
 		},
-		[200] = {
+		[23] = {
 			98124, -- Bloodberry Tart
 			81411, -- Peach Pie
 			104339, -- Harmonious River Noodles
 		},
 	},
 	Smart = {
-		[250] = {
+		[28] = {
 			101616, -- Noodle Soup
 		},
-		[275] = {
+		[31] = {
 			101617, -- Deluxe Noodle Soup
 		},
-		[300] = {
+		[34] = {
 			101618, -- Pandaren Treasure Noodle Soup
 		},
 	},
 	Spirit = {
-		[250] = {
+		[28] = {
 			74651, -- Shrimp Dumplings
 		},
-		[275] = {
+		[31] = {
 			74652, -- Fire Spirit Salmon
 		},
-		[300] = {
+		[34] = {
 			74653, -- Steamed Crab Surprise
 			145309, -- Farmer's Delight
 		},
 	},
 	Stamina = {
-		[375] = {
+		[43] = {
 			74654, -- Wildfowl Roast
 		},
-		[415] = {
+		[47] = {
 			74655, -- Twin Fish Platter
 		},
-		[450] = {
+		[51] = {
 			74656, -- Chun Tian Spring Rolls
 			145310, -- Stuffed Lushrooms
 		},
+    [75] = {
+      160958, -- Hearty Elekk Steak
+      160973, -- Steamed Scorpion
+    },
+    [112] = {
+      160984, -- Talador Surf and Turf
+    },
 	},
 	Stats = {
-		[275] = {
+		[31] = {
 			88586, -- Chao Cookies
 		}
 	},
 	Strength = {
-		[250] = {
+		[28] = {
 			74642, -- Charbroiled Tiger Steak
 		},
-		[275] = {
+		[31] = {
 			74645, -- Eternal Blossom Fish
 		},
-		[300] = {
+		[34] = {
 			74646, -- Black Pepper Ribs and Shrimp
 			145311, -- Fluffy Silkfeather Omlet
 		},
+	},
+	Versatility = {
+    [50] = {
+      160971, -- Clefthoof Sausages
+      160983, -- Skulker Chowder
+    },
+    [75] = {
+      161000, -- Gorgrond Chowder
+    },
 	},
 }
 
@@ -187,6 +227,10 @@ local alreadyFed = {
 }
 
 local function flashFoods(stat, current, cap, conversion, size)
+  if not foods[stat] then
+    return -- temporary (?) measure while modules are being updated for 6.0
+  end
+  
 	for rating, items in pairs(foods[stat]) do
 		if cap == nil or current + rating / conversion <= cap then
 			for _, item in pairs(items) do
@@ -204,28 +248,10 @@ function c.FlashFoods(stats)
 	end
 	
 	flashFoods("Mastery")
-	flashFoods("Stats")
 	flashFoods("Smart")
-	
+	flashFoods("Stats")
+	flashFoods("Versatility")
 	for _, stat in pairs(stats) do
-		if stat == "Spell Hit" then
-			local current = GetCombatRatingBonus(CR_HIT_SPELL)
-			flashFoods("Hit", current, 15, 340)
-			flashFoods("Expertise", current, 15, 340)
-		elseif stat == "Hit from Spirit" then
-			flashFoods("Spirit", GetCombatRatingBonus(CR_HIT_SPELL), 15, 340)
-		elseif stat == "Melee Hit" then
-			local current = GetCombatRatingBonus(CR_HIT_MELEE)
-			if OffhandHasWeapon() then
-				flashFoods("Hit", current, 26.5, 340, s.FlashSizePercent() / 2)
-			end
-			flashFoods("Hit", current, 7.5, 340)
-			flashFoods("Expertise", GetExpertise(), 7.5, 340)
-		elseif stat == "Tanking Hit" then
-			flashFoods("Hit", GetCombatRatingBonus(CR_HIT_MELEE), 7.5, 340)
-			flashFoods("Expertise", GetExpertise(), 15, 340)
-		else
-			flashFoods(stat)
-		end
+		flashFoods(stat)
 	end
 end

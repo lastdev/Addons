@@ -762,7 +762,6 @@ Change Log:
 		- Added Pandaria spells for Siege of Orgrimmar (Heroic)
 	v4.30.1
 		- Added Pandaria spells for Siege of Orgrimmar (Heroic)
-<<<<<<< HEAD
 	v4.31
 		- Added support for Warlords of Draenor
 		- Added and fixed Pandaria spells for Siege of Orgrimmar (Heroic)
@@ -797,9 +796,13 @@ Change Log:
 		- Added WoD spells for Highmaul
 		- Added WoD spells for Blackrock Foundry
 		- Added WoD spells for Iron Docks
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-
+	v4.35
+		- Updated for patch 6.0
+	v4.35.1
+		- Added WoD spells for Upper Blackrock Spire
+		- Added WoD spells for Blasted Lands Event
+		- Added Pandaria spells for Brewmoon Festival
+		
 ]]--
 GTFO = {
 	DefaultSettings = {
@@ -816,13 +819,8 @@ GTFO = {
 		IgnoreOptions = { };
 		TrivialDamagePercent = 2; -- Minimum % of HP lost required for an alert to be trivial
 	};
-<<<<<<< HEAD
-	Version = "4.34.1"; -- Version number (text format)
-	VersionNumber = 43401; -- Numeric version number for checking out-of-date clients
-=======
-	Version = "4.30.1"; -- Version number (text format)
-	VersionNumber = 43001; -- Numeric version number for checking out-of-date clients
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version = "4.35.1"; -- Version number (text format)
+	VersionNumber = 43501; -- Numeric version number for checking out-of-date clients
 	DataLogging = nil; -- Indicate whether or not the addon needs to run the datalogging function (for hooking)
 	DataCode = "4"; -- Saved Variable versioning, change this value to force a reset to default
 	CanTank = nil; -- The active character is capable of tanking
@@ -861,21 +859,23 @@ GTFO = {
 		StackCounter = 0;
 		DisableGTFO = nil;
 	};
-	BetaMode = nil; -- WoW Beta client detection
+	BetaMode = nil; -- WoW Beta/PTR client detection
 	SoundChannels = { 
 		{ Code = "Master", Name = _G.MASTER },
 		{ Code = "SFX", Name = _G.SOUND_VOLUME, CVar = "Sound_EnableSFX" },
 		{ Code = "Ambience", Name = _G.AMBIENCE_VOLUME, CVar = "Sound_EnableAmbience" },
 		{ Code = "Music", Name = _G.MUSIC_VOLUME, CVar = "Sound_EnableMusic" },
+		{ Code = "Dialog", Name = _G.DIALOG_VOLUME },
 	};
 };
 
 GTFOData = {};
 
+--[[
 if (select(4, GetBuildInfo()) >= 60000) then
 	GTFO.BetaMode = true;
-	tinsert(GTFO.SoundChannels, { Code = "Dialog", Name = _G.DIALOG_VOLUME });
 end
+]]--
 
 StaticPopupDialogs["GTFO_POPUP_MESSAGE"] = {
 	preferredIndex = 3,
@@ -1970,11 +1970,7 @@ function GTFO_Command_Version()
 					fullname = name.."-"..server;
 					displayName = fullname;
 				else
-<<<<<<< HEAD
 					fullname = name.."-"..GTFO_GetRealmName()
-=======
-					fullname = name.."-"..GetRealmName()
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 					displayName = name;
 				end
 				if (GTFO.Users[fullname]) then
@@ -1996,11 +1992,7 @@ function GTFO_Command_Version()
 					fullname = name.."-"..server
 					displayName = fullname;
 				else
-<<<<<<< HEAD
 					fullname = name.."-"..GTFO_GetRealmName()
-=======
-					fullname = name.."-"..GetRealmName()
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 					displayName = name;
 				end
 				if (GTFO.Users[fullname]) then

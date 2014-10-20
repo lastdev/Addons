@@ -1,4 +1,4 @@
-﻿## Interface: 50400
+﻿## Interface: 60000
 ## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Mogu'shan Vaults|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0모구샨 금고|r
@@ -15,11 +15,7 @@
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: MOP
 ## X-DBM-Mod-Has-LFR : 1
-<<<<<<< HEAD
 ## X-DBM-Mod-Sort: 205
-=======
-## X-DBM-Mod-Sort: 5
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ## X-DBM-Mod-MapID: 1008
 localization.en.lua
 localization.es.lua

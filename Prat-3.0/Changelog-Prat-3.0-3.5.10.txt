@@ -1,0 +1,8 @@
+2014-10-18  sylvanaar  <sylvanaar@mindspring.com>
+
+[728e50fb4be1] [3.5.10]
+* modules/Bubbles.lua, modules/ChatLog.lua, modules/CopyChat.lua, modules/Fading.lua, modules/UrlCopy.lua:
+
+Fix several 0/1 values with new false/true values. Thanks Kanegasi
+
+

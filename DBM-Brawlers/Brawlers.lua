@@ -1,11 +1,7 @@
 local mod	= DBM:NewMod("Brawlers", "DBM-Brawlers")
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD
-mod:SetRevision(("$Revision: 11572 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 10922 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+mod:SetRevision(("$Revision: 11575 $"):sub(12, -3))
 --mod:SetCreatureID(60491)
 --mod:SetModelID(41448)
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
@@ -34,11 +30,7 @@ mod:RemoveOption("SpeedKillTimer")
 local playerIsFighting = false
 local currentFighter = nil
 local currentRank = 0--Used to stop bars for the right sub mod based on dynamic rank detection from pulls
-<<<<<<< HEAD
 local currentZoneID = select(8, GetInstanceInfo())
-=======
-local currentZoneID = select(8, GetInstanceInfo())--As core what current area is on load, since core should know
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 local modsStopped = false
 local eventsRegistered = false
 local lastRank = 0

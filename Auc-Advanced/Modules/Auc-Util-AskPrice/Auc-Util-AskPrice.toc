@@ -1,19 +1,15 @@
 ## Title: Auc:Util:Ask Price
 ## Notes: Auctioneer utility that automatically responds to requests for pricing via the guild and, or, party chat channesl.
 ##
-## Interface: 50400
+## Interface: 60000
 ## Dependancies: Auc-Advanced
 ##
-<<<<<<< HEAD
-## Version: 5.20.5464 (RidiculousRockrat)
-=======
-## Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-## Revision: $Id: Auc-Util-AskPrice.toc 5432 2013-09-10 07:59:18Z brykrys $
+## Version: 5.21.5490 (SanctimoniousSwamprat)
+## Revision: $Id: Auc-Util-AskPrice.toc 5488 2014-10-14 01:54:22Z dinesh $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Auction House
-## X-Max-Interface: 50400
+## X-Max-Interface: 60000
 ## X-URL: http://auctioneeraddon.com/
 ## X-Feedback: http://forums.norganna.org
 ##

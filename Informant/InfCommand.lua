@@ -1,11 +1,7 @@
 --[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: InfCommand.lua 4047 2009-02-02 19:29:55Z anaral $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
@@ -34,11 +30,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-<<<<<<< HEAD
-Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Informant/InfCommand.lua $", "$Rev: 4047 $")
-=======
-Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Informant/InfCommand.lua $", "$Rev: 4047 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Informant/InfCommand.lua $", "$Rev: 4047 $")
 
 -- function prototypes
 local commandHandler, cmdHelp, onOff, genVarSet, chatPrint, restoreDefault, cmdLocale, setLocale, isValidLocale

@@ -902,8 +902,11 @@ local function instantiateWindow(obj)
                                 classTag = "sc2";--"Interface\\FriendsFrame\\Battlenet-Sc2icon"
                 elseif(self.bn and self.bn.client == _G.BNET_CLIENT_D3) then
                                 classTag = "d3";--"Interface\\FriendsFrame\\Battlenet-D3icon"
+                --(Out of room in class textures file. maybe it's time to skin only class icons and use blizzard provided textures for game clients)
                 elseif(self.bn and self.bn.client == _G.BNET_CLIENT_WTCG) then
-                                classTag = "bnd";--"Interface\\FriendsFrame\\Battlenet-WTCGicon" (Out of room in class textures file. maybe it's time to skin only class icons and use blizzard provided textures for game clients)
+                                classTag = "bnd";--"Interface\\FriendsFrame\\Battlenet-WTCGicon"
+                elseif(self.bn and self.bn.client == "Hero") then--_G.BNET_CLIENT_HEROES
+                                classTag = "bnd";--"Interface\\FriendsFrame\\Battlenet-HotSicon"
                 elseif(self.bn and self.bn.client == "App") then--Battle.net Desktop App
                                 classTag = "bnd";--"Interface\\FriendsFrame\\Battlenet-Battleneticon"
                 elseif(self.class == "") then
@@ -958,7 +961,7 @@ local function instantiateWindow(obj)
                 });
         elseif(self.isBN) then
                 -- get information of BN user from friends data.
-                local id = _G.BNet_GetPresenceID(self.theUser);
+                local id = self.theUser and _G.BNet_GetPresenceID(self.theUser) or nil;
                 if(id) then
                                 local hasFocus, toonName, client, realmName, realmID, faction, race, class, guild, zoneName, level, gameText, broadcastText, broadcastTime = _G.BNGetToonInfo(id);
                                 self.class = class or "";
@@ -1376,9 +1379,7 @@ local function destroyWindow(userNameOrObj)
         WindowSoupBowl.windows[index].user = "";
         WindowSoupBowl.available = WindowSoupBowl.available + 1;
         WindowSoupBowl.used = WindowSoupBowl.used - 1;
-        -- WIM_Astrolabe:RemoveIconFromMinimap(obj.icon);
-        -- obj.icon:Hide();
-        -- obj.icon.track = false;
+
         obj:Show();
         obj.widgets.chat_display:Clear();
         obj:Hide();

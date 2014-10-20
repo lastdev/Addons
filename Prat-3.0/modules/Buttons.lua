@@ -174,7 +174,7 @@ L:AddLocale("frFR",
 	["Show Arrows"] = "Montrer les flèches",
 	showbnet_desc = "Montrer le menu Social.",
 	showbnet_name = "Montrer le menu Social",
-	["Show Chat%d Arrows"] = "Afficher les boutons flèchés du chat", -- Needs review
+	["Show Chat%d Arrows"] = "Afficher les boutons fléchés du chat",
 	showmenu_desc = "Montrer le menu de la fenêtre de discussion.",
 	showmenu_name = "Montrer le menu",
 	showminimize_desc = "Montrer le bouton pour minimiser la discussion.",

@@ -2,17 +2,10 @@
 ************************************************************************
 Panel.lua
 ************************************************************************
-<<<<<<< HEAD
-File date: 2014-05-26T16:58:52Z
-File hash: 2fb70ce
-Project hash: 5b35dab
-Project version: 3.0.5
-=======
-File date: 2014-02-16T01:49:10Z
-File hash: fbca907
-Project hash: fbca907
-Project version: 2.6.2
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+File date: 2014-10-18T03:42:00Z
+File hash: bb475bd
+Project hash: beabe36
+Project version: 3.0.8
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -177,7 +170,10 @@ function private.InitializeFrame()
 		if self.current_profession ~= self.prev_profession then
 			editbox.prev_search = nil
 		end
-		editbox:SetText(editbox.prev_search or _G.SEARCH)
+
+		if editbox.prev_search then
+			editbox:SetText(editbox.prev_search)
+		end
 
 		-- The first time this function is called, everything in the expanded section of the MainPanel must be created.
 		if private.InitializeFilterPanel then
@@ -531,7 +527,7 @@ function private.InitializeFrame()
 
 		local function SearchByList(recipe, search_pattern, acquire_type_id)
 			for id_num, unit in private.ACQUIRE_TYPES_BY_ID[acquire_type_id]:EntityPairs() do
-				if unit.item_list and unit.item_list[recipe:SpellID()] and unit.name:lower():find(search_pattern) then
+				if unit.item_list and unit.item_list[recipe:SpellID()] and unit.name and unit.name:lower():find(search_pattern) then
 					return true
 				end
 			end
@@ -563,9 +559,9 @@ function private.InitializeFrame()
 			for acquire_type_id, acquire_data in pairs(recipe.acquire_data) do
 				if acquire_type_id == A.REPUTATION then
 					for id_num, info in pairs(acquire_data) do
-						local str = reputation_acquire_type:GetEntity(id_num).name:lower()
+						local name = reputation_acquire_type:GetEntity(id_num).name
 
-						if str and str:find(search_pattern) then
+						if name and name:lower():find(search_pattern) then
 							return true
 						end
 					end
@@ -586,6 +582,7 @@ function private.InitializeFrame()
 			SearchByCustom,
 			SearchByDiscovery,
 		}
+
 		-- Scans through the recipe database and toggles the flag on if the item is in the search criteria
 		function SearchRecipes(search_pattern)
 			if not search_pattern then
@@ -609,7 +606,7 @@ function private.InitializeFrame()
 	-------------------------------------------------------------------------------
 	-- Search EditBox
 	-------------------------------------------------------------------------------
-	local SearchBox = _G.CreateFrame("EditBox", nil, MainPanel, "SearchBoxTemplate")
+	local SearchBox = _G.CreateFrame("EditBox", "ARL_SearchBox", MainPanel, "SearchBoxTemplate")
 
 	SearchBox:EnableMouse(true)
 	SearchBox:SetAutoFocus(false)
@@ -621,7 +618,6 @@ function private.InitializeFrame()
 
 	MainPanel.search_editbox = SearchBox
 
-	SearchBox:SetText(_G.SEARCH)
 	SearchBox:SetHistoryLines(10)
 
 	-- Allow removal of focus from the SearchBox by clicking on the WorldFrame.
@@ -660,8 +656,6 @@ function private.InitializeFrame()
 		end
 		self.prev_search = nil
 
-		self:SetText(_G.SEARCH)
-
 		if self:HasFocus() then
 			self:HighlightText()
 		end
@@ -678,7 +672,7 @@ function private.InitializeFrame()
 		return true
 	end
 
-	SearchBox:SetScript("OnEnterPressed", function(self)
+	SearchBox:HookScript("OnEnterPressed", function(self)
 		local searchtext = self:GetText()
 		searchtext = searchtext:trim()
 
@@ -698,7 +692,7 @@ function private.InitializeFrame()
 		MainPanel.list_frame:Update(nil, false)
 	end)
 
-	SearchBox:SetScript("OnEditFocusLost", function(self)
+	SearchBox:HookScript("OnEditFocusLost", function(self)
 		_G.SearchBoxTemplate_OnEditFocusLost(self)
 
 		local text = self:GetText()
@@ -711,7 +705,7 @@ function private.InitializeFrame()
 	end)
 
 
-	SearchBox:SetScript("OnTextSet", function(self)
+	SearchBox:HookScript("OnTextSet", function(self)
 		local text = self:GetText()
 
 		if text ~= "" and text ~= _G.SEARCH and text ~= self.prev_search then
@@ -745,7 +739,7 @@ function private.InitializeFrame()
 			self:Hide()
 		end)
 
-		SearchBox:SetScript("OnTextChanged", function(self, is_typed)
+		SearchBox:HookScript("OnTextChanged", function(self, is_typed)
 			if not is_typed then
 				return
 			end

@@ -1,11 +1,7 @@
 --[[
 	Auctioneer - Standard Deviation Statistics module
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-	Revision: $Id: StatStdDev.lua 5360 2012-09-21 09:53:20Z brykrys $
+	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Revision: $Id: StatStdDev.lua 5468 2014-08-20 15:22:36Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -47,6 +43,22 @@ local AucGetStoreKeyFromLink = AucAdvanced.API.GetStoreKeyFromLink
 
 local PET_BAND = 5
 local MAX_DATAPOINTS = 100
+
+-- Constants used when creating a PDF:
+local BASE_WEIGHT = 1
+-- Clamping limits for stddev relative to mean
+local CLAMP_STDDEV_LOWER = 0.01
+local CLAMP_STDDEV_UPPER = 1
+-- Adjustments when seen count is very low (in this case, auctionscount)
+local LOWSEEN_MINIMUM = 1 -- lowest possible count for a valid PDF
+-- Weight taper for low seen count
+local TAPER_THRESHOLD = 10 -- seen count at which we stop making adjustments
+local TAPER_WEIGHT = .1 -- weight multiplier at LOWSEEN_MINIMUM
+local TAPER_SLOPE = (1 - TAPER_WEIGHT) / (TAPER_THRESHOLD - LOWSEEN_MINIMUM)
+local TAPER_OFFSET = TAPER_WEIGHT - LOWSEEN_MINIMUM * TAPER_SLOPE
+-- StdDev Estimate for low seen count
+local ESTIMATE_THRESHOLD = 10
+local ESTIMATE_FACTOR = 0.33
 
 local tonumber,strsplit,select,pairs=tonumber,strsplit,select,pairs
 local setmetatable=setmetatable
@@ -138,15 +150,37 @@ function lib.GetItemPDF(hyperlink, serverKey)
 	-- Get the data
 	local average, mean, _, stddev, variance, count, confidence = lib.GetPrice(hyperlink, serverKey)
 
-	if not (average and stddev) or average == 0 or stddev == 0 then
-		return nil;                 -- No data, cannot determine pricing
+	if not (average and stddev and count) or average == 0 or count < LOWSEEN_MINIMUM then
+		return nil -- No data, cannot determine pricing
 	end
 
-	local lower, upper = average - 3 * stddev, average + 3 * stddev;
+	-- The area of the BellCurve can be used to adjust its weight vs other Stat modules
+	local area = BASE_WEIGHT
+	if count < TAPER_THRESHOLD then
+		-- when seen count is very low, reduce weight
+		area = area * (count * TAPER_SLOPE + TAPER_OFFSET)
+	end
 
-	-- Build the PDF based on standard deviation & average
-	BellCurve:SetParameters(average, stddev);
-	return BellCurve, lower, upper;   -- This has a __call metamethod so it's ok
+	-- Extremely large or small values of stddev can cause problems with GetMarketValue
+	-- we shall apply limits relative to the mean of the bellcurve (local 'average')
+	local clamplower, clampupper = average * CLAMP_STDDEV_LOWER, average * CLAMP_STDDEV_UPPER
+	if count < ESTIMATE_THRESHOLD then
+		-- We assume that calculated stddev is unreliable at very low seen counts, so we apply a minimum value based on average and count
+		-- in particular fixes up the case where count is 1, and stddev is therefore 0
+		clamplower = ESTIMATE_FACTOR * average / count
+	end
+	if stddev < clamplower then
+		stddev = clamplower
+	elseif stddev > clampupper then
+		-- Note that even with this adjustment, 'lower' can still be significantly negative!
+		area = area * clampupper / stddev -- as we're hard capping the stddev, reduce weight to compensate
+		stddev = clampupper
+	end
+
+	local lower, upper = average - 3 * stddev, average + 3 * stddev
+
+	BellCurve:SetParameters(average, stddev, area)
+	return BellCurve, lower, upper, area   -- This has a __call metamethod so it's ok
 end
 
 -----------------------------------------------------------------------------------
@@ -465,8 +499,4 @@ function private.InitData()
 end
 
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Stat-StdDev/StatStdDev.lua $", "$Rev: 5360 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Stat-StdDev/StatStdDev.lua $", "$Rev: 5360 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Stat-StdDev/StatStdDev.lua $", "$Rev: 5468 $")

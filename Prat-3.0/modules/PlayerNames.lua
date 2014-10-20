@@ -186,8 +186,8 @@ Prat:AddModuleToLoad(function()
 	["Enable Alt-Invite"] = "Invitation avec Alt",
 	["Enable Invite Links"] = "Liens d'invitation",
 	["Enable TabComplete"] = "Complétion avec Tab",
-	hoverhilight_desc = "Mettre en surbrillance les lignes de chat d'un joueur spécifique quand la souris survole un lien vers ce joueur", -- Needs review
-	hoverhilight_name = "Surbrillance de noms survolés", -- Needs review
+	hoverhilight_desc = "Mettre en surbrillance les lignes de chat d'un joueur spécifique quand la souris survole un lien vers ce joueur",
+	hoverhilight_name = "Surbrillance de noms survolés",
 	["How to color other player's level."] = "Définit la couleur du niveau des autres joueurs.",
 	["How to color player's name."] = "Définit la couleur du nom des joueurs.",
 	["Keep Info"] = "Garder les info.",
@@ -1452,7 +1452,7 @@ Prat:AddModuleToLoad(function()
 
     local class, level, subgroup = self:GetData(Name)
 
-    if (class == nil) and message and message.ORG and message.ORG.GUID and message.ORG.GUID:len() > 0 then
+    if (class == nil) and message and message.ORG and message.ORG.GUID and message.ORG.GUID:len() > 0 and message.ORG.GUID ~= "0000000000000000" then
       _, class = GetPlayerInfoByGUID(message.ORG.GUID)
 
       if class ~= nil and EVENTS_FOR_CACHE_GUID_DATA[event] then

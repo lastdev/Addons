@@ -16,7 +16,7 @@
 			<OnEnter>
 				if (self.tooltipText) then
 					GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-					GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, 1);
+					GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, true);
 				end
 			</OnEnter>
 			<OnLeave function="XPerl_PlayerTipHide"/>
@@ -99,6 +99,11 @@
 				self.castBar.spark = _G[self:GetName().."BarCastBarSpark"]
 				self.castBar.bg:Hide()
 				self.target = _G[self:GetName().."Target"]
+				
+				self.target:SetAttribute("useparent-unit", true)
+				self.target:SetAttribute("unitsuffix", "target")
+				self.target:SetAttribute("type", "target")
+				
 				self:RegisterForClicks("AnyUp")
 				XPerl_CastMon_ChildUnits(self)
 			</OnLoad>

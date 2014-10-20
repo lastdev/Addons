@@ -1,5 +1,5 @@
 ﻿## Title: Lib: AboutPanel
-## X-Curse-Packaged-Version: 1.52-1-gaebddb0
+## X-Curse-Packaged-Version: 1.6.2
 ## X-Curse-Project-Name: LibAboutPanel
 ## X-Curse-Project-ID: libaboutpanel
 ## X-Curse-Repository-ID: wow/libaboutpanel/mainline
@@ -13,7 +13,7 @@
 ## X-Donate: http://www.curseforge.com/projects/libaboutpanel/#w_donations
 
 ## Interface: 50400
-## Version: 1.52-1-gaebddb0
+## Version: 1.6.2
 ## X-Revision: @project-revision@
 ## X-Date: 2014-02-24T20:41:20Z
 

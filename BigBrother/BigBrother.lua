@@ -21,7 +21,7 @@ end
 
 local addon = BigBrother
 addon.vars = vars
-vars.svnrev["BigBrother.lua"] = tonumber(("$Revision: 383 $"):match("%d+"))
+vars.svnrev["BigBrother.lua"] = tonumber(("$Revision: 389 $"):match("%d+"))
 
 local bit, math, date, string, select, table, time, tonumber, unpack, wipe, pairs, ipairs = 
       bit, math, date, string, select, table, time, tonumber, unpack, wipe, pairs, ipairs
@@ -667,7 +667,7 @@ function addon:CHAT_MSG_ADDON(prefix, message, channel, sender)
   if not revision or not version or not addon.revision then return end
   if revision > addon.revision and not upgrade_warned then
     BigBrother:Print(string.format(L["A new version of Big Brother (%s) is available for download at:"], version)..
-                     "\n     http://wow.curse.com/downloads/wow-addons/details/big-brother.aspx")
+                     "\n     http://www.curse.com/addons/wow/big-brother")
     upgrade_warned = true
   end
 end

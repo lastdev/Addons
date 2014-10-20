@@ -7,6 +7,7 @@ local backdrop = {	bgFile = "",
 					edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
 					tile = true, tileSize = 16, edgeSize = 16, 
 					insets = { left = 4, right = 4, top = 4, bottom = 4 } }
+local resetToDefaults = false
 
 -- Functions
 
@@ -51,22 +52,26 @@ local function RCConfigList_Load()
 		end
 	end
 	
-	IgnoredRareIDs = RC:GetIgnoredRareIDs()
-	j = 0
-	for k,v in pairs(RareList[0]) do
-		j = j + 1
-		if IgnoredRareIDs[v.id] ~= nil then
-			RCConfigList.tabs.tabs[0].rarename[j].cb:SetChecked(false)
-		else
-			RCConfigList.tabs.tabs[0].rarename[j].cb:SetChecked(true)
+	if not resetToDefaults then
+		IgnoredRareIDs = RC:GetIgnoredRareIDs()
+		j = 0
+		for k,v in pairs(RareList[0]) do
+			j = j + 1
+			if IgnoredRareIDs[v.id] ~= nil then
+				RCConfigList.tabs.tabs[0].rarename[j].cb:SetChecked(false)
+			else
+				RCConfigList.tabs.tabs[0].rarename[j].cb:SetChecked(true)
+			end
 		end
+	else
+		resetToDefaults = false
 	end
 end
 
 local function RCConfigList_Okay()
 	local t = {}
 	for j = 1,#RareList[0] do
-		if RCConfigList.tabs.tabs[0].rarename[j].cb:GetChecked() ~= 1 then
+		if not RCConfigList.tabs.tabs[0].rarename[j].cb:GetChecked() then
 			table.insert(t, RareList[0][j].id)
 		end
 	end
@@ -81,6 +86,7 @@ local function RCConfigList_Defaults()
 	for j = 1,#RCConfigList.tabs.tabs[0].rarename do
 		RCConfigList.tabs.tabs[0].rarename[j].cb:SetChecked(true)
 	end
+	resetToDefaults = true
 end
 
 

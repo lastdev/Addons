@@ -4,7 +4,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local BossIDs = LibStub("LibBossIDs-1.0")
 
-local revision = tonumber(string.sub("$Revision: 1269 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1274 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -25,7 +25,6 @@ local tonumber = tonumber
 local type = type
 local unpack = unpack
 
-<<<<<<< HEAD
 local GetTime = GetTime
 local UnitHealth = UnitHealth
 local GetSpellInfo = GetSpellInfo
@@ -35,10 +34,6 @@ local UnitHealthMax = UnitHealthMax
 local UnitIsFeignDeath = UnitIsFeignDeath
 local UnitName = UnitName
 local ChatThrottleLib = ChatThrottleLib
-=======
-local revision = tonumber(string.sub("$Revision: 1251 $", 12, -3))
-if Recount.Version < revision then Recount.Version = revision end
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 local dbCombatants
 
@@ -293,7 +288,6 @@ local AbsorbSpellDuration = {
 	[114893]	= 30, -- Stone Bulwark Totem Aura (confirmed), MOP
 	[145379]	= 15, -- Nature's Barrier, Shaman T16 Restoration 2P Bonus, 5.4
 	-- Warlock
-<<<<<<< HEAD
 	[7812]		= 30, -- Sacrifice (warlock) Rank 1
 	[19438]		= 30,
 	[19440]		= 30,
@@ -315,27 +309,6 @@ local AbsorbSpellDuration = {
 	[108366]	= 20, -- Soul Leech
 	[108416]	= 20, -- Sacrificial Pact
 	[131623]	= 30, -- Twilight Ward
-=======
-	[7812] = 30, -- Sacrifice (warlock) Rank 1
-	[19438] = 30,
-	[19440] = 30,
-	[19441] = 30,
-	[19442] = 30,
-	[19443] = 30,
-	[27273] = 30,
-	[47985] = 30,
-	[47986] = 30, -- rank 9
-	[6229] = 30, -- Shadow Ward (warlock) Rank 1
-	[11739] = 30,
-	[11740] = 30,
-	[28610] = 30,
-	[47890] = 30,
-	[47891] = 30, -- Rank 6
-	[6229] = 30, -- Twilight Ward (partially confirmed), MOP
-	[110913] = 10, -- Dark Bargain (partially confirmed, may not be an absorb), MOP
-	[91711] = 30, -- Nether Ward (may have unverified aura trigger), MOP
-	[145379] = 15, -- Nature's Barrier, Shaman T16 Restoration 2P Bonus, 5.4
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	-- Warrior
 	[112048]	= 6, -- Shield Barrier (confirmed), MOP
 	-- Enchants
@@ -422,11 +395,7 @@ local AbsorbSpellDuration = {
 local bossIDs = BossIDs.BossIDs
 
 function Recount.IsBoss(GUID)
-<<<<<<< HEAD
-	return GUID and bossIDs[tonumber(GUID:sub(-13, -9), 16)]
-=======
-   return GUID and bossIDs[tonumber(GUID:sub(-13, -9), 16)]
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	return GUID and bossIDs[Recount:NPCID(GUID)]
 end
 
 
@@ -536,8 +505,8 @@ function Recount:AddGuessedAbsorbData(source, victim, ability, element, hittype,
 	end
 end
 
-function Recount:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing)
-	Recount:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, 0, L["Melee"], SPELLSCHOOL_PHYSICAL, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing)
+function Recount:SwingDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand, multistrike)
+	Recount:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, 0, L["Melee"], SPELLSCHOOL_PHYSICAL, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand, multistrike)
 end
 
 function Recount:SpellBuildingDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing)
@@ -548,7 +517,11 @@ function Recount:SpellBuildingHeal(timestamp, eventtype, srcGUID, srcName, srcFl
 	-- Ignoring these for now
 end
 
-function Recount:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing)
+function Recount:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing, isOffHand, multistrike)
+
+	if string.match(dstGUID, "^Creature:0:%d+:%d+:%d+:76933:%w+$") then
+		return
+	end
 
 	--amount = amount - overkill -- Taking out overdamage on killing blows
 
@@ -571,6 +544,9 @@ function Recount:SpellDamage(timestamp, eventtype, srcGUID, srcName, srcFlags, d
 	end
 	if glancing	then
 		HitType = "Glancing" -- Elsia: Do NOT localize this, it breaks functionality!!! If you need this localized contact me on WowAce or Curse.
+	end
+	if multistrike then
+		HitType = "Multistrike"
 	end
 	--[[if blocked then
 		HitType = "Block"
@@ -600,10 +576,10 @@ function Recount:EnvironmentalDamage(timestamp, eventtype, srcGUID, srcName, src
 		HitType = "Glancing" -- Elsia: Do NOT localize this, it breaks functionality!!! If you need this localized contact me on WowAce or Curse.
 	end
 	--[[if blocked then
-		HitType="Block"
+		HitType = "Block"
 	end
 	if absorbed then
-		HitType="Absorbed"
+		HitType = "Absorbed"
 	end]]
 
 	last_timestamp = timestamp
@@ -619,7 +595,7 @@ function Recount:FixCaps(capsstr)
 	end
 end
 
-function Recount:SwingMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, missType, isOffHand, amountMissed)
+function Recount:SwingMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, missType, isOffHand, multistrike, amountMissed)
 
 	--[[if TOC > 40200 then
 		missAmount = missAmountNew
@@ -640,7 +616,7 @@ function Recount:SwingMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, d
 	Recount:AddDamageData(srcName, dstName, L["Melee"], nil, Recount:FixCaps(missType), nil, nil, srcGUID, srcFlags, dstGUID, dstFlags, spellId, blocked, absorbed) -- Elsia: Do NOT localize this, it breaks functionality!!! If you need this localized contact me on WowAce or Curse. -- Resike: Then why is it localized?
 end
 
-function Recount:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, missType, isOffHand, amountMissed)
+function Recount:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, missType, isOffHand, multistrike, amountMissed)
 
 	--[[if TOC > 40200 then
 		missAmount = missAmountNew
@@ -660,7 +636,7 @@ function Recount:SpellMissed(timestamp, eventtype, srcGUID, srcName, srcFlags, d
 	Recount:AddDamageData(srcName, dstName, spellName, Recount.SpellSchoolName[spellSchool], Recount:FixCaps(missType), nil, nil, srcGUID, srcFlags, dstGUID, dstFlags, spellId, blocked, absorbed)
 end
 
-function Recount:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overheal, absorbed, critical)
+function Recount:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, amount, overheal, absorbed, critical, multistrike)
 
 	local healtype = "Hit" -- Elsia: Do NOT localize this, it breaks functionality!!! If you need this localized contact me on WowAce or Curse.
 	local isHot
@@ -678,6 +654,9 @@ function Recount:SpellHeal(timestamp, eventtype, srcGUID, srcName, srcFlags, dst
 
 	if critical then
 		healtype = "Crit" -- Elsia: Do NOT localize this, it breaks functionality!!! If you need this localized contact me on WowAce or Curse.
+	end
+	if multistrike then
+		healtype = "Multistrike"
 	end
 
 	Recount:AddHealData(srcName, dstName, spellName, healtype, amount, overheal, srcGUID, srcFlags, dstGUID, dstFlags, spellId, isHot, absorbed) -- Elsia: Overheal missing!!!
@@ -873,6 +852,10 @@ function Recount:SpellCreate(timestamp, eventtype, srcGUID, srcName, srcFlags, d
 	-- Elsia: We do nothing for these yet.
 end
 
+function Recount:SpellAbsorbed(timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, spellId, absorbed, spellName)
+	-- Resike: We do nothing for these yet.
+end
+
 local EventParse = {
 	["SWING_DAMAGE"] = Recount.SwingDamage, -- Elsia: Melee swing damage
 	["RANGE_DAMAGE"] = Recount.SpellDamage, -- Elsia: Ranged and spell damage types
@@ -914,6 +897,7 @@ local EventParse = {
 	["PARTY_KILL"] = Recount.PartyKill, -- Elsia: Party killing blow
 	["UNIT_DIED"] = Recount.UnitDied, -- Elsia: Unit died
 	["UNIT_DESTROYED"] = Recount.UnitDied,
+	["SPELL_ABSORBED"] = Recount.SpellAbsorbed,
 	["SPELL_SUMMON"] = Recount.SpellSummon, -- Elsia: Summons
 	["SPELL_CREATE"] = Recount.SpellCreate, -- Elsia: Creations
 	["SPELL_AURA_BROKEN"] = Recount.SpellAuraBroken, -- New with 2.4.3
@@ -1084,7 +1068,7 @@ function Recount:CombatLogEvent(_, timestamp, eventtype, hideCaster, srcGUID, sr
 	if parsefunc then
 		parsefunc(self, timestamp, eventtype, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
 	else
-		Recount:Print("Unknown combat log event type: "..eventtype)
+		Recount:DPrint("Unknown combat log event type: "..eventtype) -- Changed to a debug statement until SPELL_ABSORBED events are handled properly
 	end
 end
 
@@ -1518,13 +1502,8 @@ function Recount:AddTableDataSum(who, datatype, secondary, detailtype, amount)
 	Details.count = Details.count + amount
 end
 
--- Elsia: Borrowed shamelessly from Threat-2.0
 function Recount:NPCID(guid)
-<<<<<<< HEAD
-	return tonumber(guid:sub(-13, -7), 16)
-=======
-	return tonumber(guid:sub(-13,-7),16)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	return tonumber(({('-'):split(guid)})[6])
 end
 
 function Recount:DetectPet(name, nGUID, nFlags)
@@ -1888,7 +1867,7 @@ function Recount:AddDamageData(source, victim, ability, element, hittype, damage
 				Recount:AddTableDataStats(victimData, "PartialResist", ability, L["No Resist"], 0)
 			end
 			
-			if blocked or hittype=="Block" then
+			if blocked or hittype == "Block" then
 				Recount:AddAmount2(victimData, "ElementTakenBlock", element, blocked)
 				if blocked then
 					Recount:AddTableDataStats(victimData, "PartialBlock", ability, L["Blocked"], blocked)

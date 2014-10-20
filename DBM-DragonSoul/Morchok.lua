@@ -1,11 +1,7 @@
 local mod	= DBM:NewMod(311, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD
 mod:SetRevision(("$Revision: 118 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 mod:SetCreatureID(55265)
 mod:SetEncounterID(1292)
 mod:SetZone()
@@ -19,12 +15,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_REMOVED 103851",
 	"SPELL_CAST_START 103414 103851",
 	"SPELL_SUMMON 103639 109017",
-<<<<<<< HEAD
 	"SPELL_CAST_SUCCESS 103821"
-=======
-	"SPELL_CAST_SUCCESS 103821",
-	"SPELL_DAMAGE"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 )
 
 local warnCrushArmor		= mod:NewStackAnnounce(103687, 3, nil, mod:IsTank() or mod:IsHealer())
@@ -203,13 +194,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 		if not self:IsTrivial(90) then--Only register damage events during vortex (when black blood is out) and only if it's not trivial
 			self:RegisterShortTermEvents(
-<<<<<<< HEAD
 				"SPELL_DAMAGE 103785",
 				"SPELL_MISSED 103785"
-=======
-				"SPELL_DAMAGE",
-				"SPELL_MISSED"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			)
 		end
 	end

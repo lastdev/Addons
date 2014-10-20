@@ -146,15 +146,18 @@ local function ScanQuests()
 	SaveHeaders()
 
 	local RewardsCache = {}
+	
+	local numEntries, numQuests = GetNumQuestLogEntries()
+	
 	for i = 1, GetNumQuestLogEntries() do
-		local title, _, questTag, groupSize, isHeader, _, isComplete, isDaily = GetQuestLogTitle(i);
+		local title, _, groupSize, isHeader, _, isComplete, isDaily = GetQuestLogTitle(i);
 
 		if isHeader then
 			quests[i] = "0|" .. (title or "")
 		else
 			SelectQuestLogEntry(i)
 			local money = GetQuestLogRewardMoney()
-			quests[i] = format("1|%s|%d|%d|%d", questTag or "", groupSize, money, isComplete or 0)
+			quests[i] = format("1|%d|%d|%d", groupSize, money, isComplete or 0)
 			links[i] = GetQuestLink(i)
 
 			wipe(RewardsCache)
@@ -162,11 +165,12 @@ local function ScanQuests()
 			if num > 0 then
 				for i = 1, num do
 					local _, _, numItems, _, isUsable = GetQuestLogChoiceInfo(i)
+					isUsable = isUsable and 1 or 0	-- this was 1 or 0, in WoD, it is a boolean, convert back to 0 or 1
 					local link = GetQuestLogItemLink("choice", i)
 					if link then
 						local id = tonumber(link:match("item:(%d+)"))
 						if id then
-							table.insert(RewardsCache, REWARD_TYPE_CHOICE .."|"..id.."|"..numItems.."|"..(isUsable or 0))
+							table.insert(RewardsCache, REWARD_TYPE_CHOICE .."|"..id.."|"..numItems.."|"..isUsable)
 						end
 					end
 				end
@@ -176,11 +180,12 @@ local function ScanQuests()
 			if num > 0 then
 				for i = 1, num do
 					local _, _, numItems, _, isUsable = GetQuestLogRewardInfo(i)
+					isUsable = isUsable and 1 or 0	-- this was 1 or 0, in WoD, it is a boolean, convert back to 0 or 1
 					local link = GetQuestLogItemLink("reward", i)
 					if link then
 						local id = tonumber(link:match("item:(%d+)"))
 						if id then
-							table.insert(RewardsCache, REWARD_TYPE_REWARD .. "|"..id.."|"..numItems.."|"..(isUsable or 0))
+							table.insert(RewardsCache, REWARD_TYPE_REWARD .. "|"..id.."|"..numItems.."|"..isUsable)
 						end
 					end
 				end
@@ -272,14 +277,13 @@ end
 local function _GetQuestLogInfo(character, index)
 	local quest = character.Quests[index]
 	local link = character.QuestLinks[index]
-	local isHeader, questTag, groupSize, money, isComplete = strsplit("|", quest)
+	local isHeader, groupSize, money, isComplete = strsplit("|", quest)
 
 	if isHeader == "0" then
-		return true, questTag	-- questTag contains the title in a header line
+		return true, groupSize	-- groupSize contains the title in a header line (clean this code, it works but is not clean)
 	end
 
-	isComplete = tonumber(isComplete)
-	return nil, link, questTag, tonumber(groupSize), tonumber(money), tonumber(isComplete)
+	return nil, link, tonumber(groupSize), tonumber(money), tonumber(isComplete)
 end
 
 local function _GetQuestLogNumRewards(character, index)

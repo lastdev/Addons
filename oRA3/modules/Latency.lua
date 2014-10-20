@@ -7,7 +7,7 @@ local util = oRA.util
 local module = oRA:NewModule("Latency")
 local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
 
-module.VERSION = tonumber(("$Revision: 712 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 789 $"):sub(12, -3))
 
 local latency = {}
 
@@ -22,12 +22,17 @@ function module:OnRegister()
 	oRA.RegisterCallback(self, "OnShutdown")
 	oRA.RegisterCallback(self, "OnListSelected")
 	oRA.RegisterCallback(self, "OnCommReceived")
+	oRA.RegisterCallback(self, "OnGroupChanged")
 
 	SLASH_ORALATENCY1 = "/ralag"
 	SLASH_ORALATENCY2 = "/ralatency"
 	SlashCmdList.ORALATENCY = function()
 		oRA:OpenToList(L["Latency"])
 	end
+end
+
+function module:OnGroupChanged()
+	oRA:UpdateList(L["Latency"])
 end
 
 function module:OnShutdown()

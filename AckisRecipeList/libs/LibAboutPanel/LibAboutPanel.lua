@@ -3,14 +3,14 @@
 ****************************************************************************************
 LibAboutPanel
 
-File date: 2014-02-24T20:41:20Z
-Project version: 1.52-1-gaebddb0
+File date: 2014-08-06T00:23:36Z
+Project version: 1.6.2
 
 Author: Tekkub, Ackis
 
 ****************************************************************************************
 
-]]--
+]] --
 
 local lib, oldminor = LibStub:NewLibrary("LibAboutPanel", 3)
 if not lib then return end
@@ -20,7 +20,6 @@ local L = {
 	["Author"] = "Author",
 	["Category"] = "Category",
 	["Credits"] = "Credits",
-	["Donate"] = "Donate",
 	["Email"] = "Email",
 	["License"] = "License",
 	["Localizations"] = "Languages",
@@ -38,7 +37,6 @@ elseif GAME_LOCALE == "deDE" then
 	L["Author"] = "Autor"
 	L["Category"] = "Kategorie"
 	L["Credits"] = "Ehren"
-	L["Donate"] = "Spenden"
 	L["Email"] = "E-Mail"
 	L["License"] = "Lizenz"
 	L["Localizations"] = "Sprachen"
@@ -51,7 +49,6 @@ elseif GAME_LOCALE == "esES" or GAME_LOCALE == "esMX" then
 	L["Author"] = "Autor"
 	L["Category"] = "Categoría"
 	L["Credits"] = "Créditos"
-	L["Donate"] = "Donar"
 	L["Email"] = "Email"
 	L["License"] = "Licencia"
 	L["Localizations"] = "Idiomas"
@@ -74,7 +71,7 @@ end
 
 function lib.new(parent, addonname)
 	local frame = CreateFrame("Frame", nil, UIParent)
-	frame.name, frame.parent, frame.addonname = not parent and gsub(addonname," ","") or L["About"], parent, gsub(addonname," ","") -- Remove spaces from addonname because GetMetadata doesn't like that
+	frame.name, frame.parent, frame.addonname = not parent and gsub(addonname, " ", "") or L["About"], parent, gsub(addonname, " ", "") -- Remove spaces from addonname because GetMetadata doesn't like that
 	frame:Hide()
 	frame:SetScript("OnShow", lib.OnShow)
 	InterfaceOptions_AddCategory(frame)
@@ -126,9 +123,9 @@ function lib.OpenEditbox(self)
 end
 
 
-local fields = {"Version", "Author", "X-Category", "X-License", "X-Email", "Email", "eMail", "X-Website", "X-Credits", "X-Localizations", "X-Donate"}
-local haseditbox = {["X-Website"] = true, ["X-Email"] = true, ["X-Donate"] = true, ["Email"] = true, ["eMail"] = true}
-local fieldLabels = {["eMail"] = "Email"}
+local fields = { "Version", "Author", "X-Category", "X-License", "X-Email", "Email", "eMail", "X-Website", "X-Credits", "X-Localizations" }
+local haseditbox = { ["X-Website"] = true, ["X-Email"] = true, ["Email"] = true, ["eMail"] = true }
+local fieldLabels = { ["eMail"] = "Email" }
 
 local function HideTooltip() GameTooltip:Hide() end
 
@@ -152,7 +149,7 @@ function lib.OnShow(frame)
 		frame.about_title = title
 	end
 	title:SetPoint("TOPLEFT", 16, -16)
-	title:SetText(frame.parent and (frame.parent.." - " .. L["About"]) or frame.name)
+	title:SetText(frame.parent and (frame.parent .. " - " .. L["About"]) or frame.name)
 
 	if not frame.about_subtitle then
 		frame.about_subtitle = frame:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -178,6 +175,7 @@ function lib.OnShow(frame)
 				frame[field .. "_title"] = title
 			end
 			title:SetWidth(80)
+
 			if not anchor then
 				title:SetPoint("TOPLEFT", subtitle, "BOTTOMLEFT", -2, -12)
 			else
@@ -200,6 +198,7 @@ function lib.OnShow(frame)
 			if field == "Author" then
 				local authorservername = GetAddOnMetadata(frame.addonname, "X-Author-Server")
 				local authorfaction = GetAddOnMetadata(frame.addonname, "X-Author-Faction")
+
 				if authorservername and authorfaction then
 					detail:SetText(val .. " " .. L["on"] .. " " .. authorservername .. " (" .. authorfaction .. ")")
 				elseif authorservername and not authorfaction then
@@ -212,8 +211,8 @@ function lib.OnShow(frame)
 			elseif field == "Version" then
 				local addonversion = GetAddOnMetadata(frame.addonname, field)
 				-- Remove @project-revision@ and replace it with Repository
-				addonversion = string.gsub(addonversion,"@project.revision@","Repository") -- Curse
-				addonversion = string.gsub(addonversion,"wowi:revision","Repository") -- WoWInterface
+				addonversion = string.gsub(addonversion, "@project.revision@", "Repository") -- Curse
+				addonversion = string.gsub(addonversion, "wowi:revision", "Repository") -- WoWInterface
 				detail:SetText(addonversion)
 			elseif field == "X-License" then
 				local copyright = GetAddOnMetadata(frame.addonname, "X-Copyright")

@@ -51,7 +51,7 @@ local XPerl_ColourHealthBar = XPerl_ColourHealthBar
 -- TODO - Watch for:	 ERR_FRIEND_OFFLINE_S = "%s has gone offline."
 
 local conf, rconf
-XPerl_RequestConfig(function(newConf) conf = newConf rconf = conf.raid end, "$Revision: 856 $")
+XPerl_RequestConfig(function(newConf) conf = newConf rconf = conf.raid end, "$Revision: 879 $")
 
 XPERL_RAIDGRP_PREFIX	= "XPerl_Raid_Grp"
 
@@ -739,7 +739,7 @@ local function UpdateBuffs(self)
 	XPerl_ColourFriendlyUnit(self.nameFrame.text, partyid)
 
 	local buffCount = 0
-	local maxBuff = 8 - ((abs(1 - (rconf.mana or 0)) * 2) * (rconf.buffs.right or 0))
+	local maxBuff = 8 - ((abs(1 - (rconf.mana and 1 or 0)) * 2) * (rconf.buffs.right and 1 or 0))
 
 	local show, cureCast = GetShowCast(self)
 	self.debuffsForced = nil
@@ -798,7 +798,7 @@ local function UpdateBuffs(self)
 			bf:SetPoint("BOTTOMLEFT", self.statsFrame, "BOTTOMRIGHT", -1, 1)
 
 			if (rconf.buffs.inside) then
-				if (buffCount > 3 + (rconf.mana or 0)) then
+				if (buffCount > 3 + (rconf.mana and 1 or 0)) then
 					self.statsFrame:SetWidth(60)
 				else
 					self.statsFrame:SetWidth(70)
@@ -815,12 +815,12 @@ local function UpdateBuffs(self)
 				local buffI = bf.buff[i]
 				buffI:ClearAllPoints()
 
-				if (i == 4 + (rconf.mana or 0)) then
+				if (i == 4 + (rconf.mana and 1 or 0)) then
 					if (rconf.buffs.inside) then
 						buffI:SetPoint("BOTTOMLEFT", 0, 0)
 						bf.buff[1]:SetPoint("BOTTOMLEFT", buffI, "BOTTOMRIGHT", 0, 0)
 					else
-						buffI:SetPoint("BOTTOMLEFT", bf.buff[i-(4 - abs(1 - (rconf.mana or 0)))], "BOTTOMRIGHT", 0, 0)
+						buffI:SetPoint("BOTTOMLEFT", bf.buff[i-(4 - abs(1 - (rconf.mana and 1 or 0)))], "BOTTOMRIGHT", 0, 0)
 					end
 				else
 					buffI:SetPoint("BOTTOMLEFT", bf.buff[i - 1], "TOPLEFT", 0, 0)
@@ -1150,7 +1150,7 @@ function XPerl_Raid_HideShowRaid()
 	end
 
 	for i = 1,WoWclassCount do
-		if (rconf.group[i] == 1 and enable and (i < 11 or rconf.sortByClass) and not singleGroup) then
+		if (rconf.group[i] and enable and (i < 11 or rconf.sortByClass) and not singleGroup) then
 			if (not raidHeaders[i]:IsShown()) then
 				raidHeaders[i]:Show()
 			end
@@ -1804,22 +1804,22 @@ function XPerl_RaidTitles()
 				virtualFrame:ClearAllPoints()
 				if (rconf.anchor == "TOP") then
 					virtualFrame:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 0, 0)
-					virtualFrame:SetHeight(((rconf.mana or 0) * rows + 38) * rows + (rconf.spacing * (rows - 1)))
+					virtualFrame:SetHeight(((rconf.mana and 1 or 0) * rows + 38) * rows + (rconf.spacing * (rows - 1)))
 					virtualFrame:SetWidth(80)
 
 				elseif (rconf.anchor == "LEFT") then
 					virtualFrame:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 0, 0)
-					virtualFrame:SetHeight((rconf.mana or 0) * 5 + 38)
+					virtualFrame:SetHeight((rconf.mana and 1 or 0) * 5 + 38)
 					virtualFrame:SetWidth(80 * rows + (rconf.spacing * (rows - 1)))
 
 				elseif (rconf.anchor == "BOTTOM") then
 					virtualFrame:SetPoint("BOTTOMLEFT", frame, "TOPLEFT", 0, 0)
-					virtualFrame:SetHeight(((rconf.mana or 0) * rows + 38) * rows + (rconf.spacing * (rows - 1)))
+					virtualFrame:SetHeight(((rconf.mana and 1 or 0) * rows + 38) * rows + (rconf.spacing * (rows - 1)))
 					virtualFrame:SetWidth(80)
 
 				elseif (rconf.anchor == "RIGHT") then
 					virtualFrame:SetPoint("TOPRIGHT", frame, "BOTTOMRIGHT", 0, 0)
-					virtualFrame:SetHeight((rconf.mana or 0) * 5 + 38)
+					virtualFrame:SetHeight((rconf.mana and 1 or 0) * 5 + 38)
 					virtualFrame:SetWidth(80 * rows + (rconf.spacing * (rows - 1)))
 				end
 

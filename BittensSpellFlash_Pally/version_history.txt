@@ -1,12 +1,9 @@
-<<<<<<< HEAD
 == Version 50400.2.3
 * I have gotten a pretty good response, so I think (and hope) Bitten's SpellFlash will live on!
 
 == Version 50400.2.2
 * The future of Bitten's SpellFlash: Pally is in question.  I no longer wish to maintain this addon, starting with patch 6.0.  If you are interested in taking it over, keeping up with optimal rotations, and you have programming skills, please leave a comment or PM on Curse.
 
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 == Version 50400.2.1
 * Retribution: Bugfix - Divine Storm was not flashing for the 4pT16 proc.
 
@@ -94,13 +91,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 * Retribution: Templar's Verdict will no longer flash when it is out of range.
 * Retribution: No longer flashes Sacred Shield if a damaging ability will be off cooldown within 1 gcd.
 * Retribution: No longer insists you switch from Seal of Insight to Seal of Truth.
-<<<<<<< HEAD
-=======
-
-== Version 3.1.0
-* Protection & Retribution: Added Lay on Hands.
-* Retribution: Researched the rotation and updated accordingly for slightly better dps.
-* Retribution: Added lvl 90 talents.
-* Retribution: Added Sacred Shield, Flash of Light and Word of Glory.
-* Retribution: Hammer of Wrath no longer flashes when you have no target, or when your target is out of range.
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

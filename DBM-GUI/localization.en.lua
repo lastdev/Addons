@@ -13,22 +13,13 @@ L.OTabBosses	= "Bosses"
 L.OTabOptions	= GAMEOPTIONS_MENU
 
 L.TabCategory_Options	 	= "General Options"
-<<<<<<< HEAD
+L.TabCategory_WOD	 		= EXPANSION_NAME5
 L.TabCategory_MOP	 		= EXPANSION_NAME4
 L.TabCategory_CATA	 		= EXPANSION_NAME3
 L.TabCategory_WOTLK 		= EXPANSION_NAME2
 L.TabCategory_BC 			= EXPANSION_NAME1
 L.TabCategory_CLASSIC		= EXPANSION_NAME0
 L.TabCategory_PVP 			= PVP
-=======
-L.TabCategory_WoD	 		= "Warlords of Draenor"
-L.TabCategory_MOP	 		= "Mists of Pandaria"
-L.TabCategory_CATA	 		= "Cataclysm"
-L.TabCategory_WOTLK 		= "Wrath of the Lich King"
-L.TabCategory_BC 			= "The Burning Crusade"
-L.TabCategory_CLASSIC		= "WoW Classic"
-L.TabCategory_PVP 			= "PvP"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L.TabCategory_OTHER    		= "Other Boss Mods"
 
 L.BossModLoaded 			= "%s statistics"
@@ -70,6 +61,7 @@ L.Latency_Text				= "Set max latency sync threshold: %d"
 -- Tab: General Timer Options
 L.TimerGeneral 				= "General DBM Timer Options"
 L.SKT_Enabled				= "Always show record victory timer (Overrides boss-specific option)"
+L.CRT_Enabled				= "Show timer for next combat ressurection charge (6.x difficulties only)"
 L.ChallengeTimerOptions		= "Set option for challenge mode best clear timer"
 L.ChallengeTimerPersonal	= "Personal"
 L.ChallengeTimerGuild		= GUILD
@@ -109,6 +101,7 @@ L.BarWhileMove 				= "Raid warning movable"
 L.RaidWarnSound				= "Play sound on raid warning"
 L.CountdownVoice			= "Set primary voice for count sounds"
 L.CountdownVoice2			= "Set secondary voice for count sounds"
+L.CountdownVoice3			= "Set tertiary voice for count sounds"
 L.SpecialWarnSound			= "Set sound for special warnings affecting you or your specific role"
 L.SpecialWarnSound2			= "Set sound for special warnings affecting everyone"
 L.SpecialWarnSound3			= "Set sound for VERY important special warnings"
@@ -124,6 +117,7 @@ L.CombatMessages			= "Combat Message Options"
 L.ShowEngageMessage 		= "Show engage messages in chat frame"
 L.ShowKillMessage 			= "Show kill messages in chat frame"
 L.ShowWipeMessage 			= "Show wipe messages in chat frame"
+L.ShowGuildMessages 		= "Show show guild engage/kill/wipe message in chat frame"
 L.ShowRecoveryMessage 		= "Show timer recovery messages in chat frame"
 L.WhisperMessages			= "Whisper Message Options"
 L.AutoRespond 				= "Auto-respond to whispers while fighting"
@@ -197,10 +191,6 @@ L.SpamBlockNoInfoFrame		= "Do not show info frame"
 L.SpamBlockNoHealthFrame	= "Do not show health frame"
 
 -- Tab: Spam Filter
-<<<<<<< HEAD
-=======
-L.Panel_SpamFilter			= "Global and Spam Filters"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L.Area_SpamFilter			= "Spam Filter Options"
 L.StripServerName			= "Strip realm name in warnings and timers"
 L.SpamBlockBossWhispers		= "Filter &lt;DBM&gt; warning whispers while fighting"
@@ -208,7 +198,6 @@ L.BlockVersionUpdateNotice	= "Disable update notification popup (Not recommended
 L.ShowBBOnCombatStart		= "Perform Big Brother buff check on combat start"
 L.BigBrotherAnnounceToRaid	= "Announce Big Brother results to raid"
 
-<<<<<<< HEAD
 L.Area_SpecFilter			= "Spec Filter Options"
 L.FilterTankSpec			= "Filter warnings designated for Tank role when not tank spec"
 --Healer and Damager not in use yet. Tank is easily black and white. if not a tank, disable taunt warnings. Pretty obvious.
@@ -218,31 +207,13 @@ L.FilterTankSpec			= "Filter warnings designated for Tank role when not tank spe
 --L.FilterHealerSpec		= "Filter warnings designated for Healer role when not Healer spec"--Not in use
 --L.FilterDamagerSpec		= "Filter warnings designated for Damager role when not Damager spec"--Not in use
 
-L.Area_PullTimer			= "Pull, Combat, & Custom Timer Filter Options"
+L.Area_PullTimer			= "Pull, Break, Combat, & Custom Timer Filter Options"
 L.DontShowPTNoID			= "Block Pull Timer if not sent from same zone as you"
-L.DontShowPT				= "Do not show Pull Timer bar"
-L.DontShowPTText			= "Do not show announce text for Pull Timer"
-L.DontPlayPTCountdown		= "Do not play Pull/Combat/Custom Timer countdown audio"
-L.DontShowPTCountdownText	= "Do not show Pull/Combat/Custom Timer countdown text"
-L.PT_Threshold				= "Do not show Pull/Combat/Custom Timer countdown text above: %d"
-=======
-L.Area_SpamFilter_Outgoing	= "Global Filter Options"
-L.SpamBlockNoShowAnnounce	= "Do not show announces or play warning sounds"
-L.DontShowFarWarnings		= "Do not show announces/timers for events that are far away"
-L.SpamBlockNoSendWhisper	= "Do not send boss warning whispers to other players"
-L.SpamBlockNoSetIcon		= "Do not set icons on targets"
-L.SpamBlockNoRangeFrame		= "Do not show range frame"
-L.SpamBlockNoInfoFrame		= "Do not show info frame"
-L.SpamBlockNoHealthFrame	= "Do not show health frame"
-
-L.Area_PullTimer			= "Pull Timer Filter Options"
-L.DontShowPTNoID			= "Block pull timers not sent from same zone as you"
-L.DontShowPT				= "Do not show Pull Timer bar"
-L.DontShowPTText			= "Do not show announce text for Pull Timer"
-L.DontPlayPTCountdown		= "Do not play Pull/Combat Timer countdown audio"
-L.DontShowPTCountdownText	= "Do not show Pull/Combat Timer countdown text"
-L.PT_Threshold				= "Do not show Pull/Combat Timer countdown text above: %d"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+L.DontShowPT				= "Do not show Pull/Break Timer bar"
+L.DontShowPTText			= "Do not show announce text for Pull/Break Timer"
+L.DontPlayPTCountdown		= "Do not play Pull/Break/Combat/Custom Timer countdown audio"
+L.DontShowPTCountdownText	= "Do not show Pull/Break/Combat/Custom Timer countdown text"
+L.PT_Threshold				= "Do not show Pull/Break/Combat/Custom Timer countdown text above: %d"
 
 L.Panel_HideBlizzard		= "Hide Blizzard"
 L.Area_HideBlizzard			= "Hide Blizzard Options"
@@ -252,11 +223,7 @@ L.HideTooltips				= "Hide tooltips during boss fights"
 L.SpamBlockSayYell			= "Hide chat bubbles announces from the chat frame"
 L.DisableCinematics			= "Hide in-game cinematics"
 L.AfterFirst				= "After each movie has played once"
-<<<<<<< HEAD
 L.Always					= ALWAYS
-=======
-L.Always					= "Always"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 L.Panel_ExtraFeatures		= "Extra Features"
 L.Area_ChatAlerts			= "Chat Alert Options"
@@ -267,11 +234,7 @@ L.LFDEnhance				= "Play readycheck sound for role checks &amp; BG/LFG proposals 
 L.WorldBossNearAlert		= "Play readycheck sound when world bosses you are near to are pulled that you need (Overrides boss-specific option)"
 L.AFKHealthWarning			= "Play alert sound if you are losing health while AFK"
 L.Area_AutoLogging			= "Auto Logging Options"
-<<<<<<< HEAD
 L.AutologBosses				= "Automatically record boss encounters using blizzard combat log (Use /dbm pull before bosses to start logging early for pre pots and other events.)"
-=======
-L.AutologBosses				= "Automatically record boss encounters using blizzard combat log (Using /dbm pull before bosses is required for <a href=\"http://www.warcraftlogs.com\">|cff3588ffwarcraftlogs.com|r</a> compatability)"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L.AdvancedAutologBosses		= "Automatically record boss encounters with Transcriptor"
 L.LogOnlyRaidBosses			= "Only record raid boss encounters (exclude Raid Finder/party/scenario)"
 L.Area_Invite				= "Invite Options"

@@ -1,6 +1,26 @@
 
 
 
+== Version 6.12
+
+* Small change to prevent template module from loading from the original folder.
+
+
+== Version 6.11.1
+
+* Updated to the 2.0.5 version of SpellFlashCore.
+
+
+== Version 6.11
+
+* Fixed a few things for compatibility and bumped toc to 60000.
+
+
+== Version 6.11
+
+* Fixed a few things for compatibility and bumped toc to 60000.
+
+
 == Version 6.9
 
 * Fixed a bug with an internal RegisterSpells function.

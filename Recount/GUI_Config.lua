@@ -6,7 +6,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local BC = {} -- = LibStub("LibBabble-Class-3.0"):GetLookupTable()
 
-local revision = tonumber(string.sub("$Revision: 1267 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1273 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -1637,7 +1637,6 @@ function me:SetupButtonOptions(parent)
 	slider:SetObeyStepOnDrag(true)
 	slider:SetWidth(180)
 	slider:SetHeight(16)
-<<<<<<< HEAD
 	slider:SetPoint("TOP", theFrame, "TOP", 0, -96 - 16) -- Elsia: TODO this number will need adjusting to accommodate the paging config change
 	slider:SetScript("OnValueChanged", function(this)
 		_G[this:GetName().."Text"]:SetText(L["Row Height"]..": "..math.floor(this:GetValue() + 0.5))
@@ -1650,23 +1649,12 @@ function me:SetupButtonOptions(parent)
 
 	slider = CreateFrame("Slider", "Recount_ConfigWindow_RowSpacing_Slider", theFrame, "OptionsSliderTemplate")
 	theFrame.RowSpacingSlider = slider
-=======
-	slider:SetPoint("TOP", theFrame, "TOP", 0, -96-16) -- Elsia: TODO this number will need adjusting to accommodate the paging config change
-	slider:SetScript("OnValueChanged",function(this) getglobal(this:GetName().."Text"):SetText(L["Row Height"]..": "..math.floor(this:GetValue()+0.5));Recount.db.profile.MainWindow.RowHeight=math.floor(this:GetValue()+0.5);Recount:BarsChanged() end)
-	getglobal(slider:GetName().."High"):SetText("35");
-	getglobal(slider:GetName().."Low"):SetText("8");
-	getglobal(slider:GetName().."Text"):SetText(L["Row Height"]..": "..math.floor(slider:GetValue()+0.5))
-
-	slider = CreateFrame("Slider", "Recount_ConfigWindow_RowSpacing_Slider", theFrame,"OptionsSliderTemplate")
-	theFrame.RowSpacingSlider=slider
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	slider:SetOrientation("HORIZONTAL")
 	slider:SetMinMaxValues(0, 4)
 	slider:SetValueStep(1)
 	slider:SetObeyStepOnDrag(true)
 	slider:SetWidth(180)
 	slider:SetHeight(16)
-<<<<<<< HEAD
 	slider:SetPoint("TOP", theFrame, "TOP", 0, -130 - 16)
 	slider:SetScript("OnValueChanged", function(this)
 		_G[this:GetName().."Text"]:SetText(L["Row Spacing"]..": "..math.floor(this:GetValue() + 0.5))
@@ -1678,15 +1666,6 @@ function me:SetupButtonOptions(parent)
 	_G[slider:GetName().."Text"]:SetText(L["Row Spacing"]..": "..math.floor(slider:GetValue()))
 
 	theFrame.TotalBar = CreateFrame("CheckButton",nil, theFrame)
-=======
-	slider:SetPoint("TOP", theFrame, "TOP", 0, -130-16)
-	slider:SetScript("OnValueChanged",function(this) getglobal(this:GetName().."Text"):SetText(L["Row Spacing"]..": "..math.floor(this:GetValue()+0.5));Recount.db.profile.MainWindow.RowSpacing=math.floor(this:GetValue()+0.5);Recount:BarsChanged() end)
-	getglobal(slider:GetName().."High"):SetText("4");
-	getglobal(slider:GetName().."Low"):SetText("0");
-	getglobal(slider:GetName().."Text"):SetText(L["Row Spacing"]..": "..math.floor(slider:GetValue()))
-
-	theFrame.TotalBar=CreateFrame("CheckButton",nil,theFrame)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	me:ConfigureCheckbox(theFrame.TotalBar)
 	theFrame.TotalBar:SetPoint("TOPLEFT", theFrame, "TOPLEFT", 12, -158 - 16)
 	theFrame.TotalBar:SetScript("OnClick", function(this)
@@ -2025,11 +2004,11 @@ end
 
 function me:SaveFilterConfig()
 	for k, v in pairs(me.FilterOptions.Filters) do
-		Recount.db.profile.Filters.Show[k] = v.ShowData:GetChecked() == 1
-		Recount.db.profile.Filters.Data[k] = v.RecordData:GetChecked() == 1
-		Recount.db.profile.Filters.TimeData[k] = v.RecordTime:GetChecked() == 1
-		Recount.db.profile.Filters.TrackDeaths[k] = v.TrackDeaths:GetChecked() == 1
-		--Recount.db.profile.Filters.TrackBuffs[k] = v.TrackBuffs:GetChecked() == 1
+		Recount.db.profile.Filters.Show[k] = v.ShowData:GetChecked() == true
+		Recount.db.profile.Filters.Data[k] = v.RecordData:GetChecked() == true
+		Recount.db.profile.Filters.TimeData[k] = v.RecordTime:GetChecked() == true
+		Recount.db.profile.Filters.TrackDeaths[k] = v.TrackDeaths:GetChecked() == true
+		--Recount.db.profile.Filters.TrackBuffs[k] = v.TrackBuffs:GetChecked() == true
 	end
 	Recount:IsTimeDataActive()
 	Recount:FullRefreshMainWindow()

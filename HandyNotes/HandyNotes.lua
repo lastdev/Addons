@@ -200,16 +200,16 @@ end
 -- Build data
 local continentMapFile = {
 	[WORLDMAP_COSMIC_ID] = "Cosmic", -- That constant is -1
-	[WORLDMAP_WORLD_ID] = "World", -- That constant is 0
+	[WORLDMAP_AZEROTH_ID] = "World",
 }
-local continentList = {GetMapContinents()}
+local continentList = {}
 local zoneList = {}
 local reverseZoneC = {}
 local reverseZoneZ = {}
 local zonetoMapID = {}
 local mapIDtoMapFile = {
 	[WORLDMAP_COSMIC_ID] = "Cosmic",
-	[WORLDMAP_WORLD_ID] = "World",
+	[WORLDMAP_AZEROTH_ID] = "World",
 }
 local mapFiletoMapID = {
 	["Cosmic"] = -1,
@@ -217,16 +217,19 @@ local mapFiletoMapID = {
 }
 local reverseMapFileC = {
 	["Cosmic"] = WORLDMAP_COSMIC_ID,
-	["World"] = WORLDMAP_WORLD_ID,
+	["World"] = WORLDMAP_AZEROTH_ID,
 }
 local reverseMapFileZ = {
 	["Cosmic"] = 0,
 	["World"] = 0,
 }
-for C, CName in ipairs(continentList) do
+local continentTempList = {GetMapContinents()}
+for i = 1, #continentTempList, 2 do
+	local C = (i + 1) / 2
+	local mapID, CName = continentTempList[i], continentTempList[i+1]
 	SetMapZoom(C, 0)
-	local mapID = GetCurrentMapAreaID()
 	local mapFile = GetMapInfo()
+	continentList[C] = CName
 	reverseMapFileC[mapFile] = C
 	reverseMapFileZ[mapFile] = 0
 	reverseZoneC[CName] = C
@@ -234,11 +237,14 @@ for C, CName in ipairs(continentList) do
 	mapIDtoMapFile[mapID] = mapFile
 	mapFiletoMapID[mapFile] = mapID
 	continentMapFile[C] = mapFile
-	zoneList[C] = {GetMapZones(C)}
-	for Z, ZName in ipairs(zoneList[C]) do
-		SetMapZoom(C, Z)
-		local mapID = GetCurrentMapAreaID()
+	zoneList[C] = {}
+	local zoneTempList = {GetMapZones(C)}
+	for j = 1, #zoneTempList, 2 do
+		local mapID, ZName = zoneTempList[j], zoneTempList[j+1]
+		SetMapByID(mapID)
+		local Z = GetCurrentMapZone()
 		local mapFile = GetMapInfo()
+		zoneList[C][Z] = ZName
 		reverseMapFileC[mapFile] = C
 		reverseMapFileZ[mapFile] = Z
 		reverseZoneC[ZName] = C

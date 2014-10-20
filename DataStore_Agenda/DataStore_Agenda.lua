@@ -15,6 +15,11 @@ local THIS_ACCOUNT = "Default"
 
 local AddonDB_Defaults = {
 	global = {
+		Options = {
+			WeeklyResetDay = nil,		-- weekday (0 = Sunday, 6 = Saturday)
+			WeeklyResetHour = nil,		-- 0 to 23
+			NextWeeklyReset = nil,
+		},
 		Characters = {
 			['*'] = {				-- ["Account.Realm.Name"]
 				lastUpdate = nil,
@@ -22,6 +27,8 @@ local AddonDB_Defaults = {
 				Contacts = {},
 				DungeonIDs = {},		-- raid timers
 				ItemCooldowns = {},	-- mysterious egg, disgusting jar, etc..
+				LFGDungeons = {},		-- info about LFG dungeons/raids
+								
 				Notes = {},
 				Tasks = {},
 				Mail = {},			-- This is for intenal mail only, unrelated to wow's
@@ -33,6 +40,10 @@ local AddonDB_Defaults = {
 -- *** Utility functions ***
 local function GetOption(option)
 	return addon.db.global.Options[option]
+end
+
+local function SetOption(option, value)
+	addon.db.global.Options[option] = value
 end
 
 -- *** Scanning functions ***
@@ -95,6 +106,62 @@ local function ScanDungeonIDs()
 	end
 end
 
+local function ScanLFGDungeon(dungeonID)
+   -- name, typeId, subTypeID, 
+	-- minLvl, maxLvl, recLvl, minRecLvl, maxRecLvl, 
+	-- expansionId, groupId, textureName, difficulty, 
+	-- maxPlayers, dungeonDesc, isHoliday  = GetLFGDungeonInfo(dungeonID)
+   
+	local dungeonName, typeID, subTypeID, _, _, _, _, _, expansionID, _, _, difficulty = GetLFGDungeonInfo(dungeonID)
+	
+	-- unknown ? exit
+	if not dungeonName then return end
+	
+	-- type 1 = instance, 2 = raid. We don't want the rest
+	if typeID > 2 then return end
+		
+	-- difficulty levels we don't need
+	--	0 = invalid (pvp 10v10 rated bg has this)
+	-- 1 = normal (no lock)
+	-- 8 = challenge
+	-- 12 = normal mode scenario
+	if (difficulty < 2) or (difficulty == 8) or (difficulty == 12) then return end
+
+	-- how many did we kill in that instance ?
+	local numEncounters, numCompleted = GetLFGDungeonNumEncounters(dungeonID)
+	if not numCompleted or numCompleted == 0 then return end		-- no kills ? exit
+	
+	local dungeons = addon.ThisCharacter.LFGDungeons
+	local count = 0
+	local key
+	
+	for i = 1, numEncounters do
+		local bossName, _, isKilled = GetLFGDungeonEncounterInfo(dungeonID, i)
+
+		key = format("%s.%s", dungeonID, bossName)
+		if isKilled then
+			dungeons[key] = true
+			count = count + 1
+		else
+			dungeons[key] = nil
+		end
+	end
+
+	-- save how many we have killed in that dungeon
+	if count > 0 then
+		dungeons[format("%s.Count", dungeonID)] = count
+	end
+end
+
+local function ScanLFGDungeons()
+	local dungeons = addon.ThisCharacter.LFGDungeons
+	wipe(dungeons)
+	
+	for i = 1, 1000 do
+		ScanLFGDungeon(i)
+	end
+end
+
 local function ScanCalendar()
 	-- Save the current month
 	local currentMonth, currentYear = CalendarGetMonth()
@@ -154,6 +221,18 @@ end
 
 local function OnRaidInstanceWelcome()
 	RequestRaidInfo()
+end
+
+local function OnLFGUpdateRandomInfo()
+	ScanLFGDungeons()
+end
+
+-- local function OnLFGLockInfoReceived()
+	-- DEFAULT_CHAT_FRAME:AddMessage("LFG_LOCK_INFO_RECEIVED")
+-- end
+
+local function OnEncounterEnd(event, dungeonID, name, difficulty, raidSize, endStatus)
+	ScanLFGDungeon(dungeonID)
 end
 
 local function OnChatMsgSystem(event, arg)
@@ -273,6 +352,17 @@ local function _DeleteSavedInstance(character, key)
 	character.DungeonIDs[key] = nil
 end
 
+-- * LFG Dungeons *
+local function _IsBossAlreadyLooted(character, dungeonID, boss)
+	local key = format("%s.%s", dungeonID, boss)
+	return character.LFGDungeons[key]
+end
+
+local function _GetLFGDungeonKillCount(character, dungeonID)
+	local key = format("%s.Count", dungeonID)
+	return character.LFGDungeons[key] or 0
+end
+
 -- * Calendar *
 local function _GetNumCalendarEvents(character)
 	return #character.Calendar
@@ -362,6 +452,92 @@ local function SetClientServerTimeGap()
 	addon:SendMessage("DATASTORE_CS_TIMEGAP_FOUND", clientServerTimeGap)
 end
 
+local function GetWeeklyResetDayByRegion(region)
+	local day = 2		-- default to US, 2 = Tuesday
+	
+	if region then
+		if region == "EU" then 
+			day = 3 
+		elseif region == "CN" or region == "KR" or region == "TW" then
+			day = 4
+		end
+	end
+	
+	return day
+end
+
+local function GetNextWeeklyReset(weeklyResetDay)
+	local year = tonumber(date("%Y"))
+	local month = tonumber(date("%m"))
+	local day = tonumber(date("%d"))
+	local todaysWeekDay = tonumber(date("%w"))
+	local numDays = 0		-- number of days to add
+	
+	-- how many days should we add to today's date ?
+	if todaysWeekDay < weeklyResetDay then					-- if it is Monday (1), and reset is on Wednesday (3)
+		numDays = weeklyResetDay - todaysWeekDay		-- .. then we add 2 days
+	elseif todaysWeekDay > weeklyResetDay then			-- if it is Friday (5), and reset is on Wednesday (3)
+		numDays = weeklyResetDay - todaysWeekDay + 7	-- .. then we add 5 days (3 - 5 + 7)
+	else
+		-- Same day : if the weekly reset period has passed, add 7 days, if not yet, than 0 days
+		numDays = (tonumber(date("%H")) > GetOption("WeeklyResetHour")) and 7 or 0
+	end
+
+	if numDays == 0 then return end
+	
+	local newDay = day + numDays	-- 25th + 2 days = 27, or 28th + 10 days = 38 days (used to check days overflow in a month)
+
+	local daysPerMonth = { 31,28,31,30,31,30,31,31,30,31,30,31 }
+	if (year % 4 == 0) and (year % 100 ~= 0 or year % 400 == 0) then	-- is leap year ?
+		daysPerMonth[2] = 29
+	end	
+	
+	-- no overflow ? (25th + 2 days = 27, we stay in the same month)
+	if newDay <= daysPerMonth[month] then
+		return format("%04d-%02d-%02d", year, month, newDay)
+	end
+	
+	-- we have a "day" overflow, but still in the same year
+	if month <= 11 then
+		-- 27/03 + 10 days = 37 - 31 days in March, so 6/04
+		return format("%04d-%02d-%02d", year, month+1, newDay - daysPerMonth[month])
+	end
+	
+	-- at this point, we had a day overflow in December, so jump to next year
+	return format("%04d-%02d-%02d", year+1, 1, newDay - daysPerMonth[month])
+end
+
+local function ClearExpiredDungeons()
+	-- WeeklyResetDay = nil,		-- weekday (0 = Sunday, 6 = Saturday)
+	-- WeeklyResetHour = nil,		-- 0 to 23
+	-- NextWeeklyReset = nil,
+	
+	local weeklyResetDay = GetOption("WeeklyResetDay")
+	
+	if not weeklyResetDay then			-- if the weekly reset day has not been set yet ..
+		weeklyResetDay = GetWeeklyResetDayByRegion(GetCVar("portal"))
+		
+		SetOption("WeeklyResetDay", weeklyResetDay)
+		SetOption("WeeklyResetHour", 6)			-- 6 am should be ok in most zones
+		SetOption("NextWeeklyReset", GetNextWeeklyReset(weeklyResetDay))
+		return	-- initial pass, nothing to clear
+	end
+	
+	local today = date("%Y-%m-%d")
+	local nextReset = GetOption("NextWeeklyReset")
+
+	if (today < nextReset) then return end		-- not yet ? exit
+	if (today == nextReset) and (tonumber(date("%H")) < GetOption("WeeklyResetHour")) then return end
+	
+	-- at this point, we may reset
+	for key, character in pairs(addon.db.global.Characters) do
+		wipe(character.LFGDungeons)
+	end
+	
+	-- finally, set the next reset day
+	SetOption("NextWeeklyReset", GetNextWeeklyReset(weeklyResetDay))
+end
+
 local PublicMethods = {
 	GetClientServerTimeGap = _GetClientServerTimeGap,
 	GetNumContacts = _GetNumContacts,
@@ -372,6 +548,9 @@ local PublicMethods = {
 	HasSavedInstanceExpired = _HasSavedInstanceExpired,
 	DeleteSavedInstance = _DeleteSavedInstance,
 
+	IsBossAlreadyLooted = _IsBossAlreadyLooted,
+	GetLFGDungeonKillCount = _GetLFGDungeonKillCount,
+	
 	GetNumCalendarEvents = _GetNumCalendarEvents,
 	GetCalendarEventInfo = _GetCalendarEventInfo,
 	HasCalendarEventExpired = _HasCalendarEventExpired,
@@ -394,6 +573,8 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetSavedInstanceInfo")
 	DataStore:SetCharacterBasedMethod("HasSavedInstanceExpired")
 	DataStore:SetCharacterBasedMethod("DeleteSavedInstance")
+	DataStore:SetCharacterBasedMethod("IsBossAlreadyLooted")
+	DataStore:SetCharacterBasedMethod("GetLFGDungeonKillCount")
 
 	DataStore:SetCharacterBasedMethod("GetNumCalendarEvents")
 	DataStore:SetCharacterBasedMethod("GetCalendarEventInfo")
@@ -414,8 +595,14 @@ function addon:OnEnable()
 	-- Dungeon IDs
 	addon:RegisterEvent("UPDATE_INSTANCE_INFO", OnUpdateInstanceInfo)
 	addon:RegisterEvent("RAID_INSTANCE_WELCOME", OnRaidInstanceWelcome)
+	addon:RegisterEvent("LFG_UPDATE_RANDOM_INFO", OnLFGUpdateRandomInfo)
+	-- addon:RegisterEvent("LFG_LOCK_INFO_RECEIVED", OnLFGLockInfoReceived)
+	addon:RegisterEvent("ENCOUNTER_END", OnEncounterEnd)
+		
 	addon:RegisterEvent("CHAT_MSG_SYSTEM", OnChatMsgSystem)
 
+	ClearExpiredDungeons()
+	
 	-- Calendar (only register after setting the current month)
 	local _, thisMonth, _, thisYear = CalendarGetDate()
 	CalendarSetAbsMonth(thisMonth, thisYear)

@@ -1366,8 +1366,6 @@ end
 
 -- TODO: Made more complex than needed when fixing bugs, simplify!
 function ReagentRestocker:repair()
-	dprint("GUILD LEVEL" .. _G.GetGuildLevel())
-	
 	if _G.CanMerchantRepair() then
 		local msg, cost = "", _G.GetRepairAllCost()
 		
@@ -1588,17 +1586,6 @@ end
 
 --function ReagentRestocker:getMerchantReputation()
 
---	local guildPerk = 1;
-	
---	if _G.GetGuildLevel() >= 24 then
---		guildPerk = 0.9 -- TODO: I just reverted this because stuff was breaking, 
-						--need to find a better way to calculate faction
-						--discount, taking into account the guild level 24
-						--"Bartering" perk.
---	else
---		guildPerk = 1
---	end
-
 	-- Test code that is hopefully more accurate at getting the discount
 --	local reaction = _G.UnitReaction("target", "player")
 	
@@ -1642,7 +1629,7 @@ end
 --		end
 --		
 --		if (0.4 < numDiscounted/#merchantPriceList) then
---			return discountPercent*guildPerk
+--			return discountPercent
 --		end
 --	end
 	

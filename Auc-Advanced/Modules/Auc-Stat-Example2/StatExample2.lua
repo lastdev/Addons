@@ -18,11 +18,7 @@ end
 
 --[[
 	Auctioneer - Stat's API Example module
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: StatExample2.lua 5365 2012-09-24 17:33:48Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -259,8 +255,4 @@ end
 function private.Baz()
 end
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/Modules/Auc-Stat-Example2/StatExample2.lua $", "$Rev: 5365 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/Modules/Auc-Stat-Example2/StatExample2.lua $", "$Rev: 5365 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Advanced/Modules/Auc-Stat-Example2/StatExample2.lua $", "$Rev: 5365 $")

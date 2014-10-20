@@ -150,7 +150,7 @@ L:AddLocale("frFR",
 	["Set number of lines mousewheel will scroll."] = "Définit le nombre de lignes qui défilent lors d'un coup de molette avec la souris.",
 	["Set number of lines mousewheel will scroll when ctrl is pressed."] = "Définit le nombre de lignes qui défilent lorsque Ctrl est enfoncé.",
 	-- ["Set TheLowDown Delay"] = "",
-	["Set time to wait before jumping to the bottom of chat windows."] = "Régler le temps d'attente avant de sauter au bas de la fenêtre de chat.", -- Needs review
+	["Set time to wait before jumping to the bottom of chat windows."] = "Régler le temps d'attente avant de sauter au bas de la fenêtre de chat.",
 	["Text scroll direction"] = "Direction du texte",
 	Top = "Haut en bas",
 }

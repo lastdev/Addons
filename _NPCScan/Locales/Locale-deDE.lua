@@ -350,11 +350,7 @@ private.L.NPCs["50085"] = "Oberanführer Zornesbeben"
 private.L.NPCs["50086"] = "Tarvus der Üble"
 private.L.NPCs["50089"] = "Julak-Doom"
 private.L.NPCs["50138"] = "Karoma"
-<<<<<<< HEAD
 private.L.NPCs["50154"] = "Madexx - Brown"
-=======
-private.L.NPCs["50154"] = "Madexx"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 private.L.NPCs["50159"] = "Sambas"
 private.L.NPCs["50328"] = "Fangor"
 private.L.NPCs["50329"] = "Rrakk"
@@ -482,10 +478,7 @@ private.L.NPCs["50838"] = "Taps"
 private.L.NPCs["50839"] = "Chromhund"
 private.L.NPCs["50840"] = "Major Affentanz"
 private.L.NPCs["50842"] = "Magmagan"
-<<<<<<< HEAD
 private.L.NPCs["50843"] = "Portent"
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 private.L.NPCs["50846"] = "Geiferschlund"
 private.L.NPCs["50855"] = "Jaxx die Tollwütige"
 private.L.NPCs["50856"] = "Schnork"
@@ -574,17 +567,10 @@ private.L.NPCs["51076"] = "Lopex"
 private.L.NPCs["51077"] = "Buschschwanz"
 private.L.NPCs["51078"] = "Ferdinand"
 private.L.NPCs["51079"] = "Kapitän Faulwind"
-<<<<<<< HEAD
 private.L.NPCs["51401"] = "Madexx - Rot"
 private.L.NPCs["51402"] = "Madexx - Grün"
 private.L.NPCs["51403"] = "Madexx - Schwarz"
 private.L.NPCs["51404"] = "Madexx - Blau"
-=======
-private.L.NPCs["51401"] = "Madexx"
-private.L.NPCs["51402"] = "Madexx"
-private.L.NPCs["51403"] = "Madexx"
-private.L.NPCs["51404"] = "Madexx"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 private.L.NPCs["51658"] = "Mogh der Tote"
 private.L.NPCs["51661"] = "Tsul'Kalu"
 private.L.NPCs["51662"] = "Mahamba"
@@ -840,9 +826,8 @@ private.L["CMD_HELP"] = "Die Befehle sind  |cff808080“/npcscan add <NpcID> <Na
 private.L["CMD_REMOVE"] = "REMOVE"
 private.L["CMD_REMOVENOTFOUND_FORMAT"] = "NSC |cff808080“%s”|r nicht gefunden."
 private.L["CONFIG_ALERT"] = "Warnungsoptionen"
-<<<<<<< HEAD
--- private.L["CONFIG_ALERT_PERSISTENT_TOAST"] = "Keep Toast Persistant."
--- private.L["CONFIG_ALERT_PERSISTENT_TOAST_DESC"] = "The toast will not automatically fade out after being displayed"
+private.L["CONFIG_ALERT_PERSISTENT_TOAST"] = "Benachrichtigung langfristig anzeigen"
+private.L["CONFIG_ALERT_PERSISTENT_TOAST_DESC"] = "Die Benachrichtigung wird nicht automatisch ausgeblendet nach dem anzeigen."
 private.L["CONFIG_ALERT_SCREEN_EDGE_FLASH"] = "Zeige das rote Aufblitzen des Bildschirm Randes"
 private.L["CONFIG_ALERT_SCREEN_EDGE_FLASH_DESC"] = "Aktiviert das rote Aufblitzen des Bildschirm Randes wenn ein Mob gefunden wunde."
 private.L["CONFIG_ALERT_SHOW_AS_TOAST"] = "Als Einblendung anzeigen."
@@ -850,13 +835,6 @@ private.L["CONFIG_ALERT_SHOW_AS_TOAST_DESC"] = "Zeige den Alarm als Einblendung 
 private.L["CONFIG_ALERT_SOUND"] = "Warnton-Datei"
 private.L["CONFIG_ALERT_SOUND_CLASSIC"] = "Klassischer NPCScan"
 private.L["CONFIG_ALERT_SOUND_CLASSIC_DESC"] = "Klassische NPCScan Horn & Schlagzeug Warnung"
-=======
--- private.L["CONFIG_ALERT_SCREEN_EDGE_FLASH"] = "Show Red Screen Edge Flash"
--- private.L["CONFIG_ALERT_SCREEN_EDGE_FLASH_DESC"] = "Enables Red Screen Edge Flash when mob is found."
-private.L["CONFIG_ALERT_SOUND"] = "Warnton-Datei"
--- private.L["CONFIG_ALERT_SOUND_CLASSIC"] = "Classic NPCScan"
--- private.L["CONFIG_ALERT_SOUND_CLASSIC_DESC"] = "Classic NPCScan Horn & Drums alert"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 private.L["CONFIG_ALERT_SOUND_DEFAULT"] = "|cffffd200Default|r"
 private.L["CONFIG_ALERT_SOUND_DESC"] = "Wähle den abzuspielenden Warnton, wenn ein NSC gefunden wird. Zusätzliche Töne können über |cff808080“SharedMedia”|r Addons hinzugefügt werden."
 private.L["CONFIG_ALERT_UNMUTE"] = "Stummschaltung für Warnton ausschalten"
@@ -876,11 +854,8 @@ private.L["FOUND_TAMABLE_FORMAT"] = "|cff808080“%s”|r gefunden!  |cffff2020(
 private.L["FOUND_TAMABLE_WRONGZONE_FORMAT"] = "|cffff2020Falscher Alarm:|r Zähmbarer Mob gefunden |cff808080“%s”|r in %s anstatt von %s (ID %d); mit Sicherheit ein Begleiter."
 private.L["FOUND_UNIT_DEAD"] = "%s gefunden aber ist Tod."
 private.L["FOUND_UNIT_TAXI"] = "%s gefunden während eines Fluges nähe %d, %d in %s."
-<<<<<<< HEAD
 private.L["MOUSEOVER_SCAN"] = "Zeige Alarm für Kreaturen beim überfahren mit der Maus."
 private.L["MOUSEOVER_SCAN_DESC"] = "Zeigt den Alarm für Kreaturen beim überfahren mit der Maus, auch wenn er schon im Cache ist."
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 private.L["PRINT_FORMAT"] = "%s_|cffCCCC88NPCScan|r: %s"
 private.L["RAREMOBS"] = "Seltene Kreaturen"
 private.L["SEARCH_ACHIEVEMENTADDFOUND"] = "Suche nach NSCs abgeschlossener Erfolge"

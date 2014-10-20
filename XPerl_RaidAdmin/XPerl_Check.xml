@@ -1316,7 +1316,7 @@
 							</OnShow>
 							<OnEnter>
 								GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -15, 0)
-								GameTooltip:SetText(XPERL_CHECK_REPORT_DROPDOWN_DESC, nil, nil, nil, nil, 1)
+								GameTooltip:SetText(XPERL_CHECK_REPORT_DROPDOWN_DESC, nil, nil, nil, nil, true)
 							</OnEnter>
 							<OnLeave>
 								GameTooltip:Hide()

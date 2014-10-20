@@ -1,10 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: EnxConstants.lua 4632 2010-01-24 02:33:54Z ccox $
 	URL: http://enchantrix.org/
 
@@ -54,6 +50,11 @@ local GHOST_IRON_ORE = 72092
 local KYPARITE_ORE = 72093
 local WHITE_TRILLIUM_ORE = 72103
 local BLACK_TRILLIUM_ORE = 72094
+
+-- prospectable Draenor ores
+--local BLACKROCK = 109118	-- not prospectable
+--local TRUEIRON = 109119	-- not prospectable
+
 
 local COPPERPOWDER = 24186
 local TINPOWDER = 24188
@@ -128,7 +129,7 @@ local EMBERTOPAZ = 52193
 local DEMONSEYE = 52194
 local AMBERJEWEL = 52195
 
--- new for Panda
+-- new for Pandaria
 local TIGEROPAL = 76130
 local LAPISLAZULI = 76133
 local SUNSTONE = 76134
@@ -142,6 +143,9 @@ local WILDJADE = 76139
 local VERMILIONONYX = 76140
 local IMPERIALAMETHYST = 76141
 local SUNSRADIANCE = 76142
+
+-- TODO - ccox - new gems for Warlords of Draenor
+-- Currently no prospectable gems, only craftable gems
 
 
 --[[
@@ -166,6 +170,8 @@ const.ProspectMinLevels = {
 	[KYPARITE_ORE] = 550,
 	[WHITE_TRILLIUM_ORE] = 600,
 	[BLACK_TRILLIUM_ORE] = 600,
+--	[BLACKROCK] = 600,			-- currently not prospectable
+--	[TRUEIRON] = 600,			-- currently not prospectable
 }
 
 
@@ -358,7 +364,6 @@ const.ProspectableItems = {
 			},
 
 	[GHOST_IRON_ORE] = {
--- ccox - tested in beta Sept 23, 2012
 			[SPARKLING_SHARD] = 1.14,
 			
 			[TIGEROPAL] = 0.25,
@@ -377,7 +382,6 @@ const.ProspectableItems = {
 			},
 	
 	[KYPARITE_ORE] = {
--- ccox - tested in beta Sept 23, 2012
 			[SPARKLING_SHARD] = 1.46,
 			
 			[TIGEROPAL] = 0.25,
@@ -396,8 +400,6 @@ const.ProspectableItems = {
 			},
 	
 	[WHITE_TRILLIUM_ORE] = {
--- ccox - tested in beta Sept 23, 2012
--- ccox - wild guess, needs update	
 			[SPARKLING_SHARD] = 1.65,
 			
 			[TIGEROPAL] = 0.18,
@@ -416,8 +418,6 @@ const.ProspectableItems = {
 			},
 
 	[BLACK_TRILLIUM_ORE] = {
--- ccox - tested in beta Sept 23, 2012
--- ccox - wild guess, needs update
 			[SPARKLING_SHARD] = 1.65,
 			
 			[TIGEROPAL] = 0.18,
@@ -532,6 +532,7 @@ const.ReverseProspectingSources = {
 
 
 -- items that have no use, sell to vendor, and thus get vendor prices
+-- most have now been removed from yields
 const.VendorTrash =  {
 	[COPPERPOWDER] = true,
 	[TINPOWDER] = true,

@@ -1,4 +1,4 @@
-﻿-- Import SM for statusbar-textures, font-styles and border-types
+-- Import SM for statusbar-textures, font-styles and border-types
 local SharedMedia = LibStub("LibSharedMedia-3.0");
 
 -- Default settings
@@ -33,6 +33,17 @@ local default = {
   alpha         = 1.0,
   barColor       = {1.0, 0.0, 0.0, 1.0},
   backgroundColor   = {0.0, 0.0, 0.0, 0.5},
+  spark           = false,
+  sparkWidth      = 10,
+  sparkHeight     = 30,
+  sparkColor      = {1.0, 1.0, 1.0, 1.0},
+  sparkTexture    = "Interface\\CastingBar\\UI-CastingBar-Spark",
+  sparkBlendMode  = "ADD",
+  sparkDesature   = false,
+  sparkOffsetX    = 0,
+  sparkOffsetY    = 0,
+  sparkRotationMode = "AUTO",
+  sparkRotation   = 0,
   borderColor     = {1.0, 1.0, 1.0, 0.5},
   backdropColor    = {1.0, 1.0, 1.0, 0.5},
   borderEdge      = "None",
@@ -51,6 +62,31 @@ local default = {
   customTextUpdate   = "update"
 };
 
+-- Returns tex Coord for 90° rotations + x or y flip
+
+local texCoords = { 0, 0, 1, 1,
+                    0, 0, 1, 1,
+                    0, 0, 1, 1 };
+
+-- only supports multipliers of 90° degree
+-- returns in order: TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy
+local GetTexCoord = function(degree, mirror)
+    local offset = (degree or 0)/ 90
+    local TLx,  TLy = texCoords[2 + offset], texCoords[1 + offset]
+    local TRx,  TRy = texCoords[3 + offset], texCoords[2 + offset]
+    local BLx,  BLy = texCoords[1 + offset], texCoords[4 + offset]
+    local BRx,  BRy = texCoords[4 + offset], texCoords[3 + offset]
+
+    if (mirror) then
+        TLx, TRx = TRx, TLx
+        TLy, TRy = TRy, TLy
+        BLx, BRx = BRx, BLx
+        BLy, BRy = BRy, BLy
+    end
+
+    return TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy
+end
+
 -- Emulate blizzard statusbar with advanced features (more grow directions)
 local barPrototype = {
   -- Apply settings to bar (re-align textures)
@@ -61,10 +97,11 @@ local barPrototype = {
     
     -- Alignment variables
     local progress = (self.value - self.min) / (self.max - self.min);
-    local align1, align2;
-    local xProgress, yProgress;
+    local align1, align2, alignSpark;
+    local xProgress, yProgress, sparkOffset;
     local TLx,  TLy,  BLx,  BLy,  TRx,  TRy,  BRx,  BRy;
     local TLx_, TLy_, BLx_, BLy_, TRx_, TRy_, BRx_, BRy_;
+    local sTLx, sTLy, sBLx, sBLy, sTRx, sTRy, sBRx, sBRy; -- spark rotation
     
     -- Do not flip/rotate textures
     local orientation = self.orientation;
@@ -78,64 +115,79 @@ local barPrototype = {
     
     -- HORIZONTAL (Grow: L -> R, Deplete: R -> L)
     if orientation == "HORIZONTAL" then
-      TLx , TLy  = 0.0      , 0.0    ; TRx , TRy  = 1.0        , 0.0      ;
-      BLx , BLy  = 0.0      , 1.0    ; BRx , BRy  = 1.0        , 1.0      ;
+      TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy = GetTexCoord(0, false)
       
       TLx_, TLy_ = TLx      , TLy    ; TRx_, TRy_ = TRx*progress    , TRy      ;
       BLx_, BLy_ = BLx      , BLy    ; BRx_, BRy_ = BRx*progress    , BRy      ;
       
     -- HORIZONTAL_INVERSE (Grow: R -> L, Deplete: L -> R)
     elseif orientation == "HORIZONTAL_INVERSE" then
-      TLx , TLy  = 1.0      , 0.0      ; TRx , TRy  = 0.0      , 0.0      ;
-      BLx , BLy  = 1.0      , 1.0      ; BRx , BRy  = 0.0      , 1.0      ;
+      TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy = GetTexCoord(0, true)
       
       TLx_, TLy_ = TLx*progress  , TLy      ; TRx_, TRy_ = TRx      , TRy      ;
       BLx_, BLy_ = BLx*progress  , BLy      ; BRx_, BRy_ = BRx      , BRy      ;
       
     -- VERTICAL (Grow: T -> B, Deplete: B -> T)
     elseif orientation == "VERTICAL" then
-      TLx , TLy  = 0.0      , 1.0      ; TRx , TRy  = 0.0      , 0.0      ;
-      BLx , BLy  = 1.0      , 1.0      ; BRx , BRy  = 1.0      , 0.0      ;
+      TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy = GetTexCoord(90, false)
       
       TLx_, TLy_ = TLx      , TLy      ; TRx_, TRy_ = TRx      , TRy      ;
       BLx_, BLy_ = BLx*progress  , BLy      ; BRx_, BRy_ = BRx*progress  , BRy      ;
 
     -- VERTICAL_INVERSE (Grow: B -> T, Deplete: T -> B)
     elseif orientation == "VERTICAL_INVERSE" then
-      TLx , TLy  = 1.0      , 0.0      ; TRx , TRy  = 1.0      , 1.0      ;
-      BLx , BLy  = 0.0      , 0.0      ; BRx , BRy  = 0.0      , 1.0      ;
+      TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy = GetTexCoord(270, false)
       
       TLx_, TLy_ = TLx*progress  , TLy      ; TRx_, TRy_ = TRx*progress  , TRy      ;
       BLx_, BLy_ = BLx      , BLy      ; BRx_, BRy_ = BRx      , BRy      ;
       
     end
+
     -- HORIZONTAL (Grow: L -> R, Deplete: R -> L)
     if self.orientation == "HORIZONTAL" then
       align1, align2   = "TOPLEFT", "BOTTOMLEFT";
+      alignSpark       = "LEFT";
       xProgress    = self:GetWidth() * progress;
+      sparkOffset   = xProgress;
       
     -- HORIZONTAL_INVERSE (Grow: R -> L, Deplete: L -> R)
     elseif self.orientation == "HORIZONTAL_INVERSE" then
       align1, align2   = "TOPRIGHT", "BOTTOMRIGHT";
+      alignSpark       = "RIGHT";
       xProgress    = self:GetWidth() * progress;
+      sparkOffset   = -xProgress;
       
     -- VERTICAL (Grow: T -> B, Deplete: B -> T)
     elseif self.orientation == "VERTICAL" then
       align1, align2   = "TOPLEFT", "TOPRIGHT";
+      alignSpark       = "TOP";
       yProgress    = self:GetHeight() * progress;
+      sparkOffset   = -yProgress;
 
     -- VERTICAL_INVERSE (Grow: B -> T, Deplete: T -> B)
     elseif self.orientation == "VERTICAL_INVERSE" then
       align1, align2   = "BOTTOMLEFT", "BOTTOMRIGHT";
+      alignSpark       = "BOTTOM";
       yProgress    = self:GetHeight() * progress;
-      
+      sparkOffset   = yProgress;
     end
+
+    local sparkMirror = self.spark.sparkMirror;
+    local sparkRotationMode = self.spark.sparkRotationMode;
+    if (sparkRotationMode == "AUTO") then
+        sTLx, sTLy, sBLx, sBLy, sTRx, sTRy, sBRx, sBRy = TLx, TLy, BLx, BLy, TRx, TRy, BRx, BRy;
+    else
+        local sparkRotation = tonumber(self.spark.sparkRotation);
+        sTLx, sTLy, sTRx, sTRy, sBLx, sBLy, sBRx, sBRy = GetTexCoord(sparkRotation, sparkMirror)
+    end
+
     -- Only width/height of parent changed
-     if not OnSizeChanged then
+    if not OnSizeChanged then
       -- Stretch bg accross complete frame
       self.bg:ClearAllPoints();
       self.bg:SetAllPoints();
       self.bg:SetTexCoord(TLx , TLy , BLx , BLy , TRx , TRy , BRx , BRy );
+      self.spark:SetTexCoord(sTLx , sTLy , sBLx , sBLy , sTRx , sTRy , sBRx , sBRy);
       
       -- Set alignment
       self.fg:ClearAllPoints();
@@ -148,10 +200,14 @@ local barPrototype = {
     
     -- Create statusbar illusion
     if xProgress then
-      self.fg:SetWidth(xProgress > 0 and xProgress or 0.1);
+      self.fg:SetWidth(xProgress > 0 and xProgress or 0.0001);
+      self.spark:ClearAllPoints();
+      self.spark:SetPoint("CENTER", self, alignSpark, sparkOffset + (self.spark.sparkOffsetX or 0), self.spark.sparkOffsetY or 0);
     end
     if yProgress then
-      self.fg:SetHeight(yProgress > 0 and yProgress or 0.1);
+      self.fg:SetHeight(yProgress > 0 and yProgress or 0.0001);
+      self.spark:ClearAllPoints();
+      self.spark:SetPoint("CENTER", self, alignSpark, (self.spark.sparkOffsetX or 0), sparkOffset + (self.spark.sparkOffsetY or 0));
     end
   end,
   
@@ -279,10 +335,13 @@ local function create(parent)
   local bar = CreateFrame("FRAME", nil, region);
   local fg = bar:CreateTexture(nil, "ARTWORK");
   local bg = bar:CreateTexture(nil, "ARTWORK");
+  local spark = bar:CreateTexture(nil, "ARTWORK");
   fg:SetDrawLayer("ARTWORK", 2);
   bg:SetDrawLayer("ARTWORK", 1);
+  spark:SetDrawLayer("ARTWORK", 3);
   bar.fg = fg;
   bar.bg = bg;
+  bar.spark = spark;
   for key, value in pairs(barPrototype) do
     bar[key] = value;
   end
@@ -767,6 +826,23 @@ local function modify(parent, region, data)
   local texturePath = SharedMedia:Fetch("statusbar", data.texture) or "";
   bar:SetStatusBarTexture(texturePath);
   bar:SetBackgroundColor(data.backgroundColor[1], data.backgroundColor[2], data.backgroundColor[3], data.backgroundColor[4]);
+  -- Update spark settings
+  bar.spark:SetTexture(data.sparkTexture);
+  bar.spark:SetVertexColor(data.sparkColor[1], data.sparkColor[2], data.sparkColor[3], data.sparkColor[4]); -- TODO introduce function?
+  bar.spark:SetWidth(data.sparkWidth);
+  bar.spark:SetHeight(data.sparkHeight);
+  if (data.spark) then
+    bar.spark:Show()
+  else
+    bar.spark:Hide()
+  end
+  bar.spark:SetBlendMode(data.sparkBlendMode);
+  bar.spark:SetDesaturated(data.sparkDesaturate);
+  bar.spark.sparkOffsetX = data.sparkOffsetX;
+  bar.spark.sparkOffsetY = data.sparkOffsetY;
+  bar.spark.sparkRotationMode = data.sparkRotationMode;
+  bar.spark.sparkRotation = data.sparkRotation;
+  bar.spark.sparkMirror = data.sparkMirror;
   
   -- Bar or Border (+Backdrop) in front
   if data.barInFront then
@@ -948,21 +1024,21 @@ local function modify(parent, region, data)
             scalex = -scalex;
             if data.orientation == "HORIZONTAL" then
                 if self.orientation ~= "HORIZONTAL_INVERSE" then
-                    orientHorizontalInverse();
+                    orientHorizontalInverse(self, data);
                 end
             elseif data.orientation == "HORIZONTAL_INVERSE" then
                 if self.orientation ~= "HORIZONTAL" then
-                    orientHorizontal();
+                    orientHorizontal(self, data);
                 end
             end
         else
             if data.orientation == "HORIZONTAL" then
                 if self.orientation ~= "HORIZONTAL" then
-                    orientHorizontal();
+                    orientHorizontal(self, data);
                 end
             elseif data.orientation == "HORIZONTAL_INVERSE" then
                 if self.orientation ~= "HORIZONTAL_INVERSE" then
-                    orientHorizontalInverse();
+                    orientHorizontalInverse(self, data);
                 end
             end
         end

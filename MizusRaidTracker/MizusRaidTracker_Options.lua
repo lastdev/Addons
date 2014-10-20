@@ -4,7 +4,7 @@
 -- *******************************************************
 --
 -- This addon is written and copyrighted by:
---    * Mîzukichan @ EU-Antonidas (2010-2013)
+--    * Mîzukichan @ EU-Antonidas (2010-2014)
 --
 --    This file is part of Mizus RaidTracker.
 --
@@ -85,6 +85,8 @@ function MRT_Options_ParseValues()
     MRT_Options_TrackingPanel_LogLFRRaids_CB_Text:SetText(MRT_L.Options["TP_LogLFRRaids"]);
     MRT_Options_TrackingPanel_LogAVRaids_CB_Text:SetText(MRT_L.Options["TP_LogAVRaids"]);
     MRT_Options_TrackingPanel_LogWotLKRaids_CB_Text:SetText(MRT_L.Options["TP_LogWotLKRaids"]);
+    MRT_Options_TrackingPanel_LogCataclysmRaids_CB_Text:SetText(MRT_L.Options["TP_LogCataclysmRaids"]);
+    MRT_Options_TrackingPanel_LogLootModePersonal_CB_Text:SetText(MRT_L.Options["TP_LogLootModePersonal"]);
     MRT_Options_TrackingPanel_CreateNewRaidOnNewZone_CB_Text:SetText(MRT_L.Options["TP_CreateNewRaidOnNewZone"]);
     MRT_Options_TrackingPanel_UseServerTime_CB_Text:SetText(MRT_L.Options["TP_UseServerTime"]);
     -- ItemsTrackingPanel
@@ -93,7 +95,7 @@ function MRT_Options_ParseValues()
     MRT_Options_ItemsTrackingPanel_AskForDKPValue_CB_Text:SetText(MRT_L.Options["TP_AskForDKPValue"]);    
     MRT_Options_ItemsTrackingPanel_MinItemQualityToGetCost_SliderText:SetText(MRT_L.Options["TP_MinItemQualityToGetCost_Desc"]);
     MRT_Options_ItemsTrackingPanel_OnlyTrackItemsAbove_Text:SetText(MRT_L.Options["TP_OnlyTrackItemsAbove"]);
-    MRT_Options_ItemsTrackingPanel_UseEPGPValues_CB_Text:SetText(MRT_L.Options["ITP_UseEPGP_GP_Values"].." (experimental!)");
+    MRT_Options_ItemsTrackingPanel_UseEPGPValues_CB_Text:SetText(MRT_L.Options["ITP_UseEPGP_GP_Values"]);
     MRT_Options_ItemsTrackingPanel_ChooseAutoFocus_Title:SetText(MRT_L.Options["ITP_AutoFocus_Title"]);
     MRT_Options_ItemsTrackingPanel_Create_ChooseAutoFocus_DropDownMenu();
     MRT_Options_ItemsTrackingPanel_IgnoreEnchantingMats_CB_Text:SetText(MRT_L.Options["ITP_IgnoreEnchantingMats"]);
@@ -155,6 +157,8 @@ function MRT_Options_OnOkay(panel)
     MRT_Options["Tracking_LogLFRRaids"] = MRT_Options_TrackingPanel_LogLFRRaids_CB:GetChecked();
     MRT_Options["Tracking_LogAVRaids"] = MRT_Options_TrackingPanel_LogAVRaids_CB:GetChecked();
     MRT_Options["Tracking_LogWotLKRaids"] = MRT_Options_TrackingPanel_LogWotLKRaids_CB:GetChecked();
+    MRT_Options["Tracking_LogCataclysmRaids"] = MRT_Options_TrackingPanel_LogCataclysmRaids_CB:GetChecked();
+    MRT_Options["Tracking_LogLootModePersonal"] = MRT_Options_TrackingPanel_LogLootModePersonal_CB:GetChecked();
     MRT_Options["Tracking_CreateNewRaidOnNewZone"] = MRT_Options_TrackingPanel_CreateNewRaidOnNewZone_CB:GetChecked();
     MRT_Options["Tracking_UseServerTime"] = MRT_Options_TrackingPanel_UseServerTime_CB:GetChecked();
     -- ItemsTrackingPanel
@@ -224,6 +228,8 @@ function MRT_Options_RestoreValues()
     MRT_Options_TrackingPanel_LogLFRRaids_CB:SetChecked(MRT_Options["Tracking_LogLFRRaids"]);
     MRT_Options_TrackingPanel_LogAVRaids_CB:SetChecked(MRT_Options["Tracking_LogAVRaids"]);
     MRT_Options_TrackingPanel_LogWotLKRaids_CB:SetChecked(MRT_Options["Tracking_LogWotLKRaids"]);
+    MRT_Options_TrackingPanel_LogCataclysmRaids_CB:SetChecked(MRT_Options["Tracking_LogCataclysmRaids"]);
+    MRT_Options_TrackingPanel_LogLootModePersonal_CB:SetChecked(MRT_Options["Tracking_LogLootModePersonal"]);
     MRT_Options_TrackingPanel_CreateNewRaidOnNewZone_CB:SetChecked(MRT_Options["Tracking_CreateNewRaidOnNewZone"]);
     MRT_Options_TrackingPanel_UseServerTime_CB:SetChecked(MRT_Options["Tracking_UseServerTime"]);
     -- ItemsTrackingPanel

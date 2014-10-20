@@ -4,7 +4,7 @@ Reagent Restocker now has [[https://plus.google.com/101127866821396020019|Google
 
 If you like it, feel free to donate! I highly recommend donating to your favorite addons, it really helps.
 
-NOTE: I've been seeing copies of Reagent Restocker popping up at other download sites. The only two places I currently upload the addon to are curse.com, wowinterface.com. I cannot guarantee the integrity of any other download sites.
+NOTE: I've been seeing copies of Reagent Restocker popping up at other download sites. The only three places I currently upload the addon to are curse.com, wowinterface.com, and solidice.com. I cannot guarantee the integrity of any other download sites.
 
 What can you do with Reagent Restocker? Well, you can do the following:
 
@@ -37,7 +37,7 @@ Raid Roll users: Reagent Restocker may take over /rr - if that happens, use /rrl
 /rrbuy and /rrsell add items to the sell and buy lists (thanks g3gg0)
 
 == NOTE ==
-The primary portal for Reagent Restocker is at curse.com, even though I also publish the addon to wowinterface.com (the old portal), and may publish to other places in the future.
+The primary portal for Reagent Restocker is at curse.com, even though I also publish the addon to wowinterface.com (the old portal) and solidice.com, and may publish to other places in the future.
 
 The public facing page is here:
 http://wow.curse.com/downloads/wow-addons/details/reagent_restocker.aspx

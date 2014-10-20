@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("NorthrendBeasts", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 142 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 163 $"):sub(12, -3))
 mod:SetCreatureID(34796, 35144, 34799, 34797)
 --mod:SetEncounterID(1088)
 mod:SetMinSyncRevision(104)
@@ -293,14 +293,10 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 			local uId = DBM:GetRaidUnitId(target)
 			if uId then
 				local inRange = CheckInteractDistance(uId, 2)
-				local x, y = GetPlayerMapPosition(uId)
-				if x == 0 and y == 0 then
-					SetMapToCurrentZone()
-					x, y = GetPlayerMapPosition(uId)
-				end
 				if inRange then
 					specWarnChargeNear:Show()
 					if self.Options.IcehowlArrow then
+						local x, y = UnitPosition(uId)
 						DBM.Arrow:ShowRunAway(x, y, 12, 5)
 					end
 				end

@@ -4,13 +4,8 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-<<<<<<< HEAD
-addon.Version = "v5.4.009"
-addon.VersionNum = 504009
-=======
-addon.Version = "v5.4.004"
-addon.VersionNum = 504004
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+addon.Version = "v6.0.001"
+addon.VersionNum = 600001
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -141,6 +136,7 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Characters.ViewBagsAllInOne"] = 0,
 			["UI.Tabs.Characters.ViewBagsRarity"] = 0,
 			["UI.Tabs.Characters.ViewVoidStorage"] = 1,
+			["UI.Tabs.Characters.ViewReagentBank"] = 1,
 			
 			["UI.Tabs.Guild.BankItemsRarity"] = 0,		-- rarity filter in the guild bank tab
 			
@@ -152,6 +148,8 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Grids.Tradeskills.CurrentXPack"] = 1,					-- Current expansion pack 
 			["UI.Tabs.Grids.Tradeskills.CurrentTradeSkill"] = 1,			-- Current tradeskill index
 			["UI.Tabs.Grids.Archaeology.CurrentRace"] = 1,					-- Current race index
+			["UI.Tabs.Grids.Dungeons.CurrentXPack"] = 1,						-- Current expansion pack 
+			["UI.Tabs.Grids.Dungeons.CurrentRaids"] = 1,						-- Current raid index
 			
 			["UI.AHColorCoding"] = 1,						-- color coded recipes at the AH
 			["UI.VendorColorCoding"] = 1,					-- color coded recipes at vendors

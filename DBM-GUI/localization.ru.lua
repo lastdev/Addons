@@ -14,6 +14,7 @@ L.OTabBosses				= "Боссы"
 L.OTabOptions				= "Настройки"
 
 L.TabCategory_Options	 	= "Общие параметры"
+L.TabCategory_WOD	 		= "Warlords of Draenor"
 L.TabCategory_MOP	 		= "Туманы Пандарии"
 L.TabCategory_CATA	 		= "Катаклизм"
 L.TabCategory_WOTLK 		= "Wrath of the Lich King"
@@ -60,12 +61,8 @@ L.UseMasterVolume			= "Использовать основной аудио ка
 L.Latency_Text				= "Макс. задержка для синхронизации: %d"
 -- Tab: General Timer Options
 L.TimerGeneral 				= "Общие параметры таймера"
-<<<<<<< HEAD
 L.SKT_Enabled				= "Всегда отображать таймер рекордной победы<br/>(переопределяет настройку для конкретного босса)"
 L.CRT_Enabled				= "Отображать таймер до след. заряда воскрешения в бою (только уровни сложности в 6.x)"
-=======
-L.SKT_Enabled				= "Всегда отображать таймер быстрого убийства<br/>(переопределяет настройку для конкретного босса)"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L.ChallengeTimerOptions		= "Отображать таймер лучшего прохождения для режима испытаний"
 L.ChallengeTimerPersonal	= "Персональный"
 L.ChallengeTimerGuild		= "Гильдия"
@@ -120,6 +117,7 @@ L.CombatMessages			= "Параметры сообщений в бою"
 L.ShowEngageMessage 		= "Показывать сообщения о вступлении в бой в окне чата"
 L.ShowKillMessage 			= "Показывать сообщения об убийстве босса в окне чата"
 L.ShowWipeMessage 			= "Показывать сообщения при вайпе в окне чата"
+L.ShowGuildMessages 		= "Показывать сообщения о вступлении в бой/убийстве/вайпе гильдии в окне чата"
 L.ShowRecoveryMessage 		= "Показывать сообщения о восстановлении таймеров в окне чата"
 L.WhisperMessages			= "Параметры приватных сообщений"
 L.AutoRespond 				= "Включить авто-ответ в бою"
@@ -183,16 +181,6 @@ L.BarWidth					= "Ширина индикатора: %d"
 
 -- Tab: Global Filter
 L.Panel_SpamFilter				= "Общие и спам-фильтры"
-<<<<<<< HEAD
-=======
-L.Area_SpamFilter				= "Параметры спам-фильтра"
-L.StripServerName				= "Удалять имя сервера в предупреждениях и таймерах"
-L.SpamBlockBossWhispers			= "Фильтрация &lt;DBM&gt; предупреждений шепотом в бою"
-L.BlockVersionUpdateNotice		= "Отключить уведомление о доступном обновлении (не рекомендуется)"
-L.ShowBBOnCombatStart			= "Выполнять проверку положительных эффектов Big Brother в начале боя"
-L.BigBrotherAnnounceToRaid		= "Объявлять результаты проверки Big Brother в рейд"
-
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L.Area_SpamFilter_Outgoing		= "Параметры общего фильтра"
 L.SpamBlockNoShowAnnounce		= "Не объявлять или предупреждать звуком игрока"
 L.DontShowFarWarnings			= "Не отображать предупреждения/таймеры для событий, которые далеко"
@@ -201,7 +189,6 @@ L.SpamBlockNoSetIcon			= "Не устанавливать метки на цел
 L.SpamBlockNoRangeFrame			= "Не отображать окно проверки дистанции"
 L.SpamBlockNoInfoFrame			= "Не отображать информационное окно"
 L.SpamBlockNoHealthFrame		= "Не отображать окно здоровья"
-<<<<<<< HEAD
 
 -- Tab: Spam Filter
 L.Area_SpamFilter				= "Параметры спам-фильтра"
@@ -210,8 +197,6 @@ L.SpamBlockBossWhispers			= "Фильтрация &lt;DBM&gt; предупреж
 L.BlockVersionUpdateNotice		= "Отключить уведомление о доступном обновлении (не рекомендуется)"
 L.ShowBBOnCombatStart			= "Выполнять проверку положительных эффектов Big Brother в начале боя"
 L.BigBrotherAnnounceToRaid		= "Объявлять результаты проверки Big Brother в рейд"
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 L.Area_SpecFilter				= "Параметры фильтра по специализации"
 L.FilterTankSpec				= "Фильтровать предупреждения для роли танка когда не в специализации танка"

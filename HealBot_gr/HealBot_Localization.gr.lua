@@ -820,7 +820,7 @@ function HealBot_Lang_grGR()
 			[HEALBOT_DEBUFF_STATIC_WOUND]      = 11, -- Jin'rokh the Breaker
 			[HEALBOT_DEBUFF_THUNDERING_THROW]  = 11, -- Jin'rokh the Breaker
 			[HEALBOT_DEBUFF_FOCUSED_LIGHTNING] = 4, -- Jin'rokh the Breaker
-			[HEALBOT_DEBUFF_ELECTRIFIED_WATERS] = 4, -- Jin'rokh the Breaker 
+			--[HEALBOT_DEBUFF_ELECTRIFIED_WATERS] = 4, -- Jin'rokh the Breaker 
 			[HEALBOT_DEBUFF_TRIPLE_PUNCTURE]   = 11, -- Horridon
 			[HEALBOT_DEBUFF_RENDING_CHARGE]    = 10, -- Horridon
 			[HEALBOT_DEBUFF_FROZEN_BOLT]       = 4, -- Horridon
@@ -862,7 +862,7 @@ function HealBot_Lang_grGR()
 			--[HEALBOT_DEBUFF_ANIMA_FONT]        = 2, -- Dark Animus
 			[HEALBOT_DEBUFF_SCORCHED]          = 11, -- Iron Qon
 			[HEALBOT_DEBUFF_FREEZE]            = 4, -- Iron Qon
-			[HEALBOT_DEBUFF_STORM_CLOUD]       = 11, -- Iron Qon
+			--[HEALBOT_DEBUFF_STORM_CLOUD]       = 11, -- Iron Qon
 			--[HEALBOT_DEBUFF_ARCING_LIGHTNING]  = 2, -- Iron Qon   
 			[HEALBOT_DEBUFF_FAN_OF_FLAMES]     = 4, -- Twin Consorts 
 			[HEALBOT_DEBUFF_BEAST_OF_NIGHTMARES] = 2, -- Twin Consorts
@@ -998,7 +998,7 @@ function HealBot_Lang_grGR()
 			[HEALBOT_DEBUFF_MALICIOUS_BLAST]   = 8, -- Garrosh Hellscream Heroic 
 			[HEALBOT_DEBUFF_FIXATE]            = 4, -- Garrosh Hellscream Heroic 
 			[HEALBOT_DEBUFF_NAPALM]            = 8, -- Garrosh Hellscream Heroic
-			[HEALBOT_DEBUFF_EXPLOSIVE_DESPAIR] = 4, -- Garrosh Hellscream
+			--[HEALBOT_DEBUFF_EXPLOSIVE_DESPAIR] = 4, -- Garrosh Hellscream
 			[HEALBOT_DEBUFF_FAITH]             = 4, -- Garrosh Hellscream Buff
 			[HEALBOT_DEBUFF_HOPE]              = 5, -- Garrosh Hellscream Buff 
 			[HEALBOT_DEBUFF_COURAGE]           = 3, -- Garrosh Hellscream Buff 

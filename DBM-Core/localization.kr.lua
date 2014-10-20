@@ -1,6 +1,7 @@
 ﻿if (GetLocale() == "koKR") then
 
 DBM_CORE_NEED_SUPPORT				= "문의/건의사항은 설정 화면에서 사용자 포럼 버튼을 누른 후, DBM 사용자 포럼에 남겨 주시기 바랍니다. DBM Team은 프로그래밍 또는 외국어에 능통하신 분의 도움을 기다리고 있습니다. 자세한 사항은 everfinale@gmail.com 으로 메일을 보내주시기 바랍니다."
+DBM_CORE_NEED_LOGS					= "DBM이 현재 전투 경고를 원할히 하기 위해서는 Transcriptor (http://www.wowace.com/addons/transcriptor/) 기록이 필요합니다. 가능하시다면, 현재 전투를 Transcriptor로 기록하신 후에 http://forums.elitistjerks.com/topic/132677-deadly-boss-mods-60-testing/ 로 오셔서 올려주세요.(용량이 크므로 반드시 압축해주시기 바랍니다.). 6.0 공격대 전투 기록만 필요합니다. 5인 던전 전투 기록은 필요하지 않습니다."
 DBM_HOW_TO_USE_MOD					= "DBM 사용을 환영합니다. 대화창에서 /dbm help를 입력하면 사용 가능한 명령어 목록을 볼 수 있습니다. 설정을 위해서는 /dbm을 입력하면 설정창이 나타납니다. 각 경고는 최초 불러오기시 캐릭터 특성에 맞는 적절한 경고를 선택합니다. 선택된 경고는 설정창에서 언제든지 변경이 가능합니다."
 
 DBM_FORUMS_MESSAGE					= "오류를 발견하셨나요? 일부 전투에서 추가 경고가 있으면 좋을텐데라고 생각하셨나요?\n그렇다면 DBM 사용자 포럼을 방문해 보세요. 주소는 |HDBM:forums|h|cff3588ffhttp://www.inven.co.kr/board/powerbbs.php?come_idx=3716|r 입니다. (클릭후 주소 복사 가능)"
@@ -14,6 +15,8 @@ DBM_CORE_LOAD_GUI_COMBAT			= "전투 중에는 설정창을 불러올 수 없습
 DBM_CORE_LOAD_SKIN_COMBAT			= "전투 도중 DBM 바 스킨 설정에 실패했습니다. 바가 정상 작동하지 않을 것이며 다수의 lua 오류가 발생할 수 있습니다. 이 오류는 DBM 바에 스킨을 적용하는 제3의 애드온이 있을 때 주로 발생합니다. 전투 종료 후 /reload 명령어를 입력하여 UI를 재시작 해주시기 바랍니다."
 DBM_CORE_BAD_LOAD					= "DBM이 현재 인스턴스의 경고를 완전히 불러오지 못한 것을 발견했습니다. 전투가 종료된 후에, /console reloadui 명령어를 입력하여 경고를 다시 불러오시기 바랍니다."
 
+DBM_CORE_BLIZZ_BUGS					= "6.0 애드온 오류 안내:\n1. 시스템 설정 - 소리에서 사운드 채널이 '낮음(24)'로 설정되어 있을 경우 전투 중에 애드온 소리가 나지 않을 수 있습니다. 6.0에서 동시에 24개 이상 소리가 날 경우 애드온 소리는 후순위가 되기 때문입니다.\n2. DBM은 캐릭터별로 설정을 저장하므로, 캐릭터 이름에 특수 문자가 있을 경우 설정이 올바르게 되지 않을 수 있습니다."
+
 DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP	= "현재 공격대원 숫자에 맞는 근접판정 정보를 알 수 없기 때문에 DBM이 이 전투에서 거리 창을 비활성화 했습니다."
 DBM_CORE_DYNAMIC_ADD_COUNT			= "현재 공격대원 숫자에 맞는 쫄 소환 정보를 알 수 없기 때문에 DBM이 이 전투에서 소환 횟수 정보를 비활성화 했습니다."
 DBM_CORE_DYNAMIC_MULTIPLE			= "현재 공격대원 숫자에 맞는 우두머리 특수 정보가 없기 때문에 DBM이 이 전투에서 다수 기능을 비활성화 했습니다."
@@ -22,20 +25,25 @@ DBM_CORE_LOOT_SPEC_REMINDER			= "현재 전문화는 %s 입니다. 현재 선택
 
 DBM_CORE_BIGWIGS_ICON_CONFLICT		= "DBM이 BigWigs와 DBM의 전술 목표 아이콘 설정이 모두 활성화 되어 있는 것이 확인했습니다. 아이콘 충돌을 방지하기 위해 두 애드온중 하나의 아이콘 설정을 비활성화 해주시기 바랍니다."
 
+DBM_CORE_PROVINGGROUNDS_AD			= "현재 인스턴스에서 DBM-ProvingGrounds 사용이 가능합니다. deadlybossmods.com 또는 와우 인벤에서 다운로드 받으실 수 있습니다. 이 메세지는 한 번만 표시됩니다."
+
 DBM_CORE_COMBAT_STARTED				= "%s 작동됨. 행운을 빕니다! :)";
 DBM_CORE_COMBAT_STARTED_IN_PROGRESS	= "%s 전투 진행 도중 참가하였습니다. 행운을 빕니다! :)"
+DBM_CORE_GUILD_COMBAT_STARTED		= "길드원이 %s 전투를 시작하였습니다."
 DBM_CORE_SCENARIO_STARTED			= "%s 시작됨. 행운을 빕니다! :)";
 DBM_CORE_SCENARIO_STARTED_IN_PROGRESS	= "%s 진행 도중 참가하였습니다. 행운을 빕니다! :)"
 DBM_CORE_BOSS_DOWN					= "%s 전투에서 승리하였습니다! (전투 시간: %s)"
 DBM_CORE_BOSS_DOWN_I				= "%s 전투에서 승리하였습니다! (이 난이도에서 승리: %d회)"
 DBM_CORE_BOSS_DOWN_L				= "%s 전투에서 승리하였습니다! (전투 시간: %s, 최종 전투 기록: %s, 가장 빨랐던 기록: %s, 이 난이도에서 승리: %d회)"
 DBM_CORE_BOSS_DOWN_NR				= "%s 전투에서 승리하였습니다! (전투 시간: %s) 이 기록은 새로운 기록이군요! (과거 기록: %s, 이 난이도에서 승리: %d회)"
+DBM_CORE_GUILD_BOSS_DOWN			= "길드원이 %s 전투에서 승리하였습니다! (전투시간: %s)"
 DBM_CORE_SCENARIO_COMPLETE			= "%s|1을;를; 완료하였습니다! (소요 시간: %s)"
 DBM_CORE_SCENARIO_COMPLETE_I		= "%s|1을;를; 완료하였습니다! (이 난이도 완료: %d회)"
 DBM_CORE_SCENARIO_COMPLETE_L		= "%s|1을;를; 완료하였습니다! (소요 시간: %s, 최종 소요 시간: %s, 가장 빨랐던 소요 시간: %s. 이 난이도 완료: %d회)"
 DBM_CORE_SCENARIO_COMPLETE_NR		= "%s|1을;를; 완료하였습니다! (소요 시간: %s) 이 기록은 새로운 기록이군요! (과거 기록: %s, 이 난이도 완료: %d회)"
 DBM_CORE_COMBAT_ENDED_AT			= "%s 전투가 종료되었습니다. (전투 종료시 우두머리 체력: %s, 전투 시간: %s)"
 DBM_CORE_COMBAT_ENDED_AT_LONG		= "%s 전투가 종료되었습니다. (전투 종료시 우두머리 체력: %s, 전투 시간: %s, 전멸: %d회)"
+DBM_CORE_GUILD_COMBAT_ENDED_AT		= "길드원이 %s 전투에서 전멸하였습니다. (전투 종료시 우두머리 체력: %s, 전투시간: %s)"
 DBM_CORE_SCENARIO_ENDED_AT			= "%s|1이;가; 종료되었습니다. (소요 시간: %s)"
 DBM_CORE_SCENARIO_ENDED_AT_LONG		= "%s|1이;가; 종료되었습니다. (소요 시간: %s, 이 난이도 미완료: %d회)"
 DBM_CORE_COMBAT_STATE_RECOVERED		= "%s 전투가 %s 전에 시작되었습니다. 바를 복구 합니다."
@@ -98,20 +106,15 @@ DBM_CORE_UPDATEREMINDER_FOOTER_GENERIC	= (IsMacClient() and "Cmd-C" or "Ctrl-C")
 DBM_CORE_UPDATEREMINDER_URL				= "http://www.inven.co.kr/board/powerbbs.php?come_idx=3716"
 DBM_CORE_UPDATEREMINDER_DISABLE			= "경고: 현재 사용중인 DBM 버전은 지나치게 오래되어 (r%d 가량) 사용하실 수 없습니다. 이것은 당신 및 공격대원에게 잘못된 알림으로 혼동을 주지 않기 위함입니다. 계속 사용하시려면 지금 즉시 최신 버전으로 업데이트하여 주시기 바랍니다."
 DBM_CORE_UPDATEREMINDER_HOTFIX			= "지금 사용하시는 DBM 버전은 이 전투에서 잘못된 경고를 표시합니다. 이 오류는 다음 버전에서 수정되오나, 다음 버전이 없을 경우 최신 alpha 버전으로 업데이트 하면 수정할 수 있습니다."
-<<<<<<< HEAD
 DBM_CORE_UPDATEREMINDER_MAJORPATCH		= "경고: DBM 버전이 오래되어 현재 게임 버전에서는 작동하지 않을 것입니다. 당신 또는 같은 공격대원에게 잘못된 알림을 보내거나 게임이 느려지는 것을 막기 위함을 양해하여 주시기 바랍니다. 지금 당장 최신 버전으로 업데이트 하여 주시기 바랍니다. 만약 6.0 베타를 실행 중인데 이 메세지가 보인다면, http://forums.elitistjerks.com/topic/132677-deadly-boss-mods-60-testing 에서 6.0 베타 버전을 받으세요."
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+DBM_CORE_UPDATEREMINDER_TESTVERSION		= "경고: 현재 게임 버전과 맞지 않는 DBM을 사용중입니다. 현재 게임 버전에 맞는 DBM을 다운로드 받아 다시 설치하시기 바랍니다."
+DBM_CORE_VEM							= "경고: 당신은 DBM과 VEM을 동시에 사용중입니다. 현재 설정에서는 DBM이 작동하지 않으므로 DBM을 불러오지 않습니다."
 
 DBM_CORE_MOVABLE_BAR				= "나를 움직이세요~_~"
 
 DBM_PIZZA_SYNC_INFO					= "|Hplayer:%1$s|h[%1$s]|h님이 당신에게 DBM 바 보냄: '%2$s'\n|HDBM:cancel:%2$s:nil|h|cff3588ff[바 취소]|r|h  |HDBM:ignore:%2$s:%1$s|h|cff3588ff[%1$s 바 차단]|r|h"
 DBM_PIZZA_CONFIRM_IGNORE			= "%s님의 DBM 바를 차단하시겠습니까? 이 공격대에 있는 동안에만 적용됩니다."
-<<<<<<< HEAD
 DBM_PIZZA_ERROR_USAGE				= "사용법: /dbm [broadcast] timer <시간> <글자>. 시간은 1초 이상이어야 합니다."
-=======
-DBM_PIZZA_ERROR_USAGE				= "사용법: /dbm [broadcast] timer <시간> <글자>"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 --DBM_CORE_MINIMAP_TOOLTIP_HEADER (Same as English locales)
 DBM_CORE_MINIMAP_TOOLTIP_FOOTER		= "Shift+클릭 또는 오른쪽 클릭으로 움직이세요.\nAlt+Shift+클릭으로 움직이면 자유롭게 배치할 수 있습니다."
@@ -142,7 +145,6 @@ DBM_CORE_SLASHCMD_HELP				= {
 --	"/dbm version2: 공격대 전체 DBM 버전 확인 + 구버전 귓속말 알림(줄임말: ver2).",
 	"/dbm unlock(move): 20초 동안 바 위치 조정 가능 상태가 됨",
 	"* 아래 명령어의 숫자나 글자를 입력할때 < > 는 입력하지 않음 *",
-<<<<<<< HEAD
 	"/dbm timer/ctimer/ltimer/cltimer <숫자> <글자>: <글자>에 입력한 대로 <숫자>초 동안 지속되는 바를 생성",
 	"/dbm broadcast timer/ctimer/ltimer/cltimer <숫자> <글자>: <글자>에 입력한 대로 <숫자>초 동안 지속되는 바를 생성 후 모든 공격대원에게 보냄(승급 권한 필요)",
 	" - timer: 평범한 바",
@@ -150,10 +152,6 @@ DBM_CORE_SLASHCMD_HELP				= {
 	" - ltimer: 계속 반복되는 바", 
 	" - cltimer: 계속 반복되며, 초읽기 글자 및 숫자가 보이는 바",
 	"/dbm timer endloop: ltimer 또는 cltimer 바의 반복을 멈춤.",
-=======
-	"/dbm timer <숫자> <글자>: <글자>에 입력한 대로 <숫자>초 동안 지속되는 바를 생성",
-	"/dbm broadcast timer <숫자> <글자>: <글자>에 입력한 대로 <숫자>초 동안 지속되는 바를 생성 후 모든 공격대원에게 보냄(승급 권한 필요)",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	"/dbm break <숫자>: <숫자>분 지속되는 휴식 바를 보냄. DBM을 설치한 모든 공격대원이 볼 수 있음(승급 권한 필요)",
 	"/dbm pull <숫자>: <숫자>초 후 전투 예정 바를 보냄. DBM을 설치한 모든 공격대원이 볼 수 있음(승급 권한 필요)",
 	"/dbm arrow: DBM 화살표 도움말을 봄",
@@ -172,7 +170,7 @@ DBM_CORE_RIGHT						= "오른쪽"
 DBM_CORE_BACK						= "뒤쪽"--BACK
 DBM_CORE_FRONT						= "앞쪽"
 
-DBM_CORE_BREAK_START				= "쉬는 시간 시작 -- %s분 남았습니다!"
+DBM_CORE_BREAK_START				= "쉬는 시간 시작 -- %s분 남았습니다! (%s|1이;가; 보냄)"
 DBM_CORE_BREAK_MIN					= "%s분 후 쉬는 시간이 끝납니다!"
 DBM_CORE_BREAK_SEC					= "%s초 후 쉬는 시간이 끝납니다!"
 DBM_CORE_TIMER_BREAK				= "쉬는 시간"
@@ -246,11 +244,7 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you			= "당신이 $spell:%s 대상이 된 경�
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target		= "$spell:%s 대상 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.taunt		= "다른 방어 전담이 $spell:%s 대상이 된 경우 도발 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close		= "$spell:%s 대상이 당신 가까이 있을 경우 특수 경고 보기"
-<<<<<<< HEAD
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move		= "$spell:%s 피하기 특수 경고 보기"
-=======
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move		= "$spell:%s 회피 특수 경고 보기"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveaway	= "$spell:%s 이동 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.moveto		= "$spell:%s 대상에게 이동 특수 경고 보기"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run			= "$spell:%s 도망치기 특수 경고 보기"
@@ -304,12 +298,11 @@ DBM_CORE_MOVE_SPECIAL_WARNING_BAR		= "특수 경고 움직이기"
 DBM_CORE_MOVE_SPECIAL_WARNING_TEXT		= "특수 경고"
 
 DBM_ARROW_MOVABLE						= "화살표 움직이기"
-DBM_ARROW_NO_RAIDGROUP					= "이 기능은 공격대에 속해 있고, 공격대 던전 내부에 있을때만 사용 가능합니다."
-
 DBM_ARROW_ERROR_USAGE	= {
 	"DBM 화살표 사용법:",
-	"/dbm arrow <x> <y>  지정된 좌표(X/Y) 방향으로 화살표를 만듭니다.(0 < x/y < 100)",
-	"/dbm arrow <대상이름>  현재 파티 또는 공격대의 <대상이름> 방향으로 화살표를 만듭니다.",
+	"/dbm arrow <x> <y>  지정된 좌표(X/Y) 방향으로 화살표를 만듭니다. (세계지도 좌표 사용)",
+	"/dbm arrow map <x> <y>  지정된 좌표(X/Y) 방향으로 화살표를 만듭니다. (지역지도 좌표 사용)",
+	"/dbm arrow <대상이름>  현재 파티 또는 공격대의 <대상이름> 방향으로 화살표를 만듭니다. (대소문자 구분)",
 	"/dbm arrow target  현재 대상 방향으로 화살표를 만듭니다.",
 	"/dbm arrow focus  현재 주시대상 방향으로 화살표를 만듭니다.",
 	"/dbm arrow move  화살표가 25초 동안 이동가능 상태가 됩니다.",

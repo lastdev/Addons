@@ -1,15 +1,10 @@
 local mod	= DBM:NewMod(737, "DBM-HeartofFear", nil, 330)
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD
-mod:SetRevision(("$Revision: 11260 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 10980 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+mod:SetRevision(("$Revision: 3 $"):sub(12, -3))
 mod:SetCreatureID(62511)
 mod:SetEncounterID(1499)
 mod:SetZone()
-mod:SetMinSyncRevision(8052)
 
 mod:RegisterCombat("combat")
 

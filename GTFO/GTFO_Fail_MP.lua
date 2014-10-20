@@ -718,7 +718,6 @@ GTFO.SpellID["140836"] = GTFO.SpellID["140833"];
 GTFO.SpellID["140837"] = GTFO.SpellID["140833"];
 GTFO.SpellID["140838"] = GTFO.SpellID["140833"];
 
-<<<<<<< HEAD
 GTFO.SpellID["134772"] = {
 	--desc = "Get Off! (Millhouse Manastorm)";
 	sound = 3;
@@ -828,33 +827,6 @@ GTFO.SpellID["138847"] = {
 	sound = 3;
 };
 
-=======
--- TODO: Optic Blast (Zen'shar)
--- TODO: Static Charge (Disruptron)
--- TODO: Blue Crush (Epicus Maximus)
--- TODO: Pure Rock'n Roll (Epicus Maximus)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-
-
-GTFO.SpellID["140868"] = {
-	--desc = "Left Hook (Ty'thar)";
-	sound = 3;
-};
-
-GTFO.SpellID["140862"] = {
-	--desc = "Right Hook (Ty'thar)";
-	sound = 3;
-};
-
-GTFO.SpellID["140886"] = {
-	--desc = "Slam (Ty'thar)";
-	sound = 3;
-};
-
-GTFO.SpellID["141038"] = {
-	--desc = "Feathery Detonation (Tyson Sanders)";
-	sound = 3;
-};
 
 -- *****************************
 -- * Trove of the Thunder King *
@@ -1309,11 +1281,7 @@ GTFO.SpellID["144615"] = {
 };
 
 GTFO.SpellID["149031"] = {
-<<<<<<< HEAD
 	--desc = "Ethereal Corruption (Sha of Pride - Heroic)";
-=======
-	--desc = "Ethereal Corruption (Sha of Pride)";
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	sound = 3;
 };
 
@@ -1322,12 +1290,6 @@ GTFO.SpellID["147198"] = {
 	sound = 3;
 };
 
-<<<<<<< HEAD
-=======
--- TODO: Instant kill from the add in pac-man room (Sha of Pride)
--- TODO: Projection Explosion (Sha of Pride) -- Friendly Fire Fail
-
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 GTFO.SpellID["146743"] = {
 	--desc = "Sniped! (Kor'kron Elite Sniper)";
 	sound = 3;
@@ -1337,14 +1299,11 @@ GTFO.SpellID["148506"] = {
 	--desc = "Spike Mine Detonation (Pressure Mine)";
 	sound = 3;
 };
-<<<<<<< HEAD
 
 GTFO.SpellID["145752"] = {
 	--desc = "Spike Mine Detonation (Cannon Mine)";
 	sound = 3;
 };
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 GTFO.SpellID["146848"] = {
 	--desc = "Skull Cracker (High Enforcer Thranok)";
@@ -1355,10 +1314,7 @@ GTFO.SpellID["146849"] = {
 	--desc = "Shattering Cleave (High Enforcer Thranok)";
 	soundHeroic = 3;
 	tankSound = 0;
-<<<<<<< HEAD
 	tankSoundHeroic = 0;
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 };
 
 GTFO.SpellID["147688"] = {
@@ -1391,7 +1347,6 @@ GTFO.SpellID["144919"] = {
 };
 
 -- TODO: Demolisher Cannons (Iron Juggernaut) - Avoidable group AOE? Like Jikun Caw?
-<<<<<<< HEAD
 
 GTFO.SpellID["144303"] = {
 	--desc = "Swipe (Darkfang/Bloodclaw)";
@@ -1404,11 +1359,6 @@ GTFO.SpellID["144334"] = {
 	sound = 3;
 };
 
-=======
--- TODO: Swipe (Darkfang/Bloodclaw) - Tank-only?
--- TODO: Iron Tomb (Earthbreaker Haromm) - Fail on application or necessary? 
-
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 GTFO.SpellID["144030"] = {
 	--desc = "Toxic Tornado (Wavebinder Kardris)";
 	sound = 3;
@@ -1496,7 +1446,6 @@ GTFO.SpellID["146908"] = {
 	tankSound = 0; -- Verify unavoidable by tank
 };
 
-<<<<<<< HEAD
 GTFO.SpellID["145993"] = {
 	--desc = "Set to Blow (Commander Na'kaz)";
 	sound = 3;
@@ -1507,28 +1456,12 @@ GTFO.SpellID["145523"] = {
 	sound = 3;
 };
 
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 -- TODO: Return to Stone (Mogu) - Non-tank fail
 -- TODO: Shadow Volley (Jun-Wei) - Ranged avoidable?
 -- TODO: Molten Fist (Zu Yin) - Avoidable?
 -- TODO: Jade Tempest (Xiang-Lin) - Avoidable?
 -- TODO: Fracture (Kun-Da) - Avoidable?
-<<<<<<< HEAD
 -- TODO: Throw Explosives (Sri'thik Bombardier)
-=======
--- TODO: Bombs? (Mantid) - Friendly Fire
--- TODO: Bombs on ground (Mantid) - Avoidable
-
-GTFO.SpellID["145993"] = {
-	--desc = "Set to Blow (Commander Na'kaz)";
-	sound = 3;
-};
-
--- TODO: Throw Explosives (Sri'thik Bombardier)
--- TODO: Keg Toss (Ancient Brewmaster Spirit) - Non-tank fail? Avoidable?
--- TODO: Blade of a Hundred Steps (Ancient Brewmaster Spirit) - Avoidable?
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 GTFO.SpellID["143428"] = {
 	--desc = "Tail Lash (Thok the Bloodthirsty)";
@@ -1636,7 +1569,6 @@ GTFO.SpellID["146605"] = {
 	tankSound = 0;
 };
 
-<<<<<<< HEAD
 GTFO.SpellID["142232"] = {
     --desc = "Death from Above (Kil'ruk the Wind-Reaver)";
     sound = 3;
@@ -1651,15 +1583,6 @@ GTFO.SpellID["143240"] = {
 	soundHeroic = 3;
 };
 
-=======
--- TODO: Catalytic Reaction: Red (Xaril the Poisoned Mind) - Friendly Fire fail
--- TODO: Catalytic Reaction: Orange (Ring of Fire) (Xaril the Poisoned Mind) - Rings a one-time hit or multiple hit?
--- TODO: Devour Whole (Hungry Kunchongs) - Ji'kun Snail fail
--- TODO: Swipe (Mature Kunchong) - Avoidable?
--- TODO: Sonic Projection (Kaz'tik the Manipulator) 143768 - Avoidable by target?
--- TODO: Swipe (Amber Scorpion) 143378 - Fail for non-tanks or just fail for anyone with Sting 143376 ?
-
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 GTFO.SpellID["144094"] = {
 	--desc = "Sonic Resonance (Hisek the Swarmkeeper)";
 	soundFunction = function() -- Warn only if you get hit more than once
@@ -2266,7 +2189,6 @@ GTFO.SpellID["138044"] = {
 	sound = 3;
 };
 
-<<<<<<< HEAD
 GTFO.SpellID["132702"] = {
 	--desc = "Slipping on Oil";
 	sound = 3;
@@ -2276,5 +2198,3 @@ GTFO.SpellID["147335"] = {
 	--desc = "Furious Splash (Zesqua)";
 	sound = 3;
 };
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

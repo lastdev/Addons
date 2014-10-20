@@ -1,10 +1,6 @@
 --[[
 	Auctioneer - Fix for searches not returning to page one in Blizzard code.
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: PageOneReturn.lua 5171 2011-05-31 11:29:35Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -115,8 +111,4 @@ function private.SearchButtonClick(...)
 	private.RealSearchButtonClick(...)
 end
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-FixAH/PageOneReturn.lua $", "$Rev: 5171 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-FixAH/PageOneReturn.lua $", "$Rev: 5171 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-FixAH/PageOneReturn.lua $", "$Rev: 5171 $")

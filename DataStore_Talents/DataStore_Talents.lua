@@ -165,25 +165,25 @@ local function ScanTalents()
 	
 	wipe(char.TalentTrees)
 	
-	local attrib, offset
-	for specNum = 1, 2 do												-- primary and secondary specs
-		attrib = 0
-		offset = 0
+	-- local attrib, offset
+	-- for specNum = 1, 2 do												-- primary and secondary specs
+		-- attrib = 0
+		-- offset = 0
 		
 		-- bits 0-1 = talent 1
 		-- bits 2-3 = talent 2
 		-- etc..
 		
-		for talentNum = 1, GetNumTalents() do			-- all talents
-			local _, _, _, column, isSelected = GetTalentInfo(talentNum, nil, specNum)
-			if isSelected then
-				attrib = attrib + LeftShift(column, offset)
-			end
-			offset = offset + 2		-- each rank takes 2 bits (values 0 to 3)
-		end
+		-- for talentNum = 1, GetNumTalents() do			-- all talents
+			-- local _, _, _, column, isSelected = GetTalentInfo(talentNum, nil, specNum)
+			-- if isSelected then
+				-- attrib = attrib + LeftShift(column, offset)
+			-- end
+			-- offset = offset + 2		-- each rank takes 2 bits (values 0 to 3)
+		-- end
 		
-		char["Talents" .. specNum] = attrib
-	end
+		-- char["Talents" .. specNum] = attrib
+	-- end
 
 	char.lastUpdate = time()
 end
@@ -194,24 +194,24 @@ local function ScanTalentReference(ref)
 	local level = UnitLevel("player")
 	if not level or level < 15 then return end		-- don't scan anything for low level characters
 	
-	ref.Talents = {}
+	-- ref.Talents = {}
 	
 			
-	for talentNum = 1, GetNumTalents() do
-		local nameTalent, iconPath, tier, column = GetTalentInfo(talentNum)
+	-- for talentNum = 1, GetNumTalents() do
+		-- local nameTalent, iconPath, tier, column = GetTalentInfo(talentNum)
 
-		if nameTalent then
+		-- if nameTalent then
 			-- all paths start with this prefix, let's hope blue does not change this :)
 			-- saves a lot of memory not to keep the full path for each talent (about 16k in total for all classes)
-			iconPath = string.gsub(iconPath, UI_ICONS_PATH, "")
-			iconPath = string.gsub(iconPath, string.upper(UI_ICONS_PATH), "")
+			-- iconPath = string.gsub(iconPath, UI_ICONS_PATH, "")
+			-- iconPath = string.gsub(iconPath, string.upper(UI_ICONS_PATH), "")
 			
-			local link = GetTalentLink(talentNum)
-			local id = tonumber(link:match("talent:(%d+)"))
+			-- local link = GetTalentLink(talentNum)
+			-- local id = tonumber(link:match("talent:(%d+)"))
 			
-			ref.Talents[talentNum] = id .. "|" .. nameTalent .. "|" .. iconPath .. "|" .. tier .. "|" ..  column
-		end
-	end
+			-- ref.Talents[talentNum] = id .. "|" .. nameTalent .. "|" .. iconPath .. "|" .. tier .. "|" ..  column
+		-- end
+	-- end
 end
 
 local function ScanGlyphSockets()
@@ -229,15 +229,15 @@ local function ScanGlyphSockets()
 	local glyphs = addon.ThisCharacter.Glyphs
 	wipe(glyphs)
 	
-	local enabled, glyphType, spell, glyphID, tooltipIndex
-	local link, index
-	local attrib
+	-- local enabled, glyphType, spell, glyphID, tooltipIndex
+	-- local link, index
+	-- local attrib
 
-	for specNum = 1, GetNumSpecGroups() do
-		for i = 1, NUM_GLYPH_SLOTS do
-			index = ((specNum - 1) * NUM_GLYPH_SLOTS) + i
+	-- for specNum = 1, GetNumSpecGroups() do
+		-- for i = 1, NUM_GLYPH_SLOTS do
+			-- index = ((specNum - 1) * NUM_GLYPH_SLOTS) + i
 	      
-		   enabled, glyphType, tooltipIndex, spell = GetGlyphSocketInfo(i, specNum)
+		   -- enabled, glyphType, tooltipIndex, spell = GetGlyphSocketInfo(i, specNum)
 			
 			-- bit 0 : enabled
 			-- bits 1-2 : glyphType
@@ -246,29 +246,29 @@ local function ScanGlyphSockets()
 			-- bits 23- : glyphID
 			-- deprecated: icon : returned by GetSpellInfo()
 			
-			attrib = enabled or 0
-			attrib = attrib + LeftShift(glyphType or 0, 1)
-			if spell then
-				attrib = attrib + LeftShift(spell, 3)
-			end
+			-- attrib = enabled or 0
+			-- attrib = attrib + LeftShift(glyphType or 0, 1)
+			-- if spell then
+				-- attrib = attrib + LeftShift(spell, 3)
+			-- end
 
-			attrib = attrib + LeftShift(tooltipIndex, 20)
+			-- attrib = attrib + LeftShift(tooltipIndex, 20)
 			
-			if enabled then
-				link = GetGlyphLink(i, specNum)
-				if link then
-					glyphID = link:match("glyph:(%d+)")
-					if glyphID then
-						attrib = attrib + LeftShift(glyphID, 23)
-					end
-				end
-			end
+			-- if enabled then
+				-- link = GetGlyphLink(i, specNum)
+				-- if link then
+					-- glyphID = link:match("glyph:(%d+)")
+					-- if glyphID then
+						-- attrib = attrib + LeftShift(glyphID, 23)
+					-- end
+				-- end
+			-- end
 			
-			if attrib > 0 then
-				glyphs[index] = attrib
-			end
-		end
-	end
+			-- if attrib > 0 then
+				-- glyphs[index] = attrib
+			-- end
+		-- end
+	-- end
 	
 	addon.ThisCharacter.lastUpdate = time()
 end

@@ -222,10 +222,10 @@ Prat:AddModuleToLoad(function()
   -- enable/disable fading
   function mod:Fade(cf, textfade)
     if textfade then
-      cf:SetFading(1)
+      cf:SetFading(true)
       cf:SetTimeVisible(mod.db.profile.duration)
     else
-      cf:SetFading(0)
+      cf:SetFading(false)
     end
   end
 

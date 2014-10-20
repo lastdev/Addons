@@ -1,12 +1,7 @@
 --[[
 	Auctioneer
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: CoreConfig.lua 5461 2014-06-19 10:37:18Z brykrys $
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
-	Revision: $Id: CoreConfig.lua 5213 2011-08-25 12:48:28Z brykrys $
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -199,8 +194,4 @@ coremodule.Processors = {
 	gameactive = function() private.Activate() end,
 }
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CoreConfig.lua $", "$Rev: 5461 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/CoreConfig.lua $", "$Rev: 5213 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Advanced/CoreConfig.lua $", "$Rev: 5461 $")

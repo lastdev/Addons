@@ -853,7 +853,7 @@ function moveItems(fromLocation, toLocation, itemID, amount)
 		name, icon, isViewable, canDeposit, numWithdrawals, remainingWithdrawals = _G.GetGuildBankTabInfo(1)
 		
 		--print("Remaining withdrawls: " .. remainingWithdrawals)
-		if(fromLocation == TYPE_GUILDBANK and remainingWithdrawls <= 1) then
+		if(fromLocation == TYPE_GUILDBANK and remainingWithdrawals ~= nil and remainingWithdrawals <= 1) then
 			print("Not using any more bank withdrawls")
 			return;
 		end

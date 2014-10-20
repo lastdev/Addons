@@ -137,9 +137,9 @@ local function DrawTalent(texture, tier, column, count, id)
 	if count and count > 0 then
 		itemCount:SetText(GREEN .. count)
 		itemCount:Show()
-		itemTexture:SetDesaturated(0)
+		itemTexture:SetDesaturated(false)
 	else
-		itemTexture:SetDesaturated(1)
+		itemTexture:SetDesaturated(true)
 		itemCount:Hide()
 	end
 	itemButton:Show()
@@ -345,7 +345,7 @@ local function DrawClassIcons(iconGroup, class, character, guildMember)
 		itemButton:Show()
 		
 		if not isPlayer then
-			itemTexture:SetDesaturated((character or guildMember) and 0 or 1)
+			itemTexture:SetDesaturated((character or guildMember) and false or true)
 		end
 		
 		index = index + 1

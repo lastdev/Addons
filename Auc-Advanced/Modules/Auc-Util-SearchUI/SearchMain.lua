@@ -1,12 +1,7 @@
 --[[
 	Auctioneer - Search UI
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-	Revision: $Id: SearchMain.lua 5452 2014-01-18 19:02:51Z brykrys $
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
-	Revision: $Id: SearchMain.lua 5373 2012-10-06 06:23:34Z brykrys $
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Revision: $Id: SearchMain.lua 5474 2014-09-23 15:46:46Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This Addon provides a Search tab on the AH interface, which allows
@@ -197,8 +192,14 @@ end
 if Enchantrix and Enchantrix.Storage and Enchantrix.Util then
 	resources.isEnchantrixLoaded = true
 else
-	local _, _, _, enabled, loadable = GetAddOnInfo("Enchantrix") -- check it's actually possible to load
-	if enabled and loadable then
+	local _, _, _, loadable, reason = GetAddOnInfo("Enchantrix") -- check it's actually possible to load
+	if AucAdvanced.HYBRID5 then
+		-- Hybrid mode for WoW5.4; remove once WoW6.0 goes live
+		loadable = loadable and reason
+	else
+		loadable = reason == "DEMAND_LOADED"
+	end 
+	if loadable then
 		Stubby.RegisterAddOnHook("Enchantrix", "Auc-Util-SearchUI", function()
 			if Enchantrix and Enchantrix.Storage and Enchantrix.Util then
 				Stubby.UnregisterAddOnHook("Enchantrix", "Auc-Util-SearchUI")
@@ -2190,8 +2191,4 @@ end
 private.updater = CreateFrame("Frame", nil, UIParent)
 private.updater:SetScript("OnUpdate", private.OnUpdate)
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5452 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5373 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5474 $")

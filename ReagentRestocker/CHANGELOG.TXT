@@ -6,6 +6,19 @@ https://www.facebook.com/ReagentRestocker
 
 NOTE: I've been seeing copies of Reagent Restocker popping up at other download sites. The only two places I currently upload the addon to are curse.com and wowinterface.com. I cannot guarantee the integrity of any other download sites.
 
+== v9.1 ==
+* Removed guild level code, since that functionality has been removed as of Warlords of Draenor.
+
+== v9.0 ==
+* Bug fixes.
+* Official release for patch 6.0.2.
+
+== v8.4 Beta ==
+* Bug fixes and compatibility fixes.
+
+== v8.3 Beta ==
+* Updated for compatibility with Warlords of Draenor beta.
+
 == v8.2 ==
 * Updated TOC.
 * Minor UI tweaks.

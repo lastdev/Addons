@@ -1,0 +1,58 @@
+Ljtibs:
+	- Support for wow patc 6.0
+	- Update for v6
+Velkitor:
+	- roc update
+	- Make sure we have a duration before we try to animate
+	- TOC Version update
+Andrew Hecht:
+	- Query for unit names every frame, this should correct issues for non english locale
+Ljtibs:
+	- 5.2 toc update
+	- Added some more configuration options
+	- renamed toc file
+	- let there be dashes
+Andrew Hecht:
+	- pkgmeta update
+	- Curse updater fixes
+	- Added a reverse sort order for the full size view.
+	- Corrected UI error when in off spec mode
+	- Curse updater fix
+	- Added a compact mode
+	- Added buttons to make the indicator icons clickable
+	- Take out debug statement
+	- Converted to using Spell IDs as references so that I can support multiple languages.
+	- fix
+	- Minor bug fixes
+	- Load the spell indicators in player login instead of add-on loaded
+	- Cleaned up some code
+	- Fixed uplift indicator
+	- TOC update
+	- Added the heal amount indicator back
+	- Added Slash commands
+	Added a scale option in the slash commands.
+	- Fixed the drag lock button
+	- Added a more lightweight data store for unit information and unit buffs
+	- Moved some ui code out of the main lua file
+	Also changed version scheme to major.minor.incremental
+	- TOC Update
+	- Make Garbage Collection less aggressive.
+	- Instruct the Garbage collector to run on a schedule
+	- bug fix on raid join
+	- When Renewing Mist heals it will now flash the amount healed on the player's renewing mist progress bar. Format: effective ( over healing )
+	- Added an indicator for Mana Tea
+	- Corrected an issue that caused the tracker frame to show on non monk characters.
+	- Added a uplift indicator.  That indicator highlights when there are 3 or more players with ReM under 80% hp.
+	- AutoHide the Tracker window when the player is not in the Mistweaver specialization
+	- The Renewing Mist indicator will no longer refresh for global cool downs.
+	- Multiple changes
+	- Added indicators for Renewing Mist and Thunder Focus Tea
+	- Changed the color of player names to their class color
+	- Ordered the Renewing Mist progress bars by duration remaining ascending
+	- Corrected an issue that could cause the last raid or group member to not be checked.  Moved the current unit's health percent to the right hand side, and had the text dynamically change color with the unit's health level.
+	- Delete old TOC file
+	- Renamed the TOC file to match the download location from WoWAce
+	- Corrected issue for looking up raid member's current health
+	- Split the unit name, and the unit health and duration
+	This should compensate for long unit names.
+	- Initial Commit

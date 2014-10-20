@@ -10,7 +10,7 @@ local GetSpellInfo, UnitBuff, UnitIsConnected, UnitIsDeadOrGhost =
 local BarHeight=18
 local BarWidth=250
 local WindowWidth=BarWidth+32
-local TotalBuffs=8
+local TotalBuffs=9
 local PlayersShown=8
 local RowsCreated=PlayersShown+1
 local BuffSpacing=18
@@ -21,7 +21,7 @@ local BuffWindow_ResizeWindow, BuffWindow_UpdateWindow, BuffWindow_UpdateBuffs
 
 local RL = AceLibrary("Roster-2.1")
 
-vars.svnrev["BuffWindow.lua"] = tonumber(("$Revision: 371 $"):match("%d+"))
+vars.svnrev["BuffWindow.lua"] = tonumber(("$Revision: 391 $"):match("%d+"))
 
 -- tie-in for third party addons to add tooltips
 -- table maps GUID => {  highlight = boolean, [addonname] = "status text" }
@@ -78,7 +78,7 @@ for i,v in ipairs(vars.SpellData.foods) do
 	table.insert(vars.Foodbuffs,  { spellData(v) })
 end
 
-local foodmin = 250 -- minimum food stat level to allow
+local foodmin = 25 -- minimum food stat level to allow
 local scanfoodcache = {}
 local scantt = CreateFrame("GameTooltip", "BigBrotherScanTooltip", UIParent, "GameTooltipTemplate")
 local function scanfood(spellid)
@@ -151,8 +151,15 @@ local SH = "SHAMAN"
 local WA = "WARRIOR"
 local WK = "WARLOCK"
 
-local function BTspell(class, id, lesserEffect)
+local function BTspell(class, id, lesserEffect, pettag)
   local name, icon = spellData(id, false)
+  if lesserEffect and type(lesserEffect) == "string" and not pettag then
+    pettag = lesserEffect
+    lesserEffect = false
+  end
+  if pettag and GetLocale() == "enUS" then
+    name = name.." ("..pettag..")"
+  end
   return name, icon, class, lesserEffect
 end
 
@@ -162,88 +169,123 @@ local BigBrother_BuffTable={
 		name=L["Raid Buffs"],
 		sortFunc=Sort_RaidBuffs,
 		buffs={
-			{ -- stats
+		-- possibly missing pet buffs:
+		-- Rylak, Rhino
+			{ -- stats 5%
 			 {BTspell(PA,20217)}, 		-- Blessing of Kings
 			 {BTspell(DR,1126)},		-- Mark of the Wild
-			 {BTspell(MO,117666)},		-- Legacy of the Emperor
-			 {BTspell(HP,90363)}, 		-- Embrace of the Shale Spider
-			 {BTspell(nil,69378,true)},	-- Blessing of Forgotten Kings 
+			 {BTspell(MO,116781)}, 		-- Legacy of the White Tiger
+			 {BTspell(MO,115921)},		-- Legacy of the Emperor
+			 {BTspell(HP,159988,"Dog")}, 		-- Bark of the Wild
+			 {BTspell(HP,160017,"Gorilla")}, 	-- Blessing of Kongs
+			 {BTspell(HP,90363, "Shale Spider")},	-- Embrace of the Shale Spider
+			 {BTspell(HP,160077,"Worm")}, 		-- Strength of the Earth
+			 {BTspell(nil,69378,true)},	-- Blessing of Forgotten Kings (4%)
 			 }, 
-			{ -- stamina
+			{ -- stamina 10%
 			 {BTspell(PR,21562)},		-- Power Word: Fortitude
-			 {BTspell(WK,109773)},		-- Dark Intent
+			 {BTspell(WK,166928)},		-- Blood Pact
 			 {BTspell(WA,469)},		-- Commanding Shout
-			 {BTspell(HP,90364)},		-- Qiraji Fortitude
-			 {BTspell(nil,111922,true)},	-- Runescroll of Fortitude III
-			 {BTspell(nil,86507,true)}, 	-- Runescroll of Fortitude II
-			 {BTspell(nil,69377,true)}, 	-- Runescroll of Fortitude I
+			 {BTspell(HP,50256, "Bear")}, 		-- Invigorating Roar
+			 {BTspell(HP,160014,"Goat")}, 		-- Sturdiness
+			 {BTspell(HP,90364, "Silithid")},	-- Qiraji Fortitude
+			 {BTspell(nil,111922,true)},	-- Runescroll of Fortitude III (8%)
+			 {BTspell(nil,86507,true)}, 	-- Runescroll of Fortitude II  (7%)
+			 {BTspell(nil,69377,true)}, 	-- Runescroll of Fortitude I   (6%)
 			 }, 
-                        { -- mastery
+                        { -- mastery 550
 			 {BTspell(PA,19740)}, 		-- Blessing of Might
+			 {BTspell(DE,155522)}, 		-- Power of the Grave
                          {BTspell(SH,116956)}, 		-- Grace of Air
-                         {BTspell(HP,93435)}, 		-- Roar of Courage
-                         {BTspell(HP,128997)}, 		-- Spirit Beast Blessing
+			 {BTspell(DR,24907)}, 		-- Moonkin Aura
+                         {BTspell(HP,93435, "Cat")},		-- Roar of Courage
+			 {BTspell(HP,160039,"Hydra")}, 		-- Keen Senses
+                         {BTspell(HP,128997,"Spirit Beast")},	-- Spirit Beast Blessing
+			 {BTspell(HP,160073,"Tallstrider")}, 	-- Plainswalking
 			 }, 
-			{ -- crit
+			{ -- crit 5%
 			 {BTspell(MO,116781)}, 		-- Legacy of the White Tiger
 			 {BTspell(DR,17007)}, 		-- Leader of the Pack
 			 {BTspell(MA,1459)}, 		-- Arcane Brilliance
 			 {BTspell(MA,61316)}, 		-- Dalaran Brilliance
-			 {BTspell(HP,24604)}, 		-- Furious Howl
-			 {BTspell(HP,90309)},		-- Terrifying Roar
-			 {BTspell(HP,97229)},		-- Bellowing Roar
-			 {BTspell(HP,126373)},		-- Fearless Roar
-			 {BTspell(HP,126309)},		-- Still Water
+			 {BTspell(HP,90309, "Devilsaur")},	-- Terrifying Roar
+			 {BTspell(HP,126373,"Quilen")},		-- Fearless Roar
+			 {BTspell(HP,160052,"Raptor")},		-- Strength of the Pack
+			 {BTspell(HP,90363, "Shale Spider")},	-- Embrace of the Shale Spider
+			 {BTspell(HP,126309,"Water Strider")},	-- Still Water
+			 {BTspell(HP,24604, "Wolf")}, 		-- Furious Howl
 			}, 
-			{ -- spell power
+			{ -- haste 5%
+			 {BTspell(DE,55610)}, 		-- Unholy Aura
+                         {BTspell(SH,116956)}, 		-- Grace of Air
+			 {BTspell(PR,49868)}, 		-- Mind Quickening
+			 {BTspell(RO,113742)}, 		-- Swiftblade's Cunning
+			 {BTspell(HP,128432,"Hyena")},		-- Cackling Howl
+			 {BTspell(HP,135678,"Sporebat")},	-- Energizing Spores
+			 {BTspell(HP,160074,"Wasp")}, 		-- Speed of the Swarm
+			},
+			{ -- multistrike 5%
+			 {BTspell(MO,166916)},		-- Windflurry
+			 {BTspell(PR,49868)}, 		-- Mind Quickening
+			 {BTspell(RO,113742)}, 		-- Swiftblade's Cunning
+			 {BTspell(WK,109773)},		-- Dark Intent
+			 {BTspell(HP,50519, "Bat")}, 		-- Sonic Focus
+			 {BTspell(HP,159736,"Chimaera")}, 	-- Duality
+			 {BTspell(HP,57386, "Clefthoof")}, 	-- Wild Strength
+			 {BTspell(HP,58604, "Core Hound")}, 	-- Double Bite
+			 {BTspell(HP,34889, "Dragonhawk")}, 	-- Spry Attacks
+			 {BTspell(HP,24844, "Wind Serpent")}, 	-- Breath of the Winds
+			}, 
+			{ -- versatility 3%
+			 {BTspell(PA,167187)}, 		-- Sanctity Aura
+			 {BTspell(WA,167188)}, 		-- Inspiring Presence
+			 {BTspell(DE,55610)}, 		-- Unholy Aura
+			 {BTspell(DR,1126)},		-- Mark of the Wild
+			 {BTspell(HP,159735,"Bird of Prey")}, 	-- Tenacity
+			 {BTspell(HP,35290, "Boar")}, 		-- Indomitable
+			 {BTspell(HP,57386, "Clefthoof")}, 	-- Wild Strength
+			 {BTspell(HP,160045,"Porcupine")}, 	-- Defensive Quills
+			 {BTspell(HP,50518, "Ravager")}, 	-- Chitinous Armor
+			 {BTspell(HP,160077,"Worm")}, 		-- Strength of the Earth
+			}, 
+			{ -- spell power 10%
 			 {BTspell(MA,1459)}, 		-- Arcane Brilliance
 			 {BTspell(MA,61316)}, 		-- Dalaran Brilliance
 			 {BTspell(WK,109773)}, 		-- Dark Intent
-			 {BTspell(SH,77747)}, 		-- Burning Wrath
-			 {BTspell(HP,126309)},		-- Still Water
+			 {BTspell(HP,128433,"Serpent")},	-- Serpent's Cunning
+			 {BTspell(HP,90364, "Silithid")},	-- Qiraji Fortitude
+			 {BTspell(HP,126309,"Water Strider")},	-- Still Water
 			},
-			{ -- spell haste
-                         {BTspell(SH,51470)}, 		-- Elemental Oath
-			 {BTspell(DR,24907)}, 		-- Moonkin Aura
-			 {BTspell(PR,49868)}, 		-- Mind Quickening
-			 {BTspell(HP,135678)},		-- Energizing Spores
-			},
-			{ -- attack power
+			{ -- attack power 10%
 			 {BTspell(HU,19506)}, 		-- Trueshot Aura
 			 {BTspell(WA,6673)}, 		-- Battle Shout
 			 {BTspell(DE,57330)}, 		-- Horn of Winter
 			},
-			{ -- attack haste
-			 {BTspell(RO,113742)}, 		-- Swiftblade's Cunning
-			 {BTspell(DE,55610)}, 		-- Unholy Aura
-			 {BTspell(SH,30809)}, 		-- Unleashed Rage
-			 {BTspell(HP,128432)}, 		-- Cackling Howl
-			 {BTspell(HP,128433)}, 		-- Serpent's Swiftness
-			},
 		},
 		header={
-			L["All Stats"],
-			L["Stamina"], 
-			L["Mastery"],
-			L["Crit chance"],
-			L["Spell power"],
-			L["Spell haste"],
-			L["Attack power"],
-			L["Attack haste"],
+			RAID_BUFF_1, 		-- "Stats"
+			RAID_BUFF_2, 		-- "Stamina"
+			STAT_MASTERY, 		-- "Mastery";
+			STAT_CRITICAL_STRIKE, 	-- "Critical Strike";
+			STAT_HASTE, 		-- "Haste";
+			STAT_MULTISTRIKE, 	-- "Multistrike";
+			STAT_VERSATILITY, 	-- "Versatility";
+			STAT_SPELLPOWER, 	-- "Spell Power";
+			STAT_ATTACK_POWER, 	-- "Attack Power";
 		}
 	},
 	{
 		name=L["Consumables"],
 		sortFunc=Sort_RaidBuffs,
 		buffs={
-			{},{},{},{},
+			{},{},{},{},{},
 			vars.Flasks,
 			vars.Elixirs_Battle,
 			vars.Elixirs_Guardian,
       			vars.Foodbuffs,
 		},
 		header={
-			{},{},{},{},
+			{},{},{},{},{},
 			{headerColor(L["Flasks"]),           select(2,spellData(67019))}, 
 			{headerColor(L["Battle Elixirs"]),   select(2,spellData(60344))}, 
 			{headerColor(L["Guardian Elixirs"]), select(2,spellData(54494))}, 
@@ -355,7 +397,7 @@ function BuffWindow_Functions:CreateBuffRow(parent, xoffset, yoffset)
 		--GameTooltip:ClearLines();GameTooltip:AddLine(this.BuffName);GameTooltip:Show()
 		Row.Buff[i]:SetScript("OnEnter", BuffWindow_Functions.OnEnterBuff)
 		Row.Buff[i]:SetScript("OnLeave", BuffWindow_Functions.OnLeaveBuff)
-		Row.Buff[i]:EnableMouse()
+		Row.Buff[i]:EnableMouse(true)
 
 		Row.Buff[i]:Show()
 	end
@@ -468,7 +510,7 @@ function BigBrother:CreateBuffWindow()
 	BuffWindow:SetWidth(WindowWidth) 
 	BuffWindow:SetMovable(true)
 	BuffWindow:SetClampedToScreen(true)
-	BuffWindow:EnableMouse()
+	BuffWindow:EnableMouse(true)
 	
   BuffWindow:ClearAllPoints()
 	if BigBrother.db.profile.BuffWindow_posX then

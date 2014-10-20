@@ -140,9 +140,10 @@ XPERL_HIGHLIGHT_SPELLS = {
 		[GetSpellInfo(28880)] = 15,			-- Gift of the Naaru (Racial)
 		[GetSpellInfo(61295)] = 15,			-- Riptide
 		[GetSpellInfo(115151)] = 18,		-- Renewing Mist
+		[GetSpellInfo(119611)] = 18,		-- Renewing Mist - furtherst instead of nearest
 		[GetSpellInfo(115175)] = 8,			-- Soothing Mist
 		[GetSpellInfo(124682)] = 6,			-- Enveloping Mist
-		[GetSpellInfo(124682)] = 30,		-- Eternal Flame
+		[GetSpellInfo(114163)] = 30,		-- Eternal Flame
 	},
 	pomSpells = {
 		[GetSpellInfo(33076)] = 30			-- Prayer of Mending

@@ -8,12 +8,12 @@ if (GetLocale() == "zhTW") then
 XPerl_ProductName	= "|cFFD00000X-Perl|r 單位框架"
 XPerl_Description	= XPerl_ProductName.." 作者 "..XPerl_Author
 
-XPerl_LongDescription	= "全新外觀的玩家狀態框架模組，包括玩家、寵物、隊伍、專注(focus)、團隊、目標以及目標的目標等。"
+XPerl_LongDescription	= "全新外觀的玩家單位狀態框架模組，包括玩家、寵物、隊伍、專注(focus)、團隊、目標以及目標的目標等。"
 
 XPERL_MINIMAP_HELP1	= "|c00FFFFFF左鍵點擊|r 開啟設定視窗 (以及 |c0000FF00解鎖框架|r)"
 XPERL_MINIMAP_HELP2	= "|c00FFFFFF右鍵拖動|r 移動此圖標"
 XPERL_MINIMAP_HELP3	= "\r團隊成員: |c00FFFF80%d|r\r隊伍成員: |c00FFFF80%d|r"
-XPERL_MINIMAP_HELP4	= "\r你是此 隊伍/團隊 隊長"
+XPERL_MINIMAP_HELP4	= "\r你是此 隊伍/團隊 的隊長"
 XPERL_MINIMAP_HELP5	= "|c00FFFFFFAlt|r 顯示 X-Perl 記憶體用量"
 XPERL_MINIMAP_HELP6	= "|c00FFFFFF+Shift|r 顯示 X-Perl 記憶體使用明細"
 
@@ -86,15 +86,15 @@ BINDING_NAME_TOGGLERAIDSORT = "切換團隊排序方式為 職業/隊伍"
 BINDING_NAME_TOGGLERAIDPETS = "切換是否使用團隊寵物"
 BINDING_NAME_TOGGLEOPTIONS = "開/關設定視窗"
 BINDING_NAME_TOGGLEBUFFTYPE = "切換 增益/減益/無"
-BINDING_NAME_TOGGLEBUFFCASTABLE = "切換顯示可施加/解除的增益/減益魔法"
+BINDING_NAME_TOGGLEBUFFCASTABLE = "切換顯示可施加/解除的增益/減益效果"
 BINDING_NAME_TEAMSPEAKMONITOR = "顯示 Teamspeak 監看圖標"
 BINDING_NAME_TOGGLERANGEFINDER = "切換距離偵測開啟/關閉"
 
-XPERL_KEY_NOTICE_RAID_BUFFANY = "顯示所有 增益/減益魔法"
-XPERL_KEY_NOTICE_RAID_BUFFCURECAST = "只有 可施加/可解除 的增益/減益魔法顯示"
-XPERL_KEY_NOTICE_RAID_BUFFS = "顯示團隊的 增益魔法"
-XPERL_KEY_NOTICE_RAID_DEBUFFS = "顯示團隊的 減益魔法"
-XPERL_KEY_NOTICE_RAID_NOBUFFS = "不顯示團隊的 增益魔法"
+XPERL_KEY_NOTICE_RAID_BUFFANY = "顯示所有 增益/減益效果"
+XPERL_KEY_NOTICE_RAID_BUFFCURECAST = "只有 可施加/可解除 的增益/減益效果顯示"
+XPERL_KEY_NOTICE_RAID_BUFFS = "顯示團隊的 增益效果"
+XPERL_KEY_NOTICE_RAID_DEBUFFS = "顯示團隊的 減益效果"
+XPERL_KEY_NOTICE_RAID_NOBUFFS = "不顯示團隊的 增益效果"
 
 XPERL_DRAGHINT1		= "|c00FFFFFF點擊|r 調整視窗比例"
 XPERL_DRAGHINT2		= "|c00FFFFFFShift+點擊|r 重置視窗尺寸"

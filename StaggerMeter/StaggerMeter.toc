@@ -1,4 +1,4 @@
-## Interface: 50400
+## Interface: 60000
 ## Title : StaggerMeter
 ## Notes: Easily see when you have enough Stagger Damage to make Purge worthwhile
 ## Author: Sean Lauren

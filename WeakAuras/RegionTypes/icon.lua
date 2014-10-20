@@ -1,4 +1,4 @@
-﻿local SharedMedia = LibStub("LibSharedMedia-3.0");
+local SharedMedia = LibStub("LibSharedMedia-3.0");
 local LBF = nil --LibStub("LibButtonFacade",true);
 
 local borderOffset = 0.06
@@ -79,9 +79,10 @@ local function create(parent, data)
     end
 	region.frameId = frameId;
 	
-    local cooldown = CreateFrame("COOLDOWN", "WeakAurasCooldown"..frameId, region);
+    local cooldown = CreateFrame("COOLDOWN", "WeakAurasCooldown"..frameId, region, "CooldownFrameTemplate");
     region.cooldown = cooldown;
     cooldown:SetAllPoints(icon);
+    cooldown:SetDrawEdge(false);
     
     local stacksFrame = CreateFrame("frame", nil, region);
     stacksFrame:SetFrameLevel(cooldown:GetFrameLevel() + 1);

@@ -1,10 +1,6 @@
 --[[
 Name: LibBabble-Boss-3.0
-<<<<<<< HEAD
-Revision: $Rev: 413 $
-=======
-Revision: $Rev: 409 $
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+Revision: $Rev: 415 $
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-boss-3-0/
 Dependencies: None
@@ -12,11 +8,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-Boss-3.0"
-<<<<<<< HEAD
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 413 $"):match("%d+"))
-=======
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 409 $"):match("%d+"))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 415 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)
@@ -1989,11 +1981,7 @@ elseif GAME_LOCALE == "frFR" then
 	Altarius = "Altarius",
 	Alysrazor = "Alysrazor",
 	["Alzzin the Wildshaper"] = "Alzzin le Modeleur",
-<<<<<<< HEAD
 	["Amalgam of Corruption"] = "Amalgame de corruption", -- Needs review
-=======
-	-- ["Amalgam of Corruption"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Amanitar = "Amanitar",
 	["Ambassador Flamelash"] = "Ambassadeur Cinglefouet",
 	["Ambassador Hellmaw"] = "Ambassadeur Gueule-d'enfer",
@@ -2110,11 +2098,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Chest of The Seven"] = "Coffre des sept",
 	["Chief Salyis"] = "Chef Salyis",
 	["Chief Ukorz Sandscalp"] = "Chef Ukorz Scalpessable",
-<<<<<<< HEAD
 	["Chi-Ji, The Red Crane"] = "Chi Ji, la Grue rouge", -- Needs review
-=======
-	-- ["Chi-Ji, The Red Crane"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Chimaeron = "Chimaeron",
 	["Cho'gall"] = "Cho'gall",
 	["Cho'Rush the Observer"] = "Cho'Rush l'Observateur",
@@ -2186,11 +2170,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Dust Covered Chest"] = "Coffre couvert de poussière",
 	Dustwraith = "Ame en peine poudreuse",
 	["Eadric the Pure"] = "Eadric le Pur",
-<<<<<<< HEAD
 	["Earthbreaker Haromm"] = "Brise-terre Haromm", -- Needs review
-=======
-	-- ["Earthbreaker Haromm"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Earthcaller Halmgar"] = "Implorateur de la terre Halmgar",
 	["Earthrager Ptah"] = "Enrageterre Ptah",
 	Ebonroc = "Rochébène",
@@ -2260,11 +2240,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Frost King Malakk"] = "Roi du givre Malakk",
 	["Gahz'ranka"] = "Gahz'ranka",
 	["Gahz'rilla"] = "Gahz'rilla",
-<<<<<<< HEAD
 	Galakras = "Galakras", -- Needs review
-=======
-	-- Galakras = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Gal'darah"] = "Gal'darah",
 	["Galgann Firehammer"] = "Galgann Martel-de-feu",
 	Galleon = "Galion",
@@ -2284,11 +2260,7 @@ elseif GAME_LOCALE == "frFR" then
 	["General Bjarngrim"] = "Général Bjarngrim",
 	["General Drakkisath"] = "Général Drakkisath",
 	["General Husam"] = "Général Husam",
-<<<<<<< HEAD
 	["General Nazgrim"] = "Général Nazgrim", -- Needs review
-=======
-	-- ["General Nazgrim"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["General Pa'valak"] = "Général Pa'valak",
 	["General Rajaxx"] = "Général Rajaxx",
 	["General Umbriss"] = "Général Umbriss",
@@ -2357,11 +2329,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Henry Stern"] = "Henry Stern",
 	["Herald Volazj"] = "Héraut Volazj",
 	Herod = "Hérode",
-<<<<<<< HEAD
 	["He Softfoot"] = "He Pas de Loup", -- Needs review
-=======
-	-- ["He Softfoot"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Hex Lord Malacrass"] = "Seigneur des maléfices Malacrass",
 	["High Astromancer Solarian"] = "Grande astromancienne Solarian",
 	["High Botanist Freywinn"] = "Grand botaniste Freywinn",
@@ -2384,11 +2352,7 @@ elseif GAME_LOCALE == "frFR" then
 	["High Priest Venoxis"] = "Grand prêtre Venoxis",
 	["High Prophet Barim"] = "Grand prophète Barim",
 	["High Warlord Naj'entus"] = "Grand seigneur de guerre Naj'entus",
-<<<<<<< HEAD
 	["Hisek the Swarmkeeper"] = "Hisek le Gardien de l'essaim", -- Needs review
-=======
-	-- ["Hisek the Swarmkeeper"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Hodir = "Hodir",
 	Hogger = "Lardeur",
 	Hoptallus = "Sautallus",
@@ -2414,11 +2378,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Illidan Stormrage"] = "Illidan Hurlorage",
 	["Illidari Council"] = "Conseil illidari",
 	["Illyanna Ravenoak"] = "Illyanna Corvichêne",
-<<<<<<< HEAD
 	Immerseus = "Immerseus", -- Needs review
-=======
-	-- Immerseus = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Immol'thar"] = "Immol'thar",
 	["Imperial Vizier Zor'lok"] = "Vizir impérial Zor'lok",
 	["Infinite Corruptor"] = "Corrupteur infini",
@@ -2431,20 +2391,12 @@ elseif GAME_LOCALE == "frFR" then
 	["Interrogator Vishas"] = "Interrogateur Vishas",
 	Ionar = "Ionar",
 	Ironaya = "Ironaya",
-<<<<<<< HEAD
 	["Iron Juggernaut"] = "Mastodonte de fer", -- Needs review
-=======
-	-- ["Iron Juggernaut"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Iron Qon"] = "Qwon de fer",
 	Ironspine = "Echine-de-fer",
 	Isalien = "Isalien",
 	Isiset = "Isiset",
-<<<<<<< HEAD
 	["Iyyokuk the Lucid"] = "Iyyokuk le Lucide", -- Needs review
-=======
-	-- ["Iyyokuk the Lucid"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Jade = "Jade",
 	["Jade Guardian"] = "Gardien de jade",
 	["Jammal'an the Prophet"] = "Jammal'an le prophète",
@@ -2466,31 +2418,19 @@ elseif GAME_LOCALE == "frFR" then
 	["Kael'thas Sunstrider"] = "Kael'thas Haut-soleil",
 	Kalecgos = "Kalecgos",
 	["Kam Deepfury"] = "Kam Furie-du-fond",
-<<<<<<< HEAD
 	["Ka'roz the Locust"] = "Ka'roz la Sauterelle", -- Needs review
-=======
-	-- ["Ka'roz the Locust"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Karsh Steelbender"] = "Karsh Plielacier",
 	["Kazkaz the Unholy"] = "Kazkaz l'Impie",
 	["Kazra'jin"] = "Kazra'jin",
 	["Kaz'rogal"] = "Kaz'rogal",
-<<<<<<< HEAD
 	["Kaz'tik the Manipulator"] = "Kaz'tik le Manipulateur", -- Needs review
-=======
-	-- ["Kaz'tik the Manipulator"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Keli'dan the Breaker"] = "Keli'dan le Briseur",
 	["Kel'Thuzad"] = "Kel'Thuzad",
 	Keristrasza = "Keristrasza",
 	["Kiggler the Crazed"] = "Kiggler le Cinglé",
 	["Kil'jaeden"] = "Kil'jaeden",
 	["Kil'rek"] = "Kil'rek",
-<<<<<<< HEAD
 	["Kil'ruk the Wind-Reaver"] = "Kil'ruk le Saccageur des vents", -- Needs review
-=======
-	-- ["Kil'ruk the Wind-Reaver"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["King Dred"] = "Roi Dred",
 	["King Gordok"] = "Roi Gordok",
 	["King Llane Piece"] = "Pion du Roi Llane",
@@ -2500,17 +2440,10 @@ elseif GAME_LOCALE == "frFR" then
 	Kolk = "Kolk",
 	Kologarn = "Kologarn",
 	["Koralon the Flame Watcher"] = "Koralon le Veilleur des flammes",
-<<<<<<< HEAD
 	["Kor'kron Dark Shaman"] = "Sombres chamans kor’krons", -- Needs review
 	["Kor'kron Jailer"] = "Geôlier kor'kron", -- Needs review
 	Kormok = "Kormok",
 	["Korven the Prime"] = "Korven le Premier", -- Needs review
-=======
-	-- ["Kor'kron Dark Shaman"] = "",
-	-- ["Kor'kron Jailer"] = "",
-	Kormok = "Kormok",
-	-- ["Korven the Prime"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Kresh = "Kresh",
 	Krick = "Krick",
 	["Krick and Ick"] = "Krick et Ick",
@@ -2593,11 +2526,7 @@ elseif GAME_LOCALE == "frFR" then
 	Malacrass = "Malacrass",
 	["Maleki the Pallid"] = "Maleki le Blafard",
 	["Mal'Ganis"] = "Mal'Ganis",
-<<<<<<< HEAD
 	Malkorok = "Malkorok", -- Needs review
-=======
-	-- Malkorok = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Maloriak = "Maloriak",
 	Malygos = "Malygos",
 	Mannoroth = "Mannoroth",
@@ -2660,13 +2589,8 @@ elseif GAME_LOCALE == "frFR" then
 	["Nexus-Prince Shaffar"] = "Prince-nexus Shaffar",
 	Nezir = "Nezir",
 	Nightbane = "Plaie-de-nuit",
-<<<<<<< HEAD
 	["Niuzao, The Black Ox"] = "Niuzao, Le Buffle noir", -- Needs review
 	Norushen = "Norushen", -- Needs review
-=======
-	-- ["Niuzao, The Black Ox"] = "",
-	-- Norushen = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Noth the Plaguebringer"] = "Noth le Porte-peste",
 	["Novos the Summoner"] = "Novos l'Invocateur",
 	Noxxion = "Noxcion",
@@ -2688,11 +2612,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Ook-Ook"] = "Ook-Ook",
 	Oondasta = "Oondasta",
 	["Opera Event"] = "Evénement de l'opéra",
-<<<<<<< HEAD
 	["Ordos, Fire-God of the Yaungol"] = "Ordos, Dieu du feu des yaungols", -- Needs review
-=======
-	-- ["Ordos, Fire-God of the Yaungol"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Orgrim's Hammer"] = "Marteau d'Orgrim",
 	["Ormorok the Tree-Shaper"] = "Ormorok le Sculpte-arbre",
 	["Oro Eyegouge"] = "Oro Crève-oeil ",
@@ -2706,11 +2626,7 @@ elseif GAME_LOCALE == "frFR" then
 	Ozumat = "Ozumat",
 	Pandemonius = "Pandemonius",
 	["Panzor the Invincible"] = "Panzor l'Invincible",
-<<<<<<< HEAD
 	["Paragons of the Klaxxi"] = "Parangons des Klaxxi", -- Needs review
-=======
-	-- ["Paragons of the Klaxxi"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Patchwerk = "Le Recousu",
 	["Pathaleon the Calculator"] = "Pathaleon le Calculateur",
 	["Peroth'arn"] = "Peroth'arn",
@@ -2770,11 +2686,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Rhahk'Zor"] = "Rhahk'Zor",
 	["Ribbly Screwspigot"] = "Ribbly Fermevanne",
 	["Right Arm"] = "Bras droit",
-<<<<<<< HEAD
 	["Rik'kal the Dissector"] = "Rik'kal le Disséqueur", -- Needs review
-=======
-	-- ["Rik'kal the Dissector"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Ring of Law"] = "Cercle de la loi",
 	["Risen Hammersmith"] = "Forgeur de marteaux ressuscité",
 	Roar = "Graou",
@@ -2786,11 +2698,7 @@ elseif GAME_LOCALE == "frFR" then
 	Romulo = "Romulo",
 	["Romulo & Julianne"] = "Romulo & Julianne",
 	Roogug = "Roogug",
-<<<<<<< HEAD
 	["Rook Stonetoe"] = "Freux Orteil de Pierre", -- Needs review
-=======
-	-- ["Rook Stonetoe"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Ro'shak"] = "Ro'shak", -- Needs review
 	Rotface = "Trognepus",
 	Rotgrip = "Grippe-charogne",
@@ -2811,11 +2719,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Saviana Ragefire"] = "Saviana Ragefeu",
 	["Scarlet Commander Mograine"] = "Commandant écarlate Mograine",
 	["Scourgelord Tyrannus"] = "Seigneur du Fléau Tyrannus",
-<<<<<<< HEAD
 	["Secured Stockpile of Pandaren Spoils"] = "Réserve sécurisée de butin de Pandarie", -- Needs review
-=======
-	-- ["Secured Stockpile of Pandaren Spoils"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Seeth'rel"] = "Fulmi'rel",
 	["Selin Fireheart"] = "Selin Coeur-de-feu",
 	["Sergeant Bly"] = "Sergent Bly",
@@ -2832,20 +2736,12 @@ elseif GAME_LOCALE == "frFR" then
 	["Sha of Anger"] = "Sha de la colère",
 	["Sha of Doubt"] = "Sha du doute",
 	["Sha of Fear"] = "Sha de la peur",
-<<<<<<< HEAD
 	["Sha of Pride"] = "Sha de l’orgueil", -- Needs review
-=======
-	-- ["Sha of Pride"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Sha of Violence"] = "Sha de la violence",
 	Shazzrah = "Shazzrah",
 	["Shirrak the Dead Watcher"] = "Shirrak le Veillemort",
 	["Siamat, Lord of South Wind"] = "Siamat, seigneur du vent du Sud",
-<<<<<<< HEAD
 	["Siegecrafter Blackfuse"] = "Ingé-siège Boîte-Noire", -- Needs review
-=======
-	-- ["Siegecrafter Blackfuse"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Sindragosa = "Sindragosa",
 	Sinestra = "Sinestra",
 	["Sir Zeliek"] = "Sire Zeliek",
@@ -2853,11 +2749,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Skadi the Ruthless"] = "Skadi le Brutal",
 	["Skarr the Unbreakable"] = "Bâlhafr l'Invaincu",
 	["Skarvald the Constructor"] = "Skarvald le Constructeur",
-<<<<<<< HEAD
 	["Skeer the Bloodseeker"] = "Skeer le Cherche-sang", -- Needs review
-=======
-	-- ["Skeer the Bloodseeker"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Skra'gath"] = "Skra'gath",
 	Skul = "Krân",
 	Skum = "Skum",
@@ -2873,11 +2765,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Spirestone Battle Lord"] = "Seigneur de bataille Pierre-du-pic",
 	["Spirestone Butcher"] = "Boucher Pierre-du-pic",
 	["Spirestone Lord Magus"] = "Seigneur magus Pierre-du-pic",
-<<<<<<< HEAD
 	["Spoils of Pandaria"] = "Butin de Pandarie", -- Needs review
-=======
-	-- ["Spoils of Pandaria"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Staff of Disintegration"] = "Bâton de désintégration",
 	Stalagg = "Stalagg",
 	Steelbreaker = "Brise-acier",
@@ -2890,11 +2778,7 @@ elseif GAME_LOCALE == "frFR" then
 	Suen = "Suen",
 	["Sulfuron Harbinger"] = "Messager de Sulfuron",
 	["Sul the Sandcrawler"] = "Sul le Rampeur des sables",
-<<<<<<< HEAD
 	["Sun Tenderheart"] = "Sun Cœur de Douceur", -- Needs review
-=======
-	-- ["Sun Tenderheart"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Supremus = "Supremus",
 	["Svala Sorrowgrave"] = "Svala Tristetombe",
 	["Swamplord Musel'ek"] = "Seigneur des marais Musel'ek",
@@ -2927,11 +2811,7 @@ elseif GAME_LOCALE == "frFR" then
 	["The Crone"] = "La Mégère",
 	["The Curator"] = "Le conservateur",
 	["The Eredar Twins"] = "Les jumelles érédars",
-<<<<<<< HEAD
 	["The Fallen Protectors"] = "Les protecteurs déchus", -- Needs review
-=======
-	-- ["The Fallen Protectors"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["The Four Horsemen"] = "Les quatre cavaliers",
 	["The Illidari Council"] = "Le conseil illidari",
 	["The Iron Council"] = "Assemblée du fer",
@@ -2954,11 +2834,7 @@ elseif GAME_LOCALE == "frFR" then
 	["The Twin Val'kyr"] = "Les jumelles val'kyr",
 	["The Unforgiven"] = "Le Condamné",
 	["The Windreaver"] = "Ouraganien",
-<<<<<<< HEAD
 	["Thok the Bloodthirsty"] = "Thok le Sanguinaire", -- Needs review
-=======
-	-- ["Thok the Bloodthirsty"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Thorim = "Thorim",
 	["Thorngrin the Tender"] = "Rirépine le Tendre",
 	["Tidewalker Lurker"] = "Rôdeur marcheur-des-flots",
@@ -3020,11 +2896,7 @@ elseif GAME_LOCALE == "frFR" then
 	["Warp Slicer"] = "Tranchoir dimensionnel",
 	["Warp Splinter"] = "Brise-dimension",
 	["Watchkeeper Gargolmar"] = "Gardien des guetteurs Gargolmar",
-<<<<<<< HEAD
 	["Wavebinder Kardris"] = "Lieuse de vague Kardris", -- Needs review
-=======
-	-- ["Wavebinder Kardris"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Weaver = "Tisserand",
 	["Willey Hopebreaker"] = "Willey Mutilespoir",
 	["Will of the Emperor"] = "Volonté de l'empereur",
@@ -3035,29 +2907,17 @@ elseif GAME_LOCALE == "frFR" then
 	["Wolf Master Nandos"] = "Maître-loup Nandos",
 	["Wrath-Scryer Soccothrates"] = "Scrute-courroux Soccothrates",
 	Wushoolay = "Wushoolay",
-<<<<<<< HEAD
 	["Xaril the Poisoned Mind"] = "Xaril l'Esprit empoisonné", -- Needs review
 	Xevozz = "Xevozz",
 	["Xin the Weaponmaster"] = "Xin le Maître d'armes",
 	["XT-002 Deconstructor"] = "Déconstructeur XT-002",
 	["Xuen, The White Tiger"] = "Xuen, le Tigre blanc", -- Needs review
-=======
-	-- ["Xaril the Poisoned Mind"] = "",
-	Xevozz = "Xevozz",
-	["Xin the Weaponmaster"] = "Xin le Maître d'armes",
-	["XT-002 Deconstructor"] = "Déconstructeur XT-002",
-	-- ["Xuen, The White Tiger"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Yan-Zhu the Uncasked"] = "Yan Zhu le Déballonné",
 	["Yogg-Saron"] = "Yogg-Saron",
 	Yor = "Yor",
 	["Yor'sahj the Unsleeping"] = "Yor’sahj l’Insomniaque",
 	Ysondre = "Ysondre",
-<<<<<<< HEAD
 	["Yu'lon, The Jade Serpent"] = "Yu’lon, Le Serpent de jade", -- Needs review
-=======
-	-- ["Yu'lon, The Jade Serpent"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Zanzil = "Zanzil",
 	Zekkis = "Zekkis",
 	["Zelemar the Wrathful"] = "Zelemar le Courroucé",
@@ -4063,11 +3923,7 @@ elseif GAME_LOCALE == "esES" then
 	Altarius = "Altarius",
 	Alysrazor = "Alysrazor",
 	["Alzzin the Wildshaper"] = "Alzzin el Formaferal",
-<<<<<<< HEAD
 	["Amalgam of Corruption"] = "Amalgama de corrupción", -- Needs review
-=======
-	-- ["Amalgam of Corruption"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Amanitar = "Amanitar",
 	["Ambassador Flamelash"] = "Embajador Latifuego",
 	["Ambassador Hellmaw"] = "Embajador Faucinferno",
@@ -4184,11 +4040,7 @@ elseif GAME_LOCALE == "esES" then
 	["Chest of The Seven"] = "Tesoro de los Siete",
 	["Chief Salyis"] = "Jefe Salyis", -- Needs review
 	["Chief Ukorz Sandscalp"] = "Jefe Ukorz Cabellarena",
-<<<<<<< HEAD
 	["Chi-Ji, The Red Crane"] = "Chi-Ji, la Grulla Roja", -- Needs review
-=======
-	-- ["Chi-Ji, The Red Crane"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Chimaeron = "Chimaeron",
 	["Cho'gall"] = "Cho'gall",
 	["Cho'Rush the Observer"] = "Cho'Rush el Observador",
@@ -4260,11 +4112,7 @@ elseif GAME_LOCALE == "esES" then
 	["Dust Covered Chest"] = "Cofre cubierto de polvo",
 	Dustwraith = "Ánima de polvo",
 	["Eadric the Pure"] = "Eadric el Puro",
-<<<<<<< HEAD
 	["Earthbreaker Haromm"] = "Rompesuelos Haromm", -- Needs review
-=======
-	-- ["Earthbreaker Haromm"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Earthcaller Halmgar"] = "Clamor de Tierra Halmgar",
 	["Earthrager Ptah"] = "Terracundo Ptah",
 	Ebonroc = "Ebonroc",
@@ -4334,11 +4182,7 @@ elseif GAME_LOCALE == "esES" then
 	["Frost King Malakk"] = "Rey de Escarcha Malakk", -- Needs review
 	["Gahz'ranka"] = "Gahz'ranka",
 	["Gahz'rilla"] = "Gahz'rilla",
-<<<<<<< HEAD
 	Galakras = "Galakras", -- Needs review
-=======
-	-- Galakras = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Gal'darah"] = "Gal'darah",
 	["Galgann Firehammer"] = "Galgann Flamartillo",
 	Galleon = "Galleon", -- Needs review
@@ -4358,13 +4202,8 @@ elseif GAME_LOCALE == "esES" then
 	["General Bjarngrim"] = "General Bjarngrim",
 	["General Drakkisath"] = "General Drakkisath",
 	["General Husam"] = "General Husam",
-<<<<<<< HEAD
 	["General Nazgrim"] = "General Nazgrim", -- Needs review
 	["General Pa'valak"] = "General Pa'valak", -- Needs review
-=======
-	-- ["General Nazgrim"] = "",
-	-- ["General Pa'valak"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["General Rajaxx"] = "General Rajaxx",
 	["General Umbriss"] = "General Umbriss",
 	["General Vezax"] = "General Vezax",
@@ -4432,11 +4271,7 @@ elseif GAME_LOCALE == "esES" then
 	["Henry Stern"] = "Henry Stern",
 	["Herald Volazj"] = "Heraldo Volazj",
 	Herod = "Herod",
-<<<<<<< HEAD
 	["He Softfoot"] = "Zheng Paso Cauto", -- Needs review
-=======
-	-- ["He Softfoot"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Hex Lord Malacrass"] = "Señor aojador Malacrass",
 	["High Astromancer Solarian"] = "Gran astromántica Solarian",
 	["High Botanist Freywinn"] = "Gran botánico Freywinn",
@@ -4459,11 +4294,7 @@ elseif GAME_LOCALE == "esES" then
 	["High Priest Venoxis"] = "Sumo Sacerdote Venoxis",
 	["High Prophet Barim"] = "Sumo profeta Barim",
 	["High Warlord Naj'entus"] = "Gran Señor de la Guerra Naj'entus",
-<<<<<<< HEAD
 	["Hisek the Swarmkeeper"] = "Hisek el Guardaenjambres", -- Needs review
-=======
-	-- ["Hisek the Swarmkeeper"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Hodir = "Hodir",
 	Hogger = "Hogger",
 	Hoptallus = "Saltadizo", -- Needs review
@@ -4489,11 +4320,7 @@ elseif GAME_LOCALE == "esES" then
 	["Illidan Stormrage"] = "Illidan Tempestira",
 	["Illidari Council"] = "Concilio Illidari",
 	["Illyanna Ravenoak"] = "Illyanna Roblecuervo",
-<<<<<<< HEAD
 	Immerseus = "Immerseus", -- Needs review
-=======
-	-- Immerseus = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Immol'thar"] = "Immol'thar",
 	["Imperial Vizier Zor'lok"] = "Visir imperial Zor'lok", -- Needs review
 	["Infinite Corruptor"] = "Corruptor Infinito",
@@ -4506,21 +4333,12 @@ elseif GAME_LOCALE == "esES" then
 	["Interrogator Vishas"] = "Interrogador Vishas",
 	Ionar = "Ionar",
 	Ironaya = "Hierraya",
-<<<<<<< HEAD
 	["Iron Juggernaut"] = "Gigante Férreo", -- Needs review
 	["Iron Qon"] = "Qon el Tenaz", -- Needs review
 	Ironspine = "Dorsacerado",
 	Isalien = "Isalien",
 	Isiset = "Isiset",
 	["Iyyokuk the Lucid"] = "Iyyokuk el Lúcido", -- Needs review
-=======
-	-- ["Iron Juggernaut"] = "",
-	-- ["Iron Qon"] = "",
-	Ironspine = "Dorsacerado",
-	Isalien = "Isalien",
-	Isiset = "Isiset",
-	-- ["Iyyokuk the Lucid"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Jade = "Jade",
 	["Jade Guardian"] = "Guardián de jade", -- Needs review
 	["Jammal'an the Prophet"] = "Jammal'an el Profeta",
@@ -4542,31 +4360,19 @@ elseif GAME_LOCALE == "esES" then
 	["Kael'thas Sunstrider"] = "Kael'thas Caminante del Sol",
 	Kalecgos = "Kalecgos",
 	["Kam Deepfury"] = "Kam Furiahonda",
-<<<<<<< HEAD
 	["Ka'roz the Locust"] = "Ka'roz la Langosta", -- Needs review
-=======
-	-- ["Ka'roz the Locust"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Karsh Steelbender"] = "Karsh Doblacero",
 	["Kazkaz the Unholy"] = "Kazkaz el Blasfemo",
 	["Kazra'jin"] = "Kazra'jin", -- Needs review
 	["Kaz'rogal"] = "Kaz'rogal",
-<<<<<<< HEAD
 	["Kaz'tik the Manipulator"] = "Kaz'tik el Manipulador", -- Needs review
-=======
-	-- ["Kaz'tik the Manipulator"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Keli'dan the Breaker"] = "Keli'dan el Ultrajador",
 	["Kel'Thuzad"] = "Kel'Thuzad",
 	Keristrasza = "Keristrasza",
 	["Kiggler the Crazed"] = "Kiggler el Enloquecido",
 	["Kil'jaeden"] = "Kil'jaeden",
 	["Kil'rek"] = "Kil'rek",
-<<<<<<< HEAD
 	["Kil'ruk the Wind-Reaver"] = "Kil'ruk el Atracavientos", -- Needs review
-=======
-	-- ["Kil'ruk the Wind-Reaver"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["King Dred"] = "Rey Dred",
 	["King Gordok"] = "Rey Gordok",
 	["King Llane Piece"] = "Rey Llane",
@@ -4576,17 +4382,10 @@ elseif GAME_LOCALE == "esES" then
 	Kolk = "Kolk",
 	Kologarn = "Kologarn",
 	["Koralon the Flame Watcher"] = "Koralon el Vigía de las llamas",
-<<<<<<< HEAD
 	["Kor'kron Dark Shaman"] = "Chamanes Oscuros Kor'kron", -- Needs review
 	["Kor'kron Jailer"] = "Carcelero Kor'kron", -- Needs review
 	Kormok = "Kormok",
 	["Korven the Prime"] = "Korven el Perfecto", -- Needs review
-=======
-	-- ["Kor'kron Dark Shaman"] = "",
-	-- ["Kor'kron Jailer"] = "",
-	Kormok = "Kormok",
-	-- ["Korven the Prime"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Kresh = "Kresh",
 	Krick = "Puagh",
 	["Krick and Ick"] = "Agh y Puagh",
@@ -4669,11 +4468,7 @@ elseif GAME_LOCALE == "esES" then
 	Malacrass = "Malacrass",
 	["Maleki the Pallid"] = "Maleki el Pálido",
 	["Mal'Ganis"] = "Mal'Ganis",
-<<<<<<< HEAD
 	Malkorok = "Malkorok", -- Needs review
-=======
-	-- Malkorok = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Maloriak = "Maloriak",
 	Malygos = "Malygos",
 	Mannoroth = "Mannoroth", -- Needs review
@@ -4736,13 +4531,8 @@ elseif GAME_LOCALE == "esES" then
 	["Nexus-Prince Shaffar"] = "Príncipe-nexo Shaffar",
 	Nezir = "Nezir",
 	Nightbane = "Nocturno",
-<<<<<<< HEAD
 	["Niuzao, The Black Ox"] = "Niuzao, El Buey Negro", -- Needs review
 	Norushen = "Norushen", -- Needs review
-=======
-	-- ["Niuzao, The Black Ox"] = "",
-	-- Norushen = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Noth the Plaguebringer"] = "Noth el Pesteador",
 	["Novos the Summoner"] = "Novos el Invocador",
 	Noxxion = "Noxxion",
@@ -4764,11 +4554,7 @@ elseif GAME_LOCALE == "esES" then
 	["Ook-Ook"] = "Ook-Ook", -- Needs review
 	Oondasta = "Oondasta", -- Needs review
 	["Opera Event"] = "Evento de Opera",
-<<<<<<< HEAD
 	["Ordos, Fire-God of the Yaungol"] = "Ordos, Dios de fuego de los yaungol", -- Needs review
-=======
-	-- ["Ordos, Fire-God of the Yaungol"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Orgrim's Hammer"] = "Martillo de Orgrim",
 	["Ormorok the Tree-Shaper"] = "Ormorok el cortador de árboles",
 	["Oro Eyegouge"] = "Oro Bocojo ",
@@ -4782,11 +4568,7 @@ elseif GAME_LOCALE == "esES" then
 	Ozumat = "Ozumat",
 	Pandemonius = "Pandemonius",
 	["Panzor the Invincible"] = "Panzor el Invencible",
-<<<<<<< HEAD
 	["Paragons of the Klaxxi"] = "Dechados de los Klaxxi", -- Needs review
-=======
-	-- ["Paragons of the Klaxxi"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Patchwerk = "Remendejo",
 	["Pathaleon the Calculator"] = "Panthaleon el Calculador",
 	["Peroth'arn"] = "Peroth'arn", -- Needs review
@@ -4846,11 +4628,7 @@ elseif GAME_LOCALE == "esES" then
 	["Rhahk'Zor"] = "Rhahk'Zor",
 	["Ribbly Screwspigot"] = "Ribbly Llavenrosca",
 	["Right Arm"] = "Brazo derecho",
-<<<<<<< HEAD
 	["Rik'kal the Dissector"] = "Rik'kal el Disector", -- Needs review
-=======
-	-- ["Rik'kal the Dissector"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Ring of Law"] = "Ring of Law",
 	["Risen Hammersmith"] = "Forjamartillos resucitado",
 	Roar = "Rugido",
@@ -4862,13 +4640,8 @@ elseif GAME_LOCALE == "esES" then
 	Romulo = "Romulo",
 	["Romulo & Julianne"] = "Romeo y Julieta",
 	Roogug = "Roogug",
-<<<<<<< HEAD
 	["Rook Stonetoe"] = "Rook Mano Dura", -- Needs review
 	["Ro'shak"] = "Ro'shak", -- Needs review
-=======
-	-- ["Rook Stonetoe"] = "",
-	-- ["Ro'shak"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Rotface = "Carapútrea",
 	Rotgrip = "Escamapodrida",
 	["Runemaster Molgeim"] = "Maestro de runas Molgeim",
@@ -4888,11 +4661,7 @@ elseif GAME_LOCALE == "esES" then
 	["Saviana Ragefire"] = "Saviana Furia Ardiente",
 	["Scarlet Commander Mograine"] = "Comandante Escarlata Mograine",
 	["Scourgelord Tyrannus"] = "Señor de la Plaga Tyrannus",
-<<<<<<< HEAD
 	["Secured Stockpile of Pandaren Spoils"] = "Reserva protegida del botín pandaren", -- Needs review
-=======
-	-- ["Secured Stockpile of Pandaren Spoils"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Seeth'rel"] = "Seeth'rel",
 	["Selin Fireheart"] = "Selin Corazón de Fuego",
 	["Sergeant Bly"] = "Sargento Bly",
@@ -4906,7 +4675,6 @@ elseif GAME_LOCALE == "esES" then
 	["Shadowpriest Sezz'ziz"] = "Sacerdote oscuro Sezz'ziz",
 	Shadron = "Shadron",
 	Shannox = "Shannox",
-<<<<<<< HEAD
 	["Sha of Anger"] = "Sha de la ira", -- Needs review
 	["Sha of Doubt"] = "Sha de la duda", -- Needs review
 	["Sha of Fear"] = "Sha del miedo", -- Needs review
@@ -4916,17 +4684,6 @@ elseif GAME_LOCALE == "esES" then
 	["Shirrak the Dead Watcher"] = "Shirrak el Vigía de los Muertos",
 	["Siamat, Lord of South Wind"] = "Siamat, señor del viento del sur",
 	["Siegecrafter Blackfuse"] = "Asediador Mechanegra", -- Needs review
-=======
-	-- ["Sha of Anger"] = "",
-	-- ["Sha of Doubt"] = "",
-	-- ["Sha of Fear"] = "",
-	-- ["Sha of Pride"] = "",
-	-- ["Sha of Violence"] = "",
-	Shazzrah = "Shazzrah",
-	["Shirrak the Dead Watcher"] = "Shirrak el Vigía de los Muertos",
-	["Siamat, Lord of South Wind"] = "Siamat, señor del viento del sur",
-	-- ["Siegecrafter Blackfuse"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Sindragosa = "Sindragosa",
 	Sinestra = "Sinestra",
 	["Sir Zeliek"] = "Sir Zeliek",
@@ -4934,11 +4691,7 @@ elseif GAME_LOCALE == "esES" then
 	["Skadi the Ruthless"] = "Skadi el Despiadado",
 	["Skarr the Unbreakable"] = "Skarr el Inquebrantable",
 	["Skarvald the Constructor"] = "Skarvald el Constructor",
-<<<<<<< HEAD
 	["Skeer the Bloodseeker"] = "Skeer el Cruento", -- Needs review
-=======
-	-- ["Skeer the Bloodseeker"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Skra'gath"] = "Skra'gath",
 	Skul = "Skul",
 	Skum = "Skum",
@@ -4954,11 +4707,7 @@ elseif GAME_LOCALE == "esES" then
 	["Spirestone Battle Lord"] = "Señor de batalla Cumbrerroca",
 	["Spirestone Butcher"] = "Carnicero Cumbrerroca",
 	["Spirestone Lord Magus"] = "Señor Magus Cumbrerroca",
-<<<<<<< HEAD
 	["Spoils of Pandaria"] = "Botín de Pandaria", -- Needs review
-=======
-	-- ["Spoils of Pandaria"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Staff of Disintegration"] = "Bastón de desintegración",
 	Stalagg = "Stalagg",
 	Steelbreaker = "Rompeacero",
@@ -4970,13 +4719,8 @@ elseif GAME_LOCALE == "esES" then
 	["Subetai the Swift"] = "Subetai el Raudo", -- Needs review
 	Suen = "Suen", -- Needs review
 	["Sulfuron Harbinger"] = "Sulfuron Presagista",
-<<<<<<< HEAD
 	["Sul the Sandcrawler"] = "Sul el Reptador de la arena", -- Needs review
 	["Sun Tenderheart"] = "Sun Corazón Afable", -- Needs review
-=======
-	-- ["Sul the Sandcrawler"] = "",
-	-- ["Sun Tenderheart"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Supremus = "Supremus",
 	["Svala Sorrowgrave"] = "Svala Tumbapena",
 	["Swamplord Musel'ek"] = "Señor del pantano Musel'ek",
@@ -5009,11 +4753,7 @@ elseif GAME_LOCALE == "esES" then
 	["The Crone"] = "La Vieja Bruja",
 	["The Curator"] = "Curator",
 	["The Eredar Twins"] = "Los Gemelos Eredar",
-<<<<<<< HEAD
 	["The Fallen Protectors"] = "Los Protectores Caídos", -- Needs review
-=======
-	-- ["The Fallen Protectors"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["The Four Horsemen"] = "Los Cuatro Jinetes",
 	["The Illidari Council"] = "El concilio Illidari",
 	["The Iron Council"] = "La Asamblea de Hierro",
@@ -5036,11 +4776,7 @@ elseif GAME_LOCALE == "esES" then
 	["The Twin Val'kyr"] = "Gemelas Val'kyr",
 	["The Unforgiven"] = "El Imperdonable",
 	["The Windreaver"] = "El Atracavientos",
-<<<<<<< HEAD
 	["Thok the Bloodthirsty"] = "Thok el Sanguinario", -- Needs review
-=======
-	-- ["Thok the Bloodthirsty"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Thorim = "Thorim",
 	["Thorngrin the Tender"] = "Thorngrin el Tierno",
 	["Tidewalker Lurker"] = "Rondador Levantamareas",
@@ -5102,11 +4838,7 @@ elseif GAME_LOCALE == "esES" then
 	["Warp Slicer"] = "Cercenadora de distorsión",
 	["Warp Splinter"] = "Disidente de distorsión",
 	["Watchkeeper Gargolmar"] = "Guardián vigía Gargolmar",
-<<<<<<< HEAD
 	["Wavebinder Kardris"] = "Vinculaolas Kardris", -- Needs review
-=======
-	-- ["Wavebinder Kardris"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Weaver = "Sastrón",
 	["Willey Hopebreaker"] = "Willey Rompeesperanzas",
 	["Will of the Emperor"] = "Voluntad del Emperador", -- Needs review
@@ -5117,30 +4849,17 @@ elseif GAME_LOCALE == "esES" then
 	["Wolf Master Nandos"] = "Maestro de lobos Nandos",
 	["Wrath-Scryer Soccothrates"] = "Arúspice de cólera Soccothrates",
 	Wushoolay = "Wushoolay",
-<<<<<<< HEAD
 	["Xaril the Poisoned Mind"] = "Xaril, la Mente Envenenada", -- Needs review
-=======
-	-- ["Xaril the Poisoned Mind"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Xevozz = "Xevozz",
 	["Xin the Weaponmaster"] = "Xin, el Maestro de arma", -- Needs review
 	["XT-002 Deconstructor"] = "Desarmador XA-002",
-<<<<<<< HEAD
 	["Xuen, The White Tiger"] = "Xuen, El Tigre Blanco", -- Needs review
 	["Yan-Zhu the Uncasked"] = "Yan-Zhu el Peleón", -- Needs review
-=======
-	-- ["Xuen, The White Tiger"] = "",
-	-- ["Yan-Zhu the Uncasked"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Yogg-Saron"] = "Yogg-Saron",
 	Yor = "Yor",
 	["Yor'sahj the Unsleeping"] = "Yor'sahj el Velador", -- Needs review
 	Ysondre = "Ysondre",
-<<<<<<< HEAD
 	["Yu'lon, The Jade Serpent"] = "Yu'lon, El Dragón de Jade", -- Needs review
-=======
-	-- ["Yu'lon, The Jade Serpent"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Zanzil = "Zanzil",
 	Zekkis = "Zekkis",
 	["Zelemar the Wrathful"] = "Zelemar el Colérico",
@@ -6146,11 +5865,7 @@ elseif GAME_LOCALE == "ptBR" then
 	Altarius = "Altarius",
 	Alysrazor = "Alysrazor",
 	["Alzzin the Wildshaper"] = "Azzin, o Selvamorfo",
-<<<<<<< HEAD
 	["Amalgam of Corruption"] = "Amálgama da Corrupção", -- Needs review
-=======
-	-- ["Amalgam of Corruption"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Amanitar = "Amanitar",
 	["Ambassador Flamelash"] = "Embaixador Fogaçoite",
 	["Ambassador Hellmaw"] = "Embaixador Gorjavernus",
@@ -6267,11 +5982,7 @@ elseif GAME_LOCALE == "ptBR" then
 	["Chest of The Seven"] = "Baú dos Sete",
 	["Chief Salyis"] = "Chefe Salyis", -- Needs review
 	["Chief Ukorz Sandscalp"] = "Chefe Ukorz Escalpareia",
-<<<<<<< HEAD
 	["Chi-Ji, The Red Crane"] = "Chi-Ji, A Garça Vermelha", -- Needs review
-=======
-	-- ["Chi-Ji, The Red Crane"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Chimaeron = "Khímaron",
 	["Cho'gall"] = "Cho'gall",
 	["Cho'Rush the Observer"] = "Ez'Magg, o Observador",
@@ -6343,11 +6054,7 @@ elseif GAME_LOCALE == "ptBR" then
 	["Dust Covered Chest"] = "Baú Empoeirado", -- Needs review
 	Dustwraith = "Assombração de Poeira", -- Needs review
 	["Eadric the Pure"] = "Eadric, o Puro",
-<<<<<<< HEAD
 	["Earthbreaker Haromm"] = "Rompe-terra Haromm", -- Needs review
-=======
-	-- ["Earthbreaker Haromm"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Earthcaller Halmgar"] = "Arauto da Terra Halmgar", -- Needs review
 	["Earthrager Ptah"] = "Ptah Furitérreo",
 	Ebonroc = "Petrébano",
@@ -6417,11 +6124,7 @@ elseif GAME_LOCALE == "ptBR" then
 	["Frost King Malakk"] = "Rei do Gelo Malakk", -- Needs review
 	["Gahz'ranka"] = "Gahz'ranka", -- Needs review
 	["Gahz'rilla"] = "Gahz'rilla",
-<<<<<<< HEAD
 	Galakras = "Galakras", -- Needs review
-=======
-	-- Galakras = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Gal'darah"] = "Gal'darah",
 	["Galgann Firehammer"] = "Galnann Martelígneo",
 	Galleon = "Gailleon", -- Needs review
@@ -6441,13 +6144,8 @@ elseif GAME_LOCALE == "ptBR" then
 	["General Bjarngrim"] = "General Bjarngrim",
 	["General Drakkisath"] = "General Drakkisath",
 	["General Husam"] = "General Husam",
-<<<<<<< HEAD
 	["General Nazgrim"] = "General Nazgrim", -- Needs review
 	["General Pa'valak"] = "General Pa'valak", -- Needs review
-=======
-	-- ["General Nazgrim"] = "",
-	-- ["General Pa'valak"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["General Rajaxx"] = "General Rajaxx",
 	["General Umbriss"] = "General Umbriss",
 	["General Vezax"] = "General Vezax",
@@ -6515,11 +6213,7 @@ elseif GAME_LOCALE == "ptBR" then
 	["Henry Stern"] = "Henry Stern", -- Needs review
 	["Herald Volazj"] = "Arauto Volazj",
 	Herod = "Herodes",
-<<<<<<< HEAD
 	["He Softfoot"] = "He Pés Leves", -- Needs review
-=======
-	-- ["He Softfoot"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Hex Lord Malacrass"] = "Grão-bagateiro Malacrass",
 	["High Astromancer Solarian"] = "Alta-astromante Solarian",
 	["High Botanist Freywinn"] = "Alto-botânico Freywinn",
@@ -6542,11 +6236,7 @@ elseif GAME_LOCALE == "ptBR" then
 	["High Priest Venoxis"] = "Sumo Sacerdote Venoxis",
 	["High Prophet Barim"] = "Sumo Profeta Barim",
 	["High Warlord Naj'entus"] = "Sumo Senhor da Guerra Naj'entus",
-<<<<<<< HEAD
 	["Hisek the Swarmkeeper"] = "Hisek, o Guardião do Enxame", -- Needs review
-=======
-	-- ["Hisek the Swarmkeeper"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Hodir = "Hodir",
 	Hogger = "Hogger",
 	Hoptallus = "Saltallus", -- Needs review
@@ -6572,11 +6262,7 @@ elseif GAME_LOCALE == "ptBR" then
 	["Illidan Stormrage"] = "Illidan Tempesfúria",
 	["Illidari Council"] = "Conselho Illidari",
 	["Illyanna Ravenoak"] = "Illyanna Corvalho",
-<<<<<<< HEAD
 	Immerseus = "Immerseus", -- Needs review
-=======
-	-- Immerseus = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Immol'thar"] = "Immol'thar",
 	["Imperial Vizier Zor'lok"] = "Vizir Imperial Zor'lok", -- Needs review
 	["Infinite Corruptor"] = "Corruptor Infinito",
@@ -6589,21 +6275,12 @@ elseif GAME_LOCALE == "ptBR" then
 	["Interrogator Vishas"] = "Interrogador Vishas",
 	Ionar = "Ionar",
 	Ironaya = "Ferronaya",
-<<<<<<< HEAD
 	["Iron Juggernaut"] = "Jaganata de Ferro", -- Needs review
 	["Iron Qon"] = "Qon de Ferro", -- Needs review
 	Ironspine = "Espinha de Ferro", -- Needs review
 	Isalien = "Isalien", -- Needs review
 	Isiset = "Isiset",
 	["Iyyokuk the Lucid"] = "Iyyokuk, o Lúcido", -- Needs review
-=======
-	-- ["Iron Juggernaut"] = "",
-	-- ["Iron Qon"] = "",
-	-- Ironspine = "",
-	-- Isalien = "",
-	Isiset = "Isiset",
-	-- ["Iyyokuk the Lucid"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Jade = "Jade", -- Needs review
 	["Jade Guardian"] = "Guardião de Jade", -- Needs review
 	["Jammal'an the Prophet"] = "Jammal'an, o Profeta",
@@ -6624,18 +6301,12 @@ elseif GAME_LOCALE == "ptBR" then
 	["Junk Bot"] = "Sucatômato", -- Needs review
 	["Kael'thas Sunstrider"] = "Kael'thas Andassol",
 	Kalecgos = "Kalecgos",
-<<<<<<< HEAD
 	["Kam Deepfury"] = "Kam Fundafúria", -- Needs review
 	["Ka'roz the Locust"] = "Ka'roz, o Gafanhoto", -- Needs review
-=======
-	-- ["Kam Deepfury"] = "",
-	-- ["Ka'roz the Locust"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Karsh Steelbender"] = "Karsh Dobraferro",
 	["Kazkaz the Unholy"] = "Kazkaz, o Profano", -- Needs review
 	["Kazra'jin"] = "Kazra'jin", -- Needs review
 	["Kaz'rogal"] = "Kaz'rogal",
-<<<<<<< HEAD
 	["Kaz'tik the Manipulator"] = "Kaz'tik, o Manipulador", -- Needs review
 	["Keli'dan the Breaker"] = "Keli'dan, o Quebrador", -- Needs review
 	["Kel'Thuzad"] = "Kel'Thuzad",
@@ -6644,16 +6315,6 @@ elseif GAME_LOCALE == "ptBR" then
 	["Kil'jaeden"] = "Kil'jaeden", -- Needs review
 	["Kil'rek"] = "Kil'rek", -- Needs review
 	["Kil'ruk the Wind-Reaver"] = "Kil'ruk, o Aniquilador dos Ventos", -- Needs review
-=======
-	-- ["Kaz'tik the Manipulator"] = "",
-	-- ["Keli'dan the Breaker"] = "",
-	["Kel'Thuzad"] = "Kel'Thuzad",
-	Keristrasza = "Keristrasza",
-	-- ["Kiggler the Crazed"] = "",
-	-- ["Kil'jaeden"] = "",
-	-- ["Kil'rek"] = "",
-	-- ["Kil'ruk the Wind-Reaver"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["King Dred"] = "Rei Moso",
 	["King Gordok"] = "Rei Gordok",
 	["King Llane Piece"] = "Peça do Rei Llane", -- Needs review
@@ -6663,17 +6324,10 @@ elseif GAME_LOCALE == "ptBR" then
 	Kolk = "Kolk", -- Needs review
 	Kologarn = "Kologarn",
 	["Koralon the Flame Watcher"] = "Koralon, o Vigia do Fogo",
-<<<<<<< HEAD
 	["Kor'kron Dark Shaman"] = "Xamã Sombrio Kor'kron", -- Needs review
 	["Kor'kron Jailer"] = "Carcereiro Ko'kron", -- Needs review
 	Kormok = "Kormok", -- Needs review
 	["Korven the Prime"] = "Korven, o Escolado", -- Needs review
-=======
-	-- ["Kor'kron Dark Shaman"] = "",
-	-- ["Kor'kron Jailer"] = "",
-	-- Kormok = "",
-	-- ["Korven the Prime"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Kresh = "Cresh",
 	Krick = "Krick",
 	["Krick and Ick"] = "Krick e Ick",
@@ -6756,11 +6410,7 @@ elseif GAME_LOCALE == "ptBR" then
 	Malacrass = "Malacrass",
 	["Maleki the Pallid"] = "Malaki, o Pálido",
 	["Mal'Ganis"] = "Mal'Ganis",
-<<<<<<< HEAD
 	Malkorok = "Malkorok", -- Needs review
-=======
-	-- Malkorok = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Maloriak = "Maloriak",
 	Malygos = "Malygos",
 	Mannoroth = "Mannoroth",
@@ -6823,13 +6473,8 @@ elseif GAME_LOCALE == "ptBR" then
 	["Nexus-Prince Shaffar"] = "Príncipe do Nexus Shaffar",
 	Nezir = "Nezir",
 	Nightbane = "Nocturno",
-<<<<<<< HEAD
 	["Niuzao, The Black Ox"] = "Niuzao, O Boi Negro", -- Needs review
 	Norushen = "Norushen", -- Needs review
-=======
-	-- ["Niuzao, The Black Ox"] = "",
-	-- Norushen = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Noth the Plaguebringer"] = "Noth, o Pestífero",
 	["Novos the Summoner"] = "Novos, o Evocador",
 	Noxxion = "Tóxxico",
@@ -6851,13 +6496,8 @@ elseif GAME_LOCALE == "ptBR" then
 	["Ook-Ook"] = "Uk-Uk", -- Needs review
 	Oondasta = "Oondasta", -- Needs review
 	["Opera Event"] = "O Evento da Ópera",
-<<<<<<< HEAD
 	["Ordos, Fire-God of the Yaungol"] = "Ordos <Deus-Fogo dos Yaungóis>", -- Needs review
 	["Orgrim's Hammer"] = "Martelo de Orgrim", -- Needs review
-=======
-	-- ["Ordos, Fire-God of the Yaungol"] = "",
-	-- ["Orgrim's Hammer"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Ormorok the Tree-Shaper"] = "Ormorok, o Molda-árvores",
 	["Oro Eyegouge"] = "Oro Ranca-olho", -- Needs review
 	["Ossirian the Unscarred"] = "Ossirian, o Intocado",
@@ -6870,11 +6510,7 @@ elseif GAME_LOCALE == "ptBR" then
 	Ozumat = "Ozumat",
 	Pandemonius = "Pandemônio",
 	["Panzor the Invincible"] = "Panzor o Invencível", -- Needs review
-<<<<<<< HEAD
 	["Paragons of the Klaxxi"] = "Paragões dos Klaxxi", -- Needs review
-=======
-	-- ["Paragons of the Klaxxi"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Patchwerk = "Retalhoso",
 	["Pathaleon the Calculator"] = "Pathaleon, o Calculista",
 	["Peroth'arn"] = "Peroth'arn",
@@ -6934,11 +6570,7 @@ elseif GAME_LOCALE == "ptBR" then
 	["Rhahk'Zor"] = "Rhahk'Zor", -- Needs review
 	["Ribbly Screwspigot"] = "Ribas Parafuset",
 	["Right Arm"] = "Braço Direito",
-<<<<<<< HEAD
 	["Rik'kal the Dissector"] = "Rik'kal, o Dissecador", -- Needs review
-=======
-	-- ["Rik'kal the Dissector"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Ring of Law"] = "Círculo da Lei",
 	["Risen Hammersmith"] = "Marteleiro Reanimado", -- Needs review
 	Roar = "Rugido",
@@ -6950,13 +6582,8 @@ elseif GAME_LOCALE == "ptBR" then
 	Romulo = "Romão",
 	["Romulo & Julianne"] = "Romão e Julianne",
 	Roogug = "Rugug",
-<<<<<<< HEAD
 	["Rook Stonetoe"] = "Rook Dedão de Pedra", -- Needs review
 	["Ro'shak"] = "Ro'shak", -- Needs review
-=======
-	-- ["Rook Stonetoe"] = "",
-	-- ["Ro'shak"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Rotface = "Rostorroto",
 	Rotgrip = "Putrigarra",
 	["Runemaster Molgeim"] = "Mestre de Runas Molgeim",
@@ -6976,11 +6603,7 @@ elseif GAME_LOCALE == "ptBR" then
 	["Saviana Ragefire"] = "Saviana Iraflama",
 	["Scarlet Commander Mograine"] = "Comandante Escarlate Mograine",
 	["Scourgelord Tyrannus"] = "Senhor do Flagelo Tyrannus",
-<<<<<<< HEAD
 	["Secured Stockpile of Pandaren Spoils"] = "Reserva Segura de Tesouros Pandarênicos", -- Needs review
-=======
-	-- ["Secured Stockpile of Pandaren Spoils"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Seeth'rel"] = "Cole'rel",
 	["Selin Fireheart"] = "Serin Flamicórdio",
 	["Sergeant Bly"] = "Sargento Bly", -- Needs review
@@ -6994,7 +6617,6 @@ elseif GAME_LOCALE == "ptBR" then
 	["Shadowpriest Sezz'ziz"] = "Sacerdote Sombrio Diz'ieh",
 	Shadron = "Shadron",
 	Shannox = "Shannox",
-<<<<<<< HEAD
 	["Sha of Anger"] = "Sha da Raiva", -- Needs review
 	["Sha of Doubt"] = "Sha da Dúvida", -- Needs review
 	["Sha of Fear"] = "Sha do Medo", -- Needs review
@@ -7004,17 +6626,6 @@ elseif GAME_LOCALE == "ptBR" then
 	["Shirrak the Dead Watcher"] = "Shirrak, o Vigia dos Mortos",
 	["Siamat, Lord of South Wind"] = "Siamat, Senhor do Vento Sul",
 	["Siegecrafter Blackfuse"] = "Cerqueiro Pavio Preto", -- Needs review
-=======
-	-- ["Sha of Anger"] = "",
-	-- ["Sha of Doubt"] = "",
-	-- ["Sha of Fear"] = "",
-	-- ["Sha of Pride"] = "",
-	-- ["Sha of Violence"] = "",
-	Shazzrah = "Shazzrah",
-	["Shirrak the Dead Watcher"] = "Shirrak, o Vigia dos Mortos",
-	["Siamat, Lord of South Wind"] = "Siamat, Senhor do Vento Sul",
-	-- ["Siegecrafter Blackfuse"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Sindragosa = "Sindragosa",
 	Sinestra = "Sinestra",
 	["Sir Zeliek"] = "Sir Zeliek",
@@ -7022,15 +6633,9 @@ elseif GAME_LOCALE == "ptBR" then
 	["Skadi the Ruthless"] = "Skadi, o Impiedoso",
 	["Skarr the Unbreakable"] = "Cikkatriz, o Inquebrável", -- Needs review
 	["Skarvald the Constructor"] = "Skarvald, o Construtor",
-<<<<<<< HEAD
 	["Skeer the Bloodseeker"] = "Skeer, o Sanguinário", -- Needs review
 	["Skra'gath"] = "Skra'gath", -- Needs review
 	Skul = "Kranio", -- Needs review
-=======
-	-- ["Skeer the Bloodseeker"] = "",
-	-- ["Skra'gath"] = "",
-	-- Skul = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Skum = "Skória",
 	Slabhide = "Couro-pétreo",
 	["Slad'ran"] = "Slad'ran",
@@ -7041,21 +6646,12 @@ elseif GAME_LOCALE == "ptBR" then
 	["Solarium Agent"] = "Agente do Solarium", -- Needs review
 	["Solarium Priest"] = "Sacerdote do Solário", -- Needs review
 	["Spine of Deathwing"] = "Espinhaço do Asa da Morte",
-<<<<<<< HEAD
 	["Spirestone Battle Lord"] = "Senhor da Batalha Agulhapétrea", -- Needs review
 	["Spirestone Butcher"] = "Carniceiro Agulhapétrea", -- Needs review
 	["Spirestone Lord Magus"] = "Mestre Mago Agulhapétrea", -- Needs review
 	["Spoils of Pandaria"] = "Espólios de Pandária", -- Needs review
 	["Staff of Disintegration"] = "Cajado da Desintegração", -- Needs review
 	Stalagg = "Stalagg", -- Needs review
-=======
-	-- ["Spirestone Battle Lord"] = "",
-	-- ["Spirestone Butcher"] = "",
-	-- ["Spirestone Lord Magus"] = "",
-	-- ["Spoils of Pandaria"] = "",
-	-- ["Staff of Disintegration"] = "",
-	-- Stalagg = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Steelbreaker = "Rompeaço",
 	["Stomper Kreeg"] = "Pisoteador Kreeg",
 	Stonespine = "Petrespáduas", -- Needs review
@@ -7065,13 +6661,8 @@ elseif GAME_LOCALE == "ptBR" then
 	["Subetai the Swift"] = "Subetai, o Veloz", -- Needs review
 	Suen = "Suen", -- Needs review
 	["Sulfuron Harbinger"] = "Emissário de Sulfuron",
-<<<<<<< HEAD
 	["Sul the Sandcrawler"] = "Sul, o Rastejante da Areia", -- Needs review
 	["Sun Tenderheart"] = "Sun Coração Tenro", -- Needs review
-=======
-	-- ["Sul the Sandcrawler"] = "",
-	-- ["Sun Tenderheart"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Supremus = "Supremus",
 	["Svala Sorrowgrave"] = "Svala Morbecripta",
 	["Swamplord Musel'ek"] = "Senhor do Pântano Musel'ek",
@@ -7104,11 +6695,7 @@ elseif GAME_LOCALE == "ptBR" then
 	["The Crone"] = "Bruxa Má",
 	["The Curator"] = "O Curador",
 	["The Eredar Twins"] = "Gêmeas Eredar",
-<<<<<<< HEAD
 	["The Fallen Protectors"] = "Protetores Caídos", -- Needs review
-=======
-	-- ["The Fallen Protectors"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["The Four Horsemen"] = "Os Quatro Cavaleiros",
 	["The Illidari Council"] = "O Conselho Illidari",
 	["The Iron Council"] = "O Conselho de Ferro",
@@ -7130,13 +6717,8 @@ elseif GAME_LOCALE == "ptBR" then
 	["The Twin Emperors"] = "Imperadores Gêmeos",
 	["The Twin Val'kyr"] = "As Gêmeas Val'kyr",
 	["The Unforgiven"] = "O imperdoável",
-<<<<<<< HEAD
 	["The Windreaver"] = "O Teceventos", -- Needs review
 	["Thok the Bloodthirsty"] = "Thok, o Sedento de Sangue", -- Needs review
-=======
-	-- ["The Windreaver"] = "",
-	-- ["Thok the Bloodthirsty"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Thorim = "Thorim",
 	["Thorngrin the Tender"] = "Cardônico, o Mantenedor",
 	["Tidewalker Lurker"] = "Tocaieiro Andamaré", -- Needs review
@@ -7198,11 +6780,7 @@ elseif GAME_LOCALE == "ptBR" then
 	["Warp Slicer"] = "Fatiador Dimensional", -- Needs review
 	["Warp Splinter"] = "Estilhaço Dimensional",
 	["Watchkeeper Gargolmar"] = "Guarda Gargulmar",
-<<<<<<< HEAD
 	["Wavebinder Kardris"] = "Teceondas Kardris", -- Needs review
-=======
-	-- ["Wavebinder Kardris"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Weaver = "Tecelão",
 	["Willey Hopebreaker"] = "Gualter Quebrafé",
 	["Will of the Emperor"] = "Vontade do Imperador", -- Needs review
@@ -7213,31 +6791,17 @@ elseif GAME_LOCALE == "ptBR" then
 	["Wolf Master Nandos"] = "Nandos, o Mestre de Lobos", -- Needs review
 	["Wrath-Scryer Soccothrates"] = "Iráugure Socótrates",
 	Wushoolay = "Vuxulai",
-<<<<<<< HEAD
 	["Xaril the Poisoned Mind"] = "Xaril, a Mente Envenenada", -- Needs review
-=======
-	-- ["Xaril the Poisoned Mind"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Xevozz = "Xevozz",
 	["Xin the Weaponmaster"] = "Xin, o Mestre de Armas", -- Needs review
 	["XT-002 Deconstructor"] = "Desconstrutor XT-002",
-<<<<<<< HEAD
 	["Xuen, The White Tiger"] = "Xuen, O Tigre Branco", -- Needs review
 	["Yan-Zhu the Uncasked"] = "Yan-Zhu, o Desenvasado", -- Needs review
-=======
-	-- ["Xuen, The White Tiger"] = "",
-	-- ["Yan-Zhu the Uncasked"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Yogg-Saron"] = "Yogg-Saron",
 	Yor = "Yor", -- Needs review
 	["Yor'sahj the Unsleeping"] = "Yor'sahj, o Vigil",
-<<<<<<< HEAD
 	Ysondre = "Ysondra", -- Needs review
 	["Yu'lon, The Jade Serpent"] = "Yu'lon, A Serpente de Jade", -- Needs review
-=======
-	-- Ysondre = "",
-	-- ["Yu'lon, The Jade Serpent"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	Zanzil = "Zanzil",
 	Zekkis = "Zekkis", -- Needs review
 	["Zelemar the Wrathful"] = "Zelemar, o Colérico", -- Needs review
@@ -8010,11 +7574,7 @@ elseif GAME_LOCALE == "itIT" then
 	["Saviana Ragefire"] = "Saviana Fiammafurente",
 	["Scarlet Commander Mograine"] = "Commandante Scarlatto Mograine",
 	["Scourgelord Tyrannus"] = "Signore della Piaga Tirannus",
-<<<<<<< HEAD
 	["Secured Stockpile of Pandaren Spoils"] = "Consolle di Controllo del Magazzino",
-=======
-	-- ["Secured Stockpile of Pandaren Spoils"] = "",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	["Seeth'rel"] = "Gelen'rel",
 	["Selin Fireheart"] = "Selin Fiammacuori",
 	["Sergeant Bly"] = "Sergente Bly",
@@ -8856,7 +8416,7 @@ elseif GAME_LOCALE == "ruRU" then
 	Nezir = "Незир",
 	Nightbane = "Ночная Погибель",
 	["Niuzao, The Black Ox"] = "Нюцзао, Черный Бык",
-	Norushen = "Норусхрен",
+	Norushen = "Норусхен", -- Needs review
 	["Noth the Plaguebringer"] = "Нот Чумной",
 	["Novos the Summoner"] = "Новос Призыватель",
 	Noxxion = "Ноксион",

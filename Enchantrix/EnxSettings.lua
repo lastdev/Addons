@@ -1,11 +1,7 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-	Revision: $Id: EnxSettings.lua 5347 2012-09-06 06:26:15Z Esamynn $
+	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Revision: $Id: EnxSettings.lua 5465 2014-07-05 11:05:46Z brykrys $
 	URL: http://enchantrix.org/
 
 	Settings GUI
@@ -67,11 +63,7 @@ Usage:
 
 ]]
 
-<<<<<<< HEAD
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Enchantrix/EnxSettings.lua $", "$Rev: 5347 $")
-=======
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Enchantrix/EnxSettings.lua $", "$Rev: 5347 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Enchantrix/EnxSettings.lua $", "$Rev: 5465 $")
 
 local lib = {}
 Enchantrix.Settings = lib
@@ -147,7 +139,7 @@ local settingDefaults = {
 	['TooltipMillingShowAuctValueMedian'] = true,
 	['TooltipMillingShowBaselineValue'] = true,
 	['TooltipMillingShowAuctAdvValue'] = true,
-	
+
 	['TooltipShowReagents'] = true,		-- show reagents for enchant/spell tooltips
 
 	['ShowAllCraftReagents'] = false,		-- ccox - just an idea I'm testing, doesn't work that well yet
@@ -277,13 +269,13 @@ local function setter(setting, value)
 			-- If there's a profile name supplied
 			if (value) then
 				local existingProfile = EnchantConfig["profile."..value]
-				
+
 				local newName = gui.elements["profile.name"]:GetText()
 
 				if (newName and newName ~= "") then
 					-- copy it under the new name
 					EnchantConfig["profile."..newName] = existingProfile
-					
+
 					-- Set the current profile to the new profile
 					EnchantConfig[getUserSig()] = newName
 
@@ -542,7 +534,7 @@ function lib.MakeGuiConfig()
 	gui:AddControl(id, "Header",     0,    _ENCH("GuiGeneralOptions"))
 	gui:AddControl(id, "Subhead",     0,	_ENCH('ModTTShow')) --"Show Tooltip:"
 	gui:AddControl(id, "Selectbox", 0, 1, { { "always", _ENCH('ModTTShow_always') }, {"alt", _ENCH('ModTTShow_alt') }, { "noalt", _ENCH('ModTTShow_noalt') }, {"shift", _ENCH('ModTTShow_shift') }, {"noshift", _ENCH('ModTTShow_noshift')}, {"ctrl", _ENCH('ModTTShow_ctrl')},{"noctrl", _ENCH('ModTTShow_noctrl')}, { "never", _ENCH('ModTTShow_never')} }, "ModTTShow")
-	gui:AddTip(id, _ENCH('ModTTShow_Help')) --"Determines Tooltip behavior. Always: Show Enchantrix's Tooltip every time. When <mod> is pressed: Only show Enchantrix's tooltip if the specified modifier is pressed. When <mod> is not pressed: Only show Enchantrix's tooltip if the specified modifier is not pressed. Never: Never show Enchantrix's tooltip."	
+	gui:AddTip(id, _ENCH('ModTTShow_Help')) --"Determines Tooltip behavior. Always: Show Enchantrix's Tooltip every time. When <mod> is pressed: Only show Enchantrix's tooltip if the specified modifier is pressed. When <mod> is not pressed: Only show Enchantrix's tooltip if the specified modifier is not pressed. Never: Never show Enchantrix's tooltip."
 	gui:AddControl(id, "Checkbox",   0, 1, "AltChatlinkTooltip", _ENCH('GuiAltChatlink'))--"Open tooltips from chat links with Alt left-clicks"
 	gui:AddTip(id, _ENCH('HelpAltChatlink'))--"Enables opening a tooltip by left-clicking on an item link in chat while the Alt key is pressed."
 	gui:AddControl(id, "Checkbox",   0, 1, "TooltipShowDisenchantLevel", _ENCH("GuiDELevels") )
@@ -585,7 +577,8 @@ function lib.MakeGuiConfig()
 	gui:AddControl(id, "Checkbox",   0, 2, "autoLootDE", _ENCH("GuiAutoLootDE"))
 
 	gui:AddControl(id, "Subhead",    0,    "AutoDisenchant: Permanently Ignored Items")
-	gui:AddControl(id, "Selectbox",  0, 1, "autode.items", "autode.selectitem")
+	local autoDElist = gui:AddControl(id, "Selectbox",  0, 1, "autode.items", "autode.selectitem")
+	autoDElist:SetWidth(280) -- Wider width needed for very long item names (SetWidth not directly supported by AddControl)
 	gui:AddControl(id, "Button",     0, 1, "autode.deleteItem", "remove item")
 	gui:AddControl(id, "Button",     0, 1, "autode.reset", "reset all items")
 

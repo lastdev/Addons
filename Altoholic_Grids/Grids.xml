@@ -7,6 +7,7 @@
 	<Script file="Grid_Tradeskills.lua"></Script>
 	<Script file="Grid_Archeology.lua"></Script>
 	<Script file="Grid_Dailies.lua"></Script>
+	<Script file="Grid_Dungeons.lua"></Script>
 	
 	<Frame name="AltoholicFrameGrids" parent="AltoholicTabGrids" hidden="true">
 		<Size>

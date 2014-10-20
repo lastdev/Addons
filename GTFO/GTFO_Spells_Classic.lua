@@ -150,3 +150,13 @@ GTFO.SpellID["25989"] = {
 	sound = 2;
 	trivialLevel = 60;
 };
+
+GTFO.SpellID["176369"] = {
+	--desc = "Lava Barrage (Ironmarch Scorcher)";
+	sound = 1;
+};
+
+GTFO.SpellID["176338"] = {
+	--desc = "Lava Blast (Ironmarch Scorcher)";
+	sound = 1;
+};

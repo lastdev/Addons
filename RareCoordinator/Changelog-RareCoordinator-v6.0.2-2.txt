@@ -1,0 +1,12 @@
+tag v6.0.2-2
+f84cf3f2ad42ac4b9af81fdfb398b71e9b9fb6ca
+elvador <>
+2014-10-15 03:17:01 +0200
+
+Tagging as v6.0.2-2
+
+
+--------------------
+
+elvador:
+	- toc bump

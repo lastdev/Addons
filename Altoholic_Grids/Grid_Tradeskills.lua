@@ -36,6 +36,7 @@ local xPacks = {
 	EXPANSION_NAME2,	-- "Wrath of the Lich King"
 	EXPANSION_NAME3,	-- "Cataclysm"
 	EXPANSION_NAME4,	-- "Mists of Pandaria"
+	EXPANSION_NAME5,	-- "Warlords of Draenor"
 }
 
 local OPTION_XPACK = "UI.Tabs.Grids.Tradeskills.CurrentXPack"
@@ -60,11 +61,7 @@ end
 
 local function OnTradeSkillChange(self)
 	CloseDropDownMenus()
-<<<<<<< HEAD
 	addon:SetOption(OPTION_TRADESKILL, self.value)
-=======
-	currentTradeSkill = self.value
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	addon.Tabs.Grids:Update()
 end
 
@@ -188,12 +185,9 @@ end
 
 local callbacks = {
 	OnUpdate = function() 
-<<<<<<< HEAD
 			local currentXPack = addon:GetOption(OPTION_XPACK)
 			local currentTradeSkill = addon:GetOption(OPTION_TRADESKILL)
 			
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			currentList = LCI:GetProfessionCraftList(tradeskills[currentTradeSkill], currentXPack)
 			if not currentList.isSorted then
 				table.sort(currentList, SortByCraftLevel)
@@ -243,18 +237,14 @@ local callbacks = {
 			itemText:SetFontObject("GameFontNormalSmall")
 			itemText:SetJustifyH("CENTER")
 			itemText:SetPoint("BOTTOMRIGHT", 5, 0)
-			itemTexture:SetDesaturated(0)
+			itemTexture:SetDesaturated(false)
 			itemTexture:SetTexCoord(0, 1, 0, 1)
 			
 			itemTexture:SetTexture(GetItemIcon(currentItemID) or ICON_QUESTIONMARK)
 
 			local text = ICON_NOTREADY
 			local vc = 0.25	-- vertex color
-<<<<<<< HEAD
 			local profession = DataStore:GetProfession(character, GetSpellInfo(tradeskills[addon:GetOption(OPTION_TRADESKILL)]))			
-=======
-			local profession = DataStore:GetProfession(character, GetSpellInfo(tradeskills[currentTradeSkill]))			
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 			if profession.NumCrafts ~= 0 then
 				-- do not enable this yet .. working fine, but better if more filtering allowed. ==> filtering on rarity

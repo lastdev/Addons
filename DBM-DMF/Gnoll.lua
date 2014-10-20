@@ -1,11 +1,7 @@
 local mod	= DBM:NewMod("Gnoll", "DBM-DMF")
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD:DBM-DMF/Gnoll.lua
 mod:SetRevision(("$Revision: 11506 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 10922 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23:DBM-DMF/Gnoll.lua
 mod:SetZone()
 
 mod:RegisterEvents(
@@ -14,10 +10,7 @@ mod:RegisterEvents(
 	"UNIT_SPELLCAST_SUCCEEDED player",
 	"QUEST_WATCH_UPDATE"
 )
-<<<<<<< HEAD:DBM-DMF/Gnoll.lua
 mod.noStatistics = true
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23:DBM-DMF/Gnoll.lua
 
 local warnGameOverQuest			= mod:NewAnnounce("warnGameOverQuest", 2, 101612, nil, false)
 local warnGameOverNoQuest		= mod:NewAnnounce("warnGameOverNoQuest", 2, 101612, nil, false)

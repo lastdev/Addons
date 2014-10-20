@@ -106,36 +106,56 @@ c.AddOptionalSpell("Shout", "for Buff", {
 c.AddOptionalSpell("Dps Stance", nil, {
 	Type = "form",
 	ID = "Battle Stance",
-	FlashID = { "Battle Stance", "Berserker Stance" },
+	FlashID = { "Battle Stance"},
 	CheckFirst = function()
-		return not s.Form(c.GetID("Battle Stance"))
-			and not s.Form(c.GetID("Berserker Stance"))
+		return not s.Form(c.GetID("Battle Stance"))			
 	end
 })
 
+--Arms  only
+--Colossus Smashes a target for 225% Physical damage and costs 20 rageccf.
 c.AddSpell("Colossus Smash", nil, {
-	CheckFirst = function()
-		return a.Smash < 1.5
-	end
 })
 
+--TALENT:
+--You become a whirling storm of destructive force, striking 
+--all targets within 8 yards for 120% weapon damage every 1 sec 
+--for 6 sec.
+--During a Bladestorm, you can continue to dodge, block, and parry, 
+--and are immune to movement impairing and loss of control effects. 
+--However, you can only perform shout abilities.
 c.AddSpell("Bladestorm", nil, {
 	Melee = true,
 	Cooldown = 90,
 })
-
+--TALENT"
+--Sends a wave of force in a frontal cone before you, 
+--causing (75 / 100 * Attack power) damage and stunning 
+--all enemy targets within 10 yards for 4 sec.
+--Causing damage to 3 or more targets lowers the cooldown 
+--of the next Shockwave by 20 sec.
 c.AddSpell("Shockwave", nil, {
 	Melee = true,
 	Cooldown = 40,
 })
 
+--TALENT:
+--Roar ferociously, causing 126 (+ 140% of Attack power) 
+--damage to all enemies within 8 yards, knocking them back 
+--and knocking them down for 0.50 sec. Dragon Roar is always 
+--a critical strike and ignores all armor on the target.
 c.AddSpell("Dragon Roar", nil, {
 	Melee = true,
 	Cooldown = 60,
 })
 
+--SPELL:
+--Leap through the air towards a targeted location, slamming 
+--down with destructive force to deal 1 (+ 50% of Attack power) 
+--Physical damage to all enemies within 8 yards.
 c.MakeMini(c.AddOptionalSpell("Heroic Leap", nil, {
 	NoGCD = true,
+	Cooldown = 45,
 	NoRangeCheck = true,
 	CheckFirst = function()
 		return a.Smash > 0 and not c.IsSolo()
@@ -153,6 +173,12 @@ local function victoryHealable()
 	end
 end
 
+--TALENTS:
+--Instantly attack the target, causing (200% of Attack power) 
+--damage and healing you for 15% of your maximum health.
+--Killing an enemy that yields experience or honor resets 
+--the cooldown of Impending Victory.
+--Replaces Victory Rush.
 c.AddSpell("Impending Victory", nil, {
 	Melee = true,
 	Cooldown = 30,
@@ -207,17 +233,41 @@ c.AddOptionalSpell("Victory Rush", "for Heals, Optional", {
 	end,
 })
 
-c.AddOptionalSpell("Enraged Regeneration", nil, {
-	NoGCD = true,
-	NoPowerCheck = true,
-	Cooldown = 60,
-	CheckFirst = function()
-		return a.Enraged and c.GetHealthPercent("player") < 80
-	end,
+--TALENT:
+--Instantly heals you for 10% of your maximum health, 
+--and an additional 20% over 5 sec.  Usable while stunned.
+--c.AddOptionalSpell("Enraged Regeneration", nil, {
+--	NoGCD = true,
+--	NoPowerCheck = true,
+--	Cooldown = 60,
+--	CheckFirst = function()
+--		return a.Enraged and c.GetHealthPercent("player") < 80
+--	end,
+--})
+
+--TALENT:
+--Every 30 rage that you spend reduces the remaining cooldown 
+--of several of your abilities by 1 sec:
+--  Avatar
+--  Bloodbath
+--  Bladestorm
+--  Storm Bolt
+--  Shockwave
+--  Dragon Roar
+--  Mocking Banner
+--  Heroic Leap
+--  Recklessness
+--  Die by the Sword
+c.AddOptionalSpell("Anger Management", nil, {
+  NoGCD = true,
 })
 
+--TALENT:  Associated Buff: Avatar
+--Transform into a colossus for 24 sec, dealing 20% 
+--increased damage and removing all roots and snares.
 c.AddOptionalSpell("Avatar", nil, {
 	NoGCD = true,
+	Cooldown = 180,
 	CheckFirst = function()
 		local reckCd = c.GetCooldown("Recklessness", true, 180)
 		return reckCd > 42 or reckCd < 6
@@ -274,13 +324,6 @@ c.AddOptionalSpell("Heroic Strike", "for Arms", {
 		return (a.EmptyRage < 15 and not a.InExecute)
 			or (a.Smash > 0 and a.Rage > 60 and c.WearingSet(2, "DpsT16"))
 	end
-})
-
-c.AddOptionalSpell("Cleave", "for Arms", {
-	NoGCD = true,
-	CheckFirst = function()
-		return a.EmptyRage < 10
-	end,
 })
 
 c.AddOptionalSpell("Sweeping Strikes", nil, {
@@ -357,30 +400,6 @@ c.AddSpell("Slam", "Double Prime", {
 	end
 })
 
-c.AddSpell("Overpower", nil, {
-	SpecialGCD = 1,
-	Melee = true,
-	Override = function()
-		return a.CanOverpower and (a.OverpowerIsFree or not a.InExecute)
-	end
-})
-
-c.AddSpell("Overpower", "Prime", {
-	SpecialGCD = 1,
-	Melee = true,
-	Override = function()
-		return a.CanOverpower and a.TasteStacks >= 3 and not a.InExecute
-	end
-})
-
-c.AddSpell("Overpower", "AoE", {
-	SpecialGCD = 1,
-	Melee = true,
-	Override = function()
-		return a.CanOverpower and a.Rage >= 40
-	end
-})
-
 c.AddSpell("Thunder Clap", nil, {
 	Melee = true,
 })
@@ -393,10 +412,10 @@ c.AddSpell("Whirlwind", "for Arms", {
 })
 
 -------------------------------------------------------------------------- Fury
+-- 
+
 local function shouldFlashBloodthirst()
-	return (not a.InExecute 
-			or a.Rage < 30 
-			or a.Smash == 0)
+	return (not a.InExecute)
 		and not c.IsCasting("Bloodthirst")
 end
 
@@ -404,21 +423,23 @@ local function getRagingBlowStacks(noGCD)
 	local stacks = c.GetBuffStack("Raging Blow!", noGCD)
 	if c.IsCasting("Enrage") then
 		stacks = stacks + 1
+		c.Debug("Event","Casting Enrage")
 	end
 	if c.IsCasting("Raging Blow") then
 		stacks = stacks - 1
+		c.Debug("Event","Casting Raging Blow")
 	end
+	local str = tostring(math.min(math.max(0, stacks), 2))
+	c.Debug("Event Stacks",str)
 	return math.min(math.max(0, stacks), 2)
 end
 
+--10122014 rdh: Changed the return to true and added Cooldown
 c.AddOptionalSpell("Recklessness", "for Fury", {
 	NoGCD = true,
+	Cooldown = 180,
 	CheckFirst = function(z)
 		z.FlashSize = nil
-		
-		if c.IsSolo() or c.WearingSet(4, "DpsT14") then
-			return true
-		end
 		
 		if c.HasTalent("Bloodbath") then
 			return a.Bloodbath
@@ -426,18 +447,17 @@ c.AddOptionalSpell("Recklessness", "for Fury", {
 			if not a.InExecute then
 				z.FlashSize = s.FlashSizePercent() / 2
 			end
-			return a.Smash > 5
-				or a.SmashCD < 2
-				or not c.HasSpell("Colossus Smash")
 		end
+		
+		if c.IsSolo() or c.WearingSet(4, "DpsT16") then
+      return true
+    end
 	end
 })
 
 c.AddOptionalSpell("Bloodbath", "for Fury", {
 	NoGCD = true,
-	CheckFirst = function()
-		return a.Smash > 5 or a.SmashCD < 2
-	end
+	Cooldown = 60,
 })
 
 c.AddOptionalSpell("Berserker Rage", "for Fury", {
@@ -458,28 +478,26 @@ c.AddOptionalSpell("Heroic Strike", "for Fury", {
 	end
 })
 
-c.AddOptionalSpell("Cleave", "for Fury", {
-	NoGCD = true,
-	CheckFirst = function()
-		return a.EmptyRage <= 10
-	end
-})
-
 c.AddSpell("Raging Blow", nil, {
-	CheckFirst = function()
+	Override = function(z)
+	  z.FlashSize = nil
 		local stacks = getRagingBlowStacks()
-		return stacks > 0
-			and (stacks == 2
-				or c.GetBuffDuration("Raging Blow") < 3
-				or a.Smash > 0
-				or a.SmashCD > 3)
+		if stacks == 2 then
+		  z.FlashSize = s.FlashSizePercent() * 2
+		  return true
+		end
+		
+		if stacks == 1 then
+		  z.FlashSize = s.FlashSizePercent() * 0.5
+		  return true
+		end
 	end
 })
 
 c.AddSpell("Raging Blow", "Prime", {
 	CheckFirst = function()
+	c.Debug("Event","Raging Blow Prime call")
 		return not a.InExecute
-			and a.Smash > 0
 			and getRagingBlowStacks() == 2
 	end
 })
@@ -506,66 +524,93 @@ c.AddSpell("Bloodthirst", nil, {
 c.MakePredictor(c.AddSpell("Bloodthirst", "Wait", {
 	Melee = true,
 	Override = function()
-		return c.GetCooldown("Bloodthirst") < 1 and shouldFlashBloodthirst() 
+		return c.HasTalent("Unquenchable Thirst") and c.GetCooldown("Bloodthirst") < 1 and shouldFlashBloodthirst() 
 	end
 }))
 
-c.AddSpell("Wild Strike", "before Bloodthirst", {
-	NoPowerCheck = true,
-	SpecialGCD = 1,
-	CheckFirst = function()
-		return a.Rage >= 10
-			and not a.InExecute
-			and c.HasBuff("Bloodsurge")
-			and c.GetCooldown("Bloodthirst", false, 4.5) < 1
-	end
+c.AddSpell("Wild Strike", nil, {  
+  NoPowerCheck = true,
+  CheckFirst = function(z)
+    z.FlashSize = nil
+    if c.HasBuff("Bloodsurge") then
+      c.Debug("Event","Bloodsurge Buffed")
+      z.FlashSize = s.FlashSizePercent() * 2
+      return a.Rage >= 10
+    else
+      c.Debug("Event","NOT Bloodsurge")
+      z.FlashSize = s.FlashSizePercent() * 0.5
+      return a.Rage >= 45 and (getRagingBlowStacks() < 2)
+    end
+  end
 })
 
-c.AddSpell("Wild Strike", "under Bloodsurge", {
+c.AddSpell("Wild Strike", "under Bloodsurge", {  
 	NoPowerCheck = true,
-	CheckFirst = function()
-		return a.Rage >= 10 and c.HasBuff("Bloodsurge")
-	end
-})
-
-c.AddSpell("Wild Strike", "under Colossus Smash", {
-	CheckFirst = function()
-		return not a.InExecute and a.Smash > 0
+	CheckFirst = function(z)
+	  z.FlashSize = nil
+	  if c.HasBuff("Bloodsurge") then
+	    z.FlashSize = s.FlashSizePercent() * 2
+	    return a.Rage >= 10
+	  else
+	    z.FlashSize = s.FlashSizePercent() * 0.5
+	    return a.Rage >= 80
+	  end
 	end
 })
 
 c.AddSpell("Wild Strike", "with High Rage", {
 	CheckFirst = function()
-		return rageAfterHeroicStrike() >= 80
-			and not a.InExecute
-			and a.SmashCD > 2
+		return a.Rage >= 80
 	end
 })
 
+--10122014 rdh: Removed reference to Smash
+--Deals 1,371 damage to all enemies within 8 yards and knocking 
+--them back and down for .5 sec.  Damage ignores all armor and is 
+--always a critical strike.
 c.AddSpell("Dragon Roar", "for Fury", {
 	Melee = true,
 	CheckFirst = function()
-		return a.Smash == 0 and (not c.HasTalent("Bloodbath") or a.Bloodbath)
+--		return a.Smash == 0 and (not c.HasTalent("Bloodbath") or a.Bloodbath)
+    return (not c.HasTalent("Bloodbath") or a.Bloodbath)
 	end
 })
 
+--10122014 rdh: Changed rage check from 90 to 30
+--   Removed a.smash since Colossus Smash has been removed.
+--Attempt to finish off a wounded foe, causing
+--3,237 Physical damage with main-hand and 969 
+--Physical damage with off-hand.  Only usable on 
+--enemies with less than 20% health.
 c.AddSpell("Execute", "for Fury", {
 	CheckFirst = function()
 		return a.Enraged
-			or a.Smash > 0
-			or c.HasBuff("Recklessness", false, false, true)
-			or rageAfterHeroicStrike() > 90
-			or c.IsSolo()
+--			or a.Smash > 0
+			or c.HasBuff("Sudden Death", false, false, true)
+--			or rageAfterHeroicStrike() > 90
+      or a.Rage > 30
+--			or c.IsSolo()
 	end
 })
 
+--10122014 rdh: Changed Cooldown from 30 to 6
+--  Removed the Smash return, not necessary
+--Throw weapon at the enemy, causing 510 Physical damage.
+--Generates high threat.
+--Note: What does Smash have to do with Heroic Throw?
 c.AddSpell("Heroic Throw", "for Fury", {
-	Cooldown = 30,
-	CheckFirst = function()
-		return a.Smash == 0
-	end
+	Cooldown = 6,
+--	CheckFirst = function()
+--		return a.Smash == 0
+--	end
 })
 
+--In a whirlwind of steel you attack all enemies within 8 yards 
+--causing 815 Physical damage with main-hand and 238 Physical 
+--damage with off-hand to each enemy.  Dealing damage with Whirlwind 
+--increases the number of targets that your Raging Blow hits by 1.
+--Note:  What is the Override return?
+--stacking up to 3.
 c.AddSpell("Whirlwind", "for Fury", {
 	Melee = true,
 	Override = function()
@@ -598,9 +643,13 @@ c.AddSpell("No Mitigation if Victory Available", nil, {
 	end
 })
 
+--10122014 rdh: Added Cooldown
+--Demoralizes all enemies within 10 yards, reducing the
+--damage they do to you by 20% for 8 sec.
 c.AddOptionalSpell("Demoralizing Shout", nil, {
 	NoGCD = true,
 	Melee = true,
+	Cooldown = 60,
 	IsUp = function()
 		return c.HasMyDebuff("Demoralizing Shout", true)
 	end,
@@ -609,9 +658,14 @@ c.AddOptionalSpell("Demoralizing Shout", nil, {
 	end,
 })
 
-c.AddOptionalSpell("Enraged Regeneration", "for Prot", {
+--10122014 rdh:  Removed for Prot,and added Cooldown
+--Instantly heals for 10% of your maximum health, and an additional
+--20% over 5 sec.  Usable while stunned.
+--c.AddOptionalSpell("Enraged Regeneration", "for Prot", {
+c.AddOptionalSpell("Enraged Regeneration", nil, {
 	NoGCD = true,
 	NoPowerCheck = true,
+	Cooldown = 60,
 	CheckFirst = function()
 		return a.Enraged
 	end,
@@ -620,6 +674,7 @@ c.AddOptionalSpell("Enraged Regeneration", "for Prot", {
 	end,
 })
 
+--Reduces all damage taken by 40% for 8 sec.
 c.AddOptionalSpell("Shield Wall", "under 3 min", {
 	NoGCD = true,
 	Enabled = function()
@@ -627,6 +682,7 @@ c.AddOptionalSpell("Shield Wall", "under 3 min", {
 	end,
 })
 
+--Reduces all damage taken by 40% for 8 sec.
 c.AddOptionalSpell("Shield Wall", "3+ min", {
 	NoGCD = true,
 	Enabled = function()
@@ -634,79 +690,108 @@ c.AddOptionalSpell("Shield Wall", "3+ min", {
 	end,
 })
 
+--10122014 rdh: Added cooldown
+--Note: Confused about the return value.
+--Increases Current and Maximum health by 30% for 15 sec.
 c.AddOptionalSpell("Last Stand", nil, {
 	NoGCD = true,
+	Cooldown = 180,
 	ShouldHold = function()
 		return s.HealthPercent("player") > 70
 	end
 })
 
+--10122014 rdh: Removed Tanking check and added Rage check
+--Raise our shield blocking every melee attack for the next 6 seconds.
+--These can be critical blocks.  Maximum 2 charges.
 c.AddOptionalSpell("Shield Block", nil, {
 	NoGCD = true,
 	Melee = true,
 	CheckFirst = function()
-		return c.IsTanking() 
+--		return c.IsTanking() 
+    return a.Rage > 60
 			and not c.HasBuff("Shield Barrier", true)
 			and not c.InDamageMode()
 	end,
 })
 
+--10122014 rdh: Removed the tanking check
+--Raise our shield absorbing  899 damage for the next 6 seconds.
+--Consumes up to 40 additional Rage to increase the damage taken.
+--Note: WoD allows this on ALL Warriors. Confused how this works 
+--      with Fury and Arms.
 c.AddOptionalSpell("Shield Barrier", nil, {
 	NoGCD = true,
+	Cooldown = 1.38,
 	CheckFirst = function()
-		return c.IsTanking()
-			and not c.HasBuff("Shield Barrier", true) 
-			and not c.HasBuff("Shield Block", true)
-			and not c.InDamageMode()
+--		return c.IsTanking()
+--			and not c.HasBuff("Shield Barrier", true) 
+--			and not c.HasBuff("Shield Block", true)
+--			and not c.InDamageMode()
+    return not c.HasBuff("Shield Barrier", true) 
+      and not c.HasBuff("Shield Block", true)
+      and not c.InDamageMode()
 	end,
 })
 
+--10122014 rdh: Removed Rage check
+--You go berserk, removing and granting immunity to Fear,
+--Sap, and Incapacitate effects for 6 sec.
 c.AddOptionalSpell("Berserker Rage", "for Prot", {
 	NoGCD = true,
 	Cooldown = 30,
 	CheckFirst = function()
-		return a.EmptyRage > 10 and (c.IsTanking() or c.InDamageMode())
+--		return a.EmptyRage > 10 and (c.IsTanking() or c.InDamageMode())
+    return (c.IsTanking() or c.InDamageMode())
 	end,
 })
 
+-- 10122014 rdh: Added the cooldown and Rage check
+--Instantly deals 1,071 Physical damage.  Not on Global cooldown.
 c.AddOptionalSpell("Heroic Strike", "for Prot", {
 	NoGCD = true,
+	Cooldown = 1.38,
 	CheckFirst = function()
-		return not c.AoE and shouldDumpProt()
+		return a.EmptyRage > 30 and not c.AoE and shouldDumpProt()
 	end,
 })
 
-c.AddOptionalSpell("Cleave", "for Prot", {
-	NoGCD = true,
-	CheckFirst = function()
-		return c.AoE and shouldDumpProt()
-	end,
-})
+--10122014 rdh: Obsolete for Wod
+--c.AddOptionalSpell("Cleave", "for Prot", {
+--	NoGCD = true,
+--	CheckFirst = function()
+--		return c.AoE and shouldDumpProt()
+--	end,
+--})
 
 c.AddTaunt("Taunt", nil, {
 	NoGCD = true,
 	Cooldown = 6,
 })
 
+--10122014 rdh: Removed Weakend_Blows and changed cooldown from 6 to 5.54
 c.AddSpell("Thunder Clap", "for Debuff", {
 	Melee = true,
-	Cooldown = 6,
+	Cooldown = 5.54,
 	CheckFirst = function()
-		local debuffNeeded = not c.HasDebuff(c.WEAKENED_BLOWS_DEBUFFS)
+--		local debuffNeeded = not c.HasDebuff(c.WEAKENED_BLOWS_DEBUFFS)
 		local damageMode = c.InDamageMode()
 		if c.AoE then
-			return debuffNeeded or damageMode
+--			return debuffNeeded or damageMode
+			return damageMode
 		else
-			return debuffNeeded and not damageMode
+--			return debuffNeeded and not damageMode
+      return not damageMode
 		end
 	end,
 })
 
 c.AddSpell("Thunder Clap", "for Refresh", {
 	Melee = true,
-	Cooldown = 6,
+	Cooldown = 5.54,
 	CheckFirst = function()
-		return c.GetDebuffDuration(c.WEAKENED_BLOWS_DEBUFFS) < 4 or c.AoE
+--		return c.GetDebuffDuration(c.WEAKENED_BLOWS_DEBUFFS) < 4 or c.AoE
+    return c.AoE
 	end,
 })
 

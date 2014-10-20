@@ -1,11 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher EnchantMats
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-	Revision: $Id: SearcherEnchantMats.lua 5368 2012-09-29 09:50:29Z brykrys $
+	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Revision: $Id: SearcherEnchantMats.lua 5481 2014-10-05 21:31:37Z ccox $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -87,11 +83,20 @@ local LCELESTIAL = 52718
 local MAELSTROM = 52722
 
 local SHA_CRYSTAL = 74248
+local SHA_CRYSTAL_FRAGMENT = 105718
 local ETHERAL = 74247
 local SETHERAL = 74252
 local SPIRIT = 74249
 --local GMYSTERIOUS = 74251		-- doesn't seem to be used
 local MYSTERIOUS = 74250
+
+local DRAENIC = 109693
+local SLUMINOUS = 115502
+local LUMINOUS = 111245
+--local AZURIAN = 113589		-- might be taken out
+local TEMPORAL = 113588
+local FRACTEMPORAL = 115504
+--local BLACKFIRE = 111247		-- doesn't seem to be used
 
 -- a table we can check for item ids
 local validReagents =
@@ -132,17 +137,27 @@ local validReagents =
 	[GCOSMIC] = true,
 	[LCOSMIC] = true,
 	[ABYSS] = true,
+	
 	[MAELSTROM] = true,
 	[HEAVENLY_SHARD] = true,
 	[SHEAVENLY_SHARD] = true,
 	[GCELESTIAL] = true,
 	[LCELESTIAL] = true,
 	[HYPNOTIC] = true,
+	
 	[SHA_CRYSTAL] = true,
+	[SHA_CRYSTAL_FRAGMENT] = true,
 	[ETHERAL] = true,
 	[SETHERAL] = true,
 	[SPIRIT] = true,
 	[MYSTERIOUS] = true,
+	
+	[FRACTEMPORAL] = true,
+	[TEMPORAL] = true,
+	[LUMINOUS] = true,
+	[SLUMINOUS] = true,
+	[DRAENIC] = true,
+	
 	}
 
 -- Set our defaults
@@ -206,6 +221,14 @@ default("enchantmats.PriceAdjust."..MYSTERIOUS, 100)
 default("enchantmats.PriceAdjust."..SETHERAL, 100)
 default("enchantmats.PriceAdjust."..ETHERAL, 100)
 default("enchantmats.PriceAdjust."..SHA_CRYSTAL, 100)
+default("enchantmats.PriceAdjust."..SHA_CRYSTAL_FRAGMENT, 100)
+
+default("enchantmats.PriceAdjust."..DRAENIC, 100)
+default("enchantmats.PriceAdjust."..SLUMINOUS, 100)
+default("enchantmats.PriceAdjust."..LUMINOUS, 100)
+--default("enchantmats.PriceAdjust."..AZURIAN, 100)
+default("enchantmats.PriceAdjust."..TEMPORAL, 100)
+default("enchantmats.PriceAdjust."..FRACTEMPORAL, 100)
 
 
 function private.doValidation()
@@ -283,7 +306,8 @@ function lib:MakeGuiConfig(gui)
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..LMYSTIC, 0, 200, 1, "Lesser Mystic Essence %s%%")
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..LASTRAL, 0, 200, 1, "Lesser Astral Essence %s%%")
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..LMAGIC, 0, 200, 1, "Lesser Magic Essence %s%%")
-
+	
+	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..DRAENIC, 0, 200, 1, "Draenic Dust %s%%" )
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..SPIRIT, 0, 200, 1, "Spirit Dust %s%%" )
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..HYPNOTIC, 0, 200, 1, "Hypnotic Dust %s%%" )
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..INFINITE, 0, 200, 1, "Infinite Dust %s%%" )
@@ -294,6 +318,7 @@ function lib:MakeGuiConfig(gui)
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..SOUL, 0, 200, 1, "Soul Dust %s%%")
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..STRANGE, 0, 200, 1, "Strange Dust %s%%")
 
+	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..LUMINOUS, 0, 200, 1, "Luminous Shard %s%%" )
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..ETHERAL, 0, 200, 1, "Ethereal Shard %s%%" )
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..HEAVENLY_SHARD, 0, 200, 1, "Heavenly Shard %s%%" )
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..DREAM_SHARD, 0, 200, 1, "Dream Shard %s%%" )
@@ -303,6 +328,7 @@ function lib:MakeGuiConfig(gui)
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..LGLOWING, 0, 200, 1, "Large Glowing Shard %s%%")
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..LGLIMMERING, 0, 200, 1, "Large Glimmering Shard %s%%")
 
+	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..SLUMINOUS, 0, 200, 1, "Small Luminous Shard %s%%")
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..SETHERAL, 0, 200, 1, "Small Ethereal Shard %s%%")
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..SHEAVENLY_SHARD, 0, 200, 1, "Small Heavenly Shard %s%%")
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..SDREAM_SHARD, 0, 200, 1, "Small Dream Shard %s%%")
@@ -312,11 +338,15 @@ function lib:MakeGuiConfig(gui)
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..SGLOWING, 0, 200, 1, "Small Glowing Shard %s%%")
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..SGLIMMERING, 0, 200, 1, "Small Glimmering Shard %s%%")
 
+	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..TEMPORAL, 0, 200, 1, "Temporal Crystal %s%%" )
+	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..FRACTEMPORAL, 0, 200, 1, "Fractured Temporal Crystal %s%%" )
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..SHA_CRYSTAL, 0, 200, 1, "Sha Crystal %s%%" )
+	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..SHA_CRYSTAL_FRAGMENT, 0, 200, 1, "Sha Crystal Fragment %s%%" )
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..MAELSTROM, 0, 200, 1, "Maelstrom Crystal %s%%" )
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..ABYSS, 0, 200, 1, "Abyss Crystal %s%%" )
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..VOID, 0, 200, 1, "Void Crystal %s%%" )
 	gui:AddControl(id, "WideSlider", 0, 1, "enchantmats.PriceAdjust."..NEXUS, 0, 200, 1, "Nexus Crystal %s%%")
+
 end
 
 function lib.Search(item)
@@ -410,8 +440,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-SearchUI/SearcherEnchantMats.lua $", "$Rev: 5368 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-SearchUI/SearcherEnchantMats.lua $", "$Rev: 5368 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-SearchUI/SearcherEnchantMats.lua $", "$Rev: 5481 $")

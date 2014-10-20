@@ -40,8 +40,8 @@ GameTooltip:SetUnitDebuff("unit", [index] or ["name", "rank"][, "filter"]);
 * The untilCanceled return value is true if the buff doesn't have its own duration (e.g. stealth)
 ]]--
 
-SMARTBUFF_VERSION       = "v5.4b";
-SMARTBUFF_VERSIONNR     = 50001;
+SMARTBUFF_VERSION       = "v6.0a";
+SMARTBUFF_VERSIONNR     = 60000;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in cast buffs";
 SMARTBUFF_DESC          = "Cast the most important buffs on you or party/raid members/pets";
@@ -362,18 +362,18 @@ local function InitBuffOrder(reset)
   end
 end
 
-
+-- TODO: Redesign if reactivated!
 local function IsTalentSkilled(t, i, name)
-  local tName, _, _, _, tPoints = GetTalentInfo(t, i);
+  local _, tName, _, _, tAvailable = GetTalentInfo(t, i);
   if (tName) then
     isTTreeLoaded = true;
-    SMARTDEBUFF_AddMsgD("Talent: "..tName..", Points = "..tPoints);    
-    if (name and name == tName and tPoints > 0) then
-      SMARTDEBUFF_AddMsgD("Debuff talent found: "..name..", Points = "..tPoints);
-      return true, tPoints;
+    SMARTBUFF_AddMsgD("Talent: "..tName..", Points = "..tAvailable);    
+    if (name and name == tName and tAvailable > 0) then
+      SMARTBUFF_AddMsgD("Debuff talent found: "..name..", Points = "..tAvailable);
+      return true, tAvailable;
     end
   else
-    SMARTDEBUFF_AddMsgD("Talent tree not available!");
+    SMARTBUFF_AddMsgD("Talent tree not available!");
     isTTreeLoaded = false;
   end
   return false, 0;
@@ -417,8 +417,8 @@ function SMARTBUFF_OnLoad(self)
   SlashCmdList["SMARTBUFFMENU"] = SMARTBUFF_OptionsFrame_Toggle;
   SLASH_SMARTBUFFMENU1 = "/sbm";
   
-  SlashCmdList["SMARTBUFFRELOAD"] = function(msg) ReloadUI(); end;
-  SLASH_SMARTBUFFRELOAD1 = "/rui";
+  SlashCmdList["SmartReloadUI"] = function(msg) ReloadUI(); end;
+  SLASH_SmartReloadUI1 = "/rui";
   
   SMARTBUFF_InitSpellIDs();
   --DEFAULT_CHAT_FRAME:AddMessage("SB OnLoad");
@@ -620,7 +620,7 @@ function SMARTBUFF_OnUpdate(self, elapsed)
   if (not isInit) then
     if (isLoaded and GetTime() > tAutoBuff + 0.5) then
       tAutoBuff = GetTime();
-      tName = GetTalentInfo(1);
+      _, tName = GetTalentInfo(1, 1, 1);
       if (tName) then
         SMARTBUFF_OnEvent(self, "SMARTBUFF_UPDATE");
       end
@@ -912,12 +912,12 @@ function SMARTBUFF_GetSpellID(spellname)
   local i = 0;
   local nSpells = 0;
   local id = nil;
-  local spellN, isPassive, isNAY, spellId;
+  local spellN, spellId, skillType;
   
   -- Get number of spells
   --for i = 1, GetNumSpellTabs() do
   -- Common and specialization
-  for i = 1, 2 do
+  for i = 1, GetNumSpellTabs() do
     local _, _, _, n = GetSpellTabInfo(i);
     nSpells = nSpells + n;
   end  
@@ -927,7 +927,8 @@ function SMARTBUFF_GetSpellID(spellname)
     i = i + 1;
     spellN = GetSpellBookItemName(i, BOOKTYPE_SPELL);
     skillType, spellId = GetSpellBookItemInfo(i, BOOKTYPE_SPELL);
-      
+    --print(spellN.." "..spellId);
+
     if (skillType == "FLYOUT") then
       for j = 1, GetNumFlyouts() do
         local fid = GetFlyoutID(j);
@@ -951,10 +952,7 @@ function SMARTBUFF_GetSpellID(spellname)
   end
   
   if (id) then
-    isPassive = IsPassiveSpell(id) ~= nil;
-    --if (spellN) then SMARTBUFF_AddMsgD(spellN.." found, "..tostring(isPassive)..", "..skillType); end
-    if (isPassive or skillType == "FUTURESPELL") then
-    --if (isPassive or isNAY or spellId == nil or not IsSpellKnown(id, BOOKTYPE_SPELL)) then
+    if (IsPassiveSpell(id) or skillType == "FUTURESPELL" or not IsSpellKnown(id)) then
       id = nil;
       i = nil;
     end    
@@ -1036,6 +1034,7 @@ function SMARTBUFF_SetBuff(buff, i, ia)
   cBuffs[i].Type = buff[3];
   cBuffs[i].CanCharge = false;
   if (SMARTBUFF_IsSpell(cBuffs[i].Type)) then
+    --print(cBuffs[i].BuffS);
     cBuffs[i].IDS, cBuffs[i].BookID = SMARTBUFF_GetSpellID(cBuffs[i].BuffS);
   end
   if (cBuffs[i].IDS == nil and not(SMARTBUFF_IsItem(cBuffs[i].Type) or cBuffs[i].Type == SMARTBUFF_CONST_TRACK)) then
@@ -1043,6 +1042,8 @@ function SMARTBUFF_SetBuff(buff, i, ia)
     return i;
   end
   
+  --print(cBuffs[i].IDS);
+
   if (buff[4] ~= nil) then cBuffs[i].LevelsS = buff[4] else cBuffs[i].LevelsS = nil end
   if (buff[5] ~= nil) then cBuffs[i].Params = buff[5] else cBuffs[i].Params = SG.NIL end
   cBuffs[i].Links = buff[6];
@@ -1053,7 +1054,7 @@ function SMARTBUFF_SetBuff(buff, i, ia)
   --  cBuffs[i].BuffS = SMARTBUFF_NETHERWARD;
   --end
   
-  if (cBuffs[i].IDS) then
+  if (cBuffs[i].IDS ~= nil) then
     cBuffs[i].IconS = GetSpellTexture(cBuffs[i].BuffS);
   else
     if (cBuffs[i].Type == SMARTBUFF_CONST_TRACK) then
@@ -1605,9 +1606,10 @@ function SMARTBUFF_Check(mode, force)
       if (units) then
         for _, unit in pairs(units) do
           if (isSetBuffs) then break; end
-          --SMARTBUFF_AddMsgD("Checking single units " .. unit);
+          SMARTBUFF_AddMsgD("Checking single unit = "..unit);
           local spellName, actionType, slot, buffType;
           i, actionType, spellName, slot, _, buffType = SMARTBUFF_BuffUnit(unit, subgroup, mode);
+
           if (i <= 1) then
             if (i == 0 and mode ~= 1) then
               --tLastCheck = GetTime() - O.AutoTimer + GlobalCd;
@@ -1674,9 +1676,11 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
   
   if (UnitExists(unit) and UnitIsFriend("player", unit) and not UnitIsDeadOrGhost(unit) and not UnitIsCorpse(unit)
     and UnitIsConnected(unit) and UnitIsVisible(unit) and not UnitOnTaxi(unit) and not cBlacklist[unit]
-    and ((UnitIsPVP(unit) == nil and (not isPvP or O.BuffPvP)) or (UnitIsPVP(unit) and (isPvP or O.BuffPvP)))) then
+    and ((not UnitIsPVP(unit) and (not isPvP or O.BuffPvP)) or (UnitIsPVP(unit) and (isPvP or O.BuffPvP)))) then
     --and not SmartBuff_UnitIsIgnored(unit)
     
+    --print("Prep Check");
+
     _, uc = UnitClass(unit);
     un = UnitName(unit);
     ur = UnitGroupRolesAssigned(unit);
@@ -1808,7 +1812,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
                 local count = GetNumTrackingTypes();
                 for n = 1, GetNumTrackingTypes() do 
 	                local trackN, trackT, trackA, trackC = GetTrackingInfo(n);
-	                if (trackN ~= nil and trackA == nil) then
+	                if (trackN ~= nil and not trackA) then
 	                  --SMARTBUFF_AddMsgD(n..". "..trackN.." ("..trackC..")");
 	                  if (trackN == buffnS) then
 	                    if (sPlayerClass == "DRUID" and buffnS == SMARTBUFF_DRUID_TRACK) then
@@ -2459,7 +2463,7 @@ function SMARTBUFF_CheckUnitBuffs(unit, buffN, buffT, buffL, buffC)
               for n = 1, GetNumShapeshiftForms(), 1 do
                 local _, name, active, castable = GetShapeshiftFormInfo(n);
                 --print(t[i]..", "..name..", active = "..(active or "nil"));
-                if (name and active == nil and castable and name == t[i]) then
+                if (name and not active and castable and name == t[i]) then
                   return defBuff, nil, nil, nil, nil;
                 elseif (name and active and castable and name == t[i]) then
                   --print("Chained stance found: "..t[i]);
@@ -2544,7 +2548,7 @@ function SMARTBUFF_CheckUnitBuffs(unit, buffN, buffT, buffL, buffC)
       return nil, 0, defBuff, timeleft, count;
     end
   end  
-  
+
   -- Buff not found, return default buff
   return defBuff, nil, nil, nil, nil;
 end

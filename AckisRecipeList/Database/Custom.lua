@@ -2,15 +2,10 @@
 ************************************************************************
 Custom.lua
 ************************************************************************
-File date: 2014-02-14T05:23:40Z
-File hash: 04922c6
-<<<<<<< HEAD
-Project hash: 5b35dab
-Project version: 3.0.5
-=======
-Project hash: fbca907
-Project version: 2.6.2
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+File date: 2014-07-20T21:55:21Z
+File hash: 8ba10d0
+Project hash: beabe36
+Project version: 3.0.8
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -66,6 +61,7 @@ function addon:InitCustom()
 	AddCustom("LEARNT_BY_ACCEPTING_QUEST")
 	AddCustom("TIMELESS_ISLE_COOKING", Z.TIMELESS_ISLE, 52.1, 46.1)
 	AddCustom("ANCIENT_GUO-LAI_CACHE", Z.VALE_OF_ETERNAL_BLOSSOMS)
+	AddCustom("DRAENOR_DEFAULT", Z.DRAENOR)
 
 	self.InitCustom = nil
 end

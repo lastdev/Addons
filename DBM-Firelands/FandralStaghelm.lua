@@ -1,11 +1,7 @@
 local mod	= DBM:NewMod(197, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD
-mod:SetRevision(("$Revision: 115 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 99 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+mod:SetRevision(("$Revision: 131 $"):sub(12, -3))
 mod:SetCreatureID(52571)
 mod:SetEncounterID(1185)
 mod:DisableEEKillDetection()
@@ -114,16 +110,12 @@ function mod:LeapingFlamesTarget(targetname)
 	else
 		local uId = DBM:GetRaidUnitId(targetname)
 		if uId then
-			local x, y = GetPlayerMapPosition(uId)
-			if x == 0 and y == 0 then
-				SetMapToCurrentZone()
-				x, y = GetPlayerMapPosition(uId)
-			end
-			local inRange = DBM.RangeCheck:GetDistance("player", x, y)
+			local inRange = DBM.RangeCheck:GetDistance("player", uId)
 			if inRange and inRange < 13 then
 				recentlyJumped = true--Anti Spam
 				specWarnLeapingFlamesNear:Show(targetname)
 				if self.Options.LeapArrow then
+					local x, y = UnitPosition(uId)
 					DBM.Arrow:ShowRunAway(x, y, 12, 5)
 				end
 				self:Schedule(2.5, clearLeapWarned)--Clear it a little faster for near warnings though, cause  you definitely don't need 4 seconds to move if it wasn't even on YOU.

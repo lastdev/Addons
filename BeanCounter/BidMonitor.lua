@@ -1,12 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: BidMonitor.lua 5457 2014-06-11 11:20:23Z brykrys $
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
-	Revision: $Id: BidMonitor.lua 5428 2013-07-13 09:31:17Z brykrys $
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	URL: http://auctioneeraddon.com/
 
 	BidMonitor - Records bids posted in the Auctionhouse
@@ -33,11 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-<<<<<<< HEAD
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.20/BeanCounter/BidMonitor.lua $","$Rev: 5457 $","5.1.DEV.", 'auctioneer', 'libs')
-=======
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.19/BeanCounter/BidMonitor.lua $","$Rev: 5428 $","5.1.DEV.", 'auctioneer', 'libs')
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/BeanCounter/BidMonitor.lua $","$Rev: 5457 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local libName = "BeanCounter"
 local libType = "Util"

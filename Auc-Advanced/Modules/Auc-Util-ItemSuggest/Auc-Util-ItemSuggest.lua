@@ -1,10 +1,6 @@
 --[[
 	Auctioneer - Item Suggest module
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: Auc-Util-ItemSuggest.lua 5417 2013-06-11 15:45:45Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -1105,8 +1101,4 @@ end
 -- Neither Enchantrix nor Informant triggers "load" processor events; instead, use LoadTriggers to detect either loading
 lib.LoadTriggers = {enchantrix = true, informant = true}
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-ItemSuggest/Auc-Util-ItemSuggest.lua $", "$Rev: 5417 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-ItemSuggest/Auc-Util-ItemSuggest.lua $", "$Rev: 5417 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-ItemSuggest/Auc-Util-ItemSuggest.lua $", "$Rev: 5417 $")

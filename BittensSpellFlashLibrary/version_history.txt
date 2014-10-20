@@ -1,10 +1,19 @@
-<<<<<<< HEAD
+== Version 60000.2.0
+* Updated buffs and foods for 6.0 (and WoD).
+
+== Version 60000.1.2
+* Bugfix for occasional Lua error.
+
+== Version 60000.1.1
+* Bugfix: Getting spell cast time changed w/ patch 6.0.
+
+== Version 60000.1.0
+* Making the "Out of Date" status go away.
+
 == Version 50400.4.2
 This version only affectly Feral Druids.
 * Small tweak for flashing forms in c.DelayPriorityFlash.
 
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 == Version 50400.4.1
 * Added flashing for WoW's 9th Anniversary Celebration Package.
 
@@ -85,22 +94,3 @@ This version supports the latest Warrior release.
 
 == Version 4.13.1
 * c.PriorityFlash() and c.DelayPriorityFlash() now accept an AoEColor flag in the rotation.
-
-== Version 4.13.0
-This version supports the latest Paladin release.
-* Added c.InDamageMode().
-* Added c.ToggleDamageModeInGroups().
-
-== Version 4.12.0
-* Added c.HasSpell().
-* c.RegisterAddon() now causes it to flash Healthstones.
-* c.DelayPriorityFlash() will no longer flash optional spells with a longer delay than the main spell.
-<<<<<<< HEAD
-=======
-
-== Version 4.11.0
-* c.FlashAll() and c.PriorityFlash() now respect a new "Dispel" flag.
-* Added c.AddDispel().
-* Removed the unused c.CloneSpell().
-* Bugfix: c.AddInterrupt() and c.AddTaunt() were not respecting the attributes parameter.
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

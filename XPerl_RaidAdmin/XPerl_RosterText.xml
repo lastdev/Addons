@@ -103,7 +103,7 @@
 			<OnEnter>
 				if (self.tooltipText) then
 					GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-					GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, 1)
+					GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, true)
 				end
 			</OnEnter>
 			<OnLeave>

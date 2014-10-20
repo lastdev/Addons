@@ -1,11 +1,7 @@
 --[[
 Auctioneer - StatSimple
-<<<<<<< HEAD
-Version: 5.20.5464 (RidiculousRockrat)
-=======
-Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-Revision: $Id: StatSimple.lua 5360 2012-09-21 09:53:20Z brykrys $
+Version: 5.21.5490 (SanctimoniousSwamprat)
+Revision: $Id: StatSimple.lua 5477 2014-09-27 18:58:18Z brykrys $
 URL: http://auctioneeraddon.com/
 
 This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -46,6 +42,23 @@ local Resources = AucAdvanced.Resources
 local AucGetStoreKeyFromLink = AucAdvanced.API.GetStoreKeyFromLink
 
 local PET_BAND = 4
+
+-- Constants used when creating a PDF:
+local BASE_WEIGHT = 1
+-- Clamping limits for stddev relative to mean
+local CLAMP_STDDEV_LOWER = 0.01
+local CLAMP_STDDEV_UPPER = 1
+-- Adjustments when seen count is very low (seen days in this case)
+local LOWSEEN_MINIMUM = 0 -- lowest possible count for a valid PDF
+-- Weight taper for low seen count
+local TAPER_THRESHOLD = 5 -- seen count at which we stop making adjustments
+local TAPER_WEIGHT = .1 -- weight multiplier at LOWSEEN_MINIMUM
+local TAPER_SLOPE = (1 - TAPER_WEIGHT) / (TAPER_THRESHOLD - LOWSEEN_MINIMUM)
+local TAPER_OFFSET = TAPER_WEIGHT - LOWSEEN_MINIMUM * TAPER_SLOPE
+-- StdDev Estimate for low seen count
+local ESTIMATE_THRESHOLD = 10
+local ESTIMATE_FACTOR = 0.33
+local ESTIMATE_OFFSET = 1 -- offset divisor to avoid division by 0
 
 -- Eliminate some global lookups
 local select = select
@@ -248,7 +261,7 @@ function lib.GetPriceArray(hyperlink, serverKey)
 	return array
 end
 
-local bellCurve = AucAdvanced.API.GenerateBellCurve();
+local bellCurve = AucAdvanced.API.GenerateBellCurve()
 -- Gets the PDF curve for a given item. This curve indicates
 -- the probability of an item's mean price. Uses an estimation
 -- of the normally distributed bell curve by performing
@@ -257,30 +270,52 @@ local bellCurve = AucAdvanced.API.GenerateBellCurve();
 -- @param hyperlink The item to generate the PDF curve for
 -- @param serverKey The realm-faction key from which to look up the data
 -- @return The PDF for the requested item, or nil if no data is available
--- @return The lower limit of meaningful data for the PDF (determined
--- as the mean minus 5 standard deviations)
--- @return The upper limit of meaningful data for the PDF (determined
--- as the mean plus 5 standard deviations)
+-- @return The lower limit of meaningful data for the PDF
+-- @return The upper limit of meaningful data for the PDF
+-- @return The area of the PDF
 function lib.GetItemPDF(hyperlink, serverKey)
-	-- TODO: This is an estimate. Can we touch this up later? Especially the stddev==0 case
-
 	if not get("stat.simple.enable") then return end
 	-- Calculate the SE estimated standard deviation & mean
 	local dayAverage, avg3, avg7, avg14, minBuyout, avgmins, _, dayTotal, dayCount, seenDays, seenCount, mean, stddev = lib.GetPrice(hyperlink, serverKey)
 
-	if seenCount == 0 or stddev ~= stddev or mean ~= mean or not mean or mean == 0 then
-		return ;                         -- No available data or cannot estimate
+	if not (mean and stddev and seenDays) or mean == 0 or seenDays < LOWSEEN_MINIMUM then
+		return -- No available data or cannot estimate
 	end
 
-	-- If the standard deviation is zero, we'll have some issues, so we'll estimate it by saying
-	-- the std dev is 100% of the mean divided by square root of number of views
-	if stddev == 0 then stddev = mean / sqrt(seenCount); end
+	local area = BASE_WEIGHT
+	if seenDays < TAPER_THRESHOLD then
+		-- when seenDays is very low, reduce weight
+		area = area * (seenDays * TAPER_SLOPE + TAPER_OFFSET)
+	end
+
+	-- Extremely large or small values of stddev can cause problems with GetMarketValue
+	-- we shall apply limits relative to the mean of the bellcurve
+	local clamplower, clampupper = mean * CLAMP_STDDEV_LOWER, mean * CLAMP_STDDEV_UPPER
+
+	if seenDays < ESTIMATE_THRESHOLD then
+		-- when seenDays is very low, stddev will typically be extremely low (or 0),
+		-- because the EMAs won't have had time to drift very far apart yet
+		-- we shall estimate (i.e. fake) stddev based on mean and seenDays
+		-- note: seenDays can be 0, if we only have today's value, so we add ESTIMATE_OFFSET
+		clamplower = ESTIMATE_FACTOR * mean / (seenDays + ESTIMATE_OFFSET)
+		-- todo: this is a very rough formula, can anyone improve it? (see also Stat-Purchased)
+		-- note: originally we only checked if stddev == 0,
+		-- in which case we substituted stddev = mean / sqrt(seenCount)
+	end
+
+	if stddev < clamplower then
+		stddev = clamplower
+	elseif stddev > clampupper then
+		-- Note that even with this adjustment, 'lower' can still be significantly negative!
+		area = area * clampupper / stddev -- as we're hard capping the stddev, reduce weight to compensate
+		stddev = clampupper
+	end
 
 	-- Calculate the lower and upper bounds as +/- 3 standard deviations
 	local lower, upper = mean - 3*stddev, mean + 3*stddev;
 
-	bellCurve:SetParameters(mean, stddev);
-	return bellCurve, lower, upper;
+	bellCurve:SetParameters(mean, stddev, area)
+	return bellCurve, lower, upper, area
 end
 
 function lib.OnLoad(addon)
@@ -676,8 +711,4 @@ function private.InitData()
 end
 
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Stat-Simple/StatSimple.lua $", "$Rev: 5360 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Stat-Simple/StatSimple.lua $", "$Rev: 5360 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Stat-Simple/StatSimple.lua $", "$Rev: 5477 $")

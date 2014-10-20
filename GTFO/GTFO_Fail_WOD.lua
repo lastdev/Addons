@@ -252,6 +252,17 @@ GTFO.SpellID["155033"] = {
 	tankSound = 0;
 };
 
+GTFO.SpellID["155572"] = {
+	--desc = "Smash (Black Iron Siegebreaker)";
+	sound = 3;
+};
+
+GTFO.SpellID["155575"] = {
+	--desc = "Shield Smash (Black Iron Veteran)";
+	sound = 3;
+	tankSound = 0;
+};
+
 GTFO.SpellID["155081"] = {
 	--desc = "Fire Storm (Ragewing)";
 	sound = 3;

@@ -994,6 +994,8 @@ XPERL_CONF_MONITOR_WARRIOR = "Mostra Guerriero"
 XPERL_CONF_MONITOR_WARRIOR_DESC = "Mostra i Guerrieri nel monitor dell'incursione"
 XPERL_CONF_MONITOR_DEATHKNIGHT = "Mostra Cavaliere della Morte"
 XPERL_CONF_MONITOR_DEATHKNIGHT_DESC = "Mostra i Cavalieri della Morte nel monitor dell'incursione"
+XPERL_CONF_MONITOR_MONK			        = "Mostra Monaco"
+XPERL_CONF_MONITOR_MONK_DESC		    = "Mostra i Monaci nel monitor dell'incursione"
 
 XPERL_CONF_MONITOR_LOWMANA = "Mana basso"
 XPERL_CONF_MONITOR_LOWMANA_DESC = "Imposta il valore da utilizzare per determinare quando un giocatore ha il Mana basso"

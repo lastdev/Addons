@@ -1,4 +1,4 @@
-﻿## Interface: 50400
+﻿## Interface: 60000
 ## Title: X-Perl |cffeda55fOptions|r by |cFFFF8080Zek |cFF40FF40(LoadOnDemand)|r
 ## Title-itIT: X-Perl |cffeda55fOpzioni|r di |cFFFF8080Zek |cFF40FF40(Caricabile su richiesta)|r
 ## Title-ruRU: X-Perl |cffeda55fНастройки |cFF40FF40(LoadOnDemand)|r
@@ -8,7 +8,7 @@
 ## Notes-itIT: Finestra opzioni di X-Perl
 ## Notes-ruRU: Интерфейс настроек X-Perl'а
 ## Notes-deDE: X-Perl UnitFrames Optionen GUI
-## Notes-zhTW: X-Perl 功能設定 GUI
+## Notes-zhTW: X-Perl 單位框架功能設定 GUI
 ## Author: Zek
 ## X-License: GNU GPL v3, 29 June 2007
 ## RequiredDeps: XPerl
@@ -17,7 +17,7 @@
 ## X-Curse-Project-Name: X-Perl UnitFrames
 ## X-Curse-Project-ID: xperl
 ## X-Curse-Repository-ID: wow/xperl/mainline
-## X-Curse-Packaged-Version: r860
+## X-Curse-Packaged-Version: r879
 ## X-Curse-Project-Name: X-Perl UnitFrames
 ## X-Curse-Project-ID: xperl
 ## X-Curse-Repository-ID: wow/xperl/mainline

@@ -1,12 +1,7 @@
 --[[
 	Auctioneer Advanced
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: CoreAPI.lua 5450 2014-01-15 18:57:22Z brykrys $
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
-	Revision: $Id: CoreAPI.lua 5435 2013-09-19 01:37:32Z Shirik $
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -119,7 +114,6 @@ do
 	may be curious of a different limit (for example, filter modules). In these cases, pass in a different
 	value for confidence. 0.5 = 50%, 0.75 = 75%, etc.
     ]]
-<<<<<<< HEAD
 	function lib.GetMarketValue(itemLink, serverKey, confidence)
 		local _;
 		if type(itemLink) == 'number' then _, itemLink = GetItemInfo(itemLink) end
@@ -142,22 +136,6 @@ do
 		cacheSig = cacheSig .. (confidence == 0.5 and "" or ("-" .. floor(confidence * 10000)));
 
 		serverKey = serverKey or GetFaction() -- call GetFaction once here, instead of in every Stat module
-=======
-    function lib.GetMarketValue(itemLink, serverKey, confidence)
-        local _;
-        if type(itemLink) == 'number' then _, itemLink = GetItemInfo(itemLink) end
-	if not itemLink then return end
-
-	local cacheSig = lib.GetSigFromLink(itemLink)
-	if not cacheSig then return end -- not a valid item link
-
-	-- need to append confidence level so we don't mix them up later
-	-- Rounded to a level that is effectively irrelevant to avoid FP errors
-	confidence = confidence or 0.5;
-	cacheSig = cacheSig .. (confidence == 0.5 and "" or ("-" .. math.floor(confidence * 10000)));
-
-	serverKey = serverKey or GetFaction() -- call GetFaction once here, instead of in every Stat module
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
         local cacheEntry = cache[serverKey][cacheSig]
         if cacheEntry then
@@ -1226,8 +1204,4 @@ do
 end
 
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CoreAPI.lua $", "$Rev: 5450 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/CoreAPI.lua $", "$Rev: 5435 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Advanced/CoreAPI.lua $", "$Rev: 5450 $")

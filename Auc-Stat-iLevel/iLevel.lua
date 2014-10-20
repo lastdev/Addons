@@ -1,11 +1,7 @@
 --[[
 	Auctioneer - iLevel Standard Deviation Statistics module
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-	Revision: $Id: iLevel.lua 5365 2012-09-24 17:33:48Z brykrys $
+	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Revision: $Id: iLevel.lua 5470 2014-09-05 16:39:23Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -52,6 +48,22 @@ local EquipEncode = AucAdvanced.Const.EquipEncode
 local GetFaction = AucAdvanced.GetFaction
 
 local KEEP_NUM_POINTS = 250
+
+-- Constants used when creating a PDF:
+local BASE_WEIGHT = 0.2 -- iLevel starts with a lower weight than most other Stat modules
+-- Clamping limits for stddev relative to mean
+local CLAMP_STDDEV_LOWER = 0.01
+local CLAMP_STDDEV_UPPER = 1
+-- Adjustments when seen count is very low (in this case, auctionscount)
+local LOWSEEN_MINIMUM = 1 -- lowest possible count for a valid PDF
+-- Weight taper for low seen count
+local TAPER_THRESHOLD = 10 -- seen count at which we stop making adjustments
+local TAPER_WEIGHT = .1 -- weight multiplier at LOWSEEN_MINIMUM
+local TAPER_SLOPE = (1 - TAPER_WEIGHT) / (TAPER_THRESHOLD - LOWSEEN_MINIMUM)
+local TAPER_OFFSET = TAPER_WEIGHT - LOWSEEN_MINIMUM * TAPER_SLOPE
+-- StdDev Estimate for low seen count
+local ESTIMATE_THRESHOLD = 10
+local ESTIMATE_FACTOR = 0.33
 
 local ZValues = {.063, .126, .189, .253, .319, .385, .454, .525, .598, .675, .756, .842, .935, 1.037, 1.151, 1.282, 1.441, 1.646, 1.962, 20, 20000}
 
@@ -113,7 +125,7 @@ function lib.ScanProcessors.create(operation, itemData, oldData)
 	stats[iLevel][sz+1] = buyout
 end
 
-local BellCurve = AucAdvanced.API.GenerateBellCurve();
+local BellCurve = AucAdvanced.API.GenerateBellCurve()
 -----------------------------------------------------------------------------------
 -- The PDF for standard deviation data, standard bell curve
 -----------------------------------------------------------------------------------
@@ -122,15 +134,40 @@ function lib.GetItemPDF(hyperlink, serverKey)
 	-- Get the data
 	local average, mean, _, stddev, variance, count, confidence = lib.GetPrice(hyperlink, serverKey)
 
-	if not (average and stddev) or average == 0 or stddev == 0 then
-		return nil;                 -- No data, cannot determine pricing
+	if not (average and stddev and count) or average == 0 or count < LOWSEEN_MINIMUM then
+		return nil -- No data, cannot determine pricing
 	end
 
-	local lower, upper = average - 3 * stddev, average + 3 * stddev;
+	-- The area of the BellCurve can be used to adjust its weight vs other Stat modules
+	-- iLevel is a fallback stat, intended for when other modules have no data
+	-- we will start with a reduced weight, so it has less influence than other stats
+	local area = BASE_WEIGHT
+	if count < TAPER_THRESHOLD then
+		-- when seen count is very low, reduce weight
+		area = area * (count * TAPER_SLOPE + TAPER_OFFSET)
+	end
 
-	-- Build the PDF based on standard deviation & average
-	BellCurve:SetParameters(average, stddev);
-	return BellCurve, lower, upper;   -- This has a __call metamethod so it's ok
+	-- Extremely large or small values of stddev can cause problems with GetMarketValue
+	-- we shall apply limits relative to the mean of the bellcurve (local 'average')
+	local clamplower, clampupper = average * CLAMP_STDDEV_LOWER, average * CLAMP_STDDEV_UPPER
+	if count < ESTIMATE_THRESHOLD then
+		-- We assume that calculated stddev is unreliable at very low seen counts, so we apply a minimum value based on average and count
+		-- in particular fixes up the case where count is 1, and stddev is therefore 0
+		clamplower = ESTIMATE_FACTOR * average / count
+	end
+	if stddev < clamplower then
+		stddev = clamplower
+	elseif stddev > clampupper then
+		-- iLevel is particularly prone to producing a very large stddev, due to the diversity of the items in each category
+		-- Note that even with this adjustment, 'lower' can still be significantly negative!
+		area = area * clampupper / stddev -- as we're hard capping the stddev, reduce weight to compensate
+		stddev = clampupper
+	end
+
+	local lower, upper = average - 3 * stddev, average + 3 * stddev
+
+	BellCurve:SetParameters(average, stddev, area)
+	return BellCurve, lower, upper, area   -- This has a __call metamethod so it's ok
 end
 
 -----------------------------------------------------------------------------------
@@ -522,8 +559,4 @@ function private.PackStats(data)
 	return concat(tmp, ",", 1, ntmp)
 end
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Stat-iLevel/iLevel.lua $", "$Rev: 5365 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Stat-iLevel/iLevel.lua $", "$Rev: 5365 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Stat-iLevel/iLevel.lua $", "$Rev: 5470 $")

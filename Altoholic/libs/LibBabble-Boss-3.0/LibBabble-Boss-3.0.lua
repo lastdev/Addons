@@ -1,10 +1,6 @@
 --[[
 Name: LibBabble-Boss-3.0
-<<<<<<< HEAD
-Revision: $Rev: 413 $
-=======
-Revision: $Rev: 409 $
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+Revision: $Rev: 415 $
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-boss-3-0/
 Dependencies: None
@@ -12,11 +8,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-Boss-3.0"
-<<<<<<< HEAD
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 413 $"):match("%d+"))
-=======
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 409 $"):match("%d+"))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 415 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)
@@ -8424,7 +8416,7 @@ elseif GAME_LOCALE == "ruRU" then
 	Nezir = "Незир",
 	Nightbane = "Ночная Погибель",
 	["Niuzao, The Black Ox"] = "Нюцзао, Черный Бык",
-	Norushen = "Норусхрен",
+	Norushen = "Норусхен", -- Needs review
 	["Noth the Plaguebringer"] = "Нот Чумной",
 	["Novos the Summoner"] = "Новос Призыватель",
 	Noxxion = "Ноксион",

@@ -111,14 +111,6 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Scripts>
-					<OnEnter>
-						Altoholic.Currencies:Mails_OnEnter(self)
-					</OnEnter>
-					<OnLeave>
-						AltoTooltip:Hide();
-					</OnLeave>
-				</Scripts>
 			</Button>
 			<Button name="$parentValorWeek" inherits="AltoCurrenciesButtonTemplate" id="2">
 				<Size>

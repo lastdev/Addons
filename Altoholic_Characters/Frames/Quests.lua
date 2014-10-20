@@ -61,7 +61,7 @@ function ns:Update()
 	local i=1
 	
 	for line = 1, DS:GetQuestLogSize(character) do
-		local isHeader, quest, questTag, groupSize, money, isComplete = DS:GetQuestLogInfo(character, line)
+		local isHeader, quest, groupSize, money, isComplete = DS:GetQuestLogInfo(character, line)
 		
 		if (offset > 0) or (DisplayedCount >= VisibleLines) then		-- if the line will not be visible
 			if isHeader then													-- then keep track of counters
@@ -111,8 +111,8 @@ function ns:Update()
 				_G[entry..i.."QuestLinkNormalText"]:SetText(WHITE .. "[" .. level .. "] " .. quest)
 				_G[entry..i.."QuestLink"]:SetID(line)
 				_G[entry..i.."QuestLink"]:SetPoint("TOPLEFT", 15, 0)
-				if questTag then 
-					_G[entry..i.."Tag"]:SetText(FormatQuestType(questTag, groupSize))
+				if groupSize then 
+					_G[entry..i.."Tag"]:SetText(FormatQuestType("", groupSize))
 					_G[entry..i.."Tag"]:Show()
 				else
 					_G[entry..i.."Tag"]:Hide()

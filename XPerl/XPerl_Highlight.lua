@@ -4,7 +4,7 @@
 
 local playerClass, playerName, playerGUID
 local conf
-XPerl_RequestConfig(function(new) conf = new end, "$Revision: 744 $")
+XPerl_RequestConfig(function(new) conf = new end, "$Revision: 862 $")
 
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 local GetNumGroupMembers = GetNumGroupMembers
@@ -1283,10 +1283,22 @@ function xpHigh:OnEvent(event, ...)
 	self[event](self, ...)
 end
 
+
+
+-- Check if the flags match our required flags to filter out combat log events
+-- See http://wowpedia.org/UnitFlag for description of flags
+function xpHigh:checkEventFlags(dstFlags)
+	local dstMask = COMBATLOG_OBJECT_AFFILIATION_MINE + COMBATLOG_OBJECT_AFFILIATION_PARTY + COMBATLOG_OBJECT_AFFILIATION_RAID
+	-- The Target and Focus flags are NON-EXCLUSIVE, so we can't just add them to the dstMask and mask them
+	return (
+			(band(dstFlags, dstMask) ~= 0) or ((band(dstFlags, COMBATLOG_OBJECT_TARGET) ~= 0) or (band(dstFlags, COMBATLOG_OBJECT_FOCUS) ~= 0))
+	)
+end
+
+
 xpHigh.clEvents = {}
 -- COMBAT_LOG_EVENT_UNFILTERED
 -- Using this instead of UNIT_SPELLCAST_SUCCEEDED so we can use the dstGUID for a guarenteed correct target, rather than implied and not necessarily correct name
-local dstMask = COMBATLOG_OBJECT_AFFILIATION_MINE + COMBATLOG_OBJECT_AFFILIATION_PARTY + COMBATLOG_OBJECT_AFFILIATION_RAID
 function xpHigh:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcRaidFlags, dstGUID, dstName, dstFlags, dstRaidFlags, ...)
 	local ev = self.clEvents[event]
 	if (ev) then
@@ -1297,7 +1309,7 @@ end
 -- COMBATLOG:SPELL_CAST_SUCCESS
 function xpHigh.clEvents:SPELL_CAST_SUCCESS(timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
 	if (srcGUID == playerGUID) then
-		if (band(dstFlags, dstMask) ~= 0) then
+		if (self:checkEventFlags(dstFlags)) then
 			local spellId, spellName, spellSchool = ...
 			if (hotSpells[spellName]) then
 				if (conf.highlight.HOT) then
@@ -1324,7 +1336,7 @@ end
 -- COMBATLOG:SPELL_HEAL
 function xpHigh.clEvents:SPELL_HEAL(timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
 	if (srcGUID == playerGUID and conf.highlight.HEAL and conf.highlight.extraSparkles) then
-		if (band(dstFlags, dstMask) ~= 0) then
+		if (self:checkEventFlags(dstFlags)) then
 			-- Pretty sparkles for our healing target
 			self:Add(dstGUID, "HOTSPARKS", 0.1)
 		end
@@ -1333,13 +1345,43 @@ end
 
 -- COMBATLOG:SPELL_PERIODIC_HEAL
 function xpHigh.clEvents:SPELL_PERIODIC_HEAL(timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
-	if (srcGUID == playerGUID and conf.highlight.HOT and conf.highlight.extraSparkles) then
-		if (band(dstFlags, dstMask) ~= 0) then
+	if (srcGUID == playerGUID and conf.highlight.HOT ) then
+		if (self:checkEventFlags(dstFlags)) then
 			local spellId, spellName, spellSchool, amount = ...
 			if (hotSpells[spellName]) then
 				-- Our HOT actually healed someone, so we'll do something pretty
-				if (self:HasEffect(dstGUID, "HOT")) then
+				if (self:HasEffect(dstGUID, "HOT") and conf.highlight.extraSparkles) then
 					self:Add(dstGUID, "HOTSPARKS", 0.1)
+				elseif (not self:HasEffect(dstGUID, "HOT")) then
+					-- Spikeles: Our HOT has healed someone but there is no HOT notification, 
+					-- so, add our flashy. BUT if there is a HOT, then there is a buff on them, and that HOT has an expiration time, so lets grab
+					-- it and use it as the time left for the flashy otherwise we can't be sure of the exact time of the spell left when this
+					-- was triggered
+					
+					-- Find our HOT and get the duration left for it, then add a flashy!
+					local name, rank, tex, count, buffType, dur, endTime, isMine
+					local checkName = dstName;
+					-- If the dstName is NOT in our party/raid but it IS target/focus we MUST use target/focus instead of their name
+					if (not UnitInParty(dstName) and not UnitPlayerOrPetInRaid(dstName) and not UnitPlayerOrPetInParty(dstName)) then
+						-- ok, now figure out which it is, target or focus?
+						-- NOTE: The first GetUnitName should handle cross-realm raid/bg (i think) but this should be double checked
+						if (GetUnitName("target", true) == dstName or GetUnitName("target", false) == dstName) then
+							checkName = "target"
+						else
+							checkName = "focus"
+						end
+					end
+
+					name, rank, tex, count, buffType, dur, endTime, isMine = UnitBuff(checkName, spellName, "", "PLAYER")
+					
+					if (isMine) then
+							-- Figure out how many seconds are left in the HOT so we can ensure the flashy only stays up as long as the HOT is active
+							local secondsLeft = endTime - GetTime();
+							self:Add(dstGUID, "HOT", secondsLeft)
+							if (conf.highlight.extraSparkles) then
+								self:Add(dstGUID, "HOTSPARKS", 0.1)
+							end
+					end
 				end
 			end
 		end
@@ -1348,7 +1390,7 @@ end
 
 -- COMBATLOG:SPELL_DAMAGE
 function xpHigh.clEvents:SPELL_DAMAGE(timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellID, spellName, spellSchool, amount, ...)
-	if (band(dstFlags, dstMask) ~= 0) then
+	if (self:checkEventFlags(dstFlags)) then
 		local overkill, school, resisted, blocked, absorbed, critical, glancing, crushing = ...
 		if (absorbed) then
 			self:Damage(dstGUID, absorbed)
@@ -1359,7 +1401,7 @@ xpHigh.clEvents.SPELL_PERIODIC_DAMAGE = xpHigh.clEvents.SPELL_DAMAGE
 
 -- COMBATLOG:SPELL_MISSED
 function xpHigh.clEvents:SPELL_MISSED(timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
-	if (band(dstFlags, dstMask) ~= 0) then
+	if (self:checkEventFlags(dstFlags)) then
 		local spellId, spellName, spellSchool, missType, missAmount = ...
 		if (missType == "ABSORB") then
 			self:Damage(dstGUID, missAmount)
@@ -1370,7 +1412,7 @@ xpHigh.clEvents.SPELL_PERIODIC_MISSED = xpHigh.clEvents.SPELL_MISSED
 
 -- COMBATLOG:SWING_DAMAGE
 function xpHigh.clEvents:SWING_DAMAGE(timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, amount, ...)
-	if (band(dstFlags, dstMask) ~= 0) then
+	if (self:checkEventFlags(dstFlags)) then
 		local overkill, school, resisted, blocked, absorbed, critical, glancing, crushing = ...
 		if (absorbed) then
 			self:Damage(dstGUID, absorbed)
@@ -1380,7 +1422,7 @@ end
 
 -- COMBATLOG:SWING_MISSED
 function xpHigh.clEvents:SWING_MISSED(timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
-	if (band(dstFlags, dstMask) ~= 0) then
+	if (self:checkEventFlags(dstFlags)) then
 		local missType, missAmount = ...
 		if (missType == "ABSORB") then
 			self:Damage(dstGUID, missAmount)
@@ -1390,7 +1432,7 @@ end
 
 -- ENVIRONMENTAL_DAMAGE
 function xpHigh.clEvents:ENVIRONMENTAL_DAMAGE(timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, ...)
-	if (band(dstFlags, dstMask) ~= 0) then
+	if (self:checkEventFlags(dstFlags)) then
 		local environmentalType, amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing = ...
 		if (missType == "ABSORB") then
 			self:Damage(dstGUID, absorbed)
@@ -1401,7 +1443,7 @@ end
 -- COMBATLOG:SPELL_AURA_APPLIED
 function xpHigh.clEvents:SPELL_AURA_APPLIED(timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, auraType)
 	if (conf.highlight.SHIELD) then
-		if ((srcGUID == dstGUID or srcGUID == playerGUID or dstGUID == playerGUID) and band(dstFlags, dstMask) ~= 0) then
+		if ((srcGUID == dstGUID or srcGUID == playerGUID or dstGUID == playerGUID) and self:checkEventFlags(dstFlags)) then
 			local def = absorbSpells[spellName]
 			if (not def) then
 				def = absorbSpells[spellId]
@@ -1443,7 +1485,7 @@ xpHigh.clEvents.SPELL_AURA_REFRESH = xpHigh.clEvents.SPELL_AURA_APPLIED
 -- COMBATLOG:SPELL_AURA_REMOVED
 function xpHigh.clEvents:SPELL_AURA_REMOVED(timestamp, event, srcGUID, srcName, srcFlags, dstGUID, dstName, dstFlags, spellId, spellName, spellSchool, auraType, ...)
 	if (conf.highlight.SHIELD) then
-		if (band(dstFlags, dstMask) ~= 0) then
+		if (self:checkEventFlags(dstFlags)) then
 			local def = absorbSpells[spellName]
 			if (not def) then
 				def = absorbSpells[spellId]

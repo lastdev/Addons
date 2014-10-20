@@ -2,15 +2,10 @@
 -- Player.lua
 -- Player functions and data for AckisRecipeList.
 -------------------------------------------------------------------------------
--- File date: 2014-02-14T05:23:40Z
--- File hash: 04922c6
-<<<<<<< HEAD
--- Project hash: 5b35dab
--- Project version: 3.0.5
-=======
--- Project hash: fbca907
--- Project version: 2.6.2
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+-- File date: 2014-07-27T02:08:58Z
+-- File hash: 82b55cc
+-- Project hash: beabe36
+-- Project version: 3.0.8
 -------------------------------------------------------------------------------
 -- Please see http://www.wowace.com/addons/arl/ for more information.
 -------------------------------------------------------------------------------
@@ -119,24 +114,30 @@ function Player:HasProperRepLevel(rep_data)
 	end
 	local is_alliance = self.faction == "Alliance"
 	local reputation_levels = self.reputation_levels
-	local FAC = private.FACTION_IDS
+	local FAC = private.FACTION_IDS_FROM_LABEL
 	local has_faction = true
 
 	for rep_id, rep_info in pairs(rep_data) do
-		for rep_level in pairs(rep_info) do
-			if rep_id == FAC.HONOR_HOLD or rep_id == FAC.THRALLMAR then
-				rep_id = is_alliance and FAC.HONOR_HOLD or FAC.THRALLMAR
-			elseif rep_id == FAC.MAGHAR or rep_id == FAC.KURENAI then
-				rep_id = is_alliance and FAC.KURENAI or FAC.MAGHAR
-			end
-			local rep_name = private.AcquireTypes.Reputation:GetEntity(rep_id).name
+		local reputation = private.AcquireTypes.Reputation:GetEntity(rep_id)
 
-			if not reputation_levels[rep_name] or reputation_levels[rep_name] < rep_level then
-				has_faction = false
-			else
-				has_faction = true
-				break
+		if reputation then
+			local rep_name = reputation.name
+			for rep_level in pairs(rep_info) do
+				if rep_id == FAC.HONOR_HOLD or rep_id == FAC.THRALLMAR then
+					rep_id = is_alliance and FAC.HONOR_HOLD or FAC.THRALLMAR
+				elseif rep_id == FAC.MAGHAR or rep_id == FAC.KURENAI then
+					rep_id = is_alliance and FAC.KURENAI or FAC.MAGHAR
+				end
+
+				if not reputation_levels[rep_name] or reputation_levels[rep_name] < rep_level then
+					has_faction = false
+				else
+					has_faction = true
+					break
+				end
 			end
+		else
+			addon:Debug("Unable to find reputation data for ID %d.", rep_id)
 		end
 	end
 	return has_faction

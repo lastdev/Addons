@@ -15,15 +15,30 @@ local type = type
 c.STAT_BUFFS = {
 	1126, -- Mark of the Wild
 	115921, -- Legacy of the Emperor
+	116781, -- Legacy of the White Tiger
+	
 	20217, -- Blessing of Kings
+	159988, -- Bark of the Wild
+	160017, -- Blessing of Kongs
 	90363, -- Embrace of the Shale Spider
+	160077, -- Strength of the Earth
+	
+--	-- 4%
+--	69378, -- Blessing of Forgotten Kings
 }
 
 c.STAMINA_BUFFS = {
 	21562, -- Power Word: Fortitude
-	109773, -- Dark Intent
 	469, -- Commanding Shout
+	
+	166928, -- Blood Pact
+	50256, -- Invigorating Roar
+	160014, -- Sturdiness
+	160003, -- Savage Vigor
 	90364, -- Qiraji Fortitude
+	
+--	-- 8%
+--	111922, -- Fortitude
 }
 
 c.ATTACK_POWER_BUFFS = {
@@ -35,25 +50,46 @@ c.ATTACK_POWER_BUFFS = {
 c.SPELL_POWER_BUFFS = {
 	1459, -- Arcane Brilliance
 	61316, -- Dalaran Brialliance
-	77747, -- Burning Wrath
 	109773, -- Dark Intent
+	
+	128433, -- Serpent's Cunning
+  90364, -- Qiraji Fortitude
 	126309, -- Still Water
 }
 
-c.MELEE_HASTE_BUFFS = {
-	55610, -- Unholy Aura
-	113742, -- Swiftblade's Cunning
-	30809, -- Unleashed Rage
-	128432, -- Cackling Howl
-	128433, -- Serpent's Swiftness
+c.BLOODLUST_BUFFS = {
+  80353, -- Time Warp
+  2825, -- Bloodlust
+  32182, -- Heroism
+  90355, -- Ancient Hysteria
+  160452, -- Netherwinds
+  
+  -- 25%
+  146555, -- Drums of Rage
 }
 
-c.SPELL_HASTE_BUFFS = {
-	24907, -- Moonkin Aura
-	15473, -- Shadowform
+c.MASTERY_BUFFS = {
+  155522, -- Power of the Grave
+  24907, -- Moonkin Aura
+  19740, -- Blessing of Might
+  116956, -- Grace of Air
+  
+  93435, -- Roar of Courage
+  160039, -- Keen Senses
+  128997, -- Spirit Beast Blessing
+  160073, -- Plainswalking
+}
+
+c.HASTE_BUFFS = {
+	55610, -- Unholy Aura
 	49868, -- Mind Quickening (applied to raid members by Shadowform)
-	51470, -- Elemental Oath
+	113742, -- Swiftblade's Cunning
+  116956, -- Grace of Air
+	
+	128432, -- Cackling Howl
+	160003, -- Savage Vigor
 	135678, -- Energizing Spores
+	160074, -- Speed of the Swarm
 }
 
 c.CRIT_BUFFS = {
@@ -61,25 +97,41 @@ c.CRIT_BUFFS = {
 	1459, -- Arcane Brilliance
 	61316, -- Dalaran Brialliance
 	116781, -- Legacy of the White Tiger
-	97229, -- Bellowing Roar
-	24604, -- Furious Howl
+	
 	90309, -- Terrifying Roar
 	126373, -- Fearless Roar
+	160052, -- Strength of the Pack
+	90363, -- Embrace of the Shale Spider
 	126309, -- Still Water
+	24604, -- Furious Howl
 }
 
-c.MASTERY_BUFFS = {
-	19740, -- Blessing of Might
-	116956, -- Grace of Air
-	93435, -- Roar of Courage
-	128997, -- Spirit Beast Blessing
+c.MULTISTRIKE_BUFFS = {
+  166916, -- Windfury
+  49868, -- Mind Quickening
+  113742, -- Swiftblade's Cunning
+  109773, -- Dark Intent
+  
+  50519, -- Sonic Focus
+  57386, -- Clefthoof
+  58604, -- Double Bite
+  34889, -- Spry Attacks
+  24844, -- Breath of the Winds
 }
 
-c.BLOODLUST_BUFFS = {
-    90355, -- Ancient Hysteria
-    80353, -- Time Warp
-    2825, -- Bloodlust
-    32182, -- Heroism
+c.VERSATILITY_BUFFS = {
+  55610, -- Unholy Aura
+  1126, -- Mark of the Wild
+  167187, -- Sanctity Aura
+  167188, -- Inspiring Presence
+  
+  159735, -- Tenacity
+  35290, -- Indomitable
+  57386, -- Wild Strength
+  160045, -- Defensive Quills
+  50518, -- Chitinous Armor
+  173035, -- Grace
+  160077, -- Strength of the Earth
 }
 
 c.ARMOR_DEBUFFS = 113746

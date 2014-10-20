@@ -163,6 +163,10 @@ aeldra@sonnenkinder.org
 Changes: 
 Rev     Date        Description
 ------  ----------  -----------------------
+6.0a    2014-10-16  Updated code for Warlords of Draenor
+                    Included Broker addon
+                    Thanks for donation: Chris S, Glenn J, Jennyfer H, Jon B, Michael Z :)
+
 5.4b    2013-10-30  Fixed LUA errors with RealmName
 
 5.4a    2013-09-12  Fixed LUA errors with sliders

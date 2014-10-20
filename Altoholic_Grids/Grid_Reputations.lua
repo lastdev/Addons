@@ -10,7 +10,7 @@ local YELLOW	= "|cFFFFFF00"
 local DARK_RED = "|cFFF00000"
 
 -- *** Reputations ***
-local CAT_GUILD = 6
+local CAT_GUILD = 7
 local CAT_ALLINONE = CAT_GUILD + 1
 
 local ICON_NOTREADY = "\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t"
@@ -22,188 +22,209 @@ local Factions = {
 		name = EXPANSION_NAME0,	-- "Classic"
 		{	-- [1]
 			name = FACTION_ALLIANCE,	-- 469
-			{ name = GetFactionInfoByID(69), icon = "Achievement_Character_Nightelf_Female" },	-- "Darnassus"
-			{ name = GetFactionInfoByID(930), icon = "Achievement_Character_Draenei_Male" },	--  name = "Exodar"
-			{ name = GetFactionInfoByID(54), icon = "Achievement_Character_Gnome_Female" },	-- "Gnomeregan"
-			{ name = GetFactionInfoByID(47), icon = "Achievement_Character_Dwarf_Male" },		-- "Ironforge"
-			{ name = GetFactionInfoByID(72), icon = "Achievement_Character_Human_Male" },		-- "Stormwind"
-			{ name = GetFactionInfoByID(1134), icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.625, right = 0.75, top = 0, bottom = 0.25 },	-- "Gilneas"
-			{ name = GetFactionInfoByID(1353), icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.75, right = 0.875, top = 0, bottom = 0.25 },	-- "Tushui Pandaren"
-			{ name = GetFactionInfoByID(469), icon = "INV_BannerPVP_02" },	-- "Alliance"
+			{ name = DataStore:GetFactionName(69), icon = "Achievement_Character_Nightelf_Female" },	-- "Darnassus"
+			{ name = DataStore:GetFactionName(930), icon = "Achievement_Character_Draenei_Male" },	--  name = "Exodar"
+			{ name = DataStore:GetFactionName(54), icon = "Achievement_Character_Gnome_Female" },	-- "Gnomeregan"
+			{ name = DataStore:GetFactionName(47), icon = "Achievement_Character_Dwarf_Male" },		-- "Ironforge"
+			{ name = DataStore:GetFactionName(72), icon = "Achievement_Character_Human_Male" },		-- "Stormwind"
+			{ name = DataStore:GetFactionName(1134), icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.625, right = 0.75, top = 0, bottom = 0.25 },	-- "Gilneas"
+			{ name = DataStore:GetFactionName(1353), icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.75, right = 0.875, top = 0, bottom = 0.25 },	-- "Tushui Pandaren"
+			{ name = DataStore:GetFactionName(469), icon = "INV_BannerPVP_02" },	-- "Alliance"
 		},
 		{	-- [2]
 			name = FACTION_HORDE,
-			{ name = GetFactionInfoByID(530), icon = "Achievement_Character_Troll_Male" },		-- "Darkspear Trolls"
-			{ name = GetFactionInfoByID(76), icon = "Achievement_Character_Orc_Male" },		-- "Orgrimmar"
-			{ name = GetFactionInfoByID(81), icon = "Achievement_Character_Tauren_Male" },		-- "Thunder Bluff"
-			{ name = GetFactionInfoByID(68), icon = "Achievement_Character_Undead_Female" },		-- "Undercity"
-			{ name = GetFactionInfoByID(911), icon = "Achievement_Character_Bloodelf_Male" },		-- "Silvermoon City"
-			{ name = GetFactionInfoByID(1133), icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.625, right = 0.75, top = 0.25, bottom = 0.5 },	--  name = "Bilgewater Cartel"
-			{ name = GetFactionInfoByID(1352), icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.75, right = 0.875, top = 0.25, bottom = 0.5 },	-- "Huojin Pandaren" 
-			{ name = GetFactionInfoByID(67), icon = "INV_BannerPVP_01" },	-- "Horde" 
+			{ name = DataStore:GetFactionName(530), icon = "Achievement_Character_Troll_Male" },		-- "Darkspear Trolls"
+			{ name = DataStore:GetFactionName(76), icon = "Achievement_Character_Orc_Male" },		-- "Orgrimmar"
+			{ name = DataStore:GetFactionName(81), icon = "Achievement_Character_Tauren_Male" },		-- "Thunder Bluff"
+			{ name = DataStore:GetFactionName(68), icon = "Achievement_Character_Undead_Female" },		-- "Undercity"
+			{ name = DataStore:GetFactionName(911), icon = "Achievement_Character_Bloodelf_Male" },		-- "Silvermoon City"
+			{ name = DataStore:GetFactionName(1133), icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.625, right = 0.75, top = 0.25, bottom = 0.5 },	--  name = "Bilgewater Cartel"
+			{ name = DataStore:GetFactionName(1352), icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.75, right = 0.875, top = 0.25, bottom = 0.5 },	-- "Huojin Pandaren" 
+			{ name = DataStore:GetFactionName(67), icon = "INV_BannerPVP_01" },	-- "Horde" 
 		},
 		{	-- [3]
 			name = L["Alliance Forces"],	-- 891
-			{ name = GetFactionInfoByID(509), icon = "Achievement_BG_winAB" },	--  name = "The League of Arathor" 
-			{ name = GetFactionInfoByID(890), icon = "Achievement_BG_captureflag_WSG" },	-- "Silverwing Sentinels" 
-			{ name = GetFactionInfoByID(730), icon = "Achievement_BG_winAV" },		-- "Stormpike Guard"
+			{ name = DataStore:GetFactionName(509), icon = "Achievement_BG_winAB" },	--  name = "The League of Arathor" 
+			{ name = DataStore:GetFactionName(890), icon = "Achievement_BG_captureflag_WSG" },	-- "Silverwing Sentinels" 
+			{ name = DataStore:GetFactionName(730), icon = "Achievement_BG_winAV" },		-- "Stormpike Guard"
 		},
 		{	-- [4]
 			name = L["Horde Forces"],
-			{ name = GetFactionInfoByID(510), icon = "Achievement_BG_winAB" },		-- "The Defilers" 
-			{ name = GetFactionInfoByID(889), icon = "Achievement_BG_captureflag_WSG" },	-- "Warsong Outriders" 
-			{ name = GetFactionInfoByID(729), icon = "Achievement_BG_winAV" },		-- "Frostwolf Clan" 
+			{ name = DataStore:GetFactionName(510), icon = "Achievement_BG_winAB" },		-- "The Defilers" 
+			{ name = DataStore:GetFactionName(889), icon = "Achievement_BG_captureflag_WSG" },	-- "Warsong Outriders" 
+			{ name = DataStore:GetFactionName(729), icon = "Achievement_BG_winAV" },		-- "Frostwolf Clan" 
 		},
 		{	-- [5]
 			name = L["Steamwheedle Cartel"],
-			{ name = GetFactionInfoByID(21), icon = "Achievement_Zone_Stranglethorn_01" },		-- "Booty Bay" 
-			{ name = GetFactionInfoByID(577), icon = "Achievement_Zone_Winterspring" },		-- "Everlook" 
-			{ name = GetFactionInfoByID(369), icon = "Achievement_Zone_Tanaris_01" },		-- "Gadgetzan" 
-			{ name = GetFactionInfoByID(470), icon = "Achievement_Zone_Barrens_01" },		-- "Ratchet" 
+			{ name = DataStore:GetFactionName(21), icon = "Achievement_Zone_Stranglethorn_01" },		-- "Booty Bay" 
+			{ name = DataStore:GetFactionName(577), icon = "Achievement_Zone_Winterspring" },		-- "Everlook" 
+			{ name = DataStore:GetFactionName(369), icon = "Achievement_Zone_Tanaris_01" },		-- "Gadgetzan" 
+			{ name = DataStore:GetFactionName(470), icon = "Achievement_Zone_Barrens_01" },		-- "Ratchet" 
 		},
 		{	-- [6]
 			name = OTHER,
-			{ name = GetFactionInfoByID(529), icon = "INV_Jewelry_Talisman_07" },		-- "Argent Dawn" 
-			{ name = GetFactionInfoByID(87), icon = "INV_Helmet_66" },		-- "Bloodsail Buccaneers" 
-			{ name = GetFactionInfoByID(910), icon = "INV_Misc_Head_Dragon_Bronze" },		-- "Brood of Nozdormu" 
-			{ name = GetFactionInfoByID(609), icon = "Achievement_Zone_Silithus_01" },		-- "Cenarion Circle" 
-			{ name = GetFactionInfoByID(909), icon = "INV_Misc_Ticket_Darkmoon_01" },		-- "Darkmoon Faire" 
-			{ name = GetFactionInfoByID(92), icon = "INV_Misc_Head_Centaur_01" },			-- "Gelkis Clan Centaur" 
-			{ name = GetFactionInfoByID(749), icon = "Spell_Frost_SummonWaterElemental_2" },		-- "Hydraxian Waterlords" 
-			{ name = GetFactionInfoByID(93), icon = "INV_Misc_Head_Centaur_01" },		-- "Magram Clan Centaur" 
-			{ name = GetFactionInfoByID(349), icon = "INV_ThrowingKnife_04" },		-- "Ravenholdt" 
-			{ name = GetFactionInfoByID(809), icon = "Achievement_Zone_Feralas" },		-- "Shen'dralar" 
-			{ name = GetFactionInfoByID(70), icon = "INV_Misc_ArmorKit_03" },		-- "Syndicate" 
-			{ name = GetFactionInfoByID(59), icon = "INV_Ingot_Thorium" },		-- "Thorium Brotherhood" 
-			{ name = GetFactionInfoByID(576), icon = "Achievement_Reputation_timbermaw" },		-- "Timbermaw Hold" 
-			{ name = GetFactionInfoByID(922), icon = "Achievement_Zone_Ghostlands" },		-- "Tranquillien" 
-			{ name = GetFactionInfoByID(589), icon = "Ability_Mount_PinkTiger" },		-- "Wintersaber Trainers" 
-			{ name = GetFactionInfoByID(270), icon = "INV_Bijou_Green" },		-- "Zandalar Tribe" 
+			{ name = DataStore:GetFactionName(529), icon = "INV_Jewelry_Talisman_07" },		-- "Argent Dawn" 
+			{ name = DataStore:GetFactionName(87), icon = "INV_Helmet_66" },		-- "Bloodsail Buccaneers" 
+			{ name = DataStore:GetFactionName(910), icon = "INV_Misc_Head_Dragon_Bronze" },		-- "Brood of Nozdormu" 
+			{ name = DataStore:GetFactionName(609), icon = "Achievement_Zone_Silithus_01" },		-- "Cenarion Circle" 
+			{ name = DataStore:GetFactionName(909), icon = "INV_Misc_Ticket_Darkmoon_01" },		-- "Darkmoon Faire" 
+			{ name = DataStore:GetFactionName(92), icon = "INV_Misc_Head_Centaur_01" },			-- "Gelkis Clan Centaur" 
+			{ name = DataStore:GetFactionName(749), icon = "Spell_Frost_SummonWaterElemental_2" },		-- "Hydraxian Waterlords" 
+			{ name = DataStore:GetFactionName(93), icon = "INV_Misc_Head_Centaur_01" },		-- "Magram Clan Centaur" 
+			{ name = DataStore:GetFactionName(349), icon = "INV_ThrowingKnife_04" },		-- "Ravenholdt" 
+			{ name = DataStore:GetFactionName(809), icon = "Achievement_Zone_Feralas" },		-- "Shen'dralar" 
+			{ name = DataStore:GetFactionName(70), icon = "INV_Misc_ArmorKit_03" },		-- "Syndicate" 
+			{ name = DataStore:GetFactionName(59), icon = "INV_Ingot_Thorium" },		-- "Thorium Brotherhood" 
+			{ name = DataStore:GetFactionName(576), icon = "Achievement_Reputation_timbermaw" },		-- "Timbermaw Hold" 
+			{ name = DataStore:GetFactionName(922), icon = "Achievement_Zone_Ghostlands" },		-- "Tranquillien" 
+			{ name = DataStore:GetFactionName(589), icon = "Ability_Mount_PinkTiger" },		-- "Wintersaber Trainers" 
+			{ name = DataStore:GetFactionName(270), icon = "INV_Bijou_Green" },		-- "Zandalar Tribe" 
 		}
 	},
 	{	-- [2]
 		name = EXPANSION_NAME1,	-- "The Burning Crusade"
 		{	-- [1]
 			name = GetRealZoneText(530),	-- Outland
-			{ name = GetFactionInfoByID(1012), icon = "Achievement_Reputation_AshtongueDeathsworn" },	-- "Ashtongue Deathsworn" 
-			{ name = GetFactionInfoByID(942), icon = "Achievement_Reputation_GuardiansofCenarius" },	-- "Cenarion Expedition" 
-			{ name = GetFactionInfoByID(933), icon = "INV_Enchant_ShardPrismaticLarge" },		-- "The Consortium" 
-			{ name = GetFactionInfoByID(946), icon = "Spell_Misc_HellifrePVPHonorHoldFavor" },	-- "Honor Hold" 
-			{ name = GetFactionInfoByID(978), icon = "INV_Misc_Foot_Centaur" },		-- "Kurenai" 
-			{ name = GetFactionInfoByID(941), icon = "Achievement_Zone_Nagrand_01" },	-- "The Mag'har" 
-			{ name = GetFactionInfoByID(1015), icon = "Ability_Mount_NetherdrakePurple" },		-- "Netherwing" 
-			{ name = GetFactionInfoByID(1038), icon = "Achievement_Reputation_Ogre" },		-- "Ogri'la" 
-			{ name = GetFactionInfoByID(970), icon = "INV_Mushroom_11" },	-- "Sporeggar" 
-			{ name = GetFactionInfoByID(947), icon = "Spell_Misc_HellifrePVPThrallmarFavor" },	-- "Thrallmar" 
+			{ name = DataStore:GetFactionName(1012), icon = "Achievement_Reputation_AshtongueDeathsworn" },	-- "Ashtongue Deathsworn" 
+			{ name = DataStore:GetFactionName(942), icon = "Achievement_Reputation_GuardiansofCenarius" },	-- "Cenarion Expedition" 
+			{ name = DataStore:GetFactionName(933), icon = "INV_Enchant_ShardPrismaticLarge" },		-- "The Consortium" 
+			{ name = DataStore:GetFactionName(946), icon = "Spell_Misc_HellifrePVPHonorHoldFavor" },	-- "Honor Hold" 
+			{ name = DataStore:GetFactionName(978), icon = "INV_Misc_Foot_Centaur" },		-- "Kurenai" 
+			{ name = DataStore:GetFactionName(941), icon = "Achievement_Zone_Nagrand_01" },	-- "The Mag'har" 
+			{ name = DataStore:GetFactionName(1015), icon = "Ability_Mount_NetherdrakePurple" },		-- "Netherwing" 
+			{ name = DataStore:GetFactionName(1038), icon = "Achievement_Reputation_Ogre" },		-- "Ogri'la" 
+			{ name = DataStore:GetFactionName(970), icon = "INV_Mushroom_11" },	-- "Sporeggar" 
+			{ name = DataStore:GetFactionName(947), icon = "Spell_Misc_HellifrePVPThrallmarFavor" },	-- "Thrallmar" 
 		},
 		{	-- [2]
 			name = GetMapNameByID(481),	-- "Shattrath City"
-			{ name = GetFactionInfoByID(1011), icon = "Achievement_Zone_Terrokar" },		-- "Lower City" 
-			{ name = GetFactionInfoByID(1031), icon = "Ability_Hunter_Pet_NetherRay" },		-- "Sha'tari Skyguard" 
-			{ name = GetFactionInfoByID(1077), icon = "INV_Shield_48" },		-- "Shattered Sun Offensive" 
-			{ name = GetFactionInfoByID(932), icon = "Achievement_Character_Draenei_Female" },	-- "The Aldor" 
-			{ name = GetFactionInfoByID(934), icon = "Achievement_Character_Bloodelf_Female" },		-- "The Scryers" 
-			{ name = GetFactionInfoByID(935), icon = "Achievement_Zone_Netherstorm_01" },		-- "The Sha'tar" 
+			{ name = DataStore:GetFactionName(1011), icon = "Achievement_Zone_Terrokar" },		-- "Lower City" 
+			{ name = DataStore:GetFactionName(1031), icon = "Ability_Hunter_Pet_NetherRay" },		-- "Sha'tari Skyguard" 
+			{ name = DataStore:GetFactionName(1077), icon = "INV_Shield_48" },		-- "Shattered Sun Offensive" 
+			{ name = DataStore:GetFactionName(932), icon = "Achievement_Character_Draenei_Female" },	-- "The Aldor" 
+			{ name = DataStore:GetFactionName(934), icon = "Achievement_Character_Bloodelf_Female" },		-- "The Scryers" 
+			{ name = DataStore:GetFactionName(935), icon = "Achievement_Zone_Netherstorm_01" },		-- "The Sha'tar" 
 		},
 		{	-- [3]
 			name = OTHER,
-			{ name = GetFactionInfoByID(989), icon = "Achievement_Zone_HillsbradFoothills" },		-- "Keepers of Time" 
-			{ name = GetFactionInfoByID(990), icon = "INV_Enchant_DustIllusion" },	-- "The Scale of the Sands" 
-			{ name = GetFactionInfoByID(967), icon = "Spell_Holy_MindSooth" },		-- "The Violet Eye" 
+			{ name = DataStore:GetFactionName(989), icon = "Achievement_Zone_HillsbradFoothills" },		-- "Keepers of Time" 
+			{ name = DataStore:GetFactionName(990), icon = "INV_Enchant_DustIllusion" },	-- "The Scale of the Sands" 
+			{ name = DataStore:GetFactionName(967), icon = "Spell_Holy_MindSooth" },		-- "The Violet Eye" 
 		}
 	},
 	{	-- [3]
 		name = EXPANSION_NAME2,	-- "Wrath of the Lich King"
 		{	-- [1]
 			name = GetRealZoneText(571),	-- Northrend
-			{ name = GetFactionInfoByID(1106), icon = "Achievement_Reputation_ArgentCrusader" },		-- "Argent Crusade"
-			{ name = GetFactionInfoByID(1090), icon = "Achievement_Reputation_KirinTor" },		-- "Kirin Tor" 
-			{ name = GetFactionInfoByID(1073), icon = "Achievement_Reputation_Tuskarr" },	-- "The Kalu'ak" 
-			{ name = GetFactionInfoByID(1091), icon = "Achievement_Reputation_WyrmrestTemple" },		-- "The Wyrmrest Accord" 
-			{ name = GetFactionInfoByID(1098), icon = "Achievement_Reputation_KnightsoftheEbonBlade" },	-- "Knights of the Ebon Blade" 
-			{ name = GetFactionInfoByID(1119), icon = "Achievement_Boss_Hodir_01" },		-- "The Sons of Hodir" 
-			{ name = GetFactionInfoByID(1156), icon = "Achievement_Reputation_ArgentCrusader" },		-- "The Ashen Verdict" 
+			{ name = DataStore:GetFactionName(1106), icon = "Achievement_Reputation_ArgentCrusader" },		-- "Argent Crusade"
+			{ name = DataStore:GetFactionName(1090), icon = "Achievement_Reputation_KirinTor" },		-- "Kirin Tor" 
+			{ name = DataStore:GetFactionName(1073), icon = "Achievement_Reputation_Tuskarr" },	-- "The Kalu'ak" 
+			{ name = DataStore:GetFactionName(1091), icon = "Achievement_Reputation_WyrmrestTemple" },		-- "The Wyrmrest Accord" 
+			{ name = DataStore:GetFactionName(1098), icon = "Achievement_Reputation_KnightsoftheEbonBlade" },	-- "Knights of the Ebon Blade" 
+			{ name = DataStore:GetFactionName(1119), icon = "Achievement_Boss_Hodir_01" },		-- "The Sons of Hodir" 
+			{ name = DataStore:GetFactionName(1156), icon = "Achievement_Reputation_ArgentCrusader" },		-- "The Ashen Verdict" 
 		},
 		{	-- [2]
-			name = GetFactionInfoByID(1037), 	-- "Alliance Vanguard"
-			{ name = GetFactionInfoByID(1037), icon = "Spell_Misc_HellifrePVPHonorHoldFavor" },	-- "Alliance Vanguard" 
-			{ name = GetFactionInfoByID(1068), icon = "Achievement_Zone_HowlingFjord_02" },	-- "Explorers' League" 
-			{ name = GetFactionInfoByID(1126), icon = "Achievement_Zone_StormPeaks_01" },		-- "The Frostborn" 
-			{ name = GetFactionInfoByID(1094), icon = "Achievement_Zone_CrystalSong_01" },		-- "The Silver Covenant" 
-			{ name = GetFactionInfoByID(1050), icon = "Achievement_Zone_BoreanTundra_01" },	-- "Valiance Expedition" 	
+			name = DataStore:GetFactionName(1037), 	-- "Alliance Vanguard"
+			{ name = DataStore:GetFactionName(1037), icon = "Spell_Misc_HellifrePVPHonorHoldFavor" },	-- "Alliance Vanguard" 
+			{ name = DataStore:GetFactionName(1068), icon = "Achievement_Zone_HowlingFjord_02" },	-- "Explorers' League" 
+			{ name = DataStore:GetFactionName(1126), icon = "Achievement_Zone_StormPeaks_01" },		-- "The Frostborn" 
+			{ name = DataStore:GetFactionName(1094), icon = "Achievement_Zone_CrystalSong_01" },		-- "The Silver Covenant" 
+			{ name = DataStore:GetFactionName(1050), icon = "Achievement_Zone_BoreanTundra_01" },	-- "Valiance Expedition" 	
 		},
 		{	-- [3]
-			name = GetFactionInfoByID(1052), 	-- "Horde Expedition"
-			{ name = GetFactionInfoByID(1052), icon = "Spell_Misc_HellifrePVPThrallmarFavor" },		-- "Horde Expedition" 
-			{ name = GetFactionInfoByID(1067), icon = "Achievement_Zone_HowlingFjord_02" },		-- "The Hand of Vengeance" 
-			{ name = GetFactionInfoByID(1124), icon = "Achievement_Zone_CrystalSong_01" },			-- "The Sunreavers" 
-			{ name = GetFactionInfoByID(1064), icon = "Achievement_Zone_BoreanTundra_02" },		-- "The Taunka" 
-			{ name = GetFactionInfoByID(1085), icon = "Achievement_Zone_BoreanTundra_03" },		-- "Warsong Offensive" 
+			name = DataStore:GetFactionName(1052), 	-- "Horde Expedition"
+			{ name = DataStore:GetFactionName(1052), icon = "Spell_Misc_HellifrePVPThrallmarFavor" },		-- "Horde Expedition" 
+			{ name = DataStore:GetFactionName(1067), icon = "Achievement_Zone_HowlingFjord_02" },		-- "The Hand of Vengeance" 
+			{ name = DataStore:GetFactionName(1124), icon = "Achievement_Zone_CrystalSong_01" },			-- "The Sunreavers" 
+			{ name = DataStore:GetFactionName(1064), icon = "Achievement_Zone_BoreanTundra_02" },		-- "The Taunka" 
+			{ name = DataStore:GetFactionName(1085), icon = "Achievement_Zone_BoreanTundra_03" },		-- "Warsong Offensive" 
 		},
 		{	-- [4]
 			name = GetMapNameByID(493),	-- "Sholazar Basin"
-			{ name = GetFactionInfoByID(1104), icon = "Ability_Mount_WhiteDireWolf" },		-- "Frenzyheart Tribe" 
-			{ name = GetFactionInfoByID(1105), icon = "Achievement_Reputation_MurlocOracle" },	-- "The Oracles" 
+			{ name = DataStore:GetFactionName(1104), icon = "Ability_Mount_WhiteDireWolf" },		-- "Frenzyheart Tribe" 
+			{ name = DataStore:GetFactionName(1105), icon = "Achievement_Reputation_MurlocOracle" },	-- "The Oracles" 
 		},
 	},
 	{	-- [4]
 		name = EXPANSION_NAME3,	-- "Cataclysm"
 		{	-- [1]
 			name = OTHER,
-			{ name = GetFactionInfoByID(1158), icon = "Achievement_Zone_mount hyjal" },		-- "Guardians of Hyjal" 
-			{ name = GetFactionInfoByID(1135), icon = "Spell_Nature_EarthElemental_Totem" },		-- "The Earthen Ring" 
-			{ name = GetFactionInfoByID(1171), icon = "inv_misc_tabard_therazane" },		-- "Therazane" 
-			{ name = GetFactionInfoByID(1174), icon = "inv_misc_tabard_wildhammerclan" },		-- "Wildhammer Clan" 
-			{ name = GetFactionInfoByID(1173), icon = "inv_misc_tabard_tolvir" },		-- "Ramkahen" 
-			{ name = GetFactionInfoByID(1177), icon = "inv_misc_tabard_baradinwardens" },		-- "Baradin's Wardens" 
-			{ name = GetFactionInfoByID(1172), icon = "inv_misc_tabard_dragonmawclan" },		-- "Dragonmaw Clan" 
-			{ name = GetFactionInfoByID(1178), icon = "inv_misc_tabard_hellscream" },		-- "Hellscream's Reach" 
-			{ name = GetFactionInfoByID(1204), icon = "inv_neck_hyjaldaily_04" },		-- "Avengers of Hyjal" 
+			{ name = DataStore:GetFactionName(1158), icon = "Achievement_Zone_mount hyjal" },		-- "Guardians of Hyjal" 
+			{ name = DataStore:GetFactionName(1135), icon = "Spell_Nature_EarthElemental_Totem" },		-- "The Earthen Ring" 
+			{ name = DataStore:GetFactionName(1171), icon = "inv_misc_tabard_therazane" },		-- "Therazane" 
+			{ name = DataStore:GetFactionName(1174), icon = "inv_misc_tabard_wildhammerclan" },		-- "Wildhammer Clan" 
+			{ name = DataStore:GetFactionName(1173), icon = "inv_misc_tabard_tolvir" },		-- "Ramkahen" 
+			{ name = DataStore:GetFactionName(1177), icon = "inv_misc_tabard_baradinwardens" },		-- "Baradin's Wardens" 
+			{ name = DataStore:GetFactionName(1172), icon = "inv_misc_tabard_dragonmawclan" },		-- "Dragonmaw Clan" 
+			{ name = DataStore:GetFactionName(1178), icon = "inv_misc_tabard_hellscream" },		-- "Hellscream's Reach" 
+			{ name = DataStore:GetFactionName(1204), icon = "inv_neck_hyjaldaily_04" },		-- "Avengers of Hyjal" 
 		}
 	},
 	{	-- [5]
 		name = EXPANSION_NAME4,	-- "Mists of Pandaria"
 		{	-- [1]
-			name = GetFactionInfoByID(1302), 	-- "The Anglers"
-			{ name = GetFactionInfoByID(1358), icon = "achievement_faction_anglers" },		-- "Nat Pagle" 
+			name = DataStore:GetFactionName(1302), 	-- "The Anglers"
+			{ name = DataStore:GetFactionName(1358), icon = "achievement_faction_anglers" },		-- "Nat Pagle" 
 		},
 		{	-- [2]
-			name = GetFactionInfoByID(1272), 	-- "The Tillers"
-			{ name = GetFactionInfoByID(1277), icon = "achievement_faction_tillers" },		-- "Chee Chee" 
-			{ name = GetFactionInfoByID(1275), icon = "achievement_faction_tillers" },		-- "Ella" 
-			{ name = GetFactionInfoByID(1283), icon = "achievement_faction_tillers" },		-- "Farmer Fung" 
-			{ name = GetFactionInfoByID(1282), icon = "achievement_faction_tillers" },		-- "Fish Fellreed" 
-			{ name = GetFactionInfoByID(1281), icon = "achievement_faction_tillers" },		-- "Gina Mudclaw" 
-			{ name = GetFactionInfoByID(1279), icon = "achievement_faction_tillers" },		-- "Haohan Mudclaw" 
-			{ name = GetFactionInfoByID(1273), icon = "achievement_faction_tillers" },		-- "Jogu the Drunk" 
-			{ name = GetFactionInfoByID(1276), icon = "achievement_faction_tillers" },		-- "Old Hillpaw" 
-			{ name = GetFactionInfoByID(1278), icon = "achievement_faction_tillers" },		-- "Sho" 
-			{ name = GetFactionInfoByID(1280), icon = "achievement_faction_tillers" },		-- "Tina Mudclaw" 
+			name = DataStore:GetFactionName(1272), 	-- "The Tillers"
+			{ name = DataStore:GetFactionName(1277), icon = "achievement_faction_tillers" },		-- "Chee Chee" 
+			{ name = DataStore:GetFactionName(1275), icon = "achievement_faction_tillers" },		-- "Ella" 
+			{ name = DataStore:GetFactionName(1283), icon = "achievement_faction_tillers" },		-- "Farmer Fung" 
+			{ name = DataStore:GetFactionName(1282), icon = "achievement_faction_tillers" },		-- "Fish Fellreed" 
+			{ name = DataStore:GetFactionName(1281), icon = "achievement_faction_tillers" },		-- "Gina Mudclaw" 
+			{ name = DataStore:GetFactionName(1279), icon = "achievement_faction_tillers" },		-- "Haohan Mudclaw" 
+			{ name = DataStore:GetFactionName(1273), icon = "achievement_faction_tillers" },		-- "Jogu the Drunk" 
+			{ name = DataStore:GetFactionName(1276), icon = "achievement_faction_tillers" },		-- "Old Hillpaw" 
+			{ name = DataStore:GetFactionName(1278), icon = "achievement_faction_tillers" },		-- "Sho" 
+			{ name = DataStore:GetFactionName(1280), icon = "achievement_faction_tillers" },		-- "Tina Mudclaw" 
 		},
 		{	-- [3]
 			name = OTHER,
-			{ name = GetFactionInfoByID(1375), icon = "achievement_general_hordeslayer" },		-- "Dominance Offensive" 
-			{ name = GetFactionInfoByID(1228), icon = "inv_misc_fish_58" },		-- "Forest Hozen" 
-			{ name = GetFactionInfoByID(1269), icon = "achievement_faction_goldenlotus" },		-- "Golden Lotus" 
-			{ name = GetFactionInfoByID(1387), icon = "achievement_reputation_kirintor_offensive" },		-- "Kirin Tor Offensive" 
-			{ name = GetFactionInfoByID(1376), icon = "achievement_general_allianceslayer" },		-- "Operation: Shieldwall" 
-			{ name = GetFactionInfoByID(1271), icon = "achievement_faction_serpentriders" },		-- "Order of the Cloud Serpent" 
-			{ name = GetFactionInfoByID(1242), icon = "inv_misc_fish_58" },		-- "Pearlfin Jinyu" 
-			{ name = GetFactionInfoByID(1270), icon = "achievement_faction_shadopan" },		-- "Shado-Pan" 
-			{ name = GetFactionInfoByID(1435), icon = "achievement_faction_shadopan" },		-- "Shado-Pan Assault" 
-			{ name = GetFactionInfoByID(1216), icon = "inv_misc_book_07" },		-- "Shang Xi's Academy" 
-			{ name = GetFactionInfoByID(1388), icon = "achievement_faction_sunreaveronslaught" },		-- "Sunreaver Onslaught" 
-			{ name = GetFactionInfoByID(1302), icon = "achievement_faction_anglers" },		-- "The Anglers" 
-			{ name = GetFactionInfoByID(1341), icon = "achievement_faction_celestials" },		-- "The August Celestials" 
-			{ name = GetFactionInfoByID(1359), icon = "inv_misc_head_dragon_black" },		-- "The Black Prince" 
-			{ name = GetFactionInfoByID(1351), icon = "inv_cask_02" },		-- "The Brewmasters" 
-			{ name = GetFactionInfoByID(1337), icon = "achievement_faction_klaxxi" },		-- "The Klaxxi" 
-			{ name = GetFactionInfoByID(1345), icon = "achievement_faction_lorewalkers" },		-- "The Lorewalkers" 
-			{ name = GetFactionInfoByID(1272), icon = "achievement_faction_tillers" },		-- "The Tillers" 
-			{ name = GetFactionInfoByID(1492), icon = "ability_monk_quipunch" },		-- "Emperor Shaohao"
+			{ name = DataStore:GetFactionName(1375), icon = "achievement_general_hordeslayer" },		-- "Dominance Offensive" 
+			{ name = DataStore:GetFactionName(1228), icon = "inv_misc_fish_58" },		-- "Forest Hozen" 
+			{ name = DataStore:GetFactionName(1269), icon = "achievement_faction_goldenlotus" },		-- "Golden Lotus" 
+			{ name = DataStore:GetFactionName(1387), icon = "achievement_reputation_kirintor_offensive" },		-- "Kirin Tor Offensive" 
+			{ name = DataStore:GetFactionName(1376), icon = "achievement_general_allianceslayer" },		-- "Operation: Shieldwall" 
+			{ name = DataStore:GetFactionName(1271), icon = "achievement_faction_serpentriders" },		-- "Order of the Cloud Serpent" 
+			{ name = DataStore:GetFactionName(1242), icon = "inv_misc_fish_58" },		-- "Pearlfin Jinyu" 
+			{ name = DataStore:GetFactionName(1270), icon = "achievement_faction_shadopan" },		-- "Shado-Pan" 
+			{ name = DataStore:GetFactionName(1435), icon = "achievement_faction_shadopan" },		-- "Shado-Pan Assault" 
+			{ name = DataStore:GetFactionName(1216), icon = "inv_misc_book_07" },		-- "Shang Xi's Academy" 
+			{ name = DataStore:GetFactionName(1388), icon = "achievement_faction_sunreaveronslaught" },		-- "Sunreaver Onslaught" 
+			{ name = DataStore:GetFactionName(1302), icon = "achievement_faction_anglers" },		-- "The Anglers" 
+			{ name = DataStore:GetFactionName(1341), icon = "achievement_faction_celestials" },		-- "The August Celestials" 
+			{ name = DataStore:GetFactionName(1359), icon = "inv_misc_head_dragon_black" },		-- "The Black Prince" 
+			{ name = DataStore:GetFactionName(1351), icon = "inv_cask_02" },		-- "The Brewmasters" 
+			{ name = DataStore:GetFactionName(1337), icon = "achievement_faction_klaxxi" },		-- "The Klaxxi" 
+			{ name = DataStore:GetFactionName(1345), icon = "achievement_faction_lorewalkers" },		-- "The Lorewalkers" 
+			{ name = DataStore:GetFactionName(1272), icon = "achievement_faction_tillers" },		-- "The Tillers" 
+			{ name = DataStore:GetFactionName(1492), icon = "ability_monk_quipunch" },		-- "Emperor Shaohao"
 		}
 	},
 	{	-- [6]
+		name = EXPANSION_NAME5,	-- "Warlords of Draenor"
+		{	-- [1]
+			name = FACTION_ALLIANCE,	-- 469
+			{ name = DataStore:GetFactionName(1710), icon = "inv_tabard_a_shataridefense" },		-- Sha'tari Defense
+			{ name = DataStore:GetFactionName(1682), icon = "inv_tabard_a_78wrynnvanguard" },	-- Wrynn's Vanguard
+		},
+		{	-- [2]
+			name = FACTION_HORDE,
+			{ name = DataStore:GetFactionName(1708), icon = "inv_tabard_a_80laughingskull" },	-- Laughing Skull Orcs
+			{ name = DataStore:GetFactionName(1681), icon = "inv_tabard_a_77voljinsspear" },		-- Vol'jin's Spear
+
+		},
+		{	-- [3]
+			name = OTHER,
+			{ name = DataStore:GetFactionName(1515), icon = "inv_tabard_a_76arakkoaoutcast" },		-- Arrakoa Outcasts
+			{ name = DataStore:GetFactionName(1731), icon = "inv_tabard_a_81exarchs" },		-- Council of Exarchs
+			{ name = DataStore:GetFactionName(1445), icon = "inv_tabard_a_01frostwolfclan" },		-- Frostwold Orcs
+			{ name = DataStore:GetFactionName(1711), icon = "achievement_goblinhead" },		-- Steamwheedle Preservation Society
+		},		
+	},	
+	{	-- [7]
 		name = GUILD,
 		{	-- [1]
 			name = GUILD,
@@ -252,6 +273,14 @@ local function BuildView()
 		end
 		
 		table.sort(view, function(a,b) 	-- sort all factions alphabetically
+			if not a.name then
+				DEFAULT_CHAT_FRAME:AddMessage(a.icon)
+			end
+			if not b.name then
+				DEFAULT_CHAT_FRAME:AddMessage(b.icon)
+			end
+			
+			
 			return a.name < b.name
 		end)
 	end
@@ -441,7 +470,7 @@ local callbacks = {
 			itemText:SetFontObject("GameFontNormalSmall")
 			itemText:SetJustifyH("CENTER")
 			itemText:SetPoint("BOTTOMRIGHT", 5, 0)
-			itemTexture:SetDesaturated(0)
+			itemTexture:SetDesaturated(false)
 			
 			local status, _, _, rate = DataStore:GetReputationInfo(character, faction.name)
 			if status and rate then 
@@ -449,7 +478,7 @@ local callbacks = {
 				if status == FACTION_STANDING_LABEL8 then
 					text = ICON_READY
 				else
-					itemTexture:SetDesaturated(1)
+					itemTexture:SetDesaturated(true)
 					itemText:SetFontObject("NumberFontNormalSmall")
 					itemText:SetJustifyH("RIGHT")
 					itemText:SetPoint("BOTTOMRIGHT", 0, 0)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Felmyst", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 531 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 543 $"):sub(12, -3))
 mod:SetCreatureID(25038)
 mod:SetModelID(22838)
 mod:SetZone()
@@ -65,12 +65,7 @@ function mod:EncapsulateTarget(targetname, uId)
 		specWarnEncaps:Show()
 		yellEncaps:Yell()
 	elseif uId then
-		local x, y = GetPlayerMapPosition(uId)
-		if x == 0 and y == 0 then
-			SetMapToCurrentZone()
-			x, y = GetPlayerMapPosition(uId)
-		end
-		local inRange = DBM.RangeCheck:GetDistance("player", x, y)
+		local inRange = DBM.RangeCheck:GetDistance("player", uId)
 		if inRange and inRange < 21 then
 			specWarnEncapsNear:Show(targetname)
 		end

@@ -1,10 +1,6 @@
 --[[
 	Auctioneer
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: CorePost.lua 5398 2013-03-27 19:22:01Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -1385,8 +1381,4 @@ private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Advanced/CorePost.lua $", "$Rev: 5398 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Advanced/CorePost.lua $", "$Rev: 5398 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Advanced/CorePost.lua $", "$Rev: 5398 $")

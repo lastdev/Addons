@@ -1,11 +1,7 @@
 ﻿--[[
 	Enchantrix Addon for World of Warcraft(tm).
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-	Revision: $Id: EnxUtil.lua 5339 2012-09-01 21:39:07Z ccox $
+	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Revision: $Id: EnxUtil.lua 5483 2014-10-06 00:05:15Z ccox $
 	URL: http://enchantrix.org/
 
 	General utility functions
@@ -32,11 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-<<<<<<< HEAD
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Enchantrix/EnxUtil.lua $", "$Rev: 5339 $")
-=======
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Enchantrix/EnxUtil.lua $", "$Rev: 5339 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Enchantrix/EnxUtil.lua $", "$Rev: 5483 $")
 
 -- Global functions
 local getItems
@@ -708,7 +700,7 @@ function createProfiler(name)
 end
 
 Enchantrix.Util = {
-	Revision			= "$Revision: 5339 $",
+	Revision			= "$Revision: 5483 $",
 
 	GetItems			= getItems,
 	GetItemType			= getItemType,
@@ -762,11 +754,13 @@ function Enchantrix.Util.DisenchantSkillRequiredForItemLevel(level, quality)
 	-- should we cache this in a table?
 
 	if (not level or not quality) then
-		--Enchantrix.Util.DebugPrintQuick( "nil level or quality", level, quality )
+		-- Enchantrix.Util.DebugPrintQuick( "nil level or quality", level, quality )		-- DEBUGGING
 		return 0
 	end
+
+-- TODO - ccox - WoD items?
 	
--- ccox - Panda items, this is partly guesswork
+-- ccox - Panda items
 	if (quality == 2 and level >= 340) then
 		-- all greens
 		return 475;					-- 384 - 460

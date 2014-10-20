@@ -203,7 +203,7 @@
 						GameTooltip:AddLine(self.tooltipText, nil, nil, nil, 1)
 						GameTooltip:Show()
 					else
-						GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, 1)
+						GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, true)
 					end
 				end
 			</OnEnter>
@@ -358,7 +358,7 @@
 							GameTooltip:SetText(title, 1, 1, 1)
 							GameTooltip:AddLine(self.tooltipText, nil, nil, nil, 1)
 						else
-							GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, 1);
+							GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, true);
 						end
 						GameTooltip:Show()
 					end
@@ -446,7 +446,7 @@
 						GameTooltip:SetText(title, 1, 1, 1)
 						GameTooltip:AddLine(self.tooltipText, nil, nil, nil, 1)
 					else
-						GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, 1);
+						GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, true);
 					end
 					GameTooltip:Show()
 				end
@@ -634,7 +634,11 @@
 			</OnLeave>
 			<OnClick>
 				if (self.configBase) then
-					XPerl_Options_SetIndex(self, self:GetChecked())
+					if self:GetChecked() then
+						XPerl_Options_SetIndex(self, 1)
+					else
+						XPerl_Options_SetIndex(self, nil)
+					end
 
 				elseif (type(self.configSelection) == "table") then
 					if (self.configIndex == nil) then
@@ -652,7 +656,11 @@
 						end
 
 						if (type(table) == "table") then
-							table[self.configIndex] = self:GetChecked()
+							if self:GetChecked() then
+								table[self.configIndex] = 1
+							else
+								table[self.configIndex] = nil
+							end
 						end
 					end
 				elseif (self.XconfigVar) then
@@ -712,7 +720,7 @@
 					tex:SetVertexColor(1, 1, 1)
 
 					if (ticked == 0) then
-						self:SetChecked(nil)
+						self:SetChecked(false)
 					elseif (ticked == vars) then
 						self:SetChecked(true)
 					else
@@ -780,7 +788,7 @@
 						GameTooltip:SetText(title, 1, 1, 1)
 						GameTooltip:AddLine(self.tooltipText, nil, nil, nil, 1)
 					else
-						GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, 1);
+						GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, true);
 					end
 					GameTooltip:Show()
 				end
@@ -1256,7 +1264,11 @@
 						self:SetChecked(XPerlDB.raid.class[self:GetID()].enable)
 					</OnShow>
 					<OnClick>
-						XPerlDB.raid.class[self:GetID()].enable = self:GetChecked()
+						if self:GetChecked() then
+							XPerlDB.raid.class[self:GetID()].enable = 1
+						else
+							XPerlDB.raid.class[self:GetID()].enable = nil
+						end
 						XPerl_Raid_ChangeAttributes()
 						XPerl_Raid_OptionActions()
 					</OnClick>
@@ -2232,7 +2244,7 @@
 							</OnShow>
 							<OnEnter>
 								GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -15, 0)
-								GameTooltip:SetText(XPERL_CONF_ANCHORMENU_DESC, nil, nil, nil, nil, 1)
+								GameTooltip:SetText(XPERL_CONF_ANCHORMENU_DESC, nil, nil, nil, nil, true)
 								_G[self:GetName().."Label"]:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
 							</OnEnter>
 							<OnLeave>
@@ -2364,7 +2376,7 @@
 							</OnShow>
 							<OnEnter>
 								GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -15, 0)
-								GameTooltip:SetText(XPERL_CONF_ANCHORMENU_DESC, nil, nil, nil, nil, 1)
+								GameTooltip:SetText(XPERL_CONF_ANCHORMENU_DESC, nil, nil, nil, nil, true)
 								_G[self:GetName().."Label"]:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
 							</OnEnter>
 							<OnLeave>
@@ -3534,16 +3546,16 @@
 									XPerl_Options_EnableSibling(self,"ExtraSparkles")
 
 									local _, class = UnitClass("player")
-									if (class ~= "DRUID" and class ~= "PRIEST" and class ~= "SHAMAN" and class ~= "MONK") then
-										XPerlDB.highlight.HOT = nil
+									if (class ~= "DRUID" and class ~= "PRIEST" and class ~= "SHAMAN" and class ~= "MONK" and class ~= "PALADIN") then
+										--XPerlDB.highlight.HOT = nil
 										XPerl_Options_EnableCheck(XPerl_Options_GetSibling("HighlightHoTs",self), false)
 									end
 									if (class ~= "PRIEST" and class ~= "SHAMAN" and class ~= "MAGE" and class ~= "PALADIN") then
-										XPerlDB.highlight.SHIELD = nil
+										--XPerlDB.highlight.SHIELD = nil
 										XPerl_Options_EnableCheck(XPerl_Options_GetSibling("HighlightShields",self), false)
 									end
 									if (class ~= "PRIEST") then
-										XPerlDB.highlight.POM = nil
+										--XPerlDB.highlight.POM = nil
 										XPerl_Options_EnableCheck(XPerl_Options_GetSibling("HighlightMending",self), false)
 									end
 								end
@@ -4528,7 +4540,7 @@
 							</OnShow>
 							<OnEnter>
 								GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -15, 0)
-								GameTooltip:SetText(XPERL_CONF_LOAD_SETTINGS_DESC, nil, nil, nil, nil, 1)
+								GameTooltip:SetText(XPERL_CONF_LOAD_SETTINGS_DESC, nil, nil, nil, nil, true)
 								_G[self:GetName().."Label"]:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b)
 							</OnEnter>
 							<OnLeave>
@@ -10844,7 +10856,7 @@
 										XPerl_Options_RegisterProtected(self)
 									</OnLoad>
 									<OnClick>
-										XPerl_Options_RaidSelectAll(self, 1)
+										XPerl_Options_RaidSelectAll(self, true)
 									</OnClick>
 								</Scripts>
 							</Button>
@@ -10864,7 +10876,7 @@
 										XPerl_Options_RegisterProtected(self)
 									</OnLoad>
 									<OnClick>
-										XPerl_Options_RaidSelectAll(self)
+										XPerl_Options_RaidSelectAll(self, false)
 									</OnClick>
 								</Scripts>
 							</Button>
@@ -11901,7 +11913,7 @@
 									</OnShow>
 									<OnClick>
 										XPerlDB.colour.classic = nil
-										_G[self:GetParent():GetName().."_ClassicHealth"]:SetChecked(0)
+										_G[self:GetParent():GetName().."_ClassicHealth"]:SetChecked(false)
 
 										XPerlLocked = 1
 										XPerl_ColourPicker.ParentFrame = XPerl_Options
@@ -11935,7 +11947,7 @@
 									</OnShow>
 									<OnClick>
 										XPerlDB.colour.classic = nil
-										_G[self:GetParent():GetName().."_ClassicHealth"]:SetChecked(0)
+										_G[self:GetParent():GetName().."_ClassicHealth"]:SetChecked(false)
 
 										XPerlLocked = 1
 										XPerl_ColourPicker.ParentFrame = XPerl_Options
@@ -13430,6 +13442,7 @@
 									XPerl_Options_EnableSibling(self, "Rogue")
 									XPerl_Options_EnableSibling(self, "Warrior")
 									XPerl_Options_EnableSibling(self, "DeathKnight")
+									XPerl_Options_EnableSibling(self, "Monk")
 									XPerl_Options_EnableSibling(self, "LowMana")
 									XPerl_Options_EnableSibling(self, "HighMana")
 									XPerl_Options_EnableSibling(self, "UnitWidth")
@@ -13655,12 +13668,33 @@
 						</Scripts>
 					</CheckButton>
 
+					<CheckButton name="$parent_Monk" inherits="XPerlCheckButtonTemplate">
+						<Size><AbsDimension x="26" y="26"/></Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parent_DeathKnight" relativePoint="BOTTOMLEFT">
+								<Offset><AbsDimension x="0" y="6"/></Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								XPerl_OptionsSetMyText(self, "XPERL_CONF_MONITOR_MONK")
+							</OnLoad>
+							<OnShow>
+								self:SetChecked(XPerlRaidMonConfig.classes.MONK)
+							</OnShow>
+							<OnClick>
+								XPerlRaidMonConfig.classes.MONK = not XPerlRaidMonConfig.classes.MONK
+								XPerl_RaidMonitor_Frame:Init()
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+
 					<Slider name="$parent_LowMana" inherits="XPerlSlider">
 						<Size>
 							<AbsDimension x="75" y="16"/>
 						</Size>
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="$parent_DeathKnight" relativePoint="BOTTOMLEFT">
+							<Anchor point="TOPLEFT" relativeTo="$parent_Monk" relativePoint="BOTTOMLEFT">
 								<Offset>
 									<AbsDimension x="0" y="-10"/>
 								</Offset>

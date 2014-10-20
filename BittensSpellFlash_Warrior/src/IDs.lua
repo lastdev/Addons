@@ -6,6 +6,7 @@ c.Init(a)
 
 a.SpellIDs = {
 	["Avatar"] = 107574,
+    ["Anger Management"] = 152278,
 	["Battle Shout"] = 6673,
 	["Battle Stance"] = 2457,
 	["Berserker Rage"] = 18499,
@@ -51,6 +52,7 @@ a.SpellIDs = {
 	["Spell Reflection"] = 23920,
 	["Storm Bolt"] = 107570,
 	["Sudden Execute"] = 139958,
+    ["Sudden Death"] = 52437,
 	["Sunder Armor"] = 7386,
 	["Sweeping Strikes"] = 12328,
 	["Sword and Board"] = 50227,
@@ -68,6 +70,8 @@ a.TalentIDs = {
 	["Impending Victory"] = 103840,
 	["Avatar"] = 107574,
 	["Bloodbath"] = 12292,
+	["Sudden Death"] = 29725,
+	["Unquenchable Thirst"] = 169683,
 }
 
 a.GlyphIDs = {

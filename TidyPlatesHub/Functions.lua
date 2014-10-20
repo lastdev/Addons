@@ -30,26 +30,6 @@ Index:
 
 --]]
 
---[[
-Each function file will need:
-1. Helper definitions
-2. LocalVar reference
-3. TIdyPlatesHub.table references
-4. Watcher/Init function reference
-5. Color References
-
-
-Core		- Helpers, Init, Basic Structure Defs
-Color
-Filter
-Opacity
-Scale
-Text
-Threat
-Widgets
-
---]]
-
 TidyPlatesHubFunctions = {}
 local LocalVars = TidyPlatesHubDefaults
 local InCombatLockdown = InCombatLockdown
@@ -209,7 +189,7 @@ end
 local function GetFriendlyClass(name)
 	local class = TidyPlatesUtility.GroupMembers.Class[name]
 
-	if (IsInInstance() == nil) and (not class) and LocalVars.AdvancedEnableUnitCache then
+	if (not IsInInstance()) and (not class) and LocalVars.AdvancedEnableUnitCache then
 		class = CachedUnitClass(name) end
 	return class
 end
@@ -342,14 +322,11 @@ local function SetStyleBinaryDelegate(unit)
 end
 
 
-<<<<<<< HEAD
-=======
 
 
 
 
 
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ------------------------------------------------------------------------------
 -- Health Bar Color
 ------------------------------------------------------------------------------
@@ -494,8 +471,6 @@ local function HealthColorDelegate(unit)
 		if LocalVars.ColorShowPartyAggro and LocalVars.ColorPartyAggroBar then
 			if GetAggroCondition(unit.rawName) then color = LocalVars.ColorPartyAggro end
 		end
-	elseif unit.reaction == "TAPPED" then
-		color = LocalVars.ColorTapped
 	end
 
 	-- Color Mode / Color Spotlight
@@ -732,13 +707,9 @@ local SemiWhiter = {r=1, g=1, b=1, a=.9}
 local SemiYellow = {r=1, g=1, b=.8, a=1}
 -- GoldColor, YellowColor
 local function NameColorDefault(unit)
-<<<<<<< HEAD
-	return White
-=======
 	if unit.isTarget then return White
 	elseif unit.isMouseover then return SemiWhiter
 	else return SemiWhite end
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end
 
 local NameColorFunctions = {
@@ -761,19 +732,12 @@ local NameColorFunctions = {
 
 local function SetNameColorDelegate(unit)
 	local color, colorMode
-	local alphaFade
-
-	if unit.isTarget or unit.isMouseover then alphaFade = 1
-	else alphaFade = .8 end
-
 
 	if unit.reaction == "FRIENDLY" then
 		-- Party Aggro Coloring -- Overrides the normal coloring
 		if LocalVars.ColorShowPartyAggro and LocalVars.ColorPartyAggroText then
 			if GetAggroCondition(unit.rawName) then color = LocalVars.ColorPartyAggro end
 		end
-	elseif unit.reaction == "TAPPED"  then
-		color = LocalVars.ColorTapped
 	end
 
 	if not color then
@@ -798,11 +762,9 @@ local function SetNameColorDelegate(unit)
 	end
 
 	if color then
-
-
 		--if unit.guid == nil then return (color.r+.1)/2, (color.g+.1)/2, (color.b+.1)/2, (color.a or 1) end
-		return color.r, color.g, color.b , ((color.a or 1) * alphaFade)
-	else return 1, 1, 1, 1 end
+		return color.r, color.g, color.b , (color.a or 1)
+	else return .2, .2, .2, 1 end
 end
 
 ------------------------------------------------------------------------------
@@ -825,7 +787,10 @@ end
 
 -- None
 local function HealthFunctionNone() return "" end
-
+-- Custom
+local function HealthFunctionCustom(unit)
+	if LocalVars.CustomHealthFunction then return LocalVars.CustomHealthFunction(unit) end
+end
 -- Percent
 local function TextHealthPercentColored(unit)
 	local color = ColorFunctionByHealth(unit)
@@ -845,12 +810,6 @@ end
 -- Approximate
 local function HealthFunctionApprox(unit)
 	return ShortenNumber(unit.health)
-end
--- Approximate
-local function HealthFunctionApproxAndPercent(unit)
-	return HealthFunctionApprox(unit).."  ("..ceil(100*(unit.health/unit.healthmax)).."%)"
-	-- local color = ColorFunctionByHealth(unit)
-	-- ceil(100*(unit.health/unit.healthmax)).."%", color.r, color.g, color.b, .7
 end
 --Deficit
 local function HealthFunctionDeficit(unit)
@@ -893,15 +852,13 @@ local function HealthFunctionArenaID(unit)
 
 	--arenaindex = 2	-- Tester
 	if unit.type == "PLAYER" then
-
 		if arenaindex and arenaindex > 0 then
 			arenastring = "|cffffcc00["..(tostring(arenaindex)).."]  |r"
 		end
 
 
 		if unit.isTarget then localid = "target"
-		elseif unit.isMouseover then localid = "mouseover"
-		end
+		elseif unit.isMouseover then localid = "mouseover" end
 
 
 		if localid then
@@ -909,6 +866,7 @@ local function HealthFunctionArenaID(unit)
 			local powerindex, powertype = UnitPowerType(localid)
 
 			--local powername = getglobal(powertype)
+
 
 			if power and power > 0 then
 				powerstring = "  "..power.."%"		--..powername
@@ -918,14 +876,6 @@ local function HealthFunctionArenaID(unit)
 	end
 
 	local healthstring = "|cffffffff"..tostring(ceil(unit.health/1000)).."k|cff0088ff"
-
---[[
--- Test Strings
-	powerstring = "  ".."43".."%"
-	--arenastring = "|cffffcc00["..(tostring(2)).."]  |r"
-	arenastring = "|cffffcc00#"..(tostring(2)).."  |r"
-	powercolor = PowerBarColor[2]
---]]
 
 	--	return '4'.."|r"..(powerstring or "")
 	return arenastring..healthstring..powerstring, powercolor.r, powercolor.g, powercolor.b, 1
@@ -941,119 +891,24 @@ local function HealthFunctionArenaID(unit)
 end
 
 
-local HealthTextModesCustom = {}
-
-
---[[
-local hexChars = {
-	"1",
-	"2",
-	"3",
-	"4",
-	"5",
-	"6",
-	"7",
-	"8",
-	"9",
-	"A",
-	"B",
-	"C",
-	"D",
-	"E",
-	"F",
-}
-
-
-local function intToHex(num)
-	--local sig, sep
-	--sig = fmod(num, 16)
-	sep = num - sig*16
-	return hexChars[sig]..hexChars[sep]
-end
-
---]]
-
-
--- Custom
-local function HealthFunctionCustom(unit)
-
-	local LeftText, RightText, CenterText = "", "", ""
-
-	--HealthTextModesCustom[LocalVars.StatusTextLeft]
-
-
-	return LeftText, RightText, CenterText
-	--if LocalVars.CustomHealthFunction then return LocalVars.CustomHealthFunction(unit) end
-
-	--HealthTextModesCustom(mode, addColor)
-
-	--[[
-	ColorFriendlyStatusTextMode
-	ColorFriendlyStatusTextModeCenter
-	ColorFriendlyStatusTextModeRight
-
-	ColorEnemyStatusTextMode
-	ColorEnemyStatusTextModeCenter
-	ColorEnemyStatusTextModeRight
-	--]]
-
-
-	--[[
-	StatusTextLeft = 8,
-	StatusTextCenter = 5,
-	StatusTextRight = 7,
-
-	StatusTextLeftColor = true,
-	StatusTextCenterColor = true,
-	StatusTextRightColor = true,
-
-
-	TidyPlatesHubModes.CustomTextModes = {
-				{ text = L("None") },
-				{ text = L("Percent Health")} ,
-				{ text = L("Exact health"),},
-				{ text = L("Health Deficit"),} ,
-				{ text = L("Rounded Health"),},
-				{ text = L("Target-of-Target"),},
-				{ text = L("Target Power"),},
-				{ text = L("Arena ID"),},
-				{ text = L("Level"),},
-	--]]
-end
 
 local HealthTextModeFunctions = {
 	HealthFunctionNone,
 	HealthFunctionPercent,
+	HealthFunctionExact,
 	HealthFunctionDeficit,
 	HealthFunctionTotal,
 	HealthFunctionTargetOf,
+	HealthFunctionApprox,
+	HealthFunctionLevel,
+	HealthFunctionLevelHealth,
+	-- -- TextFunctionMana,
 	HealthFunctionArenaID,
-	HealthFunctionCustom,
+	--HealthFunctionCustom,
 }
-
 
 local function HealthTextDelegate(unit)
 
-<<<<<<< HEAD
-	local func
-	local mode = 1
-	local showText = not (LocalVars.TextShowOnlyOnTargets or LocalVars.TextShowOnlyOnActive)
-
-	if unit.reaction == "FRIENDLY" then mode = LocalVars.ColorFriendlyStatusTextMode
-	else mode = LocalVars.ColorEnemyStatusTextMode end
-
-	func = HealthTextModeFunctions[mode] or DummyFunction
-
-	if LocalVars.TextShowOnlyOnTargets then
-		if (unit.isTarget or unit.isMouseover or unit.isMarked) then showText = true end
-	end
-
-	if LocalVars.TextShowOnlyOnActive then
-		if (unit.isMarked) or (unit.threatValue > 0) or (unit.health < unit.healthmax) then showText = true end
-	end
-
-	if showText then return func(unit) end
-=======
 	local mode = 1
 	if unit.reaction == "FRIENDLY" then mode = LocalVars.ColorFriendlyStatusTextMode
 	else mode = LocalVars.ColorEnemyStatusTextMode end
@@ -1061,7 +916,6 @@ local function HealthTextDelegate(unit)
 	local func = HealthTextModeFunctions[mode] or DummyFunction
 	if LocalVars.TextShowOnlyOnTargets and not (unit.isTarget or unit.isMouseover) then return end -- or unit.isMouseover
 	return func(unit)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end
 
 
@@ -1289,23 +1143,8 @@ local function ScaleDelegate(...)
 
 	if LocalVars.ScaleIgnoreNonEliteUnits and (not unit.isElite) then
 	elseif LocalVars.ScaleIgnoreNeutralUnits and unit.reaction == "NEUTRAL" then
-<<<<<<< HEAD
-	-- old
-	--elseif LocalVars.ScaleIgnoreInactive and not (unit.reaction == "FRIENDLY" and (unit.isInCombat or (unit.threatValue > 0) or (unit.health < unit.healthmax))) then
-
-	-- new
-	--elseif LocalVars.ScaleIgnoreInactive and not ((unit.reaction == "FRIENDLY" and (unit.isInCombat or unit.threatValue > 0)) or (unit.health < unit.healthmax)) then
-
-	-- unit.health < unit.healthmax					-- Damaged
-	-- (unit.isInCombat or unit.threatValue > 0)
-	elseif LocalVars.ScaleIgnoreInactive and not ( (unit.health < unit.healthmax) or (unit.isInCombat or unit.threatValue > 0) or (unit.isCasting == true) ) then
-
-
-	elseif LocalVars.ScaleCastingSpotlight and unit.reaction == "HOSTILE" and unit.isCasting then scale = LocalVars.ScaleSpotlight
-=======
 	elseif LocalVars.ScaleIgnoreInactive and not (unit.reaction == "FRIENDLY" and (unit.isInCombat or (unit.threatValue > 0) or (unit.health < unit.healthmax))) then
 	elseif LocalVars.ScaleCastingSpotlight and unit.isCasting then scale = LocalVars.ScaleSpotlight
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	elseif LocalVars.ScaleMiniMobs and unit.isMini then
 		scale = MiniMobScale
 	else
@@ -1369,7 +1208,7 @@ local function AlphaFunctionByActive(unit)
 	if (unit.health < unit.healthmax) or (unit.threatValue > 1) or unit.isInCombat or unit.isMarked then return LocalVars.OpacitySpotlight end
 end
 
-local function AlphaFunctionByActiveAuras(unit)
+local function AlphaFunctionByActiveDebuffs(unit)
 	local widget = unit.frame.widgets.DebuffWidget
 	--local widget = TidyPlatesWidgets.GetAuraWidgetByGUID(unit.guid)
 	if IsAuraShown(widget) then return LocalVars.OpacitySpotlight end
@@ -1393,30 +1232,9 @@ local function AlphaFunctionByThreat(unit)
 		else return AlphaFunctionByThreatHigh(unit) end
 end
 
-
-local function AlphaFunctionGroupMembers(unit)
-	local class = TidyPlatesUtility.GroupMembers.Class[unit.name]
-	if class then return LocalVars.OpacitySpotlight end
-end
-
-
-local function AlphaFunctionByPlayers(unit)
-	if unit.type == "PLAYER" then return LocalVars.OpacitySpotlight end
-end
-
-
-local AlphaFunctionsEnemy = { 	DummyFunction,
-	AlphaFunctionByThreat, AlphaFunctionByLowHealth,
-	AlphaFunctionByNPC, AlphaFunctionByActiveAuras,
-	AlphaFunctionByEnemyHealer, AlphaFunctionByActive,
-}
-
-local AlphaFunctionsFriendly = {DummyFunction,
-	AlphaFunctionByLowHealth, AlphaFunctionGroupMembers,
-	AlphaFunctionByPlayers,  AlphaFunctionByActive,
-}
-
-
+local AlphaFunctionsUniversal = { DummyFunction, AlphaFunctionByThreat, AlphaFunctionByActiveDebuffs,
+	AlphaFunctionByEnemy, AlphaFunctionByNPC, AlphaFunctionByRaidIcon, AlphaFunctionByActive,
+	AlphaFunctionByEnemyHealer, AlphaFunctionByLowHealth}
 
 -- Alpha Functions Listed by Role order: Damage, Tank, Heal
 local AlphaFunctions = {AlphaFunctionsDamage, AlphaFunctionsTank}
@@ -1437,23 +1255,14 @@ local function AlphaDelegate(...)
 	end
 
 	if unit.isTarget then return Diminish(LocalVars.OpacityTarget)
-	elseif unit.isCasting and unit.reaction == "HOSTILE" and LocalVars.OpacitySpotlightSpell then alpha = LocalVars.OpacitySpotlight
-	elseif unit.isMouseover and LocalVars.OpacitySpotlightMouseover then alpha = LocalVars.OpacitySpotlight
-	elseif unit.isMarked and LocalVars.OpacitySpotlightRaidMarked then alpha = LocalVars.OpacitySpotlight
-
+	elseif unit.isCasting and LocalVars.OpacityFullSpell then return Diminish(LocalVars.OpacityTarget)
+	elseif unit.isMouseover and LocalVars.OpacityFullMouseover then return Diminish(LocalVars.OpacityTarget)
 	else
 		-- Filter
 		if UnitFilter(unit) then alpha = LocalVars.OpacityFiltered
 		-- Spotlight
 		else
-			local func = DummyFunction
-
-			if unit.reaction == "FRIENDLY" then
-				func = AlphaFunctionsFriendly[LocalVars.FriendlyAlphaSpotlightMode] or func
-			else
-				func = AlphaFunctionsEnemy[LocalVars.EnemyAlphaSpotlightMode] or func
-			end
-
+			local func = AlphaFunctionsUniversal[LocalVars.OpacitySpotlightMode] or DummyFunction
 			alpha = func(...)
 		end
 	end
@@ -1516,11 +1325,6 @@ TidyPlatesHubPrefixList = {
 	["CC"] = 4,
 	["cc"] = 4,
 	["Cc"] = 4,
-
-	-- NOT
-	["NOT"] = 5,
-	["Not"] = 5,
-	["not"] = 5,
 }
 
 --[[
@@ -1601,44 +1405,7 @@ local DebuffPrefixModes = {
 		--return true, .5, .4, 0
 		return true, 1, 1, 0
 	end,
-	-- NOT
-	function(aura)
-		return false
-	end
 }
-
--- [[
-local function SmartFilterMode(aura)
-	local ShowThisAura = false
-	local AuraPriority = 20
-
-	-- My own Buffs and Debuffs
-	if aura.caster == UnitGUID("player") and (aura.duration and aura.duration < 150) then
-		if LocalVars.WidgetsMyBuff and aura.type == AURA_TYPE_BUFF then
-			ShowThisAura = true
-		elseif LocalVars.WidgetsMyDebuff and aura.type ~= AURA_TYPE_BUFF then
-			ShowThisAura = true
-		end
-	end
-
-	-- Evaluate for further filtering
-	local prefix, priority = GetPrefixPriority(aura)
-	-- If the aura is mentioned in the list, evaluate the instruction...
-	if prefix then
-		local show = DebuffPrefixModes[prefix](aura)
-		if show == true then
-			return true, 20 + (priority or 0), r, g, b
-		else
-			return false
-		end
-	--- When no prefix is mentioned, return the aura.
-	else
-		return ShowThisAura, 20, r, g, b
-	end
-
-end
---]]
-
 
 local DebuffFilterModes = {
 	-- My Debuffs
@@ -1658,8 +1425,6 @@ local DebuffFilterModes = {
 		end
 
 	end,
-	-- Smart Filter
-	--SmartFilterMode,
 }
 
 --[[
@@ -1688,30 +1453,6 @@ Auras 4.0
 
 
 
-
---]]
-
-
---[[
-Auras 3.0
-
-	My Debuffs
-	My Buffs
-	Smart Search
-	Custom
-
-	Smart Search
-
-	My Debuffs + Any buffs added to the list, or blacklisted
-	My Buffs + Any debuffs added to the list, or blacklisted
-	Smart Search = Debuffs on Enemies, Buffs on Friendlies, + List
-
-
-Auras 4.0
-
-	CC Database
-	Cooldown Counter
-	Ability Counter
 
 --]]
 
@@ -1742,20 +1483,17 @@ local function TrackDispelType(auratype)
 	end
 end
 
-
-
-
 local function DebuffFilter(aura)
 	if LocalVars.WidgetAuraTrackDispelFriendly and aura.reaction == AURA_TARGET_FRIENDLY then
+		--if (aura.type ~= 1)  then print("Debuff Filter", aura.name, aura.type) end
 		if TrackDispelType(AURA_TYPE[aura.type]) then
 		local r, g, b = GetAuraColor(aura)
 		return true, 10, r, g, b end
 	end
 
 	-- Filter Mode
-	--local func = DebuffFilterModes[LocalVars.WidgetsAuraMode] or DummyFunction
-	--return func(aura)
-	return SmartFilterMode(aura)
+	local func = DebuffFilterModes[LocalVars.WidgetsAuraMode] or DummyFunction
+	return func(aura)
 end
 
 
@@ -1764,27 +1502,9 @@ local function Prefilter(spellid, spellname, auratype, auratargetreaction)
 	-- Store debuffs on friendly units.
 	if (auratargetreaction == AURA_TARGET_FRIENDLY) and (AURA_TYPE[auratype] ~= AURA_TYPE_BUFF) then return true end
 	-- Store auras marked in lookup
-<<<<<<< HEAD
 	return ((LocalVars.WidgetsDebuffLookup[tostring(spellid)] or LocalVars.WidgetsDebuffLookup[spellname]) ~= nil)
 end
 
---[[
-local function BasicPrefilter(spellid, spellname, auratype, auratargetreaction)
-	-- Store debuffs on friendly units.
-	if (auratargetreaction == AURA_TARGET_FRIENDLY) and (AURA_TYPE[auratype] ~= AURA_TYPE_BUFF) then return true end
-	-- Store auras marked in lookup
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-	return ((LocalVars.WidgetsDebuffLookup[tostring(spellid)] or LocalVars.WidgetsDebuffLookup[spellname]) ~= nil)
-end
-
-local function SmartPrefilter(spellid, spellname, auratype, auratargetreaction)
-	-- Store debuffs on friendly units.
-	if (auratargetreaction == AURA_TARGET_FRIENDLY) and (AURA_TYPE[auratype] ~= AURA_TYPE_BUFF) then return true end
-	-- Store auras marked in lookup
-	return ((LocalVars.WidgetsDebuffLookup[tostring(spellid)] or LocalVars.WidgetsDebuffLookup[spellname]) ~= nil)
-end
---]]
 
 
 ---------------------------------------------------------------------------------------------------------
@@ -1969,8 +1689,7 @@ local function EnableWatchers()
 
 	-- Healer Tracker
 	if (ScaleFunctionsUniversal[LocalVars.ScaleSpotlightMode] == ScaleFunctionByEnemyHealer) or
-		AlphaFunctionsFriendly[LocalVars.FriendlySpotlightMode] == AlphaFunctionByEnemyHealer or
-		AlphaFunctionsEnemy[LocalVars.EnemySpotlightMode] == AlphaFunctionByEnemyHealer or
+		AlphaFunctionsUniversal[LocalVars.OpacitySpotlightMode] == AlphaFunctionByEnemyHealer or
 		WarningBorderFunctionsUniversal[LocalVars.ColorDangerGlowMode] ~= DummyFunction then
 			TidyPlatesUtility:EnableHealerTrack()
 	else
@@ -1987,12 +1706,7 @@ local function EnableWatchers()
 		ThreatFunctionList[NameColorFunctions[LocalVars.ColorEnemyNameMode]] or
 		ThreatFunctionList[FriendlyBarFunctions[LocalVars.ColorFriendlyBarMode]] or
 		ThreatFunctionList[NameColorFunctions[LocalVars.ColorFriendlyNameMode]] or
-<<<<<<< HEAD
-		ThreatFunctionList[AlphaFunctionsEnemy[LocalVars.EnemyAlphaSpotlightMode]] or
-		ThreatFunctionList[AlphaFunctionsFriendly[LocalVars.FriendlyAlphaSpotlightMode]] or
-=======
 		ThreatFunctionList[AlphaFunctionsUniversal[LocalVars.OpacitySpotlightMode]] or
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		ThreatFunctionList[ScaleFunctionsUniversal[LocalVars.ScaleSpotlightMode]] or
 		ThreatFunctionList[NameColorFunctions[LocalVars.HeadlineEnemyColor]] or
 		ThreatFunctionList[NameColorFunctions[LocalVars.HeadlineFriendlyColor]]
@@ -2059,25 +1773,18 @@ local blizzfont =				STANDARD_TEXT_FONT;
 
 local function ApplyFontCustomization(style)
 	if not style then return end
-
-	-- Store Original Fonts
-	style.name.oldfont = style.name.oldfont or style.name.typeface
-	style.level.oldfont = style.level.oldfont or style.level.typeface
-	style.customtext.oldfont = style.customtext.oldfont or style.customtext.typeface
-	style.spelltext.oldfont = style.spelltext.oldfont or style.spelltext.typeface
-
-	-- Apply Font
 	if LocalVars.TextUseBlizzardFont then
+		style.oldfont = style.name.typeface
 		style.name.typeface = blizzfont
 		style.level.typeface = blizzfont
 		style.customtext.typeface = blizzfont
 		style.spelltext.typeface = blizzfont
 	else
-		--local typeface = style.oldfont or style.name.typeface
-		style.name.typeface =  style.name.oldfont or style.name.typeface
-		style.level.typeface =  style.level.oldfont or style.level.typeface
-		style.customtext.typeface =  style.customtext.oldfont or style.customtext.typeface
-		style.spelltext.typeface =  style.spelltext.oldfont or style.spelltext.typeface
+		local typeface = style.oldfont or style.name.typeface
+		style.name.typeface =  typeface
+		style.level.typeface =  typeface
+		style.customtext.typeface =  typeface
+		style.spelltext.typeface =  typeface
 	end
 	style.frame.y = ((LocalVars.FrameVerticalPosition-.5)*50)-16
 end
@@ -2107,9 +1814,6 @@ local function ApplyThemeCustomization(theme)
 	EnableWatchers()
 	ApplyStyleCustomization(theme["Default"])
 	ApplyFontCustomization(theme["NameOnly"])
-
-	--ApplyUserProgram(theme["Default"], theme["NameOnly"])
-
 	TidyPlates:ForceUpdate()
 	RaidClassColors = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS
 end
@@ -2150,44 +1854,3 @@ end
 
 SLASH_HUB1 = '/hub'
 SlashCmdList['HUB'] = ShowCurrentHubPanel
-
-local function fromCSV (s)
-  s = s .. ','        -- ending comma
-  local t = {}        -- table to collect fields
-  local fieldstart = 1
-  repeat
-    -- next field is quoted? (start with `"'?)
-    if string.find(s, '^"', fieldstart) then
-      local a, c
-      local i  = fieldstart
-      repeat
-        -- find closing quote
-        a, i, c = string.find(s, '"("?)', i+1)
-      until c ~= '"'    -- quote not followed by quote?
-      if not i then error('unmatched "') end
-      local f = string.sub(s, fieldstart+1, i-1)
-      table.insert(t, (string.gsub(f, '""', '"')))
-      fieldstart = string.find(s, ',', i) + 1
-    else                -- unquoted; find next comma
-      local nexti = string.find(s, ',', fieldstart)
-      table.insert(t, string.sub(s, fieldstart, nexti-1))
-      fieldstart = nexti + 1
-    end
-  until fieldstart > string.len(s)
-  return t
-end
---[[
-local function EvaluateExpression(expression)
-	print(expression)
-	-- /eval oh blah, dee, oh , blah ,do
-	local t = fromCSV(expression)
-	for i,v in pairs(t) do
-		print(i,v)
-	end
-
-end
-
-
-SLASH_EVAL1 = '/eval'
-SlashCmdList['EVAL'] = EvaluateExpression
---]]

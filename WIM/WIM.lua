@@ -20,12 +20,9 @@ debug = false; -- turn debugging on and off.
 useProtocol2 = true; -- test switch for new W2W Protocol. (Dev use only)
 
 -- is Private Server?
-isPrivateServer = not (string.match(_G.GetCVar("realmList"), "worldofwarcraft.com$")
+--[[isPrivateServer = not (string.match(_G.GetCVar("realmList"), "worldofwarcraft.com$")
                         or string.match(_G.GetCVar("realmList"), "battle.net$")
-                        or string.match(_G.GetCVar("realmListbn"), "battle.net$")) and true or false;
-
--- is US or EU server?
-isUS = _G.GetCVar("realmList"):sub(1,2) == "us" and true or false;
+                        or string.match(_G.GetCVar("realmListbn"), "battle.net$")) and true or false;--]]
 
 constants = {}; -- constants such as class colors will be stored here. (includes female class names).
 modules = {}; -- module table. consists of all registerd WIM modules/plugins/skins. (treated the same).
@@ -86,7 +83,6 @@ local function initialize()
         
     -- import libraries.
     libs.WhoLib = _G.LibStub:GetLibrary("LibWho-2.0");
-   -- libs.Astrolabe = _G.DongleStub("Astrolabe-0.4");
     libs.SML = _G.LibStub:GetLibrary("LibSharedMedia-3.0");
     libs.ChatHandler = _G.LibStub:GetLibrary("LibChatHandler-1.0");
     
@@ -160,7 +156,7 @@ local function onEnable()
 --    DisplayTutorial(L["WIM (WoW Instant Messenger)"], L["WIM is currently running. To access WIM's wide array of options type:"].." |cff69ccf0/wim|r");
     dPrint("WIM is now enabled.");
     
-    --Private Server Check
+--[[    --Private Server Check
     if(isPrivateServer and not db.alertedPrivateServer) then
       _G.StaticPopupDialogs["WIM_PRIVATE_SERVER"] = {
       	preferredIndex = STATICPOPUP_NUMDIALOGS,
@@ -176,7 +172,7 @@ local function onEnable()
         hideOnEscape = 1
       };        
       _G.StaticPopup_Show ("WIM_PRIVATE_SERVER", theLink);
-    end
+    end--]]
 end
 
 -- called when WIM is disabled.

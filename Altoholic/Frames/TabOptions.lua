@@ -124,28 +124,26 @@ local support = {
 
 -- this content will be subject to frequent changes, do not bother translating it !!
 local whatsnew = {
-<<<<<<< HEAD
+	{	name = "6.0.001 Changes",
+		bulletedList = {
+			"Added a pane in the Grids tab to track LFR lockouts across alts.",
+			"Added support for the new void storage tab + reagent bank.",
+			"Updated achievement lists.",
+			"Updated tradeskills data (Grids tab)",
+			"Fixed WoD related issues.",
+			"DataStore_Reputations: fixed WoD compatibility.",
+			"DataStore_Reputations: LibBabble-Factions is back.",
+			"DataStore_Talents: talents & glyph scanning is temporarily fully disabled. UI is still missing too, sorry about that.",
+			"DataStore_Quests: fixed WoD compatibility.",
+			"DataStore_Containers: Added support for the new void storage tab.",
+			"DataStore_Containers: Added support for the new reagent bank.",
+			"LibCraftInfo: updated for WoD.",
+			"LibCraftLevels: updated for WoD.",
+			"LibCraftReagent: updated for WoD.",
+			"Currencies pane: removed unrequired tooltip.",
+		},
+	},
 	{	name = "5.4.009 Changes",
-=======
-	{	name = "5.4.003 Changes",
-		bulletedList = {
-			"Created and added support for 3 new libraries : LibCraftInfo, LibCraftLevels, LibCraftReagents.",
-			"These libraries intend to replace the lost functionality caused by tables reset to zero in LibPeriodicTable.",
-			"I now have my own dataminer, so these tables should be easier to maintain when a patch hits.",
-			"I also cleaned up some hard coded tables to now use the libraries instead.",
-			"Overall, the addon now consumes a little bit more memory, but the data sources are way more complete than before.",
-			"Replaced the internal list of recipes by LibCraftInfo.",
-			"Fixed the Characters -> Profession pane no longer showing reagents due to LPT changes.",
-			"Fixed the Grids -> Tradeskills pane no longer correct due to LPT changes.",
-		},
-	},
-	{	name = "5.4.002 Changes",
-		bulletedList = {
-			"Fixed profession levels reported as 0.",
-		},
-	},
-	{	name = "5.4.001 Changes",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 		bulletedList = {
 			"Uncommented the code that actually deletes linked realms.",
 			"DataStore_Crafts: reworked the processing of events that actually trigger profession scanning.",
@@ -170,35 +168,6 @@ local whatsnew = {
 			"Added an option to remember the tradeskills filter across sessions. (Grids -> Tradeskills).",
 			"Added an option to remember the archaeology filter across sessions. (Grids -> Archaeology).",
 			"Item counts for guilds on merged realms should now be visible too (sorry can't test this myself).",
-		},
-	},
-	{	name = "5.4.007 Changes",
-		bulletedList = {
-			"Added missing faction 'Emperor Shaohao'.",
-			"Altoholic: removed LibBabble-Faction",
-			"DataStore_Reputations: removed LibBabble-Faction.",
-			"Fixed lua error when using the search function.",
-		},
-	},
-	{	name = "5.4.006 Changes",
-		bulletedList = {
-			"Fixed double item counts in the tooltip.",
-			"Improved the search functionality to be less restrictive.",
-		},
-	},
-	{	name = "5.4.005 Changes",
-		bulletedList = {
-			"Fixed bugs related to full names (name+realm) in the Guild tab.",
-			"Added a pane in the account summary to show the PVE & PVP currencies.",
-			"Added tooltip support for connected realms.",
-			"Added an option to show/hide item count from connected realms.",
-			"Added support for mails sent to/returned from alts on connected realms. ",
-		},
-	},
-	{	name = "5.4.004 Changes",
-		bulletedList = {
-			"Fixed showing the item source for crafts in the tooltip.",
-			"Fixed LibCraftInfo.",
 		},
 	},
 	{	name = "Earlier changes",

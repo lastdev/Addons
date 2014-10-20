@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Zandalari", "DBM-Pandaria")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11576 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(69768, 69769, 69841, 69842)
 mod:SetZone()
 mod:DisableWBEngageSync()

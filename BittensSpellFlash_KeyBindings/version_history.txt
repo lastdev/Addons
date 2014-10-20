@@ -1,0 +1,36 @@
+== Version 60000.1.0
+* Making the "Out of Date" status go away.
+
+== Version 50400.1.1
+* Fix for a Lua error when running on a toon without SpellFlash.
+
+== Version 50400.1.0
+* Making the "Out of Date" status go away.
+
+== Version 2.2.0
+* Added a keybinding for Damage Mode (used for tanks).
+
+== Version 2.1.1
+* Making the "Out of Date" status go away.
+
+== Version 2.1.0
+* Added a check box to toggle default Blizzard proc highlight animations.
+* Removed the (unused) toggle for "Misc" debug tags.
+
+== Version 2.0.0
+* Now includes an options screen to turn on/off debugging output of specific tags.
+
+== Version 1.0.4
+* Making the "Out of Date" status go away.
+
+== Version 1.0.3
+* Updating to the newest version of Bitten's SpellFlash Library.
+
+== Version 1.0.2
+* Bear with me - I'm learning this new packaging system.  I think this time the debug output should be removed.
+
+== Verison 1.0.1
+* No change, just releasing from beta.
+
+== Version 1.0.0 beta
+* Initial Release

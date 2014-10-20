@@ -18,7 +18,7 @@ local MAJOR = "LibToast-1.0"
 
 _G.assert(LibStub, MAJOR .. " requires LibStub")
 
-local MINOR = 7 -- Should be manually increased
+local MINOR = 8 -- Should be manually increased
 local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not lib then
@@ -67,7 +67,7 @@ local DEFAULT_TOAST_HEIGHT = 50
 local DEFAULT_ICON_SIZE = 30
 
 local DEFAULT_TOAST_BACKDROP = {
-    bgFile = [[Interface\CHATFRAME\CHATFRAMEBACKGROUND]],
+    bgFile = [[Interface\FriendsFrame\UI-Toast-Background]],
     edgeFile = [[Interface\FriendsFrame\UI-Toast-Border]],
     tile = true,
     tileSize = 12,
@@ -167,7 +167,7 @@ end
 -- Settings functions.
 -----------------------------------------------------------------------
 local function ToastSpawnPoint()
-    return _G.Toaster and _G.Toaster:SpawnPoint() or "BOTTOMRIGHT"
+    return _G.Toaster and _G.Toaster:SpawnPoint() or (_G.IsMacClient() and "TOPRIGHT" or "BOTTOMRIGHT")
 end
 
 local function ToastTitleColors(urgency)
@@ -364,8 +364,7 @@ local function _acquireToast()
         focus:SetScript("OnShow", _hideDismissButton)
 
         local dismiss_button = _G.CreateFrame("Button", nil, toast)
-        dismiss_button:SetWidth(18)
-        dismiss_button:SetHeight(18)
+        dismiss_button:SetSize(18, 18)
         dismiss_button:SetPoint("TOPRIGHT", toast, "TOPRIGHT", -4, -4)
         dismiss_button:SetFrameStrata("DIALOG")
         dismiss_button:SetFrameLevel(toast:GetFrameLevel() + 2)
@@ -623,6 +622,10 @@ end
 
 function toast_proxy:SetFormattedText(text, ...)
     current_toast.text:SetFormattedText(text, ...)
+end
+
+function toast_proxy:SetIconAtlas(...)
+    current_toast.icon:SetAtlas(...)
 end
 
 function toast_proxy:SetIconTexture(texture)

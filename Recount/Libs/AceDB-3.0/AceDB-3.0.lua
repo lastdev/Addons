@@ -39,13 +39,8 @@
 -- end
 -- @class file
 -- @name AceDB-3.0.lua
-<<<<<<< HEAD
--- @release $Id: AceDB-3.0.lua 1111 2014-07-19 20:01:42Z kaelten $
-local ACEDB_MAJOR, ACEDB_MINOR = "AceDB-3.0", 24
-=======
--- @release $Id: AceDB-3.0.lua 1096 2013-09-13 15:05:40Z nevcairiel $
-local ACEDB_MAJOR, ACEDB_MINOR = "AceDB-3.0", 23
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+-- @release $Id: AceDB-3.0.lua 1123 2014-10-14 19:48:04Z nevcairiel $
+local ACEDB_MAJOR, ACEDB_MINOR = "AceDB-3.0", 25
 local AceDB, oldminor = LibStub:NewLibrary(ACEDB_MAJOR, ACEDB_MINOR)
 
 if not AceDB then return end -- No upgrade needed
@@ -267,7 +262,8 @@ local factionKey = UnitFactionGroup("player")
 local factionrealmKey = factionKey .. " - " .. realmKey
 local localeKey = GetLocale():lower()
 
-local regionKey = GetCVar("portal") == "public-test" and "PTR" or GetCVar("portal")
+local regionTable = { "US", "KR", "EU", "TW", "CN" }
+local regionKey = _G["GetCurrentRegion"] and regionTable[GetCurrentRegion()] or string.sub(GetCVar("realmList"), 1, 2):upper()
 local factionrealmregionKey = factionrealmKey .. " - " .. regionKey
 
 -- Actual database initialization function
@@ -307,7 +303,7 @@ local function initdb(sv, defaults, defaultProfile, olddb, parent)
 		["factionrealm"] = factionrealmKey,
 		["factionrealmregion"] = factionrealmregionKey,
 		["profile"] = profileKey,
-        ["locale"] = localeKey,
+		["locale"] = localeKey,
 		["global"] = true,
 		["profiles"] = true,
 	}

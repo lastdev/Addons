@@ -6,7 +6,7 @@
 -- Constants
 -------------------------------------------------------------------------------
 
-local VERSION = "5.4.32"
+local VERSION = "6.0.34"
 
 -------------------------------------------------------------------------------
 -- Variables
@@ -121,6 +121,8 @@ function FloTotemBar_OnLoad(self)
 	self:RegisterEvent("SPELL_UPDATE_COOLDOWN");
 	self:RegisterEvent("ACTIONBAR_UPDATE_USABLE");
 	self:RegisterEvent("UPDATE_BINDINGS");
+	self:RegisterEvent("GLYPH_ADDED");
+	self:RegisterEvent("GLYPH_REMOVED");
 
 	if self.totemtype ~= "CALL" then
 		self:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player");
@@ -138,7 +140,7 @@ end
 
 function FloTotemBar_OnEvent(self, event, arg1, ...)
 
-	if event == "PLAYER_ENTERING_WORLD" or event == "LEARNED_SPELL_IN_TAB" or event == "PLAYER_ALIVE" or event == "PLAYER_LEVEL_UP" or event == "CHARACTER_POINTS_CHANGED" then
+	if event == "PLAYER_ENTERING_WORLD" or event == "LEARNED_SPELL_IN_TAB" or event == "PLAYER_ALIVE" or event == "PLAYER_LEVEL_UP" or event == "CHARACTER_POINTS_CHANGED" or event == "GLYPH_ADDED" or event == "GLYPH_REMOVED" then
 		if not changingSpec then
 			FloLib_Setup(self);
 
@@ -415,7 +417,7 @@ function FloTotemBar_CheckTrapLife(self, timestamp, spellIdx, event, hideCaster,
 	local spell = self.spells[spellIdx];
 	local name = string.upper(spell.name);
 
-	if strsub(event, 1, 5) == "SPELL" and event ~= "SPELL_CAST_SUCCESS" and event ~= "SPELL_CREATE" and string.find(string.upper(spellName), name, 1, true) then
+	if event ~= nil and strsub(event, 1, 5) == "SPELL" and event ~= "SPELL_CAST_SUCCESS" and event ~= "SPELL_CREATE" and string.find(string.upper(spellName), name, 1, true) then
 		if CombatLog_Object_IsA(sourceFlags, COMBATLOG_FILTER_MINE) then
 			FloTotemBar_ResetTimer(self, spell.school);
 		else
@@ -435,7 +437,7 @@ function FloTotemBar_CheckTrap2Life(self, timestamp, spellIdx, event, hideCaster
 		COMBATLOG_OBJECT_TYPE_GUARDIAN
 		);
 
-	if strsub(event, 1, 5) == "SWING" and CombatLog_Object_IsA(sourceFlags, COMBATLOG_FILTER_MY_GUARDIAN) then
+	if event ~= nil and strsub(event, 1, 5) == "SWING" and CombatLog_Object_IsA(sourceFlags, COMBATLOG_FILTER_MY_GUARDIAN) then
 		FloTotemBar_ResetTimer(self, spell.school);
 	end
 end
@@ -455,8 +457,18 @@ end
 
 function FloTotemBar_SetupSpell(self, spell, pos)
 
-	local duration;
-	local algo;
+	local duration, algo, school, glyphed, spellName, spellTexture;
+
+        if spell.glyph and FloLib_IsGlyphActive(spell.glyph) then
+                school = spell.glyphedSchool;
+                glyphed = spell.glyphed;
+                spellName = spell.glyphedName;
+                spellTexture = spell.glyphedTexture;
+        else
+                school = spell.school;
+                spellName = spell.name;
+                spellTexture = spell.texture;
+        end
 
 	-- Avoid tainting
 	if not InCombatLockdown() then
@@ -466,25 +478,19 @@ function FloTotemBar_SetupSpell(self, spell, pos)
 		icon = _G[name.."Button"..pos.."Icon"];
 
 		button:SetAttribute("type", "spell");
-		button:SetAttribute("type2", "spell");
 		button:SetAttribute("spell", spell.name);
 
-		if spell.id2 then
-			button:SetAttribute("type2", "spell");
-			button:SetAttribute("spell2", spell.name2.."("..spell.addName2..")");
-		end
-
-		icon:SetTexture(spell.texture);
+		icon:SetTexture(spellTexture);
 	end
 
 	if FLO_CLASS_NAME == "SHAMAN" then
 		algo = FloTotemBar_UpdateTotem;
 	elseif FLO_CLASS_NAME == "HUNTER" then
 		duration = spell.duration or 60;
-		algo = ALGO_TRAP[spell.school];
+		algo = ALGO_TRAP[school];
 	end
 
-	self.spells[pos] = { id = spell.id, name = spell.name, addName = spell.addName, duration = duration, algo = algo, school = spell.school, talented = spell.talented };
+	self.spells[pos] = { id = spell.id, name = spellName, addName = spell.addName, duration = duration, algo = algo, school = school, talented = spell.talented, glyphed = glyphed };
 
 end
 
@@ -544,12 +550,14 @@ function FloTotemBar_UpdatePosition(self)
 		end
 
 		if FLO_CLASS_NAME == "HUNTER" then
-			self:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", 256/ACTIVE_OPTIONS.scale, (yOffset + yOffset2)/ACTIVE_OPTIONS.scale);
-		elseif FLO_CLASS_NAME == "PALADIN" then
-			self:SetPoint("LEFT", ShapeshiftBarFrame, "LEFT", 225, 2);
+                        if FloAspectBar ~= nil then
+                                self:SetPoint("LEFT", FloAspectBar, "RIGHT", 10/ACTIVE_OPTIONS.scale, 0);
+                        else
+			        self:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", 512/ACTIVE_OPTIONS.scale, (yOffset + yOffset2)/ACTIVE_OPTIONS.scale);
+                        end
 		else
 			local finalOffset = layout.offset * self:GetHeight();
-			self:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", FloBarCALL:GetWidth() + 18, (yOffset + yOffset1)/ACTIVE_OPTIONS.scale + finalOffset);
+			self:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", FloBarCALL:GetWidth() + 464, (yOffset + yOffset1)/ACTIVE_OPTIONS.scale + finalOffset);
 		end
 
 	elseif FLO_CLASS_NAME == "SHAMAN" then
@@ -801,9 +809,9 @@ function FloTotemBar_OnUpdate(self)
 		end
 
 		if isActive then
-			button:SetChecked(1);
+			button:SetChecked(true);
 		else
-			button:SetChecked(0);
+			button:SetChecked(false);
 		end
 	end
 end

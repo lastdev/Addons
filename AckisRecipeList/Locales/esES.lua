@@ -6,11 +6,7 @@ esES localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-<<<<<<< HEAD
-Project version: 3.0.5
-=======
-Project version: 2.6.2
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+Project version: 3.0.8
 ************************************************************************
 Original translated by: StiviS
 Currently maintained by:
@@ -212,11 +208,6 @@ L["Bryan Landers"] = true
 L["Brynna Wilson"] = true
 L["Buckslappy"] = "Bofetín"
 L["Bufo"] = "Buffo"
-<<<<<<< HEAD
-=======
-L["BUGGED"] = [=[BUGEADO
-ESTA RECETA ESTA ACTUALMENTE BUGEADA EN LA ULTIMA COMPILACION DE LOS SERVIDORES DE JUEGO]=]
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Burbik Gearspanner"] = "Burbik Trazagranaje"
 L["Burko"] = true
 L["Burning Berserker"] = "Rabioso ardiente"
@@ -233,6 +224,7 @@ L["Casandra Downs"] = true
 L["Catarina Stanford"] = true
 L["Catherine Leland"] = true
 L["Cauldron"] = "Caldera"
+L["Caz Twosprocket"] = "Caz Dosdientes"
 L["Celie Steelwing"] = "Celie Alacerada"
 L["Chapman"] = "Buhonero"
 L["Charles Worth"] = "Charles Valor"
@@ -279,6 +271,7 @@ L["Corporal Bluth"] = "Cabo Bluth"
 L["Cowardly Crosby"] = "Blandengue Crosby"
 L["CRAFTED_ENGINEERS"] = "Receta creada por Ingenieros."
 L["Crag Stalker"] = "Acechador del risco"
+L["Craig Nollward"] = "Craig Guardanol"
 L["Crazed Murkblood Foreman"] = "Supervisor Sangreoscura enloquecido"
 L["Crazed Murkblood Miner"] = "Minero Sangreoscura enloquecido"
 L["Crazk Sparks"] = "Craz Chispaz"
@@ -369,11 +362,24 @@ L["DISCOVERY_ALCH_PROT"] = "Descubierta haciendo Pociones de Proteccion Mayor co
 L["DISCOVERY_BS_INGOT_PANDARIA"] = "Descubierto creando Lingote de Trillium Balanceado, o a través del diseño para los Lingote de Trillium Balanceado."
 L["DISCOVERY_BS_PANDARIA"] = "Descubierto haciendo Lingote de Acero del Relámpago."
 L["DISCOVERY_BS_WEAP_PANDARIA"] = "Descubierto fabricando armas de Pandaria con un nombre similar."
+L["DISCOVERY_COOK_DRAENOR"] = "Se descubre la receta aleatoriamente cocinando cualquier receta de comida de Warlords of Draenor."
 L["DISCOVERY_DESC"] = "Las recetas obtenidas a través de Descubierto serán incluidas en la exploración."
+L["DISCOVERY_INSC_AUTOLEARN"] = "Se aprende automáticamente al nivel apropiado de habilidad."
+L["DISCOVERY_INSC_BLACKFALLOW"] = "Obtenido aleatoriamente via Investigación: Tinta Fangonegro, o a través de Investigación: Tinta de guerra si ya tienes todos los Glifos de Tinta de guerra."
 L["DISCOVERY_INSC_BOOK"] = "Descubierta aleatoriamente al leer un Libro sobre maestría en glifos."
+L["DISCOVERY_INSC_CELESTIAL"] = "Obtenido aleatoriamente via Investigación: Tinta Celestial, o a través de Investigación: Tinta de Guerra si ya tienes todos los Glifos de Tinta de Guerra."
+L["DISCOVERY_INSC_DREAMS"] = "Obtenido aleatoriamente via Investigación: Tinta Onírica, o a través de Investigación: Tinta de Guerra si ya tienes todos los Glifos de Tinta de Guerra."
+L["DISCOVERY_INSC_ETHEREAL"] = "Obtenido aleatoriamente via Investigación: Tinta Etérea, o a través de Investigación: Tinta de Guerra si ya tienes todos los Glifos de Tinta de Guerra."
+L["DISCOVERY_INSC_JADEFIRE"] = "Obtenido aleatoriamente via Investigación: Tinta de Fuego de Jade, o a través de Investigación: Tinta de Guerra si ya tienes todos los Glifos de Tinta de Guerra."
+L["DISCOVERY_INSC_LIONS"] = "Obtenido aleatoriamente via Investigación: Tinta de León, o a través de Investigación: Tinta de Guerra si ya tienes todos los Glifos de Tinta de Guerra."
+L["DISCOVERY_INSC_MIDNIGHT"] = "Obtenido aleatoriamente via Investigación: Tinta de Medianoche, o a través de Investigación: Tinta de Guerra si ya tienes todos los Glifos de Tinta de Guerra."
 L["DISCOVERY_INSC_MINOR"] = "Obtenida aleatoriamente al realizar Investigación en inscripción menor."
+L["DISCOVERY_INSC_MOONGLOW"] = "Obtenido aleatoriamente via Investigación: Tinta de Resplandor lunar, o a través de Investigación: Tinta de Guerra si ya tienes todos los Glifos de Tinta de Guerra."
 L["DISCOVERY_INSC_NORTHREND"] = "Obtenida aleatoriamente al realizar Investigación de inscripción de Rasganorte."
 L["DISCOVERY_INSC_PANDARIA"] = "Obtenido al azar al usar el Pergamino de Sabiduría"
+L["DISCOVERY_INSC_SEA"] = "Obtenido aleatoriamente via Investigación: Tinta del Mar, o a través de Investigación: Tinta de Guerra si ya tienes todos los Glifos de Tinta de Guerra."
+L["DISCOVERY_INSC_SHIMMERING"] = "Obtenido aleatoriamente via Investigación: Tinta Fulgurante, o a través de Investigación: Tinta de Guerra si ya tienes todos los Glifos de Tinta de Guerra."
+L["DISCOVERY_INSC_WARBINDER"] = "Obtenido aleatoriamente via Investigación: Tinta de Guerra."
 L["DISCOVERY_JC_PANDARIA"] = "Obtenida al azar haciendo la Facetas de investigación diaría."
 L["DISCOVERY_LW_HARDENED_PANDARIA"] = "Descubierto creando Cuero Magnífico Endurecido, o a través del patrón para el Cuero Magnífico Endurecido."
 L["DISCOVERY_LW_PANDARIA"] = "Obtenido aleatoriamente a través de la diaria de Magnificencia de Cuero y Magnificencia de Escamas."
@@ -395,6 +401,7 @@ L["Doomforge Craftsman"] = "Artesano de la Forja Maldita"
 L["Doomforge Engineer"] = "Ingeniero de la Forja Maldita"
 L["Drac Roughcut"] = true
 L["Draelan"] = true
+L["DRAENOR_DEFAULT"] = "Se aprendió automáticamente después de usar el correspondiente pergamino de Draenor de profesión."
 L["Drake Lindgren"] = "Draco Lindgren"
 L["Drakk Stonehand"] = "Drakk Petramano"
 L["Dramm Riverhorn"] = "Dramm Cuerno de Río"
@@ -452,6 +459,7 @@ L["Ethereal Priest"] = "Sacerdote etéreo"
 L["Ethereum Jailor"] = "Carcelero El Etereum"
 L["Ethereum Nullifier"] = "Nulificador de El Etereum"
 L["Eunice Burch"] = true
+L["Eustace Tanwell"] = "Eustace Curtebien"
 L["Evie Whirlbrew"] = "Evie Brebegira"
 L["EXCLUDECOUNT_DESC"] = "Incluír recetas excluídas en la cuenta total de recetas."
 L["Exclusion Issues"] = "Problemas de Exclusión"
@@ -462,6 +470,7 @@ L["EXPANSION_DESC_FORMAT"] = "Mostrar las recetas introducidas en %s."
 L["EXPANSION_FILTER_FORMAT"] = "Muestra una selección de %s reputaciones para incluir en el scan."
 L["FACTION_DESC_FORMAT"] = "Incluye recetas que deben obtenerse antes por %s players."
 L["Fael Morningsong"] = "Fael Canción de la Mañana"
+L["Faeyrin Willowmoon"] = "Faeyrin Sauce Lunar"
 L["Falorn Nightwhisper"] = "Falorn Noctusurro"
 L["Fariel Starsong"] = "Fariel Cantostelar"
 L["Farii"] = true
@@ -627,6 +636,7 @@ L["Harggan"] = true
 L["Harlown Darkweave"] = "Harlown Tejeoscuro"
 L["Harn Longcast"] = "Harn Tiralejo"
 L["Haughty Modiste"] = "Modista Jonti"
+L["Healer Nan"] = "Sanadora Nan"
 L["Heldan Galesong"] = "Heldan Vendasón"
 L["Helenia Olden"] = true
 L["Henry Stern"] = true
@@ -655,6 +665,7 @@ L["Indu'le Fisherman"] = "Pescador Indu'le"
 L["Indu'le Mystic"] = "Mistico Indu'le"
 L["Indu'le Warrior"] = "Guerrero Indu'le"
 L["Inessera"] = true
+L["Ingo Woolybush"] = "Ingo Lanudo"
 L["Inkmaster Wei"] = "Maestro calígrafo Wei"
 L["Innkeeper Biribi"] = "Tabernera Biribi"
 L["Innkeeper Fizzgrimble"] = "Tabernero Fizzgrimble"
@@ -743,6 +754,7 @@ L["K. Lee Smallfry"] = "K. Lee Fritito"
 L["Knaz Blunderflame"] = "Knaz Flamerrada"
 L["Knight Dameron"] = "Caballero Dameron"
 L["KNOWN_DESC"] = "Incluir todas las recetas aprendidas en la exploración."
+L["\"Kobold\" Kerik"] = "\"Kóbold\" Kerik"
 L["Kol Ironpaw"] = "Kol Zarpaférrea"
 L["Koren"] = true
 L["Kor'geld"] = true
@@ -799,6 +811,7 @@ L["Lilyssia Nightbreeze"] = "Lilyssia Brisa Nocturna"
 L["LIMITED_SUPPLY"] = "Vendido en cantidad limitada."
 L["Linna Bruder"] = true
 L["Linzy Blackbolt"] = "Linzy Pernonegro"
+L["Lissah Spellwick"] = "Lissah Prendehechizos"
 L["Lizbeth Cromwell"] = true
 L["Lizna Goldweaver"] = "Lizna Tejeoro"
 L["Location"] = "Localización"
@@ -841,14 +854,18 @@ L["MAP_ISSUES_DESC"] = "ARL se basa en TomTom para añadir iconos y puntos de ru
 L["MAP_OPTIONS_DESC"] = "Permite cambiar la forma en que ARL se integra en el mapa del mundo y en el minimapa."
 L["Margaux Parchley"] = "Margaux Pastoseco"
 L["Maria Lumere"] = true
+L["Marie Holdston"] = true
 L["Mari Stonehand"] = "Mari Petramano"
 L["Marith Lazuria"] = true
 L["Marogg"] = true
 L["Martine Tramblay"] = true
 L["Mary Edras"] = true
 L["Master Bier"] = "Maestro Bier"
+L["Master Cannon"] = "Maestro Canon"
+L["Master Chang"] = "Maestro Chang"
 L["Master Chef Mouldier"] = "Maestro cocinero Mouldier"
 L["Master Elemental Shaper Krixix"] = "Maestro de los elementos Formacio Krixix"
+L["Master Marshall"] = "Maestro Marshall"
 L["Materials"] = "Materiales"
 L["Mathar G'ochar"] = true
 L["Matt Johnson"] = true
@@ -881,6 +898,7 @@ L["Mob Drop"] = "Soltado por Monstruo"
 L["MOB_DROP_DESC"] = "Las recetas que son Soltadas por un Monstruo serán incluidas en la exploración."
 L["Mobus"] = true
 L["Modoru"] = true
+L["MODULE_ERROR_FORMAT"] = "El addon \"Ackis Recipe List: %s\" no se puede cargar, porque no se encuentra o no está activado."
 L["Molt Thorn"] = "Fundespino"
 L["Moonrage Tailor"] = "Sastre Furia Lunar"
 L["Moordo"] = true
@@ -952,8 +970,7 @@ L["Okuno"] = true
 L["Olisarra the Kind"] = "Olisarra la Amable"
 L["Oluros"] = true
 L["One-Handed Axe"] = "Hacha de una mano"
-L["One-Handed Mace"] = [=[Maza de una mano
-]=]
+L["One-Handed Mace"] = "Maza de una mano"
 L["One-Handed Sword"] = "Espada de una mano"
 L["Onodo"] = true
 L["Onslaught Mason"] = "Mampostero del Embate"
@@ -975,6 +992,7 @@ L["Palehoof's Big Bag of Parts"] = "Talego de repuestos de Pezuña Pálida"
 L["Pand Stonebinder"] = "Pand Amarrapiedra"
 L["Paulsta'ats"] = true
 L["Penney Copperpinch"] = "Penney Cobrellizco"
+L["Periale"] = true
 L["Phantom Attendant"] = "Aparición de guardia"
 L["Phantom Stagehand"] = "Aparición de tramoyista"
 L["Phantom Valet"] = "Aparición de ayuda de cámara"
@@ -1050,6 +1068,7 @@ L["REPORTING_BUGS_DESC"] = [=["Al informar sobre un error, por favor, asegúrese
 6) Usted ha encontrado un error que nadie ha informado antes. Crear un nuevo ticket en http://www.wowace.com/projects/arl/tickets/ con un título descriptivo sobre el problema. En el ticket asegúrese de incluir el mensaje de error que ha recibido (sólo el mensaje de error, no necesito una lista de los addons que utiliza), la receta / profesión que la que estaba trabajando, y cualquier otra información que usted piense que puede ayudar.
 Al publicar un informe de error, no incluir la totalidad de los addons de swatter. Esto sólo hace que sea difícil de leer. Si quieres un buen modelo de informe de errores, utiliza BugSack. No publiques errores/faltan recetas en los comentarios, o enviarlas a mí a través de un PM. Publicar como un ticket que yo pueda abordar y realizar un seguimiento fácilmente."]=]
 L["REPUTATION_DESC"] = "Incluir recetas de vendedores de reputación en el scan."
+L["Research"] = "Investigación"
 L["RESET_DESC"] = "Resetear todos los filtros a sus valores por defecto."
 L["RESET_WINDOW_DESC"] = "Resetea el interface de ARL a su posición por defecto."
 L["Reset Window Position"] = "Restablecer Posición de la Ventana"
@@ -1225,14 +1244,15 @@ L["Tansy Puddlefizz"] = "Tansy Burbajea"
 L["Tarban Hearthgrain"] = "Tarban Granogar"
 L["Tarien Silverdew"] = "Tarien Alboradanívea"
 L["Tari'qa"] = true
+L["Taryel Firestrike"] = "Taryel Golpe del Fuego"
 L["Taryssa Lazuria"] = true
+L["Tatia Brine"] = "Tatia Salmuera"
 L["Tatiana"] = true
 L["Taur Stonehoof"] = "Taur Pezuña Pétrea"
 L["Teg Dawnstrider"] = "Teg Caminalba"
 L["Telonis"] = true
 L["Tepa"] = true
-L["Terrance Denman"] = [=[Terrance Denman
-]=]
+L["Terrance Denman"] = true
 L["Terrormaster"] = "Maestro de terror"
 L["Text Dump"] = "Volcado de Texto"
 L["TEXT_DUMP_DESC"] = "Muestra todas las recetas en un formato de valores separados por comas que se puede copiar y pegar en otro cliente."
@@ -1243,6 +1263,7 @@ L["Thamner Pol"] = true
 L["Tharynn Bouden"] = true
 L["Thaurissan Firewalker"] = "Caminafuego Thaurissan"
 L["The Chef"] = "El Chef"
+L["Theoden Manners"] = "Theoden Modales"
 L["Theramore Infiltrator"] = "Infiltrado de Theramore"
 L["Theramore Marine"] = "Marino de Theramore"
 L["Theramore Preserver"] = "Valedora de Theramonte"

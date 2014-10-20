@@ -1,27 +1,19 @@
 ## Title: Enchantrix
-<<<<<<< HEAD
-## Notes: Display information in item tooltips pertaining to disenchanting, prospecting, and milling results.  [5.20.5464] This AddOn is licensed under the GNU GPL, see GPL.txt for details.
-=======
-## Notes: Display information in item tooltips pertaining to disenchanting, prospecting, and milling results.  [5.19.5445] This AddOn is licensed under the GNU GPL, see GPL.txt for details.
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+## Notes: Display information in item tooltips pertaining to disenchanting, prospecting, and milling results.  [5.21.5490] This AddOn is licensed under the GNU GPL, see GPL.txt for details.
 ##
-## Interface: 50400
+## Interface: 60000
 ## LoadOnDemand: 1
 ## Dependencies: Stubby
 ## OptionalDeps: !nLog, Babylonian, DebugLib, Configator, SlideBar, LibExtraTip, TipHelper, LibDataBroker
 ## SavedVariables: EnchantConfig, EnchantedLocal, EnchantedItemTypes, NonDisenchantablesLocal, ProspectedLocal, MillingLocal
 ## SavedVariablesPerCharacter: AutoDisenchantIgnoreList
 ##
-<<<<<<< HEAD
-## Version: 5.20.5464 (RidiculousRockrat)
-=======
-## Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-## Revision: $Id: Enchantrix.toc 5432 2013-09-10 07:59:18Z brykrys $
+## Version: 5.21.5490 (SanctimoniousSwamprat)
+## Revision: $Id: Enchantrix.toc 5488 2014-10-14 01:54:22Z dinesh $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Auction House
-## X-Max-Interface: 50400
+## X-Max-Interface: 60000
 ## X-URL: http://auctioneeraddon.com/
 ## X-Feedback: http://forums.norganna.org
 

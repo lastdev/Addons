@@ -5,11 +5,7 @@
 
 	AddOn: EnchantrixBarker
 	Revision: $Id: BarkerStrings.lua 5402 2013-04-01 14:03:25Z brykrys $
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 
 	License:
 		This program is free software; you can redistribute it and/or

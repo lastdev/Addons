@@ -1,12 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: AskPrice.lua 5447 2014-01-14 15:11:43Z brykrys $
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
-	Revision: $Id: AskPrice.lua 5347 2012-09-06 06:26:15Z Esamynn $
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	URL: http://auctioneeraddon.com/
 
 	Auctioneer AskPrice created by Mikezter and merged into
@@ -602,8 +597,4 @@ function private.SetupConfigGui(gui)
 
 end
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-AskPrice/AskPrice.lua $", "$Rev: 5447 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-AskPrice/AskPrice.lua $", "$Rev: 5347 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-AskPrice/AskPrice.lua $", "$Rev: 5447 $")

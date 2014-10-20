@@ -591,11 +591,7 @@ function HealBot_Panel_TestBarsOn()
     for gl=1,11 do
         hbCurrentFrame=healGroups[gl]["FRAME"]
         if healGroups[gl]["NAME"]==HEALBOT_OPTIONS_SELFHEALS_en then
-<<<<<<< HEAD
             if healGroups[gl]["STATE"] then
-=======
-            if healGroups[gl]["STATE"]==1 then
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                 HealBot_Panel_testAddButton(HEALBOT_OPTIONS_SELFHEALS,HEALBOT_OPTIONS_SELFHEALS,1,1,HEALBOT_WORD_HEALER)
                 gNo=4
                 xRaidBars=xRaidBars-1
@@ -603,58 +599,34 @@ function HealBot_Panel_TestBarsOn()
         elseif healGroups[gl]["NAME"]==HEALBOT_OPTIONS_TANKHEALS_en then
             local nTanks=HealBot_Globals.TestBars["TANKS"]
             if HealBot_Globals.TestBars["PROFILE"]==1 then nTanks=1 end
-<<<<<<< HEAD
             if nTanks>0 and healGroups[gl]["STATE"] then
-=======
-            if nTanks>0 and healGroups[gl]["STATE"]==1 then
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                 HealBot_Panel_testAddButton(HEALBOT_OPTIONS_TANKHEALS,HEALBOT_WORD_TANK,1,nTanks,HEALBOT_WORD_TANK)
                 xRaidBars=xRaidBars-nTanks
             end
         elseif healGroups[gl]["NAME"]==HEALBOT_CLASSES_HEALERS_en then
             local nHealers=HealBot_Globals.TestBars["HEALERS"]
             if HealBot_Globals.TestBars["PROFILE"]==1 then nHealers=1 end
-<<<<<<< HEAD
             if nHealers>0 and healGroups[gl]["STATE"] then
-=======
-            if nHealers>0 and healGroups[gl]["STATE"]==1 then
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                 HealBot_Panel_testAddButton(HEALBOT_CLASSES_HEALERS,HEALBOT_WORD_HEALER,1,nHealers,HEALBOT_WORD_HEALER)
                 xRaidBars=xRaidBars-nHealers
             end
         elseif healGroups[gl]["NAME"]==HEALBOT_OPTIONS_GROUPHEALS_en then
             if gNo>xRaidBars then gNo=xRaidBars end
-<<<<<<< HEAD
             if healGroups[gl]["STATE"] and gNo>0 then
-=======
-            if healGroups[gl]["STATE"]==1 and gNo>0 then
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                 HealBot_Panel_testAddButton(HEALBOT_OPTIONS_GROUPHEALS.." "..grpNo,HEALBOT_OPTIONS_GROUPHEALS,1,gNo)
                 xRaidBars=xRaidBars-gNo
             end
         elseif healGroups[gl]["NAME"]==HEALBOT_OPTIONS_MYTARGET_en then
-<<<<<<< HEAD
             if HealBot_Globals.TestBars["TARGETS"]>0 and healGroups[gl]["STATE"] then
-=======
-            if HealBot_Globals.TestBars["TARGETS"]>0 and healGroups[gl]["STATE"]==1 then
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                 HealBot_Panel_testAddButton(HEALBOT_OPTIONS_MYTARGET,HEALBOT_DISABLED_TARGET,1,HealBot_Globals.TestBars["TARGETS"])
                 xRaidBars=xRaidBars-HealBot_Globals.TestBars["TARGETS"]
             end
         elseif healGroups[gl]["NAME"]==HEALBOT_FOCUS_en then
-<<<<<<< HEAD
             if healGroups[gl]["STATE"] then
                 HealBot_Panel_testAddButton(HEALBOT_FOCUS,HEALBOT_FOCUS,1,1)
             end
         elseif healGroups[gl]["NAME"]==HEALBOT_OPTIONS_EMERGENCYHEALS_en then
             if healGroups[gl]["STATE"] and HealBot_Globals.TestBars["PROFILE"]>1 and xRaidBars>0 then
-=======
-            if healGroups[gl]["STATE"]==1 then
-                HealBot_Panel_testAddButton(HEALBOT_FOCUS,HEALBOT_FOCUS,1,1)
-            end
-        elseif healGroups[gl]["NAME"]==HEALBOT_OPTIONS_EMERGENCYHEALS_en then
-            if healGroups[gl]["STATE"]==1 and HealBot_Globals.TestBars["PROFILE"]>1 and xRaidBars>0 then
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                 if xRaidBars<5 then
                     HealBot_Panel_testAddButton(HEALBOT_OPTIONS_EMERGENCYHEALS.." "..HEALBOT_OPTIONS_GROUPHEALS.." "..grpNo,HEALBOT_OPTIONS_EMERGENCYHEALS,1,xRaidBars)
                 else
@@ -707,7 +679,6 @@ function HealBot_Panel_TestBarsOn()
                 end
             end
         elseif healGroups[gl]["NAME"]==HEALBOT_OPTIONS_PETHEALS_en then
-<<<<<<< HEAD
             if HealBot_Globals.TestBars["PETS"]>0 and healGroups[gl]["STATE"] then
                 HealBot_Panel_testAddButton(HEALBOT_OPTIONS_PETHEALS,HEALBOT_OPTIONS_PETHEALS,1,HealBot_Globals.TestBars["PETS"],HEALBOT_OPTIONS_PETHEALS)
             end
@@ -720,20 +691,6 @@ function HealBot_Panel_TestBarsOn()
                 HealBot_Panel_testAddButton(HEALBOT_CUSTOM_CASTBY_ENEMY,HEALBOT_CUSTOM_CASTBY_ENEMY,1,HealBot_Globals.TestBars["ENEMY"],HEALBOT_CUSTOM_CASTBY_ENEMY)
             end
     --    elseif healGroups[gl]["NAME"]==HEALBOT_OPTIONS_TARGETHEALS_en and healGroups[gl]["STATE"] then
-=======
-            if HealBot_Globals.TestBars["PETS"]>0 and healGroups[gl]["STATE"]==1 then
-                HealBot_Panel_testAddButton(HEALBOT_OPTIONS_PETHEALS,HEALBOT_OPTIONS_PETHEALS,1,HealBot_Globals.TestBars["PETS"],HEALBOT_OPTIONS_PETHEALS)
-            end
-        elseif healGroups[gl]["NAME"]==HEALBOT_VEHICLE_en then
-            if healGroups[gl]["STATE"]==1 then
-                HealBot_Panel_testAddButton(HEALBOT_VEHICLE,HEALBOT_VEHICLE,1,2)
-            end
-        elseif healGroups[gl]["NAME"]==HEALBOT_CUSTOM_CASTBY_ENEMY_en then
-            if healGroups[gl]["STATE"]==1 then
-                HealBot_Panel_testAddButton(HEALBOT_CUSTOM_CASTBY_ENEMY,HEALBOT_CUSTOM_CASTBY_ENEMY,1,HealBot_Globals.TestBars["ENEMY"],HEALBOT_CUSTOM_CASTBY_ENEMY)
-            end
-    --    elseif healGroups[gl]["NAME"]==HEALBOT_OPTIONS_TARGETHEALS_en and healGroups[gl]["STATE"]==1 then
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     --        HealBot_Panel_testAddButton(HEALBOT_OPTIONS_TARGETHEALS,HEALBOT_DISABLED_TARGET,1,1)
         end
     end
@@ -1257,17 +1214,9 @@ function HealBot_Panel_tankHeals()
         local subgroup=HealBot_UnitGroups[xUnit] or 1;
         if Healbot_Config_Skins.ExtraIncGroup[Healbot_Config_Skins.Current_Skin][subgroup] then
             if not HealBot_TrackNames[xGUID] then
-<<<<<<< HEAD
                 local uName=HealBot_GetUnitName(xUnit)
                 if not HealBot_TrackNotVisible[xGUID] or Healbot_Config_Skins.BarsHide[Healbot_Config_Skins.Current_Skin]["INCTANK"]==false then
                     i[hbCurrentFrame] = i[hbCurrentFrame]+1;
-=======
-                if not HealBot_TrackNotVisible[xGUID] or Healbot_Config_Skins.BarsHide[Healbot_Config_Skins.Current_Skin]["INCTANK"]==0 then
-                    i[hbCurrentFrame] = i[hbCurrentFrame]+1;
-                    local uName=UnitName(xUnit);
-                    HealBot_UnitName[xGUID] = uName
-                    HealBot_UnitNameGUID[uName]=xGUID
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                     HealBot_TrackNames[xGUID]=true;
                     HealBot_unitRole[xGUID]=hbRole[HEALBOT_MAINTANK]
                     if Healbot_Config_Skins.Sort[Healbot_Config_Skins.Current_Skin]["SUBORDER"]<6 and hbincSort then
@@ -1278,10 +1227,7 @@ function HealBot_Panel_tankHeals()
                 else
                     HealBot_setNotVisible(xGUID,xUnit)
                 end
-<<<<<<< HEAD
                 HealBot_Panel_updGUIDstore(xGUID,uName,xUnit)
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
             end
         end
     end
@@ -1320,11 +1266,7 @@ function HealBot_Panel_setTanks()
         end
     end
     table.foreach(HealBot_MyPrivateTanks, function (index,xGUID)
-<<<<<<< HEAD
         local xUnit=HealBot_Panel_RaidUnit(xGUID) or "unknown"
-=======
-        local xUnit=HealBot_RaidUnit(xGUID) or "unknown"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
         if UnitExists(xUnit) then  
             HealBot_MainTanks[xGUID]=xUnit
         end
@@ -1365,17 +1307,9 @@ function HealBot_Panel_healerHeals()
     for xGUID,xUnit in pairs(hbHealers) do
         local subgroup=HealBot_UnitGroups[xUnit] or 1;
         if Healbot_Config_Skins.ExtraIncGroup[Healbot_Config_Skins.Current_Skin][subgroup] then
-<<<<<<< HEAD
             local uName=HealBot_GetUnitName(xUnit)
             if not HealBot_TrackNotVisible[xGUID] then
                 i[hbCurrentFrame] = i[hbCurrentFrame]+1;
-=======
-            if not HealBot_TrackNotVisible[xGUID] then
-                i[hbCurrentFrame] = i[hbCurrentFrame]+1;
-                local uName=UnitName(xUnit);
-                HealBot_UnitName[xGUID] = uName
-                HealBot_UnitNameGUID[uName]=xGUID
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                 HealBot_TrackNames[xGUID]=true;
                 if Healbot_Config_Skins.Sort[Healbot_Config_Skins.Current_Skin]["SUBORDER"]<6 and hbincSort then
                     HealBot_Panel_insSubSort(xUnit, xGUID)
@@ -1385,10 +1319,7 @@ function HealBot_Panel_healerHeals()
             else
                 HealBot_setNotVisible(xGUID,xUnit)
             end
-<<<<<<< HEAD
             HealBot_Panel_updGUIDstore(xGUID,uName,xUnit)
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
         end
     end
     if i[hbCurrentFrame]>k then 
@@ -1412,19 +1343,10 @@ function HealBot_Panel_groupHeals()
         if UnitExists(xUnit) then
             local xGUID=HealBot_UnitGUID(xUnit)
             if not HealBot_TrackNames[xGUID] then
-<<<<<<< HEAD
                 local uName=HealBot_GetUnitName(xUnit)
                 if not HealBot_TrackNotVisible[xGUID] or Healbot_Config_Skins.BarsHide[Healbot_Config_Skins.Current_Skin]["INCGROUP"]==false then
                     if nraid>0 and HealBot_Data["PGUID"]~=xGUID then 
                         xUnit=HealBot_Panel_RaidUnit(xGUID) or xUnit
-=======
-                if not HealBot_TrackNotVisible[xGUID] or Healbot_Config_Skins.BarsHide[Healbot_Config_Skins.Current_Skin]["INCGROUP"]==0 then
-                    local uName=UnitName(xUnit);
-                    if nraid>0 and HealBot_Data["PGUID"]~=xGUID then 
-                        local pUnit=xUnit
-                        xUnit=HealBot_RaidUnit(xGUID) or xUnit
-                        HealBot_RaidUnitID[pUnit]=xUnit
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                     end
                     i[hbCurrentFrame] = i[hbCurrentFrame]+1;
                     HealBot_TrackNames[xGUID]=true;
@@ -1540,11 +1462,7 @@ function HealBot_Panel_focusHeals()
     end
     
     if i[hbCurrentFrame]>k then 
-<<<<<<< HEAD
         if Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["FONLYFRIEND"] then
-=======
-        if Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["FONLYFRIEND"]==1 then
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
             HealBot_Panel_SubSort(false)
         else
             HealBot_Panel_SubSort(false, true)
@@ -1670,11 +1588,7 @@ function HealBot_Panel_raidHeals()
                         HealBot_Panel_updGUIDstore(xGUID,uName,xUnit)
                     end
                 else
-<<<<<<< HEAD
                     local gState=false
-=======
-                    local gState=0
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                     for id=1,11 do
                         if Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][id]["NAME"]==HEALBOT_OPTIONS_GROUPHEALS_en then
                             gState=Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][id]["STATE"]
@@ -1800,11 +1714,7 @@ function HealBot_Panel_raidHeals()
                         HealBot_Panel_updGUIDstore(xGUID,uName,xUnit)
                     end
                 else
-<<<<<<< HEAD
                     local gState=false
-=======
-                    local gState=0
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                     for id=1,11 do
                         if Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][id]["NAME"]==HEALBOT_OPTIONS_GROUPHEALS_en then
                             gState=Healbot_Config_Skins.HealGroups[Healbot_Config_Skins.Current_Skin][id]["STATE"]
@@ -1992,10 +1902,6 @@ function HealBot_Panel_petHeals()
         if Healbot_Config_Skins.ExtraIncGroup[Healbot_Config_Skins.Current_Skin][subgroup] then
             if not HealBot_TrackNotVisible[xGUID] then
                 i[hbCurrentFrame] = i[hbCurrentFrame]+1;
-<<<<<<< HEAD
-=======
-                HealBot_UnitName[xGUID] = uName;
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                 HealBot_UnitGroups[xUnit]=HealBot_UnitGroups[pUnit]
                 if Healbot_Config_Skins.Sort[Healbot_Config_Skins.Current_Skin]["SUBORDER"]<6 and hbincSort then
                     HealBot_Panel_insSubSort(xUnit, xGUID)
@@ -2005,10 +1911,7 @@ function HealBot_Panel_petHeals()
             else
                 HealBot_setNotVisible(xGUID,xUnit)
             end
-<<<<<<< HEAD
             HealBot_Panel_updGUIDstore(xGUID,uName,xUnit)
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
         end
     end
     if nraid>0 then
@@ -2021,12 +1924,7 @@ function HealBot_Panel_petHeals()
                 if Healbot_Config_Skins.ExtraIncGroup[Healbot_Config_Skins.Current_Skin][subgroup] then
                     if not HealBot_TrackNotVisible[xGUID] then
                         i[hbCurrentFrame] = i[hbCurrentFrame]+1;
-<<<<<<< HEAD
                         uName=HealBot_GetUnitName(xUnit)
-=======
-                        uName=UnitName(xUnit);
-                        HealBot_UnitName[xGUID] = uName;
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                         HealBot_UnitGroups[xUnit]=HealBot_UnitGroups[pUnit]
                         if Healbot_Config_Skins.Sort[Healbot_Config_Skins.Current_Skin]["SUBORDER"]<6 and hbincSort then
                             HealBot_Panel_insSubSort(xUnit, xGUID)
@@ -2036,10 +1934,7 @@ function HealBot_Panel_petHeals()
                     else
                         HealBot_setNotVisible(xGUID,xUnit)
                     end
-<<<<<<< HEAD
                     HealBot_Panel_updGUIDstore(xGUID,uName,xUnit)
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                 end
             end
             if Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["GROUPPETS"] then
@@ -2103,10 +1998,6 @@ function HealBot_Panel_vehicleHeals()
         if Healbot_Config_Skins.ExtraIncGroup[Healbot_Config_Skins.Current_Skin][subgroup] then
             if not HealBot_TrackNotVisible[xGUID] then
                 i[hbCurrentFrame] = i[hbCurrentFrame]+1;
-<<<<<<< HEAD
-=======
-                HealBot_UnitName[xGUID] = uName;
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                 HealBot_UnitGroups[xUnit]=HealBot_UnitGroups[pUnit]
                 if Healbot_Config_Skins.Sort[Healbot_Config_Skins.Current_Skin]["SUBORDER"]<6 and hbincSort then
                     HealBot_Panel_insSubSort(xUnit, xGUID)
@@ -2116,10 +2007,7 @@ function HealBot_Panel_vehicleHeals()
             else
                 HealBot_setNotVisible(xGUID,xUnit)
             end
-<<<<<<< HEAD
             HealBot_Panel_updGUIDstore(xGUID,uName,xUnit)
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
         end
     end
     if nraid>0 then
@@ -2133,10 +2021,6 @@ function HealBot_Panel_vehicleHeals()
                 if Healbot_Config_Skins.ExtraIncGroup[Healbot_Config_Skins.Current_Skin][subgroup] then
                     if not HealBot_TrackNotVisible[xGUID] then
                         i[hbCurrentFrame] = i[hbCurrentFrame]+1;
-<<<<<<< HEAD
-=======
-                        HealBot_UnitName[xGUID] = uName;
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                         HealBot_UnitGroups[xUnit]=HealBot_UnitGroups[pUnit]
                         if Healbot_Config_Skins.Sort[Healbot_Config_Skins.Current_Skin]["SUBORDER"]<6 and hbincSort then
                             HealBot_Panel_insSubSort(xUnit, xGUID)
@@ -2146,10 +2030,7 @@ function HealBot_Panel_vehicleHeals()
                     else
                         HealBot_setNotVisible(xGUID,xUnit)
                     end
-<<<<<<< HEAD
                     HealBot_Panel_updGUIDstore(xGUID,uName,xUnit)
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                 end
             end
         end
@@ -2201,11 +2082,7 @@ function HealBot_Panel_targetHeals()
         xGUID=HealBot_UnitGUID(xUnit)
         if (not UnitInRaid(xUnit) and not UnitInParty(xUnit)) or ((UnitInRaid(xUnit) or UnitInParty(xUnit)) and xGUID and HealBot_TrackNames[xGUID]) then
             if HealBot_Data["PGUID"]==xGUID then 
-<<<<<<< HEAD
                 if Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TINCSELF"] then TargetValid=true end
-=======
-                if Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TINCSELF"]==1 then TargetValid=true end
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
             elseif UnitInParty("target") then
                 if Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TINCGROUP"] then TargetValid=true end
             elseif UnitInRaid("target") then 
@@ -2230,11 +2107,7 @@ function HealBot_Panel_targetHeals()
     end
     
     if i[hbCurrentFrame]>k then 
-<<<<<<< HEAD
         if Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TONLYFRIEND"] then
-=======
-        if Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["TONLYFRIEND"]==1 then
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
             HealBot_Panel_SubSort(false)
         else
             HealBot_Panel_SubSort(false, true)
@@ -2308,25 +2181,15 @@ function HealBot_Panel_enemyTargets()
     if HealBot_Data["MAPID"]==953 then
         if UnitExists("boss1") then
             if numBoss<3 then numBoss=3 end
-<<<<<<< HEAD
             showBossExists=false
-=======
-            showBossExists=0
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
         end
     end
     
     if numBoss>0 then
         for bi=1,numBoss do
-<<<<<<< HEAD
             if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["HIDE"] then
                 if HealBot_Data["UILOCK"]=="YES" then
                     if showBossExists then
-=======
-            if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["HIDE"]==1 then
-                if HealBot_Data["UILOCK"]=="YES" then
-                    if showBossExists==1 then
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                         if UnitExists("boss"..bi) then
                             HealBot_Panel_enemyBar("boss"..bi, "boss"..bi)
                         end
@@ -2355,11 +2218,7 @@ function HealBot_Panel_enemyBar(unit, pUnit, noEvents)
     local incEnemy=true
     if UnitExists(unit) and UnitHealth(unit)>99 then
         xGUID=HealBot_UnitGUID(unit)
-<<<<<<< HEAD
         uName=HealBot_GetUnitName(unit)
-=======
-        uName=UnitName(unit)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     end
     HealBot_UnitName[unit]=uName;    
     i[hbCurrentFrame]=i[hbCurrentFrame]+1;
@@ -2584,11 +2443,7 @@ function HealBot_Panel_SetupBars()
                             _, OffsetY[bFrame] = HealBot_Action_PositionButton(xButton,OffsetX[bFrame],OffsetY[bFrame],bwidth[bFrame],bheight[bFrame],nil,bFrame,bcspace[bFrame],brspace[bFrame])
                         end
                     end
-<<<<<<< HEAD
                 elseif Healbot_Config_Skins.HealBar[Healbot_Config_Skins.Current_Skin][bFrame]["GRPCOLS"] then
-=======
-                elseif Healbot_Config_Skins.HealBar[Healbot_Config_Skins.Current_Skin][bFrame]["GRPCOLS"]==1 then
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                     h[bFrame]=h[bFrame]+1
                     if not newHeader["G"][bFrame] then
                         if HealBot_BottomAnchors[bFrame] then 
@@ -2786,7 +2641,6 @@ end
 
 function HealBot_RetUnitGroups(unit)
     return HealBot_UnitGroups[unit]
-<<<<<<< HEAD
 end
 
 local hbTempUnitName={}
@@ -2909,6 +2763,4 @@ function HealBot_Panel_RemoveMember(hbGUID, unit)
     if HealBot_UnitNameGUID[uName] then HealBot_UnitNameGUID[uName]=nil end
     HealBot_immediateClearLocalArr(hbGUID)
     if HealBot_UnitName[hbGUID] then HealBot_UnitName[hbGUID]=nil end
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end

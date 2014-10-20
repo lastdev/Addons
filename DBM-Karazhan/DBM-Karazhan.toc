@@ -1,4 +1,4 @@
-﻿## Interface: 50400
+﻿## Interface: 60000
 ## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Karazhan|r
 ## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0카라잔|r
@@ -20,7 +20,6 @@ localization.es.lua
 localization.tw.lua
 localization.cn.lua
 localization.ru.lua
-MapSizes.lua
 Attumen.lua
 Moroes.lua
 MaidenOfVirtue.lua

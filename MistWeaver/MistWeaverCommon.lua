@@ -1,6 +1,6 @@
 
 
-local debug = true;
+local debug = false;
 function mw_debug(value, name)
     if (not debug) then
         return;
@@ -36,21 +36,21 @@ function mw_pairsByKeys(t, f)
             return a[i], t[a[i]];
         end
     end
-    
+
     return iter;
 end
 
 function mw_pairsByKeysDesc(t, f)
     local a = {}
-        for n in pairs(t) do table.insert(a, n) end
-        table.sort(a, function(a,b) return a>b end)
-        local i = 0      -- iterator variable
-        local iter = function ()   -- iterator function
-            i = i + 1
-            if a[i] == nil then return nil
-            else return a[i], t[a[i]]
-            end
+    for n in pairs(t) do table.insert(a, n) end
+    table.sort(a, function(a,b) return a>b end)
+    local i = 0      -- iterator variable
+    local iter = function ()   -- iterator function
+        i = i + 1
+        if a[i] == nil then return nil
+        else return a[i], t[a[i]]
         end
+    end
     return iter
 end
 
@@ -71,7 +71,7 @@ function mw_rgb2hex(red, green, blue)
     local r = string.format("%x", red * 255);
     local g = string.format("%x", green * 255);
     local b = string.format("%x", blue * 255);
-    
+
     if (strlen(r) < 2) then
         r = "0"..r;
     end
@@ -81,27 +81,36 @@ function mw_rgb2hex(red, green, blue)
     if (strlen(b) < 2) then
         b = "0"..b;
     end
-    
+
     local color = r..g..b;
-    
+
     return color;
+end
+
+function MistWeaver_RemoveTextures(frame)
+    for i, child in ipairs({frame:GetRegions()}) do
+
+        if (child and child:IsObjectType("texture")) then
+            child:SetTexture(nil);
+        end
+    end
 end
 
 function MistWeaver_SetBackdrop(frame)
 
     local background = "Interface\\Addons\\MistWeaver\\images\\frame-background";
     local border = "Interface\\Addons\\MistWeaver\\images\\frame-border";
-    
+
     if (CleanUIData) then
         background = CleanUI_GetFrameBackground() or "Interface\\Addons\\MistWeaver\\images\\frame-background";
         border = CleanUI_GetFrameBorder() or "Interface\\Addons\\MistWeaver\\images\\frame-border";
     end
-    
+
     local insetValue = 2;
 
-    frame:SetBackdrop( { 
-            bgFile = background, 
-            edgeFile = border, tile = true, tileSize = 64, edgeSize = 16, 
-            insets = { left = insetValue, right = insetValue, top = insetValue, bottom = insetValue }
-        });
+    frame:SetBackdrop( {
+        bgFile = background,
+        edgeFile = border, tile = true, tileSize = 64, edgeSize = 16,
+        insets = { left = insetValue, right = insetValue, top = insetValue, bottom = insetValue }
+    });
 end

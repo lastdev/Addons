@@ -19,7 +19,6 @@ local pairs = pairs
 local select = select
 local wipe = wipe
 
--------------------------------------------------------------- Table Management
 function u.SkipOrUpgrade(table, feature, version)
 	return skipOrUpgrade(table, feature, version)
 end
@@ -107,4 +106,12 @@ function u.PrintTable(table)
 	if empty then
 		print("table is empty")
 	end
+end
+
+function u.Size(table)
+	local size = 0
+	for _, _ in pairs(table) do
+		size = size + 1
+	end
+	return size
 end

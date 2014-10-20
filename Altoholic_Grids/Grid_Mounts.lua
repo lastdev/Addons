@@ -152,7 +152,7 @@ local companionsCallbacks = {
 			itemText:SetFontObject("GameFontNormalSmall")
 			itemText:SetJustifyH("CENTER")
 			itemText:SetPoint("BOTTOMRIGHT", 5, 0)
-			itemTexture:SetDesaturated(0)
+			itemTexture:SetDesaturated(false)
 			itemTexture:SetTexCoord(0, 1, 0, 1)
 			itemTexture:SetTexture(currentPetTexture)
 			
@@ -507,7 +507,7 @@ local mountsCallbacks = {
 			itemText:SetFontObject("GameFontNormalSmall")
 			itemText:SetJustifyH("CENTER")
 			itemText:SetPoint("BOTTOMRIGHT", 5, 0)
-			itemTexture:SetDesaturated(0)
+			itemTexture:SetDesaturated(false)
 			itemTexture:SetTexCoord(0, 1, 0, 1)
 			itemTexture:SetTexture(currentPetTexture)
 			

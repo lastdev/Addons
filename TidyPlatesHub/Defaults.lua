@@ -11,24 +11,6 @@ TidyPlatesHubDefaults = {
 
 	-- Style
 	---------------------------------------
-<<<<<<< HEAD
-	ColorEnemyBarMode =  2,
-	ColorEnemyNameMode = 1,
-	ColorEnemyStatusTextMode = 1,
-
-	ColorFriendlyBarMode =  2,
-	ColorFriendlyNameMode = 1,
-	ColorFriendlyStatusTextMode = 1,
-
-	TextShowOnlyOnActive = false,
-
-
-	-- Headline
-	---------------------------------------
-	StyleEnemyMode = 1,
-	StyleFriendlyMode = 1,
-
-=======
 	ColorEnemyBarMode =  1,
 	--ColorEnemyGlowMode = 1,
 	ColorEnemyNameMode = 1,
@@ -43,7 +25,6 @@ TidyPlatesHubDefaults = {
 	---------------------------------------
 	StyleEnemyMode = 1,
 	StyleFriendlyMode = 7,
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	HeadlineEnemyColor = 4,
 	HeadlineFriendlyColor = 4,
 	TextPlateFieldMode = 3,
@@ -52,35 +33,11 @@ TidyPlatesHubDefaults = {
 	---------------------------------------
 	OpacityTarget = 1,
 	OpacityNonTarget = .5,
-	--OpacitySpotlightMode = 1,
-
-
-
-
-	EnemyAlphaSpotlightMode = 1,
-	FriendlyAlphaSpotlightMode = 1,
-
+	OpacitySpotlightMode = 1,
 	OpacitySpotlight = 1,
+	OpacityFullSpell = false,				-- Bring Casting units to Full Opacity
 	OpacityFullNoTarget = true,				-- Use full opacity when No Target
-
-	--OpacityFullSpell = false,				-- Deprecated 6.13
-	--OpacityFullMouseover = false,			-- Deprecated 6.13
-
-	OpacitySpotlightSpell = false,			-- Added 6.14
-	OpacitySpotlightMouseover = false,		-- Added 6.14
-	OpacitySpotlightRaidMarked = false,		-- Added 6.14
-
-	-- Unit Spotlight
-	---------------------------------------
-	UnitSpotlightOpacity = 1,
-	UnitSpotlightScale = 1.4,
-	UnitSpotlightColor = {r = .8, g = 0, b = 0,},
-	UnitSpotlightOpacityEnable = true,
-	UnitSpotlightScaleEnable = true,
-	UnitSpotlightBarEnable = true,
-	UnitSpotlightGlowEnable = true,
-	UnitSpotlightList = "",
-	UnitSpotlightLookup = {},
+	OpacityFullMouseover = false,
 
 	-- Unit Spotlight
 	---------------------------------------
@@ -119,10 +76,6 @@ TidyPlatesHubDefaults = {
 	ScaleIgnoreNonEliteUnits = false,
 	ScaleIgnoreInactive = false,
 	ScaleCastingSpotlight = false,
-<<<<<<< HEAD
-	ScaleTargetSpotlight = false,
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	ScaleMiniMobs = true,
 
 	-- Text
@@ -171,27 +124,11 @@ TidyPlatesHubDefaults = {
 	TextColorHostilePlayer = {r = 255/255, g = 51/255, b = 32/255,},
 	TextColorGuildMember = {r = 60/255, g = 168/255, b = 255/255,},
 
-	ColorTapped = {r = 110/255, g = 110/255, b = 110/255,},
-
 	-- Casting
 	---------------------------------------
 	ColorNormalSpellCast = { r = 252/255, g = 140/255, b = 0, },
 	ColorUnIntpellCast = { r = 0.5137243866920471, g = 0.7529395222663879, b = 0.7647042274475098, },
 	SpellCastEnableFriendly = false,
-<<<<<<< HEAD
-
-	-- Status Text
-	---------------------------------------
-	StatusTextLeft = 8,
-	StatusTextCenter = 5,
-	StatusTextRight = 7,
-
-	StatusTextLeftColor = true,
-	StatusTextCenterColor = true,
-	StatusTextRightColor = true,
-
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 
 	-- Health
@@ -221,9 +158,7 @@ TidyPlatesHubDefaults = {
 	WidgetsDebuff = true,
 	WidgetsDebuffStyle = 1,
 	WidgetsAuraMode = 1,
-	WidgetsMyDebuff = true,
-	WidgetsMyBuff = false,
-	WidgetsDebuffTrackList = "My Rake\nMy Rip\nMy Moonfire\nAll 339\nMy Regrowth\nMy Rejuvenation\nNot Facepalm Bolt",
+	WidgetsDebuffTrackList = "My Rake\nMy Rip\nMy Moonfire\nAll 339\nMy Regrowth\nMy Rejuvenation",
 	WidgetsDebuffLookup = {},
 	WidgetsDebuffPriority = {},
 	WidgetAuraTrackDispelFriendly = false,

@@ -136,13 +136,13 @@ function ns:Update()
 				_G[itemName .. "SpellName"]:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 				_G[itemName .. "SubSpellName"]:SetText(info)
 				_G[itemName .. "SubSpellName"]:SetTextColor(0.50, 0.25, 0)
-				_G[itemName .. "IconTexture"]:SetDesaturated(0)
+				_G[itemName .. "IconTexture"]:SetDesaturated(false)
 				_G[itemName .. "IconTexture"]:SetVertexColor(1.0, 1.0, 1.0)
 			else
 				_G[itemName .. "SpellName"]:SetTextColor(0.4, 0.4, 0.4)
 				_G[itemName .. "SubSpellName"]:SetFormattedText(SPELLBOOK_AVAILABLE_AT, availableAt)
 				_G[itemName .. "SubSpellName"]:SetTextColor(0.4, 0.4, 0.4)
-				_G[itemName .. "IconTexture"]:SetDesaturated(1)
+				_G[itemName .. "IconTexture"]:SetDesaturated(true)
 				_G[itemName .. "IconTexture"]:SetVertexColor(0.4, 0.4, 0.4)
 			end
 			
@@ -217,12 +217,12 @@ function ns:UpdateKnownGlyphs()
 				if isKnown then
 					_G[itemName .. "SpellName"]:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 					_G[itemName .. "SubSpellName"]:SetTextColor(0.50, 0.25, 0)
-					_G[itemName .. "IconTexture"]:SetDesaturated(0)
+					_G[itemName .. "IconTexture"]:SetDesaturated(false)
 					_G[itemName .. "IconTexture"]:SetVertexColor(1.0, 1.0, 1.0)
 				else
 					_G[itemName .. "SpellName"]:SetTextColor(0.4, 0.4, 0.4)
 					_G[itemName .. "SubSpellName"]:SetTextColor(0.4, 0.4, 0.4)
-					_G[itemName .. "IconTexture"]:SetDesaturated(1)
+					_G[itemName .. "IconTexture"]:SetDesaturated(true)
 					_G[itemName .. "IconTexture"]:SetVertexColor(0.4, 0.4, 0.4)
 				end
 

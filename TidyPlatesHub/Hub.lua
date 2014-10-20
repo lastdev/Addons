@@ -18,8 +18,7 @@ local TextModes = TidyPlatesHubModes.TextModes
 local RangeModes = TidyPlatesHubModes.RangeModes
 local AuraWidgetModes = TidyPlatesHubModes.AuraWidgetModes
 local DebuffStyles = TidyPlatesHubModes.DebuffStyles
-local EnemyOpacityModes = TidyPlatesHubModes.EnemyOpacityModes
-local FriendlyOpacityModes = TidyPlatesHubModes.FriendlyOpacityModes
+local OpacityModes = TidyPlatesHubModes.OpacityModes
 local ScaleModes = TidyPlatesHubModes.ScaleModes
 local FriendlyBarModes = TidyPlatesHubModes.FriendlyBarModes
 local EnemyBarModes = TidyPlatesHubModes.EnemyBarModes
@@ -30,8 +29,6 @@ local TextPlateFieldModes = TidyPlatesHubModes.TextPlateFieldModes
 local ArtStyles = TidyPlatesHubModes.ArtStyles
 local ArtModes = TidyPlatesHubModes.ArtModes
 local ThreatModes = TidyPlatesHubModes.ThreatModes
-local CustomTextModes = TidyPlatesHubModes.CustomTextModes
-local BasicTextModes = TidyPlatesHubModes.BasicTextModes
 
 ------------------------------------------------------------------
 -- Generate Panel
@@ -39,9 +36,7 @@ local BasicTextModes = TidyPlatesHubModes.BasicTextModes
 local function CreateInterfacePanelWidgets(panel)
 	local objectName = panel.objectName
 	local AlignmentColumn = panel.AlignmentColumn
-	local OffsetColumnB = 200						-- 240
-	local F = nil									-- Cache for anchoring
-
+	local OffsetColumnB = 200	-- 240
 
 --[[
 ------------------------------------------------------------------------------------------------------------------------
@@ -104,33 +99,6 @@ Plate Show, Fade In Animation
 	------------------------------
     -- Text
 	------------------------------
-<<<<<<< HEAD
-    -- Health Bars
-	------------------------------
-
-    panel.HealthBarLabel, F = CreateQuickHeadingLabel(nil, "Health Bar View", AlignmentColumn, F, 0, 5)
-
-    -- Enemy
-	panel.ColorEnemyBarMode, F =  CreateQuickDropdown(objectName.."ColorEnemyBarMode", "Enemy Bar Color:", EnemyBarModes, 1, AlignmentColumn, F)
-	panel.ColorEnemyNameMode, F =  CreateQuickDropdown(objectName.."ColorEnemyNameMode", "Enemy Name Color:", NameColorModes, 1, AlignmentColumn, F)
-	panel.ColorEnemyStatusTextMode, F =  CreateQuickDropdown(objectName.."ColorEnemyStatusTextMode", "Enemy Status Text:", TextModes, 1, AlignmentColumn, F )
-	--panel.ColorEnemyStatusTextModeCenter, F =  CreateQuickDropdown(objectName.."ColorEnemyStatusTextModeCenter", "", BasicTextModes, 1, AlignmentColumn, F, 0, -14 )
-	--panel.ColorEnemyStatusTextModeRight, F =  CreateQuickDropdown(objectName.."ColorEnemyStatusTextModeRight", "", BasicTextModes, 1, AlignmentColumn, F, 0, -14 )
-
-	-- Friendly
-	panel.ColorFriendlyBarMode, F =  CreateQuickDropdown(objectName.."ColorFriendlyBarMode", "Friendly Bar Color:", FriendlyBarModes, 1, AlignmentColumn, panel.HealthBarLabel, OffsetColumnB)
-	panel.ColorFriendlyNameMode, F =  CreateQuickDropdown(objectName.."ColorFriendlyNameMode", "Friendly Name Color:", NameColorModes, 1, AlignmentColumn, F, OffsetColumnB)
-	panel.ColorFriendlyStatusTextMode, F =  CreateQuickDropdown(objectName.."ColorFriendlyStatusTextMode", "Friendly Status Text:", TextModes, 1, AlignmentColumn, F, OffsetColumnB)
-	--panel.ColorFriendlyStatusTextModeCenter, F =  CreateQuickDropdown(objectName.."ColorFriendlyStatusTextModeCenter", "", BasicTextModes, 1, AlignmentColumn, F, OffsetColumnB, -14)
-	--panel.ColorFriendlyStatusTextModeRight, F =  CreateQuickDropdown(objectName.."ColorFriendlyStatusTextModeRight", "", BasicTextModes, 1, AlignmentColumn, F, OffsetColumnB, -14)
-
-	-- Other
-	panel.TextShowLevel, F = CreateQuickCheckbutton(objectName.."TextShowLevel", "Show Level", AlignmentColumn, F, 0, 2)
-	panel.TextUseBlizzardFont, F = CreateQuickCheckbutton(objectName.."TextUseBlizzardFont", "Use Default Blizzard Font", AlignmentColumn, F, 0)
-    panel.TextShowOnlyOnTargets, F = CreateQuickCheckbutton(objectName.."TextShowOnlyOnTargets", "Show Status Text on Target & Mouseover", AlignmentColumn, F, 0)
-    panel.TextShowOnlyOnActive, F = CreateQuickCheckbutton(objectName.."TextShowOnlyOnActive", "Show Status Text on Active/Damaged Units", AlignmentColumn, F, 0)
-
-=======
 --[[
 
 	Friendly Unit Name Coloring					Enemy Unit Name Coloring
@@ -212,7 +180,6 @@ Plate Show, Fade In Animation
 	panel.StyleLabel = CreateQuickHeadingLabel(nil, "Headline View", AlignmentColumn, panel.TextShowOnlyOnTargets, 0, 5)
 	panel.StyleEnemyMode =  CreateQuickDropdown(objectName.."StyleEnemyMode", "Enemy Nameplates:", StyleModes, 1, AlignmentColumn, panel.StyleLabel, 0, 2)
 	panel.StyleFriendlyMode =  CreateQuickDropdown(objectName.."StyleFriendlyMode", "Friendly Nameplates:", StyleModes, 1, AlignmentColumn, panel.StyleLabel, OffsetColumnB, 2)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 	panel.HeadlineEnemyColor = CreateQuickDropdown(objectName.."HeadlineEnemyColor", "Enemy Headline Color:", NameColorModes, 1, AlignmentColumn, panel.StyleEnemyMode)	-- |cffee9900Text-Only Style
 	panel.HeadlineFriendlyColor = CreateQuickDropdown(objectName.."HeadlineFriendlyColor", "Friendly Headline Color:", NameColorModes, 1, AlignmentColumn, panel.StyleFriendlyMode, OffsetColumnB)	-- |cffee9900Text-Only Style
@@ -223,40 +190,6 @@ Plate Show, Fade In Animation
 	------------------------------
 	-- Aura (Buff and Debuff) Widget
 	------------------------------
-<<<<<<< HEAD
-	panel.StyleLabel = CreateQuickHeadingLabel(nil, "Headline View", AlignmentColumn, F, 0, 5)
-	panel.StyleEnemyMode =  CreateQuickDropdown(objectName.."StyleEnemyMode", "Enemy Headline Mode:", StyleModes, 1, AlignmentColumn, panel.StyleLabel, 0, 2)
-	panel.StyleFriendlyMode =  CreateQuickDropdown(objectName.."StyleFriendlyMode", "Friendly Headline Mode:", StyleModes, 1, AlignmentColumn, panel.StyleLabel, OffsetColumnB, 2)
-
-	panel.HeadlineEnemyColor = CreateQuickDropdown(objectName.."HeadlineEnemyColor", "Enemy Headline Color:", NameColorModes, 1, AlignmentColumn, panel.StyleEnemyMode)	-- |cffee9900Text-Only Style
-	panel.HeadlineFriendlyColor = CreateQuickDropdown(objectName.."HeadlineFriendlyColor", "Friendly Headline Color:", NameColorModes, 1, AlignmentColumn, panel.StyleFriendlyMode, OffsetColumnB)	-- |cffee9900Text-Only Style
-
-	panel.TextPlateFieldMode =  CreateQuickDropdown(objectName.."TextPlateFieldMode", "Status Text Field:", TextPlateFieldModes, 1, AlignmentColumn, panel.HeadlineEnemyColor )	-- |cffee9900Text-Only Style
-
-
-	------------------------------
-	-- Aura (Buff and Debuff) Widget
-	------------------------------
-	panel.DebuffsLabel = CreateQuickHeadingLabel(nil, "Buffs & Debuffs", AlignmentColumn, panel.TextPlateFieldMode, 0, 5)
-	panel.WidgetsDebuff = CreateQuickCheckbutton(objectName.."WidgetsDebuff", "Enable Aura Widget", AlignmentColumn, panel.DebuffsLabel)
-
-	--panel.WidgetsAuraMode =  CreateQuickDropdown(objectName.."WidgetsAuraMode", "Filter Mode:", AuraWidgetModes, 1, AlignmentColumn, panel.WidgetsDebuffStyle, 16)		-- used to be WidgetsDebuffMode
-
-	panel.WidgetsMyDebuff = CreateQuickCheckbutton(objectName.."WidgetsMyDebuff", "Include My Debuffs", AlignmentColumn, panel.WidgetsDebuff, 16)
-	panel.WidgetsMyBuff = CreateQuickCheckbutton(objectName.."WidgetsMyBuff", "Include My Buffs", AlignmentColumn, panel.WidgetsMyDebuff, 16)
-
-	panel.WidgetsDebuffListLabel = CreateQuickItemLabel(nil, "Additional Auras:", AlignmentColumn, panel.WidgetsMyBuff, 16)
-	panel.WidgetsDebuffTrackList = CreateQuickEditbox(objectName.."WidgetsDebuffTrackList", AlignmentColumn, panel.WidgetsDebuffListLabel, 16)
-
-	panel.WidgetsDebuffStyle =  CreateQuickDropdown(objectName.."WidgetsDebuffStyle", "Icon Style:", DebuffStyles, 1, AlignmentColumn, panel.WidgetsDebuffTrackList, 16)
-
-	panel.WidgetAuraTrackDispelFriendly = CreateQuickCheckbutton(objectName.."WidgetAuraTrackDispelFriendly", "Include Dispellable Debuffs on Friendly Units", AlignmentColumn, panel.WidgetsDebuffStyle, 16, 4)
-	panel.WidgetAuraTrackCurse = CreateQuickCheckbutton(objectName.."WidgetAuraTrackCurse", "Curse", AlignmentColumn, panel.WidgetAuraTrackDispelFriendly, 16+16, -2)
-	panel.WidgetAuraTrackDisease = CreateQuickCheckbutton(objectName.."WidgetAuraTrackDisease", "Disease", AlignmentColumn, panel.WidgetAuraTrackCurse, 16+16, -2)
-	panel.WidgetAuraTrackMagic = CreateQuickCheckbutton(objectName.."WidgetAuraTrackMagic", "Magic", AlignmentColumn, panel.WidgetAuraTrackDisease, 16+16, -2)
-	panel.WidgetAuraTrackPoison = CreateQuickCheckbutton(objectName.."WidgetAuraTrackPoison", "Poison", AlignmentColumn, panel.WidgetAuraTrackMagic, 16+16, -2)
-
-=======
 	panel.DebuffsLabel = CreateQuickHeadingLabel(nil, "Buffs & Debuffs", AlignmentColumn, panel.TextPlateFieldMode, 0, 5)
 	panel.WidgetsDebuff = CreateQuickCheckbutton(objectName.."WidgetsDebuff", "Show Aura Timers", AlignmentColumn, panel.DebuffsLabel)
 	panel.WidgetsDebuffStyle =  CreateQuickDropdown(objectName.."WidgetsDebuffStyle", "Icon Style:", DebuffStyles, 1, AlignmentColumn, panel.WidgetsDebuff, 16)
@@ -269,20 +202,13 @@ Plate Show, Fade In Animation
 	panel.WidgetAuraTrackDisease = CreateQuickCheckbutton(objectName.."WidgetAuraTrackDisease", "Disease", AlignmentColumn, panel.WidgetAuraTrackCurse, 16, -2)
 	panel.WidgetAuraTrackMagic = CreateQuickCheckbutton(objectName.."WidgetAuraTrackMagic", "Magic", AlignmentColumn, panel.WidgetAuraTrackDisease, 16, -2)
 	panel.WidgetAuraTrackPoison = CreateQuickCheckbutton(objectName.."WidgetAuraTrackPoison", "Poison", AlignmentColumn, panel.WidgetAuraTrackMagic, 16, -2)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 	------------------------------
 	-- Debuff Help Tip
 	panel.DebuffHelpTip = CreateQuickItemLabel(nil, "Tip: |cffCCCCCCAuras should be listed with the exact name, or a spell ID number. "..
-<<<<<<< HEAD
-		"You can use the prefixes, 'My' or 'All', to distinguish personal damage spells from global crowd control spells. The prefix 'Not' "..
-		"may be used to blacklist an aura.  Auras at the top of the list will get displayed before lower ones.", AlignmentColumn, panel.WidgetsDebuffListLabel, 225+40) -- 210, 275, )
-	panel.DebuffHelpTip:SetHeight(150)
-=======
 		"You can use the prefixes, 'My' or 'All', to distinguish personal damage spells from global crowd control spells. "..
 		"Auras at the top of the list will get displayed before lower ones.", AlignmentColumn, panel.WidgetsDebuffListLabel, 225+40) -- 210, 275, )
 	panel.DebuffHelpTip:SetHeight(128)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	panel.DebuffHelpTip:SetWidth(200)
 	panel.DebuffHelpTip.Text:SetJustifyV("TOP")
 
@@ -292,78 +218,14 @@ Plate Show, Fade In Animation
 	------------------------------
 	--Opacity
 	------------------------------
-<<<<<<< HEAD
-	panel.OpacityLabel, F = CreateQuickHeadingLabel(nil, "Opacity", AlignmentColumn, panel.WidgetAuraTrackPoison, 0, 5)
-	panel.EnemyAlphaSpotlightMode =  CreateQuickDropdown(objectName.."EnemyAlphaSpotlightMode", "Enemy Spotlight Mode:", EnemyOpacityModes, 1, AlignmentColumn, F)
-	panel.FriendlyAlphaSpotlightMode, F =  CreateQuickDropdown(objectName.."FriendlySpotlightMode", "Friendly Spotlight Mode:", FriendlyOpacityModes, 1, AlignmentColumn, F, OffsetColumnB)
-
-	panel.OpacitySpotlight = CreateQuickSlider(objectName.."OpacitySpotlight", "Spotlight Opacity:", AlignmentColumn, F, 0, 2)
-	panel.OpacityTarget = CreateQuickSlider(objectName.."OpacityTarget", "Current Target Opacity:", AlignmentColumn, panel.OpacitySpotlight, 0, 2)
-=======
 	panel.OpacityLabel = CreateQuickHeadingLabel(nil, "Opacity", AlignmentColumn, panel.WidgetAuraTrackPoison, 0, 5)
 	panel.OpacityTarget = CreateQuickSlider(objectName.."OpacityTarget", "Current Target Opacity:", AlignmentColumn, panel.OpacityLabel, 0, 2)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	panel.OpacityNonTarget = CreateQuickSlider(objectName.."OpacityNonTarget", "Non-Target Opacity:", AlignmentColumn, panel.OpacityTarget, 0, 2)
-
-	panel.OpacitySpotlightSpell = CreateQuickCheckbutton(objectName.."OpacitySpotlightSpell", "Spotlight Casting Units", AlignmentColumn, panel.OpacityNonTarget, 0)
-	panel.OpacitySpotlightMouseover = CreateQuickCheckbutton(objectName.."OpacitySpotlightMouseover", "Spotlight Mouseover", AlignmentColumn, panel.OpacitySpotlightSpell, 0)
-	panel.OpacitySpotlightRaidMarked = CreateQuickCheckbutton(objectName.."OpacitySpotlightRaidMarked", "Spotlight Raid Marked", AlignmentColumn, panel.OpacitySpotlightMouseover, 0)
-
-	panel.OpacityFullNoTarget = CreateQuickCheckbutton(objectName.."OpacityFullNoTarget", "Use Target Opacity When No Target Exists", AlignmentColumn, panel.OpacitySpotlightRaidMarked, 0)
-
-	------------------------------
-	--Scale
-	------------------------------
-	panel.ScaleLabel = CreateQuickHeadingLabel(nil, "Scale", AlignmentColumn, panel.OpacityFullNoTarget, 0, 5)
-	panel.ScaleStandard = CreateQuickSlider(objectName.."ScaleStandard", "Normal Scale:", AlignmentColumn, panel.ScaleLabel, 0, 2)
-	panel.ScaleSpotlightMode =  CreateQuickDropdown(objectName.."ScaleSpotlightMode", "Scale Spotlight Mode:", ScaleModes, 1, AlignmentColumn, panel.ScaleStandard)
-	panel.ScaleSpotlight = CreateQuickSlider(objectName.."ScaleSpotlight", "Spotlight Scale:", AlignmentColumn, panel.ScaleSpotlightMode, 0, 2)
-	panel.ScaleIgnoreNeutralUnits= CreateQuickCheckbutton(objectName.."ScaleIgnoreNeutralUnits", "Ignore Neutral Units", AlignmentColumn, panel.ScaleSpotlight, 16)
-	panel.ScaleIgnoreNonEliteUnits= CreateQuickCheckbutton(objectName.."ScaleIgnoreNonEliteUnits", "Ignore Non-Elite Units", AlignmentColumn, panel.ScaleIgnoreNeutralUnits, 16)
-	panel.ScaleIgnoreInactive= CreateQuickCheckbutton(objectName.."ScaleIgnoreInactive", "Ignore Inactive Units", AlignmentColumn, panel.ScaleIgnoreNonEliteUnits, 16)
-	panel.ScaleMiniMobs= CreateQuickCheckbutton(objectName.."ScaleMiniMobs", "Auto-Scale Mini/Trivial Mobs", AlignmentColumn, panel.ScaleIgnoreInactive, 0)
-	panel.ScaleCastingSpotlight, F = CreateQuickCheckbutton(objectName.."ScaleCastingSpotlight", "Spotlight Casting Units", AlignmentColumn, panel.ScaleMiniMobs, 0)
-	panel.ScaleTargetSpotlight, F = CreateQuickCheckbutton(objectName.."ScaleTargetSpotlight", "Spotlight Target Units", AlignmentColumn, F, 0)
-
-
-	-- panel.ScaleTrivialMobsMultiplier =
-	-- Downscale Trivial Mobs  (70%)
-
-	------------------------------
-	-- Trivial Mobs
-	------------------------------
-	-- Scale Multiplier
-	-- Override Target Settings
-	-- Ignore Threat
-	--
-
-	-- Hiding Mobs vs Filtering Mobs
-
-	------------------------------
-    -- Unit Search Spotlight/Searchlight
-	------------------------------
-
-	--[[
-	panel.UnitSpotlightLabel = CreateQuickHeadingLabel(nil, "Unit Spotlight", AlignmentColumn, panel.ScaleCastingSpotlight, 0, 5)
-
-	-- Column 1
-	panel.UnitSpotlightOpacity = CreateQuickSlider(objectName.."UnitSpotlightOpacity", "Spotlight Opacity:", AlignmentColumn, panel.UnitSpotlightLabel, 0, 2)
-	panel.UnitSpotlightScale = CreateQuickSlider(objectName.."UnitSpotlightScale", "Spotlight Scale:", AlignmentColumn, panel.UnitSpotlightOpacity, 0, 2)
-	panel.UnitSpotlightColorLabel = CreateQuickItemLabel(nil, "Spotlight Color:", AlignmentColumn, panel.UnitSpotlightScale, 0, 0)
-	panel.UnitSpotlightColor = CreateQuickColorbox(objectName.."UnitSpotlightColor", "Bar & Glow Color", AlignmentColumn, panel.UnitSpotlightColorLabel , 6, 2)
-
-	panel.UnitSpotlightListLabel = CreateQuickItemLabel(nil, "Unit Name:", AlignmentColumn, panel.UnitSpotlightColor, 0, 4)
-	panel.UnitSpotlightList = CreateQuickEditbox(objectName.."UnitSpotlightList", AlignmentColumn, panel.UnitSpotlightListLabel, 0)
-
-	-- Boss NPC units
-
-	-- Column 2
-	panel.UnitSpotlightOpacityEnable = CreateQuickCheckbutton(objectName.."UnitSpotlightOpacityEnable", "Enable Opacity", AlignmentColumn, panel.UnitSpotlightListLabel, 8+ OffsetColumnB, 0)
-	panel.UnitSpotlightScaleEnable = CreateQuickCheckbutton(objectName.."UnitSpotlightScaleEnable", "Enable Scale", AlignmentColumn, panel.UnitSpotlightOpacityEnable, 8+ OffsetColumnB, 0)
-	panel.UnitSpotlightBarEnable = CreateQuickCheckbutton(objectName.."UnitSpotlightBarEnable", "Enable Bar Color", AlignmentColumn, panel.UnitSpotlightScaleEnable, 8+OffsetColumnB)
-	panel.UnitSpotlightGlowEnable = CreateQuickCheckbutton(objectName.."UnitSpotlightGlowEnable", "Enable Glow Color", AlignmentColumn, panel.UnitSpotlightBarEnable, 8+OffsetColumnB)
-
-	--]]
+	panel.OpacitySpotlightMode =  CreateQuickDropdown(objectName.."OpacitySpotlightMode", "Opacity Spotlight Mode:", OpacityModes, 1, AlignmentColumn, panel.OpacityNonTarget)
+	panel.OpacitySpotlight = CreateQuickSlider(objectName.."OpacitySpotlight", "Spotlight Opacity:", AlignmentColumn, panel.OpacitySpotlightMode, 0, 2)
+	panel.OpacityFullSpell = CreateQuickCheckbutton(objectName.."OpacityFullSpell", "Bring Casting Units to Target Opacity", AlignmentColumn, panel.OpacitySpotlight, 16)
+	panel.OpacityFullMouseover = CreateQuickCheckbutton(objectName.."OpacityFullMouseover", "Bring Mouseovers to Target Opacity", AlignmentColumn, panel.OpacityFullSpell, 16)
+	panel.OpacityFullNoTarget = CreateQuickCheckbutton(objectName.."OpacityFullNoTarget", "Use Target Opacity When No Target Exists", AlignmentColumn, panel.OpacityFullMouseover, 16)
 
 	------------------------------
 	--Scale
@@ -419,11 +281,7 @@ Plate Show, Fade In Animation
 	------------------------------
 	-- Filter
 	--------------------------------
-<<<<<<< HEAD
-	panel.FilterLabel = CreateQuickHeadingLabel(nil, "Unit Filter", AlignmentColumn, F, 0, 5)
-=======
 	panel.FilterLabel = CreateQuickHeadingLabel(nil, "Unit Filter", AlignmentColumn, panel.ScaleCastingSpotlight, 0, 5)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	panel.OpacityFiltered = CreateQuickSlider(objectName.."OpacityFiltered", "Filtered Unit Opacity:", AlignmentColumn, panel.FilterLabel, 0, 2)
 	panel.ScaleFiltered = CreateQuickSlider(objectName.."ScaleFiltered", "Filtered Unit Scale:", AlignmentColumn, panel.OpacityFiltered, 0, 2)
 	panel.FilterScaleLock = CreateQuickCheckbutton(objectName.."FilterScaleLock", "Override Target Scale", AlignmentColumn, panel.ScaleFiltered, 16)
@@ -444,13 +302,8 @@ Plate Show, Fade In Animation
     ------------------------------
 	-- Reaction
 	------------------------------
-<<<<<<< HEAD
-	-- Health Bar Color
-    panel.ReactionLabel = CreateQuickHeadingLabel(nil, "Reaction", AlignmentColumn, panel.OpacityFilterList, 0, 5)
-=======
 
         panel.ReactionLabel = CreateQuickHeadingLabel(nil, "Reaction", AlignmentColumn, panel.OpacityFilterList, 0, 5)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	panel.ReactionColorLabel = CreateQuickItemLabel(nil, "Health Bar Color:", AlignmentColumn, panel.ReactionLabel, 0, 2)
 	panel.ColorFriendlyNPC = CreateQuickColorbox(objectName.."ColorFriendlyNPC", "Friendly NPC", AlignmentColumn, panel.ReactionColorLabel , 16)
 	panel.ColorFriendlyPlayer = CreateQuickColorbox(objectName.."ColorFriendlyPlayer", "Friendly Player", AlignmentColumn, panel.ColorFriendlyNPC , 16)
@@ -458,11 +311,7 @@ Plate Show, Fade In Animation
 	panel.ColorHostileNPC = CreateQuickColorbox(objectName.."ColorHostileNPC", "Hostile NPC", AlignmentColumn, panel.ColorNeutral , 16)
 	panel.ColorHostilePlayer = CreateQuickColorbox(objectName.."ColorHostilePlayer", "Hostile Player", AlignmentColumn, panel.ColorHostileNPC , 16)
 	panel.ColorGuildMember = CreateQuickColorbox(objectName.."ColorGuildMember", "Guild Member", AlignmentColumn, panel.ColorHostilePlayer , 16)
-<<<<<<< HEAD
-    -- Text Color
-=======
     -- Column 2
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     panel.TextReactionColorLabel = CreateQuickItemLabel(nil, "Text Color:", AlignmentColumn, panel.ReactionLabel, OffsetColumnB )
 	panel.TextColorFriendlyNPC = CreateQuickColorbox(objectName.."TextColorFriendlyNPC", "Friendly NPC", AlignmentColumn, panel.ReactionColorLabel , OffsetColumnB + 16)
 	panel.TextColorFriendlyPlayer = CreateQuickColorbox(objectName.."TextColorFriendlyPlayer", "Friendly Player", AlignmentColumn, panel.TextColorFriendlyNPC , OffsetColumnB + 16)
@@ -470,24 +319,14 @@ Plate Show, Fade In Animation
 	panel.TextColorHostileNPC = CreateQuickColorbox(objectName.."TextColorHostileNPC", "Hostile NPC", AlignmentColumn, panel.TextColorNeutral , OffsetColumnB + 16)
 	panel.TextColorHostilePlayer = CreateQuickColorbox(objectName.."TextColorHostilePlayer", "Hostile Player", AlignmentColumn, panel.TextColorHostileNPC , OffsetColumnB + 16)
 	panel.TextColorGuildMember = CreateQuickColorbox(objectName.."TextColorGuildMember", "Guild Member", AlignmentColumn, panel.TextColorHostilePlayer , OffsetColumnB + 16)
-	-- Other
-	panel.OtherColorLabel = CreateQuickItemLabel(nil, "Other Colors:", AlignmentColumn, panel.ColorGuildMember, 0, 2)
-	panel.ColorTapped = CreateQuickColorbox(objectName.."ColorTapped", "Tapped Unit", AlignmentColumn, panel.OtherColorLabel , 16)
-	--panel.ColorTotem = CreateQuickColorbox(objectName.."ColorTotem", "Totem", AlignmentColumn, panel.ColorTapped , 16)
 
 	------------------------------
 	-- Threat
 	------------------------------
     -- Column 1
-<<<<<<< HEAD
-	panel.ThreatLabel = CreateQuickHeadingLabel(nil, "Threat", AlignmentColumn, panel.ColorTapped, 0, 5)
-	panel.ThreatMode =  CreateQuickDropdown(objectName.."ThreatMode", "Threat Mode:", ThreatModes, 1, AlignmentColumn, panel.ThreatLabel, 0, 2)
-	panel.ThreatGlowEnable = CreateQuickCheckbutton(objectName.."ThreatGlowEnable", "Enable Warning Glow", AlignmentColumn, panel.ThreatMode,0)
-=======
 	panel.ThreatLabel = CreateQuickHeadingLabel(nil, "Threat", AlignmentColumn, panel.ColorGuildMember, 0, 5)
 	panel.ThreatMode =  CreateQuickDropdown(objectName.."ThreatMode", "Threat Mode:", ThreatModes, 1, AlignmentColumn, panel.ThreatLabel, 0, 2)
 	panel.ThreatGlowEnable = CreateQuickCheckbutton(objectName.."ThreatGlowEnable", "Enable Border Glow", AlignmentColumn, panel.ThreatMode,0)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 	panel.ColorThreatColorLabels = CreateQuickItemLabel(nil, "Threat Colors:", AlignmentColumn, panel.ThreatGlowEnable, 0, 2)
 	panel.ColorAttackingMe = CreateQuickColorbox(objectName.."ColorAttackingMe", "Warning", AlignmentColumn, panel.ColorThreatColorLabels , 16)
@@ -517,44 +356,15 @@ Plate Show, Fade In Animation
 	panel.HealthColorLabels = CreateQuickItemLabel(nil, "Health Colors:", AlignmentColumn, panel.LowHealthThreshold, 0)
 	panel.ColorHighHealth = CreateQuickColorbox(objectName.."ColorHighHealth", "High Health", AlignmentColumn, panel.HealthColorLabels , 16)
 	panel.ColorMediumHealth = CreateQuickColorbox(objectName.."ColorMediumHealth", "Medium Health", AlignmentColumn, panel.ColorHighHealth , 16)
-	panel.ColorLowHealth, F = CreateQuickColorbox(objectName.."ColorLowHealth", "Low Health", AlignmentColumn, panel.ColorMediumHealth , 16)
-	-- [ ]  Highlight Enemy Healers
+	panel.ColorLowHealth = CreateQuickColorbox(objectName.."ColorLowHealth", "Low Health", AlignmentColumn, panel.ColorMediumHealth , 16)
 
-<<<<<<< HEAD
-=======
 	--[[
 			[ ]  Highlight Enemy Healers
 	--]]
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 	------------------------------
     -- Cast Bars
 	------------------------------
-<<<<<<< HEAD
-    panel.SpellCastLabel, F = CreateQuickHeadingLabel(nil, "Cast Bars", AlignmentColumn, F, 0, 5)
-    panel.SpellCastEnableFriendly, F = CreateQuickCheckbutton(objectName.."SpellCastEnableFriendly", "Show Friendly Cast Bars", AlignmentColumn, F)
-	panel.SpellCastColorLabel, F = CreateQuickItemLabel(nil, "Cast Bar Colors:", AlignmentColumn, F, 0, 2)
-	panel.ColorNormalSpellCast, F = CreateQuickColorbox(objectName.."ColorNormalSpellCast", "Normal", AlignmentColumn, F , 16)
-	panel.ColorUnIntpellCast, F = CreateQuickColorbox(objectName.."ColorUnIntpellCast", "Un-interruptible", AlignmentColumn, F , 16)
-
-	--[[
-	------------------------------
-	-- Text
-	------------------------------
-	panel.StatusTextLabel, F = CreateQuickHeadingLabel(nil, "Status Text", AlignmentColumn, F, 0, 5)
-
-	panel.StatusTextLeft, F =  CreateQuickDropdown(objectName.."StatusTextLeft", "Custom Text Program:", CustomTextModes, 1, AlignmentColumn, F, 0, 0)
-	panel.StatusTextLeftColor = CreateQuickCheckbutton(objectName.."StatusTextLeftColor", "Context Color", AlignmentColumn, F, 150, -16)
-	--panel.StatusTextLeftBracket = CreateQuickCheckbutton(objectName.."StatusTextLeftBracket", "Bracket", AlignmentColumn, F, 300, -16)
-
-	panel.StatusTextCenter, F =  CreateQuickDropdown(objectName.."StatusTextCenter", "", CustomTextModes, 1, AlignmentColumn, F, 0, -11)
-	panel.StatusTextCenterColor = CreateQuickCheckbutton(objectName.."StatusTextCenterColor", "Context Color", AlignmentColumn, F, 150, -16)
-	--panel.StatusTextCenterBracket = CreateQuickCheckbutton(objectName.."StatusTextCenterBracket", "Bracket", AlignmentColumn, F, 300, -16)
-
-	panel.StatusTextRight, F =  CreateQuickDropdown(objectName.."StatusTextRight", "", CustomTextModes, 1, AlignmentColumn, F, 0, -11)
-	panel.StatusTextRightColor = CreateQuickCheckbutton(objectName.."StatusTextRightColor", "Context Color", AlignmentColumn, F, 150, -16)
-	--panel.StatusTextRightBracket = CreateQuickCheckbutton(objectName.."StatusTextRightBracket", "Bracket", AlignmentColumn, F, 300, -16)
-=======
 	--[[
 	Enable Friendly Cast Bars
 	Enable Enemy Cast Bars
@@ -570,17 +380,12 @@ Plate Show, Fade In Animation
 	panel.ColorNormalSpellCast = CreateQuickColorbox(objectName.."ColorNormalSpellCast", "Normal", AlignmentColumn, panel.SpellCastColorLabel , 16)
 	panel.ColorUnIntpellCast = CreateQuickColorbox(objectName.."ColorUnIntpellCast", "Un-interruptible", AlignmentColumn, panel.ColorNormalSpellCast , 16)
 
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 
 	------------------------------
 	--Widgets
 	------------------------------
-<<<<<<< HEAD
-	panel.WidgetsLabel, F = CreateQuickHeadingLabel(nil, "Other Widgets", AlignmentColumn, F, 0, 5)
-=======
 	panel.WidgetsLabel = CreateQuickHeadingLabel(nil, "Other Widgets", AlignmentColumn, panel.ColorUnIntpellCast, 0, 5)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	panel.WidgetTargetHighlight = CreateQuickCheckbutton(objectName.."WidgetTargetHighlight", "Show Target Highlight", AlignmentColumn, panel.WidgetsLabel)
 	panel.WidgetEliteIndicator = CreateQuickCheckbutton(objectName.."WidgetEliteIndicator", "Show Elite Icon", AlignmentColumn, panel.WidgetTargetHighlight)
 	panel.ClassEnemyIcon = CreateQuickCheckbutton(objectName.."ClassEnemyIcon", "Show Enemy Class Art", AlignmentColumn, panel.WidgetEliteIndicator)
@@ -590,9 +395,9 @@ Plate Show, Fade In Animation
 
 	panel.WidgetsEnableExternal = CreateQuickCheckbutton(objectName.."WidgetsEnableExternal", "Enable External Widgets", AlignmentColumn, panel.WidgetsComboPoints)
 
-	panel.WidgetsThreatIndicator, F = CreateQuickCheckbutton(objectName.."WidgetsThreatIndicator", "Show Tug-o-Threat Indicator", AlignmentColumn, panel.WidgetsLabel, OffsetColumnB)
-	--panel.WidgetsThreatIndicatorMode =  CreateQuickDropdown(objectName.."WidgetsThreatIndicatorMode", "Threat Indicator:", ThreatWidgetModes, 1, AlignmentColumn, panel.WidgetsThreatIndicator, OffsetColumnB+16)
-	panel.WidgetsRangeIndicator = CreateQuickCheckbutton(objectName.."WidgetsRangeIndicator", "Show Party Range Warning", AlignmentColumn, F, OffsetColumnB)
+	panel.WidgetsThreatIndicator = CreateQuickCheckbutton(objectName.."WidgetsThreatIndicator", "Show Threat Indicator", AlignmentColumn, panel.WidgetsLabel, OffsetColumnB)
+	panel.WidgetsThreatIndicatorMode =  CreateQuickDropdown(objectName.."WidgetsThreatIndicatorMode", "Threat Indicator:", ThreatWidgetModes, 1, AlignmentColumn, panel.WidgetsThreatIndicator, OffsetColumnB+16)
+	panel.WidgetsRangeIndicator = CreateQuickCheckbutton(objectName.."WidgetsRangeIndicator", "Show Party Range Warning", AlignmentColumn, panel.WidgetsThreatIndicatorMode, OffsetColumnB)
 	panel.WidgetsRangeMode =  CreateQuickDropdown(objectName.."WidgetsRangeMode", "Range:", RangeModes, 1, AlignmentColumn, panel.WidgetsRangeIndicator, OffsetColumnB+16)
 
 	------------------------------
@@ -606,31 +411,6 @@ Plate Show, Fade In Animation
 	--panel.AdvancedCustomCodeTextbox = CreateQuickEditbox(objectName.."AdvancedCustomCodeTextbox", AlignmentColumn, panel.AdvancedHealthTextLabel, 8)
 
 
-<<<<<<< HEAD
-	--[[
-	theme.Default.name.size = 18
-	--]]
-	local ClearCacheButton = CreateFrame("Button", objectName.."ClearCacheButton", AlignmentColumn, "TidyPlatesPanelButtonTemplate")
-	ClearCacheButton:SetPoint("TOPLEFT", panel.FrameVerticalPosition, "BOTTOMLEFT",-6, -18)
-	--ClearCacheButton:SetPoint("TOPLEFT", panel.AdvancedCustomCodeTextbox, "BOTTOMLEFT",-6, -18)
-	ClearCacheButton:SetWidth(300)
-	ClearCacheButton:SetText("Clear Cache")
-	ClearCacheButton:SetScript("OnClick", function()
-			local count = 0
-			for index, obj in pairs(TidyPlatesWidgetData) do
-				if type(obj) == 'table' then
-					for subIndex in pairs(obj) do
-						count = count + 1
-						TidyPlatesWidgetData[index][subIndex] = nil
-					end
-				end
-			end
-			print("Tidy Plates Hub: Cleared", count, "entries from cache.")
-		end)
-
-	local BlizzOptionsButton = CreateFrame("Button", objectName.."BlizzButton", AlignmentColumn, "TidyPlatesPanelButtonTemplate")
-	BlizzOptionsButton:SetPoint("TOPLEFT", ClearCacheButton, "BOTTOMLEFT", 0, -16)
-=======
 	--loadstring( [[return function(unit) ]]..LocalVars.AdvancedCustomCodeTextbox..[[ end]])
 	--[[
 	--function(theme)
@@ -640,7 +420,6 @@ Plate Show, Fade In Animation
 
 	local BlizzOptionsButton = CreateFrame("Button", objectName.."BlizzButton", AlignmentColumn, "TidyPlatesPanelButtonTemplate")
 	BlizzOptionsButton:SetPoint("TOPLEFT", panel.FrameVerticalPosition, "BOTTOMLEFT",-6, -18)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	--BlizzOptionsButton:SetPoint("TOPLEFT", panel.AdvancedCustomCodeTextbox, "BOTTOMLEFT",-6, -18)
 	BlizzOptionsButton:SetWidth(300)
 	BlizzOptionsButton:SetText("Blizzard Nameplate Motion & Visibility...")
@@ -667,15 +446,9 @@ Plate Show, Fade In Animation
 	SetSliderMechanics(panel.OpacitySpotlight, 1, 0, 1, .01)
 	SetSliderMechanics(panel.OpacityFiltered, 1, 0, 1, .01)
 
-<<<<<<< HEAD
-	SetSliderMechanics(panel.ScaleFiltered, 1, .5, 2.2, .01)
-	SetSliderMechanics(panel.ScaleStandard, 1, .5, 2.2, .01)
-	SetSliderMechanics(panel.ScaleSpotlight, 1, .5, 2.2, .01)
-=======
 	SetSliderMechanics(panel.ScaleFiltered, 1, .1, 2.5, .01)
 	SetSliderMechanics(panel.ScaleStandard, 1, .1, 2.5, .01)
 	SetSliderMechanics(panel.ScaleSpotlight, 1, .1, 2.5, .01)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 	SetSliderMechanics(panel.FrameVerticalPosition, .5, 0, 1, .02)
 
@@ -695,20 +468,10 @@ Plate Show, Fade In Animation
 		-- Convert Unit Filter Strings
 		ConvertStringToTable(LocalVars.OpacityFilterList, LocalVars.OpacityFilterLookup)
 		ConvertStringToTable(LocalVars.UnitSpotlightList, LocalVars.UnitSpotlightLookup)
-<<<<<<< HEAD
-
-		-- Convert Custom Code...  (Testing)
-
-		-- local func, err = loadstring( [[return function(unit) ]]..LocalVars.AdvancedCustomCodeTextbox..[[ end]])
-		-- if func == nil and err then print(panel.name, "|r CUSTOM SCRIPT ERROR", err)
-		-- elseif func then LocalVars.CustomHealthFunction = func()	end
-
-=======
 		-- Convert Custom Code...  (Testing)
 		--local func, err = loadstring( [[return function(unit) ]]..LocalVars.AdvancedCustomCodeTextbox..[[ end]])
 		--if func == nil and err then print(panel.name, "|r CUSTOM SCRIPT ERROR", err)
 		--elseif func then LocalVars.CustomHealthFunction = func()	end
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 	end
 end

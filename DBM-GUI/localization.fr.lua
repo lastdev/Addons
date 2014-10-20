@@ -10,6 +10,7 @@ L.OTabBosses	= "Boss"
 L.OTabOptions	= "Options"
 
 L.TabCategory_Options		= "Options générales"
+L.TabCategory_WoD	 		= "Warlords of Draenor"
 L.TabCategory_MOP	 		= "Mists of Pandaria"
 L.TabCategory_CATA			= "Cataclysm"
 L.TabCategory_WOTLK			= "Wrath of the Lich King"
@@ -177,13 +178,8 @@ L.Area_SpamFilter				= "Options des filtres de spam"
 L.StripServerName				= "Ne pas afficher le royaume sur les alertes et les timers"
 L.SpamBlockBossWhispers			= "Filtrer les chuchotements d'alerte &lt;DBM&gt; pendant les rencontres"
 L.BlockVersionUpdateNotice		= "Désactiver le popup de notification de mise à jour"
-<<<<<<< HEAD
 L.ShowBBOnCombatStart			= "Effectuer une vérif. générale des buffs au début du combat"
 L.BigBrotherAnnounceToRaid		= "Annoncer les résultats de la vérif. générale au raid"
-=======
-L.ShowBBOnCombatStart			= "Effectuer une vérif. des buffs Big Brother au début du combat"
-L.BigBrotherAnnounceToRaid		= "Annoncer les résultats de Big Brother au raid"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
 L.Area_SpamFilter_Outgoing		= "Options des filtres globaux"
 L.SpamBlockNoShowAnnounce		= "Ne pas afficher d'annonces ou jouer de sons d'alerte"

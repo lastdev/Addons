@@ -459,6 +459,7 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_BLOODFURY       = GetSpellInfo(20572); --"Blood Fury" 33697, 33702
   SMARTBUFF_BERSERKING      = GetSpellInfo(20554); --"Berserking" 26296, 26297
   SMARTBUFF_WOTFORSAKEN     = GetSpellInfo(7744);  --"Will of the Forsaken"
+  SMARTBUFF_WarStomp        = GetSpellInfo(20549); --"War Stomp"
   
   -- Food
   SMARTBUFF_FOOD_AURA       = GetSpellInfo(46899); --"Well Fed"
@@ -815,7 +816,8 @@ function SMARTBUFF_InitSpellList()
     --{SMARTBUFF_PRECEPTION, 0.333, SMARTBUFF_CONST_SELF}, -- Human
     {SMARTBUFF_BLOODFURY, 0.416, SMARTBUFF_CONST_SELF},  -- Orc
     {SMARTBUFF_BERSERKING, 0.166, SMARTBUFF_CONST_SELF}, -- Troll
-    {SMARTBUFF_WOTFORSAKEN, 0.083, SMARTBUFF_CONST_SELF} -- Undead
+    {SMARTBUFF_WOTFORSAKEN, 0.083, SMARTBUFF_CONST_SELF}, -- Undead
+    {SMARTBUFF_WarStomp, 0.033, SMARTBUFF_CONST_SELF} -- Tauer
   };
 
   -- FOOD

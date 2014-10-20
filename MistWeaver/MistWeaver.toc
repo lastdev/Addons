@@ -1,7 +1,7 @@
-## Interface: 50400
+## Interface: 60000
 ## Title: MistWeaver
 ## Author: Nirriti
-## Version: 5.23
+## Version: 6.6
 ## Notes: a very special healer addon for a monk
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
@@ -13,7 +13,6 @@ MistWeaverLocalization.lua
 MistWeaverCommon.lua
 
 MistWeaverConfig.lua
-MistWeaverStatistics.lua
 
 MistWeaver.lua
 MistWeaver_Target.lua
@@ -21,9 +20,9 @@ MistWeaver_Focus.lua
 MistWeaver_Pets.lua
 
 MistWeaverConfig.xml
-MistWeaverStatistics.xml
 
 MistWeaver.xml
 MistWeaver_Target.xml
 MistWeaver_Focus.xml
 MistWeaver_Pets.xml
+ 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BPCouncil", "DBM-Icecrown", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 125 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 163 $"):sub(12, -3))
 mod:SetCreatureID(37970, 37972, 37973)
 mod:SetEncounterID(1095)
 mod:DisableEEKillDetection()--IEEU fires for this boss.
@@ -96,14 +96,10 @@ function mod:ShockVortexTarget(targetname, uId)
 	else
 		if uId then
 			local inRange = CheckInteractDistance(uId, 2)
-			local x, y = GetPlayerMapPosition(uId)
-			if x == 0 and y == 0 then
-				SetMapToCurrentZone()
-				x, y = GetPlayerMapPosition(uId)
-			end
 			if inRange then
 				specWarnVortexNear:Show(targetname)
 				if self.Options.VortexArrow then
+					local x, y = UnitPosition(uId)
 					DBM.Arrow:ShowRunAway(x, y, 10, 5)
 				end
 			end

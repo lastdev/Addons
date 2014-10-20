@@ -37,7 +37,7 @@ local function CreateQuickSlider(name, label, ... ) --, neighborFrame, xOffset, 
 			columnFrame.Callback()
 			--if columnFrame.OnFeedback then columnFrame:OnFeedback() end
 		end)
-		return frame, frame
+		return frame
 	end
 
 	local function CreateQuickCheckbutton(name, label, ...)
@@ -53,7 +53,7 @@ local function CreateQuickSlider(name, label, ... ) --, neighborFrame, xOffset, 
 			columnFrame.Callback()
 			--if columnFrame.OnFeedback then columnFrame:OnFeedback() end
 		end)
-		return frame, frame
+		return frame
 	end
 
 	local function SetSliderMechanics(slider, value, minimum, maximum, increment)
@@ -111,7 +111,7 @@ local function CreateQuickSlider(name, label, ... ) --, neighborFrame, xOffset, 
 		QuickSetPoints(frame, ...)
 		-- Set Feedback Function
 		--frame.OnValueChanged = columnFrame.OnFeedback
-		return frame, frame
+		return frame
 	end
 
 	local function CreateQuickColorbox(name, label, ...)
@@ -124,7 +124,7 @@ local function CreateQuickSlider(name, label, ... ) --, neighborFrame, xOffset, 
 		-- Set Feedback Function
 		frame.OnValueChanged = function() columnFrame.Callback() end
 		--frame.OnValueChanged = columnFrame.OnFeedback
-		return frame, frame
+		return frame
 	end
 
 	local function CreateQuickDropdown(name, label, dropdownTable, initialValue, ...)
@@ -137,7 +137,7 @@ local function CreateQuickSlider(name, label, ... ) --, neighborFrame, xOffset, 
 		-- Set Feedback Function
 		frame.OnValueChanged = function() columnFrame.Callback() end
 		--frame.OnValueChanged = columnFrame.OnFeedback
-		return frame, frame
+		return frame
 	end
 
 	local function CreateQuickHeadingLabel(name, label, ...)
@@ -171,7 +171,7 @@ local function CreateQuickSlider(name, label, ... ) --, neighborFrame, xOffset, 
 		columnFrame.HeadingBookmarks = columnFrame.HeadingBookmarks or {}
 		columnFrame.HeadingBookmarks[label] = bookmark
 		-- Done!
-		return frame, frame
+		return frame
 	end
 
 	local function CreateDrawer(name, label, ...)
@@ -205,7 +205,7 @@ local function CreateQuickSlider(name, label, ... ) --, neighborFrame, xOffset, 
 		QuickSetPoints(frame.AnchorButton, ...)
 		frame:SetPoint("TOPLEFT", frame.AnchorButton, "TOPLEFT", 0, 0)
 		-- Done!
-		return frame, frame
+		return frame
 	end
 
 	local function CreateQuickItemLabel(name, label, ...)
@@ -228,7 +228,7 @@ local function CreateQuickSlider(name, label, ... ) --, neighborFrame, xOffset, 
 		frame.Margins = { Left = 6, Right = 2, Top = 2, Bottom = 2,}
 		-- Set Positions
 		QuickSetPoints(frame, ...)
-		return frame, frame
+		return frame
 	end
 
 local function OnMouseWheelScrollFrame(frame, value, name)
@@ -575,7 +575,7 @@ local function CreateInterfacePanel( objectName, panelTitle, parentTitle)
         --child1:SetVertexColor()
 
 
---[[
+
 
 	local function InitializeDropdownMenu()
 		AddDropdownTitle("Bookmarks")
@@ -594,40 +594,11 @@ local function CreateInterfacePanel( objectName, panelTitle, parentTitle)
 		end
 	end
 
-	--]]
-
-	local function OnClickBookmark(frame)
-		local scrollTo = panel.AlignmentColumn.HeadingBookmarks[frame:GetText()]:GetHeight()
-		--print(frame:GetText(), scrollTo)
-		panel.ScrollFrame:SetVerticalScroll(ceil(scrollTo - 27))
-		PanelHelpers.HideDropdownMenu()
-	end
-
-	local function OnClickBookmarkDrawer(frame)
+	BookmarkButton:SetScript("OnClick", function(frame)
+		UIDropDownMenu_Initialize(DropdownFrame, InitializeDropdownMenu, "MENU")
+		ToggleDropDownMenu(1, nil, DropdownFrame, frame)
 		PlaySound("igMainMenuOptionCheckBoxOn")
-
-		local BookmarkMenu = {}
-		for index, name in pairs(panel.AlignmentColumn.Headings) do
-			BookmarkMenu[index] = {}
-			BookmarkMenu[index].text = name
-		end
-
-		PanelHelpers.ShowDropdownMenu(BookmarkButton, BookmarkMenu, OnClickBookmark)
-	end
-
-
-
-			--UIDropDownMenu_Initialize(DropdownFrame, InitializeDropdownMenu, "MENU")
-		--ToggleDropDownMenu(1, nil, DropdownFrame, frame)
-
---[[
-
---PanelHelpers.HideDropdownMenu
-
-		ShowDropdownMenu(drawer, menu, OnClickItem)
-		--]]
-
-	BookmarkButton:SetScript("OnClick", OnClickBookmarkDrawer )
+	end)
 
 	--[[
 	-- Bookmark/Table of Contents Button

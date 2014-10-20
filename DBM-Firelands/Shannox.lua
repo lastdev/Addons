@@ -3,11 +3,7 @@ local L		= mod:GetLocalizedStrings()
 local Riplimb	= EJ_GetSectionInfo(2581)
 local Rageface	= EJ_GetSectionInfo(2583)
 
-<<<<<<< HEAD
-mod:SetRevision(("$Revision: 120 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+mod:SetRevision(("$Revision: 131 $"):sub(12, -3))
 mod:SetCreatureID(53691)
 mod:SetEncounterID(1205)
 mod:DisableEEKillDetection()
@@ -84,12 +80,7 @@ function mod:ImmoTrapTarget(targetname)
 	else
 		local uId = DBM:GetRaidUnitId(targetname)
 		if uId then
-			local x, y = GetPlayerMapPosition(uId)
-			if x == 0 and y == 0 then
-				SetMapToCurrentZone()
-				x, y = GetPlayerMapPosition(uId)
-			end
-			local inRange = DBM.RangeCheck:GetDistance("player", x, y)
+			local inRange = DBM.RangeCheck:GetDistance("player", uId)
 			if inRange and inRange < 6 then
 				specWarnImmTrapNear:Show(targetname)
 			end
@@ -105,12 +96,7 @@ function mod:CrystalTrapTarget(targetname)
 	else
 		local uId = DBM:GetRaidUnitId(targetname)
 		if uId then
-			local x, y = GetPlayerMapPosition(uId)
-			if x == 0 and y == 0 then
-				SetMapToCurrentZone()
-				x, y = GetPlayerMapPosition(uId)
-			end
-			local inRange = DBM.RangeCheck:GetDistance("player", x, y)
+			local inRange = DBM.RangeCheck:GetDistance("player", uId)
 			if inRange and inRange < 6 then
 				specWarnCrystalTrapNear:Show(targetname)
 			end

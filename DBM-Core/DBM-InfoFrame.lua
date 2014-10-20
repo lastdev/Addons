@@ -55,7 +55,7 @@ local createFrame
 local onUpdate
 local dropdownFrame
 local initializeDropdown
-local currentMapName
+local currentMapId
 local maxlines
 local currentEvent
 local headerText = "DBM Info Frame"	-- this is only used if DBM.InfoFrame:SetHeader(text) is not called before :Show()
@@ -80,8 +80,7 @@ local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local GetSpellInfo = GetSpellInfo
 local UnitThreatSituation = UnitThreatSituation
 local GetRaidRosterInfo = GetRaidRosterInfo
-local GetCurrentMapAreaID = GetCurrentMapAreaID
-local GetMapNameByID = GetMapNameByID
+local UnitPosition = UnitPosition
 local GetPartyAssignment = GetPartyAssignment
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned
 
@@ -109,6 +108,7 @@ do
 			UIDropDownMenu_AddButton(info, 1)
 
 			info = UIDropDownMenu_CreateInfo()
+			info.keepShownOnClick = true
 			info.text = DBM_CORE_INFOFRAME_SHOW_SELF
 			if DBM.Options.InfoFrameShowSelf then
 				info.checked = true
@@ -140,7 +140,7 @@ function createFrame()
 	frame:SetWidth(64)
 	frame:EnableMouse(true)
 	frame:SetToplevel(true)
-	frame:SetMovable()
+	frame:SetMovable(1)
 	GameTooltip_OnLoad(frame)
 	frame:SetPadding(16)
 	frame:RegisterForDrag("LeftButton")
@@ -171,7 +171,7 @@ function createFrame()
 	end)
 	frame:SetScript("OnMouseDown", function(self, button)
 		if button == "RightButton" then
-			UIDropDownMenu_Initialize(dropdownFrame, initializeDropdown, "MENU")
+			UIDropDownMenu_Initialize(dropdownFrame, initializeDropdown)
 			ToggleDropDownMenu(1, nil, dropdownFrame, "cursor", 5, -10)
 		end
 	end)
@@ -393,7 +393,11 @@ end
 
 local function getUnitCreatureId(uId)
 	local guid = UnitGUID(uId)
-	return (guid and (tonumber(guid:sub(6, 10), 16))) or 0
+	local type, _, _, _, cid = strsplit(":", guid or "")
+	if type and type == "Creature" then
+		return tonumber(cid)
+	end
+	return 0
 end
 
 local function updatePlayerTargets()
@@ -474,8 +478,7 @@ function onUpdate(self, elapsed)
 		local name = sortedLines[i]
 		-- filter players who are not in the current zone (i.e. just idling/watching while being in the raid)
 		local unitId = DBM:GetRaidUnitId(DBM:GetUnitFullName(name))
-		local raidId = unitId and unitId:sub(0, 4) == "raid" and (tonumber(unitId:sub(5) or 0) or 0)
-		if not raidId or select(7, GetRaidRosterInfo(raidId)) == currentMapName then
+		if unitId and select(4, UnitPosition(unitId)) == currentMapId then
 			linesShown = linesShown + 1
 			local power = lines[name]
 			local icon = icons[name]
@@ -509,9 +512,7 @@ end
 --  Methods  --
 ---------------
 function infoFrame:Show(maxLines, event, ...)
-	SetMapToCurrentZone()
-	local currentMapId = GetCurrentMapAreaID()
-	currentMapName = GetMapNameByID(currentMapId)
+	currentMapId = select(4, UnitPosition("player"))
 	if DBM.Options.DontShowInfoFrame and (event or 0) ~= "test" then return end
 
 	maxlines = maxLines or 5

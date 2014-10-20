@@ -1,15 +1,10 @@
 local mod	= DBM:NewMod(857, "DBM-Pandaria", nil, 322, 1)
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD
-mod:SetRevision(("$Revision: 11421 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 10978 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+mod:SetRevision(("$Revision: 3 $"):sub(12, -3))
 mod:SetCreatureID(71952)
 mod:SetReCombatTime(20)
 mod:SetZone()
-mod:SetMinSyncRevision(10466)
 
 mod:RegisterCombat("combat_yell", L.Pull)
 mod:RegisterKill("yell", L.Victory)
@@ -36,7 +31,6 @@ local timerBlazingSong			= mod:NewBuffActiveTimer(15, 144471)
 
 mod:AddReadyCheckOption(33117, false)
 
-<<<<<<< HEAD
 function mod:BeaconTarget(targetname, uId)
 	if not targetname then return end
 	warnBeaconOfHope:Show(targetname)
@@ -53,14 +47,6 @@ function mod:OnCombatStart(delay, yellTriggered)
 	end
 end
 
-=======
-function mod:OnCombatStart(delay, yellTriggered)
-	if yellTriggered then--We know for sure this is an actual pull and not diving into in progress
-		timerInspiringSongCD:Start(20-delay)
-	end
-end
-
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 144468 then
@@ -77,15 +63,9 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 144473 then
 		warnBeaconOfHope:Show()
 		specWarnBeaconOfHope:Show()
-<<<<<<< HEAD
 		self:BossTargetScanner(71952, "BeaconTarget", 0.1, 20)
 	elseif spellId == 144461 then
 		warnFirestorm:Show()
-=======
-	elseif spellId == 144461 then
-		warnFirestorm:Show()
-		specWarnFirestorm:Show()
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	end
 end
 

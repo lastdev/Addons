@@ -1,8 +1,8 @@
-﻿## Interface: 50400
+﻿## Interface: 60000
 ## Title: DataStore
 ## Notes: Main DataStore Module
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: 5.4.001
+## Version: 6.0.001
 ## OptionalDeps: Ace3, LibAboutPanel 
 ## SavedVariables: DataStoreDB
 ## X-Embeds: Ace3
@@ -12,11 +12,7 @@
 ## X-eMail: thaoky.altoholic@yahoo.com
 ## X-Donate: http://wow.curse.com/downloads/wow-addons/details/altoholic.aspx
 ## X-Credits: My guild (Odysseüs), all translators, the wowace community, and all users for their invaluable suggestions !
-<<<<<<< HEAD
-## X-Curse-Packaged-Version: r47
-=======
-## X-Curse-Packaged-Version: r42
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+## X-Curse-Packaged-Version: r48
 ## X-Curse-Project-Name: DataStore
 ## X-Curse-Project-ID: datastore
 ## X-Curse-Repository-ID: wow/datastore/mainline

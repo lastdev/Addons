@@ -110,7 +110,7 @@
         <Scripts>
             <OnLoad>
                 self:SetBackdrop( { 
-                    bgFile = "Interface\\AddOns\\CleanUI\\skins\\minimap_masktexture", 
+                    bgFile = "Interface\\AddOns\\MistWeaver\\images\\masktexture", 
                     insets = { left = 4, right = 4, top = 4, bottom = 4 }
                 });
                 self:SetBackdropColor(1.0, 1.0, 1.0, 1.0);

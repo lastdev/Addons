@@ -1,11 +1,7 @@
 local mod	= DBM:NewMod("DSTrash", "DBM-DragonSoul")
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD
-mod:SetRevision(("$Revision: 128 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 104 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+mod:SetRevision(("$Revision: 131 $"):sub(12, -3))
 mod:SetModelID(39378)
 mod:SetZone()
 mod.isTrashMod = true
@@ -71,12 +67,7 @@ function mod:BoulderTarget(sGUID)
 		else
 			local uId = DBM:GetRaidUnitId(targetname)
 			if uId then
-				local x, y = GetPlayerMapPosition(uId)
-				if x == 0 and y == 0 then
-					SetMapToCurrentZone()
-					x, y = GetPlayerMapPosition(uId)
-				end
-				local inRange = DBM.RangeCheck:GetDistance("player", x, y)
+				local inRange = DBM.RangeCheck:GetDistance("player", uId)
 				if inRange and inRange < 6 then--Guessed, unknown, spelltip isn't informative.
 					specWarnBoulderNear:Show(targetname)
 				end

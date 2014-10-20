@@ -1,11 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-	Revision: $Id: BeanCounter.lua 5416 2013-06-11 15:28:08Z brykrys $
+	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Revision: $Id: BeanCounter.lua 5485 2014-10-13 12:58:31Z brykrys $
 
 	BeanCounterCore - BeanCounter: Auction House History
 	URL: http://auctioneeraddon.com/
@@ -32,11 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-<<<<<<< HEAD
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.20/BeanCounter/BeanCounter.lua $","$Rev: 5416 $","5.1.DEV.", 'auctioneer', 'libs')
-=======
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.19/BeanCounter/BeanCounter.lua $","$Rev: 5416 $","5.1.DEV.", 'auctioneer', 'libs')
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/BeanCounter/BeanCounter.lua $","$Rev: 5485 $","5.1.DEV.", 'auctioneer', 'libs')
 
 --AucAdvanced.Modules["Util"]["BeanCounter"]
 
@@ -537,7 +529,7 @@ function private.databaseAdd(key, itemLink, itemString, value, compress, server,
 		compress = true
 	end
 
-	local item, itemID, enchantID, jewelID1, jewelID2, jewelID3, jewelID4, suffixID, uniqueID, linkLevel, reforged = strsplit(":", itemString)
+	local item, itemID, enchantID, jewelID1, jewelID2, jewelID3, jewelID4, suffixID, uniqueID, tail = strsplit(":", itemString, 10)
 	--if this will be a compressed entry replace uniqueID with 0 or its scaling factor
 	if compress then
 		suffixID = tonumber(suffixID)
@@ -546,7 +538,7 @@ function private.databaseAdd(key, itemLink, itemString, value, compress, server,
 		else
 			uniqueID = 0
 		end
-		itemString = strjoin(":", item, itemID, enchantID, jewelID1, jewelID2, jewelID3, jewelID4, suffixID, uniqueID, linkLevel, reforged)
+		itemString = strjoin(":", item, itemID, enchantID, jewelID1, jewelID2, jewelID3, jewelID4, suffixID, uniqueID, tail)
 	end
 	--use current player unless we pass in a server, player
 	local db = private.playerData

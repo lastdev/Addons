@@ -18,6 +18,7 @@ local IsInRaid = IsInRaid
 local IsItemInRange = IsItemInRange
 local IsMounted = IsMounted
 local GetSpellCharges = GetSpellCharges
+local GetSpellInfo = GetSpellInfo
 local UnitGetIncomingHeals = UnitGetIncomingHeals
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned
@@ -243,8 +244,12 @@ function c.HasGlyph(name)
 	end
 end
 
+local function getCastTime(localizedNameOrId)
+  return (select(4, GetSpellInfo(localizedNameOrId)) or 0) / 1000
+end
+
 function c.GetCastTime(name)
-	return s.CastTime(s.SpellName(c.GetID(name)))
+	return getCastTime(c.GetID(name))
 end
 
 function c.GetCost(name)
@@ -277,7 +282,7 @@ local function getChannelTimeRemaining()
 end
 
 local function getCastFinish(info)
-	return info.CastStart + s.CastTime(info.Name)
+	return info.CastStart + getCastTime(info.Name)
 end
 
 local function getChannelFinish(info)

@@ -1,4 +1,4 @@
-## Interface: 50400
+## Interface: 60000
 ## Title: FloTotemBar
 ## Author: Floraline
 ## Notes: Add some bars for casting of totems/traps, with timers showing the remaining life time of the objects
@@ -6,7 +6,7 @@
 ## Dependencies:
 ## SavedVariables: 
 ## SavedVariablesPerCharacter: FLOTOTEMBAR_OPTIONS
-## X-Curse-Packaged-Version: 5.4.32
+## X-Curse-Packaged-Version: 6.0.34
 ## X-Curse-Project-Name: FloTotemBar
 ## X-Curse-Project-ID: flo-totem-bar
 ## X-Curse-Repository-ID: wow/flo-totem-bar/mainline

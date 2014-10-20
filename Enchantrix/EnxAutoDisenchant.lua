@@ -1,11 +1,7 @@
 ﻿--[[
 	Enchantrix Addon for World of Warcraft(tm).
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-	Revision: $Id: EnxAutoDisenchant.lua 5422 2013-06-15 18:03:26Z brykrys $
+	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Revision: $Id: EnxAutoDisenchant.lua 5484 2014-10-13 07:37:49Z ccox $
 	URL: http://enchantrix.org/
 
 	Automatic disenchant scanner.
@@ -32,11 +28,7 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-<<<<<<< HEAD
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Enchantrix/EnxAutoDisenchant.lua $", "$Rev: 5422 $")
-=======
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Enchantrix/EnxAutoDisenchant.lua $", "$Rev: 5422 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Enchantrix/EnxAutoDisenchant.lua $", "$Rev: 5484 $")
 
 local auto_de_session_ignore_list = {}
 local auto_de_frame
@@ -137,7 +129,7 @@ local function isAutoDisenchantAllowed(link, count)
 end
 
 local function nameFromIgnoreListItem(item)
-	local _, _, name = string.find(item, "%[(.+)%]")
+	local name = GetItemInfo(item)
 	return name
 end
 
@@ -163,6 +155,7 @@ local function getDisenchantOrProspectValue(link, count)
 
 	if quality >= 2 then
 		local enchSkillRequired = Enchantrix.Util.DisenchantSkillRequiredForItemLevel(level, quality)
+		-- debugSpam( "enchantskill required ", enchSkillRequired );
 		if enchSkillRequired and Enchantrix.Util.GetUserEnchantingSkill() >= enchSkillRequired then
 			local hsp, median, baseline, valFive = Enchantrix.Storage.GetItemDisenchantTotals(link)
 			if (not hsp) or (hsp == 0) then
@@ -176,6 +169,7 @@ local function getDisenchantOrProspectValue(link, count)
 			end
 			if hsp and hsp > 0 then
 				return hsp, _ENCH('ArgSpellname')
+--			else debugSpam("Item ", link, "has zero Disenchant value?" );
 			end
 		end
 	end
@@ -204,12 +198,13 @@ local function getDisenchantOrProspectValue(link, count)
 					local value = (hsp or 0) * yield
 					prospectValue = prospectValue + value
 				end
+				--if (prospectValue == 0) then debugSpam("Item ", link, "has zero prospect value?" ); end	-- TODO - DEBUGGING
 				return prospectValue, _ENCH('ArgSpellProspectingName')
 			end
 		end
 
 		local inscriptionSkillRequired = Enchantrix.Util.InscriptionSkillRequiredForItem(link)
-		if inscriptionSkillRequired and Enchantrix.Util.GetUserInscriptionSkill() >= inscriptionSkillRequired then
+		if (inscriptionSkillRequired and inscriptionSkillRequired > 0) and Enchantrix.Util.GetUserInscriptionSkill() >= inscriptionSkillRequired then
 			local milling = Enchantrix.Storage.GetItemMilling(link)
 			if milling then
 				local millingValue = 0
@@ -227,6 +222,7 @@ local function getDisenchantOrProspectValue(link, count)
 					local value = (hsp or 0) * yield
 					millingValue = millingValue + value
 				end
+				--if (millingValue == 0) then debugSpam("Item ", link, "has zero milling value?" ); end	-- TODO - DEBUGGING
 				return millingValue, _ENCH('ArgSpellMillingName')
 			end
 		end
@@ -249,6 +245,7 @@ local function findItemInOneBag(bag, findLink)
 				if (not isItemIgnored(link)) and isAutoDisenchantAllowed(link, count) then
 					local value, spell = getDisenchantOrProspectValue(link, count)
 					if value and value > 0 then
+						-- debugSpam("found auto item ", value, link );
 						return link, bag, slot, value, spell
 					end
 				end
@@ -719,7 +716,7 @@ local function addonLoaded()
 	Stubby.RegisterEventHook("LOOT_CLOSED", "Enchantrix.AutoDisenchant", onEvent)
 	Stubby.RegisterEventHook("UNIT_SPELLCAST_SENT", "Enchantrix.AutoDisenchant", onEvent)
 	Stubby.RegisterEventHook("UNIT_SPELLCAST_INTERRUPTED", "Enchantrix.AutoDisenchant", onEvent)
-	Stubby.RegisterEventHook("UNIT_SPELLCAST_FAILED", "Enchantrix.AutoDisenchant", onEvent)
+	Stubby.RegisterEventHook("UNIT_SPELLCAST_FAILED", "Enchantrix.AutoDisenchant", onEvent)		-- this happens often during combat
 	Stubby.RegisterEventHook("UNIT_SPELLCAST_SUCCEEDED", "Enchantrix.AutoDisenchant", onEvent)
 	Stubby.RegisterEventHook("BAG_UPDATE", "Enchantrix.AutoDisenchant", onEvent)
 

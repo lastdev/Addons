@@ -3,13 +3,8 @@
 -------------------------------------------------------------------------------
 -- File date: 2014-02-15T23:44:42Z
 -- File hash: ddf47c8
-<<<<<<< HEAD
--- Project hash: 5b35dab
--- Project version: 3.0.5
-=======
--- Project hash: fbca907
--- Project version: 2.6.2
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+-- Project hash: beabe36
+-- Project version: 3.0.8
 -------------------------------------------------------------------------------
 -- Please see http://www.wowace.com/addons/arl/ for more information.
 -------------------------------------------------------------------------------

@@ -1,11 +1,7 @@
 local mod	= DBM:NewMod(818, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD
-mod:SetRevision(("$Revision: 11365 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(68036)--Crimson Fog 69050
 mod:SetEncounterID(1572)
 mod:SetZone()
@@ -254,12 +250,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		else
 			local uId = DBM:GetRaidUnitId(args.destName)
 			if uId then
-				local x, y = GetPlayerMapPosition(uId)
-				if x == 0 and y == 0 then
-					SetMapToCurrentZone()
-					x, y = GetPlayerMapPosition(uId)
-				end
-				local inRange = DBM.RangeCheck:GetDistance("player", x, y)
+				local inRange = DBM.RangeCheck:GetDistance("player", uId)
 				if inRange and inRange < 21 then--Range hard to get perfect, a player 30 yards away might still be in it. I say 15 is probably good middle ground to catch most of the "near"
 					specWarnForceOfWillNear:Show(args.destName)
 				end

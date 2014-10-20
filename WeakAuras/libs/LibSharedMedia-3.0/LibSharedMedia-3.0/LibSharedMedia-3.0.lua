@@ -1,10 +1,6 @@
 --[[
 Name: LibSharedMedia-3.0
-<<<<<<< HEAD
 Revision: $Revision: 87 $
-=======
-Revision: $Revision: 86 $
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 Author: Elkano (elkano@gmx.de)
 Inspired By: SurfaceLib by Haste/Otravi (troeks@gmail.com)
 Website: http://www.wowace.com/projects/libsharedmedia-3-0/

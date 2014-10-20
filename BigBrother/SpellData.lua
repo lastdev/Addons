@@ -2,7 +2,7 @@
 local addonName, vars = ...
 vars.SpellData = {}
 vars.svnrev = {}
-vars.svnrev["SpellData.lua"] = tonumber(("$Revision: 382 $"):match("%d+"))
+vars.svnrev["SpellData.lua"] = tonumber(("$Revision: 385 $"):match("%d+"))
 
 
 vars.SpellData.foods = {
@@ -148,20 +148,17 @@ vars.SpellData.ccspells = {
 	28272, -- Polymorph Pig
 	61780, -- Polymorph Turkey
 	9484, -- Shackle Undead
-	2637, -- Hibernate
 	3355, -- Freezing Trap (Effect) 
 	6770, -- Sap
 	20066, -- Repentance
 	5782, -- Fear
 	2094, -- Blind
 	51514, -- Hex
-	76780, -- Bind Elemental
 	19386, -- Wyvern Sting
 	710, -- Banish
 	10326, -- Turn Evil
 	6358, -- Seduction
 	115268, -- Mesmerize
-	1513, -- Scare Beast
 	339, -- Entangling Roots
 	115078, -- Paralysis (Monk)
         122224, -- Impaling Spear (HoF: Wind Lord Mel'jarak)
@@ -170,9 +167,6 @@ vars.SpellData.ccspells = {
 
 -- debuffs that can be applied to a cc target without breaking it
 vars.SpellData.ccsafeauras = {
-	1490,  -- Curse of the Elements
-	109466,-- Curse of Enfeeblement
-	18223, -- Curse of Exhaustion
 	5484,  -- Howl of Terror
 	3600,  -- Earthbind totem
 	31589, -- Slow 
@@ -184,7 +178,6 @@ vars.SpellData.ccsafeauras = {
 	15487, -- Silence
 	13810, -- Ice trap
 	56845, -- Glyph of Freezing Trap
-	34490, -- Silencing Shot
 	5116, -- Concussive Shot
         853, -- Hammer of Justice
 	408, -- Kidney Shot
@@ -223,7 +216,7 @@ vars.SpellData.tauntSpells = {
   116189, -- Provoke (Monk)
   17735, -- Suffering (Warlock Voidwalker)
   2649,  -- Growl (Hunter Pet)
-  53477, -- Taunt (Hunter Pet)
+  --53477, -- Taunt (Hunter Pet)
 }
 
 vars.SpellData.aoetauntSpells = {
@@ -233,6 +226,5 @@ vars.SpellData.aoetauntSpells = {
   82407, -- Painful Shock (Engineering Malfunction)
   36213, -- Angered Earth (Shaman Earth Elemental), unfortunately no visible debuff
   -- 59671, -- Challenging Howl (Warlock)  3.x
-  73684, -- Unleash Earth (Shaman) -- not really an aoe, but has to trigger off AURA_APPLIED
 }
 

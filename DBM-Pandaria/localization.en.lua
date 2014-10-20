@@ -88,11 +88,7 @@ L= DBM:GetModLocalization(859)
 
 L:SetMiscLocalization({
 	Pull					= "We shall see.",
-<<<<<<< HEAD
 	Victory					= "Though you will be surrounded by foes greater than you can imagine, your fortitude shall allow you to endure. Remember this in the times ahead.",
-=======
-	Victory					= "You are the mountain, unmovable by all but time.",
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	VictoryDem				= "Rakkas shi alar re pathrebosh il zila rethule kiel shi shi belaros rikk kanrethad adare revos shi xi thorje Rukadare zila te lok zekul melar "--Cover all bases and all
 })
 
@@ -123,7 +119,6 @@ L:SetOptionLocalization({
 L:SetMiscLocalization({
 	Pull					= "You will take my place on the eternal brazier."
 })
-<<<<<<< HEAD
 
 -----------------
 --  Zandalari  --
@@ -133,5 +128,3 @@ L = DBM:GetModLocalization("Zandalari")
 L:SetGeneralLocalization({
 	name =	"Zandalari"
 })
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23

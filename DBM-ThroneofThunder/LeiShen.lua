@@ -1,11 +1,7 @@
 local mod	= DBM:NewMod(832, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-<<<<<<< HEAD
-mod:SetRevision(("$Revision: 11365 $"):sub(12, -3))
-=======
-mod:SetRevision(("$Revision: 11193 $"):sub(12, -3))
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
 mod:SetCreatureID(68397)--Diffusion Chain Conduit 68696, Static Shock Conduit 68398, Bouncing Bolt conduit 68698, Overcharge conduit 68697
 mod:SetEncounterID(1579)
 mod:SetZone()
@@ -270,16 +266,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			if not self.vb.intermissionActive and self:IsMelee() then return end--Melee do not help soak these during normal phases, only during intermissions
 			local uId = DBM:GetRaidUnitId(args.destName)
 			if uId then
-				local x, y = GetPlayerMapPosition(uId)
-				if x == 0 and y == 0 then
-					SetMapToCurrentZone()
-					x, y = GetPlayerMapPosition(uId)
-				end
-				local inRange = DBM.RangeCheck:GetDistance("player", x, y)
+				local inRange = DBM.RangeCheck:GetDistance("player", uId)
 				if inRange and inRange < 31 then
 					specWarnStaticShockNear:Show(args.destName)
 					if self.Options.StaticShockArrow then
-						DBM.Arrow:ShowRunTo(args.destName, 3, 3, 8)
+						DBM.Arrow:ShowRunTo(uId, 3, 3, 8)
 					end
 				end
 			end
@@ -303,16 +294,11 @@ function mod:SPELL_AURA_APPLIED(args)
 			if not self.vb.intermissionActive and self:IsMelee() then return end--Melee do not help soak these during normal phases, only during intermissions
 			local uId = DBM:GetRaidUnitId(args.destName)
 			if uId then
-				local x, y = GetPlayerMapPosition(uId)
-				if x == 0 and y == 0 then
-					SetMapToCurrentZone()
-					x, y = GetPlayerMapPosition(uId)
-				end
-				local inRange = DBM.RangeCheck:GetDistance("player", x, y)
+				local inRange = DBM.RangeCheck:GetDistance("player", uId)
 				if inRange and inRange < 31 then
 					specWarnOverchargedNear:Show(args.destName)
 					if self.Options.OverchargeArrow then
-						DBM.Arrow:ShowRunTo(args.destName, 3, 3, 6)
+						DBM.Arrow:ShowRunTo(uId, 3, 3, 6)
 					end
 				end
 			end

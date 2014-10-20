@@ -1,12 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Snatch
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: SearcherSnatch.lua 5452 2014-01-18 19:02:51Z brykrys $
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
-	Revision: $Id: SearcherSnatch.lua 5368 2012-09-29 09:50:29Z brykrys $
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -650,8 +645,4 @@ function private.refreshDisplay()
 	frame.pctBox.help:SetText(format("Buy as percent of %s value", get("snatch.price.model") or "market") )
 end
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-SearchUI/SearcherSnatch.lua $", "$Rev: 5452 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-SearchUI/SearcherSnatch.lua $", "$Rev: 5368 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-SearchUI/SearcherSnatch.lua $", "$Rev: 5452 $")

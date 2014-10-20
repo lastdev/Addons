@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Putricide", "DBM-Icecrown", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 130 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 163 $"):sub(12, -3))
 mod:SetCreatureID(36678)
 mod:SetEncounterID(1102)
 mod:SetModelID(30881)
@@ -103,14 +103,10 @@ function mod:MalleableGooTarget(targetname, uId)
 	else
 		if uId then
 			local inRange = CheckInteractDistance(uId, 2)
-			local x, y = GetPlayerMapPosition(uId)
-			if x == 0 and y == 0 then
-				SetMapToCurrentZone()
-				x, y = GetPlayerMapPosition(uId)
-			end
 			if inRange then
 				specWarnMalleableGooNear:Show(targetname)
 				if self.Options.GooArrow then
+					local x, y = UnitPosition(uId)
 					DBM.Arrow:ShowRunAway(x, y, 10, 5)
 				end
 			end

@@ -15,48 +15,29 @@ function HealBot_IncHeals_retHealsIn(unit, hbFrame)
 end
 
 function HealBot_IncHeals_updHealsIn(unit)
-<<<<<<< HEAD
     if HealBot_Unit_Button[unit] then
         HealBot_IncHeals_HealsInUpdate(unit)
-=======
-    local xUnit,_ = HealBot_UnitID(unit)
-    if xUnit then
-        HealBot_IncHeals_HealsInUpdate(xUnit)
-        HealBot_Action_ResetUnitStatus(xUnit)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
     end
 end
 
 function HealBot_IncHeals_HealsInUpdate(unit)
     if unit then
         if UnitExists(unit) then
-<<<<<<< HEAD
             hbHealsIn[unit]=hbHealsIn[unit] or 0
             hbAbsorbs[unit]=hbAbsorbs[unit] or 0
 
             local x=UnitGetIncomingHeals(unit) or 0
             local y=UnitGetTotalAbsorbs(unit) or 0
-=======
-            hbHealsIn[unit]=UnitGetIncomingHeals(unit)
-            hbAbsorbs[unit]=UnitGetTotalAbsorbs(unit)
-
-            local x=hbHealsIn[unit] or 0
-            local y=hbAbsorbs[unit] or 0
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
             if (x+y)==0 then
                 HealBot_setHealsAbsorb(unit, nil)
             else
                 HealBot_setHealsAbsorb(unit, true)
             end
-<<<<<<< HEAD
             if x~=hbHealsIn[unit] or y~=hbAbsorbs[unit] then
                 HealBot_Action_ResetUnitStatus(unit)
                 hbHealsIn[unit]=x
                 hbAbsorbs[unit]=y
             end
-=======
-            HealBot_Action_ResetUnitStatus(unit)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
         else
             HealBot_IncHeals_ClearAll(unit)
             HealBot_setHealsAbsorb(unit, nil)

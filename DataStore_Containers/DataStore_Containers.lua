@@ -31,6 +31,8 @@ local MSG_BANKTAB_REQUEST_ACK					= 4	-- .. ack the request, tell the requester 
 local MSG_BANKTAB_REQUEST_REJECTED			= 5	-- .. refuse the request
 local MSG_BANKTAB_TRANSFER						= 6	-- .. or send the data
 
+local VOID_STORAGE_TAB = "VoidStorage.Tab"
+
 local AddonDB_Defaults = {
 	global = {
 		Guilds = {
@@ -390,15 +392,26 @@ local function ScanBag(bagID)
 end
 
 local function ScanVoidStorage()
-	local bag = addon.ThisCharacter.Containers["VoidStorage"]
-	bag.size = 80
-	
+	-- delete the old data from the "VoidStorage" container, now stored in .Tab1, .Tab2 (since they'll likely add more later on)
+	wipe(addon.ThisCharacter.Containers["VoidStorage"])
+
+	local bag
 	local itemID
-	for i = 1, bag.size do
-		itemID = GetVoidItemInfo(i)
-		bag.ids[i] = itemID
+	
+	for tab = 1, 2 do
+		bag = addon.ThisCharacter.Containers[VOID_STORAGE_TAB .. tab]
+		bag.size = 80
+	
+		for slot = 1, bag.size do
+			itemID = GetVoidItemInfo(tab, slot)
+			bag.ids[slot] = itemID
+		end
 	end
 	addon:SendMessage("DATASTORE_VOIDSTORAGE_UPDATED")
+end
+
+local function ScanReagentBank()
+	ScanContainer(REAGENTBANK_CONTAINER, BAGS)
 end
 
 -- *** Event Handlers ***
@@ -430,6 +443,10 @@ local function OnPlayerBankSlotsChanged(event, slotID)
 	end
 end
 
+local function OnPlayerReagentBankSlotsChanged(event)
+	ScanReagentBank()
+end
+
 local function OnBankFrameOpened()
 	addon.isBankOpen = true
 	for bagID = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do		-- 5 to 11
@@ -443,6 +460,7 @@ end
 
 local function OnGuildBankFrameClosed()
 	addon:UnregisterEvent("GUILDBANKFRAME_CLOSED")
+	addon:UnregisterEvent("GUILDBANKBAGSLOTS_CHANGED")
 	addon:UnregisterEvent("GUILDBANKBAGSLOTS_CHANGED")
 	
 	local guildName = GetGuildInfo("player")
@@ -547,7 +565,9 @@ local function _GetContainerInfo(character, containerID)
 	
 	if containerID == MAIN_BANK_SLOTS then	-- main bank slots
 		icon = "Interface\\Icons\\inv_misc_enggizmos_17"
-	elseif containerID == "VoidStorage" then
+	elseif containerID == REAGENTBANK_CONTAINER then
+		icon = "Interface\\Icons\\inv_misc_bag_satchelofcenarius"
+	elseif string.sub(containerID, 1, string.len(VOID_STORAGE_TAB)) == VOID_STORAGE_TAB then
 		icon = "Interface\\Icons\\spell_nature_astralrecalgroup"
 		size = 80
 	end
@@ -592,21 +612,26 @@ local function _GetContainerItemCount(character, searchedID)
 	local bagCount = 0
 	local bankCount = 0
 	local voidCount = 0
+	local reagentBankCount = 0
 	local id
 	
+	-- old voidstorage, simply delete it, might still be listed if players haven't logged on all their alts					
+	character.Containers["VoidStorage"] = nil
+		
 	for containerName, container in pairs(character.Containers) do
 		for slotID = 1, container.size do
 			id = container.ids[slotID]
 			
 			if (id) and (id == searchedID) then
 				local itemCount = container.counts[slotID] or 1
-				
-				if (containerName == "VoidStorage") then
+				if (containerName == "VoidStorage.Tab1") or (containerName == "VoidStorage.Tab2") then
 					voidCount = voidCount + 1
 				elseif (containerName == "Bag"..MAIN_BANK_SLOTS) then
 					bankCount = bankCount + itemCount
 				elseif (containerName == "Bag-2") then
 					bagCount = bagCount + itemCount
+				elseif (containerName == "Bag-3") then
+					reagentBankCount = reagentBankCount + itemCount
 				else
 					local bagNum = tonumber(string.sub(containerName, 4))
 					if (bagNum >= 0) and (bagNum <= 4) then
@@ -619,7 +644,7 @@ local function _GetContainerItemCount(character, searchedID)
 		end
 	end
 
-	return bagCount, bankCount, voidCount
+	return bagCount, bankCount, voidCount, reagentBankCount
 end
 
 local function _GetNumBagSlots(character)
@@ -885,6 +910,7 @@ function addon:OnEnable()
 	addon:RegisterEvent("BANKFRAME_OPENED", OnBankFrameOpened)
 	addon:RegisterEvent("GUILDBANKFRAME_OPENED", OnGuildBankFrameOpened)
 	addon:RegisterEvent("VOID_STORAGE_OPEN", OnVoidStorageOpened)
+	addon:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED", OnPlayerReagentBankSlotsChanged)
 	
 	-- disable bag updates during multi sell at the AH
 	addon:RegisterEvent("AUCTION_HOUSE_SHOW", OnAuctionHouseShow)
@@ -895,4 +921,6 @@ function addon:OnDisable()
 	addon:UnregisterEvent("BANKFRAME_OPENED")
 	addon:UnregisterEvent("GUILDBANKFRAME_OPENED")
 	addon:UnregisterEvent("AUCTION_HOUSE_SHOW")
+	addon:UnregisterEvent("VOID_STORAGE_OPEN")
+	addon:UnregisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED")
 end

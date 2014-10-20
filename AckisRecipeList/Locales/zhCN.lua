@@ -6,11 +6,7 @@ zhCN localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-<<<<<<< HEAD
-Project version: 3.0.5
-=======
-Project version: 2.6.2
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+Project version: 3.0.8
 ************************************************************************
 Original translated by: iCat, Kurax, 冰焱妩魅 @ CWDG, ananhaid
 Currently maintained by:
@@ -212,10 +208,6 @@ L["Bryan Landers"] = "比尔亚·兰德斯"
 L["Brynna Wilson"] = "布莱娜·维尔森"
 L["Buckslappy"] = "贝克斯拉皮"
 L["Bufo"] = "布佛"
-<<<<<<< HEAD
-=======
-L["BUGGED"] = "在当前最新版本服务器此配方存在错误！"
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 L["Burbik Gearspanner"] = "巴比克·齿轮"
 L["Burko"] = "布尔库"
 L["Burning Berserker"] = "炽燃狂战士"
@@ -263,10 +255,10 @@ L["Coilfang Sorceress"] = "盘牙巫师"
 L["Coilskar Siren"] = "库斯卡海妖"
 L["COMMAND_LINE_SCAN"] = "运行一个命令行扫描所需要指定专业，如：/arl scan 附魔"
 L["Common Issues"] = "常见问题"
-L["COMMON_ISSUES_DESC"] = [=[“请在提交错误报告之前查看这些经常被提及的常见问题。
+L["COMMON_ISSUES_DESC"] = [=[请在提交错误报告之前查看这些经常被提及的常见问题。
 1、某配方没有被显示！- 检查您的过滤器设置，以确保配方没有被过滤掉。
 2、铭文中缺少了很多雕文！- 为何它们没有被列出？关闭您的“职业”过滤。默认情况下（最常用）ARL 只会显示您的职业可以使用的配方，所以大多数不可使用的雕文都不会显示。
-3、我不希望看到敌对阵营的的配方！- 打开阵营过滤器。这将设置为只显示您所在阵营的配方。如果仍有配方显示在它不该出现的位置，请提交错误报告。”]=]
+3、我不希望看到敌对阵营的的配方！- 打开阵营过滤器。这将设置为只显示您所在阵营的配方。如果仍有配方显示在它不该出现的位置，请提交错误报告。]=]
 L["Compare Trainer Acquire"] = "对比训练师的获取"
 L["COMPARE_TRAINER_ACQUIRE_DESC"] = "选定的训练师获取方式与 ARL 数据库中的进行对比。"
 L["Constance Brisboise"] = "康斯坦茨·布里斯博埃斯"
@@ -370,11 +362,24 @@ L["DISCOVERY_ALCH_PROT"] = "使用燃烧的远征或更高材料制作特效防�
 L["DISCOVERY_BS_INGOT_PANDARIA"] = "制作平衡延极锭或从平衡延极锭设计图领悟。"
 L["DISCOVERY_BS_PANDARIA"] = "制造霹雳钢锭时领悟。"
 L["DISCOVERY_BS_WEAP_PANDARIA"] = "制造潘达利亚武器时领悟同名物品。"
+L["DISCOVERY_COOK_DRAENOR"] = "制造任意德拉诺之王烹饪配方时领悟配方物品。"
 L["DISCOVERY_DESC"] = "扫描中包含领悟配方。"
+L["DISCOVERY_INSC_AUTOLEARN"] = "到达相应的技能等级时自动学习。"
+L["DISCOVERY_INSC_BLACKFALLOW"] = "当你获得全部战争约束者墨水制造的雕文时进行研究：秋闲墨水或研究：战争约束者墨水随机获得。"
 L["DISCOVERY_INSC_BOOK"] = "阅读雕文精通之书随机领悟。"
+L["DISCOVERY_INSC_CELESTIAL"] = "当你获得全部战争约束者墨水制造的雕文时进行研究：星空墨水或研究：战争约束者墨水随机获得。"
+L["DISCOVERY_INSC_DREAMS"] = "当你获得全部战争约束者墨水制造的雕文时进行研究：梦幻墨水或研究：战争约束者墨水随机获得。"
+L["DISCOVERY_INSC_ETHEREAL"] = "当你获得全部战争约束者墨水制造的雕文时进行研究：虚灵墨水或研究：战争约束者墨水随机获得。"
+L["DISCOVERY_INSC_JADEFIRE"] = "当你获得全部战争约束者墨水制造的雕文时进行研究：碧火墨水或研究：战争约束者墨水随机获得。"
+L["DISCOVERY_INSC_LIONS"] = "当你获得全部战争约束者墨水制造的雕文时进行研究：狮王墨水或研究：战争约束者墨水随机获得。"
+L["DISCOVERY_INSC_MIDNIGHT"] = "当你获得全部战争约束者墨水制造的雕文时进行研究：午夜墨水或研究：战争约束者墨水随机获得。"
 L["DISCOVERY_INSC_MINOR"] = "进行雕文研究随机获得。"
+L["DISCOVERY_INSC_MOONGLOW"] = "当你获得全部战争约束者墨水制造的雕文时进行研究：月光墨水或研究：战争约束者墨水随机获得。"
 L["DISCOVERY_INSC_NORTHREND"] = "进行诺森德雕文研究随机获得。"
 L["DISCOVERY_INSC_PANDARIA"] = "使用智慧卷轴随机获得。"
+L["DISCOVERY_INSC_SEA"] = "当你获得全部战争约束者墨水制造的雕文时进行研究：海洋墨水或研究：战争约束者墨水随机获得。"
+L["DISCOVERY_INSC_SHIMMERING"] = "当你获得全部战争约束者墨水制造的雕文时进行研究：闪光墨水或研究：战争约束者墨水随机获得。"
+L["DISCOVERY_INSC_WARBINDER"] = "进行研究：战争约束者墨水随机获得。"
 L["DISCOVERY_JC_PANDARIA"] = "随机从探索棱镜日常中领悟。"
 L["DISCOVERY_LW_HARDENED_PANDARIA"] = "制作硬化华丽毛皮或从硬化华丽毛皮图样领悟。"
 L["DISCOVERY_LW_PANDARIA"] = "从华丽制皮秘诀和华丽制鳞秘诀日常随机获得。"
@@ -457,8 +462,9 @@ L["Eustace Tanwell"] = "尤塔西·坦维尔"
 L["Evie Whirlbrew"] = "埃文·维布鲁"
 L["EXCLUDECOUNT_DESC"] = "在所有配方中包含已被排除配方。"
 L["Exclusion Issues"] = "排除问题"
-L["EXCLUSION_ISSUES_DESC"] = "“要添加配方到排除（忽略）名单，只需在配方窗口 Alt-单击它。让这些重新回来，打开 ARL 选项并打开“显示排除”。这将在下次扫描时显示排除的所有配方。在完成这些后，Alt-单击配方从排除名单移除。”"
-L["EXPANDALL_DESC"] = "展开下面所有的配方列表。按住 Shift 键展开子项。"
+L["EXCLUSION_ISSUES_DESC"] = "要添加配方到排除（忽略）名单，只需在配方窗口 Alt-单击它。让这些重新回来，打开 ARL 选项并打开“显示排除”。这将在下次扫描时显示排除的所有配方。在完成这些后，Alt-单击配方从排除名单移除。"
+L["EXPANDALL_DESC"] = [=[展开下面所有的配方列表。
+按住 Shift 键展开子项。]=]
 L["EXPANSION_DESC_FORMAT"] = "显示%s的配方。"
 L["EXPANSION_FILTER_FORMAT"] = "在扫描中包含显示%s声望。"
 L["FACTION_DESC_FORMAT"] = "包含配方必须首先由%s玩家获得。"
@@ -519,7 +525,7 @@ L["Gagsprocket"] = "加格斯普吉特"
 L["Gambarinka"] = "加巴林卡"
 L["Game Commands"] = "游戏命令行"
 L["GAME_COMMANDS_DESC"] = [=[命令行：
-Ackis Recipe List 新近更改使用一个图形用户界面的变化参数。输入 /arl 命令行打开图形用户界面。可以使用的命令有：
+输入 /arl 命令行打开图形用户界面。可以使用的命令有：
 - /arl about
   打开关于项目，了解一些本插件的信息。
 - /arl sort 或 /arl sorting
@@ -534,6 +540,8 @@ Ackis Recipe List 新近更改使用一个图形用户界面的变化参数。�
   打开过滤选项。
 - /arl scan
   执行缺失配方扫描。此时不能使用扫描按钮。
+- /arl tradelinks
+  显示一个全部专业商业技能链接。
 
 点击：
 Ackis Recipe List 使用点击修改后不同的功能。
@@ -544,9 +552,11 @@ Ackis Recipe List 使用点击修改后不同的功能。
 - 点击
   执行扫描当前商业技能并在一个新的窗口显示配方。
 - Shift-点击
-  生成一个当前商业技能转储为 CSV 文本格式。
+  生成一个当前商业技能转储为（CSV，XML，BBC）文本格式。
 - Alt-点击
   在世界地图和迷你地图上删除所有 ARL 所生成的路径。
+- Ctrl-点击
+  当配方数据的训练师、供应商等更新时提供可用开发代码。
 
 配方：
 点击某个配方所实现的功能。
@@ -928,7 +938,7 @@ L["Neferatti"] = "奈菲拉蒂"
 L["Neii"] = "奈伊"
 L["Nemiha"] = "奈米哈"
 L["Nergal"] = "奈尔加"
-L["Nerog"] = true
+L["Nerog"] = "内罗格"
 L["Nerrist"] = "耐里斯特"
 L["Nessa Shadowsong"] = "尼莎·影歌"
 L["Nexus Stalker"] = "节点潜行者"
@@ -1052,15 +1062,16 @@ L["Refik"] = "雷菲克"
 L["Rekka the Hammer"] = "重锤蕾卡"
 L["REMOVED_FROM_GAME"] = "此配方已从游戏中移除。"
 L["Reporting Bugs"] = "Bug 报告"
-L["REPORTING_BUGS_DESC"] = [=[“当你要报告个错误（Bug）时，请确认做到以下几点：
-1) 下载最新版本，从 http://www.wowace.com/projects/arl/files/ 可以找到。
-2) 确认这个错误从未被提出。可以在 http://www.wowace.com/projects/arl/tickets/ 查看到。
+L["REPORTING_BUGS_DESC"] = [=[当你要报告个错误（Bug）时，请确认做到以下几点：
+1) 下载最新版本，从 http://www.wowace.com/addons/arl/files/ 可以找到。
+2) 确认这个错误从未被提出。可以在 http://www.wowace.com/addons/arl/tickets/ 查看到。
 3) 屏蔽相同类型插件如 Skillet 或 ATSW。
-4) 在 http://www.wowace.com/projects/arl/pages/feedback-and-bug-reporting/ 阅读错误报告文档。
+4) 在 http://www.wowace.com/addons/arl/pages/feedback-and-bug-reporting/ 阅读错误报告文档。
 5) 如果您的问题没有列出，你使用的是最新版本验证您的插件设置。检查过滤，个人喜好等等。
-6) 你发现了一个别人没有报告过的错误，在 http://www.wowace.com/projects/arl/tickets/ 新建一个 Ticket 并提交问题。确认在 Ticket 内要包含你搜到的错误信息（只需错误信息，并不需要你使用的插件列表），配方和你的专业技能，和其他你认为有用的信息。
-当张贴错误报告时，请*不要*包含错误记录插件所提供的所有信息。这只会让人难以理解。如果希望提交一个好的错误报告，请使用 BugSack。请不要贴出注释 /missing recipes（缺失配方），或者通过 PM 发送给我。以 Ticket 方式贴出可以轻松的处理和找到。”]=]
+6) 你发现了一个别人没有报告过的错误，在 http://www.wowace.com/addons/arl/tickets/ 新建一个 Ticket 并提交问题。确认在 Ticket 内要包含你搜到的错误信息（只需错误信息，并不需要你使用的插件列表），配方和你的专业技能，和其他你认为有用的信息。
+当张贴错误报告时，请*不要*包含错误记录插件所提供的所有信息。这只会让人难以理解。如果希望提交一个好的错误报告，请使用 BugSack。请不要贴出注释 /missing recipes（缺失配方），或者通过 PM 发送给我。以 Ticket 方式贴出可以轻松的处理和找到。]=]
 L["REPUTATION_DESC"] = "扫描中包括从声望供应商处获得的配方。"
+L["Research"] = "研究"
 L["RESET_DESC"] = "重置所有过滤为默认值。"
 L["RESET_WINDOW_DESC"] = "重置 ARL 图形界面到默认位置。"
 L["Reset Window Position"] = "重置窗口位置"
@@ -1114,9 +1125,9 @@ L["SCANBUTTONPOSITION_DESC"] = "你可以自定义扫描按钮在商业技能框
 L["Scan Entire Database"] = "扫描全部数据库"
 L["SCAN_ENTIRE_DB_DESC"] = "加载全部配方数据库，并对扫描每一个配方检查提示标记。这将使用大量的内存并延迟您的计算机。"
 L["SCAN_PROF_DB_DESC"] = "在配方数据库扫描指定专业（小写名称或法术 ID），扫描提示并与内置数据库进行对比。"
-L["SCAN_RECIPES_DESC"] = [=[“扫描并打开缺失的商业技能配方。
+L["SCAN_RECIPES_DESC"] = [=[扫描并打开缺失的商业技能配方。
 Shift-单击生成文本转存。
-Alt-单击从地图和迷你地图移除所有路径。”]=]
+Alt-单击从地图和迷你地图移除所有路径。]=]
 L["SCAN_SPELL_ID_DESC"] = "扫描指定法术 ID，扫描提示并与内置数据库进行对比。"
 L["Scan Vendor"] = "扫描供应商"
 L["SCAN_VENDOR_DESC"] = "扫描当前打开供应商的配方并与内置数据库进行信息对比。"
@@ -1321,8 +1332,9 @@ L["UNKNOWN_DESC"] = "扫描中包含未知配方。"
 L["UnknownTradeSkill"] = "您已经打开了一个不支持这个插件的商业技能窗口。这个商业技能为：%s。请向插件作者提供这条信息。"
 L["Uriku"] = "乌利库"
 L["Using Filters"] = "使用过滤"
-L["USING_FILTERS_DESC"] = [=[“开启/关闭过滤。有两种过滤方式：一为阻止显示所有配方，另一为阻止显示特定的类型。
-第一种过滤方式符合匹配的配方（如：绑定）。如果你切换 ARL 不显示拾取绑定配方，过滤中将不会显示拾取绑定配方。第二种过滤方式为处理获取信息。如果一个配方为某怪掉落或者从商人购买，你切换为不显示商人售卖配方，这个配方仍然会显示但是售卖商人信息会被隐藏。原因是还会有其他办法获取这个配方（怪物掉落），所以仍然会在过滤中显示。”]=]
+L["USING_FILTERS_DESC"] = [=[开启/关闭过滤。有两种过滤方式：一为阻止显示所有配方，另一为阻止显示特定的类型。
+第一种过滤方式符合匹配的配方（如：绑定）。如果你切换 ARL 不显示拾取绑定配方，过滤中将不会显示拾取绑定配方。第二种过滤方式为处理获取信息。如果一个配方为某怪掉落或者从商人购买，你切换为不显示商人售卖配方，这个配方仍然会显示但是售卖商人信息会被隐藏。原因是还会有其他办法获取这个配方（怪物掉落），所以仍然会在过滤中显示。
+请注意，那样提示将总是隐藏对立阵营的配方获取方式。这将节省空间而不是显示一个巨大的提示。]=]
 L["Uthok"] = "尤索克"
 L["Vaean"] = "维安"
 L["Valn"] = "瓦伦"

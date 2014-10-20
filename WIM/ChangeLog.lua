@@ -2,7 +2,7 @@
     This change log was meant to be viewed in game.
     You may do so by typing: /wim changelog
 ]]
-local currentRevision = tonumber(("$Revision: 419 $"):match("(%d+)"));
+local currentRevision = tonumber(("$Revision: 428 $"):match("(%d+)"));
 local log = {};
 local beta_log = {};
 local t_insert = table.insert;
@@ -16,6 +16,10 @@ local function addBetaEntry(version, rdate, description, transmitted)
 end
 
 -- ChangeLog Entries.
+addEntry("3.6.19", "07/11/2014", [[
+	*Cleaned up and removed unneeded code and library.
+	*Removed private realm check since it doesn't work in 6.0 and causes problems with beta.
+]]);
 addEntry("3.6.18", "04/11/2014", [[
 	*Fixed icon for battle.net desktop app users.
 ]]);

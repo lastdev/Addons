@@ -1,10 +1,6 @@
 --[[
 	Auctioneer - Scan Start module
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+	Version: 5.21.5490 (SanctimoniousSwamprat)
 	Revision: $Id: ScanStart.lua 5347 2012-09-06 06:26:15Z Esamynn $
 	URL: http://auctioneeraddon.com/
 
@@ -218,8 +214,4 @@ function private.ConfigChanged()
 	if AucAdvanced.Settings.GetSetting("util.scanstart.debug") then blnDebug = true end
 end
 
-<<<<<<< HEAD
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.20/Auc-Util-ScanStart/ScanStart.lua $", "$Rev: 5347 $")
-=======
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.19/Auc-Util-ScanStart/ScanStart.lua $", "$Rev: 5347 $")
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-ScanStart/ScanStart.lua $", "$Rev: 5347 $")

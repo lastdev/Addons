@@ -12,7 +12,7 @@ local GetNumGroupMembers = GetNumGroupMembers
 local GetNumSubgroupMembers = GetNumSubgroupMembers
 
 
-XPerl_SetModuleRevision("$Revision: 825 $")
+XPerl_SetModuleRevision("$Revision: 865 $")
 
 XPERL_RAIDMON_UNIT_WIDTH_MIN = 50
 XPERL_RAIDMON_UNIT_WIDTH_MAX = 150
@@ -731,14 +731,6 @@ function cast:Vars()
 	DefaultVar("BackgroundAlpha", 0.8)
 end
 
--- SetTargetConfig
-local function SetTargetConfig(self)
-	self.target:SetAttribute("useparent-unit", true)
-	self.target:SetAttribute("unitsuffix", "target")
-	self.target:SetAttribute("type", "target")
-	self.target:SetWidth(config.TargetWidth)
-	self.target:SetHeight(config.UnitHeight)
-end
 
 -- cast:Init
 function cast:Init()
@@ -763,18 +755,9 @@ function cast:Init()
 	self.area:SetAttribute("groupBy", "CLASS")		-- For API version 20003
 	self.area:SetAttribute("groupingOrder", "PRIEST,DRUID,SHAMAN,PALADIN,MAGE,WARLOCK,HUNTER,ROGUE,WARRIOR,DEATHKNIGHT,MONK")
 
-	self.area.initialConfigFunction = function(self)
-		-- This is the only place we're allowed to set attributes whilst in combat
-		self:SetAttribute("*type1", "target")
-		self:SetAttribute("initial-height", config.UnitHeight)
-		self:SetAttribute("initial-width", config.UnitWidth)
-
-		if (InCombatLockdown()) then
-			XPerl_OutOfCombatQueue[SetTargetConfig] = self
-		else
-			SetTargetConfig(self)
-		end
-	end
+	self:SetAttribute("*type1", "target")
+	self:SetAttribute("initial-height", config.UnitHeight)
+	self:SetAttribute("initial-width", config.UnitWidth)
 
 	local classes = {}
 	for k,v in pairs(config.classes) do

@@ -1547,20 +1547,17 @@
 				</Scripts>				
 			</Button>
 			
-			<Button name="SmartBuffOptionsFrame_btnTutorial" inherits="MainHelpPlateButton" toplevel="true">
-        <Size>
-          <AbsDimension x="16" y="16"/>
-        </Size>			
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent" x="0" y="0" />
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						SMARTBUFF_ToggleTutorial();
-					</OnClick>
-				</Scripts>
-			</Button>			
-			
+      <Button name="$parentTutorialButton" parentKey="MainHelpButton" inherits="MainHelpPlateButton" toplevel="true">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parent" x="-24" y="24" />
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            SMARTBUFF_ToggleTutorial();
+          </OnClick>
+        </Scripts>
+      </Button>      
+      
       <ScrollFrame name="SmartBuffOptionsFrame_ScrollFrameBuffs" inherits="FauxScrollFrameTemplate">
         <Size>
           <AbsDimension x="184" y="410"/>

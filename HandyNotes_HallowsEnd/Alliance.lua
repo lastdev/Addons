@@ -11,86 +11,101 @@ local points = HallowsEnd.points
 -- Eastern Kingdoms --
 ----------------------
 points["Arathi"] = {
-	[40104910] = 28954, -- Refuge Pointe
+	[40094914] = 28954, -- Refuge Pointe
 }
 
 points["Badlands"] = {
-	[65903580] = 28955, -- Fuselight
-	[20905630] = 28956, -- Dragon's Mouth
+	[65863565] = 28955, -- Fuselight
+	[20875632] = 28956, -- Dragon's Mouth
 }
 
 points["BlastedLands"] = {
-	[60691408] = 28960, -- Nethergarde Keep
-	[44338759] = 28961, -- Surwich
+	[60691407] = 28960, -- Nethergarde Keep
+	[44348759] = 28961, -- Surwich
 }
 
 points["DunMorogh"] = {
-	[54505070] = 12332, -- Kharanos
+	[54485076] = 12332, -- Kharanos
+	[61202744] = 12335, -- The Commons, Ironforge
 }
 
 points["Duskwood"] = {
-	[73804430] = 12344, -- Darkshire
+	[73804425] = 12344, -- Darkshire
 }
 
 points["EasternPlaguelands"] = {
-	[75605240] = 12402, -- Light's Hope Chapel
+	[75575230] = 12402, -- Light's Hope Chapel
 }
 
 points["Elwynn"] = {
-	[43746589] = 12286, -- Goldshire
+	[43746590] = 12286, -- Goldshire
+	[24894013] = 12336, -- Trade District, Stormwind City
 }
 
 points["Hinterlands"] = {
-	[14204470] = 12351, -- Aerie Peak
-	[66204440] = 28970, -- Stormfeather Outpost
+	[14194460] = 12351, -- Aerie Peak
+	[66164443] = 28970, -- Stormfeather Outpost
 }
 
 points["Ironforge"] = {
-	[18705130] = 12335, -- The Commons
+	[18505083] = 12335, -- The Commons
 }
 
 points["LochModan"] = {
-	[35504840] = 12339, -- Thelsamar
-	[82906360] = 28963, -- Farstrider Lodge
+	[35544850] = 12339, -- Thelsamar
+	[83036353] = 28963, -- Farstrider Lodge
 }
 
 points["Redridge"] = {
-	[26464150] = 12342, -- Lakeshire
+	[26484156] = 12342, -- Lakeshire
 }
 
 points["SearingGorge"] = {
-	[39486602] = 28965, -- Iron Summit
+	[39486603] = 28965, -- Iron Summit
 }
 
 points["StormwindCity"] = {
-	[60527533] = 12336, -- Trade District
+	[60517532] = 12336, -- Trade District
 }
 
 points["StranglethornJungle"] = {
-	[53166699] = 28964, -- Fort Livingston
+	[53166698] = 28964, -- Fort Livingston
+}
+
+points["StranglethornVale"] = {
+	[37907993] = 12397, -- Booty Bay, Southern Stranglethorn
+	[52094310] = 28964, -- Fort Livingston, Northern Stranglethorn
 }
 
 points["SwampOfSorrows"] = {
-	[71641408] = 28967, -- Bogpaddle
-	[28933241] = 28968, -- The Harbourage
+	[71651410] = 28967, -- Bogpaddle
+	[28933240] = 28968, -- The Harbourage
 }
 
 points["TheCapeOfStranglethorn"] = {
-	[40927374] = 12397, -- Booty Bay
+	[40917372] = 12397, -- Booty Bay
 }
 
 points["WesternPlaguelands"] = {
-	[43408450] = 28988, -- Chillwind Camp
+	[43418439] = 28988, -- Chillwind Camp
 }
 
-points["Westfall"] = {
-	[56814732] = 12340, -- Sentinel Hill
-}
+if IsQuestFlaggedCompleted(26322) then
+	-- Sentinel Hill is on fire, the bucket is in the tower
+	points["Westfall"] = {
+		[56824732] = 12340,
+	}
+else
+	-- Sentinel Hill is not on fire, the bucket is in the inn
+	points["Westfall"] = {
+		[52915374] = 12340,
+	}
+end
 
 points["Wetlands"] = {
-	[10806090] = 12343, -- Menethil Harbour
-	[26102590] = 28990, -- Swiftgear Station
-	[58103920] = 28991, -- Greenwarden Grove
+	[10816095] = 12343, -- Menethil Harbour
+	[26092597] = 28990, -- Swiftgear Station
+	[58183921] = 28991, -- Greenwarden's Grove
 }
 
 
@@ -98,69 +113,70 @@ points["Wetlands"] = {
 -- Kalimdor --
 --------------
 points["Ashenvale"] = {
-	[37004930] = 12345, -- Astranaar
+	[37014926] = 12345, -- Astranaar
 }
 
 points["AzuremystIsle"] = {
-	[48494205] = 12333, -- Azure Watch
+	[48494905] = 12333, -- Azure Watch
+	[29293485] = 12337, -- Seat of the Naaru, The Exodar
 }
 
 points["Barrens"] = {
-	[67307470] = 12396, -- Ratchet
+	[67347466] = 12396, -- Ratchet
 }
 
 points["BloodmystIsle"] = {
-	[55705990] = 12341, -- Blood Watch
+	[55695997] = 12341, -- Blood Watch
 }
 
 points["Darkshore"] = {
-	[50801880] = 28951, -- Lor'danel
+	[50801890] = 28951, -- Lor'danel
 }
 
 points["Darnassus"] = {
-	[62203300] = 12334, -- Craftsman's Terrace
+	[62273316] = 12334, -- Craftsman's Terrace
 }
 
 points["Desolace"] = {
-	[66300670] = 12348, -- Nijel's Point
-	[56805000] = 28993, -- Karnum's Glade
+	[66330659] = 12348, -- Nijel's Point
+	[56725012] = 28993, -- Karnum's Glade
 }
 
 points["Dustwallow"] = {
-	[66604530] = 12349, -- Theramore Isle
-	[41907410] = 12398, -- Mudsprocket
+	[66604528] = 12349, -- Theramore Isle
+	[41867409] = 12398, -- Mudsprocket
 }
 
 points["Felwood"] = {
-	[44602890] = 28994, -- Whisperwind Grove
-	[61802670] = 28995, -- Talonbranch Glade
+	[44582898] = 28994, -- Whisperwind Grove
+	[61862671] = 28995, -- Talonbranch Glade
 }
 
 points["Feralas"] = {
-	[46304520] = 12350, -- Feathermoon Stronghold
-	[51101780] = 28952, -- Dreamer's Rest
+	[46334519] = 12350, -- Feathermoon Stronghold
+	[51071782] = 28952, -- Dreamer's Rest
 }
 
 points["Silithus"] = {
-	[55503670] = 12401, -- Cenarion Hold
+	[55473679] = 12401, -- Cenarion Hold
 }
 
 points["SouthernBarrens"] = {
-	[39001100] = 29006, -- Honour's Stand
-	[65604660] = 29007, -- Northwatch Hold
-	[49106850] = 29008, -- Fort Triumph
+	[39011098] = 29006, -- Honour's Stand
+	[65604654] = 29007, -- Northwatch Hold
+	[49056850] = 29008, -- Fort Triumph
 }
 
 points["StonetalonMountains"] = {
 	[71027908] = 29010, -- Northwatch Expedition Base Camp
-	[59105630] = 29011, -- Windshear Hold
-	[39503280] = 29012, -- Thal'darah Overlook
-	[31506070] = 29013, -- Farwatcher's Glen
+	[59055633] = 29011, -- Windshear Hold
+	[39483281] = 29012, -- Thal'darah Overlook
+	[31536066] = 29013, -- Farwatcher's Glen
 }
 
 points["Tanaris"] = {
-	[52602710] = 12399, -- Gadgetzan
-	[55706090] = 29014, -- Bootlegger Outpost
+	[52562710] = 12399, -- Gadgetzan
+	[55706096] = 29014, -- Bootlegger Outpost
 }
 
 points["TheExodar"] = {
@@ -168,15 +184,16 @@ points["TheExodar"] = {
 }
 
 points["Teldrassil"] = {
-	[55405230] = 12331, -- Dolanaar
+	[55365229] = 12331, -- Dolanaar
+	[34164401] = 12334, -- Craftsman's Terrace, Darnassus
 }
 
 points["UngoroCrater"] = {
-	[55206210] = 29018, -- Marshal's Stand
+	[55276212] = 29018, -- Marshal's Stand
 }
 
 points["Winterspring"] = {
-	[59805120] = 12400, -- Everlook
+	[59835122] = 12400, -- Everlook
 }
 
 
@@ -279,38 +296,45 @@ points["ZulDrak"] = {
 -- Cataclysm --
 ---------------
 points["Deepholm"] = {
-	[47405170] = 29020, -- Temple of Earth
+	[47365171] = 29020, -- Temple of Earth
 }
 
 points["Hyjal"] = {
-	[63002410] = 28999, -- Nordrassil
-	[18703730] = 29000, -- Grove of Aessina
-	[42704560] = 29001, -- Shrine of Aviana
+	[63052415] = 28999, -- Nordrassil
+	[18623732] = 29000, -- Grove of Aessina
+	[42684571] = 29001, -- Shrine of Aviana
 }
 
 points["TwilightHighlands"] = {
-	[60405820] = 28977, -- Firebeard's Patrol
-	[79507850] = 28980, -- Highbank
-	[49603040] = 28978, -- Thundermar
-	[43605730] = 28979, -- Victor's Point
+	[60355825] = 28977, -- Firebeard's Patrol
+	[79487855] = 28980, -- Highbank
+	[49583036] = 28978, -- Thundermar
+	[43505727] = 28979, -- Victor's Point
 }
 
 points["Uldum"] = {
-	[26600730] = 29016, -- Oasis of Vir'sar
-	[54703300] = 29017, -- Ramkahen
+	[26580724] = 29016, -- Oasis of Vir'sar
+	[54683301] = 29017, -- Ramkahen
+}
+
+points["Vashjir"] = {
+	[78653071] = 28981, -- Deepmist Grotto, Kelp'thar Forest
+	[64195159] = 28982, -- Silver Tide Hollow, Shimmering Expanse
+	[64566242] = 28983, -- Tranquil Wash, Shimmering Expanse
+	[39576790] = 28985, -- Darkbreak Cove, Abyssal Depths
 }
 
 points["VashjirDepths"] = {
-	[54707220] = 28985, -- Darkbreak Cove
+	[54677212] = 28985, -- Darkbreak Cove
 }
 
 points["VashjirKelpForest"] = {
-	[63406020] = 28981, -- Deepmist Grotto
+	[63506017] = 28981, -- Deepmist Grotto
 }
 
 points["VashjirRuins"] = {
-	[49204190] = 28982, -- Silver Tide Hollow
-	[49705740] = 28983, -- Tranquil Wash
+	[49174188] = 28982, -- Silver Tide Hollow
+	[49725739] = 28983, -- Tranquil Wash
 }
 
 
@@ -318,47 +342,47 @@ points["VashjirRuins"] = {
 -- Pandaria --
 --------------
 points["DreadWastes"] = {
-	[55007100] = 32023, -- Soggy's Gamble
-	[56003200] = 32024, -- Klaxxi'vess
+	[55217117] = 32023, -- Soggy's Gamble
+	[55913228] = 32024, -- Klaxxi'vess
 }
 
 points["Krasarang"] = {
-	[51007700] = 32034, -- Marista
-	[76000700] = 32036, -- Zhu's Watch
+	[51437729] = 32034, -- Marista
+	[75930691] = 32036, -- Zhu's Watch
 }
 
 points["KunLaiSummit"] = {
-	[73009200] = 32039, -- Binan Village
-	[64006100] = 32041, -- The Grummle Bazaar
-	[57006000] = 32037, -- One Keg
-	[54008300] = 32042, -- Westwind Rest
-	[62002900] = 32051, -- Zouchin Village
+	[72719226] = 32039, -- Binan Village
+	[64226125] = 32041, -- The Grummle Bazaar
+	[57475994] = 32037, -- One Keg
+	[54078278] = 32042, -- Westwind Rest
+	[62482892] = 32051, -- Zouchin Village
 }
 
 points["TheHiddenPass"] = {
-	[55007200] = 32026, -- Tavern in the Mists
+	[55037224] = 32026, -- Tavern in the Mists
 }
 
 points["TheJadeForest"] = {
-	[46004400] = 32027, -- Dawn's Blossom
-	[48003500] = 32029, -- Greenstone Village
-	[55006300] = 32032, -- Jade Temple Grounds
-	[45008400] = 32049, -- Paw'don Village
-	[60008300] = 32033, -- Pearlfin Village
-	[56002400] = 32031, -- Sri-La Village
-	[42002300] = 32021, -- Tian Monastery
+	[45784360] = 32027, -- Dawn's Blossom
+	[48083464] = 32029, -- Greenstone Village
+	[54626335] = 32032, -- Jade Temple Grounds
+	[44808439] = 32049, -- Paw'don Village
+	[59558322] = 32033, -- Pearlfin Village
+	[55732440] = 32031, -- Sri-La Village
+	[41672316] = 32021, -- Tian Monastery
 }
 
 points["TownlongWastes"] = {
-	[71005800] = 32043, -- Longying Outpost
+	[71135780] = 32043, -- Longying Outpost
 }
 
 points["ValeofEternalBlossoms"] = {
-	[35157775] = 32044, -- Mistfall Village
-	[87006400] = 32052, -- Shrine of Seven Stars
+	[35137777] = 32044, -- Mistfall Village
+	[87006895] = 32052, -- Shrine of Seven Stars
 }
 
 points["ValleyoftheFourWinds"] = {
-	[84002000] = 32048, -- Pang's Stead
-	[20005600] = 32046, -- Stoneplow
+	[83642019] = 32048, -- Pang's Stead
+	[19885582] = 32046, -- Stoneplow
 }

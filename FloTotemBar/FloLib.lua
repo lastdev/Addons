@@ -4,11 +4,11 @@
 
 -- Some shared functions
 -- Prevent multi-loading
-if not FLOLIB_VERSION or FLOLIB_VERSION < 1.32 then
+if not FLOLIB_VERSION or FLOLIB_VERSION < 1.34 then
 
 local _
 local NUM_SPELL_SLOTS = 10;
-FLOLIB_VERSION = 1.32;
+FLOLIB_VERSION = 1.34;
 
 FLOLIB_ACTIVATE_SPEC_1 = GetSpellInfo(63645);
 FLOLIB_ACTIVATE_SPEC_2 = GetSpellInfo(63644);
@@ -181,6 +181,17 @@ function FloLib_ReceiveDrag(self, releaseCursor)
 
 end
 
+-- Check if a glyph is active
+function FloLib_IsGlyphActive(glyphId)
+        for i = 1, NUM_GLYPH_SLOTS do
+                local enabled, _, _, glyphSpellID, _ = GetGlyphSocketInfo(i);
+                if enabled and glyphSpellID == glyphId then
+                        return true;
+                end
+        end
+        return false;
+end
+
 -- Return the rank of a talent
 function FloLib_GetTalentRank(talentName, tree)
 
@@ -237,8 +248,8 @@ function FloLib_Setup(self)
 
 		if isKnown then
 			spell.name, spell.addName, spell.texture = GetSpellInfo(spell.id);
-			if spell.id2 and not spell.name2 then
-				spell.name2, spell.addName2, spell.texture2 = GetSpellInfo(spell.id2);
+			if spell.glyphed and not spell.nameGlyphed then
+				spell.glyphedName, _, spell.glyphedTexture = GetSpellInfo(spell.glyphed);
 			end
 			self:SetupSpell(spell, i);
 			i = i + 1;
@@ -261,8 +272,8 @@ function FloLib_Setup(self)
 
 		spell = self.availableSpells[n];
 		spell.name, spell.addName, spell.texture = GetSpellInfo(spell.id);
-		if spell.id2 and not spell.name2 then
-			spell.name2, spell.addName2, spell.texture2 = GetSpellInfo(spell.id2);
+		if spell.glyphed and not spell.nameGlyphed then
+			spell.glyphedName, _, spell.glyphedTexture = GetSpellInfo(spell.glyphed);
 		end
 
 		-- Check if this spell is already positionned
@@ -339,7 +350,7 @@ function FloLib_UpdateState(self)
 
 	local numSpells = #self.spells;
 	local spell, cooldown, normalTexture, icon;
-	local start, duration, enable, isUsable, noMana;
+	local start, duration, enable, charges, maxCharges, isUsable, noMana;
 	local start2, duration2, enable2;
 	local i;
 
@@ -353,8 +364,10 @@ function FloLib_UpdateState(self)
 
 		--Cooldown stuffs
 		cooldown = _G[self:GetName().."Button"..i.."Cooldown"];
-		start, duration, enable = GetSpellCooldown(spell.id);
-		if spell.talented then
+                start, duration, enable, charges, maxCharges = GetSpellCooldown(spell.id);
+                if spell.glyphed then
+                        start, duration, enable = GetSpellCooldown(spell.glyphed);
+                elseif spell.talented then
 			start2, duration2, enable2 = GetSpellCooldown(spell.talented);
 			if start > 0 and start2 > 0 then
 				start = math.min(start, start2);
@@ -364,7 +377,13 @@ function FloLib_UpdateState(self)
 			duration = math.max(duration, duration2);
 		end
 
-		CooldownFrame_SetTimer(cooldown, start, duration, enable);
+                if cooldown.currentCooldownType ~= COOLDOWN_TYPE_NORMAL then
+                        cooldown:SetEdgeTexture("Interface\\Cooldown\\edge");
+                        cooldown:SetSwipeColor(0, 0, 0);
+                        cooldown:SetHideCountdownNumbers(false);
+                        cooldown.currentCooldownType = COOLDOWN_TYPE_NORMAL;
+                end
+                CooldownFrame_SetTimer(cooldown, start, duration, enable, charges, maxCharges);
 
 		--Castable stuffs
 		normalTexture = _G[self:GetName().."Button"..i.."NormalTexture"];

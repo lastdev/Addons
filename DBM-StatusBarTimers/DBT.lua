@@ -348,8 +348,8 @@ do
 			DBM:Schedule(3, delaySkinCheck, self)
 			return
 		end
-		local _, _, _, enabled = GetAddOnInfo("DBM-DefaultSkin")
-		if enabled and skins[self.options.Skin].loaded == nil then
+		local enabled = GetAddOnEnableState(UnitName("player"), "DBM-DefaultSkin")
+		if enabled ~= 0 and skins[self.options.Skin].loaded == nil then
 			-- The currently set skin is no longer loaded, revert to DefaultSkin. If enabled (else, person wants textureless bar on purpose)
 			self:SetSkin("DefaultSkin")
 		end
@@ -714,43 +714,18 @@ function barPrototype:Update(elapsed)
 	if isMoving == "move" and self.moveElapsed <= 0.5 then
 		self.moveElapsed = self.moveElapsed + elapsed
 		local melapsed = self.moveElapsed
-<<<<<<< HEAD:DBM-StatusBarTimers/DBT.lua
 		local newX = self.moveOffsetX + (obj.options[self.enlarged and "HugeBarXOffset" or "BarXOffset"] - self.moveOffsetX) * (melapsed / 0.5)
 		local newY
 		if obj.options.ExpandUpwards then
 			newY = self.moveOffsetY + obj.options.Height * 2 + (obj.options[self.enlarged and "HugeBarYOffset" or "BarYOffset"] - self.moveOffsetY) * (melapsed / 0.5)
 		else
 			newY = self.moveOffsetY + (-obj.options[self.enlarged and "HugeBarYOffset" or "BarYOffset"] - self.moveOffsetY) * (melapsed / 0.5)
-=======
-		local newX = self.moveOffsetX + (obj.options.BarXOffset - self.moveOffsetX) * (melapsed / 0.5)
-		local newY
-		if obj.options.ExpandUpwards then
-			newY = self.moveOffsetY + obj.options.Height * 2 + (obj.options.BarYOffset - self.moveOffsetY) * (melapsed / 0.5)
-		else
-			newY = self.moveOffsetY + (-obj.options.BarYOffset - self.moveOffsetY) * (melapsed / 0.5)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23:DBM-StatusBarTimers/DBT.lua
 		end
 		frame:ClearAllPoints()
 		frame:SetPoint(self.movePoint, self.moveAnchor, self.moveRelPoint, newX, newY)
 	elseif isMoving == "move" then
-<<<<<<< HEAD:DBM-StatusBarTimers/DBT.lua
-=======
 		self.moving = nil
 		self:SetPosition()
-	elseif isMoving == "next" then
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23:DBM-StatusBarTimers/DBT.lua
-		self.moving = nil
-		local newX = self.moveOffsetX + (obj.options.BarXOffset - self.moveOffsetX)
-		local newY
-		if obj.options.ExpandUpwards then
-			newY = self.moveOffsetY + obj.options.Height * 2 + (obj.options.BarYOffset - self.moveOffsetY)
-		else
-			newY = self.moveOffsetY + (-obj.options.BarYOffset - self.moveOffsetY)
-		end
-		frame:ClearAllPoints()
-		frame:SetPoint(self.movePoint, self.moveAnchor, self.moveRelPoint, newX, newY)
-		self:SetPosition()
-<<<<<<< HEAD:DBM-StatusBarTimers/DBT.lua
 	elseif isMoving == "next" then
 		self.moving = nil
 		local newX = self.moveOffsetX + (obj.options[self.enlarged and "HugeBarXOffset" or "BarXOffset"] - self.moveOffsetX)
@@ -763,8 +738,6 @@ function barPrototype:Update(elapsed)
 		frame:ClearAllPoints()
 		frame:SetPoint(self.movePoint, self.moveAnchor, self.moveRelPoint, newX, newY)
 		self:SetPosition()
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23:DBM-StatusBarTimers/DBT.lua
 	elseif isMoving == "enlarge" and self.moveElapsed <= 1 then
 		self:AnimateEnlarge(elapsed)
 	elseif isMoving == "enlarge" then
@@ -781,15 +754,9 @@ function barPrototype:Update(elapsed)
 		local oldY = self.frame:GetTop()
 		self.frame:ClearAllPoints()
 		if obj.options.ExpandUpwards then
-<<<<<<< HEAD:DBM-StatusBarTimers/DBT.lua
 			self.frame:SetPoint("TOP", newAnchor, "BOTTOM", obj.options.HugeBarXOffset, 40 + obj.options.HugeBarYOffset)
 		else
 			self.frame:SetPoint("TOP", newAnchor, "BOTTOM", obj.options.HugeBarXOffset, -obj.options.HugeBarYOffset)
-=======
-			self.frame:SetPoint("TOP", newAnchor, "BOTTOM", obj.options.BarXOffset, 40 + obj.options.BarYOffset)
-		else
-			self.frame:SetPoint("TOP", newAnchor, "BOTTOM", obj.options.BarXOffset, -obj.options.BarYOffset)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23:DBM-StatusBarTimers/DBT.lua
 		end
 		local newX = self.frame:GetRight() - self.frame:GetWidth()/2
 		local newY = self.frame:GetTop()
@@ -940,7 +907,6 @@ function barPrototype:ApplyStyle()
 	timer:SetTextColor(self.owner.options.TextColorR, self.owner.options.TextColorG, self.owner.options.TextColorB)
 	if self.owner.options.IconLeft then icon1:Show() else icon1:Hide() end
 	if self.owner.options.IconRight then icon2:Show() else icon2:Hide() end
-<<<<<<< HEAD:DBM-StatusBarTimers/DBT.lua
 	if self.enlarged then bar:SetWidth(self.owner.options.HugeWidth); bar:SetHeight(self.owner.options.Height); else bar:SetWidth(self.owner.options.Width) bar:SetHeight(self.owner.options.Height); end
 	if self.enlarged then frame:SetScale(self.owner.options.HugeScale) else frame:SetScale(self.owner.options.Scale) end
 	if self.owner.options.IconLocked then
@@ -950,15 +916,6 @@ function barPrototype:ApplyStyle()
 		icon2:SetWidth(self.owner.options.Height)
 		icon2:SetHeight(self.owner.options.Height)
 	end
-=======
-	if self.enlarged then frame:SetWidth(self.owner.options.HugeWidth); frame:SetHeight(self.owner.options.Height); else frame:SetWidth(self.owner.options.Width); frame:SetHeight(self.owner.options.Height); end
-	if self.enlarged then bar:SetWidth(self.owner.options.HugeWidth); bar:SetHeight(self.owner.options.Height); else bar:SetWidth(self.owner.options.Width) bar:SetHeight(self.owner.options.Height); end
-	if self.enlarged then frame:SetScale(self.owner.options.HugeScale) else frame:SetScale(self.owner.options.Scale) end
-	icon1:SetWidth(self.owner.options.Height)
-	icon1:SetHeight(self.owner.options.Height)
-	icon2:SetWidth(self.owner.options.Height)
-	icon2:SetHeight(self.owner.options.Height)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23:DBM-StatusBarTimers/DBT.lua
 	self.frame:Show()
 	if sparkEnabled then
 		spark:SetAlpha(1)
@@ -1138,11 +1095,7 @@ function barPrototype:SetPosition()
 	local anchor = (self.prev and self.prev.frame) or (self.enlarged and self.owner.secAnchor) or self.owner.mainAnchor
 	self.frame:ClearAllPoints()
 	if self.owner.options.ExpandUpwards then
-<<<<<<< HEAD:DBM-StatusBarTimers/DBT.lua
 		self.frame:SetPoint("TOP", anchor, "BOTTOM", self.owner.options[self.enlarged and "HugeBarXOffset" or "BarXOffset"], self.owner.options.Height * 2 + self.owner.options[self.enlarged and "HugeBarYOffset" or "BarYOffset"])
-=======
-		self.frame:SetPoint("TOP", anchor, "BOTTOM", self.owner.options.BarXOffset, self.owner.options.Height * 2 + self.owner.options.BarYOffset)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23:DBM-StatusBarTimers/DBT.lua
 	else
 		self.frame:SetPoint("TOP", anchor, "BOTTOM", self.owner.options[self.enlarged and "HugeBarXOffset" or "BarXOffset"], -self.owner.options[self.enlarged and "HugeBarYOffset" or "BarYOffset"])
 	end
@@ -1155,11 +1108,7 @@ function barPrototype:MoveToNextPosition(oldX, oldY)
 	local oldY = oldY or (self.frame:GetTop())
 	self.frame:ClearAllPoints()
 	if self.owner.options.ExpandUpwards then
-<<<<<<< HEAD:DBM-StatusBarTimers/DBT.lua
 		self.frame:SetPoint("TOP", newAnchor, "BOTTOM", self.owner.options[self.enlarged and "HugeBarXOffset" or "BarXOffset"], self.owner.options.Height * 2 + self.owner.options[self.enlarged and "HugeBarYOffset" or "BarYOffset"])
-=======
-		self.frame:SetPoint("TOP", newAnchor, "BOTTOM", self.owner.options.BarXOffset, self.owner.options.Height * 2 + self.owner.options.BarYOffset)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23:DBM-StatusBarTimers/DBT.lua
 	else
 		self.frame:SetPoint("TOP", newAnchor, "BOTTOM", self.owner.options[self.enlarged and "HugeBarXOffset" or "BarXOffset"], -self.owner.options[self.enlarged and "HugeBarYOffset" or "BarYOffset"])
 	end

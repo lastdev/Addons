@@ -15,6 +15,9 @@ local THIS_ACCOUNT = "Default"
 
 local AddonDB_Defaults = {
 	global = {
+		Reference = {
+			UIDsRev = {},		-- ex: Reverse lookup of Faction UIDs, now in the database since opposite faction is no longer provided by the API
+		},
 		Characters = {
 			['*'] = {				-- ["Account.Realm.Name"] 
 				lastUpdate = nil,
@@ -40,6 +43,8 @@ local BottomLevelNames = {
 
 local BottomLevels = { -42000, -6000, -3000, 0, 3000, 9000, 21000, 42000 }
 
+local BF = LibStub("LibBabble-Faction-3.0"):GetUnstrictLookupTable()
+
 --[[	*** Faction UIDs ***
 These UIDs have 2 purposes: 
 - avoid saving numerous copies of the same string (the faction name)
@@ -47,143 +52,161 @@ These UIDs have 2 purposes:
 
 Note: Let the system manage the ids, DO NOT delete entries from this table, if a faction is removed from the game, mark it as OLD_ or whatever.
 --]]
-local FactionUIDs = {
-	69,	-- "Darnassus"
-	930,	-- "Exodar"
-	54,	-- "Gnomeregan"
-	47,	-- "Ironforge"
-	72,	-- "Stormwind"
-	530,	-- "Darkspear Trolls"
-	76,	-- "Orgrimmar"
-	81,	-- "Thunder Bluff"
-	68,	-- "Undercity"
-	911,	-- "Silvermoon City"
-	509,	-- "The League of Arathor"
-	890,	-- "Silverwing Sentinels"
-	730,	-- "Stormpike Guard"
-	510,	-- "The Defilers"
-	889,	-- "Warsong Outriders"
-	729,	-- "Frostwolf Clan"
-	21,	-- "Booty Bay"
-	577,	-- "Everlook"
-	369,	-- "Gadgetzan"
-	470,	-- "Ratchet"
-	529,	-- "Argent Dawn"
-	87,	-- "Bloodsail Buccaneers"
-	910,	-- "Brood of Nozdormu"
-	609,	-- "Cenarion Circle"
-	909,	-- "Darkmoon Faire"
-	92,	-- "Gelkis Clan Centaur"
-	749,	-- "Hydraxian Waterlords"
-	93,	-- "Magram Clan Centaur"
-	349,	-- "Ravenholdt"
-	809,	-- "Shen'dralar"
-	70,	-- "Syndicate"
-	59,	-- "Thorium Brotherhood"
-	576,	-- "Timbermaw Hold"
-	922,	-- "Tranquillien"
-	589,	-- "Wintersaber Trainers"
-	270,	-- "Zandalar Tribe"
-	1012,	-- "Ashtongue Deathsworn"
-	942,	-- "Cenarion Expedition"
-	933,	-- "The Consortium"
-	946,	-- "Honor Hold"
-	978,	-- "Kurenai"
-	941,	-- "The Mag'har"
-	1015,	-- "Netherwing"
-	1038,	-- "Ogri'la"
-	970,	-- "Sporeggar"
-	947,	-- "Thrallmar"
-	1011,	-- "Lower City"
-	1031,	-- "Sha'tari Skyguard"
-	1077,	-- "Shattered Sun Offensive"
-	932,	-- "The Aldor"
-	934,	-- "The Scryers"
-	935,	-- "The Sha'tar"
-	989,	-- "Keepers of Time"
-	990,	-- "The Scale of the Sands"
-	967,	-- "The Violet Eye"
-	1106,	-- "Argent Crusade"
-	1090,	-- "Kirin Tor"
-	1073,	-- "The Kalu'ak"
-	1091,	-- "The Wyrmrest Accord"
-	1098,	-- "Knights of the Ebon Blade"
-	1119,	-- "The Sons of Hodir"
-	1156,	-- "The Ashen Verdict"
-	1037,	-- "Alliance Vanguard"
-	1068,	-- "Explorers' League"
-	1126,	-- "The Frostborn"
-	1094,	-- "The Silver Covenant"
-	1050,	-- "Valiance Expedition"
-	1052,	-- "Horde Expedition"
-	1067,	-- "The Hand of Vengeance"
-	1124,	-- "The Sunreavers"
-	1064,	-- "The Taunka"
-	1085,	-- "Warsong Offensive"
-	1104,	-- "Frenzyheart Tribe"
-	1105,	-- "The Oracles"
-	469,	-- "Alliance"
-	67,	-- "Horde"
-	1134,	-- "Gilneas"
-	1133,	-- "Bilgewater Cartel"
+
+-- Since WoD, GetFactionInfoByID does not return a value when an alliance player asks for an horde function, so at least default to an english text
+
+
+local factions = {
+	{ id = 69, name = BF["Darnassus"] },
+	{ id = 930, name = BF["Exodar"] },
+	{ id = 54, name = BF["Gnomeregan"] },
+	{ id = 47, name = BF["Ironforge"] },
+	{ id = 72, name = BF["Stormwind"] },
+	{ id = 530, name = BF["Darkspear Trolls"] },
+	{ id = 76, name = BF["Orgrimmar"] },
+	{ id = 81, name = BF["Thunder Bluff"] },
+	{ id = 68, name = BF["Undercity"] },
+	{ id = 911, name = BF["Silvermoon City"] },
+	{ id = 509, name = BF["The League of Arathor"] },
+	{ id = 890, name = BF["Silverwing Sentinels"] },
+	{ id = 730, name = BF["Stormpike Guard"] },
+	{ id = 510, name = BF["The Defilers"] },
+	{ id = 889, name = BF["Warsong Outriders"] },
+	{ id = 729, name = BF["Frostwolf Clan"] },
+	{ id = 21, name = BF["Booty Bay"] },
+	{ id = 577, name = BF["Everlook"] },
+	{ id = 369, name = BF["Gadgetzan"] },
+	{ id = 470, name = BF["Ratchet"] },
+	{ id = 529, name = BF["Argent Dawn"] },
+	{ id = 87, name = BF["Bloodsail Buccaneers"] },
+	{ id = 910, name = BF["Brood of Nozdormu"] },
+	{ id = 609, name = BF["Cenarion Circle"] },
+	{ id = 909, name = BF["Darkmoon Faire"] },
+	{ id = 92, name = BF["Gelkis Clan Centaur"] },
+	{ id = 749, name = BF["Hydraxian Waterlords"] },
+	{ id = 93, name = BF["Magram Clan Centaur"] },
+	{ id = 349, name = BF["Ravenholdt"] },
+	{ id = 809, name = BF["Shen'dralar"] },
+	{ id = 70, name = BF["Syndicate"] },
+	{ id = 59, name = BF["Thorium Brotherhood"] },
+	{ id = 576, name = BF["Timbermaw Hold"] },
+	{ id = 922, name = BF["Tranquillien"] },
+	{ id = 589, name = BF["Wintersaber Trainers"] },
+	{ id = 270, name = BF["Zandalar Tribe"] },
+	{ id = 1012, name = BF["Ashtongue Deathsworn"] },
+	{ id = 942, name = BF["Cenarion Expedition"] },
+	{ id = 933, name = BF["The Consortium"] },
+	{ id = 946, name = BF["Honor Hold"] },
+	{ id = 978, name = BF["Kurenai"] },
+	{ id = 941, name = BF["The Mag'har"] },
+	{ id = 1015, name = BF["Netherwing"] },
+	{ id = 1038, name = BF["Ogri'la"] },
+	{ id = 970, name = BF["Sporeggar"] },
+	{ id = 947, name = BF["Thrallmar"] },
+	{ id = 1011, name = BF["Lower City"] },
+	{ id = 1031, name = BF["Sha'tari Skyguard"] },
+	{ id = 1077, name = BF["Shattered Sun Offensive"] },
+	{ id = 932, name = BF["The Aldor"] },
+	{ id = 934, name = BF["The Scryers"] },
+	{ id = 935, name = BF["The Sha'tar"] },
+	{ id = 989, name = BF["Keepers of Time"] },
+	{ id = 990, name = BF["The Scale of the Sands"] },
+	{ id = 967, name = BF["The Violet Eye"] },
+	{ id = 1106, name = BF["Argent Crusade"] },
+	{ id = 1090, name = BF["Kirin Tor"] },
+	{ id = 1073, name = BF["The Kalu'ak"] },
+	{ id = 1091, name = BF["The Wyrmrest Accord"] },
+	{ id = 1098, name = BF["Knights of the Ebon Blade"] },
+	{ id = 1119, name = BF["The Sons of Hodir"] },
+	{ id = 1156, name = BF["The Ashen Verdict"] },
+	{ id = 1037, name = BF["Alliance Vanguard"] },
+	{ id = 1068, name = BF["Explorers' League"] },
+	{ id = 1126, name = BF["The Frostborn"] },
+	{ id = 1094, name = BF["The Silver Covenant"] },
+	{ id = 1050, name = BF["Valiance Expedition"] },
+	{ id = 1052, name = BF["Horde Expedition"] },
+	{ id = 1067, name = BF["The Hand of Vengeance"] },
+	{ id = 1124, name = BF["The Sunreavers"] },
+	{ id = 1064, name = BF["The Taunka"] },
+	{ id = 1085, name = BF["Warsong Offensive"] },
+	{ id = 1104, name = BF["Frenzyheart Tribe"] },
+	{ id = 1105, name = BF["The Oracles"] },
+	{ id = 469, name = BF["Alliance"] },
+	{ id = 67, name = BF["Horde"] },
+	{ id = 1134, name = BF["Gilneas"] },
+	{ id = 1133, name = BF["Bilgewater Cartel"] },
 
 	-- cataclysm
-	1158,	-- "Guardians of Hyjal"
-	1135,	-- "The Earthen Ring"
-	1171,	-- "Therazane"
-	1174,	-- "Wildhammer Clan"
-	1173,	-- "Ramkahen"
-	1177,	-- "Baradin's Wardens"
-	1172,	-- "Dragonmaw Clan"
-	1178,	-- "Hellscream's Reach"
-	1204,	-- "Avengers of Hyjal"
+	{ id = 1158, name = BF["Guardians of Hyjal"] },
+	{ id = 1135, name = BF["The Earthen Ring"] },
+	{ id = 1171, name = BF["Therazane"] },
+	{ id = 1174, name = BF["Wildhammer Clan"] },
+	{ id = 1173, name = BF["Ramkahen"] },
+	{ id = 1177, name = BF["Baradin's Wardens"] },
+	{ id = 1172, name = BF["Dragonmaw Clan"] },
+	{ id = 1178, name = BF["Hellscream's Reach"] },
+	{ id = 1204, name = BF["Avengers of Hyjal"] },
 
-	-- pandaria
-	1277,	-- "Chee Chee"
-	1275,	-- "Ella"
-	1283,	-- "Farmer Fung"
-	1282,	-- "Fish Fellreed"
-	1228,	-- "Forest Hozen"
-	1281,	-- "Gina Mudclaw"
-	1269,	-- "Golden Lotus"
-	1279,	-- "Haohan Mudclaw"
-	1273,	-- "Jogu the Drunk"
-	1358,	-- "Nat Pagle"
-	1276,	-- "Old Hillpaw"
-	1271,	-- "Order of the Cloud Serpent"
-	1242,	-- "Pearlfin Jinyu"
-	1270,	-- "Shado-Pan"
-	1216,	-- "Shang Xi's Academy"
-	1278,	-- "Sho"
-	1302,	-- "The Anglers"
-	1341,	-- "The August Celestials"
-	1359,	-- "The Black Prince"
-	1351,	-- "The Brewmasters"
-	1337,	-- "The Klaxxi"
-	1345,	-- "The Lorewalkers"
-	1272,	-- "The Tillers"
-	1280,	-- "Tina Mudclaw"
-	1353,	-- "Tushui Pandaren"
-	1352,	-- "Huojin Pandaren"
+	-- Mists of Pandaria
+	{ id = 1277, name = BF["Chee Chee"] },
+	{ id = 1275, name = BF["Ella"] },
+	{ id = 1283, name = BF["Farmer Fung"] },
+	{ id = 1282, name = BF["Fish Fellreed"] },
+	{ id = 1228, name = BF["Forest Hozen"] },
+	{ id = 1281, name = BF["Gina Mudclaw"] },
+	{ id = 1269, name = BF["Golden Lotus"] },
+	{ id = 1279, name = BF["Haohan Mudclaw"] },
+	{ id = 1273, name = BF["Jogu the Drunk"] },
+	{ id = 1358, name = BF["Nat Pagle"] },
+	{ id = 1276, name = BF["Old Hillpaw"] },
+	{ id = 1271, name = BF["Order of the Cloud Serpent"] },
+	{ id = 1242, name = BF["Pearlfin Jinyu"] },
+	{ id = 1270, name = BF["Shado-Pan"] },
+	{ id = 1216, name = BF["Shang Xi's Academy"] },
+	{ id = 1278, name = BF["Sho"] },
+	{ id = 1302, name = BF["The Anglers"] },
+	{ id = 1341, name = BF["The August Celestials"] },
+	{ id = 1359, name = BF["The Black Prince"] },
+	{ id = 1351, name = BF["The Brewmasters"] },
+	{ id = 1337, name = BF["The Klaxxi"] },
+	{ id = 1345, name = BF["The Lorewalkers"] },
+	{ id = 1272, name = BF["The Tillers"] },
+	{ id = 1280, name = BF["Tina Mudclaw"] },
+	{ id = 1353, name = BF["Tushui Pandaren"] },
+	{ id = 1352, name = BF["Huojin Pandaren"] },
 
-	1376,	-- "Operation: Shieldwall"
-	1387,	-- "Kirin Tor Offensive"
-	1416,	-- "Akama's Trust"
-	1375,	-- "Dominance Offensive"
-	1388,	-- "Sunreaver Onslaught"
-	1435,	-- "Shado-Pan Assault"
-	1440,	-- "Darkspear Rebellion"	
-	1492, -- "Emperor Shaohao"
+	{ id = 1376, name = BF["Operation: Shieldwall"] },
+	{ id = 1387, name = BF["Kirin Tor Offensive"] },
+	{}, -- was "Akama's Trust", keep this index empty
+	{ id = 1375, name = BF["Dominance Offensive"] },
+	{ id = 1388, name = BF["Sunreaver Onslaught"] },
+	{ id = 1435, name = BF["Shado-Pan Assault"] },
+	{ id = 1440, name = BF["Darkspear Rebellion"] },
+	{ id = 1492, name = GetFactionInfoByID(1492) },		-- BF["Emperor Shaohao"]
+	
+	-- Warlords of Draenor
+	{ id = 1515, name = GetFactionInfoByID(1515) },		-- Arrakoa Outcasts
+	{ id = 1731, name = GetFactionInfoByID(1731) },		-- Council of Exarchs
+	{ id = 1445, name = GetFactionInfoByID(1445) },		-- Frostwold Orcs
+	{ id = 1710, name = GetFactionInfoByID(1710) },		-- Sha'tari Defense
+	{ id = 1711, name = GetFactionInfoByID(1711) },		-- Steamwheedle Preservation Society
+	{ id = 1682, name = GetFactionInfoByID(1682) },		-- Wrynn's Vanguard
+	{ id = 1708, name = GetFactionInfoByID(1708) },		-- Laughing Skull Orcs
+	{ id = 1681, name = GetFactionInfoByID(1681) },		-- Vol'jin's Spear
 }
 
 local FactionUIDsRev = {}
+local FactionIdToName = {}
 
-for k, v in pairs(FactionUIDs) do
-	local name = GetFactionInfoByID(v)
-	FactionUIDsRev[name] = k	-- ex : ["Darnassus"] = 1
+for k, v in pairs(factions) do
+	if v.id and v.name then
+		FactionIdToName[v.id] = v.name
+		FactionUIDsRev[v.name] = k	-- ex : [BZ["Darnassus"]] = 1
+	end
 end
 
 -- *** Utility functions ***
+
 local headersState = {}
 local inactive = {}
 
@@ -258,14 +281,14 @@ local currentGuildName
 
 local function ScanReputations()
 	SaveHeaders()
-	local factions = addon.ThisCharacter.Factions
-	wipe(factions)
+	local f = addon.ThisCharacter.Factions
+	wipe(f)
 	
 	for i = 1, GetNumFactions() do		-- 2nd pass, data collection
 		local name, _, _, _, _, earned = GetFactionInfo(i)
 		if (earned and earned > 0) then		-- new in 3.0.2, headers may have rep, ex: alliance vanguard + horde expedition
 			if FactionUIDsRev[name] then		-- is this a faction we're tracking ?
-				factions[FactionUIDsRev[name]] = earned
+				f[FactionUIDsRev[name]] = earned
 			end
 		end
 	end
@@ -364,6 +387,10 @@ local function _GetReputationLevelText(bottom)
 	return BottomLevelNames[bottom]
 end
 
+local function _GetFactionName(id)
+	return FactionIdToName[id]
+end
+
 local PublicMethods = {
 	GetReputationInfo = _GetReputationInfo,
 	GetRawReputationInfo = _GetRawReputationInfo,
@@ -371,6 +398,7 @@ local PublicMethods = {
 	GetGuildReputation = _GetGuildReputation,
 	GetReputationLevels = _GetReputationLevels,
 	GetReputationLevelText = _GetReputationLevelText,
+	GetFactionName = _GetFactionName,
 }
 
 function addon:OnInitialize()

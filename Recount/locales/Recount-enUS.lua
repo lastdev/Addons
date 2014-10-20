@@ -208,6 +208,7 @@ L["Misc"] = true
 L["Miss"] = true
 L["Mob"] = true
 L["Mobs"] = true
+L["Multistrike"] = true
 L["Name of Ability"] = true
 L["Nature"] = true
 L["Naturefire"] = true

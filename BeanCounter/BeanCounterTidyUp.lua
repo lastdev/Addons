@@ -1,13 +1,9 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-<<<<<<< HEAD
-	Version: 5.20.5464 (RidiculousRockrat)
-=======
-	Version: 5.19.5445 (QuiescentQuoll)
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
-	Revision: $Id: BeanCounterTidyUp.lua 5266 2012-01-12 03:33:30Z kandoko $
+	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Revision: $Id: BeanCounterTidyUp.lua 5485 2014-10-13 12:58:31Z brykrys $
 	URL: http://auctioneeraddon.com/
-	
+
 	BeanCounterTidyUp - Database clean up and maintenance functions
 
 	License:
@@ -32,11 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-<<<<<<< HEAD
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.20/BeanCounter/BeanCounterTidyUp.lua $","$Rev: 5266 $","5.1.DEV.", 'auctioneer', 'libs')
-=======
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.19/BeanCounter/BeanCounterTidyUp.lua $","$Rev: 5266 $","5.1.DEV.", 'auctioneer', 'libs')
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/BeanCounter/BeanCounterTidyUp.lua $","$Rev: 5485 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 local private = lib.Private
@@ -68,7 +60,7 @@ function private.startPlayerMaintenance(server, player)
 	local sortArray = get("tasks.sortArray", server, player) or 0
 	local prunePostedDB = get("tasks.prunePostedDB", server, player) or 0
 	local compactDB = get("tasks.compactDB", server, player) or 0
-	
+
 	--we use random to add 1-5 days to the fixed intervals. This should keep all the tasks from occuring in the same login in general
 	if sortArray + 2592000 < currentTime then --run monthly
 		private.sortArrayByDate(server, player)
@@ -80,9 +72,9 @@ function private.startPlayerMaintenance(server, player)
 	end
 	if compactDB + 2592000 < currentTime then --run monthly
 		private.compactDB(server, player)
-		set("tasks.compactDB", RND, server, player)	
+		set("tasks.compactDB", RND, server, player)
 	end
-	
+
 	--check for non player tasks
 	if runServerTaskOnce then
 		runServerTaskOnce = false
@@ -92,7 +84,7 @@ function private.startPlayerMaintenance(server, player)
 			private.pruneItemNameArray()
 			set("tasks.refreshItemIDArray", time())
 		end
-	end	
+	end
 end
 
 --Sum all entries for display in window  TODO:Add in check for lua key value limitations
@@ -120,7 +112,7 @@ end
 --Recreate/refresh ItemIName to ItemID array
 function private.refreshItemIDArray(announce)
 	for player, v in pairs(private.serverData)do
-		for DB,data in pairs(private.serverData[player]) do			
+		for DB,data in pairs(private.serverData[player]) do
 			for itemID, value in pairs(data) do
 				for itemString, text in pairs(value) do
 					local key, suffix = lib.API.decodeLink(itemString)
@@ -132,7 +124,7 @@ function private.refreshItemIDArray(announce)
 						end
 					end
 				end
-			end	
+			end
 		end
 	end
 --~ 	if announce then print("Finished refresing ItemName Array") end
@@ -142,11 +134,11 @@ end
 local function pruneItemNameArrayHelper(itemID)
 	for server, serverData in pairs(BeanCounterDB) do
 		for player, playerData in pairs(serverData) do
-			for DB, data in pairs(playerData) do				
+			for DB, data in pairs(playerData) do
 				if data[itemID] then
 					--found a match
 					return true
-				end	
+				end
 			end
 		end
 	end
@@ -202,9 +194,9 @@ function private.compactDB(server, player)
 			for itemID, itemIDData in pairs(data) do
 				for itemString, itemStringData in pairs(itemIDData) do
 					--remove itemStrings that are now empty, all the keys have been moved to compressed format
-					if #itemStringData == 0 then 
-						debugPrint("Removed empty table:", itemString, server, player) 
-						playerData[DB][itemID][itemString] = nil 
+					if #itemStringData == 0 then
+						debugPrint("Removed empty table:", itemString, server, player)
+						playerData[DB][itemID][itemString] = nil
 					end
 				end
 				--after removing the itemStrings look to see if there are itemID's that need removing
@@ -238,7 +230,7 @@ function private.removeOldData(datatoPurge, DB, server, player)
 	for itemString, itemStringData in pairs(datatoPurge) do
 		for i = #itemStringData, 1, -1 do
 			local _, _, _, _, _, _, _, postTime = private.unpackString(itemStringData[i])
-			
+
 			if tonumber(postTime) <= expire then --we have an old data entry lets process this
 				debugPrint("Removed", itemString, itemStringData[i] , date("%c", postTime) , server, player)
 				table.remove(itemStringData, i)
@@ -302,7 +294,7 @@ end
 function private.deleteExactItem(itemLink)
 	if not itemLink or not itemLink:match("^(|c%x+|H.+|h%[.+%])") then return end
 	for player, playerData in pairs(private.serverData) do
-		for DB, data in pairs(playerData) do		
+		for DB, data in pairs(playerData) do
 			for itemID, itemIDData in pairs(data) do
 				for itemString, itemStringData in pairs(itemIDData) do
 					local  _,_,_,_,_,_, _, suffix, uniqueID = strsplit(":", itemString)
@@ -328,7 +320,7 @@ local integrity = {} --table containing teh DB layout
 	integrity["failedAuctions"] = {"number", "number", "number", "number", "number", "number", "string", "number", "string", "string"}--10
 	integrity["postedBids"] = {"number", "number", "string", "string", "number", "number", "string" } --7
 	integrity["postedAuctions"] = {"number", "number", "number", "number", "number" ,"number", "string"} --7
-	
+
 	integrity["completedBidsBuyoutsNeutral"] = {"number", "number", "number", "number", "number", "number", "string", "number", "string", "string"}--10
 	integrity["completedAuctionsNeutral"] = {"number", "number", "number", "number", "number", "number", "string", "number", "string", "string"}--10
 	integrity["failedBidsNeutral"] = {"number", "number", "number", "number", "number", "number", "string", "number", "string", "string"}--10
@@ -352,6 +344,7 @@ local integrityClean, integrityCount = true, 1
 							BeanCounterDB[server][player][DB][itemID][itemString] = nil
 							debugPrint("Failed: Invalid format", DB, data, "", itemString)
 							integrityClean = false
+						--[[ temporarily disabled pending review of WoD: with new bonusID fields, a valid itemString could have any number of ':' from 12 up
 						elseif itemStringLength > 10 then --Bad itemstring purge
 							debugPrint("Failed: Invalid itemString", DB, data, "", itemString)
 							local _, link = GetItemInfo(itemString) --ask server for a good itemlink
@@ -365,6 +358,7 @@ local integrityClean, integrityCount = true, 1
 								BeanCounterDB[server][player][DB][itemID][itemString] = nil
 							end
 							integrityClean = false
+						--]]
 						elseif itemStringLength < 9 then
 							local itemStringNew = itemString..":80"
 							BeanCounterDB[server][player][DB][itemID][itemStringNew] = data

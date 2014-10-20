@@ -6,7 +6,7 @@ local XPerl_Player_Events = {}
 local isOutOfControl = nil
 local playerClass, playerName
 local conf, pconf
-XPerl_RequestConfig(function(new) conf = new pconf = conf.player if (XPerl_Player) then XPerl_Player.conf = conf.player end end, "$Revision: 849 $")
+XPerl_RequestConfig(function(new) conf = new pconf = conf.player if (XPerl_Player) then XPerl_Player.conf = conf.player end end, "$Revision: 875 $")
 local perc1F = "%.1f"..PERCENT_SYMBOL
 local percD = "%.0f"..PERCENT_SYMBOL
 
@@ -517,9 +517,9 @@ local function XPerl_Player_DruidBarUpdate(self)
 	if (InCombatLockdown()) then
 		XPerl_ProtectedCall(XPerl_Player_DruidBarUpdate, self)
 	else
-		local h = 40 + ((druidBarExtra + (pconf.repBar or 0) + (pconf.xpBar or 0)) * 10)
+		local h = 40 + ((druidBarExtra + (pconf.repBar and 1 or 0) + (pconf.xpBar and 1 or 0)) * 10)
 		if (pconf.extendPortrait) then
-			self.portraitFrame:SetHeight(62 + druidBarExtra * 10 + (((pconf.xpBar or 0) + (pconf.repBar or 0)) * 10))
+			self.portraitFrame:SetHeight(62 + druidBarExtra * 10 + (((pconf.xpBar and 1 or 0) + (pconf.repBar and 1 or 0)) * 10))
 		end
 		self.statsFrame:SetHeight(h)
 	end
@@ -646,7 +646,7 @@ function XPerl_PlayerStatus_OnUpdate(self, val, max)
 		local testLow = pconf.fullScreen.lowHP / 100
 		local testHigh = pconf.fullScreen.highHP / 100
 
-		if (val and max) then
+		if (val and max and val > 0 and max > 0) then
 			local test = val / max
 
 			if ( test <= testLow and not XPerl_LowHealthFrame.frameFlash and not UnitIsDeadOrGhost("player")) then
@@ -966,7 +966,13 @@ function XPerl_Player_Events:PLAYER_TALENT_UPDATE()
 	XPerl_Player_UpdateMana(self)
 	
 	if(playerClass == "PRIEST") then
-		PriestBarFrame_CheckAndShow();
+		if (self.runes) then
+			self.runes:Hide()
+		end
+		XPerl_Player_InitPriest(self);
+		if (XPerl_Player_Buffs_Position) then
+			XPerl_Player_Buffs_Position(self)
+		end
 	end
 end
 
@@ -1142,10 +1148,10 @@ function XPerl_Player_SetWidth(self)
 		end
 	end
 
-	local h = 40 + ((((self.statsFrame.druidBar and self.statsFrame.druidBar:IsShown()) or 0) + (pconf.repBar or 0) + (pconf.xpBar or 0)) * 10)
+	local h = 40 + ((((self.statsFrame.druidBar and self.statsFrame.druidBar:IsShown()) and 1 or 0) + (pconf.repBar and 1 or 0) + (pconf.xpBar and 1 or 0)) * 10)
 	self.statsFrame:SetHeight(h)
 
-	self:SetWidth((pconf.portrait or 0) * 62 + (pconf.percent or 0) * 32 + 124 + pconf.size.width)
+	self:SetWidth((pconf.portrait and 1 or 0) * 62 + (pconf.percent and 1 or 0) * 32 + 124 + pconf.size.width)
 	self:SetScale(pconf.scale)
 
 	XPerl_StatsFrameSetup(self, {self.statsFrame.druidBar, self.statsFrame.xpBar, self.statsFrame.repBar})
@@ -1274,7 +1280,7 @@ function XPerl_Player_Set_Bits(self)
 
 	self.highlight:ClearAllPoints()
 	if (pconf.extendPortrait or (self.runes and pconf.showRunes and pconf.dockRunes)) then
-		self.portraitFrame:SetHeight(62 + (((pconf.xpBar or 0) + (pconf.repBar or 0)) * 10))
+		self.portraitFrame:SetHeight(62 + (((pconf.xpBar and 1 or 0) + (pconf.repBar and 1 or 0)) * 10))
 		--self.highlight:SetPoint("TOPLEFT", self.levelFrame, "TOPLEFT", 0, 0)
 		--self.highlight:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, 0)
 	else
@@ -1449,11 +1455,10 @@ end
 function XPerl_Player_InitPriest(self)
 	if ( select(2,UnitClass("player")) == "PRIEST") then
 
-		if (not PriestBarFrame or PriestBarFrame:GetParent() ~= PlayerFrame or not PriestBarFrame:IsShown() or not pconf.showRunes ) then
+		if (not PriestBarFrame or (PriestBarFrame:GetParent() ~= PlayerFrame and PriestBarFrame:GetParent() ~= self.runes) or not PriestBarFrame:IsShown() or not pconf.showRunes ) then
 			-- Only hijack runes if not already done so by another mod
 			return
 		end
-
 		
 		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
 		self.runes:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 0, 2)
@@ -1462,7 +1467,6 @@ function XPerl_Player_InitPriest(self)
 		self.runes.unit = "player"
 		PriestBarFrame:SetParent(self.runes)--XPerl_Player)
 		--MakeMoveable(self)
-		
 	end
 end
 
@@ -1483,8 +1487,6 @@ function XPerl_Player_InitMonk(self)
 		self.runes.unit = "player"
 		MonkHarmonyBar:SetParent(self.runes)--XPerl_Player)
 		--MakeMoveable(self)
-
-		
 	end
 end
 --XPerl_Player_InitMoonkin
@@ -1496,7 +1498,6 @@ function XPerl_Player_InitMoonkin(self)
 			return
 		end
 	
-	
 		self.runes = CreateFrame("Frame", "XPerl_Runes", self)
 		self.runes:SetPoint("TOPLEFT", self.portraitFrame, "BOTTOMLEFT", 0, 2)
 		self.runes:SetPoint("BOTTOMRIGHT", self.statsFrame, "BOTTOMRIGHT", 0, -30)
@@ -1506,8 +1507,6 @@ function XPerl_Player_InitMoonkin(self)
 		EclipseBarFrame:SetParent(self.runes)
 		
 	end
-
-	--XPerl_Player_InitMoonkin = nil
 end
 
 
