@@ -212,12 +212,12 @@ function Outfitter:ParseItemLink(pItemLink)
 	local vStartIndex, vEndIndex, vItemCode, vItemEnchantCode,
 	      vItemJewelCode1, vItemJewelCode2, vItemJewelCode3, vItemJewelCode4,
 	      vItemSubCode, vItemUniqueID, vLinkLevel, vReforgeID, vUnknownCode,
-	      vItemName
-	
+	      vUnknownCode2, vItemName
+
 	vStartIndex, vEndIndex, vItemCode, vItemEnchantCode,
 	vItemJewelCode1, vItemJewelCode2, vItemJewelCode3, vItemJewelCode4,
 	vItemSubCode, vItemUniqueID, vLinkLevel, vReforgeID, vUnknownCode,
-	vItemName = pItemLink:find(self.cItemLinkFormat)
+	vUnknownCode2, vItemName = pItemLink:find(self.cItemLinkFormat)
 	
 	if not vStartIndex then
 		self:DebugMessage("ParseItemLink: Pattern didn't match")

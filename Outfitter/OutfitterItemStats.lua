@@ -203,6 +203,7 @@ Outfitter.SimpleStatCategories =
 			{ID = "MASTERY_RATING"},
 			{ID = "TOTAL_STATS", Name = Outfitter.cTotalStatsName},
 			{ID = "ITEM_LEVEL", Name = Outfitter.cItemLevelName},
+			{ID = "PVP_POWER"}
 		},
 	},
 	{
@@ -292,7 +293,7 @@ Outfitter.SimpleStatCategories =
 ----------------------------------------
 -- Install the simple stats
 ----------------------------------------
-
+--[[
 for _, vStatCategory in ipairs(Outfitter.SimpleStatCategories) do
 	setmetatable(vStatCategory, Outfitter._SimpleStatCategoryMetaTable)
 	
@@ -306,7 +307,7 @@ for _, vStatCategory in ipairs(Outfitter.SimpleStatCategories) do
 	
 	table.insert(Outfitter.StatCategories, vStatCategory)
 end
-
+]]
 ----------------------------------------
 Outfitter.PawnScalesCategory =
 ----------------------------------------

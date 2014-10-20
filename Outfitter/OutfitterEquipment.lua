@@ -147,6 +147,10 @@ function Outfitter:BuildEquipmentChangeList(pOutfit, pInventoryCache)
 		end
 	end
 	
+	if self.Debug.EquipmentChanges then
+		self:DebugOutfitTable(pOutfit, "Remaining")
+	end
+	
 	-- WoW has a bug with dual-spec where you can end up with dual 2H weapons equipped even
 	-- though you may no longer have Titan's Grip.  To correct this, I detect the situation here
 	-- and insert an unequip operation for the 2H'er in the OH slot to restore the equipment
@@ -930,6 +934,10 @@ function Outfitter:UpdateEquippedItems()
 	local vInventoryCache = self:GetInventoryCache()
 	local vCompiledOutfit = self:GetCompiledOutfit()
 	
+	if self.Debug.EquipmentChanges then
+		self:DebugOutfitTable(vCompiledOutfit, "CompiledOutfit0")
+	end
+	
 	-- When in combat delay the outfit change until
 	-- combat ends
 	
@@ -1306,16 +1314,12 @@ function Outfitter.OutfitStack:UpdateOutfitDisplay()
 		end
 	end -- for
 	
-	if vShowHelm == true then
-		ShowHelm("1")
-	elseif vShowHelm == false then
-		ShowHelm("0")
+	if vShowHelm ~= nil then
+		ShowHelm(vShowHelm)
 	end
 	
-	if vShowCloak == true then
-		ShowCloak("1")
-	elseif vShowCloak == false then
-		ShowCloak("0")
+	if vShowCloak ~= nil then
+		ShowCloak(vShowCloak)
 	end
 	
 	if vShowTitleID ~= nil

@@ -1,5 +1,5 @@
 ----------------------------------------
--- Outfitter Copyright 2006 - 2011 John Stephen, wobbleworks.com
+-- Outfitter Copyright 2006-2014 John Stephen, wobbleworks.com
 -- All rights reserved, unauthorized redistribution is prohibited
 ----------------------------------------
 
@@ -74,6 +74,9 @@ Outfitter.CreditPlayersByRealm =
 		["MacGregor"] = 1,
 		["LaoTseu"] = 1,
 		["Irozal"] = 1,
+		["EmForAce"] = 1,
+		["durandal42"] = 1,
+		["Dicebar"] = 1,
 	},
 	["Tester"] =
 	{
@@ -423,8 +426,6 @@ Outfitter_cIconSetLabel = Outfitter.cIconSetLabel
 -- Hopefully the authors of those addons will eventually migrate their code to
 -- use the new functions instead so that these can eventually be eliminated.
 
-Outfitter_cFishingStatName = Outfitter.LibStatLogic:GetStatNameFromID("FISHING")
-
 Outfitter_cCompleteOutfits = Outfitter.cCompleteOutfits
 Outfitter_cAccessoryOutfits = Outfitter.cAccessoryOutfits
 Outfitter_cOddsNEndsOutfits = Outfitter.cOddsNEndsOutfits
@@ -492,12 +493,7 @@ Outfitter.BANKED_FONT_COLOR_CODE = "|cff4033ff"
 Outfitter.OUTFIT_MESSAGE_COLOR = {r = 0.2, g = 0.75, b = 0.3}
 
 Outfitter.IsWoW4 = true
-if Outfitter.IsWoW4 then
-	Outfitter.cItemLinkFormat = "|Hitem:(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+)|h%[([^%]]*)%]|h"
-else
-	Outfitter.cItemLinkFormat = "|Hitem:(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+)|h%[([^%]]*)%]|h"
-end
-
+Outfitter.cItemLinkFormat = "|Hitem:(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+)|h%[([^%]]*)%]|h"
 
 Outfitter.cUniqueGemItemIDs =
 {
