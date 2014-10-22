@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 596 2013-09-26T19:39:50Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -586,7 +586,7 @@ function ArmoryFrameLineTab_OnClick(self)
     for i = 1, ARMORY_MAX_LINE_TABS do
         local lineTab = _G["ArmoryFrameLineTab"..i];
         if ( lineTab:GetID() ~= self:GetID() ) then
-            lineTab:SetChecked(nil);
+            lineTab:SetChecked(false);
         end
     end
 
@@ -904,13 +904,12 @@ function ArmoryComparisonFrame_OnUpdate(self, elapsed)
         end
         if ( self.link ~= link ) then
             self.link = link;
-            self.hasShoppingTooltips = ShoppingTooltip1:IsVisible() or ShoppingTooltip2:IsVisible() or ShoppingTooltip3:IsVisible();
+            self.hasShoppingTooltips = ShoppingTooltip1:IsVisible() or ShoppingTooltip2:IsVisible();
             if ( link ) then
                 self.hasComparison = true;
 
                 ShoppingTooltip1:Hide();
                 ShoppingTooltip2:Hide();
-                ShoppingTooltip3:Hide();
 
                 ArmoryShowCompareItem(tooltip, link);
             else
@@ -1324,7 +1323,7 @@ function Armory_PS_OnLoad()
     ArmoryPS.UnitName = function(unit) return Armory:UnitName(unit); end;
     ArmoryPS.GetActiveSpecGroup = function(inspect) return Armory:GetActiveSpecGroup(); end;
     ArmoryPS.GetSpecialization = function(inspect, pet, talentGroup) return Armory:GetSpecialization(inspect, pet, talentGroup); end;
-    ArmoryPS.GetSpecializationInfo = function(index, inspect, pet) return Armory:GetSpecializationInfo(index, inspect, pet); end;
+    ArmoryPS.GetSpecializationInfo = function(index, inspect, pet, dummy, sex) return Armory:GetSpecializationInfo(index, inspect, pet, dummy, sex); end;
     ArmoryPS.GetInventoryItemLink = function(unit, index) return (Armory:GetInventoryItemLink(unit, index)) or nil; end;
 
     local categoryInfo = PAPERDOLL_STATCATEGORIES["PLAYERSCORE"];

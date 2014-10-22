@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 494 2012-09-04T21:04:44Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -223,7 +223,7 @@ end
 
 function ArmoryItemFilterDropDown_OnEnter(self)
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-    GameTooltip:SetText(ARMORY_FILTER_TOOLTIP, nil, nil, nil, nil, 1);
+    GameTooltip:SetText(ARMORY_FILTER_TOOLTIP, nil, nil, nil, nil, true);
 end
 
 function ArmoryItemFilterDropDown_OnLeave(self)

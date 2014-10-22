@@ -1,4 +1,4 @@
-<!-- Revision: 564 2012-11-28T00:03:51Z -->
+<!-- Revision: 646 2014-10-13T22:12:03Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\FrameXML\UI.xsd">
   <Script file="ArmoryTalentFrame.lua"/>
@@ -23,11 +23,11 @@
 
   <!-- Talent button template, taken from PlayerTalentButtonTemplate in Blizzard_TalentUI.xml -->
   <Button name="ArmoryTalentButtonTemplate" virtual="true">
-    <Size x="64" y="64"/>
+    <Size x="56" y="56"/>
     <Layers>
       <Layer level="BACKGROUND">
         <Texture name="$parentIconTexture" parentKey="icon">
-          <Size x="30" y="30"/>
+          <Size x="26" y="26"/>
           <Anchors>
             <Anchor point="CENTER" x="-1" y="2"/>
           </Anchors>
@@ -35,7 +35,7 @@
       </Layer>
       <Layer level="ARTWORK" textureSubLevel="1">
         <Texture name="$parentSlot" inherits="Talent-SingleBorder" parentKey="Slot">
-          <Size x="31" y="30"/>
+          <Size x="27" y="26"/>
           <Anchors>
             <Anchor point="CENTER" x="-1" y="2"/>
           </Anchors>
@@ -64,7 +64,7 @@
 
   <!-- Row of player talents, taken from PlayerTalentRowTemplate in Blizzard_TalentUI.xml -->
   <Frame name="ArmoryTalentRowTemplate" virtual="true">
-    <Size x="627" y="50"/>
+    <Size x="629" y="42"/>
     <Frames>
       <Button name="$parentTalent1" inherits="ArmoryTalentButtonTemplate" parentKey="talent1">
         <Anchors>
@@ -216,27 +216,32 @@
           </Frame>
           <Frame name="$parentTalentRow2" inherits="ArmoryTalentRowTemplate" parentKey="tier2" id="2">
             <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="$parentTalentRow1" relativePoint="BOTTOMLEFT" x="0" y="4"/>
+              <Anchor point="TOPLEFT" relativeTo="$parentTalentRow1" relativePoint="BOTTOMLEFT" x="0" y="3"/>
             </Anchors>
           </Frame>
           <Frame name="$parentTalentRow3" inherits="ArmoryTalentRowTemplate" parentKey="tier3" id="3">
             <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="$parentTalentRow2" relativePoint="BOTTOMLEFT" x="0" y="4"/>
+              <Anchor point="TOPLEFT" relativeTo="$parentTalentRow2" relativePoint="BOTTOMLEFT" x="0" y="3"/>
             </Anchors>
           </Frame>
           <Frame name="$parentTalentRow4" inherits="ArmoryTalentRowTemplate" parentKey="tier4" id="4">
             <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="$parentTalentRow3" relativePoint="BOTTOMLEFT" x="0" y="4"/>
+              <Anchor point="TOPLEFT" relativeTo="$parentTalentRow3" relativePoint="BOTTOMLEFT" x="0" y="3"/>
             </Anchors>
           </Frame>
           <Frame name="$parentTalentRow5" inherits="ArmoryTalentRowTemplate" parentKey="tier5" id="5">
             <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="$parentTalentRow4" relativePoint="BOTTOMLEFT" x="0" y="4"/>
+              <Anchor point="TOPLEFT" relativeTo="$parentTalentRow4" relativePoint="BOTTOMLEFT" x="0" y="3"/>
             </Anchors>
           </Frame>
           <Frame name="$parentTalentRow6" inherits="ArmoryTalentRowTemplate" parentKey="tier6" id="6">
             <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="$parentTalentRow5" relativePoint="BOTTOMLEFT" x="0" y="4"/>
+              <Anchor point="TOPLEFT" relativeTo="$parentTalentRow5" relativePoint="BOTTOMLEFT" x="0" y="3"/>
+            </Anchors>
+          </Frame>
+          <Frame name="$parentTalentRow7" inherits="ArmoryTalentRowTemplate" parentKey="tier7" id="7">
+            <Anchors>
+              <Anchor point="TOPLEFT" relativeTo="$parentTalentRow6" relativePoint="BOTTOMLEFT" x="0" y="3"/>
             </Anchors>
           </Frame>
         </Frames>

@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 572 2013-01-04T15:34:54Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -427,7 +427,7 @@ function ArmoryPetFrame_UpdateSpec()
     ArmoryPetSpecFrame:Hide();
     local spec = Armory:GetSpecialization(false, true);
     if ( spec ) then
-		local _, name, description, icon = Armory:GetSpecializationInfo(spec, false, true);
+		local _, name, description, icon = Armory:GetSpecializationInfo(spec, false, true, nil, Armory:UnitSex("pet"));
 		if ( name ) then
 		    SetPortraitToTexture(ArmoryPetSpecFrame.specIcon, icon);
 		    ArmoryPetSpecFrame.specName:SetText(name);

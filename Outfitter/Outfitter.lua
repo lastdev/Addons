@@ -117,6 +117,10 @@ Outfitter.CreditPlayersByRealm =
 	{
 		["Dankris\n<Caligula's Pleasures>"] = 3,
 	},
+	["Azjol-Nerub"] =
+	{
+		["Mythris"] = 3,
+	},
 	["Blackwater Raiders"] =
 	{
 		["Maumau\n<No Quarter>"] = 3,
@@ -8598,7 +8602,7 @@ function Outfitter._ExtendedCompareTooltip:ShowCompareItem()
 						local vItemLink, vItemQuality = Outfitter:GenerateItemLink(vItem)
 						
 						if vItemLink
-						and vItemQuality >= ITEM_QUALITY_UNCOMMON then
+						and vItemQuality >= 2 then
 							table.insert(vShoppingItems, {Item = vItem, OutfitName = vOutfit:GetName(), Link = vItemLink})
 						end
 					end

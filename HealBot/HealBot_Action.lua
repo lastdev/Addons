@@ -1455,7 +1455,7 @@ function HealBot_Action_EnableButton(button, isTarget)
     local ebtext=uName
     if activeUnit then
         local hbFontAdj=hbFontVal[Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["FONT"]] or 2
-        local bttextlen = floor((hbFontAdj*2)+2+((Healbot_Config_Skins.HealBar[Healbot_Config_Skins.Current_Skin][button.frame]["WIDTH"]*1.88)
+        local bttextlen = floor((hbFontAdj*2)+HealBot_Globals.tsadjmod+((Healbot_Config_Skins.HealBar[Healbot_Config_Skins.Current_Skin][button.frame]["WIDTH"]*1.88)
                                 /(Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["HEIGHT"])
                                 -(Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["HEIGHT"]/hbFontAdj)))
         ebtext=HealBot_Action_HBText(uHlth,uMaxHlth,uName,ebUnit,uHealIn, hbGUID, bttextlen, button.frame)
@@ -1770,7 +1770,7 @@ function HealBot_Action_HBText(hlth,maxhlth,unitName,unit,healin, hbGUID, bttext
     end    -- added by Diacono of Ursin
     if Healbot_Config_Skins.Aggro[Healbot_Config_Skins.Current_Skin]["SHOWTEXT"] and HealBot_Aggro[unit] and HealBot_Aggro[unit]=="a" and 
        (HealBot_UnitThreat[unit] or 0)>Healbot_Config_Skins.Aggro[Healbot_Config_Skins.Current_Skin]["ALERT"] and uName then
-        uName=">>  "..uName.."  <<"
+        uName=">> "..uName.." <<"
         --uName=">"..HealBot_UnitThreat[unit].."> "..uName.." <"..HealBot_UnitThreat[unit].."<"
     end
     local vUnit=HealBot_retIsInVehicle(unit)
@@ -3009,7 +3009,7 @@ function HealBot_Action_SetButtonAttrib(button,bbutton,bkey,status,j)
                 ToggleDropDownMenu(1, nil, HBFriendsDropDown, "cursor", 10, -8)
             end
             button.showhbmenu = showHBmenu
-        elseif HealBot_GetSpellId(sName) then
+        elseif HealBot_Spells[sName] and HealBot_Spells[sName].known then
             if sTar or sTrin1 or sTrin2 or AvoidBC then
                 local mText = HealBot_Action_AlterSpell2Macro(sName, sTar, sTrin1, sTrin2, AvoidBC, button.unit, status)
                 button:SetAttribute(HB_prefix..buttonType..j, nil);
@@ -4079,8 +4079,7 @@ end
 function HealBot_Action_UseSmartCast(bp)
     local sName=HealBot_Action_SmartCast(bp);
     if sName then
-        local sID=HealBot_GetSpellId(sName)
-        if sID then
+        if HealBot_Spells[sName] and HealBot_Spells[sName].known then
             if UnitIsUnit("player",bp.unit) or HealBot_UnitInRange(sName, bp.unit)==1 then
                 bp:SetAttribute("helpbutton1", "heal1");
                 bp:SetAttribute("type-heal1", "spell");
@@ -4106,7 +4105,6 @@ function HealBot_Action_UseSmartCast(bp)
             end
         end
         usedSmartCast=true;
-        HealBot_Check_WeaponBuffs(sName)
     end
 end
 

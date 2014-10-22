@@ -1,10 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-<<<<<<< HEAD
-    Revision: 638 2014-10-12T08:05:02Z
-=======
-    Revision: 607 2013-12-11T12:16:33Z
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -77,10 +73,7 @@ local knownBy;
 local fetched;
 
 local accountBoundPattern = "^"..ITEM_BIND_TO_BNETACCOUNT.."$";
-<<<<<<< HEAD
 local levelPattern = "^"..ITEM_LEVEL:gsub("(%%d)", "(.+)").."$";
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 local minLevelPattern = "^"..ITEM_MIN_LEVEL:gsub("(%%d)", "(.+)").."$";
 local rankPattern = "^"..ITEM_MIN_SKILL:gsub("%d%$", ""):gsub("%%s", "(.+)"):gsub("%(%%d%)", "%%((%%d+)%%)").."$";
 local repPattern = "^"..ITEM_REQ_REPUTATION:gsub("%-", "%%-"):gsub("%%s", "(.+)").."$";
@@ -91,25 +84,17 @@ local reagentPattern = "\n"..ITEM_REQ_SKILL:gsub("%d%$", ""):gsub("%%s", "(.+)")
 
 local function GetRequirements(tooltip)
     local text, standing, reagents;
-<<<<<<< HEAD
     local reqLevel, reqProfession, reqRank, reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, accountBound, realName;
-=======
-    local reqLevel, reqProfession, reqRank, reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, accountBound;
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
     for i = 2, tooltip:NumLines() do
         text = Armory:GetTooltipText(tooltip, i);
         if ( (text or "") ~= "" ) then
 			if ( text:find(accountBoundPattern) ) then
 				accountBound = true;
-<<<<<<< HEAD
 
 			elseif ( text:find(levelPattern) ) then
                 realName = strtrim(Armory:GetTooltipText(tooltip, i - 1) or "");
 
-=======
-				
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 			elseif ( text:find(minLevelPattern) ) then
                 reqLevel = text:match(minLevelPattern);
                 
@@ -142,11 +127,7 @@ local function GetRequirements(tooltip)
         end
     end
     
-<<<<<<< HEAD
     return tonumber(reqLevel), reqProfession, tonumber(reqRank), reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, reagents, accountBound, realName;
-=======
-    return tonumber(reqLevel), reqProfession, tonumber(reqRank), reqReputation, reqStanding, reqSkill, reqRaces, reqClasses, reagents, accountBound;
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 end
 
 local itemCandidates = {};
@@ -313,7 +294,7 @@ local function EnhanceItemTooltip(tooltip, id, link)
 
     if ( itemCount and #itemCount > 0 ) then
         spaceAdded = spaceAdded or AddSpacer(tooltip);
-        local count, bagCount, bankCount, mailCount, auctionCount, equipCount, voidCount = 0, 0, 0, 0, 0, 0, 0;
+        local count, bagCount, bankCount, reagentBankCount, mailCount, auctionCount, equipCount, voidCount = 0, 0, 0, 0, 0, 0, 0, 0;
         local details;
         local r, g, b = Armory:GetConfigItemCountColor();
         for k, v in ipairs(itemCount) do
@@ -322,18 +303,19 @@ local function EnhanceItemTooltip(tooltip, id, link)
             end
             bagCount = bagCount + (v.bags or 0);
             bankCount = bankCount + (v.bank or 0);
+            reagentBankCount = reagentBankCount + (v.reagentBank or 0);
             mailCount = mailCount + (v.mail or 0);
             auctionCount = auctionCount + (v.auction or 0);
             equipCount = equipCount + (v.equipped or 0);
             voidCount = voidCount + (v.void or 0);
-            details = v.details or Armory:GetCountDetails(v.bags, v.bank, v.mail, v.auction, nil, nil, v.equipped, v.void, v.perSlot);
+            details = v.details or Armory:GetCountDetails(v.bags, v.bank, v.reagentBank, v.mail, v.auction, nil, nil, v.equipped, v.void, v.perSlot);
             tooltip:AddDoubleLine(format("%s [%d]", v.name, v.count), details, r, g, b, r, g, b);
         end
 
         if ( Armory:HasInventory() and count > 0 and Armory:GetConfigShowItemCountTotals() ) then
             r, g, b = Armory:GetConfigItemCountTotalsColor();
-            local guildCount = count - bagCount - bankCount - mailCount - auctionCount - equipCount - voidCount;
-            details = Armory:GetCountDetails(bagCount, bankCount, mailCount, auctionCount, nil, guildCount, equipCount, voidCount);
+            local guildCount = count - bagCount - bankCount - reagentBankCount - mailCount - auctionCount - equipCount - voidCount;
+            details = Armory:GetCountDetails(bagCount, bankCount, reagentBankCount, mailCount, auctionCount, nil, guildCount, equipCount, voidCount);
             tooltip:AddDoubleLine(format(ARMORY_TOTAL, count), details, r, g, b, r, g, b);
         end
     end
@@ -400,19 +382,20 @@ local function EnhanceRecipeTooltip(tooltip, id, link)
         local r, g, b = Armory:GetConfigItemCountColor();
         for i = 1, #reagents do
             name, quantity = unpack(reagents[i]);
-            count, bags, bank, mail, auction, alts = 0, 0, 0, 0, 0, 0;
+            count, bags, bank, mail, auction, alts, reagentBank = 0, 0, 0, 0, 0, 0, 0;
             for _, v in ipairs(reagentCount[i]) do
                 if ( v.mine ) then
                     bags = bags + (v.bags or 0);
                     bank = bank + (v.bank or 0);
+                    reagentBank = reagentBank + (v.reagentBank or 0);
                     mail = mail + (v.mail or 0);
                     auction = auction + (v.auction or 0);
                 else
-                    alts = alts + (v.bags or 0) + (v.bank or 0) + (v.mail or 0) + (v.auction or 0);
+                    alts = alts + (v.bags or 0) + (v.bank or 0) + (v.mail or 0) + (v.auction or 0) + (v.reagentBank or 0);
                 end
                 count = count + v.count;
             end
-            details = Armory:GetCountDetails(bags, bank, mail, auction, alts, count - bags - bank - mail - auction - alts);
+            details = Armory:GetCountDetails(bags, bank, reagentBank, mail, auction, alts, count - bags - bank - reagentBank - mail - auction - alts);
             tooltip:AddDoubleLine(name..format(" [%d/%d]", count, quantity), details, r, g, b, r, g, b);
         end
     end
@@ -1108,7 +1091,7 @@ function Armory:AddEnhancedTip(frame, normalText, r, g, b, enhancedText, noNorma
             GameTooltip:SetText(normalText, r, g, b);
             GameTooltip:AddLine(enhancedText, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1);
         else
-            GameTooltip:SetText(enhancedText, r, g, b, 1, 1);
+            GameTooltip:SetText(enhancedText, r, g, b, 1, true);
         end
         GameTooltip:Show();
     elseif ( not noNormalText ) then

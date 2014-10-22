@@ -4,13 +4,27 @@ The Armory archive can be found on http://www.wow-neighbours.com/.
 
 Thanks for using Armory. You can show your appreciation and support future development by donating!
 
-<<<<<<< HEAD
+==== v12.1.1 ====
+# Included updated German and Spanish translations.
+
+==== v12.1.0 ====
+# Quest log initially showed an empty list; this has been fixed.
+# Trade skill search box wasn't working properly anymore; this has been fixed.
+# Trade skill collapse / expand all button didn't work anymore; this has been fixed.
+# Reagent bank was always shown in inventory; this has been fixed.
+# An option has been added to set the server's weekly reset day because Armory can't figure it out anymore. Default will be Tuesday.
+
+==== v12.0.1 ====
+# Something went wrong with talents for toons not at max level; this has been fixed.
+
+==== v12.0.0 ====
+# Adjustments have been made for patch 6.0.2.
+  Note: The database has to be reset because Blizzard changed too much.
+
 ==== v11.2.1 ====
 # Included updated Spanish translations.
 # A recipe was shown as learnable in case the recipe's name changes once learned; this has been fixed.
 
-=======
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 ==== v11.2.0 ====
 # Included updated German translations.
 # The summary now shows '0' if there is mail that doesn't expire.

@@ -1,10 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-<<<<<<< HEAD
-    Revision: 638 2014-10-12T08:05:02Z
-=======
-    Revision: 628 2014-04-08T09:54:44Z
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
+    Revision: 652 2014-10-19T10:25:00Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -342,7 +338,7 @@ local function GetProfessionLineValue(index)
     local numLines = Armory:GetNumTradeSkills();
     if ( dbEntry and index > 0 and index <= numLines ) then
         local id = dbEntry:GetValue(container, selectedSkill, itemContainer, professionLines[index], "Data");
-        local cooldown, isDayCooldown, timestamp = dbEntry:GetValue(container, selectedSkill, itemContainer, professionLines[index], "Cooldown")
+        local cooldown, isDayCooldown, timestamp, charges, maxCharges = dbEntry:GetValue(container, selectedSkill, itemContainer, professionLines[index], "Cooldown")
         if ( cooldown ) then
             cooldown = cooldown - (time() - timestamp);
             if ( cooldown <= 0 ) then
@@ -350,7 +346,7 @@ local function GetProfessionLineValue(index)
                 isDayCooldown = nil;
             end
         end
-        return id, cooldown, isDayCooldown, dbEntry:GetValue(container, selectedSkill, itemContainer, professionLines[index], "Info");
+        return id, cooldown, isDayCooldown, charges, maxCharges, dbEntry:GetValue(container, selectedSkill, itemContainer, professionLines[index], "Info");
     end
 end
 
@@ -521,7 +517,7 @@ local function StoreTradeSkillInfo(dbEntry, skillIndex, index)
         end
     end
 
-    local cooldown, isDayCooldown = _G.GetTradeSkillCooldown(skillIndex);
+    local cooldown, isDayCooldown, charges, maxCharges = _G.GetTradeSkillCooldown(skillIndex);
 
     -- HACK: when a cd is activated it will return 00:00, but after a relog it suddenly becomes 03:00
     -- Note: GetServerTime() precision is minutes
@@ -529,8 +525,8 @@ local function StoreTradeSkillInfo(dbEntry, skillIndex, index)
         cooldown = _G.GetQuestResetTime();
     end
     
-    if ( cooldown and cooldown > 0 ) then
-        dbEntry:SetValue(3, itemContainer, index, "Cooldown", cooldown, isDayCooldown, time());
+    if ( (cooldown and cooldown > 0) or (maxCharges and maxCharges > 0) ) then
+        dbEntry:SetValue(3, itemContainer, index, "Cooldown", cooldown, isDayCooldown, time(), charges, maxCharges);
     else
         dbEntry:SetValue(3, itemContainer, index, "Cooldown", nil);
     end
@@ -805,9 +801,9 @@ function Armory:GetNumTradeSkills()
 end
 
 function Armory:GetTradeSkillInfo(index)
-    local _, _, _, skillName, skillType, numAvailable, isExpanded, altVerb, numSkillUps, indentLevel, showProgressBar, currentRank, maxRank, startingRank = GetProfessionLineValue(index);
+    local _, _, _, _, _, skillName, skillType, numAvailable, isExpanded, altVerb, numSkillUps, indentLevel, showProgressBar, currentRank, maxRank, startingRank, displayAsUnavailable, unavailableString = GetProfessionLineValue(index);
     isExpanded = not self:GetHeaderLineState(itemContainer..selectedSkill, skillName); 
-    return skillName, skillType, numAvailable, isExpanded, altVerb, numSkillUps, indentLevel, showProgressBar, currentRank, maxRank, startingRank;
+    return skillName, skillType, numAvailable, isExpanded, altVerb, numSkillUps, indentLevel, showProgressBar, currentRank, maxRank, startingRank, displayAsUnavailable, unavailableString;
 end
 
 function Armory:ExpandTradeSkillSubClass(index)
@@ -1020,8 +1016,8 @@ function Armory:GetTradeSkillDescription(index)
 end
 
 function Armory:GetTradeSkillCooldown(index)
-    local _, cooldown, isDayCooldown = GetProfessionLineValue(index);
-    return cooldown, isDayCooldown;
+    local _, cooldown, isDayCooldown, charges, maxCharges = GetProfessionLineValue(index);
+    return cooldown, isDayCooldown, charges or 0, maxCharges or 0;
 end
 
 function Armory:GetTradeSkillIcon(index)
@@ -1190,17 +1186,11 @@ function Armory:GetRecipeAltInfo(name, link, profession, reqRank, reqReputation,
         local currentProfile = self:CurrentProfile();
         local skillName, skillType, dbEntry, character;
 
-<<<<<<< HEAD
         for _, profile in ipairs(self:GetConnectedProfiles()) do
             self:SelectProfile(profile);
-=======
-            for _, profile in ipairs(self:GetConnectedProfiles()) do
-                self:SelectProfile(profile);
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 
             dbEntry = self.selectedDbBaseEntry;
 
-<<<<<<< HEAD
             local known;
             for i = 1, dbEntry:GetNumValues(container, profession, itemContainer) do
                 skillName, skillType = dbEntry:GetValue(container, profession, itemContainer, i, "Info");
@@ -1208,20 +1198,9 @@ function Armory:GetRecipeAltInfo(name, link, profession, reqRank, reqReputation,
                     known = true;
                     AddKnownBy(profile);
                     break;
-=======
-                local known;
-                for i = 1, dbEntry:GetNumValues(container, profession, itemContainer) do
-                    skillName, skillType = dbEntry:GetValue(container, profession, itemContainer, i, "Info");
-                    if ( IsRecipe(skillType) and IsSameRecipe(skillName, name) ) then
-                        known = true;
-                        AddKnownBy(profile);
-                        break;
-                    end
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                 end
             end
 
-<<<<<<< HEAD
             if ( not known and dbEntry:Contains(container, profession) and (self:GetConfigShowHasSkill() or self:GetConfigShowCanLearn()) ) then
 				local character = self:GetQualifiedCharacterName(profile, true);
                 local skillName, subSkillName, standingID, standing;
@@ -1238,25 +1217,6 @@ function Armory:GetRecipeAltInfo(name, link, profession, reqRank, reqReputation,
                             if ( skillName == profession ) then
                                 isValid = reqSkill == skillName or reqSkill == subSkillName;
                                 break;
-=======
-                if ( not known and dbEntry:Contains(container, profession) and (self:GetConfigShowHasSkill() or self:GetConfigShowCanLearn()) ) then
-					local character = self:GetQualifiedCharacterName(profile, true);
-                    local skillName, subSkillName, standingID, standing;
-                    local rank = dbEntry:GetValue(container, profession, "Rank");
-                    local learnable = reqRank <= rank;
-                    local attainable = not learnable;
-                    local unknown = false;
-
-                    if ( reqSkill or reqReputation ) then
-                        local isValid = reqSkill == nil;
-                        if ( reqSkill ) then
-                            for i = 1, 6 do
-                                skillName, subSkillName = dbEntry:GetValue(container, tostring(i));
-                                if ( skillName == profession ) then
-                                    isValid = reqSkill == skillName or reqSkill == subSkillName;
-                                    break;
-                                end
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
                             end
                         end
                     end

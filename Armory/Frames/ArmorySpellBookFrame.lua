@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 564 2012-11-28T00:03:51Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -425,14 +425,14 @@ function ArmorySpellButton_UpdateButton(self)
     iconTexture:Show();
     if ( not (slotType == "FUTURESPELL") ) then
         iconTexture:SetAlpha(1);
-        iconTexture:SetDesaturated(0);
+        iconTexture:SetDesaturated(false);
         self.RequiredLevelString:Hide();
         self.SeeTrainerString:Hide();
         self.SpellName:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
     else
         local level = Armory:GetSpellAvailableLevel(slot, ArmorySpellBookFrame.bookType, ArmorySpellBookFrame.selectedPetSpec);
         iconTexture:SetAlpha(0.5);
-        iconTexture:SetDesaturated(1);
+        iconTexture:SetDesaturated(true);
         if ( level and level > Armory:UnitLevel("player") ) then
             self.SeeTrainerString:Hide();
             self.RequiredLevelString:Show();
@@ -676,11 +676,12 @@ end
 function ArmorySpellBookCoreAbilities_UpdateTabs()
 	local numSpecs = Armory:GetNumSpecializations();
 	local currentSpec = Armory:GetSpecialization();
+	local sex = Armory:UnitSex("player");
 	local index = 1;
 	local tab;
 	if ( currentSpec ) then
 		tab = ArmorySpellBook_GetCoreAbilitySpecTab(index);
-		local id, name, description, icon = Armory:GetSpecializationInfo(currentSpec);
+		local id, name, description, icon = Armory:GetSpecializationInfo(currentSpec, nil, nil, nil, sex);
 		tab:SetID(currentSpec);
 		tab:SetNormalTexture(icon);
 		tab:SetChecked(ArmorySpellBookCoreAbilitiesFrame.selectedSpec == tab:GetID());
@@ -699,7 +700,7 @@ function ArmorySpellBookCoreAbilities_UpdateTabs()
 	for i = 1, numSpecs do
 		if ( not currentSpec or currentSpec ~= i ) then
 			tab = ArmorySpellBook_GetCoreAbilitySpecTab(index);
-			local id, name, description, icon = Armory:GetSpecializationInfo(i);
+			local id, name, description, icon = Armory:GetSpecializationInfo(i, nil, nil, nil, sex);
 			tab:SetID(i);
 			tab:SetNormalTexture(icon);
 			tab:SetChecked(ArmorySpellBookCoreAbilitiesFrame.selectedSpec == tab:GetID());
@@ -719,8 +720,9 @@ function ArmorySpellBook_UpdateCoreAbilitiesTab()
 	ArmorySpellBookCoreAbilities_UpdateTabs();
 	
 	local currentSpec = Armory:GetSpecialization();
+	local sex = Armory:UnitSex("player");
 	local desaturate = currentSpec and (currentSpec ~= ArmorySpellBookCoreAbilitiesFrame.selectedSpec);
-	local specID, displayName = Armory:GetSpecializationInfo(ArmorySpellBookCoreAbilitiesFrame.selectedSpec);
+	local specID, displayName = Armory:GetSpecializationInfo(ArmorySpellBookCoreAbilitiesFrame.selectedSpec, nil, nil, nil, sex);
 	
 	ArmorySpellBookCoreAbilitiesFrame.SpecName:SetText(displayName);
 	

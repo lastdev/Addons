@@ -2286,7 +2286,7 @@ function Addon.UIElementsLib._PushButton:Disable()
 end
 
 function Addon.UIElementsLib._PushButton:IsEnabled()
-	return self.Inherited.IsEnabled(self) == 1
+	return self.Inherited.IsEnabled(self)
 end
 
 function Addon.UIElementsLib._PushButton:UpdateButtonTexture()

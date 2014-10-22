@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 603 2013-12-08T16:12:46Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -33,12 +33,15 @@ ARMORY_AUCTIONS_CONTAINER = -4;
 ARMORY_NEUTRAL_AUCTIONS_CONTAINER = -5;
 ARMORY_EQUIPMENT_CONTAINER = -6;
 ARMORY_VOID_CONTAINER = -7;
+ARMORY_REAGENTBANK_CONTAINER = -8;
 
 ARMORY_CACHE_CONTAINER = "Cache";
 ARMORY_VOID_STORAGE_MAX = 80;
+ARMORY_VOID_STORAGE_PAGES = 2;
 
 ArmoryInventoryContainers = { 
     BACKPACK_CONTAINER, 1, 2, 3, 4, BANK_CONTAINER, 5, 6, 7, 8, 9, 10, 11, 
+    ARMORY_REAGENTBANK_CONTAINER,
     ARMORY_VOID_CONTAINER,
     ARMORY_MAIL_CONTAINER, 
     ARMORY_AUCTIONS_CONTAINER, ARMORY_NEUTRAL_AUCTIONS_CONTAINER, 
@@ -60,6 +63,7 @@ function ArmoryInventoryFrame_OnLoad(self)
     self:RegisterEvent("BANKFRAME_OPENED");
     self:RegisterEvent("BANKFRAME_CLOSED");
     self:RegisterEvent("PLAYERBANKSLOTS_CHANGED");
+    self:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED");
 	self:RegisterEvent("MAIL_SHOW");
     self:RegisterEvent("MAIL_SEND_SUCCESS");
     self:RegisterEvent("MAIL_CLOSED");
@@ -120,9 +124,13 @@ function ArmoryInventoryFrame_OnEvent(self, event, ...)
     elseif ( event == "PLAYERBANKSLOTS_CHANGED" and arg1 <= NUM_BANKGENERIC_SLOTS ) then
         -- Must execute immediately
         ArmoryInventoryFrame_UpdateContainer(BANK_CONTAINER);
+    elseif ( event == "PLAYERREAGENTBANKSLOTS_CHANGED" ) then
+        -- Must execute immediately
+        ArmoryInventoryFrame_UpdateContainer(ARMORY_REAGENTBANK_CONTAINER);
     elseif ( event == "BANKFRAME_OPENED" ) then
         self.bankOpen = true;
         -- Must execute immediately
+        ArmoryInventoryFrame_UpdateContainer(ARMORY_REAGENTBANK_CONTAINER);
         ArmoryInventoryFrame_UpdateContainer(BANK_CONTAINER);
         for i = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do
             ArmoryInventoryFrame_UpdateContainer(i);

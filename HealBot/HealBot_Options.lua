@@ -427,7 +427,7 @@ function HealBot_Options_setLists()
         [HEALBOT_SAVAGE_DEFENCE]=HEALBOT_DRUID,
         [HEALBOT_SURVIVAL_INSTINCTS]=HEALBOT_DRUID,
         [HEALBOT_FRENZIED_REGEN]=HEALBOT_DRUID,
-        [HEALBOT_NATURE_SWIFTNESS]=HEALBOT_DRUID,
+        --[HEALBOT_NATURE_SWIFTNESS]=HEALBOT_DRUID,
 		--[HEALBOT_NATURES_GRASP]=HEALBOT_DRUID,
         [HEALBOT_DRUID_CLEARCASTING]=HEALBOT_DRUID,
 		--WoD Added
@@ -485,7 +485,7 @@ function HealBot_Options_setLists()
         [HEALBOT_FLASH_OF_LIGHT]=HEALBOT_PALADIN,
         [HEALBOT_LIGHT_BEACON]=HEALBOT_PALADIN,
         [HEALBOT_GUARDED_BY_THE_LIGHT]=HEALBOT_PALADIN,
-        --[HEALBOT_GUARDIAN_ANCIENT_KINGS]=HEALBOT_PALADIN,
+        [HEALBOT_GUARDIAN_ANCIENT_KINGS]=HEALBOT_PALADIN,
         [HEALBOT_WORD_OF_GLORY]=HEALBOT_PALADIN,
         [HEALBOT_HAND_OF_FREEDOM]=HEALBOT_PALADIN,
 		[HEALBOT_DIVINE_PROTECTION]=HEALBOT_PALADIN,
@@ -498,14 +498,11 @@ function HealBot_Options_setLists()
 		[HEALBOT_PRAYER_OF_MENDING]=HEALBOT_PRIEST,
 		[HEALBOT_RENEW]=HEALBOT_PRIEST,
         [HEALBOT_DIVINE_HYMN]=HEALBOT_PRIEST,
-        --[HEALBOT_INNER_FOCUS]=HEALBOT_PRIEST,
         [HEALBOT_SERENDIPITY]=HEALBOT_PRIEST,
         [HEALBOT_TWIST_OF_FATE]=HEALBOT_PRIEST,
 		[HEALBOT_GUARDIAN_SPIRIT]=HEALBOT_PRIEST,
         [HEALBOT_HOLY_WORD_SERENITY]=HEALBOT_PRIEST,
         [HEALBOT_FEAR_WARD]=HEALBOT_PRIEST,
-		--[HEALBOT_INNER_FIRE]=HEALBOT_PRIEST,
-        --[HEALBOT_INNER_WILL]=HEALBOT_PRIEST,
 		[HEALBOT_PAIN_SUPPRESSION]=HEALBOT_PRIEST,
         [HEALBOT_POWER_INFUSION]=HEALBOT_PRIEST,
         [HEALBOT_POWER_WORD_SHIELD]=HEALBOT_PRIEST,
@@ -522,6 +519,9 @@ function HealBot_Options_setLists()
         [HEALBOT_ANGELIC_BULWARK]=HEALBOT_PRIEST,
         [HEALBOT_DISPERSION]=HEALBOT_PRIEST,
 		[HEALBOT_VAMPIRIC_EMBRACE]=HEALBOT_PRIEST,
+		--[[[HEALBOT_DIVINE_STAR]=HEALBOT_PRIEST,
+		[HEALBOT_CASCADE]=HEALBOT_PRIEST,
+		[HEALBOT_HALO]=HEALBOT_PRIEST,]]
 		--WoD Added
 		[HEALBOT_SHADOW_WORD_INSANITY]=HEALBOT_PRIEST,            
 		[HEALBOT_SURGE_OF_DARKNESS]=HEALBOT_PRIEST,               
@@ -560,7 +560,8 @@ function HealBot_Options_setLists()
         [HEALBOT_UNLEASHED_FURY]=HEALBOT_SHAMAN,
         [HEALBOT_TIDAL_WAVES]=HEALBOT_SHAMAN,
 		--WoD Added
-		[HEALBOT_CLOUDBURST_TOTEM]=HEALBOT_SHAMAN,                
+		[HEALBOT_CLOUDBURST_TOTEM]=HEALBOT_SHAMAN,
+		[HEALBOT_ELEMENTAL_FUSION]=HEALBOT_SHAMAN,
 		--Warlock
 		[HEALBOT_DARK_INTENT]=HEALBOT_WARLOCK,
         [HEALBOT_DARK_BARGAIN]=HEALBOT_WARLOCK,
@@ -642,21 +643,21 @@ function HealBot_Options_InitBuffSpellsClassList(tClass)
         }
     elseif tClass=="HUNT" then
         HealBot_Buff_Spells_Class_List = {
-            HEALBOT_A_HAWK,
+            --HEALBOT_A_HAWK,
             HEALBOT_A_CHEETAH,
             HEALBOT_A_PACK,
             HEALBOT_A_WILD,
-            HEALBOT_A_IRON_HAWK,
+            --HEALBOT_A_IRON_HAWK,
             HEALBOT_TRAP_LAUNCHER,
         }
     elseif tClass=="MAGE" then
         HealBot_Buff_Spells_Class_List = {
             HEALBOT_ARCANE_BRILLIANCE,
             HEALBOT_DALARAN_BRILLIANCE,
-            HEALBOT_FROST_ARMOR,
+            --HEALBOT_FROST_ARMOR,
             HEALBOT_MAGE_WARD,
-            HEALBOT_MAGE_ARMOR,
-            HEALBOT_MOLTEN_ARMOR,
+            --HEALBOT_MAGE_ARMOR,
+            --HEALBOT_MOLTEN_ARMOR,
             HEALBOT_FOCUS_MAGIC,
             HEALBOT_ICE_WARD,
         }
@@ -695,18 +696,7 @@ function HealBot_Options_InitBuffSpellsClassList(tClass)
     elseif tClass=="PRIE" then
         HealBot_Buff_Spells_Class_List = {
             HEALBOT_POWER_WORD_FORTITUDE,
-            --HEALBOT_INNER_FIRE,
-            --HEALBOT_INNER_WILL,
             HEALBOT_FEAR_WARD,
-            HEALBOT_PAIN_SUPPRESSION,
-            HEALBOT_POWER_INFUSION,
-            HEALBOT_LEVITATE,
-            --HEALBOT_HYMN_OF_HOPE,
-            HEALBOT_SHADOWFORM,
-            HEALBOT_VAMPIRIC_EMBRACE,
-            HEALBOT_CHAKRA_SANCTUARY,
-            HEALBOT_CHAKRA_SERENITY,
-            HEALBOT_CHAKRA_CHASTISE,
         }
     elseif tClass=="ROGU" then
         HealBot_Buff_Spells_Class_List = {
@@ -714,14 +704,9 @@ function HealBot_Options_InitBuffSpellsClassList(tClass)
     elseif tClass=="SHAM" then
         HealBot_Buff_Spells_Class_List = {
             HEALBOT_LIGHTNING_SHIELD,
-            HEALBOT_ROCKBITER_WEAPON,
-            HEALBOT_FLAMETONGUE_WEAPON,
-            HEALBOT_EARTHLIVING_WEAPON,
-            HEALBOT_WINDFURY_WEAPON,
-            HEALBOT_FROSTBRAND_WEAPON,
             HEALBOT_EARTH_SHIELD,
             HEALBOT_WATER_SHIELD,
-            HEALBOT_WATER_WALKING, 
+            HEALBOT_WATER_WALKING,
         }
     elseif tClass=="WARL" then
         HealBot_Buff_Spells_Class_List = {
@@ -753,15 +738,9 @@ end
 function HealBot_Options_InitBuffList()
     HealBot_Buff_Spells_List ={}
     for j=1, getn(HealBot_Buff_Spells_Class_List), 1 do
-        local id=HealBot_GetSpellId(HealBot_Buff_Spells_Class_List[j]);
-        if id then
-            table.insert(HealBot_Buff_Spells_List,HealBot_Buff_Spells_Class_List[j])
-            if not HealBot_Spells[HealBot_Buff_Spells_Class_List[j]] then
-                local id = HealBot_GetSpellId(HealBot_Buff_Spells_Class_List[j]);
-                if id then
-                    HealBot_FindSpellRangeCast(id);
-                end
-            end
+        local spellName=HealBot_Buff_Spells_Class_List[j]
+        if HealBot_Spells[spellName] and HealBot_Spells[spellName].known then   
+            table.insert(HealBot_Buff_Spells_List,spellName)
         end
     end
 end
@@ -4208,7 +4187,7 @@ end
 
 --------------------------------------------------------------------------------
 
-HealBot_Options_StorePrev["hbLangs"] = 1
+HealBot_Options_StorePrev["hbLangs"] = 3
 
 function HealBot_Options_hbLangs_DropDown()
     local info = UIDropDownMenu_CreateInfo()
@@ -4712,13 +4691,16 @@ function HealBot_Options_SelectHealSpellsCombo_DDlist()
             HEALBOT_ETERNAL_FLAME,
             HEALBOT_EXECUTION_SENTENCE,
             HEALBOT_CASCADE,
+			HEALBOT_DIVINE_STAR,
+			HEALBOT_HALO,
             HEALBOT_CENARION_WARD,
         }
     end
     local tmpHealDDlist={}
     for j=1, getn(HealBot_Options_SelectHealSpellsCombo_List), 1 do
-        if HealBot_GetSpellId(HealBot_Options_SelectHealSpellsCombo_List[j]) then
-            table.insert(tmpHealDDlist, HealBot_Options_SelectHealSpellsCombo_List[j])
+        local spellName=HealBot_Options_SelectHealSpellsCombo_List[j]
+        if HealBot_Spells[spellName] and HealBot_Spells[spellName].known then
+            table.insert(tmpHealDDlist, spellName)
         end
     end
     table.sort(tmpHealDDlist)
@@ -4761,7 +4743,6 @@ local function HealBot_Options_SelectOtherSpellsCombo_DDlist()
     local tmpOtherDDlist={}
     if HealBot_Options_StorePrev["ActionBarsCombo"]==3 then
         HealBot_Options_SelectOtherSpellsCombo_List = {
-            HEALBOT_BIND_ELEMENTAL,
             HEALBOT_HEX,
             HEALBOT_ENTANGLING_ROOTS,
             HEALBOT_GROWL,
@@ -4777,7 +4758,6 @@ local function HealBot_Options_SelectOtherSpellsCombo_DDlist()
             HEALBOT_DISABLE,
             HEALBOT_SPEAR_HAND_STRIKE,
             HEALBOT_PARALYSIS,
-            HEALBOT_GRAPPLE_WEAPON,
             HEALBOT_HAMMER_OF_JUSTICE,
             HEALBOT_REBUKE,
             HEALBOT_RECKONING,
@@ -4785,8 +4765,9 @@ local function HealBot_Options_SelectOtherSpellsCombo_DDlist()
             HEALBOT_TURN_EVIL,
         }
         for j=1, getn(HealBot_Options_SelectOtherSpellsCombo_List), 1 do
-            if HealBot_GetSpellId(HealBot_Options_SelectOtherSpellsCombo_List[j]) then
-                table.insert(tmpOtherDDlist,HealBot_Options_SelectOtherSpellsCombo_List[j])
+            local spellName=HealBot_Options_SelectOtherSpellsCombo_List[j]
+            if HealBot_Spells[spellName] and HealBot_Spells[spellName].known then
+                table.insert(tmpOtherDDlist,spellName)
             end
         end
     else
@@ -4798,7 +4779,8 @@ local function HealBot_Options_SelectOtherSpellsCombo_DDlist()
             HEALBOT_SPIRIT_SHELL,
             HEALBOT_REVIVE,
             HEALBOT_GUARDIAN_SPIRIT,
-            HEALBOT_INTERVENE,
+            HEALBOT_PAIN_SUPPRESSION,
+			HEALBOT_INTERVENE,
             HEALBOT_RESURRECTION,
             HEALBOT_REDEMPTION,
             HEALBOT_REBIRTH,
@@ -4815,9 +4797,8 @@ local function HealBot_Options_SelectOtherSpellsCombo_DDlist()
             HEALBOT_LIFE_TAP,
             HEALBOT_DIVINE_SHIELD,
             HEALBOT_DIVINE_PROTECTION,
-            HEALBOT_NATURE_SWIFTNESS,
+            --HEALBOT_NATURE_SWIFTNESS,
             HEALBOT_ANACESTRAL_SWIFTNESS,
-            --HEALBOT_INNER_FOCUS,
             HEALBOT_LEAP_OF_FAITH,
             HEALBOT_UNLEASH_ELEMENTS,
             HEALBOT_DETOX,
@@ -4826,16 +4807,25 @@ local function HealBot_Options_SelectOtherSpellsCombo_DDlist()
             HEALBOT_THUNDER_FOCUS_TEA,
             --HEALBOT_VOID_SHIFT,
             --HEALBOT_MANA_STREAM_TOTEM,
-            HEALBOT_MANA_TIDE_TOTEM,
+            --HEALBOT_MANA_TIDE_TOTEM,
             HEALBOT_ASTRAL_SHIFT,
-            --HEALBOT_GUARDIAN_ANCIENT_KINGS,
+            HEALBOT_GUARDIAN_ANCIENT_KINGS,
+			HEALBOT_UNLEASH_LIFE,
+            HEALBOT_LEVITATE,
+            HEALBOT_POWER_INFUSION,
+			HEALBOT_VAMPIRIC_EMBRACE,
+            --[[HEALBOT_CHAKRA_SANCTUARY,
+            HEALBOT_CHAKRA_SERENITY,
+            HEALBOT_CHAKRA_CHASTISE,
+			HEALBOT_SHADOWFORM,]]
         }
         for j=1, getn(HealBot_Options_SelectOtherSpellsCombo_List), 1 do
-            if HealBot_GetSpellId(HealBot_Options_SelectOtherSpellsCombo_List[j]) then
-                table.insert(tmpOtherDDlist,HealBot_Options_SelectOtherSpellsCombo_List[j])
+            local spellName=HealBot_Options_SelectOtherSpellsCombo_List[j]
+            if HealBot_Spells[spellName] and HealBot_Spells[spellName].known then
+                table.insert(tmpOtherDDlist,spellName)
             end
         end
-        if HealBot_Data["PCLASSTRIM"]=="SHAM" and HealBot_GetSpellId(HEALBOT_PURIFY_SPIRIT) then
+        if HealBot_Data["PCLASSTRIM"]=="SHAM" and HealBot_Spells[HEALBOT_PURIFY_SPIRIT] and HealBot_Spells[HEALBOT_PURIFY_SPIRIT].known then
             table.insert(tmpOtherDDlist,HEALBOT_PURIFY_SPIRIT)
         end
         for j=1, getn(HealBot_Buff_Spells_List), 1 do
@@ -5699,9 +5689,14 @@ function HealBot_Options_Set_Current_Skin(newSkin, ddRefresh)
             HealBot_setOptions_Timer(185)
             HealBot_setOptions_Timer(188)
            -- HealBot_SetResetFlag("SOFT")
-        elseif HealBot_Config.Skin_ID>0 and HealBot_Config.Current_Skin and Healbot_Config_Skins.HealBar[Healbot_Config_Skins.Current_Skin] then 
-            Healbot_Config_Skins.Current_Skin = HealBot_Config.Current_Skin
-            Healbot_Config_Skins.Skin_ID = HealBot_Config.Skin_ID
+        elseif HealBot_Config.Skin_ID>0 and HealBot_Config.Current_Skin then
+            if not Healbot_Config_Skins.Skins[HealBot_Config.Current_Skin] then 
+                HealBot_Config.Current_Skin=Healbot_Config_Skins.Current_Skin
+                HealBot_Config.Skin_ID = Healbot_Config_Skins.Skin_ID
+            else
+                Healbot_Config_Skins.Current_Skin = HealBot_Config.Current_Skin
+                Healbot_Config_Skins.Skin_ID = HealBot_Config.Skin_ID
+            end
         else
             HealBot_Config.Current_Skin = Healbot_Config_Skins.Current_Skin
             HealBot_Config.Skin_ID = Healbot_Config_Skins.Skin_ID
@@ -6515,8 +6510,8 @@ function HealBot_Options_CDCTxt1_DropDown()
     if HealBot_Config_Cures.HealBotDebuffText[HealBot_Options_getDropDownId_bySpec(1)]==HEALBOT_WORDS_NONE then info.checked = true end
     UIDropDownMenu_AddButton(info);
     for j=1, getn(DebuffSpells_List), 1 do
-        local sName, _=HealBot_GetSpellName(HealBot_GetSpellId(DebuffSpells_List[j]));
-        if sName then
+        local sName=DebuffSpells_List[j]
+        if HealBot_Spells[sName] and HealBot_Spells[sName].known then
             info.text = sName;
             info.func = function(self)
                             HealBot_Config_Cures.HealBotDebuffText[HealBot_Options_getDropDownId_bySpec(1)] = self:GetText()
@@ -6568,8 +6563,8 @@ function HealBot_Options_CDCTxt2_DropDown()
     if HealBot_Config_Cures.HealBotDebuffText[HealBot_Options_getDropDownId_bySpec(2)]==HEALBOT_WORDS_NONE then info.checked = true end
     UIDropDownMenu_AddButton(info);
     for j=1, getn(DebuffSpells_List), 1 do
-        local sName, _=HealBot_GetSpellName(HealBot_GetSpellId(DebuffSpells_List[j]));
-        if sName then
+        local sName=DebuffSpells_List[j]
+        if HealBot_Spells[sName] and HealBot_Spells[sName].known then
             info.text = sName;
             info.func = function(self)
                             HealBot_Config_Cures.HealBotDebuffText[HealBot_Options_getDropDownId_bySpec(2)] = self:GetText()
@@ -6621,8 +6616,8 @@ function HealBot_Options_CDCTxt3_DropDown()
     if HealBot_Config_Cures.HealBotDebuffText[HealBot_Options_getDropDownId_bySpec(3)]==HEALBOT_WORDS_NONE then info.checked = true end
     UIDropDownMenu_AddButton(info);
     for j=1, getn(DebuffSpells_List), 1 do
-        local sName, _=HealBot_GetSpellName(HealBot_GetSpellId(DebuffSpells_List[j]));
-        if sName then
+        local sName=DebuffSpells_List[j]
+        if HealBot_Spells[sName] and HealBot_Spells[sName].known then
             info.text = sName;
             info.func = function(self)
                             HealBot_Config_Cures.HealBotDebuffText[HealBot_Options_getDropDownId_bySpec(3)] = self:GetText()
@@ -7363,7 +7358,7 @@ function HealBot_Options_Debuff_Reset()
     for k=1,3 do
         if DebuffDropDownClass[HealBot_Options_getDropDownId_bySpec(k)] and DebuffDropDownClass[HealBot_Options_getDropDownId_bySpec(k)]>1 then
             local id=HealBot_GetSpellId(DebuffTextClass[HealBot_Options_getDropDownId_bySpec(k)]);
-            local sName,_ = HealBot_GetSpellName(id);
+            local sName = HealBot_GetSpellInfo(id);
             if not sName then
                 local usable, _ = IsUsableItem(DebuffTextClass[HealBot_Options_getDropDownId_bySpec(k)]);
                 if usable then
@@ -7595,10 +7590,8 @@ function HealBot_Options_Buff_Reset()
     
     for k=1,8 do
         if BuffDropDownClass[HealBot_Options_getDropDownId_bySpec(k)] and BuffDropDownClass[HealBot_Options_getDropDownId_bySpec(k)]>1 then
-            local id=HealBot_GetSpellId(BuffTextClass[HealBot_Options_getDropDownId_bySpec(k)]);
-            local sName = HealBot_GetSpellName(id);
-
-            if sName then
+            local sName=BuffTextClass[HealBot_Options_getDropDownId_bySpec(k)]
+            if HealBot_Spells[sName] and HealBot_Spells[sName].known then   
                 if not spells[sName] then
                     spells[sName]=sName;
                     HealBot_Set_BuffWatch(sName)
@@ -7793,8 +7786,6 @@ function HealBot_Options_Buff_Reset()
                 HealBot_buffbarcolr[sName]=buffbarcolrClass[k];
                 HealBot_buffbarcolg[sName]=buffbarcolgClass[k];
                 HealBot_buffbarcolb[sName]=buffbarcolbClass[k];
-            elseif id then
-                HealBot_AddDebug("Not found buff for spell id"..id)
             end
             HealBot_setOptions_Timer(30)
         end
@@ -8310,10 +8301,7 @@ function HealBot_Options_Click_OnTextChanged(self)
     local button = HealBot_Options_ComboClass_Button(HealBot_Options_ComboButtons_Button)
     spellText = strtrim(self:GetText())
     combo[button..HealBot_Config.CurrentSpec] = spellText
-    if HealBot_GetSpellId(spellText) then
-        HealBot_setOptions_Timer(70)
-        HealBot_setOptions_Timer(400)
-    elseif GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
+    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
         HealBot_setOptions_Timer(400)
     end
     HealBot_Options_SoftReset_flag=true
@@ -8331,10 +8319,7 @@ function HealBot_Options_Shift_OnTextChanged(self)
     local button = HealBot_Options_ComboClass_Button(HealBot_Options_ComboButtons_Button)
     spellText = strtrim(self:GetText())
     combo["Shift"..button..HealBot_Config.CurrentSpec] = spellText
-    if HealBot_GetSpellId(spellText) then
-        HealBot_setOptions_Timer(70)
-        HealBot_setOptions_Timer(400)
-    elseif GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
+    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
         HealBot_setOptions_Timer(400)
     end
     HealBot_Options_SoftReset_flag=true
@@ -8352,10 +8337,7 @@ function HealBot_Options_Ctrl_OnTextChanged(self)
     local button = HealBot_Options_ComboClass_Button(HealBot_Options_ComboButtons_Button)
     spellText = strtrim(self:GetText())
     combo["Ctrl"..button..HealBot_Config.CurrentSpec] = spellText
-    if HealBot_GetSpellId(spellText) then
-        HealBot_setOptions_Timer(70)
-        HealBot_setOptions_Timer(400)
-    elseif GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
+    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
         HealBot_setOptions_Timer(400)
     end
     HealBot_Options_SoftReset_flag=true
@@ -8373,10 +8355,7 @@ function HealBot_Options_Alt_OnTextChanged(self)
     local button = HealBot_Options_ComboClass_Button(HealBot_Options_ComboButtons_Button)
     spellText = strtrim(self:GetText())
     combo["Alt"..button..HealBot_Config.CurrentSpec] = spellText
-    if HealBot_GetSpellId(spellText) then
-        HealBot_setOptions_Timer(70)
-        HealBot_setOptions_Timer(400)
-    elseif GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
+    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
         HealBot_setOptions_Timer(400)
     end
     HealBot_Options_SoftReset_flag=true
@@ -8394,10 +8373,7 @@ function HealBot_Options_CtrlShift_OnTextChanged(self)
     local button = HealBot_Options_ComboClass_Button(HealBot_Options_ComboButtons_Button)
     spellText = strtrim(self:GetText())
     combo["Ctrl-Shift"..button..HealBot_Config.CurrentSpec] = spellText
-    if HealBot_GetSpellId(spellText) then
-        HealBot_setOptions_Timer(70)
-        HealBot_setOptions_Timer(400)
-    elseif GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
+    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
         HealBot_setOptions_Timer(400)
     end
     HealBot_Options_SoftReset_flag=true
@@ -8415,10 +8391,7 @@ function HealBot_Options_AltShift_OnTextChanged(self)
     local button = HealBot_Options_ComboClass_Button(HealBot_Options_ComboButtons_Button)
     spellText = strtrim(self:GetText())
     combo["Alt-Shift"..button..HealBot_Config.CurrentSpec] = spellText
-    if HealBot_GetSpellId(spellText) then
-        HealBot_setOptions_Timer(70)
-        HealBot_setOptions_Timer(400)
-    elseif GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
+    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
         HealBot_setOptions_Timer(400)
     end
     HealBot_Options_SoftReset_flag=true
@@ -8436,10 +8409,7 @@ function HealBot_Options_CtrlAlt_OnTextChanged(self)
     local button = HealBot_Options_ComboClass_Button(HealBot_Options_ComboButtons_Button)
     spellText = strtrim(self:GetText())
     combo["Alt-Ctrl"..button..HealBot_Config.CurrentSpec] = spellText
-    if HealBot_GetSpellId(spellText) then
-        HealBot_setOptions_Timer(70)
-        HealBot_setOptions_Timer(400)
-    elseif GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
+    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
         HealBot_setOptions_Timer(400)
     end
     HealBot_Options_SoftReset_flag=true
@@ -8501,33 +8471,6 @@ function HealBot_Options_SmartCastRes_OnClick(self)
         HealBot_Globals.SmartCastRes = true
     else
         HealBot_Globals.SmartCastRes = false
-    end
-end
-
-function HealBot_Options_CheckCombos()  
-    local HealBot_CombosKeys_List = {"","Shift","Ctrl","Alt","Ctrl-Shift","Alt-Shift"}
-    local id,HB_combo_prefix,SpellTxtE,SpellTxtD,HB_button=0,nil,nil,nil,nil
-    for j=1,15 do
-        HB_button=HealBot_Options_ComboClass_Button(j)
-    
-        for x=1, getn(HealBot_CombosKeys_List), 1 do
-            HB_combo_prefix = HealBot_CombosKeys_List[x]..HB_button..HealBot_Config.CurrentSpec
-
-            SpellTxtE = HealBot_Action_AttribSpellPattern(HB_combo_prefix)
-            SpellTxtD = HealBot_Action_AttribDisSpellPattern(HB_combo_prefix)
-      
-            if SpellTxtE then
-                if not HealBot_Spells[SpellTxtE] then
-                    id = HealBot_GetSpellId(SpellTxtE);
-
-                end
-            end
-            if SpellTxtD then
-                if not HealBot_Spells[SpellTxtD] then
-                    id = HealBot_GetSpellId(SpellTxtD);
-                end
-            end
-        end
     end
 end
 
@@ -8797,6 +8740,7 @@ function HealBot_Options_Lang(region)
         if loaded then
             HealBot_Lang_ptBR()
             HealBot_AddChat("Switching Lang to ptBR")
+            HealBot_Options_StorePrev["hbLangs"]=10
         else
             HealBot_AddChat("Unable to load ptBR (Addon: HealBot_br) - Reason: "..reason)
             validCode=false
@@ -8806,6 +8750,7 @@ function HealBot_Options_Lang(region)
         if loaded then
             HealBot_Lang_zhCN()
             HealBot_AddChat("Switching Lang to zhCN")
+            HealBot_Options_StorePrev["hbLangs"]=1
         else
             HealBot_AddChat("Unable to load zhCN (Addon: HealBot_cn) - Reason: "..reason)
             validCode=false
@@ -8815,6 +8760,7 @@ function HealBot_Options_Lang(region)
         if loaded then
             HealBot_Lang_deDE()
             HealBot_AddChat("Switching Lang to deDE")
+            HealBot_Options_StorePrev["hbLangs"]=5
         else
             HealBot_AddChat("Unable to load deDE (Addon: HealBot_de) - Reason: "..reason)
             validCode=false
@@ -8824,6 +8770,7 @@ function HealBot_Options_Lang(region)
         if loaded then
             HealBot_Lang_esES()
             HealBot_AddChat("Switching Lang to esES")
+            HealBot_Options_StorePrev["hbLangs"]=12
         else
             HealBot_AddChat("Unable to load esES (Addon: HealBot_es) - Reason: "..reason)
             validCode=false
@@ -8833,6 +8780,7 @@ function HealBot_Options_Lang(region)
         if loaded then
             HealBot_Lang_frFR()
             HealBot_AddChat("Switching Lang to frFR")
+            HealBot_Options_StorePrev["hbLangs"]=4
         else
             HealBot_AddChat("Unable to load frFR (Addon: HealBot_fr) - Reason: "..reason)
             validCode=false
@@ -8842,6 +8790,7 @@ function HealBot_Options_Lang(region)
         if loaded then
             HealBot_Lang_huHU()
             HealBot_AddChat("Switching Lang to huHU")
+            HealBot_Options_StorePrev["hbLangs"]=7
         else
             HealBot_AddChat("Unable to load huHU (Addon: HealBot_hu) - Reason: "..reason)
             validCode=false
@@ -8851,6 +8800,7 @@ function HealBot_Options_Lang(region)
         if loaded then
             HealBot_Lang_koKR()
             HealBot_AddChat("Switching Lang to koKR")
+            HealBot_Options_StorePrev["hbLangs"]=9
         else
             HealBot_AddChat("Unable to load koKR (Addon: HealBot_kr) - Reason: "..reason)
             validCode=false
@@ -8860,6 +8810,7 @@ function HealBot_Options_Lang(region)
         if loaded then
             HealBot_Lang_ruRU()
             HealBot_AddChat("Switching Lang to ruRU")
+            HealBot_Options_StorePrev["hbLangs"]=11
         else
             HealBot_AddChat("Unable to load ruRU (Addon: HealBot_ru) - Reason: "..reason)
             validCode=false
@@ -8869,6 +8820,7 @@ function HealBot_Options_Lang(region)
         if loaded then
             HealBot_Lang_zhTW()
             HealBot_AddChat("Switching Lang to zhTW")
+            HealBot_Options_StorePrev["hbLangs"]=13
         else
             HealBot_AddChat("Unable to load zhTW (Addon: HealBot_tw) - Reason: "..reason)
             validCode=false
@@ -8878,6 +8830,7 @@ function HealBot_Options_Lang(region)
         if loaded then
             HealBot_Lang_itIT()
             HealBot_AddChat("Switching Lang to itIT")
+            HealBot_Options_StorePrev["hbLangs"]=8
         else
             HealBot_AddChat("Unable to load itIT (Addon: HealBot_it) - Reason: "..reason)
             validCode=false
@@ -8887,6 +8840,7 @@ function HealBot_Options_Lang(region)
         if loaded then
             HealBot_Lang_grGR()
             HealBot_AddChat("Switching Lang to grGR")
+            HealBot_Options_StorePrev["hbLangs"]=6
         else
             HealBot_AddChat("Unable to load grGR (Addon: HealBot_gr) - Reason: "..reason)
             validCode=false
@@ -8894,9 +8848,11 @@ function HealBot_Options_Lang(region)
     elseif region=="enUK" then
         HealBot_Lang_enUK()
         HealBot_AddChat("Switching Lang to enUK")
+        HealBot_Options_StorePrev["hbLangs"]=2
     elseif region=="enUS" then
         HealBot_Lang_enUS()
         HealBot_AddChat("Switching Lang to enUS")
+        HealBot_Options_StorePrev["hbLangs"]=3
     else
         validCode=nil
         HealBot_AddChat("Invalid Region code "..region)
@@ -10496,11 +10452,6 @@ function HealBot_Options_InitSub2(subNo)
             HealBot_Options_IgnoreDebuffsFriend:SetChecked(HealBot_Config_Cures.IgnoreFriendDebuffs)
             HealBot_Options_SetText(HealBot_Options_IgnoreDebuffsFriend,HEALBOT_OPTIONS_IGNOREDEBUFFFRIEND)
             HealBot_Options_MonitorDebuffsInCombat:SetChecked(HealBot_Config_Cures.DebuffWatchInCombat)
-            if HealBot_Config_Cures.DebuffWatchInCombat==false then
-                HealBot_AddDebug("HealBot_Config_Cures.DebuffWatchInCombat= FALSE")
-            else
-                HealBot_AddDebug("HealBot_Config_Cures.DebuffWatchInCombat= TRUE")
-            end
             HealBot_Options_SetText(HealBot_Options_MonitorDebuffsInCombat,HEALBOT_OPTIONS_MONITORBUFFSC)
             HealBot_Options_MonitorDebuffsWhenGrouped:SetChecked(HealBot_Config_Cures.DebuffWatchWhenGrouped)
             HealBot_Options_SetText(HealBot_Options_MonitorDebuffsWhenGrouped,HEALBOT_OPTIONS_IN_A_GROUP)

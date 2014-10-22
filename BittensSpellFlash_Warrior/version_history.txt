@@ -1,4 +1,10 @@
-== Version 60000.1.9
+== Version 60000.1.3
+* Let's try that again ...
+
+== Version 60000.1.2
+* Arms and Protection: Completely disabled (temporarily) so they stop spewing errors to the chat log.
+
+== Version 60000.1.1
 * Fury: Changed rotation to work with the 6.0.2 WoD PrePatch.
 * Arms and Protection: Still working on these two specs for WoD changes.
 
@@ -84,18 +90,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 * Arms & Fury: Updated rotations to the lastest in Simulationcraft.
 * All: Removed Deadly Calm.
 * All: Adjusted uses of Impending Victory for heals to the new values in 5.2.
-
-== Version 3.2.0
-* Arms & Fury: Added Avatar & Bloodbath.
-* Arms & Fury: Researched & updated the rotations for higher dps.
-* Arms & Fury: Detects 4pT14 & adjusts flashing for cooldowns accordingly.
-* Arms & Fury: Added Enraged Regeneration.
-* Arms & Fury: Now flashes Impending Victory / Victory Rush if you could use the heal.
-* Arms & Fury: No longer flashes Heroic Leap when solo.
-* Fury: Bugfix - Wild Strike was not flashing with less than 30 rage, even with Bloodsurge.
-* Protection: Bugfix - Enraged Regeneration was not flashing with less than 60 rage, even when enraged.
-* All: Added Sunder Armor (in case, for some reason, you are the one maintaining it).
-
-== Version 3.1.0
-* Protection: Tweaked the mitigation cooldown priorities.
-* Protection: Berserker Rage will not flash when you are not the current tank.

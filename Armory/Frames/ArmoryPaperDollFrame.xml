@@ -930,7 +930,7 @@
       </OnClick>
       <OnEnter>
         GameTooltip:SetOwner(self, "ANCHOR_LEFT");
-        GameTooltip:SetText(ARMORY_CMD_SET_USEOVERLAY_MENUTEXT, nil, nil, nil, nil, 1);
+        GameTooltip:SetText(ARMORY_CMD_SET_USEOVERLAY_MENUTEXT, nil, nil, nil, nil, true);
       </OnEnter>
       <OnLeave function="GameTooltip_Hide"/>
     </Scripts>

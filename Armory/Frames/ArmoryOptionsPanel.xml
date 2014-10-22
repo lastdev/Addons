@@ -1,4 +1,4 @@
-<!-- Revision: 632 2014-04-19T09:31:41Z -->
+<!-- Revision: 652 2014-10-19T10:25:00Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\FrameXML\UI.xsd">
   <Script file="ArmoryOptionsPanel.lua"/>
@@ -84,7 +84,7 @@
       <OnEnter>
         if ( self.tooltipText ) then
           GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-          GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, 1);
+          GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, true);
         end
         if ( self.tooltipRequirement ) then
           GameTooltip:AddLine(self.tooltipRequirement, "", 1.0, 1.0, 1.0);
@@ -115,7 +115,21 @@
       </OnLoad>
     </Scripts>
   </CheckButton>
-
+  <Frame name="ArmoryOptionsDropDownTemplate" virtual="true" inherits="ArmoryDropDownMenuTemplate" enableMouse="true">
+    <Layers>
+      <Layer level="BACKGROUND">
+        <FontString name="$parentLabel" parentKey="Label" inherits="GameFontHighlight">
+          <Anchors>
+            <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
+              <Offset>
+                <AbsDimension x="16" y="3"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+  </Frame>
 
   <Frame name="ArmoryOptionsPanel" hidden="true" parent="InterfaceOptionsFramePanelContainer">
     <Layers>
@@ -337,6 +351,34 @@
           </OnLoad>
         </Scripts>
       </CheckButton>
+      <Frame name="$parentWeeklyResetDropDown" inherits="ArmoryOptionsDropDownTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="$parentFactionFilter" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="-13" y="-24"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            self.type = CONTROLTYPE_DROPDOWN;
+            ArmoryOptionsPanel_RegisterControl(self, self:GetParent());
+            self:RegisterEvent("PLAYER_ENTERING_WORLD");
+          </OnLoad>
+          <OnEnter>
+            if ( not self.isDisabled ) then
+              GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
+              GameTooltip:SetText(self.tooltip, nil, nil, nil, nil, true);
+            end
+          </OnEnter>
+          <OnEvent>
+            ArmoryOptionsPanel_WeeklyResetDropDown_OnEvent(self, event, ...);
+          </OnEvent>
+          <OnLeave>
+            GameTooltip_Hide();
+          </OnLeave>
+        </Scripts>
+      </Frame>
       <Button name="$parentResetScreen" inherits="ArmoryOptionsPanelButtonTemplate" text="ARMORY_CMD_RESET_FRAME_MENUTEXT">
         <Size>
           <AbsDimension x="175" y="25"/>
@@ -1643,7 +1685,7 @@
           </OnLoad>
         </Scripts>
       </CheckButton>
-      <Frame name="$parentDefaultSearchTypeDropDown" inherits="ArmoryDropDownMenuTemplate" enableMouse="true">
+      <Frame name="$parentDefaultSearchTypeDropDown" inherits="ArmoryOptionsDropDownTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentSearchAltClick" relativePoint="BOTTOMLEFT">
             <Offset>
@@ -1651,19 +1693,6 @@
             </Offset>
           </Anchor>
         </Anchors>
-        <Layers>
-          <Layer level="BACKGROUND">
-            <FontString name="$parentLabel" inherits="GameFontHighlight">
-              <Anchors>
-                <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
-                  <Offset>
-                    <AbsDimension x="16" y="3"/>
-                  </Offset>
-                </Anchor>
-              </Anchors>
-            </FontString>
-          </Layer>
-        </Layers>
         <Scripts>
           <OnLoad>
             self.type = CONTROLTYPE_DROPDOWN;
@@ -1673,7 +1702,7 @@
           <OnEnter>
             if ( not self.isDisabled ) then
               GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
-              GameTooltip:SetText(self.tooltip, nil, nil, nil, nil, 1);
+              GameTooltip:SetText(self.tooltip, nil, nil, nil, nil, true);
             end
           </OnEnter>
           <OnEvent>
@@ -1765,7 +1794,7 @@
             if ( not self.disabled ) then
               if ( self.tooltipText ) then
                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-                GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, 1);
+                GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, true);
               end
               if ( self.tooltipRequirement ) then
                 GameTooltip:AddLine(self.tooltipRequirement, "", 1.0, 1.0, 1.0);
@@ -2016,7 +2045,7 @@
             if ( not self.disabled ) then
               if ( self.tooltipText ) then
                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-                GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, 1);
+                GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, true);
               end
               if ( self.tooltipRequirement ) then
                 GameTooltip:AddLine(self.tooltipRequirement, "", 1.0, 1.0, 1.0);
@@ -2619,7 +2648,7 @@
           </OnLoad>
         </Scripts>
       </CheckButton>
-      <Frame name="$parentWarningSoundDropDown" inherits="ArmoryDropDownMenuTemplate" enableMouse="true">
+      <Frame name="$parentWarningSoundDropDown" inherits="ArmoryOptionsDropDownTemplate">
         <Anchors>
           <Anchor point="TOPLEFT" relativeTo="$parentMaziel" relativePoint="BOTTOMLEFT">
             <Offset>
@@ -2627,19 +2656,6 @@
             </Offset>
           </Anchor>
         </Anchors>
-        <Layers>
-          <Layer level="BACKGROUND">
-            <FontString name="$parentLabel" inherits="GameFontHighlight">
-              <Anchors>
-                <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
-                  <Offset>
-                    <AbsDimension x="16" y="3"/>
-                  </Offset>
-                </Anchor>
-              </Anchors>
-            </FontString>
-          </Layer>
-        </Layers>
         <Scripts>
           <OnLoad>
             self.type = CONTROLTYPE_DROPDOWN;
@@ -2649,7 +2665,7 @@
           <OnEnter>
             if ( not self.isDisabled ) then
               GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
-              GameTooltip:SetText(self.tooltip, nil, nil, nil, nil, 1);
+              GameTooltip:SetText(self.tooltip, nil, nil, nil, nil, true);
             end
           </OnEnter>
           <OnEvent>

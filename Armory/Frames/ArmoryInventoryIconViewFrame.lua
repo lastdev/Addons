@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 551 2012-11-11T13:24:10Z
+    Revision: 647 2014-10-14T19:12:45Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -30,7 +30,7 @@ local Armory, _ = Armory;
 
 ARMORY_MAX_CONTAINERS = 20;
 ARMORY_MAX_CONTAINER_COLUMNS = 7;
-ARMORY_MAX_CONTAINER_ITEMS = 80;
+ARMORY_MAX_CONTAINER_ITEMS = 98;
 ARMORY_CONTAINER_OFFSET_X = 22;
 ARMORY_CONTAINER_OFFSET_Y = -5;
 ARMORY_CONTAINER_ROW_HEIGHT = 37;
@@ -85,7 +85,7 @@ function ArmoryInventoryIconViewFrame_ShowContainer(containerFrame)
         columns = NUM_CONTAINER_COLUMNS;
         isPlusTwoBag = (mod(numSlots, columns) == 2);
     elseif ( Armory:GetInventoryBagLayout() and id == ARMORY_VOID_CONTAINER ) then
-        numSlots = ARMORY_VOID_STORAGE_MAX;
+        numSlots = ARMORY_VOID_STORAGE_MAX * ARMORY_VOID_STORAGE_PAGES;
         columns = ARMORY_VOID_CONTAINER_COLUMNS;
         rowHeight = ARMORY_VOID_CONTAINER_ROW_HEIGHT;
         buttonBaseName = containerName.."VoidItem";
@@ -160,6 +160,7 @@ function ArmoryInventoryIconViewFrame_ShowContainer(containerFrame)
 
             Armory:SetItemLink(itemButton, nil);
             itemButton.hasItem = nil;
+            itemButton.IconBorder:Hide();
             
             itemButton:Show();
         else
@@ -220,6 +221,13 @@ function ArmoryInventoryIconViewFrame_ShowContainer(containerFrame)
                 else
                     itemButton.searchOverlay:Show();
                 end
+
+				if ( quality and quality > LE_ITEM_QUALITY_COMMON and BAG_ITEM_QUALITY_COLORS[quality] ) then
+					itemButton.IconBorder:Show();
+					itemButton.IconBorder:SetVertexColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b);
+				else
+					itemButton.IconBorder:Hide();
+				end
 
                 Armory:SetItemLink(itemButton, link);
                 itemButton.hasItem = 1;

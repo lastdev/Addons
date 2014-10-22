@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 632 2014-04-19T09:31:41Z
+    Revision: 652 2014-10-19T10:25:00Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -156,6 +156,60 @@ function ArmoryOptionsPanel_CheckButton_OnClick(checkButton)
     checkButton:SetValue(setting);
 
     ArmoryOptionsPanel_RefreshDependentControls(checkButton);
+end
+
+function ArmoryOptionsPanel_WeeklyResetDropDown_OnEvent(self, event, ...)
+    if ( event == "PLAYER_ENTERING_WORLD" ) then
+        self.defaultValue = 2;
+        self.oldValue = Armory:GetConfigWeeklyReset();
+        self.value = self.oldValue or self.defaultValue;
+        self.tooltip = ARMORY_CMD_SET_WEEKLYRESET_TOOLTIP;
+
+        ArmoryDropDownMenu_SetWidth(self, 90);
+        ArmoryDropDownMenu_Initialize(self, ArmoryOptionsPanel_WeeklyResetDropDown_Initialize);
+        ArmoryDropDownMenu_SetSelectedValue(self, self.value);
+
+        self.SetValue = 
+            function (self, value)
+                self.value = value;
+                ArmoryDropDownMenu_SetSelectedValue(self, value);
+                Armory:SetConfigWeeklyReset(value);
+            end
+        self.GetValue =
+            function (self)
+                return ArmoryDropDownMenu_GetSelectedValue(self);
+            end
+        self.RefreshValue =
+            function (self)
+                ArmoryDropDownMenu_Initialize(self, ArmoryOptionsPanel_WeeklyResetDropDown_Initialize);
+                ArmoryDropDownMenu_SetSelectedValue(self, self.value);
+            end
+
+        ArmoryOptionsPanelWeeklyResetDropDownLabel:SetText(Armory:Proper(ARMORY_CMD_SET_WEEKLYRESET_TEXT));
+
+        self:UnregisterEvent(event);
+    end
+end
+
+function ArmoryOptionsPanel_WeeklyResetDropDown_OnClick(self)
+	ArmoryOptionsPanelWeeklyResetDropDown:SetValue(self.value);
+end
+
+function ArmoryOptionsPanel_WeeklyResetDropDown_Initialize()
+    local info = ArmoryDropDownMenu_CreateInfo();
+
+    info.func = ArmoryOptionsPanel_WeeklyResetDropDown_OnClick;
+    info.owner = ARMORY_DROPDOWNMENU_OPEN_MENU;
+
+    info.text = WEEKDAY_TUESDAY;
+    info.value = 2;
+    info.checked = nil;
+    ArmoryDropDownMenu_AddButton(info);
+
+    info.text = WEEKDAY_WEDNESDAY;
+    info.value = 3;
+    info.checked = nil;
+    ArmoryDropDownMenu_AddButton(info);
 end
 
 function ArmoryOptionsPanel_DefaultSearchTypeDropDown_OnEvent(self, event, ...)

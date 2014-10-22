@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 532 2012-09-29T21:48:44Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -50,7 +50,7 @@ function Armory:SetSpecializations(unit)
             if ( i > newNum ) then
                 self:SetClassValue(unit, 2, container, i, nil);
             else
-                self:SetClassValue(unit, 2, container, i, _G.GetSpecializationInfo(i, false, isPet));
+                self:SetClassValue(unit, 2, container, i, _G.GetSpecializationInfo(i, false, isPet, nil, isPet and _G.UnitSex("pet") or _G.UnitSex("player")));
             end
         end
         
@@ -76,17 +76,17 @@ function Armory:GetNumSpecializations(inspect, pet)
     return numSpecs or 0;
 end
 
-function Armory:GetSpecializationInfo(index, inspect, pet)
+function Armory:GetSpecializationInfo(index, inspect, pet, dummy, sex)
     local unit = ((pet and "pet") or "player");
     if ( pet ) then
         return self:GetClassValue(unit, container, index);
     else
         local _, _, classID = self:UnitClass(unit);
-        return _G.GetSpecializationInfoForClassID(classID, index);
+        return _G.GetSpecializationInfoForClassID(classID, index, sex);
     end
 end
 
 function Armory:GetSpecializationRole(index, inspect, pet)
-	local _, _, _, _, _, role = self:GetSpecializationInfo(index, inspect, pet);
+	local _, _, _, _, _, role = self:GetSpecializationInfo(index, inspect, pet, nil, Armory:UnitSex((pet and "pet") or "player"));
     return role;
 end

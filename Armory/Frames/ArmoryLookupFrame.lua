@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 580 2013-01-22T20:01:17Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -857,13 +857,13 @@ function ArmoryLookupFrame_FindQuest(exact, search, arg1)
         local numEntries = table.getn(dbEntry:GetValue(container));
         local questIndex = 1;
         while ( questIndex <= numEntries ) do
-            name, _, _, _, isHeader = dbEntry:GetValue(container, questIndex, "Info");
+            name, _, _, isHeader = dbEntry:GetValue(container, questIndex, "Info");
             if ( arg1 == "2" ) then
                 -- area (header)
                 if ( isHeader and ArmoryLookupFrame_IsMatch(name, search, exact) ) then
                     repeat
                         questIndex = questIndex + 1;
-                        name, _, _, _, isHeader = dbEntry:GetValue(container, questIndex, "Info");
+                        name, _, _, isHeader = dbEntry:GetValue(container, questIndex, "Info");
                         if ( not isHeader ) then
                             id = dbEntry:GetValue(container, questIndex, "Data");
                             AddRef(result, dbEntry:GetValue(container, id, "Link"), refType);
@@ -926,7 +926,6 @@ function ArmoryLookupFrame_InspectCharacter(exact, search, arg1)
         table.wipe(specs);
 
 	    local numTalentGroups = Armory:GetNumSpecGroups();
-	    local numTalents = Armory:GetNumTalents();
         for talentGroup = 1, numTalentGroups do
             local primaryTree = Armory:GetSpecialization(false, false, talentGroup);
             local role = Armory:GetSpecializationRole(primaryTree);
@@ -936,19 +935,15 @@ function ArmoryLookupFrame_InspectCharacter(exact, search, arg1)
             end
 
             table.wipe(info);
-            for i = 1, numTalents do
-       			local _, texture, _, _, selected = Armory:GetTalentInfo(i, false, talentGroup);
-                if ( selected ) then
-               		link = Armory:GetTalentLink(i, false, talentGroup);
-                    if ( link ) then
-                        ref = link:match("|Htalent:([-%d:]+)|h");
-                        texture = table.remove({strsplit("\\", texture)});
-                        if ( ref ) then
-                            table.insert(info, Armory:Join(";", ref, texture));
-                        end
-                    end
-                end
-            end
+  			for tier = 1, MAX_TALENT_TIERS do
+				for column = 1, NUM_TALENT_COLUMNS do
+       				local id, _, texture, _, _, selected = Armory:GetTalentInfo(tier, column, talentGroup);
+					if ( selected ) then
+						texture = table.remove({strsplit("\\", texture)});
+						table.insert(info, Armory:Join(";", id, texture));
+					end
+				end
+			end
             if ( #info > 0 ) then
                 table.insert(info, 1, Armory:Join(";", role, active));
                 table.insert(specs, table.concat(info, "|"));

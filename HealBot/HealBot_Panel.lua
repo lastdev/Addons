@@ -86,13 +86,15 @@ function HealBot_Panel_clickToFocus(status)
 end
 
 function HealBot_GetMyHealTargets()
-    local x=HealBot_Options_copyTable(HealBot_MyHealTargets)
-    return x;
+    --local x=HealBot_Options_copyTable(HealBot_MyHealTargets)
+    --return x;
+    return HealBot_MyHealTargets
 end
 
 function HealBot_Panel_GetMainTanks()
-    local x=HealBot_Options_copyTable(HealBot_MainTanks)
-    return x;
+    --local x=HealBot_Options_copyTable(HealBot_MainTanks)
+    --return x;
+    return HealBot_MainTanks
 end
 
 function HealBot_Panel_SetSubSortPlayer()

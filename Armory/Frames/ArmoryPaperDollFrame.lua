@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 580 2013-01-22T20:01:17Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -126,9 +126,6 @@ ARMORY_PAPERDOLL_STATINFO = {
         -- Only appears for Druids when in shapeshift form
         updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetAlternateMana(statFrame, unit); end
     },
-    ["MASTERY"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetMastery(statFrame, unit); end
-    },
     ["ITEMLEVEL"] = {
         updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetItemLevel(statFrame, unit); end
     },
@@ -138,100 +135,73 @@ ARMORY_PAPERDOLL_STATINFO = {
 	    
     -- Base stats
     ["STRENGTH"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetStat(statFrame, unit, 1); end 
+        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetStat(statFrame, unit, LE_UNIT_STAT_STRENGTH); end 
     },
     ["AGILITY"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetStat(statFrame, unit, 2); end 
-    },
-    ["STAMINA"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetStat(statFrame, unit, 3); end 
+        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetStat(statFrame, unit, LE_UNIT_STAT_AGILITY); end 
     },
     ["INTELLECT"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetStat(statFrame, unit, 4); end 
+        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetStat(statFrame, unit, LE_UNIT_STAT_INTELLECT); end 
     },
-    ["SPIRIT"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetStat(statFrame, unit, 5); end 
+    ["STAMINA"] = {
+        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetStat(statFrame, unit, LE_UNIT_STAT_STAMINA); end 
     },
-    
-    -- Melee
-    ["MELEE_DAMAGE"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetDamage(statFrame, unit); end
-    },
-    ["MELEE_DPS"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetMeleeDPS(statFrame, unit); end
-    },
-    ["MELEE_AP"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetAttackPower(statFrame, unit); end
-    },
-    ["MELEE_ATTACKSPEED"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetAttackSpeed(statFrame, unit); end
+    	
+	-- Enhancements
+    ["CRITCHANCE"] = {
+        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetCritChance(statFrame, unit); end
     },
     ["HASTE"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetMeleeHaste(statFrame, unit); end
+        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetHaste(statFrame, unit); end
     },
-    ["HITCHANCE"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetMeleeHitChance(statFrame, unit); end
-    }, 
-    ["CRITCHANCE"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetMeleeCritChance(statFrame, unit); end
+    ["MASTERY"] = {
+		updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetMastery(statFrame, unit); end
+	},
+    ["SPIRIT"] = {
+        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetStat(statFrame, unit, LE_UNIT_STAT_SPIRIT); end 
     },
-    ["EXPERTISE"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetExpertise(statFrame, unit); end
-    }, 
+	["BONUS_ARMOR"] = {
+		updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetBonusArmor(statFrame, unit); end
+	},
+	["MULTISTRIKE"] = {
+		updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetMultistrike(statFrame, unit); end
+	},
+	["LIFESTEAL"] = {
+		updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetLifesteal(statFrame, unit); end
+	},
+	["VERSATILITY"] = {
+		updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetVersatility(statFrame, unit); end
+	},
+	["AVOIDANCE"] = {
+		updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetAvoidance(statFrame, unit); end
+	},
+
+	-- Attack
+	["ATTACK_DAMAGE"] = {
+		updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetDamage(statFrame, unit); end
+	},
+	["ATTACK_AP"] = {
+		updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetAttackPower(statFrame, unit); end
+	},
+	["ATTACK_ATTACKSPEED"] = {
+		updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetAttackSpeed(statFrame, unit); end
+	},
     ["ENERGY_REGEN"] = {
         updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetEnergyRegen(statFrame, unit); end
     },
     ["RUNE_REGEN"] = {
         updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetRuneRegen(statFrame, unit); end
     },
-    
-    -- Ranged
-    ["RANGED_DAMAGE"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetRangedDamage(statFrame, unit); end
-    },
-    ["RANGED_DPS"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetRangedDPS(statFrame, unit); end
-    },
-    ["RANGED_AP"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetRangedAttackPower(statFrame, unit); end
-    },
-    ["RANGED_ATTACKSPEED"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetRangedAttackSpeed(statFrame, unit); end
-    },
-    ["RANGED_CRITCHANCE"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetRangedCritChance(statFrame, unit); end
-    },
-    ["RANGED_HITCHANCE"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetRangedHitChance(statFrame, unit); end
-    }, 
-    ["RANGED_HASTE"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetRangedHaste(statFrame, unit); end
-    },
     ["FOCUS_REGEN"] = {
         updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetFocusRegen(statFrame, unit); end
     },
     
     -- Spell
-    ["SPELLDAMAGE"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetSpellBonusDamage(statFrame, unit); end
-    },
-    ["SPELLHEALING"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetSpellBonusHealing(statFrame, unit); end
-    },
-    ["SPELL_HASTE"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetSpellHaste(statFrame, unit); end
-    },
-    ["SPELL_HITCHANCE"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetSpellHitChance(statFrame, unit); end
+    ["SPELLPOWER"] = {
+        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetSpellPower(statFrame, unit); end
     },
     ["MANAREGEN"] = {
         updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetManaRegen(statFrame, unit); end
-    },
-    ["COMBATMANAREGEN"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetCombatManaRegen(statFrame, unit); end
-    },
-    ["SPELLCRIT"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetSpellCritChance(statFrame, unit); end
     },
     
     -- Defense
@@ -247,23 +217,13 @@ ARMORY_PAPERDOLL_STATINFO = {
     ["BLOCK"] = {
         updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetBlock(statFrame, unit); end
     },
-    ["RESILIENCE_REDUCTION"] = {
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetResilience(statFrame, unit); end
-    },
-	["PVP_POWER"] = {
-		updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetPvpPower(statFrame, unit); end
-	},
-    ["RESILIENCE_CRIT"] = {
-        -- TODO
-        updateFunc = function(statFrame, unit) ArmoryPaperDollFrame_SetResilience(statFrame, unit); end
-    },
 };
 
 ARMORY_PLAYERSTAT_DROPDOWN_OPTIONS = {
     "GENERAL",
     "ATTRIBUTES",
-    "MELEE",
-    "RANGED",
+    "ENHANCEMENTS",
+    "ATTACK",
     "SPELL",
     "DEFENSE",
 };
@@ -315,15 +275,16 @@ end
 function ArmoryPaperDollItemSlotButton_Update(button, itemId)
     local unit = "player";
     local count = 0;
-    local texture;
+    local link, quality, texture;
     
     if ( itemId ~= nil ) then
         if ( itemId ~= 0 ) then
-            _, link, _, _, _, _, _, _, _, texture = _G.GetItemInfo(itemId);
+            _, link, quality, _, _, _, _, _, _, texture = _G.GetItemInfo(itemId);
         end
         button.itemId = itemId;
     else
-        link = Armory:GetInventoryItemLink(unit, button:GetID())
+        link = Armory:GetInventoryItemLink(unit, button:GetID());
+        quality = Armory:GetInventoryItemQuality(unit, button:GetID());
         texture = Armory:GetInventoryItemTexture(unit, button:GetID());
         count = Armory:GetInventoryItemCount(unit, button:GetID());
         button.itemId = nil;
@@ -343,6 +304,13 @@ function ArmoryPaperDollItemSlotButton_Update(button, itemId)
         button.hasItem = nil;
     end
     
+    if ( quality and quality > LE_ITEM_QUALITY_COMMON and BAG_ITEM_QUALITY_COLORS[quality] ) then
+		button.IconBorder:Show();
+		button.IconBorder:SetVertexColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b);
+	else
+		button.IconBorder:Hide();
+	end
+
     Armory:SetInventoryItem("player", button:GetID(), true);
     button.link = link;
 end
@@ -464,51 +432,6 @@ function ArmoryPaperDollFrame_SetZone()
     else
         ArmoryZoneText:Hide();
     end
-end
-
-function ArmoryGetMeleeMissChance(levelOffset, special)
-    if ( levelOffset < 0 or levelOffset > 3 ) then
-        return 0;
-    end
-    local chance = BASE_MISS_CHANCE_PHYSICAL[levelOffset];
-    chance = chance - Armory:GetCombatRatingBonus(CR_HIT_MELEE) - Armory:GetHitModifier();
-    if ( Armory:IsDualWielding() and not special ) then
-        chance = chance + DUAL_WIELD_HIT_PENALTY;
-    end
-    if ( chance < 0 ) then
-        chance = 0;
-    elseif ( chance > 100 ) then
-        chance = 100;
-    end
-    return chance;
-end
-
-function ArmoryGetRangedMissChance(levelOffset, special)
-    if ( levelOffset < 0 or levelOffset > 3 ) then
-        return 0;
-    end
-    local chance = BASE_MISS_CHANCE_PHYSICAL[levelOffset];
-    chance = chance - Armory:GetCombatRatingBonus(CR_HIT_RANGED) - Armory:GetHitModifier();
-    if ( chance < 0 ) then
-        chance = 0;
-    elseif ( chance > 100 ) then
-        chance = 100;
-    end
-    return chance;
-end
-
-function ArmoryGetSpellMissChance(levelOffset, special)
-    if ( levelOffset < 0 or levelOffset > 3 ) then
-        return 0;
-    end
-    local chance = BASE_MISS_CHANCE_SPELL[levelOffset];
-    chance = chance - Armory:GetCombatRatingBonus(CR_HIT_SPELL) - Armory:GetSpellHitModifier();
-    if ( chance < 0 ) then
-        chance = 0;
-    elseif ( chance > 100 ) then
-        chance = 100;
-    end
-    return chance;
 end
 
 function ArmoryGetEnemyDodgeChance(levelOffset)
@@ -665,75 +588,93 @@ function ArmoryPaperDollFrame_SetStat(statFrame, unit, statIndex)
         local _, unitClass = Armory:UnitClass("player");
         unitClass = strupper(unitClass);
 
+		local primaryStat, spec;
+		spec = Armory:GetSpecialization();
+		if ( spec ) then
+			primaryStat = select(7, Armory:GetSpecializationInfo(spec, nil, nil, nil, Armory:UnitSex("player")));
+		end
         -- Strength
-        if ( statIndex == 1 ) then
+        if ( statIndex == LE_UNIT_STAT_STRENGTH ) then
             local attackPower = Armory:GetAttackPowerForStat(statIndex, effectiveStat);
-            statFrame.tooltip2 = format(statFrame.tooltip2, BreakUpLargeNumbers(attackPower));
+			if ( Armory:HasAPEffectsSpellPower() ) then
+				statFrame.tooltip2 = STAT_TOOLTIP_BONUS_AP_SP;
+			end
+			if ( not primaryStat or primaryStat == LE_UNIT_STAT_STRENGTH ) then
+				statFrame.tooltip2 = format(statFrame.tooltip2, BreakUpLargeNumbers(attackPower));
+			else
+				statFrame.tooltip2 = STAT_NO_BENEFIT_TOOLTIP;
+			end
         -- Agility
-        elseif ( statIndex == 2 ) then
+        elseif ( statIndex == LE_UNIT_STAT_AGILITY ) then
             local attackPower = Armory:GetAttackPowerForStat(statIndex, effectiveStat);
-            if ( attackPower > 0 ) then
-                statFrame.tooltip2 = format(STAT_TOOLTIP_BONUS_AP, BreakUpLargeNumbers(attackPower)) .. format(statFrame.tooltip2, Armory:GetCritChanceFromAgility("player"));
-            else
-                statFrame.tooltip2 = format(statFrame.tooltip2, Armory:GetCritChanceFromAgility("player"));
-            end
+       		local tooltip = STAT_TOOLTIP_BONUS_AP;
+			if ( Armory:HasAPEffectsSpellPower() ) then
+				tooltip = STAT_TOOLTIP_BONUS_AP_SP;
+			end
+			if ( not primaryStat or primaryStat == LE_UNIT_STAT_AGILITY ) then
+				statFrame.tooltip2 = format(tooltip, BreakUpLargeNumbers(attackPower));
+			else
+				statFrame.tooltip2 = STAT_NO_BENEFIT_TOOLTIP;
+			end
         -- Stamina
-        elseif ( statIndex == 3 ) then
-            local baseStam = min(20, effectiveStat);
-            local moreStam = effectiveStat - baseStam;
-            statFrame.tooltip2 = format(statFrame.tooltip2, BreakUpLargeNumbers((baseStam + (moreStam * Armory:UnitHPPerStamina("player"))) * Armory:GetUnitMaxHealthModifier("player")));
+        elseif ( statIndex == LE_UNIT_STAT_STAMINA ) then
+			statFrame.tooltip2 = format(statFrame.tooltip2, BreakUpLargeNumbers(((effectiveStat * Armory:UnitHPPerStamina("player"))) * Armory:GetUnitMaxHealthModifier("player")));
         -- Intellect
-        elseif ( statIndex == 4 ) then
-            if ( Armory:UnitHasMana("player") ) then
-                if ( Armory:GetOverrideSpellPowerByAP() ~= nil ) then
-                    statFrame.tooltip2 = format(STAT4_NOSPELLPOWER_TOOLTIP, Armory:GetSpellCritChanceFromIntellect("player"));
-                else
-                    statFrame.tooltip2 = format(statFrame.tooltip2, max(0, effectiveStat - 10), Armory:GetSpellCritChanceFromIntellect("player"));
-                end
-            else
-                statFrame.tooltip2 = STAT_USELESS_TOOLTIP;
-            end
+        elseif ( statIndex == LE_UNIT_STAT_INTELLECT ) then
+			if ( Armory:UnitHasMana("player") ) then
+				if ( Armory:HasAPEffectsSpellPower() ) then
+					statFrame.tooltip2 = STAT_NO_BENEFIT_TOOLTIP;
+				else
+					local result, druid = Armory:HasSPEffectsAttackPower();
+					if ( result and druid ) then
+						statFrame.tooltip2 = format(STAT_TOOLTIP_SP_AP_DRUID, max(0, effectiveStat), max(0, effectiveStat));
+					elseif ( result ) then
+						statFrame.tooltip2 = format(STAT_TOOLTIP_BONUS_AP_SP, max(0, effectiveStat));
+					elseif ( not primaryStat or primaryStat == LE_UNIT_STAT_INTELLECT ) then
+						statFrame.tooltip2 = format(statFrame.tooltip2, max(0, effectiveStat));
+					else
+						statFrame.tooltip2 = STAT_NO_BENEFIT_TOOLTIP;
+					end
+				end
+			else
+				statFrame.tooltip2 = STAT_NO_BENEFIT_TOOLTIP;
+			end
         -- Spirit
-        elseif ( statIndex == 5 ) then
+        elseif ( statIndex == LE_UNIT_STAT_SPIRIT ) then
             -- All mana regen stats are displayed as mana/5 sec.
-            if ( Armory:UnitHasMana("player") ) then
-                local regen = Armory:GetUnitManaRegenRateFromSpirit("player");
+			local _, isNegatedForSpec = Armory:GetUnitManaRegenRateFromSpirit("player");
+			local _, regen = Armory:GetManaRegen();
+			if ( Armory:UnitHasMana("player") and not isNegatedForSpec ) then
                 regen = floor( regen * 5.0 );
                 statFrame.tooltip2 = format(MANA_REGEN_FROM_SPIRIT, regen);
             else
-                statFrame.tooltip2 = STAT_USELESS_TOOLTIP;
+                statFrame.tooltip2 = STAT_NO_BENEFIT_TOOLTIP;
             end
         end
     elseif ( unit == "pet" ) then
-        if ( statIndex == 1 ) then
+        if ( statIndex == LE_UNIT_STAT_STRENGTH ) then
             local attackPower = BreakUpLargeNumbers(effectiveStat - 20);
             statFrame.tooltip2 = format(statFrame.tooltip2, attackPower);
-        elseif ( statIndex == 2 ) then
+        elseif ( statIndex == LE_UNIT_STAT_AGILITY ) then
             local critChance = Armory:GetCritChanceFromAgility("pet");
             if ( critChance ) then
                 statFrame.tooltip2 = format(statFrame.tooltip2, critChance);
             else
                 statFrame.tooltip2 = nil;
             end
-        elseif ( statIndex == 3 ) then
-            local healthModifier = Armory:GetUnitHealthModifier("pet");
-            local maxHealthModifier = Armory:GetUnitMaxHealthModifier("pet");
-            if ( healthModifier and maxHealthModifier ) then
-                local expectedHealthGain = (((stat - posBuff - negBuff) - 20) * 10 + 20) * healthModifier;
-                local realHealthGain = ((effectiveStat - 20) * 10 + 20) * healthModifier;
-                local healthGain = BreakUpLargeNumbers((realHealthGain - expectedHealthGain) * maxHealthModifier);
-                statFrame.tooltip2 = format(statFrame.tooltip2, healthGain);
-            else
-                statFrame.tooltip2 = nil;
-            end
-        elseif ( statIndex == 4 ) then
+        elseif ( statIndex == LE_UNIT_STAT_STAMINA ) then
+            local expectedHealthGain = ((stat - posBuff - negBuff) * CREATURE_HP_PER_STA) * Armory:GetUnitHealthModifier("pet");
+            local realHealthGain = (effectiveStat * CREATURE_HP_PER_STA) * Armory:GetUnitHealthModifier("pet");
+            local healthGain = BreakUpLargeNumbers((realHealthGain - expectedHealthGain) * Armory:GetUnitMaxHealthModifier("pet"));
+            statFrame.tooltip2 = format(statFrame.tooltip2, healthGain);
+        elseif ( statIndex == LE_UNIT_STAT_INTELLECT ) then
             if ( Armory:UnitHasMana("pet") ) then
-                local manaGain = BreakUpLargeNumbers(((effectiveStat - 20) * 15 + 20) * Armory:GetUnitPowerModifier("pet"));
-                statFrame.tooltip2 = format(statFrame.tooltip2, manaGain, max(0, effectiveStat - 10), Armory:GetSpellCritChanceFromIntellect("pet"));
+                local manaGain = BreakUpLargeNumbers((effectiveStat * 15) * Armory:GetUnitPowerModifier("pet"));
+                statFrame.tooltip2 = format(statFrame.tooltip2, manaGain, max(0, effectiveStat), Armory:GetSpellCritChanceFromIntellect("pet"));
             else
                 statFrame.tooltip2 = nil;
             end
-        elseif ( statIndex == 5 ) then
+        elseif ( statIndex == LE_UNIT_STAT_SPIRIT ) then
             statFrame.tooltip2 = "";
             if ( Armory:UnitHasMana("pet") ) then
                 statFrame.tooltip2 = format(MANA_REGEN_FROM_SPIRIT, Armory:GetUnitManaRegenRateFromSpirit("pet"));
@@ -744,16 +685,29 @@ function ArmoryPaperDollFrame_SetStat(statFrame, unit, statIndex)
 end
 
 function ArmoryPaperDollFrame_SetArmor(statFrame, unit)
-    local base, effectiveArmor, armor, posBuff, negBuff = Armory:UnitArmor(unit);
+    local baselineArmor, effectiveArmor, armor, posBuff, negBuff = Armory:UnitArmor(unit);
     local level = Armory:UnitLevel(unit);
     
     if ( level and effectiveArmor ) then
         _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, ARMOR));
         local text = _G[statFrame:GetName().."StatText"];
+		local bonusArmor = Armory:UnitBonusArmor(unit)
+		local nonBonusArmor = effectiveArmor - bonusArmor;
 
-        PaperDollFormatStat(ARMOR, base, posBuff, negBuff, statFrame, text);
+		if ( nonBonusArmor < baselineArmor ) then
+			baselineArmor = nonBonusArmor
+		end
+
+		PaperDollFrame_SetLabelAndText(statFrame, STAT_ARMOR, effectiveArmor, false);
+		local baseArmorReduction = PaperDollFrame_GetArmorReduction(baselineArmor, level);
         local armorReduction = PaperDollFrame_GetArmorReduction(effectiveArmor, level);
-        statFrame.tooltip2 = format(DEFAULT_STATARMOR_TOOLTIP, armorReduction);
+
+		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, ARMOR).." "..string.format("%s", effectiveArmor)..FONT_COLOR_CODE_CLOSE;
+		statFrame.tooltip2 = format(STAT_ARMOR_BASE_TOOLTIP, baseArmorReduction);
+	
+		if ( bonusArmor > 0 ) then
+			statFrame.tooltip2 = statFrame.tooltip2 .. "\n" .. format(STAT_ARMOR_TOTAL_TOOLTIP, armorReduction);
+		end
 
         if ( unit == "player" ) then
             local petBonus = Armory:ComputePetBonus( "PET_BONUS_ARMOR", effectiveArmor );
@@ -762,8 +716,40 @@ function ArmoryPaperDollFrame_SetArmor(statFrame, unit)
             end
         end
 
+		statFrame:SetScript("OnEnter", CharacterArmor_OnEnter);
         statFrame:Show();
    else
+        statFrame:Hide();
+   end
+end
+
+function ArmoryPaperDollFrame_SetBonusArmor(statFrame, unit)
+	local _, effectiveArmor, _, posBuff, negBuff = Armory:UnitArmor(unit);
+	local level = Armory:UnitLevel(unit);
+
+    if ( level and effectiveArmor ) then
+		_G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, ARMOR));
+		local text = _G[statFrame:GetName().."StatText"];
+
+		local bonusArmor, isNegatedForSpec = Armory:UnitBonusArmor(unit);
+
+		PaperDollFrame_SetLabelAndText(statFrame, STAT_BONUS_ARMOR, bonusArmor, false);
+		local armorReduction = PaperDollFrame_GetArmorReduction(effectiveArmor, level);
+		statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, BONUS_ARMOR).." "..string.format("%s", bonusArmor)..FONT_COLOR_CODE_CLOSE;
+
+		local hasAura, percent = Armory:GetBladedArmorEffect();
+
+		if ( hasAura ) then
+			statFrame.tooltip2 = format(STAT_ARMOR_BONUS_ARMOR_BLADED_ARMOR_TOOLTIP, armorReduction, (bonusArmor * (percent / 100)));
+		elseif ( not isNegatedForSpec ) then
+			statFrame.tooltip2 = format(STAT_ARMOR_TOTAL_TOOLTIP, armorReduction);
+		else
+			statFrame.tooltip2 = STAT_NO_BENEFIT_TOOLTIP;
+		end
+		
+		statFrame:SetScript("OnEnter", CharacterArmor_OnEnter);
+		statFrame:Show();
+	else
         statFrame:Hide();
    end
 end
@@ -790,7 +776,7 @@ function ArmoryPaperDollFrame_SetBlock(statFrame, unit)
     local chance = Armory:GetBlockChance();
     PaperDollFrame_SetLabelAndText(statFrame, STAT_BLOCK, chance, 1);
     statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, BLOCK_CHANCE).." "..string.format("%.2F", chance).."%"..FONT_COLOR_CODE_CLOSE;
-    statFrame.tooltip2 = format(CR_BLOCK_TOOLTIP, Armory:GetCombatRating(CR_BLOCK), Armory:GetCombatRatingBonus(CR_BLOCK), Armory:GetShieldBlock());
+    statFrame.tooltip2 = format(CR_BLOCK_TOOLTIP, Armory:GetShieldBlock());
     statFrame:Show();
 end
 
@@ -820,43 +806,6 @@ function ArmoryPaperDollFrame_SetResilience(statFrame, unit)
 
     statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_RESILIENCE).." "..format("%.2F%%", damageReduction)..FONT_COLOR_CODE_CLOSE;
 	statFrame.tooltip2 = RESILIENCE_TOOLTIP .. format(STAT_RESILIENCE_BASE_TOOLTIP, resilienceRating, ratingBonus);
-	statFrame:Show();
-end
-
-function ArmoryPaperDollFrame_SetPvpPower(statFrame, unit)
-	if (unit ~= "player") then
-		statFrame:Hide();
-		return;
-	end
-
-	local pvpPower = Armory:GetCombatRating(CR_PVP_POWER);
-    local pvpDamage = Armory:GetPvpPowerDamage();
-    local pvpHealing = Armory:GetPvpPowerHealing();
-    
-    if ( not (pvpPower and pvpDamage and pvpHealing) ) then
-        statFrame:Hide();
-        return;
-    end
-    
-	pvpPower = BreakUpLargeNumbers(pvpPower);
-
-    if ( pvpHealing > pvpDamage ) then
-        PaperDollFrame_SetLabelAndText(statFrame, STAT_PVP_POWER, pvpHealing, 1);
-        statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_PVP_POWER).." "..
-            format("%.2F%%", pvpHealing).." ("..SHOW_COMBAT_HEALING..")"..FONT_COLOR_CODE_CLOSE;
-        statFrame.tooltip2 = PVP_POWER_TOOLTIP .. format(PVP_POWER_HEALING_TOOLTIP, pvpPower, pvpHealing, pvpDamage);
-    else
-        PaperDollFrame_SetLabelAndText(statFrame, STAT_PVP_POWER, pvpDamage, 1);
-        statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_PVP_POWER).." "..
-            format("%.2F%%", pvpDamage).." ("..DAMAGE..")"..FONT_COLOR_CODE_CLOSE;
-        statFrame.tooltip2 = PVP_POWER_TOOLTIP .. format(PVP_POWER_DAMAGE_TOOLTIP, pvpPower, pvpDamage, pvpHealing);
-    end
-
-	--local pvpPowerBonus = Armory:GetCombatRatingBonus(CR_PVP_POWER);
-	--PaperDollFrame_SetLabelAndText(statFrame, STAT_PVP_POWER, pvpPowerBonus, 1);
---
-	--statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_PVP_POWER).." "..format("%.2F%%", pvpPowerBonus)..FONT_COLOR_CODE_CLOSE;
-	--statFrame.tooltip2 = PVP_POWER_TOOLTIP .. format(PVP_POWER_BASE_TOOLTIP, pvpPower, pvpPowerBonus);
 	statFrame:Show();
 end
 
@@ -890,7 +839,6 @@ function ArmoryPaperDollFrame_SetDamage(statFrame, unit)
     local baseDamage = (minDamage + maxDamage) * 0.5;
     local fullDamage = (baseDamage + physicalBonusPos + physicalBonusNeg) * percent;
     local totalBonus = (fullDamage - baseDamage);
-    local damagePerSecond = (max(fullDamage,1) / speed);
     local damageTooltip = displayMinLarge.." - "..displayMaxLarge;
 
     local colorPos = "|cff20ff20";
@@ -935,7 +883,6 @@ function ArmoryPaperDollFrame_SetDamage(statFrame, unit)
     end
     statFrame.damage = damageTooltip;
     statFrame.attackSpeed = speed;
-    statFrame.dps = damagePerSecond;
     statFrame.unit = unit;
 
     -- If there's an offhand speed then add the offhand info to the tooltip
@@ -945,7 +892,6 @@ function ArmoryPaperDollFrame_SetDamage(statFrame, unit)
 
         local offhandBaseDamage = (minOffHandDamage + maxOffHandDamage) * 0.5;
         local offhandFullDamage = (offhandBaseDamage + physicalBonusPos + physicalBonusNeg) * percent;
-        local offhandDamagePerSecond = (max(offhandFullDamage,1) / offhandSpeed);
         local offhandDamageTooltip = BreakUpLargeNumbers(max(floor(minOffHandDamage),1)).." - "..BreakUpLargeNumbers(max(ceil(maxOffHandDamage),1));
         if ( physicalBonusPos > 0 ) then
             offhandDamageTooltip = offhandDamageTooltip..colorPos.." +"..physicalBonusPos.."|r";
@@ -960,7 +906,6 @@ function ArmoryPaperDollFrame_SetDamage(statFrame, unit)
         end
         statFrame.offhandDamage = offhandDamageTooltip;
         statFrame.offhandAttackSpeed = offhandSpeed;
-        statFrame.offhandDps = offhandDamagePerSecond;
     else
         statFrame.offhandAttackSpeed = nil;
     end
@@ -970,175 +915,8 @@ function ArmoryPaperDollFrame_SetDamage(statFrame, unit)
     statFrame:Show();
 end
 
-function ArmoryPaperDollFrame_SetMeleeDPS(statFrame, unit)
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_DPS_SHORT));
-    local text = _G[statFrame:GetName().."StatText"];
-    local speed, offhandSpeed = Armory:UnitAttackSpeed(unit);
-
-    local minDamage, maxDamage, minOffHandDamage, maxOffHandDamage, physicalBonusPos, physicalBonusNeg, percent = Armory:UnitDamage(unit);
-    if ( not minDamage ) then
-        statFrame:Hide();
-        return;
-    end 
-    
-    local displayMin = max(floor(minDamage), 1);
-    local displayMax = max(ceil(maxDamage), 1);
-
-    minDamage = (minDamage / percent) - physicalBonusPos - physicalBonusNeg;
-    maxDamage = (maxDamage / percent) - physicalBonusPos - physicalBonusNeg;
-
-    local baseDamage = (minDamage + maxDamage) * 0.5;
-    local fullDamage = (baseDamage + physicalBonusPos + physicalBonusNeg) * percent;
-    local totalBonus = (fullDamage - baseDamage);
-    local damagePerSecond = (max(fullDamage, 1) / speed);
-    local damageTooltip = max(floor(minDamage),1).." - "..max(ceil(maxDamage), 1);
-
-    local colorPos = "|cff20ff20";
-    local colorNeg = "|cffff2020";
-    local statText;
-
-    -- epsilon check
-    if ( totalBonus < 0.1 and totalBonus > -0.1 ) then
-        totalBonus = 0.0;
-    end
-
-    if ( totalBonus == 0 ) then
-        statText = BreakUpLargeNumbers(damagePerSecond);
-    else
-        local color;
-        if ( totalBonus > 0 ) then
-            color = colorPos;
-        else
-            color = colorNeg;
-        end
-        statText = color..BreakUpLargeNumbers(damagePerSecond).."|r";
-    end
-
-    -- If there's an offhand speed then add the offhand info
-    if ( offhandSpeed ) then
-        minOffHandDamage = (minOffHandDamage / percent) - physicalBonusPos - physicalBonusNeg;
-        maxOffHandDamage = (maxOffHandDamage / percent) - physicalBonusPos - physicalBonusNeg;
-
-        local offhandBaseDamage = (minOffHandDamage + maxOffHandDamage) * 0.5;
-        local offhandFullDamage = (offhandBaseDamage + physicalBonusPos + physicalBonusNeg) * percent;
-        local offhandDamagePerSecond = (max(offhandFullDamage, 1) / offhandSpeed);
-        local offhandTotalBonus = (offhandFullDamage - offhandBaseDamage);
-
-        -- epsilon check
-        if ( offhandTotalBonus < 0.1 and offhandTotalBonus > -0.1 ) then
-            offhandTotalBonus = 0.0;
-        end
-        local separator = " / ";
-        if (damagePerSecond > 1000 and offhandDamagePerSecond > 1000) then
-            separator = "/";
-        end
-        if ( offhandTotalBonus == 0 ) then
-            statText = statText..separator..BreakUpLargeNumbers(offhandDamagePerSecond);
-        else
-            local color;
-            if ( offhandTotalBonus > 0 ) then
-                color = colorPos;
-            else
-                color = colorNeg;
-            end
-            statText = statText..separator..color..BreakUpLargeNumbers(offhandDamagePerSecond).."|r";
-        end
-    end
-
-    text:SetText(statText);
-    
-    statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..DAMAGE_PER_SECOND..FONT_COLOR_CODE_CLOSE;
-    statFrame:Show();
-end
-
-function ArmoryPaperDollFrame_SetRangedDPS(statFrame, unit)
-	if ( unit ~= "player" ) then
-		statFrame:Hide();
-		return;
-	end
-
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_DPS_SHORT));
-    local text = _G[statFrame:GetName().."StatText"];
-
-    -- If no ranged attack then set to n/a
-    local rangedWeapon = Armory:IsRangedWeapon();
-    if ( rangedWeapon ) then
-        ArmoryPaperDollFrame.noRanged = nil;
-    else
-        text:SetText(NOT_APPLICABLE);
-        ArmoryPaperDollFrame.noRanged = 1;
-        statFrame.damage = nil;
-        return;
-    end
-
-    local rangedAttackSpeed, minDamage, maxDamage, physicalBonusPos, physicalBonusNeg, percent = Armory:UnitRangedDamage(unit);
-
-    -- Round to the third decimal place (i.e. 99.9 percent)
-    percent = math.floor(percent  * 10^3 + 0.5) / 10^3;
-    local displayMin = max(floor(minDamage),1);
-    local displayMax = max(ceil(maxDamage),1);
-
-    local baseDamage;
-    local fullDamage;
-    local totalBonus;
-    local damagePerSecond;
-    local tooltip;
-
-    if ( Armory:HasWandEquipped() ) then
-        baseDamage = (minDamage + maxDamage) * 0.5;
-        fullDamage = baseDamage * percent;
-        totalBonus = 0;
-        if( rangedAttackSpeed == 0 ) then
-            damagePerSecond = 0;
-        else
-            damagePerSecond = (max(fullDamage, 1) / rangedAttackSpeed);
-        end
-    else
-        minDamage = (minDamage / percent) - physicalBonusPos - physicalBonusNeg;
-        maxDamage = (maxDamage / percent) - physicalBonusPos - physicalBonusNeg;
-
-        baseDamage = (minDamage + maxDamage) * 0.5;
-        fullDamage = (baseDamage + physicalBonusPos + physicalBonusNeg) * percent;
-        totalBonus = (fullDamage - baseDamage);
-        if( rangedAttackSpeed == 0 ) then
-            damagePerSecond = 0;
-        else
-            damagePerSecond = (max(fullDamage, 1) / rangedAttackSpeed);
-        end
-    end
-	tooltip = BreakUpLargeNumbers(max(floor(minDamage),1)).." - "..BreakUpLargeNumbers(max(ceil(maxDamage),1));
-
-    if ( totalBonus == 0 ) then
-        text:SetText(BreakUpLargeNumbers(damagePerSecond));
-    else
-        local colorPos = "|cff20ff20";
-        local colorNeg = "|cffff2020";
-        local color;
-        if ( totalBonus > 0 ) then
-            color = colorPos;
-        else
-            color = colorNeg;
-        end
-        text:SetText(color.. BreakUpLargeNumbers(damagePerSecond).."|r");
-        if ( physicalBonusPos > 0 ) then
-            tooltip = tooltip..colorPos.." +"..BreakUpLargeNumbers(physicalBonusPos).."|r";
-        end
-        if ( physicalBonusNeg < 0 ) then
-            tooltip = tooltip..colorNeg.." "..BreakUpLargeNumbers(physicalBonusNeg).."|r";
-        end
-        if ( percent > 1 ) then
-            tooltip = tooltip..colorPos.." x"..floor(percent * 100 + 0.5).."%|r";
-        elseif ( percent < 1 ) then
-            tooltip = tooltip..colorNeg.." x"..floor(percent * 100 + 0.5).."%|r";
-        end
-        --statFrame.tooltip2 = tooltip.." "..format(DPS_TEMPLATE, damagePerSecond);
-    end
-
-    statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..DAMAGE_PER_SECOND..FONT_COLOR_CODE_CLOSE;
-    statFrame:Show();
-end
-
 function ArmoryPaperDollFrame_SetAttackSpeed(statFrame, unit)
+	local meleeHaste = Armory:GetMeleeHaste();
     local speed, offhandSpeed = Armory:UnitAttackSpeed(unit);
     if ( speed ) then
         if ( offhandSpeed ) then
@@ -1153,6 +931,7 @@ function ArmoryPaperDollFrame_SetAttackSpeed(statFrame, unit)
         PaperDollFrame_SetLabelAndText(statFrame, WEAPON_SPEED, text);
 
         statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, ATTACK_SPEED).." "..text..FONT_COLOR_CODE_CLOSE;
+		statFrame.tooltip2 = format(STAT_ATTACK_SPEED_BASE_TOOLTIP, BreakUpLargeNumbers(meleeHaste));
 
         statFrame:Show();
     else
@@ -1163,7 +942,18 @@ end
 function ArmoryPaperDollFrame_SetAttackPower(statFrame, unit)
     _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_ATTACK_POWER));
     local text = _G[statFrame:GetName().."StatText"];
-    local base, posBuff, negBuff = Armory:UnitAttackPower(unit);
+    local base, posBuff, negBuff;
+
+	local rangedWeapon = Armory:IsRangedWeapon();
+
+	local tag, tooltip;
+	if ( rangedWeapon ) then
+		base, posBuff, negBuff = Armory:UnitRangedAttackPower(unit);
+		tag, tooltip = RANGED_ATTACK_POWER, RANGED_ATTACK_POWER_TOOLTIP;
+	else 
+	 	base, posBuff, negBuff = Armory:UnitAttackPower(unit);
+	 	tag, tooltip = MELEE_ATTACK_POWER, MELEE_ATTACK_POWER_TOOLTIP;
+	end
 
     if ( base ) then
 		local damageBonus = BreakUpLargeNumbers(max((base + posBuff + negBuff), 0) / ATTACK_POWER_MAGIC_NUMBER);
@@ -1177,17 +967,17 @@ function ArmoryPaperDollFrame_SetAttackPower(statFrame, unit)
 			end
 			spellPower = min(spellPower, Armory:GetSpellBonusHealing()) * Armory:GetOverrideAPBySpellPower();
 
-			PaperDollFormatStat(MELEE_ATTACK_POWER, spellPower, 0, 0, statFrame, text);
+			PaperDollFormatStat(tag, spellPower, 0, 0, statFrame, text);
 			damageBonus = BreakUpLargeNumbers(spellPower / ATTACK_POWER_MAGIC_NUMBER);
 		else
-			PaperDollFormatStat(MELEE_ATTACK_POWER, base, posBuff, negBuff, statFrame, text);
+			PaperDollFormatStat(tag, base, posBuff, negBuff, statFrame, text);
 		end
 
         local effectiveAP = max(0, base + posBuff + negBuff);
         if ( Armory:GetOverrideSpellPowerByAP() ~= nil ) then
             statFrame.tooltip2 = format(MELEE_ATTACK_POWER_SPELL_POWER_TOOLTIP, damageBonus, BreakUpLargeNumbers(effectiveAP * Armory:GetOverrideSpellPowerByAP() + 0.5));
         else
-            statFrame.tooltip2 = format(MELEE_ATTACK_POWER_TOOLTIP, damageBonus);
+            statFrame.tooltip2 = format(tooltip, damageBonus);
         end
 
         statFrame:Show();
@@ -1196,201 +986,7 @@ function ArmoryPaperDollFrame_SetAttackPower(statFrame, unit)
     end
 end
 
-function ArmoryPaperDollFrame_SetRangedAttack(statFrame, unit)
-	if ( unit ~= "player" ) then
-		statFrame:Hide();
-		return;
-	end
-
-    local rangedAttackBase, rangedAttackMod = Armory:UnitRangedAttack(unit);
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, COMBAT_RATING_NAME1));
-    local text = _G[statFrame:GetName().."StatText"];
-
-    -- If no ranged texture then set stats to n/a
-    local rangedWeapon = Armory:IsRangedWeapon();
-    if ( rangedWeapon ) then
-        ArmoryPaperDollFrame.noRanged = nil;
-    else
-        text:SetText(NOT_APPLICABLE);
-        ArmoryPaperDollFrame.noRanged = 1;
-        statFrame.tooltip = nil;
-        return;
-    end
-
-    if( rangedAttackMod == 0 ) then
-        text:SetText(BreakUpLargeNumbers(rangedAttackBase));
-        statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, COMBAT_RATING_NAME1).." "..rangedAttackBase..FONT_COLOR_CODE_CLOSE;
-    else
-        local color = RED_FONT_COLOR_CODE;
-        if( rangedAttackMod > 0 ) then
-            color = GREEN_FONT_COLOR_CODE;
-            statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, COMBAT_RATING_NAME1).." "..(rangedAttackBase + rangedAttackMod).." ("..rangedAttackBase..color.." +"..rangedAttackMod..FONT_COLOR_CODE_CLOSE..HIGHLIGHT_FONT_COLOR_CODE..")";
-        else
-            statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, COMBAT_RATING_NAME1).." "..(rangedAttackBase + rangedAttackMod).." ("..rangedAttackBase..color.." "..rangedAttackMod..FONT_COLOR_CODE_CLOSE..HIGHLIGHT_FONT_COLOR_CODE..")";
-        end
-        text:SetText(color..BreakUpLargeNumbers(rangedAttackBase + rangedAttackMod)..FONT_COLOR_CODE_CLOSE);
-    end
-    local total = Armory:GetCombatRating(CR_WEAPON_SKILL) + Armory:GetCombatRating(CR_WEAPON_SKILL_RANGED);
-    statFrame.tooltip2 = format(WEAPON_SKILL_RATING, total);
-    if ( total > 0 ) then
-        statFrame.tooltip2 = statFrame.tooltip2..format(WEAPON_SKILL_RATING_BONUS, BreakUpLargeNumbers(Armory:GetCombatRatingBonus(CR_WEAPON_SKILL) + Armory:GetCombatRatingBonus(CR_WEAPON_SKILL_RANGED)));
-    end
-    statFrame:Show();
-end
-
-function ArmoryPaperDollFrame_SetRangedDamage(statFrame, unit)
-	if ( unit ~= "player" ) then
-		statFrame:Hide();
-		return;
-	end
-
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, DAMAGE));
-    local text = _G[statFrame:GetName().."StatText"];
-
-    -- If no ranged attack then set to n/a
-    local rangedWeapon = Armory:IsRangedWeapon();
-    if ( rangedWeapon ) then
-        ArmoryPaperDollFrame.noRanged = nil;
-    else
-        text:SetText(NOT_APPLICABLE);
-        ArmoryPaperDollFrame.noRanged = 1;
-        statFrame.damage = nil;
-        return;
-    end
-
-    local rangedAttackSpeed, minDamage, maxDamage, physicalBonusPos, physicalBonusNeg, percent = Armory:UnitRangedDamage(unit);
-
-    -- Round to the third decimal place (i.e. 99.9 percent)
-    percent = math.floor(percent  * 10^3 + 0.5) / 10^3
-    local displayMin = max(floor(minDamage),1);
-    local displayMax = max(ceil(maxDamage),1);
-
-    local baseDamage;
-    local fullDamage;
-    local totalBonus;
-    local damagePerSecond;
-    local tooltip;
-
-    if ( Armory:HasWandEquipped() ) then
-        baseDamage = (minDamage + maxDamage) * 0.5;
-        fullDamage = baseDamage * percent;
-        totalBonus = 0;
-        if ( rangedAttackSpeed == 0 ) then
-            damagePerSecond = 0;
-        else
-            damagePerSecond = (max(fullDamage,1) / rangedAttackSpeed);
-        end
-        tooltip = BreakUpLargeNumbers(max(floor(minDamage),1)).." - "..BreakUpLargeNumbers(max(ceil(maxDamage),1));
-    else
-        minDamage = (minDamage / percent) - physicalBonusPos - physicalBonusNeg;
-        maxDamage = (maxDamage / percent) - physicalBonusPos - physicalBonusNeg;
-
-        baseDamage = (minDamage + maxDamage) * 0.5;
-        fullDamage = (baseDamage + physicalBonusPos + physicalBonusNeg) * percent;
-        totalBonus = (fullDamage - baseDamage);
-        if ( rangedAttackSpeed == 0 ) then
-            damagePerSecond = 0;
-        else
-            damagePerSecond = (max(fullDamage,1) / rangedAttackSpeed);
-        end
-        tooltip = BreakUpLargeNumbers(max(floor(minDamage),1)).." - "..BreakUpLargeNumbers(max(ceil(maxDamage),1));
-    end
-
-    if ( totalBonus == 0 ) then
-        if ( ( displayMin < 100 ) and ( displayMax < 100 ) ) then 
-            text:SetText(BreakUpLargeNumbers(displayMin).." - "..BreakUpLargeNumbers(displayMax));    
-        else
-            text:SetText(BreakUpLargeNumbers(displayMin).."-"..BreakUpLargeNumbers(displayMax));
-        end
-    else
-        local colorPos = "|cff20ff20";
-        local colorNeg = "|cffff2020";
-        local color;
-        if ( totalBonus > 0 ) then
-            color = colorPos;
-        else
-            color = colorNeg;
-        end
-        if ( ( displayMin < 100 ) and ( displayMax < 100 ) ) then 
-            text:SetText(color..BreakUpLargeNumbers(displayMin).." - "..BreakUpLargeNumbers(displayMax).."|r");    
-        else
-            text:SetText(color..BreakUpLargeNumbers(displayMin).."-"..BreakUpLargeNumbers(displayMax).."|r");
-        end
-        if ( physicalBonusPos > 0 ) then
-            tooltip = tooltip..colorPos.." +"..BreakUpLargeNumbers(physicalBonusPos).."|r";
-        end
-        if ( physicalBonusNeg < 0 ) then
-            tooltip = tooltip..colorNeg.." "..BreakUpLargeNumbers(physicalBonusNeg).."|r";
-        end
-        if ( percent > 1 ) then
-            tooltip = tooltip..colorPos.." x"..floor(percent*100+0.5).."%|r";
-        elseif ( percent < 1 ) then
-            tooltip = tooltip..colorNeg.." x"..floor(percent*100+0.5).."%|r";
-        end
-        statFrame.tooltip = tooltip.." "..format(DPS_TEMPLATE, BreakUpLargeNumbers(damagePerSecond));
-    end
-    statFrame.attackSpeed = rangedAttackSpeed;
-    statFrame.damage = tooltip;
-    statFrame.dps = damagePerSecond;
-    statFrame:SetScript("OnEnter", CharacterRangedDamageFrame_OnEnter);
-    statFrame:Show();
-end
-
-function ArmoryPaperDollFrame_SetRangedAttackSpeed(statFrame, unit)
-	if ( unit ~= "player" ) then
-		statFrame:Hide();
-		return;
-	end
-
-    local text;
-    -- If no ranged attack then set to n/a
-    if ( ArmoryPaperDollFrame.noRanged ) then
-        text = NOT_APPLICABLE;
-        statFrame.tooltip = nil;
-    else
-        text = Armory:UnitRangedDamage(unit);
-        text = format("%.2F", text);
-        statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, ATTACK_SPEED).." "..text..FONT_COLOR_CODE_CLOSE;
-    end
-    PaperDollFrame_SetLabelAndText(statFrame, WEAPON_SPEED, text);
-    statFrame:Show();
-end
-
-function ArmoryPaperDollFrame_SetRangedAttackPower(statFrame, unit)
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_ATTACK_POWER));
-    local text = _G[statFrame:GetName().."StatText"];
-    local base, posBuff, negBuff = Armory:UnitRangedAttackPower(unit);
-
-	if ( Armory:GetOverrideAPBySpellPower() ~= nil ) then
-		local holySchool = 2;
-		-- Start at 2 to skip physical damage
-		local spellPower = Armory:GetSpellBonusDamage(holySchool);		
-		for i = holySchool + 1, MAX_SPELL_SCHOOLS do
-			spellPower = min(spellPower, Armory:GetSpellBonusDamage(i));
-		end
-		spellPower = min(spellPower, Armory:GetSpellBonusHealing()) * Armory:GetOverrideAPBySpellPower();
-
-		PaperDollFormatStat(RANGED_ATTACK_POWER, spellPower, 0, 0, statFrame, text);
-	else
-	    PaperDollFormatStat(RANGED_ATTACK_POWER, base, posBuff, negBuff, statFrame, text);
-	end
-	
-    local totalAP = base+posBuff+negBuff;
-    statFrame.tooltip2 = format(RANGED_ATTACK_POWER_TOOLTIP, BreakUpLargeNumbers(max((totalAP), 0)/ATTACK_POWER_MAGIC_NUMBER));
-    local petAPBonus = Armory:ComputePetBonus( "PET_BONUS_RAP_TO_AP", totalAP );
-    if( petAPBonus > 0 ) then
-        statFrame.tooltip2 = statFrame.tooltip2 .. "\n" .. format(PET_BONUS_TOOLTIP_RANGED_ATTACK_POWER, BreakUpLargeNumbers(petAPBonus));
-    end
-
-    local petSpellDmgBonus = Armory:ComputePetBonus( "PET_BONUS_RAP_TO_SPELLDMG", totalAP );
-    if( petSpellDmgBonus > 0 ) then
-        statFrame.tooltip2 = statFrame.tooltip2 .. "\n" .. format(PET_BONUS_TOOLTIP_SPELLDAMAGE, BreakUpLargeNumbers(petSpellDmgBonus));
-    end
-
-    statFrame:Show();
-end
-
-function ArmoryPaperDollFrame_SetSpellBonusDamage(statFrame, unit)
+function ArmoryPaperDollFrame_SetSpellPower(statFrame, unit)
     local text = _G[statFrame:GetName().."StatText"];
     local minModifier = 0;
 
@@ -1415,275 +1011,67 @@ function ArmoryPaperDollFrame_SetSpellBonusDamage(statFrame, unit)
         statFrame.bonusDamage = nil;
     end
 
-    local spellHealing = Armory:GetSpellBonusHealing();
-    if ( spellHealing and minModifier ) then
-        if ( spellHealing == minModifier ) then
-            _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_SPELLPOWER));
-            statFrame.tooltip = STAT_SPELLPOWER;
-            statFrame.tooltip2 = STAT_SPELLPOWER_TOOLTIP;
-        else
-            _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_SPELLDAMAGE));
-            statFrame.tooltip = STAT_SPELLDAMAGE;
-            statFrame.tooltip2 = STAT_SPELLDAMAGE_TOOLTIP;
-        end
+    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_SPELLPOWER));
+    statFrame.tooltip = STAT_SPELLPOWER;
+    statFrame.tooltip2 = STAT_SPELLPOWER_TOOLTIP;
 
-        text:SetText(BreakUpLargeNumbers(minModifier));
-        statFrame.minModifier = minModifier;
-        statFrame.unit = unit;
-        statFrame:SetScript("OnEnter", ArmoryCharacterSpellBonusDamage_OnEnter);
-        statFrame:Show();
-    else
-        statFrame:Hide();
-    end
-end
-
-function ArmoryPaperDollFrame_SetSpellBonusHealing(statFrame, unit)
-    local text = _G[statFrame:GetName().."StatText"];
-    local minDamage = 0;
-
-    if ( unit == "player" ) then
-        local holySchool = 2;
-        -- Start at 2 to skip physical damage
-        minDamage = Armory:GetSpellBonusDamage(holySchool);        
-        for i = (holySchool + 1), MAX_SPELL_SCHOOLS do
-            minDamage = min(minDamage, Armory:GetSpellBonusDamage(i));
-        end
-    elseif ( unit == "pet" ) then
-        --Healing is not needed for pets
-        --minDamage = Armory:GetPetSpellBonusDamage();
-        statFrame:Hide();
-        return;
-    end
-    statFrame.bonusDamage = nil;
-
-    local spellHealing = Armory:GetSpellBonusHealing();
-    if ( spellHealing == minDamage ) then
-        statFrame:Hide();
-        return;
-    end
-
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_SPELLHEALING));
-    statFrame.tooltip = STAT_SPELLHEALING;
-    statFrame.tooltip2 = STAT_SPELLHEALING_TOOLTIP;
-    text:SetText(BreakUpLargeNumbers(spellHealing));
-    statFrame.minModifier = spellHealing;
+    text:SetText(BreakUpLargeNumbers(minModifier));
+    statFrame.minModifier = minModifier;
     statFrame.unit = unit;
     statFrame:SetScript("OnEnter", ArmoryCharacterSpellBonusDamage_OnEnter);
     statFrame:Show();
 end
 
-function ArmoryPaperDollFrame_SetSpellCritChance(statFrame, unit)
+function ArmoryPaperDollFrame_SetCritChance(statFrame, unit)
 	if ( unit ~= "player" ) then
 		statFrame:Hide();
 		return;
 	end
+	
+	local rating;
+	local spellCrit, rangedCrit, meleeCrit;
+	local critChance;
 
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, SPELL_CRIT_CHANCE));
-    local text = _G[statFrame:GetName().."StatText"];
-    local holySchool = 2;
-    -- Start at 2 to skip physical damage
-    local minCrit = Armory:GetSpellCritChance(holySchool);
-    statFrame.spellCrit = {};
-    statFrame.spellCrit[holySchool] = minCrit;
-    local spellCrit;
-    for i = (holySchool+1), MAX_SPELL_SCHOOLS do
-        spellCrit = Armory:GetSpellCritChance(i);
-        minCrit = min(minCrit, spellCrit);
-        statFrame.spellCrit[i] = spellCrit;
-    end
-    minCrit = format("%.2F%%", minCrit);
-    text:SetText(minCrit);
-    statFrame.minCrit = minCrit;
-    statFrame.rating = Armory:GetCombatRating(CR_CRIT_SPELL);
-    statFrame.bonus = Armory:GetCombatRatingBonus(CR_CRIT_SPELL);
-    statFrame:SetScript("OnEnter", ArmoryCharacterSpellCritChance_OnEnter);
-    statFrame:Show();
-end
-
-function ArmoryPaperDollFrame_SetMeleeCritChance(statFrame, unit)
-	if ( unit ~= "player" ) then
-		statFrame:Hide();
-		return;
+	_G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_CRITICAL_STRIKE));
+	local text = _G[statFrame:GetName().."StatText"];
+	
+	-- Start at 2 to skip physical damage
+	local holySchool = 2;
+	local minCrit = Armory:GetSpellCritChance(holySchool);
+	statFrame.spellCrit = {};
+	statFrame.spellCrit[holySchool] = minCrit;
+	local spellCrit;
+	for i=(holySchool+1), MAX_SPELL_SCHOOLS do
+		spellCrit = Armory:GetSpellCritChance(i);
+		minCrit = min(minCrit, spellCrit);
+		statFrame.spellCrit[i] = spellCrit;
 	end
+	spellCrit = minCrit
+	rangedCrit = Armory:GetRangedCritChance();
+	meleeCrit = Armory:GetCritChance();
 
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, MELEE_CRIT_CHANCE));
-    local text = _G[statFrame:GetName().."StatText"];
-    local critChance = Armory:GetCritChance();
-    critChance = format("%.2F%%", critChance);
-    text:SetText(critChance);
-    statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, MELEE_CRIT_CHANCE).." "..critChance..FONT_COLOR_CODE_CLOSE;
-    statFrame.tooltip2 = format(CR_CRIT_MELEE_TOOLTIP, BreakUpLargeNumbers(Armory:GetCombatRating(CR_CRIT_MELEE)), Armory:GetCombatRatingBonus(CR_CRIT_MELEE));
-end
-
-function ArmoryPaperDollFrame_SetRangedCritChance(statFrame, unit)
-	if ( unit ~= "player" ) then
-		statFrame:Hide();
-		return;
+	if ( spellCrit >= rangedCrit and spellCrit >= meleeCrit ) then
+		critChance = spellCrit;
+		rating = CR_CRIT_SPELL;
+	elseif ( rangedCrit >= meleeCrit ) then
+		critChance = rangedCrit;
+		rating = CR_CRIT_RANGED;
+	else
+		critChance = meleeCrit;
+		rating = CR_CRIT_MELEE;
 	end
-
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, RANGED_CRIT_CHANCE));
-    local text = _G[statFrame:GetName().."StatText"];
-    local critChance = Armory:GetRangedCritChance();
-    critChance = format("%.2F%%", critChance);
-    text:SetText(critChance);
-    statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, RANGED_CRIT_CHANCE).." "..critChance..FONT_COLOR_CODE_CLOSE;
-    statFrame.tooltip2 = format(CR_CRIT_RANGED_TOOLTIP, BreakUpLargeNumbers(Armory:GetCombatRating(CR_CRIT_RANGED)), Armory:GetCombatRatingBonus(CR_CRIT_RANGED));
-end
-
-function ArmoryMeleeHitChance_OnEnter(statFrame)
-    GameTooltip:SetOwner(statFrame, "ANCHOR_RIGHT");
-    local hitChance = statFrame.hitChance;
-    if ( hitChance >= 0 ) then
-        hitChance = format("+%.2F%%", hitChance);
-    else
-        hitChance = RED_FONT_COLOR_CODE..format("%.2F%%", hitChance)..FONT_COLOR_CODE_CLOSE;
-    end
-    GameTooltip:SetText(HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_HIT_CHANCE).." "..hitChance..FONT_COLOR_CODE_CLOSE);
-    GameTooltip:AddLine(format(STAT_HIT_MELEE_TOOLTIP, BreakUpLargeNumbers(statFrame.rating), statFrame.bonus));
-    GameTooltip:AddLine(" ");
-    GameTooltip:AddDoubleLine(STAT_TARGET_LEVEL, MISS_CHANCE, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
-    if ( Armory:IsDualWielding() ) then
-        GameTooltip:AddLine(STAT_HIT_NORMAL_ATTACKS, GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
-    end
-    local playerLevel = Armory:UnitLevel("player");
-    for i = 0, 3 do
-        local missChance = format("%.2F%%", ArmoryGetMeleeMissChance(i, false));
-        local level = playerLevel + i;
-        if ( i == 3 ) then
-            level = level.." / |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:0|t";
-        end
-        GameTooltip:AddDoubleLine("      "..level, missChance.."    ", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-    end
-
-    if ( Armory:IsDualWielding() ) then
-        GameTooltip:AddLine(STAT_HIT_SPECIAL_ATTACKS, GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
-        for i = 0, 3 do
-            local missChance = format("%.2F%%", ArmoryGetMeleeMissChance(i, true));
-            local level = playerLevel + i;
-            if ( i == 3 ) then
-                level = level.." / |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:0|t";
-            end
-            GameTooltip:AddDoubleLine("      "..level, missChance.."    ", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-        end
-    end
-
-    GameTooltip:Show();
-end
-
-function ArmoryPaperDollFrame_SetMeleeHitChance(statFrame, unit)
-	if ( unit ~= "player" ) then
-		statFrame:Hide();
-		return;
+		
+	critChance = format("%.2F%%", critChance);
+	text:SetText(critChance);
+		
+	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_CRITICAL_STRIKE).." "..critChance..FONT_COLOR_CODE_CLOSE;
+	if ( Armory:GetCritChanceProvidesParryEffect() ) then
+		local critChance = Armory:GetCombatRatingBonus(rating);
+		statFrame.tooltip2 = format(CR_CRIT_PARRY_RATING_TOOLTIP, BreakUpLargeNumbers(Armory:GetCombatRating(rating)), critChance, critChance);
+	else
+		statFrame.tooltip2 = format(CR_CRIT_TOOLTIP, BreakUpLargeNumbers(Armory:GetCombatRating(rating)), Armory:GetCombatRatingBonus(rating));
 	end
-
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_HIT_CHANCE));
-    local text = _G[statFrame:GetName().."StatText"];
-    local hitChance = Armory:GetCombatRatingBonus(CR_HIT_MELEE) + Armory:GetHitModifier();
-    statFrame.hitChance = hitChance;
-    statFrame.rating = Armory:GetCombatRating(CR_HIT_MELEE);
-    statFrame.bonus = Armory:GetCombatRatingBonus(CR_HIT_MELEE);
-    statFrame:SetScript("OnEnter", ArmoryMeleeHitChance_OnEnter);
-    if ( hitChance >= 0 ) then
-        hitChance = format("+%.2F%%", hitChance);
-    else
-        hitChance = RED_FONT_COLOR_CODE..format("%.2F%%", hitChance)..FONT_COLOR_CODE_CLOSE;
-    end
-    text:SetText(hitChance);
-    statFrame:Show();
-end
-
-function ArmoryRangedHitChance_OnEnter(statFrame)
-    GameTooltip:SetOwner(statFrame, "ANCHOR_RIGHT");
-    local hitChance = statFrame.hitChance;
-    if ( hitChance >= 0 ) then
-        hitChance = format("+%.2F%%", hitChance);
-    else
-        hitChance = RED_FONT_COLOR_CODE..format("%.2F%%", hitChance)..FONT_COLOR_CODE_CLOSE;
-    end
-    GameTooltip:SetText(HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_HIT_CHANCE).." "..hitChance..FONT_COLOR_CODE_CLOSE);
-    GameTooltip:AddLine(format(STAT_HIT_RANGED_TOOLTIP, BreakUpLargeNumbers(statFrame.rating), statFrame.bonus));
-    GameTooltip:AddLine(" ");
-    GameTooltip:AddDoubleLine(STAT_TARGET_LEVEL, MISS_CHANCE, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
-    local playerLevel = Armory:UnitLevel("player");
-    for i = 0, 3 do
-        local missChance = format("%.2F%%", ArmoryGetRangedMissChance(i));
-        local level = playerLevel + i;
-        if ( i == 3 ) then
-            level = level.." / |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:0|t";
-        end
-        GameTooltip:AddDoubleLine("      "..level, missChance.."    ", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-    end
-
-    GameTooltip:Show();
-end
-
-function ArmoryPaperDollFrame_SetRangedHitChance(statFrame, unit)
-	if ( unit ~= "player" ) then
-		statFrame:Hide();
-		return;
-	end
-
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_HIT_CHANCE));
-    local text = _G[statFrame:GetName().."StatText"];
-    local hitChance = Armory:GetCombatRatingBonus(CR_HIT_RANGED) + Armory:GetHitModifier();
-    statFrame.hitChance = hitChance;
-    statFrame.rating = Armory:GetCombatRating(CR_HIT_RANGED);
-    statFrame.bonus = Armory:GetCombatRatingBonus(CR_HIT_RANGED);
-    statFrame:SetScript("OnEnter", ArmoryRangedHitChance_OnEnter);
-    if ( hitChance >= 0 ) then
-        hitChance = format("+%.2F%%", hitChance);
-    else
-        hitChance = RED_FONT_COLOR_CODE..format("%.2F%%", hitChance)..FONT_COLOR_CODE_CLOSE;
-    end
-    text:SetText(hitChance);
-    statFrame:Show();
-end
-
-function ArmorySpellHitChance_OnEnter(statFrame)
-    GameTooltip:SetOwner(statFrame, "ANCHOR_RIGHT");
-    local hitChance = statFrame.hitChance;
-    if ( hitChance >= 0 ) then
-        hitChance = format("+%.2F%%", hitChance);
-    else
-        hitChance = RED_FONT_COLOR_CODE..format("%.2F%%", hitChance)..FONT_COLOR_CODE_CLOSE;
-    end
-    GameTooltip:SetText(HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_HIT_CHANCE).." "..hitChance..FONT_COLOR_CODE_CLOSE);
-    GameTooltip:AddLine(format(STAT_HIT_SPELL_TOOLTIP, BreakUpLargeNumbers(statFrame.rating), statFrame.bonus));
-    GameTooltip:AddLine(" ");
-    GameTooltip:AddDoubleLine(STAT_TARGET_LEVEL, MISS_CHANCE, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
-    local playerLevel = Armory:UnitLevel("player");
-    for i = 0, 3 do
-        local missChance = format("%.2F%%", ArmoryGetSpellMissChance(i));
-        local level = playerLevel + i;
-        if ( i == 3 ) then
-            level = level.." / |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:0|t";
-        end
-        GameTooltip:AddDoubleLine("      "..level, missChance.."    ", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-    end
-
-    GameTooltip:Show();
-end
-
-function ArmoryPaperDollFrame_SetSpellHitChance(statFrame, unit)
-	if ( unit ~= "player" ) then
-		statFrame:Hide();
-		return;
-	end
-
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_HIT_CHANCE));
-    local text = _G[statFrame:GetName().."StatText"];
-    local hitChance = Armory:GetCombatRatingBonus(CR_HIT_SPELL) + Armory:GetSpellHitModifier();
-    statFrame.hitChance = hitChance;
-    statFrame.rating = Armory:GetCombatRating(CR_HIT_SPELL);
-    statFrame.bonus = Armory:GetCombatRatingBonus(CR_HIT_SPELL);
-    statFrame:SetScript("OnEnter", ArmorySpellHitChance_OnEnter);
-    if ( hitChance >= 0 ) then
-        hitChance = format("+%.2F%%", hitChance);
-    else
-        hitChance = RED_FONT_COLOR_CODE..format("%.2F%%", hitChance)..FONT_COLOR_CODE_CLOSE;
-    end
-    text:SetText(hitChance);
-    statFrame:Show();
+	statFrame:Show();
 end
 
 function ArmoryPaperDollFrame_SetEnergyRegen(statFrame, unit)
@@ -1747,13 +1135,15 @@ function ArmoryPaperDollFrame_SetRuneRegen(statFrame, unit)
     statFrame:Show();
 end
 
-function ArmoryPaperDollFrame_SetMeleeHaste(statFrame, unit)
+function ArmoryPaperDollFrame_SetHaste(statFrame, unit)
 	if ( unit ~= "player" ) then
 		statFrame:Hide();
 		return;
 	end
 	
-    local haste = Armory:GetMeleeHaste();
+    local haste = Armory:GetHaste();
+	local rating = CR_HASTE_MELEE;
+
     if ( haste < 0 ) then
         haste = RED_FONT_COLOR_CODE..format("%.2F%%", haste)..FONT_COLOR_CODE_CLOSE;
     else
@@ -1766,67 +1156,11 @@ function ArmoryPaperDollFrame_SetMeleeHaste(statFrame, unit)
     statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_HASTE) .. " " .. haste .. FONT_COLOR_CODE_CLOSE;
 
     local _, class = Armory:UnitClass(unit);	
-    statFrame.tooltip2 = _G["STAT_HASTE_MELEE_"..class.."_TOOLTIP"];
+    statFrame.tooltip2 = _G["STAT_HASTE_"..class.."_TOOLTIP"];
     if ( not statFrame.tooltip2 ) then
-        statFrame.tooltip2 = STAT_HASTE_MELEE_TOOLTIP;
+        statFrame.tooltip2 = STAT_HASTE_TOOLTIP;
     end
-    statFrame.tooltip2 = statFrame.tooltip2 .. format(STAT_HASTE_BASE_TOOLTIP, BreakUpLargeNumbers(Armory:GetCombatRating(CR_HASTE_MELEE)), Armory:GetCombatRatingBonus(CR_HASTE_MELEE));
-
-    statFrame:Show();
-end
-
-function ArmoryPaperDollFrame_SetRangedHaste(statFrame, unit)
-	if ( unit ~= "player" ) then
-		statFrame:Hide();
-		return;
-	end
-
-    local haste = Armory:GetRangedHaste();
-    if ( haste < 0 ) then
-        haste = RED_FONT_COLOR_CODE..format("%.2F%%", haste)..FONT_COLOR_CODE_CLOSE;
-    else
-        haste = "+"..format("%.2F%%", haste);
-    end
-
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_HASTE));
-    local text = _G[statFrame:GetName().."StatText"];
-    text:SetText(haste);
-    statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_HASTE) .. " " .. haste .. FONT_COLOR_CODE_CLOSE;
-
-    local _, class = Armory:UnitClass(unit);	
-    statFrame.tooltip2 = _G["STAT_HASTE_RANGED_"..class.."_TOOLTIP"];
-    if ( not statFrame.tooltip2 ) then
-        statFrame.tooltip2 = STAT_HASTE_RANGED_TOOLTIP;
-    end
-    statFrame.tooltip2 = statFrame.tooltip2 .. format(STAT_HASTE_BASE_TOOLTIP, BreakUpLargeNumbers(Armory:GetCombatRating(CR_HASTE_RANGED)), Armory:GetCombatRatingBonus(CR_HASTE_RANGED));
-
-    statFrame:Show();
-end
-
-function ArmoryPaperDollFrame_SetSpellHaste(statFrame, unit)
-	if ( unit ~= "player" ) then
-		statFrame:Hide();
-		return;
-	end
-	
-    local haste = Armory:UnitSpellHaste(unit);
-    if ( haste < 0 ) then
-        haste = RED_FONT_COLOR_CODE..format("%.2F%%", haste)..FONT_COLOR_CODE_CLOSE;
-    else
-        haste = "+"..format("%.2F%%", haste);
-    end
-
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, SPELL_HASTE));
-    local text = _G[statFrame:GetName().."StatText"];
-    text:SetText(haste);
-    statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_HASTE) .. " " .. haste .. FONT_COLOR_CODE_CLOSE;
-
-    local _, class = Armory:UnitClass(unit);	
-    statFrame.tooltip2 = _G["STAT_HASTE_SPELL_"..class.."_TOOLTIP"];
-    if ( not statFrame.tooltip2 ) then
-        statFrame.tooltip2 = STAT_HASTE_SPELL_TOOLTIP;
-    end
-    statFrame.tooltip2 = statFrame.tooltip2 .. format(STAT_HASTE_BASE_TOOLTIP, BreakUpLargeNumbers(Armory:GetCombatRating(CR_HASTE_SPELL)), Armory:GetCombatRatingBonus(CR_HASTE_SPELL));
+    statFrame.tooltip2 = statFrame.tooltip2 .. format(STAT_HASTE_BASE_TOOLTIP, BreakUpLargeNumbers(Armory:GetCombatRating(rating)), Armory:GetCombatRatingBonus(rating));
 
     statFrame:Show();
 end
@@ -1845,172 +1179,48 @@ function ArmoryPaperDollFrame_SetManaRegen(statFrame, unit)
         return;
     end
 
-    local base, casting = Armory:GetManaRegen();
+    local base, combat = Armory:GetManaRegen();
     -- All mana regen stats are displayed as mana/5 sec.
     base = BreakUpLargeNumbers(floor( base * 5.0 ));
-    casting = floor( casting * 5.0 );
-    text:SetText(base);
-    statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. MANA_REGEN .. FONT_COLOR_CODE_CLOSE;
-    statFrame.tooltip2 = format(MANA_REGEN_TOOLTIP, base);
-    statFrame:Show();
-end
-
-function ArmoryPaperDollFrame_SetCombatManaRegen(statFrame, unit)
-	if ( unit ~= "player" ) then
-		statFrame:Hide();
-		return;
-	end
-
-    _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, MANA_REGEN_COMBAT));
-    local text = _G[statFrame:GetName().."StatText"];
-    if ( not Armory:UnitHasMana("player") ) then
-        text:SetText(NOT_APPLICABLE);
-        statFrame.tooltip = nil;
-        return;
-    end
-
-    local base, casting = Armory:GetManaRegen();
-    -- All mana regen stats are displayed as mana/5 sec.
-    base = BreakUpLargeNumbers(floor( base * 5.0 ));
-    casting = floor( casting * 5.0 );
-    text:SetText(casting);
-    statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. MANA_REGEN_COMBAT .. FONT_COLOR_CODE_CLOSE;
-    statFrame.tooltip2 = format(MANA_COMBAT_REGEN_TOOLTIP, casting);
-    statFrame:Show();
-end
-
-function ArmoryExpertise_OnEnter(statFrame)
-    GameTooltip:SetOwner(statFrame, "ANCHOR_RIGHT");
-    local expertise = format("%.2F%%", statFrame.expertise);
-    local offhandExpertise = format("%.2F%%", statFrame.offhandExpertise);
-	local rangedExpertise = format("%.2F%%", statFrame.rangedExpertise);
-	
-	local category = statFrame:GetParent().Category;
-
-    local expertiseDisplay, expertisePercentDisplay;
-	if ( category == "MELEE" and Armory:IsDualWielding() ) then
-		expertiseDisplay = expertise.." / "..offhandExpertise;
-	elseif ( category == "RANGED" ) then
-		expertiseDisplay = rangedExpertise;
-    else
-        expertiseDisplay = expertise;
-    end
-	
-	local expertiseTooltip;
-	if ( category == "MELEE" ) then
-		expertiseTooltip = CR_EXPERTISE_TOOLTIP;
-	else
-		expertiseTooltip = CR_RANGED_EXPERTISE_TOOLTIP;
-	end
-
-    GameTooltip:SetText(HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, _G["COMBAT_RATING_NAME"..CR_EXPERTISE]).." "..expertiseDisplay..FONT_COLOR_CODE_CLOSE);
-	GameTooltip:AddLine(format(expertiseTooltip, expertiseDisplay, BreakUpLargeNumbers(statFrame.rating), statFrame.bonus), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
-    GameTooltip:AddLine(" ");
-
-    -- Dodge chance
-    GameTooltip:AddDoubleLine(STAT_TARGET_LEVEL, DODGE_CHANCE, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
-    local playerLevel = Armory:UnitLevel("player");
-    for i = 0, 3 do
-        local mainhandDodge, offhandDodge, rangedDodge = ArmoryGetEnemyDodgeChance(i);
-        mainhandDodge = format("%.2F%%", mainhandDodge);
-        offhandDodge = format("%.2F%%", offhandDodge);
-        rangedDodge = format("%.2F%%", rangedDodge);
-        local level = playerLevel + i;
-        if ( i == 3 ) then
-            level = level.." / |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:0|t";
-        end
-        local dodgeDisplay;
-        if ( category == "MELEE" and Armory:IsDualWielding() and mainhandDodge ~= offhandDodge ) then
-            dodgeDisplay = mainhandDodge.." / "..offhandDodge;
-		elseif ( category == "RANGED" ) then
-			dodgeDisplay = rangedDodge.."  ";
-        else
-            dodgeDisplay = mainhandDodge.."  ";
-        end
-        GameTooltip:AddDoubleLine("      "..level, dodgeDisplay.."  ", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-    end
-
-    -- Parry chance
-    if ( category == "MELEE" ) then
-		GameTooltip:AddLine(" ");
-		GameTooltip:AddDoubleLine(STAT_TARGET_LEVEL, PARRY_CHANCE, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
-		local playerLevel = Armory:UnitLevel("player");
-		for i = 0, 3 do
-			local mainhandParry, offhandParry = ArmoryGetEnemyParryChance(i);
-			mainhandParry = format("%.2F%%", mainhandParry);
-			offhandParry = format("%.2F%%", offhandParry);
-			local level = playerLevel + i;
-			if ( i == 3 ) then
-				level = level.." / |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:0|t";
-			end
-			local parryDisplay;
-			if ( Armory:IsDualWielding() and mainhandParry ~= offhandParry ) then
-				parryDisplay = mainhandParry.." / "..offhandParry;
-			else
-				parryDisplay = mainhandParry.."  ";
-			end
-			GameTooltip:AddDoubleLine("      "..level, parryDisplay.."  ", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-		end
-	end
-	
-    GameTooltip:Show();
-end
-
-function ArmoryPaperDollFrame_SetExpertise(statFrame, unit)
-	if ( unit ~= "player" ) then
-		statFrame:Hide();
-		return;
-	end
-	
-	local category = statFrame:GetParent().Category;
-
-    local expertise, offhandExpertise, rangedExpertise = Armory:GetExpertise();
-    statFrame.expertise = expertise;
-    statFrame.offhandExpertise = offhandExpertise;
-    statFrame.rangedExpertise = rangedExpertise;
-    statFrame.rating = Armory:GetCombatRating(CR_EXPERTISE);
-    statFrame.bonus = Armory:GetCombatRatingBonus(CR_EXPERTISE);
-	expertise = format("%.2F%%", expertise);
-	offhandExpertise = format("%.2F%%", offhandExpertise);
-	rangedExpertise = format("%.2F%%", rangedExpertise);
-    local speed, offhandSpeed = Armory:UnitAttackSpeed(unit);
-    local text;
-    if ( category == "MELEE" and offhandSpeed ) then
-        text = expertise.." / "..offhandExpertise;
-	elseif ( category == "RANGED" ) then
-        text = rangedExpertise;
-    else
-        text = expertise;
-    end
-    PaperDollFrame_SetLabelAndText(statFrame, STAT_EXPERTISE, text);
-    statFrame:SetScript("OnEnter", ArmoryExpertise_OnEnter);
+    combat = BreakUpLargeNumbers(floor( combat * 5.0 ));
+	-- Combat mana regen is most important to the player, so we display it as the main value
+    text:SetText(combat);
+	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, MANA_REGEN) .. " " .. combat .. FONT_COLOR_CODE_CLOSE;
+	-- Base (out of combat) regen is displayed only in the subtext of the tooltip
+	statFrame.tooltip2 = format(MANA_REGEN_TOOLTIP, base);
     statFrame:Show();
 end
 
 function ArmoryMastery_OnEnter(statFrame)
     GameTooltip:SetOwner(statFrame, "ANCHOR_RIGHT");
 
-    local title = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_MASTERY).." "..format("%.2F%%", statFrame.mastery)..FONT_COLOR_CODE_CLOSE;
-    if ( statFrame.bonus > 0 ) then
-        title = title..HIGHLIGHT_FONT_COLOR_CODE.." ("..format("%.2F%%", statFrame.mastery - statFrame.bonus)..FONT_COLOR_CODE_CLOSE..GREEN_FONT_COLOR_CODE.."+"..format("%.2F%%", statFrame.bonus)..FONT_COLOR_CODE_CLOSE..HIGHLIGHT_FONT_COLOR_CODE..")";
-    end
-    GameTooltip:SetText(title);
-
-    if ( statFrame.primaryTalentTree ) then
-        if ( statFrame.masterySpell ) then
-            GameTooltip:AddSpellByID(statFrame.masterySpell);
-        end
-        if ( statFrame.masterySpell2 ) then
-            GameTooltip:AddLine(" ");
-            GameTooltip:AddSpellByID(statFrame.masterySpell2);
-        end
-        GameTooltip:AddLine(" ");
-        GameTooltip:AddLine(format(STAT_MASTERY_TOOLTIP, statFrame.rating, statFrame.bonus), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
-    else
-        GameTooltip:AddLine(format(STAT_MASTERY_TOOLTIP, statFrame.rating, statFrame.bonus), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
-        GameTooltip:AddLine(" ");
-        GameTooltip:AddLine(STAT_MASTERY_TOOLTIP_NO_TALENT_SPEC, GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b, true);
-    end
+	local _, class = Armory:UnitClass("player");
+	local mastery, bonusCoeff = Armory:GetMasteryEffect();
+	local masteryBonus = Armory:GetCombatRatingBonus(CR_MASTERY) * bonusCoeff;
+	
+	local title = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_MASTERY).." "..format("%.2F%%", mastery)..FONT_COLOR_CODE_CLOSE;
+	if ( masteryBonus > 0 ) then
+		title = title..HIGHLIGHT_FONT_COLOR_CODE.." ("..format("%.2F%%", mastery - masteryBonus)..FONT_COLOR_CODE_CLOSE..GREEN_FONT_COLOR_CODE.."+"..format("%.2F%%", masteryBonus)..FONT_COLOR_CODE_CLOSE..HIGHLIGHT_FONT_COLOR_CODE..")"..FONT_COLOR_CODE_CLOSE;
+	end
+	GameTooltip:SetText(title);
+	
+	local primaryTalentTree = Armory:GetSpecialization();
+	if ( primaryTalentTree ) then
+		local masterySpell, masterySpell2 = Armory:GetSpecializationMasterySpells(primaryTalentTree);
+		if ( masterySpell ) then
+			GameTooltip:AddSpellByID(masterySpell);
+		end
+		if ( masterySpell2 ) then
+			GameTooltip:AddLine(" ");
+			GameTooltip:AddSpellByID(masterySpell2);
+		end
+		GameTooltip:AddLine(" ");
+		GameTooltip:AddLine(format(STAT_MASTERY_TOOLTIP, Armory:GetCombatRating(CR_MASTERY), masteryBonus), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
+	else
+		GameTooltip:AddLine(format(STAT_MASTERY_TOOLTIP, Armory:GetCombatRating(CR_MASTERY), masteryBonus), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
+		GameTooltip:AddLine(" ");
+		GameTooltip:AddLine(STAT_MASTERY_TOOLTIP_NO_TALENT_SPEC, GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b, true);
+	end
     GameTooltip:Show();
 end
 
@@ -2026,19 +1236,146 @@ function ArmoryPaperDollFrame_SetMastery(statFrame, unit)
 
     _G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_MASTERY));
     local text = _G[statFrame:GetName().."StatText"];
-    local mastery, bonusCoef = Armory:GetMasteryEffect();
-    local primaryTalentTree = Armory:GetSpecialization();
-    statFrame.mastery = mastery;
-    statFrame.rating = Armory:GetCombatRating(CR_MASTERY);
-    statFrame.bonus = Armory:GetCombatRatingBonus(CR_MASTERY) * bonusCoef;
-    statFrame.primaryTalentTree = primaryTalentTree;
-    if ( masteryKnown and primaryTalentTree ) then
-        statFrame.masterySpell, statFrame.masterySpell2 = Armory:GetSpecializationMasterySpells();
-    end
+    local mastery = Armory:GetMasteryEffect();
+	mastery = format("%.2F%%", mastery);
+	text:SetText(mastery);
     statFrame:SetScript("OnEnter", ArmoryMastery_OnEnter);
-    mastery = format("%.2F%%", mastery);
-    text:SetText(mastery);
     statFrame:Show();
+end
+
+-- Task 68016: Multistrike gives damaging attacks and heals a chance to repeat the damage or healing at 30% effectiveness
+function ArmoryPaperDollFrame_SetMultistrike(statFrame, unit)
+	if ( unit ~= "player" ) then
+		statFrame:Hide();
+		return;
+	end
+	
+	_G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_MULTISTRIKE));
+	local text = _G[statFrame:GetName().."StatText"];
+	local multistrike = Armory:GetMultistrike();
+	multistrike = format("%.2F%%", multistrike);
+	text:SetText(multistrike);
+	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_MULTISTRIKE) .. " " .. multistrike .. FONT_COLOR_CODE_CLOSE;
+	
+	statFrame.tooltip2 = format(CR_MULTISTRIKE_TOOLTIP, Armory:GetMultistrike(), Armory:GetMultistrikeEffect(), BreakUpLargeNumbers(Armory:GetCombatRating(CR_MULTISTRIKE)), Armory:GetCombatRatingBonus(CR_MULTISTRIKE));
+
+	statFrame:Show();
+end
+
+-- Task 68016: Readiness reduces the cooldown of core class/spec abilities
+function ArmoryReadiness_OnEnter(statFrame)
+	GameTooltip:SetOwner(statFrame, "ANCHOR_RIGHT");
+	
+	local title = HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_READINESS).." "..format("%.2F%%", Armory:GetReadiness())..FONT_COLOR_CODE_CLOSE;
+
+	GameTooltip:SetText(title);
+	
+	local primaryTalentTree = Armory:GetSpecialization();
+	if ( primaryTalentTree ) then
+		local readinessSpell = Armory:GetSpecializationReadinessSpell(primaryTalentTree);
+		if ( readinessSpell ) then
+			GameTooltip:AddSpellByID(readinessSpell);
+		end
+
+		GameTooltip:AddLine(" ");
+		GameTooltip:AddLine(format(CR_READINESS_TOOLTIP, BreakUpLargeNumbers(Armory:GetCombatRating(CR_READINESS)), Armory:GetCombatRatingBonus(CR_READINESS)));
+	else
+		GameTooltip:AddLine(CR_READINESS_TOOLTIP_NO_TALENT_SPEC, GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b, true);
+	end
+	GameTooltip:Show();
+end
+
+-- Task 68016: Readiness reduces the cooldown of core class/spec abilities
+function ArmoryPaperDollFrame_SetReadiness(statFrame, unit)
+	if ( unit ~= "player" ) then
+		statFrame:Hide();
+		return;
+	end
+	
+	_G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_READINESS));
+	local text = _G[statFrame:GetName().."StatText"];
+	local readiness = Armory:GetReadiness();
+	readiness = format("%.2F%%", readiness);
+	text:SetText(readiness);
+	statFrame:SetScript("OnEnter", ArmoryReadiness_OnEnter);
+	statFrame:Show();
+end
+
+-- Task 68016: Speed increases run speed
+function ArmoryPaperDollFrame_SetSpeed(statFrame, unit)
+	if ( unit ~= "player" ) then
+		statFrame:Hide();
+		return;
+	end
+	
+	_G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_SPEED));
+	local text = _G[statFrame:GetName().."StatText"];
+	local speed = Armory:GetSpeed();
+	speed = format("%.2F%%", speed);
+	text:SetText(speed);
+	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_SPEED) .. " " .. speed .. FONT_COLOR_CODE_CLOSE;
+	
+	statFrame.tooltip2 = format(CR_SPEED_TOOLTIP, BreakUpLargeNumbers(Armory:GetCombatRating(CR_SPEED)), Armory:GetCombatRatingBonus(CR_SPEED));
+
+	statFrame:Show();
+end
+
+-- Task 68016: Lifesteal returns a portion of all damage done as health
+function ArmoryPaperDollFrame_SetLifesteal(statFrame, unit)
+	if ( unit ~= "player" ) then
+		statFrame:Hide();
+		return;
+	end
+	
+	_G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_LIFESTEAL));
+	local text = _G[statFrame:GetName().."StatText"];
+	local lifesteal = Armory:GetLifesteal();
+	lifesteal = format("%.2F%%", lifesteal);
+	text:SetText(lifesteal);
+	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_LIFESTEAL) .. " " .. lifesteal .. FONT_COLOR_CODE_CLOSE;
+	
+	statFrame.tooltip2 = format(CR_LIFESTEAL_TOOLTIP, BreakUpLargeNumbers(Armory:GetCombatRating(CR_LIFESTEAL)), Armory:GetCombatRatingBonus(CR_LIFESTEAL));
+
+	statFrame:Show();
+end
+
+-- Task 68016: Avoidance reduces AoE damage taken
+function ArmoryPaperDollFrame_SetAvoidance(statFrame, unit)
+	if ( unit ~= "player" ) then
+		statFrame:Hide();
+		return;
+	end
+	
+	_G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_AVOIDANCE));
+	local text = _G[statFrame:GetName().."StatText"];
+	local avoidance = Armory:GetAvoidance();
+	avoidance = format("%.2F%%", avoidance);
+	text:SetText(avoidance);
+	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_AVOIDANCE) .. " " .. avoidance .. FONT_COLOR_CODE_CLOSE;
+	
+	statFrame.tooltip2 = format(CR_AVOIDANCE_TOOLTIP, BreakUpLargeNumbers(Armory:GetCombatRating(CR_AVOIDANCE)), Armory:GetCombatRatingBonus(CR_AVOIDANCE));
+
+	statFrame:Show();
+end
+
+function ArmoryPaperDollFrame_SetVersatility(statFrame, unit)
+	if ( unit ~= "player" ) then
+		statFrame:Hide();
+		return;
+	end
+	
+	_G[statFrame:GetName().."Label"]:SetText(format(STAT_FORMAT, STAT_VERSATILITY));
+	local text = _G[statFrame:GetName().."StatText"];
+	local versatility = Armory:GetCombatRating(CR_VERSATILITY_DAMAGE_DONE);
+	local versatilityDamageBonus = Armory:GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE) + Armory:GetVersatilityBonus(CR_VERSATILITY_DAMAGE_DONE);
+	local versatilityDamageTakenReduction = Armory:GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_TAKEN) + Armory:GetVersatilityBonus(CR_VERSATILITY_DAMAGE_TAKEN);
+	local versatilityLabel = format("%.2F%%", versatilityDamageBonus);
+	text:SetText(versatilityLabel);
+	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE .. format(VERSATILITY_TOOLTIP_FORMAT, STAT_VERSATILITY, versatilityDamageBonus, versatilityDamageTakenReduction) .. FONT_COLOR_CODE_CLOSE;
+	
+	statFrame.tooltip2 = format(CR_VERSATILITY_TOOLTIP, versatilityDamageBonus, versatilityDamageTakenReduction, BreakUpLargeNumbers(versatility), versatilityDamageBonus, versatilityDamageTakenReduction);
+
+	statFrame:Show();
 end
 
 function ArmoryPaperDollFrame_SetItemLevel(statFrame, unit)
@@ -2074,10 +1411,12 @@ function ArmoryMovementSpeed_OnEnter(statFrame)
     GameTooltip:SetText(HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, STAT_MOVEMENT_SPEED).." "..format("%d%%", statFrame.speed+0.5)..FONT_COLOR_CODE_CLOSE);
 
     GameTooltip:AddLine(format(STAT_MOVEMENT_GROUND_TOOLTIP, statFrame.runSpeed + 0.5));
-    if (statFrame.unit ~= "pet") then
+    if ( statFrame.unit ~= "pet" ) then
         GameTooltip:AddLine(format(STAT_MOVEMENT_FLIGHT_TOOLTIP, statFrame.flightSpeed + 0.5));
     end
     GameTooltip:AddLine(format(STAT_MOVEMENT_SWIM_TOOLTIP, statFrame.swimSpeed + 0.5));
+	GameTooltip:AddLine(" ");
+	GameTooltip:AddLine(format(CR_SPEED_TOOLTIP, BreakUpLargeNumbers(Armory:GetCombatRating(CR_SPEED)), Armory:GetCombatRatingBonus(CR_SPEED)));
     GameTooltip:Show();
 
     statFrame.UpdateTooltip = ArmoryMovementSpeed_OnEnter;
@@ -2168,73 +1507,10 @@ function ArmoryCharacterSpellBonusDamage_OnEnter(self)
         local petBonusAP = Armory:ComputePetBonus("PET_BONUS_SPELLDMG_TO_AP", damage);
         local petBonusDmg = Armory:ComputePetBonus("PET_BONUS_SPELLDMG_TO_SPELLDMG", damage);
         if ( petBonusAP > 0 or petBonusDmg > 0 ) then
-            GameTooltip:AddLine(format(petStr, petBonusAP, petBonusDmg), nil, nil, nil, 1 );
+            GameTooltip:AddLine(format(petStr, petBonusAP, petBonusDmg), nil, nil, nil, true );
         end
     end
     GameTooltip:Show();
-end
-
-function ArmoryCharacterSpellCritChance_OnEnter(self)
-    GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-    GameTooltip:SetText(HIGHLIGHT_FONT_COLOR_CODE..format(PAPERDOLLFRAME_TOOLTIP_FORMAT, SPELL_CRIT_CHANCE).." "..self.minCrit..FONT_COLOR_CODE_CLOSE);
-    local spellCrit;
-    for i = 2, MAX_SPELL_SCHOOLS do
-        spellCrit = format("%.2F%%", self.spellCrit[i]);
-        if ( spellCrit ~= self.minCrit ) then
-            GameTooltip:AddDoubleLine(_G["DAMAGE_SCHOOL"..i], spellCrit, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-            GameTooltip:AddTexture("Interface\\PaperDollInfoFrame\\SpellSchoolIcon"..i);
-        end
-    end
-    GameTooltip:AddLine(format(CR_CRIT_SPELL_TOOLTIP, BreakUpLargeNumbers(self.rating), self.bonus));
-    GameTooltip:Show();
-end
-
---helper function to determine if PVP power should be shown in a particular category
---might be worth changing this so the locations of pvp power are stored in a table...but too late now
-function ArmoryShowStatInCategory(stat, category, unit)
-    local statInfo = ARMORY_PAPERDOLL_STATINFO[stat];
-    if ( stat ~= "PVP_POWER" ) then
-        return statInfo;
-    end
-
-    local primaryTalentTree = Armory:GetSpecialization();
-    local _, class = Armory:UnitClass("player"); 
-    local role = nil;
-    local specID = nil;
-
-    if ( primaryTalentTree ) then
-        specID, _, _, _, _, role = Armory:GetSpecializationInfo(primaryTalentTree);
-    end
-
-    --Show PVP power in melee for tanks or damagers that aren't spell based
-    if ( category == "MELEE" ) then
-        if ( class == "ROGUE" or class == "DEATHKNIGHT" or class == "WARRIOR" or
-            ((class == "SHAMAN" or class =="MONK" or class == "PALADIN" or class == "DRUID") and 
-             (role == "DAMAGER" or role == "TANK") and SPEC_CORE_ABILITY_TEXT[specID] ~= "DRUID_BALANCE" and
-             SPEC_CORE_ABILITY_TEXT[specID] ~= "SHAMAN_ELE") ) then
-            return statInfo;
-        else
-            return nil;
-        end
-    --Show it in ranged for hunters
-    elseif ( category == "RANGED" ) then
-        if ( class == "HUNTER" ) then
-            return statInfo;
-        else
-            return nil;
-        end
-    --Show it in spells for healers and spell based damagers
-    elseif ( category == "SPELL" ) then
-        if ( class == "WARLOCK" or class == "MAGE" or class == "PRIEST" or
-             role == "HEALER" or SPEC_CORE_ABILITY_TEXT[specID] == "DRUID_BALANCE" or
-             SPEC_CORE_ABILITY_TEXT[specID] == "SHAMAN_ELE" ) then
-            return statInfo;
-        else
-            return nil;
-        end
-    end
-
-    return statInfo;
 end
 
 function ArmoryPaperDollFrame_UpdateStatCategory(category, suffix)
@@ -2271,10 +1547,8 @@ function ArmoryPaperDollFrame_UpdateStatCategory(category, suffix)
         local statInfo;
         if ( overlay ) then
             statInfo = PAPERDOLL_STATINFO[stat];
-            statInfo = ShowStatInCategory(stat, category, "player");
         else
             statInfo = ARMORY_PAPERDOLL_STATINFO[stat];
-            statInfo = ArmoryShowStatInCategory(stat, category, "player");
         end
         if ( statInfo ) then
             statFrame:Show();
@@ -2366,10 +1640,8 @@ function ArmoryPaperDollFrame_SetStatDropDown()
     ARMORY_PLAYERSTAT_DROPDOWN_SELECTION = "ATTRIBUTES";
     if ( classFileName == "MAGE" or classFileName == "PRIEST" or classFileName == "WARLOCK" or classFileName == "DRUID" ) then
         ARMORY_PLAYERSTAT_DROPDOWN_SELECTION = "SPELL";
-    elseif ( classFileName == "HUNTER" ) then
-        ARMORY_PLAYERSTAT_DROPDOWN_SELECTION = "RANGED";
     else
-        ARMORY_PLAYERSTAT_DROPDOWN_SELECTION = "MELEE";
+        ARMORY_PLAYERSTAT_DROPDOWN_SELECTION = "ENHANCEMENTS";
     end
 end
 
@@ -2388,6 +1660,10 @@ function ArmoryPaperDollFrame_OnLoad(self)
     self:RegisterEvent("PLAYER_GUILD_UPDATE");
     self:RegisterEvent("COMBAT_RATING_UPDATE");
     self:RegisterEvent("MASTERY_UPDATE");
+	self:RegisterEvent("MULTISTRIKE_UPDATE");
+	self:RegisterEvent("SPEED_UPDATE");
+	self:RegisterEvent("LIFESTEAL_UPDATE");
+	self:RegisterEvent("AVOIDANCE_UPDATE");
     self:RegisterEvent("PLAYER_EQUIPMENT_CHANGED");
     self:RegisterEvent("SOCKET_INFO_UPDATE");
     self:RegisterEvent("ZONE_CHANGED");
@@ -2400,7 +1676,7 @@ function ArmoryPaperDollFrame_OnLoad(self)
     self:RegisterEvent("SKILL_LINES_CHANGED");
     self:RegisterEvent("UPDATE_FACTION");
     self:RegisterEvent("EQUIPMENT_SETS_CHANGED");
-    self:RegisterEvent("PLAYER_AVG_ITEM_LEVEL_READY");
+    self:RegisterEvent("PLAYER_AVG_ITEM_LEVEL_UPDATE");
 	self:RegisterUnitEvent("UNIT_DAMAGE", "player");
 	self:RegisterUnitEvent("UNIT_ATTACK_SPEED", "player");
 	self:RegisterUnitEvent("UNIT_MAXHEALTH", "player");
@@ -2446,7 +1722,15 @@ function ArmoryPaperDollFrame_OnEvent(self, event, unit)
         end
     end
 
-    if ( event == "COMBAT_RATING_UPDATE" or event == "MASTERY_UPDATE" or event == "PLAYER_AVG_ITEM_LEVEL_READY" or event == "PLAYER_DAMAGE_DONE_MODS" or event == "SPELL_POWER_CHANGED" ) then
+    if ( event == "COMBAT_RATING_UPDATE" or 
+		 event == "MASTERY_UPDATE" or 
+		 event == "MULTISTRIKE_UPDATE" or 
+		 event == "SPEED_UPDATE" or 
+		 event == "LIFESTEAL_UPDATE" or 
+		 event == "AVOIDANCE_UPDATE" or 
+		 event == "PLAYER_AVG_ITEM_LEVEL_UPDATE" or 
+		 event == "PLAYER_DAMAGE_DONE_MODS" or 
+		 event == "SPELL_POWER_CHANGED" ) then
         Armory:Execute(ArmoryPaperDollFrame_UpdateStats);
     elseif ( event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" or event == "ZONE_CHANGED_NEW_AREA" ) then
         Armory:Execute(ArmoryPaperDollFrame_SetZone);
@@ -2527,13 +1811,13 @@ function ArmoryPaperDollFrame_UpdateTalent(overlay)
         parent = "ArmoryPaperDollTalentOverlay";
 		currentSpec = GetSpecialization();
 		if ( currentSpec ) then
-			_, specialism, _, _, _, role = GetSpecializationInfo(currentSpec);
+			_, specialism, _, _, _, role = GetSpecializationInfo(currentSpec, nil, nil, nil, UnitSex("player"));
 		end
 	else
 		parent = "ArmoryPaperDollTalent";
 		currentSpec = Armory:GetSpecialization();
 		if ( currentSpec ) then
-			_, specialism, _, _, _, role = Armory:GetSpecializationInfo(currentSpec);
+			_, specialism, _, _, _, role = Armory:GetSpecializationInfo(currentSpec, nil, nil, nil, Armory:UnitSex("player"));
 		end
 	end
 
@@ -2913,7 +2197,7 @@ function ArmoryGearSetButton_OnEnter(self)
         local locationType;
         local count, equipped, bags, missing = 0, 0, 0, 0;
         for i = EQUIPPED_FIRST, EQUIPPED_LAST do
-            if ( items[i] ~= 0 ) then
+            if ( (items[i] or 0) ~= 0 ) then
                 locationType = bit.rshift(locations[i], 16);
                 if ( locationType == 16 ) then
                     equipped = equipped + 1;
@@ -3189,9 +2473,10 @@ function ArmoryAttributesOverlayTopFramePlayerStatDropDown_Initialize()
     local checked;
     for i = 1, getn(ARMORY_PLAYERSTAT_DROPDOWN_OPTIONS) do
         if ( ARMORY_PLAYERSTAT_DROPDOWN_OPTIONS[i] == ArmoryLocalSettings.playerStatTopDropdown ) then
+            info.checked = 1;
             checked = 1;
         else
-            checked = nil;
+            info.checked = nil;
         end
         info.text = _G["STAT_CATEGORY_"..ARMORY_PLAYERSTAT_DROPDOWN_OPTIONS[i]];
         info.func = ArmoryAttributesOverlayTopFramePlayerStatDropDown_OnClick;
@@ -3200,6 +2485,10 @@ function ArmoryAttributesOverlayTopFramePlayerStatDropDown_Initialize()
         info.owner = ARMORY_DROPDOWNMENU_OPEN_MENU;
         ArmoryDropDownMenu_AddButton(info);
     end
+    if ( not checked ) then
+		ArmoryLocalSettings.playerStatTopDropdown = nil;
+		ArmoryPaperDollOverlayTopFrame_SetStatDropDown();
+	end
 end
 
 function ArmoryAttributesOverlayTopFramePlayerStatDropDown_OnClick(self)
@@ -3215,10 +2504,8 @@ function ArmoryPaperDollOverlayBottomFrame_SetStatDropDown()
         ArmoryLocalSettings.playerStatBottomDropdown = "ATTRIBUTES";
         if ( classFileName == "MAGE" or classFileName == "PRIEST" or classFileName == "WARLOCK" or classFileName == "DRUID" ) then
             ArmoryLocalSettings.playerStatBottomDropdown = "SPELL";
-        elseif ( classFileName == "HUNTER" ) then
-            ArmoryLocalSettings.playerStatBottomDropdown = "RANGED";
         else
-            ArmoryLocalSettings.playerStatBottomDropdown = "MELEE";
+            ArmoryLocalSettings.playerStatBottomDropdown = "ENHANCEMENTS";
         end
     end
     ArmoryDropDownMenu_SetSelectedValue(ArmoryAttributesOverlayBottomFramePlayerStatDropDown, ArmoryLocalSettings.playerStatBottomDropdown);
@@ -3240,17 +2527,21 @@ function ArmoryAttributesOverlayBottomFramePlayerStatDropDown_Initialize()
     local checked;
     for i = 1, getn(ARMORY_PLAYERSTAT_DROPDOWN_OPTIONS) do
         if ( ARMORY_PLAYERSTAT_DROPDOWN_OPTIONS[i] == ArmoryLocalSettings.playerStatBottomDropdown ) then
+            info.checked = 1;
             checked = 1;
         else
-            checked = nil;
+            info.checked = nil;
         end
         info.text = _G["STAT_CATEGORY_"..ARMORY_PLAYERSTAT_DROPDOWN_OPTIONS[i]];
         info.func = ArmoryAttributesOverlayBottomFramePlayerStatDropDown_OnClick;
         info.value = ARMORY_PLAYERSTAT_DROPDOWN_OPTIONS[i];
-        info.checked = checked;
         info.owner = ARMORY_DROPDOWNMENU_OPEN_MENU;
         ArmoryDropDownMenu_AddButton(info);
     end
+    if ( not checked ) then
+		ArmoryLocalSettings.playerStatBottomDropdown = nil;
+		ArmoryPaperDollOverlayBottomFrame_SetStatDropDown();
+	end
 end
 
 function ArmoryAttributesOverlayBottomFramePlayerStatDropDown_OnClick(self)

@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 598 2013-09-26T20:28:29Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -42,15 +42,17 @@ ArmoryTradeSkillTypePrefix = {
 ["trivial"] = " ", 
 ["header"] = " ",
 ["subheader"] = " ",
+["nodifficulty"] = " ",
 }
 
 ArmoryTradeSkillTypeColor = {};
-ArmoryTradeSkillTypeColor["optimal"]   = { r = 1.00, g = 0.50, b = 0.25, font = GameFontNormalLeftOrange };
-ArmoryTradeSkillTypeColor["medium"]    = { r = 1.00, g = 1.00, b = 0.00, font = GameFontNormalLeftYellow };
-ArmoryTradeSkillTypeColor["easy"]      = { r = 0.25, g = 0.75, b = 0.25, font = GameFontNormalLeftLightGreen };
-ArmoryTradeSkillTypeColor["trivial"]   = { r = 0.50, g = 0.50, b = 0.50, font = GameFontNormalLeftGrey };
-ArmoryTradeSkillTypeColor["header"]    = { r = 1.00, g = 0.82, b = 0,    font = GameFontNormalLeft };
-ArmoryTradeSkillTypeColor["subheader"] = { r = 1.00, g = 0.82, b = 0,    font = GameFontNormalLeft };
+ArmoryTradeSkillTypeColor["optimal"]      = { r = 1.00, g = 0.50, b = 0.25, font = GameFontNormalLeftOrange };
+ArmoryTradeSkillTypeColor["medium"]       = { r = 1.00, g = 1.00, b = 0.00, font = GameFontNormalLeftYellow };
+ArmoryTradeSkillTypeColor["easy"]         = { r = 0.25, g = 0.75, b = 0.25, font = GameFontNormalLeftLightGreen };
+ArmoryTradeSkillTypeColor["trivial"]      = { r = 0.50, g = 0.50, b = 0.50, font = GameFontNormalLeftGrey };
+ArmoryTradeSkillTypeColor["header"]       = { r = 1.00, g = 0.82, b = 0,    font = GameFontNormalLeft };
+ArmoryTradeSkillTypeColor["subheader"]    = { r = 1.00, g = 0.82, b = 0,    font = GameFontNormalLeft };
+ArmoryTradeSkillTypeColor["nodifficulty"] = { r = 0.96, g = 0.96, b = 0.96, font = GameFontNormalLeftGrey };
 
 function ArmoryTradeSkillFrame_OnLoad(self)
     self:RegisterEvent("TRADE_SKILL_SHOW");
@@ -121,7 +123,7 @@ end
 function ArmoryTradeSkill_Update()
     local currentSkill, modeChanged, hasCooldown;
 
-    if ( ArmoryTradeSkillFrame.isOpen and not (IsTradeSkillLinked() or IsTradeSkillGuild()) ) then
+    if ( ArmoryTradeSkillFrame.isOpen and not (IsTradeSkillLinked() or IsTradeSkillGuild() or IsNPCCrafting()) ) then
         Armory:UnregisterTradeSkillUpdateEvents();
         currentSkill, modeChanged, hasCooldown = Armory:UpdateTradeSkill();
         Armory:RegisterTradeSkillUpdateEvents();
@@ -283,15 +285,15 @@ function ArmoryTradeSkillFrame_Update()
     FauxScrollFrame_Update(ArmoryTradeSkillListScrollFrame, numTradeSkills, ARMORY_TRADE_SKILLS_DISPLAYED, ARMORY_TRADE_SKILL_HEIGHT, nil, nil, nil, ArmoryTradeSkillHighlightFrame, 293, 316 );
 
     ArmoryTradeSkillHighlightFrame:Hide();
-    local skillName, skillType, numAvailable, isExpanded, altVerb, numSkillUps, indentLevel, showProgressBar, currentRank, maxRank, startingRank;
-    local skillIndex, skillButton, skillButtonText, skillButtonCount, skillButtonNumSkillUps, skillButtonNumSkillUpsIcon, skillButtonNumSkillUpsText, skillButtonSubSkillRankBar;
+    local skillName, skillType, numAvailable, isExpanded, altVerb, numSkillUps, indentLevel, showProgressBar, currentRank, maxRank, startingRank, displayAsUnavailable;
+    local skillIndex, skillButton, skillButtonText, skillButtonCount, skillButtonNumSkillUps, skillButtonNumSkillUpsIcon, skillButtonNumSkillUpsText, skillButtonSubSkillRankBar, skillButtonLockedIcon;
     local nameWidth, countWidth, usedWidth;
 
    	local skillNamePrefix = " ";
 
-    for i=1, ARMORY_TRADE_SKILLS_DISPLAYED, 1 do
+    for i = 1, ARMORY_TRADE_SKILLS_DISPLAYED, 1 do
         skillIndex = i + skillOffset;
-        skillName, skillType, numAvailable, isExpanded, altVerb, numSkillUps, indentLevel, showProgressBar, currentRank, maxRank, startingRank = Armory:GetTradeSkillInfo(skillIndex);
+        skillName, skillType, numAvailable, isExpanded, altVerb, numSkillUps, indentLevel, showProgressBar, currentRank, maxRank, startingRank, displayAsUnavailable = Armory:GetTradeSkillInfo(skillIndex);
 
         skillButton = _G["ArmoryTradeSkillSkill"..i];
         skillButtonText = _G["ArmoryTradeSkillSkill"..i.."Text"];
@@ -300,6 +302,7 @@ function ArmoryTradeSkillFrame_Update()
 		skillButtonNumSkillUpsText = _G["ArmoryTradeSkillSkill"..i.."NumSkillUpsText"];
 		skillButtonNumSkillUpsIcon = _G["ArmoryTradeSkillSkill"..i.."NumSkillUpsIcon"];
 		skillButtonSubSkillRankBar = _G["ArmoryTradeSkillSkill"..i.."SubSkillRankBar"];
+		skillButtonLockedIcon = _G["ArmoryTradeSkillSkill"..i.."LockedIcon"];
         if ( skillIndex <= numTradeSkills ) then    
             --turn on the multiskill icon
             if ( (numSkillUps or 0) > 1 and skillType == "optimal" ) then
@@ -312,6 +315,14 @@ function ArmoryTradeSkillFrame_Update()
                 skillButtonNumSkillUpsIcon:Hide();
                 usedWidth = 0;		
             end
+            
+			-- display a lock icon when the recipe is shown, but unavailable
+			if ( displayAsUnavailable ) then
+				skillButtonLockedIcon:Show();
+				usedWidth = ARMORY_TRADE_SKILL_SKILLUP_TEXT_WIDTH;
+			else
+				skillButtonLockedIcon:Hide();
+			end
 
             local color = ArmoryTradeSkillTypeColor[skillType];
             if ( color ) then
@@ -459,7 +470,7 @@ function ArmoryTradeSkillFrame_Update()
 end
 
 function ArmoryTradeSkillFrame_SetSelection(id)
-    local skillName, skillType, numAvailable, isExpanded, altVerb = Armory:GetTradeSkillInfo(id);
+    local skillName, skillType, numAvailable, isExpanded, altVerb, numSkillUps, indentLevel, showProgressBar, currentRank, maxRank, startingRank, displayAsUnavailable, unavailableString = Armory:GetTradeSkillInfo(id);
     ArmoryTradeSkillHighlightFrame:Show();
     if ( skillType == "header" or skillType == "subheader" ) then
         ArmoryTradeSkillHighlightFrame:Hide();
@@ -477,16 +488,25 @@ function ArmoryTradeSkillFrame_SetSelection(id)
     end
 
 	ArmoryTradeSkillSkillName:SetText(skillName);
-	local cooldown, isDayCooldown = Armory:GetTradeSkillCooldown(id);
+	local cooldown, isDayCooldown, charges, maxCharges = Armory:GetTradeSkillCooldown(id);
 
-	if ( not cooldown ) then
-		ArmoryTradeSkillSkillCooldown:SetText("");
-	elseif ( not isDayCooldown ) then
-		ArmoryTradeSkillSkillCooldown:SetText(COOLDOWN_REMAINING.." "..SecondsToTime(cooldown));
-	elseif ( cooldown > 60 * 60 * 24 ) then	--Cooldown is greater than 1 day.
-		ArmoryTradeSkillSkillCooldown:SetText(COOLDOWN_REMAINING.." "..SecondsToTime(cooldown, true, false, 1, true));
+	if ( maxCharges > 0 and (charges > 0 or not cooldown) ) then
+		ArmoryTradeSkillSkillCooldown:SetText(format(TRADESKILL_CHARGES_REMAINING, charges, maxCharges));
+		ArmoryTradeSkillSkillCooldown:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
+	elseif ( displayAsUnavailable ) then
+		ArmoryTradeSkillSkillCooldown:SetTextColor(RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b);
+		ArmoryTradeSkillSkillCooldown:SetText(unavailableString);
 	else
-		ArmoryTradeSkillSkillCooldown:SetText(COOLDOWN_EXPIRES_AT_MIDNIGHT);
+		ArmoryTradeSkillSkillCooldown:SetTextColor(RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b);
+		if ( not cooldown ) then
+			ArmoryTradeSkillSkillCooldown:SetText("");
+		elseif ( not isDayCooldown ) then
+			ArmoryTradeSkillSkillCooldown:SetText(COOLDOWN_REMAINING.." "..SecondsToTime(cooldown));
+		elseif ( cooldown > 60 * 60 * 24 ) then	--Cooldown is greater than 1 day.
+			ArmoryTradeSkillSkillCooldown:SetText(COOLDOWN_REMAINING.." "..SecondsToTime(cooldown, true, false, 1, true));
+		else
+			ArmoryTradeSkillSkillCooldown:SetText(COOLDOWN_EXPIRES_AT_MIDNIGHT);
+		end
 	end
 
     ArmoryTradeSkillSkillIcon:SetNormalTexture(Armory:GetTradeSkillIcon(id));
@@ -542,6 +562,12 @@ function ArmoryTradeSkillFrame_SetSelection(id)
                     playerReagentCount = "*";
                 end
                 count:SetText(playerReagentCount.." /"..reagentCount);
+                --fix text overflow when the reagent count is too high
+				if (math.floor(count:GetStringWidth()) > math.floor(reagent.Icon:GetWidth() + .5)) then 
+					--round count width down because the leftmost number can overflow slightly without looking bad
+					--round icon width because it should always be an int, but sometimes it's a slightly off float
+					count:SetText(playerReagentCount.."\n/"..reagentCount);
+				end
             else
                 count:SetText(reagentCount.." ");
             end
@@ -766,4 +792,18 @@ function ArmoryTradeSkillFilter_OnTextChanged(self)
         ArmoryTradeSkillFrame_SetSelection(Armory:GetFirstTradeSkill());
         ArmoryTradeSkillFrame_Update();
     end
+end
+
+function ArmoryTradeSkillFrameLockIcon_OnEnter(self)
+	local skillName, skillType, numAvailable, isExpanded, altVerb, numSkillUps, indentLevel, showProgressBar, currentRank, maxRank, startingRank, displayAsUnavailable, unavailableString = Armory:GetTradeSkillInfo(self:GetID());
+	
+	if ( unavailableString and unavailableString ~= "" ) then
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+		GameTooltip:AddLine(unavailableString, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
+		GameTooltip:Show();
+	end
+end
+
+function ArmoryTradeSkillFrameLockIcon_OnLeave(self)
+	GameTooltip:Hide();
 end

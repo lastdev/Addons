@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 624 2014-04-06T08:54:19Z
+    Revision: 652 2014-10-19T10:25:00Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -44,6 +44,14 @@ function Armory:GetAverageItemLevel()
     return self:SetGetCharacterValue("AverageItemLevel", _G.GetAverageItemLevel());
 end
 
+function Armory:GetAvoidance()
+    return self:SetGetCharacterValue("Avoidance", _G.GetAvoidance());
+end
+
+function Armory:GetBladedArmorEffect()
+    return self:SetGetCharacterValue("BladedArmorEffect", _G.GetBladedArmorEffect());
+end
+
 function Armory:GetBlockChance()
     return self:SetGetCharacterValue("BlockChance", _G.GetBlockChance());
 end
@@ -69,6 +77,10 @@ function Armory:GetCritChanceFromAgility(unit)
         return self:SetGetPetValue("CritChanceFromAgility", _G.GetCritChanceFromAgility(unit));
     end
     return self:SetGetCharacterValue("CritChanceFromAgility", _G.GetCritChanceFromAgility(unit));
+end
+
+function Armory:GetCritChanceProvidesParryEffect()
+    return self:SetGetCharacterValue("CritChanceProvidesParryEffect", _G.GetCritChanceProvidesParryEffect());
 end
 
 function Armory:GetCurrencyInfo(index)
@@ -120,6 +132,10 @@ end
 
 function Armory:GetGuildInfo(unit)
     return self:SetGetCharacterValue("Guild", _G.GetGuildInfo("player"));
+end
+
+function Armory:GetHaste()
+    return self:SetGetCharacterValue("Haste", _G.GetHaste());
 end
 
 function Armory:GetHitModifier()
@@ -176,6 +192,10 @@ function Armory:GetLatestThreeSenders()
     return self:SetGetCharacterValue("LatestThreeSenders", _G.GetLatestThreeSenders());
 end
 
+function Armory:GetLifesteal()
+    return self:SetGetCharacterValue("Lifesteal", _G.GetLifesteal());
+end
+
 function Armory:GetManaRegen()
     return self:SetGetCharacterValue("ManaRegen", _G.GetManaRegen());
 end
@@ -190,6 +210,14 @@ end
 
 function Armory:GetMoney()
     return self:SetGetCharacterValue("Money", _G.GetMoney()) or 0;
+end
+
+function Armory:GetMultistrike()
+    return self:SetGetCharacterValue("Multistrike", _G.GetMultistrike());
+end
+
+function Armory:GetMultistrikeEffect()
+    return self:SetGetCharacterValue("MultistrikeEffect", _G.GetMultistrikeEffect());
 end
 
 function Armory:GetOverrideAPBySpellPower()
@@ -299,25 +327,17 @@ function Armory:GetPowerRegen()
     return self:SetGetCharacterValue("PowerRegen", _G.GetPowerRegen());
 end
 
-function Armory:GetPvpPowerDamage()
-    return self:SetGetCharacterValue("PvpPowerDamage", _G.GetPvpPowerDamage());
-end
-
-function Armory:GetPvpPowerHealing()
-    return self:SetGetCharacterValue("PvpPowerHealing", _G.GetPvpPowerHealing());
-end
-
 function Armory:GetPVPLifetimeStats()
     return self:SetGetCharacterValue("PVPLifetimeStats", _G.GetPVPLifetimeStats());
 end
 
 function Armory:GetPVPRewards()
-    local pointsThisWeek, maxPointsThisWeek, tier2Quantity, tier2Limit, tier1Quantity, tier1Limit, randomPointsThisWeek, maxRandomPointsThisWeek, arenaReward, ratedBGReward = self:SetGetCharacterValue("PVPRewards", _G.GetPVPRewards());
+	local pointsThisWeek, maxPointsThisWeek, bucket1Quantity, bucket1Limit, bucket2Quantity, bucket2Limit, bucket3Quantity, bucket3Limit, arenaReward, ratedBGReward = self:SetGetCharacterValue("PVPRewards", _G.GetPVPRewards());
     if ( time() >= self:GetWeeklyQuestResetTime() ) then
         pointsThisWeek = 0;
-        randomPointsThisWeek = 0;
+        bucket3Limit = 0;
     end
-    return pointsThisWeek or 0, maxPointsThisWeek or 0, tier2Quantity or 0, tier2Limit or 0, tier1Quantity or 0, tier1Limit or 0, randomPointsThisWeek or 0, maxRandomPointsThisWeek or 0, arenaReward or 0, ratedBGReward or 0;
+    return pointsThisWeek or 0, maxPointsThisWeek or 0, bucket1Quantity or 0, bucket1Limit or 0, bucket2Quantity or 0, bucket2Limit or 0, bucket3Quantity or 0, bucket3Limit or 0, arenaReward or 0, ratedBGReward or 0;
 end
 
 function Armory:GetPVPSessionStats()
@@ -347,16 +367,16 @@ function Armory:GetPVPYesterdayStats(update)
     return hk, cp;
 end
 
+function Armory:GetReadiness()
+    return self:SetGetCharacterValue("Readiness", _G.GetReadiness());
+end
+
 function Armory:GetQuestResetTime()
     return self:SetGetCharacterValue("QuestResetTime", time() + _G.GetQuestResetTime()) or 0;
 end
 
 function Armory:GetRangedCritChance()
     return self:SetGetCharacterValue("RangedCritChance", _G.GetRangedCritChance());
-end
-
-function Armory:GetRangedHaste()
-    return self:SetGetCharacterValue("RangedHaste", _G.GetRangedHaste());
 end
 
 function Armory:GetRestState()
@@ -402,6 +422,18 @@ function Armory:GetSpecializationMasterySpells()
         return self:SetGetCharacterValue("MaterySpells", nil);
     end
     return self:SetGetCharacterValue("MaterySpells", _G.GetSpecializationMasterySpells(primaryTree));
+end
+
+function Armory:GetSpecializationReadinessSpell()
+    local primaryTree = _G.GetSpecialization();
+    if ( not primaryTree ) then
+        return self:SetGetCharacterValue("ReadinessSpell", nil);
+    end
+    return self:SetGetCharacterValue("ReadinessSpell", _G.GetSpecializationReadinessSpell(primaryTree));
+end
+
+function Armory:GetSpeed()
+    return self:SetGetCharacterValue("Speed", _G.GetSpeed());
 end
 
 function Armory:GetSpellBonusDamage(holySchool)
@@ -469,18 +501,19 @@ end
 
 function Armory:GetUnitSpeed(unit)
     if ( strlower(unit) == "pet" ) then
-        return self:SetGetPetValue("Speed", _G.GetUnitSpeed(unit));
+        return self:SetGetPetValue("UnitSpeed", _G.GetUnitSpeed(unit));
     end
-    return self:SetGetCharacterValue("Speed", _G.GetUnitSpeed(unit));
+    return self:SetGetCharacterValue("UnitSpeed", _G.GetUnitSpeed(unit));
+end
+
+function Armory:GetVersatilityBonus(index)
+    if ( index ) then
+        return self:SetGetCharacterValue("VersatilityBonus"..index, _G.GetVersatilityBonus(index)) or 0;
+    end
 end
 
 function Armory:GetWeeklyQuestResetTime()
-	local day = 2;
-	-- assume only EU servers reset on wednesday (rest on tuesday)
-	local region = GetCVar("realmList"):match("^[%a.]-(%a+).%a+.%a+.%a+$");
-	if (region and strupper(region) == "EU") then
-		day = 3;
-	end
+	local day = self:GetConfigWeeklyReset();
 	local offset = (7 + day - date("%w", time())) % 7;
 	return self:GetQuestResetTime() + offset * 24 * 60 * 60;
 end
@@ -491,6 +524,10 @@ end
 
 function Armory:GetZoneText()
     return self:SetGetCharacterValue("Zone", _G.GetZoneText());
+end
+
+function Armory:HasAPEffectsSpellPower()
+    return self:SetGetCharacterValue("HasAPEffectsSP", _G.HasAPEffectsSpellPower());
 end
 
 function Armory:HasNewMail()
@@ -508,8 +545,8 @@ function Armory:HasPetUI()
     end
 end
 
-function Armory:HasWandEquipped()
-    return self:SetGetCharacterValue("HasWandEquipped", _G.HasWandEquipped());
+function Armory:HasSPEffectsAttackPower()
+    return self:SetGetCharacterValue("HasSPEffectsAP", _G.HasSPEffectsAttackPower());
 end
 
 function Armory:IsBankBagSlot(index)
@@ -534,10 +571,6 @@ end
 
 function Armory:InRepairMode()
    return self:SetGetCharacterValue("InRepairMode", _G.InRepairMode());
-end
-
-function Armory:IsDualWielding()
-   return self:SetGetCharacterValue("IsDualWielding", _G.IsDualWielding());
 end
 
 function Armory:IsMetaActive(unit)
@@ -758,8 +791,8 @@ function Armory:SetSpell(id, bookType, specialization)
     end
 end
 
-function Armory:SetTalent(index, inspect, talentGroup)
-    local link = self:GetTalentLink(index, inspect, talentGroup);
+function Armory:SetTalent(id)
+    local link = _G.GetTalentLink(id);
     if ( link ) then
         self:SetHyperlink(GameTooltip, link);
     end
@@ -815,6 +848,13 @@ end
 
 function Armory:UnitAura(unit, index, filter)
     return self:GetBuff(unit, index, filter);
+end
+
+function Armory:UnitBonusArmor(unit)
+    if ( strlower(unit) == "pet" ) then
+        return self:SetGetPetValue("BonusArmor", _G.UnitBonusArmor(unit));
+    end
+    return self:SetGetCharacterValue("BonusArmor", _G.UnitBonusArmor(unit));
 end
 
 function Armory:UnitCharacterPoints(unit)
@@ -937,16 +977,11 @@ function Armory:UnitRangedAttackPower(unit)
     return self:SetGetCharacterValue("RangedAttackPower", _G.UnitRangedAttackPower("player"));
 end
 
-function Armory:UnitRangedDamage(unit)
-    return self:SetGetCharacterValue("RangedDamage", _G.UnitRangedDamage("player"));
-end
-
 function Armory:UnitSex(unit)
-    return self:SetGetCharacterValue("Sex", _G.UnitSex("player"));
-end
-
-function Armory:UnitSpellHaste(unit)
-    return self:SetGetCharacterValue("SpellHaste", _G.UnitSpellHaste("player"));
+    if ( strlower(unit) == "pet" ) then
+        return self:SetGetPetValue("Sex", _G.UnitSex(unit));
+    end
+    return self:SetGetCharacterValue("Sex", _G.UnitSex(unit));
 end
 
 function Armory:UnitStat(unit, index)

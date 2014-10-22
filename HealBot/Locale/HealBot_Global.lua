@@ -1,4 +1,4 @@
-HEALBOT_VERSION   = "6.0.2.1";
+HEALBOT_VERSION   = "6.0.2.2";
 HEALBOT_ABOUT_URL = "http://healbot.darktech.org/"
 
 function HealBot_globalVars()
@@ -35,7 +35,7 @@ function HealBot_globalVars()
     HEALBOT_SPEAR_HAND_STRIKE               = GetSpellInfo(116705) or "--Spear Hand Strike"
     HEALBOT_PARALYSIS                       = GetSpellInfo(115078) or "--Paralysis"
     HEALBOT_CRACKLING_JADE_LIGHTNING        = GetSpellInfo(117952) or "--Crackling Jade Lightning"
-    HEALBOT_GRAPPLE_WEAPON                  = GetSpellInfo(117368) or "--Grapple Weapon"    
+  
     --Paladin
 	HEALBOT_REBUKE                          = GetSpellInfo(96231) or "--Rebuke"
     HEALBOT_JUDGMENT                        = GetSpellInfo(20271) or "--Judgment"
@@ -46,14 +46,15 @@ function HealBot_globalVars()
     HEALBOT_HOLY_SHOCK                      = GetSpellInfo(20473) or "--Holy Shock"
     HEALBOT_RECKONING                       = GetSpellInfo(62124) or "--Reckoning"
     HEALBOT_REPENTANCE                      = GetSpellInfo(20066) or "--Repentance"
-    HEALBOT_TURN_EVIL                       = GetSpellInfo(10326) or "--Turn Evil"   
+    HEALBOT_TURN_EVIL                       = GetSpellInfo(10326) or "--Turn Evil" 
+	HEALBOT_BINDING_LIGHT                   = GetSpellInfo(115750) or "--Blinding Light"
     --Shaman
 	HEALBOT_CHAIN_LIGHTNING                 = GetSpellInfo(421) or "--Chain Lightning"
     HEALBOT_LIGHTNING_BOLT                  = GetSpellInfo(403) or "--Lightning Bolt"
     HEALBOT_EARTH_SHOCK                     = GetSpellInfo(8042) or "--Earth Shock"
     HEALBOT_FLAME_SHOCK                     = GetSpellInfo(8050) or "--Flame Shock"
     HEALBOT_FROST_SHOCK                     = GetSpellInfo(8056) or "--Frost Shock"
-    HEALBOT_BIND_ELEMENTAL                  = GetSpellInfo(76780) or "--Bind Elemental"
+    --HEALBOT_BIND_ELEMENTAL                  = GetSpellInfo(76780) or "--Bind Elemental"
     HEALBOT_HEX                             = GetSpellInfo(51514) or "--Hex"
     HEALBOT_LAVA_BLAST                      = GetSpellInfo(51505) or "--Lava Blast"
     HEALBOT_PRIMAL_STRIKE                   = GetSpellInfo(73899) or "--Primal Strike"
@@ -157,6 +158,8 @@ function HealBot_globalVars()
     HEALBOT_HOLY_WORD_SERENITY              = GetSpellInfo(88684) or "--Holy Word: Serenity";
     HEALBOT_HOLY_WORD_SANCTUARY             = GetSpellInfo(88685) or "--Holy Word: Sanctuary"; 
     HEALBOT_CASCADE                         = GetSpellInfo(121135) or "--Cascade"
+	HEALBOT_DIVINE_STAR                     = GetSpellInfo(110744) or "--Divine Star"
+	HEALBOT_HALO                            = GetSpellInfo(120517) or "--Halo"
     --Shaman
 	HEALBOT_HEALING_WAVE                    = GetSpellInfo(77472) or "--Healing Wave";
     HEALBOT_HEALING_SURGE                   = GetSpellInfo(8004) or "--Healing Surge";
@@ -166,7 +169,7 @@ function HealBot_globalVars()
     HEALBOT_CHAIN_HEAL                      = GetSpellInfo(1064) or "--Chain Heal";
     HEALBOT_HEALING_STREAM_TOTEM            = GetSpellInfo(119523) or "--Healing Stream Totem";
     HEALBOT_HEALING_TIDE_TOTEM              = GetSpellInfo(108280) or "--Healing Tide Totem";
-    HEALBOT_MANA_TIDE_TOTEM                 = GetSpellInfo(16190) or "--Mana Tide Totem";
+    --HEALBOT_MANA_TIDE_TOTEM                 = GetSpellInfo(16190) or "--Mana Tide Totem";
     --Monk
 	HEALBOT_SOOTHING_MIST                   = GetSpellInfo(115175) or "--Soothing Mist"
     HEALBOT_ZEN_MEDITATION                  = GetSpellInfo(115176) or "--Zen Meditation"
@@ -208,18 +211,18 @@ function HealBot_globalVars()
     HEALBOT_HARMONY                         = GetSpellInfo(100977) or "--Harmony";
     HEALBOT_LIVING_SEED                     = GetSpellInfo(48500) or "--Living Seed";
     HEALBOT_SAVAGE_DEFENCE                  = GetSpellInfo(62606) or "--Savage Defense";
-    HEALBOT_NATURE_SWIFTNESS                = GetSpellInfo(132158) or "--Nature's Swiftness";
+    --HEALBOT_NATURE_SWIFTNESS                = GetSpellInfo(132158) or "--Nature's Swiftness";
 	--WoD Added
 	HEALBOT_NATURE_MOMENT_OF_CLARITY        = GetSpellInfo(155577) or "--Moment of Clarity";
 	HEALBOT_NATURE_REJUVENATION_GERMINATION = GetSpellInfo(155777) or "--Rejuvenation Germination";
 	HEALBOT_NATURE_RAMPANT_GROWTH           = GetSpellInfo(155834) or "--Rampant Growth";
     
 	--Hunter
-    HEALBOT_A_HAWK                          = GetSpellInfo(13165) or "--Aspect of the Hawk"
+    --HEALBOT_A_HAWK                          = GetSpellInfo(13165) or "--Aspect of the Hawk"
     HEALBOT_A_CHEETAH                       = GetSpellInfo(5118) or "--Aspect of the Cheetah"
     HEALBOT_A_PACK                          = GetSpellInfo(13159) or "--Aspect of the Pack"
     HEALBOT_A_WILD                          = GetSpellInfo(20043) or "--Aspect of the Wild"
-    HEALBOT_A_IRON_HAWK                     = GetSpellInfo(109260) or "--Aspect of the Iron Hawk"
+    --HEALBOT_A_IRON_HAWK                     = GetSpellInfo(109260) or "--Aspect of the Iron Hawk"
     HEALBOT_MENDPET                         = GetSpellInfo(136) or "--Mend Pet"
     HEALBOT_DETERRENCE                      = GetSpellInfo(19263) or "--Deterrence"
     HEALBOT_TRAP_LAUNCHER                   = GetSpellInfo(77769) or "--Trap Launcher"
@@ -228,10 +231,10 @@ function HealBot_globalVars()
 	HEALBOT_ARCANE_BRILLIANCE               = GetSpellInfo(1459) or "--Arcane Brilliance";
     HEALBOT_DALARAN_BRILLIANCE              = GetSpellInfo(61316) or "--Dalaran Brilliance";
     HEALBOT_MAGE_WARD                       = GetSpellInfo(543) or "--Mage Ward";
-    HEALBOT_MAGE_ARMOR                      = GetSpellInfo(6117) or "--Mage Armor";
-    HEALBOT_MOLTEN_ARMOR                    = GetSpellInfo(30482) or "--Molten Armor";
+    --HEALBOT_MAGE_ARMOR                      = GetSpellInfo(6117) or "--Mage Armor";
+    --HEALBOT_MOLTEN_ARMOR                    = GetSpellInfo(30482) or "--Molten Armor";
     HEALBOT_FOCUS_MAGIC                     = GetSpellInfo(54646) or "--Focus Magic";
-    HEALBOT_FROST_ARMOR                     = GetSpellInfo(7302) or "--Frost Armor";
+    --HEALBOT_FROST_ARMOR                     = GetSpellInfo(7302) or "--Frost Armor";
     HEALBOT_TEMPORAL_SHIELD                 = GetSpellInfo(115610) or "--Temporal Shield"
     HEALBOT_ICE_BARRIER                     = GetSpellInfo(11426) or "--Ice Barrier"
     HEALBOT_INCANTERS_WARD                  = GetSpellInfo(1463) or "--Incanter's Ward"
@@ -268,7 +271,7 @@ function HealBot_globalVars()
     HEALBOT_ARDENT_DEFENDER                 = GetSpellInfo(31850) or "--Ardent Defender";
     HEALBOT_HOLY_SHIELD                     = GetSpellInfo(20925) or "--Holy Shield"
     HEALBOT_GUARDED_BY_THE_LIGHT            = GetSpellInfo(53592) or "--Guarded by the Light";
-    --HEALBOT_GUARDIAN_ANCIENT_KINGS          = GetSpellInfo(86698) or "--Guardian of Ancient Kings";
+    HEALBOT_GUARDIAN_ANCIENT_KINGS          = GetSpellInfo(86659) or "--Guardian of Ancient Kings";
     HEALBOT_ETERNAL_FLAME                   = GetSpellInfo(114163) or "--Eternal Flame";
     HEALBOT_HAND_OF_PURITY                  = GetSpellInfo(114039) or "--Hand of Purity";
     HEALBOT_EXECUTION_SENTENCE              = GetSpellInfo(114157) or "--Execution Sentence";
@@ -291,10 +294,7 @@ function HealBot_globalVars()
     HEALBOT_PAIN_SUPPRESSION                = GetSpellInfo(33206) or "--Pain Suppression";
     HEALBOT_POWER_INFUSION                  = GetSpellInfo(10060) or "--Power Infusion";
     HEALBOT_POWER_WORD_FORTITUDE            = GetSpellInfo(21562) or "--Power Word: Fortitude";
-    --HEALBOT_INNER_FIRE                      = GetSpellInfo(588) or "--Inner Fire";
-    --HEALBOT_INNER_WILL                      = GetSpellInfo(73413) or "--Inner Will";
     HEALBOT_SHADOWFORM                      = GetSpellInfo(15473) or "--Shadowform"
-    --HEALBOT_INNER_FOCUS                     = GetSpellInfo(89485) or "--Inner Focus";
     HEALBOT_CHAKRA                          = GetSpellInfo(14751) or "--Chakra";
     HEALBOT_CHAKRA_SANCTUARY                = GetSpellInfo(81206) or "--Chakra: Sanctuary";
     HEALBOT_CHAKRA_SERENITY                 = GetSpellInfo(81208) or "--Chakra: Serenity";
@@ -309,7 +309,6 @@ function HealBot_globalVars()
     HEALBOT_EVANGELISM                      = GetSpellInfo(81661) or "--Evangelism";
     HEALBOT_ARCHANGEL                       = GetSpellInfo(81700) or "--Archangel";
     HEALBOT_DIVINE_INSIGHT                  = GetSpellInfo(109175) or "--Divine Insight";
-    --HEALBOT_HYMN_OF_HOPE                    = GetSpellInfo(64901) or "--Hymn of Hope";
     HEALBOT_ANGELIC_BULWARK                 = GetSpellInfo(108945) or "--Angelic Bulwark"
     HEALBOT_DISPERSION                      = GetSpellInfo(47585) or "--Dispersion"
     HEALBOT_TWIST_OF_FATE                   = GetSpellInfo(109142) or "--Twist of Fate";
@@ -330,11 +329,6 @@ function HealBot_globalVars()
     HEALBOT_TIDAL_WAVES                     = GetSpellInfo(51564) or "--Tidal Waves";
     HEALBOT_ANACESTRAL_SWIFTNESS            = GetSpellInfo(16188) or "--Ancestral Swiftness";
     HEALBOT_LIGHTNING_SHIELD                = GetSpellInfo(324) or "--Lightning Shield";
-    HEALBOT_ROCKBITER_WEAPON                = GetSpellInfo(8017) or "--Rockbiter Weapon";
-    HEALBOT_FLAMETONGUE_WEAPON              = GetSpellInfo(8024) or "--Flametongue Weapon";
-    HEALBOT_EARTHLIVING_WEAPON              = GetSpellInfo(51730) or "--Earthliving Weapon";
-    HEALBOT_WINDFURY_WEAPON                 = GetSpellInfo(8232) or "--Windfury Weapon";
-    HEALBOT_FROSTBRAND_WEAPON               = GetSpellInfo(8033) or "--Frostbrand Weapon";
     HEALBOT_EARTH_SHIELD                    = GetSpellInfo(974) or "--Earth Shield";
     HEALBOT_WATER_SHIELD                    = GetSpellInfo(52127) or "--Water Shield";
     HEALBOT_WATER_WALKING                   = GetSpellInfo(546) or "--Water Walking";
@@ -347,12 +341,13 @@ function HealBot_globalVars()
     HEALBOT_ANACESTRAL_GUIDANCE             = GetSpellInfo(108281) or "--Ancestral Guidance";
     HEALBOT_ASCENDANCE                      = GetSpellInfo(114049) or "--Ascendance";
     HEALBOT_UNLEASH_LIFE                    = GetSpellInfo(73685) or "--Unleash Life";
-    HEALBOT_UNLEASH_FLAME                   = GetSpellInfo(73683) or "--Unleash Flame";
+    HEALBOT_UNLEASH_FLAME                   = GetSpellInfo(165462) or "--Unleash Flame";
     HEALBOT_SPIRITWALKERS_GRACE             = GetSpellInfo(79206) or "--Spiritwalker's Grace";
     HEALBOT_ELEMENTAL_MASTERY               = GetSpellInfo(16166) or "--Elemental Mastery";
     HEALBOT_SHAMANISTIC_RAGE                = GetSpellInfo(30823) or "--Shamanistic Rage";
 	--WoD Added	
 	HEALBOT_GENESIS                         = GetSpellInfo(145518) or "--Genesis";
+	HEALBOT_ELEMENTAL_FUSION                = GetSpellInfo(152257) or "--Elemental Fusion";
 	HEALBOT_CLOUDBURST_TOTEM                = GetSpellInfo(157153) or "--Cloudburst Totem";
 	HEALBOT_STORM_ELEMENTAL_TOTEM           = GetSpellInfo(152256) or "--Storm Elemenal Totem";
 	HEALBOT_HIGH_TIDE                       = GetSpellInfo(157154) or "--High Tide";
@@ -365,8 +360,10 @@ function HealBot_globalVars()
     HEALBOT_THUNDER_FOCUS_TEA               = GetSpellInfo(116680) or "--Thunder Focus Tea"
     HEALBOT_SERPENT_ZEAL                    = GetSpellInfo(127722) or "--Serpent's Zeal"
     HEALBOT_MANA_TEA                        = GetSpellInfo(115867) or "--Mana Tea"
-    HEALBOT_STANCE_MONK_TIGER               = GetSpellInfo(103985) or "--Stance of the Fierce Tiger"
-    HEALBOT_STANCE_MONK_SERPENT             = GetSpellInfo(115070) or "--Stance of the Wise Serpent"
+    HEALBOT_STANCE_MONK_OX                  = GetSpellInfo(115069) or "--Stance of the Sturdy Ox"
+    HEALBOT_STANCE_MONK_TIGER               = GetSpellInfo(103985) or "--Stance of the Fierce Tiger"	
+	HEALBOT_STANCE_MONK_SERPENT             = GetSpellInfo(115070) or "--Stance of the Wise Serpent"
+	HEALBOT_STANCE_MONK_CRANE               = GetSpellInfo(154436) or "--Stance of the Spirited Crane"
     HEALBOT_ELUSIVE_BREW                    = GetSpellInfo(115308) or "--Elusive Brew"
     HEALBOT_FORTIFYING_BREW                 = GetSpellInfo(115203) or "--Fortifying Brew"
     HEALBOT_DAMPEN_HARM                     = GetSpellInfo(122278) or "--Dampen Harm"
@@ -427,7 +424,6 @@ function HealBot_globalVars()
     HEALBOT_NATURES_CURE                    = GetSpellInfo(88423) or "--Nature's Cure";
     HEALBOT_PURIFY                          = GetSpellInfo(527) or "--Purify";
     HEALBOT_CLEANSE_SPIRIT                  = GetSpellInfo(51886) or "--Cleanse Spirit";
-    HEALBOT_IMPROVED_CLEANSE_SPIRIT         = GetSpellInfo(77130) or "--Improved Cleanse Spirit";
     HEALBOT_SACRED_CLEANSING                = GetSpellInfo(53551) or "--Sacred Cleansing";
     HEALBOT_BODY_AND_SOUL                   = GetSpellInfo(64127) or "--Body and Soul";
     HEALBOT_PURIFY_SPIRIT                   = GetSpellInfo(77130) or "--Purify Spirit";
@@ -466,7 +462,7 @@ function HealBot_globalVars()
 	HEALBOT_DEBUFF_DREAMLESS_SLEEP          = GetSpellInfo(15822) or "--Dreamless Sleep";
     HEALBOT_DEBUFF_GREATER_DREAMLESS        = GetSpellInfo(24360) or "--Greater Dreamless Sleep";
     HEALBOT_DEBUFF_MAJOR_DREAMLESS          = GetSpellInfo(28504) or "--Major Dreamless Sleep";
-	HEALBOT_DEBUFF_HUNTERS_MARK             = GetSpellInfo(1130) or "--Hunter's Mark";			
+	--HEALBOT_DEBUFF_HUNTERS_MARK             = GetSpellInfo(1130) or "--Hunter's Mark";			
 	
 	
 	--Common Buffs
@@ -857,16 +853,18 @@ function HealBot_globalVars()
 	
 	
 	--[[Updated Patch ??? Warlords Of Draenor Expansion by Ariá - Silvermoon EU
-	--World Bosses
+	World Bosses
 	Drov The Ruiner
-    
-	--Tarlna The Ageless	
-	
+    --Tarlna The Ageless]]	
+	HEALBOT_DEBUFF_COLOSSAL_BLOW             = GetSpellInfo(175973) or "--Colossal Blow";
+	HEALBOT_DEBUFF_SAVAGE_VINES              = GetSpellInfo(176001) or "--Savage Vines";
+	HEALBOT_DEBUFF_NOXIOUS_SPIT              = GetSpellInfo(161833) or "--Noxious Spit";
 	--Rukhmar
+	HEALBOT_DEBUFF_PIERCED_ARMOR             = GetSpellInfo(167615) or "--Pierced Armor";
 		
-	--= GetMapNameByID(???) or "--Highmaul" 
+	--[[= GetMapNameByID(994)) or "--Highmaul" 
 	Trash
-	--The Butcher
+	--The Butcher]]
 	HEALBOT_DEBUFF_GUSHING_WOUNDS            = GetSpellInfo(156152) or "--Gushing Wounds";
 	HEALBOT_DEBUFF_THE_TENDERIZER            = GetSpellInfo(156151) or "--The Tenderizer";
 	HEALBOT_DEBUFF_THE_CLEAVER               = GetSpellInfo(156143) or "--The Cleaver";
@@ -876,26 +874,106 @@ function HealBot_globalVars()
 	HEALBOT_DEBUFF_OPEN_WOUNDS               = GetSpellInfo(159178) or "--Open Wounds";
 	HEALBOT_DEBUFF_MONSTERS_BRAWL            = GetSpellInfo(159213) or "--Monster's Brawl";
 	HEALBOT_DEBUFF_BERSERKER_RUSH            = GetSpellInfo(158986) or "--Berserker Rush";
-	
-	
+	HEALBOT_DEBUFF_MAULING_BREW              = GetSpellInfo(159410) or "--Mauling Brew";
+	HEALBOT_DEBUFF_VILE_BREATH               = GetSpellInfo(160521) or "--Vile Breath";
+	HEALBOT_DEBUFF_IRON_BOMB                 = GetSpellInfo(159386) or "--Iron Bomb";
+	HEALBOT_DEBUFF_GRAPPLE                   = GetSpellInfo(159188) or "--Grapple";
+	HEALBOT_DEBUFF_ON_THE_HUNT               = GetSpellInfo(162497) or "--On the Hunt";
 	--Twin Ogron 
+	HEALBOT_DEBUFF_ENFEEBLING_ROAR           = GetSpellInfo(158026) or "--Enfeebling Roar";
+	HEALBOT_DEBUFF_BLAZE                     = GetSpellInfo(158241) or "--Blaze";
+	HEALBOT_DEBUFF_INJURED                   = GetSpellInfo(155569) or "--Injured";
+	HEALBOT_DEBUFF_ARCANE_WOUND              = GetSpellInfo(167200) or "--Arcane Wound";
+	HEALBOT_DEBUFF_WEAKENED_DEFENSES         = GetSpellInfo(59709) or "--Weakened Defenses";
+	HEALBOT_DEBUFF_ARCANE_VOLATILITY         = GetSpellInfo(163372) or "--Arcane Volatility";
 	--Ko'ragh
+	HEALBOT_DEBUFF_CAUSTIC_ENERGY            = GetSpellInfo(161242) or "--Caustic Energy";
+	HEALBOT_DEBUFF_EXPEL_MAGIC_SHADOW        = GetSpellInfo(162184) or "--Expel Magic: Shadow";
+	HEALBOT_DEBUFF_EXPEL_MAGIC_ARCANE        = GetSpellInfo(162186) or "--Expel Magic: Arcane";
+	HEALBOT_DEBUFF_DOMINATING_POWER          = GetSpellInfo(163472) or "--Dominating Power";
+	HEALBOT_DEBUFF_EXPEL_MAGIC_FEL           = GetSpellInfo(172895) or "--Expel Magic: Fel";
 	--Tectus
-	--Brackenspore 
+	HEALBOT_DEBUFF_CRYSTALLINE_BARRAGE       = GetSpellInfo(162346) or "--Crystalline Barrage";
+	HEALBOT_DEBUFF_PETRIFICATION             = GetSpellInfo(162892) or "--Petrification";
+	--Brackenspore
+	HEALBOT_DEBUFF_INFESTING_SPORES          = GetSpellInfo(163242) or "--Infesting Spores";
+	HEALBOT_DEBUFF_CREEPING_MOSS             = GetSpellInfo(163590) or "--Creeping Moss";
+	HEALBOT_DEBUFF_ROT                       = GetSpellInfo(163241) or "--Rot";
+	HEALBOT_DEBUFF_NECROTIC_BREATH           = GetSpellInfo(159220) or "--Necrotic Breath";
+	HEALBOT_DEBUFF_MIND_FUNGUS               = GetSpellInfo(160179) or "--Mind Fungus";
+	HEALBOT_DEBUFF_FLESH_EATER               = GetSpellInfo(159972) or "--Flesh Eater";
 	--Imperator Mar'gok 
+	HEALBOT_DEBUFF_BRANDED                   = GetSpellInfo(156225) or "--Branded";
+	HEALBOT_DEBUFF_DESTRUCTIVE_RESONANCE     = GetSpellInfo(159200) or "--Destructive Resonance";
+	HEALBOT_DEBUFF_FORCE_NOVA                = GetSpellInfo(157353) or "--Force Nova";
+	HEALBOT_DEBUFF_MARK_OF_CHAOS             = GetSpellInfo(158605) or "--Mark of Chaos";
+	HEALBOT_DEBUFF_FIXATE                    = GetSpellInfo(157763) or "--Fixate";
+	HEALBOT_DEBUFF_CRUSH_ARMOR               = GetSpellInfo(158553) or "--Crush Armor";
 
-	= GetMapNameByID(???) or "--Blackrock Foundry"
+	--[[= GetMapNameByID(988) or "--Blackrock Foundry"
 	Trash
-	--Blackhand
+	--Blackhand]]
+	HEALBOT_DEBUFF_MARKED_FOR_DEATH          = GetSpellInfo(156096) or "--Marked for Death";
+	HEALBOT_DEBUFF_IMPALED                   = GetSpellInfo(175020) or "--Impaled";
+	HEALBOT_DEBUFF_SLAGGED                   = GetSpellInfo(156047) or "--Slagged";
+	HEALBOT_DEBUFF_MOLTEN_SLAG               = GetSpellInfo(156401) or "--Molten Slag";
+	HEALBOT_DEBUFF_BURNED                    = GetSpellInfo(156404) or "--Burned";
+	HEALBOT_DEBUFF_SHATTERING_SMASH          = GetSpellInfo(155992) or "--Shattering Smash";
+	HEALBOT_DEBUFF_OVERHEATED                = GetSpellInfo(156888) or "--Overheated";	
 	--Beastlord Darmac
+	HEALBOT_DEBUFF_PINNED_DOWN               = GetSpellInfo(118135) or "--Marked for Death";
+	HEALBOT_DEBUFF_REND_AND_TEAR             = GetSpellInfo(155061) or "--Rend and Tear";
+	HEALBOT_DEBUFF_SEARED_FLESH              = GetSpellInfo(155030) or "--Seared Flesh";
+	HEALBOT_DEBUFF_CRUSH_ARMOR               = GetSpellInfo(155236) or "--Crush Armor";
+	HEALBOT_DEBUFF_EPICENTRE                 = GetSpellInfo(159044) or "--Epicenter";
+	HEALBOT_DEBUFF_UNSTEADY                  = GetSpellInfo(162276) or "--Unsteady";
+	HEALBOT_DEBUFF_FLAME_INFUSION            = GetSpellInfo(155657) or "--Flame Infusion";	
 	--Flamebender Ka'graz
+	HEALBOT_DEBUFF_LAVA_SLASH                = GetSpellInfo(155314) or "--Lava Slash";
+	HEALBOT_DEBUFF_BLAZING_RADIANCE          = GetSpellInfo(155484) or "--Blazing Radiance";
+	HEALBOT_DEBUFF_FIXATE                    = GetSpellInfo(154952) or "--Fixate";
+	HEALBOT_DEBUFF_CHARRING_BREATH           = GetSpellInfo(155074) or "--Charring Breath";
+	HEALBOT_DEBUFF_RISING_FLAME              = GetSpellInfo(163284) or "--Rising Flames";
+	HEALBOT_DEBUFF_EMPOWERED_ARMAMENT        = GetSpellInfo(162293) or "--Empowered Armament";	
 	--Operator Thogar 
+	HEALBOT_DEBUFF_ENKINDLE                  = GetSpellInfo(155921) or "--Enkindle";
+	HEALBOT_DEBUFF_PROTOTYPE_PULSE_GRENADE   = GetSpellInfo(165195) or "--Prototype Pulse Grenade";
+	HEALBOT_DEBUFF_SERRATED_SLASH            = GetSpellInfo(155701) or "--Serrated Slash";
+	HEALBOT_DEBUFF_BURNING                   = GetSpellInfo(164380) or "--Burning";
 	--The Blast Furnace
+	HEALBOT_DEBUFF_TEMPERED                  = GetSpellInfo(155240) or "--Tempered";
+	HEALBOT_DEBUFF_HEAT                      = GetSpellInfo(155242) or "--Heat";
+	HEALBOT_DEBUFF_BOMB                      = GetSpellInfo(178279) or "--Bomb";
+	HEALBOT_DEBUFF_RUPTURE                   = GetSpellInfo(156932) or "--Rupture";
+	HEALBOT_DEBUFF_MELT_ARMOR                = GetSpellInfo(175104) or "--Melt Armor";
+	HEALBOT_DEBUFF_VOLATILE_FIRE             = GetSpellInfo(176121) or "--Volatile Fire";
+	HEALBOT_DEBUFF_FIXATE                    = GetSpellInfo(158702) or "--Fixate";
+	HEALBOT_DEBUFF_MELT                      = GetSpellInfo(155223) or "--Melt";
 	--Hans'gar and Franzok 
+	HEALBOT_DEBUFF_SHATTERED_VERTEBRAE       = GetSpellInfo(157139) or "--Shattered Vertebrae";
+	HEALBOT_DEBUFF_SEARING_PLATES            = GetSpellInfo(161570) or "--Searing Plates";
+	HEALBOT_DEBUFF_AFTERSHOCK                = GetSpellInfo(157853) or "--Aftershock";
 	--Gruul
+	HEALBOT_DEBUFF_INFERNO_SLICE             = GetSpellInfo(155080) or "--Inferno Slice";
+	HEALBOT_DEBUFF_INFERNO_STRIKE            = GetSpellInfo(162322) or "--Inferno Strike";
+	HEALBOT_DEBUFF_OVERWHELMING_BLOWS        = GetSpellInfo(155078) or "--Overwhelming Blows";
+	HEALBOT_DEBUFF_FLARE                     = GetSpellInfo(165298) or "--Flare";
 	--Kromog
+	HEALBOT_DEBUFF_RUNE_OF_GRASPING_EARTH    = GetSpellInfo(156297) or "--Rune of Grasping Earth";
+	HEALBOT_DEBUFF_WARPED_ARMOR              = GetSpellInfo(156766) or "--Warped Armor";
+	HEALBOT_DEBUFF_RUNE_OF_CRUSHING_EARTH    = GetSpellInfo(161839) or "--Rune of Crushing Earth";	
 	--Oregorger
-	--The Iron Maidens]]	
+	HEALBOT_DEBUFF_ACID_TORRENT              = GetSpellInfo(157059) or "--Acid Torrent";
+	HEALBOT_DEBUFF_RETCHED_BLACKROCK         = GetSpellInfo(156203) or "--Retched Blackrock";
+	HEALBOT_DEBUFF_EXPLOSIVE_SHARD           = GetSpellInfo(156374) or "--Explosive Shard";	
+	HEALBOT_DEBUFF_ACID_MAW                  = GetSpellInfo(173471) or "--Acid Maw";
+	--The Iron Maidens
+	HEALBOT_DEBUFF_SORKAS_PREY               = GetSpellInfo(170395) or "--Sorka's Prey";
+	HEALBOT_DEBUFF_MARAKS_BLOODCALLING       = GetSpellInfo(170405) or "--Marak's Bloodcalling";
+	HEALBOT_DEBUFF_DEADLY_THROW              = GetSpellInfo(158692) or "--Deadly Throw";	
+	HEALBOT_DEBUFF_FIXATE                    = GetSpellInfo(158702) or "--Fixate";
+	HEALBOT_DEBUFF_EXPOSE_ARMOR              = GetSpellInfo(158686) or "--Expose Armor";	
+	HEALBOT_DEBUFF_CORRUPTED_BLOOD           = GetSpellInfo(158683) or "--Corrupted Blood";
 end
 
 HealBot_globalVars()

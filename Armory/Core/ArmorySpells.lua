@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 590 2013-03-11T20:16:07Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -193,7 +193,7 @@ local function GetPetTabs()
     for talentGroup = 1, numTalentGroups do
         local spec = Armory:GetSpecialization(false, true, talentGroup);
         if ( spec ) then
-            local _, name, _, texture = Armory:GetSpecializationInfo(spec, false, true);
+            local _, name, _, texture = Armory:GetSpecializationInfo(spec, false, true, nil, Armory:UnitSex("pet"));
             if ( name ) then
                 local spells, hasSpecSpells = GetPetSpells(spec);
                 local offSpecID;

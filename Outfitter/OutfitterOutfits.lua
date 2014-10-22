@@ -469,10 +469,10 @@ function Outfitter._OutfitMethodsEM:IsFullyEquipped()
 		return false
 	end
 	
-	for vSlotID, vLocation in pairs(vLocations) do
-		if vLocation
-		and vLocation ~= 0 -- Empty slot
-		and vLocation ~= 1 then -- Ignored slot
+	for vSlotID, vIgnore in GetEquipmentSetIgnoreSlots(self.Name) do
+		
+		local vLocation = vLocations[vSlotID]
+		if vLocation then
 			local vOnPlayer, vInBank, vInBags, vSlotIndex, vBagIndex = self:UnpackLocation(vLocation)
 			
 			if not vOnPlayer then
@@ -556,8 +556,10 @@ end
 function Outfitter._OutfitMethodsEM:IsEmpty()
 	self.ItemLocations = GetEquipmentSetLocations(self.Name)
 	
-	for _, vLocation in pairs(self.ItemLocations) do
-		return false
+	for vSlotID, vIgnore in GetEquipmentSetIgnoreSlots(self.Name) do
+		if not vIgnore then
+			return false
+		end
 	end
 	
 	return true
@@ -648,7 +650,7 @@ function Outfitter._OutfitMethodsEM:GetItem(pSlotName)
 	if self.TemporaryItems then
 		return self.TemporaryItems[pSlotName]
 	else
-		return self:GetItemEM(pSlotName, GetEquipmentSetLocations(self.Name))
+		return self:GetItemEM(pSlotName, GetEquipmentSetIgnoreSlots(self.Name), GetEquipmentSetLocations(self.Name))
 	end
 end
 
@@ -675,22 +677,25 @@ function Outfitter._OutfitMethodsEM:UnpackLocation(pLocation)
 	return vOnPlayer, vInBank, vInBags, vSlotIndex, vBagIndex
 end
 
-function Outfitter._OutfitMethodsEM:GetItemEM(pSlotName, pLocations)
+function Outfitter._OutfitMethodsEM:GetItemEM(pSlotName, pIgnoreSlots, pLocations)
+	if not pSlotName then
+		return
+	end
+
 	if not pLocations then
 		Outfitter:DebugMessage("GetItemEM: No locations for %s", tostring(self.Name))
 		return
 	end
 	
-	local vLocation = pLocations[Outfitter.cSlotIDs[pSlotName]]
-
-	if not vLocation
-	or vLocation == 1 then
+	local vSlotID = Outfitter.cSlotIDs[pSlotName]
+	if pIgnoreSlots[vSlotID] then
 		return
 	end
-	
+	local vLocation = pLocations[vSlotID]
+
 	local vItemInfo = self.Items and self.Items[pSlotName]
 	
-	if vLocation == 0 then
+	if not vLocation then
 		if not vItemInfo
 		or vItemInfo.Code ~= 0 then
 			vItemInfo = {Code = 0} -- this slot is emptied on equip
@@ -728,12 +733,23 @@ end
 
 function Outfitter:DumpEMOutfitLocations(pName)
 	local vLocations = GetEquipmentSetLocations(pName)
-	
-	for vSlotID, vLocation in pairs(vLocations) do
-		local vSlotName = Outfitter.cSlotIDToInventorySlot[vSlotID]
-		local vOnPlayer, vInBank, vInBags, vSlotIndex, vBagIndex = Outfitter._OutfitMethodsEM:UnpackLocation(vLocation)
-		
-		self:DebugMessage("%s (%s): Location=%s OnPlayer=%s, InBank=%s, InBags=%s, SlotIndex=%s, BagIndex=%s", vSlotName, vSlotID, tostring(vLocation), tostring(vOnPlayer), tostring(vInBank), tostring(vInBags), tostring(vSlotIndex), tostring(vBagIndex))
+	local vIgnoreSlots = GetEquipmentSetIgnoreSlots(pName)
+	self:DebugTable(vLocations, "Locations")
+	self:DebugTable(vIgnoreSlots, "IgnoreSlots")
+
+	for vSlotName, vSlotID in pairs(self.cSlotIDs) do
+		self:DebugMessage("Checking slot %s (%s)", tostring(vSlotName), tostring(vSlotID))
+		if vIgnoreSlots[vSlotID] then
+			self:DebugMessage("%s (%s): IGNORED", vSlotName, vSlotID)
+		else
+			local vLocation = vLocations[vSlotID]
+			if not vLocation then
+				self:DebugMessage("%s (%s): EMPTY", vSlotName, vSlotID)
+			else
+				local vOnPlayer, vInBank, vInBags, vSlotIndex, vBagIndex = Outfitter._OutfitMethodsEM:UnpackLocation(vLocation)
+				self:DebugMessage("%s (%s): Location=%s OnPlayer=%s, InBank=%s, InBags=%s, SlotIndex=%s, BagIndex=%s", vSlotName, vSlotID, tostring(vLocation), tostring(vOnPlayer), tostring(vInBank), tostring(vInBags), tostring(vSlotIndex), tostring(vBagIndex))
+			end
+		end
 	end
 end
 
@@ -750,19 +766,17 @@ function Outfitter._OutfitMethodsEM:GetItems()
 		return
 	end
 	
+	local vIgnoreSlots = GetEquipmentSetIgnoreSlots(self.Name)
 	for vSlotID, vSlotName in pairs(Outfitter.cSlotIDToInventorySlot) do
-		self.Items[vSlotName] = self:GetItemEM(vSlotName, self.ItemLocations)
+		self.Items[vSlotName] = self:GetItemEM(vSlotName, vIgnoreSlots, self.ItemLocations)
 	end
 	
 	return self.Items
 end
 
-function Outfitter._OutfitMethodsEM:SlotIsEnabledEM(pSlotName, pItemLocations)
-	if not pItemLocations then
-		return false
-	end
-	local vLocation = pItemLocations[Outfitter.cSlotIDs[pSlotName]]
-	return vLocation and vLocation ~= 1
+function Outfitter._OutfitMethodsEM:SlotIsEnabledEM(pSlotName, pIgnoreSlots, pItemLocations)
+	local vSlotID = Outfitter.cSlotIDs[pSlotName]
+	return not pIgnoreSlots[vSlotID]
 end
 
 function Outfitter._OutfitMethodsEM:SlotIsEnabled(pSlotName)
@@ -770,19 +784,20 @@ function Outfitter._OutfitMethodsEM:SlotIsEnabled(pSlotName)
 		return self.TemporaryItems[pSlotName] ~= nil
 	end
 	
-	return self:SlotIsEnabledEM(pSlotName, GetEquipmentSetLocations(self.Name))
+	return self:SlotIsEnabledEM(pSlotName, GetEquipmentSetIgnoreSlots(self.Name), GetEquipmentSetLocations(self.Name))
 end
 
 function Outfitter._OutfitMethodsEM:SlotIsEquipped(pSlotName, pInventoryCache)
-	local vLocations = GetEquipmentSetLocations(self.Name)
-	local vLocation = vLocations[Outfitter.cSlotIDs[pSlotName]]
-	
-	if not vLocation
-	or vLocation == 1 then
+	local vSlotID = Outfitter.cSlotIDs[pSlotName]
+	local vIgnoreSlots = GetEquipmentSetIgnoreSlots(self.Name)
+	if vIgnoreSlots[vSlotID] then
 		return false
 	end
-	
-	if vLocation == 0 then
+
+	local vLocations = GetEquipmentSetLocations(self.Name)
+	local vLocation = vLocations[vSlotID]
+
+	if not vLocation then
 		return pInventoryCache.InventoryItems[pSlotName] == nil
 	end
 	
@@ -805,9 +820,9 @@ function Outfitter._OutfitMethodsEM:HasCombatEquipmentSlots()
 	--
 	
 	local vLocations = GetEquipmentSetLocations(self.Name)
-	
+	local vIgnoreSlots = GetEquipmentSetIgnoreSlots(self.Name)
 	for vEquipmentSlot, _ in pairs(Outfitter.cCombatEquipmentSlots) do
-		if self:SlotIsEnabledEM(vEquipmentSlot, vLocations) then
+		if self:SlotIsEnabledEM(vEquipmentSlot, vIgnoreSlots, vLocations) then
 			return true
 		end
 	end
@@ -829,9 +844,9 @@ function Outfitter._OutfitMethodsEM:OnlyHasCombatEquipmentSlots()
 	--
 	
 	local vLocations = GetEquipmentSetLocations(self.Name)
-	
+	local vIgnoreSlots = GetEquipmentSetIgnoreSlots(self.Name)
 	for vSlotName, vSlotID in pairs(Outfitter.cSlotIDs) do
-		if self:SlotIsEnabledEM(vSlotName, vLocations)
+		if self:SlotIsEnabledEM(vSlotName, vIgnoreSlots, vLocations)
 		and not Outfitter.cCombatEquipmentSlots[vSlotName] then
 			return false
 		end
@@ -859,7 +874,7 @@ function Outfitter._OutfitMethodsEM:IsComplete()
 	end
 	
 	--
-	
+	local vIgnoreSlots = GetEquipmentSetIgnoreSlots(self.Name)
 	local vLocations = GetEquipmentSetLocations(self.Name)
 	
 	if not vLocations then
@@ -867,7 +882,7 @@ function Outfitter._OutfitMethodsEM:IsComplete()
 	end
 	
 	for vSlotName, vSlotID in pairs(Outfitter.cSlotIDs) do
-		if not self:SlotIsEnabledEM(vSlotName, vLocations) then
+		if vIgnoreSlots[vSlotID] then
 			-- If it's the offhand slot and there's a 2H weapon in the mainhand
 			-- then ignore the fact that it's empty
 			
@@ -875,7 +890,7 @@ function Outfitter._OutfitMethodsEM:IsComplete()
 				return false
 			end
 			
-			local vMainHandItem = self:GetItemEM("MainHandSlot", vLocations)
+			local vMainHandItem = self:GetItemEM("MainHandSlot", vIgnoreSlots, vLocations)
 			
 			if not vMainHandItem
 			or vMainHandItem.InvType ~= "INVTYPE_2HWEAPON" then

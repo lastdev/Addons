@@ -1,4 +1,4 @@
-<!-- Revision: 490 2012-09-04T09:42:28Z -->
+<!-- Revision: 652 2014-10-19T10:25:00Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\FrameXML\UI.xsd">
   <Script file="ArmoryQuestLogFrame.lua"/>
@@ -31,7 +31,6 @@
       </OnLeave>
     </Scripts>
   </Button>
-
   <Button name="ArmoryQuestInfoRewardItemTemplate" inherits="QuestItemTemplate" virtual="true">
     <Scripts>
       <OnEnter>
@@ -703,121 +702,109 @@
           </OnLoad>
         </Scripts>
       </Frame>
-      <Frame name="ArmoryQuestInfoTalentFrame" inherits="QuestTalentFrameTemplate" />
-      <Frame name="ArmoryQuestInfoSkillPointFrame" inherits="QuestSkillPointFrameTemplate" />
-      <Frame name="ArmoryQuestInfoXPFrame" inherits="QuestXPFrameTemplate" />
-      <Frame name="ArmoryQuestInfoPlayerTitleFrame" inherits="QuestPlayerTitleFrameTemplate" />
-      <Frame name="ArmoryQuestInfoReputationsFrame" hidden="true">
-        <Size>
-          <AbsDimension x="285" y="100"/>
-        </Size>
-        <Anchors>
-          <Anchor point="CENTER" />
-        </Anchors>
+      <Button name="ArmoryQuestInfoSkillPointFrame" inherits="LargeItemButtonTemplate">
         <Layers>
-          <Layer level="BACKGROUND">
-            <FontString name="ArmoryQuestInfoReputationText" inherits="QuestFont" justifyH="LEFT" text="REWARD_REPUTATION_TEXT">
-              <Size>
-                <AbsDimension x="285" y="0"/>
-              </Size>
+          <Layer level="OVERLAY">
+            <Texture name="$parentSkillPointBg" file="Interface\QuestFrame\SkillUp-BG">
+              <Size x="32" y="32"/>
               <Anchors>
-                <Anchor point="TOPLEFT" />
+                <Anchor point="BOTTOMRIGHT" relativeTo="$parentIconTexture" x="12" y="-6"/>
+              </Anchors>
+            </Texture>
+            <Texture name="$parentSkillPointBgGlow" file="Interface\QuestFrame\SkillUp-Glow" alphaMode="ADD" alpha="0.3">
+              <Size x="64" y="64"/>
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parentSkillPointBg"/>
+              </Anchors>
+            </Texture>
+            <FontString name="$parentPoints" parentKey="ValueText" inherits="GameFontNormalLarge" justifyH="LEFT">
+              <Anchors>
+                <Anchor point="CENTER" relativeTo="$parentSkillPointBg" relativePoint="CENTER" x="3"/>
               </Anchors>
             </FontString>
           </Layer>
         </Layers>
-        <Frames>
-          <Frame name="ArmoryQuestInfoReputation1" inherits="QuestReputationTemplate" hidden="true">
-            <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="ArmoryQuestInfoReputationText" relativePoint="BOTTOMLEFT">
-                <Offset>
-                  <AbsDimension x="0" y="-2"/>
-                </Offset>
-              </Anchor>
-            </Anchors>
-          </Frame>
-          <Frame name="ArmoryQuestInfoReputation2" inherits="QuestReputationTemplate" hidden="true">
-            <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="ArmoryQuestInfoReputation1" relativePoint="BOTTOMLEFT">
-                <Offset>
-                  <AbsDimension x="0" y="-2"/>
-                </Offset>
-              </Anchor>
-            </Anchors>
-          </Frame>
-          <Frame name="ArmoryQuestInfoReputation3" inherits="QuestReputationTemplate" hidden="true">
-            <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="ArmoryQuestInfoReputation2" relativePoint="BOTTOMLEFT">
-                <Offset>
-                  <AbsDimension x="0" y="-2"/>
-                </Offset>
-              </Anchor>
-            </Anchors>
-          </Frame>
-          <Frame name="ArmoryQuestInfoReputation4" inherits="QuestReputationTemplate" hidden="true">
-            <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="ArmoryQuestInfoReputation3" relativePoint="BOTTOMLEFT">
-                <Offset>
-                  <AbsDimension x="0" y="-2"/>
-                </Offset>
-              </Anchor>
-            </Anchors>
-          </Frame>
-          <Frame name="ArmoryQuestInfoReputation5" inherits="QuestReputationTemplate" hidden="true">
-            <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="ArmoryQuestInfoReputation4" relativePoint="BOTTOMLEFT">
-                <Offset>
-                  <AbsDimension x="0" y="-2"/>
-                </Offset>
-              </Anchor>
-            </Anchors>
-          </Frame>
-          <Frame name="ArmoryQuestInfoReputation6" inherits="QuestReputationTemplate" hidden="true">
-            <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="ArmoryQuestInfoReputation5" relativePoint="BOTTOMLEFT">
-                <Offset>
-                  <AbsDimension x="0" y="-2"/>
-                </Offset>
-              </Anchor>
-            </Anchors>
-          </Frame>
-          <Frame name="ArmoryQuestInfoReputation7" inherits="QuestReputationTemplate" hidden="true">
-            <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="ArmoryQuestInfoReputation6" relativePoint="BOTTOMLEFT">
-                <Offset>
-                  <AbsDimension x="0" y="-2"/>
-                </Offset>
-              </Anchor>
-            </Anchors>
-          </Frame>
-          <Frame name="ArmoryQuestInfoReputation8" inherits="QuestReputationTemplate" hidden="true">
-            <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="ArmoryQuestInfoReputation7" relativePoint="BOTTOMLEFT">
-                <Offset>
-                  <AbsDimension x="0" y="-2"/>
-                </Offset>
-              </Anchor>
-            </Anchors>
-          </Frame>
-          <Frame name="ArmoryQuestInfoReputation9" inherits="QuestReputationTemplate" hidden="true">
-            <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="ArmoryQuestInfoReputation8" relativePoint="BOTTOMLEFT">
-                <Offset>
-                  <AbsDimension x="0" y="-2"/>
-                </Offset>
-              </Anchor>
-            </Anchors>
-          </Frame>
-          <Frame name="ArmoryQuestInfoReputation10" inherits="QuestReputationTemplate" hidden="true">
-            <Anchors>
-              <Anchor point="TOPLEFT" relativeTo="ArmoryQuestInfoReputation9" relativePoint="BOTTOMLEFT">
-                <Offset>
-                  <AbsDimension x="0" y="-2"/>
-                </Offset>
-              </Anchor>
-            </Anchors>
-          </Frame>
-        </Frames>
+        <Scripts>
+          <OnLoad>
+            -- Hacks to get this to display a little more nicely
+            _G[self:GetName().."IconTexture"]:SetPoint("TOPLEFT", -3, 0);
+            _G[self:GetName().."Name"]:SetPoint("LEFT", _G[self:GetName().."NameFrame"], 24, 0);
+            _G[self:GetName().."Name"]:SetWidth(81);
+          </OnLoad>
+          <OnEnter>
+            if (self.tooltip) then
+              GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+              GameTooltip:SetText(self.tooltip, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
+            end
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+        </Scripts>
+      </Button>
+      <Frame name="ArmoryQuestInfoXPFrame">
+        <Size x="280" y="20"/>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="$parentReceiveText" inherits="QuestFont" text="EXPERIENCE_COLON">
+              <Anchors>
+                <Anchor point="LEFT" x="0" y="0"/>
+              </Anchors>
+            </FontString>
+            <FontString name="$parentPoints" parentKey="ValueText" inherits="NumberFontNormalLarge" justifyH="LEFT">
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="$parentReceiveText" relativePoint="RIGHT" x="15" y="0"/>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name="ArmoryQuestInfoPlayerTitleFrame">
+        <Size x="500" y="40"/>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <Texture name="$parentIconTexture" file="Interface\Icons\INV_Misc_Note_02">
+              <Size x="39" y="39"/>
+              <Anchors>
+                <Anchor point="TOPLEFT" x="0" y="0"/>
+              </Anchors>
+            </Texture>
+            <Texture name="$parentTitleFrameLeft" file="Interface\QuestFrame\UI-QuestItemNameFrame">
+              <Size x="4" y="40"/>
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="$parentIconTexture" relativePoint="RIGHT" x="2" y="0"/>
+              </Anchors>
+              <TexCoords left="0.078125" right="0.1171875" top="0.15625" bottom="0.828125"/>
+            </Texture>
+            <Texture name="$parentTitleFrameCenter" file="Interface\QuestFrame\UI-QuestItemNameFrame">
+              <Size x="200" y="40"/>
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="$parentTitleFrameLeft" relativePoint="RIGHT" x="0" y="0"/>
+              </Anchors>
+              <TexCoords left="0.1171875" right="0.828125" top="0.15625" bottom="0.828125"/>
+            </Texture>
+            <Texture file="Interface\QuestFrame\UI-QuestItemNameFrame">
+              <Size x="11" y="40"/>
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="$parentTitleFrameCenter" relativePoint="RIGHT" x="0" y="0"/>
+              </Anchors>
+              <TexCoords left="0.828125" right="0.9140625" top="0.15625" bottom="0.828125"/>
+            </Texture>
+          </Layer>
+          <Layer level="OVERLAY">
+            <FontString name="$parentTitleLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="REWARD_TITLE">
+              <Size x="200" y="12"/>
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parentTitleFrameLeft" x="8" y="-9"/>
+              </Anchors>
+            </FontString>
+            <FontString name="$parentTitle" parentKey="ValueText" inherits="GameFontHighlight" justifyH="LEFT" justifyV="TOP">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parentTitleLabel" relativePoint="BOTTOMLEFT" x="0" y="0"/>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
       </Frame>
     </Frames>
   </Frame>

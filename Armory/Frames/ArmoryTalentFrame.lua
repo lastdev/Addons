@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 521 2012-09-16T10:38:05Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -98,7 +98,7 @@ function ArmoryTalentFrame_OnShow(self)
         end
         if ( hasMultipleTalentGroups and i <= numTalentGroups ) then
 			local primaryTree = Armory:GetSpecialization(false, false, i) or 1;
-			local _, _, _, iconTexture = Armory:GetSpecializationInfo(primaryTree);
+			local _, _, _, iconTexture = Armory:GetSpecializationInfo(primaryTree, nil, nil, nil, Armory:UnitSex("player"));
             tab:GetNormalTexture():SetTexture(iconTexture);
             tab:Show();
         else
@@ -123,11 +123,6 @@ end
 
 function ArmoryTalentFrame_UpdateFrame()
     local TalentFrame = ArmoryTalentFrame.Talents;
-	local numTalents = Armory:GetNumTalents();
-	-- Just a reminder error if there are more talents than available buttons
-	if ( numTalents > MAX_NUM_TALENTS ) then
-		message("Too many talents in talent frame!");
-	end
 
 	-- have to disable stuff if not active talent group
 	local disable = ( ArmoryTalentFrame.talentGroup ~= Armory:GetActiveSpecGroup() );
@@ -135,17 +130,17 @@ function ArmoryTalentFrame_UpdateFrame()
 		ArmoryTalentFrame.bg:SetDesaturated(disable);
 	end
 
-	local rowAvailable = true;
 	local numTalentSelections = 0;
-	for i = 1, MAX_NUM_TALENTS do
-		if ( i <= numTalents ) then
-			-- Set the button info
-			local name, iconTexture, tier, column, selected, available = Armory:GetTalentInfo(i, false, ArmoryTalentFrame.talentGroup);
-			local button = TalentFrame["tier"..tier]["talent"..column];
-			local talentRow = TalentFrame["tier"..tier];
+	for tier = 1, MAX_TALENT_TIERS do
+		local talentRow = TalentFrame["tier"..tier];
+		for column = 1, NUM_TALENT_COLUMNS do
+			local talentID, name, iconTexture, selected, available = Armory:GetTalentInfo(tier, column, ArmoryTalentFrame.talentGroup);
+			local button = talentRow["talent"..column];
+			button.tier = tier;
+			button.column = column;
 
-			if ( button and name and tier <= MAX_NUM_TALENT_TIERS ) then
-				button:SetID(i);
+			if ( button and name ) then
+				button:SetID(talentID);
 
 				SetItemButtonTexture(button, iconTexture);
 				if ( button.name ~= nil ) then
@@ -163,29 +158,15 @@ function ArmoryTalentFrame_UpdateFrame()
 
 				if ( selected ) then
 				    SetDesaturation(button.icon, disable);
-				    --button.highlight:SetAlpha(1);
 				    button.border:Show();
 				else
 				    SetDesaturation(button.icon, true);
-				    --button.highlight:SetAlpha(0);
 				    button.border:Hide();
 			    end
 
 	            button:Show();
 	        elseif ( button ) then
 	            button:Hide();
-	        end
-
-	        -- do tier level number after every row
-	        if ( talentRow.level ~= nil ) then
-	            if ( mod(i, NUM_TALENT_COLUMNS) == 0 ) then
-	                if ( rowAvailable ) then
-	                    talentRow.level:SetTextColor(1, 0.82, 0);
-	                else
-	                    talentRow.level:SetTextColor(0.5, 0.5, 0.5);
-	                end
-	                rowAvailable = true;
-	            end
 	        end
 	    end
 	end
@@ -204,9 +185,9 @@ end
 
 function ArmoryPlayerSpecTab_OnClick(self)
     for i = 1, ARMORY_MAX_TALENT_SPECTABS do
-        _G["ArmoryPlayerSpecTab" .. i]:SetChecked(nil);
+        _G["ArmoryPlayerSpecTab" .. i]:SetChecked(false);
     end
-    self:SetChecked(1);
+    self:SetChecked(true);
 
     ArmoryTalentFrame.talentGroup = self:GetID();
     
@@ -327,7 +308,7 @@ function ArmoryTalentFrameSpec_OnShow(self)
 	local spec = Armory:GetSpecialization(false, false, ArmoryTalentFrame.talentGroup) or 1;
 
 	if ( spec ~= nil and spec > 0 ) then
-		local id, name, description, icon, background, role = Armory:GetSpecializationInfo(spec);
+		local id, name, description, icon, background, role = Armory:GetSpecializationInfo(spec, nil, nil, nil, Armory:UnitSex("player"));
 		if ( role ~= nil ) then
 			self.specIcon:Show();
 			SetPortraitToTexture(self.specIcon, icon);
@@ -372,12 +353,12 @@ end
 
 function ArmoryTalentFrameTalent_OnEnter(self)
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT");	
-	Armory:SetTalent(self:GetID(), false, ArmoryTalentFrame.talentGroup);
+	Armory:SetTalent(self:GetID());
 end
 
 function ArmoryTalentFrameTalent_OnClick(self)
 	if ( IsModifiedClick("CHATLINK") ) then
-		local link = Armory:GetTalentLink(self:GetID(), false, ArmoryTalentFrame.talentGroup);
+		local link = GetTalentLink(self:GetID());
 		if ( link ) then
 			ChatEdit_InsertLink(link);
 		end

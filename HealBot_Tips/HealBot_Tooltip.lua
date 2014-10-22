@@ -494,11 +494,11 @@ end
 function HealBot_Tooltip_SpellSummary(spellName)
     local ret_val = "  "
     if HealBot_Spells[spellName] then
-        if HealBot_Spells[spellName].Mana<HealBot_Tooltip_Power then
-            ret_val = " -  "..HealBot_Spells[spellName].Mana.." Power"
-        else
-            ret_val = " -  "..HealBot_Spells[spellName].Mana.." Mana"
-        end
+        --if HealBot_Spells[spellName].Mana<HealBot_Tooltip_Power then
+        --    ret_val = " -  "..HealBot_Spells[spellName].Mana.." Power"
+        --else
+        --    ret_val = " -  "..HealBot_Spells[spellName].Mana.." Mana"
+        --end
     end
     if strlen(ret_val)<5 then ret_val = " - "..spellName; end
     return ret_val;
@@ -730,23 +730,21 @@ function HealBot_Action_RefreshTargetTooltip(button)
     HealBot_Tooltip_Show()
 end
 
-function HealBot_Tooltip_GetHealSpell(unit,pattern,hbGUID)
-    local id=HealBot_GetSpellId(pattern);
-    local sName = HealBot_GetSpellName(id)
-    if not sName then 
-        if pattern then
-            local w, _ = IsUsableItem(pattern, unit)
+function HealBot_Tooltip_GetHealSpell(unit,sName,hbGUID)
+    if not sName or not HealBot_Spells[sName] then
+        if sName then
+            local w, _ = IsUsableItem(sName, unit)
             if not w then
                 return nil, 1, 0
             else
                 if HealBot_Data["PGUID"]==hbGUID then
-                    if IsItemInRange(pattern,unit)~=1 then
-                        return pattern, 1, 0
+                    if IsItemInRange(sName,unit)~=1 then
+                        return sName, 1, 0
                     else
-                        return pattern, 0, 1
+                        return sName, 0, 1
                     end
                 else
-                    return pattern, 0, 1
+                    return sName, 0, 1
                 end
             end
         else

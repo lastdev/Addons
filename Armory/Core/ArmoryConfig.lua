@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 629 2014-04-09T09:00:00Z
+    Revision: 652 2014-10-19T10:25:00Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -1542,4 +1542,12 @@ function Armory:GetConfigWarningSound()
     if ( soundName ~= "" ) then
         return soundName;
     end
+end
+
+function Armory:SetConfigWeeklyReset(day)
+    self:Setting("General", "WeeklyReset", day);
+end
+
+function Armory:GetConfigWeeklyReset()
+    return self:Setting("General", "WeeklyReset") or 2;
 end

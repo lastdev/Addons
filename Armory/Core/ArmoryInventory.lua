@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 604 2013-12-08T18:35:45Z
+    Revision: 652 2014-10-19T10:25:00Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -407,20 +407,33 @@ function Armory:SetContainer(id)
 
         elseif ( id == ARMORY_VOID_CONTAINER ) then
             local itemID;
-            for i = 1, ARMORY_VOID_STORAGE_MAX do
-                itemID, texture = _G.GetVoidItemInfo(i);
-                if ( texture ) then
-		            _, link, quality = _G.GetItemInfo(itemID);
-                    SetSlotInfo(id, nextSlot, texture, 1, quality, link, nil, self:CanEquip(link), i);
-                    nextSlot = nextSlot + 1;
+            for i = 1, ARMORY_VOID_STORAGE_PAGES do
+				for j = 1, ARMORY_VOID_STORAGE_MAX do
+					itemID, texture = _G.GetVoidItemInfo(i, j);
+					if ( texture ) then
+						_, link, quality = _G.GetItemInfo(itemID);
+						SetSlotInfo(id, nextSlot, texture, 1, quality, link, nil, self:CanEquip(link), (i - 1) * ARMORY_VOID_STORAGE_MAX + j);
+						nextSlot = nextSlot + 1;
+					end
+				end
+            end
+            
+        elseif ( id == ARMORY_REAGENTBANK_CONTAINER ) then
+            if ( _G.IsReagentBankUnlocked() ) then
+                for i = 1, _G.GetContainerNumSlots(REAGENTBANK_CONTAINER) do
+                    texture, count, _, quality, _, _, link = _G.GetContainerItemInfo(REAGENTBANK_CONTAINER, i);
+                    if ( texture ) then
+                        SetSlotInfo(id, nextSlot, texture, count, quality, link, nil, nil, i);
+                        SetItemCache(itemContainer, link, count, "player");
+                        nextSlot = nextSlot + 1;
+                    end
                 end
             end
             
         else
             for i = 1, _G.GetContainerNumSlots(id) do
-                texture, count, _, quality = _G.GetContainerItemInfo(id, i);
+                texture, count, _, quality, _, _, link = _G.GetContainerItemInfo(id, i);
                 if ( texture ) then
-                    link = _G.GetContainerItemLink(id, i);
                     SetSlotInfo(id, nextSlot, texture, count, quality, link, nil, self:CanEquip(link), i);
                     SetItemCache(itemContainer, link, count, "player");
                     nextSlot = nextSlot + 1;
@@ -437,6 +450,8 @@ function Armory:SetContainer(id)
         if ( id == BANK_CONTAINER ) then
             numSlots = NUM_BANKGENERIC_SLOTS;
             bagSlots, remaining = _G.GetNumBankSlots();
+        elseif ( id == ARMORY_REAGENTBANK_CONTAINER ) then
+            numSlots = _G.IsReagentBankUnlocked() and _G.GetContainerNumSlots(REAGENTBANK_CONTAINER) or 0;
         elseif ( id > ARMORY_MAIL_CONTAINER ) then
             numSlots = _G.GetContainerNumSlots(id);
             name = _G.GetBagName(id);
@@ -705,6 +720,8 @@ function Armory:GetInventoryContainerInfoEx(id, unit)
         name = ARMORY_EQUIPPED;
     elseif ( id == ARMORY_VOID_CONTAINER ) then
         name = VOID_STORAGE;
+    elseif ( id == ARMORY_REAGENTBANK_CONTAINER ) then
+		name = REAGENT_BANK;
     elseif ( containerName ) then
         local prefix = "";
         if ( id > NUM_BAG_SLOTS ) then
@@ -925,7 +942,7 @@ end
 
 local scanItem = {};
 function Armory:ScanInventory(link, bagsOnly)
-    local count, bagCount, bankCount, mailCount, auctionCount, voidCount = 0, 0, 0, 0, 0, 0;
+    local count, bagCount, bankCount, reagentBankCount, mailCount, auctionCount, voidCount = 0, 0, 0, 0, 0, 0, 0;
     local perSlotCount, result;
     if ( link ) then
         scanItem[1] = link;
@@ -933,12 +950,13 @@ function Armory:ScanInventory(link, bagsOnly)
         count = result.count;
         bagCount = result.bags;
         bankCount = result.bank;
+        reagentBankCount = result.reagentBank;
         mailCount = result.mail;
         auctionCount = result.auction;
         voidCount = result.void;
         perSlotCount = result.perSlot;
     end
-    return count, bagCount, bankCount, mailCount, auctionCount, voidCount, perSlotCount;
+    return count, bagCount, bankCount, reagentBankCount, mailCount, auctionCount, voidCount, perSlotCount;
 end
 
 local scanResult = {};
@@ -981,6 +999,8 @@ function Armory:ScanInventoryItems(items, bagsOnly)
             result.bags = result.bags + count;
         elseif ( id == BANK_CONTAINER or (id > NUM_BAG_SLOTS and id <= NUM_BAG_SLOTS + NUM_BANKBAGSLOTS) ) then
             result.bank = result.bank + count;
+        elseif ( id == ARMORY_REAGENTBANK_CONTAINER ) then
+			result.reagentBank = result.reagentBank + count;
         elseif ( id == ARMORY_AUCTIONS_CONTAINER or id == ARMORY_NEUTRAL_AUCTIONS_CONTAINER ) then
             result.auction = result.auction + count;
         elseif ( id == ARMORY_VOID_CONTAINER ) then
@@ -1003,7 +1023,7 @@ function Armory:ScanInventoryItems(items, bagsOnly)
             name = item;
             itemString = self:GetCachedItemString(name);
         end
-        result[k] = { name=name or UNKNOWN, item=itemString, count=0, bags=0, bank=0, mail=0, auction=0, void=0 };
+        result[k] = { name=name or UNKNOWN, item=itemString, count=0, bags=0, bank=0, reagentBank=0, mail=0, auction=0, void=0 };
 
         for i = 1, #ArmoryInventoryContainers do
             id = ArmoryInventoryContainers[i];
@@ -1087,7 +1107,7 @@ function Armory:FindInventory(...)
                             if ( items[itemId] ) then
                                 items[itemId].count = items[itemId].count + itemCount;
                             else
-                                items[itemId] = {link=link, tinker=tinker, anchor=anchor, count=itemCount, bags=0, bank=0, mail=0, alts=0, equipped=0, void=0};
+                                items[itemId] = {link=link, tinker=tinker, anchor=anchor, count=itemCount, bags=0, bank=0, reagentBank=0, mail=0, alts=0, equipped=0, void=0};
                             end
                             if ( self:IsPlayerSelected() ) then
                                 if ( id == ARMORY_MAIL_CONTAINER ) then
@@ -1096,6 +1116,8 @@ function Armory:FindInventory(...)
                                     items[itemId].bags = items[itemId].bags + itemCount;
                                 elseif ( id == BANK_CONTAINER or (id > NUM_BAG_SLOTS and id <= NUM_BAG_SLOTS + NUM_BANKBAGSLOTS) ) then
                                     items[itemId].bank = items[itemId].bank + itemCount;
+                                elseif ( id == ARMORY_REAGENTBANK_CONTAINER ) then
+									items[itemId].reagentBank = items[itemId].reagentBank + itemCount;
                                 elseif ( id == ARMORY_EQUIPMENT_CONTAINER ) then
                                     items[itemId].equipped = items[itemId].equipped + itemCount;
                                 elseif ( id == ARMORY_VOID_CONTAINER ) then
@@ -1114,7 +1136,7 @@ function Armory:FindInventory(...)
 
     local name;
     for _, info in pairs(items) do
-        text = self:GetCountDetails(info.bags, info.bank, info.mail, nil, info.alts, nil, info.equipped, info.void);
+        text = self:GetCountDetails(info.bags, info.bank, info.reagentBank, info.mail, nil, info.alts, nil, info.equipped, info.void);
         name = self:GetNameFromLink(info.link);
         table.insert(list, {label="", name=name, extra=text, link=info.link, tinker=info.tinker, anchor=info.anchor, count=info.count});
     end

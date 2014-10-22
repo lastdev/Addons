@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 631 2014-04-12T14:56:13Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -376,7 +376,7 @@ local function DisplayQuests(tooltip, characterInfo)
 	Armory:LoadProfile(characterInfo.RealmInfo.Name, characterInfo.Name);
 
 	local numEntries;
-	local questTitleText, level, questTag, isHeader, isCollapsed, isComplete, isDaily, label;
+	local questTitleText, level, isHeader, isCollapsed, isComplete, frequency, questID, label;
 	local color;
 
  	if ( characterInfo.NumQuests > 0 ) then
@@ -393,8 +393,7 @@ local function DisplayQuests(tooltip, characterInfo)
         if ( not questHeaderState.Quests ) then
 			numEntries = Armory:GetNumQuestLogEntries();
 			for i = 1, numEntries do
-				questTitleText, level, questTag, _, isHeader, isCollapsed, isComplete, isDaily = Armory:GetQuestLogTitle(i);
-
+				questTitleText, level, _, isHeader, isCollapsed, isComplete, frequency, questID = Armory:GetQuestLogTitle(i);
 				index, column = tooltip:AddLine("");
 
 				if ( isHeader ) then
@@ -402,8 +401,8 @@ local function DisplayQuests(tooltip, characterInfo)
 					tooltip:SetCellScript(index, myColumn, "OnMouseDown", function (self, id) 
 					    local currentProfile = Armory:CurrentProfile();
 						Armory:LoadProfile(characterInfo.RealmInfo.Name, characterInfo.Name);
-						
-						local isCollapsed = select(6, Armory:GetQuestLogTitle(id));
+
+						local isCollapsed = select(5, Armory:GetQuestLogTitle(id));
 						if ( isCollapsed ) then
 							Armory:ExpandQuestHeader(id);
 						else
@@ -424,7 +423,7 @@ local function DisplayQuests(tooltip, characterInfo)
 				color = Armory:HexColor(color);
 				
 				myColumn = column; index, column = tooltip:SetCell(index, myColumn, color..questTitleText..FONT_COLOR_CODE_CLOSE); 
-				myColumn = column; index, column = tooltip:SetCell(index, myColumn, isHeader and "" or color..(ArmoryQuestLog_GetQuestTag(questTag, isComplete, isDaily) or "")..FONT_COLOR_CODE_CLOSE); 
+				myColumn = column; index, column = tooltip:SetCell(index, myColumn, isHeader and "" or color..(ArmoryQuestLog_GetQuestTag(questID, isComplete, frequency) or "")..FONT_COLOR_CODE_CLOSE); 
 			end
 		end
 	end

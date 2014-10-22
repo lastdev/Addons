@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 629 2014-04-09T09:00:00Z
+    Revision: 647 2014-10-14T19:12:45Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -41,7 +41,7 @@ if ( not Armory ) then
 
         title = ARMORY_TITLE,
         version = GetAddOnMetadata("Armory", "Version"),
-        dbVersion = 34,
+        dbVersion = 36,
         interface = _G.GetBuildInfo(),
     };
 end
@@ -994,7 +994,6 @@ function Armory:IsDbCompatible()
             end
             
             upgraded = true;
-
            
         -- convert from 33 to 34
         elseif ( dbVersion == 33 ) then
@@ -1003,6 +1002,22 @@ function Armory:IsDbCompatible()
             dbEntry:SetValue(2, "General", "SummaryCurrency:"..(_G.GetCurrencyInfo(JUSTICE_CURRENCY)), true);
             dbEntry:SetValue(2, "General", "SummaryCurrency:"..(_G.GetCurrencyInfo(VALOR_CURRENCY)), true);
             
+            upgraded = true;
+           
+        -- convert from 35 to 36 (34 to 35 = clear db)
+        elseif ( dbVersion == 35 ) then
+            for realm in pairs(ArmoryDB) do
+                for character in pairs(ArmoryDB[realm]) do
+                    entry = ArmoryDB[realm][character];
+                    entry.Talents = nil;
+                end
+            end
+
+            for class in pairs(ArmoryShared) do
+                entry = ArmoryShared[class];
+                entry.Talents = nil;
+            end
+
             upgraded = true;
 
 --[[
@@ -1860,11 +1875,11 @@ function Armory:GetItemCount(link)
                         name = self:GetQualifiedCharacterName(profile, not self:GetConfigGlobalItemCount());
                     end
 
-                    local count, bagCount, bankCount, mailCount, auctionCount, voidCount = 0, 0, 0, 0, 0, 0;
+                    local count, bagCount, bankCount, reagentBankCount, mailCount, auctionCount, voidCount = 0, 0, 0, 0, 0, 0, 0;
                     local perSlotCount;
                     local equipCount = self:GetEquipCount(link);
                     if ( self:HasInventory() ) then
-                        count, bagCount, bankCount, mailCount, auctionCount, voidCount, perSlotCount = self:ScanInventory(link);
+                        count, bagCount, bankCount, reagentBankCount, mailCount, auctionCount, voidCount, perSlotCount = self:ScanInventory(link);
                         if ( suspended and equipCount == 0 ) then
                             name = name..RED_FONT_COLOR_CODE.." ("..ARMORY_UPDATE_SUSPENDED..")"..FONT_COLOR_CODE_CLOSE;
                         end
@@ -1878,7 +1893,7 @@ function Armory:GetItemCount(link)
                             table.insert(itemCounts, {name=name, count=0});
                         end
                     else
-                        table.insert(itemCounts, {name=name, count=count, bags=bagCount, bank=bankCount, mail=mailCount, auction=auctionCount, equipped=equipCount, void=voidCount, perSlot=perSlotCount, mine=mine});
+                        table.insert(itemCounts, {name=name, count=count, bags=bagCount, bank=bankCount, reagentBank=reagentBankCount, mail=mailCount, auction=auctionCount, equipped=equipCount, void=voidCount, perSlot=perSlotCount, mine=mine});
                     end
                 end
             end
@@ -1915,7 +1930,7 @@ function Armory:GetMultipleItemCount(items)
                 end
                 for k, v in ipairs(result) do
                     if ( v.count > 0 ) then
-                        table.insert(multipleItemCounts[k], {name=name, count=v.count, bags=v.bags, bank=v.bank, mail=v.mail, auction=v.auction, void=v.void, perSlot=v.perSlot, mine=mine});
+                        table.insert(multipleItemCounts[k], {name=name, count=v.count, bags=v.bags, bank=v.bank, reagentBank=v.reagentBank, mail=v.mail, auction=v.auction, void=v.void, perSlot=v.perSlot, mine=mine});
                     elseif ( suspended ) then
                         table.insert(multipleItemCounts[k], {name=name, count=0});
                     end
@@ -1929,7 +1944,7 @@ function Armory:GetMultipleItemCount(items)
 end
 
 local detailCounts = {};
-function Armory:GetCountDetails(bagCount, bankCount, mailCount, auctionCount, altCount, guildCount, equipCount, voidCount, perSlotCount)
+function Armory:GetCountDetails(bagCount, bankCount, reagentBankCount, mailCount, auctionCount, altCount, guildCount, equipCount, voidCount, perSlotCount)
     local details = "";
     table.wipe(detailCounts);
     if ( (bagCount or 0) > 0 ) then
@@ -1950,6 +1965,9 @@ function Armory:GetCountDetails(bagCount, bankCount, mailCount, auctionCount, al
             table.insert(detailCounts, ARMORY_BANK_CONTAINER_NAME.." "..bankCount);
         end
     end
+    if ( (reagentBankCount or 0) > 0 ) then
+		table.insert(detailCounts, REAGENT_BANK.." "..reagentBankCount);
+	end
     if ( (mailCount or 0) > 0 ) then
         table.insert(detailCounts, MAIL_LABEL.." "..mailCount);
     end

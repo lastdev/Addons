@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 592 2013-05-21T13:24:07Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -152,7 +152,7 @@ function Armory:AddEquipmentSet(tooltip)
                     end
                 end
                 if ( #gearSets > 0 ) then
-                    tooltip:AddLine(format(EQUIPMENT_SETS, table.concat(gearSets, ", ")), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1);
+                    tooltip:AddLine(format(EQUIPMENT_SETS, table.concat(gearSets, ", ")), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
                     tooltip:Show();
                 end
             end

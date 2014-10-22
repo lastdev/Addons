@@ -1,0 +1,22 @@
+## Interface: 60000
+## Title: Ackis Recipe List: Leatherworking
+## Notes: Leatherworking data for Ackis Recipe List.
+## Author: Ackis, Pompy, Ressy, Torhal
+## Version: 6.0.2.1
+## X-Revision: cf2e6b1
+## X-Date: 2014-07-23T01:57:11Z
+## Dependencies: AckisRecipeList
+## LoadOnDemand: 1
+## X-Curse-Packaged-Version: 6.0.2.1
+## X-Curse-Project-Name: Ackis Recipe List: Leatherworking
+## X-Curse-Project-ID: arl-leatherworking
+## X-Curse-Repository-ID: wow/arl-leatherworking/mainline
+
+Core.lua
+Filters.lua
+Discoveries.lua
+MobDrops.lua
+Quests.lua
+Trainers.lua
+Vendors.lua
+Recipes.lua

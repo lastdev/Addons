@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 557 2012-11-11T23:10:00Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -52,7 +52,8 @@ local function GetQuestLines()
         local include, text, numItems;
         
         for i = 1, count do
-            local name, _, _, _, isHeader, _, _, _, questID = dbEntry:GetValue(container, i, "Info");
+            local name, _, _, isHeader, _, _, _, questID = dbEntry:GetValue(container, i, "Info");
+
             local isCollapsed = Armory:GetHeaderLineState(container, name);
             if ( isHeader ) then
                 table.insert(questLines, i);
@@ -99,7 +100,7 @@ local function GetQuestLineValue(index, key, subkey)
     local dbEntry = Armory.selectedDbBaseEntry;
     local numLines = Armory:GetNumQuestLogEntries();
     if ( dbEntry and index > 0 and index <= numLines ) then
-        local _, _, _, _, _, _, _, _, questID = dbEntry:GetValue(container, questLines[index], "Info");
+        local questID = select(8, dbEntry:GetValue(container, questLines[index], "Info"));
         if ( subkey ) then
             return dbEntry:GetValue(container, tostring(questID), key, subkey);
         elseif ( key ) then
@@ -116,7 +117,7 @@ local function UpdateQuestHeaderState(index, isCollapsed)
     if ( dbEntry ) then
         if ( index == 0 ) then
             for i = 1, dbEntry:GetNumValues(container) do
-                local name, _, _, _, isHeader = dbEntry:GetValue(container, i, "Info");
+                local name, _, _, isHeader = dbEntry:GetValue(container, i, "Info");
                 if ( isHeader ) then
                     Armory:SetHeaderLineState(container, name, isCollapsed);
                 end
@@ -174,7 +175,7 @@ function Armory:UpdateQuests()
             local funcNumLines = _G.GetNumQuestLogEntries;
             local funcGetLineInfo = _G.GetQuestLogTitle;
             local funcGetLineState = function(index)
-                local _, _, _, _, isHeader, isCollapsed = _G.GetQuestLogTitle(index);
+                local _, _, _, isHeader, isCollapsed = _G.GetQuestLogTitle(index);
                 return isHeader, not isCollapsed;
             end;
             local funcExpand = _G.ExpandQuestHeader;
@@ -203,9 +204,6 @@ function Armory:UpdateQuests()
                 end
                 if ( _G.GetQuestLogRewardSpell() ) then
                     info.RewardSpell = dbEntry.Save(_G.GetQuestLogRewardSpell());
-                end
-                if ( _G.GetQuestLogRewardTalents() > 0 ) then
-                    info.RewardTalents = _G.GetQuestLogRewardTalents();
                 end
                 if ( _G.GetQuestLogRewardXP() > 0 ) then
                     info.RewardXP = _G.GetQuestLogRewardXP();
@@ -257,12 +255,6 @@ function Armory:UpdateQuests()
                     info.Currencies = {};
                     for i = 1, _G.GetNumQuestLogRewardCurrencies() do
                         info.Currencies[i] = dbEntry.Save(_G.GetQuestLogRewardCurrencyInfo(i));
-                    end
-                end
-                if ( _G.GetNumQuestLogRewardFactions() > 0 ) then
-                    info.Factions = {};
-                    for i = 1, _G.GetNumQuestLogRewardFactions() do
-                        info.Factions[i] = dbEntry.Save(_G.GetQuestLogRewardFactionInfo(i));
                     end
                 end
                 return id;
@@ -330,7 +322,7 @@ function Armory:GetQuestHeader(index)
     local dbEntry = self.playerDbBaseEntry;
     if ( dbEntry ) then
         for i = index, 1, -1 do
-            local title, _, _, _, isHeader = dbEntry:GetValue(container, i, "Info");
+            local title, _, _, isHeader = dbEntry:GetValue(container, i, "Info");
             if ( isHeader ) then
                 return title;
             end
@@ -354,9 +346,9 @@ function Armory:GetNumQuestLogEntries()
 end
 
 function Armory:GetQuestLogTitle(index)
-    local title, level, questTag, suggestedGroup, isHeader, isCollapsed, isComplete, isDaily, questID, startEvent, displayQuestID = GetQuestLineValue(index);
+    local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID, startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLineValue(index); 
     isCollapsed = self:GetHeaderLineState(container, title);
-    return title, level, questTag, suggestedGroup, isHeader, isCollapsed, isComplete, isDaily, questID, displayQuestID;
+    return title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID, startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory;
 end
 
 function Armory:ExpandQuestHeader(index)
@@ -409,10 +401,6 @@ end
 
 function Armory:GetQuestLogRewardSpell()
     return GetQuestLineValue(selectedQuestLine, "RewardSpell");
-end
-
-function Armory:GetQuestLogRewardTalents()
-    return GetQuestLineValue(selectedQuestLine, "RewardTalents") or 0;
 end
 
 function Armory:GetQuestLogRewardXP()
@@ -487,18 +475,6 @@ function Armory:GetQuestLogRewardCurrencyInfo(id)
     return GetQuestLineValue(selectedQuestLine, "Currencies", id);
 end
 
-function Armory:GetNumQuestLogRewardFactions()
-    local factions = GetQuestLineValue(selectedQuestLine, "Factions");
-    if ( factions ) then
-        return #factions;
-    end
-    return 0;
-end
-
-function Armory:GetQuestLogRewardFactionInfo(id)
-    return GetQuestLineValue(selectedQuestLine, "Factions", id);
-end
-
 function Armory:GetQuestLogItemLink(itemType, id)
     local link;
     if ( itemType == "reward" ) then
@@ -532,7 +508,7 @@ function Armory:FindQuest(...)
         if ( numEntries ) then
             local name, level, isHeader, link, text, questID;
             for index = 1, numEntries do
-                name, level, _, _, isHeader, _, _, _, questID = dbEntry:GetValue(container, index, "Info");
+                name, level, _, isHeader, _, _, _, questID = dbEntry:GetValue(container, index, "Info");
                 if ( not isHeader ) then
                     link = dbEntry:GetValue(container, tostring(questID), "Link");
                     if ( self:GetConfigExtendedSearch() ) then
@@ -563,7 +539,7 @@ function Armory:FindQuestItem(itemList, ...)
             local text, label, name, link, id;
 
             for index = 1, numEntries do
-                questLogTitleText, level, _, _, isHeader, _, _, _, questID = dbEntry:GetValue(container, index, "Info");
+                questLogTitleText, level, _, isHeader, _, _, _, questID = dbEntry:GetValue(container, index, "Info");
                 if ( not isHeader ) then
                     id = tostring(questID);
                     label = ARMORY_CMD_FIND_QUEST_REWARD.." "..self:HexColor(ArmoryGetDifficultyColor(level))..questLogTitleText..FONT_COLOR_CODE_CLOSE;
@@ -599,7 +575,7 @@ function Armory:FindQuestSpell(spellList, ...)
             local text, label, name, link, id;
 
             for index = 1, numEntries do
-                questLogTitleText, level, _, _, isHeader, _, _, _, questID = dbEntry:GetValue(container, index, "Info");
+                questLogTitleText, level, _, isHeader, _, _, _, questID = dbEntry:GetValue(container, index, "Info");
                 if ( not isHeader ) then
                     id = tostring(questID);
                     if ( dbEntry:GetValue(container, id, "RewardSpell") ) then

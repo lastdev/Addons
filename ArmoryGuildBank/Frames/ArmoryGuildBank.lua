@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 585 2013-03-02T14:19:03Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -312,7 +312,7 @@ function ArmoryGuildBankFrame_Update()
 
             -- Update the tab items		
             local button, index, column;
-            local name, link, texture, itemCount;
+            local name, link, texture, itemCount, quality;
             for i = 1, ARMORY_MAX_GUILDBANK_SLOTS_PER_TAB do
                 index = mod(i, ARMORY_NUM_SLOTS_PER_GUILDBANK_GROUP);
                 if ( index == 0 ) then
@@ -335,6 +335,14 @@ function ArmoryGuildBankFrame_Update()
                 else
                     button.searchOverlay:Hide();
                 end
+                
+                quality = Armory:GetQualityFromLink(link);
+				if ( quality and quality > LE_ITEM_QUALITY_COMMON and BAG_ITEM_QUALITY_COLORS[quality] ) then
+					button.IconBorder:Show();
+					button.IconBorder:SetVertexColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b);
+				else
+					button.IconBorder:Hide();
+				end
 
                 Armory:SetItemLink(button, link);
             end
@@ -542,6 +550,7 @@ function ArmoryIconGuildBankFrame_UpdateTabs()
     if ( dbEntry ) then
         local tab, tabButton, iconTexture;
         local name, count, link, texture, timestamp;
+        local icon, iconNumber;
         for i = 1, MAX_GUILDBANK_TABS do
             tab = _G["ArmoryIconGuildBankTab"..i];
             tabButton = _G["ArmoryIconGuildBankTab"..i.."Button"];
@@ -554,9 +563,15 @@ function ArmoryIconGuildBankFrame_UpdateTabs()
                 end
                 tabButton.tooltip = name;
 
-                iconTexture:SetTexture(AGB:GetTabIcon(dbEntry, i) or "Interface\\Icons\\Temp");
+				icon = AGB:GetTabIcon(dbEntry, i) or "Interface\\Icons\\Temp";
+				iconNumber = tonumber(icon);
+				if ( iconNumber ) then
+					iconTexture:SetToFileData(iconNumber);
+				else
+					iconTexture:SetTexture(icon);
+				end
                 if ( i == AGB.currentTab ) then
-                    tabButton:SetChecked(1);
+                    tabButton:SetChecked(true);
                     
                     timestamp = AGB:GetTabTimestamp(dbEntry, i);
                     if ( timestamp > 0 ) then
@@ -573,7 +588,7 @@ function ArmoryIconGuildBankFrame_UpdateTabs()
                     ArmoryIconGuildBankTabTitleBackgroundLeft:Show();
                     ArmoryIconGuildBankTabTitleBackgroundRight:Show();
                 else
-                    tabButton:SetChecked(nil);
+                    tabButton:SetChecked(false);
                 end
                 tab:Show();
             else

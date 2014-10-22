@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 596 2013-09-26T19:39:50Z
+    Revision: 646 2014-10-13T22:12:03Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -119,7 +119,7 @@ function ArmoryConquestFrame_Update()
     _, quantity = Armory:GetCurrencyInfo(CONQUEST_CURRENCY);
     ArmoryConquestFramePoints:SetText(quantity);    
 
-    local pointsThisWeek, maxPointsThisWeek, tier2Quantity, tier2Limit, tier1Quantity, tier1Limit, randomPointsThisWeek, maxRandomPointsThisWeek, arenaReward, ratedBGReward = Armory:GetPVPRewards();
+    local pointsThisWeek, maxPointsThisWeek = Armory:GetPVPRewards();
 
     ArmoryPVPFrameConquestBar:SetMinMaxValues(0, maxPointsThisWeek);
     ArmoryPVPFrameConquestBar:SetValue(pointsThisWeek);
@@ -153,7 +153,20 @@ function ArmoryConquestFrame_ShowMaximumRewardsTooltip(self)
 	GameTooltip:AddLine(format(CURRENCY_RECEIVED_THIS_WEEK, currencyName), 1, 1, 1, true);
 	GameTooltip:AddLine(" ");
 
-	local pointsThisWeek, maxPointsThisWeek, tier2Quantity, tier2Limit, tier1Quantity, tier1Limit, randomPointsThisWeek, maxRandomPointsThisWeek, arenaReward, ratedBGReward = Armory:GetPVPRewards();
+	local pointsThisWeek, maxPointsThisWeek, bucket1Quantity, bucket1Limit, bucket2Quantity, bucket2Limit, bucket3Quantity, bucket3Limit, arenaReward, ratedBGReward = Armory:GetPVPRewards();
+	
+	-- Hack to make the system more understandable - Display Bucket 2 as a bonus pool that "overflows" into Bucket 1
+	-- (This hack is only valid when there are two buckets, since the underlying system doesn't actually work this way...)
+	if ( bucket2Limit > bucket1Limit and bucket3Limit == 0 ) then
+		bucket2Limit = bucket2Limit - bucket1Limit; -- Subtract to get the size of the "bonus pool"
+		if ( bucket2Quantity > bucket2Limit ) then
+			bucket1Quantity = bucket1Quantity + bucket2Quantity - bucket2Limit; -- put extra in Bucket 1
+			if ( bucket1Quantity > bucket1Limit ) then
+				bucket1Quantity = bucket1Limit; -- clamp to be safe...
+			end
+			bucket2Quantity = bucket2Limit; -- remove extra from Bucket 2
+		end
+	end
 
 	local r, g, b = 1, 1, 1;
 	local capped;
@@ -161,29 +174,35 @@ function ArmoryConquestFrame_ShowMaximumRewardsTooltip(self)
 		r, g, b = 0.5, 0.5, 0.5;
 		capped = true;
 	end
-	GameTooltip:AddDoubleLine(FROM_ALL_SOURCES, format(CURRENCY_WEEKLY_CAP_FRACTION, pointsThisWeek, maxPointsThisWeek), r, g, b, r, g, b);
+	GameTooltip:AddDoubleLine(FROM_TOTAL, format(CURRENCY_WEEKLY_CAP_FRACTION, pointsThisWeek, maxPointsThisWeek), r, g, b, r, g, b);
 
-	if ( capped or tier2Quantity >= tier2Limit ) then
-		r, g, b = 0.5, 0.5, 0.5;
-	else
-		r, g, b = 1, 1, 1;
+	if ( bucket1Limit > 0 ) then
+		if ( capped or bucket1Quantity >= bucket1Limit ) then
+			r, g, b = 0.5, 0.5, 0.5;
+		else
+			r, g, b = 1, 1, 1;
+		end
+		GameTooltip:AddDoubleLine(" -"..FROM_ALL_SOURCES, format(CURRENCY_WEEKLY_CAP_FRACTION, bucket1Quantity, bucket1Limit), r, g, b, r, g, b);
 	end
-	GameTooltip:AddDoubleLine(" -"..FROM_RATEDBG, format(CURRENCY_WEEKLY_CAP_FRACTION, tier2Quantity, tier2Limit), r, g, b, r, g, b);
 
-	if ( capped or tier1Quantity >= tier1Limit ) then
-		r, g, b = 0.5, 0.5, 0.5;
-	else
-		r, g, b = 1, 1, 1;
+	if ( bucket2Limit > 0 ) then
+		if ( capped or bucket2Quantity >= bucket2Limit ) then
+			r, g, b = 0.5, 0.5, 0.5;
+		else
+			r, g, b = 1, 1, 1;
+		end
+		GameTooltip:AddDoubleLine(" -"..FROM_ASHRAN, format(CURRENCY_WEEKLY_CAP_FRACTION, bucket2Quantity, bucket2Limit), r, g, b, r, g, b);
 	end
-	GameTooltip:AddDoubleLine(" -"..FROM_ARENA, format(CURRENCY_WEEKLY_CAP_FRACTION, tier1Quantity, tier1Limit), r, g, b, r, g, b);
 
-	if ( capped or randomPointsThisWeek >= maxRandomPointsThisWeek ) then
-		r, g, b = 0.5, 0.5, 0.5;
-	else
-		r, g, b = 1, 1, 1;
+	if ( bucket3Limit > 0 ) then
+		if ( capped or bucket3Quantity >= bucket3Limit ) then
+			r, g, b = 0.5, 0.5, 0.5;
+		else
+			r, g, b = 1, 1, 1;
+		end
+		GameTooltip:AddDoubleLine(" -"..FROM_RATEDBG, format(CURRENCY_WEEKLY_CAP_FRACTION, bucket3Quantity, bucket3Limit), r, g, b, r, g, b);
 	end
-	GameTooltip:AddDoubleLine(" -"..FROM_RANDOMBG, format(CURRENCY_WEEKLY_CAP_FRACTION, randomPointsThisWeek, maxRandomPointsThisWeek), r, g, b, r, g, b);
-
+	
 	GameTooltip:Show();
 end
 
@@ -192,12 +211,14 @@ local CONQUEST_TOOLTIP_PADDING = 30 --counts both sides
 function ArmoryConquestFrameButton_OnEnter(self)
 	local tooltip = ArmoryConquestTooltip;
 	
-	local rating, seasonBest, weeklyBest, seasonPlayed, _, weeklyPlayed, _, cap = Armory:GetPersonalRatedInfo(self.id);
+	local rating, seasonBest, weeklyBest, seasonPlayed, seasonWon, weeklyPlayed, weeklyWon, cap = Armory:GetPersonalRatedInfo(self.id);
 
     tooltip.WeeklyBest:SetText(PVP_BEST_RATING..weeklyBest);
+    tooltip.WeeklyGamesWon:SetText(PVP_GAMES_WON..weeklyWon);
     tooltip.WeeklyGamesPlayed:SetText(PVP_GAMES_PLAYED..weeklyPlayed);
 
     tooltip.SeasonBest:SetText(PVP_BEST_RATING..seasonBest);
+    tooltip.SeasonWon:SetText(PVP_GAMES_WON..seasonWon);
     tooltip.SeasonGamesPlayed:SetText(PVP_GAMES_PLAYED..seasonPlayed);
 
     tooltip.ProjectedCap:SetText(cap);

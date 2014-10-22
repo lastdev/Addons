@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 625 2014-04-07T09:27:58Z
+    Revision: 652 2014-10-19T10:25:00Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -31,7 +31,6 @@ local Armory, _ = Armory;
 ARMORY_QUESTS_DISPLAYED = 6;
 ARMORY_QUESTLOG_QUEST_HEIGHT = 16;
 ARMORY_MAX_OBJECTIVES = 10;
-ARMORY_MAX_REPUTATIONS = 10;
 ARMORY_MAX_NUM_ITEMS = 10;
 
 function ArmoryQuestLogTitleButton_OnClick(self, button)
@@ -69,7 +68,6 @@ end
 function ArmoryQuestLogFrame_OnLoad(self)
     self:RegisterEvent("PLAYER_ENTERING_WORLD");
     self:RegisterEvent("QUEST_LOG_UPDATE");
-    self:RegisterEvent("UPDATE_FACTION");
     self:RegisterEvent("UNIT_QUEST_LOG_CHANGED");
 end
 
@@ -152,8 +150,9 @@ function ArmoryQuestLog_Update()
         ArmoryQuestLog_SetFirstValidSelection();
     end
 
-    local questIndex, questLogTitle, questTitleTag, questNormalText, questHighlight;
-    local questLogTitleText, level, questTag, suggestedGroup, isHeader, isCollapsed, isComplete, isDaily, color, questID, displayQuestID;
+    local questIndex, questLogTitle, questTag, questTitleTag, questNormalText, questHighlight;
+    local questLogTitleText, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, color, questID, displayQuestID;
+
     for i = 1, ARMORY_QUESTS_DISPLAYED do
         questIndex = i + FauxScrollFrame_GetOffset(ArmoryQuestLogListScrollFrame);
         questLogTitle = _G["ArmoryQuestLogTitle"..i];
@@ -161,7 +160,8 @@ function ArmoryQuestLog_Update()
         questNormalText = _G["ArmoryQuestLogTitle"..i.."NormalText"];
         questHighlight = _G["ArmoryQuestLogTitle"..i.."Highlight"];
         if ( questIndex <= numEntries ) then
-            questLogTitleText, level, questTag, suggestedGroup, isHeader, isCollapsed, isComplete, isDaily, questID, displayQuestID = Armory:GetQuestLogTitle(questIndex);
+            questLogTitleText, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID, _, displayQuestID = Armory:GetQuestLogTitle(questIndex);
+			-- title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID, startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory
             if ( isHeader ) then
                 if ( questLogTitleText ) then
                     questLogTitle:SetText(questLogTitleText);
@@ -187,7 +187,7 @@ function ArmoryQuestLog_Update()
             -- Save if its a header or not
             questLogTitle.isHeader = isHeader;
             
-            questTag = ArmoryQuestLog_GetQuestTag(questTag, isComplete, isDaily);
+            local questTag = ArmoryQuestLog_GetQuestTag(questID, isComplete, frequency);
             if ( questTag ) then
                 questTitleTag:SetText("("..questTag..")");
                 -- Shrink text to accomdate quest tags without wrapping
@@ -231,7 +231,7 @@ function ArmoryQuestLog_Update()
     local notExpanded = 0;
     -- Somewhat redundant loop, but cleaner than the alternatives
     for i=1, numEntries, 1 do
-        questLogTitleText, _, _, _, isHeader, isCollapsed = Armory:GetQuestLogTitle(i);
+        questLogTitleText, _, _, isHeader, isCollapsed = Armory:GetQuestLogTitle(i);
         if ( questLogTitleText and isHeader ) then
             numHeaders = numHeaders + 1;
             if ( isCollapsed ) then
@@ -249,18 +249,25 @@ function ArmoryQuestLog_Update()
     end
 end
 
-function ArmoryQuestLog_GetQuestTag(questTag, isComplete, isDaily)
+function ArmoryQuestLog_GetQuestTag(questID, isComplete, frequency)
+	local questTagID, questTag = GetQuestTagInfo(questID);
 	if ( isComplete and isComplete < 0 ) then
-        questTag = FAILED;
-    elseif ( isComplete and isComplete > 0 ) then
-        questTag = COMPLETE;
-    elseif ( isDaily ) then
-        if ( questTag ) then
-            questTag = format(DAILY_QUEST_TAG_TEMPLATE, questTag);
-        else
-            questTag = DAILY;
-        end
-    end
+		questTag = FAILED;
+	elseif ( isComplete and isComplete > 0 ) then
+		questTag = COMPLETE;
+	elseif( questTagID and questTagID == QUEST_TAG_ACCOUNT ) then
+		local factionGroup = GetQuestFactionGroup(questID);
+		if( factionGroup ) then
+			questTag = FACTION_ALLIANCE;
+			if ( factionGroup == LE_QUEST_FACTION_HORDE ) then
+				questTag = FACTION_HORDE;
+			end
+		end
+	elseif( frequency == LE_QUEST_FREQUENCY_DAILY and (not isComplete or isComplete == 0) ) then
+		questTag = DAILY;
+	elseif( frequency == LE_QUEST_FREQUENCY_WEEKLY and (not isComplete or isComplete == 0) )then
+		questTag = WEEKLY;
+	end
     return questTag;
 end
 
@@ -278,7 +285,7 @@ function ArmoryQuestLog_SetSelection(questID)
     Armory:SelectQuestLogEntry(questID);
     local titleButton = _G["ArmoryQuestLogTitle"..id];
     local titleButtonTag = _G["ArmoryQuestLogTitle"..id.."Tag"];
-    local questLogTitleText, level, questTag, suggestedGroup, isHeader, isCollapsed = Armory:GetQuestLogTitle(questID);
+    local questLogTitleText, level, suggestedGroup, isHeader, isCollapsed = Armory:GetQuestLogTitle(questID);
     if ( isHeader ) then
         if ( isCollapsed ) then
             Armory:ExpandQuestHeader(questID);
@@ -416,38 +423,6 @@ function ArmoryQuestInfo_ShowSpecialObjectives()
     end
 end
 
-function ArmoryQuestInfo_DoReputations(anchor)
-    local numReputations = Armory:GetNumQuestLogRewardFactions();
-    local factionName, amount, factionId, isHeader;
-    local index = 0;
-    for i = 1, numReputations do		
-        factionId, amount = Armory:GetQuestLogRewardFactionInfo(i);
-        factionName, _, _, _, _, _, _, _, isHeader, _, hasRep = GetFactionInfoByID(factionId);
-        if ( factionName and ( not isHeader or hasRep ) ) then
-            index = index + 1;
-            amount = floor(amount / 100);
-            if ( amount < 0 ) then
-                amount = "|cffff4400"..amount.."|r";
-            end
-            _G["ArmoryQuestInfoReputation"..index.."Faction"]:SetText(format(REWARD_REPUTATION, factionName));
-            _G["ArmoryQuestInfoReputation"..index.."Amount"]:SetText(amount);
-            _G["ArmoryQuestInfoReputation"..index]:Show();
-        end
-    end
-    if ( index > 0 ) then
-        for i = index + 1, ARMORY_MAX_REPUTATIONS do
-            _G["ArmoryQuestInfoReputation"..i]:Hide();
-        end
-        ArmoryQuestInfoReputationsFrame:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -5);
-        ArmoryQuestInfoReputationsFrame:SetHeight(index * 17 + ArmoryQuestInfoReputationText:GetHeight() + 4);
-        ArmoryQuestInfoReputationsFrame:Show();
-        return ArmoryQuestInfoReputationsFrame;
-    else
-        ArmoryQuestInfoReputationsFrame:Hide();
-        return anchor;
-    end
-end
-
 function ArmoryQuestInfo_ShowTimer()
     local timeLeft = Armory:GetQuestLogTimeLeft();
     ArmoryQuestInfoTimerFrame.timeLeft = timeLeft;
@@ -524,7 +499,6 @@ function ArmoryQuestInfo_ShowRewards()
     local numQuestCurrencies = Armory:GetNumQuestLogRewardCurrencies();
     local numQuestSpellRewards = 0;
     local money = Armory:GetQuestLogRewardMoney();
-    local talents = Armory:GetQuestLogRewardTalents();
     local skillName, skillIcon, skillPoints = Armory:GetQuestLogRewardSkillPoints();
     local xp = Armory:GetQuestLogRewardXP();
     local playerTitle = Armory:GetQuestLogRewardTitle();
@@ -534,7 +508,7 @@ function ArmoryQuestInfo_ShowRewards()
     end
 
     local totalRewards = numQuestRewards + numQuestChoices + numQuestCurrencies;
-    if ( totalRewards == 0 and money == 0 and talents == 0 and xp == 0 and not playerTitle and numQuestSpellRewards == 0 ) then
+    if ( totalRewards == 0 and money == 0 and xp == 0 and not playerTitle and numQuestSpellRewards == 0 ) then
         ArmoryQuestInfoRewardsFrame:Hide();
         return nil;
     end
@@ -545,7 +519,6 @@ function ArmoryQuestInfo_ShowRewards()
     end
     -- Hide non-icon rewards (for now)
     ArmoryQuestInfoMoneyFrame:Hide();
-    ArmoryQuestInfoTalentFrame:Hide();
     ArmoryQuestInfoSkillPointFrame:Hide();
     ArmoryQuestInfoXPFrame:Hide();
     ArmoryQuestInfoPlayerTitleFrame:Hide();	
@@ -610,6 +583,7 @@ function ArmoryQuestInfo_ShowRewards()
         learnSpellText:SetPoint("TOPLEFT", lastFrame, "BOTTOMLEFT", 3, -5);
 
         texture, name, isTradeskillSpell, isSpellLearned = Armory:GetQuestLogRewardSpell();
+		--texture, name, isTradeskillSpell, isSpellLearned, hideSpellLearnText, isBoostSpell, garrFollowerID;
 
         if ( isTradeskillSpell ) then
             learnSpellText:SetText(REWARD_TRADESKILL_SPELL);
@@ -632,7 +606,7 @@ function ArmoryQuestInfo_ShowRewards()
     end
 
     -- Setup mandatory rewards
-    if ( numQuestRewards > 0 or numQuestCurrencies > 0 or money > 0 or talents > 0 or xp > 0 or playerTitle ) then
+    if ( numQuestRewards > 0 or numQuestCurrencies > 0 or money > 0 or  xp > 0 or playerTitle ) then
         questItemReceiveText:SetPoint("TOPLEFT", lastFrame, "BOTTOMLEFT", 3, -5);
         questItemReceiveText:Show();		
         lastFrame = questItemReceiveText;
@@ -642,18 +616,9 @@ function ArmoryQuestInfo_ShowRewards()
             ArmoryQuestInfoMoneyFrame:Show();
         end
         -- XP rewards
-        lastFrame = QuestInfo_ToggleRewardElement("ArmoryQuestInfoXPFrame", xp, "Points", lastFrame);		
-        -- Talent rewards
-        lastFrame = QuestInfo_ToggleRewardElement("ArmoryQuestInfoTalentFrame", talents, "Points", lastFrame);
-        if ( ArmoryQuestInfoTalentFrame:IsShown() ) then
-            ArmoryQuestInfoTalentFrameIconTexture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes");
-            local _, class = Armory:UnitClass("player");
-            ArmoryQuestInfoTalentFrameIconTexture:SetTexCoord(unpack(CLASS_ICON_TCOORDS[strupper(class)]));
-            ArmoryQuestInfoTalentFrameName:SetText(BONUS_TALENTS);
-            ArmoryQuestInfoTalentFrame.tooltip = format(BONUS_TALENTS_TOOLTIP, talents);
-        end
+        lastFrame = QuestInfo_ToggleRewardElement(ArmoryQuestInfoXPFrame, BreakUpLargeNumbers(xp), lastFrame);		
         -- Skill Point rewards
-        lastFrame = QuestInfo_ToggleRewardElement("ArmoryQuestInfoSkillPointFrame", skillPoints, "Points", lastFrame);
+        lastFrame = QuestInfo_ToggleRewardElement(ArmoryQuestInfoSkillPointFrame, skillPoints, lastFrame);
         if ( ArmoryQuestInfoSkillPointFrame:IsShown() ) then
             ArmoryQuestInfoSkillPointFrameIconTexture:SetTexture(skillIcon);
             if ( skillName ) then
@@ -665,7 +630,7 @@ function ArmoryQuestInfo_ShowRewards()
             end
         end
         -- Title reward
-        lastFrame = QuestInfo_ToggleRewardElement("ArmoryQuestInfoPlayerTitleFrame", playerTitle, "Title", lastFrame);
+        lastFrame = QuestInfo_ToggleRewardElement(ArmoryQuestInfoPlayerTitleFrame, playerTitle, lastFrame);
         -- Item rewards
         local index;
         local baseIndex = rewardsCount;
@@ -737,8 +702,6 @@ function ArmoryQuestInfo_ShowRewards()
         questItemReceiveText:Hide();
     end
     
-    lastFrame = ArmoryQuestInfo_DoReputations(lastFrame);
-    
     ArmoryQuestInfoRewardsFrame:Show();
     return ArmoryQuestInfoRewardsFrame, lastFrame;
 end
@@ -760,10 +723,10 @@ end
 function ArmoryQuestLog_GetFirstSelectableQuest()
     local numEntries = Armory:GetNumQuestLogEntries();
     local index = 0;
-    local questLogTitleText, level, questTag, suggestedGroup, isHeader, isCollapsed;
+    local questLogTitleText, isHeader;
     for i = 1, numEntries do
         index = i;
-        questLogTitleText, level, questTag, suggestedGroup, isHeader, isCollapsed = Armory:GetQuestLogTitle(i);
+        questLogTitleText, _, _, isHeader = Armory:GetQuestLogTitle(i);
         if ( questLogTitleText and not isHeader ) then
             return index;
         end
@@ -810,7 +773,6 @@ function ArmoryQuestInfo_Display(template, parentFrame)
         ArmoryQuestInfoItemReceiveText:SetTextColor(textColor[1], textColor[2], textColor[3]);
         ArmoryQuestInfoSpellLearnText:SetTextColor(textColor[1], textColor[2], textColor[3]);		
         ArmoryQuestInfoXPFrameReceiveText:SetTextColor(textColor[1], textColor[2], textColor[3]);
-        ArmoryQuestInfoReputationText:SetTextColor(textColor[1], textColor[2], textColor[3]);
     end
 
     for i = 1, #elementsTable, 3 do

@@ -1,4 +1,4 @@
-<!-- Revision: 598 2013-09-26T20:28:29Z -->
+<!-- Revision: 652 2014-10-19T10:25:00Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\FrameXML\UI.xsd">
   <Script file="ArmoryTradeSkillFrame.lua"/>
@@ -45,12 +45,41 @@
           </OnClick>
           <OnEnter>
             GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-            GameTooltip:AddLine(string.format(SKILLUP_TOOLTIP, self.countText:GetText()), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1, 1);
+            GameTooltip:AddLine(string.format(SKILLUP_TOOLTIP, self.countText:GetText()), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
             GameTooltip:Show();
             ArmoryTradeSkillFrameButton_OnEnter(self:GetParent());
           </OnEnter>
           <OnLeave>
             GameTooltip:Hide();
+            ArmoryTradeSkillFrameButton_OnLeave(self:GetParent());
+          </OnLeave>
+        </Scripts>
+      </Button>
+      <Button name="$parentLockedIcon" parentKey="lockedicon">
+        <Size x="26" y="16"/>
+        <Anchors>
+          <Anchor point="RIGHT" x="-2" y="0"/>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <Texture name="$parentIcon" file="Interface\LFGFrame\UI-LFG-ICON-LOCK" parentKey="icon">
+              <Size x="16" y="16"/>
+              <Anchors>
+                <Anchor point="RIGHT" x="0" y="-1"/>
+              </Anchors>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnClick>
+            self:GetParent():Click(button);
+          </OnClick>
+          <OnEnter>
+            ArmoryTradeSkillFrameLockIcon_OnEnter(self:GetParent());
+            ArmoryTradeSkillFrameButton_OnEnter(self:GetParent());
+          </OnEnter>
+          <OnLeave>
+            ArmoryTradeSkillFrameLockIcon_OnLeave(self:GetParent());
             ArmoryTradeSkillFrameButton_OnLeave(self:GetParent());
           </OnLeave>
         </Scripts>
@@ -267,7 +296,7 @@
         </Anchors>
         <Layers>
           <Layer level="ARTWORK">
-            <FontString name="$parentSkillRank" inherits="GameFontHighlightSmall" justifyH="CENTER">
+            <FontString name="$parentSkillRank" inherits="WhiteNormalNumberFont" justifyH="CENTER">
               <Anchors>
                 <Anchor point="TOP" relativeTo="ArmoryTradeSkillFrameTitleText">
                   <Offset>
