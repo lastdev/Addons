@@ -1,6 +1,6 @@
 --[[
 	SelectBox
-	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
 	Revision: $Id: SelectBox.lua 312 2011-06-14 07:33:25Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 

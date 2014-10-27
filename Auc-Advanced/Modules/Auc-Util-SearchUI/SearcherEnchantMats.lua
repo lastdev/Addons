@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher EnchantMats
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: SearcherEnchantMats.lua 5481 2014-10-05 21:31:37Z ccox $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: SearcherEnchantMats.lua 5498 2014-10-18 13:24:18Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -271,7 +271,7 @@ function lib:MakeGuiConfig(gui)
 	gui:AddControl(id, "Checkbox",          0.56, 1, "enchantmats.allow.buy", "Allow Buyouts")
 	gui:AddControl(id, "Checkbox",          0.42, 1, "enchantmats.maxprice.enable", "Enable individual maximum price:")
 	gui:AddTip(id, "Limit the maximum amount you want to spend with the EnchantMats searcher")
-	gui:AddControl(id, "MoneyFramePinned",  0.42, 2, "enchantmats.maxprice", 1, 999999999, "Maximum Price for EnchantMats")
+	gui:AddControl(id, "MoneyFramePinned",  0.42, 2, "enchantmats.maxprice", 1, Const.MAXBIDPRICE, "Maximum Price for EnchantMats")
 
 	gui:AddControl(id, "Label",             0.42, 1, nil, "Price Valuation Method:")
 	gui:AddControl(id, "Selectbox",         0.42, 1, resources.selectorPriceModelsEnx, "enchantmats.model")
@@ -440,4 +440,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-SearchUI/SearcherEnchantMats.lua $", "$Rev: 5481 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-SearchUI/SearcherEnchantMats.lua $", "$Rev: 5498 $")

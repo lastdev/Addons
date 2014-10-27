@@ -1,6 +1,6 @@
 --[[
 Auctioneer - StatSimple
-Version: 5.21.5490 (SanctimoniousSwamprat)
+Version: 5.21b.5509 (SanctimoniousSwamprat)
 Revision: $Id: StatSimple.lua 5477 2014-09-27 18:58:18Z brykrys $
 URL: http://auctioneeraddon.com/
 
@@ -711,4 +711,4 @@ function private.InitData()
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Stat-Simple/StatSimple.lua $", "$Rev: 5477 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Stat-Simple/StatSimple.lua $", "$Rev: 5477 $")

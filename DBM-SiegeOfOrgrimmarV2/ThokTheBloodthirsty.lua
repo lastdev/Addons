@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(851, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 9 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13 $"):sub(12, -3))
 mod:SetCreatureID(71529)
 mod:SetEncounterID(1599)
 mod:SetZone()
@@ -136,13 +136,13 @@ function mod:OnCombatStart(delay)
 		specWarnDeafeningScreech:Schedule(12)
 	end
 	berserkTimer:Start(-delay)
-	if self.Options.RangeFrame then
+	DBM:AddMsg(DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP)
+--	if self.Options.RangeFrame then
 --		if self:IsMythic() then
 --			DBM.RangeCheck:Show(10, nil, nil, 11)--All difficulties are dynamic with no data. Will only be able to fix mythic really.
 --		else
-			DBM:AddMsg(DBM_CORE_DYNAMIC_DIFFICULTY_CLUMP)
 --		end
-	end
+--	end
 end
 
 function mod:OnCombatEnd()

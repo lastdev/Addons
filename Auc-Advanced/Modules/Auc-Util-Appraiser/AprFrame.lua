@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: AprFrame.lua 5462 2014-06-19 11:01:56Z brykrys $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: AprFrame.lua 5495 2014-10-17 12:28:53Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -1176,7 +1176,7 @@ function private.CreateFrames()
 			else
 				frame.manifest.lines:Add("  ".._TRANS('APPR_Interface_UnknownDeposit'))--Unknown deposit cost
 			end
-			if (frame.salebox.matcher:GetChecked() and (frame.salebox.matcher:IsEnabled()==1) and (DiffFromModel)) then
+			if (frame.salebox.matcher:GetChecked() and (frame.salebox.matcher:IsEnabled()) and (DiffFromModel)) then
 				local MatchStringList = {strsplit("\n", MatchString)}
 				for i in pairs(MatchStringList) do
 					frame.manifest.lines:Add((MatchStringList[i]))
@@ -2967,4 +2967,4 @@ function private.CreateFrames()
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5462 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5495 $")

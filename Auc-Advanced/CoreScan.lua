@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: CoreScan.lua 5473 2014-09-23 15:44:55Z brykrys $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: CoreScan.lua 5506 2014-10-19 18:24:27Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -947,6 +947,11 @@ local Commitfunction = function()
 	local wasOnePage = wasGetAll or (TempcurQuery.qryinfo.page == 0) -- retrieved all records in single pull (only one page scanned or was GetAll)
 	local wasUnrestricted = not (TempcurQuery.class or TempcurQuery.subclass or TempcurQuery.minUseLevel
 		or TempcurQuery.name or TempcurQuery.isUsable or TempcurQuery.invType or TempcurQuery.quality) -- no restrictions, potentially a full scan
+
+	-- ### temp fix, until we figure out what isUsable flag is now doing
+	if TempcurQuery.isUsable then
+		wasIncomplete = true -- always treat as incomplete
+	end
 
 
 	local serverKey = TempcurQuery.qryinfo.serverKey or GetFaction()
@@ -1903,6 +1908,8 @@ local StorePageFunction = function()
 		return
 	end
 
+	local GetTime = GetTime
+
 	if (not private.scanStarted) then private.scanStarted = GetTime() end
 	local queryStarted = private.scanStarted
 	local retrievalStarted = GetTime()
@@ -1921,12 +1928,20 @@ local StorePageFunction = function()
 		_G.nLog.AddMessage("Auctioneer", "Scan", _G.N_INFO, ("StorePage For Page %d Started %fs after Query Start"):format(page, retrievalStarted - queryStarted), ("StorePage (Page %d) Called\n%f seconds have elapsed since scan start"):format(page, retrievalStarted - queryStarted))
 	end
 
+	local scannerthrottle = get("core.scan.scannerthrottle")
 	if private.isGetAll then
 		--[[
 			pre-store delay before starting to store a getall query to give the client a bit of time to sort itself out
 			we want to call it before GetNumAuctionItems, so we must use private.isGetAll for detection
 		--]]
 		coroutine.yield()
+		if scannerthrottle then
+			local nextWait = GetTime() + 3
+			while GetTime() < nextWait do
+				coroutine.yield() -- yielding updates GetTime, so this loop will still work
+				if private.breakStorePage then break end
+			end
+		end
 		if private.warningCanSendBug and CanSendAuctionQuery() then -- check it again after delay
 			private.warningCanSendBug = nil
 		end
@@ -1935,7 +1950,7 @@ local StorePageFunction = function()
 	local curQuery, curScan, curPages = private.curQuery, private.curScan, private.curPages
 	local qryinfo = curQuery.qryinfo
 
-	local EventFramesRegistered = {}
+	local EventFramesRegistered = nil
 	local numBatchAuctions, totalAuctions = GetNumAuctionItems("list")
 	local maxPages = ceil(totalAuctions / NUM_AUCTION_ITEMS_PER_PAGE)
 	local isGetAll = false
@@ -1994,6 +2009,12 @@ local StorePageFunction = function()
 	local nextPause = debugprofilestop() + processingTime
 	local time = time
 	local lastTime = time()
+	local breakcount = 5000 -- additional limiter: yield every breakcount auctions scanned
+
+	if scannerthrottle then
+		breakcount = 1000
+		processingTime = processingTime / 5
+	end
 
 	local storecount = 0
 	local sellerOnly = true
@@ -2012,7 +2033,7 @@ local StorePageFunction = function()
 		local retries = { }
 		for i = 1, numBatchAuctions do
 			if isGetAll then -- only yield for GetAll scans
-				if debugprofilestop() > nextPause or time() > lastTime then
+				if debugprofilestop() > nextPause or time() > lastTime or (storecount > 0 and storecount % breakcount == 0) then
 					lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true)
 					coroutine.yield()
 					if private.breakStorePage then
@@ -2072,7 +2093,7 @@ local StorePageFunction = function()
 			lastTime = time()
 			for _, i in ipairs(retries) do
 				if isGetAll then
-					if debugprofilestop() > nextPause or time() > lastTime then
+					if debugprofilestop() > nextPause or time() > lastTime or storecount % breakcount == 0 then
 						lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true)
 						coroutine.yield()
 						if private.breakStorePage then break end
@@ -2192,7 +2213,7 @@ local StorePageFunction = function()
 	end
 
 
-	if isGetAll then
+	if EventFramesRegistered then
 		for _, frame in pairs(EventFramesRegistered) do
 			frame:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
 			local eventscript = frame:GetScript("OnEvent")
@@ -2200,7 +2221,7 @@ local StorePageFunction = function()
 				pcall(eventscript, frame, "AUCTION_ITEM_LIST_UPDATE")
 			end
 		end
-		EventFramesRegistered=nil
+		EventFramesRegistered = nil
 	end
 
 	--Send a Processor event to modules letting them know we are done with the page
@@ -2236,8 +2257,11 @@ local StorePageFunction = function()
 				private.UpdateScanProgress(nil, totalAuctions, #curScan, elapsed, page+2, maxPages, curQuery) -- page+2 signals that scan is done
 				private.Commit(isGetAllFail, false, true)
 				-- Clear the getall output. We don't want to create a new query so use the hook
-				private.queryStarted = GetTime()
-				private.Hook.QueryAuctionItems("empty page", "", "", nil, nil, nil, nil, nil, nil, nil, nil)
+				-- ### temp fix: isUsable flag appears to be acting like a mini-getall, in this case we don't want to blank the results
+				if not curQuery.isUsable then
+					private.queryStarted = GetTime()
+					private.Hook.QueryAuctionItems("empty page", "", "", nil, nil, nil, nil, nil, nil, nil, nil)
+				end -- ###
 		elseif private.isScanning then
 			if (page+1 < maxPages) then
 				private.ScanPage(page + 1)
@@ -2363,12 +2387,12 @@ function private.QueryScrubParameters(name, minLevel, maxLevel, invTypeIndex, cl
 	invTypeIndex = tonumber(invTypeIndex) or Const.EquipLocToInvIndex[invTypeIndex] -- accepts "INVTYPE_*" strings
 	if invTypeIndex and invTypeIndex < 1 then invTypeIndex = nil end
 	if isUsable and isUsable ~= 0 then
-		isUsable = 1
+		isUsable = true
 	else
 		isUsable = nil
 	end
 	if name and exactMatch and exactMatch ~= 0 then
-		exactMatch = 1 -- exactMatch is only valid if we have a name
+		exactMatch = true -- exactMatch is only valid if we have a name
 	else
 		exactMatch = nil
 	end
@@ -2386,9 +2410,9 @@ function private.CreateQuerySig(name, minLevel, maxLevel, invTypeIndex, classInd
 		invTypeIndex or "",
 		classIndex or "",
 		subclassIndex or "",
-		isUsable or "",
+		isUsable and "1" or "", -- can't concatenate booleans
 		qualityIndex or "",
-		exactMatch or ""
+		exactMatch and "1" or ""
 	) -- can use strsplit("#", sig) to extract params
 end
 
@@ -3009,4 +3033,4 @@ end
 internal.Scan.Logout = lib.Logout
 internal.Scan.AHClosed = lib.AHClosed
 
-_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Advanced/CoreScan.lua $", "$Rev: 5473 $")
+_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Advanced/CoreScan.lua $", "$Rev: 5506 $")

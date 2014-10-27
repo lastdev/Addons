@@ -1,6 +1,6 @@
 --[[
 	Auctioneer Advanced
-	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
 	Revision: $Id: CoreAPI.lua 5450 2014-01-15 18:57:22Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -1204,4 +1204,4 @@ do
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Advanced/CoreAPI.lua $", "$Rev: 5450 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Advanced/CoreAPI.lua $", "$Rev: 5450 $")

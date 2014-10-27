@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Scan Finish module
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: ScanFinish.lua 5347 2012-09-06 06:26:15Z Esamynn $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: ScanFinish.lua 5505 2014-10-19 11:12:01Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer module that adds a few event functionalities
@@ -31,149 +31,127 @@
 --]]
 if not AucAdvanced then return end
 
+
 local libType, libName = "Util", "ScanFinish"
 local lib,parent,private = AucAdvanced.NewModule(libType, libName)
 if not lib then return end
-local print,decode,_,_,replicate,empty,get,set,default,debugPrint,fill = AucAdvanced.GetModuleLocals()
+local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill = AucAdvanced.GetModuleLocals()
 
-local blnDebug = false
-local blnLibEmbedded = nil
+local strAucClassicPath
+local AddOnName = ...
+AddOnName = AddOnName:lower()
+if AddOnName == "auc-util-scanfinish" then
+	strAucClassicPath = "Interface\\AddOns\\Auc-Util-ScanFinish\\ScanComplete.ogg"
+elseif AddOnName == "auc-advanced" then -- embedded
+	strAucClassicPath = "Interface\\AddOns\\Auc-Advanced\\Modules\\Auc-Util-ScanFinish\\ScanComplete.ogg"
+else -- unknown
+	return
+end
 
-local intScanMinThreshold = 300  --Safeguard to prevent Auditor Refresh button scans from executing our finish events. Use 300 or more to be safe
-local strPrevSound = "AuctioneerClassic"
+local blnDebug
+local strPrevSound
 
-function lib.Processor(callbackType, ...)
-	if blnDebug then
-		local msg = ("CallbackType=%s, Sound=%s, IsBlocked=%s, IsScanning=%s"):format(callbackType, 
-			tostring(AucAdvanced.Settings.GetSetting("util.scanfinish.soundpath")), 
-			tostring(AucAdvanced.API.IsBlocked()), tostring(AucAdvanced.Scan.IsScanning()))
-		--debugPrint(msg, "ScanFinish Processor", callbackType, 0, "Debug")
-	end
-	
-	if (callbackType == "scanfinish") then
-		if not AucAdvanced.Settings.GetSetting("util.scanfinish.activated") then
+lib.Processors = {
+	scanfinish = function(callbackType, ...)
+		if not get("util.scanfinish.activated") then
 			return
 		end
 		private.ScanFinish(...)
-	elseif (callbackType == "scanstart") then
-		if not AucAdvanced.Settings.GetSetting("util.scanfinish.activated") then
+	end,
+
+	scanstart = function(callbackType, ...)
+		if not get("util.scanfinish.activated") then
 			return
 		end
 		private.ScanStart(...)
-	elseif (callbackType == "config") then
-		private.SetupConfigGui(...)
-	elseif (callbackType == "configchanged") then
-		private.ConfigChanged(...)
-	end
-end
+	end,
 
-lib.Processors = {}
-lib.Processors.scanfinish = lib.Processor
-lib.Processors.scanstart = lib.Processor
-lib.Processors.config = lib.Processor
-lib.Processors.configchanged = lib.Processor
+	config = function(callbackType, ...)
+		if private.SetupConfigGui then private.SetupConfigGui(...) end
+	end,
+
+	configchanged = function(callbackType, ...)
+		private.ConfigChanged(...)
+	end,
+}
 
 function lib.OnLoad()
-	print("Auctioneer: {{"..libType..":"..libName.."}} loaded!")
-	AucAdvanced.Settings.SetDefault("util.scanfinish.activated", true)
-	AucAdvanced.Settings.SetDefault("util.scanfinish.shutdown", false)
-	AucAdvanced.Settings.SetDefault("util.scanfinish.logout", false)
-	AucAdvanced.Settings.SetDefault("util.scanfinish.message", "So many auctions... so little time")
-	AucAdvanced.Settings.SetDefault("util.scanfinish.messagechannel", "none")
-	AucAdvanced.Settings.SetDefault("util.scanfinish.emote", "none")
-	AucAdvanced.Settings.SetDefault("util.scanfinish.debug", false)
-	if AucAdvanced.Settings.GetSetting("util.scanfinish.debug") then blnDebug = true end
+	aucPrint("Auctioneer: {{"..libType..":"..libName.."}} loaded!")
+	default("util.scanfinish.activated", true)
+	default("util.scanfinish.shutdown", false)
+	default("util.scanfinish.logout", false)
+	default("util.scanfinish.soundpath", "AuctioneerClassic")
+	default("util.scanfinish.message", "So many auctions... so little time")
+	default("util.scanfinish.messagechannel", "none")
+	default("util.scanfinish.emote", "none")
+	default("util.scanfinish.debug", false)
+
+	blnDebug = get("util.scanfinish.debug")
+	strPrevSound = get("util.scanfinish.soundpath")
 end
 
 function private.ScanStart(scanSize, querysig, query)
-	--debugPrint(scanSize, "ScanFinish", "ScanStart", 0, "Debug")
-
 	if (scanSize ~= "Full") then return end
-	AlertShutdownOrLogOff()
+	private.AlertShutdownOrLogOff()
 end
 
 
 function private.ScanFinish(scanSize, querysig, query, wasComplete)
-	--debugPrint(scanSize..","..tostring(wasComplete), "ScanFinish", "ScanFinish", 0, "Debug")
-
 	if (scanSize ~= "Full") then return end
 	if (not wasComplete) then return end
 	private.PerformFinishEvents()
 end
 
 function private.PerformFinishEvents()
-	--Clean up/reset local variables
-	local msg = ("Message: '%s', MessageChannel: '%s', Emote: '%s', Logout: %s, ShutDown %s"):format(
-		AucAdvanced.Settings.GetSetting("util.scanfinish.message"),
-		AucAdvanced.Settings.GetSetting("util.scanfinish.messagechannel"),
-		AucAdvanced.Settings.GetSetting("util.scanfinish.emote"),
-		tostring(AucAdvanced.Settings.GetSetting("util.scanfinish.logout")),
-		tostring(AucAdvanced.Settings.GetSetting("util.scanfinish.shutdown")))
-	--debugPrint(msg, "ScanFinish", "PerformFinishEvents", 0, "Debug")
-
 	--Sound
-	PlayCompleteSound()
+	private.PlayCompleteSound()
 
 	--Message
-	if AucAdvanced.Settings.GetSetting("util.scanfinish.messagechannel") == "none" then
+	if get("util.scanfinish.messagechannel") == "none" then
 		--don't do anything
-	elseif AucAdvanced.Settings.GetSetting("util.scanfinish.messagechannel") == "GENERAL" then
-		SendChatMessage(AucAdvanced.Settings.GetSetting("util.scanfinish.message"),"CHANNEL",nil,GetChannelName("General"))
+	elseif get("util.scanfinish.messagechannel") == "GENERAL" then
+		SendChatMessage(get("util.scanfinish.message"),"CHANNEL",nil,GetChannelName("General"))
 	else
-		SendChatMessage(AucAdvanced.Settings.GetSetting("util.scanfinish.message"),AucAdvanced.Settings.GetSetting("util.scanfinish.messagechannel"))
+		SendChatMessage(get("util.scanfinish.message"),get("util.scanfinish.messagechannel"))
 	end
 
 	--Emote
-	if not (AucAdvanced.Settings.GetSetting("util.scanfinish.emote") == "none") then
-		DoEmote(AucAdvanced.Settings.GetSetting("util.scanfinish.emote"))
+	if not (get("util.scanfinish.emote") == "none") then
+		DoEmote(get("util.scanfinish.emote"))
 	end
 
 	--Shutdown or Logoff
-	if (AucAdvanced.Settings.GetSetting("util.scanfinish.shutdown")) then
-		print("AucAdvanced: {{"..libName.."}} Shutting Down!!")
+	if (get("util.scanfinish.shutdown")) then
+		aucPrint("AucAdvanced: {{"..libName.."}} Shutting Down!!")
 		if not blnDebug then
 			Quit()
 		end
-	elseif (AucAdvanced.Settings.GetSetting("util.scanfinish.logout")) then
-		print("AucAdvanced: {{"..libName.."}} Logging Out!")
+	elseif (get("util.scanfinish.logout")) then
+		aucPrint("AucAdvanced: {{"..libName.."}} Logging Out!")
 		if not blnDebug then
 			Logout()
 		end
 	end
 end
 
-function AlertShutdownOrLogOff()
-	if (AucAdvanced.Settings.GetSetting("util.scanfinish.shutdown")) then
+function private.AlertShutdownOrLogOff()
+	if (get("util.scanfinish.shutdown")) then
 		PlaySound("TellMessage")
-		print("AucAdvanced: {{"..libName.."}} |cffff3300Reminder|r: Shutdown is enabled. World of Warcraft will be shut down once the current scan successfully completes.")
-	elseif (AucAdvanced.Settings.GetSetting("util.scanfinish.logout")) then
+		aucPrint("AucAdvanced: {{"..libName.."}} |cffff3300Reminder|r: Shutdown is enabled. World of Warcraft will be shut down once the current scan successfully completes.")
+	elseif (get("util.scanfinish.logout")) then
 		PlaySound("TellMessage")
-		print("AucAdvanced: {{"..libName.."}} |cffff3300Reminder|r: LogOut is enabled. This character will be logged off once the current scan successfully completes.")
+		aucPrint("AucAdvanced: {{"..libName.."}} |cffff3300Reminder|r: LogOut is enabled. This character will be logged off once the current scan successfully completes.")
 	end
 end
 
-function PlayCompleteSound()
-	strConfiguredSoundPath = AucAdvanced.Settings.GetSetting("util.scanfinish.soundpath")
-	if strConfiguredSoundPath and not (strConfiguredSoundPath == "none") then
+function private.PlayCompleteSound()
+	local strConfiguredSoundPath = get("util.scanfinish.soundpath")
+	if strConfiguredSoundPath and strConfiguredSoundPath ~= "none" then
 		if blnDebug then
-			print("AucAdvanced: {{"..libName.."}} You are listening to "..strConfiguredSoundPath)
+			aucPrint("AucAdvanced: {{"..libName.."}} You are listening to "..strConfiguredSoundPath)
 		end
 		if strConfiguredSoundPath == "AuctioneerClassic" then
-			if blnLibEmbedded == nil then
-			  	blnLibEmbedded = IsLibEmbedded()
-			end
-			strConfiguredSoundPath = "Interface\\AddOns\\Auc-Util-ScanFinish\\ScanComplete.mp3"
-			if blnLibEmbedded then
-				strConfiguredSoundPath = "Interface\\AddOns\\Auc-Advanced\\Modules\\Auc-Util-ScanFinish\\ScanComplete.mp3"
-			end
-
-			--Known PlaySoundFile bug seems to require some event preceeding it to get it to work reliably
-			--Can get this working as a print to screen or an internal sound. Other developers
-			--suggested this workaround.
-			--http://forums.worldofwarcraft.com/thread.html?topicId=1777875494&sid=1&pageNo=4
-			PlaySound("GAMEHIGHLIGHTFRIENDLYUNIT")
-			PlaySoundFile(strConfiguredSoundPath)
-
+			PlaySoundFile(strAucClassicPath)
 		else
 			PlaySound(strConfiguredSoundPath)
 		end
@@ -182,12 +160,13 @@ end
 
 --Config UI functions
 function private.SetupConfigGui(gui)
+	private.SetupConfigGui = nil
 	-- The defaults for the following settings are set in the lib.OnLoad function
 	local id = gui:AddTab(libName, libType.." Modules")
 
 	gui:AddHelp(id, "what is scanfinish",
 		"What is ScanFinish?",
-		"ScanFinish is an Auctioneer module that will execute one or more useful events once Auctioneer has completed a scan successfully.\n\nScanFinish will only execute these events during full Auctioneer scans with a minimum threshold of "..intScanMinThreshold .." items, so there is no worry about logging off or spamming emotes during the incremental scans or SearchUI activities. Unfortunately, this also means the functionality will not be enabled in auction houses with under "..intScanMinThreshold.." items."
+		"ScanFinish is an Auctioneer module that will execute one or more useful events once Auctioneer has completed a Full scan successfully."
 		)
 
 	gui:AddControl(id, "Header",	 0,	libName.." options")
@@ -251,45 +230,29 @@ function private.SetupConfigGui(gui)
 
 
 	--Debug switch via gui. Currently not exposed to the end user
-	gui:AddControl(id, "Subhead",	0,	"")
-	gui:AddControl(id, "Checkbox",   0, 1, "util.scanfinish.debug", "Show Debug Information for this session")
+	-- gui:AddControl(id, "Subhead",	0,	"")
+	-- gui:AddControl(id, "Checkbox",   0, 1, "util.scanfinish.debug", "Show Debug Information for this session")
 
 
 end
 
-function IsLibEmbedded()
-	blnResult = false
-	for pos, module in ipairs(AucAdvanced.EmbeddedModules) do
-		--print("  Debug:Comparing Auc-Util-"..libName.." with "..module)
-		if "Auc-Util-"..libName == module then
-			if blnDebug then
-				print("  Debug:Auc-Util-"..libName.." is an embedded module")
-			end
-			blnResult = true
-			break
+function private.ConfigChanged(fullsetting, value, setting, module)
+	if module ~= "scanfinish" then return end -- only respond to own changes
+	--Debug switch via gui. Currently not exposed to the end user
+	blnDebug = get("util.scanfinish.debug")
+	if blnDebug then
+		aucPrint("  Debug:Configuration Changed")
+		if not get("util.scanfinish.activated") then
+			aucPrint("  Debug:Updating ScanFinish:Deactivated")
+		elseif AucAdvanced.Scan.IsScanning() then
+			aucPrint("  Debug:Updating ScanFinish with Scan in progress")
 		end
 	end
-	return blnResult
-end
 
-function private.ConfigChanged()
-	--Debug switch via gui. Currently not exposed to the end user
-	--blnDebug = AucAdvanced.Settings.GetSetting("util.scanfinish.debug")
-	if blnDebug then
-		print("  Debug:Configuration Changed")
-	end
-	if AucAdvanced.Settings.GetSetting("util.scanfinish.debug") then blnDebug = true end
-
-	if not (strPrevSound == AucAdvanced.Settings.GetSetting("util.scanfinish.soundpath")) then
-		PlayCompleteSound()
-		strPrevSound = AucAdvanced.Settings.GetSetting("util.scanfinish.soundpath")
-	end
-
-	if (not AucAdvanced.Settings.GetSetting("util.scanfinish.activated")) then
-		if blnDebug then print("  Debug:Updating ScanFinish:Deactivated") end
-	elseif (AucAdvanced.Scan.IsScanning()) then
-		if blnDebug then print("  Debug:Updating ScanFinish with Scan in progress") end
+	if not (strPrevSound == get("util.scanfinish.soundpath")) then
+		private.PlayCompleteSound()
+		strPrevSound = get("util.scanfinish.soundpath")
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-ScanFinish/ScanFinish.lua $", "$Rev: 5347 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-ScanFinish/ScanFinish.lua $", "$Rev: 5505 $")

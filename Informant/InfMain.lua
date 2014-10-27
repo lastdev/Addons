@@ -1,8 +1,8 @@
 ﻿--[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: InfMain.lua 5261 2012-01-04 13:56:43Z dinesh $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: InfMain.lua 5500 2014-10-18 14:29:01Z brykrys $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
 	License:
@@ -27,9 +27,9 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Informant/InfMain.lua $","$Rev: 5261 $")
+Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Informant/InfMain.lua $","$Rev: 5500 $")
 
-INFORMANT_VERSION = "5.21.5490"
+INFORMANT_VERSION = "5.21b.5509"
 if (INFORMANT_VERSION == "<".."%version%>") then
 	INFORMANT_VERSION = "5.2.DEV"
 end
@@ -119,7 +119,7 @@ CLASS_TO_CATEGORY_MAP = {
 	[13] = 11, --Miscellaneous
 	[5] = 11, --Miscellaneous
 	[12] = 12, --Quest
-} 
+}
 
 local soulbindtypes = {_TRANS("INF_Tooltip_SoulBindUse"),_TRANS("INF_Tooltip_SoulBindEquip"),_TRANS("INF_Tooltip_SoulBindPickup")}
 local specialbindtypes = {_TRANS("INF_Tooltip_SpecialBindAccount"),_TRANS("INF_Tooltip_SpecialBindGuild")}
@@ -165,7 +165,7 @@ function getItem(itemID, static)
 	if (not itemID) then return end
 	if (static and staticDataID and staticDataID==itemID) then return staticDataItem end
 	if cache[itemID] then return cache[itemID] end
-	
+
 	local baseData = self.database[itemID]
 	local buy, sell, class, quality, stack, additional, usedby, quantity, limited, merchantlist,soulbind,specialbind
 	local itemName, itemLink, itemQuality, itemLevel, itemUseLevel, itemType, itemSubType, itemStackSize, itemEquipLoc, itemTexture = GetItemInfo(tonumber(itemID))
@@ -174,7 +174,7 @@ function getItem(itemID, static)
 		buy, class, quality, stack, additional, usedby, quantity, limited, merchantlist, soulbind, specialbind = strsplit(":", baseData)
 		buy = tonumber(buy)
 	end
-	
+
 	-- work around a blizzard bug where honor tokens return stack size 2147483647
 	-- this only seems to happen for the obsolete honor tokens shown in the currency frame
 	-- See JIRA INF-41
@@ -182,7 +182,7 @@ function getItem(itemID, static)
 		itemStackSize = nil
 		stack = nil
 	end
-	
+
 	-- if we have a local correction for this item, merge in the corrected data
 	local itemUpdateData
 	if (InformantLocalUpdates and InformantLocalUpdates.items) then
@@ -372,7 +372,7 @@ function getItem(itemID, static)
 	else
 		dataItem.rewardFrom = (static and emptyTable or {})
 	end
-	
+
 	-- see if this is a recipe, and what it might create
 	if (self.crafted) then
 		local recipe_number = tonumber(itemID)
@@ -386,7 +386,7 @@ function getItem(itemID, static)
 			end
 		end
 	end
-	
+
 	-- we adjusted the static table, if called with static = true
 	-- so save the itemID for future calls
 	if static then
@@ -599,7 +599,7 @@ local function showItem(itemInfo)
 		if (itemInfo.isPlayerMade) then
 			addLine(_TRANS('INF_Interface_InfWinPlayerMade'):format(itemInfo.tradeSkillLevel, itemInfo.tradeSkillName), "5060ff")
 		end
-		
+
 		local numReq = 0
 		local numRew = 0
 		local numSta = 0
@@ -701,7 +701,7 @@ end
 local function updateSellPricesFromMerchant()
 	if (not InformantLocalUpdates.items) then InformantLocalUpdates.items = {} end
 	local tt = Informant_ScanTooltip
-	
+
 	for bag = 0, NUM_BAG_FRAMES do
 		for slot = 1, GetContainerNumSlots(bag) do
 			local scanningLink = GetContainerItemLink(bag, slot)
@@ -785,7 +785,7 @@ local function updateBuyPricesFromMerchant( vendorID )
 					local newItemInfo = InformantLocalUpdates.items[ itemid ]
 					if (not newItemInfo) then newItemInfo = {} end
 					local oldList = newItemInfo.merchants
-					
+
 					if (oldList) then
 						local moreMerch = split(oldList, ",")
 						for pos, merchID in pairs(moreMerch) do
@@ -795,14 +795,14 @@ local function updateBuyPricesFromMerchant( vendorID )
 							end
 						end
 					end
-					
+
 					if (not foundMerchant) then
 						if (oldList) then
 							newItemInfo.merchants = oldList..","..tostring( vendorID )
 						else
 							newItemInfo.merchants = tostring( vendorID )
 						end
-	
+
 						InformantLocalUpdates.items[ itemid ] = newItemInfo
 					end
 				end
@@ -825,7 +825,8 @@ local function updateMerchantName()
 	-- TODO - we are not currently using the faction information for vendors
 
 	local vendorGUID = UnitGUID("NPC")
-	local vendorID = tonumber(strsub(vendorGUID,6,12),16)
+	local vendorID = select(6,strsplit("-", vendorGUID))
+	vendorID = tonumber(vendorID)
 
 	if (not self.vendors[ vendorID ] and not InformantLocalUpdates.vendor[ vendorID ]) then
 		-- add the new vendor name to our update list
@@ -861,17 +862,17 @@ local function scrubLocalUpdateInfo()
 
 	if (InformantLocalUpdates and InformantLocalUpdates.items
 		and not InformantLocalUpdates.scrubbedForDupeMerchants) then
-		
+
 		for itemID, itemInfo in pairs(InformantLocalUpdates.items) do
 			if (itemInfo.merchants) then
-				
+
 				-- make sure vendor IDs are unique by regenerating the list into a table
 				local newTable = {}
 				local merchList = split(itemInfo.merchants, ",")
 				for pos, merchID in pairs(merchList) do
 					newTable[ tonumber( merchID ) ] = true
 				end
-				
+
 				-- then converting that table back into our string format
 				local first = true
 				local newList
@@ -883,14 +884,14 @@ local function scrubLocalUpdateInfo()
 					end
 					first = false
 				end
-				
+
 				-- finally, replace the existing info with scrubbed info
 				itemInfo.merchants = newList
 				InformantLocalUpdates.items[ itemID ] = itemInfo
-				
+
 			end
 		end
-		
+
 		InformantLocalUpdates.scrubbedForDupeMerchants = true;	-- we should only do this once
 	end
 
@@ -924,7 +925,7 @@ local function slidebar()
 						icon = "Interface\\AddOns\\Informant\\inficon",
 						OnClick = function(self, button) slidebarclickhandler(self, button) end,
 						})
-			
+
 			function LDBButton:OnTooltipShow()
 				self:AddLine("Informant Configuration",  1,1,0.5, 1)
 			end
@@ -939,14 +940,14 @@ local function slidebar()
 				GameTooltip:Hide()
 			end
 		end
-	end	
+	end
 end
 
 function onLoad()
 	InformantFrame:RegisterEvent("ADDON_LOADED")
-	
+
 	Informant_ScanTooltip:SetScript("OnTooltipAddMoney", OnTooltipAddMoney);
-	
+
 	InformantFrame:RegisterEvent("MERCHANT_SHOW");
 	InformantFrame:RegisterEvent("MERCHANT_UPDATE");
 
@@ -981,10 +982,10 @@ local function frameLoaded()
 	-- Setup the default for stubby to always load (people can override this on a
 	-- per toon basis)
 	Stubby.SetConfig("Informant", "LoadType", "always", true)
-	
+
 	-- Register our temporary command hook with stubby
-	Stubby.RegisterBootCode("Informant", "CommandHandler", 
-	-- Localize Me! 
+	Stubby.RegisterBootCode("Informant", "CommandHandler",
+	-- Localize Me!
 	[[
 		local function cmdHandler(msg)
 			local cmd, param = msg:lower():match("^(%w+)%s*(.*)$")
@@ -1060,7 +1061,7 @@ function onEvent(event, addon)
 	if( event == "MERCHANT_SHOW" or event == "MERCHANT_UPDATE" ) then
 		doUpdateMerchant()
 	end
-	
+
 end
 
 function frameActive(isActive)

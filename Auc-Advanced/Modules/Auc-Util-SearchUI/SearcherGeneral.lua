@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher General
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: SearcherGeneral.lua 5368 2012-09-29 09:50:29Z brykrys $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: SearcherGeneral.lua 5498 2014-10-18 13:24:18Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -107,8 +107,8 @@ default("general.seller.regexp", false)
 default("general.seller.invert", false)
 default("general.minbid", 0)
 default("general.minbuy", 0)
-default("general.maxbid", 999999999)
-default("general.maxbuy", 999999999)
+default("general.maxbid", Const.MAXBIDPRICE)
+default("general.maxbuy", Const.MAXBIDPRICE)
 
 -- This function is automatically called when we need to create our search generals
 function lib:MakeGuiConfig(gui)
@@ -179,13 +179,13 @@ function lib:MakeGuiConfig(gui)
 	gui:AddControl(id, "Checkbox",   0.37, 0, "general.seller.invert", "Invert")
 
 	gui:SetLast(id, cont)
-	gui:AddControl(id, "MoneyFramePinned", 0, 1, "general.minbid", 0, 999999999, "Minimum Bid")
+	gui:AddControl(id, "MoneyFramePinned", 0, 1, "general.minbid", 0, Const.MAXBIDPRICE, "Minimum Bid")
 	gui:SetLast(id, cont)
-	gui:AddControl(id, "MoneyFramePinned", 0.5, 1, "general.minbuy", 0, 999999999, "Minimum Buyout")
+	gui:AddControl(id, "MoneyFramePinned", 0.5, 1, "general.minbuy", 0, Const.MAXBIDPRICE, "Minimum Buyout")
 	last = gui:GetLast(id)
-	gui:AddControl(id, "MoneyFramePinned", 0, 1, "general.maxbid", 0, 999999999, "Maximum Bid")
+	gui:AddControl(id, "MoneyFramePinned", 0, 1, "general.maxbid", 0, Const.MAXBIDPRICE, "Maximum Bid")
 	gui:SetLast(id, last)
-	gui:AddControl(id, "MoneyFramePinned", 0.5, 1, "general.maxbuy", 0, 999999999, "Maximum Buyout")
+	gui:AddControl(id, "MoneyFramePinned", 0.5, 1, "general.maxbuy", 0, Const.MAXBIDPRICE, "Maximum Buyout")
 end
 
 function lib.Search(item)
@@ -345,7 +345,11 @@ function private.PriceSearch(buybid, price)
 		minprice = get("general.minbuy")
 		maxprice = get("general.maxbuy")
 	end
-	if (price <= maxprice) and (price >= minprice) then
+	-- disregard maxprice if it is 0, or if it is less then minprice
+	if maxprice == 0 or maxprice < minprice then
+		maxprice = nil
+	end
+	if price >= minprice and (not maxprice or price <= maxprice) then
 		return true
 	elseif price < minprice then
 		private.debug = buybid.." price too low"
@@ -354,4 +358,4 @@ function private.PriceSearch(buybid, price)
 	end
 	return false
 end
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-SearchUI/SearcherGeneral.lua $", "$Rev: 5368 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-SearchUI/SearcherGeneral.lua $", "$Rev: 5498 $")

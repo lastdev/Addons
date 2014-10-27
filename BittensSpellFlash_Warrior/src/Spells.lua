@@ -1,4 +1,4 @@
-local addonName, a = ...
+  local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
 local x = s.UpdatedVariables
@@ -26,7 +26,7 @@ local function chooseShout(z, fail)
 		z.FlashID = bothShouts
 	elseif ap then
 		z.FlashID = commandID
-	elseif sta then
+	elseif sta then  
 		z.FlashID = battleID
 	else
 		z.FlashID = bothShouts
@@ -112,11 +112,6 @@ c.AddOptionalSpell("Dps Stance", nil, {
 	end
 })
 
---Arms  only
---Colossus Smashes a target for 225% Physical damage and costs 20 rageccf.
-c.AddSpell("Colossus Smash", nil, {
-})
-
 --TALENT:
 --You become a whirling storm of destructive force, striking 
 --all targets within 8 yards for 120% weapon damage every 1 sec 
@@ -156,10 +151,9 @@ c.AddSpell("Dragon Roar", nil, {
 c.MakeMini(c.AddOptionalSpell("Heroic Leap", nil, {
 	NoGCD = true,
 	Cooldown = 45,
-	NoRangeCheck = true,
-	CheckFirst = function()
-		return a.Smash > 0 and not c.IsSolo()
-	end
+--	CheckFirst = function()
+--		return a.Smash > 0 and not c.IsSolo()
+--	end
 }))
 
 local function victoryHealable()
@@ -286,12 +280,54 @@ c.AddInterrupt("Pummel")
 c.AddInterrupt("Disrupting Shout")
 
 -------------------------------------------------------------------------- Arms
+local rendUpTime = 0
+
 local function hasSmashFor(time)
 	return a.Smash >= time 
 		or a.SmashCD <= a.Smash
 		or not c.HasSpell("Colossus Smash")
 end
 
+local function getRendUptime(time)
+--      c.Debug("GetRendTime", rendUpTime)
+   if rendUpTime == 0 then
+      rendUpTime = GetTime()
+	  return true
+   elseif (GetTime() - rendUpTime) >= 17 then
+      rendUpTime = 0
+	  return true
+   else
+      return false
+   end
+
+end
+
+-- A vicious strike that deals 225% Physical damage and costs 20 rage.
+-- Costs 20 rage.
+c.AddSpell("Mortal Strike", nil, {
+	Melee = true,
+	Cooldown = 6,
+	Override = function()
+		return a.Rage > 20 and not a.InExecute
+	end
+})
+
+-- Wounds the target, causing (579.6% of Attack Power) bleed damage over 18 seconds and abilities
+-- final burst (222.5% of Attack Power) bleed damage when the effect expires.
+-- Costs 5 rage. 
+c.AddSpell("Rend", nil, {	
+	CheckFirst = function()
+--      c.Debug("GetRendTime", rendUpTime, a.rendAppliedTime)
+      if a.rendAppliedTime == 0 then
+	     return true
+      elseif (GetTime() - a.rendAppliedTime) >= 17 then
+	     a.rendAppliedTime = 0
+	     return true
+      else
+         return false
+      end
+	end
+})
 c.AddOptionalSpell("Recklessness", "for Arms", {
 	CheckFirst = function(z)
 		z.FlashSize = nil
@@ -330,73 +366,56 @@ c.AddOptionalSpell("Sweeping Strikes", nil, {
 	NoGCD = true,
 })
 
-c.AddSpell("Mortal Strike", nil, {
-	Melee = true,
-	Override = function()
-		local cd = c.GetCooldown("Mortal Strike", false, 6)
-		if c.IsCasting("Overpower") then
-			return cd <= .5
-		else
-			return cd == 0
-		end
-	end,
-})
-
+-- Hurls your weapon at an enemy, causing 60% Physical damage and stunning for 4 seconds.
+-- Deals quadruple damage to targets permanently immune to stuns.
 c.AddSpell("Storm Bolt", "for Arms", {
+  Cooldown = 30,	
 	CheckFirst = function()
 		return a.Smash > 0
 	end
 })
 
+-- Roar explosively, dealing (156% of Attack Power) damage to all enemies within 8 yards
+-- and knocking them back and down for 0.50 seconds.  Damage ignores all armor and is 
+-- always a critical strike.
 c.AddSpell("Dragon Roar", "for Arms", {
 	Melee = true,
-	CheckFirst = function()
-		return a.Bloodbath
-	end,
+	Cooldown = 60,
 })
 
-c.AddSpell("Dragon Roar", "Prime for Arms", {
-	Melee = true,
-	CheckFirst = function()
-		return a.Smash == 0
-	end,
-})
-
+-- Smashes a target for 150% Physical damage and causes your attacks to bypass all of their 
+-- armor for 6 seconds.  Bypasses less armor on players.
 c.AddSpell("Colossus Smash", "for Arms", {
-	CheckFirst = function()
-		return a.Smash <= 1.5
+  Cooldown = 20,
+  Melee = true,
+	Override = function()
+    return a.Smash < 1
 	end
 })
 
+-- Attempt to finish off a wounded foe, causing 320% Physical damage. 
+-- Only usable on enemies that have less than 20% health.
+-- Costs 30 Rage
 c.AddSpell("Execute", "for Arms", {
 	CheckFirst = function()
-		return not a.OverpowerIsFree
-			or a.TasteStacks == 0
-			or a.Recklessness
-			or a.EmptyRage < 25
-			or (a.Smash > 0 and not c.WearingSet(2, "DpsT16"))
+		return a.InExecute and a.Rage > 30 
+--			or a.Recklessness
+--			or a.EmptyRage < 25
+--			or (a.Smash > 0 and not c.WearingSet(2, "DpsT16"))
 	end
 })
 
+-- Slam an opponent, causing 150% Physical damage.  Each consecutive use of Slam increases
+-- the damage dealt by 50% and the Rage cost by 100%, stacking up to 2 times for 2 sec.
+-- Costs 10 Rage.
 c.AddSpell("Slam", nil, {
-	CheckFirst = function()
-		return a.Rage >= 40 and not a.InExecute
-	end
-})
-
-c.AddSpell("Slam", "Prime", {
-	CheckFirst = function()
-		return a.Smash > 0
-			and a.Smash < 2.5
-			and not a.InExecute
-	end
-})
-
-c.AddSpell("Slam", "Double Prime", {
-	CheckFirst = function()
-		return not a.InExecute 
-			and a.Smash > 0 
-			and (a.Smash < 1 or c.HasBuff("Recklessness", false, true))
+	CheckFirst = function(z)
+	    if c.GetBuffStack("Slam") == 1 then
+		   z.FlashSize = s.FlashSizePercent() * 0.75
+		elseif c.GetBuffStack("Slam") == 2 then
+		   z.FlashSize = s.FlashSizePercent() * 1.5
+		end
+		return true
 	end
 })
 
@@ -404,10 +423,13 @@ c.AddSpell("Thunder Clap", nil, {
 	Melee = true,
 })
 
+-- In a whirlwind of steel you attack all enemies within 8 yards, 
+-- causing 100% Physical damage with your main-hand weapon to each enemy.
+-- Costs 20 Rage.
 c.AddSpell("Whirlwind", "for Arms", {
 	Melee = true,
 	CheckFirst = function()
-		return a.Rage >= 90
+		return a.Rage >= 20
 	end,
 })
 
@@ -423,14 +445,14 @@ local function getRagingBlowStacks(noGCD)
 	local stacks = c.GetBuffStack("Raging Blow!", noGCD)
 	if c.IsCasting("Enrage") then
 		stacks = stacks + 1
-		c.Debug("Event","Casting Enrage")
+--		c.Debug("Event","Casting Enrage")
 	end
 	if c.IsCasting("Raging Blow") then
 		stacks = stacks - 1
-		c.Debug("Event","Casting Raging Blow")
+--		c.Debug("Event","Casting Raging Blow")
 	end
 	local str = tostring(math.min(math.max(0, stacks), 2))
-	c.Debug("Event Stacks",str)
+--	c.Debug("Event Stacks",str)
 	return math.min(math.max(0, stacks), 2)
 end
 
@@ -496,7 +518,7 @@ c.AddSpell("Raging Blow", nil, {
 
 c.AddSpell("Raging Blow", "Prime", {
 	CheckFirst = function()
-	c.Debug("Event","Raging Blow Prime call")
+--	c.Debug("Event","Raging Blow Prime call")
 		return not a.InExecute
 			and getRagingBlowStacks() == 2
 	end
@@ -533,11 +555,11 @@ c.AddSpell("Wild Strike", nil, {
   CheckFirst = function(z)
     z.FlashSize = nil
     if c.HasBuff("Bloodsurge") then
-      c.Debug("Event","Bloodsurge Buffed")
+--      c.Debug("Event","Bloodsurge Buffed")
       z.FlashSize = s.FlashSizePercent() * 2
       return a.Rage >= 10
     else
-      c.Debug("Event","NOT Bloodsurge")
+ --     c.Debug("Event","NOT Bloodsurge")
       z.FlashSize = s.FlashSizePercent() * 0.5
       return a.Rage >= 45 and (getRagingBlowStacks() < 2)
     end
@@ -586,7 +608,7 @@ c.AddSpell("Execute", "for Fury", {
 	CheckFirst = function()
 		return a.Enraged
 --			or a.Smash > 0
-			or c.HasBuff("Sudden Death", false, false, true)
+			or a.InExecute
 --			or rageAfterHeroicStrike() > 90
       or a.Rage > 30
 --			or c.IsSolo()

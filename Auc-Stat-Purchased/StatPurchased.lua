@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - StatPurchased
-	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
 	Revision: $Id: StatPurchased.lua 5478 2014-09-27 19:09:48Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -699,4 +699,4 @@ function private.InitData()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Stat-Purchased/StatPurchased.lua $", "$Rev: 5478 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Stat-Purchased/StatPurchased.lua $", "$Rev: 5478 $")

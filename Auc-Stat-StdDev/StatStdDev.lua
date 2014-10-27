@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Standard Deviation Statistics module
-	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
 	Revision: $Id: StatStdDev.lua 5468 2014-08-20 15:22:36Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -499,4 +499,4 @@ function private.InitData()
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Stat-StdDev/StatStdDev.lua $", "$Rev: 5468 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Stat-StdDev/StatStdDev.lua $", "$Rev: 5468 $")

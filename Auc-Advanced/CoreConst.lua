@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: CoreConst.lua 5482 2014-10-05 21:37:04Z ccox $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: CoreConst.lua 5497 2014-10-18 13:22:44Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -138,6 +138,7 @@ local lib = {
 	MAXSKILLLEVEL = 700,
 	MAXUSERLEVEL = 100,
 	MAXITEMLEVEL = 700,
+	MAXBIDPRICE = 9999999999, -- copy from Blizzard_AuctionUI.lua, so it is available before AH loads
 }
 
 lib.InvTypes = lib.EquipEncode -- backward compatibility - deprecated entry
@@ -181,4 +182,4 @@ CompileInvTypes(GetAuctionInvTypes(2, 1))
 
 AucAdvanced.Const = lib
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Advanced/CoreConst.lua $", "$Rev: 5482 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Advanced/CoreConst.lua $", "$Rev: 5497 $")

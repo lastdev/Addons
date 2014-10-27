@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
 	Revision: $Id: CoreManifest.lua 5471 2014-09-16 15:08:54Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -55,7 +55,7 @@ local DEV_VERSION = "5.21.DEV"
 local MINIMUM_TOC = 50400
 local MINIMUM_CLIENT = "5.4"
 
-lib.Version="5.21.5490";
+lib.Version="5.21b.5509";
 if (lib.Version == "<".."%version%>") then
 	lib.Version = DEV_VERSION
 end
@@ -255,4 +255,4 @@ function lib.ValidateInstall()
 end
 
 
-lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Advanced/CoreManifest.lua $", "$Rev: 5471 $")
+lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Advanced/CoreManifest.lua $", "$Rev: 5471 $")

@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: CoreSettings.lua 5475 2014-09-23 15:50:39Z brykrys $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: CoreSettings.lua 5506 2014-10-19 18:24:27Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	Settings GUI
@@ -135,7 +135,6 @@ local settingDefaults = {
 	['scandata.summaryonpartial'] = true,
 	['clickhook.enable'] = true,
 	['scancommit.targetFPS'] = 25,
---	['scancommit.speed'] = 50,
 	['scancommit.progressbar'] = true,
 	['scancommit.ttl'] = 5,
 	['core.general.alwaysHomeFaction'] = true,
@@ -146,11 +145,11 @@ local settingDefaults = {
 	["ModTTShow"] = "always",
 	["post.clearonclose"] = true,
 	["post.confirmonclose"] = true,
-	["core.scan.sellernamedelay"] = true,
+	["core.scan.sellernamedelay"] = false,
 	["core.scan.unresolvedtolerance"] = 0,
 	["core.scan.scanallqueries"] = true,
-	["core.scan.hybridscans"] = true,
-	["core.scan.pregetalldelay"] = 0,
+	["core.scan.hybridscans"] = false,
+	["core.scan.scannerthrottle"] = false,
 	["core.tooltip.altchatlink_leftclick"] = false,
 	["core.tooltip.enableincombat"] = false,
 	["core.tooltip.depositcost"] = true,
@@ -583,21 +582,23 @@ function private._MakeGuiConfig() -- Name mangled to block gui creation at first
 	gui:AddTip(id, _TRANS('ADV_HelpTooltip_ScanDataSummaryMicro')) --"Display the summation of an Auction House scan"
 
 	gui:AddControl(id, "Subhead",     0,	_TRANS('ADV_Interface_DataRetrieval')) --"Data Retrieval"
---	gui:AddControl(id, "Slider",	0, 1, "scancommit.speed", 1, 100, 1, _TRANS('ADV_Interface_ProcessingPriority')) --"Processing priority: %d"
---	gui:AddTip(id, _TRANS('ADV_HelpTooltip_ProcessPriority')) --"Sets the processing priority of the scan data. Higher values take less time, but cause more lag"
 	gui:AddControl(id, "Slider",	0, 1, "scancommit.targetFPS", 5, 100, 5, _TRANS('ADV_Interface_ProcessingTargetFPS')) --"Desired FPS during scan: %d"
 	gui:AddTip(id, _TRANS('ADV_HelpTooltip_ProcessingTargetFPS')) --"Sets the target frame rate during the scan. Higher values will be smoother, but will take more time overall."
 	gui:AddControl(id, "Slider",	0, 1, "scancommit.ttl", 1, 70, 1, _TRANS('ADV_Interface_ScanRetrieveTTL').." %d ".._TRANS('ADV_Interface_seconds'))--Scan Retrieval Time-to-Live
 	gui:AddTip(id, _TRANS('ADV_HelpTooltip_ScanRetrieveTTL') )--The number of seconds Auctioneer will spend trying to get data that was missing from the scan initially.
+	gui:AddControl(id, "Slider",	0, 1, "core.scan.unresolvedtolerance", 0, 100, 1, _TRANS("ADV_Interface_UnresolvedAuctionsTolerance").." %d") --Unresolved Auctions Tolerance
+	gui:AddTip(id, _TRANS("ADV_HelpTooltip_UnresolvedAuctionsTolerance")) --Maximum number of unresolvable auctions allowed for a full scan to still be treated as Complete
 
-	gui:AddControl(id, "Checkbox",	0, 1, "core.scan.hybridscans", _TRANS("ADV_Interface_HybridScanning")) --Enable Hybrid scanning for very large Auction Houses
-	gui:AddTip(id, _TRANS("ADV_HelpTooltip_HybridScanning")) --For very large Auction Houses, a GetAll scan will not be able to retrieve all the auctions. A Hybrid scan will start Normal scanning to retrive the auctions missed by the GetAll
 	gui:AddControl(id, "Checkbox",	0, 1, "core.scan.sellernamedelay", _TRANS('ADV_Interface_ScanSellerNames'))--Additional scanning to retrieve more Seller names
 	gui:AddTip(id, _TRANS('ADV_HelpTooltip_ScanSellerNames')) --Perform additional scanning to retrieve more data about the names of Sellers. If this option is disabled scans will finish sooner but some filters and searchers will not work
 	gui:AddControl(id, "Checkbox",	0, 1, "core.scan.scanallqueries", _TRANS('ADV_Interface_ScanAllQueries')) --Scan manual searches and searches by other Addons
 	gui:AddTip(id, _TRANS('ADV_HelpTooltip_ScanAllQueries')) --Enable to perform scanning of every Auctionhouse search. Disable to only scan Auctioneer's own searches.\nYou may need to disable this option if you have compatibility problems with other AddOns
-	gui:AddControl(id, "Slider",	0, 1, "core.scan.unresolvedtolerance", 0, 100, 1, _TRANS("ADV_Interface_UnresolvedAuctionsTolerance").." %d") --Unresolved Auctions Tolerance
-	gui:AddTip(id, _TRANS("ADV_HelpTooltip_UnresolvedAuctionsTolerance")) --Maximum number of unresolvable auctions allowed for a full scan to still be treated as Complete
+
+	gui:AddControl(id, "Subhead", 0, "Experimental Settings (consult the forums before using these)")
+	gui:AddControl(id, "Checkbox",	0, 1, "core.scan.scannerthrottle", "Throttle Scanning stage during fast scans")
+	gui:AddTip(id, "Slow down the Scanning stage during Getall scans. May help avoid disconnects during this stage. May result in missed auctions and incomplete scans")
+	gui:AddControl(id, "Checkbox",	0, 1, "core.scan.hybridscans", _TRANS("ADV_Interface_HybridScanning")) --Enable Hybrid scanning for very large Auction Houses
+	gui:AddTip(id, _TRANS("ADV_HelpTooltip_HybridScanning")) --For very large Auction Houses, a GetAll scan will not be able to retrieve all the auctions. A Hybrid scan will start Normal scanning to retrive the auctions missed by the GetAll
 
 	gui:AddHelp(id, "why show summation",
 		_TRANS('ADV_Help_WhyShowSummation'), --"What is the post scan summary?",
@@ -787,4 +788,4 @@ function private.CheckObsolete()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Advanced/CoreSettings.lua $", "$Rev: 5475 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Advanced/CoreSettings.lua $", "$Rev: 5506 $")

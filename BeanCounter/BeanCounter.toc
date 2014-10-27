@@ -1,13 +1,13 @@
 ## Title: BeanCounter
-## Notes: Auction House transaction history to include purchases and sales, failures and successes.  Data viewable in game and stored for use within other Auctioneer Modules and other AddOns.
+## Notes: Auction House transaction history to include purchases and sales, failures and successes.
 ##
 ## Interface: 60000
 ## Dependencies: Stubby
 ## OptionalDeps: !nLog, Babylonian, DebugLib, SlideBar, Auc-Advanced, Configator, LibExtraTip, TipHelper, LibDataBroker
-## SavedVariables: BeanCounterDB, BeanCounterDBSettings, BeanCounterDBNames, BeanCounterAccountDB
+## SavedVariables: BeanCounterDB, BeanCounterDBSettings, BeanCounterDBNames, BeanCounterAccountDB, BeanCounterMailPatch
 ##
-## Version: 5.21.5490 (SanctimoniousSwamprat)
-## Revision: $Id: BeanCounter.toc 5488 2014-10-14 01:54:22Z dinesh $
+## Version: 5.21b.5509 (SanctimoniousSwamprat)
+## Revision: $Id: BeanCounter.toc 5504 2014-10-19 11:07:29Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Auction House

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Realtime module
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: SearchRealTime.lua 5368 2012-09-29 09:50:29Z brykrys $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: SearchRealTime.lua 5505 2014-10-19 11:12:01Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This Auctioneer module allows the user to search the current Browse tab
@@ -359,9 +359,7 @@ function private.alert(link, cost, reason)
 	if SoundPath and (SoundPath ~= "none") and not private.playedsound then
 		private.playedsound = true
 		if SoundPath == "DoorBell" then
-			SoundPath = embedpath.."Auc-Util-SearchUI\\DoorBell.mp3"
-			PlaySound("GAMEHIGHLIGHTFRIENDLYUNIT")
-			PlaySoundFile(SoundPath)
+			PlaySoundFile(embedpath.."Auc-Util-SearchUI\\DoorBell.ogg")
 		else
 			PlaySound(SoundPath)
 		end
@@ -534,4 +532,4 @@ function private.HookAH()
 	BrowseRTSButton:SetPoint("TOPRIGHT", AuctionFrameBrowse, "TOPLEFT", 310, -15)
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-SearchUI/SearchRealTime.lua $", "$Rev: 5368 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-SearchUI/SearchRealTime.lua $", "$Rev: 5505 $")

@@ -16,6 +16,10 @@ local astrolabe = DongleStub("Astrolabe-1.0")
 local lastWaypoint
 local scanning          -- This function is not re-entrant, stop that
 
+local function getQIDFromIndex(questIndex)
+	return (select(8, GetQuestLogTitle(questIndex)))
+end
+
 local function ObjectivesChanged()
     -- This function should only run if enableClosest is set
     if not enableClosest then
@@ -32,7 +36,7 @@ local function ObjectivesChanged()
 
     local map, floor = GetCurrentMapAreaID()
     local floors = astrolabe:GetNumFloors(map)
-    floor = floor and floor or (floors == 0 and 0 or 1)
+    floor = (floors == 0 and 0 or 1)
 
     local px, py = GetPlayerMapPosition("player")
 
@@ -62,7 +66,7 @@ local function ObjectivesChanged()
             break
         end
 
-        local qid = select(9, GetQuestLogTitle(questIndex))
+        local qid = getQIDFromIndex(questIndex)
         local completed, x, y, objective = QuestPOIGetIconInfo(qid)
 
         if x and y then
@@ -78,7 +82,7 @@ local function ObjectivesChanged()
     if closest then
         local questIndex = GetQuestIndexForWatch(closest)
         local title = GetQuestLogTitle(questIndex)
-        local qid = select(9, GetQuestLogTitle(questIndex))
+        local qid = getQIDFromIndex(questIndex)
         local completed, x, y, objective = QuestPOIGetIconInfo(qid)
 
         if completed then
@@ -127,9 +131,6 @@ end
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("QUEST_POI_UPDATE")
 eventFrame:RegisterEvent("QUEST_LOG_UPDATE")
-hooksecurefunc("WatchFrame_Update", function(self)
-    ObjectivesChanged()
-end)
 
 eventFrame:SetScript("OnEvent", function(self, event, ...)
     if event == "QUEST_POI_UPDATE" then
@@ -164,7 +165,7 @@ local function poi_OnClick(self, button)
     if not questIndex and self.questId then
         -- Lookup the questIndex for the given questId
         for idx = 1, GetNumQuestLogEntries(), 1 do
-            local qid = select(9, GetQuestLogTitle(idx))
+            local qid = getQIDFromIndex(idx)
             if qid == self.questId then
                 questIndex = idx
             end
@@ -176,7 +177,7 @@ local function poi_OnClick(self, button)
     end
 
     local title = GetQuestLogTitle(questIndex)
-    local qid = select(9, GetQuestLogTitle(questIndex))
+    local qid = getQIDFromIndex(questIndex)
     local completed, x, y, objective = QuestPOIGetIconInfo(qid)
     if completed then
         title = "Turn in: " .. title
@@ -208,28 +209,6 @@ local function poi_OnClick(self, button)
         poiclickwaypoints[key] = uid
     end
 end
-
-local hooked = {}
-hooksecurefunc("QuestPOI_DisplayButton", function(parentName, buttonType, buttonIndex, questId)
-    local buttonName = "poi"..tostring(parentName)..tostring(buttonType).."_"..tostring(buttonIndex);
-    local poiButton = _G[buttonName];
-
-    if not hooked[buttonName] then
-        poiButton:HookScript("OnClick", poi_OnClick)
-        poiButton:RegisterForClicks("AnyUp")
-        hooked[buttonName] = true
-    end
-
-    -- Check to see if there is a swap button
-    local swapName = "poi" .. parentName .. "_Swap"
-    local swapButton = _G[swapName]
-
-    if not hooked[swapName] and swapButton then
-        swapButton:HookScript("OnClick", poi_OnClick)
-        swapButton:RegisterForClicks("AnyUp")
-        hooked[swapName] = true
-    end
-end)
 
 function TomTom:EnableDisablePOIIntegration()
     enableClicks= TomTom.profile.poi.enable

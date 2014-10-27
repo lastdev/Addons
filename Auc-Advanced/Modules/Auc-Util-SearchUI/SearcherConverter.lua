@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Converter
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: SearcherConverter.lua 5368 2012-09-29 09:50:29Z brykrys $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: SearcherConverter.lua 5498 2014-10-18 13:24:18Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -242,7 +242,7 @@ function lib:MakeGuiConfig(gui)
 	gui:AddControl(id, "Header",     0,      "Converter search criteria")
 	local last = gui:GetLast(id)
 
-	gui:AddControl(id, "MoneyFramePinned",  0, 1, "converter.profit.min", 1, 999999999, "Minimum Profit")
+	gui:AddControl(id, "MoneyFramePinned",  0, 1, "converter.profit.min", 1, Const.MAXBIDPRICE, "Minimum Profit")
 	gui:AddControl(id, "Slider",            0, 1, "converter.profit.pct", 1, 100, .5, "Min Discount: %0.01f%%")
 
 	gui:AddControl(id, "Subhead",           0,   "Include in search")
@@ -258,7 +258,7 @@ function lib:MakeGuiConfig(gui)
 	gui:AddControl(id, "Checkbox",          0.56, 1,  "converter.allow.buy", "Allow Buyouts")
 	gui:AddControl(id, "Checkbox",          0.42, 1, "converter.maxprice.enable", "Enable individual maximum price:")
 	gui:AddTip(id, "Limit the maximum amount you want to spend with the Converter searcher")
-	gui:AddControl(id, "MoneyFramePinned",  0.42, 2, "converter.maxprice", 1, 999999999, "Maximum Price for Converter")
+	gui:AddControl(id, "MoneyFramePinned",  0.42, 2, "converter.maxprice", 1, Const.MAXBIDPRICE, "Maximum Price for Converter")
 
 	gui:AddControl(id, "Subhead",           0.42,    "Price Valuation Method:")
 	gui:AddControl(id, "Selectbox",         0.42, 1, resources.selectorPriceModels, "converter.model")
@@ -324,4 +324,4 @@ function lib.Search (item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-SearchUI/SearcherConverter.lua $", "$Rev: 5368 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-SearchUI/SearcherConverter.lua $", "$Rev: 5498 $")

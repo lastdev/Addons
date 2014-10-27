@@ -1,7 +1,7 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: BeanCounterMail.lua 5480 2014-09-30 19:54:06Z brykrys $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: BeanCounterMail.lua 5504 2014-10-19 11:07:29Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	BeanCounterMail - Handles recording of all auction house related mail
@@ -28,7 +28,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/BeanCounter/BeanCounterMail.lua $","$Rev: 5480 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/BeanCounter/BeanCounterMail.lua $","$Rev: 5504 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local lib = BeanCounter
 local private, print, get, set, _BC = lib.getLocals() --_BC localization function
@@ -58,6 +58,46 @@ local wonLocale = AUCTION_WON_MAIL_SUBJECT:gsub("%%s", "")
 
 local reportTotalMail, reportReadMail = 0, 0 --Used as a debug check on mail scanning engine
 
+-- usage: factionEncode[private.playerSettings.faction]
+local factionEncode = {
+	Alliance = "A",
+	Horde = "H",
+}
+
+local senderAuctionHouse
+function private.isAuctionHouseMail(sender, subject)
+	if not senderAuctionHouse then
+		senderAuctionHouse = {}
+		senderAuctionHouse[_BC('MailSenderAuctionHouse')] = true -- from BeanCounterStrings.lua
+		if BUTTON_LAG_AUCTIONHOUSE then -- from GlobalStrings.lua: looks like this may be a viable localized string for "Auction House"?
+			senderAuctionHouse[BUTTON_LAG_AUCTIONHOUSE] = true
+		end
+		if BeanCounterMailPatch then -- recorded value(s) from known AH mail
+			for _, s in ipairs(BeanCounterMailPatch) do
+				senderAuctionHouse[s] = true
+			end
+		end
+	end
+	if senderAuctionHouse[sender] then
+		return true
+	end
+
+	-- try to 'learn' Auction House sender localized name by inspecting subject
+	-- temporary fix - this is slow and will trigger for every non-AH mail
+	-- also, potentially prone to accidental matches?
+	if subject and subject ~= "" then
+		if subject:match(expiredLocale) or subject:match(outbidLocale) or subject:match(successLocale) or subject:match(wonLocale) or subject:match(cancelledLocale) then
+			if not BeanCounterMailPatch then
+				BeanCounterMailPatch = {}
+			end
+			tinsert(BeanCounterMailPatch, sender)
+			senderAuctionHouse[sender] = true
+
+			return true
+		end
+	end
+end
+
 local registeredInboxFrameHook = false
 function private.mailMonitor(event,arg1)
 	if (event == "MAIL_INBOX_UPDATE") then
@@ -66,6 +106,7 @@ function private.mailMonitor(event,arg1)
 	elseif (event == "MAIL_SHOW") then
 		private.inboxStart = {} --clear the inbox list, if we errored out this should give us a fresh start.
 		private.mailReadOveride = {}
+		private.lastSkipString = nil
 		if not registeredInboxFrameHook then --make sure we only ever register this hook once
 			registeredInboxFrameHook = true
 			hooksecurefunc("InboxFrame_OnClick", private.mailFrameClick)
@@ -116,22 +157,26 @@ end
 --Mailbox Snapshots
 function private.updateInboxStart()
 	reportTotalMail = GetInboxNumItems()
+	local skipString = ""
 	for n = reportTotalMail, 1, -1 do
 		local _, _, sender, subject, money, _, daysLeft, _, wasRead, _, _, _ = GetInboxHeaderInfo(n)
-		if subject == "" then debugPrint("Skipping mail #", n, "The server is not sending the subject data. Mail will be left unread and we will retry") end
+		if subject == "" then
+			if skipString == "" then
+				skipString = tostring(n)
+			else
+				skipString = tostring(n) .. "," .. skipString
+			end
+		end
 		if sender and subject and subject ~= "" and (not wasRead or private.mailReadOveride[n]) then -- subject ~= "" when the server fails, this will prevent us from reading the mail giving the server more time to get its shit togather
 			local auctionHouse --A, H, N flag for which AH the trxn came from
-			if sender ==_BC('MailAllianceAuctionHouse') then
-				auctionHouse = "A"
-			elseif sender == _BC('MailHordeAuctionHouse') then
-				auctionHouse = "H"
-			elseif sender == _BC('MailNeutralAuctionHouse') then
-				auctionHouse = "N"
+			if private.isAuctionHouseMail(sender, subject) then
+				auctionHouse = factionEncode[private.playerSettings.faction]
 			end
+
 
 			if auctionHouse then
 				private.HideMailGUI(true)
-				wasRead = wasRead or 0 --its nil unless its has been read
+				wasRead = wasRead and 1 or 0 -- three possible states 0=unread 1=read by addon 2=read by player
 				private.mailReadOveride[n] = false -- set back to false so we don't read the same message more than once
 				local itemLink = GetInboxItemLink(n, 1)
 				local _, _, stack, _, _ = GetInboxItem(n)
@@ -148,10 +193,14 @@ function private.updateInboxStart()
 		end
 		private.lastCheckedMail = GetTime() --this keeps us from hiding the mail UI to early and causing flicker
 	end
+	if skipString ~= "" and skipString ~= private.lastSkipString then
+		debugPrint("Skipping mail #", skipString, "The server is not sending the subject data. Mail will be left unread and we will retry")
+		private.lastSkipString = skipString
+	end
 	private.wipeSearchCache() --clear the search cache, we are updating data so it is now outdated
 end
 function private.getInvoice(n, sender, subject)
-	if sender:match(_BC('MailAllianceAuctionHouse')) or sender:match(_BC('MailHordeAuctionHouse')) or sender:match(_BC('MailNeutralAuctionHouse')) then
+	if private.isAuctionHouseMail(sender, subject) then
 		if subject:match(successLocale) or subject:match(wonLocale) then
 			local invoiceType, itemName, playerName, bid, buyout, deposit, consignment = GetInboxInvoiceInfo(n)
 			if invoiceType and playerName and playerName ~= "" and bid and bid > 0 then --Silly name throttling lead to missed invoice lookups
@@ -170,7 +219,7 @@ private.lastCheckedMail = GetTime()
 function private.mailonUpdate()
 	local total = #private.inboxStart
 	if total > 0 then
-		for i = total, 1, -1 do -- in pairs(private.inboxStart) do
+		for i = total, 1, -1 do
 			--update mail GUI Count
 			local count = #private.inboxStart
 			--private.CountGUI:SetText("Recording: "..total-count.." of "..total.." items")
@@ -221,7 +270,7 @@ function private.mailSort()
 		local messageAgeInSeconds = floor((30 - private.reconcilePending[i]["age"]) * 24 * 60 * 60)
 		private.reconcilePending[i]["time"] = (time() - messageAgeInSeconds)
 
-		if private.reconcilePending[i]["sender"]:match(_BC('MailAllianceAuctionHouse')) or private.reconcilePending[i]["sender"]:match(_BC('MailHordeAuctionHouse')) or private.reconcilePending[i]["sender"]:match(_BC('MailNeutralAuctionHouse')) then
+		if private.isAuctionHouseMail(private.reconcilePending[i].sender, private.reconcilePending[i].subject) then
 			if private.reconcilePending[i].subject:match(successLocale) and (private.reconcilePending[i].retrieved == "yes" or private.reconcilePending[i].retrieved == "failed") then
 				private.sortCompletedAuctions( i )
 
@@ -329,7 +378,7 @@ function private.findStackcompletedAuctions(key, itemID, itemLink, soldDeposit, 
 						if (soldTime > postTime) and (oldestPossible < postTime) then
 							tremove(private.playerData[key][itemID][itemString], index) --remove the matched item From postedAuctions DB
 							--private.playerData[key][itemID][itemString][index] = private.playerData[key][itemID][itemString][index]..";USED Sold"
-							debugPrint("postedAuction removed as sold", itemID, itemLink, itemString)
+							--debugPrint("postedAuction removed as sold", itemID, itemLink, itemString)
 							return tonumber(postStack), tonumber(postBid), itemString   --itemString is the "real" itemlink
 						end
 					end
@@ -669,11 +718,12 @@ function private.mailFrameUpdate()
 		button:Show()
 
 		local itemindex = ((InboxFrame.pageNum * 7) - 7 + i) --this gives us the actual itemindex as oposed to teh 1-7 button index
-		local _, _, sender, subject, money, _, daysLeft, _, wasRead, _, _, _ = GetInboxHeaderInfo(itemindex)
+		--local _, _, sender, subject, money, _, daysLeft, _, wasRead, _, _, _ = GetInboxHeaderInfo(itemindex)
 		if db["mailbox"][itemindex] then
 			local sender = db["mailbox"][itemindex]["sender"]
-			if sender and (sender:match(_BC('MailHordeAuctionHouse')) or sender:match(_BC('MailAllianceAuctionHouse')) or sender:match(_BC('MailNeutralAuctionHouse'))) then
-				if (db["mailbox"][itemindex]["read"] < 2) then
+			local subject = db["mailbox"][itemindex]["subject"]
+			if private.isAuctionHouseMail(sender, subject) then
+				if (db["mailbox"][itemindex]["read"] ~= 2) then
 					if get("util.beancounter.mailrecolor") == "icon" or get("util.beancounter.mailrecolor") == "both" then
 						_G[basename.."ButtonSlot"]:SetVertexColor(1.0, 0.82, 0)
 						SetDesaturation(buttonIcon, nil)
@@ -697,7 +747,7 @@ function private.mailBoxColorStart()
 
 	for n = 1,GetInboxNumItems() do
 		local _, _, sender, subject, money, _, daysLeft, _, wasRead, _, _, _ = GetInboxHeaderInfo(n);
-		mailCurrent[n] = {["time"] = daysLeft ,["sender"] = sender, ["subject"] = subject, ["read"] = wasRead or 0 }
+		mailCurrent[n] = {["time"] = daysLeft ,["sender"] = sender, ["subject"] = subject, ["read"] = wasRead and 1 or 0 }
 	end
 
 	--Fix reported errors of mail DB not existing for some reason.
@@ -725,7 +775,7 @@ function private.mailBoxColorStart()
 					--debugPrint("This is marked read so removing ", i)
 					tremove(db["mailbox"], i)
 					break
-				elseif db["mailbox"][i]["read"] < 2 then
+				elseif db["mailbox"][i]["read"] ~= 2 then
 	--This message has not been read, so we have a sequence of messages with the same name. Need to go back recursivly till we find the "Real read" message that need removal
 					for V = group["end"], group["start"], -1 do
 						if db["mailbox"][V]["read"] == 2 then

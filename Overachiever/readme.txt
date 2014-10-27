@@ -1,5 +1,5 @@
 
-Overachiever v0.73
+Overachiever v0.80
 ==============================
 
 Author: Tuhljin
@@ -106,6 +106,9 @@ Change log
 ==========
 
 The change log lists changes of particular note to users, not every change made.
+
+v0.80
+- Initial updates for WoW patch 6.0.x. Fixes the most common errors.
 
 v0.73
 - Updated for WoW patch 5.4.

@@ -2,7 +2,7 @@
 ## Interface: 60000
 ## Dependancies: Auc-Advanced
 ##
-## Version: 5.21.5490 (SanctimoniousSwamprat)
+## Version: 5.21b.5509 (SanctimoniousSwamprat)
 ## Revision: $Id: Auc-Util-PriceLevel.toc 5488 2014-10-14 01:54:22Z dinesh $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

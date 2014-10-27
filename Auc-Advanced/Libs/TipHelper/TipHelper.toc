@@ -6,7 +6,7 @@
 ## Dependencies: LibExtraTip
 ## OptionalDependencies: !nLog
 ##
-## Version: 5.21.5490 (SanctimoniousSwamprat)
+## Version: 5.21b.5509 (SanctimoniousSwamprat)
 ## Revision: $Id: TipHelper.toc 370 2014-10-14 01:59:24Z dinesh $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Libraries

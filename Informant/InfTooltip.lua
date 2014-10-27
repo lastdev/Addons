@@ -1,8 +1,8 @@
 --[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: InfTooltip.lua 5406 2013-05-10 10:30:00Z brykrys $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: InfTooltip.lua 5502 2014-10-18 16:29:56Z brykrys $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
 	Tooltip handler. Assumes the responsibility of filling the tooltip
@@ -23,7 +23,7 @@
 		along with this program(see GPL.txt); if not, write to the Free Software
 		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ]]
-Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Informant/InfTooltip.lua $", "$Rev: 5406 $")
+Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Informant/InfTooltip.lua $", "$Rev: 5502 $")
 
 local nilSafeString			-- nilSafeString(String)
 local whitespace			-- whitespace(length)
@@ -128,7 +128,10 @@ function Informant.TooltipHandler(frame, item, count, name, link, quality)
 	end
 
 	if (getFilter('show-link')) then
-		tooltip:AddLine(_TRANS('INF_Tooltip_ItemLink'):format((":"):join(itemID, enchant, gemSlot1, gemSlot2, gemSlot3, gemSlotBonus, randomProp, uniqID)), nil, embedded)
+		local showlink = link:match("item:([^|]+)")
+		if showlink then
+			tooltip:AddLine(_TRANS('INF_Tooltip_ItemLink'):format(showlink), nil, embedded)
+		end
 	end
 
 	--DEFAULT_CHAT_FRAME:AddMessage("Got vendor: "..(buy or 0).."/"..(sell or 0))

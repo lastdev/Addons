@@ -1109,7 +1109,7 @@ do
   -- CREATE LIST OF VALID LOCATIONS:
   -- Add all zones to the list:
   local zonetab = {}
-  for i=1,select("#",GetMapContinents()) do  zonetab[i] = { GetMapZones(i) };  end
+  for i=1,select("#",Overachiever.GetMapContinents_names()) do  zonetab[i] = { Overachiever.GetMapZones_names(i) };  end
   for i,tab in ipairs(zonetab) do
     for n,z in ipairs(tab) do  suggested[z] = true;  end  -- Already localized so no need for LBZ here.
   end
@@ -1119,7 +1119,11 @@ do
     local tab
     for i=1,select("#", ...) do
       tab = select(i, ...)
-      for k,v in pairs(tab) do  list[ LBZ[k] or k ] = true;  end  -- Add localized version of instance names.
+      for k,v in pairs(tab) do
+	    list[ LBZ[k] or k ] = true  -- Add localized version of instance names.
+		--print("adding: k = "..(LBZ[k] or k)..(LBZ[k] and "" or "no LBZ[k]"))
+		if (Overachiever_Debug and not LBZ[k]) then  print("POSSIBLE ERROR - no LBZ lookup found for "..k);  end
+	  end
     end
   end
   addtolist(suggested, ACHID_INSTANCES, ACHID_INSTANCES_NORMAL, ACHID_INSTANCES_HEROIC,
@@ -1132,8 +1136,10 @@ do
   for k in pairs(suggested) do
     count = count + 1
     LocationsList[count] = k
+	--print("adding "..k)
   end
   wipe(suggested)
+  WHATWHAT = LocationsList
   sort(LocationsList)
   -- Cross-reference by lowercase key to place in the array:
   for i,v in ipairs(LocationsList) do  LocationsList[strlower(v)] = i;  end

@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: BeanCounter
-	Revision: $Id: BeanCounterStrings.lua 5456 2014-06-05 11:59:54Z brykrys $
-	Version: 5.21.5490 (SanctimoniousSwamprat)
+	Revision: $Id: BeanCounterStrings.lua 5492 2014-10-15 18:21:21Z brykrys $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -333,6 +333,7 @@ BeanCounterLocalizations = {
 		["MailAllianceAuctionHouse"]	= "Alliance Auction House";
 		["MailHordeAuctionHouse"]	= "Horde Auction House";
 		["MailNeutralAuctionHouse"]	= "Blackwater Auction House";
+		["MailSenderAuctionHouse"]	= "Auction House";
 
 		-- Section: Tooltip Messages
 		["TTDateString"]	= "Enter the format that you would like your date field to show. Default is %c.";

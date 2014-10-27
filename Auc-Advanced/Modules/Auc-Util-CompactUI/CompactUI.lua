@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer - Price Level Utility module
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: CompactUI.lua 5444 2013-11-29 18:35:10Z brykrys $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: CompactUI.lua 5496 2014-10-17 12:31:59Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a price level indicator
@@ -557,7 +557,8 @@ function private.RetrievePage()
 	local pagesize = GetNumAuctionItems("list")
 	if pagesize < 50 then
 		pagesize = 50
-	elseif pagesize > 50 then --If doing a GetAll, don't show anything
+	--elseif pagesize > 50 then --If doing a GetAll, don't show anything
+	elseif pagesize > 3000 then -- ### temp fix for "Usable Items" setting returning more than 50 results at a time [ADV-686]
 		pagesize = 0
 	end
 	for i = 1, pagesize do
@@ -760,7 +761,8 @@ function private.MyAuctionFrameUpdate()
 	local index, button
 	BrowseBidButton:Disable()
 	BrowseBuyoutButton:Disable()
-	if (numBatchAuctions > 50) then
+	--if (numBatchAuctions > 50) then
+	if (numBatchAuctions > 3000) then -- ### temp fix for "Usable Items" [ADV-686]
 		numBatchAuctions = 0
 		totalAuctions = 0
 	end
@@ -889,4 +891,4 @@ function private.SetupConfigGui(gui)
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 5444 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 5496 $")

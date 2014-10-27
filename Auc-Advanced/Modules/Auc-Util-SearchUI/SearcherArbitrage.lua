@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer - Search UI - Searcher Arbitrage
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: SearcherArbitrage.lua 5368 2012-09-29 09:50:29Z brykrys $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: SearcherArbitrage.lua 5498 2014-10-18 13:24:18Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -215,7 +215,7 @@ function lib:MakeGuiConfig(gui)
 
 	local last = gui:GetLast(id)
 
-	gui:AddControl(id, "MoneyFramePinned",  0, 1, "arbitrage.profit.min", 1, 999999999, "Minimum Profit")
+	gui:AddControl(id, "MoneyFramePinned",  0, 1, "arbitrage.profit.min", 1, Const.MAXBIDPRICE, "Minimum Profit")
 	gui:AddControl(id, "Slider",            0, 1, "arbitrage.profit.pct", 1, 100, .5, "Min Discount: %0.01f%%")
 	gui:AddControl(id, "Checkbox",          0, 1, "arbitrage.seen.check", "Check Seen count")
 	gui:AddControl(id, "Slider",            0, 2, "arbitrage.seen.min", 1, 100, 1, "Min seen count: %s")
@@ -234,7 +234,7 @@ function lib:MakeGuiConfig(gui)
 	gui:AddControl(id, "Checkbox",          0.56, 1, "arbitrage.allow.buy", "Allow Buyouts")
 	gui:AddControl(id, "Checkbox",          0.42, 1, "arbitrage.maxprice.enable", "Enable individual maximum price:")
 	gui:AddTip(id, "Limit the maximum amount you want to spend with the Arbitrage searcher")
-	gui:AddControl(id, "MoneyFramePinned",  0.42, 2, "arbitrage.maxprice", 1, 999999999, "Maximum Price for Arbitrage")
+	gui:AddControl(id, "MoneyFramePinned",  0.42, 2, "arbitrage.maxprice", 1, Const.MAXBIDPRICE, "Maximum Price for Arbitrage")
 
 	gui:AddControl(id, "Subhead",           0.42,    "Price Valuation Method:")
 	gui:AddControl(id, "Selectbox",         0.42, 1, resources.selectorPriceModels, "arbitrage.model")
@@ -297,4 +297,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-SearchUI/SearcherArbitrage.lua $", "$Rev: 5368 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-SearchUI/SearcherArbitrage.lua $", "$Rev: 5498 $")

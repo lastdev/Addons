@@ -1,5 +1,5 @@
 ## Title: Auc:Stat:Purchased Stats
-## Notes: Statistics extension for Auctioneer that performs historical exponential moving averages at the 1, 3, 7 and 14 day intervals, using the item's last known price before expiration and buy-out price if auction ends early.
+## Notes: Statistics extension for Auctioneer that assumes an item was bought out if the auction ends early.
 ##
 ## Interface: 60000
 ## LoadOnDemand: 0
@@ -7,8 +7,8 @@
 ## Dependencies: Auc-Advanced
 ## SavedVariables: AucAdvancedStatPurchasedData
 ##
-## Version: 5.21.5490 (SanctimoniousSwamprat)
-## Revision: $Id: Auc-Stat-Purchased.toc 5488 2014-10-14 01:54:22Z dinesh $
+## Version: 5.21b.5509 (SanctimoniousSwamprat)
+## Revision: $Id: Auc-Stat-Purchased.toc 5499 2014-10-18 14:22:33Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Auction House

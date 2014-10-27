@@ -333,11 +333,11 @@ function TomTom:ShowHideWorldCoords()
         TomTomWorldFrame.Cursor:ClearAllPoints()
 
         if mapSizedUp then
-            TomTomWorldFrame.Player:SetPoint("RIGHT", WorldMapPositioningGuide, "BOTTOM", -15, 15)
-            TomTomWorldFrame.Cursor:SetPoint("LEFT", WorldMapPositioningGuide, "BOTTOM", 15, 15)
+            TomTomWorldFrame.Player:SetPoint("TOPLEFT", WorldMapFrame.BorderFrame, "TOPLEFT",   30, -6)
+            TomTomWorldFrame.Cursor:SetPoint("TOPLEFT",  WorldMapFrame.BorderFrame, "TOPRIGHT",  -170, -6)
         else
-            TomTomWorldFrame.Player:SetPoint("LEFT", WorldMapPositioningGuide, "BOTTOMLEFT", 25, 16)
-            TomTomWorldFrame.Cursor:SetPoint("LEFT", WorldMapPositioningGuide, "BOTTOMLEFT", 140, 16)
+            TomTomWorldFrame.Player:SetPoint("TOPLEFT", WorldMapFrame.BorderFrame, "TOPLEFT", 100, -6)
+            TomTomWorldFrame.Cursor:SetPoint("TOPLEFT",  WorldMapFrame.BorderFrame, "TOPRIGHT", -170, -6)
         end
 
         TomTomWorldFrame.Player:Hide()
@@ -428,6 +428,11 @@ local world_click_verify = {
 
 local origScript = WorldMapButton_OnClick
 WorldMapButton_OnClick = function(self, ...)
+    if WorldMapButton.ignoreClick then
+        WorldMapButton.ignoreClick = false;
+        return;
+    end
+
     local mouseButton, button = ...
     if mouseButton == "RightButton" then
         -- Check for all the modifiers that are currently set
@@ -450,8 +455,8 @@ WorldMapButton_OnClick = function(self, ...)
     end
 end
 
-if WorldMapButton:GetScript("OnMouseUp") == origScript then
-    WorldMapButton:SetScript("OnMouseUp", WorldMapButton_OnClick)
+if WorldMapButton:GetScript("OnClick") == origScript then
+    WorldMapButton:SetScript("OnClick", WorldMapButton_OnClick)
 end
 
 local function WaypointCallback(event, arg1, arg2, arg3)

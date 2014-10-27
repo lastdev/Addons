@@ -2,7 +2,7 @@
 ## Interface: 50400
 ## Dependancies: Auc-Advanced
 ##
-## Version: 5.21.5490 (SanctimoniousSwamprat)
+## Version: 5.21b.5509 (SanctimoniousSwamprat)
 ## Revision: $Id: Auc-Stat-WOWEcon.toc 5432 2013-09-10 07:59:18Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

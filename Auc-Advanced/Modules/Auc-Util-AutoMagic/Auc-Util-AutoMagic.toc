@@ -1,12 +1,12 @@
 ## Title: Auc:Util:AutoMagic
-## Notes: Automates some repetitive tasks, such as auto-selling grays, unusable quest rewards, or other items you designate.  Bulk mail items to Alternate Characters based upon the reason for which they were purchased.
+## Notes: Automates some repetitive tasks, such as auto-selling and bulk mailing.
 ##
 ## Interface: 60000
 ## Dependancies: Auc-Advanced
 ## OptionalDependencies: Auc-Util-Appraiser, Enchantrix, Auc-Util-ItemSuggest, LibDataBroker
 ##
-## Version: 5.21.5490 (SanctimoniousSwamprat)
-## Revision: $Id: Auc-Util-AutoMagic.toc 5488 2014-10-14 01:54:22Z dinesh $
+## Version: 5.21b.5509 (SanctimoniousSwamprat)
+## Revision: $Id: Auc-Util-AutoMagic.toc 5499 2014-10-18 14:22:33Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Auction House

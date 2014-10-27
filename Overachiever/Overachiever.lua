@@ -600,23 +600,26 @@ local function TrackerBtnOnLeave()
   GameTooltip:Hide()
 end
 
--- Hook current Watch Frame Link Buttons:
-for k, v in pairs(WATCHFRAME_LINKBUTTONS) do
-  v.OverachieverHooked = true
-  v:HookScript("OnEnter", TrackerBtnOnEnter)
-  v:HookScript("OnLeave", TrackerBtnOnLeave)
+if (WATCHFRAME_LINKBUTTONS) then --asdf stopgap solution until watch frame can be used properly
+
+	-- Hook current Watch Frame Link Buttons:
+	for k, v in pairs(WATCHFRAME_LINKBUTTONS) do
+	  v.OverachieverHooked = true
+	  v:HookScript("OnEnter", TrackerBtnOnEnter)
+	  v:HookScript("OnLeave", TrackerBtnOnLeave)
+	end
+
+	-- Hook future Watch Frame Link Buttons when they are created:
+	setmetatable(WATCHFRAME_LINKBUTTONS, { __newindex = function(t, k, v)
+	  rawset(t, k, v)
+	  if (not v.OverachieverHooked) then
+		v.OverachieverHooked = true
+		v:HookScript("OnEnter", TrackerBtnOnEnter)
+		v:HookScript("OnLeave", TrackerBtnOnLeave)
+	  end
+	end })
+
 end
-
--- Hook future Watch Frame Link Buttons when they are created:
-setmetatable(WATCHFRAME_LINKBUTTONS, { __newindex = function(t, k, v)
-  rawset(t, k, v)
-  if (not v.OverachieverHooked) then
-    v.OverachieverHooked = true
-    v:HookScript("OnEnter", TrackerBtnOnEnter)
-    v:HookScript("OnLeave", TrackerBtnOnLeave)
-  end
-end })
-
 
 local function getExplorationAch(zonesOnly, ...)
   local id, cat
@@ -1205,6 +1208,33 @@ SlashCmdList["ACHIEVEMENTUI"] = slashHandler;
 -- LOCALIZATION ASSIST
 --------------------------
 
+function Overachiever.GetMapContinents_names()
+  local tab = {}
+  local continents = { GetMapContinents() }
+  local count = 0
+  for i,v in ipairs(continents) do
+    if (i % 2 == 0) then -- As of WoW 6.0, only the even numbered results are strings. The rest are integers (IDs for the continents).
+      count = count + 1
+      tab[count] = continents[i];
+    end
+  end
+  return unpack(tab)
+end
+
+function Overachiever.GetMapZones_names(index)
+  local tab = {}
+  local zones = { GetMapZones(index) }
+  local count = 0
+  for i,v in ipairs(zones) do
+    if (i % 2 == 0) then -- As of WoW 6.0, only the even numbered results are strings. The rest are integers (IDs for the continents).
+      count = count + 1
+      tab[count] = zones[i];
+    end
+  end
+  return unpack(tab)
+end
+
+
 if (Overachiever_Debug) then
 
   function Overachiever.Debug_GetKillCriteriaAchs()
@@ -1254,11 +1284,11 @@ if (Overachiever_Debug) then
     end
   end
 
-  -- Intended first call: BuildZoneIDTable(0, GetMapContinents());
+  -- Intended first call: BuildZoneIDTable(0, Overachiever.GetMapContinents_names());
   local function BuildZoneIDTable(num, conname, next, ...)
     num = num + 1
     --print("BuildZoneIDTable: "..conname.." ("..num..")")
-    BuildZoneIDTable_z(num, 0, GetMapZones(num))
+    BuildZoneIDTable_z(num, 0, Overachiever.GetMapZones_names(num))
     if (next) then
       BuildZoneIDTable(num, next, ...)
     end
@@ -1268,7 +1298,7 @@ if (Overachiever_Debug) then
   function Overachiever.Debug_GetExplorationData(testAchMatch, saveZoneIDs)
     if (not ZoneID and (testAchMatch or saveZoneIDs)) then
       ZoneID = {}
-      BuildZoneIDTable(0, GetMapContinents());
+      BuildZoneIDTable(0, Overachiever.GetMapContinents_names());
       chatprint("Zone data gathered.")
     end
     if (saveZoneIDs) then  Overachiever_Settings.Debug_ZoneData = ZoneID;  end

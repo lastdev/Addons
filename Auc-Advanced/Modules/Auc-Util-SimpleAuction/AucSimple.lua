@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Basic Auction Posting
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: AucSimple.lua 5362 2012-09-21 17:59:48Z brykrys $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: AucSimple.lua 5507 2014-10-23 16:08:21Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a simple dialog for
@@ -262,7 +262,7 @@ function private.SetupConfigGui(gui)
 	gui:AddControl(id, "Selectbox",    0, 2, {{"fixed", "Fixed value"}, {"percent", "Percentage"}}, "util.simpleauc.undercut")
 	gui:AddTip(id, "When the auction is to be undercut, specify how you want the lowest price to be undercut")
 	gui:AddControl(id, "Label",        0, 1, nil, "Fixed undercut value amount:")
-	gui:AddControl(id, "MoneyFramePinned", 0, 2, "util.simpleauc.undercut.fixed", 0, 999999999)
+	gui:AddControl(id, "MoneyFramePinned", 0, 2, "util.simpleauc.undercut.fixed", 0, AucAdvanced.Const.MAXBIDPRICE)
 	gui:AddTip(id, "This is the fixed amount to undercut the lowest auction by")
 	gui:AddControl(id, "Label",        0, 1, nil, "Percentage undercut amount:")
 	gui:AddControl(id, "NumeriWide", 0, 3, "util.simpleauc.undercut.percent", 0,100, 0.5, "Percentage: %s%%")
@@ -274,4 +274,4 @@ function private.SetupConfigGui(gui)
 	gui:AddControl(id, "Checkbox",     0, 2, "util.simpleauc.scanbutton.disable.wowecon", "Except if WowEcon is loaded")
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-SimpleAuction/AucSimple.lua $", "$Rev: 5362 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-SimpleAuction/AucSimple.lua $", "$Rev: 5507 $")

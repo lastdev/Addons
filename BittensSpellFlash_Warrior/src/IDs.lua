@@ -6,7 +6,7 @@ c.Init(a)
 
 a.SpellIDs = {
 	["Avatar"] = 107574,
-    ["Anger Management"] = 152278,
+  ["Anger Management"] = 152278,
 	["Battle Shout"] = 6673,
 	["Battle Stance"] = 2457,
 	["Berserker Rage"] = 18499,
@@ -41,6 +41,7 @@ a.SpellIDs = {
 	["Raging Blow!"] = 131116,
 	["Rallying Cry"] = 97462,
 	["Recklessness"] = 1719,
+	["Rend"] = 772,
 	["Revenge"] = 6572,
 	["Second Wind"] = 125667,
 	["Shield Barrier"] = 112048,

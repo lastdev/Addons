@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI - Searcher Snatch
-	Version: 5.21.5490 (SanctimoniousSwamprat)
-	Revision: $Id: SearcherSnatch.lua 5452 2014-01-18 19:02:51Z brykrys $
+	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Revision: $Id: SearcherSnatch.lua 5498 2014-10-18 13:24:18Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -323,7 +323,7 @@ function lib:MakeGuiConfig(gui)
 	gui:AddTip(id, "Allow Snatch searcher to suggest buyouts")
 	gui:AddControl(id, "Checkbox", 0, 1, "snatch.maxprice.enable", "Enable individual maximum price:")
 	gui:AddTip(id, "Limit the maximum amount you want to spend with the Snatch searcher")
-	gui:AddControl(id, "MoneyFramePinned", 0, 2, "snatch.maxprice", 1, 999999999, "Maximum Price for Snatch")
+	gui:AddControl(id, "MoneyFramePinned", 0, 2, "snatch.maxprice", 1, Const.MAXBIDPRICE, "Maximum Price for Snatch")
 
 	gui:AddControl(id, "Subhead", 0, "Price Valuation Method:")
 	gui:AddControl(id, "Selectbox", 0, 1, resources.selectorPriceModels, "snatch.price.model")
@@ -645,4 +645,4 @@ function private.refreshDisplay()
 	frame.pctBox.help:SetText(format("Buy as percent of %s value", get("snatch.price.model") or "market") )
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21a/Auc-Util-SearchUI/SearcherSnatch.lua $", "$Rev: 5452 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-SearchUI/SearcherSnatch.lua $", "$Rev: 5498 $")

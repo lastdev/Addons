@@ -1,5 +1,5 @@
 ## Title: Auc-Auctioneer |cff774422(core)
-## Notes: Auctioneer assists players to track item values; whether buying or selling. You must enable at least one statistics extension (like Auc:Stats:Simple) to begin.  Combines with other modules to form the powerful, fully configurable Auctioneer Suite.
+## Notes: Auctioneer assists players to track item values on the Auction House; whether buying or selling.
 ##
 ## Interface: 60000
 ## LoadOnDemand: 0
@@ -8,8 +8,8 @@
 ## SavedVariables: AucAdvancedConfig, AucAdvancedData
 ## SavedVariablesPerCharacter: AucAdvancedLocal
 ##
-## Version: 5.21.5490 (SanctimoniousSwamprat)
-## Revision: $Id: Auc-Advanced.toc 5488 2014-10-14 01:54:22Z dinesh $
+## Version: 5.21b.5509 (SanctimoniousSwamprat)
+## Revision: $Id: Auc-Advanced.toc 5499 2014-10-18 14:22:33Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Auction House
