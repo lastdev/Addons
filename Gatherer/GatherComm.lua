@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
-	Revision: $Id: GatherComm.lua 1106 2014-02-23 01:00:37Z Esamynn $
+	Version: 5.0.0 (<%codename%>)
+	Revision: $Id: GatherComm.lua 1114 2014-10-11 07:13:26Z ccox $
 
 	License:
 	This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherComm.lua $", "$Rev: 1106 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_5.0.0/Gatherer/GatherComm.lua $", "$Rev: 1114 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient
@@ -155,7 +155,7 @@ function Gatherer.Comm.Receive( message, how, who )
 				Gatherer.Report.SendFeedback(who, "RECV", objectID)
 			elseif ( setting(msgtype..".print.recv") ) then
 				local gatherC, gatherZ = Gatherer.ZoneTokens.GetContinentAndZone(zoneToken)
-				local localizedZoneName = select(gatherZ, GetMapZones(gatherC))
+				local localizedZoneName = select(2*gatherZ, GetMapZones(gatherC))
 				Gatherer.Util.ChatPrint(_tr("COMM_RECEIVE_NODE", objName, localizedZoneName, who, _tr(how)))
 			end
 		end

@@ -2,30 +2,60 @@
 -- Setup
 --
 
-local oRA = LibStub("AceAddon-3.0"):GetAddon("oRA3")
+local addonName, scope = ...
+local oRA = scope.addon
 local module = oRA:NewModule("Cooldowns", "AceTimer-3.0")
-local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
+local L = scope.locale
 local AceGUI = LibStub("AceGUI-3.0")
 local candy = LibStub("LibCandyBar-3.0")
 local media = LibStub("LibSharedMedia-3.0")
 local LGIST = LibStub("LibGroupInSpecT-1.1")
 
-module.VERSION = tonumber(("$Revision: 785 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 824 $"):sub(12, -3))
 
 --------------------------------------------------------------------------------
 -- Locals
 --
 
-local mTypeBar = media and media.MediaType and media.MediaType.STATUSBAR or "statusbar"
-local mTypeFont = media and media.MediaType and media.MediaType.FONT or "font"
+-- GLOBALS: oRA3 oRA3CooldownFrame NUM_GLYPH_SLOTS MAX_TALENT_TIERS  NUM_TALENT_COLUMNS NONE UIParent
+-- GLOBALS: GameTooltip GameFontNormal GameFontHighlight LOCALIZED_CLASS_NAMES_MALE InterfaceOptionsFrame_OpenToCategory
+
 local playerName, playerGUID
+
+local cdModifiers = {}
+
+local function addMod(guid, spell, modifier)
+	if modifier ~= 0 then
+		if not cdModifiers[guid] then cdModifiers[guid] = {} end
+		cdModifiers[guid][spell] = (cdModifiers[guid][spell] or 0) + modifier
+	end
+end
+
+local talentCooldowns = {
+	[19364] = function(guid) -- Crouching Tiger, Hidden Chimera
+		addMod(guid, 781, 10) -- Disengage, -10sec
+		addMod(guid, 19263, 60) -- Deterrence, -60sec
+	end,
+	[17591] = function(guid) -- Unbreakable Spirit
+		addMod(guid, 642, 150) -- Divine Shield, -150sec
+		addMod(guid, 498, 30) -- Divine Protection, -30sec
+		local divinity = cdModifiers[guid] and cdModifiers[guid][633]
+		addMod(guid, 633, divinity and 360 or 300) -- Lay on Hands, (-50%) -300sec / -360sec with Glyph of Divinity
+	end,
+	[15775] = function(guid) -- Juggernaut
+		addMod(guid, 100, 8) -- Charge, -8sec
+	end,
+}
 
 local glyphCooldowns = {
 	[55678] = {6346, 60},      -- Fear Ward, -60sec
 	[63229] = {47585, 15},     -- Dispersion, -15sec
-	[55455] = {2894, 120},     -- Fire Elemental Totem, -120sec (-40%)
+	[55455] = {2894, 150},     -- Fire Elemental Totem, -150sec (-50%)
 	[63291] = {51514, 10},     -- Hex, -10sec
-	[63329] = {871, -120},     -- Shield Wall, +2min
+	[159640] = {51533, 60},    -- Feral Spirit, -60sec
+	[159648] = {30823, 60},    -- Shamanistic Rage, -60sec
+	[159650] = {79206, 60},    -- Spiritwalker's Grace, -60sec
+	[63329] = {871, -120},     -- Shield Wall, +120sec
 	[63325] = {6544, 15},      -- Heroic Leap, -15sec
 	[55688] = {64044, 10},     -- Psychic Horror, -10sec
 	[63309] = {48020, 4},      -- Demonic Circle: Teleport, -4sec
@@ -47,34 +77,55 @@ local glyphCooldowns = {
 	[55451] = {57994, -3},     -- Wind Shear, +3sec
 	[123391] = {115080, -120}, -- Touch of Death, +120sec
 	[63331] = {77606, 30},     -- Dark Simulacrum, -30sec
+	[59332] = {77575, 60},     -- Outbreak, -60sec
+	[54939] = {633, -120},     -- Lay on Hands, +120sec
+	[146955] = {31821, 60},    -- Devotion Aura, -60sec
+	--[159548] = {31850, 110},   -- Ardent Defender, set to 60sec after 10s
 }
 
 local spells = {
 	DRUID = {
+		[99] = 30,      -- Incapacitating Roar
+		[5211] = 50,    -- Mighty Bash
 		[132158] = 60,  -- Nature's Swiftness
 		[61336] = 180,  -- Survival Instincts
 		[22812] = 60,   -- Barkskin
 		[106839] = 15,  -- Skull Bash
 		[78675] = 60,   -- Solar Beam
-		[78674] = 15,   -- Starsurge
+		[78674] = 30,   -- Starsurge (3 charges)
 		[18562] = 15,   -- Swiftmend
 		[132469] = 30,  -- Typhoon
-		[48505] = 90,   -- Starfall
-		[102401] = 15,  -- Wild Charge
+		[48505] = 30,   -- Starfall (3 charges)
+		[16979] = 15,   -- Wild Charge (Bear)
+		[49376] = 15,   -- Wild Charge (Cat)
+		[102383] = 15,  -- Wild Charge (Moonkin)
+		[102416] = 15,  -- Wild Charge (Aquatic)
+		[102417] = 15,  -- Wild Charge (Travel)
 		[5211]  = 50,   -- Bash
 		[50334] = 180,  -- Berserk
 		[5217]  = 30,   -- Tiger's Fury
 		[1850]  = 180,  -- Dash
-		[740]   = 480,  -- Tranquility
+		[740]   = 180,  -- Tranquility
 		[77761] = 120,  -- Stampeding Roar
+		[33831] = 30,   -- Force of Nature (3 charges)
+		[33891] = 180,  -- Incarnation: Tree of Life
+		[102543] = 180, -- Incarnation: King of the Jungle
+		[102558] = 180, -- Incarnation: Son of Ursoc
+		[102560] = 180, -- Incarnation: Chosen of Elune
 		[102342] = 60,  -- Ironbark
 		[102359] = 30,  -- Mass Entanglement
+		[102280] = 30,  -- Displacer Beast
+		[108238] = 120, -- Renewel
+		[102351] = 30,  -- Cenarion Ward
+		[102793] = 60,  -- Ursol's Vortex
+		[108291] = 360, -- Heart of the Wild
+		[124974] = 90,  -- Nature's Vigil
 	},
 	HUNTER = {
 		[34477] = 30,   -- Misdirection
 		[5384]  = 30,   -- Feign Death
 		[781]   = 20,   -- Disengage
-		[19263] = 180,  -- Deterrence --- XXX need to figure out how to deal with multiple charges (cd doesn't start until the second charge is used, second charge cd doesn't start until first charge is off cd)
+		[19263] = 180,  -- Deterrence (2 charges)
 		[147362] = 24,  -- Counter Shot
 		[19386] = 45,   -- Wyvern Sting
 		[13809] = 30,   -- Ice Trap
@@ -84,28 +135,33 @@ local spells = {
 		[19577] = 60,   -- Intimidation
 		[82726] = 30,   -- Fervor
 		[19574] = 60,   -- Bestial Wrath
-		[3045]  = 180,  -- Rapid Fire
-		[3674]  = 30,   -- Black Arrow
+		[3045]  = 120,  -- Rapid Fire
+		[3674]  = 30,   -- Black Arrow -- XXX reset on dispel
 		[34600] = 30,   -- Snake Trap
 		[82948] = 30,   -- Snake Trap + Launcher
 		[13813] = 30,   -- Explosive Trap
 		[82939] = 30,   -- Explosive Trap + Launcher
 		[51753] = 60,   -- Camouflage
-		[90355] = 360,  -- Ancient Hysteria
-		[160452] = 360, -- Netherwinds
+		[53271] = 45,   -- Master's Call
 		[109248] = 45,  -- Binding Shot
 		[109304] = 120, -- Exhilaration
 		[121818] = 300, -- Stampede
-		[53271] = 45,   -- Master's Call
 		[172106] = 180, -- Aspect of the Fox
+		[120679] = 30,  -- Dire Beast
+		[131894] = 60,  -- A Murder of Crow
+		[117050] = 15,  -- Glaive Toss
+		[109259] = 45,  -- Powershot
+		[120360] = 20,  -- Barrage
 		-- XXX Pets missing
+		[90355] = 360,  -- Ancient Hysteria
+		[160452] = 360, -- Netherwinds
 	},
 	MAGE = {
 		[45438] = 300,  -- Ice Block
 		[2139]  = 24,   -- Counterspell
 		[66]    = 300,  -- Invisibility
-		[122]   = 25,   -- Frost Nova
-		[120]   = 10,   -- Cone of Cold
+		[122]   = 30,   -- Frost Nova
+		[120]   = 12,   -- Cone of Cold
 		[11426] = 25,   -- Ice Barrier
 		[12472] = 180,  -- Icy Veins
 		[12051] = 120,  -- Evocation
@@ -118,11 +174,20 @@ local spells = {
 		[31661] = 20,   -- Dragon's Breath
 		[44572] = 30,   -- Deep Freeze
 		[80353] = 300,  -- Time Warp
+		[55342]  = 120, -- Mirror Image
 		[113724] = 45,  -- Ring of Frost
 		[115610] = 25,  -- Temporal Shield
 		[102051] = 20,  -- Frostjaw
 		[110959] = 90,  -- Greater Invisibility
-		[159916] = 60,  -- Amplify Magic
+		[159916] = 120, -- Amplify Magic
+		[157913] = 45,  -- Evanesce
+		[108843] = 25,  -- Blazing Speed
+		[108839] = 20,  -- Ice Floes
+		[108978] = 90,  -- Alter Time
+		[111264] = 20,  -- Ice Ward
+		[157980] = 25,  -- Supernova (2 charges)
+		[157981] = 25,  -- Blast Wave (2 charges)
+		[157997] = 25,  -- Ice Nova (2 charges)
 	},
 	PALADIN = {
 		[633]   = 600,  -- Lay on Hands
@@ -145,9 +210,12 @@ local spells = {
 		[105593] = 30,  -- Fist of Justice
 		[114158] = 60,  -- Light's Hammer
 		[114157] = 60,  -- Execution Sentence
+		[85499]  = 45,  -- Speed of Light
+		[20066]  = 15,  -- Repentance
+		[115750] = 120, -- Blinding Light
 	},
 	PRIEST = {
-		[8122]  = 30,   -- Psychic Scream
+		[8122]  = 45,   -- Psychic Scream
 		[6346]  = 180,  -- Fear Ward
 		[34433] = 180,  -- Shadowfiend
 		[64843] = 180,  -- Divine Hymn
@@ -169,9 +237,10 @@ local spells = {
 		[109964] = 60,  -- Spirit Shell
 		[108920] = 30,  -- Void Tendrils
 		[123040] = 60,  -- Mindbender
+		[112833] = 30,  -- Spectral Guise
 	},
 	ROGUE = {
-		[5277]  = 180,  -- Evasion
+		[5277]  = 120,  -- Evasion
 		[1766]  = 15,   -- Kick
 		[1856]  = 120,  -- Vanish
 		[1725]  = 30,   -- Distract
@@ -185,35 +254,38 @@ local spells = {
 		[14183] = 20,   -- Premeditation
 		[51713] = 60,   -- Shadow Dance
 		[76577] = 180,  -- Smoke Bomb
-		[36554] = 24,   -- Shadowstep
+		[36554] = 20,   -- Shadowstep
 		[1776]  = 10,   -- Gouge
 		[408]   = 20,   -- Kidney Shot
 		[51690] = 120,  -- Killing Spree
-		[51713] = 60,   -- Shadow Dance
 		[74001] = 120,  -- Combat Readiness
 	},
 	SHAMAN = {
 		[57994] = 12,   -- Wind Shear
 		[20608] = 1800, -- Reincarnation
-		[2062]  = 600,  -- Earth Elemental Totem
-		[2894]  = 600,  -- Fire Elemental Totem
+		[2062]  = 300,  -- Earth Elemental Totem
+		[2894]  = 300,  -- Fire Elemental Totem
 		[UnitFactionGroup("player") == "Horde" and 2825 or 32182] = 300, -- Bloodlust/Heroism
 		[51514] = 45,   -- Hex
-		[16188] = 60,   -- Ancestral Swiftness
+		[16188] = 90,   -- Ancestral Swiftness
 		[8177]  = 25,   -- Grounding Totem
 		[2484]  = 30,   -- Earthbind Totem
 		[51490] = 45,   -- Thunderstorm
-		[16166] = 90,   -- Elemental Mastery
+		[16166] = 120,  -- Elemental Mastery
 		[79206] = 120,  -- Spiritwalker's Grace
 		[51533] = 120,  -- Feral Spirit
 		[30823] = 60,   -- Shamanistic Rage
+		[16166] = 120,  -- Elemental Mastery
 		[8143]  = 60,   -- Tremor Totem
+		[51485] = 30,   -- Earthgrab Totem
 		[98008] = 180,  -- Spirit Link Totem
+		[108270] = 60,  -- Stone Bulwark Totem
 		[108280] = 180, -- Healing Tide Totem
 		[108281] = 120, -- Ancestral Guidance
 		[108273] = 60,  -- Windwalk Totem
-		[108271] = 120, -- Astral Shift
+		[108271] = 90,  -- Astral Shift
 		[114049] = 180, -- Ascendance
+		[108285] = 180, -- Call of the Elements
 	},
 	WARLOCK = {
 		[698]   = 120,  -- Ritual of Summoning
@@ -227,39 +299,42 @@ local spells = {
 		[6789]  = 45,   -- Mortal Coil
 		[108359] = 120, -- Dark Regeneration
 		[110913] = 180, -- Dark Bargain
-		[111397] = 30,  -- Blood Horror
-		[108482] = 60,  -- Unbound Will
+		[111397] = 60,  -- Blood Horror
+		[108482] = 120, -- Unbound Will
 		[108501] = 120, -- Grimoire of Service
-		[108505] = 120, -- Archimonde's Vengeance
 		[113860] = 120, -- Dark Soul: Misery
 		[113861] = 120, -- Dark Soul: Knowledge
 		[113858] = 120, -- Dark Soul: Instability
+		[108508] = 60,  -- Mannoroth's Fury
+		[137587] = 60,  -- Kil'jaden's Cunning
 	},
 	WARRIOR = {
 		[100]   = 20,   -- Charge
 		[23920] = 25,   -- Spell Reflection
 		[3411]  = 30,   -- Intervene
-		[57755] = 30,   -- Heroic Throw
 		[1719]  = 180,  -- Recklessness
 		[6552]  = 15,   -- Pummel
 		[5246]  = 90,   -- Intimidating Shout
-		[871]   = 300,  -- Shield Wall
+		[871]   = 180,  -- Shield Wall
 		[64382] = 300,  -- Shattering Throw
 		[55694] = 60,   -- Enraged Regeneration
 		[12975] = 180,  -- Last Stand
-		[46924] = 90,   -- Bladestorm
+		[46924] = 60,   -- Bladestorm
 		[12292] = 60,   -- Bloodbath
-		[46968] = 40,   -- Shockwave
+		[46968] = 40,   -- Shockwave -- XXX -20s if hits 3 targets
 		[86346] = 20,   -- Colossus Smash
 		[6544]  = 45,   -- Heroic Leap
 		[97462] = 180,  -- Rallying Cry
-		[114028] = 60,  -- Mass Spell Reflection
+		[114028] = 30,  -- Mass Spell Reflection
 		[114029] = 30,  -- Safeguard
 		[114030] = 120, -- Vigilance
 		[114192] = 180, -- Mocking Banner
+		[107574] = 180, -- Avatar
+		[107570] = 30,  -- Storm Bolt
+		[118000] = 60,  -- Dragon Roar
 	},
 	DEATHKNIGHT = {
-		[49576] = 25,   -- Death Grip
+		[49576] = 25,   -- Death Grip -- XXX Perk reduces CD by 5s
 		[47528] = 15,   -- Mind Freeze
 		[47476] = 60,   -- Strangulate
 		[48792] = 180,  -- Icebound Fortitude
@@ -269,25 +344,27 @@ local spells = {
 		[55233] = 60,   -- Vampiric Blood
 		[49028] = 90,   -- Dancing Rune Weapon
 		[49039] = 120,  -- Lichborne
-		[48982] = 30,   -- Rune Tap
+		[48982] = 40,   -- Rune Tap (2 charges)
 		[51271] = 60,   -- Pillar of Frost
 		[49206] = 180,  -- Summon Gargoyle
-		[46584] = 120,  -- Raise Dead
+		[46584] = 60,   -- Raise Dead
 		[51052] = 120,  -- Anti-Magic Zone
-		[57330] = 20,   -- Horn of Winter
 		[47568] = 300,  -- Empower Rune Weapon
 		[48743] = 120,  -- Death Pact
 		[77606] = 60,   -- Dark Simulacrum
+		[96268] = 30,   -- Death's Advance
+		[77575] = 60,   -- Outbreak
 		[108199] = 60,  -- Gorefiend's Grasp
 		[108194] = 30,  -- Asphyxiate
 		[108200] = 60,  -- Remorseless Winter
 		[108201] = 120, -- Desecrated Ground
+		[115989] = 90,  -- Unholy Blight
 	},
 	MONK = {
 		[115176] = 180, -- Zen Meditation
 		[122278] = 90,  -- Dampen Harm
 		[115310] = 180, -- Revival
-		[116849] = 120, -- Life Cocoon
+		[116849] = 120, -- Life Cocoon -- XXX Perk reduces CD by 20s
 		[115203] = 180, -- Fortifying Brew
 		[119381] = 45,  -- Leg Sweep
 		[122470] = 90,  -- Touch of Karma
@@ -301,7 +378,23 @@ local spells = {
 		[116680] = 45,  -- Thunder Focus Tea
 		[101545] = 25,  -- Flying Serpent Kick
 		[137562] = 120, -- Nimble Brew
+		[123904] = 180, -- Invoke Xuen, the White Tiger
 	},
+}
+
+local chargeSpells = {
+	-- these will always return the charge info with GetSpellCharges
+	[78674] = true,  -- Starsurge (3 charges)
+	[48505] = true,  -- Starfall (3 charges)
+	[33831] = true,  -- Force of Nature (3 charges)
+	[19263] = true,  -- Deterrence (2 charges)
+	[48982] = true,  -- Rune Tap (2 charges)
+	[157980] = true, -- Supernova (2 charges)
+	[157981] = true, -- Blast Wave (2 charges)
+	[157997] = true, -- Ice Nova (2 charges)
+	-- normally nil
+	[1953] = true,   -- Blink  (2 charges with glyph)
+	[100] = true,    -- Charge (2 charges with talent)
 }
 
 local allSpells = {}
@@ -312,9 +405,12 @@ for class, spells in next, spells do
 		classLookup[id] = class
 	end
 end
+--allSpells[66235] = 110 -- Ardent Defender heal
 
 local db = nil
-local cdModifiers = {}
+
+local mTypeBar = media and media.MediaType and media.MediaType.STATUSBAR or "statusbar"
+local mTypeFont = media and media.MediaType and media.MediaType.FONT or "font"
 
 local options, restyleBars
 local lockDisplay, unlockDisplay, isDisplayLocked, showDisplay, hideDisplay, isDisplayShown
@@ -799,7 +895,7 @@ do
 		bar:SetScale(db.barScale)
 		bar:SetTexture(media:Fetch(mTypeBar, db.barTexture))
 		local spell = bar:Get("ora3cd:spell")
-		local unit = bar:Get("ora3cd:unit"):gsub("(%a)%-(.*)", "%1")
+		local unit = bar:Get("ora3cd:unit"):gsub("%-.+", "*")
 		if db.barShorthand then spell = shorts[spell] end
 		if db.barShowSpell and db.barShowUnit and not db.onlyShowMine then
 			bar:SetLabel(("%s: %s"):format(unit, spell))
@@ -951,11 +1047,14 @@ do
 		if not display then setupCooldownDisplay() end
 		display:Show()
 		shown = true
+		oRA3CooldownFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	end
 	function hideDisplay()
 		if not display then return end
 		display:Hide()
 		shown = nil
+		oRA3CooldownFrame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+		stopAll()
 	end
 
 	local function setup()
@@ -1007,17 +1106,13 @@ do
 		tex:SetPoint("CENTER", drag)
 
 		if db.lockDisplay then
-			locked = nil
 			lockDisplay()
 		else
-			locked = true
 			unlockDisplay()
 		end
 		if db.showDisplay then
-			shown = true
 			showDisplay()
 		else
-			shown = nil
 			hideDisplay()
 		end
 	end
@@ -1027,7 +1122,7 @@ do
 		setup()
 		local bar
 		for b, v in next, visibleBars do
-			if b:Get("ora3cd:unit") == unit and b:Get("ora3cd:spell") == name then
+			if UnitIsUnit(b:Get("ora3cd:unit"), unit) and b:Get("ora3cd:spell") == name then
 				bar = b
 				break
 			end
@@ -1049,9 +1144,39 @@ do
 	startBar = start
 end
 
+do
+	local spellList, reverseClass = nil, nil
+	function module:SpawnTestBar()
+		if not spellList then
+			spellList = {}
+			reverseClass = {}
+			for k in next, allSpells do spellList[#spellList + 1] = k end
+			for name, class in next, oRA._testUnits do reverseClass[class] = name end
+		end
+		local spell = spellList[math.random(1, #spellList)]
+		local name, _, icon = GetSpellInfo(spell)
+		if not name then return end
+		local unit = reverseClass[classLookup[spell]]
+		local duration = (allSpells[spell] / 30) + math.random(1, 120)
+		startBar(unit, spell, name, icon, duration)
+	end
+end
+
+function module:IsOnCD(unit, spell)
+	local barSpellKey = type(spell) == "string" and "ora3cd:spell" or "ora3cd:spellid"
+	for bar in next, self:GetBars() do
+		if UnitIsUnit(bar:Get("ora3cd:unit"), unit) and spell == bar:Get(barSpellKey) then
+			return true, bar
+		end
+	end
+	return false
+end
+
 --------------------------------------------------------------------------------
 -- Module
 --
+
+local checkReincarnationCooldown = nil
 
 function module:OnRegister()
 	local database = oRA.db:RegisterNamespace("Cooldowns", {
@@ -1118,7 +1243,7 @@ function module:OnRegister()
 	local _, playerClass = UnitClass("player")
 	if playerClass == "SHAMAN" then
 		-- GetSpellCooldown returns 0 when UseSoulstone is invoked, so we delay the check
-		local function checkCooldown()
+		function checkReincarnationCooldown()
 			local start, duration = GetSpellCooldown(20608)
 			if start > 0 and duration > 1.5 then
 				local elapsed = GetTime() - start -- don't resend the full duration if already on cooldown
@@ -1127,71 +1252,29 @@ function module:OnRegister()
 		end
 		hooksecurefunc("UseSoulstone", function()
 			if IsInGroup() then
-				module:ScheduleTimer(checkCooldown, 1)
+				module:ScheduleTimer(checkReincarnationCooldown, 1)
 			end
 		end)
 	end
 end
 
-function module:IsOnCD(unit, spell)
-	local barSpellKey = type(spell) == "string" and "ora3cd:spell" or "ora3cd:spellid"
-	for bar in next, self:GetBars() do
-		local barUnit = bar:Get("ora3cd:unit")
-		if UnitIsUnit(barUnit, unit) and spell == bar:Get(barSpellKey) then
-			return true
-		end
-	end
-	return false
-end
-
-do
-	local spellList, reverseClass = nil, nil
-	function module:SpawnTestBar()
-		if not spellList then
-			spellList = {}
-			reverseClass = {}
-			for k in next, allSpells do spellList[#spellList + 1] = k end
-			for name, class in next, oRA._testUnits do reverseClass[class] = name end
-		end
-		local spell = spellList[math.random(1, #spellList)]
-		local name, _, icon = GetSpellInfo(spell)
-		if not name then return end
-		local unit = reverseClass[classLookup[spell]]
-		local duration = (allSpells[spell] / 30) + math.random(1, 120)
-		startBar(unit, spell, name, icon, duration)
-	end
-end
-
-local function getCooldown(guid, spellId)
-	local cd = allSpells[spellId]
-	if cdModifiers[guid] and cdModifiers[guid][spellId] then
-		cd = cd - cdModifiers[guid][spellId]
-	end
-	return cd
-end
-
-function module:OnStartup()
+function module:OnStartup(_, groupStatus)
 	setupCooldownDisplay()
-	oRA3CooldownFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-	self:RegisterEvent("PLAYER_TALENT_UPDATE", "UpdateCooldownModifiers")
-	self:RegisterEvent("PLAYER_ENTERING_WORLD", "UpdateCooldownModifiers")
-	self:RegisterEvent("PLAYER_ALIVE", "UpdateCooldownModifiers")
-	self:RegisterEvent("GROUP_ROSTER_UPDATE")
+	oRA.RegisterCallback(self, "OnCommReceived")
+	oRA.RegisterCallback(self, "OnGroupChanged")
+	self:OnGroupChanged(nil, groupStatus)
 
 	LGIST.RegisterCallback(self, "GroupInSpecT_Update", "InspectUpdate")
 	LGIST.RegisterCallback(self, "GroupInSpecT_Remove", "InspectRemove")
-
-	oRA.RegisterCallback(self, "OnCommReceived")
-
-	self:UpdateCooldownModifiers()
+	LGIST:Query("player")
 end
 
 function module:OnShutdown()
 	self:UnregisterAllEvents()
-	oRA3CooldownFrame:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+	oRA.UnregisterCallback(self, "OnCommReceived")
+	oRA.UnregisterCallback(self, "OnGroupChanged")
 	LGIST.UnregisterAllCallbacks(self)
 
-	stopAll()
 	hideDisplay()
 	wipe(cdModifiers)
 end
@@ -1202,73 +1285,46 @@ function module:OnCommReceived(_, sender, prefix, cd)
 	end
 end
 
-function module:GROUP_ROSTER_UPDATE()
+function module:OnGroupChanged(_, groupStatus)
+	if groupStatus == 0 then return end
+
 	for bar in next, self:GetBars() do
 		if not UnitExists(bar:Get("ora3cd:unit")) then
 			bar:Stop()
 		end
 	end
+
+	if checkReincarnationCooldown then
+		checkReincarnationCooldown()
+	end
 end
 
 function module:Cooldown(player, spell, cd)
+	if not db.showDisplay then return end
 	if type(spell) ~= "number" or type(cd) ~= "number" then error("Spell or number had the wrong type.") end
 	if not db.spells[spell] then return end
 	if db.onlyShowMine and not UnitIsUnit(player, "player") then return end
 	if db.neverShowMine and UnitIsUnit(player, "player") then return end
-	if not db.showDisplay then return end
 	local spellName, _, icon = GetSpellInfo(spell)
 	if not spellName or not icon then return end
 	startBar(player, spell, spellName, icon, cd)
 end
 
-local function addMod(guid, spell, modifier)
-	if modifier == 0 then return end
-	if not cdModifiers[guid] then cdModifiers[guid] = {} end
-	cdModifiers[guid][spell] = (cdModifiers[guid][spell] or 0) + modifier
-end
-
-local talentScanners = {
-	WARRIOR = function(info)
-		if info.talents[103826] then -- Juggernaut
-			addMod(info.guid, 100, 8) -- 8 seconds off Charge
-		end
-	end,
-	HUNTER = function(info)
-		if info.talents[118675] then -- Crouching Tiger, Hidden Chimera
-			addMod(info.guid, 781, 10) -- 10 secs off Disengage
-			addMod(info.guid, 19263, 60) -- 60 secs off Deterrence
-		end
-	end,
-	MAGE = function(info)
-		if info.talents[110959] then -- Greater Invis
-			addMod(info.guid, 66, 210) -- 210 secs off Invisibility
-		end
-	end,
-}
-
-function module:UpdateCooldownModifiers()
-	local info = LGIST:GetCachedInfo(playerGUID)
-	if info then
-		self:UpdateGroupCooldownModifiers(info)
-	end
-end
-
-function module:UpdateGroupCooldownModifiers(info)
-	if cdModifiers[info.guid] then
+function module:InspectUpdate(_, guid, unit, info)
+	if cdModifiers[guid] then
 		wipe(cdModifiers[info.guid])
 	end
 	for spellId in next, info.glyphs do
 		if glyphCooldowns[spellId] then
 			local spell, modifier = unpack(glyphCooldowns[spellId])
-			addMod(info.guid, spell, modifier)
+			addMod(guid, spell, modifier)
 		end
 	end
-	local talentMod = info.class and talentScanners[info.class]
-	if talentMod then talentMod(info) end
-end
-
-function module:InspectUpdate(_, guid, unit, info)
-	self:UpdateGroupCooldownModifiers(info)
+	for talentId in next, info.talents do
+		if talentCooldowns[talentId] then
+			talentCooldowns[talentId](guid)
+		end
+	end
 end
 
 function module:InspectRemove(_, guid)
@@ -1279,9 +1335,29 @@ end
 do
 	local IsEncounterInProgress, band, inEncounter = IsEncounterInProgress, bit.band, nil
 	local group = bit.bor(COMBATLOG_OBJECT_AFFILIATION_MINE, COMBATLOG_OBJECT_AFFILIATION_PARTY, COMBATLOG_OBJECT_AFFILIATION_RAID)
+
+	local function getCooldown(guid, spellId)
+		local cd = allSpells[spellId]
+		if cdModifiers[guid] and cdModifiers[guid][spellId] then
+			cd = cd - cdModifiers[guid][spellId]
+		end
+		return cd
+	end
+
 	function combatLog(_, _, _, event, _, srcGUID, source, srcFlags, _, _, _, _, _, spellId)
 		if source and (event == "SPELL_CAST_SUCCESS" or event == "SPELL_RESURRECT") and allSpells[spellId] and band(srcFlags, group) ~= 0 then
-			module:Cooldown(source, spellId, getCooldown(srcGUID, spellId))
+			if chargeSpells[spellId] then
+				local charges, maxCharges, start, duration = GetSpellCharges(spellId)
+				if charges then -- your spell
+					if charges == 0 then
+						module:Cooldown(source, spellId, duration - (GetTime() - start))
+					end
+				elseif not module:IsOnCD(source, spellId) then -- guess cd, nothing displayed so assume it's the first charge
+					module:Cooldown(source, spellId, getCooldown(srcGUID, spellId))
+				end
+			else
+				module:Cooldown(source, spellId, getCooldown(srcGUID, spellId))
+			end
 		end
 
 		if not inEncounter and IsEncounterInProgress() then
@@ -1290,7 +1366,7 @@ do
 			inEncounter = nil
 			for bar in next, module:GetBars() do
 				local spell = bar:Get("ora3cd:spellid")
-				if allSpells[spell] > 299 and spell ~= 20608 then -- reset 5min+ cds (but not reincarnation)
+				if allSpells[spell] > 180 and spell ~= 20608 then -- reset +3min cds (except Reincarnation)
 					bar:Stop()
 				end
 			end

@@ -2979,7 +2979,7 @@ function module:InitializeRecipes()
 	recipe:SetCraftedItem(32574, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("LEATHERWORKING_WRIST")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.RAID, F.DPS)
-	recipe:AddWorldDrop(Z.BLACK_TEMPLE, Z.MOUNT_HYJAL)
+	recipe:AddWorldDrop(Z.MOUNT_HYJAL)
 
 	-- Shoulders of Lightning Reflexes -- 41162
 	recipe = AddRecipe(41162, V.TBC, Q.EPIC)

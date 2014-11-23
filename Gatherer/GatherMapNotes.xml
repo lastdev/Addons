@@ -1,8 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 <!--
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
-	Revision: $Id: GatherMapNotes.xml 1024 2012-09-26 02:53:04Z Esamynn $
+	Version: 5.0.0 (<%codename%>)
+	Revision: $Id: GatherMapNotes.xml 1125 2014-10-25 20:29:48Z Esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 -->
-	<Script>Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherMapNotes.xml $", "$Rev: 1024 $")</Script>
+	<Script>Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_5.0.0/Gatherer/GatherMapNotes.xml $", "$Rev: 1125 $")</Script>
 	<Script file = "GatherMapNotes.lua"/>
 	
 	<!-- World Map Display Templates -->
@@ -82,34 +82,4 @@
 			</OnShow>
 		</Scripts>
 	</Frame>
-
-	<!-- Button to show/hide icons on world map -->
-	<Button name="Gatherer_WorldMapDisplay" inherits="UIPanelButtonTemplate" text="Show items" parent="WorldMapFrame" toplevel="true">
-		<Size>
-			<AbsDimension x="100" y="25"/>
-		</Size>
-		<Anchors>
-			<Anchor point="TOPLEFT" relativeTo="WorldMapPositioningGuide" relativePoint="TOPLEFT">
-				<Offset>
-					<!-- this should be the same as the full size map numbers in the OnShow script -->
-					<AbsDimension x="4" y="-4"/>
-				</Offset>
-			</Anchor>
-		</Anchors>
-		<Scripts>
-			<OnLoad>
-				self:SetScale(0.7)
-			</OnLoad>
-			<OnShow>
-				if not ( GetCVarBool("miniWorldMap") ) then
-					self:SetPoint("TOPLEFT", WorldMapPositioningGuide, "TOPLEFT", 4, -4);
-				else
-					self:SetPoint("TOPLEFT", WorldMapTitleButton, "TOPLEFT", 8, -3);
-				end
-			</OnShow>
-			<OnClick>
-				Gatherer.MapNotes.ToggleDisplay()
-			</OnClick>
-		</Scripts>
-	</Button>
 </Ui>

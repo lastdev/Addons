@@ -96,9 +96,11 @@ do
 	-- IsNameplate
 	local function IsNameplate(frame)
 		if frame:GetName() and strfind(frame:GetName(), '^NamePlate%d') then
-			local nameTextChild = select(2, frame:GetChildren())
+			local textureChild, nameTextChild =frame:GetChildren()
+			--local nameTextChild = select(2, frame:GetChildren())
 			if nameTextChild then
-				local nameTextRegion = nameTextChild:GetRegions()
+				local nameTextRegion, otherRegion, anotherRegion = nameTextChild:GetRegions()
+				--print(nameTextRegion:GetObjectType(), otherRegion, anotherRegion)
 				return (nameTextRegion and nameTextRegion:GetObjectType() == 'FontString')
 			end
 		end
@@ -286,7 +288,6 @@ do
 		regions.spellshadow:Hide()
 		regions.spelltext:Hide()
 		--]]
-
 
         -- Tidy Plates Frame
         --------------------------------

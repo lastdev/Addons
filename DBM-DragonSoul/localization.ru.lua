@@ -1,7 +1,7 @@
 ﻿if GetLocale() ~= "ruRU" then return end
 local L
 
------------------
+-------------
 -- Morchok --
 -------------
 L= DBM:GetModLocalization(311)
@@ -28,19 +28,13 @@ L:SetMiscLocalization({
 ---------------------
 L= DBM:GetModLocalization(324)
 
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
 L:SetOptionLocalization({
-	ShadowYell	= "Кричать, когда на вас $spell:104600<br/>(Героический уровень сложности)",
-	CustomRangeFrame	= "Range Frame options",
-	Never				= "Disabled",
-	Normal				= "Normal Range Frame",
-	DynamicPhase2		= "Phase2 Debuff Filtering",
-	DynamicAlways		= "Always Debuff Filtering"
+	ShadowYell			= "Кричать, когда на вас $spell:103434<br/>(Героический уровень сложности)",
+	CustomRangeFrame	= "Настройки окна проверки дистанции (Героический уровень сложности)",
+	Never				= "Отключено",
+	Normal				= "Обычное",
+	DynamicPhase2		= "Фильтрация дебафов (фаза 2)",
+	DynamicAlways		= "Фильтрация дебафов (всегда)"
 })
 
 L:SetMiscLocalization({
@@ -53,15 +47,19 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(325)
 
 L:SetWarningLocalization({
+	warnOozesHit	= "%s поглотил %s"
 })
 
 L:SetTimerLocalization({
-	timerOozesActive	= "Появление капель крови"
+	timerOozesActive	= "Появление капель крови",
+	timerOozesReach		= "Капли достигнут босса"
 })
 
 L:SetOptionLocalization({
+	warnOozesHit		= "Объявлять какие капли достигли босса",
 	timerOozesActive	= "Отсчет времени спавна капель крови",
-	RangeFrame			= "Показывать окно проверки дистанции (4м) для $spell:104898"
+	timerOozesReach		= "Отсчет времени до достижения каплями босса",
+	RangeFrame			= "Окно проверки дистанции (4) для $spell:104898<br/>(Сложность Обычная+)"
 })
 
 L:SetMiscLocalization({
@@ -79,7 +77,8 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(317)
 
 L:SetWarningLocalization({
-	warnFrostTombCast		= "%s через 8 секунл"
+	WarnPillars				= "%s: осталось %d",
+	warnFrostTombCast		= "%s через 8 сек."
 })
 
 L:SetTimerLocalization({
@@ -87,12 +86,15 @@ L:SetTimerLocalization({
 })
 
 L:SetOptionLocalization({
+	WarnPillars				= "Объявлять сколько $journal:3919 или $journal:4069 осталось",
 	TimerSpecial			= "Отсчет времени до первой особой способности",
 	RangeFrame				= "Показывать окно проверки дистанции: (3м) для $spell:105269 и<br/>(10м) для $journal:4327",
 	AnnounceFrostTombIcons	= "Дублировать рейдовые иконки на целях $spell:104451 в рейд-чат<br/>(Необходимы права лидера или помощника)",
 	warnFrostTombCast		= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.cast:format(104448),
 	SetIconOnFrostTomb		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(104451),
-	SetIconOnFrostflake		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(109325)
+	SetIconOnFrostflake		= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(109325),
+	SpecialCount			= "Звуковой отсчет для $spell:105256 или $spell:105465",
+	SetBubbles				= "Автоматически отключать сообщения в облачках когда $spell:104451 доступен<br/>(возвращает их в исходное после боя)"
 })
 
 L:SetMiscLocalization({
@@ -114,10 +116,14 @@ L:SetTimerLocalization({
 
 L:SetOptionLocalization({
 	TimerCombatStart	= "Отсчет времени до приземления Ультраксиона",
-	ResetHoTCounter		= "Restart Hour of Twilight counter",--$spell doesn't work in this function apparently so use typed spellname for now.
-	Never				= "Never",
-	ResetDynamic		= "Reset in sets of 3/2 (heroic/normal)",
-	Reset3Always		= "Always Reset in sets of 3"
+	ResetHoTCounter		= "Сброс счетчика \"Время сумерек\"",--$spell doesn't work in this function apparently so use typed spellname for now.
+	Never				= "Никогда",
+	ResetDynamic		= "Сброс на 3/2 (гер./обыч.)",
+	Reset3Always		= "Сброс на 3 всегда",
+	SpecWarnHoTN		= "Спец-предупреждение за 5 сек до \"Время сумерек\". Если сброс счетчика \"Никогда\", используется правило на 3",
+	One					= "1 (т.е. 1 4 7)",
+	Two					= "2 (т.е. 2 5)",
+	Three				= "3 (т.е. 3 6)"
 })
 
 L:SetMiscLocalization({
@@ -130,22 +136,24 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(332)
 
 L:SetWarningLocalization({
+	SpecWarnElites	= "Сумеречные Элитки!"
 })
 
 L:SetTimerLocalization({
-	TimerCombatStart	= "Начало боя",
 	TimerAdd			= "Следующие помощники"
 })
 
 L:SetOptionLocalization({
-	TimerCombatStart	= "Отсчет времени до начала боя",
-	TimerAdd			= "Отсчет времени до появления следующих помощников"
+	TimerAdd			= "Отсчет времени до появления следующих помощников",
+	SpecWarnElites		= "Спец-предупреждение для новых Сумеречных Элиток",
+	SetTextures			= "Автоматически отключать проэцирование текстур на 1 фазе<br/>(возвращает в исходное на 2 фазе)"
 })
 
 L:SetMiscLocalization({
 	SapperEmote			= "Дракон пикирует на палубу, чтобы сбросить на нее сумеречного сапера!",
 	Broadside			= "spell:110153",
-	DeckFire			= "spell:110095"
+	DeckFire			= "spell:110095",
+	GorionaRetreat			= "screeches in pain and retreats into the swirling clouds"
 })
 
 -------------------------
@@ -154,13 +162,12 @@ L:SetMiscLocalization({
 L= DBM:GetModLocalization(318)
 
 L:SetWarningLocalization({
+	warnSealArmor			= "%s",
 	SpecWarnTendril			= "Закрепитесь!"
 })
 
-L:SetTimerLocalization({
-})
-
 L:SetOptionLocalization({
+	warnSealArmor			= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.cast:format(105847),
 	SpecWarnTendril			= "Спец-предупреждение, когда на вас нет дебаффа $spell:109454",
 	InfoFrame				= "Показывать информационное окно для игроков без $spell:109454",
 	SetIconOnGrip			= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(109459),
@@ -168,11 +175,11 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	Pull		= "Смотрите, он разваливается! Оторвите пластины, и у нас появится шанс сбить его!",
-	NoDebuff	= "Нет %s",
+	Pull			= "Смотрите, он разваливается! Оторвите пластины, и у нас появится шанс сбить его!",
+	NoDebuff		= "Нет %s",
 	PlasmaTarget	= "Жгучая плазма: %s",
-	DRoll		= "собирается накрениться",
-	DLevels		= "выравнивается"
+	DRoll			= "собирается накрениться",
+	DLevels			= "выравнивается"
 })
 
 ---------------------------
@@ -180,13 +187,9 @@ L:SetMiscLocalization({
 ---------------------------
 L= DBM:GetModLocalization(333)
 
-L:SetWarningLocalization({
-})
-
-L:SetTimerLocalization({
-})
-
 L:SetOptionLocalization({
+	RangeFrame			= "Динамическое окно проверки дистанции используя статус дебафа<br/>$spell:108649 на героическом уровне сложности",
+	SetIconOnParasite	= DBM_CORE_AUTO_ICONS_OPTION_TEXT:format(108649)
 })
 
 L:SetMiscLocalization({
@@ -203,16 +206,21 @@ L:SetGeneralLocalization({
 })
 
 L:SetWarningLocalization({
+	DrakesLeft			= "Осталось Сумеречных агрессоров: %d"
 })
 
 L:SetTimerLocalization({
+	timerRoleplay		= GUILD_INTEREST_RP,
 	TimerDrakes			= "%s",--spellname from mod
 })
 
 L:SetOptionLocalization({
+	DrakesLeft			= "Объявлять сколько Сумеречных агрессоров осталось",
 	TimerDrakes			= "Отсчет времени при применении $spell:109904 Сумеречными агрессорами"
 })
 
 L:SetMiscLocalization({
-	UltraxionTrash		= "Рад встрече, Алекстраза. Скоро ты увидишь, над чем я трудился."
+	firstRP				= "Хвала Титанам, они вернулись!",
+	UltraxionTrash		= "Рад встрече, Алекстраза. Скоро ты увидишь, над чем я трудился.",
+	UltraxionTrashEnded = "Детеныши, эксперименты, шаги к будущему величию. Вы увидите, чего я добился."
 })

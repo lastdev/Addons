@@ -1,0 +1,16 @@
+tag v4
+c01e502717118b43459d64fe4c485cc83104599c
+David Lynch <kemayo@gmail.com>
+2014-11-14 17:20:03 -0600
+
+Tagging v4
+
+
+--------------------
+
+David Lynch:
+	- More detail on the strange spore
+	- Strange spore location note
+	- Notes from Shadowmoon
+	- Pippers supplies: don't count
+	- 3xRooby Reat, apparently

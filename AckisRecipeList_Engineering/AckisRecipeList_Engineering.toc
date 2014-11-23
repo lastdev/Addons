@@ -2,12 +2,12 @@
 ## Title: Ackis Recipe List: Engineering
 ## Notes: Engineering data for Ackis Recipe List.
 ## Author: Ackis, Pompy, Ressy, Torhal
-## Version: 6.0.2.1
-## X-Revision: 8f8b0fb
+## Version: 6.0.3.1
+## X-Revision: 32899a1
 ## X-Date: 2014-07-23T01:50:18Z
 ## Dependencies: AckisRecipeList
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: 6.0.2.1
+## X-Curse-Packaged-Version: 6.0.3.1
 ## X-Curse-Project-Name: Ackis Recipe List: Engineering
 ## X-Curse-Project-ID: arl-engineering
 ## X-Curse-Repository-ID: wow/arl-engineering/mainline

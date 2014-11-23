@@ -55,6 +55,11 @@ local AuraTimerOnUpdate = function(self, time)
     self:SetValue(progress)
 end
 
+RogueGetComboPoints = function(unit)
+    return UnitPower("player", 4)
+end
+
+
 -- local min = math.min
 -- local max = math.max
 function NugComboBar:LoadClassSettings()
@@ -278,9 +283,11 @@ function NugComboBar:LoadClassSettings()
 
             self:RegisterEvent("SPELLS_CHANGED")
             self.SPELLS_CHANGED = function(self, event)
+                local wwperk = IsSpellKnown(157411) and 1 or 0
+
                 if IsSpellKnown(115396)  -- Ascension
-                    then self:SetMaxPoints(5, isCT and "5NO6")
-                    else self:SetMaxPoints(4, isCT and "4NO6")
+                    then self:SetMaxPoints(5+wwperk)
+                    else self:SetMaxPoints(4+wwperk)
                 end
 
                 local spec = GetSpecialization()
@@ -520,18 +527,56 @@ function NugComboBar:LoadClassSettings()
             self.UNIT_AURA = self.UNIT_COMBO_POINTS
             filter = "HELPFUL"
             allowedCaster = "player"
-            GetComboPoints = GetAuraStack
+
+            local BloodChargeName = GetSpellInfo(114851)
+            local ScentOfBlood = GetSpellInfo(50421)
+            local GetBloodCharges = function(unit)
+                local _,_,_, count, _,_,_, caster = UnitAura("player", BloodChargeName, nil, "HELPFUL")
+                -- if not count then return 0 end
+                count = count or 0
+                local layer2count = 0
+                local barcount = nil
+                local fives,rem = math.modf(count/5)
+                if count > 10 then
+                    if secondLayerEnabled and count == 12 then
+                        layer2count = 2
+                    else
+                        barcount = count - 10
+                    end
+                else
+                    barcount = count - fives*5
+                end
+
+                local secondRowCount = nil
+                if NugComboBarDB.special1 then
+                    local _,_,_, count2, _,_,_, caster = UnitAura("player", ScentOfBlood, nil, "HELPFUL")
+                    secondRowCount = count2 or 0
+                end
+                return fives, barcount, nil, layer2count, secondRowCount
+            end
             
             self:RegisterEvent("SPELLS_CHANGED")
             self.SPELLS_CHANGED = function(self, event)
                 local spec = GetSpecialization()
                 if      spec == 3 then -- unholy
                     allowedUnit = "pet"
+                    self:DisableBar()
+                    self:SetMaxPoints(5)
                     scanAura = GetSpellInfo(91342) -- Shadow Infusion
+                    GetComboPoints = GetAuraStack
                     soundFullEnabled = true
-                elseif  spec == 1 then
+                elseif IsSpellKnown(45529) then
+                    self:EnableBar(0,5, "Small")
+                    GetComboPoints = GetBloodCharges
+                    if NugComboBarDB.special1 and spec == 1 then
+                        self:SetMaxPoints(2, "DKDOUBLE", 5)
+                    else
+                        self:SetMaxPoints(2)
+                    end
+                elseif spec == 1 and NugComboBarDB.special1 then
                     allowedUnit = "player"
                     scanAura = GetSpellInfo(50421) -- Scent of Blood
+                    GetComboPoints = GetAuraStack
                 end
             end
             self:SPELLS_CHANGED()
@@ -550,7 +595,12 @@ function NugComboBar:LoadClassSettings()
                 self:DisableBar()
                 self:RegisterEvent("UNIT_POWER")
                 self:UnregisterEvent("UNIT_AURA")
-                self:SetMaxPoints(3)
+                if IsSpellKnown(157217) then
+                    self:SetMaxPoints(5, "PALADIN")
+                else
+                    self:SetMaxPoints(3)
+                end
+                
                 GetComboPoints = GetShadowOrbs
                 soundFullEnabled = true
             end
@@ -573,8 +623,8 @@ function NugComboBar:LoadClassSettings()
                 GetComboPoints = GetAuraStack
                 scanAura = GetSpellInfo(63735) -- Serendipity
             end
-            self:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
-            self.ACTIVE_TALENT_GROUP_CHANGED = function(self)
+            self:RegisterEvent("SPELLS_CHANGED")
+            self.SPELLS_CHANGED = function(self, event)
                 local spec = GetSpecialization()
                 if spec == 3 then
                     shadow_orbs()
@@ -584,12 +634,12 @@ function NugComboBar:LoadClassSettings()
                     evangelism()
                 end
             end
-            self:ACTIVE_TALENT_GROUP_CHANGED()
+            self:SPELLS_CHANGED()
         elseif class == "MAGE" then 
             self:RegisterEvent("UNIT_AURA")
             self.UNIT_AURA = self.UNIT_COMBO_POINTS 
 
-            local showMissileProcs = false
+            local showMissileProcs = NugComboBarDB.special1
             if showMissileProcs then
                 self:SetMaxPoints(4, "ARCANE", 3)
                 local arcaneCharges = GetSpellInfo(36032)
@@ -604,6 +654,7 @@ function NugComboBar:LoadClassSettings()
                 -- allowedUnit = "player"
                 GetComboPoints = GetChargesAndBarrage
             else
+                self:DisableBar()
                 self:SetMaxPoints(4)
                 scanAura = GetSpellInfo(36032) -- Arcane Blast Buff
                 filter = "HARMFUL"
@@ -653,6 +704,8 @@ local defaults = {
     disableProgress = false,
     adjustX = 2.05,
     adjustY = 2.1,
+    alpha = 1,
+    special1 = false,
     hideWithoutTarget = false,
     vertical = false,
     soundChannel = "SFX",
@@ -923,7 +976,13 @@ do
         if hideSlowly == nil then hideSlowly = NugComboBarDB.hideSlowly end;
         if secondLayerEnabled == nil then secondLayerEnabled = NugComboBarDB.secondLayer end;
         self:SetAlpha(0)
+
+        if NugComboBarDB.scale < 0.91 and string.find(NugComboBarDB.preset3d, "funnel") then
+            print("[NugComboBar] funnelXXXX presets do not work on a scale below 0.9.")
+            NugComboBarDB.scale = 1
+        end
         self:SetScale(NugComboBarDB.scale)
+
         self.Commands.anchorpoint(NugComboBarDB.anchorpoint)
 
         self:LoadClassSettings()
@@ -982,8 +1041,8 @@ local HideTimer = function(self, time)
     if self.OnUpdateCounter < fadeAfter then return end
 
     local ncb = NugComboBar
-    local a = fadeAfter + fadeTime - self.OnUpdateCounter
-    ncb:SetAlpha(a)
+    local a = 1-((self.OnUpdateCounter - fadeAfter) / fadeTime)
+    ncb:SetAlpha(NugComboBarDB.alpha*a)
     if self.OnUpdateCounter >= fadeAfter + fadeTime then
         self:SetScript("OnUpdate",nil)
         ncb:SetAlpha(0)
@@ -1138,7 +1197,7 @@ function NugComboBar.UNIT_COMBO_POINTS(self, event, unit, ptype, forced)
     end
 
     -- print("progress", progress)
-    -- print (comboPoints == defaultValue, (progress == nil or progress == defaultProgress), not UnitAffectingCombat("player"), not showEmpty)
+    -- print (comboPoints, defaultValue, comboPoints == defaultValue, (progress == nil or progress == defaultProgress), not UnitAffectingCombat("player"), not showEmpty)
     if  not showAlways and
         comboPoints == defaultValue and
         (progress == nil or progress == defaultProgress) and
@@ -1159,7 +1218,7 @@ function NugComboBar.UNIT_COMBO_POINTS(self, event, unit, ptype, forced)
     else
         fader:SetScript("OnUpdate", nil)
         self.hiding = false
-        self:SetAlpha(1)
+        self:SetAlpha(NugComboBarDB.alpha)
     end
 
     comboPointsBefore = comboPoints
@@ -1315,7 +1374,7 @@ end
 NugComboBar.Commands = {
     ["unlock"] = function(v)
         NugComboBar.anchor:Show()
-        NugComboBar:SetAlpha(1)
+        NugComboBar:SetAlpha(NugComboBarDB.alpha)
         for i=1,NugComboBar.MAX_POINTS do
             NugComboBar.p[i]:Activate()
         end
@@ -1364,11 +1423,22 @@ NugComboBar.Commands = {
         NugComboBarDB.disableBlizz = not NugComboBarDB.disableBlizz
         print ("NCB> Changes will take effect after /reload")
     end,
+    ["special"] = function(v)
+        NugComboBarDB.special1 = not NugComboBarDB.special1
+        print ("NCB Special = ", NugComboBarDB.special1)
+    end,
     ["scale"] = function(v)
         local num = tonumber(v)
         if num then 
             NugComboBarDB.scale = num; NugComboBar:SetScale(NugComboBarDB.scale);
         else print ("Current scale is: ".. NugComboBarDB.scale)
+        end
+    end,
+    ["alpha"] = function(v)
+        local num = tonumber(v)
+        if num then 
+            NugComboBarDB.alpha = num; NugComboBar:SetAlpha(NugComboBarDB.alpha);
+        else print ("Current alpha is: ".. NugComboBarDB.alpha)
         end
     end,
     ["disable"] = function(v)

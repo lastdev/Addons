@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Scan Finish module
-	Version: 5.21b.5509 (SanctimoniousSwamprat)
-	Revision: $Id: ScanFinish.lua 5505 2014-10-19 11:12:01Z brykrys $
+	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Revision: $Id: ScanFinish.lua 5515 2014-10-31 12:07:47Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an Auctioneer module that adds a few event functionalities
@@ -41,9 +41,9 @@ local strAucClassicPath
 local AddOnName = ...
 AddOnName = AddOnName:lower()
 if AddOnName == "auc-util-scanfinish" then
-	strAucClassicPath = "Interface\\AddOns\\Auc-Util-ScanFinish\\ScanComplete.ogg"
+	strAucClassicPath = "Interface\\AddOns\\Auc-Util-ScanFinish\\ScanComplete.mp3"
 elseif AddOnName == "auc-advanced" then -- embedded
-	strAucClassicPath = "Interface\\AddOns\\Auc-Advanced\\Modules\\Auc-Util-ScanFinish\\ScanComplete.ogg"
+	strAucClassicPath = "Interface\\AddOns\\Auc-Advanced\\Modules\\Auc-Util-ScanFinish\\ScanComplete.mp3"
 else -- unknown
 	return
 end
@@ -255,4 +255,4 @@ function private.ConfigChanged(fullsetting, value, setting, module)
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-ScanFinish/ScanFinish.lua $", "$Rev: 5505 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Util-ScanFinish/ScanFinish.lua $", "$Rev: 5515 $")

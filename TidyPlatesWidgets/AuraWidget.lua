@@ -702,12 +702,16 @@ end
 -------------------------------------------------------------
 
 local function UpdateWidgetTime(frame, expiration)
-	local timeleft = expiration-GetTime()
-	if timeleft > 60 then
-		frame.TimeLeft:SetText(floor(timeleft/60).."m")
+	if expiration == 0 then
+		frame.TimeLeft:SetText("")
 	else
-		frame.TimeLeft:SetText(floor(timeleft))
-		--frame.TimeLeft:SetText(floor(timeleft*10)/10)
+		local timeleft = expiration-GetTime()
+		if timeleft > 60 then
+			frame.TimeLeft:SetText(floor(timeleft/60).."m")
+		else
+			frame.TimeLeft:SetText(floor(timeleft))
+			--frame.TimeLeft:SetText(floor(timeleft*10)/10)
+		end
 	end
 end
 
@@ -731,7 +735,8 @@ local function UpdateIcon(frame, texture, expiration, stacks, r, g, b)
 		-- Expiration
 		UpdateWidgetTime(frame, expiration)
 		frame:Show()
-		PolledHideIn(frame, expiration)
+		if expiration ~= 0 then PolledHideIn(frame, expiration) end
+
 	elseif frame then
 		PolledHideIn(frame, 0)
 	end
@@ -786,8 +791,11 @@ local function UpdateIconGrid(frame, guid)
 						show, priority, r, g, b = AuraFilterFunction(aura)
 					end				-- This method will replace it
 
+					--print(aura.name, aura.spellid, aura.caster, aura.caster == UnitGUID("player"), aura.duration, aura.expiration)
+
 					-- Get Order/Priority
-					if show and aura.expiration > GetTime() then
+					--if show and aura.expiration > GetTime() then		--- Testing this to enable certain 0 Expiration Debuffs  (MONK)
+					if show then
 						aura.priority = priority or 10
 						aura.r, aura.g, aura.b = r, g, b
 						debuffCount = debuffCount + 1

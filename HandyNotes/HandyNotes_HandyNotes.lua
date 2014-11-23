@@ -117,23 +117,16 @@ local function editPin(button, mapFile, coord)
 	HNEditFrame:Show()
 end
 
-local function addCartWaypoint(button, mapFile, coord)
-	if Cartographer and Cartographer.HasModule and Cartographer:HasModule("Waypoints") and Cartographer:IsModuleActive("Waypoints") then
-		local x, y = HandyNotes:getXY(coord)
-		local cartCoordID = floor(x*10000 + 0.5) + floor(y*10000 + 0.5)*10001
-		local BZR = LibStub("LibBabble-Zone-3.0"):GetReverseLookupTable()
-		local zone = HandyNotes:GetCZToZone(HandyNotes:GetCZ(mapFile))
-		if zone then
-			Cartographer_Waypoints:AddRoutesWaypoint(BZR[zone], cartCoordID, dbdata[mapFile][coord].title)
-		end
-	end
-end
-
 local function addTomTomWaypoint(button, mapFile, coord)
 	if TomTom then
-		local c, z = HandyNotes:GetCZ(mapFile)
+		local mapId = HandyNotes:GetMapFiletoMapID(mapFile)
 		local x, y = HandyNotes:getXY(coord)
-		TomTom:AddZWaypoint(c, z, x*100, y*100, dbdata[mapFile][coord].title, nil, true, true)
+		TomTom:AddMFWaypoint(mapId, nil, x, y, {
+			title = dbdata[mapFile][coord].title,
+			persistent = nil,
+			minimap = true,
+			world = true
+		})
 	end
 end
 
@@ -141,7 +134,6 @@ do
 	local isMoving = false
 	local info = {}
 	local clickedMapFile = nil
-	local clickedZone = nil
 	local clickedCoord = nil
 	local function generateMenu(button, level)
 		if (not level) then return end
@@ -180,17 +172,6 @@ do
 			info.arg1 = clickedMapFile
 			info.arg2 = clickedCoord
 			UIDropDownMenu_AddButton(info, level)
-
-			-- Cartographer_Waypoints menu item
-			if Cartographer and Cartographer.HasModule and Cartographer:HasModule("Waypoints") and Cartographer:IsModuleActive("Waypoints") then
-				if HandyNotes:GetCZToZone(HandyNotes:GetCZ(clickedMapFile)) then -- Only if this is in a mapzone
-					info.text = L["Add this location to Cartographer_Waypoints"]
-					info.func = addCartWaypoint
-					info.arg1 = clickedMapFile
-					info.arg2 = clickedCoord
-					UIDropDownMenu_AddButton(info, level)
-				end
-			end
 
 			if TomTom then
 				info.text = L["Add this location to TomTom waypoints"]
@@ -279,6 +260,7 @@ do
 		["TheMaelstromContinent"] = {__index = Astrolabe.ContinentList[5]},
 		["Vashjir"]               = {[0] = 613, 614, 615, 610},
 		["Pandaria"]              = {__index = Astrolabe.ContinentList[6]},
+		["Draenor"]               = {__index = Astrolabe.ContinentList[7]},
 	}
 	for k, v in pairs(continentMapFile) do
 		setmetatable(v, v)
@@ -358,8 +340,7 @@ end
 -- button is guaranteed to be passed in with the WorldMapButton frame
 function HN:WorldMapButton_OnClick(button, mouseButton, ...)
 	if mouseButton == "RightButton" and IsAltKeyDown() and not IsControlKeyDown() and not IsShiftKeyDown() then
-		local C, Z, L = GetCurrentMapContinent(), GetCurrentMapZone(), GetCurrentMapDungeonLevel()
-		local mapFile = HandyNotes:WhereAmI()
+		local mapFile, L = HandyNotes:WhereAmI(), GetCurrentMapDungeonLevel()
 
 		-- Get the coordinate clicked on
 		local x, y = GetCursorPosition()

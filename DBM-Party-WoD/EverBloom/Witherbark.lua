@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1214, "DBM-Party-WoD", 5, 556)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11483 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11848 $"):sub(12, -3))
 mod:SetCreatureID(81522)
 mod:SetEncounterID(1746)
 
@@ -18,7 +18,7 @@ mod:RegisterEventsInCombat(
 
 local warnParchedGrasp			= mod:NewSpellAnnounce(164357, 3, nil, mod:IsTank())
 local warnBrittleBark			= mod:NewSpellAnnounce(164275, 2)
-local warnUncheckedGrowth		= mod:NewSpellAnnounce("ej10098", 3)
+local warnUncheckedGrowth		= mod:NewSpellAnnounce("ej10098", 3, 164294)
 
 local specWarnLivingLeaves		= mod:NewSpecialWarningMove(169495)
 local specWarnUncheckedGrowth	= mod:NewSpecialWarningMove(164294)

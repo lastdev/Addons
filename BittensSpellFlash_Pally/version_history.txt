@@ -1,3 +1,25 @@
+== Version 60000.4
+* Execution Sentence is optional, always.
+* Fix flashing Final Verdict without the HP to cast it.
+* Fix lua error when using Final Verdict
+  (hopefully, since I don't have a 100 pally to test on yet.)
+
+== Version 60000.3
+* Avenging Wrath is optional, not mandatory.
+
+== Version 60000.2
+* Add missing Maraad's Truth spell ID.
+
+== Version 60000.1.1
+* Update TOC to reflect the updates in the last upload.
+
+== Version 60000.1.0
+* Updated spell data for 6.0.
+* Implement Holy Power prediction for 6.0 changes.
+* Updated food and other buff flashing.
+* Updated Ret rotation for 6.0 (full single, cleave, and AoE rotations)
+* Updated Prot rotation for 6.0 (balanced rotation only)
+
 == Version 50400.2.3
 * I have gotten a pretty good response, so I think (and hope) Bitten's SpellFlash will live on!
 

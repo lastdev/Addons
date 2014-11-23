@@ -28,11 +28,13 @@ end
 local function HasEnoughSkill(ilvl, quality)
 	local prof1, prof2 = GetProfessions()
 	local name, _, myskill = GetProfessionInfo(prof1)
-	if name ~= ENCHANTING then name, _, myskill = GetProfessionInfo(prof2) end
+	if name ~= ENCHANTING and prof2 then
+		name, _, myskill = GetProfessionInfo(prof2)
+	end
 	if name ~= ENCHANTING then return false end
 
 	if ilvl <= 20 then return true end
-	if ilvl <= 60 then return myskill >= (math.floor(ilvl/5) - 3) * 25 end
+	if ilvl <= 60 then return myskill >= (math.floor((ilvl-1)/5) - 3) * 25 end
 	if ilvl <= 89 or quality <= 3 and ilvl <= 99 then return myskill >= 225 end
 
 	if quality == 2 then -- uncommon

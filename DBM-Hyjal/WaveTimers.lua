@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("HyjalWaveTimers", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 540 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 548 $"):sub(12, -3))
 
 mod:RegisterEvents(
 	"GOSSIP_SHOW",
@@ -54,7 +54,7 @@ end
 mod.QUEST_PROGRESS = mod.GOSSIP_SHOW
 
 function mod:UPDATE_WORLD_STATES()
-	local text = select(4, GetWorldStateUIInfo(3))
+	local text = select(4, GetWorldStateUIInfo(4))
 	if not text then return end
 	local _,_,currentWave = text:find(L.WaveCheck)
 	if not currentWave then

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1186, "DBM-Party-WoD", 1, 547)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11517 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11861 $"):sub(12, -3))
 mod:SetCreatureID(76177)
 mod:SetEncounterID(1685)
 mod:SetZone()
@@ -13,7 +13,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 155327 153994"
 )
 
-
+--TODO, soul vessel is probably wrong now.
 local warnSWP					= mod:NewTargetAnnounce(154477, 2, nil, mod:IsHealer())
 local warnSoulVessel			= mod:NewSpellAnnounce(155327, 4)
 local warnTornSpirits			= mod:NewSpellAnnounce(153991, 3)

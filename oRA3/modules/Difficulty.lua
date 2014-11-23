@@ -1,7 +1,9 @@
-local oRA = LibStub("AceAddon-3.0"):GetAddon("oRA3")
+
+local addonName, scope = ...
+local oRA = scope.addon
 local module = oRA:NewModule("Difficulty", "AceTimer-3.0")
 
-module.VERSION = tonumber(("$Revision: 794 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 814 $"):sub(12, -3))
 
 function module:OnRegister()
 	local defaults = {
@@ -24,7 +26,7 @@ do
 		if not IsInGroup() then
 			local diff = module.db.profile.prevRaidDifficulty
 			if GetRaidDifficultyID() ~= diff then
-				SetRaidDifficultyID(diff)
+				SetRaidDifficulties(true, diff)
 			end
 		end
 	end
@@ -39,7 +41,7 @@ end
 function module:OnShutdown()
 	if self.db.profile.prevRaidDifficulty then
 		if not IsInInstance() then -- don't change on leaving group while still in the instance
-			SetRaidDifficultyID(self.db.profile.prevRaidDifficulty)
+			SetRaidDifficulties(true, self.db.profile.prevRaidDifficulty)
 			self:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
 		else
 			self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnShutdown")

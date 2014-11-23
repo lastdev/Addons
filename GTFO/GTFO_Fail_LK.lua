@@ -193,6 +193,11 @@ GTFO.SpellID["63009"] = {
 	sound = 3;
 };
 
+GTFO.SpellID["63041"] = {
+	--desc = "Rocket Strike (Mimiron)";
+	sound = 3;
+};
+
 GTFO.SpellID["69680"] = {
 	--desc = "Gunship Explosion (Gunship Battle - 10 Normal)";
 	sound = 3;

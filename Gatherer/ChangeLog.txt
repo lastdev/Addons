@@ -1,6 +1,19 @@
 CHANGELOG
 ---------------------------------------
 
+5.0.0
+========
+Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10953
+- GATH-218: add basic WoD gatherables (Herbs/Ore/Archaeology)
+- GATH-222: correct problem with conflicts between zones with the same name
+- GATH-221: merge World Map show/hide button into default UI dropdown
+
+4.4.2
+========
+Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10952
+- GATH-216: WoW 6.0.2 compatibility (not WoD)
+- GATH-219: update Astrolabe library
+
 4.4.1
 ========
 Version Issue List: http://jira.norganna.org/browse/GATH/fixforversion/10852
@@ -600,4 +613,4 @@ Deleted a rogue print2 statement.
 - Added giant clam treasure
 
 --------------
-Revision: $Id: ChangeLog.txt 1108 2014-02-23 01:05:52Z Esamynn $
+Revision: $Id: ChangeLog.txt 1134 2014-11-14 01:27:24Z Esamynn $

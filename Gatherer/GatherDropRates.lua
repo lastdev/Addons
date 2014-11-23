@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
-	Revision: $Id: GatherDropRates.lua 955 2012-08-28 16:39:14Z Esamynn $
+	Version: 5.0.0 (<%codename%>)
+	Revision: $Id: GatherDropRates.lua 1129 2014-11-13 21:02:28Z esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -25,11 +25,23 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherDropRates.lua $", "$Rev: 955 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_5.0.0/Gatherer/GatherDropRates.lua $", "$Rev: 1129 $")
 
-local ArchaeologyCurrencies = Gatherer.Constants.ArchaeologyCurrencies
+local dbVersion = 5
 
-local dbVersion = 4
+local ArchaeologyCurrencies_DropRateConversions = {
+	["ARCH_DRAENEI"] = 398,
+	["ARCH_DWARF"] = 384,
+	["ARCH_FOSSIL"] = 393,
+	["ARCH_NERUBIAN"] = 400,
+	["ARCH_NIGHTELF"] = 394,
+	["ARCH_ORC"] = 397,
+	["ARCH_TOLVIR"] = 401,
+	["ARCH_TROLL"] = 385,
+	["ARCH_VRYKUL"] = 399,
+	["ARCH_PANDAREN"] = 676,
+	["ARCH_MOGU"] = 677,
+}
 
 function Gatherer.DropRates.Load()
 	local data = Gatherer_DropRates
@@ -69,7 +81,6 @@ function Gatherer.DropRates.Load()
 		if (data.dbVersion == 2) then
 			local objectCategories = Gatherer.Categories.ObjectCategories
 			local objectGTypes = Gatherer.Nodes.Objects
-			local archCurrencies = Gatherer.Constants.ArchaeologyCurrencies
 			
 			for cont, contData in pairs(data) do
 				if ( type(contData) == "table" ) then
@@ -78,7 +89,7 @@ function Gatherer.DropRates.Load()
 							
 							if (objectGTypes[nodeId] == "ARCH") then
 								local total = nodeData.total
-								local currencyID = archCurrencies[objectCategories[nodeId]]
+								local currencyID = ArchaeologyCurrencies_DropRateConversions[objectCategories[nodeId]]
 								if ( currencyID and not nodeData[currencyID] ) then
 									nodeData[currencyID] = nodeData.total * 7 -- magic number is 7... just because
 								end
@@ -92,7 +103,7 @@ function Gatherer.DropRates.Load()
 		end
 		
 		if (data.dbVersion == 3) then
-			data = { dbVersion = dbVersion }
+			data = { dbVersion = 4 }
 			for cont, contData in pairs(Gatherer_DropRates) do
 				if ( type(cont) == "number" ) then
 					for zone, zoneData in pairs(contData) do
@@ -103,6 +114,28 @@ function Gatherer.DropRates.Load()
 					end
 				end
 			end
+		end
+
+		if (data.dbVersion == 4) then
+			local objectGTypes = Gatherer.Nodes.Objects
+			for zoneToken, zoneData in pairs(data) do
+				if ( type(zoneData) == "table" ) then
+					for nodeId, nodeData in pairs(zoneData) do
+						if (objectGTypes[nodeId] == "ARCH") then
+							local newData = {}
+							for itemId, count in pairs(nodeData) do
+								if ( type(itemId) == "number" and itemId < 1000 ) then
+									newData[-itemId] = count
+								else
+									newData[itemId] = count
+								end
+							end
+							zoneData[nodeId] = newData
+						end
+					end
+				end
+			end
+			data.dbVersion = 5
 		end
 		
 		if ( data.dbVersion ~= dbVersion ) then
@@ -133,11 +166,12 @@ function Gatherer.DropRates.ProcessDrops( objectId, zone, source, coins, loot )
 	local foundItem = false
 	for pos, loot in ipairs(loot) do
 		local id = loot.id
+		local lootType = loot.type
 		if (not id and loot.link) then
 			id = Gatherer.Util.BreakLink(loot.link)
 		end
-		if (not id and ArchaeologyCurrencies[loot.name]) then
-			id = ArchaeologyCurrencies[loot.name]
+		if ( lootType == LOOT_SLOT_CURRENCY ) then
+			id = -id
 		end
 		if ( id ) then
 			local count = loot.count

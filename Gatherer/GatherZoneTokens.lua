@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
-	Revision: $Id: GatherZoneTokens.lua 1102 2013-09-10 06:19:12Z Esamynn $
+	Version: 5.0.0 (<%codename%>)
+	Revision: $Id: GatherZoneTokens.lua 1130 2014-11-13 21:02:57Z esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	Functions for converting to and from the locale independent zone tokens
 --]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherZoneTokens.lua $", "$Rev: 1102 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_5.0.0/Gatherer/GatherZoneTokens.lua $", "$Rev: 1130 $")
 
 -- reference to the Astrolabe mapping library
 local Astrolabe = DongleStub(Gatherer.AstrolabeVersion)
@@ -166,12 +166,39 @@ local MapIdToTokenMap = {
 		[928] = "ISLE_THUNDER",
 		[929] = "ISLE_GIANTS",
 		[951] = "TIMELESS_ISLE",
+	
+	-- Draenor
+		[978] = "DRAENOR_ASHRAN",
+		[941] = "DRAENOR_FROSTFIRE_RIDGE",
+		[949] = "DRAENOR_GORGROND",
+		[950] = "DRAENOR_NAGRAND",
+		[947] = "DRAENOR_SHADOWMOON_VALLEY",
+		[948] = "DRAENOR_SPIRES_OF_ARAK",
+		[946] = "DRAENOR_TALADOR",
+		[945] = "DRAENOR_TANAAN_JUNGLE",
 }
+
+
+-- convert list of zoneID1, zoneName1, zoneID2, zoneName2, etc.
+-- into just a list of zone names
+local function stripZoneIDs(...)
+	local n = select("#", ...)
+	--print("zoneList count = ", n );
+	local temp = {};
+	local index = 1;
+	for i = 2, n, 2 do
+		temp[index] = select(i, ...);
+		--print("  item = ", temp[index] );
+		index = index + 1;
+	end
+	return temp;
+end
+
 
 Tokens = {}
 TokensByContinent = {}
 TokenToMapID = {}
-ZoneNames = {GetMapContinents()}
+ZoneNames = stripZoneIDs(GetMapContinents())
 
 unrecognizedZones = {}
 
@@ -202,8 +229,13 @@ Ver3To4TempTokens = {
 	["TheMaelstrom"] = "MAELSTROM",
 }
 
+local continentWorldMapIDs = {}
+for i, id in pairs(GetContinentMaps()) do
+	continentWorldMapIDs[i] = GetContinentMapInfo(id)
+end
+
 for continent, zones in pairs(Astrolabe.ContinentList) do
-	local continentZoneNames = {GetMapZones(continent)}
+	local continentZoneNames = stripZoneIDs(GetMapZones(continent));
 	ZoneNames[continent] = { CONTINENT = ZoneNames[continent] }
 	local tokenMap = {}
 	for index, mapID in pairs(zones) do
@@ -212,7 +244,7 @@ for continent, zones in pairs(Astrolabe.ContinentList) do
 			if not ( MapIdToTokenMap[mapID] ) then
 				-- use the mapID as a temporary token and 
 				zoneToken = mapID;
-				table.insert(unrecognizedZones, continentZoneNames[index])
+				table.insert(unrecognizedZones, continentZoneNames[index].." ("..mapID..")")
 			else
 				zoneToken = MapIdToTokenMap[mapID]
 			end
@@ -224,7 +256,16 @@ for continent, zones in pairs(Astrolabe.ContinentList) do
 			
 			ZoneNames[continent][zoneToken] = continentZoneNames[index]
 			ZoneNames[zoneToken] = continentZoneNames[index]
-			ZoneNames[continentZoneNames[index]] = zoneToken
+			if not ( ZoneNames[continentZoneNames[index]] ) then
+				ZoneNames[continentZoneNames[index]] = zoneToken
+			else
+				if not ( type(ZoneNames[continentZoneNames[index]]) == "table" ) then
+					local origZoneToken = ZoneNames[continentZoneNames[index]]
+					ZoneNames[continentZoneNames[index]] = {}
+					ZoneNames[continentZoneNames[index]][""] = origZoneToken
+				end
+				ZoneNames[continentZoneNames[index]][continentWorldMapIDs[continent]] = zoneToken
+			end
 		end
 	end
 	TokensByContinent[continent] = tokenMap

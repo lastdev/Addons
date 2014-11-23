@@ -1,8 +1,8 @@
 ﻿--[[
 	Icon set definitions
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
-	Revision: $Id: GatherIcons.lua 1074 2013-03-03 05:00:04Z LocalizerAutoCommit $
+	Version: 5.0.0 (<%codename%>)
+	Revision: $Id: GatherIcons.lua 1131 2014-11-13 21:03:23Z esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -195,4 +195,12 @@ Gatherer.Icons = {
 	[207533] = "Open\\Chest", -- Runestone Treasure Chest
 	[210565] = "Herb\\GraveMoss", -- Dark Soil
 	[214945] = "Open\\OynxEgg", -- Onyx Egg
+	[220901] = "Open\\Chest", -- Gleaming Treasure Chest
+	[220902] = "Open\\Chest", -- Rope-Bound Treasure Chest
+	[221617] = "Open\\Chest", -- Skull-Covered Chest
+	[221670] = "Open\\Chest", -- Moss-Covered Chest
+	[221671] = "Open\\Chest", -- Sturdy Chest
+	[221672] = "Open\\Chest", -- Smoldering Chest
+	[221673] = "Open\\Chest", -- Blazing Chest
+	[222684] = "Herb\\GraveMoss", -- Glinting Sand
 }

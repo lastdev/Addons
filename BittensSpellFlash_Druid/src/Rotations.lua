@@ -6,11 +6,6 @@ local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 local m = a.CatSimulator
 local u = g.GetTable("BittensUtilities")
 
-u.Schedule(
-    1,
-    print,
-    "|cFF80A0FFThe future of Bitten's SpellFlash: Druid is in question.  I no longer wish to maintain this addon, starting with patch 6.0.  If you are interested in taking it over, keeping up with optimal rotations, and you have programming skills, please leave a comment or PM on Curse.|r")
-
 local GetComboPoints = GetComboPoints
 local GetCritChance = GetCritChance
 local UnitDamage = UnitDamage
@@ -40,45 +35,55 @@ local RAKE_FURY_DELAY = 2
 local primalPending = 0
 local primalPendingFromMangle = false
 
+a.WarningPrintedAbout = {}
+
+local function WARNING(rotation)
+   if not a.WarningPrintedAbout[rotation] then
+      u.Schedule(
+         5,
+         print,
+         string.format("|cFFFF0000WARNING: The %s druid rotation is NOT UP TO DATE.  They require major rework to be working right.  This will happen.  Help is absolutely welcome.|r -- SlippyCheeze", rotation)
+      )
+      a.WarningPrintedAbout[rotation] = true
+   end
+end
+
+
 local function monitorPendPrimalRage(spellID, _, _, critical)
-	if critical 
-		and c.IdMatches(spellID, "Auto Attack", "Mangle(Bear Form)")
-		and s.Form(c.GetID("Bear Form")) then
-		
-		primalPending = GetTime()
-		primalPendingFromMangle = c.IdMatches(spellID, "Mangle(Bear Form)")
-		c.Debug("Event", "Primal Fury Rage Pending")
-	end
+   if critical
+      and c.IdMatches(spellID, "Auto Attack", "Mangle")
+      and s.Form(c.GetID("Bear Form")) then
+
+      primalPending = GetTime()
+      primalPendingFromMangle = c.IdMatches(spellID, "Mangle")
+      c.Debug("Event", "Primal Fury Rage Pending")
+   end
 end
 
 local function monitorConsumePrimalRage(spellID)
-	if c.IdMatches(spellID, "Primal Fury Rage") then
-		primalPending = 0
-		c.Debug("Event", "Primal Fury Rage Happened")
-	end
+   if c.IdMatches(spellID, "Primal Fury Rage") then
+      primalPending = 0
+      c.Debug("Event", "Primal Fury Rage Happened")
+   end
 end
 
 local function calcRage()
-	a.Rage = c.GetPower(0, SPELL_POWER_RAGE)
-	local bump = 0
-	local soulMultiplier = 
-		c.HasTalent("Soul of the Forest") and GetSpecialization() == 3 
-			and 1.3 
-			or 1
-	if GetTime() - primalPending < .8 then
-		bump = 15
-		if primalPendingFromMangle then
-			bump = bump * soulMultiplier
-		end
-	end
-	if c.IsQueued("Mangle(Bear Form)") then
-		bump = bump + 5 * soulMultiplier
-	end
-	if c.HasBuff("Enrage", true) and c.WearingSet(4, "GuardianT15") then
-		bump = bump * 1.5
-	end
-	a.Rage =  math.min(s.MaxPower("player"), a.Rage + bump)
-	a.EmptyRage = s.MaxPower("player") - a.Rage
+   a.Rage = c.GetPower(0, SPELL_POWER_RAGE)
+   local bump = 0
+   local soulMultiplier = c.HasTalent("Soul of the Forest") and GetSpecialization() == 3
+         and 1.3
+         or 1
+   if GetTime() - primalPending < .8 then
+      bump = 15
+      if primalPendingFromMangle then
+         bump = bump * soulMultiplier
+      end
+   end
+   if c.IsQueued("Mangle") then
+      bump = bump + 5 * soulMultiplier
+   end
+   a.Rage =  math.min(s.MaxPower("player"), a.Rage + bump)
+   a.EmptyRage = s.MaxPower("player") - a.Rage
 end
 
 a.Rotations = {}
@@ -91,187 +96,192 @@ a.MoonfireTick = 2
 a.SunfireTick = 2
 
 local updateMoonfire = function()
-	a.MoonfireTick = c.GetHastedTime(2)
-	c.Debug("Event", "Moonfire ticks every", a.MoonfireTick)
+   a.MoonfireTick = c.GetHastedTime(2)
+   c.Debug("Event", "Moonfire ticks every", a.MoonfireTick)
 end
 
 local updateSunfire = function()
-	a.SunfireTick = c.GetHastedTime(2)
-	c.Debug("Event", "Sunfire ticks every", a.SunfireTick)
+   a.SunfireTick = c.GetHastedTime(2)
+   c.Debug("Event", "Sunfire ticks every", a.SunfireTick)
 end
 
 a.Rotations.Balance = {
-	Spec = 1,
-	
-	UsefulStats = { 
-		"Intellect", "Spell Hit", "Hit from Spirit", "Crit", "Haste" 
-	},
-	
-	FlashInCombat = function()
-		a.Energy = UnitPower("player", SPELL_POWER_ECLIPSE)
-		a.Alignment = c.GetBuffDuration(
-			"Celestial Alignment", false, false, true)
-		
-		if a.Alignment > 0 then
-			a.Solar = true
-			a.Lunar = true
-		else
-			a.Solar = c.HasBuff("Eclipse (Solar)") 
-			a.Lunar = c.HasBuff("Eclipse (Lunar)")
-		end
-		a.GoingUp = GetEclipseDirection() ~= "moon"
-		
-		a.EclipsePending = false
-		if a.Alignment == 0 then
-			local bump = 0
-			if c.IsCasting("Starfire") then
-				if a.GoingUp then
-					bump = 20
-				end
-			elseif c.IsCasting("Wrath") then
-				if not a.GoingUp then
-					bump = -15
-				end
-			elseif c.IsCasting("Starsurge") then
-				if a.GoingUp then
-					bump = 20
-				else
-					bump = -20
-				end
-			end
-			if c.IsCasting("Astral Communion") 
-				and c.HasBuff("Astral Insight") then
-				
-				if a.GoingUp then
-					bump = bump + 100
-				else
-					bump = bump - 100
-				end
-			end
-			if bump ~= 0 then
-				if c.HasSpell("Euphoria")
-					and not a.Solar
-					and not a.Lunar then
-					
-					bump = bump * 2
-				end
-				a.Energy = a.Energy + bump
-				if a.Energy <= -100 then
-					a.GoingUp = true
-					a.Lunar = true
-					a.EclipsePending = true
-				elseif a.Energy >= 100 then
-					a.GoingUp = false
-					a.Solar = true
-					a.EclipsePending = true
-				elseif a.Energy >= 0 then
-					a.Lunar = false
-				elseif a.Energy <= 0 then
-					a.Solar = false
-				end
-			end
-		end
-		
-		local now = GetTime()
-		if now - pendingSecondDot < .8
-			or (a.Alignment > 0 and c.IsCasting("Moonfire", "Sunfire")) then
-			
-			a.Moonfire = 14
-			a.Sunfire = 14
-		else
-			a.Moonfire = c.GetMyDebuffDuration("Moonfire", false, false, true)
-			a.Sunfire = c.GetMyDebuffDuration("Sunfire", false, false, true)
-		end
-		
-		if now - pendingLunarShower < 0.8 
-			or c.IsCasting("Moonfire", "Sunfire") then
-			
-			a.LunarShower = 3 - c.GetBusyTime()
-		else
-			a.LunarShower = c.GetBuffDuration("Lunar Shower")
-		end
-		
-		c.FlashAll(
-			"Starfall", 
-			"Force of Nature: Balance", 
-			"Incarnation: Chosen of Elune",
-			"Nature's Vigil",
-			"Celestial Alignment",
-			"Wild Mushroom: Detonate",
-			"Renewal",
-			"Soothe",
-			"Solar Beam")
-		
-		c.PriorityFlash(
-			"Astral Communion Instant", 
-			"Starsurge under Shooting Stars",
-			"Moonfire under Eclipse",
-			"Sunfire under Eclipse",
-			"Moonfire",
-			"Sunfire",
-			"Starsurge",
-			"Starfire under Celestial Alignment",
-			"Wrath under Celestial Alignment",
-			"Starfire",
-			"Wrath")
-	end,
-	
-	FlashOutOfCombat = function()
-		c.FlashAll("Symbiosis", "Healing Touch Solo")
-	end,
-	
-	FlashAlways = function()
-		c.FlashAll("Mark of the Wild", "Moonkin Form")
-	end,
-	
-	CastSucceeded = function(info)
-		if c.InfoMatches(info, "Moonfire", "Sunfire") then
-			if c.HasBuff("Celestial Alignment", true, false, true) then
-				pendingSecondDot = GetTime()
-				c.Debug("Event", "Pending Second DoT")
-			end
-			pendingLunarShower = GetTime()
-			c.Debug("Event", "Lunar Shower Pending")
-		end
-	end,
-	
-	AuraApplied = function(spellID)
-		if c.IdMatches(spellID, "Moonfire") then
-			updateMoonfire()
-		elseif c.IdMatches(spellID, "Starfire") then
-			updateSunfire()
-		elseif c.IdMatches(spellID, "Lunar Shower") then
-			pendingLunarShower = 0
-			c.Debug("Event", "Lunar Shower Happened")
-		end
-	end,
-	
-	SpellDamage = function(spellID, _, _, crit)
-		if crit then
-			if c.IdMatches(spellID, "Starsurge") then
-				updateMoonfire()
-				updateSunfire()
-			elseif c.IdMatches(spellID, "Wrath") then
-				updateSunfire()
-			elseif c.IdMatches(spellID, "Starfire") then
-				updateMoonfire()
-			end
-		end
-	end,
-	
-	ExtraDebugInfo = function()
-		return string.format(
-			"e:%d s:%s l:%s u:%s p:%s m:%.1f s:%.1f l:%.1f a:%.1f",
-			a.Energy,
-			tostring(a.Solar),
-			tostring(a.Lunar),
-			tostring(a.GoingUp),
-			tostring(a.EclipsePending),
-			a.Moonfire,
-			a.Sunfire,
-			a.LunarShower,
-			a.Alignment)
-	end,
+   Spec = 1,
+
+   UsefulStats = {
+      "Intellect", "Spell Hit", "Hit from Spirit", "Crit", "Haste"
+   },
+
+   PreFlash = function()
+      WARNING("Balance")
+   end,
+
+   NoFlashInCombat = function()
+      a.Energy = UnitPower("player", SPELL_POWER_ECLIPSE)
+      a.Alignment = c.GetBuffDuration(
+         "Celestial Alignment", false, false, true)
+
+      if a.Alignment > 0 then
+         a.Solar = true
+         a.Lunar = true
+      else
+         a.Solar = c.HasBuff("Eclipse (Solar)")
+         a.Lunar = c.HasBuff("Eclipse (Lunar)")
+      end
+      a.GoingUp = GetEclipseDirection() ~= "moon"
+
+      a.EclipsePending = false
+      if a.Alignment == 0 then
+         local bump = 0
+         if c.IsCasting("Starfire") then
+            if a.GoingUp then
+               bump = 20
+            end
+         elseif c.IsCasting("Wrath") then
+            if not a.GoingUp then
+               bump = -15
+            end
+         elseif c.IsCasting("Starsurge") then
+            if a.GoingUp then
+               bump = 20
+            else
+               bump = -20
+            end
+         end
+         -- @todo danielp 2014-11-11: astral insight no longer exists
+         -- if c.IsCasting("Astral Communion")
+         --    and c.HasBuff("Astral Insight") then
+         -- 
+         --    if a.GoingUp then
+         --       bump = bump + 100
+         --    else
+         --       bump = bump - 100
+         --    end
+         -- end
+         if bump ~= 0 then
+            -- changed in 6.0, I think???
+            -- if c.HasSpell("Euphoria")
+            --    and not a.Solar
+            --    and not a.Lunar then
+            -- 
+            --    bump = bump * 2
+            -- end
+            a.Energy = a.Energy + bump
+            if a.Energy <= -100 then
+               a.GoingUp = true
+               a.Lunar = true
+               a.EclipsePending = true
+            elseif a.Energy >= 100 then
+               a.GoingUp = false
+               a.Solar = true
+               a.EclipsePending = true
+            elseif a.Energy >= 0 then
+               a.Lunar = false
+            elseif a.Energy <= 0 then
+               a.Solar = false
+            end
+         end
+      end
+
+      local now = GetTime()
+      if now - pendingSecondDot < .8
+         or (a.Alignment > 0 and c.IsCasting("Moonfire", "Sunfire")) then
+
+         a.Moonfire = 14
+         a.Sunfire = 14
+      else
+         a.Moonfire = c.GetMyDebuffDuration("Moonfire", false, false, true)
+         a.Sunfire = c.GetMyDebuffDuration("Sunfire", false, false, true)
+      end
+
+      -- if now - pendingLunarShower < 0.8
+      --    or c.IsCasting("Moonfire", "Sunfire") then
+      -- 
+      --    a.LunarShower = 3 - c.GetBusyTime()
+      -- else
+      --    a.LunarShower = c.GetBuffDuration("Lunar Shower")
+      -- end
+
+      c.FlashAll(
+         "Starfall",
+         "Force of Nature: Balance",
+         "Incarnation: Chosen of Elune",
+         "Nature's Vigil",
+         "Celestial Alignment",
+         "Renewal",
+         "Soothe",
+         "Solar Beam")
+
+      c.PriorityFlash(
+         "Astral Communion Instant",
+         "Starsurge under Shooting Stars",
+         "Moonfire under Eclipse",
+         "Sunfire under Eclipse",
+         "Moonfire",
+         "Sunfire",
+         "Starsurge",
+         "Starfire under Celestial Alignment",
+         "Wrath under Celestial Alignment",
+         "Starfire",
+         "Wrath")
+   end,
+
+   NoFlashOutOfCombat = function()
+      c.FlashAll("Healing Touch Solo")
+   end,
+
+   FlashAlways = function()
+      c.FlashAll("Mark of the Wild", "Moonkin Form")
+   end,
+
+   NoCastSucceeded = function(info)
+      if c.InfoMatches(info, "Moonfire", "Sunfire") then
+         if c.HasBuff("Celestial Alignment", true, false, true) then
+            pendingSecondDot = GetTime()
+            c.Debug("Event", "Pending Second DoT")
+         end
+         -- pendingLunarShower = GetTime()
+         -- c.Debug("Event", "Lunar Shower Pending")
+      end
+   end,
+
+   NoAuraApplied = function(spellID)
+      if c.IdMatches(spellID, "Moonfire") then
+         updateMoonfire()
+      elseif c.IdMatches(spellID, "Starfire") then
+         updateSunfire()
+      -- elseif c.IdMatches(spellID, "Lunar Shower") then
+      --    pendingLunarShower = 0
+      --    c.Debug("Event", "Lunar Shower Happened")
+      end
+   end,
+
+   NoSpellDamage = function(spellID, _, _, crit)
+      if crit then
+         if c.IdMatches(spellID, "Starsurge") then
+            updateMoonfire()
+            updateSunfire()
+         elseif c.IdMatches(spellID, "Wrath") then
+            updateSunfire()
+         elseif c.IdMatches(spellID, "Starfire") then
+            updateMoonfire()
+         end
+      end
+   end,
+
+   NoExtraDebugInfo = function()
+      return string.format(
+         "e:%d s:%s l:%s u:%s p:%s m:%.1f s:%.1f l:%.1f a:%.1f",
+         a.Energy,
+         tostring(a.Solar),
+         tostring(a.Lunar),
+         tostring(a.GoingUp),
+         tostring(a.EclipsePending),
+         a.Moonfire,
+         a.Sunfire,
+         a.LunarShower,
+         a.Alignment)
+   end,
 }
 
 ------------------------------------------------------------------------- Feral
@@ -280,87 +290,87 @@ local lastRipDuration = 0
 local pendingRipExtension = 0
 
 local function updateRipDuration()
-	local duration = s.MyDebuffDuration(c.GetID("Rip"))
-	local now = GetTime()
-	if duration - lastRipDuration > 4 then
-		pendingRipExtension = 6
+   local duration = s.MyDebuffDuration(c.GetID("Rip"))
+   local now = GetTime()
+   if duration - lastRipDuration > 4 then
+      pendingRipExtension = 6
 --c.Debug("Rip", "Overwrite: ", duration - lastRipDuration)
-	elseif pendingRipExtension > 0 and duration > lastRipDuration then
-		pendingRipExtension = pendingRipExtension - 2
+   elseif pendingRipExtension > 0 and duration > lastRipDuration then
+      pendingRipExtension = pendingRipExtension - 2
 --c.Debug("Rip", "change of ", duration - lastRipDuration, " -> ", pendingRipExtension)
-	end
-	lastRipTime = now
-	lastRipDuration = duration
-	
-	local busyTime = c.GetBusyTime()
-	if c.IsAuraPendingFor("Rip") then
-		a.Rip = 99
-		a.MinRip = 99
-	elseif duration > busyTime 
-		or (duration > 0 
-			and pendingRipExtension > 0 
-			and c.IsCasting("Shred", "Ravage", "Mangle(Cat Form)")) then
-		
-		a.Rip = duration - busyTime
-		a.MinRip = a.Rip
-		if not c.AoE then
-			a.Rip = a.Rip + pendingRipExtension
-		end
-	else
-		a.Rip = 0
-		a.MinRip = 0
-	end
+   end
+   lastRipTime = now
+   lastRipDuration = duration
+
+   local busyTime = c.GetBusyTime()
+   if c.IsAuraPendingFor("Rip") then
+      a.Rip = 99
+      a.MinRip = 99
+   elseif duration > busyTime
+      or (duration > 0
+         and pendingRipExtension > 0
+         and c.IsCasting("Shred", "Mangle")) then
+
+      a.Rip = duration - busyTime
+      a.MinRip = a.Rip
+      if not c.AoE then
+         a.Rip = a.Rip + pendingRipExtension
+      end
+   else
+      a.Rip = 0
+      a.MinRip = 0
+   end
 end
 
 local castingRipCP = 1
 local bleeds = { }
 local damageCalcs = {
-	Rip = function(physMod, bleedMod, cp)
-		-- TODO this isn't exact, but it's close
-		return (113 + cp * (320 + 0.05993 * UnitAttackPower("player")))
-			* bleedMod
-			* physMod
-	end,
-	Rake = function(physMod, bleedMod)
-		return (99 + .3 * UnitAttackPower("player")) * bleedMod * physMod
-	end,
-	Mangle = function(physMod)
-		local armor = 24835 * (1 - .04 * c.GetDebuffStack(c.ARMOR_DEBUFFS))
-		local low, high = UnitDamage("player")
-		return (physMod * 78 + 1.25 * (low + high))
-			* (1 - armor / (armor + 46257.5))
-	end,
+   Rip = function(physMod, bleedMod, cp)
+      -- TODO this isn't exact, but it's close
+      return (113 + cp * (320 + 0.05993 * UnitAttackPower("player")))
+         * bleedMod
+         * physMod
+   end,
+   Rake = function(physMod, bleedMod)
+      return (99 + .3 * UnitAttackPower("player")) * bleedMod * physMod
+   end,
+   Mangle = function(physMod)
+      local armor = 24835 * (1 - .04 * c.GetDebuffStack(c.ARMOR_DEBUFFS))
+      local low, high = UnitDamage("player")
+      return (physMod * 78 + 1.25 * (low + high))
+         * (1 - armor / (armor + 46257.5))
+   end,
 }
 
 function a.CalcDamage(name, cp, roar, fury, dream, vigil)
-	local critMultiplier = 2
-	local physMod = 1
-	if (roar or a.Roar) > 0 then
-		physMod = physMod * 1.4
-	end
-	if (fury or a.TigersFury) > 0 then
-		physMod = physMod * 1.15
-	end
-	if (dream or a.DreamStacks) > 0 then
-		physMod = physMod * 1.3
-	end
-	if (vigil or a.Vigil) > 0 then
-		physMod = physMod * 1.12
-	end
-	local noncrit = damageCalcs[name](
-		physMod, 1 + .0313 * GetMastery(), cp or a.CP)
-	local avg = noncrit * (1 + (critMultiplier - 1) * GetCritChance() / 100)
-	return avg, noncrit
+   local critMultiplier = 2
+   local physMod = 1
+   if (roar or a.Roar) > 0 then
+      physMod = physMod * 1.4
+   end
+   if (fury or a.TigersFury) > 0 then
+      physMod = physMod * 1.15
+   end
+   if (dream or a.DreamStacks) > 0 then
+      physMod = physMod * 1.3
+   end
+   if (vigil or a.Vigil) > 0 then
+      physMod = physMod * 1.12
+   end
+   local noncrit = damageCalcs[name](
+      physMod, 1 + .0313 * GetMastery(), cp or a.CP)
+   local avg = noncrit * (1 + (critMultiplier - 1) * GetCritChance() / 100)
+   return avg, noncrit
 end
 
 function a.ExistingBleedDamage(name)
-	if c.IsCasting(name) then
-		return a.CalcDamage(name)
-	elseif a[name] == 0 then
-		return 0
-	else
-		return u.GetOrMakeTable(bleeds, name)[UnitGUID(s.UnitSelection())] or 0
-	end
+   if c.IsCasting(name) then
+      return a.CalcDamage(name)
+   elseif a[name] == 0 then
+      return 0
+   else
+      return u.GetOrMakeTable(bleeds, name)[UnitGUID(s.UnitSelection())] or 0
+   end
 end
 
 local lastEnergy = 0
@@ -374,482 +384,465 @@ local lastCP = 0
 local pendingBearRage = 0
 
 local function initState()
-	a.InExecute = s.HealthPercent() < 25
-	
-	calcRage()
-	local now = GetTime()
-	if now - pendingBearRage < .8 then
-		a.Rage = a.Rage + 10
-	end
-	
-	if s.Power("player") < lastEnergy or now - biteTime > 1 then
-		pendingBiteDrain = 0
-	end
-	lastEnergy = s.Power("player")
-	
-	updateRipDuration()
-	
-	local curCP = GetComboPoints("player")
-	local added = curCP - lastCP
-	a.CP = curCP
-	if now - cpPending < .8 then
-		if added > 0 then
-			added = added - 1
-			cpPending = 0
-			c.Debug("Event", "Mangle CP Happened")
-		else
-			a.CP = a.CP + 1
-		end
-	end
-	if now - furyCpPending < .8 then
-		if added > 0 then
-			furyCpPending = 0
-			c.Debug("Event", "Primal Fury CP Happened")
-		else
-			a.CP = a.CP + 1
-		end
-	end
-	if now - pendingRoarDrop < .8 then
-		if curCP == 0 then
-			pendingRoarDrop = 0
-			c.Debug("Event", "Savage Roar CP Use Happened")
-		else
-			a.CP = 0
-		end
-	end
-	a.CP = math.min(5, a.CP)
-	lastCP = curCP
-	
-	a.Regen = 10 + GetMeleeHaste() / 10
-	a.Energy = 
-		c.GetPower(a.Regen, SPELL_POWER_ENERGY) 
-		- pendingBiteDrain 
-		+ forestPending
-	a.Roar = c.GetBuffDuration("Savage Roar", false, false, true)
-	a.Rake = c.GetMyDebuffDuration("Rake", false, false, true)
-	a.ThrashCat = c.GetMyDebuffDuration("Thrash(Cat Form)", false, true, true)
-	a.DreamStacks = c.GetBuffStack("Dream of Cenarius - Feral", false, true)
-	if c.IsCasting("Healing Touch") then
-		a.Swiftness = 0
-		if c.HasTalent("Dream of Cenarius") then
-			a.DreamStacks = 2
-		end
-	else
-		a.Swiftness = c.GetBuffDuration("Predatory Swiftness")
-		if a.DreamStacks > 0 
-			and c.IsCasting(
-				"Shred", 
-				"Shred!",
-				"Thrash(Bear Form)",
-				"Mangle(Bear Form)",
-				"Rake", 
-				"Ravage", 
-				"Ravage!",
-				"Rip", 
-				"Ferocious Bite", 
-				"Thrash(Cat Form)", 
-				"Mangle(Cat Form)",
-				"Swipe") then
-			
-			a.DreamStacks = a.DreamStacks - 1
-		end
-		if c.IsCasting(
-			"Shred", 
-			"Shred!", 
-			"Rake", 
-			"Ravage", 
-			"Ravage!", 
-			"Mangle(Cat Form)") then
-			
-			a.CP = math.min(5, a.CP + 1)
-		elseif c.IsCasting("Rip", "Savage Roar", "Ferocious Bite") then
-			if a.CP == 5 then
-				a.Swiftness = 8
-			end
-			if c.HasTalent("Soul of the Forest") then
-				a.Energy = a.Energy + 4 * a.CP
-			end
-			
-			a.CP = 0
-		end
-	end
-	a.Energy = math.max(0, math.min(100, a.Energy))
-	
-	a.Clearcasting = c.HasBuff("Clearcasting")
-	if a.Clearcasting 
-		and c.IsCasting(
-			"Shred",
-			"Shred!",
-			"Rake",
-			"Ravage",
-			"Ravage!",
-			"Rip",
-			"Ferocious Bite",
-			"Thrash(Cat Form)",
-			"Mangle(Cat Form)",
-			"Swipe") then
-		
-		a.Clearcasting = false
-	end
-	
-	a.Berserk = c.GetBuffDuration("Berserk", false, false, true)
-	a.TigersFury = c.GetBuffDuration("Tiger's Fury", false, false, true)
-	a.TigerCool = c.GetCooldown("Tiger's Fury")
-	a.King = c.GetBuffDuration(
-		"Incarnation: King of the Jungle", false, false, true)
-	a.Vigil = c.GetBuffDuration("Nature's Vigil", false, false, true)
-	
-	a.TimeToCap = (100 - a.Energy) / a.Regen
-	a.Substantial = s.Health() > 1.5 * s.MaxHealth("player") or s.Dummy()
+   a.InExecute = s.HealthPercent() < 25
+
+   calcRage()
+   local now = GetTime()
+   if now - pendingBearRage < .8 then
+      a.Rage = a.Rage + 10
+   end
+
+   if s.Power("player") < lastEnergy or now - biteTime > 1 then
+      pendingBiteDrain = 0
+   end
+   lastEnergy = s.Power("player")
+
+   updateRipDuration()
+
+   local curCP = GetComboPoints("player")
+   local added = curCP - lastCP
+   a.CP = curCP
+   if now - cpPending < .8 then
+      if added > 0 then
+         added = added - 1
+         cpPending = 0
+         c.Debug("Event", "Mangle CP Happened")
+      else
+         a.CP = a.CP + 1
+      end
+   end
+   if now - furyCpPending < .8 then
+      if added > 0 then
+         furyCpPending = 0
+         c.Debug("Event", "Primal Fury CP Happened")
+      else
+         a.CP = a.CP + 1
+      end
+   end
+   if now - pendingRoarDrop < .8 then
+      if curCP == 0 then
+         pendingRoarDrop = 0
+         c.Debug("Event", "Savage Roar CP Use Happened")
+      else
+         a.CP = 0
+      end
+   end
+   a.CP = math.min(5, a.CP)
+   lastCP = curCP
+
+   a.Regen = 10 + GetMeleeHaste() / 10
+   a.Energy =
+      c.GetPower(a.Regen, SPELL_POWER_ENERGY)
+      - pendingBiteDrain
+      + forestPending
+   a.Roar = c.GetBuffDuration("Savage Roar", false, false, true)
+   a.Rake = c.GetMyDebuffDuration("Rake", false, false, true)
+   a.ThrashCat = c.GetMyDebuffDuration("Thrash(Cat Form)", false, true, true)
+   a.DreamStacks = c.GetBuffStack("Dream of Cenarius - Feral", false, true)
+   if c.IsCasting("Healing Touch") then
+      a.Swiftness = 0
+      if c.HasTalent("Dream of Cenarius") then
+         a.DreamStacks = 2
+      end
+   else
+      a.Swiftness = c.GetBuffDuration("Predatory Swiftness")
+      if a.DreamStacks > 0
+         and c.IsCasting(
+            "Shred",
+            "Thrash(Bear Form)",
+            "Mangle",
+            "Rake",
+            "Rip",
+            "Ferocious Bite",
+            "Thrash(Cat Form)",
+            "Swipe") then
+
+         a.DreamStacks = a.DreamStacks - 1
+      end
+      if c.IsCasting(
+         "Shred",
+         "Rake",
+         "Mangle") then
+
+         a.CP = math.min(5, a.CP + 1)
+      elseif c.IsCasting("Rip", "Savage Roar", "Ferocious Bite") then
+         if a.CP == 5 then
+            a.Swiftness = 8
+         end
+         if c.HasTalent("Soul of the Forest") then
+            a.Energy = a.Energy + 4 * a.CP
+         end
+
+         a.CP = 0
+      end
+   end
+   a.Energy = math.max(0, math.min(100, a.Energy))
+
+   a.Clearcasting = c.HasBuff("Clearcasting")
+   if a.Clearcasting
+      and c.IsCasting(
+         "Shred",
+         "Rake",
+         "Rip",
+         "Ferocious Bite",
+         "Thrash(Cat Form)",
+         "Mangle",
+         "Swipe") then
+
+      a.Clearcasting = false
+   end
+
+   a.Berserk = c.GetBuffDuration("Berserk", false, false, true)
+   a.TigersFury = c.GetBuffDuration("Tiger's Fury", false, false, true)
+   a.TigerCool = c.GetCooldown("Tiger's Fury")
+   a.King = c.GetBuffDuration(
+      "Incarnation: King of the Jungle", false, false, true)
+   a.Vigil = c.GetBuffDuration("Nature's Vigil", false, false, true)
+
+   a.TimeToCap = (100 - a.Energy) / a.Regen
+   a.Substantial = s.Health() > 1.5 * s.MaxHealth("player") or s.Dummy()
 end
 
 a.TimeToCap = 0
 
 a.Rotations.Feral = {
-	Spec = 2,
-	
-	UsefulStats = { "Agility", "Melee Hit", "Strength", "Crit", "Haste" },
-	
-	FlashInCombat = function()
-		initState()
-		
-		c.FlashAll(
-			"Force of Nature: Feral", 
-			"Faerie Fire for Debuff",
-			"Renewal",
-			"Soothe",
-			"Skull Bash",
-			"Survival Instincts under 30", 
-			"Barkskin under 30")
-		
-		if s.Form(c.GetID("Bear Form")) then
-			c.FlashAll("Heart of the Wild", "Healing Touch for Feral Heal")
-			local flashing = c.PriorityFlash(
-				"Swipe(Bear Form) Prime for Feral",
-				"Thrash(Bear Form) for Feral",
-				"Cat Form",
-				"Swipe(Bear Form) for Feral",
-				"Mangle(Bear Form)",
-				"Lacerate",
-				"Faerie Fire")
-			local freely = flashing ~= "Cat Form"
-			if a.Rage >= (c.AoE and freely and 45 or 30) 
-				and (freely or c.GetCooldown("Maul") == 0) then
-				
-				c.FlashAll("Maul for Feral") 
-			end
-			return
-		end
-		
-		if c.FlashAll("Cat Form") then
-			return
-		end
-		
-		if c.AoE then
-			c.FlashAll(
-				"Tiger's Fury", 
-				"Berserk", 
-				"Nature's Vigil",
-				"Healing Touch for Feral Heal",
-				"Incarnation: King of the Jungle")
-			c.PriorityFlash(
-				"Healing Touch for Dream",
-				"Savage Roar for AoE",
-				"Rip",
-				"Ferocious Bite for AoE",
-				"Bear Form for Feral AoE",
-				"Thrash(Cat Form) for AoE",
-				"Swipe(Cat Form) for Feral")
-		else
-			c.DelayPriorityFlash(
-				"Ravage under Stealth",
-				"Healing Touch for Feral Beta",
-				"Bear Form while Pooling",
-				"Ferocious Bite on Last Tick Beta",
-				"Healing Touch for Dream Beta",
-				"Savage Roar at 0",
-				"Incarnation: King of the Jungle Beta",
-				"Tiger's Fury Beta",
-				"Nature's Vigil Beta",
-				"Berserk",
-				"Thrash(Cat Form) under Omen",
-				"Savage Roar at 3 in Execute",
-				"Rip Overwrite",
-				"Ferocious Bite in Execute Pooling",
-				"Ferocious Bite in Execute",
-				"Rip unless Fury Soon",
-				"Savage Roar at 12",
-				"Rake for Re-Origination",
-				"Rake Overwrite",
-				"Thrash(Cat Form) Beta",
-				"Thrash(Cat Form) Delay",
-				"Thrash(Cat Form) Re-Origination",
-				"Thrash(Cat Form) Re-Origination Delay",
-				"Ferocious Bite Pooling",
-				"Ferocious Bite Beta",
-				"Filler Delay",
-				"Ravage Filler",
-				"Rake Filler",
-				"Shred Filler",
-				"Mangle(Cat Form) Filler")
-		end
-	end,
-	
-	FlashOutOfCombat = function()
-		c.FlashAll("Symbiosis", "Healing Touch Solo", "Cat Form")
-	end,
-	
-	FlashAlways = function()
-		c.FlashAll("Mark of the Wild")
-	end,
-	
-	CastQueued = function(info)
-		if c.InfoMatches(info, "Ferocious Bite") then
-			local _, regen = GetPowerRegen()
-			local cost = s.SpellCost(info.Name)
-			local energy = s.Power("player") + s.UpdatedVariables.Lag * regen
-			cost = cost + math.min(25, energy - cost)
-			info.Cost[SPELL_POWER_ENERGY] = cost
-			c.Debug("Event", "FB will cost", cost)
-		elseif c.InfoMatches(info, "Rip") then
-			castingRipCP = GetComboPoints("player")
-		end
-	end,
-	
-	CastSucceeded = function(info)
-		local hasForest = c.HasTalent("Soul of the Forest")
-		
-		if c.IdMatches(info.ID, "Mangle(Cat Form)") then
-			cpPending = GetTime()
-			c.Debug("Event", "Mangle CP Pending")
-		elseif c.InfoMatches(info, "Savage Roar Glyphed") then
-			pendingRoarDrop = GetTime()
-			c.Debug("Event", "Savage Roar CP Use Pending")
-		elseif c.InfoMatches(info, "Ferocious Bite") then
-			lastEnergy = s.Power("player")
-			if hasForest then
-				pendingBiteDrain = math.min(
-					25, lastEnergy - 4 * GetComboPoints("player"))
-			else
-				pendingBiteDrain = math.min(25, lastEnergy)
-			end
-			biteTime = GetTime()
-			c.Debug("Event", "FB will still cost", pendingBiteDrain)
-		elseif c.InfoMatches(info, "Bear Form") then
-			pendingBearRage = GetTime()
-			c.Debug("Event", "Bear Form Rage Pending")
-		end
-		
-		if hasForest
-			and c.InfoMatches(
-				info, 
-				"Rip",
-				"Savage Roar Glyphed", 
-				"Savage Roar Unglyphed") then
-			
-			forestPending = 4 * GetComboPoints("player")
-			c.Debug("Event", "Soul of the Forest Pending:", forestPending)
-		end
-	end,
-	
-	CastSucceeded_FromLog = function(spellID, _, targetID)
-		local name = 
-			(c.IdMatches(spellID, "Rip") and "Rip")
-				or (c.IdMatches(spellID, "Rake") and "Rake")
-		if name then
-			local avg, noncrit = 
-				a.CalcDamage(
-					name, 
-					castingRipCP, 
-					s.BuffDuration(c.GetID("Savage Roar"), "player"),
-					s.BuffDuration(c.GetID("Tiger's Fury"), "player"),
-					s.BuffStack(c.GetID("Dream of Cenarius - Feral"), "player"),
-					s.BuffDuration(c.GetID("Nature's Vigil"), "player"))
-			u.GetOrMakeTable(bleeds, name)[targetID] = avg
-			c.Debug("Event", 
-				string.format("%s is ticking for %.1f avg (%.1f noncrit)", 
-					name, avg, noncrit))
-		end
-	end,
-	
-	SpellMissed = function(spellID)
-		if c.IdMatches(spellID, "Rip", "Ferocious Bite") then
-			forestPending = 0
-			c.Debug("Event", "Never mind on Soul of the Forest ... it missed")
-		end
-		if c.IdMatches(spellID, "Ferocious Bite") then
-			pendingBiteDrain = 0
-			c.Debug("Event", "Oh, and never mind on FB either")
-		end
-	end,
-	
-	SpellDamage = function(spellID, _, _, crit, tick)
-		if crit
-			and not tick
-			and c.IdMatches(
-				spellID, 
-				"Shred", 
-				"Shred!", 
-				"Rake",
-				"Ravage",
-				"Ravage!",
-				"Mangle(Cat Form)") then
-			
-			furyCpPending = GetTime()
-			c.Debug("Event", "Primal Fury CP Pending")
-		else
-			monitorPendPrimalRage(spellID, nil, nil, crit)
-		end
-	end,
-	
-	AutoAttack = monitorPendPrimalRage,
-	
-	Energized = function(spellID)
-		if c.IdMatches(spellID, "Soul of the Forest") then
-			forestPending = 0
-			c.Debug("Event", "Soul of the Forest Happened")
-		elseif c.IdMatches(spellID, "Bear Form Rage") then
-			pendingBearRage = 0
-			c.Debug("Event", "Bear Form Rage Happened")
-		else
-			monitorConsumePrimalRage(spellID)
-		end
-	end,
-	
-	LeftCombat = function()
-		bleeds = { }
-		c.Debug("Event", "Left Combat")
-	end,
-	
-	ExtraDebugInfo = function()
-		return string.format(
-			"b:%.1f r:%.1f e:%.1f c:%d c:%s s:%.1f d:%d b:%.1f t:%.1f k:%.1f r:%.1f r:%.1f x:%s", 
-			c.GetBusyTime(),
-			a.Rage,
-			a.Energy, 
-			a.CP,
-			tostring(not not a.Clearcasting),
-			a.Swiftness,
-			a.DreamStacks,
-			a.Berserk,
-			a.TigersFury,
-			a.King,
-			a.Rip,
-			a.Roar,
-			tostring(not not a.InExecute))
-	end,
+   Spec = 2,
+
+   UsefulStats = { "Agility", "Melee Hit", "Strength", "Crit", "Haste" },
+
+   PreFlash = function()
+      WARNING("Feral")
+   end,
+
+   FlashInCombat = function()
+      initState()
+
+      c.FlashAll(
+         "Force of Nature: Feral",
+         "Faerie Fire for Debuff",
+         "Renewal",
+         "Soothe",
+         "Skull Bash",
+         "Survival Instincts under 30",
+         "Barkskin under 30")
+
+      if s.Form(c.GetID("Bear Form")) then
+         c.FlashAll("Heart of the Wild: Feral", "Healing Touch for Feral Heal")
+         local flashing = c.PriorityFlash(
+            -- "Swipe(Bear Form) Prime for Feral",
+            "Thrash(Bear Form) for Feral",
+            "Cat Form",
+            -- "Swipe(Bear Form) for Feral",
+            "Mangle",
+            "Lacerate",
+            "Faerie Fire")
+         local freely = flashing ~= "Cat Form"
+         if a.Rage >= (c.AoE and freely and 45 or 30)
+            and (freely or c.GetCooldown("Maul") == 0) then
+
+            c.FlashAll("Maul for Feral")
+         end
+         return
+      end
+
+      if c.FlashAll("Cat Form") then
+         return
+      end
+
+      if c.AoE then
+         c.FlashAll(
+            "Tiger's Fury",
+            "Berserk",
+            "Nature's Vigil",
+            "Healing Touch for Feral Heal",
+            "Incarnation: King of the Jungle")
+         c.PriorityFlash(
+            "Healing Touch for Dream",
+            "Savage Roar for AoE",
+            "Rip",
+            "Ferocious Bite for AoE",
+            "Bear Form for Feral AoE",
+            "Thrash(Cat Form) for AoE"
+         )
+      else
+         c.DelayPriorityFlash(
+            "Healing Touch for Feral Beta",
+            "Bear Form while Pooling",
+            "Ferocious Bite on Last Tick Beta",
+            "Healing Touch for Dream Beta",
+            "Savage Roar at 0",
+            "Incarnation: King of the Jungle Beta",
+            "Tiger's Fury Beta",
+            "Nature's Vigil Beta",
+            "Berserk",
+            "Thrash(Cat Form) under Omen",
+            "Savage Roar at 3 in Execute",
+            "Rip Overwrite",
+            "Ferocious Bite in Execute Pooling",
+            "Ferocious Bite in Execute",
+            "Rip unless Fury Soon",
+            "Savage Roar at 12",
+            "Rake for Re-Origination",
+            "Rake Overwrite",
+            "Thrash(Cat Form) Beta",
+            "Thrash(Cat Form) Delay",
+            "Thrash(Cat Form) Re-Origination",
+            "Thrash(Cat Form) Re-Origination Delay",
+            "Ferocious Bite Pooling",
+            "Ferocious Bite Beta",
+            "Filler Delay",
+            "Rake Filler",
+            "Shred Filler",
+            "Mangle Filler")
+      end
+   end,
+
+   FlashOutOfCombat = function()
+      c.FlashAll("Healing Touch Solo", "Cat Form")
+   end,
+
+   FlashAlways = function()
+      c.FlashAll("Mark of the Wild")
+   end,
+
+   CastQueued = function(info)
+      if c.InfoMatches(info, "Ferocious Bite") then
+         local _, regen = GetPowerRegen()
+         local cost = s.SpellCost(info.Name)
+         local energy = s.Power("player") + s.UpdatedVariables.Lag * regen
+         cost = cost + math.min(25, energy - cost)
+         info.Cost[SPELL_POWER_ENERGY] = cost
+         c.Debug("Event", "FB will cost", cost)
+      elseif c.InfoMatches(info, "Rip") then
+         castingRipCP = GetComboPoints("player")
+      end
+   end,
+
+   CastSucceeded = function(info)
+      local hasForest = c.HasTalent("Soul of the Forest")
+
+      if c.IdMatches(info.ID, "Mangle") then
+         cpPending = GetTime()
+         c.Debug("Event", "Mangle CP Pending")
+      elseif c.InfoMatches(info, "Ferocious Bite") then
+         lastEnergy = s.Power("player")
+         if hasForest then
+            pendingBiteDrain = math.min(
+               25, lastEnergy - 4 * GetComboPoints("player"))
+         else
+            pendingBiteDrain = math.min(25, lastEnergy)
+         end
+         biteTime = GetTime()
+         c.Debug("Event", "FB will still cost", pendingBiteDrain)
+      elseif c.InfoMatches(info, "Bear Form") then
+         pendingBearRage = GetTime()
+         c.Debug("Event", "Bear Form Rage Pending")
+      end
+
+      if hasForest
+         and c.InfoMatches(
+            info,
+            "Rip",
+            "Savage Roar")
+      then
+
+         forestPending = 4 * GetComboPoints("player")
+         c.Debug("Event", "Soul of the Forest Pending:", forestPending)
+      end
+   end,
+
+   CastSucceeded_FromLog = function(spellID, _, targetID)
+      local name =
+         (c.IdMatches(spellID, "Rip") and "Rip")
+            or (c.IdMatches(spellID, "Rake") and "Rake")
+      if name then
+         local avg, noncrit =
+            a.CalcDamage(
+               name,
+               castingRipCP,
+               s.BuffDuration(c.GetID("Savage Roar"), "player"),
+               s.BuffDuration(c.GetID("Tiger's Fury"), "player"),
+               s.BuffStack(c.GetID("Dream of Cenarius - Feral"), "player"),
+               s.BuffDuration(c.GetID("Nature's Vigil"), "player"))
+         u.GetOrMakeTable(bleeds, name)[targetID] = avg
+         c.Debug("Event",
+            string.format("%s is ticking for %.1f avg (%.1f noncrit)",
+               name, avg, noncrit))
+      end
+   end,
+
+   SpellMissed = function(spellID)
+      if c.IdMatches(spellID, "Rip", "Ferocious Bite") then
+         forestPending = 0
+         c.Debug("Event", "Never mind on Soul of the Forest ... it missed")
+      end
+      if c.IdMatches(spellID, "Ferocious Bite") then
+         pendingBiteDrain = 0
+         c.Debug("Event", "Oh, and never mind on FB either")
+      end
+   end,
+
+   SpellDamage = function(spellID, _, _, crit, tick)
+      if crit
+         and not tick
+         and c.IdMatches(
+            spellID,
+            "Shred",
+            "Rake",
+            "Mangle") then
+
+         furyCpPending = GetTime()
+         c.Debug("Event", "Primal Fury CP Pending")
+      else
+         monitorPendPrimalRage(spellID, nil, nil, crit)
+      end
+   end,
+
+   AutoAttack = monitorPendPrimalRage,
+
+   Energized = function(spellID)
+      if c.IdMatches(spellID, "Soul of the Forest") then
+         forestPending = 0
+         c.Debug("Event", "Soul of the Forest Happened")
+      elseif c.IdMatches(spellID, "Bear Form Rage") then
+         pendingBearRage = 0
+         c.Debug("Event", "Bear Form Rage Happened")
+      else
+         monitorConsumePrimalRage(spellID)
+      end
+   end,
+
+   LeftCombat = function()
+      bleeds = { }
+      c.Debug("Event", "Left Combat")
+   end,
+
+   ExtraDebugInfo = function()
+      return string.format(
+         "b:%.1f r:%.1f e:%.1f c:%d c:%s s:%.1f d:%d b:%.1f t:%.1f k:%.1f r:%.1f r:%.1f x:%s",
+         c.GetBusyTime(),
+         a.Rage,
+         a.Energy,
+         a.CP,
+         tostring(not not a.Clearcasting),
+         a.Swiftness,
+         a.DreamStacks,
+         a.Berserk,
+         a.TigersFury,
+         a.King,
+         a.Rip,
+         a.Roar,
+         tostring(not not a.InExecute))
+   end,
 }
 
 ---------------------------------------------------------------------- Guardian
 local uncontrolledMitigationCooldowns = {
-	"Feint",
-	"Spell Reflection",
-	"Tooth and Claw",
+   "Tooth and Claw",
 }
 
 a.Rotations.Guardian = {
-	Spec = 3,
-	AoEColor = "aqua",
-	
-	UsefulStats = { 
-		"Agility", "Dodge", "Tanking Hit", "Stamina", "Crit", "Haste"
-	},
-	
-	FlashInCombat = function()
-		calcRage()
-		c.FlashMitigationBuffs(
-			1,
-			uncontrolledMitigationCooldowns,
-			c.COMMON_TANKING_BUFFS,
-			"Healing Touch Mitigation Delay",
-			"Berserk in Damage Mode",
-			"Incarnation: Son of Ursoc in Damage Mode",
-			"Cenarion Ward for Guardian",
-			"Bone Shield",
-			"Elusive Brew",
-			"Barkskin",
-			"Flashing Steel Talisman",
-			"Renewal for Guardian",
-			"Survival Instincts Glyphed",
-			"Fortitude of the Zandalari",
-			"Might of Ursoc at 2 mins",
-			"Berserk for Guardian",
-			"Incarnation: Son of Ursoc",
-			"Survival Instincts Unglyphed",
-			"Might of Ursoc above 2 mins")
-		c.FlashAll(
-			"Frenzied Regeneration",
-			"Savage Defense",
-			"Maul for Guardian",
-			"Skull Bash",
-			"Growl")
-		c.DelayPriorityFlash(
-			"Thrash(Bear Form) for Weakened Blows",
-			"Healing Touch for Guardian",
-			"Rejuvenation for Guardian",
-			"Thrash(Bear Form) for Damage",
-			"Mangle(Bear Form) for Guardian",
-			"Mangle(Bear Form) Delay",
-			"Rejuvenation Refresh for Guardian",
-			"Swipe(Bear Form) for AoE",
-			"Swipe(Bear Form) for AoE Delay",
-			"Thrash(Bear Form) for AoE",
-			"Thrash(Bear Form) for Bleed",
-			"Faerie Fire for Debuff for Guardian",
-			"Enrage",
-			"Lacerate for Guardian",
-			"Faerie Fire",
-			"Thrash(Bear Form)")
-	end,
-	
-	FlashOutOfCombat = function()
-		c.FlashAll("Symbiosis", "Healing Touch Solo", "Bone Shield")
-	end,
-	
-	FlashAlways = function()
-		c.FlashAll("Mark of the Wild", "Bear Form")
-	end,
-	
-	SpellDamage = monitorPendPrimalRage,
-	
-	AutoAttack = monitorPendPrimalRage,
-	
-	Energized = monitorConsumePrimalRage,
-	
-	ExtraDebugInfo = function()
-		return string.format("r:%.1f b:%.2f", a.Rage, c.GetBusyTime())
-	end,
+   Spec = 3,
+   AoEColor = "aqua",
+
+   UsefulStats = {
+      "Agility", "Dodge", "Stamina", "Crit", "Haste"
+   },
+
+   PreFlash = function()
+      WARNING("Guardian")
+   end,
+
+   FlashInCombat = function()
+      calcRage()
+      c.FlashMitigationBuffs(
+         1,
+         uncontrolledMitigationCooldowns,
+         c.COMMON_TANKING_BUFFS,
+         "Healing Touch Mitigation Delay",
+         "Berserk in Damage Mode",
+         "Incarnation: Son of Ursoc in Damage Mode",
+         "Cenarion Ward for Guardian",
+         "Barkskin",
+         "Flashing Steel Talisman",
+         "Renewal for Guardian",
+         "Survival Instincts Glyphed",
+         "Fortitude of the Zandalari",
+         "Berserk for Guardian",
+         "Incarnation: Son of Ursoc",
+         "Survival Instincts Unglyphed")
+      c.FlashAll(
+         "Frenzied Regeneration",
+         "Savage Defense",
+         "Maul for Guardian",
+         "Skull Bash",
+         "Growl")
+      c.DelayPriorityFlash(
+         "Healing Touch for Guardian",
+         "Rejuvenation for Guardian",
+         "Thrash(Bear Form) for Damage",
+         "Mangle for Guardian",
+         "Mangle Delay",
+         "Rejuvenation Refresh for Guardian",
+         -- "Swipe(Bear Form) for AoE",
+         -- "Swipe(Bear Form) for AoE Delay",
+         "Thrash(Bear Form) for AoE",
+         "Thrash(Bear Form) for Bleed",
+         "Faerie Fire for Debuff for Guardian",
+         "Lacerate for Guardian",
+         "Faerie Fire",
+         "Thrash(Bear Form)")
+   end,
+
+   FlashOutOfCombat = function()
+      c.FlashAll("Healing Touch Solo")
+   end,
+
+   FlashAlways = function()
+      c.FlashAll("Mark of the Wild", "Bear Form")
+   end,
+
+   SpellDamage = monitorPendPrimalRage,
+
+   AutoAttack = monitorPendPrimalRage,
+
+   Energized = monitorConsumePrimalRage,
+
+   ExtraDebugInfo = function()
+      return string.format("r:%.1f b:%.2f", a.Rage, c.GetBusyTime())
+   end,
 }
 
 ------------------------------------------------------------------- Restoration
 a.Rotations.Restoration = {
-	Spec = 4,
-	
-	UsefulStats = { "Intellect", "Spirit", "Crit", "Haste" },
-	
-	FlashInCombat = function()
-		c.FlashAll(
-			"Force of Nature: Restoration", 
-			"Lifebloom",
-			"Swiftmend",
-			"Nourish",
-			"Healing Touch for Restoration",
-			"Regrowth",
-			"Wild Mushroom",
-			"Innervate",
-			"Renewal",
-			"Cenarion Ward for Restoration",
-			"Soothe")
-	end,
-	
-	FlashAlways = function()
-		c.FlashAll("Mark of the Wild")
-	end,
-	
-	AuraApplied = function(spellID, target)
-		if c.IdMatches(spellID, "Lifebloom") then
-			a.LifebloomTarget = target
-			c.Debug("Event", "Lifebloom on", target)
-		end
-	end,
+   Spec = 4,
+
+   UsefulStats = { "Intellect", "Spirit", "Crit", "Haste" },
+
+   PreFlash = function()
+      WARNING("Restoration")
+   end,
+
+   FlashInCombat = function()
+      c.FlashAll(
+         "Force of Nature: Restoration",
+         "Lifebloom",
+         "Healing Touch for Restoration",
+         "Regrowth",
+         "Wild Mushroom: Restoration",
+         "Renewal",
+         "Cenarion Ward for Restoration",
+         "Soothe")
+   end,
+
+   FlashAlways = function()
+      c.FlashAll("Mark of the Wild")
+   end,
+
+   AuraApplied = function(spellID, target)
+      if c.IdMatches(spellID, "Lifebloom") then
+         a.LifebloomTarget = target
+         c.Debug("Event", "Lifebloom on", target)
+      end
+   end,
 }

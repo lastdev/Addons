@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21b.5509 (SanctimoniousSwamprat)
-	Revision: $Id: CoreScan.lua 5506 2014-10-19 18:24:27Z brykrys $
+	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Revision: $Id: CoreScan.lua 5518 2014-11-06 11:35:20Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -172,18 +172,11 @@ private.auctionItemListUpdated = false
 
 function private.LoadScanData()
 	if not private.loadingScanData then
-		local _, _, _, load, reason, security = GetAddOnInfo("Auc-ScanData")
-		if AucAdvanced.HYBRID5 then -- Hybrid mode for WoW5.4; review once WoW6.0 goes live
-			load = load and reason
-			reason = security
-		else
-			load = reason == "DEMAND_LOADED"
-		end
-
+		local _, _, _, _, reason = GetAddOnInfo("Auc-ScanData")
 		if IsAddOnLoaded("Auc-ScanData") then
 			-- another AddOn has force-loaded Auc-ScanData
 			private.loadingScanData = "loading"
-		elseif not load then
+		elseif reason ~= "DEMAND_LOADED" then -- unable to be loaded
 			private.loadingScanData = "fallback"
 			if reason then
 				reason = _G["ADDON_"..reason] or reason
@@ -1165,13 +1158,45 @@ local Commitfunction = function()
 	local messageCreate = private.FallbackScanData and "fallbackcreate" or "create"
 	local undirtyCount = 0
 
+	local garbageinterval
+	local stage3garbage = get("core.scan.stage3garbage")
+	if stage3garbage >= Const.ALEVEL_HI then
+		garbageinterval = 1000
+	elseif stage3garbage >= Const.ALEVEL_MED then
+		garbageinterval = 5000
+	elseif stage3garbage >= Const.ALEVEL_LOW then
+		garbageinterval = 10000
+	end
+
 	processBeginEndStats(processors, "begin", querySizeInfo, nil)
 
 	coroutine.yield()
 	nextPause = debugprofilestop() + processingTime
 	lastTime = time()
 	for index, data in ipairs(TempcurScan) do
-		if debugprofilestop() > nextPause or time() > lastTime then
+		local doYield = false
+		if garbageinterval and index % garbageinterval == 0 then
+			coroutine.yield() -- yield before and after collectgarbage to smooth things a little, as it tends to cause small freezes
+			collectgarbage()
+			doYield = true
+		else
+			local checkprofile = debugprofilestop()
+			if checkprofile > nextPause then
+				checkprofile = (checkprofile - nextPause) / processingTime
+				if checkprofile > 2 then
+					-- double yield if last processing cycle took more than 2 * the permitted time
+					coroutine.yield()
+				end
+				if checkprofile > 4 then
+					-- triple yield if last processing cycle took more than 4 * the permitted time
+					coroutine.yield()
+				end
+				doYield = true
+			elseif time() > lastTime then
+				doYield = true
+			end
+		end
+		if doYield then
 			lib.ProgressBars("CommitProgressBar", 100*progresscounter/progresstotal, true, "Auctioneer: Processing Stage 3")
 			coroutine.yield()
 			nextPause = debugprofilestop() + processingTime
@@ -1309,8 +1334,14 @@ local Commitfunction = function()
 
 	--[[ *** Stage 5 : Reports *** ]]
 	lib.ProgressBars("CommitProgressBar", 100, true, "Auctioneer: Processing Finished")
-	coroutine.yield() -- final yield to update GetTime for the stats
+	-- final yield to update GetTime for the stats
 	-- (though we should be aware that whatever else happens during this yield gets added to our final time, we can't get an update of GetTime *without* yielding here!)
+	coroutine.yield()
+	-- optionally do a final collection here (as above, we want it surrounded by yields)
+	if get("core.scan.stage5garbage") then
+		collectgarbage()
+		coroutine.yield()
+	end
 
 	local currentCount = #scandata.image
 	if (updateCount + sameCount + newCount + filterNewCount + filterOldCount + unresolvedCount ~= scanCount) then
@@ -1428,8 +1459,11 @@ local Commitfunction = function()
 			if (printSummary) then _print(summaryLine) end
 			summary = summary.."\n"..summaryLine
 		end
-
-
+		if unresolvedCount > 0 then
+			summaryLine = "  {{"..unresolvedCount.."}} Unresolved entries"
+			if (printSummary) then _print(summaryLine) end
+			summary = summary.."\n"..summaryLine
+		end
 
 		if (_G.nLog) then
 			local eTime = GetTime()
@@ -1935,13 +1969,6 @@ local StorePageFunction = function()
 			we want to call it before GetNumAuctionItems, so we must use private.isGetAll for detection
 		--]]
 		coroutine.yield()
-		if scannerthrottle then
-			local nextWait = GetTime() + 3
-			while GetTime() < nextWait do
-				coroutine.yield() -- yielding updates GetTime, so this loop will still work
-				if private.breakStorePage then break end
-			end
-		end
 		if private.warningCanSendBug and CanSendAuctionQuery() then -- check it again after delay
 			private.warningCanSendBug = nil
 		end
@@ -2007,8 +2034,6 @@ local StorePageFunction = function()
 	local processingTime = 800 / get("scancommit.targetFPS")
 	local debugprofilestop = debugprofilestop
 	local nextPause = debugprofilestop() + processingTime
-	local time = time
-	local lastTime = time()
 	local breakcount = 5000 -- additional limiter: yield every breakcount auctions scanned
 
 	if scannerthrottle then
@@ -2033,14 +2058,13 @@ local StorePageFunction = function()
 		local retries = { }
 		for i = 1, numBatchAuctions do
 			if isGetAll then -- only yield for GetAll scans
-				if debugprofilestop() > nextPause or time() > lastTime or (storecount > 0 and storecount % breakcount == 0) then
+				if debugprofilestop() > nextPause or i % breakcount == 0 then
 					lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true)
 					coroutine.yield()
 					if private.breakStorePage then
 						break
 					end
 					nextPause = debugprofilestop() + processingTime
-					lastTime = time()
 				end
 			end
 
@@ -2090,15 +2114,13 @@ local StorePageFunction = function()
 			if private.breakStorePage then break end
 
 			nextPause = debugprofilestop() + processingTime
-			lastTime = time()
-			for _, i in ipairs(retries) do
+			for pos, i in ipairs(retries) do
 				if isGetAll then
-					if debugprofilestop() > nextPause or time() > lastTime or storecount % breakcount == 0 then
+					if debugprofilestop() > nextPause or pos % breakcount == 0 then
 						lib.ProgressBars("GetAllProgressBar", 100*storecount/numBatchAuctions, true)
 						coroutine.yield()
 						if private.breakStorePage then break end
 						nextPause = debugprofilestop() + processingTime
-						lastTime = time()
 					end
 				end
 
@@ -3033,4 +3055,4 @@ end
 internal.Scan.Logout = lib.Logout
 internal.Scan.AHClosed = lib.AHClosed
 
-_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Advanced/CoreScan.lua $", "$Rev: 5506 $")
+_G.AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Advanced/CoreScan.lua $", "$Rev: 5518 $")

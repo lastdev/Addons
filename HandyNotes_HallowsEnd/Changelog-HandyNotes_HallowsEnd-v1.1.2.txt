@@ -1,0 +1,12 @@
+tag v1.1.2
+f82b8c5272f40dcf8b28f3c98e7d4e54044c474f
+Ethan Centaurai <ethancentaurai@outlook.com>
+2014-11-01 17:44:58 +0000
+
+Tagging as v1.1.2.
+
+
+--------------------
+
+Ethan Centaurai:
+	- End the event on November 1st, not October 31st.

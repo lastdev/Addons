@@ -10,8 +10,8 @@ L["Flash Beast Mastery"] = "Brilhar Domínio das Feras" -- Needs review
 L["Flash Survival"] = "Brilhar Sobrevivência" -- Needs review
 
 elseif locale == "frFR" then -- French
--- L["Flash Beast Mastery"] = ""
--- L["Flash Survival"] = ""
+L["Flash Beast Mastery"] = "Flash Maîtrise des Bêtes" -- Needs review
+L["Flash Survival"] = "Flash Survie" -- Needs review
 
 elseif locale == "deDE" then -- German
 -- L["Flash Beast Mastery"] = ""
@@ -42,7 +42,7 @@ elseif locale == "esES" then -- Spanish
 -- L["Flash Survival"] = ""
 
 elseif locale == "zhTW" then -- Traditional Chinese
--- L["Flash Beast Mastery"] = ""
--- L["Flash Survival"] = ""
+L["Flash Beast Mastery"] = "啟用野獸控制專精" -- Needs review
+L["Flash Survival"] = "啟用生存專精" -- Needs review
 
 end

@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
-	Revision: $Id: ImportCTMapMod.lua 997 2012-09-11 03:14:32Z Esamynn $
+	Version: 5.0.0 (<%codename%>)
+	Revision: $Id: ImportCTMapMod.lua 1130 2014-11-13 21:02:57Z esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/Import/ImportCTMapMod.lua $", "$Rev: 997 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_5.0.0/Gatherer/Import/ImportCTMapMod.lua $", "$Rev: 1130 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient
@@ -40,7 +40,7 @@ function module.ImportFunction()
    if (CT_UserMap_Notes) then
       Gatherer.Storage.MassImportMode = true
       for ctzone, ctdata in pairs(CT_UserMap_Notes) do
-         for gatherC, zones in pairs(Gatherer.Util.ZoneNames) do
+         for gatherC, zones in ipairs(Gatherer.Util.ZoneNames) do
             local zoneIndex = zones[ctzone]
             if ( zoneIndex ) then
                local zoneToken = Gatherer.ZoneTokens.GetZoneToken(gatherC, zoneIndex)

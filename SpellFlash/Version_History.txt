@@ -1,4 +1,33 @@
+== Version 6.17
 
+* Fixed calls to the function GetSpellInfo.
+
+
+== Version 6.16
+
+* Removed stray debug message.
+
+
+== Version 6.15
+
+* handle SpellCost via tooltip scraping.
+  - since 6.0.2 Blizzard removed any API for getting spell costs, so we are
+    forced to resort to stone-age tools like tooltip scanning.  Blizzard,
+    what is this?  Why did you do that?!?
+* DK Melee range spell updated to one that still exists.
+* use universal "Global Cooldown" spell to handle the GCD.
+* use `local foo=foo` to speed up the core.
+  - in my testing this was about a 10 percent performance win.
+
+
+== Version 6.14
+
+* Updated the training dummy ID numbers.
+
+
+== Version 6.13
+
+* Updated the s.GUIDInfo and s.UnitInfo functions.
 
 
 == Version 6.12

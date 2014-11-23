@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Scan Button module
-	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Version: 5.21c.5521 (SanctimoniousSwamprat)
 	Revision: $Id: ScanButton.lua 5403 2013-04-03 16:50:32Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -546,4 +546,4 @@ function private.AuctionFrameFilters_UpdateClasses()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-ScanButton/ScanButton.lua $", "$Rev: 5403 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Util-ScanButton/ScanButton.lua $", "$Rev: 5403 $")

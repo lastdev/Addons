@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Twins", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 535 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 547 $"):sub(12, -3))
 mod:SetCreatureID(25165, 25166)
 mod:SetModelID(23334)
 mod:SetZone()
@@ -80,7 +80,7 @@ end
 
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
-function mod:SPELL_DAMAGE(_, _, _, _, _, _, _, _, spellId)
+function mod:SPELL_DAMAGE(_, _, _, _, _, destName, _, _, spellId)
 	if spellId == 45256 then
 		warnBlow:Show(destName)
 		timerBlowCD:Start()

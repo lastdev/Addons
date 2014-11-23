@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1216, "DBM-Party-WoD", 1, 547)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11741 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11861 $"):sub(12, -3))
 mod:SetCreatureID(75927)
 mod:SetEncounterID(1678)
 mod:SetZone()
@@ -39,7 +39,7 @@ local specWarnFelSpark				= mod:NewSpecialWarningMove(153726)
 local timerCurtainOfFlameCD			= mod:NewNextTimer(20, 153396)--20sec cd but can be massively delayed by adds phases
 local timerFelLash					= mod:NewTargetTimer(7.5, 153234)
 local timerClawsOfArgus				= mod:NewBuffActiveTimer(18, 153764)
-local timerClawsOfArgusCD			= mod:NewNextTimer(60, 153764)
+local timerClawsOfArgusCD			= mod:NewNextTimer(70, 153764)
 
 mod:AddRangeFrameOption(5, 153396)
 
@@ -58,7 +58,7 @@ function mod:OnCombatStart(delay)
 	self.vb.debuffCount = 0
 	self.vb.firstFlameDone = false
 	timerCurtainOfFlameCD:Start(15.5-delay)
-	timerClawsOfArgusCD:Start(27-delay)
+	timerClawsOfArgusCD:Start(32-delay)
 end
 
 function mod:OnCombatEnd()

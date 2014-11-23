@@ -1,3 +1,20 @@
+== Version 60000.2
+* Fixed Dark Intent flashing.  (Thanks Targenor!)
+
+== Version 60000.1.1
+* Implemented 6.0 Affliction warlock rotation.
+
+This is only lightly tested, but seems to work.  I am not expert at the spec,
+so feedback on improving the rotation is very, very welcome.
+
+== Version 60000.1.0
+* Reindent, utf-8-unix encoding, 3-space lua indents.
+* New author: SlippyCheeze
+  - Thanks to Xemnosyst for all his amazing work!
+* Clean up the spell IDs for removed spells.
+* Implement 6.0 Destruction warlock rotation.
+* Implement 6.0 Demonology warlock rotation.
+
 == Version 50400.1.5
 * I have gotten a pretty good response, so I think (and hope) Bitten's SpellFlash will live on!
 

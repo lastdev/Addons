@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
-	Revision: $Id: GatherStorage.lua 1049 2012-11-02 01:52:57Z Esamynn $
+	Version: 5.0.0 (<%codename%>)
+	Revision: $Id: GatherStorage.lua 1132 2014-11-14 01:16:00Z esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	Library for accessing and updating the database
 --]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherStorage.lua $", "$Rev: 1049 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_5.0.0/Gatherer/GatherStorage.lua $", "$Rev: 1132 $")
 
 
 --------------------------------------------------------------------------
@@ -47,7 +47,7 @@ local HARVESTED = 2
 local SOURCE = 3
 
 -- Current Database Version
-local dbVersion = 5
+local dbVersion = 6
 
 --------------------------------------------------------------------------
 -- Data Table
@@ -69,10 +69,27 @@ lib.MassImportMode = false
 -- reference to the Astrolabe mapping library
 local Astrolabe = DongleStub(Gatherer.AstrolabeVersion)
 
+
+-- convert list of zoneID1, zoneName1, zoneID2, zoneName2, etc.
+-- into just a list of zone names
+local function stripZoneIDs(...)
+	local n = select("#", ...)
+	--print("zoneList count = ", n );
+	local temp = {};
+	local index = 1;
+	for i = 2, n, 2 do
+		temp[index] = select(i, ...);
+		--print("  item = ", temp[index] );
+		index = index + 1;
+	end
+	return temp;
+end
+
+
 local ZoneData = {}
-local continents = {GetMapContinents()}
+local continents = stripZoneIDs(GetMapContinents())
 for index, name in ipairs(continents) do
-	ZoneData[index] = {GetMapZones(index)}
+	ZoneData[index] = stripZoneIDs(GetMapZones(index))
 	ZoneData[index].name = name
 end
 

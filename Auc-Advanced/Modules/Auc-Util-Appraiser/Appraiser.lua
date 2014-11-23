@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Version: 5.21c.5521 (SanctimoniousSwamprat)
 	Revision: $Id: Appraiser.lua 5462 2014-06-19 11:01:56Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -467,4 +467,4 @@ function lib.GetOwnAuctionDetails()
 end
 Stubby.RegisterEventHook("AUCTION_OWNED_LIST_UPDATE", "Auc-Util-Appraiser", lib.GetOwnAuctionDetails)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-Appraiser/Appraiser.lua $", "$Rev: 5462 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Util-Appraiser/Appraiser.lua $", "$Rev: 5462 $")

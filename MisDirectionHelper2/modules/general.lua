@@ -13,6 +13,8 @@ local GetNumSubgroupMembers, IsInRaid = GetNumSubgroupMembers, IsInRaid
 local InterfaceOptionsFrame_OpenToCategory = InterfaceOptionsFrame_OpenToCategory
 local InCombatLockdown, IsAddOnLoaded = InCombatLockdown, IsAddOnLoaded
 
+-- GLOBALS: LibStub TipTac ElvUI StaticPopupDialogs
+
 function MDH:trim(s) return (string.gsub(s, "^%s*(.-)%s*$", "%1")) end
 
 function MDH:CreateLDBObject()
@@ -89,14 +91,14 @@ function MDH:checkParty()
 			MDH:ClearTarget("RightButton")
 			MDH.ingroup = true
 			print("|cff568bffMisdirection Helper:|r " .. L["Targets reset"])
-			if (MDH.db.profile.autotank and MDH.inParty and (not MDH.inRaid)) then MDH:PrtyTank("LeftButton") end
+			if MDH.db.profile.autotank and MDH.inParty then MDH:PartyTank("LeftButton") end
 		end
 	else 
 		MDH.ingroup = nil
 		if MDH.db.profile.autopet then
 			MDH:ClearTarget("LeftButton")
 			MDH:ClearTarget("RightButton")
-			MDH:PlyrPet("LeftButton")
+			MDH:PlayerPet("LeftButton")
 			print("|cff568bffMisdirection Helper:r " .. L["Target set to pet"])
 		end
 	end
@@ -124,10 +126,10 @@ function MDH:TTText(t)
 end
 
 local function HandlerFunc(arg, button)
-    if arg == "b1" then MDH:PrtyTank(button)
+    if arg == "b1" then MDH:PartyTank(button)
     elseif arg == "b2" then MDH:MDHtarget(button)
     elseif arg == "b3" then MDH:ToT(button)
-	elseif arg == "b4" then MDH:PlyrPet(button)
+	elseif arg == "b4" then MDH:PlayerPet(button)
 	elseif arg == "b5" then MDH:PopUp(button)
 	elseif arg == "f" then MDH:MDHfocus(button)
 	elseif arg == "b6" then InterfaceOptionsFrame_OpenToCategory(MDH.optionsFrame)

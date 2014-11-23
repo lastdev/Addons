@@ -30,6 +30,26 @@ GTFO.SpellID["152750"] = {
 	sound = 3;
 };
 
+GTFO.SpellID["158273"] = {
+	--desc = "Cluster Bomb (Iron Horde Scout)";
+	sound = 3;
+};
+
+GTFO.SpellID["165607"] = {
+	--desc = "Void Bonds";
+	sound = 3;
+};
+
+GTFO.SpellID["160782"] = {
+	--desc = "Black Skies (Iron Fleet)";
+	sound = 3;
+};
+
+GTFO.SpellID["172337"] = {
+	--desc = "Furious Wind";
+	sound = 3;
+};
+
 --TODO: Colossal Slam (Drov the Ruiner) - non-tank fail for front-cone damage
 --TODO: Rumbling Goren (Drov the Ruiner) - non-tank fail?
 --TODO: Colossal Blow (Tarlna the Ageless) - avoidable by tanks too?
@@ -78,8 +98,23 @@ GTFO.SpellID["154018"] = {
 -- * Bloodmaul Slag Mines *
 -- ************************
 
+GTFO.SpellID["151446"] = {
+	--desc = "Crush (Bloodmaul Enforcer)";
+	sound = 3;
+};
+
 GTFO.SpellID["150023"] = {
 	--desc = "Slag Smash (Magmolatus)";
+	sound = 3;
+};
+
+GTFO.SpellID["149941"] = {
+	--desc = "Rough Smash (Ruination)";
+	sound = 3;
+};
+
+GTFO.SpellID["152835"] = {
+	--desc = "Fiery Boulder (Roltall)";
 	sound = 3;
 };
 
@@ -125,7 +160,7 @@ GTFO.SpellID["163276"] = {
 GTFO.SpellID["161256"] = {
 	--desc = "Primal Assault (Oshir)";
 	sound = 3;
-	tankSound = 0; -- Avoidable by tank?
+	tankSound = 2;
 };
 
 

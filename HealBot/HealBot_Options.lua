@@ -315,6 +315,7 @@ function HealBot_Options_setLists()
         HEALBOT_WORD_BATTLEGROUND.." 10",
         HEALBOT_WORD_BATTLEGROUND.." 15",
         HEALBOT_WORD_BATTLEGROUND.." 40",
+        HEALBOT_WORD_PETBATTLE,
     }
 
     HealBot_Options_AggroAlertLevel_List = {
@@ -519,9 +520,6 @@ function HealBot_Options_setLists()
         [HEALBOT_ANGELIC_BULWARK]=HEALBOT_PRIEST,
         [HEALBOT_DISPERSION]=HEALBOT_PRIEST,
 		[HEALBOT_VAMPIRIC_EMBRACE]=HEALBOT_PRIEST,
-		--[[[HEALBOT_DIVINE_STAR]=HEALBOT_PRIEST,
-		[HEALBOT_CASCADE]=HEALBOT_PRIEST,
-		[HEALBOT_HALO]=HEALBOT_PRIEST,]]
 		--WoD Added
 		[HEALBOT_SHADOW_WORD_INSANITY]=HEALBOT_PRIEST,            
 		[HEALBOT_SURGE_OF_DARKNESS]=HEALBOT_PRIEST,               
@@ -668,6 +666,7 @@ function HealBot_Options_InitBuffSpellsClassList(tClass)
             HEALBOT_RUSHING_JADE_WIND,
             HEALBOT_STANCE_MONK_TIGER,
             HEALBOT_STANCE_MONK_SERPENT,
+			HEALBOT_STANCE_MONK_CRANE,
         }
     elseif tClass=="PALA" then
         HealBot_Buff_Spells_Class_List = {
@@ -739,7 +738,7 @@ function HealBot_Options_InitBuffList()
     HealBot_Buff_Spells_List ={}
     for j=1, getn(HealBot_Buff_Spells_Class_List), 1 do
         local spellName=HealBot_Buff_Spells_Class_List[j]
-        if HealBot_Spells[spellName] and HealBot_Spells[spellName].known then   
+        if HealBot_GetSpellId(spellName) then   
             table.insert(HealBot_Buff_Spells_List,spellName)
         end
     end
@@ -4631,6 +4630,7 @@ function HealBot_Options_SelectHealSpellsCombo_DDlist()
             HEALBOT_THROW,
             HEALBOT_DEATH_COIL,
             HEALBOT_ARCANE_SHOT,
+            HEALBOT_AIMED_SHOT,
             HEALBOT_FIRE_BLAST,
             HEALBOT_FROSTFIRE_BOLT,
         }
@@ -4692,14 +4692,19 @@ function HealBot_Options_SelectHealSpellsCombo_DDlist()
             HEALBOT_EXECUTION_SENTENCE,
             HEALBOT_CASCADE,
 			HEALBOT_DIVINE_STAR,
-			HEALBOT_HALO,
-            HEALBOT_CENARION_WARD,
+			HEALBOT_HALO,               
+			HEALBOT_SAVING_GRACE,                    
+			HEALBOT_CLARITY_OF_PURPOSE,
+			HEALBOT_CENARION_WARD,
+			HEALBOT_BREATH_OF_THE_SERPENT,  
+			HEALBOT_RUSHING_JADE_WIND,              
+			HEALBOT_CHI_TOROEDO,                    			
         }
     end
     local tmpHealDDlist={}
     for j=1, getn(HealBot_Options_SelectHealSpellsCombo_List), 1 do
         local spellName=HealBot_Options_SelectHealSpellsCombo_List[j]
-        if HealBot_Spells[spellName] and HealBot_Spells[spellName].known then
+        if HealBot_GetSpellId(spellName) then
             table.insert(tmpHealDDlist, spellName)
         end
     end
@@ -4766,7 +4771,7 @@ local function HealBot_Options_SelectOtherSpellsCombo_DDlist()
         }
         for j=1, getn(HealBot_Options_SelectOtherSpellsCombo_List), 1 do
             local spellName=HealBot_Options_SelectOtherSpellsCombo_List[j]
-            if HealBot_Spells[spellName] and HealBot_Spells[spellName].known then
+            if HealBot_GetSpellId(spellName) then
                 table.insert(tmpOtherDDlist,spellName)
             end
         end
@@ -4811,21 +4816,22 @@ local function HealBot_Options_SelectOtherSpellsCombo_DDlist()
             HEALBOT_ASTRAL_SHIFT,
             HEALBOT_GUARDIAN_ANCIENT_KINGS,
 			HEALBOT_UNLEASH_LIFE,
-            HEALBOT_LEVITATE,
+            HEALBOT_CLOUDBURST_TOTEM,
+			HEALBOT_LEVITATE,
             HEALBOT_POWER_INFUSION,
 			HEALBOT_VAMPIRIC_EMBRACE,
-            --[[HEALBOT_CHAKRA_SANCTUARY,
-            HEALBOT_CHAKRA_SERENITY,
-            HEALBOT_CHAKRA_CHASTISE,
-			HEALBOT_SHADOWFORM,]]
+            HEALBOT_CLARITY_OF_WILL,
+			HEALBOT_DETONATE_CHI,
+			HEALBOT_BEACON_OF_FAITH,
+			HEALBOT_BEACON_OF_INSIGHT,
         }
         for j=1, getn(HealBot_Options_SelectOtherSpellsCombo_List), 1 do
             local spellName=HealBot_Options_SelectOtherSpellsCombo_List[j]
-            if HealBot_Spells[spellName] and HealBot_Spells[spellName].known then
+            if HealBot_GetSpellId(spellName) then
                 table.insert(tmpOtherDDlist,spellName)
             end
         end
-        if HealBot_Data["PCLASSTRIM"]=="SHAM" and HealBot_Spells[HEALBOT_PURIFY_SPIRIT] and HealBot_Spells[HEALBOT_PURIFY_SPIRIT].known then
+        if HealBot_Data["PCLASSTRIM"]=="SHAM" and HealBot_GetSpellId(HEALBOT_PURIFY_SPIRIT) then
             table.insert(tmpOtherDDlist,HEALBOT_PURIFY_SPIRIT)
         end
         for j=1, getn(HealBot_Buff_Spells_List), 1 do
@@ -6511,7 +6517,7 @@ function HealBot_Options_CDCTxt1_DropDown()
     UIDropDownMenu_AddButton(info);
     for j=1, getn(DebuffSpells_List), 1 do
         local sName=DebuffSpells_List[j]
-        if HealBot_Spells[sName] and HealBot_Spells[sName].known then
+        if HealBot_GetSpellId(sName) then
             info.text = sName;
             info.func = function(self)
                             HealBot_Config_Cures.HealBotDebuffText[HealBot_Options_getDropDownId_bySpec(1)] = self:GetText()
@@ -6564,7 +6570,7 @@ function HealBot_Options_CDCTxt2_DropDown()
     UIDropDownMenu_AddButton(info);
     for j=1, getn(DebuffSpells_List), 1 do
         local sName=DebuffSpells_List[j]
-        if HealBot_Spells[sName] and HealBot_Spells[sName].known then
+        if HealBot_GetSpellId(sName) then
             info.text = sName;
             info.func = function(self)
                             HealBot_Config_Cures.HealBotDebuffText[HealBot_Options_getDropDownId_bySpec(2)] = self:GetText()
@@ -6617,7 +6623,7 @@ function HealBot_Options_CDCTxt3_DropDown()
     UIDropDownMenu_AddButton(info);
     for j=1, getn(DebuffSpells_List), 1 do
         local sName=DebuffSpells_List[j]
-        if HealBot_Spells[sName] and HealBot_Spells[sName].known then
+        if HealBot_GetSpellId(sName) then
             info.text = sName;
             info.func = function(self)
                             HealBot_Config_Cures.HealBotDebuffText[HealBot_Options_getDropDownId_bySpec(3)] = self:GetText()
@@ -7591,7 +7597,7 @@ function HealBot_Options_Buff_Reset()
     for k=1,8 do
         if BuffDropDownClass[HealBot_Options_getDropDownId_bySpec(k)] and BuffDropDownClass[HealBot_Options_getDropDownId_bySpec(k)]>1 then
             local sName=BuffTextClass[HealBot_Options_getDropDownId_bySpec(k)]
-            if HealBot_Spells[sName] and HealBot_Spells[sName].known then   
+            if HealBot_GetSpellId(sName) then   
                 if not spells[sName] then
                     spells[sName]=sName;
                     HealBot_Set_BuffWatch(sName)

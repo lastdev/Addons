@@ -1,6 +1,6 @@
 --[[
 	Various Constant Information definitions
-	Revision: $Id: GatherConstants.lua 1008 2012-09-17 00:43:39Z Esamynn $
+	Revision: $Id: GatherConstants.lua 1133 2014-11-14 01:16:28Z esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherConstants.lua $", "$Rev: 1008 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_5.0.0/Gatherer/GatherConstants.lua $", "$Rev: 1133 $")
 
 local metatable = { __index = getfenv(0) }
 setmetatable( Gatherer.Constants, metatable )
@@ -77,6 +77,11 @@ SkillLevel = {
 ["ORE_RKYPARITE"] = 575,
 ["ORE_TRILLIUM"] = 600,
 ["ORE_RTRILLIUM"] = 600,
+-- WoD Ores
+["ORE_TRUEIRON"] = 610, -- True Iron Deposit
+["ORE_RTRUEIRON"] = 610, -- Rich True Iron Deposit
+["ORE_BLACKROCK"] = 610, -- Blackrock Deposit
+["ORE_RBLACKROCK"] = 610, -- Rich Blackrock Deposit
 
 
 -- Herbs
@@ -148,6 +153,13 @@ SkillLevel = {
 ["HERB_SHATOUCHEDHERB"] = 575, -- Sha-Touched Herb
 ["HERB_SNOWLILY"] = 575, -- Snow Lily
 ["HERB_FOOLSCAP"] = 600, -- Fool's Cap
+-- WoD Herbs
+["HERB_FROSTWEED"] = 610, -- Frostweed
+["HERB_FIREWEED"] = 610, -- Fireweed
+["HERB_GORGRONDFLYTRAP"] = 610, -- Gorgrond Flytrap
+["HERB_STARFLOWER"] = 610, -- Starflower
+["HERB_NAGRANDARROWBLOOM"] = 610, -- Nagrand Arrowbloom
+["HERB_TALADORORCHID"] = 610, -- Talador Orchid
 
 	-- Archaeology
 	["ARCH_DRAENEI"] = 300,		-- Draenei Archaeology Find
@@ -195,39 +207,5 @@ SupportedGatherTypes = {
 	OPEN = "OPEN",
 	ARCH = "ARCH",
 }
-
-ArchaeologyCurrencies = {
-	398, -- Draenei Archaeology Fragment
-	384, -- Dwarf Archaeology Fragment
-	393, -- Fossil Archaeology Fragment
-	400, -- Nerubian Archaeology Fragment
-	394, -- Night Elf Archaeology Fragment
-	397, -- Orc Archaeology Fragment
-	401, -- Tol'vir Archaeology Fragment
-	385, -- Troll Archaeology Fragment
-	399, -- Vrykul Archaeology Fragment
-	676, -- Pandaren Archaeology Fragment
-	677, -- Mogu Archaeology Fragment
-}
-
-local seedList = ArchaeologyCurrencies
-ArchaeologyCurrencies = {}
-for _, id in pairs(seedList) do
-	local name = GetCurrencyInfo(id)
-	ArchaeologyCurrencies[id] = name
-	ArchaeologyCurrencies[name] = id
-end
-
-ArchaeologyCurrencies["ARCH_DRAENEI"] = 398
-ArchaeologyCurrencies["ARCH_DWARF"] = 384
-ArchaeologyCurrencies["ARCH_FOSSIL"] = 393
-ArchaeologyCurrencies["ARCH_NERUBIAN"] = 400
-ArchaeologyCurrencies["ARCH_NIGHTELF"] = 394
-ArchaeologyCurrencies["ARCH_ORC"] = 397
-ArchaeologyCurrencies["ARCH_TOLVIR"] = 401
-ArchaeologyCurrencies["ARCH_TROLL"] = 385
-ArchaeologyCurrencies["ARCH_VRYKUL"] = 399
-ArchaeologyCurrencies["ARCH_PANDAREN"] = 676
-ArchaeologyCurrencies["ARCH_MOGU"] = 677
 
 SurveySpellName = GetSpellInfo(80451)

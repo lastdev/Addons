@@ -338,9 +338,9 @@ Inaktiv: das Standard-Layout wird verwendet
 L["ARMORY_CMD_SET_WARNINGSOUND_MENUTEXT"] = "Warn-Sound"
 L["ARMORY_CMD_SET_WARNINGSOUND_TEXT"] = "Warnungsnachrichten Sound"
 L["ARMORY_CMD_SET_WARNINGSOUND_TOOLTIP"] = "Wähle einen Sound, der abgespielt wird, wenn eine automatische Warnung oder Fehlernachricht im Chatfenster angezeigt wird."
-L["ARMORY_CMD_SET_WEEKLYRESET_MENUTEXT"] = "Wöchentlicher Reset" -- Needs review
-L["ARMORY_CMD_SET_WEEKLYRESET_TEXT"] = "Wöchentlicher Server-Reset" -- Needs review
-L["ARMORY_CMD_SET_WEEKLYRESET_TOOLTIP"] = "Tag auswählen, an dem der wöchentliche Server-Reset durchgeführt wird (Dienstags für US- und Mittwochs für EU-Server)." -- Needs review
+L["ARMORY_CMD_SET_WEEKLYRESET_MENUTEXT"] = "Wöchentlicher Reset"
+L["ARMORY_CMD_SET_WEEKLYRESET_TEXT"] = "Wöchentlicher Server-Reset"
+L["ARMORY_CMD_SET_WEEKLYRESET_TOOLTIP"] = "Tag auswählen, an dem der wöchentliche Server-Reset durchgeführt wird (Dienstags für US- und Mittwochs für EU-Server)."
 L["ARMORY_CMD_SET_WINDOWSEARCH_MENUTEXT"] = "Suchergebnisse im Fenster anzeigen"
 L["ARMORY_CMD_SET_WINDOWSEARCH_TEXT"] = "Suchergebnisse in einem Extrafenster anzeigen"
 L["ARMORY_CMD_SET_WINDOWSEARCH_TOOLTIP"] = [=[Aktiv: Suchergebnisse werden in einem Extrafenster angezeigt

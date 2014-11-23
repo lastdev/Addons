@@ -1,3 +1,9 @@
+== Version 60000.1.1
+* Added u.ToString()
+
+== Version 60000.1.0
+* Making the "Out of Date" status go away.
+
 == Version 50400.1.1
 The options panels that are lined (as parent/child/sibling) will now behave better when resetting to default settings.
 

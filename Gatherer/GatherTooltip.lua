@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
-	Revision: $Id: GatherTooltip.lua 1008 2012-09-17 00:43:39Z Esamynn $
+	Version: 5.0.0 (<%codename%>)
+	Revision: $Id: GatherTooltip.lua 1129 2014-11-13 21:02:28Z esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	Tooltip functions
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherTooltip.lua $", "$Rev: 1008 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_5.0.0/Gatherer/GatherTooltip.lua $", "$Rev: 1129 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient
@@ -39,15 +39,13 @@ setfenv(1, Gatherer.Tooltip)
 function AddDropRates( tooltip, nodeId, zone, maxDropsToShow )
 	if not ( maxDropsToShow ) then maxDropsToShow = 5 end
 	local total = Gatherer.DropRates.GetDropsTotal(nodeId)
-	local ArchaeologyCurrencies = Gatherer.Constants.ArchaeologyCurrencies
 	if ( total and (total > 0) ) then
 		tooltip:AddLine(_tr("NOTE_OVERALLDROPS"))
 		local numLeft = 0
 		for i, item, count in Gatherer.DropRates.ObjectDrops(nodeId, zone, "DESC") do
-			local itemName, itemLink, _
-			if ( ArchaeologyCurrencies[item] ) then
-				itemName, _, invTexture = GetCurrencyInfo(item)
-				invTexture = "Interface\\Icons\\"..invTexture
+			local itemName, itemLink, invTexture, _
+			if ( item < 0 ) then
+				itemName, _, invTexture = GetCurrencyInfo(-item)
 				itemLink = "|cff00aa00["..itemName.."]|r"
 			else
 				itemName, itemLink, _, _, _, _, _, _, _, invTexture = GetItemInfo(item)

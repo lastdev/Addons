@@ -47,11 +47,13 @@ local InCombatLockdown = InCombatLockdown
 local string, unpack, type, select = string, unpack, type, select
 local pairs, ipairs, strsplit, tonumber = pairs, ipairs, strsplit, tonumber
 local CreateMacro, EditMacro, GetMacroIndexByName, IsAddOnLoaded = CreateMacro, EditMacro, GetMacroIndexByName, IsAddOnLoaded
-local GetNumGroupMembers, GetNumSubgroupMembers, IsInRaid = GetNumGroupMembers, GetNumSubgroupMembers, IsInRaid
+local GetNumGroupMembers, GetNumSubgroupMembers, IsInRaid, IsInGroup = GetNumGroupMembers, GetNumSubgroupMembers, IsInRaid, IsInGroup
 local GetInstanceInfo, UnitIsGhost, UnitExists = GetInstanceInfo, UnitIsGhost, UnitExists
-local UnitAffectingCombat, UnitInRaid, GetStablePetInfo = UnitAffectingCombat, UnitInRaid, GetStablePetInfo
+local UnitAffectingCombat, UnitInRaid, GetStablePetInfo, UnitIsPlayer = UnitAffectingCombat, UnitInRaid, GetStablePetInfo, UnitIsPlayer
 local SendChatMessage, CreateFrame = SendChatMessage, CreateFrame
 local GameTooltipText, GameTooltipHeaderText = GameTooltipText, GameTooltipHeaderText
+
+-- GLOBALS: MDH MDHWaitFrame Tukui ElvUI InterfaceOptionsFrame_OpenToCategory StaticPopup_Show GetAddOnMetadata InterfaceOptions_AddCategory
 
 local function set(info, value)
 	local key = info[#info]
@@ -110,11 +112,11 @@ local function GetTTFont(font)
 end
 
 --********************************
-function MDH:MDHTextUpdate() MDH.dataObject.text = self:TTText("both") end
+function MDH:MDHTextUpdate() MDH.dataObject.text = MDH:TTText("both") end
 
 function MDH:MDHLoad()
-	if UnitExists("pet") then self:MDHgetpet() end
-	self:MDHEditMacro()
+	if UnitExists("pet") then MDH:MDHgetpet() end
+	MDH:MDHEditMacro()
 end
 
 function MDH:MDHEditMacro()
@@ -122,19 +124,19 @@ function MDH:MDHEditMacro()
 	if InCombatLockdown() then return end
 	local singlemacro, multiplemacro, macro, macroid
 	local spell = imd
-	local id = self.db.profile.hicon or hiconinfo[imd][2]
-	local mname = self.db.profile.hname
-	local modkey = modkeys[self.db.profile.modkey]
+	local id = MDH.db.profile.hicon or hiconinfo[imd][2]
+	local mname = MDH.db.profile.hname
+	local modkey = modkeys[MDH.db.profile.modkey]
 	if uc == "ROGUE" then
 		spell = itt
 		id = MDH.db.profile.ricon or riconinfo[itt][2]
 		mname = MDH.db.profile.rname
 	end
-	self:MDHTextUpdate()
-	singlemacro = "#showtooltip\n/cast [mod:" .. modkey .. ",@none][@%s,nodead,exists] %s; %s"
-	multiplemacro = "#showtooltip\n/cast [mod:" .. modkey .. ",@none][btn:1,@%s,nodead,exists][btn:2,@%s,nodead,exists] %s; %s"
-	if self.db.profile.target2 then macro = string.format(multiplemacro, self.db.profile.target or "target", self.db.profile.target2 or "target", spell, spell)
-	else macro = string.format(singlemacro, self.db.profile.target or "target", spell, spell) end
+	MDH:MDHTextUpdate()
+	singlemacro = "#showtooltip\n/use [mod:" .. modkey .. ",@none][@%s,nodead] %s; %s"
+	multiplemacro = "#showtooltip\n/use [mod:" .. modkey .. ",@none][btn:1,@%s,nodead][btn:2,@%s,nodead] %s; %s"
+	if MDH.db.profile.target2 then macro = string.format(multiplemacro, MDH.db.profile.target or "target", MDH.db.profile.target2 or "target", spell, spell)
+	else macro = string.format(singlemacro, MDH.db.profile.target or "target", spell, spell) end
 	macroid = GetMacroIndexByName(mname)
 	if macroid == 0 then CreateMacro(mname , iconm[id], macro, 1, 1)
 	else EditMacro(macroid, mname , iconm[id], macro) end
@@ -143,12 +145,12 @@ end
 function MDH:MDHChat()
 	if IsAddOnLoaded("CastYeller2") or IsAddOnLoaded("CastYeller") then return end
 	local msg = string.format((uc == "HUNTER") and L["%s Misdirects to %s"] or L["%s casts Tricks of the Trade on %s"], UnitName("player"), misdtarget)
-	local chan = self.db.profile.cChannel or "RAID"
+	local chan = MDH.db.profile.cChannel or "RAID"
 	local s
 	--LFD fix courtesy of Eincrou
 	--*****
 	if chan == "PARTY" and GetNumSubgroupMembers() ~= 0 then 
-		if (IsInGroup(LE_PARTY_CATEGORY_INSTANCE)) then chan = "INSTANCE_CHAT" end
+		if (IsInGroup(_G.LE_PARTY_CATEGORY_INSTANCE)) then chan = "INSTANCE_CHAT" end
 		s = true
 	--*****
 	--if chan == "PARTY" and GetNumSubgroupMembers() ~= 0 then s = true
@@ -260,7 +262,7 @@ function MDH:OnInitialize()
 	local optionsTable, themesTable
 	local k, v
 
-	self.db = LibStub("AceDB-3.0"):New("MisDirectionHelperDB", defaults)
+	MDH.db = LibStub("AceDB-3.0"):New("MisDirectionHelperDB", defaults)
 	optionsTable = {
 		type = "group",
 		name = _G.MAIN_MENU,
@@ -898,77 +900,78 @@ function MDH:OnInitialize()
 	}
 
 	--remove old renamed variables
-	self.db.profile.Name = nil
-	self.db.profile.Petname = nil
+	MDH.db.profile.Name = nil
+	MDH.db.profile.Petname = nil
 	mainPanel.name = "Misdirection Helper 2"
 	InterfaceOptions_AddCategory(mainPanel)
 	AceConfig:RegisterOptionsTable("MisdirectionHelperOptions", optionsTable)
 	AceConfig:RegisterOptionsTable("MisdirectionHelperThemes", themesTable)
-	AceConfig:RegisterOptionsTable("MisdirectionHelperProfiles", AceDBOptions:GetOptionsTable(self.db))
+	AceConfig:RegisterOptionsTable("MisdirectionHelperProfiles", AceDBOptions:GetOptionsTable(MDH.db))
 	MDH.optionsFrame = AceConfigDialog:AddToBlizOptions("MisdirectionHelperOptions", _G.MAIN_MENU, "Misdirection Helper 2")
 	AceConfigDialog:AddToBlizOptions("MisdirectionHelperThemes", L["Themes"], "Misdirection Helper 2")
 	AceConfigDialog:AddToBlizOptions("MisdirectionHelperProfiles", L["Profiles"], "Misdirection Helper 2")
-	self:CreateLDBObject()
+	MDH:CreateLDBObject()
 	if icon then icon:Register("MisdirectionHelper", MDH.dataObject, MDH.db.profile.minimap) end
-	if (GetNumSubgroupMembers() > 0) or (GetNumGroupMembers() > 0) or (UnitInRaid("player")) then self.ingroup = true end
-	self:MDHOnload()
+	if (GetNumSubgroupMembers() > 0) or (GetNumGroupMembers() > 0) or (UnitInRaid("player")) then MDH.ingroup = true end
+	MDH:MDHOnload()
 end
 
 function MDH:OnEnable()
 	--initialise fonts
-	self.fonts = {}
-	self.fonts.MDHHeaderFont = {font=CreateFont("MDHHeaderFont")}
-	self.fonts.MDHHeaderFont.font:SetFont(GameTooltipHeaderText:GetFont(), 15)
-	self.fonts.MDHLineFont = {font=CreateFont("MDHLineFont")}
-	self.fonts.MDHLineFont.font:SetFont(GameTooltipText:GetFont())
+	MDH.fonts = {}
+	MDH.fonts.MDHHeaderFont = {font=CreateFont("MDHHeaderFont")}
+	MDH.fonts.MDHHeaderFont.font:SetFont(GameTooltipHeaderText:GetFont(), 15)
+	MDH.fonts.MDHLineFont = {font=CreateFont("MDHLineFont")}
+	MDH.fonts.MDHLineFont.font:SetFont(GameTooltipText:GetFont())
 	local mdhfont = CreateFont("ElvFont")
 	if IsAddOnLoaded("Tukui") then
 		local T, C, L = unpack(Tukui)
-		mdhfont:SetFont(C["media"].font, 12)
+		mdhfont:SetFont(C.Medias.font, 12)
 	elseif IsAddOnLoaded("ElvUI") then
 		local E, L, V, P, G, DF = unpack(ElvUI)
 		mdhfont:SetFont(E["media"].normFont, 12)
 	else mdhfont:SetFont(GameTooltipText:GetFont()) end
-	self.fonts.ElvUIHeaderFont = {font=mdhfont}
-	self.fonts.ElvUIHeaderFont.font:SetFont(mdhfont:GetFont(), 14)
-	self.fonts.ElvUILineFont = {font=mdhfont}
-	self.fonts.ElvUILineFont.font:SetFont(mdhfont:GetFont(), 12)
+	MDH.fonts.ElvUIHeaderFont = {font=mdhfont}
+	MDH.fonts.ElvUIHeaderFont.font:SetFont(mdhfont:GetFont(), 14)
+	MDH.fonts.ElvUILineFont = {font=mdhfont}
+	MDH.fonts.ElvUILineFont.font:SetFont(mdhfont:GetFont(), 12)
 	mdhfont = CreateFont("Friz")
-	self.fonts.FrizHeaderFont = {font=mdhfont}
-	self.fonts.FrizHeaderFont.font:SetFont("Fonts\\FRIZQT__.TTF", 14)
-	self.fonts.FrizLineFont = {font=mdhfont}
-	self.fonts.FrizLineFont.font:SetFont("Fonts\\FRIZQT__.TTF", 12)
+	MDH.fonts.FrizHeaderFont = {font=mdhfont}
+	MDH.fonts.FrizHeaderFont.font:SetFont("Fonts\\FRIZQT__.TTF", 14)
+	MDH.fonts.FrizLineFont = {font=mdhfont}
+	MDH.fonts.FrizLineFont.font:SetFont("Fonts\\FRIZQT__.TTF", 12)
 	mdhfont = CreateFont("ArialN")
-	self.fonts.ArialNHeaderFont = {font=mdhfont}
-	self.fonts.ArialNHeaderFont.font:SetFont("Fonts\\ARIALN.TTF", 14)
-	self.fonts.ArialNLineFont = {font=mdhfont}
-	self.fonts.ArialNLineFont.font:SetFont("Fonts\\ARIALN.TTF", 12)
+	MDH.fonts.ArialNHeaderFont = {font=mdhfont}
+	MDH.fonts.ArialNHeaderFont.font:SetFont("Fonts\\ARIALN.TTF", 14)
+	MDH.fonts.ArialNLineFont = {font=mdhfont}
+	MDH.fonts.ArialNLineFont.font:SetFont("Fonts\\ARIALN.TTF", 12)
 	mdhfont = CreateFont("Skurri")
-	self.fonts.SkurriHeaderFont = {font=mdhfont}
-	self.fonts.SkurriHeaderFont.font:SetFont("Fonts\\SKURRI.TTF", 14)
-	self.fonts.SkurriLineFont = {font=mdhfont}
-	self.fonts.SkurriLineFont.font:SetFont("Fonts\\SKURRI.TTF", 12)
+	MDH.fonts.SkurriHeaderFont = {font=mdhfont}
+	MDH.fonts.SkurriHeaderFont.font:SetFont("Fonts\\SKURRI.TTF", 14)
+	MDH.fonts.SkurriLineFont = {font=mdhfont}
+	MDH.fonts.SkurriLineFont.font:SetFont("Fonts\\SKURRI.TTF", 12)
 	mdhfont = CreateFont("Morpheus")
-	self.fonts.MorpheusHeaderFont = {font=mdhfont}
-	self.fonts.MorpheusHeaderFont.font:SetFont("Fonts\\MORPHEUS.TTF", 14)
-	self.fonts.MorpheusLineFont = {font=mdhfont}
-	self.fonts.MorpheusLineFont.font:SetFont("Fonts\\MORPHEUS.TTF", 12)
-	for k, v in pairs(self.db.global.custom) do self.themes[k] = v end
+	MDH.fonts.MorpheusHeaderFont = {font=mdhfont}
+	MDH.fonts.MorpheusHeaderFont.font:SetFont("Fonts\\MORPHEUS.TTF", 14)
+	MDH.fonts.MorpheusLineFont = {font=mdhfont}
+	MDH.fonts.MorpheusLineFont.font:SetFont("Fonts\\MORPHEUS.TTF", 12)
+	for k, v in pairs(MDH.db.global.custom) do MDH.themes[k] = v end
 	updateThemeList()
 	_G.SLASH_MDH_CMD1 = "/mdh"
-	_G.SlashCmdList["MDH_CMD"] = function(input) InterfaceOptionsFrame_OpenToCategory(self.optionsFrame) end
+	_G.SlashCmdList["MDH_CMD"] = function(input) InterfaceOptionsFrame_OpenToCategory(MDH.optionsFrame) end
 end
 
 function MDH:MDHOnload()
-	self:RegisterEvent("PLAYER_ENTERING_WORLD")
-	self:RegisterEvent("UNIT_PET")
-	self:RegisterEvent("UNIT_SPELLCAST_SENT")
-	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
-	self:RegisterEvent("PLAYER_REGEN_DISABLED")
-	self:RegisterEvent("PLAYER_FOCUS_CHANGED")
-	self.waitFrame = MDHWaitFrame or CreateFrame("Frame", "MDHWaitFrame")
-	if self.db.profile.clearleave or self.db.profile.autotank then self:RegisterEvent("GROUP_ROSTER_UPDATE") end
-	if self.db.profile.remind then self:RegisterEvent("ZONE_CHANGED_NEW_AREA") end
+	MDH:RegisterEvent("PLAYER_ENTERING_WORLD")
+	MDH:RegisterEvent("UNIT_PET")
+	MDH:RegisterEvent("UNIT_SPELLCAST_SENT")
+	MDH:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+	MDH:RegisterEvent("PLAYER_REGEN_DISABLED")
+	MDH:RegisterEvent("PLAYER_FOCUS_CHANGED")
+	MDH.waitFrame = MDHWaitFrame or CreateFrame("Frame", "MDHWaitFrame")
+	if MDH.db.profile.clearleave or MDH.db.profile.autotank then MDH:RegisterEvent("GROUP_ROSTER_UPDATE") end
+	if MDH.db.profile.autotank then MDH:RegisterEvent("ROLE_CHANGED_INFORM") end
+	if MDH.db.profile.remind then MDH:RegisterEvent("ZONE_CHANGED_NEW_AREA") end
 end
 
 local function onUpdate(this, elapsed)
@@ -985,45 +988,47 @@ function MDH:GROUP_ROSTER_UPDATE()
 	MDHWaitFrame:SetScript("OnUpdate", onUpdate)
 end
 
+function MDH:ROLE_CHANGED_INFORM() MDH:GROUP_ROSTER_UPDATE() end
+
 function MDH:ZONE_CHANGED_NEW_AREA()
 	local inInstance = (select(2, GetInstanceInfo()) ~= "none")
 	if UnitIsGhost("player") then return end
 	if inInstance then
-		if self.remind then --reminder already set, don't give another one
+		if MDH.remind then --reminder already set, don't give another one
 		else
 			StaticPopup_Show("MDH_REMINDER")
-			self.remind = true
+			MDH.remind = true
 		end
-	else self.remind = nil end
+	else MDH.remind = nil end
 end
 
 function MDH:PLAYER_TARGET_CHANGED()
 	if not InCombatLockdown() then
-		if self.db.profile.target == "target" then
-			self.db.profile.name = self:validateTarget("target")
-			self:MDHTextUpdate()
+		if MDH.db.profile.target == "target" then
+			MDH.db.profile.name = MDH:validateTarget("target")
+			MDH:MDHTextUpdate()
 		end
 	end
 end
 
 function MDH:PLAYER_FOCUS_CHANGED()
 	if not InCombatLockdown() then
-		if self.db.profile.target == "focus" then
-			self.db.profile.name = self:validateTarget("focus")
-			self:MDHTextUpdate()
+		if MDH.db.profile.target == "focus" then
+			MDH.db.profile.name = MDH:validateTarget("focus")
+			MDH:MDHTextUpdate()
 		end
 	end
 end
 
-function MDH:PLAYER_ENTERING_WORLD() self:MDHLoad() end
+function MDH:PLAYER_ENTERING_WORLD() MDH:MDHLoad() end
 
 function MDH:UNIT_PET(event, unitid)
 	local pet
 	if unitid == "player" and UnitExists("pet") then pet = UnitName("pet")
-		if pet ~= self.db.profile.petname then self:MDHgetpet() end
-		if self.db.profile.target == "pet" then self.db.profile.name = self.db.profile.petname
-		elseif self.db.profile.target2 == "pet" then self.db.profile.name2 = self.db.profile.petname end
-		self:MDHTextUpdate()
+		if pet ~= MDH.db.profile.petname then MDH:MDHgetpet() end
+		if MDH.db.profile.target == "pet" then MDH.db.profile.name = MDH.db.profile.petname
+		elseif MDH.db.profile.target2 == "pet" then MDH.db.profile.name2 = MDH.db.profile.petname end
+		MDH:MDHTextUpdate()
 	end
 end
 
@@ -1038,21 +1043,21 @@ function MDH:UNIT_SPELLCAST_SUCCEEDED(event, unitid, spell, rank, ...)
 	local cast, petcall, index
 	if unitid == "player" then
 		if spell == dismisspet then
-			self:MDHgetpet()
-			self:MDHTextUpdate()
+			MDH:MDHgetpet()
+			MDH:MDHTextUpdate()
 			return
 		end
 		for index, petcall in ipairs(callpet) do
 			if spell == petcall then
-				self.db.profile.petname = select(2, GetStablePetInfo(index))
-				--print(spell, self.db.profile.petname)
-				self:MDHTextUpdate()
+				MDH.db.profile.petname = select(2, GetStablePetInfo(index))
+				--print(spell, MDH.db.profile.petname)
+				MDH:MDHTextUpdate()
 				return
 			end
 		end
 		if uc == "HUNTER" then if spell == imd then cast = true end
 		elseif uc == "ROGUE" then if spell == itt then cast = true end end
-		if cast and self.db.profile.bAnnounce then self:MDHChat() end
+		if cast and MDH.db.profile.bAnnounce then MDH:MDHChat() end
 	end
 end
 

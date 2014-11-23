@@ -398,6 +398,10 @@ function GoGo_ChooseMount()
 		GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 37)
 	end --if
 
+	if GoGo_Prefs.AutoExcludeFlyingMounts and not GoGo_Variables.ZoneExclude.CanFly then
+		GoGo_Variables.SkipFlyingMount = true
+	end --if
+	
 	if IsSubmerged() then
 		GoGo_CheckSwimSurface()
 	else
@@ -445,7 +449,7 @@ function GoGo_ChooseMount()
 
 	if GoGo_Variables.SkipFlyingMount then
 		if GoGo_Variables.Debug >= 10 then
-			GoGo_DebugAddLine("GoGo_ChooseMount: Filtering out all mounts that can fly (button 2 pressed).")
+			GoGo_DebugAddLine("GoGo_ChooseMount: Filtering out all mounts that can fly (button 2 pressed or no flying mounts preference set).")
 		end --if
 		GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 10003) or {}
 	end --if
@@ -485,13 +489,15 @@ function GoGo_ChooseMount()
 		end --if
 	end --if
 
+--[[
 	if not GoGo_InBook(GoGo_Variables.Localize.CloudSerpentRiding) then
 		GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 100) or {}
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ChooseMount: Eliminated mounts requiring Cloud Serpent Riding - " .. (table.getn(GoGo_Variables.FilteredMounts) or 0) .. " mounts left.")
 		end --if
 	end --if
-	
+]]
+
 	if IsFalling() then  -- we're falling.. save us  (only grab instant cast spells)
 		GoGo_Variables.FilteredMounts = GoGo_GetInstantMounts(GoGo_Variables.FilteredMounts) or {}
 		if GoGo_Variables.Debug >= 10 then
@@ -530,6 +536,12 @@ function GoGo_ChooseMount()
 	else
 		GoGo_Variables.CanFly = false
 	end --if 
+
+	if GoGo_Variables.Debug >= 10 then
+		GoGo_DebugAddLine("GoGo_ChooseMount: ZoneExclude.Canfly = " .. tostring(GoGo_Variables.ZoneExclude.CanFly))
+		GoGo_DebugAddLine("GoGo_ChooseMount: SkipFlyingMount = " .. tostring(GoGo_Variables.SkipFlyingMount))
+		GoGo_DebugAddLine("GoGo_ChooseMount: NoFlying = " .. tostring(GoGo_Variables.NoFlying))
+	end --if
 	
 	if GoGo_Variables.Debug >= 10 then
 		GoGo_DebugAddLine("GoGo_ChooseMount: Eliminated mounts we can't use; " .. (table.getn(GoGo_Variables.FilteredMounts) or 0) .. " mounts left.")
@@ -881,7 +893,7 @@ function GoGo_RemoveUnusableMounts(MountList)  -- Remove mounts Blizzard says we
 					end --if
 				end --if
 			else  -- it's a mount spell or class shape form
-				if IsUsableSpell(GoGo_SpellID) then
+				if IsUsableSpell(GoGo_SpellID) then  -- don't use IsSpellKnown() - mounts in collection are not known... morons....
 					table.insert(GoGo_NewTable, GoGo_SpellID)
 				end --if
 			end --if
@@ -2706,6 +2718,13 @@ function GoGo_ZoneCheck()
 		if GoGo_InBook(GoGo_Variables.Localize.FlightMastersLicense) then
 			GoGo_Variables.ZoneExclude.CanFly = true
 		end --if
+	elseif GoGo_Variables.Player.ZoneID == 890 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Camp Narache")
+		end --if
+		if GoGo_InBook(GoGo_Variables.Localize.FlightMastersLicense) then
+			GoGo_Variables.ZoneExclude.CanFly = true
+		end --if
 	elseif GoGo_Variables.Player.ZoneID == 891 then
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Echo Isles")
@@ -2835,6 +2854,12 @@ function GoGo_ZoneCheck()
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
 		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 949 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Gorgrond")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
+		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == 951 then
 		-- shows Temperal Anomaly buff showing no-flying for the main island
 		-- areas in the water around the island allows for flying even with the Temperal Anomaly buff
@@ -2857,6 +2882,60 @@ function GoGo_ZoneCheck()
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false
 		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 964 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Bloodmaul Slag Mines (instance)")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = false
+	elseif GoGo_Variables.Player.ZoneID == 969 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Shadowmoon Burial Grounds")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 978 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Ashran")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 984 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Auchindoun (instance)")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = false
+	elseif GoGo_Variables.Player.ZoneID == 987 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Iron Docks (instance)")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 989 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Skyreach (instance)")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = false
+	elseif GoGo_Variables.Player.ZoneID == 993 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Grimrail Depot (instance)")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = false
+	elseif GoGo_Variables.Player.ZoneID == 995 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Hall of Blackhand (instance)")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = false
+	elseif GoGo_Variables.Player.ZoneID == 1008 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for The Everbloom (instance)")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == -1 then
 		-- Arenas:
 		-- -- Nagrand Arena
@@ -2867,6 +2946,7 @@ function GoGo_ZoneCheck()
 		end --if
 	else
 		if GoGo_Variables.Debug >= 4 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Unknown zone ID.  Showing debug information.")
 			GoGo_DebugCollectInformation()
 		end --if
 	end --if
@@ -3128,16 +3208,16 @@ function GoGo_GetBestAirMounts(GoGo_FilteredMounts)
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_GetBestAirMounts: Druid with preferred flight forms option enabled.  Using flight form.")
 		end --if
-		if string.find(GoGo_SearchString, GoGo_Variables.Localize.FastFlightForm, 1, true) then
+		if string.find(GoGo_SearchString, 165962, 1, true) then
 			if GoGo_Variables.Debug >= 10 then
 				GoGo_DebugAddLine("GoGo_GetBestAirMounts: Found FastFlightForm")
 			end --if
-			table.insert(mounts, GoGo_Variables.Localize.FastFlightForm)
-		elseif string.find(GoGo_SearchString, GoGo_Variables.Localize.FlightForm, 1, true) then
+			table.insert(mounts, 165962)
+		elseif string.find(GoGo_SearchString, GoGo_Variables.Localize.TravelForm, 1, true) then
 			if GoGo_Variables.Debug >= 10 then
 				GoGo_DebugAddLine("GoGo_GetBestAirMounts: Found FlightForm")
 			end --if
-			table.insert(mounts, GoGo_Variables.Localize.FlightForm)
+			table.insert(mounts, GoGo_Variables.Localize.TravelForm)
 		else
 			if GoGo_Variables.Debug >= 10 then
 				GoGo_DebugAddLine("GoGo_GetBestAirMounts: No flight forms found")
@@ -3383,31 +3463,27 @@ GOGO_ERRORS = {
 GOGO_SPELLS = {
 	["DRUID"] = function()
 		if GoGo_Prefs.DruidClickForm then
-			if GoGo_InBook(GoGo_Variables.Localize.AquaForm) then
-				if not GoGo_Variables.SkipFlyingMount and GoGo_InBook(GoGo_Variables.Localize.FastFlightForm) and GoGo_Variables.CanFly then
-					return "/cancelform [flying] \n/use [swimming] "..GoGo_InBook(GoGo_Variables.Localize.AquaForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; [combat]"..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; "..GoGo_InBook(GoGo_Variables.Localize.FastFlightForm)
-				elseif not GoGo_Variables.SkipFlyingMount and GoGo_InBook(GoGo_Variables.Localize.FlightForm) and GoGo_Variables.CanFly then
-					return "/cancelform [flying] \n/use [swimming] "..GoGo_InBook(GoGo_Variables.Localize.AquaForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; [combat]"..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; "..GoGo_InBook(GoGo_Variables.Localize.FlightForm)
-				else
-					return "/cancelform [flying] \n/use [swimming] "..GoGo_InBook(GoGo_Variables.Localize.AquaForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm)..";"..GoGo_InBook(GoGo_Variables.Localize.TravelForm)
-				end --if
+			if not GoGo_Variables.SkipFlyingMount and GoGo_InBook(165962) and GoGo_Variables.CanFly then
+				return "/cancelform [flying] \n/use [swimming] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; [combat]"..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; "..GoGo_InBook(165962)
+			elseif not GoGo_Variables.SkipFlyingMount and GoGo_Variables.CanFly then
+				return "/cancelform [flying] \n/use [swimming] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; "..GoGo_InBook(GoGo_Variables.Localize.TravelForm)
+			else
+				return "/cancelform [flying] \n/use [swimming] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm)..";"..GoGo_InBook(GoGo_Variables.Localize.TravelForm)
 			end --if
 		else
+			local GoGo_CastString = "/use "
 			local GoGo_NumForms = GetNumShapeshiftForms()
 			local GoGo_FormName = ""
-			local GoGo_CastString = "/use "
 			for GoGo_TempCount = 1, GoGo_NumForms do
 				_, GoGo_FormName = GetShapeshiftFormInfo(GoGo_TempCount)
 				GoGo_CastString = GoGo_CastString .. "[form:" .. GoGo_TempCount .. "] "..GoGo_FormName..";"
 			end --for
-			if GoGo_InBook(GoGo_Variables.Localize.AquaForm) then
-				if not GoGo_Variables.SkipFlyingMount and GoGo_InBook(GoGo_Variables.Localize.FastFlightForm) and GoGo_Variables.CanFly then
-					GoGo_CastString = GoGo_CastString .. "[swimming] "..GoGo_InBook(GoGo_Variables.Localize.AquaForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; [combat]"..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; "..GoGo_InBook(GoGo_Variables.Localize.FastFlightForm)
-				elseif not GoGo_Variables.SkipFlyingMount and GoGo_InBook(GoGo_Variables.Localize.FlightForm) and GoGo_Variables.CanFly then
-					GoGo_CastString = GoGo_CastString .. "[swimming] "..GoGo_InBook(GoGo_Variables.Localize.AquaForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; [combat]"..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; "..GoGo_InBook(GoGo_Variables.Localize.FlightForm)
-				else
-					GoGo_CastString = GoGo_CastString .. "[swimming] "..GoGo_InBook(GoGo_Variables.Localize.AquaForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm)..";"..GoGo_InBook(GoGo_Variables.Localize.TravelForm)
-				end --if
+			if not GoGo_Variables.SkipFlyingMount and GoGo_InBook(165962) and GoGo_Variables.CanFly then
+				GoGo_CastString = GoGo_CastString .. "[swimming] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; [combat]"..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; "..GoGo_InBook(165962)
+			elseif not GoGo_Variables.SkipFlyingMount and GoGo_Variables.CanFly then
+				GoGo_CastString = GoGo_CastString .. "[swimming] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm).."; [combat]"..GoGo_InBook(GoGo_Variables.Localize.TravelForm)
+			else
+				GoGo_CastString = GoGo_CastString .. "[swimming] "..GoGo_InBook(GoGo_Variables.Localize.TravelForm).."; [indoors]"..GoGo_InBook(GoGo_Variables.Localize.CatForm)..";"..GoGo_InBook(GoGo_Variables.Localize.TravelForm)
 			end --if
 			return GoGo_CastString
 		end --if
@@ -3739,6 +3815,19 @@ function GoGo_Panel_Options()
 	GoGo_Panel_RemoveBuffs:SetScript("OnClick",
 		function(self)
 			GoGo_SetPref("RemoveBuffs", GoGo_Panel_RemoveBuffs:GetChecked())
+		end --function
+	)
+
+	GoGo_Panel_AutoExcludeFlyingMounts = CreateFrame("CheckButton", "GoGo_Panel_AutoExcludeFlyingMounts", GoGo_Panel, "OptionsCheckButtonTemplate")
+	GoGo_Panel_AutoExcludeFlyingMounts:SetPoint("TOPLEFT", "GoGo_Panel_RemoveBuffs", "BOTTOMLEFT", 0, -4)
+	GoGo_Panel_AutoExcludeFlyingMountsText:SetText(GoGo_Variables.Localize.String.AutoExcludeFlyingMountsInNoFlyAreas)
+	GoGo_Panel_AutoExcludeFlyingMounts.tooltipText = GoGo_Variables.Localize.String.AutoExcludeFlyingMountsInNoFlyAreas_Long
+	if GoGo_Prefs.AutoExcludeFlyingMounts then
+		GoGo_Panel_AutoExcludeFlyingMounts:SetChecked(1)
+	end --if
+	GoGo_Panel_AutoExcludeFlyingMounts:SetScript("OnClick",
+		function(self)
+			GoGo_SetPref("AutoExcludeFlyingMounts", GoGo_Panel_AutoExcludeFlyingMounts:GetChecked())
 		end --function
 	)
 end --function
@@ -4101,6 +4190,11 @@ function GoGo_SetPref(strPref, intValue, boolNoPanel)
 		if (not boolNoPanel) then
 			GoGo_Panel_RemoveBuffs:SetChecked(intValue)
 		end --if
+	elseif strPref == "AutoExcludeFlyingMounts" then
+		GoGo_Prefs.AutoExcludeFlyingMounts = intValue
+		if (not boolNoPanel) then
+			GoGo_Panel_AutoExcludeFlyingMounts:SetChecked(intValue)
+		end --if
 	elseif strPref == "AspectPack" then
 		GoGo_Prefs.AspectPack = intValue
 		if (not boolNoPanel) then
@@ -4133,6 +4227,7 @@ function GoGo_Settings_Default(Class)
 		GoGo_Prefs.GlobalPrefMount = false
 		GoGo_Prefs.DisableWaterFlight = true
 		GoGo_SetPref("RemoveBuffs", true)
+		GoGo_SetPref("AutoExcludeFlyingMounts", false)
 		InterfaceOptionsFrame_OpenToCategory(GoGo_Panel_Options)
 	else
 		GoGo_Prefs = {}
@@ -4153,6 +4248,7 @@ function GoGo_Settings_Default(Class)
 		GoGo_SetPref("DruidFormNotRandomize", false, true)
 		GoGo_Prefs.DisableWaterFlight = true
 		GoGo_SetPref("RemoveBuffs", true, true)
+		GoGo_SetPref("AutoExcludeFlyingMounts", false, true)
 		GoGo_SetPref("DruidDisableInCombat", false, true)
 		GoGo_SetPref("ShamanClickForm", false, true)
 	end --if
@@ -4172,9 +4268,10 @@ function GoGo_Settings_SetUpdates()
 	if not GoGo_Prefs.DruidFormNotRandomize then GoGo_Prefs.DruidFormNotRandomize = false end
 	if not GoGo_Prefs.DisableWaterFlight then GoGo_Prefs.DisableWaterFlight = false end
 	if not GoGo_Prefs.RemoveBuffs then GoGo_Prefs.RemoveBuffs = false end
+	if not GoGo_Prefs.AutoExcludeFlyingMounts then GoGo_Prefs.AutoExcludeFlyingMounts = false end
 	if not GoGo_Prefs.DruidDisableInCombat then GoGo_Prefs.DruidDisableInCombat = false end
 	if not GoGo_Prefs.ShamanClickForm then GoGo_Prefs.ShamanClickForm = false end
-	
+
 	GoGo_Prefs.UnknownMounts = {}
 	if not GoGo_Prefs.GlobalExclude then
 		GoGo_Prefs.GlobalExclude = {}
@@ -4241,6 +4338,7 @@ function GoGo_AddOptionCheckboxes(GoGo_FrameParentText)
 			if _G[GoGo_CheckBoxName] then
 				_G[GoGo_CheckBoxName]:SetPoint("TOPLEFT", 16, GoGo_checkboxrow)
 				_G[GoGo_CheckBoxName]:SetChecked(false)
+--				_G[GoGo_CheckBoxName].tooltipText = "" -- clear tool tip text
 			else
 				GoGo_CheckButton = CreateFrame("CheckButton", GoGo_CheckBoxName, GoGo_FrameParent, "ChatConfigCheckButtonTemplate")
 				GoGo_CheckButton:SetPoint("TOPLEFT", 16, GoGo_checkboxrow)

@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Version: 5.21c.5521 (SanctimoniousSwamprat)
 	Revision: $Id: AprFrame.lua 5495 2014-10-17 12:28:53Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -2967,4 +2967,4 @@ function private.CreateFrames()
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5495 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5495 $")

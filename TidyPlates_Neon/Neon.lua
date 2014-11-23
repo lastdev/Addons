@@ -311,9 +311,9 @@ WidgetConfig.ThreatWheelWidget = { anchor =  "CENTER", x = 36 ,y = VerticalAdjus
 WidgetConfig.ComboWidget = { anchor = "CENTER" , x = 0 ,y = VerticalAdjustment + 9.5 }
 WidgetConfig.RangeWidget = { anchor = "CENTER" , x = 0 ,y = VerticalAdjustment + 0 }
 WidgetConfig.DebuffWidget = { anchor = "CENTER" , x = 15 ,y = VerticalAdjustment + 17 }
-if (UnitClassBase("player") == "Druid") or (UnitClassBase("player") == "Rogue") then
+--if (UnitClassBase("player") == "Druid") or (UnitClassBase("player") == "Rogue") then
 	WidgetConfig.DebuffWidgetPlus = { anchor = "CENTER" , x = 15 ,y = VerticalAdjustment + 24 }
-end
+--end
 
 local DamageThemeName = "Neon/|cFFFF4400Damage"
 local TankThemeName = "Neon/|cFF3782D1Tank"

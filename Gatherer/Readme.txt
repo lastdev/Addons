@@ -1,4 +1,4 @@
-This is Gatherer v4.4.1
+This is Gatherer v5.0.0
 http://www.gathereraddon.com/
 
 ABOUT:

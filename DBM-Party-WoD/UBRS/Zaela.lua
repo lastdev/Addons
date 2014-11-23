@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1234, "DBM-Party-WoD", 8, 559)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11758 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 11861 $"):sub(12, -3))
 mod:SetCreatureID(77120)
 mod:SetEncounterID(1762)
 mod:SetZone()
@@ -63,6 +63,7 @@ function mod:UNIT_TARGETABLE_CHANGED()
 	if UnitExists("boss1") then--Returning from air phase
 		warnZaela:Show()
 		specWarnZaela:Show()
+		timerBlackIronCycloneCD:Start(10)
 	else--Leaving for air phase, may need to delay by a sec or so if boss1 still exists.
 		timerZaelaReturns:Start()
 		timerBlackIronCycloneCD:Cancel()

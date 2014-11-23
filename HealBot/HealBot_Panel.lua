@@ -92,9 +92,7 @@ function HealBot_GetMyHealTargets()
 end
 
 function HealBot_Panel_GetMainTanks()
-    --local x=HealBot_Options_copyTable(HealBot_MainTanks)
-    --return x;
-    return HealBot_MainTanks
+    return HealBot_MainTanks;
 end
 
 function HealBot_Panel_SetSubSortPlayer()

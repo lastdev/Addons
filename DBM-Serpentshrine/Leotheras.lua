@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Leotheras", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 535 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 547 $"):sub(12, -3))
 mod:SetCreatureID(21215, 21806)
 mod:SetModelID(20514)
 mod:SetZone()
@@ -134,7 +134,7 @@ function mod:UNIT_DIED(args)
 			table.wipe(warnDemonTargets)
 			timerWhirlCD:Start(15)
 			timerPhase:Start(nil, L.Demon)
-			berserkTimer:Start(-delay)
+			berserkTimer:Start()
 		end
 	elseif cId == 21215 and self:IsInCombat() then
 		DBM:EndCombat(self)

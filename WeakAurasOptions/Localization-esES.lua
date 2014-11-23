@@ -181,19 +181,18 @@ L["Frost Resistance"] = "Resistencia al Frío"
 L["Full Scan"] = "Escaneo Completo"
 L["Ghost Wolf"] = "Lobo Fantasma"
 L["Glow Action"] = "Acción de Destello"
-L["Group aura count description"] = [=[
-La candidad de %s miembros que deben ser afectados por el aura para que el activador se dispare.
+L["Group aura count description"] = [=[La candidad de %s miembros que deben ser afectados por el aura para que el activador se dispare.
 Si el número introducido es un entero (p.ej. 5), lo interpretaré como el número absoluto de gente afectada el la banda.
-Si el número introducido es una fracción (1/2), decimal (0.5), o un porcentaje (50%), lo interpretar;e como el porcentaje de jugadores afectados en la banda.
+Si el número introducido es una fracción (1/2), decimal (0.5), o un porcentaje (50%%), lo interpretar;e como el porcentaje de jugadores afectados en la banda.
 
 |cFF4444FFPor ejemplo:|r
 |cFF00CC00> 0|r se activa cuando cualquier persona en la banda %s esté afectada
 |cFF00CC00= 100%%|r se activa cuando todo el mundo en la banda %s esté afectado
 |cFF00CC00!= 2|r se activa cuando el numero de personas %s afectadas no es 2
-|cFF00CC00<= 0.8|r se activa cuando menos del 80% de la banda %s está afectada (4 de 5 en grupos, 8 de 10 o 20 de 25 en bandas)
+|cFF00CC00<= 0.8|r se activa cuando menos del 80%% de la banda %s está afectada (4 de 5 en grupos, 8 de 10 o 20 de 25 en bandas)
 |cFF00CC00> 1/2|r se activa cuando más de la mitad de jugadores %s están afectados
 |cFF00CC00>= 0|r siempre se activa
-]=]
+]=] -- Needs review
 L["Group Member Count"] = "Contador del Miembro de Grupo"
 L["Group (verb)"] = "Agrupar"
 L["Height"] = "Alto"
@@ -201,6 +200,7 @@ L["Hide this group's children"] = "Esconder hijos"
 L["Hide When Not In Group"] = "Esconder si no Estas Agrupado"
 L["Horizontal Align"] = "Alineado Horizontal"
 L["Icon Info"] = "Información del Icono"
+-- L["Icon Inset"] = ""
 L["Ignored"] = "Ignorar"
 L["Ignore GCD"] = "Ignorar el GCD"
 L["%i Matches"] = "%i Correspondencias"
@@ -285,6 +285,7 @@ L["Rotation"] = "Rotación"
 L["Same"] = "Igual"
 L["Search"] = "Buscar"
 L["Secondary"] = "Secundario"
+-- L["Select the auras you always want to be listed first"] = ""
 L["Send To"] = "Envar A"
 L["Set tooltip description"] = "Personalizar definición"
 L["Shadow Dance"] = "Danza de Sombras"
@@ -330,6 +331,7 @@ L["Text Color"] = "Color del Texto"
 L["Text Position"] = "Posición del Texto"
 L["Text Settings"] = "Configuración de textos"
 L["Texture"] = "Textura"
+-- L["Texture Info"] = ""
 L["The children of this group have different display types, so their display options cannot be set as a group."] = "No todos los hijos contienen la misma configuración, así que no los puedes configurar bajo el mismo perfil."
 L["The duration of the animation in seconds."] = "Duración de la animación (en segundos)."
 L["The type of trigger"] = "Tipo de Activador"

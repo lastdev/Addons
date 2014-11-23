@@ -1829,6 +1829,11 @@ GTFO.SpellID["148718"] = {
 	sound = 1;
 };
 
+GTFO.SpellID["147136"] = {
+	--desc = "Napalm (Garrosh Hellscream)"; 
+	sound = 1;
+};
+
 -- ************
 -- * Pandaria *
 -- ************

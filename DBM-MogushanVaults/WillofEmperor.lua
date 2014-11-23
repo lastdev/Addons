@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(677, "DBM-MogushanVaults", nil, 317)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 3 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 21 $"):sub(12, -3))
 mod:SetCreatureID(60399, 60400)--60396 (Rage), 60397 (Strength), 60398 (Courage), 60480 (Titan Spark), 60399 (Qin-xi), 60400 (Jan-xi)
 mod:SetEncounterID(1407)
 mod:SetZone()
@@ -12,7 +12,6 @@ mod:SetMinCombatTime(25)
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 116525 116778 116829",
 	"CHAT_MSG_MONSTER_YELL",
-	"UNIT_DIED",
 	"UNIT_SPELLCAST_SUCCEEDED boss1 boss2 target focus",--For this boss we want target/focus and boss1-2
 	"UNIT_POWER_FREQUENT boss1 boss2"
 )

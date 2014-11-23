@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21b.5509 (SanctimoniousSwamprat)
-	Revision: $Id: CoreUtil.lua 5423 2013-06-15 18:11:00Z brykrys $
+	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Revision: $Id: CoreUtil.lua 5518 2014-11-06 11:35:20Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -232,18 +232,34 @@ do
 	end
 end
 
--- Creates the list of Auction Durations for use in deposit cost dropdowns
--- Usage: gui:AddControl(id, "Selectbox",  column, indent, AucAdvanced.selectorAuctionLength, "util.modulename.deplength")
+-- Common Dropdown Tables
+-- Usage: gui:AddControl(id, "Selectbox",  column, indent, AucAdvanced.selectorXXXX, "libtype.modulename.yyyy")
 do
 	local auctionlength = {
-			{12, FORMATED_HOURS:format(12)},
-			{24, FORMATED_HOURS:format(24)},
-			{48, FORMATED_HOURS:format(48)},
-		}
+		{12, FORMATED_HOURS:format(12)},
+		{24, FORMATED_HOURS:format(24)},
+		{48, FORMATED_HOURS:format(48)},
+	}
+	-- List of Auction Durations for use in deposit cost dropdowns
 	function lib.selectorAuctionLength()
 		return auctionlength
 	end
+
+	local alevel = {
+		{Const.ALEVEL_OFF, "Off"},
+		{Const.ALEVEL_LOW, "Low"},
+		{Const.ALEVEL_MED, "Medium"},
+		{Const.ALEVEL_HI, "High"},
+	}
+	-- Creates a list of Activity Levels for general use
+	-- ALEVEL constants are numbers of increasing value, so modules may test for example: value >= Const.ALEVEL_MED
+	-- Proposed to introduce variations of this table in future, with different combinations of values
+	-- thus this variant has been called type 'A', having values OFF, LOW, MED, HI
+	function lib.selectorActivityLevelA()
+		return alevel
+	end
 end
+
 
 function lib.GetFactor(...) return tooltip:GetFactor(...) end
 function lib.SanitizeLink(...) return tooltip:SanitizeLink(...) end
@@ -947,4 +963,4 @@ function lib.CreateMoney(height)
 	return (tooltip:CreateMoney(height))
 end
 
-lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Advanced/CoreUtil.lua $", "$Rev: 5423 $")
+lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Advanced/CoreUtil.lua $", "$Rev: 5518 $")

@@ -1,7 +1,7 @@
 ## Interface: 60000
 ## Title: WeakAuras Model Paths
 ## Author: Mirrored
-## Version: 2.0.9.2
+## Version: 2.0.9.7
 ## Notes: Model paths for WeakAuras
 ## Notes-esES: Las rutas de archivos de modelos en 3D para WeakAuras
 ## Notes-deDE: 3D-Model Pfade für WeakAuras
@@ -14,7 +14,7 @@
 ## DefaultState: Enabled
 ## LoadOnDemand: 1
 ## Dependencies: WeakAuras, WeakAurasOptions
-## X-Curse-Packaged-Version: 2.0.9.2
+## X-Curse-Packaged-Version: 2.0.9.7
 ## X-Curse-Project-Name: WeakAuras 2
 ## X-Curse-Project-ID: weakauras-2
 ## X-Curse-Repository-ID: wow/weakauras-2/mainline

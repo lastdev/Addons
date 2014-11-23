@@ -2,7 +2,7 @@
 
 	LibSwag - A library to help you keep track of all your swag.
 
-	Revision: $Id: LibSwag.lua 955 2012-08-28 16:39:14Z Esamynn $
+	Revision: $Id: LibSwag.lua 1129 2014-11-13 21:02:28Z esamynn $
 
 	License:
 		This library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ They will both be called with the following parameters:
 
 -- Note, you should add this to your addon's SavedVariables
 LibSwagData = {}
-local myVersion = 0120
+local myVersion = 0121
 
 -- Check versioning to see if we need to upgrade the existing library
 local create = false
@@ -208,7 +208,7 @@ if (create or update) then
 			local lIcon, lName, lQuantity, lQuality = GetLootSlotInfo(i)
 			local slotType = GetLootSlotType(i)
 			local lLink = GetLootSlotLink(i)
-			if (not lLink and slotType == LOOT_SLOT_CURRENCY) then
+			if (not lLink and slotType == LOOT_SLOT_MONEY) then
 				local i,j,val
 				i,j, val = string.find(lName, COPPER_AMOUNT:gsub("%%d", "(%%d+)", 1))
 				if (i) then coin = coin + val end
@@ -220,7 +220,7 @@ if (create or update) then
 					table.insert(loot, { link = lLink, name = lName, count = lQuantity })
 				end
 			else
-				table.insert(loot, { link = lLink, name = lName, count = lQuantity })
+				table.insert(loot, { link = lLink, name = lName, count = lQuantity, type = slotType })
 			end
 		end
 

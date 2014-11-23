@@ -1,20 +1,18 @@
 
-local oRA = LibStub("AceAddon-3.0"):GetAddon("oRA3")
+local addonName, scope = ...
+local oRA = scope.addon
 local util = oRA.util
 local module = oRA:NewModule("BattleRes", "AceTimer-3.0")
-local L = LibStub("AceLocale-3.0"):GetLocale("oRA3")
+local L = scope.locale
 
 module.VERSION = tonumber(("$Revision: 712 $"):sub(12, -3))
 
-local resAmount = 1
-local ticker = 0
-local timeToGo = 0
+local resAmount = 0
 local redemption, feign = (GetSpellInfo(27827)), (GetSpellInfo(5384))
 local theDead = {}
 local updateFunc
 local brez
 local inCombat = false
-local IsEncounterInProgress = IsEncounterInProgress
 
 local function createFrame()
 	brez = CreateFrame("Frame", "oRA3BattleResMonitor", UIParent)
@@ -110,7 +108,7 @@ local function getOptions()
 	if not options then
 		options = {
 			type = "group",
-			name = "Res Monitor",
+			name = L.battleResTitle,
 			get = function(k) return module.db.profile[k[#k]] end,
 			set = function(k, v)
 				module.db.profile[k[#k]] = v
@@ -143,7 +141,7 @@ end
 
 function module:OnRegister()
 	self.db = oRA.db:RegisterNamespace("BattleRes", defaults)
-	oRA:RegisterModuleOptions("BattleRes", getOptions, "Res Monitor")
+	oRA:RegisterModuleOptions("BattleRes", getOptions, L.battleResTitle)
 	oRA.RegisterCallback(self, "OnStartup")
 	oRA.RegisterCallback(self, "OnShutdown")
 end
@@ -154,16 +152,11 @@ function module:OnStartup()
 end
 
 do
-	local function addOne()
-		resAmount = resAmount + 1
-		brez.remaining:SetText(resAmount)
-		brez.remaining:SetTextColor(0,1,0)
-		ticker = 0
-	end
-
+	local GetTime, GetSpellCharges = GetTime, GetSpellCharges
 	local function updateTime()
-		ticker = ticker + 1
-		local time = timeToGo - ticker
+		local charges, maxCharges, started, duration = GetSpellCharges(20484) -- Rebirth
+		if not charges then return end
+		local time = duration - (GetTime() - started)
 		local m = floor(time/60)
 		local s = mod(time, 60)
 		brez.timer:SetFormattedText("%d:%02d", m, s)
@@ -173,30 +166,23 @@ do
 				if UnitBuff(k, redemption) or UnitBuff(k, feign) or UnitIsFeignDeath(k) then -- The backup plan, you need one with Blizz
 					theDead[k] = nil
 				elseif not UnitIsDeadOrGhost(k) and UnitIsConnected(k) and UnitAffectingCombat(k) then
-					if v == "br" then
-						resAmount = resAmount - 1
-						brez.remaining:SetText(resAmount)
-						if resAmount == 0 then
-							brez.remaining:SetTextColor(1,0,0)
-						end
-					else
+					if v ~= "br" then
 						local _, class = UnitClass(k)
+						local tbl = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS -- Support custom class color addons, if installed
+						local s = class and tbl[class] or GRAY_FONT_COLOR -- Failsafe, rarely UnitClass can return nil
+						local shortName = k:gsub("%-.+", "*")
 						if class == "SHAMAN" then
-							-- print?
+							brez.scroll:AddMessage(
+								("|cFF71d5ff|Hspell:20608|h%s|h|r >> |cFF%02x%02x%02x%s|r"):format(
+									GetSpellInfo(20608), s.r * 255, s.g * 255, s.b * 255, shortName
+								)
+							)
 						else
-							local tbl = CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS -- Support custom class color addons, if installed
-							local s = class and tbl[class] or GRAY_FONT_COLOR -- Failsafe, rarely UnitClass can return nil
-							local shortName = k:gsub("%-.+", "*")
 							brez.scroll:AddMessage(
 								("|cFF71d5ff|Hspell:20707|h%s|h|r >> |cFF%02x%02x%02x%s|r"):format(
 									GetSpellInfo(20707), s.r * 255, s.g * 255, s.b * 255, shortName
 								)
 							)
-							resAmount = resAmount - 1
-							brez.remaining:SetText(resAmount)
-							if resAmount == 0 then
-								brez.remaining:SetTextColor(1,0,0)
-							end
 						end
 					end
 					theDead[k] = nil
@@ -205,28 +191,32 @@ do
 		end
 	end
 
-	local countUpdater, timeUpdater = nil, nil
+	local timeUpdater = nil
 	local function updateStatus()
-		if not inCombat and IsEncounterInProgress() then
-			inCombat = true
-			wipe(theDead)
-			resAmount = 1
-			ticker = 0
-			brez.remaining:SetText(resAmount)
-			brez.remaining:SetTextColor(0,1,0)
-			-- XXX fix mythic scaling
-			local _, _, _, _, _, _, _, _, instanceGroupSize = GetInstanceInfo()
-			timeToGo = (90/instanceGroupSize)*60
-			countUpdater = module:ScheduleRepeatingTimer(addOne, timeToGo)
-			timeUpdater = module:ScheduleRepeatingTimer(updateTime, 1)
-			brez:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-			brez.scroll:Clear()
-		elseif inCombat and not IsEncounterInProgress() then
+		local charges, maxCharges, started, duration = GetSpellCharges(20484) -- Rebirth
+		if charges then
+			if not inCombat then
+				inCombat = true
+				theDead = {}
+				timeUpdater = module:ScheduleRepeatingTimer(updateTime, 1)
+				brez:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+				brez.scroll:Clear()
+			end
+			if charges ~= resAmount then
+				resAmount = charges
+				brez.remaining:SetText(resAmount)
+				if charges == 0 then
+					brez.remaining:SetTextColor(1,0,0)
+				else
+					brez.remaining:SetTextColor(0,1,0)
+				end
+			end
+		elseif inCombat and not charges then
 			inCombat = false
+			resAmount = 0
 			brez:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-			module:CancelTimer(countUpdater)
 			module:CancelTimer(timeUpdater)
-			brez.remaining:SetText("0")
+			brez.remaining:SetText(resAmount)
 			brez.timer:SetText("0:00")
 			brez.remaining:SetTextColor(1,1,1)
 		end
@@ -240,10 +230,6 @@ do
 			if not brez then
 				createFrame()
 				createFrame = nil
-				self:ScheduleTimer(function()
-					print("|cFF33FF99oRA3|r: We've added a new Battle Res Monitor! It will show how many resses you have available, and the time remaining until you gain another res.")
-					print("|cFF33FF99oRA3|r: As it's brand new it may be buggy. We're looking for input and tweaking it as required.")
-				end, 5)
 			end
 			toggleLock()
 			toggleShow()
@@ -292,8 +278,7 @@ do
 		return pet
 	end
 
-	updateFunc = function(_, _, _, event, ...)
-		local _, sGuid, name, _, _, tarGuid, tarName, _, _, spellId, spellName = ...
+	updateFunc = function(_, _, _, event, _, sGuid, name, _, _, tarGuid, tarName, _, _, spellId)
 		if event == "SPELL_RESURRECT" then
 			if spellId == 126393 then -- Eternal Guardian
 				name = getPetOwner(name, sGuid)

@@ -886,7 +886,7 @@ end
 
 function HealBot_GetSpellId(spellName)
     if (not spellName) then return nil end
-    if HealBot_Spells[spellName] and HealBot_Spells[spellName].id and HealBot_Spells[spellName].known then   
+    if HealBot_Spells[spellName] and HealBot_Spells[spellName].known then   
         return HealBot_Spells[spellName].id; 
     end
     return nil;
@@ -1903,6 +1903,8 @@ function HealBot_OnEvent(self, event, ...)
         if HealBot_Unit_Button[arg1] then HealBot_Action_ResetUnitStatus(arg1) end
     elseif (event=="ZONE_CHANGED_NEW_AREA") or (event=="ZONE_CHANGED")  or (event=="ZONE_CHANGED_INDOORS") then
         HealBot_OnEvent_ZoneChanged(self);
+    elseif (event=="PET_BATTLE_OPENING_START") or (event=="PET_BATTLE_CLOSE") then
+        HealBot_OnEvent_PetBattleStartStop(self);
     elseif (event=="READY_CHECK") then
         HealBot_OnEvent_ReadyCheck(self,arg1,arg2);
     elseif (event=="READY_CHECK_CONFIRM") then
@@ -2203,6 +2205,8 @@ function HealBot_Register_Events()
         HealBot:RegisterEvent("UNIT_CONNECTION");
         HealBot:RegisterEvent("COMPANION_LEARNED");
         HealBot:RegisterEvent("PLAYER_CONTROL_GAINED");
+        HealBot:RegisterEvent("PET_BATTLE_OPENING_START");
+        HealBot:RegisterEvent("PET_BATTLE_CLOSE");
         if HealBot_Globals.EnLibQuickHealth then HealBot:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED") end
     end
     HealBot:RegisterEvent("GROUP_ROSTER_UPDATE");
@@ -2317,6 +2321,8 @@ function HealBot_UnRegister_Events()
 	HealBot:UnregisterEvent("INSPECT_READY");
     HealBot:UnregisterEvent("CHARACTER_POINTS_CHANGED");
     HealBot:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+    HealBot:UnregisterEvent("PET_BATTLE_OPENING_START");
+    HealBot:UnregisterEvent("PET_BATTLE_CLOSE");
 end
 
 function HealBot_CheckUnitAggro(unit)
@@ -3254,13 +3260,13 @@ function HealBot_CheckUnitDebuffs(button)
                     elseif WatchTarget["Focus"] and UnitIsUnit(xUnit, "focus") then
                         checkthis=true;
                     elseif WatchTarget["MainTanks"] then
-                        local HealBot_MainTanks=HealBot_Panel_GetMainTanks();
-                        for i=1, #HealBot_MainTanks do
-                            if xGUID==HealBot_MainTanks[i] then
-                                checkthis=true;
-                                break
-                            end
+                    local MainTanks=HealBot_Panel_GetMainTanks();
+                    for zGUID,_ in pairs(MainTanks) do
+                        if xGUID==zGUID then
+                            checkthis=true;
+                            break;
                         end
+                    end
                     elseif WatchTarget["MyTargets"] then
                         local myhTargets=HealBot_GetMyHealTargets();
                         for i=1, #myhTargets do
@@ -3545,9 +3551,9 @@ function HealBot_CheckUnitBuffs(button)
                 elseif WatchTarget["Focus"] then
 				    if UnitIsUnit(xUnit, "focus") then checkthis=true; end
                 elseif WatchTarget["MainTanks"] then
-                    local HealBot_MainTanks=HealBot_Panel_GetMainTanks();
-                    for i=1, #HealBot_MainTanks do
-                        if xGUID==HealBot_MainTanks[i] then
+                    local MainTanks=HealBot_Panel_GetMainTanks();
+                    for zGUID,_ in pairs(MainTanks) do
+                        if xGUID==zGUID then
                             checkthis=true;
                             break;
                         end
@@ -4118,6 +4124,11 @@ function HealBot_OnEvent_PartyMembersChanged(self)
     HealBot_luVars["CheckAllHealth"]=true
 end
 
+function HealBot_OnEvent_PetBattleStartStop(self)
+    HealBot_luVars["CheckSkin"]=true
+    if HealBot_Data["REFRESH"]<4 then HealBot_Data["REFRESH"]=4; end
+end
+
 function HealBot_PartyUpdate_CheckSkin()
     local _,z = IsInInstance()
     local PrevSolo=HealBot_luVars["IsSolo"]
@@ -4202,6 +4213,16 @@ function HealBot_PartyUpdate_CheckSkin()
         if HealBot_Config.SkinDefault[Healbot_Config_Skins.Current_Skin]~=3 then
             for x in pairs (Healbot_Config_Skins.Skins) do
                 if HealBot_Config.SkinDefault[Healbot_Config_Skins.Skins[x]]==3 then
+                    HealBot_Data["REFRESH"]=0
+                    HealBot_Options_Set_Current_Skin(Healbot_Config_Skins.Skins[x])
+                    break
+                end
+            end
+        end
+    elseif C_PetBattles.IsInBattle() then
+        if HealBot_Config.SkinDefault[Healbot_Config_Skins.Current_Skin]~=11 then
+            for x in pairs (Healbot_Config_Skins.Skins) do
+                if HealBot_Config.SkinDefault[Healbot_Config_Skins.Skins[x]]==11 then
                     HealBot_Data["REFRESH"]=0
                     HealBot_Options_Set_Current_Skin(Healbot_Config_Skins.Skins[x])
                     break
@@ -5060,35 +5081,35 @@ function HealBot_InitSpells()
     HealBot_Init_Spells_Defaults();
 
     if HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_PRIEST] then
-        if HealBot_Spells[HEALBOT_HEAL] and HealBot_Spells[HEALBOT_HEAL].known then
+        if HealBot_GetSpellId(HEALBOT_HEAL) then
             HealBot_SmartCast_Spells[HEALBOT_HEAL]="L"
         end
-        if HealBot_Spells[HEALBOT_FLASH_HEAL] and HealBot_Spells[HEALBOT_FLASH_HEAL].known then
+        if HealBot_GetSpellId(HEALBOT_FLASH_HEAL) then
             HealBot_SmartCast_Spells[HEALBOT_FLASH_HEAL]="S"
         end
 	elseif HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_DRUID] then
-        if HealBot_Spells[HEALBOT_HEALING_TOUCH] and HealBot_Spells[HEALBOT_HEALING_TOUCH].known then
+        if HealBot_GetSpellId(HEALBOT_HEALING_TOUCH) then
             HealBot_SmartCast_Spells[HEALBOT_HEALING_TOUCH]="L"
         end
-        if HealBot_Spells[HEALBOT_REJUVENATION] and HealBot_Spells[HEALBOT_REJUVENATION].known then
+        if HealBot_GetSpellId(HEALBOT_REJUVENATION) then
             HealBot_SmartCast_Spells[HEALBOT_REJUVENATION]="S"
         end
     elseif HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_PALADIN] then
-        if HealBot_Spells[HEALBOT_HOLY_LIGHT] and HealBot_Spells[HEALBOT_HOLY_LIGHT].known then
+        if HealBot_GetSpellId(HEALBOT_HOLY_LIGHT) then
             HealBot_SmartCast_Spells[HEALBOT_HOLY_LIGHT]="L"
         end
-        if HealBot_Spells[HEALBOT_FLASH_OF_LIGHT] and HealBot_Spells[HEALBOT_FLASH_OF_LIGHT].known then
+        if HealBot_GetSpellId(HEALBOT_FLASH_OF_LIGHT) then
             HealBot_SmartCast_Spells[HEALBOT_FLASH_OF_LIGHT]="S"
         end
     elseif HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_SHAMAN] then
-        if HealBot_Spells[HEALBOT_HEALING_WAVE] and HealBot_Spells[HEALBOT_HEALING_WAVE].known then
+        if HealBot_GetSpellId(HEALBOT_HEALING_WAVE) then
             HealBot_SmartCast_Spells[HEALBOT_HEALING_WAVE]="S"
         end
     elseif HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_MONK] then
-        if HealBot_Spells[HEALBOT_ENVELOPING_MIST] and HealBot_Spells[HEALBOT_ENVELOPING_MIST].known then
+        if HealBot_GetSpellId(HEALBOT_ENVELOPING_MIST) then
             HealBot_SmartCast_Spells[HEALBOT_ENVELOPING_MIST]="L"
         end
-        if HealBot_Spells[HEALBOT_SOOTHING_MIST] and HealBot_Spells[HEALBOT_SOOTHING_MIST].known then
+        if HealBot_GetSpellId(HEALBOT_SOOTHING_MIST) then
             HealBot_SmartCast_Spells[HEALBOT_SOOTHING_MIST]="S"
         end
     end
@@ -5213,8 +5234,10 @@ function HealBot_UnitInRange(spellName, unit) -- added by Diacono of Ursin
     elseif (spellName or HEALBOT_WORDS_UNKNOWN)==HEALBOT_WORDS_UNKNOWN then
         if UnitInRange(unit) then
             uRange = 1
+        elseif CheckInteractDistance(unit,1) then
+            uRange = 1
         else
-            uRange = CheckInteractDistance(unit,1) or 0
+            uRange = 0
         end
     elseif IsSpellInRange(spellName, unit) ~= nil then
         uRange = IsSpellInRange(spellName, unit)
@@ -5222,8 +5245,10 @@ function HealBot_UnitInRange(spellName, unit) -- added by Diacono of Ursin
         uRange = IsItemInRange(spellName, unit)
     elseif UnitInRange(unit) then
         uRange = 1
+    elseif CheckInteractDistance(unit,1) then
+        uRange = 1
     else
-        uRange = CheckInteractDistance(unit,1) or 0
+        uRange = 0
     end
     if uRange==0 and not UnitIsVisible(unit) then 
         uRange=-1 

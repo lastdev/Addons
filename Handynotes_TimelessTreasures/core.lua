@@ -152,14 +152,13 @@ function TimelessTreasures:OnLeave()
 end
 
 local function CreateWaypoint(button, mapFile, coord)
-	local c, z = HandyNotes:GetCZ(mapFile)
-	local x, y = HandyNotes:getXY(coord)
+	local x = floor(coord / 10000) / 10000 -- 0.xxx
+	local y = (coord % 10000) / 10000
 
-	if TomTom then
-		TomTom:AddZWaypoint(c, z, x * 100, y * 100, "Timeless Treasure")
-	elseif Cartographer_Waypoints then
-		Cartographer_Waypoints:AddWaypoint( NotePoint:new(HandyNotes:GetCZToZone(c, z), x, y, "Timeless Treasure") )
-	end
+	-- TomTom's AddZWaypoint is currently buggy as it relies on Astrolabe's GetMapID which has wrong returns
+	-- HandyNotes returns the correct mapID but it does not have floor information
+	-- also HandyNotes does not return anything when using GetCZ("CavernofLostSpirits")
+	TomTom:AddMFWaypoint(HandyNotes:GetMapFiletoMapID(mapFile), nil, x, y, {title = points[mapFile][coord].type})
 end
 
 do
@@ -182,7 +181,7 @@ do
 
 			UIDropDownMenu_AddButton(info, level)
 
-			if TomTom or Cartographer_Waypoints then
+			if TomTom then
 				-- waypoint menu item
 				info.disabled = nil
 				info.isTitle = nil
@@ -448,17 +447,16 @@ end
 -- initialise
 function TimelessTreasures:OnEnable()
 	HandyNotes:RegisterPluginDB("TimelessTreasures", self, options)
-	self:RegisterEvent("QUEST_FINISHED", "Refresh")
+	self:RegisterEvent("QUEST_LOG_UPDATE", "Refresh")
 
 	db = LibStub("AceDB-3.0"):New("HandyNotes_TimelessTreasuresDB", defaults, true).profile
 
 	self:SetIcons()
 end
 
-function TimelessTreasures:Refresh()
-	self:SendMessage("HandyNotes_NotifyUpdate", "TimelessTreasures")
+function TimelessTreasures:Refresh(...)
+	self:SendMessage("HandyNotes_NotifyUpdate", "TimelessTreasures", ...)
 end
 
 -- activate
 TimelessTreasures = LibStub("AceAddon-3.0"):NewAddon(TimelessTreasures, addonName, "AceEvent-3.0")
-

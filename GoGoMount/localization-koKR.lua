@@ -10,6 +10,8 @@
 		Tailoring = "재봉술",
 	},
 	String = {
+		AutoExcludeFlyingMountsInNoFlyAreas = "Automatically exclude flying mounts in \"no fly\" areas", -- Requires localization
+		AutoExcludeFlyingMountsInNoFlyAreas_Long = "With this option enabled, GoGoMount will automatically remove all mounts that can fly from the random mount selection when it believes you can't actually fly.  This is almost the same as using key binding #2 for GoGoMount.  This will be useful while leveling up, in battle grounds, etc.  Note that if your list of favorite mounts contains all mounts that can fly and you trying mounting in a battle ground with this option enabled, you may not mount at all.", -- Requires localization
 		AutomaticallyRemoveBuffs = "자동으로 탈것 버프 제거",
 		AutoStartCrusaderAura = "성전사의 오라 자동 시전", -- Needs review
 		AutoStartCrusaderAura_Long = "GoGoMount로 탈것 탑승시 자동으로 성전사의 오라를 시전합니다.", -- Needs review

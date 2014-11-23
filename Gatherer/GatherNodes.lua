@@ -1,7 +1,7 @@
 ﻿--[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
-	Revision: $Id: GatherNodes.lua 1097 2013-06-15 04:00:07Z LocalizerAutoCommit $
+	Version: 5.0.0 (<%codename%>)
+	Revision: $Id: GatherNodes.lua 1131 2014-11-13 21:03:23Z esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -79,6 +79,10 @@ if (region == "deDE") then -- German
 		["Reiches Geistereisenvorkommen"] = 209328, -- Rich Ghost Iron Deposit
 		["Reiches Kyparitvorkommen"] = 209329, -- Rich Kyparite Deposit
 		["Reiche Trilliumader"] = 209330, -- Rich Trillium Vein
+		["Echteisenvorkommen"] = 228493, -- True Iron Deposit
+		["Reiches Echteisenvorkommen"] = 228510, -- Rich True Iron Deposit
+		["Schwarzfelsvorkommen"] = 228563, -- Blackrock Deposit
+		["Reiches Schwarzfelsvorkommen"] = 228564, -- Rich Blackrock Deposit
 		["Silberblatt"] = 1617, -- Silverleaf
 		["Friedensblume"] = 1618, -- Peacebloom
 		["Erdwurzel"] = 1619, -- Earthroot
@@ -140,6 +144,12 @@ if (region == "deDE") then -- German
 		["Goldlotus"] = 209354, -- Golden Lotus
 		["Narrenkappe"] = 209355, -- Fool's Cap
 		["Sha-berührtes Kraut"] = 214510, -- Sha-Touched Herb
+		["Frostwurz"] = 228571, -- Frostweed
+		["Feuerwurz"] = 228572, -- Fireweed
+		["Gorgrondfliegenfalle"] = 228573, -- Gorgrond Flytrap
+		["Sternenblume"] = 228574, -- Starflower
+		["Nagrandpfeilkelch"] = 228575, -- Nagrand Arrowbloom
+		["Taladororchidee"] = 228576, -- Talador Orchid
 		["Versteckte Geldkassette"] = 2039, -- Hidden Strongbox
 		["Riesenmuschel"] = 2744, -- Giant Clam
 		["Ramponierte Truhe"] = 2843, -- Battered Chest
@@ -209,10 +219,13 @@ if (region == "deDE") then -- German
 		["Archäologischer pandarischer Fund"] = 211163, -- Pandaren Archaeology Find
 		["Archäologischer Fund der Mogu"] = 211174, -- Mogu Archaeology Find
 		["Archäologischer Fund der Mantis"] = 218950, -- Mantid Archaeology Find
+		["Archäologischer Fund der Klans von Draenor"] = 226521, -- Draenor Clans Archaeology Find
 
 
 		-- Missing Node Names
 		["Tattered Chest"] = 2844,
+		["Arakkoa Archaeology Find"] = 234105,
+		["Ogre Archaeology Find"] = 234106,
 	}
 elseif (region == "enUS") then -- English
 	Gatherer.Nodes.Names = {
@@ -256,6 +269,10 @@ elseif (region == "enUS") then -- English
 		["Rich Ghost Iron Deposit"] = 209328,
 		["Rich Kyparite Deposit"] = 209329,
 		["Rich Trillium Vein"] = 209330,
+		["True Iron Deposit"] = 228493,
+		["Rich True Iron Deposit"] = 228510,
+		["Blackrock Deposit"] = 228563,
+		["Rich Blackrock Deposit"] = 228564,
 		["Silverleaf"] = 1617,
 		["Peacebloom"] = 1618,
 		["Earthroot"] = 1619,
@@ -317,6 +334,12 @@ elseif (region == "enUS") then -- English
 		["Golden Lotus"] = 209354,
 		["Fool's Cap"] = 209355,
 		["Sha-Touched Herb"] = 214510,
+		["Frostweed"] = 228571,
+		["Fireweed"] = 228572,
+		["Gorgrond Flytrap"] = 228573,
+		["Starflower"] = 228574,
+		["Nagrand Arrowbloom"] = 228575,
+		["Talador Orchid"] = 228576,
 		["Hidden Strongbox"] = 2039,
 		["Giant Clam"] = 2744,
 		["Battered Chest"] = 2843,
@@ -387,6 +410,9 @@ elseif (region == "enUS") then -- English
 		["Pandaren Archaeology Find"] = 211163,
 		["Mogu Archaeology Find"] = 211174,
 		["Mantid Archaeology Find"] = 218950,
+		["Draenor Clans Archaeology Find"] = 226521,
+		["Arakkoa Archaeology Find"] = 234105,
+		["Ogre Archaeology Find"] = 234106,
 	}
 elseif (region == "esES") then -- Spanish
 	Gatherer.Nodes.Names = {
@@ -489,6 +515,7 @@ elseif (region == "esES") then -- Spanish
 		["Hierbaseda"] = 209350, -- Silkweed
 		["Lirio de las nieves"] = 209351, -- Snow Lily
 		["Amapola de lluvia"] = 209353, -- Rain Poppy
+		["Loto Dorado"] = 209354, -- Golden Lotus
 		["Loto dorado"] = 209354, -- Golden Lotus
 		["Flor del inocente"] = 209355, -- Fool's Cap
 		["Seta del inocente"] = 209355, -- Fool's Cap
@@ -566,6 +593,22 @@ elseif (region == "esES") then -- Spanish
 		["Hallazgo arqueológico pandaren"] = 211163, -- Pandaren Archaeology Find
 		["Hallazgo arqueológico mogu"] = 211174, -- Mogu Archaeology Find
 		["Hallazgo arqueológico mántide"] = 218950, -- Mantid Archaeology Find
+
+
+		-- Missing Node Names
+		["True Iron Deposit"] = 228493,
+		["Rich True Iron Deposit"] = 228510,
+		["Blackrock Deposit"] = 228563,
+		["Rich Blackrock Deposit"] = 228564,
+		["Frostweed"] = 228571,
+		["Fireweed"] = 228572,
+		["Gorgrond Flytrap"] = 228573,
+		["Starflower"] = 228574,
+		["Nagrand Arrowbloom"] = 228575,
+		["Talador Orchid"] = 228576,
+		["Draenor Clans Archaeology Find"] = 226521,
+		["Arakkoa Archaeology Find"] = 234105,
+		["Ogre Archaeology Find"] = 234106,
 	}
 elseif (region == "esMX") then -- Latin American Spanish (Mapped from esES)
 	Gatherer.Nodes.Names = {
@@ -668,6 +711,7 @@ elseif (region == "esMX") then -- Latin American Spanish (Mapped from esES)
 		["Hierbaseda"] = 209350, -- Silkweed
 		["Lirio de las nieves"] = 209351, -- Snow Lily
 		["Amapola de lluvia"] = 209353, -- Rain Poppy
+		["Loto Dorado"] = 209354, -- Golden Lotus
 		["Loto dorado"] = 209354, -- Golden Lotus
 		["Flor del inocente"] = 209355, -- Fool's Cap
 		["Seta del inocente"] = 209355, -- Fool's Cap
@@ -745,6 +789,22 @@ elseif (region == "esMX") then -- Latin American Spanish (Mapped from esES)
 		["Hallazgo arqueológico pandaren"] = 211163, -- Pandaren Archaeology Find
 		["Hallazgo arqueológico mogu"] = 211174, -- Mogu Archaeology Find
 		["Hallazgo arqueológico mántide"] = 218950, -- Mantid Archaeology Find
+
+
+		-- Missing Node Names
+		["True Iron Deposit"] = 228493,
+		["Rich True Iron Deposit"] = 228510,
+		["Blackrock Deposit"] = 228563,
+		["Rich Blackrock Deposit"] = 228564,
+		["Frostweed"] = 228571,
+		["Fireweed"] = 228572,
+		["Gorgrond Flytrap"] = 228573,
+		["Starflower"] = 228574,
+		["Nagrand Arrowbloom"] = 228575,
+		["Talador Orchid"] = 228576,
+		["Draenor Clans Archaeology Find"] = 226521,
+		["Arakkoa Archaeology Find"] = 234105,
+		["Ogre Archaeology Find"] = 234106,
 	}
 elseif (region == "frFR") then -- French
 	Gatherer.Nodes.Names = {
@@ -753,7 +813,9 @@ elseif (region == "frFR") then -- French
 		["Filon de cuivre"] = 1731, -- Copper Vein
 		["Filon d'étain"] = 1732, -- Tin Vein
 		["Filon d'argent"] = 1733, -- Silver Vein
+		["Filon d’argent"] = 1733, -- Silver Vein
 		["Filon d'or"] = 1734, -- Gold Vein
+		["Filon d’or"] = 1734, -- Gold Vein
 		["Gisement de fer"] = 1735, -- Iron Deposit
 		["Gisement de mithril"] = 2040, -- Mithril Deposit
 		["Gisement de vrai-argent"] = 2047, -- Truesilver Deposit
@@ -768,8 +830,10 @@ elseif (region == "frFR") then -- French
 		["Riche filon de thorium couvert de limon"] = 177388, -- Ooze Covered Rich Thorium Vein
 		["Gisement de gangrefer"] = 181555, -- Fel Iron Deposit
 		["Gisement d'adamantite"] = 181556, -- Adamantite Deposit
+		["Gisement d’adamantite"] = 181556, -- Adamantite Deposit
 		["Filon de khorium"] = 181557, -- Khorium Vein
 		["Riche gisement d'adamantite"] = 181569, -- Rich Adamantite Deposit
+		["Riche gisement d’adamantite"] = 181569, -- Rich Adamantite Deposit
 		["Gisement de néanticite"] = 185877, -- Nethercite Deposit
 		["Gisement de cobalt"] = 189978, -- Cobalt Deposit
 		["Riche gisement de cobalt"] = 189979, -- Rich Cobalt Deposit
@@ -777,19 +841,27 @@ elseif (region == "frFR") then -- French
 		["Riche gisement de saronite"] = 189981, -- Rich Saronite Deposit
 		["Veine de titane"] = 191133, -- Titanium Vein
 		["Gisement d'obsidium"] = 202736, -- Obsidium Deposit
+		["Gisement d’obsidium"] = 202736, -- Obsidium Deposit
 		["Morceau d'obsidium"] = 202736, -- Obsidium Deposit
 		["Gisement de pyrite"] = 202737, -- Pyrite Deposit
 		["Filon d'élémentium"] = 202738, -- Elementium Vein
+		["Filon d’élémentium"] = 202738, -- Elementium Vein
 		["Enorme bloc d'obsidium"] = 202739, -- Rich Obsidium Deposit
 		["Riche gisement d'obsidium"] = 202739, -- Rich Obsidium Deposit
+		["Riche gisement d’obsidium"] = 202739, -- Rich Obsidium Deposit
 		["Riche gisement de pyrite"] = 202740, -- Rich Pyrite Deposit
 		["Riche filon d'élémentium"] = 202741, -- Rich Elementium Vein
+		["Riche filon d’élémentium"] = 202741, -- Rich Elementium Vein
 		["Gisement d’ectofer"] = 209311, -- Ghost Iron Deposit
 		["Gisement de kyparite"] = 209312, -- Kyparite Deposit
 		["Filon de trillium"] = 209313, -- Trillium Vein
 		["Riche gisement d’ectofer"] = 209328, -- Rich Ghost Iron Deposit
 		["Riche gisement de kyparite"] = 209329, -- Rich Kyparite Deposit
 		["Riche filon de trillium"] = 209330, -- Rich Trillium Vein
+		["Gisement de vérifer"] = 228493, -- True Iron Deposit
+		["Riche gisement de vérifer"] = 228510, -- Rich True Iron Deposit
+		["Gisement de rochenoire"] = 228563, -- Blackrock Deposit
+		["Riche gisement de rochenoire"] = 228564, -- Rich Blackrock Deposit
 		["Feuillargent"] = 1617, -- Silverleaf
 		["Pacifique"] = 1618, -- Peacebloom
 		["Terrestrine"] = 1619, -- Earthroot
@@ -851,6 +923,12 @@ elseif (region == "frFR") then -- French
 		["Lotus doré"] = 209354, -- Golden Lotus
 		["Berluette"] = 209355, -- Fool's Cap
 		["Plante touchée par les sha"] = 214510, -- Sha-Touched Herb
+		["Givrelette"] = 228571, -- Frostweed
+		["Ignescente"] = 228572, -- Fireweed
+		["Dionée de Gorgrond"] = 228573, -- Gorgrond Flytrap
+		["Bourrache"] = 228574, -- Starflower
+		["Sagittaire de Nagrand"] = 228575, -- Nagrand Arrowbloom
+		["Orchidée de Talador"] = 228576, -- Talador Orchid
 		["Coffre dissimulé"] = 2039, -- Hidden Strongbox
 		["Palourde géante"] = 2744, -- Giant Clam
 		["Coffre endommagé"] = 2843, -- Battered Chest
@@ -903,6 +981,7 @@ elseif (region == "frFR") then -- French
 		["Œuf de l'Aile-du-Néant"] = 185915, -- Netherwing Egg
 		["Morceau de permagivre"] = 193997, -- Everfrost Chip
 		["Coffre lié d'argent"] = 207472, -- Silverbound Treasure Chest
+		["Coffre lié d’argent"] = 207472, -- Silverbound Treasure Chest
 		["Coffre en sombrefer"] = 207498, -- Dark Iron Treasure Chest
 		["Coffre de soie"] = 207512, -- Silken Treasure Chest
 		["Coffre en bois d'érable"] = 207529, -- Maplewood Treasure Chest
@@ -926,10 +1005,14 @@ elseif (region == "frFR") then -- French
 
 		-- Missing Node Names
 		["Sturdy Treasure Chest"] = 207484,
+		["Draenor Clans Archaeology Find"] = 226521,
+		["Arakkoa Archaeology Find"] = 234105,
+		["Ogre Archaeology Find"] = 234106,
 	}
 elseif (region == "itIT") then -- Italian
 	Gatherer.Nodes.Names = {
 		["Vena Piccola di Torio"] = 324, -- Small Thorium Vein
+		["Vena di Incendicite"] = 1610, -- Incendicite Mineral Vein
 		["Vena di Rame"] = 1731, -- Copper Vein
 		["Vena di Stagno"] = 1732, -- Tin Vein
 		["Vena d'Argento"] = 1733, -- Silver Vein
@@ -937,7 +1020,9 @@ elseif (region == "itIT") then -- Italian
 		["Deposito di Ferro"] = 1735, -- Iron Deposit
 		["Deposito di Mithril"] = 2040, -- Mithril Deposit
 		["Deposito di Verargento"] = 2047, -- Truesilver Deposit
+		["Deposito di Verargento Coperto di Melma"] = 123309, -- Ooze Covered Truesilver Deposit
 		["Vena di Torio Coperta di Melma"] = 123848, -- Ooze Covered Thorium Vein
+		["Deposito di Ferroscuro"] = 165658, -- Dark Iron Deposit
 		["Vena Ricca di Torio"] = 175404, -- Rich Thorium Vein
 		["Deposito di Vilferro"] = 181555, -- Fel Iron Deposit
 		["Deposito di Adamantite"] = 181556, -- Adamantite Deposit
@@ -952,6 +1037,8 @@ elseif (region == "itIT") then -- Italian
 		["Deposito d'Obsidio"] = 202736, -- Obsidium Deposit
 		["Deposito di Pirite"] = 202737, -- Pyrite Deposit
 		["Vena d'Elementio"] = 202738, -- Elementium Vein
+		["Deposito Ricco d'Obsidio"] = 202739, -- Rich Obsidium Deposit
+		["Deposito Ricco di Pirite"] = 202740, -- Rich Pyrite Deposit
 		["Vena Ricca d'Elementio"] = 202741, -- Rich Elementium Vein
 		["Deposito di Ectoferro"] = 209311, -- Ghost Iron Deposit
 		["Deposito di Kyparite"] = 209312, -- Kyparite Deposit
@@ -959,6 +1046,10 @@ elseif (region == "itIT") then -- Italian
 		["Deposito Ricco di Ectoferro"] = 209328, -- Rich Ghost Iron Deposit
 		["Deposito Ricco di Kyparite"] = 209329, -- Rich Kyparite Deposit
 		["Vena Ricca di Trillio"] = 209330, -- Rich Trillium Vein
+		["Deposito di Puroferro"] = 228493, -- True Iron Deposit
+		["Deposito Ricco di Puroferro"] = 228510, -- Rich True Iron Deposit
+		["Deposito di Roccianera"] = 228563, -- Blackrock Deposit
+		["Deposito Ricco di Roccianera"] = 228564, -- Rich Blackrock Deposit
 		["Fogliargenta"] = 1617, -- Silverleaf
 		["Sbocciapace"] = 1618, -- Peacebloom
 		["Bulboterro"] = 1619, -- Earthroot
@@ -981,6 +1072,7 @@ elseif (region == "itIT") then -- Italian
 		["Erbacieca"] = 142143, -- Blindweed
 		["Fungo Fantasma"] = 142144, -- Ghost Mushroom
 		["Sangue di Grom"] = 142145, -- Gromsblood
+		["Sangue di Grommash"] = 142145, -- Gromsblood
 		["Sansam Dorato"] = 176583, -- Golden Sansam
 		["Foglia Onirica"] = 176584, -- Dreamfoil
 		["Ramargento Montano"] = 176586, -- Mountain Silversage
@@ -995,6 +1087,7 @@ elseif (region == "itIT") then -- Italian
 		["Terocone"] = 181277, -- Terocone
 		["Lichene Antico"] = 181278, -- Ancient Lichen
 		["Fiorfatuo"] = 181279, -- Netherbloom
+		["Sbocciafatuo"] = 181279, -- Netherbloom
 		["Vite dell'Incubo"] = 181280, -- Nightmare Vine
 		["Cardomana"] = 181281, -- Mana Thistle
 		["Cespuglio di Nubefatua"] = 185881, -- Netherdust Bush
@@ -1020,6 +1113,29 @@ elseif (region == "itIT") then -- Italian
 		["Loto Dorato"] = 209354, -- Golden Lotus
 		["Fungo del Folle"] = 209355, -- Fool's Cap
 		["Erba Toccata dagli Sha"] = 214510, -- Sha-Touched Herb
+		["Erba Toccata dallo Sha"] = 214510, -- Sha-Touched Herb
+		["Erba del Gelo"] = 228571, -- Frostweed
+		["Erba del Fuoco"] = 228572, -- Fireweed
+		["Acchiappamosche di Gorgrond"] = 228573, -- Gorgrond Flytrap
+		["Stellaria"] = 228574, -- Starflower
+		["Fogliaspina di Nagrand"] = 228575, -- Nagrand Arrowbloom
+		["Orchidea di Talador"] = 228576, -- Talador Orchid
+		["Mollusco Gigante"] = 2744, -- Giant Clam
+		["Cassa Danneggiata"] = 2843, -- Battered Chest
+		["Cassa Sbrindellata"] = 2844, -- Tattered Chest
+		["Barile dell'Acqua"] = 3658, -- Water Barrel
+		["Barile di Succo di Melone"] = 3659, -- Barrel of Melon Juice
+		["Cassa d'Armature"] = 3660, -- Armor Crate
+		["Cassa d'Armi"] = 3661, -- Weapon Crate
+		["Cassa di Cibo"] = 3662, -- Food Crate
+		["Barile di Latte"] = 3705, -- Barrel of Milk
+		["Scatola di Componenti Assortiti"] = 19019, -- Box of Assorted Parts
+		["Grossa Cassa Rinforzata"] = 74447, -- Large Iron Bound Chest
+		["Grossa Cassa Robusta"] = 74448, -- Large Solid Chest
+		["Grossa Cassa Danneggiata"] = 75293, -- Large Battered Chest
+		["Forziere del Bucaniere"] = 123330, -- Buccaneer's Strongbox
+		["Grossa Cassa Rinforzata di Ferro"] = 131978, -- Large Mithril Bound Chest
+		["Cassa di Rifornimenti dell'Orda"] = 142191, -- Horde Supply Crate
 		["Cristallo Energetico Blu"] = 164658, -- Blue Power Crystal
 		["Cristallo Energetico Verde"] = 164659, -- Green Power Crystal
 		["Cristallo Energetico Rosso"] = 164660, -- Red Power Crystal
@@ -1028,58 +1144,54 @@ elseif (region == "itIT") then -- Italian
 		["Trappola per Crostacei"] = 176582, -- Shellfish Trap
 		["Scrigno di Rovinato"] = 179486, -- Battered Footlocker
 		["Scrigno Fradicio"] = 179487, -- Waterlogged Footlocker
+		["Scrigno Ammaccato"] = 179492, -- Dented Footlocker
+		["Scrigno Muschioso"] = 179493, -- Mossy Footlocker
+		["Forziere Scarlatto"] = 179498, -- Scarlet Footlocker
+		["Cassa Funebre"] = 181665, -- Burial Chest
+		["Cappaluce"] = 182053, -- Glowcap
+		["Cesto di Vimini"] = 184740, -- Wicker Chest
+		["Cassa Primitiva"] = 184793, -- Primitive Chest
 		["Uovo di Alafatua"] = 185915, -- Netherwing Egg
 		["Frammento Semprefreddo"] = 193997, -- Everfrost Chip
 		["Cassa del Tesoro Rinforzata in Argento"] = 207472, -- Silverbound Treasure Chest
+		["Baule del Tesoro Robusto"] = 207484, -- Sturdy Treasure Chest
 		["Robusto Baule del Tesoro"] = 207484, -- Sturdy Treasure Chest
+		["Baule del Tesoro di Ferroscuro"] = 207498, -- Dark Iron Treasure Chest
 		["Cassa del Tesoro di Seta"] = 207512, -- Silken Treasure Chest
 		["Cassa d'Acero del Tesoro"] = 207529, -- Maplewood Treasure Chest
 		["Cassa del Tesoro di Pietra Runica"] = 207533, -- Runestone Treasure Chest
 		["Terreno Smosso"] = 210565, -- Dark Soil
+		["Uovo d'Onice"] = 214945, -- Onyx Egg
+		["Ritrovamento Archeologico Troll"] = 202655, -- Troll Archaeology Find
 		["Scoperta Archeologica Troll"] = 202655, -- Troll Archaeology Find
 		["Ritrovamento Archeologico Elfico"] = 203071, -- Night Elf Archaeology Find
+		["Scoperta Archeologica Nerubiana"] = 203078, -- Nerubian Archaeology Find
+		["Ritrovamento Archeologico Nanico"] = 204282, -- Dwarf Archaeology Find
 		["Scoperta Archeologica Nanica"] = 204282, -- Dwarf Archaeology Find
+		["Ritrovamento Archeologico Fossile"] = 206836, -- Fossil Archaeology Find
 		["Scoperta Archeologica Fossile"] = 206836, -- Fossil Archaeology Find
 		["Scoperta Archeologica Orchesca"] = 207187, -- Orc Archaeology Find
 		["Scoperta Archeologica Draenei"] = 207188, -- Draenei Archaeology Find
+		["Scoperta Archeologica Vrykul"] = 207189, -- Vrykul Archaeology Find
 		["Scoperta Archeologica Tol'vir"] = 207190, -- Tol'vir Archaeology Find
 		["Scoperta Archeologica Pandaren"] = 211163, -- Pandaren Archaeology Find
+		["Ritrovamento Archeologico Mogu"] = 211174, -- Mogu Archaeology Find
 		["Scoperta Archeologica Mogu"] = 211174, -- Mogu Archaeology Find
+		["Ritrovamento Archeologico Mantid"] = 218950, -- Mantid Archaeology Find
 		["Scoperta Archeologica Mantid"] = 218950, -- Mantid Archaeology Find
 
 
 		-- Missing Node Names
-		["Incendicite Mineral Vein"] = 1610,
 		["Lesser Bloodstone Deposit"] = 2653,
 		["Ooze Covered Silver Vein"] = 73940,
 		["Ooze Covered Gold Vein"] = 73941,
-		["Ooze Covered Truesilver Deposit"] = 123309,
 		["Ooze Covered Mithril Deposit"] = 123310,
-		["Dark Iron Deposit"] = 165658,
 		["Ooze Covered Rich Thorium Vein"] = 177388,
-		["Rich Obsidium Deposit"] = 202739,
-		["Rich Pyrite Deposit"] = 202740,
 		["Hidden Strongbox"] = 2039,
-		["Giant Clam"] = 2744,
-		["Battered Chest"] = 2843,
-		["Tattered Chest"] = 2844,
 		["Solid Chest"] = 2850,
-		["Water Barrel"] = 3658,
-		["Barrel of Melon Juice"] = 3659,
-		["Armor Crate"] = 3660,
-		["Weapon Crate"] = 3661,
-		["Food Crate"] = 3662,
-		["Barrel of Milk"] = 3705,
 		["Barrel of Sweet Nectar"] = 3706,
 		["Alliance Strongbox"] = 3714,
-		["Box of Assorted Parts"] = 19019,
 		["Scattered Crate"] = 28604,
-		["Large Iron Bound Chest"] = 74447,
-		["Large Solid Chest"] = 74448,
-		["Large Battered Chest"] = 75293,
-		["Buccaneer's Strongbox"] = 123330,
-		["Large Mithril Bound Chest"] = 131978,
-		["Horde Supply Crate"] = 142191,
 		["Un'Goro Dirt Pile"] = 157936,
 		["Cleansed Night Dragon"] = 164881,
 		["Cleansed Songflower"] = 164882,
@@ -1087,22 +1199,14 @@ elseif (region == "itIT") then -- Italian
 		["Cleansed Whipper Root"] = 174622,
 		["Blood of Heroes"] = 176213,
 		["Practice Lockbox"] = 178244,
-		["Dented Footlocker"] = 179492,
-		["Mossy Footlocker"] = 179493,
-		["Scarlet Footlocker"] = 179498,
-		["Burial Chest"] = 181665,
 		["Fel Iron Chest"] = 181798,
 		["Heavy Fel Iron Chest"] = 181800,
 		["Adamantite Bound Chest"] = 181802,
 		["Felsteel Chest"] = 181804,
-		["Glowcap"] = 182053,
-		["Wicker Chest"] = 184740,
-		["Primitive Chest"] = 184793,
 		["Solid Fel Iron Chest"] = 184930,
-		["Dark Iron Treasure Chest"] = 207498,
-		["Onyx Egg"] = 214945,
-		["Nerubian Archaeology Find"] = 203078,
-		["Vrykul Archaeology Find"] = 207189,
+		["Draenor Clans Archaeology Find"] = 226521,
+		["Arakkoa Archaeology Find"] = 234105,
+		["Ogre Archaeology Find"] = 234106,
 	}
 elseif (region == "koKR") then -- Korean
 	Gatherer.Nodes.Names = {
@@ -1219,10 +1323,20 @@ elseif (region == "koKR") then -- Korean
 		["Rich Obsidium Deposit"] = 202739,
 		["Rich Pyrite Deposit"] = 202740,
 		["Rich Trillium Vein"] = 209330,
+		["True Iron Deposit"] = 228493,
+		["Rich True Iron Deposit"] = 228510,
+		["Blackrock Deposit"] = 228563,
+		["Rich Blackrock Deposit"] = 228564,
 		["Dragon's Teeth"] = 2044,
 		["Sorrowmoss"] = 176587,
 		["Netherdust Bush"] = 185881,
 		["Firethorn"] = 191303,
+		["Frostweed"] = 228571,
+		["Fireweed"] = 228572,
+		["Gorgrond Flytrap"] = 228573,
+		["Starflower"] = 228574,
+		["Nagrand Arrowbloom"] = 228575,
+		["Talador Orchid"] = 228576,
 		["Hidden Strongbox"] = 2039,
 		["Giant Clam"] = 2744,
 		["Battered Chest"] = 2843,
@@ -1280,6 +1394,9 @@ elseif (region == "koKR") then -- Korean
 		["Draenei Archaeology Find"] = 207188,
 		["Vrykul Archaeology Find"] = 207189,
 		["Tol'vir Archaeology Find"] = 207190,
+		["Draenor Clans Archaeology Find"] = 226521,
+		["Arakkoa Archaeology Find"] = 234105,
+		["Ogre Archaeology Find"] = 234106,
 	}
 elseif (region == "ptBR") then -- Portuguese (Brazilian)
 	Gatherer.Nodes.Names = {
@@ -1319,9 +1436,11 @@ elseif (region == "ptBR") then -- Portuguese (Brazilian)
 		["Veio de Elemêntio Abundante"] = 202741, -- Rich Elementium Vein
 		["Depósito de Ferro Fantasma"] = 209311, -- Ghost Iron Deposit
 		["Depósito de Kyparita"] = 209312, -- Kyparite Deposit
+		["Veio de Trílio"] = 209313, -- Trillium Vein
 		["Veio de Tríllio"] = 209313, -- Trillium Vein
 		["Depósito Repleto de Ferro Fantasma"] = 209328, -- Rich Ghost Iron Deposit
 		["Depósito Rico em Kyparita"] = 209329, -- Rich Kyparite Deposit
+		["Veio Repleto de Trílio"] = 209330, -- Rich Trillium Vein
 		["Veio Repleto de Tríllio"] = 209330, -- Rich Trillium Vein
 		["Folha-prata"] = 1617, -- Silverleaf
 		["Botão-da-paz"] = 1618, -- Peacebloom
@@ -1335,6 +1454,7 @@ elseif (region == "ptBR") then -- Portuguese (Brazilian)
 		["Raiz-da-vida"] = 2041, -- Liferoot
 		["Some-folha"] = 2042, -- Fadeleaf
 		["Bigode-de-hadgar"] = 2043, -- Khadgar's Whisker
+		["Dentes de dragão"] = 2044, -- Dragon's Teeth
 		["Dentes-de-dragão"] = 2044, -- Dragon's Teeth
 		["Estrangulalga"] = 2045, -- Stranglekelp
 		["Espinheira-dourada"] = 2046, -- Goldthorn
@@ -1365,12 +1485,16 @@ elseif (region == "ptBR") then -- Portuguese (Brazilian)
 		["Arbusto de Poeira Etérea"] = 185881, -- Netherdust Bush
 		["Trevo Dourado"] = 189973, -- Goldclover
 		["Lírio Tigre"] = 190169, -- Tiger Lily
+		["Lírio-tigre"] = 190169, -- Tiger Lily
 		["Rosa de Talandra"] = 190170, -- Talandra's Rose
+		["Rosa-de-talandra"] = 190170, -- Talandra's Rose
 		["Flor-de-lich"] = 190171, -- Lichbloom
 		["Espinho de Gelo"] = 190172, -- Icethorn
+		["Gelocardo"] = 190172, -- Icethorn
 		["Planta Congelada"] = 190175, -- Frozen Herb
 		["Lótus Gélido"] = 190176, -- Frost Lotus
 		["Língua de Áspide"] = 191019, -- Adder's Tongue
+		["Língua-de-áspide"] = 191019, -- Adder's Tongue
 		["Espinho de Fogo"] = 191303, -- Firethorn
 		["Cinzanilha"] = 202747, -- Cinderbloom
 		["Tempesvina"] = 202748, -- Stormvine
@@ -1443,6 +1567,16 @@ elseif (region == "ptBR") then -- Portuguese (Brazilian)
 
 		-- Missing Node Names
 		["Lesser Bloodstone Deposit"] = 2653,
+		["True Iron Deposit"] = 228493,
+		["Rich True Iron Deposit"] = 228510,
+		["Blackrock Deposit"] = 228563,
+		["Rich Blackrock Deposit"] = 228564,
+		["Frostweed"] = 228571,
+		["Fireweed"] = 228572,
+		["Gorgrond Flytrap"] = 228573,
+		["Starflower"] = 228574,
+		["Nagrand Arrowbloom"] = 228575,
+		["Talador Orchid"] = 228576,
 		["Hidden Strongbox"] = 2039,
 		["Solid Chest"] = 2850,
 		["Barrel of Sweet Nectar"] = 3706,
@@ -1460,6 +1594,9 @@ elseif (region == "ptBR") then -- Portuguese (Brazilian)
 		["Adamantite Bound Chest"] = 181802,
 		["Felsteel Chest"] = 181804,
 		["Solid Fel Iron Chest"] = 184930,
+		["Draenor Clans Archaeology Find"] = 226521,
+		["Arakkoa Archaeology Find"] = 234105,
+		["Ogre Archaeology Find"] = 234106,
 	}
 elseif (region == "ptPT") then -- Portuguese (Mapped from ptBR)
 	Gatherer.Nodes.Names = {
@@ -1499,9 +1636,11 @@ elseif (region == "ptPT") then -- Portuguese (Mapped from ptBR)
 		["Veio de Elemêntio Abundante"] = 202741, -- Rich Elementium Vein
 		["Depósito de Ferro Fantasma"] = 209311, -- Ghost Iron Deposit
 		["Depósito de Kyparita"] = 209312, -- Kyparite Deposit
+		["Veio de Trílio"] = 209313, -- Trillium Vein
 		["Veio de Tríllio"] = 209313, -- Trillium Vein
 		["Depósito Repleto de Ferro Fantasma"] = 209328, -- Rich Ghost Iron Deposit
 		["Depósito Rico em Kyparita"] = 209329, -- Rich Kyparite Deposit
+		["Veio Repleto de Trílio"] = 209330, -- Rich Trillium Vein
 		["Veio Repleto de Tríllio"] = 209330, -- Rich Trillium Vein
 		["Folha-prata"] = 1617, -- Silverleaf
 		["Botão-da-paz"] = 1618, -- Peacebloom
@@ -1515,6 +1654,7 @@ elseif (region == "ptPT") then -- Portuguese (Mapped from ptBR)
 		["Raiz-da-vida"] = 2041, -- Liferoot
 		["Some-folha"] = 2042, -- Fadeleaf
 		["Bigode-de-hadgar"] = 2043, -- Khadgar's Whisker
+		["Dentes de dragão"] = 2044, -- Dragon's Teeth
 		["Dentes-de-dragão"] = 2044, -- Dragon's Teeth
 		["Estrangulalga"] = 2045, -- Stranglekelp
 		["Espinheira-dourada"] = 2046, -- Goldthorn
@@ -1545,12 +1685,16 @@ elseif (region == "ptPT") then -- Portuguese (Mapped from ptBR)
 		["Arbusto de Poeira Etérea"] = 185881, -- Netherdust Bush
 		["Trevo Dourado"] = 189973, -- Goldclover
 		["Lírio Tigre"] = 190169, -- Tiger Lily
+		["Lírio-tigre"] = 190169, -- Tiger Lily
 		["Rosa de Talandra"] = 190170, -- Talandra's Rose
+		["Rosa-de-talandra"] = 190170, -- Talandra's Rose
 		["Flor-de-lich"] = 190171, -- Lichbloom
 		["Espinho de Gelo"] = 190172, -- Icethorn
+		["Gelocardo"] = 190172, -- Icethorn
 		["Planta Congelada"] = 190175, -- Frozen Herb
 		["Lótus Gélido"] = 190176, -- Frost Lotus
 		["Língua de Áspide"] = 191019, -- Adder's Tongue
+		["Língua-de-áspide"] = 191019, -- Adder's Tongue
 		["Espinho de Fogo"] = 191303, -- Firethorn
 		["Cinzanilha"] = 202747, -- Cinderbloom
 		["Tempesvina"] = 202748, -- Stormvine
@@ -1623,6 +1767,16 @@ elseif (region == "ptPT") then -- Portuguese (Mapped from ptBR)
 
 		-- Missing Node Names
 		["Lesser Bloodstone Deposit"] = 2653,
+		["True Iron Deposit"] = 228493,
+		["Rich True Iron Deposit"] = 228510,
+		["Blackrock Deposit"] = 228563,
+		["Rich Blackrock Deposit"] = 228564,
+		["Frostweed"] = 228571,
+		["Fireweed"] = 228572,
+		["Gorgrond Flytrap"] = 228573,
+		["Starflower"] = 228574,
+		["Nagrand Arrowbloom"] = 228575,
+		["Talador Orchid"] = 228576,
 		["Hidden Strongbox"] = 2039,
 		["Solid Chest"] = 2850,
 		["Barrel of Sweet Nectar"] = 3706,
@@ -1640,6 +1794,9 @@ elseif (region == "ptPT") then -- Portuguese (Mapped from ptBR)
 		["Adamantite Bound Chest"] = 181802,
 		["Felsteel Chest"] = 181804,
 		["Solid Fel Iron Chest"] = 184930,
+		["Draenor Clans Archaeology Find"] = 226521,
+		["Arakkoa Archaeology Find"] = 234105,
+		["Ogre Archaeology Find"] = 234106,
 	}
 elseif (region == "ruRU") then -- Russian
 	Gatherer.Nodes.Names = {
@@ -1662,15 +1819,19 @@ elseif (region == "ruRU") then -- Russian
 		["Залежи черного железа"] = 165658, -- Dark Iron Deposit
 		["Богатая ториевая жила"] = 175404, -- Rich Thorium Vein
 		["Покрытая слизью богатая ториевая жила"] = 177388, -- Ooze Covered Rich Thorium Vein
+		["Залежи оскверненного железа"] = 181555, -- Fel Iron Deposit
 		["Месторождение оскверненного железа"] = 181555, -- Fel Iron Deposit
 		["Залежи адамантита"] = 181556, -- Adamantite Deposit
 		["Кориевая жила"] = 181557, -- Khorium Vein
 		["Богатые залежи адамантита"] = 181569, -- Rich Adamantite Deposit
+		["Залежи хаотита"] = 185877, -- Nethercite Deposit
 		["Месторождение хаотита"] = 185877, -- Nethercite Deposit
 		["Залежи кобальта"] = 189978, -- Cobalt Deposit
 		["Богатые залежи кобальта"] = 189979, -- Rich Cobalt Deposit
+		["Залежи саронита"] = 189980, -- Saronite Deposit
 		["Месторождение саронита"] = 189980, -- Saronite Deposit
 		["Богатое месторождение саронита"] = 189981, -- Rich Saronite Deposit
+		["Богатые залежи саронита"] = 189981, -- Rich Saronite Deposit
 		["Залежи титана"] = 191133, -- Titanium Vein
 		["Залежи обсидиана"] = 202736, -- Obsidium Deposit
 		["Залежи колчедана"] = 202737, -- Pyrite Deposit
@@ -1684,6 +1845,10 @@ elseif (region == "ruRU") then -- Russian
 		["Богатые залежи призрачного железа"] = 209328, -- Rich Ghost Iron Deposit
 		["Богатые залежи кипарита"] = 209329, -- Rich Kyparite Deposit
 		["Богатая триллиевая жила"] = 209330, -- Rich Trillium Vein
+		["Залежи истинного железа"] = 228493, -- True Iron Deposit
+		["Богатые залежи истинного железа"] = 228510, -- Rich True Iron Deposit
+		["Залежи руды Черной горы"] = 228563, -- Blackrock Deposit
+		["Богатые залежи руды Черной горы"] = 228564, -- Rich Blackrock Deposit
 		["Сребролист"] = 1617, -- Silverleaf
 		["Мироцвет"] = 1618, -- Peacebloom
 		["Земляной корень"] = 1619, -- Earthroot
@@ -1746,6 +1911,12 @@ elseif (region == "ruRU") then -- Russian
 		["Золотой лотос"] = 209354, -- Golden Lotus
 		["Дурногриб"] = 209355, -- Fool's Cap
 		["Пораженная ша трава"] = 214510, -- Sha-Touched Herb
+		["Морозноцвет"] = 228571, -- Frostweed
+		["Пламецвет"] = 228572, -- Fireweed
+		["Горгрондская мухоловка"] = 228573, -- Gorgrond Flytrap
+		["Звездоцвет"] = 228574, -- Starflower
+		["Награндский стрелоцвет"] = 228575, -- Nagrand Arrowbloom
+		["Таладорская орхидея"] = 228576, -- Talador Orchid
 		["Потайной сейф"] = 2039, -- Hidden Strongbox
 		["Гигантский моллюск"] = 2744, -- Giant Clam
 		["Подбитый сундук"] = 2843, -- Battered Chest
@@ -1821,6 +1992,12 @@ elseif (region == "ruRU") then -- Russian
 		["Пандаренская археологическая находка"] = 211163, -- Pandaren Archaeology Find
 		["Археологическая находка могу"] = 211174, -- Mogu Archaeology Find
 		["Археологическая находка богомолов"] = 218950, -- Mantid Archaeology Find
+		["Археологическая находка огров"] = 234106, -- Ogre Archaeology Find
+
+
+		-- Missing Node Names
+		["Draenor Clans Archaeology Find"] = 226521,
+		["Arakkoa Archaeology Find"] = 234105,
 	}
 elseif (region == "zhCN") then -- Chinese
 	Gatherer.Nodes.Names = {
@@ -1974,6 +2151,10 @@ elseif (region == "zhCN") then -- Chinese
 		["Rich Pyrite Deposit"] = 202740,
 		["Rich Elementium Vein"] = 202741,
 		["Rich Trillium Vein"] = 209330,
+		["True Iron Deposit"] = 228493,
+		["Rich True Iron Deposit"] = 228510,
+		["Blackrock Deposit"] = 228563,
+		["Rich Blackrock Deposit"] = 228564,
 		["Goldclover"] = 189973,
 		["Tiger Lily"] = 190169,
 		["Talandra's Rose"] = 190170,
@@ -1985,6 +2166,12 @@ elseif (region == "zhCN") then -- Chinese
 		["Firethorn"] = 191303,
 		["Heartblossom"] = 202750,
 		["Twilight Jasmine"] = 202751,
+		["Frostweed"] = 228571,
+		["Fireweed"] = 228572,
+		["Gorgrond Flytrap"] = 228573,
+		["Starflower"] = 228574,
+		["Nagrand Arrowbloom"] = 228575,
+		["Talador Orchid"] = 228576,
 		["Everfrost Chip"] = 193997,
 		["Onyx Egg"] = 214945,
 		["Troll Archaeology Find"] = 202655,
@@ -1998,6 +2185,9 @@ elseif (region == "zhCN") then -- Chinese
 		["Tol'vir Archaeology Find"] = 207190,
 		["Pandaren Archaeology Find"] = 211163,
 		["Mogu Archaeology Find"] = 211174,
+		["Draenor Clans Archaeology Find"] = 226521,
+		["Arakkoa Archaeology Find"] = 234105,
+		["Ogre Archaeology Find"] = 234106,
 	}
 elseif (region == "zhTW") then -- Traditional Chinese
 	Gatherer.Nodes.Names = {
@@ -2168,6 +2358,16 @@ elseif (region == "zhTW") then -- Traditional Chinese
 
 
 		-- Missing Node Names
+		["True Iron Deposit"] = 228493,
+		["Rich True Iron Deposit"] = 228510,
+		["Blackrock Deposit"] = 228563,
+		["Rich Blackrock Deposit"] = 228564,
+		["Frostweed"] = 228571,
+		["Fireweed"] = 228572,
+		["Gorgrond Flytrap"] = 228573,
+		["Starflower"] = 228574,
+		["Nagrand Arrowbloom"] = 228575,
+		["Talador Orchid"] = 228576,
 		["Silverbound Treasure Chest"] = 207472,
 		["Sturdy Treasure Chest"] = 207484,
 		["Dark Iron Treasure Chest"] = 207498,
@@ -2175,6 +2375,9 @@ elseif (region == "zhTW") then -- Traditional Chinese
 		["Maplewood Treasure Chest"] = 207529,
 		["Runestone Treasure Chest"] = 207533,
 		["Onyx Egg"] = 214945,
+		["Draenor Clans Archaeology Find"] = 226521,
+		["Arakkoa Archaeology Find"] = 234105,
+		["Ogre Archaeology Find"] = 234106,
 	}
 end
 
@@ -2221,6 +2424,10 @@ Gatherer.Nodes.Objects = {
 	[209328] = "MINE", -- Rich Ghost Iron Deposit
 	[209329] = "MINE", -- Rich Kyparite Deposit
 	[209330] = "MINE", -- Rich Trillium Vein
+	[228493] = "MINE", -- True Iron Deposit
+	[228510] = "MINE", -- Rich True Iron Deposit
+	[228563] = "MINE", -- Blackrock Deposit
+	[228564] = "MINE", -- Rich Blackrock Deposit
 	[1617] = "HERB", -- Silverleaf
 	[1618] = "HERB", -- Peacebloom
 	[1619] = "HERB", -- Earthroot
@@ -2282,6 +2489,12 @@ Gatherer.Nodes.Objects = {
 	[209354] = "HERB", -- Golden Lotus
 	[209355] = "HERB", -- Fool's Cap
 	[214510] = "HERB", -- Sha-Touched Herb
+	[228571] = "HERB", -- Frostweed
+	[228572] = "HERB", -- Fireweed
+	[228573] = "HERB", -- Gorgrond Flytrap
+	[228574] = "HERB", -- Starflower
+	[228575] = "HERB", -- Nagrand Arrowbloom
+	[228576] = "HERB", -- Talador Orchid
 	[2039] = "OPEN", -- Hidden Strongbox
 	[2744] = "OPEN", -- Giant Clam
 	[2843] = "OPEN", -- Battered Chest
@@ -2342,8 +2555,16 @@ Gatherer.Nodes.Objects = {
 	[207529] = "OPEN", -- Maplewood Treasure Chest
 	[207533] = "OPEN", -- Runestone Treasure Chest
 	[210565] = "OPEN", -- Dark Soil
-	[211454] = "OPEN", -- Kafa'kota Bush
 	[214945] = "OPEN", -- Onyx Egg
+	[220901] = "OPEN", -- Gleaming Treasure Chest
+	[220902] = "OPEN", -- Rope-Bound Treasure Chest
+	[221617] = "OPEN", -- Skull-Covered Chest
+	[221670] = "OPEN", -- Moss-Covered Chest
+	[221671] = "OPEN", -- Sturdy Chest
+	[221672] = "OPEN", -- Smoldering Chest
+	[221673] = "OPEN", -- Blazing Chest
+	[222684] = "OPEN", -- Glinting Sand
+	[222685] = "OPEN", -- Crane Nest
 	[202655] = "ARCH", -- Troll Archaeology Find
 	[203071] = "ARCH", -- Night Elf Archaeology Find
 	[203078] = "ARCH", -- Nerubian Archaeology Find
@@ -2356,6 +2577,9 @@ Gatherer.Nodes.Objects = {
 	[211163] = "ARCH", -- Pandaren Archaeology Find
 	[211174] = "ARCH", -- Mogu Archaeology Find
 	[218950] = "ARCH", -- Mantid Archaeology Find
+	[226521] = "ARCH", -- Draenor Clans Archaeology Find
+	[234105] = "ARCH", -- Arakkoa Archaeology Find
+	[234106] = "ARCH", -- Ogre Archaeology Find
 }
 
 Gatherer.Nodes.PrimaryItems = {

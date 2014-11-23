@@ -138,7 +138,6 @@ do
 			y = math.max(-80, math.min(y*diagRadius, 80))
 		end
 		button:SetPoint("CENTER", Minimap, "CENTER", x, y)
-        HealBot_AddDebug("updatePosition")
 	end
 end
 
@@ -176,7 +175,6 @@ function onDragStop(self)
 	self.icon:UpdateCoord()
 	self:UnlockHighlight()
 	self.isMoving = nil
-    HealBot_AddDebug("onDragStop")
 end
 
 local defaultCoords = {0, 1, 0, 1}

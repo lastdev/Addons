@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(868, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 3 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 21 $"):sub(12, -3))
 mod:SetCreatureID(72311, 72560, 72249, 73910, 72302, 72561, 73909)--Boss needs to engage off friendly NCPS, not the boss. I include the boss too so we don't detect a win off losing varian. :)
 mod:SetEncounterID(1622)
 mod:DisableESCombatDetection()
@@ -276,7 +276,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 end
 
 function mod:UPDATE_WORLD_STATES()
-	local text = select(4, GetWorldStateUIInfo(4))
+	local text = select(4, GetWorldStateUIInfo(5))
 	local percent = tonumber(string.match(text or "", "%d+"))
 	if percent == 1 and (self.vb.firstTower == 0) and not self:IsMythic() then
 		self.vb.firstTower = 1

@@ -1,4 +1,4 @@
-﻿## Interface: 50400
+﻿## Interface: 60000
 ## 
 ## Title: Gatherer
 ## 
@@ -11,8 +11,9 @@
 ## Notes-ruRU: Gatherer это дополнение, которое позволяет Вам запоминать точки сбора ресурсов и показывать их на Вашей карте или радаре, или внутри интерфейса игры. Также оно позволяет расшаривать свои находки с Вашей гильдией или рейдом.
 ## Notes-zhCN: 采集助手(Gatherer)是一个允许你纪录你的采集点位置并显示于你的大小地图和采集助手附加的抬头显示模式的插件。并允许你向你的队友、团队成员以及朋友来分享你的采集数据。
 ## Notes-esES: Gatherer es un addon que te permite recordar las zonas de recolección y verlas ya sea en todo el mapa del mundo o en tu minimapa. Tambien te permite compartir tus zonas de recolección con tu hermandad, raids o amigos.
+## Notes-trTR: Gatherer, sizin toplama bölgelerinizi hatırlayan ve bunları oyun içinde, haritanızda ve küçük haritanızda göstermeyi sağlayan bir eklentidir. Ayrıca bu bilgileri arkadaşlarınız, guild veya raid'de ki kişilerle paylaşır.
 ## 
-## Version: 4.4.1
+## Version: 5.0.0
 ## Author: Esamynn
 ## 
 # myAddOns Support Metadata
@@ -24,7 +25,7 @@
 ## 
 ## SavedVariables: GatherItems, Gatherer_DropRates, Gatherer_SavedSettings_AccountWide, LibSwagData, Gatherer_SharingBlacklist
 ## SavedVariablesPerCharacter: Gatherer_SavedSettings_PerCharacter
-## Revision: $Id: Gatherer.toc 1102 2013-09-10 06:19:12Z Esamynn $
+## Revision: $Id: Gatherer.toc 1118 2014-10-17 04:00:08Z LocalizerAutoCommit $
 ## OptionalDeps: myAddOns, Configator, SlideBar, Babylonian, LibDataBroker
 
 # Manifest list

@@ -4,1261 +4,1421 @@ local s = SpellFlashAddon
 local x = s.UpdatedVariables
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
-local GetRuneType = GetRuneType
-local GetSpecialization = GetSpecialization
+local GetCombatRatingBonus = GetCombatRatingBonus
+local GetMasteryEffect = GetMasteryEffect
+local GetSpellInfo = GetSpellInfo
 local GetTime = GetTime
-local GetTotemInfo = GetTotemInfo
+local GetVersatility = GetVersatility
+local GetVersatilityBonus = GetVersatilityBonus
+local UnitAttackPower = UnitAttackPower
+local UnitBuff = UnitBuff
 local UnitExists = UnitExists
-local print = print
+local UnitLevel = UnitLevel
+local UnitStat = UnitStat
+
+local CR_VERSATILITY_DAMAGE_DONE = CR_VERSATILITY_DAMAGE_DONE
+local SPELL_POWER_RUNIC_POWER = SPELL_POWER_RUNIC_POWER
+
+local ipairs = ipairs
+local max = math.max
+local min = math.min
 local select = select
+local sort = sort
+local tinsert = tinsert
 local type = type
+local unpack = unpack
 
 a.Costs = {}
-function a.SetCost(blood, frost, unholy, death, name, bonusRP, rime)
-	a.Costs[s.SpellName(c.GetID(name))] = {
-		Blood = blood,
-		Frost = frost,
-		Unholy = unholy,
-		Death = death,
-		BonusRP = bonusRP,
-		Rime = rime,
-	}
+function a.SetCost(blood, frost, unholy, death, name, bonusRP, rime, freeWithPerk)
+   a.Costs[s.SpellName(c.GetID(name))] = {
+      Blood = blood,
+      Frost = frost,
+      Unholy = unholy,
+      Death = death,
+      BonusRP = bonusRP,
+      Rime = rime,
+      FreeWithPerk = freeWithPerk and c.GetID(freeWithPerk) or nil
+   }
 end
 
---a.SetCost(0, 1, 0, 0, "Chains of Ice")
-a.SetCost(0, 0, 0, 0, "Empower Rune Weapon", 25)
-a.SetCost(0, 0, 0, 0, "Horn of Winter")
-a.SetCost(0, 0, 0, 1, "Death Siphon")
-a.SetCost(0, 0, 1, 0, "Bone Shield")
-a.SetCost(0, 0, 1, 0, "Dark Transformation")
+a.SetCost(1, 0, 0, 0, "Blood Boil")
+a.SetCost(0, 0, 0, 0, "Bone Shield")
+a.SetCost(0, 1, 0, 0, "Chains of Ice")
+a.SetCost(0, 0, 1, 0, "Dark Transformation", nil, false, "Enhanced Dark Transformation")
 a.SetCost(0, 0, 1, 0, "Death and Decay")
-a.SetCost(0, 0, 1, 0, "Plague Strike")
-a.SetCost(0, 0, 1, 0, "Scourge Strike")
+a.SetCost(0, 0, 0, 1, "Death Siphon")
+a.SetCost(0, 1, 1, 0, "Death Strike")
+a.SetCost(0, 0, 0, 0, "Empower Rune Weapon", 25)
+a.SetCost(1, 1, 0, 0, "Festering Strike")
+a.SetCost(0, 0, 0, 0, "Horn of Winter")
 a.SetCost(0, 1, 0, 0, "Howling Blast", nil, true)
 a.SetCost(0, 1, 0, 0, "Icy Touch", nil, true)
-a.SetCost(0, 1, 0, 0, "Pillar of Frost")
-a.SetCost(0, 1, 1, 0, "Death Strike")
 a.SetCost(0, 1, 1, 0, "Obliterate")
-a.SetCost(1, 0, 0, 0, "Blood Boil")
-a.SetCost(1, 0, 0, 0, "Heart Strike")
-a.SetCost(1, 0, 0, 0, "Pestilence")
+a.SetCost(0, 1, 0, 0, "Pillar of Frost", nil, false, "Empowered Pillar of Frost")
+a.SetCost(0, 0, 1, 0, "Plague Strike")
+a.SetCost(1, 0, 0, 0, "Rune Tap")
+a.SetCost(0, 0, 1, 0, "Scourge Strike")
 a.SetCost(1, 0, 0, 0, "Strangulate")
-a.SetCost(1, 1, 0, 0, "Festering Strike")
 
-local function runeAvailable(runeId, delay)
-	if delay == nil then
-		delay = 0
-	end
-	if a.Runes[runeId] <= delay then
-		return 1
-	end
+
+local BLOOD1 = 1
+local BLOOD2 = 2
+local UNHOLY1 = 3
+local UNHOLY2 = 4
+local FROST1 = 5
+local FROST2 = 6
+
+local function runeAvailable(runeId, delay, forbidDeath)
+   if a.Runes[runeId].Delay > (delay or 0) then
+      return false
+   end
+
+   if forbidDeath and a.Runes[runeId].Type == "death" then
+      return false
+   end
+
+   return true
 end
 
 local function fakeConsume(runeID, delay, needed, deathAvailable)
-	if runeAvailable(runeID, delay) then
-		if a.IsDeathRune(runeID) then
-			deathAvailable = deathAvailable + 1
-		elseif needed > 0 then
-			needed = needed - 1
-		end
-	end
-	return needed, deathAvailable
+   if runeAvailable(runeID, delay) then
+      if a.Runes[runeID].Type == "death" then
+         deathAvailable = deathAvailable + 1
+      elseif needed > 0 then
+         needed = needed - 1
+      end
+   end
+   return needed, deathAvailable
 end
 
 local function sufficientRunes(blood, frost, unholy, death, forbidDeath, noGCD)
-	local deathAvailable = a.PendingDeathRunes
-	local delay = 0
-	if noGCD then
-		delay = -c.GetBusyTime()
-	end
-	blood, deathAvailable = fakeConsume(1, delay, blood, deathAvailable)
-	blood, deathAvailable = fakeConsume(2, delay, blood, deathAvailable)
-	frost, deathAvailable = fakeConsume(5, delay, frost, deathAvailable)
-	frost, deathAvailable = fakeConsume(6, delay, frost, deathAvailable)
-	unholy, deathAvailable = fakeConsume(3, delay, unholy, deathAvailable)
-	unholy, deathAvailable = fakeConsume(4, delay, unholy, deathAvailable)
-	if forbidDeath then
-		deathAvailable = 0
-	end
---c.Debug("sufficientRunes", blood, frost, unholy, death, deathAvailable)
-	return blood + frost + unholy + death <= deathAvailable
+   local deathAvailable = a.PendingDeathRunes
+   local delay = 0
+   if noGCD then
+      delay = -c.GetBusyTime()
+   end
+   blood, deathAvailable = fakeConsume(1, delay, blood, deathAvailable)
+   blood, deathAvailable = fakeConsume(2, delay, blood, deathAvailable)
+   frost, deathAvailable = fakeConsume(5, delay, frost, deathAvailable)
+   frost, deathAvailable = fakeConsume(6, delay, frost, deathAvailable)
+   unholy, deathAvailable = fakeConsume(3, delay, unholy, deathAvailable)
+   unholy, deathAvailable = fakeConsume(4, delay, unholy, deathAvailable)
+
+   -- handle macroed BT, which can maybe generate a death rune when
+   -- we hit the button for this action, prior to it landing.
+   if c.GetOption("BTMacro") and c.HasTalent("Blood Tap") then
+      local depleted = a.FullyDepleted()
+      while a.BloodCharges >= 5 and depleted > 0 do
+         deathAvailable = deathAvailable + 1
+         depleted = depleted - 1
+      end
+   end
+
+   if forbidDeath then
+      deathAvailable = 0
+   end
+
+   -- c.Debug("sufficientRunes", blood, frost, unholy, death, '=', blood+frost+unholy+death, '<=', deathAvailable, '|', blood+frost+unholy+death <= deathAvailable)
+   return blood + frost + unholy + death <= deathAvailable
 end
 
 local function sufficientResources(id, noGCD)
-	local name = s.SpellName(id)
-	local cost = a.Costs[name]
-	if cost then
-		local frost = cost.Rime and a.FreezingFog > 0 and 0 or cost.Frost
-		if not sufficientRunes(
-			cost.Blood, frost, cost.Unholy, cost.Death, false, noGCD) then
-			
---c.Debug("sufficientResources", name)
-			return false
-		end
-	end
---c.Debug("Resources", s.SpellCost(name), "<=", a.RP, "|", s.SpellCost(name) <= a.RP)
-	return s.SpellCost(name) <= a.RP
+   local name = s.SpellName(id)
+   local cost = a.Costs[name]
+   if cost then
+      if cost.freeWithPerk and c.HasSpell(cost.freeWithPerk) then
+         return true
+      end
+
+      local frost = cost.Rime and a.FreezingFog > 0 and 0 or cost.Frost
+      return sufficientRunes(cost.Blood, frost, cost.Unholy, cost.Death, false, noGCD)
+   else
+-- c.Debug("Resources", name, s.SpellCost(name, SPELL_POWER_RUNIC_POWER), "<=", a.RP, "|", s.SpellCost(name) <= a.RP)
+      return s.SpellCost(name, SPELL_POWER_RUNIC_POWER) <= a.RP
+   end
 end
 
-local function masterOverride(z)
-	if z.Melee then
-		if not s.MeleeDistance() then
-			return false
-		end
-	elseif not z.NoRangeCheck and s.SpellHasRange(z.ID) then
-		if not s.SpellInRange(z.ID) then
-			return false
-		end
-	end
-	return (z.CheckFirst == nil or z:CheckFirst())
-		and sufficientResources(z.ID)
+-- GetDelay (on a spell) can return up to 2 values: "delay" and "modDelay".
+--
+-- "delay" is the time until the spell is ready to flash (in seconds), or a
+-- falsey value to indicate it should be skipped.  "modDelay", if present,
+-- restricts the spell to only flash if "delay" <= "modDelay".
+--
+-- However, if the IsMinDelayDefinition flag is set, that changes things.  Then
+-- "delay" is the minimum time all lower priority spells must be delayed.
+-- "modDelay", if present, causes that restriction to only apply to lower
+-- priority spells whose delay would otherwise be > "delay - modDelay".  So,
+-- for example, "Exorcism Delay" causes any spells lower than its priority that
+-- would come off cooldown .2 seconds before Exorcism to pretend they won't come
+-- off cooldown until Exercism.  That causes Exorcism to flash instead, since
+-- it's worth waiting those .2 seconds  (at most).
+local function sortRunesByMinimumDelay(a, b)
+   return a.Delay < b.Delay
+end
+
+local function getRuneDelay(count, ...)
+   local runes = {...}
+   sort(runes, sortRunesByMinimumDelay)
+
+   if count <= 0 then
+      return 0 -- no runes needed, so no problem
+   elseif count > #runes then
+      return 9001 -- you need more of these than exist?!?
+   else
+      return runes[count].Delay -- how long, bro?
+   end
+end
+
+local function getRuneDelayForSpellCost(spell, cost)
+   local blood  = cost.Blood
+   local frost  = cost.Rime and a.FreezingFog > 0 and 0 or cost.Frost
+   local unholy = cost.Unholy
+   local death  = cost.Death
+   local deathAvailable = 0
+
+   -- first pass, directly consume the runes we want.
+   for _, rune in ipairs(a.Runes) do
+      if rune.Delay <= 0 then
+         if blood > 0 and rune.Type == "blood" then
+            blood = blood - 1
+         elseif frost > 0 and rune.Type == "frost" then
+            frost = frost - 1
+         elseif unholy > 0 and rune.Type == "unholy" then
+            unholy = unholy - 1
+         elseif rune.Type == "death" then
+            if death > 0 then
+               death = death - 1
+            else
+               deathAvailable = deathAvailable + 1
+            end
+         end
+      end
+   end
+
+   local remaining = blood + frost + unholy + death
+
+   -- we have enough runes, right now, so we can use the spell.
+   if remaining <= 0 then
+      return 0
+   end
+
+   -- handle macroed BT, which can maybe generate a death rune when
+   -- we hit the button for this action, prior to it landing.
+   if c.GetOption("BTMacro") and c.HasTalent("Blood Tap") then
+      local depleted = a.FullyDepleted()
+      while a.BloodCharges >= 5 and depleted > 0 do
+         deathAvailable = deathAvailable + 1
+         a.BloodCharges = a.BloodCharges - 5
+         depleted = depleted - 1
+      end
+   end
+
+   -- we don't have enough runes, can we use death runes instead?
+   if deathAvailable >= remaining and not spell.NoDeathRunes then
+      return 0 -- yes
+   end
+
+   -- OK, when does this come available for use, then?
+   local delay = max(
+      getRuneDelay(blood,  a.Runes[1], a.Runes[2]),
+      getRuneDelay(unholy, a.Runes[3], a.Runes[4]),
+      getRuneDelay(frost,  a.Runes[5], a.Runes[6])
+   )
+
+   return delay
+end
+
+-- @todo danielp 2014-11-16: copied from BSFL flashing.lua
+local function auraDelay(spell, aura, func, early)
+   if aura then
+      return func(aura, false, spell.UseBuffID, spell.ID) - early
+   else
+      return 0
+   end
+end
+
+local function getDelayForSpell(spell)
+   local cost = spell.Cost
+   local delay
+
+   if cost and cost.freeWithPerk and c.HasSpell(cost.freeWithPerk) then
+      -- yay, we can just use this as much as we want.
+      delay = 0
+   elseif cost then
+      delay = getRuneDelayForSpellCost(spell, cost)
+   else
+      -- runic power
+      if s.SpellCost(spell.ID, SPELL_POWER_RUNIC_POWER) <= a.RP then
+         delay = 0
+      else
+         return false
+      end
+   end
+
+   -- if someone asked that we don't cast, respect that.
+   if not delay then return delay end
+
+   -- should we delay until one GCD before the other spell is ready?
+   -- note: this depends on our implementation, and avoids
+   local justBefore = 0
+   if spell.UseJustBefore then
+      local other = c.GetSpell(spell.UseJustBefore):GetDelay()
+      if other then
+         justBefore = max(0, other - c.LastGCD)
+      end
+   end
+
+   -- Check for cooldowns and buffs.  Copied from default.  At least we get
+   -- the other checks, like forms and range for free.
+   --
+   -- @todo danielp 2014-11-16: consider porting support for this over?
+   local early = (spell.EarlyRefresh or 0) + c.GetCastTime(spell.ID)
+
+   delay = max(
+      delay,
+      justBefore,
+      auraDelay(spell, spell.Buff, c.GetBuffDuration, early),
+      auraDelay(spell, spell.MyDebuff, c.GetMyDebuffDuration, early),
+      auraDelay(spell, spell.Debuff, c.GetDebuffDuration, early),
+      auraDelay(spell, spell.MyBuff, c.GetMyBuffDuration, early),
+      spell.Cooldown
+         and c.GetCooldown(spell.ID, spell.NoGCD, spell.Cooldown)
+         or  0)
+
+   return delay, spell.MaxWait
 end
 
 -- Use this for all spells with rune or RP costs.  Spells added this way may
 -- only use the CheckFirst and NoRangeCheck attributes.  All others will be
 -- ignored.  Cooldowns will NOT be checked.
-local function addSpell(name, tag, attributes)
-	c.AddSpell(name, tag, attributes).Override = masterOverride
+local function addAttrs(name, attributes)
+   attributes = attributes or {}
+   attributes.Cost = attributes.Cost or a.Costs[name]
+   attributes.GetDelay = attributes.GetDelay or getDelayForSpell
+   attributes.Name = name
+   return attributes
 end
 
-local function addOptionalSpell(name, tag, attributes)
-	c.AddOptionalSpell(name, tag, attributes).Override = masterOverride
+local function addDKSpell(name, tag, attributes)
+   return c.AddSpell(name, tag, addAttrs(name, attributes))
+end
+
+local function addOptionalDKSpell(name, tag, attributes)
+   return c.AddOptionalSpell(name, tag, addAttrs(name, attributes))
 end
 
 ------------------------------------------------------------------------ common
-function a.IsDeathRune(runeId)
-	return GetRuneType(runeId) == 4
-end
-
 function a.BothRunesAvailable(runeName, delay)
-	if runeName == "Blood" then
-		return runeAvailable(1, delay) and runeAvailable(2, delay)
-	elseif runeName == "Frost" then
-		return runeAvailable(5, delay) and runeAvailable(6, delay)
-	elseif runeName == "Unholy" then
-		return runeAvailable(3, delay) and runeAvailable(4, delay)
-	end
-	print("Bad rune name: ", runeName)
+   if runeName == "blood" then
+      return runeAvailable(BLOOD1, delay) and runeAvailable(BLOOD2, delay)
+   elseif runeName == "frost" then
+      return runeAvailable(FROST1, delay) and runeAvailable(FROST2, delay)
+   elseif runeName == "unholy" then
+      return runeAvailable(UNHOLY1, delay) and runeAvailable(UNHOLY2, delay)
+   end
+   print("Bad rune name: ", runeName)
 end
 
-local function isFullyDepleted(runeID)
-	local otherID
-	if runeID % 2 == 0 then
-		otherID = runeID - 1
-	else
-		otherID = runeID + 1
-	end
-	local otherCD = a.Runes[otherID]
-	return otherCD > 0 and a.Runes[runeID] > otherCD
-end
+local allRuneTypes = {"blood", "frost", "unholy"}
+function a.FullyDepleted(...)
+   local count = 0
 
-local function hasFullyDepleted(...)
-	for i = 1, select("#", ...) do
-		if isFullyDepleted(select(i, ...)) then
-			return true
-		end
-	end
+   for _, runeName in ipairs(... and {...} or allRuneTypes) do
+      if runeName == "blood" then
+         if a.Runes[BLOOD1].Delay > 0 and a.Runes[BLOOD2].Delay > 0 then
+            count = count + 1
+         end
+      elseif runeName == "frost" then
+         if a.Runes[FROST1].Delay > 0 and a.Runes[FROST2].Delay > 0 then
+            count = count + 1
+         end
+      elseif runeName == "unholy" then
+         if a.Runes[UNHOLY1].Delay > 0 and a.Runes[UNHOLY2].Delay > 0 then
+            count = count + 1
+         end
+      else
+         print("Bad rune name: ", runeName)
+      end
+   end
+
+   return count
 end
 
 local function hasFrostFever(earlyRefresh)
-	if c.IsCasting("Plague Leech") then
-		return false
-	end
-	
-	return c.GetMyDebuffDuration("Frost Fever") > earlyRefresh
-		or c.IsAuraPendingFor("Outbreak")
-		or c.IsAuraPendingFor("Icy Touch")
-		or c.IsAuraPendingFor("Howling Blast")
-		or c.HasBuff("Unholy Blight")
-		or c.IsCasting("Unholy Blight")
-		or (c.HasSpell("Scarlet Fever")
-			and c.IsCasting("Blood Boil")
-			and s.MyDebuff(c.GetID("Frost Fever"))
-		or (c.HasSpell("Ebon Plaguebringer")
-			and c.IsAuraPendingFor("Plague Strike")))
+   if c.IsCasting("Plague Leech") then
+      return false
+   end
+
+   if c.HasTalent("Necrotic Plague") then
+      return c.GetMyDebuffDuration("Necrotic Plague") > earlyRefresh
+      or c.IsAuraPendingFor("Outbreak")
+      or c.IsAuraPendingFor("Plague Strike")
+      or c.IsAuraPendingFor("Icy Touch")
+      or c.IsAuraPendingFor("Howling Blast")
+      or c.HasBuff("Unholy Blight")
+      or c.IsCasting("Unholy Blight")
+      or (c.HasSpell("Ebon Plaguebringer")
+         and c.IsAuraPendingFor("Plague Strike"))
+   end
+
+   return c.GetMyDebuffDuration("Frost Fever") > earlyRefresh
+      or c.IsAuraPendingFor("Outbreak")
+      or c.IsAuraPendingFor("Icy Touch")
+      or c.IsAuraPendingFor("Howling Blast")
+      or c.HasBuff("Unholy Blight")
+      or c.IsCasting("Unholy Blight")
+      or (c.HasSpell("Ebon Plaguebringer")
+         and c.IsAuraPendingFor("Plague Strike"))
+   -- @todo danielp 2014-10-18: check blood DK rules
 end
 
 local function hasBloodPlague(earlyRefresh)
-	if c.IsCasting("Plague Leech") then
-		return false
-	end
-	
-	return c.GetMyDebuffDuration("Blood Plague") > earlyRefresh
-		or c.IsAuraPendingFor("Outbreak")
-		or c.IsAuraPendingFor("Plague Strike")
-		or GetTime() - a.BloodPlagueRefreshPending < .8
-		or c.HasBuff("Unholy Blight")
-		or c.IsCasting("Unholy Blight")
-		or (c.IsCasting("Blood Boil")
-			and s.MyDebuff(c.GetID("Blood Plague"))
-			and c.HasSpell("Scarlet Fever"))
+   if c.IsCasting("Plague Leech") then
+      return false
+   end
+
+   if c.HasTalent("Necrotic Plague") then
+      return c.GetMyDebuffDuration("Necrotic Plague") > earlyRefresh
+      or c.IsAuraPendingFor("Outbreak")
+      or c.IsAuraPendingFor("Plague Strike")
+      or c.IsAuraPendingFor("Icy Touch")
+      or c.IsAuraPendingFor("Howling Blast")
+      or c.HasBuff("Unholy Blight")
+      or c.IsCasting("Unholy Blight")
+      or (c.HasSpell("Ebon Plaguebringer")
+         and c.IsAuraPendingFor("Plague Strike"))
+   end
+
+   return c.GetMyDebuffDuration("Blood Plague") > earlyRefresh
+      or c.IsAuraPendingFor("Outbreak")
+      or c.IsAuraPendingFor("Plague Strike")
+      or GetTime() - a.BloodPlagueRefreshPending < .8
+      or c.HasBuff("Unholy Blight")
+      or c.IsCasting("Unholy Blight")
+   -- @todo danielp 2014-10-18: check blood DK rules
 end
 
 local function hasBothDiseases(earlyRefresh)
-	return hasFrostFever(earlyRefresh) and hasBloodPlague(earlyRefresh)
+   return hasFrostFever(earlyRefresh) and hasBloodPlague(earlyRefresh)
 end
 
-local function shouldStrikeForResources()
-	if c.HasTalent("Blood Tap") then
-		return a.BloodCharges <= 10
-			or c.GetBuffDuration("Blood Charge") < 5
-	elseif c.HasTalent("Runic Empowerment") then
-		return hasFullyDepleted(1, 2, 3, 4, 5, 6)
-	elseif c.HasTalent("Runic Corruption") then
-		return c.GetBuffDuration("Runic Corruption") == 0
-	end
+local function soulReaperIsUsable()
+   if not a.InExecute or not s.MeleeDistance() then
+      return false
+   end
+
+   -- @todo danielp 2014-11-15: this is a proxy for "will it land, and be
+   -- worth it", which is probably not a great tool for the job.
+   if c.GetHealth("target") < (2 * s.MaxHealth("player")) then
+      return false
+   end
 end
 
-local function soulReaperIsReady(delay)
-	if type(delay) ~= "number" then
-		delay = 0
-	end
-	
-	return a.InExecute
-		and GetTime() + c.GetBusyTime() + delay - a.LastSoulReaper >= 6
-		and s.MeleeDistance()
-		and not c.IsCasting(
-			"Soul Reaper - Frost", 
-			"Soul Reaper - Unholy", 
-			"Soul Reaper - Blood")
+addOptionalDKSpell("Empower Rune Weapon", "for Death Strike", {
+   NoGCD = true,
+   Cooldown = 5 * 60,
+   CheckFirst = function()
+      -- don't burn this just for saving the shield
+      local count = 0
+      for i = 1,6 do
+         if a.Runes[i].Type ~= "blood" and a.Runes[i].Delay <= 0 then
+            count = count + 1
+         end
+      end
+
+      return count == 0
+         and a.PendingDeathRunes == 0
+         and a.ShouldDeathStrikeForHealth()
+   end
+})
+
+addOptionalDKSpell("Empower Rune Weapon", nil, {
+   NoGCD = true,
+   Cooldown = 5 * 60,
+   FlashSize = s.FlashSizePercent() / 2,
+   CheckFirst = function()
+      -- don't burn this just for saving the shield
+      local count = 0
+      for i = 1,6 do
+         if a.Runes[i].Delay <= 0 then
+            count = count + 1
+         end
+      end
+
+      return count == 0
+         and a.PendingDeathRunes == 0
+         and a.RP < 32
+   end
+})
+
+local function canManuallyBloodTap(charges)
+   if c.GetOption("BTMacro") then -- user wants it automagical
+      return false
+   end
+
+   return a.BloodCharges >= (charges or 5) and a.FullyDepleted() > 0
 end
 
-c.AddSpell("Horn of Winter", nil, {
-	Cooldown = 20,
-	CheckFirst = function()
-		return s.MaxPower("player") - a.RP > a.HornOfWinterBonus()
-	end
+addOptionalDKSpell("Blood Tap", nil, {
+   NoGCD = true,
+   CheckFirst = function()
+      return canManuallyBloodTap()
+   end
 })
 
-c.AddOptionalSpell("Empower Rune Weapon", nil, {
-	NoGCD = true,
-	FlashSize = s.FlashSizePercent() / 2,
+addOptionalDKSpell("Blood Tap", "at 11", {
+   NoGCD = true,
+   CheckFirst = function()
+      return canManuallyBloodTap(11)
+   end
 })
 
-c.AddOptionalSpell("Empower Rune Weapon", "when low", {
-	NoGCD = true,
-	FlashSize = s.FlashSizePercent() / 2,
-	CheckFirst = function()
-		return not (runeAvailable(1)
-				or runeAvailable(2)
-				or runeAvailable(5)
-				or runeAvailable(6)
-				or runeAvailable(3)
-				or runeAvailable(4))
-			and a.PendingDeathRunes == 0
-			and a.RP < 32
-	end
+addOptionalDKSpell("Blood Tap", "for Defile", {
+   NoGCD = true,
+   CheckFirst = function()
+      return c.GetCooldown("Defile", false, 30) == 0 and canManuallyBloodTap(5)
+   end
 })
 
-c.AddOptionalSpell("Blood Tap", nil, {
-	NoGCD = true,
-	CheckFirst = function()
-		return a.BloodCharges >= 5 
-			and hasFullyDepleted(1, 2, 3, 4, 5, 6)
-	end
+addOptionalDKSpell("Death Siphon", nil, {
+   CheckFirst = function()
+      return c.GetHealthPercent("player") < 80
+   end
 })
 
-c.AddOptionalSpell("Blood Tap", "at 11", {
-	NoGCD = true,
-	CheckFirst = function()
-		return a.BloodCharges >= 11
-			and hasFullyDepleted(1, 2, 3, 4, 5, 6)
-	end
+addDKSpell("Outbreak", nil, {
+   -- @todo danielp 2014-11-16: necrotic plague?
+   Applies = { "Blood Plague", "Frost Fever" },
+   Cooldown = 60,
+   CheckFirst = function()
+      return not hasBothDiseases(0)
+   end
 })
 
-addOptionalSpell("Death Siphon", nil, {
-	CheckFirst = function()
-		return c.GetHealthPercent("player") < 80
-	end
+addDKSpell("Outbreak", "at 3", {
+   Applies = { "Blood Plague", "Frost Fever" },
+   Cooldown = 60,
+   CheckFirst = function()
+      return not hasBothDiseases(3)
+   end
 })
 
-c.AddSpell("Outbreak", nil, {
-	Applies = { "Blood Plague", "Frost Fever" },
-	CheckFirst = function()
-		return not hasBothDiseases(0)
-	end
+addDKSpell("Unholy Blight", nil, {
+   Melee = true,
+   Cooldown = 90,
+   CheckFirst = function()
+      return not hasBothDiseases(0)
+   end
 })
 
-c.AddSpell("Outbreak", "at 2", {
-	CheckFirst = function()
-		return c.GetCooldown("Outbreak") == 0 and not hasBothDiseases(2)
-	end
+addDKSpell("Unholy Blight", "at 2", {
+   Melee = true,
+   Cooldown = 90,
+   CheckFirst = function()
+      return not hasBothDiseases(2)
+   end
 })
 
-c.AddSpell("Outbreak", "at 3", {
-	CheckFirst = function()
-		return c.GetCooldown("Outbreak") == 0 and not hasBothDiseases(3)
-	end
-})
-
-c.AddSpell("Unholy Blight", nil, {
-	Melee = true,
-	CheckFirst = function()
-		return c.GetCooldown("Unholy Blight") == 0 and not hasBothDiseases(0)
-	end
-})
-
-c.AddSpell("Unholy Blight", "at 2", {
-	Melee = true,
-	CheckFirst = function()
-		return c.GetCooldown("Unholy Blight") == 0 and not hasBothDiseases(2)
-	end
-})
-
-c.AddSpell("Unholy Blight", "at 3", {
-	Melee = true,
-	CheckFirst = function()
-		return c.GetCooldown("Unholy Blight") == 0 and not hasBothDiseases(3)
-	end
+addDKSpell("Unholy Blight", "at 3", {
+   Melee = true,
+   Cooldown = 90,
+   CheckFirst = function()
+      return not hasBothDiseases(3)
+   end
 })
 
 local function canPlagueLeech()
-	if not hasBothDiseases(0) then
-		return false
-	end
-	
-	local spec = GetSpecialization()
-	if spec == 3 then -- unholy spec
-		return hasFullyDepleted(1, 2, 5, 6) -- blood & frost runes
-	else -- blood or frost spec
-		return hasFullyDepleted(5, 6, 3, 4) -- frost & unholy runes
-	end
+   if not hasBothDiseases(0) then
+      return false
+   end
+
+   if s.Spec(3) then -- unholy spec
+      return a.FullyDepleted("blood", "frost") > 0
+   else -- blood or frost spec
+      return a.FullyDepleted("frost", "unholy") > 0
+   end
 end
 
-c.AddSpell("Plague Leech", nil, {
-	CheckFirst = canPlagueLeech,
+addDKSpell("Plague Leech", nil, {
+   Cooldown = 25,
+   CheckFirst = canPlagueLeech,
 })
 
-c.AddSpell("Plague Leech", "at 1", {
-	CheckFirst = function()
-		return canPlagueLeech() and not hasBothDiseases(1)
-	end
+addDKSpell("Plague Leech", "for Death Strike", {
+   Cooldown = 25,
+   CheckFirst = function()
+      return canPlagueLeech() and
+         (a.ShouldDeathStrikeForHealth() or a.shouldDeathStrikeForShield())
+   end
 })
 
-c.AddSpell("Plague Leech", "at 2", {
-	CheckFirst = function()
-		return canPlagueLeech() and not hasBothDiseases(2)
-	end
+addDKSpell("Plague Leech", "at 1", {
+   Cooldown = 25,
+   CheckFirst = function()
+      return canPlagueLeech() and not hasBothDiseases(1)
+   end
 })
 
-c.AddSpell("Plague Leech", "at 3", {
-	CheckFirst = function()
-		return canPlagueLeech() and not hasBothDiseases(3)
-	end
+addDKSpell("Plague Leech", "at 2", {
+   Cooldown = 25,
+   CheckFirst = function()
+      return canPlagueLeech() and not hasBothDiseases(2)
+   end
 })
 
-c.AddSpell("Plague Leech", "if Outbreak", {
-	CheckFirst = function()
-		return canPlagueLeech() and c.GetCooldown("Outbreak", false, 60) < 1 
-	end
+addDKSpell("Plague Leech", "at 3", {
+   Cooldown = 25,
+   CheckFirst = function()
+      return canPlagueLeech() and not hasBothDiseases(3)
+   end
 })
 
-addSpell("Plague Strike", "for Blood Plague", {
-	Applies = { "Blood Plague" },
-	CheckFirst = function()
-		return not hasBloodPlague(0)
-	end
+addDKSpell("Plague Leech", "if Outbreak", {
+   Cooldown = 25,
+   CheckFirst = function()
+      return canPlagueLeech() and c.GetCooldown("Outbreak", false, 60) < 1
+   end
 })
 
-c.AddOptionalSpell("Raise Dead", nil, {
-	NoRangeCheck = 1,
-	CheckFirst = function()
-		return not UnitExists("pet")
-	end
+addDKSpell("Plague Strike", "for Blood Plague", {
+   Applies = { "Blood Plague" },
+   CheckFirst = function()
+      return not hasBloodPlague(0)
+   end
 })
 
-addOptionalSpell("Death and Decay", nil, {
-	NoRangeCheck = true,
-	CheckFirst = function()
-		return c.GetCooldown("Death and Decay", false, 30) == 0
-	end
+addOptionalDKSpell("Raise Dead", nil, {
+   NoRangeCheck = 1,
+   CheckFirst = function()
+      return not UnitExists("pet")
+   end
 })
 
-c.AddOptionalSpell("Horn of Winter", "for Buff, Optional", {
-	Cooldown = 20,
-	CheckFirst = function()
-		return c.RaidBuffNeeded(c.ATTACK_POWER_BUFFS)
-	end
+addDKSpell("Death and Decay", nil, {
+   NoRangeCheck = true,
+   Cooldown = 30,
+})
+
+addOptionalDKSpell("Horn of Winter", "for Buff, Optional", {
+   Cooldown = 20,
+   CheckFirst = function()
+      return c.RaidBuffNeeded(c.ATTACK_POWER_BUFFS)
+   end
 })
 
 c.AddInterrupt("Mind Freeze", nil, {
-	NoGCD = true,
+   NoGCD = true,
 })
 
 c.AddInterrupt("Asphyxiate")
 
 c.AddInterrupt("Strangulate", nil, {
-	NoGCD = true,
+   NoGCD = true,
+})
+
+addOptionalDKSpell("Defile", nil, {
+   Melee = true, -- @todo danielp 2014-11-16: really?
+   Cooldown = 30,
 })
 
 ------------------------------------------------------------------------- Blood
 local function canBloodTapForDeathStrike()
-	local frost = 0
-	local unholy = 0
-	local death = a.PendingDeathRunes
-	if runeAvailable(5) then
-		if a.IsDeathRune(5) then
-			death = death + 1
-		else
-			frost = frost + 1
-		end
-	end
-	if runeAvailable(6) then
-		if a.IsDeathRune(6) then
-			death = death + 1
-		else
-			frost = frost + 1
-		end
-	end
-	if runeAvailable(3) then
-		if a.IsDeathRune(3) then
-			death = death + 1
-		else
-			unholy = unholy + 1
-		end
-	end
-	if runeAvailable(4) then
-		if a.IsDeathRune(4) then
-			death = death + 1
-		else
-			unholy = unholy + 1
-		end
-	end
-	return (frost + unholy + death == 1)
-		or (death == 0 and (
-				(frost == 0 and unholy > 0)
-			or (unholy == 0 and frost > 0)))
+   local frost = 0
+   local unholy = 0
+   local death = a.PendingDeathRunes
+   if runeAvailable(FROST1) then
+      if a.Runes[5].Type == "death" then
+         death = death + 1
+      else
+         frost = frost + 1
+      end
+   end
+   if runeAvailable(FROST2) then
+      if a.Runes[6].Type == "death" then
+         death = death + 1
+      else
+         frost = frost + 1
+      end
+   end
+   if runeAvailable(UNHOLY1) then
+      if a.Runes[3].Type == "death" then
+         death = death + 1
+      else
+         unholy = unholy + 1
+      end
+   end
+   if runeAvailable(UNHOLY2) then
+      if a.Runes[4].Type == "death" then
+         death = death + 1
+      else
+         unholy = unholy + 1
+      end
+   end
+   return (frost + unholy + death == 1)
+      or (death == 0 and (
+            (frost == 0 and unholy > 0)
+         or (unholy == 0 and frost > 0)))
 end
 
+-- Estimated amount of Blood Shield
+-- Based on http://forums.wowace.com/showpost.php?p=329939&postcount=2
+-- Uses data from http://us.battle.net/wow/en/forum/topic/13087818929#2
+-- ItemScaling value by player level:
+local item_scaling = {
+   -- ten levels per line
+     3,   3,   4,   4,   5,   6,   6,   7,   7,   8,
+     8,   9,   9,  10,  10,  11,  11,  12,  12,  13,
+    13,  14,  14,  15,  15,  16,  16,  17,  17,  18,
+    18,  19,  19,  20,  20,  21,  21,  22,  22,  23,
+    23,  24,  24,  25,  25,  26,  26,  27,  27,  28,
+    28,  29,  29,  30,  30,  31,  31,  32,  32,  32,
+    35,  37,  39,  39,  40,  40,  41,  44,  44,  44,
+    44,  44,  45,  46,  49,  49,  50,  50,  51,  51,
+    52,  52,  54,  56,  57,  60,  61,  62,  64,  67,
+   101, 118, 139, 162, 190, 225, 234, 242, 252, 261}
+
 local function getDeathStrikeHeal(forceUseScentStacks)
-	local stack = c.GetBuffStack("Scent of Blood")
-	if not forceUseScentStacks and c.IsCasting("Death Strike") then
-		stack = 0
-	end
-	local heal = 7 * (1 + .2 * stack)
-	if c.WearingSet(2, "BloodT14") then
-		heal = heal * 1.1
-	end
-	return heal 
+   --Death strike tooltip heal without versatility multiplier
+   local baseAP, plusAP, minusAP = UnitAttackPower("player")
+   local base_heal = (baseAP + plusAP - minusAP) * 5
+
+   --Clean versatility value from items
+   local mastery = 0.01 * GetMasteryEffect("player")
+
+   --versatility as % multiplier; calculation based on "damage done",
+   --which is currently == to "healing done", and this is stolen from
+   --PaperDollFrame.lua from the Blizzard FrameXML code.
+   local versatility = 1 + (
+      0.01 * (GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE) +
+            GetVersatilityBonus(CR_VERSATILITY_DAMAGE_DONE)))
+
+
+   --Scent of Blood multiplier
+   local SoB = 1 + (c.GetBuffStack("Scent of Blood") * 0.2)
+   if not forceUseScentStacks and c.IsCasting("Death Strike") then
+      SoB = 1
+   end
+
+   --Base resolve out of combat
+   local stamina = UnitStat("player",3)
+   local resolve_base = stamina / 250.0 / (item_scaling[UnitLevel("Player")] or 1)
+   local resolve_buff = select(17, UnitBuff("player", GetSpellInfo(c.GetID("Resolve")))) or 0
+
+   --Resolve: http://us.battle.net/wow/en/forum/topic/13087818929#2
+   local resolve = 1 + (resolve_buff / stamina / 60 * 0.25 + resolve_base)
+
+   -- Dark Succor doubles DS healing...
+   local dark_succor = c.HasBuff("Dark Succor") and 2 or 1
+
+   -- finally, our healing estimate.
+   return (((((base_heal * versatility) * SoB) * mastery) * resolve) * dark_succor)
 end
 
 function a.ShouldDeathStrikeForHealth()
-	local health = c.GetHealthPercent("player") + getDeathStrikeHeal()
-	if c.IsCasting("Death Strike") then
-		health = health + getDeathStrikeHeal(true)
-	end
-	return health < 100
+   local health = c.GetHealth("player") + getDeathStrikeHeal()
+   if c.IsCasting("Death Strike") then
+      health = health + getDeathStrikeHeal(true)
+   end
+
+   -- allow up to 2.5 percent max health overheal
+   return health <= (s.MaxHealth("player") * 1.025)
 end
 
-local function shouldDeathStrikeForShield()
-	return c.GetBuffDuration("Blood Shield") < 2
-		and not c.IsCasting("Death Strike")
+function a.shouldDeathStrikeForShield()
+   return c.GetBuffDuration("Blood Shield") < 2 and
+      not c.IsCasting("Death Strike")
 end
 
-c.AddOptionalSpell("Blood Presence", nil, {
-	Type = "form"
+addOptionalDKSpell("Blood Presence", nil, {
+   Type = "form"
 })
 
-addSpell("Death Strike")
+addDKSpell("Death Strike")
 
-addSpell("Death Strike", "for Health", {
-	CheckFirst = a.ShouldDeathStrikeForHealth
+addDKSpell("Death Strike", "for Health", {
+   CheckFirst = a.ShouldDeathStrikeForHealth,
+   GetDelay = function(spell)
+      a.DebugThisSpell = true
+      local delay = getDelayForSpell(spell)
+      a.DebugThisSpell = false
+      return delay
+   end,
 })
 
-addSpell("Death Strike", "to Save Shield", {
-	CheckFirst = shouldDeathStrikeForShield
+addOptionalDKSpell("Death Strike", "with Dark Succor", {
+   CheckFirst = function()
+      return c.HasBuff("Dark Succor") and a.ShouldDeathStrikeForHealth()
+   end
 })
 
-addSpell("Death Strike", "if Two Available", {
-	CheckFirst = function()
-		local avail = a.PendingDeathRunes
-		if a.IsDeathRune(1) and runeAvailable(1, 1) then
-			avail = avail + 1
-		end
-		if a.IsDeathRune(2) and runeAvailable(2, 1) then
-			avail = avail + 1
-		end
-		if runeAvailable(5, 1) then
-			avail = avail + 1
-		end
-		if runeAvailable(6, 1) then
-			avail = avail + 1
-		end
-		if runeAvailable(3, 1) then
-			avail = avail + 1
-		end
-		if runeAvailable(4, 1) then
-			avail = avail + 1
-		end
-		if a.BloodCharges >= 10 then
-			avail = avail + 2
-		elseif a.BloodCharges >= 5 then
-			avail = avail + 1
-		end
-		return avail >= 4
-	end
+addDKSpell("Death Strike", "to Save Shield", {
+    CheckFirst = a.shouldDeathStrikeForShield
 })
 
-c.AddOptionalSpell("Blood Tap", "for Death Strike", {
-	NoGCD = true,
-	Melee = true,
-	CheckFirst = function()
-		return a.BloodCharges >= 5
-			and (a.ShouldDeathStrikeForHealth() or shouldDeathStrikeForShield())
-			and canBloodTapForDeathStrike()
-	end
+addDKSpell("Death Strike", "if Two Available", {
+   -- @todo danielp 2014-11-16: can we optimize this?
+   CheckFirst = function()
+      local avail = a.PendingDeathRunes
+      if a.Runes[BLOOD1].Type == "death" and runeAvailable(BLOOD1, 1) then
+         avail = avail + 1
+      end
+      if a.Runes[BLOOD2].Type == "death" and runeAvailable(BLOOD2, 1) then
+         avail = avail + 1
+      end
+      if runeAvailable(FROST1, 1) then
+         avail = avail + 1
+      end
+      if runeAvailable(FROST2, 1) then
+         avail = avail + 1
+      end
+      if runeAvailable(UNHOLY1, 1) then
+         avail = avail + 1
+      end
+      if runeAvailable(UNHOLY2, 1) then
+         avail = avail + 1
+      end
+      return avail >= 4
+   end
 })
 
-addSpell("Death Siphon", "for Health", {
-	CheckFirst = function()
-		-- use the same criteria as for Death Strike, so we know Death Siphon
-		-- is only used when Death Strike cannot be
-		return a.ShouldDeathStrikeForHealth()
-	end
+addOptionalDKSpell("Blood Tap", "for Death Strike", {
+   NoGCD = true,
+   Melee = true,
+   CheckFirst = function()
+      return a.BloodCharges >= 5
+         and (a.ShouldDeathStrikeForHealth() or a.shouldDeathStrikeForShield())
+         and canBloodTapForDeathStrike()
+   end
 })
 
-c.AddSpell("Outbreak", "for Weakened Blows", {
-	Debuff = c.WEAKENED_BLOWS_DEBUFFS,
-	CheckFirst = function()
-		return not hasBloodPlague(10)
-	end,
+addDKSpell("Death Siphon", "for Health", {
+   CheckFirst = function()
+      -- use the same criteria as for Death Strike, so we know Death Siphon
+      -- is only used when Death Strike cannot be
+      return a.ShouldDeathStrikeForHealth()
+   end
 })
 
-c.AddSpell("Outbreak", "Early", {
-	CheckFirst = function()
-		return not hasBothDiseases(5)
-	end
+addDKSpell("Outbreak", "Early", {
+   Applies = { "Blood Plague", "Frost Fever" },
+   Cooldown = 60,
+   CheckFirst = function()
+      return not hasBothDiseases(5)
+   end
 })
 
-addSpell("Plague Strike", "for Weakened Blows", {
-	Debuff = c.WEAKENED_BLOWS_DEBUFFS,
-	CheckFirst = function()
-		return not hasBloodPlague(10)
-	end,
+addDKSpell("Outbreak", "Early, Glyphed", {
+   Applies = { "Blood Plague", "Frost Fever" },
+   Cooldown = 60,
+   CheckFirst = function()
+      return c.HasGlyph("Outbreak") and not hasBothDiseases(5)
+   end
 })
 
-addSpell("Rune Strike")
+addDKSpell("Death Coil")
 
-addSpell("Rune Strike", "for Resources", {
-	CheckFirst = shouldStrikeForResources
+addDKSpell("Death Coil", "1 Rune to cap", {
+    CheckFirst = function() return a.RP > 90 end
 })
 
-addSpell("Rune Strike", "for Resources if Capped", {
-	CheckFirst = function()
-		return s.MaxPower("player") - a.RP < 40 
-			and (shouldStrikeForResources() or c.HasTalent("Runic Corruption"))
-	end
+addDKSpell("Death Coil", "2 Runes to cap", {
+    CheckFirst = function() return a.RP > 80 end
 })
 
-addSpell("Rune Strike", "for Runic Corruption", {
-	CheckFirst = function()
-		return c.HasTalent("Runic Corruption")
-	end
+addDKSpell("Death and Decay", "Free", {
+   NoRangeCheck = true,
+   Cooldown = 30,
+   CheckFirst = function()
+      return a.CrimsonScourge
+   end
 })
 
-addOptionalSpell("Death and Decay", "Free", {
-	NoRangeCheck = true,
-	CheckFirst = function()
-		return a.CrimsonScourge
-			and c.GetCooldown("Death and Decay", false, 30) == 0
-	end
+addDKSpell("Blood Boil", "BB", {
+   Melee = true,
+   CheckFirst = function()
+      -- blood runes only, forbid death runes
+      return sufficientRunes(2, 0, 0, 0, true)
+   end
 })
 
-addOptionalSpell("Death and Decay", "without Consequence", {
-	NoRangeCheck = true,
-	CheckFirst = function()
-		return c.AoE
-			and a.CrimsonScourge
-			and hasBothDiseases(15)
-			and c.GetCooldown("Death and Decay", false, 30) == 0
-	end
+addDKSpell("Blood Boil", "B, if safe", {
+   Melee = true,
+   CheckFirst = function()
+      -- Blood runes only, forbid death runes
+      if not sufficientRunes(1, 0, 0, 0, true) then
+         return false
+      end
+
+      -- only if we are not using RE, for which we should keep our
+      -- second B rune active at all times.
+      if c.HasTalent("Runic Empowerment") then
+         return false
+      end
+
+      -- If we are in execute range, we want to hold our B for SR,
+      -- too, so ensure that we will have a B rune ready by the time
+      -- SR rolls around.
+      --
+      -- @todo danielp 2014-11-16:
+      -- sanity check: is this gonna get messed up if things regen
+      -- as death runes, which we don't want to spend on SR?
+      -- I think we are actually safe on that front.
+      if not a.InExecute then
+         return true
+      end
+
+      -- @todo danielp 2014-11-16: restore this by using GetDelay on SR.
+      -- if not soulReaperIsReady(max(a.Runes[1].Delay, a.Runes[2].Delay)) then
+      --    return false
+      -- end
+
+      -- wow, everything passed!
+      return true
+   end
 })
 
-c.AddSpell("Blood Boil", "for Runic Power", {
-	Melee = true,
-	Override = function()
-		return not a.CrimsonScourge 
-			and s.MaxPower("player") - a.RP >= 30 
-			and sufficientRunes(1, 0, 0, 0, true)
-	end
+addDKSpell("Blood Boil", "for diseases", {
+   Melee = true,
+   CheckFirst = function()
+      return hasBothDiseases(0) and not hasBothDiseases(3)
+   end
 })
 
-c.AddSpell("Blood Boil", "Free", {
-	Melee = true,
-	Override = function()
-		return a.CrimsonScourge
-	end
+addDKSpell("Blood Boil", "Free", {
+   Melee = true,
+   CheckFirst = function()
+      return a.CrimsonScourge
+   end
 })
 
-c.AddSpell("Blood Boil", "for Weakened Blows", {
-	Melee = true,
-	Override = function(z)
-		if not hasBloodPlague(0) 
-			or hasBloodPlague(10) 
-			or not c.HasSpell("Scarlet Fever") then
-			
-			return false
-		end
-		
-		local duration = c.GetDebuffDuration(c.WEAKENED_BLOWS_DEBUFFS)
-		if a.CrimsonScourge then
-			return duration <= 5
-		end
-		
-		if not sufficientResources(z.ID) then
-			return false
-		end
-		
-		if duration <= 5 and c.GetCooldown("Outbreak") > duration then
-			return true
-		end
-		
-		return c.HasMyDebuff("Frost Fever")
-			and sufficientRunes(1, 0, 0, 0, true)
-	end
+addDKSpell("Soul Reaper - Blood", "B", {
+   Cooldown = 6,
+   MyDebuff = "Soul Reaper Debuff",
+   CheckFirst = function()
+      return soulReaperIsUsable() and sufficientRunes(1, 0, 0, 0, true)
+   end
 })
 
-c.AddSpell("Blood Boil", "for AoE or Free", {
-	Melee = true,
-	Override = function(z)
-		if a.CrimsonScourge then
-			z.Continue = false
-			return true
-		elseif sufficientResources(z.ID) then
-			z.Continue = true
-			return true
-		end
-	end
+addOptionalDKSpell("Rune Tap", nil, {
+   NoGCD = true,
+   Score = 3,
 })
 
-c.AddSpell("Blood Boil", "for AoE B or Free", {
-	Melee = true,
-	Override = function(z)
-		if a.CrimsonScourge then
-			z.Continue = false
-			return true
-		elseif sufficientRunes(1, 0, 0, 0, true) then
-			z.Continue = true
-			return true
-		end
-	end
+addOptionalDKSpell("Rune Tap", "with more than one charge", {
+   NoGCD = true,
+   Score = 3,
+   CheckFirst = function()
+      return c.GetChargeInfo("Rune Tap") > 1
+   end
 })
 
-c.AddSpell("Horn of Winter", "for Buff", {
-	Cooldown = 20,
-	CheckFirst = function()
-		return c.RaidBuffNeeded(c.ATTACK_POWER_BUFFS)
-	end
+addOptionalDKSpell("Dancing Rune Weapon", nil, {
+   NoGCD = true,
+   Melee = true,
+   Cooldown = 90,
+   CheckFirst = function()
+      return not c.WearingSet(4, "BloodT16")
+   end,
 })
 
-c.AddSpell("Horn of Winter", "for Runic Power", {
-	Cooldown = 20,
-	CheckFirst = function()
-		return s.MaxPower("player") - a.RP >= 20 + a.HornOfWinterBonus()
-	end
+addOptionalDKSpell("Dancing Rune Weapon", "Prime", {
+   NoGCD = true,
+   Melee = true,
+   Cooldown = 90,
+   CheckFirst = function()
+      return (c.WearingSet(4, "BloodT16")
+            and (not (runeAvailable(BLOOD1)  or runeAvailable(BLOOD2) or
+                      runeAvailable(UNHOLY1) or runeAvailable(UNHOLY2))))
+         or c.InDamageMode()
+   end,
 })
 
-addSpell("Soul Reaper - Blood", nil, {
-	CheckFirst = soulReaperIsReady,
+addOptionalDKSpell("Bone Shield", nil, {
+   Cooldown = 60,
+   CheckFirst = function()
+      if s.InCombat() then
+         return not c.HasBuff("Bone Shield")
+      elseif x.EnemyDetected then
+         return c.GetBuffDuration("Bone Shield") < 60
+            or s.BuffStack(c.GetID("Bone Shield"), "player") < 6
+      end
+   end
 })
 
-c.AddSpell("Soul Reaper - Blood", "B", {
-	Override = function()
-		return soulReaperIsReady() and sufficientRunes(1, 0, 0, 0, true)
-	end
+addOptionalDKSpell("Vampiric Blood", nil, {
+   NoGCD = true,
+   Cooldown = 60,
+   CheckFirst = function()
+      return not c.IsSolo() or sufficientResources(c.GetID("Death Strike"))
+   end,
+   ShouldHold = function()
+      -- if we would self-heal, this is probably appropriate.
+      return not a.ShouldDeathStrikeForHealth()
+   end,
 })
 
-c.AddSpell("Soul Reaper - Blood", "for Runic Power unless AoE", {
-	Override = function()
-		return not c.AoE
-			and soulReaperIsReady()
-			and s.MaxPower("player") - a.RP >= 30
-			and sufficientRunes(1, 0, 0, 0, true)
-	end
+addOptionalDKSpell("Death Pact", nil, {
+   NoRangeCheck = 1,
+   Cooldown = 2 * 60,
+   ShouldHold = function()
+      return c.GetHealthPercent("player") > 45
+   end
 })
 
-c.AddSpell("Soul Reaper - Blood", "BB", {
-	Override = function()
-		return soulReaperIsReady()
-			and a.BothRunesAvailable("Blood", 1)
-			and not a.IsDeathRune(1)
-			and not a.IsDeathRune(2)
-	end
+addOptionalDKSpell("Conversion", nil, {
+   NoGCD = true,
+   Buff = "Conversion",
+   CheckFirst = function()
+      return a.RP > 50 and not c.HasBuff("Conversion")
+   end,
+   ShouldHold = function()
+      return c.GetHealthPercent("player") > 80
+   end
 })
 
-addSpell("Heart Strike", nil, {
-	Melee = true,
+addOptionalDKSpell("Conversion", "Cancel", {
+   NoGCD = true,
+   FlashColor = "red",
+   CheckFirst = function()
+      return c.HasBuff("Conversion", true)
+         and not a.ShouldDeathStrikeForHealth()
+   end
 })
 
-c.AddSpell("Heart Strike", "for Runic Power unless AoE", {
-	Melee = true,
-	Override = function()
-		return not c.AoE
-			and s.MaxPower("player") - a.RP >= 30
-			and sufficientRunes(1, 0, 0, 0, true)
-	end
+addOptionalDKSpell("Icebound Fortitude", "Unglyphed", {
+   Score = 2,
+   NoGCD = true,
+   Cooldown = 180,
+   Enabled = function()
+      return not c.HasGlyph("Icebound Fortitude")
+   end,
 })
 
-c.AddSpell("Heart Strike", "BB", {
-	Melee = true,
-	Override = function()
-		return a.BothRunesAvailable("Blood", 1)
-			and not a.IsDeathRune(1)
-			and not a.IsDeathRune(2)
-	end
-})
-
-c.AddSpell("Heart Strike", "B", {
-	Melee = true,
-	Override = function()
-		return sufficientRunes(1, 0, 0, 0, true)
-	end
-})
-
-addSpell("Icy Touch", "for Frost Fever", {
-	Applies = { "Frost Fever" },
-	CheckFirst = function()
-		return not hasFrostFever(0)
-	end
-})
-
-c.AddOptionalSpell("Rune Tap", nil, {
-	NoGCD = true,
-	CheckFirst = function()
-		local damage = 100 - c.GetHealthPercent("player")
-		if damage < 10 then
-			return false
-		end
-		
-		if a.ShouldDeathStrikeForHealth()
-			and sufficientResources(c.GetID("Death Strike")) then
-			
-			return damage > getDeathStrikeHeal() + 10
-		else
-			return true
-		end
-	end
-})
-
-c.AddOptionalSpell("Dancing Rune Weapon", nil, {
-	NoGCD = true,
-	Melee = true,
-	CheckFirst = function()
-		return not c.WearingSet(4, "BloodT16")
-	end,
-})
-
-c.AddOptionalSpell("Dancing Rune Weapon", "Prime", {
-	NoGCD = true,
-	Melee = true,
-	CheckFirst = function()
-		return (c.WearingSet(4, "BloodT16")
-				and (not (runeAvailable(1)
-					or runeAvailable(2)
-					or runeAvailable(3)
-					or runeAvailable(4))))
-			or c.InDamageMode()
-	end,
-})
-
-c.AddOptionalSpell("Bone Shield", nil, {
-	CheckFirst = function()
-		if s.InCombat() then
-			return not c.HasBuff("Bone Shield")
-		elseif x.EnemyDetected then
-			return c.GetBuffDuration("Bone Shield") < 60
-				or s.BuffStack(c.GetID("Bone Shield"), "player") < 6
-		end
-	end
-})
-
-c.AddOptionalSpell("Vampiric Blood", nil, {
-	NoGCD = true,
-	CheckFirst = function()
-		return not c.IsSolo() or sufficientResources(c.GetID("Death Strike"))
-	end,
-	ShouldHold = function()
-		return s.HealthPercent("player") > 85
-	end,
-})
-
-c.AddOptionalSpell("Death Pact", nil, {
-	NoRangeCheck = 1,
-	Enabled = function()
-		local ghoulIsOut = GetTotemInfo(1)
-		return ghoulIsOut
-	end,
-	ShouldHold = function()
-		local ghoulIsOut = GetTotemInfo(1)
-		return ghoulIsOut and c.GetHealthPercent("player") > 60
-	end
-})
-
-c.AddOptionalSpell("Raise Dead", "for Death Pact", {
-	NoRangeCheck = 1,
-	CheckFirst = function()
-		return c.HasTalent("Death Pact") and c.GetCooldown("Raise Dead") < 1
-	end
-})
-
-c.AddOptionalSpell("Conversion", nil, {
-	NoGCD = true,
-	Buff = "Conversion",
-	CheckFirst = function()
-		return a.RP > 50 and not c.HasBuff("Conversion")
-	end,
-	ShouldHold = function()
-		return c.GetHealthPercent("player") > 80
-	end
-})
-
-c.AddOptionalSpell("Conversion", "Cancel", {
-	NoGCD = true,
-	FlashColor = "red",
-	CheckFirst = function()
-		return c.HasBuff("Conversion", true)
-			and not a.ShouldDeathStrikeForHealth()
-	end
-})
-
-c.AddOptionalSpell("Icebound Fortitude", "Unglyphed", {
-	Score = 2,
-	NoGCD = true,
-	Enabled = function()
-		return not c.HasGlyph("Icebound Fortitude")
-	end,
-})
-
-c.AddOptionalSpell("Icebound Fortitude", "Glyphed", {
-	Score = 2,
-	NoGCD = true,
-	Enabled = function()
-		return c.HasGlyph("Icebound Fortitude")
-	end,
+addOptionalDKSpell("Icebound Fortitude", "Glyphed", {
+   Score = 2,
+   NoGCD = true,
+   Cooldown = 90,
+   Enabled = function()
+      return c.HasGlyph("Icebound Fortitude")
+   end,
 })
 
 c.AddTaunt("Dark Command", nil, {
-	NoGCD = true
+   NoGCD = true,
+   Cooldown = 8,
 })
 
 c.AddTaunt("Death Grip", nil, {
-	NoGCD = true 
+   NoGCD = true,
+   Cooldown = 8,
 })
 
 ------------------------------------------------------------------------- Frost
-c.AddOptionalSpell("Frost Presence", nil, { Type = "form" })
+addOptionalDKSpell("Frost Presence", nil, { Type = "form" })
 
-c.AddOptionalSpell("Pillar of Frost", nil, { 
-	NoGCD = true,
+addOptionalDKSpell("Pillar of Frost", nil, {
+   NoGCD = true,
+   Cooldown = 60,
 })
 
-addSpell("Frost Strike", nil, {
-	Melee = true,
+addDKSpell("Frost Strike", nil, {
+   Melee = true,
 })
 
-addSpell("Frost Strike", "under KM", {
-	Melee = true,
-	CheckFirst = function()
-		return a.KillingMachine
-	end
+addDKSpell("Frost Strike", "when not pooling", {
+   Melee = true,
+   CheckFirst = function()
+      return c.GetHealth("target") < (2 * s.MaxHealth("player"))
+   end,
 })
 
-addSpell("Frost Strike", "at 88", {
-	Melee = true,
-	CheckFirst = function()
-		return a.KillingMachine and a.RP >= 88
-	end
+addDKSpell("Frost Strike", "under KM", {
+   Melee = true,
+   CheckFirst = function()
+      return a.KillingMachine
+   end
 })
 
-addSpell("Frost Strike", "at 76", {
-	Melee = true,
-	CheckFirst = function()
-		return a.KillingMachine and a.RP >= 76
-	end
+addDKSpell("Frost Strike", "for RE", {
+   Melee = true,
+   CheckFirst = function()
+      return c.HasTalent("Runic Empowerment") and
+         a.FullyDepleted() > 0 and
+         (not a.Killing_machine or not sufficientResources(c.GetID("Obliterate"), false))
+   end
 })
 
-addSpell("Frost Strike", "at 40", {
-	Melee = true,
-	CheckFirst = function()
-		return a.RP >= 40
-	end
+addDKSpell("Frost Strike", "for BT", {
+   Melee = true,
+   CheckFirst = function()
+      return c.HasTalent("Blood Tap") and
+         a.BloodCharges <= 10 and
+         (not a.Killing_machine or not sufficientResources(c.GetID("Obliterate"), false))
+   end
 })
 
-addSpell("Frost Strike", "for Resources", {
-	Melee = true,
-	CheckFirst = shouldStrikeForResources
+addDKSpell("Frost Strike", "for OB cap", {
+   Melee = true,
+   CheckFirst = function()
+      return a.RP > 76 and
+         sufficientResources(c.GetID("Obliterate"), false)
+   end
 })
 
-addSpell("Frost Strike", "for Runic Empowerment", {
-	Melee = true,
-	CheckFirst = function()
-		return c.HasTalent("Runic Empowerment") and not hasFullyDepleted(5, 6)
-	end
+addDKSpell("Frost Strike", "for HB cap", {
+   Melee = true,
+   UseJustBefore = "Howling Blast",
+   CheckFirst = function()
+      return a.RP > 88
+   end
 })
 
---addSpell("Frost Strike", "for Resources unless KM", {
---	Melee = true,
---	CheckFirst = function()
---		return not a.KillingMachine and shouldStrikeForResources()
---	end
---})
-
-addSpell("Soul Reaper - Frost", nil, {
-	CheckFirst = soulReaperIsReady,
+addDKSpell("Frost Strike", "for PS cap", {
+   Melee = true,
+   UseJustBefore = "Plague Strike for Blood Plague",
+   CheckFirst = function()
+      return a.RP > 88
+   end
 })
 
-c.AddSpell("Blood Tap", "for Soul Reaper - Frost", {
-	NoGCD = true,
-	Melee = true,
-	FlashID = { "Blood Tap", "Soul Reaper - Frost" },
-	CheckFirst = function()
-		return soulReaperIsReady()
-			and a.BloodCharges >= 5
-			and hasFullyDepleted(1, 2, 3, 4, 5, 6)
-	end
+addDKSpell("Soul Reaper - Frost", nil, {
+   Cooldown = 6,
+   MyDebuff = "Soul Reaper Debuff",
+   CheckFirst = soulReaperIsUsable,
 })
 
-c.AddSpell("Blood Tap", "for OB KM", {
-	NoGCD = true,
-	Melee = true,
-	FlashID = { "Blood Tap", "Obliterate" },
-	CheckFirst = function()
-		return a.KillingMachine
-			and a.BloodCharges >= 5
-			and (a.PendingDeathRunes > 0
-				or runeAvailable(1)
-				or runeAvailable(2)
-				or runeAvailable(5)
-				or runeAvailable(6)
-				or runeAvailable(3)
-				or runeAvailable(4))
-	end
+addDKSpell("Blood Tap", "for Soul Reaper - Frost", {
+   NoGCD = true,
+   Melee = true,
+   FlashID = { "Blood Tap", "Soul Reaper - Frost" },
+   CheckFirst = function()
+      return soulReaperIsUsable()
+         and a.BloodCharges >= 5
+         and a.FullyDepleted() > 0
+   end
 })
 
-c.AddOptionalSpell("Blood Tap", "at 8 or Non-Execute", {
-	NoGCD = true,
-	CheckFirst = function()
-		if not hasFullyDepleted(1, 2, 3, 4, 5, 6) then
-			return false
-		end
-		
-		if a.BloodCharges >= 8 then
-			return true
-		end
-		
-		return a.BloodCharges >= 5 and not a.InExecute
-	end
+addDKSpell("Blood Tap", "for OB KM", {
+   NoGCD = true,
+   Melee = true,
+   FlashID = { "Blood Tap", "Obliterate" },
+   CheckFirst = function()
+      return a.KillingMachine
+         and a.BloodCharges >= 5
+         and (a.PendingDeathRunes > 0
+            or runeAvailable(BLOOD1)
+            or runeAvailable(BLOOD2)
+            or runeAvailable(FROST1)
+            or runeAvailable(FROST2)
+            or runeAvailable(UNHOLY1)
+            or runeAvailable(UNHOLY2))
+   end
 })
 
-addSpell("Howling Blast")
+addOptionalDKSpell("Blood Tap", "at 8 or Non-Execute", {
+   NoGCD = true,
+   CheckFirst = function()
+      if a.FullyDepleted() <= 0 then
+         return false
+      end
 
-addSpell("Howling Blast", "for Frost Fever", {
-	Applies = { "Frost Fever" },
-	CheckFirst = function()
-		return not hasFrostFever(0)
-	end
+      if a.BloodCharges >= 8 then
+         return true
+      end
+
+      return a.BloodCharges >= 5 and not a.InExecute
+   end
 })
 
-addSpell("Howling Blast", "under Freezing Fog", {
-	CheckFirst = function()
-		return a.FreezingFog > 0
-	end
+addDKSpell("Howling Blast")
+
+addDKSpell("Howling Blast", "for Frost Fever", {
+   Applies = { "Frost Fever" },
+   CheckFirst = function()
+      return not hasFrostFever(0)
+   end
 })
 
-addSpell("Howling Blast", "BB or FF", {
-	CheckFirst = function()
-		return a.BothRunesAvailable("Blood", 1) 
-			or a.BothRunesAvailable("Frost", 1)
-	end
+addDKSpell("Howling Blast", "under Freezing Fog", {
+   CheckFirst = function()
+      return a.FreezingFog > 0
+   end
 })
 
-addSpell("Howling Blast", "BB or FF or DU", {
-	CheckFirst = function()
-		return a.BothRunesAvailable("Blood", 1) 
-			or a.BothRunesAvailable("Frost", 1)
-			or (a.IsDeathRune(3) and runeAvailable(3) and runeAvailable(4, 1))
-			or (a.IsDeathRune(4) and runeAvailable(4) and runeAvailable(3, 1))
-	end
+addDKSpell("Obliterate")
+
+local function checkObliterateUnholyWithoutKillingMachine()
+   return (runeAvailable(UNHOLY1, nil, true) or runeAvailable(UNHOLY2, nil, true)) and
+      not a.KillingMachine
+end
+
+addDKSpell("Obliterate", "U w/out KM", {
+   GetDelay = function()
+      if a.KillingMachine then
+         return false
+      end
+
+      local runes = {}
+      if a.Runes[UNHOLY1].Type ~= "death" then
+         tinsert(runes, a.Runes[UNHOLY1])
+      end
+      if a.Runes[UNHOLY2].Type ~= "death" then
+         tinsert(runes, a.Runes[UNHOLY2])
+      end
+
+      if #runes > 0 then
+         return getRuneDelay(1, unpack(runes))
+      else
+         return false
+      end
+   end,
 })
 
-addSpell("Obliterate", nil, {
-	CheckFirst = function()
-		return hasBothDiseases(0)
-	end
+addDKSpell("Frost Strike", "for Oblit cap no KM", {
+   Melee = true,
+   UseJustBefore = "Obliterate U w/out KM",
+   CheckFirst = function()
+      return a.RP > 76
+   end
 })
 
-addSpell("Obliterate", "UU", {
-	CheckFirst = function()
-		return a.BothRunesAvailable("Unholy", 1) and hasBothDiseases(0)
-	end
+
+addDKSpell("Obliterate", "under KM", {
+   CheckFirst = function()
+      return a.KillingMachine
+   end
 })
 
-addSpell("Obliterate", "U w/out KM", {
-	CheckFirst = function()
-		return hasBothDiseases(0)
-			and ((runeAvailable(3) and not a.IsDeathRune(3))
-				or (runeAvailable(4) and not a.IsDeathRune(4)))
-			and not a.KillingMachine
-			and not c.GetOption("Mastersimple")
-	end
+addDKSpell("Obliterate", "BB or FF or UU", {
+   CheckFirst = function()
+      return (a.BothRunesAvailable("blood", 1)
+            or a.BothRunesAvailable("frost", 1)
+            or a.BothRunesAvailable("unholy", 1))
+   end
 })
 
-addSpell("Obliterate", "under KM", {
-	CheckFirst = function()
-		return a.KillingMachine and hasBothDiseases(0)
-	end
+addDKSpell("Death and Decay", "U", {
+   NoRangeCheck = true,
+   Cooldown = 30,
+   CheckFirst = function()
+      return sufficientRunes(0, 0, 1, 0, true)
+   end
 })
 
---addSpell("Obliterate", "KM UU", {
---	CheckFirst = function()
---		return a.KillingMachine
---			and a.BothRunesAvailable("Unholy", 1) 
---			and hasBothDiseases(0)
---	end
---})
-
-addSpell("Obliterate", "BB or FF or UU", {
-	CheckFirst = function()
-		return hasBothDiseases(0)
-			and (a.BothRunesAvailable("Blood", 1)
-				or a.BothRunesAvailable("Frost", 1)
-				or a.BothRunesAvailable("Unholy", 1))
-	end
+addOptionalDKSpell("Death and Decay", "U, optional", {
+   NoRangeCheck = true,
+   Cooldown = 30,
+   CheckFirst = function()
+      return sufficientRunes(0, 0, 1, 0, true)
+   end
 })
 
-addOptionalSpell("Death Coil", "at 60", {
-	CheckFirst = function()
-		return a.RP >= 60
-	end
+addDKSpell("Plague Strike", "U", {
+   CheckFirst = function()
+      return sufficientRunes(0, 0, 1, 0, true)
+   end
 })
 
-addOptionalSpell("Death and Decay", "U", {
-	NoRangeCheck = true,
-	CheckFirst = function()
-		return c.GetCooldown("Death and Decay", false, 30) == 0 
-			and sufficientRunes(0, 0, 1, 0, true)
-			and c.GetOption("Mastersimple")
-	end
-})
-
-addSpell("Plague Strike", "U", {
-	CheckFirst = function()
-		return sufficientRunes(0, 0, 1, 0, true) and c.GetOption("Mastersimple")
-	end
-})
-
-addSpell("Plague Strike", "UU", {
-	CheckFirst = function()
-		return a.BothRunesAvailable("Unholy", 1)
-	end
-})
-
-addSpell("Plague Strike", "unless RE", {
-	CheckFirst = function()
-		return not c.HasTalent("Runic Empowerment")
-	end
+addDKSpell("Plague Strike", "UU", {
+   CheckFirst = function()
+      return sufficientRunes(0, 0, 2, 0, true)
+   end
 })
 
 ------------------------------------------------------------------------ Unholy
-c.AddOptionalSpell("Unholy Presence", nil, {
-	Type = "form",
+addOptionalDKSpell("Unholy Presence", nil, {
+   Type = "form",
 })
 
-c.AddOptionalSpell("Unholy Frenzy", nil, {
-	NoRangeCheck = 1,
-	Melee = 1,
-	CheckFirst = function()
-		return not s.Buff(c.BLOODLUST_BUFFS, "player")
-	end
+addDKSpell("Soul Reaper - Unholy", nil, {
+   Cooldown = 6,
+   MyDebuff = "Soul Reaper Debuff",
+   CheckFirst = soulReaperIsUsable,
 })
 
-addSpell("Soul Reaper - Unholy", nil, {
-	CheckFirst = soulReaperIsReady,
+addDKSpell("Blood Tap", "for Soul Reaper - Unholy", {
+--      NoGCD = true,
+   Melee = true,
+   FlashID = { "Blood Tap", "Soul Reaper - Unholy" },
+   CheckFirst = function()
+      return soulReaperIsUsable()
+         and a.BloodCharges >= 5
+         and a.FullyDepleted() > 0
+   end
 })
 
-c.AddSpell("Blood Tap", "for Soul Reaper - Unholy", {
---	NoGCD = true,
-	Melee = true,
-	FlashID = { "Blood Tap", "Soul Reaper - Unholy" },
-	CheckFirst = function()
-		return soulReaperIsReady()
-			and a.BloodCharges >= 5
-			and hasFullyDepleted(1, 2, 3, 4, 5, 6)
-	end
+addDKSpell("Plague Strike", "for Both Diseases", {
+   CheckFirst = function()
+      return not hasBothDiseases(0)
+   end
 })
 
-addSpell("Plague Strike", "for Both Diseases", {
-	CheckFirst = function()
-		return not hasBothDiseases(0)
-	end
-})
-
-addOptionalSpell("Summon Gargoyle", nil, {
-	CheckFirst = function()
-		return c.GetCooldown("Summon Gargoyle") == 0
-	end
+addOptionalDKSpell("Summon Gargoyle", nil, {
+   Cooldown = 180,
 })
 
 local function shouldDT()
-	if s.Buff(c.GetID("Dark Transformation"), "pet")
-		or c.IsAuraPendingFor("Dark Transformation") then
-		
-		return false
-	end
-	
-	local stacks = s.BuffStack(c.GetID("Shadow Infusion"), "pet")
-	if a.ShadowInfusionPending or c.IsCasting("Death Coil") then
-		stacks = stacks + 1
-	end
-	return stacks >= 5
+   if s.Buff(c.GetID("Dark Transformation"), "pet")
+      or c.IsAuraPendingFor("Dark Transformation") then
+
+      return false
+   end
+
+   local stacks = s.BuffStack(c.GetID("Shadow Infusion"), "pet")
+   if a.ShadowInfusionPending or c.IsCasting("Death Coil") then
+      stacks = stacks + 1
+   end
+   return stacks >= 5
 end
 
-addSpell("Dark Transformation", nil, {
-	CheckFirst = shouldDT,
+addDKSpell("Dark Transformation", nil, {
+   CheckFirst = shouldDT,
 })
 
-c.AddSpell("Blood Tap", "for Dark Transformation", {
---	NoGCD = true,
-	FlashID = { "Blood Tap", "Dark Transformation" },
-	CheckFirst = function()
-		return a.BloodCharges >= 5
-			and hasFullyDepleted(1, 2, 3, 4, 5, 6)
-			and shouldDT()
-	end
+addDKSpell("Blood Tap", "for Dark Transformation", {
+--      NoGCD = true,
+   FlashID = { "Blood Tap", "Dark Transformation" },
+   CheckFirst = function()
+      return a.BloodCharges >= 5
+         and a.FullyDepleted() > 0
+         and shouldDT()
+   end
 })
 
-addSpell("Death Coil", "at 90", {
-	CheckFirst = function()
-		return a.RP > 90
-	end
+addDKSpell("Death Coil", "at 90", {
+   CheckFirst = function()
+      return a.RP > 90
+   end
 })
 
-addOptionalSpell("Death and Decay", "UU", {
-	NoRangeCheck = true,
-	CheckFirst = function()
-		return c.GetCooldown("Death and Decay", false, 30) == 0 
-			and a.BothRunesAvailable("Unholy", 1)
-	end
+addDKSpell("Death and Decay", "UU", {
+   NoRangeCheck = true,
+   Cooldown = 30,
+   CheckFirst = function()
+      return a.BothRunesAvailable("unholy", 1)
+   end
 })
 
-addOptionalSpell("Death and Decay", "unless Soul Reaper", {
-	NoRangeCheck = true,
-	CheckFirst = function()
-		return c.GetCooldown("Death and Decay", false, 30) == 0 
-			and (not a.InExecute
-				or not soulReaperIsReady(1)
-				or sufficientRunes(0, 0, 2, 0, false))
-	end
+addDKSpell("Death and Decay", "unless Soul Reaper", {
+   NoRangeCheck = true,
+   Cooldown = 30,
+   CheckFirst = function()
+      return not a.InExecute
+      -- @todo danielp 2014-11-16: fix is usable for delay
+         or not soulReaperIsUsable(1)
+         or sufficientRunes(0, 0, 2, 0, false)
+   end
 })
 
-c.AddOptionalSpell("Blood Tap", "for D&D", {
---	NoGCD = true,
-	FlashID = { "Blood Tap", "Death and Decay" },
-	CheckFirst = function()
-		return a.BloodCharges >= 5
-			and c.GetCooldown("Death and Decay") == 0
-			and not sufficientResources(c.GetID("Death and Decay"))
-			and not c.IsCasting("Death and Decay")
-	end
+addOptionalDKSpell("Blood Tap", "for D&D", {
+--      NoGCD = true,
+   FlashID = { "Blood Tap", "Death and Decay" },
+   CheckFirst = function()
+      return a.BloodCharges >= 5
+         and c.GetCooldown("Death and Decay") == 0
+         and not sufficientResources(c.GetID("Death and Decay"))
+         and not c.IsCasting("Death and Decay")
+   end
 })
 
-addSpell("Scourge Strike", "UU", {
-	CheckFirst = function()
-		return a.BothRunesAvailable("Unholy", 1)
-	end
+addDKSpell("Scourge Strike", "UU", {
+   CheckFirst = function()
+      return a.BothRunesAvailable("unholy", 1)
+   end
 })
 
-addSpell("Scourge Strike", "unless Soul Reaper", {
-	CheckFirst = function()
-		return not a.InExecute
-			or not soulReaperIsReady(1)
-			or sufficientRunes(0, 0, 2, 0, false)
-	end
+addDKSpell("Scourge Strike", "unless Soul Reaper", {
+   CheckFirst = function()
+      -- @todo danielp 2014-11-16: fix is usable for delay
+      return not a.InExecute
+         or not soulReaperIsUsable(1)
+         or sufficientRunes(0, 0, 2, 0, false)
+   end
 })
 
-addSpell("Festering Strike", nil, {
-	CheckFirst = function()
-		return sufficientRunes(1, 1, 0, 0, true)
-	end
+addDKSpell("Festering Strike", nil, {
+   CheckFirst = function()
+      return sufficientRunes(1, 1, 0, 0, true)
+   end
 })
 
-addSpell("Festering Strike", "BBFF", {
-	CheckFirst = function()
-		return a.BothRunesAvailable("Blood", 1)
-			or a.BothRunesAvailable("Frost", 1)
-	end
+addDKSpell("Festering Strike", "BBFF", {
+   CheckFirst = function()
+      return a.BothRunesAvailable("blood", 1)
+         or a.BothRunesAvailable("frost", 1)
+   end
 })
 
-addSpell("Death Coil", "under Sudden Doom or for Dark Transformation", {
-	CheckFirst = function()
-		if c.HasBuff("Sudden Doom") and not c.IsCasting("Death Coil") then
-			return true
-		end
-		
-		if GetTime() - a.DTCast < .8
-			or s.BuffDuration(c.GetID("Dark Transformation"), "pet")
-				> c.GetBusyTime()
-			or c.IsCasting("Dark Transformation") then
-			
-			return false
-		end
-		
-		-- make sure unholy runes stay on cooldown?
-		local runes = a.PendingDeathRunes
-		if runeAvailable(1, 1) and a.IsDeathRune(1) then
-			runes = runes + 1
-		end
-		if runeAvailable(2, 1) and a.IsDeathRune(2) then
-			runes = runes + 1
-		end
-		if runeAvailable(5, 1) and a.IsDeathRune(5) then
-			runes = runes + 1
-		end
-		if runeAvailable(6, 1) and a.IsDeathRune(6) then
-			runes = runes + 1
-		end
-		if runeAvailable(3, 1) then
-			runes = runes + 1
-		end
-		if runeAvailable(4, 1) then
-			runes = runes + 1
-		end
-		return runes <= 1
-	end
+addDKSpell("Death Coil", "under Sudden Doom or for Dark Transformation", {
+   CheckFirst = function()
+      if c.HasBuff("Sudden Doom") and not c.IsCasting("Death Coil") then
+         return true
+      end
+
+      if GetTime() - a.DTCast < .8
+         or s.BuffDuration(c.GetID("Dark Transformation"), "pet")
+            > c.GetBusyTime()
+         or c.IsCasting("Dark Transformation") then
+
+         return false
+      end
+
+      -- make sure unholy runes stay on cooldown?
+      local runes = a.PendingDeathRunes
+      if runeAvailable(BLOOD1, 1) and a.Runes[1].Type == "death" then
+         runes = runes + 1
+      end
+      if runeAvailable(BLOOD2, 1) and a.Runes[2].Type == "death" then
+         runes = runes + 1
+      end
+      if runeAvailable(FROST1, 1) and a.Runes[5].Type == "death" then
+         runes = runes + 1
+      end
+      if runeAvailable(FROST2, 1) and a.Runes[6].Type == "death" then
+         runes = runes + 1
+      end
+      if runeAvailable(UNHOLY1, 1) then
+         runes = runes + 1
+      end
+      if runeAvailable(UNHOLY2, 1) then
+         runes = runes + 1
+      end
+      return runes <= 1
+   end
 })
 
-addSpell("Death Coil", "unless Gargoyle or Dark Transformation", {
-	CheckFirst = function()
-		local dt
-		if c.IsAuraPendingFor("Dark Transformation") then
-			dt = 30
-		else
-			dt = s.BuffDuration(c.GetID("Dark Transformation"), "pet")
-				- c.GetBusyTime()
-			if dt <= 0 then
-				return true
-			end
-		end
-		
-		return dt > 8 
-			and (c.GetCooldown("Summon Gargoyle") > 8 
-				or c.IsCasting("Summon Gargoyle"))
-	end
+addDKSpell("Death Coil", "unless Gargoyle or Dark Transformation", {
+   CheckFirst = function()
+      local dt
+      if c.IsAuraPendingFor("Dark Transformation") then
+         dt = 30
+      else
+         dt = s.BuffDuration(c.GetID("Dark Transformation"), "pet")
+            - c.GetBusyTime()
+         if dt <= 0 then
+            return true
+         end
+      end
+
+      return dt > 8
+         and (c.GetCooldown("Summon Gargoyle") > 8
+            or c.IsCasting("Summon Gargoyle"))
+   end
 })
 
-c.AddOptionalSpell("Blood Tap", "at 8 or for Dark Transformation", {
-	NoGCD = true,
-	CheckFirst = function()
-		if a.InExecute or not hasFullyDepleted(1, 2, 3, 4, 5, 6) then
-			return false
-		end
-		
-		if a.BloodCharges >= 8 then
-			return true
-		end
-		
-		return a.BloodCharges >= 5 
-			and s.BuffDuration(c.GetID("Dark Transformation"), "pet")
-				<= c.GetBusyTime()
-	end
+addOptionalDKSpell("Blood Tap", "at 8 or for Dark Transformation", {
+   NoGCD = true,
+   CheckFirst = function()
+      if a.InExecute or a.FullyDepleted() <= 0 then
+         return false
+      end
+
+      if a.BloodCharges >= 8 then
+         return true
+      end
+
+      return a.BloodCharges >= 5
+         and s.BuffDuration(c.GetID("Dark Transformation"), "pet")
+            <= c.GetBusyTime()
+   end
 })

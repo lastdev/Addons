@@ -1,6 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Version: 5.21c.5521 (SanctimoniousSwamprat)
 	Revision: $Id: EnxConstants.lua 4632 2010-01-24 02:33:54Z ccox $
 	URL: http://enchantrix.org/
 
@@ -133,7 +133,7 @@ local HERB_GORGONDFLYTRAP = 109126
 local HERB_STARFLOWER = 109127
 local HERB_NAGRANDARROWBLOOM = 109128
 local HERB_TALADORORCHID = 109129
-local HERB_CHAMELEONLOTUS = 109130 -- green, but millable!
+local HERB_CHAMELEONLOTUS = 109130 -- green quality, but millable!
 
 
 -- only currently used for autoloot in EnxAutoDisenchant.lua
@@ -218,8 +218,8 @@ const.MillingSkillRequired = {
 	[SHADOW_PIGMENT_HIGH] = 500,
 	
 -- WoD TODO - ccox - confirm values
-	[CERULEAN_PEGMENT_LOW] = 600,
-	[CERULEAN_PEGMENT_HIGH] = 600,
+	[CERULEAN_PEGMENT_LOW] = 1,
+	[CERULEAN_PEGMENT_HIGH] = 1,
 
 }
 
@@ -305,10 +305,10 @@ const.MillableItems = {
 	[HERB_FROSTWEED] = CERULEAN_PEGMENT_LOW,
 	[HERB_FIREWEED] = CERULEAN_PEGMENT_LOW,
 	[HERB_GORGONDFLYTRAP] = CERULEAN_PEGMENT_LOW,
-	[HERB_STARFLOWER] = CERULEAN_PEGMENT_HIGH,
+	[HERB_STARFLOWER] = CERULEAN_PEGMENT_LOW,
 	[HERB_NAGRANDARROWBLOOM] = CERULEAN_PEGMENT_HIGH,
 	[HERB_TALADORORCHID] = CERULEAN_PEGMENT_HIGH,
-	[HERB_CHAMELEONLOTUS] = CERULEAN_PEGMENT_LOW,	-- green, but millable!
+	[HERB_CHAMELEONLOTUS] = CERULEAN_PEGMENT_LOW,	-- green quality, but millable!
 }
 
 
@@ -417,13 +417,13 @@ const.MillGroupYields = {
 		[MISTY_PIGMENT] = 0.56,
 		},
 
--- TODO - ccox - WoD confirm yields
+-- WoD - TODO - ccox - need more data
 	[CERULEAN_PEGMENT_LOW] = {
-		[CERULEAN_PIGMENT] = 2.0,
+		[CERULEAN_PIGMENT] = 2.10,
 		},
 	
 	[CERULEAN_PEGMENT_HIGH] = {
-		[CERULEAN_PIGMENT] = 2.5,
+		[CERULEAN_PIGMENT] = 2.10,
 		},
 }
 
@@ -448,7 +448,7 @@ local BLACKFALLOW_INK = 61978
 local INFERNO_INK = 61981
 local INK_DREAMS = 79254
 local STARLIGHT_INK = 79255
---local WARBRINGER_INK = 113111		-- not used
+local WARBINDER_INK = 113111
 
 const.ReverseInkList = {
 
@@ -463,7 +463,7 @@ const.ReverseInkList = {
 	[ INKOFTHESEA_INK ] = { AZURE_PIGMENT },
 	[ BLACKFALLOW_INK ] = { ASHEN_PIGMENT },
 	[ INK_DREAMS ] = { SHADOW_PIGMENT },
---	[ WARBRINGER_INK ] = { CERULEAN_PIGMENT },	-- ink not used
+	[ WARBINDER_INK ] = { CERULEAN_PIGMENT },
 	
 	[ HUNTERS_INK ] = { VERDANT_PIGMENT },
 	[ DAWNSTAR_INK ] = { BURNT_PIGMENT },

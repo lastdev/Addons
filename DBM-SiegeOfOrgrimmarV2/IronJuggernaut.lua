@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(864, "DBM-SiegeOfOrgrimmarV2", nil, 369)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 18 $"):sub(12, -3))
 mod:SetCreatureID(71466)
 mod:SetEncounterID(1600)
 mod:SetZone()
@@ -178,7 +178,7 @@ function mod:SPELL_AURA_REMOVED(args)
 end
 
 function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 144218 and destGUID == UnitGUID("player") and self:AntiSpam() then
+	if spellId == 144218 and destGUID == UnitGUID("player") and self:AntiSpam(1.5) then
 		specWarnBorerDrillMove:Show()
 	end
 end

@@ -1,10 +1,10 @@
 ## Interface: 60000
-## Version: 60000.1.0
+## Version: 60000.1.1
 ## Author: Xemnosyst
 ## Title : Bitten's Utils
 ## Notes: General functions used in Bitten's addons.
 ## URL: http://www.curse.com/addons/wow/bittens-utils
-## X-Curse-Packaged-Version: 60000.1.0
+## X-Curse-Packaged-Version: 60000.1.1
 ## X-Curse-Project-Name: Bitten's Utils
 ## X-Curse-Project-ID: bittens-utils
 ## X-Curse-Repository-ID: wow/bittens-utils/mainline

@@ -13,6 +13,8 @@ if GetLocale() == "itIT" then
 		Tailoring = "Sartoria", -- Needs review
 	},
 	String = {
+		AutoExcludeFlyingMountsInNoFlyAreas = "Automatically exclude flying mounts in \"no fly\" areas", -- Requires localization
+		AutoExcludeFlyingMountsInNoFlyAreas_Long = "With this option enabled, GoGoMount will automatically remove all mounts that can fly from the random mount selection when it believes you can't actually fly.  This is almost the same as using key binding #2 for GoGoMount.  This will be useful while leveling up, in battle grounds, etc.  Note that if your list of favorite mounts contains all mounts that can fly and you trying mounting in a battle ground with this option enabled, you may not mount at all.", -- Requires localization
 		AutomaticallyRemoveBuffs = "Rimuovi automaticamente gli appassionati che impediscono il montaggio", -- Needs review
 		AutoStartCrusaderAura = "Avvio automatico Crusader Aura", -- Needs review
 		AutoStartCrusaderAura_Long = "Avvia automaticamente Crusader Aura quando si utilizza GoGoMount da montare.", -- Needs review

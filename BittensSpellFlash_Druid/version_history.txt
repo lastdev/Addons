@@ -1,3 +1,14 @@
+== Version 60000.1.1
+* Fix combat log spamming (sorry)
+
+== Version 60000.1.0
+* New author: SlippyCheeze
+* UTF-8-unix everything.
+* Reindent to 3-space indentation for lua.
+* Bump TOC for 6.0 release, author, etc.
+* Kill dead spells, flush rotations, etc, for 6.0.
+* Added threatening warning about the rotations being, well, not done.
+
 == Version 50400.2.5
 * The future of Bitten's SpellFlash: Druid is in question.  I no longer wish to maintain this addon, starting with patch 6.0.  If you are interested in taking it over, keeping up with optimal rotations, and you have programming skills, please leave a comment or PM on Curse.
 

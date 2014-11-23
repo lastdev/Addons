@@ -39,8 +39,8 @@ L["Aura(s)"] = "Auren"
 L["Auto"] = "Auto"
 L["Auto-cloning enabled"] = "Auto-Klonen aktiviert"
 L["Automatic Icon"] = "Automatisches Symbol"
-L["Backdrop Color"] = "Hintergrundfarbe" -- Needs review
-L["Backdrop Style"] = "Hintergrundstil" -- Needs review
+L["Backdrop Color"] = "Hintergrundfarbe"
+L["Backdrop Style"] = "Hintergrundstil"
 L["Background"] = "Hintergrund"
 L["Background Color"] = "Hintergrundfarbe"
 L["Background Inset"] = "Hintergrundeinzug"
@@ -48,8 +48,8 @@ L["Background Offset"] = "Hintergrundversatz"
 L["Background Texture"] = "Hintergrundtextur"
 L["Bar Alpha"] = "Balkentransparenz"
 L["Bar Color"] = "Balkenfarbe"
-L["Bar Color Settings"] = "Balkenfarben Einstellungen" -- Needs review
-L["Bar in Front"] = "Balken im Vordergrund" -- Needs review
+L["Bar Color Settings"] = "Balkenfarben Einstellungen"
+L["Bar in Front"] = "Balken im Vordergrund"
 L["Bar Texture"] = "Balkentextur"
 L["Battle"] = "Angriff"
 L["Bear"] = "Bär"
@@ -57,12 +57,12 @@ L["Berserker"] = "Berserker"
 L["Blend Mode"] = "Blendmodus"
 L["Blood"] = "Blut"
 L["Border"] = "Rand"
-L["Border Color"] = "Randfarbe" -- Needs review
-L["Border Inset"] = "Rahmeneinlassung" -- Needs review
+L["Border Color"] = "Randfarbe"
+L["Border Inset"] = "Rahmeneinlassung"
 L["Border Offset"] = "Randversatz"
-L["Border Settings"] = "Rahmeneinstellungen" -- Needs review
-L["Border Size"] = "Rahmengröße" -- Needs review
-L["Border Style"] = "Rahmenstil" -- Needs review
+L["Border Settings"] = "Rahmeneinstellungen"
+L["Border Size"] = "Rahmengröße"
+L["Border Style"] = "Rahmenstil"
 L["Bottom Text"] = "Text unten"
 L["Button Glow"] = "Aktionsleisten Glanz"
 L["Can be a name or a UID (e.g., party1). Only works on friendly players in your group."] = "Kann ein Name oder eine UID (zb. party1) sein. Funktioniert nur für freundliche Spieler innerhalb deiner Gruppe."
@@ -171,9 +171,9 @@ L["Finish"] = "Endanimation"
 L["Fire Resistance"] = "Feuerresistenz"
 L["Flight(Non-Feral)"] = "Flug"
 L["Font"] = "Schriftart"
-L["Font Flags"] = "Schrifteinstellungen" -- Needs review
+L["Font Flags"] = "Schrifteinstellungen"
 L["Font Size"] = "Schriftgröße"
-L["Font Type"] = "Schriftart" -- Needs review
+L["Font Type"] = "Schrifttyp"
 L["Foreground Color"] = "Vordergrundfarbe"
 L["Foreground Texture"] = "Vordergrundtextur"
 L["Form (Druid)"] = "Form (Druide)"
@@ -187,18 +187,17 @@ L["Frost Resistance"] = "Frostresistenz"
 L["Full Scan"] = "Kompletter Scan"
 L["Ghost Wolf"] = "Geisterwolf"
 L["Glow Action"] = "Leuchtaktion"
-L["Group aura count description"] = [=[
-Anzahl an Gruppen-/Raidmitgliedern die von einer der Auren betroffen sein muss um den Trigger auszulösen.
-Es kann entweder ein fixer Wert sein (zb. 5) oder relativ sein (zb. 50%).
-Falls die Zahl im Format als Bruch (1/2), Prozent (50%) oder Dezimal (0.5) vorliegt, wird sie relativ zur Größe der aktuellen Gruppenstärke gesetzt.
+L["Group aura count description"] = [=[Die Anzahl der %s-Mitglieder, die von einer der Auren betroffen sein müssen, um den Trigger auszulösen.
+Falls der eingegebene Wert eine ganze Zahl (z.B. 5) ist, wird die Anzahl der betroffenen Gruppenmitglieder damit verglichen.
+Falls die Zahl als Dezimalzahl (z.B. 0.5), Bruch (z.B. 1/2) oder Prozentsatz (z.B. 50%%) eingegeben wird, muss dieser Teil der %s betroffen sein.
 
-|cFF4444FFBeispiel:|r
- > 0 - Lößt aus, wenn jemand betroffen ist
- = 100%% - Lößt aus, wenn alle betroffen sind
- != 2 - Lößt aus, wenn weniger oder mehr als 2 Spieler betroffen sind
- <= 0.8 - Lößt aus, wenn 80%% betroffen sind (4/5, 8/10 oder 20/25)
- > 1/2 - Lößt aus, wenn die Hälfte der Mitglieder betroffen sind
- >= 0 - Lößt immer aus]=]
+|cFF4444FBeispiel:|r
+|cFF00CC00> 0|r Löst aus, wenn irgendjemand in der %s betroffen ist.
+|cFF00CC00= 100%%|r Löst aus, wenn alle in der %s betroffen sind.
+|cFF00CC00!= 2|r Löst aus, wenn weniger oder mehr als 2 Spieler in der %s betroffen sind.
+|cFF00CC00<= 0.8|r Löst aus, wenn weniger als 80%% in der %s betroffen sind (4 von 5 Gruppenmitgliedern, 8 von 10 oder 20 von 25 Raidmitgliedern).
+|cFF00CC00> 1/2|r Löst aus, wenn mehr als die Hälfte der %s betroffen sind.
+|cFF00CC00>= 0|r Löst immer aus.]=] -- Needs review
 L["Group Member Count"] = "Gruppengröße"
 L["Group (verb)"] = "Gruppe"
 L["Height"] = "Höhe"
@@ -206,6 +205,7 @@ L["Hide this group's children"] = "Kinder der Gruppe verbergen"
 L["Hide When Not In Group"] = "Falls nicht in Gruppe, dann verbergen"
 L["Horizontal Align"] = "Horizontal Ausrichten"
 L["Icon Info"] = "Symbolinfo"
+-- L["Icon Inset"] = ""
 L["Ignored"] = "Ignoriert"
 L["Ignore GCD"] = "Globale Abklingzeit ignorieren"
 L["%i Matches"] = "%i Treffer"
@@ -290,6 +290,7 @@ L["Rotation"] = "Rotation"
 L["Same"] = "Gleich"
 L["Search"] = "Suchen"
 L["Secondary"] = "Zweite"
+-- L["Select the auras you always want to be listed first"] = ""
 L["Send To"] = "Senden an"
 L["Set tooltip description"] = "Tooltipbeschreibung festlegen"
 L["Shadow Dance"] = "Schattentanz"
@@ -341,6 +342,7 @@ L["Text Color"] = "Textfarbe"
 L["Text Position"] = "Textposition"
 L["Text Settings"] = "Text Einstellungen"
 L["Texture"] = "Textur"
+-- L["Texture Info"] = ""
 L["The children of this group have different display types, so their display options cannot be set as a group."] = "Anzeigeoptionen für diese Gruppe können nicht dargetsellt werden, weil die Kinder dieser Gruppe verschiedene Anzeigetypen haben."
 L["The duration of the animation in seconds."] = "Die Dauer der Animation in Sekunden."
 L["The type of trigger"] = "Auslösertyp"
@@ -349,7 +351,7 @@ L["This display is currently loaded"] = "Diese Anzeige ist zur Zeit geladen"
 L["This display is not currently loaded"] = "Diese Anzeige ist zur Zeit nicht geladen"
 L["This display will only show when |cFF00FF00%s"] = "Diese Anzeige wird nur eingezeigt, wenn |cFF00FF00%s"
 L["This display will only show when |cFFFF0000 Not %s"] = "Diese Anzeige wird nur eingezeigt, wenn |cFF00FF00 nicht %s"
-L["This region of type \"%s\" has no configuration options."] = "Diese Region vom Typ \"%s\" besitzt keine Einstellungsmöglichkeiten." -- Needs review
+L["This region of type \"%s\" has no configuration options."] = "Diese Region vom Typ \"%s\" besitzt keine Einstellungsmöglichkeiten."
 L["Time in"] = "Zeit in"
 L["Timer"] = "Zeitgeber"
 L["Timer Settings"] = "Timer Einstellungen"

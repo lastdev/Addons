@@ -1,7 +1,9 @@
+local LocalDescription, LocalGuild, LocalClass = {}, {}, {}
 
 TidyPlatesWidgetData.UnitDescriptions = TidyPlatesWidgetData.UnitDescriptions or {}
 TidyPlatesWidgetData.UnitGuild = TidyPlatesWidgetData.UnitGuild or {}
 TidyPlatesWidgetData.UnitClass = TidyPlatesWidgetData.UnitClass or {}
+TidyPlatesWidgetData.UnitLastSeen = TidyPlatesWidgetData.UnitLastSeen or {}
 
 local Friends = Friends or {}
 local Guild = Guild or {}
@@ -114,12 +116,17 @@ function UnitCacheMonitorEvents.PLAYER_ENTERING_WORLD()
 	if itype and itype ~= "none" then inInstance = true else inInstance = false end
 end
 
+
+
 function UnitCacheMonitorEvents.UPDATE_MOUSEOVER_UNIT(self, ...)
+
 	-- Bypass caching while in an instance
 	if inInstance then return end
 
 	-- Vars
 	local name, class, realm, description, unitadded, descriptionAlt
+
+	local d = date("*t")
 
 	-- Player
 	------------------------------------
@@ -141,8 +148,6 @@ function UnitCacheMonitorEvents.UPDATE_MOUSEOVER_UNIT(self, ...)
 		-- Check for alterations
 		if TidyPlatesWidgetData.UnitGuild[name] ~= description or TidyPlatesWidgetData.UnitClass[name] ~= class then
 			unitadded = true
-			TidyPlatesWidgetData.UnitClass[name] = class
-			TidyPlatesWidgetData.UnitGuild[name] = description
 		end
 
 	-- NPC
@@ -166,14 +171,30 @@ function UnitCacheMonitorEvents.UPDATE_MOUSEOVER_UNIT(self, ...)
 			if tonumber(level) or level == "??" then description = nil end		-- If the description is a level, don't store it
 		end
 
-		if TidyPlatesWidgetData.UnitDescriptions[name] ~= description then
-			unitadded = true
-			TidyPlatesWidgetData.UnitDescriptions[name] = description
-		end
+		class = "NPC"
 
+		if TidyPlatesWidgetData.UnitGuild[name] ~= description then
+			unitadded = true
+		end
 	end
 
-	if unitadded then TidyPlates:RequestDelegateUpdate() end
+	-- Store Timecode
+	if name then
+		TidyPlatesWidgetData.UnitLastSeen[name] = ((d.year - 2006) * 365) + d.yday
+	end
+
+	-- For temporary cache
+	LocalClass[name] = class
+	LocalGuild[name] = description
+
+	-- For saved cache
+	if unitadded then
+		TidyPlatesWidgetData.UnitClass[name] = class
+		TidyPlatesWidgetData.UnitGuild[name] = description
+
+		TidyPlates:RequestDelegateUpdate()
+	end
+
 end
 
 function UnitCacheMonitorEvents.GUILD_ROSTER_UPDATE(self, ...)
@@ -194,6 +215,39 @@ local function OnEvent(frame, event, ...)
 	UnitCacheMonitorEvents[event](...)
 end
 
+
+local cleaned = false
+local function CleanCaches()
+	if cleaned == true then return end
+
+	local d = date("*t")
+	local now = ((d.year - 2006) * 365) + d.yday
+
+	-- Clean Out caches
+	for i,v in pairs(TidyPlatesWidgetData.UnitDescriptions) do
+		local last = TidyPlatesWidgetData.UnitLastSeen[i]
+		if last == nil or (now - last > 60) then
+			TidyPlatesWidgetData.UnitDescriptions[i] = nil
+		end
+	end
+
+	for i,v in pairs(TidyPlatesWidgetData.UnitGuild) do
+		local last = TidyPlatesWidgetData.UnitLastSeen[i]
+		if last == nil or (now - last > 60) then
+			TidyPlatesWidgetData.UnitGuild[i] = nil
+		end
+	end
+
+	for i,v in pairs(TidyPlatesWidgetData.UnitClass) do
+		local last = TidyPlatesWidgetData.UnitLastSeen[i]
+		if last == nil or (now - last > 60) then
+			TidyPlatesWidgetData.UnitClass[i] = nil
+		end
+	end
+	cleaned = true
+end
+
+
 local function Enable()
 	if not UnitCacheMonitor then UnitCacheMonitor = CreateFrame("Frame") end
 	for event in pairs(UnitCacheMonitorEvents) do UnitCacheMonitor:RegisterEvent(event) end
@@ -202,11 +256,13 @@ local function Enable()
 	if not TidyPlatesWidgetData.UnitDescriptions then TidyPlatesWidgetData.UnitDescriptions = {} end
 	if not TidyPlatesWidgetData.UnitClass then TidyPlatesWidgetData.UnitClass = {} end
 	if not TidyPlatesWidgetData.UnitGuild then TidyPlatesWidgetData.UnitGuild = {} end
+	if not TidyPlatesWidgetData.UnitLastSeen then TidyPlatesWidgetData.UnitLastSeen = {} end
 	if not Guild then Guild = {} end
 	if not Friends then Friends = {} end
 
 	GuildRoster()
 	UpdateFriendCache()
+	CleanCaches()
 	--print("TidyPlatesBeta Message: Unit Data Caching is Enabled")
 end
 
@@ -223,16 +279,36 @@ local function InstanceStatus()
 	return inInstance
 end
 
-local function CachedUnitDescription(name)
-	if inInstance then return nil else return TidyPlatesWidgetData.UnitDescriptions[name] end
-end
 
 local function CachedUnitGuild(name)
-	if inInstance then return nil else return TidyPlatesWidgetData.UnitGuild[name] end
+
+	if inInstance then 		-- If inInstance, don't both looking up the data...  might cause a hiccup if the table is huge
+		return nil
+	elseif LocalGuild[name] then
+		return LocalGuild[name]
+	elseif TidyPlatesWidgetData.UnitGuild[name] then
+		LocalGuild[name] = TidyPlatesWidgetData.UnitGuild[name]
+		return LocalGuild[name]
+	end
+
+	--if inInstance then return nil else return TidyPlatesWidgetData.UnitGuild[name] end
 end
 
 local function CachedUnitClass(name)
-	if inInstance then return nil else return TidyPlatesWidgetData.UnitClass[name] end
+	if inInstance then 		-- If inInstance, don't both looking up the data...  might cause a hiccup if the table is huge
+		return nil
+	elseif LocalClass[name] then
+		return LocalClass[name]
+	elseif TidyPlatesWidgetData.UnitClass[name] then
+		LocalClass[name] = TidyPlatesWidgetData.UnitClass[name]
+		return LocalClass[name]
+	end
+
+	--if inInstance then return nil else return TidyPlatesWidgetData.UnitClass[name] end
+end
+
+local function CachedUnitDescription(name)
+	return CachedUnitGuild(name)
 end
 
 local function IsFriend(name)
@@ -244,10 +320,11 @@ local function IsGuildmate(name)
 end
 
 -- InstanceStatus, CachedUnitDescription, CachedUnitGuild, CachedUnitClass, IsFriend, IsGuildmate
-
 TidyPlatesUtility.CachedUnitDescription = CachedUnitDescription
 TidyPlatesUtility.CachedUnitGuild = CachedUnitGuild
 TidyPlatesUtility.CachedUnitClass = CachedUnitClass
+
+
 TidyPlatesUtility.IsFriend = IsFriend
 TidyPlatesUtility.IsGuildmate = IsGuildmate
 

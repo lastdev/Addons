@@ -1,6 +1,24 @@
 Pack Command:  		zip -vr TP_Release.zip TidyPlates* -x@exclude.lst
 Exclusion List: 	*.svn*   *.DS_Store*   exclude.lst   *.db   *.png   *.gif   *.jpg   *.tif   *.txt   *.psd   *.bmp
 
+
+6.15.3
+---------------------------
+* Combo Widget: Fixed monk and localization issues
+* Blizzard theme; "Fixed" the graphic alignment?
+* Aura Widget:  Support for Infinite Duration (0=Expiration Time) auras, like "Storm, Earth, and Fire".
+* Hub; Cast Bar: Changed the logic of Friendly Unit cast bars.  Perhaps this will help Capacitor Totem visibility?
+
+6.15.2
+---------------------------
+* Unit Cache:
+	- In LUA, When a table gets large, it will be slower to search. For some users, this cache may be quite large....
+	- New features will automatically remove old data, and speed up lookups....
+	- Added a second level Cache, which is looked at FIRST; not a saved variable (ie. erased on logout).  This should reduce frequent lookups to the BIG table.
+	- Added a 'lastSeen' feature, where the function will timestamp when the unit was seen, and remove any unit entry (on login) not seen for 60 days.
+* Combo Widget: Monks get to see their Chi displayed in the Combo widget
+
+
 6.15.1
 ---------------------------
 Fix for mouseover (and many other things)

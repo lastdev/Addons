@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21b.5509 (SanctimoniousSwamprat)
-	Revision: $Id: CoreConst.lua 5497 2014-10-18 13:22:44Z brykrys $
+	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Revision: $Id: CoreConst.lua 5518 2014-11-06 11:35:20Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -36,7 +36,6 @@ if not AucAdvanced then return end
 local lib = {
 	PlayerName = UnitName("player"),
 	PlayerRealm = GetRealmName(),
-	PlayerFaction = UnitFactionGroup("player"),
 
 	AucMinTimes = {
 		0,
@@ -130,6 +129,11 @@ local lib = {
 	-- Temporary flags (only used during processing - higher values to leave lower ones free for permanent flags)
 	FLAG_DIRTY = 64,
 
+	ALEVEL_OFF = 0,
+	ALEVEL_LOW = 1,
+	ALEVEL_MED = 2,
+	ALEVEL_HI = 3,
+
 	CLASSES = { GetAuctionItemClasses() },
 	SUBCLASSES = { },
 	CLASSESREV = { }, -- Table mapping names to index in CLASSES table
@@ -139,18 +143,10 @@ local lib = {
 	MAXUSERLEVEL = 100,
 	MAXITEMLEVEL = 700,
 	MAXBIDPRICE = 9999999999, -- copy from Blizzard_AuctionUI.lua, so it is available before AH loads
+
 }
 
-lib.InvTypes = lib.EquipEncode -- backward compatibility - deprecated entry
-
-lib.ServerKeyHome = lib.PlayerRealm .."-".. lib.PlayerFaction
-lib.ServerKeyNeutral = lib.PlayerRealm .."-Neutral"
-if lib.PlayerFaction == "Alliance" then
-	lib.OpposingFaction = "Horde"
-else
-	lib.OpposingFaction = "Alliance"
-end
-lib.ServerKeyOpposing = lib.PlayerRealm .."-".. lib.OpposingFaction
+lib.CompactRealm = lib.PlayerRealm:gsub(" ", "") -- CompactRealm is realm name with spaces removed
 
 for i = 1, #lib.CLASSES do
 	lib.CLASSESREV[lib.CLASSES[i]] = i
@@ -182,4 +178,4 @@ CompileInvTypes(GetAuctionInvTypes(2, 1))
 
 AucAdvanced.Const = lib
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Advanced/CoreConst.lua $", "$Rev: 5497 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Advanced/CoreConst.lua $", "$Rev: 5518 $")

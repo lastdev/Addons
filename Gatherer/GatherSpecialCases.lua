@@ -1,6 +1,6 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
+	Version: 5.0.0 (<%codename%>)
 	Revision: $Id: GatherSpecialCases.lua 894 2010-12-02 22:46:33Z Esamynn $
 
 	License:
@@ -34,7 +34,7 @@
 	THIS FILE SHOULD ALWAYS BE HEAVILY COMMENTED SO THAT IT IS EASY TO UNDERSTAND
 	EXACTLY WHAT IS BEING DONE AND WHY!!!
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherSpecialCases.lua $", "$Rev: 894 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_5.0.0/Gatherer/GatherSpecialCases.lua $", "$Rev: 894 $")
 
 --[[
 	Processing function that does the actual work.  This function nils itself

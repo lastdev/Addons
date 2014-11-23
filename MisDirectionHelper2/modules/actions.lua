@@ -1,7 +1,7 @@
 local UnitExists, UnitName, IsInRaid = UnitExists, UnitName, IsInRaid
 local UnitGroupRolesAssigned, UnitGetAvailableRoles, UnitHealthMax = UnitGroupRolesAssigned, UnitGetAvailableRoles, UnitHealthMax
 local GetNumGroupMembers, GetPartyAssignment = GetNumGroupMembers, GetPartyAssignment
-local _G = _G
+local _G, format = _G, format
 
 function MDH:ClearTarget(button)
 	if button == "LeftButton" then
@@ -27,7 +27,7 @@ function MDH:ToT(button)
 	self:MDHShowToolTip()
 end
 
-function MDH:PlyrPet(button)
+function MDH:PlayerPet(button)
 	if UnitExists("pet") then self:MDHgetpet() end
 	if button == "LeftButton" then
 		self.db.profile.target = "pet"
@@ -40,7 +40,7 @@ function MDH:PlyrPet(button)
 	self:MDHShowToolTip()
 end
 
-function MDH:PrtyTank(button)
+function MDH:PartyTank(button)
 	self:MDHtank(button)
 	self:MDHEditMacro()
 	self:MDHShowToolTip()
@@ -72,15 +72,16 @@ end
 
 function MDH:MDHtank(button)
 	local members = GetNumGroupMembers()
-	local mt, mth, name, tank, canBeTank, member, maxHealth, prefix
-	if IsInRaid() then prefix = "raid" else prefix = "party" end
+	local mt, mth, canBeTank, maxHealth
+	local prefix = IsInRaid() and "raid" or "party"
 	if members == 0 then return end
 	for member = 1, _G.MAX_RAID_MEMBERS do
-		name = UnitName(prefix .. member)
+		local unit = format("%s%d", prefix, member)
+		local name = UnitName(unit)
 		if name then
-			tank = GetPartyAssignment("MAINTANK", name) or (UnitGroupRolesAssigned(name) == "TANK")
-			if not tank then canBeTank = UnitGetAvailableRoles(name)
-				if canBeTank then maxHealth = UnitHealthMax(name)
+			local tank = GetPartyAssignment("MAINTANK", unit) or (UnitGroupRolesAssigned(unit) == "TANK")
+			if not tank then canBeTank = UnitGetAvailableRoles(unit)
+				if canBeTank then maxHealth = UnitHealthMax(unit)
 					if maxHealth > (mth or 0) then
 						mth = maxHealth
 						mt = name

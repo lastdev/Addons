@@ -310,19 +310,21 @@ function HealBot_Action_setpcClass()
             local prevHealBot_pcMax=HealBot_pcMax;
             if HealBot_Data["PCLASSTRIM"]==HealBot_Class_En[HEALBOT_PALADIN] then
                 HealBot_pcClass[j]=9
-                if UnitLevel("player")<85 then
-                    HealBot_pcMax=3
-                else
-                    HealBot_pcMax=5
-                end
+                HealBot_pcMax = UnitPowerMax("player" , 9);
+                --if UnitLevel("player")<85 then
+                --    HealBot_pcMax=3
+                --else
+                --    HealBot_pcMax=5
+                --end
             else
                 HealBot_pcClass[j]=12
-                local _, talent = GetTalentRowSelectionInfo(3)
-                if talent==8 then
-                    HealBot_pcMax=5
-                else
-                    HealBot_pcMax=4
-                end
+                HealBot_pcMax = UnitPowerMax("player" , 12);
+                --local _, talent = GetTalentRowSelectionInfo(3)
+                --if talent==8 then
+                --    HealBot_pcMax=5
+                --else
+                --    HealBot_pcMax=4
+                --end
             end     
             if prevHealBot_pcMax~=HealBot_pcMax then
                 HealBot_Action_clearResetBarSkinDone()
@@ -351,8 +353,10 @@ function HealBot_Action_SetrSpell()
     if HealBot_Data["PCLASSTRIM"]=="DRUI" then
         if HealBot_GetSpellId(HEALBOT_WRATH) then 
             HealBot_RangeSpells["HARM"]=HEALBOT_WRATH -- 40
+            x=HEALBOT_WRATH
         elseif HealBot_GetSpellId(HEALBOT_HURRICANE) then 
             HealBot_RangeSpells["HARM"]=HEALBOT_HURRICANE -- 30
+            x=HEALBOT_HURRICANE
         end
         if HealBot_GetSpellId(HEALBOT_MARK_OF_THE_WILD) then 
 			HealBot_RangeSpells["BUFF"]=HEALBOT_MARK_OF_THE_WILD
@@ -373,8 +377,10 @@ function HealBot_Action_SetrSpell()
     elseif HealBot_Data["PCLASSTRIM"]=="MAGE" then
         if HealBot_GetSpellId(HEALBOT_FROSTFIRE_BOLT) then 
             HealBot_RangeSpells["HARM"]=HEALBOT_FROSTFIRE_BOLT -- 40
+            x=HEALBOT_FROSTFIRE_BOLT
         elseif HealBot_GetSpellId(HEALBOT_FIRE_BLAST) then 
             HealBot_RangeSpells["HARM"]=HEALBOT_FIRE_BLAST -- 30
+            x=HEALBOT_FIRE_BLAST
         end
 		if HealBot_GetSpellId(HEALBOT_ARCANE_BRILLIANCE) then 
 			HealBot_RangeSpells["BUFF"]=HEALBOT_ARCANE_BRILLIANCE
@@ -387,8 +393,10 @@ function HealBot_Action_SetrSpell()
     elseif HealBot_Data["PCLASSTRIM"]=="PALA" then
         if HealBot_GetSpellId(HEALBOT_HOLY_SHOCK) then 
             HealBot_RangeSpells["HARM"]=HEALBOT_HOLY_SHOCK -- 40
+            x=HEALBOT_HOLY_SHOCK
         elseif HealBot_GetSpellId(HEALBOT_JUDGMENT) then 
 			HealBot_RangeSpells["HARM"]=HEALBOT_JUDGMENT -- 30
+            x=HEALBOT_JUDGMENT
 		end
 		if HealBot_GetSpellId(HEALBOT_REDEMPTION) then 
 			HealBot_RangeSpells["BUFF"]=HEALBOT_REDEMPTION
@@ -409,8 +417,10 @@ function HealBot_Action_SetrSpell()
     elseif HealBot_Data["PCLASSTRIM"]=="PRIE" then
         if HealBot_GetSpellId(HEALBOT_SHADOW_WORD_PAIN) then 
             HealBot_RangeSpells["HARM"]=HEALBOT_SHADOW_WORD_PAIN -- 40
+            x=HEALBOT_SHADOW_WORD_PAIN
         elseif HealBot_GetSpellId(HEALBOT_SMITE) then 
             HealBot_RangeSpells["HARM"]=HEALBOT_SMITE -- 30
+            x=HEALBOT_SMITE
         end
 		if HealBot_GetSpellId(HEALBOT_POWER_WORD_FORTITUDE) then 
 			HealBot_RangeSpells["BUFF"]=HEALBOT_POWER_WORD_FORTITUDE
@@ -431,19 +441,19 @@ function HealBot_Action_SetrSpell()
     elseif HealBot_Data["PCLASSTRIM"]=="SHAM" then
         if HealBot_GetSpellId(HEALBOT_LIGHTNING_BOLT) then 
 			HealBot_RangeSpells["HARM"]=HEALBOT_LIGHTNING_BOLT -- 30 or 40 depending on Spec
+            x=HEALBOT_LIGHTNING_BOLT
 		end
 		if HealBot_GetSpellId(HEALBOT_EARTH_SHIELD) then 
 			HealBot_RangeSpells["BUFF"]=HEALBOT_EARTH_SHIELD
 			x=HEALBOT_EARTH_SHIELD
 		end
-	--	if HealBot_GetSpellId(HEALBOT_PURIFY_SPIRIT) then 
-	--		HealBot_RangeSpells["CURE"]=HEALBOT_PURIFY_SPIRIT
-	--		x=HEALBOT_PURIFY_SPIRIT
-    --    elseif HealBot_GetSpellId(HEALBOT_CLEANSE_SPIRIT) then 
-	--		HealBot_RangeSpells["CURE"]=HEALBOT_CLEANSE_SPIRIT
-	--		x=HEALBOT_CLEANSE_SPIRIT
-	--	end
-		if HealBot_GetSpellId(HEALBOT_HEALING_SURGE) then 
+		if HealBot_GetSpellId(HEALBOT_PURIFY_SPIRIT) then 
+			HealBot_RangeSpells["CURE"]=HEALBOT_PURIFY_SPIRIT
+			x=HEALBOT_PURIFY_SPIRIT
+        elseif HealBot_GetSpellId(HEALBOT_CLEANSE_SPIRIT) then 
+			HealBot_RangeSpells["CURE"]=HEALBOT_CLEANSE_SPIRIT
+			x=HEALBOT_CLEANSE_SPIRIT
+		elseif HealBot_GetSpellId(HEALBOT_HEALING_SURGE) then 
 			HealBot_RangeSpells["CURE"]=HEALBOT_HEALING_SURGE
 			x=HEALBOT_HEALING_SURGE
 		end
@@ -458,6 +468,7 @@ function HealBot_Action_SetrSpell()
     elseif HealBot_Data["PCLASSTRIM"]=="MONK" then
         if HealBot_GetSpellId(HEALBOT_CRACKLING_JADE_LIGHTNING) then 
 			HealBot_RangeSpells["HARM"]=HEALBOT_CRACKLING_JADE_LIGHTNING  -- 40
+            x=HEALBOT_CRACKLING_JADE_LIGHTNING
 		end
 		if HealBot_GetSpellId(HEALBOT_LEGACY_EMPEROR) then 
 			HealBot_RangeSpells["BUFF"]=HEALBOT_LEGACY_EMPEROR
@@ -478,8 +489,10 @@ function HealBot_Action_SetrSpell()
     elseif HealBot_Data["PCLASSTRIM"]=="WARL" then
         if HealBot_GetSpellId(HEALBOT_CORRUPTION) then 
 			HealBot_RangeSpells["HARM"]=HEALBOT_CORRUPTION -- 40
+            x=HEALBOT_CORRUPTION
         elseif HealBot_GetSpellId(HEALBOT_FEAR) then 
 			HealBot_RangeSpells["HARM"]=HEALBOT_FEAR -- 30
+            x=HEALBOT_FEAR
 		end
 		if HealBot_GetSpellId(HEALBOT_UNENDING_BREATH) then 
 			HealBot_RangeSpells["BUFF"]=HEALBOT_UNENDING_BREATH
@@ -488,22 +501,45 @@ function HealBot_Action_SetrSpell()
     elseif HealBot_Data["PCLASSTRIM"]=="WARR" then
         if HealBot_GetSpellId(HEALBOT_TAUNT) then 
 			HealBot_RangeSpells["HARM"]=HEALBOT_TAUNT -- 30 
+            x=HEALBOT_TAUNT
 		end
         if HealBot_GetSpellId(HEALBOT_VIGILANCE) then 
 			HealBot_RangeSpells["BUFF"]=HEALBOT_VIGILANCE 
 			x=HEALBOT_VIGILANCE
+        elseif HealBot_GetSpellId(HEALBOT_BATTLE_SHOUT) then 
+			HealBot_RangeSpells["BUFF"]=HEALBOT_BATTLE_SHOUT 
+			x=HEALBOT_BATTLE_SHOUT
 		end
     elseif HealBot_Data["PCLASSTRIM"]=="HUNT" then
         if HealBot_GetSpellId(HEALBOT_ARCANE_SHOT) then 
 			HealBot_RangeSpells["HARM"]=HEALBOT_ARCANE_SHOT -- 40
+            x=HEALBOT_ARCANE_SHOT
+        elseif HealBot_GetSpellId(HEALBOT_CONCUSSIVE_SHOT) then 
+			HealBot_RangeSpells["HARM"]=HEALBOT_CONCUSSIVE_SHOT -- 40
+            x=HEALBOT_CONCUSSIVE_SHOT
+        elseif HealBot_GetSpellId(HEALBOT_AIMED_SHOT) then 
+			HealBot_RangeSpells["HARM"]=HEALBOT_AIMED_SHOT -- 40
+            x=HEALBOT_AIMED_SHOT
+		end
+		if HealBot_GetSpellId(HEALBOT_MENDPET) then 
+			HealBot_RangeSpells["HEAL"]=HEALBOT_MENDPET
+			x=HEALBOT_MENDPET
 		end
     elseif HealBot_Data["PCLASSTRIM"]=="ROGU" then
         if HealBot_GetSpellId(HEALBOT_THROW) then 
 			HealBot_RangeSpells["HARM"]=HEALBOT_THROW -- 30
+            x=HEALBOT_THROW
+        elseif HealBot_GetSpellId(HEALBOT_GOUGE) then 
+			HealBot_RangeSpells["HARM"]=HEALBOT_GOUGE -- 30
+            x=HEALBOT_GOUGE
 		end
     elseif HealBot_Data["PCLASSTRIM"]=="DEAT" then
         if HealBot_GetSpellId(HEALBOT_DEATH_COIL) then 
 			HealBot_RangeSpells["HARM"]=HEALBOT_DEATH_COIL -- 30 
+            x=HEALBOT_DEATH_COIL
+        elseif HealBot_GetSpellId(HEALBOT_PLAGUE_STRIKE) then 
+			HealBot_RangeSpells["HARM"]=HEALBOT_PLAGUE_STRIKE -- 30 
+            x=HEALBOT_PLAGUE_STRIKE
 		end
     end
 	if (HealBot_RangeSpells["HEAL"] or HEALBOT_WORDS_UNKNOWN)==HEALBOT_WORDS_UNKNOWN then HealBot_RangeSpells["HEAL"]=x end
@@ -3009,7 +3045,7 @@ function HealBot_Action_SetButtonAttrib(button,bbutton,bkey,status,j)
                 ToggleDropDownMenu(1, nil, HBFriendsDropDown, "cursor", 10, -8)
             end
             button.showhbmenu = showHBmenu
-        elseif HealBot_Spells[sName] and HealBot_Spells[sName].known then
+        elseif HealBot_GetSpellId(sName) then
             if sTar or sTrin1 or sTrin2 or AvoidBC then
                 local mText = HealBot_Action_AlterSpell2Macro(sName, sTar, sTrin1, sTrin2, AvoidBC, button.unit, status)
                 button:SetAttribute(HB_prefix..buttonType..j, nil);
@@ -4079,7 +4115,7 @@ end
 function HealBot_Action_UseSmartCast(bp)
     local sName=HealBot_Action_SmartCast(bp);
     if sName then
-        if HealBot_Spells[sName] and HealBot_Spells[sName].known then
+        if HealBot_GetSpellId(sName) then
             if UnitIsUnit("player",bp.unit) or HealBot_UnitInRange(sName, bp.unit)==1 then
                 bp:SetAttribute("helpbutton1", "heal1");
                 bp:SetAttribute("type-heal1", "spell");

@@ -1,3 +1,45 @@
+== Version 60000.3
+* Note: It's not really an update, it's just a reorganization, because I'm a little bit picky... I think ^^
+* Addon: Added load.xml file and change .Toc file
+
+== Version 60000.2.0
+NOTE: Eshria joined the team dev
+* All: Added Death from Above inside of the rotation (optional suggestion, be smarter than the addon)
+* All: Added Shadow Reflection inside the rotation
+* Combat: Added Instant Poison
+
+== Version 60000.1.2
+* Added instant poison.
+
+== Version 60000.1.1
+* Spelling corrections.
+
+== Version 60000.1.0
+Update for patch 6.0.3 by Eshria (Idiline) - Defias Brotherhood:
+* Addon: Added French localization
+* All: Removed Redirect
+* All: Removed Paralytic Poison
+* All: Removed Tricks of the Trade (It no longer has a damage component.)
+* All: Removed Shadow Blades
+* All: Removed Mind-numbing Poison
+* All: Removed Ruthlessness Energize
+* All: Removed Expose Armor Glyph
+* All: Removed Expose Armor
+* All: Removed Hit
+* All: Added Multistrike
+* All: Added Versatility
+* All: Update UsefulStats
+* All: Added Death from Above talent
+* All: Added Shadow Reflection talent
+* Assassination: Added Improved Slice and Dice
+* Assassination: If you are 92+ you don't have to refresh or use Slice and dice anymore (Slice and Dice is now always passively active.)
+* Assassination: Update Rupture refresh (If a DoT spell is recast with 30% or less time remaining on the original timer, the remaining time will be added to the new duration of that cast.)
+* Assassination: Update Slice and Dice (If a DoT spell is recast with 30% or less time remaining on the original timer, the remaining time will be added to the new duration of that cast.)
+* Combat: Update Slice and Dice (If a DoT spell is recast with 30% or less time remaining on the original timer, the remaining time will be added to the new duration of that cast.)
+* Combat: Update Revealing Strike (If a DoT spell is recast with 30% or less time remaining on the original timer, the remaining time will be added to the new duration of that cast.)
+* Combat: Removed Rupture (this spell has been removed for this specialization)
+* Subtlety: Update Slice and Dice (If a DoT spell is recast with 30% or less time remaining on the original timer, the remaining time will be added to the new duration of that cast.)
+
 == Version 50400.1.6
 * I have gotten a pretty good response, so I think (and hope) Bitten's SpellFlash will live on!
 

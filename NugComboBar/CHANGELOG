@@ -1,3 +1,28 @@
+6.0.11:
+ - Option to change alpha
+ - Fixed a bug with Empowered Shadow Orbs not  being detected on login
+ - "/ncb special" command for mages(missile procs) and 
+deathknights(Scent of Blood)
+
+6.0.10:
+ - Windwalker Monk perk support
+
+6.0.9:
+ - Support for Empowered Shadow Orbs
+
+6.0.8:
+ - Blood Charges for DK if talented and not Unholy
+
+6.0.7:
+ - Using UnitPower for CPs now
+
+6.0.6:
+ - funnel presets just do not work, if you scale the bar below 0.9
+   Automatically scaling up if it is detected
+
+6.0.5:
+ - Workaround for combo points to be visible without a target
+
 6.0.4:
  - Changed fulmination to fill up to 14
  - Removed mushroom from Restoration Druid

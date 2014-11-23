@@ -2,7 +2,7 @@
 ## Interface: 40300
 ## Dependancies: Auc-Advanced
 ##
-## Version: 5.21b.5509 (SanctimoniousSwamprat)
+## Version: 5.21c.5521 (SanctimoniousSwamprat)
 ## Revision: $Id: Auc-Util-Example.toc 5234 2011-11-24 04:54:19Z Nechckn $
 ## URL: http://auctioneeraddon.com/
 ## Author: Norganna's AddOns

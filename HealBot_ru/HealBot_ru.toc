@@ -4,6 +4,6 @@
 ## Notes: HealBot Localization for ruRU
 ## RequiredDeps: HealBot
 ## LoadOnDemand: 1
-## Version: 6.0.2.2
+## Version: 6.0.3.1
 
 HealBot_Localization.ru.lua

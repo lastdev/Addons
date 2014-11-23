@@ -51,32 +51,37 @@ function a.CanAmbush()
 			or not a.NoShadowstep[targetID])
 end
 
-c.AddOptionalSpell("Tricks of the Trade", nil, {
-	NoRangeCheck = true,
-	CheckFirst = function()
-		return s.InRaidOrParty()
-	end
-})
+--c.AddOptionalSpell("Tricks of the Trade", nil, {
+--	NoRangeCheck = true,
+--	CheckFirst = function()
+--		return s.InRaidOrParty()
+--	end
+--})
 
-addOptionalSpell("Tricks of the Trade", "unglyphed", {
-	NoRangeCheck = true,
-	CheckFirst = function()
-		return s.InRaidOrParty() and not c.HasGlyph("Tricks of the Trade")
-	end
-})
+--addOptionalSpell("Tricks of the Trade", "unglyphed", {
+--	NoRangeCheck = true,
+--	CheckFirst = function()
+--		return s.InRaidOrParty() and not c.HasGlyph("Tricks of the Trade")
+--	end
+--})
 
-c.AddOptionalSpell("Tricks of the Trade", "glyphed", {
-	NoRangeCheck = true,
-	CheckFirst = function()
-		return s.InRaidOrParty() and c.HasGlyph("Tricks of the Trade")
-	end
-})
+--c.AddOptionalSpell("Tricks of the Trade", "glyphed", {
+--	NoRangeCheck = true,
+--	CheckFirst = function()
+--		return s.InRaidOrParty() and c.HasGlyph("Tricks of the Trade")
+--	end
+--})
 
 c.AddOptionalSpell("Deadly Poison", nil, {
-	FlashID = { "Deadly Poison", "Poisons" },
+	FlashID = {
+	    "Deadly Poison",
+	    "Instant Poison",
+	    "Poisons"
+	},
 	CheckFirst = function()
 		return c.SelfBuffNeeded("Deadly Poison")
 			and c.SelfBuffNeeded("Wound Poison")
+			and c.SelfBuffNeeded("Instant Poison")
 	end
 })
 
@@ -84,25 +89,25 @@ c.AddOptionalSpell("Non-Lethal Poison", nil, {
 	ID = "Crippling Poison",
 	FlashID = { 
 		"Crippling Poison", 
-		"Mind-numbing Poison", 
+--		"Mind-numbing Poison",
 		"Leeching Poison", 
-		"Paralytic Poison",
+--		"Paralytic Poison",
 		"Poisons" 
 	},
 	CheckFirst = function()
 		return c.SelfBuffNeeded("Crippling Poison")
-			and c.SelfBuffNeeded("Mind-numbing Poison")
+--			and c.SelfBuffNeeded("Mind-numbing Poison")
 			and c.SelfBuffNeeded("Leeching Poison")
-			and c.SelfBuffNeeded("Paralytic Poison")
+--			and c.SelfBuffNeeded("Paralytic Poison")
 	end
 })
 
-c.AddOptionalSpell("Redirect", nil, {
-	CheckFirst = function()
-		return GetComboPoints("player") == 0
-			and s.UsableSpell(c.GetID("Recuperate"))
-	end
-})
+--c.AddOptionalSpell("Redirect", nil, {
+--	CheckFirst = function()
+--		return GetComboPoints("player") == 0
+--			and s.UsableSpell(c.GetID("Recuperate"))
+--	end
+--})
 
 c.AddOptionalSpell("Preparation", nil, {
 	FlashSize = s.FlashSizePercent() / 2,
@@ -111,36 +116,45 @@ c.AddOptionalSpell("Preparation", nil, {
 	end
 })
 
-c.AddOptionalSpell("Shadow Blades")
+--c.AddOptionalSpell("Shadow Blades")
 
 c.AddOptionalSpell("Marked for Death", nil, {
 	CheckFirst = function()
 		return a.CP == 0
-			and not c.HasBuff("Shadow Blades", false, false, true)
+--			and not c.HasBuff("Shadow Blades", false, false, true)
 	end
 })
 
-c.AddOptionalSpell("Expose Armor", nil, {
-	CheckFirst = function()
-		if c.IsSolo() then
-			return false
-		end
-		
-		if c.GetDebuffDuration(c.ARMOR_DEBUFFS) < 3 then
-			return true
-		end
-		
-		local stack = c.GetDebuffStack(c.ARMOR_DEBUFFS)
-		if c.IsQueued("Expose Armor") or a.ExposePending then
-			if c.HasGlyph("Expose Armor") then
-				stack = 3
-			else
-				stack = stack + 1
-			end
-		end
-		return stack < 3
+c.AddSpell("Death from Above", nil, {
+--c.AddOptionalSpell("Death from Above", nil, {
+	CheckFirst = function(z)
+	    c.MakeOptional(z, c.IsSolo())
+	    return a.CP >= 5
+	        and a.Energy >= 50
 	end
 })
+
+--c.AddOptionalSpell("Expose Armor", nil, {
+--	CheckFirst = function()
+--		if c.IsSolo() then
+--			return false
+--		end
+--		
+--		if c.GetDebuffDuration(c.ARMOR_DEBUFFS) < 3 then
+--			return true
+--		end
+-- 
+--		local stack = c.GetDebuffStack(c.ARMOR_DEBUFFS)
+--		if c.IsQueued("Expose Armor") or a.ExposePending then
+--			if c.HasGlyph("Expose Armor") then
+--				stack = 3
+--			else
+--				stack = stack + 1
+--			end
+--		end
+--		return stack < 3
+--	end
+--})
 
 addSpell("Ambush", nil, {
 	CheckFirst = a.CanAmbush,
@@ -180,6 +194,8 @@ c.AddInterrupt("Kick", nil, {
 	NoGCD = true,
 })
 
+
+
 ----------------------------------------------------------------- Assassination
 local function canDispatch()
 	return s.HealthPercent() < 35 
@@ -187,6 +203,7 @@ local function canDispatch()
 end
 
 c.AddOptionalSpell("Vendetta")
+c.AddOptionalSpell("Shadow Reflection")
 
 c.AddOptionalSpell("Vanish", "for Assassination", {
 	NoGCD = true,
@@ -214,7 +231,7 @@ c.AddSpell("Dispatch", "pre-Rupture", {
 		if not canDispatch() then
 			return false
 		elseif c.HasBuff("Blindside") then	
-			return a.CP < 5 and a.Rupture < 3
+			return a.CP < 5 and a.Rupture < 6
 		else
 			return a.CP < 5 
 				and a.Rupture == 0 
@@ -231,9 +248,9 @@ c.AddSpell("Dispatch", "pre-Envenom", {
 		end
 		
 		local empty = a.EmptyCP - 2
-		if c.HasBuff("Shadow Blades", false, false, true) then
-			empty = empty - 1
-		end
+--		if c.HasBuff("Shadow Blades", false, false, true) then
+--			empty = empty - 1
+--		end
 		return empty >= 0 
 			and (c.HasBuff("Blindside") or a.Energy + 1.5 * a.Regen < 90)
 	end
@@ -261,7 +278,7 @@ c.AddSpell("Mutilate", "pre-Envenom", {
 			and a.CP < 7
 			and not canDispatch()
 			and c.HasTalent("Anticipation")
-			and not c.HasBuff("Shadow Blades", false, false, true)
+--			and not c.HasBuff("Shadow Blades", false, false, true)
 	end
 })
 
@@ -276,7 +293,7 @@ c.AddSpell("Rupture", "for Assassination", {
 		if a.Energy < cost then
 			dur = dur - (cost - a.Energy) / a.Regen
 		end
-		return (a.CP > 0 and dur <= 0) or (a.CP >= 5 and dur < 2)
+		return (a.CP > 0 and dur <= 0) or (a.CP >= 5 and dur < 6)
 	end
 })
 
@@ -305,7 +322,7 @@ c.AddSpell("Envenom", "for Buff", {
 c.AddSpell("Envenom", "to refresh Slice and Dice", {
 	Melee = true,
 	CheckFirst = function()
-		return a.SnD > .1 and a.SnD < 3
+		return a.SnD > .1 and a.SnD < 6
 	end
 })
 
@@ -317,9 +334,9 @@ local function shouldSpendCpCombat()
 	
 	return not c.HasTalent("Anticipation")
 		or a.EmptyCP < 2
-		or (a.EmptyCP < 3 and c.HasBuff("Shadow Blades"))
+--		or (a.EmptyCP < 3 and c.HasBuff("Shadow Blades"))
 		or a.DeepInsight > 0 
-		or c.GetCooldown("Shadow Blades", false, 180) < 3
+--		or c.GetCooldown("Shadow Blades", false, 180) < 3
 end
 
 local function shouldSpendEnergyCombat()
@@ -329,19 +346,19 @@ local function shouldSpendEnergyCombat()
 		or c.IsSolo()
 end
 
-c.AddOptionalSpell("Shadow Blades", "for Combat", {
-	Cooldown = 180,
-	CheckFirst = function()
-		if not c.WearingSet(4, "T14") then
-			return true
-		end
-		
-		local ks = c.GetCooldown("Killing Spree")
-		local ar = c.GetCooldown("Adrenaline Rush")
-		return (ks > 30.5 and ar <= 9) 
-			or (a.Energy < 35 and (ks == 0 or ar == 0))
-	end
-})
+--c.AddOptionalSpell("Shadow Blades", "for Combat", {
+--	Cooldown = 180,
+--	CheckFirst = function()
+--		if not c.WearingSet(4, "T14") then
+--			return true
+--		end
+--		
+--		local ks = c.GetCooldown("Killing Spree")
+--		local ar = c.GetCooldown("Adrenaline Rush")
+--		return (ks > 30.5 and ar <= 9) 
+--			or (a.Energy < 35 and (ks == 0 or ar == 0))
+--	end
+--})
 
 c.AddOptionalSpell("Killing Spree", nil, {
 	NoRangeCheck = true,
@@ -351,27 +368,28 @@ c.AddOptionalSpell("Killing Spree", nil, {
 			return false
 		end
 		
-		if c.WearingSet(4, "T14") then
-			local sb = c.GetBuffDuration("Shadow Blades")
-			if sb == 0 then
-				return c.GetCooldown("Shadow Blades") > 30
-			else
-				return sb <= 3.5 or a.Energy < 35
-			end
-		else
+--		if c.WearingSet(4, "T14") then
+--			local sb = c.GetBuffDuration("Shadow Blades")
+--			if sb == 0 then
+--				return c.GetCooldown("Shadow Blades") > 30
+--			else
+--				return sb <= 3.5 or a.Energy < 35
+--			end
+--		else
 			return a.Energy < 35
-		end
+--		end
 	end
 })
 
 c.AddOptionalSpell("Adrenaline Rush", nil, {
 	CheckFirst = function()
-		local sb = c.GetBuffDuration("Shadow Blades")
-		if c.WearingSet(4, "T14") then
-			return sb > 0 and (a.Energy < 35 or sb <= 15)
-		else
-			return sb > 0 or a.Energy < 35
-		end
+--		local sb = c.GetBuffDuration("Shadow Blades")
+--		if c.WearingSet(4, "T14") then
+--			return sb > 0 and (a.Energy < 35 or sb <= 15)
+--		else
+--			return sb > 0 or a.Energy < 35
+            return a.Energy < 35 -- Comment this line if you UnComment what is above
+--		end
 	end
 })
 
@@ -379,8 +397,8 @@ c.AddOptionalSpell("Vanish", "for Combat", {
 	CheckFirst = function()
 		if c.IsSolo() 
 			or c.HasBuff("Stealth") 
-			or a.EmptyCP < 2
-			or (c.HasBuff("Shadow Blades") and a.EmptyCP < 3) then
+			or a.EmptyCP < 2 then
+--			or (c.HasBuff("Shadow Blades") and a.EmptyCP < 3) then
 			
 			return false
 		end
@@ -398,7 +416,7 @@ c.AddOptionalSpell("Vanish", "for Combat", {
 c.AddOptionalSpell("Marked for Death", "for Combat", {
 	CheckFirst = function()
 		return a.CP <= 1
-			and not c.HasBuff("Shadow Blades", false, false, true)
+--			and not c.HasBuff("Shadow Blades", false, false, true)
 	end
 })
 
@@ -411,25 +429,25 @@ addSpell("Slice and Dice", "for Combat", {
 			if c.HasGlyph("Deadly Momentum") then
 				return a.SnD == 0 and a.CP >= 5
 			else
-				return a.SnD < 2
+				return a.SnD < 6
 			end
 		else
 			z.FlashColor = nil
 			z.Continue = nil
-			return a.SnD < 2 or (a.Guile == 11 and a.SnD < 16 and a.CP >= 4)
+			return a.SnD < 6 or (a.Guile == 11 and a.SnD < 16 and a.CP >= 4)
 		end
 		
 	end
 })
 
-addOptionalSpell("Rupture", "for Combat", {
-	CheckFirst = function()
-		return shouldSpendCpCombat()
-			and a.Rupture < 2
-			and not c.HasBuff("Blade Flurry")
-			and not c.IsSolo()
-	end
-})
+--addOptionalSpell("Rupture", "for Combat", {
+--	CheckFirst = function()
+--		return shouldSpendCpCombat()
+--			and a.Rupture < 6
+--			and not c.HasBuff("Blade Flurry")
+--			and not c.IsSolo()
+--	end
+--})
 
 addSpell("Eviscerate", "for Combat", {
 	CheckFirst = shouldSpendCpCombat,
@@ -438,7 +456,7 @@ addSpell("Eviscerate", "for Combat", {
 c.AddSpell("Revealing Strike", nil, {
 	Melee = true,
 	Override = function(z)
-		if c.GetMyDebuffDuration("Revealing Strike") > 2
+		if c.GetMyDebuffDuration("Revealing Strike") > 5
 			or c.IsAuraPendingFor("Revealing Strike")
 			or not shouldSpendEnergyCombat() then
 			
@@ -581,9 +599,9 @@ addSpell("Slice and Dice", "for Subtlety", {
 		local delay = modForDelay(z, z.FlashColor)
 		local dur = a.SnD - delay
 		if c.IsSolo() and c.HasGlyph("Deadly Momentum") then
-			return dur <= 0 and a.CP >= 5
+			return dur <= 5 and a.CP >= 5
 		else
-			return dur < 4
+			return dur < 6
 		end
 	end
 })
@@ -593,7 +611,7 @@ c.AddSpell("Rupture", "for Subtlety", {
 	NoPowerCheck = true,
 	CheckFirst = function(z)
 		c.MakeOptional(z, c.IsSolo())
-		return a.Rupture - modForDelay(z, z.FlashColor) < 4
+		return a.Rupture - modForDelay(z, z.FlashColor) < 6
 	end
 })
 

@@ -1,3 +1,14 @@
+== Version 60000.5
+* versions 2 through 4 don't really exist.
+
+== Version 60000.1
+* new author: SlippyCheeze
+  - thanks to Xemnosyst for all his great work
+* reformat code
+* Beast Mastery & Survival: Flashes Steady Shot instead of Cobra Shot for
+  lower level characters.
+* mark basic 6.0 compatibility, including a warning about 100 not supported yet.
+
 == Version 50400.2.2
 * All: Flashes WoW's 9th Anniversary Celebration Package.
 
@@ -87,11 +98,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 
 == Version 2.2.0
 * All: Added AoE rotations.  See your keybindings to activate them.
-
-== Version 2.1.0
-* Beast Mastery / Survival: Changed the threshold for Arcane Shot to 64% (sims showed an improvement for survival, and that leaves BM almost unchanged if you have 2/2 Kindred Spirits).
-* Marksmanship: Played with SS vs focus dump priorities.  This is an improvement.
-* Marksmanship: Better tracking of when the next shot will trigger Improved Steady Shot.
-* Marksmanship: Tighter tracking of the Chimera Shot cooldown and Improved Steady Shot buff.
-* Marksmanship: Better tracking of travel times and how that affects when Serpent Sting will be refreshed.
-* All: All spells are now considered for their rotation if the *will* be available by the time your current and queued spells are complete, regardless of whether they are available now.

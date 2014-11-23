@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 652 2014-10-19T10:25:00Z
+    Revision: 656 2014-11-05T22:36:19Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -102,7 +102,8 @@ end
 local function IsSameRecipe(skillName, recipeName)
     skillName = strlower(strtrim(skillName));
     recipeName = strlower(strtrim(recipeName));
-    return skillName:sub(1, strlen(recipeName)) == recipeName;
+    --return skillName:sub(1, strlen(recipeName)) == recipeName;
+    return skillName:find(recipeName);
 end
 
 local function SelectProfession(baseEntry, name)

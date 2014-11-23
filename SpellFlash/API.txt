@@ -458,7 +458,7 @@ Decodes the unit GUID string to find the identification information.
 ===== ** Returns:
 
 ; ** Type
-:		(string) The unit type: "player", "npc", "pet", "vehicle" or "unknown".
+:		(string) The unit type.
 ; ** ID
 :		(number) The unit identification number.
 
@@ -480,7 +480,7 @@ Decodes the unit GUID string to find the identification information.
 ===== ** Returns:
 
 ; ** Type
-:		(string) The unit type: "player", "npc", "pet", "vehicle" or "unknown".
+:		(string) The unit type.
 ; ** ID
 :		(number) The unit identification number.
 

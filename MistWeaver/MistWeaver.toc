@@ -1,7 +1,7 @@
 ## Interface: 60000
 ## Title: MistWeaver
 ## Author: Nirriti
-## Version: 6.6
+## Version: 6.7
 ## Notes: a very special healer addon for a monk
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
@@ -25,4 +25,3 @@ MistWeaver.xml
 MistWeaver_Target.xml
 MistWeaver_Focus.xml
 MistWeaver_Pets.xml
- 

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Anetheron", "DBM-Hyjal")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 547 $"):sub(12, -3))
 mod:SetCreatureID(17808)
 mod:SetModelID(21069)
 mod:SetZone()
@@ -21,6 +21,7 @@ local warnSleep			= mod:NewTargetAnnounce(31298, 2)
 local warnInferno		= mod:NewTargetAnnounce(31299, 4)
 
 local timerSwarm		= mod:NewBuffFadesTimer(20, 31306)
+local timerSleep		= mod:NewBuffFadesTimer(10, 31298)
 local timerSleepCD		= mod:NewCDTimer(19, 31298)
 local timerInferno		= mod:NewCDTimer(51, 31299)
 

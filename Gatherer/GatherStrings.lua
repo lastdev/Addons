@@ -4,8 +4,8 @@
 	http://localizer.norganna.org/
 
 	AddOn: Gatherer
-	Revision: $Id: GatherStrings.lua 1107 2014-02-23 01:03:36Z LocalizerAutoCommit $
-	Version: 4.4.1 (<%codename%>)
+	Revision: $Id: GatherStrings.lua 1128 2014-11-13 05:00:11Z LocalizerAutoCommit $
+	Version: 5.0.0 (<%codename%>)
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -852,6 +852,7 @@ GathererLocalizations = {
 		["MAP_NOTES_HIDE"]	= "Hide Items";
 		["MAP_NOTES_SHOW"]	= "Show Items";
 		["NOTIFICATIONS_TITLE"]	= "Gatherer: Warnings";
+		["WORLDMAP_NOTES_SHOW_MENUITEM"]	= "Gatherer: Show Items";
 
 		-- Section: Mass Sharing Messages
 		["MASS_SHARING_ABORT"]	= "Aborted upload.";
@@ -1179,6 +1180,7 @@ GathererLocalizations = {
 		["MAP_NOTES_HIDE"]	= "Ocultar objetos";
 		["MAP_NOTES_SHOW"]	= "Mostrar Objetos";
 		["NOTIFICATIONS_TITLE"]	= "Gatherer: Avisos";
+		["WORLDMAP_NOTES_SHOW_MENUITEM"]	= "Gatherer: mostrar objetos";
 
 		-- Section: Mass Sharing Messages
 		["MASS_SHARING_ABORT"]	= "Subida cancelada";
@@ -3221,6 +3223,7 @@ GathererLocalizations = {
 		["MAP_NOTES_HIDE"]	= "Скрыть предметы";
 		["MAP_NOTES_SHOW"]	= "Показать предметы";
 		["NOTIFICATIONS_TITLE"]	= "Gatherer: Предупреждения";
+		["WORLDMAP_NOTES_SHOW_MENUITEM"]	= "Gatherer: Показать предметы";
 
 		-- Section: Mass Sharing Messages
 		["MASS_SHARING_ABORT"]	= "Отправка прервана.";
@@ -3329,6 +3332,9 @@ GathererLocalizations = {
 
 	trTR = {
 
+		-- Section: AddOn Communication
+		["COMM_RECEIVE_NODE"]	= "%3 (%4) tarafından %1, %2'de alındı.";
+
 		-- Section: Configuration
 		["CONFIG_ABOUT_LOADED_ENABLE"]	= "Yüklenen mesajı göster";
 		["CONFIG_ALL_FILTER_NOTE"]	= "%1'lik seçenekler, geçerli filtrelerin yok sayılıp, o kategorideki tüm noktaların gösterilmesine sebep olur.";
@@ -3347,6 +3353,7 @@ GathererLocalizations = {
 		["CONFIG_IGNORE_PURGE_DONE"]	= "Gatherer veritabanınızdan %d nokta tamamen kaldırıldı.";
 		["CONFIG_IGNORE_PURGE_QUESTION"]	= "Bu kişiden gelen tüm noktaları kaldırmak istiyor musunuz?";
 		["CONFIG_MINE_FILTER_LABEL"]	= "Takip edilecek maden noktaları";
+		["CONFIG_MINIICON_ANGLE"]	= "Buton açısı: %d°";
 		["CONFIG_MINIICON_DISTANCE"]	= "Menzil: %d";
 		["CONFIG_MINIICON_ENABLE"]	= "Minimap Düğmesini Göster";
 		["CONFIG_MINIMAP_ADD_LABEL"]	= "Minimap Ek";
@@ -3367,15 +3374,48 @@ GathererLocalizations = {
 		["CONFIG_MINIMAP_LABEL"]	= "Minimap seçenekleri";
 		["CONFIG_MINIMAP_MAX_NOTES"]	= "Göster: En yakın %d tane";
 		["CONFIG_MINIMAP_NOTE_OPACITY"]	= "Varsayılan şeffaflık:  %d%%";
+		["CONFIG_MINIMAP_TRACKING_ACTIVE_ONLY"]	= "Sadece aktif takip becerisi için";
 		["CONFIG_MINIMAP_TRACKING_CIRCLE_ENABLE"]	= "Yakınlaştıkça izleme ikonuna çevir.";
 		["CONFIG_MINIMAP_TRACKING_DISTANCE"]	= "İzleme menzili: %d yard";
 		["CONFIG_MINIMAP_TRACKING_ENABLE"]	= "İzleme yeteneğini aktif et.";
 		["CONFIG_OPEN_FILTER_LABEL"]	= "İzlenecek hazine noktaları";
+		["CONFIG_PROFILE_CHANGE_NOTIFICATION"]	= "Profil değiştiriliyor: %1";
+		["CONFIG_PROFILE_CREATE_COPY"]	= "Kopya oluştur";
+		["CONFIG_PROFILE_CREATE_NEW"]	= "Yeni oluştur";
+		["CONFIG_PROFILE_CURRENT_LABEL"]	= "Şuan ki profili aktif et";
+		["CONFIG_PROFILE_NEW"]	= "Bir profili değiştir veya oluştur";
+		["CONFIG_PROFILE_NEW_LABEL"]	= "Yeni profil adı:";
+		["CONFIG_SECTION_ABOUT"]	= "Hakkında";
+		["CONFIG_SECTION_GENERAL"]	= "Genel";
+		["CONFIG_SECTION_HEADER_CORE"]	= "Kaynak Ayarları";
+		["CONFIG_SECTION_HEADER_PLUGINS"]	= "Eklentiler";
+		["CONFIG_SECTION_MINIMAP"]	= "Küçük Harita";
+		["CONFIG_SECTION_OPEN"]	= "Hazine";
+		["CONFIG_SECTION_PROFILES"]	= "Profiller";
+		["CONFIG_SECTION_SHARING"]	= "Paylaşım";
+		["CONFIG_SECTION_TITLE_ABOUT"]	= "Gatherer Hakkında";
+		["CONFIG_SECTION_TITLE_ARCH"]	= "Arkeoloji Seçenekleri";
+		["CONFIG_SECTION_TITLE_GENERAL"]	= "Ana Gatherer Seçenekleri";
+		["CONFIG_SECTION_TITLE_HERB"]	= "Bitkici Filtre Seçenekleri";
+		["CONFIG_SECTION_TITLE_MINE"]	= "Madenci Filtre Seçenekleri";
+		["CONFIG_SECTION_TITLE_MINIMAP"]	= "Küçük Harita Gatherer Seçenekleri";
+		["CONFIG_SECTION_TITLE_OPEN"]	= "Hazine Filtre Seçenekleri";
+		["CONFIG_SECTION_TITLE_PROFILES"]	= "Profil kurulum, ayarlama ve değiştirme";
+		["CONFIG_SECTION_TITLE_SHARING"]	= "Senkronizasyon Seçenekleri";
+		["CONFIG_SHARING_BLACKLIST_LABEL"]	= "Karaliste Paylaşımı";
+		["CONFIG_SHARING_GROUP_DATABASE"]	= "Grupla toplanılanları benim veritabanıma ekle";
+		["CONFIG_SHARING_GROUP_ENABLE"]	= "Grup senkronizasyonunu aktif et";
+		["CONFIG_SHARING_GROUP_LABEL"]	= "Raid/Grup Paylaşımı";
+		["CONFIG_SHARING_GROUP_MESSAGE_RECV"]	= "Grupla toplarken alınacak mesajı yazın";
+		["CONFIG_SHARING_PERSONAL_LABEL"]	= "Kişisel Uyarı";
 
 		-- Section: Database Version Messages
 		["STORAGE_DB_CATACLYSMIC"]	= "Dünyanın en kötüsü olarak dönüş yapan Deathwing, tüm çiçekleri yakıp, madenleri eritip, hazine kutularını parçaladı. Şimdi hepsi yeniden büyümeli, yeniden kristalize olmalı, ya da korsanlar tarafından tekrar saklanmalılar, muhtemelen yeni yerlerinde. Hazine Avı!!! (Eski dünya bilgileri büyük çapta coğrafya değişimi sebebiyle tamamen silindi.)";
 		["STORAGE_DB_VERSION_INVALID"]	= "DİKKAT!!!\nGatherer, veritabanı versiyonunuzun geçersiz olduğunu keşfetti. Lütfen veritabanınızı temizlemek için \"kabul et\"e basın, ya da veritabanınızı manuel olarak tamir etmek isterseniz \"yoksay\"a basın";
 		["STORAGE_DB_VERSION_NEWER"]	= "Kaydedilmiş Gatherer veritabanınız oldukça yeni. Şu anki veritabanınız, Gatherer'ı güncelleyene kadar beklemede kalacaktır.";
+
+		-- Section: Game Object Tooltip
+		["GAME_OBJECT_REQUIRES_REWRITE"]	= "%1$s %2$d";
 
 		-- Section: Gatherables Report
 		["REPORT_COLUMN_HEADER_DIST"]	= "Msfe";
@@ -3396,6 +3436,14 @@ GathererLocalizations = {
 		["REPORT_TITLE"]	= "Toplanabilirlerin Raporu";
 		["REPORT_UNMARK_ALL"]	= "Tüm seçimleri kaldır";
 		["REPORT_UNMARK_THESE"]	= "Bunların seçimini kaldır";
+
+		-- Section: Generic Messages
+		["DESCRIPTION"]	= "Gatherer, sizin toplama bölgelerinizi hatırlayan ve bunları oyun içinde, haritanızda ve küçük haritanızda göstermeyi sağlayan bir eklentidir. Ayrıca bu bilgileri arkadaşlarınız, guild veya raid'de ki kişilerle paylaşır.";
+		["DESCRIPTION_LICENSE"]	= "Gatherer, genel kamu lisansı v2 altında ki bir açık kaynak yazılımdır. Tüm lisans için lütfen gpl.txt'ye bakın.(Eklentiyle gelmektedir.)";
+		["LOADED_NOTIFICATION"]	= "Gatherer v%1 -- Yüklendi!";
+		["MANIFEST_INVALID_VERSIONS_WARNING"]	= "{{Uyarı:}} \n\nLütfen eski dizini sildiğinden emin ol:\n%1\nyeni kopyasını buradan yükle:\n%2\nve bir hata raporlamadan önce WoW'u yeniden başlat.\n\nTeşekkürler,\n  Gatherer Geliştirici Takımı";
+		["VERSION_MESSAGE"]	= "Bu Gatherer v%1";
+		["ZONETOKENS_UNIDENTIFIED_ZONES_WARNING"]	= "Gatherer bu bölgeleri tanımlayamıyor: {{%1}}\nEğer burası yeni bir bölgeyse problem yok, normal bir şekilde devam edebilirsin.\nEğer burası yeni bir bölge değilse, {{bilgilerin KAYBOLMADI!}} bundan dolayı sakin kal. Bu bölgeyle ilgili bilgilerin birleşmiş durumda ancak ulaşabilmen için Gatherer'ı güncellemen lazım. O zaman kadar normal bir şekilde devam edebilirsin ve yeni bilgilerin güncellediğinde eskileriyle birleşecektir.\n\n{{Uygun olduğunuzda lütfen Gatherer'ı üst sürüme yükseltin.}}";
 
 		-- Section: Generic Strings
 		["ACCEPT"]	= "Kabul et";
@@ -3478,6 +3526,8 @@ GathererLocalizations = {
 		["LABEL_DENSITY_REPORT"]	= "Nokta Ara";
 		["LABEL_NOTE"]	= "Not";
 		["LABEL_REPORT"]	= "Toplanabilirler Raporu";
+		["MAP_NOTES_HIDE"]	= "Eşyaları Gizle";
+		["MAP_NOTES_SHOW"]	= "Eşyaları Göster";
 		["NOTIFICATIONS_TITLE"]	= "Gatherer: Uyarılar";
 
 		-- Section: Mass Sharing Messages
@@ -3534,6 +3584,9 @@ GathererLocalizations = {
 		["TREASURE_UNGOROSOIL"]	= "Un'Goro Toprak";
 		["TREASURE_WHIPPERROOT"]	= "Kırbaç Kök yumrular";
 		["TREASURE_WINDBLOSSOM"]	= "Rüzgarçiçek Karpuzu";
+
+		-- Section: Node Database Plugins
+		["DATABASE_IMPORT_BUTTON_LABEL"]	= "İçeri Aktar";
 
 		-- Section: Node Density Search
 		["DENSITY_COLUMN_HEADER_LOCATION"]	= "Bölge";

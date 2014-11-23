@@ -1,0 +1,22 @@
+## Interface: 60000
+## Title: Ackis Recipe List: Cooking
+## Notes: Cooking data for Ackis Recipe List.
+## Author: Ackis, Pompy, Ressy, Torhal
+## Version: 6.0.2.2
+## X-Revision: 77d95d9
+## X-Date: 2014-08-08T23:01:30Z
+## Dependencies: AckisRecipeList
+## LoadOnDemand: 1
+## X-Curse-Packaged-Version: 6.0.2.2
+## X-Curse-Project-Name: Ackis Recipe List: Cooking
+## X-Curse-Project-ID: arl-cooking
+## X-Curse-Repository-ID: wow/arl-cooking/mainline
+
+Core.lua
+Filters.lua
+MobDrops.lua
+Quests.lua
+Trainers.lua
+Vendors.lua
+Recipes.lua
+Discoveries.lua

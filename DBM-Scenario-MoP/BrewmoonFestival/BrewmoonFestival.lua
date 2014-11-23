@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d539", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 21 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1051)
@@ -10,8 +10,7 @@ mod:RegisterEventsInCombat(
 	"CHAT_MSG_MONSTER_YELL",
 	"SPELL_AURA_APPLIED",
 	"SPELL_AURA_REMOVED",
-	"SPELL_CAST_START",
-	"UNIT_DIED"
+	"SPELL_CAST_START"
 )
 mod.onlyNormal = true
 

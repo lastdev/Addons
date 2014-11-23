@@ -6,7 +6,6 @@ local L = LibStub("AceLocale-3.0"):NewLocale("HandyNotes", "zhTW")
 if not L then return end
 
 L["Add Handy Note"] = "新增註記"
-L["Add this location to Cartographer_Waypoints"] = "新增這個位置到Cartographer_Waypoints"
 L["Add this location to TomTom waypoints"] = "新增這個位置到TomTom waypoints"
 L[ [=[
 Alt+Right Click To Add a HandyNote]=] ] = [=[

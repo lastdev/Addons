@@ -1,3 +1,35 @@
+== Version 60000.1.13
+* Protection: The rotation was not being presented sequentially.  Changed the rotation to be very sequential.
+* Fury:  No changes.
+* Arms:  No changes.
+
+== Version 60000.1.12
+* Protection: Re-worked the entire rotation scheme, incorporationg the 6.0.3 changes.  Previous release was errant in that it flashed when not available and did not provide correct rotation.
+* Fury: Re-worked the rotation and provided more detail criteria to assist in the Rage pool related idle times.
+* Arms:  No changes.
+
+== Version 60000.1.11
+* Sorry, this ended up being a re-release of 10 since I forgot to commit the work.
+
+== Version 60000.1.10
+* Protection: No changes.
+* Fury: Corrected the Rage Pool calculations for rotations.  Would not flash at all when half rage.
+* Arms:  No changes.
+
+== Version 60000.1.9
+* Protection: No changes
+* Fury: No Changes
+* Arms:  Corrected the Flashing when ability was not ready. 
+
+== Version 60000.1.7
+* First release with Protection enabled.  Also modified Fury to conincide with the 6.0.3 nerfs/changes.  Arms was not changed, same functionality as 60000.1.6.
+* Protection:  Focused mainly on single target with Sudden Death Talent.    Shield Barrier and Shield Block will have small flashes indicating they are available.
+*              Cooldowns are not currently flashed.  Taunt and Mocking Banner are not currently flashed.
+* Fury:  Rotation changed somewhat -> Need to stay Enraged so Bloodthirst is the go to.  Sometimes it is necessary to wait until it procs.  Basic rotation is
+*        to Bloodthirst, Berserker Rage, Wild Strike, Raging Blow, Bloodthirst, Raging Blow, Wild Strike, and then use Dragon Roar/Storm Bolt and Execute as it
+*        comes available.  This will vary slightly based on the stacks of Raging Blow.  The flashes should follow this rotation.
+* Arms:  No changes in this release but I am aware of flashing issues when the ability is not ready.  I will address that next.
+
 == Version 60000.1.3
 * Let's try that again ...
 

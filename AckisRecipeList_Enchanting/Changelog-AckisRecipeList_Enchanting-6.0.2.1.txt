@@ -1,0 +1,24 @@
+tag 6.0.2.1
+b92ba5d514f3eed2f1034cda83d4432aafaa6751
+James D. Callahan III <jcallahan@curse.com>
+2014-10-14 20:56:44 -0500
+
+
+
+--------------------
+
+Ressy:
+	- Updated for WoD
+	- Add Enchanting Materials filter
+	- Add Horde Garrison Vendor
+	- Skeleton for WoD
+	- Add Warspear/Stormshield & Ashran vendors & trainers
+	- Add Necklace as filter
+	- pre-WoD changes
+	- Add Vendor in Lunarfall
+	- Fixing reputation filters
+James D. Callahan III:
+	- Updated reputation and filter names to match the core.
+Ressy:
+	- Removal of ring enchants
+	- Bump ToC

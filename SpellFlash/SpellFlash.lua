@@ -1,3 +1,4 @@
+-- -*- lua-indent-level: 8; -*-
 local MinBuild, OverBuild, Build = 50000, 0, select(4, GetBuildInfo())
 if Build < (MinBuild or 0) or ( (OverBuild or 0) > 0 and Build >= OverBuild ) then return end
 local AddonName, a = ...
@@ -9,6 +10,7 @@ local L = a.Localize
 SpellFlashAddon = {}
 local s = SpellFlashAddon
 s.config = {}
+local SpellFlashCore = SpellFlashCore
 local GetSpellInfo = SpellFlashCore.GetSpellInfo
 local GetItemInfo = SpellFlashCore.GetItemInfo
 s.SpellName = SpellFlashCore.SpellName
@@ -18,32 +20,117 @@ s.CopyTable = SpellFlashCore.CopyTable
 s.RegisterBigLibTimer = SpellFlashCore.RegisterBigLibTimer
 s.RegisterBigLibTimer(a)
 
+-- Lua API functions frequently used
+local select = select
+local ipairs = ipairs
+local next = next
+local pairs = pairs
+local max = math.max
+local floor = math.floor
+local tinsert = tinsert
+local tremove = tremove
+local tonumber = tonumber
+local tostring = tostring
+local type = type
+
+-- WoW globals frequently used in performance critical code.
+local ActionButton_OverlayGlowAnimOutFinished = ActionButton_OverlayGlowAnimOutFinished
+local ActionHasRange = ActionHasRange
+local GetActionCooldown = GetActionCooldown
+local GetActionInfo = GetActionInfo
+local GetGlyphSocketInfo = GetGlyphSocketInfo
+local GetInventoryItemBroken = GetInventoryItemBroken
+local GetInventoryItemID = GetInventoryItemID
+local GetInventorySlotInfo = GetInventorySlotInfo
+local GetItemCooldown = GetItemCooldown
+local GetItemCount = GetItemCount
+local GetNetStats = GetNetStats
+local GetNumGlyphSockets = GetNumGlyphSockets
+local GetNumGroupMembers = GetNumGroupMembers
+local GetNumSubgroupMembers = GetNumSubgroupMembers
+local GetPetActionCooldown = GetPetActionCooldown
+local GetPetActionInfo = GetPetActionInfo
+local GetPetActionSlotUsable = GetPetActionSlotUsable
+local GetPowerRegen = GetPowerRegen
+local GetSpecialization = GetSpecialization
+local GetSpellAutocast = GetSpellAutocast
+local GetSpellCooldown = GetSpellCooldown
+local GetTime = GetTime
+local GetUnitSpeed = GetUnitSpeed
+local GetWeaponEnchantInfo = GetWeaponEnchantInfo
+local HasFullControl = HasFullControl
+local IsActionInRange = IsActionInRange
+local IsActiveBattlefieldArena = IsActiveBattlefieldArena
+local IsCurrentAction = IsCurrentAction
+local IsCurrentItem = IsCurrentItem
+local IsCurrentSpell = IsCurrentSpell
+local IsEquippableItem = IsEquippableItem
+local IsEquippedItem = IsEquippedItem
+local IsInInstance = IsInInstance
+local IsInRaid = IsInRaid
+local IsItemInRange = IsItemInRange
+local IsModifiedClick = IsModifiedClick
+local IsMounted = IsMounted
+local IsPlayerSpell = IsPlayerSpell
+local IsResting = IsResting
+local IsSpellInRange = IsSpellInRange
+local IsUsableAction = IsUsableAction
+local IsUsableItem = IsUsableItem
+local IsUsableSpell = IsUsableSpell
+local ItemHasRange = ItemHasRange
+local SpellHasRange = SpellHasRange
+local UnitAffectingCombat = UnitAffectingCombat
+local UnitAura = UnitAura
+local UnitCanAttack = UnitCanAttack
+local UnitCastingInfo = UnitCastingInfo
+local UnitChannelInfo = UnitChannelInfo
+local UnitClass = UnitClass
+local UnitClassification = UnitClassification
+local UnitDetailedThreatSituation = UnitDetailedThreatSituation
+local UnitExists = UnitExists
+local UnitFactionGroup = UnitFactionGroup
+local UnitGUID = UnitGUID
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
+local UnitInRange = UnitInRange
+local UnitInVehicle = UnitInVehicle
+local UnitIsAFK = UnitIsAFK
+local UnitIsConnected = UnitIsConnected
+local UnitIsDeadOrGhost = UnitIsDeadOrGhost
+local UnitIsFriend = UnitIsFriend
+local UnitIsPlayer = UnitIsPlayer
+local UnitIsTapped = UnitIsTapped
+local UnitIsTappedByAllThreatList = UnitIsTappedByAllThreatList
+local UnitIsTappedByPlayer = UnitIsTappedByPlayer
+local UnitIsTrivial = UnitIsTrivial
+local UnitIsUnit = UnitIsUnit
+local UnitIsVisible = UnitIsVisible
+local UnitLevel = UnitLevel
+local UnitName = UnitName
+local UnitOnTaxi = UnitOnTaxi
+local UnitPlayerControlled = UnitPlayerControlled
+local UnitPower = UnitPower
+local UnitPowerMax = UnitPowerMax
+local UnitPowerType = UnitPowerType
+local UnitRace = UnitRace
+local WorldFrame = WorldFrame
+local NUM_PET_ACTION_SLOTS = NUM_PET_ACTION_SLOTS
+local SPELL_POWER_MANA = SPELL_POWER_MANA
+
+
+
 function a.print(...)
 	print(a.AddonTitleHeader, ...)
 end
 
 local MELEESPELL = {
-	DEATHKNIGHT = 45902--[[Blood Strike]],
+	DEATHKNIGHT = 45462--[[Plague Strike]],
 	DRUID = 33876--[[Mangle]],
 	MONK = 100780--[[Jab]],
 	PALADIN = 35395--[[Crusader Strike]],
 	ROGUE = 1752--[[Sinister Strike]],
 	SHAMAN = 73899--[[Primal Strike]],
 	WARRIOR = 78--[[Heroic Strike]],
-}
-
-local GLOBALCOOLDOWNSPELL = {
-	DEATHKNIGHT = 47541--[[Death Coil]],
-	DRUID = 5176--[[Wrath]],
-	HUNTER = 883--[[Call Pet 1]],
-	MAGE = 44614--[[Frostfire Bolt]],
-	MONK = 100780--[[Jab]],
-	PALADIN = 7328--[[Redemption]],
-	PRIEST = 585--[[Smite]],
-	ROGUE = 1752--[[Sinister Strike]],
-	SHAMAN = 403--[[Lightning Bolt]],
-	WARLOCK = 686--[[Shadow Bolt]],
-	WARRIOR = 5308--[[Execute]],
 }
 
 local HEALERCLASS = {
@@ -139,19 +226,20 @@ a.PetActions = {
 
 -- http://www.wowhead.com/npcs?filter=cr=34;crs=0;crv=270
 a.DummyIDNumbers = {
+	[24792] = "Advanced Training Dummy",
 	[1921] = "Combat Dummy",
 	[32542] = "Disciple's Training Dummy",
 	[25297] = "Drill Dummy",
 	[32546] = "Ebon Knight's Training Dummy",
-	[17059] = "Hellfire Combat Dummy",
-	[17060] = "Hellfire Combat Dummy Small",
 	[17578] = "Hellfire Training Dummy",
+	[54344] = "Highlord's Nemesis Trainer",
 	[32547] = "Highlord's Nemesis Trainer",
 	[32541] = "Initiate's Training Dummy",
 	[32545] = "Initiate's Training Dummy",
 	[33229] = "Melee Target",
 	[19139] = "Nagrand Target Dummy",
 	[16211] = "Naxxramas Combat Dummy",
+	[84991] = "Pet Training Post",
 	[42328] = "Practice Dummy",
 	[25225] = "Practice Dummy",
 	[31146] = "Raider's Training Dummy",
@@ -175,10 +263,13 @@ a.DummyIDNumbers = {
 	[32667] = "Training Dummy",
 	[31144] = "Training Dummy",
 	[46647] = "Training Dummy",
+	[67127] = "Training Dummy",
+	[79414] = "Training Dummy",
+	[79987] = "Training Dummy",
+	[70245] = "Training Dummy",
+	[89078] = "Training Dummy",
 	[5652] = "Undercity Practice Dummy",
 	[32543] = "Veteran's Training Dummy",
-	[1591] = "Training Dummy",
-	[31146] = "Raider's Training Dummy",
 }
 
 
@@ -216,7 +307,7 @@ local PET_SPELLS = {}
 local TALENTS = {}
 local CLASSMODULES = {}
 local CLASSMODULES_ADDONNAMES = {}
-local GLOBAL_COOLDOWN_SPELL = nil
+local GLOBAL_COOLDOWN_SPELL = 61304
 local CURRENTFORM = nil
 local SHOOT = nil
 local REALM = nil
@@ -305,7 +396,7 @@ end
 
 function s.Dummy(unit)
 	local Type, ID = s.UnitInfo(unit)
-	if Type == "npc" then
+	if Type == "Creature" then
 		return a.DummyIDNumbers[ID]
 	end
 	return nil
@@ -603,7 +694,7 @@ local function RegisterOutsideMeleeDistanceSpell()
 		for i = 1, GetNumSpellBookItems() do
 			local skillType, spellId = GetSpellBookItemInfo(i, "player")
 			if skillType == "SPELL" and IsPlayerSpell(spellId) and s.SpellHasRange(spellId) then
-				local MinRange, MaxRange = select(8,GetSpellInfo(spellId))
+				local MinRange, MaxRange = select(5,GetSpellInfo(spellId))
 				if MinRange == 5 and MaxRange >= 10 then
 					OUTSIDEMELEESPELL = spellId
 					break
@@ -867,7 +958,7 @@ function Event.COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 				end
 				if not AURA_CHECK and SPELL_DELAY[SpellName] and SPELL_DELAY[SpellName][GUID] then
 					local Lag = select(3, GetNetStats()) / 1000
-					a:SetTimer(SpellName.."HitDelay"..GUID, math.max(1, Lag))
+					a:SetTimer(SpellName.."HitDelay"..GUID, max(1, Lag))
 				end
 			elseif Event == "SPELL_DAMAGE" or Event == "SPELL_HEAL" then
 				AURA_CHECK = a:ClearTimer(SpellName.."HitDelay"..GUID)
@@ -880,7 +971,7 @@ function Event.COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 				end
 				if not AURA_CHECK and SPELL_DELAY[SpellName] and SPELL_DELAY[SpellName][GUID] then
 					local Lag = select(3, GetNetStats()) / 1000
-					a:SetTimer(SpellName.."AuraDelay"..GUID, math.max(1, Lag))
+					a:SetTimer(SpellName.."AuraDelay"..GUID, max(1, Lag))
 				end
 			end
 			if not AURA_CHECK then
@@ -901,7 +992,7 @@ function Event.COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 					end
 					local LastTime = LastTimeTable[1]
 					if Event ~= "SPELL_MISS" and Event ~= "SPELL_MISSED" then
-						local TravelTime = math.max(Time - LastTime, 0)
+						local TravelTime = max(Time - LastTime, 0)
 						if not LAST_SPELL_TRAVEL_TIME[GUID] then
 							LAST_SPELL_TRAVEL_TIME_END[GUID] = a:CreateTable()
 							LAST_SPELL_TRAVEL_TIME[GUID] = a:CreateTable()
@@ -962,7 +1053,7 @@ function Event.UNIT_SPELLCAST_INTERRUPTED(event, unit, SpellName, rank, ID)
 				RegisterSpellCast(SpellName, GUID)
 			end
 			SPELLCAST[unit][ID] = nil
-		end
+ 		end
 	end
 end
 
@@ -978,12 +1069,6 @@ function Event.UNIT_SPELLCAST_SUCCEEDED(event, unit, SpellName, rank, ID)
 	end
 end
 
-local function RegisterGlobalCooldownSpell()
-	if not GLOBAL_COOLDOWN_SPELL and s.HasSpell(GLOBALCOOLDOWNSPELL[CLASS]) then
-		GLOBAL_COOLDOWN_SPELL = GLOBALCOOLDOWNSPELL[CLASS]
-	end
-end
-
 local function RegisterAll()
 	LAST_SPELL_TRAVEL_TIME = a:CreateTable(LAST_SPELL_TRAVEL_TIME, 1)
 	LAST_SPELL_TRAVEL_TIME_END = a:CreateTable(LAST_SPELL_TRAVEL_TIME_END, 1)
@@ -992,7 +1077,6 @@ local function RegisterAll()
 	a:SetTimer("RegisterTalents", 1, 0, RegisterTalents)
 	a:SetTimer("RegisterOtherAuras", 1, 0, RegisterOtherAuras)
 	a:SetTimer("RegisterOutsideMeleeDistanceSpell", 1, 0, RegisterOutsideMeleeDistanceSpell)
-	a:SetTimer("RegisterGlobalCooldownSpell", 1, 0, RegisterGlobalCooldownSpell)
 end
 
 local function StartUp()
@@ -1090,7 +1174,7 @@ local WeaponSlotPosition = {mainhandslot = 1, secondaryhandslot = 4, rangedslot 
 
 local function CheckAura(SpellName, unit, DurationRemainingGreaterThan, Stealable, Castable, UseBuffID, Type, owner, GiveExpirationTime, GiveApplications, Debuff)
 	if type(unit) == "string" then
-		local group = string.lower("|"..unit.."|")
+		local group = ("|"..unit.."|"):lower()
 		local raid, party = group:match("|raid|"), group:match("|party|")
 		if raid or party then
 			local all, notself, afk, range, healer, mana = group:match("|all|"), group:match("|notself|"), group:match("|afk|"), group:match("|range|"), group:match("|healer|"), group:match("|mana|")
@@ -1596,7 +1680,7 @@ function s.SpellDelay(SpellName, unit, any)
 	return GetSpellDelay(SpellName, unit, any)
 end
 
-function GetAuraDelay(SpellName, GUID)
+local function GetAuraDelay(SpellName, GUID)
 	if type(SpellName) == "table" then
 		for _, SpellName in ipairs(SpellName) do
 			if GetAuraDelay(SpellName, GUID) then
@@ -1663,12 +1747,13 @@ function s.AuraCastingOrChanneling(SpellName, unit)
 	return nil
 end
 
-local UnitTypesTable = {["0"] = "player", ["8"] = "player", ["4"] = "pet", ["3"] = "npc", ["5"] = "vehicle"}
-local UnitIDPosition = {player = {6}, pet = {6, 10}, npc = {7, 10}, vehicle = {7, 10}, unknown = {7, 10}}
 function s.GUIDInfo(GUID)
 	if type(GUID) == "string" and GUID ~= "" then
-		local Type = UnitTypesTable[GUID:sub(5, 5)] or "unknown"
-		return Type, tonumber(GUID:sub(unpack(UnitIDPosition[Type])), 16)
+		local Type, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid = ("-"):split(GUID)
+		if Type == "Player" then
+			return Type, tonumber(server_id)
+		end
+		return Type, tonumber(npc_id)
 	end
 	return nil
 end
@@ -1808,7 +1893,7 @@ end
 
 function s.CastTime(SpellName)
 	if SpellName then
-		local castTime = select(7, GetSpellInfo(SpellName)) or 0
+		local castTime = select(4, GetSpellInfo(SpellName)) or 0
 		if castTime > 0 then
 			return castTime / 1000
 		end
@@ -1816,14 +1901,70 @@ function s.CastTime(SpellName)
 	return 0
 end
 
-function s.SpellCost(SpellName, PowerType)
-	if SpellName then
-		local name, rank, icon, cost, isFunnel, powerType = GetSpellInfo(SpellName)
-		if not PowerType or PowerType == powerType then
-			return cost or 0
-		end
-	end
-	return 0
+-- 6.0.2 dropped any API for getting this data, so we need to grovel around in
+-- the guts of the tooltip to get it.  Blizzard, why? whyyyy?
+local SpellCostTip = CreateFrame('GameTooltip')
+local SpellCostText = SpellCostTip:CreateFontString()
+SpellCostTip:AddFontStrings(
+        SpellCostTip:CreateFontString(),
+        SpellCostTip:CreateFontString())
+SpellCostTip:AddFontStrings(
+        SpellCostText,
+        SpellCostTip:CreateFontString())
+
+-- patterns to extract power by type, extra brackets because gsub has multiple
+-- return values, and we don't want the '1' sneaking into our tables.
+local PowerPatterns = {
+        [-2] = {(HEALTH_COST:gsub('%%d', '([.,%%d]+)', 1))},
+        [0]  = {(MANA_COST:gsub('%%d', '([.,%%d]+)', 1))},
+        [1]  = {(RAGE_COST:gsub('%%d', '([.,%%d]+)', 1))},
+        [2]  = {(FOCUS_COST:gsub('%%d', '([.,%%d]+)', 1))},
+        [3]  = {(ENERGY_COST:gsub('%%d', '([.,%%d]+)', 1))},
+        [5]  = {(RUNE_COST_BLOOD:gsub('%%d', '([.,%%d]+)', 1)),
+                (RUNE_COST_CHROMATIC:gsub('%%d', '([.,%%d]+)', 1)),
+                (RUNE_COST_FROST:gsub('%%d', '([.,%%d]+)', 1)),
+                (RUNE_COST_UNHOLY:gsub('%%d', '([.,%%d]+)', 1))},
+        [6]  = {(RUNIC_POWER_COST:gsub('%%d', '([.,%%d]+)', 1))},
+        [7]  = {(SOUL_SHARDS_COST:gsub('%%d', '([.,%%d]+)', 1))},
+        [9]  = {(HOLY_POWER_COST:gsub('%%d', '([.,%%d]+)', 1))},
+        [12] = {(CHI_COST:gsub('%%d', '([.,%%d]+)', 1))},
+        [13] = {(SHADOW_ORBS_COST:gsub('%%d', '([.,%%d]+)', 1))},
+        [14] = {(BURNING_EMBERS_COST:gsub('%%d', '([.,%%d]+)', 1))},
+        [15] = {(DEMONIC_FURY_COST:gsub('%%d', '([.,%%d]+)', 1))},
+}
+
+function s.SpellCost(SpellName, DesiredPowerType)
+        if not SpellName then return 0 end
+
+        -- hopefully this will stay working, since it isn't fully documented.
+        local _, _, _, _, _, _, id = GetSpellInfo(SpellName)
+        if not id then
+                return 0
+        end
+
+        -- make the tooltip work...
+        SpellCostTip:SetOwner(WorldFrame, 'ANCHOR_NONE')
+        SpellCostTip:SetSpellByID(id)
+
+        local text = SpellCostText:GetText()
+        if not text then
+                return 0
+        end
+
+        -- if not specified, default to our main power type.
+        local patterns = PowerPatterns[DesiredPowerType or UnitPowerType("player")]
+        if not patterns then
+                -- if you encounter this, fix the table?
+                return 0
+        end
+
+        local cost = 0
+        for _, pattern in ipairs(patterns) do
+                local match = text:match(pattern)
+                if match then cost = match:gsub('%D', '') + cost end
+        end
+
+        return cost
 end
 
 
@@ -2336,7 +2477,7 @@ end
 
 function s.HealthPercent(unit)
 	if type(unit) == "string" then
-		local group = string.lower("|"..unit.."|")
+		local group = ("|"..unit.."|"):lower()
 		local raid, party = group:match("|raid|"), group:match("|party|")
 		if raid or party then
 			local notself, afk, range, healer, notfull, average = group:match("|notself|"), group:match("|afk|"), group:match("|range|"), group:match("|healer|"), group:match("|notfull|"), group:match("|average|")
@@ -2448,7 +2589,7 @@ end
 
 function s.PowerPercent(unit, ...)
 	if type(unit) == "string" then
-		local group = string.lower("|"..unit.."|")
+		local group = ("|"..unit.."|"):lower()
 		local raid, party = group:match("|raid|"), group:match("|party|")
 		if raid or party then
 			local notself, afk, range, healer, notfull, average = group:match("|notself|"), group:match("|afk|"), group:match("|range|"), group:match("|healer|"), group:match("|notfull|"), group:match("|average|")
@@ -2560,7 +2701,7 @@ end
 
 function s.Healer(unit)
 	if type(unit) == "string" then
-		local group = string.lower("|"..unit.."|")
+		local group = ("|"..unit.."|"):lower()
 		local raid, party = group:match("|raid|"), group:match("|party|")
 		if raid or party then
 			local notself, afk, range = group:match("|notself|"), group:match("|afk|"), group:match("|range|")
@@ -2947,7 +3088,9 @@ function s.CheckIfSpellCastable(z)
 	if z.EnemyTargetNeeded and Immune(z.ID, z.Unit) then
 		return false
 	end
-	local name, rank, icon, cost, isFunnel, powerType, castTime = GetSpellInfo(z.ID)
+	--local name, rank, icon, cost, isFunnel, powerType, castTime = GetSpellInfo(z.ID)
+	local name, rank, icon, castTime = GetSpellInfo(z.ID)
+	local cost = s.SpellCost(z.ID)
 	if not castTime or castTime < 0 then
 		castTime = 0
 	end
@@ -2955,12 +3098,12 @@ function s.CheckIfSpellCastable(z)
 	local DoubleLag = Lag * 2
 	local CastingTimeLeft = s.GetCasting(nil, "player")
 	local CastRegenPower = 0
-	if not z.NoPowerCheck and CastingTimeLeft > 0 and powerType and UnitPowerType("player") == powerType then
+	if not z.NoPowerCheck and cost and cost > 0 and CastingTimeLeft > 0 then
 		local Regen, activeRegen = GetPowerRegen()
 		if s.InCombat then
 			Regen = activeRegen
 		end
-		CastRegenPower = math.floor(Regen * CastingTimeLeft)
+		CastRegenPower = floor(Regen * CastingTimeLeft)
 	end
 	if z.NoStopChannel then
 		if type(z.NoStopChannel) == "table" or type(z.NoStopChannel) == "string" or ( type(z.NoStopChannel) == "number" and z.NoStopChannel > 1 ) then
@@ -3013,7 +3156,7 @@ function s.CheckIfSpellCastable(z)
 					end
 				end
 				local AuraCastingQueued = (s.SpellOrAuraDelay(z[p..Aura..i], z.Unit) or 0) * z[p.."StackGiven"..i]
-				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + math.max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."EarlyRefresh"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued + CastingQueued >= z[p.."Stack"..i] then
+				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."EarlyRefresh"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued + CastingQueued >= z[p.."Stack"..i] then
 					return false
 				end
 			end
@@ -3045,7 +3188,7 @@ function s.CheckIfSpellCastable(z)
 				if s.AuraCastingOrChanneling(z[p..Aura..i], "player") then
 					AuraCastingQueued = AuraCastingQueued + z[p.."StackGiven"..i]
 				end
-				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + math.max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] + CastingQueued then
+				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] + CastingQueued then
 					return false
 				end
 			end
@@ -3067,7 +3210,7 @@ function s.CheckIfSpellCastable(z)
 					z[p.."StackGiven"..i] = 1
 				end
 				local AuraCastingQueued = (s.SpellOrAuraDelay(z[p..Aura..i], z.Unit) or 0) * z[p.."StackGiven"..i]
-				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, math.max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] then
+				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] then
 					return false
 				end
 			end
@@ -3077,7 +3220,7 @@ function s.CheckIfSpellCastable(z)
 	local isUsable, notEnoughPower = s.UsableSpell(z.ID)
 	return ( z.EvenIfNotUsable or isUsable or ( not z.Conditional and notEnoughPower ) )
 		and ( not z.Melee or s.MeleeDistance(z.Unit) )
-		and ( z.NoPowerCheck or (cost or 0) == 0 or UnitPower("player", powerType) + CastRegenPower >= (cost or 0) + s.SpellCost(s.CastingName(nil, "player"), powerType) )
+		and ( z.NoPowerCheck or (cost or 0) == 0 or UnitPower("player") + CastRegenPower >= (cost or 0) + s.SpellCost(s.CastingName(nil, "player")) )
 		and ( SUPPRESS_SPEED_CHECK or not z.NotWhileMoving or not s.Moving("player") )
 		and ( cooldown <= Lag + CastingTimeLeft or ( not globalcooldown and duration <= 1.5 ) or ( globalcooldown and cooldown <= globalcooldown ) )
 		and ( SUPPRESS_RANGE_CHECK or z.NoRangeCheck or UnitIsUnit(z.Unit, "player") or UnitIsUnit(z.Unit, "vehicle") or not s.SpellHasRange(z.Name) or s.SpellInRange(z.Name, z.Unit) )
@@ -3158,7 +3301,7 @@ function s.CheckIfItemCastable(z)
 					end
 				end
 				local AuraCastingQueued = (s.SpellOrAuraDelay(z[p..Aura..i], z.Unit) or 0) * z[p.."StackGiven"..i]
-				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + math.max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."EarlyRefresh"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued + CastingQueued >= z[p.."Stack"..i] then
+				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."EarlyRefresh"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued + CastingQueued >= z[p.."Stack"..i] then
 					return false
 				end
 			end
@@ -3190,7 +3333,7 @@ function s.CheckIfItemCastable(z)
 				if s.AuraCastingOrChanneling(z[p..Aura..i], "player") then
 					AuraCastingQueued = AuraCastingQueued + z[p.."StackGiven"..i]
 				end
-				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + math.max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] + CastingQueued then
+				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] + CastingQueued then
 					return false
 				end
 			end
@@ -3212,7 +3355,7 @@ function s.CheckIfItemCastable(z)
 					z[p.."StackGiven"..i] = 1
 				end
 				local AuraCastingQueued = (s.SpellOrAuraDelay(z[p..Aura..i], z.Unit) or 0) * z[p.."StackGiven"..i]
-				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, math.max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] then
+				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] then
 					return false
 				end
 			end
@@ -3308,7 +3451,7 @@ function s.CheckIfVehicleSpellCastable(z)
 					end
 				end
 				local AuraCastingQueued = (s.SpellOrAuraDelay(z[p..Aura..i], z.Unit) or 0) * z[p.."StackGiven"..i]
-				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + math.max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."EarlyRefresh"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued + CastingQueued >= z[p.."Stack"..i] then
+				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."EarlyRefresh"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued + CastingQueued >= z[p.."Stack"..i] then
 					return false
 				end
 			end
@@ -3340,7 +3483,7 @@ function s.CheckIfVehicleSpellCastable(z)
 				if s.AuraCastingOrChanneling(z[p..Aura..i], "vehicle") then
 					AuraCastingQueued = AuraCastingQueued + z[p.."StackGiven"..i]
 				end
-				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + math.max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] + CastingQueued then
+				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] + CastingQueued then
 					return false
 				end
 			end
@@ -3362,7 +3505,7 @@ function s.CheckIfVehicleSpellCastable(z)
 					z[p.."StackGiven"..i] = 1
 				end
 				local AuraCastingQueued = (s.SpellOrAuraDelay(z[p..Aura..i], z.Unit) or 0) * z[p.."StackGiven"..i]
-				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, math.max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] then
+				if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] then
 					return false
 				end
 			end
@@ -3421,7 +3564,9 @@ function s.CheckIfPetSpellCastable(z)
 				name = name.."("..subtext..")"
 			end
 			if ( a.PetActions[z.Name] or z.Name ) == name then
-				local name, rank, icon, cost, isFunnel, powerType, castTime = GetSpellInfo(z.ID)
+				--local name, rank, icon, cost, isFunnel, powerType, castTime = GetSpellInfo(z.ID)
+				local name, rank, icon, castTime = GetSpellInfo(z.ID)
+				local cost = s.SpellCost(z.ID)
 				if not castTime or castTime < 0 then
 					castTime = 0
 				end
@@ -3458,7 +3603,7 @@ function s.CheckIfPetSpellCastable(z)
 								end
 							end
 							local AuraCastingQueued = (s.SpellOrAuraDelay(z[p..Aura..i], z.Unit) or 0) * z[p.."StackGiven"..i]
-							if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + math.max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."EarlyRefresh"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued + CastingQueued >= z[p.."Stack"..i] then
+							if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."EarlyRefresh"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued + CastingQueued >= z[p.."Stack"..i] then
 								return false
 							end
 						end
@@ -3483,14 +3628,14 @@ function s.CheckIfPetSpellCastable(z)
 								z[p.."StackTaken"..i] = 1
 							end
 							local CastingQueued = 0
-							if Current or CastingOrChanneling then
+							if CastingOrChanneling then
 								CastingQueued = z[p.."StackTaken"..i]
 							end
 							local AuraCastingQueued = (s.SpellOrAuraDelay(z[p..Aura..i], z.Unit) or 0) * z[p.."StackGiven"..i]
 							if s.AuraCastingOrChanneling(z[p..Aura..i], "pet") then
 								AuraCastingQueued = AuraCastingQueued + z[p.."StackGiven"..i]
 							end
-							if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + math.max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] + CastingQueued then
+							if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, z.CastTime + max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] + CastingQueued then
 								return false
 							end
 						end
@@ -3512,7 +3657,7 @@ function s.CheckIfPetSpellCastable(z)
 								z[p.."StackGiven"..i] = 1
 							end
 							local AuraCastingQueued = (s.SpellOrAuraDelay(z[p..Aura..i], z.Unit) or 0) * z[p.."StackGiven"..i]
-							if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, math.max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] then
+							if ( Function(z[p..Aura..i], z[p.."BuffUnit"..i] or z.Unit, max(CastingTimeLeft, cooldown) + DoubleLag + (z[p.."MoreBuffTime"..i] or 0), nil, nil, z[p.."UseBuffID"..i]) or 0 ) + AuraCastingQueued < z[p.."Stack"..i] then
 								return false
 							end
 						end
@@ -3528,7 +3673,7 @@ function s.CheckIfPetSpellCastable(z)
 					end
 				end
 				return ( not z.NotIfActive or not isActive ) and ( z.EvenIfNotUsable or GetPetActionSlotUsable(n) )
-					and ( z.NoPowerCheck or (cost or 0) == 0 or UnitPower("pet", powerType) >= (cost or 0) + s.SpellCost(s.CastingName(nil, "pet"), powerType) )
+					and ( z.NoPowerCheck or (cost or 0) == 0 or UnitPower("pet") >= (cost or 0) + s.SpellCost(s.CastingName(nil, "pet")) )
 					and ( cooldown <= Lag + CastingTimeLeft or ( not globalcooldown and duration <= 1.5 ) or ( globalcooldown and cooldown <= globalcooldown ) )
 					and ( not z.EnemyTargetNeeded or s.Enemy(z.Unit) )
 					and ( not z.Interrupt or s.GetCastingOrChanneling(nil, z.Unit, 1) > (CastingOrChanneling or (cooldown + z.CastTime)) + DoubleLag )

@@ -1,0 +1,11 @@
+tag 6.0.2.2
+cee62059a57252fa03b4adb396e26e3727148cf8
+James D. Callahan III <jcallahan@curse.com>
+2014-10-18 01:38:08 -0500
+
+
+
+--------------------
+
+James D. Callahan III:
+	- NAGRAND => NAGRAND_OUTLAND

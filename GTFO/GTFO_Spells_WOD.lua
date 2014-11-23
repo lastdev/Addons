@@ -36,12 +36,27 @@ GTFO.SpellID["161918"] = {
 	sound = 1;
 };
 
+GTFO.SpellID["178601"] = {
+	--desc = "Shocking Ground (Shadowmoon Ritualist)";
+	sound = 1;
+};
+
+GTFO.SpellID["158238"] = {
+	--desc = "Blaze";
+	sound = 1;
+};
+
 --TODO: Acid Breath (Drov the Ruiner) - avoidable?
 --TODO: Noxious Spit (Tarlna the Ageless) - pool
 
 -- **************
 -- * Auchindoun *
 -- **************
+
+GTFO.SpellID["156746"] = {
+	--desc = "Consecrated Light (Vigilant Kaathar)";
+	sound = 1;
+};
 
 GTFO.SpellID["166749"] = {
 	--desc = "Mind Sear (Sargerei Soulbinder)";
@@ -60,6 +75,11 @@ GTFO.SpellID["161457"] = {
 	sound = 1;
 };
 
+GTFO.SpellID["154773"] = {
+	--desc = "Warden's Hammer (Sargerei Warden)";
+	sound = 1;
+};
+
 GTFO.SpellID["154187"] = {
 	--desc = "Soul Vessel (Soulbinder Nyami)";
 	sound = 1;
@@ -70,7 +90,10 @@ GTFO.SpellID["153616"] = {
 	sound = 1;
 };
 
--- TODO: Rain of Fire (Teron'gor)
+GTFO.SpellID["156856"] = {
+	--desc = "Rain of Fire (Teron'gor)";
+	sound = 1;
+};
 
 -- ************************
 -- * Bloodmaul Slag Mines *
@@ -93,6 +116,12 @@ GTFO.SpellID["149996"] = {
 
 GTFO.SpellID["153227"] = {
 	--desc = "Burning Slag (Roltall)";
+	sound = 1;
+};
+
+GTFO.SpellID["152941"] = {
+	--desc = "Molten Reach (Roltall)";
+	applicationOnly = true;
 	sound = 1;
 };
 
@@ -145,10 +174,13 @@ GTFO.SpellID["161588"] = {
 
 -- Lava Sweep (Makogg Emberblade) - Fail?
 -- TODO: Shattering Blade (Koramar) - avoidable?
-
 -- Barbed Arrow Barrage (Fleshrender Nok'gar)
--- Burning Arrows (Fleshrender Nok'gar) - fire
 -- Shredding Swipes (Fleshrender Nok'gar) - Fail?
+
+GTFO.SpellID["164632"] = {
+	--desc = "Burning Arrows (Fleshrender Nok'gar)";
+	sound = 1;
+};
 
 GTFO.SpellID["168540"] = {
 	--desc = "Cannon Barrage (Skulloc)";
@@ -170,8 +202,18 @@ GTFO.SpellID["173149"] = {
 	sound = 1;
 };
 
+GTFO.SpellID["173324"] = {
+	--desc = "Jagged Caltrops";
+	sound = 1;
+};
+
 GTFO.SpellID["173489"] = {
 	--desc = "Lava Barrage (Ironwing Flamespitter)";
+	sound = 1;
+};
+
+GTFO.SpellID["173517"] = {
+	--desc = "Lava Blast (Ironwing Flamespitter)";
 	sound = 1;
 };
 

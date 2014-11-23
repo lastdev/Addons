@@ -35,9 +35,9 @@ local function processCast(info)
 			anticipationTransfer = now
 			c.Debug("Event", "Anticipation Charges will transfer")
 		end
-	elseif c.InfoMatches(info, "Expose Armor") then
-		a.ExposePending = true
-		c.Debug("Event", "Expose Armor pending")
+--	elseif c.InfoMatches(info, "Expose Armor") then
+--		a.ExposePending = true
+--		c.Debug("Event", "Expose Armor pending")
 	end
 end
 
@@ -48,10 +48,10 @@ local function maybeConsumeRelentless(id)
 end
 
 local function unpendExpose(id)
-	if id == c.ARMOR_DEBUFFS then
-		a.ExposePending = false
-		c.Debug("Event", "Expose Armor applied")
-	end
+--	if id == c.ARMOR_DEBUFFS then
+--		a.ExposePending = false
+--		c.Debug("Event", "Expose Armor applied")
+--	end
 end
 
 a.Rotations = {}
@@ -70,8 +70,8 @@ function a.PreFlash()
 	end
 	
 	-- Calc cp
-	local bladed = s.Buff(c.GetID("Shadow Blades"), "player") 
-		or c.IsCasting("Shadow Blades")
+--	local bladed = s.Buff(c.GetID("Shadow Blades"), "player") 
+--		or c.IsCasting("Shadow Blades")
 	local anticipation = c.HasTalent("Anticipation")
 	if c.IsCasting("Marked for Death") then
 		a.CP = a.CP + 5
@@ -95,8 +95,9 @@ function a.PreFlash()
 		"Dispatch",
 		"Revealing Strike", 
 		"Shuriken Toss",
-		"Hemorrhage",
-		"Expose Armor") then
+		"Hemorrhage"
+--		,"Expose Armor"
+		) then
 		
 		a.CP = a.CP + 1
 		if bladed then
@@ -131,17 +132,23 @@ end
 a.Rotations.Assassination = {
 	Spec = 1,
 	
-	UsefulStats = { "Agility", "Melee Hit", "Strength", "Crit", "Haste" },
+
+--	UsefulStats = { "Agility", "Crit", "Haste", "Melee Hit", "Strength" },
+--  UsefulStats = { "Agility", "Crit", "Haste" },
+    UsefulStats = { "Agility", "Crit", "Multistrike", "Versatility", "Mastery", "Haste" },
 	
 	FlashInCombat = function()
 		c.FlashAll(
 			"Vendetta",
-			"Shadow Blades",
+--			"Shadow Blades",
 			"Marked for Death",
-			"Expose Armor", 
+--			"Expose Armor",
 			"Recuperate",
 			"Shiv", 
-			"Kick")
+			"Kick",
+			"Death from Above",
+			"Shadow Reflection"
+			)
 		
 		if c.HasBuff("Vanish", false, false, true)
 			or c.HasBuff("Subterfuge")
@@ -149,22 +156,65 @@ a.Rotations.Assassination = {
 			
 			c.PriorityFlash("Envenom", "Ambush", "Dispatch", "Mutilate")
 		else
-			local flashing = c.PriorityFlash(
-				"Envenom to refresh Slice and Dice",
-				"Slice and Dice for Assassination",
-				"Dispatch pre-Rupture",
-				"Mutilate pre-Rupture",
-				"Rupture for Assassination",
-				"Envenom for Buff",
-				"Dispatch pre-Envenom",
-				"Mutilate pre-Envenom",
-				"Envenom",
-				"Tricks of the Trade unglyphed",
-				"Dispatch",
-				"Mutilate",
-				"Preparation",
-				"Tricks of the Trade glyphed",
-				"Shuriken Toss")
+		    local flashing -- Don't forget to comment this line if you comment if/else
+		    
+		    if UnitLevel("player") >= 92 then
+		        flashing = c.PriorityFlash(
+--				    "Envenom to refresh Slice and Dice",
+--				    "Slice and Dice for Assassination",
+                    "Dispatch pre-Rupture",
+		        	"Mutilate pre-Rupture",
+		        	"Rupture for Assassination",
+		        	"Envenom for Buff",
+		        	"Dispatch pre-Envenom",
+		        	"Mutilate pre-Envenom",
+		        	"Envenom",
+--				    "Tricks of the Trade unglyphed",
+		        	"Dispatch",
+		        	"Mutilate",
+		        	"Preparation",
+--                  "Tricks of the Trade glyphed",
+		        	"Shuriken Toss"
+                    )
+            else
+                flashing = c.PriorityFlash(
+				    "Envenom to refresh Slice and Dice",
+				    "Slice and Dice for Assassination",
+				    "Dispatch pre-Rupture",
+				    "Mutilate pre-Rupture",
+				    "Rupture for Assassination",
+				    "Envenom for Buff",
+				    "Dispatch pre-Envenom",
+				    "Mutilate pre-Envenom",
+				    "Envenom",
+--				    "Tricks of the Trade unglyphed",
+				    "Dispatch",
+				    "Mutilate",
+				    "Preparation",
+--				    "Tricks of the Trade glyphed",
+				    "Shuriken Toss"
+				    )
+		    end
+		    
+		    
+--			local flashing = c.PriorityFlash( -- "local Flashing" is already declared above of if/else, so remove "local" if you have to
+--				"Envenom to refresh Slice and Dice",
+--				"Slice and Dice for Assassination",
+--				"Dispatch pre-Rupture",
+--				"Mutilate pre-Rupture",
+--				"Rupture for Assassination",
+--				"Envenom for Buff",
+--				"Dispatch pre-Envenom",
+--				"Mutilate pre-Envenom",
+--				"Envenom",
+--				"Tricks of the Trade unglyphed",
+--				"Dispatch",
+--				"Mutilate",
+--				"Preparation",
+--				"Tricks of the Trade glyphed",
+--				"Shuriken Toss",
+--		        "Death from Above"
+--				)
 				
 			local vanish = c.GetSpell("Vanish for Assassination")
 			if c.HasTalent("Nightstalker") then
@@ -195,7 +245,11 @@ a.Rotations.Assassination = {
 	end,
 	
 	FlashAlways = function()
-		c.FlashAll("Deadly Poison", "Non-Lethal Poison", "Redirect")
+		c.FlashAll(
+		    "Deadly Poison",
+		    "Non-Lethal Poison"
+--		    ,"Redirect"
+		    )
 	end,
 	
 	CastSucceeded = processCast,
@@ -219,7 +273,9 @@ local guile = 0
 a.Rotations.Combat = {
 	Spec = 2,
 	
-	UsefulStats = { "Agility", "Melee Hit", "Strength", "Crit", "Haste" },
+--	UsefulStats = { "Agility", "Melee Hit", "Strength", "Crit", "Haste" },
+--  UsefulStats = { "Agility", "Crit", "Haste" },
+    UsefulStats = { "Agility", "Multistrike", "Versatility", "Crit", "Haste", "Mastery" },
 		
 	FlashInCombat = function()
 		if c.IsQueued("Sinister Strike", "Revealing Strike") then
@@ -235,27 +291,31 @@ a.Rotations.Combat = {
 		end
 		
 		c.FlashAll(
-			"Shadow Blades for Combat", 
+--			"Shadow Blades for Combat",
 			"Killing Spree",
 			"Adrenaline Rush", 
 			"Vanish for Combat", 
 			"Marked for Death for Combat",
-			"Expose Armor",
+--			"Expose Armor",
 			"Recuperate",
 			"Shiv", 
-			"Kick")
+			"Kick",
+			"Death from Above",
+			"Shadow Reflection"
+			)
 		c.PriorityFlash(
 			"Ambush", 
 			"Slice and Dice for Combat", 
 			"Revealing Strike if Down",
-			"Rupture for Combat",
+--			"Rupture for Combat",
 			"Eviscerate for Combat",
-			"Tricks of the Trade unglyphed",
+--			"Tricks of the Trade unglyphed",
 			"Revealing Strike",
 			"Sinister Strike",
 			"Preparation",
-			"Tricks of the Trade glyphed",
-			"Shuriken Toss")
+--			"Tricks of the Trade glyphed",
+			"Shuriken Toss"
+			)
 	end,
 	
 	FlashOutOfCombat = function(self)
@@ -267,7 +327,11 @@ a.Rotations.Combat = {
 	end,
 	
 	FlashAlways = function()
-		c.FlashAll("Deadly Poison", "Non-Lethal Poison", "Redirect")
+		c.FlashAll(
+		    "Deadly Poison",
+		    "Non-Lethal Poison"
+--		    ,"Redirect"
+		    )
 	end,
 	
 	CastSucceeded = function(info)
@@ -284,10 +348,10 @@ a.Rotations.Combat = {
 	end,
 	
 	CastSucceeded_FromLog = function(spellID)
-		if c.IdMatches(spellID, "Ruthlessness Energize") then
-			ruthlessnessPending = 0
-			c.Debug("Event", "Ruthlessness Happened")
-		end
+--		if c.IdMatches(spellID, "Ruthlessness Energize") then
+--			ruthlessnessPending = 0
+--			c.Debug("Event", "Ruthlessness Happened")
+--		end
 	end,
 	
 	SpellMissed = function(spellID)
@@ -342,11 +406,13 @@ a.ConsumedNextRecovery = false
 a.Rotations.Subtlety = {
 	Spec = 3,
 	
-	UsefulStats = { "Agility", "Melee Hit", "Strength", "Crit", "Haste" },
+--	UsefulStats = { "Agility", "Melee Hit", "Strength", "Crit", "Haste" },
+--  UsefulStats = { "Agility", "Crit", "Haste" },
+    UsefulStats = { "Agility", "Multistrike", "Crit", "Versatility", "Mastery", "Haste" },
 	
 	FlashInCombat = function()
 		local snd = s.BuffDuration(c.GetID("Slice and Dice"), "player")
-		if snd > 0 and c.HasSpell("Energetic Recovery") then
+		if snd > 5 and c.HasSpell("Energetic Recovery") then
 			local nextTick = snd % 2
 			local busy = c.GetBusyTime()
 			local recentRealTick = GetTime() - lastEnergeticRecovery < 1
@@ -375,12 +441,14 @@ a.Rotations.Subtlety = {
 				or c.HasBuff("Stealth"))
 		
 		c.FlashAll(
-			"Shadow Blades", 
+--			"Shadow Blades",
 			"Premeditation", 
 			"Recuperate", 
-			"Expose Armor", 
+--			"Expose Armor",
 			"Shiv", 
-			"Kick")
+			"Kick",
+			"Death from Above"
+			)
 		if c.FlashAll("Ambush for Subtlety") then
 			return
 		end
@@ -388,21 +456,24 @@ a.Rotations.Subtlety = {
 		c.FlashAll(
 			"Shadow Dance",
 			"Vanish for Subtlety",
-			"Marked for Death")
+			"Marked for Death",
+			"Shadow Reflection"
+			)
 		
 		local bankCharges =
 			c.HasTalent("Anticipation")
 				and a.CP < 9
-				and a.SnD > 0
-				and a.Rupture > 2
-				and (a.SnD < 6 or a.Rupture < 4)
+				and a.SnD > 5
+				and a.Rupture > 5
+				and (a.SnD < 6 or a.Rupture < 6)
 		if a.CP >= 5 and not bankCharges then
 			c.PriorityFlash(
 				"Slice and Dice for Subtlety",
 				"Rupture for Subtlety",
 				"Eviscerate for Subtlety",
-				"Preparation",
-				"Tricks of the Trade")
+				"Preparation"
+--				,"Tricks of the Trade"
+				)
 		elseif bankCharges 
 			or a.CP < 4 
 			or a.Energy > 80 
@@ -411,16 +482,18 @@ a.Rotations.Subtlety = {
 			
 			c.PriorityFlash(
 				"Hemorrhage for Bleed",
-				"Tricks of the Trade unglyphed",
+--				"Tricks of the Trade unglyphed",
 				"Backstab",
 				"Hemorrhage if no Backstab",
 				"Preparation",
-				"Tricks of the Trade",
-				"Shuriken Toss")
+--				"Tricks of the Trade",
+				"Shuriken Toss"
+				)
 		else
 			c.PriorityFlash(
-				"Preparation",
-				"Tricks of the Trade")
+				"Preparation"
+--				,"Tricks of the Trade"
+				)
 		end
 	end,
 	
@@ -433,7 +506,11 @@ a.Rotations.Subtlety = {
 	end,
 	
 	FlashAlways = function()
-		c.FlashAll("Deadly Poison", "Non-Lethal Poison", "Redirect")
+		c.FlashAll(
+		    "Deadly Poison",
+		    "Non-Lethal Poison"
+--		    ,"Redirect"
+		    )
 	end,
 	
 	CastSucceeded = processCast,

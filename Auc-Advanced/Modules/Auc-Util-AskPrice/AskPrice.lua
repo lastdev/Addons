@@ -1,6 +1,6 @@
 --[[
 	Auctioneer Addon for World of Warcraft(tm).
-	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Version: 5.21c.5521 (SanctimoniousSwamprat)
 	Revision: $Id: AskPrice.lua 5447 2014-01-14 15:11:43Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -597,4 +597,4 @@ function private.SetupConfigGui(gui)
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Util-AskPrice/AskPrice.lua $", "$Rev: 5447 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Util-AskPrice/AskPrice.lua $", "$Rev: 5447 $")

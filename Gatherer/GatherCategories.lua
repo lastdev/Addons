@@ -1,8 +1,8 @@
 ﻿--[[
 	Gatherable Nodes, type groupings definitions
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
-	Revision: $Id: GatherCategories.lua 1085 2013-06-04 06:15:18Z LocalizerAutoCommit $
+	Version: 5.0.0 (<%codename%>)
+	Revision: $Id: GatherCategories.lua 1131 2014-11-13 21:03:23Z esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -96,6 +96,10 @@ ObjectCategories = {
 	[209328] = "ORE_RGHOSTIRON", -- Rich Ghost Iron Deposit
 	[209329] = "ORE_RKYPARITE", -- Rich Kyparite Deposit
 	[209330] = "ORE_RTRILLIUM", -- Rich Trillium Vein
+	[228493] = "ORE_TRUEIRON", -- True Iron Deposit
+	[228510] = "ORE_RTRUEIRON", -- Rich True Iron Deposit
+	[228563] = "ORE_BLACKROCK", -- Blackrock Deposit
+	[228564] = "ORE_RBLACKROCK", -- Rich Blackrock Deposit
 
 	-- Herbs
 	[1617] = "HERB_SILVERLEAF", -- Silverleaf
@@ -159,6 +163,12 @@ ObjectCategories = {
 	[209354] = "HERB_GOLDENLOTUS", -- Golden Lotus
 	[209355] = "HERB_FOOLSCAP", -- Fool's Cap
 	[214510] = "HERB_SHATOUCHEDHERB", -- Sha-Touched Herb
+	[228571] = "HERB_FROSTWEED", -- Frostweed
+	[228572] = "HERB_FIREWEED", -- Fireweed
+	[228573] = "HERB_GORGRONDFLYTRAP", -- Gorgrond Flytrap
+	[228574] = "HERB_STARFLOWER", -- Starflower
+	[228575] = "HERB_NAGRANDARROWBLOOM", -- Nagrand Arrowbloom
+	[228576] = "HERB_TALADORORCHID", -- Talador Orchid
 
 	-- Treasure
 	[2039] = "TREASURE_CHEST", -- Hidden Strongbox
@@ -233,6 +243,9 @@ ObjectCategories = {
 	[211163] = "ARCH_PANDAREN", -- Pandaren Archaeology Find
 	[211174] = "ARCH_MOGU", -- Mogu Archaeology Find
 	[218950] = "ARCH_MANTID", -- Mantid Archaeology Find
+	[226521] = "ARCH_DRAENORCLANS", -- Draenor Clans Archaeology Find
+	[234105] = "ARCH_ARAKKOA", -- Arakkoa Archaeology Find
+	[234106] = "ARCH_OGRE", -- Ogre Archaeology Find
 }
 
 
@@ -282,6 +295,10 @@ CategoryNames = {
 	["ORE_RKYPARITE"] = ORE_RKYPARITE,
 	["ORE_TRILLIUM"] = ORE_TRILLIUM,
 	["ORE_RTRILLIUM"] = ORE_RTRILLIUM,
+	["ORE_BLACKROCK"] = ORE_BLACKROCK,
+	["ORE_RBLACKROCK"] = ORE_RBLACKROCK,
+	["ORE_TRUEIRON"] = ORE_TRUEIRON,
+	["ORE_RTRUEIRON"] = ORE_RTRUEIRON,
 
 	-- Herbs
 	["HERB_BRIARTHORN"] = 1621, -- Briarthorn
@@ -345,6 +362,12 @@ CategoryNames = {
 	["HERB_SHATOUCHEDHERB"] = 214510, -- Sha-Touched Herb
 	["HERB_SNOWLILY"] = 209351, -- Snow Lily
 	["HERB_FOOLSCAP"] = 209355, -- Fool's Cap
+	["HERB_FIREWEED"] = 228572, -- Fireweed
+	["HERB_GORGRONDFLYTRAP"] = 228573, -- Gorgrond Flytrap
+	["HERB_FROSTWEED"] = 228571, -- Frostweed
+	["HERB_STARFLOWER"] = 228574, -- Starflower
+	["HERB_NAGRANDARROWBLOOM"] = 228575, -- Nagrand Arrowbloom
+	["HERB_TALADORORCHID"] = 228576, -- Talador Orchid
 
 	-- Treasure
 	["TREASURE_CHEST"] = TREASURE_CHEST,
@@ -419,6 +442,9 @@ CategoryNames = {
 	["ARCH_PANDAREN"] = ARCH_PANDAREN,
 	["ARCH_MOGU"] = ARCH_MOGU,
 	["ARCH_MANTID"] = ARCH_MANTID,
+	["ARCH_DRAENORCLANS"] = ARCH_DRAENORCLANS,
+	["ARCH_ARAKKOA"] = ARCH_ARAKKOA,
+	["ARCH_OGRE"] = ARCH_OGRE,
 }
 
 for category, id in pairs(CategoryNames) do

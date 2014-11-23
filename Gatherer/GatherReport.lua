@@ -1,6 +1,6 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
+	Version: 5.0.0 (<%codename%>)
 	Revision: $Id: GatherReport.lua 1031 2012-09-28 04:54:31Z Esamynn $
 
 	License:
@@ -27,7 +27,7 @@
 
 	Reporting and data management subsystem
 --]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherReport.lua $", "$Rev: 1031 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_5.0.0/Gatherer/GatherReport.lua $", "$Rev: 1031 $")
 
 local THROTTLE_COUNT = 10
 local THROTTLE_RATE = .25

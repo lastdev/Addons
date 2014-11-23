@@ -174,6 +174,8 @@ TidyPlatesHubDefaults = {
 	--AdvancedHealthTextList = [[return unit.health]],
 }
 
+-- if (UnitClassBase("player") == "Druid") or (UnitClassBase("player") == "Rogue")
+
 TidyPlatesHubGlobal = CopyTable(TidyPlatesHubDefaults)
 
 

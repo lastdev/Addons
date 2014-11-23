@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
-	Revision: $Id: GatherConvert.lua 955 2012-08-28 16:39:14Z Esamynn $
+	Version: 5.0.0 (<%codename%>)
+	Revision: $Id: GatherConvert.lua 1132 2014-11-14 01:16:00Z esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	Database conversion/merging code and conversion data tables
 --]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherConvert.lua $", "$Rev: 955 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_5.0.0/Gatherer/GatherConvert.lua $", "$Rev: 1132 $")
 
 local metatable = { __index = getfenv(0) }
 setmetatable( Gatherer.Convert, metatable )
@@ -55,7 +55,7 @@ local function extractNodeInformation()
 			return
 		end
 	end
-	for index, data in ipairs(nodeData) do
+	for index, data in pairs(nodeData) do
 		local typeInfo = typeConversionData[index]
 		local dataType = type(data)
 		if ( typeInfo ) then
@@ -350,6 +350,75 @@ ConversionInformation = {
 	
 	--MergeNode argument mapping table for DB version 5 to MergeNode function arguments
 	[5] = {
+		nodeLevel = 4,
+		mappingData = {
+			[1] = { type="key", level=4, }, --gatherName
+			[2] = { type="key", level=2, }, --gatherType
+			[3] = nil, --continent
+			[4] = { type="key", level=1, }, --zone
+			[5] = { type="value", level=3, key=1, }, --x
+			[6] = { type="value", level=3, key=2, }, --y
+			[7] = { type="value", level=4, key=1, }, --count
+			[8] = { type="value", level=4, key=2, }, --harvested
+			[9] = { type="value", level=3, key=3, }, --inspected
+			[10] = { type="value", level=4, key=3, }, --source
+			[11] = { type="value", level=3, key=4, }, --indoor
+		},
+		typeConversionData = {
+			[1] = {
+				string = (
+					function( data )
+						for k, v in pairs(Gatherer.Nodes.Names) do
+							if ( strlower(k) == strlower(data) ) then
+								return v
+							end
+						end
+						--stick with the name if we don't have an id for it yet
+						return Gatherer.Nodes.ReMappings[data] or data
+					end
+				),
+				number = (
+					function( data )
+						return Gatherer.Nodes.ReMappings[data] or data
+					end
+				),
+			},
+			[2] = "string",
+			[3] = nil,
+			[4] = {
+				caseSensitive = true,
+				string = (
+					function( data )
+						-- due to a mixup, nodes from Outland got stored under Draenor zones
+						-- there were no known Draenor node types in the version with this problem
+						-- so we can safely move all of these where they belong
+						if ( data == "DRAENOR_NAGRAND" ) then
+							return "NAGRAND"
+						elseif ( data == "DRAENOR_SHADOWMOON_VALLEY" ) then
+							return "SHADOWMOON_VALLEY"
+						else
+							return data
+						end
+					end
+				),
+				number = (
+					function( data )
+						return data
+					end
+				),
+			},
+			[5] = "number",
+			[6] = "number",
+			[7] = "number",
+			[8] = "number",
+			[9] = "number",
+			[10] = "string",
+			[11] = "boolean",
+		},
+	},
+	
+	--MergeNode argument mapping table for DB version 6 to MergeNode function arguments
+	[6] = {
 		nodeLevel = 4,
 		mappingData = {
 			[1] = { type="key", level=4, }, --gatherName

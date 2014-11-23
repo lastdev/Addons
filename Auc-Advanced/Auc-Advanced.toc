@@ -8,7 +8,7 @@
 ## SavedVariables: AucAdvancedConfig, AucAdvancedData
 ## SavedVariablesPerCharacter: AucAdvancedLocal
 ##
-## Version: 5.21b.5509 (SanctimoniousSwamprat)
+## Version: 5.21c.5521 (SanctimoniousSwamprat)
 ## Revision: $Id: Auc-Advanced.toc 5499 2014-10-18 14:22:33Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

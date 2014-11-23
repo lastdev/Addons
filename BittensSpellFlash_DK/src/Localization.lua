@@ -12,10 +12,10 @@ if locale == "ptBR" then -- Brazilian Portuguese
 -- L["Solo Mode when not Grouped"] = ""
 
 elseif locale == "frFR" then -- French
--- L["Flash Blood"] = ""
--- L["Flash Frost"] = ""
--- L["Flash Unholy"] = ""
-L["Solo Mode when not Grouped"] = "Mode solo si pas groupé" -- Needs review
+L["Flash Blood"] = "Flash Sang" -- Needs review
+L["Flash Frost"] = "Flash Givre" -- Needs review
+L["Flash Unholy"] = "Flash Impie" -- Needs review
+L["Solo Mode when not Grouped"] = "Mode solo lorsque vous n'êtes pas groupé" -- Needs review
 
 elseif locale == "deDE" then -- German
 L["Flash Blood"] = "Aufblitzen bei Blut" -- Needs review

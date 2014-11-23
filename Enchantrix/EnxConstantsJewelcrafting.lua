@@ -1,6 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Version: 5.21c.5521 (SanctimoniousSwamprat)
 	Revision: $Id: EnxConstants.lua 4632 2010-01-24 02:33:54Z ccox $
 	URL: http://enchantrix.org/
 
@@ -144,8 +144,8 @@ local VERMILIONONYX = 76140
 local IMPERIALAMETHYST = 76141
 local SUNSRADIANCE = 76142
 
--- TODO - ccox - new gems for Warlords of Draenor
--- Currently no prospectable gems, only craftable gems
+-- Warlords of Draenor
+-- no prospectable gems, only craftable gems
 
 
 --[[
@@ -170,8 +170,8 @@ const.ProspectMinLevels = {
 	[KYPARITE_ORE] = 550,
 	[WHITE_TRILLIUM_ORE] = 600,
 	[BLACK_TRILLIUM_ORE] = 600,
---	[BLACKROCK] = 600,			-- currently not prospectable
---	[TRUEIRON] = 600,			-- currently not prospectable
+--	[BLACKROCK] = 600,			-- not prospectable
+--	[TRUEIRON] = 600,			-- not prospectable
 }
 
 

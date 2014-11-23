@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("PT", "DBM-Party-BC", 12)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 540 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 548 $"):sub(12, -3))
 
 mod:RegisterEvents(
 	"UPDATE_WORLD_STATES",
@@ -34,7 +34,7 @@ function mod:UNIT_DIED(args)
 end
 
 function mod:UPDATE_WORLD_STATES()
-	local text = select(4, GetWorldStateUIInfo(2))
+	local text = select(4, GetWorldStateUIInfo(3))
 	if not text then return end
 	local _, _, currentPortal = string.find(text, L.PortalCheck)
 	if not currentPortal then 

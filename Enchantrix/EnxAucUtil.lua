@@ -1,6 +1,6 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Version: 5.21c.5521 (SanctimoniousSwamprat)
 	Revision: $Id: EnxAucUtil.lua 5278 2012-03-05 13:09:29Z brykrys $
 	URL: http://enchantrix.org/
 
@@ -30,7 +30,7 @@
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 
 ]]
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Enchantrix/EnxAucUtil.lua $","$Rev: 5278 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Enchantrix/EnxAucUtil.lua $","$Rev: 5278 $")
 
 -- Provide fixed price data by registering ourselves as a bonafide legitimate Auctioneer module.
 if not AucAdvanced then return end

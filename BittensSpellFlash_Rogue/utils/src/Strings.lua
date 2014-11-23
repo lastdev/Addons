@@ -6,7 +6,10 @@ end
 local L = u.Localize
 
 local math = math
+local pairs = pairs
 local string = string
+local tostring = tostring
+local type = type
 
 function u.StartsWith(str, pre)
 	local len = pre:len()
@@ -16,6 +19,26 @@ end
 function u.EndsWith(str, suf)
 	local len = suf:len()
 	return len <= str:len() and str:sub(-len, -1) == suf
+end
+
+function u.ToString(value)
+  if type(value) ~= "table" then
+    return tostring(value)
+  end
+  
+  local str = "{ "
+  local foundOne = false
+  for k, v in pairs(value) do
+    if foundOne then
+      str = str .. ", "
+    end
+    str = str .. u.ToString(k) .. " = " .. u.ToString(v)
+    foundOne = true
+  end
+  if foundOne then
+    str = str .. " "
+  end
+  return str .. "}"
 end
 
 -- toCondensedString(76.54,  3) => 76.5

@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
-	Revision: $Id: GatherMapNotes.lua 1004 2012-09-13 04:23:41Z Esamynn $
+	Version: 5.0.0 (<%codename%>)
+	Revision: $Id: GatherMapNotes.lua 1125 2014-10-25 20:29:48Z Esamynn $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 	World Map Drawing Functions
 ]]
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GatherMapNotes.lua $", "$Rev: 1004 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_5.0.0/Gatherer/GatherMapNotes.lua $", "$Rev: 1125 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient
@@ -54,23 +54,26 @@ function Gatherer.MapNotes.ToggleDisplay()
 	end
 end
 
-local Gatherer_WorldMapDisplay_ButtonWidth = 100
 function Gatherer.MapNotes.Update()
 	if ( Gatherer.Config.GetSetting("mainmap.enable") ) then
-		Gatherer_WorldMapDisplay:SetText(_tr("MAP_NOTES_HIDE"))
 		GathererMapOverlayParent:Show()
 	else
-		Gatherer_WorldMapDisplay:SetText(_tr("MAP_NOTES_SHOW"))
 		GathererMapOverlayParent:Hide()
 	end
-	local buttonWidth = Gatherer_WorldMapDisplay:GetFontString():GetWidth() + 15
-	if ( buttonWidth > Gatherer_WorldMapDisplay_ButtonWidth ) then
-		if ( buttonWidth > 150 ) then buttonWidth = 150 end
-		if ( buttonWidth < 100 ) then buttonWidth = 100 end
-		Gatherer_WorldMapDisplay:SetWidth(buttonWidth)
-		Gatherer_WorldMapDisplay_ButtonWidth = buttonWidth
-	end
 end
+
+hooksecurefunc(WorldMapFrame.UIElementsFrame.TrackingOptionsButton.DropDown, "initialize", function()
+	UnitPopup_AddDropDownButton({}, UnitPopupButtons["SUBSECTION_SEPARATOR"], "SUBSECTION_SEPARATOR", UIDROPDOWNMENU_MENU_LEVEL);
+	local info = {}
+	info.text = _tr("BINDING_HEADER_GATHERER")..": ".._tr("MAP_NOTES_SHOW")
+	info.value = "gatherer.mainmap.enable"
+	info.func = Gatherer.MapNotes.ToggleDisplay
+	info.checked = Gatherer.Config.GetSetting("mainmap.enable")
+	info.isNotRadio = true;
+	info.keepShownOnClick = 1
+	UIDropDownMenu_AddButton(info)
+end)
+
 
 function Gatherer.MapNotes.GetNoteObject( noteNumber )
 	local button = _G["GatherMain"..noteNumber]

@@ -184,8 +184,7 @@ L["Frost Resistance"] = "冰抗"
 L["Full Scan"] = "完整扫描"
 L["Ghost Wolf"] = "幽灵狼形态"
 L["Glow Action"] = "发光动作"
-L["Group aura count description"] = [=[
-所输入的队伍或团队成员的数量必须给定一个或多个光环作为显示触发的条件。
+L["Group aura count description"] = [=[所输入的队伍或团队成员的数量必须给定一个或多个光环作为显示触发的条件。
 如果输入的数字是一个整数(如5)，受影响的团队成员数量将与输入的数字相同。
 如果输入的数字是一个小数(如0.5)，分数(例如1/ 2)，或百分比(例如50%%)，那么多比例的队伍或团队成员的必须受到影响。
 |cFF4444FF举例：|r
@@ -194,7 +193,7 @@ L["Group aura count description"] = [=[
 |cFF00CC00不等于 2|r 会在2人受影响之外时触发
 |cFF00CC00小于等于 0.8|r 会在小于80%%的人受影响时触发
 |cFF00CC00大于 1/2|r 会在超过一半以上的人受影响时触发
-|cFF00CC00大于等于 0|r 总是触发.]=]
+|cFF00CC00大于等于 0|r 总是触发.]=] -- Needs review
 L["Group Member Count"] = "队伍或团队成员数"
 L["Group (verb)"] = "组织"
 L["Height"] = "高度"
@@ -202,6 +201,7 @@ L["Hide this group's children"] = "隐藏这个子元素"
 L["Hide When Not In Group"] = "不在队伍时隐藏"
 L["Horizontal Align"] = "水平对齐"
 L["Icon Info"] = "图标信息"
+-- L["Icon Inset"] = ""
 L["Ignored"] = "被忽略"
 L["Ignore GCD"] = "忽略公共CD(GCD)"
 L["%i Matches"] = "%i 符合"
@@ -283,6 +283,7 @@ L["Rotation"] = "旋转"
 L["Same"] = "相同"
 L["Search"] = "搜索"
 L["Secondary"] = "副天赋"
+-- L["Select the auras you always want to be listed first"] = ""
 L["Send To"] = "发送给"
 L["Set tooltip description"] = "设置提示描述"
 L["Shadow Dance"] = "暗影之舞"
@@ -317,10 +318,10 @@ L["Spell ID dialog"] = [=[你已经指定一个|cFFFF0000法术ID|r。
 当然，如果你启用完整扫描，|cFF8800FFWeakAuras|r可以搜寻指定的|cFFFF0000法术编号|r的法术。
 
 你想要启用完整扫描来匹配这个|cFFFF0000法术编号|r吗？]=]
-L["Stack Count"] = "堆叠数"
-L["Stack Count Position"] = "堆叠数位置"
-L["Stack Info"] = "堆叠信息"
-L["Stacks Settings"] = "堆叠设置"
+L["Stack Count"] = "层数" -- Needs review
+L["Stack Count Position"] = "层数位置" -- Needs review
+L["Stack Info"] = "层数信息" -- Needs review
+L["Stacks Settings"] = "层数设置" -- Needs review
 L["Stagger"] = "交错"
 L["Stance (Warrior)"] = "姿态"
 L["Start"] = "开始"
@@ -333,6 +334,7 @@ L["Text Color"] = "文字颜色"
 L["Text Position"] = "文字位置"
 L["Text Settings"] = "文字设置"
 L["Texture"] = "材质"
+-- L["Texture Info"] = ""
 L["The children of this group have different display types, so their display options cannot be set as a group."] = "群组中的子元素含有类型不同图示，所以它们的显示选项无法统一成一个群组."
 L["The duration of the animation in seconds."] = "动画持续秒数"
 L["The type of trigger"] = "触发器类型"
@@ -367,7 +369,7 @@ L["Unlike the start or finish animations, the main animation will loop over and 
 L["Unstealthed"] = "非潜行"
 L["Update Custom Text On..."] = "更新自定义文字于"
 L["Use Full Scan (High CPU)"] = "使用完整扫描(高CPU)"
-L["Use tooltip \"size\" instead of stacks"] = "使用\\\"大小\\\"提示,而不是\\\"堆叠\\\""
+L["Use tooltip \"size\" instead of stacks"] = "使用\\\"大小\\\"提示,而不是\\\"层数\\\"" -- Needs review
 L["Vertical Align"] = "垂直对齐"
 L["View"] = "查看"
 L["Width"] = "宽度"

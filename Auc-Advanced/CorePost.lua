@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.21b.5509 (SanctimoniousSwamprat)
+	Version: 5.21c.5521 (SanctimoniousSwamprat)
 	Revision: $Id: CorePost.lua 5398 2013-03-27 19:22:01Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -1381,4 +1381,4 @@ private.Prompt.DragBottom:SetScript("OnMouseDown", DragStart)
 private.Prompt.DragBottom:SetScript("OnMouseUp", DragStop)
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21b/Auc-Advanced/CorePost.lua $", "$Rev: 5398 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Advanced/CorePost.lua $", "$Rev: 5398 $")

@@ -292,6 +292,7 @@ BlizzardTheme.healthborder.width = 128
 BlizzardTheme.healthborder.height = 32
 BlizzardTheme.healthborder.x = 0
 BlizzardTheme.healthborder.y = 0 + BlizzardThemeVertical
+BlizzardTheme.healthborder.right = .50
 
 BlizzardTheme.eliteicon.texture = "Interface\\Tooltips\\EliteNameplateIcon"
 BlizzardTheme.eliteicon.width = 32
@@ -354,7 +355,7 @@ BlizzardTheme.level.flags = "NONE"
 BlizzardTheme.healthbar.texture =					 "Interface\\TARGETINGFRAME\\UI-StatusBar"
 BlizzardTheme.healthbar.backdrop = 				EMPTY_TEXTURE
 BlizzardTheme.healthbar.height = 9
-BlizzardTheme.healthbar.width = 102
+BlizzardTheme.healthbar.width = 104
 BlizzardTheme.healthbar.x = -8.5
 BlizzardTheme.healthbar.y = -7	+ BlizzardThemeVertical
 

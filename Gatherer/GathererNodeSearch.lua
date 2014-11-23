@@ -1,7 +1,7 @@
 --[[
 	Gatherer Addon for World of Warcraft(tm).
-	Version: 4.4.1 (<%codename%>)
-	Revision: $Id: GathererNodeSearch.lua 982 2012-09-05 04:31:52Z Esamynn $
+	Version: 5.0.0 (<%codename%>)
+	Revision: $Id: GathererNodeSearch.lua 1114 2014-10-11 07:13:26Z ccox $
 
 	License:
 		This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 --]]
 
 
-Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_4.4.1/Gatherer/GathererNodeSearch.lua $", "$Rev: 982 $")
+Gatherer_RegisterRevision("$URL: http://svn.norganna.org/gatherer/tags/REL_5.0.0/Gatherer/GathererNodeSearch.lua $", "$Rev: 1114 $")
 
 local _tr = Gatherer.Locale.Tr
 local _trC = Gatherer.Locale.TrClient
@@ -146,6 +146,23 @@ function private.ChangeControls(obj, arg1,arg2,...)
 	frame.SelectBoxSetting = {arg1, arg2}
 end
 
+
+-- convert list of zoneID1, zoneName1, zoneID2, zoneName2, etc.
+-- into just a list of zone names
+local function stripZoneIDs(...)
+	local n = select("#", ...)
+	--print("zoneList count = ", n );
+	local temp = {};
+	local index = 1;
+	for i = 2, n, 2 do
+		temp[index] = select(i, ...);
+		--print("  item = ", temp[index] );
+		index = index + 1;
+	end
+	return temp;
+end
+
+
 -- Use a callback to generate the list of continents, so that the call
 -- to GetMapContinents is deferred until it is defined. Also establish
 -- the maximum continent index here
@@ -153,7 +170,7 @@ local continents
 local maxCont
 local function vals()
 	if not continents then
-		continents = {GetMapContinents()}
+		continents = stripZoneIDs(GetMapContinents())
 		maxCont = table.maxn(continents)
 	end
 	local items = {
