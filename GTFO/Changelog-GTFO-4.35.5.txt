@@ -1,0 +1,104 @@
+------------------------------------------------------------------------
+r131 | zensunim | 2014-11-26 10:13:22 +0000 (Wed, 26 Nov 2014) | 6 lines
+Changed paths:
+   A /tags/4.35.5 (from /trunk:130)
+
+4.35.5
+* Added WoD spells for Draenor (world)
+* Added WoD spells for Grimrail Depot
+* Added WoD spells for Shadowmoon Burial Grounds
+* Added WoD spells for the Everbloom
+* Updated Classic spells for Molten Core
+------------------------------------------------------------------------
+r130 | zensunim | 2014-11-26 10:11:15 +0000 (Wed, 26 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_Fail_WOD.lua
+   M /trunk/GTFO_Spells_WOD.lua
+
+Prepping for 4.35.5 release
+------------------------------------------------------------------------
+r129 | zensunim | 2014-11-25 16:50:38 +0000 (Tue, 25 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO_Fail_Classic.lua
+   M /trunk/GTFO_Fail_WOD.lua
+   M /trunk/GTFO_Spells_Classic.lua
+   M /trunk/GTFO_Spells_WOD.lua
+
+MC updates, world updates
+------------------------------------------------------------------------
+r128 | zensunim | 2014-11-24 05:19:08 +0000 (Mon, 24 Nov 2014) | 4 lines
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_Fail_WOD.lua
+   M /trunk/GTFO_Spells_WOD.lua
+
+4.35.5
+- Added WoD spells for Draenor (world)
+- Added WoD spells for Grimrail Depot
+- Added WoD spells for Shadowmoon Burial Grounds
+------------------------------------------------------------------------
+r126 | zensunim | 2014-11-23 19:14:23 +0000 (Sun, 23 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_Fail_WOD.lua
+
+Prepping for 4.35.4 release
+------------------------------------------------------------------------
+r125 | zensunim | 2014-11-23 10:54:20 +0000 (Sun, 23 Nov 2014) | 4 lines
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO_Fail_WOD.lua
+   M /trunk/GTFO_Spells_WOD.lua
+
+- Added WoD spells for Draenor (world)
+- Added WoD spells for Upper Blackrock Spire
+- Added WoD spells for Grimrail Depot
+
+------------------------------------------------------------------------
+r124 | zensunim | 2014-11-22 10:12:19 +0000 (Sat, 22 Nov 2014) | 4 lines
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_Fail_WOD.lua
+   M /trunk/GTFO_Spells_WOD.lua
+
+- Added WoD spells for Draenor (world)
+- Added WoD spells for Shadowmoon Burial Grounds
+- Added WoD spells for Skyreach
+
+------------------------------------------------------------------------
+r122 | zensunim | 2014-11-16 17:04:52 +0000 (Sun, 16 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_Fail_WOD.lua
+   M /trunk/GTFO_Spells_WOD.lua
+
+Added WoD spells for Auchindoun
+------------------------------------------------------------------------
+r121 | zensunim | 2014-11-16 04:39:39 +0000 (Sun, 16 Nov 2014) | 4 lines
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_Fail_WOD.lua
+   M /trunk/GTFO_Spells_MP.lua
+   M /trunk/GTFO_Spells_WOD.lua
+
+* Added Pandaria spells for Siege of Orgrimmar (Heroic)
+* Added WoD spells for Draenor (world)
+* Added WoD spells for Bloodmaul Slag Mines
+* Added WoD spells for Iron Docks
+------------------------------------------------------------------------
+r119 | zensunim | 2014-11-01 06:56:04 +0000 (Sat, 01 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_Fail_LK.lua
+
+Prepping for 4.35.2 release
+------------------------------------------------------------------------

@@ -10,25 +10,14 @@ local NUM_TALENT_COLUMNS = NUM_TALENT_COLUMNS
 local GetTalentDescription
 do
 	local cache = {}
-	local scanner = CreateFrame("GameTooltip")
-	scanner:SetOwner(WorldFrame, "ANCHOR_NONE")
-	local lcache, rcache = {}, {}
-	for i = 1, 6 do
-		lcache[i], rcache[i] = scanner:CreateFontString(), scanner:CreateFontString()
-		lcache[i]:SetFontObject(GameFontNormal); rcache[i]:SetFontObject(GameFontNormal)
-		scanner:AddFontStrings(lcache[i], rcache[i])
-	end
+	local tooltip = CreateFrame("GameTooltip", "TalentMacrosTooltip", nil, "GameTooltipTemplate")
+	tooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
 	function GetTalentDescription(id)
 		if cache[id] then return cache[id] end
-		scanner:ClearLines()
-		scanner:SetTalent(id, nil, GetActiveSpecGroup())
-		for i = scanner:NumLines(), 1, -1 do
-			local desc = lcache[i] and lcache[i]:GetText()
-			if desc and desc ~= TALENT_TOOLTIP_REMOVEPREVIEWPOINT and desc ~= TALENT_TOOLTIP_ADDPREVIEWPOINT then
-				cache[id] = desc
-				return desc
-			end
-		end
+		tooltip:SetTalent(id)
+		local _, _, spellId = tooltip:GetSpell()
+		cache[id] = GetSpellDescription(spellId)
+		return cache[id]
 	end
 end
 
@@ -57,7 +46,7 @@ local function GetOptions()
 			create = {
 				type = "execute",
 				name = "Create Macros",
-				desc = "Create seven general macros named t1-t7 that will be updated when you change talents. Do not edit these directly!",
+				desc = "Create several general macros named t1-t7 that will be updated when you change talents. Do not edit these directly!",
 				func = "CreateMacros",
 				disabled = function()
 					for tier = 1, MAX_TALENT_TIERS do
@@ -74,7 +63,7 @@ local function GetOptions()
 			advanced = {
 				type = "toggle",
 				name = "Enable templates for each talent",
-				desc = "Allows you to edit the macro text for each talent.\n\nDisable to make all macros simply:\n   #showtooltip\n   /cast talentname",
+				desc = "Allows you to edit the macro text for each talent.\n\nDisable to make all macros simply:\n   #showtooltip\n   /cast Talent Name",
 				get = function() return db.advanced end,
 				set = function(info, value)
 					db.advanced = value
@@ -95,21 +84,21 @@ local function GetOptions()
 	if db.advanced then
 		local spec = GetActiveSpecGroup()
 		for tier = 1, MAX_TALENT_TIERS do
+			local level = min(100, 15 * tier)
+			local group = {
+				type = "group",
+				name = ("Tier %d: %d"):format(tier, level),
+				order = level,
+				args = {},
+			}
+			options.args[tostring(tier)] = group
+
 			for column = 1, NUM_TALENT_COLUMNS do
 				local id, name, iconTexture, selected, available = GetTalentInfo(tier, column, spec)
-				local group = ("Tier %d"):format(tier)
-				if not options.args[group] then
-					options.args[group] = {
-						type = "group",
-						name = group,
-						order = 10 * tier,
-						args = {},
-					}
-				end
 				local title = ("|T%s:0:0:0:0:64:64:4:60:4:60|t %s%s"):format(iconTexture, name, selected and CHECK_TEXTURE or "")
-				options.args[group].desc = options.args[group].desc and ("%s\n%s"):format(options.args[group].desc, title) or title
+				group.desc = group.desc and ("%s\n%s"):format(group.desc, title) or title
 
-				options.args[group].args[name] = {
+				group.args[name] = {
 					type = "input",
 					name = ("|T%s:18:18:3:0:64:64:4:60:4:60|t %s%s"):format(iconTexture, name, selected and CHECK_TEXTURE or ""),
 					desc = GetTalentDescription(id),
@@ -150,13 +139,15 @@ function TalentMacros:OnInitialize()
 	self.db =  LibStub("AceDB-3.0"):New("TalentMacrosDB", defaults)
 	db = self.db.profile
 
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(ADDON_NAME, GetOptions)
-	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(ADDON_NAME, ADDON_NAME)
+	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("TalentMacros", GetOptions)
+	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("TalentMacros", ADDON_NAME)
+	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("TalentMacros/Profiles", LibStub("AceDBOptions-3.0"):GetOptionsTable(TalentMacros.db))
+	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("TalentMacros/Profiles", "Profiles", ADDON_NAME)
 end
 
 function TalentMacros:OnEnable()
 	-- upgrade the db
-	if not db.version or db.version < 1 then
+	if not db.version then
 		local spec = GetActiveSpecGroup()
 		for tier = 1, MAX_TALENT_TIERS do
 			for column = 1, NUM_TALENT_COLUMNS do

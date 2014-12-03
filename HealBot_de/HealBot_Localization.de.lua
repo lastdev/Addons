@@ -897,7 +897,7 @@ HEALBOT_PLAYER_OF_REALM                 = "von"
     HEALBOT_ENEMY_NUMBER_BOSSES             = "Anzahl der Bosse"
     HEALBOT_ENEMY_HIDE_OUTOFCOMBAT          = "Verstecke Balken au\195\159erhalb eines Kampfes"
     HEALBOT_ENEMY_EXISTS_SHOW               = "Entering combat only".."\n".."show when exists"
-    HEALBOT_ENEMY_EXISTS_SHOW_PTARGETS      = "Ziele des Spielers"
+    HEALBOT_ENEMY_EXISTS_SHOW_PTARGETS      = "Spieler Ziel-Balken"
     HEALBOT_ENEMY_EXISTS_SHOW_BOSSES        = "Boss Balken"
     HEALBOT_OPTIONS_TARGET_ONLY_FRIEND      = "Ziel: Nur Freundliche anzeigen"
     HEALBOT_OPTIONS_FOCUS_ONLY_FRIEND       = "Fokus: Nur Freundliche anzeigen"
@@ -921,4 +921,7 @@ HEALBOT_PLAYER_OF_REALM                 = "von"
     HEALBOT_LDB_RIGHT_TOOLTIP               = "|cffffff00 Rechtsklick:|r HealBot zurücksetzen";
     HEALBOT_LDB_SHIFTRIGHT_TOOLTIP          = "|cffffff00 Shift-Rechtsklick:|r HealBot An/Aus toggeln";
     HEALBOT_WORD_PETBATTLE                  = "Haustierkampf"
+    HEALBOT_ENEMY_INCLUDE_ARENA             = "Arena Gegner anzeigen"
+    HEALBOT_ENEMY_INCLUDE_ARENAPETS         = "Begleiter anzeigen"
+    HEALBOT_ENEMY_EXISTS_SHOW_ARENA         = "Arena Gegner Balken"
 end

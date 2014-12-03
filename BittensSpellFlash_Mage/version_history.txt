@@ -1,3 +1,6 @@
+== Version 50400.3
+Update to latest BSF library.
+
 == Version 50400.2.5
 * I have gotten a pretty good response, so I think (and hope) Bitten's SpellFlash will live on!
 

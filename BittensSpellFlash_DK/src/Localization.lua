@@ -54,10 +54,10 @@ L["Flash Unholy"] = "邪恶闪光" -- Needs review
 L["Solo Mode when not Grouped"] = "无队伍时使用单人模式" -- Needs review
 
 elseif locale == "esES" then -- Spanish
--- L["Flash Blood"] = ""
--- L["Flash Frost"] = ""
--- L["Flash Unholy"] = ""
--- L["Solo Mode when not Grouped"] = ""
+L["Flash Blood"] = "Alertas de Sangre" -- Needs review
+L["Flash Frost"] = "Alertas de Escarcha" -- Needs review
+L["Flash Unholy"] = "Alertas de Profano" -- Needs review
+L["Solo Mode when not Grouped"] = "Modo en solitario para cuando no estés en grupo" -- Needs review
 
 elseif locale == "zhTW" then -- Traditional Chinese
 L["Flash Blood"] = "血魄閃光" -- Needs review

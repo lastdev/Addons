@@ -8,7 +8,6 @@ end
 local s = SpellFlashAddon
 local x = s.UpdatedVariables
 
-local GetItemCount = GetItemCount
 local GetNumGroupMembers = GetNumGroupMembers
 local GetPowerRegen = GetPowerRegen
 local GetSpecialization = GetSpecialization
@@ -31,12 +30,15 @@ local UnitPowerMax = UnitPowerMax
 local UnitPowerType = UnitPowerType
 local UnitSpellHaste = UnitSpellHaste
 local UnitThreatSituation = UnitThreatSituation
-local math = math
+local UnitExists = UnitExists
+
+local max = math.max
+local min = math.min
 local pairs = pairs
 local print = print
 local select = select
 local string = string
-local table = table
+local tinsert = tinsert
 local type = type
 local unpack = unpack
 local wipe = wipe
@@ -131,7 +133,7 @@ function c.GetCooldown(name, noGCD, fullCD)
    if fullCD and c.IsCasting(id) then
       return fullCD
    else
-      return math.max(0, s.SpellCooldown(id) - c.GetBusyTime(noGCD))
+      return max(0, s.SpellCooldown(id) - c.GetBusyTime(noGCD))
    end
 end
 
@@ -178,7 +180,7 @@ function c.GetIDs(...)
    for i = 1, select("#", ...) do
       local id = c.GetID(select(i, ...))
       if id then
-         table.insert(ids, id)
+         tinsert(ids, id)
       end
    end
    return ids
@@ -287,7 +289,7 @@ local function getChannelTimeRemaining()
       remaining = s.GetChanneling(nil, "player")
    end
    for buff in u.Keys(channelBuffs) do
-      remaining = math.max(remaining, s.BuffDuration(buff, "player"))
+      remaining = max(remaining, s.BuffDuration(buff, "player"))
    end
    return remaining
 end
@@ -311,7 +313,7 @@ local function getGcdFinish(info)
    if nextGcd == nil then
       nextGcd = c.LastGCD
    elseif nextGcd == "hasted" then
-      nextGcd = math.max(1, c.GetHastedTime(1.5))
+      nextGcd = max(1, c.GetHastedTime(1.5))
    end
    return info.GCDStart + nextGcd
 end
@@ -320,23 +322,23 @@ function c.GetBusyTime(noGCD)
    local busy = 0
    local info = c.GetQueuedInfo()
    if info then
-      busy = math.max(getCastFinish(info), getChannelFinish(info))
+      busy = max(getCastFinish(info), getChannelFinish(info))
       if not noGCD then
-         busy = math.max(busy, getGcdFinish(info))
+         busy = max(busy, getGcdFinish(info))
       end
-      busy = math.max(0, busy - GetTime())
+      busy = max(0, busy - GetTime())
    end
    if not noGCD then
       local gcd = s.GlobalCooldown()
-      busy = math.max(busy, gcd)
+      busy = max(busy, gcd)
    end
-   return math.max(
+   return max(
       s.GetCasting(nil, "player"), getChannelTimeRemaining(), busy)
 end
 
 local function advancePowerCalc(t, power, newT, regen, max, info, powerType)
    if newT > t then
-      power = math.min(max, power + regen * (newT - t))
+      power = min(max, power + regen * (newT - t))
       t = newT
    end
    if info then
@@ -344,7 +346,7 @@ local function advancePowerCalc(t, power, newT, regen, max, info, powerType)
       if not cost then
          cost = s.SpellCost(info.Name, powerType)
       end
-      power = math.min(max, power - cost)
+      power = min(max, power - cost)
    end
    return t, power
 end
@@ -509,7 +511,7 @@ end
 
 function c.GetGroupMembers()
    local last = 0
-   local max = math.max(1, GetNumGroupMembers())
+   local max = max(1, GetNumGroupMembers())
    local type
    if IsInRaid() then
       type = "raid"
@@ -595,13 +597,13 @@ end
 
 function c.GetTotemDuration(slot)
    local _, name, startTime, duration, _ = GetTotemInfo(slot)
-   return math.max(0, startTime + duration - GetTime() - c.GetBusyTime()),
+   return max(0, startTime + duration - GetTime() - c.GetBusyTime()),
       name
 end
 
 function c.GetHealth(unit)
    unit = s.UnitSelection(unit)
-   return math.min(
+   return min(
       UnitHealthMax(unit),
       UnitHealth(unit) + (UnitGetIncomingHeals(unit) or 0))
 end

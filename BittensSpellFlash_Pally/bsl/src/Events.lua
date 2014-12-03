@@ -69,6 +69,8 @@ local currentSpells = { }
 --    spellIdN = { ... }
 -- }    }
 local aoeTracking = { }
+c.EstimatedHarmTargets = 0
+c.EstimatedHealTargets = 0
 
 
 -------------------------------------------------------------- Public Functions
@@ -640,7 +642,9 @@ local function handleLogEvent(...)
          endTravelTime(spellID, target, true)
       end
 
-      updateAoeTracking(spellID, "harm", timestamp)
+      if not select(25, ...) then -- ignore multistrike hits
+         updateAoeTracking(spellID, "harm", timestamp)
+      end
 
       local critical = select(21, ...)
       fireEvent(
@@ -669,7 +673,10 @@ local function handleLogEvent(...)
       local amount = select(15, ...)
       local overheal = select(16, ...)
 
-      updateAoeTracking(spellID, "heal", timestamp)
+      if not select(25, ...) then -- ignore multistrike heals
+         updateAoeTracking(spellID, "heal", timestamp)
+      end
+
       fireEvent("SpellHeal", spellID, target, amount)
    elseif event == "SPELL_ENERGIZE" or event == "SPELL_PERIODIC_ENERGIZE" then
       local amount = select(15, ...)

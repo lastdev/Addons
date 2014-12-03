@@ -28,15 +28,15 @@ elseif locale == "frFR" then -- French
 -- L["Wearing Prot 2pT13"] = ""
 
 elseif locale == "deDE" then -- German
--- L["Aberration"] = ""
-L["Demon"] = "Dämon" -- Needs review
-L["Dragonkin"] = "Drachkin" -- Needs review
-L["Elemental"] = "Elementar" -- Needs review
-L["Flash Holy"] = "Aufblitzen bei Heilig" -- Needs review
-L["Flash Prot"] = "Aufblitzen bei Schutz" -- Needs review
-L["Flash Ret"] = "Aufblitzen bei Vergeltung" -- Needs review
-L["Undead"] = "Untot" -- Needs review
-L["Wearing Prot 2pT13"] = "Trage 2 Schutz T13 Teile" -- Needs review
+L["Aberration"] = "Abweichung" -- Needs review
+L["Demon"] = "Dämon"
+L["Dragonkin"] = "Drachkin"
+L["Elemental"] = "Elementar"
+L["Flash Holy"] = "Aufblitzen bei Heilig"
+L["Flash Prot"] = "Aufblitzen bei Schutz"
+L["Flash Ret"] = "Aufblitzen bei Vergeltung"
+L["Undead"] = "Untot"
+L["Wearing Prot 2pT13"] = "Trage 2 Schutz T13 Teile"
 
 elseif locale == "itIT" then -- Italian
 -- L["Aberration"] = ""
@@ -94,15 +94,15 @@ L["Undead"] = "亡灵" -- Needs review
 L["Wearing Prot 2pT13"] = "有防护T13两件套效果" -- Needs review
 
 elseif locale == "esES" then -- Spanish
--- L["Aberration"] = ""
--- L["Demon"] = ""
--- L["Dragonkin"] = ""
--- L["Elemental"] = ""
--- L["Flash Holy"] = ""
--- L["Flash Prot"] = ""
--- L["Flash Ret"] = ""
--- L["Undead"] = ""
--- L["Wearing Prot 2pT13"] = ""
+L["Aberration"] = "Aberración" -- Needs review
+L["Demon"] = "Demonio" -- Needs review
+L["Dragonkin"] = "Dragonante" -- Needs review
+L["Elemental"] = "Elemental" -- Needs review
+L["Flash Holy"] = "Alertas de Sagrado" -- Needs review
+L["Flash Prot"] = "Alertas de Protección" -- Needs review
+L["Flash Ret"] = "Alertas de Reprensión" -- Needs review
+L["Undead"] = "No-muerto" -- Needs review
+L["Wearing Prot 2pT13"] = "Llevando Protección 2pT13" -- Needs review
 
 elseif locale == "zhTW" then -- Traditional Chinese
 -- L["Aberration"] = ""

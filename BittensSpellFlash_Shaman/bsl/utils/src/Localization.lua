@@ -9,23 +9,63 @@ u.Localize = setmetatable({ }, { __index = function(_, key) return key end })
 local L = u.Localize
 local locale = GetLocale()
 if locale == "ptBR" then -- Brazilian Portuguese
---@localization(locale="ptBR", format="lua_additive_table")@
+-- L["B"] = ""
+-- L["K"] = ""
+-- L["M"] = ""
+-- L["T"] = ""
+
 elseif locale == "frFR" then -- French
---@localization(locale="frFR", format="lua_additive_table")@
+-- L["B"] = ""
+-- L["K"] = ""
+-- L["M"] = ""
+-- L["T"] = ""
+
 elseif locale == "deDE" then -- German
---@localization(locale="deDE", format="lua_additive_table")@
+L["B"] = "Einbuchstabiges Kürzel für (englisch) \"Billion\"" -- Needs review
+L["K"] = "Einbuchstabiges Kürzel für \"Tausend\"" -- Needs review
+L["M"] = "Einbuchstabiges Kürzel für \"Million\"" -- Needs review
+L["T"] = "Einbuchstabiges Kürzel für (englisch) \"Trillion\"" -- Needs review
+
 elseif locale == "itIT" then -- Italian
---@localization(locale="itIT", format="lua_additive_table")@
+-- L["B"] = ""
+-- L["K"] = ""
+-- L["M"] = ""
+-- L["T"] = ""
+
 elseif locale == "koKR" then -- Korean
---@localization(locale="koKR", format="lua_additive_table")@
+-- L["B"] = ""
+-- L["K"] = ""
+-- L["M"] = ""
+-- L["T"] = ""
+
 elseif locale == "esMX" then -- Latin American Spanish
---@localization(locale="esMX", format="lua_additive_table")@
+-- L["B"] = ""
+-- L["K"] = ""
+-- L["M"] = ""
+-- L["T"] = ""
+
 elseif locale == "ruRU" then -- Russian
---@localization(locale="ruRU", format="lua_additive_table")@
+-- L["B"] = ""
+-- L["K"] = ""
+-- L["M"] = ""
+-- L["T"] = ""
+
 elseif locale == "zhCN" then -- Simplified Chinese
---@localization(locale="zhCN", format="lua_additive_table")@
+-- L["B"] = ""
+-- L["K"] = ""
+L["M"] = "百万" -- Needs review
+-- L["T"] = ""
+
 elseif locale == "esES" then -- Spanish
---@localization(locale="esES", format="lua_additive_table")@
+-- L["B"] = ""
+-- L["K"] = ""
+-- L["M"] = ""
+-- L["T"] = ""
+
 elseif locale == "zhTW" then -- Traditional Chinese
---@localization(locale="zhTW", format="lua_additive_table")@
+-- L["B"] = ""
+-- L["K"] = ""
+L["M"] = "百萬" -- Needs review
+-- L["T"] = ""
+
 end

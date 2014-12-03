@@ -163,6 +163,12 @@ aeldra@sonnenkinder.org
 Changes: 
 Rev     Date        Description
 ------  ----------  -----------------------
+6.0b    2014-10-23  Updated code for Warlords of Draenor
+                    Updated buff lists
+                    Updated item lists
+                    Added toybox support
+                    Thanks for donation: Maik M :)
+                    
 6.0a    2014-10-16  Updated code for Warlords of Draenor
                     Included Broker addon
                     Thanks for donation: Chris S, Glenn J, Jennyfer H, Jon B, Michael Z :)

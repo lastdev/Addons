@@ -1,4 +1,4 @@
-﻿Outfitter.cVersion = "5.10b2"
+﻿Outfitter.cVersion = "5.10b6"
 
 Outfitter.cTitle = "Outfitter"
 Outfitter.cTitleVersion = Outfitter.cTitle.." "..Outfitter.cVersion
@@ -78,6 +78,7 @@ Outfitter.cMultiphaseSurveyOutfit = "The Multiphase Survey"
 Outfitter.cSpellcastOutfit = "Spellcast"
 Outfitter.cRestingOutfit = "Resting"
 Outfitter.cFlameLeviathanOutfit = "Flame Leviathan"
+Outfitter.cQuestTurninOutfit = "Quest Turn-in"
 
 Outfitter.cArgentDawnOutfitDescription = "Equips the outfit when you're in the Plaguelands"
 Outfitter.cRidingOutfitDescription = "Equips the outfit when you're mounted"
@@ -126,6 +127,7 @@ Outfitter.cInDungeonDescription = "Equips the outfit when you're in a dungeon, r
 Outfitter.cArgentTournamentOutfitDescription = "Equips the outfit when you mouse over an Argent Tournament mount, unequips it when you exit the vehicle"
 Outfitter.cRestingOutfitDescription = "Equips the outfit when you're in an inn"
 Outfitter.cFlameLeviathanOutfitDescription = "Equips the outfit when you enter a Flame Leviathan encounter vehicle, unequips it when you exit and combat is ended"
+Outfitter.cQuestTurninOutfitDescription = "Use this to automatically equip your bonus XP gear before you turn in quests"
 
 Outfitter.cMountSpeedFormat = "Increases speed by (%d+)%%%."; -- For detecting when mounted
 Outfitter.cFlyingMountSpeedFormat = "Increases flight speed by (%d+)%%%."; -- For detecting when mounted

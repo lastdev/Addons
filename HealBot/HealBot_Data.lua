@@ -1,4 +1,4 @@
-HealBot_lastVerSkinUpdate="6.0.0.0"
+HealBot_lastVerSkinUpdate="6.0.3.0"
 
 HealBot_Default_Textures={
     [1]= {name="HealBot 01", file=[[Interface\Addons\HealBot\Images\bar1.tga]]},
@@ -359,7 +359,6 @@ HealBot_GlobalsDefaults = {
 	[HEALBOT_DEBUFF_BURNED]                  = 11, -- Blackhand
 	[HEALBOT_DEBUFF_SHATTERING_SMASH]        = 12, -- Blackhand
 	[HEALBOT_DEBUFF_OVERHEATED]              = 10, -- Blackhand
-	--[HEALBOT_DEBUFF_ATTACH_SLAG_BOMBS]       = 9, -- Blackhand 157000	
 	--Beastlord Darmac
 	[HEALBOT_DEBUFF_PINNED_DOWN]             = 9, -- Beastlord Darmac
 	[HEALBOT_DEBUFF_REND_AND_TEAR]           = 10, -- Beastlord Darmac
@@ -433,16 +432,13 @@ HealBot_GlobalsDefaults = {
             [HEALBOT_ENRAGED_REGEN]=2,
             [HEALBOT_BARKSKIN]=4,
             [HEALBOT_IRONBARK]=2,
-            --[HEALBOT_INNERVATE]=2,
 			[HEALBOT_HARMONY]=2,
             [HEALBOT_SURVIVAL_INSTINCTS]=2,
             [HEALBOT_FRENZIED_REGEN]=2,
-            --[HEALBOT_NATURES_GRASP]=2,
-            --[HEALBOT_NATURE_SWIFTNESS]=2,
             [HEALBOT_SAVAGE_DEFENCE]=4,
 			--WoD Added
-			[HEALBOT_NATURE_REJUVENATION_GERMINATION]=1,
-			[HEALBOT_GENESIS]=1,
+			[HEALBOT_NATURE_REJUVENATION_GERMINATION]=2,
+			[HEALBOT_GENESIS]=2,
         },
         ["HUNT"] = {
             [HEALBOT_MENDPET]=2,
@@ -479,9 +475,9 @@ HealBot_GlobalsDefaults = {
             [HEALBOT_DENOUNCE]=2,
             [HEALBOT_DIVINE_PROTECTION]=4,
 			--WoD Added
-			[HEALBOT_BEACON_OF_FAITH]=1,                 
-			[HEALBOT_BEACON_OF_INSIGHT]=1,               
-			[HEALBOT_DIVINE_SAVED_BY_THE_LIGHT]=1,       
+			[HEALBOT_BEACON_OF_FAITH]=2,                 
+			[HEALBOT_BEACON_OF_INSIGHT]=2,               
+			[HEALBOT_DIVINE_SAVED_BY_THE_LIGHT]=2,       
         },
         ["PRIE"] = {
             [HEALBOT_GUARDIAN_SPIRIT]=3,
@@ -509,13 +505,13 @@ HealBot_GlobalsDefaults = {
             [HEALBOT_DISPERSION]=4,
 			[HEALBOT_VAMPIRIC_EMBRACE]=1,
 			--WoD Added
-			[HEALBOT_SHADOW_WORD_INSANITY]=1,            
-			[HEALBOT_SURGE_OF_DARKNESS]=1,               
-			[HEALBOT_SURGE_OF_LIGHT]=1,                  
-			[HEALBOT_ASCENSION]=1,                       
-			[HEALBOT_WORD_OF_MENDING]=1,                 
-			[HEALBOT_CLARITY_OF_WILL]=1,                                     
-			[HEALBOT_CLARITY_OF_PURPOSE]=1,              
+			[HEALBOT_SHADOW_WORD_INSANITY]=2,            
+			[HEALBOT_SURGE_OF_DARKNESS]=2,               
+			[HEALBOT_SURGE_OF_LIGHT]=2,                  
+			[HEALBOT_ASCENSION]=2,                       
+			[HEALBOT_WORD_OF_MENDING]=2,                 
+			[HEALBOT_CLARITY_OF_WILL]=2,                                     
+			[HEALBOT_CLARITY_OF_PURPOSE]=2,              
         },
         ["ROGU"] = {
             [HEALBOT_VANISH]=4,
@@ -529,11 +525,9 @@ HealBot_GlobalsDefaults = {
             [HEALBOT_EARTH_SHIELD]=3,
             [HEALBOT_WATER_SHIELD]=2,
             [HEALBOT_LIGHTNING_SHIELD]=2,
-            --[HEALBOT_EARTHLIVING]=2,
             [HEALBOT_UNLEASHED_FURY]=2,
             [HEALBOT_TIDAL_WAVES]=2,
             [HEALBOT_ANACESTRAL_SWIFTNESS]=2,
-            --[HEALBOT_ANACESTRAL_VIGOR]=2,
             [HEALBOT_EMPOWER]=2,
             [HEALBOT_ANACESTRAL_GUIDANCE]=2,
             [HEALBOT_ASCENDANCE]=2,
@@ -545,13 +539,12 @@ HealBot_GlobalsDefaults = {
             [HEALBOT_HEALING_RAIN]=2,
             [HEALBOT_SPIRITWALKERS_GRACE]=2,
 			--WoD Added
-			[HEALBOT_CLOUDBURST_TOTEM]=1,
-			[HEALBOT_ELEMENTAL_FUSION]=1,
+			[HEALBOT_CLOUDBURST_TOTEM]=2,
+			[HEALBOT_ELEMENTAL_FUSION]=2,
         },
         ["WARL"] = {
             [HEALBOT_DARK_INTENT]=2,
             [HEALBOT_DARK_BARGAIN]=4,
-            --[HEALBOT_TWILIGHT_WARD]=4,
             [HEALBOT_UNENDING_RESOLVE]=4,
         }, 
         ["WARR"] = {
@@ -588,10 +581,10 @@ HealBot_GlobalsDefaults = {
             [HEALBOT_FORTIFYING_BREW]=4,
             [HEALBOT_DAMPEN_HARM]=4,
             [HEALBOT_DIFFUSE_MAGIC]=4,
-            --[HEALBOT_AVERT_HARM]=4,
             [HEALBOT_GUARD]=4,
 			--WoD Added                
-			[HEALBOT_BREATH_OF_THE_SERPENT]=1,           
+			[HEALBOT_BREATH_OF_THE_SERPENT]=4,
+            [HEALBOT_CHI_EXPLOSION]=4,
         },
         ["ALL"] = {
             [HEALBOT_GIFT_OF_THE_NAARU]=2,
@@ -1356,10 +1349,14 @@ HealBot_Config_SkinsDefaults = {
                                                     [9] = {["SCNT"]=true,["SSCNT"]=false,["SDUR"]=false,["SSDUR"]=true,["SCALE"]=0.6,["DURTHRH"]=9,["DURWARN"]=3},
                                                    [10] = {["SCNT"]=true,["SSCNT"]=false,["SDUR"]=false,["SSDUR"]=true,["SCALE"]=0.6,["DURTHRH"]=9,["DURWARN"]=3},},
               },
-       Enemy  =  {[HEALBOT_SKINS_STD]              = {["INCSELF"]=false,["INCTANKS"]=true,["INCMYTAR"]=false,["NUMBOSS"]=2,["HIDE"]=true,["EXISTSHOWPTAR"]=false,["EXISTSHOWBOSS"]=true},
-                  [HEALBOT_OPTIONS_GROUPHEALS]     = {["INCSELF"]=false,["INCTANKS"]=true,["INCMYTAR"]=false,["NUMBOSS"]=2,["HIDE"]=true,["EXISTSHOWPTAR"]=false,["EXISTSHOWBOSS"]=true},
-                  [HEALBOT_OPTIONS_EMERGENCYHEALS] = {["INCSELF"]=false,["INCTANKS"]=true,["INCMYTAR"]=false,["NUMBOSS"]=2,["HIDE"]=true,["EXISTSHOWPTAR"]=false,["EXISTSHOWBOSS"]=true},
-                  [HEALBOT_ZONE_AV]                = {["INCSELF"]=false,["INCTANKS"]=true,["INCMYTAR"]=false,["NUMBOSS"]=2,["HIDE"]=true,["EXISTSHOWPTAR"]=false,["EXISTSHOWBOSS"]=true},
+       Enemy  =  {[HEALBOT_SKINS_STD]              = {["INCSELF"]=false,["INCTANKS"]=true,["INCMYTAR"]=false,["INCARENA"]=true,["INCARENAPETS"]=false,
+                                                      ["NUMBOSS"]=2,["HIDE"]=true,["EXISTSHOWPTAR"]=false,["EXISTSHOWBOSS"]=true,["EXISTSHOWARENA"]=true},
+                  [HEALBOT_OPTIONS_GROUPHEALS]     = {["INCSELF"]=false,["INCTANKS"]=true,["INCMYTAR"]=false,["INCARENA"]=true,["INCARENAPETS"]=false,
+                                                      ["NUMBOSS"]=2,["HIDE"]=true,["EXISTSHOWPTAR"]=false,["EXISTSHOWBOSS"]=true,["EXISTSHOWARENA"]=true},
+                  [HEALBOT_OPTIONS_EMERGENCYHEALS] = {["INCSELF"]=false,["INCTANKS"]=true,["INCMYTAR"]=false,["INCARENA"]=true,["INCARENAPETS"]=false,
+                                                      ["NUMBOSS"]=2,["HIDE"]=true,["EXISTSHOWPTAR"]=false,["EXISTSHOWBOSS"]=true,["EXISTSHOWARENA"]=true},
+                  [HEALBOT_ZONE_AV]                = {["INCSELF"]=false,["INCTANKS"]=true,["INCMYTAR"]=false,["INCARENA"]=true,["INCARENAPETS"]=false,
+                                                      ["NUMBOSS"]=2,["HIDE"]=true,["EXISTSHOWPTAR"]=false,["EXISTSHOWBOSS"]=true,["EXISTSHOWARENA"]=true},
                },
 };
 

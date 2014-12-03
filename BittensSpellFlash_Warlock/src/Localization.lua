@@ -48,9 +48,9 @@ L["Flash Demonology"] = "闪存恶魔" -- Needs review
 L["Flash Destruction"] = "闪存销毁" -- Needs review
 
 elseif locale == "esES" then -- Spanish
-L["Flash Affliction"] = "Flash aflicción"
-L["Flash Demonology"] = "Flash demonología"
-L["Flash Destruction"] = "Flash destrucción"
+L["Flash Affliction"] = "Alertas de Aflicción" -- Needs review
+L["Flash Demonology"] = "Alertas de Demonología" -- Needs review
+L["Flash Destruction"] = "Alertas de Destrucción" -- Needs review
 
 elseif locale == "zhTW" then -- Traditional Chinese
 L["Flash Affliction"] = "閃存痛苦" -- Needs review

@@ -1,7 +1,7 @@
 ﻿--[[
-$Id: LibBabble-SubZone-3.0.lua 166 2014-10-14 14:30:19Z arith $
+$Id: LibBabble-SubZone-3.0.lua 170 2014-10-18 13:24:28Z arith $
 Name: LibBabble-SubZone-3.0
-Revision: $Rev: 166 $
+Revision: $Rev: 170 $
 Maintainers: arith, dynaletik
 Last updated by: $Author: arith $
 Website: http://www.wowace.com/addons/libbabble-subzone-3-0/
@@ -10,7 +10,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-SubZone-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 166 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 170 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local _, private = ...
@@ -197,6 +197,7 @@ lib:SetBaseTranslations
 	["Ashen Fields"] = "Ashen Fields",
 	["Ashen Lake"] = "Ashen Lake",
 	Ashenvale = "Ashenvale",
+	["Ashenvale 4.x"] = "Ashenvale 4.x",
 	["Ashmaul Burial Grounds"] = "Ashmaul Burial Grounds",
 	Ashran = "Ashran",
 	["Ashran - [TEMPNAME ]HORDE MAIN BUILDING"] = "Ashran - [TEMPNAME ]HORDE MAIN BUILDING",
@@ -390,6 +391,7 @@ lib:SetBaseTranslations
 	["Blade's Edge Mountain"] = "Blade's Edge Mountain",
 	["Blade's Edge Mountains"] = "Blade's Edge Mountains",
 	["Bladespire Citadel"] = "Bladespire Citadel",
+	["Bladespire Fortress"] = "Bladespire Fortress",
 	["Bladespire Grounds"] = "Bladespire Grounds",
 	["Bladespire Hold"] = "Bladespire Hold",
 	["Bladespire Outpost"] = "Bladespire Outpost",
@@ -1151,6 +1153,7 @@ lib:SetBaseTranslations
 	["Ethereal Corridor"] = "Ethereal Corridor",
 	["Ethereum Staging Grounds"] = "Ethereum Staging Grounds",
 	["Eventide Landing"] = "Eventide Landing",
+	["Everbloom Overlook"] = "Everbloom Overlook",
 	["Everbloom Wilds"] = "Everbloom Wilds",
 	["Evergreen Trading Post"] = "Evergreen Trading Post",
 	Evergrove = "Evergrove",
@@ -1282,6 +1285,7 @@ lib:SetBaseTranslations
 	["Flamewatch Tower"] = "Flamewatch Tower",
 	["Flavor - Stormwind Harbor  - Start"] = "Flavor - Stormwind Harbor  - Start",
 	["Flavor - Stormwind Harbor - Stop"] = "Flavor - Stormwind Harbor - Stop",
+	["Flavor - Stormwind Harbor  - Start"] = "Flavor - Stormwind Harbor  - Start",
 	["Fleshrender's Workshop"] = "Fleshrender's Workshop",
 	foo = "foo",
 	["Foothold Citadel"] = "Foothold Citadel",
@@ -1376,6 +1380,7 @@ lib:SetBaseTranslations
 	["Frostsaber Rock"] = "Frostsaber Rock",
 	Frostwall = "Frostwall",
 	["Frostwall Approach"] = "Frostwall Approach",
+	["Frostwall Garrison"] = "Frostwall Garrison",
 	["Frostwall Mine"] = "Frostwall Mine",
 	["Frostwall Tavern"] = "Frostwall Tavern",
 	["Frostwhisper Gorge"] = "Frostwhisper Gorge",
@@ -1938,6 +1943,7 @@ lib:SetBaseTranslations
 	["Jin Yang Road"] = "Jin Yang Road",
 	["Jorune Mine"] = "Jorune Mine",
 	Jotunheim = "Jotunheim",
+	["Joz's Rylaks"] = "Joz's Rylaks",
 	K3 = "K3",
 	["Kag'ah"] = "Kag'ah",
 	["Kaja'mine"] = "Kaja'mine",
@@ -2439,6 +2445,7 @@ lib:SetBaseTranslations
 	Nine = "Nine",
 	["Niuzao Catacombs"] = "Niuzao Catacombs",
 	["Niuzao Temple"] = "Niuzao Temple",
+	["Nivek's Overlook"] = "Nivek's Overlook",
 	["Njord's Breath Bay"] = "Njord's Breath Bay",
 	["Njorndar Village"] = "Njorndar Village",
 	["Njorn Stair"] = "Njorn Stair",
@@ -2575,6 +2582,7 @@ lib:SetBaseTranslations
 	["Path of a Hundred Steps"] = "Path of a Hundred Steps",
 	["Path of Conquerors"] = "Path of Conquerors",
 	["Path of Enlightenment"] = "Path of Enlightenment",
+	["Path of Light"] = "Path of Light",
 	["Path of Serenity"] = "Path of Serenity",
 	["Path of the Light"] = "Path of the Light",
 	["Path of the Titans"] = "Path of the Titans",
@@ -2780,6 +2788,7 @@ lib:SetBaseTranslations
 	["Ridgepoint Tower"] = "Ridgepoint Tower",
 	Rikkilea = "Rikkilea",
 	["Rikkitun Village"] = "Rikkitun Village",
+	["Rilzit's Holdfast"] = "Rilzit's Holdfast",
 	["Rim of the World"] = "Rim of the World",
 	["Ring of Conquest"] = "Ring of Conquest",
 	["Ring of Judgement"] = "Ring of Judgement",
@@ -3227,6 +3236,7 @@ lib:SetBaseTranslations
 	["Skymesa Ritual Chamber"] = "Skymesa Ritual Chamber",
 	Skyrange = "Skyrange",
 	Skyreach = "Skyreach",
+	["Skysea Point"] = "Skysea Point",
 	["Skysea Ridge"] = "Skysea Ridge",
 	["Skysong Lake"] = "Skysong Lake",
 	["Slabchisel's Survey"] = "Slabchisel's Survey",
@@ -3596,6 +3606,7 @@ lib:SetBaseTranslations
 	["Temple of Elune UNUSED"] = "Temple of Elune UNUSED",
 	["Temple of Five Dawns"] = "Temple of Five Dawns",
 	["Temple of Invention"] = "Temple of Invention",
+	["Temple of Karabor"] = "Temple of Karabor",
 	["Temple of Kotmogu"] = "Temple of Kotmogu",
 	["Temple of Life"] = "Temple of Life",
 	["Temple of Order"] = "Temple of Order",
@@ -4539,6 +4550,7 @@ lib:SetBaseTranslations
 	["Three-Breeze Terrace"] = "Three-Breeze Terrace",
 	["Three Corners"] = "Three Corners",
 	["Throm'var"] = "Throm'var",
+	["Throm'Var"] = "Throm'Var",
 	["Throm'var Landing"] = "Throm'var Landing",
 	["Throne of Ancient Conquerors"] = "Throne of Ancient Conquerors",
 	["Throne of Kil'jaeden"] = "Throne of Kil'jaeden",
@@ -4662,10 +4674,12 @@ lib:SetBaseTranslations
 	["Tranquil Wash"] = "Tranquil Wash",
 	Transborea = "Transborea",
 	["Transitus Shield"] = "Transitus Shield",
+	Transport = "Transport",
 	["Transport: Alliance Gunship"] = "Transport: Alliance Gunship",
 	["Transport: Alliance Gunship (IGB)"] = "Transport: Alliance Gunship (IGB)",
 	["Transport: Horde Gunship"] = "Transport: Horde Gunship",
 	["Transport: Horde Gunship (IGB)"] = "Transport: Horde Gunship (IGB)",
+	["Transport: Menethil <-> Valgarde"] = "Transport: Menethil <-> Valgarde",
 	["Transport: Onyxia/Nefarian Elevator"] = "Transport: Onyxia/Nefarian Elevator",
 	["Trasnport: The Mighty Wind (Icecrown Citadel Raid)"] = "Trasnport: The Mighty Wind (Icecrown Citadel Raid)",
 	["Trelleum Mine"] = "Trelleum Mine",

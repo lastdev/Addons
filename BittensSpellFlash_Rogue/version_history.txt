@@ -1,3 +1,8 @@
+== Version 60000.4
+Update to latest BSF library.
+
+Fix indentation and encoding to match other projects.
+
 == Version 60000.3
 * Note: It's not really an update, it's just a reorganization, because I'm a little bit picky... I think ^^
 * Addon: Added load.xml file and change .Toc file

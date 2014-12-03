@@ -6,19 +6,70 @@ local module = core:NewModule("HandyNotes", "AceEvent-3.0")
 local Debug = core.Debug
 
 local db
-local icon = "Interface\\Icons\\INV_Misc_Head_Dragon_01"
+-- local icon = "Interface\\Icons\\INV_Misc_Head_Dragon_01"
+local icon, icon_mount
 
 local nodes = {}
 module.nodes = nodes
 
 local handler = {}
 do
+	local function should_show_mob(id)
+		local questid = core.db.global.mob_quests[id]
+		if questid then
+			return module.db.profile.questcomplete or not IsQuestFlaggedCompleted(questid)
+		end
+		local mod_tooltip = core:GetModule("Tooltip", true)
+		if not mod_tooltip then
+			return true
+		end
+		local achievement, achievement_name, completed = mod_tooltip:AchievementMobStatus(id)
+		if achievement then
+			return not completed or module.db.profile.achieved
+		end
+		return module.db.profile.achievementless
+	end
+	local function icon_for_mob(id)
+		if not icon then
+			local left, right, top, bottom = GetObjectIconTextureCoords(41)
+			icon = {
+				icon = [[Interface\MINIMAP\OBJECTICONS]],
+				tCoordLeft = left + 0.015,
+				tCoordRight = right - 0.015,
+				tCoordTop = top + 0.015,
+				tCoordBottom = bottom - 0.015,
+				r = 1,
+				g = 0.33,
+				b = 0,
+				a = 0.9,
+			}
+			local left, right, top, bottom = GetObjectIconTextureCoords(44)
+			icon_mount = {
+				icon = [[Interface\MINIMAP\OBJECTICONS]],
+				tCoordLeft = left + 0.015,
+				tCoordRight = right - 0.015,
+				tCoordTop = top + 0.015,
+				tCoordBottom = bottom - 0.015,
+				r = 1,
+				g = 0.33,
+				b = 0,
+				a = 0.9,
+			}
+		end
+		local mod_announce = core:GetModule("Announce", true)
+		if not mod_announce then
+			return icon
+		end
+		return mod_announce:HasMount(id) and icon_mount or icon
+	end
 	local function iter(t, prestate)
 		if not t then return nil end
 		local state, value = next(t, prestate)
 		while state do
 			if value then
-				return state, nil, icon, db.icon_scale, db.icon_alpha
+				if should_show_mob(value) then
+					return state, nil, icon_for_mob(value), db.icon_scale, db.icon_alpha
+				end
 			end
 			state, value = next(t, state)
 		end
@@ -48,6 +99,7 @@ function handler:OnEnter(mapFile, coord)
 	end
 	local display_level = ("%s%s"):format((level and level > 0) and level or (level and level == -1) and 'Boss' or '?', elite and '+' or '')
 	tooltip:AddDoubleLine(display_level, creature_type or UNKNOWN)
+
 	tooltip:AddDoubleLine("Last seen", core:FormatLastSeen(lastseen))
 	tooltip:AddDoubleLine("ID", id)
 	local mod_tooltip = core:GetModule("Tooltip", true)
@@ -95,17 +147,16 @@ local function deleteWholeMob(button, mapFile, coord)
 end
 
 local function createWaypoint(button, mapFile, coord)
-	local c, z = HandyNotes:GetCZ(mapFile)
-	local x, y = HandyNotes:getXY(coord)
-	local id, name = core:GetMobByCoord(mapFile, coord)
 	if TomTom then
-		local persistent, minimap, world
-		if temporary then
-			persistent = true
-			minimap = false
-			world = false
-		end
-		TomTom:AddZWaypoint(c, z, x*100, y*100, name, persistent, minimap, world)
+		local mapId = HandyNotes:GetMapFiletoMapID(mapFile)
+		local x, y = HandyNotes:getXY(coord)
+		local id, name = core:GetMobByCoord(mapFile, coord)
+		TomTom:AddMFWaypoint(mapId, nil, x, y, {
+			title = name,
+			persistent = nil,
+			minimap = true,
+			world = true
+			})
 	end
 end
 
@@ -180,10 +231,14 @@ function module:OnInitialize()
 		profile = {
 			icon_scale = 1.0,
 			icon_alpha = 1.0,
+			achieved = true,
+			questcomplete = false,
+			achievementless = true,
 		},
 	})
 	db = self.db.profile
-	HandyNotes:RegisterPluginDB("SilverDragon", handler, {
+
+	local options = {
 		type = "group",
 		name = "SilverDragon",
 		desc = "Where the rares are",
@@ -198,13 +253,34 @@ function module:OnInitialize()
 				type = "description",
 				order = 0,
 			},
+			achieved = {
+				type = "toggle",
+				name = "Show achieved",
+				desc = "Whether to show icons for mobs you have already killed (tested by whether you've got their achievement progress)",
+				arg = "achieved",
+				order = 10,
+			},
+			questcomplete = {
+				type = "toggle",
+				name = "Show quest-complete",
+				desc = "Whether to show icons for mobs you have the tracking quest complete for (which probably means they won't drop anything)",
+				arg = "questcomplete",
+				order = 15,
+			},
+			achievementless = {
+				type = "toggle",
+				name = "Show non-achievement mobs",
+				desc = "Whether to show icons for mobs which aren't part of the criteria for any known achievement",
+				arg = "achievementless",
+				order = 20,
+			},
 			icon_scale = {
 				type = "range",
 				name = "Icon Scale",
 				desc = "The scale of the icons",
 				min = 0.25, max = 2, step = 0.01,
 				arg = "icon_scale",
-				order = 10,
+				order = 25,
 			},
 			icon_alpha = {
 				type = "range",
@@ -212,11 +288,28 @@ function module:OnInitialize()
 				desc = "The alpha transparency of the icons",
 				min = 0, max = 1, step = 0.01,
 				arg = "icon_alpha",
-				order = 20,
+				order = 30,
 			},
 		},
-	})
+	}
+
+	local config = core:GetModule("Config", true)
+	if config then
+		config.options.args.addons.plugins.handynotes = {
+			handynotes = {
+				type = "group",
+				name = "HandyNotes",
+				get = options.get,
+				set = options.set,
+				args = options.args,
+			},
+		}
+	end
+
+	HandyNotes:RegisterPluginDB("SilverDragon", handler, options)
 	self:UpdateNodes()
+
+	self:RegisterEvent("LOOT_CLOSED")
 end
 
 function module:Seen(callback, id, name, zone, x, y, dead, new_location)
@@ -232,13 +325,14 @@ end
 core.RegisterCallback(module, "Seen")
 
 function module:UpdateNodes()
+	wipe(nodes)
 	for zone, mobs in pairs(core.db.global.mobs_byzoneid) do
 		local mapFile = core.mapfile_from_zoneid(zone)
 		if mapFile then
 			nodes[zone] = {}
 			for id, locs in pairs(mobs) do
 				for _, loc in ipairs(locs) do
-					nodes[zone][loc] = core:GetMobLabel(id)
+					nodes[zone][loc] = id
 				end
 			end
 		else
@@ -246,6 +340,11 @@ function module:UpdateNodes()
 		end
 	end
 	self.nodes = nodes
+	self:SendMessage("HandyNotes_NotifyUpdate", "SilverDragon")
+end
+
+
+function module:LOOT_CLOSED()
 	self:SendMessage("HandyNotes_NotifyUpdate", "SilverDragon")
 end
 

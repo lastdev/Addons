@@ -423,13 +423,10 @@ function HealBot_Options_setLists()
         [HEALBOT_WILD_GROWTH]=HEALBOT_DRUID,
 		[HEALBOT_BARKSKIN]=HEALBOT_DRUID,
         [HEALBOT_IRONBARK]=HEALBOT_DRUID,
-		--[HEALBOT_INNERVATE]=HEALBOT_DRUID,
         [HEALBOT_HARMONY]=HEALBOT_DRUID,
         [HEALBOT_SAVAGE_DEFENCE]=HEALBOT_DRUID,
         [HEALBOT_SURVIVAL_INSTINCTS]=HEALBOT_DRUID,
         [HEALBOT_FRENZIED_REGEN]=HEALBOT_DRUID,
-        --[HEALBOT_NATURE_SWIFTNESS]=HEALBOT_DRUID,
-		--[HEALBOT_NATURES_GRASP]=HEALBOT_DRUID,
         [HEALBOT_DRUID_CLEARCASTING]=HEALBOT_DRUID,
 		--WoD Added
 		[HEALBOT_NATURE_REJUVENATION_GERMINATION]=HEALBOT_DRUID,
@@ -465,6 +462,7 @@ function HealBot_Options_setLists()
         [HEALBOT_GUARD]=HEALBOT_MONK,
 		--WoD Added                  
 		[HEALBOT_BREATH_OF_THE_SERPENT]=HEALBOT_MONK,
+        [HEALBOT_CHI_EXPLOSION]=HEALBOT_MONK,
 		
 		--Paladin
 		[HEALBOT_HAND_OF_SALVATION]=HEALBOT_PALADIN,
@@ -554,7 +552,6 @@ function HealBot_Options_setLists()
         [HEALBOT_ASCENDANCE]=HEALBOT_SHAMAN,
         [HEALBOT_ANACESTRAL_GUIDANCE]=HEALBOT_SHAMAN,
         [HEALBOT_EMPOWER]=HEALBOT_SHAMAN,
-        --[HEALBOT_ANACESTRAL_VIGOR]=HEALBOT_SHAMAN,
         [HEALBOT_UNLEASHED_FURY]=HEALBOT_SHAMAN,
         [HEALBOT_TIDAL_WAVES]=HEALBOT_SHAMAN,
 		--WoD Added
@@ -563,7 +560,6 @@ function HealBot_Options_setLists()
 		--Warlock
 		[HEALBOT_DARK_INTENT]=HEALBOT_WARLOCK,
         [HEALBOT_DARK_BARGAIN]=HEALBOT_WARLOCK,
-        --[HEALBOT_TWILIGHT_WARD]=HEALBOT_WARLOCK,
         [HEALBOT_UNENDING_RESOLVE]=HEALBOT_WARLOCK,
 		
 		--Warrior
@@ -636,26 +632,20 @@ function HealBot_Options_InitBuffSpellsClassList(tClass)
         HealBot_Buff_Spells_Class_List = {
             HEALBOT_MARK_OF_THE_WILD,
             HEALBOT_BARKSKIN,
-            --HEALBOT_NATURES_GRASP,
             HEALBOT_IRONBARK,
         }
     elseif tClass=="HUNT" then
         HealBot_Buff_Spells_Class_List = {
-            --HEALBOT_A_HAWK,
             HEALBOT_A_CHEETAH,
             HEALBOT_A_PACK,
             HEALBOT_A_WILD,
-            --HEALBOT_A_IRON_HAWK,
             HEALBOT_TRAP_LAUNCHER,
         }
     elseif tClass=="MAGE" then
         HealBot_Buff_Spells_Class_List = {
             HEALBOT_ARCANE_BRILLIANCE,
             HEALBOT_DALARAN_BRILLIANCE,
-            --HEALBOT_FROST_ARMOR,
             HEALBOT_MAGE_WARD,
-            --HEALBOT_MAGE_ARMOR,
-            --HEALBOT_MOLTEN_ARMOR,
             HEALBOT_FOCUS_MAGIC,
             HEALBOT_ICE_WARD,
         }
@@ -682,8 +672,6 @@ function HealBot_Options_InitBuffSpellsClassList(tClass)
             HEALBOT_SEAL_OF_RIGHTEOUSNESS,
             HEALBOT_SEAL_OF_INSIGHT,
             HEALBOT_SEAL_OF_TRUTH,
-            --HEALBOT_DIVINE_PLEA,
-            --HEALBOT_DIVINE_FAVOR,
             HEALBOT_SACRED_SHIELD,
         }
         local i = GetSpecialization()
@@ -1153,6 +1141,24 @@ function HealBot_Options_ShowEnemyIncTanks_OnClick(self)
     if HealBot_Data["REFRESH"]==0 then HealBot_Data["REFRESH"]=1; end
 end
 
+function HealBot_Options_ShowEnemyIncArena_OnClick(self)
+    if self:GetChecked() then
+        Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCARENA"]=true
+    else
+        Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCARENA"]=false
+    end
+    if HealBot_Data["REFRESH"]==0 then HealBot_Data["REFRESH"]=1; end
+end
+
+function HealBot_Options_ShowEnemyIncArenaPets_OnClick(self)
+    if self:GetChecked() then
+        Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCARENAPETS"]=true
+    else
+        Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCARENAPETS"]=false
+    end
+    if HealBot_Data["REFRESH"]==0 then HealBot_Data["REFRESH"]=1; end
+end
+
 function HealBot_Options_ShowEnemyIncMyTargets_OnClick(self)
     if self:GetChecked() then
         Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCMYTAR"]=true
@@ -1176,6 +1182,14 @@ function HealBot_Options_EnemyExistsPlayerTargets_OnClick(self)
         Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWPTAR"]=true
     else
         Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWPTAR"]=false
+    end
+end
+
+function HealBot_Options_EnemyExistsArena_OnClick(self)
+    if self:GetChecked() then
+        Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWARENA"]=true
+    else
+        Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWARENA"]=false
     end
 end
 
@@ -4622,6 +4636,7 @@ function HealBot_Options_SelectHealSpellsCombo_DDlist()
             HEALBOT_BLACKOUT_KICK,
             HEALBOT_TOUCH_OF_DEATH,
             HEALBOT_CRACKLING_JADE_LIGHTNING,
+            HEALBOT_HOLY_WORD_CHASTISE,
             HEALBOT_DENOUNCE,
             HEALBOT_HAMMER_OF_WRATH,
             HEALBOT_HOLY_SHOCK,
@@ -4677,6 +4692,7 @@ function HealBot_Options_SelectHealSpellsCombo_DDlist()
             HEALBOT_MENDPET,
             HEALBOT_HEALTH_FUNNEL,
             HEALBOT_HOLY_WORD_SERENITY,
+            HEALBOT_HOLY_WORD_SANCTUARY,
             HEALBOT_SOOTHING_MIST,
             HEALBOT_ZEN_MEDITATION,
             HEALBOT_LIFE_COCOON,
@@ -4696,7 +4712,8 @@ function HealBot_Options_SelectHealSpellsCombo_DDlist()
 			HEALBOT_SAVING_GRACE,                    
 			HEALBOT_CLARITY_OF_PURPOSE,
 			HEALBOT_CENARION_WARD,
-			HEALBOT_BREATH_OF_THE_SERPENT,  
+			HEALBOT_BREATH_OF_THE_SERPENT,
+            HEALBOT_CHI_EXPLOSION,
 			HEALBOT_RUSHING_JADE_WIND,              
 			HEALBOT_CHI_TOROEDO,                    			
         }
@@ -4894,7 +4911,7 @@ function HealBot_Options_SelectMacrosCombo_DropDown()
                 UIDropDownMenu_AddButton(info);
             end
         end
-        for j=37, numperchar+36, 1 do
+        for j=MAX_ACCOUNT_MACROS+1, numperchar+MAX_ACCOUNT_MACROS, 1 do
             hbMacroName=GetMacroInfo(j)
             if hbMacroName and strsub(hbMacroName,1,strlen(HealBot_Config.CrashProtMacroName))~=HealBot_Config.CrashProtMacroName then
                 local mpName = hbMacroName
@@ -8545,9 +8562,7 @@ function HealBot_Options_SetDefaults()
 end
 
 function HealBot_Options_OnLoad(self, panelNum)
-   -- table.insert(UISpecialFrames,self:GetName());
     DoneInitTab={}
-   -- HealBot_setOptions_Timer(8000)
   -- Tabs
     local g=_G["HealBot_Options_FramesSkinsFrame"]
     g:Hide()
@@ -9385,6 +9400,13 @@ function HealBot_Options_Init(tabNo)
         HealBot_HighlightActiveBarColour:SetStatusBarTexture(LSM:Fetch('statusbar',HealBot_Default_Textures[16].name));
         HealBot_HighlightTargetBarColour:SetStatusBarTexture(LSM:Fetch('statusbar',HealBot_Default_Textures[16].name));
         HealBot_Aggro3Colorpick:SetStatusBarTexture(LSM:Fetch('statusbar',HealBot_Default_Textures[16].name));
+    end
+end
+
+function HealBot_Options_ResetSpellsHealperDropdown(ddType)
+    if ddType=="SPELLS" then
+        DoneInitTab[801]=nil
+        HealBot_Options_InitSub(801)
     end
 end
 
@@ -10286,6 +10308,10 @@ function HealBot_Options_InitSub1(subNo)
             HealBot_Options_SetText(HealBot_Options_ShowEnemyIncSelf,HEALBOT_ENEMY_INCLUDE_SELF)
             HealBot_Options_ShowEnemyIncTanks:SetChecked(Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCTANKS"])
             HealBot_Options_SetText(HealBot_Options_ShowEnemyIncTanks,HEALBOT_ENEMY_INCLUDE_TANKS)
+            HealBot_Options_ShowEnemyIncArena:SetChecked(Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCARENA"])
+            HealBot_Options_SetText(HealBot_Options_ShowEnemyIncArena,HEALBOT_ENEMY_INCLUDE_ARENA)
+            HealBot_Options_ShowEnemyIncArenaPets:SetChecked(Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCARENAPETS"])
+            HealBot_Options_SetText(HealBot_Options_ShowEnemyIncArenaPets,HEALBOT_ENEMY_INCLUDE_ARENAPETS)
             HealBot_Options_ShowEnemyIncMyTargets:SetChecked(Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCMYTAR"])
             HealBot_Options_SetText(HealBot_Options_ShowEnemyIncMyTargets,HEALBOT_ENEMY_INCLUDE_MYTARGETS)
             HealBot_Options_val_OnLoad(HealBot_Options_ShowEnemyNumBoss,HEALBOT_ENEMY_NUMBER_BOSSES,0,4,1)
@@ -10298,7 +10324,8 @@ function HealBot_Options_InitSub1(subNo)
             HealBot_Options_EnemyExistsBosses:SetChecked(Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWBOSS"])
             HealBot_Options_SetText(HealBot_Options_EnemyExistsBosses,HEALBOT_ENEMY_EXISTS_SHOW_BOSSES)
             HealBot_EnemySkinsFrameTxt:SetText(HEALBOT_OPTIONS_ENEMY_OPT)
-            HealBot_Options_EnemyExistsBosses:SetText(HEALBOT_ENEMY_EXISTS_SHOW)
+            HealBot_Options_EnemyExistsArena:SetChecked(Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWARENA"])
+            HealBot_Options_SetText(HealBot_Options_EnemyExistsArena,HEALBOT_ENEMY_EXISTS_SHOW_ARENA)
             g=_G["HealBot_Options_EnemyExistsTxt"]
             g:SetText(HEALBOT_ENEMY_EXISTS_SHOW)
             DoneInitTab[346]=true
@@ -11494,12 +11521,6 @@ function HealBot_UpdateUsedMedia(event, mediatype, key)
                                 HealBot_Font_Outline[Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][xButton.frame]["OUTLINE"]]);
             end        
         end
-    --elseif mediatype == "background" then
-    --elseif mediatype == "border" then
-    elseif mediatype == "sound" then
-        if key == HealBot_Config_Cures.SoundDebuffPlay then
-        -- Do nothing
-        end
     end
 end
 
@@ -11524,7 +11545,6 @@ function HealBot_Comms_SendAddonMsg(addon_id, msg, aType, pName)
     elseif aType==5 then
         SendAddonMessage(addon_id, msg, "GUILD" );
     end
-  --  HealBot_AddDebug("addon msg="..msg)
 end
 
 function HealBot_Comms_GetChan(chan)

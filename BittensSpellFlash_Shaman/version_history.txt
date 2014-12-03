@@ -1,3 +1,14 @@
+== Version 60000.3
+Update to latest BSF library.
+
+== Version 60000.2
+* Convert everything to utf-8-unix.
+* Untabify, 3-space indent.
+* Update ele shaman rotation to current theorycrafted 6.0 rotation.
+
+== Version 60000.1.0
+* All: Updated for 6.0.  These is a quick-and-dirty update from TingSang to get things working, with more thorough revisions to come in the future.
+
 == Version 50400.1.2
 * All: Flashes WoW's 9th Anniversary Celebration Package.
 
@@ -87,11 +98,3 @@ NOTE: Your options will be reset when you upgrade to this version.
 == Version 2.1.4
 * All: FaStEr96 added a Russion localization.  Thanks!
 * All: dayv_d added a Traditional Chinese localization.  Thanks!
-
-== Version 2.1.3
-* Elemental: Lightning shield will now flash at 1 minute remaining out of combat, down from 5.  If you have more than 3 stacks, it waits until 15 seconds.
-* Elemental: Thunderstorm will now flash at under 92% mana out of combat, down from 100%.
-* Restoration: Earth Shield now flashes at 2 minutes out of combat, down from 5.
-
-== Version 2.1.2
-* Taking out of beta.

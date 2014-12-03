@@ -1,3 +1,12 @@
+== Version 60000.4
+Update to latest BSF library.
+
+== Version 60000.3
+* fix lua error on load, for reals
+
+== Version 60000.2
+* fix lua error on load
+
 == Version 60000.1
 * new author: SlippyCheeze
   - thanks so much to Xemnosyst for his hard work!

@@ -1,3 +1,30 @@
+== Version 60000.14
+Fix flashing for Unholy pet summorn.
+
+== Version 60000.13
+Update to latest BSF library.
+
+== Version 60000.12
+Fix Soul Reaper.  It would never fire, which is crazy.  One tiny line later
+and it should now work, which should see a nice jump in DK DPS across
+all specs.
+
+== Version 60000.11
+Debugging and work-around for ticket 200, in which our rune cooldown is nil
+for a level 58 DK.  Since I can't reproduce this trivially, and I don't want
+to try and level to 58 to verify it for sure, this adds inline debugging and
+protects the code against the error spam.
+
+== Version 60000.10
+Rewrote Unholy rotation for 6.0; this brings it up to both technical and
+in-game parity with frost and blood.  As with any major rewrite bugs may
+exist, but this is fairly well play tested, and should be solid.
+
+== Version 60000.9
+Bump priority of plague strike for DW Frost, so that we actually get blood
+plague on, well, pretty much anything.  It was spending almost exclusively on
+Obliterate instead, just because of the way runes stacked up in the rotation.
+
 == Version 60000.8
 * Fix manual BT error for all specs.
 

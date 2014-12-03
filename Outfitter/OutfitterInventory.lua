@@ -121,7 +121,8 @@ function Outfitter:GetExtendedBagItemLinkInfo(pBagIndex, pSlotIndex)
 	      vItemType,
 	      vItemSubType,
 	      vItemCount,
-	      vItemInvType = GetItemInfo(vItemCode)
+	      vItemInvType,
+		  vItemTexture = GetItemInfo(vItemCode)
 	
 	return vItemCode,
 	      vItemEnchantCode,
@@ -209,34 +210,26 @@ function Outfitter:ParseItemLink(pItemLink)
 		return
 	end
 	
-	local vStartIndex, vEndIndex, vItemCode, vItemEnchantCode,
-	      vItemJewelCode1, vItemJewelCode2, vItemJewelCode3, vItemJewelCode4,
-	      vItemSubCode, vItemUniqueID, vLinkLevel, vReforgeID, vUnknownCode,
-	      vUnknownCode2, vItemName
-
-	vStartIndex, vEndIndex, vItemCode, vItemEnchantCode,
-	vItemJewelCode1, vItemJewelCode2, vItemJewelCode3, vItemJewelCode4,
-	vItemSubCode, vItemUniqueID, vLinkLevel, vReforgeID, vUnknownCode,
-	vUnknownCode2, vItemName = pItemLink:find(self.cItemLinkFormat)
-	
-	if not vStartIndex then
-		self:DebugMessage("ParseItemLink: Pattern didn't match")
-		self:DebugMessage(tostring(pItemLink:gsub("|", "\\")))
-		self:DebugMessage(tostring(self.cItemLinkFormat:gsub("|", "\\")))
-		return
+	local vStartIndex, vEndIndex, vCodeStrings, vName = pItemLink:find("|Hitem:([^|]*)|h%[([^%]]*)%]|h")
+	-- self:DebugMessage("start %s, end %s, codes %s, name %s", tostring(vStartIndex), tostring(vEndIndex), tostring(vCodeStrings), tostring(vName))
+		
+	local vCodes = {}
+	for vCodeString in string.gmatch(vCodeStrings, "%d+") do
+		local vCode = tonumber(vCodeString)
+		vCodes[#vCodes + 1] = vCode
 	end
-	
-	return tonumber(vItemCode),
-	       tonumber(vItemEnchantCode),
-	       tonumber(vItemJewelCode1),
-	       tonumber(vItemJewelCode2),
-	       tonumber(vItemJewelCode3),
-	       tonumber(vItemJewelCode4),
-	       tonumber(vItemSubCode),
-	       tonumber(vItemUniqueID),
-	       tonumber(vLinkLevel),
-	       tonumber(vReforgeID),
-	       vItemName
+
+	return vCodes[1], -- ItemCode
+		    vCodes[2], -- ItemEnchantCode
+	        vCodes[3], -- ItemJewelCode1
+		    vCodes[4], -- ItemJewelCode2
+	        vCodes[5], -- ItemJewelCode3
+	        vCodes[6], -- ItemJewelCode4
+	        vCodes[7], -- ItemSubCode
+	        vCodes[8], -- ItemUniqueID
+	        vCodes[9], -- LinkLevel
+	        vCodes[10], -- ReforgeID
+	        vName
 end
 
 function Outfitter:GetItemInfoFromLink(pItemLink)

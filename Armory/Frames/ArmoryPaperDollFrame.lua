@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 646 2014-10-13T22:12:03Z
+    Revision: 658 2014-11-30T13:26:06Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -2481,7 +2481,6 @@ function ArmoryAttributesOverlayTopFramePlayerStatDropDown_Initialize()
         info.text = _G["STAT_CATEGORY_"..ARMORY_PLAYERSTAT_DROPDOWN_OPTIONS[i]];
         info.func = ArmoryAttributesOverlayTopFramePlayerStatDropDown_OnClick;
         info.value = ARMORY_PLAYERSTAT_DROPDOWN_OPTIONS[i];
-        info.checked = checked;
         info.owner = ARMORY_DROPDOWNMENU_OPEN_MENU;
         ArmoryDropDownMenu_AddButton(info);
     end

@@ -1,0 +1,24 @@
+------------------------------------------------------------------------
+r122 | tuhljin | 2014-11-24 20:11:22 +0000 (Mon, 24 Nov 2014) | 1 line
+Changed paths:
+   A /tags/v0.81 (from /trunk:121)
+
+Tagging as v0.81
+------------------------------------------------------------------------
+r121 | tuhljin | 2014-11-24 05:36:08 +0000 (Mon, 24 Nov 2014) | 4 lines
+Changed paths:
+   M /trunk/Options.lua
+   M /trunk/Overachiever.lua
+   M /trunk/Overachiever.toc
+   M /trunk/Overachiever_Tabs/Overachiever_Tabs.toc
+   M /trunk/Overachiever_Tabs/Search.lua
+   M /trunk/Overachiever_Tabs/Suggestions.lua
+   M /trunk/Overachiever_Trade/Overachiever_Trade.toc
+   M /trunk/libs/TjOptions.lua
+   M /trunk/readme.txt
+
+- Suggestions Tab: Added new Darkmoon Faire suggestions.
+- Fixed issue where all checkboxes start as checked in the Overachiever options panels even if the saved option was really false/disabled.
+- Fixed an error related to auto-tracking. (This resulted in error messages when traveling from zone to zone if the exploration auto-tracking option was enabled.)
+- "Auto-track timed achievements" option is now enabled by default. (No change if not using a fresh install of the addon.)
+------------------------------------------------------------------------

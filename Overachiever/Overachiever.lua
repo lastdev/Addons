@@ -181,7 +181,15 @@ do
     local id, ret, anyFound
     for i=1,GetCategoryNumAchievements(category) do
       id, ret = get_arg1_argN(argnum, GetAchievementInfo(category, i))
-      if (anyCase) then  ret = strlower(ret);  end
+      if (anyCase) then
+        if (not ret) then
+			chatprint("getAchievementID_cat: ret is nil.", "["..THIS_TITLE.." DEBUG]")
+			print("category:",category, "index:",i, "argnum:",argnum)
+			ret = ''
+		else
+			ret = strlower(ret)
+		end
+      end
       if ( strfind(ret, pattern, 1, true) ) then
         if (getAll) then
           found[#(found) + 1] = id;
@@ -282,7 +290,7 @@ end
 
 
 local function canTrackAchievement(id, allowCompleted)
-  if ( GetNumTrackedAchievements() < WATCHFRAME_MAXACHIEVEMENTS and
+  if (GetNumTrackedAchievements() < MAX_TRACKED_ACHIEVEMENTS and  -- WATCHFRAME_MAXACHIEVEMENTS renamed to MAX_TRACKED_ACHIEVEMENTS
        (allowCompleted or not select(4, GetAchievementInfo(id))) ) then
     return true
   end
@@ -888,6 +896,7 @@ end
 -----------------------
 
 function Overachiever.OnEvent(self, event, arg1, ...)
+  --chatprint(event)
   if (event == "PLAYER_ENTERING_WORLD") then
     Overachiever.MainFrame:UnregisterEvent("PLAYER_ENTERING_WORLD")
     Overachiever.MainFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")

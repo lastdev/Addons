@@ -5498,7 +5498,7 @@
                     <Anchors>
                       <Anchor point="TOPLEFT">
                         <Offset>
-                          <AbsDimension x="170" y="-45" />
+                          <AbsDimension x="170" y="-40" />
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -5510,7 +5510,7 @@
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_ShowEnemyIncSelf" relativePoint="BOTTOMLEFT">
                         <Offset>
-                          <AbsDimension x="0" y="-55" />
+                          <AbsDimension x="0" y="-35" />
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -5518,11 +5518,35 @@
                       <OnClick>HealBot_Options_ShowEnemyIncTanks_OnClick(self)</OnClick>
                     </Scripts>
                   </CheckButton>
-                  <CheckButton name="HealBot_Options_ShowEnemyIncMyTargets" inherits="OptionsCheckButtonTemplate">
+                  <CheckButton name="HealBot_Options_ShowEnemyIncArena" inherits="OptionsCheckButtonTemplate">
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_ShowEnemyIncTanks" relativePoint="BOTTOMLEFT">
                         <Offset>
-                          <AbsDimension x="0" y="-55" />
+                          <AbsDimension x="0" y="-35" />
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                    <Scripts>
+                      <OnClick>HealBot_Options_ShowEnemyIncArena_OnClick(self)</OnClick>
+                    </Scripts>
+                  </CheckButton>
+                  <CheckButton name="HealBot_Options_ShowEnemyIncArenaPets" inherits="SendMailRadioButtonTemplate">
+                    <Anchors>
+                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_ShowEnemyIncArena" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                          <AbsDimension x="20" y="-2" />
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                    <Scripts>
+                      <OnClick>HealBot_Options_ShowEnemyIncArenaPets_OnClick(self,self:GetID())</OnClick>
+                    </Scripts>
+                  </CheckButton>
+                  <CheckButton name="HealBot_Options_ShowEnemyIncMyTargets" inherits="OptionsCheckButtonTemplate">
+                    <Anchors>
+                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_ShowEnemyIncArena" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                          <AbsDimension x="0" y="-45" />
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -5537,7 +5561,7 @@
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_ShowEnemyIncMyTargets" relativePoint="BOTTOMLEFT">
                         <Offset>
-                          <AbsDimension x="-20" y="-75" />
+                          <AbsDimension x="-50" y="-55" />
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -5549,7 +5573,7 @@
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_ShowEnemyNumBoss" relativePoint="BOTTOMLEFT">
                         <Offset>
-                          <AbsDimension x="20" y="-70" />
+                          <AbsDimension x="50" y="-58" />
                         </Offset>
                       </Anchor>
                     </Anchors>
@@ -5566,7 +5590,7 @@
                       </Anchor>
                     </Anchors>
                     <Scripts>
-                      <OnClick>HealBot_Options_EnemyExistsPlayerTargets_OnClick(self,self:GetID())</OnClick>
+                      <OnClick>HealBot_Options_EnemyExistsPlayerTargets_OnClick(self)</OnClick>
                     </Scripts>
                     <Layers>
                       <Layer level="BACKGROUND">
@@ -5574,7 +5598,7 @@
                           <Anchors>
                               <Anchor point="BOTTOMRIGHT" relativeTo="HealBot_Options_EnemyExistsPlayerTargets" relativePoint="BOTTOMLEFT">
                                 <Offset>
-                                  <AbsDimension x="-5" y="-15" />
+                                  <AbsDimension x="-15" y="-32" />
                                 </Offset>
                               </Anchor>
                           </Anchors>
@@ -5582,7 +5606,7 @@
                       </Layer>
                     </Layers>
                   </CheckButton>
-                  <CheckButton name="HealBot_Options_EnemyExistsBosses" inherits="SendMailRadioButtonTemplate">
+                  <CheckButton name="HealBot_Options_EnemyExistsArena" inherits="SendMailRadioButtonTemplate">
                     <Anchors>
                       <Anchor point="TOPLEFT" relativeTo="HealBot_Options_EnemyExistsPlayerTargets" relativePoint="BOTTOMLEFT">
                         <Offset>
@@ -5591,7 +5615,19 @@
                       </Anchor>
                     </Anchors>
                     <Scripts>
-                      <OnClick>HealBot_Options_EnemyExistsBosses_OnClick(self,self:GetID())</OnClick>
+                      <OnClick>HealBot_Options_EnemyExistsArena_OnClick(self)</OnClick>
+                    </Scripts>
+                  </CheckButton>
+                  <CheckButton name="HealBot_Options_EnemyExistsBosses" inherits="SendMailRadioButtonTemplate">
+                    <Anchors>
+                      <Anchor point="TOPLEFT" relativeTo="HealBot_Options_EnemyExistsArena" relativePoint="BOTTOMLEFT">
+                        <Offset>
+                          <AbsDimension x="0" y="-15" />
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                    <Scripts>
+                      <OnClick>HealBot_Options_EnemyExistsBosses_OnClick(self)</OnClick>
                     </Scripts>
                   </CheckButton>
                 </Frames>

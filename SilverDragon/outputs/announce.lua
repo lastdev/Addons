@@ -6,27 +6,27 @@ local LSM = LibStub("LibSharedMedia-3.0")
 
 if LSM then
 	-- Register some media
-	LSM:Register("sound", "Rubber Ducky", [[Sound\Doodad\Goblin_Lottery_Open01.wav]])
-	LSM:Register("sound", "Cartoon FX", [[Sound\Doodad\Goblin_Lottery_Open03.wav]])
-	LSM:Register("sound", "Explosion", [[Sound\Doodad\Hellfire_Raid_FX_Explosion05.wav]])
-	LSM:Register("sound", "Shing!", [[Sound\Doodad\PortcullisActive_Closed.wav]])
-	LSM:Register("sound", "Wham!", [[Sound\Doodad\PVP_Lordaeron_Door_Open.wav]])
-	LSM:Register("sound", "Simon Chime", [[Sound\Doodad\SimonGame_LargeBlueTree.wav]])
-	LSM:Register("sound", "War Drums", [[Sound\Event Sounds\Event_wardrum_ogre.wav]])--NPC Scan default
-	LSM:Register("sound", "Scourge Horn", [[Sound\Events\scourge_horn.wav]])--NPC Scan default
+	LSM:Register("sound", "Rubber Ducky", [[Sound\Doodad\Goblin_Lottery_Open01.ogg]])
+	LSM:Register("sound", "Cartoon FX", [[Sound\Doodad\Goblin_Lottery_Open03.ogg]])
+	LSM:Register("sound", "Explosion", [[Sound\Doodad\Hellfire_Raid_FX_Explosion05.ogg]])
+	LSM:Register("sound", "Shing!", [[Sound\Doodad\PortcullisActive_Closed.ogg]])
+	LSM:Register("sound", "Wham!", [[Sound\Doodad\PVP_Lordaeron_Door_Open.ogg]])
+	LSM:Register("sound", "Simon Chime", [[Sound\Doodad\SimonGame_LargeBlueTree.ogg]])
+	LSM:Register("sound", "War Drums", [[Sound\Event Sounds\Event_wardrum_ogre.ogg]])--NPC Scan default
+	LSM:Register("sound", "Scourge Horn", [[Sound\Events\scourge_horn.ogg]])--NPC Scan default
 	LSM:Register("sound", "Pygmy Drums", [[Sound\Doodad\GO_PygmyDrumsStage_Custom0_Loop.ogg]])
-	LSM:Register("sound", "Cheer", [[Sound\Event Sounds\OgreEventCheerUnique.wav]])
-	LSM:Register("sound", "Humm", [[Sound\Spells\SimonGame_Visual_GameStart.wav]])
-	LSM:Register("sound", "Short Circuit", [[Sound\Spells\SimonGame_Visual_BadPress.wav]])
-	LSM:Register("sound", "Fel Portal", [[Sound\Spells\Sunwell_Fel_PortalStand.wav]])
-	LSM:Register("sound", "Fel Nova", [[Sound\Spells\SeepingGaseous_Fel_Nova.wav]])
-	LSM:Register("sound", "PVP Flag", [[Sound\Spells\PVPFlagTaken.wav]])
-	LSM:Register("sound", "Algalon: Beware!", [[Sound\Creature\AlgalonTheObserver\UR_Algalon_BHole01.wav]])
-	LSM:Register("sound", "Yogg Saron: Laugh", [[Sound\Creature\YoggSaron\UR_YoggSaron_Slay01.wav]])
-	LSM:Register("sound", "Illidan: Not Prepared", [[Sound\Creature\Illidan\BLACK_Illidan_04.wav]])
-	LSM:Register("sound", "Magtheridon: I am Unleashed", [[Sound\Creature\Magtheridon\HELL_Mag_Free01.wav]])
+	LSM:Register("sound", "Cheer", [[Sound\Event Sounds\OgreEventCheerUnique.ogg]])
+	LSM:Register("sound", "Humm", [[Sound\Spells\SimonGame_Visual_GameStart.ogg]])
+	LSM:Register("sound", "Short Circuit", [[Sound\Spells\SimonGame_Visual_BadPress.ogg]])
+	LSM:Register("sound", "Fel Portal", [[Sound\Spells\Sunwell_Fel_PortalStand.ogg]])
+	LSM:Register("sound", "Fel Nova", [[Sound\Spells\SeepingGaseous_Fel_Nova.ogg]])
+	LSM:Register("sound", "PVP Flag", [[Sound\Spells\PVPFlagTaken.ogg]])
+	LSM:Register("sound", "Algalon: Beware!", [[Sound\Creature\AlgalonTheObserver\UR_Algalon_BHole01.ogg]])
+	LSM:Register("sound", "Yogg Saron: Laugh", [[Sound\Creature\YoggSaron\UR_YoggSaron_Slay01.ogg]])
+	LSM:Register("sound", "Illidan: Not Prepared", [[Sound\Creature\Illidan\BLACK_Illidan_04.ogg]])
+	LSM:Register("sound", "Magtheridon: I am Unleashed", [[Sound\Creature\Magtheridon\HELL_Mag_Free01.ogg]])
 	LSM:Register("sound", "Loatheb: I see you", [[Sound\Creature\Loathstare\Loa_Naxx_Aggro02.ogg]])
-	LSM:Register("sound", "NPCScan", [[Sound\Event Sounds\Event_wardrum_ogre.wav]])--Sound file is actually bogus, this just forces the option NPCScan into menu. We hack it later.
+	LSM:Register("sound", "NPCScan", [[Sound\Event Sounds\Event_wardrum_ogre.ogg]])--Sound file is actually bogus, this just forces the option NPCScan into menu. We hack it later.
 end
 
 local mount_mobs = {
@@ -38,6 +38,16 @@ local mount_mobs = {
 	[69769] = true, -- Zandalari Warbringer (Slate)
 	[69841] = true, -- Zandalari Warbringer (Amber)
 	[69842] = true, -- Zandalari Warbringer (Jade)
+	[70096] = true, -- War-God Dokah (Can drop any of the 3 above warbringer mounts)
+	[73167] = true, -- Huolon
+	-- Draenor goes wild here:
+	[81001] = true, -- Nok-Karosh
+	[87308] = true, -- Gorok the Cleaver
+	[50990] = true, -- Nakk the Thunderer
+	[50981] = true, -- Luk'hok
+	[50985] = true, -- Poundfist
+	[51015] = true, -- Silthide
+	[50883] = true, -- Pathrunner
 }
 local boss_mobs = {
 	[50009] = true, -- Mobus
@@ -57,16 +67,19 @@ function module:OnInitialize()
 			sink = true,
 			drums = true,
 			sound = true,
+			soundgroup = true,
+			soundguild = false,
 			sound_mount = true,
 			sound_boss = true,
 			soundfile = "Loatheb: I see you",
 			soundfile_mount = "Illidan: Not Prepared",
 			soundfile_boss = "Magtheridon: I am Unleashed",
 			sound_loop = 1,
-			sound_mount_loop = 1,
+			sound_mount_loop = 3,
 			sound_boss_loop = 1,
 			flash = true,
-			instances = true,
+			instances = false,
+			dead = true,
 			expansions = {
 				classic = true,
 				bc = true,
@@ -112,6 +125,7 @@ function module:OnInitialize()
 				order = 10,
 				get = get, set = set,
 				args = {
+					dead = toggle("Dead rares", "Announce when we see dead rares, if known. Not all scanning methods know whether a rare is dead or not, so this isn't entirely reliable."),
 					flash = toggle("Flash", "Flash the edges of the screen."),
 					instances = toggle("Instances", "Show announcements while in an instance"),
 				},
@@ -150,6 +164,7 @@ function module:OnInitialize()
 					anger = faker(60491, "Sha of Anger (Boss!)", 809, 0.5, 0.5),
 					vyragosa = faker(32630, "Vyragosa (Boring)", 495, 0.5, 0.5),
 					deathmaw = faker(10077, "Deathmaw (Pet!)", 29, 0.5, 0.5),
+					haakun = faker(83008, "Haakun", 946, 0.5, 0.5),
 				},
 			},
 		}
@@ -180,6 +195,8 @@ function module:OnInitialize()
 					about = config.desc("Play sounds to announce rare mobs? Can do special things for special mobs. You *really* don't want to miss, say, the Time-Lost Proto Drake, after all...", 0),
 					sound = toggle("Enabled", "Play sounds at all!", 10),
 					drums = toggle("The Sound of Drums", "Underneath it all, the constant drumming", 12),
+					soundgroup = toggle("Group Sync Sounds", "Play sounds from synced mobs from party/raid members", 13),
+					soundguild = toggle("Guild Sync Sounds", "Play sounds from synced mobs from guild members not in group", 14),
 					soundfile = soundfile("sound", 15),
 					sound_loop = soundrange(17),
 					mount = {type="header", name="", order=20,},
@@ -197,10 +214,14 @@ function module:OnInitialize()
 	end
 end
 
-function module:Seen(callback, id, name, zone, ...)
-	Debug("Announce:Seen", id, name, zone, ...)
+function module:Seen(callback, id, name, zone, x, y, is_dead, ...)
+	Debug("Announce:Seen", id, name, zone, x, y, is_dead, ...)
 
 	if not self.db.profile.instances and IsInInstance() then
+		return
+	end
+
+	if is_dead and not self.db.profile.dead then
 		return
 	end
 
@@ -209,7 +230,11 @@ function module:Seen(callback, id, name, zone, ...)
 		return
 	end
 
-	core.events:Fire("Announce", id, name, zone, ...)
+	core.events:Fire("Announce", id, name, zone, x, y, is_dead, ...)
+end
+
+function module:HasMount(id)
+	return mount_mobs[id]
 end
 
 function module:CareAboutZone(zone)
@@ -266,15 +291,19 @@ function module:PlaySound(s)
 		self:ScheduleTimer("PlaySound", 4.5, s)
 	end
 end
-core.RegisterCallback("SD Announce Sound", "Announce", function(callback, id)
+core.RegisterCallback("SD Announce Sound", "Announce", function(callback, id, name, zone, x, y, dead, newloc, source)
 	if not (module.db.profile.sound and LSM) then
 		return
 	end
+	if source:match("^sync") then
+		local channel, player = source:match("sync:(.+):(.+)")
+		if channel == "GUILD" and not module.db.profile.soundguild or (channel == "PARTY" or channel == "RAID") and not module.db.profile.soundgroup then return end
+	end
 	local soundfile, loops
-	if mount_mobs[id] then
+	if module.db.profile.sound_mount and mount_mobs[id] then
 		soundfile = module.db.profile.soundfile_mount
 		loops = module.db.profile.sound_mount_loop
-	elseif boss_mobs[id] then
+	elseif module.db.profile.sound_boss and boss_mobs[id] then
 		soundfile = module.db.profile.soundfile_boss
 		loops = module.db.profile.sound_boss_loop
 	else

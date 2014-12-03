@@ -1,3 +1,6 @@
+== Version 60000.2
+Update to latest BSF library.
+
 == Version 60000.1.13
 * Protection: The rotation was not being presented sequentially.  Changed the rotation to be very sequential.
 * Fury:  No changes.

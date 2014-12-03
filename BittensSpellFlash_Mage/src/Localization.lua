@@ -70,12 +70,12 @@ L["Show Combustion Monitor"] = "显示点燃监视器"
 L["Solo Mode when not Grouped"] = "无队伍时使用单人模式"
 
 elseif locale == "esES" then -- Spanish
--- L["Flash Arcane"] = ""
--- L["Flash Fire"] = ""
--- L["Flash Frost"] = ""
--- L["Minumum Combustion total damage:"] = ""
--- L["Show Combustion Monitor"] = ""
--- L["Solo Mode when not Grouped"] = ""
+L["Flash Arcane"] = "Alertas de Arcano" -- Needs review
+L["Flash Fire"] = "Alertas de Fuego" -- Needs review
+L["Flash Frost"] = "Alertas de Escarcha" -- Needs review
+L["Minumum Combustion total damage:"] = "Daño total mínimo de Combustión:" -- Needs review
+L["Show Combustion Monitor"] = "Mostrar monitor de Combustión" -- Needs review
+L["Solo Mode when not Grouped"] = "Modo en solitario para cuando no estés en grupo" -- Needs review
 
 elseif locale == "zhTW" then -- Traditional Chinese
 L["Flash Arcane"] = "秘法閃光"

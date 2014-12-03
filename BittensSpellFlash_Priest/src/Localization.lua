@@ -21,7 +21,7 @@ elseif locale == "deDE" then -- German
 L["Flash Discipline"] = "Aufblitzen bei Disziplin"
 L["Flash Holy"] = "Aufblitzen bei Heilig"
 L["Flash Shadow"] = "Aufblitzen bei Schatten"
-L["PW: Shield & Binding Heal on Mouseover"] = "Mw: Schild & Verbindende Heilung bei Mouseover" -- Needs review
+L["PW: Shield & Binding Heal on Mouseover"] = "Mw: Schild & Verbindende Heilung bei Mouseover"
 
 elseif locale == "itIT" then -- Italian
 -- L["Flash Discipline"] = ""
@@ -54,10 +54,10 @@ L["Flash Shadow"] = "暗影闪光" -- Needs review
 L["PW: Shield & Binding Heal on Mouseover"] = "真言术:盾&绑定治疗于鼠标指向" -- Needs review
 
 elseif locale == "esES" then -- Spanish
--- L["Flash Discipline"] = ""
--- L["Flash Holy"] = ""
--- L["Flash Shadow"] = ""
--- L["PW: Shield & Binding Heal on Mouseover"] = ""
+L["Flash Discipline"] = "Alertas de Disciplina" -- Needs review
+L["Flash Holy"] = "Alertas de Sagrado" -- Needs review
+L["Flash Shadow"] = "Alertas de Sombra" -- Needs review
+L["PW: Shield & Binding Heal on Mouseover"] = "Escudo y Sanación conjunta al pasar el ratón por encima" -- Needs review
 
 elseif locale == "zhTW" then -- Traditional Chinese
 L["Flash Discipline"] = "戒律閃光" -- Needs review

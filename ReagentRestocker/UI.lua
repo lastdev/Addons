@@ -605,6 +605,12 @@ function showBank()
 		"Puts 'extra' Shopping List items (i.e., more than the quantity you keep stocked) into your guild bank",
 		function() return ReagentRestockerDB.Options.OverstockToGuildBank end,
 		function(x) ReagentRestockerDB.Options.OverstockToGuildBank = x end);
+		
+	addCheckBox("Automatically deposit all reagents to Reagent Bank",
+		"Automatically deposits all reagents to the Reagent Bank when the bank is opened.",
+		function() return ReagentRestockerDB.Options.AutoDepositReagents end,
+		function(x) ReagentRestockerDB.Options.AutoDepositReagents = x end);
+		--DepositReagentBank
 
 end
 

@@ -40,7 +40,7 @@ GameTooltip:SetUnitDebuff("unit", [index] or ["name", "rank"][, "filter"]);
 * The untilCanceled return value is true if the buff doesn't have its own duration (e.g. stealth)
 ]]--
 
-SMARTBUFF_VERSION       = "v6.0a";
+SMARTBUFF_VERSION       = "v6.0b";
 SMARTBUFF_VERSIONNR     = 60000;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in cast buffs";
@@ -360,6 +360,16 @@ local function InitBuffOrder(reset)
     end
     i = i + 1;
   end
+end
+
+local function IsMinLevel(minLevel)
+  if (not minLevel) then 
+    return true;
+  end
+  if (minLevel > UnitLevel("player")) then
+    return false;
+  end
+  return true;
 end
 
 -- TODO: Redesign if reactivated!
@@ -962,7 +972,6 @@ function SMARTBUFF_GetSpellID(spellname)
 end
 -- END SMARTBUFF_GetSpellID
 
-
 -- Set the buff array
 function SMARTBUFF_SetBuffs()
   if (B == nil) then return; end
@@ -1076,10 +1085,22 @@ function SMARTBUFF_SetBuff(buff, i, ia)
         return i;      
       end
     elseif (ia or cBuffs[i].Type == SMARTBUFF_CONST_ITEMGROUP) then
-      _, _, _, _, _, _, _, _, _, cBuffs[i].IconS = GetItemInfo(cBuffs[i].BuffS);
+      -- itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice
+      local _, _, _, _, minLevel, _, _, _, _, texture = GetItemInfo(cBuffs[i].BuffS);
+      if (not IsMinLevel(minLevel)) then
+        cBuffs[i] = nil;
+        return i;      
+      end
+      cBuffs[i].IconS = texture;
     else
-      local bag, slot, count, texture = SMARTBUFF_FindReagent(cBuffs[i].BuffS, cBuffs[i].Chain);
-      if (count == 0) then
+      local _, _, _, _, minLevel = GetItemInfo(cBuffs[i].BuffS);
+      if (not IsMinLevel(minLevel)) then
+        cBuffs[i] = nil;
+        return i;      
+      end
+      
+      local _, _, count, texture = SMARTBUFF_FindItem(cBuffs[i].BuffS, cBuffs[i].Chain);
+      if (count <= 0) then
         cBuffs[i] = nil;
         return i;
       end    
@@ -1904,7 +1925,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
               -- Weapon buff ------------------------------------------------------------------------
               elseif (cBuff.Type == SMARTBUFF_CONST_WEAPON or cBuff.Type == SMARTBUFF_CONST_INV) then                                
                 --SMARTBUFF_AddMsgD("Check weapon Buff");
-                local bMh, tMh, cMh, bOh, tOh, cOh, bRh, tRh, cRh = GetWeaponEnchantInfo();                
+                local bMh, tMh, cMh, bOh, tOh, cOh = GetWeaponEnchantInfo();                
                 
                 if (bs.MH) then
                   iSlot = 16;
@@ -1959,34 +1980,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
                     --SMARTBUFF_AddMsgD("Weapon Buff cannot be cast, no offhand weapon equipped or wrong weapon/stone type");
                   end
                 end
-                
-                if (bs.RH and not bExpire and handtype == "") then
-                  iSlot = 18;
-                  iId = GetInventoryItemID("player", iSlot);
-                  if (iId and SMARTBUFF_CanApplyWeaponBuff(buffnS, iSlot)) then
-                    if (bRh) then
-                      if (rbTime > 0 and cBuff.DurationS >= 1) then
-                        --if (tRh == nil) then tRh = 0; end
-                        tRh = floor(tRh/1000);
-                        charges = cOh;
-                        if (charges == nil) then charges = -1; end
-                        if (charges > 1) then cBuff.CanCharge = true; end
-                        --SMARTBUFF_AddMsgD(un .. " (WOH): " .. buffnS .. string.format(" %.0f sec left", tOh) .. ", " .. charges .. " charges left");
-                        if (tRh <= rbTime or (O.CheckCharges and cBuff.CanCharge and charges > 0 and charges <= O.MinCharges)) then
-                          buff = buffnS;
-                          bt = tRh;
-                          bExpire = true;                          
-                        end                      
-                      end
-                    else
-                      handtype = "ranged";
-                      buff = buffnS;
-                    end
-                  else
-                    --SMARTBUFF_AddMsgD("Weapon Buff cannot be cast, no ranged weapon equipped or wrong weapon/stone type");
-                  end
-                end                
-                
+
                 if (buff and cBuff.Type == SMARTBUFF_CONST_INV) then
                   local cr = SMARTBUFF_CountReagent(buffnS, cBuff.Chain);
                   if (cr > 0) then
@@ -2089,10 +2083,10 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
                   currentUnit = nil;
                   currentSpell = nil;
                   
-                  --try to apply weapon buffs on main/off/ranged hand
+                  --try to apply weapon buffs on main/off hand
                   if (cBuff.Type == SMARTBUFF_CONST_INV) then                    
                     if (iSlot and (handtype ~= "" or bExpire)) then
-                      local bag, slot, count, _ = SMARTBUFF_FindReagent(buffnS, cBuff.Chain);
+                      local bag, slot, count = SMARTBUFF_FindItem(buffnS, cBuff.Chain);
                       if (count > 0) then
                         sMsgWarning = "";
                         return 0, SMARTBUFF_ACTION_ITEM, buffnS, iSlot, "player", cBuff.Type;
@@ -2109,7 +2103,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
                     
                   -- eat food or use scroll or potion
                   elseif (cBuff.Type == SMARTBUFF_CONST_FOOD or cBuff.Type == SMARTBUFF_CONST_SCROLL or cBuff.Type == SMARTBUFF_CONST_POTION) then
-                    local bag, slot, count, _ = SMARTBUFF_FindReagent(buffnS, cBuff.Chain);
+                    local bag, slot, count = SMARTBUFF_FindItem(buffnS, cBuff.Chain);
                     if (count > 0 or bExpire) then
                       sMsgWarning = "";
                       return 0, SMARTBUFF_ACTION_ITEM, buffnS, 0, "player", cBuff.Type;
@@ -2118,7 +2112,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
                     
                   -- use item on a unit
                   elseif (cBuff.Type == SMARTBUFF_CONST_ITEMGROUP) then
-                    local bag, slot, count, _ = SMARTBUFF_FindReagent(buffnS, cBuff.Chain);
+                    local bag, slot, count = SMARTBUFF_FindItem(buffnS, cBuff.Chain);
                     if (count > 0) then
                       sMsgWarning = "";
                       return 0, SMARTBUFF_ACTION_ITEM, buffnS, 0, unit, cBuff.Type;
@@ -2128,7 +2122,7 @@ function SMARTBUFF_BuffUnit(unit, subgroup, mode, spell)
                   -- create item
                   elseif (cBuff.Type == SMARTBUFF_CONST_ITEM) then
                     r = 20;
-                    local bag, slot, count, _ = SMARTBUFF_FindReagent(buff, cBuff.Chain);                    
+                    local bag, slot, count = SMARTBUFF_FindItem(buff, cBuff.Chain);                    
                     if (count == 0) then
                       r = SMARTBUFF_doCast(unit, cBuff.IDS, buffnS, cBuff.LevelsS, cBuff.Type);
                       if (r == 0) then
@@ -2731,7 +2725,15 @@ end
 
 -- Returns the number of a reagent currently in player's bag
 function SMARTBUFF_CountReagent(reagent, chain)
-  if (reagent == nil) then return 99; end
+  if (reagent == nil) then
+    return -1, nil;
+  end
+  
+  local toy = SG.Toybox[reagent];
+  if (toy) then
+    return 1, toy[1];
+  end
+
   local n = 0;
   local id = nil;
   local bag = 0;
@@ -2757,8 +2759,16 @@ function SMARTBUFF_CountReagent(reagent, chain)
   return n, id;
 end
 
-function SMARTBUFF_FindReagent(reagent, chain)
-  if (reagent == nil) then return 99; end
+function SMARTBUFF_FindItem(reagent, chain)
+  if (reagent == nil) then
+    return nil, nil, -1, nil;
+  end
+  
+  local toy = SG.Toybox[reagent];
+  if (toy) then
+    return 999, toy[1], 1, toy[2];
+  end
+  
   local n = 0;
   local bag = 0;
   local slot = 0;
@@ -3036,7 +3046,7 @@ function SMARTBUFF_Options_Init(self)
     isParrot = true;    
   end
     
-  SMARTBUFF_FindReagent("ScanBagsForSBInit");  
+  SMARTBUFF_FindItem("ScanBagsForSBInit");  
     
   SMARTBUFF_AddMsg(SMARTBUFF_VERS_TITLE .. " " .. SMARTBUFF_MSG_LOADED, true);
   SMARTBUFF_AddMsg("/sbm - " .. SMARTBUFF_OFT_MENU, true);
@@ -3526,11 +3536,7 @@ function SmartBuff_BuffSetup_Show(i)
     if (cBuffs[i].Type == SMARTBUFF_CONST_INV or cBuffs[i].Type == SMARTBUFF_CONST_WEAPON) then
       SmartBuff_BuffSetup_cbMH:Show();
       SmartBuff_BuffSetup_cbOH:Show();
-      if (sPlayerClass == "ROGUE") then
-        SmartBuff_BuffSetup_cbRH:Show();
-      else
-        SmartBuff_BuffSetup_cbRH:Hide();
-      end
+      SmartBuff_BuffSetup_cbRH:Hide();
     else
       SmartBuff_BuffSetup_cbMH:Hide();
       SmartBuff_BuffSetup_cbOH:Hide();
@@ -3635,9 +3641,13 @@ function SmartBuff_BuffSetup_ToolTip(mode)
   
   GameTooltip:ClearLines();
   if (SMARTBUFF_IsItem(btype)) then
-    local bag, slot, count, texture = SMARTBUFF_FindReagent(cBuffs[i].BuffS, cBuffs[i].Chain);
+    local bag, slot, count, texture = SMARTBUFF_FindItem(cBuffs[i].BuffS, cBuffs[i].Chain);
     if (bag and slot) then
-      GameTooltip:SetBagItem(bag, slot);
+      if (bag == 999) then -- Toy
+        GameTooltip:SetToyByItemID(slot);
+      else
+        GameTooltip:SetBagItem(bag, slot);
+      end
     end
   else
     if (mode == 1 and ids) then

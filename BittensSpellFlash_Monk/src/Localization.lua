@@ -62,11 +62,11 @@ L["Flash Windwalker"] = "风行闪光" -- Needs review
 L["Solo Mode when not Grouped"] = "无队伍时使用单人模式" -- Needs review
 
 elseif locale == "esES" then -- Spanish
--- L["Flash Brewmaster"] = ""
--- L["Flash Melee Abilities Above % Mana:"] = ""
--- L["Flash Mistweaver"] = ""
--- L["Flash Windwalker"] = ""
--- L["Solo Mode when not Grouped"] = ""
+L["Flash Brewmaster"] = "Alertas de Maestro cervecero" -- Needs review
+L["Flash Melee Abilities Above % Mana:"] = "Alertas de habilidades cuerpo a cuerpo por encima de % de maná:" -- Needs review
+L["Flash Mistweaver"] = "Alertas de Tejedor de niebla" -- Needs review
+L["Flash Windwalker"] = "Alertas de Viajero del viento" -- Needs review
+L["Solo Mode when not Grouped"] = "Modo en solitario para cuando no estés en grupo" -- Needs review
 
 elseif locale == "zhTW" then -- Traditional Chinese
 L["Flash Brewmaster"] = "釀酒閃光" -- Needs review

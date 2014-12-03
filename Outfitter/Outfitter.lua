@@ -77,6 +77,8 @@ Outfitter.CreditPlayersByRealm =
 		["EmForAce"] = 1,
 		["durandal42"] = 1,
 		["Dicebar"] = 1,
+		["Silarn"] = 1,
+		["slippycheeze"] = 1,
 	},
 	["Tester"] =
 	{
@@ -497,7 +499,7 @@ Outfitter.BANKED_FONT_COLOR_CODE = "|cff4033ff"
 Outfitter.OUTFIT_MESSAGE_COLOR = {r = 0.2, g = 0.75, b = 0.3}
 
 Outfitter.IsWoW4 = true
-Outfitter.cItemLinkFormat = "|Hitem:(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+)|h%[([^%]]*)%]|h"
+Outfitter.cItemLinkFormat = "|Hitem:(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+):(-?%d+)|h%[([^%]]*)%]|h"
 
 Outfitter.cUniqueGemItemIDs =
 {
@@ -1605,7 +1607,6 @@ function Outfitter:ExecuteCommand(pCommand)
 		
 		summary = {func = self.OutfitSummary},
 		rating = {func = self.RatingSummary},
-		sortbags = {func = self.SortBags},
 		iteminfo = {func = self.ShowLinkInfo},
 		itemstats = {func = self.ShowLinkStats},
 		
@@ -2125,7 +2126,7 @@ function Outfitter:InitializeOutfitMenu(pFrame, pOutfit)
 			local vNumVisibleTitles = 0
 			
 			for vTitleID = 1, vNumTitles do
-				if IsTitleKnown(vTitleID) ~= 0 then
+				if IsTitleKnown(vTitleID) then
 					vNumVisibleTitles = vNumVisibleTitles + 1
 					
 					if vNumVisibleTitles > self.MaxSimpleTitles then
@@ -2162,7 +2163,7 @@ function Outfitter:InitializeOutfitMenu(pFrame, pOutfit)
 			local vNumVisibleTitles = 0
 			
 			for vTitleID = 1, vNumTitles do
-				if IsTitleKnown(vTitleID) ~= 0 then
+				if IsTitleKnown(vTitleID) then
 					vNumVisibleTitles = vNumVisibleTitles + 1
 					
 					if vNumVisibleTitles > self.MaxSimpleTitles then
@@ -2322,7 +2323,7 @@ function Outfitter:AddOutfitMenu(pMenu, pMenuID, pLevel, pOutfit)
 			local vNumVisibleTitles = 0
 			
 			for vTitleID = 1, vNumTitles do
-				if IsTitleKnown(vTitleID) ~= 0 then
+				if IsTitleKnown(vTitleID) then
 					vNumVisibleTitles = vNumVisibleTitles + 1
 					
 					if vNumVisibleTitles > self.MaxSimpleTitles then
@@ -2371,7 +2372,7 @@ function Outfitter:AddOutfitMenu(pMenu, pMenuID, pLevel, pOutfit)
 			local vNumVisibleTitles = 0
 			
 			for vTitleID = 1, vNumTitles do
-				if IsTitleKnown(vTitleID) ~= 0 then
+				if IsTitleKnown(vTitleID) then
 					vNumVisibleTitles = vNumVisibleTitles + 1
 					
 					if vNumVisibleTitles > self.MaxSimpleTitles then
@@ -2680,7 +2681,7 @@ function Outfitter:GenerateItemListString(pLabel, pListColorCode, pItems)
 end
 
 function Outfitter.AddNewbieTip(pItem, pNormalText, pRed, pGreen, pBlue, pNewbieText, pNoNormalText)
-	if GetCVar("UberTooltips") == 1 then
+	if GetCVarBool("UberTooltips") then
 		GameTooltip_SetDefaultAnchor(GameTooltip, pItem)
 		if pNormalText then
 			GameTooltip:SetText(pNormalText, pRed, pGreen, pBlue)
@@ -3964,12 +3965,6 @@ function Outfitter.GetItemSortRank(pItem)
 	end
 end
 
-function Outfitter:SortBags()
-	self.SortBagsCoroutineRef = coroutine.create(self.SortBagsThread)
-	
-	self:RunThreads()
-end
-
 function Outfitter:RunThreads()
 	if self.SortBagsCoroutineRef then
 		local vSuccess, vMessage = coroutine.resume(self.SortBagsCoroutineRef, self)
@@ -3978,234 +3973,6 @@ function Outfitter:RunThreads()
 			self:ErrorMessage("SortBags resume failed: %s", vMessage)
 		end
 	end
-end
-
-function Outfitter:SortBagsThread()
-	self.EventLib:RegisterEvent("BAG_UPDATE", self.BagSortBagsChanged, self)
-	self.EventLib:RegisterEvent("PLAYERBANKSLOTS_CHANGED", self.BagSortBagsChanged, self)
-	
-	if true then
-		self:SortBagRange(NUM_BAG_SLOTS, 0)
-		
-		if self.BankFrameIsOpen then
-			for vBankSlot = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do
-				self:SortBagRange(vBankSlot, vBankSlot)
-			end
-			
-			self:SortBagRange(-1, -1)
-		end
-	else
-		self:SortBagRange(5, 5)
-	end
-
-	self.EventLib:UnregisterEvent("BAG_UPDATE", self.BagSortBagsChanged, self)
-	self.EventLib:UnregisterEvent("PLAYERBANKSLOTS_CHANGED", self.BagSortBagsChanged, self)
-	
-	self.SortBagsCoroutineRef = nil
-end
-
-function Outfitter:BagSortBagsChanged()
-	self.BagChangeTime = GetTime()
-	
-	self.SchedulerLib:RescheduleTask(0.5, self.RunThreads, self)
-end
-
-function Outfitter:SortBagRange(pStartIndex, pEndIndex)
-	self:DebugMessage("SortBagRange: %s, %s", pStartIndex or "nil", pEndIndex or "nil")
-	
-	-- Gather a list of the items
-	
-	local vItems = {}
-	local vIterator = self:New(self._BagIterator, pStartIndex, pEndIndex)
-	
-	while vIterator:NextSlot() do
-		self:DebugMessage("Checking slot %d, %d", vIterator.BagIndex, vIterator.BagSlotIndex)
-		
-		local vItemInfo = self:GetBagItemInfo(vIterator.BagIndex, vIterator.BagSlotIndex)
-		
-		if vItemInfo then
-			self:CorrectItemInfo(vItemInfo)
-			
-			vItemInfo.ItemIsUsed = self:GetOutfitsUsingItem(vItemInfo)
-			vItemInfo.Equippable = vItemInfo.InvType ~= ""
-			vItemInfo.SortRank = self.GetItemSortRank(vItemInfo)
-			
-			table.insert(vItems, vItemInfo)
-		end
-	end
-	
-	-- Sort the items
-	
-	self:DebugMessage("Sorting the items")
-	
-	table.sort(vItems, self.BagSortCompareItems)
-	
-	-- Assign the items to bag slots
-	
-	self:DebugMessage("Assigning locations")
-	
-	local vDestBagSlot = self:New(self._BagIterator, pStartIndex, pEndIndex)
-	
-	for _, vItemInfo in ipairs(vItems) do
-		if not vDestBagSlot:NextSlot() then
-			break
-		end
-		
-		vItemInfo.DestBagIndex = vDestBagSlot.BagIndex
-		vItemInfo.DestBagSlotIndex = vDestBagSlot.BagSlotIndex
-	end
-	
-	--
-	
-	self:DebugMessage("Starting item moves")
-	
-	while self:BagSortMoveItems(vItems) do
-		self:DebugMessage("Completed one move")
-		
-		while not self.BagChangeTime or GetTime() - self.BagChangeTime < 0.5 do
-			self:DebugMessage("Yielding")
-			self:BagSortBagsChanged()
-			coroutine.yield()
-		end
-	end
-	
-	self:DebugMessage("Done moving items")
-end	
-
-function Outfitter:BagSortMoveItems(pItems)
-	self:DebugMessage("BagSortMoveItems")
-	
-	local vDidMove = false
-	local vBagSlotUsed = {}
-	
-	for vIndex = -1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do
-		vBagSlotUsed[vIndex] = {}
-	end
-	
-	-- Move the items to their destinations
-	
-	local vSaved_EnableSFX = GetCVar("Sound_EnableSFX")
-	SetCVar("Sound_EnableSFX", "0")
-	
-	local vNumMoves = 0
-	
-	for _, vItemInfo in ipairs(pItems) do
-		if (vItemInfo.Location.BagIndex ~= vItemInfo.DestBagIndex
-		or vItemInfo.Location.BagSlotIndex ~= vItemInfo.DestBagSlotIndex)
-		and not vBagSlotUsed[vItemInfo.Location.BagIndex][vItemInfo.Location.BagSlotIndex]
-		and not vBagSlotUsed[vItemInfo.DestBagIndex][vItemInfo.DestBagSlotIndex] then
-			
-			self:DebugMessage("Checking item in %d, %d", vItemInfo.Location.BagIndex, vItemInfo.Location.BagSlotIndex)
-			
-			-- Find the item currently at the destination (if any)
-			
-			local vDestItemInfo
-			
-			for _, vItemInfo2 in ipairs(pItems) do
-				if vItemInfo2.Location.BagSlotIndex == vItemInfo.DestBagSlotIndex
-				and vItemInfo2.Location.BagIndex == vItemInfo.DestBagIndex then
-					self:DebugMessage("Found item in pItems")
-					vDestItemInfo = vItemInfo2
-					break
-				end
-			end
-			
-			-- Move/swap the items
-			
-			self:NoteMessage(format(
-					"Moving %s from bag %d, %d to %d, %d",
-					vItemInfo.Name,
-					vItemInfo.Location.BagIndex, vItemInfo.Location.BagSlotIndex,
-					vItemInfo.DestBagIndex, vItemInfo.DestBagSlotIndex))
-			
-			
-			ClearCursor()
-			self:PickupItemLocation(vItemInfo.Location)
-			self:PickupItemLocation({BagIndex = vItemInfo.DestBagIndex, BagSlotIndex = vItemInfo.DestBagSlotIndex})
-			if vDestItemInfo then self:PickupItemLocation(vItemInfo.Location) end
-			ClearCursor()
-			
-			-- Mark the bag slots as already being involved in this round
-			
-			vBagSlotUsed[vItemInfo.Location.BagIndex][vItemInfo.Location.BagSlotIndex] = true
-			vBagSlotUsed[vItemInfo.DestBagIndex][vItemInfo.DestBagSlotIndex] = true
-			
-			-- Update the source and dest item info
-			
-			if vDestItemInfo then
-				vDestItemInfo.Location.BagIndex = vItemInfo.Location.BagIndex
-				vDestItemInfo.Location.BagSlotIndex = vItemInfo.Location.BagSlotIndex
-			end
-			
-			vItemInfo.Location.BagIndex = vItemInfo.DestBagIndex
-			vItemInfo.Location.BagSlotIndex = vItemInfo.DestBagSlotIndex
-			
-			vDidMove = true
-			
-			self:BagSortBagsChanged()
-			
-			-- Yield every ten item moves
-			
-			vNumMoves = vNumMoves + 1
-			
-			if vNumMoves >= 10 then
-				SetCVar("Sound_EnableSFX", vSaved_EnableSFX)
-				coroutine.yield()
-				SetCVar("Sound_EnableSFX", "0")
-				
-				vNumMoves = 0
-			end
-		end
-	end
-	
-	SetCVar("Sound_EnableSFX", vSaved_EnableSFX)
-	
-	self:DebugMessage("BagSortMoveItems completed: vDidMove = %s", tostring(vDidMove))
-	
-	return vDidMove
-end
-
-function Outfitter.BagSortCompareItems(pItem1, pItem2) -- Must not be method since it's called by table.sort
-	if pItem1.SortRank ~= pItem2.SortRank then
-		return pItem1.SortRank < pItem2.SortRank
-	end
-	
-	-- If both items are equippable, sort them by
-	-- slot first
-	
-	if pItem1.Equippable then
-		return pItem1.InvType < pItem2.InvType
-	end
-	
-	-- Sort items by type
-	
-	if pItem1.Type ~= pItem2.Type then
-		return pItem1.Type < pItem2.Type
-	end
-	
-	-- Sort by subtype
-	
-	if pItem1.SubType ~= pItem2.SubType then
-		return pItem1.SubType < pItem2.SubType
-	end
-	
-	-- Sort by name
-	
-	if pItem1.Name ~= pItem2.Name then
-		return pItem1.Name < pItem2.Name
-	end
-	
-	-- Sort by where they're already at if they're the same item
-	
-	if pItem1.Location.BagIndex ~= pItem2.Location.BagIndex then
-		return pItem1.Location.BagIndex > pItem2.Location.BagIndex
-	end
-	
-	if pItem1.Location.BagSlotIndex ~= pItem2.Location.BagSlotIndex then
-		return pItem1.Location.BagSlotIndex < pItem2.Location.BagSlotIndex
-	end
-	
-	return false
 end
 
 Outfitter._BagIterator = {}
@@ -5837,8 +5604,10 @@ function Outfitter:InitializeSpecialOccasionOutfits()
 	
 	if not vOutfit then
 		vOutfit = self:GenerateSmartOutfit(Outfitter.cArgentDawnOutfit, "ArgentDawn", vInventoryCache, true)
-		vOutfit.ScriptID = "ArgentDawn"
-		Outfitter:AddOutfit(vOutfit)
+		if vOutfit then
+			vOutfit.ScriptID = "ArgentDawn"
+			Outfitter:AddOutfit(vOutfit)
+		end
 	end
 	]]--
 	-- Find riding items
@@ -5847,10 +5616,12 @@ function Outfitter:InitializeSpecialOccasionOutfits()
 	
 	if not vOutfit then
 		vOutfit = Outfitter:GenerateSmartOutfit(Outfitter.cRidingOutfit, "MOUNT_SPEED", vInventoryCache, true)
-		vOutfit.ScriptID = "Riding"
-		vOutfit.ScriptSettings = {}
-		vOutfit.ScriptSettings.DisableBG = true -- Default to disabling in BGs since that appears to be the most popular
-		Outfitter:AddOutfit(vOutfit)
+		if vOutfit then
+			vOutfit.ScriptID = "Riding"
+			vOutfit.ScriptSettings = {}
+			vOutfit.ScriptSettings.DisableBG = true -- Default to disabling in BGs since that appears to be the most popular
+			Outfitter:AddOutfit(vOutfit)
+		end
 	end
 	
 	-- Create the Battlegrounds outfits
@@ -5937,8 +5708,9 @@ function Outfitter:CanEquipBagItem(pBagIndex, pBagSlotIndex)
 	      vItemCount,
 	      vItemInvType = self:GetExtendedBagItemLinkInfo(pBagIndex, pBagSlotIndex)
 	
+	-- Disabling minLevel check because new drops pre WoD are showing as minLevel 100 despite only requiring 90
 	return Outfitter.cInvTypeToSlotName[vItemInvType] ~= nil
-	       and (not vItemMinLevel or UnitLevel("player") >= vItemMinLevel)
+--	       and (not vItemMinLevel or UnitLevel("player") >= vItemMinLevel)
 end
 
 function Outfitter:BagItemWillBind(pBagIndex, pBagSlotIndex)
@@ -8007,11 +7779,8 @@ function Outfitter:TooltipContainsLine(pTooltip, pText)
 		
 		if vTextString:find(pText) then
 			local vColor = {}
-			
 			vColor.r, vColor.g, vColor.b = vText:GetTextColor()
-			
 			local vHSVColor = Outfitter:RGBToHSV(vColor)
-			
 			return true, vHSVColor.s > 0.2 and vHSVColor.v > 0.2 and (vHSVColor.h < 50 or vHSVColor.h > 150)
 		end
 	end
@@ -8385,7 +8154,7 @@ function Outfitter:GenerateItemLink(pItem)
 	local _, _, vQuality = GetItemInfo(pItem.Code)
 	local _, _, _, vQualityColorCode = GetItemQualityColor(vQuality or 1)
 	
-	return string.format("|c%s|Hitem:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d|h[%s]|h|r", vQualityColorCode, pItem.Code, pItem.EnchantCode or 0, pItem.JewelCode1 or 0, pItem.JewelCode2 or 0, pItem.JewelCode3 or 0, pItem.JewelCode4 or 0, pItem.SubCode or 0, pItem.UniqueID or 0, pItem.LinkLevel or 0, pItem.ReforgeID or 0, pItem.Name), vQuality or 1
+	return string.format("|c%s|Hitem:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d|h[%s]|h|r", vQualityColorCode, pItem.Code, pItem.EnchantCode or 0, pItem.JewelCode1 or 0, pItem.JewelCode2 or 0, pItem.JewelCode3 or 0, pItem.JewelCode4 or 0, pItem.SubCode or 0, pItem.UniqueID or 0, pItem.LinkLevel or 0, pItem.ReforgeID or 0, pItem.Name or "unknown"), vQuality or 1
 end
 
 function Outfitter:ShowMissingItems()
@@ -8487,6 +8256,12 @@ function Outfitter._ExtendedCompareTooltip:Construct()
 		self:HideCompareItems()
 	end)
 	
+	GameTooltip:HookScript("OnTooltipSetItem", function ()
+		if not IsModifiedClick("COMPAREITEMS") then
+			self:HideCompareItems()
+		end
+	end)
+
 	self.Tooltips = {}
 	self.NumTooltipsShown = 0
 	self.MaxTooltipsShown = 5
@@ -8541,19 +8316,9 @@ function Outfitter._ExtendedCompareTooltip:ShowCompareItem()
 	-- Figure out which tooltip to attach to and
 	-- append the 'used by' info on shopping tooltips
 	
-	self.AnchorToTooltip = GameTooltip
+	self.AnchorToTooltip = nil
 	
-	for vIndex = 1, 100 do
-		local vShoppingTooltip = _G["ShoppingTooltip"..vIndex]
-		
-		if not vShoppingTooltip then
-			break
-		end
-		
-		if not vShoppingTooltip:IsVisible() then
-			break
-		end
-		
+	for vIndex, vShoppingTooltip in ipairs(GameTooltip.shoppingTooltips) do
 		local _, vShoppingLink = vShoppingTooltip:GetItem()
 		local vShoppingItemInfo = Outfitter:GetItemInfoFromLink(vShoppingLink)
 		
@@ -8562,18 +8327,24 @@ function Outfitter._ExtendedCompareTooltip:ShowCompareItem()
 			vShoppingTooltip:Show()
 		end
 		
-		self.AnchorToTooltip = vShoppingTooltip
+		-- Keep the first shopping tooltip for an anchor since it's the one Blizzard positions at the end
+		if not self.AnchorToTooltip then
+			self.AnchorToTooltip = vShoppingTooltip
+		end
 	end
 	
+	if not self.AnchorToTooltip then
+		self.AnchorToTooltip = GameTooltip
+	end
+
 	-- Determine which slots need to be examined
 	
-	local vInventorySlots = {}
-	
 	local vInvSlotInfo = Outfitter.cInvTypeToSlotName[vTooltipItemInvType]
-	
 	if not vInvSlotInfo then
 		return
 	end
+	
+	local vInventorySlots = {}
 	
 	table.insert(vInventorySlots, vInvSlotInfo.SlotName)
 	

@@ -352,7 +352,7 @@ function Outfitter._EditScriptDialog:GetScriptSettings()
 				vValue = tonumber(vFrame:GetText())
 			
 			elseif vType == "boolean" then
-				vValue = vFrame:GetChecked() == 1
+				vValue = vFrame:GetChecked()
 			
 			elseif vType == "stringtable"
 			or vType == "zonelist" then

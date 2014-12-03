@@ -1083,9 +1083,7 @@ function HealBot_Panel_PanelChanged(disableHealBot)
         end   
 
         for xGUID,xUnit in pairs(HealBot_TrackGUID) do
---            if xGUID~=HealBot_PlayerGUID then
-                HealBot_Panel_RemoveMember(xGUID,xUnit)
---            end
+            HealBot_Panel_RemoveMember(xGUID,xUnit)
         end
         
         for x,_ in pairs(HealBot_TrackGUID) do
@@ -2124,18 +2122,18 @@ function HealBot_Panel_enemyTargets()
     if not HealBot_BottomAnchors[hbCurrentFrame] then HeaderPos[hbCurrentFrame][i[hbCurrentFrame]+1] = HEALBOT_OPTIONS_TARGETHEALS end
     local k=i[hbCurrentFrame]
     if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCSELF"] then
-        if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["HIDE"] then
-            if HealBot_Data["UILOCK"]=="YES" then
-                if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWPTAR"] then
-                    if UnitExists("playertarget") and not UnitIsFriend("player","playertarget") then
-                        HealBot_Panel_enemyBar("playertarget", "player", true)
-                    end
-                else
-                    HealBot_Panel_enemyBar("playertarget", "player", true)
-                end
-            end
-        else
-            HealBot_Panel_enemyBar("playertarget", "player", true)
+        HealBot_Panel_checkEnemyBar("playertarget", "player", Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWPTAR"])
+    end
+    if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCARENA"] then
+        for j=1,5 do
+            xUnit="arena"..j;
+            HealBot_Panel_checkEnemyBar(xUnit, xUnit, Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWARENA"])
+        end
+    end
+    if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCARENAPETS"] then
+        for j=1,5 do
+            xUnit="arena"..j;
+            HealBot_Panel_checkEnemyBar(xUnit, xUnit, Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWARENA"])
         end
     end
     if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCTANKS"] then
@@ -2143,37 +2141,13 @@ function HealBot_Panel_enemyTargets()
             HealBot_Panel_setTanks()
         end
         for _,xUnit in pairs(HealBot_MainTanks) do
-            if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["HIDE"] then
-                if HealBot_Data["UILOCK"]=="YES" then
-                    if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWPTAR"] then
-                        if UnitExists(xUnit.."target") and not UnitIsFriend(xUnit,xUnit.."target") then
-                            HealBot_Panel_enemyBar(xUnit.."target", xUnit, true)
-                        end
-                    else
-                        HealBot_Panel_enemyBar(xUnit.."target", xUnit, true)
-                    end
-                end
-            else
-                HealBot_Panel_enemyBar(xUnit.."target", xUnit, true)
-            end
+            HealBot_Panel_checkEnemyBar(xUnit.."target", xUnit, Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWPTAR"])
         end
     end
     if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["INCMYTAR"] then
         table.foreach(HealBot_MyHealTargets, function (index,xGUID)
             xUnit=HealBot_Panel_RaidUnit(xGUID) or "unknown"
-            if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["HIDE"] then
-                if HealBot_Data["UILOCK"]=="YES" then
-                    if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWPTAR"] then
-                        if UnitExists(xUnit.."target") and not UnitIsFriend(xUnit,xUnit.."target") then
-                            HealBot_Panel_enemyBar(xUnit.."target", xUnit, true)
-                        end
-                    else
-                        HealBot_Panel_enemyBar(xUnit.."target", xUnit, true)
-                    end
-                end
-            else
-                HealBot_Panel_enemyBar(xUnit.."target", xUnit, true)
-            end
+            HealBot_Panel_checkEnemyBar(xUnit.."target", xUnit, Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["EXISTSHOWPTAR"])
         end)
     end
     local numBoss=Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["NUMBOSS"]
@@ -2187,19 +2161,8 @@ function HealBot_Panel_enemyTargets()
     
     if numBoss>0 then
         for bi=1,numBoss do
-            if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["HIDE"] then
-                if HealBot_Data["UILOCK"]=="YES" then
-                    if showBossExists then
-                        if UnitExists("boss"..bi) then
-                            HealBot_Panel_enemyBar("boss"..bi, "boss"..bi)
-                        end
-                    else
-                        HealBot_Panel_enemyBar("boss"..bi, "boss"..bi)
-                    end
-                end
-            else
-                HealBot_Panel_enemyBar("boss"..bi, "boss"..bi)
-            end
+            xUnit="boss"..bi
+            HealBot_Panel_checkEnemyBar(xUnit, xUnit, showBossExists)
         end
     end
     if i[hbCurrentFrame]>k then 
@@ -2212,18 +2175,32 @@ function HealBot_Panel_enemyTargets()
     end
 end
 
-function HealBot_Panel_enemyBar(unit, pUnit, noEvents)
-    local xGUID=unit
+function HealBot_Panel_checkEnemyBar(eUnit, pUnit, existsShow)
+    if Healbot_Config_Skins.Enemy[Healbot_Config_Skins.Current_Skin]["HIDE"] then
+        if HealBot_Data["UILOCK"]=="YES" then
+            if existsShow then
+                if UnitExists(eUnit) and UnitHealth(eUnit)>99 and not UnitIsDeadOrGhost(eUnit) and (UnitIsUnit(eUnit, pUnit) or not UnitIsFriend(eUnit, pUnit)) then
+                    HealBot_Panel_enemyBar(eUnit)
+                end
+            else
+                HealBot_Panel_enemyBar(eUnit)
+            end
+        end
+    else
+        HealBot_Panel_enemyBar(eUnit)
+    end
+end
+
+function HealBot_Panel_enemyBar(eUnit)
     local uName=HEALBOT_ENEMY_NO_TARGET
     local incEnemy=true
-    if UnitExists(unit) and UnitHealth(unit)>99 then
-        xGUID=HealBot_UnitGUID(unit)
-        uName=HealBot_GetUnitName(unit)
+    if UnitExists(eUnit) and UnitHealth(eUnit)>99 then
+        uName=HealBot_GetUnitName(eUnit)
     end
-    HealBot_UnitName[unit]=uName;    
+    HealBot_UnitName[eUnit]=uName;    
     i[hbCurrentFrame]=i[hbCurrentFrame]+1;
-    table.insert(subunits,unit)
-    HealBot_setEnemyUnits(unit, xGUID, pUnit)
+    table.insert(subunits,eUnit)
+    HealBot_setEnemyUnits(eUnit)
 end
 
 function HealBot_Panel_cpSave(mNum)
@@ -2660,41 +2637,44 @@ end
 
 function HealBot_Panel_RaidUnit(hbGUID,unitName)
     local rUnit,xUnit=nil,nil
+    local hbInRaid=IsInRaid()
     if unitName then
         rUnit=hbTempUnitName[unitName]
-        if not rUnit or not UnitExists(rUnit) or (IsInRaid() and strsub(rUnit,1,4)~="raid") or HealBot_GetUnitName(rUnit)~=unitName then
+        if not rUnit or not UnitExists(rUnit) or (hbInRaid and strsub(rUnit,1,4)~="raid") or (not hbInRaid and strsub(rUnit,1,4)=="raid") or HealBot_GetUnitName(rUnit)~=unitName then
             rUnit=nil
-            local nraid=GetNumGroupMembers()
+            local nGroupMembers=GetNumGroupMembers()
             if unitName==HealBot_Data["PNAME"] then
                 rUnit="player"
-            elseif IsInRaid() and nraid>0 then
-                for j=1,nraid do
-                    xUnit = "raid"..j
-                    if UnitExists(xUnit) and HealBot_GetUnitName(xUnit)==unitName then
-                        rUnit=xUnit
-                        break
+            elseif nGroupMembers>0 then
+                if hbInRaid then
+                    for j=1,nGroupMembers do
+                        xUnit = "raid"..j
+                        if UnitExists(xUnit) and HealBot_GetUnitName(xUnit)==unitName then
+                            rUnit=xUnit
+                            break
+                        end
                     end
-                end
-                for j=1,nraid do
-                    xUnit = "raidpet"..j
-                    if UnitExists(xUnit) and HealBot_GetUnitName(xUnit)==unitName then
-                        rUnit=xUnit
-                        break
+                    for j=1,nGroupMembers do
+                        xUnit = "raidpet"..j
+                        if UnitExists(xUnit) and HealBot_GetUnitName(xUnit)==unitName then
+                            rUnit=xUnit
+                            break
+                        end
                     end
-                end
-            elseif nraid>0 then
-                for j=1,nraid do
-                    xUnit = "party"..j
-                    if UnitExists(xUnit) and HealBot_GetUnitName(xUnit)==unitName then
-                        rUnit=xUnit
-                        break
+                else
+                    for j=1,nGroupMembers do
+                        xUnit = "party"..j
+                        if UnitExists(xUnit) and HealBot_GetUnitName(xUnit)==unitName then
+                            rUnit=xUnit
+                            break
+                        end
                     end
-                end
-                for j=1,nraid do
-                    xUnit = "partypet"..j
-                    if UnitExists(xUnit) and HealBot_GetUnitName(xUnit)==unitName then
-                        rUnit=xUnit
-                        break
+                    for j=1,nGroupMembers do
+                        xUnit = "partypet"..j
+                        if UnitExists(xUnit) and HealBot_GetUnitName(xUnit)==unitName then
+                            rUnit=xUnit
+                            break
+                        end
                     end
                 end
             end
@@ -2709,43 +2689,45 @@ function HealBot_Panel_RaidUnit(hbGUID,unitName)
         end
     else
         rUnit=hbTempUnitGUID[hbGUID]
-        if not rUnit or (IsInRaid() and strsub(rUnit,1,4)~="raid") or HealBot_UnitGUID(rUnit)~=hbGUID then
+        if not rUnit or (hbInRaid and strsub(rUnit,1,4)~="raid") or (not hbInRaid and strsub(rUnit,1,4)=="raid") or HealBot_UnitGUID(rUnit)~=hbGUID then
             rUnit=nil
-            local nraid=GetNumGroupMembers()
+            local nGroupMembers=GetNumGroupMembers()
             if hbGUID==HealBot_Data["PGUID"] then
                 rUnit="player"
             elseif HealBot_UnitGUID("pet")==hbGUID then
                 rUnit="pet"
             elseif focusHeal==1 and HealBot_UnitGUID("focus")==hbGUID then
                 rUnit="focus"
-            elseif IsInRaid() and nraid>0 then
-                for j=1,nraid do
-                    xUnit = "raid"..j
-                    if UnitGUID(xUnit)==hbGUID then
-                        rUnit=xUnit
-                        break
+            elseif nGroupMembers>0 then
+                if hbInRaid then
+                    for j=1,nGroupMembers do
+                        xUnit = "raid"..j
+                        if UnitGUID(xUnit)==hbGUID then
+                            rUnit=xUnit
+                            break
+                        end
                     end
-                end
-                for j=1,nraid do
-                    xUnit = "raidpet"..j
-                    if HealBot_UnitGUID(xUnit)==hbGUID then
-                        rUnit=xUnit
-                        break
+                    for j=1,nGroupMembers do
+                        xUnit = "raidpet"..j
+                        if HealBot_UnitGUID(xUnit)==hbGUID then
+                            rUnit=xUnit
+                            break
+                        end
                     end
-                end
-            elseif nraid>0 then
-                for j=1,nraid do
-                    xUnit = "party"..j
-                    if UnitGUID(xUnit)==hbGUID then
-                        rUnit=xUnit
-                        break
+                else
+                    for j=1,nGroupMembers do
+                        xUnit = "party"..j
+                        if UnitGUID(xUnit)==hbGUID then
+                            rUnit=xUnit
+                            break
+                        end
                     end
-                end
-                for j=1,nraid do
-                    xUnit = "partypet"..j
-                    if HealBot_UnitGUID(xUnit)==hbGUID then
-                        rUnit=xUnit
-                        break
+                    for j=1,nGroupMembers do
+                        xUnit = "partypet"..j
+                        if HealBot_UnitGUID(xUnit)==hbGUID then
+                            rUnit=xUnit
+                            break
+                        end
                     end
                 end
             end

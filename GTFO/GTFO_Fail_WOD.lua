@@ -10,6 +10,11 @@ Author: Zensunim of Malygos
 -- * Draenor *
 -- ***********
 
+GTFO.SpellID["167929"] = {
+	--desc = "Snap Shut (Iron Trap)";
+	sound = 3;
+};
+
 GTFO.SpellID["158834"] = {
 	--desc = "Acid Burst (Acidback)";
 	sound = 3;
@@ -47,6 +52,51 @@ GTFO.SpellID["160782"] = {
 
 GTFO.SpellID["172337"] = {
 	--desc = "Furious Wind";
+	sound = 3;
+};
+
+GTFO.SpellID["175114"] = {
+	--desc = "Personal Explosives (Betsi Boombasket)";
+	sound = 3;
+};
+
+GTFO.SpellID["165951"] = {
+	--desc = "Shrapnel (The Burninator)";
+	sound = 3;
+};
+
+GTFO.SpellID["166139"] = {
+	--desc = "Blazing Radiance (Roakk the Zealot)";
+	sound = 3;
+};
+
+GTFO.SpellID["167929"] = {
+	--desc = "Ground Smash (Hulking Brute)";
+	sound = 3;
+};
+
+GTFO.SpellID["167929"] = {
+	--desc = "Ground Smash (Hulking Brute)";
+	sound = 3;
+};
+
+GTFO.SpellID["175574"] = {
+	--desc = "Rain of Spears (Hunter Blacktooth)";
+	sound = 3;
+};
+
+GTFO.SpellID["174910"] = {
+	--desc = "Unstable Slag Mine";
+	sound = 3;
+};
+
+GTFO.SpellID["177876"] = {
+	--desc = "Artillery Barrage";
+	sound = 3;
+};
+
+GTFO.SpellID["154571"] = {
+	--desc = "Exploding Mushroom (Leeching Mushroom)";
 	sound = 3;
 };
 
@@ -147,6 +197,16 @@ GTFO.SpellID["166404"] = {
 	sound = 3;
 };
 
+GTFO.SpellID["162065"] = {
+	--desc = "Freezing Snare (Skylord Tovra)";
+	sound = 3;
+};
+
+GTFO.SpellID["162057"] = {
+	--desc = "Spinning Spear (Skylord Tovra)";
+	sound = 3;
+};
+
 -- **************
 -- * Iron Docks *
 -- **************
@@ -186,8 +246,7 @@ GTFO.SpellID["153232"] = {
 GTFO.SpellID["164686"] = {
 	--desc = "Dark Eclipse (Sadana Bloodfury)";
 	sound = 3;
-	--negatingDebuffSpellID = ???; -- White rune debuff
-	test = true;
+	negatingDebuffSpellID = 162652; -- Lunar Purity
 };
 
 GTFO.SpellID["153395"] = {
@@ -205,6 +264,17 @@ GTFO.SpellID["154442"] = {
 	sound = 3;
 };
 
+GTFO.SpellID["159035"] = {
+	--desc = "Wrathcleave (Shaddum)";
+	sound = 3;
+	tankSound = 0;
+};
+
+GTFO.SpellID["157002"] = {
+	--desc = "Chaos Wave (Teron'gor)";
+	sound = 3;
+};
+
 -- ************
 -- * Skyreach *
 -- ************
@@ -214,9 +284,26 @@ GTFO.SpellID["153563"] = {
 	sound = 3;
 };
 
+GTFO.SpellID["154132"] = {
+	--desc = "Smash (Araknath)";
+	sound = 3;
+};
+
 -- *****************
 -- * The Everbloom *
 -- *****************
+
+GTFO.SpellID["172588"] = {
+	--desc = "Vile Breath (Melded Berserker)";
+	sound = 3;
+	tankSound = 0;
+};
+
+GTFO.SpellID["169714"] = {
+	--desc = "Gasp (Gnarlroot)";
+	sound = 3;
+	tankSound = 0;
+};
 
 GTFO.SpellID["165093"] = {
 	--desc = "Virulent Gasp (Verdant Mandragora)";
@@ -229,10 +316,20 @@ GTFO.SpellID["164294"] = {
 	sound = 3;
 };
 
+GTFO.SpellID["169424"] = {
+	--desc = "Triple Attack (Twisted Abomination)";
+	sound = 3;
+	tankSound = 0;
+};
+
+GTFO.SpellID["169445"] = {
+	--desc = "Noxious Eruption (Twisted Abomination)";
+	sound = 3;
+};
+
 GTFO.SpellID["175997"] = {
 	--desc = "Noxious Eruption (Dulhu)";
 	sound = 3;
-	test = true; -- Avoidable?
 };
 
 GTFO.SpellID["169850"] = {
@@ -243,6 +340,17 @@ GTFO.SpellID["169850"] = {
 GTFO.SpellID["166492"] = {
 	--desc = "Firebloom (Archmage Sol)";
 	sound = 3;
+};
+
+GTFO.SpellID["170016"] = {
+	--desc = "Glowbulb Pollen (Archmage Sol)";
+	sound = 3;
+};
+
+GTFO.SpellID["170411"] = {
+	--desc = "Spore Breath (Infested Venomfang)";
+	sound = 3;
+	tankSound = 0;
 };
 
 GTFO.SpellID["172643"] = {
@@ -309,7 +417,10 @@ GTFO.SpellID["155031"] = {
 	applicationOnly = true;	
 };
 
--- TODO: Burning Breath (Emberscale Ironflight)
+GTFO.SpellID["165954"] = {
+	--desc = "Shockwave (Black Iron Rageguard)";
+	sound = 3;
+};
 
 -- *********************
 -- * Blackrock Foundry *

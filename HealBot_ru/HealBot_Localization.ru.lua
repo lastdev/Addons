@@ -905,7 +905,7 @@ function HealBot_Lang_ruRU()
     HEALBOT_ENEMY_NUMBER_BOSSES             = "Количество Боссов";
     HEALBOT_ENEMY_HIDE_OUTOFCOMBAT          = "Скрыть панели вне боя";
     HEALBOT_ENEMY_EXISTS_SHOW               = "Только при входе в бой".."\n".."показывать при выходе";
-    HEALBOT_ENEMY_EXISTS_SHOW_PTARGETS      = "Цели игроков";
+    HEALBOT_ENEMY_EXISTS_SHOW_PTARGETS      = "Полосы целей игроков"
     HEALBOT_ENEMY_EXISTS_SHOW_BOSSES        = "Панели боссов";
     HEALBOT_OPTIONS_TARGET_ONLY_FRIEND      = "Цель: Показывать только дружественную";
     HEALBOT_OPTIONS_FOCUS_ONLY_FRIEND       = "Фокус: Показывать только дружественный";
@@ -928,4 +928,8 @@ function HealBot_Lang_ruRU()
     HEALBOT_LDB_SHIFTLEFT_TOOLTIP           = "|cffffff00 Shift-ЛКМ:|r Переключить стиль HealBot";
     HEALBOT_LDB_RIGHT_TOOLTIP               = "|cffffff00 ПКМ:|r Сбросить HealBot";
     HEALBOT_LDB_SHIFTRIGHT_TOOLTIP          = "|cffffff00 Shift-ПКМ:|r Вкл/Выкл HealBot";
+    HEALBOT_WORD_PETBATTLE                  = "Битвы питомцев"
+    HEALBOT_ENEMY_INCLUDE_ARENA             = "Включая оппонентов арены"
+    HEALBOT_ENEMY_INCLUDE_ARENAPETS         = "Включая питомцев"
+    HEALBOT_ENEMY_EXISTS_SHOW_ARENA         = "Полосы оппонентов арены"
 end

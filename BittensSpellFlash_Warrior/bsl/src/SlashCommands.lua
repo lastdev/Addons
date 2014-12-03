@@ -38,6 +38,7 @@ c.ShouldPrint = {
    ["Debugging Info"] = false,
    ["Cast Event"] = false,
    ["Log Event"] = false,
+   ["AoE"] = false,
 }
 
 function c.Debug(tag, ...)

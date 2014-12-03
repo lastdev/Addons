@@ -16,9 +16,9 @@ L["Windfury"] = "Fúria dos Ventos" -- Needs review
 elseif locale == "frFR" then -- French
 L["Earthliving"] = "Viveterre"
 L["Flametongue"] = "Langue de feu"
-L["Flash Elemental"] = " Flash Élémentaire" -- Needs review
-L["Flash Enhancement"] = "Flash Amélioration" -- Needs review
-L["Flash Restoration"] = "Flash Restauration" -- Needs review
+L["Flash Elemental"] = " Flash Élémentaire"
+L["Flash Enhancement"] = "Flash Amélioration"
+L["Flash Restoration"] = "Flash Restauration"
 L["Windfury"] = "Furie-des-vents"
 
 elseif locale == "deDE" then -- German
@@ -38,12 +38,12 @@ elseif locale == "itIT" then -- Italian
 -- L["Windfury"] = ""
 
 elseif locale == "koKR" then -- Korean
--- L["Earthliving"] = ""
--- L["Flametongue"] = ""
--- L["Flash Elemental"] = ""
--- L["Flash Enhancement"] = ""
--- L["Flash Restoration"] = ""
--- L["Windfury"] = ""
+L["Earthliving"] = "대지생명" -- Needs review
+L["Flametongue"] = "불꽃의 무기" -- Needs review
+L["Flash Elemental"] = "정기 특성에 깜박거림 적용" -- Needs review
+L["Flash Enhancement"] = "고양 특성에 적용" -- Needs review
+L["Flash Restoration"] = "복원 특성에 깜박거림 적용" -- Needs review
+L["Windfury"] = "질풍의 무기" -- Needs review
 
 elseif locale == "esMX" then -- Latin American Spanish
 L["Earthliving"] = "Vida terrestre"
@@ -72,9 +72,9 @@ L["Windfury"] = "风怒" -- Needs review
 elseif locale == "esES" then -- Spanish
 L["Earthliving"] = "Vida terrestre" -- Needs review
 L["Flametongue"] = "Lengua de Fuego" -- Needs review
--- L["Flash Elemental"] = ""
--- L["Flash Enhancement"] = ""
--- L["Flash Restoration"] = ""
+L["Flash Elemental"] = "Alertas de Elemental" -- Needs review
+L["Flash Enhancement"] = "Alertas de Mejora" -- Needs review
+L["Flash Restoration"] = "Alertas de Restauración" -- Needs review
 L["Windfury"] = "Viento Furioso" -- Needs review
 
 elseif locale == "zhTW" then -- Traditional Chinese

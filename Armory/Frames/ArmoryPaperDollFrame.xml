@@ -608,7 +608,7 @@
       <Frame name="ArmoryPaperDollHeaderFrame" useParentLevel="true">
         <Anchors>
           <Anchor point="TOPLEFT" x="30" y="-26"/>
-          <Anchor point="BOTTOMRIGHT" relativeTo="ArmoryFrameInsetRight" relativePoint="TOPRIGHT"/>
+          <Anchor point="BOTTOMRIGHT" relativeTo="ArmoryFrameInset" relativePoint="TOPRIGHT"/>
         </Anchors>
         <Layers>
           <Layer level="OVERLAY">

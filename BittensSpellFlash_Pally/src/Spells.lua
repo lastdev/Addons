@@ -673,7 +673,7 @@ c.AddSpell("Final Verdict", "with Divine Purpose", {
 
 local function HammerOfWrathDelay()
    local cd = c.GetCooldown("Hammer of Wrath", false, 6)
-   return (a.HoWPhase or a.AvengingWrath > 0)
+   return (a.HoWPhase or (a.AvengingWrath and a.AvengingWrath > 0))
       and s.SpellInRange(c.GetID("Hammer of Wrath"))
       and cd
 end

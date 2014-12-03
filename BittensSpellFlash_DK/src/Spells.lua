@@ -409,9 +409,11 @@ local function soulReaperIsUsable()
 
    -- @todo danielp 2014-11-15: this is a proxy for "will it land, and be
    -- worth it", which is probably not a great tool for the job.
-   if c.GetHealth("target") < (2 * s.MaxHealth("player")) then
+   if c.GetHealth("target") < 20000 then
       return false
    end
+
+   return true
 end
 
 addOptionalDKSpell("Empower Rune Weapon", "for Death Strike", {
@@ -508,6 +510,27 @@ addDKSpell("Unholy Blight", nil, {
    Cooldown = 90,
    CheckFirst = function()
       return not hasBothDiseases(0)
+   end
+})
+
+addDKSpell("Unholy Blight", "unconditionally", {
+   Melee = true,
+   Cooldown = 90,
+})
+
+addDKSpell("Unholy Blight", "for Unholy", {
+   Melee = true,
+   Cooldown = 90,
+   CheckFirst = function()
+      if not hasBothDiseases(0) then
+         return false
+      end
+
+      if c.HasTalent("Necrotic Plague") then
+         return not hasBothDiseases(1)
+      else
+         return not hasBothDiseases(3)
+      end
    end
 })
 
@@ -828,6 +851,12 @@ addDKSpell("Death Coil", "2 Runes to cap", {
 addDKSpell("Death and Decay", "Free", {
    NoRangeCheck = true,
    Cooldown = 30,
+   Costs = {
+      Blood = 0,
+      Frost = 0,
+      Unholy = 0,
+      Death = 0,
+   },
    CheckFirst = function()
       return a.CrimsonScourge
    end
@@ -838,6 +867,14 @@ addDKSpell("Blood Boil", "BB", {
    CheckFirst = function()
       -- blood runes only, forbid death runes
       return sufficientRunes(2, 0, 0, 0, true)
+   end
+})
+
+addDKSpell("Blood Boil", "FFDD", {
+   Melee = true,
+   CheckFirst = function()
+      -- two frost and two death
+      return (sufficientRunes(0, 2, 0, 2) and sufficientRunes(0, 0, 2, 0, true))
    end
 })
 
@@ -1247,7 +1284,7 @@ addDKSpell("Blood Tap", "for Soul Reaper - Unholy", {
    end
 })
 
-addDKSpell("Plague Strike", "for Both Diseases", {
+addDKSpell("Plague Strike", "for Diseases", {
    CheckFirst = function()
       return not hasBothDiseases(0)
    end
@@ -1285,12 +1322,6 @@ addDKSpell("Blood Tap", "for Dark Transformation", {
    end
 })
 
-addDKSpell("Death Coil", "at 90", {
-   CheckFirst = function()
-      return a.RP > 90
-   end
-})
-
 addDKSpell("Death and Decay", "UU", {
    NoRangeCheck = true,
    Cooldown = 30,
@@ -1314,10 +1345,20 @@ addOptionalDKSpell("Blood Tap", "for D&D", {
 --      NoGCD = true,
    FlashID = { "Blood Tap", "Death and Decay" },
    CheckFirst = function()
-      return a.BloodCharges >= 5
+      return canManuallyBloodTap()
          and c.GetCooldown("Death and Decay") == 0
-         and not sufficientResources(c.GetID("Death and Decay"))
          and not c.IsCasting("Death and Decay")
+   end
+})
+
+addOptionalDKSpell("Blood Tap", "for D&D UU", {
+--      NoGCD = true,
+   FlashID = { "Blood Tap", "Death and Decay" },
+   CheckFirst = function()
+      return canManuallyBloodTap()
+         and c.GetCooldown("Death and Decay") == 0
+         and not c.IsCasting("Death and Decay")
+         and a.BothRunesAvailable("unholy")
    end
 })
 
@@ -1327,25 +1368,29 @@ addDKSpell("Scourge Strike", "UU", {
    end
 })
 
-addDKSpell("Scourge Strike", "unless Soul Reaper", {
+addDKSpell("Scourge Strike", nil, {
    CheckFirst = function()
-      -- @todo danielp 2014-11-16: fix is usable for delay
-      return not a.InExecute
-         or not soulReaperIsUsable(1)
-         or sufficientRunes(0, 0, 2, 0, false)
+      -- !(target.health.pct-3*(target.health.pct%target.time_to_die)<=45)
+      -- aims to predict just ahead of the execute window.
+
+      -- two death, or one unholy and one death
+      return sufficientRunes(0, 0, 0, 2)
+         or (sufficientRunes(0, 0, 1, 1) and sufficientRunes(0, 0, 1, 0, true))
+   end
+})
+addDKSpell("Scourge Strike", "one unholy only", {
+   CheckFirst = function()
+      return sufficientRunes(0, 0, 1, 0, true)
+         and not a.BothRunesAvailable("unholy", 1)
    end
 })
 
-addDKSpell("Festering Strike", nil, {
-   CheckFirst = function()
-      return sufficientRunes(1, 1, 0, 0, true)
-   end
-})
+addDKSpell("Festering Strike")
 
 addDKSpell("Festering Strike", "BBFF", {
    CheckFirst = function()
       return a.BothRunesAvailable("blood", 1)
-         or a.BothRunesAvailable("frost", 1)
+         and a.BothRunesAvailable("frost", 1)
    end
 })
 
@@ -1355,35 +1400,45 @@ addDKSpell("Death Coil", "under Sudden Doom or for Dark Transformation", {
          return true
       end
 
+      -- @todo danielp 2014-11-28: do we still need this delay?  the value
+      -- feels like an artifact of the server processing events across actors
+      -- in a batch every 600ms, which has gone away now in WoD.
       if GetTime() - a.DTCast < .8
-         or s.BuffDuration(c.GetID("Dark Transformation"), "pet")
-            > c.GetBusyTime()
-         or c.IsCasting("Dark Transformation") then
-
+         or s.BuffDuration(c.GetID("Dark Transformation"), "pet") > c.GetBusyTime()
+         or c.IsCasting("Dark Transformation")
+      then
          return false
       end
 
+      -- death_coil,if=buff.dark_transformation.down&rune.unholy<=1
+      if runeAvailable(UNHOLY1, 1) and runeAvailable(UNHOLY2, 1) then
+         return false
+      end
+
+      return true
+
+      -- @todo danielp 2014-11-28: should this still apply?
       -- make sure unholy runes stay on cooldown?
-      local runes = a.PendingDeathRunes
-      if runeAvailable(BLOOD1, 1) and a.Runes[1].Type == "death" then
-         runes = runes + 1
-      end
-      if runeAvailable(BLOOD2, 1) and a.Runes[2].Type == "death" then
-         runes = runes + 1
-      end
-      if runeAvailable(FROST1, 1) and a.Runes[5].Type == "death" then
-         runes = runes + 1
-      end
-      if runeAvailable(FROST2, 1) and a.Runes[6].Type == "death" then
-         runes = runes + 1
-      end
-      if runeAvailable(UNHOLY1, 1) then
-         runes = runes + 1
-      end
-      if runeAvailable(UNHOLY2, 1) then
-         runes = runes + 1
-      end
-      return runes <= 1
+      -- local runes = a.PendingDeathRunes
+      -- if runeAvailable(BLOOD1, 1) and a.Runes[1].Type == "death" then
+      --    runes = runes + 1
+      -- end
+      -- if runeAvailable(BLOOD2, 1) and a.Runes[2].Type == "death" then
+      --    runes = runes + 1
+      -- end
+      -- if runeAvailable(FROST1, 1) and a.Runes[5].Type == "death" then
+      --    runes = runes + 1
+      -- end
+      -- if runeAvailable(FROST2, 1) and a.Runes[6].Type == "death" then
+      --    runes = runes + 1
+      -- end
+      -- if runeAvailable(UNHOLY1, 1) then
+      --    runes = runes + 1
+      -- end
+      -- if runeAvailable(UNHOLY2, 1) then
+      --    runes = runes + 1
+      -- end
+      -- return runes <= 1
    end
 })
 
@@ -1406,19 +1461,24 @@ addDKSpell("Death Coil", "unless Gargoyle or Dark Transformation", {
    end
 })
 
-addOptionalDKSpell("Blood Tap", "at 8 or for Dark Transformation", {
+addOptionalDKSpell("Blood Tap", "at 10 with 30 RP", {
    NoGCD = true,
    CheckFirst = function()
-      if a.InExecute or a.FullyDepleted() <= 0 then
-         return false
-      end
+      return canManuallyBloodTap(10) and a.RP >= 30
+   end
+})
 
-      if a.BloodCharges >= 8 then
-         return true
-      end
+addOptionalDKSpell("Blood Tap", "at 10", {
+   NoGCD = true,
+   CheckFirst = function()
+      return canManuallyBloodTap(10)
+   end
+})
 
-      return a.BloodCharges >= 5
-         and s.BuffDuration(c.GetID("Dark Transformation"), "pet")
-            <= c.GetBusyTime()
+addOptionalDKSpell("Blood Tap", "for DC cap", {
+   NoGCD = true,
+   UseJustBefore = "Death Coil under Sudden Doom or for Dark Transformation",
+   CheckFirst = function()
+      return canManuallyBloodTap(10)
    end
 })

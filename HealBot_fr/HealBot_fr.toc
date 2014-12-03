@@ -4,6 +4,6 @@
 ## Notes: HealBot Localization for frFR
 ## RequiredDeps: HealBot
 ## LoadOnDemand: 1
-## Version: 6.0.3.1
+## Version: 6.0.3.2
 
 HealBot_Localization.fr.lua

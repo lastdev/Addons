@@ -188,10 +188,6 @@ function HealBot_Comms_CheckVer(userName, version)
     end
 end
 
-function HealBot_Comms_ReportVer()  -- Used by TitanHealbot
-    return HealBot_MsgUpdateAvail
-end
-
 function HealBot_Comms_AcceptSkins()
     if HealBot_Globals.AcceptSkins==1 then
         HealBot_Info_AcceptSkinsVal:SetText("ON")

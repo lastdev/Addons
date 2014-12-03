@@ -13,9 +13,45 @@ TYPE_GUILDBANK	= 3
 
 -- SubscribeWOWEvent(eventName, eventAction)
 
+_G.BankFrameItemButton_Update_PASS = false
+
 SubscribeWOWEvent("BANKFRAME_OPENED",
-function()
+function(...)
 	dprint("BANKFRAME_OPENED")
+	--dprint(...)
+	
+	-- New to Warlords of Draenor - we can now automatically deposit
+	-- reagents into the Reagent Bank. :)
+	if ReagentRestockerDB.Options.AutoDepositReagents then
+		-- Force the deposit to happen without throwing an error.
+		-- BankFrame.lua in Blizzard's call tries to update the button
+		-- on the PLAYERREAGENTBANKSLOTS_CHANGED event, but the button
+		-- does not exist until the player switches tabs.
+		
+
+		if _G.ReagentBankFrame.DespositButton then
+
+			-- Sadly, I've had to workaround an error message when
+			-- using DepositReagentBank when BANKFRAME_OPENED is
+			-- called the first time.
+			if not _G.BankFrameItemButton_Update_OLD then
+				_G.BankFrameItemButton_Update_OLD = _G.BankFrameItemButton_Update
+				
+				_G.BankFrameItemButton_Update = function(button)
+					if _G.BankFrameItemButton_Update_PASS == false then
+						_G.BankFrameItemButton_Update_OLD(button)
+					else
+						_G.BankFrameItemButton_Update_PASS = false
+					end
+				end
+			end
+			
+			_G.BankFrameItemButton_Update_PASS = true
+			_G.DepositReagentBank()
+		end
+		--_G.DepositReagentBank()
+	end
+	
 	--ReagentRestocker:triggerAction(BANKFRAME_OPENED_EVENT)
 	
 	-- TODO: Check source, destination, and amount that needs to be moved.
@@ -90,7 +126,7 @@ function()
 				-- Get ItemIDs from buying list
 				for k, v in pairs(getAllObjsWithTag("Buy")) do
 					inventoryTable = scanForItem(TYPE_BAGS, k)
-					
+
 					-- Now we have a table of {bag, slot, itemCount} triples in inventoryTable.
 					-- Let's count them.
 					local countBags = 0
@@ -914,9 +950,9 @@ function doMove(fromLocation, fromBag, fromSlot, toLocation, toBag, toSlot, amou
 	
 	-- Get the amount of the item initially in the from location.
 	if fromLocation == TYPE_GUILDBANK then
-		texture, itemCount, locked, _, _, _, link = GetGuildBankItemInfo(fromBag, fromSlot)
+		texture, itemCount, locked, _, _, _, link = _G.GetGuildBankItemInfo(fromBag, fromSlot)
 	else
-		texture, itemCount, locked, _, _, _, link = GetContainerItemInfo(fromBag, fromSlot)
+		texture, itemCount, locked, _, _, _, link = _G.GetContainerItemInfo(fromBag, fromSlot)
 	end
 	
 	local name, icon, isViewable, canDeposit, numWithdrawals, remainingWithdrawals = _G.GetGuildBankTabInfo(1)
@@ -1004,7 +1040,7 @@ function scanForOpenSlots(location, itemID)
 						table.insert(emptySlots, {bag, item, 0})
 					end
 
-					if itemCount ~=nil and itemID ~= nil and ID ~= nil and itemID == ID and locked==nil then
+					if itemCount ~=nil and itemID ~= nil and ID ~= nil and itemID == ID and locked==false then
 						_, _, _, _, _, _, _, itemStackSize = ReagentRestocker:safeGetItemInfo(itemID)
 
 						-- For some odd reason, we still have to check itemCount for being nil?
@@ -1032,7 +1068,7 @@ function scanForOpenSlots(location, itemID)
 					table.insert(emptySlots, {bag, item, 0})
 				end
 
-				if itemCount ~=nil and itemID ~= nil and ID ~= nil and itemID == ID and locked==nil then
+				if itemCount ~=nil and itemID ~= nil and ID ~= nil and itemID == ID and locked==false then
 					_, _, _, _, _, _, _, itemStackSize = ReagentRestocker:safeGetItemInfo(itemID)
 
 					-- For some odd reason, we still have to check itemCount for being nil?
@@ -1063,7 +1099,7 @@ function scanForOpenSlots(location, itemID)
 					table.insert(emptySlots, {bag, item, 0})
 				end
 
-				if itemCount ~=nil and itemID ~= nil and ID ~= nil and itemID == ID and locked==nil then
+				if itemCount ~=nil and itemID ~= nil and ID ~= nil and itemID == ID and locked==false then
 					--print(itemCount)
 					_, _, _, _, _, _, _, itemStackSize = ReagentRestocker:safeGetItemInfo(itemID)
 					
@@ -1136,7 +1172,7 @@ function scanForItem(location, itemID)
 					texture, itemCount, locked, _, _, _, link = _G.GetGuildBankItemInfo(bag, item)
 					if link ~= nil then ID = getIDFromItemLink(link) end
 					
-					if itemID ~= nil and ID ~= nil and itemID == ID and locked==nil and itemCount ~= nil then
+					if itemID ~= nil and ID ~= nil and itemID == ID and locked==false and itemCount ~= nil then
 						--print("bag " .. bag .. " slot " .. slot .. " itemCount " .. itemCount)
 						table.insert(itemList, {bag, slot, itemCount})
 					end
@@ -1149,16 +1185,16 @@ function scanForItem(location, itemID)
 				local bagLink=_G.GetInventoryItemLink("player", _G.ContainerIDToInventoryID(bag))
 				_, _, _, _, _, _, itemSubType =  _G.GetItemInfo(bagLink)
 			else
-				itemSubType = "Bag" -- Trying to get the bag type of the backpack just results in an error. Don't even try.
+				itemSubType = (_G.GetAuctionItemSubClasses(3)) -- Trying to get the bag type of the backpack just results in an error. Don't even try.
 			end
-			if itemSubType == "Bag" then -- Only try to put items in non-special bag types.
+			if itemSubType == (_G.GetAuctionItemSubClasses(3)) then -- Only try to put items in non-special bag types.
 				-- TODO: Ideally, we could detect the item type and try to put the item in the proper bag type.
 				for item=0,GetContainerNumSlots(bag) do
 					texture, itemCount, locked, _, _, _, link = GetContainerItemInfo(bag, item)
 					if link ~= nil then ID = getIDFromItemLink(link) end
 	
 					--if itemID ~= nil and ID ~= nil  then print("bag " .. bag .. " item " .. item .. " itemID " .. itemID .. " ID " .. ID) end
-					if itemID ~= nil and ID ~= nil and itemID == ID and locked==nil and itemCount ~= nil then
+					if itemID ~= nil and ID ~= nil and itemID == ID and locked==false and itemCount ~= nil then
 	
 						_, _, _, _, _, _, _, itemStackSize = ReagentRestocker:safeGetItemInfo(itemID)
 						--print("bag " .. bag .. " item " .. item .. " itemCount " .. itemCount)
@@ -1173,8 +1209,7 @@ function scanForItem(location, itemID)
 		for item=0,GetContainerNumSlots(bag) do
 			texture, itemCount, locked, _, _, _, link = GetContainerItemInfo(bag, item)
 			if link ~= nil then ID = getIDFromItemLink(link) end
-			
-			if itemID ~= nil and ID ~= nil and itemID == ID and locked==nil and itemCount ~= nil then
+			if itemID ~= nil and ID ~= nil and itemID == ID and locked==false and itemCount ~= nil then
 				_, _, _, _, _, _, _, itemStackSize = ReagentRestocker:safeGetItemInfo(itemID)
 				--print("bag " .. bag .. " item " .. item .. " itemCount " .. itemCount)
 				table.insert(itemList, {bag, item, itemCount})
@@ -1184,12 +1219,12 @@ function scanForItem(location, itemID)
 		for bag=NUM_BAG_SLOTS+1,NUM_BAG_SLOTS+_G.GetNumBankSlots() do
 			local bagLink=_G.GetInventoryItemLink("player", _G.ContainerIDToInventoryID(bag))
 			_, _, _, _, _, _, itemSubType =  _G.GetItemInfo(bagLink)
-			if itemSubType == "Bag" then -- Only try to put items in non-special bag types.
+			if itemSubType == (_G.GetAuctionItemSubClasses(3)) then -- Only try to put items in non-special bag types.
 				for item=0,GetContainerNumSlots(bag) do
 					texture, itemCount, locked, _, _, _, link = GetContainerItemInfo(bag, item)
 					if link ~= nil then ID = getIDFromItemLink(link) end
 					
-					if itemID ~= nil and ID ~= nil and itemID == ID and locked==nil and itemCount ~= nil then
+					if itemID ~= nil and ID ~= nil and itemID == ID and locked==false and itemCount ~= nil then
 						_, _, _, _, _, _, _, itemStackSize = ReagentRestocker:safeGetItemInfo(itemID)
 						--print("bag " .. bag .. " item " .. item .. " itemCount " .. itemCount)
 						table.insert(itemList, {bag, item, itemCount})

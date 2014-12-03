@@ -1051,7 +1051,7 @@ function HealBot_Lang_enALL()
     HEALBOT_ENEMY_NUMBER_BOSSES             = "Number of Bosses"
     HEALBOT_ENEMY_HIDE_OUTOFCOMBAT          = "Hide bars out of combat"
     HEALBOT_ENEMY_EXISTS_SHOW               = "Entering combat only".."\n".."show when exists"
-    HEALBOT_ENEMY_EXISTS_SHOW_PTARGETS      = "Player targets"
+    HEALBOT_ENEMY_EXISTS_SHOW_PTARGETS      = "Player target bars"
     HEALBOT_ENEMY_EXISTS_SHOW_BOSSES        = "Boss bars"
     HEALBOT_OPTIONS_TARGET_ONLY_FRIEND      = "Target: Only show Friendly"
     HEALBOT_OPTIONS_FOCUS_ONLY_FRIEND       = "Focus: Only show Friendly"
@@ -1075,6 +1075,10 @@ function HealBot_Lang_enALL()
     HEALBOT_LDB_RIGHT_TOOLTIP               = "|cffffff00 Right Click:|r Reset HealBot";
     HEALBOT_LDB_SHIFTRIGHT_TOOLTIP          = "|cffffff00 Shift-Right Click:|r Toggle HealBot On/Off";
     HEALBOT_WORD_PETBATTLE                  = "Pet Battle"
+    HEALBOT_ENEMY_INCLUDE_ARENA             = "Include Arena opponents"
+    HEALBOT_ENEMY_INCLUDE_ARENAPETS         = "Including Pets"
+    HEALBOT_ENEMY_EXISTS_SHOW_ARENA         = "Arena opponent bars"
+    
 end
 
 if (GetLocale() == "enUK") then

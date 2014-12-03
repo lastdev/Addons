@@ -10,7 +10,6 @@ GTFO.SpellID["20476"] = {
 	--desc = "Explosion (Baron Geddon, Molten Core)";
 	sound = 4;
 	ignoreSelfInflicted = true;
-	trivialLevel = 70;
 };
 
 GTFO.SpellID["95495"] = {
@@ -68,14 +67,12 @@ GTFO.SpellID["19272"] = {
 	--desc = "Lava Breath (Magmadar - Molten Core)";
 	sound = 3;
 	tankSound = 0;
-	trivialLevel = 70;
 };
 
 GTFO.SpellID["19272"] = {
 	--desc = "Flame Breath (Gyth - Blackrock Spire)";
 	sound = 3;
 	tankSound = 0;
-	trivialLevel = 70;
 };
 
 GTFO.SpellID["19272"] = {

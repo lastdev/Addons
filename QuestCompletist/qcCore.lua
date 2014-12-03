@@ -1,30 +1,21 @@
-﻿--[[ Internal Tables ]]--
-qcCompletedQuests = {}
-qcMapQuests = {}
-qcPins = {}
-qcSparePins = {}
-qcWorkingDB = {}
-qcWorkingLog = {}
+﻿local TableInsert = table.insert;
+local TableRemove = table.remove;
+local StringFormat = string.format;
+local ToString = tostring;
+local BitBand = bit.band
 
 local qcL = qcLocalize
 
---[[ Map Icon Tables ]]--
-local qcCurrentMapInitiators = {} --[[ Stores quest initiators for a single Map ID ]]--
-local qcCurrentMapIcons = {} --[[ Stores the icons for a single Map ID ]]--
-local qcSpareMapIcons = {} --[[ Stores icons that can be recycled ]]--
+local qcPins = {}
+local qcPinFrames = {}
+local qcSparePinFrames = {}
 
---[[ qcUpdateQuestList\qcGetCategoryQuests Variables ]]--
 local qcCurrentCategoryID = 0
 local qcCurrentCategoryQuestCount = 0
 local qcCategoryQuests = {}
 
---[[ Search Variables ]]--
-local qcSearchText = nil
-
 --[[ Vars ]]--
-local qcCurrentMapZone = -1
 local qcCurrentScrollPosition = 1
-local qcMap = nil
 local qcMapTooltip = nil
 local qcQuestReputationTooltip = nil
 local qcQuestInformationTooltip = nil
@@ -33,10 +24,9 @@ local qcNewDataAlertTooltip = nil
 local qcMutuallyExclusiveAlertTooltip = nil
 
 --[[ Constants ]]--
-local QCADDON_VERSION = 100.0
-local QCADDON_PURGE = false
+local QCADDON_VERSION = 101
+local QCADDON_PURGE = true
 local QCDEBUG_MODE = false
-local QCTRIPLEPADDING = "   "
 local QCADDON_CHAT_TITLE = "|CFF9482C9Quest Completist:|r "
 
 local COLOUR_DEATHKNIGHT = "|cFFC41F3B"
@@ -65,6 +55,8 @@ local QC_ICON_COORDS_ITEMDROPSTANDARD = {0.375,0.5,0,0.25}
 local QC_ICON_COORDS_ITEMDROPREPEATABLE = {0.375,0.5,0.25,0.5}
 local QC_ICON_COORDS_CLASS = {0.5,0.625,0,0.25}
 local QC_ICON_COORDS_KILL = {0.25,0.375,0,0.25}
+
+local qcCategoryDropDownMenu = CreateFrame("Frame", "qcCategoryDropDownMenu")
 
 --[[ Bitwise Values ]]--
 qcFactionBits = {
@@ -124,10 +116,8 @@ SlashCmdList["QUESTCOMPLETIST"] = function(msg, editbox)
 end
 
 function qcCopyTable(qcTable)
-
 	if not (qcTable) then return nil end
 	if not (type(qcTable) == "table") then return nil end
-
 	local qcNewTable = {}
 	for qcKey, qcValue in pairs(qcTable) do
 		if (type(qcValue) == "table") then
@@ -136,39 +126,20 @@ function qcCopyTable(qcTable)
 			qcNewTable[qcKey] = qcValue
 		end
 	end
-
 	return qcNewTable
-
 end
 
-function qcUpdateCurrentCategoryText(qcCategoryID)
-
+function qcUpdateCurrentCategoryText(categoryId)
 	qcQuestCompletistUI.qcSelectedCategory:SetText("#")
-	for qcIndex, qcEntry in pairs(qcQuestCategories) do
-		if (qcEntry[1] == qcCategoryID) then
-			qcQuestCompletistUI.qcSelectedCategory:SetText(qcEntry[2])
+	for i, e in pairs(qcQuestCategories) do
+		if (e[1] == categoryId) then
+			qcQuestCompletistUI.qcSelectedCategory:SetText(e[2])
 			break
 		end
 	end
-
-end
-
-local function qcCollectUpdate()
-
-	if not (qcCollectedQuests) then qcCollectedQuests = {} end
-
-	local qcUpdateCount = 0
-	for qcIndex, qcEntry in pairs(qcCollectedQuests) do
-		qcUpdateCount = (qcUpdateCount + 1)
-	end
-
-	print(string.format("%sThanks for using Quest Completist. You have gathered %d updates so far. Every now and then, please consider sending me your Saved Variables file so that I can include these updates in the next version.",QCADDON_CHAT_TITLE,qcUpdateCount))
-	print(string.format("%s%sLocalization has begun! Please help translate the addon by visiting QC's curseforge page.",QCADDON_CHAT_TITLE,COLOUR_PALADIN))
-
 end
 
 local function qcUpdateMutuallyExclusiveCompletedQuest(qcQuestID)
-
 	if (qcMutuallyExclusive[qcQuestID]) then
 		for qcMutuallyExclusiveIndex, qcMutuallyExclusiveEntry in pairs(qcMutuallyExclusive[qcQuestID]) do
 			if (qcQuestDatabase[qcMutuallyExclusiveEntry]) then
@@ -176,11 +147,9 @@ local function qcUpdateMutuallyExclusiveCompletedQuest(qcQuestID)
 			end
 		end
 	end
-
 end
 
 local function qcUpdateSkippedBreadcrumbQuest(qcQuestID)
-
 	if (qcBreadcrumbQuests[qcQuestID]) then
 		for qcBreadcrumbIndex, qcBreadcrumbEntry in pairs(qcBreadcrumbQuests[qcQuestID]) do
 			if (qcQuestDatabase[qcBreadcrumbEntry]) then
@@ -188,264 +157,221 @@ local function qcUpdateSkippedBreadcrumbQuest(qcQuestID)
 			end
 		end
 	end
-
 end
 
-local function qcGetSearchQuests(qcSearchText)
-
-	local tableinsert = table.insert
-	local stringupper = string.upper
-	local tablesort = table.sort
-	local stringfind = string.find
-
-	wipe(qcSearchQuests)
-	local qcHoldingTable = {}
+local function qcGetSearchQuests(searchText)
+	local tableInsert = table.insert
+	local stringUpper = string.upper
+	local stringFind = string.find
+	wipe(qcSearchQuests) -- TODO: Where is this table, and we dont seem to be returning it correctly.
+	local holdingTable = {}
 	for qcIndex, qcEntry in pairs(qcQuestDatabase) do
-		if (stringfind(stringupper(qcEntry[2]),qcSearchText,1,true)) then
-			tableinsert(qcHoldingTable,qcEntry)
+		if (stringFind(stringUpper(qcEntry[2]),searchText,1,true)) then
+			tableInsert(holdingTable,qcEntry)
 		end
 	end
-	qcSearchQuests = qcCopyTable(qcHoldingTable)
-	wipe(qcHoldingTable)
-
+	qcSearchQuests = qcCopyTable(holdingTable)
 end
 
-local function qcGetCategoryQuests(qcCategoryID, qcSearch, qcSearchText)
-
-	if (qcSearch) then
-		local tableinsert = table.insert
-		local stringupper = string.upper
-		local tablesort = table.sort
+local function qcGetCategoryQuests(categoryId, searchText) -- *
+	local tableInsert = table.insert
+	local stringUpper = string.upper
+	local tableSort = table.sort
+	local holdingTable = {}
+	wipe(qcCategoryQuests)
+	if (searchText) then
 		local stringfind = string.find
-
-		wipe(qcCategoryQuests)
-		local qcHoldingTable = {}
-		for qcIndex, qcEntry in pairs(qcQuestDatabase) do
-			if (stringfind(stringupper(qcEntry[2]),qcSearchText,1,true)) then
-				tableinsert(qcHoldingTable,qcEntry)
+		for i, e in pairs(qcQuestDatabase) do
+			if (stringfind(stringUpper(e[2]),searchText,1,true)) then
+				tableInsert(holdingTable,e)
 			end
 		end
-		qcCategoryQuests = qcCopyTable(qcHoldingTable)
-		wipe(qcHoldingTable)
+		qcCategoryQuests = qcCopyTable(holdingTable)
 		return nil
 	end
-
-	local tableinsert = table.insert
-	local tableremove = table.remove
-	local stringupper = string.upper
-	local bitband = bit.band
-	local tablesort = table.sort
-
-	wipe(qcCategoryQuests)
-	local qcHoldingTable = {}
-	for qcIndex, qcEntry in pairs(qcQuestDatabase) do
-		if (qcEntry[5] == qcCategoryID) then
-			tableinsert(qcHoldingTable,qcEntry)
+	local tableRemove = table.remove
+	local BitBand = bit.band
+	for i, e in pairs(qcQuestDatabase) do
+		if (e[5] == categoryId) then
+			tableInsert(holdingTable,e)
 		end
 	end
-	qcCategoryQuests = qcCopyTable(qcHoldingTable)
-	wipe(qcHoldingTable)
-
-	if (qcSettings["QC_L_HIDE_COMPLETED"] == 1) then
-		for qcCategoryQuestsIndex = #qcCategoryQuests, 1, -1 do
-			if (qcCompletedQuests[qcCategoryQuests[qcCategoryQuestsIndex][1]]) then
-				if (qcCompletedQuests[qcCategoryQuests[qcCategoryQuestsIndex][1]]["C"] == 1) or (qcCompletedQuests[qcCategoryQuests[qcCategoryQuestsIndex][1]]["C"] == 2) then
-					tableremove(qcCategoryQuests,qcCategoryQuestsIndex)
+	qcCategoryQuests = qcCopyTable(holdingTable)
+	if (qcSettings.QC_L_HIDE_COMPLETED == 1) then
+		for i = #qcCategoryQuests, 1, -1 do
+			if (qcCompletedQuests[qcCategoryQuests[i][1]]) then
+				if (qcCompletedQuests[qcCategoryQuests[i][1]]["C"] == 1) or (qcCompletedQuests[qcCategoryQuests[i][1]]["C"] == 2) then
+					tableRemove(qcCategoryQuests,i)
 				end
 			end
 		end
 	end
-
-	if (qcSettings["QC_ML_HIDE_FACTION"] == 1) then
-		local qcCurrentPlayerFaction, _S = UnitFactionGroup("player")
-		local qcCurrentFaction = qcFactionBits[stringupper(qcCurrentPlayerFaction)]
-		for qcCategoryQuestsIndex = #qcCategoryQuests, 1, -1 do
-			if (bitband(qcCategoryQuests[qcCategoryQuestsIndex][7], qcCurrentFaction) == 0) then
-				tableremove(qcCategoryQuests,qcCategoryQuestsIndex)
+	if (qcSettings.QC_ML_HIDE_FACTION == 1) then
+		local playerFaction, _ = UnitFactionGroup("player")
+		local factionFlag = qcFactionBits[stringUpper(playerFaction)]
+		for i = #qcCategoryQuests, 1, -1 do
+			if (BitBand(qcCategoryQuests[i][7], factionFlag) == 0) then
+				tableRemove(qcCategoryQuests,i)
 			end
 		end
 	end
-
-	if (qcSettings["QC_ML_HIDE_RACECLASS"] == 1) then
-		local _S, qcCurrentPlayerRace = UnitRace("player")
-		local qcCurrentRace = qcRaceBits[stringupper(qcCurrentPlayerRace)]
-		local _S, qcCurrentPlayerClass = UnitClass("player")
-		local qcCurrentClass = qcClassBits[stringupper(qcCurrentPlayerClass)]
-		for qcCategoryQuestsIndex = #qcCategoryQuests, 1, -1 do
-			if (bitband(qcCategoryQuests[qcCategoryQuestsIndex][8], qcCurrentRace) == 0) then
-				tableremove(qcCategoryQuests,qcCategoryQuestsIndex)
-			elseif (bitband(qcCategoryQuests[qcCategoryQuestsIndex][9], qcCurrentClass) == 0) then
-				tableremove(qcCategoryQuests,qcCategoryQuestsIndex)
+	if (qcSettings.QC_ML_HIDE_RACECLASS == 1) then
+		local _, playerRace = UnitRace("player")
+		local raceFlag = qcRaceBits[stringUpper(playerRace)]
+		local _, playerClass = UnitClass("player")
+		local classFlag = qcClassBits[stringUpper(playerClass)]
+		for i = #qcCategoryQuests, 1, -1 do
+			if ((BitBand(qcCategoryQuests[i][8], raceFlag) == 0) or (BitBand(qcCategoryQuests[i][9], classFlag) == 0)) then
+				tableRemove(qcCategoryQuests,i)
 			end
 		end
 	end
-
-	if (qcSettings["SORT"] == 1) then
-		tablesort(qcCategoryQuests,function(a,b) return (a[3]<b[3] or (a[3] == b[3] and a[2]<b[2])) end)
-	elseif (qcSettings["SORT"] == 2) then
-		tablesort(qcCategoryQuests,function(a,b) return a[2]<b[2] end)
+	if (qcSettings.SORT == 1) then
+		tableSort(qcCategoryQuests,function(a,b) return (a[3]<b[3] or (a[3] == b[3] and a[2]<b[2])) end)
+	elseif (qcSettings.SORT == 2) then
+		tableSort(qcCategoryQuests,function(a,b) return a[2]<b[2] end)
 	else
-		tablesort(qcCategoryQuests,function(a,b) return (a[3]<b[3] or (a[3] == b[3] and a[2]<b[2])) end)
+		tableSort(qcCategoryQuests,function(a,b) return (a[3]<b[3] or (a[3] == b[3] and a[2]<b[2])) end)
 	end
-
 end
 
-function qcUpdateQuestList(qcCategoryID, qcStartIndex, qcSearch, qcSearchText)
-
-	local stringformat = string.format
-	local qcQuestListRecordName = "qcMenuButton"
-	local qcHash = "#"
-
-	if (qcCategoryID) then
-		qcCurrentCategoryID = qcCategoryID
-		qcUpdateCurrentCategoryText(qcCategoryID)
+function qcUpdateQuestList(categoryId, startIndex, searchText) -- *
+	if not (qcQuestCompletistUI:IsVisible()) then return nil end
+	local stringFormat = string.format
+	if (categoryId) then
 		qcQuestCompletistUI.qcSearchBox:SetText("")
-		qcGetCategoryQuests(qcCategoryID)
+		qcCurrentCategoryID = categoryId
+		qcUpdateCurrentCategoryText(categoryId)
+		qcGetCategoryQuests(categoryId)
 		qcCurrentCategoryQuestCount = (#qcCategoryQuests)
-		qcQuestCompletistUI.qcCurrentCategoryQuestCount:SetText(stringformat("%d Quests Found",qcCurrentCategoryQuestCount))
 		if (qcCurrentCategoryQuestCount < 16) then
 			qcMenuSlider:SetMinMaxValues(1, 1)
 		else
 			qcMenuSlider:SetMinMaxValues(1, qcCurrentCategoryQuestCount - 15)
 		end
-		qcMenuSlider:SetValue(qcStartIndex)
+		qcMenuSlider:SetValue(startIndex)
 	else
-		if (qcSearch) then
-			qcGetCategoryQuests(nil, true, qcSearchText)
+		if (searchText) then
+			qcGetCategoryQuests(nil, searchText)
 			qcCurrentCategoryQuestCount = (#qcCategoryQuests)
 			qcQuestCompletistUI.qcSelectedCategory:SetText("Search Results")
-			qcQuestCompletistUI.qcCurrentCategoryQuestCount:SetText(stringformat("%d Quests Found",qcCurrentCategoryQuestCount))
 			if (qcCurrentCategoryQuestCount < 16) then
 				qcMenuSlider:SetMinMaxValues(1, 1)
 			else
 				qcMenuSlider:SetMinMaxValues(1, qcCurrentCategoryQuestCount - 15)
 			end
-			qcMenuSlider:SetValue(qcStartIndex)
+			qcMenuSlider:SetValue(startIndex)
 		end
 	end
-
-	for qcQuestListIndex = 1, 16 do
-		local qcOffset = ((qcQuestListIndex + qcStartIndex) - 1)
-		local qcQuestListRecord = _G[qcQuestListRecordName .. qcQuestListIndex]
-		if (qcCurrentCategoryQuestCount >= qcOffset) then
-			local qcCategoryEntry = qcCategoryQuests[qcOffset]
-			local qcQuestID = qcCategoryEntry[1]
-			qcQuestListRecord.QuestName:SetText(stringformat("[%d] %s",qcCategoryEntry[3],qcCategoryEntry[2]))
-			qcQuestListRecord.QuestID = qcQuestID
-			qcQuestListRecord.QuestIcon:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\QCIcons")
-			local qcQuestType = qcCategoryEntry[6]
-			if (qcQuestType == 1) then --[[ Normal ]]--
-				qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
-				qcQuestListRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
-			elseif (qcQuestType == 2) then --[[ Repeatable ]]--
-				qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_REPEATABLE))
-				qcQuestListRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
-			elseif (qcQuestType == 3) then --[[ Daily ]]--
-				qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_DAILY))
-				qcQuestListRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
-			elseif (qcQuestType == 4) then
-				qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_SPECIAL))
-				qcQuestListRecord.QuestName:SetTextColor(1.0, 0.6156862745098039, 0.0862745098039216, 1.0)
-			elseif (qcQuestType == 5) then --[[ Weekly TODO: USING NORMAL ICON ]]--
-				qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
-				qcQuestListRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
-			elseif (qcQuestType == 6) then --[[ Profession ]]--
-				qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_PROFESSION))
-				qcQuestListRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
-			elseif (qcQuestType == 7) then --[[ Seasonal ]]--
-				qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_SEASONAL))
-				qcQuestListRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+	qcQuestCompletistUI.qcCurrentCategoryQuestCount:SetText(stringFormat("%d Quests Found",qcCurrentCategoryQuestCount))
+	for i = 1, 16 do
+		local offset = ((i + startIndex) - 1)
+		local questRecord = _G["qcMenuButton" .. i]
+		if (qcCurrentCategoryQuestCount >= offset) then
+			local e = qcCategoryQuests[offset]
+			local questId = e[1]
+			local questType = e[6]
+			local questFaction = e[7]
+			questRecord.QuestName:SetText(stringFormat("[%d] %s",e[3],e[2]))
+			questRecord.QuestID = questId
+			-- TODO: Possible to reduce code with call to _G[]?
+			if (questType == 1) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
+				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+			elseif (questType == 2) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_REPEATABLE))
+				questRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
+			elseif (questType == 3) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_DAILY))
+				questRecord.QuestName:SetTextColor(0.0941176470588235, 0.6274509803921569, 0.9411764705882353, 1.0)
+			elseif (questType == 4) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_SPECIAL))
+				questRecord.QuestName:SetTextColor(1.0, 0.6156862745098039, 0.0862745098039216, 1.0)
+			elseif (questType == 5) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
+				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+			elseif (questType == 6) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_PROFESSION))
+				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+			elseif (questType == 7) then
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_SEASONAL))
+				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
 			else
-				qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
-				qcQuestListRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
+				questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
+				questRecord.QuestName:SetTextColor(1.0, 1.0, 1.0, 1.0)
 			end
-			qcQuestListRecord.QuestIcon:Show()
-			--[[ Set faction icon ]]--
-			local qcQuestFaction = qcCategoryEntry[7]
-			if (qcQuestFaction == 1) then
-				qcQuestListRecord.FactionIcon:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\AllianceIcon")
-				qcQuestListRecord.FactionIcon:Show()
-			elseif(qcQuestFaction == 2) then
-				qcQuestListRecord.FactionIcon:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\HordeIcon")
-				qcQuestListRecord.FactionIcon:Show()
-			elseif(qcQuestFaction == 3) then
-				qcQuestListRecord.FactionIcon:Hide()
+			questRecord.QuestIcon:Show()
+			if ((questFaction == 0) or (questFaction == 3)) then
+				questRecord.FactionIcon:Hide()
+			elseif (questFaction == 1) then
+				questRecord.FactionIcon:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\AllianceIcon")
+				questRecord.FactionIcon:Show()
+			elseif(questFaction == 2) then
+				questRecord.FactionIcon:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\HordeIcon")
+				questRecord.FactionIcon:Show()
 			else
-				qcQuestListRecord.FactionIcon:Hide()
+				questRecord.FactionIcon:Hide()
 			end
-			--[[ Check quest state ]]--
-			if not (GetQuestLogIndexByID(qcQuestID) == 0) then
-				local _S
-				local qcIsComplete
-				_S, _S, _S, _S, _S, _S, qcIsComplete, _S, _S = GetQuestLogTitle(GetQuestLogIndexByID(qcQuestID))
-				if (qcIsComplete == nil) then --[[ Quest is yet to reach a conclusion ]]--
-					qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_PROGRESS))
-					qcQuestListRecord.QuestName:SetTextColor(0.5803921568627451, 0.5882352941176471, 0.5803921568627451, 1.0)
-				elseif (qcIsComplete == 1) then --[[ Is completed ]]--
-					qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_READY))
-					qcQuestListRecord.QuestName:SetTextColor(1.0, 0.8196078431372549, 0.0, 1.0)
-				elseif (qcIsComplete == -1) then --[[ Is failed or abandoned ]]--
-					qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
-					qcQuestListRecord.QuestName:SetTextColor(0.9372549019607843, 0.1490196078431373, 0.0627450980392157, 1.0)
+			if not (GetQuestLogIndexByID(questId) == 0) then
+				local isComplete
+				_, _, _, _, _, _, isComplete, _, _ = GetQuestLogTitle(GetQuestLogIndexByID(questId)) -- TODO: Still same return?
+				if (isComplete == nil) then
+					questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_PROGRESS))
+					questRecord.QuestName:SetTextColor(0.5803921568627451, 0.5882352941176471, 0.5803921568627451, 1.0)
+				elseif (isComplete == 1) then
+					questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_READY))
+					questRecord.QuestName:SetTextColor(1.0, 0.8196078431372549, 0.0, 1.0)
+				elseif (isComplete == -1) then
+					questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
+					questRecord.QuestName:SetTextColor(0.9372549019607843, 0.1490196078431373, 0.0627450980392157, 1.0)
 				end
 			end
-			--[[ Check completed state. Does not colour repeatables	or daily quests. ]]--
-			if (qcCompletedQuests[qcQuestID]) then
-				if not (qcCategoryEntry[6] == 2) or (qcCategoryEntry[6] == 3) then
-					--[[ Quest is not repeatable or daily ]]--
-					if (qcCompletedQuests[qcQuestID]["C"] == 1) then --[[ Quest is complete ]]--
-						qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_COMPLETE))
-						qcQuestListRecord.QuestName:SetTextColor(0.0, 1.0, 0.0, 1.0)
-					elseif (qcCompletedQuests[qcQuestID]["C"] == 2) then --[[ Quest is unattainable ]]--
-						qcQuestListRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_UNATTAINABLE))
-						qcQuestListRecord.QuestName:SetTextColor(0.77, 0.12, 0.23, 1.0)
+			if (qcCompletedQuests[questId]) then
+				if not ((questType == 2) or (questType == 3)) then
+					if (qcCompletedQuests[questId]["C"] == 1) then
+						questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_COMPLETE))
+						questRecord.QuestName:SetTextColor(0.0, 1.0, 0.0, 1.0)
+					elseif (qcCompletedQuests[questId]["C"] == 2) then
+						questRecord.QuestIcon:SetTexCoord(unpack(QC_ICON_COORDS_UNATTAINABLE))
+						questRecord.QuestName:SetTextColor(0.77, 0.12, 0.23, 1.0)
 					end
-				else
-					--[[ Shouldn't need to do anything here? Should still be blue with correct icon. ]]--
 				end
 			end
-			qcQuestListRecord:Show()
-			qcQuestListRecord:Enable()
+			questRecord:Show()
+			questRecord:Enable()
 		else
-			qcQuestListRecord.QuestName:SetText(qcHash)
-			qcQuestListRecord:Hide()
-			qcQuestListRecord:Disable()
+			questRecord.QuestName:SetText("#")
+			questRecord:Hide()
+			questRecord:Disable()
 		end
 	end
-
 end
 
-function qcSearchBox_OnEditFocusLost(self)
-
-	qcSearchText = string.upper(self:GetText())
-	if not (qcSearchText == "") then
-		qcUpdateQuestList(nil, 1, true, qcSearchText)
+function qcSearchBox_OnEditFocusLost(self) -- *
+	searchText = string.upper(self:GetText())
+	if not (searchText == "") then
+		qcUpdateQuestList(nil, 1, searchText)
 	else
 		qcUpdateQuestList(qcCurrentCategoryID, 1)
 	end
-
 end
 
-function qcSearchBox_OnTextChanged(self, qcUserInput)
-
-	if (qcUserInput == true) then
-		qcSearchText = string.upper(self:GetText())
-		if not (qcSearchText == "") then
-			qcUpdateQuestList(nil, 1, true, qcSearchText)
+function qcSearchBox_OnTextChanged(self, userInput) -- *
+	if (userInput == true) then
+		searchText = string.upper(self:GetText())
+		if not (searchText == "") then
+			qcUpdateQuestList(nil, 1, searchText)
 		else
 			qcUpdateQuestList(qcCurrentCategoryID, 1)
 		end
 	end
-
 end
 
-function qcScrollUpdate(qcValue)
-
-	if not (qcCurrentScrollPosition == qcValue) then
-		qcCurrentScrollPosition = qcValue
-		qcUpdateQuestList(nil, qcValue)
+function qcScrollUpdate(value) -- *
+	if not (qcCurrentScrollPosition == value) then
+		qcCurrentScrollPosition = value
+		qcUpdateQuestList(nil, value)
 	end
-
 end
 
 local function qcQueryQuestFlaggedComplete()
@@ -508,36 +434,28 @@ local function qcQuestQueryCompleted()
 end
 
 local function qcClearUpdateCache()
-
-	--[[ Clear the caches ]]--
 	wipe(qcCompletedQuests)
 	print(string.format("%sCache Cleared.",QCADDON_CHAT_TITLE))
-
 end
 
 local function qcPurgeCollectedCache()
-
 	if (qcCollectedQuests == nil) then qcCollectedQuests = {} end
 	if (qcProgressComplete == nil) then qcProgressComplete = {} end
 	wipe(qcCollectedQuests)
 	wipe(qcProgressComplete)
 	print(string.format("%sCollected Cache Purged.",QCADDON_CHAT_TITLE))
-
 end
 
-function qcMenuMouseWheel(self, delta)
-
-	local qcCurrentPosition = qcMenuSlider:GetValue()
-
-	if (delta < 0) and (qcCurrentPosition < qcCurrentCategoryQuestCount) then
-		qcMenuSlider:SetValue(qcCurrentPosition + 2)
-	elseif (delta > 0) and (qcCurrentPosition > 1) then
-		qcMenuSlider:SetValue(qcCurrentPosition - 2)
+function qcMenuMouseWheel(self, delta) -- *
+	local position = qcMenuSlider:GetValue()
+	if (delta < 0) and (position < qcCurrentCategoryQuestCount) then
+		qcMenuSlider:SetValue(position + 2)
+	elseif (delta > 0) and (position > 1) then
+		qcMenuSlider:SetValue(position - 2)
 	end
-
 end
 
-local function qcProcessMenuAction(button, arg1)
+function qcProcessMenuAction(button, arg1)
 
 	if (arg1 == "PERFORMSERVERQUERY") then
 		print(string.format("%s%s",QCADDON_CHAT_TITLE,qcL.QUERYREQUESTED))
@@ -561,11 +479,17 @@ local function qcProcessMenuAction(button, arg1)
 
 end
 
-function qcCategoryDropdown_Initialize(self, level)
+function qcProcessMenuSelection(self, arg1)
+	qcQuestCompletistUI.qcSearchBox:SetText("");
+	qcUpdateQuestList(arg1,1);
+	CloseDropDownMenus();
+end
+
+function qcCategoryDropdown_Initialize(self, level, menuList)
 
 	local stringformat = string.format
 	local qcMenuData = {}
-
+	
 	if (level == 1) then
 		for qcMenuIndex, qcMenuEntry in ipairs(qcCategoryMenu) do
 			if (qcMenuEntry[3]) then
@@ -580,82 +504,72 @@ function qcCategoryDropdown_Initialize(self, level)
 		for qcMenuIndex, qcMenuEntry in ipairs(qcCategoryMenu) do
 			if (qcMenuEntry[1] == qcParentValue) then
 				for qcSubmenuIndex, qcSubmenuEntry in ipairs(qcMenuEntry[3]) do
-					if (tonumber(qcSubmenuEntry[1])) then
-						qcMenuData = {text=qcSubmenuEntry[2],isTitle=false,notCheckable=false,hasArrow=false,value=qcSubmenuEntry[1],arg1=qcSubmenuEntry[1],func=function(button,arg1) qcQuestCompletistUI.qcSearchBox:SetText("");qcUpdateQuestList(arg1,1);CloseDropDownMenus();end}
+					if (qcSubmenuEntry[3]) then
+						qcMenuData = {text=stringformat("   %s",qcSubmenuEntry[2]),isTitle=false,notCheckable=true,hasArrow=true,value=qcSubmenuEntry[1]}
 					else
-						qcMenuData = {text=qcSubmenuEntry[2],isTitle=false,notCheckable=false,hasArrow=false,value=qcSubmenuEntry[1],arg1=qcSubmenuEntry[1],func=function(button,arg1) qcProcessMenuAction(button,arg1);end}
+						if (tonumber(qcSubmenuEntry[1])) then
+							qcMenuData = {text=qcSubmenuEntry[2],isTitle=false,notCheckable=false,hasArrow=false,value=qcSubmenuEntry[1],arg1=qcSubmenuEntry[1],func=function(button,arg1) qcQuestCompletistUI.qcSearchBox:SetText("");qcUpdateQuestList(arg1,1);CloseDropDownMenus();end}
+						else
+							qcMenuData = {text=qcSubmenuEntry[2],isTitle=false,notCheckable=false,hasArrow=false,value=qcSubmenuEntry[1],arg1=qcSubmenuEntry[1],func=function(button,arg1) qcProcessMenuAction(button,arg1);end}
+						end
 					end
 					UIDropDownMenu_AddButton(qcMenuData, level)
 				end
 				break
 			end
 		end
-	end
-
-end
-
-function qcCategoryDropdownButton_OnClick(self, button, down)
-
-	ToggleDropDownMenu(1, nil, qcCategoryDropdownMenu, self:GetName(), 0, 0)
-
-end
-
-function qcCategoryDropdown_OnLoad(self)
-
-	UIDropDownMenu_Initialize(self, qcCategoryDropdown_Initialize)
-
-end
-
-local function qcGetZoneIDFromName(zoneName)
-
-	for qcZoneIndex, qcZone in ipairs(qcQuestCategories) do
-		if (qcZone[2] == zoneName) then
-			return qcZone[1]
+	elseif (level == 3) then
+		local qcParentValue = UIDROPDOWNMENU_MENU_VALUE
+		for qcMenuIndex, qcMenuEntry in ipairs(qcCategoryMenu) do
+			if (qcMenuEntry[3]) then
+				for qcSubmenuIndex, qcSubmenuEntry in ipairs(qcMenuEntry[3]) do
+					if (qcSubmenuEntry[1] == qcParentValue) then
+						if (tonumber(qcSubmenuEntry[1])) then
+							qcMenuData = {text=qcSubmenuEntry[2],isTitle=false,notCheckable=false,hasArrow=false,value=qcSubmenuEntry[1],arg1=qcSubmenuEntry[1],func=function(button,arg1) qcQuestCompletistUI.qcSearchBox:SetText("");qcUpdateQuestList(arg1,1);CloseDropDownMenus();end}
+						else
+							qcMenuData = {text=qcSubmenuEntry[2],isTitle=false,notCheckable=false,hasArrow=false,value=qcSubmenuEntry[1],arg1=qcSubmenuEntry[1],func=function(button,arg1) qcProcessMenuAction(button,arg1);end}
+						end
+						UIDropDownMenu_AddButton(qcMenuData, level)
+					end
+					break
+				end
+			else
+				qcMenuData = {text=qcMenuEntry[2],isTitle=true,notCheckable=true,hasArrow=false}
+			end
 		end
 	end
 
-	return nil
-
 end
 
-local function qcZoneChangedNewArea()
-
-	--[[local qcZoneName
-	SetMapToCurrentZone()
-	if (GetCurrentMapContinent() > 0) then
-		local qcCurrentContinentZones = {GetMapZones(GetCurrentMapContinent())}
-		qcZoneName = qcCurrentContinentZones[GetCurrentMapZone()]
-	else
-		qcZoneName = GetRealZoneText()
-	end
-
-	local qcZoneID = qcGetZoneIDFromName(qcZoneName)
-	if (qcZoneID ~= nil) then
-		qcUpdateQuestList(qcZoneID, 1)
-	end]]--
-
-	SetMapToCurrentZone()
-	local qcMapID = GetCurrentMapAreaID()
-	if (qcAreaIDToCategoryID[qcMapID]) then
-		qcUpdateQuestList(qcAreaIDToCategoryID[qcMapID],1)
-	end
-
+function qcCategoryDropdownButton_OnClick(self, button, down) -- *
+	EasyMenu(qcMenu, qcCategoryDropDownMenu, self:GetName(), 0, 0, nil)
 end
 
-function qcUpdateTooltip(qcButtonIndex)
+function qcCategoryDropdown_OnLoad(self) -- TODO: Is this even needed anymore?
+	UIDropDownMenu_Initialize(self, qcCategoryDropdown_Initialize)
+end
 
-	local stringformat = string.format
-	local qcQuestListRecord = _G["qcMenuButton" .. qcButtonIndex]
-	local qcQuestID = qcQuestListRecord.QuestID
+local function qcZoneChangedNewArea() -- *
+	SetMapToCurrentZone()
+	local id = GetCurrentMapAreaID()
+	if (qcAreaIDToCategoryID[id]) then
+		qcCurrentCategoryID = qcAreaIDToCategoryID[id]
+		qcUpdateQuestList(qcCurrentCategoryID,1)
+	end
+end
 
-	if not (qcQuestID == nil) then
+function qcUpdateTooltip(index)
+	local stringFormat = string.format
+	local questId = _G["qcMenuButton" .. index].QuestID
+
+	if not (questId == nil) then
 		qcQuestInformationTooltip:SetOwner(qcQuestCompletistUI,"ANCHOR_BOTTOMRIGHT",-30,500)
 		qcQuestInformationTooltip:ClearLines()
-		qcQuestInformationTooltip:SetHyperlink(stringformat("quest:%d",qcQuestID))
+		qcQuestInformationTooltip:SetHyperlink(stringFormat("quest:%d",questId))
 		qcQuestInformationTooltip:AddLine(" ")
-		qcQuestInformationTooltip:AddDoubleLine("Quest ID:", stringformat("%s%d",COLOUR_MAGE,qcQuestID))
-		if not (qcQuestDatabase[qcQuestID][13] == nil) then
-			for qcInitiatorIndex, qcInitiatorEntry in pairs(qcQuestDatabase[qcQuestID][13]) do
+		qcQuestInformationTooltip:AddDoubleLine("Quest ID:", stringFormat("|cFF69CCF0%d|r",questId))
+		if not (qcQuestDatabase[questId][13] == nil) then
+			for qcInitiatorIndex, qcInitiatorEntry in pairs(qcQuestDatabase[questId][13]) do
 				local qcInitiatorID = qcInitiatorEntry[1]
 				local qcInitiatorName = qcInitiatorEntry[2]
 				local qcInitiatorMapID = qcInitiatorEntry[3]
@@ -664,34 +578,34 @@ function qcUpdateTooltip(qcButtonIndex)
 				local qcInitiatorY = qcInitiatorEntry[6]
 				if not (qcInitiatorID == 0) then
 					if not (qcInitiatorName == nil) then
-						qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", stringformat("%s%s [%d]",COLOUR_HUNTER,qcInitiatorName,qcInitiatorID))
+						qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", stringFormat("%s%s [%d]",COLOUR_HUNTER,qcInitiatorName,qcInitiatorID))
 					else
-						qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", stringformat("%s%s [%d]",COLOUR_HUNTER,"Self-provided Quest",qcInitiatorID))
+						qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", stringFormat("%s%s [%d]",COLOUR_HUNTER,"Self-provided Quest",qcInitiatorID))
 					end
 				else
 					if not (qcInitiatorName == nil) then
-						qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", stringformat("%s%s",COLOUR_HUNTER,qcInitiatorName))
+						qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", stringFormat("%s%s",COLOUR_HUNTER,qcInitiatorName))
 					else
-						qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", stringformat("%s%s",COLOUR_HUNTER,"Self-provided Quest"))
+						qcQuestInformationTooltip:AddDoubleLine("Quest Giver:", stringFormat("%s%s",COLOUR_HUNTER,"Self-provided Quest"))
 					end
 				end
 				if not (qcInitiatorMapLevel == 0) then
-					qcQuestInformationTooltip:AddDoubleLine("  - Location:", stringformat("%s%s, Floor %d @ %.1f,%.1f",COLOUR_HUNTER,tostring(GetMapNameByID(qcInitiatorMapID) or nil),qcInitiatorMapLevel,qcInitiatorX,qcInitiatorY),nil,nil,nil,true)
+					qcQuestInformationTooltip:AddDoubleLine("  - Location:", stringFormat("%s%s, Floor %d @ %.1f,%.1f",COLOUR_HUNTER,tostring(GetMapNameByID(qcInitiatorMapID) or nil),qcInitiatorMapLevel,qcInitiatorX,qcInitiatorY),nil,nil,nil,true)
 				else
-					qcQuestInformationTooltip:AddDoubleLine("  - Location:", stringformat("%s%s @ %.1f,%.1f",COLOUR_HUNTER,tostring(GetMapNameByID(qcInitiatorMapID) or nil),qcInitiatorX,qcInitiatorY),nil,nil,nil,true)
+					qcQuestInformationTooltip:AddDoubleLine("  - Location:", stringFormat("%s%s @ %.1f,%.1f",COLOUR_HUNTER,tostring(GetMapNameByID(qcInitiatorMapID) or nil),qcInitiatorX,qcInitiatorY),nil,nil,nil,true)
 				end
 			end
 		end
 		qcQuestInformationTooltip:Show()
 		qcQuestReputationTooltip:SetOwner(qcQuestInformationTooltip,"ANCHOR_BOTTOMRIGHT",-qcQuestInformationTooltip:GetWidth())
 		qcQuestReputationTooltip:ClearLines()
-		if not (qcQuestDatabase[qcQuestID][12] == nil) then
+		if not (qcQuestDatabase[questId][12] == nil) then
 			qcReputationCount = 0
 			qcQuestReputationTooltip:AddLine(GetText("COMBAT_TEXT_SHOW_REPUTATION_TEXT"))
 			qcQuestReputationTooltip:AddLine(" ")
-			for qcReputationIndex, qcReputationEntry in pairs(qcQuestDatabase[qcQuestID][12]) do
+			for qcReputationIndex, qcReputationEntry in pairs(qcQuestDatabase[questId][12]) do
 				qcReputationCount = (qcReputationCount+1)
-				qcQuestReputationTooltip:AddDoubleLine(tostring(qcFactions[qcReputationIndex] or qcReputationIndex), stringformat("%s%d rep",COLOUR_DRUID,qcReputationEntry))
+				qcQuestReputationTooltip:AddDoubleLine(tostring(qcFactions[qcReputationIndex] or qcReputationIndex), stringFormat("%s%d rep",COLOUR_DRUID,qcReputationEntry))
 			end
 			if (qcReputationCount > 0) then
 				qcQuestReputationTooltip:Show()
@@ -705,282 +619,18 @@ function qcUpdateTooltip(qcButtonIndex)
 
 end
 
-function qcQuestEditorAlliance_OnClick()
-
-	if (qcQuestEditor.Alliance:GetChecked() == 1) then
-		qcQuestEditor.Human:SetChecked(true)
-		qcQuestEditor.Dwarf:SetChecked(true)
-		qcQuestEditor.Nightelf:SetChecked(true)
-		qcQuestEditor.Gnome:SetChecked(true)
-		qcQuestEditor.Draenei:SetChecked(true)
-		qcQuestEditor.Worgen:SetChecked(true)
-		qcQuestEditor.Pandaren:SetChecked(true)
-	else
-		qcQuestEditor.Human:SetChecked(false)
-		qcQuestEditor.Dwarf:SetChecked(false)
-		qcQuestEditor.Nightelf:SetChecked(false)
-		qcQuestEditor.Gnome:SetChecked(false)
-		qcQuestEditor.Draenei:SetChecked(false)
-		qcQuestEditor.Worgen:SetChecked(false)
-	end
-
-end
-
-function qcQuestEditorHorde_OnClick()
-
-	if (qcQuestEditor.Horde:GetChecked() == 1) then
-		qcQuestEditor.Orc:SetChecked(true)
-		qcQuestEditor.Scourge:SetChecked(true)
-		qcQuestEditor.Tauren:SetChecked(true)
-		qcQuestEditor.Troll:SetChecked(true)
-		qcQuestEditor.Goblin:SetChecked(true)
-		qcQuestEditor.Bloodelf:SetChecked(true)
-		qcQuestEditor.Pandaren:SetChecked(true)
-	else
-		qcQuestEditor.Orc:SetChecked(false)
-		qcQuestEditor.Scourge:SetChecked(false)
-		qcQuestEditor.Tauren:SetChecked(false)
-		qcQuestEditor.Troll:SetChecked(false)
-		qcQuestEditor.Goblin:SetChecked(false)
-		qcQuestEditor.Bloodelf:SetChecked(false)
-	end
-
-end
-
-function qcQuestEditorUpdate_OnClick()
-
-	local qcFactionFlag = 0
-	local qcRaceFlag = 0
-	local qcClassFlag = 0
-
-	if (qcQuestEditor.Alliance:GetChecked() == 1) then qcFactionFlag = (qcFactionFlag + qcFactionBits["ALLIANCE"]) end
-	if (qcQuestEditor.Horde:GetChecked() == 1) then qcFactionFlag = (qcFactionFlag + qcFactionBits["HORDE"]) end
-	if (qcQuestEditor.Neutral:GetChecked() == 1) then qcFactionFlag = (qcFactionFlag + qcFactionBits["NEUTRAL"]) end
-	if (qcFactionFlag == 0) then
-		print("YOU MUST SELECT AT LEAST 1 FACTION")
-		return nil
-	end
-
-	if (qcQuestEditor.Human:GetChecked() == 1) then qcRaceFlag = (qcRaceFlag + qcRaceBits["HUMAN"]) end
-	if (qcQuestEditor.Dwarf:GetChecked() == 1) then qcRaceFlag = (qcRaceFlag + qcRaceBits["DWARF"]) end
-	if (qcQuestEditor.Nightelf:GetChecked() == 1) then qcRaceFlag = (qcRaceFlag + qcRaceBits["NIGHTELF"]) end
-	if (qcQuestEditor.Gnome:GetChecked() == 1) then qcRaceFlag = (qcRaceFlag + qcRaceBits["GNOME"]) end
-	if (qcQuestEditor.Draenei:GetChecked() == 1) then qcRaceFlag = (qcRaceFlag + qcRaceBits["DRAENEI"]) end
-	if (qcQuestEditor.Worgen:GetChecked() == 1) then qcRaceFlag = (qcRaceFlag + qcRaceBits["WORGEN"]) end
-	if (qcQuestEditor.Orc:GetChecked() == 1) then qcRaceFlag = (qcRaceFlag + qcRaceBits["ORC"]) end
-	if (qcQuestEditor.Scourge:GetChecked() == 1) then qcRaceFlag = (qcRaceFlag + qcRaceBits["SCOURGE"]) end
-	if (qcQuestEditor.Tauren:GetChecked() == 1) then qcRaceFlag = (qcRaceFlag + qcRaceBits["TAUREN"]) end
-	if (qcQuestEditor.Troll:GetChecked() == 1) then qcRaceFlag = (qcRaceFlag + qcRaceBits["TROLL"]) end
-	if (qcQuestEditor.Goblin:GetChecked() == 1) then qcRaceFlag = (qcRaceFlag + qcRaceBits["GOBLIN"]) end
-	if (qcQuestEditor.Bloodelf:GetChecked() == 1) then qcRaceFlag = (qcRaceFlag + qcRaceBits["BLOODELF"]) end
-	if (qcQuestEditor.Pandaren:GetChecked() == 1) then qcRaceFlag = (qcRaceFlag + qcRaceBits["PANDAREN"]) end
-	if (qcRaceFlag == 0) then
-		print("YOU MUST SELECT AT LEAST 1 RACE")
-		return nil
-	end
-
-	if (qcQuestEditor.Warrior:GetChecked() == 1) then qcClassFlag = (qcClassFlag + qcClassBits["WARRIOR"]) end
-	if (qcQuestEditor.Paladin:GetChecked() == 1) then qcClassFlag = (qcClassFlag + qcClassBits["PALADIN"]) end
-	if (qcQuestEditor.Hunter:GetChecked() == 1) then qcClassFlag = (qcClassFlag + qcClassBits["HUNTER"]) end
-	if (qcQuestEditor.Rogue:GetChecked() == 1) then qcClassFlag = (qcClassFlag + qcClassBits["ROGUE"]) end
-	if (qcQuestEditor.Priest:GetChecked() == 1) then qcClassFlag = (qcClassFlag + qcClassBits["PRIEST"]) end
-	if (qcQuestEditor.Deathknight:GetChecked() == 1) then qcClassFlag = (qcClassFlag + qcClassBits["DEATHKNIGHT"]) end
-	if (qcQuestEditor.Shaman:GetChecked() == 1) then qcClassFlag = (qcClassFlag + qcClassBits["SHAMAN"]) end
-	if (qcQuestEditor.Mage:GetChecked() == 1) then qcClassFlag = (qcClassFlag + qcClassBits["MAGE"]) end
-	if (qcQuestEditor.Warlock:GetChecked() == 1) then qcClassFlag = (qcClassFlag + qcClassBits["WARLOCK"]) end
-	if (qcQuestEditor.Druid:GetChecked() == 1) then qcClassFlag = (qcClassFlag + qcClassBits["DRUID"]) end
-	if (qcQuestEditor.Monk:GetChecked() == 1) then qcClassFlag = (qcClassFlag + qcClassBits["MONK"]) end
-	if (qcClassFlag == 0) then
-		print("YOU MUST SELECT AT LEAST 1 CLASS")
-		return nil
-	end
-
-	if not (qcEditor[qcQuestEditor.ID] == nil) then
-		qcEditor[qcQuestEditor.ID][7] = qcFactionFlag
-		qcEditor[qcQuestEditor.ID][8] = qcRaceFlag
-		qcEditor[qcQuestEditor.ID][9] = qcClassFlag
-	end
-	
-	print("Saved to qcEditor.")
-
-end
-
-function qcLoadToEditor(QuestID)
-
-	local qcQuestID = QuestID
-	
-	if (qcEditor == nil) then qcEditor = {} end
-	if (qcEditor[qcQuestID] == nil) then
-		qcQuestTable = {}
-		qcQuestTable = qcCopyTable(qcQuestDatabase[qcQuestID])
-		table.insert(qcEditor,qcQuestID,qcQuestTable)
-	end
-	
-	qcQuestEditor.ID = qcQuestID
-	qcQuestEditor.QuestName:SetText(qcEditor[qcQuestID][2])
-	
-	-- Faction
-	if (bit.band(qcEditor[qcQuestID][7],qcFactionBits["ALLIANCE"]) > 0) then
-		qcQuestEditor.Alliance:SetChecked(true)
-	else
-		qcQuestEditor.Alliance:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][7],qcFactionBits["HORDE"]) > 0) then
-		qcQuestEditor.Horde:SetChecked(true)
-	else
-		qcQuestEditor.Horde:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][7],qcFactionBits["NEUTRAL"]) > 0) then
-		qcQuestEditor.Neutral:SetChecked(true)
-	else
-		qcQuestEditor.Neutral:SetChecked(false)
-	end
-	
-	--Race
-	if (bit.band(qcEditor[qcQuestID][8],qcRaceBits["HUMAN"]) > 0) then
-		qcQuestEditor.Human:SetChecked(true)
-	else
-		qcQuestEditor.Human:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][8],qcRaceBits["DWARF"]) > 0) then
-		qcQuestEditor.Dwarf:SetChecked(true)
-	else
-		qcQuestEditor.Dwarf:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][8],qcRaceBits["NIGHTELF"]) > 0) then
-		qcQuestEditor.Nightelf:SetChecked(true)
-	else
-		qcQuestEditor.Nightelf:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][8],qcRaceBits["GNOME"]) > 0) then
-		qcQuestEditor.Gnome:SetChecked(true)
-	else
-		qcQuestEditor.Gnome:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][8],qcRaceBits["DRAENEI"]) > 0) then
-		qcQuestEditor.Draenei:SetChecked(true)
-	else
-		qcQuestEditor.Draenei:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][8],qcRaceBits["WORGEN"]) > 0) then
-		qcQuestEditor.Worgen:SetChecked(true)
-	else
-		qcQuestEditor.Worgen:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][8],qcRaceBits["ORC"]) > 0) then
-		qcQuestEditor.Orc:SetChecked(true)
-	else
-		qcQuestEditor.Orc:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][8],qcRaceBits["SCOURGE"]) > 0) then
-		qcQuestEditor.Scourge:SetChecked(true)
-	else
-		qcQuestEditor.Scourge:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][8],qcRaceBits["TAUREN"]) > 0) then
-		qcQuestEditor.Tauren:SetChecked(true)
-	else
-		qcQuestEditor.Tauren:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][8],qcRaceBits["TROLL"]) > 0) then
-		qcQuestEditor.Troll:SetChecked(true)
-	else
-		qcQuestEditor.Troll:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][8],qcRaceBits["GOBLIN"]) > 0) then
-		qcQuestEditor.Goblin:SetChecked(true)
-	else
-		qcQuestEditor.Goblin:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][8],qcRaceBits["BLOODELF"]) > 0) then
-		qcQuestEditor.Bloodelf:SetChecked(true)
-	else
-		qcQuestEditor.Bloodelf:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][8],qcRaceBits["PANDAREN"]) > 0) then
-		qcQuestEditor.Pandaren:SetChecked(true)
-	else
-		qcQuestEditor.Pandaren:SetChecked(false)
-	end
-	
-	-- Class
-	if (bit.band(qcEditor[qcQuestID][9],qcClassBits["WARRIOR"]) > 0) then
-		qcQuestEditor.Warrior:SetChecked(true)
-	else
-		qcQuestEditor.Warrior:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][9],qcClassBits["PALADIN"]) > 0) then
-		qcQuestEditor.Paladin:SetChecked(true)
-	else
-		qcQuestEditor.Paladin:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][9],qcClassBits["HUNTER"]) > 0) then
-		qcQuestEditor.Hunter:SetChecked(true)
-	else
-		qcQuestEditor.Hunter:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][9],qcClassBits["ROGUE"]) > 0) then
-		qcQuestEditor.Rogue:SetChecked(true)
-	else
-		qcQuestEditor.Rogue:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][9],qcClassBits["PRIEST"]) > 0) then
-		qcQuestEditor.Priest:SetChecked(true)
-	else
-		qcQuestEditor.Priest:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][9],qcClassBits["MONK"]) > 0) then
-		qcQuestEditor.Monk:SetChecked(true)
-	else
-		qcQuestEditor.Monk:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][9],qcClassBits["DEATHKNIGHT"]) > 0) then
-		qcQuestEditor.Deathknight:SetChecked(true)
-	else
-		qcQuestEditor.Deathknight:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][9],qcClassBits["SHAMAN"]) > 0) then
-		qcQuestEditor.Shaman:SetChecked(true)
-	else
-		qcQuestEditor.Shaman:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][9],qcClassBits["MAGE"]) > 0) then
-		qcQuestEditor.Mage:SetChecked(true)
-	else
-		qcQuestEditor.Mage:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][9],qcClassBits["WARLOCK"]) > 0) then
-		qcQuestEditor.Warlock:SetChecked(true)
-	else
-		qcQuestEditor.Warlock:SetChecked(false)
-	end
-	if (bit.band(qcEditor[qcQuestID][9],qcClassBits["DRUID"]) > 0) then
-		qcQuestEditor.Druid:SetChecked(true)
-	else
-		qcQuestEditor.Druid:SetChecked(false)
-	end
-
-end
-
 function qcQuestClick(qcButtonIndex)
-
-	local qcQuestListRecord = "qcMenuButton"
-	local qcQuestID = _G[qcQuestListRecord .. qcButtonIndex].QuestID
-
+	local qcQuestID = _G["qcMenuButton" .. qcButtonIndex].QuestID
 	if (IsLeftShiftKeyDown() == nil) and (IsLeftAltKeyDown() == nil) then
-		if (QCDEBUG_MODE) then
-			qcLoadToEditor(qcQuestID)
-			qcQuestEditor:Show()
-		end
-		if IsAddOnLoaded('TomTom') then
-			if not (qcQuestDatabase[qcQuestID][13] == nil) then
+		if (IsAddOnLoaded('TomTom')) then
+			if (qcQuestDatabase[qcQuestID][13]) then
 				for qcInitiatorIndex, qcInitiatorEntry in pairs(qcQuestDatabase[qcQuestID][13]) do
 					TomTom:AddMFWaypoint(qcInitiatorEntry[3], qcInitiatorEntry[4], qcInitiatorEntry[5]/100, qcInitiatorEntry[6]/100, {title=qcInitiatorEntry[2]})
 				end
 			end
 			TomTom:SetClosestWaypoint()
 		end
-	elseif (IsLeftShiftKeyDown() ~= nil) then --[[ User wants to toggle the completed status of a quest ]]--
+	elseif (IsLeftShiftKeyDown()) then --[[ User wants to toggle the completed status of a quest ]]--
 		if (qcCompletedQuests[qcQuestID] == nil) then
 			qcCompletedQuests[qcQuestID] = {["C"] = 1}
 		else
@@ -1019,28 +669,22 @@ function qcQuestClick(qcButtonIndex)
 end
 
 function qcCloseTooltip()
-
 	qcQuestInformationTooltip:Hide()
 	qcQuestReputationTooltip:Hide()
-
 end
 
-local function qcUpdateCompletedQuest(qcQuestID)
-
-	if not (qcQuestDatabase[qcQuestID] == nil) then
-		if (qcQuestDatabase[qcQuestID][6] == 2) or (qcQuestDatabase[qcQuestID][6] == 3) then
+local function qcUpdateCompletedQuest(questId) -- *
+	if (qcQuestDatabase[questId]) then
+		if ((qcQuestDatabase[questId][6] == 2) or (qcQuestDatabase[questId][6] == 3)) then
 			return nil
 		end
 	end
-	if (qcCompletedQuests[qcQuestID] == nil) then qcCompletedQuests[qcQuestID] = {["C"]=1} end
-
+	if not (qcCompletedQuests[questId]) then qcCompletedQuests[questId] = {["C"]=1} end
 end
 
-local function qcNewDataChecks(qcQuestID)
-
-	if ((qcQuestID == nil) or (qcQuestID == 0)) then return nil end
-
-	if (qcQuestDatabase[qcQuestID] == nil) then
+local function qcNewDataChecks(questId) -- *
+	if ((questId == nil) or (questId == 0)) then return nil end
+	if not (qcQuestDatabase[questId]) then
 		qcNewDataAlert.New = true
 		qcNewDataAlert.Faction = false
 		qcNewDataAlert.Race = false
@@ -1052,33 +696,53 @@ local function qcNewDataChecks(qcQuestID)
 		qcNewDataAlert.Faction = false
 		qcNewDataAlert.Race = false
 		qcNewDataAlert.Class = false
-		local qcFaction, qcRace, qcClass = 0, 0, 0
-		--[[ Faction Checks ]]--
-		local qcEFaction, _S = UnitFactionGroup("player")
-		qcFaction = qcFactionBits[string.upper(qcEFaction)]
-		if (bit.band(qcFaction,qcQuestDatabase[qcQuestID][7]) == 0) then
+		local factionFlag, raceFlag, classFlag = 0, 0, 0
+		local playerFaction, _ = UnitFactionGroup("player")
+		local _, playerRace = UnitRace("player")
+		local _, playerClass = UnitClass("player")
+		factionFlag = qcFactionBits[string.upper(playerFaction)]
+		if (bit.band(factionFlag,qcQuestDatabase[questId][7]) == 0) then
 			qcNewDataAlert.Faction = true
-			--print(QCADDON_CHAT_TITLE, "QC did not know this quest could be completed by your faction. Please read the How To Contribute file in the addon folder to help fix this.")
-			qcNewDataAlert:Show()
 		end
-		--[[ Race ]]--
-		local _S, qcERace = UnitRace("player")
-		qcRace = qcRaceBits[string.upper(qcERace)]
-		if (bit.band(qcRace,qcQuestDatabase[qcQuestID][8]) == 0) then
+		raceFlag = qcRaceBits[string.upper(playerRace)]
+		if (bit.band(raceFlag,qcQuestDatabase[questId][8]) == 0) then
 			qcNewDataAlert.Race = true
-			--print(QCADDON_CHAT_TITLE, "QC did not know this quest could be completed by your race. Please read the How To Contribute file in the addon folder to help fix this.")
-			qcNewDataAlert:Show()
 		end
-		--[[ Class ]]--
-		local _S, qcEClass = UnitClass("player")
-		qcClass = qcClassBits[string.upper(qcEClass)]
-		if (bit.band(qcClass,qcQuestDatabase[qcQuestID][9]) == 0) then
+		classFlag = qcClassBits[string.upper(playerClass)]
+		if (bit.band(classFlag,qcQuestDatabase[questId][9]) == 0) then
 			qcNewDataAlert.Class = true
-			--print(QCADDON_CHAT_TITLE, "QC did not know this quest could be completed by your class. Please read the How To Contribute file in the addon folder to help fix this.")
+		end
+		if ((qcNewDataAlert.Faction) or (qcNewDataAlert.Race) or (qcNewDataAlert.Class)) then
 			qcNewDataAlert:Show()
 		end
 	end
+end
 
+function qcNewDataAlert_OnEnter(self) -- *
+	qcNewDataAlertTooltip:SetOwner(qcNewDataAlert, "ANCHOR_CURSOR")
+	qcNewDataAlertTooltip:ClearLines()
+	qcNewDataAlertTooltip:AddLine("Quest Completist")
+	qcNewDataAlertTooltip:AddLine(COLOUR_HUNTER .. "Quest Completist was not aware of the following information. Please help improve the accuracy of the addon by contributing with the Community Editor! (Link on Curse)", nil, nil, nil, true)
+	if (qcNewDataAlert.New) then
+		qcNewDataAlertTooltip:AddLine(COLOUR_MAGE .. " - Quest does not exist in the database.", nil, nil, nil, true)
+		qcNewDataAlertTooltip:Show()
+	end
+	if (qcNewDataAlert.Faction) then
+		qcNewDataAlertTooltip:AddLine(COLOUR_MAGE .. " - QC was not aware your FACTION could complete this quest.", nil, nil, nil, true)
+	end
+	if (qcNewDataAlert.Race) then
+		qcNewDataAlertTooltip:AddLine(COLOUR_MAGE .. " - QC was not aware your RACE could complete this quest.", nil, nil, nil, true)
+	end
+	if (qcNewDataAlert.Class) then
+		qcNewDataAlertTooltip:AddLine(COLOUR_MAGE .. " - QC was not aware your CLASS could complete this quest.", nil, nil, nil, true)
+	end
+	if ((qcNewDataAlert.New) or (qcNewDataAlert.Faction) or (qcNewDataAlert.Race) or (qcNewDataAlert.Class)) then
+		qcNewDataAlertTooltip:Show()
+	end
+end
+
+function qcNewDataAlert_OnLeave(self) -- *
+	qcNewDataAlertTooltip:Hide()
 end
 
 local function qcBreadcrumbChecks(qcQuestID)
@@ -1129,76 +793,47 @@ local function qcMutuallyExclusiveChecks(qcQuestID)
 
 end
 
-function qcMapTooltipSetup()
-
-local qcFrame = CreateFrame("GameTooltip", "qcMapTooltip", WorldMapDetailFrame, "GameTooltipTemplate")
-
-	qcFrame:SetFrameStrata("TOOLTIP")
-	qcMapTooltip = qcFrame
-	--[[ Hook to allow scale changes with the world map ]]--
-	WorldMapDetailFrame:HookScript("OnSizeChanged", function(self)
-	qcMapTooltip:SetScale(1/self:GetScale())
-	end)
-
+function qcMapTooltipSetup() -- *
+	qcMapTooltip = CreateFrame("GameTooltip", "qcMapTooltip", WorldFrame, "GameTooltipTemplate")
+	qcMapTooltip:SetFrameStrata("TOOLTIP")
+	WorldMapFrame:HookScript("OnSizeChanged",
+		function(self)
+			qcMapTooltip:SetScale(1/self:GetScale())
+		end
+	)
 end
 
-function qcQuestReputationTooltipSetup()
-
-local qcFrame = CreateFrame("GameTooltip", "qcQuestReputationTooltip", qcQuestCompletistUI, "GameTooltipTemplate")
-
-	qcFrame:SetFrameStrata("TOOLTIP")
-	qcQuestReputationTooltip = qcFrame
-
+function qcQuestReputationTooltipSetup() -- *
+	qcQuestReputationTooltip = CreateFrame("GameTooltip", "qcQuestReputationTooltip", qcQuestCompletistUI, "GameTooltipTemplate")
+	qcQuestReputationTooltip:SetFrameStrata("TOOLTIP")
 end
 
-function qcQuestInformationTooltipSetup()
-
-local qcFrame = CreateFrame("GameTooltip", "qcQuestInformationTooltip", qcQuestCompletistUI, "GameTooltipTemplate")
-
-	qcFrame:SetFrameStrata("TOOLTIP")
-	qcFrame:HookScript("OnTooltipSetQuest", function(self)
-		
-	end)
-	qcQuestInformationTooltip = qcFrame
-
+function qcQuestInformationTooltipSetup() -- *
+	qcQuestInformationTooltip = CreateFrame("GameTooltip", "qcQuestInformationTooltip", qcQuestCompletistUI, "GameTooltipTemplate")
+	qcQuestInformationTooltip:SetFrameStrata("TOOLTIP")
 end
 
-function qcToastTooltipSetup()
-
-local qcFrame = CreateFrame("GameTooltip", "qcToastTooltip", qcToast, "GameTooltipTemplate")
-
-	qcFrame:SetFrameStrata("TOOLTIP")
-	qcToastTooltip = qcFrame
-
+function qcToastTooltipSetup() -- *
+	qcToastTooltip = CreateFrame("GameTooltip", "qcToastTooltip", qcToast, "GameTooltipTemplate")
+	qcToastTooltip:SetFrameStrata("TOOLTIP")
 end
 
-function qcNewDataAlertTooltipSetup()
-
-local qcFrame = CreateFrame("GameTooltip", "qcNewDataAlertTooltip", qcNewDataAlert, "GameTooltipTemplate")
-
-	qcFrame:SetFrameStrata("TOOLTIP")
-	qcNewDataAlertTooltip = qcFrame
-
+function qcNewDataAlertTooltipSetup() -- *
+	qcNewDataAlertTooltip = CreateFrame("GameTooltip", "qcNewDataAlertTooltip", qcNewDataAlert, "GameTooltipTemplate")
+	qcNewDataAlertTooltip:SetFrameStrata("TOOLTIP")
 end
 
-function qcMutuallyExclusiveAlertTooltipSetup()
-
-local qcFrame = CreateFrame("GameTooltip", "qcMutuallyExclusiveAlertTooltip", qcMutuallyExclusiveAlert, "GameTooltipTemplate")
-
-	qcFrame:SetFrameStrata("TOOLTIP")
-	qcMutuallyExclusiveAlertTooltip = qcFrame
-
+function qcMutuallyExclusiveAlertTooltipSetup() -- *
+	qcMutuallyExclusiveAlertTooltip = CreateFrame("GameTooltip", "qcMutuallyExclusiveAlertTooltip", qcMutuallyExclusiveAlert, "GameTooltipTemplate")
+	qcMutuallyExclusiveAlertTooltip:SetFrameStrata("TOOLTIP")
 end
 
-function qcGetToastQuestInformation(qcQuestID)
-
-	if (qcQuestID) then
-		if not (qcQuestDatabase[qcQuestID] == nil) then
-			local qcQuestName = tostring(qcQuestDatabase[qcQuestID][2] or nil)
-			return qcQuestName
+function qcGetToastQuestInformation(questId) -- *
+	if (questId) then
+		if (qcQuestDatabase[questId]) then
+			return tostring(qcQuestDatabase[questId][2] or nil)
 		end
 	end
-
 end
 
 function qcToast_OnEnter(self)
@@ -1225,41 +860,8 @@ function qcToast_OnEnter(self)
 
 end
 
-function qcToast_OnLeave(self)
-
+function qcToast_OnLeave(self) -- *
 	qcToastTooltip:Hide()
-
-end
-
-function qcNewDataAlert_OnEnter(self)
-
-	qcNewDataAlertTooltip:SetOwner(qcNewDataAlert, "ANCHOR_CURSOR")
-	qcNewDataAlertTooltip:ClearLines()
-	qcNewDataAlertTooltip:AddLine("Quest Completist")
-	qcNewDataAlertTooltip:AddLine(COLOUR_HUNTER .. "Quest Completist was not aware of the following information. Please help improve the addon by reading the 'How To Contribute' file in the addon folder, and submitting your saved variable data.", nil, nil, nil, true)
-	if (qcNewDataAlert.New == true) then
-		qcNewDataAlertTooltip:AddLine(COLOUR_MAGE .. " - Quest does not exist in the database.", nil, nil, nil, true)
-		qcNewDataAlertTooltip:Show()
-	end
-	if (qcNewDataAlert.Faction == true) then
-		qcNewDataAlertTooltip:AddLine(COLOUR_MAGE .. " - QC was not aware your FACTION could complete this quest.", nil, nil, nil, true)
-		qcNewDataAlertTooltip:Show()
-	end
-	if (qcNewDataAlert.Race == true) then
-		qcNewDataAlertTooltip:AddLine(COLOUR_MAGE .. " - QC was not aware your RACE could complete this quest.", nil, nil, nil, true)
-		qcNewDataAlertTooltip:Show()
-	end
-	if (qcNewDataAlert.Class == true) then
-		qcNewDataAlertTooltip:AddLine(COLOUR_MAGE .. " - QC was not aware your CLASS could complete this quest.", nil, nil, nil, true)
-		qcNewDataAlertTooltip:Show()
-	end
-
-end
-
-function qcNewDataAlert_OnLeave(self)
-
-	qcNewDataAlertTooltip:Hide()
-
 end
 
 function qcMutuallyExclusiveQuestInformation(qcQuestID)
@@ -1302,445 +904,210 @@ function qcMutuallyExclusiveAlert_OnLeave(self)
 
 end
 
-local function qcPreparePin(qcQuestType, qcQuestID, qcQuestName)
+--[[ ##### MAP PINS START ##### ]]--
 
-local qcNewPin
-
-	if (#qcSparePins > 0) then
-		qcNewPin = qcSparePins[1]
-		table.remove(qcSparePins, 1)
-		--print("Reusing pin: " .. tostring(qcNewPin))
-	end
-
-	if (not qcNewPin) then
-		qcNewPin = CreateFrame("Frame", nil, WorldMapDetailFrame)
-		qcNewPin.Texture = qcNewPin:CreateTexture()
-
-		--[[ Tooltip Hooks ]]--
-		qcNewPin:HookScript("OnEnter", function(self)
-		qcMapTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		qcMapTooltip:ClearLines()
-		if (self.QuestID ~= nil) then qcMapTooltip:SetHyperlink("quest:" .. self.QuestID) end
-		qcMapTooltip:AddLine(" ")
-		qcMapTooltip:AppendText(" [" .. (self.QuestID or "ID_ERROR") .. "]")
-		if (self.QuestID ~= nil) and (qcQuestDBv2[self.QuestID][3][2] ~= nil) and (qcQuestDBv2[self.QuestID][3][1] ~= nil) then qcMapTooltip:AddDoubleLine("Starts from:", tostring(COLOUR_DRUID .. qcQuestDBv2[self.QuestID][3][2] .. " [" .. qcQuestDBv2[self.QuestID][3][1]  .. "]")) end
-		if (self.QuestID ~= nil) and (qcQuestDBv2[self.QuestID][1][4] ~= nil) then qcMapTooltip:AddDoubleLine("Category:", tostring(COLOUR_DRUID .. qcQuestDBv2[self.QuestID][1][4])) end
-		if (self.QuestID ~= nil) and (qcQuestDBv2[self.QuestID][5][1] ~= nil) then qcMapTooltip:AddLine(COLOUR_HUNTER .. (qcQuestDBv2[self.QuestID][5][1] or ""), nil, nil, nil, true) end
-		qcMapTooltip:AddLine(COLOUR_MAGE .. "Please report errors to me on Curse.com")
-		qcMapTooltip:Show()
-		end)
-		qcNewPin:HookScript("OnLeave", function(self)
-		qcMapTooltip:ClearLines()
-		qcMapTooltip:Hide()
-		end)
-
-		qcNewPin.Texture:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\QCIcons")
-		if (qcQuestType == 3) then --[[ Daily ]]--
-			qcNewPin.Texture:SetTexCoord(0,0.125,0.25,0.5)
-			qcNewPin.Texture:SetAllPoints()
-			qcNewPin:SetWidth(16)
-			qcNewPin:SetHeight(16)
-			qcNewPin:EnableMouse(true)
-		elseif (qcQuestType == 2) then --[[ Repeatable ]]--
-			qcNewPin.Texture:SetTexCoord(0.125,0.25,0.25,0.5)
-			qcNewPin.Texture:SetAllPoints()
-			qcNewPin:SetWidth(16)
-			qcNewPin:SetHeight(16)
-			qcNewPin:EnableMouse(true)
-		else
-			qcNewPin.Texture:SetTexCoord(0,0.125,0,0.25)
-			qcNewPin.Texture:SetAllPoints()
-			qcNewPin:SetWidth(16)
-			qcNewPin:SetHeight(16)
-			qcNewPin:EnableMouse(true)
-		end
-		table.insert(qcPins, qcNewPin)
+local function qcColouredQuestName(questId)
+	if not (questId) then return nil end
+	if not (qcQuestDatabase[questId]) then return nil end
+	if ((qcQuestDatabase[questId][6] == 3) or (qcQuestDatabase[questId][6] == 2)) then
+		return string.format("|cff178ed5%s|r",qcQuestDatabase[questId][2])
+	elseif (qcCompletedQuests[questId] == nil) then
+		return string.format("|cffffffff%s|r",qcQuestDatabase[questId][2])
+	elseif ((qcCompletedQuests[questId]["C"] == 1) or (qcCompletedQuests[questId]["C"] == 2)) then
+		return string.format("|cff00ff00%s|r",qcQuestDatabase[questId][2])
 	else
-		qcNewPin.Texture:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\QCIcons")
-		if (qcQuestType == 3) then --[[ Daily ]]--
-			qcNewPin.Texture:SetTexCoord(0,0.125,0.25,0.5)
-			qcNewPin.Texture:SetAllPoints()
-			qcNewPin:SetWidth(16)
-			qcNewPin:SetHeight(16)
-			qcNewPin:EnableMouse(true)
-		elseif (qcQuestType == 2) then --[[ Repeatable ]]--
-			qcNewPin.Texture:SetTexCoord(0.125,0.25,0.25,0.5)
-			qcNewPin.Texture:SetAllPoints()
-			qcNewPin:SetWidth(16)
-			qcNewPin:SetHeight(16)
-			qcNewPin:EnableMouse(true)
-		else
-			qcNewPin.Texture:SetTexCoord(0,0.125,0,0.25)
-			qcNewPin.Texture:SetAllPoints()
-			qcNewPin:SetWidth(16)
-			qcNewPin:SetHeight(16)
-			qcNewPin:EnableMouse(true)
-		end
-		qcNewPin.QuestID = qcQuestID
-		qcNewPin.QuestName = qcQuestName
-		table.insert(qcPins, qcNewPin)
+		return string.format("|cffffffff%s [U]|r",qcQuestDatabase[questId][2])
 	end
-
-	return qcNewPin
-
 end
 
-local function qcShowPin(x, y, qcQuestType, qcQuestID, qcQuestName)
-
-local qcPin = qcPreparePin(qcQuestType, qcQuestID, qcQuestName)
-
-	qcPin:ClearAllPoints()
-	qcPin:SetFrameLevel(WorldMapPOIFrame:GetFrameLevel()-1)
-	qcPin:SetPoint("CENTER", WorldMapDetailFrame, "TOPLEFT", (x/100)*WorldMapDetailFrame:GetWidth(), (-y/100)*WorldMapDetailFrame:GetHeight())
-	qcPin:Show()
-
+local function qcHideAllPins() -- *
+	for i = #qcPinFrames, 1, -1 do
+		qcPinFrames[i]:Hide()
+		TableInsert(qcSparePinFrames, qcPinFrames[i])
+		TableRemove(qcPinFrames,i)
+	end
 end
 
-local function qcHidePin(qcPinID, qcEntry)
-
-	if (qcPinID) then
-		qcEntry:Hide()
-		table.insert(qcSparePins, qcEntry)
-		table.remove(qcPins, qcPinID)
+local function qcGetPin()
+	local pin = nil
+	if (#qcSparePinFrames > 0) then
+		pin = qcSparePinFrames[1]
+		TableRemove(qcSparePinFrames, 1)
 	end
-
-end
-
-local function qcHideAllPins()
-
-	for qcIndex = #qcPins, 1, -1 do
-		qcHidePin(qcIndex, qcPins[qcIndex])
-	end
-
-end
-
-local function qcRefreshPins(qcMapID)
-
-	qcHideAllPins()
-	wipe(qcMapQuests)
-
-	if (qcSettings["QC_M_SHOW_ICONS"] == 0) then
-		return nil
-	end
-
-	--[[ Pull all quests related to this map from the database ]]--
-	for qcIndex, qcEntry in pairs(qcQuestDBv2) do
-		if (qcEntry[3][6] == qcMapID) then
-			if (qcEntry[3][8] == 0) then
-				table.insert(qcMapQuests, qcEntry)
-			end
-		end
-	end
-
-	--[[ Completed filtering - regardless of user filtering options ]]--
-	for qcMapQuestsIndex = #qcMapQuests, 1, -1 do
-		if (qcCompletedQuests[qcMapQuests[qcMapQuestsIndex][1][1]] ~= nil) then
-			if (qcCompletedQuests[qcMapQuests[qcMapQuestsIndex][1][1]]["C"] == 1) or (qcCompletedQuests[qcMapQuests[qcMapQuestsIndex][1][1]]["C"] == 2) then
-				if (qcMapQuests[qcMapQuestsIndex][1][5] == 1) or (qcMapQuests[qcMapQuestsIndex][1][5] == 4) then --[[ Normal quest or special quest ]]--
-					--print("Removing completed quest: " .. qcMapQuests[qcMapQuestsIndex][1][2])
-					table.remove(qcMapQuests, qcMapQuestsIndex)
+	if not (pin) then
+		pin = CreateFrame("Frame", "qcPin", WorldMapDetailFrame)
+		pin:SetWidth(16)
+		pin:SetHeight(16)
+		pin.Texture = pin:CreateTexture()
+		pin.Texture:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\QCIcons")
+		pin.Texture:SetAllPoints()
+		pin:EnableMouse(true)
+		pin:SetFrameStrata("HIGH")
+		pin:SetFrameLevel(WorldMapFrame.UIElementsFrame:GetFrameLevel())
+		pin:HookScript("OnEnter",
+			function(self, motion)
+				local frames = {}
+				local frame = EnumerateFrames()
+				while (frame) do
+					if (frame:IsVisible() and MouseIsOver(frame) and (frame:GetName() == "qcPin")) then
+						TableInsert(frames, frame)
+					end
+					frame = EnumerateFrames(frame)
 				end
-			end
-		end
-	end
-
-	--[[ Faction filtering - regardless of user filtering options ]]--
-	do
-		local qcCurrentPlayerFaction, _S = UnitFactionGroup("player")
-		local qcCurrentFaction = qcFactionBits[string.upper(qcCurrentPlayerFaction)]
-		for qcMapQuestsIndex = #qcMapQuests, 1, -1 do
-			if (bit.band(qcMapQuests[qcMapQuestsIndex][4][1], qcCurrentFaction) == 0) then
-				--print("Removing opposing faction quest: " .. qcMapQuests[qcMapQuestsIndex][1][2])
-				table.remove(qcMapQuests, qcMapQuestsIndex)
-			end
-		end
-	end
-
-	--[[ Class\Race filtering - regardless of user filtering options ]]--
-	do
-		local _S, qcCurrentPlayerClass = UnitClass("player")
-		local qcCurrentClass = qcClassBits[string.upper(qcCurrentPlayerClass)]
-		local _S, qcCurrentPlayerRace = UnitRace("player")
-		local qcCurrentRace = qcRaceBits[string.upper(qcCurrentPlayerRace)]
-		for qcMapQuestsIndex = #qcMapQuests, 1, -1 do
-			if (bit.band(qcMapQuests[qcMapQuestsIndex][4][3], qcCurrentClass) == 0) then
-				--print("Removing other class quest.")
-				table.remove(qcMapQuests, qcMapQuestsIndex)
-			elseif (bit.band(qcMapQuests[qcMapQuestsIndex][4][2], qcCurrentRace) == 0) then
-				--print("Removing other races quest.")
-				table.remove(qcMapQuests, qcMapQuestsIndex)
-			end
-		end
-	end
-
-	--[[ Add pins to the map ]]--
-	do
-		for qcMapQuestsIndex = #qcMapQuests, 1, -1 do
-			--print("Creating pin to show incomplete quest: " .. qcMapQuests[qcMapQuestsIndex][1][2])
-			qcShowPin(qcMapQuests[qcMapQuestsIndex][3][4], qcMapQuests[qcMapQuestsIndex][3][5], qcMapQuests[qcMapQuestsIndex][1][5], qcMapQuests[qcMapQuestsIndex][1][1], qcMapQuests[qcMapQuestsIndex][1][2])
-		end
-	end
-
-end
-
---[[ ##### MAP ICONS START ##### ]]--
-
-local function qcColouredQuestName(qcQuestID)
-
-	if not (qcQuestID) then return nil end
-	if (qcQuestDatabase[qcQuestID] == nil) then return nil end
-
-	--[[ Order by most likely first, always leaving completed until the end ]]--
-	if (qcQuestDatabase[qcQuestID][6] == 3) then
-		return string.format("|cff178ed5%s|r",qcQuestDatabase[qcQuestID][2])
-	elseif (qcQuestDatabase[qcQuestID][6] == 2) then
-		return string.format("|cff178ed5%s|r",qcQuestDatabase[qcQuestID][2])
-	elseif (qcCompletedQuests[qcQuestID] == nil) then
-		return string.format("|cffffffff%s|r",qcQuestDatabase[qcQuestID][2])
-	elseif (qcCompletedQuests[qcQuestID]["C"] == 1) or (qcCompletedQuests[qcQuestID]["C"] == 2) then
-		return string.format("|cff00ff00%s|r",qcQuestDatabase[qcQuestID][2])
-	else --[[ Not handled ]]--
-		return nil
-	end
-
-end
-
-local function qcPrepareIcon(qcIconType)
-
-	local qcNewIcon = nil
-	local tableinsert = table.insert
-	local tostring = tostring
-	local stringformat = string.format
-
-	if (#qcSpareMapIcons > 0) then
-		qcNewIcon = qcSpareMapIcons[1]
-		table.remove(qcSpareMapIcons, 1)
-	end
-
-	if not (qcNewIcon) then
-		qcNewIcon = CreateFrame("Frame", "qcIcon", WorldMapDetailFrame)
-		qcNewIcon:SetWidth(16)
-		qcNewIcon:SetHeight(16)
-		qcNewIcon.Texture = qcNewIcon:CreateTexture()
-		qcNewIcon.Texture:SetTexture("Interface\\Addons\\QuestCompletist\\Images\\QCIcons")
-		qcNewIcon.Texture:SetAllPoints()
-		qcNewIcon:EnableMouse(true)
-
-		--[[ Tooltip Hooks ]]--
-		qcNewIcon:HookScript("OnEnter", function(self, motion)
-		local qcFrames = {}
-		local qcFrame = EnumerateFrames()
-		while (qcFrame) do
-			if (qcFrame:IsVisible() and MouseIsOver(qcFrame) and (qcFrame:GetName() == "qcIcon")) then
-				tableinsert(qcFrames, qcFrame)
-			end
-			qcFrame = EnumerateFrames(qcFrame)
-		end
-		qcMapTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		qcMapTooltip:ClearLines()
-		for qcFrameIndex, qcFrameEntry in pairs(qcFrames) do -- Possible ipairs?
-			local qcInitiatorsIndex = qcFrameEntry.InitiatorsIndex
-			if (qcCurrentMapInitiators[qcInitiatorsIndex][3] == 0) then
-				qcMapTooltip:AddLine(qcCurrentMapInitiators[qcInitiatorsIndex][4] or stringformat("%s %s",UnitName("player"),"|cff69ccf0<Yourself>|r"))
-			else
-				qcMapTooltip:AddDoubleLine(qcCurrentMapInitiators[qcInitiatorsIndex][4] or stringformat("%s %s",UnitName("player"),"|cff69ccf0<Yourself>|r"), stringformat("|cffff7d0a[%d]|r",qcCurrentMapInitiators[qcInitiatorsIndex][3]))
-			end
-			for qcIndex, qcEntry in ipairs(qcCurrentMapInitiators[qcInitiatorsIndex][7]) do
-				qcMapTooltip:AddDoubleLine(tostring(qcColouredQuestName(qcEntry)), stringformat("|cffff7d0a[%d]|r",tostring(qcEntry)))
-				if (#qcCurrentMapInitiators[qcInitiatorsIndex][7] <= 10) then
-					--[[ Order by most likely first, always leaving completed until the end ]]--
-					--[[ TODO: Create a texture object and use in-game texture with SetTexCoord ]]--
-					if (qcQuestDatabase[qcEntry]) then
-						if (qcQuestDatabase[qcEntry][6] == 3) then
-							qcMapTooltip:AddTexture("Interface\\Addons\\QuestCompletist\\Images\\DailyQuestIcon")
-						elseif (qcQuestDatabase[qcEntry][6] == 2) then
-							qcMapTooltip:AddTexture("Interface\\Addons\\QuestCompletist\\Images\\DailyActiveQuestIcon")
-						elseif (qcCompletedQuests[qcEntry] ~= nil) and (qcCompletedQuests[qcEntry]["C"] == 1 or qcCompletedQuests[qcEntry]["C"] == 2) then
-							qcMapTooltip:AddTexture("Interface\\Addons\\QuestCompletist\\Images\\QuestCompleteIcon")
-						else
-							qcMapTooltip:AddTexture("Interface\\Addons\\QuestCompletist\\Images\\AvailableQuestIcon")
+				qcMapTooltip:SetOwner(self, "ANCHOR_RIGHT")
+				qcMapTooltip:ClearLines()
+				for i, e in pairs(frames) do -- TODO: Possible ipairs?
+					local initiatorsIndex = e.PinIndex
+					if (qcPins[initiatorsIndex][3] == 0) then
+						qcMapTooltip:AddLine(qcPins[initiatorsIndex][4] or StringFormat("%s %s",UnitName("player"),"|cff69ccf0<Yourself>|r"))
+					else
+						qcMapTooltip:AddDoubleLine(qcPins[initiatorsIndex][4] or StringFormat("%s %s",UnitName("player"),"|cff69ccf0<Yourself>|r"), StringFormat("|cffff7d0a[%d]|r",qcPins[initiatorsIndex][3]))
+					end
+					for qcIndex, qcEntry in ipairs(qcPins[initiatorsIndex][7]) do
+						qcMapTooltip:AddDoubleLine(tostring(qcColouredQuestName(qcEntry)), StringFormat("|cffff7d0a[%d]|r",tostring(qcEntry)))
+						if (#qcPins[initiatorsIndex][7] <= 10) then
+							--[[ Order by most likely first, always leaving completed until the end ]]--
+							--[[ TODO: Create a texture object and use in-game texture with SetTexCoord ]]--
+							if (qcQuestDatabase[qcEntry]) then
+								if (qcQuestDatabase[qcEntry][6] == 3) then
+									qcMapTooltip:AddTexture("Interface\\Addons\\QuestCompletist\\Images\\DailyQuestIcon")
+								elseif (qcQuestDatabase[qcEntry][6] == 2) then
+									qcMapTooltip:AddTexture("Interface\\Addons\\QuestCompletist\\Images\\DailyActiveQuestIcon")
+								elseif (qcCompletedQuests[qcEntry] ~= nil) and (qcCompletedQuests[qcEntry]["C"] == 1 or qcCompletedQuests[qcEntry]["C"] == 2) then
+									qcMapTooltip:AddTexture("Interface\\Addons\\QuestCompletist\\Images\\QuestCompleteIcon")
+								else
+									qcMapTooltip:AddTexture("Interface\\Addons\\QuestCompletist\\Images\\AvailableQuestIcon")
+								end
+							end
 						end
 					end
+					if (qcPins[initiatorsIndex][8]) then
+						qcMapTooltip:AddLine(StringFormat("|cffabd473%s|r",qcPins[initiatorsIndex][8]),nil,nil,nil,true)
+					end
 				end
+				qcMapTooltip:Show()
 			end
-			if (qcCurrentMapInitiators[qcInitiatorsIndex][8]) then
-				qcMapTooltip:AddLine(stringformat("|cffabd473%s|r",qcCurrentMapInitiators[qcInitiatorsIndex][8]),nil,nil,nil,true)
+		)
+		pin:HookScript("OnLeave",
+			function(self)
+				qcMapTooltip:Hide()
 			end
-		end
-		qcMapTooltip:Show()
-		end)
-		qcNewIcon:HookScript("OnLeave", function(self)
-		qcMapTooltip:Hide()
-		end)
+		)
+	end
+	TableInsert(qcPinFrames, pin)
+	return pin
+end
 
-		if (qcIconType == 1) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
-		elseif (qcIconType == 3) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_DAILY))
-		elseif (qcIconType == 2) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_REPEATABLE))
-		elseif (qcIconType == 5) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_SEASONAL))
-		elseif (qcIconType == 4) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_SPECIAL))
-		elseif (qcIconType == 6) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_PROFESSION))
-		elseif (qcIconType == 7) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_ITEMDROPSTANDARD))
-		elseif (qcIconType == 8) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_ITEMDROPREPEATABLE))
-		elseif (qcIconType == 9) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_CLASS))
-		elseif (qcIconType == 10) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_KILL))
-		else
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
-		end
+local function qcShowPin(index, icon) -- *
+	local pin = qcGetPin()
+	pin:SetPoint("CENTER", WorldMapDetailFrame, "TOPLEFT", (qcPins[index][5] / 100) * WorldMapDetailFrame:GetWidth(), (-qcPins[index][6] / 100) * WorldMapDetailFrame:GetHeight())
+	pin.PinIndex = index
+	if (icon == 1) then
+		pin.Texture:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
+	elseif (icon == 3) then
+		pin.Texture:SetTexCoord(unpack(QC_ICON_COORDS_DAILY))
+	elseif (icon == 2) then
+		pin.Texture:SetTexCoord(unpack(QC_ICON_COORDS_REPEATABLE))
+	elseif (icon == 5) then
+		pin.Texture:SetTexCoord(unpack(QC_ICON_COORDS_SEASONAL))
+	elseif (icon == 4) then
+		pin.Texture:SetTexCoord(unpack(QC_ICON_COORDS_SPECIAL))
+	elseif (icon == 6) then
+		pin.Texture:SetTexCoord(unpack(QC_ICON_COORDS_PROFESSION))
+	elseif (icon == 7) then
+		pin.Texture:SetTexCoord(unpack(QC_ICON_COORDS_ITEMDROPSTANDARD))
+	elseif (icon == 8) then
+		pin.Texture:SetTexCoord(unpack(QC_ICON_COORDS_ITEMDROPREPEATABLE))
+	elseif (icon == 9) then
+		pin.Texture:SetTexCoord(unpack(QC_ICON_COORDS_CLASS))
+	elseif (icon == 10) then
+		pin.Texture:SetTexCoord(unpack(QC_ICON_COORDS_KILL))
 	else
-		if (qcIconType == 1) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
-		elseif (qcIconType == 3) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_DAILY))
-		elseif (qcIconType == 2) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_REPEATABLE))
-		elseif (qcIconType == 5) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_SEASONAL))
-		elseif (qcIconType == 4) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_SPECIAL))
-		elseif (qcIconType == 6) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_PROFESSION))
-		elseif (qcIconType == 7) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_ITEMDROPSTANDARD))
-		elseif (qcIconType == 8) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_ITEMDROPREPEATABLE))
-		elseif (qcIconType == 9) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_CLASS))
-		elseif (qcIconType == 10) then
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_KILL))
-		else
-			qcNewIcon.Texture:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
+		pin.Texture:SetTexCoord(unpack(QC_ICON_COORDS_NORMAL))
+	end
+	pin:Show()
+end
+
+local function qcRefreshPins(mapId, mapLevel)
+	if not (WorldMapFrame:IsVisible()) then return nil end
+	if (qcSettings.QC_M_SHOW_ICONS == 0) or (qcPinDB[mapId] == nil) then
+		qcHideAllPins()
+		wipe(qcPins)
+		return nil
+	end
+	qcPins = qcCopyTable(qcPinDB[mapId])
+	for i = #qcPins, 1, -1 do
+		if not (qcPins[i][1] == mapLevel) then
+			TableRemove(qcPins,i)
 		end
 	end
-	
-	tableinsert(qcCurrentMapIcons, qcNewIcon)
-	return qcNewIcon
-
-end
-
-local function qcShowIcon(qcCurrentMapInitiatorsIndex, qcX, qcY, qcIconType)
-
-	local qcIcon = qcPrepareIcon(qcIconType)
-
-	qcIcon:SetFrameLevel(WorldMapPOIFrame:GetFrameLevel()-1)
-	qcIcon:SetPoint("CENTER", WorldMapDetailFrame, "TOPLEFT", (qcX/100)*WorldMapDetailFrame:GetWidth(), (-qcY/100)*WorldMapDetailFrame:GetHeight())
-	qcIcon.InitiatorsIndex = qcCurrentMapInitiatorsIndex
-	qcIcon:Show()
-
-end
-
-local function qcHideAllMapIcons()
-
-	local tableinsert = table.insert
-	local tableremove = table.remove
-
-	for qcIndex = #qcCurrentMapIcons, 1, -1 do
-		qcCurrentMapIcons[qcIndex]:Hide()
-		tableinsert(qcSpareMapIcons, qcCurrentMapIcons[qcIndex])
-		tableremove(qcCurrentMapIcons, qcIndex)
-	end
-
-end
-
-local function qcRefreshMapIcons(qcMapID, qcMapLevel)
-
-	qcHideAllMapIcons()
-	wipe(qcCurrentMapInitiators)
-
-	if (qcSettings["QC_M_SHOW_ICONS"] == 0) then return nil end
-	if not (qcMapIcon[qcMapID]) then return nil end
-
-	local tableremove = table.remove
-	local bitband = bit.band
-
-	qcCurrentMapInitiators = qcCopyTable(qcMapIcon[qcMapID])
-
-	--[[ Map level ]]--
-	for qcCurrentMapInitiatorsIndex = #qcCurrentMapInitiators, 1, -1 do
-		if not (qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][1] == qcMapLevel) then
-			tableremove(qcCurrentMapInitiators, qcCurrentMapInitiatorsIndex)
-		end
-	end
-
-	--[[ Low level quests ]]--
-	if (qcSettings["QC_M_HIDE_LOWLEVEL"] == 1) then
-		for qcCurrentMapInitiatorsIndex = #qcCurrentMapInitiators, 1, -1 do
-			for qcQuestIndex = #qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], 1, -1 do
-				local qcQuestID = qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7][qcQuestIndex]
-				if (qcQuestDatabase[qcQuestID]) then
-					local qcQuestLevel = qcQuestDatabase[qcQuestID][3] or 0 -- Account for -1 quests???
-					local qcQuestCutoff = (UnitLevel("player") - GetQuestGreenRange())
-					if (qcQuestLevel < qcQuestCutoff) then
-						tableremove(qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], qcQuestIndex)
+	if (qcSettings.QC_M_HIDE_LOWLEVEL == 1) then
+		for i = #qcPins, 1, -1 do
+			for questIndex = #qcPins[i][7], 1, -1 do
+				local questId = qcPins[i][7][questIndex]
+				if (qcQuestDatabase[questId]) then
+					local questLevel = qcQuestDatabase[questId][3] or 0
+					local greenCutoff = (UnitLevel("player") - GetQuestGreenRange())
+					if (questLevel < greenCutoff) then
+						TableRemove(qcPins[i][7],questIndex)
 					end
 				else
-					tableremove(qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], qcQuestIndex)
+					TableRemove(qcPins[i][7],questIndex)
 				end
 			end
-			if (#qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7] == 0) then
-				tableremove(qcCurrentMapInitiators, qcCurrentMapInitiatorsIndex)
+			if (#qcPins[i][7] == 0) then
+				TableRemove(qcPins, i)
 			end
 		end
 	end
-
-	--[[ Completed quests ]]--
 	if (qcSettings["QC_M_HIDE_COMPLETED"] == 1) then
-		for qcCurrentMapInitiatorsIndex = #qcCurrentMapInitiators, 1, -1 do
-			for qcQuestIndex = #qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], 1, -1 do
-				local qcQuestID = qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7][qcQuestIndex]
+		for i = #qcPins, 1, -1 do
+			for qcQuestIndex = #qcPins[i][7], 1, -1 do
+				local qcQuestID = qcPins[i][7][qcQuestIndex]
 				if (qcCompletedQuests[qcQuestID]) and ((qcCompletedQuests[qcQuestID]["C"] == 1) or (qcCompletedQuests[qcQuestID]["C"] == 2)) then
-					tableremove(qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], qcQuestIndex)
+					TableRemove(qcPins[i][7], qcQuestIndex)
 				end
 			end
-			if (#qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7] == 0) then
-				tableremove(qcCurrentMapInitiators, qcCurrentMapInitiatorsIndex)
+			if (#qcPins[i][7] == 0) then
+				TableRemove(qcPins, i)
 			end
 		end
 	end
 
 	--[[ Faction ]]--
 	if (qcSettings["QC_ML_HIDE_FACTION"] == 1) then
-		for qcCurrentMapInitiatorsIndex = #qcCurrentMapInitiators, 1, -1 do
-			for qcQuestIndex = #qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], 1, -1 do
-				local qcQuestID = qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7][qcQuestIndex]
+		for i = #qcPins, 1, -1 do
+			for qcQuestIndex = #qcPins[i][7], 1, -1 do
+				local qcQuestID = qcPins[i][7][qcQuestIndex]
 				local qcCurrentPlayerFaction, _S = UnitFactionGroup("player")
 				local qcCurrentFaction = qcFactionBits[string.upper(qcCurrentPlayerFaction)]
-				if (qcQuestDatabase[qcQuestID]) and (bitband(qcQuestDatabase[qcQuestID][7], qcCurrentFaction) == 0) then
-					tableremove(qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], qcQuestIndex)
+				if (qcQuestDatabase[qcQuestID]) and (BitBand(qcQuestDatabase[qcQuestID][7], qcCurrentFaction) == 0) then
+					TableRemove(qcPins[i][7], qcQuestIndex)
 				end
 			end
-			if (#qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7] == 0) then
-				tableremove(qcCurrentMapInitiators, qcCurrentMapInitiatorsIndex)
+			if (#qcPins[i][7] == 0) then
+				TableRemove(qcPins, i)
 			end
 		end
 	end
 
 	--[[ Race\Class ]]--
 	if (qcSettings["QC_ML_HIDE_RACECLASS"] == 1) then
-		for qcCurrentMapInitiatorsIndex = #qcCurrentMapInitiators, 1, -1 do
-			for qcQuestIndex = #qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], 1, -1 do
-				local qcQuestID = qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7][qcQuestIndex]
+		for i = #qcPins, 1, -1 do
+			for qcQuestIndex = #qcPins[i][7], 1, -1 do
+				local qcQuestID = qcPins[i][7][qcQuestIndex]
 				local _S, qcCurrentPlayerRace = UnitRace("player")
 				local qcCurrentRace = qcRaceBits[string.upper(qcCurrentPlayerRace)]
 				local _S, qcCurrentPlayerClass = UnitClass("player")
 				local qcCurrentClass = qcClassBits[string.upper(qcCurrentPlayerClass)]
-				if (qcQuestDatabase[qcQuestID]) and (bitband(qcQuestDatabase[qcQuestID][8], qcCurrentRace) == 0) then
-					tableremove(qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], qcQuestIndex)
-				elseif (qcQuestDatabase[qcQuestID]) and (bitband(qcQuestDatabase[qcQuestID][9], qcCurrentClass) == 0) then
-					tableremove(qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], qcQuestIndex)
+				if (qcQuestDatabase[qcQuestID]) and (BitBand(qcQuestDatabase[qcQuestID][8], qcCurrentRace) == 0) then
+					TableRemove(qcPins[i][7], qcQuestIndex)
+				elseif (qcQuestDatabase[qcQuestID]) and (BitBand(qcQuestDatabase[qcQuestID][9], qcCurrentClass) == 0) then
+					TableRemove(qcPins[i][7], qcQuestIndex)
 				end
 			end
-			if (#qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7] == 0) then
-				tableremove(qcCurrentMapInitiators, qcCurrentMapInitiatorsIndex)
+			if (#qcPins[i][7] == 0) then
+				TableRemove(qcPins, i)
 			end
 		end
 	end
@@ -1748,17 +1115,17 @@ local function qcRefreshMapIcons(qcMapID, qcMapLevel)
 	--[[ Seasonal ]]--
 	if (qcSettings["QC_M_HIDE_SEASONAL"] == 1) then
 		local qcToday = date("%y%m%d")
-		for qcCurrentMapInitiatorsIndex = #qcCurrentMapInitiators, 1, -1 do
-			for qcQuestIndex = #qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], 1, -1 do
-				local qcQuestID = qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7][qcQuestIndex]
+		for i = #qcPins, 1, -1 do
+			for qcQuestIndex = #qcPins[i][7], 1, -1 do
+				local qcQuestID = qcPins[i][7][qcQuestIndex]
 				if (qcQuestDatabase[qcQuestID]) and (qcQuestDatabase[qcQuestID][11] > 0) then
 					if not ((qcToday >= qcHolidayDates[qcQuestDatabase[qcQuestID][11]][1]) and (qcToday <= qcHolidayDates[qcQuestDatabase[qcQuestID][11]][2])) then
-						tableremove(qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], qcQuestIndex)
+						TableRemove(qcPins[i][7], qcQuestIndex)
 					end
 				end
 			end
-			if (#qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7] == 0) then
-				tableremove(qcCurrentMapInitiators, qcCurrentMapInitiatorsIndex)
+			if (#qcPins[i][7] == 0) then
+				TableRemove(qcPins, i)
 			end
 		end
 	end
@@ -1771,48 +1138,48 @@ local function qcRefreshMapIcons(qcMapID, qcMapLevel)
 			local qcName, qcTexture, _S, _S, _S, _S, qcProfessionID, _S = GetProfessionInfo(qcEntry)
 			qcProfessionBitwise = (qcProfessionBitwise + qcProfessionBits[qcProfessionID])
 		end
-		for qcCurrentMapInitiatorsIndex = #qcCurrentMapInitiators, 1, -1 do
-			for qcQuestIndex = #qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], 1, -1 do
-				local qcQuestID = qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7][qcQuestIndex]
+		for i = #qcPins, 1, -1 do
+			for qcQuestIndex = #qcPins[i][7], 1, -1 do
+				local qcQuestID = qcPins[i][7][qcQuestIndex]
 				if (qcQuestDatabase[qcQuestID]) and (qcQuestDatabase[qcQuestID][10] > 0) then
-					if (bitband(qcQuestDatabase[qcQuestID][10], qcProfessionBitwise) == 0) then
-						tableremove(qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], qcQuestIndex)
+					if (BitBand(qcQuestDatabase[qcQuestID][10], qcProfessionBitwise) == 0) then
+						TableRemove(qcPins[i][7], qcQuestIndex)
 					end
 				end
 			end
-			if (#qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7] == 0) then
-				tableremove(qcCurrentMapInitiators, qcCurrentMapInitiatorsIndex)
+			if (#qcPins[i][7] == 0) then
+				TableRemove(qcPins, i)
 			end
 		end
 	end
 
 	--[[ In progress ]]--
 	if (qcSettings["QC_M_HIDE_INPROGRESS"] == 1) then
-		for qcCurrentMapInitiatorsIndex = #qcCurrentMapInitiators, 1, -1 do
-			for qcQuestIndex = #qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], 1, -1 do
-				local qcQuestID = qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7][qcQuestIndex]
+		for i = #qcPins, 1, -1 do
+			for qcQuestIndex = #qcPins[i][7], 1, -1 do
+				local qcQuestID = qcPins[i][7][qcQuestIndex]
 				if (GetQuestLogIndexByID(qcQuestID) ~= 0) then
-					tableremove(qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7], qcQuestIndex)
+					TableRemove(qcPins[i][7], qcQuestIndex)
 				end
 			end
-			if (#qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7] == 0) then
-				tableremove(qcCurrentMapInitiators, qcCurrentMapInitiatorsIndex)
+			if (#qcPins[i][7] == 0) then
+				TableRemove(qcPins, i)
 			end
 		end
 	end
 
 	--[[ Empty quest sub-tables ]]--
-	for qcCurrentMapInitiatorsIndex = #qcCurrentMapInitiators, 1, -1 do
-		if (#qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7] == 0) then
-			tableremove(qcCurrentMapInitiators, qcCurrentMapInitiatorsIndex)
+	for i = #qcPins, 1, -1 do
+		if (#qcPins[i][7] == 0) then
+			TableRemove(qcPins, i)
 		end
 	end
 
 	--[[ Check if only 1 quest remains for each initiator, and customize icon for that final quest ]]--
-	for qcCurrentMapInitiatorsIndex = #qcCurrentMapInitiators, 1, -1 do
-		local qcIconType = qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][2]
-		if (#qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7] == 1) then
-			local qcQuestID = qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][7][1]
+	for i = #qcPins, 1, -1 do
+		local qcIconType = qcPins[i][2]
+		if (#qcPins[i][7] == 1) then
+			local qcQuestID = qcPins[i][7][1]
 			if ((qcQuestDatabase[qcQuestID]) and (qcIconType == 1)) then
 				if (qcQuestDatabase[qcQuestID][6] == 1) then
 					qcIconType = 1
@@ -1825,30 +1192,24 @@ local function qcRefreshMapIcons(qcMapID, qcMapLevel)
 				end
 			end
 		end
-		qcShowIcon(qcCurrentMapInitiatorsIndex, qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][5], qcCurrentMapInitiators[qcCurrentMapInitiatorsIndex][6], qcIconType)
+		qcShowPin(i, qcIconType)
 	end
 
 end
 
---[[ ##### MAP ICONS END ##### ]]--
+--[[ ##### MAP PINS END ##### ]]--
 
 --[[ ##### INTERFACE OPTIONS START ##### ]]--
 
-function qcInterfaceOptions_Okay(self)
-
+function qcInterfaceOptions_Okay(self) -- *
 	qcUpdateQuestList(qcCurrentCategoryID, 1)
-	qcRefreshMapIcons(GetCurrentMapAreaID(), GetCurrentMapDungeonLevel())
-
+	qcRefreshPins(GetCurrentMapAreaID(), GetCurrentMapDungeonLevel())
 end
 
-function qcInterfaceOptions_Cancel(self)
-
+function qcInterfaceOptions_Cancel(self) -- *
 end
 
 function qcInterfaceOptions_OnShow(self)
-
-	-- CreateFrame("frameType" [, "name" [, parent [, "template"]]])
-
 	local qcL = qcLocalize
 
     qcConfigTitle = self:CreateFontString("qcConfigTitle", "ARTWORK", "GameFontNormalLarge")
@@ -1872,7 +1233,7 @@ function qcInterfaceOptions_OnShow(self)
     qcIO_M_SHOW_ICONS:SetPoint("TOPLEFT", qcMapFiltersTitle, "BOTTOMLEFT", 16, -6)
 	_G[qcIO_M_SHOW_ICONS:GetName().."Text"]:SetText(qcL.SHOWMAPICONS)
 	qcIO_M_SHOW_ICONS:SetScript("OnClick", function(self)
-		if (qcIO_M_SHOW_ICONS:GetChecked() == nil) then
+		if (qcIO_M_SHOW_ICONS:GetChecked() == false) then
 			qcSettings.QC_M_SHOW_ICONS = 0
 		else
 			qcSettings.QC_M_SHOW_ICONS = 1
@@ -1883,7 +1244,7 @@ function qcInterfaceOptions_OnShow(self)
     qcIO_M_HIDE_COMPLETED:SetPoint("TOPLEFT", qcIO_M_SHOW_ICONS, "BOTTOMLEFT", 0, 0)
 	_G[qcIO_M_HIDE_COMPLETED:GetName().."Text"]:SetText(qcL.HIDECOMPLETEDQUESTS)
 	qcIO_M_HIDE_COMPLETED:SetScript("OnClick", function(self)
-		if (qcIO_M_HIDE_COMPLETED:GetChecked() == nil) then
+		if (qcIO_M_HIDE_COMPLETED:GetChecked() == false) then
 			qcSettings.QC_M_HIDE_COMPLETED = 0
 		else
 			qcSettings.QC_M_HIDE_COMPLETED = 1
@@ -1894,7 +1255,7 @@ function qcInterfaceOptions_OnShow(self)
     qcIO_M_HIDE_LOWLEVEL:SetPoint("TOPLEFT", qcIO_M_HIDE_COMPLETED, "BOTTOMLEFT", 0, 0)
 	_G[qcIO_M_HIDE_LOWLEVEL:GetName().."Text"]:SetText(qcL.HIDELOWLEVELQUESTS)
 	qcIO_M_HIDE_LOWLEVEL:SetScript("OnClick", function(self)
-		if (qcIO_M_HIDE_LOWLEVEL:GetChecked() == nil) then
+		if (qcIO_M_HIDE_LOWLEVEL:GetChecked() == false) then
 			qcSettings.QC_M_HIDE_LOWLEVEL = 0
 		else
 			qcSettings.QC_M_HIDE_LOWLEVEL = 1
@@ -1905,7 +1266,7 @@ function qcInterfaceOptions_OnShow(self)
     qcIO_M_HIDE_PROFESSION:SetPoint("TOPLEFT", qcIO_M_HIDE_LOWLEVEL, "BOTTOMLEFT", 0, 0)
 	_G[qcIO_M_HIDE_PROFESSION:GetName().."Text"]:SetText(qcL.HIDEOTHERPROFESSIONQUESTS)
 	qcIO_M_HIDE_PROFESSION:SetScript("OnClick", function(self)
-		if (qcIO_M_HIDE_PROFESSION:GetChecked() == nil) then
+		if (qcIO_M_HIDE_PROFESSION:GetChecked() == false) then
 			qcSettings.QC_M_HIDE_PROFESSION = 0
 		else
 			qcSettings.QC_M_HIDE_PROFESSION = 1
@@ -1916,7 +1277,7 @@ function qcInterfaceOptions_OnShow(self)
     qcIO_M_HIDE_SEASONAL:SetPoint("TOPLEFT", qcIO_M_HIDE_PROFESSION, "BOTTOMLEFT", 0, 0)
 	_G[qcIO_M_HIDE_SEASONAL:GetName().."Text"]:SetText(qcL.HIDENONACTIVESEASONALQUESTS)
 	qcIO_M_HIDE_SEASONAL:SetScript("OnClick", function(self)
-		if (qcIO_M_HIDE_SEASONAL:GetChecked() == nil) then
+		if (qcIO_M_HIDE_SEASONAL:GetChecked() == false) then
 			qcSettings.QC_M_HIDE_SEASONAL = 0
 		else
 			qcSettings.QC_M_HIDE_SEASONAL = 1
@@ -1927,7 +1288,7 @@ function qcInterfaceOptions_OnShow(self)
     qcIO_M_HIDE_INPROGRESS:SetPoint("TOPLEFT", qcIO_M_HIDE_SEASONAL, "BOTTOMLEFT", 0, 0)
 	_G[qcIO_M_HIDE_INPROGRESS:GetName().."Text"]:SetText(qcL.HIDEINPROGRESSQUESTS)
 	qcIO_M_HIDE_INPROGRESS:SetScript("OnClick", function(self)
-		if (qcIO_M_HIDE_INPROGRESS:GetChecked() == nil) then
+		if (qcIO_M_HIDE_INPROGRESS:GetChecked() == false) then
 			qcSettings.QC_M_HIDE_INPROGRESS = 0
 		else
 			qcSettings.QC_M_HIDE_INPROGRESS = 1
@@ -1942,7 +1303,7 @@ function qcInterfaceOptions_OnShow(self)
     qcIO_L_HIDE_COMPLETED:SetPoint("TOPLEFT", qcListFiltersTitle, "BOTTOMLEFT", 16, -6)
 	_G[qcIO_L_HIDE_COMPLETED:GetName().."Text"]:SetText(qcL.HIDECOMPLETEDQUESTS)
 	qcIO_L_HIDE_COMPLETED:SetScript("OnClick", function(self)
-		if (qcIO_L_HIDE_COMPLETED:GetChecked() == nil) then
+		if (qcIO_L_HIDE_COMPLETED:GetChecked() == false) then
 			qcSettings.QC_L_HIDE_COMPLETED = 0
 		else
 			qcSettings.QC_L_HIDE_COMPLETED = 1
@@ -1953,7 +1314,7 @@ function qcInterfaceOptions_OnShow(self)
     qcIO_L_HIDE_LOWLEVEL:SetPoint("TOPLEFT", qcIO_L_HIDE_COMPLETED, "BOTTOMLEFT", 0, 0)
 	_G[qcIO_L_HIDE_LOWLEVEL:GetName().."Text"]:SetText(qcL.HIDELOWLEVELQUESTS .. COLOUR_DEATHKNIGHT .. " (Not Yet Implemented)")
 	qcIO_L_HIDE_LOWLEVEL:SetScript("OnClick", function(self)
-		if (qcIO_L_HIDE_LOWLEVEL:GetChecked() == nil) then
+		if (qcIO_L_HIDE_LOWLEVEL:GetChecked() == false) then
 			qcSettings.QC_L_HIDE_LOWLEVEL = 0
 		else
 			qcSettings.QC_L_HIDE_LOWLEVEL = 1
@@ -1964,7 +1325,7 @@ function qcInterfaceOptions_OnShow(self)
     qcIO_L_HIDE_PROFESSION:SetPoint("TOPLEFT", qcIO_L_HIDE_LOWLEVEL, "BOTTOMLEFT", 0, 0)
 	_G[qcIO_L_HIDE_PROFESSION:GetName().."Text"]:SetText(qcL.HIDEOTHERPROFESSIONQUESTS .. COLOUR_DEATHKNIGHT .. " (Not Yet Implemented)")
 	qcIO_L_HIDE_PROFESSION:SetScript("OnClick", function(self)
-		if (qcIO_L_HIDE_PROFESSION:GetChecked() == nil) then
+		if (qcIO_L_HIDE_PROFESSION:GetChecked() == false) then
 			qcSettings.QC_L_HIDE_PROFESSION = 0
 		else
 			qcSettings.QC_L_HIDE_PROFESSION = 1
@@ -1979,7 +1340,7 @@ function qcInterfaceOptions_OnShow(self)
     qcIO_ML_HIDE_FACTION:SetPoint("TOPLEFT", qcCombinedFiltersTitle, "BOTTOMLEFT", 16, -6)
 	_G[qcIO_ML_HIDE_FACTION:GetName().."Text"]:SetText(qcL.HIDEOTHERFACTIONQUESTS)
 	qcIO_ML_HIDE_FACTION:SetScript("OnClick", function(self)
-		if (qcIO_ML_HIDE_FACTION:GetChecked() == nil) then
+		if (qcIO_ML_HIDE_FACTION:GetChecked() == false) then
 			qcSettings.QC_ML_HIDE_FACTION = 0
 		else
 			qcSettings.QC_ML_HIDE_FACTION = 1
@@ -1990,7 +1351,7 @@ function qcInterfaceOptions_OnShow(self)
     qcIO_ML_HIDE_RACECLASS:SetPoint("TOPLEFT", qcIO_ML_HIDE_FACTION, "BOTTOMLEFT", 0, 0)
 	_G[qcIO_ML_HIDE_RACECLASS:GetName().."Text"]:SetText(qcL.HIDEOTHERRACEANDCLASSQUESTS)
 	qcIO_ML_HIDE_RACECLASS:SetScript("OnClick", function(self)
-		if (qcIO_ML_HIDE_RACECLASS:GetChecked() == nil) then
+		if (qcIO_ML_HIDE_RACECLASS:GetChecked() == false) then
 			qcSettings.QC_ML_HIDE_RACECLASS = 0
 		else
 			qcSettings.QC_ML_HIDE_RACECLASS = 1
@@ -2017,6 +1378,10 @@ function qcInterfaceOptions_OnLoad(self)
 end
 
 --[[ ##### INTERFACE OPTIONS END ##### ]]--
+
+local function qcWelcomeMessage()
+	print(string.format("%sThanks for using Quest Completist. Spot a quest innaccuracy? Please contribute to the accuracy of the database by using the new Community Editor! (Link on Curse)",QCADDON_CHAT_TITLE))
+end
 
 local function qcCheckSettings()
 
@@ -2149,56 +1514,37 @@ local function qcApplySettings()
 end
 
 local function qcEventHandler(self, event, ...)
-
 	if (event == "WORLD_MAP_UPDATE") then
-
-		qcRefreshMapIcons(GetCurrentMapAreaID(), GetCurrentMapDungeonLevel())
-		qcRefreshPins(GetCurrentMapAreaID())
-
+		qcRefreshPins(GetCurrentMapAreaID(), GetCurrentMapDungeonLevel())
 	elseif (event == "UNIT_QUEST_LOG_CHANGED") then
-
 		if (... == "player") then qcUpdateQuestList(nil, qcMenuSlider:GetValue()) end
-
 	elseif (event == "ZONE_CHANGED_NEW_AREA") then
-
 		qcZoneChangedNewArea()
-
 	elseif (event == "QUEST_ITEM_UPDATE") then
-
 		if (QuestFrame:IsShown()) then QuestFrameNpcNameText:SetText(string.format("%s [%d]",UnitName("questnpc") or "nil",GetQuestID())) end
-
 	elseif (event == "QUEST_DETAIL") then
-
 		local qcQuestID = GetQuestID()
 		if (QuestFrame:IsShown()) then QuestFrameNpcNameText:SetText(string.format("%s [%d]",UnitName("questnpc") or "nil",GetQuestID())) end
 		qcBreadcrumbChecks(qcQuestID)
 		qcNewDataChecks(qcQuestID)
 		qcMutuallyExclusiveChecks(qcQuestID)
-		qcDetectSharedQuestOnDetail(qcQuestID)
+		--qcDetectSharedQuestOnDetail(qcQuestID)
 		if (QCDEBUG_MODE) then qcVerifyMapDataExists() end
-
 	elseif (event == "QUEST_ACCEPTED") then
-
-		qcCollectQuestOnAccept(...)
 		qcUpdateQuestList(nil, qcMenuSlider:GetValue())
-
 	elseif (event == "QUEST_PROGRESS") then
-
 		local qcQuestID = GetQuestID()
 		if (QuestFrame:IsShown()) then QuestFrameNpcNameText:SetText(string.format("%s [%d]",UnitName("questnpc") or "nil",GetQuestID())) end
 		if not (qcQuestID == 0) then
-			qcCollectQuestOnProgressComplete(qcQuestID)
 			qcBreadcrumbChecks(qcQuestID)
 			qcNewDataChecks(qcQuestID)
 			qcMutuallyExclusiveChecks(qcQuestID)
 		end
-
 	elseif (event == "QUEST_COMPLETE") then
-
 		local qcQuestID = GetQuestID()
 		if (QuestFrame:IsShown()) then QuestFrameNpcNameText:SetText(string.format("%s [%d]",UnitName("questnpc") or "nil",GetQuestID())) end
 		if not (qcQuestID == 0) then
-			qcCollectQuestOnProgressComplete(qcQuestID)
+			--qcCollectQuestOnProgressComplete(qcQuestID)
 			qcBreadcrumbChecks(qcQuestID)
 			qcNewDataChecks(qcQuestID)
 			qcMutuallyExclusiveChecks(qcQuestID)
@@ -2207,38 +1553,37 @@ local function qcEventHandler(self, event, ...)
 			qcUpdateSkippedBreadcrumbQuest(qcQuestID)
 			qcUpdateQuestList(nil, qcMenuSlider:GetValue())
 		end
-
 	elseif (event == "PLAYER_ENTERING_WORLD") then
-
 		qcZoneChangedNewArea()
-
 	elseif (event == "ADDON_LOADED") then
-
 		if (... == "QuestCompletist") then
+			if not (qcCompletedQuests) then qcCompletedQuests = {} end
+			if not (qcWorkingDB) then qcWorkingDB = {} end
+			if not (qcWorkingLog) then qcWorkingLog = {} end
 			qcCheckSettings()
 			qcApplySettings()
-			qcCollectUpdate()
+			qcWelcomeMessage()
+			qcZoneChangedNewArea()
 			--qcQuestQueryCompleted()
+			qcMenuSlider:SetValueStep(1);
+			qcMenuSlider:SetObeyStepOnDrag(true);
 		end
-
 	end
 
 end
 
-function qcQuestBuilder_OnLoad(self)
-
-	
-
+function qcQuestCompletistUI_OnShow(self)
+	if (qcSettings) then
+		qcUpdateQuestList(qcCurrentCategoryID,qcMenuSlider:GetValue())
+	end
 end
 
 function qcQuestCompletistUI_OnLoad(self)
-
 	SetPortraitToTexture(self.qcPortrait, "Interface\\ICONS\\TRADE_ARCHAEOLOGY_DRAENEI_TOME")
-	self.qcTitleText:SetText(string.format("Quest Completist v%s",QCADDON_VERSION))
+	self.qcTitleText:SetText(string.format("Quest Completist v%s", QCADDON_VERSION))
 	self.qcCategoryDropdownButton:SetText(GetText("CATEGORIES"))
 	self.qcOptionsButton:SetText(GetText("FILTERS"))
 	self:RegisterForDrag("LeftButton")
-
 	self:RegisterEvent("QUEST_COMPLETE")
 	self:RegisterEvent("QUEST_DETAIL")
 	self:RegisterEvent("QUEST_PROGRESS")
@@ -2250,18 +1595,10 @@ function qcQuestCompletistUI_OnLoad(self)
 	self:RegisterEvent("ADDON_LOADED")
 	self:RegisterEvent("WORLD_MAP_UPDATE")
 	self:SetScript("OnEvent", qcEventHandler)
-
 	qcQuestInformationTooltipSetup()
 	qcQuestReputationTooltipSetup()
 	qcMapTooltipSetup()
 	qcToastTooltipSetup()
 	qcNewDataAlertTooltipSetup()
 	qcMutuallyExclusiveAlertTooltipSetup()
-
-	for qcIndex, qcEntry in ipairs(qcCategoryMenu) do
-		if (qcEntry[3]) then
-			table.sort(qcEntry[3],function(a,b) return a[2]<b[2] end)
-		end
-	end
-
 end

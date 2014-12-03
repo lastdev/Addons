@@ -9,6 +9,12 @@ local debugf = tekDebug and tekDebug:GetFrame("SilverDragon")
 local function Debug(...) if debugf then debugf:AddMessage(string.join(", ", tostringall(...))) end end
 addon.Debug = Debug
 
+local mfloor, mpow, mabs = math.floor, math.pow, math.abs
+local tinsert, tremove = table.insert, table.remove
+local ipairs, pairs = ipairs, pairs
+local IsInInstance, GetCurrentMapAreaID, SetMapByID, SetMapToCurrentZone = IsInInstance, GetCurrentMapAreaID, SetMapByID, SetMapToCurrentZone
+local wowVersion, buildRevision, _, buildTOC = GetBuildInfo()
+
 local globaldb
 function addon:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("SilverDragon2DB", {
@@ -42,16 +48,22 @@ function addon:OnInitialize()
 			mob_notes = {
 				-- 132132 = "Jade"
 			},
+			mob_vignettes = {
+				-- "Something Descriptive That Isn't The Mob Name" = id
+			},
+			mob_quests = {
+				-- mobid = questid
+			},
 			mob_count = {
 				['*'] = 0,
 			},
-			always = {},
+			always = {
+			},
 			ignore = {
-				[32435] = true, -- Vern!
+				[32435] = true, -- Vern
 				[64403] = true, -- Alani
-				[60491] = true, -- Sha of Anger
-				[62346] = true, -- Galleon (depends on if they make his new 5.2 spawn rate very common)
-				[69099] = true, -- Nalak (the next not so rare, rare world boss?)
+				[62346] = true, -- Galleon (spawns every 2 hourish)
+--				[62346] = true, -- Oondasta (spawns every 2 hoursish now)
 				--Throne of Thunder Weekly bosses
 				[70243] = true,--Agony and Anima (Archritualist Kelada)
 				[70238] = true,--Eyes of the Thunder King
@@ -65,7 +77,7 @@ function addon:OnInitialize()
 		},
 		profile = {
 			scan = 1, -- scan interval, 0 for never
-			delay = 600, -- number of seconds to wait between recording the same mob
+			delay = 1200, -- number of seconds to wait between recording the same mob
 			instances = false,
 			taxi = true,
 		},
@@ -135,25 +147,50 @@ local alliance_ignore_mobs = { --Mobs alliance cannot kill
 	[68318] = true,--Dalan Nightbreaker (Krasarang)
 	[68319] = true,--Disha Fearwarden (Krasarang)
 	[68317] = true,--Mavis Harms (Krasarang)
+	-- draenor quartermasters...
+	[82876] = true,--Grand Marshal Tremblade (Ashran)
+	[82878] = true,--Marshal Gabriel (Ashran)
+	[82880] = true,--Marshal Karsh Stormforge (Ashran)
 }
 local horde_ignore_mobs = { --Mobs horde cannot kill
 	[51079] = true,--Captain Foulwind (Vashjir)
 	[68321] = true,--Kar Warmaker (Krasarang)
 	[68322] = true,--Muerta (Krasarang)
 	[68320] = true,--Ubunti the Shade (Krasarang)
+	-- draenor quartermasters...
+	[82877] = true,--High Warlord Volrath (Ashran)
+	[82883] = true,--Warlord Noktyn (Ashran)
+	[82882] = true,--General Aved (Ashran)
 }
 
+local cache_tooltip = CreateFrame("GameTooltip", "SDCacheTooltip")
+cache_tooltip:AddFontStrings(
+	cache_tooltip:CreateFontString("$parentTextLeft1", nil, "GameTooltipText"),
+	cache_tooltip:CreateFontString("$parentTextRight1", nil, "GameTooltipText")
+)
+function addon:RequestCacheForMob(id)
+	-- this doesn't work with just clearlines and the setowner outside of this, and I'm not sure why
+	cache_tooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
+	cache_tooltip:SetHyperlink(("unit:Creature-0-0-0-0-%d"):format(id))
+	if cache_tooltip:IsShown() then
+		local name = SDCacheTooltipTextLeft1:GetText()
+		globaldb.mob_id[name] = id
+		globaldb.mob_name[id] = name
+		return name
+	end
+end
+
 local valid_unit_types = {
-	[0x003] = true, -- npcs
-	[0x005] = true, -- vehicles
+	Creature = true, -- npcs
+	Vehicle = true, -- vehicles
 }
 local function npc_id_from_guid(guid)
 	if not guid then return end
-	local unit_type = bit.band(tonumber("0x"..strsub(guid, 3, 5)), 0x00f)
-	if not valid_unit_types[unit_type] then
-		return
-	end
-	return tonumber("0x"..strsub(guid, 6, 10))
+	local unit_type, id = guid:match("(%a+)-%d+-%d+-%d+-%d+-(%d+)-.+")
+	if not (unit_type and valid_unit_types[unit_type]) then
+ 		return
+ 	end
+	return tonumber(id)
 end
 function addon:UnitID(unit)
 	return npc_id_from_guid(UnitGUID(unit))
@@ -176,6 +213,7 @@ local elite_types = {
 	rareelite = true,
 	worldboss = true,
 }
+
 function addon:SaveMob(id, name, zone, x, y, level, elite, creature_type)
 	Debug("SaveMob", id, name, zone, x, y, level, elite, creature_type)
 	if not id then return end
@@ -197,7 +235,7 @@ function addon:SaveMob(id, name, zone, x, y, level, elite, creature_type)
 	globaldb.mob_type[id] = BCTR[creature_type]
 	globaldb.mob_name[id] = name
 	globaldb.mob_id[name] = id
-
+	
 	if not (zone and x and y and x > 0 and y > 0) then
 		return
 	end
@@ -206,24 +244,24 @@ function addon:SaveMob(id, name, zone, x, y, level, elite, creature_type)
 	local newloc = true
 	for _, coord in ipairs(globaldb.mobs_byzoneid[zone][id]) do
 		local loc_x, loc_y = self:GetXY(coord)
-		if (math.abs(loc_x - x) < 0.03) and (math.abs(loc_y - y) < 0.03) then
+		if (mabs(loc_x - x) < 0.03) and (mabs(loc_y - y) < 0.03) then
 			-- We've seen it close to here before. (within 3% of the zone)
 			newloc = false
 			break
 		end
 	end
 	if newloc then
-		table.insert(globaldb.mobs_byzoneid[zone][id], self:GetCoord(x, y))
+		tinsert(globaldb.mobs_byzoneid[zone][id], self:GetCoord(x, y))
 	end
 	return newloc
 end
 
--- Returns name, num_locs, level, is_elite, creature_type, last_seen, times_seen, is_tameable
+-- Returns name, num_locs, level, is_elite, creature_type, last_seen, times_seen, is_tameable, questid
 function addon:GetMob(zone, id)
 	if not (zone and id and globaldb.mobs_byzoneid[zone][id]) then
 		return 0, 0, false, UNKNOWN, nil, 0, nil, nil
 	end
-	return globaldb.mob_name[id], #globaldb.mobs_byzoneid[zone][id], globaldb.mob_level[id], globaldb.mob_elite[id], BCT[globaldb.mob_type[id]], globaldb.mob_seen[id], globaldb.mob_count[id], globaldb.mob_tameable[name]
+	return globaldb.mob_name[id], #globaldb.mobs_byzoneid[zone][id], globaldb.mob_level[id], globaldb.mob_elite[id], BCT[globaldb.mob_type[id]], globaldb.mob_seen[id], globaldb.mob_count[id], globaldb.mob_tameable[name], globaldb.mob_quests[id]
 end
 
 function addon:GetMobLabel(id)
@@ -234,34 +272,31 @@ function addon:GetMobLabel(id)
 end
 
 local faction = UnitFactionGroup("player")
-function addon:NotifyMob(id, name, zone, x, y, is_dead, is_new_location, source, unit, silent)
+function addon:NotifyMob(id, name, zone, x, y, is_dead, is_new_location, source, unit, silent, force)
 	self.events:Fire("Seen_Raw", id, name, zone, x, y, is_dead, is_new_location, source, unit)
 
 	if silent then
 		Debug("Skipping notification: silent call", id, name)
 		return
 	end
+	--Maybe add an option for this later. This checks unit faction and ignores mobs your faction cannot do anything with.
+	if faction == "Alliance" and alliance_ignore_mobs[id] or faction == "Horde" and horde_ignore_mobs[id] then
+		return
+	end
 	if globaldb.ignore[id] then
 		Debug("Skipping notification: ignored", id, name)
 		return
 	end
-	--Maybe add an option for this later. This checks unit faction and ignores mobs your faction cannot do anything with.
-	if faction == "Alliance" and alliance_ignore_mobs[id] or faction == "Horde" and horde_ignore_mobs[id] then
-		Debug("Skipping notification: faction ignore", id, name)
-		return
-	end
-	if lastseen[id] and time() < lastseen[id] + self.db.profile.delay then
-		Debug("Skipping notification: seen", id, name, lastseen[id], time() - self.db.profile.delay)
+	if not force and lastseen[id..zone] and time() < lastseen[id..zone] + self.db.profile.delay then
+		Debug("Skipping notification: seen", id, name, lastseen[id..zone], time() - self.db.profile.delay)
 		return
 	end
 	if (not self.db.profile.taxi) and UnitOnTaxi('player') then
 		Debug("Skipping notification: taxi", id, name)
 		return
 	end
-
 	globaldb.mob_count[id] = globaldb.mob_count[id] + 1
-	lastseen[id] = time()
-
+	lastseen[id..zone] = time()
 	self.events:Fire("Seen", id, name, zone, x, y, is_dead, is_new_location, source, unit)
 end
 
@@ -290,7 +325,7 @@ function addon:DeleteMobCoord(zone, id, coord)
 	if not globaldb.mobs_byzoneid[zone] and globaldb.mobs_byzoneid[zone][id] then return end
 	for i, mob_coord in ipairs(globaldb.mobs_byzoneid[zone][id]) do
 		if coord == mob_coord then
-			table.remove(globaldb.mobs_byzoneid[zone][id], i)
+			tremove(globaldb.mobs_byzoneid[zone][id], i)
 			return
 		end
 	end
@@ -327,9 +362,9 @@ end
 -- Scanning:
 
 function addon:CheckNearby()
+	if (not self.db.profile.instances) and IsInInstance() then return end
 	local zone = self:GetPlayerZone()
 	if not zone then return end
-	if (not self.db.profile.instances) and IsInInstance() then return end
 
 	self.events:Fire("Scan", zone)
 end
@@ -337,18 +372,18 @@ end
 -- Utility:
 
 addon.round = function(num, precision)
-	return math.floor(num * math.pow(10, precision) + 0.5) / math.pow(10, precision)
+	return mfloor(num * mpow(10, precision) + 0.5) / mpow(10, precision)
 end
 
 function addon:FormatLastSeen(t)
 	t = tonumber(t)
-	if not t or t == 0 then return 'Never' end
+	if not t or t == 0 then return NEVER end
 	local currentTime = time()
-	local minutes = math.ceil((currentTime - t) / 60)
-	if minutes > 59 then
-		local hours = math.ceil((currentTime - t) / 3600)
+	local minutes = mfloor(((currentTime - t) / 60) + 0.5)
+	if minutes > 119 then
+		local hours = mfloor(((currentTime - t) / 3600) + 0.5)
 		if hours > 23 then
-			return math.ceil((currentTime - t) / 86400).." day(s)"
+			return mfloor(((currentTime - t) / 86400) + 0.5).." day(s)"
 		else
 			return hours.." hour(s)"
 		end

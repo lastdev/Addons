@@ -16,19 +16,17 @@ GTFO.SpellID["19428"] = {
 	--desc = "Conflagration (Magmadar, Molten Core)";
 	sound = 1;
 	applicationOnly = true;
-	trivialLevel = 70;
 };
 
 GTFO.SpellID["19717"] = {
 	--desc = "Rain of Fire (Gehennas, Molten Core)";
 	sound = 2;
-	trivialLevel = 70;
 };
 
 GTFO.SpellID["19698"] = {
 	--desc = "Inferno (Baron Geddon, Molten Core)";
 	sound = 1;
-	trivialLevel = 70;
+	tankSound = 2;
 };
 
 GTFO.SpellID["10363"] = {

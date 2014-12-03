@@ -1,3 +1,6 @@
+== Version 60000.2
+Update to latest BSF library.
+
 == Version 60000.1.1
 * Fix combat log spamming (sorry)
 

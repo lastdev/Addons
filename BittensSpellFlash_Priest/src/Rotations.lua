@@ -2,6 +2,7 @@ local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
+local u = BittensGlobalTables.GetTable("BittensUtilities")
 
 local GetTime = GetTime
 local SPELL_POWER_SHADOW_ORBS = SPELL_POWER_SHADOW_ORBS

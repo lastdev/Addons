@@ -1,5 +1,5 @@
 -- Coordinates
--- By Szandos, based on code from several other map addons, mainly MiniCoords by Pimpace (no longer updated)
+-- By Szandos
 
 --Variables
 local Coordinates_UpdateInterval = 0.2
@@ -80,9 +80,6 @@ function Coordinates_eventFrame:VARIABLES_LOADED()
 		CoordinatesDB["fontSize"] = 12
 	end
 	Coordinates_eventFrame:SetScript("OnUpdate", function(self, elapsed) Coordinates_OnUpdate(self, elapsed) end)
-	
-	-- Temp fix for taint introduced by Blizzard in 5.4.1
-	setfenv(WorldMapFrame_OnShow, setmetatable({UpdateMicroButtons=function() end }, { __index = _G}))
 end
 
 function Coordinates_eventFrame:ZONE_CHANGED_NEW_AREA()
@@ -131,7 +128,7 @@ function Coordinates_UpdateCoordinates()
 		local top = WorldMapDetailFrame:GetTop()
 		cursorX = (cursorX - left) / width * 100
 		cursorY = (top - cursorY) / height * 100
- 		worldmapCoordsText = "Cursor(X,Y): "..format("%.1f , %.1f |", cursorX, cursorY)
+ 		local worldmapCoordsText = "Cursor(X,Y): "..format("%.1f , %.1f |", cursorX, cursorY)
 		
 		-- Player position
 		local px, py = GetPlayerMapPosition("player")

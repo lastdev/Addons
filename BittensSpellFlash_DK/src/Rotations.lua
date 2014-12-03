@@ -1,6 +1,7 @@
 local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
+local x = s.UpdatedVariables
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
 local GetRuneCooldown = GetRuneCooldown
@@ -141,9 +142,19 @@ function a.PreFlash()
    local now = GetTime()
    for i = 1, 6 do
       local rune = a.Runes[i]
-      local start, duration = GetRuneCooldown(i)
+      local start, duration, ready = GetRuneCooldown(i)
 
-      if start == 0 then -- rune is ready to use
+      -- @todo danielp 2014-11-29: ticket 200 reported a bug where start was
+      -- nil, on a level 58 DK, during zoning, and I can't reproduce it.
+      --
+      -- extra debugging output, and work around it by just *assuming* that it
+      -- is ready if we didn't get any cooldown data.
+      if start == nil and not a.printedNilRuneDebug then
+         a.printedNilRuneDebug = true
+         print(format("please file a ticket and report that rune cooldown %d is nil: %s, %s, %s", i, start, duration, ready))
+      end
+
+      if (start or 0) == 0 then -- rune is ready to use
          rune.Delay = 0
       else
          rune.Delay = start + duration - now - busyTime
@@ -381,8 +392,8 @@ a.Rotations.Frost = {
       flashInterrupts()
       c.FlashAll(
          "Pillar of Frost",
-         "Death Siphon",
          "Death Strike with Dark Succor",
+         "Death Siphon",
          "Horn of Winter for Buff, Optional")
 
       -- c.Debug("aoe", "harm", c.EstimatedHarmTargets, "heal", c.EstimatedHealTargets)
@@ -422,6 +433,8 @@ a.Rotations.Frost = {
             "Howling Blast under Freezing Fog",
             "Blood Tap at 8 or Non-Execute",
             "Death and Decay U, optional",
+            "Frost Strike for PS cap",
+            "Plague Strike for Blood Plague",
             "Frost Strike for Oblit cap no KM",
             "Obliterate U w/out KM",
             "Frost Strike for HB cap",
@@ -429,7 +442,6 @@ a.Rotations.Frost = {
             "Blood Tap",
             "Plague Leech",
             "Frost Strike for PS cap",
-            "Plague Strike for Blood Plague",
             "Frost Strike when not pooling",
             "Plague Strike U",
             "Empower Rune Weapon")
@@ -516,49 +528,104 @@ a.DTCast = 0
 a.Rotations.Unholy = {
    Spec = 3,
 
-   UsefulStats = { "Strength", "Melee Hit", "Crit", "Haste" },
+   UsefulStats = {
+      "Strength", "Multistrike", "Crit", "Versatility", "Haste"
+   },
 
    FlashInCombat = function()
       a.SetCost(0, 0, 1, 0, "Soul Reaper - Unholy")
       flashInterrupts()
+
       c.FlashAll(
+         "Death Strike with Dark Succor",
          "Death Siphon",
-         "Horn of Winter for Buff, Optional")
-      local flashing
-         flashing = c.PriorityFlash(
-            "Outbreak",
-            "Unholy Blight",
-            "Soul Reaper - Unholy",
-            "Blood Tap for Soul Reaper - Unholy",
-            "Plague Strike for Both Diseases",
-            "Summon Gargoyle",
-            "Dark Transformation",
-            "Blood Tap for Dark Transformation",
-            "Death Coil at 90",
-            "Death and Decay UU",
-            "Scourge Strike UU",
-            "Festering Strike BBFF",
-            "Death and Decay unless Soul Reaper",
-            "Blood Tap for D&D",
-            "Death Coil under Sudden Doom or for Dark Transformation",
-            "Scourge Strike unless Soul Reaper",
+         "Horn of Winter for Buff, Optional"
+      )
+
+      if c.EstimatedHarmTargets < 2 then
+         c.DelayPriorityFlash(
             "Plague Leech if Outbreak",
+            "Plague Leech at 2",
+            "Blood Tap for Soul Reaper - Unholy",
+            "Soul Reaper - Unholy",
+            "Summon Gargoyle",
+            "Death Coil 1 Rune to cap",
+            "Defile",
+            "Blood Tap for Dark Transformation",
+            "Dark Transformation",
+            "Unholy Blight for Unholy",
+            "Outbreak",
+            "Plague Strike for Diseases",
+            -- breath_of_sindragosa,if=runic_power>75
+            -- run_action_list,name=bos_st,if=dot.breath_of_sindragosa.ticking
+            -- death_and_decay,if=cooldown.breath_of_sindragosa.remains<7&runic_power<88&talent.breath_of_sindragosa.enabled
+            -- scourge_strike,if=cooldown.breath_of_sindragosa.remains<7&runic_power<88&talent.breath_of_sindragosa.enabled
+            -- festering_strike,if=cooldown.breath_of_sindragosa.remains<7&runic_power<76&talent.breath_of_sindragosa.enabled
+            "Death and Decay UU",
+            "Blood Tap for D&D UU",
+            "Scourge Strike UU",
+            "Death Coil 1 Rune to cap",
+            "Festering Strike BBFF",
+            "Death and Decay",
+            "Blood Tap for D&D",
+            "Blood Tap for DC cap",
+            -- blood_tap,if=buff.blood_charge.stack>10&(buff.sudden_doom.react|(buff.dark_transformation.down&rune.unholy<=1))
+            "Death Coil under Sudden Doom or for Dark Transformation",
+            "Scourge Strike",
             "Festering Strike",
-            "Death Coil unless Gargoyle or Dark Transformation",
-            "Blood Tap at 8 or for Dark Transformation",
-            "Empower Rune Weapon")
---         end
-      if flashing and c.GetSpell(flashing).ID == c.GetID("Death Coil") then
-         c.FlashAll("Blood Tap at 11")
+            "Blood Tap at 10 with 30 RP",
+            -- "Death Coil",
+            "Empower Rune Weapon"
+         )
+      else -- AoE rotation
+         c.DelayPriorityFlash(
+            "Unholy Blight unconditionally",
+            -- @todo danielp 2014-11-29: BB to spread infection, if any target
+            -- has no diseases, and something does have them up.
+            -- This requires much more sophisticated target tracking than I
+            -- have built so far.
+            "Outbreak",
+            "Plague Strike for Diseases",
+            "Defile",
+            -- breath_of_sindragosa,if=runic_power>75
+            -- run_action_list,name=bos_aoe,if=dot.breath_of_sindragosa.ticking
+            "Blood Boil BB",
+            "Blood Boil FFDD",
+            "Summon Gargoyle",
+            "Blood Tap for Dark Transformation",
+            "Dark Transformation",
+            "Death and Decay U",
+            "Blood Tap for Soul Reaper - Unholy",
+            "Soul Reaper - Unholy",
+            "Scourge Strike UU",
+            "Blood Tap at 10",
+            "Death Coil 1 Rune to cap",
+            "Death Coil under Sudden Doom or for Dark Transformation",
+            "Blood Boil",
+            "Icy Touch",
+            "Scourge Strike one unholy only",
+            "Plague Leech",
+            "Empower Rune Weapon"
+         )
       end
    end,
 
    FlashOutOfCombat = function()
-      c.FlashAll("Dark Transformation")
+      if x.EnemyDetected then
+         c.DelayPriorityFlash(
+            "Dark Transformation",
+            "Defile",
+            "Outbreak",
+            "Plague Strike"
+         )
+      end
    end,
 
    FlashAlways = function()
-      c.FlashAll("Raise Dead", "Unholy Presence")
+      c.FlashAll(
+         "Unholy Presence",
+         "Raise Dead"
+      )
    end,
 
    CastSucceeded = function(info)

@@ -469,7 +469,7 @@ function Outfitter._OutfitMethodsEM:IsFullyEquipped()
 		return false
 	end
 	
-	for vSlotID, vIgnore in GetEquipmentSetIgnoreSlots(self.Name) do
+	for vSlotID, vIgnore in pairs(GetEquipmentSetIgnoreSlots(self.Name)) do
 		
 		local vLocation = vLocations[vSlotID]
 		if vLocation then
@@ -556,7 +556,7 @@ end
 function Outfitter._OutfitMethodsEM:IsEmpty()
 	self.ItemLocations = GetEquipmentSetLocations(self.Name)
 	
-	for vSlotID, vIgnore in GetEquipmentSetIgnoreSlots(self.Name) do
+	for vSlotID, vIgnore in pairs(GetEquipmentSetIgnoreSlots(self.Name)) do
 		if not vIgnore then
 			return false
 		end

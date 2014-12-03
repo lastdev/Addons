@@ -264,8 +264,10 @@ local ACHID_ZONE_MISC = {
 	["Zul'Drak"] = { "1576:2", "1596:2" },	-- "Of Blood and Anguish", "Guru of Drakuru"
 	["Wintergrasp"] = { 1752, 2199, 1717, 1751, 1755, 1727, 1723 },
 -- Darkmoon Faire
-	["Darkmoon Island"] = { 6020, 6021, 6022, 6023, 6026, 6027, 6028, 6029, IsAlliance and 6030 or 6031, 6032, 6025 },
-	["Darkmoon Faire"] = { 6020, 6021, 6022, 6023, 6026, 6027, 6028, 6029, IsAlliance and 6030 or 6031, 6032, 6025 },
+	["Darkmoon Island"] = { 6020, 6021, 6022, 6023, 6026, 6027, 6028, 6029, IsAlliance and 6030 or 6031, 6032, 6025,
+		9250, 6019, 6332 },
+	["Darkmoon Faire"] = { 6020, 6021, 6022, 6023, 6026, 6027, 6028, 6029, IsAlliance and 6030 or 6031, 6032, 6025,
+		9250, 6019, 6332 },
 	-- !! not 100% certain which is needed; may be both; test when the faire's available
 -- Other Cataclysm-related
 	["Deepholm"] = { 5445, 5446, 5447, 5449 },	-- "Fungalophobia", "The Glop Family Line",
@@ -780,6 +782,8 @@ local frame, panel, sortdrop
 local LocationsList, EditZoneOverride, subzdrop, subzdrop_menu, subzdrop_Update = {}
 local diffdrop, raidsizedrop
 local RefreshBtn, ResetBtn, NoSuggestionsLabel, ResultsLabel
+
+WHAT = LocationsList
 
 local function SortDrop_OnSelect(self, value)
   VARS.SuggestionsSort = value
@@ -1419,7 +1423,7 @@ function Overachiever.Debug_GetIDsInCat(cat)
 end
 --]]
 
---[[
+--[[ --]]
 -- /run Overachiever.Debug_GetMissingAch()
 local function getAchIDsFromTab(from, to)
   for k,v in pairs(from) do

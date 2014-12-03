@@ -19,7 +19,7 @@ function ReagentRestocker:fixBoolean(var)
 end
 
 -- Maximum database version.
-ReagentRestocker.maxVer = 16;
+ReagentRestocker.maxVer = 17;
 
 function ReagentRestocker:loadDB()
 
@@ -46,6 +46,7 @@ function ReagentRestocker:loadDB()
 		ReagentRestockerDB.Options.UseTextLDB = false
 		ReagentRestockerDB.Options.SingleLDB = true
 		ReagentRestockerDB.Options.ReagentWarning = true
+		ReagentRestockerDB.Options.AutoDepositReagents = false
 		ReagentRestockerDB.Options.AutoSellQuality = false
 		ReagentRestockerDB.Options.AutoSellQualityLevel = 0
 		ReagentRestockerDB.Options.AutoDestroyGrays = false
@@ -71,7 +72,7 @@ function ReagentRestocker:loadDB()
 		ReagentRestockerDB.Version = GetAddOnMetadata(addonName, "Version");
 		
 		-- Database version, so I don't have to parse the addon's version, which is a string.
-		ReagentRestockerDB.DataVersion = 16;
+		ReagentRestockerDB.DataVersion = ReagentRestocker.maxVer;
 	end
 	
 	-- Initialize global table, which has its own versioning independent of per-character versioning.
@@ -403,6 +404,10 @@ function ReagentRestocker:loadDB()
 		ReagentRestockerDB.DataVersion = 16;
 	end
 	
+	if ReagentRestockerDB.DataVersion == 16 then
+		ReagentRestockerDB.Options.AutoDepositReagents = false
+		ReagentRestockerDB.DataVersion = 17
+	end
 	
 	-- Fix any nil quantities.
 	--for k, v in pairs(ReagentRestockerDB["Items"]) do

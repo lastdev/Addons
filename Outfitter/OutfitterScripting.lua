@@ -427,7 +427,7 @@ if event == "GAMETOOLTIP_SHOW" then
     -- Check the tooltip for an orange or red tradeskill message
     -- and equip the outfit if there is one
 
-    local hasText, isDifficult = Outfitter:TooltipContainsLine(GameTooltip, ]]..pTooltipGatherMessage..[[)
+    local hasText, isDifficult = Outfitter:TooltipContainsLine(GameTooltip, "]]..pTooltipGatherMessage..[[")
 
     if hasText and (setting.ignoreDifficulty or isDifficult) then
         equip = true
@@ -490,19 +490,19 @@ Outfitter.PresetScripts =
 		Name = Outfitter.cHerbalismOutfit,
 		ID = "HERBALISM",
 		Category = "TRADE",
-		Script = Outfitter:GenerateGatheringScript("UNIT_SKINNABLE_HERB", Outfitter.cHerbalismDescription),
+		Script = Outfitter:GenerateGatheringScript(Outfitter.LBI["Herbalism"], Outfitter.cHerbalismDescription),
 	},
 	{
 		Name = Outfitter.cMiningOutfit,
 		ID = "MINING",
 		Category = "TRADE",
-		Script = Outfitter:GenerateGatheringScript("UNIT_SKINNABLE_ROCK", Outfitter.cMiningDescription),
+		Script = Outfitter:GenerateGatheringScript(Outfitter.LBI["Mining"], Outfitter.cMiningDescription),
 	},
 	{
 		Name = Outfitter.cSkinningOutfit,
 		ID = "SKINNING",
 		Category = "TRADE",
-		Script = Outfitter:GenerateGatheringScript("UNIT_SKINNABLE_LEATHER", Outfitter.cSkinningDescription),
+		Script = Outfitter:GenerateGatheringScript(UNIT_SKINNABLE_LEATHER, Outfitter.cSkinningDescription),
 	},
 	{
 		Name = Outfitter.cLockpickingOutfit,
@@ -1410,22 +1410,20 @@ end
 		Name = Outfitter.cArgentTournamentOutfit,
 		ID = "ARGENT_TOURNY",
 		Category = "QUEST",
-		Script = Outfitter:GenerateScriptHeader("GAMETOOLTIP_SHOW GAMETOOLTIP_HIDE UNIT_ENTERED_VEHICLE UNIT_EXITED_VEHICLE", Outfitter.cArgentTournamentOutfit)..
+		Script = Outfitter:GenerateScriptHeader("GAMETOOLTIP_SHOW GAMETOOLTIP_HIDE UPDATE_MOUSEOVER_UNIT UNIT_ENTERED_VEHICLE UNIT_EXITED_VEHICLE", Outfitter.cArgentTournamentOutfit)..
 [[
-if event == "GAMETOOLTIP_SHOW" then
+if event == "GAMETOOLTIP_SHOW" or event == "UPDATE_MOUSEOVER_UNIT" then
     local unitGUID = UnitGUID("mouseover")
     
     if not unitGUID then
         return
     end
     
-    local unitType = unitGUID:sub(5, 5)
+    local unitType, _, _, _, _, npcID = strsplit("-", unitGUID)
     
-    if unitType ~= "3" and unitType ~= "5" then
+    if unitType ~= "Vehicle" then
         return
     end
-    
-    local npcID = tonumber(unitGUID:sub(7, 10), 16)
     
     if not self.MountIDs then
         if UnitFactionGroup("player") == "Alliance" then
@@ -1456,7 +1454,7 @@ if event == "GAMETOOLTIP_SHOW" then
         self.MountIDs[34125] = "Stabled Campaign Warhorse"
     end
     
-    if self.MountIDs[npcID] then
+    if self.MountIDs[tonumber(npcID)] then
         equip = true
     end
 elseif event == "GAMETOOLTIP_HIDE"
@@ -1481,22 +1479,20 @@ end
 		Name = "Vigilance on Wings",
 		ID = "VIGILANCE_ON_WINGS",
 		Category = "QUEST",
-		Script = Outfitter:GenerateScriptHeader("GAMETOOLTIP_SHOW GAMETOOLTIP_HIDE UNIT_ENTERED_VEHICLE UNIT_EXITED_VEHICLE", "")..
+		Script = Outfitter:GenerateScriptHeader("GAMETOOLTIP_SHOW UPDATE_MOUSEOVER_UNIT GAMETOOLTIP_HIDE UNIT_ENTERED_VEHICLE UNIT_EXITED_VEHICLE", "")..
 [[
-if event == "GAMETOOLTIP_SHOW" then
+if event == "GAMETOOLTIP_SHOW" or event == "UPDATE_MOUSEOVER_UNIT" then
     local unitGUID = UnitGUID("mouseover")
     
     if not unitGUID then
         return
     end
     
-    local unitType = unitGUID:sub(5, 5)
+    local unitType, _, _, _, _, npcID = strsplit("-", unitGUID)
     
-    if unitType ~= "3" and unitType ~= "5" then
+    if unitType ~= "Creature" then
         return
     end
-    
-    local npcID = tonumber(unitGUID:sub(7, 10), 16)
     
     if not self.MountIDs then
         self.MountIDs = {}
@@ -1506,7 +1502,7 @@ if event == "GAMETOOLTIP_SHOW" then
         self.MountIDs[40723] = "Aviana's Guardian"
     end
     
-    if self.MountIDs[npcID] then
+    if self.MountIDs[tonumber(npcID)] then
         equip = true
     end
 elseif event == "GAMETOOLTIP_HIDE"
@@ -1531,28 +1527,30 @@ end
 		Name = Outfitter.cFlameLeviathanOutfit,
 		ID = "FLAME_LEVIATHAN",
 		Category = "QUEST",
-		Script = Outfitter:GenerateScriptHeader("GAMETOOLTIP_SHOW GAMETOOLTIP_HIDE UNIT_ENTERED_VEHICLE UNIT_EXITED_VEHICLE PLAYER_REGEN_ENABLED", Outfitter.cFlameLeviathanOutfitDescription)..
+		Script = Outfitter:GenerateScriptHeader("GAMETOOLTIP_SHOW UPDATE_MOUSEOVER_UNIT GAMETOOLTIP_HIDE UNIT_ENTERED_VEHICLE UNIT_EXITED_VEHICLE PLAYER_REGEN_ENABLED", Outfitter.cFlameLeviathanOutfitDescription)..
 [[
-if event == "GAMETOOLTIP_SHOW" then
+if event == "GAMETOOLTIP_SHOW" or event == "UPDATE_MOUSEOVER_UNIT" then
     local unitGUID = UnitGUID("mouseover")
     
-    if not unitGUID
-    or unitGUID:sub(5, 5) ~= "5" then
+    if not unitGUID then
         return
     end
     
-    local npcID = tonumber(unitGUID:sub(9, 12), 16)
+    local unitType, _, _, _, _, npcID = strsplit("-", unitGUID)
+    
+    if unitType ~= "Vehicle" then
+        return
+    end
     
     if not self.MountIDs then
-        self.MountIDs =
-        {
+        self.MountIDs = {
             [33060] = "Salvaged Siege Engine",
             [33109] = "Salvaged Demolisher",
             [33062] = "Salvaged Chopper",
         }
     end
     
-    if self.MountIDs[npcID] then
+    if self.MountIDs[tonumber(npcID)] then
         equip = true
     end
 elseif event == "GAMETOOLTIP_HIDE"
@@ -1597,6 +1595,19 @@ if GetZoneText() == GetMapNameByID(477) then -- Nagrand
     end
 else
     equip = false -- Not in Nagrand
+end
+]],
+	},
+	{
+		Name = Outfitter.cQuestTurninOutfit,
+		ID = "QUEST_TURNIN",
+		Category = "QUEST",
+		Script = Outfitter:GenerateScriptHeader("QUEST_PROGRESS QUEST_FINISHED", Outfitter.cQuestTurninOutfitDescription)..
+[[
+if event == "QUEST_PROGRESS" then
+    equip = true
+elseif didEquip then
+    equip = false
 end
 ]],
 	},

@@ -11,6 +11,7 @@ local GetZoneText = GetZoneText
 local max = math.max
 local pairs = pairs
 local select = select
+local type = type
 
 local s = SpellFlashAddon
 local x = s.UpdatedVariables
@@ -208,10 +209,13 @@ function c.PriorityFlash(...)
          end
       end
    end
-   if rotation.ExtraDebugInfo then
-      c.Debug("Flash", rotation.ExtraDebugInfo(), flashed)
-   else
-      c.Debug("Flash", flashed)
+   if c.DebugLastFlashedSpell ~= flashed then
+      if rotation.ExtraDebugInfo then
+         c.Debug("Flash", rotation.ExtraDebugInfo(), flashed)
+      else
+         c.Debug("Flash", flashed)
+      end
+      c.DebugLastFlashedSpell = flashed
    end
    if movementFallthrough and overrideColor then
       rotation:MovementFallthrough()
@@ -336,9 +340,7 @@ function c.DelayPriorityFlash(...)
                      delay = max(delay, pusherGoals[k])
                   end
                end
-               if delay < nextDelay
-                  and (not modDelay or delay <= modDelay) then
-
+               if delay < nextDelay and (not modDelay or delay <= modDelay) then
 --c.Debug("DelayPriorityFlash", "  ^ use it", delay)
                   if spell.Continue then
                      continuers[spell] = delay
@@ -360,14 +362,15 @@ function c.DelayPriorityFlash(...)
       end
    end
    if nextSpell then
-      if rotation.ExtraDebugInfo then
-         c.Debug("Flash",
-            rotation.ExtraDebugInfo(), nextSpellName, nextDelay)
-      else
-         c.Debug("Flash", nextSpellName, nextDelay)
+      if c.DebugLastFlashedSpell ~= nextSpellName then
+         if rotation.ExtraDebugInfo then
+            c.Debug("Flash", rotation.ExtraDebugInfo(), nextSpellName, nextDelay)
+         else
+            c.Debug("Flash", nextSpellName, nextDelay)
+         end
+         c.DebugLastFlashedSpell = nextSpellName
       end
-      return nextSpellName,
-         delayFlash(nextSpell, nextDelay, nextSpellMinDelay, rotation)
+      return nextSpellName, delayFlash(nextSpell, nextDelay, nextSpellMinDelay, rotation)
    end
 end
 

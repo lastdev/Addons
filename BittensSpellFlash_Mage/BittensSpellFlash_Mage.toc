@@ -1,5 +1,5 @@
 ## Interface: 50400
-## Version: 50400.2.5
+## Version: 50400.3
 ## Author: Xemnosyst
 ## Title: Bitten's SpellFlash: Mage
 ## Notes: Replaces Blizzard's default proc highlighting to flash a maximum dps rotation.
@@ -9,7 +9,7 @@
 ## LoadOnDemand: 1
 ## X-SpellFlashAddon-LoadWith: Mage
 ## SavedVariablesPerCharacter: CombustionMonitorSettings
-## X-Curse-Packaged-Version: 50400.2.5
+## X-Curse-Packaged-Version: 50400.3
 ## X-Curse-Project-Name: Bitten's SpellFlash: Mage
 ## X-Curse-Project-ID: bittens-spellflash-mage
 ## X-Curse-Repository-ID: wow/bittens-spellflash-mage/mainline

@@ -1,4 +1,4 @@
-<!-- Revision: 595 2013-09-23T19:49:05Z -->
+<!-- Revision: 658 2014-11-30T13:26:06Z -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\FrameXML\UI.xsd">
   <Script file="ArmoryFrame.lua"/>
@@ -533,12 +533,6 @@
           </OnEnter>
         </Scripts>
       </Button>
-      <Frame name="ArmoryFrameInsetRight" inherits="InsetFrameTemplate" hidden="true">
-        <Anchors>
-          <Anchor point="TOPLEFT" relativeTo="ArmoryFrameInset" relativePoint="TOPRIGHT" x="1" y="0"/>
-          <Anchor point="BOTTOMRIGHT" relativeTo="ArmoryFrameInset" x="-4" y="4"/>
-        </Anchors>
-      </Frame>
     </Frames>
     <Scripts>
       <OnLoad>

@@ -4,7 +4,7 @@
 ## Title-esES: ArmoryGuildBank [Banco de Hermandad]
 ## Title-frFR: ArmoryGuildBank [Banque de Guilde]
 ## Title-koKR: ArmoryGuildBank [길드은행 정보 열람]
-## Version: v12.1.2
+## Version: v12.1.3
 ## Notes: Provides guild bank information to Armory users
 ## Notes-deDE: Ermöglicht Gildenbankinformationen für Armorynutzer
 ## Notes-esES: Da información del banco de la hermandad a los usuarios de Armory
@@ -18,7 +18,7 @@
 ## X-Website: http://www.wow-neighbours.com/
 ## X-Category: Inventory
 ## X-Part-Of: Armory
-## X-Curse-Packaged-Version: v12.1.2
+## X-Curse-Packaged-Version: v12.1.3
 ## X-Curse-Project-Name: Armory
 ## X-Curse-Project-ID: armory
 ## X-Curse-Repository-ID: wow/armory/mainline

@@ -1,3 +1,28 @@
+== Version 60000.11
+Mark as 6.0 compatible.
+
+== Version 60000.10
+Fix a stupid lua error that broke non-BM specs.
+
+== Version 60000.9
+Update to latest BSF library.
+
+== Version 60000.8
+Update BM hunter for level 100.  Also, clean up other specs a tiny bit.
+
+This is the start of getting the module into real shape for WoD, but starting
+with BM because I need to get my hunter to 100 in order to properly test the
+new talents, etc.
+
+This incidentally excised a bunch of dead spells, and fixed a long-standing
+bug that could cause focus generators to be ignored when they should be used.
+
+== Version 60000.7
+* Fix a lua error on load, for reals.
+
+== Version 60000.6
+* Fix a lua error on load.
+
 == Version 60000.5
 * versions 2 through 4 don't really exist.
 

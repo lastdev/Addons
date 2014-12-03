@@ -1,3 +1,11 @@
+== Version 60000.6
+Update to latest BSF library.
+
+== Version 60000.5
+* Retribution pre-combat flashing (opening spell for starting fight.)
+* Fix lua error flashing Hammer of Wrath.
+* Additional lua error fixes.
+
 == Version 60000.4
 * Execution Sentence is optional, always.
 * Fix flashing Final Verdict without the HP to cast it.

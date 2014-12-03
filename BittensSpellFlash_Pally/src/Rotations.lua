@@ -1,6 +1,7 @@
 local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
+local x = s.UpdatedVariables
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
@@ -514,15 +515,28 @@ a.Rotations.Retribution = {
       flashRaidBuffs()
    end,
 
+   FlashOutOfCombat = function()
+      if x.EnemyDetected then
+         c.DelayPriorityFlash(
+            "Final Verdict at 5",
+            "Templar's Verdict at 5",
+            "Execution Sentence",
+            "Hammer of Wrath for Ret",
+            "Crusader Strike",
+            "Judgment"
+         )
+      end
+   end,
+
    ExtraDebugInfo = function()
       return string.format(
          "h:%d j:%.1f, c:%.1f e:%.1f a:%.1f h:%.1f d:%s c:%s",
-         a.HolyPower,
-         a.Judgment,
-         a.Crusader,
-         a.Exorcism,
-         a.AvengingWrath,
-         a.HolyAvenger,
+         a.HolyPower or 0,
+         a.Judgment or 0,
+         a.Crusader or 0,
+         a.Exorcism or 0,
+         a.AvengingWrath or 0,
+         a.HolyAvenger or 0,
          a.DivinePurpose and "t" or "f",
          a.DivineCrusader and "t" or "f")
    end,

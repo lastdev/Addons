@@ -56,7 +56,7 @@ function HealBot_Action_RefreshTooltip()
     local xGUID=HealBot_UnitGUID(xUnit)
     if not xGUID or not HealBot_Unit_Button[xUnit] then return end
     local xButton=HealBot_Unit_Button[xUnit]
-    local uName=HealBot_GetUnitName(xUnit)
+    local uName=HealBot_GetUnitName(xUnit, xGUID)
     if not uName then return end;
     
     HealBot_ToolTip_SetTooltipPos();
@@ -494,11 +494,11 @@ end
 function HealBot_Tooltip_SpellSummary(spellName)
     local ret_val = "  "
     if HealBot_Spells[spellName] then
-        --if HealBot_Spells[spellName].Mana<HealBot_Tooltip_Power then
-        --    ret_val = " -  "..HealBot_Spells[spellName].Mana.." Power"
-        --else
-        --    ret_val = " -  "..HealBot_Spells[spellName].Mana.." Mana"
-        --end
+        if HealBot_Spells[spellName].Mana<HealBot_Tooltip_Power then
+            ret_val = " -  "..HealBot_Spells[spellName].Mana.." Power"
+        else
+            ret_val = " -  "..HealBot_Spells[spellName].Mana.." Mana"
+        end
     end
     if strlen(ret_val)<5 then ret_val = " - "..spellName; end
     return ret_val;
@@ -710,9 +710,9 @@ function HealBot_Action_RefreshTargetTooltip(button)
         if HealBot_UnitData[button.guid] then
             unitSpec = HealBot_UnitData[button.guid]["SPEC"] or " "
         end
-        HealBot_Tooltip_SetLine(linenum,HealBot_GetUnitName(button.unit),r,g,b,1,"Level "..UnitLevel(button.unit)..unitSpec..UnitClass(button.unit),r,g,b,1)    
+        HealBot_Tooltip_SetLine(linenum,HealBot_GetUnitName(button.unit, button.guid),r,g,b,1,"Level "..UnitLevel(button.unit)..unitSpec..UnitClass(button.unit),r,g,b,1)    
     else
-        HealBot_Tooltip_SetLine(linenum,HealBot_GetUnitName(button.unit),r,g,b,1,rText,rR,rG,rB,ra)
+        HealBot_Tooltip_SetLine(linenum,HealBot_GetUnitName(button.unit, button.guid),r,g,b,1,rText,rR,rG,rB,ra)
     end
     linenum=linenum+1
     HealBot_Tooltip_SetLine(linenum,HEALBOT_TOOLTIP_TARGETBAR,1,1,0.5,1,HEALBOT_OPTIONS_TAB_SPELLS.." "..HEALBOT_SKIN_DISTEXT,1,1,0,1)
@@ -731,7 +731,7 @@ function HealBot_Action_RefreshTargetTooltip(button)
 end
 
 function HealBot_Tooltip_GetHealSpell(unit,sName,hbGUID)
-    if not sName or not HealBot_Spells[sName] then
+    if not sName or not HealBot_GetSpellId(sName) then
         if sName then
             local w, _ = IsUsableItem(sName, unit)
             if not w then

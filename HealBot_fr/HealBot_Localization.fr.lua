@@ -917,7 +917,7 @@ HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "Vous surveillez les buffs manquants \
 	HEALBOT_ENEMY_NUMBER_BOSSES             = "Nombre de boss"
 	HEALBOT_ENEMY_HIDE_OUTOFCOMBAT          = "Cacher les barres hors combat"
 	HEALBOT_ENEMY_EXISTS_SHOW               = "N\'afficher que si l\'unit\195\169".."\n".."existe au d\195\169but du combat"
-	HEALBOT_ENEMY_EXISTS_SHOW_PTARGETS      = "Cibles des joueurs"
+	HEALBOT_ENEMY_EXISTS_SHOW_PTARGETS      = "Barres des cibles"
 	HEALBOT_ENEMY_EXISTS_SHOW_BOSSES        = "Barres des boss"
     HEALBOT_OPTIONS_TARGET_ONLY_FRIEND      = "Cible : Uniquement si amicale"
     HEALBOT_OPTIONS_FOCUS_ONLY_FRIEND       = "Focus : Uniquement si amicale"
@@ -942,6 +942,10 @@ HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "Vous surveillez les buffs manquants \
     HEALBOT_LDB_SHIFTLEFT_TOOLTIP           = "|cffffff00 Shift-Clic gauche :|r Skin suivant";
     HEALBOT_LDB_RIGHT_TOOLTIP               = "|cffffff00 Clic droit :|r Reset HealBot";
     HEALBOT_LDB_SHIFTRIGHT_TOOLTIP          = "|cffffff00 Shift-Clic droit :|r HealBot On/Off";
+    HEALBOT_WORD_PETBATTLE                  = "Combat de mascottes"
+    HEALBOT_ENEMY_INCLUDE_ARENA             = "Inclure les opposants d\'ar\195\170ne"
+    HEALBOT_ENEMY_INCLUDE_ARENAPETS         = "Inclure les familiers"
+    HEALBOT_ENEMY_EXISTS_SHOW_ARENA         = "Barres des adversaires en ar\195\170ne"
 end
 
 if (GetLocale() == "frFR") then

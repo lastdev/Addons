@@ -1,3 +1,65 @@
+== Version 60000.5
+Initialize estimated target counts to try and fix some odd "number compared
+to nil" errors that people have encountered.
+
+== Version 60000.4
+* Ignore multistrike hits when calculating AoE target estimates.
+
+These come with the same timestamp as the main event, but as distinct log
+entries, so they were fooling the calculation into thinking there were many
+more targets than really existed.  Thanks, Shamans, for finding this.
+
+== Version 60000.3.3
+* Protect c.GetChargeInfo against unknown spells.
+
+To avoid bugs, if you do not know the spell we return 0 charges, 9001 seconds
+to next charge, and 9001 seconds to cap.  These seems like the safest return
+values, and avoid needing to guard every invocation with a check the spell is
+already known.
+
+== Version 60000.3.2
+* Added PreFlash to individual rotations.
+
+This is a pretty internal change, but allows a PreFlash function to be defined
+on any rotation, which will be run prior to any other flashing being done.
+This exactly mirrors the PreFlash function on the class module, but on a
+per-rotation basis.
+
+This is to support the Warlock module, which has per-class resources to track,
+but is applicable to any rotation that has unique management to do prior to
+rotation calculations.
+
+== Version 60000.3.1
+* Fix range detection (c.DistanceAtThe{Least,Most}) for 6.0 API changes.
+* Minor cleanups elsewhere.
+* Added "Armor" food type placeholder, against the future.
+
+== Version 60000.3.0
+* New maintainer: http://www.curse.com/users/slippycheeze
+  - HUGE thanks to Xemnosyst for all the work done to get this
+    to where it is today, and keep it awesome.  I only hope to
+    be half as good on my best days.
+
+* Update to utf-8-unix encoding everywhere.
+* Standardize on 3 spaces for indentation.
+* Added AddonLoader support to toc. (delay loading only)
+* Updated author details.
+
+== Version 60000.2.1
+* AoE target count, via c.EstimatedHarmTargets and c.EstimatedHealTargets.
+
+== Version 60000.2.0
+* Updated buffs and foods for 6.0 (and WoD).
+
+== Version 60000.1.2
+* Bugfix for occasional Lua error.
+
+== Version 60000.1.1
+* Bugfix: Getting spell cast time changed w/ patch 6.0.
+
+== Version 60000.1.0
+* Making the "Out of Date" status go away.
+
 == Version 50400.4.2
 This version only affectly Feral Druids.
 * Small tweak for flashing forms in c.DelayPriorityFlash.
@@ -79,16 +141,3 @@ This version supports the latest Warrior release.
 
 == Version 4.13.2
 * Oops - forgot something in 4.13.1.
-
-== Version 4.13.1
-* c.PriorityFlash() and c.DelayPriorityFlash() now accept an AoEColor flag in the rotation.
-
-== Version 4.13.0
-This version supports the latest Paladin release.
-* Added c.InDamageMode().
-* Added c.ToggleDamageModeInGroups().
-
-== Version 4.12.0
-* Added c.HasSpell().
-* c.RegisterAddon() now causes it to flash Healthstones.
-* c.DelayPriorityFlash() will no longer flash optional spells with a longer delay than the main spell.

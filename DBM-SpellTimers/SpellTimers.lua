@@ -8,7 +8,7 @@
 --    * Paul Emmerich (Tandanu @ EU-Aegwynn)
 -- 
 -- The localizations are written by:
---    * enGB/enUS: Nitram/Tandanu        http://www.deadlybossmods.com		
+--    * enGB/enUS: Nitram/Tandanu        http://www.deadlybossmods.com
 --    * deDE: Nitram/Tandanu             http://www.deadlybossmods.com
 --    * zhCN: yleaf(yaroot@gmail.com)
 --    * zhTW: yleaf(yaroot@gmail.com)/Juha
@@ -26,7 +26,7 @@
 --    * Share Alike. If you alter, transform, or build upon this work, you may distribute the resulting work only under the same or similar license to this one.
 --
 
-local Revision = ("$Revision: 100 $"):sub(12, -3)
+local Revision = ("$Revision: 102 $"):sub(12, -3)
 
 local IsInRaid = IsInRaid
 local IsInInstance = IsInInstance
@@ -42,13 +42,12 @@ local default_settings = {
 	own_bargroup = false,
 	show_portal = true,
 	spells = {
-		{ spell = 48792, bartext = "%spell on %player", cooldown = 12 },-- Death Knight: Icebound Fortitude Duration (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 61336, bartext = "%spell on %player", cooldown = 12 },-- Druid: Survival Instincts Duration (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 29166, bartext = default_bartext, cooldown = 180 },	-- Druid: Innervate
+		{ spell = 48792, bartext = "%spell on %player", cooldown = 8 },-- Death Knight: Icebound Fortitude Duration (for Healers/Tanks to see how long cooldown runs)
+		{ spell = 61336, bartext = "%spell on %player", cooldown = 6 },-- Druid: Survival Instincts Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 6940, bartext = "%spell on %target", cooldown = 12 }, -- Paladin: Hand of Sacrifice Duration (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 498, bartext = "%spell on %player", cooldown = 10 },	-- Paladin: Divine Protection Duration (for Healers/Tanks to see how long cooldown runs)
+		{ spell = 498, bartext = "%spell on %player", cooldown = 8 },	-- Paladin: Divine Protection Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 31850, bartext = "%spell on %player", cooldown = 10 },-- Paladin: Argent Defender Duration (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 86659, bartext = "%spell on %player", cooldown = 12 },-- Paladin: Guardian of Ancient Kings (for Healers/Tanks to see how long cooldown runs)
+		{ spell = 86659, bartext = "%spell on %player", cooldown = 8 },-- Paladin: Guardian of Ancient Kings (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 31821, bartext = default_bartext, cooldown = 180 },	-- Paladin: Devotion Aura
 		{ spell = 6346, bartext = default_bartext, cooldown = 180 },	-- Priest: Fear Ward
 		{ spell = 73325, bartext = default_bartext, cooldown = 90 },	-- Priest: Leap of Faith (Life Grip)
@@ -57,11 +56,9 @@ local default_settings = {
 		{ spell = 62618, bartext = default_bartext, cooldown = 180 },	-- Priest: Power Word: Barrier
 		{ spell = 98008, bartext = default_bartext, cooldown = 180 },	-- Shaman: Spirit Link Totem
 		{ spell = 20608, bartext = default_bartext, cooldown = 1800 },	-- Shaman: Reincarnation
-		{ spell = 871, bartext = "%spell on %player", cooldown = 12 },	-- Warrior: Shieldwall Duration (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 12975, bartext = "%spell on %player", cooldown = 20 },-- Warrior: Last Stand Duration (for Healers/Tanks to see how long cooldown runs)
+		{ spell = 871, bartext = "%spell on %player", cooldown = 8 },	-- Warrior: Shieldwall Duration (for Healers/Tanks to see how long cooldown runs)
+		{ spell = 12975, bartext = "%spell on %player", cooldown = 15 },-- Warrior: Last Stand Duration (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 97462, bartext = default_bartext, cooldown = 180 },	-- Warrior: Rallying Cry CD (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 114203, bartext = default_bartext, cooldown = 180 },	-- Warrior: Demoralizing Banner (for Healers/Tanks to see how long cooldown runs)
-		{ spell = 114207, bartext = default_bartext, cooldown = 180 },	-- Warrior: Skull Banner (for Healers/Tanks to see how long cooldown runs)
 		{ spell = 22700, bartext = default_bartext, cooldown = 600 }, 	-- Field Repair Bot 74A
 		{ spell = 44389, bartext = default_bartext, cooldown = 600 }, 	-- Field Repair Bot 110G
 		{ spell = 54711, bartext = default_bartext, cooldown = 300 }, 	-- Scrapbot Construction Kit
@@ -137,7 +134,7 @@ do
 				for i=1, #settings.spells, 1 do
 					createnewentry()
 				end
-			end				
+			end
 		end
 
 		
@@ -188,7 +185,7 @@ do
 						settings.spells[self.guikey][field] = self:GetNumber()
 						rebuildSpellIDIndex()
 					elseif field == "cooldown" then
-						settings.spells[self.guikey][field] = self:GetNumber()					
+						settings.spells[self.guikey][field] = self:GetNumber()
 					elseif field == "enabled" then
 						settings.spells[self.guikey].enabled = not not self:GetChecked()
 					else
@@ -221,7 +218,7 @@ do
 			getadditionalid:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-UP");
 			getadditionalid:SetPushedTexture("Interface\\Buttons\\UI-PlusButton-DOWN");
 			getadditionalid:SetWidth(15)
-			getadditionalid:SetHeight(15)		
+			getadditionalid:SetHeight(15)
 
 			function createnewentry()
 				CurCount = CurCount + 1
@@ -248,7 +245,7 @@ do
 				local enableit = area:CreateCheckButton("")
 				enableit.guikey = CurCount
 				enableit:SetScript("OnShow", onshow_spell("enabled"))
-				enableit:SetScript("OnClick", onchange_spell("enabled"))				
+				enableit:SetScript("OnClick", onchange_spell("enabled"))
 				enableit:SetPoint("LEFT", cooldown, "RIGHT", 5, 0)
 
 				getadditionalid:ClearAllPoints()
@@ -350,11 +347,11 @@ do
 					v.spell = 20484
 				end
 			end
-			
+
 			rebuildSpellIDIndex()
 		elseif settings.enabled and event == "INSTANCE_ENCOUNTER_ENGAGE_UNIT" and IsEncounterInProgress() and not encounterStarted then--Encounter Started
 			encounterStarted = true
-			
+
 		elseif settings.enabled and event == "PLAYER_REGEN_ENABLED" and not IsEncounterInProgress() and encounterStarted then--Encounter Ended
 			encounterStarted = false
 			--Reset all CDs that are > 3 minutes EXCEPT shaman reincarnate
