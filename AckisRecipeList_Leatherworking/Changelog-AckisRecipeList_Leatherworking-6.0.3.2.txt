@@ -1,0 +1,11 @@
+tag 6.0.3.2
+561e3361c4e6d6a0ca931fbd0925eeb2fae84f69
+James D. Callahan III <jcallahan@curse.com>
+2014-11-23 20:07:56 -0600
+
+
+
+--------------------
+
+Ressy:
+	- Fix ticket 1637 - Correct NPC coordinates

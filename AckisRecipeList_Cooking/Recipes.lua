@@ -414,8 +414,8 @@ function module:InitializeRecipes()
 	recipe = AddRecipe(13028, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(175, 175, 175, 190, 205)
 	recipe:SetCraftedItem(10841, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.INSTANCE)
-	recipe:AddTrainer(8696)
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:Retire()
 
 	-- Lean Wolf Steak -- 15853
 	recipe = AddRecipe(15853, V.ORIG, Q.COMMON)

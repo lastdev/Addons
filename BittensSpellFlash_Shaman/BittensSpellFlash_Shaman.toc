@@ -1,5 +1,5 @@
 ## Interface: 60000
-## Version: 60000.3
+## Version: 60000.6
 ## Author: Xemnosyst, SlippyCheeze
 ## Title: Bitten's SpellFlash: Shaman
 ## Notes: Replaces Blizzard's default proc highlighting to flash 1) a maximum dps rotation, or 2) more informative healing proc highlights.
@@ -8,7 +8,7 @@
 ## OptionalDeps: BittensSpellFlashLibrary
 ## LoadOnDemand: 1
 ## X-SpellFlashAddon-LoadWith: Shaman
-## X-Curse-Packaged-Version: 60000.3
+## X-Curse-Packaged-Version: 60000.6
 ## X-Curse-Project-Name: Bitten's SpellFlash: Shaman
 ## X-Curse-Project-ID: bittens-spellflash-shaman
 ## X-Curse-Repository-ID: wow/bittens-spellflash-shaman/mainline

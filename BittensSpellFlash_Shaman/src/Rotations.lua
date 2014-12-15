@@ -14,6 +14,8 @@ local unpack = unpack
 
 a.Rotations = { }
 
+a.EotE = false
+
 function a.PreFlash()
    a.Ascended = c.HasBuff("Ascendance", false, false, true)
 end
@@ -29,7 +31,7 @@ a.Rotations.Elemental = {
    SingleTargetPriorityList = {
       "Unleash Flame for Unleashed Fury",
       "Spiritwalker's Grace for Elemental with Ascendance",
-      "Earth Shock at cap",
+      "Flame Shock Prime for Elemental",
       "Lava Burst",
       "Flame Shock Early",
       "Earth Shock for Elemental",
@@ -44,7 +46,7 @@ a.Rotations.Elemental = {
    AoEPriorityList = {
       "Earthquake for AoE",
       "Lava Beam",
-      "Earth Shock at cap",
+      "Earth Shock",
       "Thunderstorm for damage",
       "Searing Totem",
       "Chain Lightning",
@@ -87,7 +89,7 @@ a.Rotations.Elemental = {
    end,
 
    FlashOutOfCombat = function()
-      c.FlashAll("Thunderstorm", "Water Walking")
+      c.FlashAll("Water Walking")
 
       if x.EnemyDetected then
          if s.Boss("target") or s.Boss("mouseover") then
@@ -99,8 +101,8 @@ a.Rotations.Elemental = {
             "Unleash Flame for Unleashed Fury",
             "Earthquake",
             "Elemental Blast",
-            "Lava Burst",
-            "Flame Shock for Elemental"
+            "Flame Shock for Elemental",
+            "Lava Burst"
          )
       end
    end,
@@ -110,6 +112,10 @@ a.Rotations.Elemental = {
          "Lightning Shield",
          "Healing Surge when Solo"
       )
+   end,
+
+   PreFlash = function()
+      a.EotE = c.HasBuff("Echo of the Elements Buff: Ele", false, false, true)
    end,
 }
 

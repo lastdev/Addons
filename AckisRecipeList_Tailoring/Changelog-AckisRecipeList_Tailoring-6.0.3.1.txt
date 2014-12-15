@@ -1,0 +1,14 @@
+tag 6.0.3.1
+b288770729bced0b7accb4c788a0bed547039f3b
+Ressy <resa1983@hotmail.com>
+2014-12-13 12:42:50 -0500
+
+6.0.3.1 update
+
+
+--------------------
+
+Ressy:
+	- Removal of Tailoring mobdrops
+	- Vendor scan, and fix some WoD skill levels
+	- Fix Vendor name

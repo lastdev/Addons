@@ -6,7 +6,7 @@ koKR localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 3.0.8
+Project version: 3.0.11
 ************************************************************************
 Original translated by: damjau, next96
 Currently maintained by:
@@ -65,7 +65,6 @@ L["ALL_FILTERED"] = "이 전문기술은 이미 검색되었음에도 불구하�
 L["Almaador"] = "알마도르"
 L["Altaa"] = "알타"
 L["ALT_CLICK"] = "Alt-클릭으로 이 제조법을 무시 목록에 추가하거나 제거 합니다."
-L["Alt-Tradeskills"] = "Alt-기술"
 L["Alurmi"] = "알룰미"
 L["Alys Vol'tyr"] = "알리스 볼티르"
 L["Amal'thazad"] = "아말타자드"
@@ -298,7 +297,6 @@ L["DISCOVERY_ALCH_NORTHREND_RESEARCH"] = "노스랜드 연금술 연구를 통�
 L["DISCOVERY_ALCH_POTION"] = "불타는 성전 이후의 물약을 만드는 과정에서 발견됨"
 L["DISCOVERY_ALCH_PROT"] = "불타는 성전 이후의 보호물약을 사용하다 발견할 수 있습니다."
 L["DISCOVERY_DESC"] = "검색 과정에 발견을 통해 획득할 수 있는 제조법이 포함되어 있어야 합니다."
-L["DISCOVERY_INSC_BOOK"] = "문양 숙련의 서적을 통하여 랜덤하게 발견"
 L["Disembodied Protector"] = "실체 없는 총독"
 L["Disembodied Vindicator"] = "실체 없는 구원자" -- Needs review
 L["DISPLAY_EXCLUSION_DESC"] = "제외 목록에 있는 제조법을 표시합니다."
@@ -513,7 +511,6 @@ L["Harn Longcast"] = "한 롱캐스트"
 L["Haughty Modiste"] = "거만한 의류상"
 L["Heldan Galesong"] = "헬단 게일송"
 L["Helenia Olden"] = "헬레니아 올든"
-L["HENRY_STERN_RFD"] = "가시덩쿨 구릉의 헨리 스턴과 대화하여 배울 수 있음"
 L["Hgarth"] = "하가스"
 L["Hide Pop-Up"] = "팝업 숨김"
 L["High Admiral \"Shelly\" Jorrik"] = "함대 사령관 \"쉘리\" 조릭" -- Needs review
@@ -560,7 +557,6 @@ L["Jeeda"] = "지다"
 L["Jennabink Powerseam"] = "제나빙크 파워심"
 L["Jenna Lemkenilli"] = "지나 렘케닐리"
 L["Jessara Cordell"] = "예사라 코르델"
-L["Jezebel Bican"] = "이세벨 비칸"
 L["Jhordy Lapforge"] = "조르디 랩포지"
 L["Jim Saltit"] = "짐 살티트"
 L["Jinky Twizzlefixxit"] = "진키 트위즐픽시트"
@@ -619,7 +615,6 @@ L["Krugosh"] = "크루고쉬"
 L["Krunn"] = "크룬"
 L["Kuldar Steeltooth"] = "쿨다르 스틸투스" -- Needs review
 L["Kul'de"] = "쿨데"
-L["Kul Inkspiller"] = "쿨 잉크스필러"
 L["Kulwia"] = "쿨위아"
 L["KUNG"] = "From a NPC in Dalaran sewers after doing The Taste Test" -- Needs review
 L["Kurzen Commando"] = "쿠르젠 특전사"
@@ -631,7 +626,6 @@ L["Lady Alistra"] = "여군주 알리스트라"
 L["Lalla Brightweave"] = "랄라 브라이트위브"
 L["Landraelanis"] = "랜드랠라니스"
 L["Lanolis Dewdrop"] = "라놀리스 듀드롭"
-L["Larana Drome"] = "라라나 드롬"
 L["Lardan"] = "라드란"
 L["Lavinia Crowe"] = "라비니아 크로위"
 L["Leather"] = "가죽 방어구"

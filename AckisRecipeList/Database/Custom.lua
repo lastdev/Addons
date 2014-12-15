@@ -2,10 +2,10 @@
 ************************************************************************
 Custom.lua
 ************************************************************************
-File date: 2014-07-20T21:55:21Z
-File hash: 8ba10d0
-Project hash: beabe36
-Project version: 3.0.8
+File date: 2014-12-13T08:15:02Z
+File hash: 7b24cc0
+Project hash: 0b1c7cf
+Project version: 3.0.11
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -42,7 +42,6 @@ function addon:InitCustom()
 	AddCustom("DEFAULT_RECIPE")
 	AddCustom("CRAFTED_ENGINEERS")
 	AddCustom("ONYXIA_HEAD_QUEST", Z.ONYXIAS_LAIR)
-	AddCustom("HENRY_STERN_RFD", Z.RAZORFEN_DOWNS)
 	AddCustom("ENG_GNOMER", Z.GNOMEREGAN)
 	AddCustom("ENG_FLOOR_ITEM_BRD", Z.BLACKROCK_DEPTHS)
 	AddCustom("BRD_MAIL")

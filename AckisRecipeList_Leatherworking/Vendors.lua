@@ -23,10 +23,10 @@ function module:InitializeVendors()
 		addon.AcquireTypes.Vendor:AddEntity(id_num, name, zone_name, x, y, faction)
 	end
 
-	AddVendor(2697,		L["Clyde Ranthal"],			Z.REDRIDGE_MOUNTAINS,		88.9,	70.9,	"Alliance")
+	AddVendor(2697,		L["Clyde Ranthal"],			Z.REDRIDGE_MOUNTAINS,		78.6,	63.6,	"Alliance")
 	AddVendor(2698,		L["George Candarte"],			Z.HILLSBRAD_FOOTHILLS,		76.7,	58.5,	"Horde")
 	AddVendor(2699,		L["Rikqiz"],				Z.THE_CAPE_OF_STRANGLETHORN,	43.2,	71.7,	"Neutral")
-	AddVendor(2816,		L["Androd Fadran"],			Z.ARATHI_HIGHLANDS,		45.0,	46.9,	"Alliance")
+	AddVendor(2816,		L["Androd Fadran"],			Z.ARATHI_HIGHLANDS,		39.2,	48.2,	"Alliance")
 	AddVendor(2819,		L["Tunkk"],				Z.ARATHI_HIGHLANDS,		70.0,	35.4,	"Horde")
 	AddVendor(2846,		L["Blixrez Goodstitch"],		Z.THE_CAPE_OF_STRANGLETHORN,	42.8,	74.1,	"Neutral")
 	AddVendor(3008,		L["Mak"],				Z.THUNDER_BLUFF,		42.0,	43.5,	"Horde")

@@ -2,12 +2,12 @@
 ## Title: Ackis Recipe List: Enchanting
 ## Notes: Enchanting data for Ackis Recipe List.
 ## Author: Ackis, Pompy, Ressy, Torhal
-## Version: 6.0.2.1
-## X-Revision: 84167ae
+## Version: 6.0.3.1
+## X-Revision: fef0ef8
 ## X-Date: 2014-07-23T01:49:46Z
 ## Dependencies: AckisRecipeList
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: 6.0.2.1
+## X-Curse-Packaged-Version: 6.0.3.1
 ## X-Curse-Project-Name: Ackis Recipe List: Enchanting
 ## X-Curse-Project-ID: arl-enchanting
 ## X-Curse-Repository-ID: wow/arl-enchanting/mainline

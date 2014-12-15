@@ -1,0 +1,14 @@
+tag 6.0.3.2
+1054e83451d0d153b69c3fd14b7e263c3f9ce730
+Ressy <resa1983@hotmail.com>
+2014-12-13 12:40:38 -0500
+
+6.0.3.2 update
+
+
+--------------------
+
+Ressy:
+	- Update Vendor name
+	- Removal of Inscription Vendors
+	- Remove Glyph of Shapemender - was replaced with a zone-wide Blessing before going live

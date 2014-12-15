@@ -134,7 +134,8 @@ c.AddInterrupt("Wind Shear")
 local function burstCheck(z)
    walkingCheck(z)
    return a.Ascended
-      or (c.GetCooldown("Lava Burst") == 0 and not c.IsCasting("Lava Burst"))
+      or (c.GetCooldown("Lava Burst") == 0
+             and (not c.IsCasting("Lava Burst") or c.EotE))
       or (c.HasBuff("Lava Surge") and not c.IsQueued("Lava Burst"))
 end
 
@@ -187,7 +188,7 @@ c.AddSpell("Flame Shock", "Prime for Elemental", {
    NotIfActive = true,
    CheckFirst = function()
       return c.GetMyDebuffDuration("Flame Shock")
-         <= c.GetCastTime("Lava Burst") + .1
+         <= c.GetCastTime("Lava Burst") + .2
    end,
 })
 
@@ -226,15 +227,6 @@ c.AddSpell("Lava Burst", nil, {
          and ((c.GetMyDebuffDuration("Flame Shock") > c.GetCastTime("Lava Burst"))
                or c.DistanceAtTheLeast(20)
                or c.GetCooldown("Flame Shock") > 0)
-   end
-})
-
-c.AddSpell("Earth Shock", "at cap", {
-   CheckFirst = function()
-      local stacks = c.GetBuffStack("Lightning Shield")
-      if stacks >= (c.HasSpell("Improved Lightning Shield") and 20 or 15) then
-         return true
-      end
    end
 })
 

@@ -2168,11 +2168,11 @@ function Addon.UIElementsLib._LevelRangePicker:Construct(pParent, pLabel)
 	self:SetWidth(80)
 	self:SetHeight(24)
 	
-	self.MinLevel = Addon:New(Addon.UIElementsLib._EditBox, self, pLabel, 2)
+	self.MinLevel = Addon:New(Addon.UIElementsLib._EditBox, self, pLabel, 3)
 	self.MinLevel:SetWidth(30)
 	self.MinLevel:SetPoint("LEFT", self, "LEFT")
 	
-	self.MaxLevel = Addon:New(Addon.UIElementsLib._EditBox, self, Addon.cLevelRangeSeparator, 2)
+	self.MaxLevel = Addon:New(Addon.UIElementsLib._EditBox, self, Addon.cLevelRangeSeparator, 3)
 	self.MaxLevel:SetWidth(30)
 	self.MaxLevel:SetAnchorMode("TITLE")
 	self.MaxLevel.Title:SetPoint("LEFT", self.MinLevel, "RIGHT", 5, 0)

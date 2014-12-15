@@ -5,7 +5,7 @@ local module = oRA:NewModule("Invite", "AceTimer-3.0")
 local L = scope.locale
 local AceGUI = LibStub("AceGUI-3.0")
 
-module.VERSION = tonumber(("$Revision: 814 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 838 $"):sub(12, -3))
 
 local frame = nil
 local db = nil
@@ -242,8 +242,8 @@ local function handleWhisper(msg, sender, _, _, _, _, _, _, _, _, _, _, presence
 	end
 	sender = Ambiguate(sender, "none")
 	if shouldInvite(msg, sender) then
-		local _, instanceType = IsInInstance()
-		if (instanceType == "party" and GetNumSubgroupMembers() == 4) or GetNumGroupMembers() == 40 then
+		local inInstance, instanceType = IsInInstance()
+		if (inInstance and instanceType == "party" and GetNumSubgroupMembers() == 4) or GetNumGroupMembers() == 40 then
 			if presenceId > 0 then
 				BNSendWhisper(presenceId, L["<oRA3> Sorry, the group is full."])
 			else

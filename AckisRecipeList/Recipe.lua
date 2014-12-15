@@ -305,51 +305,52 @@ function Recipe:ItemFilterType()
 end
 
 local function SetFilterState(recipe, turn_on, ...)
-	local num_filters = select('#', ...)
+	local numFilters = select('#', ...)
 
-	for index = 1, num_filters, 1 do
-		local filter = select(index, ...)
+	for filterIndex = 1, numFilters do
+		local filterID = select(filterIndex, ...)
 
-		if filter then
-			local filter_name = private.FILTER_STRINGS[filter]
+		if filterID then
+			local filterName = private.FILTER_STRINGS[filterID]
 			local bitfield
-			local member_name
+			local memberName
 
 			for table_index, bits in ipairs(private.FLAG_WORDS) do
-				if bits[filter_name] then
+				if bits[filterName] then
 					bitfield = bits
-					member_name = private.FLAG_MEMBERS[table_index]
+					memberName = private.FLAG_MEMBERS[table_index]
 					break
 				end
 			end
 
-			if not bitfield or not member_name then
+			if not bitfield or not memberName then
+				addon:Debug("Recipe '%s' (spell ID %d): Attempting to assign non-existent filter flag %s.", recipe.name, recipe:SpellID(), filterName)
 				return
 			end
 
-			if not recipe.flags[member_name] then
-				recipe.flags[member_name] = 0
+			if not recipe.flags[memberName] then
+				recipe.flags[memberName] = 0
 			end
 
 			if turn_on then
-				if bit.band(recipe.flags[member_name], bitfield[filter_name]) == bitfield[filter_name] then
-					if recipe.flags[member_name] == 0 then
-						recipe.flags[member_name] = nil
+				if bit.band(recipe.flags[memberName], bitfield[filterName]) == bitfield[filterName] then
+					if recipe.flags[memberName] == 0 then
+						recipe.flags[memberName] = nil
 					end
 					return
 				end
 			else
-				if bit.band(recipe.flags[member_name], bitfield[filter_name]) ~= bitfield[filter_name] then
-					if recipe.flags[member_name] == 0 then
-						recipe.flags[member_name] = nil
+				if bit.band(recipe.flags[memberName], bitfield[filterName]) ~= bitfield[filterName] then
+					if recipe.flags[memberName] == 0 then
+						recipe.flags[memberName] = nil
 					end
 					return
 				end
 			end
-			recipe.flags[member_name] = bit.bxor(recipe.flags[member_name], bitfield[filter_name])
+			recipe.flags[memberName] = bit.bxor(recipe.flags[memberName], bitfield[filterName])
 
-			if recipe.flags[member_name] == 0 then
-				recipe.flags[member_name] = nil
+			if recipe.flags[memberName] == 0 then
+				recipe.flags[memberName] = nil
 			end
 		else
 			addon:Debug("Recipe '%s' (spell ID %d): Attempting to %s non-existent filter flag.", recipe.name, recipe:SpellID(), turn_on and "assign" or "remove")
@@ -469,6 +470,7 @@ end
 
 function Recipe:AddCustom(...)
 	self:AddAcquireData(A.CUSTOM, "Custom", true, ...)
+	self:AddFilters(private.FILTER_IDS.MISC1)
 end
 
 function Recipe:AddDiscovery(...)
@@ -579,27 +581,27 @@ do
 			------------------------------------------------------------------------------------------------
 			-- Player Type flags.
 			------------------------------------------------------------------------------------------------
-			melee	= { flag = COMMON1.DPS,		field = "common1",	sv_root = player_filters },
-			tank	= { flag = COMMON1.TANK,	field = "common1",	sv_root = player_filters },
-			healer	= { flag = COMMON1.HEALER,	field = "common1",	sv_root = player_filters },
-			caster	= { flag = COMMON1.CASTER,	field = "common1",	sv_root = player_filters },
+			melee	= { flagName = "DPS",		field = "common1",	sv_root = player_filters },
+			tank	= { flagName = "TANK",		field = "common1",	sv_root = player_filters },
+			healer	= { flagName = "HEALER",	field = "common1",	sv_root = player_filters },
+			caster	= { flagName = "CASTER",	field = "common1",	sv_root = player_filters },
 		}
 
 		SOFT_FILTERS = {
-			achievement	= { flag = COMMON1.ACHIEVEMENT,		field = "common1",	sv_root = obtain_filters },
-			discovery	= { flag = COMMON1.DISC,		field = "common1",	sv_root = obtain_filters },
-			instance	= { flag = COMMON1.INSTANCE,		field = "common1",	sv_root = obtain_filters },
-			mobdrop		= { flag = COMMON1.MOB_DROP,		field = "common1",	sv_root = obtain_filters },
-			pvp		= { flag = COMMON1.PVP,			field = "common1",	sv_root = obtain_filters },
-			quest		= { flag = COMMON1.QUEST,		field = "common1",	sv_root = obtain_filters },
-			raid		= { flag = COMMON1.RAID,		field = "common1",	sv_root = obtain_filters },
-			retired		= { flag = COMMON1.RETIRED,		field = "common1",	sv_root = obtain_filters },
-			reputation	= { flag = COMMON1.REPUTATION,		field = "common1",	sv_root = obtain_filters },
-			seasonal	= { flag = COMMON1.WORLD_EVENTS,	field = "common1",	sv_root = obtain_filters },
-			trainer		= { flag = COMMON1.TRAINER,		field = "common1",	sv_root = obtain_filters },
-			vendor		= { flag = COMMON1.VENDOR,		field = "common1",	sv_root = obtain_filters },
-			worlddrop	= { flag = COMMON1.WORLD_DROP,		field = "common1",	sv_root = obtain_filters },
-			misc1		= { flag = COMMON1.MISC1,		field = "common1",	sv_root = obtain_filters },
+			achievement	= { flagName = "ACHIEVEMENT",	field = "common1",	sv_root = obtain_filters },
+			discovery	= { flagName = "DISC",		field = "common1",	sv_root = obtain_filters },
+			instance	= { flagName = "INSTANCE",	field = "common1",	sv_root = obtain_filters },
+			mobdrop		= { flagName = "MOB_DROP",	field = "common1",	sv_root = obtain_filters },
+			pvp		= { flagName = "PVP",		field = "common1",	sv_root = obtain_filters },
+			quest		= { flagName = "QUEST",		field = "common1",	sv_root = obtain_filters },
+			raid		= { flagName = "RAID",		field = "common1",	sv_root = obtain_filters },
+			retired		= { flagName = "RETIRED",	field = "common1",	sv_root = obtain_filters },
+			reputation	= { flagName = "REPUTATION",	field = "common1",	sv_root = obtain_filters },
+			seasonal	= { flagName = "WORLD_EVENTS",	field = "common1",	sv_root = obtain_filters },
+			trainer		= { flagName = "TRAINER",	field = "common1",	sv_root = obtain_filters },
+			vendor		= { flagName = "VENDOR",	field = "common1",	sv_root = obtain_filters },
+			worlddrop	= { flagName = "WORLD_DROP",	field = "common1",	sv_root = obtain_filters },
+			misc1		= { flagName = "MISC1",		field = "common1",	sv_root = obtain_filters },
 		}
 
 		InitializeFilters = nil
@@ -645,10 +647,8 @@ do
 		end
 
 		for bitflag, flag_name in pairs(filters) do
-			if bit.band(bitfield, bitflag) == bitflag then
-				if name_field[flag_name] then
-					return true
-				end
+			if bit.band(bitfield, bitflag) == bitflag and name_field[flag_name] then
+				return true
 			end
 		end
 		return false
@@ -698,9 +698,9 @@ do
 		if not filter_db.quality[QUALITY_FILTERS[self.quality]] then
 			return false
 		end
+
 		local item_filter_type = self:ItemFilterType()
 		local profession_module = addon:GetModule(private.PROFESSION_MODULE_NAMES[private.ORDERED_PROFESSIONS[addon.Frame.current_profession]])
-
 		if item_filter_type and (not profession_module or not profession_module.db.profile.filters.item[item_filter_type]) then
 			return false
 		end
@@ -714,16 +714,13 @@ do
 		end
 
 		local _, crafted_item_binding = self:CraftedItem()
-
 		if crafted_item_binding and not addon.db.profile.filters.binding["item_" .. crafted_item_binding:lower()] then
 			return false
 		end
 
 		-- Check the hard filter flags.
-		for filter, data in pairs(private.HARD_FILTERS) do
-			local bitfield = self.flags[data.field]
-
-			if bitfield and bit.band(bitfield, data.flag) == data.flag and not data.sv_root[filter] then
+		for filterName, filterData in pairs(private.HARD_FILTERS) do
+			if self:HasFilter(filterData.field, filterData.flagName) and not filterData.sv_root[filterName] then
 				return false
 			end
 		end
@@ -745,10 +742,8 @@ do
 		-- loop through nonexclusive (soft filters) flags until one is true
 		-- If one of these is true (ie: we want to see trainers and there is a trainer flag) we display the recipe
 		------------------------------------------------------------------------------------------------
-		for filter, data in pairs(SOFT_FILTERS) do
-			local bitfield = self.flags[data.field]
-
-			if bitfield and bit.band(bitfield, data.flag) == data.flag and data.sv_root[filter] then
+		for filterName, filterData in pairs(SOFT_FILTERS) do
+			if self:HasFilter(filterData.field, filterData.flagName) and filterData.sv_root[filterName] then
 				return true
 			end
 		end
@@ -767,8 +762,8 @@ local DUMP_FUNCTION_FORMATS = {
 	[A.RETIRED] = "recipe:Retire()",
 }
 
-local sorted_data = {}
-local reverse_map = {}
+local sortedData = {}
+local reverseMap = {}
 
 -- These are automatically added when assigning the appropriate acquire type; dumping them is redundant.
 local IMPLICIT_FLAGS = {
@@ -776,6 +771,7 @@ local IMPLICIT_FLAGS = {
 	ALLIANCE = true,
 	DISC = true,
 	HORDE = true,
+	MISC1 = true,
 	MOB_DROP = true,
 	QUEST = true,
 	REPUTATION = true,
@@ -787,9 +783,9 @@ local IMPLICIT_FLAGS = {
 }
 
 -- Reputation flags are automatically added when a reputation vendor is assigned to the recipe.
-for index = 1, #private.REP_FLAGS do
-	for reputation_name in pairs(private.REP_FLAGS[index]) do
-		IMPLICIT_FLAGS[reputation_name] = true
+for reputationIndex = 1, #private.REP_FLAGS do
+	for reputationName in pairs(private.REP_FLAGS[reputationIndex]) do
+		IMPLICIT_FLAGS[reputationName] = true
 	end
 end
 
@@ -830,93 +826,93 @@ function Recipe:Dump(output, use_genesis)
 	if self.item_filter_type then
 		output:AddLine(("recipe:SetItemFilterType(\"%s\")"):format(self.item_filter_type:upper()), genesis_val)
 	end
-	local flag_string
+	local filterOutputText
 
-	for table_index = 1, #private.FLAG_WORDS do
-		table.wipe(sorted_data)
-		table.wipe(reverse_map)
+	for flagWordIndex = 1, #private.FLAG_WORDS do
+		table.wipe(sortedData)
+		table.wipe(reverseMap)
 
-		local bits = private.FLAG_WORDS[table_index]
-		for flag_name, flag_bit in pairs(bits) do
-			if not IMPLICIT_FLAGS[flag_name] then
-				local bitfield = self.flags[private.FLAG_MEMBERS[table_index]]
+		local bitsTable = private.FLAG_WORDS[flagWordIndex]
+		for flagName, flagBit in pairs(bitsTable) do
+			if not IMPLICIT_FLAGS[flagName] then
+				local bitfield = self.flags[private.FLAG_MEMBERS[flagWordIndex]]
 
-				if bitfield and bit.band(bitfield, flag_bit) == flag_bit then
-					table.insert(sorted_data, flag_bit)
-					reverse_map[flag_bit] = flag_name
+				if bitfield and bit.band(bitfield, flagBit) == flagBit then
+					table.insert(sortedData, flagBit)
+					reverseMap[flagBit] = flagName
 				end
 			end
 		end
-		table.sort(sorted_data)
+		table.sort(sortedData)
 
-		for flag_index = 1, #sorted_data do
-			local flag_bit = sorted_data[flag_index]
-			local bitfield = self.flags[private.FLAG_MEMBERS[table_index]]
+		for flagIndex = 1, #sortedData do
+			local flagBit = sortedData[flagIndex]
+			local bitfield = self.flags[private.FLAG_MEMBERS[flagWordIndex]]
 
-			if bitfield and bit.band(bitfield, flag_bit) == flag_bit then
-				if flag_string then
-					flag_string = ("%s, F.%s"):format(flag_string, private.FILTER_STRINGS[private.FILTER_IDS[reverse_map[flag_bit]]])
+			if bitfield and bit.band(bitfield, flagBit) == flagBit then
+				if filterOutputText then
+					filterOutputText = ("%s, F.%s"):format(filterOutputText, private.FILTER_STRINGS[private.FILTER_IDS[reverseMap[flagBit]]])
 				else
-					flag_string = ("F.%s"):format(private.FILTER_STRINGS[private.FILTER_IDS[reverse_map[flag_bit]]])
+					filterOutputText = ("F.%s"):format(private.FILTER_STRINGS[private.FILTER_IDS[reverseMap[flagBit]]])
 				end
 			end
 		end
 	end
 
-	if flag_string then
-		output:AddLine(("recipe:AddFilters(%s)"):format(flag_string), genesis_val)
+	if filterOutputText then
+		output:AddLine(("recipe:AddFilters(%s)"):format(filterOutputText), genesis_val)
 	end
 	local ZL = private.ZONE_LABELS_FROM_NAME
 
-	flag_string = nil
+	filterOutputText = nil
 
-	for acquire_type_id, acquire_info in pairs(self.acquire_data) do
-		if acquire_type_id == A.REPUTATION then
-			for rep_id, rep_info in pairs(acquire_info) do
-				local faction_string = private.FACTION_LABELS_FROM_ID[rep_id]
+	for acquireTypeID, acquireInfo in pairs(self.acquire_data) do
+		if acquireTypeID == A.REPUTATION then
+			for factionID, factionInfo in pairs(acquireInfo) do
+				local factionLabel = private.FACTION_LABELS_FROM_ID[factionID]
 
-				if faction_string then
-					faction_string = ("FAC.%s"):format(faction_string)
+				if factionLabel then
+					factionLabel = ("FAC.%s"):format(factionLabel)
 				else
-					faction_string = rep_id
-					addon:Printf("Recipe %d (%s) - no string for faction %d", self:SpellID(), self.name, rep_id)
+					factionLabel = factionID
+					addon:Printf("Recipe %d (%s) - no string for faction %d", self:SpellID(), self.name, factionID)
 				end
 
-				for rep_level, level_info in pairs(rep_info) do
-					local rep_string = ("REP.%s"):format(private.REP_LEVEL_STRINGS[rep_level or 1])
+				for reputationLevel, reputationLevelInfo in pairs(factionInfo) do
+					local reputationLevelString = ("REP.%s"):format(private.REP_LEVEL_STRINGS[reputationLevel or 1])
 					local values
 
-					table.wipe(sorted_data)
-					table.wipe(reverse_map)
+					table.wipe(sortedData)
+					table.wipe(reverseMap)
 
-					for id_num in pairs(level_info) do
-						table.insert(sorted_data, id_num)
+					for entityID in pairs(reputationLevelInfo) do
+						table.insert(sortedData, entityID)
 					end
-					table.sort(sorted_data)
+					table.sort(sortedData)
 
-					for index, vendor_id in ipairs(sorted_data) do
+					for entityIDIndex, vendorID in ipairs(sortedData) do
 						if values then
-							values = ("%s, %d"):format(values, vendor_id)
+							values = ("%s, %d"):format(values, vendorID)
 						else
-							values = vendor_id
+							values = vendorID
 						end
 					end
-					output:AddLine(("recipe:AddRepVendor(%s, %s, %s)"):format(faction_string, rep_string, values), genesis_val)
+					output:AddLine(("recipe:AddRepVendor(%s, %s, %s)"):format(factionLabel, reputationLevelString, values), genesis_val)
 				end
 			end
-		elseif acquire_type_id == A.VENDOR then
+		elseif acquireTypeID == A.VENDOR then
 			local values
 			local limited_values
 
-			table.wipe(sorted_data)
-			table.wipe(reverse_map)
+			table.wipe(sortedData)
+			table.wipe(reverseMap)
 
-			for id_num in pairs(acquire_info) do
-				table.insert(sorted_data, id_num)
+			for id_num in pairs(acquireInfo) do
+				table.insert(sortedData, id_num)
 			end
-			table.sort(sorted_data)
+			table.sort(sortedData)
 
-			for index, identifier in ipairs(sorted_data) do
+			for index, identifier in ipairs(sortedData) do
 				local saved_id
 
 				if type(identifier) == "string" then
@@ -949,22 +945,22 @@ function Recipe:Dump(output, use_genesis)
 			if limited_values then
 				output:AddLine(("recipe:AddLimitedVendor(%s)"):format(limited_values), genesis_val)
 			end
-		elseif DUMP_FUNCTION_FORMATS[acquire_type_id] then
+		elseif DUMP_FUNCTION_FORMATS[acquireTypeID] then
 			local values
 
-			table.wipe(sorted_data)
-			table.wipe(reverse_map)
+			table.wipe(sortedData)
+			table.wipe(reverseMap)
 
-			for id_num in pairs(acquire_info) do
-				table.insert(sorted_data, id_num)
+			for id_num in pairs(acquireInfo) do
+				table.insert(sortedData, id_num)
 			end
-			table.sort(sorted_data)
+			table.sort(sortedData)
 
-			for index, identifier in ipairs(sorted_data) do
+			for index, identifier in ipairs(sortedData) do
 				local saved_id
 
 				if type(identifier) == "string" then
-					if acquire_type_id == A.WORLD_DROP then
+					if acquireTypeID == A.WORLD_DROP then
 						saved_id = ("Z.%s"):format(ZL[identifier])
 					else
 						saved_id = ("\"%s\""):format(identifier)
@@ -979,9 +975,9 @@ function Recipe:Dump(output, use_genesis)
 					values = saved_id
 				end
 			end
-			output:AddLine((DUMP_FUNCTION_FORMATS[acquire_type_id]):format(values), genesis_val)
+			output:AddLine((DUMP_FUNCTION_FORMATS[acquireTypeID]):format(values), genesis_val)
 		else
-			for identifier in pairs(acquire_info) do
+			for identifier in pairs(acquireInfo) do
 				local saved_id
 
 				if type(identifier) == "string" then
@@ -990,17 +986,17 @@ function Recipe:Dump(output, use_genesis)
 					saved_id = identifier
 				end
 
-				if flag_string then
-					flag_string = ("%s, A.%s, %s"):format(flag_string, private.ACQUIRE_TYPES_BY_ID[acquire_type_id]:Label(), saved_id)
+				if filterOutputText then
+					filterOutputText = ("%s, A.%s, %s"):format(filterOutputText, private.ACQUIRE_TYPES_BY_ID[acquireTypeID]:Label(), saved_id)
 				else
-					flag_string = ("A.%s, %s"):format(private.ACQUIRE_TYPES_BY_ID[acquire_type_id]:Label(), saved_id)
+					filterOutputText = ("A.%s, %s"):format(private.ACQUIRE_TYPES_BY_ID[acquireTypeID]:Label(), saved_id)
 				end
 			end
 		end
 	end
 
-	if flag_string then
-		output:AddLine(("recipe:AddAcquireData(%s)"):format(flag_string), genesis_val)
+	if filterOutputText then
+		output:AddLine(("recipe:AddAcquireData(%s)"):format(filterOutputText), genesis_val)
 	end
 	output:AddLine(" ", genesis_val)
 end

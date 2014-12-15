@@ -2,12 +2,12 @@
 ## Title: Ackis Recipe List: Blacksmithing
 ## Notes: Blacksmithing data for Ackis Recipe List.
 ## Author: Ackis, Pompy, Ressy, Torhal
-## Version: 6.0.2.2
-## X-Revision: f06c6b1
+## Version: 6.0.3.1
+## X-Revision: fc23f37
 ## X-Date: 2014-07-23T01:44:42Z
 ## Dependencies: AckisRecipeList
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: 6.0.2.2
+## X-Curse-Packaged-Version: 6.0.3.1
 ## X-Curse-Project-Name: Ackis Recipe List: Blacksmithing
 ## X-Curse-Project-ID: arl-blacksmithing
 ## X-Curse-Repository-ID: wow/arl-blacksmithing/mainline

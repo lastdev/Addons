@@ -1,0 +1,11 @@
+tag 6.0.3.1
+d763fcf04fbd3b07803064fc7ded01f11420eeac
+James D. Callahan III <jcallahan@curse.com>
+2014-12-13 13:51:43 -0600
+
+Retagging to fix tag name.
+
+
+--------------------
+
+No changelog

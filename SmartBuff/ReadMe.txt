@@ -163,6 +163,10 @@ aeldra@sonnenkinder.org
 Changes: 
 Rev     Date        Description
 ------  ----------  -----------------------
+6.0c    2014-12-02  Added buffs: Hunter (Munitions, Lone Wolf), Rogue (Instant Poison), Hunter (Camouflage), Warrior (Gladiator Stance)
+                    Added items: WoD flasks, Oralius' Whispering Crystal, Fire-Watcher's Oath, Blazing Wings
+                    Fix for LUA error: script ran too long
+
 6.0b    2014-10-23  Updated code for Warlords of Draenor
                     Updated buff lists
                     Updated item lists

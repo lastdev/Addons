@@ -4,8 +4,8 @@ Quest.lua
 ************************************************************************
 File date: 2014-06-01T11:02:34Z
 File hash: 6925a97
-Project hash: beabe36
-Project version: 3.0.8
+Project hash: 0b1c7cf
+Project version: 3.0.11
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************

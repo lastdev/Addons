@@ -4,8 +4,8 @@ Vendor.lua
 ************************************************************************
 File date: 2014-10-18T06:19:35Z
 File hash: beabe36
-Project hash: beabe36
-Project version: 3.0.8
+Project hash: 0b1c7cf
+Project version: 3.0.11
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************

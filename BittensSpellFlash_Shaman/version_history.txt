@@ -1,3 +1,10 @@
+== Version 60000.5
+* Fix priority of Lava Burst vs Flame Shock.  (Always prefer FS if not up.)
+* Fix Echo of the Elements spell cooldown removal.
+
+== Version 60000.4
+Don't flash Thunderstorm for mana regen, because it doesn't.
+
 == Version 60000.3
 Update to latest BSF library.
 

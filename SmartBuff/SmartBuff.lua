@@ -40,7 +40,7 @@ GameTooltip:SetUnitDebuff("unit", [index] or ["name", "rank"][, "filter"]);
 * The untilCanceled return value is true if the buff doesn't have its own duration (e.g. stealth)
 ]]--
 
-SMARTBUFF_VERSION       = "v6.0b";
+SMARTBUFF_VERSION       = "v6.0c1";
 SMARTBUFF_VERSIONNR     = 60000;
 SMARTBUFF_TITLE         = "SmartBuff";
 SMARTBUFF_SUBTITLE      = "Supports you in cast buffs";
@@ -1229,11 +1229,6 @@ function SMARTBUFF_PreCheck(mode, force)
     return false;
   end
   --SMARTBUFF_AddMsgD("2: " .. GetTime() - tLastCheck);
-   
-  if (isSetBuffs) then
-    SMARTBUFF_SetBuffs();
-    isSyncReq = true;
-  end
     
   if (UnitAffectingCombat("player")) then
     isCombat = true;
@@ -1242,6 +1237,11 @@ function SMARTBUFF_PreCheck(mode, force)
     isCombat = false;
     --SMARTBUFF_AddMsgD("Out of combat");
   end
+  
+  if (not isCombat and isSetBuffs) then
+    SMARTBUFF_SetBuffs();
+    isSyncReq = true;
+  end  
   
   sMsgWarning = "";
   isFirstError = true;

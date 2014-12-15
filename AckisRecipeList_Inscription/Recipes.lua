@@ -4397,14 +4397,6 @@ function module:InitializeRecipes()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddCustom("DRAENOR_DEFAULT")
 
-	-- Glyph of Shapemender -- 175448
-	recipe = AddRecipe(175448, V.WOD, Q.COMMON)
-	recipe:SetSkillLevels(295, 295, 300, 450, 600)
-	recipe:SetCraftedItem(120300, "BIND_ON_EQUIP")
-	recipe:SetItemFilterType("INSCRIPTION_MAJOR_GLYPH")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DRUID)
-	recipe:AddDiscovery("DISCOVERY_INSC_WARBINDER")
-
 	-- Secrets of Draenor Inscription -- 177045
 	recipe = AddRecipe(177045, V.WOD, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 600, 650, 700)

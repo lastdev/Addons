@@ -24,11 +24,6 @@ c.AddOptionalSpell("Power Word: Fortitude", nil, {
    end
 })
 
-c.AddOptionalSpell("Inner Fire", nil, {
-   Buff = "Inner Fire",
-   BuffUnit = "player",
-})
-
 c.AddOptionalSpell("Power Infusion", nil, {
    NoGCD = true,
    NoRangeCheck = true,
@@ -41,22 +36,9 @@ c.AddOptionalSpell("Flash Heal", "under Surge of Light", {
    end
 })
 
-c.AddOptionalSpell("Shadowfiend", "for Mana", {
-    CheckFirst = function()
-   return s.PowerPercent("player") < 76
-    end
-})
-
 c.AddOptionalSpell("Mindbender", "for Mana", {
    CheckFirst = function()
       return s.PowerPercent("player") < 82
-   end
-})
-
-c.AddOptionalSpell("Inner Fire", "or Will", {
-   FlashID = { "Inner Fire", "Inner Will" },
-   CheckFirst = function()
-      return not c.HasBuff("Inner Fire") and not c.HasBuff("Inner Will")
    end
 })
 
@@ -78,8 +60,6 @@ c.AddDispel("Dispel Magic", nil, "Magic")
 
 -------------------------------------------------------------------- Discipline
 c.RegisterForFullChannels("Penance", 2)
-
-c.AddOptionalSpell("Inner Focus")
 
 c.AddOptionalSpell("Power Word: Shield", "under Divine Insight", {
    FlashID = { "Power Word: Shield", "Power Word: Shield w/ Insight" },
@@ -148,7 +128,7 @@ local function serendipityCheck(z)
    local stacks = c.GetBuffStack("Serendipity")
    if stacks < 2 and c.IsCasting("Binding Heal", "Flash Heal") then
       stacks = stacks + 1
-   elseif c.IsCasting("Greater Heal", "Prayer of Healing") then
+   elseif c.IsCasting("Heal", "Prayer of Healing") then
       stacks = 0
    end
 
@@ -156,7 +136,7 @@ local function serendipityCheck(z)
    return stacks > 0
 end
 
-c.AddOptionalSpell("Greater Heal", "under Serendipity", {
+c.AddOptionalSpell("Heal", "under Serendipity", {
    NoRangeCheck = true,
    CheckFirst = serendipityCheck,
 })
@@ -210,14 +190,14 @@ c.AddInterrupt("Silence", nil, {
 
 c.AddSpell("Mind Blast", nil, {
    GetDelay = function()
-      return a.Orbs < 3 and c.GetCooldown("Mind Blast", false, 8)
+      return a.Orbs < 3 and c.GetCooldown("Mind Blast", false, 0)
    end
 })
 
 c.AddSpell("Mind Blast", "Delay", {
    IsMinDelayDefinition = true,
    GetDelay = function()
-      return a.Orbs < 3 and c.GetCooldown("Mind Blast", false, 8), .5
+      return a.Orbs < 3 and c.GetCooldown("Mind Blast", false, 9), .5
    end,
 })
 
@@ -237,7 +217,7 @@ c.AddSpell("Shadow Word: Death", nil, {
 
 c.AddSpell("Shadow Word: Death", "for Orb", {
    GetDelay = function()
-      if not a.InExecute or a.Orbs == 3 then
+      if not a.InExecute or a.Orbs >= 3 then
          return false
       end
 
@@ -258,7 +238,7 @@ c.AddSpell("Shadow Word: Death", "without Orb", {
 c.MakePredictor(c.AddSpell("Shadow Word: Death", "Delay", {
    IsMinDelayDefinition = true,
    GetDelay = function()
-      if not a.InExecute or a.Orbs == 3 then
+      if not a.InExecute or a.Orbs >= 3 then
          return false
       end
 
@@ -273,51 +253,42 @@ c.MakePredictor(c.AddSpell("Shadow Word: Death", "Delay", {
 c.AddSpell("Mind Flay", nil, {
    CanCastWhileMoving = false,
    GetDelay = function(z)
-      local delay = c.GetMyDebuffDuration("Mind Flay (Insanity)")
-      if delay > 0 then
-         z.WhiteFlashOffset = 0
-         return delay
-      end
-
-      z.WhiteFlashOffset = -a.FlayTick
+      -- local delay = c.GetMyDebuffDuration("Mind Flay (Insanity)")
+      -- if delay > 0 then
+      --    z.WhiteFlashOffset = 0
+      --    return delay
+      -- end
+      -- 
+      -- z.WhiteFlashOffset = -a.FlayTick
       return s.GetChanneling(z.ID, "player") - c.GetBusyTime()
    end
 })
 
-c.AddSpell("Mind Flay", "(Insanity)", {
+c.AddSpell("Insanity", nil, {
    CanCastWhileMoving = false,
    GetDelay = function(z)
-      if not c.HasTalent("Solace and Insanity") then
-         return false
-      end
-
-      local plague = c.GetMyDebuffDuration(
-         "Devouring Plague", false, false, true)
-      if plague == 0 then
-         return false
-      end
-
-      if a.Insanity == 0 then
-         z.WhiteFlashOffset = 0
-         return 0
-      end
-
-      if a.Insanity - a.FlayTick > plague - .5 then
-         z.WhiteFlashOffset = -2 * a.FlayTick
-      else
-         z.WhiteFlashOffset = -a.FlayTick
-      end
-      return a.Insanity
+      -- if a.Insanity == 0 then
+      --    z.WhiteFlashOffset = 0
+      --    return 0
+      -- end
+      -- 
+      -- if a.Insanity - a.FlayTick > plague - .5 then
+      --    z.WhiteFlashOffset = -2 * a.FlayTick
+      -- else
+      --    z.WhiteFlashOffset = -a.FlayTick
+      -- end
+      -- return a.Insanity
+      return s.GetChanneling(z.ID, "player") - c.GetBusyTime()
    end,
 })
-c.RegisterInitiatingSpell("Mind Flay", "Mind Flay (Insanity)")
+c.RegisterInitiatingSpell("Insanity", "Insanity")
 
-c.AddSpell("Mind Flay", "(Insanity) Delay", {
-   IsMinDelayDefinition = true,
-   GetDelay = function()
-      return a.Insanity
-   end,
-})
+-- c.AddSpell("Mind Flay", "(Insanity) Delay", {
+--    IsMinDelayDefinition = true,
+--    GetDelay = function()
+--       return a.Insanity
+--    end,
+-- })
 
 c.AddSpell("Shadow Word: Pain", nil, {
    MyDebuff = "Shadow Word: Pain",
@@ -332,7 +303,7 @@ c.AddSpell("Shadow Word: Pain", "Early", {
    MyDebuff = "Shadow Word: Pain",
    Tick = 6,
    CheckFirst = function()
-      return a.InExecute and c.HasTalent("Solace and Insanity")
+      return a.InExecute and c.HasTalent("Insanity")
    end
 })
 
@@ -354,7 +325,7 @@ c.AddSpell("Vampiric Touch", "Early", {
    MyDebuff = "Vampiric Touch",
    Tick = 6,
    CheckFirst = function()
-      return a.InExecute and c.HasTalent("Solace and Insanity")
+      return a.InExecute and c.HasTalent("Insanity")
    end
 })
 
@@ -364,21 +335,15 @@ c.AddSpell("Mind Spike", "under Surge of Darkness", {
    end
 })
 
-c.AddSpell("Mind Spike", "under Surge of Darkness Cap", {
-   CheckFirst = function()
-      return a.Surges == 2
-   end
-})
-
 c.AddSpell("Devouring Plague", nil, {
    MyDebuff = "Devouring Plague",
    Tick = 1,
    CheckFirst = function()
-      return a.Orbs == 3
+      return a.Orbs >= 3
    end,
 })
 
-c.AddSpell("Cascade", nil, {
+c.AddOptionalSpell("Cascade", nil, {
    NoRangeCheck = true,
    GetDelay = function(z)
       local dist = c.DistanceAtTheLeast()

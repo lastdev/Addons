@@ -1,3 +1,19 @@
+== Version 60000.15
+Implement WoD MM hunter rotation.  Should work with all talents, including
+people who don't use Lone Wolf.
+
+== Version 60000.14
+Implement WoD SV hunter rotation.  (Yes, it is unpopular, but simple compared
+to MM, so it wins the prize to get shuffled out first.)
+
+== Version 60000.13
+Make Barrage and Powershot optional, since both have consequences beyond just
+doing damage that you might need to avoid triggering.  Glaive Toss is still
+mandatory because it is a more or less single target spell.
+
+== Version 60000.12
+Really, really fix the damn lua error.
+
 == Version 60000.11
 Mark as 6.0 compatible.
 

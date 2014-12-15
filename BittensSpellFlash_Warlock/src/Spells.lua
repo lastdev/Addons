@@ -558,7 +558,7 @@ c.AddOptionalSpell("Metamorphosis", "Cancel", {
          return false
       end
 
-      if a.Fury < (c.HasGlyph("Dark Soul: Knowledge") and 450 or 650) then
+      if a.Fury < (c.HasGlyph("Dark Soul") and 450 or 650) then
          return true
       end
 

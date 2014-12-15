@@ -3,10 +3,10 @@
 Core.lua
 Core functions for Ackis Recipe List
 ************************************************************************
-File date: 2014-09-07T02:48:44Z
-File hash: 37f2a43
-Project hash: beabe36
-Project version: 3.0.8
+File date: 2014-12-13T00:51:37Z
+File hash: 1246860
+Project hash: 0b1c7cf
+Project version: 3.0.11
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -720,7 +720,7 @@ do
 		if loaded_modules[module_name] then
 			return true
 		end
-		local _, _, _, _, reason = private.GetAddOnInfo(module_name)
+		local _, _, _, _, reason = _G.GetAddOnInfo(module_name)
 
 		if reason ~= "DISABLED" then
 			local is_loaded = _G.LoadAddOn(module_name) and true or false
@@ -888,7 +888,7 @@ do
 			local found_module
 
 			for profession_name, module_name in pairs(private.PROFESSION_MODULE_NAMES) do
-				local _, _, _, _, reason = private.GetAddOnInfo(FOLDER_NAME .. "_" .. module_name or "")
+				local _, _, _, _, reason = _G.GetAddOnInfo(FOLDER_NAME .. "_" .. module_name or "")
 				if not reason or reason == "DISABLED" then
 					-- The assumption here is that if a module is disabled, the user is aware that modules exist.
 					found_module = true

@@ -14,7 +14,7 @@
 #@debug@
 # ## Title: Ackis Recipe List - Development Version
 #@end-debug@
-## X-Curse-Packaged-Version: 3.0.8
+## X-Curse-Packaged-Version: 3.0.11
 ## X-Curse-Project-Name: Ackis Recipe List
 ## X-Curse-Project-ID: arl
 ## X-Curse-Repository-ID: wow/arl/mainline
@@ -40,9 +40,9 @@
 
 ## Interface: 60000
 ## X-Compatible-With: 60000
-## Version: 3.0.8
-## X-Revision: beabe36
-## X-Date: 2014-08-05T23:43:28Z
+## Version: 3.0.11
+## X-Revision: 0b1c7cf
+## X-Date: 2014-11-23T04:28:24Z
 
 ## X-Credits: FGWarmonger, Kagaro, Speeddymon, Xinhuan, Aesir, BWMerlin, everyone who translated stuff and more!
 ## X-Category: Tradeskill
@@ -50,7 +50,7 @@
 ## X-Website: http://wow.curse.com/downloads/wow-addons/details/arl.aspx
 ## X-Feedback: http://www.wowace.com/addons/arl/forum/
 
-## OptionalDeps: Ace3, LibAboutPanel, LibBabble-Boss-3.0, LibSharedMedia-3.0, LibQTip-1.0, LibTextDump-1.0, LibToast-1.0, LibDialog-1.0, Skillet, ATSW, Cauldron, TomTom, TipTac, Carbonite, tekDebug
+## OptionalDeps: Ace3, LibAboutPanel, LibBabble-Boss-3.0, LibSharedMedia-3.0, LibQTip-1.0, LibTextDump-1.0, LibToast-1.0, LibDialog-1.0, Skillet, ATSW, Cauldron, TomTom, TipTac, Carbonite
 ## DefaultState: Enabled
 
 ## X-WoWI-ID: 5061

@@ -1,3 +1,6 @@
+== Version 60000.4
+Fix chat log spam about the dark soul glyph.
+
 == Version 60000.3
 Update to latest BSF library.
 

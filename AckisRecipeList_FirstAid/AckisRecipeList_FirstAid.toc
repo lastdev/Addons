@@ -2,12 +2,12 @@
 ## Title: Ackis Recipe List: First Aid
 ## Notes: First Aid data for Ackis Recipe List.
 ## Author: Ackis, Pompy, Ressy, Torhal
-## Version: 6.0.2.1
-## X-Revision: c805b27
+## Version: 6.0.3.1
+## X-Revision: e25c411
 ## X-Date: 2014-07-23T01:54:03Z
 ## Dependencies: AckisRecipeList
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: 6.0.2.1
+## X-Curse-Packaged-Version: 6.0.3.1
 ## X-Curse-Project-Name: Ackis Recipe List: First Aid
 ## X-Curse-Project-ID: arl-first-aid
 ## X-Curse-Repository-ID: wow/arl-first-aid/mainline

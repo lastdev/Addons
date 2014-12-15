@@ -4,7 +4,7 @@ local oRA = scope.addon
 local module = oRA:NewModule("ReadyCheck", "AceTimer-3.0")
 local L = scope.locale
 
-module.VERSION = tonumber(("$Revision: 806 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 839 $"):sub(12, -3))
 
 local readycheck = {} -- table containing ready check results
 local frame -- will be filled with our GUI frame
@@ -194,6 +194,8 @@ local function updateWindow()
 			highgroup = 6
 		elseif diff == 16 then -- 20 man
 			highgroup = 5
+		elseif diff == 14 or diff == 15 then
+			highgroup = 7
 		else -- 40 man
 			highgroup = 9
 		end

@@ -61,7 +61,6 @@ function module:InitializeVendors()
 	AddVendor(64599,	L["Ambersmith Zikk"],			Z.DREAD_WASTES,			55.0,	35.6,	"Neutral")
 	AddVendor(77359,	L["Auria Irondreamer"],			Z.LUNARFALL,			 0.0,	 0.0,	"Alliance")  -- Alliance Garrison
 	AddVendor(79867,	L["Orgek Ironhand"],			Z.FROSTWALL,			 0.0,	 0.0,	"Horde")  -- Horde Garrison
-	AddVendor(80768,	L["Alstan Mountainbrew"],		Z.TALADOR,			69.5,	21.3,	"Alliance")
 	AddVendor(87062,	L["Royce Bigbeard"],			Z.STORMSHIELD,			49.0,	47.0,	"Alliance") -- Alliance Ashran
 	AddVendor(87550,	L["Nonn Theeratchet"],			Z.WARSPEAR,			75.2,	37.6,	"Horde") -- Horde Ashran
 

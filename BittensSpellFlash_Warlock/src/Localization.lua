@@ -11,9 +11,9 @@ L["Flash Demonology"] = "Flash Demonologia" -- Needs review
 L["Flash Destruction"] = "Flash Destruição" -- Needs review
 
 elseif locale == "frFR" then -- French
--- L["Flash Affliction"] = ""
--- L["Flash Demonology"] = ""
--- L["Flash Destruction"] = ""
+L["Flash Affliction"] = "Alertes d'Affliction" -- Needs review
+L["Flash Demonology"] = "Alertes de Démonologie" -- Needs review
+L["Flash Destruction"] = "Alertes de Destruction" -- Needs review
 
 elseif locale == "deDE" then -- German
 L["Flash Affliction"] = "Blitz Gebrechen" -- Needs review

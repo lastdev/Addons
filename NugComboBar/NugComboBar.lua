@@ -314,6 +314,9 @@ function NugComboBar:LoadClassSettings()
             self:RegisterEvent("UNIT_AURA")
             self.UNIT_AURA = self.UNIT_COMBO_POINTS
             allowedUnit = "player"
+
+            local maxcharges = IsSpellKnown(157774) and 20 or 15
+
             local LShield = GetSpellInfo(324) -- Lightning Shield
             local GetLightningShield = function(unit)
                 local _,_,_, count, _,_,_, caster = UnitAura("player", LShield, nil, "HELPFUL")
@@ -334,25 +337,39 @@ function NugComboBar:LoadClassSettings()
                 return count, nil, nil, layer2count
             end
 
+            local GetLightningShield2 = function(unit)
+                local _,_,_, count, _,_,_, caster = UnitAura("player", LShield, nil, "HELPFUL")
+                if not count then return 0, 0 end
+                if count >= maxcharges - 3 and NugComboBar.bar then
+                    NugComboBar.bar:SetColor(unpack(NugComboBarDB.colors.bar2))
+                else
+                    NugComboBar.bar:SetColor(unpack(NugComboBarDB.colors.bar1))
+                end
+                return 0, count
+            end
+
             self:RegisterEvent("SPELLS_CHANGED")
             self.SPELLS_CHANGED = function(self)
                 local spec = GetSpecialization()
                 if spec == 1 then
-                    self:DisableBar()
-                    self:SetMaxPoints(7, "SHAMAN7")
-
-                    -- if not secondLayerEnabled then
-                        -- self:EnableBar(0, 8, "Long")
-                    -- else
-                        -- self:EnableBar(0, 2, "Small")
-                    -- end
-                    GetComboPoints = GetLightningShield
+                    defaultValue = 0
+                    defaultProgress = 1
+                    if self.bar then
+                        showEmpty = true
+                        maxcharges = IsSpellKnown(157774) and 20 or 15
+                        self:EnableBar(0, maxcharges, "Big")
+                        GetComboPoints = GetLightningShield2
+                    else
+                        showEmpty = false
+                        GetComboPoints = GetAuraStack
+                    end
                 elseif spec == 3 then
                     self:DisableBar()
                     self:SetMaxPoints(2)
                     scanAura = GetSpellInfo(51564) -- Tidal Waves
                     GetComboPoints = GetAuraStack
                 else
+                    self:DisableBar()
                     soundFullEnabled = true
                     self:SetMaxPoints(5)
                     scanAura = GetSpellInfo(53817) -- Maelstrom Weapon
@@ -638,29 +655,42 @@ function NugComboBar:LoadClassSettings()
         elseif class == "MAGE" then 
             self:RegisterEvent("UNIT_AURA")
             self.UNIT_AURA = self.UNIT_COMBO_POINTS 
-
-            local showMissileProcs = NugComboBarDB.special1
-            if showMissileProcs then
-                self:SetMaxPoints(4, "ARCANE", 3)
-                local arcaneCharges = GetSpellInfo(36032)
-                local arcaneMissiles = GetSpellInfo(79683)
-                local GetChargesAndBarrage = function(unit)
-                    local _,_,_, count1 = UnitAura("player", arcaneCharges, nil, "HARMFUL")
-                    local _,_,_, count2 = UnitAura("player", arcaneMissiles, nil, "HELPFUL")
-                    return count1 or 0, 0, nil, nil, count2 or 0 -- for second line
+            self:SetMaxPoints(5)
+            self:RegisterEvent("SPELLS_CHANGED")
+            self.SPELLS_CHANGED = function(self, event)
+                self:RegisterEvent("UNIT_AURA")
+                local spec = GetSpecialization()
+                if spec == 1 then
+                    local showMissileProcs = NugComboBarDB.special1
+                    if showMissileProcs then
+                        self:SetMaxPoints(4, "ARCANE", 3)
+                        local arcaneCharges = GetSpellInfo(36032)
+                        local arcaneMissiles = GetSpellInfo(79683)
+                        local GetChargesAndBarrage = function(unit)
+                            local _,_,_, count1 = UnitAura("player", arcaneCharges, nil, "HARMFUL")
+                            local _,_,_, count2 = UnitAura("player", arcaneMissiles, nil, "HELPFUL")
+                            return count1 or 0, 0, nil, nil, count2 or 0 -- for second line
+                        end
+                        -- scanAura = GetSpellInfo(36032) -- Arcane Blast Buff
+                        -- filter = "HARMFUL"
+                        -- allowedUnit = "player"
+                        GetComboPoints = GetChargesAndBarrage
+                    else
+                        self:DisableBar()
+                        self:SetMaxPoints(4)
+                        scanAura = GetSpellInfo(36032) -- Arcane Blast Buff
+                        filter = "HARMFUL"
+                        GetComboPoints = GetAuraStack
+                    end
+                elseif IsSpellKnown(1463) then
+                    self:DisableBar()
+                    self:SetMaxPoints(5)
+                    scanAura = GetSpellInfo(116267) -- Incanter's Flow Buff
+                    filter = "HELPFUL"
+                    GetComboPoints = GetAuraStack
                 end
-                -- scanAura = GetSpellInfo(36032) -- Arcane Blast Buff
-                -- filter = "HARMFUL"
-                -- allowedUnit = "player"
-                GetComboPoints = GetChargesAndBarrage
-            else
-                self:DisableBar()
-                self:SetMaxPoints(4)
-                scanAura = GetSpellInfo(36032) -- Arcane Blast Buff
-                filter = "HARMFUL"
-                allowedUnit = "player"
-                GetComboPoints = GetAuraStack
             end
+            self:SPELLS_CHANGED()
         else
             self:SetMaxPoints(2)
             return

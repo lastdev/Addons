@@ -1030,8 +1030,9 @@ end
 
 local function qcRefreshPins(mapId, mapLevel)
 	if not (WorldMapFrame:IsVisible()) then return nil end
+	qcHideAllPins()
+	wipe(qcPins)
 	if (qcSettings.QC_M_SHOW_ICONS == 0) or (qcPinDB[mapId] == nil) then
-		qcHideAllPins()
 		wipe(qcPins)
 		return nil
 	end

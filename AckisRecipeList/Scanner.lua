@@ -5,8 +5,8 @@ Vendor/trainer scanning for Ackis Recipe List.
 ************************************************************************
 File date: 2014-10-14T01:43:23Z
 File hash: e76b354
-Project hash: beabe36
-Project version: 3.0.8
+Project hash: 0b1c7cf
+Project version: 3.0.11
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************

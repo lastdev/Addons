@@ -7,33 +7,28 @@ local u = BittensGlobalTables.GetTable("BittensUtilities")
 local GetPowerRegen = GetPowerRegen
 local GetTime = GetTime
 local SPELL_POWER_FOCUS = SPELL_POWER_FOCUS
-local math = math
-local pairs = pairs
 local select = select
 local string = string
-local tostring = tostring
+local unpack = unpack
 
-local warning = "|cFFFF0000WARNING: The Hunter %s rotation works to level 90, but has not been updated to level 100.  I can't promise when this will happen, but this will happen.  Help is absolutely welcome.|r -- SlippyCheeze"
+local focusAdded = {
+   ["Focusing Shot"] = 50,
+   ["Steady Shot"] = 14,
+   ["Cobra Shot"] = 14,
+}
 
-local printedOnce = {}
-local function printOnce(msg, ...)
-   if a.printedOnce[msg] then return end
-   a.printedOnce[msg] = true
-   print(format(msg, ...))
-end
+function a.FocusAdded(spell, delay)
+   local focus = focusAdded[spell] or 0
+   local steady = s.Buff(c.GetID("Steady Focus"), "player", delay)
 
-function a.FocusAdded(delay)
-   if s.Buff(c.GetID("Steady Focus"), "player", delay) then
-      return 21
-   else
-      return 14
-   end
+   return focus * (steady and 1.5 or 1)
 end
 
 local function castQueued(info)
    -- adjust focus costs
    if c.InfoMatches(info, "Cobra Shot", "Steady Shot") then
       info.Cost[SPELL_POWER_FOCUS] = -a.FocusAdded(
+         info.Name,
          info.CastStart + s.CastTime(info.Name) - GetTime())
 
       -- this starts a steady focus pattern
@@ -136,59 +131,43 @@ a.Rotations.BeastMastery = {
 }
 
 ------------------------------------------------------------------ Marksmanship
-local nextSSIsImproved
-local ssUnimprovers = {
-   "Arcane Shot",
-   "Chimera Shot",
+local MMCarefulAimRotation = {
+   "Glaive Toss for AoE",
+   "Powershot for AoE",
+   "Barrage for AoE",
    "Aimed Shot",
-   "Glaive Toss", -- guess
-   "Powershot", -- guess
-   "Barrage", -- guess
-   "A Murder of Crows",
-   "Dire Beast",
-   "Serpent Sting",
-   "Multi-Shot",
-   "Tranquilizing Shot",
--- Perhaps the below are not worth including, since they are not part of the
--- rotation
---      "Distracting Shot",
---      "Silencing Shot",
---      "Wyvern Sting",
---      "Binding Shot",
+   "Focusing Shot",
+   "Steady Shot"
 }
--- Things that do NOT break SS pairs:
--- Traps
--- Things not on the GCD
--- Deterrence
--- Disengage
--- Feign Death
--- Flare
--- Mend Pet
 
-local function getImprovedStatus(info, curValue)
-   if info then
-      if c.InfoMatches(info, "Steady Shot") then
-         return not curValue
-      elseif c.InfoMatches(info, ssUnimprovers) then
-         return false
-      end
-   end
-   return curValue
-end
+local MMNormalRotation = {
+         -- rapid fire rotation here
+         "Explosive Trap",
+         "A Murder of Crows",
+         "Dire Beast",
+         "Glaive Toss",
+         "Powershot",
+         "Barrage",
+         -- pool max focus for rapid fire so we can spam AimedShot with Careful Aim buff
+         "Steady Shot to pool",
+         "Focusing Shot to pool",
+         "Multi-Shot for MM",
+         "Aimed Shot",
+         "Aimed Shot under Thrill of the Hunt",
+         "Mend Pet",
+         "Focusing Shot",
+         "Steady Shot"
+}
 
 a.Rotations.Marksmanship = {
    Spec = 2,
 
-   UsefulStats = { "Agility", "Melee Hit", "Crit", "Haste" },
+   UsefulStats = { "Agility", "Crit", "Multistrike", "Versatility", "Haste", "Mastery" },
 
    FlashInCombat = function()
-
-      -- adjust resources/cooldowns to reflect casting & queued spells
-      local casting = c.GetCastingInfo()
-      local queued = c.GetQueuedInfo()
-      a.NextSSIsImproved = getImprovedStatus(casting, nextSSIsImproved)
-      a.NextSSIsImproved = getImprovedStatus(queued, a.NextSSIsImproved)
-      a.CSCool = c.GetCooldown("Chimera Shot", false, 9)
+      a.CarefulAim =
+         (c.HasBuff("Rapid Fire") or s.HealthPercent("target") >= 80)
+         and not c.GetOption("NoCarefulAim")
 
       -- flash
       c.FlashAll(
@@ -199,46 +178,47 @@ a.Rotations.Marksmanship = {
          "Bullheaded",
          "Mend Pet at 50",
          "Counter Shot",
-         "Tranquilizing Shot")
+         "Tranquilizing Shot"
+      )
+
       c.PriorityFlash(
-         "Steady Shot 2",
-         "Chimera Shot to save Serpent Sting",
-         "Serpent Sting",
-         "Stampede for Marksmanship",
-         "A Murder of Crows",
-         "Dire Beast",
-         "Chimera Shot",
+         "Steady Shot for Steady Focus",
+         "Chimaera Shot",
          "Kill Shot",
-         "Glaive Toss",
          "Rapid Fire",
-         "Steady Shot Opportunistic",
-         "Arcane Shot under Thrill of the Hunt",
-         "Powershot",
-         "Aimed Shot",
-         "Arcane Shot for Marksmanship",
-         "Barrage",
-         "Mend Pet",
-         "Steady Shot")
+         "Stampede for Marksmanship",
+         -- must be the last line for this to work.
+         unpack(a.CarefulAim and MMCarefulAimRotation or MMNormalRotation)
+      )
    end,
 
    FlashOutOfCombat = function()
-      printOnce(warning, "MM")
       c.FlashAll("Mend Pet")
+
+      if x.EnemyDetected then
+         c.PriorityFlash(
+            "Glaive Toss",
+            "A Murder of Crows",
+            "Chimaera Shot",
+            "Aimed Shot",
+            "Focusing Shot",
+            "Steady Shot"
+         )
+      end
    end,
 
    FlashAlways = function()
-      c.FlashAll("Call Pet", "Revive Pet")
+      if c.HasTalent("Lone Wolf") then
+         c.FlashAll("Dismiss Pet")
+      else
+         c.FlashAll("Call Pet", "Revive Pet")
+      end
    end,
 
    CastQueued = castQueued,
 
-   CastSucceeded = function(info)
-      nextSSIsImproved = getImprovedStatus(info, nextSSIsImproved)
-   end,
-
    ExtraDebugInfo = function()
-      return string.format("%.1f %s %.1f",
-         a.Focus, tostring(a.NextSSIsImproved), a.CSCool)
+      return string.format("%.1f", a.Focus)
    end,
 }
 
@@ -246,7 +226,7 @@ a.Rotations.Marksmanship = {
 a.Rotations.Survival = {
    Spec = 3,
 
-   UsefulStats = { "Agility", "Melee Hit", "Crit", "Haste" },
+   UsefulStats = { "Agility", "Multistrike", "Crit", "Haste" },
 
    FlashInCombat = function()
       c.FlashAll(
@@ -257,34 +237,38 @@ a.Rotations.Survival = {
          "Bullheaded",
          "Mend Pet at 50",
          "Counter Shot",
-         "Tranquilizing Shot")
+         "Tranquilizing Shot"
+      )
+
       c.PriorityFlash(
-         "Serpent Sting",
-         "Cobra Shot for Serpent Sting",
+         "Cobra Shot for Steady Focus",
+         "Black Arrow",
+         "Explosive Shot",
          "Stampede",
          "A Murder of Crows",
-         "Black Arrow",
          "Dire Beast",
-         "Kill Shot",
-         "Explosive Shot",
          "Glaive Toss",
-         "Arcane Shot under Thrill of the Hunt",
-         "Powershot",
-         "Arcane Shot for Survival",
-         "Rapid Fire",
          "Barrage",
+         "Powershot",
+         "Arcane Shot under Thrill of the Hunt",
+         "Multi-Shot for SV",
+         "Arcane Shot for Survival",
          "Mend Pet",
+         "Focusing Shot",
          "Cobra Shot",
          "Steady Shot for Leveling")
    end,
 
    FlashOutOfCombat = function()
-      printOnce(warning, "SV")
       c.FlashAll("Mend Pet")
    end,
 
    FlashAlways = function()
-      c.FlashAll("Call Pet", "Revive Pet")
+      if c.HasTalent("Lone Wolf") then
+         c.FlashAll("Dismiss Pet")
+      else
+         c.FlashAll("Call Pet", "Revive Pet")
+      end
    end,
 
    CastQueued = castQueued,

@@ -4,12 +4,13 @@
 
 -- Whats new info
 SMARTBUFF_WHATSNEW = "|cffffffffWhats new:|r\n\n"
-  .."- Updated code for Warlords of Draenor\n\n"
-  .."- Updated buff lists\n\n"
-  .."- Updated item lists\n\n"
-  .."- Added toybox support\n\n"
+  .."- Added buffs: Hunter (Munitions, Lone Wolf), Rogue (Instant Poison), Hunter (Camouflage), Warrior (Gladiator Stance)\n\n"
+  .."- Added items: WoD flasks, Oralius' Whispering Crystal, Fire-Watcher's Oath, Blazing Wings\n\n"
+  .."- Fix for LUA error: script ran too long\n\n"
   --.."- This release will restore basic functionality, but unfortunately it does not contain all the new aura changes, sorry.\n\n"
-  .."- Please report any missing auras, thanks!\n\n"
+  .."- Due to I am not playing WoD atm, please report any missing auras and be patient, thanks!\n\n"
+  
+  --[[
   .."- Thanks for donation:\n"
   .."  Maik M.\n"
   .."  Chris S.\n"
@@ -18,6 +19,7 @@ SMARTBUFF_WHATSNEW = "|cffffffffWhats new:|r\n\n"
   .."  Jon B.\n"
   .."  Michael Z.\n"
   .."  :)"
+  --]]
   ;
 
 

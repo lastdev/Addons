@@ -1,5 +1,5 @@
 ## Interface: 60000
-## X-Curse-Packaged-Version: 6.0.0.48-Beta
+## X-Curse-Packaged-Version: 6.0.0.49-Beta
 ## X-Curse-Project-Name: Panda
 ## X-Curse-Project-ID: panda
 ## X-Curse-Repository-ID: wow/panda/mainline
@@ -7,7 +7,7 @@
 ## Title: Panda
 ## Notes: Prospecting and Disenchanting Aide
 ## Author: Tekkub Stoutwrithe
-## Version: 6.0.0.48
+## Version: 6.0.0.49
 ## X-Website: http://code.google.com/p/tekkub-wow/
 ## X-Email: tekkub-wow@googlegroups.com
 ## X-Category: Tradeskills

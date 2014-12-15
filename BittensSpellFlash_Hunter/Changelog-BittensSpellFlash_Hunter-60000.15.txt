@@ -1,0 +1,134 @@
+------------------------------------------------------------------------
+r98 | slippycheeze | 2014-12-13 05:13:53 +0000 (Sat, 13 Dec 2014) | 1 line
+Changed paths:
+   A /tags/60000.15 (from /trunk:97)
+
+Tagging as 60000.15
+------------------------------------------------------------------------
+r97 | slippycheeze | 2014-12-13 05:13:00 +0000 (Sat, 13 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+Switch to auto-generated changelog from curse
+------------------------------------------------------------------------
+r96 | slippycheeze | 2014-12-13 05:12:55 +0000 (Sat, 13 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+   M /trunk/version_history.txt
+
+Implement MM hunter rotation for 6.0, finally.
+------------------------------------------------------------------------
+r94 | slippycheeze | 2014-12-13 02:55:40 +0000 (Sat, 13 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+   M /trunk/version_history.txt
+
+Implement initial SV hunter WoD rotation.
+------------------------------------------------------------------------
+r92 | slippycheeze | 2014-12-07 09:37:47 +0000 (Sun, 07 Dec 2014) | 5 lines
+Changed paths:
+   M /trunk/src/Spells.lua
+   M /trunk/version_history.txt
+
+Make Barrage and Powershot optional.
+
+Both have consequences beyond just doing damage that you might need to
+avoid triggering.  Glaive Toss is still mandatory because it is a more
+or less single target spell.
+------------------------------------------------------------------------
+r90 | slippycheeze | 2014-12-05 17:22:45 +0000 (Fri, 05 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+   M /trunk/version_history.txt
+
+Really fix the damn lua error.
+------------------------------------------------------------------------
+r88 | slippycheeze | 2014-12-02 01:31:36 +0000 (Tue, 02 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/BittensSpellFlash_Hunter.toc
+   M /trunk/version_history.txt
+
+Mark as 6.0 compatible.
+------------------------------------------------------------------------
+r86 | slippycheeze | 2014-12-02 00:59:56 +0000 (Tue, 02 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+   M /trunk/version_history.txt
+
+Fix lua error breaking non-BM specs
+------------------------------------------------------------------------
+r84 | slippycheeze | 2014-11-30 23:05:25 +0000 (Sun, 30 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/version_history.txt
+
+Update to latest BSF library
+------------------------------------------------------------------------
+r82 | slippycheeze | 2014-11-30 21:54:20 +0000 (Sun, 30 Nov 2014) | 3 lines
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+   M /trunk/version_history.txt
+
+Update BM rotation to 100
+
+Also, minor other cleanups, but mostly rewriting the rotation to work.
+------------------------------------------------------------------------
+r80 | slippycheeze | 2014-11-23 18:12:44 +0000 (Sun, 23 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+   M /trunk/version_history.txt
+
+fix lua error on load, for reals
+------------------------------------------------------------------------
+r78 | slippycheeze | 2014-11-23 04:05:37 +0000 (Sun, 23 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+   M /trunk/version_history.txt
+
+Fix lua error on load.
+------------------------------------------------------------------------
+r76 | slippycheeze | 2014-11-22 03:53:30 +0000 (Sat, 22 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/version_history.txt
+
+changelog
+------------------------------------------------------------------------
+r73 | slippycheeze | 2014-11-22 03:01:23 +0000 (Sat, 22 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Options.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+   M /trunk/version_history.txt
+
+Final push marking 6.0 compatibility...
+------------------------------------------------------------------------
+r72 | slippycheeze | 2014-11-22 03:01:18 +0000 (Sat, 22 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/.buildpath
+   M /trunk/.pkgmeta
+   M /trunk/.project
+   M /trunk/BittensSpellFlash_Hunter.toc
+   M /trunk/src/IDs.lua
+   M /trunk/src/Localization.lua
+   M /trunk/src/Options.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+   M /trunk/version_history.txt
+
+utf-8-unix everything
+------------------------------------------------------------------------
+r71 | xemnosyst | 2014-07-27 15:54:17 +0000 (Sun, 27 Jul 2014) | 2 lines
+Changed paths:
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+   M /trunk/version_history.txt
+
+* Beast Mastery & Survival: Flashes Steady Shot instead of Cobra Shot for lower level characters.
+
+------------------------------------------------------------------------

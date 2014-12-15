@@ -2,10 +2,10 @@
 ************************************************************************
 Panel.lua
 ************************************************************************
-File date: 2014-10-18T03:42:00Z
-File hash: bb475bd
-Project hash: beabe36
-Project version: 3.0.8
+File date: 2014-12-13T00:42:14Z
+File hash: c363f0c
+Project hash: 0b1c7cf
+Project version: 3.0.11
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -705,9 +705,16 @@ function private.InitializeFrame()
 	end)
 
 
-	SearchBox:HookScript("OnTextSet", function(self)
-		local text = self:GetText()
+	SearchBox:SetScript("OnTextSet", function(self)
+		if not self:HasFocus() and self:GetText() == "" then
+			self.searchIcon:SetVertexColor(0.6, 0.6, 0.6)
+			self.clearButton:Hide()
+		else
+			self.searchIcon:SetVertexColor(1.0, 1.0, 1.0)
+			self.clearButton:Show()
+		end
 
+		local text = self:GetText()
 		if text ~= "" and text ~= _G.SEARCH and text ~= self.prev_search then
 			self:HighlightText()
 		else
