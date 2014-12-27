@@ -824,6 +824,13 @@ Change Log:
 		- Added WoD spells for Shadowmoon Burial Grounds
 		- Added WoD spells for the Everbloom
 		- Updated Classic spells for Molten Core
+	v4.35.6
+		- Added WoD spells for Draenor (world)
+		- Added WoD spells for Highmaul
+		- Added WoD spells for Iron Docks
+		- Added WoD spells for Skyreach
+	v4.35.7
+		- Added and fixed WoD spells for Highmaul
 		
 ]]--
 GTFO = {
@@ -841,8 +848,8 @@ GTFO = {
 		IgnoreOptions = { };
 		TrivialDamagePercent = 2; -- Minimum % of HP lost required for an alert to be trivial
 	};
-	Version = "4.35.5"; -- Version number (text format)
-	VersionNumber = 43505; -- Numeric version number for checking out-of-date clients
+	Version = "4.35.7"; -- Version number (text format)
+	VersionNumber = 43507; -- Numeric version number for checking out-of-date clients
 	DataLogging = nil; -- Indicate whether or not the addon needs to run the datalogging function (for hooking)
 	DataCode = "4"; -- Saved Variable versioning, change this value to force a reset to default
 	CanTank = nil; -- The active character is capable of tanking

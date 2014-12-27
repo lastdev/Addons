@@ -285,7 +285,7 @@ HealBot_GlobalsDefaults = {
         [HEALBOT_SHROUD_OF_PURGATORY]      = 9, --Death Knight
 		[HEALBOT_DEBUFF_ROCKET_FUEL_LEAK]  = 10, --Engineering        
 	
-	--[[Updated Patch ??? Warlords Of Draenor Expansion by Ariá - Silvermoon EU
+	--[[Updated Patch 6.0.3 Warlords Of Draenor Expansion by Ariá - Silvermoon EU
 	--World Bosses
 	Drov The Ruiner
     --Tarlna The Ageless]]	
@@ -294,13 +294,26 @@ HealBot_GlobalsDefaults = {
 	--Rukhmar
 	[HEALBOT_DEBUFF_PIERCED_ARMOR]           = 11, -- Rukhmar
 		
+	--Scenarios, Dungeons & Proving Grounds
+	[HEALBOT_DEBUFF_CHOMP]             = 9, -- Healer Challenge 
+    [HEALBOT_DEBUFF_LAVA_BURNS]        = 10, -- Healer Challenge
+	--DISPELABLE (DO NOT REMOVE)
+	[HEALBOT_DEBUFF_WITHERING_FLAMES]        = 10, -- Magmolatus (DO NOT REMOVE)
+	[HEALBOT_DEBUFF_UNSTABLE_AFFLICTION]     = 10, -- Gul'kosh (DO NOT REMOVE)
+	
 	--[[= GetMapNameByID(944) or "--Highmaul" 
 	Trash]]
 	[HEALBOT_DEBUFF_TAINED_CLAWS]            = 10, -- Trash  
+	[HEALBOT_DEBUFF_DEVOUR]                  = 10, -- Trash
 	[HEALBOT_DEBUFF_RADIATING_POISON]        = 10, -- Trash 
+	[HEALBOT_DEBUFF_STAGGERING_BLOW]         = 12, -- Trash
 	[HEALBOT_DEBUFF_RUNE_OF_DESTRUCTION]     = 9, -- Trash  
 	[HEALBOT_DEBUFF_RUNE_OF_DISINTEGRATION]  = 10, -- Trash
 	[HEALBOT_DEBUFF_RENDING_SLASH]           = 10, -- Trash  	
+	[HEALBOT_DEBUFF_EARTHDEVASTATING_SLAM]   = 12, -- Trash
+	[HEALBOT_DEBUFF_FROZEN_CORE]             = 10, -- Trash
+	[HEALBOT_DEBUFF_WILD_FLAMES]             = 10, -- Trash
+	[HEALBOT_DEBUFF_RENDING_THROW]           = 10, -- Trash
 	--The Butcher
 	[HEALBOT_DEBUFF_GUSHING_WOUNDS]          = 10, -- The Butcher  
 	[HEALBOT_DEBUFF_THE_TENDERIZER]          = 11, -- The Butcher  
@@ -326,11 +339,12 @@ HealBot_GlobalsDefaults = {
 	--Ko'ragh
 	[HEALBOT_DEBUFF_CAUSTIC_ENERGY]          = 9, -- Ko'ragh
 	[HEALBOT_DEBUFF_SUPPRESSION_FIELD]       = 10, -- Ko'ragh
-	[HEALBOT_DEBUFF_EXPEL_MAGIC_SHADOW]      = 9, -- Ko'ragh
-	[HEALBOT_DEBUFF_EXPEL_MAGIC_ARCANE]      = 11, -- Ko'ragh
-	[HEALBOT_DEBUFF_EXPEL_MAGIC_FROST]       = 10, -- Ko'ragh
+	[HEALBOT_DEBUFF_EXPEL_MAGIC_SHADOW]      = 12, -- Ko'ragh
+	[HEALBOT_DEBUFF_EXPEL_MAGIC_ARCANE]      = 9, -- Ko'ragh
 	[HEALBOT_DEBUFF_DOMINATING_POWER]        = 12, -- Ko'ragh
 	[HEALBOT_DEBUFF_EXPEL_MAGIC_FEL]         = 10, -- Ko'ragh
+	[HEALBOT_DEBUFF_NULLIFICATION_BARRIER]   = 12, -- Ko'ragh  
+	--[HEALBOT_DEBUFF_EXPEL_MAGIC_FROST]       = 11, -- Ko'ragh
 	--Tectus
 	[HEALBOT_DEBUFF_CRYSTALLINE_BARRAGE]     = 10, -- Tectus
 	[HEALBOT_DEBUFF_PETRIFICATION]           = 11, -- Tectus
@@ -339,15 +353,31 @@ HealBot_GlobalsDefaults = {
 	[HEALBOT_DEBUFF_CREEPING_MOSS]           = 10, -- Brackenspore
 	[HEALBOT_DEBUFF_ROT]                     = 10, -- Brackenspore
 	[HEALBOT_DEBUFF_NECROTIC_BREATH]         = 9, -- Brackenspore
-	[HEALBOT_DEBUFF_MIND_FUNGUS]             = 11, -- Brackenspore
 	[HEALBOT_DEBUFF_FLESH_EATER]             = 11, -- Brackenspore
+	--[HEALBOT_DEBUFF_MIND_FUNGUS]             = 11, -- Brackenspore
 	--Imperator Mar'gok 
 	[HEALBOT_DEBUFF_BRANDED]                 = 9, -- Imperator Mar'gok 
 	[HEALBOT_DEBUFF_DESTRUCTIVE_RESONANCE]   = 11, -- Imperator Mar'gok 
-	[HEALBOT_DEBUFF_FORCE_NOVA]              = 10, -- Imperator Mar'gok 
 	[HEALBOT_DEBUFF_MARK_OF_CHAOS]           = 9, -- Imperator Mar'gok 
+	[HEALBOT_DEBUFF_BRANDED_DISPLACEMENT]               = 9, -- Imperator Mar'gok   
+	[HEALBOT_DEBUFF_DESTRUCTIVE_RESONANCE_DISPLACEMENT] = 11, -- Imperator Mar'gok
+	[HEALBOT_DEBUFF_MARK_OF_CHAOS_DISPLACEMENT]         = 9, -- Imperator Mar'gok	
+	[HEALBOT_DEBUFF_BRANDED_FORTIFICATION]              = 9, -- Imperator Mar'gok
+	[HEALBOT_DEBUFF_DESTRUCTIVE_RESONANCE_FORTIFICATION]= 11, -- Imperator Mar'gok
+	[HEALBOT_DEBUFF_MARK_OF_CHAOS_FORTIFICATION]        = 9, -- Imperator Mar'gok	
+	[HEALBOT_DEBUFF_BRANDED_REPLICATION]                = 9, -- Imperator Mar'gok
+	[HEALBOT_DEBUFF_DESTRUCTIVE_RESONANCE_REPLICATION]  = 11, -- Imperator Mar'gok
+	[HEALBOT_DEBUFF_MARK_OF_CHAOS_REPLICATION]          = 9, -- Imperator Mar'gok
 	[HEALBOT_DEBUFF_FIXATE]                  = 9, -- Imperator Mar'gok 
-	[HEALBOT_DEBUFF_CRUSH_ARMOR]             = 11, -- Imperator Mar'gok 
+	[HEALBOT_DEBUFF_CRUSH_ARMOR]             = 11, -- Imperator Mar'gok
+	--[[[HEALBOT_DEBUFF_DESTRUCTIVE_RESONANCE]   = 11, -- Imperator Mar'gok 
+	[HEALBOT_DEBUFF_FORCE_NOVA]              = 10, -- Imperator Mar'gok
+	[HEALBOT_DEBUFF_DESTRUCTIVE_RESONANCE_DISPLACEMENT] = 11, -- Imperator Mar'gok
+	[HEALBOT_DEBUFF_FORCE_NOVA_DISPLACEMENT]            = 10, -- Imperator Mar'gok
+	[HEALBOT_DEBUFF_DESTRUCTIVE_RESONANCE_FORTIFICATION]= 11, -- Imperator Mar'gok
+	[HEALBOT_DEBUFF_FORCE_NOVA_FORTIFICATION]           = 10, -- Imperator Mar'gok
+	[HEALBOT_DEBUFF_DESTRUCTIVE_RESONANCE_REPLICATION]  = 11, -- Imperator Mar'gok
+	[HEALBOT_DEBUFF_FORCE_NOVA_REPLICATION]             = 10, -- Imperator Mar'gok]]	
 
 	--[[= GetMapNameByID(988) or "--Blackrock Foundry"
 	Trash
@@ -509,7 +539,8 @@ HealBot_GlobalsDefaults = {
 			[HEALBOT_SURGE_OF_DARKNESS]=2,               
 			[HEALBOT_SURGE_OF_LIGHT]=2,                  
 			[HEALBOT_ASCENSION]=2,                       
-			[HEALBOT_WORD_OF_MENDING]=2,                 
+			[HEALBOT_WORD_OF_MENDING]=2,   
+            [HEALBOT_WORDS_OF_MENDING]=2,
 			[HEALBOT_CLARITY_OF_WILL]=2,                                     
 			[HEALBOT_CLARITY_OF_PURPOSE]=2,              
         },

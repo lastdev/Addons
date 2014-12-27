@@ -21,7 +21,7 @@ local BuffWindow_ResizeWindow, BuffWindow_UpdateWindow, BuffWindow_UpdateBuffs
 
 local RL = AceLibrary("Roster-2.1")
 
-vars.svnrev["BuffWindow.lua"] = tonumber(("$Revision: 391 $"):match("%d+"))
+vars.svnrev["BuffWindow.lua"] = tonumber(("$Revision: 394 $"):match("%d+"))
 
 -- tie-in for third party addons to add tooltips
 -- table maps GUID => {  highlight = boolean, [addonname] = "status text" }
@@ -78,7 +78,7 @@ for i,v in ipairs(vars.SpellData.foods) do
 	table.insert(vars.Foodbuffs,  { spellData(v) })
 end
 
-local foodmin = 25 -- minimum food stat level to allow
+local foodmin = 74 -- minimum food stat level to allow
 local scanfoodcache = {}
 local scantt = CreateFrame("GameTooltip", "BigBrotherScanTooltip", UIParent, "GameTooltipTemplate")
 local function scanfood(spellid)
@@ -170,7 +170,7 @@ local BigBrother_BuffTable={
 		sortFunc=Sort_RaidBuffs,
 		buffs={
 		-- possibly missing pet buffs:
-		-- Rylak, Rhino
+		-- Rhino
 			{ -- stats 5%
 			 {BTspell(PA,20217)}, 		-- Blessing of Kings
 			 {BTspell(DR,1126)},		-- Mark of the Wild
@@ -181,6 +181,7 @@ local BigBrother_BuffTable={
 			 {BTspell(HP,90363, "Shale Spider")},	-- Embrace of the Shale Spider
 			 {BTspell(HP,160077,"Worm")}, 		-- Strength of the Earth
 			 {BTspell(nil,69378,true)},	-- Blessing of Forgotten Kings (4%)
+			 {BTspell(HU,160206)},		-- Lone Wolf: Power of the Primates
 			 }, 
 			{ -- stamina 10%
 			 {BTspell(PR,21562)},		-- Power Word: Fortitude
@@ -189,19 +190,22 @@ local BigBrother_BuffTable={
 			 {BTspell(HP,50256, "Bear")}, 		-- Invigorating Roar
 			 {BTspell(HP,160014,"Goat")}, 		-- Sturdiness
 			 {BTspell(HP,90364, "Silithid")},	-- Qiraji Fortitude
+			 {BTspell(HP,160003, "Rylak")},		-- Savage Vigor
 			 {BTspell(nil,111922,true)},	-- Runescroll of Fortitude III (8%)
 			 {BTspell(nil,86507,true)}, 	-- Runescroll of Fortitude II  (7%)
 			 {BTspell(nil,69377,true)}, 	-- Runescroll of Fortitude I   (6%)
+			 {BTspell(HU,160199)},		-- Lone Wolf: Fortitude of the Bear
 			 }, 
-                        { -- mastery 550
+			{ -- mastery 550
 			 {BTspell(PA,19740)}, 		-- Blessing of Might
 			 {BTspell(DE,155522)}, 		-- Power of the Grave
-                         {BTspell(SH,116956)}, 		-- Grace of Air
+			 {BTspell(SH,116956)}, 		-- Grace of Air
 			 {BTspell(DR,24907)}, 		-- Moonkin Aura
-                         {BTspell(HP,93435, "Cat")},		-- Roar of Courage
+			 {BTspell(HP,93435, "Cat")},		-- Roar of Courage
 			 {BTspell(HP,160039,"Hydra")}, 		-- Keen Senses
-                         {BTspell(HP,128997,"Spirit Beast")},	-- Spirit Beast Blessing
+			 {BTspell(HP,128997,"Spirit Beast")},	-- Spirit Beast Blessing
 			 {BTspell(HP,160073,"Tallstrider")}, 	-- Plainswalking
+			 {BTspell(HU,160198)},		-- Lone Wolf: Grace of the Cat
 			 }, 
 			{ -- crit 5%
 			 {BTspell(MO,116781)}, 		-- Legacy of the White Tiger
@@ -214,6 +218,7 @@ local BigBrother_BuffTable={
 			 {BTspell(HP,90363, "Shale Spider")},	-- Embrace of the Shale Spider
 			 {BTspell(HP,126309,"Water Strider")},	-- Still Water
 			 {BTspell(HP,24604, "Wolf")}, 		-- Furious Howl
+			 {BTspell(HU,160200)},		-- Lone Wolf: Ferocity of the Raptor
 			}, 
 			{ -- haste 5%
 			 {BTspell(DE,55610)}, 		-- Unholy Aura
@@ -223,6 +228,8 @@ local BigBrother_BuffTable={
 			 {BTspell(HP,128432,"Hyena")},		-- Cackling Howl
 			 {BTspell(HP,135678,"Sporebat")},	-- Energizing Spores
 			 {BTspell(HP,160074,"Wasp")}, 		-- Speed of the Swarm
+			 {BTspell(HP,160003, "Rylak")},		-- Savage Vigor
+			 {BTspell(HU,160203)},		-- Lone Wolf: Haste of the Hyena
 			},
 			{ -- multistrike 5%
 			 {BTspell(MO,166916)},		-- Windflurry
@@ -235,6 +242,7 @@ local BigBrother_BuffTable={
 			 {BTspell(HP,58604, "Core Hound")}, 	-- Double Bite
 			 {BTspell(HP,34889, "Dragonhawk")}, 	-- Spry Attacks
 			 {BTspell(HP,24844, "Wind Serpent")}, 	-- Breath of the Winds
+			 {BTspell(HU,172968)},		-- Lone Wolf: Quickness of the Dragonhawk
 			}, 
 			{ -- versatility 3%
 			 {BTspell(PA,167187)}, 		-- Sanctity Aura
@@ -247,6 +255,8 @@ local BigBrother_BuffTable={
 			 {BTspell(HP,160045,"Porcupine")}, 	-- Defensive Quills
 			 {BTspell(HP,50518, "Ravager")}, 	-- Chitinous Armor
 			 {BTspell(HP,160077,"Worm")}, 		-- Strength of the Earth
+			 {BTspell(HP,173035, "Stag")},		-- Grace
+			 {BTspell(HU,172967)},		-- Lone Wolf: Versatility of the Ravager
 			}, 
 			{ -- spell power 10%
 			 {BTspell(MA,1459)}, 		-- Arcane Brilliance
@@ -255,6 +265,7 @@ local BigBrother_BuffTable={
 			 {BTspell(HP,128433,"Serpent")},	-- Serpent's Cunning
 			 {BTspell(HP,90364, "Silithid")},	-- Qiraji Fortitude
 			 {BTspell(HP,126309,"Water Strider")},	-- Still Water
+			 {BTspell(HU,160205)},		-- Lone Wolf: Wisdom of the Serpent
 			},
 			{ -- attack power 10%
 			 {BTspell(HU,19506)}, 		-- Trueshot Aura

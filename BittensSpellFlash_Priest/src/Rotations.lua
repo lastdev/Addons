@@ -1,14 +1,18 @@
 local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
+local x = s.UpdatedVariables
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 local u = BittensGlobalTables.GetTable("BittensUtilities")
 
 local GetTime = GetTime
 local SPELL_POWER_SHADOW_ORBS = SPELL_POWER_SHADOW_ORBS
 local UnitSpellHaste = UnitSpellHaste
-local math = math
+local min = math.min
+local max = math.max
 local string = string
+local wipe = wipe
+local UnitGUID = UnitGUID
 
 a.Rotations = {}
 
@@ -77,8 +81,24 @@ a.Rotations.Holy = {
 }
 
 ------------------------------------------------------------------------ Shadow
-local lastSWD = 0
-local swdInARow = 0
+local lastSWDCast = 0
+local lastSWDCD = 0
+local swdGivesOrb = true
+
+function a.swdGivesOrb()
+   if c.HasSpell("Enhanced Shadow Word: Death") then
+      return true
+   else
+      return swdGivesOrb
+   end
+end
+
+local mindHarvested = {}
+
+function a.canMindHarvest()
+   return c.HasGlyph("Mind Harvest") and not mindHarvested[UnitGUID("target")]
+end
+
 a.FlayTick = 1
 a.Rotations.Shadow = {
    Spec = 3,
@@ -87,36 +107,27 @@ a.Rotations.Shadow = {
       "Intellect", "Spell Hit", "Hit from Spirit", "Crit", "Haste"
    },
 
-   FlashInCombat = function()
-      a.SinceSWD = GetTime() - lastSWD
-      if a.SinceSWD > .5 and a.SinceSWD < .8 then
-         if c.GetCooldown("Shadow Word: Death") > 0 then
-            swdInARow = 0
-         else
-            swdInARow = 1
-         end
-      elseif a.SinceSWD > 9 then
-         swdInARow = 0
-      end
+   PreFlash = function()
+      a.maxOrbs = c.HasSpell("Enhanced Shadow Orbs") and 5 or 3
 
-      a.SinceSWD = a.SinceSWD + c.GetBusyTime()
-      if c.IsCasting("Shadow Word: Death") then
-         a.SWDinARow = swdInARow + 1
-         a.SinceSWD = 0
+      a.SinceSWD = GetTime() - lastSWDCast
+      local swdcd = c.GetCooldown("Shadow Word: Death", false, 8)
+      if a.SinceSWD < 9 and swdcd < lastSWDCD then
+         swdGivesOrb = false
       else
-         a.SWDinARow = swdInARow
+         swdGivesOrb = true
       end
 
       a.Orbs = s.Power("player", SPELL_POWER_SHADOW_ORBS)
       if c.IsCasting("Mind Blast") then
-         a.Orbs = math.min(3, a.Orbs + 1)
+         a.Orbs = min(a.maxOrbs, a.Orbs + (a.canMindHarvest() and 1 or 3))
       elseif c.IsCasting("Devouring Plague") then
-         a.Orbs = 0
+         a.Orbs = max(0, a.Orbs - 3)
       elseif c.IsCasting("Shadow Word: Death")
-         and s.HealthPercent() < 20
-         and (swdInARow == 0 or c.HasSpell("Enhanced Shadow Word: Death"))
+         and s.HealthPercent() <= 20
+         and a.swdGivesOrb()
       then
-         a.Orbs = math.min(3, a.Orbs + 1)
+         a.Orbs = min(a.maxOrbs, a.Orbs + 1)
       end
 
       a.Surges = c.GetBuffStack("Surge of Darkness")
@@ -126,7 +137,12 @@ a.Rotations.Shadow = {
 
       a.InExecute = s.HealthPercent() <= 20
 
+      a.Insanity = c.HasBuff("Shadow Word: Insanity")
+   end,
+
+   FlashInCombat = function()
       c.FlashAll(
+         "Power Word: Shield for Shadow",
          "Power Infusion",
          "Mindbender",
          "Shadowfiend",
@@ -136,42 +152,144 @@ a.Rotations.Shadow = {
          "Silence"
       )
 
-      c.DelayPriorityFlash(
-         "Devouring Plague",
-         "Mind Blast",
-         "Shadow Word: Death for Orb",
-         "Insanity",
-         -- "Mind Flay (Insanity) Delay",
-         "Mind Spike under Surge of Darkness",
-         "Shadow Word: Pain",
-         "Vampiric Touch",
-         "Shadow Word: Death without Orb",
-         "Cascade",
+      local cop = c.HasTalent("Clarity of Power")
+      local ins = c.HasTalent("Insanity")
+
+      if cop and ins and not a.InExecute and c.EstimatedHarmTargets <= 5 then
+         -- SimCraft cop_dotweave
+         c.DelayPriorityFlash(
+            "Power Infusion",
+            "Devouring Plague for CoP and Insanity",
+            "Mind Blast for three orbs",
+            "Mind Blast <= 5 targets",
+            "Mindbender",
+            "Shadowfiend",
+            "Shadow Word: Pain for CoP and Insanity",
+            "Vampiric Touch for CoP and Insanity",
+            "Insanity",
+            "Insanity Delay",
+            -- dots if we had bloodlust and stuff.
+            "Halo",
+            "Cascade",
+            "Divine Star",
+            -- dots on non-primary target.
+            "Mind Spike for CoP and Insanity",
+            "Mind Flay for CoP and Insanity",
+            "Mind Spike"
+         )
+      elseif cop and ins and a.InExecute then
+         -- SimCraft cop_mfi
+         c.DelayPriorityFlash(
+            "Power Infusion",
+            "Devouring Plague at five orbs",
+            "Mind Blast for three orbs",
+            "Mind Blast <= 5 targets",
+            "Shadow Word: Death",
+            "Devouring Plague at three orbs",
+            "Mindbender",
+            "Shadowfiend",
+            -- dots on non-primary targets
+            "Insanity",
+            "Insanity Delay",
+            "Halo",
+            "Cascade",
+            "Divine Star",
+            "Mind Sear for AoE",
+            "Mind Spike"
+         )
+      elseif cop then
+         -- SimCraft cop
+         c.DelayPriorityFlash(
+            "Power Infusion",
+            "Devouring Plague at three orbs",
+            "Mind Blast for three orbs",
+            "Mind Blast for three orbs",
+            "Mind Blast <= 5 targets",
+            "Shadow Word: Death",
+            "Mindbender",
+            "Shadowfiend",
+            "Halo",
+            "Cascade",
+            "Divine Star",
+            -- maybe throw dots on non-primary target.
+            "Mind Spike under Surge of Darkness",
+            "Mind Sear for AoE",
+            "Mind Spike without Devouring Plague",
+            "Mind Flay"
+         )
+      elseif c.HasTalent("Void Entropy") then
+         -- SimCraft vent
+         c.DelayPriorityFlash(
+            "Power Infusion",
+            "Mindbender",
+            "Shadowfiend",
+            "Void Entropy",
+            "Devouring Plague",
+            "Halo",
+            "Cascade",
+            "Divine Star",
+            "Mind Blast for three orbs",
+            "Mind Blast <= 5 targets",
+            "Shadow Word: Death for Orb",
+            -- actions.vent+=/shadow_word_pain,if=shadow_orb=4&remains<(18*0.50)&set_bonus.tier17_2pc&cooldown.mind_blast.remains<1.2*gcd&cooldown.mind_blast.remains>0.2*gcd
+            "Insanity",
+            "Insanity Delay",
+            "Mind Spike Surge of Darkness Cap",
+            "Shadow Word: Pain Early",
+            "Vampiric Touch Early",
+            "Mind Blast Delay",
+            "Mind Spike under Surge of Darkness",
+            "Mind Sear for AoE",
+            "Shadow Word: Pain for Insanity",
+            "Vampiric Touch for Insanity",
+            "Mind Flay"
+         )
+      else
+         -- SimCraft main
+         c.DelayPriorityFlash(
+            "Power Infusion",
+            "Mindbender",
+            "Shadowfiend",
+            "Shadow Word: Death for Orb",
+            "Devouring Plague",
+            "Mind Blast for three orbs",
+            "Mind Blast <= 5 targets",
+            "Insanity",
+            "Insanity Delay",
+            "Halo",
+            "Cascade",
+            "Divine Star",
+            "Shadow Word: Pain Early",
+            "Vampiric Touch Early",
+            "Devouring Plague Late",
+            "Mind Spike Surge of Darkness Cap",
+            "Shadow Word: Death Delay",
+            "Mind Blast Delay",
+            "Mind Spike under Surge of Darkness",
+            "Mind Sear for AoE",
+            "Shadow Word: Pain for Insanity",
+            "Vampiric Touch for Insanity",
+            "Mind Flay"
+         )
+      end
+   end,
+
+   MovementFallthrough = function()
+      c.PriorityFlash(
+         "Mind Blast with Shadowy Insight",
          "Divine Star",
-         "Halo",
-         "Shadow Word: Pain Early",
-         "Vampiric Touch Early",
-         "Mind Blast Delay",
-         "Shadow Word: Death Delay",
-         "Mind Flay"
+         "Cascade",
+         "Shadow Word: Death",
+         "Shadow Word: Pain Moving"
       )
    end,
 
---      MovementFallthrough = function()
---         c.PriorityFlash(
---            "Shadow Word: Death",
---            "Shadow Word: Pain Moving")
---      end,
-
    FlashOutOfCombat = function()
-      if not a.WarnedAboutRotation then
-         a.WarnedAboutRotation = true
-         print(
-            "|cFFFF0000WARNING: The Shadow Priest rotation works, more or less, to level 90, but has not been updated to level 100.  It require major rework and testing to be working right.  This will happen, and is in progress.|r -- SlippyCheeze"
-         )
-      end
-
       c.FlashAll("Dispersion")
+
+      if x.EnemyDetected then
+         c.FlashAll("Mind Spike")
+      end
    end,
 
    FlashAlways = function()
@@ -181,11 +299,22 @@ a.Rotations.Shadow = {
       )
    end,
 
+   LeftCombat = function()
+      wipe(mindHarvested)
+   end,
+
+   SpellDamage = function(spellID, _, targetID)
+      if c.IdMatches(spellID, "Mind Blast") then
+         mindHarvested[targetID] = true
+      end
+   end,
+
    CastSucceeded = function(info)
       if c.InfoMatches(info, "Shadow Word: Death") then
-         lastSWD = GetTime()
-         swdInARow = swdInARow + 1
-         c.Debug("Event", "Shadow Word: Death cast")
+         lastSWDCast = GetTime()
+         lastSWDCD = c.GetCooldown("Shadow Word: Death")
+         c.Debug("Event", "Shadow Word: Death cast",
+                 "cast", lastSWDCast, "cd", lastSWDCD)
       end
    end,
 
@@ -197,7 +326,9 @@ a.Rotations.Shadow = {
    end,
 
    ExtraDebugInfo = function()
-      return string.format("o:%d s:%d s:%d s:%.1f b:%.1f",
-         a.Orbs, a.Surges, a.SWDinARow, a.SinceSWD, c.GetBusyTime())
+      return string.format(
+         "o:%d s:%d s:%d s:%.1f b:%.1f",
+         a.Orbs, a.Surges, a.swdGivesOrb(), a.SinceSWD, c.GetBusyTime()
+      )
    end,
 }

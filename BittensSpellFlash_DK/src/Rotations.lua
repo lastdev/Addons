@@ -514,10 +514,15 @@ a.Rotations.Frost = {
    end,
 
    ExtraDebugInfo = function()
-      return string.format("%s k:%s f:%d",
+      local rotation = c.EstimatedHarmTargets >= 3 and 'A'
+         or OffhandHasWeapon() and 'D'
+         or '2'
+
+      return string.format("%s k:%s f:%d R:%s",
          getGenericDebugInfo(),
          tostring(a.KillingMachine),
-         a.FreezingFog)
+         a.FreezingFog,
+         rotation)
    end,
 }
 

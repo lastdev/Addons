@@ -47,5 +47,7 @@ GTFO.IgnoreScan["162510"] = true; -- Tectonic Upheavel
 GTFO.IgnoreScan["98021"] = true; -- Spirit Link (Shaman)
 GTFO.IgnoreScan["148760"] = true; -- Pheromone Cloud
 GTFO.IgnoreScan["175982"] = true; -- Rain of Slag
+GTFO.IgnoreScan["158519"] = true; -- Quake
+
 
 

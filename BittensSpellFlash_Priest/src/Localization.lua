@@ -12,10 +12,10 @@ L["Flash Shadow"] = "Flash Sombra" -- Needs review
 -- L["PW: Shield & Binding Heal on Mouseover"] = ""
 
 elseif locale == "frFR" then -- French
--- L["Flash Discipline"] = ""
--- L["Flash Holy"] = ""
--- L["Flash Shadow"] = ""
--- L["PW: Shield & Binding Heal on Mouseover"] = ""
+L["Flash Discipline"] = "Flash Discipline" -- Needs review
+L["Flash Holy"] = "Flash Sacré" -- Needs review
+L["Flash Shadow"] = "Flash Ombre" -- Needs review
+L["PW: Shield & Binding Heal on Mouseover"] = "Mots de pouvoir : les soins et les Boucliers en passant la souris" -- Needs review
 
 elseif locale == "deDE" then -- German
 L["Flash Discipline"] = "Aufblitzen bei Disziplin"

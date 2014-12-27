@@ -19,10 +19,11 @@ a.SpellIDs = {
    ["Dispersion"] = 47585,
    ["Divine Insight"] = 123266,
    ["Divine Star"] = 110744,
+   ["Enhanced Shadow Orbs"] = 157217,
    ["Enhanced Shadow Word: Death"] = 157218,
    ["Evangelism"] = 81662,
    ["Flash Heal"] = 2061,
-   ["Greater Heal"] = 2060,
+   ["Heal"] = 2060,
    ["Halo"] = 120517,
    ["Holy Fire"] = 14914,
    ["Insanity"] = 129197,
@@ -41,33 +42,48 @@ a.SpellIDs = {
    ["Prayer of Mending"] = 33076,
    ["Serendipity"] = 63735,
    ["Shadow Word: Death"] = 32379,
+   ["Shadow Word: Insanity"] = 132573,
    ["Shadow Word: Pain"] = 589,
    ["Shadowfiend"] = 34433,
    ["Shadowform"] = 15473,
+   ["Shadowy Insight"] = 124430, -- buff, not talent
    ["Silence"] = 15487,
    ["Smite"] = 585,
    ["Surge of Darkness"] = 87160,
    ["Surge of Light"] = 114255,
    ["Vampiric Embrace"] = 15286,
    ["Vampiric Touch"] = 34914,
+   ["Void Entropy"] = 155361,
+   ["Weakened Soul"] = 6788,
 --      ["Dark Archangel"] = 87151,
 --      ["Dark Evangelism"] = 87118,
 --      ["Empowered Shadow"] = 95799,
 --      ["Holy Word: Chastise"] = 88625,
 --      ["Holy Word: Sanctuary"] = 88685,
 --      ["Holy Word: Serenity"] = 88684,
---      ["Weakened Soul"] = 6788,
+
+   ["Mental Instincts"] = 167254, -- T17 4PC Shadow Buff
 }
 
 a.TalentIDs = {
+   ["Auspicious Spirits"] = 155271,
+   ["Clarity of Power"] = 155246,
    ["Divine Insight"] = 109175,
    ["Insanity"] = 139139,
+   ["Void Entropy"] = 155361,
 }
 
 a.GlyphIDs = {
    ["Lightspring"] = 126133,
+   ["Mind Harvest"] = 162532,
 }
 
 a.EquipmentSets = {
-
+   T17 = {
+      ChestSlot    = { 115560 },
+      ShoulderSlot = { 115561 },
+      HandsSlot    = { 115562 },
+      HeadSlot     = { 115563 },
+      LegsSlot     = { 115564 },
+   },
 }

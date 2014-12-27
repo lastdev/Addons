@@ -6,7 +6,8 @@ local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 local CheckInteractDistance = CheckInteractDistance
 local GetTime = GetTime
 local IsItemInRange = IsItemInRange
-local math = math
+local min = math.min
+local max = math.max
 local pairs = pairs
 
 local function mendingIsDown()
@@ -75,7 +76,7 @@ c.AddOptionalSpell("Archangel", nil, {
       local stack = c.GetBuffStack("Evangelism")
       if c.IsCasting("Penance", "Smite", "Holy Fire") then
          if dur > 0 then
-            stack = math.min(5, stack + 1)
+            stack = min(5, stack + 1)
          else
             stack = 1
          end
@@ -168,13 +169,13 @@ c.AddOptionalSpell("Shadowform", nil, {
 
 c.AddOptionalSpell("Shadowfiend", nil, {
    Override = function()
-      return c.GetCooldown("Shadowfiend") == 0
+      return c.GetCooldown("Shadowfiend") == 0 and not a.Insanity
    end
 })
 
 c.AddOptionalSpell("Mindbender", nil, {
    Override = function()
-      return c.GetCooldown("Mindbender") == 0
+      return c.GetCooldown("Mindbender") == 0 and not a.Insanity
    end
 })
 
@@ -190,14 +191,35 @@ c.AddInterrupt("Silence", nil, {
 
 c.AddSpell("Mind Blast", nil, {
    GetDelay = function()
-      return a.Orbs < 3 and c.GetCooldown("Mind Blast", false, 0)
+      return a.Orbs < a.maxOrbs and c.GetCooldown("Mind Blast", false, 0)
+   end
+})
+
+c.AddSpell("Mind Blast", "with Shadowy Insight", {
+   GetDelay = function()
+      return c.HasBuff("Shadowy Insight")
+         and c.GetCooldown("Mind Blast", false, 0)
+   end
+})
+
+c.AddSpell("Mind Blast", "for three orbs", {
+   GetDelay = function()
+      return a.Orbs <= 2
+         and a.canMindHarvest()
+         and c.GetCooldown("Mind Blast", false, 0)
+   end
+})
+
+c.AddSpell("Mind Blast", "<= 5 targets", {
+   GetDelay = function()
+      return c.EstimatedHarmTargets <= 5 and c.GetCooldown("Mind Blast", false, 0)
    end
 })
 
 c.AddSpell("Mind Blast", "Delay", {
    IsMinDelayDefinition = true,
    GetDelay = function()
-      return a.Orbs < 3 and c.GetCooldown("Mind Blast", false, 9), .5
+      return a.Orbs < a.maxOrbs and c.GetCooldown("Mind Blast", false, 9), .5
    end,
 })
 
@@ -207,45 +229,41 @@ c.AddSpell("Shadow Word: Death", nil, {
          return false
       end
 
-      if a.SWDinARow == 1 then
-         return 0
-      end
-
       return c.GetCooldown("Shadow Word: Death", false, 8)
    end,
 })
 
 c.AddSpell("Shadow Word: Death", "for Orb", {
    GetDelay = function()
-      if not a.InExecute or a.Orbs >= 3 then
+      if not a.InExecute or a.Orbs >= 5 then
          return false
       end
 
-      if a.SWDinARow == 1 then
-         return 9 - a.SinceSWD
-      else
+      if a.swdGivesOrb() then
          return c.GetCooldown("Shadow Word: Death", false, 8)
+      else
+         return 8 - a.SinceSWD
       end
    end,
 })
 
 c.AddSpell("Shadow Word: Death", "without Orb", {
    CheckFirst = function()
-      return a.InExecute and a.SWDinARow == 1 and a.SinceSWD < 3
+      return a.InExecute and not a.swdGivesOrb() and a.SinceSWD < 3
    end
 })
 
 c.MakePredictor(c.AddSpell("Shadow Word: Death", "Delay", {
    IsMinDelayDefinition = true,
    GetDelay = function()
-      if not a.InExecute or a.Orbs >= 3 then
+      if not a.InExecute or a.Orbs >= a.maxOrbs then
          return false
       end
 
-      if a.SWDInARow == 1 then
-         return 6 - a.SinceSWD, .5
-      else
+      if a.swdGivesOrb() then
          return c.GetCooldown("Shadow Word: Death", false, 8), .5
+      else
+         return 6 - a.SinceSWD, .5
       end
    end,
 }))
@@ -264,8 +282,25 @@ c.AddSpell("Mind Flay", nil, {
    end
 })
 
+c.AddSpell("Mind Flay", "for CoP and Insanity", {
+   CanCastWhileMoving = false,
+   CheckFirst = function()
+      return c.WearingSet(2, "T17")
+         and c.HasMyDebuff("Shadow Word: Pain")
+         and c.HasMyDebuff("Vampiric Touch")
+         and c.GetCooldown("Mind Blast", false, 6) > 0.9 * c.LastGCD
+   end,
+   GetDelay = function(z)
+      return s.GetChanneling(z.ID, "player") - c.GetBusyTime()
+   end
+})
+
 c.AddSpell("Insanity", nil, {
    CanCastWhileMoving = false,
+   FlashID = { "Insanity", "Mind Flay" },
+   CheckFirst = function()
+      return a.Insanity
+   end,
    GetDelay = function(z)
       -- if a.Insanity == 0 then
       --    z.WhiteFlashOffset = 0
@@ -283,28 +318,57 @@ c.AddSpell("Insanity", nil, {
 })
 c.RegisterInitiatingSpell("Insanity", "Insanity")
 
--- c.AddSpell("Mind Flay", "(Insanity) Delay", {
---    IsMinDelayDefinition = true,
---    GetDelay = function()
---       return a.Insanity
---    end,
--- })
+c.AddSpell("Insanity", "Delay", {
+   IsMinDelayDefinition = true,
+   GetDelay = function()
+      return a.Insanity
+   end,
+})
 
 c.AddSpell("Shadow Word: Pain", nil, {
    MyDebuff = "Shadow Word: Pain",
    Tick = 3,
 })
 
-c.AddSpell("Shadow Word: Pain", "Application", {
-   MyDebuff = "Shadow Word: Pain",
-})
-
 c.AddSpell("Shadow Word: Pain", "Early", {
    MyDebuff = "Shadow Word: Pain",
-   Tick = 6,
+   Tick = 3,
+   EarlyRefresh = 18 * 0.3,
+})
+
+c.AddSpell("Shadow Word: Pain", "for Insanity", {
+   MyDebuff = "Shadow Word: Pain",
+   Tick = 3,
+   EarlyRefresh = 9, -- 3 ticks
    CheckFirst = function()
-      return a.InExecute and c.HasTalent("Insanity")
-   end
+      return a.Orbs >= 2 and c.HasTalent("Insanity")
+   end,
+})
+
+c.AddSpell("Shadow Word: Pain", "for CoP and Insanity", {
+   MyDebuff = "Shadow Word: Pain",
+   Tick = 3,
+--   EarlyRefresh = 9, -- 3 ticks
+   CheckFirst = function()
+      if a.Orbs == 4
+         and c.WearingSet(2, "T17")
+         and not c.HasMyDebuff("Shadow Word: Pain")
+         and not c.HasMyDebuff("Devouring Plague")
+         and c.GetCooldown("Mind Blast", false, 6) < 1.2 * c.LastGCD
+         and c.GetCooldown("Mind Blast", false, 6) > 0.2 * c.LastGCD
+      then
+         return true
+      end
+
+      if a.Orbs >= 5
+         and not c.HasMyDebuff("Devouring Plague")
+         and not c.HasMyDebuff("Shadow Word: Pain")
+      then
+         return true
+      end
+
+      return false
+   end,
 })
 
 c.AddSpell("Shadow Word: Pain", "Moving", {
@@ -317,21 +381,62 @@ c.AddSpell("Vampiric Touch", nil, {
    Tick = 3,
 })
 
-c.AddSpell("Vampiric Touch", "Application", {
-   MyDebuff = "Vampiric Touch",
-})
-
 c.AddSpell("Vampiric Touch", "Early", {
    MyDebuff = "Vampiric Touch",
-   Tick = 6,
+   Tick = 3,
+   EarlyRefresh = 15 * 0.3,
+})
+
+c.AddSpell("Vampiric Touch", "for Insanity", {
+   MyDebuff = "Vampiric Touch",
+   Tick = 3,
+   EarlyRefresh = 3 * 3.5, -- 3.5 ticks
    CheckFirst = function()
-      return a.InExecute and c.HasTalent("Insanity")
+      return a.Orbs >= 2 and c.HasTalent("Insanity")
+   end,
+})
+
+c.AddSpell("Vampiric Touch", "for CoP and Insanity", {
+   MyDebuff = "Vampiric Touch",
+   Tick = 3,
+   -- EarlyRefresh = 3 * 3.5, -- 3.5 ticks
+   CheckFirst = function()
+      return a.Orbs >= 5
+         and not c.HasMyDebuff("Devouring Plague")
+         and not c.HasMyDebuff("Vampiric Touch")
+   end,
+})
+
+c.AddSpell("Mind Spike")
+
+c.AddSpell("Mind Spike", "Surge of Darkness Cap", {
+   CheckFirst = function()
+      return c.EstimatedHarmTargets <= 5 and a.Surges >= 3
    end
 })
 
 c.AddSpell("Mind Spike", "under Surge of Darkness", {
    CheckFirst = function()
-      return a.Surges > 0
+      return c.EstimatedHarmTargets <= 5 and a.Surges > 0
+   end
+})
+
+c.AddSpell("Mind Spike", "without Devouring Plague", {
+   CheckFirst = function()
+      return not c.HasMyDebuff("Devouring Plague")
+   end
+})
+
+c.AddSpell("Mind Spike", "for CoP and Insanity", {
+   CheckFirst = function()
+      if a.Orbs > 2 or c.GetCooldown("Mind Blast", false, 6) < 0.5 * c.LastGCD then
+         return false
+      end
+
+      local vt = c.HasMyDebuff("Vampiric Touch")
+      local swp = c.HasMyDebuff("Shadow Word: Pain")
+
+      return (vt and not swp) or (swp and not vt)
    end
 })
 
@@ -339,7 +444,80 @@ c.AddSpell("Devouring Plague", nil, {
    MyDebuff = "Devouring Plague",
    Tick = 1,
    CheckFirst = function()
-      return a.Orbs >= 3
+      if a.Orbs >= 5 then
+         return true
+      end
+
+      if a.Orbs < 3 then
+         return false
+      end
+
+      return c.GetCooldown("Mind Blast", false, 9) < c.LastGCD
+         or (a.InExecute and c.GetCooldown("Shadow Word: Death", false, 8) < c.LastGCD)
+         or c.ShouldCastToRefresh(
+            "Devouring Plague", "Void Entropy", 2 * c.LastGCD, false)
+   end,
+})
+
+c.AddSpell("Devouring Plague", "at three orbs", {
+   MyDebuff = "Devouring Plague",
+   Tick = 1,
+   CheckFirst = function()
+      if a.Orbs <  3 then
+         return false
+      end
+
+      return c.GetCooldown("Mind Blast", false, 9) < c.LastGCD
+         or (a.InExecute and c.GetCooldown("Shadow Word: Death", false, 8) < c.LastGCD)
+   end,
+})
+
+c.AddSpell("Devouring Plague", "at five orbs", {
+   MyDebuff = "Devouring Plague",
+   Tick = 1,
+   CheckFirst = function()
+      if a.Orbs < 5 then
+         return false
+      end
+   end,
+})
+
+-- as far as I can tell, zero travel time involved.
+c.AssociateTravelTimes(0, "Devouring Plague")
+c.AddSpell("Devouring Plague", "Late", {
+   MyDebuff = "Devouring Plague",
+   Tick = 1,
+   CheckFirst = function()
+      return not c.HasTalent("Void Entropy")
+         and a.Orbs >= 3
+         and c.ShouldCastToRefresh("Devouring Plague", "Devouring Plague", 1, true)
+   end,
+})
+
+c.AddSpell("Devouring Plague", "for CoP and Insanity", {
+   MyDebuff = "Devouring Plague",
+   Tick = 1,
+   CheckFirst = function()
+      local vt = c.HasMyDebuff("Vampiric Touch")
+      local swp = c.HasMyDebuff("Shadow Word: Pain")
+
+      if vt and swp and a.Orbs >= 5 then
+         return true
+      end
+
+      -- T17 4PC
+      local mi = c.GetBuffDuration("Mental Instincts")
+      if mi > 0 and mi < c.LastGCD then
+         return true
+      end
+
+      if vt and swp and not a.Insanity
+         and c.GetCooldown("Mind Blast", false, 6) > 0.4 * c.LastGCD
+      then
+         return true
+      end
+
+      return false
    end,
 })
 
@@ -398,4 +576,32 @@ c.AddOptionalSpell("Dispersion", nil, {
    CheckFirst = function()
       return s.PowerPercent("player") < 64
    end
+})
+
+c.AddOptionalSpell("Power Word: Shield", "for Shadow", {
+   NoRangeCheck = true,
+   CheckFirst = function(z)
+      local health = c.GetHealthPercent("player")
+
+      z.FlashColor = (health <= 75) and "red" or "yellow"
+
+      return health <= 95
+         and c.GetCooldown("Power Word: Shield", false, 6) <= 0
+         and not s.Debuff(c.GetID("Weakened Soul"), "player")
+   end
+})
+
+c.AddOptionalSpell("Mind Sear", "for AoE", {
+   CheckFirst = function(z)
+      return c.EstimatedHarmTargets >= 4
+   end,
+})
+
+c.AssociateTravelTimes(0, "Void Entropy")
+c.AddSpell("Void Entropy", nil, {
+   MyDebuff = "Void Entropy",
+   Tick = 3,
+   CheckFirst = function(z)
+      return a.Orbs >= 3 and not c.HasMyDebuff("Void Entropy")
+   end,
 })
