@@ -1,9 +1,9 @@
 ------------------------------------------------------------------------
-r98 | slippycheeze | 2014-12-13 05:13:53 +0000 (Sat, 13 Dec 2014) | 1 line
+r99 | slippycheeze | 2014-12-15 21:03:54 +0000 (Mon, 15 Dec 2014) | 1 line
 Changed paths:
-   A /tags/60000.15 (from /trunk:97)
+   A /tags/60000.16 (from /trunk:98)
 
-Tagging as 60000.15
+Tagging as 60000.16 to grab updated BSF Library
 ------------------------------------------------------------------------
 r97 | slippycheeze | 2014-12-13 05:13:00 +0000 (Sat, 13 Dec 2014) | 1 line
 Changed paths:

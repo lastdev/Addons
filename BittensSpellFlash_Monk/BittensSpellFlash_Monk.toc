@@ -1,5 +1,5 @@
 ## Interface: 50400
-## Version: 50400.2
+## Version: 50400.3
 ## Author: Xemnosyst
 ## Title: Bitten's SpellFlash: Monk
 ## Notes: Replaces Blizzard's default proc highlighting to flash 1) a maximum dps rotation, 2) a maximum survivability tanking rotation, or 3) more informative healing proc highlighting.
@@ -8,7 +8,7 @@
 ## OptionalDeps: BittensSpellFlashLibrary
 ## LoadOnDemand: 1
 ## X-SpellFlashAddon-LoadWith: Monk
-## X-Curse-Packaged-Version: 50400.2
+## X-Curse-Packaged-Version: 50400.3
 ## X-Curse-Project-Name: Bitten's SpellFlash: Monk
 ## X-Curse-Project-ID: bittens-spellflash-monk
 ## X-Curse-Repository-ID: wow/bittens-spellflash-monk/mainline

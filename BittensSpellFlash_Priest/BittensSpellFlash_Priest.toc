@@ -1,5 +1,5 @@
 ## Interface: 60000
-## Version: 60000.6
+## Version: 60000.10
 ## Author: SlippyCheez, Xemnosyst
 ## Title: Bitten's SpellFlash: Priest
 ## Notes: Replaces Blizzard's default proc highlighting to flash 1) a maximum dps rotation, or 2) more informative healing proc highlights.
@@ -8,7 +8,7 @@
 ## OptionalDeps: BittensSpellFlashLibrary
 ## LoadOnDemand: 1
 ## X-SpellFlashAddon-LoadWith: Priest
-## X-Curse-Packaged-Version: 60000.6
+## X-Curse-Packaged-Version: 60000.10
 ## X-Curse-Project-Name: Bitten's SpellFlash: Priest
 ## X-Curse-Project-ID: bittens-spellflash-priest
 ## X-Curse-Repository-ID: wow/bittens-spellflash-priest/mainline

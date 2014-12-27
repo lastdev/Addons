@@ -1,7 +1,7 @@
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "Flashing", 3) then
+if u.SkipOrUpgrade(c, "Flashing", tonumber("20141215204639") or time()) then
    return
 end
 
@@ -12,6 +12,7 @@ local max = math.max
 local pairs = pairs
 local select = select
 local type = type
+local format = string.format
 
 local s = SpellFlashAddon
 local x = s.UpdatedVariables
@@ -210,10 +211,12 @@ function c.PriorityFlash(...)
       end
    end
    if c.DebugLastFlashedSpell ~= flashed then
+      local targets = format("T:%d/%d", c.EstimatedHarmTargets, c.EstimatedHealTargets)
+
       if rotation.ExtraDebugInfo then
-         c.Debug("Flash", rotation.ExtraDebugInfo(), flashed)
+         c.Debug("Flash", targets, rotation.ExtraDebugInfo(), flashed)
       else
-         c.Debug("Flash", flashed)
+         c.Debug("Flash", targets, flashed)
       end
       c.DebugLastFlashedSpell = flashed
    end
@@ -363,10 +366,11 @@ function c.DelayPriorityFlash(...)
    end
    if nextSpell then
       if c.DebugLastFlashedSpell ~= nextSpellName then
+         local targets = format("T:%d/%d", c.EstimatedHarmTargets, c.EstimatedHealTargets)
          if rotation.ExtraDebugInfo then
-            c.Debug("Flash", rotation.ExtraDebugInfo(), nextSpellName, nextDelay)
+            c.Debug("Flash", targets, rotation.ExtraDebugInfo(), nextSpellName, nextDelay)
          else
-            c.Debug("Flash", nextSpellName, nextDelay)
+            c.Debug("Flash", targets, nextSpellName, nextDelay)
          end
          c.DebugLastFlashedSpell = nextSpellName
       end

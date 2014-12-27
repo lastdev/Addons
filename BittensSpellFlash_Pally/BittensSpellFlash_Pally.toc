@@ -1,5 +1,5 @@
 ## Interface: 60000
-## Version: 60000.6
+## Version: 60000.7
 ## Author: SlippyCheeze, Xemnosyst
 ## Title: Bitten's SpellFlash: Pally
 ## Notes: Replaces Blizzard's default proc highlighting to flash 1) a maximum dps rotation, 2) a maximum survivability tanking rotation, or 3) more informative healing proc highlighting.
@@ -8,7 +8,7 @@
 ## OptionalDeps: BittensSpellFlashLibrary
 ## LoadOnDemand: 1
 ## X-SpellFlashAddon-LoadWith: Paladin
-## X-Curse-Packaged-Version: 60000.6
+## X-Curse-Packaged-Version: 60000.7
 ## X-Curse-Project-Name: Bitten's SpellFlash: Pally
 ## X-Curse-Project-ID: bittens-spellflash-pally
 ## X-Curse-Repository-ID: wow/bittens-spellflash-pally/mainline

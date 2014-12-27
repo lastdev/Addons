@@ -100,6 +100,66 @@ GTFO.SpellID["154571"] = {
 	sound = 3;
 };
 
+GTFO.SpellID["150876"] = {
+	--desc = "Rolling Boulder Smash";
+	sound = 3;
+};
+
+GTFO.SpellID["148798"] = {
+	--desc = "Explosive Lava";
+	sound = 3;
+};
+
+GTFO.SpellID["151579"] = {
+	--desc = "Explosive Lava";
+	sound = 3;
+};
+
+GTFO.SpellID["155263"] = {
+	--desc = "Clusterpult Shot (Iron Clusterpult)";
+	sound = 3;
+};
+
+GTFO.SpellID["155260"] = {
+	--desc = "Punch [Right] (Iron Clusterpult)";
+	sound = 3;
+};
+
+GTFO.SpellID["155241"] = {
+	--desc = "Punch [Left] (Iron Clusterpult)";
+	sound = 3;
+};
+
+GTFO.SpellID["155230"] = {
+	--desc = "Avalanche Palm (Maggoc)";
+	sound = 3;
+};
+
+GTFO.SpellID["154648"] = {
+	--desc = "Spear Barrage";
+	sound = 3;
+};
+
+GTFO.SpellID["176367"] = {
+	--desc = "Time Bomb (Spirit of Kairozdormu)";
+	sound = 3;
+};
+
+GTFO.SpellID["176464"] = {
+	--desc = "Ripples in Time (Spirit of Kairozdormu)";
+	sound = 3;
+};
+
+GTFO.SpellID["151691"] = {
+	--desc = "Black Skies (Commander Vorka)";
+	sound = 3;
+};
+
+GTFO.SpellID["165908"] = {
+	--desc = "Earthshattering Slam (Grosh the Mighty)";
+	sound = 3;
+};
+
 --TODO: Colossal Slam (Drov the Ruiner) - non-tank fail for front-cone damage
 --TODO: Rumbling Goren (Drov the Ruiner) - non-tank fail?
 --TODO: Colossal Blow (Tarlna the Ageless) - avoidable by tanks too?
@@ -210,6 +270,11 @@ GTFO.SpellID["162057"] = {
 -- **************
 -- * Iron Docks *
 -- **************
+
+GTFO.SpellID["163668"] = {
+	--desc = "Flaming Slash (Makogg Emberblade)";
+	sound = 3;
+};
 
 GTFO.SpellID["163276"] = {
 	--desc = "Shredded Tendons (Neesa Nox)";
@@ -588,6 +653,12 @@ GTFO.SpellID["162271"] = {
 	sound = 3;
 };
 
+GTFO.SpellID["172115"] = {
+	--desc = "Earthen Thrust";
+	sound = 3;
+	test = true;
+};
+
 GTFO.SpellID["161634"] = {
 	--desc = "Molten Bomb (Vul'gor)";
 	sound = 3;
@@ -636,14 +707,29 @@ GTFO.SpellID["171045"] = {
 	sound = 3;
 };
 
-
 -- Brackenspore
 -- TODO: Exploding Fungus (Brackenspore, Heroic) -- Avoidable?
 -- TODO: Call of the Tides (Brackenspore, Heroic) -- Avoidable?
 
--- Twin Ogron
-GTFO.SpellID["158026"] = {
-	--desc = "Enfeebling Roar (Phemos)";
+GTFO.SpellID["166185"] = {
+	--desc = "Rending Slash (Highmaul Conscript)";
+	applicationOnly = true;
+	sound = 3;
+	tankSound = 0;
+};
+
+GTFO.SpellID["166180"] = {
+	--desc = "Shield Charge (Highmaul Conscript)";
+	sound = 3;
+};
+
+GTFO.SpellID["166183"] = {
+	--desc = "Shield Slam (Highmaul Conscript)";
+	sound = 3;
+};
+
+GTFO.SpellID["178024"] = {
+	--desc = "Arcane Barrage (Gorian Arcanist)";
 	sound = 3;
 };
 
@@ -675,12 +761,9 @@ GTFO.SpellID["158420"] = {
 	test = true; -- Different damage amounts based on raid difficulty (50K for LFR?)
 };
 
-
--- TODO: Pulverize (Pol) -- Based on damage amount & distance, 3 different types in sequence: #1 spam fail, #2 impact fail, #3 distance fail
 -- TODO: Arcane Charge (Pol) -- Avoidable?
 -- TODO: Arcane Volatility (Phemos, Heroic) -- Avoidable? FF damage?
 
--- Ko'ragh
 GTFO.SpellID["172685"] = {
 	--desc = "Expel Magic: Fire (Ko'ragh)";
 	sound = 3;

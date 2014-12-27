@@ -754,7 +754,7 @@ function HealBot_SlashCmd(cmd)
     elseif (HBcmd=="cw") then  -- Clear Warnings
         HealBot_Globals.OneTimeMsg={}
     elseif (HBcmd=="zzz") then
-        HealBot_Queue_MyBuffsCheck(UnitGUID("player"), "player")
+        HealBot_AddDebug(HEALBOT_CHAT_ADDONID.."Nothing set")
     else
         if x then HBcmd=HBcmd.." "..x end
         if y then HBcmd=HBcmd.." "..y end
@@ -1104,7 +1104,7 @@ function HealBot_OnUpdate(self)
                     HealBot_Reset_flag=nil
                 elseif HealBot_luVars["UseCrashProtection"] and HealBot_luVars["UseCrashProtection"]<GetTime() then 
                         HealBot_luVars["UseCrashProtection"]=nil
-                        if HealBot_Data["REFRESH"]<7 then HealBot_Data["REFRESH"]=7; end
+                        HealBot_Data["REFRESH"]=4
                 elseif HealBot_Data["REFRESH"]>0 then
                     HealBot_Data["REFRESH"]=HealBot_Data["REFRESH"]+1
                     if HealBot_Data["REFRESH"]==5 and HealBot_luVars["CheckSkin"] then
@@ -1117,21 +1117,7 @@ function HealBot_OnUpdate(self)
                     end
                 elseif HealBot_CheckTalents and HealBot_CheckTalents<GetTime() then
                     HealBot_CheckTalents=false; 
-                    HealBot_setHbStanceBuffs()
-                    HealBot_Options_setDebuffTypes()
                     HealBot_GetTalentInfo(HealBot_Data["PGUID"], "player")
-                    HealBot_setOptions_Timer(5)
-                    HealBot_setOptions_Timer(15)
-                    HealBot_Options_ResetDoInittab(10)
-                    HealBot_Options_ResetDoInittab(5)
-                    HealBot_Options_ResetDoInittab(4)
-                    HealBot_setOptions_Timer(40)
-                    HealBot_setOptions_Timer(50)
-                    HealBot_ClearAllBuffs()
-                    HealBot_ClearAllDebuffs()
-                    HealBot_setOptions_Timer(400)
-                    HealBot_setOptions_Timer(10)
-                    HealBot_Action_setpcClass()
                 elseif HealBot_CheckBuffsTimehbGUID and HealBot_CheckBuffsTime<GetTime() then
                     PlayerBuffsGUID=HealBot_PlayerBuff[HealBot_CheckBuffsTimehbGUID]
                     if PlayerBuffsGUID then
@@ -1369,36 +1355,6 @@ function HealBot_OnUpdate(self)
                         HealBot_Options_Timer[990]=nil
                         HealBot_AddChat("  "..HEALBOT_ADDON .. HEALBOT_LOADED);
                         HealBot_AddChat(HEALBOT_HELP[1])
-                    --elseif HealBot_Options_Timer[2001] then
-                    --    HealBot_Options_Timer[2001]=nil
-                    --    HealBot_Action_setPoint(1)    
-                    --elseif HealBot_Options_Timer[2002] then
-                    --    HealBot_Options_Timer[2002]=nil
-                    --    HealBot_Action_setPoint(2)    
-                    --elseif HealBot_Options_Timer[2003] then
-                    --    HealBot_Options_Timer[2003]=nil
-                    --    HealBot_Action_setPoint(3)    
-                    --elseif HealBot_Options_Timer[2004] then
-                    --    HealBot_Options_Timer[2004]=nil
-                    --    HealBot_Action_setPoint(4)    
-                    --elseif HealBot_Options_Timer[2005] then
-                    --    HealBot_Options_Timer[2005]=nil
-                    --    HealBot_Action_setPoint(5)    
-                    --elseif HealBot_Options_Timer[2006] then
-                    --    HealBot_Options_Timer[2006]=nil
-                    --    HealBot_Action_setPoint(6)    
-                    --elseif HealBot_Options_Timer[2007] then
-                    --    HealBot_Options_Timer[2007]=nil
-                    --   HealBot_Action_setPoint(7)    
-                    --elseif HealBot_Options_Timer[2008] then
-                    --    HealBot_Options_Timer[2008]=nil
-                    --    HealBot_Action_setPoint(8)    
-                    --elseif HealBot_Options_Timer[2009] then
-                    --    HealBot_Options_Timer[2009]=nil
-                    --    HealBot_Action_setPoint(9)    
-                    --elseif HealBot_Options_Timer[2010] then
-                    --    HealBot_Options_Timer[2010]=nil
-                    --    HealBot_Action_setPoint(10)
                     elseif HealBot_Options_Timer[4910] then
                         HealBot_Options_Timer[4910]=nil
                         HealBot_setLowManaTrig()
@@ -1407,23 +1363,30 @@ function HealBot_OnUpdate(self)
                         if GetTime()>HealBot_luVars["hbInsNameCheck"] then
                             HealBot_Options_Timer[7950]=nil
                             HealBot_luVars["hbInsNameCheck"]=nil
+                            SetMapToCurrentZone()
                             HealBot_setOptions_Timer(30)
                             local y,z = IsInInstance()
-                            local newName=HEALBOT_WORD_OUTSIDE
-                            if (y or 0)==1 then
-                                local x = GetRealZoneText()
-                                newName=x
+                            local mapName=HEALBOT_WORD_OUTSIDE
+                            local mapAreaID=GetCurrentMapAreaID()
+                            if mapAreaID and mapAreaID>0 then
+                                mapName=GetMapNameByID(mapAreaID)
+                            elseif z and z=="arena" then 
+                                mapName="Arena"
                             end
-                            if HealBot_luVars["hbInsName"]~=newName then
+                            if z and (z=="pvp" or z=="arena") then 
+                                HealBot_luVars["inBG"]=true 
+                            else
+                                HealBot_luVars["inBG"]=nil
+                            end                            
+                            HealBot_Data["MAPID"]=mapAreaID
+                            if HealBot_luVars["hbInsName"]~=mapName then
                                 if hbScale>0 then HealBot_Comms_SendAddonMsg("HealBot", "RS:"..HealBot_luVars["hbInsName"]..":"..hbScale, HealBot_AddonMsgType, HealBot_Data["PNAME"]) end
-                                HealBot_luVars["hbInsName"]=newName
-                                hbScale=(HealBot_MapScale.zScale[newName] or 0) 
+                                HealBot_luVars["hbInsName"]=mapName
+                                hbScale=(HealBot_MapScale.zScale[mapName] or 0) 
                                 calibrateHBScale=0
                             end
                             HealBot_Options_SetEnableDisableCDBtn()
-                            HealBot_inBG(z)
                             HealBot_SetAddonComms()
-                            HealBot_luVars["getMapID"]=true
                             HealBot_luVars["RangeUpdates"]=true
                             HealBot_Set_Timers()
                         end
@@ -2003,6 +1966,7 @@ function HealBot_OnEvent_VariablesLoaded(self)
     local pRace, pRaceEN=UnitRace("player")
     HealBot_Data["PRACETRIM"]=strsub(pRaceEN,1,3)
     HealBot_Data["PNAME"]=UnitName("player")
+    HealBot_Data["PLEVEL"]=UnitLevel("player")
     RegisterAddonMessagePrefix("HealBot")
     HealBot_Options_InitBuffClassList()
     HealBot_setOptions_Timer(5)
@@ -2758,28 +2722,15 @@ end
 
 function HealBot_OnEvent_ZoneChanged(self)
     HealBot_setOptions_Timer(120)
-    HealBot_luVars["getMapID"]=true
-    local _,z = IsInInstance()
-    HealBot_inBG(z)
 end
 
 function HealBot_CheckZone()
     HealBot_Set_Timers()
     HealBot_setOptions_Timer(405)
     HealBot_setOptions_Timer(10)
-    HealBot_luVars["hbInsNameCheck"]=GetTime()+2
+    HealBot_luVars["hbInsNameCheck"]=GetTime()+1
     HealBot_setOptions_Timer(7950)
     HealBot_SetAuraChecks()
-    local _,z = IsInInstance()
-    HealBot_inBG(z)
-end
-
-function HealBot_inBG(instanceType)
-    if instanceType=="pvp" or instanceType=="arena" then 
-        HealBot_luVars["inBG"]=true 
-    else
-        HealBot_luVars["inBG"]=nil
-    end
 end
 
 function HealBot_SetAuraChecks()
@@ -4516,11 +4467,26 @@ function HealBot_GetTalentInfo(hbGUID, unit)
             i = GetSpecialization()
             if i then
                 _, s, _, _, _, r = GetSpecializationInfo(i,false,false) 
-                if HealBot_Config.CurrentSpec~=i then 
+                if HealBot_Config.CurrentSpec~=i or HealBot_Data["PLEVEL"]~=UnitLevel("player") then 
                     HealBot_Config.CurrentSpec=i 
+                    HealBot_Data["PLEVEL"]=UnitLevel("player")
                     HealBot_InitSpells()
                     HealBot_Options_ResetDoInittab(50)
                     HealBot_Options_ResetDoInittab(40)
+                    HealBot_Options_ResetDoInittab(10)
+                    HealBot_Options_ResetDoInittab(5)
+                    HealBot_Options_ResetDoInittab(4)
+                    HealBot_setHbStanceBuffs()
+                    HealBot_Options_setDebuffTypes()
+                    HealBot_setOptions_Timer(5)
+                    HealBot_setOptions_Timer(15)
+                    HealBot_setOptions_Timer(40)
+                    HealBot_setOptions_Timer(50)
+                    HealBot_ClearAllBuffs()
+                    HealBot_ClearAllDebuffs()
+                    HealBot_setOptions_Timer(400)
+                    HealBot_setOptions_Timer(10)
+                    HealBot_Action_setpcClass()
                 end
             end
         else
@@ -5225,11 +5191,9 @@ function HealBot_Direction_Check(unit)
             hbX, hbY = (direction % 9) * 0.109375, floor(direction / 9) * 0.08203125;
         elseif HealBot_luVars["mapUpdate"]<GetTime() then
             HealBot_luVars["mapUpdate"]=GetTime()+5
-            SetMapToCurrentZone()
         end
     elseif HealBot_luVars["mapUpdate"]<GetTime() then
         HealBot_luVars["mapUpdate"]=GetTime()+3
-        SetMapToCurrentZone()
     end
     return hbX, hbY, direction;
 end

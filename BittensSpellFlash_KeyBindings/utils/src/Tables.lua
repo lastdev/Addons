@@ -16,6 +16,7 @@ end
 
 local next = next
 local pairs = pairs
+local print = print
 local select = select
 local wipe = wipe
 

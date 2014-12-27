@@ -793,8 +793,6 @@ c.AddSpell("Shadowburn", nil, {
    end,
 })
 
-c.AddSpell("Shadowburn", "Last Resort")
-
 c.AddSpell("Immolate", nil, {
    FlashID = { "Immolate", "Immolate AoE" },
    Range = 40,
@@ -879,8 +877,6 @@ c.AddSpell("Chaos Bolt", nil, {
       return 0
    end,
 })
-
-c.AddSpell("Chaos Bolt", "Last Resort")
 
 c.AddSpell("Incinerate", nil, {
    FlashID = { "Incinerate", "Incinerate AoE" },
