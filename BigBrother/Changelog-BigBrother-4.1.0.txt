@@ -1,0 +1,22 @@
+------------------------------------------------------------------------
+r395 | oscarucb | 2014-12-17 22:26:07 +0000 (Wed, 17 Dec 2014) | 1 line
+Changed paths:
+   A /tags/4.1.0 (from /trunk:394)
+
+Tagging as 4.1.0
+------------------------------------------------------------------------
+r394 | oscarucb | 2014-12-17 22:24:41 +0000 (Wed, 17 Dec 2014) | 2 lines
+Changed paths:
+   M /trunk/BuffWindow.lua
+
+adjust food min
+
+------------------------------------------------------------------------
+r393 | oscarucb | 2014-12-17 11:01:34 +0000 (Wed, 17 Dec 2014) | 2 lines
+Changed paths:
+   M /trunk/BuffWindow.lua
+   M /trunk/SpellData.lua
+
+tickets 58/59: add WoD flasks, Lone Wolf buffs
+
+------------------------------------------------------------------------

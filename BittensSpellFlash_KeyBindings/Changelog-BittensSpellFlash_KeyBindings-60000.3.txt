@@ -1,0 +1,16 @@
+------------------------------------------------------------------------
+r31 | slippycheeze | 2014-12-15 21:03:11 +0000 (Mon, 15 Dec 2014) | 1 line
+Changed paths:
+   A /tags/60000.3 (from /trunk:30)
+
+Tagging as 60000.3 to grab updated BSF Library
+------------------------------------------------------------------------
+r29 | slippycheeze | 2014-12-15 19:23:43 +0000 (Mon, 15 Dec 2014) | 3 lines
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/BittensSpellFlash_KeyBindings.toc
+
+Rebuild to grab latest BSF library
+
+Also, automate changelog generation and add me as an author.
+------------------------------------------------------------------------

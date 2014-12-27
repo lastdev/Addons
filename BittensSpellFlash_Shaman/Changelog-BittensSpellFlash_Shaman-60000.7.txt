@@ -1,0 +1,82 @@
+------------------------------------------------------------------------
+r92 | slippycheeze | 2014-12-15 21:03:42 +0000 (Mon, 15 Dec 2014) | 1 line
+Changed paths:
+   A /tags/60000.7 (from /trunk:91)
+
+Tagging as 60000.7 to grab updated BSF Library
+------------------------------------------------------------------------
+r90 | slippycheeze | 2014-12-13 06:00:48 +0000 (Sat, 13 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+Move to auto-generated changelog.
+------------------------------------------------------------------------
+r89 | slippycheeze | 2014-12-13 06:00:44 +0000 (Sat, 13 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+
+Fix missing spell in aoe rotation
+------------------------------------------------------------------------
+r87 | slippycheeze | 2014-12-12 06:42:35 +0000 (Fri, 12 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+   M /trunk/version_history.txt
+
+Various rotation improvements.
+------------------------------------------------------------------------
+r85 | slippycheeze | 2014-12-08 04:52:17 +0000 (Mon, 08 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+   M /trunk/version_history.txt
+
+Don't flash thunderstorm for mana regen, because it doesn't.
+------------------------------------------------------------------------
+r83 | slippycheeze | 2014-11-30 23:06:16 +0000 (Sun, 30 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/version_history.txt
+
+Update to latest BSF library
+------------------------------------------------------------------------
+r81 | slippycheeze | 2014-11-29 10:19:27 +0000 (Sat, 29 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/BittensSpellFlash_Shaman.toc
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+   M /trunk/version_history.txt
+
+Update for 6.0 rotations and talents -- ele only
+------------------------------------------------------------------------
+r80 | slippycheeze | 2014-11-18 23:08:18 +0000 (Tue, 18 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+   M /trunk/version_history.txt
+
+Move to three space indents, whitespace cleanup.
+------------------------------------------------------------------------
+r79 | slippycheeze | 2014-11-18 23:08:13 +0000 (Tue, 18 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/.buildpath
+   M /trunk/.pkgmeta
+   M /trunk/.project
+   M /trunk/BittensSpellFlash_Shaman.toc
+   M /trunk/src/IDs.lua
+   M /trunk/src/Localization.lua
+   M /trunk/src/Options.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+   M /trunk/version_history.txt
+
+Convert everything to utf-8-unix
+------------------------------------------------------------------------
+r78 | tingsang | 2014-10-21 18:15:12 +0000 (Tue, 21 Oct 2014) | 2 lines
+Changed paths:
+   M /trunk/src/Spells.lua
+
+Reverted code for Ascendence to the original
+Reverted code for Flame Shock Prime and Early
+------------------------------------------------------------------------

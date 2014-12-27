@@ -1,0 +1,62 @@
+------------------------------------------------------------------------
+r334 | slippycheeze | 2014-12-15 20:47:07 +0000 (Mon, 15 Dec 2014) | 1 line
+Changed paths:
+   A /tags/60000.7 (from /trunk:333)
+
+Tagging as 60000.7
+------------------------------------------------------------------------
+r333 | slippycheeze | 2014-12-15 20:46:39 +0000 (Mon, 15 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/BittensSpellFlashLibrary.lua
+   M /trunk/src/Buffs.lua
+   M /trunk/src/Events.lua
+   M /trunk/src/Flashing.lua
+   M /trunk/src/Foods.lua
+   M /trunk/src/OptionsFrames.lua
+   M /trunk/src/Simulations.lua
+   M /trunk/src/SlashCommands.lua
+
+Try again with automatic versions to figure out curseforge packaging oddity...
+------------------------------------------------------------------------
+r331 | slippycheeze | 2014-12-15 20:39:06 +0000 (Mon, 15 Dec 2014) | 3 lines
+Changed paths:
+   M /trunk/src/BittensSpellFlashLibrary.lua
+   M /trunk/src/Buffs.lua
+   M /trunk/src/Events.lua
+   M /trunk/src/Flashing.lua
+   M /trunk/src/Foods.lua
+   M /trunk/src/OptionsFrames.lua
+   M /trunk/src/Simulations.lua
+   M /trunk/src/SlashCommands.lua
+
+Auto-update the file revision to ensure we always get the latest version
+of the library used, even if the author *cough* forgets to bump that
+when significant changes are made.
+------------------------------------------------------------------------
+r330 | slippycheeze | 2014-12-15 20:39:02 +0000 (Mon, 15 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+Use auto-generated changelog.
+------------------------------------------------------------------------
+r329 | slippycheeze | 2014-12-15 20:38:58 +0000 (Mon, 15 Dec 2014) | 5 lines
+Changed paths:
+   M /trunk/src/Flashing.lua
+
+Report target estimates in flashing debug
+
+Since rotations automatically trigger behaviour from target counts to
+move to AoE mode, it helps to have that debug information in the
+flashing reports.
+------------------------------------------------------------------------
+r326 | slippycheeze | 2014-11-30 21:48:05 +0000 (Sun, 30 Nov 2014) | 2 lines
+Changed paths:
+   M /trunk/src/BittensSpellFlashLibrary.lua
+   M /trunk/src/Events.lua
+   M /trunk/src/Flashing.lua
+   M /trunk/src/SlashCommands.lua
+   M /trunk/version_history.txt
+
+Try and fix some odd errors folks are hitting.
+
+------------------------------------------------------------------------
