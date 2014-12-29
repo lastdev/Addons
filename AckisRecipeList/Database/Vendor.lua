@@ -2,10 +2,10 @@
 ************************************************************************
 Vendor.lua
 ************************************************************************
-File date: 2014-10-18T06:19:35Z
-File hash: beabe36
-Project hash: 0b1c7cf
-Project version: 3.0.11
+File date: 2014-12-14T20:50:11Z
+File hash: a4cd6d6
+Project hash: a4cd6d6
+Project version: 3.0.12
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -35,8 +35,16 @@ local BN = private.BOSS_NAMES
 local Z = private.ZONE_NAMES
 
 function addon:InitVendor()
-	local function AddVendor(id_num, name, zone_name, x, y, faction)
-		private.AcquireTypes.Vendor:AddEntity(id_num, name, zone_name, x, y, faction)
+	local function AddVendor(identifier, name, location, coord_x, coord_y, faction)
+		return private.AcquireTypes.Vendor:AddEntity(addon, {
+			coord_x = coord_x,
+			coord_y = coord_y,
+			faction = faction,
+			identifier = identifier,
+			item_list = {},
+			location = location,
+			name = name,
+		})
 	end
 
 	AddVendor(66,		L["Tharynn Bouden"],			Z.ELWYNN_FOREST,		41.9,	67.1,	"Alliance") -- Cooking, Tailoring

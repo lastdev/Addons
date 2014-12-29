@@ -30,6 +30,7 @@ a.SpellIDs = {
    ["Lightwell"] = 724,
    ["Mind Blast"] = 8092,
    ["Mind Flay"] = 15407,
+   ["Mind Sear"] = 48045,
    ["Mind Spike"] = 73510,
    ["Mindbender"] = 123040,
    ["Penance"] = 47540,

@@ -1,0 +1,21 @@
+------------------------------------------------------------------------
+r27 | thaoky | 2014-12-24 14:13:01 +0000 (Wed, 24 Dec 2014) | 1 line
+Changed paths:
+   A /tags/6.0.002 (from /trunk:26)
+
+Tagging as 6.0.002
+------------------------------------------------------------------------
+r26 | thaoky | 2014-12-24 13:56:35 +0000 (Wed, 24 Dec 2014) | 2 lines
+Changed paths:
+   M /trunk/DataStore_Currencies.lua
+   M /trunk/DataStore_Currencies.toc
+
+.toc update to use project-version
+Added support for garrison resources, apexis crystals, and seals of tempered fate.
+------------------------------------------------------------------------
+r25 | thaoky | 2014-10-17 17:03:39 +0000 (Fri, 17 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore_Currencies.toc
+
+6.0.001 Commit
+------------------------------------------------------------------------

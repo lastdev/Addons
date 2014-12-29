@@ -24,6 +24,15 @@ L= DBM:GetModLocalization(1216)
 -----------------------
 L= DBM:GetModLocalization(1225)
 
+-------------
+--  Auch Trash  --
+-------------
+L = DBM:GetModLocalization("AuchTrash")
+
+L:SetGeneralLocalization({
+	name =	"아킨둔: 일반구간"
+})
+
 -----------------------
 -- <<<Bloodmaul Slag Mines>>> --
 -----------------------
@@ -47,6 +56,15 @@ L= DBM:GetModLocalization(887)
 -----------------------
 L= DBM:GetModLocalization(889)
 
+-------------
+--  BSM Trash  --
+-------------
+L = DBM:GetModLocalization("BSMTrash")
+
+L:SetGeneralLocalization({
+	name =	"피망치 잿가루 광산: 일반구간"
+})
+
 -----------------------
 -- <<<Grimrail Depot>>> --
 -----------------------
@@ -69,6 +87,15 @@ L:SetWarningLocalization({
 -- Thunderlord General --
 -----------------------
 L= DBM:GetModLocalization(1133)
+
+-------------
+--  GRD Trash  --
+-------------
+L = DBM:GetModLocalization("GRDTrash")
+
+L:SetGeneralLocalization({
+	name =	"파멸철로 정비소: 일반구간"
+})
 
 -----------------------
 -- <<<Iron Docks>>> --
@@ -117,7 +144,7 @@ L= DBM:GetModLocalization(1208)
 L= DBM:GetModLocalization(1209)
 
 L:SetMiscLocalization({
-	Pull	= "Xeri'tac begins unleashing Toxic Spiderlings down on you!"
+	Pull	= "당신의 머리 위로 산성 새끼 거미를 쏟아붓습니다!"
 })
 
 -----------------------
@@ -171,6 +198,25 @@ L= DBM:GetModLocalization(967)
 -----------------------
 L= DBM:GetModLocalization(968)
 
+L:SetWarningLocalization({
+	warnAdd			= DBM_CORE_AUTO_ANNOUNCE_TEXTS.spell:format("하늘탑 보호 피조물"),
+	specWarnAdd		= DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch:format("하늘탑 보호 피조물")
+})
+
+L:SetOptionLocalization({
+	warnAdd			= "하늘탑 보호 피조물 알림 보기",
+	specWarnAdd		= "하늘탑 보호 피조물 대상 전환 특수 경고 보기"
+})
+
+-------------
+--  Skyreach Trash  --
+-------------
+L = DBM:GetModLocalization("SkyreachTrash")
+
+L:SetGeneralLocalization({
+	name =	"하늘탑: 일반구간"
+})
+
 -----------------------
 -- <<<Upper Blackrock Spire>>> --
 -----------------------
@@ -200,9 +246,18 @@ L= DBM:GetModLocalization(1229)
 L= DBM:GetModLocalization(1234)
 
 L:SetTimerLocalization({
-	timerZaelaReturns	= "젤라 돌아옴"
+	timerZaelaReturns	= "젤라 착지"
 })
 
 L:SetOptionLocalization({
-	timerZaelaReturns	= "젤라 돌아옴 바 보기"
+	timerZaelaReturns	= "젤라 착지 바 보기"
+})
+
+-------------
+--  UBRS Trash  --
+-------------
+L = DBM:GetModLocalization("UBRSTrash")
+
+L:SetGeneralLocalization({
+	name =	"검은바위 첨탑 상층: 일반구간"
 })

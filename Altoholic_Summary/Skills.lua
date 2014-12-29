@@ -8,7 +8,7 @@ local INFO_REALM_LINE = 0
 local INFO_CHARACTER_LINE = 1
 local INFO_TOTAL_LINE = 2
 
-local SKILL_CAP = 600
+local SKILL_CAP = 700
 
 local WHITE		= "|cFFFFFFFF"
 local TEAL		= "|cFF00FF9A"

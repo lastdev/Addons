@@ -10,6 +10,10 @@
 --  MRT requires a correct localization of RaidZones and Bossyells for working
 --
 
+-- Check for addon table
+if (not MizusRaidTracker) then return; end
+local _L = MizusRaidTracker._L
+
 ----------------------
 --  Are you local?  --
 ----------------------
@@ -19,64 +23,30 @@ if GetLocale() ~= "frFR" then return end
 -----------------
 --  Bossyells  --
 -----------------
-MRT_L.Bossyells = {
-    -- Naxxramas
-    [535] = {
-        ["I grow tired of these games. Proceed, and I will banish your souls to oblivion!"] = "Quatre cavaliers",
-    },
-    
-    -- Ulduar
-    [529] = {
-        ["Vous courez tout droit dans la gueule de la folie !"] = "Assemblée du Fer",  -- Normalmode - Stormcaller Brundir last
-        ["Que vous apporte ma chute? Votre destin n'en est pas moins scellé, mortels!"] = "Assemblée du Fer",  -- Semi-Hardmode - Runemaster Molgeim last
-        ["Impossible..."] = "Assemblée du Fer",  -- Hardmode - Steelbreaker last
-        ["Je suis... libéré de son emprise... enfin."] = "Hodir",
-        ["Retenez vos coups ! Je me rends !"] = "Thorim",
-        ["Son emprise sur moi se dissipe. J'y vois à nouveau clair. Merci, héros."] = "Freya",
-        ["Il semblerait que j'aie pu faire une minime erreur de calcul. J'ai permis \195\160 mon esprit de se laisser corrompre par ce d\195\169mon dans la prison qui a désactiv\195\169 ma directive principale. Tous les syst\195\168mes fonctionnent \195\160 nouveau. Termin\195\169."] = "Mimiron",
-        ["J'ai vu des mondes baigner dans les flammes"] = "Algalon l'Observateur",
-    },
-     
-    -- Trial of the Crusader
-    [543] = {
-        ["Une victoire tragique et depourvue de sens. La perte subie aujourd'hui nous affaiblira tous, car qui d'autre que le roi-liche pourrait beneficier d'une telle folie?? De grands guerriers ont perdu la vie. Et pour quoi?? La vraie menace plane à l'horizon?: le roi-liche nous attend, tous, dans la mort."] = "Champions de faction",
-    },
-    
-    -- Icecrown Citadel
-    [604] = {
-        ["Vous direz pas que j'vous avais pas prévenus, canailles ! Mes frères et sœurs, en avant !"] = "Bataille des canonnières", -- Muradin
-        ["L'Alliance baisse pavillon. Sus au roi-liche !"] = "Bataille des canonnières", -- Saurfang
-        ["JE REVIS !"] = "Valithria Marcherêve", -- Dreamwalker
-    },
+_L.yells[529]["Algalon"] = "J'ai vu des mondes baigner dans les flammes" -- Needs review
+_L.yells[529]["Freya"] = "Son emprise sur moi se dissipe. J'y vois à nouveau clair. Merci, héros." -- Needs review
+_L.yells[529]["Hodir"] = "Je suis... libéré de son emprise... enfin." -- Needs review
+_L.yells[529]["Mimiron"] = "Il semblerait que j'aie pu faire une minime erreur de calcul." -- Needs review
+_L.yells[529]["Thorim"] = "Retenez vos coups ! Je me rends !" -- Needs review
 
-    -- Ruby Sanctum
-    [609] = {
-        ["Savourez bien cette victoire mortels car ce serra votre dernière. Ce monde brulera au retour du maitre !"] = "Halion", -- Halion
-    },
-    
-    -- Throne of the Four Winds
-    [773] = {
-        ["Le conclave du Vent est dissip\195\169. Votre conduite honorable et votre d\195\169termination vous valent le droit de m'affronter, mortels. J'attends votre attaque sur ma plate-forme ! Venez !"] = "Conclave of Wind", -- Conclave of Wind
-    },
-    
-    -- Firelands
-    [800] = {
-        ["Trop tôt! ... Vous êtes venu trop ..."] = "Ragnaros",
-    },
-    
-    -- Terrace of Endless Spring
-    [886] = {
-        --["Non… les eaux… je dois… résister… je n'aurai pas… peur…"] = "Protecteurs de l’Éternel",
-        ["Je vous remercie, étrangers. J'ai été libéré."] = "Tsulong", 
-        ["Je… ah… oh ! J’ai… ? Tout était… si… embrouillé."] = "Lei Shi",
-    },
-    
-    -- Siege of Orgrimmar
-    [953] = {
-        ["Ah, vous avez réussi ! Les eaux ont retrouvé leur pureté."] = "Immerseus",
-        ["Système en cours de réinitialisation. Veuillez ne pas le débrancher, ou il pourrait vous sauter à la figure."] = "Spoils of Pandaria",
-    },
-}
+_L.yells[543]["Faction Champions"] = "Une victoire tragique et depourvue de sens. La perte subie aujourd'hui nous affaiblira tous, car qui d'autre que le roi-liche pourrait beneficier d'une telle folie?? De grands guerriers ont perdu la vie. Et pour quoi?? La vraie menace plane à l'horizon?: le roi-liche nous attend, tous, dans la mort." -- Needs review
+
+_L.yells[604]["Dreamwalker"] = "JE REVIS !" -- Needs review
+_L.yells[604]["Icecrown Gunship Battle Alliance"] = "Vous direz pas que j'vous avais pas prévenus, canailles ! Mes frères et sœurs, en avant !" -- Needs review
+_L.yells[604]["Icecrown Gunship Battle Horde"] = "L'Alliance baisse pavillon. Sus au roi-liche !" -- Needs review
+
+_L.yells[609]["Halion"] = "Savourez bien cette victoire mortels car ce serra votre dernière. Ce monde brulera au retour du maitre !" -- Needs review
+
+_L.yells[773]["Conclave Of Wind"] = "Le conclave du Vent est dissipé. Votre conduite honorable et votre détermination vous valent le droit de m'affronter, mortels. J'attends votre attaque sur ma plate-forme ! Venez !" -- Needs review
+
+_L.yells[800]["Ragnaros"] = "Trop tôt! ... Vous êtes venu trop tôt..." -- Needs review
+
+_L.yells[886]["Lei Shi"] = "Je… ah… oh ! J’ai… ? Tout était… si… embrouillé." -- Needs review
+_L.yells[886]["Tsulong"] = "Je vous remercie, étrangers. J'ai été libéré." -- Needs review
+
+_L.yells[953]["Immerseus"] = "Ah, vous avez réussi ! Les eaux ont retrouvé leur pureté." -- Needs review
+_L.yells[953]["Spoils of Pandaria"] = "Système en cours de réinitialisation. Veuillez ne pas le débrancher, ou il pourrait vous sauter à la figure." -- Needs review
+
 
 
 ---------------------------------
@@ -130,7 +100,7 @@ MRT_L.Core["Trash Mob"] = "Trash Mob"
 -----------------------------------
 --  Option panels local strings  --
 -----------------------------------
-MRT_L.Options["AP_GroupRestriction"] = "Suivre simplement les 2 premiers groupes (sur 5)"
+MRT_L.Options["AP_GroupRestriction"] = "Suivre simplement les 2 premiers groupes (sur 5)" -- Needs review
 MRT_L.Options["AP_GuildAttendance"] = "Activer la vérification des participants de la guilde"
 MRT_L.Options["AP_GuildAttendanceCustomTextTitle"] = "Texte personnalisé pour la présence de guilde :"
 MRT_L.Options["AP_GuildAttendanceDuration"] = "Durée de prise en compte des participants"
@@ -185,6 +155,7 @@ MRT_L.Options["MP_MinimapIcon"] = "Afficher le bouton de la minicarte"
 -- MRT_L.Options["MP_ResetGuiPos"] = "Reset GUI position"
 MRT_L.Options["MP_SlashCmd"] = "Commande \"slash\""
 MRT_L.Options["TP_AskForDKPValue"] = "Demander le prix des objets"
+-- MRT_L.Options["TP_AskForDKPValuePersonal"] = "... if loot mode is personal loot"
 MRT_L.Options["TP_CreateNewRaidOnNewZone"] = "Créer un nouveau raid en entrant dans une nouvelle zone"
 MRT_L.Options["TP_Log10MenRaids"] = "Suivre les raids de 10 joueurs"
 MRT_L.Options["TP_LogAVRaids"] = "Suivre les raids JcJ (Archavon, Bastion de Baradin)"
@@ -250,6 +221,7 @@ MRT_L.GUI["Button_StartNewRaid"] = "Débuter un nouveau raid"
 MRT_L.GUI["Button_TakeSnapshot"] = "Prendre un instantané"
 MRT_L.GUI["Can not delete current raid"] = "Erreur : Impossible de supprimer le raid actuel."
 MRT_L.GUI["Cell_Hard"] = "Héroïque"
+-- MRT_L.GUI["Cell_LFR"] = "LFR"
 MRT_L.GUI["Cell_Normal"] = "Normal"
 MRT_L.GUI["Col_Cost"] = "Coût"
 MRT_L.GUI["Col_Date"] = "Date"

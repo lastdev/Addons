@@ -2,10 +2,10 @@
 ************************************************************************
 Custom.lua
 ************************************************************************
-File date: 2014-12-13T08:15:02Z
-File hash: 7b24cc0
-Project hash: 0b1c7cf
-Project version: 3.0.11
+File date: 2014-12-14T20:50:11Z
+File hash: a4cd6d6
+Project hash: a4cd6d6
+Project version: 3.0.12
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -33,9 +33,18 @@ local L			= LibStub("AceLocale-3.0"):GetLocale(private.addon_name)
 local Z			= private.ZONE_NAMES
 
 function addon:InitCustom()
-	local function AddCustom(identifier, zone_name, coord_x, coord_y, faction)
-		private.AcquireTypes.Custom:AddEntity(identifier, L[identifier], zone_name, coord_x, coord_y, faction)
+	local function AddCustom(identifier, zoneName, coordX, coordY, faction)
+		return private.AcquireTypes.Custom:AddEntity(addon, {
+			coord_x = coordX,
+			coord_y = coordY,
+			faction = faction,
+			identifier = identifier,
+			item_list = {},
+			location = zoneName,
+			name = L[identifier],
+		})
 	end
+
 	AddCustom("DAILY_COOKING_MEAT", Z.SHATTRATH_CITY)
 	AddCustom("DAILY_COOKING_FISH", Z.SHATTRATH_CITY)
 	AddCustom("DAILY_FISHING_SHATT", Z.SHATTRATH_CITY)

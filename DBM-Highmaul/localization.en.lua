@@ -6,11 +6,12 @@ local L
 L= DBM:GetModLocalization(1128)
 
 L:SetTimerLocalization({
-	timerCrowdCD	= "Crowd CD"
+	timerSweeperCD			= DBM_CORE_AUTO_TIMER_TEXTS.next:format((GetSpellInfo(177776)))
 })
 
 L:SetOptionLocalization({
-	timerCrowdCD	= "Show timer for when the crowd will spawn new adds"
+	timerSweeperCD			= DBM_CORE_AUTO_TIMER_OPTIONS.next:format(177776),
+	countdownSweeper		= DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT:format(177776)
 })
 
 ---------------------------
@@ -32,6 +33,13 @@ L:SetMiscLocalization({
 ------------------
 L= DBM:GetModLocalization(1196)
 
+L:SetOptionLocalization({
+	InterruptCounter	= "Reset Decay counter after",
+	Two					= "After two casts",
+	Three				= "After three casts",
+	Four				= "After four casts"
+})
+
 --------------
 -- Twin Ogron --
 --------------
@@ -39,7 +47,9 @@ L= DBM:GetModLocalization(1148)
 
 L:SetOptionLocalization({
 	PhemosSpecial	= "Play countdown sound for Phemos' cooldowns",
-	PolSpecial		= "Play countdown sound for Pol's cooldowns"
+	PolSpecial		= "Play countdown sound for Pol's cooldowns",
+	PhemosSpecialVoice	= "Play spoken alerts for Phemos' abilities using selected voice pack",
+	PolSpecialVoice		= "Play spoken alerts for Pol's abilities using selected voice pack"
 })
 
 --------------------
@@ -58,6 +68,20 @@ L:SetMiscLocalization({
 -- Imperator Mar'gok --
 --------------------------
 L= DBM:GetModLocalization(1197)
+
+L:SetOptionLocalization({
+	--Auto generated, don't copy to non english files, not needed.
+	warnBranded						= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.stack:format(156225),
+	warnResonance					= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(156467),
+	warnMarkOfChaos					= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(158605),
+	warnForceNova					= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(157349),
+	warnAberration					= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(156471)
+	--Auto generated, don't copy to non english files, not needed.
+})
+
+L:SetMiscLocalization({
+	BrandedYell			= "Branded (%s) on %s"
+})
 
 -------------
 --  Trash  --

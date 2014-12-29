@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1210, "DBM-Party-WoD", 5, 556)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11861 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12037 $"):sub(12, -3))
 mod:SetCreatureID(83846)
 mod:SetEncounterID(1756)
 mod:SetZone()
@@ -21,11 +21,14 @@ local warnGenesis				= mod:NewSpellAnnounce(169613, 4)
 
 local specWarnColossalBlow		= mod:NewSpecialWarningSpell(169179, nil, nil, nil, 2)
 local specWarnEntanglement		= mod:NewSpecialWarningSwitch(169251, mod:IsDps())
-local specWarnGenesis			= mod:NewSpecialWarningSwitch(169613)--Everyone. "Switch" is closest generic to "run around stomping flowers"
+local specWarnGenesis			= mod:NewSpecialWarningSpell(169613)--Everyone. "Switch" is closest generic to "run around stomping flowers"
 
 --Only timers that were consistent, others are all over the place.
 local timerFontOfLife			= mod:NewNextTimer(15, 169120)
 local timerGenesis				= mod:NewNextTimer(60.5, 169613)
+
+local voiceColossalBlow			= mod:NewVoice(169179)
+local voiceGenesis				= mod:NewVoice(169613)
 
 function mod:OnCombatStart(delay)
 	timerFontOfLife:Start(-delay)
@@ -37,10 +40,12 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 169179 then
 		warnColossalBlow:Show()
 		specWarnColossalBlow:Show()
+		voiceColossalBlow:Play("shockwave")
 	elseif spellId == 169613 then
 		warnGenesis:Show()
 		specWarnGenesis:Show()
 		timerGenesis:Start()
+		voiceGenesis:Play("169613")
 	end
 end
 

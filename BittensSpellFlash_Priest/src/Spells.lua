@@ -38,6 +38,7 @@ c.AddOptionalSpell("Flash Heal", "under Surge of Light", {
 })
 
 c.AddOptionalSpell("Mindbender", "for Mana", {
+   Cooldown = 60,
    CheckFirst = function()
       return s.PowerPercent("player") < 82
    end
@@ -168,14 +169,16 @@ c.AddOptionalSpell("Shadowform", nil, {
 })
 
 c.AddOptionalSpell("Shadowfiend", nil, {
-   Override = function()
-      return c.GetCooldown("Shadowfiend") == 0 and not a.Insanity
+   Cooldown = 3 * 60,
+   CheckFirst = function()
+      return not a.Insanity
    end
 })
 
 c.AddOptionalSpell("Mindbender", nil, {
-   Override = function()
-      return c.GetCooldown("Mindbender") == 0 and not a.Insanity
+   Cooldown = 60,
+   CheckFirst = function()
+      return not a.Insanity
    end
 })
 
@@ -321,7 +324,7 @@ c.RegisterInitiatingSpell("Insanity", "Insanity")
 c.AddSpell("Insanity", "Delay", {
    IsMinDelayDefinition = true,
    GetDelay = function()
-      return a.Insanity
+      return c.GetBuffDuration("Shadow Word: Insanity")
    end,
 })
 
@@ -463,7 +466,7 @@ c.AddSpell("Devouring Plague", "at three orbs", {
    MyDebuff = "Devouring Plague",
    Tick = 1,
    CheckFirst = function()
-      if a.Orbs <  3 then
+      if a.Orbs < 3 then
          return false
       end
 
@@ -498,6 +501,10 @@ c.AddSpell("Devouring Plague", "for CoP and Insanity", {
    MyDebuff = "Devouring Plague",
    Tick = 1,
    CheckFirst = function()
+      if a.Orbs < 3 then
+         return false
+      end
+
       local vt = c.HasMyDebuff("Vampiric Touch")
       local swp = c.HasMyDebuff("Shadow Word: Pain")
 

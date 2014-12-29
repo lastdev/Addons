@@ -9,6 +9,10 @@ local _G = getfenv(0)
 local FOLDER_NAME, private = ...
 
 local addon = private.addon
+if not addon then
+	return
+end
+
 local constants = addon.constants
 local module = addon:GetModule(private.module_name)
 local L = _G.LibStub("AceLocale-3.0"):GetLocale(addon.constants.addon_name)
@@ -20,8 +24,16 @@ local Z = constants.ZONE_NAMES
 -- What we _really_ came here to see...
 -----------------------------------------------------------------------
 function module:InitializeVendors()
-	local function AddVendor(id_num, name, zone_name, x, y, faction)
-		addon.AcquireTypes.Vendor:AddEntity(id_num, name, zone_name, x, y, faction)
+	local function AddVendor(vendorID, vendorName, zoneName, coordX, coordY, faction)
+		addon.AcquireTypes.Vendor:AddEntity(module, {
+			coord_x = coordX,
+			coord_y = coordY,
+			faction = faction,
+			identifier = vendorID,
+			item_list = {},
+			location = zoneName,
+			name = vendorName,
+		})
 	end
 
 	AddVendor(1146,		L["Vharr"],				Z.NORTHERN_STRANGLETHORN,	38.7,	49.2,	"Horde")

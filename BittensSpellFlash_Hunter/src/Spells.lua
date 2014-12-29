@@ -282,6 +282,26 @@ c.AddInterrupt("Counter Shot", nil, {
    NoGCD = true,
 })
 
+c.AddSpell("Kill Shot", nil, {
+   Cooldown = 10,
+   -- This is required because IsUsableSpell is buggy in 6.0.3;
+   -- see http://us.battle.net/wow/en/forum/topic/15700039856#1
+   -- also http://us.battle.net/wow/en/forum/topic/15699089759#1
+   EvenIfNotUsable = true,
+   CheckFirst = function()
+      local execute = c.HasSpell("Enhanced Kill Shot") and 35 or 20
+
+      -- nasty work-around for the second bug in KS cooldown
+      if a.ForceKillShotCooldown > GetTime() then
+         return false
+      end
+
+      -- avoidCapping("Kill Shot", -10)
+      -- c.GetCooldown("Kill Shot", false, 10) <= c.GetBusyTime()
+      return c.GetHealthPercent("target") <= execute
+   end,
+})
+
 ----------------------------------------------------------------- Beast Mastery
 c.AddOptionalSpell("Focus Fire", nil, {
    CheckFirst = function()
@@ -289,12 +309,6 @@ c.AddOptionalSpell("Focus Fire", nil, {
       return s.BuffStack(c.GetID("Frenzy"), "pet") >= 5
          and not c.HasBuff("Focus Fire")
          and (wrath <= 0 or wrath >= 3)
-   end
-})
-
-c.AddSpell("Kill Shot", nil, {
-   CheckFirst = function()
-      return (a.EmptyFocus - (c.LastGCD * a.Regen)) >= 0
    end
 })
 
@@ -396,6 +410,7 @@ addSpell("Steady Shot", "to pool", {
    CheckFirst = function()
       return shouldCastToPool("Steady Shot")
          and not c.HasTalent("Focusing Shot")
+         and avoidCapping("Steady Shot", -10)
    end
 })
 
@@ -403,6 +418,7 @@ c.AddSpell("Focusing Shot", "to pool", {
    CheckFirst = function()
       return shouldCastToPool("Focusing Shot")
          and c.HasTalent("Focusing Shot")
+         and avoidCapping("Focusing Shot", -20)
    end
 })
 

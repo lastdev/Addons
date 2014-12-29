@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 656 2014-11-05T22:36:19Z
+    Revision: 660 2014-12-10T12:44:11Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -143,7 +143,7 @@ local function GetProfessionLines()
                 name, skillType = dbEntry:GetValue(itemContainer, i, "Info");
                 id = dbEntry:GetValue(itemContainer, i, "Data");
                 isExpanded = not Armory:GetHeaderLineState(itemContainer..selectedSkill, name);
-                if ( skillType == "header" ) then
+                if ( skillType == "header" or (i == 1 and skillType == "subheader") ) then
                     if ( tradeSkillSubClassFilter ) then
                         isIncluded = tradeSkillSubClassFilter[name..(#groups + 1)];
                     else

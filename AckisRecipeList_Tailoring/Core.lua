@@ -7,6 +7,11 @@ local _G = getfenv(0)
 local pairs = _G.pairs
 
 -------------------------------------------------------------------------------
+-- Constants
+-------------------------------------------------------------------------------
+local MODULE_VERSION = 1
+
+-------------------------------------------------------------------------------
 -- AddOn namespace.
 -------------------------------------------------------------------------------
 local FOLDER_NAME, private = ...
@@ -15,26 +20,20 @@ private.module_name = MODULE_NAME
 
 local LibStub = _G.LibStub
 local addon = LibStub("AceAddon-3.0"):GetAddon("Ackis Recipe List")
+
+if MODULE_VERSION ~= addon.SUPPORTED_MODULE_VERSION then
+	addon:SpawnModuleWrongVersionDialog({
+		moduleName = MODULE_NAME,
+		moduleVersion = MODULE_VERSION
+	})
+	return
+end
+
 private.addon = addon
 
 local module = addon:NewModule(MODULE_NAME)
-
-module.ITEM_FILTER_TYPES = {
-	TAILORING_BACK = true,
-	TAILORING_BAG = true,
-	TAILORING_CHEST = true,
-	TAILORING_FEET = true,
-	TAILORING_HANDS = true,
-	TAILORING_HEAD = true,
-	TAILORING_ITEM_ENHANCEMENT = true,
-	TAILORING_LEGS = true,
-	TAILORING_MATERIALS = true,
-	TAILORING_MISC = true,
-	TAILORING_SHIRT = true,
-	TAILORING_SHOULDER = true,
-	TAILORING_WAIST = true,
-	TAILORING_WRIST = true,
-}
+module.Version = MODULE_VERSION
+module.Name  = FOLDER_NAME
 
 function module:OnInitialize()
 	local defaults = {

@@ -78,6 +78,15 @@
 					</Anchor>
 				</Anchors>
 			</Button>
+			<Button name="$parentMenuItem6" inherits="AltoSummaryMenuItemTemplate" id="6" text="GARRISON_FOLLOWERS_TITLE">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem5" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
 			
 			<Button name="$parent_Sort1" inherits="AltoSortButtonTemplate" id="1">
 				<Size>
@@ -169,6 +178,18 @@
 				</Size>
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parent_Sort7" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_Sort9" inherits="AltoSortButtonTemplate" id="9">
+				<Size>
+					<AbsDimension x="80" y="19"/>
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Sort8" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>

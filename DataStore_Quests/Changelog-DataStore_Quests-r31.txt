@@ -1,0 +1,21 @@
+------------------------------------------------------------------------
+r31 | thaoky | 2014-12-27 13:24:51 +0000 (Sat, 27 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/Options.lua
+   M /trunk/Options.xml
+
+Modified options pane to use parentKey references
+------------------------------------------------------------------------
+r29 | thaoky | 2014-12-24 14:04:19 +0000 (Wed, 24 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore_Quests.toc
+
+.toc update to use project-version
+------------------------------------------------------------------------
+r28 | thaoky | 2014-10-17 17:04:12 +0000 (Fri, 17 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore_Quests.lua
+   M /trunk/DataStore_Quests.toc
+
+6.0.001 Commit
+------------------------------------------------------------------------

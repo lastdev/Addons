@@ -108,6 +108,7 @@ private.PROFESSION_MODULE_NAMES = {
 	[private.LOCALIZED_PROFESSION_NAMES.JEWELCRAFTING] = "Jewelcrafting",
 	[private.LOCALIZED_PROFESSION_NAMES.LEATHERWORKING] = "Leatherworking",
 	[private.LOCALIZED_PROFESSION_NAMES.SMELTING] = "Smelting",
+	[private.MINING_PROFESSION_NAME] = "Smelting",
 	[private.LOCALIZED_PROFESSION_NAMES.TAILORING] = "Tailoring",
 }
 
@@ -161,6 +162,8 @@ private.GAME_VERSION_NAMES = {
 	[5] = "MOP",
 	[6] = "WOD",
 }
+
+constants.GAME_VERSION_NAMES = private.GAME_VERSION_NAMES
 
 private.GAME_VERSIONS = {}
 constants.GAME_VERSIONS = private.GAME_VERSIONS

@@ -1,12 +1,12 @@
 ﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Options.lua"></Script>
 
-	<Frame name="DataStoreInventoryOptions" hidden="true">
+	<Frame parentKey="InventoryOptions" parent="DataStoreFrames" hidden="true">
 		<Size>
 			<AbsDimension x="615" y="306"/>
 		</Size>
 		<Frames>
-			<CheckButton name="$parent_AutoClearGuildInventory" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton parentKey="AutoClearGuildInventory" inherits="InterfaceOptionsCheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
@@ -23,12 +23,12 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="$parent_BroadcastAiL" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton parentKey="BroadcastAiL" inherits="InterfaceOptionsCheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors> 
-					<Anchor point="TOP" relativeTo="$parent_AutoClearGuildInventory" relativePoint="BOTTOM" >
+					<Anchor point="TOP" relativeKey="$parent.AutoClearGuildInventory" relativePoint="BOTTOM" >
 						<Offset>
 							<AbsDimension  x="0" y="-10"/>
 						</Offset>
@@ -40,12 +40,12 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="$parent_EquipmentRequestNotification" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton parentKey="EquipmentRequestNotification" inherits="InterfaceOptionsCheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors> 
-					<Anchor point="TOP" relativeTo="$parent_BroadcastAiL" relativePoint="BOTTOM" >
+					<Anchor point="TOP" relativeKey="$parent.BroadcastAiL" relativePoint="BOTTOM" >
 						<Offset>
 							<AbsDimension  x="0" y="-10"/>
 						</Offset>

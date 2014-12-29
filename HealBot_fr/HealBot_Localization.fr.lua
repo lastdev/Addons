@@ -1,4 +1,4 @@
-ï»¿-- French version (by Kubik of Vol'Jin) 2014-08-25 / V. 5.4.8.3
+ï»¿-- French version (by Kubik of Vol'Jin) 2014-12-13 / V. 6.0.3.6
 -- à = \195\160
 -- â = \195\162
 -- ç = \195\167
@@ -196,6 +196,8 @@ HEALBOT_OPTIONS_SOFTRESET     = "ResetHB";
     HEALBOT_OPTIONS_SHOWHEALTHONBAR     = "Afficher la vie";
     HEALBOT_OPTIONS_BARHEALTHINCHEALS   = "Inclure les soins entrants";
     HEALBOT_OPTIONS_BARHEALTHSEPHEALS   = "S\195\169parer les soins entrants";
+    HEALBOT_OPTIONS_BARHEALTHINCALL     = "Inclure les heals entrants et les absorptions"
+    HEALBOT_OPTIONS_BARHEALTHSEPALL     = "S\195\169parer les heals entrants et les absorptions"
     HEALBOT_OPTIONS_BARHEALTH1          = "en \195\169cart";
     HEALBOT_OPTIONS_BARHEALTH2          = "en pourcentage";
     HEALBOT_OPTIONS_TIPTEXT             = "Bulle d\'information";

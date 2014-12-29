@@ -4,7 +4,7 @@ local Graph = LibStub:GetLibrary("LibGraph-2.0")
 local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 
-local revision = tonumber(string.sub("$Revision: 1273 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1286 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -1657,7 +1657,7 @@ function Recount:CreateDetailWindow()
 	PieMode:SetWidth(450 + 50)
 
 	PieMode.TopPieChart = Graph:CreateGraphPieChart("Recount_DetailWindow_TopPieChart", PieMode, "LEFT", "LEFT", 0, 72.5, 150, 150)--56.5, 150, 150)
-	PieMode.BotPieChart = Graph:CreateGraphPieChart("Recount_DetailWindow_BotPieChart", PieMode, "LEFT", "LEFT", 0, -72.5, 150, 150)---88, 150, 150)
+	PieMode.BotPieChart = Graph:CreateGraphPieChart("Recount_DetailWindow_BotPieChart", PieMode, "LEFT", "LEFT", 0, -72.5, 150, 150)--88, 150, 150)
 
 	PieMode.TopPieChart:SetSelectionFunc(Recount.SelectUpperDetailTablePie)
 	PieMode.BotPieChart:SetSelectionFunc(me.SelectLowerDetailTable)

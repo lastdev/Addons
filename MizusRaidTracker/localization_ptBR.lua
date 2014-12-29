@@ -10,6 +10,10 @@
 --  MRT requires a correct localization of bossyells for working
 --
 
+-- Check for addon table
+if (not MizusRaidTracker) then return; end
+local _L = MizusRaidTracker._L
+
 ----------------------
 --  Are you local?  --
 ----------------------
@@ -19,58 +23,30 @@ if GetLocale() ~= "ptBR" then return end
 -----------------
 --  Bossyells  --
 -----------------
-MRT_L.Bossyells = {
-    -- Naxxramas
-    [535] = {
-        ["I grow tired of these games. Proceed, and I will banish your souls to oblivion!"] = "Four Horsemen",
-    },
+-- _L.yells[529]["Algalon"] = "I have seen worlds bathed in the Makers' flames, their denizens fading without as much as a whimper. Entire planetary systems born and razed in the time that it takes your mortal hearts to beat once. Yet all throughout, my own heart devoid of emotion... of empathy. I. Have. Felt. Nothing. A million-million lives wasted. Had they all held within them your tenacity? Had they all loved life as you do?"
+-- _L.yells[529]["Freya"] = "His hold on me dissipates. I can see clearly once more. Thank you, heroes."
+-- _L.yells[529]["Hodir"] = "I... I am released from his grasp... at last."
+-- _L.yells[529]["Mimiron"] = "It would appear that I've made a slight miscalculation. I allowed my mind to be corrupted by the fiend in the prison, overriding my primary directive. All systems seem to be functional now. Clear."
+-- _L.yells[529]["Thorim"] = "Stay your arms! I yield!"
 
-    -- Ulduar
-    [529] = {
-        ["You rush headlong into the maw of madness!"] = "Iron Council",  -- Normalmode - Stormcaller Brundir last
-        ["What have you gained from my defeat? You are no less doomed, mortals."] = "Iron Council",  -- Semi-Hardmode - Runemaster Molgeim last
-        ["Impossible..."] = "Iron Council",  -- Hardmode - Steelbreaker last
-        ["I... I am released from his grasp... at last."] = "Hodir",
-        ["Stay your arms! I yield!"] = "Thorim",
-        ["His hold on me dissipates. I can see clearly once more. Thank you, heroes."] = "Freya",
-        ["It would appear that I've made a slight miscalculation. I allowed my mind to be corrupted by the fiend in the prison, overriding my primary directive. All systems seem to be functional now. Clear."] = "Mimiron",
-        ["I have seen worlds bathed in the Makers' flames, their denizens fading without as much as a whimper. Entire planetary systems born and razed in the time that it takes your mortal hearts to beat once. Yet all throughout, my own heart devoid of emotion... of empathy. I. Have. Felt. Nothing. A million-million lives wasted. Had they all held within them your tenacity? Had they all loved life as you do?"] = "Algalon the Observer",
-    },
-    
-    -- Trial of the Crusader
-    [543] = {
-        ["A shallow and tragic victory. We are weaker as a whole from the losses suffered today. Who but the Lich King could benefit from such foolishness? Great warriors have lost their lives. And for what? The true threat looms ahead - the Lich King awaits us all in death."] = "Faction Champions",
-    },
-    
-    -- Icecrown Citadel
-    [604] = {
-        ["Don't say I didn't warn ya, scoundrels! Onward, brothers and sisters!"] = "Icecrown Gunship Battle", -- Muradin
-        ["The Alliance falter. Onward to the Lich King!"] = "Icecrown Gunship Battle", -- Saurfang
-        ["I AM RENEWED! Ysera grant me the favor to lay these foul creatures to rest!"] = "Valithria Dreamwalker", -- Dreamwalker
-    },
-    
-    -- Ruby Sanctum
-    [609] = {
-        ["Relish this victory, mortals, for it will be your last. This world will burn with the master's return!"] = "Halion", -- Halion
-    },
-    
-    -- Throne of the Four Winds
-    [773] = {
-        ["The Conclave of Wind has dissipated. Your honorable conduct and determination have earned you the right to face me in battle, mortals. I await your assault on my platform! Come!"] = "Conclave of Wind", -- Conclave of Wind
-    },
-    
-    -- Firelands
-    [800] = {
-        ["Too soon! ... You have come too soon..."] = "Ragnaros",
-    },
-    
-    -- Terrace of Endless Spring
-    [886] = {
-        --["Não. .. as águas ... Eu devo ... resistir ... Eu não deve ... medo ..."] = "Protetores do Infinito",
-        ["Eu agradeço, forasteiros. Eu fui libertado."] = "Tsulong", 
-        ["Eu... ah... oh! Eu o quê...? Eu fiz o quê...? Estava tudo tão... tão turvo..."] = "Lei Shi",
-    },
-}
+-- _L.yells[543]["Faction Champions"] = "A shallow and tragic victory. We are weaker as a whole from the losses suffered today. Who but the Lich King could benefit from such foolishness? Great warriors have lost their lives. And for what? The true threat looms ahead - the Lich King awaits us all in death."
+
+-- _L.yells[604]["Dreamwalker"] = "I AM RENEWED! Ysera grant me the favor to lay these foul creatures to rest!"
+-- _L.yells[604]["Icecrown Gunship Battle Alliance"] = "Don't say I didn't warn ya, scoundrels! Onward, brothers and sisters!"
+-- _L.yells[604]["Icecrown Gunship Battle Horde"] = "The Alliance falter. Onward to the Lich King!"
+
+-- _L.yells[609]["Halion"] = "Relish this victory, mortals, for it will be your last. This world will burn with the master's return!"
+
+-- _L.yells[773]["Conclave Of Wind"] = "The Conclave of Wind has dissipated. Your honorable conduct and determination have earned you the right to face me in battle, mortals. I await your assault on my platform! Come!"
+
+-- _L.yells[800]["Ragnaros"] = "Too soon! ... You have come too soon..."
+
+_L.yells[886]["Lei Shi"] = "Eu... ah... oh! Eu o quê...? Eu fiz o quê...? Estava tudo tão... tão turvo..." -- Needs review
+_L.yells[886]["Tsulong"] = "Eu agradeço, forasteiros. Eu fui libertado." -- Needs review
+
+-- _L.yells[953]["Immerseus"] = "Ah, you have done it!  The waters are pure once more."
+-- _L.yells[953]["Spoils of Pandaria"] = "System resetting. Don't turn the power off, or the whole thing will probably explode."
+
 
 
 ---------------------------------
@@ -124,7 +100,7 @@ Press Ctrl+V to import data in your webbrowser.]=] ]==]
 -----------------------------------
 --  Option panels local strings  --
 -----------------------------------
--- MRT_L.Options["AP_GroupRestriction"] = "Track only first 2/5 groups"
+-- MRT_L.Options["AP_GroupRestriction"] = "Track only first 2/4/5/6 groups"
 -- MRT_L.Options["AP_GuildAttendance"] = "Enable guild attendance check"
 -- MRT_L.Options["AP_GuildAttendanceCustomTextTitle"] = "Custom guild attendance text:"
 -- MRT_L.Options["AP_GuildAttendanceDuration"] = "Duration of taking attendance"
@@ -177,6 +153,7 @@ EQdkp-Plus Raid-Log-Import 0.5.6.x]=] ]==]
 -- MRT_L.Options["MP_ResetGuiPos"] = "Reset GUI position"
 -- MRT_L.Options["MP_SlashCmd"] = "Slash command"
 -- MRT_L.Options["TP_AskForDKPValue"] = "Ask for item cost"
+-- MRT_L.Options["TP_AskForDKPValuePersonal"] = "... if loot mode is personal loot"
 -- MRT_L.Options["TP_CreateNewRaidOnNewZone"] = "Create new raid on new zone"
 -- MRT_L.Options["TP_Log10MenRaids"] = "Track 10 player raids"
 -- MRT_L.Options["TP_LogAVRaids"] = "Track PVP raids (VoA, BH)"
@@ -238,6 +215,7 @@ A relog after changing this value is recommended.]=] ]==]
 -- MRT_L.GUI["Button_TakeSnapshot"] = "Take Snapshot"
 -- MRT_L.GUI["Can not delete current raid"] = "Error: Can't delete current raid."
 -- MRT_L.GUI["Cell_Hard"] = "Hard"
+-- MRT_L.GUI["Cell_LFR"] = "LFR"
 -- MRT_L.GUI["Cell_Normal"] = "Normal"
 -- MRT_L.GUI["Col_Cost"] = "Cost"
 -- MRT_L.GUI["Col_Date"] = "Date"

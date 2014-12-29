@@ -1,7 +1,7 @@
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "Flashing", tonumber("20141215204639") or time()) then
+if u.SkipOrUpgrade(c, "Flashing", tonumber("20141220081111") or time()) then
    return
 end
 
@@ -48,8 +48,8 @@ local function spellCastable(spell)
 
    if not (spell.NoRangeCheck or spell.Melee or spell.Range)
       and s.SpellHasRange(spell.ID)
-      and not s.SpellInRange(spell.ID) then
-
+      and not s.SpellInRange(spell.ID)
+   then
       return false
    end
 
@@ -78,7 +78,8 @@ local function flashable(spell)
       or spell.Debuff
       or spell.MyBuff
       or spell.Interrupt
-      or spell.Dispel then
+      or spell.Dispel
+   then
 
       local early =
          c.GetBusyTime(spell.NoGCD) + max(0, c.GetCastTime(spell.ID) or 0)
@@ -137,8 +138,8 @@ local function flashable(spell)
    local flashID = spell.FlashID or spell.ID
    if (flashableFunc and not flashableFunc(flashID))
       or not castableFunc(spell)
-      or (spell.CheckLast and not spell:CheckLast()) then
-
+      or (spell.CheckLast and not spell:CheckLast())
+   then
       return false
    end
 

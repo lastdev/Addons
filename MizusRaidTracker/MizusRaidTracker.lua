@@ -28,12 +28,20 @@
 --    If not, see <http://www.gnu.org/licenses/>.
 
 
+-- Check for addon table
+if (not MizusRaidTracker) then MizusRaidTracker = {}; end
+local mrt = MizusRaidTracker
+local _L = MizusRaidTracker._L
+local _O = MRT_Options
 
 -------------------------------
 --  Globals/Default Options  --
 -------------------------------
 MRT_ADDON_TITLE = GetAddOnMetadata("MizusRaidTracker", "Title");
 MRT_ADDON_VERSION = GetAddOnMetadata("MizusRaidTracker", "Version");
+--[===[@debug@
+MRT_ADDON_VERSION = "v0.61.2-alpha"
+--@end-debug@]===]
 MRT_NumOfCurrentRaid = nil;
 MRT_NumOfLastBoss = nil;
 MRT_Options = {};
@@ -62,14 +70,19 @@ local MRT_Defaults = {
         ["Attendance_GuildAttendanceCustomText"] = MRT_GA_TEXT_CHARNAME_BOSS,
         ["Attendance_GroupRestriction"] = false,                                    -- if true, track only first 2/5 groups in 10/25 player raids
         ["Attendance_TrackOffline"] = true,                                         -- if true, track offline players
-        ["Tracking_Log10MenRaids"] = true,                                          -- Track 10 player raids: true / nil
-        ["Tracking_LogLFRRaids"] = true,                                            -- Track LFR raids: true / nil
+        ["Tracking_Log10MenRaids"] = true,                                          -- Track 10 player raids: true / nil (pre WoD-Raids)
+        ["Tracking_Log25MenRaids"] = true,                                          -- Track 25 player raids: true / nil (pre WoD-Raids)
+        ["Tracking_LogLFRRaids"] = true,                                            -- Track LFR raids: true / nil (any)
+        ["Tracking_LogNormalRaids"] = true,                                         -- Track Normal raids (WoD+)
+        ["Tracking_LogHeroicRaids"] = true,                                         -- Track Heroic raids (WoD+)
+        ["Tracking_LogMythicRaids"] = true,                                         -- Track Mythic raids (WoD+)
         ["Tracking_LogAVRaids"] = false,                                            -- Track PvP raids: true / nil
         ["Tracking_LogWotLKRaids"] = false,                                         -- Track WotLK raid: true / nil
         ["Tracking_LogCataclysmRaids"] = false,                                     -- Track Catacylsm raid: true / nil
         ["Tracking_LogMoPRaids"] = true,                                            -- Track MoP raid: true / nil
         ["Tracking_LogLootModePersonal"] = true,
         ["Tracking_AskForDKPValue"] = true,                                         -- 
+        ["Tracking_AskForDKPValuePersonal"] = true,                                 -- ask for points cost when in personal loot mode true/nil - not used when generic option is off
         ["Tracking_MinItemQualityToLog"] = 4,                                       -- 0:poor, 1:common, 2:uncommon, 3:rare, 4:epic, 5:legendary, 6:artifact
         ["Tracking_MinItemQualityToGetDKPValue"] = 4,                               -- 0:poor, 1:common, 2:uncommon, 3:rare, 4:epic, 5:legendary, 6:artifact
         ["Tracking_AskCostAutoFocus"] = 2,                                          -- 1: always AutoFocus, 2: when not in combat, 3: never
@@ -108,6 +121,7 @@ local LBBL = LBB:GetUnstrictLookupTable();
 local LBI = LibStub("LibBabble-Inventory-3.0");
 local LBIR = LBI:GetReverseLookupTable();
 local EPGPCalc = LibStub("LibEPGP-GPCalculator-1.0");
+local LibGP = LibStub("LibGearPoints-1.2");
 local ScrollingTable = LibStub("ScrollingTable");
 local tinsert = tinsert;
 local pairs = pairs;
@@ -141,6 +155,14 @@ local MRT_DKPFrame_DropDownTableColDef = {
     {["name"] = "", ["width"] = 100},
 };
 
+-- Table for boss yells
+for k, v in pairs(_L.yells) do
+    MRT_L.Bossyells[k] = {}
+    for k2, v2 in pairs(v) do
+        if (k2 == "Icecrown Gunship Battle Alliance") or (k2 == "Icecrown Gunship Battle Horde") then k2 = "Icecrown Gunship Battle"; end
+        MRT_L.Bossyells[k][v2] = k2
+    end
+end
 
 ----------------------
 --  RegisterEvents  --
@@ -151,20 +173,15 @@ function MRT_MainFrame_OnLoad(frame)
     frame:RegisterEvent("CHAT_MSG_WHISPER");
     frame:RegisterEvent("CHAT_MSG_MONSTER_YELL");
     frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-    if (uiVersion < 50001) then
-        frame:RegisterEvent("GROUP_ROSTER_UPDATE");
-    end
+    frame:RegisterEvent("ENCOUNTER_END");
     frame:RegisterEvent("PARTY_CONVERTED_TO_RAID");
     frame:RegisterEvent("PARTY_INVITE_REQUEST");
     frame:RegisterEvent("PARTY_LOOT_METHOD_CHANGED");
     frame:RegisterEvent("PLAYER_ENTERING_WORLD");
     frame:RegisterEvent("PLAYER_REGEN_DISABLED");
     frame:RegisterEvent("RAID_INSTANCE_WELCOME");
+    frame:RegisterEvent("RAID_ROSTER_UPDATE");
     frame:RegisterEvent("ZONE_CHANGED_NEW_AREA");
-    
-    if (uiVersion >= 50001) then
-        frame:RegisterEvent("RAID_ROSTER_UPDATE");
-    end
 end
 
 
@@ -213,6 +230,10 @@ function MRT_OnEvent(frame, event, ...)
     elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then 
         if (not MRT_Options["General_MasterEnable"]) then return end;
         MRT_CombatLogHandler(...);
+        
+    elseif (event == "ENCOUNTER_END") then
+        local encounterID, name, difficulty, size, success = ...
+        MRT_Debug("ENCOUNTER_END fired! encounterID="..encounterID..", name="..name..", difficulty="..difficulty..", size="..size..", success="..success)
     
     elseif (event == "GUILD_ROSTER_UPDATE") then 
         MRT_GuildRosterUpdate(frame, event, ...);
@@ -258,6 +279,14 @@ function MRT_OnEvent(frame, event, ...)
             return; 
         end;
         MRT_CheckZoneAndSizeStatus();
+        
+    elseif (event == "RAID_ROSTER_UPDATE") then
+        MRT_Debug("RAID_ROSTER_UPDATE fired!");
+        if (MRT_UnknownRelogStatus) then
+            MRT_UnknownRelogStatus = false;
+            MRT_CheckRaidStatusAfterLogin();
+        end
+        MRT_RaidRosterUpdate(frame);
     
     elseif (event == "ZONE_CHANGED_NEW_AREA") then
         MRT_Debug("Event ZONE_CHANGED_NEW_AREA fired.");
@@ -281,14 +310,6 @@ function MRT_OnEvent(frame, event, ...)
         wipe(MRT_ArrayBossID)
         --MRT_Debug("Tabelle gelöscht");
     
-    elseif (event == "GROUP_ROSTER_UPDATE" or event == "RAID_ROSTER_UPDATE") then
-        MRT_Debug("GROUP_ROSTER_UPDATE or RAID_ROSTER_UPDATE fired!");
-        if (MRT_UnknownRelogStatus) then
-            MRT_UnknownRelogStatus = false;
-            MRT_CheckRaidStatusAfterLogin();
-        end
-        MRT_RaidRosterUpdate(frame);
-    
     end
 end
 
@@ -302,17 +323,7 @@ end
 
 -- Combatlog handler
 function MRT_CombatLogHandler(...)
-    local combatEvent, destGUID, destName, spellID;
-    if (uiVersion < 40100) then
-        -- WoW client previous to 4.1.0 (China)
-        _, combatEvent, _, _, _, destGUID, destName, _, spellID = ...;
-    elseif (uiVersion < 40200) then
-        -- WoW client = 4.1.0
-        _, combatEvent, _, _, _, _, destGUID, destName, _, spellID = ...;
-    else
-        -- WoW client >= 4.2.0
-        _, combatEvent, _, _, _, _, _, destGUID, destName, _, _, spellID = ...;
-    end
+    local _, combatEvent, _, _, _, _, _, destGUID, destName, _, _, spellID = ...;
     if (not MRT_NumOfCurrentRaid) then return; end
     if (combatEvent == "UNIT_DIED") then
         local englishBossName;
@@ -343,7 +354,7 @@ function MRT_CombatLogHandler(...)
         end
     end
     if (combatEvent == "SPELL_CAST_SUCCESS") then
-        MRT_Debug("SPELL_CAST_SUCCESS event found - SpellID is " .. spellID);
+        -- MRT_Debug("SPELL_CAST_SUCCESS event found - SpellID is " .. spellID);
     end
     if (combatEvent == "SPELL_CAST_SUCCESS" and MRT_BossSpellIDTriggerList[spellID]) then
         MRT_Debug("Matching SpellID in trigger list found - Processing...");
@@ -589,6 +600,17 @@ function MRT_UpdateSavedOptions()
         MRT_Options["Tracking_LogLootModePersonal"] = true;
         MRT_Options["General_OptionsVersion"] = 15;
     end
+    if MRT_Options["General_OptionsVersion"] == 15 then
+        MRT_Options["Tracking_Log25MenRaids"] = true;
+        MRT_Options["Tracking_LogNormalRaids"] = true;
+        MRT_Options["Tracking_LogHeroicRaids"] = true;
+        MRT_Options["Tracking_LogMythicRaids"] = true;
+        MRT_Options["General_OptionsVersion"] = 16;
+    end
+    if MRT_Options["General_OptionsVersion"] == 16 then
+        MRT_Options["Tracking_AskForDKPValuePersonal"] = true;
+        MRT_Options["General_OptionsVersion"] = 17;
+    end
 end
 
 
@@ -660,6 +682,36 @@ function MRT_VersionUpdate()
             end
         end
         MRT_Options["DB_Version"] = 2;
+    end
+    -- DB changes from v.2 to v.3: 
+    -- * Update from 3.4 difficulty IDs to 6.0 difficulty IDs
+    -- * Add raid difficulty IDs to raid entries
+    -- * Fix LFR (ID 17) entries
+    if (MRT_Options["DB_Version"] == 2) then
+        if (#MRT_RaidLog > 0) then
+            for i, raidInfoTable in ipairs(MRT_RaidLog) do
+                if (raidInfoTable["RaidSize"] == 10) then
+                    raidInfoTable["DiffID"] = 3;
+                elseif (raidInfoTable["RaidSize"] == 25) then
+                    raidInfoTable["DiffID"] = 4;
+                end
+                for j, bossInfo in ipairs(raidInfoTable["Bosskills"]) do
+                    if (not bossInfo["Difficulty"]) then
+                        raidInfoTable["DiffID"] = 17;
+                        bossInfo["Difficulty"] = 17;
+                    elseif (bossInfo["Difficulty"] == 1) then
+                        bossInfo["Difficulty"] = 3;
+                    elseif (bossInfo["Difficulty"] == 2) then
+                        bossInfo["Difficulty"] = 4;
+                    elseif (bossInfo["Difficulty"] == 3) then
+                        bossInfo["Difficulty"] = 5;
+                    elseif (bossInfo["Difficulty"] == 4) then
+                        bossInfo["Difficulty"] = 6;
+                    end
+                end
+            end
+        end
+        MRT_Options["DB_Version"] = 3;
     end
 end
 
@@ -808,31 +860,18 @@ end
 
 function MRT_CheckZoneAndSizeStatus()
     -- Use GetInstanceInfo() for informations about the zone! / Track bossdifficulty at bosskill (important for ICC)
-    local _, instanceInfoType, instanceInfoDifficulty = MRT_GetInstanceInfo();
+    local _, instanceInfoType, diffID, diffDesc, maxPlayers, _, _, iniMapID, iniGroupSize = MRT_GetInstanceInfo();
+    if (not diffID) then return; end
     local areaID = GetCurrentMapAreaID();
     if (not areaID) then return; end
     local localInstanceInfoName = GetMapNameByID(areaID);
     if (not localInstanceInfoName) then return; end
-    local instanceInfoDifficulty2 = MRT_GetInstanceDifficulty();
-    if (not instanceInfoDifficulty2) then return; end
-    MRT_Debug("MRT_CheckZoneAndSizeStatus called - data: Name="..localInstanceInfoName.." / ID=" ..areaID.." / Type="..instanceInfoType.." / InfoDiff="..instanceInfoDifficulty.." / GetInstanceDiff="..instanceInfoDifficulty2);
+    MRT_Debug("MRT_CheckZoneAndSizeStatus called - data: Name="..localInstanceInfoName.." / areaID=" ..areaID.." / Type="..instanceInfoType.." / diffDesc="..diffDesc.." / diffID="..diffID);
+    -- For legacy 10 N/H and 25 N/H raids, difficulty is tracked at boss killtime, as those difficulties have a shared ID
+    -- Thus, handle diffID 5 as 3 and 6 as 2
+    if (diffID == 5) then diffID = 3; end
+    if (diffID == 6) then diffID = 4; end
     if (MRT_RaidZones[areaID]) then
-        if (uiVersion >= 40300) then
-            local isInLFG = nil;
-            if (uiVersion >= 50001) then
-                _, isInLFG = GetLFGInfoServer(LE_LFG_CATEGORY_RF);
-                if not isInLFG then
-                    _, isInLFG = GetLFGInfoServer(LE_LFG_CATEGORY_LFR);
-                end
-            else
-                _, isInLFG = GetLFGInfoServer();
-            end
-            if (MRT_IsInRaid() and isInLFG and not MRT_Options["Tracking_LogLFRRaids"]) then
-                MRT_Debug("This instance is an LFR-Raid and tracking of those is disabled.");
-                if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
-                return;
-            end
-        end
         -- Check if the current raidZone is a zone which should be tracked
         if (MRT_PvPRaids[areaID] and not MRT_Options["Tracking_LogAVRaids"]) then 
             MRT_Debug("This instance is a PvP-Raid and tracking of those is disabled.");
@@ -860,104 +899,72 @@ function MRT_CheckZoneAndSizeStatus()
             if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
             return;
         end
-        -- Check tracking status
-        MRT_CheckTrackingStatus(localInstanceInfoName, instanceInfoDifficulty2);
+        -- Check if current raid size should be tracked
+        if (diffID == 3 and not MRT_Options["Tracking_Log10MenRaids"]) then
+            MRT_Debug("This instance is a 10 player legacy raid and tracking of those is disabled.");
+            if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
+            return;
+        end
+        if (diffID == 4 and not MRT_Options["Tracking_Log25MenRaids"]) then
+            MRT_Debug("This instance is a 25 player legacy raid and tracking of those is disabled.");
+            if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
+            return;
+        end
+        if ((diffID == 7 or diffID == 17) and not MRT_Options["Tracking_LogLFRRaids"]) then
+            MRT_Debug("This instance is a LFR-Raid and tracking of those is disabled.");
+            if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
+            return;
+        end
+        if (diffID == 14 and not MRT_Options["Tracking_LogNormalRaids"]) then
+            MRT_Debug("This instance is a WoD or later normal mode raid and tracking of those is disabled.");
+            if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
+            return;
+        end
+        if (diffID == 15 and not MRT_Options["Tracking_LogHeroicRaids"]) then
+            MRT_Debug("This instance is a WoD or later heroic mode raid and tracking of those is disabled.");
+            if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
+            return;
+        end
+        if (diffID == 16 and not MRT_Options["Tracking_LogMythicRaids"]) then
+            MRT_Debug("This instance is a WoD or later mythic mode raid and tracking of those is disabled.");
+            if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
+            return;
+        end
+        -- At this point, we should have something that should be tracked.
+        -- If there is no active raid, just start one
+        if (not MRT_NumOfCurrentRaid) then
+            MRT_Debug("Start tracking a new instance - Name="..localInstanceInfoName.." / maxPlayers="..maxPlayers.." / diffID="..diffID);
+            MRT_CreateNewRaid(localInstanceInfoName, maxPlayers, diffID);
+            return;
+        end
+        -- There is an active raid, check if diffID changed, if yes, start a new raid
+        if (MRT_RaidLog[MRT_NumOfCurrentRaid]["DiffID"] ~= diffID) then
+            MRT_Debug("Start tracking a new instance - Name="..localInstanceInfoName.." / maxPlayers="..maxPlayers.." / diffID="..diffID);
+            MRT_CreateNewRaid(localInstanceInfoName, maxPlayers, diffID);
+            return;
+        end
+        -- diffID not changed. If instance changed, check if auto create on new instance is on.
+        if ((MRT_RaidLog[MRT_NumOfCurrentRaid]["RaidZone"] ~= localInstanceInfoName) and MRT_Options["Tracking_CreateNewRaidOnNewZone"]) then
+            MRT_Debug("Start tracking a new instance - Name="..localInstanceInfoName.." / maxPlayers="..maxPlayers.." / diffID="..diffID);
+            MRT_CreateNewRaid(localInstanceInfoName, maxPlayers, diffID);
+            return;
+        end
     else
         MRT_Debug("This instance is not on the tracking list.");
     end
 end
 
-function MRT_CheckTrackingStatus(instanceInfoName, instanceInfoDifficulty)
-    -- Create a new raid entry if MRT_Raidzones match and MRT enabled and:
-    --  I) If no active raid and 10 player tracking enabled
-    --  if 10 player tracking disabled, check for 25 player
-    --  II) If changed from 10 men to 25 men
-    --  III) If changed from 25 men to 10 men (if 10men enabled - else close raid)
-    --  IV) If RaidZone changed and CreateNewRaidOnNewZone on
-    --  V) If RaidZone and RaidSize changed and CreateNewRaidOnNewZone off
-    MRT_Debug("Match in MRT_Raidzones from MRT_GetInstanceInfo() found.");
-    -- Case: No active raidtracking:
-    if (not MRT_NumOfCurrentRaid) then
-        if (MRT_Options["Tracking_Log10MenRaids"] and (instanceInfoDifficulty == 1 or instanceInfoDifficulty == 3)) then 
-            MRT_Debug("Start tracking a new 10 player raid...");
-            MRT_CreateNewRaid(instanceInfoName, 10);
-        elseif (instanceInfoDifficulty == 2 or instanceInfoDifficulty == 4) then
-            MRT_Debug("Start tracking a new 25 player raid...");
-            MRT_CreateNewRaid(instanceInfoName, 25);
-        end
-    -- Case: There is an active raid - no zone change
-    elseif (MRT_RaidLog[MRT_NumOfCurrentRaid]["RaidZone"] == instanceInfoName) then
-        MRT_Debug("Active raid in same zone found...");
-        -- Case: Active Raid is a 10 player raid -> 10 player raids tracking enabled
-        if (MRT_RaidLog[MRT_NumOfCurrentRaid]["RaidSize"] == 10) then
-            -- Case: same size as active raid
-            if (instanceInfoDifficulty == 1 or instanceInfoDifficulty == 3) then 
-                MRT_Debug("Nothing changed... CurrentRaid == ActiveRaid");
-                return;
-            -- Case: different size as active raid
-            else
-                MRT_Debug("Raidsize changed to 25 - creating new raid...");
-                MRT_CreateNewRaid(instanceInfoName, 25);
-            end
-        -- Case: Active Raid is a 25 player raid
-        elseif (MRT_RaidLog[MRT_NumOfCurrentRaid]["RaidSize"] == 25) then
-            -- Case: same size as active raid
-            if (instanceInfoDifficulty == 2 or instanceInfoDifficulty == 4) then 
-                MRT_Debug("Nothing changed... CurrentRaid == ActiveRaid");
-                return;
-            -- Case: different size as active raid
-            elseif (MRT_Options["Tracking_Log10MenRaids"]) then 
-                MRT_Debug("Raidsize changed to 10 - creating new raid...");
-                MRT_CreateNewRaid(instanceInfoName, 10);
-            else
-                MRT_Debug("Raidsize changed to 10, but 10 player tracking disabled - ending active raid...")
-                MRT_EndActiveRaid();
-            end
-        end
-    -- Case: There is an active raid and a zone change and MRT_Options["Tracking_CreateNewRaidOnNewZone"] is enabled:
-    elseif (MRT_Options["Tracking_CreateNewRaidOnNewZone"]) then
-        MRT_Debug("Active raid in different zone found...");
-        if (instanceInfoDifficulty == 2 or instanceInfoDifficulty == 4) then MRT_CreateNewRaid(instanceInfoName, 25);
-        elseif (MRT_Options["Tracking_Log10MenRaids"]) then MRT_CreateNewRaid(instanceInfoName, 10);
-        else MRT_EndActiveRaid();
-        end
-    -- Case: There is an active raid and a zone change and MRT_Options["Tracking_CreateNewRaidOnNewZone"] is disabled:
-    else
-        -- Case: Active Raid is a 10 player raid -> 10 player raids tracking enabled
-        if (MRT_RaidLog[MRT_NumOfCurrentRaid]["RaidSize"] == 10) then
-            -- Case: Zonechange and same raid size
-            if (instanceInfoDifficulty == 1 or instanceInfoDifficulty == 3) then
-                MRT_Debug("Raid zone changed. Raid size didn't change. CreateNewRaidOnNewZone is disabled. Won't create new raid.");
-                return;
-            else
-                MRT_Debug("Raid zone and raid size changed. Starting new raid.");
-                MRT_CreateNewRaid(instanceInfoName, 25);
-            end
-        -- Case: Active Raid is a 25 player raid
-        else
-            if (instanceInfoDifficulty == 2 or instanceInfoDifficulty == 4) then 
-                MRT_Debug("Raid zone changed. Raid size didn't change. CreateNewRaidOnNewZone is disabled. Won't create new raid.");
-                return;
-            -- Case: different size as active raid
-            elseif (MRT_Options["Tracking_Log10MenRaids"]) then
-                MRT_Debug("Raid zone and raid size changed. Starting new raid.");
-                MRT_CreateNewRaid(instanceInfoName, 10);
-            else
-                MRT_Debug("Raidsize changed to 10, but 10 player tracking disabled - ending active raid...")
-                MRT_EndActiveRaid();
-            end
-        end
-    end
-end
-
-function MRT_CreateNewRaid(zoneName, raidSize)
+function MRT_CreateNewRaid(zoneName, raidSize, diffID)
+    assert(zoneName, "Invalid argument: zoneName is nil.")
+    assert(raidSize, "Invalid argument: raidSize is nil.")
+    assert(diffID, "Invalid argument: diffID is nil.")
     if (MRT_NumOfCurrentRaid) then MRT_EndActiveRaid(); end
     local numRaidMembers = MRT_GetNumRaidMembers();
     local realm = GetRealmName();
     if (numRaidMembers == 0) then return; end
-    MRT_Debug("Creating new raid... - RaidZone is "..zoneName.." and RaidSize is "..tostring(raidSize));
+    MRT_Debug("Creating new raid... - RaidZone is "..zoneName..", RaidSize is "..tostring(raidSize).. " and diffID is "..tostring(diffID));
     local currentTime = MRT_GetCurrentTime();
-    local MRT_RaidInfo = {["Players"] = {}, ["Bosskills"] = {}, ["Loot"] = {}, ["RaidZone"] = zoneName, ["RaidSize"] = raidSize, ["Realm"] = GetRealmName(), ["StartTime"] = currentTime};
+    local MRT_RaidInfo = {["Players"] = {}, ["Bosskills"] = {}, ["Loot"] = {}, ["DiffID"] = diffID, ["RaidZone"] = zoneName, ["RaidSize"] = raidSize, ["Realm"] = GetRealmName(), ["StartTime"] = currentTime};
     MRT_Debug(tostring(numRaidMembers).." raidmembers found. Processing RaidRoster...");
     for i = 1, numRaidMembers do
         local playerName, _, playerSubGroup, playerLvl, playerClassL, playerClass, _, playerOnline = GetRaidRosterInfo(i);
@@ -980,7 +987,7 @@ function MRT_CreateNewRaid(zoneName, raidSize)
             ["Sex"] = playerSex,
             ["Guild"] = playerGuild,
         };
-        if ((playerOnline or MRT_Options["Attendance_TrackOffline"]) and (not MRT_Options["Attendance_GroupRestriction"] or (playerSubGroup <= 2 and raidSize == 10) or (playerSubGroup <= 5 and raidSize == 25))) then
+        if ((playerOnline or MRT_Options["Attendance_TrackOffline"]) and (not MRT_Options["Attendance_GroupRestriction"] or (playerSubGroup <= (raidSize / 5)))) then
             tinsert(MRT_RaidInfo["Players"], playerInfo);
         end
         if (MRT_PlayerDB[realm] == nil) then
@@ -1042,7 +1049,7 @@ function MRT_ResumeLastRaid()
         end
         MRT_PlayerDB[realm][playerName] = playerDBEntry;
         -- is this a valid attendee?
-        if ((playerOnline or MRT_Options["Attendance_TrackOffline"]) and (not MRT_Options["Attendance_GroupRestriction"] or (playerSubGroup <= 2 and raidSize == 10) or (playerSubGroup <= 5 and raidSize == 25))) then
+        if ((playerOnline or MRT_Options["Attendance_TrackOffline"]) and (not MRT_Options["Attendance_GroupRestriction"] or (playerSubGroup <= (raidSize / 5)))) then
             currentAttendeesList[playerName] = true;
         end
     end
@@ -1099,7 +1106,7 @@ function MRT_RaidRosterUpdate(frame)
         local playerName, _, playerSubGroup, playerLvl, playerClassL, playerClass, _, playerOnline = GetRaidRosterInfo(i);
         -- seems like there is a slight possibility, that playerName is not available - so check it
         if playerName then
-            if (playerOnline or MRT_Options["Attendance_TrackOffline"]) and (not MRT_Options["Attendance_GroupRestriction"] or (playerSubGroup <= 2 and raidSize == 10) or (playerSubGroup <= 5 and raidSize == 25)) then
+            if (playerOnline or MRT_Options["Attendance_TrackOffline"]) and (not MRT_Options["Attendance_GroupRestriction"] or (playerSubGroup <= (raidSize / 5))) then
                 tinsert(activePlayerList, playerName);
             end
             local playerInRaid = nil;
@@ -1108,7 +1115,7 @@ function MRT_RaidRosterUpdate(frame)
                     if(val["Leave"] == nil) then playerInRaid = true; end
                 end
             end
-            if ((playerInRaid == nil) and (playerOnline or MRT_Options["Attendance_TrackOffline"]) and (not MRT_Options["Attendance_GroupRestriction"] or (playerSubGroup <= 2 and raidSize == 10) or (playerSubGroup <= 5 and raidSize == 25))) then
+            if ((playerInRaid == nil) and (playerOnline or MRT_Options["Attendance_TrackOffline"]) and (not MRT_Options["Attendance_GroupRestriction"] or (playerSubGroup <= (raidSize / 5)))) then
                 MRT_Debug("New player found: "..playerName);
                 local UnitID = "raid"..tostring(i);
                 local playerRaceL, playerRace = UnitRace(UnitID);
@@ -1162,25 +1169,20 @@ end
 function MRT_AddBosskill(bossname, man_diff, bossID)
     if (not MRT_NumOfCurrentRaid) then return; end
     MRT_Debug("Adding bosskill to RaidLog[] - tracked boss: "..bossname);
-    local _, _, instanceDifficulty, _, _, dynDiff, isDyn = MRT_GetInstanceInfo();
+    local maxPlayers = MRT_RaidLog[MRT_NumOfCurrentRaid]["RaidSize"];
+    local _, _, diffID = MRT_GetInstanceInfo();
     if (man_diff) then
-        if (MRT_RaidLog[MRT_NumOfCurrentRaid]["RaidSize"] == 10) then
-            instanceDifficulty = 1;
-        else
-            instanceDifficulty = 2;
-        end;
-        if (man_diff == "H") then
-            instanceDifficulty = instanceDifficulty + 2;
-        end;
-    else
-        if (isDyn) then instanceDifficulty = instanceDifficulty + (2 * dynDiff); end;
-    end;
+        diffID = MRT_RaidLog[MRT_NumOfCurrentRaid]["DiffID"];
+        if (man_diff == "H" and (diffID == 3 or diffID == 4)) then
+            diffID = diffID + 2;
+        end
+    end
     local trackedPlayers = {};
     local numRaidMembers = MRT_GetNumRaidMembers();
     for i = 1, numRaidMembers do
         local playerName, _, playerSubGroup, _, _, _, _, playerOnline = GetRaidRosterInfo(i);
         -- check group number and group related tracking options
-        if (not MRT_Options["Attendance_GroupRestriction"] or (playerSubGroup <= 2 and (instanceDifficulty == 1 or instanceDifficulty == 3)) or (playerSubGroup <= 5 and (instanceDifficulty == 2 or instanceDifficulty == 4))) then
+        if (not MRT_Options["Attendance_GroupRestriction"] or (playerSubGroup <= (maxPlayers / 5))) then
             -- check online status and online status related tracking options
             if (MRT_Options["Attendance_TrackOffline"] or playerOnline == 1) then
                 tinsert(trackedPlayers, playerName);
@@ -1191,7 +1193,7 @@ function MRT_AddBosskill(bossname, man_diff, bossID)
         ["Players"] = trackedPlayers,
         ["Name"] = bossname,
         ["Date"] = MRT_GetCurrentTime(),
-        ["Difficulty"] = instanceDifficulty,
+        ["Difficulty"] = diffID,
         ["BossId"] = bossID,
     }
     tinsert(MRT_RaidLog[MRT_NumOfCurrentRaid]["Bosskills"], MRT_BossKillInfo);
@@ -1246,7 +1248,7 @@ function MRT_TakeSnapshot()
         MRT_Print(MRT_L.Core["TakeSnapshot_NotInRaidError"]);
         return false; 
     end
-    MRT_CreateNewRaid("Snapshot", 0);
+    MRT_CreateNewRaid("Snapshot", 40, 0);
     MRT_EndActiveRaid();
     MRT_Print(MRT_L.Core["TakeSnapshot_Done"]);
     return true;
@@ -1297,14 +1299,18 @@ function MRT_AutoAddLoot(chatmsg)
     local lootAction = nil;
     local itemNote = nil;
     local supressCostDialog = nil;
-    local GPValues, GPValueText, GPListType, GPList = nil, nil, nil, nil;
+    local gp1, gp2 = nil, nil;
     -- if EPGP GP system is enabled, get GP values
     if (MRT_Options["ItemTracking_UseEPGPValues"]) then
-        local realm = GetRealmName();
-        local lootClass = MRT_PlayerDB[realm][playerName]["Class"];
-        GPValues, GPValueText, GPListType, GPList = EPGPCalc:GetItemGP(itemLink, lootClass);
-        dkpValue = GPValues[1];
-        itemNote = GPValueText;
+        gp1, gp2 = LibGP:GetValue(itemLink);
+        if (not gp1) then
+            dkpValue = 0
+        elseif (not gp2) then
+            dkpValue = gp1
+        else
+            dkpValue = gp1
+            itemNote = string.format("%d or %d", gp1, gp2)
+        end
     end
     -- if an external function handles item data, notify it
     if (MRT_ExternalItemCostHandler.func) then
@@ -1354,7 +1360,10 @@ function MRT_AutoAddLoot(chatmsg)
         ["Note"] = itemNote,
     };
     tinsert(MRT_RaidLog[MRT_NumOfCurrentRaid]["Loot"], MRT_LootInfo);
-    if ((not MRT_Options["Tracking_AskForDKPValue"]) or supressCostDialog) then 
+    -- get current loot mode
+    local isPersonal = select(1, GetLootMethod()) == "personalloot"
+    -- check if we should ask the player for item cost
+    if (supressCostDialog or (not MRT_Options["Tracking_AskForDKPValue"]) or (isPersonal and not MRT_Options["Tracking_AskForDKPValuePersonal"])) then 
         -- notify registered, external functions
         local itemNum = #MRT_RaidLog[MRT_NumOfCurrentRaid]["Loot"];
         if (#MRT_ExternalLootNotifier > 0) then
@@ -1378,6 +1387,7 @@ function MRT_AutoAddLoot(chatmsg)
         return; 
     end
     if (MRT_Options["Tracking_MinItemQualityToGetDKPValue"] > MRT_ItemColorValues[itemColor]) then return; end
+    -- ask the player for item cost
     MRT_DKPFrame_AddToItemCostQueue(MRT_NumOfCurrentRaid, #MRT_RaidLog[MRT_NumOfCurrentRaid]["Loot"]);
 end
 
@@ -1490,7 +1500,7 @@ function MRT_DKPFrame_AskCost()
     else
         MRT_GetDKPValueFrame_EB:SetAutoFocus(true);
     end
-    -- show DKPValue
+    -- show DKPValue Frame
     MRT_GetDKPValueFrame:Show();  
 end
 
@@ -1806,67 +1816,31 @@ end
 
 -- Adding generic function for counting raid members in order to deal with WoW MoP changes
 function MRT_GetNumRaidMembers()
-    if (uiVersion < 50001) then
-        return GetNumRaidMembers();
+    if (IsInRaid()) then
+        return GetNumGroupMembers();
     else
-        if (IsInRaid()) then
-            return GetNumGroupMembers();
-        else
-            return 0;
-        end
+        return 0;
     end
 end
 
 -- Adding generic function in order to deal with WoW MoP changes (to ensure backwards compatibility)
 function MRT_IsInRaid()
-    if (uiVersion < 50001) then
-        if (GetNumRaidMembers() > 0) then
-            return true;
-        else
-            return false;
-        end
-    else
-        return IsInRaid();
-    end
+    return IsInRaid();
 end
 
 function MRT_GetInstanceDifficulty()
-    if (uiVersion < 50001) then
-        -- legacy instance difficulty IDs, needs a big workaround for Draenor:
-        -- 1 = 5, 10 or 40 players normal
-        -- 2 = 5 or 25 players heroic
-        -- 3 = 10 players heroic
-        -- 4 = 25 players heroic
-        return GetInstanceDifficulty();
-    else
-        local _, _, iniDiff = GetInstanceInfo();
-        local iniDiffMapping = {
-            [0] = 0, -- fix check outside
-            [1] = 1,
-            [2] = 2,
-            [3] = 1,
-            [4] = 2,
-            [5] = 3,
-            [6] = 4,
-            [7] = 2,
-            [8] = 0,
-            [9] = 1,
-            [11] = 0,
-            [12] = 0,
-			[14] = 2,
-            [15] = 2,
-            [16] = 4,
-        };
-        return iniDiffMapping[iniDiff];
-    end
+    local _, _, iniDiff = GetInstanceInfo();
+    -- handle non instanced territories as 40 player raids
+    if (iniDiff == 0) then iniDiff = 9; end
+    return iniDiff
 end
 
 function MRT_GetInstanceInfo()
-    if (uiVersion < 50001) then
-        return GetInstanceInfo();
-    else
-        local inName, inType, _, diffName, mPlayers, dynDiff, isDynamic = GetInstanceInfo();
-        local diffIndex = MRT_GetInstanceDifficulty();
-        return inName, inType, diffIndex, diffName, mPlayers, dynDiff, isDynamic;
+    local name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceMapID, instanceGroupSize = GetInstanceInfo()
+    -- handle non instanced territories as 40 player raids
+    if (difficultyID == 0) then 
+        difficultyID = 9;
+        maxPlayers = 40;
     end
+    return name, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceMapID, instanceGroupSize
 end

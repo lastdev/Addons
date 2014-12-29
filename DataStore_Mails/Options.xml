@@ -28,7 +28,7 @@
 				</Scripts>
 			</Slider>
 
-			<CheckButton name="$parent_CheckMailExpiry" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton parentKey="CheckMailExpiry" inherits="InterfaceOptionsCheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
@@ -45,12 +45,12 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="$parent_ScanMailBody" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton parentKey="ScanMailBody" inherits="InterfaceOptionsCheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors> 
-					<Anchor point="TOP" relativeTo="$parent_CheckMailExpiry" relativePoint="BOTTOM" >
+					<Anchor point="TOP" relativeKey="$parent.CheckMailExpiry" relativePoint="BOTTOM" >
 						<Offset>
 							<AbsDimension  x="0" y="-10"/>
 						</Offset>
@@ -62,12 +62,12 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="$parent_CheckMailExpiryAllAccounts" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton parentKey="CheckMailExpiryAllAccounts" inherits="InterfaceOptionsCheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors> 
-					<Anchor point="TOP" relativeTo="$parent_ScanMailBody" relativePoint="BOTTOM" >
+					<Anchor point="TOP" relativeKey="$parent.ScanMailBody" relativePoint="BOTTOM" >
 						<Offset>
 							<AbsDimension  x="0" y="-10"/>
 						</Offset>
@@ -79,12 +79,12 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="$parent_CheckMailExpiryAllRealms" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton parentKey="CheckMailExpiryAllRealms" inherits="InterfaceOptionsCheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors> 
-					<Anchor point="TOP" relativeTo="$parent_CheckMailExpiryAllAccounts" relativePoint="BOTTOM" >
+					<Anchor point="TOP" relativeKey="$parent.CheckMailExpiryAllAccounts" relativePoint="BOTTOM" >
 						<Offset>
 							<AbsDimension  x="0" y="-10"/>
 						</Offset>

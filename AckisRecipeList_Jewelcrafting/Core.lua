@@ -7,6 +7,11 @@ local _G = getfenv(0)
 local pairs = _G.pairs
 
 -------------------------------------------------------------------------------
+-- Constants
+-------------------------------------------------------------------------------
+local MODULE_VERSION = 1
+
+-------------------------------------------------------------------------------
 -- AddOn namespace.
 -------------------------------------------------------------------------------
 local FOLDER_NAME, private = ...
@@ -15,30 +20,20 @@ private.module_name = MODULE_NAME
 
 local LibStub = _G.LibStub
 local addon = LibStub("AceAddon-3.0"):GetAddon("Ackis Recipe List")
+
+if MODULE_VERSION ~= addon.SUPPORTED_MODULE_VERSION then
+	addon:SpawnModuleWrongVersionDialog({
+		moduleName = MODULE_NAME,
+		moduleVersion = MODULE_VERSION
+	})
+	return
+end
+
 private.addon = addon
 
 local module = addon:NewModule(MODULE_NAME)
-
-module.ITEM_FILTER_TYPES = {
-	JEWELCRAFTING_CREATED_ITEM = true,
-	JEWELCRAFTING_FIST_WEAPON = true,
-	JEWELCRAFTING_HEAD = true,
-	JEWELCRAFTING_MATERIALS = true,
-	JEWELCRAFTING_NECK = true,
-	JEWELCRAFTING_RING = true,
-	JEWELCRAFTING_TRINKET = true,
-	JEWELCRAFTING_GEM_BLUE = true,
-	JEWELCRAFTING_GEM_GREEN = true,
-	JEWELCRAFTING_GEM_META = true,
-	JEWELCRAFTING_GEM_ORANGE = true,
-	JEWELCRAFTING_GEM_PRISMATIC = true,
-	JEWELCRAFTING_GEM_PURPLE = true,
-	JEWELCRAFTING_GEM_RED = true,
-	JEWELCRAFTING_GEM_YELLOW = true,
-	JEWELCRAFTING_MOUNT = true,
-	JEWELCRAFTING_PET = true,
-	JEWELCRAFTING_ITEM_ENHANCEMENT = true,
-}
+module.Version = MODULE_VERSION
+module.Name  = FOLDER_NAME
 
 function module:OnInitialize()
 	local defaults = {

@@ -1,0 +1,72 @@
+------------------------------------------------------------------------
+r1126 | nevcairiel | 2014-11-10 06:38:01 +0000 (Mon, 10 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/AceConfig-3.0/AceConfigDialog-3.0/AceConfigDialog-3.0.lua
+   M /trunk/AceGUI-3.0/widgets/AceGUIContainer-TreeGroup.lua
+
+Use true/false in GameTooltip:SetText/AddLine instead of 1/0
+------------------------------------------------------------------------
+r1125 | nevcairiel | 2014-11-01 07:35:29 +0000 (Sat, 01 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/Bindings.xml
+
+Add the "AddOns" category to the ReloadUI binding
+------------------------------------------------------------------------
+r1124 | funkydude | 2014-10-27 21:00:07 +0000 (Mon, 27 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/AceDB-3.0/AceDB-3.0.lua
+
+AceDB: remove pre-v6 fallback for GetCurrentRegion, all regions are on v6 now.
+------------------------------------------------------------------------
+r1123 | nevcairiel | 2014-10-14 19:48:04 +0000 (Tue, 14 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/AceDB-3.0/AceDB-3.0.lua
+
+AceDB-3.0: Fix whitespace
+------------------------------------------------------------------------
+r1121 | nevcairiel | 2014-10-14 17:27:09 +0000 (Tue, 14 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/changelog.txt
+
+Update changelog
+------------------------------------------------------------------------
+r1120 | nevcairiel | 2014-10-14 17:24:10 +0000 (Tue, 14 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/Ace3.toc
+
+Update TOC for 6.0
+------------------------------------------------------------------------
+r1119 | nevcairiel | 2014-10-14 17:23:29 +0000 (Tue, 14 Oct 2014) | 4 lines
+Changed paths:
+   M /trunk/AceTimer-3.0/AceTimer-3.0.lua
+
+AceTimer-3.0: New timer implementation based on C_Timer.After
+
+Old timers will be properly cleaned up and migrated.
+Requires WoW 6.0
+------------------------------------------------------------------------
+r1118 | nevcairiel | 2014-10-12 08:21:54 +0000 (Sun, 12 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/AceHook-3.0/AceHook-3.0.lua
+
+AceHook-3.0: Remove superfluous condition
+------------------------------------------------------------------------
+r1117 | nevcairiel | 2014-10-12 08:19:16 +0000 (Sun, 12 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/AceHook-3.0/AceHook-3.0.lua
+
+AceHook-3.0: Always use HookScript when hooking scripts in a secure fashion (Ticket #338)
+------------------------------------------------------------------------
+r1116 | nevcairiel | 2014-10-12 08:15:46 +0000 (Sun, 12 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/AceGUI-3.0/widgets/AceGUIWidget-DropDown.lua
+
+AceGUI-3.0: DropDown: Properly disable all clickable areas when the dropdown is disabled (Ticket #360)
+------------------------------------------------------------------------
+r1115 | kaelten | 2014-09-21 11:52:35 +0000 (Sun, 21 Sep 2014) | 2 lines
+Changed paths:
+   M /trunk/AceDB-3.0/AceDB-3.0.lua
+
+Updating AceDB to use a new API (GetCurrentRegion) to generate accurate regionKeys for profile names for WoD.
+
+------------------------------------------------------------------------

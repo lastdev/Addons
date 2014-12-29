@@ -3,10 +3,10 @@
 Scanner.lua
 Vendor/trainer scanning for Ackis Recipe List.
 ************************************************************************
-File date: 2014-10-14T01:43:23Z
-File hash: e76b354
-Project hash: 0b1c7cf
-Project version: 3.0.11
+File date: 2014-12-14T16:48:18Z
+File hash: 87d43b2
+Project hash: a4cd6d6
+Project version: 3.0.12
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -1107,7 +1107,15 @@ do
 				L[vendor_name] = true
 			end
 			_G.SetMapToCurrentZone() -- Make sure were are looking at the right zone
-			vendor_acquire_type:AddEntity(vendor_id, L[vendor_name], _G.GetRealZoneText(), vendor_x, vendor_y, _G.UnitFactionGroup("target") or "Neutral")
+
+			vendor_acquire_type:AddEntity(addon, {
+				coord_x = vendor_x,
+				coord_y = vendor_y,
+				faction = _G.UnitFactionGroup("target") or "Neutral",
+				identifier = vendor_id,
+				location = _G.GetRealZoneText(),
+				name = L[vendor_name],
+			})
 		end
 
 		if matching_vendor and vendor_entry and vendor_entry.item_list then

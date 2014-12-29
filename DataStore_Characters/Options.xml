@@ -1,12 +1,12 @@
 ﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Options.lua"></Script>
 
-	<Frame name="DataStoreCharactersOptions" hidden="true">
+	<Frame parentKey="CharactersOptions" parent="DataStoreFrames" hidden="true">
 		<Size>
 			<AbsDimension x="615" y="306"/>
 		</Size>
 		<Frames>
-			<CheckButton name="$parent_RequestPlayTime" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton parentKey="RequestPlayTime" inherits="InterfaceOptionsCheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
@@ -23,12 +23,12 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="$parent_HideRealPlayTime" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton parentKey="HideRealPlayTime" inherits="InterfaceOptionsCheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors> 
-					<Anchor point="TOP" relativeTo="$parent_RequestPlayTime" relativePoint="BOTTOM" >
+					<Anchor point="TOP" relativeKey="$parent.RequestPlayTime" relativePoint="BOTTOM" >
 						<Offset>
 							<AbsDimension  x="0" y="-10"/>
 						</Offset>

@@ -2,14 +2,21 @@ local addonName, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
-local bcm = a.BCM
+local x = s.UpdatedVariables
 
+local UnitSpellHaste = UnitSpellHaste
 local GetPowerRegen = GetPowerRegen
+local UnitLevel = UnitLevel
 local GetTime = GetTime
-local math = math
+local min = math.min
+local max = math.max
+local ceil = math.ceil
 local select = select
 local string = string
 local tostring = tostring
+local unpack = unpack
+
+local rotation
 
 a.LastRuneCast = 0
 
@@ -18,45 +25,63 @@ local function processCast(info)
       a.LastRuneCast = GetTime()
       c.Debug("Event", "Rune of Power cast")
    end
+
+   if c.InfoMatches(info, "Prismatic Crystal") then
+      a.PrismaticCrystalCast = GetTime()
+   end
 end
 
 a.Rotations = {}
 
+a.PrismaticCrystalCast = 0
+
 function a.PreFlash()
-   bcm.UpdateVisibility()
+   a.SpellHaste = 1 + UnitSpellHaste("player") / 100
 
    local mana = c.GetPower(select(2, GetPowerRegen()))
    a.ManaPercent = mana / s.MaxPower("player") * 100
+
    a.AlterTime = c.HasBuff("Alter Time", false, false, true)
+
    a.FloesStack = c.GetBuffStack("Ice Floes")
    if c.IsCasting("Ice Floes") then
       a.FloesStack = a.FloesStack + 1
    end
+
    a.Presence = c.HasBuff("Presence of Mind", false, false, true)
+
    if c.IsCasting(
       "Arcane Blast",
       "Arcane Missiles",
       "Flamestrike",
       "Frostfire Bolt",
-      "Frostbolt") then
-
+      "Frostbolt")
+   then
       a.FloesStack = a.FloesStack - 1
       a.Presence = false
    end
+
+   a.HasPrismaticCrystal = c.HasTalent("Prismatic Crystal")
+   a.PrismaticCrystalRemains = (a.PrismaticCrystalCast + 12) - GetTime()
+
+   if a.PrismaticCrystalRemains > 0 then
+      a.PrismaticCrystal = true
+   else
+      a.PrismaticCrystal = false
+      a.PrismaticCrystalRemains = 0
+   end
+
+   local _, targetID = s.UnitInfo("target")
+   -- 76933 is "Prismatic Crystal", FWIW.
+   a.TargettingCrystal = (targetID == 76933)
 end
 
-s.AddSettingsListener(
-   function()
-      bcm.UpdateVisibility()
-   end
-)
-
 ------------------------------------------------------------------------ Arcane
-local chargeStart
+local chargeStart = 0
 
 local function bumpChargesAt(time)
    if time - chargeStart < 10 then
-      a.ChargeStacks = math.min(4, a.ChargeStacks + 1)
+      a.ChargeStacks = min(4, a.ChargeStacks + 1)
    else
       a.ChargeStacks = 1
    end
@@ -64,11 +89,13 @@ local function bumpChargesAt(time)
 end
 
 a.Rotations.Arcane = {
+   Warning = "The Arcane rotation should work, but is not tested above ~ level 60.  Prismatic Crystal support is not yet implemented.  Please file tickets for any other issues.",
+
    Spec = 1,
 
-   UsefulStats = { "Intellect", "Spell Hit", "Crit", "Haste" },
+   UsefulStats = { "Intellect", "Mastery", "Multistrike", "Haste", "Crit" },
 
-   FlashInCombat = function()
+   PreFlash = function()
       a.ChargeStacks = s.DebuffStack(c.GetID("Arcane Charge"), "player")
       chargeStart = GetTime()
          + s.DebuffDuration(c.GetID("Arcane Charge"), "player")
@@ -102,7 +129,7 @@ a.Rotations.Arcane = {
       if a.ChargeStacks == 0 then
          a.ChargeDuration = 0
       else
-         a.ChargeDuration = math.max(
+         a.ChargeDuration = max(
             0, chargeStart + 10 - GetTime() - c.GetBusyTime())
          if a.ChargeDuration == 0 then
             a.ChargeStacks = 0
@@ -112,43 +139,110 @@ a.Rotations.Arcane = {
       a.ArcanePowerCD = c.GetCooldown("Arcane Power", false, 90)
 
       a.ArcanePower = c.HasBuff("Arcane Power", false, false, true)
+      a.ArcanePowerDuration = c.GetBuffDuration("Arcane Power")
+   end,
+
+   RotationCrystalInit = {
+      -- # Conditions for initiating Prismatic Crystal
+      -- actions.init_crystal=call_action_list,name=conserve,if=buff.arcane_charge.stack<4
+      -- actions.init_crystal+=/prismatic_crystal,if=buff.arcane_charge.stack=4&cooldown.arcane_power.remains<0.5
+      -- actions.init_crystal+=/prismatic_crystal,if=glyph.arcane_power.enabled&buff.arcane_charge.stack=4&cooldown.arcane_power.remains>45
+   },
+
+   RotationCrystalActive = {
+      -- # Actions while Prismatic Crystal is active
+      -- actions.crystal_sequence+=/nether_tempest,if=buff.arcane_charge.stack=4&!ticking&pet.prismatic_crystal.remains>8
+      -- actions.crystal_sequence+=/call_action_list,name=burn
+   },
+
+   RotationAoE = {
+      -- # AoE sequence
+      "Nether Tempest with 4 Arcane Charges",
+      "Supernova",
+      "Arcane Barrage with 4 Arcane Charges",
+      "Arcane Orb with < 4 Arcane Charges",
+      "Cone of Cold Glyphed",
+      "Arcane Explosion"
+   },
+
+   -- High mana usage, "burn" sequence, also level < 80
+   RotationBurn = {
+      "Arcane Missiles with 3 Arcane Missiles",
+      "Supernova High Priority",
+      "Nether Tempest with 4 Arcane Charges",
+      "Arcane Orb with < 4 Arcane Charges",
+      "Supernova on Prismatic Crystal",
+      "Presence of Mind >= 96",
+      "Arcane Blast at 4 stacks",
+      "Arcane Missiles with 4 Arcane Charges",
+      "Supernova with mana < 96",
+      -- # APL hack for evocation interrupt
+      -- actions.burn+=/call_action_list,name=conserve,if=cooldown.evocation.duration-cooldown.evocation.remains<5
+      -- actions.burn+=/evocation,interrupt_if=mana.pct>92,if=time_to_die>10&mana.pct<50
+      "Evocation for Arcane",
+      "Evocation Interrupt",
+      "Presence of Mind",
+      "Arcane Blast"
+   },
+
+   RotationConserve = {
+      "Arcane Missiles with 3 Arcane Missiles",
+      "Nether Tempest with 4 Arcane Charges",
+      "Supernova High Priority",
+      "Arcane Orb with < 2 Arcane Charges",
+      "Presence of Mind >= 96",
+      "Arcane Blast at 4 stacks",
+      "Arcane Missiles with 4 Arcane Charges",
+      "Supernova Low Priority",
+      "Nether Tempest Early",
+      "Arcane Barrage with 4 Arcane Charges",
+      "Presence of Mind low priority",
+      "Arcane Blast",
+   },
+
+   FlashInCombat = function()
+      local crystal = c.HasTalent("Prismatic Crystal")
+
+      -- If we are less than level 80, there is no value to conserving mana,
+      -- because that is tied to our mastery, which kicks in at 80...
+      --
+      -- time_to_die<mana.pct*0.35*spell_haste
+      local burn = UnitLevel("player") < 80
+         or c.GetCooldown("Evocation") <=
+         (a.ManaPercent - 30) * (a.ArcanePower and 0.4 or 0.3) * a.SpellHaste
 
       c.FlashAll(
          "Arcane Power",
-         "Presence of Mind before AT",
-         "Alter Time for Arcane",
-         "Rune of Power",
-         "Evocation for Arcane",
-         "Evocation Interrupt",
-         "Mirror Image",
-         "Mana Gem",
-         "Brilliant Mana Gem",
-         "Cold Snap",
          "Counterspell",
-         "Spellsteal")
-      if c.AoE then
-         c.PriorityFlash(
-            "Nether Tempest",
-            "Living Bomb",
-            "Frost Bomb",
-            "Presence of Mind before Flamestrike",
-            "Flamestrike",
-            "Arcane Explosion",
-            "Arcane Barrage for AoE",
-            "Arcane Missiles for AoE",
-            "Arcane Blast")
+         -- blink,if=movement.distance>10
+         -- blazing_speed,if=movement.remains>0
+         -- ice_floes,if=buff.ice_floes.down&(raid_event.movement.distance>0|raid_event.movement.in<action.arcane_missiles.cast_time)
+         "Cold Snap",
+         "Spellsteal"
+      )
+
+      -- if crystal and a.PrismaticCrystal then
+      --    local rotation = a.Rotations.Arcane.ArcanePrismaticCrystal
+      -- elseif cristal and c.GetCooldown("Prismatic Crystal") <= 0 then
+      --    local rotation = a.Rotations.Arcane.ArcanePrismaticInit
+      -- else
+      if c.EstimatedHarmTargets >= 4 then
+         rotation = a.Rotations.Arcane.RotationAoE
+      elseif burn then
+         rotation = a.Rotations.Arcane.RotationBurn
       else
-         c.PriorityFlash(
-            "Arcane Barrage if Losing Stacks",
-            "Nether Tempest",
-            "Living Bomb",
-            "Frost Bomb",
-            "Arcane Blast with Profound Magic",
-            "Arcane Missiles",
-            "Arcane Barrage",
-            "Presence of Mind before AB",
-            "Arcane Blast")
+         rotation = a.Rotations.Arcane.RotationConserve
       end
+
+      c.DelayPriorityFlash(
+         "Cold Snap if health <= 30",
+         "Time Warp",
+         "Rune of Power",
+         "Mirror Image",
+         "Cold Snap for Presence of Mind",
+         -- must be the last line for this to work.
+         unpack(rotation)
+      )
    end,
 
    MovementFallthrough = function()
@@ -160,16 +254,19 @@ a.Rotations.Arcane = {
    end,
 
    FlashOutOfCombat = function()
-      c.FlashAll(
-         "Conjure Mana Gem",
-         "Evocation for Health",
-         "Evocation for Invoker's Energy Pre-Combat",
-         "Rune of Power Pre-Combat")
+      if x.EnemyDetected then
+         c.DelayPriorityFlash(
+            "Evocation for Arcane",
+            "Rune of Power",
+            "Mirror Image",
+            "Rune of Power",
+            "Arcane Blast"
+         )
+      end
    end,
 
    FlashAlways = function()
       c.FlashAll(
-         "Mage Armor",
          "Arcane Brilliance",
          "Dalaran Brilliance",
          "Ice Barrier")
@@ -210,23 +307,33 @@ local function applyFireProc()
    end
 end
 
+local pyroChain = false
+
+local function pyroStacked(GCDs, fireball_in_flight)
+   return a.combustionCD < c.LastGCD * GCDs
+      and a.PyroProc
+      and a.HeatingProc
+      and (a.FireballInFlight or not fireball_in_flight)
+end
+
 a.Rotations.Fire = {
+   Warning = "The Fire rotation is updated for WoD, but only tested to 60.  This will change soon.  Please be patient.",
+
    Spec = 2,
 
-   UsefulStats = { "Intellect", "Spell Hit", "Crit", "Haste" },
+   UsefulStats = { "Intellect", "Crit", "Mastery", "Multistrike", "Haste" },
 
-   FlashInCombat = function()
-
+   PreFlash = function()
       -- Manage Pyroblast! and Heating Up
       a.HeatingProc = c.HasBuff("Heating Up")
       a.PyroProc = c.HasBuff("Pyroblast!")
-str = "(" .. (a.HeatingProc and "true" or "false") .. "," .. (a.PyroProc and "true" or "false") .. ")->"
+      str = "(" .. (a.HeatingProc and "true" or "false") .. "," .. (a.PyroProc and "true" or "false") .. ")->"
       if pendingBlast or c.IsCastingOrInAir("Inferno Blast") then
-str = str .. "pendingBlast->"
+         str = str .. "pendingBlast->"
          applyFireProc()
       end
       if pendingNaturalCrit then
-str = str .. "naturalCrit->"
+         str = str .. "naturalCrit->"
          applyFireProc()
       end
       if a.HeatingProc then
@@ -236,70 +343,175 @@ str = str .. "naturalCrit->"
             or c.CountLandings("Pyroblast", -3, endDelay, false) > 0
             or c.CountLandings("Frostfire Bolt", -3, endDelay, false) > 0
             or c.CountLandings("Scorch", -3, endDelay, false) > 0
-            or c.IsCastingOrInAir("Combustion") then
+         or c.IsCastingOrInAir("Combustion") then
 
-str = str .. "landingDirties->"
+            str = str .. "landingDirties->"
             a.HeatingProc = false
 
---c.Debug("dirty", endDelay,
---      GetTime() - consumerLandedAt < 1,
---      c.CountLandings("Fireball", -3, endDelay, false),
---      c.CountLandings("Pyroblast", -3, endDelay, false),
---      c.CountLandings("Frostfire Bolt", -3, endDelay, false),
---      c.CountLandings("Scorch", -3, endDelay, false),
---      c.IsCastingOrInAir("Combustion")
---)
+            --c.Debug("dirty", endDelay,
+            --      GetTime() - consumerLandedAt < 1,
+            --      c.CountLandings("Fireball", -3, endDelay, false),
+            --      c.CountLandings("Pyroblast", -3, endDelay, false),
+            --      c.CountLandings("Frostfire Bolt", -3, endDelay, false),
+            --      c.CountLandings("Scorch", -3, endDelay, false),
+            --      c.IsCastingOrInAir("Combustion")
+            --)
          end
       end
       if a.PyroProc and c.IsCasting("Pyroblast") then
-str = str .. "pyroConsume->"
+         str = str .. "pyroConsume->"
          a.PyroProc = false
       end
 
-      -- Flash
+      a.FireballInFlight = c.IsCastingOrInAir("Fireball")
+
+      a.combustionCD = c.GetCooldown("Combustion")
+   end,
+
+   RotationCombust = {
+      "Prismatic Crystal",
+      -- /blood_fury
+      -- /berserking
+      -- /arcane_torrent
+      -- /potion,name=draenic_intellect
+      "Meteor Unconditionally",
+      "Pyroblast for T14 4PC",
+      "Fireball for DoT",
+      "Pyroblast with Pyroblast! or Pyromaniac",
+      "Inferno Blast with Meteor",
+      "Combustion"
+   },
+
+   RotationAoE = {
+      "Rune of Power for Fire",
+      "Mirror Image without Heating Up",
+      -- actions.aoe=inferno_blast,cycle_targets=1,if=(dot.combustion.ticking&active_dot.combustion<active_enemies)|(dot.pyroblast.ticking&active_dot.pyroblast<active_enemies)
+      -- simc "active talents" actions
+      "Meteor",
+      "Inferno Blast with Living Bomb",
+      "Living Bomb",
+      "Blast Wave",
+      -- simc "active talents" ends
+      "Pyroblast with Pyroblast! or Pyromaniac",
+      "Pyroblast when down",
+      "Cold Snap for Dragon's Breath",
+      "Dragon's Breath if Glyphed",
+      "Flamestrike"
+   },
+
+   RotationSingleTarget = {
+      "Inferno Blast with Prismatic Crystal",
+      "Pyroblast with Prismatic Crystal",
+      "Rune of Power for Fire",
+      "Mirror Image without Heating Up",
+      -- "Inferno Blast to spread", @todo danielp 2014-12-20: implement this!
+      "Pyroblast before expiration",
+      "Pyroblast for T14 4PC",
+      "Pyroblast when stacked",
+      "Inferno Blast without Pyroblast!",
+      -- simc "active talents" actions
+      "Meteor",
+      "Inferno Blast with Living Bomb",
+      "Living Bomb",
+      "Blast Wave",
+      -- simc "active talents" ends
+      "Inferno Blast with Pyroblast!",
+      "Pyroblast when solo",
+      "Fireball"
+   },
+
+   FlashInCombat = function()
       c.FlashAll(
-         "Combustion",
-         "Alter Time for Fire",
-         "Presence of Mind for Fire",
-         "Rune of Power for Fire",
-         "Evocation for Invoker's Energy for Fire",
-         "Cold Snap",
+         "Arcane Power",
          "Counterspell",
-         "Spellsteal")
-      c.PriorityFlash(
-         "Pyroblast",
-         "Inferno Blast",
-         "Mirror Image",
-         "Nether Tempest",
-         "Living Bomb",
-         "Frost Bomb",
-         "Evocation for Invoker's Energy at 5",
-         "Rune of Power at 5",
-         "Mana Gem at 10",
-         "Brilliant Mana Gem at 10",
-         "Evocation",
-         "Frostfire Bolt",
-         "Fireball")
+         -- blink,if=movement.distance>10
+         -- blazing_speed,if=movement.remains>0
+         "Cold Snap",
+         "Spellsteal"
+      )
+
+      -- can we prep a combustion combo, by talent choice.
+      if pyroChain then
+         if (a.combustionCD - c.GetBuffDuration("Combustion")) < 15 then
+            pyroChain = false
+         end
+      else
+         local pyromaniac = c.HasBuff("Pyromaniac")
+            and (a.combustionCD <
+                    ceil(c.GetBuffDuration("Pyromaniac") / c.LastGCD) * c.LastGCD)
+
+         if c.HasTalent("Meteor") then
+            pyroChain = (c.GetCooldown("Meteor") <= 0) and (pyroStacked(3) or pyromaniac)
+         elseif a.HasPrismaticCrystal then
+            local prismaticCD = c.GetCooldown("Prismatic Crystal")
+
+            pyroChain = (prismaticCD <= 0 and (pyroStacked(2) or pyromaniac))
+               or (c.HasGlyph("Combustion")
+                      and prismaticCD > 20
+                      and (pyroStacked(2, true) or pyromaniac))
+         else
+            pyroChain = pyroStacked(4, true)
+               or (pyromaniac and c.HasTalent("Kindling"))
+         end
+      end
+
+      if pyroChain then
+         rotation = a.Rotations.Fire.RotationCombust
+      elseif c.EstimatedHarmTargets >= 4 and not a.PrismaticCrystal then
+         -- prismatic crystal may be aoe, but we mostly single target the
+         -- crystal during it, so it is handler in the ST rotation.
+         rotation = a.Rotations.Fire.RotationAoE
+      else
+         rotation = a.Rotations.Fire.RotationSingleTarget
+      end
+
+      c.DelayPriorityFlash(
+         "Time Warp",
+         "Rune of Power",
+         unpack(rotation) -- must be last line.
+      )
+
+      -- -- Flash
+      -- c.FlashAll(
+      --    "Combustion",
+      --    "Alter Time for Fire",
+      --    "Presence of Mind for Fire",
+      --    "Rune of Power for Fire",
+      --    "Cold Snap",
+      --    "Counterspell",
+      --    "Spellsteal")
+      -- c.PriorityFlash(
+      --    "Pyroblast",
+      --    "Inferno Blast",
+      --    "Mirror Image",
+      --    "Nether Tempest",
+      --    "Living Bomb",
+      --    "Frost Bomb",
+      --    "Rune of Power at 5",
+      --    "Evocation",
+      --    "Frostfire Bolt",
+      --    "Fireball")
    end,
 
    MovementFallthrough = function()
-      c.FlashAll("Scorch")
+      c.FlashAll(
+         "Ice Floes",
+         "Scorch"
+      )
    end,
 
    FlashOutOfCombat = function()
       c.FlashAll(
-         "Conjure Mana Gem",
-         "Evocation for Health",
-         "Evocation for Invoker's Energy Pre-Combat",
-         "Rune of Power Pre-Combat")
+         "Rune of Power"
+      )
    end,
 
    FlashAlways = function()
       c.FlashAll(
-         "Molten Armor",
          "Arcane Brilliance",
          "Dalaran Brilliance",
-         "Ice Barrier")
+         "Ice Barrier"
+      )
    end,
 
    CastSucceeded = function(info)
@@ -351,10 +563,6 @@ str = str .. "pyroConsume->"
       end
    end,
 
-   LeftCombat = function()
-      bcm.UpdateVisibility()
-   end,
-
    ExtraDebugInfo = function()
       return string.format("%s (%s, %s)",
          str, tostring(not not a.HeatingProc), tostring(not not a.PyroProc))
@@ -362,117 +570,128 @@ str = str .. "pyroConsume->"
 }
 
 ------------------------------------------------------------------------- Frost
-local blizzFingerCount = -1
-a.FingerCount = blizzFingerCount
+a.FingerCount = c.GetBuffStack("Fingers of Frost")
 
 a.Rotations.Frost = {
+   Warning = "The Frost rotation is updated for WoD, but only tested to 60.  No Prismatic Crystal support yet.  This will change soon.  Please be patient.",
+
    Spec = 3,
    AoEColor = "pink",
 
-   UsefulStats = { "Intellect", "Spell Hit", "Crit", "Haste" },
+   UsefulStats = { "Intellect", "Multistrike", "Versatility", "Crit", "Mastery", "Haste" },
 
-   FlashInCombat = function()
+   PreFlash = function()
       a.BrainFreeze = c.HasBuff("Brain Freeze")
          and not c.IsCasting("Frostfire Bolt")
-      if c.HasGlyph("Icy Veins") then
-         a.VeinsID = c.GetID("Icy Veins Glyphed")
-      else
-         a.VeinsID = c.GetID("Icy Veins")
-      end
-      a.VeinsCD = c.GetCooldown(a.VeinsID)
-      a.HoldProcs =
-         ((c.HasGlyph("Icy Veins") and a.VeinsCD < 2)
-               or c.GetCooldown("Alter Time") < 2)
-            and not c.IsSolo()
 
+      a.VeinsCD = c.GetCooldown("Icy Veins")
+   end,
+
+   RotationSingleTarget = {
+      "Ice Lance before FoF expiration",
+      "Frostfire Bolt for Brain Freeze expiration",
+      "Frost Bomb for Frozen Orb",
+      "Frozen Orb",
+      "Frost Bomb Single Target",
+      "Ice Nova with 2 charges",
+      "Ice Lance with 2 Fingers or Frozen Orb",
+      "Comet Storm",
+      "Ice Nova with 1 charge",
+      "Frostfire Bolt with Brain Freeze",
+      -- actions.single_target+=/ice_lance,if=set_bonus.tier17_4pc&talent.thermal_void.enabled&talent.mirror_image.enabled&dot.frozen_orb.ticking
+      "Ice Lance with Frost Bomb",
+      -- # Camp procs and spam Frostbolt while 4T17 buff is up
+      -- actions.single_target+=/frostbolt,if=set_bonus.tier17_2pc&buff.ice_shard.up&!(talent.thermal_void.enabled&buff.icy_veins.up&buff.icy_veins.remains<10)
+      "Ice Lance without Frost Bomb",
+      "Water Jet",
+      "Frostbolt"
+   },
+
+   RotationAoE = {
+      "Frost Bomb AoE",
+      "Frozen Orb",
+      "Ice Lance with Frost Bomb",
+      "Comet Storm",
+      "Ice Nova with 1 charge",
+      -- we will interrupt if anything higher prio comes off CD.
+      "Blizzard"
+   },
+
+   FlashInCombat = function()
       c.FlashAll(
-         "Mirror Image",
-         "Evocation for Invoker's Energy for Frost",
-         "Rune of Power for Frost",
-         "Frozen Orb",
-         "Icy Veins",
-         "Presence of Mind for Frost",
-         "Alter Time for Frost",
-         "Freeze",
-         "Deep Freeze",
-         "Cold Snap",
+         "Arcane Power",
          "Counterspell",
-         "Spellsteal")
-      c.PriorityFlash(
-         "Frostfire Bolt Prime",
-         "Ice Lance Prime",
-         "Nether Tempest",
-         "Living Bomb",
-         "Frost Bomb",
-         "Frostfire Bolt under Brain Freeze",
-         "Ice Lance before Cap",
-         "Ice Lance when Frozen",
-         "Evocation for Invoker's Energy at 5",
-         "Rune of Power at 5",
-         "Mana Gem at 10",
-         "Brilliant Mana Gem at 10",
-         "Evocation",
-         "Frostbolt")
+         -- blink,if=movement.distance>10
+         -- blazing_speed,if=movement.remains>0
+         "Cold Snap",
+         "Spellsteal"
+      )
+
+      -- actions+=/call_action_list,name=crystal_sequence,if=talent.prismatic_crystal.enabled&(cooldown.prismatic_crystal.remains<=gcd.max|pet.prismatic_crystal.active)
+      if c.EstimatedHarmTargets >= 4 then
+         rotation = a.Rotations.Frost.RotationAoE
+      else
+         rotation = a.Rotations.Frost.RotationSingleTarget
+      end
+
+      c.DelayPriorityFlash(
+         "Time Warp",
+         "Mirror Image",
+         "Rune of Power",
+         -- actions+=/rune_of_power,if=(cooldown.icy_veins.remains<gcd.max&buff.rune_of_power.remains<20)|(cooldown.prismatic_crystal.remains<gcd.max&buff.rune_of_power.remains<10)
+         "Icy Veins",
+         unpack(rotation)       -- must be last line!
+      )
    end,
 
    MovementFallthrough = function()
-      c.PriorityFlash(
+      c.DelayPriorityFlash(
          "Ice Floes",
-         "Fire Blast",
-         "Ice Lance")
+         "Ice Lance",
+         "Fire Blast"
+      )
    end,
 
    FlashOutOfCombat = function()
-      c.FlashAll(
-         "Conjure Mana Gem",
-         "Evocation for Health",
-         "Evocation for Invoker's Energy Pre-Combat",
-         "Rune of Power Pre-Combat")
+      if x.EnemyDetected then
+         c.DelayPriorityFlash(
+            "Rune of Power",
+            "Mirror Image",
+            "Frostfire Bolt with Brain Freeze",
+            "Frostbolt"
+         )
+      end
    end,
 
    FlashAlways = function()
       c.FlashAll(
-         "Frost Armor",
          "Summon Water Elemental",
          "Arcane Brilliance",
          "Dalaran Brilliance",
-         "Ice Barrier")
+         "Ice Barrier"
+      )
    end,
 
    CastSucceeded = function(info)
       processCast(info)
-      if c.InfoMatches(info, "Ice Lance") then
-         a.FingerCount = math.max(0, a.FingerCount - 1)
-         c.Debug("Event", "Pretend FoF is now at", a.FingerCount)
-      end
    end,
 
    AuraApplied = function(spellID)
       if spellID == c.GetID("Fingers of Frost") then
-         local stack = c.GetBuffStack("Fingers of Frost")
-         if a.FingerCount == blizzFingerCount - 1 then
-            a.FingerCount = stack - 1
-         else
-            a.FingerCount = stack
-         end
-         c.Debug("Event",
-            "Gained FoF. Stack =", stack, "Pretend =", a.FingerCount)
-         blizzFingerCount = stack
+         a.FingerCount = c.GetBuffStack("Fingers of Frost")
+         c.Debug("Event", "Gained FoF. Stack =", a.FingerCount)
       end
    end,
 
    AuraRemoved = function(spellID)
       if spellID == c.GetID("Fingers of Frost") then
-         local stack = c.GetBuffStack("Fingers of Frost")
-         a.FingerCount = stack
-         c.Debug("Event", "Lost FoF. Stack =", stack)
-         blizzFingerCount = stack
+         a.FingerCount = c.GetBuffStack("Fingers of Frost")
+         c.Debug("Event", "Lost FoF. Stack =", a.FingerCount)
       end
    end,
 
    ExtraDebugInfo = function()
-      return string.format("f:%d, f:%d h:%s f:%d b:%s a:%s",
-         blizzFingerCount,
+      return string.format("f:%d h:%s f:%d b:%s a:%s",
          a.FingerCount,
          tostring(a.HoldProcs),
          a.FBStacks,

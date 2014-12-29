@@ -2,6 +2,10 @@
 
 Visit the Healbot website for latest download and information on Healbot: http://healbot.darktech.org
 
+Update path to retain settings
+==============================
+-- If updating from version (pre 5.0.4.0), first update to 6.0.2.1 to avoid reset
+-- If updating from version (pre 6.0.2.0), first update to 6.0.3.6 to avoid reset
 
 
 =================================

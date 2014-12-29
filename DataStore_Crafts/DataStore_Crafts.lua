@@ -479,7 +479,7 @@ local function ScanRecipes()
 	if not numTradeSkills or numTradeSkills == 0 then return end
 		
 	local skillName, skillType = GetTradeSkillInfo(1)	-- test the first line
-	if skillType ~= "header" then return end				-- skip scan if first line is not a header.
+	if skillType ~= "header" and skillType ~= "subheader" then return end				-- skip scan if first line is not a header.
 	
 	local char = addon.ThisCharacter
 	local profession = char.Professions[tradeskillName]
@@ -576,7 +576,7 @@ local function OnTradeSkillUpdate()
 end
 
 local function OnTradeSkillShow()
-	if IsTradeSkillLinked() or IsTradeSkillGuild() then return end
+	if IsTradeSkillLinked() or IsTradeSkillGuild() or IsNPCCrafting() then return end
 	
 	addon:RegisterEvent("TRADE_SKILL_CLOSE", OnTradeSkillClose)
 	-- we are not interested in this event if the TS pane is not shown.

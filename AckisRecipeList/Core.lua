@@ -3,10 +3,10 @@
 Core.lua
 Core functions for Ackis Recipe List
 ************************************************************************
-File date: 2014-12-13T00:51:37Z
-File hash: 1246860
-Project hash: 0b1c7cf
-Project version: 3.0.11
+File date: 2014-12-14T18:26:51Z
+File hash: fccfef8
+Project hash: a4cd6d6
+Project version: 3.0.12
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -45,6 +45,7 @@ local LibStub = _G.LibStub
 local addon = LibStub("AceAddon-3.0"):NewAddon(private.addon_name, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
 addon.constants = private.constants
 addon.constants.addon_name = private.addon_name
+addon.Name = FOLDER_NAME -- For cases when ARL needs to act as one of its modules.
 _G.AckisRecipeList = addon
 
 --[===[@alpha@
@@ -64,6 +65,14 @@ private.wow_ui_version = wow_ui_version
 
 private.TextDump = LibStub("LibTextDump-1.0"):New(private.addon_name)
 
+------------------------------------------------------------------------------
+-- Constants.
+------------------------------------------------------------------------------
+local SUPPORTED_MODULE_VERSION = 1
+
+-------------------------------------------------------------------------------
+-- Dialogs.
+-------------------------------------------------------------------------------
 Dialog:Register("ARL_ModuleErrorDialog", {
 	buttons = {
 		{
@@ -79,6 +88,28 @@ Dialog:Register("ARL_ModuleErrorDialog", {
 		self.text:SetFormattedText("%s - %s\n\n%s", private.addon_name, addon.version, L.MODULE_ERROR_FORMAT:format(profession_name))
 	end
 })
+
+Dialog:Register("ARL_ModuleWrongVersionDialog", {
+	buttons = {
+		{
+			text = _G.OKAY
+		},
+	},
+	show_while_dead = true,
+	hide_on_escape = true,
+	icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
+	is_exclusive = true,
+	text_justify_h = "LEFT",
+	width = 400,
+	on_show = function(self, data)
+		self.text:SetFormattedText("%s - %s\n\n%s", private.addon_name, addon.version, L.MODULE_WRONG_VERSION_FORMAT:format(data.moduleName, data.moduleVersion, SUPPORTED_MODULE_VERSION))
+	end
+})
+
+-- Invoked from the module itself.
+function addon:SpawnModuleWrongVersionDialog(data)
+	Dialog:Spawn("ARL_ModuleWrongVersionDialog", data)
+end
 
 Dialog:Register("ARL_NoModulesErrorDialog", {
 	buttons = {
@@ -96,10 +127,6 @@ Dialog:Register("ARL_NoModulesErrorDialog", {
 		self.text:SetFormattedText("No profession module AddOns were found.\n\nAs of version 3.0, all professions were split into individual module AddOns. These can be obtained either from Curse, from the Curse Client, or from WoWInterface.\n\nThe main %s page on either site contains URLs for all of the module AddOns; download only those you need.", private.addon_name, private.addon_name)
 	end
 })
-
-------------------------------------------------------------------------------
--- Constants.
-------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
 -- Database tables
@@ -177,7 +204,7 @@ function addon:OnInitialize()
 	-- Set default options, which are to include everything in the scan
 	local defaults = {
 		global = {
-			-- Saving alts tradeskills (needs to be global so all profiles can access it)
+			-- Saving alts tradeskills (needs to be global so all profiles can access it) TODO: Remove everything having to do with this, since Blizzard killed the functionality sometime during WoW 5.x
 			tradeskill = {},
 		},
 		profile = {
@@ -334,6 +361,8 @@ function addon:OnInitialize()
 		}
 	}
 
+	self.SUPPORTED_MODULE_VERSION = SUPPORTED_MODULE_VERSION
+
 	for index = 1, #private.GAME_VERSION_NAMES do
 		defaults.profile.filters.obtain[("expansion%d"):format(index - 1)] = true
 	end
@@ -353,6 +382,7 @@ function addon:OnInitialize()
 		self:Print("Error: Database not loaded correctly.  Please exit out of WoW and delete the ARL database file (AckisRecipeList.lua) found in: \\World of Warcraft\\WTF\\Account\\<Account Name>>\\SavedVariables\\")
 		return
 	end
+
 	private.db = self.db
 
 	local version = _G.GetAddOnMetadata("AckisRecipeList", "Version")
@@ -425,8 +455,8 @@ end
 function addon:OnEnable()
 	self.AcquireTypes = private.AcquireTypes
 
-	self:RegisterEvent("TRADE_SKILL_SHOW") -- Make addon respond to the tradeskill windows being shown
-	self:RegisterEvent("TRADE_SKILL_CLOSE") -- Addon responds to tradeskill windows being closed.
+	self:RegisterEvent("TRADE_SKILL_SHOW")
+	self:RegisterEvent("TRADE_SKILL_CLOSE")
 	self:RegisterEvent("TRADE_SKILL_UPDATE")
 
 	if addon.db.profile.scantrainers then
@@ -634,12 +664,8 @@ function addon:TRADE_SKILL_SHOW()
 		end
 		scan_button:SetWidth(scan_button:GetTextWidth() + 10)
 	end
+
 	local profession_name = _G.GetTradeSkillLine()
-
-	if profession_name == private.MINING_PROFESSION_NAME then
-		profession_name = private.LOCALIZED_PROFESSION_NAMES.SMELTING
-	end
-
 	if private.PROFESSION_MODULE_NAMES[profession_name] then
 		scan_button:Show()
 	else
@@ -702,9 +728,9 @@ do
 	local loaded_modules = {}
 
 	-- Returns true if a profession was initialized.
-	function addon:InitializeProfession(profession_name)
-		if not profession_name or not private.PROFESSION_MODULE_NAMES[profession_name] then
-			addon:Debug("nil profession passed to InitializeProfession()")
+	function addon:InitializeProfession(professionName)
+		if not professionName or not private.PROFESSION_MODULE_NAMES[professionName] then
+			addon:Debug("nil or invalid profession name passed to InitializeProfession()")
 			return false
 		end
 
@@ -712,20 +738,16 @@ do
 			InitializeLookups()
 		end
 
-		if profession_name == private.MINING_PROFESSION_NAME then
-			profession_name = private.LOCALIZED_PROFESSION_NAMES.SMELTING
-		end
-		local module_name = FOLDER_NAME .. "_" .. private.PROFESSION_MODULE_NAMES[profession_name] or ""
-
-		if loaded_modules[module_name] then
+		local moduleName = FOLDER_NAME .. "_" .. private.PROFESSION_MODULE_NAMES[professionName] or ""
+		if loaded_modules[moduleName] then
 			return true
 		end
-		local _, _, _, _, reason = _G.GetAddOnInfo(module_name)
 
+		local _, _, _, _, reason = _G.GetAddOnInfo(moduleName)
 		if reason ~= "DISABLED" then
-			local is_loaded = _G.LoadAddOn(module_name) and true or false
-			loaded_modules[module_name] = is_loaded
-			return is_loaded
+			local isLoaded = _G.LoadAddOn(moduleName) and true or false
+			loaded_modules[moduleName] = isLoaded
+			return isLoaded
 		end
 		return false
 	end
@@ -874,17 +896,19 @@ do
 		end
 		private.current_profession_specialty = nil
 
+		-- This isn't needed for the module name lookup, but it is needed for other things further down the path.
 		if profession_name == private.MINING_PROFESSION_NAME then
 			profession_name = private.LOCALIZED_PROFESSION_NAMES.SMELTING
 		end
-		local profession_module_name = private.PROFESSION_MODULE_NAMES[profession_name]
 
-		if not profession_module_name then
+		local professionModuleName = private.PROFESSION_MODULE_NAMES[profession_name]
+		if not professionModuleName then
 			return
 		end
 		self:InitializeProfession(profession_name)
 
-		if not self:GetModule(profession_module_name, true) then
+		local professionModule = self:GetModule(professionModuleName, true)
+		if not professionModule then
 			local found_module
 
 			for profession_name, module_name in pairs(private.PROFESSION_MODULE_NAMES) do
@@ -897,11 +921,19 @@ do
 			end
 
 			if found_module then
-				Dialog:Spawn("ARL_ModuleErrorDialog", profession_module_name)
+				Dialog:Spawn("ARL_ModuleErrorDialog", professionModuleName)
 			else
 				Dialog:Spawn("ARL_NoModulesErrorDialog")
 			end
 			return
+		else
+			if not professionModule.Version then
+				Dialog:Spawn("ARL_ModuleWrongVersionDialog", {
+					moduleName = professionModuleName,
+					moduleVersion = 0
+				})
+				return false
+			end
 		end
 
 		local player = private.Player
@@ -1026,7 +1058,17 @@ do
 					end
 					local F = private.FILTER_IDS
 
-					local recipe = addon:AddRecipe(spell_id, profession_id, _G.GetExpansionLevel() + 1, private.ITEM_QUALITIES.COMMON)
+					local recipe = self:AddRecipe(self, {
+						acquire_data = {},
+						flags = {},
+						genesis = private.GAME_VERSION_NAMES[_G.GetExpansionLevel() + 1],
+						name = _G.GetSpellInfo(spell_id),
+						profession = _G.GetSpellInfo(profession_id),
+						quality = private.ITEM_QUALITIES.COMMON,
+						_spell_id = spell_id,
+
+					})
+
 					recipe:SetSkillLevels(0, 0, 0, 0, 0)
 					recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TRAINER)
 					addon:Printf("Added '%s (%d)' to %s. Do a profession dump.", entry_name, spell_id, profession_name)

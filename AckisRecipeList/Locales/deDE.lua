@@ -6,7 +6,7 @@ deDE localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 3.0.11
+Project version: 3.0.12
 ************************************************************************
 Original translated by: Winkiller, Dessa
 Currently maintained by:
@@ -456,6 +456,7 @@ L["Enraged Mammoth"] = "Tobendes Mammut"
 L["Enraged Water Spirit"] = "Wütender Wassergeist"
 L["Eorain Dawnstrike"] = "Eorain Morgenschlag"
 L["Eredar Deathbringer"] = "Todesbringer der Eredar"
+L["Eric Broadoak"] = "Erik Breitstamm"
 L["Eriden"] = true
 L["Erika Tate"] = true
 L["Erilia"] = true
@@ -919,6 +920,7 @@ L["Mob Drop"] = true
 L["MOB_DROP_DESC"] = "Rezepte, welche Mob Drops sind, sollen im Scan angezeigt werden."
 L["Modoru"] = true
 L["MODULE_ERROR_FORMAT"] = "Das \"Ackis Recipe List: %s\" AddOn wurde nicht geladen. Entweder ist es nicht installiert oder deaktiviert."
+L["MODULE_WRONG_VERSION_FORMAT"] = "Das erforderliche Berufe Module, \"Ackis Recipe List: %s,\" ist Version %d. Das aktuell unterstützte Berufs Modul ist Version %d."
 L["Molt Thorn"] = "Moosbart"
 L["Moonrage Tailor"] = "Schneider des Mondzorns"
 L["Moordo"] = true
@@ -929,6 +931,7 @@ L["Mudduk"] = true
 L["Muheru the Weaver"] = "Muheru der Weber"
 L["Mukdrak"] = true
 L["Mumman"] = true
+L["Murg Stonecrack"] = "Murg Steineklopfer"
 L["Murkblood Raider"] = "Räuber der Finsterblut"
 L["Murne Greenhoof"] = "Murne Grünhuf"
 L["Muuran"] = true

@@ -1,0 +1,12 @@
+tag 6.0.18
+2f20e3ac2470b13e78a0288ae9de8c65bd106b8b
+Floraline <floraline@ophiuchus.org>
+2014-10-16 23:29:27 +0200
+
+Tagging for release v6.0.18
+
+
+--------------------
+
+Floraline:
+	- Fix cooldown bug

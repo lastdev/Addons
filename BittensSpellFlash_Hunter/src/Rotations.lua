@@ -47,6 +47,22 @@ function a.PreFlash()
    a.EmptyFocus = s.MaxPower("player") - a.Focus
 end
 
+-- This is a workaround for a bug in 6.0.3, see
+-- http://us.battle.net/wow/en/forum/topic/15699089759?page=1
+a.ForceKillShotCooldown = 0
+a.LastKillShot = 0
+
+local function killShotBugWorkaround(info)
+   if c.InfoMatches(info, "Kill Shot") then
+      local now = GetTime()
+      if (a.LastKillShot + 10) > now then
+         -- we just used our CD reset
+         a.ForceKillShotCooldown = now + 10
+      end
+      a.LastKillShot = now
+   end
+end
+
 ----------------------------------------------------------------- Beast Mastery
 a.LastMultiShot = 0
 
@@ -123,6 +139,8 @@ a.Rotations.BeastMastery = {
          a.LastMultiShot = GetTime()
          c.Debug("Event", "Multi Shot")
       end
+
+      killShotBugWorkaround(info)
    end,
 
    ExtraDebugInfo = function()
@@ -216,6 +234,7 @@ a.Rotations.Marksmanship = {
    end,
 
    CastQueued = castQueued,
+   CastSucceeded = killShotBugWorkaround,
 
    ExtraDebugInfo = function()
       return string.format("%.1f", a.Focus)

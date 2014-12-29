@@ -507,6 +507,13 @@ local function GetNextWeeklyReset(weeklyResetDay)
 	return format("%04d-%02d-%02d", year+1, 1, newDay - daysPerMonth[month])
 end
 
+local function InitializeWeeklyParameters()
+	local weeklyResetDay = GetWeeklyResetDayByRegion(GetCVar("portal"))
+	SetOption("WeeklyResetDay", weeklyResetDay)
+	SetOption("WeeklyResetHour", 6)			-- 6 am should be ok in most zones
+	SetOption("NextWeeklyReset", GetNextWeeklyReset(weeklyResetDay))
+end
+
 local function ClearExpiredDungeons()
 	-- WeeklyResetDay = nil,		-- weekday (0 = Sunday, 6 = Saturday)
 	-- WeeklyResetHour = nil,		-- 0 to 23
@@ -515,12 +522,13 @@ local function ClearExpiredDungeons()
 	local weeklyResetDay = GetOption("WeeklyResetDay")
 	
 	if not weeklyResetDay then			-- if the weekly reset day has not been set yet ..
-		weeklyResetDay = GetWeeklyResetDayByRegion(GetCVar("portal"))
-		
-		SetOption("WeeklyResetDay", weeklyResetDay)
-		SetOption("WeeklyResetHour", 6)			-- 6 am should be ok in most zones
-		SetOption("NextWeeklyReset", GetNextWeeklyReset(weeklyResetDay))
+		InitializeWeeklyParameters()
 		return	-- initial pass, nothing to clear
+	end
+	
+	if not nextReset then		-- heal broken data
+		InitializeWeeklyParameters()
+		nextReset = GetOption("NextWeeklyReset") -- retry
 	end
 	
 	local today = date("%Y-%m-%d")

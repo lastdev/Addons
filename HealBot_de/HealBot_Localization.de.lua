@@ -191,6 +191,8 @@ function HealBot_Lang_deDE()
     HEALBOT_OPTIONS_SHOWHEALTHONBAR         = "Leben auf Balken anzeigen";
     HEALBOT_OPTIONS_BARHEALTHINCHEALS       = "Ankommende Heilung anzeigen";
     HEALBOT_OPTIONS_BARHEALTHSEPHEALS       = "Getrennte ankommende Heilung";
+    HEALBOT_OPTIONS_BARHEALTHINCALL         = "Kommende Heilungen und Absorbs miteinbeziehen"
+    HEALBOT_OPTIONS_BARHEALTHSEPALL         = "Kommende Heilungen und Absorbs trennen"
     HEALBOT_OPTIONS_BARHEALTH1              = "Defizit";
     HEALBOT_OPTIONS_BARHEALTH2              = "Prozentual";
     HEALBOT_OPTIONS_TIPTEXT                 = "Tooltip-Anzeige";

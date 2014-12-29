@@ -73,6 +73,11 @@ GTFO.SpellID["144579"] = {
 	sound = 1;
 };
 
+GTFO.SpellID["101873"] = {
+	--desc = "Shrink Heart (The Abominable Greench, Feast of Winter Veil)";
+	sound = 1;
+};
+
 -- ==============================================================================
 -- Fail alerts
 -- ==============================================================================
@@ -127,4 +132,9 @@ GTFO.SpellID["144590"] = {
 GTFO.SpellID["101873"] = {
 	--desc = "Shrink Heart (The Abominable Greench, Feast of Winter Veil)";
 	sound = 1;
+};
+
+GTFO.SpellID["101885"] = {
+	--desc = "Abominable Crush (The Abominable Greench, Feast of Winter Veil)";
+	sound = 3;
 };

@@ -191,6 +191,8 @@ function HealBot_Lang_ruRU()
     HEALBOT_OPTIONS_SHOWHEALTHONBAR         = "Здоровье на панели";
     HEALBOT_OPTIONS_BARHEALTHINCHEALS       = "Включая входящее исцеление";
     HEALBOT_OPTIONS_BARHEALTHSEPHEALS       = "Разделять входящие исцеления";
+    HEALBOT_OPTIONS_BARHEALTHINCALL         = "Включать входящее лечение и поглощение"
+    HEALBOT_OPTIONS_BARHEALTHSEPALL         = "Разделять входящее лечение и поглощение"
     HEALBOT_OPTIONS_BARHEALTH1              = "разница";
     HEALBOT_OPTIONS_BARHEALTH2              = "процент";
     HEALBOT_OPTIONS_TIPTEXT                 = "Информация в подсказке";

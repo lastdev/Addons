@@ -1,7 +1,7 @@
 local g = BittensGlobalTables
 local c = g.GetOrMakeTable("BittensSpellFlashLibrary", 2)
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "MainFile", tonumber("20141215204639") or time()) then
+if u.SkipOrUpgrade(c, "MainFile", tonumber("20141220081111") or time()) then
    return
 end
 
@@ -105,8 +105,17 @@ function c.GetCurrentRotation()
       local optionName = "Flash" .. name
       if (rotation.CheckFirst == nil or rotation.CheckFirst())
          and rotation.Spec == GetSpecialization()
-         and (not c.HasOption(optionName) or c.GetOption(optionName)) then
-
+         and (not c.HasOption(optionName) or c.GetOption(optionName))
+      then
+         if rotation.Warning then
+            u.Schedule(
+               15, print,
+               "|TInterface/TargetingFrame/UI-RaidTargetingIcon_8:0|t  " ..
+                  "|cFFFF0000" .. rotation.Warning .. "|r -- SlippyCheeze" ..
+                  "  |TInterface/TargetingFrame/UI-RaidTargetingIcon_8:0|t"
+            )
+            rotation.Warning = nil
+         end
          return rotation
       end
    end

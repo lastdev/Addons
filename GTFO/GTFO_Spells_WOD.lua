@@ -10,6 +10,7 @@ Author: Zensunim of Malygos
 -- * Draenor *
 -- ***********
 
+
 GTFO.SpellID["171406"] = {
 	--desc = "Burning (Kargathar Proving Grounds)";
 	sound = 1;
@@ -178,8 +179,48 @@ GTFO.SpellID["151630"] = {
 	sound = 1;
 };
 
+GTFO.SpellID["176037"] = {
+	--desc = "Noxious Spit (Tarlna the Ageless)";
+	sound = 1;
+};
+
+GTFO.SpellID["157623"] = {
+	--desc = "Detected!";
+	sound = 1;
+};
+
+GTFO.SpellID["170009"] = {
+	--desc = "Soul Siphon";
+	sound = 1;
+	test = true;
+};
+
+GTFO.SpellID["173205"] = {
+	--desc = "Shadow Beam";
+	sound = 1;
+};
+
+GTFO.SpellID["169039"] = {
+	--desc = "Fel Flames";
+	sound = 2;
+};
+
+GTFO.SpellID["176726"] = {
+	--desc = "Demonic Gateway";
+	sound = 2;
+};
+
+GTFO.SpellID["174878"] = {
+	--desc = "Fel Firebomb";
+	sound = 1;
+};
+
+GTFO.SpellID["158441"] = {
+	--desc = "Solar Zone (Solar Familiar)";
+	sound = 2;
+};
+
 --TODO: Acid Breath (Drov the Ruiner) - avoidable?
---TODO: Noxious Spit (Tarlna the Ageless) - pool
 
 -- **************
 -- * Auchindoun *
@@ -222,6 +263,11 @@ GTFO.SpellID["153616"] = {
 	sound = 1;
 };
 
+GTFO.SpellID["153726"] = {
+	--desc = "Fel Spark (Azzakel)";
+	sound = 1;
+};
+
 GTFO.SpellID["156856"] = {
 	--desc = "Rain of Fire (Teron'gor)";
 	sound = 1;
@@ -243,6 +289,11 @@ GTFO.SpellID["150011"] = {
 
 GTFO.SpellID["149996"] = {
 	--desc = "Firestorm (Forgemaster Gog'duh)";
+	sound = 1;
+};
+
+GTFO.SpellID["149963"] = {
+	--desc = "Shatter Earth (Forgemaster Gog'duh)";
 	sound = 1;
 };
 
@@ -501,6 +552,12 @@ GTFO.SpellID["154043"] = {
 -- *****************
 -- * The Everbloom *
 -- *****************
+
+GTFO.SpellID["169424"] = {
+	--desc = "Triple Attack (Twisted Abomination)";
+	sound = 1;
+	tankSound = 0;
+};
 
 GTFO.SpellID["172579"] = {
 	--desc = "Bounding Whirl (Melded Berserker)";
@@ -776,8 +833,8 @@ GTFO.SpellID["156401"] = {
 GTFO.SpellID["175642"] = {
 	--desc = "Rune of Destruction";
 	sound = 4;
-	negatingDebuffSpellID = 175642; -- Rune
-	test = true;
+	negatingDebuffSpellID = 175636; -- Rune
+	negatingIgnoreTime = 1;
 };
 
 GTFO.SpellID["175654"] = {
@@ -823,6 +880,7 @@ GTFO.SpellID["163046"] = {
 GTFO.SpellID["172069"] = {
 	--desc = "Radiating Poison (Tectus Trash)";
 	sound = 4;
+	negatingDebuffSpellID = 172066; -- Radiating Poison
 };
 
 GTFO.SpellID["162370"] = {
@@ -881,18 +939,47 @@ GTFO.SpellID["158241"] = {
 	applicationOnly = true;
 };
 
+GTFO.SpellID["173827"] = {
+	--desc = "Wild Flames";
+	sound = 1;
+};
+
+GTFO.SpellID["174405"] = {
+	--desc = "Frozen Core";
+	sound = 4;
+	negatingDebuffSpellID = 174404;
+};
+
+
 -- Ko'ragh
 -- TODO: Expel Magic: Fel (Ko'ragh, Heroic) -- fire?
 
---[[
-GTFO.SpellID["unknown"] = {
+GTFO.SpellID["162397"] = {
+	--desc = "Expel Magic: Arcane (Ko'ragh)";
+	sound = 4;
+	negatingDebuffSpellID = 162186; -- Expel Magic: Arcane
+};
+
+GTFO.SpellID["161345"] = {
 	--desc = "Suppression Field (Ko'ragh)";
 	sound = 1;
-	tankSound = 0;
-	test = true; -- How does this mechanic work strat-wise?  Tanks may have to drag adds into the field to prevent explosions, but does DPS ever need to stand there?
+	tankSound = 2;
 };
-]]--
 
--- Imperator Mar'gok
--- TODO: Force Nova (Imperator Mar'gok) -- avoidable?
+GTFO.SpellID["157353"] = {
+	--desc = "Force Nova (Imperator Mar'gok)";
+	soundFunction = function() 
+		-- Alert if hit more than 8 times
+		if (not GTFO.VariableStore.ForceNovaHitCount) then
+			GTFO.VariableStore.ForceNovaHitCount = 0;
+		end
+		if (GTFO.VariableStore.ForceNovaHitCount == 0) then
+			GTFO_AddEvent("ResetForceNovaCounter", 10, function() GTFO.VariableStore.ForceNovaHitCount = 0; end);
+		end
+		GTFO.VariableStore.ForceNovaHitCount = GTFO.VariableStore.ForceNovaHitCount + 1;
+		if (GTFO.VariableStore.ForceNovaHitCount > 8) then
+			return 1;
+		end
+	end;
+};
 

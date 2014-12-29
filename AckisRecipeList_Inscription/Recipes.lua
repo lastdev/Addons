@@ -8,8 +8,13 @@ local _G = getfenv(0)
 -------------------------------------------------------------------------------
 local FOLDER_NAME, private = ...
 
-local constants = private.addon.constants
-local module = private.addon:GetModule(private.module_name)
+local addon = private.addon
+if not addon then
+	return
+end
+
+local constants = addon.constants
+local module = addon:GetModule(private.module_name)
 
 -------------------------------------------------------------------------------
 -- Filter flags. Acquire types, and Reputation levels.
@@ -23,13 +28,48 @@ local Z = constants.ZONE_NAMES
 local FAC = constants.FACTION_IDS
 local REP = constants.REP_LEVELS
 
+module.Recipes = {}
+
+--------------------------------------------------------------------------------------------------------------------
+-- General methods.
+--------------------------------------------------------------------------------------------------------------------
+function module:GetOrCreateRecipeAcquireTypeTable(recipe, acquireTypeID, factionID, reputationLevel)
+	local acquireTypeData = recipe.acquire_data[acquireTypeID]
+	if not acquireTypeData then
+		recipe.acquire_data[acquireTypeID] = {}
+		acquireTypeData = recipe.acquire_data[acquireTypeID]
+
+	end
+
+	if factionID and reputationLevel and acquireTypeID == constants.ACQUIRE_TYPE_IDS.REPUTATION then
+		if not acquireTypeData[factionID] then
+			acquireTypeData[factionID] = {
+				[reputationLevel] = {}
+			}
+		elseif not acquireTypeData[factionID][reputationLevel] then
+			acquireTypeData[factionID][reputationLevel] = {}
+		end
+	end
+
+	return acquireTypeData
+end
+
 --------------------------------------------------------------------------------------------------------------------
 -- Initialize!
 --------------------------------------------------------------------------------------------------------------------
 function module:InitializeRecipes()
-	local function AddRecipe(spell_id, genesis, quality)
-		return private.addon:AddRecipe(spell_id, constants.PROFESSION_SPELL_IDS.INSCRIPTION, genesis, quality)
+	local function AddRecipe(spellID, expansionID, quality)
+		return addon:AddRecipe(module, {
+			acquire_data = {},
+			flags = {},
+			genesis = constants.GAME_VERSION_NAMES[expansionID],
+			name = _G.GetSpellInfo(spellID),
+			profession = _G.GetSpellInfo(constants.PROFESSION_SPELL_IDS.INSCRIPTION),
+			quality = quality,
+			_spell_id = spellID,
+		})
 	end
+
 	local recipe
 
 	-------------------------------------------------------------------------------
@@ -617,7 +657,7 @@ function module:InitializeRecipes()
 	recipe:SetCraftedItem(42957, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("INSCRIPTION_MAJOR_GLYPH")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.ROGUE)
-	
+
 
 	-- Glyph of Evasion -- 57119
 	recipe = AddRecipe(57119, V.WOTLK, Q.COMMON)
@@ -705,7 +745,7 @@ function module:InitializeRecipes()
 	recipe:SetCraftedItem(42973, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("INSCRIPTION_MAJOR_GLYPH")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.ROGUE)
-	
+
 
 	-- Glyph of Sprint -- 57133
 	recipe = AddRecipe(57133, V.WOTLK, Q.COMMON)
@@ -777,7 +817,7 @@ function module:InitializeRecipes()
 	recipe:SetCraftedItem(43430, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("INSCRIPTION_MAJOR_GLYPH")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.WARRIOR)
-	
+
 
 	-- Glyph of Sweeping Strikes -- 57168
 	recipe = AddRecipe(57168, V.WOTLK, Q.COMMON)
@@ -865,7 +905,7 @@ function module:InitializeRecipes()
 	recipe:SetCraftedItem(42409, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("INSCRIPTION_MAJOR_GLYPH")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.PRIEST)
-	
+
 
 	-- Glyph of Psychic Scream -- 57196
 	recipe = AddRecipe(57196, V.WOTLK, Q.COMMON)
@@ -905,7 +945,7 @@ function module:InitializeRecipes()
 	recipe:SetCraftedItem(43533, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("INSCRIPTION_MAJOR_GLYPH")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DK)
-	
+
 
 	-- Glyph of the Geist -- 57209
 	recipe = AddRecipe(57209, V.WOTLK, Q.COMMON)
@@ -1065,7 +1105,7 @@ function module:InitializeRecipes()
 	recipe:SetCraftedItem(41524, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("INSCRIPTION_MAJOR_GLYPH")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.SHAMAN)
-	
+
 
 	-- Glyph of Capacitor Totem -- 57235
 	recipe = AddRecipe(57235, V.WOTLK, Q.COMMON)
@@ -1209,7 +1249,7 @@ function module:InitializeRecipes()
 	recipe:SetCraftedItem(42459, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("INSCRIPTION_MINOR_GLYPH")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.CASTER, F.WARLOCK)
-	
+
 
 	-- Glyph of Health Funnel -- 57265
 	recipe = AddRecipe(57265, V.WOTLK, Q.COMMON)
@@ -2318,7 +2358,7 @@ function module:InitializeRecipes()
 	recipe:SetCraftedItem(45800, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("INSCRIPTION_MAJOR_GLYPH")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DK)
-	
+
 
 	-- Glyph of Tranquil Grip -- 64300
 	recipe = AddRecipe(64300, V.WOTLK, Q.COMMON)
@@ -4422,6 +4462,14 @@ function module:InitializeRecipes()
 	recipe:SetItemFilterType("INSCRIPTION_ITEM_ENHANCEMENT")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(77372, 79829, 87063, 87551)
+
+	-- Glyph of the Shapemender -- 178448
+	recipe = AddRecipe(178448, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(295, 295, 300, 450, 600)
+	recipe:SetCraftedItem(120300, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("INSCRIPTION_MAJOR_GLYPH")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DRUID)
+	recipe:AddDiscovery("DISCOVERY_INSC_WARBINDER")
 
 	-- Warbinder's Ink -- 178497
 	recipe = AddRecipe(178497, V.WOD, Q.COMMON)

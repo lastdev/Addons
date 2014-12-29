@@ -17,11 +17,6 @@
 				</Anchor>
 			</Anchors>
 		</ButtonText>
-		<Scripts>
-			<OnClick>
-				Altoholic.Currencies:OnClick(self)
-			</OnClick>
-		</Scripts>
 
 		<NormalFont style="GameFontNormalSmallLeft"/>
 		<HighlightFont style="GameFontHighlightSmallLeft"/>
@@ -103,7 +98,10 @@
 				<NormalFont style="GameFontNormalSmallLeft"/>
 				<HighlightFont style="GameFontHighlightSmallLeft"/>
 			</Button>
-			<Button name="$parentJustice" inherits="AltoCurrenciesButtonTemplate" id="1">
+			<Button name="$parentCurrency1" inherits="AltoCurrenciesButtonTemplate" id="1">
+				<Size>
+					<AbsDimension x="80" y="18"/>
+				</Size>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="$parentLevel" relativePoint="BOTTOMRIGHT">
 						<Offset>
@@ -112,39 +110,42 @@
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="$parentValorWeek" inherits="AltoCurrenciesButtonTemplate" id="2">
+			<Button name="$parentCurrency2" inherits="AltoCurrenciesButtonTemplate" id="2">
 				<Size>
-					<AbsDimension x="90" y="18"/>
+					<AbsDimension x="100" y="18"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentJustice" relativePoint="BOTTOMRIGHT">
+					<Anchor point="BOTTOMLEFT" relativeTo="$parentCurrency1" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="$parentValor" inherits="AltoCurrenciesButtonTemplate" id="3">
+			<Button name="$parentCurrency3" inherits="AltoCurrenciesButtonTemplate" id="3">
+				<Size>
+					<AbsDimension x="60" y="18"/>
+				</Size>
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentValorWeek" relativePoint="BOTTOMRIGHT">
+					<Anchor point="BOTTOMLEFT" relativeTo="$parentCurrency2" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="$parentHonor" inherits="AltoCurrenciesButtonTemplate" id="4">
+			<Button name="$parentCurrency4" inherits="AltoCurrenciesButtonTemplate" id="4">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentValor" relativePoint="BOTTOMRIGHT">
+					<Anchor point="BOTTOMLEFT" relativeTo="$parentCurrency3" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
 			</Button>
-			<Button name="$parentConquest" inherits="AltoCurrenciesButtonTemplate" id="5">
+			<Button name="$parentCurrency5" inherits="AltoCurrenciesButtonTemplate" id="5">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentHonor" relativePoint="BOTTOMRIGHT">
+					<Anchor point="BOTTOMLEFT" relativeTo="$parentCurrency4" relativePoint="BOTTOMRIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>

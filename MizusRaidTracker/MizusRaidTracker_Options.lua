@@ -23,6 +23,11 @@
 --    If not, see <http://www.gnu.org/licenses/>.
 
 
+-- Check for addon table
+if (not MizusRaidTracker) then MizusRaidTracker = {}; end
+local mrt = MizusRaidTracker
+
+
 --------------
 --  Locals  --
 --------------
@@ -70,7 +75,7 @@ end
 --------------------------------------------------------
 function MRT_Options_ParseValues()
     -- MainPanel
-    MRT_Options_MainPanel_Title:SetText(MRT_ADDON_TITLE.." v."..MRT_ADDON_VERSION);
+    MRT_Options_MainPanel_Title:SetText(MRT_ADDON_TITLE.." "..MRT_ADDON_VERSION);
     MRT_Options_MainPanel_Description:SetText(MRT_L.Options["MP_Description"]);
     MRT_Options_MainPanel_Enabled_CB_Text:SetText(MRT_L.Options["MP_Enabled"]);
     MRT_Options_MainPanel_Debug_CB_Text:SetText(MRT_L.Options["MP_Debug"]);
@@ -92,7 +97,8 @@ function MRT_Options_ParseValues()
     -- ItemsTrackingPanel
     MRT_Options_ItemsTrackingPanel_Title:SetText(MRT_L.Options["ITP_TitleText"]);
     MRT_Options_ItemsTrackingPanel_MinItemQualityToLog_SliderText:SetText(MRT_L.Options["TP_MinItemQualityToLog_Desc"]);
-    MRT_Options_ItemsTrackingPanel_AskForDKPValue_CB_Text:SetText(MRT_L.Options["TP_AskForDKPValue"]);    
+    MRT_Options_ItemsTrackingPanel_AskForDKPValue_CB_Text:SetText(MRT_L.Options["TP_AskForDKPValue"]);
+    MRT_Options_ItemsTrackingPanel_AskForDKPValuePersonal_CB_Text:SetText(MRT_L.Options["TP_AskForDKPValuePersonal"]);
     MRT_Options_ItemsTrackingPanel_MinItemQualityToGetCost_SliderText:SetText(MRT_L.Options["TP_MinItemQualityToGetCost_Desc"]);
     MRT_Options_ItemsTrackingPanel_OnlyTrackItemsAbove_Text:SetText(MRT_L.Options["TP_OnlyTrackItemsAbove"]);
     MRT_Options_ItemsTrackingPanel_UseEPGPValues_CB_Text:SetText(MRT_L.Options["ITP_UseEPGP_GP_Values"]);
@@ -164,6 +170,7 @@ function MRT_Options_OnOkay(panel)
     -- ItemsTrackingPanel
     MRT_Options["Tracking_MinItemQualityToLog"] = MRT_Options_ItemsTrackingPanel_MinItemQualityToLog_Slider:GetValue();
     MRT_Options["Tracking_AskForDKPValue"] = MRT_Options_ItemsTrackingPanel_AskForDKPValue_CB:GetChecked();
+    MRT_Options["Tracking_AskForDKPValuePersonal"] = MRT_Options_ItemsTrackingPanel_AskForDKPValuePersonal_CB:GetChecked();
     MRT_Options["Tracking_MinItemQualityToGetDKPValue"] = MRT_Options_ItemsTrackingPanel_MinItemQualityToGetCost_Slider:GetValue();
     MRT_Options["ItemTracking_UseEPGPValues"] = MRT_Options_ItemsTrackingPanel_UseEPGPValues_CB:GetChecked();
     MRT_Options["Tracking_AskCostAutoFocus"] = UIDropDownMenu_GetSelectedID(MRT_Options_ItemsTrackingPanel_ChooseAutoFocus_DropDownMenu);
@@ -236,6 +243,7 @@ function MRT_Options_RestoreValues()
     MRT_Options_ItemsTrackingPanel_MinItemQualityToLog_Slider:SetValue(MRT_Options["Tracking_MinItemQualityToLog"]);
     MRT_Options_ItemsTrackingPanel_MinItemQualityToLog_SliderValue:SetText("|c"..MRT_ItemColors[MRT_Options["Tracking_MinItemQualityToLog"]+1]..MRT_ItemValues[MRT_Options["Tracking_MinItemQualityToLog"]+1]);
     MRT_Options_ItemsTrackingPanel_AskForDKPValue_CB:SetChecked(MRT_Options["Tracking_AskForDKPValue"]);
+    MRT_Options_ItemsTrackingPanel_AskForDKPValuePersonal_CB:SetChecked(MRT_Options["Tracking_AskForDKPValuePersonal"]);
     MRT_Options_ItemsTrackingPanel_MinItemQualityToGetCost_Slider:SetValue(MRT_Options["Tracking_MinItemQualityToGetDKPValue"]);
     MRT_Options_ItemsTrackingPanel_MinItemQualityToGetCost_SliderValue:SetText("|c"..MRT_ItemColors[MRT_Options["Tracking_MinItemQualityToGetDKPValue"]+1]..MRT_ItemValues[MRT_Options["Tracking_MinItemQualityToGetDKPValue"]+1]);
     MRT_Options_ItemsTrackingPanel_OnlyTrackItemsAbove_EB:SetText(MRT_Options["Tracking_OnlyTrackItemsAboveILvl"]);

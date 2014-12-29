@@ -60,7 +60,8 @@ HealBot_ConfigDefaults = {
   ActionVisible = {[1]=0,[2]=0,[3]=0,[4]=0,[5]=0,[6]=0,[7]=0,[8]=0,[9]=0,[10]=0},
   EnableHealthy = true,
   Profile=1,
-};
+  BuffReset="6.0.0",
+  };
 
 HealBot_Config_SpellsDefaults = {
   EnabledKeyCombo=nil,
@@ -232,6 +233,9 @@ HealBot_GlobalsDefaults = {
 	EnAutoCombat=true,
     RaidHideMethod=0,
     useUTF8=true,
+    minHealthBloom=40,
+    minManaBloom=40,
+    CustomCuresReset="6.0.0",
     HealBot_customPermUserName={},
     HealBot_MouseWheelIndex={ ["AltUp"]=2, ["AltDown"]=3 },
     HealBot_MouseWheelTxt={ ["AltUp"]=HEALBOT_BLIZZARD_MENU, ["AltDown"]=HEALBOT_HB_MENU },

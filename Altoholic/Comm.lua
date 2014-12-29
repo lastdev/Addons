@@ -285,7 +285,7 @@ local AUTH_NEVER	= 3
 function Altoholic.Comm.Sharing:OnSharingRequest(sender, data)
 	self.SharingEnabled = nil
 	
-	if UnitAffectingCombat("player") ~= nil then
+	if UnitAffectingCombat("player") == true then
 		-- automatically reject if requestee is in combat
 		Whisper(sender, MSG_ACCOUNT_SHARING_REFUSEDINCOMBAT)
 		return

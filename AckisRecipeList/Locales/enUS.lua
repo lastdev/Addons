@@ -6,7 +6,7 @@ enUS localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 3.0.11
+Project version: 3.0.12
 ************************************************************************
 Translation credits: http://www.wowace.com/addons/arl/localization/translators/
 
@@ -930,7 +930,8 @@ L["Mo'arg Weaponsmith"] = true
 L["Mob Drop"] = true
 L["MOB_DROP_DESC"] = "Recipes that are Mob Drops should be included in the scan."
 L["Modoru"] = true
-L["MODULE_ERROR_FORMAT"] = "The \"Ackis Recipe List: %s\" AddOn is not loaded. Either it is not installed or is disabled."
+L["MODULE_ERROR_FORMAT"] = "The required profession module, \"Ackis Recipe List: %s,\" is not loaded. Either it is not installed or is disabled."
+L["MODULE_WRONG_VERSION_FORMAT"] = "The required profession module, \"Ackis Recipe List: %s,\" is version %d. The current supported profession module version is %d."
 L["Molt Thorn"] = true
 L["Moonrage Tailor"] = true
 L["Moordo"] = true
@@ -941,6 +942,7 @@ L["Mudduk"] = true
 L["Muheru the Weaver"] = true
 L["Mukdrak"] = true
 L["Mumman"] = true
+L["Murg Stonecrack"] = true
 L["Murkblood Raider"] = true
 L["Murne Greenhoof"] = true
 L["Muuran"] = true

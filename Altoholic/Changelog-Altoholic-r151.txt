@@ -1,0 +1,62 @@
+------------------------------------------------------------------------
+r151 | thaoky | 2014-12-27 13:28:47 +0000 (Sat, 27 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/Altoholic.lua
+   M /trunk/Core.lua
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Modules/Altoholic_Achievements/Achievements.lua
+   M /trunk/Modules/Altoholic_Characters/TabCharacters.lua
+   M /trunk/Modules/Altoholic_Grids/Grid_Mounts.lua
+   M /trunk/Modules/Altoholic_Grids/TabGrids.lua
+   M /trunk/Modules/Altoholic_Guild/Frames/GuildMembers.lua
+   M /trunk/Modules/Altoholic_Summary/Currencies.lua
+   M /trunk/Modules/Altoholic_Summary/Currencies.xml
+   M /trunk/Modules/Altoholic_Summary/TabSummary.lua
+   M /trunk/Tooltip.lua
+   M /trunk/changelog.txt
+
+6.0.003 Commit
+------------------------------------------------------------------------
+r150 | thaoky | 2014-12-24 14:51:45 +0000 (Wed, 24 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+Fixed .pkgmeta to include DataStore_Garrisons (oops !)
+------------------------------------------------------------------------
+r149 | thaoky | 2014-12-24 14:43:37 +0000 (Wed, 24 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/Altoholic.toc
+   M /trunk/AltoholicTemplates.xml
+   M /trunk/Comm.lua
+   M /trunk/Core.lua
+   M /trunk/Frames/TabOptions.lua
+   M /trunk/Modules/Altoholic_Achievements/Achievements.lua
+   M /trunk/Modules/Altoholic_Achievements/Altoholic_Achievements.toc
+   M /trunk/Modules/Altoholic_Agenda/Altoholic_Agenda.toc
+   M /trunk/Modules/Altoholic_Characters/Altoholic_Characters.toc
+   M /trunk/Modules/Altoholic_Grids/Altoholic_Grids.toc
+   A /trunk/Modules/Altoholic_Grids/Grid_GarrisonArchitect.lua
+   A /trunk/Modules/Altoholic_Grids/Grid_GarrisonFollowers.lua
+   M /trunk/Modules/Altoholic_Grids/Grids.xml
+   M /trunk/Modules/Altoholic_Grids/TabGrids.lua
+   M /trunk/Modules/Altoholic_Grids/TabGrids.xml
+   M /trunk/Modules/Altoholic_Guild/Altoholic_Guild.toc
+   M /trunk/Modules/Altoholic_Search/Altoholic_Search.toc
+   M /trunk/Modules/Altoholic_Summary/Altoholic_Summary.toc
+   M /trunk/Modules/Altoholic_Summary/Currencies.lua
+   M /trunk/Modules/Altoholic_Summary/Currencies.xml
+   A /trunk/Modules/Altoholic_Summary/GarrisonFollowers.lua
+   A /trunk/Modules/Altoholic_Summary/GarrisonFollowers.xml
+   M /trunk/Modules/Altoholic_Summary/Skills.lua
+   M /trunk/Modules/Altoholic_Summary/TabSummary.lua
+   M /trunk/Modules/Altoholic_Summary/TabSummary.xml
+   M /trunk/changelog.txt
+
+6.0.002 Commit
+------------------------------------------------------------------------
+r148 | thaoky | 2014-10-17 17:19:53 +0000 (Fri, 17 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/changelog.txt
+
+Added missing changelog.txt
+------------------------------------------------------------------------

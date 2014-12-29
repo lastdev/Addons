@@ -124,6 +124,34 @@ local support = {
 
 -- this content will be subject to frequent changes, do not bother translating it !!
 local whatsnew = {
+	{	name = "6.0.003 Changes",
+		bulletedList = {
+			"DataStore_Garrisons: fixed a bug where saved buildings are deleted from the DB.",
+			"Added tracking of uncollected garrison resources. They can be seen in the currency pane of the account summary.",
+			"Added a warning when uncollected garrison resources are >400 on a given alt. There is an option to disable this warning if you want to.",
+			"Added Garrison-related achievements, now listed in a proper way in the achievements' tab.",
+			"Recipes bought at garrison trainers now appear in red if they are BOP and already known.",
+			"Removed mounts from the addon, as they have been account-wide for a while now. The icon is still there as a placeholder in the grids tab though.",
+			"DataStore_Pets: removed all mount-related functions and data tables.",
+			"DataStore_Mails: fixed a bug where the addon kept complaining about old mails about to expire. This one is long overdue, thanks to Wispor and Elfana for helping me on this one !",
+			"Fixed 'Player not found' message. (Bug 779 / Thanks Phinar !)",
+			"DataStore_Achievements: fixed an error caused by achievements with invalid id (as returned by the game's API). (Bug 792 / Thanks SpareSimian)",
+			"DataStore_Agenda: fixed a Lua error at logon. (Bug 792 also / Thanks SpareSimian)",
+		},
+	},
+	{	name = "6.0.002 Changes",
+		bulletedList = {
+			"New DataStore module : DataStore_Garrisons ! You have to visit the missions table to scan followers.",
+			"Grids tab: added a pane for Garrison followers.",
+			"Grids tab: added a pane for Garrison buildings.",
+			"DataStore_Containers: now scanning the reagent bank at logon.",
+			"Account Summary : updated the currency pane to remove valor and justice tokens, and replace them with garrison resources, apexis crystals, and seals of tempered fate.",
+			"Account Summary : added a pane for Garrison followers.",
+			"Fixed a Lua error when talking to an enchanting follower in the garrison.",
+			"Fixed professions not being scanned entirely since 6.0 (Thanks Myrrodin & CKaotic), I did revert the part about followers though, to use IsNPCCrafting() instead.",
+			"A lot of minor fixes.",
+		},
+	},
 	{	name = "6.0.001 Changes",
 		bulletedList = {
 			"Added a pane in the Grids tab to track LFR lockouts across alts.",

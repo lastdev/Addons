@@ -543,18 +543,18 @@ end
 
 function HealBot_GetBandageType()
     local bandage = ""
-    if IsUsableItem(HEALBOT_DENSE_EMBERSILK_BANDAGE) then bandage = HEALBOT_DENSE_EMBERSILK_BANDAGE
-    elseif IsUsableItem(HEALBOT_EMBERSILK_BANDAGE) then bandage = HEALBOT_EMBERSILK_BANDAGE
-    elseif IsUsableItem(HEALBOT_HEAVY_FROSTWEAVE_BANDAGE) then bandage = HEALBOT_HEAVY_FROSTWEAVE_BANDAGE
-    elseif IsUsableItem(HEALBOT_FROSTWEAVE_BANDAGE) then bandage = HEALBOT_FROSTWEAVE_BANDAGE
-    elseif IsUsableItem(HEALBOT_HEAVY_NETHERWEAVE_BANDAGE) then bandage = HEALBOT_HEAVY_NETHERWEAVE_BANDAGE
-    elseif IsUsableItem(HEALBOT_NETHERWEAVE_BANDAGE) then bandage = HEALBOT_NETHERWEAVE_BANDAGE
-    elseif IsUsableItem(HEALBOT_HEAVY_RUNECLOTH_BANDAGE) then bandage = HEALBOT_HEAVY_RUNECLOTH_BANDAGE
-    elseif IsUsableItem(HEALBOT_RUNECLOTH_BANDAGE) then bandage = HEALBOT_RUNECLOTH_BANDAGE
-    elseif IsUsableItem(HEALBOT_HEAVY_MAGEWEAVE_BANDAGE) then bandage = HEALBOT_HEAVY_MAGEWEAVE_BANDAGE
-    elseif IsUsableItem(HEALBOT_MAGEWEAVE_BANDAGE) then bandage = HEALBOT_MAGEWEAVE_BANDAGE
-    elseif IsUsableItem(HEALBOT_HEAVY_SILK_BANDAGE) then bandage = HEALBOT_HEAVY_SILK_BANDAGE
-    elseif IsUsableItem(HEALBOT_SILK_BANDAGE) then bandage = HEALBOT_SILK_BANDAGE
+    if IsUsableItem(HEALBOT_DENSE_EMBERSILK_BANDAGE) or HealBot_IsItemInBag(HEALBOT_DENSE_EMBERSILK_BANDAGE) then bandage = HEALBOT_DENSE_EMBERSILK_BANDAGE
+    elseif IsUsableItem(HEALBOT_EMBERSILK_BANDAGE) or HealBot_IsItemInBag(HEALBOT_EMBERSILK_BANDAGE) then bandage = HEALBOT_EMBERSILK_BANDAGE
+    elseif IsUsableItem(HEALBOT_HEAVY_FROSTWEAVE_BANDAGE) or HealBot_IsItemInBag(HEALBOT_HEAVY_FROSTWEAVE_BANDAGE) then bandage = HEALBOT_HEAVY_FROSTWEAVE_BANDAGE
+    elseif IsUsableItem(HEALBOT_FROSTWEAVE_BANDAGE) or HealBot_IsItemInBag(HEALBOT_FROSTWEAVE_BANDAGE) then bandage = HEALBOT_FROSTWEAVE_BANDAGE
+    elseif IsUsableItem(HEALBOT_HEAVY_NETHERWEAVE_BANDAGE) or HealBot_IsItemInBag(HEALBOT_HEAVY_NETHERWEAVE_BANDAGE) then bandage = HEALBOT_HEAVY_NETHERWEAVE_BANDAGE
+    elseif IsUsableItem(HEALBOT_NETHERWEAVE_BANDAGE) or HealBot_IsItemInBag(HEALBOT_NETHERWEAVE_BANDAGE) then bandage = HEALBOT_NETHERWEAVE_BANDAGE
+    elseif IsUsableItem(HEALBOT_HEAVY_RUNECLOTH_BANDAGE) or HealBot_IsItemInBag(HEALBOT_HEAVY_RUNECLOTH_BANDAGE) then bandage = HEALBOT_HEAVY_RUNECLOTH_BANDAGE
+    elseif IsUsableItem(HEALBOT_RUNECLOTH_BANDAGE) or HealBot_IsItemInBag(HEALBOT_RUNECLOTH_BANDAGE) then bandage = HEALBOT_RUNECLOTH_BANDAGE
+    elseif IsUsableItem(HEALBOT_HEAVY_MAGEWEAVE_BANDAGE) or HealBot_IsItemInBag(HEALBOT_HEAVY_MAGEWEAVE_BANDAGE) then bandage = HEALBOT_HEAVY_MAGEWEAVE_BANDAGE
+    elseif IsUsableItem(HEALBOT_MAGEWEAVE_BANDAGE) or HealBot_IsItemInBag(HEALBOT_MAGEWEAVE_BANDAGE) then bandage = HEALBOT_MAGEWEAVE_BANDAGE
+    elseif IsUsableItem(HEALBOT_HEAVY_SILK_BANDAGE) or HealBot_IsItemInBag(HEALBOT_HEAVY_SILK_BANDAGE) then bandage = HEALBOT_HEAVY_SILK_BANDAGE
+    elseif IsUsableItem(HEALBOT_SILK_BANDAGE) or HealBot_IsItemInBag(HEALBOT_SILK_BANDAGE) then bandage = HEALBOT_SILK_BANDAGE
     else
         bandage = HEALBOT_WORDS_UNKNOWN
     end
@@ -1477,7 +1477,7 @@ function HealBot_Action_EnableButton(button, isTarget)
         local bttextlen = floor((hbFontAdj*2)+HealBot_Globals.tsadjmod+((Healbot_Config_Skins.HealBar[Healbot_Config_Skins.Current_Skin][button.frame]["WIDTH"]*1.88)
                                 /(Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["HEIGHT"])
                                 -(Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][button.frame]["HEIGHT"]/hbFontAdj)))
-        ebtext=HealBot_Action_HBText(uHlth,uMaxHlth,uName,ebUnit,uHealIn, hbGUID, bttextlen, button.frame)
+        ebtext=HealBot_Action_HBText(uHlth,uMaxHlth,uName,ebUnit,uHealIn, uAbsorbs, hbGUID, bttextlen, button.frame)
     end
     ebubar.txt = _G[ebubar:GetName().."_text"];
     ebubar.txt:SetText(ebtext);
@@ -1614,8 +1614,16 @@ function HealBot_Action_sethbAggroNumberFormat()
     end
 end
 
-function HealBot_Action_HBText(hlth,maxhlth,unitName,unit,healin, hbGUID, bttextlen, hbCurFrame)
+function HealBot_Action_HBText(hlth,maxhlth,unitName,unit,healin, absorbin, hbGUID, bttextlen, hbCurFrame)
     local btHBbarText,uName,bthlthdelta=" ",unitName,0
+    local hbHealInTxt=Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][hbCurFrame]["INCHEALS"]
+    local healInTxt=healin
+    if hbHealInTxt>3 then
+        healInTxt=healin+absorbin
+        if hbHealInTxt==4 then hbHealInTxt=2 end
+        if hbHealInTxt==5 then hbHealInTxt=3 end
+    end
+    
     
     if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][hbCurFrame]["CLASSONBAR"] and Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][hbCurFrame]["CLASSTYPE"]==2 and UnitClass(unit) then
         local clTxt=UnitClass(unit)
@@ -1649,8 +1657,8 @@ function HealBot_Action_HBText(hlth,maxhlth,unitName,unit,healin, hbGUID, bttext
     if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][hbCurFrame]["HLTHONBAR"] and maxhlth then
         local numSuffix=""
         if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][hbCurFrame]["HLTHTYPE"]==1 then
-            if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][hbCurFrame]["INCHEALS"]==2 then
-                bthlthdelta=hlth+healin
+            if hbHealInTxt==2 then
+                bthlthdelta=hlth+healInTxt
                 if bthlthdelta>maxhlth then bthlthdelta=maxhlth end
             else
                 bthlthdelta=hlth;
@@ -1702,16 +1710,16 @@ function HealBot_Action_HBText(hlth,maxhlth,unitName,unit,healin, hbGUID, bttext
                 end
             end
             btHBbarText=btHBbarText..hbNumFormatSurL[hbCurFrame]..bthlthdelta..numSuffix..hbNumFormatSurR[hbCurFrame]
-            if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][hbCurFrame]["INCHEALS"]==3 and healin>0 then
+            if healInTxt>0 and hbHealInTxt==3 then
                 numSuffix=""
-                if hbNumFormatPlaces[hbCurFrame]>-1 and healin>999 then
-                    healin, numSuffix=HealBot_Action_shortenHealIn(healin, numSuffix, hbCurFrame)
+                if hbNumFormatPlaces[hbCurFrame]>-1 and healInTxt>999 then
+                    healInTxt, numSuffix=HealBot_Action_shortenHealIn(healInTxt, numSuffix, hbCurFrame)
                 end
-                btHBbarText=btHBbarText.." +"..healin..numSuffix
+                btHBbarText=btHBbarText.." +"..healInTxt..numSuffix
             end
         elseif Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][hbCurFrame]["HLTHTYPE"]==2 then
-            if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][hbCurFrame]["INCHEALS"]==2 then
-                bthlthdelta=(hlth+healin)-maxhlth;
+            if hbHealInTxt==2 then
+                bthlthdelta=(hlth+healInTxt)-maxhlth;
             else
                 bthlthdelta=hlth-maxhlth;
             end
@@ -1765,21 +1773,21 @@ function HealBot_Action_HBText(hlth,maxhlth,unitName,unit,healin, hbGUID, bttext
             else
                 btHBbarText=btHBbarText..hbNumFormatSurL[hbCurFrame]..bthlthdelta..numSuffix..hbNumFormatSurR[hbCurFrame]
             end
-            if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][hbCurFrame]["INCHEALS"]==3 and healin>0 then
+            if hbHealInTxt==3 and healInTxt>0 then
                 numSuffix=""
-                if hbNumFormatPlaces[hbCurFrame]>-1  and healin>999 then 
-                    healin, numSuffix=HealBot_Action_shortenHealIn(healin, numSuffix, hbCurFrame)
+                if hbNumFormatPlaces[hbCurFrame]>-1  and healInTxt>999 then 
+                    healInTxt, numSuffix=HealBot_Action_shortenHealIn(healInTxt, numSuffix, hbCurFrame)
                 end
-                btHBbarText=btHBbarText.." +"..healin..numSuffix
+                btHBbarText=btHBbarText.." +"..healInTxt..numSuffix
             end
         else
-            if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][hbCurFrame]["INCHEALS"]==2 then
-                btHBbarText=btHBbarText..hbNumFormatSurL[hbCurFrame]..floor(((hlth+healin)/maxhlth)*100).."%"..hbNumFormatSurR[hbCurFrame]
+            if hbHealInTxt==2 then
+                btHBbarText=btHBbarText..hbNumFormatSurL[hbCurFrame]..floor(((hlth+healInTxt)/maxhlth)*100).."%"..hbNumFormatSurR[hbCurFrame]
             else
                 btHBbarText=btHBbarText..hbNumFormatSurL[hbCurFrame]..floor((hlth/maxhlth)*100).."%"..hbNumFormatSurR[hbCurFrame]
             end
-            if Healbot_Config_Skins.BarText[Healbot_Config_Skins.Current_Skin][hbCurFrame]["INCHEALS"]==3 and healin>0 then
-                btHBbarText=btHBbarText.." +"..floor((healin/maxhlth)*100).."%"
+            if hbHealInTxt==3 and healInTxt>0 then
+                btHBbarText=btHBbarText.." +"..floor((healInTxt/maxhlth)*100).."%"
             end
         end
     end
@@ -3014,7 +3022,7 @@ function HealBot_Action_SetButtonAttrib(button,bbutton,bkey,status,j)
             if status=="Enabled" then
                 HealBotButtonMacroAttribs[HB_prefix..j]=sName
             end
-        elseif IsUsableItem(sName) then
+        elseif IsUsableItem(sName) or HealBot_IsItemInBag(sName) then
             button:SetAttribute(HB_prefix..buttonType..j, "item"..j);
             button:SetAttribute(HB_prefix.."type-item"..j, "item");
             button:SetAttribute(HB_prefix.."item-item"..j, sName);

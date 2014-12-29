@@ -2,10 +2,10 @@
 ************************************************************************
 Quest.lua
 ************************************************************************
-File date: 2014-06-01T11:02:34Z
-File hash: 6925a97
-Project hash: 0b1c7cf
-Project version: 3.0.11
+File date: 2014-12-14T20:50:11Z
+File hash: a4cd6d6
+Project hash: a4cd6d6
+Project version: 3.0.12
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -51,8 +51,16 @@ private.quest_names = _G.setmetatable({}, {
 })
 
 function addon:InitQuest()
-	local function AddQuest(quest_id, zone_name, coord_x, coord_y, faction)
-		private.AcquireTypes.Quest:AddEntity(quest_id, nil, zone_name, coord_x, coord_y, faction)
+	local function AddQuest(questID, zoneName, coordX, coordY, faction)
+		private.AcquireTypes.Quest:AddEntity(addon, {
+			coord_x = coordX,
+			coord_y = coordY,
+			faction = faction,
+			identifier = questID,
+			item_list = {},
+			location = zoneName,
+			name = nil, -- Handled by memoizing table above.
+		})
 	end
 
 	AddQuest(8323,	Z.SILITHUS,			67.1,	69.7,	"Neutral") -- Blacksmithing, Tailoring

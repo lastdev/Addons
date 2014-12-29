@@ -11,11 +11,36 @@ local pairs = _G.pairs
 local FOLDER_NAME, private = ...
 
 local addon = private.addon
+if not addon then
+	return
+end
+
 local constants = addon.constants
 local module = addon:GetModule(private.module_name)
 
 local LibStub = _G.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale(constants.addon_name)
+
+-------------------------------------------------------------------------------
+-- What we're really here for.
+-------------------------------------------------------------------------------
+module.ITEM_FILTER_TYPES = {
+	LEATHERWORKING_BACK = true,
+	LEATHERWORKING_BAG = true,
+	LEATHERWORKING_CHEST = true,
+	LEATHERWORKING_CREATED_ITEM = true,
+	LEATHERWORKING_FEET = true,
+	LEATHERWORKING_HANDS = true,
+	LEATHERWORKING_HEAD = true,
+	LEATHERWORKING_ITEM_ENHANCEMENT = true,
+	LEATHERWORKING_LEGS = true,
+	LEATHERWORKING_MATERIALS = true,
+	LEATHERWORKING_SHIELD = true,
+	LEATHERWORKING_SHOULDER = true,
+	LEATHERWORKING_THROWN = true,
+	LEATHERWORKING_WAIST = true,
+	LEATHERWORKING_WRIST = true,
+}
 
 function module:InitializeItemFilters(parent_panel)
 	local MainPanel = addon.Frame

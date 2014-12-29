@@ -8,7 +8,7 @@
 ## SavedVariables: DataStore_AuctionsDB
 ## X-Category: Interface Enhancements
 ## X-Embeds: Ace3
-## X-Curse-Packaged-Version: r34
+## X-Curse-Packaged-Version: r40
 ## X-Curse-Project-Name: DataStore_Auctions
 ## X-Curse-Project-ID: datastore_auctions
 ## X-Curse-Repository-ID: wow/datastore_auctions/mainline

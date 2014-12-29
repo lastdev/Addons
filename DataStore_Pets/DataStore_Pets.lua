@@ -56,19 +56,16 @@ end
 -- *** Event Handlers ***
 local function OnPlayerAlive()
 	ScanCompanions("CRITTER")
-	ScanCompanions("MOUNT")
 end
 
 local function OnCompanionUpdate()
 	-- COMPANION_UPDATE is triggered very often, but after the very first call, pets & mounts can be scanned automatically. After that, we only need to track COMPANION_LEARNED
 	addon:UnregisterEvent("COMPANION_UPDATE")
 	ScanCompanions("CRITTER")
-	ScanCompanions("MOUNT")
 end
 
 local function OnCompanionLearned()
 	ScanCompanions("CRITTER")
-	ScanCompanions("MOUNT")
 end
 
 -- ** Mixins **
@@ -99,15 +96,6 @@ local function _IsPetKnown(character, companionType, spellID)
 	end
 end
 
-local function _GetMountList()
-	return addon.MountList
-end
-
-local function _GetMountSpellID(itemID)
-	-- returns nil if  id is not in the DB, returns the spellID otherwise
-	return addon.MountToSpellID[itemID]
-end
-
 local function _GetCompanionList()
 	return addon.CompanionList
 end
@@ -127,8 +115,6 @@ local PublicMethods = {
 	GetNumPets = _GetNumPets,
 	GetPetInfo = _GetPetInfo,
 	IsPetKnown = _IsPetKnown,
-	GetMountList = _GetMountList,
-	GetMountSpellID = _GetMountSpellID,
 	GetCompanionList = _GetCompanionList,
 	GetCompanionSpellID = _GetCompanionSpellID,
 	GetCompanionLink = _GetCompanionLink,

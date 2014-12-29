@@ -89,16 +89,12 @@ c.AddOptionalSpell("Non-Lethal Poison", nil, {
    ID = "Crippling Poison",
    FlashID = {
       "Crippling Poison",
---         "Mind-numbing Poison",
       "Leeching Poison",
---         "Paralytic Poison",
       "Poisons"
    },
    CheckFirst = function()
       return c.SelfBuffNeeded("Crippling Poison")
---            and c.SelfBuffNeeded("Mind-numbing Poison")
          and c.SelfBuffNeeded("Leeching Poison")
---            and c.SelfBuffNeeded("Paralytic Poison")
    end
 })
 

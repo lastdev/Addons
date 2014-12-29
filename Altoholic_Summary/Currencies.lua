@@ -20,24 +20,14 @@ local CURRENCY_ID_CONQUEST = 390
 local CURRENCY_ID_HONOR = 392
 local CURRENCY_ID_JUSTICE = 395
 local CURRENCY_ID_VALOR = 396
+local CURRENCY_ID_APEXIS = 823
+local CURRENCY_ID_GARRISON = 824
+local CURRENCY_ID_SOTF = 994		-- Seals of Tempered Fate (WoD)
 
 addon.Currencies = {}
 
 local ns = addon.Currencies		-- ns = namespace
 local Characters = addon.Characters
-
-local function SetCurrencyCounter(frame, character, id)
-	local amount, earnedThisWeek, weeklyMax, totalMax = DataStore:GetCurrencyTotals(character, id)
-	local color = (amount == 0) and GREY or YELLOW
-
-	if id == CURRENCY_ID_CONQUEST then
-		frame:SetText(format("%s%s%s/%s%s", color, amount, WHITE, GREEN, weeklyMax))
-	elseif totalMax == 0 then
-		frame:SetText(color .. amount)
-	else
-		frame:SetText(format("%s%s%s/%s%s", color, amount, WHITE, GREEN, totalMax))
-	end
-end
 
 function ns:Update()
 	local VisibleLines = 14
@@ -91,10 +81,11 @@ function ns:Update()
 				end				
 				_G[entry..i.."Level"]:SetText("")
 				
-				_G[entry..i.."JusticeNormalText"]:SetText("")
-				_G[entry..i.."ValorNormalText"]:SetText("")
-				_G[entry..i.."HonorNormalText"]:SetText("")
-				_G[entry..i.."ConquestNormalText"]:SetText("")
+				_G[entry..i.."Currency1NormalText"]:SetText("")
+				_G[entry..i.."Currency2NormalText"]:SetText("")
+				_G[entry..i.."Currency3NormalText"]:SetText("")
+				_G[entry..i.."Currency4NormalText"]:SetText("")
+				_G[entry..i.."Currency5NormalText"]:SetText("")
 				
 				_G[ entry..i ]:SetID(line)
 				_G[ entry..i ]:Show()
@@ -119,33 +110,38 @@ function ns:Update()
 					_G[entry..i.."NameNormalText"]:SetText(icon .. format("%s (%s)", DS:GetColoredCharacterName(character), DS:GetCharacterClass(character)))
 					_G[entry..i.."Level"]:SetText(GREEN .. DS:GetCharacterLevel(character))
 				
-					-- Justice points
-					local amount, earnedThisWeek, weeklyMax, totalMax = DataStore:GetCurrencyTotals(character, CURRENCY_ID_JUSTICE)
+					-- Garrison resources
+					local uncollected = DataStore:GetUncollectedResources(character) or 0
+					
+					local amount, earnedThisWeek, weeklyMax, totalMax = DataStore:GetCurrencyTotals(character, CURRENCY_ID_GARRISON)
 					local color = (amount == 0) and GREY or WHITE
 					
-					_G[entry..i.."JusticeNormalText"]:SetText(format("%s%s%s/%s%s", color, amount, WHITE, YELLOW, totalMax))
+					_G[entry..i.."Currency1NormalText"]:SetText(format("%s%s/%s+%s", color, amount, GREEN, uncollected))
 					
-					-- Valor points per week
-					amount, earnedThisWeek, weeklyMax, totalMax = DataStore:GetCurrencyTotals(character, CURRENCY_ID_VALOR)
+					-- Apexis crystals
+					amount, earnedThisWeek, weeklyMax, totalMax = DataStore:GetCurrencyTotals(character, CURRENCY_ID_APEXIS)
 
-					color = (earnedThisWeek == 0) and GREY or WHITE
-					_G[entry..i.."ValorWeekNormalText"]:SetText(format("%s%s%s/%s%s", color, earnedThisWeek, WHITE, YELLOW, weeklyMax))
-					
-					-- Valor points
 					color = (amount == 0) and GREY or WHITE
-					_G[entry..i.."ValorNormalText"]:SetText(format("%s%s%s/%s%s", color, amount, WHITE, YELLOW, totalMax))
+					_G[entry..i.."Currency2NormalText"]:SetWidth(100)
+					_G[entry..i.."Currency2NormalText"]:SetText(format("%s%s%s/%s%s", color, amount, WHITE, YELLOW, totalMax))
+					
+					-- Seals of Tempered Fate
+					amount, earnedThisWeek, weeklyMax, totalMax = DataStore:GetCurrencyTotals(character, CURRENCY_ID_SOTF)
+					color = (amount == 0) and GREY or WHITE
+					
+					_G[entry..i.."Currency3NormalText"]:SetText(format("%s%s%s/%s%s", color, amount, WHITE, YELLOW, totalMax))
 					
 					-- Honor points
 					amount, earnedThisWeek, weeklyMax, totalMax = DataStore:GetCurrencyTotals(character, CURRENCY_ID_HONOR)
 					color = (amount == 0) and GREY or WHITE
 					
-					_G[entry..i.."HonorNormalText"]:SetText(format("%s%s%s/%s%s", color, amount, WHITE, YELLOW, totalMax))
+					_G[entry..i.."Currency4NormalText"]:SetText(format("%s%s%s/%s%s", color, amount, WHITE, YELLOW, totalMax))
 					
 					-- Conquest points
 					amount, earnedThisWeek, weeklyMax, totalMax = DataStore:GetCurrencyTotals(character, CURRENCY_ID_CONQUEST)
 					color = (earnedThisWeek == 0) and GREY or WHITE
 					
-					_G[entry..i.."ConquestNormalText"]:SetText(format("%s%s%s/%s%s", color, earnedThisWeek, WHITE, YELLOW, weeklyMax))
+					_G[entry..i.."Currency5NormalText"]:SetText(format("%s%s%s/%s%s", color, earnedThisWeek, WHITE, YELLOW, weeklyMax))
 
 				elseif (lineType == INFO_TOTAL_LINE) then
 					_G[entry..i.."Collapse"]:Hide()
@@ -154,10 +150,11 @@ function ns:Update()
 					_G[entry..i.."NameNormalText"]:SetWidth(200)
 					_G[entry..i.."NameNormalText"]:SetText(L["Totals"])
 					_G[entry..i.."Level"]:SetText(Characters:GetField(line, "level"))
-					_G[entry..i.."JusticeNormalText"]:SetText("")
-					_G[entry..i.."ValorNormalText"]:SetText("")
-					_G[entry..i.."HonorNormalText"]:SetText("")
-					_G[entry..i.."ConquestNormalText"]:SetText("")
+					_G[entry..i.."Currency1NormalText"]:SetText("")
+					_G[entry..i.."Currency2NormalText"]:SetText("")
+					_G[entry..i.."Currency3NormalText"]:SetText("")
+					_G[entry..i.."Currency4NormalText"]:SetText("")
+					_G[entry..i.."Currency5NormalText"]:SetText("")
 				end
 				_G[ entry..i ]:SetID(line)
 				_G[ entry..i ]:Show()
@@ -228,51 +225,4 @@ function ns:OnEnter(self)
 	end
 	
 	AltoTooltip:Show();
-end
-
-local VIEW_AUCTIONS = 5
-local VIEW_BIDS = 6
-local VIEW_MAILS = 7
-
-function ns:OnClick(self)
-	local line = self:GetParent():GetID()
-	local lineType = Characters:GetLineType(line)
-	
-	if lineType ~= INFO_CHARACTER_LINE then		
-		return
-	end
-	
-	local id = self:GetID()
-	if (id == 2) or (id >= 5) then	-- exit if it's not the right column
-		return
-	end
-	
-	local DS = DataStore
-	local character = DS:GetCharacter(Characters:GetInfo(line))
-	
-	local action, num
-	
-	if id == 1 then			-- mails
-		num = DS:GetNumMails(character) or 0
-		if num > 0 then				-- only set the action if there are data to show
-			action = VIEW_MAILS
-		end
-	elseif id == 3 then		-- auctions
-		num = DS:GetNumAuctions(character) or 0
-		if num > 0 then
-			action = VIEW_AUCTIONS
-		end
-	elseif id == 4 then		-- bids
-		num = DS:GetNumBids(character) or 0
-		if num > 0 then
-			action = VIEW_BIDS
-		end
-	end
-	
-	if action then
-		addon.Tabs:OnClick("Characters")
-		addon.Tabs.Characters:SetAlt( Characters:GetInfo(line) )
-		addon.Tabs.Characters:MenuItem_OnClick(AltoholicTabCharacters_Characters, "LeftButton")
-		addon.Tabs.Characters:ViewCharInfo(action)	
-	end
 end

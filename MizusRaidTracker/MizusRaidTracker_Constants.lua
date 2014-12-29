@@ -4,12 +4,15 @@
 -- *********************************************************
 --
 
-MRT_InstanceDifficultyTable = {
-    [1] = "10 Normal",              -- Note: also 5 Normal / 40 player raid
-    [2] = "25 Normal",              -- Note: also 5 Heroic
-    [3] = "10 Heroic",
-    [4] = "25 Heroic",
-}
+
+-- Check for addon table
+if (not MizusRaidTracker) then MizusRaidTracker = {}; end
+local mrt = MizusRaidTracker
+
+mrt.diffIDsLFR = { 7, 17 }
+mrt.diffIDsNormal = { 1, 3, 4, 9, 12, 14 }
+mrt.diffIDsHeroic = { 2, 5, 6, 11, 15 }
+mrt.raidSizes = { 5, 5, 10, 25, 10, 25, 25, 5, 40, 40, 3, 3, 40, 30, 30, 20, 30, 5, 5, 5 }
 
 -- these are probably not needed anymore
 MRT_ItemColorValues = {
@@ -81,6 +84,9 @@ MRT_RaidZones = {
     [897] = true,       -- Heart of Fear
     [930] = true,       -- Throne of Thunder
 	[953] = true,		-- Siege of Orgrimmar
+    -- Warlords of Draenor
+    [994] = true,       -- Highmaul
+    [988] = true,       -- Blackrock Foundry
 }
 
 MRT_LegacyRaidZonesPanadria = {
@@ -159,7 +165,10 @@ MRT_BossIDList = {
     [16011] = "Loatheb",
     [16061] = "Instructor Razuvious",
     [16060] = "Gothik the Harvester",
-        -- Four Horsemen not supported - boss event with multiple NPCs without shared health pool and without boss yell
+    [16064] = "The Four Horsemen",              -- ID of Thane Korth'azz
+    [16065] = "The Four Horsemen",              -- ID of Lady Blaumeux
+    [30549] = "The Four Horsemen",              -- ID of Baron Rivendare
+    [16063] = "The Four Horsemen",              -- ID of Sire Zeliek
     [16028] = "Patchwerk",
     [15931] = "Grobbulus",
     [15932] = "Gluth",
@@ -184,7 +193,9 @@ MRT_BossIDList = {
     [33118] = "Ignis the Furnace Master",
     [33186] = "Razorscale",
     [33293] = "XT-002 Deconstructor",
-        -- The Assembly of Iron will need bossyell for correct tracking
+    [32867] = "Assembly of Iron",               -- ID of Steelbreaker
+    [32927] = "Assembly of Iron",               -- ID of Runemaster Molgeim
+    [32857] = "Assembly of Iron",               -- ID of Stormcaller Brundir
     [32930] = "Kologarn",
     [33515] = "Auriaya",
         -- Freya, Hodir, Mimiron and Thorim will need bossyells - they don't die
@@ -344,6 +355,33 @@ MRT_BossIDList = {
 	[71160] = "Paragons of the Klaxxi", -- ID of Iyyokuk the Lucid
 	[71161] = "Paragons of the Klaxxi", -- ID of Kil'ruk the Wind-Reaver
 	[71865] = "Garrosh Hellscream",
+    
+    ---------------------------
+    --  Warlords of Draenor  --
+    ---------------------------
+    -- Highmaul
+    [78714] = "Kargath Bladefist",      -- Will probably need a boss yell
+    [77404] = "The Butcher",
+    [78948] = "Tectus",
+    [78491] = "Brackenspore",
+    [78238] = "Twin Ogron",             -- ID of Pol
+    [78237] = "Twin Ogron",             -- ID of Phemos
+    [79015] = "Ko'ragh",
+    [77428] = "Imperator Mar'gok",
+    -- Blackrock Foundry
+    [76877] = "Gruul",
+    [77182] = "Oregorger",
+    [76865] = "Beastlord Darmac",
+    [76814] = "Flamebender Ka'graz",
+    [76973] = "Hans'gar and Franzok",   -- ID of Hans'gar
+    [76974] = "Hans'gar and Franzok",   -- ID of Franzok
+    [76906] = "Operator Thogar",
+    [76806] = "The Blast Furnace",      -- ID of Heart of the Mountain
+    [77692] = "Kromog",
+    [77557] = "The Iron Maidens",       -- ID of Admiral Gar'an
+    [77231] = "The Iron Maidens",       -- ID of Enforcer Sorka
+    [77477] = "The Iron Maidens",       -- ID of Marak the Blooded
+    [77325] = "Blackhand",
 }
 
 -- ARRAY 
@@ -406,7 +444,12 @@ MRT_BossRenameList = {
     -- Dragon Soul
     [53879] = "Spine of Deathwing",   
     [56173] = "Madness of Deathwing",
-  
+    
+    ---------------------------
+    --  Warlords of Draenor  --
+    ---------------------------
+    -- Blackrock Foundry
+    [76806] = "The Blast Furnace",  
 }
 
 
@@ -416,7 +459,6 @@ MRT_ReverseBossIDList = {
     --  Wrath of the Lich King  --
     ------------------------------
     -- Ulduar
-    ["Iron Council"] = 32857,
     ["Hodir"] = 32845,
     ["Thorim"] = 32865,
     ["Freya"] = 32906,
@@ -452,36 +494,45 @@ MRT_ReverseBossIDList = {
 --------------------------------
 MRT_IgnoredItemIDList = {
     -- Emblems of...
-    [40752] = true,  -- ...Heroism
-    [40753] = true,  -- ...Valor
-    [45624] = true,  -- ...Conquest
-    [47241] = true,  -- ...Triumph
-    [49426] = true,  -- ...Frost
+    [40752] = true,     -- ...Heroism
+    [40753] = true,     -- ...Valor
+    [45624] = true,     -- ...Conquest
+    [47241] = true,     -- ...Triumph
+    [49426] = true,     -- ...Frost
     
     -- Gems
-    [36931] = true,  -- Ametrine
-    [36919] = true,  -- Cardinal Ruby
-    [36928] = true,  -- Dreadstone
-    [36934] = true,  -- Eye of Zul
-    [36922] = true,  -- King's Amber
-    [36925] = true,  -- Majestic Zircon
+    [36931] = true,     -- Ametrine
+    [36919] = true,     -- Cardinal Ruby
+    [36928] = true,     -- Dreadstone
+    [36934] = true,     -- Eye of Zul
+    [36922] = true,     -- King's Amber
+    [36925] = true,     -- Majestic Zircon
     
     -- Shards
-    [20725] = true,  -- Nexus Crystal
-    [22450] = true,  -- Void Crystal
-    [34057] = true,  -- Abyss Crystal
-    [52722] = true,  -- Maelstrom Crystal
-    [74248] = true,  -- Sha Crystal
+    [20725] = true,     -- Nexus Crystal
+    [22450] = true,     -- Void Crystal
+    [34057] = true,     -- Abyss Crystal
+    [52722] = true,     -- Maelstrom Crystal
+    [74248] = true,     -- Sha Crystal
+    [115502] = true,    -- Small Luminous Shard
+    [111245] = true,    -- Luminous Shard
+    [115504] = true,    -- Fractured Temporal Crystal
+    [113588] = true,    -- Temporal Crystal
     
     -- Sigils of...
-    [87208] = true,  -- Sigil of Power
-    [87209] = true,  -- Sigil of Wisdom
+    [87208] = true,     -- Sigil of Power
+    [87209] = true,     -- Sigil of Wisdom
     
     -- Wrathion Legendary Questline
-    [87210] = true,  -- Chimera of Fear
-    [94593] = true,  -- Secrets of the Empire
-    [94594] = true,  -- Titan Runestones
-    [94867] = true,  -- Heart of the Thunder King
+    [87210] = true,     -- Chimera of Fear
+    [94593] = true,     -- Secrets of the Empire
+    [94594] = true,     -- Titan Runestones
+    [94867] = true,     -- Heart of the Thunder King
+    
+    -- WoD Legendary Questline
+    [115280] = true,    -- Abrogator Stone
+    [115288] = true,    -- Felbreaker's Tome
+    [115289] = true,    -- Sigil of the Sorcerer King
 }
 
 

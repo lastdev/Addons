@@ -203,6 +203,8 @@ function HealBot_Lang_enALL()
     HEALBOT_OPTIONS_SHOWHEALTHONBAR         = "Show health on bar";
     HEALBOT_OPTIONS_BARHEALTHINCHEALS       = "Include incoming heals";
     HEALBOT_OPTIONS_BARHEALTHSEPHEALS       = "Separate incoming heals";
+    HEALBOT_OPTIONS_BARHEALTHINCALL         = "Include incoming heals and absorbs"
+    HEALBOT_OPTIONS_BARHEALTHSEPALL         = "Separate incoming heals and absorbs"
     HEALBOT_OPTIONS_BARHEALTH1              = "as delta";
     HEALBOT_OPTIONS_BARHEALTH2              = "as percentage";
     HEALBOT_OPTIONS_TIPTEXT                 = "Tooltip information";

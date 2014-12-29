@@ -227,19 +227,16 @@ L= DBM:GetModLocalization(663)
 L= DBM:GetModLocalization(665)
 
 L:SetWarningLocalization({
-	SpecWarnGetBoned	= "Get Bone Armor",
-	SpecWarnDoctor		= "The doctor is in!"
+	SpecWarnGetBoned	= "Get Bone Armor"
 })
 
 L:SetOptionLocalization({
 	SpecWarnGetBoned	= "Show special warning when you are missing $spell:113996 debuff",
-	SpecWarnDoctor		= "Show special warning when if Doctor Theolen Krastinov spawns",
 	InfoFrame			= "Show info frame for players not affected by $spell:113996"
 })
 
 L:SetMiscLocalization({
-	PlayerDebuffs	= "No Bone Armor",
-	TheolenSpawn	= "The doctor is in!"
+	PlayerDebuffs	= "No Bone Armor"
 })
 
 -----------------------

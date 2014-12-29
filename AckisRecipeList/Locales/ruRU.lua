@@ -6,7 +6,7 @@ ruRU localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 3.0.11
+Project version: 3.0.12
 ************************************************************************
 Currently maintained by:
 http://www.wowace.com/addons/arl/localization/translators/
@@ -241,6 +241,7 @@ L["Chaw Stronghide"] = "Чоу Толстая Шкура"
 L["\"Chef\" Overheat"] = "\"Шеф\" Перегрев"
 L["Chief Engineer Leveny"] = "Главный инженер Левени"
 L["Chin"] = "Чинь"
+L["Christopher Macdonald"] = true -- Needs review
 L["Christoph Jeffcoat"] = "Кристоф Френч"
 L["Cielstrasza"] = "Небостраза"
 L["Clarise Gnarltree"] = "Клариса Гнутодрев"
@@ -457,6 +458,7 @@ L["Enraged Mammoth"] = "Разъяренный мамонт"
 L["Enraged Water Spirit"] = "Разъяренный дух воды"
 L["Eorain Dawnstrike"] = "Эорейн Стрелок Рассвета"
 L["Eredar Deathbringer"] = "Смертоносный эредар"
+L["Eric Broadoak"] = "Эрик Броудок" -- Needs review
 L["Eriden"] = "Эриден"
 L["Erika Tate"] = "Эрика Тейт"
 L["Erilia"] = "Эрилия"
@@ -934,6 +936,7 @@ L["Mudduk"] = "Маддьюк"
 L["Muheru the Weaver"] = "Мугеру Ткач"
 L["Mukdrak"] = "Мукдрак"
 L["Mumman"] = "Мумман"
+L["Murg Stonecrack"] = "Мург Камнебой" -- Needs review
 L["Murkblood Raider"] = "Налетчик из племени Темной Крови"
 L["Murne Greenhoof"] = "Марн Зеленое Копыто" -- Needs review
 L["Muuran"] = "Мууран"

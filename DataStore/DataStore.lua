@@ -195,7 +195,7 @@ local function OnGuildRosterUpdate()
 		onlineStatus = (onlineStatus) and true or nil	-- force a nil, instead of false
 		
 		if name then
-			name = Ambiguate(name, "guild")
+			name = Ambiguate(name, "none")
 			guildMembersIndexes[name] = i
 
 			if onlineMembers[name] and not onlineStatus then	-- if a player was online but has now gone offline, trigger a message
@@ -245,7 +245,7 @@ local function GuildCommHandler(prefix, message, distribution, sender)
 		local func = GuildCommCallbacks[prefix][msgType]
 
 		if func then
-			sender = Ambiguate(sender, "guild")
+			sender = Ambiguate(sender, "none")
 			func(sender, arg1, arg2, arg3)
 		end
 	end
@@ -294,6 +294,9 @@ function addon:OnInitialize()
 	Characters = addon.db.global.Characters
 	Guilds = addon.db.global.Guilds
 	UpdateDB()
+	
+	-- a hidden frame to contain all children frames of submodules, this avoids polluting _G[].
+	addon.Frames = CreateFrame("Frame", "DataStoreFrames", UIParent)
 
 	setmetatable(addon, lookupMethods)
 
@@ -760,7 +763,7 @@ function addon:GetGuildMemberInfo(member)
 		local fullName, rank, rankIndex, level, class, zone, note, officernote, online, status, englishClass, achievementPoints, achievementRank, isMobile, canSoR, reputation = GetGuildRosterInfo(index)
 
 		if fullName then
-			fullName = Ambiguate(fullName, "guild")
+			fullName = Ambiguate(fullName, "none")
 		end
 
 		return fullName, rank, rankIndex, level, class, zone, note, officernote, online, status, englishClass, achievementPoints, achievementRank, isMobile, canSoR, reputation

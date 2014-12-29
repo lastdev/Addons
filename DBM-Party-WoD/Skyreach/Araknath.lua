@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(966, "DBM-Party-WoD", 7, 476)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11861 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12037 $"):sub(12, -3))
 mod:SetCreatureID(76141)
 mod:SetEncounterID(1699)--Verify, name doesn't match
 mod:SetZone()
@@ -27,7 +27,7 @@ mod.vb.burstCount = 0
 
 function mod:OnCombatStart(delay)
 	self.vb.burstCount = 0
-	timerBurstCD:Start(20-delay)
+	timerBurstCD:Start(20-delay, 1)
 end
 
 function mod:SPELL_CAST_START(args)

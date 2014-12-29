@@ -102,6 +102,7 @@ L.RaidWarnSound				= "Sound für Schlachtzugwarnung"
 L.CountdownVoice			= "Primäre Stimme für akustische Zählungen"
 L.CountdownVoice2			= "Sekundäre Stimme für akustische Zählungen"
 L.CountdownVoice3			= "Tertiäre Stimme für akustische Zählungen"
+L.VoicePackChoice			= "Setze Sprachpack für gesprochene Warnungen"
 L.SpecialWarnSound			= "Sound für Spezialwarnungen, die dich oder deine Rolle betreffen"
 L.SpecialWarnSound2			= "Sound für Spezialwarnungen, die jeden betreffen"
 L.SpecialWarnSound3			= "Sound für SEHR wichtige Spezialwarnungen"
@@ -184,6 +185,7 @@ L.Panel_SpamFilter			= "Filter / Spam-Filter"
 L.Area_SpamFilter_Outgoing	= "globale Filtereinstellungen"
 L.SpamBlockNoShowAnnounce	= "Zeige keine Mitteilungen und spiele keine Warnungssounds"
 L.DontShowFarWarnings		= "Zeige keine Mitteilungen/Timer für weit entfernte Ereignisse"
+L.SpamBlockNoRunAway		= "Spiele keine \"Lauf weg!\"-Sounds"
 L.SpamBlockNoSendWhisper	= "Flüstere keine Bosswarnungen an andere Spieler"
 L.SpamBlockNoSetIcon		= "Setze keine Zeichen auf Ziele"
 L.SpamBlockNoRangeFrame		= "Zeige kein Abstandsfenster/-radar an"
@@ -200,10 +202,10 @@ L.BigBrotherAnnounceToRaid	= "Verkünde Ergebnis der \"BigBrother\"-Buffprüfung
 
 L.Area_SpecFilter			= "Filtereinstellungen für Spezialisierungen"
 L.FilterTankSpec			= "Unterdrücke Warnungen für Tanks, falls deine aktuelle Spezialisierung keine \"Schutz\"-Spezialisierung ist (Hinweis: Diese Filterung sollte normalerweise nicht deaktiviert werden, da alle individuellen \"Spott\"-Warnungen nun standardmäßig aktiviert sind.)"
-
-
-
-
+--
+--
+--
+--
 --L.FilterHealerSpec		= "Unterdrücke Warnungen für Heiler, falls deine aktuelle Spezialisierung keine \"Heilung\"-Spezialisierung ist"--Not in use
 --L.FilterDamagerSpec		= "Unterdrücke Warnungen für DDs, falls deine aktuelle Spezialisierung keine \"Schaden\"-Spezialisierung ist"--Not in use
 
@@ -218,7 +220,8 @@ L.PT_Threshold				= "Zeige keinen opt. Countd. f. Pull-/Pausen-/Kampf-/Nutzer-Ti
 L.Panel_HideBlizzard		= "Verberge Spielelemente"
 L.Area_HideBlizzard			= "Einstellungen zum Verbergen von Spielelementen"
 L.HideBossEmoteFrame		= "Verberge das Fenster \"RaidBossEmoteFrame\" während Bosskämpfen"
-L.HideWatchFrame			= "Verberge das Fenster für die Questverfolgung während Bosskämpfen"
+L.HideWatchFrame			= "Verberge das Fenster für die Questverfolgung während Bosskämpfen, falls keine Erfolge verfolgt werden"
+L.HideGarrisonUpdates		= "Verberge Garnisonsmeldungen während Bosskämpfen"
 L.HideTooltips				= "Verberge Tooltips während Bosskämpfen"
 L.SpamBlockSayYell			= "Sprechblasen-Ansagen im Chatfenster ausblenden"
 L.DisableCinematics			= "Verberge Videosequenzen"

@@ -1,0 +1,42 @@
+------------------------------------------------------------------------
+r63 | thaoky | 2014-12-27 13:19:47 +0000 (Sat, 27 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/Options.lua
+   M /trunk/Options.xml
+
+Modified options pane to use parentKey references
+------------------------------------------------------------------------
+r61 | thaoky | 2014-12-24 13:54:36 +0000 (Wed, 24 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore_Crafts.lua
+
+Changed the fix made for garrison followers, to use IsNPCCrafting() instead
+------------------------------------------------------------------------
+r60 | myrroddin | 2014-11-29 15:50:46 +0000 (Sat, 29 Nov 2014) | 2 lines
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/DataStore_Crafts.toc
+
+- Clean up ToC
+- Why is there useless stuff in the .pkgmeta?
+------------------------------------------------------------------------
+r59 | myrroddin | 2014-11-29 15:27:27 +0000 (Sat, 29 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore_Crafts.lua
+
+- Fix ticket #14 Professions not being scanned since 6.0 (fix by ckaotik)
+------------------------------------------------------------------------
+r57 | myrroddin | 2014-11-29 15:11:01 +0000 (Sat, 29 Nov 2014) | 2 lines
+Changed paths:
+   M /trunk/DataStore_Crafts.lua
+   M /trunk/DataStore_Crafts.toc
+
+- Fix ticket #13 index link error
+- Use repo keyword subs for ToC Version field
+------------------------------------------------------------------------
+r56 | thaoky | 2014-10-17 17:03:31 +0000 (Fri, 17 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore_Crafts.toc
+
+6.0.001 Commit
+------------------------------------------------------------------------

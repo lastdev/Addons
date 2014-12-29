@@ -1,5 +1,5 @@
 ## Interface: 60000
-## Version: 60000.16
+## Version: 60000.17
 ## Author: Xemnosyst, SlippyCheeze
 ## Title: Bitten's SpellFlash: Hunter
 ## Notes: Replaces Blizzard's default proc highlighting to flash a maximum dps rotation.
@@ -8,7 +8,7 @@
 ## OptionalDeps: BittensSpellFlashLibrary
 ## LoadOnDemand: 1
 ## X-SpellFlashAddon-LoadWith: Hunter
-## X-Curse-Packaged-Version: 60000.16
+## X-Curse-Packaged-Version: 60000.17
 ## X-Curse-Project-Name: Bitten's SpellFlash: Hunter
 ## X-Curse-Project-ID: bittens-spellflash-hunter
 ## X-Curse-Repository-ID: wow/bittens-spellflash-hunter/mainline

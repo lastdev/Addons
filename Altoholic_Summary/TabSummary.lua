@@ -21,6 +21,7 @@ local childrenFrames = {
 	"Skills",
 	"Activity",
 	"Currencies",
+	"GarrisonFollowers",
 }
 
 local childrenObjects		-- these are the tables that actually contain the BuildView & Update methods. Not really OOP, but enough for our needs
@@ -84,6 +85,7 @@ function ns:MenuItem_OnClick(id)
 		addon.TradeSkills,
 		addon.Activity,
 		addon.Currencies,
+		addon.GarrisonFollowers,
 	}
 
 	for _, v in pairs(childrenFrames) do			-- hide all frames
@@ -167,11 +169,29 @@ function ns:SetMode(mode)
 		Columns:Add(NAME, 100, function(self) addon.Characters:Sort(self, "GetCharacterName") end)
 		Columns:Add(LEVEL, 60, function(self) addon.Characters:Sort(self, "GetCharacterLevel") end)
 		
-		Columns:Add(L["Justice"], 80, function(self) addon.Characters:Sort(self, "GetJusticePoints") end)
-		Columns:Add(L["Valor / Week"], 90, function(self) addon.Characters:Sort(self, "GetValorPointsPerWeek") end)
-		Columns:Add(L["Valor"], 80, function(self) addon.Characters:Sort(self, "GetValorPoints") end)
+		local icon = "Interface\\Icons\\inv_garrison_resource"
+		Columns:Add("   " .. addon:TextureToFontstring(icon, 18, 18), 80, function(self) addon.Characters:Sort(self, "GetGarrisonResources") end)
+		
+		icon = "Interface\\Icons\\inv_apexis_draenor"
+		Columns:Add("        " .. addon:TextureToFontstring(icon, 18, 18), 100, function(self) addon.Characters:Sort(self, "GetApexisCrystals") end)
+		
+		icon = "Interface\\Icons\\ability_animusorbs"
+		Columns:Add("   " .. addon:TextureToFontstring(icon, 18, 18), 60, function(self) addon.Characters:Sort(self, "GetSealsOfFate") end)
 		Columns:Add(L["Honor"], 80, function(self) addon.Characters:Sort(self, "GetHonorPoints") end)
 		Columns:Add(L["Conquest"], 80, function(self) addon.Characters:Sort(self, "GetConquestPoints") end)
+
+	elseif currentMode == 6 then
+		Columns:Add(NAME, 100, function(self) addon.Characters:Sort(self, "GetCharacterName") end)
+		Columns:Add(LEVEL, 60, function(self) addon.Characters:Sort(self, "GetCharacterLevel") end)
+		
+		Columns:Add("   #", 60, function(self) addon.Characters:Sort(self, "GetNumFollowers") end)
+		Columns:Add("Lv 100", 60, function(self) addon.Characters:Sort(self, "GetNumFollowersAtLevel100") end)
+		Columns:Add("Rare", 60, function(self) addon.Characters:Sort(self, "GetNumRareFollowers") end)
+		Columns:Add("Epic", 60, function(self) addon.Characters:Sort(self, "GetNumEpicFollowers") end)
+		Columns:Add("> 615", 60, function(self) addon.Characters:Sort(self, "GetNumFollowersAtiLevel615") end)
+		Columns:Add("> 630", 60, function(self) addon.Characters:Sort(self, "GetNumFollowersAtiLevel630") end)
+		Columns:Add("> 645", 60, function(self) addon.Characters:Sort(self, "GetNumFollowersAtiLevel645") end)
+		
 	end
 end
 
@@ -186,6 +206,8 @@ function ns:Refresh()
 		addon.Activity:Update()
 	elseif AltoholicFrameCurrencies:IsVisible() then
 		addon.Currencies:Update()
+	elseif AltoholicFrameGarrisonFollowers:IsVisible() then
+		addon.GarrisonFollowers:Update()
 	end
 end
 
@@ -313,6 +335,7 @@ end
 local addonList = {
 	"DataStore_Auctions",
 	"DataStore_Characters",
+	"DataStore_Garrisons",
 	"DataStore_Inventory",
 	"DataStore_Mails",
 	"DataStore_Quests",

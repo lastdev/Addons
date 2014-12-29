@@ -181,23 +181,14 @@ end
 local function ScanMailbox()
 	local character = addon.ThisCharacter
 	wipe(character.Mails)
+	wipe(character.MailCache)	-- fully clear the mail cache, since the mailbox will now be properly scanned
 	
 	local numItems = GetInboxNumItems();
 	if numItems == 0 then
 		return
 	end
 	
-	local cache = character.MailCache
-	-- check the cache, and clean entries that are about to be replaced in the scan
-	for i = #cache, 1, -1 do
-		if cache[i].lastCheck then
-			local age = time() - cache[i].lastCheck
-			
-			if age > 3600 then		-- if older than 1 hour, delete this entry
-				table.remove(cache, i)
-			end
-		end
-	end
+	
 	
 	for i = 1, numItems do
 		local _, stationaryIcon, mailSender, mailSubject, mailMoney, _, days, numAttachments, _, wasReturned = GetInboxHeaderInfo(i);

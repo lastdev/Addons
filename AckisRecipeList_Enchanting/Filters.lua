@@ -11,11 +11,37 @@ local pairs = _G.pairs
 local FOLDER_NAME, private = ...
 
 local addon = private.addon
+if not addon then
+	return
+end
+
 local constants = addon.constants
 local module = addon:GetModule(private.module_name)
 
 local LibStub = _G.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale(constants.addon_name)
+
+-------------------------------------------------------------------------------
+-- What we're really here for.
+-------------------------------------------------------------------------------
+module.ITEM_FILTER_TYPES = {
+	ENCHANTING_BOOTS = true,
+	ENCHANTING_BRACER = true,
+	ENCHANTING_CHEST = true,
+	ENCHANTING_CLOAK = true,
+	ENCHANTING_GLOVES = true,
+	ENCHANTING_RING = true,
+	ENCHANTING_NECK = true,
+	ENCHANTING_SHIELD = true,
+	ENCHANTING_WEAPON = true,
+	ENCHANTING_2H_WEAPON = true,
+	ENCHANTING_STAFF = true,
+	ENCHANTING_OIL = true,
+	ENCHANTING_ROD = true,
+	ENCHANTING_WAND = true,
+	ENCHANTING_MISC = true,
+	ENCHANTING_MATERIALS = true,
+}
 
 function module:InitializeItemFilters(parent_panel)
 	local MainPanel = addon.Frame

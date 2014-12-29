@@ -33,7 +33,7 @@ local VIEW_GLYPHS = 4
 local VIEW_AUCTIONS = 5
 local VIEW_BIDS = 6
 local VIEW_MAILS = 7
-local VIEW_MOUNTS = 8
+-- local VIEW_MOUNTS = 8
 local VIEW_COMPANIONS = 9
 local VIEW_SPELLS = 10
 local VIEW_KNOWN_GLYPHS = 11
@@ -262,9 +262,7 @@ function ns:ShowCharInfo(view)
 		
 	elseif view == VIEW_SPELLS then
 		addon.Spellbook:Update()
-	elseif view == VIEW_MOUNTS then
-		addon.Pets:SetSinglePetView("MOUNT")
-		addon.Pets:UpdatePets()
+
 	elseif view == VIEW_COMPANIONS then
 		addon.Pets:SetSinglePetView("CRITTER")
 		addon.Pets:UpdatePets()
@@ -658,13 +656,9 @@ local function SpellbookIcon_Initialize(self, level)
 	if DataStore_Pets and last then
 		local pets = DataStore:GetPets(currentCharacterKey, "CRITTER")
 		local numPets = DataStore:GetNumPets(pets) or 0
-		pets = DataStore:GetPets(currentCharacterKey, "MOUNT")
-		local numMounts = DataStore:GetNumPets(pets) or 0
-	
-		DDM_Add(format(MOUNTS .. " %s(%d)", GREEN, numMounts), VIEW_MOUNTS, OnViewChange, nil, (currentView == VIEW_MOUNTS))
+
 		DDM_Add(format(COMPANIONS .. " %s(%d)", GREEN, numPets), VIEW_COMPANIONS, OnViewChange, nil, (currentView == VIEW_COMPANIONS))
 	else
-		DDM_Add(format(MOUNTS .. " %s(%d)", GREY, numMounts), nil, nil)
 		DDM_Add(format(COMPANIONS .. " %s(%d)", GREY, numPets), nil, nil)
 	end
 	DDM_AddTitle(" ")

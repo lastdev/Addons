@@ -6,7 +6,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local LD = LibStub("LibDropdown-1.0")
 
-local revision = tonumber(string.sub("$Revision: 1266 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1286 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -50,11 +50,11 @@ local dbCombatants
 -- Based on cck's numeric Short code in DogTag-3.0.
 function Recount.ShortNumber(value)
 	if value >= 10000000 or value <= -10000000 then
-		return ("%.1fm"):format(value / 1000000)
+		return ("%.2fm"):format(value / 1000000)
 	elseif value >= 1000000 or value <= -1000000 then
 		return ("%.2fm"):format(value / 1000000)
 	elseif value >= 100000 or value <= -100000 then
-		return ("%.0fk"):format(value / 1000)
+		return ("%.1fk"):format(value / 1000)
 	elseif value >= 10000 or value <= -10000 then
 		return ("%.1fk"):format(value / 1000)
 	else
@@ -253,7 +253,7 @@ function Recount:SetupBar(row)
 	row.StatusBar:Show()
 
 	row.LeftText = row.StatusBar:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-	row.LeftText:SetPoint("LEFT", row.StatusBar, "LEFT", 2)
+	row.LeftText:SetPoint("LEFT", row.StatusBar, "LEFT", 2, 0)
 	row.LeftText:SetJustifyH("LEFT")
 	row.LeftText:SetText("Test")
 	row.LeftText:SetTextColor(1, 1, 1, 1)
@@ -262,7 +262,7 @@ function Recount:SetupBar(row)
 	Recount:AddFontString(row.LeftText)
 
 	row.RightText = row.StatusBar:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-	row.RightText:SetPoint("RIGHT", row.StatusBar, "RIGHT", -2)
+	row.RightText:SetPoint("RIGHT", row.StatusBar, "RIGHT", -2, 0)
 	row.RightText:SetJustifyH("RIGHT")
 	row.RightText:SetText("0")
 	row.RightText:SetTextColor(1, 1, 1, 1)
@@ -456,7 +456,7 @@ function me:FixRow(i)
 	local LText = row.LeftText:GetText()
 
 	if not Recount.db.profile.MainWindow.BarText.ServerName then
-		LText = string.gsub(LText, "%-[^|]+", "")
+		LText = string.gsub(LText, "%-[%a+]+", "")
 	end
 	row.LeftText:SetText(LText)
 	while row.LeftText:GetStringWidth() > MaxNameWidth do
@@ -1034,7 +1034,6 @@ function Recount:RefreshMainWindow(datarefresh)
 	end
 
 	local data = Recount.db2.combatants
-	local i
 	local dispTable = MainWindow.DispTableSorted
 	local lookup = MainWindow.DispTableLookup
 	local Total = 0
@@ -1123,7 +1122,7 @@ function Recount:RefreshMainWindow(datarefresh)
 		RowWidth = MainWindow:GetWidth() - 23
 	end
 
-		FauxScrollFrame_Update(MainWindow.ScrollBar, table.getn(dispTable), Recount.MainWindow.CurRows, 20)
+	FauxScrollFrame_Update(MainWindow.ScrollBar, table.getn(dispTable), Recount.MainWindow.CurRows, 20)
 	local offset = FauxScrollFrame_GetOffset(MainWindow.ScrollBar)
 
 	if type(MainWindow.SpecialTotal) == "function" then
@@ -1138,7 +1137,7 @@ function Recount:RefreshMainWindow(datarefresh)
 
 	if not MainWindow_Settings.HideTotalBar and MainWindow.CurRows > 0 and Total > 0 then
 		if TotalPerSec > 0 then
-			PerSec = Recount:FormatLongNums(TotalPerSec) -- Resike: This could have some issues.
+			PerSec = Recount:FormatLongNums(TotalPerSec)
 			--PerSec = string_format("%.1f", TotalPerSec)
 		else
 			PerSec = ""
@@ -1179,9 +1178,9 @@ function Recount:RefreshMainWindow(datarefresh)
 				percent = 100 * v[2] / Total
 			end
 			if v[5] then
-				if type(v[5])=="number" then
+				if type(v[5]) == "number" then
 					--PerSec = string_format("%.1f",v[5])
-					PerSec = Recount:FormatLongNums(v[5]) -- Resike: This could have some issues.
+					PerSec = Recount:FormatLongNums(v[5])
 				else
 					PerSec = v[5]
 				end
@@ -1217,11 +1216,6 @@ function Recount:RefreshMainWindow(datarefresh)
 
 	me:UpdateDetailData()
 end
-
-local ConvertDataSet2 = {}
-ConvertDataSet2["OverallData"] = "a_overall"
-ConvertDataSet2["CurrentFightData"] = "b_current"
-ConvertDataSet2["LastFightData"] = "c_last"
 
 function Recount:OpenFightDropDown(myframe)
 	-- adopted from BulkMail
@@ -1354,7 +1348,7 @@ function Recount:OpenFightDropDown(myframe)
 	end
 
 	fightmenuframe:SetPoint(oside, myframe, side, 0, 0)
---	fightmenuframe:SetFrameLevel(myframe:GetFrameLevel() + 9)
+	--fightmenuframe:SetFrameLevel(myframe:GetFrameLevel() + 9)
 end
 
 --[[function Recount:FightDropDownOpen(myframe)
@@ -1384,8 +1378,6 @@ end
 
 	UIDropDownMenu_SetAnchor(Recount_FightDropDownMenu , 0, 0, oside, myframe, side)
 end]]
-
-
 
 --Should add saved datasets here
 function me:CreateFightDropdown(level)
@@ -1574,7 +1566,6 @@ ConvertDataSet["LastFightData"] = L["Last Fight"]
 function Recount:ReportData(amount, loc, loc2)
 	local dataMode = Recount.MainWindowData[Recount.db.profile.MainWindowMode]
 	local data = dbCombatants
-	local i
 	local maxValue = 0
 	local reportTable = Recount.MainWindow.DispTableSorted
 	local lookup = Recount.MainWindow.DispTableLookup
@@ -1584,7 +1575,7 @@ function Recount:ReportData(amount, loc, loc2)
 
 	local MainWindow_Settings = Recount.db.profile.MainWindow
 
-	if type(data)=="table" then
+	if type(data) == "table" then
 		for k, v in pairs(data) do
 			if v and v.type and Recount.db.profile.Filters.Show[v.type] and not (v.type == "Pet" and Recount.db.profile.MergePets and v.Owner and dbCombatants[v.Owner] and not Recount.db.profile.Filters.Show[dbCombatants[v.Owner].type]) then -- Elsia: Added owner inheritance filtering for pets
 				if v.Fights[Recount.db.profile.CurDataSet] then

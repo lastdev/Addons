@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("LichKing", "DBM-Icecrown", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 175 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 171 $"):sub(12, -3))
 mod:SetCreatureID(36597)
 mod:SetEncounterID(1106)
 mod:DisableEEKillDetection()--EE fires at 10%
@@ -115,11 +115,7 @@ local lastPlague
 local numberOfPlayers = 1
 
 function mod:OnCombatStart(delay)
-	local _, class = UnitClass("player")
 	numberOfPlayers = DBM:GetNumRealGroupMembers()
-	if class == "HUNTER" then
-		numberOfPlayers = numberOfPlayers + 1
-	end
 	self.vb.phase = 0
 	self:NextPhase()
 	table.wipe(warnedValkyrGUIDs)

@@ -2,12 +2,12 @@
 ## Title: Ackis Recipe List: Jewelcrafting
 ## Notes: Jewelcrafting data for Ackis Recipe List.
 ## Author: Ackis, Pompy, Ressy, Torhal
-## Version: 6.0.3.1
-## X-Revision: a750e0f
+## Version: 6.0.3.2
+## X-Revision: e208c59
 ## X-Date: 2014-07-23T01:55:51Z
 ## Dependencies: AckisRecipeList
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: 6.0.3.1
+## X-Curse-Packaged-Version: 6.0.3.2
 ## X-Curse-Project-Name: Ackis Recipe List: Jewelcrafting
 ## X-Curse-Project-ID: arl-jewelcrafting
 ## X-Curse-Repository-ID: wow/arl-jewelcrafting/mainline

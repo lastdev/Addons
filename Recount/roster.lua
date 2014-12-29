@@ -1,6 +1,6 @@
 local Recount = _G.Recount
 
-local revision = tonumber(string.sub("$Revision: 1266 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1286 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -49,7 +49,9 @@ end
 
 function Recount:GetUnitIDFromName(name)
 
-	if type(name)~="string" then return nil end -- Bandaid for raid frame issues
+	if type(name) ~= "string" then
+		return nil
+	end -- Bandaid for raid frame issues
 
 	local realm = name:match("-(.-)")
 	if realm then

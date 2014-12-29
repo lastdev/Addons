@@ -15,6 +15,9 @@ local CURRENCY_ID_CONQUEST = 390
 local CURRENCY_ID_HONOR = 392
 local CURRENCY_ID_JUSTICE = 395
 local CURRENCY_ID_VALOR = 396
+local CURRENCY_ID_APEXIS = 823
+local CURRENCY_ID_GARRISON = 824
+local CURRENCY_ID_SOTF = 994		-- Seals of Tempered Fate (WoD)
 
 local AddonDB_Defaults = {
 	global = {
@@ -83,22 +86,26 @@ end
 
 
 -- *** Scanning functions ***
-local function ScanCurrencyTotals(id)
+local function ScanCurrencyTotals(id, divWeekly, divTotal)
+	local denomWeekly = divWeekly or 1
+	local denomTotal = divTotal or 1
+	
 	local _, amount, _, earnedThisWeek, weeklyMax, totalMax = GetCurrencyInfo(id)
 	
-	if id == CURRENCY_ID_VALOR then
-		weeklyMax = math.floor(weeklyMax / 100)
-	end
-	totalMax = math.floor(totalMax / 100)
+	weeklyMax = math.floor(weeklyMax / denomWeekly)
+	totalMax = math.floor(totalMax / denomTotal)
 	
 	addon.ThisCharacter.CurrencyInfo[id] = format("%s-%s-%s-%s", amount or 0, earnedThisWeek or 0, weeklyMax or 0, totalMax or 0)
 end
 
 local function ScanTotals()
-	ScanCurrencyTotals(CURRENCY_ID_CONQUEST)
-	ScanCurrencyTotals(CURRENCY_ID_HONOR)
-	ScanCurrencyTotals(CURRENCY_ID_JUSTICE)
-	ScanCurrencyTotals(CURRENCY_ID_VALOR)
+	ScanCurrencyTotals(CURRENCY_ID_CONQUEST, nil, 100)
+	ScanCurrencyTotals(CURRENCY_ID_HONOR, nil, 100)
+	ScanCurrencyTotals(CURRENCY_ID_JUSTICE, nil, 100)
+	ScanCurrencyTotals(CURRENCY_ID_VALOR, 100)
+	ScanCurrencyTotals(CURRENCY_ID_APEXIS)
+	ScanCurrencyTotals(CURRENCY_ID_GARRISON)
+	ScanCurrencyTotals(CURRENCY_ID_SOTF)
 end
 
 local function ScanCurrencies()
@@ -294,6 +301,36 @@ local function _GetConquestPoints(character)
 	return tonumber(earnedThisWeek)
 end
 
+local function _GetGarrisonResources(character)
+	local info = character.CurrencyInfo[CURRENCY_ID_GARRISON]
+	if not info then
+		return 0
+	end
+	
+	local amount = strsplit("-", info)
+	return tonumber(amount)
+end
+
+local function _GetApexisCrystals(character)
+	local info = character.CurrencyInfo[CURRENCY_ID_APEXIS]
+	if not info then
+		return 0
+	end
+	
+	local amount = strsplit("-", info)
+	return tonumber(amount)
+end
+
+local function _GetSealsOfFate(character)
+	local info = character.CurrencyInfo[CURRENCY_ID_SOTF]
+	if not info then
+		return 0
+	end
+	
+	local amount = strsplit("-", info)
+	return tonumber(amount)
+end
+
 local PublicMethods = {
 	GetNumCurrencies = _GetNumCurrencies,
 	GetCurrencyInfo = _GetCurrencyInfo,
@@ -305,6 +342,9 @@ local PublicMethods = {
 	GetValorPointsPerWeek = _GetValorPointsPerWeek,
 	GetHonorPoints = _GetHonorPoints,
 	GetConquestPoints = _GetConquestPoints,
+	GetApexisCrystals = _GetApexisCrystals,
+	GetGarrisonResources = _GetGarrisonResources,
+	GetSealsOfFate = _GetSealsOfFate,
 	GetArcheologyCurrencyInfo = _GetArcheologyCurrencyInfo,
 }
 
@@ -322,6 +362,9 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetValorPointsPerWeek")
 	DataStore:SetCharacterBasedMethod("GetHonorPoints")
 	DataStore:SetCharacterBasedMethod("GetConquestPoints")
+	DataStore:SetCharacterBasedMethod("GetApexisCrystals")
+	DataStore:SetCharacterBasedMethod("GetGarrisonResources")
+	DataStore:SetCharacterBasedMethod("GetSealsOfFate")
 	DataStore:SetCharacterBasedMethod("GetArcheologyCurrencyInfo")
 end
 

@@ -212,19 +212,16 @@ L= DBM:GetModLocalization(663)
 L= DBM:GetModLocalization(665)
 
 L:SetWarningLocalization({
-	SpecWarnGetBoned	= "Hole Knochenrüstung",
-	SpecWarnDoctor		= "Der Doktor ist da!"
+	SpecWarnGetBoned	= "Hole Knochenrüstung"
 })
 
 L:SetOptionLocalization({
 	SpecWarnGetBoned	= "Spezialwarnung, falls dir der $spell:113996 Buff fehlt",
-	SpecWarnDoctor		= "Spezialwarnung, wenn Doktor Theolen Krastinov erscheint",
 	InfoFrame			= "Zeige Infofenster für Spieler, denen der $spell:113996 Buff fehlt"
 })
 
 L:SetMiscLocalization({
-	PlayerDebuffs	= "Keine Knochenrüstung",
-	TheolenSpawn	= "Der Doktor ist da!"--needs to be verified
+	PlayerDebuffs	= "Keine Knochenrüstung"
 })
 
 -----------------------

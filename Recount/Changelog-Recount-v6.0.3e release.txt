@@ -1,0 +1,62 @@
+------------------------------------------------------------------------
+r1287 | resike | 2014-12-23 23:57:27 +0000 (Tue, 23 Dec 2014) | 1 line
+Changed paths:
+   A /tags/v6.0.3e release (from /trunk:1286)
+
+Tagging as v6.0.3e release
+------------------------------------------------------------------------
+r1286 | Resike | 2014-12-23 22:23:27 +0000 (Tue, 23 Dec 2014) | 11 lines
+Changed paths:
+   M /trunk/GUI_Detail.lua
+   M /trunk/GUI_Main.lua
+   M /trunk/Recount_Modes.lua
+   M /trunk/Tracker.lua
+   M /trunk/debug.lua
+   M /trunk/roster.lua
+
+- Added "Multistrike (Crit)" hit type.
+- Absorbs should be properly added to "Healing Taken".
+- Some event fixes.
+- Removed server stripping from some places.
+- SetPoint fix for the Bar's text.
+- Updated server stripping pattern to properly work for "PlayerName-Servername <PetName-ServerName>" style pets.
+- Between 100k and 1m damage the precision will be 1 decimals for short style.
+- After 10m damage the precision will be 2 decimals for short style.
+- Some performance upgrades.
+- Debug code fixes.
+- Some other smaller fixes.
+------------------------------------------------------------------------
+r1284 | Resike | 2014-12-15 19:11:18 +0000 (Mon, 15 Dec 2014) | 3 lines
+Changed paths:
+   M /trunk/Recount_Modes.lua
+   M /trunk/Tracker.lua
+
+- Ignored "Stance of the Sturdy" Ox and "Purgatory" from absorbs.
+- Triggering an absorb should properly update activity time for the caster.
+- Absorbs per second fix.
+------------------------------------------------------------------------
+r1283 | Resike | 2014-12-08 00:59:27 +0000 (Mon, 08 Dec 2014) | 4 lines
+Changed paths:
+   M /trunk/GUI_Detail.lua
+   M /trunk/Recount_Modes.lua
+   M /trunk/Tracker.lua
+
+- Major changes in absorb handling.
+- Server name fixes, for tooltips and details.
+- Some fixes related "Absorbs" and "Deaths" details.
+- Some other minor fixes.
+------------------------------------------------------------------------
+r1281 | Resike | 2014-11-23 15:38:48 +0000 (Sun, 23 Nov 2014) | 2 lines
+Changed paths:
+   M /trunk/Tracker.lua
+
+- Reverted damage done to critters from last commit.
+- Some upvalue fixes.
+------------------------------------------------------------------------
+r1280 | Resike | 2014-11-21 12:31:17 +0000 (Fri, 21 Nov 2014) | 2 lines
+Changed paths:
+   M /trunk/Tracker.lua
+
+- Added "Clarity of Will" as an absorb.
+- Ignoring damage done to critters inside battlegrounds.
+------------------------------------------------------------------------

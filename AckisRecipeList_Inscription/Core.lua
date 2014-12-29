@@ -7,6 +7,11 @@ local _G = getfenv(0)
 local pairs = _G.pairs
 
 -------------------------------------------------------------------------------
+-- Constants
+-------------------------------------------------------------------------------
+local MODULE_VERSION = 1
+
+-------------------------------------------------------------------------------
 -- AddOn namespace.
 -------------------------------------------------------------------------------
 local FOLDER_NAME, private = ...
@@ -15,24 +20,20 @@ private.module_name = MODULE_NAME
 
 local LibStub = _G.LibStub
 local addon = LibStub("AceAddon-3.0"):GetAddon("Ackis Recipe List")
+
+if MODULE_VERSION ~= addon.SUPPORTED_MODULE_VERSION then
+	addon:SpawnModuleWrongVersionDialog({
+		moduleName = MODULE_NAME,
+		moduleVersion = MODULE_VERSION
+	})
+	return
+end
+
 private.addon = addon
 
 local module = addon:NewModule(MODULE_NAME)
-
-module.ITEM_FILTER_TYPES = {
-	INSCRIPTION_CREATED_ITEM = true,
-	INSCRIPTION_ITEM_ENHANCEMENT = true,
-	INSCRIPTION_MAJOR_GLYPH = true,
-	INSCRIPTION_MATERIALS = true,
-	INSCRIPTION_MINOR_GLYPH = true,
-	INSCRIPTION_OFF_HAND = true,
-	INSCRIPTION_STAFF = true,
-	INSCRIPTION_SCROLL = true,
-	INSCRIPTION_PET = true,
-	INSCRIPTION_TRINKET = true,
-	INSCRIPTION_RESEARCH = true,
-	INSCRIPTION_WAND = true,
-}
+module.Version = MODULE_VERSION
+module.Name  = FOLDER_NAME
 
 function module:OnInitialize()
 	local defaults = {

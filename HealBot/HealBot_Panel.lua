@@ -1437,26 +1437,30 @@ function HealBot_Panel_focusHeals()
     if UnitExists(xUnit) and (Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["FONLYFRIEND"]==false or UnitIsFriend("player",xUnit)) then
         uExists=true
     end
+    local alwaysShow=false
     if uExists then
         if xGUID and not HealBot_TrackNames[xGUID] then 
             if not HealBot_TrackNotVisible[xGUID] or Healbot_Config_Skins.BarsHide[Healbot_Config_Skins.Current_Skin]["INCFOCUS"]==false then
                 HealBot_TrackNames[xGUID]=true;
                 i[hbCurrentFrame] = i[hbCurrentFrame]+1;
                 table.insert(subunits,xUnit)
+            elseif Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["FALWAYSSHOW"] then
+                alwaysShow=true
             else
                 HealBot_setNotVisible(xGUID,xUnit)
             end
             HealBot_Panel_updGUIDstore(xGUID,uName,xUnit)
         end
     elseif Healbot_Config_Skins.Healing[Healbot_Config_Skins.Current_Skin]["FALWAYSSHOW"] then
-        xGUID = xUnit
-        if not HealBot_TrackNames[xGUID] then 
-            HealBot_TrackNames[xGUID]=true;
-            i[hbCurrentFrame] = i[hbCurrentFrame]+1;
-            uName = HEALBOT_WORD_RESERVED..":"..xUnit
-            HealBot_UnitName[xGUID] = uName
-            table.insert(subunits,xUnit)
-        end
+        alwaysShow=true
+    end
+    if alwaysShow then
+        xGUID = xGUID or xUnit 
+        HealBot_TrackNames[xGUID]=true;
+        i[hbCurrentFrame] = i[hbCurrentFrame]+1;
+        uName = HEALBOT_WORD_RESERVED..":"..xUnit
+        HealBot_UnitName[xGUID] = uName
+        table.insert(subunits,xUnit)
     end
     
     if i[hbCurrentFrame]>k then 

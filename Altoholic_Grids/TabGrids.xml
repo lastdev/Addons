@@ -301,6 +301,87 @@
 					</Anchor>
 				</Anchors>
 			</Button>
+			<Button name="$parent_GarrisonArchitect" inherits="AltoTabGridsMenuIconTemplate" id="11">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeTo="$parent_Dungeons" relativePoint="BOTTOMRIGHT" >
+						<Offset x="5" y="0" />
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="$parent_GarrisonFollowers" inherits="AltoTabGridsMenuIconTemplate" id="12">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeTo="$parent_GarrisonArchitect" relativePoint="BOTTOMRIGHT" >
+						<Offset x="5" y="0" />
+					</Anchor>
+				</Anchors>
+			</Button>
+			
+			<!-- Tooltip for Garrison Levels, to avoid messing with Blizzard's own -->
+			<Frame parentKey="BuildingLevelTooltip" inherits="TooltipBorderedFrameTemplate" hidden="true" frameStrata="TOOLTIP" clampedToScreen="true">
+				<Size x="230" y="300"/>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Name" inherits="GameFontHighlightMedium" justifyH="LEFT">
+							<Size x="190" y="0"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" x="15" y="-15"/>
+							</Anchors>
+						</FontString>
+						<FontString parentKey="FollowerText" inherits="GameFontHighlight" justifyH="LEFT">
+							<Size x="190" y="0"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Name" relativePoint="BOTTOMLEFT" x="0" y="-5"/>
+							</Anchors>
+						</FontString>
+						<FontString parentKey="Rank1" inherits="GameFontNormal" justifyH="LEFT">
+							<Size x="190" y="0"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeKey="$parent.FollowerText" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+							</Anchors>
+						</FontString>
+						<FontString parentKey="Rank1Tooltip" inherits="GameFontHighlight" justifyH="LEFT">
+							<Size x="190" y="0"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Rank1" relativePoint="BOTTOMLEFT" x="10" y="-5"/>
+							</Anchors>
+						</FontString>
+						
+						<FontString parentKey="Rank2" inherits="GameFontNormal" justifyH="LEFT">
+							<Size x="190" y="0"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Rank1Tooltip" relativePoint="BOTTOMLEFT" x="-10" y="-10"/>
+							</Anchors>
+						</FontString>
+						<FontString parentKey="Rank2Tooltip" inherits="GameFontHighlight" justifyH="LEFT">
+							<Size x="190" y="0"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Rank2" relativePoint="BOTTOMLEFT" x="10" y="-5"/>
+							</Anchors>
+						</FontString>
+						
+						<FontString parentKey="Rank3" inherits="GameFontNormal" justifyH="LEFT">
+							<Size x="190" y="0"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Rank2Tooltip" relativePoint="BOTTOMLEFT" x="-10" y="-10"/>
+							</Anchors>
+						</FontString>
+						<FontString parentKey="Rank3Tooltip" inherits="GameFontHighlight" justifyH="LEFT">
+							<Size x="190" y="0"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Rank3" relativePoint="BOTTOMLEFT" x="10" y="-5"/>
+							</Anchors>
+						</FontString>
+						
+						<FontString parentKey="UnlockText" inherits="GameFontHighlight" justifyH="LEFT">
+							<Size x="190" y="0"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Rank3Tooltip" relativePoint="BOTTOMLEFT" x="-10" y="-10"/>
+							</Anchors>
+							<Color r="1.0" g="0.1" b="0.1" a="1"/>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
 		</Frames>
 		<Scripts>
 			<OnLoad>

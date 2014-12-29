@@ -13,6 +13,7 @@ local addonList = {
 	"DataStore_Containers",
 	"DataStore_Crafts",
 	"DataStore_Currencies",
+	"DataStore_Garrisons",
 	"DataStore_Inventory",
 	"DataStore_Mails",
 	"DataStore_Pets",

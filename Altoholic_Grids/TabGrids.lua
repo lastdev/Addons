@@ -45,6 +45,8 @@ local ICON_VIEW_TRADESKILLS = "Interface\\Icons\\Ability_Repair"
 local ICON_VIEW_ARCHEOLOGY = "Interface\\Icons\\trade_archaeology"
 local ICON_VIEW_QUESTS = "Interface\\LFGFrame\\LFGIcon-Quest"
 local ICON_VIEW_DUNGEONS = "Interface\\Icons\\inv_helmet_189"
+local ICON_VIEW_GARRISON_ARCHITECT = "Interface\\Icons\\inv_garrison_blueprints3"
+local ICON_VIEW_GARRISON_FOLLOWERS = "Interface\\Icons\\achievement_garrisonfollower_epic"
 
 addon.Tabs.Grids = {}
 
@@ -98,11 +100,10 @@ local function UpdateMenuIcons()
 	
 	if DataStore_Pets then
 		EnableIcon(parent .. "_Pets")
-		EnableIcon(parent .. "_Mounts")
 	else
 		DisableIcon(parent .. "_Pets")
-		DisableIcon(parent .. "_Mounts")
 	end
+	DisableIcon(parent .. "_Mounts")
 	
 	if DataStore_Achievements then
 		EnableIcon(parent .. "_Tabards")
@@ -120,6 +121,14 @@ local function UpdateMenuIcons()
 		EnableIcon(parent .. "_Dungeons")
 	else
 		DisableIcon(parent .. "_Dungeons")
+	end
+	
+	if DataStore_Garrisons then
+		EnableIcon(parent .. "_GarrisonArchitect")
+		EnableIcon(parent .. "_GarrisonFollowers")
+	else
+		DisableIcon(parent .. "_GarrisonArchitect")
+		DisableIcon(parent .. "_GarrisonFollowers")
 	end
 end
 
@@ -463,7 +472,12 @@ function ns:OnLoad()
 	_G[parent .. "_Dailies"].text = "Daily Quests"
 	addon:SetItemButtonTexture(parent .. "_Dungeons", ICON_VIEW_DUNGEONS, size, size)
 	_G[parent .. "_Dungeons"].text = LOOKING_FOR_DUNGEON
-	
+	addon:SetItemButtonTexture(parent .. "_GarrisonArchitect", ICON_VIEW_GARRISON_ARCHITECT, size, size)
+	_G[parent .. "_GarrisonArchitect"].text = GARRISON_ARCHITECT
+	addon:SetItemButtonTexture(parent .. "_GarrisonFollowers", ICON_VIEW_GARRISON_FOLLOWERS, size, size)
+	_G[parent .. "_GarrisonFollowers"].text = GARRISON_FOLLOWERS_TITLE
+
+		
 	-- Class Icons
 	for column = 1, CHARS_PER_FRAME do
 		addon:DDM_Initialize(_G[classMenu..column], ClassIcon_Initialize)

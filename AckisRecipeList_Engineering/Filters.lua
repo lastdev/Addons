@@ -11,11 +11,37 @@ local pairs = _G.pairs
 local FOLDER_NAME, private = ...
 
 local addon = private.addon
+if not addon then
+	return
+end
+
 local constants = addon.constants
 local module = addon:GetModule(private.module_name)
 
 local LibStub = _G.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale(constants.addon_name)
+
+-------------------------------------------------------------------------------
+-- What we're really here for.
+-------------------------------------------------------------------------------
+module.ITEM_FILTER_TYPES = {
+	ENGINEERING_BACK = true,
+	ENGINEERING_BAG = true,
+	ENGINEERING_BOW = true,
+	ENGINEERING_CREATED_ITEM = true,
+	ENGINEERING_CROSSBOW = true,
+	ENGINEERING_FEET = true,
+	ENGINEERING_GUN = true,
+	ENGINEERING_HEAD = true,
+	ENGINEERING_ITEM_ENHANCEMENT = true,
+	ENGINEERING_MAIN_HAND = true,
+	ENGINEERING_MATERIALS = true,
+	ENGINEERING_MOUNT = true,
+	ENGINEERING_NECK = true,
+	ENGINEERING_PET = true,
+	ENGINEERING_SHIELD = true,
+	ENGINEERING_TRINKET = true,
+}
 
 function module:InitializeItemFilters(parent_panel)
 	local MainPanel = addon.Frame

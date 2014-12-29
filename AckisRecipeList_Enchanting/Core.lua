@@ -7,6 +7,11 @@ local _G = getfenv(0)
 local pairs = _G.pairs
 
 -------------------------------------------------------------------------------
+-- Constants
+-------------------------------------------------------------------------------
+local MODULE_VERSION = 1
+
+-------------------------------------------------------------------------------
 -- AddOn namespace.
 -------------------------------------------------------------------------------
 local FOLDER_NAME, private = ...
@@ -15,28 +20,20 @@ private.module_name = MODULE_NAME
 
 local LibStub = _G.LibStub
 local addon = LibStub("AceAddon-3.0"):GetAddon("Ackis Recipe List")
+
+if MODULE_VERSION ~= addon.SUPPORTED_MODULE_VERSION then
+	addon:SpawnModuleWrongVersionDialog({
+		moduleName = MODULE_NAME,
+		moduleVersion = MODULE_VERSION
+	})
+	return
+end
+
 private.addon = addon
 
 local module = addon:NewModule(MODULE_NAME)
-
-module.ITEM_FILTER_TYPES = {
-	ENCHANTING_BOOTS = true,
-	ENCHANTING_BRACER = true,
-	ENCHANTING_CHEST = true,
-	ENCHANTING_CLOAK = true,
-	ENCHANTING_GLOVES = true,
-	ENCHANTING_RING = true,
-	ENCHANTING_NECK = true,
-	ENCHANTING_SHIELD = true,
-	ENCHANTING_WEAPON = true,
-	ENCHANTING_2H_WEAPON = true,
-	ENCHANTING_STAFF = true,
-	ENCHANTING_OIL = true,
-	ENCHANTING_ROD = true,
-	ENCHANTING_WAND = true,
-	ENCHANTING_MISC = true,
-	ENCHANTING_MATERIALS = true,
-}
+module.Version = MODULE_VERSION
+module.Name  = FOLDER_NAME
 
 function module:OnInitialize()
 	local defaults = {

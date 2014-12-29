@@ -1,0 +1,19 @@
+tag v8
+0b6ae8f77b9f62e07940176d62b5015c7af33875
+David Lynch <kemayo@gmail.com>
+2014-12-03 12:49:29 -0800
+
+Tagging v8
+
+
+--------------------
+
+David Lynch:
+	- Follower: Archmage Vargoth
+	- All the Ogre Booty, with proper internal coords and levels for Bladespire
+	- Note the cave entrance on the frozen frostwolf axe
+	- Add Time-Warped Tower
+	- Clumsy Cragmaul Brute item
+	- Note on Misplaced Scroll
+	- Note on pure crystal dust
+	- Gaz'orda drop

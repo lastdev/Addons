@@ -5,12 +5,14 @@ local addon = _G[addonName]
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 function addon:SetupOptions()
-	DataStore:AddOptionCategory(DataStoreAuctionsOptions, addonName, "DataStore")
+	local f = DataStore.Frames.AuctionsOptions
+	
+	DataStore:AddOptionCategory(f, addonName, "DataStore")
 
 	-- localize options
-	DataStoreAuctionsOptions_AutoClearExpiredItemsText:SetText(L["Automatically clear expired auctions and bids"])
-	DataStore:SetCheckBoxTooltip(DataStoreAuctionsOptions_AutoClearExpiredItems, L["CLEAR_ITEMS_TITLE"], L["CLEAR_ITEMS_ENABLED"], L["CLEAR_ITEMS_DISABLED"])
+	f.AutoClearExpiredItems.Text:SetText(L["Automatically clear expired auctions and bids"])
+	DataStore:SetCheckBoxTooltip(f.AutoClearExpiredItems, L["CLEAR_ITEMS_TITLE"], L["CLEAR_ITEMS_ENABLED"], L["CLEAR_ITEMS_DISABLED"])
 	
 	-- restore saved options to gui
-	DataStoreAuctionsOptions_AutoClearExpiredItems:SetChecked(DataStore:GetOption(addonName, "AutoClearExpiredItems"))
+	f.AutoClearExpiredItems:SetChecked(DataStore:GetOption(addonName, "AutoClearExpiredItems"))
 end

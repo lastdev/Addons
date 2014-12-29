@@ -1,4 +1,4 @@
-HEALBOT_VERSION   = "6.0.3.5";
+HEALBOT_VERSION   = "6.0.3.7";
 HEALBOT_ABOUT_URL = "http://healbot.darktech.org/"
 
 function HealBot_globalVars()
@@ -117,6 +117,11 @@ function HealBot_globalVars()
     HEALBOT_POWERFUL_ANTI_VENOM             = GetItemInfo(19440) or "--Powerful Anti-Venom";
     HEALBOT_ELIXIR_OF_POISON_RES            = GetItemInfo(3386) or "--Potion of Curing";
 
+    --Items
+    HEALBOT_ORALIUS_WHISPERING_CRYSTAL      = GetItemInfo(118922) or "--Oralius' Whispering Crystal";
+    HEALBOT_WHISPERS_OF_INSANITY            = GetSpellInfo(176151) or "--Whispers of Insanity"
+    HEALBOT_EVER_BLOOMING_FROND             = GetItemInfo(118935) or "--Ever-Blooming Frond"
+    HEALBOT_BLOOM                           = GetSpellInfo(176160) or "--Bloom"
     
 	--Racial Abilities
     HEALBOT_STONEFORM                       = GetSpellInfo(20594) or "--Stoneform";

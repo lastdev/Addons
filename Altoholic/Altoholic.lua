@@ -222,6 +222,38 @@ function AuctionFrameBrowse_UpdateHook()
 	AltoTooltip:Hide()
 end
 
+local function IsBOPRecipeKnown(itemID)
+	-- Check if a given recipe is BOP and known by the current player
+	local _, link = GetItemInfo(itemID)
+	if not link then return end
+
+	-- ITEM_BIND_ON_EQUIP = "Binds when equipped";
+	-- ITEM_BIND_ON_PICKUP = "Binds when picked up";
+	-- ITEM_BIND_ON_USE = "Binds when used";
+	-- ITEM_SPELL_KNOWN = "Already known";
+	
+	AltoTooltip:SetOwner(AltoholicFrame, "ANCHOR_LEFT")
+	AltoTooltip:SetHyperlink(link)
+	
+	local tooltipLine
+	local isBOP
+	local isKnown	-- by the current character only
+	
+	for i = 1, AltoTooltip:NumLines() do
+		tooltipLine = _G[ "AltoTooltipTextLeft" .. i]:GetText()
+		if tooltipLine then
+			if tooltipLine == ITEM_BIND_ON_PICKUP and i <= 4 then	
+				-- some items will have "Binds when picked up" twice.. only care about the occurence in the first 4 lines
+				isBOP = true
+			elseif tooltipLine == ITEM_SPELL_KNOWN then
+				isKnown = true
+			end
+		end
+	end
+
+	return (isBOP and isKnown) -- only return true if both are true
+end
+
 local Orig_MerchantFrame_UpdateMerchantInfo
 
 local function MerchantFrame_UpdateMerchantInfoHook()
@@ -248,7 +280,9 @@ local function MerchantFrame_UpdateMerchantInfoHook()
 					if button then
 						local r, g, b
 						
-						if #couldLearn == 0 and #willLearn == 0 then		-- nobody could learn the recipe, neither now nor later : red
+						if IsBOPRecipeKnown(itemID) then		-- recipe is bop and already known, useless to alts : red.
+							r, g, b = 1, 0, 0
+						elseif #couldLearn == 0 and #willLearn == 0 then		-- nobody could learn the recipe, neither now nor later : red
 							r, g, b = 1, 0, 0
 						elseif #couldLearn > 0 then							-- at least 1 could learn it : green (priority over "will learn")
 							r, g, b = 0, 1, 0

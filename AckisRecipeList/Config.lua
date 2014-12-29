@@ -5,8 +5,8 @@ Ace3 Configuration options for ARL
 ************************************************************************
 File date: 2014-05-26T00:13:59Z
 File hash: d2eafec
-Project hash: 0b1c7cf
-Project version: 3.0.11
+Project hash: a4cd6d6
+Project version: 3.0.12
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************

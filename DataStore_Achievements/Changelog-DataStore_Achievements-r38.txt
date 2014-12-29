@@ -1,0 +1,238 @@
+------------------------------------------------------------------------
+r38 | thaoky | 2014-12-27 13:08:22 +0000 (Sat, 27 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore_Achievements.lua
+
+Fixed processing of achievement ids that are nil
+------------------------------------------------------------------------
+r36 | thaoky | 2014-12-24 13:44:47 +0000 (Wed, 24 Dec 2014) | 4 lines
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/DataStore_Achievements.lua
+   M /trunk/DataStore_Achievements.toc
+
+- .toc update to use project-version
+- Fixed ScanSingleAchievement to skip processing when achievement id is nil.
+- reverted changes by Myrrodin. Please keep the library structure as it is in the project. DataStore modules mostly do not need libs, as they are provided by the main DataStore module. This is fully intended.
+
+------------------------------------------------------------------------
+r35 | myrroddin | 2014-11-30 03:15:01 +0000 (Sun, 30 Nov 2014) | 1 line
+Changed paths:
+   D /trunk/Libs/Ace3
+   A /trunk/Libs/Ace3.lua
+   A /trunk/Libs/Ace3.toc
+   A /trunk/Libs/AceAddon-3.0
+   A /trunk/Libs/AceAddon-3.0/AceAddon-3.0.lua
+   A /trunk/Libs/AceAddon-3.0/AceAddon-3.0.xml
+   A /trunk/Libs/AceBucket-3.0
+   A /trunk/Libs/AceBucket-3.0/AceBucket-3.0.lua
+   A /trunk/Libs/AceBucket-3.0/AceBucket-3.0.xml
+   A /trunk/Libs/AceComm-3.0
+   A /trunk/Libs/AceComm-3.0/AceComm-3.0.lua
+   A /trunk/Libs/AceComm-3.0/AceComm-3.0.xml
+   A /trunk/Libs/AceComm-3.0/ChatThrottleLib.lua
+   A /trunk/Libs/AceConfig-3.0
+   A /trunk/Libs/AceConfig-3.0/AceConfig-3.0.lua
+   A /trunk/Libs/AceConfig-3.0/AceConfig-3.0.xml
+   A /trunk/Libs/AceConfig-3.0/AceConfigCmd-3.0
+   A /trunk/Libs/AceConfig-3.0/AceConfigCmd-3.0/AceConfigCmd-3.0.lua
+   A /trunk/Libs/AceConfig-3.0/AceConfigCmd-3.0/AceConfigCmd-3.0.xml
+   A /trunk/Libs/AceConfig-3.0/AceConfigDialog-3.0
+   A /trunk/Libs/AceConfig-3.0/AceConfigDialog-3.0/AceConfigDialog-3.0.lua
+   A /trunk/Libs/AceConfig-3.0/AceConfigDialog-3.0/AceConfigDialog-3.0.xml
+   A /trunk/Libs/AceConfig-3.0/AceConfigRegistry-3.0
+   A /trunk/Libs/AceConfig-3.0/AceConfigRegistry-3.0/AceConfigRegistry-3.0.lua
+   A /trunk/Libs/AceConfig-3.0/AceConfigRegistry-3.0/AceConfigRegistry-3.0.xml
+   A /trunk/Libs/AceConsole-3.0
+   A /trunk/Libs/AceConsole-3.0/AceConsole-3.0.lua
+   A /trunk/Libs/AceConsole-3.0/AceConsole-3.0.xml
+   A /trunk/Libs/AceDB-3.0
+   A /trunk/Libs/AceDB-3.0/AceDB-3.0.lua
+   A /trunk/Libs/AceDB-3.0/AceDB-3.0.xml
+   A /trunk/Libs/AceDBOptions-3.0
+   A /trunk/Libs/AceDBOptions-3.0/AceDBOptions-3.0.lua
+   A /trunk/Libs/AceDBOptions-3.0/AceDBOptions-3.0.xml
+   A /trunk/Libs/AceEvent-3.0
+   A /trunk/Libs/AceEvent-3.0/AceEvent-3.0.lua
+   A /trunk/Libs/AceEvent-3.0/AceEvent-3.0.xml
+   A /trunk/Libs/AceGUI-3.0
+   A /trunk/Libs/AceGUI-3.0/AceGUI-3.0.lua
+   A /trunk/Libs/AceGUI-3.0/AceGUI-3.0.xml
+   A /trunk/Libs/AceGUI-3.0/widgets
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIContainer-BlizOptionsGroup.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIContainer-DropDownGroup.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIContainer-Frame.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIContainer-InlineGroup.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIContainer-ScrollFrame.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIContainer-SimpleGroup.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIContainer-TabGroup.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIContainer-TreeGroup.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIContainer-Window.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-Button.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-CheckBox.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-ColorPicker.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-DropDown-Items.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-DropDown.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-EditBox.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-Heading.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-Icon.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-InteractiveLabel.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-Keybinding.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-Label.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-MultiLineEditBox.lua
+   A /trunk/Libs/AceGUI-3.0/widgets/AceGUIWidget-Slider.lua
+   A /trunk/Libs/AceHook-3.0
+   A /trunk/Libs/AceHook-3.0/AceHook-3.0.lua
+   A /trunk/Libs/AceHook-3.0/AceHook-3.0.xml
+   A /trunk/Libs/AceLocale-3.0
+   A /trunk/Libs/AceLocale-3.0/AceLocale-3.0.lua
+   A /trunk/Libs/AceLocale-3.0/AceLocale-3.0.xml
+   A /trunk/Libs/AceSerializer-3.0
+   A /trunk/Libs/AceSerializer-3.0/AceSerializer-3.0.lua
+   A /trunk/Libs/AceSerializer-3.0/AceSerializer-3.0.xml
+   A /trunk/Libs/AceTab-3.0
+   A /trunk/Libs/AceTab-3.0/AceTab-3.0.lua
+   A /trunk/Libs/AceTab-3.0/AceTab-3.0.xml
+   A /trunk/Libs/AceTimer-3.0
+   A /trunk/Libs/AceTimer-3.0/AceTimer-3.0.lua
+   A /trunk/Libs/AceTimer-3.0/AceTimer-3.0.xml
+   A /trunk/Libs/Bindings.xml
+   R /trunk/Libs/CallbackHandler-1.0
+   A /trunk/Libs/CallbackHandler-1.0/CallbackHandler-1.0.lua
+   A /trunk/Libs/CallbackHandler-1.0/CallbackHandler-1.0.xml
+   A /trunk/Libs/Changelog-Ace3-r1118.txt
+   A /trunk/Libs/Changelog-Ace3-r1126.txt
+   A /trunk/Libs/LICENSE.txt
+   R /trunk/Libs/LibStub
+   A /trunk/Libs/LibStub/LibStub.lua
+   A /trunk/Libs/changelog.txt
+
+- Sheesh what a mess!
+------------------------------------------------------------------------
+r34 | myrroddin | 2014-11-30 02:40:25 +0000 (Sun, 30 Nov 2014) | 2 lines
+Changed paths:
+   M /trunk/DataStore_Achievements.toc
+
+- Properly load support libs
+- Change .pkgmeta and ToC accordingly
+------------------------------------------------------------------------
+r33 | myrroddin | 2014-11-30 02:23:12 +0000 (Sun, 30 Nov 2014) | 2 lines
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/DataStore_Achievements.toc
+   A /trunk/Libs
+   A /trunk/Libs/Ace3
+   A /trunk/Libs/Ace3/Ace3.lua
+   A /trunk/Libs/Ace3/Ace3.toc
+   A /trunk/Libs/Ace3/AceAddon-3.0
+   A /trunk/Libs/Ace3/AceAddon-3.0/AceAddon-3.0.lua
+   A /trunk/Libs/Ace3/AceAddon-3.0/AceAddon-3.0.xml
+   A /trunk/Libs/Ace3/AceBucket-3.0
+   A /trunk/Libs/Ace3/AceBucket-3.0/AceBucket-3.0.lua
+   A /trunk/Libs/Ace3/AceBucket-3.0/AceBucket-3.0.xml
+   A /trunk/Libs/Ace3/AceComm-3.0
+   A /trunk/Libs/Ace3/AceComm-3.0/AceComm-3.0.lua
+   A /trunk/Libs/Ace3/AceComm-3.0/AceComm-3.0.xml
+   A /trunk/Libs/Ace3/AceComm-3.0/ChatThrottleLib.lua
+   A /trunk/Libs/Ace3/AceConfig-3.0
+   A /trunk/Libs/Ace3/AceConfig-3.0/AceConfig-3.0.lua
+   A /trunk/Libs/Ace3/AceConfig-3.0/AceConfig-3.0.xml
+   A /trunk/Libs/Ace3/AceConfig-3.0/AceConfigCmd-3.0
+   A /trunk/Libs/Ace3/AceConfig-3.0/AceConfigCmd-3.0/AceConfigCmd-3.0.lua
+   A /trunk/Libs/Ace3/AceConfig-3.0/AceConfigCmd-3.0/AceConfigCmd-3.0.xml
+   A /trunk/Libs/Ace3/AceConfig-3.0/AceConfigDialog-3.0
+   A /trunk/Libs/Ace3/AceConfig-3.0/AceConfigDialog-3.0/AceConfigDialog-3.0.lua
+   A /trunk/Libs/Ace3/AceConfig-3.0/AceConfigDialog-3.0/AceConfigDialog-3.0.xml
+   A /trunk/Libs/Ace3/AceConfig-3.0/AceConfigRegistry-3.0
+   A /trunk/Libs/Ace3/AceConfig-3.0/AceConfigRegistry-3.0/AceConfigRegistry-3.0.lua
+   A /trunk/Libs/Ace3/AceConfig-3.0/AceConfigRegistry-3.0/AceConfigRegistry-3.0.xml
+   A /trunk/Libs/Ace3/AceConsole-3.0
+   A /trunk/Libs/Ace3/AceConsole-3.0/AceConsole-3.0.lua
+   A /trunk/Libs/Ace3/AceConsole-3.0/AceConsole-3.0.xml
+   A /trunk/Libs/Ace3/AceDB-3.0
+   A /trunk/Libs/Ace3/AceDB-3.0/AceDB-3.0.lua
+   A /trunk/Libs/Ace3/AceDB-3.0/AceDB-3.0.xml
+   A /trunk/Libs/Ace3/AceDBOptions-3.0
+   A /trunk/Libs/Ace3/AceDBOptions-3.0/AceDBOptions-3.0.lua
+   A /trunk/Libs/Ace3/AceDBOptions-3.0/AceDBOptions-3.0.xml
+   A /trunk/Libs/Ace3/AceEvent-3.0
+   A /trunk/Libs/Ace3/AceEvent-3.0/AceEvent-3.0.lua
+   A /trunk/Libs/Ace3/AceEvent-3.0/AceEvent-3.0.xml
+   A /trunk/Libs/Ace3/AceGUI-3.0
+   A /trunk/Libs/Ace3/AceGUI-3.0/AceGUI-3.0.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/AceGUI-3.0.xml
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIContainer-BlizOptionsGroup.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIContainer-DropDownGroup.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIContainer-Frame.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIContainer-InlineGroup.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIContainer-ScrollFrame.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIContainer-SimpleGroup.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIContainer-TabGroup.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIContainer-TreeGroup.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIContainer-Window.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIWidget-Button.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIWidget-CheckBox.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIWidget-ColorPicker.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIWidget-DropDown-Items.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIWidget-DropDown.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIWidget-EditBox.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIWidget-Heading.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIWidget-Icon.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIWidget-InteractiveLabel.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIWidget-Keybinding.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIWidget-Label.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIWidget-MultiLineEditBox.lua
+   A /trunk/Libs/Ace3/AceGUI-3.0/widgets/AceGUIWidget-Slider.lua
+   A /trunk/Libs/Ace3/AceHook-3.0
+   A /trunk/Libs/Ace3/AceHook-3.0/AceHook-3.0.lua
+   A /trunk/Libs/Ace3/AceHook-3.0/AceHook-3.0.xml
+   A /trunk/Libs/Ace3/AceLocale-3.0
+   A /trunk/Libs/Ace3/AceLocale-3.0/AceLocale-3.0.lua
+   A /trunk/Libs/Ace3/AceLocale-3.0/AceLocale-3.0.xml
+   A /trunk/Libs/Ace3/AceSerializer-3.0
+   A /trunk/Libs/Ace3/AceSerializer-3.0/AceSerializer-3.0.lua
+   A /trunk/Libs/Ace3/AceSerializer-3.0/AceSerializer-3.0.xml
+   A /trunk/Libs/Ace3/AceTab-3.0
+   A /trunk/Libs/Ace3/AceTab-3.0/AceTab-3.0.lua
+   A /trunk/Libs/Ace3/AceTab-3.0/AceTab-3.0.xml
+   A /trunk/Libs/Ace3/AceTimer-3.0
+   A /trunk/Libs/Ace3/AceTimer-3.0/AceTimer-3.0.lua
+   A /trunk/Libs/Ace3/AceTimer-3.0/AceTimer-3.0.xml
+   A /trunk/Libs/Ace3/Bindings.xml
+   A /trunk/Libs/Ace3/CallbackHandler-1.0
+   A /trunk/Libs/Ace3/CallbackHandler-1.0/CallbackHandler-1.0.lua
+   A /trunk/Libs/Ace3/CallbackHandler-1.0/CallbackHandler-1.0.xml
+   A /trunk/Libs/Ace3/Changelog-Ace3-r1118.txt
+   A /trunk/Libs/Ace3/Changelog-Ace3-r1126.txt
+   A /trunk/Libs/Ace3/LICENSE.txt
+   A /trunk/Libs/Ace3/LibStub
+   A /trunk/Libs/Ace3/LibStub/LibStub.lua
+   A /trunk/Libs/Ace3/changelog.txt
+   A /trunk/Libs/CallbackHandler-1.0
+   A /trunk/Libs/CallbackHandler-1.0/CallbackHandler-1.0
+   A /trunk/Libs/CallbackHandler-1.0/CallbackHandler-1.0/CallbackHandler-1.0.lua
+   A /trunk/Libs/CallbackHandler-1.0/CallbackHandler-1.0/CallbackHandler-1.0.xml
+   A /trunk/Libs/CallbackHandler-1.0/CallbackHandler-1.0.toc
+   A /trunk/Libs/CallbackHandler-1.0/Changelog-CallbackHandler-1.0-1.0.6.60000.txt
+   A /trunk/Libs/CallbackHandler-1.0/LibStub
+   A /trunk/Libs/CallbackHandler-1.0/LibStub/LibStub.lua
+   A /trunk/Libs/LibStub
+   A /trunk/Libs/LibStub/Changelog-LibStub-1.0.2.60000.txt
+   A /trunk/Libs/LibStub/LibStub.lua
+   A /trunk/Libs/LibStub/LibStub.toc
+   A /trunk/Libs/LibStub/tests
+   A /trunk/Libs/LibStub/tests/test.lua
+   A /trunk/Libs/LibStub/tests/test2.lua
+   A /trunk/Libs/LibStub/tests/test3.lua
+   A /trunk/Libs/LibStub/tests/test4.lua
+
+- Properly load support libs
+- Change .pkgmeta and ToC accordingly
+------------------------------------------------------------------------
+r32 | thaoky | 2014-10-17 17:01:43 +0000 (Fri, 17 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore_Achievements.toc
+
+6.0.001 Commit
+------------------------------------------------------------------------

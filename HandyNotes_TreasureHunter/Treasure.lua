@@ -1,43 +1,6 @@
----------------------------------------------------------
--- Addon declaration
-HandyNotes_TreasureHunter = LibStub("AceAddon-3.0"):NewAddon("HandyNotes_TreasureHunter", "AceEvent-3.0")
-local HL = HandyNotes_TreasureHunter
-local HandyNotes = LibStub("AceAddon-3.0"):GetAddon("HandyNotes")
--- local L = LibStub("AceLocale-3.0"):GetLocale("HandyNotes_TreasureHunter", true)
+local myname, ns = ...
 
-local debugf = tekDebug and tekDebug:GetFrame("TreasureHunter")
-local function Debug(...) if debugf then debugf:AddMessage(string.join(", ", tostringall(...))) end end
-
----------------------------------------------------------
--- Our db upvalue and db defaults
-local db
-local defaults = {
-    profile = {
-        show_junk = true,
-        show_npcs = true,
-        found = false,
-        icon_scale = 1.0,
-        icon_alpha = 1.0,
-        icon_item = true,
-        tooltip_item = true,
-    },
-}
-
----------------------------------------------------------
--- Localize some globals
-local next = next
-local GameTooltip = GameTooltip
-local WorldMapTooltip = WorldMapTooltip
-local HandyNotes = HandyNotes
-local GetItemInfo = GetItemInfo
-local GetAchievementInfo = GetAchievementInfo
-local GetAchievementCriteriaInfo = GetAchievementCriteriaInfo
-local GetCurrencyInfo = GetCurrencyInfo
-
----------------------------------------------------------
--- Constants
-
-local points = {
+ns.points = {
     --[[ structure:
     [mapFile] = { -- "_terrain1" etc will be stripped from attempts to fetch this
         [coord] = {
@@ -61,9 +24,9 @@ local points = {
         [87602030]={ quest=35662, label="Steamwheedle Supplies", note="Use a glider", currency=824, },
         [88204260]={ quest=35616, label="Steamwheedle Supplies", note="Use a glider", currency=824, },
         -- abu'gar
-        [38404940]={ quest=36072, item=114245, note="Abu'Gar's Favorite Lure", },
-        [65906120]={ quest=35711, item=114242, note="Abu'gar's Vitality", },
-        [85403870]={ quest=36089, item=114243, note="Abu'gar's Missing Reel", },
+        [38404940]={ quest=36711, item=114245, note="Abu'Gar's Favorite Lure, won't show complete until you get Abu'Gar", }, -- 36072
+        [65906120]={ quest=36711, item=114242, note="Abu'gar's Vitality, won't show complete until you get Abu'Gar", }, -- 35711
+        [85403870]={ quest=36711, item=114243, note="Abu'gar's Missing Reel, won't show complete until you get Abu'Gar", }, -- 36089
         -- glider-required
         [70501390]={ quest=35643, label="Mountain Climber's Pack", note="Use a glider", currency=824, },
         [73007040]={ quest=35678, label="Warsong Lockbox", note="Use a glider", currency=824, },
@@ -107,13 +70,13 @@ local points = {
         [67404900]={ quest=36039, item=118252, note="Highmaul Sledge", },
         [67605980]={ quest=35759, label="Abandoned Cargo", note="Gold, random green", },
         [69905240]={ quest=35597, label="Adventurer's Pack", note="Gold, random green", },
-        [72706100]={ quest=36035, item=118254, note="Polished Saberon Skull", },
+        [72706100]={ quest=36035, item=118254, note="Polished Saberon Skull", note="Circuitous path up the cliff from in Sabermaw, past the Adventuer's Mace", },
         [73102160]={ quest=35692, item=118233, note="Freshwater Clam", },
         [73901410]={ quest=35955, label="Adventurer's Sack", note="Gold", },
         [75206500]={ quest=36102, label="Saberon Stash", note="Gold, jump down", },
         [75306570]={ quest=36099, item=61986, note="Important Exploration Supplies", },
         [75404710]={ quest=36074, item=118236, note="Gambler's Purse", },
-        [75806200]={ quest=36077, label="Adventurer's Mace", note="Gold, green mace", },
+        [75806200]={ quest=36077, label="Adventurer's Mace", note="Gold, green mace; circuitous path up the cliff from in Sabermaw", },
         [77302820]={ quest=35986, item=116760, note="Bone-Carved Dagger", },
         [78901550]={ quest=36036, item=118251, note="Elemental Shackles", },
         [81007980]={ quest=36049, item=118255, note="Ogre Beads", },
@@ -126,7 +89,7 @@ local points = {
         [38001960]={ quest=37397, npc=87846, achievement=9571, }, -- Pit Slayer
         [38602240]={ quest=37395, npc=87788, item=119405, achievement=9571, }, -- Durg Spinecrusher
         [40001600]={ quest=37395, npc=87837, achievement=9571, }, -- Bonebreaker
-        [42207860]={ quest=34725, npc=80122, currency=824, note="In a cave", }, -- Gaz'orda
+        [42207860]={ quest=34725, npc=80122, item=116798, currency=824, note="In a cave", }, -- Gaz'orda
         [42804920]={ quest=35875, npc=83409, item=116765, }, -- Ophiis
         [43003640]={ quest=37400, npc=87234, item=119380, achievement=9541, }, -- Brutag Grimblade
         [43803440]={ quest=37473, npc=87239, achievement=9541, }, -- Krahl Deadeye
@@ -170,11 +133,18 @@ local points = {
         [60003800]={ quest=37222, npc=86729, item=118657, }, -- Direhoof
         [34005100]={ quest=37224, npc=87666, item=118659, }, -- Mu'gra
         [37003800]={ quest=37520, npc=88951, item=120172, }, -- Vileclaw
+        -- followers
+        [46401600]={ quest=34466, follower=190, note="Mysterious Staff; collect all the Mysterious items across Draenor", }, -- Archmage Vargoth
+        [67205600]={ quest=36711, npc=82746, follower=209, note="Rebuild his fishing rod by gathering the pieces @ 38.4,49.3, 65.8,61.1, 85.4,38.7", }, -- Abu'gar
     },
     --[[
     -- TODO: need the name
     ["ACaveInNagrand"] = {
         [66305730]={ quest=36088, label="Adventurer's Pouch", note="Random green", },
+    },
+    -- "Vault of the Titan"
+    ["StonecragGorge"] = {
+    
     },
     --]]
     ["ShadowmoonValleyDR"] = {
@@ -182,11 +152,11 @@ local points = {
         [27100260]={ quest=35280, currency=824, label="Stolen Treasure", },
         [26500570]={ quest=34174, currency=824, label="Fantastic Fish", },
         [28800710]={ quest=35279, currency=824, label="Sunken Treasure", },
-        [30301990]={ quest=35530, currency=824, label="Lunarfall Egg", note="Moves to the garrison once built", },
+        [30301990]={ quest=35530, currency=824, label="Lunarfall Egg", note="Moves to the garrison once built", faction="Alliance", },
         [45802460]={ quest=33570, currency=824, label="Shadowmoon Exile Treasure", note="cave below Exile Rise", },
         [52902490]={ quest=37254, currency=824, label="Mushroom-Covered Chest", },
         [57904530]={ quest=33568, currency=824, label="Kaliri Egg", },
-        [28303930]={ quest=33571, currency=824, label="Shadowmoon Treasure", },
+        [28303930]={ quest=33571, currency=824, label="Shadowmoon Treasure", note="It's in the tent-y building. Currently bugged so it won't show as complete.", },
         [42106130]={ quest=33041, currency=824, label="Iron Horde Cargo Shipment", },
         [84504470]={ quest=33885, currency=824, label="Cargo of the Raven Queen", },
         -- treasures
@@ -195,7 +165,7 @@ local points = {
         [30004530]={ quest=35919, item=113563, note="Shadowmoon Sacrificial Dagger" },
         [31303910]={ quest=33886, item=109081, note="Ronokk's Belongings", },
         [33503970]={ quest=33569, item=113545, note="Reusable mana potion", },
-        [34204350]={ quest=33866, item=109124, note="Veema's Herb Bag", },
+        [34204350]={ quest=33866, item=109124, note="Veema's Herb Bag, underground", },
         [34404620]={ quest=33891, item=108901, note="Giant Moonwillow Cone", },
         [35904090]={ quest=33540, item=113546, note="Uzko's Knickknacks", },
         [36704450]={ quest=33573, item=113378, },
@@ -261,6 +231,8 @@ local points = {
         [61606180]={ quest=35725, item=113557, npc=82207, }, -- Faebright
         [67806380]={ quest=35688, item=113556, npc=82676, }, -- Enavra
         [68208480]={ quest=37410, currency=823, npc=85568, }, -- Avalanche
+        -- followers
+        [42804040]={ quest=35614, follower=179, npc=74741, faction="Alliance", note="Do the crystal defense event here to get him", }, -- Artificer Romuul
     },
     ["BloodthornCave"] = {
         [55544974]={ quest=33572, item=113373, note="Rotting Basket", level=15, },
@@ -270,34 +242,46 @@ local points = {
         [16104980]={ quest=33942, label="Supply Dump", currency=824, },
         [21605070]={ quest=34931, label="Pale Loot Sack", currency=824, },
         [24001300]={ quest=34647, label="Snow-Covered Strongbox", currency=824, },
-        [26503640]={ quest=nil, label="Gorr'thogg's Personal Reserve", currency=824, },
         [34202350]={ quest=32803, label="Thunderlord Cache", currency=824, },
         [37205920]={ quest=34967, label="Raided Loot", currency=824, },
         [43705550]={ quest=34841, label="Forgotten Supplies", currency=824, },
-        [51002280]={ quest=34521, label="Glowing Obsidian Shard", currency=824, },
+        [51002280]={ quest=34521, label="Glowing Obsidian Shard", currency=824, note="May be missing?", },
         [56707180]={ quest=36863, label="Iron Horde Munitions", currency=824, },
         [64702570]={ quest=33946, label="Survivalist's Cache", currency=824, },
         [66702640]={ quest=33948, label="Goren Leftovers", currency=824, },
         [68204580]={ quest=33947, label="Grimfrost Treasure", currency=824, },
         [69006910]={ quest=33017, label="Iron Horde Supplies", currency=824, },
-        [74505620]={ quest=34937, label="Lady Sena's Other Materials Stash", currency=824, },
+        [74505620]={ quest=34937, label="Lady Sena's Other Materials Stash", currency=824, faction="Horde", },
         -- treasures
         [09804540]={ quest=34641, item=111407, note="Sealed Jug", },
         [19201200]={ quest=34642, item=111408, note="Lucky Coin", },
         [21900960]={ quest=33926, item=108739, note="Lagoon Pool", toy=true, },
         [23102500]={ quest=33916, item=108735, note="Arena Master's War Horn", toy=true, },
-        [24202720]={ quest=33501, item=63293, note="Spectator's Chest, booze", },
-        [24204860]={ quest=34507, item=110689, note="Frozen Frostwolf Axe", },
+        [24202720]={ quest=33501, item=63293, note="Spectator's Chest; booze, jump from the tower, entrance @ 25,30", },
+        [24204860]={ quest=34507, item=110689, note="Frozen Frostwolf Axe; cave at 25,51", },
         [25502040]={ quest=34648, item=111415, note="Gnawed Bone", },
-        [26703940]={ quest=nil, item=113189, note="Doorog's Secret Stash", },
         [27604280]={ quest=33500, item=43696, note="Slave's Stash, booze", },
+        [30305120]={ quest=33438, item=107662, note="Time-Warped Tower; loot all the frozen ogres", }, -- note: other ogres are 33497, 33439, and 33440
         [38403780]={ quest=33502, item=112087, note="Obsidian Petroglyph", },
         [40902010]={ quest=34473, item=110536, note="Envoy's Satchel", },
         [42401970]={ quest=34520, item=120341, note="Burning Pearl", },
         [42703170]={ quest=33940, item=112187, note="Crag-Leaper's Cache", },
         [57105210]={ quest=34476, item=111554, note="Frozen Orc Skeleton", },
+        [61804250]={ quest=33511, npc=72156, item=112110, note="Interrupt the ritual, then feed him ogres", },
         [63401480]={ quest=33525, npc=75081, note=UNKNOWN, }, -- Young Orc Woman
-        [64406580]={ quest=33505, item=117564, note="Wiggling Egg", pet=true, },
+        [64406580]={ quest=33505, item=117564, note="Wiggling Egg; rylak nests on the roof", pet=true, },
+        -- bladespire...
+        [26503640]={ quest=35367, label="Gorr'thogg's Personal Reserve", currency=824, },
+        [26703940]={ quest=35370, item=113189, note="Doorog's Secret Stash", },
+        [26603520]={ quest=35347, currency=824, label="Ogre Booty", },
+        [27173763]={ quest=35373, label="Ogre Booty", note="Gold", },
+        [27283876]={ quest=35570, label="Ogre Booty", note="Gold", },
+        [27603382]={ quest=35371, label="Ogre Booty", note="Gold", },
+        [28093409]={ quest=35567, currency=824, label="Ogre Booty", },
+        [28093409]={ quest=35568, currency=824, label="Ogre Booty", },
+        [28093409]={ quest=35569, currency=824, label="Ogre Booty", },
+        [28293440]={ quest=35368, label="Ogre Booty", note="Gold", },
+        [28293440]={ quest=35369, label="Ogre Booty", note="Gold", },
         -- rares
         [67407820]={ quest=34477, item=112086, npc=78621, }, -- Cyclonic Fury
         [41206820]={ quest=34843, item=111953, npc=80242, }, -- Chillfang
@@ -319,7 +303,7 @@ local points = {
         [54606940]={ quest=34131, item=111484, npc=76914, }, -- Coldtusk
         [71404680]={ quest=33504, item=107661, npc=74971, }, -- Firefury Giant
         [47005520]={ quest=34839, item=111955, npc=80235, }, -- Gurun
-        [50201860]={ quest=33531, npc=75120, note=UNKNOWN, }, -- Clumsy Cragmaul Brute
+        [50201860]={ quest=33531, item=112096, npc=75120, note="...and a peeled banana", }, -- Clumsy Cragmaul Brute
         [84404880]={ quest=nil, npc=84384, note=UNKNOWN, }, -- Taskmaster Kullah
         [85005220]={ quest=37556, npc=87600, currency=823, }, -- Jaluk the Pacifist
         [88605740]={ quest=37525, npc=84378, currency=823, }, -- Ak'ox the Slaughterer
@@ -341,26 +325,35 @@ local points = {
         [48202340]={ quest=37386, item=119390, npc=82616, }, -- Jabberjaw
         [43002100]={ quest=37387, item=119356, npc=82614, }, -- Moltnoma
         [40601240]={ quest=34522, npc=79104, currency=823, }, -- Ug'lok the Frozen
+        -- followers
+        [68001900]={ quest=34464, follower=190, note="Mysterious Boots; collect all the Mysterious items across Draenor", }, -- Archmage Vargoth
     },
-    --[[
     ["BladespireFortress"] = {
-        [37806900]={ quest=nil, item=113189, note="Doorog's Secret Stash", },
-        [76806280]={ quest=nil, currency=824, label="Ogre Booty", },
+        [44806480]={ quest=35570, label="Ogre Booty", note="Gold", level=1, },
+        [48506720]={ quest=35369, label="Ogre Booty", note="Gold; up some crates", level=1, },
+        [53702880]={ quest=35368, label="Ogre Booty", note="Gold; up some crates", level=1, },
+        [36502900]={ quest=35347, currency=824, label="Ogre Booty", level=2, },
+        [37806900]={ quest=35370, item=113189, note="Doorog's Secret Stash; second floor, outside", level=2, },
+        [46401640]={ quest=35371, label="Ogre Booty", note="Gold; up some crates; may hit an invisible ceiling, it's reachable if you work at it", level=2, },
+        [51101770]={ quest=35567, currency=824, label="Ogre Booty", level=2, },
+        [52605300]={ quest=35373, label="Ogre Booty", note="Gold; up some crates", level=2, },
+        [70806800]={ quest=35569, currency=824, label="Ogre Booty", note="In the vault", level=2, },
+        [76606330]={ quest=35568, currency=824, label="Ogre Booty", note="In the vault", level=2, },
+        [31706640]={ quest=35367, item=113108, note="Gorr'thogg's Personal Reserve", level=3, },
     },
-    --]]
     ["Gorgrond"] = {
         -- treasures
-        [39006810]={ quest=36631, label="Sasha's Secret Stash", note="Random green + gold", },
+        [39006810]={ quest=36631, label="Sasha's Secret Stash", note="Random green + gold; top of the tower on a broken beam outside, you have to jump down", },
         [40007230]={ quest=36170, item=118715, note="Femur of Improbability", },
         [40407660]={ quest=36621, item=118710, note="Explorer Canister", currency=824, },
         [41705300]={ quest=36506, item=118702, note="Brokor's Sack", },
-        [41807810]={ quest=36658, label="Evermorn Supply Cache", },
-        [42408340]={ quest=36625, label="Discarded Pack", note="Gold", },
+        [41807810]={ quest=36658, label="Evermorn Supply Cache", note="Green and gold; behind a hut", },
+        [42408340]={ quest=36625, label="Discarded Pack", note="Gold; under the roots", },
         [42604680]={ quest=35056, label="Horned Skull", currency=824, },
         [43109290]={ quest=34241, item=118227, note="Ockbar's Pack", },
-        [43606980]={ quest=36118, label="Pile of Rubble", note="Random green + gold", },
+        [43907050]={ quest=36118, label="Pile of Rubble", note="Random green + gold; behind the ruined ogre statue head", },
         [43704240]={ quest=36618, label="Iron Supply Chest", currency=824, },
-        [44207420]={ quest=35709, label="Laughing Skull Cache", currency=824, },
+        [44207420]={ quest=35709, label="Laughing Skull Cache", currency=824, note="Up a tree", },
         [45004260]={ quest=36634, item=118713, note="Sniper's Crossbow", },
         [45704970]={ quest=36610, item=118708, note="Suntouched Spear", },
         [46105000]={ quest=36651, label="Harvestable Precious Crystal", currency=824, },
@@ -369,10 +362,11 @@ local points = {
         [48904730]={ quest=36203, item=118716, note="Warm Goren Egg", toy=true, },
         [49304360]={ quest=36596, item=107645, note="Weapons Cache", currency=824, },
         [52506690]={ quest=36509, item=118717, note="Odd Skull", },
-        [53008000]={ quest=34940, item=118718, note="Strange Looking Dagger", },
+        [53008000]={ quest=34940, item=118718, note="Strange Looking Dagger; cave entrance at 51.3,77.6", },
         [53107440]={ quest=36654, item=118714, note="Remains of Balik Orecrusher", },
+        [57006530]={ quest=37249, item=118106, note="Strange Spore; on mushrooms on the cliff", pet=true, junk=true, },
         [57805600]={ quest=36605, item=118703, note="Remains of Balldir Deeprock", },
-        [59406370]={ quest=36628, item=118712, note="Vindicator's Hammer", },
+        [59406370]={ quest=36628, item=118712, note="Vindicator's Hammer; on a mushroom, climb up into Wildwood from 59.8,53.5 (yes, it's a long way), jump to the mushrooms at 61.9,60.0, and carry on across to the one with a nest on top", },
         [71906660]={ quest=nil, label="Sunken Treasure", currency=824, },
         -- rares
         [37608140]={ quest=36600, item=118231, npc=85970, }, -- Riptar
@@ -406,40 +400,44 @@ local points = {
         [61803930]={ quest=37376, item=119391, npc=88586, currency=823, achievement=9678, }, -- Mogamago
         [63803160]={ quest=37372, npc=86266, achievement=9678, }, -- Venolasix
         [64006180]={ quest=36794, item=118213, npc=86410, }, -- Sylldross
-        [69204460]={ quest=37369, item=119432, npc=86257, toy=true, achievement=9678, }, -- Basten
+        [69204460]={ quest=37369, item=119432, npc=86257, toy=true, achievement=9678, repeatable=true, note="Repeatable until you know the toy he drops", }, -- Basten
         [70803400]={ quest=37374, item=119367, npc=88582, currency=823, achievement=9678, }, -- Swift Onyx Flayer
         [72803580]={ quest=37373, npc=88580, achievement=9678, }, -- Firestarter Grash
         [76004200]={ quest=37405, npc=80371, currency=823, }, -- Typhon
+        -- followers
+        [39703990]={ quest=34463, follower=190, note="Mysterious Ring; collect all the Mysterious items across Draenor", }, -- Archmage Vargoth
+        [44908690]={ quest=36037, npc=83820, follower=193, note="He'll look hostile; fight the things that are attacking him", }, -- Tormmok
     },
     ["Talador"] = {
         -- treasures
         [33307670]={ quest=34259, label="Bonechewer Remnants", currency=824, },
         [35509660]={ quest=34249, label="Farmer's Bounty", currency=824, },
         [36509610]={ quest=34182, item=117567, note="Aarko's Family Treasure", },
-        [37607490]={ quest=nil, item=112371, note="Bonechewer Spear", }, -- questionable?
+        [37607490]={ quest=34148, item=112371, note="Bonechewer Spear; sticking out of Viperlash, cave entrance @ 36,75", },
         [38201250]={ quest=34258, label="Light of the Sea", currency=824, },
         [38408450]={ quest=34257, item=116119, note="Treasure of Ango'rosh", },
         [39307770]={ quest=35162, item=112699, note="Teroclaw Nest", pet=true, },
         [39505520]={ quest=34254, item=117570, note="Soulbinder's Reliquary", },
         [39807670]={ quest=35162, item=112699, note="Teroclaw Nest", pet=true, },
-        [40608950]={ quest=34140, label="Yuuri's Gift", currency=824, },
+        [40608950]={ quest=34140, label="Yuuri's Gift", note="You have to complete Nightmare in the Tomb first", currency=824, faction="Alliance", },
         [47009170]={ quest=34256, item=116128, note="Relic of Telmor", },
         [52502950]={ quest=34235, item=116132, note="Luminous Shell", },
         [54002760]={ quest=34290, item=116402, note="Ketya's Stash", pet=true, },
         [54105630]={ quest=35162, item=112699, note="Teroclaw Nest", pet=true, },
         [55206680]={ quest=34253, item=116118, note="Draenei Weapons", currency=824, },
+        [57207540]={ quest=34134, item=117563, note="Rescue 4 draenei trapped in spider webs, then Isaari's Cache will spawm here", faction="Alliance", },
         [57402670]={ quest=34238, item=116120, note="Foreman's Lunchbox", },
         [58901200]={ quest=33933, item=108743, note="Deceptia's Smoldering Boots", toy=true, },
-        [61107170]={ quest=34116, label="Norana's Cache", },
+        [61107170]={ quest=34116, item=117563, label="Rescue 4 adventurers trapped in spider webs, then Norana's Cache will spawn here", faction="Horde", },
         [62003240]={ quest=34236, item=116131, note="Amethyl Crystal", currency=824, },
         [62404800]={ quest=34252, item=110506, note="Barrel of Fish", },
         [64607920]={ quest=34251, item=117571, note="Iron Box", },
         [64901330]={ quest=34232, item=116117, note="Rook's Tacklebox", },
-        [65501130]={ quest=34233, item=117568, note="Jug of Aged Ironwine", },
+        [65501130]={ quest=34233, item=117568, note="Jug of Aged Ironwine, cave entrance to the north", },
         [65508860]={ quest=34255, item=116129, note="Webbed Sac", },
         [65908520]={ quest=34276, label="Rusted Lockbox", note="Random green", },
         [66608690]={ quest=34239, item=117569, note="Curious Deathweb Egg", toy=true, },
-        [69905610]={ quest=34101, item=109192, note="Lightbearer", },
+        [68785621]={ quest=34101, item=109192, note="Lightbearer", },
         [70100700]={ quest=36937, label="Burning Blade Cache", currency=823, },
         [70803200]={ quest=35162, item=112699, note="Teroclaw Nest", pet=true, },
         [70903550]={ quest=35162, item=112699, note="Teroclaw Nest", pet=true, },
@@ -453,7 +451,7 @@ local points = {
         [75704140]={ quest=34261, label="Keluu's Belongings", note="Gold", },
         [75804480]={ quest=34250, item=116128, note="Relic of Aruuna", },
         [77005000]={ quest=34248, item=116116, note="Charred Sword", },
-        [78201480]={ quest=34263, item=117572, note="Pure Crystal Dust", },
+        [78201480]={ quest=34263, item=117572, note="Pure Crystal Dust; upper level of the mine", },
         [81803500]={ quest=34260, item=109118, note="Aruuna Mining Cart", },
         -- rares
         [22207400]={ quest=36919, npc=85572, note="In a crate, no loot", }, -- Grrbrrgle
@@ -482,7 +480,6 @@ local points = {
         [53802580]={ quest=34135, npc=77529, item=112263, }, -- Yazheera the Incinerator
         [53909100]={ quest=34668, npc=79485, item=116110, }, -- Talonpriest Zorkra
         [56606360]={ quest=35219, npc=78710, item=116122, toy=true, }, -- Kharazos the Triumphant, Galzomar, Sikthiss
-        [57207540]={ quest=34134, npc=77453, item=117563, }, -- Isaari
         [59008800]={ quest=34171, npc=77634, item=116126, note="Kill the hatchlings to summon", }, -- Taladorantula
         [59505960]={ quest=34196, npc=77741, item=116112, }, -- Ra'kahn
         [62004600]={ quest=34185, npc=77715, item=116124, }, -- Hammertooth
@@ -494,26 +491,29 @@ local points = {
         [69603340]={ quest=34205, npc=77776, item=112261, }, -- Wandering Vindicator
         [78005040]={ quest=34167, npc=77626, item=112369, }, -- Hen-Mother Hami
         [86403040]={ quest=34859, npc=79334, item=116077, }, -- No'losh
+        -- followers
+        [45303700]={ quest=34465, follower=190, note="Mysterious Hat; collect all the Mysterious items across Draenor", }, -- Archmage Vargoth
+        [62755038]={ quest=nil, follower=171, note="Complete the quests starting with Clear!", }, -- Pleasure-Bot 8000 (actually a different quest for alliance and horde)
     },
     ["SpiresOfArak"] = {
         -- archaeology
         [33302730]={ quest=36422, label="Sun-Touched Cache", currency=829, note="Needs archaeology", },
         [42701830]={ quest=36244, label="Misplaced Scrolls", note="Needs archaeology", currency=829, },
-        [43001640]={ quest=36245, label="Relics of the Outcasts", currency=829, note="Needs archaeology", },
-        [43202720]={ quest=36355, label="Relics of the Outcasts", currency=829, note="Needs archaeology", },
-        [46004410]={ quest=36354, label="Relics of the Outcasts", currency=829, note="Needs archaeology", },
+        [43001640]={ quest=36245, label="Relics of the Outcasts", currency=829, note="Needs archaeology; on top of the walls", },
+        [43202720]={ quest=36355, label="Relics of the Outcasts", currency=829, note="Needs archaeology; climb the ropes", },
+        [46004410]={ quest=36354, label="Relics of the Outcasts", currency=829, note="Needs archaeology; climb the tree, jump to the rope", },
         [51904890]={ quest=36360, label="Relics of the Outcasts", currency=829, note="Needs archaeology", },
-        [52404280]={ quest=36416, label="Misplaced Scroll", currency=829, note="Needs archaeology", },
-        [56304530]={ quest=36433, label="Smuggled Apexis Artifacts", currency=829, note="Needs archaeology", },
+        [52404280]={ quest=36416, label="Misplaced Scroll", currency=829, note="Needs archaeology; start climbing the mountain at 53.6, 47.7", },
+        [56304530]={ quest=36433, label="Smuggled Apexis Artifacts", currency=829, note="Needs archaeology; climb  the mushrooms up the tree", },
         [60205390]={ quest=36359, label="Relics of the Outcasts", currency=829, note="Needs archaeology", },
         [67403980]={ quest=36356, label="Relics of the Outcasts", currency=829, note="Needs archaeology", },
         -- shrines
-        [43802470]={ quest=36397, item=115463, note="Take to a Shrine of Terrok", },
-        [43901500]={ quest=36395, item=115463, note="Take to a Shrine of Terrok", },
-        [48906250]={ quest=36399, item=115463, note="Take to a Shrine of Terrok", },
-        [53108450]={ quest=nil, item=115463, note="Take to a Shrine of Terrok", },
-        [55602200]={ quest=36400, item=115463, note="Take to a Shrine of Terrok", },
-        [69204330]={ quest=36398, item=115463, note="Take to a Shrine of Terrok", },
+        [43802470]={ quest=36397, item=115463, note="Take to a Shrine of Terrok", repeatable=true, },
+        [43901500]={ quest=36395, item=115463, note="Take to a Shrine of Terrok", repeatable=true, },
+        [48906250]={ quest=36399, item=115463, note="Take to a Shrine of Terrok", repeatable=true, },
+        [53108450]={ quest=nil, item=115463, note="Take to a Shrine of Terrok", repeatable=true, },
+        [55602200]={ quest=36400, item=115463, note="Take to a Shrine of Terrok", repeatable=true, },
+        [69204330]={ quest=36398, item=115463, note="Take to a Shrine of Terrok", repeatable=true, },
         [42402670]={ quest=36388, item=118242, note="Gift of Anzu", note="Drink Elixir of Shadow Sight", },
         [46904050]={ quest=36389, item=118238, note="Gift of Anzu", note="Drink Elixir of Shadow Sight", },
         [48604450]={ quest=36386, item=118237, note="Gift of Anzu", note="Drink Elixir of Shadow Sight", },
@@ -526,6 +526,7 @@ local points = {
         [53305560]={ quest=36403, item=118267, note="Offering to the Raven Mother", },
         [61006380]={ quest=36410, item=118267, note="Offering to the Raven Mother", },
         -- treasures
+        [29504170]={ quest=35334, item=118207, pet=true, label="Egg of Varasha", note="In the cave", },
         [36801720]={ quest=36243, label="Outcast's Belongings", note="Random green", },
         [50402580]={ quest=36444, item=118691, note="Iron Horde Explosives", },
         [50702880]={ quest=36247, label="Lost Herb Satchel", note="Assorted herbs", },
@@ -537,24 +538,24 @@ local points = {
         [46903400]={ quest=36446, label="Outcast's Pouch", note="Random green", },
         [47903070]={ quest=36361, item=116920, note="Shattered Hand Lockbox", },
         [42102170]={ quest=36447, label="Outcast's Belongings", note="Random green", },
-        [34102750]={ quest=36421, label="Sun-Touched Cache", currency=824, note="Needs archaeology?", },
+        [34102750]={ quest=36421, label="Sun-Touched Cache", currency=824, },
         [68203880]={ quest=36375, npc=85190, item=118692, }, -- Sethekk Idol
         [71604850]={ quest=36450, item=109223, note="Sethekk Ritual Brew", },
         [41805050]={ quest=36451, item=116918, note="Garrison Workman's Hammer", },
         [56202880]={ quest=36362, label="Shattered Hand Cache", currency=824, },
-        [68408900]={ quest=36453, label="Coinbender's Payment", currency=824, },
-        [63606740]={ quest=36454, item=109130, note="Mysterious Mushrooms", },
+        [68408900]={ quest=36453, label="Coinbender's Payment", note="Gold", },
+        [63606740]={ quest=36454, label="Mysterious Mushrooms", note="Herbs", },
         [66505650]={ quest=36455, label="Waterlogged Satchel", note="Random green", },
         [54403240]={ quest=36364, item=118695, note="Toxicfang Venom", currency=824, },
         [59708130]={ quest=36365, label="Spray-O-Matic 5000 XT", currency=824, },
         [60908460]={ quest=36456, label="Shredder Parts", currency=824, },
         [55509080]={ quest=36366, label="Campaign Contributions", note="Gold", },
-        [50502210]={ quest=36401, item=116919, note="Fractured Sunstone", },
+        [50502210]={ quest=36401, item=116919, note="Fractured Sunstone; may be bugged and show as incomplete", },
         [44401200]={ quest=36377, npc=85206, item=118693, }, -- Rukhmar's Image
         [40605500]={ quest=36458, item=116913, note="Abandoned Mining Pick", },
         [58706030]={ quest=36340, item=116922, note="Ogron Plunder (Hobbit reference!)", },
         [37305070]={ quest=36657, item=116887, note="Feed the dog 3x[Rooby Reat] from the chef downstairs", },
-        [37705640]={ quest=36462, item=116020, note="Unlocks a chest in Admiral Taylor's Garrison Town Hall", },
+        [37705640]={ quest=36462, item=116020, note="Unlocks a chest in Admiral Taylor's Garrison Town Hall @ 36.2,54.4", },
         [59109060]={ quest=nil, item=116917, note="In the control room", }, -- Sailor Zazzuk's 180-Proof Rum
         -- rares
         [25202420]={ quest=36943, npc=86978, item=118696, currency=824, }, -- Gaze, not certain about item-drop
@@ -564,7 +565,7 @@ local points = {
         [38402780]={ quest=36470, npc=85504, item=118107, pet=true, }, -- Rotcap
         [46402860]={ quest=36267, npc=84807, item=118198, }, -- Durkath Steelmaw
         [46802300]={ quest=35599, npc=80614, item=116839, }, -- Blade-Dancer Aeryx
-        [51800720]={ quest=37394, npc=83990, note="No loot?", }, -- Solar Magnifier
+        [51800720]={ quest=37394, npc=83990, item=119407, }, -- Solar Magnifier
         [52003540]={ quest=36478, npc=79938, item=118201, }, -- Shadowbark
         [52805480]={ quest=36472, npc=85520, item=116857, }, -- Swarmleaf
         [53208900]={ quest=36396, npc=84417, item=118206, }, -- Mutafen
@@ -583,10 +584,12 @@ local points = {
         [69005400]={ quest=37406, npc=80372, note="No loot", }, -- Echidna
         [71203380]={ quest=37392, npc=87027, currency=823, }, -- Shadow Hulk
         [74404280]={ quest=37390, npc=87019, currency=823, }, -- Glutonous Giant
+        -- followers
+        [55306850]={ quest=37168, follower=219, note="Follow the trail up the hill to 64.9,65.4, find him in the cave", }, -- Leorajh
     },
-    -- these might /all/ be junk? don't know yet
+    -- Garrisons!
     ["garrisonsmvalliance_tier1"] = {
-        [49604380]={ quest=35530, currency=824, label="Lunarfall Egg", note="wagon", },
+        [49604380]={ quest=35530, currency=824, label="Lunarfall Egg", note="wagon", faction="Alliance", junk=true, },
         [51800110]={ quest=35289, currency=824, label="Spark's Stolen Supplies", note="cave by lake", junk=true, },
         [42405436]={ quest=35381, currency=824, label="Pippers' Buried Supplies", junk=true, },
         [50704850]={ quest=35382, currency=824, label="Pippers' Buried Supplies", junk=true, },
@@ -594,7 +597,7 @@ local points = {
         [49197683]={ quest=35384, currency=824, label="Pippers' Buried Supplies", junk=true, },
     },
     ["garrisonsmvalliance_tier2"] = {
-        [37306590]={ quest=35530, currency=824, label="Lunarfall Egg, wagon", },
+        [37006590]={ quest=35530, currency=824, label="Lunarfall Egg, wagon", },
         [51800110]={ quest=35289, currency=824, label="Spark's Stolen Supplies", note="cave by lake", junk=true, },
         [41685803]={ quest=35381, currency=824, label="Pippers' Buried Supplies", junk=true, },
         [51874545]={ quest=35382, currency=824, label="Pippers' Buried Supplies", junk=true, },
@@ -609,6 +612,15 @@ local points = {
         [37864378]={ quest=35383, currency=824, label="Pippers' Buried Supplies", junk=true, },
         [61527154]={ quest=35384, currency=824, label="Pippers' Buried Supplies", junk=true, },
     },
+    ["garrisonffhorde_tier1"] = {
+        [72505620]={ quest=34937, label="Lady Sena's Other Materials Stash", currency=824, faction="Horde", },
+    },
+    ["garrisonffhorde_tier2"] = {
+        [72505620]={ quest=34937, label="Lady Sena's Other Materials Stash", currency=824, faction="Horde", },
+    },
+    ["garrisonffhorde_tier3"] = {
+        [72505620]={ quest=34937, label="Lady Sena's Other Materials Stash", currency=824, faction="Horde", },
+    },
     --[[
     -- TODO: confirm map name, probably different per-floor, this is the one just before the Foundry Terminus
     ["BlackrockFoundry"] {
@@ -617,354 +629,3 @@ local points = {
     ["TanaanJungleIntro"] = {},
     --]]
 }
-
-local cache_tooltip = CreateFrame("GameTooltip", "HNTreasureHunterTooltip")
-cache_tooltip:AddFontStrings(
-    cache_tooltip:CreateFontString("$parentTextLeft1", nil, "GameTooltipText"),
-    cache_tooltip:CreateFontString("$parentTextRight1", nil, "GameTooltipText")
-)
-local name_cache = {}
-local function mob_name(id)
-    if not name_cache[id] then
-        -- this doesn't work with just clearlines and the setowner outside of this, and I'm not sure why
-        cache_tooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
-        cache_tooltip:SetHyperlink(("unit:Creature-0-0-0-0-%d"):format(id))
-        if cache_tooltip:IsShown() then
-            name_cache[id] = HNTreasureHunterTooltipTextLeft1:GetText()
-        end
-    end
-    return name_cache[id]
-end
-
-local default_texture, npc_texture
-local icon_cache = {}
-local trimmed_icon = function(texture)
-    if not icon_cache[texture] then
-        icon_cache[texture] = {
-            icon = texture,
-            tCoordLeft = 0.1,
-            tCoordRight = 0.9,
-            tCoordTop = 0.1,
-            tCoordBottom = 0.9,
-        }
-    end
-    return icon_cache[texture]
-end
-local function work_out_label(point)
-    local fallback
-    if point.label then
-        return point.label
-    end
-    if point.item then
-        local _, link, _, _, _, _, _, _, _, texture = GetItemInfo(point.item)
-        if link then
-            return link
-        end
-        fallback = 'item:'..point.item
-    end
-    if point.npc then
-        local name = mob_name(point.npc)
-        if name then
-            return name
-        end
-        fallback = 'npc:'..point.npc
-    end
-    if point.currency then
-        local name, _, texture = GetCurrencyInfo(point.currency)
-        if name then
-            return name
-        end
-    end
-    return UNKNOWN
-end
-local function work_out_texture(point)
-    if point.item and db.icon_item then
-        local texture = select(10, GetItemInfo(point.item))
-        if texture then
-            return trimmed_icon(texture)
-        end
-    end
-    if point.currency then
-        local texture = select(3, GetCurrencyInfo(point.currency))
-        if texture then
-            return trimmed_icon(texture)
-        end
-    end
-    if point.achievement then
-        local texture = select(10, GetAchievementInfo(point.achievement))
-        if texture then
-            return trimmed_icon(texture)
-        end
-    end
-    if point.npc then
-        if not npc_texture then
-            local left, right, top, bottom = GetObjectIconTextureCoords(41)
-            npc_texture = {
-                icon = [[Interface\MINIMAP\OBJECTICONS]],
-                tCoordLeft = left,
-                tCoordRight = right,
-                tCoordTop = top,
-                tCoordBottom = bottom,
-            }
-        end
-        return npc_texture
-    end
-    return trimmed_icon(default_texture)
-end
-local get_point_info = function(point)
-    if not default_texture then
-        default_texture = select(10, GetAchievementInfo(9726))
-    end
-    if point then
-        local label = work_out_label(point)
-        local icon = work_out_texture(point)
-        local category = "treasure"
-        if point.npc then
-            category = "npc"
-        elseif point.junk then
-            category = "junk"
-        end
-        return label, icon, category, point.quest
-    end
-end
-local get_point_info_by_coord = function(mapFile, coord)
-    mapFile = string.gsub(mapFile, "_terrain%d+$", "")
-    return get_point_info(points[mapFile] and points[mapFile][coord])
-end
-
-local function handle_tooltip(tooltip, point)
-    if point then
-        -- major:
-        if point.label then
-            tooltip:AddLine(point.label)
-        elseif point.item then
-            if db.tooltip_item or IsLeftShiftKeyDown() then
-                tooltip:SetHyperlink(("item:%d"):format(point.item))
-            else
-                local link = select(2, GetItemInfo(point.item))
-                tooltip:AddLine(link)
-            end
-        elseif point.npc then
-            tooltip:SetHyperlink(("unit:Creature-0-0-0-0-%d"):format(point.npc))
-        end
-
-        if point.item and point.npc then
-            tooltip:AddDoubleLine(CREATURE, mob_name(point.npc) or point.npc)
-        end
-        if point.currency then
-            local name = GetCurrencyInfo(point.currency)
-            tooltip:AddDoubleLine(CURRENCY, name or point.currency)
-        end
-        if point.achievement then
-            local _, name = GetAchievementInfo(point.achievement)
-            tooltip:AddDoubleLine(BATTLE_PET_SOURCE_6, name or point.achievement)
-        end
-        if point.note then
-            tooltip:AddLine(point.note)
-        end
-    else
-        tooltip:SetText(UNKNOWN)
-    end
-    tooltip:Show()
-end
-local handle_tooltip_by_coord = function(tooltip, mapFile, coord)
-    mapFile = string.gsub(mapFile, "_terrain%d+$", "")
-    return handle_tooltip(tooltip, points[mapFile] and points[mapFile][coord])
-end
-
----------------------------------------------------------
--- Plugin Handlers to HandyNotes
-local HLHandler = {}
-local info = {}
-
-function HLHandler:OnEnter(mapFile, coord)
-    local tooltip = self:GetParent() == WorldMapButton and WorldMapTooltip or GameTooltip
-    if ( self:GetCenter() > UIParent:GetCenter() ) then -- compare X coordinate
-        tooltip:SetOwner(self, "ANCHOR_LEFT")
-    else
-        tooltip:SetOwner(self, "ANCHOR_RIGHT")
-    end
-    handle_tooltip_by_coord(tooltip, mapFile, coord)
-end
-
-local function createWaypoint(button, mapFile, coord)
-    if TomTom then
-        local mapId = HandyNotes:GetMapFiletoMapID(mapFile)
-        local x, y = HandyNotes:getXY(coord)
-        TomTom:AddMFWaypoint(mapId, nil, x, y, {
-            title = get_point_info_by_coord(mapFile, coord),
-            persistent = nil,
-            minimap = true,
-            world = true
-        })
-    end
-end
-
-do
-    local currentZone, currentCoord
-    local function generateMenu(button, level)
-        if (not level) then return end
-        for k in pairs(info) do info[k] = nil end
-        if (level == 1) then
-            -- Create the title of the menu
-            info.isTitle      = 1
-            info.text         = "HandyNotes - TreasureHunter"
-            info.notCheckable = 1
-            UIDropDownMenu_AddButton(info, level)
-
-            if TomTom then
-                -- Waypoint menu item
-                info.disabled     = nil
-                info.isTitle      = nil
-                info.notCheckable = nil
-                info.text = "Create waypoint"
-                info.icon = nil
-                info.func = createWaypoint
-                info.arg1 = currentZone
-                info.arg2 = currentCoord
-                UIDropDownMenu_AddButton(info, level);
-            end
-
-            -- Close menu item
-            info.text         = "Close"
-            info.icon         = nil
-            info.func         = function() CloseDropDownMenus() end
-            info.arg1         = nil
-            info.notCheckable = 1
-            UIDropDownMenu_AddButton(info, level);
-        end
-    end
-    local HL_Dropdown = CreateFrame("Frame", "HandyNotes_TreasureHunterDropdownMenu")
-    HL_Dropdown.displayMode = "MENU"
-    HL_Dropdown.initialize = generateMenu
-
-    function HLHandler:OnClick(button, down, mapFile, coord)
-        if button == "RightButton" and not down then
-            currentZone = string.gsub(mapFile, "_terrain%d+$", "")
-            currentCoord = coord
-            ToggleDropDownMenu(1, nil, HL_Dropdown, self, 0, 0)
-        end
-    end
-end
-
-function HLHandler:OnLeave(mapFile, coord)
-    if self:GetParent() == WorldMapButton then
-        WorldMapTooltip:Hide()
-    else
-        GameTooltip:Hide()
-    end
-end
-
-do
-    -- This is a custom iterator we use to iterate over every node in a given zone
-    local currentLevel
-    local function iter(t, prestate)
-        if not t then return nil end
-        local state, value = next(t, prestate)
-        while state do -- Have we reached the end of this zone?
-            if value then
-                if not value.level or value.level == currentLevel then
-                    local label, icon, category, quest = get_point_info(value)
-                    -- Debug("iter step", state, icon, db.icon_scale, db.icon_alpha, category, quest)
-                    if (
-                        (category ~= "junk" or db.show_junk)
-                        and (category ~= "npc" or db.show_npcs)
-                        and (db.found or not (quest and IsQuestFlaggedCompleted(quest)))
-                    ) then
-                        return state, nil, icon, db.icon_scale, db.icon_alpha
-                    end
-                end
-            end
-            state, value = next(t, state) -- Get next data
-        end
-        return nil, nil, nil, nil
-    end
-    function HLHandler:GetNodes(mapFile, minimap, level)
-        Debug("GetNodes", mapFile, minimap, level)
-        currentLevel = level
-        mapFile = string.gsub(mapFile, "_terrain%d+$", "")
-        return iter, points[mapFile], nil
-    end
-end
-
----------------------------------------------------------
--- Options table
-local options = {
-    type = "group",
-    name = "TreasureHunter",
-    desc = "TreasureHunter",
-    get = function(info) return db[info[#info]] end,
-    set = function(info, v)
-        db[info[#info]] = v
-        HL:SendMessage("HandyNotes_NotifyUpdate", "TreasureHunter")
-    end,
-    args = {
-        desc = {
-            name = "These settings control the look and feel of the icon.",
-            type = "description",
-            order = 0,
-        },
-        icon_scale = {
-            type = "range",
-            name = "Icon Scale",
-            desc = "The scale of the icons",
-            min = 0.25, max = 2, step = 0.01,
-            order = 20,
-        },
-        icon_alpha = {
-            type = "range",
-            name = "Icon Alpha",
-            desc = "The alpha transparency of the icons",
-            min = 0, max = 1, step = 0.01,
-            order = 30,
-        },
-        icon_item = {
-            type = "toggle",
-            name = "Item icons",
-            desc = "Show the icons for items, if known; otherwise, the achievement icon will be used",
-        },
-        tooltip_item = {
-            type = "toggle",
-            name = "Item tooltips",
-            desc = "Show the full tooltips for items",
-        },
-        -- show_junk = {
-        --     type = "toggle",
-        --     name = "Junk",
-        --     desc = "Show items which don't count for any achievement",
-        -- },
-        found = {
-            type = "toggle",
-            name = "Show found",
-            desc = "Show waypoints for items you've already found?",
-        },
-        show_npcs = {
-            type = "toggle",
-            name = "Show NPCs",
-            desc = "Show rare NPCs to be killed, generally for items or achievements",
-        },
-    },
-}
-
-
----------------------------------------------------------
--- Addon initialization, enabling and disabling
-
-function HL:OnInitialize()
-    -- Set up our database
-    self.db = LibStub("AceDB-3.0"):New("HandyNotes_TreasureHunterDB", defaults)
-    db = self.db.profile
-    -- Initialize our database with HandyNotes
-    HandyNotes:RegisterPluginDB("TreasureHunter", HLHandler, options)
-
-    -- watch for LOOT_CLOSED
-    self:RegisterEvent("LOOT_CLOSED")
-end
-
-function HL:Refresh()
-    self:SendMessage("HandyNotes_NotifyUpdate", "TreasureHunter")
-end
-
-function HL:LOOT_CLOSED()
-    self:Refresh()
-end

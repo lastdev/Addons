@@ -109,6 +109,8 @@ function HealBot_Options_setLists()
         HEALBOT_WORDS_NO.." "..HEALBOT_OPTIONS_INCHEAL,
         HEALBOT_OPTIONS_BARHEALTHINCHEALS,
         HEALBOT_OPTIONS_BARHEALTHSEPHEALS,
+        HEALBOT_OPTIONS_BARHEALTHINCALL,
+        HEALBOT_OPTIONS_BARHEALTHSEPALL,
     }
 
     HealBot_Options_BarHealthColour_List = {
@@ -724,12 +726,23 @@ function HealBot_Options_InitBuffClassList()
     table.sort(HealBot_Buff_Spells_Class_List)
 end
 
+local HealBot_Buff_Items_List = {
+        HEALBOT_ORALIUS_WHISPERING_CRYSTAL,
+        HEALBOT_EVER_BLOOMING_FROND,
+};
+
 function HealBot_Options_InitBuffList()
     HealBot_Buff_Spells_List ={}
     for j=1, getn(HealBot_Buff_Spells_Class_List), 1 do
         local spellName=HealBot_Buff_Spells_Class_List[j]
         if HealBot_GetSpellId(spellName) then   
             table.insert(HealBot_Buff_Spells_List,spellName)
+        end
+    end
+    for j=1, getn(HealBot_Buff_Items_List), 1 do
+        local itemName=HealBot_Buff_Items_List[j]
+        if IsUsableItem(itemName) or HealBot_IsItemInBag(itemName) then   
+            table.insert(HealBot_Buff_Spells_List,itemName)
         end
     end
 end
@@ -5019,7 +5032,7 @@ function HealBot_Options_SelectItemsCombo_DropDown()
         }
         HealBot_Options_SelectItemsCombo_List=HealBot_Options_itemsByLevel()
         for j=1, getn(hbItemsIfExists), 1 do
-            if IsUsableItem(hbItemsIfExists[j]) then
+            if IsUsableItem(hbItemsIfExists[j]) or HealBot_IsItemInBag(hbItemsIfExists[j]) then
                 table.insert(HealBot_Options_SelectItemsCombo_List, hbItemsIfExists[j])
             end
         end
@@ -7388,8 +7401,7 @@ function HealBot_Options_Debuff_Reset()
             local id=HealBot_GetSpellId(DebuffTextClass[HealBot_Options_getDropDownId_bySpec(k)]);
             local sName = HealBot_GetSpellInfo(id);
             if not sName then
-                local usable, _ = IsUsableItem(DebuffTextClass[HealBot_Options_getDropDownId_bySpec(k)]);
-                if usable then
+                if IsUsableItem(DebuffTextClass[HealBot_Options_getDropDownId_bySpec(k)]) or HealBot_IsItemInBag(DebuffTextClass[HealBot_Options_getDropDownId_bySpec(k)]) then
                     sName=DebuffTextClass[HealBot_Options_getDropDownId_bySpec(k)];
                 end
             end
@@ -7619,7 +7631,8 @@ function HealBot_Options_Buff_Reset()
     for k=1,8 do
         if BuffDropDownClass[HealBot_Options_getDropDownId_bySpec(k)] and BuffDropDownClass[HealBot_Options_getDropDownId_bySpec(k)]>1 then
             local sName=BuffTextClass[HealBot_Options_getDropDownId_bySpec(k)]
-            if HealBot_GetSpellId(sName) then   
+            if HealBot_GetSpellId(sName) or IsUsableItem(sName) or HealBot_IsItemInBag(sName) then  
+           
                 if not spells[sName] then
                     spells[sName]=sName;
                     HealBot_Set_BuffWatch(sName)
@@ -8329,7 +8342,7 @@ function HealBot_Options_Click_OnTextChanged(self)
     local button = HealBot_Options_ComboClass_Button(HealBot_Options_ComboButtons_Button)
     spellText = strtrim(self:GetText())
     combo[button..HealBot_Config.CurrentSpec] = spellText
-    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
+    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) or HealBot_IsItemInBag(spellText) then
         HealBot_setOptions_Timer(400)
     end
     HealBot_Options_SoftReset_flag=true
@@ -8347,7 +8360,7 @@ function HealBot_Options_Shift_OnTextChanged(self)
     local button = HealBot_Options_ComboClass_Button(HealBot_Options_ComboButtons_Button)
     spellText = strtrim(self:GetText())
     combo["Shift"..button..HealBot_Config.CurrentSpec] = spellText
-    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
+    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) or HealBot_IsItemInBag(spellText) then
         HealBot_setOptions_Timer(400)
     end
     HealBot_Options_SoftReset_flag=true
@@ -8365,7 +8378,7 @@ function HealBot_Options_Ctrl_OnTextChanged(self)
     local button = HealBot_Options_ComboClass_Button(HealBot_Options_ComboButtons_Button)
     spellText = strtrim(self:GetText())
     combo["Ctrl"..button..HealBot_Config.CurrentSpec] = spellText
-    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
+    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) or HealBot_IsItemInBag(spellText) then
         HealBot_setOptions_Timer(400)
     end
     HealBot_Options_SoftReset_flag=true
@@ -8383,7 +8396,7 @@ function HealBot_Options_Alt_OnTextChanged(self)
     local button = HealBot_Options_ComboClass_Button(HealBot_Options_ComboButtons_Button)
     spellText = strtrim(self:GetText())
     combo["Alt"..button..HealBot_Config.CurrentSpec] = spellText
-    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
+    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) or HealBot_IsItemInBag(spellText) then
         HealBot_setOptions_Timer(400)
     end
     HealBot_Options_SoftReset_flag=true
@@ -8401,7 +8414,7 @@ function HealBot_Options_CtrlShift_OnTextChanged(self)
     local button = HealBot_Options_ComboClass_Button(HealBot_Options_ComboButtons_Button)
     spellText = strtrim(self:GetText())
     combo["Ctrl-Shift"..button..HealBot_Config.CurrentSpec] = spellText
-    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
+    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) or HealBot_IsItemInBag(spellText) then
         HealBot_setOptions_Timer(400)
     end
     HealBot_Options_SoftReset_flag=true
@@ -8419,7 +8432,7 @@ function HealBot_Options_AltShift_OnTextChanged(self)
     local button = HealBot_Options_ComboClass_Button(HealBot_Options_ComboButtons_Button)
     spellText = strtrim(self:GetText())
     combo["Alt-Shift"..button..HealBot_Config.CurrentSpec] = spellText
-    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
+    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) or HealBot_IsItemInBag(spellText) then
         HealBot_setOptions_Timer(400)
     end
     HealBot_Options_SoftReset_flag=true
@@ -8437,7 +8450,7 @@ function HealBot_Options_CtrlAlt_OnTextChanged(self)
     local button = HealBot_Options_ComboClass_Button(HealBot_Options_ComboButtons_Button)
     spellText = strtrim(self:GetText())
     combo["Alt-Ctrl"..button..HealBot_Config.CurrentSpec] = spellText
-    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) then
+    if HealBot_GetSpellId(spellText) or GetMacroIndexByName(spellText) or IsUsableItem(spellText) or HealBot_IsItemInBag(spellText) then
         HealBot_setOptions_Timer(400)
     end
     HealBot_Options_SoftReset_flag=true
@@ -9412,6 +9425,7 @@ function HealBot_Options_ResetSpellsHealperDropdown(ddType)
     if ddType=="SPELLS" then
         DoneInitTab[801]=nil
         HealBot_Options_InitSub(801)
+        HealBot_Action_SetAllAttribs()
     end
 end
 

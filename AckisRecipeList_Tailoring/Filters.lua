@@ -11,11 +11,35 @@ local pairs = _G.pairs
 local FOLDER_NAME, private = ...
 
 local addon = private.addon
+if not addon then
+	return
+end
+
 local constants = addon.constants
 local module = addon:GetModule(private.module_name)
 
 local LibStub = _G.LibStub
 local L = LibStub("AceLocale-3.0"):GetLocale(constants.addon_name)
+
+-------------------------------------------------------------------------------
+-- What we're really here for.
+-------------------------------------------------------------------------------
+module.ITEM_FILTER_TYPES = {
+	TAILORING_BACK = true,
+	TAILORING_BAG = true,
+	TAILORING_CHEST = true,
+	TAILORING_FEET = true,
+	TAILORING_HANDS = true,
+	TAILORING_HEAD = true,
+	TAILORING_ITEM_ENHANCEMENT = true,
+	TAILORING_LEGS = true,
+	TAILORING_MATERIALS = true,
+	TAILORING_MISC = true,
+	TAILORING_SHIRT = true,
+	TAILORING_SHOULDER = true,
+	TAILORING_WAIST = true,
+	TAILORING_WRIST = true,
+}
 
 function module:InitializeItemFilters(parent_panel)
 	local MainPanel = addon.Frame

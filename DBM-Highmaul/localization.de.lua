@@ -6,14 +6,6 @@ local L
 ---------------
 L= DBM:GetModLocalization(1128)
 
-L:SetTimerLocalization({
-	timerCrowdCD	= "Crowd CD"
-})
-
-L:SetOptionLocalization({
-	timerCrowdCD	= "Show timer for when the crowd will spawn new adds"
-})
-
 ---------------------------
 -- The Butcher --
 ---------------------------
@@ -25,7 +17,7 @@ L= DBM:GetModLocalization(971)
 L= DBM:GetModLocalization(1195)
 
 L:SetMiscLocalization({
-	pillarSpawn	= "RISE, MOUNTAINS!"
+	pillarSpawn	= "ERHEBT EUCH, BERGE!"
 })
 
 ------------------
@@ -39,8 +31,10 @@ L= DBM:GetModLocalization(1196)
 L= DBM:GetModLocalization(1148)
 
 L:SetOptionLocalization({
-	PhemosSpecial	= "Play countdown sound for Phemos' cooldowns",
-	PolSpecial		= "Play countdown sound for Pol's cooldowns"
+	PhemosSpecial	= "Spiele akustischen Countdown für Phemos' Spezialfähigkeiten",
+	PolSpecial		= "Spiele akustischen Countdown für Pols Spezialfähigkeiten",
+	PhemosSpecialVoice	= "Spiele gesprochene Warnungen für Phemos' Spezialfähigkeiten",
+	PolSpecialVoice		= "Spiele gesprochene Warnungen für Pols Spezialfähigkeiten"
 })
 
 --------------------
@@ -49,16 +43,20 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(1153)
 
 L:SetMiscLocalization({
-	supressionTarget1	= "I will crush you!",
-	supressionTarget2	= "Silence!",
-	supressionTarget3	= "Quiet!",
-	supressionTarget4	= "I will tear you in half!"
+	supressionTarget1	= "Ich werde Euch zermalmen!",
+	supressionTarget2	= "Schweigt!",
+	supressionTarget3	= "Ruhe!",
+	supressionTarget4	= "Ich reiße Euch in Stücke!"
 })
 
 --------------------------
 -- Imperator Mar'gok --
 --------------------------
 L= DBM:GetModLocalization(1197)
+
+L:SetMiscLocalization({
+	BrandedYell			= "Gebrandmarkt (%s) auf %s"
+})
 
 -------------
 --  Trash  --

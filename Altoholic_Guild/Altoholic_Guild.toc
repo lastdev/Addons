@@ -2,11 +2,11 @@
 ## Title: Altoholic_Guild
 ## Notes: Altoholic's Guild UI
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: 6.0.001
+## Version: r151
 ## Dependencies: Altoholic, DataStore, DataStore_Characters
 ## LoadOnDemand: 1
 ## X-Category: Interface Enhancements
-## X-Curse-Packaged-Version: r148
+## X-Curse-Packaged-Version: r151
 ## X-Curse-Project-Name: Altoholic
 ## X-Curse-Project-ID: altoholic
 ## X-Curse-Repository-ID: wow/altoholic/mainline

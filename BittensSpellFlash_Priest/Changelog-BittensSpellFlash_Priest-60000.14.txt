@@ -1,0 +1,179 @@
+------------------------------------------------------------------------
+r129 | slippycheeze | 2014-12-27 00:55:48 +0000 (Sat, 27 Dec 2014) | 1 line
+Changed paths:
+   A /tags/60000.14 (from /trunk:128)
+
+Create tag 60000.14
+------------------------------------------------------------------------
+r128 | slippycheeze | 2014-12-27 00:55:31 +0000 (Sat, 27 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Spells.lua
+
+Fix CoP and Insanity causing Devouring Plague to flash with < 3 orbs
+------------------------------------------------------------------------
+r126 | slippycheeze | 2014-12-24 17:43:24 +0000 (Wed, 24 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Spells.lua
+
+Fix lua error / crash with Insanity talent
+------------------------------------------------------------------------
+r124 | slippycheeze | 2014-12-20 23:06:18 +0000 (Sat, 20 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/IDs.lua
+
+Fix missing Mind Sear spell ID definition
+------------------------------------------------------------------------
+r122 | slippycheeze | 2014-12-20 20:01:24 +0000 (Sat, 20 Dec 2014) | 3 lines
+Changed paths:
+   M /trunk/src/Spells.lua
+
+Fix Mindbender and Shadowfiend CD tracking
+
+We should no longer flash these when they are on cooldown.
+------------------------------------------------------------------------
+r120 | slippycheeze | 2014-12-17 00:18:29 +0000 (Wed, 17 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+
+Remove warning about rotation being wrong.
+------------------------------------------------------------------------
+r119 | slippycheeze | 2014-12-17 00:18:24 +0000 (Wed, 17 Dec 2014) | 3 lines
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Implement remaining CoP and Insanity rotations
+
+This brings Shadow Priests up to full speed.
+------------------------------------------------------------------------
+r118 | slippycheeze | 2014-12-17 00:18:19 +0000 (Wed, 17 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Implement Clarity of Power without Insanity
+------------------------------------------------------------------------
+r117 | slippycheeze | 2014-12-16 07:04:31 +0000 (Tue, 16 Dec 2014) | 5 lines
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Implement basic WoD 100 Shadow rotation.
+
+No Void Entropy, no Clarity of Power, just the most basic rotation
+possible, implemented and tested at 100.  Not that most people will ever
+use this, but whatever, it is a good start.
+------------------------------------------------------------------------
+r116 | slippycheeze | 2014-12-16 07:04:26 +0000 (Tue, 16 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+
+Trivial whitespace fix, no functional changes.
+------------------------------------------------------------------------
+r114 | slippycheeze | 2014-12-16 01:28:02 +0000 (Tue, 16 Dec 2014) | 9 lines
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+
+Handle Glyph of Mind Harvest orb prediction.
+
+The first time we hit a new target with this glyph, we generate three
+orbs; this fixes the prediction so we know when that is going to happen,
+and account for it correctly.
+
+That should result in, eg, correctly flashing Devouring Plague on the
+first cast from empty, when before we assumed only one orb was
+generated...
+------------------------------------------------------------------------
+r113 | slippycheeze | 2014-12-16 01:27:58 +0000 (Tue, 16 Dec 2014) | 10 lines
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Correctly handle enhanced shadow orbs, and enhance SW:D for
+shadow priests.
+
+We previously had a few places that used three orbs when calculating the
+maximum, which led to less orb generation than it should.  We also kept
+the "CD reset prevents orb generation" even if you had the perk that
+removed that restriction.
+
+Overall effect should be much better management of orb generation, which
+should fix the DPS deficit that lack of support was causing.
+------------------------------------------------------------------------
+r110 | slippycheeze | 2014-12-15 08:19:03 +0000 (Mon, 15 Dec 2014) | 13 lines
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Enable Power Word: Shield for Shadow
+
+This is used defensively, and is the only non-intrusive defensive we
+have, so is pretty important.  It flashes yellow above 50 percent, and
+red below that, but is optional in both cases so that it doesn't break
+the rotation.
+
+The theory is that especially in a raid of dungeon situation, until you
+are really hurt, you probably don't want to give up DPS in return for
+health most of the time, but below the 50 percent line, your healers
+might start to worry ... and in the world of triage, a DPS rates well
+below the tanks and healers, so you should probably look after yourself
+for a bit.
+------------------------------------------------------------------------
+r108 | slippycheeze | 2014-12-14 04:29:08 +0000 (Sun, 14 Dec 2014) | 5 lines
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Update Shadow rotation to work at ~ 91
+
+This isn't a complete shadow rework, and the 100 talents radically
+change rotations, so they definitely need love, but we now have the most
+basic rotation down at lower levels.
+------------------------------------------------------------------------
+r106 | slippycheeze | 2014-12-13 22:32:50 +0000 (Sat, 13 Dec 2014) | 2 lines
+Changed paths:
+   M /trunk/src/Rotations.lua
+
+Move warning only to shadow rotations, since others are now up to date
+and correct.
+------------------------------------------------------------------------
+r105 | slippycheeze | 2014-12-13 22:32:46 +0000 (Sat, 13 Dec 2014) | 3 lines
+Changed paths:
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Update Holy for 6.0
+
+Like Disc, the healing hints are fairly simple, and this covers them nicely.
+------------------------------------------------------------------------
+r104 | slippycheeze | 2014-12-13 22:32:41 +0000 (Sat, 13 Dec 2014) | 4 lines
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Updated Disc priest hints for healing mode.
+
+This doesn't touch the atonement rotation, which is more or less "never
+use", but is also in another addon.
+------------------------------------------------------------------------
+r103 | slippycheeze | 2014-12-13 22:09:14 +0000 (Sat, 13 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   D /trunk/version_history.txt
+
+Move to SVN changelog instead of manual one.
+------------------------------------------------------------------------
+r101 | slippycheeze | 2014-11-30 23:06:02 +0000 (Sun, 30 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/version_history.txt
+
+Update to latest BSF library
+------------------------------------------------------------------------

@@ -4,7 +4,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale( "Recount" )
 local Epsilon = 0.000000000000000001
 
-local revision = tonumber(string.sub("$Revision: 1257 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1286 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -62,7 +62,7 @@ DetailTitles.Blocked = {
 	BotAmount = L["Count"]
 }
 
-DetailTitles.Absorbed = {
+--[[DetailTitles.Absorbed = {
 	TopNames = L["Ability Name"],
 	TopCount = "",
 	TopAmount = L["Absorbed"],
@@ -71,7 +71,7 @@ DetailTitles.Absorbed = {
 	BotAvg = L["Avg"],
 	BotMax = L["Max"],
 	BotAmount = L["Count"]
-}
+}]]
 
 DetailTitles.DamagedWho = {
 	TopNames = L["Player/Mob Name"],
@@ -176,7 +176,7 @@ DetailTitles.Absorbed = {
 	TopNames = L["Ability Name"],
 	TopCount = L["Count"],
 	TopAmount = L["Absorbed"],
-	BotNames = "",
+	BotNames = "Player Name",
 	BotMin = L["Min"],
 	BotAvg = L["Avg"],
 	BotMax = L["Max"],
@@ -339,7 +339,7 @@ function Recount:MergedPetHealingDPS(data, fight)
 		Time = Epsilon
 	end
 	
-	return (healing + PetAmount), (healing + PetAmount)/Time
+	return (healing + PetAmount), (healing + PetAmount) / Time
 end
 
 function DataModes:HealingReturner(data, num)
@@ -349,7 +349,7 @@ function DataModes:HealingReturner(data, num)
 	local healing, hps = Recount:MergedPetHealingDPS(data, Recount.db.profile.CurDataSet)
 	if num == 1 then
 		return healing, hps
---		return (data.Fights[Recount.db.profile.CurDataSet].Healing or 0), (data.Fights[Recount.db.profile.CurDataSet].Healing or 0)/((data.Fights[Recount.db.profile.CurDataSet].ActiveTime or 0) + Epsilon)
+		--return (data.Fights[Recount.db.profile.CurDataSet].Healing or 0), (data.Fights[Recount.db.profile.CurDataSet].Healing or 0)/((data.Fights[Recount.db.profile.CurDataSet].ActiveTime or 0) + Epsilon)
 	end
 
 	return healing, {{data.Fights[Recount.db.profile.CurDataSet].Heals, L["'s Effective Healing"], DetailTitles.Heals},{data.Fights[Recount.db.profile.CurDataSet].HealedWho, " "..L["Healed Who"], DetailTitles.HealedWho}, {data.Fights[Recount.db.profile.CurDataSet].OverHeals, L["'s Overhealing"],DetailTitles.OverHeals}, {data.Fights[Recount.db.profile.CurDataSet].TimeHealing, L["'s Time Spent Healing"], DetailTitles.HealTime}}
@@ -430,7 +430,7 @@ function DataModes:Absorbs(data, num)
 		return 0, 0
 	end
 	if num == 1 then
-		return (data.Fights[Recount.db.profile.CurDataSet].Absorbs or 0), (data.Fights[Recount.db.profile.CurDataSet].Absorbs or 0) / ((data.Fights[Recount.db.profile.CurDataSet].ActiveTime or 0) + Epsilon)
+		return (data.Fights[Recount.db.profile.CurDataSet].Absorbs or 0), (data.Fights[Recount.db.profile.CurDataSet].Absorbs or 0) / ((data.Fights[Recount.db.profile.CurDataSet].ActiveTime or 1) + Epsilon)
 	else
 		return (data.Fights[Recount.db.profile.CurDataSet].Absorbs or 0), {{data.Fights[Recount.db.profile.CurDataSet].Absorbed, L["'s Absorbs"], DetailTitles.Absorbed}, {data.Fights[Recount.db.profile.CurDataSet].ShieldedWho, " "..L["Shielded Who"], DetailTitles.ShieldedWho}--[[, {data.Fights[Recount.db.profile.CurDataSet].ShieldDamagedBy, " "..L["Took Damage From"], DetailTitles.ShieldDamagedBy}]]}
 	end
@@ -501,7 +501,8 @@ function Recount:AddSortedTooltipData(title, data, num)
 			else
 				percent = 100
 			end
-			GameTooltip:AddDoubleLine(i..". "..SortedData[i][1], SortedData[i][2].." ("..percent.."%)", 1, 1, 1, 1, 1, 1)
+			local name = SortedData[i][1]
+			GameTooltip:AddDoubleLine(i..". "..name, SortedData[i][2].." ("..percent.."%)", 1, 1, 1, 1, 1, 1)
 		end
 	end
 
@@ -634,8 +635,8 @@ function TooltipFuncs:ActiveTime(name, data)
 	local Total = Heal + Damage + Epsilon
 	Heal = 100 * Heal / Total
 	Damage = 100 * Damage / Total
-	GameTooltip:AddDoubleLine(L["Time Damaging"]..":",math_floor(Damage + 0.5).."%", nil, nil, nil, 1, 1, 1)
-	GameTooltip:AddDoubleLine(L["Time Healing"]..":",math_floor(Heal + 0.5).."%", nil, nil, nil, 1, 1, 1)
+	GameTooltip:AddDoubleLine(L["Time Damaging"]..":", math_floor(Damage + 0.5).."%", nil, nil, nil, 1, 1, 1)
+	GameTooltip:AddDoubleLine(L["Time Healing"]..":", math_floor(Heal + 0.5).."%", nil, nil, nil, 1, 1, 1)
 	GameTooltip:AddLine("<"..L["Click for more Details"]..">", 0, 0.9, 0)
 end
 
@@ -643,7 +644,7 @@ function TooltipFuncs:DeathCounts(name, data)
 	local SortedData, total
 	GameTooltip:ClearLines()
 	GameTooltip:AddLine(name)
-	GameTooltip:Hide()
+	--GameTooltip:Hide()
 end
 
 function TooltipFuncs:Absorbs(name, data)
@@ -672,7 +673,7 @@ local MainWindowModes = {
 }
 
 function Recount:AddModeTooltip(lname, modefunc, toolfunc, ...)
-	tinsert(MainWindowModes,{lname, modefunc, toolfunc,...})
+	tinsert(MainWindowModes, {lname, modefunc, toolfunc,...})
 	Recount:SetupMainWindow()
 end
 

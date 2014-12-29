@@ -24,6 +24,7 @@ a.SpellIDs = {
    ["Counter Shot"] = 147362,
    ["Dire Beast"] = 120679,
    ["Dismiss Pet"] = 2641,
+   ["Enhanced Kill Shot"] = 157707,
    ["Exhilaration"] = 109304,
    ["Explosive Shot"] = 53301,
    ["Explosive Trap Launched"] = 82939,

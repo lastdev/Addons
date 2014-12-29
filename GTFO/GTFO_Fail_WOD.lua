@@ -160,9 +160,29 @@ GTFO.SpellID["165908"] = {
 	sound = 3;
 };
 
+GTFO.SpellID["175973"] = {
+	--desc = "Colossal Slam (Tarlna the Ageless)";
+	sound = 3;
+	applicationOnly = true;
+};
+
+GTFO.SpellID["170042"] = {
+	--desc = "Shadow Rune";
+	sound = 3;
+};
+
+GTFO.SpellID["160066"] = {
+	--desc = "Flash Bang (Solar Familiar)";
+	sound = 3;
+};
+
+GTFO.SpellID["169108"] = {
+	--desc = "Collateral Damage (Solar Magnifier)";
+	sound = 3;
+};
+
 --TODO: Colossal Slam (Drov the Ruiner) - non-tank fail for front-cone damage
 --TODO: Rumbling Goren (Drov the Ruiner) - non-tank fail?
---TODO: Colossal Blow (Tarlna the Ageless) - avoidable by tanks too?
 --TODO: Savage Vines (Tarlna the Ageless) - explosion fail if not targetted
 --TODO: Blaze of Glory (Rukhmar) -- ?
 --TODO: Loose Quills (Rukhmar) -- ?
@@ -210,6 +230,11 @@ GTFO.SpellID["154018"] = {
 
 GTFO.SpellID["151446"] = {
 	--desc = "Crush (Bloodmaul Enforcer)";
+	sound = 3;
+};
+
+GTFO.SpellID["153679"] = {
+	--desc = "EarthCrush (Slave Watcher Crushto)";
 	sound = 3;
 };
 
@@ -381,12 +406,6 @@ GTFO.SpellID["164294"] = {
 	sound = 3;
 };
 
-GTFO.SpellID["169424"] = {
-	--desc = "Triple Attack (Twisted Abomination)";
-	sound = 3;
-	tankSound = 0;
-};
-
 GTFO.SpellID["169445"] = {
 	--desc = "Noxious Eruption (Twisted Abomination)";
 	sound = 3;
@@ -395,6 +414,12 @@ GTFO.SpellID["169445"] = {
 GTFO.SpellID["175997"] = {
 	--desc = "Noxious Eruption (Dulhu)";
 	sound = 3;
+};
+
+GTFO.SpellID["168383"] = {
+	--desc = "Slash (Dulhu)";
+	sound = 3;
+	tankSound = 0;
 };
 
 GTFO.SpellID["169850"] = {
@@ -409,6 +434,16 @@ GTFO.SpellID["166492"] = {
 
 GTFO.SpellID["170016"] = {
 	--desc = "Glowbulb Pollen (Archmage Sol)";
+	sound = 3;
+};
+
+GTFO.SpellID["170083"] = {
+	--desc = "Fire Orchid Pollen (Archmage Sol)";
+	sound = 3;
+};
+
+GTFO.SpellID["170033"] = {
+	--desc = "Golden Lion's Bloom (Archmage Sol)";
 	sound = 3;
 };
 
@@ -448,6 +483,11 @@ GTFO.SpellID["169179"] = {
 
 -- TODO: Lodestone Spike (Orebender Gor'ashan) -- Avoidable?  Couldn't see the graphic
 
+GTFO.SpellID["153936"] = {
+	--desc = "Shrapnel Storm (Black Iron Warcaster)";
+	sound = 3;
+};
+
 GTFO.SpellID["155037"] = {
 	--desc = "Eruption (Drakonid Monstrocity)";
 	sound = 3;
@@ -478,6 +518,12 @@ GTFO.SpellID["155081"] = {
 
 GTFO.SpellID["155031"] = {
 	--desc = "Engulfing Fire (Ragewing)";
+	sound = 3;
+	applicationOnly = true;	
+};
+
+GTFO.SpellID["155056"] = {
+	--desc = "Engulfing Fire (Ragewing, Heroic)";
 	sound = 3;
 	applicationOnly = true;	
 };
@@ -675,11 +721,13 @@ GTFO.SpellID["160521"] = {
 	--tankSound = 0; -- Avoidable by tanks?
 };
 
--- Kargath Bladefist
--- TODO: Ravenous Bloodmaw (Kargath Bladefist, Heroic) -- Insta-death?
-
 GTFO.SpellID["160952"] = {
 	--desc = "Fire Bomb (Iron Bomber)";
+	sound = 3;
+};
+
+GTFO.SpellID["161218"] = {
+	--desc = "Ravenous Bloodmaw (Kargath Bladefist, Heroic)";
 	sound = 3;
 };
 
@@ -769,13 +817,12 @@ GTFO.SpellID["172685"] = {
 	sound = 3;
 };
 
-GTFO.SpellID["162397"] = {
-	--desc = "Expel Magic: Arcane (Ko'ragh)";
+GTFO.SpellID["161358"] = {
+	--desc = "Suppression Field - Trample (Ko'ragh)";
 	sound = 3;
 };
 
 -- Imperator Mar'gok
--- TODO: Destructive Resonance (Imperator Mar'gok) -- impact explosion from the person that triggers the mine only, supposed to avoid?
 -- TODO: Mark of Chaos (Imperator Mar'gok) -- FF damage fail
 -- TODO: Nether Blast (Imperator Mar'gok) -- Fail if you're not the target?
 -- TODO: Devastating Shockwave (Imperator Mar'gok) -- Non-tank fail
@@ -783,4 +830,12 @@ GTFO.SpellID["162397"] = {
 -- TODO: Force Nova: Replication (Imperator Mar'gok) -- Fail if you're not the target of nova?
 
 
+GTFO.SpellID["159200"] = {
+	--desc = "Destructive Resonance (Imperator Mar'gok)";
+	sound = 3;
+};
 
+GTFO.SpellID["158609"] = {
+	--desc = "Mark of Chaos (Imperator Mar'gok)";
+	sound = 4;
+};

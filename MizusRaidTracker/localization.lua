@@ -1,5 +1,5 @@
 -- ********************************************************
--- **        Mizus RaidTracker - enGB/enUS Local         **
+-- **        Mizus RaidTracker - Debug Local             **
 -- **           <http://nanaki.affenfelsen.de>           **
 -- ********************************************************
 --
@@ -10,72 +10,55 @@
 --  MRT requires a correct localization of bossyells for working
 --
 
+-- Check for addon table
+if (not MizusRaidTracker) then MizusRaidTracker = {}; end
+local mrt = MizusRaidTracker
+
 -----------------------------
 --  Create Tablestructure  --
 -----------------------------
-MRT_L = { ["Bossyells"] = {}, ["Core"] = {}, ["Options"] = {}, ["GUI"] = {} };
+MRT_L = { ["Bossyells"] = {}, ["Core"] = {}, ["Options"] = {}, ["GUI"] = {}, };
 
-
------------------
---  Bossyells  --
------------------
-MRT_L.Bossyells = {
-    -- Naxxramas
-    [535] = {
-        ["I grow tired of these games. Proceed, and I will banish your souls to oblivion!"] = "Four Horsemen",
-    },
-
-    -- Ulduar
-    [529] = {
-        ["You rush headlong into the maw of madness!"] = "Iron Council",  -- Normalmode - Stormcaller Brundir last
-        ["What have you gained from my defeat? You are no less doomed, mortals."] = "Iron Council",  -- Semi-Hardmode - Runemaster Molgeim last
-        ["Impossible..."] = "Iron Council",  -- Hardmode - Steelbreaker last
-        ["I... I am released from his grasp... at last."] = "Hodir",
-        ["Stay your arms! I yield!"] = "Thorim",
-        ["His hold on me dissipates. I can see clearly once more. Thank you, heroes."] = "Freya",
-        ["It would appear that I've made a slight miscalculation. I allowed my mind to be corrupted by the fiend in the prison, overriding my primary directive. All systems seem to be functional now. Clear."] = "Mimiron",
-        ["I have seen worlds bathed in the Makers' flames, their denizens fading without as much as a whimper. Entire planetary systems born and razed in the time that it takes your mortal hearts to beat once. Yet all throughout, my own heart devoid of emotion... of empathy. I. Have. Felt. Nothing. A million-million lives wasted. Had they all held within them your tenacity? Had they all loved life as you do?"] = "Algalon the Observer",
-    },
-
-    -- Trial of the Crusader
-    [543] = {
-        ["A shallow and tragic victory. We are weaker as a whole from the losses suffered today. Who but the Lich King could benefit from such foolishness? Great warriors have lost their lives. And for what? The true threat looms ahead - the Lich King awaits us all in death."] = "Faction Champions",
-    },
-    
-    -- Icecrown Citadel
-    [604] = {
-        ["Don't say I didn't warn ya, scoundrels! Onward, brothers and sisters!"] = "Icecrown Gunship Battle", -- Muradin
-        ["The Alliance falter. Onward to the Lich King!"] = "Icecrown Gunship Battle", -- Saurfang
-        ["I AM RENEWED! Ysera grant me the favor to lay these foul creatures to rest!"] = "Valithria Dreamwalker", -- Dreamwalker
-    },
-    
-    -- Ruby Sanctum
-    [609] = {
-        ["Relish this victory, mortals, for it will be your last. This world will burn with the master's return!"] = "Halion", -- Halion
-    },
-    
-    -- Throne of the Four Winds
-    [773] = {
-        ["The Conclave of Wind has dissipated. Your honorable conduct and determination have earned you the right to face me in battle, mortals. I await your assault on my platform! Come!"] = "Conclave of Wind", -- Conclave of Wind
-    },
-    
-    -- Firelands
-    [800] = {
-        ["Too soon! ... You have come too soon..."] = "Ragnaros",
-    },
-    
-    -- Terrace of Endless Spring
-    [886] = {
-        ["I thank you, strangers. I have been freed."] = "Tsulong", 
-        ["I... ah... oh! Did I...? Was I...? It was... so... cloudy."] = "Lei Shi",
-    },
-
-    -- Siege of Orgrimmar
-    [953] = {
-        ["Ah, you have done it!  The waters are pure once more."] = "Immerseus",
-        ["System resetting. Don't turn the power off, or the whole thing will probably explode."] = "Spoils of Pandaria",
-    },
+mrt._L = { 
+    ["yells"] = {
+        [529] = {}, 
+        [543] = {}, 
+        [604] = {}, 
+        [609] = {}, 
+        [773] = {}, 
+        [800] = {}, 
+        [886] = {}, 
+        [953] = {}, 
+    } 
 }
+local _L = mrt._L
+
+------------------
+--  boss yells  --
+------------------
+_L.yells[529]["Algalon"] = "I have seen worlds bathed in the Makers' flames, their denizens fading without as much as a whimper. Entire planetary systems born and razed in the time that it takes your mortal hearts to beat once. Yet all throughout, my own heart devoid of emotion... of empathy. I. Have. Felt. Nothing. A million-million lives wasted. Had they all held within them your tenacity? Had they all loved life as you do?"
+_L.yells[529]["Freya"] = "His hold on me dissipates. I can see clearly once more. Thank you, heroes."
+_L.yells[529]["Hodir"] = "I... I am released from his grasp... at last."
+_L.yells[529]["Mimiron"] = "It would appear that I've made a slight miscalculation. I allowed my mind to be corrupted by the fiend in the prison, overriding my primary directive. All systems seem to be functional now. Clear."
+_L.yells[529]["Thorim"] = "Stay your arms! I yield!"
+
+_L.yells[543]["Faction Champions"] = "A shallow and tragic victory. We are weaker as a whole from the losses suffered today. Who but the Lich King could benefit from such foolishness? Great warriors have lost their lives. And for what? The true threat looms ahead - the Lich King awaits us all in death."
+
+_L.yells[604]["Dreamwalker"] = "I AM RENEWED! Ysera grant me the favor to lay these foul creatures to rest!"
+_L.yells[604]["Icecrown Gunship Battle Alliance"] = "Don't say I didn't warn ya, scoundrels! Onward, brothers and sisters!"
+_L.yells[604]["Icecrown Gunship Battle Horde"] = "The Alliance falter. Onward to the Lich King!"
+
+_L.yells[609]["Halion"] = "Relish this victory, mortals, for it will be your last. This world will burn with the master's return!"
+
+_L.yells[773]["Conclave Of Wind"] = "The Conclave of Wind has dissipated. Your honorable conduct and determination have earned you the right to face me in battle, mortals. I await your assault on my platform! Come!"
+
+_L.yells[800]["Ragnaros"] = "Too soon! ... You have come too soon..."
+
+_L.yells[886]["Lei Shi"] = "I... ah... oh! Did I...? Was I...? It was... so... cloudy."
+_L.yells[886]["Tsulong"] = "I thank you, strangers. I have been freed."
+
+_L.yells[953]["Immerseus"] = "Ah, you have done it!  The waters are pure once more."
+_L.yells[953]["Spoils of Pandaria"] = "System resetting. Don't turn the power off, or the whole thing will probably explode."
 
 
 ---------------------------------
@@ -128,7 +111,7 @@ MRT_L.Core = {
 --  Option panels local strings  --
 -----------------------------------
 MRT_L.Options = {
-	AP_GroupRestriction = "Track only first 2/5 groups",
+	AP_GroupRestriction = "Track only first 2/4/5/6 groups",
 	AP_GuildAttendance = "Enable guild attendance check",
     AP_GuildAttendanceNoAuto = "Ask for confirmation",
     AP_GuildAttendanceTrigger = "Trigger",
@@ -179,6 +162,7 @@ MRT_L.Options = {
     MP_SlashCmd = "Slash command",
     MP_ResetGuiPos = "Reset GUI position",
 	TP_AskForDKPValue = "Ask for item cost",
+    TP_AskForDKPValuePersonal = "... if loot mode is personal",
     TP_CreateNewRaidOnNewZone = "Create new raid on new zone",
 	TP_Log10MenRaids = "Track 10 player raids",
 	TP_LogAVRaids = "Track PVP raids (VoA, BH)",
@@ -225,6 +209,7 @@ MRT_L.GUI = {
     Button_StartNewRaid = "Start new raid",
 	Button_TakeSnapshot = "Take Snapshot",
 	["Can not delete current raid"] = "Error: Can't delete current raid.",
+    Cell_LFR = "LFR",
 	Cell_Hard = "Hard",
 	Cell_Normal = "Normal",
 	Col_Cost = "Cost",

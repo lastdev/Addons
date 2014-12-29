@@ -1,0 +1,212 @@
+------------------------------------------------------------------------
+r168 | slippycheeze | 2014-12-27 17:31:22 +0000 (Sat, 27 Dec 2014) | 1 line
+Changed paths:
+   A /tags/60000.13 (from /trunk:167)
+
+Create tag 60000.13
+------------------------------------------------------------------------
+r167 | slippycheeze | 2014-12-27 17:31:10 +0000 (Sat, 27 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+
+Open with Frostfire Bolt if Brain Freeze is up
+------------------------------------------------------------------------
+r165 | slippycheeze | 2014-12-25 06:49:31 +0000 (Thu, 25 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Spells.lua
+
+Fix typo that broke combustion with meteor
+------------------------------------------------------------------------
+r163 | slippycheeze | 2014-12-25 01:41:57 +0000 (Thu, 25 Dec 2014) | 9 lines
+Changed paths:
+   M /trunk/src/Rotations.lua
+
+Fix Finger of Frost tracking bug.
+
+Changes in the WoW server-side meant that a work around for inaccuracies
+in tracking FoF stacks in MoP has gone away; this, in turn, meant that
+if you used a FoF stack when you had two, we mistakenly believed that
+you have 0 (or even -1) stacks.
+
+This fixes that, so we should now handle FoF much, much better in the
+rotation.  (Starting with not appearing to ignore it for a while...)
+------------------------------------------------------------------------
+r161 | slippycheeze | 2014-12-24 23:04:22 +0000 (Wed, 24 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Spells.lua
+
+Prevent Ice Nova flashing without charges.
+------------------------------------------------------------------------
+r159 | slippycheeze | 2014-12-24 22:36:17 +0000 (Wed, 24 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Glyphing Icy Veins no longer changes spell ID.
+------------------------------------------------------------------------
+r158 | slippycheeze | 2014-12-24 22:36:13 +0000 (Wed, 24 Dec 2014) | 4 lines
+Changed paths:
+   M /trunk/BittensSpellFlash_Mage.toc
+   D /trunk/src/BittensCombustionMonitor.lua
+   M /trunk/src/Options.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Remove combustion monitor.
+
+This will likely reappear in a while, but for now we stick with the SimC
+rotation and just trust that combustion does well enough.
+------------------------------------------------------------------------
+r156 | slippycheeze | 2014-12-24 05:51:24 +0000 (Wed, 24 Dec 2014) | 3 lines
+Changed paths:
+   M /trunk/src/Spells.lua
+
+Fix Incanter's Flow breaking flashing for Fire
+
+Just another lua bug. :(
+------------------------------------------------------------------------
+r154 | slippycheeze | 2014-12-23 16:55:44 +0000 (Tue, 23 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Spells.lua
+
+fix another lua error in Ice Nova
+------------------------------------------------------------------------
+r152 | slippycheeze | 2014-12-22 18:14:18 +0000 (Mon, 22 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Spells.lua
+
+Fix Supernova flashing without charges available
+------------------------------------------------------------------------
+r150 | slippycheeze | 2014-12-22 18:07:37 +0000 (Mon, 22 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Spells.lua
+
+Fix lua error with Ice Nova, thanks Sylvania
+------------------------------------------------------------------------
+r148 | slippycheeze | 2014-12-21 21:35:10 +0000 (Sun, 21 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Spells.lua
+
+Frozen Orb has a 60 second cooldown
+------------------------------------------------------------------------
+r147 | slippycheeze | 2014-12-21 21:35:06 +0000 (Sun, 21 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Spells.lua
+
+Handle GCD being nil unexpectedly
+------------------------------------------------------------------------
+r145 | slippycheeze | 2014-12-21 08:41:49 +0000 (Sun, 21 Dec 2014) | 3 lines
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Implement Fire mage rotation, including prismatic crystal support.
+
+Sadly, like the others this is only bench tested to 60, but it should work.
+------------------------------------------------------------------------
+r144 | slippycheeze | 2014-12-21 02:37:04 +0000 (Sun, 21 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Update Frost mage rotations for WoD
+------------------------------------------------------------------------
+r142 | slippycheeze | 2014-12-20 08:12:46 +0000 (Sat, 20 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+
+Final update before pushing a semi-tested arcane rotation.
+------------------------------------------------------------------------
+r141 | slippycheeze | 2014-12-20 08:12:42 +0000 (Sat, 20 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Implement Arcane AoE rotation
+------------------------------------------------------------------------
+r140 | slippycheeze | 2014-12-20 08:12:36 +0000 (Sat, 20 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+There are no longer buffs associated with evocation
+------------------------------------------------------------------------
+r139 | slippycheeze | 2014-12-20 08:12:32 +0000 (Sat, 20 Dec 2014) | 5 lines
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Implement Arcane "burn" rotation
+
+This doesn't try and conserve mana nearly as much, which makes it
+appropriate during the burn phase, or when we are less than level 80 --
+given high mana only counts with our mastery.
+------------------------------------------------------------------------
+r138 | slippycheeze | 2014-12-20 08:12:28 +0000 (Sat, 20 Dec 2014) | 5 lines
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Ultra-basic Arcane Mage rotation update.
+
+This is a barely complete "conservative" rotation, intended to keep mana
+as high as possible at all times.  This is step one in implementing the
+full rotations.
+------------------------------------------------------------------------
+r137 | slippycheeze | 2014-12-20 08:12:23 +0000 (Sat, 20 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Evocation no longer restores health for any spec.
+------------------------------------------------------------------------
+r136 | slippycheeze | 2014-12-20 08:12:19 +0000 (Sat, 20 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Spells.lua
+
+Clean up lua locals
+------------------------------------------------------------------------
+r135 | slippycheeze | 2014-12-20 08:12:15 +0000 (Sat, 20 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+
+Update mage food preferences for all specs.
+------------------------------------------------------------------------
+r134 | slippycheeze | 2014-12-19 01:13:19 +0000 (Fri, 19 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/BittensSpellFlash_Mage.toc
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Prune dead spells from mage addon ID table.
+------------------------------------------------------------------------
+r133 | slippycheeze | 2014-12-15 21:13:18 +0000 (Mon, 15 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+move to auto-generated changelogs
+------------------------------------------------------------------------
+r130 | slippycheeze | 2014-11-30 23:08:03 +0000 (Sun, 30 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/.buildpath
+   M /trunk/.pkgmeta
+   M /trunk/.project
+   M /trunk/BittensSpellFlash_Mage.toc
+   M /trunk/src/BittensCombustionMonitor.lua
+   M /trunk/src/IDs.lua
+   M /trunk/src/Localization.lua
+   M /trunk/src/Options.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+   M /trunk/version_history.txt
+
+Update to latest BSF library
+------------------------------------------------------------------------

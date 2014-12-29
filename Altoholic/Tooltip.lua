@@ -538,15 +538,6 @@ local function ProcessTooltip(tooltip, name, link)
 					return	-- it's certainly not a recipe if we passed here
 				end
 			end
-
-			if itemSubType == BI["Mount"] then
-				local mountID = DataStore:GetMountSpellID(itemID)
-				if mountID then
-					tooltip:AddLine(" ",1,1,1);	
-					AddPetOwners(mountID, "MOUNT", tooltip)
-					return	-- it's certainly not a recipe if we passed here
-				end
-			end
 		end
 	
 	elseif itemType == BI["Glyph"] then

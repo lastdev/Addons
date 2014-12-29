@@ -1,0 +1,17 @@
+tag v60000-1.1.1
+23cba6540b1378a128c14ea46ed79e46536328d2
+Jim Whitehead <jnwhiteh@gmail.com>
+2014-12-20 10:53:35 +0100
+
+Tagging v60000-1.1.1
+
+
+--------------------
+
+Jim Whitehead:
+	- Fix an issue with corpse waypoints
+	- Properly fork Astrolabe to prevent conflicts
+	- De-duplicate zone names to fix fuzzy searching
+	- Update Astrolabe
+	This is a forked version that fixes an issue with zone mappings but will
+	be overridden by a new version of Astrolabe if made available.

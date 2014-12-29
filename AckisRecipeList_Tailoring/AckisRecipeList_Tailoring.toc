@@ -2,12 +2,12 @@
 ## Title: Ackis Recipe List: Tailoring
 ## Notes: Tailoring data for Ackis Recipe List.
 ## Author: Ackis, Pompy, Ressy, Torhal
-## Version: 6.0.3.1
-## X-Revision: f6e8973
+## Version: 6.0.3.2
+## X-Revision: 219f9c1
 ## X-Date: 2014-07-23T01:58:14Z
 ## Dependencies: AckisRecipeList
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: 6.0.3.1
+## X-Curse-Packaged-Version: 6.0.3.2
 ## X-Curse-Project-Name: Ackis Recipe List: Tailoring
 ## X-Curse-Project-ID: arl-tailoring
 ## X-Curse-Repository-ID: wow/arl-tailoring/mainline

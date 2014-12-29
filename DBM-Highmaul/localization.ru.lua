@@ -7,11 +7,12 @@ local L
 L= DBM:GetModLocalization(1128)
 
 L:SetTimerLocalization({
-	timerCrowdCD	= "Восст. Толпы"
+	timerSweeperCD			= DBM_CORE_AUTO_TIMER_TEXTS.next:format("Чистильщик арены")
 })
 
 L:SetOptionLocalization({
-	timerCrowdCD	= "Отсчет времени до появления новых аддов толпы"
+	timerSweeperCD			= "Отсчет времени до следующего Чистильщика арены",
+	countdownSweeper		= "Звуковой отсчет до восстановления \"Чистильщик арены\""
 })
 
 ---------------------------
@@ -39,8 +40,10 @@ L= DBM:GetModLocalization(1196)
 L= DBM:GetModLocalization(1148)
 
 L:SetOptionLocalization({
-	PhemosSpecial	= "Play countdown sound for Phemos' cooldowns",
-	PolSpecial		= "Play countdown sound for Pol's cooldowns"
+	PhemosSpecial	= "Звуковой обратный отсчет для кулдаунов Фем'а",
+	PolSpecial		= "Звуковой обратный отсчет для кулдаунов Пол'а",
+	PhemosSpecialVoice	= "Звуковые оповещения для способностей Фем'а используя выбранный звуковой пакет",
+	PolSpecialVoice		= "Звуковые оповещения для способностей Пол'а используя выбранный звуковой пакет"
 })
 
 --------------------
@@ -59,6 +62,10 @@ L:SetMiscLocalization({
 -- Imperator Mar'gok --
 --------------------------
 L= DBM:GetModLocalization(1197)
+
+L:SetMiscLocalization({
+	BrandedYell			= "Клеймо (%s) на %s"
+})
 
 -------------
 --  Trash  --

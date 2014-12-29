@@ -8,8 +8,13 @@ local _G = getfenv(0)
 -------------------------------------------------------------------------------
 local FOLDER_NAME, private = ...
 
-local constants = private.addon.constants
-local module = private.addon:GetModule(private.module_name)
+local addon = private.addon
+if not addon then
+	return
+end
+
+local constants = addon.constants
+local module = addon:GetModule(private.module_name)
 
 -------------------------------------------------------------------------------
 -- Filter flags. Acquire types, and Reputation levels.
@@ -23,13 +28,48 @@ local Z = constants.ZONE_NAMES
 local FAC = constants.FACTION_IDS
 local REP = constants.REP_LEVELS
 
+module.Recipes = {}
+
+--------------------------------------------------------------------------------------------------------------------
+-- General methods.
+--------------------------------------------------------------------------------------------------------------------
+function module:GetOrCreateRecipeAcquireTypeTable(recipe, acquireTypeID, factionID, reputationLevel)
+	local acquireTypeData = recipe.acquire_data[acquireTypeID]
+	if not acquireTypeData then
+		recipe.acquire_data[acquireTypeID] = {}
+		acquireTypeData = recipe.acquire_data[acquireTypeID]
+
+	end
+
+	if factionID and reputationLevel and acquireTypeID == constants.ACQUIRE_TYPE_IDS.REPUTATION then
+		if not acquireTypeData[factionID] then
+			acquireTypeData[factionID] = {
+				[reputationLevel] = {}
+			}
+		elseif not acquireTypeData[factionID][reputationLevel] then
+			acquireTypeData[factionID][reputationLevel] = {}
+		end
+	end
+
+	return acquireTypeData
+end
+
 --------------------------------------------------------------------------------------------------------------------
 -- Initialize!
 --------------------------------------------------------------------------------------------------------------------
 function module:InitializeRecipes()
-	local function AddRecipe(spell_id, genesis, quality)
-		return private.addon:AddRecipe(spell_id, constants.PROFESSION_SPELL_IDS.BLACKSMITHING, genesis, quality)
+	local function AddRecipe(spellID, expansionID, quality)
+		return addon:AddRecipe(module, {
+			acquire_data = {},
+			flags = {},
+			genesis = constants.GAME_VERSION_NAMES[expansionID],
+			name = _G.GetSpellInfo(spellID),
+			profession = _G.GetSpellInfo(constants.PROFESSION_SPELL_IDS.BLACKSMITHING),
+			quality = quality,
+			_spell_id = spellID,
+		})
 	end
+
 	local recipe
 
 	-------------------------------------------------------------------------------

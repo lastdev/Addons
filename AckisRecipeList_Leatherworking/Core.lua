@@ -7,6 +7,11 @@ local _G = getfenv(0)
 local pairs = _G.pairs
 
 -------------------------------------------------------------------------------
+-- Constants
+-------------------------------------------------------------------------------
+local MODULE_VERSION = 1
+
+-------------------------------------------------------------------------------
 -- AddOn namespace.
 -------------------------------------------------------------------------------
 local FOLDER_NAME, private = ...
@@ -15,27 +20,20 @@ private.module_name = MODULE_NAME
 
 local LibStub = _G.LibStub
 local addon = LibStub("AceAddon-3.0"):GetAddon("Ackis Recipe List")
+
+if MODULE_VERSION ~= addon.SUPPORTED_MODULE_VERSION then
+	addon:SpawnModuleWrongVersionDialog({
+		moduleName = MODULE_NAME,
+		moduleVersion = MODULE_VERSION
+	})
+	return
+end
+
 private.addon = addon
 
 local module = addon:NewModule(MODULE_NAME)
-
-module.ITEM_FILTER_TYPES = {
-	LEATHERWORKING_BACK = true,
-	LEATHERWORKING_BAG = true,
-	LEATHERWORKING_CHEST = true,
-	LEATHERWORKING_CREATED_ITEM = true,
-	LEATHERWORKING_FEET = true,
-	LEATHERWORKING_HANDS = true,
-	LEATHERWORKING_HEAD = true,
-	LEATHERWORKING_ITEM_ENHANCEMENT = true,
-	LEATHERWORKING_LEGS = true,
-	LEATHERWORKING_MATERIALS = true,
-	LEATHERWORKING_SHIELD = true,
-	LEATHERWORKING_SHOULDER = true,
-	LEATHERWORKING_THROWN = true,
-	LEATHERWORKING_WAIST = true,
-	LEATHERWORKING_WRIST = true,
-}
+module.Version = MODULE_VERSION
+module.Name  = FOLDER_NAME
 
 function module:OnInitialize()
 	local defaults = {

@@ -7,6 +7,11 @@ local _G = getfenv(0)
 local pairs = _G.pairs
 
 -------------------------------------------------------------------------------
+-- Constants
+-------------------------------------------------------------------------------
+local MODULE_VERSION = 1
+
+-------------------------------------------------------------------------------
 -- AddOn namespace.
 -------------------------------------------------------------------------------
 local FOLDER_NAME, private = ...
@@ -15,28 +20,20 @@ private.module_name = MODULE_NAME
 
 local LibStub = _G.LibStub
 local addon = LibStub("AceAddon-3.0"):GetAddon("Ackis Recipe List")
+
+if MODULE_VERSION ~= addon.SUPPORTED_MODULE_VERSION then
+	addon:SpawnModuleWrongVersionDialog({
+		moduleName = MODULE_NAME,
+		moduleVersion = MODULE_VERSION
+	})
+	return
+end
+
 private.addon = addon
 
 local module = addon:NewModule(MODULE_NAME)
-
-module.ITEM_FILTER_TYPES = {
-	ENGINEERING_BACK = true,
-	ENGINEERING_BAG = true,
-	ENGINEERING_BOW = true,
-	ENGINEERING_CREATED_ITEM = true,
-	ENGINEERING_CROSSBOW = true,
-	ENGINEERING_FEET = true,
-	ENGINEERING_GUN = true,
-	ENGINEERING_HEAD = true,
-	ENGINEERING_ITEM_ENHANCEMENT = true,
-	ENGINEERING_MAIN_HAND = true,
-	ENGINEERING_MATERIALS = true,
-	ENGINEERING_MOUNT = true,
-	ENGINEERING_NECK = true,
-	ENGINEERING_PET = true,
-	ENGINEERING_SHIELD = true,
-	ENGINEERING_TRINKET = true,
-}
+module.Version = MODULE_VERSION
+module.Name  = FOLDER_NAME
 
 function module:OnInitialize()
 	local defaults = {

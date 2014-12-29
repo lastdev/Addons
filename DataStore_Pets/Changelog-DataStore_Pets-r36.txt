@@ -1,0 +1,22 @@
+------------------------------------------------------------------------
+r36 | thaoky | 2014-12-27 13:24:01 +0000 (Sat, 27 Dec 2014) | 1 line
+Changed paths:
+   D /trunk/Data/MountList.lua
+   D /trunk/Data/MountToSpellID.lua
+   M /trunk/DataStore_Pets.lua
+   M /trunk/DataStore_Pets.toc
+
+Removed mount-related features.
+------------------------------------------------------------------------
+r34 | thaoky | 2014-12-24 14:03:36 +0000 (Wed, 24 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore_Pets.toc
+
+.toc update to use project-version
+------------------------------------------------------------------------
+r33 | thaoky | 2014-10-17 17:04:04 +0000 (Fri, 17 Oct 2014) | 1 line
+Changed paths:
+   M /trunk/DataStore_Pets.toc
+
+6.0.001 Commit
+------------------------------------------------------------------------

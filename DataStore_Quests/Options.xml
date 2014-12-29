@@ -1,12 +1,12 @@
 ﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Options.lua"></Script>
 
-	<Frame name="DataStoreQuestsOptions" hidden="true">
+	<Frame parentKey="QuestsOptions" parent="DataStoreFrames" hidden="true">
 		<Size>
 			<AbsDimension x="615" y="306"/>
 		</Size>
 		<Frames>
-			<CheckButton name="$parent_TrackTurnIns" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton parentKey="TrackTurnIns" inherits="InterfaceOptionsCheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
@@ -23,12 +23,12 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton name="$parent_AutoUpdateHistory" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton parentKey="AutoUpdateHistory" inherits="InterfaceOptionsCheckButtonTemplate">
 				<Size>
 					<AbsDimension x="20" y="20"/>
 				</Size>
 				<Anchors> 
-					<Anchor point="TOP" relativeTo="$parent_TrackTurnIns" relativePoint="BOTTOM" >
+					<Anchor point="TOP" relativeKey="$parent.TrackTurnIns" relativePoint="BOTTOM" >
 						<Offset>
 							<AbsDimension  x="0" y="-10"/>
 						</Offset>
@@ -40,7 +40,6 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-
 		</Frames>
 	</Frame>
 	

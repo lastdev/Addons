@@ -2,7 +2,7 @@
 -- yleaf(yaroot@gmail.com)
 -- sunlcy@NGA
 -- Mini_Dragon(projecteurs@gmail.com)
--- Last update: Oct 19, 2014
+-- Last update: Dec 15, 2014@12036
 
 if GetLocale() ~= "zhCN" then return end
 if not DBM_GUI_Translations then DBM_GUI_Translations = {} end
@@ -12,8 +12,8 @@ local L = DBM_GUI_Translations
 L.MainFrame 				= "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "本地化："
-L.TranslationBy 			= "Diablohu & yleaf & sunlcy & Mini_Dragon"
-L.Website					= "拜访我们的论坛（英文） |cFF73C2FBwww.deadlybossmods.com|r (hosted by Elitist Jerks!)"
+L.TranslationBy 			= "Mini_Dragon(Brilla@金色平原) 原翻译：Diablohu & yleaf & sunlcy"
+L.Website					= "拜访我们的论坛（英文） |cFF73C2FBwww.deadlybossmods.com|r (托管于 Elitist Jerks!)，或在Twitter上关注首席程序员 @MysticalOS"
 L.WebsiteButton				= "论坛"
 
 L.OTabBosses				= "模块"
@@ -112,9 +112,10 @@ L.RaidWarnSound				= "发出团队警报时播放声音"
 L.CountdownVoice			= "设置第一倒计时语音"
 L.CountdownVoice2			= "设置第二倒计时语音"
 L.CountdownVoice3			= "设置第三倒计时语音"
+L.VoicePackChoice			= "设置语音报警的语音包(快躲开！)"
 L.SpecialWarnSound			= "针对你发出特殊警报时播放的声音"
-L.SpecialWarnSound2			= "针对所有人发出特殊警报时播放的声音"
-L.SpecialWarnSound3			= "针对非常重要事件(灭团点)的特殊警报播放的声音"
+L.SpecialWarnSound2			= "针对所有人发出特殊警报时播放的声音(默认:当心)"
+L.SpecialWarnSound3			= "针对非常重要事件(灭团点)的特殊警报播放的声音(默认:毁灭)"
 
 -- Tab: Generalwarnings
 L.Tab_GeneralMessages	 		= "综合信息"
@@ -153,10 +154,10 @@ L.Slider_BarScale 			= "缩放"
 L.AreaTitle_BarSetup 			= "计时条综合设置"
 L.AreaTitle_BarSetupSmall 		= "小型计时条设置"
 L.AreaTitle_BarSetupHuge 		= "大型计时条设置"
-L.EnableHugeBar 			= "开启大型计时条（2号计时条"
+L.EnableHugeBar 			= "开启大型计时条（2号计时条）"
 L.BarIconLeft 				= "左侧图标"
 L.BarIconRight 				= "右侧图标"
-L.ExpandUpwards				= "折叠"
+L.ExpandUpwards				= "计时条向上伸展" --感谢飘去的梦， 木沐的小胖狼@NGA
 L.FillUpBars				= "填充计时条"
 L.ClickThrough				= "禁用鼠标点击事件（允许你点击计时条后面的目标）"
 L.Bar_DBMOnly				= "以下设置只对 \"DBM\" 计时条有效."
@@ -210,16 +211,19 @@ L.SpamBlockSayYell			= "隐藏聊天窗口中的使用聊天泡泡的警报信�
 
 L.Area_SpecFilter			= "专精过滤选项"
 L.FilterTankSpec			= "当非坦克专精时，过滤掉给予坦克的专用信息"
---
+
+-- Tab: Global Filter
 L.Area_SpamFilter_Outgoing		= "全局过滤设置"
 L.SpamBlockNoShowAnnounce		= "不显示警报或播放警报音效"
 L.DontShowFarWarnings			= "不显示过远事件的通告和计时器"
+L.SpamBlockNoRunAway			= "不要播放'快跑啊，小姑娘'"
 L.SpamBlockNoSendWhisper		= "不发送悄悄话提示给其他玩家"
 L.SpamBlockNoSetIcon			= "不设定标记在目标上"
 L.SpamBlockNoRangeFrame			= "不显示距离监视器"
 L.SpamBlockNoInfoFrame			= "不显示信息监视器"
 L.SpamBlockNoHealthFrame		= "不显示生命值监视器"
 
+-- Tab: Spam Filter
 L.Area_PullTimer			= "开怪倒计时过滤设置"
 L.DontShowPT				= "不显示开怪倒计时条"
 L.DontShowPTCountdownText		= "不显示开怪倒计时动画"

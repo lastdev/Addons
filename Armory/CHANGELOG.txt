@@ -4,6 +4,9 @@ The Armory archive can be found on http://www.wow-neighbours.com/.
 
 Thanks for using Armory. You can show your appreciation and support future development by donating!
 
+==== v12.1.4 ====
+# Blizzard made an error in engineering data causing Armory to display an empty frame; this has been fixed.
+
 ==== v12.1.3 ====
 # Level, guild and zone were not shown anymore in the character frame; this has been fixed.
 # Top overlay stats drop down showed additional checkmarks; this has been fixed.

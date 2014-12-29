@@ -4,8 +4,8 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v6.0.001"
-addon.VersionNum = 600001
+addon.Version = "v6.0.003"
+addon.VersionNum = 600003
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -150,6 +150,7 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Grids.Archaeology.CurrentRace"] = 1,					-- Current race index
 			["UI.Tabs.Grids.Dungeons.CurrentXPack"] = 1,						-- Current expansion pack 
 			["UI.Tabs.Grids.Dungeons.CurrentRaids"] = 1,						-- Current raid index
+			["UI.Tabs.Grids.Garrisons.CurrentBuildings"] = 1,				-- Current building type
 			
 			["UI.AHColorCoding"] = 1,						-- color coded recipes at the AH
 			["UI.VendorColorCoding"] = 1,					-- color coded recipes at vendors

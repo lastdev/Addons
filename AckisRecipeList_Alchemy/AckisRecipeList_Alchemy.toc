@@ -2,12 +2,12 @@
 ## Title: Ackis Recipe List: Alchemy
 ## Notes: Alchemy data for Ackis Recipe List.
 ## Author: Ackis, Pompy, Ressy, Torhal
-## Version: 6.0.2.2
-## X-Revision: 8cf9693
+## Version: 6.0.3.1
+## X-Revision: ce715af
 ## X-Date: 2014-07-20T22:39:54Z
 ## Dependencies: AckisRecipeList
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: 6.0.2.2
+## X-Curse-Packaged-Version: 6.0.3.1
 ## X-Curse-Project-Name: Ackis Recipe List: Alchemy
 ## X-Curse-Project-ID: arl-alchemy
 ## X-Curse-Repository-ID: wow/arl-alchemy/mainline

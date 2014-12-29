@@ -9,6 +9,55 @@ This means cleaning the following files in \WTF\Account\<your_account>\SavedVari
 There WILL be bugs if you use your old files without cleaning them first. 
 Some fixes to work around API changes are too time consuming, so cleaning is required. A meager price to pay once per expansion.
 
+6.0.003 (27/12/2014)
+
+- DataStore_Garrisons: fixed a bug where saved buildings are deleted from the DB.
+- Added tracking of uncollected garrison resources. They can be seen in the currency pane of the account summary.
+- Added a warning when uncollected garrison resources are >400 on a given alt. There is an option to disable this warning if you want to.
+- Added Garrison-related achievements, now listed in a proper way in the achievements' tab.
+- Checked recipes that kept appearing in green at garrison trainers.. there was no bug actually, recipes stayed green because they could be learned by other alts.
+What I did instead is to check if a recipe is BOP. If it is BOP, and already known, it will appear in red.
+- Removed mounts from the addon, as they have been account-wide for a while now. The icon is still there as a placeholder in the grids tab though.
+- DataStore_Pets: removed all mount-related functions and data tables.
+- DataStore_Mails: fixed a bug where the addon kept complaining about old mails about to expire. This one is long overdue, thanks to Wispor and Elfana for helping me on this one !
+- Fixed "Player not found" message. (Bug 779 / Thanks Phinar !)
+- DataStore_Achievements: fixed an error caused by achievements with invalid id (as returned by the game's API). (Bug 792 / Thanks SpareSimian)
+- DataStore_Agenda: fixed a Lua error at logon. (Bug 792 also / Thanks SpareSimian)
+
+6.0.002 (24/12/2014)
+
+Seven Year Anniversary Edition.
+
+Today is the seventh birthday of Altoholic, and I wanted to take a moment to thank the community for its patience and support.
+2013 was a difficult year on a personal level, and 2014 was extremely busy at work. 
+As you have all seen, the amount and the pace of releases was not the best in these last 2 years, nevertheless, I remain committed to keep the addon alive, even if it will sometimes be on a "best effort" basis.
+
+I had originally planned to make a release a bit earlier, but life came in the way, and truth be told, it's not a bad thing that the release happens today, as the last time I actually made a release close to the addon's birthday was for the 2-year anniversary.
+
+To celebrate this wonderful day, I am releasing the first garrison-related features, it's not much, but it's a step in the right direction. I hope you'll enjoy it.
+
+I will be peacefully resting at home for the next 2-3 weeks with some spare time on my hands though, and I intend to work on garrison missions + resources, and also on several fixes that are long overdue.
+
+Enough said.. let me finish by wishing you all the best for 2015, for you and your families, and of course for all your alts :)
+
+.. on to the changelog !
+
+- New DataStore module : DataStore_Garrisons ! 
+Note: You have to visit the missions table to scan followers, it doesn't work otherwise.
+- Grids tab: added a pane for Garrison followers.
+- Grids tab: added a pane for Garrison buildings.
+- DataStore_Containers: now scanning the reagent bank at logon.
+- Account Summary : updated the "currency" pane to remove valor and justice tokens, and replace them with garrison resources, apexis crystals, and seals of tempered fate.
+- Account Summary : added a pane for Garrison followers.
+- Fixed a Lua error when talking to an enchanting follower in the garrison.
+- Fixed professions not being scanned entirely since 6.0 (Thanks Myrrodin & CKaotic), I did revert the part about followers though, to use IsNPCCrafting() instead.
+- A lot of minor fixes.
+
+Notes:
+- Garrison missions/resource tracking are coming, no need to ask, it's high on the priority list :)
+- I have a few weeks off, so I'll have time to work on the add-on, there will be releases in the coming 2-3 weeks, with several bug fixes (hell, the list has grown quite long..)
+
+
 6.0.001 (17/10/2014)
 
 - Added a pane in the Grids tab to track LFR lockouts across alts.
