@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Magmadar", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 549 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 554 $"):sub(12, -3))
 mod:SetCreatureID(11982)
 --mod:SetEncounterID(664)
 mod:SetModelID(10193)
@@ -14,9 +14,9 @@ mod:RegisterEvents(
 )
 
 local warnPanic		= mod:NewSpellAnnounce(19408, 2)
-local warnEnrage	= mod:NewTargetAnnounce(19451, 3, nil , mod:IsHealer() or mod:IsTank() or mod:CanRemoveEnrage())
+local warnEnrage	= mod:NewTargetAnnounce(19451, 3, nil , "Healer|Tank|RemoveEnrage")
 
-local specWarnEnrage= mod:NewSpecialWarningDispel(19451, mod:CanRemoveEnrage())
+local specWarnEnrage= mod:NewSpecialWarningDispel(19451, "RemoveEnrage")
 
 --local timerPanicCD	= mod:NewCDTimer(30, 19408)
 local timerPanic	= mod:NewBuffActiveTimer(8, 19408)

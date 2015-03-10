@@ -113,7 +113,7 @@ function ns:OnLoad()
 	addon.Tabs.Agenda:RegisterChildPane(ns)
 
 	-- by default, the week starts on Sunday, adjust first day of the week if necessary
-	if addon:GetOption("WeekStartsMonday") == 1 then
+	if addon:GetOption("UI.Calendar.WeekStartsOnMonday") then
 		addon:SetFirstDayOfWeek(2)
 	end
 	

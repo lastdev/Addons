@@ -195,17 +195,17 @@ L["Frost Resistance"] = "Résistance au Givre"
 L["Full Scan"] = "Scan Complet"
 L["Ghost Wolf"] = "Loup fantôme"
 L["Glow Action"] = "Action de l'éclat"
-L["Group aura count description"] = [=[Le nombre de membres du %s qui doivent être affectés par une ou plus des auras désignées pour que le graphique soit déclenché.
-Si le nombre entré est un entier (par ex. 5), le nombre de membres du raid affectés sera comparé au nombre entré.
-Si le nombre entré est decimal (par ex. 0.5), une fraction (par ex. 1/2), ou un pourcentage (par ex. 50%%), alors cette fraction du %s doit être affecté.
+L["Group aura count description"] = [=[Le nombre de membres du %s qui doivent être affectés par une ou plusieurs des auras sélectionnées pour que l'affichage soit déclenché.
+Si le nombre entré est un entier (ex. 5), le nombre de membres du raid affectés sera comparé au nombre entré.
+Si le nombre entré est decimal (ex. 0.5), une fraction (ex. 1/2), ou un pourcentage (ex. 50%%), alors cette fraction du %s doit être affectée.
 
 |cFF4444FFPar exemple :|r
-|cFF00CC00> 0|r le déclenchera quand n'importe qui du %s est affecté
-|cFF00CC00= 100%%|r le déclenchera quand tout le monde dans le %s est affecté
-|cFF00CC00!= 2|r le déclenchera quand le nombre de membres du %s affectés est différent de 2
-|cFF00CC00<= 0.8|r le déclenchera quand quand moins de 80%% du %s est affecté (4 sur 5 membres du groupe, 8 sur 10 ou 20 sur 25 du raid )
-|cFF00CC00> 1/2|r le déclenchera quand plus de la moitié du %s est affecté
-|cFF00CC00>= 0|r le déclenchera toujours, quoi qu'il arrive
+|cFF00CC00> 0|r se déclenchera quand n'importe quel membre du %s est affecté
+|cFF00CC00= 100%%|r se déclenchera quand tous les membres du %s sont affectés
+|cFF00CC00!= 2|r se déclenchera quand le nombre de membres du %s affectés est différent de 2
+|cFF00CC00<= 0.8|r se déclenchera quand moins de 80%% du %s est affecté (4 des 5 membres du groupe, 8 des 10 ou 20 des 25 membres du raid )
+|cFF00CC00> 1/2|r se déclenchera quand plus de la moitié du %s est affecté
+|cFF00CC00>= 0|r se déclenchera toujours, quoi qu'il arrive
 ]=] -- Needs review
 L["Group Member Count"] = "Nombre de membres du groupe"
 L["Group (verb)"] = "Grouper"
@@ -214,7 +214,7 @@ L["Hide this group's children"] = "Cacher les enfants de ce groupe"
 L["Hide When Not In Group"] = "Cacher hors d'un groupe"
 L["Horizontal Align"] = "Aligner horizontalement"
 L["Icon Info"] = "Info d'icône"
--- L["Icon Inset"] = ""
+L["Icon Inset"] = "Objet inséré"
 L["Ignored"] = "Ignoré"
 L["Ignore GCD"] = "Ignorer Recharge Globale"
 L["%i Matches"] = "%i Correspondances"
@@ -299,7 +299,7 @@ L["Rotation"] = "Rotation"
 L["Same"] = "Le même"
 L["Search"] = "Chrecher"
 L["Secondary"] = "Secondaire"
--- L["Select the auras you always want to be listed first"] = ""
+L["Select the auras you always want to be listed first"] = "Choisissez les auras que vous voulez toujours voir apparaître en premier dans la liste" -- Needs review
 L["Send To"] = "Envoyer vers"
 L["Set tooltip description"] = "Définir description d'infobulle"
 L["Shadow Dance"] = "Danse de l'ombre"
@@ -350,7 +350,7 @@ L["Text Color"] = "Couleur Texte"
 L["Text Position"] = "Position Texte"
 L["Text Settings"] = "Réglages de Texte"
 L["Texture"] = "Texture"
--- L["Texture Info"] = ""
+L["Texture Info"] = "Info Texture"
 L["The children of this group have different display types, so their display options cannot be set as a group."] = "Les enfants de ce groupe ont différent types de graphiques, leurs options de graphique ne peuvent donc pas être changées en groupe."
 L["The duration of the animation in seconds."] = "La durée de l'animation en secondes."
 L["The type of trigger"] = "Le type de déclencheur"

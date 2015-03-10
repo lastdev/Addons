@@ -399,6 +399,8 @@ L["ARMORY_OPEN_HINT"] = "열려면 클릭하세요."
 L["ARMORY_PANDARIA_GEM_RESEARCH"] = "Pandaria Gem Research" -- Requires localization
 L["ARMORY_QUEST_TOOLTIP_LABEL"] = "이 퀘스트의 사항:"
 L["ARMORY_RECIPE"] = "제조법"
+L["ARMORY_RECIPE_WARNING"] = [=[Recipe %s not found in LibCraftInfo. Trying to make an educated guess.
+Please check with '/armory find skill ...' to be sure.]=] -- Requires localization
 L["ARMORY_REPUTATION_SUMMARY"] = "%1$s - %2$s (%3$d/%4$d, 다음 평판 등급 상승까지 %5$d 남았음)"
 L["ARMORY_SEARCHING"] = "검색중..."
 L["ARMORY_SELECT_UNIT_HINT"] = "마우스 좌 클릭으로 이 케릭터를 선택합니다."

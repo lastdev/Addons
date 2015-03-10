@@ -184,6 +184,7 @@ end
 local function _ReleaseCheckBox(checkbox)
     checkbox.container:Hide()
     _RecycleWidget(checkbox, active_checkboxes, checkbox_heap)
+    checkbox.container:ClearAllPoints()
     checkbox.container:SetParent(nil)
 end
 

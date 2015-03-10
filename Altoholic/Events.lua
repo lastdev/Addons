@@ -294,7 +294,7 @@ local function ShowExpiryWarning(index, minutes)
 	if not warning then return end
 	
 	-- print instead of dialog box if player is in combat
-	if addon:GetOption("WarningDialogBox") == 1 and not UnitAffectingCombat("player") then
+	if addon:GetOption("UI.Calendar.UseDialogBoxForWarnings") and not UnitAffectingCombat("player") then
 		addon:SetMsgBoxHandler(Warning_MsgBox_Handler)
 		AltoMsgBox_Text:SetText(format("%s\n%s", WHITE..warning, L["Do you want to open Altoholic's calendar for details ?"]))
 		AltoMsgBox:Show()
@@ -400,7 +400,7 @@ function ns:GetDayCount(year, month, day)
 end
 
 function ns:CheckExpiries(elapsed)
-	if addon:GetOption("DisableWarnings") == 1 then	-- warnings disabled ? do nothing
+	if addon:GetOption("UI.Calendar.WarningsEnabled") == false then	-- warnings disabled ? do nothing
 		return
 	end
 

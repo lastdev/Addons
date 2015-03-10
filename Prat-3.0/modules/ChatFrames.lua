@@ -58,6 +58,8 @@ L:AddLocale("enUS", {
     ["mainchatonload_desc"] = "Automatically select the first chat frame and make it active on load.",
 	["framealpha_name"] = "Set Chatframe Alpha",
 	["framealpha_desc"] = "Conrols the transparency of the chatframe when you hover over it with your mouse.",
+    ["rememberframepositions_name"] = "Remember Positions",
+    ["rememberframepositions_desc"] = "Remember the chatframe positions, and restore them on load"
 } )
 --@end-debug@]===]
 
@@ -81,6 +83,8 @@ L:AddLocale("enUS",
 	minchatheight_name = "Set Minimum Height",
 	minchatwidth_desc = "Sets the minimum width for all chat windows.",
 	minchatwidth_name = "Set Minimum Width",
+	rememberframepositions_desc = "Remember the chatframe positions, and restore them on load",
+	rememberframepositions_name = "Remember Positions",
 	removeclamp_desc = "Allow the chatframe to be moved flush with the edge of the screen",
 	removeclamp_name = "Zero Clamp Size",
 }
@@ -102,6 +106,8 @@ L:AddLocale("itIT",
 	-- minchatheight_name = "",
 	-- minchatwidth_desc = "",
 	-- minchatwidth_name = "",
+	-- rememberframepositions_desc = "",
+	-- rememberframepositions_name = "",
 	-- removeclamp_desc = "",
 	-- removeclamp_name = "",
 }
@@ -123,6 +129,8 @@ L:AddLocale("ptBR",
 	-- minchatheight_name = "",
 	-- minchatwidth_desc = "",
 	-- minchatwidth_name = "",
+	-- rememberframepositions_desc = "",
+	-- rememberframepositions_name = "",
 	-- removeclamp_desc = "",
 	-- removeclamp_name = "",
 }
@@ -144,6 +152,8 @@ L:AddLocale("frFR",
 	minchatheight_name = "Hauteur minimum",
 	minchatwidth_desc = "Définit la largeur minimum pour toutes les fenêtres de discussion.",
 	minchatwidth_name = "Largeur minimum",
+	-- rememberframepositions_desc = "",
+	-- rememberframepositions_name = "",
 	-- removeclamp_desc = "",
 	-- removeclamp_name = "",
 }
@@ -165,6 +175,8 @@ L:AddLocale("deDE",
 	minchatheight_name = "Minimale Höhe einstellen",
 	minchatwidth_desc = "Die minimale Breite für alle Chat-Fenster einstellen.",
 	minchatwidth_name = "Minimale Breite einstellen.",
+	rememberframepositions_desc = "Die Positionen des Chatfensters merken und diese beim Laden wiederherstellen",
+	rememberframepositions_name = "Positionen merken",
 	removeclamp_desc = "Das Verschieben des Chat-Rahmens bündig zur Bildschirmkante zulassen",
 	removeclamp_name = "Klammergröße Null",
 }
@@ -186,6 +198,8 @@ L:AddLocale("koKR",
 	minchatheight_name = "최소 높이 설정",
 	minchatwidth_desc = "모든 대화창의 최소 폭 설정",
 	minchatwidth_name = "최소 폭 설정",
+	-- rememberframepositions_desc = "",
+	-- rememberframepositions_name = "",
 	-- removeclamp_desc = "",
 	-- removeclamp_name = "",
 }
@@ -207,6 +221,8 @@ L:AddLocale("esMX",
 	-- minchatheight_name = "",
 	-- minchatwidth_desc = "",
 	-- minchatwidth_name = "",
+	-- rememberframepositions_desc = "",
+	-- rememberframepositions_name = "",
 	-- removeclamp_desc = "",
 	-- removeclamp_name = "",
 }
@@ -228,6 +244,8 @@ L:AddLocale("ruRU",
 	minchatheight_name = "Минимальная высоты",
 	minchatwidth_desc = "Устанавливает минимальную ширину для всех окон чата.",
 	minchatwidth_name = "Минимальная ширина",
+	-- rememberframepositions_desc = "",
+	-- rememberframepositions_name = "",
 	removeclamp_desc = "Позволить окну чата прижиматься вплотную к краю экрана",
 	removeclamp_name = "Вплотную к краю экрана",
 }
@@ -235,21 +253,23 @@ L:AddLocale("ruRU",
 )
 L:AddLocale("zhCN",  
 {
-	-- ["Chat window frame parameter options"] = "",
-	-- framealpha_desc = "",
-	-- framealpha_name = "",
-	-- Frames = "",
-	-- mainchatonload_desc = "",
-	-- mainchatonload_name = "",
-	-- maxchatheight_desc = "",
-	-- maxchatheight_name = "",
-	-- maxchatwidth_desc = "",
-	-- maxchatwidth_name = "",
-	-- minchatheight_desc = "",
-	-- minchatheight_name = "",
-	-- minchatwidth_desc = "",
-	-- minchatwidth_name = "",
-	-- removeclamp_desc = "",
+	["Chat window frame parameter options"] = "聊天窗口参数选项", -- Needs review
+	framealpha_desc = "控制鼠标移过时聊天框架的透明度.", -- Needs review
+	framealpha_name = "设定聊天框架透明度", -- Needs review
+	Frames = "框架", -- Needs review
+	mainchatonload_desc = "加载时自动选择并激活第1个聊天框架.", -- Needs review
+	mainchatonload_name = "加载时焦点于主聊天框架.", -- Needs review
+	maxchatheight_desc = "设定所有聊天窗口的最大高度.", -- Needs review
+	maxchatheight_name = "设定最大高度", -- Needs review
+	maxchatwidth_desc = "设定所有聊天窗口的最大宽度.", -- Needs review
+	maxchatwidth_name = "设定最大宽度", -- Needs review
+	minchatheight_desc = "设定所有聊天窗口的最小高度.", -- Needs review
+	minchatheight_name = "设定最小高度.", -- Needs review
+	minchatwidth_desc = "设定所有聊天窗口的最小宽度.", -- Needs review
+	minchatwidth_name = "设定最小宽度.", -- Needs review
+	-- rememberframepositions_desc = "",
+	-- rememberframepositions_name = "",
+	removeclamp_desc = "允许聊天框架移动至屏幕边缘齐平", -- Needs review
 	-- removeclamp_name = "",
 }
 
@@ -270,6 +290,8 @@ L:AddLocale("esES",
 	-- minchatheight_name = "",
 	-- minchatwidth_desc = "",
 	-- minchatwidth_name = "",
+	-- rememberframepositions_desc = "",
+	-- rememberframepositions_name = "",
 	-- removeclamp_desc = "",
 	-- removeclamp_name = "",
 }
@@ -291,6 +313,8 @@ L:AddLocale("zhTW",
 	minchatheight_name = "設定最小高度",
 	minchatwidth_desc = "設定對話視窗最小寬度",
 	minchatwidth_name = "設定最小寬度",
+	-- rememberframepositions_desc = "",
+	-- rememberframepositions_name = "",
 	-- removeclamp_desc = "",
 	-- removeclamp_name = "",
 }
@@ -322,6 +346,13 @@ Prat:SetModuleDefaults(mod.name, {
         mainchatonload = true,
         framealpha = DEFAULT_CHATFRAME_ALPHA,
         removeclamp = true,
+        rememberframepositions = false,
+        framemetrics = {
+            ['*'] = {
+                width = 430,
+                height = 120,
+            }
+        }
 	}
 })
 
@@ -348,11 +379,17 @@ do
                 	desc = L["removeclamp_desc"],    
                 },
 			    framealpha = {
+                    order = 115,
 					name = L["framealpha_name"],
 					desc = L["framealpha_desc"],
 					type="range", min=0.0, max=1.0, step=.01, order=190,
 				},
-	--		    mainchatonload = 200,
+                rememberframepositions = {
+                    type = "toggle",
+                    order = 120,
+                    name = L.rememberframepositions_name,
+                    desc = L.rememberframepositions_desc,
+                }
 	        }
 	    }
 	)
@@ -369,12 +406,34 @@ function mod:OnModuleEnable()
     CHAT_FRAME_BUTTON_FRAME_MIN_ALPHA = 0
     self:ConfigureAllChatFrames(true)
     self:RawHook("FCF_DockFrame", true)
+
+
+    if (self.db.profile.rememberframepositions) then
+        self:RawHook('SetChatWindowSavedPosition', true)
+        self:RawHook('GetChatWindowSavedPosition', true)
+        self:RawHook('SetChatWindowSavedDimensions', true)
+        self:RawHook('GetChatWindowSavedDimensions', true)
+
+        self:UpdateFrameMetrics()
+    end
 end
+
 
 function mod:OnModuleDisable()
     CHAT_FRAME_BUTTON_FRAME_MIN_ALPHA = 0.2
     self:ConfigureAllChatFrames(false)
+
+    if (self.db.profile.rememberframepositions) then
+
+        self:Unhook('SetChatWindowSavedPosition')
+        self:Unhook('GetChatWindowSavedPosition')
+        self:Unhook('SetChatWindowSavedDimensions')
+        self:Unhook('GetChatWindowSavedDimensions')
+
+        self:UpdateFrameMetrics()
+    end
 end
+
 function mod:FCF_DockFrame(frame, ...)
     if self.db.profile.removeclamp then
         frame:SetClampRectInsets(0,0,0,0)
@@ -442,7 +501,62 @@ end
 
 function mod:OnValueChanged()
 	self:ConfigureAllChatFrames(true)
+
+    if (self.db.profile.rememberframepositions) then
+        self:RawHook('SetChatWindowSavedPosition', true)
+        self:RawHook('GetChatWindowSavedPosition', true)
+        self:RawHook('SetChatWindowSavedDimensions', true)
+        self:RawHook('GetChatWindowSavedDimensions', true)
+
+        self:UpdateFrameMetrics()
+    else
+        self:Unhook('SetChatWindowSavedPosition')
+        self:Unhook('GetChatWindowSavedPosition')
+        self:Unhook('SetChatWindowSavedDimensions')
+        self:Unhook('GetChatWindowSavedDimensions')
+
+        self:UpdateFrameMetrics()
+    end
 end
+
+-- Frame position saving feature credit to Chatter
+
+function mod:SetChatWindowSavedPosition(id, point, xOffset, yOffset)
+    local data = self.db.profile.framemetrics[id]
+    data.point, data.xOffset, data.yOffset = point, xOffset, yOffset
+end
+
+function mod:GetChatWindowSavedPosition(id)
+    local data = self.db.profile.framemetrics[id]
+    if not data.point then
+        data.point, data.xOffset, data.yOffset = self.hooks.GetChatWindowSavedPosition(id)
+    end
+    return data.point, data.xOffset, data.yOffset
+end
+
+function mod:SetChatWindowSavedDimensions(id, width, height)
+    local data = self.db.profile.framemetrics[id]
+    data.width, data.height = width, height
+end
+
+function mod:GetChatWindowSavedDimensions(id)
+    local data = self.db.profile.framemetrics[id]
+    if not data.width then
+        data.width, data.height = self.hooks.GetChatWindowSavedDimensions(id)
+    end
+    return data.width, data.height
+end
+
+function mod:UpdateFrameMetrics()
+    for i = 1,NUM_CHAT_WINDOWS do
+        local frame = _G["ChatFrame"..i]
+        if frame and type(frame.GetID) == "function" then
+            FloatingChatFrame_Update(frame:GetID())
+        end
+    end
+end
+
+
 
   return
 end ) -- Prat:AddModuleToLoad

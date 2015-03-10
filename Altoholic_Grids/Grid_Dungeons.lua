@@ -331,52 +331,47 @@ local callbacks = {
 			addon.Tabs.Grids:SetStatus(format("%s / %s", Dungeons[currentXPack].name, Dungeons[currentXPack][currentRaids].name))
 		end,
 	GetSize = function() return #view end,
-	RowSetup = function(self, entry, row, dataRowID)
+	RowSetup = function(self, rowFrame, dataRowID)
 			local dungeonID = view[dataRowID].id
-			
-			local rowName = entry .. row
-			_G[rowName.."Name"]:SetText(WHITE .. GetLFGDungeonInfo(dungeonID))
-			_G[rowName.."Name"]:SetJustifyH("LEFT")
-			_G[rowName.."Name"]:SetPoint("TOPLEFT", 15, 0)
-		end,
-	ColumnSetup = function(self, entry, row, column, dataRowID, character)
-			local itemName = entry.. row .. "Item" .. column;
-			local itemTexture = _G[itemName .. "_Background"]
-			local itemButton = _G[itemName]
-			local itemText = _G[itemName .. "Name"]
 
+			rowFrame.Name.Text:SetText(WHITE .. GetLFGDungeonInfo(dungeonID))
+			rowFrame.Name.Text:SetJustifyH("LEFT")
+		end,
+	RowOnEnter = function()	end,
+	RowOnLeave = function() end,
+	ColumnSetup = function(self, button, dataRowID, character)
 			local _, _, _, _, _, _, _, _, _, achImage = GetAchievementInfo(view[dataRowID].achID)
-			itemTexture:SetTexture(achImage)
-			itemTexture:SetTexCoord(0, 1, 0, 1)
-			itemTexture:SetDesaturated(false)
+			button.Background:SetTexture(achImage)
+			button.Background:SetTexCoord(0, 1, 0, 1)
+			button.Background:SetDesaturated(false)
 			
 			local dungeonID = view[dataRowID].id
 			local count = DataStore:GetLFGDungeonKillCount(character, dungeonID)
 			
 			if count > 0 then 
-				itemTexture:SetVertexColor(1.0, 1.0, 1.0)
-				itemButton.key = character
-				itemButton:SetID(dungeonID)
+				button.Background:SetVertexColor(1.0, 1.0, 1.0)
+				button.key = character
+				button:SetID(dungeonID)
 
-				itemText:SetJustifyH("CENTER")
-				itemText:SetPoint("BOTTOMRIGHT", 3, 2)
-				itemText:SetFontObject("NumberFontNormalLarge")
+				button.Name:SetJustifyH("CENTER")
+				button.Name:SetPoint("BOTTOMRIGHT", 3, 2)
+				button.Name:SetFontObject("NumberFontNormalLarge")
 
 				if view[dataRowID].bosses then
-					itemText:SetText(GREEN..format("%s/%s", count, view[dataRowID].bosses))
+					button.Name:SetText(GREEN..format("%s/%s", count, view[dataRowID].bosses))
 				else
-					itemText:SetText(GREEN..format("%s/%s", count, GetLFGDungeonNumEncounters(view[dataRowID].id)))
+					button.Name:SetText(GREEN..format("%s/%s", count, GetLFGDungeonNumEncounters(view[dataRowID].id)))
 				end
 				
-				-- itemText:SetText(GREEN..count)
+				-- button.Name:SetText(GREEN..count)
 			else
-				itemTexture:SetVertexColor(0.3, 0.3, 0.3)		-- greyed out
-				itemText:SetJustifyH("CENTER")
-				itemText:SetPoint("BOTTOMRIGHT", 5, 0)
-				itemText:SetFontObject("GameFontNormalSmall")
-				itemText:SetText(ICON_NOTREADY)
-				itemButton:SetID(0)
-				itemButton.key = nil
+				button.Background:SetVertexColor(0.3, 0.3, 0.3)		-- greyed out
+				button.Name:SetJustifyH("CENTER")
+				button.Name:SetPoint("BOTTOMRIGHT", 5, 0)
+				button.Name:SetFontObject("GameFontNormalSmall")
+				button.Name:SetText(ICON_NOTREADY)
+				button:SetID(0)
+				button.key = nil
 			end
 		end,
 		
@@ -429,4 +424,4 @@ local callbacks = {
 		end,
 }
 
-addon.Tabs.Grids:RegisterGrid(10, callbacks)
+addon.Tabs.Grids:RegisterGrid(6, callbacks)

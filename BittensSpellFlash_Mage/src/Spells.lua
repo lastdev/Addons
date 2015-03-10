@@ -4,13 +4,14 @@ local s = SpellFlashAddon
 local x = s.UpdatedVariables
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
-local GetItemCount = GetItemCount
 local IsMounted = IsMounted
 local UnitBuff = UnitBuff
 local UnitLevel = UnitLevel
+local UnitGUID = UnitGUID
+local GetTime = GetTime
 local max = math.max
-local min = math.min
 local select = select
+local pairs = pairs
 
 local function getRuneDuration()
    if c.IsCasting("Rune of Power") then
@@ -76,11 +77,28 @@ c.AddOptionalSpell("Spellsteal", nil, {
    end
 })
 
+local function netherTempestActiveElsewhere()
+   local now = GetTime()
+   local target = UnitGUID("target")
+   for who, when in pairs(a.NetherTempests) do
+      if now - when < (12 - c.LastGCD) then
+         if not target or who ~= target then
+            return true
+         end
+      end
+   end
+   return false
+end
+
 c.ManageDotRefresh("Nether Tempest", 1)
 c.AssociateTravelTimes(.5, "Nether Tempest")
-c.AddSpell("Nether Tempest", "Early", {
+c.AddOptionalSpell("Nether Tempest", "Early", {
    EarlyRefresh = 4,
    MyDebuff = "Nether Tempest",
+   RunFirst = function(z)
+      -- c.MakeOptional(z, c.IsSolo() or not s.Boss("target"))
+      c.MakeMini(z, netherTempestActiveElsewhere())
+   end,
    CheckFirst = function()
       return a.ChargeStacks >= 4 and not a.TargettingCrystal
          and c.ShouldCastToRefresh(
@@ -90,9 +108,13 @@ c.AddSpell("Nether Tempest", "Early", {
    end
 })
 
-c.AddSpell("Nether Tempest", "with 4 Arcane Charges", {
+c.AddOptionalSpell("Nether Tempest", "with 4 Arcane Charges", {
    EarlyRefresh = 4,
    MyDebuff = "Nether Tempest",
+   RunFirst = function(z)
+      -- c.MakeOptional(z, c.IsSolo() or not s.Boss("target"))
+      c.MakeMini(z, netherTempestActiveElsewhere())
+   end,
    CheckFirst = function()
       return a.ChargeStacks >= 4 and not a.TargettingCrystal
    end
@@ -173,11 +195,32 @@ c.AddSpell("Frost Bomb", "AoE", {
    end,
 })
 
+c.AddSpell("Frost Bomb", "before Crystal", {
+   MyDebuff = { "Frost Bomb" },
+   CheckFirst = function()
+      return c.EstimatedHarmTargets < 2
+         and not a.TargettingCrystal
+         and c.ShouldCastToRefresh("Frost Bomb", "Frost Bomb", 10, true)
+   end,
+})
+
+c.AddSpell("Frost Bomb", "on Crystal", {
+   MyDebuff = { "Frost Bomb" },
+   CheckFirst = function()
+      return a.TargettingCrystal
+         and c.EstimatedHarmTargets > 1
+         and not a.frostBombActive
+   end,
+})
+
+
 c.AddOptionalSpell("Presence of Mind", nil, {
+   Cooldown = 90,
    NoGCD = true,
 })
 
 c.AddOptionalSpell("Presence of Mind", ">= 96", {
+   Cooldown = 90,
    NoGCD = true,
    CheckFirst = function()
       return a.ManaPercent >= 96
@@ -279,18 +322,31 @@ c.AddSpell("Cone of Cold", "Glyphed", {
    end,
 })
 
-c.AddSpell("Prismatic Crystal", nil, {
+------------------------------------------------------------------------ Arcane
+local function arcanePowerReady()
+   if a.ChargeStacks < 4 then
+      return false
+   end
+
+   if a.HasPrismaticCrystal then
+      local cd = c.GetCooldown("Prismatic Crystal")
+      return cd <= (c.LastGCD * 2) or cd >= 15
+   else
+      return true
+   end
+end
+
+c.AddSpell("Prismatic Crystal", "for Arcane", {
    Cooldown = 90,
+   NoRangeCheck = true,
    RunFirst = function(z)
       c.MakeOptional(z, c.IsSolo() or not s.Boss("target"))
    end,
+   CheckFirst = function()
+      return a.ChargeStacks >= 4
+         and (a.ArcanePowerCD < 0.5 or a.ArcanePowerCD > 45)
+   end,
 })
-
------------------------------------------------------------------------- Arcane
-local function arcanePowerReady()
-   return a.ChargeStacks == 4
-      and c.GetCooldown("Prismatic Crystal") >= 15
-end
 
 c.RegisterForFullChannels("Arcane Missiles", 2)
 
@@ -318,7 +374,7 @@ c.AddOptionalSpell("Presence of Mind", "before AT", {
 
 c.AddOptionalSpell("Presence of Mind", "before AB", {
    NoGCD = true,
-   CheckFirst = function(z)
+   CheckFirst = function()
       return c.GetCastTime("Arcane Blast") > 1.2
          and c.GetCooldown("Alter Time", false, 180) > 30
    end
@@ -326,7 +382,7 @@ c.AddOptionalSpell("Presence of Mind", "before AB", {
 
 c.AddOptionalSpell("Presence of Mind", "before Flamestrike", {
    NoGCD = true,
-   CheckFirst = function(z)
+   CheckFirst = function()
       return c.GetCastTime("Flamestrike") > 1.2
          and c.GetCooldown("Alter Time", false, 180) > 30
    end
@@ -357,26 +413,28 @@ c.AddOptionalSpell("Evocation", "for Arcane", {
 
 c.AddOptionalSpell("Evocation", "Interrupt", {
    FlashColor = "red",
-   Override = function()
+   CheckFirst = function()
       return c.IsCasting("Evocation") and a.ManaPercent > 92
    end
 })
 
 c.AddSpell("Arcane Missiles", "with 3 Arcane Missiles", {
    RunFirst = movementCheck,
-   CheckFirst = function(z)
+   CheckFirst = function()
       if a.MissilesStacks >= 3 then
          return true
       end
 
-      if c.HasTalent("Overpowered")
+      if a.MissilesStacks > 0
+         and c.HasTalent("Overpowered")
          and a.ArcanePower
          and a.ArcanePowerDuration < c.GetCastTime("Arcane Blast")
       then
          return true
       end
 
-      if c.WearingSet(4, "T17")
+      if a.MissilesStacks > 0
+         and c.WearingSet(4, "T17")
          and c.GetBuffDuration("Arcane Instability") < c.GetCastTime("Arcane Blast")
       then
          return true
@@ -388,17 +446,10 @@ c.AddSpell("Arcane Missiles", "with 3 Arcane Missiles", {
 
 c.AddSpell("Arcane Missiles", "with 4 Arcane Charges", {
    RunFirst = movementCheck,
-   CheckFirst = function(z)
+   CheckFirst = function()
       return a.MissilesStacks > 0
          and a.ChargeStacks >= 4
          and (a.ArcanePowerCD > 10 * a.SpellHaste or not c.HasTalent("Overpowered"))
-   end
-})
-
-c.AddSpell("Arcane Missiles", "for AoE", {
-   RunFirst = movementCheck,
-   CheckFirst = function(z)
-      return a.MissilesStacks > 0
    end
 })
 
@@ -451,8 +502,12 @@ c.AddOptionalSpell("Flamestrike", nil, {
    end
 })
 
-c.AddOptionalSpell("Arcane Explosion", nil, {
-   Melee = true,
+c.AddSpell("Arcane Explosion")
+
+c.AddSpell("Supernova", nil, {
+   CheckFirst = function()
+      return c.GetChargeInfo("Supernova") > 0
+   end
 })
 
 c.AddSpell("Supernova", "High Priority", {
@@ -469,6 +524,9 @@ c.AddSpell("Supernova", "High Priority", {
 c.AddSpell("Supernova", "Low Priority", {
    CheckFirst = function()
       local charges, recharge = c.GetChargeInfo("Supernova")
+      if charges <= 0 then
+         return false
+      end
 
       return a.ManaPercent < 96
          and (a.MissilesStacks < 2 or a.ChargeStacks >= 4)
@@ -482,7 +540,7 @@ c.AddSpell("Supernova", "Low Priority", {
 
 c.AddSpell("Supernova", "on Prismatic Crystal", {
    CheckFirst = function()
-      local charges, recharge = c.GetChargeInfo("Supernova")
+      local charges, _ = c.GetChargeInfo("Supernova")
 
       return charges > 0 and a.TargettingCrystal
    end,
@@ -490,32 +548,30 @@ c.AddSpell("Supernova", "on Prismatic Crystal", {
 
 c.AddSpell("Supernova", "with mana < 96", {
    CheckFirst = function()
-      local charges, recharge = c.GetChargeInfo("Supernova")
+      local charges, _ = c.GetChargeInfo("Supernova")
       return charges > 0 and a.ManaPercent < 96
    end,
 })
 
-c.AddSpell("Arcane Orb", "with < 2 Arcane Charges", {
+c.AddSpell("Arcane Orb", nil, {
+   NoRangeCheck = true,
+   Cooldown = 15,
    CheckFirst = function()
       return a.ChargeStacks < 2
-   end
-})
-
-c.AddSpell("Arcane Orb", "with < 4 Arcane Charges", {
-   CheckFirst = function()
-      return a.ChargeStacks < 4
-   end
-})
-
-c.AddOptionalSpell("Time Warp", nil, {
-   CheckFirst = function()
-      return c.GetHealthPercent() <= 25 -- | time > 5 ??
    end
 })
 
 -------------------------------------------------------------------------- Fire
 c.AssociateTravelTimes(.5, "Fireball", "Pyroblast", "Frostfire Bolt")
 c.AssociateTravelTimes(.2, "Scorch", "Inferno Blast")
+
+c.AddSpell("Prismatic Crystal", "for Fire", {
+   Cooldown = 90,
+   NoRangeCheck = true,
+   RunFirst = function(z)
+      c.MakeOptional(z, c.IsSolo() or not s.Boss("target"))
+   end,
+})
 
 c.AddSpell("Fireball")
 
@@ -774,6 +830,11 @@ c.AddOptionalSpell("Frozen Orb", nil, {
    end
 })
 
+c.AddOptionalSpell("Frozen Orb", "for Crystal", {
+   NoRangeCheck = true,
+   Cooldown = 60
+})
+
 c.AddOptionalSpell("Icy Veins", nil, {
    Cooldown = 3 * 60,
    CheckFirst = function()
@@ -850,6 +911,18 @@ c.AddOptionalSpell("Water Jet", nil, {
    end
 })
 
+c.AddOptionalSpell("Water Jet", "on pull", {
+   Type = "pet",
+   NoRangeCheck = 1,
+   NoGCD = true,
+   Cooldown = 25,
+   CheckFirst = function()
+      return a.CombatTime <= 3
+         and c.EstimatedHarmTargets < 4
+         and not (c.HasTalent("Ice Nova") and c.HasTalent("Prismatic Crystal"))
+   end
+})
+
 c.AddOptionalSpell("Deep Freeze", nil, {
    CheckFirst = function()
       if s.Boss() or c.GetCooldown("Frozen Orb") > 50 then
@@ -891,6 +964,14 @@ c.AddSpell("Ice Lance", "with 2 Fingers or Frozen Orb", {
    end
 })
 
+c.AddSpell("Ice Lance", "with 2 Fingers and Water Jet", {
+   CheckFirst = function()
+      return a.FingerCount >= 2
+         and c.HasMyDebuff("Water Jet")
+         and c.IsCastingOrInAir("Frostbolt")
+   end
+})
+
 -- approximate travel time max is .5 seconds, + 0.1 for slop :)
 c.AddSpell("Ice Lance", "with Frost Bomb", {
    CheckFirst = function()
@@ -909,8 +990,28 @@ c.AddSpell("Ice Lance", "without Frost Bomb", {
    end
 })
 
+c.AddSpell("Ice Lance", "on Crystal", {
+   CheckFirst = function()
+      return a.TargettingCrystal and a.FingerCount > 0
+   end
+})
+
 c.AddSpell("Frostbolt", nil, {
    RunFirst = movementCheck,
+})
+
+c.AddSpell("Frostbolt", "right after Water Jet", {
+   RunFirst = movementCheck,
+   CheckFirst = function()
+      return a.castWaterJet
+   end
+})
+
+c.AddSpell("Frostbolt", "during Water Jet", {
+   RunFirst = movementCheck,
+   CheckFirst = function()
+      return c.CanLandWithin("Frostbolt", c.GetMyDebuffDuration("Water Jet"))
+   end
 })
 
 c.AddOptionalSpell("Ice Nova", "with 2 charges", {
@@ -938,6 +1039,39 @@ c.AddOptionalSpell("Ice Nova", "with 1 charge", {
    end
 })
 
-c.AddOptionalSpell("Comet Storm")
+c.AddOptionalSpell("Ice Nova", nil, {
+   FlashID = { "Ice Nova", "Frost Nova" },
+})
+
+c.AddOptionalSpell("Comet Storm", nil, {
+   Cooldown = 30
+})
 
 c.AddSpell("Blizzard")
+
+c.AddSpell("Blizzard", "on Crystal", {
+   CheckFirst = function()
+      if c.EstimatedHarmTargets < 5 then
+         return false
+      end
+
+      if c.GetCooldown("Frozen Orb") <= c.LastGCD then
+         return false
+      end
+
+      if c.HasTalent("Frost Bomb") and c.FingerCount >= 2 then
+         return false
+      end
+
+      return true
+   end
+})
+
+c.AddSpell("Prismatic Crystal", "for Frost", {
+   Cooldown = 90,
+   NoRangeCheck = true,
+   RunFirst = function(z)
+      c.MakeOptional(z, c.IsSolo() or not s.Boss("target"))
+   end,
+})
+

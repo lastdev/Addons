@@ -482,8 +482,9 @@ local function GetNextWeeklyReset(weeklyResetDay)
 		-- Same day : if the weekly reset period has passed, add 7 days, if not yet, than 0 days
 		numDays = (tonumber(date("%H")) > GetOption("WeeklyResetHour")) and 7 or 0
 	end
-
-	if numDays == 0 then return end
+	
+	-- if numDays == 0 then return end
+	if numDays == 0 then return date("%Y-%m-%d") end
 	
 	local newDay = day + numDays	-- 25th + 2 days = 27, or 28th + 10 days = 38 days (used to check days overflow in a month)
 
@@ -526,13 +527,13 @@ local function ClearExpiredDungeons()
 		return	-- initial pass, nothing to clear
 	end
 	
+	local nextReset = GetOption("NextWeeklyReset")
 	if not nextReset then		-- heal broken data
 		InitializeWeeklyParameters()
 		nextReset = GetOption("NextWeeklyReset") -- retry
 	end
 	
 	local today = date("%Y-%m-%d")
-	local nextReset = GetOption("NextWeeklyReset")
 
 	if (today < nextReset) then return end		-- not yet ? exit
 	if (today == nextReset) and (tonumber(date("%H")) < GetOption("WeeklyResetHour")) then return end

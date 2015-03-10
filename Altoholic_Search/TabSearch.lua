@@ -8,6 +8,9 @@ local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
 local RED		= "|cFFFF0000"
 
+local parentName = "AltoholicTabSearch"
+local parent
+
 local view
 local highlightIndex
 
@@ -62,11 +65,12 @@ local function Item_OnClick(frame)
 end
 
 function ns:OnLoad()
+	parent = _G[parentName]
 	AltoholicTabSearch_Sort1:SetText(L["Item / Location"])
 	AltoholicTabSearch_Sort2:SetText(L["Character"])
 	AltoholicTabSearch_Sort3:SetText(L["Realm"])
-	AltoholicTabSearchSlot:SetText(L["Equipment Slot"])
-	AltoholicTabSearchLocation:SetText(L["Location"])
+	parent.Slot:SetText(L["Equipment Slot"])
+	parent.Location:SetText(L["Location"])
 end
 
 function ns:Update()
@@ -74,7 +78,7 @@ function ns:Update()
 		BuildView()
 	end
 	
-	local VisibleLines = 15
+	local numRows = 15
 
 	local itemTypeIndex				-- index of the item type in the menu table
 	local itemTypeCacheIndex		-- index of the item type in the cache table
@@ -102,47 +106,52 @@ function ns:Update()
 		buttonWidth = 136
 	end
 	
-	local offset = FauxScrollFrame_GetOffset( _G[ "AltoholicSearchMenuScrollFrame" ] );
-	local itemButtom = "AltoholicTabSearchMenuItem"
-	for i=1, VisibleLines do
-		local line = i + offset
+	local frame = AltoholicTabSearch
+	local scrollFrame = AltoholicSearchMenuScrollFrame
+	local offset = FauxScrollFrame_GetOffset(scrollFrame)
+	local menuButton
+	
+	for rowIndex = 1, numRows do
+		menuButton = frame["MenuItem"..rowIndex]
+		
+		local line = rowIndex + offset
 		
 		if line > #MenuCache then
-			_G[itemButtom..i]:Hide()
+			menuButton:Hide()
 		else
 			local p = MenuCache[line]
 			
-			_G[itemButtom..i]:SetWidth(buttonWidth)
-			_G[itemButtom..i.."NormalText"]:SetWidth(buttonWidth - 21)
+			menuButton:SetWidth(buttonWidth)
+			menuButton.Text:SetWidth(buttonWidth - 21)
 			if p.needsHighlight then
-				_G[itemButtom..i]:LockHighlight()
+				menuButton:LockHighlight()
 			else
-				_G[itemButtom..i]:UnlockHighlight()
+				menuButton:UnlockHighlight()
 			end			
 			
 			if p.linetype == 1 then
-				_G[itemButtom..i.."NormalText"]:SetText(WHITE .. view[p.nameIndex].name)
-				_G[itemButtom..i]:SetScript("OnClick", Header_OnClick)
-				_G[itemButtom..i].itemTypeIndex = p.nameIndex
+				menuButton.Text:SetText(WHITE .. view[p.nameIndex].name)
+				menuButton:SetScript("OnClick", Header_OnClick)
+				menuButton.itemTypeIndex = p.nameIndex
 			elseif p.linetype == 2 then
-				_G[itemButtom..i.."NormalText"]:SetText("|cFFBBFFBB   " .. view[p.nameIndex])
-				_G[itemButtom..i]:SetScript("OnClick", Item_OnClick)
-				_G[itemButtom..i].itemTypeIndex = p.parentIndex
-				_G[itemButtom..i].itemSubTypeIndex = p.nameIndex
+				menuButton.Text:SetText("|cFFBBFFBB   " .. view[p.nameIndex])
+				menuButton:SetScript("OnClick", Item_OnClick)
+				menuButton.itemTypeIndex = p.parentIndex
+				menuButton.itemSubTypeIndex = p.nameIndex
 			end
 
-			_G[itemButtom..i]:Show()
+			menuButton:Show()
 		end
 	end
 	
-	FauxScrollFrame_Update( _G[ "AltoholicSearchMenuScrollFrame" ], #MenuCache, VisibleLines, 20);
+	FauxScrollFrame_Update( scrollFrame, #MenuCache, numRows, 20)
 end
 
 function ns:Reset()
 	AltoholicFrame_SearchEditBox:SetText("")
-	AltoholicTabSearch_MinLevel:SetText("")
-	AltoholicTabSearch_MaxLevel:SetText("")
-	AltoholicTabSearchStatus:SetText("")				-- .. the search results
+	parent.MinLevel:SetText("")
+	parent.MaxLevel:SetText("")
+	parent.Status:SetText("")				-- .. the search results
 	AltoholicFrameSearch:Hide()
 	addon.Search:ClearResults()
 	collectgarbage()
@@ -170,7 +179,7 @@ function ns:DropDownRarity_Initialize()
 		info.text = ITEM_QUALITY_COLORS[i].hex .. _G["ITEM_QUALITY"..i.."_DESC"]
 		info.value = i
 		info.func = function(self)	
-			UIDropDownMenu_SetSelectedValue(AltoholicTabSearch_SelectRarity, self.value);
+			UIDropDownMenu_SetSelectedValue(parent.SelectRarity, self.value);
 		end
 		info.checked = nil; 
 		info.icon = nil; 
@@ -202,7 +211,7 @@ local slotNames = {		-- temporary workaround
 
 function ns:DropDownSlot_Initialize()
 	local function SetSearchSlot(self) 
-		UIDropDownMenu_SetSelectedValue(AltoholicTabSearch_SelectSlot, self.value);
+		UIDropDownMenu_SetSelectedValue(parent.SelectSlot, self.value);
 	end
 	
 	local info = UIDropDownMenu_CreateInfo(); 
@@ -239,7 +248,7 @@ function ns:DropDownLocation_Initialize()
 		info.text = text[i]
 		info.value = i
 		info.func = function(self) 
-				UIDropDownMenu_SetSelectedValue(AltoholicTabSearch_SelectLocation, self.value)
+				UIDropDownMenu_SetSelectedValue(parent.SelectLocation, self.value)
 			end
 		info.checked = nil; 
 		info.icon = nil; 
@@ -262,23 +271,7 @@ function ns:SetMode(mode)
 
 		AltoholicTabSearch_Sort2:SetPoint("LEFT", AltoholicTabSearch_Sort1, "RIGHT", 5, 0)
 		AltoholicTabSearch_Sort3:SetPoint("LEFT", AltoholicTabSearch_Sort2, "RIGHT", 5, 0)
-		
-		for i=1, 7 do
-			_G[ "AltoholicFrameSearchEntry"..i.."Name" ]:SetWidth(240)
-			_G[ "AltoholicFrameSearchEntry"..i.."Stat1" ]:SetWidth(160)
-			_G[ "AltoholicFrameSearchEntry"..i.."Stat1" ]:SetPoint("LEFT", _G[ "AltoholicFrameSearchEntry"..i.."Name" ], "RIGHT", 5, 0)
-			_G[ "AltoholicFrameSearchEntry"..i.."Stat2" ]:SetWidth(150)
-			_G[ "AltoholicFrameSearchEntry"..i.."Stat2" ]:SetPoint("LEFT", _G[ "AltoholicFrameSearchEntry"..i.."Stat1" ], "RIGHT", 5, 0)
-			
-			for j=3, 6 do
-				_G[ "AltoholicFrameSearchEntry"..i.."Stat"..j ]:Hide()
-			end
-			_G[ "AltoholicFrameSearchEntry"..i.."ILvl" ]:Hide()
-			
-			_G[ "AltoholicFrameSearchEntry"..i ]:SetScript("OnEnter", nil)
-			_G[ "AltoholicFrameSearchEntry"..i ]:SetScript("OnLeave", nil)
-		end
-				
+	
 	elseif mode == "loots" then
 		addon.Search:SetUpdateHandler("Loots_Update")
 		
@@ -288,22 +281,6 @@ function ns:SetMode(mode)
 		
 		AltoholicTabSearch_Sort2:SetPoint("LEFT", AltoholicTabSearch_Sort1, "RIGHT", 5, 0)
 		AltoholicTabSearch_Sort3:SetPoint("LEFT", AltoholicTabSearch_Sort2, "RIGHT", 5, 0)
-		
-		for i=1, 7 do
-			_G[ "AltoholicFrameSearchEntry"..i.."Name" ]:SetWidth(240)
-			_G[ "AltoholicFrameSearchEntry"..i.."Stat1" ]:SetWidth(160)
-			_G[ "AltoholicFrameSearchEntry"..i.."Stat1" ]:SetPoint("LEFT", _G[ "AltoholicFrameSearchEntry"..i.."Name" ], "RIGHT", 5, 0)
-			_G[ "AltoholicFrameSearchEntry"..i.."Stat2" ]:SetWidth(150)
-			_G[ "AltoholicFrameSearchEntry"..i.."Stat2" ]:SetPoint("LEFT", _G[ "AltoholicFrameSearchEntry"..i.."Stat1" ], "RIGHT", 5, 0)
-			
-			for j=3, 6 do
-				_G[ "AltoholicFrameSearchEntry"..i.."Stat"..j ]:Hide()
-			end
-			_G[ "AltoholicFrameSearchEntry"..i.."ILvl" ]:Hide()
-			
-			_G[ "AltoholicFrameSearchEntry"..i ]:SetScript("OnEnter", nil)
-			_G[ "AltoholicFrameSearchEntry"..i ]:SetScript("OnLeave", nil)
-		end
 		
 	elseif mode == "upgrade" then
 		addon.Search:SetUpdateHandler("Upgrade_Update")
@@ -326,21 +303,6 @@ function ns:SetMode(mode)
 		AltoholicTabSearch_Sort3:SetPoint("LEFT", AltoholicTabSearch_Sort2, "RIGHT", 0, 0)
 
 		Columns:Add("iLvl", 50, function(self) addon.Search:SortResults(self, "iLvl") end)
-		
-		for i=1, 7 do
-			_G[ "AltoholicFrameSearchEntry"..i.."Name" ]:SetWidth(190)
-			_G[ "AltoholicFrameSearchEntry"..i.."Stat1" ]:SetWidth(50)
-			_G[ "AltoholicFrameSearchEntry"..i.."Stat1" ]:SetPoint("LEFT", _G[ "AltoholicFrameSearchEntry"..i.."Name" ], "RIGHT", 0, 0)
-			_G[ "AltoholicFrameSearchEntry"..i.."Stat2" ]:SetWidth(50)
-			_G[ "AltoholicFrameSearchEntry"..i.."Stat2" ]:SetPoint("LEFT", _G[ "AltoholicFrameSearchEntry"..i.."Stat1" ], "RIGHT", 0, 0)
-			
-			_G[ "AltoholicFrameSearchEntry"..i ]:SetScript("OnEnter", function(self) 
-				ns:TooltipStats(self) 
-			end)
-			_G[ "AltoholicFrameSearchEntry"..i ]:SetScript("OnLeave", function(self) 
-				AltoTooltip:Hide()
-			end)
-		end
 	end
 end
 

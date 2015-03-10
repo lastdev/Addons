@@ -13,10 +13,10 @@ if locale == "ptBR" then -- Brazilian Portuguese
 -- L["Solo Mode when not Grouped"] = ""
 
 elseif locale == "frFR" then -- French
-L["Flash Brewmaster"] = "Clignotements pour Maître brasseur" -- Needs review
+L["Flash Brewmaster"] = "Flash Maître brasseur" -- Needs review
 L["Flash Melee Abilities Above % Mana:"] = "Clignotement des techniques de mêlée si au dessus de % de mana" -- Needs review
-L["Flash Mistweaver"] = "Clignotements pour Tisse-brume" -- Needs review
-L["Flash Windwalker"] = "Clignotements pour Marche-vent" -- Needs review
+L["Flash Mistweaver"] = "Flash Tisse-brume" -- Needs review
+L["Flash Windwalker"] = "Flash Marche-vent" -- Needs review
 L["Solo Mode when not Grouped"] = "Mode solo si pas groupé" -- Needs review
 
 elseif locale == "deDE" then -- German

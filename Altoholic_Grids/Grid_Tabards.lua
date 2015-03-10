@@ -75,39 +75,34 @@ local callbacks = {
 			end
 		end,
 	GetSize = function() return #tabardList end,
-	RowSetup = function(self, entry, row, dataRowID)
+	RowSetup = function(self, rowFrame, dataRowID)
 			local tabardName = tabardNames[ tabardList[dataRowID] ]
 			_, _, _, _, _, _, _, currentItemID = GetAchievementCriteriaInfoByID(621, tabardList[dataRowID] )
 			
 			if tabardName then
-				local rowName = entry .. row
-				_G[rowName.."Name"]:SetText(WHITE .. tabardName)
-				_G[rowName.."Name"]:SetJustifyH("LEFT")
-				_G[rowName.."Name"]:SetPoint("TOPLEFT", 15, 0)
+				rowFrame.Name.Text:SetText(WHITE .. tabardName)
+				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
-	ColumnSetup = function(self, entry, row, column, dataRowID, character)
-			local itemName = entry.. row .. "Item" .. column;
-			local itemTexture = _G[itemName .. "_Background"]
-			local itemButton = _G[itemName]
-			local itemText = _G[itemName .. "Name"]
-			
-			itemText:SetFontObject("GameFontNormalSmall")
-			itemText:SetJustifyH("CENTER")
-			itemText:SetPoint("BOTTOMRIGHT", 5, 0)
-			itemTexture:SetDesaturated(false)
-			itemTexture:SetTexCoord(0, 1, 0, 1)
-			itemTexture:SetTexture(GetItemIcon(currentItemID))
+	RowOnEnter = function()	end,
+	RowOnLeave = function() end,
+	ColumnSetup = function(self, button, dataRowID, character)
+			button.Name:SetFontObject("GameFontNormalSmall")
+			button.Name:SetJustifyH("CENTER")
+			button.Name:SetPoint("BOTTOMRIGHT", 5, 0)
+			button.Background:SetDesaturated(false)
+			button.Background:SetTexCoord(0, 1, 0, 1)
+			button.Background:SetTexture(GetItemIcon(currentItemID))
 			
 			local criteriaID = tabardList[dataRowID]
 			if DataStore:IsTabardKnown(character, criteriaID) then
-				itemTexture:SetVertexColor(1.0, 1.0, 1.0);
-				itemText:SetText(ICON_READY)
+				button.Background:SetVertexColor(1.0, 1.0, 1.0);
+				button.Name:SetText(ICON_READY)
 			else
-				itemTexture:SetVertexColor(0.4, 0.4, 0.4);
-				itemText:SetText(ICON_NOTREADY)
+				button.Background:SetVertexColor(0.4, 0.4, 0.4);
+				button.Name:SetText(ICON_NOTREADY)
 			end
-			itemButton.id = currentItemID
+			button.id = currentItemID
 		end,
 	OnEnter = function(self) 
 			self.link = nil

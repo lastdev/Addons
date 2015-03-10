@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(172, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 114 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
 mod:SetCreatureID(43296)
 mod:SetEncounterID(1023)
 mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
-mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_ChimaronIntro01.wav", nil)
+mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_ChimaronIntro01.ogg", nil)
 --Long: Ah, Chimaeron, truly a living testament to my scientific prowess. I reworked and twisted his form countless times over the years, and the final result is truly something to behold.
 --Short: There isn't one
 
@@ -27,16 +27,16 @@ mod:RegisterEvents(
 )
 
 local warnCausticSlime		= mod:NewTargetAnnounce(82935, 3)
-local warnBreak				= mod:NewStackAnnounce(82881, 3, nil, mod:IsTank() or mod:IsHealer())
-local warnDoubleAttack		= mod:NewSpellAnnounce(88826, 4, nil, mod:IsTank() or mod:IsHealer())
+local warnBreak				= mod:NewStackAnnounce(82881, 3, nil, "Tank|Healer")
+local warnDoubleAttack		= mod:NewSpellAnnounce(88826, 4, nil, "Tank|Healer")
 local warnMassacre			= mod:NewSpellAnnounce(82848, 4)
 local warnFeud				= mod:NewSpellAnnounce(88872, 3)
 local warnPhase2Soon		= mod:NewPrePhaseAnnounce(2, 3)
 local warnPhase2			= mod:NewPhaseAnnounce(2)
 
-local specWarnFailure		= mod:NewSpecialWarningSpell(88853, nil, nil, nil, true)
-local specWarnMassacre		= mod:NewSpecialWarningSpell(82848, mod:IsHealer())
-local specWarnDoubleAttack	= mod:NewSpecialWarningSpell(88826, mod:IsTank())
+local specWarnFailure		= mod:NewSpecialWarningSpell(88853, nil, nil, nil, 2)
+local specWarnMassacre		= mod:NewSpecialWarningSpell(82848, "Healer")
+local specWarnDoubleAttack	= mod:NewSpecialWarningSpell(88826, "Tank")
 
 local timerBreak			= mod:NewTargetTimer(60, 82881)
 local timerBreakCD			= mod:NewNextTimer(15, 82881)--Also double attack CD
@@ -50,7 +50,7 @@ local berserkTimer			= mod:NewBerserkTimer(450)--Heroic
 
 mod:AddBoolOption("RangeFrame")
 mod:AddBoolOption("SetIconOnSlime", false)
-mod:AddBoolOption("InfoFrame", mod:IsHealer())
+mod:AddBoolOption("InfoFrame", "Healer")
 
 local prewarnedPhase2 = false
 local phase2 = false

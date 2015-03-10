@@ -1,0 +1,45 @@
+------------------------------------------------------------------------
+r41 | thaoky | 2015-01-09 17:03:43 +0000 (Fri, 09 Jan 2015) | 2 lines
+Changed paths:
+   M /trunk/DataStore_Auctions.lua
+   M /trunk/Options.xml
+
+- Fixed usage of options
+- XML frames cleanup
+------------------------------------------------------------------------
+r40 | thaoky | 2014-12-27 13:17:28 +0000 (Sat, 27 Dec 2014) | 1 line
+Changed paths:
+   M /trunk/Options.lua
+   M /trunk/Options.xml
+
+Modified options pane to use parentKey references
+------------------------------------------------------------------------
+r37 | thaoky | 2014-12-24 13:48:00 +0000 (Wed, 24 Dec 2014) | 2 lines
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/DataStore_Auctions.toc
+   D /trunk/Libs
+   M /trunk/Locales/deDE.lua
+   M /trunk/Locales/enUS.lua
+   M /trunk/Locales/esES.lua
+   A /trunk/Locales/esMX.lua (from /trunk/Locales/esMX.lua:34)
+   M /trunk/Locales/frFR.lua
+   M /trunk/Locales/itIT.lua
+   M /trunk/Locales/koKR.lua
+   M /trunk/Locales/ptBR.lua
+   A /trunk/Locales/repoenUS.lua (from /trunk/Locales/repoenUS.lua:34)
+   M /trunk/Locales/ruRU.lua
+   M /trunk/Locales/zhCN.lua
+   M /trunk/Locales/zhTW.lua
+   M /trunk/Options.lua
+   A /trunk/locale.xml (from /trunk/locale.xml:34)
+
+.toc update to use project-version
+Reverted changes by Myrrodin.
+------------------------------------------------------------------------
+r36 | myrroddin | 2014-11-30 05:50:44 +0000 (Sun, 30 Nov 2014) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+- Oops, wrong pkgmeta. Sorry!
+------------------------------------------------------------------------

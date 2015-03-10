@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("YoggSaron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 170 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 188 $"):sub(12, -3))
 mod:SetCreatureID(33288)
 mod:SetEncounterID(1143)
 mod:SetModelID(28817)
@@ -39,7 +39,7 @@ local specWarnMadnessOutNow			= mod:NewSpecialWarning("SpecWarnMadnessOutNow")
 local specWarnBrainPortalSoon		= mod:NewSpecialWarning("specWarnBrainPortalSoon", false)
 local specWarnDeafeningRoar			= mod:NewSpecialWarningSpell(64189)
 local specWarnFervor				= mod:NewSpecialWarningYou(63138)
-local specWarnFervorCast			= mod:NewSpecialWarning("SpecWarnFervorCast", mod:IsMelee())
+local specWarnFervorCast			= mod:NewSpecialWarning("SpecWarnFervorCast", "Melee")
 local specWarnMalady				= mod:NewSpecialWarningYou(63830, true)
 local specWarnMaladyNear			= mod:NewSpecialWarningClose(63830, true)
 
@@ -47,8 +47,8 @@ mod:AddBoolOption("WarningSqueeze", true, "announce")
 
 local enrageTimer					= mod:NewBerserkTimer(900)
 local timerFervor					= mod:NewTargetTimer("OptionVersion2", 15, 63138, nil, false)
-local timerMaladyCD					= mod:NewCDTimer(19, 63830)--VERIFY ME
-local timerBrainLinkCD				= mod:NewCDTimer(32, 63802)--VERIFY ME
+local timerMaladyCD					= mod:NewCDTimer(19, 63830)
+local timerBrainLinkCD				= mod:NewCDTimer(32, 63802)
 local brainportal					= mod:NewTimer(20, "NextPortal", 57687)
 local timerLunaricGaze				= mod:NewCastTimer(4, 64163)
 local timerNextLunaricGaze			= mod:NewCDTimer(8.5, 64163)
@@ -70,8 +70,10 @@ local targetWarningsShown			= {}
 local brainLinkTargets = {}
 local brainLinkIcon = 7
 local Guardians = 0
+local numberOfPlayers = 1
 
 function mod:OnCombatStart(delay)
+	numberOfPlayers = DBM:GetNumRealGroupMembers()
 	Guardians = 0
 	phase = 1
 	enrageTimer:Start()
@@ -236,9 +238,13 @@ function mod:OnSync(msg)
 		warnBrainPortalSoon:Cancel()
 		timerMaladyCD:Cancel()
 		timerBrainLinkCD:Cancel()
-        timerEmpower:Start()
+		timerEmpower:Start()
+		if numberOfPlayers == 1 then
+			timerMadness:Cancel()
+			specWarnMadnessOutNow:Cancel()
+		end
 		warnP3:Show()
-        warnEmpowerSoon:Schedule(40)
+		warnEmpowerSoon:Schedule(40)
 		timerNextDeafeningRoar:Start(30)
 		warnDeafeningRoarSoon:Schedule(25)
 	end

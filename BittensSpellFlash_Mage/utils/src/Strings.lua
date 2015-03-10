@@ -1,5 +1,5 @@
 local u = BittensGlobalTables.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(u, "Strings", 2) then
+if u.SkipOrUpgrade(u, "Strings", 3) then
 	return
 end
 

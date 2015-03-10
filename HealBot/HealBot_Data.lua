@@ -119,10 +119,10 @@ HealBot_Config_CuresDefaults = {
   HealBotDebuffText={},
   HealBotDebuffDropDown={},
   HealBotDebuffPriority={
-    [HEALBOT_DISEASE_en] = 15,
-    [HEALBOT_MAGIC_en] = 13,
-    [HEALBOT_POISON_en] = 16,
-    [HEALBOT_CURSE_en] = 14,
+    [HEALBOT_DISEASE_en] = 7,
+    [HEALBOT_MAGIC_en] = 5,
+    [HEALBOT_POISON_en] = 8,
+    [HEALBOT_CURSE_en] = 6,
     [HEALBOT_CUSTOM_en] = 10,
   },
   CDCBarColour = {
@@ -307,8 +307,10 @@ HealBot_GlobalsDefaults = {
 	
 	--[[= GetMapNameByID(944) or "--Highmaul" 
 	Trash]]
+	[HEALBOT_DEBUFF_MOLTEN_BOMB]             = 10, -- Trash
 	[HEALBOT_DEBUFF_TAINED_CLAWS]            = 10, -- Trash  
 	[HEALBOT_DEBUFF_DEVOUR]                  = 10, -- Trash
+	[HEALBOT_DEBUFF_INFESTED_WATERS]         = 10, -- Trash
 	[HEALBOT_DEBUFF_RADIATING_POISON]        = 10, -- Trash 
 	[HEALBOT_DEBUFF_STAGGERING_BLOW]         = 12, -- Trash
 	[HEALBOT_DEBUFF_RUNE_OF_DESTRUCTION]     = 9, -- Trash  
@@ -318,6 +320,8 @@ HealBot_GlobalsDefaults = {
 	[HEALBOT_DEBUFF_FROZEN_CORE]             = 10, -- Trash
 	[HEALBOT_DEBUFF_WILD_FLAMES]             = 10, -- Trash
 	[HEALBOT_DEBUFF_RENDING_THROW]           = 10, -- Trash
+	[HEALBOT_DEBUFF_ARCANE_RESIDUE]          = 10, -- Trash  
+	[HEALBOT_DEBUFF_PULVERIZED]              = 11, -- Trash 
 	--The Butcher
 	[HEALBOT_DEBUFF_GUSHING_WOUNDS]          = 10, -- The Butcher  
 	[HEALBOT_DEBUFF_THE_TENDERIZER]          = 11, -- The Butcher  
@@ -333,6 +337,7 @@ HealBot_GlobalsDefaults = {
 	[HEALBOT_DEBUFF_IRON_BOMB]               = 10, -- Kargath Bladefist
 	[HEALBOT_DEBUFF_GRAPPLE]                 = 11, -- Kargath Bladefist
 	[HEALBOT_DEBUFF_FLAME_JET]               = 10, -- Kargath Bladefist
+	[HEALBOT_DEBUFF_ON_THE_HUNT]             = 9, -- Kargath Bladefist
 	--Twin Ogron 
 	[HEALBOT_DEBUFF_ENFEEBLING_ROAR]         = 11, -- Twin Ogron
 	[HEALBOT_DEBUFF_BLAZE]                   = 10, -- Twin Ogron
@@ -358,7 +363,7 @@ HealBot_GlobalsDefaults = {
 	[HEALBOT_DEBUFF_ROT]                     = 10, -- Brackenspore
 	[HEALBOT_DEBUFF_NECROTIC_BREATH]         = 9, -- Brackenspore
 	[HEALBOT_DEBUFF_FLESH_EATER]             = 11, -- Brackenspore
-	--[HEALBOT_DEBUFF_MIND_FUNGUS]             = 11, -- Brackenspore
+	[HEALBOT_DEBUFF_MIND_FUNGUS]             = 11, -- Brackenspore
 	--Imperator Mar'gok 
 	[HEALBOT_DEBUFF_BRANDED]                 = 9, -- Imperator Mar'gok 
 	[HEALBOT_DEBUFF_DESTRUCTIVE_RESONANCE]   = 11, -- Imperator Mar'gok 

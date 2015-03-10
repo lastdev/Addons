@@ -142,7 +142,7 @@ function ns:UpdateAuctions()
 	local character = addon.Tabs.Characters:GetAltKey()
 	
 	local numAuctions = DS:GetNumAuctions(character) or 0
-	AltoholicTabCharactersStatus:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(L["Auctions %s(%d)"], GREEN, numAuctions)))
+	AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(L["Auctions %s(%d)"], GREEN, numAuctions)))
 	
 	if numAuctions == 0 then		-- make sure the scroll frame is cleared !
 		addon:ClearScrollFrame( _G[ frame.."ScrollFrame" ], entry, VisibleLines, 41)
@@ -209,7 +209,7 @@ function ns:UpdateBids()
 	local character = addon.Tabs.Characters:GetAltKey()
 	
 	local numBids = DS:GetNumBids(character) or 0
-	AltoholicTabCharactersStatus:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(L["Bids %s(%d)"], GREEN, numBids)))
+	AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(L["Bids %s(%d)"], GREEN, numBids)))
 	
 	if numBids == 0 then		-- make sure the scroll frame is cleared !
 		addon:ClearScrollFrame( _G[ frame.."ScrollFrame" ], entry, VisibleLines, 41)

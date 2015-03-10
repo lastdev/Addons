@@ -9,7 +9,7 @@
 ## X-eMail: ckknight@gmail.com
 ## X-Category: Library
 ## X-License: MIT
-## X-Curse-Packaged-Version: r80
+## X-Curse-Packaged-Version: r82
 ## X-Curse-Project-Name: LibBabble-Race-3.0
 ## X-Curse-Project-ID: libbabble-race-3-0
 ## X-Curse-Repository-ID: wow/libbabble-race-3-0/mainline

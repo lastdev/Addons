@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - VendMarkup
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
 	Revision: $Id: vendMarkup.lua 4828 2010-07-21 22:20:18Z Prowell $
 	URL: http://auctioneeraddon.com/
 
@@ -97,4 +97,4 @@ function private.SetupConfigGui(gui)
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Util-VendMarkup/vendMarkup.lua $", "$Rev: 4828 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-VendMarkup/vendMarkup.lua $", "$Rev: 4828 $")

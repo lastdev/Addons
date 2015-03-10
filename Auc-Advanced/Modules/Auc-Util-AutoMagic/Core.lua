@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - AutoMagic Utility module
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
-	Revision: $Id: Core.lua 5443 2013-11-28 11:06:26Z brykrys $
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Revision: $Id: Core.lua 5537 2014-12-12 15:31:05Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	AutoMagic is an Auctioneer module which automates mundane tasks for you.
@@ -119,7 +119,7 @@ local isGem =
 	[76135] = true,--Roguestone
 	[76136] = true,--Pandarian Garnet
 	[76137] = true,--Alexandrite
-	--Padarian Rare
+	--Pandarian Rare
 	[76131] = true,--Primordial Ruby
 	[76138] = true,--River's Heart
 	[76139] = true,--Wild Jade
@@ -130,11 +130,18 @@ local isGem =
 	[76132] = true,--Primal Diamond
 	[76734] = true,--Serpent's Eye
 	[90407] = true,--Sparkling Shard
+	--Draenor - none mailable
 }
 
 -- This table is validating that each ID within it is a mat from disenchanting.
 local isDEMats =
 	{
+	--Draenor
+	[115504] = true,--Fractured Temporal Crystal
+	[113588] = true,--Temporal Crystal
+	[111245] = true,--Luminous Shard
+	[115502] = true,--Small Luminous Shard
+	[109693] = true,--Draenic Dust
 	--Pandarian
 	[74248] = true,--Sha Crystal
 	[105718] = true, --Sha Crystal Fragment
@@ -212,6 +219,8 @@ local isPigmentMats =
 	--Pandarian
 	[79251] = true,--Shadow Pigment
 	[79253] = true,--Misty Pigment
+	--Draenor
+	[114931] = true,--Cerulean Pigment
 }
 -- This table is validating that each ID within it is a herb. Data from informant. This allows locale independent herbs
 local isHerb =
@@ -287,6 +296,14 @@ local isHerb =
 	[79010] = true,--Snow Lily
 	[79011] = true,--Fool's Cap
 	[89639] = true,--Desecrated Herb
+	--Draenor
+	[109124] = true,--Frostweed
+	[109125] = true,--Fireweed
+	[109126] = true,--Gorgrond Flytrap
+	[109127] = true,--Starflower
+	[109128] = true,--Nagrand Arrowbloom
+	[109129] = true,--Talador Orchid
+	[109130] = true,--Chameleon Lotus
 	}
 
 --Inv slot types, used to help define what gear is usable via tooltip parse
@@ -608,4 +625,4 @@ end
 
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Util-AutoMagic/Core.lua $", "$Rev: 5443 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-AutoMagic/Core.lua $", "$Rev: 5537 $")

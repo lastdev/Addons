@@ -369,51 +369,45 @@ end
 local callbacks = {
 	OnUpdate = function() end,
 	GetSize = function() return ns:GetNumSlotTypes() end,
-	RowSetup = function(self, entry, row, dataRowID)
+	RowSetup = function(self, rowFrame, dataRowID)
 			local name, color = ns:GetSlotTypeInfo(dataRowID)
-			
-			local rowName = entry .. row
-			_G[rowName.."Name"]:SetText(color .. name)
-			_G[rowName.."Name"]:SetJustifyH("RIGHT")
-			_G[rowName.."Name"]:SetPoint("TOPLEFT", 15, 0)
+
+			rowFrame.Name.Text:SetText(color .. name)
+			rowFrame.Name.Text:SetJustifyH("RIGHT")
 		end,
-	ColumnSetup = function(self, entry, row, column, dataRowID, character)
-			local itemName = entry.. row .. "Item" .. column;
-			local itemTexture = _G[itemName .. "_Background"]
-			local itemButton = _G[itemName]
-			local itemText = _G[itemName .. "Name"]
+	RowOnEnter = function()	end,
+	RowOnLeave = function() end,
+	ColumnSetup = function(self, button, dataRowID, character)
+			button.Background:SetDesaturated(false)
+			button.Background:SetVertexColor(1.0, 1.0, 1.0)
+			button.Background:SetTexCoord(0, 1, 0, 1)
 			
-			itemTexture:SetDesaturated(false)
-			itemTexture:SetVertexColor(1.0, 1.0, 1.0)
-			itemTexture:SetTexCoord(0, 1, 0, 1)
-			
-			itemText:SetFontObject("NumberFontNormalSmall")
-			itemText:SetJustifyH("RIGHT")
-			itemText:SetPoint("BOTTOMRIGHT", 0, 0)
+			button.Name:SetFontObject("NumberFontNormalSmall")
+			button.Name:SetJustifyH("RIGHT")
+			button.Name:SetPoint("BOTTOMRIGHT", 0, 0)
 			
 			local item = DataStore:GetInventoryItem(character, dataRowID)
 			if item then
-				itemButton.key = character
+				button.key = character
 				
-				itemTexture:SetTexture(GetItemIcon(item))
+				button.Background:SetTexture(GetItemIcon(item))
 				
 				-- display the coloured border
 				local _, _, itemRarity, itemLevel = GetItemInfo(item)
 				if itemRarity and itemRarity >= 2 then
 					local r, g, b = GetItemQualityColor(itemRarity)
-					itemButton.border:SetVertexColor(r, g, b, 0.5)
-					itemButton.border:Show()
+					button.IconBorder:SetVertexColor(r, g, b, 0.5)
+					button.IconBorder:Show()
 				end
-				
 
-				_G[itemName .. "Name"]:SetText(itemLevel)
+				button.Name:SetText(itemLevel)
 			else
-				itemButton.key = nil
-				itemTexture:SetTexture(addon:GetEquipmentSlotIcon(dataRowID))
-				_G[itemName .. "Name"]:SetText("")
+				button.key = nil
+				button.Background:SetTexture(addon:GetEquipmentSlotIcon(dataRowID))
+				button.Name:SetText("")
 			end
 			
-			itemButton.id = dataRowID
+			button.id = dataRowID
 		end,
 		
 	OnEnter = function(frame) 

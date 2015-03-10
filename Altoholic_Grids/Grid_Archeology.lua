@@ -38,7 +38,7 @@ local callbacks = {
 			addon.Tabs.Grids:SetStatus(GetArchaeologyRaceInfo(addon:GetOption(OPTION_RACE)))
 		end,
 	GetSize = function() return DataStore:GetRaceNumArtifacts(addon:GetOption(OPTION_RACE)) end,
-	RowSetup = function(self, entry, row, dataRowID)
+	RowSetup = function(self, rowFrame, dataRowID)
 			local artifact = DataStore:GetArtifactInfo(addon:GetOption(OPTION_RACE), dataRowID)
 			currentItemID = artifact.itemID
 			
@@ -46,41 +46,36 @@ local callbacks = {
 				local _, _, _, hexColor = GetItemQualityColor(artifact.rarity)
 				local itemName = GetSpellInfo(artifact.spellID)
 				
-				local rowName = entry .. row
-				_G[rowName.."Name"]:SetText("|c" .. hexColor .. itemName)
-				_G[rowName.."Name"]:SetJustifyH("LEFT")
-				_G[rowName.."Name"]:SetPoint("TOPLEFT", 15, 0)
+				rowFrame.Name.Text:SetText("|c" .. hexColor .. itemName)
+				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
-	ColumnSetup = function(self, entry, row, column, dataRowID, character)
-			local itemName = entry.. row .. "Item" .. column;
-			local itemTexture = _G[itemName .. "_Background"]
-			local itemButton = _G[itemName]
-			local itemText = _G[itemName .. "Name"]
-			
-			itemText:SetFontObject("GameFontNormalSmall")
-			itemText:SetJustifyH("CENTER")
-			itemText:SetPoint("BOTTOMRIGHT", 5, 0)
-			itemTexture:SetDesaturated(false)
-			itemTexture:SetTexCoord(0, 1, 0, 1)
-			itemTexture:SetTexture(GetItemIcon(currentItemID))
+	RowOnEnter = function()	end,
+	RowOnLeave = function() end,
+	ColumnSetup = function(self, button, dataRowID, character)
+			button.Name:SetFontObject("GameFontNormalSmall")
+			button.Name:SetJustifyH("CENTER")
+			button.Name:SetPoint("BOTTOMRIGHT", 5, 0)
+			button.Background:SetDesaturated(false)
+			button.Background:SetTexCoord(0, 1, 0, 1)
+			button.Background:SetTexture(GetItemIcon(currentItemID))
 			
 			local artifact = DataStore:GetArtifactInfo(addon:GetOption(OPTION_RACE), dataRowID)
 			if DataStore:IsArtifactKnown(character, artifact.spellID) then
-				itemTexture:SetVertexColor(1.0, 1.0, 1.0);
-				itemText:SetText(ICON_READY)
+				button.Background:SetVertexColor(1.0, 1.0, 1.0);
+				button.Name:SetText(ICON_READY)
 				
 				local _, _, itemRarity, itemLevel = GetItemInfo(currentItemID)
 				if itemRarity and itemRarity >= 2 then
 					local r, g, b = GetItemQualityColor(itemRarity)
-					itemButton.border:SetVertexColor(r, g, b, 0.5)
-					itemButton.border:Show()
+					button.IconBorder:SetVertexColor(r, g, b, 0.5)
+					button.IconBorder:Show()
 				end
 			else
-				itemTexture:SetVertexColor(0.4, 0.4, 0.4);
-				itemText:SetText(ICON_NOTREADY)
+				button.Background:SetVertexColor(0.4, 0.4, 0.4);
+				button.Name:SetText(ICON_NOTREADY)
 			end
-			itemButton.id = currentItemID
+			button.id = currentItemID
 		end,
 	OnEnter = function(self) 
 			self.link = nil

@@ -9,7 +9,7 @@ local bit_band, bit_lshift, bit_rshift = bit.band, bit.lshift, bit.rshift
 local WeakAuras = WeakAuras;
 local L = WeakAuras.L;
 
-local version = 1420;
+local version = 1421;
 local versionString = WeakAuras.versionString;
 
 local regionOptions = WeakAuras.regionOptions;
@@ -165,6 +165,8 @@ function WeakAuras.DisplayStub(regionType)
             ["unit"] = "player"
         },
         ["actions"] = {
+            ["init"] = {
+            },
             ["start"] = {
             },
             ["finish"] = {
@@ -194,6 +196,7 @@ function WeakAuras.DisplayStub(regionType)
 end
 
 function WeakAuras.removeSpellNames(data)
+    local trigger
     for triggernum=0,(data.numTriggers or 9) do
         if(triggernum == 0) then
             trigger = data.trigger;
@@ -534,6 +537,10 @@ function WeakAuras.ShowDisplayTooltip(data, children, icon, icons, import, compr
         local displayName = regionData and regionData.displayName or "";
 
         local tooltip = {
+            -- 1. parameter: 1 => AddLine, 2=> AddDoubleLine,
+            -- Rest of parameters identically to AddLine or AddDoubleLine:
+            -- AddLine: text [, red, green, blue [, wrapText]]
+            -- AddDoubleLine: textLeft, textRight, textLeft.r, textLeft.g, textLeft.b, textRight.r, textRight.g, textRight.b
             {2, data.id, "          ", 0.5333, 0, 1},
             {2, displayName, "          ", 1, 0.82, 0},
             {1, " ", 1, 1, 1}
@@ -598,6 +605,17 @@ function WeakAuras.ShowDisplayTooltip(data, children, icon, icons, import, compr
             end
         end
 
+        if (import and #tooltip > 30) then
+            -- Truncate the tooltip to ~25 auras if there are more than ~30
+            local size = #tooltip
+            tooltip[26] = {2, " ",  "[...]", 1, 1, 1, 1, 1, 1};
+            local nrOfChildren = children and #children or data.controlledChildren and #data.controlledChildren or 0
+            tooltip[27] = {1, string.format(L["%s total auras"], nrOfChildren), "", 1, 1, 1, 1, 1, 1};
+            for i = 28, size do
+              tooltip[i] = nil;
+            end
+        end
+
         if(data.desc and data.desc ~= "") then
             tinsert(tooltip, {1, " "});
             tinsert(tooltip, {1, "\""..data.desc.."\"", 1, 0.82, 0, 1});
@@ -618,9 +636,23 @@ function WeakAuras.ShowDisplayTooltip(data, children, icon, icons, import, compr
             importbutton = ItemRefTooltip.WeakAuras_Tooltip_Button;
             importbutton:SetPoint("BOTTOMRIGHT", ItemRefTooltip, "BOTTOMRIGHT", -20, 8);
             importbutton:SetWidth(100);
-            if not WeakAurasSaved.import_disabled then
+            importbutton:RegisterEvent("PLAYER_REGEN_ENABLED");
+            importbutton:RegisterEvent("PLAYER_REGEN_DISABLED");
 
-                importbutton:SetText("Import");
+            local function onCombat(self, event)
+              if (event == "PLAYER_REGEN_ENABLED") then
+                importbutton:Enable();
+              else
+                importbutton:Disable();
+              end
+            end
+
+            importbutton:SetScript("OnEvent", onCombat);
+            if (InCombatLockdown()) then
+              importbutton:Disable();
+            end
+            if not WeakAurasSaved.import_disabled then
+                importbutton:SetText(L["Import"]);
                 importbutton:SetScript("OnClick", function()
                 WeakAuras.OpenOptions();
 

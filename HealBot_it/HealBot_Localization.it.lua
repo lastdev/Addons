@@ -1,19 +1,14 @@
-﻿-- Italian maintained by Brezza on Nemesis-EU.
+﻿-- Italian translator required
 
 -------------
 -- ITALIAN --
 -------------
 --
--- Alcuni termini e acronimi non sono stati tradotti perchè acquisiti come uso comune anche in italiano (ad esempio aggro, dps, buff, skin, in alcuni casi spell...)
--- oppure per motivi di spazio delle varie finestre dell'addon. Se trovate bug o avete suggerimenti non esitate a scrivermi via PM su www.healbot.info
+-- (http://www.wowwiki.com/Localizing_an_addon)
 --
--- Some words and acronyms haven't been translated because by now acquired as common use in italian (eg. aggro, dps, buff, skin, in some cases spell...)
--- or due to limited space in the addon's windows. For bugs and hints don't hesitate to contact me via PM on www.healbot.info
+-- To localize this addon, it can be cloned from GitHub, find it at https://github.com/davidmarshall15/HealBot_it
 --
 --
---
-
-
 
 
 function HealBot_Lang_itIT()

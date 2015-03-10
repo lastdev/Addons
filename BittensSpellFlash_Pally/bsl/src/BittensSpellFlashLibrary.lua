@@ -1,7 +1,7 @@
 local g = BittensGlobalTables
 local c = g.GetOrMakeTable("BittensSpellFlashLibrary", 2)
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "MainFile", tonumber("20141215204639") or time()) then
+if u.SkipOrUpgrade(c, "MainFile", tonumber("20150202022148") or time()) then
    return
 end
 
@@ -38,7 +38,7 @@ local pairs = pairs
 local print = print
 local select = select
 local string = string
-local tinsert = tinsert
+local tinsert = table.insert
 local type = type
 local unpack = unpack
 local wipe = wipe
@@ -67,8 +67,8 @@ function c.RegisterAddon()
       local inCombat = s.InCombat()
       if (IsMounted() and not inCombat)
          or UnitIsDeadOrGhost("player")
-         or UnitInVehicle("player") then
-
+         or UnitInVehicle("player")
+      then
          return
       end
 
@@ -105,8 +105,17 @@ function c.GetCurrentRotation()
       local optionName = "Flash" .. name
       if (rotation.CheckFirst == nil or rotation.CheckFirst())
          and rotation.Spec == GetSpecialization()
-         and (not c.HasOption(optionName) or c.GetOption(optionName)) then
-
+         and (not c.HasOption(optionName) or c.GetOption(optionName))
+      then
+         if rotation.Warning then
+            u.Schedule(
+               15, print,
+               "|TInterface/TargetingFrame/UI-RaidTargetingIcon_8:0|t  " ..
+                  "|cFFFF0000" .. rotation.Warning .. "|r -- SlippyCheeze" ..
+                  "  |TInterface/TargetingFrame/UI-RaidTargetingIcon_8:0|t"
+            )
+            rotation.Warning = nil
+         end
          return rotation
       end
    end
@@ -203,7 +212,9 @@ function c.GetID(name)
    if id then
       return id
    else
-      print("No spell defined (or no ID attribute):", name)
+      if name ~= nil then
+         print("No spell defined (or no ID attribute):", name)
+      end
    end
 end
 
@@ -255,6 +266,10 @@ function c.HasGlyph(name)
    else
       return s.HasGlyph(id)
    end
+end
+
+function c.Form(name)
+   return s.Form(name and c.GetID(name) or nil)
 end
 
 local function getCastTime(localizedNameOrId)
@@ -433,7 +448,7 @@ function c.AddSpell(spellName, tag, attributes)
    if attributes == nil then
       attributes = { }
    end
-   for k, v in pairs(attributes) do
+   for k, _ in pairs(attributes) do
       convertToIDs(attributes, k, "ID", "Debuff%d*", "Buff%d*")
    end
    if attributes.ID == nil then

@@ -1,7 +1,7 @@
 -- To update a translation please use the localization utility at:
 -- http://wow.curseforge.com/addons/bittens-spellflash-hunter/localization/
 
-local addonName, a = ...
+local _, a = ...
 a.Localize = setmetatable({ }, { __index = function(_, key) return key end })
 local L = a.Localize
 local locale = GetLocale()

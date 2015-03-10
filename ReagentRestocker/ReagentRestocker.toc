@@ -2,7 +2,7 @@
 ## Title: Reagent Restocker
 ## Notes: Automatically restocks your reagents, arrows, etc. when you visit the appropriate vendors or your bank.
 ## Author: CobraA1
-## Version: 10.0
+## Version: 10.1
 ## Dependencies: 
 ## OptionalDeps: Ace3, LibPeriodicTable-3.1, LibDBIcon-1.0
 ## SavedVariables: RRGlobal, RRAceDB
@@ -15,7 +15,7 @@
 ## X-Credits: Myrren <Just Crusade>, Elune, cheeken
 ## X-Website: http://wow.curse.com/downloads/wow-addons/details/reagent_restocker.aspx
 ## X-Bugs: http://wow.curseforge.com/addons/reagent_restocker/tickets/
-## X-Curse-Packaged-Version: v10.0
+## X-Curse-Packaged-Version: v10.1
 ## X-Curse-Project-Name: Reagent Restocker
 ## X-Curse-Project-ID: reagent_restocker
 ## X-Curse-Repository-ID: wow/reagent_restocker/mainline

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Mimiron", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 142 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 186 $"):sub(12, -3))
 mod:SetCreatureID(33432)
 mod:SetEncounterID(1138)
 mod:DisableESCombatDetection()
@@ -31,10 +31,10 @@ local lootannounce				= mod:NewAnnounce("MagneticCore", 1, 64444)
 local warnBombSpawn				= mod:NewAnnounce("WarnBombSpawn", 3, 63811)
 local warnFrostBomb				= mod:NewSpellAnnounce(64623, 3)
 
-local warnShockBlast			= mod:NewSpecialWarning("WarningShockBlast", nil, false)
-mod:AddBoolOption("ShockBlastWarningInP1", mod:IsMelee(), "announce")
-mod:AddBoolOption("ShockBlastWarningInP4", mod:IsMelee(), "announce")
-local warnDarkGlare				= mod:NewSpecialWarningSpell(63293)
+local warnShockBlast			= mod:NewSpecialWarning("WarningShockBlast", nil, false, nil, 4)
+mod:AddBoolOption("ShockBlastWarningInP1", "Melee", "announce")
+mod:AddBoolOption("ShockBlastWarningInP4", "Melee", "announce")
+local warnDarkGlare				= mod:NewSpecialWarningSpell(63293, nil, nil, nil, 3)
 
 local enrage 					= mod:NewBerserkTimer(900)
 local timerHardmode				= mod:NewTimer(610, "TimerHardmode", 64582)
@@ -49,13 +49,10 @@ local timerNextDarkGlare		= mod:NewNextTimer(41, 63274)
 local timerNextShockblast		= mod:NewNextTimer(34, 63631)
 local timerPlasmaBlastCD		= mod:NewCDTimer(30, 64529)
 local timerShell				= mod:NewBuffActiveTimer(6, 63666)
-local timerFlameSuppressant		= mod:NewCastTimer(60, 64570)
-local timerNextFlameSuppressant	= mod:NewNextTimer(10, 65192)
-local timerNextFrostBomb        = mod:NewNextTimer(30, 64623)
+local timerNextFlameSuppressant	= mod:NewNextTimer(60, 64570)
+local timerFlameSuppressant		= mod:NewBuffActiveTimer(10, 65192)
+local timerNextFrostBomb		= mod:NewNextTimer(30, 64623)
 local timerBombExplosion		= mod:NewCastTimer(15, 65333)
-
-local soundShockBlast			= mod:NewSound(63631, mod:IsMelee())
-local soundDarkGlare			= mod:NewSound(63414)
 
 mod:AddBoolOption("HealthFramePhase4", true)
 mod:AddBoolOption("AutoChangeLootToFFA", true)
@@ -139,7 +136,6 @@ function mod:SPELL_CAST_START(args)
 		end
 		timerShockBlast:Start()
 		timerNextShockblast:Start()
-		soundShockBlast:Play()
 	end
 	if args:IsSpellID(64529, 62997) then -- plasma blast
 		timerPlasmaBlastCD:Start()
@@ -175,7 +171,6 @@ end
 local function show_warning_for_spinup()
 	if is_spinningUp then
 		warnDarkGlare:Show()
-		soundDarkGlare:Play()
 	end
 end
 
@@ -206,6 +201,7 @@ function mod:NextPhase()
 		timerNextShockblast:Stop()
 		timerProximityMines:Stop()
 		timerFlameSuppressant:Stop()
+		timerNextFlameSuppressant:Stop()
 		timerPlasmaBlastCD:Stop()
 		timerP1toP2:Start()
 		if DBM.BossHealth:IsShown() then
@@ -216,9 +212,8 @@ function mod:NextPhase()
 			DBM.RangeCheck:Hide()
 		end
 		if hardmode then
-            timerNextFrostBomb:Start(114)
-        end
-
+			timerNextFrostBomb:Start(51)
+		end
 	elseif phase == 3 then
 		if self.Options.AutoChangeLootToFFA and DBM:GetRaidRank() == 2 then
 			SetLootMethod("freeforall")
@@ -294,7 +289,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 
 	elseif msg == L.YellHardPull or msg:find(L.YellHardPull) then
 		timerHardmode:Start()
-		timerFlameSuppressant:Start()
+		timerNextFlameSuppressant:Start()
 		enrage:Stop()
 		hardmode = true
 	end

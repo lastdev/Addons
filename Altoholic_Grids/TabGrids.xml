@@ -1,50 +1,30 @@
 ﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="TabGrids.lua"></Script>
 	
-	<Button name="AltoTabGridsIconTemplate" inherits="AltoBagItemTemplate" virtual="true">
+	<Button name="AltoTabGridsClassIconTemplate" inherits="AltoClassIconTemplate" virtual="true">
 		<Scripts>
 			<OnEnter>
 				Altoholic.Tabs.Grids:Icon_OnEnter(self)
 			</OnEnter>
-			<OnLeave>
-				AltoTooltip:Hide()
-			</OnLeave>
 		</Scripts>
 	</Button>
 	
- 	<Button name="AltoTabGridsMenuIconTemplate" virtual="true">
-		<Size>
-			<AbsDimension x="30" y="30"/>
-		</Size>
-		<Layers>
-			<Layer level="BORDER">
-				<Texture name="$parentIconTexture"/>
-				<FontString name="$parentCount" inherits="NumberFontNormal" justifyH="RIGHT" hidden="true">
-					<Anchors>
-						<Anchor point="BOTTOMRIGHT">
-							<Offset>
-								<AbsDimension x="-5" y="2"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
+ 	<Button name="AltoTabGridsMenuIconTemplate" inherits="AltoButtonTemplate" virtual="true">
+		<Size x="30" y="30" />
 		<Frames>
-			<Frame name="$parentShine" inherits="AutoCastShineTemplate">
+			<Frame parentKey="Shine" name="$parentShine" inherits="AutoCastShineTemplate">
+				<Size x="28" y="28" />
 				<Anchors>
-					<Anchor point="CENTER">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="CENTER" x="0" y="0" />
 				</Anchors>
-				<Size>
-					<AbsDimension x="28" y="28"/>
-				</Size>
 			</Frame>
 		</Frames>
 		<Scripts>
+			<OnLoad>
+				if self.iconFile then
+					self.Icon:SetTexture(self.iconFile)
+				end
+			</OnLoad>
 			<OnEnter>
 				if self.text then
 					AltoTooltip:ClearLines();
@@ -60,70 +40,46 @@
 				Altoholic.Tabs.Grids:MenuItem_OnClick(self, button)
 			</OnClick>
 		</Scripts>
-		<PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
-		<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
 	</Button>
 	
 	<Frame name="AltoholicTabGrids" parent="AltoholicFrame" hidden="true">
-		<Size>
-			<AbsDimension x="758" y="447"/>
-		</Size>
+		<Size x="758" y="447" />
 		<Anchors>
-			<Anchor point="TOPLEFT"/>
+			<Anchor point="TOPLEFT" />
 		</Anchors>
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString name="$parentText1" inherits="GameFontNormalSmall" justifyH="LEFT">
-					<Size>
-						<AbsDimension x="100" y="18"/>
-					</Size>
+				<FontString parentKey="Label1" inherits="GameFontNormalSmall" justifyH="LEFT">
+					<Size x="100" y="18" />
 					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="35" y="-105"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" x="35" y="-105" />
 					</Anchors>
 				</FontString>
-				<FontString name="$parentTextView" inherits="GameFontNormalSmall" justifyH="LEFT" text="GUILD_ROSTER_VIEW" hidden="true">
-					<Size>
-						<AbsDimension x="60" y="18"/>
-					</Size>
+				<FontString parentKey="TextView" inherits="GameFontNormalSmall" justifyH="LEFT" text="GUILD_ROSTER_VIEW" hidden="true">
+					<Size x="60" y="18" />
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" >
-							<Offset x="60" y="-5" />
-						</Anchor>
+						<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="60" y="-5" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
-				<FontString name="$parentStatus" inherits="GameFontNormal" justifyH="LEFT">
+				<FontString parentKey="Status" inherits="GameFontNormal" justifyH="LEFT">
 					<Size x="320" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT">
-							<Offset x="-250" y="13" />
-						</Anchor>
+						<Anchor point="BOTTOMRIGHT" x="-250" y="13" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame name="$parent_SelectView" inherits="UIDropDownMenuTemplate" hidden="true">
+			<Frame parentKey="SelectView" name="$parent_SelectView" inherits="UIDropDownMenuTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentTextView" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="-25" y="-2"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.TextView" relativePoint="BOTTOMLEFT" x="-25" y="-2"/>
 				</Anchors>
 			</Frame>
-			<Frame name="$parent_SelectRealm" inherits="UIDropDownMenuTemplate">
+			<Frame parentKey="SelectRealm" name="$parent_SelectRealm" inherits="UIDropDownMenuTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentText1" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="-25" y="-2"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Label1" relativePoint="BOTTOMLEFT" x="-25" y="-2" />
 				</Anchors>
 				<Scripts>
 					<OnLoad>
@@ -139,243 +95,237 @@
 			</Frame>
 		
 			<!-- Menu Icons -->
-			<Button name="$parent_ClassIcon1" inherits="AltoTabGridsIconTemplate" id="1">
+			<Frame parentKey="ClassIcons" name="$parent_ClassIcons">
+				<Size x="457" y="37" />
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset x="370" y="-55" />
-					</Anchor>
+					<Anchor point="TOPLEFT" x="370" y="-55" />
 				</Anchors>
-			</Button>
-			<Button name="$parent_ClassIcon2" inherits="AltoTabGridsIconTemplate" id="2">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_ClassIcon1" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_ClassIcon3" inherits="AltoTabGridsIconTemplate" id="3">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_ClassIcon2" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_ClassIcon4" inherits="AltoTabGridsIconTemplate" id="4">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_ClassIcon3" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_ClassIcon5" inherits="AltoTabGridsIconTemplate" id="5">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_ClassIcon4" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_ClassIcon6" inherits="AltoTabGridsIconTemplate" id="6">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_ClassIcon5" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_ClassIcon7" inherits="AltoTabGridsIconTemplate" id="7">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_ClassIcon6" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_ClassIcon8" inherits="AltoTabGridsIconTemplate" id="8">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_ClassIcon7" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_ClassIcon9" inherits="AltoTabGridsIconTemplate" id="9">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_ClassIcon8" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_ClassIcon10" inherits="AltoTabGridsIconTemplate" id="10">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_ClassIcon9" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_ClassIcon11" inherits="AltoTabGridsIconTemplate" id="11">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_ClassIcon10" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
+				<Frames>
+					<Button parentKey="Icon1" inherits="AltoTabGridsClassIconTemplate" id="1">
+						<Anchors>
+							<Anchor point="TOPLEFT" />
+						</Anchors>
+					</Button>
+					<Button parentKey="Icon2" inherits="AltoTabGridsClassIconTemplate" id="2">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.Icon1" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+					</Button>
+					<Button parentKey="Icon3" inherits="AltoTabGridsClassIconTemplate" id="3">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.Icon2" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+					</Button>
+					<Button parentKey="Icon4" inherits="AltoTabGridsClassIconTemplate" id="4">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.Icon3" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+					</Button>
+					<Button parentKey="Icon5" inherits="AltoTabGridsClassIconTemplate" id="5">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.Icon4" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+					</Button>
+					<Button parentKey="Icon6" inherits="AltoTabGridsClassIconTemplate" id="6">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.Icon5" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+					</Button>
+					<Button parentKey="Icon7" inherits="AltoTabGridsClassIconTemplate" id="7">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.Icon6" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+					</Button>
+					<Button parentKey="Icon8" inherits="AltoTabGridsClassIconTemplate" id="8">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.Icon7" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+					</Button>
+					<Button parentKey="Icon9" inherits="AltoTabGridsClassIconTemplate" id="9">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.Icon8" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+					</Button>
+					<Button parentKey="Icon10" inherits="AltoTabGridsClassIconTemplate" id="10">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.Icon9" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+					</Button>
+					<Button parentKey="Icon11" inherits="AltoTabGridsClassIconTemplate" id="11">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.Icon10" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+					</Button>
+				</Frames>
+			</Frame>
 		
-			<Frame name="$parentClassIconMenu1" inherits="AltoRightClickMenuTemplate" id="1" />
-			<Frame name="$parentClassIconMenu2" inherits="AltoRightClickMenuTemplate" id="2" />
-			<Frame name="$parentClassIconMenu3" inherits="AltoRightClickMenuTemplate" id="3" />
-			<Frame name="$parentClassIconMenu4" inherits="AltoRightClickMenuTemplate" id="4" />
-			<Frame name="$parentClassIconMenu5" inherits="AltoRightClickMenuTemplate" id="5" />
-			<Frame name="$parentClassIconMenu6" inherits="AltoRightClickMenuTemplate" id="6" />
-			<Frame name="$parentClassIconMenu7" inherits="AltoRightClickMenuTemplate" id="7" />
-			<Frame name="$parentClassIconMenu8" inherits="AltoRightClickMenuTemplate" id="8" />
-			<Frame name="$parentClassIconMenu9" inherits="AltoRightClickMenuTemplate" id="9" />
-			<Frame name="$parentClassIconMenu10" inherits="AltoRightClickMenuTemplate" id="10" />
-			<Frame name="$parentClassIconMenu11" inherits="AltoRightClickMenuTemplate" id="11" />
-
-			<Button name="$parent_Equipment" inherits="AltoTabGridsMenuIconTemplate" id="1">
+			<Frame parentKey="ContextualMenu" inherits="AltoContextualMenuTemplate" />
+			
+			<Button parentKey="Equipment" inherits="AltoTabGridsMenuIconTemplate" id="1">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" >
-						<Offset x="30" y="240" />
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="240" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\INV_Chest_Plate04" />
+				</KeyValues>
 			</Button>
-			<Button name="$parent_Factions" inherits="AltoTabGridsMenuIconTemplate" id="2">
+			<Button parentKey="Factions" inherits="AltoTabGridsMenuIconTemplate" id="2">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parent_Equipment" relativePoint="BOTTOMRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Equipment" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\INV_BannerPVP_02" />
+				</KeyValues>
 			</Button>
-			<Button name="$parent_Tokens" inherits="AltoTabGridsMenuIconTemplate" id="3">
+			<Button parentKey="Tokens" inherits="AltoTabGridsMenuIconTemplate" id="3">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parent_Factions" relativePoint="BOTTOMRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Factions" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\Spell_Holy_SummonChampion" />
+					<KeyValue key="text" value="CURRENCY" type="global" />
+				</KeyValues>
 			</Button>
-			<Button name="$parent_Tabards" inherits="AltoTabGridsMenuIconTemplate" id="4">
+			<Button parentKey="Tabards" inherits="AltoTabGridsMenuIconTemplate" id="4">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parent_Tokens" relativePoint="BOTTOMRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Tokens" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\inv_chest_cloth_30" />
+				</KeyValues>
 			</Button>
 
-			<Button name="$parent_Pets" inherits="AltoTabGridsMenuIconTemplate" id="5">
+			<Button parentKey="Pets" inherits="AltoTabGridsMenuIconTemplate" id="5">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" >
-						<Offset x="30" y="200" />
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="200" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\INV_Box_Birdcage_01" />
+					<KeyValue key="text" value="COMPANIONS" type="global" />
+				</KeyValues>
 			</Button>
-			<Button name="$parent_Mounts" inherits="AltoTabGridsMenuIconTemplate" id="6">
+			<Button parentKey="Dungeons" inherits="AltoTabGridsMenuIconTemplate" id="6">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parent_Pets" relativePoint="BOTTOMRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Pets" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\inv_helmet_189" />
+					<KeyValue key="text" value="LOOKING_FOR_DUNGEON" type="global" />
+				</KeyValues>
 			</Button>
-			<Button name="$parent_TradeSkills" inherits="AltoTabGridsMenuIconTemplate" id="7">
+			<Button parentKey="TradeSkills" inherits="AltoTabGridsMenuIconTemplate" id="7">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parent_Mounts" relativePoint="BOTTOMRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Dungeons" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\Ability_Repair" />
+					<KeyValue key="text" value="TRADESKILLS" type="global" />
+				</KeyValues>
 			</Button>
-			<Button name="$parent_Archeology" inherits="AltoTabGridsMenuIconTemplate" id="8">
+			<Button parentKey="Archeology" inherits="AltoTabGridsMenuIconTemplate" id="8">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parent_TradeSkills" relativePoint="BOTTOMRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.TradeSkills" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\trade_archaeology" />
+				</KeyValues>
 			</Button>
 
-			<Button name="$parent_Dailies" inherits="AltoTabGridsMenuIconTemplate" id="9">
+			<Button parentKey="Dailies" inherits="AltoTabGridsMenuIconTemplate" id="9">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" >
-						<Offset x="30" y="160" />
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="160" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\LFGFrame\LFGIcon-Quest" />
+				</KeyValues>
 			</Button>
-			<Button name="$parent_Dungeons" inherits="AltoTabGridsMenuIconTemplate" id="10">
+			<Button parentKey="GarrisonArchitect" inherits="AltoTabGridsMenuIconTemplate" id="10">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parent_Dailies" relativePoint="BOTTOMRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Dailies" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\inv_garrison_blueprints3" />
+					<KeyValue key="text" value="GARRISON_ARCHITECT" type="global" />
+				</KeyValues>
 			</Button>
-			<Button name="$parent_GarrisonArchitect" inherits="AltoTabGridsMenuIconTemplate" id="11">
+			<Button parentKey="GarrisonFollowers" inherits="AltoTabGridsMenuIconTemplate" id="11">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parent_Dungeons" relativePoint="BOTTOMRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.GarrisonArchitect" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\achievement_garrisonfollower_epic" />
+					<KeyValue key="text" value="GARRISON_FOLLOWERS_TITLE" type="global" />
+				</KeyValues>
 			</Button>
-			<Button name="$parent_GarrisonFollowers" inherits="AltoTabGridsMenuIconTemplate" id="12">
+			<Button parentKey="FollowerAbilities" inherits="AltoTabGridsMenuIconTemplate" id="12">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parent_GarrisonArchitect" relativePoint="BOTTOMRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.GarrisonFollowers" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\spell_shadow_shadowwordpain" />
+				</KeyValues>
 			</Button>
 			
 			<!-- Tooltip for Garrison Levels, to avoid messing with Blizzard's own -->
 			<Frame parentKey="BuildingLevelTooltip" inherits="TooltipBorderedFrameTemplate" hidden="true" frameStrata="TOOLTIP" clampedToScreen="true">
-				<Size x="230" y="300"/>
+				<Size x="230" y="300" />
 				<Layers>
 					<Layer level="ARTWORK">
 						<FontString parentKey="Name" inherits="GameFontHighlightMedium" justifyH="LEFT">
-							<Size x="190" y="0"/>
+							<Size x="190" y="0" />
 							<Anchors>
-								<Anchor point="TOPLEFT" x="15" y="-15"/>
+								<Anchor point="TOPLEFT" x="15" y="-15" />
 							</Anchors>
 						</FontString>
 						<FontString parentKey="FollowerText" inherits="GameFontHighlight" justifyH="LEFT">
-							<Size x="190" y="0"/>
+							<Size x="190" y="0" />
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeKey="$parent.Name" relativePoint="BOTTOMLEFT" x="0" y="-5"/>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Name" relativePoint="BOTTOMLEFT" x="0" y="-5" />
 							</Anchors>
 						</FontString>
 						<FontString parentKey="Rank1" inherits="GameFontNormal" justifyH="LEFT">
-							<Size x="190" y="0"/>
+							<Size x="190" y="0" />
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeKey="$parent.FollowerText" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+								<Anchor point="TOPLEFT" relativeKey="$parent.FollowerText" relativePoint="BOTTOMLEFT" x="0" y="-10" />
 							</Anchors>
 						</FontString>
 						<FontString parentKey="Rank1Tooltip" inherits="GameFontHighlight" justifyH="LEFT">
-							<Size x="190" y="0"/>
+							<Size x="190" y="0" />
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeKey="$parent.Rank1" relativePoint="BOTTOMLEFT" x="10" y="-5"/>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Rank1" relativePoint="BOTTOMLEFT" x="10" y="-5" />
 							</Anchors>
 						</FontString>
 						
 						<FontString parentKey="Rank2" inherits="GameFontNormal" justifyH="LEFT">
-							<Size x="190" y="0"/>
+							<Size x="190" y="0" />
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeKey="$parent.Rank1Tooltip" relativePoint="BOTTOMLEFT" x="-10" y="-10"/>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Rank1Tooltip" relativePoint="BOTTOMLEFT" x="-10" y="-10" />
 							</Anchors>
 						</FontString>
 						<FontString parentKey="Rank2Tooltip" inherits="GameFontHighlight" justifyH="LEFT">
-							<Size x="190" y="0"/>
+							<Size x="190" y="0" />
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeKey="$parent.Rank2" relativePoint="BOTTOMLEFT" x="10" y="-5"/>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Rank2" relativePoint="BOTTOMLEFT" x="10" y="-5" />
 							</Anchors>
 						</FontString>
 						
 						<FontString parentKey="Rank3" inherits="GameFontNormal" justifyH="LEFT">
-							<Size x="190" y="0"/>
+							<Size x="190" y="0" />
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeKey="$parent.Rank2Tooltip" relativePoint="BOTTOMLEFT" x="-10" y="-10"/>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Rank2Tooltip" relativePoint="BOTTOMLEFT" x="-10" y="-10" />
 							</Anchors>
 						</FontString>
 						<FontString parentKey="Rank3Tooltip" inherits="GameFontHighlight" justifyH="LEFT">
-							<Size x="190" y="0"/>
+							<Size x="190" y="0" />
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeKey="$parent.Rank3" relativePoint="BOTTOMLEFT" x="10" y="-5"/>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Rank3" relativePoint="BOTTOMLEFT" x="10" y="-5" />
 							</Anchors>
 						</FontString>
 						
 						<FontString parentKey="UnlockText" inherits="GameFontHighlight" justifyH="LEFT">
-							<Size x="190" y="0"/>
+							<Size x="190" y="0" />
 							<Anchors>
-								<Anchor point="TOPLEFT" relativeKey="$parent.Rank3Tooltip" relativePoint="BOTTOMLEFT" x="-10" y="-10"/>
+								<Anchor point="TOPLEFT" relativeKey="$parent.Rank3Tooltip" relativePoint="BOTTOMLEFT" x="-10" y="-10" />
 							</Anchors>
 							<Color r="1.0" g="0.1" b="0.1" a="1"/>
 						</FontString>

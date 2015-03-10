@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(91, "DBM-Party-Cataclysm", 2, 63)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 142 $"):sub(12, -3))
 mod:SetCreatureID(43778)
 mod:SetZone()
 mod:SetUsedIcons(8)
@@ -19,13 +19,11 @@ local warnHarvest			= mod:NewTargetAnnounce(88495, 4)
 local warnEnrage			= mod:NewSpellAnnounce(88522, 4)
 local warnSpiritStrike		= mod:NewSpellAnnounce(59304, 3)
 
-local specWarnHarvest		= mod:NewSpecialWarningRun(88495)
+local specWarnHarvest		= mod:NewSpecialWarningRun("OptionVersion2", 88495, nil, nil, nil, 4)
 local specWarnHarvestNear	= mod:NewSpecialWarningClose(88495)
 
 local timerHarvest			= mod:NewCastTimer(5, 88495)
 local timerOverdrive		= mod:NewBuffActiveTimer(10, 88481)
-
-local soundHarvest			= mod:NewSound(88495)
 
 mod:AddBoolOption("HarvestIcon")
 
@@ -38,7 +36,6 @@ function mod:HarvestTarget()
 		end
 	if targetname == UnitName("player") then
 		specWarnHarvest:Show()
-		soundHarvest:Play()
 	else
 		local uId = DBM:GetRaidUnitId(targetname)
 		if uId then

@@ -22,7 +22,7 @@ local characterList
 local view
 
 local function ProcessRealms(func)
-	local mode = addon:GetOption("TabSummaryMode")
+	local mode = addon:GetOption("UI.Tabs.Summary.CurrentRealms")
 	local thisRealm = GetRealmName()
 	
 	-- this account only

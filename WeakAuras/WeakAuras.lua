@@ -239,6 +239,15 @@ function WeakAuras.IsOptionsOpen()
   return false;
 end
 
+local LBG = LibStub("LibButtonGlow-1.0")
+local function WeakAuras_ShowOverlayGlow(frame)
+  LBG.ShowOverlayGlow(frame)
+end
+
+local function WeakAuras_HideOverlayGlow(frame)
+  LBG.HideOverlayGlow(frame)
+end
+
 local function forbidden()
   print("|cffffff00A WeakAura that you are using just tried to use a forbidden function but has been blocked from doing so. Please check your auras!|r")
 end
@@ -254,12 +263,50 @@ local blockedFunctions = {
   SetTradeMoney = true,
 }
 
+local overrideFunctions = {
+  ActionButton_ShowOverlayGlow = WeakAuras_ShowOverlayGlow,
+  ActionButton_HideOverlayGlow = WeakAuras_HideOverlayGlow,
+}
+
+local aura_environments = {};
+local current_aura_env = nil;
+function WeakAuras.ActivateAuraEnvironment(id)
+  if(not id or not db.displays[id]) then
+    -- Don't point to the previous aura's environment if an invalid id/display was supplied
+    current_aura_env = nil;
+  else
+    local data = db.displays[id];
+    if data.init_completed then
+      -- Point the current environment to the correct table
+      aura_environments[id] = aura_environments[id] or {};
+      current_aura_env = aura_environments[id];
+    else
+      -- Reset the environment if we haven't completed init, i.e. if we add/update/replace a weakaura
+      aura_environments[id] = {};
+      current_aura_env = aura_environments[id];
+      -- Run the init function if supplied
+      local actions = data.actions.init;
+      if(actions and actions.do_custom and actions.custom) then
+        local func = WeakAuras.LoadFunction("return function() "..(actions.custom).." end");
+        if func then
+          func();
+        end
+      end
+      data.init_completed = 1;
+    end
+  end
+end
+
 local exec_env = setmetatable({}, { __index =
   function(t, k)
     if k == "_G" then
       return t
+    elseif k == "aura_env" then
+      return current_aura_env;
     elseif blockedFunctions[k] then
       return forbidden
+    elseif overrideFunctions[k] then
+      return overrideFunctions[k]
     else
       return _G[k]
     end
@@ -295,7 +342,7 @@ do
   -- Extra check needed, because aura_cache can potentially contain data of two different triggers with different settings!
   local function TestNonUniformSettings(acEntry, data)
   if(data.remFunc) then
-    if not(data.remFunc(acEntry.expirationTime - acEntry.duration)) then
+    if not(data.remFunc(acEntry.expirationTime - GetTime())) then
       return false
     end
   end
@@ -359,7 +406,7 @@ do
       end
       end
       if(active) then
-      num = num + 1;
+        num = num + 1;
       end
     end
     return num;
@@ -677,8 +724,11 @@ do
   WeakAuras.frames["Cooldown Trigger Handler"] = cdReadyFrame
 
   local spells = {};
+  local spellsRune = {}
   local spellCdDurs = {};
   local spellCdExps = {};
+  local spellCdDursRune = {};
+  local spellCdExpsRune = {};
   local spellCharges = {};
   local spellCdHandles = {};
 
@@ -728,7 +778,15 @@ do
     end
   end
 
-  function WeakAuras.GetSpellCooldown(id)
+  function WeakAuras.GetSpellCooldown(id, ignoreRuneCD)
+    if (ignoreRuneCD) then
+      if (spellsRune[id] and spellCdExpsRune[id] and spellCdDursRune[id]) then
+        return spellCdExpsRune[id] - spellCdDursRune[id], spellCdDursRune[id];
+      else
+        return 0, 0
+      end
+    end
+
     if(spells[id] and spellCdExps[id] and spellCdDurs[id]) then
       return spellCdExps[id] - spellCdDurs[id], spellCdDurs[id];
     else
@@ -767,6 +825,8 @@ do
     spellCdHandles[id] = nil;
     spellCdDurs[id] = nil;
     spellCdExps[id] = nil;
+    spellCdDursRune[id] = nil;
+    spellCdExpsRune[id] = nil;
     spellCharges[id] = select(2, GetSpellCharges(id));
     WeakAuras.ScanEvents("SPELL_COOLDOWN_READY", id, nil);
   end
@@ -842,8 +902,7 @@ do
           WeakAuras.ScanEvents("RUNE_COOLDOWN_CHANGED", id);
         end
       elseif(startTime > 0 and duration > 0) then
-        -- GCD
-        -- Do nothing
+        -- GCD, do nothing
       else
         if(runeCdExps[id]) then
           -- Somehow CheckCooldownReady caught the rune cooldown before the timer callback
@@ -866,43 +925,24 @@ do
       startTime = startTime or 0;
       duration = duration or 0;
       local time = GetTime();
+      local remaining = startTime + duration - time;
 
       if(duration > 1.51) then
         -- On non-GCD cooldown
         local endTime = startTime + duration;
 
         if not(spellCdExps[id]) then
-          local match = nil
-          if (select(2, UnitClass("player")) == "DEATHKNIGHT") then
-            match = false
-            for runeId = 1,6 do
-              local runeStart, runeDuration = GetRuneCooldown(runeId)
-              if runeDuration == duration and math.abs(runeStart - startTime) < 0.01 then
-                match = true;
-                break;
-              end
-            end
-          end
-
           -- New cooldown
           spellCdDurs[id] = duration;
           spellCdExps[id] = endTime;
           spellCharges[id] = charges;
           spellCdHandles[id] = timer:ScheduleTimer(SpellCooldownFinished, endTime - time, id);
-          WeakAuras.ScanEvents("SPELL_COOLDOWN_STARTED", id, match);
-        elseif(spellCdExps[id] ~= endTime or spellCharges[id] ~= charges) then
-          local match = nil
-          if (select(2, UnitClass("player")) == "DEATHKNIGHT") then
-            match = false
-            for runeId = 1,6 do
-              local runeStart, runeDuration = GetRuneCooldown(runeId)
-              if runeDuration == duration and math.abs(runeStart - startTime) < 0.01 then
-                match = true;
-                break;
-              end
-            end
+          if (spellsRune[id] and duration ~= 10) then
+            spellCdDursRune[id] = duration;
+            spellCdExpsRune[id] = endTime;
           end
-
+          WeakAuras.ScanEvents("SPELL_COOLDOWN_STARTED", id);
+        elseif(spellCdExps[id] ~= endTime or spellCharges[id] ~= charges) then
           -- Cooldown is now different
           if(spellCdHandles[id]) then
             timer:CancelTimer(spellCdHandles[id]);
@@ -914,7 +954,11 @@ do
           if (maxCharges == nil or charges + 1 == maxCharges) then
             spellCdHandles[id] = timer:ScheduleTimer(SpellCooldownFinished, endTime - time, id);
           end
-          WeakAuras.ScanEvents("SPELL_COOLDOWN_CHANGED", id, match);
+          if (spellsRune[id] and duration ~= 10) then
+            spellCdDursRune[id] = duration;
+            spellCdExpsRune[id] = endTime;
+          end
+          WeakAuras.ScanEvents("SPELL_COOLDOWN_CHANGED", id);
         end
       elseif(duration > 0 and not (spellCdExps[id] and spellCdExps[id] - time > 1.51)) then
         -- GCD
@@ -1010,12 +1054,16 @@ do
     end
   end
 
-  function WeakAuras.WatchSpellCooldown(id)
+  function WeakAuras.WatchSpellCooldown(id, ignoreRunes)
     if not(cdReadyFrame) then
       WeakAuras.InitCooldownReady();
     end
 
     if not id or id == 0 then return end
+
+    if (ignoreRunes) then
+      spellsRune[id] = true;
+    end
 
     if not(spells[id]) then
       spells[id] = true;
@@ -1035,6 +1083,10 @@ do
         local endTime = startTime + duration;
         spellCdDurs[id] = duration;
         spellCdExps[id] = endTime;
+        if (duration ~= 10 and ignoreRunes) then
+          spellCdDursRune[id] = duration;
+          spellCdExpsRune[id] = endTime;
+        end
         if not(spellCdHandles[id]) then
           spellCdHandles[id] = timer:ScheduleTimer(SpellCooldownFinished, endTime - time, id);
         end
@@ -1850,6 +1902,7 @@ function WeakAuras.ScanEvents(event, arg1, arg2, ...)
     event = "COMBAT_LOG_EVENT_UNFILTERED";
   end
   for id, triggers in pairs(event_list) do
+    WeakAuras.ActivateAuraEnvironment(id);
     for triggernum, data in pairs(triggers) do
     if(data.trigger) then
       if(data.trigger(event, arg1, arg2, ...)) then
@@ -1861,18 +1914,19 @@ function WeakAuras.ScanEvents(event, arg1, arg2, ...)
       end
     end
     end
+    WeakAuras.ActivateAuraEnvironment(nil);
   end
   end
 end
 
 function WeakAuras.ActivateEvent(id, triggernum, data)
+  WeakAuras.SetEventDynamics(id, triggernum, data);
   if(data.numAdditionalTriggers > 0) then
     if(data.region:EnableTrigger(triggernum)) then
     end
   else
     data.region:Expand();
   end
-  WeakAuras.SetEventDynamics(id, triggernum, data);
 end
 
 function WeakAuras.SetEventDynamics(id, triggernum, data, ending)
@@ -1885,6 +1939,7 @@ function WeakAuras.SetEventDynamics(id, triggernum, data, ending)
     and db.displays[id].additional_triggers[triggernum].trigger;
   end
   if(trigger) then
+    WeakAuras.ActivateAuraEnvironment(id);
     if(data.duration) then
       if not(ending) then
         WeakAuras.ActivateEventTimer(id, triggernum, data.duration);
@@ -1898,6 +1953,8 @@ function WeakAuras.SetEventDynamics(id, triggernum, data, ending)
     else
       if(data.durationFunc) then
         local duration, expirationTime, static, inverse = data.durationFunc(trigger);
+        duration = type(duration) == "number" and duration or 0;
+        expirationTime = type(expirationTime) == "number" and expirationTime or 0;
         if(type(static) == "string") then
           static = data.durationFunc;
         end
@@ -1955,6 +2012,7 @@ function WeakAuras.SetEventDynamics(id, triggernum, data, ending)
       end
       WeakAuras.UpdateMouseoverTooltip(data.region)
     end
+    WeakAuras.ActivateAuraEnvironment(nil);
   else
   error("Event with id \""..id.." and trigger number "..triggernum.." tried to activate, but does not exist");
   end
@@ -2204,6 +2262,8 @@ loadFrame:RegisterEvent("PLAYER_REGEN_ENABLED");
 
 loadFrame:RegisterEvent("PLAYER_ROLES_ASSIGNED");
 loadFrame:RegisterEvent("PLAYER_DIFFICULTY_CHANGED");
+loadFrame:RegisterEvent("PET_BATTLE_OPENING_START");
+loadFrame:RegisterEvent("PET_BATTLE_CLOSE");
 
 loadFrame:SetScript("OnEvent", WeakAuras.ScanForLoads);
 
@@ -2712,6 +2772,8 @@ function WeakAuras.Delete(data)
     end
   end
   end
+  
+  animations[tostring(regions[id].region)] = nil
 
   WeakAuras.UnregisterCustomTextUpdates(regions[id].region)
   regions[id].region:SetScript("OnUpdate", nil);
@@ -2745,6 +2807,8 @@ function WeakAuras.Delete(data)
   end
 
   db.displays[id] = nil;
+
+  aura_environments[id] = nil;
 end
 
 function WeakAuras.Rename(data, newid)
@@ -2764,20 +2828,28 @@ function WeakAuras.Rename(data, newid)
 
   regions[newid] = regions[oldid];
   regions[oldid] = nil;
+
   auras[newid] = auras[oldid];
   auras[oldid] = nil;
+
+  loaded_auras[newid] = loaded_auras[oldid];
   loaded_auras[oldid] = nil;
+
   events[newid] = events[oldid];
   events[oldid] = nil;
-  loaded_events[oldid] = nil;
+
   loaded[newid] = loaded[oldid];
   loaded[oldid] = nil;
+
+  loaded_events[newid] = loaded_events[oldid];
+  loaded_events[oldid] = nil;
+
   db.displays[newid] = db.displays[oldid];
   db.displays[oldid] = nil;
 
   if(clones[oldid]) then
-  clones[newid] = clones[oldid];
-  clones[oldid] = nil;
+    clones[newid] = clones[oldid];
+    clones[oldid] = nil;
   end
 
   db.displays[newid].id = newid;
@@ -2790,6 +2862,9 @@ function WeakAuras.Rename(data, newid)
     end
   end
   end
+
+  aura_environments[newid] = aura_environments[oldid];
+  aura_environments[oldid] = nil;
 end
 
 function WeakAuras.Convert(data, newType)
@@ -3017,30 +3092,58 @@ function WeakAuras.Modernize(data)
       load[protoname] = nil;
     end
   end
+  
+  local fixEmberTrigger = function(trigger)
+    if (trigger.power and not trigger.ember) then
+      trigger.ember = tostring(tonumber(trigger.power) * 10);
+      trigger.use_ember = trigger.use_power
+      trigger.ember_operator = trigger.power_operator;
+      trigger.power = nil;
+      trigger.use_power = nil;
+      trigger.power_operator = nil;
+    end
+  end
 
   -- upgrade from singleselecting talents to multi select, see ticket 52
-  if (type(load.talent) == number) then
+  if (type(load.talent) == "number") then
     local talent = load.talent;
     load.talent = {};
     load.talent.single = talent;
     load.talent.multi = {}
   end
 
-  load.use_talent = load.use_talent and true or nil
-
   -- Add status/event information to triggers
   for triggernum=0,(data.numTriggers or 9) do
     local trigger, untrigger;
     if(triggernum == 0) then
       trigger = data.trigger;
+      untrigger = data.untrigger;
     elseif(data.additional_triggers and data.additional_triggers[triggernum]) then
       trigger = data.additional_triggers[triggernum].trigger;
+      untrigger = data.additional_triggers[triggernum].untrigger;
     end
+    -- Add status/event information to triggers
     if(trigger and trigger.event and (trigger.type == "status" or trigger.type == "event")) then
       local prototype = event_prototypes[trigger.event];
       if(prototype) then
         trigger.type = prototype.type;
       end
+    end
+    -- Convert ember trigger
+    if (trigger and trigger.type and trigger.event and trigger.type == "status" and trigger.event == "Burning Embers") then
+      fixEmberTrigger(trigger);
+      fixEmberTrigger(untrigger);
+    end
+
+    if (trigger and trigger.type and trigger.event and trigger.type == "status" and trigger.event == "Cooldown Progress (Spell)") then
+        if (not trigger.showOn) then
+            if (trigger.use_inverse) then
+                trigger.showOn = "showOnReady"
+            else
+                trigger.showOn = "showOnCooldown"
+            end
+            trigger.use_inverse = nil
+        end
     end
   end
 
@@ -3357,8 +3460,10 @@ function WeakAuras.pAdd(data)
       end
     end
 
+    data.init_completed = nil;
     data.load = data.load or {};
     data.actions = data.actions or {};
+    data.actions.init = data.actions.init or {};
     data.actions.start = data.actions.start or {};
     data.actions.finish = data.actions.finish or {};
     local loadFuncStr = WeakAuras.ConstructFunction(load_prototype, data, nil, nil, nil, "load")
@@ -3747,20 +3852,21 @@ function WeakAuras.SetRegion(data, cloneId)
           end
         end
         function region:Expand()
-          if(regionType == "model") then
-            region:EnsureModel();
-          end
-          region.toShow = true;
           region.toHide = false;
-          parent:EnsureTrays();
+
           if(WeakAuras.IsAnimating(region) == "finish" or region.groupHiding or (not region:IsVisible() or (cloneId and region.justCreated))) then
+            if(region.preShow) then
+              region:PreShow();
+            end
+            region.toShow = true;
+            parent:EnsureTrays();
             region.justCreated = nil;
             WeakAuras.PerformActions(data, "start");
             if not(WeakAuras.Animate("display", id, "start", data.animation.start, region, true, startMainAnimation, nil, cloneId)) then
-            startMainAnimation();
+              startMainAnimation();
             end
+            parent:ControlChildren();
           end
-          parent:ControlChildren();
         end
       elseif not(data.controlledChildren) then
         function region:Collapse()
@@ -3776,8 +3882,8 @@ function WeakAuras.SetRegion(data, cloneId)
           end
         end
         function region:Expand()
-          if(regionType == "model") then
-            region:EnsureModel()
+          if(region.PreShow) then
+            region:PreShow();
           end
           if(WeakAuras.IsAnimating(region) == "finish" or (not region:IsVisible() or (cloneId and region.justCreated))) then
             region.justCreated = nil;
@@ -3963,7 +4069,11 @@ function WeakAuras.PerformActions(data, type)
 
   if(actions.do_custom and actions.custom) then
     local func = WeakAuras.LoadFunction("return function() "..(actions.custom).." end");
-    func();
+    if func then
+      WeakAuras.ActivateAuraEnvironment(data.id);
+      func();
+      WeakAuras.ActivateAuraEnvironment(nil);
+    end
   end
 
   if(actions.do_glow and actions.glow_action and actions.glow_frame) then
@@ -3979,9 +4089,9 @@ function WeakAuras.PerformActions(data, type)
 
     if(glow_frame) then
       if(actions.glow_action == "show") then
-        ActionButton_ShowOverlayGlow(glow_frame);
+        WeakAuras_ShowOverlayGlow(glow_frame);
       elseif(actions.glow_action == "hide") then
-        ActionButton_HideOverlayGlow(glow_frame);
+        WeakAuras_HideOverlayGlow(glow_frame);
       end
     end
   end
@@ -4041,6 +4151,7 @@ function WeakAuras.UpdateAnimations()
     anim.progress = 1;
   end
   local progress = anim.inverse and (1 - anim.progress) or anim.progress;
+  WeakAuras.ActivateAuraEnvironment(anim.name);
   if(anim.translateFunc) then
     anim.region:ClearAllPoints();
     anim.region:SetPoint(anim.selfPoint, anim.anchor, anim.anchorPoint, anim.translateFunc(progress, anim.startX, anim.startY, anim.dX, anim.dY));
@@ -4063,6 +4174,7 @@ function WeakAuras.UpdateAnimations()
   if(anim.colorFunc and anim.region.Color) then
     anim.region:Color(anim.colorFunc(progress, anim.startR, anim.startG, anim.startB, anim.startA, anim.colorR, anim.colorG, anim.colorB, anim.colorA));
   end
+  WeakAuras.ActivateAuraEnvironment(nil);
   if(finished) then
     if not(anim.loop) then
       if(anim.startX) then
@@ -4392,6 +4504,8 @@ function WeakAuras.CanHaveDuration(data)
     WeakAuras.event_prototypes[data.trigger.event].init(data.trigger);
     end
     local current, maximum, custom = WeakAuras.event_prototypes[data.trigger.event].durationFunc(data.trigger);
+    current = type(current) ~= "number" and current or 0
+    maximum = type(maximum) ~= "number" and maximum or 0
     if(custom) then
     return {current = current, maximum = maximum};
     else
@@ -4994,6 +5108,20 @@ do
   end
 end
 
+do
+  local petFrame;
+  WeakAuras.frames["Pet Use Handler"] = petFrame;
+  function WeakAuras.WatchForPetDeath()
+  if not(petFrame) then
+    petFrame = CreateFrame("frame");
+    petFrame:RegisterUnitEvent("UNIT_HEALTH", "pet");
+    petFrame:SetScript("OnEvent", function()
+      WeakAuras.ScanEvents("PET_UPDATE");
+    end)
+  end
+  end
+end
+
 local FrameTimes = {};
 function WeakAuras.ProfileFrames(all)
   UpdateAddOnCPUUsage();
@@ -5139,4 +5267,11 @@ function WeakAuras.RemoveGTFO()
     end
     WeakAuras.event_types["GTFO"] = nil;
   end
+end
+
+function WeakAuras.EnsureString(input)
+   if (input == nil) then
+     return "";
+   end
+   return tostring(input);
 end

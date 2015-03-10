@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 652 2014-10-19T10:25:00Z
+    Revision: 665 2015-01-25T20:06:17Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -566,3 +566,4 @@ ARMORY_MAIL_LAST_VISIT                      = L["ARMORY_MAIL_LAST_VISIT"];
 ARMORY_MAIL_REMAINING                       = L["ARMORY_MAIL_REMAINING"];
 ARMORY_MAIL_ITEM_COUNT                      = L["ARMORY_MAIL_ITEM_COUNT"];
 ARMORY_BONUS_PATTERN                        = L["ARMORY_BONUS_PATTERN"];
+ARMORY_RECIPE_WARNING                       = L["ARMORY_RECIPE_WARNING"];

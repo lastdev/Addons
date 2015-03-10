@@ -1,9 +1,9 @@
 ## Interface: 60000
 ## Title: HealBot Hungarian Localization
-## Author: Strife
+## Author: Required
 ## Notes: HealBot Localization for huHU
 ## RequiredDeps: HealBot
 ## LoadOnDemand: 1
-## Version: 6.0.3.1
+## Version: 6.0.3.9
 
 HealBot_Localization.hu.lua

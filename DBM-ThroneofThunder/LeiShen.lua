@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(832, "DBM-ThroneofThunder", nil, 362)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 11 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(68397)--Diffusion Chain Conduit 68696, Static Shock Conduit 68398, Bouncing Bolt conduit 68698, Overcharge conduit 68697
 mod:SetEncounterID(1579)
 mod:SetZone()
@@ -28,11 +28,11 @@ local warnDiffusionChainSpread			= mod:NewAnnounce("warnDiffusionChainSpread", 4
 local warnOvercharged					= mod:NewTargetAnnounce(136295, 3)
 local warnBouncingBolt					= mod:NewSpellAnnounce(136361, 3)
 --Phase 1
-local warnDecapitate					= mod:NewTargetAnnounce(134912, 4, nil, mod:IsTank() or mod:IsHealer())
+local warnDecapitate					= mod:NewTargetAnnounce(134912, 4, nil, "Tank|Healer")
 local warnThunderstruck					= mod:NewCountAnnounce(135095, 3)--Target scanning seems to not work
 --Phase 2
 local warnPhase2						= mod:NewPhaseAnnounce(2)
-local warnFusionSlash					= mod:NewSpellAnnounce(136478, 4, nil, mod:IsTank() or mod:IsHealer())
+local warnFusionSlash					= mod:NewSpellAnnounce(136478, 4, nil, "Tank|Healer")
 local warnLightningWhip					= mod:NewCountAnnounce(136850, 3)
 local warnSummonBallLightning			= mod:NewCountAnnounce(136543, 3)--This seems to be VERY important to spread for. It spawns an orb for every person who takes damage. MUST range 6 this.
 local warnGorefiendsGrasp				= mod:NewCountAnnounce(108199, 1)
@@ -54,13 +54,13 @@ local specWarnOverchargedNear			= mod:NewSpecialWarningClose(136295)
 local specWarnBouncingBoltSoon			= mod:NewSpecialWarningPreWarn(136361, nil, 4)
 local specWarnBouncingBolt				= mod:NewSpecialWarningSpell(136361)
 --Phase 1
-local specWarnDecapitate				= mod:NewSpecialWarningRun(134912, nil, nil, nil, 3)
+local specWarnDecapitate				= mod:NewSpecialWarningRun("OptionVersion2", 134912, nil, nil, nil, 4)
 local specWarnDecapitateOther			= mod:NewSpecialWarningTaunt(134912)
 local specWarnThunderstruck				= mod:NewSpecialWarningCount(135095, nil, nil, nil, 2)
 local specWarnCrashingThunder			= mod:NewSpecialWarningMove(135150)
 local specWarnIntermissionSoon			= mod:NewSpecialWarning("specWarnIntermissionSoon")
 --Phase 2
-local specWarnFusionSlash				= mod:NewSpecialWarningSpell(136478, mod:IsTank(), nil, nil, 3)--Cast (394514 is debuff. We warn for cast though because it knocks you off platform if not careful)
+local specWarnFusionSlash				= mod:NewSpecialWarningSpell(136478, "Tank", nil, nil, 3)--Cast (394514 is debuff. We warn for cast though because it knocks you off platform if not careful)
 local specWarnLightningWhip				= mod:NewSpecialWarningCount(136850, nil, nil, nil, 2)
 local specWarnSummonBallLightning		= mod:NewSpecialWarningCount(136543)
 local specWarnOverloadedCircuits		= mod:NewSpecialWarningMove(137176)
@@ -82,11 +82,11 @@ local timerOverchargeCD					= mod:NewCDTimer(40, 136295)
 local timerBouncingBoltCD				= mod:NewCDTimer(40, 136361)
 local timerSuperChargedConduits			= mod:NewBuffActiveTimer(47, 137045)--Actually intermission only, but it fits best with conduits
 --Phase 1
-local timerDecapitateCD					= mod:NewCDTimer(50, 134912, nil, mod:IsTank())--Cooldown with some variation. 50-57ish or so.
+local timerDecapitateCD					= mod:NewCDTimer(50, 134912, nil, "Tank")--Cooldown with some variation. 50-57ish or so.
 local timerThunderstruck				= mod:NewCastTimer(4.8, 135095)--4 sec cast. + landing 0.8~1.3 sec.
 local timerThunderstruckCD				= mod:NewNextCountTimer(46, 135095)--Seems like an exact bar
 --Phase 2
-local timerFussionSlashCD				= mod:NewCDTimer(42.5, 136478, nil, mod:IsTank())
+local timerFussionSlashCD				= mod:NewCDTimer(42.5, 136478, nil, "Tank")
 local timerLightningWhip				= mod:NewCastTimer(4, 136850)
 local timerLightningWhipCD				= mod:NewNextCountTimer(45.5, 136850)--Also an exact bar
 local timerSummonBallLightningCD		= mod:NewNextCountTimer(45.5, 136543)--Seems exact on live, versus the variable it was on PTR
@@ -103,8 +103,6 @@ local countdownThunderstruck			= mod:NewCountdown(46, 135095)
 local countdownBouncingBolt				= mod:NewCountdown(40, 136361, nil, nil, nil, nil, true)--Pretty big deal on heroic, it's the one perminent ability you see in all strats. Should now play nice with thunderstruck with alternate voice code in ;)
 local countdownDiffusionChain			= mod:NewCountdown(40, 135991, nil, nil, nil, nil, true)
 local countdownStaticShockFades			= mod:NewCountdownFades(7, 135695, false)--May confuse with thundershock option default so off as default.
-
-local soundDecapitate					= mod:NewSound(134912)
 
 mod:AddBoolOption("RangeFrame")
 mod:AddBoolOption("OverchargeArrow")--On by default because the overcharge target is always pinned and unable to run away. You must always run to them, so everyone will want this arrow on
@@ -235,7 +233,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:IsDifficulty("lfr25") then return end
 		if args:IsPlayer() then
 			specWarnDecapitate:Show()
-			soundDecapitate:Play()
 		else
 			specWarnDecapitateOther:Show(args.destName)
 		end
@@ -270,7 +267,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				if inRange and inRange < 31 then
 					specWarnStaticShockNear:Show(args.destName)
 					if self.Options.StaticShockArrow then
-						DBM.Arrow:ShowRunTo(uId, 3, 3, 8)
+						DBM.Arrow:ShowRunTo(uId, 3, 8)
 					end
 				end
 			end
@@ -298,7 +295,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				if inRange and inRange < 31 then
 					specWarnOverchargedNear:Show(args.destName)
 					if self.Options.OverchargeArrow then
-						DBM.Arrow:ShowRunTo(uId, 3, 3, 6)
+						DBM.Arrow:ShowRunTo(uId, 3, 6)
 					end
 				end
 			end

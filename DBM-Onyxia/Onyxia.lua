@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Onyxia", "DBM-Onyxia")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(10184)
 mod:SetEncounterID(1084)
 mod:SetZone()
@@ -26,17 +26,16 @@ local warnPhase3			= mod:NewPhaseAnnounce(3)
 local warnPhase2Soon		= mod:NewPrePhaseAnnounce(2)
 local warnPhase3Soon		= mod:NewPrePhaseAnnounce(3)
 
-local specWarnBreath		= mod:NewSpecialWarningSpell(18584, nil, nil, nil, true)
-local specWarnBlastNova		= mod:NewSpecialWarningRun(68958, mod:IsMelee())
+local specWarnBreath		= mod:NewSpecialWarningSpell(18584, nil, nil, nil, 2)
+local specWarnBlastNova		= mod:NewSpecialWarningRun(68958, "Melee")
 
 local timerNextFlameBreath	= mod:NewCDTimer(20, 18435)--Breath she does on ground in frontal cone.
 local timerNextDeepBreath	= mod:NewCDTimer(35, 18584)--Range from 35-60seconds in between based on where she moves to.
 local timerBreath			= mod:NewCastTimer(8, 18584)
 local timerWhelps			= mod:NewTimer(105, "TimerWhelps", 10697)
 
-local soundBlastNova		= mod:NewSound(68958, mod:IsMelee())
-local soundDeepBreath 		= mod:NewSound(18584)
-local sndFunny				= mod:NewSound(nil, false, "SoundWTF")
+mod:AddBoolOption("SoundWTF", true, "sound")
+local sndFunny				= mod:NewSound(nil, true, false)--falsing OptionName makes it compatible
 
 local warned_preP2 = false
 local warned_preP3 = false
@@ -46,10 +45,11 @@ function mod:OnCombatStart(delay)
 	phase = 1
     warned_preP2 = false
 	warned_preP3 = false
-	sndFunny:Play("Interface\\AddOns\\DBM-Onyxia\\sounds\\dps-very-very-slowly.ogg")
-	sndFunny:Schedule(20, "Interface\\AddOns\\DBM-Onyxia\\sounds\\hit-it-like-you-mean-it.ogg")
-	sndFunny:Schedule(30, "Interface\\AddOns\\DBM-Onyxia\\sounds\\now-hit-it-very-hard-and-fast.ogg")
-	--Show correct achievement text
+	if self.Options.SoundWTF then
+		sndFunny:Play("Interface\\AddOns\\DBM-Onyxia\\sounds\\dps-very-very-slowly.ogg")
+		sndFunny:Schedule(20, "Interface\\AddOns\\DBM-Onyxia\\sounds\\hit-it-like-you-mean-it.ogg")
+		sndFunny:Schedule(30, "Interface\\AddOns\\DBM-Onyxia\\sounds\\now-hit-it-very-hard-and-fast.ogg")
+	end
 end
 
 function mod:Whelps()--Not right, need to fix
@@ -58,8 +58,10 @@ function mod:Whelps()--Not right, need to fix
 		warnWhelpsSoon:Schedule(95)
 		self:ScheduleMethod(105, "Whelps")
 		-- we replay sounds as long as p2 is running
-		sndFunny:Play("Interface\\AddOns\\DBM-Onyxia\\sounds\\i-dont-see-enough-dots.ogg")
-		sndFunny:Schedule(35, "Interface\\AddOns\\DBM-Onyxia\\sounds\\throw-more-dots.ogg")
+		if self.Options.SoundWTF then
+			sndFunny:Play("Interface\\AddOns\\DBM-Onyxia\\sounds\\i-dont-see-enough-dots.ogg")
+			sndFunny:Schedule(35, "Interface\\AddOns\\DBM-Onyxia\\sounds\\throw-more-dots.ogg")
+		end
 	end
 end
 
@@ -72,8 +74,10 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		timerNextDeepBreath:Start(77)
 		timerNextFlameBreath:Cancel()
 		self:ScheduleMethod(5, "Whelps")
-		sndFunny:Schedule(10, "Interface\\AddOns\\DBM-Onyxia\\sounds\\throw-more-dots.ogg")
-		sndFunny:Schedule(17, "Interface\\AddOns\\DBM-Onyxia\\sounds\\whelps-left-side-even-side-handle-it.ogg")
+		if self.Options.SoundWTF then
+			sndFunny:Schedule(10, "Interface\\AddOns\\DBM-Onyxia\\sounds\\throw-more-dots.ogg")
+			sndFunny:Schedule(17, "Interface\\AddOns\\DBM-Onyxia\\sounds\\whelps-left-side-even-side-handle-it.ogg")
+		end
 	elseif msg == L.YellP3 or msg:find(L.YellP3) then
 		phase = 3
 		warnPhase3:Show()
@@ -81,20 +85,20 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		timerWhelps:Stop()
 		timerNextDeepBreath:Stop()
 		warnWhelpsSoon:Cancel()
-		sndFunny:Schedule(20, "Interface\\AddOns\\DBM-Onyxia\\sounds\\now-hit-it-very-hard-and-fast.ogg")
-   		sndFunny:Schedule(35, "Interface\\AddOns\\DBM-Onyxia\\sounds\\i-dont-see-enough-dots.ogg")
-		sndFunny:Schedule(50, "Interface\\AddOns\\DBM-Onyxia\\sounds\\hit-it-like-you-mean-it.ogg")
-		sndFunny:Schedule(65, "Interface\\AddOns\\DBM-Onyxia\\sounds\\throw-more-dots.ogg")
+		if self.Options.SoundWTF then
+			sndFunny:Schedule(20, "Interface\\AddOns\\DBM-Onyxia\\sounds\\now-hit-it-very-hard-and-fast.ogg")
+   			sndFunny:Schedule(35, "Interface\\AddOns\\DBM-Onyxia\\sounds\\i-dont-see-enough-dots.ogg")
+			sndFunny:Schedule(50, "Interface\\AddOns\\DBM-Onyxia\\sounds\\hit-it-like-you-mean-it.ogg")
+			sndFunny:Schedule(65, "Interface\\AddOns\\DBM-Onyxia\\sounds\\throw-more-dots.ogg")
+		end
 	end
 end
 
 function mod:SPELL_CAST_START(args)
 	if args.spellId == 68958 then
         specWarnBlastNova:Show()
-		soundBlastNova:Play()
 	elseif args:IsSpellID(17086, 18351, 18564, 18576) or args:IsSpellID(18584, 18596, 18609, 18617) then	-- 1 ID for each direction
 		specWarnBreath:Show()
-		soundDeepBreath:Play()
 		timerBreath:Start()
 		timerNextDeepBreath:Start()
 	elseif args.spellId == 18435 then        -- Flame Breath (Ground phases)
@@ -103,13 +107,13 @@ function mod:SPELL_CAST_START(args)
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
-	if spellId == 68867 and destGUID == UnitGUID("player") then		-- Tail Sweep
+	if spellId == 68867 and destGUID == UnitGUID("player") and self.Options.SoundWTF then		-- Tail Sweep
 		sndFunny:Play("Interface\\AddOns\\DBM-Onyxia\\sounds\\watch-the-tail.ogg")
 	end
 end
 
 function mod:UNIT_DIED(args)
-	if self:IsInCombat() and args:IsPlayer() then
+	if self:IsInCombat() and args:IsPlayer() and self.Options.SoundWTF then
 		sndFunny:Play("Interface\\AddOns\\DBM-Onyxia\\sounds\\thats-a-fucking-fifty-dkp-minus.ogg")
 	end
 end

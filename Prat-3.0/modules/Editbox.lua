@@ -223,19 +223,21 @@ verwende stattdessen Alt+Hoch und Alt+Runter, um durch den Chatverlauf zu scroll
 	["Border texture"] = "边框纹理", -- Needs review
 	Bottom = "底部",
 	["Color border by channel"] = "频道颜色边框", -- Needs review
-	-- currently_broken_alt_behavior = "",
+	currently_broken_alt_behavior = [=[在现在WoW客户端里，方向键的行为已损坏，
+
+使用Alt+上和Alt+下来替代上下键浏览历史]=], -- Needs review
 	["Edge Size"] = "边缘尺寸", -- Needs review
 	Editbox = "输入框",
 	["Editbox options."] = "输入框选项",
 	Font = "字体", -- Needs review
 	["Free-floating"] = "自由浮动", -- Needs review
 	["Free-floating, Locked"] = "自由浮动，锁定", -- Needs review
-	-- ["Requires the Alt key to be held down to move the cursor in chat"] = "",
+	["Requires the Alt key to be held down to move the cursor in chat"] = "需要在聊天中按住Alt键移动光标", -- Needs review
 	["Select the font to use for the edit box"] = "选择输入框的字体", -- Needs review
 	["Sets the frame's border color to the color of your currently active channel"] = "设置边框颜色到你当前激活的频道颜色", -- Needs review
-	-- ["Tile Size"] = "",
+	["Tile Size"] = "平铺尺寸", -- Needs review
 	Top = "顶部",
-	-- ["Use Alt key for cursor movement"] = "",
+	["Use Alt key for cursor movement"] = "使用Alt键令光标移动", -- Needs review
 }
 
   )

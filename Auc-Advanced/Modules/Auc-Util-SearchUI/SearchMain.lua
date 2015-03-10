@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Search UI
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
-	Revision: $Id: SearchMain.lua 5498 2014-10-18 13:24:18Z brykrys $
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Revision: $Id: SearchMain.lua 5532 2014-12-10 15:57:25Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This Addon provides a Search tab on the AH interface, which allows
@@ -192,14 +192,8 @@ end
 if Enchantrix and Enchantrix.Storage and Enchantrix.Util then
 	resources.isEnchantrixLoaded = true
 else
-	local _, _, _, loadable, reason = GetAddOnInfo("Enchantrix") -- check it's actually possible to load
-	if AucAdvanced.HYBRID5 then
-		-- Hybrid mode for WoW5.4; remove once WoW6.0 goes live
-		loadable = loadable and reason
-	else
-		loadable = reason == "DEMAND_LOADED"
-	end
-	if loadable then
+	local _, _, _, _, reason = GetAddOnInfo("Enchantrix") -- check it's actually possible to load
+	if reason == "DEMAND_LOADED" then
 		Stubby.RegisterAddOnHook("Enchantrix", "Auc-Util-SearchUI", function()
 			if Enchantrix and Enchantrix.Storage and Enchantrix.Util then
 				Stubby.UnregisterAddOnHook("Enchantrix", "Auc-Util-SearchUI")
@@ -409,6 +403,8 @@ local settingDefaults = {
 	["columnwidth.CurBid"] = 85,
 	["columnwidth.Min/ea"] = 85,
 	["columnwidth.Cur/ea"] = 85,
+
+	["global.memorycleanup"] = false,
 }
 
 local function getDefault(setting)
@@ -443,7 +439,6 @@ local function isGlobalSetting(setting)
 end
 
 local function setter(setting, value)
-	AucAdvancedData.UtilSearchUI = nil -- Remove old settings
 	initData()
 
 	local db = currentSettings
@@ -481,7 +476,7 @@ local function setter(setting, value)
 	hasUnsaved = true
 	lib.UpdateSave()
 
-	AucAdvanced.SendProcessorMessage("configchanged", setting, value)
+	AucAdvanced.SendProcessorMessage("configchanged", setting, value, setting, "searchui")
 	lib.NotifyCallbacks('config', 'changed', setting, value)
 end
 
@@ -1520,6 +1515,12 @@ function private.MakeGuiConfig()
 	gui:MakeScrollable(id)
 	gui:AddControl(id, "Header",           0,    "Setup global options")
 
+	gui:AddControl(id, "Subhead",          0,    "Integration")
+	gui:AddControl(id, "Checkbox",          0, 1, "global.createtab", "Create tab in auction house (requires restart)")
+
+	gui:AddControl(id, "Subhead", 0, "Experimental settings")
+	gui:AddControl(id, "Checkbox", 0, 1, "global.memorycleanup", "Additional memory cleanup while searching")
+
 	gui:AddControl(id, "Subhead",          0,    "Tooltip")
 	gui:AddControl(id, "Checkbox",          0, 1, "tooltiphelp.show", "Show tooltip help over buttons")
 	gui:AddControl(id, "Checkbox",         0, 1, "debug.show", "Show debug line in tooltip for auctions")
@@ -1529,9 +1530,6 @@ function private.MakeGuiConfig()
 			gui:AddTip(id, "Show a debug line in the tooltip over auctions for searcher: "..name)
 		end
 	end
-
-	gui:AddControl(id, "Subhead",          0,    "Integration")
-	gui:AddControl(id, "Checkbox",          0, 1, "global.createtab", "Create tab in auction house (requires restart)")
 
 	gui.frame.purchase = CreateFrame("Button", nil, gui.frame, "OptionsButtonTemplate")
 	gui.frame.purchase:SetPoint("BOTTOMLEFT", gui, "BOTTOMLEFT", 170, 35)
@@ -2080,8 +2078,15 @@ local PerformSearch = function()
 	gui:ClearFocus()
 	private.removeall() --clear the results table
 	gui.frame.progressbar.text:SetText("AucAdv SearchUI: Searching |cffffcc19"..gui.config.selectedTab)
+	gui.frame.progressbar:SetValue(0)
 	gui.frame.progressbar:Show()
 	coroutine.yield() -- allow progress bar to be displayed
+
+	local memorycleanup = lib.GetSetting("global.memorycleanup")
+	if memorycleanup then
+		collectgarbage()
+		coroutine.yield()
+	end
 
 	local image = AucAdvanced.Scan.GetImageCopy() --GetImageCopy provides a table that can be used in coroutines
 	local imagesize = #image
@@ -2100,6 +2105,7 @@ local PerformSearch = function()
 	local lastTime = time()
 	local repaintSheet = false
 	local nextRepaint = 0	-- no delay for first repaint
+	local nextMemory = GetTime() + 2
 
 	private.isSearching = true
 	AucAdvanced.SendProcessorMessage("searchbegin", searcherName)
@@ -2118,6 +2124,12 @@ local PerformSearch = function()
 
 			coroutine.yield()
 
+			if memorycleanup and GetTime() > nextMemory then
+				collectgarbage()
+				coroutine.yield()
+				nextMemory = GetTime() + 2
+			end
+
 			nextPause = debugprofilestop() + processingTime
 			lastTime = time()
 
@@ -2130,12 +2142,18 @@ local PerformSearch = function()
 			repaintSheet = true
 		end
 	end
+	image = nil
 
 	private.repaintSheet()
 
 	private.isSearching = false
 	empty(SettingCache)
 	gui.frame.progressbar:Hide()
+	if memorycleanup then
+		coroutine.yield()
+		collectgarbage()
+		coroutine.yield()
+	end
 	AucAdvanced.SendProcessorMessage("searchcomplete", searcherName)
 	lib.NotifyCallbacks("search", "complete", searcherName)
 end
@@ -2191,4 +2209,4 @@ end
 private.updater = CreateFrame("Frame", nil, UIParent)
 private.updater:SetScript("OnUpdate", private.OnUpdate)
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5498 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearchMain.lua $", "$Rev: 5532 $")

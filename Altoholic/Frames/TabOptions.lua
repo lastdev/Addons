@@ -124,6 +124,20 @@ local support = {
 
 -- this content will be subject to frequent changes, do not bother translating it !!
 local whatsnew = {
+	{	name = "6.0.004 Changes",
+		bulletedList = {
+			"A massive code cleanup was performed in the XML frames",
+			"Many options were not saved correctly, this has been fixed, as a result, these options have been reset (tooltip options, etc..).",
+			"This options bug had, among others, impact on the account sharing feature that couldn't be launched anymore, Thanks Elfana for helping me on this !",
+			"DataStore_Garrisons: Fixed scanning collection of garrison cache resources. It could occasionally be wrongly reset when getting resources from other sources.",
+			"DataStore_Garrisons: Followers are now stored based on their id's, instead of their names. You will have to check your missions' table again with your alts to update follower information.",
+			"DataStore_Garrisons: added a slider to configure when the reporting for uncollected resources should happen (350 -> 475).",
+			"Grids -> Garrison Followers: added a drop down list to filter followers on whether they are collected, not collected, and if they were recruited at the inn or not.",
+			"Garrison blueprints now appear in red if already known, I applied the same rule as for BOP recipes from Garrison trainers, thus any BOP item with 'Already known' will appear red in a merchant frame.",
+			"DataStore_Agenda: fixed another Lua error at logon introduced with previous fix. (Thanks again SpareSimian!)",
+			"DataStore_Mails: added an option to report mails about to expire to the chat frame, in addition to the already existing dialog box. This will allow you to see on which alt the mail can be found. Please keep me informed if you detect real bugs thanks to this.",
+		},
+	},
 	{	name = "6.0.003 Changes",
 		bulletedList = {
 			"DataStore_Garrisons: fixed a bug where saved buildings are deleted from the DB.",
@@ -218,15 +232,15 @@ function addon:SetOption(name, value)
 end
 
 function addon:ToggleOption(frame, option)
+	local value
+	
 	if frame then
-		addon:SetOption(option, (frame:GetChecked()) and 1 or 0)
+		value = frame:GetChecked() and true or false
 	else
-		if addon:GetOption(option) == 1 then
-			addon:SetOption(option, 0)
-		else
-			addon:SetOption(option, 1)
-		end
+		value = not addon:GetOption(option)
 	end
+	
+	addon:SetOption(option, value)
 end
 
 function addon:SetupOptions()
@@ -255,17 +269,18 @@ function addon:SetupOptions()
 	whatsnew = nil
 	
 	local value
+	local f = AltoholicGeneralOptions
 	
 	-- ** General **
-	AltoholicGeneralOptions_Title:SetText(TEAL..format("%s %s", addonName, addon.Version))
-	AltoholicGeneralOptions_RestXPModeText:SetText(L["Max rest XP displayed as 150%"])
-	AltoholicGeneralOptions_GuildBankAutoUpdateText:SetText(L["Automatically authorize guild bank updates"])
-	AltoholicGeneralOptions_GuildBankAutoUpdate.tooltip = format("%s%s%s",
+	f.Title:SetText(TEAL..format("%s %s", addonName, addon.Version))
+	f.ShowRestXP150pc.Text:SetText(L["Max rest XP displayed as 150%"])
+	f.BankAutoUpdate.Text:SetText(L["Automatically authorize guild bank updates"])
+	f.BankAutoUpdate.tooltip = format("%s%s%s",
 		L["|cFFFFFFFFWhen |cFF00FF00enabled|cFFFFFFFF, this option will allow other Altoholic users\nto update their guild bank information with yours automatically.\n\n"],
 		L["When |cFFFF0000disabled|cFFFFFFFF, your confirmation will be\nrequired before sending any information.\n\n"],
 		L["Security hint: disable this if you have officer rights\non guild bank tabs that may not be viewed by everyone,\nand authorize requests manually"])
 	
-	AltoholicGeneralOptions_ClampWindowToScreenText:SetText(L["Clamp window to screen"])
+	f.ClampWindowToScreen.Text:SetText(L["Clamp window to screen"])
 	
 	L["|cFFFFFFFFWhen |cFF00FF00enabled|cFFFFFFFF, this option will allow other Altoholic users\nto update their guild bank information with yours automatically.\n\n"] = nil
 	L["When |cFFFF0000disabled|cFFFFFFFF, your confirmation will be\nrequired before sending any information.\n\n"] = nil
@@ -287,7 +302,8 @@ function addon:SetupOptions()
 	AltoholicGeneralOptions_SliderRadiusText:SetText(format("%s (%s)", L["Minimap Icon Radius"], value))
 	L["Move to change the radius of the minimap icon"] = nil
 	
-	AltoholicGeneralOptions_ShowMinimapText:SetText(L["Show Minimap Icon"])
+	f = AltoholicGeneralOptions
+	f.ShowMinimapIcon.Text:SetText(L["Show Minimap Icon"])
 	L["Show Minimap Icon"] = nil
 	
 	value = AltoholicGeneralOptions_SliderAlpha:GetValue()
@@ -307,26 +323,25 @@ function addon:SetupOptions()
 	AltoholicMemoryOptions_AddonsList:SetText(list)
 	
 	-- ** Search **
-	AltoholicSearchOptions_SearchAutoQueryText:SetText(L["AutoQuery server |cFFFF0000(disconnection risk)"])
-	AltoholicSearchOptions_SearchAutoQuery.tooltip = format("%s%s%s%s",
+	f = AltoholicSearchOptions
+	f.ItemInfoAutoQuery.Text:SetText(L["AutoQuery server |cFFFF0000(disconnection risk)"])
+	f.ItemInfoAutoQuery.tooltip = format("%s%s%s%s",
 		L["|cFFFFFFFFIf an item not in the local item cache\nis encountered while searching loot tables,\nAltoholic will attempt to query the server for 5 new items.\n\n"],
 		L["This will gradually improve the consistency of the searches,\nas more items are available in the item cache.\n\n"],
 		L["There is a risk of disconnection if the queried item\nis a loot from a high level dungeon.\n\n"],
 		L["|cFF00FF00Disable|r to avoid this risk"])	
 	
-	AltoholicSearchOptions_SortDescendingText:SetText(L["Sort loots in descending order"])
-	AltoholicSearchOptions_IncludeNoMinLevelText:SetText(L["Include items without level requirement"])
-	AltoholicSearchOptions_IncludeMailboxText:SetText(L["Include mailboxes"])
-	AltoholicSearchOptions_IncludeGuildBankText:SetText(L["Include guild bank(s)"])
-	AltoholicSearchOptions_IncludeRecipesText:SetText(L["Include known recipes"])
-	AltoholicSearchOptions_IncludeGuildSkillsText:SetText(L["Include guild members' professions"])
+	f.SortDescending.Text:SetText(L["Sort loots in descending order"])
+	f.IncludeNoMinLevel.Text:SetText(L["Include items without level requirement"])
+	f.IncludeMailboxItems.Text:SetText(L["Include mailboxes"])
+	f.IncludeGuildBankItems.Text:SetText(L["Include guild bank(s)"])
+	f.IncludeKnownRecipes.Text:SetText(L["Include known recipes"])
 	L["AutoQuery server |cFFFF0000(disconnection risk)"] = nil
 	L["Sort loots in descending order"] = nil
 	L["Include items without level requirement"] = nil
 	L["Include mailboxes"] = nil
 	L["Include guild bank(s)"] = nil
 	L["Include known recipes"] = nil
-	L["Include guild members' professions"] = nil
 	
 	-- ** Mail **
 	value = AltoholicMailOptions_SliderTimeToNextWarning:GetValue()
@@ -334,21 +349,26 @@ function addon:SetupOptions()
 	AltoholicMailOptions_SliderTimeToNextWarningLow:SetText("1");
 	AltoholicMailOptions_SliderTimeToNextWarningHigh:SetText("12"); 
 	AltoholicMailOptions_SliderTimeToNextWarningText:SetText(format("%s (%s)", L["TIME_TO_NEXT_WARNING_TEXT"], format(D_HOURS, value)))
-	AltoholicMailOptions_GuildMailWarningText:SetText(L["New mail notification"])
-	L["New mail notification"] = nil
-		
-	AltoholicMailOptions_GuildMailWarning.tooltip = format("%s",
-		L["Be informed when a guildmate sends a mail to one of my alts.\n\nMail content is directly visible without having to reconnect the character"])
 
-	AltoholicMailOptions_NameAutoCompleteText:SetText("Auto-complete recipient name" )
-		
-	AltoholicMiscOptions_AHColorCodingText:SetText(L["Use color-coding for recipes at the AH"])
-	AltoholicMiscOptions_VendorColorCodingText:SetText(L["Use color-coding for recipes at vendors"])
-		
-		
+	f = AltoholicMailOptions
+	f.GuildMailWarning.Text:SetText(L["New mail notification"])
+	f.GuildMailWarning.tooltip = format("%s",	L["Be informed when a guildmate sends a mail to one of my alts.\n\nMail content is directly visible without having to reconnect the character"])
+	f.AutoCompleteRecipient.Text:SetText("Auto-complete recipient name" )
+	L["New mail notification"] = nil
+
+	f = AltoholicMiscOptions
+	f.AHColorCoding.Text:SetText(L["Use color-coding for recipes at the AH"])
+	f.VendorColorCoding.Text:SetText(L["Use color-coding for recipes at vendors"])
+				
 	-- ** Account Sharing **
-	AltoholicAccountSharingOptions_AccSharingCommText:SetText(L["Account Sharing Enabled"])
-	AltoholicAccountSharingOptions_AccSharingComm.tooltip = format("%s%s%s%s",
+	f = AltoholicAccountSharingOptions
+	f.Text1:SetText(WHITE.."Authorizations")
+	f.Text2:SetText(WHITE..L["Character"])
+	f.IconNever:SetText("\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t")
+	f.IconAsk:SetText("\124TInterface\\RaidFrame\\ReadyCheck-Waiting:14\124t")
+	f.IconAuto:SetText("\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t")
+	f.IsEnabled.Text:SetText(L["Account Sharing Enabled"])
+	f.IsEnabled.tooltip = format("%s%s%s%s",
 		L["|cFFFFFFFFWhen |cFF00FF00enabled|cFFFFFFFF, this option will allow other Altoholic users\nto send you account sharing requests.\n"],
 		L["Your confirmation will still be required any time someone requests your information.\n\n"],
 		L["When |cFFFF0000disabled|cFFFFFFFF, all requests will be automatically rejected.\n\n"],
@@ -360,17 +380,12 @@ function addon:SetupOptions()
 	L["When |cFFFF0000disabled|cFFFFFFFF, all requests will be automatically rejected.\n\n"] = nil
 	L["Security hint: Only enable this when you actually need to transfer data,\ndisable otherwise"] = nil
 
-	AltoholicAccountSharingOptionsText1:SetText(WHITE.."Authorizations")
-	AltoholicAccountSharingOptionsText2:SetText(WHITE..L["Character"])
 	AltoholicAccountSharingOptions_InfoButton.tooltip = format("%s\n%s\n\n%s", 
 	
 	WHITE.."This list allows you to automate responses to account sharing requests.",
 	"You can choose to automatically accept or reject requests, or be asked when a request comes in.",
 	"If account sharing is totally disabled, this list will be ignored, and all requests will be rejected." )
 	
-	AltoholicAccountSharingOptionsIconNever:SetText("\124TInterface\\RaidFrame\\ReadyCheck-NotReady:14\124t")
-	AltoholicAccountSharingOptionsIconAsk:SetText("\124TInterface\\RaidFrame\\ReadyCheck-Waiting:14\124t")
-	AltoholicAccountSharingOptionsIconAuto:SetText("\124TInterface\\RaidFrame\\ReadyCheck-Ready:14\124t")
 	
 	-- ** Shared Content **
 	AltoholicSharedContentText1:SetText(WHITE.."Shared Content")
@@ -380,19 +395,20 @@ function addon:SetupOptions()
 	
 	
 	-- ** Tooltip **
-	AltoholicTooltipOptionsSourceText:SetText(L["Show item source"])
-	AltoholicTooltipOptionsCountText:SetText(L["Show item count per character"])
-	AltoholicTooltipOptionsTotalText:SetText(L["Show total item count"])
-	AltoholicTooltipOptionsRecipeInfoText:SetText(L["Show recipes already known/learnable by"])
-	AltoholicTooltipOptionsPetInfoText:SetText(L["Show pets already known/learnable by"])
-	AltoholicTooltipOptionsItemIDText:SetText(L["Show item ID and item level"])
-	AltoholicTooltipOptionsGatheringNodeText:SetText(L["Show counters on gathering nodes"])
-	AltoholicTooltipOptionsCrossFactionText:SetText(L["Show counters for both factions"])
-	AltoholicTooltipOptionsMultiAccountText:SetText(L["Show counters for all accounts"])
-	AltoholicTooltipOptionsMergedRealmsText:SetText(L["Show counters for connected realms"])
-	AltoholicTooltipOptionsGuildBankText:SetText(L["Show guild bank count"])
-	AltoholicTooltipOptionsGuildBankCountText:SetText(L["Include guild bank count in the total count"])
-	AltoholicTooltipOptionsGuildBankCountPerTabText:SetText(L["Detailed guild bank count"])
+	f = AltoholicTooltipOptions
+	f.ShowItemSource.Text:SetText(L["Show item source"])
+	f.ShowItemCount.Text:SetText(L["Show item count per character"])
+	f.ShowTotalItemCount.Text:SetText(L["Show total item count"])
+	f.ShowKnownRecipes.Text:SetText(L["Show recipes already known/learnable by"])
+	f.ShowKnownPets.Text:SetText(L["Show pets already known/learnable by"])
+	f.ShowItemID.Text:SetText(L["Show item ID and item level"])
+	f.ShowGatheringNodesCount.Text:SetText(L["Show counters on gathering nodes"])
+	f.ShowCrossFactionCount.Text:SetText(L["Show counters for both factions"])
+	f.ShowMergedRealmsCount.Text:SetText(L["Show counters for connected realms"])
+	f.ShowAllAccountsCount.Text:SetText(L["Show counters for all accounts"])
+	f.ShowGuildBankCount.Text:SetText(L["Show guild bank count"])
+	f.IncludeGuildBankInTotal.Text:SetText(L["Include guild bank count in the total count"])
+	f.ShowGuildBankCountPerTab.Text:SetText(L["Detailed guild bank count"])
 	L["Show item source"] = nil
 	L["Show item count per character"] = nil
 	L["Show total item count"] = nil
@@ -407,9 +423,10 @@ function addon:SetupOptions()
 	L["Include guild bank count in the total count"] = nil
 	
 	-- ** Calendar **
-	AltoholicCalendarOptionsFirstDayText:SetText(L["Week starts on Monday"])
-	AltoholicCalendarOptionsDialogBoxText:SetText(L["Display warnings in a dialog box"])
-	AltoholicCalendarOptionsDisableWarningsText:SetText(L["Disable warnings"])
+	f = AltoholicCalendarOptions
+	f.WeekStartsOnMonday.Text:SetText(L["Week starts on Monday"])
+	f.UseDialogBoxForWarnings.Text:SetText(L["Display warnings in a dialog box"])
+	f.WarningsEnabled.Text:SetText(L["Disable warnings"])
 	L["Week starts on Monday"] = nil
 	L["Warn %d minutes before an event starts"] = nil
 	L["Display warnings in a dialog box"] = nil
@@ -426,61 +443,70 @@ end
 function addon:RestoreOptionsToUI()
 	local O = Altoholic.db.global.options
 	
-	AltoholicGeneralOptions_RestXPMode:SetChecked(O.RestXPMode)
-	AltoholicGeneralOptions_GuildBankAutoUpdate:SetChecked(O.GuildBankAutoUpdate)
-	AltoholicGeneralOptions_ClampWindowToScreen:SetChecked(O.ClampWindowToScreen)
+	local f = AltoholicGeneralOptions
+	
+	f.ShowRestXP150pc:SetChecked(O["UI.Tabs.Summary.ShowRestXP150pc"])
+	f.BankAutoUpdate:SetChecked(O["UI.Tabs.Guild.BankAutoUpdate"])
+	f.ClampWindowToScreen:SetChecked(O["UI.ClampWindowToScreen"])
 
-	AltoholicGeneralOptions_SliderAngle:SetValue(O.MinimapIconAngle)
-	AltoholicGeneralOptions_SliderRadius:SetValue(O.MinimapIconRadius)
-	AltoholicGeneralOptions_ShowMinimap:SetChecked(O.ShowMinimap)
-	AltoholicGeneralOptions_SliderScale:SetValue(O.UIScale)
-	AltoholicFrame:SetScale(O.UIScale)
-	AltoholicGeneralOptions_SliderAlpha:SetValue(O.UITransparency)
+	AltoholicGeneralOptions_SliderAngle:SetValue(O["UI.Minimap.IconAngle"])
+	AltoholicGeneralOptions_SliderRadius:SetValue(O["UI.Minimap.IconRadius"])
+	f.ShowMinimapIcon:SetChecked(O["UI.Minimap.ShowIcon"])
+	AltoholicGeneralOptions_SliderScale:SetValue(O["UI.Scale"])
+	AltoholicFrame:SetScale(O["UI.Scale"])
+	AltoholicGeneralOptions_SliderAlpha:SetValue(O["UI.Transparency"])
 
 	-- set communication handlers according to user settings.
-	if O.AccSharingHandlerEnabled == 1 then
+	if O["UI.AccountSharing.IsEnabled"] then
 		Altoholic.Comm.Sharing:SetMessageHandler("ActiveHandler")
 	else
 		Altoholic.Comm.Sharing:SetMessageHandler("EmptyHandler")
 	end
 	
-	AltoholicSearchOptions_SearchAutoQuery:SetChecked(O.SearchAutoQuery)
-	AltoholicSearchOptions_SortDescending:SetChecked(O.SortDescending)
-	AltoholicSearchOptions_IncludeNoMinLevel:SetChecked(O.IncludeNoMinLevel)
-	AltoholicSearchOptions_IncludeMailbox:SetChecked(O.IncludeMailbox)
-	AltoholicSearchOptions_IncludeGuildBank:SetChecked(O.IncludeGuildBank)
-	AltoholicSearchOptions_IncludeRecipes:SetChecked(O.IncludeRecipes)
-	AltoholicSearchOptions_IncludeGuildSkills:SetChecked(O.IncludeGuildSkills)
-	AltoholicSearchOptionsLootInfo:SetText(GREEN .. O.TotalLoots .. "|r " .. L["Loots"] .. " / "
-										.. GREEN .. O.UnknownLoots .. "|r " .. L["Unknown"])
+	
+	f = AltoholicSearchOptions
+	
+	f.ItemInfoAutoQuery:SetChecked(O["UI.Tabs.Search.ItemInfoAutoQuery"])
+	f.SortDescending:SetChecked(O["UI.Tabs.Search.SortDescending"])
+	f.IncludeNoMinLevel:SetChecked(O["UI.Tabs.Search.IncludeNoMinLevel"])
+	f.IncludeMailboxItems:SetChecked(O["UI.Tabs.Search.IncludeMailboxItems"])
+	f.IncludeGuildBankItems:SetChecked(O["UI.Tabs.Search.IncludeGuildBankItems"])
+	f.IncludeKnownRecipes:SetChecked(O["UI.Tabs.Search.IncludeKnownRecipes"])
 
-										
+	AltoholicSearchOptionsLootInfo:SetText(GREEN .. O.TotalLoots .. "|r " .. L["Loots"] .. " / " .. GREEN .. O.UnknownLoots .. "|r " .. L["Unknown"])
+	AltoholicSearchOptionsLootInfo:SetText(format("%s%s|r %s / %s%s|r %s", GREEN, O.TotalLoots, L["Loots"], GREEN, O.UnknownLoots, L["Unknown"]))
+	
+	f = AltoholicMailOptions
 	AltoholicMailOptions_SliderTimeToNextWarning:SetValue(O["UI.Mail.TimeToNextWarning"])
-	AltoholicMailOptions_GuildMailWarning:SetChecked(O.GuildMailWarning)
-	AltoholicMailOptions_NameAutoComplete:SetChecked(O.NameAutoComplete)
-
-	AltoholicMiscOptions_AHColorCoding:SetChecked(O["UI.AHColorCoding"])
-	AltoholicMiscOptions_VendorColorCoding:SetChecked(O["UI.VendorColorCoding"])
+	f.GuildMailWarning:SetChecked(O["UI.Mail.GuildMailWarning"])
+	f.AutoCompleteRecipient:SetChecked(O["UI.Mail.AutoCompleteRecipient"])
 	
-	AltoholicAccountSharingOptions_AccSharingComm:SetChecked(O.AccSharingHandlerEnabled)
+	f = AltoholicMiscOptions
+	f.AHColorCoding:SetChecked(O["UI.AHColorCoding"])
+	f.VendorColorCoding:SetChecked(O["UI.VendorColorCoding"])
 	
-	AltoholicTooltipOptionsSource:SetChecked(O.TooltipSource)
-	AltoholicTooltipOptionsCount:SetChecked(O.TooltipCount)
-	AltoholicTooltipOptionsTotal:SetChecked(O.TooltipTotal)
-	AltoholicTooltipOptionsGuildBank:SetChecked(O.TooltipGuildBank)
-	AltoholicTooltipOptionsGuildBankCount:SetChecked(O.TooltipGuildBankCount)
-	AltoholicTooltipOptionsGuildBankCountPerTab:SetChecked(O.TooltipGuildBankCountPerTab)
-	AltoholicTooltipOptionsRecipeInfo:SetChecked(O.TooltipRecipeInfo)
-	AltoholicTooltipOptionsPetInfo:SetChecked(O.TooltipPetInfo)
-	AltoholicTooltipOptionsItemID:SetChecked(O.TooltipItemID)
-	AltoholicTooltipOptionsGatheringNode:SetChecked(O.TooltipGatheringNode)
-	AltoholicTooltipOptionsCrossFaction:SetChecked(O.TooltipCrossFaction)
-	AltoholicTooltipOptionsMultiAccount:SetChecked(O.TooltipMultiAccount)
-	AltoholicTooltipOptionsMergedRealms:SetChecked(O.TooltipConnectedRealms)
+	f = AltoholicAccountSharingOptions
+	f.IsEnabled:SetChecked(O["UI.AccountSharing.IsEnabled"])
 	
-	AltoholicCalendarOptionsFirstDay:SetChecked(O.WeekStartsMonday)
-	AltoholicCalendarOptionsDialogBox:SetChecked(O.WarningDialogBox)
-	AltoholicCalendarOptionsDisableWarnings:SetChecked(O.DisableWarnings)
+	f = AltoholicTooltipOptions
+	f.ShowItemSource:SetChecked(O["UI.Tooltip.ShowItemSource"])
+	f.ShowItemCount:SetChecked(O["UI.Tooltip.ShowItemCount"])
+	f.ShowTotalItemCount:SetChecked(O["UI.Tooltip.ShowTotalItemCount"])
+	f.ShowKnownRecipes:SetChecked(O["UI.Tooltip.ShowKnownRecipes"])
+	f.ShowKnownPets:SetChecked(O["UI.Tooltip.ShowKnownPets"])
+	f.ShowItemID:SetChecked(O["UI.Tooltip.ShowItemID"])
+	f.ShowGatheringNodesCount:SetChecked(O["UI.Tooltip.ShowGatheringNodesCount"])
+	f.ShowCrossFactionCount:SetChecked(O["UI.Tooltip.ShowCrossFactionCount"])
+	f.ShowMergedRealmsCount:SetChecked(O["UI.Tooltip.ShowMergedRealmsCount"])
+	f.ShowAllAccountsCount:SetChecked(O["UI.Tooltip.ShowAllAccountsCount"])
+	f.ShowGuildBankCount:SetChecked(O["UI.Tooltip.ShowGuildBankCount"])
+	f.IncludeGuildBankInTotal:SetChecked(O["UI.Tooltip.IncludeGuildBankInTotal"])
+	f.ShowGuildBankCountPerTab:SetChecked(O["UI.Tooltip.ShowGuildBankCountPerTab"])
+	
+	f = AltoholicCalendarOptions
+	f.WeekStartsOnMonday:SetChecked(O["UI.Calendar.WeekStartsOnMonday"])
+	f.UseDialogBoxForWarnings:SetChecked(O["UI.Calendar.UseDialogBoxForWarnings"])
+	f.WarningsEnabled:SetChecked(O["UI.Calendar.WarningsEnabled"])
 end
 
 function addon:UpdateMinimapIconCoords()
@@ -496,13 +522,13 @@ function addon:UpdateMinimapIconCoords()
 		iconAngle = iconAngle + 360
 	end
 	
-	addon:SetOption("MinimapIconAngle", iconAngle)
+	addon:SetOption("UI.Minimap.IconAngle", iconAngle)
 	AltoholicGeneralOptions_SliderAngle:SetValue(iconAngle)
 end
 
 function addon:MoveMinimapIcon()
-	local radius = addon:GetOption("MinimapIconRadius")
-	local angle = addon:GetOption("MinimapIconAngle")
+	local radius = addon:GetOption("UI.Minimap.IconRadius")
+	local angle = addon:GetOption("UI.Minimap.IconAngle")
 	
 	AltoholicMinimapButton:SetPoint( "TOPLEFT", "Minimap", "TOPLEFT", 54 - (radius * cos(angle)), (radius * sin(angle)) - 55 );
 end

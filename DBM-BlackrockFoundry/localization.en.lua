@@ -5,15 +5,6 @@ local L
 ---------------
 L= DBM:GetModLocalization(1161)
 
-L:SetWarningLocalization({
-})
-
-L:SetOptionLocalization({
-})
-
-L:SetMiscLocalization({
-})
-
 ---------------------------
 -- Oregorger, The Devourer --
 ---------------------------
@@ -24,10 +15,35 @@ L= DBM:GetModLocalization(1202)
 ---------------------------
 L= DBM:GetModLocalization(1154)
 
+L:SetWarningLocalization({
+	warnRegulators		= "Heat Regulator remaining: %d",
+	warnBlastFrequency	= "Blast frequency increased: Approx Every %d sec"
+})
+
+L:SetOptionLocalization({
+	warnRegulators		= "Announce how many Heat Regulator remain",
+	warnBlastFrequency	= "Announce when $spell:155209 frequency increased",
+	VFYellType			= "Set yell type for Volatile Fire (Mythic difficulty only)",
+	Countdown			= "Countdown until expires",
+	Apply				= "Only applied"
+})
+
+L:SetMiscLocalization({
+	heatRegulator		= "Heat Regulator"
+})
+
 ------------------
 -- Hans'gar And Franzok --
 ------------------
 L= DBM:GetModLocalization(1155)
+
+L:SetTimerLocalization({
+	timerStamperDodge			= DBM_CORE_AUTO_TIMER_TEXTS.nextcount:format((GetSpellInfo(160582)))
+})
+
+L:SetOptionLocalization({
+	timerStamperDodge			= DBM_CORE_AUTO_TIMER_OPTIONS.nextcount:format(160582)
+})
 
 --------------
 -- Flamebender Ka'graz --
@@ -49,41 +65,36 @@ L= DBM:GetModLocalization(1122)
 --------------------------
 L= DBM:GetModLocalization(1147)
 
+L:SetWarningLocalization({
+	specWarnSplitSoon	= "Raid split in 10"
+})
+
+L:SetOptionLocalization({
+	specWarnSplitSoon	= "Show special warning 10 seconds before raid split"
+})
+
 L:SetMiscLocalization({
-	--Might not even need to use yells if my npc target works in all languages.
-	--depends on if "Train" is boss target in all languages and if that spellid hack also matches it in all languages.
-	--At the very least this helps read transcriptor logs :)
-	cannonTrain		= "Cannon",
-	threeTrains		= " 3 Random Lanes",
-	helperMessage	= "It is recommended you use 'Thogar Assist' in combination with DBM on this boss. Available from: http://wow.curseforge.com/addons/thogar-assist/",
-	commandTrain1	= "The command car is here.",
-	commandTrain2	= "Here comes the brass.",
-	moreThanOne1	= "Trains inbound!",
-	moreThanOne2	= "Double-time.",
-	moreThanOne3	= "Clear the tracks!",
-	cannon1			= "Here's my artillery.",
-	cannon2			= "Here come the boomers!",
-	driveBy1		= "Faster! Bat the stack off her!",
-	driveBy2		= "Express, coming through.",
-	driveBy3		= "Redball incoming!",
-	driveBy4		= "Send 'er on down the line!",
-	driveBy5		= "Coming in hot.",
-	smallAdds1		= "Here they come - hit the grit, boys!",
-	smallAdds2		= "Troop train - inbound!",
-	smallAdds3		= "Ah - reinforcements.",
-	--Some of these flamethrowers are iffy so verify flamethrower again in videos to be very sure.
-	--These may also be something else entirely so going to only debug these right now
-	flameThrower1	= "I have a schedule to keep!",
-	flameThrower2	= "You are running out of time...",
-	flameThrower3	= "I'm not impressed. More trains are inbound!",
-	flameThrower4	= "You're just in time for the rush.!",
-	flameThrower5	= "Let's step up the pace."
+	Train			= GetSpellInfo(174806),
+	lane			= "Lane",
+	oneTrain		= "1 Random Lane: Train",
+	oneRandom		= "Appear on 1 random lane",
+	threeTrains		= "3 Random Lanes: Train",
+	threeRandom		= "Appear on 3 random lanes",
+	helperMessage	= "This encounter can be improved with 3rd party mod 'Thogar Assist' or one of many available DBM Voice packs (they audibly call out trains), available on Curse."
 })
 
 --------------------------
 -- The Iron Maidens --
 --------------------------
 L= DBM:GetModLocalization(1203)
+
+L:SetWarningLocalization({
+	specWarnReturnBase	= "Return to dock NOW!"
+})
+
+L:SetOptionLocalization({
+	specWarnReturnBase	= "Show special warning when boat player can safely return to dock"
+})
 
 L:SetMiscLocalization({
 	shipMessage		= "prepares to man the Dreadnaught's Main Cannon!"

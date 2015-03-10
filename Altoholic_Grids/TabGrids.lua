@@ -8,13 +8,11 @@ local GREEN		= "|cFF00FF00"
 local GOLD		= "|cFFFFD700"
 local THIS_ACCOUNT = "Default"
 
-local ICON_NOT_STARTED = "Interface\\RaidFrame\\ReadyCheck-NotReady" 
 local ICON_PARTIAL = "Interface\\RaidFrame\\ReadyCheck-Waiting"
-local ICON_COMPLETED = "Interface\\RaidFrame\\ReadyCheck-Ready" 
 local CHARS_PER_FRAME = 11
 
-local parent = "AltoholicTabGrids"
-local classMenu = parent .. "ClassIconMenu"	-- name of mouse over menu frames (add a number at the end to get it)
+local parentName = "AltoholicTabGrids"
+local parent
 
 local currentCategory	-- current category ( equipment, rep, currencies, etc.. )
 
@@ -25,29 +23,6 @@ local DDM_Add = addon.Helpers.DDM_Add
 local DDM_AddTitle = addon.Helpers.DDM_AddTitle
 local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
 
--- ** Left menu **
--- local VIEW_EQUIP = 1
--- local VIEW_REP = 2
--- local VIEW_TOKENS = 3
--- local VIEW_ALL_TABARDS = 4
--- local VIEW_ALL_COMPANIONS = 5
--- local VIEW_ALL_MOUNTS = 6
-
-local ICON_QUESTIONMARK = "Interface\\RaidFrame\\ReadyCheck-Waiting"
-
-local ICON_VIEW_EQUIP = "Interface\\Icons\\INV_Chest_Plate04"
-local ICON_VIEW_REP = "Interface\\Icons\\INV_BannerPVP_02"
-local ICON_VIEW_TOKENS = "Interface\\Icons\\Spell_Holy_SummonChampion"
-local ICON_VIEW_TABARDS = "Interface\\Icons\\inv_chest_cloth_30"
-local ICON_VIEW_COMPANIONS = "Interface\\Icons\\INV_Box_Birdcage_01"
-local ICON_VIEW_MOUNTS = "Interface\\Icons\\Ability_Mount_RidingHorse"
-local ICON_VIEW_TRADESKILLS = "Interface\\Icons\\Ability_Repair"
-local ICON_VIEW_ARCHEOLOGY = "Interface\\Icons\\trade_archaeology"
-local ICON_VIEW_QUESTS = "Interface\\LFGFrame\\LFGIcon-Quest"
-local ICON_VIEW_DUNGEONS = "Interface\\Icons\\inv_helmet_189"
-local ICON_VIEW_GARRISON_ARCHITECT = "Interface\\Icons\\inv_garrison_blueprints3"
-local ICON_VIEW_GARRISON_FOLLOWERS = "Interface\\Icons\\achievement_garrisonfollower_epic"
-
 addon.Tabs.Grids = {}
 
 local ns = addon.Tabs.Grids		-- ns = namespace
@@ -56,79 +31,78 @@ local ns = addon.Tabs.Grids		-- ns = namespace
 local lastButton
 
 local function StartAutoCastShine(button)
-	local item = button:GetName()
-	AutoCastShine_AutoCastStart(_G[ item .. "Shine" ]);
-	lastButton = item
+	AutoCastShine_AutoCastStart(button.Shine);
+	lastButton = button
 end
 
 local function StopAutoCastShine()
 	-- stop autocast shine on the last button that was clicked
 	if lastButton then
-		AutoCastShine_AutoCastStop(_G[ lastButton .. "Shine" ]);
+		AutoCastShine_AutoCastStop(lastButton.Shine)
 	end
 end
 
-local function EnableIcon(name)
-	_G[name]:Enable()
-	_G[name.."IconTexture"]:SetDesaturated(false)
+local function EnableIcon(frame)
+	frame:Enable()
+	frame.Icon:SetDesaturated(false)
 end
 
-local function DisableIcon(name)
-	_G[name]:Disable()
-	_G[name.."IconTexture"]:SetDesaturated(true)
+local function DisableIcon(frame)
+	frame:Disable()
+	frame.Icon:SetDesaturated(true)
 end
 
 local function UpdateMenuIcons()
-	
 	if DataStore_Inventory then
-		EnableIcon(parent .. "_Equipment")
+		EnableIcon(parent.Equipment)
 	else
-		DisableIcon(parent .. "_Equipment")
+		DisableIcon(parent.Equipment)
 	end
 
 	if DataStore_Reputations then
-		EnableIcon(parent .. "_Factions")
+		EnableIcon(parent.Factions)
 	else
-		DisableIcon(parent .. "_Factions")
+		DisableIcon(parent.Factions)
 	end
 	
 	if DataStore_Currencies then
-		EnableIcon(parent .. "_Tokens")
+		EnableIcon(parent.Tokens)
 	else
-		DisableIcon(parent .. "_Tokens")
+		DisableIcon(parent.Tokens)
 	end
 	
 	if DataStore_Pets then
-		EnableIcon(parent .. "_Pets")
+		EnableIcon(parent.Pets)
 	else
-		DisableIcon(parent .. "_Pets")
+		DisableIcon(parent.Pets)
 	end
-	DisableIcon(parent .. "_Mounts")
 	
 	if DataStore_Achievements then
-		EnableIcon(parent .. "_Tabards")
+		EnableIcon(parent.Tabards)
 	else
-		DisableIcon(parent .. "_Tabards")
+		DisableIcon(parent.Tabards)
 	end
 
 	if DataStore_Quests then
-		EnableIcon(parent .. "_Dailies")
+		EnableIcon(parent.Dailies)
 	else
-		DisableIcon(parent .. "_Dailies")
+		DisableIcon(parent.Dailies)
 	end
 	
 	if DataStore_Agenda then
-		EnableIcon(parent .. "_Dungeons")
+		EnableIcon(parent.Dungeons)
 	else
-		DisableIcon(parent .. "_Dungeons")
+		DisableIcon(parent.Dungeons)
 	end
 	
 	if DataStore_Garrisons then
-		EnableIcon(parent .. "_GarrisonArchitect")
-		EnableIcon(parent .. "_GarrisonFollowers")
+		EnableIcon(parent.GarrisonArchitect)
+		EnableIcon(parent.GarrisonFollowers)
+		EnableIcon(parent.FollowerAbilities)
 	else
-		DisableIcon(parent .. "_GarrisonArchitect")
-		DisableIcon(parent .. "_GarrisonFollowers")
+		DisableIcon(parent.GarrisonArchitect)
+		DisableIcon(parent.GarrisonFollowers)
+		DisableIcon(parent.FollowerAbilities)
 	end
 end
 
@@ -156,17 +130,15 @@ local function UpdateClassIcons()
 		end
 	end
 	
-	local itemName, itemButton, itemTexture
+	local itemName, itemButton
 	local class, _
 	
+	local frame = parent.ClassIcons
+	
 	for i = 1, CHARS_PER_FRAME do
-		itemName = parent .. "_ClassIcon" .. i
-		itemButton = _G[itemName]
+		itemButton = frame["Icon"..i]
 		
 		key = addon:GetOption(format("Tabs.Grids.%s.%s.Column%d", currentAccount, currentRealm, i))
-		itemTexture = _G[itemName .. "IconTexture"]
-		addon:CreateButtonBorder(itemButton)
-		
 		if key then
 			_, class = DataStore:GetCharacterClass(key)
 		end
@@ -174,27 +146,27 @@ local function UpdateClassIcons()
 		if key and class then
 			local tc = CLASS_ICON_TCOORDS[class]
 		
-			itemTexture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes");
-			itemTexture:SetTexCoord(tc[1], tc[2], tc[3], tc[4]);
+			itemButton.Icon:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes");
+			itemButton.Icon:SetTexCoord(tc[1], tc[2], tc[3], tc[4])
 	
 			if DataStore:GetCharacterFaction(key) == "Alliance" then
-				itemButton.border:SetVertexColor(0.1, 0.25, 1, 0.5)
+				itemButton.IconBorder:SetVertexColor(0.1, 0.25, 1, 0.5)
 			else
-				itemButton.border:SetVertexColor(1, 0, 0, 0.5)
+				itemButton.IconBorder:SetVertexColor(1, 0, 0, 0.5)
 			end
 
 		else	-- no key ? display a question mark icon
-			itemTexture:SetTexture(ICON_PARTIAL)
-			itemTexture:SetTexCoord(0, 1, 0, 1)
+			itemButton.Icon:SetTexture(ICON_PARTIAL)
+			itemButton.Icon:SetTexCoord(0, 1, 0, 1)
 			
-			itemButton.border:SetVertexColor(0, 1, 0, 0.5)
+			itemButton.IconBorder:SetVertexColor(0, 1, 0, 0.5)
 		end
 		
-		itemTexture:SetWidth(33)
-		itemTexture:SetHeight(33)
-		itemTexture:SetAllPoints(itemButton)
+		itemButton.Icon:SetWidth(33)
+		itemButton.Icon:SetHeight(33)
+		itemButton.Icon:SetAllPoints(itemButton)
 		
-		itemButton.border:Show()
+		itemButton.IconBorder:Show()
 		itemButton:SetWidth(34)
 		itemButton:SetHeight(34)
 		itemButton:Show()
@@ -209,15 +181,8 @@ end
 
 function ns:OnShow()
 	if not currentCategory then
-		StartAutoCastShine(_G[parent .. "_Equipment"])
+		StartAutoCastShine(parent.Equipment)
 		currentCategory = 1
-		
-		-- Button Borders
-		for column = 1, CHARS_PER_FRAME do
-			for row = 1, 8 do
-				addon:CreateButtonBorder(_G["AltoholicFrameGridsEntry".. row .. "Item" .. column])
-			end
-		end
 	end
 
 	UpdateMenuIcons()
@@ -233,7 +198,7 @@ function ns:MenuItem_OnClick(frame, button)
 	currentCategory = frame:GetID()
 
 	local obj = gridCallbacks[currentCategory]	-- point to the callbacks of the current object (equipment, tabards, ..)
-	obj.InitViewDDM(_G[parent.."_SelectView"], _G[parent.."TextView"])
+	obj.InitViewDDM(parent.SelectView, parent.TextView)
 	
 	ns:Update()
 end
@@ -241,13 +206,11 @@ end
 function ns:Update()
 	UpdateClassIcons()
 
-	-- update current frame
-	local numVisibleLines = 8
-	local frame = "AltoholicFrameGrids"
-	_G[frame]:Show()
-	
-	local entry = frame.."Entry"
-	local offset = FauxScrollFrame_GetOffset( _G[ frame.."ScrollFrame" ] );
+	local numRows = 8
+	local frame = AltoholicFrameGrids
+	frame:Show()
+		
+	local offset = FauxScrollFrame_GetOffset(frame.ScrollFrame)
 	
 	ns:SetStatus("")
 	
@@ -255,41 +218,43 @@ function ns:Update()
 	obj:OnUpdate()
 	
 	local size = obj:GetSize()
-
-	local dataRowID
 	local itemButton
 	
-	for row = 1, numVisibleLines do
-		dataRowID = row + offset
+	for rowIndex = 1, numRows do
+		local rowFrame = frame["Entry"..rowIndex]
+		local dataRowID = rowIndex + offset
 		if dataRowID <= size then	-- if the row is visible
 
-			obj:RowSetup(entry, row, dataRowID)
+			obj:RowSetup(rowFrame, dataRowID)
+			itemButton = rowFrame.Name
+			itemButton:SetScript("OnEnter", obj.RowOnEnter)
+			itemButton:SetScript("OnLeave", obj.RowOnLeave)
 			
-			for column = 1, CHARS_PER_FRAME do
-				itemButton = _G[entry.. row .. "Item" .. column]
-				itemButton.border:Hide()
+			for colIndex = 1, CHARS_PER_FRAME do
+				itemButton = rowFrame["Item"..colIndex]
+				itemButton.IconBorder:Hide()
 				
-				character = addon:GetOption(format("Tabs.Grids.%s.%s.Column%d", currentAccount, currentRealm, column))
+				character = addon:GetOption(format("Tabs.Grids.%s.%s.Column%d", currentAccount, currentRealm, colIndex))
 				if character then
 					itemButton:SetScript("OnEnter", obj.OnEnter)
 					itemButton:SetScript("OnClick", obj.OnClick)
 					itemButton:SetScript("OnLeave", obj.OnLeave)
 					
 					itemButton:Show()	-- note: this Show() must remain BEFORE the next call, if the button has to be hidden, it's done in ColumnSetup
-					obj:ColumnSetup(entry, row, column, dataRowID, character)
+					obj:ColumnSetup(itemButton, dataRowID, character)
 				else
 					itemButton.id = nil
 					itemButton:Hide()
 				end
 			end
 
-			_G[ entry..row ]:Show()
+			rowFrame:Show()
 		else
-			_G[ entry..row ]:Hide()
+			rowFrame:Hide()
 		end
 	end
 
-	FauxScrollFrame_Update( _G[ frame.."ScrollFrame" ], size, numVisibleLines, 41);
+	FauxScrollFrame_Update(frame.ScrollFrame, size, numRows, 41)
 end
 
 function ns:GetRealm()
@@ -297,11 +262,11 @@ function ns:GetRealm()
 end
 
 function ns:SetStatus(text)
-	_G[parent .. "Status"]:SetText(text or "")
+	parent.Status:SetText(text or "")
 end
 
 function ns:SetViewDDMText(text)
-	UIDropDownMenu_SetText(_G[parent.."_SelectView"], text)
+	UIDropDownMenu_SetText(parent.SelectView, text)
 end
 
 
@@ -313,13 +278,13 @@ local function OnRealmChange(self, account, realm)
 	currentAccount = account
 	currentRealm = realm
 
-	UIDropDownMenu_ClearAll(_G[ parent .. "_SelectRealm" ]);
-	UIDropDownMenu_SetSelectedValue(_G[ parent .. "_SelectRealm" ], account .."|".. realm)
-	UIDropDownMenu_SetText(_G[ parent .. "_SelectRealm" ], GREEN .. account .. ": " .. WHITE.. realm)
+	UIDropDownMenu_ClearAll(parent.SelectRealm);
+	UIDropDownMenu_SetSelectedValue(parent.SelectRealm, account .."|".. realm)
+	UIDropDownMenu_SetText(parent.SelectRealm, GREEN .. account .. ": " .. WHITE.. realm)
 	
 	if oldRealm and oldAccount then	-- clear the "select char" drop down if realm or account has changed
 		if (oldRealm ~= realm) or (oldAccount ~= account) then
-			_G[ parent .. "Status" ]:SetText("")
+			parent.Status:SetText("")
 			ns:Update()
 		end
 	end
@@ -390,12 +355,13 @@ end
 -- ** Menu Icons **
 function ns:Icon_OnEnter(frame)
 	local currentMenuID = frame:GetID()
-	
+	parent.ContextualMenu.menuID = currentMenuID
+
 	-- hide all
 	CloseDropDownMenus()
 
 	-- show current
-	ToggleDropDownMenu(1, nil, _G[ classMenu .. currentMenuID ], frame:GetName(), 0, -5);	
+	ToggleDropDownMenu(1, nil, parent.ContextualMenu, "AltoholicTabGrids_ClassIcons", (currentMenuID-1)*39, 0)
 	
 	local key = addon:GetOption(format("Tabs.Grids.%s.%s.Column%d", currentAccount, currentRealm, currentMenuID))
 	if key then
@@ -404,7 +370,7 @@ function ns:Icon_OnEnter(frame)
 end
 
 local function ClassIcon_Initialize(self, level)
-	local id = self:GetID()
+	local id = self.menuID
 	
 	DDM_AddTitle(L["Characters"])
 	local nameList = {}		-- we want to list characters alphabetically
@@ -441,45 +407,16 @@ local function ClassIcon_Initialize(self, level)
 end
 
 function ns:OnLoad()
-	local size = 30
-
-	-- Left Menu
-	_G[parent .. "Text1"]:SetText(L["Realm"])
-
-	-- ** Equipment / Reputations / Currencies / Tabards **
-	addon:SetItemButtonTexture(parent .. "_Equipment", ICON_VIEW_EQUIP, size, size)
-	_G[parent .. "_Equipment"].text = L["Equipment"]
-	addon:SetItemButtonTexture(parent .. "_Factions", ICON_VIEW_REP, size, size)
-	_G[parent .. "_Factions"].text = L["Reputations"]
-	addon:SetItemButtonTexture(parent .. "_Tokens", ICON_VIEW_TOKENS, size, size)
-	_G[parent .. "_Tokens"].text = CURRENCY
-	addon:SetItemButtonTexture(parent .. "_Tabards", ICON_VIEW_TABARDS, size, size)
-	_G[parent .. "_Tabards"].text = "Tabards"
-
-	-- ** Pets / Mounts  **
-	addon:SetItemButtonTexture(parent .. "_Pets", ICON_VIEW_COMPANIONS, size, size)
-	_G[parent .. "_Pets"].text = COMPANIONS
-	addon:SetItemButtonTexture(parent .. "_Mounts", ICON_VIEW_MOUNTS, size, size)
-	_G[parent .. "_Mounts"].text = MOUNTS
+	parent = _G[parentName]
+	addon:DDM_Initialize(parent.ContextualMenu, ClassIcon_Initialize)
 	
-	-- ** Secondary Professions  **
-	addon:SetItemButtonTexture(parent .. "_TradeSkills", ICON_VIEW_TRADESKILLS, size, size)
-	_G[parent .. "_TradeSkills"].text = TRADESKILLS
-	addon:SetItemButtonTexture(parent .. "_Archeology", ICON_VIEW_ARCHEOLOGY, size, size)
-	_G[parent .. "_Archeology"].text = GetSpellInfo(78670)
-	
-	addon:SetItemButtonTexture(parent .. "_Dailies", ICON_VIEW_QUESTS, size, size)
-	_G[parent .. "_Dailies"].text = "Daily Quests"
-	addon:SetItemButtonTexture(parent .. "_Dungeons", ICON_VIEW_DUNGEONS, size, size)
-	_G[parent .. "_Dungeons"].text = LOOKING_FOR_DUNGEON
-	addon:SetItemButtonTexture(parent .. "_GarrisonArchitect", ICON_VIEW_GARRISON_ARCHITECT, size, size)
-	_G[parent .. "_GarrisonArchitect"].text = GARRISON_ARCHITECT
-	addon:SetItemButtonTexture(parent .. "_GarrisonFollowers", ICON_VIEW_GARRISON_FOLLOWERS, size, size)
-	_G[parent .. "_GarrisonFollowers"].text = GARRISON_FOLLOWERS_TITLE
+	-- ** Left Menu **
+	parent.Label1:SetText(L["Realm"])
 
-		
-	-- Class Icons
-	for column = 1, CHARS_PER_FRAME do
-		addon:DDM_Initialize(_G[classMenu..column], ClassIcon_Initialize)
-	end
+	parent.Equipment.text = L["Equipment"]
+	parent.Factions.text = L["Reputations"]
+	parent.Tabards.text = "Tabards"
+	parent.Archeology.text = GetSpellInfo(78670)
+	parent.Dailies.text = "Daily Quests"
+	parent.FollowerAbilities.text = format("%s/%s", GARRISON_RECRUIT_ABILITIES, GARRISON_RECRUIT_TRAITS)
 end

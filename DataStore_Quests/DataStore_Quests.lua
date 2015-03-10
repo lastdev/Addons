@@ -16,8 +16,8 @@ local THIS_ACCOUNT = "Default"
 local AddonDB_Defaults = {
 	global = {
 		Options = {
-			TrackTurnIns = 1,					-- by default, save the ids of completed quests in the history
-			AutoUpdateHistory = 1,			-- if history has been queried at least once, auto update it at logon (fast operation - already in the game's cache)
+			TrackTurnIns = true,					-- by default, save the ids of completed quests in the history
+			AutoUpdateHistory = true,			-- if history has been queried at least once, auto update it at logon (fast operation - already in the game's cache)
 		},
 		Characters = {
 			['*'] = {				-- ["Account.Realm.Name"]
@@ -394,7 +394,7 @@ function addon:OnEnable()
 
 	addon:SetupOptions()
 
-	if GetOption("AutoUpdateHistory") == 1 then		-- if history has been queried at least once, auto update it at logon (fast operation - already in the game's cache)
+	if GetOption("AutoUpdateHistory") then		-- if history has been queried at least once, auto update it at logon (fast operation - already in the game's cache)
 		addon:ScheduleTimer(RefreshQuestHistory, 5)	-- refresh quest history 5 seconds later, to decrease the load at startup
 	end
 
@@ -411,7 +411,7 @@ end
 -- GetQuestReward is the function that actually turns in a quest
 hooksecurefunc("GetQuestReward", function(choiceIndex)
 	local questID = GetQuestID() -- returns the last displayed quest dialog's questID
-	if GetOption("TrackTurnIns") == 1 and questID then
+	if GetOption("TrackTurnIns") and questID then
 		local history = addon.ThisCharacter.History
 		local bitPos  = (questID % 32)
 		local index   = ceil(questID / 32)

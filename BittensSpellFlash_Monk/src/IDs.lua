@@ -7,13 +7,16 @@ c.Init(a)
 a.SpellIDs = {
    ["Blackout Kick"] = 100784,
    ["Breath of Fire"] = 115181,
-   ["Brewmaster Training"] = 117967,
    ["Chi Brew"] = 115399,
    ["Chi Burst"] = 123986,
+   ["Chi Explosion: BM"] = 157676,
+   ["Chi Explosion: MW"] = 157675,
+   ["Chi Explosion: WW"] = 152174,
    ["Chi Sphere"] = 121283,
    ["Chi Torpedo"] = 115008,
    ["Chi Wave"] = 115098,
    ["Combo Breaker: Blackout Kick"] = 116768,
+   ["Combo Breaker: Chi Explosion"] = 159407,
    ["Combo Breaker: Tiger Palm"] = 118864,
    ["Crackling Jade Lightning"] = 117952,
    ["Dampen Harm"] = 122278,
@@ -22,6 +25,7 @@ a.SpellIDs = {
    ["Dizzying Haze"] = 123727,
    ["Elusive Brew Stacker"] = 128939,
    ["Elusive Brew"] = 115308,
+   ["Empowered Spinning Crane Kick"] = 157415,
    ["Energizing Brew"] = 115288,
    ["Enveloping Mist"] = 124682,
    ["Expel Harm"] = 115072,
@@ -32,6 +36,8 @@ a.SpellIDs = {
    ["Guard"] = 115295,
    ["Healing Elixirs"] = 122280,
    ["Heavy Stagger"] = 124273,
+   ["Hurricane Strike"] = 152175,
+   ["Improved Breath of Fire"] = 157362,
    ["Invoke Xuen, the White Tiger"] = 123904,
    ["Jab"] = 100780,
    ["Keg Smash"] = 121253,
@@ -42,7 +48,6 @@ a.SpellIDs = {
    ["Moderate Stagger"] = 124274,
    ["Momentum"] = 119085,
    ["Muscle Memory"] = 139598,
-   ["Power Guard"] = 118636,
    ["Power Strikes"] = 129914,
    ["Provoke"] = 115546,
    ["Purifying Brew"] = 119582,
@@ -50,6 +55,7 @@ a.SpellIDs = {
    ["Rising Sun Kick"] = 107428,
    ["Roll"] = 109132,
    ["Rushing Jade Wind"] = 116847,
+   ["Serenity"] = 152173,
    ["Serpent's Zeal"] = 127722,
    ["Shuffle"] = 115307,
    ["Soothing Mist"] = 115175,
@@ -77,32 +83,26 @@ a.SpellIDs = {
 }
 
 a.TalentIDs = {
+   ["Chi Brew"] = 115399,
+   ["Chi Explosion: BM"] = 157676,
+   ["Chi Explosion: MW"] = 157675,
+   ["Chi Explosion: WW"] = 152174,
+   ["Healing Elixirs"] = 122280,
+   ["Hurricane Strike"] = 152175,
    ["Momentum"] = 119085,
    ["Power Strikes"] = 121817,
-   ["Healing Elixirs"] = 122280,
+   ["Rushing Jade Wind"] = 116847,
+   ["Serenity"] = 152173,
 }
 
 a.GlyphIDs = {
-   ["Uplift"] = 125669,
+   ["Floating Butterfly"] = 159490,
    ["Fortifying Brew"] = 124997,
    ["Mana Tea"] = 123763,
+   ["Uplift"] = 125669,
 }
 
 a.EquipmentSets = {
---      BMT15 = {
---     HeadSlot = { 95907, 95277, 96651 },
---     ShoulderSlot = { 95909, 95279, 96653 },
---     ChestSlot = { 95905, 95275, 96649 },
---     HandsSlot = { 95906, 95276, 96650 },
---     LegsSlot = { 95908, 95278, 96652 },
---      },
-   WWT15 = {
-       HeadSlot = { 95897, 95267, 96641 },
-       ShoulderSlot = { 95899, 95269, 96643 },
-       ChestSlot = { 95895, 95265, 96639 },
-       HandsSlot = { 95896, 95266, 96640 },
-       LegsSlot = { 95898, 95268, 96642 },
-   },
    BrewmasterT16 = {
        HeadSlot = { 99142, 99065, 99607, 99384 },
        ShoulderSlot = { 99144, 99051, 99565, 99386 },

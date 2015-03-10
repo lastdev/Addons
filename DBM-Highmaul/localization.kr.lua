@@ -47,8 +47,8 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(1148)
 
 L:SetOptionLocalization({
-	PhemosSpecial	= "페모스의 대기시간 초읽기 듣기",
-	PolSpecial		= "폴의 대기시간 초읽기 듣기",
+	PhemosSpecial		= "페모스의 대기시간 초읽기 듣기",
+	PolSpecial			= "폴의 대기시간 초읽기 듣기",
 	PhemosSpecialVoice	= "펠모스의 주문을 선택한 음성안내 소리로 듣기",
 	PolSpecialVoice		= "폴의 주문을 선택한 음성안내 소리로 듣기"
 })
@@ -57,6 +57,15 @@ L:SetOptionLocalization({
 --Koragh --
 --------------------
 L= DBM:GetModLocalization(1153)
+
+
+L:SetWarningLocalization({
+	specWarnExpelMagicFelFades	= "5초 후 악마 사라짐 - 처음 지점으로 이동!"
+})
+
+L:SetOptionLocalization({
+	specWarnExpelMagicFelFades	= "$spell:172895 주문이 사라지기 전에 처음 지점 이동 특수 경고 보기"
+})
 
 L:SetMiscLocalization({
 	supressionTarget1	= "박살내주마!",
@@ -70,8 +79,22 @@ L:SetMiscLocalization({
 --------------------------
 L= DBM:GetModLocalization(1197)
 
+L:SetTimerLocalization({
+	timerNightTwistedCD		= "다음 뒤틀린 밤의 신봉자"
+})
+
+L:SetOptionLocalization({
+	GazeYellType		= "심연의 시선 대화 알림 방식 선택",
+	Countdown			= "남은시간 초세기",
+	Stacks				= "받을 때 중첩 수",
+	timerNightTwistedCD	= "다음 뒤틀린 밤의 신봉자 바 보기"
+})
+
 L:SetMiscLocalization({
-	BrandedYell			= "%2$s 에게 낙인! (%1$s)"
+	BrandedYell			= "낙인(%d중첩): %dm",
+	GazeYell			= "%d초 후 시선 사라짐!",
+	GazeYell2			= "%2$s에게 시선! (%1$d)",
+	PlayerDebuffs		= "광기의 눈길 가까움"
 })
 
 -------------

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(635, "DBM-Party-WotLK", 13, 284)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 142 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(35119)
 --mod:SetEncounterID(338, 339)--DO NOT ENABLE. Confessor and Eadric are both flagged as same encounterid ("Argent Champion")
 mod:SetUsedIcons(8)
@@ -15,15 +15,12 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED"
 )
 
-local isDispeller = select(2, UnitClass("player")) == "PRIEST"
-				 or select(2, UnitClass("player")) == "PALADIN"
-
 local warnHammerofRighteous		= mod:NewSpellAnnounce(66867, 3)
 local warnVengeance             = mod:NewSpellAnnounce(66889, 3)
 local warnHammerofJustice		= mod:NewTargetAnnounce(66940, 2)
 local timerVengeance			= mod:NewBuffActiveTimer(6, 66889)
 local specwarnRadiance			= mod:NewSpecialWarning("specwarnRadiance")
-local specwarnHammerofJustice	= mod:NewSpecialWarningDispel(66940, isDispeller)
+local specwarnHammerofJustice	= mod:NewSpecialWarningDispel(66940, "Healer")
 
 mod:AddBoolOption("SetIconOnHammerTarget", false)
 

@@ -78,28 +78,24 @@ function module:InitializeRecipes()
 	recipe = AddRecipe(2538, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetCraftedItem(2679, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Spiced Wolf Meat -- 2539
 	recipe = AddRecipe(2539, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(10, 10, 50, 70, 90)
 	recipe:SetCraftedItem(2680, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Roasted Boar Meat -- 2540
 	recipe = AddRecipe(2540, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetCraftedItem(2681, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Coyote Steak -- 2541
 	recipe = AddRecipe(2541, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(50, 50, 90, 110, 130)
 	recipe:SetCraftedItem(2684, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Goretusk Liver Pie -- 2542
@@ -107,7 +103,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(50, 50, 90, 110, 130)
 	recipe:SetRecipeItem(2697, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(724, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(340)
 
 	-- Westfall Stew -- 2543
@@ -115,7 +111,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(50, 50, 115, 135, 155)
 	recipe:SetRecipeItem(728, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(733, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE)
 	recipe:AddVendor(340)
 	recipe:AddWorldDrop(Z.WESTFALL)
 
@@ -123,7 +118,6 @@ function module:InitializeRecipes()
 	recipe = AddRecipe(2544, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(75, 75, 115, 135, 155)
 	recipe:SetCraftedItem(2683, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Cooked Crab Claw -- 2545
@@ -131,7 +125,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(85, 85, 125, 145, 165)
 	recipe:SetRecipeItem(2698, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(2682, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(340)
 	recipe:AddWorldDrop(Z.DARKSHORE, Z.WESTFALL)
 
@@ -139,7 +132,6 @@ function module:InitializeRecipes()
 	recipe = AddRecipe(2546, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(80, 80, 120, 140, 160)
 	recipe:SetCraftedItem(2687, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Redridge Goulash -- 2547
@@ -147,7 +139,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(100, 100, 135, 155, 175)
 	recipe:SetRecipeItem(2699, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(1082, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(340)
 
 	-- Succulent Pork Ribs -- 2548
@@ -155,7 +147,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(110, 110, 130, 150, 170)
 	recipe:SetRecipeItem(2700, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(2685, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(340)
 	recipe:AddWorldDrop(Z.LOCH_MODAN, Z.REDRIDGE_MOUNTAINS)
 
@@ -164,7 +155,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(100, 100, 140, 160, 180)
 	recipe:SetRecipeItem(2701, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(1017, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(340)
 	recipe:AddQuest(26620)
 
@@ -173,7 +164,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(10, 10, 60, 80, 100)
 	recipe:SetRecipeItem(2889, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(2888, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE)
 	recipe:AddVendor(340)
 	recipe:AddQuest(384)
 
@@ -182,7 +172,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(80, 80, 120, 140, 160)
 	recipe:SetRecipeItem(3678, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(3662, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(340)
 
 	-- Blood Sausage -- 3371
@@ -190,7 +180,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(60, 60, 100, 120, 140)
 	recipe:SetRecipeItem(3679, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(3220, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(340)
 	recipe:AddQuest(26860)
 
@@ -199,7 +189,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(90, 90, 130, 150, 170)
 	recipe:SetRecipeItem(3680, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(3663, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(340)
 
 	-- Crocolisk Gumbo -- 3373
@@ -207,7 +197,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(120, 120, 160, 180, 200)
 	recipe:SetRecipeItem(3681, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(3664, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(340)
 
 	-- Curiously Tasty Omelet -- 3376
@@ -215,7 +205,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(130, 130, 170, 190, 210)
 	recipe:SetRecipeItem(3682, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(3665, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(340, 1148, 2821)
 
 	-- Gooey Spider Cake -- 3377
@@ -223,7 +213,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(110, 110, 150, 170, 190)
 	recipe:SetRecipeItem(3683, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(3666, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(340)
 	recipe:AddQuest(26623)
 
@@ -232,7 +222,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(110, 110, 150, 170, 190)
 	recipe:SetRecipeItem(3734, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(3726, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:Retire()
 
 	-- Hot Lion Chops -- 3398
@@ -240,7 +230,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(125, 125, 175, 195, 215)
 	recipe:SetRecipeItem(3735, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(3727, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(3489)
 
 	-- Tasty Lion Steak -- 3399
@@ -248,7 +238,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(150, 150, 190, 210, 230)
 	recipe:SetRecipeItem(3736, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(3728, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Soothing Turtle Bisque -- 3400
@@ -256,7 +245,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(175, 175, 215, 235, 255)
 	recipe:SetRecipeItem(3737, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(3729, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Barbecued Buzzard Wing -- 4094
@@ -264,7 +252,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(175, 175, 215, 235, 255)
 	recipe:SetRecipeItem(4609, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(4457, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 	recipe:AddVendor(2814)
 
@@ -273,7 +261,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(10, 10, 50, 70, 90)
 	recipe:SetRecipeItem(5482, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5472, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Scorpid Surprise -- 6413
@@ -281,7 +268,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(20, 20, 60, 80, 100)
 	recipe:SetRecipeItem(5483, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5473, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3881)
 
 	-- Roasted Kodo Meat -- 6414
@@ -289,7 +275,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(35, 35, 75, 95, 115)
 	recipe:SetRecipeItem(5484, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5474, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3081)
 
 	-- Fillet of Frenzy -- 6415
@@ -297,7 +282,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(50, 50, 90, 110, 130)
 	recipe:SetRecipeItem(5485, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5476, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Strider Stew -- 6416
@@ -305,7 +289,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(50, 50, 90, 110, 130)
 	recipe:SetRecipeItem(5486, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5477, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(3482)
 
 	-- Dig Rat Stew -- 6417
@@ -313,7 +297,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(90, 90, 130, 150, 170)
 	recipe:SetRecipeItem(78342, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(5478, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddMobDrop(3444)
 
 	-- Crispy Lizard Tail -- 6418
@@ -321,7 +304,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(100, 100, 140, 160, 180)
 	recipe:SetRecipeItem(5488, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5479, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(3482)
 
 	-- Lean Venison -- 6419
@@ -329,21 +312,19 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(110, 110, 150, 170, 190)
 	recipe:SetRecipeItem(5489, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5480, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:Retire()
 
 	-- Boiled Clams -- 6499
 	recipe = AddRecipe(6499, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(50, 50, 90, 110, 130)
 	recipe:SetCraftedItem(5525, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Goblin Deviled Clams -- 6500
 	recipe = AddRecipe(6500, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(125, 125, 165, 185, 205)
 	recipe:SetCraftedItem(5527, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Clam Chowder -- 6501
@@ -351,7 +332,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(90, 90, 130, 150, 170)
 	recipe:SetRecipeItem(5528, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5526, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(4305)
 
 	-- Giant Clam Scorcho -- 7213
@@ -359,7 +339,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(175, 175, 215, 235, 255)
 	recipe:SetRecipeItem(6039, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(6038, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(2664)
 
 	-- Brilliant Smallfish -- 7751
@@ -367,7 +347,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetRecipeItem(6325, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(6290, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(66, 1684, 3029, 3550, 4265, 4574, 5494, 5940, 8508, 56069)
 
 	-- Slitherskin Mackerel -- 7752
@@ -375,7 +354,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetRecipeItem(6326, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(787, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3550, 4305, 5162, 5942, 10118)
 
 	-- Longjaw Mud Snapper -- 7753
@@ -383,7 +361,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(50, 50, 90, 110, 130)
 	recipe:SetRecipeItem(6328, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(4592, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(66, 1684, 3027, 4265, 4574, 5162, 5748, 5940)
 
 	-- Loch Frenzy Delight -- 7754
@@ -391,7 +368,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(50, 50, 90, 110, 130)
 	recipe:SetRecipeItem(6329, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(6316, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(1684)
 
 	-- Bristle Whisker Catfish -- 7755
@@ -399,7 +375,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(100, 100, 140, 160, 180)
 	recipe:SetRecipeItem(6330, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(4593, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(2397, 3027, 3029, 3497, 4553, 5494, 56069)
 
 	-- Rainbow Fin Albacore -- 7827
@@ -407,7 +382,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(50, 50, 90, 110, 130)
 	recipe:SetRecipeItem(6368, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(5095, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3178, 3333, 3497, 4305, 4553, 5494, 5748, 5942, 10118)
 
 	-- Rockscale Cod -- 7828
@@ -415,7 +389,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(175, 175, 190, 210, 230)
 	recipe:SetRecipeItem(6369, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(4594, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(2664, 3178, 3333, 4574, 5162, 12033, 12962)
 
 	-- Savory Deviate Delight -- 8238
@@ -423,14 +396,12 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(85, 85, 125, 145, 165)
 	recipe:SetRecipeItem(6661, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(6657, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddWorldDrop(Z.NORTHERN_BARRENS, Z.SOUTHERN_BARRENS)
 
 	-- Herb Baked Egg -- 8604
 	recipe = AddRecipe(8604, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetCraftedItem(6888, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1, F.HEALER, F.CASTER)
 	recipe:AddCustom("DEFAULT_RECIPE")
 
 	-- Smoked Bear Meat -- 8607
@@ -438,22 +409,12 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(40, 40, 80, 100, 120)
 	recipe:SetRecipeItem(6892, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(6890, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(1465, 3556)
-
-	-- Thistle Tea -- 9513
-	recipe = AddRecipe(9513, V.ORIG, Q.UNCOMMON)
-	recipe:SetSkillLevels(60, 60, 100, 120, 140)
-	recipe:SetRecipeItem(18160, "BIND_ON_PICKUP")
-	recipe:SetCraftedItem(7676, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.ROGUE)
-	recipe:AddVendor(6779)
 
 	-- Goldthorn Tea -- 13028
 	recipe = AddRecipe(13028, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(175, 175, 175, 190, 205)
 	recipe:SetCraftedItem(10841, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:Retire()
 
 	-- Lean Wolf Steak -- 15853
@@ -461,7 +422,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(125, 125, 165, 185, 205)
 	recipe:SetRecipeItem(12227, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12209, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:Retire()
 
 	-- Roast Raptor -- 15855
@@ -469,7 +430,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(175, 175, 215, 235, 255)
 	recipe:SetRecipeItem(12228, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12210, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(734, 1148, 2810, 2821, 4879, 4897)
 
 	-- Hot Wolf Ribs -- 15856
@@ -477,7 +438,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(175, 175, 215, 235, 255)
 	recipe:SetRecipeItem(12229, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(13851, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(7947, 8145)
 
 	-- Jungle Stew -- 15861
@@ -485,7 +446,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(175, 175, 215, 235, 255)
 	recipe:SetRecipeItem(12231, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12212, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(734, 1148)
 
 	-- Carrion Surprise -- 15863
@@ -493,7 +454,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(175, 175, 215, 235, 255)
 	recipe:SetRecipeItem(12232, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12213, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(989, 4879, 9636)
 
 	-- Mystery Stew -- 15865
@@ -501,7 +462,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(175, 175, 215, 235, 255)
 	recipe:SetRecipeItem(12233, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12214, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(4897, 8150)
 
 	-- Dragonbreath Chili -- 15906
@@ -509,7 +470,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(200, 200, 225, 237, 250)
 	recipe:SetRecipeItem(12239, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12217, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(4879, 4897)
 
 	-- Heavy Kodo Stew -- 15910
@@ -517,7 +477,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(200, 200, 225, 237, 250)
 	recipe:SetRecipeItem(12240, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12215, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(8150, 9636)
 
 	-- Spiced Chili Crab -- 15915
@@ -525,7 +485,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(225, 225, 250, 262, 275)
 	recipe:SetRecipeItem(16111, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12216, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(989, 1149, 4305)
 
 	-- Monster Omelet -- 15933
@@ -533,7 +493,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(225, 225, 250, 262, 275)
 	recipe:SetRecipeItem(16110, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12218, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(2803, 11187)
 
 	-- Crispy Bat Wing -- 15935
@@ -541,7 +501,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetRecipeItem(12226, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(12224, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(2118)
 
 	-- Spotted Yellowtail -- 18238
@@ -549,7 +508,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(225, 225, 250, 262, 275)
 	recipe:SetRecipeItem(13939, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(6887, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Cooked Glossy Mightfish -- 18239
@@ -557,7 +515,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(225, 225, 250, 262, 275)
 	recipe:SetRecipeItem(13940, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(13927, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(2664)
 
 	-- Grilled Squid -- 18240
@@ -565,7 +522,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(240, 240, 265, 277, 290)
 	recipe:SetRecipeItem(13942, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(13928, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Filet of Redgill -- 18241
@@ -573,7 +529,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(225, 225, 250, 262, 275)
 	recipe:SetRecipeItem(13941, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(13930, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(2664)
 
 	-- Hot Smoked Bass -- 18242
@@ -581,7 +536,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(240, 240, 265, 277, 290)
 	recipe:SetRecipeItem(13943, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(13929, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(2664)
 
 	-- Nightfin Soup -- 18243
@@ -589,7 +544,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(250, 250, 275, 285, 295)
 	recipe:SetRecipeItem(13945, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(13931, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Poached Sunscale Salmon -- 18244
@@ -597,7 +551,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(250, 250, 275, 285, 295)
 	recipe:SetRecipeItem(13946, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(13932, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Lobster Stew -- 18245
@@ -605,7 +558,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(275, 275, 300, 312, 325)
 	recipe:SetRecipeItem(13947, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(13933, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(7947, 8145)
 
 	-- Mightfish Steak -- 18246
@@ -613,7 +565,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(275, 275, 300, 312, 325)
 	recipe:SetRecipeItem(13948, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(13934, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(2664, 7947, 8145)
 
 	-- Baked Salmon -- 18247
@@ -621,7 +572,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(275, 275, 300, 312, 325)
 	recipe:SetRecipeItem(13949, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(13935, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(7947, 8145)
 
 	-- Undermine Clam Chowder -- 20626
@@ -629,7 +579,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(225, 225, 250, 262, 275)
 	recipe:SetRecipeItem(16767, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(16766, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddLimitedVendor(48060, 3, 54232, 1)
 
 	-- Mithril Head Trout -- 20916
@@ -637,7 +586,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(175, 175, 215, 235, 255)
 	recipe:SetRecipeItem(17062, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(8364, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(2664, 3178, 3333, 4574, 5162, 12033, 12962)
 
 	-- Gingerbread Cookie -- 21143
@@ -645,7 +593,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetRecipeItem(17200, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(17197, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(13420, 13429, 13432, 13433, 13435, 23010, 23012, 23064)
 	recipe:AddWorldEvent("WINTER_VEIL")
 
@@ -654,7 +601,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(35, 35, 75, 95, 115)
 	recipe:SetRecipeItem(17201, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(17198, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(13420, 13429, 13432, 13433, 13435, 23010, 23012, 23064)
 	recipe:AddWorldEvent("WINTER_VEIL")
 
@@ -662,7 +608,6 @@ function module:InitializeRecipes()
 	recipe = AddRecipe(21175, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(200, 200, 225, 237, 250)
 	recipe:SetCraftedItem(17222, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Tender Wolf Steak -- 22480
@@ -670,7 +615,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(225, 225, 250, 262, 275)
 	recipe:SetRecipeItem(18046, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(18045, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(4782, 7733, 40589)
 
 	-- Runn Tum Tuber Surprise -- 22761
@@ -678,7 +623,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(275, 275, 300, 312, 325)
 	recipe:SetRecipeItem(18267, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(18254, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.INSTANCE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddMobDrop(14354)
 
 	-- Heavy Crocolisk Stew -- 24418
@@ -686,14 +631,13 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(150, 150, 160, 180, 200)
 	recipe:SetRecipeItem(20075, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(20074, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(4879)
 
 	-- Smoked Desert Dumplings -- 24801
 	recipe = AddRecipe(24801, V.ORIG, Q.COMMON)
 	recipe:SetSkillLevels(285, 285, 310, 322, 335)
 	recipe:SetCraftedItem(20452, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
 	recipe:AddQuest(8313)
 
 	-- Dirge's Kickin' Chimaerok Chops -- 25659
@@ -701,7 +645,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(300, 300, 325, 337, 350)
 	recipe:SetRecipeItem(21025, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(21023, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:Retire()
 
 	-- Smoked Sagefish -- 25704
@@ -709,7 +652,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(80, 80, 120, 140, 160)
 	recipe:SetRecipeItem(21099, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(21072, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(2397, 2664, 3027, 3085, 3400, 4223, 4265, 4553, 4894, 5160, 5483, 8307, 12033, 14738, 16253, 16677, 16718, 17246, 19195, 26868, 46708, 48060, 54232, 64084, 64465)
 
 	-- Sagefish Delight -- 25954
@@ -717,7 +660,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(175, 175, 215, 235, 255)
 	recipe:SetRecipeItem(21219, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(21217, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(2397, 2664, 3027, 3085, 3400, 4223, 4265, 4553, 4894, 5160, 5483, 8307, 12033, 14738, 16253, 16677, 16718, 17246, 19195, 26868, 46708, 48060, 54232, 64084, 64465)
 
 	-------------------------------------------------------------------------------
@@ -728,7 +671,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(60, 60, 100, 120, 140)
 	recipe:SetRecipeItem(22647, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(22645, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(16253, 18427)
 	recipe:AddQuest(9171)
 
@@ -737,7 +680,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetRecipeItem(27685, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27635, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(16262)
 
 	-- Roasted Moongraze Tenderloin -- 33277
@@ -745,7 +687,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 45, 65, 85)
 	recipe:SetRecipeItem(27686, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(24105, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddQuest(9454)
 
 	-- Bat Bites -- 33278
@@ -753,7 +694,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(50, 50, 90, 110, 130)
 	recipe:SetRecipeItem(27687, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27636, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(16253)
 
 	-- Buzzard Bites -- 33279
@@ -761,7 +702,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(300, 300, 320, 330, 340)
 	recipe:SetRecipeItem(27684, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27651, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddQuest(9356)
 
 	-- Ravager Dog -- 33284
@@ -769,7 +710,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(300, 300, 320, 330, 340)
 	recipe:SetRecipeItem(27688, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27655, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(16585, 16826)
 
 	-- Blackened Basilisk -- 33286
@@ -777,7 +718,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(315, 315, 335, 345, 355)
 	recipe:SetRecipeItem(27690, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27657, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(18957, 19038)
 
 	-- Roasted Clefthoof -- 33287
@@ -785,7 +726,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(325, 325, 345, 355, 365)
 	recipe:SetRecipeItem(27691, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27658, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(20096, 20097)
 
 	-- Warp Burger -- 33288
@@ -793,7 +734,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(325, 325, 345, 355, 365)
 	recipe:SetRecipeItem(27692, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27659, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(18957, 19038)
 
 	-- Talbuk Steak -- 33289
@@ -801,7 +742,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(325, 325, 345, 355, 365)
 	recipe:SetRecipeItem(27693, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27660, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(20096, 20097)
 
 	-- Blackened Trout -- 33290
@@ -809,7 +750,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(300, 300, 320, 330, 340)
 	recipe:SetRecipeItem(27694, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27661, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(18015, 20028)
 
 	-- Feltail Delight -- 33291
@@ -817,7 +757,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(300, 300, 320, 330, 340)
 	recipe:SetRecipeItem(27695, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27662, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(18011, 20028)
 
 	-- Blackened Sporefish -- 33292
@@ -825,7 +765,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(310, 310, 330, 340, 350)
 	recipe:SetRecipeItem(27696, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27663, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(18911)
 
 	-- Grilled Mudfish -- 33293
@@ -833,7 +773,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(320, 320, 340, 350, 360)
 	recipe:SetRecipeItem(27697, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27664, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(20096, 20097)
 
 	-- Poached Bluefish -- 33294
@@ -841,7 +781,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(320, 320, 340, 350, 360)
 	recipe:SetRecipeItem(27698, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27665, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(20096, 20097)
 
 	-- Golden Fish Sticks -- 33295
@@ -849,7 +789,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(325, 325, 345, 355, 365)
 	recipe:SetRecipeItem(27699, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27666, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(18960, 19296)
 
 	-- Spicy Crawdad -- 33296
@@ -857,7 +797,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(350, 350, 370, 375, 380)
 	recipe:SetRecipeItem(27700, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(27667, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(18960, 19296)
 
 	-- Clam Bar -- 36210
@@ -865,14 +805,13 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(300, 300, 320, 330, 340)
 	recipe:SetRecipeItem(30156, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(30155, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(18382)
 
 	-- Spice Bread -- 37836
 	recipe = AddRecipe(37836, V.TBC, Q.COMMON)
 	recipe:SetSkillLevels(1, 1, 30, 35, 38)
 	recipe:SetCraftedItem(30816, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3087, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 8306, 16253, 16277, 16676, 16719, 17246, 18987, 18988, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Mok'Nathal Shortribs -- 38867
@@ -880,7 +819,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(335, 335, 355, 365, 375)
 	recipe:SetRecipeItem(31675, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(31672, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(21113)
 	recipe:AddLimitedVendor(20916, 1)
 	recipe:AddQuest(10860)
@@ -890,7 +829,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(335, 335, 355, 365, 375)
 	recipe:SetRecipeItem(31674, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(31673, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(21113)
 	recipe:AddLimitedVendor(20916, 1)
 	recipe:AddQuest(10860)
@@ -899,21 +838,18 @@ function module:InitializeRecipes()
 	recipe = AddRecipe(42296, V.TBC, Q.COMMON)
 	recipe:SetSkillLevels(320, 320, 335, 345, 355)
 	recipe:SetCraftedItem(33048, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19186, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Fisherman's Feast -- 42302
 	recipe = AddRecipe(42302, V.TBC, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 375, 380, 385)
 	recipe:SetCraftedItem(33052, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19186, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Hot Buttered Trout -- 42305
 	recipe = AddRecipe(42305, V.TBC, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 375, 380, 385)
 	recipe:SetCraftedItem(33053, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19186, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Skullfish Soup -- 43707
@@ -921,7 +857,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(325, 325, 335, 345, 355)
 	recipe:SetRecipeItem(33870, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(33825, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddQuest(11377, 11379, 11380, 11381)
 	recipe:AddCustom("DAILY_COOKING_FISH")
 
@@ -930,7 +866,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(300, 300, 320, 330, 340)
 	recipe:SetRecipeItem(33871, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(33866, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddQuest(11377, 11379, 11380, 11381, 13100, 13101, 13102, 13103, 13107, 13112, 13113, 13114, 13115, 13116)
 	recipe:AddCustom("DAILY_COOKING_DAL", "DAILY_COOKING_FISH", "DAILY_COOKING_MEAT")
 
@@ -939,7 +874,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(300, 300, 320, 330, 340)
 	recipe:SetRecipeItem(33869, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(33867, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddQuest(11377, 11379, 11380, 11381)
 	recipe:AddCustom("DAILY_COOKING_FISH")
 
@@ -948,7 +883,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(325, 325, 335, 345, 355)
 	recipe:SetRecipeItem(33873, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(33872, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddQuest(11377, 11379, 11380, 11381)
 	recipe:AddCustom("DAILY_COOKING_MEAT")
 
@@ -957,7 +892,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(300, 300, 345, 355, 365)
 	recipe:SetRecipeItem(33875, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(33874, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddQuest(11377, 11379, 11380, 11381)
 	recipe:AddCustom("DAILY_COOKING_FISH", "DAILY_COOKING_MEAT")
 
@@ -966,7 +900,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 50, 62, 75)
 	recipe:SetRecipeItem(33925, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(33924, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddQuest(11377, 11379, 11380, 11381, 13100, 13101, 13102, 13103, 13107, 13112, 13113, 13114, 13115, 13116)
 	recipe:AddCustom("DAILY_COOKING_DAL", "DAILY_COOKING_FISH", "DAILY_COOKING_MEAT")
 
@@ -978,7 +911,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(325, 325, 325, 325, 325)
 	recipe:SetRecipeItem(34413, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(34411, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(13420, 13433)
 	recipe:AddWorldEvent("WINTER_VEIL")
 
@@ -986,42 +919,36 @@ function module:InitializeRecipes()
 	recipe = AddRecipe(45549, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34748, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Shoveltusk Steak -- 45550
 	recipe = AddRecipe(45550, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34749, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Worm Delight -- 45551
 	recipe = AddRecipe(45551, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34750, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Roasted Worg -- 45552
 	recipe = AddRecipe(45552, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34751, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Rhino Dogs -- 45553
 	recipe = AddRecipe(45553, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34752, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Great Feast -- 45554
 	recipe = AddRecipe(45554, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(375, 375, 375, 400, 425)
 	recipe:SetCraftedItem(34753, "BIND_ON_PICKUP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Mega Mammoth Meal -- 45555
@@ -1029,7 +956,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43018, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(34754, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
+	recipe:AddFilters(F.DPS)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Tender Shoveltusk Steak -- 45556
@@ -1037,7 +964,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43019, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(34755, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Spiced Worm Burger -- 45557
@@ -1045,7 +972,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43020, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(34756, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Very Burnt Worg -- 45558
@@ -1053,7 +980,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43021, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(34757, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Mighty Rhino Dogs -- 45559
@@ -1061,56 +988,49 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43022, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(34758, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Smoked Rockfin -- 45560
 	recipe = AddRecipe(45560, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 365, 380)
 	recipe:SetCraftedItem(34759, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Grilled Bonescale -- 45561
 	recipe = AddRecipe(45561, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 365, 380)
 	recipe:SetCraftedItem(34760, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Sauteed Goby -- 45562
 	recipe = AddRecipe(45562, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 365, 380)
 	recipe:SetCraftedItem(34761, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Grilled Sculpin -- 45563
 	recipe = AddRecipe(45563, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34762, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Smoked Salmon -- 45564
 	recipe = AddRecipe(45564, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34763, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Poached Nettlefish -- 45565
 	recipe = AddRecipe(45565, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34764, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Pickled Fangtooth -- 45566
 	recipe = AddRecipe(45566, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(34765, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Poached Northern Sculpin -- 45567
@@ -1118,7 +1038,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43023, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(34766, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
+	recipe:AddFilters(F.DPS)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Firecracker Salmon -- 45568
@@ -1126,14 +1046,13 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43024, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(34767, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Baked Manta Ray -- 45569
 	recipe = AddRecipe(45569, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(42942, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Imperial Manta Steak -- 45570
@@ -1141,7 +1060,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43026, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(34769, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Spicy Blue Nettlefish -- 45571
@@ -1149,7 +1068,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43025, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(34768, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Captain Rumsey's Lager -- 45695
@@ -1157,7 +1076,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(100, 100, 100, 105, 110)
 	recipe:SetRecipeItem(34834, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(34832, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddQuest(11666, 11667, 11668, 11669, 13100, 13101, 13102, 13103, 13107, 13112, 13113, 13114, 13115, 13116)
 	recipe:AddCustom("DAILY_COOKING_DAL", "DAILY_FISHING_SHATT")
 
@@ -1166,7 +1084,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(250, 250, 275, 285, 295)
 	recipe:SetRecipeItem(35564, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(35563, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Juicy Bear Burger -- 46688
@@ -1174,7 +1091,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(250, 250, 275, 285, 295)
 	recipe:SetRecipeItem(35566, "BIND_ON_EQUIP")
 	recipe:SetCraftedItem(35565, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Kungaloosh -- 53056
@@ -1182,7 +1098,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(375, 375, 375, 387, 400)
 	recipe:SetRecipeItem(39644, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(39520, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddQuest(13571)
 	recipe:AddCustom("KUNG")
 
@@ -1190,7 +1105,6 @@ function module:InitializeRecipes()
 	recipe = AddRecipe(57421, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 362, 365)
 	recipe:SetCraftedItem(34747, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddQuest(13087, 13088, 13089, 13090)
 
 	-- Fish Feast -- 57423
@@ -1198,7 +1112,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(450, 450, 455, 460, 465)
 	recipe:SetRecipeItem(43017, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(43015, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Spicy Fried Herring -- 57433
@@ -1206,7 +1120,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43027, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(42993, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Rhinolicious Wormsteak -- 57434
@@ -1214,7 +1128,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43028, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(42994, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.TANK)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Critter Bites -- 57435
@@ -1222,7 +1136,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43029, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(43004, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Hearty Rhino -- 57436
@@ -1230,7 +1143,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43030, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(42995, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Snapper Extreme -- 57437
@@ -1238,7 +1151,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43031, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(42996, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Blackened Worg Steak -- 57438
@@ -1246,7 +1159,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43032, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(42997, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Cuttlesteak -- 57439
@@ -1254,7 +1166,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43033, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(42998, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Spiced Mammoth Treats -- 57440
@@ -1262,7 +1174,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43034, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(43005, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Blackened Dragonfin -- 57441
@@ -1270,7 +1181,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43035, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(42999, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
+	recipe:AddFilters(F.DPS)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Dragonfin Filet -- 57442
@@ -1278,7 +1189,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43036, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(43000, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
+	recipe:AddFilters(F.DPS)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Tracker Snacks -- 57443
@@ -1286,14 +1197,12 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 425, 450, 475)
 	recipe:SetRecipeItem(43037, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(43001, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Dalaran Clam Chowder -- 58065
 	recipe = AddRecipe(58065, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(350, 350, 350, 382, 415)
 	recipe:SetCraftedItem(43268, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Tasty Cupcake -- 58512
@@ -1301,7 +1210,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(350, 350, 350, 357, 365)
 	recipe:SetRecipeItem(43507, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(43490, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddWorldDrop(Z.NORTHREND)
 
 	-- Last Week's Mammoth -- 58521
@@ -1309,7 +1217,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(350, 350, 350, 357, 365)
 	recipe:SetRecipeItem(43508, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(43488, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddWorldDrop(Z.NORTHREND)
 
 	-- Bad Clams -- 58523
@@ -1317,7 +1224,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(350, 350, 350, 357, 365)
 	recipe:SetRecipeItem(43509, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(43491, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddWorldDrop(Z.NORTHREND)
 
 	-- Haunted Herring -- 58525
@@ -1325,7 +1231,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(350, 350, 350, 357, 365)
 	recipe:SetRecipeItem(43510, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(43492, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddWorldDrop(Z.NORTHREND)
 
 	-- Gigantic Feast -- 58527
@@ -1333,7 +1238,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(425, 425, 435, 455, 475)
 	recipe:SetRecipeItem(43505, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(43478, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Small Feast -- 58528
@@ -1341,7 +1245,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(425, 425, 435, 455, 475)
 	recipe:SetRecipeItem(43506, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(43480, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Pumpkin Pie -- 62044
@@ -1349,7 +1252,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(100, 100, 150, 162, 175)
 	recipe:SetCraftedItem(44836, "BIND_ON_EQUIP")
 	recipe:SetRequiredFaction("Alliance")
-	recipe:AddFilters(F.ALLIANCE, F.HEALER, F.CASTER)
 	recipe:AddWorldEvent("PILGRIMS_BOUNTY")
 
 	-- Slow-Roasted Turkey -- 62045
@@ -1357,7 +1259,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(330, 330, 330, 342, 355)
 	recipe:SetCraftedItem(44839, "BIND_ON_EQUIP")
 	recipe:SetRequiredFaction("Alliance")
-	recipe:AddFilters(F.ALLIANCE, F.DPS)
 	recipe:AddWorldEvent("PILGRIMS_BOUNTY")
 
 	-- Cranberry Chutney -- 62049
@@ -1365,7 +1266,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(210, 210, 210, 222, 235)
 	recipe:SetCraftedItem(44840, "BIND_ON_EQUIP")
 	recipe:SetRequiredFaction("Alliance")
-	recipe:AddFilters(F.ALLIANCE, F.HEALER, F.CASTER)
 	recipe:AddWorldEvent("PILGRIMS_BOUNTY")
 
 	-- Spice Bread Stuffing -- 62050
@@ -1373,7 +1273,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(90, 90, 90, 102, 115)
 	recipe:SetCraftedItem(44837, "BIND_ON_EQUIP")
 	recipe:SetRequiredFaction("Alliance")
-	recipe:AddFilters(F.ALLIANCE)
 	recipe:AddWorldEvent("PILGRIMS_BOUNTY")
 
 	-- Candied Sweet Potato -- 62051
@@ -1381,7 +1280,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(270, 270, 270, 282, 295)
 	recipe:SetCraftedItem(44839, "BIND_ON_EQUIP")
 	recipe:SetRequiredFaction("Alliance")
-	recipe:AddFilters(F.ALLIANCE)
 	recipe:AddWorldEvent("PILGRIMS_BOUNTY")
 
 	-- Worg Tartare -- 62350
@@ -1389,28 +1287,25 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(400, 400, 400, 420, 460)
 	recipe:SetRecipeItem(44954, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(44953, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS)
 	recipe:AddVendor(31031, 31032, 33595)
 
 	-- Clamlette Magnifique -- 64054
 	recipe = AddRecipe(64054, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(250, 250, 250, 275, 300)
 	recipe:SetCraftedItem(33004, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddQuest(6610)
 
 	-- Black Jelly -- 64358
 	recipe = AddRecipe(64358, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(400, 400, 400, 412, 425)
 	recipe:SetCraftedItem(45932, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Bread of the Dead -- 65454
 	recipe = AddRecipe(65454, V.WOTLK, Q.COMMON)
 	recipe:SetSkillLevels(45, 45, 55, 60, 65)
 	recipe:SetCraftedItem(46691, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddWorldEvent("DAY_OF_THE_DEAD")
 	recipe:AddVendor(34382)
 
@@ -1419,7 +1314,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(270, 270, 270, 282, 295)
 	recipe:SetCraftedItem(44839, "BIND_ON_EQUIP")
 	recipe:SetRequiredFaction("Horde")
-	recipe:AddFilters(F.HORDE)
 	recipe:AddWorldEvent("PILGRIMS_BOUNTY")
 
 	-- Cranberry Chutney -- 66035
@@ -1427,7 +1321,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(210, 210, 210, 222, 235)
 	recipe:SetCraftedItem(44840, "BIND_ON_EQUIP")
 	recipe:SetRequiredFaction("Horde")
-	recipe:AddFilters(F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddWorldEvent("PILGRIMS_BOUNTY")
 
 	-- Pumpkin Pie -- 66036
@@ -1435,7 +1328,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(100, 100, 150, 162, 175)
 	recipe:SetCraftedItem(44836, "BIND_ON_EQUIP")
 	recipe:SetRequiredFaction("Horde")
-	recipe:AddFilters(F.HORDE, F.HEALER, F.CASTER)
 	recipe:AddWorldEvent("PILGRIMS_BOUNTY")
 
 	-- Slow-Roasted Turkey -- 66037
@@ -1443,7 +1335,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(330, 330, 330, 342, 355)
 	recipe:SetCraftedItem(44839, "BIND_ON_EQUIP")
 	recipe:SetRequiredFaction("Horde")
-	recipe:AddFilters(F.HORDE, F.DPS)
 	recipe:AddWorldEvent("PILGRIMS_BOUNTY")
 
 	-- Spice Bread Stuffing -- 66038
@@ -1451,7 +1342,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(90, 90, 90, 102, 115)
 	recipe:SetCraftedItem(44837, "BIND_ON_EQUIP")
 	recipe:SetRequiredFaction("Horde")
-	recipe:AddFilters(F.HORDE)
 	recipe:AddWorldEvent("PILGRIMS_BOUNTY")
 
 	-------------------------------------------------------------------------------
@@ -1462,7 +1352,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 515, 520, 525)
 	recipe:SetRecipeItem(65426, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62661, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Basilisk Liverdog -- 88004
@@ -1470,7 +1360,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 515, 520, 525)
 	recipe:SetRecipeItem(65427, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62665, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Beer-Basted Crocolisk -- 88005
@@ -1478,14 +1368,13 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 515, 520, 525)
 	recipe:SetRecipeItem(65429, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62670, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
+	recipe:AddFilters(F.DPS)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Blackened Surprise -- 88006
 	recipe = AddRecipe(88006, V.CATA, Q.COMMON)
 	recipe:SetSkillLevels(425, 425, 450, 457, 465)
 	recipe:SetCraftedItem(62676, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Broiled Dragon Feast -- 88011
@@ -1493,7 +1382,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 500, 500, 525)
 	recipe:SetRecipeItem(62799, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62289, "BIND_ON_PICKUP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddAchievement(5467)
 	recipe:AddVendor(46572, 46602, 51495, 51512)
 
@@ -1502,7 +1390,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(450, 450, 465, 477, 490)
 	recipe:SetRecipeItem(65411, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62655, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Chocolate Cookie -- 88013
@@ -1510,7 +1398,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(505, 505, 510, 512, 515)
 	recipe:SetRecipeItem(65431, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62680, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Crocolisk Au Gratin -- 88014
@@ -1518,14 +1405,13 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 515, 520, 525)
 	recipe:SetRecipeItem(65430, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62664, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.TANK)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Darkbrew Lager -- 88015
 	recipe = AddRecipe(88015, V.CATA, Q.COMMON)
 	recipe:SetSkillLevels(415, 415, 430, 435, 440)
 	recipe:SetCraftedItem(62790, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Delicious Sagefish Tail -- 88016
@@ -1533,14 +1419,13 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 515, 520, 525)
 	recipe:SetRecipeItem(65422, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62666, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Feathered Lure -- 88017
 	recipe = AddRecipe(88017, V.CATA, Q.UNCOMMON)
 	recipe:SetSkillLevels(450, 450, 450, 455, 470)
 	recipe:SetRecipeItem(65408, "BIND_ON_PICKUP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Fish Fry -- 88018
@@ -1548,7 +1433,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(475, 475, 490, 500, 510)
 	recipe:SetRecipeItem(65423, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62677, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Fortune Cookie -- 88019
@@ -1556,7 +1440,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(525, 525, 525, 525, 525)
 	recipe:SetRecipeItem(65432, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62649, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Grilled Dragon -- 88020
@@ -1564,7 +1447,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 515, 520, 525)
 	recipe:SetRecipeItem(65428, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62662, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Hearty Seafood Soup -- 88021
@@ -1572,7 +1455,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(475, 475, 490, 497, 505)
 	recipe:SetRecipeItem(65418, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62659, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
+	recipe:AddFilters(F.DPS)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Highland Spirits -- 88022
@@ -1580,7 +1463,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(450, 450, 455, 460, 465)
 	recipe:SetRecipeItem(65415, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62674, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Lavascale Fillet -- 88024
@@ -1588,7 +1470,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(450, 450, 465, 477, 490)
 	recipe:SetRecipeItem(65407, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62654, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.TANK)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Lavascale Minestrone -- 88025
@@ -1596,7 +1478,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 515, 520, 525)
 	recipe:SetRecipeItem(65409, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62663, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Lightly Fried Lurker -- 88028
@@ -1604,7 +1485,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(450, 450, 465, 477, 490)
 	recipe:SetRecipeItem(65412, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62651, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Lurker Lunch -- 88030
@@ -1612,7 +1493,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(450, 450, 465, 477, 490)
 	recipe:SetRecipeItem(65416, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62657, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TANK)
+	recipe:AddFilters(F.TANK)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Mushroom Sauce Mudfish -- 88031
@@ -1620,7 +1501,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 515, 520, 525)
 	recipe:SetRecipeItem(65420, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62667, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TANK)
+	recipe:AddFilters(F.TANK)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Pickled Guppy -- 88033
@@ -1628,7 +1509,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(475, 475, 490, 497, 505)
 	recipe:SetRecipeItem(65417, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62660, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Blackbelly Sushi -- 88034
@@ -1636,7 +1517,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 515, 520, 525)
 	recipe:SetRecipeItem(65424, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62668, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.TANK)
+	recipe:AddFilters(F.TANK)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Salted Eye -- 88035
@@ -1644,7 +1525,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(450, 450, 465, 477, 490)
 	recipe:SetRecipeItem(65410, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62653, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Seafood Magnifique Feast -- 88036
@@ -1652,7 +1532,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(525, 525, 525, 525, 525)
 	recipe:SetRecipeItem(62800, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62290, "BIND_ON_PICKUP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddAchievement(5036)
 	recipe:AddVendor(46572, 46602, 51495, 51504, 51512)
 
@@ -1661,7 +1540,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(450, 450, 465, 477, 490)
 	recipe:SetRecipeItem(65413, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62652, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Severed Sagefish Head -- 88039
@@ -1669,7 +1548,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 515, 520, 525)
 	recipe:SetRecipeItem(65421, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62671, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Skewered Eel -- 88042
@@ -1677,7 +1556,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 515, 520, 525)
 	recipe:SetRecipeItem(65425, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62669, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
+	recipe:AddFilters(F.DPS)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- South Island Iced Tea -- 88044
@@ -1685,7 +1564,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(525, 525, 525, 525, 525)
 	recipe:SetRecipeItem(65433, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62672, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Starfire Espresso -- 88045
@@ -1693,7 +1571,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(450, 450, 455, 460, 465)
 	recipe:SetRecipeItem(65414, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62675, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Tender Baked Turtle -- 88046
@@ -1701,7 +1578,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(475, 475, 490, 497, 505)
 	recipe:SetRecipeItem(65419, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62658, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS)
+	recipe:AddFilters(F.DPS)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Whitecrest Gumbo -- 88047
@@ -1709,14 +1586,13 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(450, 450, 465, 477, 490)
 	recipe:SetRecipeItem(65406, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(62656, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.HEALER, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.HEALER)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-- Venison Jerky -- 93741
 	recipe = AddRecipe(93741, V.CATA, Q.COMMON)
 	recipe:SetSkillLevels(40, 40, 80, 100, 120)
 	recipe:SetCraftedItem(67230, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1382, 1430, 1699, 2818, 3026, 3067, 3399, 4210, 4552, 4894, 5159, 5482, 6286, 16253, 16719, 17246, 18987, 18993, 19185, 19369, 26905, 26953, 26972, 26989, 28705, 29631, 33587, 33619, 42288, 42506, 45550, 46709, 47405, 49789, 54232, 66353, 85925, 86029)
 
 	-- Scalding Murglesnout -- 96133
@@ -1724,7 +1600,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 500, 500, 510)
 	recipe:SetRecipeItem(68688, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(68687, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(3027, 4223, 4553, 5160, 49701, 49737)
 
 	-------------------------------------------------------------------------------
@@ -1734,119 +1609,102 @@ function module:InitializeRecipes()
 	recipe = AddRecipe(104237, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(500, 500, 510, 515, 520)
 	recipe:SetCraftedItem(74636, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1699, 3026, 3067, 3399, 4210, 4894, 5159, 6286, 16719, 17246, 33587, 42288, 42506, 45550, 46709, 47405, 56707, 64231, 66353, 85925, 86029)
 
 	-- Fish Cake -- 104297
 	recipe = AddRecipe(104297, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(500, 500, 510, 515, 520)
 	recipe:SetCraftedItem(74641, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(1355, 1699, 3026, 3067, 3399, 4210, 4894, 5159, 6286, 16719, 17246, 33587, 42288, 42506, 45550, 46709, 47405, 56707, 64231, 66353, 85925, 86029)
 
 	-- Charbroiled Tiger Steak -- 104298
 	recipe = AddRecipe(104298, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(525, 525, 535, 540, 545)
 	recipe:SetCraftedItem(74642, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58712)
 
 	-- Eternal Blossom Fish -- 104299
 	recipe = AddRecipe(104299, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(550, 550, 560, 565, 570)
 	recipe:SetCraftedItem(74645, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58712)
 
 	-- Black Pepper Ribs and Shrimp -- 104300
 	recipe = AddRecipe(104300, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 610, 615, 620)
 	recipe:SetCraftedItem(74646, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58712)
 
 	-- Sauteed Carrots -- 104301
 	recipe = AddRecipe(104301, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(525, 525, 535, 540, 545)
 	recipe:SetCraftedItem(74643, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58713)
 
 	-- Valley Stir Fry -- 104302
 	recipe = AddRecipe(104302, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(550, 550, 560, 565, 570)
 	recipe:SetCraftedItem(74647, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58713)
 
 	-- Sea Mist Rice Noodles -- 104303
 	recipe = AddRecipe(104303, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 610, 615, 620)
 	recipe:SetCraftedItem(74648, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58713)
 
 	-- Swirling Mist Soup -- 104304
 	recipe = AddRecipe(104304, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(525, 525, 535, 540, 545)
 	recipe:SetCraftedItem(74644, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58714)
 
 	-- Braised Turtle -- 104305
 	recipe = AddRecipe(104305, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(550, 550, 560, 565, 570)
 	recipe:SetCraftedItem(74649, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58714)
 
 	-- Mogu Fish Stew -- 104306
 	recipe = AddRecipe(104306, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 610, 615, 620)
 	recipe:SetCraftedItem(74650, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58714)
 
 	-- Shrimp Dumplings -- 104307
 	recipe = AddRecipe(104307, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(525, 525, 535, 540, 545)
 	recipe:SetCraftedItem(74651, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58715)
 
 	-- Fire Spirit Salmon -- 104308
 	recipe = AddRecipe(104308, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(550, 550, 560, 565, 570)
 	recipe:SetCraftedItem(74652, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58715)
 
 	-- Steamed Crab Surprise -- 104309
 	recipe = AddRecipe(104309, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 610, 615, 620)
 	recipe:SetCraftedItem(74653, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58715)
 
 	-- Wildfowl Roast -- 104310
 	recipe = AddRecipe(104310, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(525, 525, 535, 540, 545)
 	recipe:SetCraftedItem(74654, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58716)
 
 	-- Twin Fish Platter -- 104311
 	recipe = AddRecipe(104311, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(550, 550, 560, 565, 570)
 	recipe:SetCraftedItem(74655, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58716)
 
 	-- Chun Tian Spring Rolls -- 104312
 	recipe = AddRecipe(104312, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 610, 615, 620)
 	recipe:SetCraftedItem(74656, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58716)
 
 	-- Pandaren Banquet -- 105190
@@ -1854,7 +1712,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(600, 600, 600, 600, 600)
 	recipe:SetRecipeItem(75013, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(74919, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(64395)
 
 	-- Great Pandaren Banquet -- 105194
@@ -1862,7 +1719,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(600, 600, 600, 600, 600)
 	recipe:SetRecipeItem(75017, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(75016, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddVendor(64395)
 
 	-- Viseclaw Soup -- 124029
@@ -1870,7 +1726,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(525, 525, 525, 525, 530)
 	recipe:SetRecipeItem(85502, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(85501, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddRepVendor(FAC.THE_ANGLERS, REP.FRIENDLY, 63721)
 
 	-- Krasarang Fritters -- 124032
@@ -1878,140 +1733,120 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(525, 525, 525, 525, 530)
 	recipe:SetRecipeItem(85505, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(85504, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddRepVendor(FAC.THE_ANGLERS, REP.FRIENDLY, 63721)
 
 	-- Ginseng Tea -- 124052
 	recipe = AddRecipe(124052, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(525, 525, 535, 540, 545)
 	recipe:SetCraftedItem(75026, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58717)
 
 	-- Jade Witch Brew -- 124053
 	recipe = AddRecipe(124053, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(550, 550, 560, 565, 570)
 	recipe:SetCraftedItem(75037, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58717)
 
 	-- Mad Brewer's Breakfast -- 124054
 	recipe = AddRecipe(124054, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(600, 600, 610, 615, 620)
 	recipe:SetCraftedItem(75038, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58717)
 
 	-- Pounded Rice Cake -- 124223
 	recipe = AddRecipe(124223, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(120, 120, 130, 135, 140)
 	recipe:SetCraftedItem(81400, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Yak Cheese Curds -- 124224
 	recipe = AddRecipe(124224, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(150, 150, 160, 165, 170)
 	recipe:SetCraftedItem(81401, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Toasted Fish Jerky -- 124225
 	recipe = AddRecipe(124225, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(60, 60, 70, 75, 80)
 	recipe:SetCraftedItem(81402, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Dried Peaches -- 124226
 	recipe = AddRecipe(124226, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(180, 180, 190, 195, 200)
 	recipe:SetCraftedItem(81403, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Dried Needle Mushrooms -- 124227
 	recipe = AddRecipe(124227, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(90, 90, 100, 105, 110)
 	recipe:SetCraftedItem(81404, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Boiled Silkworm Pupa -- 124228
 	recipe = AddRecipe(124228, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(210, 210, 220, 225, 230)
 	recipe:SetCraftedItem(81405, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Red Bean Bun -- 124229
 	recipe = AddRecipe(124229, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(360, 360, 370, 375, 380)
 	recipe:SetCraftedItem(81408, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Tangy Yogurt -- 124230
 	recipe = AddRecipe(124230, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(480, 480, 490, 495, 500)
 	recipe:SetCraftedItem(81409, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Green Curry Fish -- 124231
 	recipe = AddRecipe(124231, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(420, 420, 430, 435, 440)
 	recipe:SetCraftedItem(81410, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Peach Pie -- 124232
 	recipe = AddRecipe(124232, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(450, 450, 460, 465, 470)
 	recipe:SetCraftedItem(81411, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Blanched Needle Mushrooms -- 124233
 	recipe = AddRecipe(124233, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(330, 330, 340, 345, 350)
 	recipe:SetCraftedItem(81412, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Skewered Peanut Chicken -- 124234
 	recipe = AddRecipe(124234, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(390, 390, 400, 405, 410)
 	recipe:SetCraftedItem(81413, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Perfectly Cooked Instant Noodles -- 125067
 	recipe = AddRecipe(125067, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(30, 30, 40, 45, 50)
 	recipe:SetCraftedItem(86026, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Roasted Barley Tea -- 125078
 	recipe = AddRecipe(125078, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(240, 240, 250, 255, 260)
 	recipe:SetCraftedItem(81406, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Pearl Milk Tea -- 125080
 	recipe = AddRecipe(125080, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(495, 495, 505, 510, 515)
 	recipe:SetCraftedItem(81414, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Sliced Peaches -- 125117
 	recipe = AddRecipe(125117, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(1, 1, 11, 16, 21)
 	recipe:SetCraftedItem(86057, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Spicy Salmon -- 125120
@@ -2019,21 +1854,19 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 500, 500, 600)
 	recipe:SetRecipeItem(74657, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(86073, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.CASTER)
+	recipe:AddFilters(F.CASTER, F.DPS)
 	recipe:AddRepVendor(FAC.THE_TILLERS, REP.EXALTED, 58706)
 
 	-- Wildfowl Ginseng Soup -- 125121
 	recipe = AddRecipe(125121, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(510, 510, 520, 525, 530)
 	recipe:SetCraftedItem(86070, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Rice Pudding -- 125122
 	recipe = AddRecipe(125122, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(520, 520, 530, 535, 540)
 	recipe:SetCraftedItem(86069, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(56707, 64231)
 
 	-- Spicy Vegetable Chips -- 125123
@@ -2041,91 +1874,79 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(500, 500, 500, 500, 600)
 	recipe:SetRecipeItem(74658, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(86074, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.TANK)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddRepVendor(FAC.THE_TILLERS, REP.EXALTED, 58706)
 
 	-- Banquet of the Grill -- 125141
 	recipe = AddRecipe(125141, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(575, 575, 585, 590, 595)
 	recipe:SetCraftedItem(87226, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58712)
 
 	-- Great Banquet of the Grill -- 125142
 	recipe = AddRecipe(125142, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(575, 575, 585, 590, 595)
 	recipe:SetCraftedItem(87228, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58712)
 
 	-- Banquet of the Wok -- 125594
 	recipe = AddRecipe(125594, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(575, 575, 585, 590, 595)
 	recipe:SetCraftedItem(87230, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58713)
 
 	-- Great Banquet of the Wok -- 125595
 	recipe = AddRecipe(125595, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(575, 575, 585, 590, 595)
 	recipe:SetCraftedItem(87232, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58713)
 
 	-- Banquet of the Pot -- 125596
 	recipe = AddRecipe(125596, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(575, 575, 585, 590, 595)
 	recipe:SetCraftedItem(87234, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58714)
 
 	-- Great Banquet of the Pot -- 125597
 	recipe = AddRecipe(125597, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(575, 575, 585, 590, 595)
 	recipe:SetCraftedItem(87236, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58714)
 
 	-- Banquet of the Steamer -- 125598
 	recipe = AddRecipe(125598, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(575, 575, 585, 590, 595)
 	recipe:SetCraftedItem(87238, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58715)
 
 	-- Great Banquet of the Steamer -- 125599
 	recipe = AddRecipe(125599, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(575, 575, 585, 590, 595)
 	recipe:SetCraftedItem(87240, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58715)
 
 	-- Banquet of the Oven -- 125600
 	recipe = AddRecipe(125600, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(575, 575, 585, 590, 595)
 	recipe:SetCraftedItem(87242, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58716)
 
 	-- Great Banquet of the Oven -- 125601
 	recipe = AddRecipe(125601, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(575, 575, 585, 590, 595)
 	recipe:SetCraftedItem(87244, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58716)
 
 	-- Banquet of the Brew -- 125602
 	recipe = AddRecipe(125602, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(575, 575, 585, 590, 595)
 	recipe:SetCraftedItem(87246, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58717)
 
 	-- Great Banquet of the Brew -- 125603
 	recipe = AddRecipe(125603, V.MOP, Q.COMMON)
 	recipe:SetSkillLevels(575, 575, 585, 590, 595)
 	recipe:SetCraftedItem(87248, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddTrainer(58717)
 
 	-- Four Senses Brew -- 126654
@@ -2133,7 +1954,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(600, 600, 600, 602, 605)
 	recipe:SetRecipeItem(86393, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(87264, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("FOUR_SENSES_BREW")
 
 	-- Banana Infused Rum -- 126655
@@ -2141,7 +1961,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(600, 600, 600, 602, 605)
 	recipe:SetRecipeItem(87266, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(86432, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("BANANA_INFUSED_RUM")
 
 	-- Noodle Cart Kit -- 145038
@@ -2149,7 +1968,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(600, 600, 600, 600, 600)
 	recipe:SetRecipeItem(101631, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(101630, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddQuest(33022)
 	recipe:AddCustom("TIMELESS_ISLE_COOKING")
 
@@ -2158,7 +1976,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(600, 600, 600, 600, 600)
 	recipe:SetRecipeItem(101664, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(101661, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddQuest(33024)
 	recipe:AddCustom("TIMELESS_ISLE_COOKING")
 
@@ -2167,7 +1984,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(600, 600, 600, 600, 611)
 	recipe:SetRecipeItem(101663, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(101662, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddQuest(33027)
 	recipe:AddCustom("TIMELESS_ISLE_COOKING")
 
@@ -2176,7 +1992,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(600, 600, 600, 600, 600)
 	recipe:SetRecipeItem(101765, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(101746, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("ANCIENT_GUO-LAI_CACHE")
 
 	-- Spiced Blossom Soup -- 145307
@@ -2184,7 +1999,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(600, 600, 600, 600, 600)
 	recipe:SetRecipeItem(101766, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(101748, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("ANCIENT_GUO-LAI_CACHE")
 
 	-- Mango Ice -- 145308
@@ -2192,7 +2006,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(600, 600, 600, 600, 600)
 	recipe:SetRecipeItem(101767, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(101745, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("ANCIENT_GUO-LAI_CACHE")
 
 	-- Farmer's Delight -- 145309
@@ -2200,7 +2013,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(600, 600, 600, 600, 600)
 	recipe:SetRecipeItem(101768, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(101747, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("ANCIENT_GUO-LAI_CACHE")
 
 	-- Stuffed Lushrooms -- 145310
@@ -2208,7 +2020,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(600, 600, 600, 600, 600)
 	recipe:SetRecipeItem(101769, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(101749, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("ANCIENT_GUO-LAI_CACHE")
 
 	-- Fluffy Silkfeather Omelet -- 145311
@@ -2216,7 +2027,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(600, 600, 600, 600, 600)
 	recipe:SetRecipeItem(101770, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(101750, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("ANCIENT_GUO-LAI_CACHE")
 
 	-------------------------------------------------------------------------------
@@ -2227,7 +2037,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 650, 675, 700)
 	recipe:SetRecipeItem(118310, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111431, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Blackrock Ham -- 160962
@@ -2235,7 +2044,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 650, 675, 700)
 	recipe:SetRecipeItem(118311, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111433, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Pan-Seared Talbuk -- 160966
@@ -2243,7 +2051,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 650, 675, 700)
 	recipe:SetRecipeItem(118312, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111434, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Braised Riverbeast -- 160968
@@ -2251,7 +2059,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 650, 675, 700)
 	recipe:SetRecipeItem(118313, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111436, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Rylak Crepes -- 160969
@@ -2259,7 +2066,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 650, 675, 700)
 	recipe:SetRecipeItem(118314, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111437, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Clefthoof Sausages -- 160971
@@ -2267,7 +2073,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 650, 675, 700)
 	recipe:SetRecipeItem(118315, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111438, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Steamed Scorpion -- 160973
@@ -2275,7 +2080,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 650, 675, 700)
 	recipe:SetRecipeItem(118316, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111439, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Grilled Gulper -- 160978
@@ -2283,7 +2087,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 650, 675, 700)
 	recipe:SetRecipeItem(118317, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111441, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Sturgeon Stew -- 160979
@@ -2291,7 +2095,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 650, 675, 700)
 	recipe:SetRecipeItem(118318, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111442, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Fat Sleeper Cakes -- 160981
@@ -2299,7 +2103,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 650, 675, 700)
 	recipe:SetRecipeItem(118319, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111444, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Fiery Calamari -- 160982
@@ -2307,7 +2110,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 650, 675, 700)
 	recipe:SetRecipeItem(118320, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111445, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Skulker Chowder -- 160983
@@ -2315,7 +2117,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 650, 675, 700)
 	recipe:SetRecipeItem(118321, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111446, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Talador Surf and Turf -- 160984
@@ -2323,7 +2124,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 650, 675, 700)
 	recipe:SetRecipeItem(118322, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111447, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Blackrock Barbecue -- 160986
@@ -2331,7 +2131,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 650, 675, 700)
 	recipe:SetRecipeItem(118323, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111447, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Frosty Stew -- 160987
@@ -2339,7 +2139,7 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 675, 700, 725)
 	recipe:SetRecipeItem(118324, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111450, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddFilters(F.CASTER, F.DPS, F.HEALER)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Sleeper Surprise -- 160989
@@ -2347,7 +2147,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 675, 700, 725)
 	recipe:SetRecipeItem(118325, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111452, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Calamari Crepes -- 160999
@@ -2355,7 +2154,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 675, 700, 725)
 	recipe:SetRecipeItem(118326, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111453, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Gorgrond Chowder -- 161000
@@ -2363,21 +2161,18 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 675, 700, 725)
 	recipe:SetRecipeItem(118326, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111453, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Saberfish Broth -- 161001
 	recipe = AddRecipe(161001, V.WOD, Q.COMMON)
 	recipe:SetSkillLevels(1, 1, 600, 625, 650)
 	recipe:SetCraftedItem(111455, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DRAENOR_DEFAULT")
 
 	-- Grilled Saberfish -- 161002
 	recipe = AddRecipe(161002, V.WOD, Q.COMMON)
 	recipe:SetSkillLevels(1, 1, 600, 625, 650)
 	recipe:SetCraftedItem(111456, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DRAENOR_DEFAULT")
 
 	-- Feast of Blood -- 173978
@@ -2385,7 +2180,6 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 700, 725, 750)
 	recipe:SetRecipeItem(118328, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111457, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
 
 	-- Feast of the Waters -- 173979
@@ -2393,8 +2187,49 @@ function module:InitializeRecipes()
 	recipe:SetSkillLevels(1, 1, 700, 725, 750)
 	recipe:SetRecipeItem(118329, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(111458, "BIND_ON_EQUIP")
-	recipe:AddFilters(F.ALLIANCE, F.HORDE)
 	recipe:AddDiscovery("DISCOVERY_COOK_DRAENOR")
+
+	-- Salty Squid Roll -- 180757
+	recipe = AddRecipe(180757, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(1, 1, 700, 707, 715)
+	recipe:SetRecipeItem(122559, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(122344, "BIND_ON_EQUIP")
+	recipe:AddVendor(79828, 80159)
+
+	-- Pickled Eel -- 180758
+	recipe = AddRecipe(180758, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(1, 1, 700, 707, 715)
+	recipe:SetRecipeItem(122558, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(122345, "BIND_ON_EQUIP")
+	recipe:AddVendor(79828, 80159)
+
+	-- Jumbo Sea Dog -- 180759
+	recipe = AddRecipe(180759, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(1, 1, 700, 707, 715)
+	recipe:SetRecipeItem(122557, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(122346, "BIND_ON_EQUIP")
+	recipe:AddVendor(79828, 80159)
+
+	-- Whiptail Fillet -- 180760
+	recipe = AddRecipe(180760, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(1, 1, 700, 707, 715)
+	recipe:SetRecipeItem(122556, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(122347, "BIND_ON_EQUIP")
+	recipe:AddVendor(79828, 80159)
+
+	-- Buttered Sturgeon -- 180761
+	recipe = AddRecipe(180761, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(1, 1, 700, 707, 715)
+	recipe:SetRecipeItem(122560, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(122348, "BIND_ON_EQUIP")
+	recipe:AddVendor(79828, 80159)
+
+	-- Sleeper Sushi -- 180762
+	recipe = AddRecipe(180762, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(1, 1, 700, 707, 715)
+	recipe:SetRecipeItem(122555, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(122343, "BIND_ON_EQUIP")
+	recipe:AddVendor(79828, 80159)
 
 	self.InitializeRecipes = nil
 end

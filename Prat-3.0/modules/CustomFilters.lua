@@ -381,9 +381,9 @@ Prat:AddModuleToLoad(function()
 	["Extra data for WHISPER (target) and CHANNEL (channel name or num)"] = "密语(目标)和频道(频道名称或数字)的扩展数据",
 	["Filter Name"] = "过滤器名字",
 	Forward = "转发",
-	-- ForwardCustom = "",
+	ForwardCustom = "自定义传送", -- Needs review
 	ForwardMessage = "信息转发",
-	-- ForwardMessageCustom = "",
+	ForwardMessageCustom = "私有频道", -- Needs review
 	["Forward the message to a chat channel."] = "转发信息到聊天频道",
 	["Forward the message to a custom chat channel."] = "输出到一个私人频道", -- Needs review
 	["Hilight Color"] = "颜色高亮",

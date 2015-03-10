@@ -220,6 +220,31 @@ GTFO.SpellID["158441"] = {
 	sound = 2;
 };
 
+GTFO.SpellID["155963"] = {
+	--desc = "Lavastrike (Slavemaster Ok'mok)";
+	sound = 1;
+};
+
+GTFO.SpellID["162679"] = {
+	--desc = "Wild Arcane (No'losh)";
+	sound = 1;
+};
+
+GTFO.SpellID["162686"] = {
+	--desc = "Wild Arcane (No'losh)";
+	sound = 1;
+};
+
+GTFO.SpellID["176778"] = {
+	--desc = "Energy Field (Spirit of Exarch Hataaru)";
+	sound = 1;
+};
+
+GTFO.SpellID["176871"] = {
+	--desc = "Heaven's Wrath (Spirit of Maraad)";
+	sound = 1;
+};
+
 --TODO: Acid Breath (Drov the Ruiner) - avoidable?
 
 -- **************
@@ -389,6 +414,7 @@ GTFO.SpellID["163741"] = {
 GTFO.SpellID["166570"] = {
 	--desc = "Slag Blast (Nitrogg Thundertower)";
 	sound = 1;
+	applicationOnly = true;
 };
 
 
@@ -913,7 +939,6 @@ GTFO.SpellID["160179"] = {
 	--desc = "Mind Fungus (Brackenspore)";
 	sound = 2;
 	casterOnly = true;
-	test = true;
 };
 
 GTFO.SpellID["166180"] = {
@@ -944,15 +969,27 @@ GTFO.SpellID["173827"] = {
 	sound = 1;
 };
 
-GTFO.SpellID["174405"] = {
-	--desc = "Frozen Core";
-	sound = 4;
-	negatingDebuffSpellID = 174404;
+GTFO.SpellID["172917"] = {
+	--desc = "Expel Magic: Fel (Ko'rgah, Mythic)";
+	sound = 1;
 };
 
+GTFO.SpellID["175056"] = {
+	--desc = "Arcane Residue (Warden Thul'tok)";
+	sound = 1;
+	tankSound = 2;
+};
 
--- Ko'ragh
--- TODO: Expel Magic: Fel (Ko'ragh, Heroic) -- fire?
+GTFO.SpellID["174470"] = {
+	--desc = "Rampage (Gorian Royal Guardsman)";
+	sound = 1;
+	tankSound = 0;
+};
+
+GTFO.SpellID["174576"] = {
+	--desc = "Arcane Damage (Councilor Magknor)";
+	sound = 1;
+};
 
 GTFO.SpellID["162397"] = {
 	--desc = "Expel Magic: Arcane (Ko'ragh)";
@@ -974,7 +1011,7 @@ GTFO.SpellID["157353"] = {
 			GTFO.VariableStore.ForceNovaHitCount = 0;
 		end
 		if (GTFO.VariableStore.ForceNovaHitCount == 0) then
-			GTFO_AddEvent("ResetForceNovaCounter", 10, function() GTFO.VariableStore.ForceNovaHitCount = 0; end);
+			GTFO_AddEvent("ResetForceNovaCounter", 5, function() GTFO.VariableStore.ForceNovaHitCount = 0; end);
 		end
 		GTFO.VariableStore.ForceNovaHitCount = GTFO.VariableStore.ForceNovaHitCount + 1;
 		if (GTFO.VariableStore.ForceNovaHitCount > 8) then
@@ -983,3 +1020,16 @@ GTFO.SpellID["157353"] = {
 	end;
 };
 
+GTFO.SpellID["174405"] = {
+	--desc = "Frozen Core (Breaker Ritualist)";
+	sound = 4;
+	damageMinimum = 1;
+};
+
+
+GTFO.SpellID["157769"] = {
+	--desc = "Nether Blast (Imperator Mar'gok)";
+	sound = 4;
+	negatingDebuffSpellID = 157763; -- Fixate
+	negatingIgnoreTime = 2;
+};

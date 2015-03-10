@@ -6,7 +6,7 @@
 ## OptionalDeps: !nLog, Babylonian, DebugLib, SlideBar, Auc-Advanced, Configator, LibExtraTip, TipHelper, LibDataBroker
 ## SavedVariables: BeanCounterDB, BeanCounterDBSettings, BeanCounterDBNames, BeanCounterAccountDB, BeanCounterMailPatch
 ##
-## Version: 5.21c.5521 (SanctimoniousSwamprat)
+## Version: 5.21d.5538 (SanctimoniousSwamprat)
 ## Revision: $Id: BeanCounter.toc 5504 2014-10-19 11:07:29Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

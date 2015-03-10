@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - WoWEcon price statistics module
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
 	Revision: $Id: WOWEcon.lua 5323 2012-08-16 15:31:03Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -226,4 +226,4 @@ function lib.ProcessTooltip(tooltip, name, hyperlink, quality, quantity, cost, .
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Stat-WOWEcon/WOWEcon.lua $", "$Rev: 5323 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Stat-WOWEcon/WOWEcon.lua $", "$Rev: 5323 $")

@@ -1,3 +1,9 @@
+6.0.13a:
+ - Bugfix for mages
+
+6.0.13:
+ - Change color when LS is at 15+
+
 6.0.12:
  - Lightning Shield charges now go up to 20 and displayed as progress 
 bar

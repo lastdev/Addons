@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(169, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 103 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
 mod:SetCreatureID(42180, 42178, 42179, 42166)
 mod:SetEncounterID(1027)
 mod:SetZone()
 mod:SetUsedIcons(1, 3, 6, 7, 8)
-mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_OmnitronIntro01.wav", "Sound\\Creature\\Council\\VO_BD_Council_Event01.wav")
+mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_OmnitronIntro01.ogg", "Sound\\Creature\\Council\\VO_BD_Council_Event01.ogg")
 --Long: Hmm, the Omnotron Defense System. Centuries ago, these constructs were considered the dwarves greatest tactical achievements. With so many counters to each construct's attacks, I'll have to rectify these designs for them to provide me ANY entertainment!
 --Short: Intruders detected. Primary defense matrix initiated.
 
@@ -23,62 +23,62 @@ mod:RegisterEvents(
 )
 
 --Magmatron
-local warnIncineration			= mod:NewSpellAnnounce(79023, 2, nil, mod:IsHealer())
-local warnBarrierSoon			= mod:NewPreWarnAnnounce(79582, 10, 3, nil, not mod:IsHealer())
-local warnBarrier				= mod:NewSpellAnnounce(79582, 4, nil, not mod:IsHealer())
+local warnIncineration			= mod:NewSpellAnnounce(79023, 2, nil, "Healer")
+local warnBarrierSoon			= mod:NewPreWarnAnnounce(79582, 10, 3, nil, "-Healer")
+local warnBarrier				= mod:NewSpellAnnounce(79582, 4, nil, "-Healer")
 local warnAcquiringTarget		= mod:NewTargetAnnounce(79501, 4, nil, false)--Off by default, default UI has this warning built in
 --Electron
 local warnLightningConductor	= mod:NewTargetAnnounce(79888, 4, nil, false)--Off by default, default UI has this warning built in
-local warnUnstableShieldSoon	= mod:NewPreWarnAnnounce(79900, 10, 3, nil, not mod:IsHealer())
-local warnUnstableShield		= mod:NewSpellAnnounce(79900, 4, nil, not mod:IsHealer())
+local warnUnstableShieldSoon	= mod:NewPreWarnAnnounce(79900, 10, 3, nil, "-Healer")
+local warnUnstableShield		= mod:NewSpellAnnounce(79900, 4, nil, "-Healer")
 local warnShadowConductorCast	= mod:NewPreWarnAnnounce(92053, 5, 4)--Heroic Ability
 --Toxitron
 local warnPoisonProtocol		= mod:NewSpellAnnounce(80053, 3)
 local warnFixate				= mod:NewTargetAnnounce(80094, 4, nil, false)--Spammy, off by default. Raid leader can turn it on if they wanna yell at these people.
 local warnChemicalBomb			= mod:NewTargetAnnounce(80157, 3)
 local warnShellSoon				= mod:NewPreWarnAnnounce(79835, 10, 2, nil, false)
-local warnShell					= mod:NewSpellAnnounce(79835, 3, nil, not mod:IsHealer())
+local warnShell					= mod:NewSpellAnnounce(79835, 3, nil, "-Healer")
 local warnGrip					= mod:NewCastAnnounce(91849, 4)--Heroic Ability
 --Arcanotron
 local warnGenerator				= mod:NewSpellAnnounce(79624, 3)
-local warnConversionSoon		= mod:NewPreWarnAnnounce(79729, 10, 3, nil, not mod:IsHealer())
-local warnConversion			= mod:NewSpellAnnounce(79729, 4, nil, not mod:IsHealer())
+local warnConversionSoon		= mod:NewPreWarnAnnounce(79729, 10, 3, nil, "-Healer")
+local warnConversion			= mod:NewSpellAnnounce(79729, 4, nil, "-Healer")
 local warnOverchargedGenerator	= mod:NewSpellAnnounce(91857, 4)--Heroic Ability
 --All
 local warnActivated				= mod:NewTargetAnnounce(78740, 3)
 
 --Magmatron
-local specWarnBarrier			= mod:NewSpecialWarningSpell(79582, not mod:IsHealer())
-local specWarnAcquiringTarget	= mod:NewSpecialWarningYou(79501)
+local specWarnBarrier			= mod:NewSpecialWarningSpell(79582, "-Healer")
+local specWarnAcquiringTarget	= mod:NewSpecialWarningMoveAway(79501)
 local yellAcquiringTarget		= mod:NewYell(79501)
 local specWarnEncasingShadows	= mod:NewSpecialWarningTarget(92023, false)--Heroic Ability
 local yellEncasingShadows		= mod:NewYell(92023, L.YellTargetLock)
 --Electron
-local specWarnUnstableShield	= mod:NewSpecialWarningSpell(79900, not mod:IsHealer())
-local specWarnConductor			= mod:NewSpecialWarningYou(79888)
+local specWarnUnstableShield	= mod:NewSpecialWarningSpell(79900, "-Healer")
+local specWarnConductor			= mod:NewSpecialWarningMoveAway(79888)
 local yellLightConductor		= mod:NewYell(79888)
 local specWarnShadowConductor	= mod:NewSpecialWarningTarget(92053)--Heroic Ability
 local yellShadowConductor		= mod:NewYell(92053)
 --Toxitron
-local specWarnShell				= mod:NewSpecialWarningSpell(79835, not mod:IsHealer())
+local specWarnShell				= mod:NewSpecialWarningSpell(79835, "-Healer")
 local specWarnBombTarget		= mod:NewSpecialWarningRun(80094)
 local yellFixate				= mod:NewYell(80094, nil, false)
-local specWarnPoisonProtocol	= mod:NewSpecialWarningSpell(80053, not mod:IsHealer())
+local specWarnPoisonProtocol	= mod:NewSpecialWarningSpell(80053, "-Healer")
 local specWarnChemicalCloud		= mod:NewSpecialWarningMove(80161)
 local yellChemicalCloud			= mod:NewYell(80161)--May Return false tank yells
-local specWarnGrip				= mod:NewSpecialWarningSpell(91849, nil, nil, nil, true)--Heroic Ability
+local specWarnGrip				= mod:NewSpecialWarningSpell(91849, nil, nil, nil, 2)--Heroic Ability
 --Arcanotron
-local specWarnConversion		= mod:NewSpecialWarningSpell(79729, not mod:IsHealer())
-local specWarnGenerator			= mod:NewSpecialWarning("specWarnGenerator", mod:IsTank())
-local specWarnAnnihilator		= mod:NewSpecialWarningInterrupt(79710, mod:IsMelee())--On by default for melee now that there is a smart filterin place on whether or not they should be warned.
+local specWarnConversion		= mod:NewSpecialWarningSpell(79729, "-Healer")
+local specWarnGenerator			= mod:NewSpecialWarning("specWarnGenerator", "Tank")
+local specWarnAnnihilator		= mod:NewSpecialWarningInterrupt(79710, "Melee")--On by default for melee now that there is a smart filterin place on whether or not they should be warned.
 local specWarnOvercharged		= mod:NewSpecialWarningSpell(91857, false)--Heroic Ability
 --All
-local specWarnActivated			= mod:NewSpecialWarning("SpecWarnActivated", not mod:IsHealer())--Good for target switches, but healers probably don't want an extra special warning for it.
+local specWarnActivated			= mod:NewSpecialWarning("SpecWarnActivated", "-Healer")--Good for target switches, but healers probably don't want an extra special warning for it.
 
 --Magmatron
 local timerAcquiringTarget		= mod:NewNextTimer(40, 79501)
 local timerBarrier				= mod:NewBuffActiveTimer(11.5, 79582, nil, false)	-- 10 + 1.5 cast time
-local timerIncinerationCD   	= mod:NewNextTimer(26.5, 79023, nil, mod:IsHealer())--Timer Series, 10, 27, 32 (on normal) from activate til shutdown.
+local timerIncinerationCD   	= mod:NewNextTimer(26.5, 79023, nil, "Healer")--Timer Series, 10, 27, 32 (on normal) from activate til shutdown.
 --Electron
 local timerLightningConductor	= mod:NewTargetTimer(10, 79888)
 local timerLightningConductorCD	= mod:NewNextTimer(25, 79888)
@@ -99,9 +99,6 @@ local timerNextActivate			= mod:NewNextTimer(45, 78740)				--Activations are eve
 local timerNefAbilityCD			= mod:NewTimer(30, "timerNefAblity", 92048)--Huge variation on this, but shortest CD i've observed is 30.
 
 local berserkTimer				= mod:NewBerserkTimer(600)
-
-local soundLightningConductor	= mod:NewSound(79888)
-local soundFixate				= mod:NewSound(80094)
 
 mod:AddBoolOption("AcquiringTargetIcon")
 mod:AddBoolOption("ConductorIcon")
@@ -247,7 +244,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnLightningConductor:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnConductor:Show()
-			soundLightningConductor:Play()
 			yellLightConductor:Yell()
 		end
 		if self.Options.ConductorIcon then
@@ -264,7 +260,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnFixate:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnBombTarget:Show()
-			soundFixate:Play()
 			yellFixate:Yell()
 		end
 	elseif args.spellId == 80161 and args:IsPlayer() and GetTime() - cloudSpam > 4 then

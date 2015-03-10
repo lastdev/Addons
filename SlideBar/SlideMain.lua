@@ -1,6 +1,6 @@
 --[[
 	Slidebar AddOn for World of Warcraft (tm)
-	Version: 5.0.0 (<%codename%>)
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
 	Revision: $Id: SlideMain.lua 312 2011-06-14 07:33:25Z brykrys $
 	URL: http://auctioneeraddon.com/dl/
 

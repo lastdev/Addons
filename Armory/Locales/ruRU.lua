@@ -396,6 +396,8 @@ L["ARMORY_OPEN_HINT"] = "Нажмите, чтобы открыть" -- Needs rev
 L["ARMORY_PANDARIA_GEM_RESEARCH"] = "Pandaria Gem Research" -- Requires localization
 L["ARMORY_QUEST_TOOLTIP_LABEL"] = "Альты на этом задании:"
 L["ARMORY_RECIPE"] = "Рецепт" -- Needs review
+L["ARMORY_RECIPE_WARNING"] = [=[Recipe %s not found in LibCraftInfo. Trying to make an educated guess.
+Please check with '/armory find skill ...' to be sure.]=] -- Requires localization
 L["ARMORY_REPUTATION_SUMMARY"] = "%1$s - %2$s (%3$d/%4$d, %5$d осталось)" -- Needs review
 L["ARMORY_SEARCHING"] = "Поиск..."
 L["ARMORY_SELECT_UNIT_HINT"] = "Левый клик, чтобы выбрать этого персонажа." -- Needs review

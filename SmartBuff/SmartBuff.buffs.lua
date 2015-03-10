@@ -399,7 +399,11 @@ function SMARTBUFF_InitSpellIDs()
   SMARTBUFF_CRIPPLINGPOISON   = GetSpellInfo(3408);  --"Crippling Poison"
   SMARTBUFF_DEADLYPOISON      = GetSpellInfo(2823);  --"Deadly Poison"
   SMARTBUFF_LEECHINGPOISON    = GetSpellInfo(108211);--"Leeching Poison"
-  SMARTBUFF_INSTANTPOISON     = GetSpellInfo(157607);--"Instant Poison"
+  SMARTBUFF_INSTANTPOISON     = GetSpellInfo(157584);--"Instant Poison"		http://www.wowhead.com/spell=157584/instant-poison
+--  SMARTBUFF_INSTANTPOISON     = GetSpellInfo(157607);--"Instant Poison"		
+
+print(" HERE " .. SMARTBUFF_INSTANTPOISON);
+print(" HERE " .. SMARTBUFF_CRIPPLINGPOISON);
   -- Rogue buff links
   S.ChainRoguePoisonsLethal    = { SMARTBUFF_DEADLYPOISON, SMARTBUFF_WOUNDPOISON, SMARTBUFF_INSTANTPOISON };
   S.ChainRoguePoisonsNonLethal = { SMARTBUFF_CRIPPLINGPOISON, SMARTBUFF_LEECHINGPOISON };
@@ -737,6 +741,7 @@ function SMARTBUFF_InitSpellList()
       {SMARTBUFF_EVASION, 0.2, SMARTBUFF_CONST_SELF},
       {SMARTBUFF_DEADLYPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsLethal},
       {SMARTBUFF_WOUNDPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsLethal},
+      {SMARTBUFF_INSTANTPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsLethal},		-- Added
       {SMARTBUFF_LEECHINGPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsNonLethal},
       {SMARTBUFF_CRIPPLINGPOISON, 60, SMARTBUFF_CONST_SELF, nil, S.CheckFishingPole, nil, S.ChainRoguePoisonsNonLethal}
     };

@@ -384,7 +384,7 @@ function addon:GetMethodOwner(methodName)
 		local owner = info.owner
 		if owner.GetName then
 			-- implemented for any AceAddon addon or module
-			ownerName = owner.GetName()
+			ownerName = owner:GetName()
 		else
 			for moduleName, moduleTable in pairs(RegisteredModules) do
 				if moduleTable == owner then

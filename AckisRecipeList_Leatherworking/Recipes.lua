@@ -7787,5 +7787,23 @@ function module:InitializeRecipes()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.DPS, F.HEALER, F.CASTER)
 	recipe:AddVendor(77383, 79834, 87057, 87549)
 
+	-- Powerful Burnished Essence -- 181415
+	recipe = AddRecipe(181415, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(1, 1, 700, 702, 705)
+	recipe:SetCraftedItem(122537, "BIND_ON_EQUIP")
+	recipe:SetRecipeItem(122547, "BIND_ON_PICKUP")
+	recipe:SetItemFilterType("LEATHERWORKING_ITEM_ENHANCEMENT")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddVendor(91024, 91033)
+
+	-- Spiritual Leathercraft -- 182121
+	recipe = AddRecipe(182121, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(1, 1, 700, 700, 700)
+	recipe:SetCraftedItem(110611, "BIND_ON_PICKUP")
+	recipe:SetRecipeItem(122715, "BIND_ON_PICKUP")
+	recipe:SetItemFilterType("LEATHERWORKING_MATERIALS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddVendor(91024, 91033)
+
 	self.InitializeRecipes = nil
 end

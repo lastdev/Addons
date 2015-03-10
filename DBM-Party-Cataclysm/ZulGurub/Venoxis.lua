@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(175, "DBM-Party-Cataclysm", 11, 76)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 124 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
 mod:SetCreatureID(52155)
 mod:SetZone()
 mod:SetUsedIcons(7, 8)
@@ -29,9 +29,9 @@ local timerWhisperHethiss	= mod:NewTargetTimer(8, 96466)
 local timerBreathHethiss	= mod:NewNextTimer(12, 96509)
 local timerToxicLinkCD		= mod:NewNextTimer(14, 96477)--13-15 second variations, 14 will be a good medium
 
-local specWarnWhisperHethiss= mod:NewSpecialWarningInterrupt(96466, not mod:IsHealer())
+local specWarnWhisperHethiss= mod:NewSpecialWarningInterrupt(96466, "-Healer")
 local specWarnToxicLink		= mod:NewSpecialWarningYou(96477)
-local specWarnBloodvenom	= mod:NewSpecialWarningSpell(96842, nil, nil, nil, true)
+local specWarnBloodvenom	= mod:NewSpecialWarningSpell(96842, nil, nil, nil, 2)
 local specWarnPoolAcridTears= mod:NewSpecialWarningMove(96521)
 local specWarnEffusion		= mod:NewSpecialWarningMove(96680)
 

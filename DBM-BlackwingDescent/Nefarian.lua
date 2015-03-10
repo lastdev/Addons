@@ -3,11 +3,11 @@ local L		= mod:GetLocalizedStrings()
 local Nefarian	= EJ_GetSectionInfo(3279)
 local Onyxia	= EJ_GetSectionInfo(3283)
 
-mod:SetRevision(("$Revision: 103 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
 mod:SetCreatureID(41376, 41270)
 --mod:SetEncounterID(1026) -- ES fires when Nefarian engaged.
 mod:SetZone()
-mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_Event09.wav", "Sound\\Creature\\Nefarian\\VO_BD_Nefarian_Event13.wav")
+mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_Event09.ogg", "Sound\\Creature\\Nefarian\\VO_BD_Nefarian_Event13.ogg")
 --"Ha ha ha ha ha! The heroes have made it to the glorious finale. I take it you are in good spirits? Prepared for the final battle? Then gaze now upon my ultimate creation! RISE, SISTER!" = "Nefarian\\VO_BD_Nefarian_Event01",
 --Long: I have tried to be an accommodating host, but you simply will not die! Time to throw all pretense aside and just... KILL YOU ALL!.
 --Short: You really have to want it!
@@ -36,25 +36,25 @@ mod:RegisterEventsInCombat(
 
 local warnOnyTailSwipe			= mod:NewAnnounce("OnyTailSwipe", 3, 77827)--we only care about onyxia's tailswipe. Nefarian's shouldn't get in the way or you're doing it wrong.
 local warnNefTailSwipe			= mod:NewAnnounce("NefTailSwipe", 3, 77827, false)--but for those that might care for whatever reason, we include his too, off by default.
-local warnOnyShadowflameBreath	= mod:NewAnnounce("OnyBreath", 3, 77826, mod:IsTank())
-local warnNefShadowflameBreath	= mod:NewAnnounce("NefBreath", 3, 77826, mod:IsTank())
+local warnOnyShadowflameBreath	= mod:NewAnnounce("OnyBreath", 3, 77826, "Tank")
+local warnNefShadowflameBreath	= mod:NewAnnounce("NefBreath", 3, 77826, "Tank")
 local warnBlastNova				= mod:NewSpellAnnounce(80734, 3, nil, false)--Can be spammy so now off by default.
 local warnCinder				= mod:NewTargetAnnounce(79339, 4)
 local warnPhase2				= mod:NewPhaseAnnounce(2)
 local warnPhase3				= mod:NewPhaseAnnounce(3)
 local warnDominion				= mod:NewTargetAnnounce(79318, 3)
 local warnShadowBlaze			= mod:NewSpellAnnounce(81031, 4)--May be quirky
-local warnShadowblazeSoon		= mod:NewAnnounce("warnShadowblazeSoon", 2, 81031, mod:IsTank(), nil, true)--Back to on by default for tanks until option isn't tied to sound.
+local warnShadowblazeSoon		= mod:NewAnnounce("warnShadowblazeSoon", 2, 81031, "Tank", nil, true)--Back to on by default for tanks until option isn't tied to sound.
 
 local specWarnElectrocute		= mod:NewSpecialWarningSpell(81198, nil, nil, nil, true)
 local specWarnBlastsNova		= mod:NewSpecialWarningInterrupt(80734)
 local specWarnDominion			= mod:NewSpecialWarningYou(79318)
 local specWarnStolenPower		= mod:NewSpecialWarningStack(80627, nil, 150)
 local specWarnCinder			= mod:NewSpecialWarningYou(79339)
-local specWarnCinderMove		= mod:NewSpecialWarningMove(79339, false, "specWarnCinderMove")
+local specWarnCinderMove		= mod:NewSpecialWarningMoveAway(79339, true, "specWarnCinderMove", nil, 3)
 local yellCinder				= mod:NewYell(79339)
 local specWarnShadowblaze		= mod:NewSpecialWarningMove(81007)
-local specWarnShadowblazeSoon	= mod:NewSpecialWarning("specWarnShadowblazeSoon", mod:IsTank())
+local specWarnShadowblazeSoon	= mod:NewSpecialWarning("specWarnShadowblazeSoon", "Tank")
 
 local timerBlastNova			= mod:NewCastTimer(1.5, 80734)
 local timerElectrocute			= mod:NewCastTimer(5, 81198)
@@ -62,17 +62,16 @@ local timerNefLanding			= mod:NewTimer(30, "timerNefLanding", 78620)
 local timerShadowflameBarrage	= mod:NewBuffActiveTimer(150, 78621)
 local timerOnySwipeCD			= mod:NewTimer(10, "OnySwipeTimer", 77827)--10-20 second cd (18 being the most consistent)
 local timerNefSwipeCD			= mod:NewTimer(10, "NefSwipeTimer", 77827, false)--Same as hers, but not synced.
-local timerOnyBreathCD			= mod:NewTimer(12, "OnyBreathTimer", 77826, mod:IsTank() or mod:IsHealer())--12-20 second variations
-local timerNefBreathCD			= mod:NewTimer(12, "NefBreathTimer", 77826, mod:IsTank() or mod:IsHealer())--same as above
+local timerOnyBreathCD			= mod:NewTimer(12, "OnyBreathTimer", 77826, "Tank|Healer")--12-20 second variations
+local timerNefBreathCD			= mod:NewTimer(12, "NefBreathTimer", 77826, "Tank|Healer")--same as above
 local timerCinder				= mod:NewBuffFadesTimer(8, 79339)--Heroic Ability
 local timerCinderCD				= mod:NewCDTimer(22, 79339)--Heroic Ability (Every 22-25 seconds, 25 being most common but we gotta use 22 for timer cause of that small chance it's that).
-local timerDominionCD			= mod:NewNextTimer(15, 79318, nil, not mod:IsTank())
+local timerDominionCD			= mod:NewNextTimer(15, 79318, nil, not "Tank")
 local timerShadowBlazeCD		= mod:NewCDTimer(10, 81031)
 
 local berserkTimer				= mod:NewBerserkTimer(630)
 
-local soundCinder				= mod:NewSound(79339)
-local countdownShadowblaze		= mod:NewCountdown(30, 81031, mod:IsTank())
+local countdownShadowblaze		= mod:NewCountdown(30, 81031, "Tank")
 
 mod:AddBoolOption("RangeFrame", true)
 mod:AddBoolOption("SetIconOnCinder", true)
@@ -212,7 +211,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnCinder:Show()
 			specWarnCinderMove:Schedule(3)
-			soundCinder:Schedule(3)	-- no need to move as soon as the debuff is applied
 			yellCinder:Yell()
 		end
 		if self.Options.SetIconOnCinder then

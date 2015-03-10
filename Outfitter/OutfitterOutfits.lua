@@ -445,7 +445,11 @@ function Outfitter._OutfitMethodsEM:GetIcon()
 		return "Interface\\Icons\\INV_Chest_Cloth_21"
 	end
 	
-	return "Interface\\Icons\\"..vIcon
+	if type(vIcon) == "number" then
+		return vIcon
+	else
+		return "Interface\\Icons\\"..vIcon
+	end
 end
 
 function Outfitter._OutfitMethodsEM:SetIcon(pTexture)
@@ -461,6 +465,10 @@ function Outfitter._OutfitMethodsEM:SetIcon(pTexture)
 end
 
 function Outfitter._OutfitMethodsEM:SetIcon2(pTexture)
+	if type(pTexture) == "number" then
+		pTexture = Outfitter:ConvertTextureIDToString(pTexture)
+	end
+
 	self:MarkSlotsToIgnore()
 	self:SaveEquipmentSet(self.Name, pTexture)
 end

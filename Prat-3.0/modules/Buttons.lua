@@ -312,8 +312,8 @@ L:AddLocale("zhCN",
 	["Set Position"] = "设置位置",
 	["Sets position of chat menu and arrows for all chat windows."] = "设置所有聊天窗口的聊天目录及箭头位置",
 	["Show Arrows"] = "显示箭头",
-	-- showbnet_desc = "",
-	-- showbnet_name = "",
+	showbnet_desc = "显示社交菜单", -- Needs review
+	showbnet_name = "显示社交菜单", -- Needs review
 	["Show Chat%d Arrows"] = "显示聊天%d箭头",
 	showmenu_desc = "显示聊天菜单", -- Needs review
 	showmenu_name = "显示菜单", -- Needs review

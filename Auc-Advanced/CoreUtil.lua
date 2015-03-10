@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
-	Revision: $Id: CoreUtil.lua 5518 2014-11-06 11:35:20Z brykrys $
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Revision: $Id: CoreUtil.lua 5524 2014-11-23 18:06:32Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -270,27 +270,7 @@ function lib.ShowPetLink(...) return tooltip:ShowPetLink(...) end
 function lib.BreakHyperlink(...) return tooltip:BreakHyperlink(...) end -- Deprecated
 lib.breakHyperlink = lib.BreakHyperlink -- Deprecated
 
-do -- Faction and ServerKey related functions
-	local splitcache = {}
-	local localizedfactions = {
-		-- the following entries are placeholders
-		["Alliance"] = "Alliance",
-		["Horde"] = "Horde",
-		["Neutral"] = "Neutral",
-	}
-	function lib.SplitServerKey(serverKey)
-		local split = splitcache[serverKey]
-		if not split then
-			if type(serverKey) ~= "string" then return end
-			local realm, faction = strmatch(serverKey, "^(.+)%-(%u%l+)$")
-			local transfaction = localizedfactions[faction]
-			if not transfaction then return end
-			split = {realm, faction, realm.." - "..transfaction}
-			splitcache[serverKey] = split
-		end
-		return split[1], split[2], split[3]
-	end
-
+do -- Faction related functions
 	local lookupfaction = {
 		["alliance"] = "Alliance",
 		[FACTION_ALLIANCE:lower()] = "Alliance",
@@ -322,15 +302,9 @@ do -- Faction and ServerKey related functions
 		local horde = lib.localizations("ADV_Interface_FactionHorde")
 		local neutral = lib.localizations("ADV_Interface_FactionNeutral")
 
-		localizedfactions.Alliance = alliance
-		localizedfactions.Horde = horde
-		localizedfactions.Neutral = neutral
-
 		lookupfaction[alliance:lower()] = "Alliance"
 		lookupfaction[horde:lower()] = "Horde"
 		lookupfaction[neutral:lower()] = "Neutral"
-
-		wipe(splitcache)
 	end
 end
 
@@ -963,4 +937,4 @@ function lib.CreateMoney(height)
 	return (tooltip:CreateMoney(height))
 end
 
-lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Advanced/CoreUtil.lua $", "$Rev: 5518 $")
+lib.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreUtil.lua $", "$Rev: 5524 $")

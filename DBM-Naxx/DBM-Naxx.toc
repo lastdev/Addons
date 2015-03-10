@@ -1,4 +1,4 @@
-## Interface: 60000
+## Interface: 60100
 ## X-Min-Interface: 50001
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Naxxramas|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Naxxramas|r
@@ -10,7 +10,8 @@
 ## Author: Tandanu/Nitram
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
-## SavedVariablesPerCharacter: DBMNaxx_SavedVars, DBMNaxx_SavedStats
+## SavedVariables: DBMNaxx_AllSavedVars
+## SavedVariablesPerCharacter: DBMNaxx_SavedStats
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: RAID
 ## X-DBM-Mod-Category: WotLK
@@ -26,6 +27,7 @@
 ## X-DBM-Mod-SubCategories-esMX: El Arrabal Arácnido,El Arrabal de los Ensamblajes,El Arrabal de la Plaga,El Arrabal Militar,Guarida Helada
 ## X-DBM-Mod-MapID: 533
 ## X-DBM-Mod-Sort: 406
+## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua
 localization.de.lua
 localization.fr.lua

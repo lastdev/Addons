@@ -199,7 +199,7 @@ local callbacks = {
 		end,
 	OnUpdateComplete = function() end,
 	GetSize = function() return #currentList end,
-	RowSetup = function(self, entry, row, dataRowID)
+	RowSetup = function(self, rowFrame, dataRowID)
 			local spellID = currentList[dataRowID]
 			local itemName = GetSpellInfo(spellID)
 			local text
@@ -222,25 +222,20 @@ local callbacks = {
 			end
 			
 			text = text or format("%s", WHITE..itemName)
-			
-			local rowName = entry .. row
-			_G[rowName.."Name"]:SetText(text)
-			_G[rowName.."Name"]:SetJustifyH("LEFT")
-			_G[rowName.."Name"]:SetPoint("TOPLEFT", 15, 0)
+
+			rowFrame.Name.Text:SetText(text)
+			rowFrame.Name.Text:SetJustifyH("LEFT")
 		end,
-	ColumnSetup = function(self, entry, row, column, dataRowID, character)
-			local itemName = entry.. row .. "Item" .. column;
-			local itemTexture = _G[itemName .. "_Background"]
-			local itemButton = _G[itemName]
-			local itemText = _G[itemName .. "Name"]
+	RowOnEnter = function()	end,
+	RowOnLeave = function() end,
+	ColumnSetup = function(self, button, dataRowID, character)
+			button.Name:SetFontObject("GameFontNormalSmall")
+			button.Name:SetJustifyH("CENTER")
+			button.Name:SetPoint("BOTTOMRIGHT", 5, 0)
+			button.Background:SetDesaturated(false)
+			button.Background:SetTexCoord(0, 1, 0, 1)
 			
-			itemText:SetFontObject("GameFontNormalSmall")
-			itemText:SetJustifyH("CENTER")
-			itemText:SetPoint("BOTTOMRIGHT", 5, 0)
-			itemTexture:SetDesaturated(false)
-			itemTexture:SetTexCoord(0, 1, 0, 1)
-			
-			itemTexture:SetTexture(GetItemIcon(currentItemID) or ICON_QUESTIONMARK)
+			button.Background:SetTexture(GetItemIcon(currentItemID) or ICON_QUESTIONMARK)
 
 			local text = ICON_NOTREADY
 			local vc = 0.25	-- vertex color
@@ -252,8 +247,8 @@ local callbacks = {
 				-- local _, _, itemRarity, itemLevel = GetItemInfo(currentItemID)
 				-- if itemRarity and itemRarity >= 2 then
 					-- local r, g, b = GetItemQualityColor(itemRarity)
-					-- itemButton.border:SetVertexColor(r, g, b, 0.5)
-					-- itemButton.border:Show()
+					-- button.IconBorder:SetVertexColor(r, g, b, 0.5)
+					-- button.IconBorder:Show()
 				-- end
 				
 				if DataStore:IsCraftKnown(profession, currentList[dataRowID]) then
@@ -264,9 +259,9 @@ local callbacks = {
 				end
 			end
 
-			itemTexture:SetVertexColor(vc, vc, vc)
-			itemText:SetText(text)
-			itemButton.id = currentItemID
+			button.Background:SetVertexColor(vc, vc, vc)
+			button.Name:SetText(text)
+			button.id = currentItemID
 		end,
 	OnEnter = function(self) 
 			self.link = nil

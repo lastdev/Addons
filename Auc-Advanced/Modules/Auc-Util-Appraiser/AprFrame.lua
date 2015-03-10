@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Appraisals and Auction Posting
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
-	Revision: $Id: AprFrame.lua 5495 2014-10-17 12:28:53Z brykrys $
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Revision: $Id: AprFrame.lua 5531 2014-12-10 15:27:31Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds an appraisals tab to the AH for
@@ -1215,8 +1215,14 @@ function private.CreateFrames()
 			canAuction = false
 		elseif warnvendor == "buyout" then
 			frame.salebox.warn:SetText("|cffff8010".._TRANS('APPR_Interface_NoteBuyoutLessVendor'))--Note: Buyout <= Vendor
+			if AucAdvanced.Settings.GetSetting("util.appraiser.bid.vendor") then 
+				canAuction = false 
+			end
 		elseif warnvendor == "bid" then
 			frame.salebox.warn:SetText("|cffeec900".._TRANS('APPR_Interface_NoteMinBidLessVendor'))--Note: Min Bid <= Vendor
+			if AucAdvanced.Settings.GetSetting("util.appraiser.bid.vendor") then 
+				canAuction = false 
+			end
 		else
 			frame.salebox.warn:SetText("")
 		end
@@ -1382,10 +1388,10 @@ function private.CreateFrames()
 
 		aucPrint(_TRANS('APPR_Interface_RefreshingView') :format(itemName))--Refreshing view of {{%s}}
 		if background and type(background) == 'boolean' then
-			AucAdvanced.Scan.StartPushedScan(itemName, itemMinLevel, itemMinLevel, nil, itemTypeId, itemSubId, nil, itemRarity)
+			AucAdvanced.Scan.StartPushedScan(itemName, itemMinLevel, itemMinLevel, nil, itemTypeId, itemSubId, nil, itemRarity, true)
 		else
 			AucAdvanced.Scan.PushScan()
-			AucAdvanced.Scan.StartScan(itemName, itemMinLevel, itemMinLevel, nil, itemTypeId, itemSubId, nil, itemRarity)
+			AucAdvanced.Scan.StartScan(itemName, itemMinLevel, itemMinLevel, nil, itemTypeId, itemSubId, nil, itemRarity, nil, true)
 		end
 	end
 
@@ -2900,7 +2906,6 @@ function private.CreateFrames()
 				SideDressUpFrame.reshow = true
 			end
 			frame:Show()
-			AucAdvanced.Scan.LoadScanData()
 			frame.GenerateList(true)
 		else
 			if (SideDressUpFrame.reshow) then
@@ -2967,4 +2972,4 @@ function private.CreateFrames()
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5495 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-Appraiser/AprFrame.lua $", "$Rev: 5531 $")

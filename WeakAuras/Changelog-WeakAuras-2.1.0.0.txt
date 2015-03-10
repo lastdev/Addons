@@ -1,0 +1,64 @@
+tag 2.1.0.0
+21856d9d5e9d13fcf238ef5de44cbf744253c81c
+Benjamin Staneck <staneck@gmail.com>
+2015-02-24 16:27:18 +0100
+
+
+
+--------------------
+
+Benjamin Staneck:
+	- Update TOC for Patch 6.1
+Tzarc:
+	- Added table "aura_env" for all custom functions of an aura.
+	An aura-specific table, "aura_env", has been added for use for all
+	custom functions of an aura.
+	Additionally, an "On Init" section has been added to the Actions
+	tab, which provides another custom function and is guaranteed to be
+	executed before any other custom function defined for that aura.
+Infus:
+	- Import: Disable import button while in combat
+	Since Warlords of Draenor WoW simply interrupts addons that take
+	to long while in combat. Since especially importing takes quite
+	long, WoW can interrupt us in the middle of importing. That then
+	might leave our internal data in a inconsistent state.
+	
+	I could reproduce the issues reported in ticket number 183 after
+	3 tries in trying to import in combat.
+	
+	So on entering combat we disable the import button.
+	
+	Ticket-number: 183
+	- Make specific unit work for combat log event triggers
+	The text entry for specific unit has a derived its hidden function
+	incorrectly from the parent's hidden function.
+	
+	The two changes:
+	a) Pass in the trigger to the hidden function
+	b) If hidden was a function the "or hidden" part would always be
+	   true, since a function is a true value.
+	
+	Making those options visible seem to be enough to actually fix
+	the ticket 247.
+	- Aurabar: Add color option for icon
+	Allows for separately making the icon transparent, since every
+	other part has a color setting, this kind of makes sense.
+	
+	Ticket-number: 245
+	- Import tooltip: Truncate on more than 30 auras
+	Ticket-number: 182
+	- Rewrite Ignore Rune CD
+	Apparently a spell cd due to a rune has always a duration of 10.
+	So, rewrite the ignore rune cd option to use that fact. And track
+	the spell cooldowns but disregard any update that has a duration of
+	10 for those spells.
+	- Fix remaining time check for some auras
+	Ticket-number: 68
+	- Fix sorting in dynamic groups
+	We need to set the duration information in the region before we
+	call expand, as expand will call controlChildren, which sorts
+	according to the duration info.
+	
+	Ticket-number: 156
+Steffen Buehl:
+	- change dungeon difficulty load condition from select to multiselect

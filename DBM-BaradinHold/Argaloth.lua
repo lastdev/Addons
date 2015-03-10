@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(139, "DBM-BaradinHold", nil, 74)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 99 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
 mod:SetCreatureID(47120)
 mod:SetEncounterID(1033)
 mod:DisableEEKillDetection()
@@ -24,7 +24,7 @@ local warnMeteorSlash		= mod:NewSpellAnnounce(88942, 4)
 local warnFirestorm			= mod:NewSpellAnnounce(88972, 4)
 local warnFirestormSoon		= mod:NewSoonAnnounce(88972, 3)
 
-local specWarnMeteorSlash	= mod:NewSpecialWarningSpell(88942, mod:IsTank())
+local specWarnMeteorSlash	= mod:NewSpecialWarningSpell(88942, "Tank")
 local specWarnFirestormCast	= mod:NewSpecialWarningSpell(88972, nil, nil, nil, true)
 local specWarnFirestorm		= mod:NewSpecialWarningMove(89000)
 

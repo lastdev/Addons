@@ -1,7 +1,7 @@
 -- To update a translation please use the localization utility at:
 -- http://wow.curseforge.com/addons/bittens-spellflash-pally/localization/
 
-local addonName, a = ...
+local _, a = ...
 a.Localize = setmetatable({ }, { __index = function(_, key) return key end })
 local L = a.Localize
 local locale = GetLocale()
@@ -17,14 +17,14 @@ if locale == "ptBR" then -- Brazilian Portuguese
 -- L["Wearing Prot 2pT13"] = ""
 
 elseif locale == "frFR" then -- French
--- L["Aberration"] = ""
--- L["Demon"] = ""
--- L["Dragonkin"] = ""
--- L["Elemental"] = ""
--- L["Flash Holy"] = ""
--- L["Flash Prot"] = ""
--- L["Flash Ret"] = ""
--- L["Undead"] = ""
+L["Aberration"] = "Aberration" -- Needs review
+L["Demon"] = "Démon" -- Needs review
+L["Dragonkin"] = "Draconien" -- Needs review
+L["Elemental"] = "Elementaire" -- Needs review
+L["Flash Holy"] = "Flash Sacré" -- Needs review
+L["Flash Prot"] = "Flash Protection" -- Needs review
+L["Flash Ret"] = "Flash Vindicte" -- Needs review
+L["Undead"] = "Mort-Vivant" -- Needs review
 -- L["Wearing Prot 2pT13"] = ""
 
 elseif locale == "deDE" then -- German

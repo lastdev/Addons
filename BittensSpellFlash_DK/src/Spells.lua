@@ -620,6 +620,9 @@ addOptionalDKSpell("Raise Dead", nil, {
 addDKSpell("Death and Decay", nil, {
    NoRangeCheck = true,
    Cooldown = 30,
+   CheckFirst = function()
+      return not c.HasTalent("Defile")
+   end
 })
 
 addOptionalDKSpell("Horn of Winter", "for Buff, Optional", {
@@ -858,7 +861,7 @@ addDKSpell("Death and Decay", "Free", {
       Death = 0,
    },
    CheckFirst = function()
-      return a.CrimsonScourge
+      return a.CrimsonScourge and not c.HasTalent("Defile")
    end
 })
 
@@ -999,6 +1002,9 @@ addOptionalDKSpell("Death Pact", nil, {
    Cooldown = 2 * 60,
    ShouldHold = function()
       return c.GetHealthPercent("player") > 45
+   end,
+   CheckFirst = function()
+      return c.GetHealthPercent("player") <= 45
    end
 })
 
@@ -1238,7 +1244,7 @@ addDKSpell("Death and Decay", "U", {
    NoRangeCheck = true,
    Cooldown = 30,
    CheckFirst = function()
-      return sufficientRunes(0, 0, 1, 0, true)
+      return sufficientRunes(0, 0, 1, 0, true) and not c.HasTalent("Defile")
    end
 })
 
@@ -1246,7 +1252,7 @@ addOptionalDKSpell("Death and Decay", "U, optional", {
    NoRangeCheck = true,
    Cooldown = 30,
    CheckFirst = function()
-      return sufficientRunes(0, 0, 1, 0, true)
+      return sufficientRunes(0, 0, 1, 0, true) and not c.HasTalent("Defile")
    end
 })
 
@@ -1326,7 +1332,7 @@ addDKSpell("Death and Decay", "UU", {
    NoRangeCheck = true,
    Cooldown = 30,
    CheckFirst = function()
-      return a.BothRunesAvailable("unholy", 1)
+      return a.BothRunesAvailable("unholy", 1) and not c.HasTalent("Defile")
    end
 })
 
@@ -1334,6 +1340,10 @@ addDKSpell("Death and Decay", "unless Soul Reaper", {
    NoRangeCheck = true,
    Cooldown = 30,
    CheckFirst = function()
+      if not c.HasTalent("Defile") then
+         return false
+      end
+
       return not a.InExecute
       -- @todo danielp 2014-11-16: fix is usable for delay
          or not soulReaperIsUsable(1)

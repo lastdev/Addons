@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(893, "DBM-Party-WoD", 2, 385)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12099 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12926 $"):sub(12, -3))
 mod:SetCreatureID(74366, 74475)--74366 Forgemaster Gog'duh, 74475 Magmolatus
 mod:SetEncounterID(1655)
 mod:SetMainBossID(74475)
 mod:SetZone()
 
-mod:SetBossHealthInfo(74336)
+mod:SetBossHealthInfo(74366)
 
 mod:RegisterCombat("combat")
 
@@ -15,37 +15,36 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 149997 149975 150032",
 	"SPELL_CAST_START 149941 150038 150023",
 	"SPELL_PERIODIC_DAMAGE 150011",
-	"SPELL_PERIODIC_MISSED 150011",
+	"SPELL_ABSORBED 150011",
 	"UNIT_DIED"
 )
 
 -------------------------------------------
 local warnFirestorm				= mod:NewSpellAnnounce(149997, 3)
-local warnDancingFlames			= mod:NewTargetAnnounce(149975, 3, nil, mod:IsHealer())
+local warnDancingFlames			= mod:NewTargetAnnounce(149975, 3, nil, "Healer")
 local warnPhase2				= mod:NewPhaseAnnounce(2)
-local warnMoltenImpact			= mod:NewSpellAnnounce(150038, 4)
-local warnWitheringFlames		= mod:NewTargetAnnounce(150032, 3, nil, mod:IsHealer())
+local warnWitheringFlames		= mod:NewTargetAnnounce(150032, 3, nil, "Healer")
 
 local specWarnMagmaBarrage		= mod:NewSpecialWarningMove(150011)
-local specWarnRoughSmash		= mod:NewSpecialWarningMove(149941, mod:IsMelee())
-local specWarnRuination			= mod:NewSpecialWarningSwitch("ej8622", not mod:IsHealer())
-local specWarnCalamity			= mod:NewSpecialWarningSwitch("ej8626", not mod:IsHealer())
-local specWarnFirestorm			= mod:NewSpecialWarningInterrupt(149997, not mod:IsHealer())
-local specWarnDancingFlames		= mod:NewSpecialWarningDispel(149975, mod:IsHealer())
-local specWarnMagmolatus		= mod:NewSpecialWarningSwitch("ej8621", mod:IsTank())--Dps can turn this on too I suppose but 5 seconds after boss spawns they are switching to add anyways, so this is mainly for tank to pick it up
-local specWarnSlagSmash			= mod:NewSpecialWarningMove(150023, mod:IsMelee())
+local specWarnRoughSmash		= mod:NewSpecialWarningDodge(149941, "Melee")
+local specWarnRuination			= mod:NewSpecialWarningSwitch("ej8622", "-Healer")
+local specWarnCalamity			= mod:NewSpecialWarningSwitch("ej8626", "-Healer")
+local specWarnFirestorm			= mod:NewSpecialWarningInterrupt(149997, "-Healer")
+local specWarnDancingFlames		= mod:NewSpecialWarningDispel(149975, "Healer")
+local specWarnMagmolatus		= mod:NewSpecialWarningSwitch("ej8621", "Tank")--Dps can turn this on too I suppose but 5 seconds after boss spawns they are switching to add anyways, so this is mainly for tank to pick it up
+local specWarnSlagSmash			= mod:NewSpecialWarningDodge(150023, "Melee")
 local specWarnMoltenImpact		= mod:NewSpecialWarningSpell(150038, nil, nil, nil, 2)
-local specWarnWitheringFlames	= mod:NewSpecialWarningDispel(150032, mod:IsHealer())
+local specWarnWitheringFlames	= mod:NewSpecialWarningDispel(150032, "Healer")
 
 local timerMoltenImpactCD		= mod:NewNextTimer(21.5, 150038)
 
-local voiceRuination			= mod:NewVoice("ej8622", not mod:IsHealer())
-local voiceCalamity				= mod:NewVoice("ej8626", not mod:IsHealer())
+local voiceRuination			= mod:NewVoice("ej8622", "-Healer")
+local voiceCalamity				= mod:NewVoice("ej8626", "-Healer")
 local voicePhaseChange			= mod:NewVoice(nil, nil, DBM_CORE_AUTO_VOICE2_OPTION_TEXT)
-local voiceFirestorm			= mod:NewVoice(149997, not mod:IsHealer())
-local voiceDancingFlames		= mod:NewVoice(149975, mod:IsHealer())
-local voiceWitheringFlames		= mod:NewVoice(150032, mod:IsHealer())
-local voiceSlagSmash			= mod:NewVoice(150023, mod:IsMelee())
+local voiceFirestorm			= mod:NewVoice(149997, "-Healer")
+local voiceDancingFlames		= mod:NewVoice(149975, "Healer")
+local voiceWitheringFlames		= mod:NewVoice(150032, "Healer")
+local voiceSlagSmash			= mod:NewVoice(150023, "Melee")
 
 local activeAddGUIDS = {}
 
@@ -87,7 +86,6 @@ function mod:INSTANCE_ENCOUNTER_ENGAGE_UNIT()
 				specWarnMagmolatus:Show()
 				timerMoltenImpactCD:Start(5)
 				if DBM.BossHealth:IsShown() then
-					DBM.BossHealth:RemoveBoss(74336)
 					DBM.BossHealth:AddBoss(74475)
 				end
 			end
@@ -107,11 +105,13 @@ function mod:SPELL_AURA_APPLIED(args)
 		end
 	elseif spellId == 149975 then
 		warnDancingFlames:CombinedShow(0.3, args.destName)--heroic is 2 targets so combined.
-		if self:AntiSpam(2, 2) then--only show once. (prevent loud sound)
-			specWarnDancingFlames:Show(args.destName)
-			voiceDancingFlames:Play("dispelnow")
+		if self:CheckDispelFilter() then--only show once. (prevent loud sound)
+			specWarnDancingFlames:CombinedShow(0.3, args.destName)
+			if self:AntiSpam(2, 2) then
+				voiceDancingFlames:Play("dispelnow")
+			end
 		end
-	elseif spellId == 150032 then
+	elseif spellId == 150032 and self:CheckDispelFilter() then
 		warnWitheringFlames:Show(args.destName)
 		specWarnWitheringFlames:Show(args.destName)
 		voiceWitheringFlames:Play("dispelnow")
@@ -123,7 +123,6 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 149941 then
 		specWarnRoughSmash:Show()
 	elseif spellId == 150038 then
-		warnMoltenImpact:Show()
 		specWarnMoltenImpact:Show()
 		timerMoltenImpactCD:Start()
 	elseif spellId == 150023 then
@@ -137,14 +136,16 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		specWarnMagmaBarrage:Show()
 	end
 end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:UNIT_DIED(args)
 	if not DBM.BossHealth:IsShown() then return end
 	local cid = self:GetCIDFromGUID(args.destGUID)
-	if cid == 74570 then
+	if cid == 74366 then
+		DBM.BossHealth:RemoveBoss(74366)
+	elseif cid == 74570 then
 		DBM.BossHealth:RemoveBoss(74570)
-	elseif cid == 75471 then
+	elseif cid == 74571 then
 		DBM.BossHealth:RemoveBoss(74571)
 	end
 end

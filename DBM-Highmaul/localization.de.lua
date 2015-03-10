@@ -25,6 +25,13 @@ L:SetMiscLocalization({
 ------------------
 L= DBM:GetModLocalization(1196)
 
+L:SetOptionLocalization({
+	InterruptCounter	= "Setze \"Verrottung\"-Zähler zurück nach",
+	Two					= "zwei Wirkungen",
+	Three				= "drei Wirkungen",
+	Four				= "vier Wirkungen"
+})
+
 --------------
 -- Twin Ogron --
 --------------
@@ -42,6 +49,15 @@ L:SetOptionLocalization({
 --------------------
 L= DBM:GetModLocalization(1153)
 
+
+L:SetWarningLocalization({
+	specWarnExpelMagicFelFades	= "Teufelsenergie endet in 5s - geh zum Start"
+})
+
+L:SetOptionLocalization({
+	specWarnExpelMagicFelFades	= "Spezialwarnung zum Hingehen zur Startposition, wenn $spell:172895 endet"
+})
+
 L:SetMiscLocalization({
 	supressionTarget1	= "Ich werde Euch zermalmen!",
 	supressionTarget2	= "Schweigt!",
@@ -54,8 +70,22 @@ L:SetMiscLocalization({
 --------------------------
 L= DBM:GetModLocalization(1197)
 
+L:SetTimerLocalization({
+	timerNightTwistedCD		= "Next Night-Twisted Adds"--translate
+})
+
+L:SetOptionLocalization({
+	GazeYellType		= "Set yell type for Gaze of the Abyss",--translate
+	Countdown			= "Countdown until expires",--translate
+	Stacks				= "Stacks as they are applied",--translate
+	timerNightTwistedCD	= "Show timer for Next Night-Twisted Faithful"--translate
+})
+
 L:SetMiscLocalization({
-	BrandedYell			= "Gebrandmarkt (%s) auf %s"
+	BrandedYell			= "Gebrandmarkt (%d) %dm",
+	GazeYell			= "Starren endet in %d",
+	GazeYell2			= "Starren (%d) auf %s",
+	PlayerDebuffs		= "Closest to Glimpse"--translate
 })
 
 -------------

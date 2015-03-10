@@ -30,30 +30,47 @@ local GUILD_ITEM_LINE = 2
 local PLAYER_CRAFT_LINE = 3
 local GUILD_CRAFT_LINE = 4
 
-local function Realm_UpdateEx(self, offset, entry, desc)
+local function Realm_UpdateEx(self, offset, desc)
 	local line, LineDesc
+	
+	local frame = AltoholicFrameSearch
+	local itemButton
+	local rowFrame
 
-	for i=1, desc.NumLines do
-		line = i + offset
+	for rowIndex = 1, desc.NumLines do
+		rowFrame = frame["Entry"..rowIndex]
+		
+		rowFrame.Name:SetWidth(240)
+		rowFrame.Stat1:SetWidth(160)
+		rowFrame.Stat1:SetPoint("LEFT", rowFrame.Name, "RIGHT", 5, 0)
+		rowFrame.Stat2:SetWidth(150)
+		rowFrame.Stat2:SetPoint("LEFT", rowFrame.Stat1, "RIGHT", 5, 0)
+		
+		for j=3, 6 do
+			rowFrame["Stat"..j ]:Hide()
+		end
+		rowFrame.ILvl:Hide()
+		rowFrame:SetScript("OnEnter", nil)
+		rowFrame:SetScript("OnLeave", nil)
+		
+		line = rowIndex + offset
 		local result = ns:GetResult(line)
 		if result then
 			LineDesc = desc.Lines[result.linetype]
 			
 			local owner, color = LineDesc:GetCharacter(result)
-			_G[ entry..i.."Stat1" ]:SetText(color .. owner)
+			rowFrame.Stat1:SetText(color .. owner)
 			
 			local realm, account, faction = LineDesc:GetRealm(result)
 			local location = addon:GetFactionColour(faction) .. realm
 			if account ~= THIS_ACCOUNT then
 				location = location .. "\n" ..WHITE.. L["Account"] .. ": " ..GREEN.. account
 			end
-			_G[ entry..i.."Stat2" ]:SetText(location)
+			rowFrame.Stat2:SetText(location)
 			
 			local hex = WHITE
-			local itemButton = _G[ entry..i.."Item" ]
-			
-			addon:CreateButtonBorder(itemButton)
-			itemButton.border:Hide()
+			itemButton = rowFrame.Item
+			itemButton.IconBorder:Hide()
 			
 			if result.id then
 				local _, _, itemRarity = GetItemInfo(result.id)
@@ -61,8 +78,8 @@ local function Realm_UpdateEx(self, offset, entry, desc)
 					local r, g, b
 					r, g, b, hex = GetItemQualityColor(itemRarity)
 					if itemRarity >= 2 then
-						itemButton.border:SetVertexColor(r, g, b, 0.5)
-						itemButton.border:Show()
+						itemButton.IconBorder:SetVertexColor(r, g, b, 0.5)
+						itemButton.IconBorder:Show()
 					end
 					hex = "|c" .. hex
 				end
@@ -70,31 +87,31 @@ local function Realm_UpdateEx(self, offset, entry, desc)
 			
 			local name, source, sourceID = LineDesc:GetItemData(result, line)
 
-			_G[ entry..i.."Name" ]:SetText(hex .. name)
-			_G[ entry..i.."SourceNormalText" ]:SetText(source)
-			_G[ entry..i.."Source" ]:SetID(sourceID)
-			_G[ entry..i.."ItemIconTexture" ]:SetTexture(LineDesc:GetItemTexture(result));				
+			rowFrame.Name:SetText(hex .. name)
+			rowFrame.Source.Text:SetText(source)
+			rowFrame.Source:SetID(sourceID)
+			itemButton.Icon:SetTexture(LineDesc:GetItemTexture(result))			
 			
 			-- draw count
 			if result.count and result.count > 1 then
-				_G[ entry..i.."ItemCount" ]:SetText(result.count)
-				_G[ entry..i.."ItemCount" ]:Show()
+				itemButton.Count:SetText(result.count)
+				itemButton.Count:Show()
 			else
-				_G[ entry..i.."ItemCount" ]:Hide()
+				itemButton.Count:Hide()
 			end
 			
 			local id = LineDesc:GetItemID(result)
-			_G[ entry..i.."Item" ]:SetID(id or 0)
-			_G[ entry..i ]:SetID(line)
-			_G[ entry..i ]:Show()
+			itemButton:SetID(id or 0)
+			rowFrame:SetID(line)
+			rowFrame:Show()
 		end
 	end
 
 	local numResults = desc:GetSize()
 	if (offset+desc.NumLines) <= numResults then
-		AltoholicTabSearchStatus:SetText(numResults .. L[" results found (Showing "] .. (offset+1) .. "-" .. (offset+desc.NumLines) .. ")")
+		AltoholicTabSearch.Status:SetText(numResults .. L[" results found (Showing "] .. (offset+1) .. "-" .. (offset+desc.NumLines) .. ")")
 	else
-		AltoholicTabSearchStatus:SetText(numResults .. L[" results found (Showing "] .. (offset+1) .. "-" .. numResults .. ")")
+		AltoholicTabSearch.Status:SetText(numResults .. L[" results found (Showing "] .. (offset+1) .. "-" .. numResults .. ")")
 	end
 	
 	if not AltoholicFrameSearch:IsVisible() then
@@ -222,75 +239,120 @@ local RealmScrollFrame_Desc = {
 	}
 }
 
+local function ScrollFrameUpdate(desc)
+	-- copy of the function in Altoholic.lua, made local here temporarily to avoid messing up with other consumers of the function
+	
+	assert(type(desc) == "table")		-- desc is the table that contains a standardized description of the scrollframe
+	
+	local frame = _G[desc.Frame]
+	local scrollFrame = frame.ScrollFrame
+	local rowFrame
+
+	-- hide all lines and set their id to 0, the update function is responsible for showing and setting id's of valid lines	
+	for rowIndex = 1, desc.NumLines do
+		rowFrame = frame["Entry"..rowIndex]
+		rowFrame:SetID(0)
+		rowFrame:Hide()
+	end
+	
+	local offset = FauxScrollFrame_GetOffset(scrollFrame)
+	-- call the update handler
+	desc:Update(offset, desc)
+	
+	local last = (desc:GetSize() < desc.NumLines) and desc.NumLines or desc:GetSize()
+	FauxScrollFrame_Update(scrollFrame, last, desc.NumLines, desc.LineHeight)
+end
+
 function ns:Realm_Update()
-	addon:ScrollFrameUpdate(RealmScrollFrame_Desc)
+	ScrollFrameUpdate(RealmScrollFrame_Desc)
 end
 
 function ns:Loots_Update()
-	local VisibleLines = 7
-	local frame = "AltoholicFrameSearch"
-	local entry = frame.."Entry"
+	local numRows = 7
 	
+	local frame = AltoholicFrameSearch
+	local scrollFrame = frame.ScrollFrame
 	local numResults = ns:GetNumResults()
 	
 	if numResults == 0 then
-		addon:ClearScrollFrame( _G[ frame.."ScrollFrame" ], entry, VisibleLines, 41)
+		-- Hides all entries of the scrollframe, and updates it accordingly
+		for rowIndex = 1, numRows do	
+			frame["Entry"..rowIndex]:Hide()
+		end
+		FauxScrollFrame_Update(scrollFrame, numRows, numRows, 41)
 		return
 	end
 
-	local offset = FauxScrollFrame_GetOffset( _G[ frame.."ScrollFrame" ] );
+	local offset = FauxScrollFrame_GetOffset(scrollFrame)
+
+	local itemButton
+	local rowFrame
 	
-	for i=1, VisibleLines do
-		local line = i + offset
+	for rowIndex = 1, numRows do
+		rowFrame = frame["Entry"..rowIndex]
+		rowFrame.Name:SetWidth(240)
+		rowFrame.Stat1:SetWidth(160)
+		rowFrame.Stat1:SetPoint("LEFT", rowFrame.Name, "RIGHT", 5, 0)
+		rowFrame.Stat2:SetWidth(150)
+		rowFrame.Stat2:SetPoint("LEFT", rowFrame.Stat1, "RIGHT", 5, 0)
+		
+		for j=3, 6 do
+			rowFrame["Stat"..j ]:Hide()
+		end
+		rowFrame.ILvl:Hide()
+		
+		rowFrame:SetScript("OnEnter", nil)
+		rowFrame:SetScript("OnLeave", nil)
+		
+		local line = rowIndex + offset
 		local result = ns:GetResult(line)
 		if result then
 			local itemID = result.id
 			
-			local itemButton = _G[ entry..i.."Item" ]
-			addon:CreateButtonBorder(itemButton)
-			itemButton.border:Hide()
+			itemButton = rowFrame.Item
+			itemButton.IconBorder:Hide()
 			
 			local itemName, _, itemRarity, itemLevel = GetItemInfo(itemID)
 			local r, g, b, hex = GetItemQualityColor(itemRarity)
 			
 			if itemRarity >= 2 then
-				itemButton.border:SetVertexColor(r, g, b, 0.5)
-				itemButton.border:Show()
+				itemButton.IconBorder:SetVertexColor(r, g, b, 0.5)
+				itemButton.IconBorder:Show()
 			end
 			
-			_G[ entry..i.."ItemIconTexture" ]:SetTexture(GetItemIcon(itemID));
+			itemButton.Icon:SetTexture(GetItemIcon(itemID));
 
-			_G[ entry..i.."Stat2" ]:SetText(YELLOW .. itemLevel)
-			_G[ entry..i.."Name" ]:SetText("|c" .. hex .. itemName)
-			_G[ entry..i.."Source" ]:SetText(TEAL .. result.dropLocation)
-			_G[ entry..i.."Source" ]:SetID(0)
+			rowFrame.Stat2:SetText(YELLOW .. itemLevel)
+			rowFrame.Name:SetText("|c" .. hex .. itemName)
+			rowFrame.Source.Text:SetText(TEAL .. result.dropLocation)
+			rowFrame.Source:SetID(0)
 			
-			_G[ entry..i.."Stat1" ]:SetText(GREEN .. result.bossName)
+			rowFrame.Stat1:SetText(GREEN .. result.bossName)
 			
 			if (result.count ~= nil) and (result.count > 1) then
-				_G[ entry..i.."ItemCount" ]:SetText(result.count)
-				_G[ entry..i.."ItemCount" ]:Show()
+				itemButton.Count:SetText(result.count)
+				itemButton.Count:Show()
 			else
-				_G[ entry..i.."ItemCount" ]:Hide()
+				itemButton.Count:Hide()
 			end
 
-			_G[ entry..i.."Item" ]:SetID(itemID)
-			_G[ entry..i ]:Show()
+			itemButton:SetID(itemID)
+			rowFrame:Show()
 		else
-			_G[ entry..i ]:Hide()
+			rowFrame:Hide()
 		end
 	end
 
-	if (offset+VisibleLines) <= numResults then
-		AltoholicTabSearchStatus:SetText(numResults .. L[" results found (Showing "] .. (offset+1) .. "-" .. (offset+VisibleLines) .. ")")
+	if (offset+numRows) <= numResults then
+		AltoholicTabSearch.Status:SetText(numResults .. L[" results found (Showing "] .. (offset+1) .. "-" .. (offset+numRows) .. ")")
 	else
-		AltoholicTabSearchStatus:SetText(numResults .. L[" results found (Showing "] .. (offset+1) .. "-" .. numResults .. ")")
+		AltoholicTabSearch.Status:SetText(numResults .. L[" results found (Showing "] .. (offset+1) .. "-" .. numResults .. ")")
 	end
 	
-	if numResults < VisibleLines then
-		FauxScrollFrame_Update( _G[ frame.."ScrollFrame" ], VisibleLines, VisibleLines, 41);
+	if numResults < numRows then
+		FauxScrollFrame_Update(scrollFrame, numRows, numRows, 41)
 	else
-		FauxScrollFrame_Update( _G[ frame.."ScrollFrame" ], numResults, VisibleLines, 41);
+		FauxScrollFrame_Update(scrollFrame, numResults, numRows, 41)
 	end
 	
 	if not AltoholicFrameSearch:IsVisible() then
@@ -299,44 +361,62 @@ function ns:Loots_Update()
 end
 
 function ns:Upgrade_Update()
-	local VisibleLines = 7
-	local frame = "AltoholicFrameSearch"
-	local entry = frame.."Entry"
-	
+	local numRows = 7
+	local frame = AltoholicFrameSearch
+	local scrollFrame = frame.ScrollFrame
 	local numResults = ns:GetNumResults()
 	
 	if numResults == 0 then
-		addon:ClearScrollFrame( _G[ frame.."ScrollFrame" ], entry, VisibleLines, 41)
+		-- Hides all entries of the scrollframe, and updates it accordingly
+		for rowIndex = 1, numRows do	
+			frame["Entry"..rowIndex]:Hide()
+		end
+		FauxScrollFrame_Update(scrollFrame, numRows, numRows, 41)
 		return
 	end
 
-	local offset = FauxScrollFrame_GetOffset( _G[ frame.."ScrollFrame" ] );
+	local offset = FauxScrollFrame_GetOffset(scrollFrame)
+
+	local itemButton
+	local rowFrame
+	local stat
 	
-	for i=1, VisibleLines do
-		local line = i + offset
+	for rowIndex = 1, numRows do
+		rowFrame = frame["Entry"..rowIndex]
+
+		rowFrame.Name:SetWidth(190)
+		rowFrame.Stat1:SetWidth(50)
+		rowFrame.Stat1:SetPoint("LEFT", rowFrame.Name, "RIGHT", 0, 0)
+		rowFrame.Stat2:SetWidth(50)
+		rowFrame.Stat2:SetPoint("LEFT", rowFrame.Stat1, "RIGHT", 0, 0)
+		rowFrame:SetScript("OnEnter", function(self) ns:TooltipStats(self) end)
+		rowFrame:SetScript("OnLeave", function(self) AltoTooltip:Hide() end)
+		
+		local line = rowIndex + offset
 		local result = ns:GetResult(line)
 		if result then
 			local itemID = result.id
 			
-			local itemButton = _G[ entry..i.."Item" ]
-			addon:CreateButtonBorder(itemButton)
-			itemButton.border:Hide()
+			itemButton = rowFrame.Item
+			itemButton.IconBorder:Hide()
 			
 			local itemName, _, itemRarity, itemLevel = GetItemInfo(itemID)
 			local r, g, b, hex = GetItemQualityColor(itemRarity)
 			
 			if itemRarity >= 2 then
-				itemButton.border:SetVertexColor(r, g, b, 0.5)
-				itemButton.border:Show()
+				itemButton.IconBorder:SetVertexColor(r, g, b, 0.5)
+				itemButton.IconBorder:Show()
 			end
 			
-			_G[ entry..i.."ItemIconTexture" ]:SetTexture(GetItemIcon(itemID));
+			itemButton.Icon:SetTexture(GetItemIcon(itemID));
 
-			_G[ entry..i.."Name" ]:SetText("|c" .. hex .. itemName)
-			_G[ entry..i.."Source" ]:SetText(TEAL .. result.dropLocation)
-			_G[ entry..i.."Source" ]:SetID(0)
+			rowFrame.Name:SetText("|c" .. hex .. itemName)
+			rowFrame.Source.Text:SetText(TEAL .. result.dropLocation)
+			rowFrame.Source:SetID(0)
 		
 			for j=1, 6 do
+				stat = rowFrame["Stat"..j]
+				
 				if result["stat"..j] ~= nil then
 					local statValue, diff = strsplit("|", result["stat"..j])
 					local color
@@ -350,41 +430,41 @@ function ns:Upgrade_Update()
 						color = WHITE
 					end
 					
-					_G[ entry..i.."Stat"..j ]:SetText(color .. statValue)
-					_G[ entry..i.."Stat"..j ]:Show()
+					stat:SetText(color .. statValue)
+					stat:Show()
 				else
-					_G[ entry..i.."Stat"..j ]:Hide()
+					stat:Hide()
 				end
 			end
 
-			_G[ entry..i.."ILvl" ]:SetText(YELLOW .. itemLevel)
-			_G[ entry..i.."ILvl" ]:Show()
+			rowFrame.ILvl:SetText(YELLOW .. itemLevel)
+			rowFrame.ILvl:Show()
 			
 			if (result.count ~= nil) and (result.count > 1) then
-				_G[ entry..i.."ItemCount" ]:SetText(result.count)
-				_G[ entry..i.."ItemCount" ]:Show()
+				itemButton.Count:SetText(result.count)
+				itemButton.Count:Show()
 			else
-				_G[ entry..i.."ItemCount" ]:Hide()
+				itemButton.Count:Hide()
 			end
 
-			_G[ entry..i.."Item" ]:SetID(itemID)
-			_G[ entry..i ]:SetID(line)
-			_G[ entry..i ]:Show()
+			itemButton:SetID(itemID)
+			rowFrame:SetID(line)
+			rowFrame:Show()
 		else
-			_G[ entry..i ]:Hide()
+			rowFrame:Hide()
 		end
 	end
 
-	if (offset+VisibleLines) <= numResults then
-		AltoholicTabSearchStatus:SetText(numResults .. L[" results found (Showing "] .. (offset+1) .. "-" .. (offset+VisibleLines) .. ")")
+	if (offset+numRows) <= numResults then
+		AltoholicTabSearch.Status:SetText(numResults .. L[" results found (Showing "] .. (offset+1) .. "-" .. (offset+numRows) .. ")")
 	else
-		AltoholicTabSearchStatus:SetText(numResults .. L[" results found (Showing "] .. (offset+1) .. "-" .. numResults .. ")")
+		AltoholicTabSearch.Status:SetText(numResults .. L[" results found (Showing "] .. (offset+1) .. "-" .. numResults .. ")")
 	end
 	
-	if numResults < VisibleLines then
-		FauxScrollFrame_Update( _G[ frame.."ScrollFrame" ], VisibleLines, VisibleLines, 41);
+	if numResults < numRows then
+		FauxScrollFrame_Update( _G[ frame.."ScrollFrame" ], numRows, numRows, 41);
 	else
-		FauxScrollFrame_Update( _G[ frame.."ScrollFrame" ], numResults, VisibleLines, 41);
+		FauxScrollFrame_Update( _G[ frame.."ScrollFrame" ], numResults, numRows, 41);
 	end
 	
 	if not AltoholicFrameSearch:IsVisible() then
@@ -627,7 +707,7 @@ local function BrowseCharacter(character)
 		end
 	end
 	
-	if addon:GetOption("IncludeMailbox") == 1 then			-- check mail ?
+	if addon:GetOption("UI.Tabs.Search.IncludeMailboxItems") then			-- check mail ?
 		currentResultLocation = L["Mail"]
 		local num = DataStore:GetNumMails(character) or 0
 		for i = 1, num do
@@ -638,7 +718,7 @@ local function BrowseCharacter(character)
 		end
 	end
 	
-	if addon:GetOption("IncludeRecipes") == 1					-- check known recipes ?
+	if addon:GetOption("UI.Tabs.Search.IncludeKnownRecipes")			-- check known recipes ?
 		and (filters:GetFilterValue("itemType") == nil) 
 		and (filters:GetFilterValue("itemRarity") == 0)
 		and (filters:GetFilterValue("itemSlot") == 0) then
@@ -677,7 +757,7 @@ local function BrowseRealm(realm, account, bothFactions)
 		end
 	end
 	
-	if addon:GetOption("IncludeGuildBank") == 1 then	-- Check guild bank(s) ?
+	if addon:GetOption("UI.Tabs.Search.IncludeGuildBankItems") then	-- Check guild bank(s) ?
 		currentResultType = GUILD_ITEM_LINE
 
 		for guildName, guild in pairs(DataStore:GetGuilds(realm, account)) do
@@ -738,27 +818,27 @@ function ns:FindItem(searchType, searchSubType)
 		filters:EnableFilter("SubType")
 	end
 		
-	local itemMinLevel = AltoholicTabSearch_MinLevel:GetNumber()
+	local itemMinLevel = AltoholicTabSearch.MinLevel:GetNumber()
 	filters:SetFilterValue("itemMinLevel", itemMinLevel)
 	filters:EnableFilter("MinLevel")
 	
-	local itemMaxLevel = AltoholicTabSearch_MaxLevel:GetNumber()	
+	local itemMaxLevel = AltoholicTabSearch.MaxLevel:GetNumber()	
 	if itemMaxLevel ~= 0 then			-- enable the filter only if a max level has been set
 		filters:SetFilterValue("itemMaxLevel", itemMaxLevel)
 		filters:EnableFilter("Maxlevel")
 	end	
 	
-	local itemSlot = UIDropDownMenu_GetSelectedValue(AltoholicTabSearch_SelectSlot)
+	local itemSlot = UIDropDownMenu_GetSelectedValue(AltoholicTabSearch.SelectSlot)
 	if itemSlot ~= 0 then	-- don't apply filter if = 0, it means we take them all
 		filters:EnableFilter("EquipmentSlot")
 		filters:SetFilterValue("itemSlot", itemSlot)
 	end	
 	
-	filters:SetFilterValue("itemRarity", UIDropDownMenu_GetSelectedValue(AltoholicTabSearch_SelectRarity))
+	filters:SetFilterValue("itemRarity", UIDropDownMenu_GetSelectedValue(AltoholicTabSearch.SelectRarity))
 	filters:EnableFilter("Rarity")
 	
 	-- Start the search
-	local searchLocation = UIDropDownMenu_GetSelectedValue(AltoholicTabSearch_SelectLocation)
+	local searchLocation = UIDropDownMenu_GetSelectedValue(AltoholicTabSearch.SelectLocation)
 	
 	ns:ClearResults()
 	
@@ -798,16 +878,16 @@ function ns:FindItem(searchType, searchSubType)
 	
 	if ns:GetNumResults() == 0 then
 		if currentValue == "" then 
-			AltoholicTabSearchStatus:SetText(L["No match found!"])
+			AltoholicTabSearch.Status:SetText(L["No match found!"])
 		else
-			AltoholicTabSearchStatus:SetText(value .. L[" not found!"])
+			AltoholicTabSearch.Status:SetText(value .. L[" not found!"])
 		end
 	end
 	ongoingSearch = nil 	-- search done
 	
 	if SearchLoots then
 		addon.Tabs.Search:SetMode("loots")
-		if addon:GetOption("SortDescending") == 1 then 		-- descending sort ?
+		if addon:GetOption("UI.Tabs.Search.SortDescending") then 		-- descending sort ?
 			AltoholicTabSearch_Sort3.ascendingSort = true		-- say it's ascending now, it will be toggled
 			ns:SortResults(AltoholicTabSearch_Sort3, "iLvl")
 		else
@@ -890,7 +970,7 @@ function ns:FindEquipmentUpgrade()
 		addon.Tabs.Search:SetMode("loots")
 	end
 	
-	if addon:GetOption("SortDescending") == 1 then 		-- descending sort ?
+	if addon:GetOption("UI.Tabs.Search.SortDescending") then 		-- descending sort ?
 		AltoholicTabSearch_Sort8.ascendingSort = true		-- say it's ascending now, it will be toggled
 		ns:SortResults(AltoholicTabSearch_Sort8, "iLvl")
 	else

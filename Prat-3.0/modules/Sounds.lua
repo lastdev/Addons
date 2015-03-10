@@ -273,11 +273,11 @@ Prat:AddModuleToLoad(function()
   {
 	["Add a custom channel"] = "添加自定义频道",
 	["A module to play sounds on certain chat messages."] = "在某些聊天信息播放声音的模块",
-	-- bn_whisper_desc = "",
-	-- bn_whisper_name = "",
+	bn_whisper_desc = "为 %s 战网密语提示音乐", -- Needs review
+	bn_whisper_name = "战网密语", -- Needs review
 	["Custom Channels"] = "自定义频道",
-	-- group_lead_desc = "",
-	-- group_lead_name = "",
+	group_lead_desc = "为团队领袖, 队伍领袖或地下城领袖 %s 发出声音提示", -- Needs review
+	group_lead_name = "队伍领袖", -- Needs review
 	guild_desc = "公会信息声音",
 	guild_name = "公会",
 	incoming = "收到",

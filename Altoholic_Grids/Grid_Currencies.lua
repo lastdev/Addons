@@ -110,36 +110,31 @@ local callbacks = {
 			addon.Tabs.Grids:SetStatus(addon:GetOption(OPTION_TOKEN) or L["All-in-one"])
 		end,
 	GetSize = function() return #view end,
-	RowSetup = function(self, entry, row, dataRowID)
+	RowSetup = function(self, rowFrame, dataRowID)
 			local token = view[dataRowID]
 
 			if token then
-				local rowName = entry .. row
-				_G[rowName.."Name"]:SetText(WHITE .. token)
-				_G[rowName.."Name"]:SetJustifyH("LEFT")
-				_G[rowName.."Name"]:SetPoint("TOPLEFT", 15, 0)
+				rowFrame.Name.Text:SetText(WHITE .. token)
+				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
-	ColumnSetup = function(self, entry, row, column, dataRowID, character)
-			local itemName = entry.. row .. "Item" .. column;
-			local itemTexture = _G[itemName .. "_Background"]
-			local itemButton = _G[itemName]
-			local itemText = _G[itemName .. "Name"]
-			
-			itemText:SetFontObject("NumberFontNormalSmall")
-			itemText:SetJustifyH("CENTER")
-			itemText:SetPoint("BOTTOMRIGHT", 5, 0)
-			itemTexture:SetDesaturated(false)
-			itemTexture:SetTexCoord(0, 1, 0, 1)
+	RowOnEnter = function()	end,
+	RowOnLeave = function() end,
+	ColumnSetup = function(self, button, dataRowID, character)
+			button.Name:SetFontObject("NumberFontNormalSmall")
+			button.Name:SetJustifyH("CENTER")
+			button.Name:SetPoint("BOTTOMRIGHT", 5, 0)
+			button.Background:SetDesaturated(false)
+			button.Background:SetTexCoord(0, 1, 0, 1)
 
 			local token = view[dataRowID]
 			local _, _, count, icon = DataStore:GetCurrencyInfoByName(character, token)
-			itemButton.count = count
+			button.count = count
 		
 			if count then 
-				itemTexture:SetTexture(icon)
-				itemTexture:SetVertexColor(0.5, 0.5, 0.5);	-- greyed out
-				itemButton.key = character
+				button.Background:SetTexture(icon)
+				button.Background:SetVertexColor(0.5, 0.5, 0.5);	-- greyed out
+				button.key = character
 				
 				if count >= 100000 then
 					count = format("%2.1fM", count/1000000)
@@ -149,13 +144,13 @@ local callbacks = {
 					count = format("%2.1fk", count/1000)
 				end
 				
-				itemText:SetText(GREEN..count)
-				itemButton:SetID(dataRowID)
-				itemButton:Show()
+				button.Name:SetText(GREEN..count)
+				button:SetID(dataRowID)
+				button:Show()
 			else
-				itemButton.key = nil
-				itemButton:SetID(0)
-				itemButton:Hide()
+				button.key = nil
+				button:SetID(0)
+				button:Hide()
 			end
 		end,
 	OnEnter = function(frame) 

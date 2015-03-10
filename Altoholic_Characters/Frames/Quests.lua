@@ -40,12 +40,12 @@ function ns:Update()
 	local DS = DataStore
 	
 	if DS:GetQuestLogSize(character) == 0 then
-		AltoholicTabCharactersStatus:SetText(L["No quest found for "] .. addon.Tabs.Characters:GetAlt())
+		AltoholicTabCharacters.Status:SetText(L["No quest found for "] .. addon.Tabs.Characters:GetAlt())
 		addon:ClearScrollFrame( _G[ frame.."ScrollFrame" ], entry, VisibleLines, 18)
 		return
 	end
 
-	AltoholicTabCharactersStatus:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), QUEST_LOG))
+	AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), QUEST_LOG))
 	
 	local offset = FauxScrollFrame_GetOffset( _G[ frame.."ScrollFrame" ] );
 	local DisplayedCount = 0

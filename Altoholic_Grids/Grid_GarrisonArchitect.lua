@@ -138,47 +138,42 @@ local callbacks = {
 			end
 		end,
 	GetSize = function() return #view end,
-	RowSetup = function(self, entry, row, dataRowID)
+	RowSetup = function(self, rowFrame, dataRowID)
 			local v = view[dataRowID]
 			local name = v.name or select(2, C_Garrison.GetBuildingInfo(v.id))
 			
 			if name then
-				local rowName = entry .. row
-				
-				_G[rowName.."Name"]:SetText(WHITE .. name)
-				_G[rowName.."Name"]:SetJustifyH("LEFT")
-				_G[rowName.."Name"]:SetPoint("TOPLEFT", 15, 0)
+				rowFrame.Name.Text:SetText(WHITE .. name)
+				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
-	ColumnSetup = function(self, entry, row, column, dataRowID, character)
-			local itemName = entry.. row .. "Item" .. column;
-			local itemTexture = _G[itemName .. "_Background"]
-			local itemButton = _G[itemName]
-			local itemText = _G[itemName .. "Name"]
-
-			itemText:SetFontObject("NumberFontNormal")
-			itemText:SetJustifyH("RIGHT")
-			itemText:SetPoint("BOTTOMRIGHT", -3, 0)
-			itemTexture:SetDesaturated(false)
-			itemTexture:SetTexCoord(0, 1, 0, 1)
+	RowOnEnter = function()	end,
+	RowOnLeave = function() end,
+	ColumnSetup = function(self, button, dataRowID, character)
+			button.Name:SetFontObject("NumberFontNormal")
+			button.Name:SetJustifyH("RIGHT")
+			button.Name:SetPoint("BOTTOMRIGHT", -3, 0)
+			
+			button.Background:SetDesaturated(false)
+			button.Background:SetTexCoord(0, 1, 0, 1)
 			
 			local v = view[dataRowID]
 			local buildingType = v.buildingType
 			local id, level = DataStore:GetBuildingInfo(character, buildingType)
 			
 			if id and level then	-- if the id exists, this character owns this building type
-				itemButton.buildingID = id
-				itemTexture:SetVertexColor(1.0, 1.0, 1.0)
+				button.buildingID = id
+				button.Background:SetVertexColor(1.0, 1.0, 1.0)
 				
 				local tex = v.tex or select(4, C_Garrison.GetBuildingInfo(v.id))
 				
-				itemTexture:SetTexture(tex)
-				itemText:SetText(GREEN .. level)
-				itemButton:Show()
+				button.Background:SetTexture(tex)
+				button.Name:SetText(GREEN .. level)
+				button:Show()
 			else
-				itemButton.buildingID = nil
-				itemText:SetText("")
-				itemButton:Hide()
+				button.buildingID = nil
+				button.Name:SetText("")
+				button:Hide()
 			end
 		end,
 	OnEnter = function(frame) 
@@ -262,4 +257,4 @@ local callbacks = {
 		end,
 }
 
-addon.Tabs.Grids:RegisterGrid(11, callbacks)
+addon.Tabs.Grids:RegisterGrid(10, callbacks)

@@ -1,36 +1,14 @@
 ﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="TabCharacters.lua"></Script>
 
- 	<Button name="AltoViewIconTemplate" virtual="true">
-		<Size>
-			<AbsDimension x="30" y="30"/>
-		</Size>
-		<Layers>
-			<Layer level="BORDER">
-				<Texture name="$parentIconTexture"/>
-				<FontString name="$parentCount" inherits="NumberFontNormal" justifyH="RIGHT" hidden="true">
-					<Anchors>
-						<Anchor point="BOTTOMRIGHT">
-							<Offset>
-								<AbsDimension x="-5" y="2"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
+ 	<Button name="AltoViewIconTemplate" inherits="AltoButtonTemplate" virtual="true">
+		<Size x="30" y="30" />
 		<Frames>
-			<Frame name="$parentShine" inherits="AutoCastShineTemplate">
+			<Frame parentKey="Shine" name="$parentShine" inherits="AutoCastShineTemplate">
+				<Size x="28" y="28" />
 				<Anchors>
-					<Anchor point="CENTER">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="CENTER" x="0" y="0" />
 				</Anchors>
-				<Size>
-					<AbsDimension x="28" y="28"/>
-				</Size>
 			</Frame>
 		</Frames>
 		<Scripts>
@@ -49,58 +27,42 @@
 				Altoholic.Tabs.Characters:MenuItem_OnClick(self, button)
 			</OnClick>
 		</Scripts>
-		<PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
-		<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
 	</Button>
 
-	<Button name="AltoTabCharactersIconTemplate" inherits="AltoMenuIconTemplate" virtual="true">
+	<Button name="AltoTabCharactersIconTemplate" inherits="AltoButtonTemplate" virtual="true">
 		<Scripts>
+			<OnLoad>
+				local icon = self.Icon
+				icon:SetWidth(30)
+				icon:SetHeight(30)
+				
+				if self.iconFile then
+					self.Icon:SetTexture(self.iconFile)
+				end
+			</OnLoad>
 			<OnEnter>
 				Altoholic.Tabs.Characters:Icon_OnEnter(self)
 			</OnEnter>
 		</Scripts>
 	</Button>
 	
-	<Button name="AltoTabCharactersClassIconTemplate" inherits="AltoBagItemTemplate" virtual="true">
-		<Scripts>
-			<OnEnter>
-				Altoholic.Tabs.Characters:ClassIcon_OnEnter(self)
-			</OnEnter>
-			<OnLeave>
-				AltoTooltip:Hide()
-			</OnLeave>
-		</Scripts>
-	</Button>
-	
 	<Frame name="AltoholicTabCharacters" parent="AltoholicFrame" hidden="true">
-		<Size>
-			<AbsDimension x="758" y="447"/>
-		</Size>
+		<Size x="758" y="447" />
 		<Anchors>
-			<Anchor point="TOPLEFT">
-				<Offset x="0" y="0" />
-			</Anchor>
+			<Anchor point="TOPLEFT" x="0" y="0" />
 		</Anchors>
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString name="$parentText1" inherits="GameFontNormalSmall" justifyH="LEFT">
-					<Size>
-						<AbsDimension x="100" y="18"/>
-					</Size>
+				<FontString parentKey="Text1" inherits="GameFontNormalSmall" justifyH="LEFT">
+					<Size x="100" y="18" />
 					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="35" y="-105"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" x="35" y="-105" />
 					</Anchors>
 				</FontString>
-				<FontString name="$parentStatus" inherits="GameFontNormal" justifyH="LEFT">
+				<FontString parentKey="Status" inherits="GameFontNormal" justifyH="LEFT">
 					<Size x="320" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT">
-							<Offset x="-250" y="13" />
-						</Anchor>
+						<Anchor point="BOTTOMRIGHT" x="-250" y="13" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
@@ -108,72 +70,75 @@
 		</Layers>
 		<Frames>
 			<!-- Menu Icons -->
-			<Button name="$parent_CharactersIcon" inherits="AltoTabCharactersIconTemplate" id="1">
+			<Frame parentKey="MenuIcons" name="AltoholicTabCharacters_MenuIcons">
+				<Size x="340" y="37" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" >
-						<Offset x="60" y="-15" />
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="60" y="-15" />
 				</Anchors>
-			</Button>
-			<Button name="$parent_BagsIcon" inherits="AltoTabCharactersIconTemplate" id="2">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_CharactersIcon" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_QuestsIcon" inherits="AltoTabCharactersIconTemplate" id="3">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_BagsIcon" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_TalentsIcon" inherits="AltoTabCharactersIconTemplate" id="4">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_QuestsIcon" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_AuctionIcon" inherits="AltoTabCharactersIconTemplate" id="5">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_TalentsIcon" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_MailIcon" inherits="AltoTabCharactersIconTemplate" id="6">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_AuctionIcon" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_SpellbookIcon" inherits="AltoTabCharactersIconTemplate" id="7">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_MailIcon" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_ProfessionsIcon" inherits="AltoTabCharactersIconTemplate" id="8">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_SpellbookIcon" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-		
-			<Frame name="$parentRightClickMenu1" inherits="AltoRightClickMenuTemplate" id="1" />
-			<Frame name="$parentRightClickMenu2" inherits="AltoRightClickMenuTemplate" id="2" />
-			<Frame name="$parentRightClickMenu3" inherits="AltoRightClickMenuTemplate" id="3" />
-			<Frame name="$parentRightClickMenu4" inherits="AltoRightClickMenuTemplate" id="4" />
-			<Frame name="$parentRightClickMenu5" inherits="AltoRightClickMenuTemplate" id="5" />
-			<Frame name="$parentRightClickMenu6" inherits="AltoRightClickMenuTemplate" id="6" />
-			<Frame name="$parentRightClickMenu7" inherits="AltoRightClickMenuTemplate" id="7" />
-			<Frame name="$parentRightClickMenu8" inherits="AltoRightClickMenuTemplate" id="8" />
-
+				<Frames>
+					<Button parentKey="CharactersIcon" inherits="AltoTabCharactersIconTemplate" id="1">
+						<Anchors>
+							<Anchor point="TOPLEFT" />
+						</Anchors>
+					</Button>
+					<Button parentKey="BagsIcon" inherits="AltoTabCharactersIconTemplate" id="2">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.CharactersIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+					</Button>
+					<Button parentKey="QuestsIcon" inherits="AltoTabCharactersIconTemplate" id="3">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.BagsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+						<KeyValues>
+							<KeyValue key="iconFile" value="Interface\LFGFrame\LFGIcon-Quest" />
+						</KeyValues>
+					</Button>
+					<Button parentKey="TalentsIcon" inherits="AltoTabCharactersIconTemplate" id="4">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.QuestsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+						<KeyValues>
+							<KeyValue key="iconFile" value="Interface\Icons\Spell_Nature_NatureGuardian" />
+						</KeyValues>
+					</Button>
+					<Button parentKey="AuctionIcon" inherits="AltoTabCharactersIconTemplate" id="5">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.TalentsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+						<KeyValues>
+							<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Coin_01" />
+						</KeyValues>
+					</Button>
+					<Button parentKey="MailIcon" inherits="AltoTabCharactersIconTemplate" id="6">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.AuctionIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+						<KeyValues>
+							<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Note_01" />
+						</KeyValues>
+					</Button>
+					<Button parentKey="SpellbookIcon" inherits="AltoTabCharactersIconTemplate" id="7">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.MailIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+						<KeyValues>
+							<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Book_09" />
+						</KeyValues>
+					</Button>
+					<Button parentKey="ProfessionsIcon" inherits="AltoTabCharactersIconTemplate" id="8">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeKey="$parent.SpellbookIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+						</Anchors>
+						<KeyValues>
+							<KeyValue key="iconFile" value="Interface\Icons\Achievement_GuildPerk_WorkingOvertime" />
+						</KeyValues>
+					</Button>
+				</Frames>
+			</Frame>
+	
+			<Frame parentKey="ContextualMenu" inherits="AltoContextualMenuTemplate" />
+	
 			<!-- Left Menu -->
 			<!--
 			Future menu with character icons on the left
@@ -222,13 +187,9 @@
 			</Button>
 			-->
 			
-			<Frame name="$parent_SelectRealm" inherits="UIDropDownMenuTemplate">
+			<Frame parentKey="SelectRealm" name="$parent_SelectRealm" inherits="UIDropDownMenuTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentText1" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="-25" y="-2"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Text1" relativePoint="BOTTOMLEFT" x="-25" y="-2" />
 				</Anchors>
 				<Scripts>
 					<OnLoad>
@@ -243,63 +204,36 @@
 				</Scripts>
 			</Frame>
 			
-			<Button name="$parent_Characters" inherits="AltoViewIconTemplate" id="1">
+			<Button parentKey="Characters" inherits="AltoViewIconTemplate" id="1">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabCharacters" relativePoint="BOTTOMLEFT" >
-						<Offset x="30" y="240" />
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT" x="30" y="240" />
 				</Anchors>
 			</Button>
 
 			<Button name="$parent_Sort1" inherits="AltoSortButtonTemplate" id="1">
-				<Size>
-					<AbsDimension x="130" y="19"/>
-				</Size>
+				<Size x="130" y="19" />
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="AltoholicFrame_SearchEditBox" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="10" y="-10"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicFrame_SearchEditBox" relativePoint="BOTTOMRIGHT" x="10" y="-10" />
 				</Anchors>
 			</Button>
 			<Button name="$parent_Sort2" inherits="AltoSortButtonTemplate" id="2">
-				<Size>
-					<AbsDimension x="70" y="19"/>
-				</Size>
+				<Size x="70" y="19" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort1" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="$parent_Sort1" relativePoint="RIGHT" x="0" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parent_Sort3" inherits="AltoSortButtonTemplate" id="3">
-				<Size>
-					<AbsDimension x="100" y="19"/>
-				</Size>
+				<Size x="100" y="19" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort2" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="$parent_Sort2" relativePoint="RIGHT" x="0" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parent_Sort4" inherits="AltoSortButtonTemplate" id="4">
-				<Size>
-					<AbsDimension x="100" y="19"/>
-				</Size>
+				<Size x="100" y="19" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort3" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="$parent_Sort3" relativePoint="RIGHT" x="0" y="0" />
 				</Anchors>
 			</Button>
-
 		</Frames>
 		<Scripts>
 			<OnLoad>

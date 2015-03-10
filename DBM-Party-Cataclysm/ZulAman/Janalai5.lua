@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod(188, "DBM-Party-Cataclysm", 10, 77)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
 mod:SetCreatureID(23578)
 mod:SetZone()
 
@@ -22,8 +22,8 @@ local warnHatchAll			= mod:NewSpellAnnounce(43144, 4)
 
 local specWarnFlameBreath	= mod:NewSpecialWarningMove(97497)
 local specWarnAdds			= mod:NewSpecialWarningSpell(43962)
-local specWarnBomb			= mod:NewSpecialWarningSpell(42630, nil, nil, nil, true)
-local specWarnHatchAll		= mod:NewSpecialWarningSpell(43144, mod:IsTank())
+local specWarnBomb			= mod:NewSpecialWarningSpell(42630, nil, nil, nil, 2)
+local specWarnHatchAll		= mod:NewSpecialWarningSpell(43144, "Tank")
 
 local timerBomb				= mod:NewCastTimer(12, 42630)
 local timerBombCD			= mod:NewNextTimer(30, 42630)

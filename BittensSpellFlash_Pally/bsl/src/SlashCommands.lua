@@ -1,7 +1,7 @@
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "SlashCommands", tonumber("20141215204639") or time()) then
+if u.SkipOrUpgrade(c, "SlashCommands", tonumber("20150202022148") or time()) then
    return
 end
 
@@ -27,8 +27,7 @@ end
 c.AoE = false
 
 function c.ToggleAoE()
-   c.AoE = not c.AoE
-   libPrint("AoE Mode:", c.AoE)
+   libPrint("AoE Mode:", "AoE mode is now automatic, and cannot be toggled")
 end
 
 regCommand("aoe", c.ToggleAoE)

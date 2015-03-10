@@ -285,7 +285,7 @@ local AUTH_NEVER	= 3
 function Altoholic.Comm.Sharing:OnSharingRequest(sender, data)
 	self.SharingEnabled = nil
 	
-	if UnitAffectingCombat("player") == true then
+	if InCombatLockdown() then
 		-- automatically reject if requestee is in combat
 		Whisper(sender, MSG_ACCOUNT_SHARING_REFUSEDINCOMBAT)
 		return
@@ -491,7 +491,7 @@ end
 
 -- *** DataStore Event Handlers ***
 function addon:DATASTORE_BANKTAB_REQUESTED(event, sender, tabName)
-	if addon:GetOption("GuildBankAutoUpdate") == 1 then
+	if addon:GetOption("UI.Tabs.Guild.BankAutoUpdate") then
 		DataStore:SendBankTabToGuildMember(sender, tabName)
 		return
 	end
@@ -513,7 +513,7 @@ function addon:DATASTORE_BANKTAB_REQUESTED(event, sender, tabName)
 end
 
 function addon:DATASTORE_GUILD_MAIL_RECEIVED(event, sender, recipient)
-	if addon:GetOption("GuildMailWarning") == 1 then
+	if addon:GetOption("UI.Mail.GuildMailWarning") then
 		addon:Print(format(L["%s|r has received a mail from %s"], GREEN..recipient, GREEN..sender))
 	end
 end

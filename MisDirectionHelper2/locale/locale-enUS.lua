@@ -6,6 +6,7 @@ L["Misdirection"] = true
 L["Tricks of the Trade"] = true
 L["%s Misdirects to %s"] = true
 L["%s casts Tricks of the Trade on %s"] = true
+L["%s casts %s on %s"] = true
 L["Minimap Icon"] = true
 L["Toggle Minimap icon"] = true
 L["Buff Alert"] = true

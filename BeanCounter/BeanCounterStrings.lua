@@ -5,7 +5,7 @@
 
 	AddOn: BeanCounter
 	Revision: $Id: BeanCounterStrings.lua 5516 2014-11-05 17:39:30Z brykrys $
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
 
 	License:
 		This program is free software; you can redistribute it and/or

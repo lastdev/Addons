@@ -1,10 +1,10 @@
-local addonName, a = ...
-local L = a.Localize
+local _, a = ...
+--local L = a.Localize
 local s = SpellFlashAddon
 local x = s.UpdatedVariables
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
-local u = g.GetTable("BittensUtilities")
+--local u = g.GetTable("BittensUtilities")
 
 local GetSpellBonusDamage = GetSpellBonusDamage
 local UnitLevel = UnitLevel
@@ -13,14 +13,32 @@ local SPELL_POWER_HOLY_POWER = SPELL_POWER_HOLY_POWER
 
 local min = math.min
 local max = math.max
-local select = select
-local string = string
+local format = string.format
 local type = type
 local pairs = pairs
 local ipairs = ipairs
 local unpack = unpack
 
 a.Rotations = { }
+
+local contrastFlashColor = { r = 1.00, g = 0.05, b = 1.00 }
+local function setContrastFlashColor()
+   if c.GetOption("Contrast") then
+      a.Rotations.Holy.FlashColor = contrastFlashColor
+      a.Rotations.Protection.FlashColor = contrastFlashColor
+      a.Rotations.Retribution.FlashColor = contrastFlashColor
+   else
+      a.Rotations.Holy.FlashColor = nil
+      a.Rotations.Protection.FlashColor = nil
+      a.Rotations.Retribution.FlashColor = nil
+   end
+end
+
+-- set soon after load, and also when settings change.
+-- must delay initial set to allow init to finish. :(
+C_Timer.After(1, setContrastFlashColor)
+s.AddSettingsListener(setContrastFlashColor)
+
 
 local selflessStackPending = false
 local selflessClearPending = false
@@ -155,6 +173,34 @@ function a.PreFlash()
    a.HoWPhase = s.HealthPercent() <= (c.HasSpell("Empowered Hammer of Wrath") and 35 or 20)
 end
 
+function a.AuraApplied(spellID, target)
+   if c.IdMatches(spellID, "Sacred Shield") then
+      a.SacredShieldTarget = target
+      c.Debug("Event", "Sacred Shield target:", target)
+
+      a.SacredShieldPower = GetSpellBonusDamage(2)
+      c.Debug("Event", "Sacred Shield applied at", a.SacredShieldPower)
+   end
+end
+
+a.EternalFlameStrength = { hp = 0, bog = 0 }
+function a.CastSucceeded()
+   if c.IsCastingAt("player", "Eternal Flame") then
+      -- from testing a.HolyPower is still accurate at this point.
+      a.EternalFlameStrength.hp = max(3, a.HolyPower)
+      a.EternalFlameStrength.bog = c.GetBuffStack("Bastion of Glory")
+   end
+end
+
+function a.AuraRemoved(spellID, target, _)
+   if c.IdMatches(spellID, "Eternal Flame HoT") then
+      if UnitIsUnit(target, "player") then
+         a.EternalFlameStrength.hp = 0
+         a.EternalFlameStrength.bog = 0
+      end
+   end
+end
+
 local function selflessTriggerMonitor(info)
    if c.HasTalent("Selfless Healer") then
       if c.InfoMatches(info, "Judgment") then
@@ -248,22 +294,12 @@ a.Rotations.Holy = {
       clearSelflessPending(spellID, "Judgment")
    end,
 
-   AuraApplied = function(spellID)
-      if c.IdMatches(spellID, "Sacred Shield") then
-         a.SacredShieldPower = GetSpellBonusDamage(2)
-         c.Debug("Event", "Sacred Shield applied at", a.SacredShieldPower)
-      end
-   end,
-
    AuraRemoved = clearSelflessMonitor,
 
    AuraApplied = function(spellID, target)
       if c.IdMatches(spellID, "Beacon of Light") then
          a.BeaconTarget = target
          c.Debug("Event", "Beacon target:", target)
-      elseif c.IdMatches(spellID, "Sacred Shield") then
-         a.SacredShieldTarget = target
-         c.Debug("Event", "Sacred Shield target:", target)
       else
          clearSelflessPending(spellID, "Selfless Healer")
       end
@@ -280,11 +316,13 @@ a.Rotations.Protection = {
       "Stamina", "Haste", "Armor", "Crit", "Multistrike"
    },
 
-   FlashInCombat = function()
+   PreFlash = function()
       a.BastionOfPower = c.GetBuffDuration("Bastion of Power", false, false, true)
       a.DivinePurpose = c.GetBuffDuration("Divine Purpose", false, false, true)
       a.GrandCrusader = c.GetBuffDuration("Grand Crusader", false, false, true)
+   end,
 
+   FlashInCombat = function()
       c.FlashMitigationBuffs(
          1,
          "Shield of the Righteous",
@@ -303,11 +341,10 @@ a.Rotations.Protection = {
          -- "Execution Sentence for Prot",
       )
 
-      local flashing, delay = c.DelayPriorityFlash(
+      c.DelayPriorityFlash(
          "Holy Avenger",
          "Seraphim",
-         "Eternal Flame Refresh",
-         "Eternal Flame with Bastion of Power",
+         "Eternal Flame",
          "Shield of the Righteous with Divine Purpose",
          -- would be nice to do this instead of the mitigation buffs above...
          -- /shield_of_the_righteous,if=(holy_power>=5|incoming_damage_1500ms>=health.max*0.3)&(!talent.seraphim.enabled|cooldown.seraphim.remains>5)
@@ -343,38 +380,25 @@ a.Rotations.Protection = {
          "Flash of Light for Prot"
       )
 
-      -- @todo danielp 2014-11-09: revisit the logic below, enable again?
-      do return end
+   end,
 
-      if not flashing then
-         return
-      end
-
-      local bump = 0
-      if flashing == "Judgment under Sanctified Wrath" then
-         bump = 2
-      elseif u.StartsWith(flashing, "Crusader Strike")
-         or u.StartsWith(flashing, "Hammer of the Righteous")
-         or u.StartsWith(flashing, "Judgment")
-         or u.StartsWith(flashing, "Judgment")
-         or flashing == "Avenger's Shield under Grand Crusader" then
-
-         bump = 1
-      end
-      if bump == 1 and c.HasBuff("Holy Avenger", false, true) then
-         bump = 3
-      end
-      if a.HolyPower + bump > 5 then
-         if delay then
-            c.FlashAll("Shield of the Righteous Predictor")
-         else
-            c.FlashAll("Shield of the Righteous")
-         end
+   FlashOutOfCombat = function()
+      if x.EnemyDetected then
+         c.DelayPriorityFlash(
+            "Avenger's Shield under Grand Crusader",
+            "Crusader Strike",
+            "Judgment",
+            "Holy Wrath with Sanctified Wrath",
+            "Avenger's Shield"
+         )
       end
    end,
 
    FlashAlways = function()
-      c.FlashAll("Righteous Fury", "Seal of Insight for Prot")
+      c.FlashAll(
+         "Righteous Fury",
+         "Seal of Insight for Prot"
+      )
       flashRaidBuffs()
    end,
 
@@ -385,10 +409,7 @@ a.Rotations.Protection = {
    end,
 
    AuraApplied = function(spellID)
-      if c.IdMatches(spellID, "Sacred Shield") then
-         a.SacredShieldPower = GetSpellBonusDamage(2)
-         c.Debug("Event", "Sacred Shield applied at", a.SacredShieldPower)
-      else
+      if not c.IdMatches(spellID, "Sacred Shield") then
          clearSelflessPending(spellID, "Selfless Healer")
       end
    end,
@@ -396,7 +417,7 @@ a.Rotations.Protection = {
    AuraRemoved = clearSelflessMonitor,
 
    ExtraDebugInfo = function()
-      return string.format("%s %s", a.HolyPower, a.SelflessHealer)
+      return format("hp:%s sh:%s ss:%d", a.HolyPower, a.SelflessHealer, a.SacredShieldPower)
    end,
 }
 
@@ -458,6 +479,7 @@ local RetributionSingleTarget = {
    "Templar's Verdict with Avenging Wrath",
    "Templar's Verdict with Divine Purpose Talent",
    "Divine Storm with Divine Purpose talent, and Divine Crusader, without Final Verdict talent",
+   "Templar's Verdict with Divine Purpose",
    "Crusader Strike",
    "Crusader Strike Delay",
    "Final Verdict",
@@ -529,7 +551,7 @@ a.Rotations.Retribution = {
    end,
 
    ExtraDebugInfo = function()
-      return string.format(
+      return format(
          "h:%d j:%.1f, c:%.1f e:%.1f a:%.1f h:%.1f d:%s c:%s",
          a.HolyPower or 0,
          a.Judgment or 0,

@@ -1,5 +1,6 @@
-HEALBOT_VERSION   = "6.0.3.7";
+HEALBOT_VERSION   = "6.0.3.10";
 HEALBOT_ABOUT_URL = "http://healbot.darktech.org/"
+HEALBOT_MODC_URL  = "http://www.myonlinedating.club"
 
 function HealBot_globalVars()
     --Harmful Spells
@@ -487,8 +488,10 @@ function HealBot_globalVars()
 	
 	--[[= GetMapNameByID(994)) or "--Highmaul" 
 	Trash]]
+	HEALBOT_DEBUFF_MOLTEN_BOMB               = GetSpellInfo(161635) or "--Molten Bomb";
 	HEALBOT_DEBUFF_TAINED_CLAWS              = GetSpellInfo(175601) or "--Tainted Claws";
 	HEALBOT_DEBUFF_DEVOUR                    = GetSpellInfo(175599) or "--Devour";
+	HEALBOT_DEBUFF_INFESTED_WATERS           = GetSpellInfo(164642) or "--Infested Waters";
 	HEALBOT_DEBUFF_RADIATING_POISON          = GetSpellInfo(172066) or "--Radiating Poison";
 	HEALBOT_DEBUFF_STAGGERING_BLOW           = GetSpellInfo(166779) or "--Staggering Blow";
 	HEALBOT_DEBUFF_RUNE_OF_DESTRUCTION       = GetSpellInfo(175636) or "--Rune of Destruction";
@@ -498,6 +501,8 @@ function HealBot_globalVars()
 	HEALBOT_DEBUFF_FROZEN_CORE               = GetSpellInfo(174404) or "--Frozen Core";
 	HEALBOT_DEBUFF_WILD_FLAMES               = GetSpellInfo(173827) or "--Wild Flames";
 	HEALBOT_DEBUFF_RENDING_THROW             = GetSpellInfo(174500) or "--Rending Throw";
+	HEALBOT_DEBUFF_ARCANE_RESIDUE            = GetSpellInfo(175056) or "--Arcane Residue";
+	HEALBOT_DEBUFF_PULVERIZED                = GetSpellInfo(174452) or "--Pulverized";
 	--The Butcher
 	HEALBOT_DEBUFF_GUSHING_WOUNDS            = GetSpellInfo(156152) or "--Gushing Wounds";
 	HEALBOT_DEBUFF_THE_TENDERIZER            = GetSpellInfo(156151) or "--The Tenderizer";
@@ -513,6 +518,7 @@ function HealBot_globalVars()
 	HEALBOT_DEBUFF_IRON_BOMB                 = GetSpellInfo(159386) or "--Iron Bomb";
 	HEALBOT_DEBUFF_GRAPPLE                   = GetSpellInfo(159188) or "--Grapple";
 	HEALBOT_DEBUFF_FLAME_JET                 = GetSpellInfo(175946) or "--Flame Jet";
+	HEALBOT_DEBUFF_ON_THE_HUNT               = GetSpellInfo(162497) or "--On the Hunt";
 	--Twin Ogron 
 	HEALBOT_DEBUFF_ENFEEBLING_ROAR           = GetSpellInfo(158026) or "--Enfeebling Roar";
 	HEALBOT_DEBUFF_BLAZE                     = GetSpellInfo(158241) or "--Blaze";
@@ -538,7 +544,7 @@ function HealBot_globalVars()
 	HEALBOT_DEBUFF_ROT                       = GetSpellInfo(163241) or "--Rot";
 	HEALBOT_DEBUFF_NECROTIC_BREATH           = GetSpellInfo(159220) or "--Necrotic Breath";
 	HEALBOT_DEBUFF_FLESH_EATER               = GetSpellInfo(159972) or "--Flesh Eater";
-	--HEALBOT_DEBUFF_MIND_FUNGUS               = GetSpellInfo(160179) or "--Mind Fungus";
+	HEALBOT_DEBUFF_MIND_FUNGUS               = GetSpellInfo(160179) or "--Mind Fungus";
 	--Imperator Mar'gok 
 	HEALBOT_DEBUFF_BRANDED                   = GetSpellInfo(156225) or "--Branded";
 	HEALBOT_DEBUFF_DESTRUCTIVE_RESONANCE     = GetSpellInfo(159200) or "--Destructive Resonance";

@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(196, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 118 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
 mod:SetCreatureID(53494)
 mod:SetEncounterID(1200)
 mod:DisableEEKillDetection()
 mod:SetZone()
 mod:SetUsedIcons(8, 7, 6, 5, 4, 3, 2, 1)
-mod:SetModelSound("Sound\\Creature\\BALEROC\\VO_FL_BALEROC_AGGRO.wav", "Sound\\Creature\\BALEROC\\VO_FL_BALEROC_KILL_02.wav")
+mod:SetModelSound("Sound\\Creature\\BALEROC\\VO_FL_BALEROC_AGGRO.ogg", "Sound\\Creature\\BALEROC\\VO_FL_BALEROC_KILL_02.ogg")
 --Long: You are forbidden from entering my masters domain mortals.
 --Short: You have been judged
 
@@ -22,9 +22,9 @@ mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 99352 99350 99259"
 )
 
-local warnDecimationBlade	= mod:NewSpellAnnounce(99352, 4, nil, mod:IsTank() or mod:IsHealer())
-local warnStrike			= mod:NewAnnounce("warnStrike", 4, 99353, mod:IsTank() or mod:IsHealer())
-local warnInfernoBlade		= mod:NewSpellAnnounce(99350, 3, nil, mod:IsTank())
+local warnDecimationBlade	= mod:NewSpellAnnounce(99352, 4, nil, "Tank|Healer")
+local warnStrike			= mod:NewAnnounce("warnStrike", 4, 99353, "Tank|Healer")
+local warnInfernoBlade		= mod:NewSpellAnnounce(99350, 3, nil, "Tank")
 local warnShardsTorment		= mod:NewCountAnnounce(99259, 3)
 local warnTormented			= mod:NewSpellAnnounce(99257, 3)--Self only warning.
 local warnCountdown			= mod:NewTargetAnnounce(99516, 4)
@@ -32,12 +32,12 @@ local yellCountdown			= mod:NewYell(99516)
 
 local specWarnShardsTorment	= mod:NewSpecialWarningSpell(99259, nil, nil, nil, true)
 local specWarnCountdown		= mod:NewSpecialWarningYou(99516)
-local specWarnTormented		= mod:NewSpecialWarningYou(99257, mod:IsHealer())
-local specWarnDecimation	= mod:NewSpecialWarningSpell(99352, mod:IsTank())
+local specWarnTormented		= mod:NewSpecialWarningYou(99257, "Healer")
+local specWarnDecimation	= mod:NewSpecialWarningSpell(99352, "Tank")
 
 local timerBladeActive		= mod:NewTimer(15, "TimerBladeActive", 99352)
-local timerBladeNext		= mod:NewTimer(30, "TimerBladeNext", 99350, mod:IsTank() or mod:IsHealer())	-- either Decimation Blade or Inferno Blade
-local timerStrikeCD			= mod:NewTimer(5, "timerStrike", 99353, mod:IsTank() or mod:IsHealer())--5 or 2.5 sec. Variations are noted but can be auto corrected after first timer since game follows correction.
+local timerBladeNext		= mod:NewTimer(30, "TimerBladeNext", 99350, "Tank|Healer")	-- either Decimation Blade or Inferno Blade
+local timerStrikeCD			= mod:NewTimer(5, "timerStrike", 99353, "Tank|Healer")--5 or 2.5 sec. Variations are noted but can be auto corrected after first timer since game follows correction.
 local timerShardsTorment	= mod:NewNextCountTimer(34, 99259)
 local timerCountdown		= mod:NewBuffFadesTimer(8, 99516)
 local timerCountdownCD		= mod:NewNextTimer(45, 99516)
@@ -50,7 +50,7 @@ local berserkTimer			= mod:NewBerserkTimer(360)
 
 mod:AddBoolOption("ResetShardsinThrees", true, "announce")
 mod:AddBoolOption("RangeFrame")
-mod:AddBoolOption("InfoFrame", mod:IsHealer())
+mod:AddBoolOption("InfoFrame", "Healer")
 mod:AddBoolOption("SetIconOnCountdown")
 mod:AddBoolOption("SetIconOnTorment")
 mod:AddBoolOption("ArrowOnCountdown")

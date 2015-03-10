@@ -2,20 +2,12 @@
 	<Script file="Options.lua"></Script>
 
 	<Frame parentKey="CraftsOptions" parent="DataStoreFrames" hidden="true">
-		<Size>
-			<AbsDimension x="615" y="306"/>
-		</Size>
+		<Size x="615" y="306" />
 		<Frames>
 			<CheckButton parentKey="BroadcastProfs" inherits="InterfaceOptionsCheckButtonTemplate">
-				<Size>
-					<AbsDimension x="20" y="20"/>
-				</Size>
+				<Size x="20" y="20" />
 				<Anchors> 
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="40" y="-40" />
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="40" y="-40" />
 				</Anchors>      
 				<Scripts>
 					<OnClick>

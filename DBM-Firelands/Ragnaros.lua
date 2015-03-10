@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(198, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 131 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
 mod:SetCreatureID(52409)
 --mod:SetEncounterID(1203)--Figure out if EE is bad or not
 mod:SetZone()
 mod:SetUsedIcons(1, 2)
-mod:SetModelSound("Sound\\Creature\\RAGNAROS\\VO_FL_RAGNAROS_AGGRO.wav", "Sound\\Creature\\RAGNAROS\\VO_FL_RAGNAROS_KILL_03.wav")
+mod:SetModelSound("Sound\\Creature\\RAGNAROS\\VO_FL_RAGNAROS_AGGRO.ogg", "Sound\\Creature\\RAGNAROS\\VO_FL_RAGNAROS_KILL_03.ogg")
 --Long: blah blah blah (didn't feel like transcribing it)
 --Short: This is my realm
 
@@ -31,9 +31,9 @@ mod:RegisterEventsInCombat(
 
 local warnRageRagnaros		= mod:NewTargetAnnounce(101110, 3)--Staff quest ability (normal only)
 local warnRageRagnarosSoon	= mod:NewAnnounce("warnRageRagnarosSoon", 4, 101109)--Staff quest ability (normal only)
-local warnHandRagnaros		= mod:NewSpellAnnounce(98237, 3, nil, mod:IsMelee())--Phase 1 only ability
-local warnWrathRagnaros		= mod:NewSpellAnnounce(98263, 3, nil, mod:IsRanged())--Phase 1 only ability
-local warnBurningWound		= mod:NewStackAnnounce(99399, 3, nil, mod:IsTank() or mod:IsHealer())
+local warnHandRagnaros		= mod:NewSpellAnnounce(98237, 3, nil, "Melee")--Phase 1 only ability
+local warnWrathRagnaros		= mod:NewSpellAnnounce(98263, 3, nil, "Ranged")--Phase 1 only ability
+local warnBurningWound		= mod:NewStackAnnounce(99399, 3, nil, "Tank|Healer")
 local warnSulfurasSmash		= mod:NewSpellAnnounce(98710, 4)--Phase 1-3 ability.
 local warnMagmaTrap			= mod:NewTargetAnnounce(98164, 3)--Phase 1 ability.
 local warnPhase2Soon		= mod:NewPrePhaseAnnounce(2, 3)
@@ -58,7 +58,7 @@ local specWarnScorchedGround= mod:NewSpecialWarningMove(98870)--Fire on ground l
 local specWarnMagmaTrap		= mod:NewSpecialWarningMove(98164)
 local specWarnMagmaTrapNear	= mod:NewSpecialWarningClose(98164)
 local yellMagmaTrap			= mod:NewYell(98164)--May Return false tank yells
-local specWarnBurningWound	= mod:NewSpecialWarningStack(99399, mod:IsTank(), 4)
+local specWarnBurningWound	= mod:NewSpecialWarningStack(99399, "Tank", 4)
 local specWarnSplittingBlow	= mod:NewSpecialWarningSpell(98951)
 local specWarnBlazingHeat	= mod:NewSpecialWarningYou(100460)--Debuff on you
 local yellBlazingHeat		= mod:NewYell(100460)
@@ -68,20 +68,20 @@ local specWarnEngulfing		= mod:NewSpecialWarningMove(99171)
 local specWarnMeteor		= mod:NewSpecialWarningMove(99268)--Spawning on you
 local specWarnMeteorNear	= mod:NewSpecialWarningClose(99268)--Spawning on you
 local yellMeteor			= mod:NewYell(99268)
-local specWarnFixate		= mod:NewSpecialWarningYou(99849)--Chasing you after it spawned
+local specWarnFixate		= mod:NewSpecialWarningRun(99849, nil, nil, nil, 4)--Chasing you after it spawned
 local yellFixate			= mod:NewYell(99849)
 local specWarnWorldofFlames	= mod:NewSpecialWarningSpell(100171, nil, nil, nil, true)
 local specWarnDreadFlame	= mod:NewSpecialWarningMove(100941)--Standing in dreadflame
-local specWarnEmpoweredSulf	= mod:NewSpecialWarningSpell(100604, mod:IsTank())--Heroic ability Asuming only the tank cares about this? seems like according to tooltip 5 seconds to hide him into roots?
+local specWarnEmpoweredSulf	= mod:NewSpecialWarningSpell(100604, "Tank", nil, nil, 3)--Heroic ability Asuming only the tank cares about this? seems like according to tooltip 5 seconds to hide him into roots?
 local specWarnSuperheated	= mod:NewSpecialWarningStack(100593, true, 12)
 
 local timerRageRagnaros		= mod:NewTimer(5, "timerRageRagnaros", 101110)
 local timerRageRagnarosCD	= mod:NewNextTimer(60, 101110)
 local timerMagmaTrap		= mod:NewCDTimer(25, 98164)		-- Phase 1 only ability. 25-30sec variations.
 local timerSulfurasSmash	= mod:NewNextTimer(30, 98710)		-- might even be a "next" timer
-local timerHandRagnaros		= mod:NewCDTimer(25, 98237, nil, mod:IsMelee())-- might even be a "next" timer
-local timerWrathRagnaros	= mod:NewCDTimer(30, 98263, nil, mod:IsRanged())--It's always 12 seconds after smash unless delayed by magmatrap or hand of rag.
-local timerBurningWound		= mod:NewTargetTimer(20, 99399, nil, mod:IsTank() or mod:IsHealer())
+local timerHandRagnaros		= mod:NewCDTimer(25, 98237, nil, "Melee")-- might even be a "next" timer
+local timerWrathRagnaros	= mod:NewCDTimer(30, 98263, nil, "Ranged")--It's always 12 seconds after smash unless delayed by magmatrap or hand of rag.
+local timerBurningWound		= mod:NewTargetTimer(20, 99399, nil, "Tank|Healer")
 local timerFlamesCD			= mod:NewNextTimer(40, 99171)
 local timerMoltenSeedCD		= mod:NewCDTimer(60, 98495)--60 seconds CD in between from seed to seed. 50 seconds using the molten inferno trigger.
 local timerMoltenInferno	= mod:NewNextTimer(10, 98518)--Cast bar for molten Inferno (seeds exploding)
@@ -94,23 +94,19 @@ local timerCloudBurstCD		= mod:NewCDTimer(50, 100714)
 local timerBreadthofFrostCD	= mod:NewCDTimer(45, 100479)
 local timerEntrapingRootsCD	= mod:NewCDTimer(56, 100646)--56-60sec variations. Always cast before empowered sulf, varies between 3 sec before and like 11 sec before.
 local timerEmpoweredSulfCD	= mod:NewCDTimer(56, 100604)--56-64sec variations
-local timerEmpoweredSulf	= mod:NewBuffActiveTimer(10, 100604, nil, mod:IsTank())
+local timerEmpoweredSulf	= mod:NewBuffActiveTimer(10, 100604, nil, "Tank")
 local timerDreadFlameCD		= mod:NewCDTimer(40, 100675, nil, false)--Off by default as only the people dealing with them care about it.
 
 local countdownSeeds		= mod:NewCountdown(60, 98495)
 local countdownMeteor		= mod:NewCountdown("Alt45", 99268)
-local countdownEmpoweredSulf= mod:NewCountdown(56, 100604, mod:IsTank())--56-64sec variations
-local countoutEmpoweredSulf	= mod:NewCountout(10, 100604, mod:IsTank())--Counts out th duration of empowered sulfurus, tanks too busy running around to pay attention to a timer, hearing duration counted should be infinitely helpful.
+local countdownEmpoweredSulf= mod:NewCountdown(56, 100604, "Tank")--56-64sec variations
+local countoutEmpoweredSulf	= mod:NewCountout(10, 100604, "Tank")--Counts out th duration of empowered sulfurus, tanks too busy running around to pay attention to a timer, hearing duration counted should be infinitely helpful.
 
 local berserkTimer			= mod:NewBerserkTimer(1080)
 
-local soundBlazingHeat		= mod:NewSound(100460)
-local soundFixate			= mod:NewSound(99849)
-local soundEmpoweredSulf	= mod:NewSound(100604, mod:IsTank())
-
 mod:AddBoolOption("RangeFrame", true)
 mod:AddBoolOption("BlazingHeatIcons", true)
-mod:AddBoolOption("InfoHealthFrame", mod:IsHealer())--Phase 1 info framefor low health detection.
+mod:AddBoolOption("InfoHealthFrame", "Healer")--Phase 1 info framefor low health detection.
 mod:AddBoolOption("AggroFrame", false)--Phase 2 info frame for seed aggro detection.
 mod:AddBoolOption("MeteorFrame", true)--Phase 3 info frame for meteor fixate detection.
 
@@ -295,7 +291,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif spellId == 100604 then
 		warnEmpoweredSulf:Show(args.spellName)
 		specWarnEmpoweredSulf:Show()
-		soundEmpoweredSulf:Play()
 		timerEmpoweredSulf:Schedule(5)--Schedule 10 second bar to start when cast ends for buff active timer.
 		countoutEmpoweredSulf:Schedule(5)
 		timerEmpoweredSulfCD:Start()
@@ -438,7 +433,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 		timerBlazingHeatCD:Start(args.sourceGUID)--args.sourceGUID is to support multiple cds when more then 1 is up at once
 		if args:IsPlayer() then
 			specWarnBlazingHeat:Show()
-			soundBlazingHeat:Play()
 			yellBlazingHeat:Yell()
 		end
 		if self.Options.BlazingHeatIcons then
@@ -547,7 +541,6 @@ function mod:UNIT_AURA(uId)
 	if UnitDebuff("player", meteorTarget) and not meteorWarned then--Warn you that you have a meteor
 		specWarnFixate:Show()
 		yellFixate:Yell()
-		soundFixate:Play()
 		meteorWarned = true
 	elseif not UnitDebuff("player", meteorTarget) and meteorWarned then--reset warned status if you don't have debuff
 		meteorWarned = false

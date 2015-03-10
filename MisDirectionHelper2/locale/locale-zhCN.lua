@@ -42,6 +42,7 @@ L["Profiles"] = "Profiles" -- Requires localization
 L["Project description"] = "Use Misdirection / Tricks of the Trade with one click without losing your target. Create Smart Macros for Applying and Announcing Misdirection / Tricks of the Trade." -- Requires localization
 L["Right Click For MDH Options"] = "Right Click For MDH Options" -- Requires localization
 L["Right click target: %s"] = "Right click target: %s" -- Requires localization
+L["%s casts %s on %s"] = "\"player\" casts \"spell\" on \"target\"" -- Requires localization
 L["%s casts Tricks of the Trade on %s"] = "%s casts Tricks of the Trade on %s" -- Requires localization
 L["Select"] = "Select" -- Requires localization
 L["Select Channel for Buff Announcements"] = "Select Channel for Buff Announcements" -- Requires localization

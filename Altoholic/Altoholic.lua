@@ -137,7 +137,7 @@ end
 local Orig_SendMailNameEditBox_OnChar = SendMailNameEditBox:GetScript("OnChar")
 
 SendMailNameEditBox:SetScript("OnChar", function(self, ...)
-	if addon:GetOption("NameAutoComplete") == 1 then
+	if addon:GetOption("UI.Mail.AutoCompleteRecipient") then
 		local text = self:GetText(); 
 		local textlen = strlen(text); 
 		
@@ -165,7 +165,7 @@ function AuctionFrameBrowse_UpdateHook()
 
 	Orig_AuctionFrameBrowse_Update()		-- Let default stuff happen first ..
 	
-	if addon:GetOption("UI.AHColorCoding") == 0 then return end
+	if addon:GetOption("UI.AHColorCoding") == false then return end
 	
 	if IsAddOnLoaded("Auctioneer") and Auctioneer.ScanManager.IsScanning() then return end;
 
@@ -222,8 +222,8 @@ function AuctionFrameBrowse_UpdateHook()
 	AltoTooltip:Hide()
 end
 
-local function IsBOPRecipeKnown(itemID)
-	-- Check if a given recipe is BOP and known by the current player
+local function IsBOPItemKnown(itemID)
+	-- Check if a given item is BOP and known by the current player
 	local _, link = GetItemInfo(itemID)
 	if not link then return end
 
@@ -260,7 +260,7 @@ local function MerchantFrame_UpdateMerchantInfoHook()
 	
 	Orig_MerchantFrame_UpdateMerchantInfo()		-- Let default stuff happen first ..
 	
-	if addon:GetOption("UI.VendorColorCoding") == 0 then return end
+	if addon:GetOption("UI.VendorColorCoding") == false then return end
 	
    local numItems = GetMerchantNumItems()
 	local index, link
@@ -273,30 +273,29 @@ local function MerchantFrame_UpdateMerchantInfoHook()
 			if link then		-- if there's a valid item link in this slot ..
 				local itemID = addon:GetIDFromLink(link)
 				local _, _, _, _, _, itemType, itemSubType = GetItemInfo(itemID)
-				if itemType == BI["Recipe"] and itemSubType ~= BI["Book"] then		-- is it a recipe ?
-					
+				
+				local r, g, b = 1, 1, 1
+				
+				-- also applies to garrison blueprints
+				if IsBOPItemKnown(itemID) then		-- recipe is bop and already known, useless to alts : red.
+					r, g, b = 1, 0, 0
+				elseif itemType == BI["Recipe"] and itemSubType ~= BI["Book"] then		-- is it a recipe ?
 					local _, couldLearn, willLearn = addon:GetRecipeOwners(itemSubType, link, addon:GetRecipeLevel(link))
-					local button = _G["MerchantItem" .. i .. "ItemButton"]
-					if button then
-						local r, g, b
-						
-						if IsBOPRecipeKnown(itemID) then		-- recipe is bop and already known, useless to alts : red.
-							r, g, b = 1, 0, 0
-						elseif #couldLearn == 0 and #willLearn == 0 then		-- nobody could learn the recipe, neither now nor later : red
-							r, g, b = 1, 0, 0
-						elseif #couldLearn > 0 then							-- at least 1 could learn it : green (priority over "will learn")
-							r, g, b = 0, 1, 0
-						elseif #willLearn > 0 then								-- nobody could learn it now, but some could later : yellow
-							r, g, b = 1, 1, 0
-						else
-							r, g, b = 1, 1, 1
-						end
-						SetItemButtonTextureVertexColor(button, r, g, b)
-						SetItemButtonNormalTextureVertexColor(button, r, g, b)
+					if #couldLearn == 0 and #willLearn == 0 then		-- nobody could learn the recipe, neither now nor later : red
+						r, g, b = 1, 0, 0
+					elseif #couldLearn > 0 then							-- at least 1 could learn it : green (priority over "will learn")
+						r, g, b = 0, 1, 0
+					elseif #willLearn > 0 then								-- nobody could learn it now, but some could later : yellow
+						r, g, b = 1, 1, 0
 					end
 				end
+				
+				local button = _G["MerchantItem" .. i .. "ItemButton"]
+				if button then
+					SetItemButtonTextureVertexColor(button, r, g, b)
+					SetItemButtonNormalTextureVertexColor(button, r, g, b)
+				end
 			end
-
 		end
 	end
 	AltoTooltip:Hide()
@@ -350,7 +349,7 @@ function addon:OnEnable()
 
 	addon:RestoreOptionsToUI()
 
-	if addon:GetOption("ShowMinimap") == 1 then
+	if addon:GetOption("UI.Minimap.ShowIcon") then
 		addon:MoveMinimapIcon()
 		AltoholicMinimapButton:Show();
 	else
@@ -385,13 +384,9 @@ end
 
 function addon:OnShow()
 	SetPortraitTexture(AltoholicFramePortrait, "player");	
-
-	-- addon.Characters:BuildList()
-	-- addon.Characters:BuildView()
 	
 	if not addon.Tabs.current then
 		addon.Tabs:OnClick(1)
-		-- addon.Tabs.current = 1
 		addon.Characters:BuildList()
 		addon.Characters:BuildView()
 		addon.Tabs.Summary:MenuItem_OnClick(1)
@@ -644,7 +639,7 @@ function addon:GetRecipeLevel(link, tooltip)
 	for i = tooltip:NumLines(), 2, -1 do			-- parse all tooltip lines, from last to second
 		local tooltipText = _G[tooltipName .. "TextLeft" .. i]:GetText()
 		if tooltipText then
-			local _, _, rLevel = string.find(tooltipText, "%((%d+)%)") -- find number encloded in brackets
+			local _, _, rLevel = string.find(tooltipText, "%((%d+)%)") -- find number enclosed in brackets
 			if rLevel then
 				return tonumber(rLevel)
 			end
@@ -697,20 +692,6 @@ function addon:ShowWidgetTooltip(frame)
 	AltoTooltip:ClearLines();
 	AltoTooltip:AddLine(frame.tooltip)
 	AltoTooltip:Show(); 
-end
-
-function addon:CreateButtonBorder(frame)
-	if frame.border then return end
-
-	local border = frame:CreateTexture(nil, "OVERLAY")
-	border:SetWidth(67);
-	border:SetHeight(67)
-	border:SetPoint("CENTER", frame)
-	border:SetTexture("Interface\\Buttons\\UI-ActionButton-Border")
-	border:SetBlendMode("ADD")
-	border:Hide()
-	
-	frame.border = border
 end
 
 function addon:DrawCharacterTooltip(self, character)

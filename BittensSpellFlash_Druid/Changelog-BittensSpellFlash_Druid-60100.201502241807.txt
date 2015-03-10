@@ -1,0 +1,87 @@
+------------------------------------------------------------------------
+r163 | slippycheeze | 2015-02-25 02:11:26 +0000 (Wed, 25 Feb 2015) | 1 line
+Changed paths:
+   A /tags/60100.201502241807 (from /trunk:162)
+
+Create tag 60100.201502241807
+------------------------------------------------------------------------
+r162 | slippycheeze | 2015-02-25 02:10:02 +0000 (Wed, 25 Feb 2015) | 1 line
+Changed paths:
+   M /trunk/BittensSpellFlash_Druid.toc
+
+Bump TOC for patch 6.1
+------------------------------------------------------------------------
+r160 | slippycheeze | 2015-02-16 21:42:39 +0000 (Mon, 16 Feb 2015) | 1 line
+Changed paths:
+   M /trunk/src/Spells.lua
+
+Hotfix for Pulverize: don't flash without enough lacerate stacks
+------------------------------------------------------------------------
+r158 | slippycheeze | 2015-02-16 08:36:11 +0000 (Mon, 16 Feb 2015) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+
+Added sunfire to pre-combat flashing
+------------------------------------------------------------------------
+r157 | slippycheeze | 2015-02-16 07:39:55 +0000 (Mon, 16 Feb 2015) | 9 lines
+Changed paths:
+   M /trunk/src/Spells.lua
+
+Avoid flashing Sunfire constantly when Moonfire is not applied
+
+When target switching, if you are in the solar phase (eg: sunfire
+available), and moonfire was not already present on the target, we would
+constantly flash sunfire -- because the API treats the two spells
+identically, so special support is needed to filter out conditions where
+they shouldn't flash.
+
+This updates the code to avoid moonfire when it is not castable.
+------------------------------------------------------------------------
+r155 | slippycheeze | 2015-02-16 06:56:39 +0000 (Mon, 16 Feb 2015) | 1 line
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Implement WoD Balance rotation
+------------------------------------------------------------------------
+r153 | slippycheeze | 2015-02-15 22:14:03 +0000 (Sun, 15 Feb 2015) | 1 line
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Implement WoD bear rotation
+------------------------------------------------------------------------
+r151 | slippycheeze | 2015-01-25 20:56:15 +0000 (Sun, 25 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/src/Localization.lua
+
+Fix localization use
+------------------------------------------------------------------------
+r150 | slippycheeze | 2015-01-25 20:06:45 +0000 (Sun, 25 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Options.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Implement WoD feral druid rotation
+------------------------------------------------------------------------
+r149 | slippycheeze | 2015-01-25 20:06:41 +0000 (Sun, 25 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+
+Excise custom warning code now I am finally updating this.
+------------------------------------------------------------------------
+r148 | slippycheeze | 2015-01-25 20:06:37 +0000 (Sun, 25 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/BittensSpellFlash_Druid.toc
+   D /trunk/src/CatSimulator.lua
+   M /trunk/src/Localization.lua
+   M /trunk/src/Options.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Fix luacheck reported problems
+------------------------------------------------------------------------

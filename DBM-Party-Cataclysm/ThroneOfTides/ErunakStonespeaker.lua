@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(103, "DBM-Party-Cataclysm", 9, 65)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
 mod:SetCreatureID(40825, 40788)		-- 40788 = Mindbender Ghur'sha
 mod:SetZone()
 
@@ -33,7 +33,7 @@ local timerMindFog			= mod:NewBuffActiveTimer(20, 76234)
 local timerAgony			= mod:NewBuffActiveTimer(10, 76339)
 
 local specWarnLavaBolt		= mod:NewSpecialWarningInterrupt(76171)
-local specWarnAbsorbMagic	= mod:NewSpecialWarningCast(76307, nil, nil, nil, true)
+local specWarnAbsorbMagic	= mod:NewSpecialWarningCast(76307, nil, nil, nil, 2)
 local specWarnEarthShards	= mod:NewSpecialWarningMove(84931)
 
 local magmaTargets = {}

@@ -1453,6 +1453,32 @@ local function Hook_ActionButton_ShowOverlayGlow(self)
 end
 hooksecurefunc("ActionButton_ShowOverlayGlow", Hook_ActionButton_ShowOverlayGlow)
 
+-- hook into LibButtonGlow, idempotently
+local lbgHookFunction = nil
+local function hookLibButtonGlow()
+        local libButtonGlow = LibStub("LibButtonGlow-1.0", true)
+        -- no library, or it already has our hook in place
+        if not libButtonGlow or libButtonGlow.ShowOverlayGlow == lbgHookFunction then
+                return
+        end
+
+        local origShowOverlayGlow = libButtonGlow.ShowOverlayGlow
+        lbgHookFunction = function(frame)
+                if s.config.disable_default_proc_highlighting then return end
+                return origShowOverlayGlow(frame)
+        end
+        a.print("libButtonGlow hooked")
+        libButtonGlow.ShowOverlayGlow = lbgHookFunction
+end
+
+-- hook now, and also after any addon load, since the library *could* be
+-- loaded later as part of a load-on-demand (or AddonLoader delay loaded)
+-- addon, not just at the time we are loaded.
+hookLibButtonGlow()
+local labHookFrame = CreateFrame("Frame")
+labHookFrame:SetScript("OnEvent", hookLibButtonGlow)
+labHookFrame:RegisterEvent("ADDON_LOADED")
+
 -- This is used for testing purposes only
 function SpellFlashAddon.ShowBuffs(unit, Debuff)
 	local unit = unit

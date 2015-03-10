@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(193, "DBM-Firelands", nil, 78)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 115 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
 mod:SetCreatureID(52558)--or does 53772 die instead?didn't actually varify this fires right unit_died event yet so we'll see tonight
 mod:SetEncounterID(1204)
 mod:DisableEEKillDetection()
 mod:SetZone()
-mod:SetModelSound("Sound\\Creature\\RHYOLITH\\VO_FL_RHYOLITH_AGGRO.wav", "Sound\\Creature\\RHYOLITH\\VO_FL_RHYOLITH_KILL_02.wav")
+mod:SetModelSound("Sound\\Creature\\RHYOLITH\\VO_FL_RHYOLITH_AGGRO.ogg", "Sound\\Creature\\RHYOLITH\\VO_FL_RHYOLITH_KILL_02.ogg")
 --Long: Blah blah blah Nuisances, Nuisances :)
 --Short: So Soft
 
@@ -22,8 +22,8 @@ mod:RegisterEventsInCombat(
 )
 
 local warnHeatedVolcano		= mod:NewSpellAnnounce(98493, 3)
-local warnFlameStomp		= mod:NewSpellAnnounce(97282, 3, nil, mod:IsMelee())--According to journal only hits players within 20 yards of him, so melee by default?
-local warnMoltenArmor		= mod:NewStackAnnounce(98255, 4, nil, mod:IsTank() or mod:IsHealer())	-- Would this be nice if we could show this in the infoFrame? (changed defaults to tanks/healers, if you aren't either it doesn't concern you unless you find stuff to stand in)
+local warnFlameStomp		= mod:NewSpellAnnounce(97282, 3, nil, "Melee")--According to journal only hits players within 20 yards of him, so melee by default?
+local warnMoltenArmor		= mod:NewStackAnnounce(98255, 4, nil, "Tank|Healer")	-- Would this be nice if we could show this in the infoFrame? (changed defaults to tanks/healers, if you aren't either it doesn't concern you unless you find stuff to stand in)
 local warnDrinkMagma		= mod:NewSpellAnnounce(98034, 4)	-- if you "kite" him to close to magma
 local warnFragments			= mod:NewSpellAnnounce("ej2531", 2, 98136)
 local warnShard				= mod:NewCountAnnounce("ej2532", 3, 98552)
@@ -31,7 +31,7 @@ local warnMagmaFlow			= mod:NewSpellAnnounce(97225, 4)
 local warnPhase2Soon		= mod:NewPrePhaseAnnounce(2, 2)
 local warnPhase2			= mod:NewPhaseAnnounce(2, 3)
 
-local specWarnMagmaFlow		= mod:NewSpecialWarningSpell(97225, nil, nil, nil, true)
+local specWarnMagmaFlow		= mod:NewSpecialWarningSpell(97225, nil, nil, nil, 2)
 local specWarnFlameStomp	= mod:NewSpecialWarningSpell(97282, false)
 
 local timerFragmentCD		= mod:NewNextTimer(22.5, "ej2531", nil, nil, nil, 98136)

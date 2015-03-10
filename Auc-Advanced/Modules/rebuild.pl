@@ -28,7 +28,7 @@ while ($count < @embeddedModules) {
 }
 print OUTPUT "\t\t}";
 print OUTPUT "\n\t\t";
-print OUTPUT 'AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Advanced/Modules/rebuild.pl $", "$Rev: 3029 $")';
+print OUTPUT 'AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/Modules/rebuild.pl $", "$Rev: 3029 $")';
 print OUTPUT "\n\t</Script>\n\n";
 
 $count = 0;

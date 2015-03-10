@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - ScanData
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
-	Revision: $Id: ScanData.lua 5448 2014-01-14 15:16:35Z brykrys $
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Revision: $Id: ScanData.lua 5538 2014-12-19 16:13:26Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -38,7 +38,7 @@ local AddOnName = ...
 local lib,parent,private = AucAdvanced.NewModule(libType, libName, nil, nil, AddOnName)
 if not lib then return end
 
-local DATABASE_VERSION = 1.3
+local DATABASE_VERSION = 1.4
 local INTERFACE_VERSION = "A" -- must match CoreScan's SCANDATA_VERSION
 
 local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill,_TRANS = AucAdvanced.GetModuleLocals()
@@ -50,6 +50,9 @@ local Const = AucAdvanced.Const
 local Resources = AucAdvanced.Resources
 local QueryImage = AucAdvanced.API.QueryImage
 local PriceCalcLevel = AucAdvanced.Modules.Util.PriceLevel and AucAdvanced.Modules.Util.PriceLevel.CalcLevel
+local ResolveServerKey = AucAdvanced.ResolveServerKey
+
+local CONST_LINK, CONST_FLAG = Const.LINK, Const.FLAG
 
 local type = type
 local pairs = pairs
@@ -374,20 +377,18 @@ end
 
 private.dataCache = {}
 function lib.GetScanData(serverKey)
-	local cache = private.dataCache[serverKey]
-	if cache then return cache end
-
-	local realm, faction = AucAdvanced.SplitServerKey(serverKey)
-	if not realm then
-		debugPrint("AucScanData: invalid serverKey passed to GetScanData: "..tostring(serverKey), "ScanData", "Invalid serverKey", "Error")
+	if not private.isLoaded then return end
+	serverKey = ResolveServerKey(serverKey)
+	if not serverKey then
+		debugPrint("AucScanData: invalid serverKey passed to GetScanData", "ScanData", "Invalid serverKey", "Error")
 		return
 	end
 
-	local realmdata = AucScanData.scans[realm]
-	if not realmdata then return end -- not in database
+	local cache = private.dataCache[serverKey]
+	if cache then return cache end
 
-	local livedata = serverKey == Resources.ServerKeyHome or serverKey == Resources.ServerKeyNeutral -- 'live' data can be changed by scanning
-	local scandata = realmdata[faction]
+	local livedata = serverKey == Resources.ServerKey -- 'live' data can be changed by scanning
+	local scandata = AucScanData.scans[serverKey]
 	if scandata then
 		if not livedata then
 			-- Copy scandata info into a clone table and call Unpack on that
@@ -399,23 +400,10 @@ function lib.GetScanData(serverKey)
 			}
 			scandata = clone
 		end
-		if type(scandata.scanstats) ~= "table" then
-			scandata.scanstats = {ImageUpdated = scandata.time or time()}
-		end
-		if not scandata.image then
-			scandata.image = {}
-			scandata.scanstats.ImageUpdated = time()
-		end
-		-- delete obsolete entries
-		scandata.nextID = nil
-		scandata.time = nil
-		scandata.LastFullScan = nil
-		scandata.LastGetAll = nil
-	else
-		scandata = {image = {}, scanstats = {ImageUpdated = time()} }
-		if livedata then
-			realmdata[faction] = scandata
-		end
+	else -- no scandata for this serverKey
+		if not livedata then return end -- don't create new scandata if not 'live'
+		scandata = {image = {}, scanstats = {ImageUpdated = time()}}
+		AucScanData.scans[serverKey] = scandata
 	end
 
 	private.Unpack(scandata)
@@ -425,8 +413,9 @@ end
 
 function lib.ClearScanData(command)
 	local report, serverKey
-	local keyword, extra = "faction", "" -- default
+	if not private.isLoaded then return end
 
+	local keyword, extra = "server", "" -- default
 	if type(command) == "string" then
 		local _, ind, key = strfind(command, "(%S+)")
 		if key then
@@ -445,35 +434,31 @@ function lib.ClearScanData(command)
 	if keyword == "ALL" then
 		if extra == "" then
 			wipe(AucScanData.scans)
+			AucScanData.old = nil
 			report = "All realms"
 		end
 	else
 		if keyword == "server" then
-			if extra == "" then extra = Const.PlayerRealm end
-		elseif keyword == "faction" then
-			if extra == "" then extra = Resources.ServerKeyCurrent end
+			if extra == "" then extra = Resources.ServerKey end
+		elseif keyword == "faction" then -- for backward compatibility; factions are no longer used in the database
+			extra = Resources.ServerKey
 		end
-		if AucScanData.scans[extra] then -- it's a realm name in our database
+		if AucScanData.scans[extra] then
 			AucScanData.scans[extra] = nil
 			report = extra
+			serverKey = extra
 		else
-			local fac = AucAdvanced.IsFaction(extra)
-			if fac then -- convert faction group to serverKey
-				extra = Const.PlayerRealm.."-"..fac
-			end
-			local realm, faction, text = AucAdvanced.SplitServerKey(extra)
-			if faction and AucScanData.scans[realm] then
-				AucScanData.scans[realm][faction] = nil
-				report = text
-				serverKey = extra
+			local resolve = ResolveServerKey(extra)
+			if resolve and AucScanData.scans[resolve] then
+				AucScanData.scans[resolve] = nil
+				report = resolve.."("..extra..")"
+				serverKey = resolve
 			end
 		end
 	end
 
 	wipe(private.dataCache)
-	-- Our functions expect home faction to exist - create a new one if it has just been deleted
-	if not AucScanData.scans[Const.PlayerRealm] then AucScanData.scans[Const.PlayerRealm] = {} end
-	lib.GetScanData(Resources.ServerKeyCurrent) -- force create (if needed) and put back in cache
+	lib.GetScanData() -- force create home serverKey (if needed) and put back in cache
 	if report then
 		aucPrint("Auctioneer: ScanData cleared for {{"..report.."}}.")
 		local clearstats = {
@@ -490,11 +475,10 @@ function lib.ClearScanData(command)
 end
 
 function private.Unpack(scandata)
-	if type(scandata.image) == "string" then
-		if scandata.image ~= "rope" then
-			scandata.ropes = { scandata.image }
-		end
-
+	if type(scandata.scanstats) ~= "table" then
+		scandata.scanstats = {ImageUpdated = time()}
+	end
+	if scandata.image == "rope" then
 		scandata.image = {}
 		for pos, rope in ipairs(scandata.ropes) do
 			local loader, err = loadstring(rope)
@@ -502,7 +486,9 @@ function private.Unpack(scandata)
 				local test, items = pcall(loader)
 				if test then
 					for pos, item in ipairs(items) do
-						tinsert(scandata.image, item)
+						if item[CONST_LINK] and item[CONST_FLAG] then -- limited integrity check
+							tinsert(scandata.image, item)
+						end
 					end
 					err = nil
 				else
@@ -524,40 +510,83 @@ function private.Unpack(scandata)
 	scandata.ropes = nil
 end
 
+local function LookForOldData()
+	if not AucScanData.old then
+		LookForOldData = nil
+		return
+	end
+
+	local serverKey, realm, faction = Resources.ServerKey, Const.PlayerRealm, Resources.PlayerFaction
+	if not serverKey or faction == "Neutral" then return end -- wait for later event
+
+	LookForOldData = nil
+
+	local realmdata = AucScanData.old[realm]
+	if not realmdata then return end
+
+	if not AucScanData.scans[serverKey] then
+		local scandata = realmdata[faction] or realmdata[Resources.OpposingFaction] -- prefer home faction, but use opposing if no home data
+		if scandata then
+			AucScanData.scans[serverKey] = scandata
+		end
+	end
+
+	AucScanData.old[realm] = nil
+end
+
 local function OnLoadRunOnce()
 	OnLoadRunOnce = nil
 	aucPrint("Auctioneer: {{ScanData}} loaded.")
 	private.UpgradeDB()
-	if not AucScanData.scans[Const.PlayerRealm] then AucScanData.scans[Const.PlayerRealm] = {} end
-	lib.GetScanData(Resources.ServerKeyCurrent) -- force unpack of current faction data
-	private.isLoaded = true
+	if LookForOldData then LookForOldData() end
+	private.isLoaded = Resources.Active
+	lib.GetScanData() -- force unpack of home data
 end
 function lib.OnLoad()
 	if OnLoadRunOnce then OnLoadRunOnce() end
+end
+-- backup in case Auc-ScanData got loaded early (normally it would be loaded after this event)
+lib.Processors.gameactive = function()
+	wipe(private.dataCache)
+	if LookForOldData then LookForOldData() end
+	private.isLoaded = true
+	lib.GetScanData() -- force unpack of home data
+end
+-- Special handling for when a Neutral player character chooses a faction
+if Resources.PlayerFaction == "Neutral" then
+	lib.Processors.factionselect = lib.Processors.gameactive
 end
 
 function private.UpgradeDB()
 	private.UpgradeDB = nil
 
-	if AucScanData then
-		if type(AucScanData.scans) ~= "table" then AucScanData.scans = {} end
-		if AucScanData.Version == DATABASE_VERSION then return end
-
-		if AucScanData.Version == "1.2" then
-			-- version "1.2" to version 1.3
-			-- Database structure is virtually the same, we won't try to update the whole database here
-			-- Each time GetScanData is called it will check/update that record as needed
-			aucPrint("Auc-ScanData is upgrading database version 1.2 to 1.3")
-			AucScanData.Version = DATABASE_VERSION
-			return
+	local savedScanData = AucScanData
+	if savedScanData and savedScanData.Version == DATABASE_VERSION then
+		if type(savedScanData.scans) ~= "table" then savedScanData.scans = {} end
+		if savedScanData.old then
+			if not savedScanData.old.expires or time() > savedScanData.old.expires then
+				savedScanData.old = nil
+			end
 		end
+		return
+	end
 
-		-- Unknown version - wipe and start from fresh
-		aucPrint("Auc-ScanData database error: unknown version, resetting database")
-		wipe(AucScanData.scans)
-		AucScanData.Version = DATABASE_VERSION
-	else
-		AucScanData = { Version = DATABASE_VERSION, scans = {} }
+	-- Reset AucScanData; if we want to keep anything from before, we will copy it from savedScanData in the block below
+	AucScanData = {Version = DATABASE_VERSION, scans = {}}
+
+	if savedScanData then
+		if savedScanData.Version == 1.3 then
+			-- 1.4 uses a different structure and new style combined serverKeys
+			-- conversion from old to new is handled by LookForOldData on login to each server
+			aucPrint("Auc-ScanData is upgrading database version 1.3 to 1.4")
+			local oldscans = savedScanData.scans
+			if type(oldscans) == "table" and next(oldscans) then
+				oldscans.expires = time() + 604800 -- keep old data for 1 week
+				AucScanData.old = oldscans
+			end
+		else -- Unknown version
+			aucPrint("Auc-ScanData database error: unknown version, resetting database")
+		end
 	end
 end
 
@@ -568,82 +597,85 @@ function lib.OnUnload()
 	local maxLen = 2^20
 
 	local now = time()
-	local maxTime = 60 * 60 * 24 * 30 -- 30 days
+	local maxTime = 2592000 -- 60 * 60 * 24 * 30 -- 30 days
 
 	if not (AucScanData and AucScanData.scans) then return end
 
 	-- Convert all image data to loadstring strings
-	for server, sData in pairs(AucScanData.scans) do
-		local hasData = false
-		for faction, fData in pairs(sData) do
-			local scanstats = fData.scanstats
-			local timestamp = scanstats and scanstats.ImageUpdated
-			if not timestamp or (now - timestamp) > maxTime then
-				sData[faction] = nil
-			else
-				hasData = true
-
-				if fData.image and type(fData.image) == "table" then
-					fData.ropes = {}
-					rope:Add("return {")
-					local fCount = #fData.image
-					for i = 1, fCount do
-						local item = fData.image[i]
-						if item and type(item) == "table" then
-							rope:Add("{")
-							local pos = 1
-							while item[pos] or item[pos+1] or item[pos+2] or item[pos+3] do
-								local v = item[pos]
-								if v == nil then
-									rope:Add("nil,")
-								else
-									local t = type(v)
-									if t == "string" then
-										rope:Add(("%q,"):format(v))
-									elseif t == "number" then
-										rope:Add(v..",")
-									elseif t == "boolean" then
-										rope:Add(tostring(v)..",")
-									else
-										rope:Add("nil--[["..t.."]],")
-									end
-								end
-								pos = pos + 1
-							end
-							rope:Add("},")
-						elseif item == nil then
+	for serverKey, scandata in pairs(AucScanData.scans) do
+		local scanstats = scandata.scanstats
+		local timestamp = scanstats and scanstats.ImageUpdated
+		if not timestamp or (now - timestamp) > maxTime then
+			AucScanData.scans[serverKey] = nil
+		elseif type(scandata.image) == "table" then
+			scandata.ropes = {}
+			rope:Add("return {")
+			local fCount = #scandata.image
+			for i = 1, fCount do
+				local item = scandata.image[i]
+				if item and type(item) == "table" then
+					rope:Add("{")
+					local pos = 1
+					while item[pos] or item[pos+1] or item[pos+2] or item[pos+3] do
+						local v = item[pos]
+						if v == nil then
 							rope:Add("nil,")
 						else
-							rope:Add("nil--[["..type(item).."]],")
+							local t = type(v)
+							if t == "string" then
+								rope:Add(("%q,"):format(v))
+							elseif t == "number" then
+								rope:Add(v..",")
+							elseif t == "boolean" then
+								rope:Add(tostring(v)..",")
+							else
+								rope:Add("nil--[["..t.."]],")
+							end
 						end
-						if rope.len and rope.len > maxLen then
-							rope:Add("}");
-							tinsert(fData.ropes, rope:Get())
-							rope:Clear()
-							rope:Add("return {")
-						end
+						pos = pos + 1
 					end
-					rope:Add("}")
-					fData.image = "rope"
-					tinsert(fData.ropes, rope:Get())
+					rope:Add("},")
+				elseif item == nil then
+					rope:Add("nil,")
+				else
+					rope:Add("nil--[["..type(item).."]],")
+				end
+				if rope.len and rope.len > maxLen then
+					rope:Add("}");
+					tinsert(scandata.ropes, rope:Get())
 					rope:Clear()
+					rope:Add("return {")
 				end
 			end
+			rope:Add("}")
+			scandata.image = "rope"
+			tinsert(scandata.ropes, rope:Get())
+			rope:Clear()
+		elseif scandata.image ~= "rope" then
+			AucScanData.scans[serverKey] = nil
 		end
-		if not hasData then
-			AucScanData.scans[server] = nil
-		end
+	end
+
+	private.isLoaded = false
+end
+
+-- Support GetServerKeyList and ChangeServerKey, even though we load too late for CoreServers to use them at startup
+function lib.GetServerKeyList()
+	local list
+	if not (AucScanData and AucScanData.scans) then return end
+	for serverKey in pairs(AucScanData.scans) do
+		if not list then list = {} end
+		tinsert(list, serverKey)
+	end
+	return list
+end
+function ChangeServerKey(oldKey, newKey)
+	if not (oldKey and AucScanData and AucScanData.scans) then return end
+	local oldData = AucScanData.scans[oldKey]
+	AucScanData.scans[oldKey] = nil
+	if oldData and newKey then
+		AucScanData.scans[newKey] = oldData
 	end
 end
 
--- Special handling for when a Neutral player character chooses a faction
-if Resources.PlayerFaction == "Neutral" then
-	lib.Processors.factionselect = function()
-		-- wipe scan data cache and reload using new value of ServerKeyCurrent
-		wipe(private.dataCache)
-		if not AucScanData.scans[Const.PlayerRealm] then AucScanData.scans[Const.PlayerRealm] = {} end
-		lib.GetScanData(Resources.ServerKeyCurrent)
-	end
-end
-
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-ScanData/ScanData.lua $", "$Rev: 5448 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-ScanData/ScanData.lua $", "$Rev: 5538 $")

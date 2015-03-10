@@ -130,39 +130,34 @@ local companionsCallbacks = {
 			addon.Tabs.Grids:SetStatus(xPacks[currentXPack])
 		end,
 	GetSize = function() return #spellList end,
-	RowSetup = function(self, entry, row, dataRowID)
+	RowSetup = function(self, rowFrame, dataRowID)
 			currentSpellID = spellList[dataRowID]
 			local petName, _
 			petName, _, currentPetTexture = GetSpellInfo(currentSpellID)
 			
 			if petName then
-				local rowName = entry .. row
-				_G[rowName.."Name"]:SetText(WHITE .. petName)
-				_G[rowName.."Name"]:SetJustifyH("LEFT")
-				_G[rowName.."Name"]:SetPoint("TOPLEFT", 15, 0)
+				rowFrame.Name.Text:SetText(WHITE .. petName)
+				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
-	ColumnSetup = function(self, entry, row, column, dataRowID, character)
-			local itemName = entry.. row .. "Item" .. column;
-			local itemTexture = _G[itemName .. "_Background"]
-			local itemButton = _G[itemName]
-			local itemText = _G[itemName .. "Name"]
-						
-			itemText:SetFontObject("GameFontNormalSmall")
-			itemText:SetJustifyH("CENTER")
-			itemText:SetPoint("BOTTOMRIGHT", 5, 0)
-			itemTexture:SetDesaturated(false)
-			itemTexture:SetTexCoord(0, 1, 0, 1)
-			itemTexture:SetTexture(currentPetTexture)
+	RowOnEnter = function()	end,
+	RowOnLeave = function() end,
+	ColumnSetup = function(self, button, dataRowID, character)
+			button.Name:SetFontObject("GameFontNormalSmall")
+			button.Name:SetJustifyH("CENTER")
+			button.Name:SetPoint("BOTTOMRIGHT", 5, 0)
+			button.Background:SetDesaturated(false)
+			button.Background:SetTexCoord(0, 1, 0, 1)
+			button.Background:SetTexture(currentPetTexture)
 			
 			if DataStore:IsPetKnown(character, "CRITTER", currentSpellID) then
-				itemTexture:SetVertexColor(1.0, 1.0, 1.0);
-				itemText:SetText(ICON_READY)
+				button.Background:SetVertexColor(1.0, 1.0, 1.0);
+				button.Name:SetText(ICON_READY)
 			else
-				itemTexture:SetVertexColor(0.4, 0.4, 0.4);
-				itemText:SetText(ICON_NOTREADY)
+				button.Background:SetVertexColor(0.4, 0.4, 0.4);
+				button.Name:SetText(ICON_NOTREADY)
 			end
-			itemButton.id = currentSpellID
+			button.id = currentSpellID
 		end,
 	OnEnter = function(frame) 
 			local id = frame.id

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("LichKing", "DBM-Icecrown", 5)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 171 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 185 $"):sub(12, -3))
 mod:SetCreatureID(36597)
 mod:SetEncounterID(1106)
 mod:DisableEEKillDetection()--EE fires at 10%
@@ -36,14 +36,13 @@ local warnRagingSpirit		= mod:NewTargetAnnounce(69200, 3) --Transition Add
 local warnShamblingSoon		= mod:NewSoonAnnounce(70372, 2) --Phase 1 Add
 local warnShamblingHorror	= mod:NewSpellAnnounce(70372, 3) --Phase 1 Add
 local warnDrudgeGhouls		= mod:NewSpellAnnounce(70358, 2) --Phase 1 Add
-local warnShamblingEnrage	= mod:NewTargetAnnounce(72143, 3, nil, mod:IsHealer() or mod:IsTank() or mod:CanRemoveEnrage()) --Phase 1 Add Ability
+local warnShamblingEnrage	= mod:NewTargetAnnounce(72143, 3, nil, "Tank|Healer|RemoveEnrage") --Phase 1 Add Ability
 local warnNecroticPlague	= mod:NewTargetAnnounce(70337, 3) --Phase 1+ Ability
 local warnNecroticPlagueJump= mod:NewAnnounce("WarnNecroticPlagueJump", 4, 70337) --Phase 1+ Ability
-local warnInfest			= mod:NewSpellAnnounce(70541, 3, nil, mod:IsHealer()) --Phase 1 & 2 Ability
 local warnPhase2			= mod:NewPhaseAnnounce(2)
 local valkyrWarning			= mod:NewAnnounce("ValkyrWarning", 3, 71844)--Phase 2 Ability
 local warnDefileSoon		= mod:NewSoonAnnounce(72762, 3)	--Phase 2+ Ability
-local warnSoulreaper		= mod:NewSpellAnnounce(69409, 4, nil, mod:IsTank() or mod:IsHealer()) --Phase 2+ Ability
+local warnSoulreaper		= mod:NewSpellAnnounce(69409, 4, nil, "Tank|Healer") --Phase 2+ Ability
 local warnDefileCast		= mod:NewTargetAnnounce(72762, 4) --Phase 2+ Ability
 local warnSummonValkyr		= mod:NewSpellAnnounce(69037, 3, 71844) --Phase 2 Add
 local warnPhase3			= mod:NewPhaseAnnounce(3)
@@ -63,7 +62,7 @@ local specWarnDefile		= mod:NewSpecialWarningMove(72762) --Phase 2+ Ability
 local specWarnWinter		= mod:NewSpecialWarningMove(68983) --Transition Ability
 local specWarnHarvestSoul	= mod:NewSpecialWarningYou(68980) --Phase 3+ Ability
 local specWarnInfest		= mod:NewSpecialWarningSpell(70541, nil, nil, nil, 2) --Phase 1+ Ability
-local specwarnSoulreaper	= mod:NewSpecialWarningTarget(69409, mod:IsTank()) --phase 2+
+local specwarnSoulreaper	= mod:NewSpecialWarningTarget(69409, "Tank") --phase 2+
 local specWarnTrap			= mod:NewSpecialWarningYou(73539, nil, nil, nil, 3) --Heroic Ability
 local yellTrap				= mod:NewYell(73539)
 local specWarnTrapNear		= mod:NewSpecialWarningClose(73539, nil, nil, nil, 3) --Heroic Ability
@@ -72,15 +71,15 @@ local specWarnValkyrLow		= mod:NewSpecialWarning("SpecWarnValkyrLow")
 
 local timerCombatStart		= mod:NewCombatTimer(53.5)
 local timerPhaseTransition	= mod:NewTimer(62.5, "PhaseTransition", 72262)
-local timerSoulreaper	 	= mod:NewTargetTimer(5.1, 69409, nil, mod:IsTank() or mod:IsHealer())
-local timerSoulreaperCD	 	= mod:NewNextTimer(30.5, 69409, nil, mod:IsTank() or mod:IsHealer())
+local timerSoulreaper	 	= mod:NewTargetTimer(5.1, 69409, nil, "Tank|Healer")
+local timerSoulreaperCD	 	= mod:NewNextTimer(30.5, 69409, nil, "Tank|Healer")
 local timerHarvestSoul	 	= mod:NewTargetTimer(6, 68980)
 local timerHarvestSoulCD	= mod:NewNextTimer(75, 68980)
 local timerInfestCD			= mod:NewNextTimer(22.5, 70541)
-local timerNecroticPlagueCleanse = mod:NewTimer(5, "TimerNecroticPlagueCleanse", 70337, mod:IsHealer())
+local timerNecroticPlagueCleanse = mod:NewTimer(5, "TimerNecroticPlagueCleanse", 70337, "Healer")
 local timerNecroticPlagueCD	= mod:NewNextTimer(30, 70337)
 local timerDefileCD			= mod:NewNextTimer(32.5, 72762)
-local timerEnrageCD			= mod:NewCDTimer(20, 72143, nil, mod:IsTank() or mod:CanRemoveEnrage())
+local timerEnrageCD			= mod:NewCDTimer(20, 72143, nil, "Tank|RemoveEnrage")
 local timerShamblingHorror 	= mod:NewNextTimer(60, 70372)
 local timerDrudgeGhouls 	= mod:NewNextTimer(20, 70358)
 local timerRagingSpiritCD	= mod:NewNextTimer(22, 69200)
@@ -95,9 +94,6 @@ local berserkTimer			= mod:NewBerserkTimer(900)
 local countdownInfest		= mod:NewCountdown(22.5, 70541)
 local countdownShadowTrap	= mod:NewCountdown(15.5, 73539, nil, nil, nil, nil, true)
 local countdownDefile		= mod:NewCountdown(32.5, 72762, nil, nil, nil, nil, true)
-
-local soundDefile			= mod:NewSound(72762)
-local soundShadowTrap		= mod:NewSound(73539)
 
 mod:AddBoolOption("DefileIcon")
 mod:AddBoolOption("NecroticPlagueIcon")
@@ -116,6 +112,9 @@ local numberOfPlayers = 1
 
 function mod:OnCombatStart(delay)
 	numberOfPlayers = DBM:GetNumRealGroupMembers()
+	if UnitExists("pet") then
+		numberOfPlayers = numberOfPlayers + 1
+	end
 	self.vb.phase = 0
 	self:NextPhase()
 	table.wipe(warnedValkyrGUIDs)
@@ -145,7 +144,6 @@ function mod:DefileTarget(targetname, uId)
 	if targetname == UnitName("player") then
 		specWarnDefileCast:Show()
 		yellDefile:Yell()
-		soundDefile:Play()
 	else
 		if uId then
 			local inRange = CheckInteractDistance(uId, 2)
@@ -165,7 +163,6 @@ function mod:TrapTarget(targetname, uId)
 	if targetname == UnitName("player") then
 		specWarnTrap:Show()
 		yellTrap:Yell()
-		soundDefile:Play()
 	else
 		if uId then
 			local inRange = CheckInteractDistance(uId, 2)
@@ -209,7 +206,6 @@ function mod:SPELL_CAST_START(args)
 		warnSummonVileSpirit:Show()
 		timerVileSpirit:Start()
 	elseif args.spellId == 70541 then -- Infest
-		warnInfest:Show()
 		specWarnInfest:Show()
 		timerInfestCD:Start()
 		countdownInfest:Start()

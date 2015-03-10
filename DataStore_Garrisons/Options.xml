@@ -2,27 +2,36 @@
 	<Script file="Options.lua"></Script>
 
 	<Frame parentKey="GarrisonsOptions" parent="DataStoreFrames" hidden="true">
-		<Size>
-			<AbsDimension x="615" y="306"/>
-		</Size>
+		<Size x="615" y="306" />
 		<Frames>
 			<CheckButton parentKey="ReportUncollected" inherits="InterfaceOptionsCheckButtonTemplate">
-				<Size>
-					<AbsDimension x="20" y="20"/>
-				</Size>
-				<Anchors> 
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="40" y="-40" />
-						</Offset>
-					</Anchor>
-				</Anchors>      
+				<Size x="20" y="20" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="40" y="-40" />
+				</Anchors>
 				<Scripts>
 					<OnClick>
 						DataStore:ToggleOption(self, "DataStore_Garrisons", "ReportUncollected")
 					</OnClick>
 				</Scripts>
 			</CheckButton>
+			<Slider name="DataStoreGarrisonsOptions_SliderReportLevel" inherits="OptionsSliderTemplate"  minValue="350" maxValue="475" defaultValue="400" valueStep="5">
+				<Size x="180" y="16" />
+				<Anchors> 
+					<Anchor point="TOPLEFT" relativeKey="$parent.ReportUncollected" relativePoint="BOTTOMLEFT" x="0" y="-20" />
+				</Anchors>
+				<Scripts>
+					<OnValueChanged>
+						local L = LibStub("AceLocale-3.0"):GetLocale("DataStore_Garrisons")
+						
+						local name = self:GetName()
+						local value = math.floor(self:GetValue())
+						_G[name .. "Text"]:SetText(format(L["REPORT_LEVEL_LABEL"], "|cFF00FF00", value))
+						DataStore:SetOption("DataStore_Garrisons", "ReportLevel", value)
+					</OnValueChanged>
+				</Scripts>
+			</Slider>
+
 		</Frames>
 	</Frame>
 	

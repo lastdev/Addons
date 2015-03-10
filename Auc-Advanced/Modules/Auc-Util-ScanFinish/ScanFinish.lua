@@ -1,6 +1,6 @@
 --[[
 	Auctioneer - Scan Finish module
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
 	Revision: $Id: ScanFinish.lua 5515 2014-10-31 12:07:47Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -255,4 +255,4 @@ function private.ConfigChanged(fullsetting, value, setting, module)
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Util-ScanFinish/ScanFinish.lua $", "$Rev: 5515 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-ScanFinish/ScanFinish.lua $", "$Rev: 5515 $")

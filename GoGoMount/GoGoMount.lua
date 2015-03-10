@@ -42,13 +42,15 @@ function GoGo_OnEvent(self, event, ...)
 		GoGo_Variables.VerMajor, GoGo_Variables.VerMinor, GoGo_Variables.VerBuild = tonumber(GoGo_Variables.VerMajor), tonumber(GoGo_Variables.VerMinor), tonumber(GoGo_Variables.VerBuild)
 		_, GoGo_Variables.Player.Class = UnitClass("player")
 		_, GoGo_Variables.Player.Race = UnitRace("player")
+		GoGo_Variables.Player.Faction, _ = UnitFactionGroup("player")
+			GoGoFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 		if (GoGo_Variables.Player.Class == "DRUID") then
 			GoGo_Variables.Druid = {}
-			GoGoFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
+--			GoGoFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 			GoGo_Druid_Panel()
 		elseif (GoGo_Variables.Player.Class == "SHAMAN") then
 			GoGo_Variables.Shaman = {}
-			GoGoFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
+--			GoGoFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 			GoGo_Shaman_Panel()
 		elseif (GoGo_Variables.Player.Class == "HUNTER") then
 			GoGo_Hunter_Panel()
@@ -64,6 +66,7 @@ function GoGo_OnEvent(self, event, ...)
 			GoGo_SetOptionAutoDismount(1)
 		end --if
 	elseif event == "PLAYER_REGEN_DISABLED" then
+		GoGo_Variables.Player.ZoneID = GetCurrentMapAreaID()
 		for i, button in ipairs({GoGoButton, GoGoButton2, GoGoButton3}) do
 			if GoGo_Variables.Player.Class == "SHAMAN" then
 				if GoGo_Variables.Debug >= 10 then 
@@ -82,6 +85,16 @@ function GoGo_OnEvent(self, event, ...)
 						GoGo_DebugAddLine("GoGo_OnEvent: Druid entering combat.  Clearing macro because of set option.")
 					end --if
 					GoGo_FillButton(button)
+				end --if
+			elseif GoGo_Variables.Player.ZoneID == 950 then  -- everyone else if in nagrand
+				local name = GetSpellInfo(161691)
+				_, _, _, _, _, _, spellID = GetSpellInfo(name)
+				if spellID == 165803 or spellID == 164222 then
+					if GoGo_Variables.Player.Faction == "Alliance" then
+						GoGo_FillButton(button, GoGo_GetIDName(165803))
+					elseif GoGo_Variables.Player.Faction == "Horde" then
+						GoGo_FillButton(button, GoGo_GetIDName(164222))
+					end --if
 				end --if
 			end --if
 		end --for
@@ -468,6 +481,13 @@ function GoGo_ChooseMount()
 		end --if
 	end --if
 	
+	if GoGo_Variables.ZoneExclude.Draenor_Nagrand then
+		GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 202) or {}
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ChooseMount: Eliminated Draenor's Nagrand ability mounts - " .. (table.getn(GoGo_Variables.FilteredMounts) or 0) .. " mounts left.")
+		end --if
+	end --if
+
 	if GoGo_Variables.ZoneExclude.AQ40 then
 		GoGo_Variables.FilteredMounts = GoGo_FilterMountsOut(GoGo_Variables.FilteredMounts, 201) or {}
 		if GoGo_Variables.Debug >= 10 then
@@ -498,10 +518,15 @@ function GoGo_ChooseMount()
 	end --if
 ]]
 
-	if IsFalling() then  -- we're falling.. save us  (only grab instant cast spells)
-		GoGo_Variables.FilteredMounts = GoGo_GetInstantMounts(GoGo_Variables.FilteredMounts) or {}
+	if IsFalling() or GoGo_IsMoving() then  -- we're falling.. save us  (only grab instant cast spells)
+		local GoGo_TempMounts = {}
+		GoGo_TempMounts = GoGo_GetInstantMounts(GoGo_Variables.FilteredMounts) or {}
+		if table.getn(GoGo_TempMounts) == 0 then
+			GoGo_TempMounts = GoGo_GetMountsWhileMoving(GoGo_Variables.FilteredMounts) or {}
+		end --if
+		GoGo_Variables.FilteredMounts = GoGo_TempMounts or {}
 		if GoGo_Variables.Debug >= 10 then
-			GoGo_DebugAddLine("GoGo_ChooseMount: Eliminated all mounts except instant casts - " .. (table.getn(GoGo_Variables.FilteredMounts) or 0) .. " mounts left.")
+			GoGo_DebugAddLine("GoGo_ChooseMount: Eliminated all mounts except mounts that can be summoned while moving or falling - " .. (table.getn(GoGo_Variables.FilteredMounts) or 0) .. " mounts left.")
 		end --if
 	end --if
 
@@ -509,13 +534,6 @@ function GoGo_ChooseMount()
 		GoGo_Variables.FilteredMounts = GoGo_GetIndoorMounts(GoGo_Variables.FilteredMounts) or {}
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ChooseMount: Eliminated all mounts except indoor mounts - " .. (table.getn(GoGo_Variables.FilteredMounts) or 0) .. " mounts left.")
-		end --if
-	end --if
-
-	if GoGo_IsMoving() then
-		GoGo_Variables.FilteredMounts = GoGo_GetInstantMounts(GoGo_Variables.FilteredMounts) or {}
-		if GoGo_Variables.Debug >= 10 then
-			GoGo_DebugAddLine("GoGo_ChooseMount: Eliminated all mounts except instant casts - " .. (table.getn(GoGo_Variables.FilteredMounts) or 0) .. " mounts left.")
 		end --if
 	end --if
 
@@ -551,13 +569,14 @@ function GoGo_ChooseMount()
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ChooseMount: Swimming and can't fly.")
 		end --if
-		if not IsIndoors() then
+		-- indoors shouldn't matter now since we've filtered out anything that can't be used indoors above
+		--if not IsIndoors() then
 			mounts = GoGo_GetBestWaterMounts(GoGo_Variables.FilteredMounts) or {}
-		else  -- we are indoors
-			if (table.getn(mounts) == 0) and (GoGo_Variables.Player.Class == "DRUID") and GoGo_InBook(GoGo_Variables.Localize.AquaForm) then
-				return GoGo_InBook(GoGo_Variables.Localize.AquaForm)
-			end --if
-		end --if
+		--else  -- we are indoors
+		--	if (table.getn(mounts) == 0) and (GoGo_Variables.Player.Class == "DRUID") and GoGo_InBook(GoGo_Variables.Localize.AquaForm) then
+		--		return GoGo_InBook(GoGo_Variables.Localize.AquaForm)
+		--	end --if
+		--end --if
 	elseif IsSubmerged() and GoGo_Variables.CanFly then
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ChooseMount: Swimming but can fly.")
@@ -858,6 +877,16 @@ function GoGo_BuildMountList()
 		end --if
 	end --for
 
+	-- WoD Nagrand's Garrison mounts
+	GoGo_Variables.Player.ZoneID = GetCurrentMapAreaID()
+	if GoGo_Variables.Player.ZoneID == 950 then
+		local name = GetSpellInfo(161691)
+		_, _, _, _, _, _, spellID = GetSpellInfo(name)
+		if spellID == 165803 or spellID == 164222 then
+			table.insert(GoGo_MountList, spellID)
+		end --if
+	end --if
+	
 	return GoGo_MountList
 end  --function
 
@@ -1414,6 +1443,7 @@ function GoGo_ZoneCheck()
 	GoGo_Variables.ZoneExclude.TheOculus = true
 	GoGo_Variables.ZoneExclude.AQ40 = true
 	GoGo_Variables.ZoneExclude.ThousandNeedles = true
+	GoGo_Variables.ZoneExclude.Draenor_Nagrand = true
 	GoGo_Variables.ZoneExclude.CanFly = false
 	GoGo_Variables.ZoneExclude.UseMountGroup = nil
 	GoGo_Variables.InBattleground = false
@@ -2642,6 +2672,14 @@ function GoGo_ZoneCheck()
 			GoGo_Variables.ZoneExclude.CanFly = true
 		end --if
 		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 866 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Coldridge Valley")
+		end --if
+		if GoGo_InBook(GoGo_Variables.Localize.FlightMastersLicense) then
+			GoGo_Variables.ZoneExclude.CanFly = true
+		end --if
+		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == 867 then
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Temple of the Jade Serpent (5 player instance)")
@@ -2844,13 +2882,17 @@ function GoGo_ZoneCheck()
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false
 		-- can ride = true
-	elseif GoGo_Variables.Player.ZoneID == 947 then
-		-- Lunar Fall
-		-- Shadowmoon Valley
-		--(Both in the same area of Warlords of Draenor expansion)
-		-- Need to verify that this zone ID is not used
+	elseif GoGo_Variables.Player.ZoneID == 946 then
+		-- May also include Lunar Fall before garrison is setup
 		if GoGo_Variables.Debug >= 10 then
-			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Shadowmoon Valley / Lundar Fall")
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Talador")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 947 then
+		-- May also include Lunar Fall before garrison is setup
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Shadowmoon Valley")
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
 		-- can ride = true
@@ -2858,6 +2900,13 @@ function GoGo_ZoneCheck()
 		if GoGo_Variables.Debug >= 10 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Gorgrond")
 		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 950 then
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Nagrand")
+		end --if
+		GoGo_Variables.ZoneExclude.Draenor_Nagrand = false
 		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
 		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == 951 then
@@ -2893,6 +2942,13 @@ function GoGo_ZoneCheck()
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Shadowmoon Burial Grounds")
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false   -- can't fly here yet in WoD
+		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 971 then
+		-- Personal garrison area
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for Lunarfall")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
 		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == 978 then
 		if GoGo_Variables.Debug >= 10 then
@@ -2936,11 +2992,19 @@ function GoGo_ZoneCheck()
 		end --if
 		GoGo_Variables.ZoneExclude.CanFly = false
 		-- can ride = true
+	elseif GoGo_Variables.Player.ZoneID == 1009 then
+		-- Alliance part of Ashran
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_ZoneCheck: Setting up for The Stormshield")
+		end --if
+		GoGo_Variables.ZoneExclude.CanFly = false
+		-- can ride = true
 	elseif GoGo_Variables.Player.ZoneID == -1 then
 		-- Arenas:
 		-- -- Nagrand Arena
 		-- -- Ruins of Lordaeron
-		
+		-- Quests:
+		-- -- Draenor / Talador:  Remains of Xandros
 		if GoGo_Variables.Debug >= 4 then
 			GoGo_DebugAddLine("GoGo_ZoneCheck: Arena??? - " .. GoGo_Variables.Player.ZoneID)
 		end --if
@@ -3131,49 +3195,14 @@ function GoGo_Msg(msg)
 end --function
 
 ---------
-function GoGo_Id(itemstring)
+function GoGo_Id(link)
 ---------
-	local _, _, strType = string.find(itemstring,"(item:%d+)")
-	if strType then
-		return strType.." - "..itemstring
-	end --if
-	local _, _, strType = string.find(itemstring,"(spell:%d+)")
-	if strType then
-		return strType.." - "..itemstring
-	end --if
-	local _, _, strType = string.find(itemstring,"(glyph:%d+)")
-	if strType then
-		return strType.." - "..itemstring
-	end --if
-	local _, _, strType = string.find(itemstring,"(achievement:%d+)")
-	if strType then
-		return strType.." - "..itemstring
-	end --if
-	local _, _, strType = string.find(itemstring,"(battlepet:%d+)")
-	if strType then
-		return strType.." - "..itemstring
-	end --if
-	local _, _, strType = string.find(itemstring,"(battlePetAbil:%d+)")
-	if strType then
-		return strType.." - "..itemstring
-	end --if
-	local _, _, strType = string.find(itemstring,"(talent:%d+)")
-	if strType then
-		return strType.." - "..itemstring
-	end --if
-	local _, _, strType = string.find(itemstring,"(quest:%d+)")
-	if strType then
-		return strType.." - "..itemstring
-	end --if
-	local _, _, strType = string.find(itemstring,"(enchant:%d+)")
-	if strType then
-		return strType.." - "..itemstring
-	end --if
-	local _, _, strType = string.find(itemstring,"(currency:%d+)")
-	if strType then
-		return strType.." - "..itemstring
-	end --if
-
+-- tested list:
+-- item spell glyph achievement battlepet battlePetAbil talent quest enchant currency follower mission
+	local s, e = string.find(link, "|H(.-):([-0-9]+)")
+	link = string.sub(link, s+2, e)
+--	linktype, linkID = strsplit(":", link)
+	return link
 end --function
 
 ---------
@@ -3181,6 +3210,15 @@ function GoGo_GetInstantMounts(GoGo_FilteredMounts)
 ---------
 	-- Grab all mounts flagged as instant cast for falling or moving conditions
 	GoGo_FilteredMounts = GoGo_FilterMountsIn(GoGo_FilteredMounts, 7) or {}
+	return GoGo_FilteredMounts
+end --function
+
+---------
+function GoGo_GetMountsWhileMoving(GoGo_FilteredMounts)
+---------
+	-- Grab all mounts that can be casted (1.5 seconds) while moving
+	-- (Currently used for Nagrand (WoD) garrison ability mounts)
+	GoGo_FilteredMounts = GoGo_FilterMountsIn(GoGo_FilteredMounts, 5) or {}
 	return GoGo_FilteredMounts
 end --function
 
@@ -3297,6 +3335,23 @@ function GoGo_UpdateMountData()
 		end --if
 	end --if
 
+	if (GoGo_Variables.Player.Class == "DRUID" and (IsSwimming() or IsSubmerged())) then
+		-- set the swim speeds to whatever AquaForm speed is including possible glyph modifier set above
+		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10001] = GoGo_Variables.MountDB[GoGo_Variables.Localize.AquaForm][10001]
+		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10004] = GoGo_Variables.MountDB[GoGo_Variables.Localize.AquaForm][10004]
+		if GoGo_Variables.Debug >= 10 then
+			GoGo_DebugAddLine("GoGo_UpdateMountData: We're a Druid in or under water.  Updated Travel Form with swimming properties.")
+		end --if
+		if IsIndoors() then
+			-- Druid's travel form is now Aqua form and works indoors for swimming only
+			GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][8] = true
+			GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][53] = true
+			if GoGo_Variables.Debug >= 10 then
+				GoGo_DebugAddLine("GoGo_UpdateMountData: We're a Druid in or under water and indoors.  Updated Travel Form to work indoors as well.")
+			end --if
+		end --if
+	end --if
+
 	if (GoGo_Variables.Player.Class == "DRUID") and (GoGo_GlyphActive(GoGo_Variables.Localize.Glyph_Stag) and not GoGo_GlyphActive(GoGo_Variables.Localize.Glyph_Cheetah)) then
 		-- Druid's travel form can carry a passenger
 		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][2] = true
@@ -3308,11 +3363,12 @@ function GoGo_UpdateMountData()
 		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][300] = true
 		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][301] = true
 		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][403] = true
-		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10001] = 101
+--		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10001] = 101
 		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10003] = 250
-		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10004] = 101
+--		GoGo_Variables.MountDB[GoGo_Variables.Localize.TravelForm][10004] = 101
 	end --if
 
+	
 	if (GoGo_Variables.Player.Class == "SHAMAN") and (GoGo_GlyphActive(19264)) then
 	-- player = shaman and has glyph of Ghost Wolf (cast ghost wolf while dead)
 		GoGo_Variables.MountDB[GoGo_Variables.Localize.GhostWolf][550] = true
@@ -4470,6 +4526,7 @@ function GoGo_DebugCollectInformation()
 	GoGo_DebugAddLine("Information: Client locale is " .. GetLocale())
 	GoGo_DebugAddLine("Information: Location = " .. GetRealZoneText() .. " - " .. GetZoneText() .. " - " ..GetSubZoneText() .. " - " .. GetMinimapZoneText())
 	GoGo_DebugAddLine("Information: Current zone area ID as per GetCurrentMapAreaID(): " .. GetCurrentMapAreaID())
+	GoGo_DebugAddLine("Information: Current map ID as per GetCurrentMapDungeonLevel(): " .. GetCurrentMapDungeonLevel())
 	local posX, posY = GetPlayerMapPosition("Player")
 	GoGo_DebugAddLine("Information: Player location: X = ".. posX .. ", Y = " .. posY)
 	GoGo_DebugAddLine("Information: Current unit speed is " .. GetUnitSpeed("player"))

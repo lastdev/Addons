@@ -7,7 +7,7 @@
 ## Dependencies: Auc-Advanced
 ## OptionalDeps: Auc-Util-PriceLevel
 ##
-## Version: 5.21c.5521 (SanctimoniousSwamprat)
+## Version: 5.21d.5538 (SanctimoniousSwamprat)
 ## Revision: $Id: Auc-ScanData.toc 5503 2014-10-18 16:32:18Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

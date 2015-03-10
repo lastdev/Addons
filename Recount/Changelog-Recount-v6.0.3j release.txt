@@ -1,0 +1,76 @@
+------------------------------------------------------------------------
+r1302 | resike | 2015-02-02 16:16:05 +0000 (Mon, 02 Feb 2015) | 1 line
+Changed paths:
+   A /tags/v6.0.3j release (from /trunk:1301)
+
+Tagging as v6.0.3j release
+------------------------------------------------------------------------
+r1301 | Resike | 2015-02-02 15:17:56 +0000 (Mon, 02 Feb 2015) | 1 line
+Changed paths:
+   M /trunk/Recount.lua
+
+- Vehicle damage/healing should be properly indicated in real time with Merge Pets enabled, when the player is not on the damage/healing list.
+------------------------------------------------------------------------
+r1300 | Resike | 2015-02-01 22:46:24 +0000 (Sun, 01 Feb 2015) | 2 lines
+Changed paths:
+   M /trunk/GUI_Main.lua
+   M /trunk/Recount.lua
+   M /trunk/Recount_Modes.lua
+
+- Pet damage should be properly indicated in real time with Merge Pets enabled, when the player is not on the damage list.
+- More fixes for the "Server Name" strip function.
+------------------------------------------------------------------------
+r1299 | Resike | 2015-01-31 10:09:48 +0000 (Sat, 31 Jan 2015) | 2 lines
+Changed paths:
+   M /trunk/GUI_Main.lua
+   M /trunk/Recount.lua
+
+- Hostile enemies has darker red bar color, to differentiate it more from the default Death Knight color.
+- More fixes for the "Server Name" strip function.
+------------------------------------------------------------------------
+r1298 | Resike | 2015-01-30 23:45:31 +0000 (Fri, 30 Jan 2015) | 2 lines
+Changed paths:
+   M /trunk/GUI_Main.lua
+   M /trunk/Tracker.lua
+
+- Healing Data should be properly shown for enemy players/npcs.
+- Fixed "Server Name" strip function for special character "é".
+------------------------------------------------------------------------
+r1296 | Resike | 2015-01-18 12:19:33 +0000 (Sun, 18 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/GUI_Main.lua
+   M /trunk/Tracker.lua
+
+- Ignoring "Spirit of Redemption" absorb.
+------------------------------------------------------------------------
+r1294 | Resike | 2015-01-15 17:28:20 +0000 (Thu, 15 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/Tracker.lua
+
+- More death tracker fix.
+------------------------------------------------------------------------
+r1293 | Resike | 2015-01-15 16:45:07 +0000 (Thu, 15 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/Tracker.lua
+
+- Death tracker fix.
+------------------------------------------------------------------------
+r1292 | Resike | 2015-01-15 16:12:07 +0000 (Thu, 15 Jan 2015) | 2 lines
+Changed paths:
+   M /trunk/LazySync.lua
+   M /trunk/Tracker.lua
+
+- Reverted sync for a stable and working version.
+- Some other smaller fixes.
+------------------------------------------------------------------------
+r1290 | Resike | 2015-01-14 23:35:10 +0000 (Wed, 14 Jan 2015) | 4 lines
+Changed paths:
+   M /trunk/LazySync.lua
+   M /trunk/Recount.lua
+   M /trunk/Tracker.lua
+
+- Much smarter and efficient party detection.
+- Added siege damage handler.
+- Sync fixes.
+- Some performance upgradements.
+------------------------------------------------------------------------

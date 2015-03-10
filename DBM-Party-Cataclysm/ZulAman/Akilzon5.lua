@@ -1,7 +1,7 @@
 ﻿local mod	= DBM:NewMod(186, "DBM-Party-Cataclysm", 10, 77)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 143 $"):sub(12, -3))
 mod:SetCreatureID(23574)
 mod:SetZone()
 mod:SetUsedIcons(1, 8)
@@ -88,7 +88,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 			self:SetIcon(args.destName, 1, 8)
 		end
 		if self.Options.StormArrow then
-			DBM.Arrow:ShowRunTo(args.destName, 0, 0, 8)
+			DBM.Arrow:ShowRunTo(args.destName, 0, 8)
 		end
 	end
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(155, "DBM-ThroneFourWinds", nil, 75)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 111 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
 mod:SetCreatureID(46753)
 mod:SetEncounterID(1034)
 mod:DisableEEKillDetection()
@@ -33,10 +33,10 @@ local warnPhase3			= mod:NewPhaseAnnounce(3)
 local warnCloud				= mod:NewSpellAnnounce(89588, 3)
 local warnLightningRod		= mod:NewTargetAnnounce(89668, 4)
 
-local specWarnWindBurst		= mod:NewSpecialWarningSpell(87770, nil, nil, nil, true)
+local specWarnWindBurst		= mod:NewSpecialWarningSpell(87770, nil, nil, nil, 2)
 local specWarnIceStorm		= mod:NewSpecialWarningMove(91020)
 local specWarnCloud			= mod:NewSpecialWarningMove(89588)
-local specWarnLightningRod	= mod:NewSpecialWarningYou(89668)
+local specWarnLightningRod	= mod:NewSpecialWarningMoveAway(89668)
 local yellLightningRod		= mod:NewYell(89668)
 
 local timerWindBurst		= mod:NewCastTimer(5, 87770)
@@ -52,7 +52,6 @@ local timerSquallLineCD		= mod:NewCDTimer(20, 91129)
 
 local berserkTimer			= mod:NewBerserkTimer(600)
 
-local soundLightningRod		= mod:NewSound(89668)
 local countdownClouds		= mod:NewCountdown(10, 89588, false)
 local countdownFeedback		= mod:NewCountdown(20, 87904, false)
 
@@ -121,7 +120,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnLightningRod:Show()
 			yellLightningRod:Yell()
-			soundLightningRod:Play()
 			if self.Options.RangeFrame then
 				DBM.RangeCheck:Show(20)
 			end

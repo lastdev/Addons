@@ -1,8 +1,8 @@
 --[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
-	Revision: $Id: InfSettings.lua 5347 2012-09-06 06:26:15Z Esamynn $
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Revision: $Id: InfSettings.lua 5533 2014-12-11 22:11:04Z brykrys $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
 	Command handler. Assumes responsibility for allowing the user to set the
@@ -63,7 +63,7 @@ Usage:
 
 
 ]]
-Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Informant/InfSettings.lua $", "$Rev: 5347 $")
+Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Informant/InfSettings.lua $", "$Rev: 5533 $")
 
 local lib = {}
 Informant.Settings = lib
@@ -71,24 +71,19 @@ local private = {}
 local gui
 local debugPrint
 
-local function getUserSig()
-	local userSig = string.format("users.%s.%s", GetRealmName(), UnitName("player"))
-	return userSig
-end
+local UserSig = format("users.%s.%s", GetRealmName(), UnitName("player"))
 
 local function getUserProfileName()
 	if (not InformantConfig) then InformantConfig = {} end
-	local userSig = getUserSig()
-	return InformantConfig[userSig] or "Default"
+	return InformantConfig[UserSig] or "Default"
 end
 
 local function getUserProfile()
-	if (not InformantConfig) then InformantConfig = {} end
 	local profileName = getUserProfileName()
 	if (not InformantConfig["profile."..profileName]) then
 		if profileName ~= "Default" then
 			profileName = "Default"
-			InformantConfig[getUserSig()] = "Default"
+			InformantConfig[UserSig] = "Default"
 		end
 		if profileName == "Default" then
 			InformantConfig["profile."..profileName] = {}
@@ -100,7 +95,7 @@ end
 
 local function cleanse( profile )
 	if (profile) then
-		profile = {}
+		wipe(profile)
 	end
 end
 
@@ -145,7 +140,7 @@ local function getDefault(setting)
 
 	-- no idea what this setting is, so log it for debugging purposes
 	if (result == nil) then
-		debugPrint("GetDefault", ENX_INFO, "Unknown key", "default requested for unknown key:" .. setting)
+		debugPrint("Function GetDefault, requested key is unknown: " .. tostring(setting), "GetDefault: Unknown key", nil, "Info")
 	end
 
 	return result
@@ -182,7 +177,7 @@ local function setter(setting, value)
 			InformantConfig["profile."..value] = {}
 
 			-- Set the current profile to the new profile
-			InformantConfig[getUserSig()] = value
+			InformantConfig[UserSig] = value
 			-- Get the new current profile
 			local newProfile = getUserProfile()
 
@@ -236,7 +231,7 @@ local function setter(setting, value)
 
 				-- If the user was using this one, then move them to Default
 				if (getUserProfileName() == value) then
-					InformantConfig[getUserSig()] = 'Default'
+					InformantConfig[UserSig] = 'Default'
 				end
 
 				DEFAULT_CHAT_FRAME:AddMessage(_TRANS("INF_Help_ChatProfileDeleted")..value)
@@ -259,7 +254,7 @@ local function setter(setting, value)
 			value = gui.elements["profile"].value
 
 			-- Change the user's current profile to this new one
-			InformantConfig[getUserSig()] = value
+			InformantConfig[UserSig] = value
 
 			DEFAULT_CHAT_FRAME:AddMessage(_TRANS("INF_Help_ChatProfileUsing")..value)
 
@@ -295,17 +290,17 @@ local function getter(setting)
 
 	local a,b,c = strsplit(".", setting)
 	if (a == 'profile') then
-		if (b == 'profiles') then
+		if not b then -- setting == 'profile'
+			return getUserProfileName()
+		elseif b == 'profiles' then
 			local pList = InformantConfig["profiles"]
 			if (not pList) then
 				pList = { "Default" }
 			end
 			return pList
+		else -- other profile settings - no return values
+			return
 		end
-	end
-
-	if (setting == 'profile') then
-		return getUserProfileName()
 	end
 
 	local db = getUserProfile()
@@ -325,6 +320,7 @@ function lib.GetSetting(setting, default)
 	end
 end
 
+--[[
 function lib.UpdateGuiConfig()
 	if gui then
 		if gui:IsVisible() then
@@ -334,6 +330,7 @@ function lib.UpdateGuiConfig()
 		lib.MakeGuiConfig()
 	end
 end
+--]]
 
 function lib.MakeGuiConfig()
 	if gui then return end

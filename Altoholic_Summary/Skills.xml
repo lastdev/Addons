@@ -2,19 +2,11 @@
 	<Script file="Skills.lua"></Script>
 
 	<Button name="AltoSkillButtonTemplate" virtual="true">
-		<Size>
-			<AbsDimension x="65" y="18"/>
-		</Size>
+		<Size x="65" y="18" />
 		<ButtonText name="$parentNormalText" justifyH="LEFT">
-			<Size>
-				<AbsDimension x="65" y="18"/>
-			</Size>
+			<Size x="65" y="18" />
 			<Anchors>
-				<Anchor point="LEFT">
-					<Offset>
-						<AbsDimension x="0" y="0"/>
-					</Offset>
-				</Anchor>
+				<Anchor point="LEFT" x="0" y="0" />
 			</Anchors>
 		</ButtonText>
 		<Scripts>
@@ -33,36 +25,22 @@
 	</Button>
 	
 	<Button name="AltoSkillsTemplate" virtual="true">
-		<Size>
-			<AbsDimension x="615" y="22"/>
-		</Size>
+		<Size x="615" y="22" />
 		<Layers>
 			<Layer level="BACKGROUND">
 				<FontString name="$parentLevel" inherits="GameFontNormalSmall" justifyH="CENTER">
-					<Size>
-						<AbsDimension x="55" y="18"/>
-					</Size>
+					<Size x="55" y="18" />
 					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="150" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" x="150" y="0" />
 					</Anchors>
 				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
 			<Button name="$parentCollapse" hidden="true">
-				<Size>
-					<AbsDimension x="16" y="16"/>
-				</Size>
+				<Size x="16" y="16" />
 				<Anchors>
-					<Anchor point="LEFT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" x="5" y="0" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -75,9 +53,7 @@
 			</Button>
 			
 			<Button name="$parentName" id="7">
-				<Size>
-					<AbsDimension x="170" y="18"/>
-				</Size>
+				<Size x="170" y="18" />
 				<Anchors>
 					<Anchor point="TOPLEFT">
 						<Offset>

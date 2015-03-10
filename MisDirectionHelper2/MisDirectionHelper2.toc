@@ -7,18 +7,18 @@
 ## Author: Deepac, Gabriel, Jotschi, Soul
 ## OptionalDeps: TipTac, Tukui, ElvUI, Tukui_Packages_Skins, Ace3, LibStub, CallbackHandler-1.0, LibQTip-1.0, LibDBIcon-1.0
 ## SavedVariables: MisDirectionHelperDB
-## Version: v6.0.0.3
+## Version: v6.0.3.0
 ## X-Category: Raid
 ## X-Website: http://wow.curse.com/downloads/wow-addons/details/misdirectionhelper2.aspx
 ## X-Donate: https://www.paypal.com/cgi-bin/webscr?return=http%3A%2F%2Fwow.curseforge.com%2Faddons%2Fmisdirectionhelper2%2F&cn=Add+special+instructions+to+the+addon+author%28s%29&business=agoakley%40googlemail.com&bn=PP-DonationsBF%3Abtn_donateCC_LG.gif%3ANonHosted&cancel_return=http%3A%2F%2Fwow.curseforge.com%2Faddons%2Fmisdirectionhelper2%2F&lc=US&item_name=MisDirectionHelper2+%28from+CurseForge.com%29&cmd=_donations&rm=1&no_shipping=1&currency_code=USD
 ## X-Localizations: enUS, deDE, frFR, koKR, ruRU, ptBR, zhCN, zhTW, esES, esMX, itIT
 ## X-Compatible-With: 60000
-## X-Curse-Packaged-Version: v6.0.0.3
+## X-Curse-Packaged-Version: v6.0.3.0
 ## X-Curse-Project-Name: MisDirectionHelper2
 ## X-Curse-Project-ID: misdirectionhelper2
 ## X-Curse-Repository-ID: wow/misdirectionhelper2/mainline
 ## X-Credits: Jotschi, Soul, Gabriel - original authors
-## X-Curse-Packaged-Version: v6.0.0.3
+## X-Curse-Packaged-Version: v6.0.3.0
 ## X-Curse-Project-Name: MisDirectionHelper2
 ## X-Curse-Project-ID: misdirectionhelper2
 ## X-Curse-Repository-ID: wow/misdirectionhelper2/mainline

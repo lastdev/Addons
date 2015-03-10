@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
 	Revision: $Id: CoreResources.lua 5285 2012-04-17 15:45:55Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -176,6 +176,6 @@ internal.Resources = {
 	-- SetResource: permits other Core files to set a resource
 	-- Other Cores/Modules must never modify AucAdvanced.Resources directly (or I may make it a read-only table in future!)
 	SetResource = function(key, value)
-		lib.key = value
+		lib[key] = value
 	end
 }

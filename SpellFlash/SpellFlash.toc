@@ -1,12 +1,13 @@
 ## Interface: 60000
-## Version: 6.17
-## Author: BigRedBrent
+## Version: 6.21
+## Author: BigRedBrent, SlippyCheeze
 ## Title: |cFF00FFFFSpellFlash|r
 ## Notes: This addon is able to make suggestions of what spell you may want to cast next by flashing on top of the spell buttons.
 ## URL: http://www.curse.com/addons/wow/spellflash
 ## SavedVariables: SpellFlashAddonConfig
 ## Dependencies: SpellFlashCore
-## X-Curse-Packaged-Version: 6.17
+## OptionalDeps: LibButtonGlow-1.0, LibActionButton-1.0
+## X-Curse-Packaged-Version: 6.21
 ## X-Curse-Project-Name: SpellFlash
 ## X-Curse-Project-ID: spellflash
 ## X-Curse-Repository-ID: wow/spellflash/mainline

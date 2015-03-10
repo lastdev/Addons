@@ -315,36 +315,40 @@ function NugComboBar:LoadClassSettings()
             self.UNIT_AURA = self.UNIT_COMBO_POINTS
             allowedUnit = "player"
 
-            local maxcharges = IsSpellKnown(157774) and 20 or 15
+
 
             local LShield = GetSpellInfo(324) -- Lightning Shield
-            local GetLightningShield = function(unit)
-                local _,_,_, count, _,_,_, caster = UnitAura("player", LShield, nil, "HELPFUL")
-                if not count then return 0 end
-                count = count - 1
-                local layer2count = 0
-                if not secondLayerEnabled then
-                    count = count > 7 and count - 7 or 0
-                else
-                    local a,rem = math.modf(count/2)
-                    layer2count = a
-                    count = (rem > 0) and a + 1 or a
-                    -- if count > 3 then
-                        -- layer2count = count - 3
-                        -- count = 3
-                    -- end
-                end
-                return count, nil, nil, layer2count
-            end
+            -- local GetLightningShield = function(unit)
+            --     local _,_,_, count, _,_,_, caster = UnitAura("player", LShield, nil, "HELPFUL")
+            --     if not count then return 0 end
+            --     count = count - 1
+            --     local layer2count = 0
+            --     if not secondLayerEnabled then
+            --         count = count > 7 and count - 7 or 0
+            --     else
+            --         local a,rem = math.modf(count/2)
+            --         layer2count = a
+            --         count = (rem > 0) and a + 1 or a
+            --         -- if count > 3 then
+            --             -- layer2count = count - 3
+            --             -- count = 3
+            --         -- end
+            --     end
+            --     return count, nil, nil, layer2count
+            -- end
 
             local GetLightningShield2 = function(unit)
                 local _,_,_, count, _,_,_, caster = UnitAura("player", LShield, nil, "HELPFUL")
-                if not count then return 0, 0 end
-                if count >= maxcharges - 3 and NugComboBar.bar then
+                if not count then
+                    return 0, 1
+                end
+
+                if count >= 15 then
                     NugComboBar.bar:SetColor(unpack(NugComboBarDB.colors.bar2))
                 else
                     NugComboBar.bar:SetColor(unpack(NugComboBarDB.colors.bar1))
                 end
+
                 return 0, count
             end
 
@@ -356,8 +360,8 @@ function NugComboBar:LoadClassSettings()
                     defaultProgress = 1
                     if self.bar then
                         showEmpty = true
-                        maxcharges = IsSpellKnown(157774) and 20 or 15
-                        self:EnableBar(0, maxcharges, "Big")
+                        local maxcharges = IsSpellKnown(157774) and 20 or 15
+                        self:EnableBar(1, maxcharges, "Big")
                         GetComboPoints = GetLightningShield2
                     else
                         showEmpty = false
@@ -655,11 +659,11 @@ function NugComboBar:LoadClassSettings()
         elseif class == "MAGE" then 
             self:RegisterEvent("UNIT_AURA")
             self.UNIT_AURA = self.UNIT_COMBO_POINTS 
-            self:SetMaxPoints(5)
+
             self:RegisterEvent("SPELLS_CHANGED")
             self.SPELLS_CHANGED = function(self, event)
-                self:RegisterEvent("UNIT_AURA")
                 local spec = GetSpecialization()
+                self:SetMaxPoints(4)
                 if spec == 1 then
                     local showMissileProcs = NugComboBarDB.special1
                     if showMissileProcs then
@@ -682,12 +686,12 @@ function NugComboBar:LoadClassSettings()
                         filter = "HARMFUL"
                         GetComboPoints = GetAuraStack
                     end
-                elseif IsSpellKnown(1463) then
-                    self:DisableBar()
-                    self:SetMaxPoints(5)
-                    scanAura = GetSpellInfo(116267) -- Incanter's Flow Buff
-                    filter = "HELPFUL"
-                    GetComboPoints = GetAuraStack
+                -- else
+                    -- self:DisableBar()
+                    -- self:SetMaxPoints(5)
+                    -- scanAura = GetSpellInfo(116267) -- Incanter's Flow Buff
+                    -- filter = "HELPFUL"
+                    -- GetComboPoints = GetAuraStack
                 end
             end
             self:SPELLS_CHANGED()
@@ -1116,6 +1120,7 @@ function NugComboBar.EnableBar(self, min, max, btype)
     if not self.bar then return end
     self.bar.enabled = true
     if min and max then self.bar:SetMinMaxValues(min, max) end
+    self.bar.max = max
     if btype and self.bar[btype] then self.bar[btype](self.bar) end
     self.bar:Show()
 end

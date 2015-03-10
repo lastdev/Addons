@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Anub'arak_Coliseum", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 142 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(34564)
 mod:SetEncounterID(1085)
 mod:SetModelID(29268) 
@@ -21,7 +21,7 @@ local warnAdds				= mod:NewAnnounce("warnAdds", 3, 45419)
 local preWarnShadowStrike	= mod:NewSoonAnnounce(66134, 3)
 local warnShadowStrike		= mod:NewSpellAnnounce(66134, 4)
 local warnPursue			= mod:NewTargetAnnounce(67574, 4)
-local warnFreezingSlash		= mod:NewTargetAnnounce(66012, 2, nil, mod:IsHealer() or mod:IsTank())
+local warnFreezingSlash		= mod:NewTargetAnnounce(66012, 2, nil, "Tank|Healer")
 local warnHoP				= mod:NewTargetAnnounce(1022, 2, nil, false)--Heroic strat revolves around kiting pursue and using Hand of Protection.
 local warnEmerge			= mod:NewAnnounce("WarnEmerge", 3, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
 local warnEmergeSoon		= mod:NewAnnounce("WarnEmergeSoon", 1, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
@@ -29,22 +29,20 @@ local warnSubmerge			= mod:NewAnnounce("WarnSubmerge", 3, "Interface\\AddOns\\DB
 local warnSubmergeSoon		= mod:NewAnnounce("WarnSubmergeSoon", 2, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
 local warnPhase3			= mod:NewPhaseAnnounce(3)
 
-local specWarnPursue		= mod:NewSpecialWarningRun(67574)
-local specWarnSubmergeSoon	= mod:NewSpecialWarningSoon("specWarnSubmergeSoon", mod:IsTank())
-local specWarnShadowStrike	= mod:NewSpecialWarningInterrupt(66134, mod:IsTank())
+local specWarnPursue		= mod:NewSpecialWarningRun("OptionVersion2", 67574, nil, nil, nil, 4)
+local specWarnSubmergeSoon	= mod:NewSpecialWarningSoon("specWarnSubmergeSoon", "Tank")
+local specWarnShadowStrike	= mod:NewSpecialWarningInterrupt(66134, "Tank")
 local specWarnPCold			= mod:NewSpecialWarningYou(66013, false)
 
 local timerAdds				= mod:NewTimer(45, "timerAdds", 45419)
 local timerSubmerge			= mod:NewTimer(75, "TimerSubmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
 local timerEmerge			= mod:NewTimer(65, "TimerEmerge", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
-local timerFreezingSlash	= mod:NewCDTimer(20, 66012, nil, mod:IsHealer() or mod:IsTank())
+local timerFreezingSlash	= mod:NewCDTimer(20, 66012, nil, "Tank|Healer")
 local timerPCold			= mod:NewBuffActiveTimer(15, 66013)
 local timerShadowStrike		= mod:NewNextTimer(30.5, 66134)
 local timerHoP				= mod:NewBuffActiveTimer(10, 1022, nil, false)--So we will track bops to make this easier.
 
 local enrageTimer			= mod:NewBerserkTimer(570)	-- 9:30 ? hmpf (no enrage while submerged... this sucks)
-
-local soundPursue			= mod:NewSound(67574)
 
 mod:AddSetIconOption("PursueIcon", 67574, true)
 mod:AddSetIconOption("SetIconsOnPCold", 66013, false)
@@ -118,7 +116,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 67574 then
 		if args:IsPlayer() then
 			specWarnPursue:Show()
-			soundPursue:Play()
 		end
 		if self.Options.PursueIcon then
 			self:SetIcon(args.destName, 8, 15)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Deathbringer", "DBM-Icecrown", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 167 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 183 $"):sub(12, -3))
 mod:SetCreatureID(37813)
 mod:SetEncounterID(1096)
 mod:SetModelID(30790)
@@ -23,27 +23,27 @@ mod:RegisterEventsInCombat(
 	"UNIT_POWER target focus mouseover"
 )
 
-local warnFrenzySoon		= mod:NewSoonAnnounce(72737, 2, nil, mod:IsTank() or mod:IsHealer())
+local warnFrenzySoon		= mod:NewSoonAnnounce(72737, 2, nil, "Tank|Healer")
 local warnAddsSoon			= mod:NewPreWarnAnnounce(72173, 10, 3)
 local warnAdds				= mod:NewSpellAnnounce(72173, 4)
-local warnFrenzy			= mod:NewSpellAnnounce(72737, 2, nil, mod:IsTank() or mod:IsHealer())
+local warnFrenzy			= mod:NewSpellAnnounce(72737, 2, nil, "Tank|Healer")
 local warnBloodNova			= mod:NewSpellAnnounce(72378, 2)
 local warnMark 				= mod:NewTargetCountAnnounce(72293, 4, 72293)
-local warnBoilingBlood		= mod:NewTargetAnnounce(72385, 2, nil, mod:IsHealer())
-local warnRuneofBlood		= mod:NewTargetAnnounce(72410, 3, nil, mod:IsTank() or mod:IsHealer())
+local warnBoilingBlood		= mod:NewTargetAnnounce(72385, 2, nil, "Healer")
+local warnRuneofBlood		= mod:NewTargetAnnounce(72410, 3, nil, "Tank|Healer")
 
 local specwarnMark			= mod:NewSpecialWarningTarget(72293, false)
-local specwarnRuneofBlood	= mod:NewSpecialWarningTarget(72410, mod:IsTank())
+local specwarnRuneofBlood	= mod:NewSpecialWarningTarget(72410, "Tank")
 
 local timerCombatStart		= mod:NewCombatTimer(48)
-local timerRuneofBlood		= mod:NewNextTimer(20, 72410, nil, mod:IsTank() or mod:IsHealer())
+local timerRuneofBlood		= mod:NewNextTimer(20, 72410, nil, "Tank|Healer")
 local timerBoilingBlood		= mod:NewNextTimer(15.5, 72385)
 local timerBloodNova		= mod:NewNextTimer(20, 72378)
 local timerCallBloodBeast	= mod:NewNextTimer(40, 72173)
 
 local enrageTimer			= mod:NewBerserkTimer(480)
 
-mod:AddBoolOption("RangeFrame", mod:IsRanged())
+mod:AddBoolOption("RangeFrame", "Ranged")
 mod:AddBoolOption("RunePowerFrame", true, "misc")
 mod:AddBoolOption("BeastIcons", true)
 mod:AddBoolOption("BoilingBloodIcons", false)

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(107, "DBM-Party-Cataclysm", 1, 66)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 79 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
 mod:SetCreatureID(39698)
 mod:SetZone()
 
@@ -17,7 +17,7 @@ local warnSuperheated		= mod:NewCountAnnounce(75846, 3)
 
 local timerSuperheated		= mod:NewTimer(17, "TimerSuperheated", 75846)
 
-local specWarnSuperheated	= mod:NewSpecialWarningStack(75846, mod:IsTank(), 5)
+local specWarnSuperheated	= mod:NewSpecialWarningStack(75846, "Tank", 5)
 
 function mod:OnCombatStart(delay)
 end

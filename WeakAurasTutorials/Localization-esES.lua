@@ -54,47 +54,77 @@ L["Dynamic Group Options 2/4 Text"] = [=[La mayor mejora de los |cFFFFFFFGrupos 
 
 Selecciona \"Circular\" para verlo en acción.]=]
 L["Dynamic Group Options: 3/4"] = "Opciones de Grupos Dinámicos: 3/4"
--- L["Dynamic Group Options 3/4 Text"] = ""
+L["Dynamic Group Options 3/4 Text"] = [=[Las opciones de la constante de factor te permite controlar como crece tu grupo circular.
+
+En un grupo circular con espaciado constante crece su radio a medida que se añaden mas auras, mientras que una visualización de radio constante simplemente causa que las auras se junten a medida que más son añadidas.]=] -- Needs review
 L["Dynamic Group Options: 4/4"] = "Opciones de Grupos Dinámicos: 4/4"
--- L["Dynamic Group Options 4/4 Text"] = ""
+L["Dynamic Group Options 4/4 Text"] = [=[Los grupos dinámicos ahora pueden tener sus hijos automáticamente ordenados por el tiempo restante.
+
+Las auras que no tienen tiempo restante son situadas en la parte superior o inferior, dependiendo si eliges \"Ascendiente\" o \"Descendiente\".]=] -- Needs review
 L["Finished"] = "Finalizado"
 L["Full-scan Auras: 2/10"] = "Escaneo completo de Auras: 2/10"
 L["Full-scan Auras 2/10 Text"] = "Primero, habilitado la opción de Escaneo Completo"
 L["Full-scan Auras: 3/10"] = "Escaneo completo de Auras: 3/10"
--- L["Full-scan Auras 3/10 Text"] = ""
+L["Full-scan Auras 3/10 Text"] = [=[|cFFFF0000Auto-clonado|r  puedes ser ahora activado utilizando la opción \"%s\".
+
+Esto causa que una nueva aura sea creada para cada aura que coincida con los parámetros dados.]=] -- Needs review
 L["Full-scan Auras: 4/10"] = "Escaneo completo de Auras: 4/10"
--- L["Full-scan Auras 4/10 Text"] = ""
+L["Full-scan Auras 4/10 Text"] = [=[Una ventana emergente debería aparecer, informándote que las auras |cFFFF0000auto-clonadas|r deben ser generalmente utilizadas en grupos dinámicos.
+
+Presiona \"Sí\" para permitir a |cFF8800FFWeakAuras|r poner automáticamente tu aura en un grupo dinámico.]=] -- Needs review
 L["Full-scan Auras: 5/10"] = "Escaneo completo de Auras: 5/10"
 L["Full-scan Auras 5/10 Text"] = "Deshabilitar la opción de escaneo completo para reactivar otras selecciones de las opciones de Unidad "
 L["Group Auras 6/10"] = "Auras de Grupo: 6/10"
 L["Group Auras 6/10 Text"] = "Ahora selecciona \"Grupo\" para la opción de Unidad"
 L["Group Auras: 7/10"] = "Auras de Grupo: 7/10"
--- L["Group Auras 7/10 Text"] = ""
+L["Group Auras 7/10 Text"] = [=[|cFFFF0000Auto-clonado|r está, otra vez, habilitado utilizando la opción \"%s\".
+
+Una nueva aura será creada para cada miembro de tu grupo que esté afectado por la(s) aura(s) especificada(s).]=] -- Needs review
 L["Group Auras: 8/10"] = "Auras de Grupo: 8/10"
--- L["Group Auras 8/10 Text"] = ""
+L["Group Auras 8/10 Text"] = "Activando la opción %s para una Aura Grupal con |cFFFF0000auto-clonado|r activada creará una nueva aura para cada miembro de tu grupo |cFFFFFFFFno|r afectado por la(s) aura(s) especificada(s)." -- Needs review
 L["Home"] = "Inicio"
 L["Multi-target Auras: 10/10"] = "Auras Multi-objetivo: 10/10"
--- L["Multi-target Auras 10/10 Text"] = ""
+L["Multi-target Auras 10/10 Text"] = [=[Las auras Multi-objetivo auras tienen el |cFFFF0000auto-clonado|r activo por defecto..
+
+Los desencadenadores de auras multi-objetivo son diferentes de los desencadenadores de las auras normales ya que están basados en eventos del Registro de Combate, lo cúal significa que tendrán un seguimiento de las auras de criaturas que nadie tiene como objetivo (aunque alguna información dinámica no está disponible si alguien en tu grupo no los tiene como objetivo).
+
+Esto hace a las auras Multi-objetivo una buena elección para tener un seguimiendo de los DoTs en enemigos múltiples.]=] -- Needs review
 L["Multi-target Auras: 9/10"] = "Auras Multi-objetivo: 9/10"
 L["Multi-target Auras 9/10 Text"] = "Finalmente, selecciona \"Multi-objetivo\" para la opción de Unidad."
 L["New in 1.4:"] = "Nuevo en 1.4:"
 L["New in 1.4 Desc:"] = "Nuevo en 1.4"
 L["New in 1.4 Desc Text"] = "Lee las nuevas funciones de WeakAuras 1.4"
--- L["New in 1.4 Finnished Text"] = ""
--- L["New in 1.4 Text1"] = ""
+L["New in 1.4 Finnished Text"] = [=[Por supuesto, hay más características en |cFF8800FFWeakAuras 1.4|r de las que se pueden explicar a la vez, sin mencionar el incontable número de mejoras de eficiencia y de errores.
+
+Con suerte, este tutorial te guiará hacia las características principales que están disponibles.
+
+¡Gracias por utilizar |cFF8800FFWeakAuras|r!]=] -- Needs review
+L["New in 1.4 Text1"] = [=[La versión 1.4 de |cFF8800FFWeakAuras|r introduce varias nuevas potentes características.
+
+Este tutorial muestra un resumen de las capacidades más importantes y como utilizarlas.]=] -- Needs review
 L["New in 1.4 Text2"] = "Primero, crea una nueva visualización para su uso como demostración."
 L["Previous"] = "Previo"
 L["Trigger Options: 1/4"] = "Opciones de Disparador: 1/4"
--- L["Trigger Options 1/4 Text"] = ""
+L["Trigger Options 1/4 Text"] = [=[Además de \"Multi-objetivo\" hay otra opción para la opción de Unidad: Unidad Específica
+
+Selecciónala para poder crear un nuevo campo de texto.]=] -- Needs review
 L["Trigger Options: 2/4"] = "Opciones de Disparador: 2/4"
--- L["Trigger Options 2/4 Text"] = ""
+L["Trigger Options 2/4 Text"] = [=[En este campo, puedes especificar el nombre de cualquier jugador o ID personalizada de Unidad. Los IDs de Unidad tales como \"boss1\" \"boss2\" etc. son especialmente útiles para encuentros de banda.
+
+Todos los desencadenadores te permiten especificar una unidad (no únicamente los desencadenadores de Aura) ahora soportan la opción de Unidad Especifica.]=] -- Needs review
 L["Trigger Options: 3/4"] = "Opciones de Disparador: 3/4"
--- L["Trigger Options 3/4 Text"] = ""
+L["Trigger Options 3/4 Text"] = [=[|cFF8800FFWeakAuras 1.4|r también añade algunos tipos nuevos de Desencadenadores.
+
+Selecciona la categoria Estado para darles un vistazo.]=] -- Needs review
 L["Trigger Options: 4/4"] = "Opciones de Disparador: 4/4"
--- L["Trigger Options 4/4 Text"] = ""
+L["Trigger Options 4/4 Text"] = [=[Los desencadenadors de |cFFFFFFFFCaracterísticas de Unidad|r te permiten comprobar el nombre de una unidad, clase, hostilidad y si es un jugador o no.
+
+Los desencadenadores |cFFFFFFFFTiempo de reutilización Global|r y |cFFFFFFFFTemporizador de golpe|r complementan el desencadenador de Lanzamiento.]=] -- Needs review
 L["WeakAuras Tutorials"] = "Tutoriales de WeakAuras"
 L["Welcome"] = "Bienvenido"
--- L["Welcome Text"] = ""
+L["Welcome Text"] = [=[Bienvenido a la Guía de Principiante de |cFF8800FFWeakAuras|r.
+
+Esta guía te mostará como utilizar WeakAuras y explicará las opciones de configuración básicas.]=] -- Needs review
 
 
 

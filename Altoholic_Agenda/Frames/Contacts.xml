@@ -2,50 +2,29 @@
 	<Script file="Contacts.lua"></Script>
 
 	<Button name="AltoContactEntryTemplate" hidden="true" virtual="true">
-		<Size>
-			<AbsDimension x="615" y="41"/>
-		</Size>
+		<Size x="615" y="41" />
 		<Layers>
 			<Layer level="BACKGROUND">
 				<FontString name="$parentName" inherits="GameFontNormal" justifyH="LEFT">
-					<Size>
-						<AbsDimension x="240" y="14"/>
-					</Size>
+					<Size x="240" y="14" />
 					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="53" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" x="53" y="0" />
 					</Anchors>
 				</FontString>
 				<FontString name="$parentNote" inherits="GameFontNormal" justifyH="CENTER">
-					<Size>
-						<AbsDimension x="220" y="10"/>
-					</Size>
+					<Size x="220" y="10" />
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parentName" relativePoint="BOTTOMLEFT">
-							<Offset>
-								<AbsDimension x="0" y="2"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" relativeTo="$parentName" relativePoint="BOTTOMLEFT" x="0" y="2" />
 					</Anchors>
 				</FontString>
 			</Layer>
 		</Layers>
-
 	</Button>
 	
 	<Frame name="AltoholicFrameContacts" parent="AltoholicTabAgenda" hidden="true">
-		<Size>
-			<AbsDimension x="615" y="306"/>
-		</Size>
+		<Size x="615" y="306" />
 		<Anchors>
-			<Anchor point="TOPRIGHT">
-				<Offset>
-					<AbsDimension x="39" y="-105"/>
-				</Offset>
-			</Anchor>
+			<Anchor point="TOPRIGHT" x="39" y="-105" />
 		</Anchors>
 		<Frames>
 			<ScrollFrame name="$parentScrollFrame" inherits="FauxScrollFrameTemplate">
@@ -56,28 +35,16 @@
 				<Layers>
 					<Layer level="ARTWORK">
 						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size>
-								<AbsDimension x="31" y="256"/>
-							</Size>
+							<Size x="31" y="256" />
 							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
-									<Offset>
-										<AbsDimension x="-2" y="5"/>
-									</Offset>
-								</Anchor>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="5" />
 							</Anchors>
 							<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
 						</Texture>
 						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size>
-								<AbsDimension x="31" y="106"/>
-							</Size>
+							<Size x="31" y="106" />
 							<Anchors>
-								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
-									<Offset>
-										<AbsDimension x="-2" y="0"/>
-									</Offset>
-								</Anchor>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-2" y="0" />
 							</Anchors>
 							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
 						</Texture>
@@ -92,11 +59,7 @@
 			
 			<Button name="$parentEntry1" inherits="AltoContactEntryTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentScrollFrame" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="$parentScrollFrame" relativePoint="TOPLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parentEntry2" inherits="AltoContactEntryTemplate">
@@ -129,7 +92,6 @@
 					<Anchor point="TOPLEFT" relativeTo="$parentEntry6" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-
 		</Frames>
 		<Scripts>
 			<OnLoad>

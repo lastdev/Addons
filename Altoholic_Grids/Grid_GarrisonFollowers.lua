@@ -1,57 +1,219 @@
 local addonName = "Altoholic"
 local addon = _G[addonName]
 
+local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+
 local WHITE		= "|cFFFFFFFF"
 local GREEN		= "|cFF00FF00"
 local GREY		= "|cFF808080"
 
+local OPTION_FOLLOWERS = "UI.Tabs.Grids.Garrisons.CurrentFollowers"
+
 local view
 local isViewValid
 local collected = {}
+
+-- Followers not recruited at the inn
+local nonInnFollowers = { 
+	[32] = true,
+	[34] = true,
+	[87] = true,
+	[88] = true,
+	[89] = true,
+	[90] = true,
+	[91] = true,
+	[92] = true,
+	[93] = true,
+	[94] = true,
+	[95] = true,
+	[96] = true,
+	[97] = true,
+	[98] = true,
+	[99] = true,
+	[100] = true,
+	[101] = true,
+	[102] = true,
+	[103] = true,
+	[104] = true,
+	[105] = true,
+	[106] = true,
+	[107] = true,
+	[108] = true,
+	[109] = true,
+	[110] = true,
+	[111] = true,
+	[112] = true,
+	[113] = true,
+	[114] = true,
+	[115] = true,
+	[116] = true,
+	[117] = true,
+	[118] = true,
+	[119] = true,
+	[120] = true,
+	[153] = true,
+	[154] = true,
+	[155] = true,
+	[157] = true,
+	[159] = true,
+	[168] = true,
+	[170] = true,
+	[171] = true,
+	[172] = true,
+	[176] = true,
+	[177] = true,
+	[178] = true,
+	[179] = true,
+	[180] = true,
+	[182] = true,
+	[183] = true,
+	[184] = true,
+	[185] = true,
+	[186] = true,
+	[189] = true,
+	[190] = true,
+	[192] = true,
+	[193] = true,
+	[194] = true,
+	[195] = true,
+	[202] = true,
+	[203] = true,
+	[204] = true,
+	[205] = true,
+	[207] = true,
+	[208] = true,
+	[209] = true,
+	[211] = true,
+	[212] = true,
+	[216] = true,
+	[217] = true,
+	[218] = true,
+	[219] = true,
+	[224] = true,
+	[225] = true,
+	[453] = true,
+	[455] = true,
+	[458] = true,
+	[459] = true,
+	[460] = true,
+	[462] = true,
+	[463] = true,
+}
+
+local followerTypes = {
+	ALL,
+	L["Collected"],
+	L["Not collected"],
+	L["Recruited at the inn"],
+	L["Not recruited at the inn"],
+}
+
+local DDM_Add = addon.Helpers.DDM_Add
+local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
+
+local function SortByFollowerName(a, b)
+	local nameA = C_Garrison.GetFollowerNameByID(a)
+	local nameB = C_Garrison.GetFollowerNameByID(b)
+	
+	return nameA < nameB
+end
 
 local function BuildView()
 	-- Prepare the followers' view
 	-- list all collected followers (across all alts), sorted alphabetically
 	-- .. then list all uncollected followers, also sorted alphabetically
 
-	local uncollected = {}	-- sorted list
+	local realm, account = addon.Tabs.Grids:GetRealm()
+	local uncollected = {}
 	local followers
 	
-	view = {}
-	
-	local realm, account = addon.Tabs.Grids:GetRealm()
-	
-	-- Get a list of all collected followers across all alts on this realm
+	-- Prepare a list of all collected followers across all alts on this realm
 	for characterKey, character in pairs(DataStore:GetCharacters(realm, account)) do
 		followers = DataStore:GetFollowers(character)
 		
 		if followers then
-			for name, info in pairs(followers) do
-				collected[name] = true	-- ["Admiral Taylor"] = true
+			for id, _ in pairs(followers) do
+				-- temporary fix: follower keys have been replaced from their name (string) to their id (numeric)
+				-- fix it here instead of in datastore, which is already ok.
+				if type(id) == "number" then
+					collected[id] = true	-- [123] = true
+				end
 			end
 		end
 	end
-
-	for k, v in pairs(collected) do
-		table.insert(view, k)
-	end
 	
-	table.sort(view)
-	
-	-- prepare a list of uncollected followers
+	-- Prepare a list of uncollected followers
+	local link
 	for k, follower in pairs(C_Garrison.GetFollowers()) do
-		if not collected[follower.name] then
-			table.insert(uncollected, follower.name)
+		link = C_Garrison.GetFollowerLinkByID(follower.followerID)
+		if link then
+			local	id = link:match("garrfollower:(%d+)")
+			id = tonumber(id)
+				
+			if not collected[id] then
+				table.insert(uncollected, id)
+			end
 		end
 	end
+	table.sort(uncollected, SortByFollowerName)
+	
+	-- Now prepare the view, depending on user selection.
+	view = {}
+	
+	local currentFollowers = addon:GetOption(OPTION_FOLLOWERS)
+	
+	if currentFollowers == 3 then		-- Not collected only
+		for k, id in pairs(uncollected) do
+			table.insert(view, id)
+		end
+		
+		-- table is already sorted.
+	
+		isViewValid = true
+		return 
+	end
+	
+	-- in every other case (1, 2, 4 ,5) , we must add collected followers
+	for id, _ in pairs(collected) do
+		if currentFollowers <= 2 then				-- All (collected + uncollected) = 1, or 2 = collected only
+			table.insert(view, id)
+		elseif currentFollowers == 4 and not nonInnFollowers[id] then		-- All, but only from the inn
+			table.insert(view, id)
+		elseif currentFollowers == 5 and nonInnFollowers[id] then		-- All, but only NOT from the inn
+			table.insert(view, id)
+		end
+	end
+	table.sort(view, SortByFollowerName)
 
-	table.sort(uncollected)
-
-	for k, v in pairs(uncollected) do
-		table.insert(view, v)
-	end	
+	-- add uncollected, only for the "All" option (1)
+	if currentFollowers == 1 then				-- All (collected + uncollected)
+		-- already sorted
+		for k, id in pairs(uncollected) do
+			table.insert(view, id)
+		end
+	end
 	
 	isViewValid = true
+end
+
+local function OnFollowerFilterChange(self)
+	local currentFollowers = self.value
+	
+	addon:SetOption(OPTION_FOLLOWERS, currentFollowers)
+
+	addon.Tabs.Grids:SetViewDDMText(followerTypes[currentFollowers])
+	
+	isViewValid = nil
+	addon.Tabs.Grids:Update()
+end
+
+local function DropDown_Initialize()
+	local currentFollowers = addon:GetOption(OPTION_FOLLOWERS)
+	
+	for i = 1, #followerTypes do
+		DDM_Add(followerTypes[i], i, OnFollowerFilterChange, nil, (i==currentFollowers))
+	end
+	DDM_AddCloseMenu()
 end
 
 local callbacks = {
@@ -61,53 +223,60 @@ local callbacks = {
 			end
 		end,
 	GetSize = function() return #view end,
-	RowSetup = function(self, entry, row, dataRowID)
-			local name = view[dataRowID]
+	RowSetup = function(self, rowFrame, dataRowID)
+			local id = view[dataRowID]
+			local name = C_Garrison.GetFollowerNameByID(id)
+			rowFrame.Name.followerID = id
+			rowFrame.Name.followerName = name
+
 			if name then
-				local rowName = entry .. row
-				
-				_G[rowName.."Name"]:SetText((collected[name] and WHITE or GREY) .. name)
-				_G[rowName.."Name"]:SetJustifyH("LEFT")
-				_G[rowName.."Name"]:SetPoint("TOPLEFT", 15, 0)
+				rowFrame.Name.Text:SetText(WHITE .. name)
+				rowFrame.Name.Text:SetJustifyH("LEFT")
 			end
 		end,
-	ColumnSetup = function(self, entry, row, column, dataRowID, character)
-			local itemName = entry.. row .. "Item" .. column;
-			local itemTexture = _G[itemName .. "_Background"]
-			local itemButton = _G[itemName]
-			local itemText = _G[itemName .. "Name"]
+	RowOnEnter = function(self)
+			local id = self.followerID
+			local text = C_Garrison.GetFollowerSourceTextByID(id)
+			if not text then return end
 			
-			local name = view[dataRowID]
-			local _, rarity, level = DataStore:GetFollowerInfo(character, name)
+			AltoTooltip:SetOwner(self, "ANCHOR_TOP")
+			AltoTooltip:ClearLines()
+			AltoTooltip:AddLine(self.followerName, 1, 1, 1)
+			AltoTooltip:AddLine(" ")
+			AltoTooltip:AddLine(text)
+			AltoTooltip:Show()
+		end,
+	RowOnLeave = function(self)
+			AltoTooltip:Hide()
+		end,
+	ColumnSetup = function(self, button, dataRowID, character)
+			local id = view[dataRowID]
+			local rarity, level = DataStore:GetFollowerInfo(character, id)
 
-			-- id has to come from the reference, as we are listing all followers here (even those uncollected by some alts)
-			local id = DataStore:GetFollowerID(name)	
-
-			itemText:SetFontObject("NumberFontNormalSmall")
-			itemText:SetJustifyH("RIGHT")
-			itemText:SetPoint("BOTTOMRIGHT", 0, 0)
-			itemTexture:SetDesaturated(false)
-			itemTexture:SetTexCoord(0, 1, 0, 1)
-			GarrisonFollowerPortrait_Set(itemTexture, C_Garrison.GetFollowerPortraitIconIDByID(id))
-			-- itemTexture:SetToFileData(C_Garrison.GetFollowerPortraitIconIDByID(id))
+			button.Name:SetFontObject("NumberFontNormalSmall")
+			button.Name:SetJustifyH("RIGHT")
+			button.Name:SetPoint("BOTTOMRIGHT", 0, 0)
+			button.Background:SetDesaturated(false)
+			button.Background:SetTexCoord(0, 1, 0, 1)
+			GarrisonFollowerPortrait_Set(button.Background, C_Garrison.GetFollowerPortraitIconIDByID(id))
 			
 			if level then
-				itemButton.key = character
-				itemButton.followerName = name
-				itemTexture:SetVertexColor(1.0, 1.0, 1.0);
-				itemText:SetText(GREEN .. level)
+				button.key = character
+				button.followerID = id
+				button.Background:SetVertexColor(1.0, 1.0, 1.0);
+				button.Name:SetText(GREEN .. level)
 				
 				local r, g, b = GetItemQualityColor(rarity)
-				itemButton.border:SetVertexColor(r, g, b, 0.5)
-				itemButton.border:Show()
+				button.IconBorder:SetVertexColor(r, g, b, 0.5)
+				button.IconBorder:Show()
 				
 			else
-				itemButton.key = nil
-				itemButton.followerName = nil
-				itemTexture:SetVertexColor(0.4, 0.4, 0.4);
-				itemText:SetText("")
-				itemButton.border:SetVertexColor(1.0, 1.0, 1.0, 0.5)
-				itemButton.border:Hide()
+				button.key = nil
+				button.followerID = nil
+				button.Background:SetVertexColor(0.4, 0.4, 0.4);
+				button.Name:SetText("")
+				button.IconBorder:SetVertexColor(1.0, 1.0, 1.0, 0.5)
+				button.IconBorder:Hide()
 			end
 		end,
 	OnEnter = function(frame) 
@@ -115,7 +284,7 @@ local callbacks = {
 			if not character then return end
 
 			-- get the follower link
-			local link = DataStore:GetFollowerLink(character, frame.followerName)
+			local link = DataStore:GetFollowerLink(character, frame.followerID)
 			if not link then return end
 			
 			-- toggle the tooltip, use blizzard's own function for that
@@ -129,7 +298,7 @@ local callbacks = {
 			if not character then return end
 
 			-- get the follower link
-			local link = DataStore:GetFollowerLink(character, frame.followerName)
+			local link = DataStore:GetFollowerLink(character, frame.followerID)
 			if not link then return end
 			
 			-- on shift-click, insert in chat
@@ -144,9 +313,16 @@ local callbacks = {
 			FloatingGarrisonFollowerTooltip:Hide()
 		end,
 	InitViewDDM = function(frame, title)
-			frame:Hide()
-			title:Hide()
+			frame:Show()
+			title:Show()
+
+			local currentFollowers = addon:GetOption(OPTION_FOLLOWERS)
+			
+			UIDropDownMenu_SetWidth(frame, 100) 
+			UIDropDownMenu_SetButtonWidth(frame, 20)
+			UIDropDownMenu_SetText(frame, followerTypes[currentFollowers])
+			addon:DDM_Initialize(frame, DropDown_Initialize)
 		end,
 }
 
-addon.Tabs.Grids:RegisterGrid(12, callbacks)
+addon.Tabs.Grids:RegisterGrid(11, callbacks)

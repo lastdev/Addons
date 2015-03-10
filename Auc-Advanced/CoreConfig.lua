@@ -1,7 +1,7 @@
 --[[
 	Auctioneer
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
-	Revision: $Id: CoreConfig.lua 5461 2014-06-19 10:37:18Z brykrys $
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Revision: $Id: CoreConfig.lua 5534 2014-12-12 14:15:10Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -169,15 +169,14 @@ function lib.GetCommandLead(llibType, llibName)
 end
 
 function lib.About(all)
-	local rev = AucAdvanced.GetCurrentRevision()
-	private.Print(("Auctioneer rev.%d loaded"):format(rev))
+	private.Print(("Auctioneer version {{%s}}, revision %d"):format(AucAdvanced.Version, AucAdvanced.GetCurrentRevision()))
 
 	if (all) then
 		local revisionsList = AucAdvanced.GetRevisionList()
 
 		for file, revision in pairs(revisionsList) do
-			local shortName = file:match(".-/(%u.*)")
-			private.Print(("    File \"%s\", revision: %d"):format(shortName, revision))
+			local shortName = file:match(".-/(%u.*)") or file
+			private.Print(("    File \"%s\", revision %d"):format(shortName, revision))
 		end
 	end
 end
@@ -194,4 +193,4 @@ coremodule.Processors = {
 	gameactive = function() private.Activate() end,
 }
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Advanced/CoreConfig.lua $", "$Rev: 5461 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreConfig.lua $", "$Rev: 5534 $")

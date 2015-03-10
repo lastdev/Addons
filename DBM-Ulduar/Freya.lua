@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Freya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 144 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 178 $"):sub(12, -3))
 
 mod:SetCreatureID(32906)
 mod:SetEncounterID(1133)
@@ -34,7 +34,7 @@ local warnRoots				= mod:NewTargetAnnounce(62438, 2)
 local warnLifebinder		= mod:NewTargetAnnounce(62869, 3)--Actual spell is hidden from CLEU so we use a diff trigger.
 
 local specWarnLifebinder	= mod:NewSpecialWarningSpell(62869, false)
-local specWarnFury			= mod:NewSpecialWarningYou(63571)
+local specWarnFury			= mod:NewSpecialWarningMoveAway(63571)
 local specWarnTremor		= mod:NewSpecialWarningCast(62859)	-- Hard mode
 local specWarnBeam			= mod:NewSpecialWarningMove(62865)	-- Hard mode
 
@@ -44,8 +44,6 @@ local timerSimulKill		= mod:NewTimer(12, "TimerSimulKill")
 local timerFury				= mod:NewTargetTimer(10, 63571)
 local timerTremorCD 		= mod:NewCDTimer(28, 62859)
 local timerLifebinderCD 	= mod:NewCDTimer(40, 62869)
-
-local soundFury				= mod:NewSound(63571)
 
 mod:AddBoolOption("HealthFrame", true)
 mod:AddSetIconOption("SetIconOnFury", 63571, false)
@@ -87,7 +85,6 @@ function mod:SPELL_CAST_SUCCESS(args)
 		end
 		warnFury:Show(args.destName)
 		if args:IsPlayer() then -- only cast on players; no need to check destFlags
-			soundFury:Play()
 			specWarnFury:Show()
 		end
 		timerFury:Start(args.destName)

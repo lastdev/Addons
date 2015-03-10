@@ -9,6 +9,7 @@ local x = s.UpdatedVariables
 local GetMastery = GetMastery
 local GetSpellBonusDamage = GetSpellBonusDamage
 local GetSpellCritChance = GetSpellCritChance
+local UnitGUID = UnitGUID
 
 local unpack = unpack
 
@@ -16,9 +17,20 @@ a.Rotations = { }
 
 a.EotE = false
 
+local flameShockStrength = {}
+function a.NextFlameShockStrength()
+   return 1 +
+      (c.HasBuff("Unleash Flame") and 0.4 or 0) +
+      (c.GetBuffStack("Elemental Fusion") * 0.4)
+end
+function a.LastFlameShockStrength()
+   return flameShockStrength[UnitGUID("target")] or 0
+end
+
 function a.PreFlash()
    a.Ascended = c.HasBuff("Ascendance", false, false, true)
 end
+
 
 --------------------------------------------------------------------- Elemental
 a.Rotations.Elemental = {
@@ -29,12 +41,14 @@ a.Rotations.Elemental = {
    },
 
    SingleTargetPriorityList = {
-      "Unleash Flame for Unleashed Fury",
       "Spiritwalker's Grace for Elemental with Ascendance",
-      "Flame Shock Prime for Elemental",
+      "Earth Shock at cap",
+      "Flame Shock when expiring",
       "Lava Burst",
-      "Flame Shock Early",
+      "Unleash Flame for Unleashed Fury",
+      "Flame Shock to upgrade",
       "Earth Shock for Elemental",
+      "Flame Shock Early",
       "Earthquake single target",
       "Elemental Blast",
       "Flame Shock refresh for Ascendance",
@@ -46,7 +60,7 @@ a.Rotations.Elemental = {
    AoEPriorityList = {
       "Earthquake for AoE",
       "Lava Beam",
-      "Earth Shock",
+      "Earth Shock at cap",
       "Thunderstorm for damage",
       "Searing Totem",
       "Chain Lightning",
@@ -55,7 +69,6 @@ a.Rotations.Elemental = {
 
    FlashInCombat = function(r)
       c.FlashAll(
-         "Ancestral Swiftness for Elemental",
          "Ascendance for Elemental",
          "Fire Elemental Totem",
          "Spiritwalker's Grace",
@@ -72,20 +85,18 @@ a.Rotations.Elemental = {
          rotation = r.SingleTargetPriorityList
       end
 
-      c.PriorityFlash(
+      c.DelayPriorityFlash(
          -- common to both rotations
          "Elemental Mastery for Elemental",
          "Ancestral Swiftness for Elemental",
          "Storm Elemental Totem",
          "Fire Elemental Totem",
          "Ascendance for Elemental",
+         "Searing Totem for Liquid Magma",
          "Liquid Magma for Elemental",
          -- this must be the last item for this to work
          unpack(rotation)
       )
-   end,
-
-   MovementFallthrough = function()
    end,
 
    FlashOutOfCombat = function()
@@ -101,7 +112,7 @@ a.Rotations.Elemental = {
             "Unleash Flame for Unleashed Fury",
             "Earthquake",
             "Elemental Blast",
-            "Flame Shock for Elemental",
+            "Flame Shock Early",
             "Lava Burst"
          )
       end
@@ -116,6 +127,28 @@ a.Rotations.Elemental = {
 
    PreFlash = function()
       a.EotE = c.HasBuff("Echo of the Elements Buff: Ele", false, false, true)
+   end,
+
+   CastSucceeded_FromLog = function(spellID, target, targetID)
+      if spellID == c.GetID("Flame Shock") then
+         local strength = a.NextFlameShockStrength()
+         flameShockStrength[targetID] = strength
+         c.Debug("Event", "Flame Shock cast at", target, "@", strength)
+      end
+   end,
+
+   AuraApplied = function(spellID)
+      if spellID == c.GetID("Liquid Magma") then
+         c.Debug("Event", "Liquid Magma started")
+         a.LiquidMagma = true
+      end
+   end,
+
+   AuraRemoved = function(spellID)
+      if spellID == c.GetID("Liquid Magma") then
+         c.Debug("Event", "Liquid Magma stopped")
+         a.LiquidMagma = false
+      end
    end,
 }
 

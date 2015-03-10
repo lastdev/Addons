@@ -7,18 +7,18 @@ local util = oRA.util
 local module = oRA:NewModule("Gear")
 local L = scope.locale
 
-module.VERSION = tonumber(("$Revision: 836 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 855 $"):sub(12, -3))
 
 local gearTbl = {}
 
 function module:OnRegister()
 	oRA:RegisterList(
-		L["Gear"],
+		L.gear,
 		gearTbl,
-		L["Name"],
-		L["Item Level"],
-		L["Missing Gems"],
-		L["Missing Enchants"]
+		L.name,
+		L.itemLevel,
+		L.missingGems,
+		L.missingEnchants
 	)
 	oRA.RegisterCallback(self, "OnShutdown")
 	oRA.RegisterCallback(self, "OnListSelected")
@@ -27,12 +27,12 @@ function module:OnRegister()
 
 	SLASH_ORAGEAR1 = "/ragear"
 	SlashCmdList.ORAGEAR = function()
-		oRA:OpenToList(L["Gear"])
+		oRA:OpenToList(L.gear)
 	end
 end
 
 function module:OnGroupChanged()
-	oRA:UpdateList(L["Gear"])
+	oRA:UpdateList(L.gear)
 end
 
 function module:OnShutdown()
@@ -42,9 +42,9 @@ end
 do
 	local prev = 0
 	function module:OnListSelected(event, list)
-		if list == L["Gear"] then
+		if list == L.gear then
 			local t = GetTime()
-			if t-prev > 20 then
+			if t-prev > 15 then
 				prev = t
 				self:SendComm("QueryGear")
 			end
@@ -76,7 +76,7 @@ do
 	function module:OnCommReceived(_, sender, prefix, ilvl, gems, enchants)
 		if prefix == "QueryGear" then
 			local t = GetTime()
-			if t-prev > 20 then
+			if t-prev > 10 then
 				prev = t
 
 				local all, equipped = GetAverageItemLevel()
@@ -124,7 +124,7 @@ do
 			gearTbl[k][3] = tonumber(gems)
 			gearTbl[k][4] = tonumber(enchants)
 
-			oRA:UpdateList(L["Gear"])
+			oRA:UpdateList(L.gear)
 		end
 	end
 end

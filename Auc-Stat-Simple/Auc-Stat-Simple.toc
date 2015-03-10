@@ -7,7 +7,7 @@
 ## Dependencies: Auc-Advanced
 ## SavedVariables: AucAdvancedStatSimpleData
 ##
-## Version: 5.21c.5521 (SanctimoniousSwamprat)
+## Version: 5.21d.5538 (SanctimoniousSwamprat)
 ## Revision: $Id: Auc-Stat-Simple.toc 5488 2014-10-14 01:54:22Z dinesh $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer

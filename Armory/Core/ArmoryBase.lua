@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 647 2014-10-14T19:12:45Z
+    Revision: 664 2015-01-14T16:52:38Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -41,7 +41,7 @@ if ( not Armory ) then
 
         title = ARMORY_TITLE,
         version = GetAddOnMetadata("Armory", "Version"),
-        dbVersion = 36,
+        dbVersion = 37,
         interface = _G.GetBuildInfo(),
     };
 end
@@ -1019,6 +1019,28 @@ function Armory:IsDbCompatible()
             end
 
             upgraded = true;
+           
+        -- convert from 36 to 37
+        elseif ( dbVersion == 36 ) then
+            for class in pairs(ArmoryShared) do
+                entry = ArmoryShared[class];
+                if ( entry.Glyphs ) then
+                    local keys = {};
+                    for key in pairs(entry.Glyphs) do
+                        table.insert(keys, key);
+                    end
+                    for _, key in pairs(keys) do
+                        local newKey = self:GetGlyphKey(key);
+                        if ( newKey ~= key ) then
+                            entry.Glyphs[newKey] = entry.Glyphs[key];
+                            entry.Glyphs[key] = nil;
+                        end
+                    end
+                end
+            end
+            
+            upgraded = true;
+
 
 --[[
         -- convert from 20 to 21

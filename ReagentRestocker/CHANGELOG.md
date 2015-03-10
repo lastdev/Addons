@@ -11,6 +11,17 @@ other download sites.
 
  
 
+### v10.1
+
+-   Code cleanup, prints message that reagents have been deposited into Reagent
+    Bank.
+
+-   Fixed stocking from bank.
+
+-   Fixed automatic moving of reagents to reagent bank.
+
+ 
+
 ### v10.0
 
 -   Fixed bank overstocking

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Majordomo", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 549 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 554 $"):sub(12, -3))
 mod:SetCreatureID(12018, 11663, 11664)
 --mod:SetEncounterID(671)
 mod:SetModelID(12029)
@@ -16,7 +16,7 @@ local warnMagicReflect	= mod:NewSpellAnnounce(20619)
 local warnDamageShield	= mod:NewSpellAnnounce(21075)
 local warnTeleport		= mod:NewTargetAnnounce(20534)
 
-local specWarnMagicReflect		= mod:NewSpecialWarningSpell(20619, not mod:IsMelee())
+local specWarnMagicReflect		= mod:NewSpecialWarningSpell(20619, "-Melee")
 
 local timerMagicReflect	= mod:NewBuffActiveTimer(10, 20619)
 local timerDamageShield	= mod:NewBuffActiveTimer(10, 21075)

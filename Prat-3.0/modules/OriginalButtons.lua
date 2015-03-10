@@ -291,8 +291,8 @@ L:AddLocale("zhCN",
 {
 	alpha_desc = "设置所有聊天窗口里聊天菜单和聊天箭头的透明度。",
 	alpha_name = "设置透明度",
-	-- buttonframe_desc = "",
-	-- buttonframe_name = "",
+	buttonframe_desc = "切换框架菜单按钮开关.", -- Needs review
+	buttonframe_name = "显示框架按钮", -- Needs review
 	ChannelNames = "频道名字",
 	chatmenu_desc = "开启或关闭聊天菜单。",
 	chatmenu_name = "显示聊天菜单",

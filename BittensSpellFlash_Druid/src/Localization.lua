@@ -1,7 +1,7 @@
 -- To update a translation please use the localization utility at:
 -- http://wow.curseforge.com/addons/bittens-spellflash-druid/localization/
 
-local addonName, a = ...
+local _, a = ...
 a.Localize = setmetatable({ }, { __index = function(_, key) return key end })
 local L = a.Localize
 local locale = GetLocale()
@@ -13,10 +13,10 @@ L["Flash Resto"] = "Flash Restauração"
 L["Solo Mode when not Grouped"] = "Modo solo quando não estiver em grupo"
 
 elseif locale == "frFR" then -- French
-L["Flash Balance"] = "Clignotements pour Équilibre" -- Needs review
-L["Flash Feral"] = "Clignotements pour Farouche" -- Needs review
-L["Flash Guardian"] = "Clignotements pour Gardien" -- Needs review
-L["Flash Resto"] = "Clignotements pour Restauration" -- Needs review
+L["Flash Balance"] = "Flash Équilibre" -- Needs review
+L["Flash Feral"] = "Flash Farouche" -- Needs review
+L["Flash Guardian"] = "Flash Gardien" -- Needs review
+L["Flash Resto"] = "Flash Restauration" -- Needs review
 L["Solo Mode when not Grouped"] = "Mode solo si pas groupé" -- Needs review
 
 elseif locale == "deDE" then -- German

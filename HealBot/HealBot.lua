@@ -833,6 +833,12 @@ function HealBot_Reset()
     HealBot_Timers["HB3Th"]=0.2
     HealBot_Panel_ClearBlackList()
     HealBot_Panel_ClearHealTargets()
+    if HEALBOT_ORALIUS_WHISPERING_CRYSTAL=="--Oralius' Whispering Crystal" then
+        HEALBOT_ORALIUS_WHISPERING_CRYSTAL = GetItemInfo(118922) or "--Oralius' Whispering Crystal";
+    end
+    if HEALBOT_EVER_BLOOMING_FROND=="--Ever-Blooming Frond" then
+        HEALBOT_EVER_BLOOMING_FROND = GetItemInfo(118935) or "--Ever-Blooming Frond"
+    end
     HealBot_Action_ResethbInitButtons()
     HealBot_Action_EndAggro() 
     HealBot_Panel_ClearBarArrays()
@@ -1382,11 +1388,13 @@ function HealBot_OnUpdate(self)
                         if GetTime()>HealBot_luVars["hbInsNameCheck"] then
                             HealBot_Options_Timer[7950]=nil
                             HealBot_luVars["hbInsNameCheck"]=nil
+                            local tmpAreaId = GetCurrentMapAreaID()
                             SetMapToCurrentZone()
+                            local mapAreaID = GetCurrentMapAreaID()
+                            SetMapByID(tmpAreaId)
                             HealBot_setOptions_Timer(30)
                             local y,z = IsInInstance()
                             local mapName=HEALBOT_WORD_OUTSIDE
-                            local mapAreaID=GetCurrentMapAreaID()
                             if mapAreaID and mapAreaID>0 then
                                 mapName=GetMapNameByID(mapAreaID)
                             elseif z and z=="arena" then 
@@ -1590,7 +1598,11 @@ function HealBot_OnUpdate(self)
                 HealBot_IC_PartyMembersChanged()
             elseif HealBot_luVars["getMapID"] then
                 HealBot_luVars["getMapID"]=nil
-                HealBot_Data["MAPID"]=GetCurrentMapAreaID() or 0
+                local tmpAreaId = GetCurrentMapAreaID()
+                SetMapToCurrentZone()
+                local mapAreaID = GetCurrentMapAreaID()
+                SetMapByID(tmpAreaId)
+                HealBot_Data["MAPID"]=mapAreaID or 0
                 local difficultyID = GetDungeonDifficultyID()
                 if HealBot_Data["MAPID"]==930 and difficultyID>1 then
                     HealBot_luVars["ignoreFastHealthToT"]=true
@@ -1624,14 +1636,12 @@ function HealBot_OnUpdate(self)
         if HealBot_Timers["HB2Inc"]>HealBot_Timers["HB2Th"] and HealBot_Data["UNITSLOCK"]==0 then
             HealBot_Timers["HB2Inc"]=0
             aSwitch=aSwitch+1
-            if aSwitch<2 and (HealBot_luVars["DelayAuraBCheck"] or HealBot_luVars["DelayClearAggro"]) then
+            if aSwitch<2 and (HealBot_luVars["DelayAuraBCheck"] or HealBot_luVars["DelayClearAggro"] or HealBot_luVars["DelayAuraDCheck"] or Healbot_Config_Skins.Aggro[Healbot_Config_Skins.Current_Skin]["SHOW"]) then
                 if HealBot_luVars["DelayAuraBCheck"] then HealBot_doAuraBuff() end
                 if HealBot_luVars["DelayClearAggro"] then HealBot_doClearAggro() end
-            elseif aSwitch<3 and (HealBot_luVars["DelayAuraDCheck"] or Healbot_Config_Skins.Aggro[Healbot_Config_Skins.Current_Skin]["SHOW"]) then
                 if HealBot_luVars["DelayAuraDCheck"] then HealBot_doAuraDebuff() end
                 if Healbot_Config_Skins.Aggro[Healbot_Config_Skins.Current_Skin]["SHOW"] then HealBot_Action_CheckAggro() end
-                aSwitch=2
-            elseif aSwitch<4 and HealBot_luVars["EnemyBarsOn"] then
+            elseif aSwitch<3 and HealBot_luVars["EnemyBarsOn"] then
                 for xUnit,_ in pairs(HealBot_EnemyUnits) do
                     local xButton=HealBot_Unit_Button[xUnit]
                     if xButton then
@@ -1708,7 +1718,7 @@ function HealBot_OnUpdate(self)
                     end
                 end
                 if HealBot_luVars["checkEnemyAura"] and HealBot_luVars["checkEnemyAura"]<GetTime() then HealBot_luVars["checkEnemyAura"]=false end
-                aSwitch=3
+                aSwitch=2
             else
                 HealBot_Action_RefreshButtons()
                 if HealBot_Data["TIPUSE"]=="YES" and HealBot_Globals.TooltipUpdate and HealBot_Data["TIPUNIT"] then HealBot_Action_RefreshTooltip() end
@@ -1755,16 +1765,15 @@ function HealBot_doClearAggro()
     end
 end
 
-HealBot_luVars["DelayAuraDCheckMask"]=GetTime()
 function HealBot_doAuraDebuff()
     HealBot_luVars["DelayAuraDCheck"]=nil
     for xUnit,aTime in pairs(HealBot_DelayAuraDCheck) do
         if aTime<=GetTime() then
+            HealBot_DelayAuraDCheck[xUnit] = nil;
             local xButton=HealBot_Unit_Button[xUnit]
             if xButton and UnitExists(xUnit) then
                 HealBot_doAuraDebuffUnit(xButton)
             end
-            HealBot_DelayAuraDCheck[xUnit] = nil;
         else
             HealBot_luVars["DelayAuraDCheck"]=true
         end
@@ -1966,6 +1975,13 @@ function HealBot_OnEvent_VariablesLoaded(self)
         end
     end);
     
+    if HEALBOT_ORALIUS_WHISPERING_CRYSTAL=="--Oralius' Whispering Crystal" then
+        HEALBOT_ORALIUS_WHISPERING_CRYSTAL = GetItemInfo(118922) or "--Oralius' Whispering Crystal";
+    end
+    if HEALBOT_EVER_BLOOMING_FROND=="--Ever-Blooming Frond" then
+        HEALBOT_EVER_BLOOMING_FROND = GetItemInfo(118935) or "--Ever-Blooming Frond"
+    end
+    
     local pClass, pClassEN=UnitClass("player")
     HealBot_Data["PCLASSTRIM"]=strsub(pClassEN,1,4)
     
@@ -2034,6 +2050,7 @@ function HealBot_OnEvent_VariablesLoaded(self)
     HealBot_SkinsSubFrameSelectHealSortFrame:GetStatusBarTexture():SetHorizTile(false)
     HealBot_SkinsSubFrameSelectHealHideFrame:GetStatusBarTexture():SetHorizTile(false)
     HealBot_Options_Init(11)
+    HealBot_Action_SetResSpells()
 end
 
 function HealBot_useCrashProtection()
@@ -2809,7 +2826,6 @@ end
 
 function HealBot_DebuffMask(unit, nCheck)
     HealBot_DelayAuraDCheck[unit]=nCheck
-    HealBot_luVars["DelayAuraDCheck"]=true
     for xUnit,xButton in pairs(HealBot_Unit_Button) do
         if xUnit~=unit then
             if HealBot_DelayAuraDCheck[xUnit] and HealBot_DelayAuraDCheck[xUnit]<nCheck then
@@ -2821,6 +2837,7 @@ function HealBot_DebuffMask(unit, nCheck)
             end
         end
     end
+    HealBot_luVars["DelayAuraDCheck"]=true
 end
 
 function HealBot_SetUnitBuffTimer(hbGUID,buffName,endtime)
@@ -3190,6 +3207,7 @@ function HealBot_CheckUnitDebuffs(button)
     for dName,_ in pairs(curDebuffs) do
         local checkthis=false;
         local spellCD=0
+        
         if HealBot_Config_Cures.IgnoreOnCooldownDebuffs and not curDebuffs[dName]["isCustom"] then 
             spellCD=HealBot_Options_retDebuffWatchTargetCD(curDebuffs[dName]["type"])
             if spellCD>1.5 then DebuffNameIn="x" end
@@ -3202,7 +3220,7 @@ function HealBot_CheckUnitDebuffs(button)
                 elseif spellCD<=1.5 then    
                     WatchTarget, WatchGUID=HealBot_Options_retDebuffWatchTarget(curDebuffs[dName]["type"],xGUID);
                 end
-      
+
                 if WatchTarget then 
                     if WatchTarget["Raid"] then
                         checkthis=true;
@@ -3245,8 +3263,10 @@ function HealBot_CheckUnitDebuffs(button)
             DebuffSpellId=curDebuffs[dName]["spellId"]
         end 
         if spellCD>1.5 then
-            local nCheck=(GetTime()+spellCD)-0.15
+            local nCheck=(GetTime()+spellCD)-0.2
+            if spellCD>150 then HealBot_AddDebug("--> nCheck>150") end
             HealBot_DebuffMask(xUnit, nCheck)
+            break
         end
         if checkthis then
             button.debuff.type=curDebuffs[dName]["type"]
@@ -4803,10 +4823,8 @@ end
 
 function HealBot_OnEvent_UnitSpellcastStart(self,unit,spellName)
     if HealBot_Unit_Button[unit] then 
-        if (spellName==HEALBOT_RESURRECTION or spellName==HEALBOT_ANCESTRALSPIRIT or spellName==HEALBOT_REBIRTH or spellName==HEALBOT_REDEMPTION or spellName==HEALBOT_REVIVE or spellName==HEALBOT_RESUSCITATE) then
-            HealBot_Action_ResetUnitStatus(unit)
-        elseif spellName==HEALBOT_MASS_RESURRECTION then
-            HealBot_Action_MassRes()
+        if (spellName==HEALBOT_RESURRECTION or spellName==HEALBOT_ANCESTRALSPIRIT or spellName==HEALBOT_REBIRTH or spellName==HEALBOT_REDEMPTION or spellName==HEALBOT_REVIVE or spellName==HEALBOT_RESUSCITATE or spellName==HEALBOT_MASS_RESURRECTION) then
+            HealBot_Action_Res(spellName, unit)
         else
             HealBot_OnEvent_UnitThreat(unit)
         end

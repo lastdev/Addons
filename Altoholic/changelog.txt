@@ -9,6 +9,22 @@ This means cleaning the following files in \WTF\Account\<your_account>\SavedVari
 There WILL be bugs if you use your old files without cleaning them first. 
 Some fixes to work around API changes are too time consuming, so cleaning is required. A meager price to pay once per expansion.
 
+6.0.004 (09/01/2015)
+
+A massive code cleanup was performed, it should be mostly transparent for all of you, but code maintenance will be greatly improved for me.
+I also simplified a lot of XML frames with new conventions that Blizzard had activated certainly a while ago, but that I never had time to change.
+It's not finished, but it's a step in the right direction :)
+
+- Many options were not saved correctly, this has been fixed, as a result, these options have been reset (tooltip options, etc..)
+This options bug had, among others, impact on the account sharing feature that couldn't be launched anymore, Thanks Elfana for helping me on this !
+- DataStore_Garrisons: Fixed scanning collection of garrison cache resources. It could occasionally be wrongly reset when getting resources from other sources.
+- DataStore_Garrisons: Followers are now stored based on their id's, instead of their names. You will have to check your missions' table again with your alts to update follower information.
+- DataStore_Garrisons: added a slider to configure when the reporting for uncollected resources should happen (350 -> 475)
+- Grids -> Garrison Followers: added a drop down list to filter followers on whether they are collected, not collected, and if they were recruited at the inn or not.
+- Garrison blueprints now appear in red if already known, I applied the same rule as for BOP recipes from Garrison trainers, thus any BOP item with "Already known" will appear red in a merchant frame.
+- DataStore_Agenda: fixed another Lua error at logon introduced with previous fix. (Thanks again SpareSimian!)
+- DataStore_Mails: added an option to report mails about to expire to the chat frame, in addition to the already existing dialog box. This will allow you to see on which alt the mail can be found. Please keep me informed if you detect real bugs thanks to this.
+
 6.0.003 (27/12/2014)
 
 - DataStore_Garrisons: fixed a bug where saved buildings are deleted from the DB.

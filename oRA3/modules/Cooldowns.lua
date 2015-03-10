@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 -- Setup
 --
-
+-- XXX PEt DESTINATION FOR WARLOCK INTERUPT
 local addonName, scope = ...
 local oRA = scope.addon
 local module = oRA:NewModule("Cooldowns", "AceTimer-3.0")
@@ -11,7 +11,7 @@ local candy = LibStub("LibCandyBar-3.0")
 local media = LibStub("LibSharedMedia-3.0")
 local LGIST = LibStub("LibGroupInSpecT-1.1")
 
-module.VERSION = tonumber(("$Revision: 846 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 855 $"):sub(12, -3))
 
 --------------------------------------------------------------------------------
 -- Locals
@@ -107,7 +107,7 @@ local spells = {
 		[5217]  = 30,   -- Tiger's Fury
 		[1850]  = 180,  -- Dash
 		[740]   = 180,  -- Tranquility
-		[77761] = 120,  -- Stampeding Roar
+		[77761] = 120,  -- Stampeding Roar, Bear
 		[33831] = 30,   -- Force of Nature (3 charges)
 		[33891] = 180,  -- Incarnation: Tree of Life
 		[102543] = 180, -- Incarnation: King of the Jungle
@@ -341,7 +341,7 @@ local spells = {
 		[118000] = 60,  -- Dragon Roar
 	},
 	DEATHKNIGHT = {
-		[49576] = 25,   -- Death Grip -- XXX Perk reduces CD by 5s
+		[49576] = 20,   -- Death Grip -- XXX Perk reduces CD by 5s (base 25)
 		[47528] = 15,   -- Mind Freeze
 		[47476] = 60,   -- Strangulate
 		[48792] = 180,  -- Icebound Fortitude
@@ -400,14 +400,6 @@ local combatResSpells = {
 	[159931] = true, -- Gift of Chi-Ji
 }
 
-local petSpells = {
-	[90355] = true,  -- Ancient Hysteria
-	[160452] = true, -- Netherwinds
-	[171138] = true, -- Doomguard Shadow Lock
-	[115781] = true, -- Observer Optical Blast
-	[19647] = true,  -- Felhunter Spell Lock
-}
-
 local chargeSpells = {
 	-- these will always return the charge info with GetSpellCharges
 	[78674] = true,  -- Starsurge (3 charges)
@@ -431,6 +423,8 @@ local mergeSpells = { -- Used for merging multiple ids into one option
 	[171140] = 19647, -- Doomguard Shadow Lock (via Command Demon, originates from player)
 	[171139] = 19647, -- Doomguard Sacrifice, Shadow Lock
 	[95750]  = 20707, -- Combat Soulstone
+	[77764] = 77761, -- Stampeding Roar, Cat
+	[106898] = 77761, -- Stampeding Roar, Misc
 }
 
 local allSpells = {}
@@ -448,6 +442,8 @@ allSpells[119911] = 24 -- Observer Optical Blast (via Command Demon, originates 
 allSpells[115781] = 24 -- Observer Optical Blast (Normal, originates from pet)
 allSpells[171140] = 24 -- Doomguard Shadow Lock (via Command Demon, originates from player)
 allSpells[171139] = 24 -- Doomguard Sacrifice, Shadow Lock
+allSpells[77764] = 120 -- Spampeding Roar, Cat
+allSpells[106898] = 120 -- Spampeding Roar, Misc
 classLookup[95750] = "WARLOCK"
 classLookup[119910] = "WARLOCK"
 classLookup[132409] = "WARLOCK"
@@ -455,6 +451,8 @@ classLookup[119911] = "WARLOCK"
 classLookup[115781] = "WARLOCK"
 classLookup[171140] = "WARLOCK"
 classLookup[171139] = "WARLOCK"
+classLookup[77764] = "DRUID" -- Stampeding Roar, Cat
+classLookup[106898] = "DRUID" -- Stampeding Roar, Misc
 --allSpells[66235] = 110 -- Ardent Defender heal
 
 local db = nil
@@ -463,16 +461,17 @@ local mTypeBar = media and media.MediaType and media.MediaType.STATUSBAR or "sta
 local mTypeFont = media and media.MediaType and media.MediaType.FONT or "font"
 
 local options, restyleBars
-local lockDisplay, unlockDisplay, isDisplayLocked, showDisplay, hideDisplay, isDisplayShown
+local lockDisplay, unlockDisplay, showDisplay, hideDisplay
 local showPane, hidePane
 local combatLog
 local textures = media:List(mTypeBar)
 local fonts = media:List(mTypeFont)
+
 local function getOptions()
 	if not options then
 		options = {
 			type = "group",
-			name = L["Cooldowns"],
+			name = L.cooldowns,
 			get = function(k) return db[k[#k]] end,
 			set = function(k, v)
 				local key = k[#k]
@@ -496,29 +495,29 @@ local function getOptions()
 			args = {
 				showDisplay = {
 					type = "toggle",
-					name = L["Show monitor"],
-					desc = L["Show or hide the cooldown bar display in the game world."],
+					name = L.showMonitor,
+					desc = L.showMonitorDesc,
 					order = 1,
 					width = "full",
 				},
 				lockDisplay = {
 					type = "toggle",
-					name = L["Lock monitor"],
-					desc = L["Note that locking the cooldown monitor will hide the title and the drag handle and make it impossible to move it, resize it or open the display options for the bars."],
+					name = L.lockMonitor,
+					desc = L.lockMonitorDesc,
 					order = 2,
 					width = "full",
 				},
 				onlyShowMine = {
 					type = "toggle",
-					name = L["Only show my own spells"],
-					desc = L["Toggle whether the cooldown display should only show the cooldown for spells cast by you, basically functioning as a normal cooldown display addon."],
+					name = L.onlyMyOwnSpells,
+					desc = L.onlyMyOwnSpellsDesc,
 					order = 3,
 					width = "full",
 				},
 				neverShowMine = {
 					type = "toggle",
-					name = L["Never show my own spells"],
-					desc = L["Toggle whether the cooldown display should never show your own cooldowns. For example if you use another cooldown display addon for your own cooldowns."],
+					name = L.neverShowOwnSpells,
+					desc = L.neverShowOwnSpellsDesc,
 					order = 4,
 					width = "full",
 				},
@@ -530,14 +529,14 @@ local function getOptions()
 				},
 				shownow = {
 					type = "execute",
-					name = L["Open monitor"],
+					name = L.openMonitor,
 					func = showDisplay,
 					width = "full",
 					order = 11,
 				},
 				test = {
 					type = "execute",
-					name = L["Spawn test bar"],
+					name = L.spawnTestBar,
 					func = function()
 						module:SpawnTestBar()
 					end,
@@ -546,19 +545,19 @@ local function getOptions()
 				},
 				settings = {
 					type = "group",
-					name = L["Bar Settings"],
+					name = L.barSettings,
 					order = 20,
 					width = "full",
 					inline = true,
 					args = {
 						barClassColor = {
 							type = "toggle",
-							name = L["Use class color"],
+							name = L.useClassColor,
 							order = 13,
 						},
 						barColor = {
 							type = "color",
-							name = L["Custom color"],
+							name = L.customColor,
 							get = function() return unpack(db.barColor) end,
 							set = function(info, r, g, b)
 								db.barColor = {r, g, b, 1}
@@ -570,7 +569,7 @@ local function getOptions()
 						spacer = { type = "description", name = " ", order = 14.5 },
 						barHeight = {
 							type = "range",
-							name = L["Height"],
+							name = L.height,
 							order = 15,
 							min = 8,
 							max = 32,
@@ -578,7 +577,7 @@ local function getOptions()
 						},
 						barScale = {
 							type = "range",
-							name = L["Scale"],
+							name = L.scale,
 							order = 15,
 							min = 0.1,
 							max = 5.0,
@@ -586,7 +585,7 @@ local function getOptions()
 						},
 						barTexture = {
 							type = "select",
-							name = L["Texture"],
+							name = L.texture,
 							order = 17,
 							values = textures,
 							get = function()
@@ -604,36 +603,36 @@ local function getOptions()
 						},
 						barGrowUp = {
 							type = "toggle",
-							name = L["Grow up"],
+							name = L.growUpwards,
 							order = 19,
 							width = "full",
 						},
 						show = {
 							type = "group",
-							name = L["Show"],
+							name = L.show,
 							order = 20,
 							width = "full",
 							inline = true,
 							args = {
 								barShowIcon = {
 									type = "toggle",
-									name = L["Icon"],
+									name = L.icon,
 								},
 								barShowDuration = {
 									type = "toggle",
-									name = L["Duration"],
+									name = L.duration,
 								},
 								barShowUnit = {
 									type = "toggle",
-									name = L["Unit name"],
+									name = L.unitName,
 								},
 								barShowSpell = {
 									type = "toggle",
-									name = L["Spell name"],
+									name = L.spellName,
 								},
 								barShorthand = {
 									type = "toggle",
-									name = L["Short Spell name"],
+									name = L.shortSpellName,
 								},
 							},
 						},
@@ -641,7 +640,7 @@ local function getOptions()
 				},
 				labelSettings = {
 					type = "group",
-					name = L["Label Text Settings"],
+					name = L.labelTextSettings,
 					order = 21,
 					width = "full",
 					inline = true,
@@ -649,12 +648,12 @@ local function getOptions()
 					args = {
 						barLabelClassColor = {
 							type = "toggle",
-							name = L["Use class color"],
+							name = L.useClassColor,
 							order = 1,
 						},
 						barLabelColor = {
 							type = "color",
-							name = L["Custom color"],
+							name = L.customColor,
 							get = function() return unpack(db.barLabelColor) end,
 							set = function(info, r, g, b)
 								db.barLabelColor = {r, g, b, 1}
@@ -666,7 +665,7 @@ local function getOptions()
 						spacer = { type = "description", name = " ", order = 3 },
 						barLabelFont = {
 							type = "select",
-							name = L["Font"],
+							name = L.font,
 							order = 4,
 							values = fonts,
 							get = function()
@@ -684,19 +683,19 @@ local function getOptions()
 						},
 						barLabelFontSize = {
 							type = "range",
-							name = L["Font Size"],
+							name = L.fontSize,
 							order = 5,
 							min = 6, max = 24, step = 1,
 						},
 						barLabelOutline = {
 							type = "select",
-							name = L["Outline"],
+							name = L.outline,
 							order = 6,
-							values = { NONE = NONE, OUTLINE = L["Thin"], THICKOUTLINE = L["Thick"] },
+							values = { NONE = NONE, OUTLINE = L.thin, THICKOUTLINE = L.thick },
 						},
 						barLabelAlign = {
 							type = "select",
-							name = L["Label Align"],
+							name = L.labelAlign,
 							order = 7,
 							values = { LEFT = "Left", CENTER = "Center", RIGHT = "Right" },
 						},
@@ -704,7 +703,7 @@ local function getOptions()
 				},
 				durationSettings = {
 					type = "group",
-					name = L["Duration Text Settings"],
+					name = L.durationTextSettings,
 					order = 22,
 					width = "full",
 					inline = true,
@@ -712,12 +711,12 @@ local function getOptions()
 					args = {
 						barDurationClassColor = {
 							type = "toggle",
-							name = L["Use class color"],
+							name = L.useClassColor,
 							order = 1,
 						},
 						barDurationColor = {
 							type = "color",
-							name = L["Custom color"],
+							name = L.customColor,
 							get = function() return unpack(db.barLabelColor) end,
 							set = function(info, r, g, b)
 								db.barLabelColor = {r, g, b, 1}
@@ -729,7 +728,7 @@ local function getOptions()
 						spacer = { type = "description", name = " ", order = 3 },
 						barDurationFont = {
 							type = "select",
-							name = L["Font"],
+							name = L.font,
 							order = 9,
 							values = fonts,
 							get = function()
@@ -747,15 +746,15 @@ local function getOptions()
 						},
 						barDurationFontSize = {
 							type = "range",
-							name = L["Font Size"],
+							name = L.fontSize,
 							order = 10,
 							min = 6, max = 24, step = 1,
 						},
 						barDurationOutline = {
 							type = "select",
-							name = L["Outline"],
+							name = L.outline,
 							order = 11,
-							values = { NONE = NONE, OUTLINE = L["Thin"], THICKOUTLINE = L["Thick"] },
+							values = { NONE = NONE, OUTLINE = L.thin, THICKOUTLINE = L.thick },
 						},
 					},
 				},
@@ -842,7 +841,7 @@ do
 		frame:SetLayout("List")
 
 		local moduleDescription = AceGUI:Create("Label")
-		moduleDescription:SetText(L["Select which cooldowns to display using the dropdown and checkboxes below. Each class has a small set of spells available that you can view using the bar display. Select a class from the dropdown and then configure the spells for that class according to your own needs."])
+		moduleDescription:SetText(L.selectClassDesc)
 		moduleDescription:SetFontObject(GameFontHighlight)
 		moduleDescription:SetFullWidth(true)
 
@@ -854,7 +853,7 @@ do
 
 		group = AceGUI:Create("DropdownGroup")
 		group:SetLayout("Flow")
-		group:SetTitle(L["Select class"])
+		group:SetTitle(L.selectClass)
 		group:SetGroupList(classes)
 		group:SetCallback("OnGroupSelected", dropdownGroupCallback)
 		local _, playerClass = UnitClass("player")
@@ -894,8 +893,6 @@ do
 	local visibleBars = {}
 	local locked = nil
 	local shown = nil
-	function isDisplayLocked() return locked end
-	function isDisplayShown() return shown end
 
 	function module:GetBars()
 		return visibleBars
@@ -1052,7 +1049,7 @@ do
 
 	local function displayOnMouseDown(self, mouseButton)
 		if mouseButton ~= "RightButton" then return end
-		InterfaceOptionsFrame_OpenToCategory(L["Cooldowns"])
+		InterfaceOptionsFrame_OpenToCategory(L.cooldowns)
 	end
 
 	local function onDragStart(self) self:StartMoving() end
@@ -1126,11 +1123,11 @@ do
 		display.bg = bg
 		local header = display:CreateFontString(nil, "OVERLAY")
 		header:SetFontObject(GameFontNormal)
-		header:SetText(L["Cooldowns"])
+		header:SetText(L.cooldowns)
 		header:SetPoint("BOTTOM", display, "TOP", 0, 4)
 		local help = display:CreateFontString(nil, "HIGHLIGHT")
 		help:SetFontObject(GameFontNormal)
-		help:SetText(L["Right-Click me for options!"])
+		help:SetText(L.rightClick)
 		help:SetAllPoints(display)
 		display.header = header
 
@@ -1268,7 +1265,7 @@ function module:OnRegister()
 	db = database.profile
 
 	oRA:RegisterPanel(
-		L["Cooldowns"],
+		L.cooldowns,
 		showPane,
 		hidePane
 	)
@@ -1283,7 +1280,7 @@ function module:OnRegister()
 		db = database.profile
 	end)
 	candy.RegisterCallback(self, "LibCandyBar_Stop", barStopped)
-	oRA:RegisterModuleOptions("CoolDowns", getOptions, L["Cooldowns"])
+	oRA:RegisterModuleOptions("CoolDowns", getOptions, L.cooldowns)
 
 	playerName = UnitName("player")
 	playerGUID = UnitGUID("player")
@@ -1410,6 +1407,7 @@ do
 
 	local IsEncounterInProgress, band, inEncounter = IsEncounterInProgress, bit.band, nil
 	local group = bit.bor(COMBATLOG_OBJECT_AFFILIATION_MINE, COMBATLOG_OBJECT_AFFILIATION_PARTY, COMBATLOG_OBJECT_AFFILIATION_RAID)
+	local pet = bit.bor(COMBATLOG_OBJECT_TYPE_GUARDIAN, COMBATLOG_OBJECT_TYPE_PET)
 
 	local function getCooldown(guid, spellId)
 		local cd = allSpells[spellId]
@@ -1419,21 +1417,25 @@ do
 		return cd
 	end
 
+	local function checkCharges(srcGUID, source, spellId)
+		local charges, maxCharges, start, duration = GetSpellCharges(spellId)
+		if charges then -- your spell
+			if charges == 0 then
+				module:Cooldown(source, spellId, duration - (GetTime() - start))
+			end
+		elseif not module:IsOnCD(source, spellId) then -- guess cd, nothing displayed so assume it's the first charge
+			module:Cooldown(source, spellId, getCooldown(srcGUID, spellId))
+		end
+	end
+
 	function combatLog(_, _, _, event, _, srcGUID, source, srcFlags, _, _, _, _, _, spellId)
 		if source and (event == "SPELL_CAST_SUCCESS" or event == "SPELL_RESURRECT") and allSpells[spellId] and band(srcFlags, group) ~= 0 then
 			if combatResSpells[spellId] and inEncounter then
 				return
-			elseif petSpells[spellId] then
+			elseif band(srcFlags, pet) > 0 then
 				source, srcGUID = getPetOwner(source, srcGUID)
 			elseif chargeSpells[spellId] then
-				local charges, maxCharges, start, duration = GetSpellCharges(spellId)
-				if charges then -- your spell
-					if charges == 0 then
-						module:Cooldown(source, spellId, duration - (GetTime() - start))
-					end
-				elseif not module:IsOnCD(source, spellId) then -- guess cd, nothing displayed so assume it's the first charge
-					module:Cooldown(source, spellId, getCooldown(srcGUID, spellId))
-				end
+				module:ScheduleTimer(checkCharges, 0.1, srcGUID, source, spellId)
 				return
 			end
 			if mergeSpells[spellId] then

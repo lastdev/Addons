@@ -1,6 +1,6 @@
 ﻿if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 
-DBM_CORE_NEED_SUPPORT				= "¿Eres bueno programando o con los idiomas? Si es así, el Equipo DBM necesita tu ayuda para mantener el DBM como el mejor BossMod del WoW. Únete al equipo visitando www.deadlybossmods.com o enviando un mensaje a tandanu@deadlybossmods.com o nitram@deadlybossmods.com."
+DBM_CORE_NEED_SUPPORT				= "¿Eres bueno programando o con los idiomas? Si es así, el Equipo DBM necesita tu ayuda para mantener el DBM como el mejor BossMod del WoW. Únete al equipo visitando http://forums.elitistjerks.com/topic/132449-dbm-localizers-needed/"
 DBM_HOW_TO_USE_MOD					= "Bienvenido a DBM. Para acceder a las opciones escribe /dbm en tu chat para empezar a configurarlo. Puedes cargar las zonas manualmente para configurar las opciones específicas de cada Boss a tu gusto. DBM intenta hacer esto escaneando tu clase la primera vez que se inicia, pero quizás quieras más alertas de las que necesita tu clase."
 
 DBM_FORUMS_MESSAGE					= "¿Has encontrado un bug o un temporizador no va bien? ¿Piensas que algún jefe necesita un algún aviso adicional, un nuevo temporizador o alguna otra funcionalidad?\nVisita los nuevos foros de discusión, informe de bugs y solicitud de nuevas funcionalidades de Deadly Boss Mods en |HDBM:forums|h|cff3588ffhttp://www.deadlybossmods.com|r (puedes pulsar el enlace para copiar la URL)"
@@ -42,7 +42,7 @@ DBM_CORE_TIMER_FORMAT				= "%d |4minuto:minutos; y %d |4segundo:segundos;"
 DBM_CORE_MIN						= "min"
 DBM_CORE_MIN_FMT					= "%d min"
 DBM_CORE_SEC						= "seg"
-DBM_CORE_SEC_FMT					= "%d seg"
+DBM_CORE_SEC_FMT					= "%s seg"
 
 DBM_CORE_GENERIC_WARNING_OTHERS		= "y otro"
 DBM_CORE_GENERIC_WARNING_OTHERS2	= "y otros %d"
@@ -77,9 +77,6 @@ DBM_CORE_VERSIONCHECK_ENTRY_TWO		= "%s: %s (r%d) y %s (r%d)"--Two Boss mods
 DBM_CORE_VERSIONCHECK_ENTRY_NO_DBM	= "%s: DBM no instalado"
 DBM_CORE_VERSIONCHECK_FOOTER		= "Encontrados %d jugadores con Deadly Boss Mods"
 DBM_CORE_YOUR_VERSION_OUTDATED      = "¡Tu versión de Deadly Boss Mods es antigua! Por favor, visita www.deadlybossmods.com para bajarte la última versión."
-DBM_CORE_OUTDATED_PVP_MODS			= "¡Tu versión de DBM-PvP mods es antigua y debe ser eliminada si no se usa, o actualizada al nuevo paquete por separado. Estos mods ya no se incluyen conjuntamente con DBM-Core. La última versión del PVP mods puede edscargarse de http://www.deadlybossmods.com"
---DBM_BIG_WIGS						= "BigWigs"
---DBM_BIG_WIGS_ALPHA					= "BigWigs Alpha"
 
 DBM_CORE_UPDATEREMINDER_HEADER		= "La versión de tu Deadly Boss Mods es antigua.\n Version %s (r%d) disponible para descargar aqui:"
 DBM_CORE_UPDATEREMINDER_HEADER_ALPHA	= "La versión alpha de Deadly Boss Mods es antigua.\n Estás por lo menos %d versiones de test atrasado. Se recomienda a los usuarios de DBM que actualizen a la versión alpha más reciente o a la versión estable. Las versiones anticuadas pueden implementar funcionalidades incompletas o erroneas."
@@ -192,35 +189,41 @@ DBM_CORE_AUTO_SPEC_WARN_TEXTS.soon		= "%s pronto"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.prewarn		= "%s en %s"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel		= "%s en >%%s< - ¡dispelea ahora!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt	= "%s - ¡interrumpe >%%s<!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount	= "%s - ¡interrumpe >%%s<! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you			= "¡%s en ti!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target		= "%s en >%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close		= "%s en >%%s< cerca tuyo"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move		= "%s - ¡muévete!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.dodge 	= DBM_CORE_AUTO_SPEC_WARN_TEXTS.move--FIXME (this is a temp until localized properly as a dodge warning)
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.run			= "%s - ¡corre!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast		= "%s - ¡para de castear!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.reflect		= "%s en >%%s< - ¡para de atacar!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.count		= "%s! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack		= "%%d acumulaciones de %s en ti"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch		= ">%s< - ¡cambio de objetivos!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= ">%s< - ¡cambio de objetivos! (%%d)"
 
 -- Auto-generated Special Warning Localizations
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.spell 		= "Mostrar aviso especial para $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.ends 		= "Mostrar aviso especial cuando $spell:%s ha terminado"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.fades 		= "Mostrar aviso especial cuando $spell:%s se ha disipado"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.soon 		= "Mostrar pre-aviso para $spell:%s"
-DBM_CORE_AUTO_SPEC_WARN_OPTIONS.prewarn 	= "Mostrar pre-aviso %d segundos antes de $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.prewarn 	= "Mostrar pre-aviso %s segundos antes de $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dispel 		= "Mostrar aviso especial para limpiar/robar $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt	= "Mostrar aviso especial para interrumpir $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you 		= "Mostrar aviso especial cuando te afecte $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target 		= "Mostrar aviso especial cuando a alguien le afecte $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close 		= "Mostrar aviso especial cuando a alguien cerca tuyo le afecte $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move 		= "Mostrar aviso especial para salir de $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dodge 		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move--FIXME (this is a temp until localized properly as a dodge warning)
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run 		= "Mostrar aviso especial para huir de $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.cast 		= "Mostrar aviso especial para parar de castear por $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.reflect 	= "Mostrar aviso especial para parar de atacar por $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.count 		= "Mostrar aviso especial para $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack 		= "Mostrar aviso especial cuando tienes >=%d acumulaciones de $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch		= "Mostrar aviso especial para cambiar objetivos con $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
 
 -- Auto-generated Timer Localizations
 DBM_CORE_AUTO_TIMER_TEXTS.target		= "%s: >%%s<"
@@ -255,7 +258,7 @@ DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Reproducir sonido de cuenta atrás para 
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT2		= "Reproducir sonido de cuenta atrás para cuando $spell:%s se disipa"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Reproducir sonido de la duración de $spell:%s"
 DBM_CORE_AUTO_YELL_OPTION_TEXT			= "Gritar cuando tengas $spell:%s"
-DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT		= "¡%s en " .. UnitName("player") .. "!"
+DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.yell	= "¡%s en " .. UnitName("player") .. "!"
 DBM_CORE_AUTO_RANGE_OPTION_TEXT			= "Mostrar radar de rango (%s) para $spell:%s"--string used for range so we can use things like "5/2" as a value for that field
 DBM_CORE_AUTO_RANGE_OPTION_TEXT_SHORT	= "Mostrar radar de rango (%s)"--For when a range frame is just used for more than one thing
 DBM_CORE_AUTO_INFO_FRAME_OPTION_TEXT	= "Mostrar cuadro de información para $spell:%s"
@@ -289,8 +292,9 @@ DBM_INSTANCE_INFO_REQUESTED			= "Enviar solicitud de ID de estancias al grupo de
 DBM_INSTANCE_INFO_STATUS_UPDATE		= "Se ha obtenido respuesta de %d jugadores de %d usuarios de DBM: %d han enviado los datos, %d han denegado la solicitud. Se esperará %d segundos más para respuestas..."
 DBM_INSTANCE_INFO_ALL_RESPONSES		= "Se ha recibido respuestas de todos los miembros de la banda"
 DBM_INSTANCE_INFO_DETAIL_DEBUG		= "Personaje: %s Resultado: %s Estancia: %s IDEstancia: %s Difficultad: %d Tamaño: %d Progreso: %s"
-DBM_INSTANCE_INFO_DETAIL_HEADER		= "%s (%d), dificultad %d:"
+DBM_INSTANCE_INFO_DETAIL_HEADER		= "%s, dificultad %s:"
 DBM_INSTANCE_INFO_DETAIL_INSTANCE	= "    ID %s, progreso %d: %s"
+DBM_INSTANCE_INFO_DETAIL_INSTANCE2	= "    progreso %d: %s"
 DBM_INSTANCE_INFO_STATS_DENIED		= "Han denegado la solicitud: %s"
 DBM_INSTANCE_INFO_STATS_AWAY		= "Ausentes: %s"
 DBM_INSTANCE_INFO_STATS_NO_RESPONSE	= "No tienen una versión reciente de DBM instalada: %s"

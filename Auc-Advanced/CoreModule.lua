@@ -1,6 +1,6 @@
 --[[
 	Auctioneer
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
 	Revision: $Id: CoreModule.lua 5313 2012-07-27 13:29:49Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -154,4 +154,4 @@ function lib.CoreModuleOnLoad(addon)
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Advanced/CoreModule.lua $", "$Rev: 5313 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreModule.lua $", "$Rev: 5313 $")

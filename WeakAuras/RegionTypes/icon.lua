@@ -1,14 +1,8 @@
 local SharedMedia = LibStub("LibSharedMedia-3.0");
-local LBF = nil --LibStub("LibButtonFacade",true);
-
-local borderOffset = 0.06
+local MSQ = LibStub("Masque", true);
 
 local default = {
     icon = true,
---    iconInset = 0.0,
---    BFskin = "Blizzard",
---    BFgloss = 0.0,
---    BFbackdrop = false,
     desaturate = false,
     auto = true,
     inverse = false,
@@ -36,6 +30,34 @@ local function SkinChanged(skinID, gloss, backdrop, colors, button)
 
 end
 
+local function GetTexCoord(region, texWidth)
+    local texCoord
+
+    if region.MSQGroup then
+        region.MSQGroup:ReSkin();
+
+        local db = region.MSQGroup.db
+        if db and not db.Disabled then
+            local currentCoord = {region.icon:GetTexCoord()}
+
+            texCoord = {}
+            for i, coord in pairs(currentCoord) do
+                if coord > 0.5 then
+                    texCoord[i] = coord - coord * texWidth
+                else
+                    texCoord[i] = coord + (1 - coord) * texWidth
+                end
+            end
+        end
+    end
+
+    if not texCoord then
+        texCoord = {texWidth, texWidth, texWidth, 1 - texWidth, 1 - texWidth, texWidth, 1 - texWidth, 1 - texWidth}
+    end
+
+    return unpack(texCoord)
+end
+
 local function create(parent, data)
     local font = "GameFontHighlight";
 
@@ -45,19 +67,17 @@ local function create(parent, data)
     region:SetMinResize(1, 1);
 
     local button
-    if LBF then
-        button = CreateFrame("Button", nil, region, "UIPanelButtonTemplate")
+    if MSQ then
+        button = CreateFrame("Button", nil, region)
         button.data = data
         region.button = button;
         button:EnableMouse(false);
         button:Disable();
         button:SetAllPoints();
-
-        LBF:RegisterSkinCallback("WeakAuras", SkinChanged)
     end
 
     local icon = region:CreateTexture(nil, "BACKGROUND");
-    if LBF then
+    if MSQ then
         icon:SetAllPoints(button);
     else
         icon:SetAllPoints(region);
@@ -99,10 +119,9 @@ end
 local function modify(parent, region, data)
     local button, icon, cooldown, stacks = region.button, region.icon, region.cooldown, region.stacks;
 
-    if LBF and not region.LBFGroup then
-        region.LBFGroup = LBF:Group("WeakAuras", region.frameId);
-        region.LBFGroup:Skin(data.BFskin, data.BFgloss, data.BFbackdrop);
-        region.LBFGroup:AddButton(button, {Icon = icon, Cooldown = cooldown});
+    if MSQ and not region.MSQGroup then
+        region.MSQGroup = MSQ:Group("WeakAuras", region.frameId);
+        region.MSQGroup:AddButton(button, {Icon = icon, Cooldown = cooldown});
 
         button.data = data
     end
@@ -115,7 +134,9 @@ local function modify(parent, region, data)
 
     region:SetWidth(data.width);
     region:SetHeight(data.height);
-    if LBF then
+    if MSQ then
+        button:SetWidth(data.width);
+        button:SetHeight(data.height);
         button:SetAllPoints();
     end
     icon:SetAllPoints();
@@ -147,17 +168,7 @@ local function modify(parent, region, data)
 
     local texWidth = 0.25 * data.zoom;
 
-    local bo
-    if region.LBFGroup then
-        region.LBFGroup:ReSkin();
-        bo = borderOffset
-
-        icon:SetWidth(icon:GetWidth()   - bo * icon:GetWidth()  * UIParent:GetScale() * data.iconInset*10)
-        icon:SetHeight(icon:GetHeight() - bo * icon:GetHeight() * UIParent:GetScale() * data.iconInset*10)
-    else
-        bo = 0.0
-    end
-    icon:SetTexCoord(texWidth + bo, 1 - bo - texWidth, texWidth + bo, 1 - bo - texWidth);
+    icon:SetTexCoord(GetTexCoord(region, texWidth))
 
     local tooltipType = WeakAuras.CanHaveTooltip(data);
     if(tooltipType and data.useTooltip) then
@@ -178,7 +189,7 @@ local function modify(parent, region, data)
         region.color_b = b;
         region.color_a = a;
         icon:SetVertexColor(r, g, b, a);
-        if LBF then
+        if MSQ then
             button:SetAlpha(a);
         end
     end
@@ -212,7 +223,10 @@ local function modify(parent, region, data)
     if (customTextFunc) then
         local values = region.values;
         region.UpdateCustomText = function()
+            WeakAuras.ActivateAuraEnvironment(data.id);
             local custom = customTextFunc(region.expirationTime, region.duration, values.progress, values.duration, values.name, values.icon, values.stacks);
+            WeakAuras.ActivateAuraEnvironment(nil);
+            custom = WeakAuras.EnsureString(custom);
             if(custom ~= values.custom) then
                 values.custom = custom;
                 UpdateText();
@@ -356,45 +370,41 @@ local function modify(parent, region, data)
     end
 
     function region:Scale(scalex, scaley)
-        local mirror_h, mirror_v;
+        local mirror_h, mirror_v, width, height;
         if(scalex < 0) then
             mirror_h = true;
             scalex = scalex * -1;
         end
-        region:SetWidth(data.width * scalex);
+        width = data.width * scalex;
+        region:SetWidth(width);
         if(scaley < 0) then
             mirror_v = true;
             scaley = scaley * -1;
         end
-        region:SetHeight(data.height * scaley);
-        if LBF then
+        height = data.height * scaley;
+        region:SetHeight(height);
+        if MSQ then
+            button:SetWidth(width);
+            button:SetHeight(height);
             button:SetAllPoints();
         end
         icon:SetAllPoints();
 
         local texWidth = 0.25 * data.zoom;
-        local bo
-        if region.LBFGroup then
-            region.LBFGroup:ReSkin();
-            bo = borderOffset;
 
-            icon:SetWidth(icon:GetWidth()   - bo * icon:GetWidth()  * UIParent:GetScale() * data.iconInset*10)
-            icon:SetHeight(icon:GetHeight() - bo * icon:GetHeight() * UIParent:GetScale() * data.iconInset*10)
-        else
-            bo = 0.0;
-        end
+        local ulx, uly, llx, lly, urx, ury, lrx, lry = GetTexCoord(region, texWidth)
 
         if(mirror_h) then
             if(mirror_v) then
-                icon:SetTexCoord(1-bo-texWidth, 1-bo-texWidth , 1-bo-texWidth, texWidth+bo,    texWidth+bo, 1-bo-texWidth, texWidth+bo, texWidth+bo);
+                icon:SetTexCoord(lrx, lry, urx, ury, llx, lly, ulx, uly)
             else
-                icon:SetTexCoord(1-bo-texWidth, texWidth+bo,    1-bo-texWidth, 1-bo-texWidth , texWidth+bo, texWidth+bo,   texWidth+bo, 1-bo-texWidth);
+                icon:SetTexCoord(urx, ury, lrx, lry, ulx, uly, llx, lly)
             end
         else
             if(mirror_v) then
-                icon:SetTexCoord(texWidth+bo, 1-bo-texWidth, texWidth+bo, texWidth+bo,    1-bo-texWidth, 1-bo-texWidth, 1-bo-texWidth, texWidth+bo);
+                icon:SetTexCoord(llx, lly, ulx, uly, lrx, lry, urx, ury)
             else
-                icon:SetTexCoord(texWidth+bo, bo+texWidth,   texWidth+bo, 1-bo-texWidth , 1-bo-texWidth, texWidth+bo,   1-bo-texWidth, 1-bo-texWidth);
+                icon:SetTexCoord(ulx, uly, llx, lly, urx, ury, lrx, lry)
             end
         end
     end
@@ -412,10 +422,18 @@ local function modify(parent, region, data)
             end
             UpdateDurationInfo(duration, expirationTime, customValue)
         end
+        function region:PreShow()
+            if (region.duration > 0.01) then
+                cooldown:Show();
+                cooldown:SetCooldown(region.expirationTime - region.duration, region.duration);
+            end
+        end
     else
         cooldown:Hide();
         function region:SetDurationInfo(duration, expirationTime, customValue)
             UpdateDurationInfo(duration, expirationTime, customValue)
+        end
+        function region:PreShow()
         end
     end
 end

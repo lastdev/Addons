@@ -1,18 +1,13 @@
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "Foods", tonumber("20141215204639") or time()) then
+if u.SkipOrUpgrade(c, "Foods", tonumber("20150225020743") or time()) then
    return
 end
 
 local s = SpellFlashAddon
 
-local CR_HIT_MELEE = CR_HIT_MELEE
-local CR_HIT_SPELL = CR_HIT_SPELL
-local GetCombatRatingBonus = GetCombatRatingBonus
-local GetExpertise = GetExpertise
 local GetItemCount = GetItemCount
-local OffhandHasWeapon = OffhandHasWeapon
 local pairs = pairs
 
 local foods = {

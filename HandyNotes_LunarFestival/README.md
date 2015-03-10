@@ -6,7 +6,7 @@ What it does
 ------------
 
 This addon displays locations of unvisited Elders on the worldmap and minimap.
-If you also have TomTom or Cartographer installed, you can right-click on a marker to create a Waypoint arrow.
+If you also have [TomTom](http://www.curse.com/addons/wow/tomtom), you can right-click on a marker to create a Waypoint arrow.
 
 This addon is the successor to [TourGuide - The Lunar Festival](https://github.com/EthanCentaurai/TourGuide_LunarFestival), re-written as a HandyNotes plug-in due to TourGuide being broken and abandoned.
 
@@ -38,14 +38,6 @@ If you have any comments, bug reports or feature requests, please leave a commen
 * * *
 
 
-<<<<<<< HEAD
-=======
-About the Author
-----------------
-
-This addon was lovingly made by Ethan Centaurai, who usually plays as [Ulbrecht](http://eu.battle.net/wow/en/character/ghostlands/ulbrecht/simple) on Ghostlands-EU.
-
->>>>>>> 4813c50ec5e1201a0d218a2d8838b8f442e2ca23
 * Visit my [website](http://www.ethancentaurai.com/).
 * Follow me on [Twitter](http://twitter.com/StevenBlanchard).
 * Watch me on [GitHub](https://github.com/EthanCentaurai).

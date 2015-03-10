@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("RomuloAndJulianne", "DBM-Karazhan")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 527 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 554 $"):sub(12, -3))
 mod:SetCreatureID(17534, 17533, 99999)--99999 bogus screature id to keep mod from pre mature combat end.
 mod:SetModelID(17068)
 mod:RegisterCombat("yell", L.RJ_Pull)
@@ -24,7 +24,7 @@ local warnPhase3		= mod:NewPhaseAnnounce(3)
 local warningHeal		= mod:NewCastAnnounce(30878, 4)
 local warningDaring		= mod:NewTargetAnnounce(30841, 3)
 local warningDevotion	= mod:NewTargetAnnounce(30887, 3)
-local warningPosion		= mod:NewStackAnnounce(30830, 2, nil, mod:IsHealer() or mod:IsTank())
+local warningPosion		= mod:NewStackAnnounce(30830, 2, nil, "Tank|Healer")
 
 local timerHeal			= mod:NewCastTimer(2.5, 30878)
 local timerDaring		= mod:NewTargetTimer(8, 30841)

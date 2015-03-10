@@ -29,27 +29,26 @@ function(...)
 		-- does not exist until the player switches tabs.
 		
 
-		if _G.ReagentBankFrame.DespositButton then
-
-			-- Sadly, I've had to workaround an error message when
-			-- using DepositReagentBank when BANKFRAME_OPENED is
-			-- called the first time.
-			if not _G.BankFrameItemButton_Update_OLD then
-				_G.BankFrameItemButton_Update_OLD = _G.BankFrameItemButton_Update
-				
-				_G.BankFrameItemButton_Update = function(button)
-					if _G.BankFrameItemButton_Update_PASS == false then
-						_G.BankFrameItemButton_Update_OLD(button)
-					else
-						_G.BankFrameItemButton_Update_PASS = false
-					end
+		-- I've had to work around an error message when using
+		-- DepositReagentBank when BANKFRAME_OPENED is called
+		-- the first time.
+		if not _G.BankFrameItemButton_Update_OLD then
+			_G.BankFrameItemButton_Update_OLD = _G.BankFrameItemButton_Update
+			
+			_G.BankFrameItemButton_Update = function(button)
+				if _G.BankFrameItemButton_Update_PASS == false and button ~= nil then
+					_G.BankFrameItemButton_Update_OLD(button)
+				elseif button == nil then
+					-- Grr, they changed it again.
+				else
+					_G.BankFrameItemButton_Update_PASS = false
 				end
 			end
-			
-			_G.BankFrameItemButton_Update_PASS = true
-			_G.DepositReagentBank()
 		end
-		--_G.DepositReagentBank()
+		
+		_G.BankFrameItemButton_Update_PASS = true
+		_G.DepositReagentBank()
+		print("Reagents deposited into Reagent Bank.")
 	end
 	
 	--ReagentRestocker:triggerAction(BANKFRAME_OPENED_EVENT)
@@ -738,7 +737,7 @@ function placeItem(location, bag, slot, itemID)
 	local itemCount, locked
 	if location == TYPE_GUILDBANK then
 		_, itemCount, locked = _G.GetGuildBankItemInfo(bag, slot)
-		if locked == nil and _G.CursorHasItem() then -- Make sure we have an item to place
+		if (not locked) and _G.CursorHasItem() then -- Make sure we have an item to place
 			_, _, iName = _G.GetCursorInfo()
 			dprint("Cursor has " .. iName)
 			_G.PickupGuildBankItem(bag, slot)
@@ -753,7 +752,12 @@ function placeItem(location, bag, slot, itemID)
 		end
 	else
 		_, itemCount, locked = GetContainerItemInfo(bag, slot)
-		if locked == nil and _G.CursorHasItem() then -- Make sure we have an item to place
+		if locked then
+			dprint("Placing item in bag:" .. bag .. " slot:"..slot.." (locked)")
+		else
+			dprint("Placing item in bag:" .. bag .. " slot:"..slot.." (not locked)")
+		end
+		if (not locked) and _G.CursorHasItem() then -- Make sure we have an item to place
 			_, _, iName = _G.GetCursorInfo()
 			dprint("Cursor has " .. iName)
 			_G.PickupContainerItem(bag, slot)
@@ -764,7 +768,7 @@ function placeItem(location, bag, slot, itemID)
 			--dprint("queueing place")
 			--queuePlace(location, bag, slot, itemID)
 			--queueAction(nil, function() placeItem(location, bag, slot, itemID) end, nil, "placeItem (2)")
-			dprint("locked(2)")
+			dprint("locked(2x)")
 			--error("locked(2)")
 			return false
 		end

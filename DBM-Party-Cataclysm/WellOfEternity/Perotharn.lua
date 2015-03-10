@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(290, "DBM-Party-Cataclysm", 13, 185)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
 mod:SetCreatureID(55085)
 --mod:SetMinSyncRevision(6792)
 mod:SetMinSyncRevision(19)--Could break if someone is running out of date version with higher revision
@@ -17,15 +17,15 @@ mod:RegisterEventsInCombat(
 mod.onlyHeroic = true
 
 local warnFelFlames			= mod:NewTargetAnnounce(108141, 3)
-local warnDecay				= mod:NewTargetAnnounce(105544, 3, nil, mod:IsHealer())
-local warnFelQuickening		= mod:NewTargetAnnounce(104905, 3, nil, mod:IsHealer() or mod:IsTank())
+local warnDecay				= mod:NewTargetAnnounce(105544, 3, nil, "Healer")
+local warnFelQuickening		= mod:NewTargetAnnounce(104905, 3, nil, "Tank|Healer")
 
 local specWarnFelFlames		= mod:NewSpecialWarningMove(108141)
 
 local timerFelFlamesCD		= mod:NewNextTimer(8.4, 108141)
-local timerDecay			= mod:NewTargetTimer(10, 105544, nil, mod:IsHealer())
-local timerDecayCD			= mod:NewNextTimer(17, 105544, nil, mod:IsHealer())
-local timerFelQuickening	= mod:NewBuffActiveTimer(15, 104905, nil, mod:IsHealer() or mod:IsTank())
+local timerDecay			= mod:NewTargetTimer(10, 105544, nil, "Healer")
+local timerDecayCD			= mod:NewNextTimer(17, 105544, nil, "Healer")
+local timerFelQuickening	= mod:NewBuffActiveTimer(15, 104905, nil, "Tank|Healer")
 
 local function showFelFlamesWarning()
 	local targetname = mod:GetBossTarget(55085)

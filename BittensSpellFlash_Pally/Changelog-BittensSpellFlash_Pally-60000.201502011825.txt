@@ -1,0 +1,82 @@
+------------------------------------------------------------------------
+r142 | slippycheeze | 2015-02-02 02:40:31 +0000 (Mon, 02 Feb 2015) | 1 line
+Changed paths:
+   A /tags/60000.201502011825 (from /trunk:140)
+
+Note: new version format for this release
+------------------------------------------------------------------------
+r140 | slippycheeze | 2015-01-25 20:57:57 +0000 (Sun, 25 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/src/Localization.lua
+
+Fix localization use
+------------------------------------------------------------------------
+r138 | slippycheeze | 2015-01-24 07:04:00 +0000 (Sat, 24 Jan 2015) | 4 lines
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Localization.lua
+   M /trunk/src/Options.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Improve Eternal Flame handling
+
+It should now flash much more appropriately, and avoid overwriting
+itself with a weaker version.
+------------------------------------------------------------------------
+r136 | slippycheeze | 2015-01-24 04:15:41 +0000 (Sat, 24 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/src/IDs.lua
+   M /trunk/src/Spells.lua
+
+Fix Consecration cooldown with Glyph of the Consecrator
+------------------------------------------------------------------------
+r134 | slippycheeze | 2015-01-19 04:59:36 +0000 (Mon, 19 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Improve Divine Purpose handling
+------------------------------------------------------------------------
+r132 | slippycheeze | 2015-01-17 04:46:18 +0000 (Sat, 17 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Drop Seal of Truth for Prot, after the nerf
+------------------------------------------------------------------------
+r130 | slippycheeze | 2015-01-12 06:56:55 +0000 (Mon, 12 Jan 2015) | 6 lines
+Changed paths:
+   M /trunk/src/Options.lua
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Use Seal of Truth as Prot, when solo, for extra DPS
+
+This is a smart implementation: as soon as you start hurting, it will
+strongly suggest flipping back to insight, but generally while questing
+you end up without substantial pain -- making the extra DPS, small as it
+is, worth it.
+------------------------------------------------------------------------
+r128 | slippycheeze | 2015-01-12 05:31:15 +0000 (Mon, 12 Jan 2015) | 7 lines
+Changed paths:
+   M /trunk/src/Options.lua
+   M /trunk/src/Rotations.lua
+
+Implement high contrast flash mode for Pally
+
+Since so many spells are yellow/gold in color, the default white/yellow
+flashing is actually super-hard to see.  This uses the new rotation
+flash color feature from the library to allow users to opt-in to a high
+contrast option for Pally, which has a pink/purple flash color that is
+much higher contrast with the sea of gold that pally spells present.
+------------------------------------------------------------------------
+r127 | slippycheeze | 2015-01-12 05:31:11 +0000 (Mon, 12 Jan 2015) | 3 lines
+Changed paths:
+   M /trunk/src/Rotations.lua
+   M /trunk/src/Spells.lua
+
+Add prot pre-combat flashing
+
+Also, clean up various luacheck warnings, like unusual variables and args.
+------------------------------------------------------------------------

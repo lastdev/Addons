@@ -395,6 +395,8 @@ L["ARMORY_OPEN_HINT"] = "Clic pour ouvrir"
 L["ARMORY_PANDARIA_GEM_RESEARCH"] = "Recherche de gemme pandarène" -- Needs review
 L["ARMORY_QUEST_TOOLTIP_LABEL"] = "Alts ayant cette quête :"
 L["ARMORY_RECIPE"] = "Recette"
+L["ARMORY_RECIPE_WARNING"] = [=[Recipe %s not found in LibCraftInfo. Trying to make an educated guess.
+Please check with '/armory find skill ...' to be sure.]=] -- Requires localization
 L["ARMORY_REPUTATION_SUMMARY"] = "%1$s - %2$s (%3$d/%4$d, %5$d restant)"
 L["ARMORY_SEARCHING"] = "Recherche..."
 L["ARMORY_SELECT_UNIT_HINT"] = "Clic-gauche pour sélectionner ce personnage."

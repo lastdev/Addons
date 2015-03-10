@@ -485,23 +485,25 @@ function ns:SetCategory(categoryID)
 end
 
 function ns:Update()
-	local VisibleLines = 8
-	local frame = "AltoholicFrameAchievements"
-	local entry = frame.."Entry"
+	local numRows = 8
 	
-	local offset = FauxScrollFrame_GetOffset( _G[ frame.."ScrollFrame" ] );
+	local frame = AltoholicFrameAchievements
+	local offset = FauxScrollFrame_GetOffset(frame.ScrollFrame)
+	
 	local categorySize = GetCategorySize(currentCategoryID)
-	
+		
 	local realm, account = addon.Tabs.Achievements:GetRealm()
 	local character
-		
 	local achStatus
 	local isAccountBound
+	local itemButton
 	
-	AltoholicTabAchievementsStatus:SetText(format("%s: %s", ACHIEVEMENTS, GREEN..categorySize ))
+	AltoholicTabAchievements.Status:SetText(format("%s: %s", ACHIEVEMENTS, GREEN..categorySize ))
 	
-	for i=1, VisibleLines do
-		local line = i + offset
+	for rowIndex = 1, numRows do
+		local rowFrame = frame["Entry"..rowIndex]
+		local line = rowIndex + offset
+		
 		if line <= categorySize then	-- if the line is visible
 			local achievementID
 			local allianceID, hordeID = GetAchievementFactionInfo(currentCategoryID, line)
@@ -515,16 +517,15 @@ function ns:Update()
 			
 			isAccountBound = ( bit.band(flags, ACHIEVEMENT_FLAGS_ACCOUNT) == ACHIEVEMENT_FLAGS_ACCOUNT ) 
 			
-			_G[entry..i.."Name"]:SetText((isAccountBound and CYAN or WHITE) .. achName)
-			_G[entry..i.."Name"]:SetJustifyH("LEFT")
-			_G[entry..i.."Name"]:SetPoint("TOPLEFT", 15, 0)
+			rowFrame.Name.Text:SetText((isAccountBound and CYAN or WHITE) .. achName)
+			rowFrame.Name.Text:SetJustifyH("LEFT")
+			-- rowFrame.Name:SetPoint("TOPLEFT", 15, 0)
 			
-			for j = 1, 11 do
-				local itemName = entry.. i .. "Item" .. j;
-				local itemButton = _G[itemName]
-				local itemTexture = _G[itemName .. "_Background"]
+			for colIndex = 1, 11 do
+				itemButton = rowFrame["Item"..colIndex]
+				itemButton.IconBorder:Hide()
 				
-				character = addon:GetOption(format("Tabs.Achievements.%s.%s.Column%d", account, realm, j))
+				character = addon:GetOption(format("Tabs.Achievements.%s.%s.Column%d", account, realm, colIndex))
 				if character then
 					itemButton:SetScript("OnEnter", ButtonOnEnter)
 					itemButton:SetScript("OnClick", ButtonOnClick)
@@ -538,19 +539,19 @@ function ns:Update()
 					local isStarted, isComplete = DataStore:GetAchievementInfo(character, achievementID, isAccountBound)
 
 					if isComplete then
-						itemTexture:SetVertexColor(1.0, 1.0, 1.0);
+						itemButton.Background:SetVertexColor(1.0, 1.0, 1.0);
 						achStatus = ICON_READY
 					elseif isStarted then
 						achStatus = ICON_WAITING
-						itemTexture:SetVertexColor(0.9, 0.6, 0.2);
+						itemButton.Background:SetVertexColor(0.9, 0.6, 0.2);
 					else
 						achStatus = ICON_NOTREADY
-						itemTexture:SetVertexColor(0.4, 0.4, 0.4);
+						itemButton.Background:SetVertexColor(0.4, 0.4, 0.4);
 					end
 				
 					local _, _, _, _, _, _, _, _, _, achImage = GetAchievementInfo(achievementID)
-					itemTexture:SetTexture(achImage)
-					_G[itemName .. "Name"]:SetText(achStatus)
+					itemButton.Background:SetTexture(achImage)
+					itemButton.Name:SetText(achStatus)
 					
 					itemButton.id = achievementID
 					itemButton.key = character
@@ -562,11 +563,11 @@ function ns:Update()
 				end
 			end
 
-			_G[ entry..i ]:Show()
+			rowFrame:Show()
 		else
-			_G[ entry..i ]:Hide()
+			rowFrame:Hide()
 		end
 	end
 
-	FauxScrollFrame_Update( _G[ frame.."ScrollFrame" ], categorySize, VisibleLines, 41);
+	FauxScrollFrame_Update(frame.ScrollFrame, categorySize, numRows, 41)
 end

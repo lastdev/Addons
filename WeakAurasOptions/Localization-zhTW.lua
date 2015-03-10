@@ -191,12 +191,12 @@ L["Group aura count description"] = [=[%s的成員總數必須受到一個或多
 如果輸入的數字是一個小數(如0.5)，分數(例如1/ 2)，或百分比(例如50%%)，那麼這部分的%s必須受到影響。
 
 |cFF4444FF舉例：|r
-|cFF00CC00> 0|r 會觸發當任何人在%s已被影響
-|cFF00CC00= 100%%|r 會觸發當所有人在%s已被影響
-|cFF00CC00!= 2|r 會觸發當%s人員數量已被影響不完全2
-|cFF00CC00<= 0.8|r 會觸發當%s已被影響的少於80%% (4 of 5 隊伍成員， 8 of 10 or 20 of 25 團隊成員)
-|cFF00CC00> 1/2|r 會觸發當超過一半以上的%s已被影響
-|cFF00CC00>= 0|r 總是觸發，不管怎樣]=] -- Needs review
+|cFF00CC00> 0|r 當%s中的任何人受影響時觸發
+|cFF00CC00= 100%%|r 當%s中的所有人受影響時觸發
+|cFF00CC00!= 2|r 當%s中受影響的人數不為 2 時觸發
+|cFF00CC00<= 0.8|r 當%s中受影響的人數少於 80% 時觸發(5人隊伍時為4人、10人團隊時為8人、25人團隊時為20人)
+|cFF00CC00> 1/2|r 當%s中受影響的人數超過一半時觸發
+|cFF00CC00>= 0|r 無論何時總是觸發]=]
 L["Group Member Count"] = "群組成員總數"
 L["Group (verb)"] = "群組"
 L["Height"] = "高度"
@@ -204,7 +204,7 @@ L["Hide this group's children"] = "隱藏群組的子元素"
 L["Hide When Not In Group"] = "不再群組裡隱藏"
 L["Horizontal Align"] = "水平對齊"
 L["Icon Info"] = "圖示訊息"
--- L["Icon Inset"] = ""
+L["Icon Inset"] = "圖示內嵌"
 L["Ignored"] = "忽略"
 L["Ignore GCD"] = "忽略公共冷卻(GCD)"
 L["%i Matches"] = "%i符合"
@@ -286,7 +286,7 @@ L["Rotation"] = "旋轉"
 L["Same"] = "相同"
 L["Search"] = "搜尋"
 L["Secondary"] = "第二天賦"
--- L["Select the auras you always want to be listed first"] = ""
+L["Select the auras you always want to be listed first"] = "選擇要列在前面的特效"
 L["Send To"] = "發送到"
 L["Set tooltip description"] = "設定提示資訊文字"
 L["Shadow Dance"] = "暗影之舞"
@@ -337,7 +337,7 @@ L["Text Color"] = "文字顏色"
 L["Text Position"] = "文字定位"
 L["Text Settings"] = "文字設定"
 L["Texture"] = "材質"
--- L["Texture Info"] = ""
+L["Texture Info"] = "材質資料"
 L["The children of this group have different display types, so their display options cannot be set as a group."] = "群組的子元素有不同的特效類型，所以特效的選項無法設定到群組。"
 L["The duration of the animation in seconds."] = "動畫的持續時間(秒)。"
 L["The type of trigger"] = "觸發類型"

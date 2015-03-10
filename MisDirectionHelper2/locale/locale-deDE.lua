@@ -42,6 +42,7 @@ L["Profiles"] = "Profile" -- Needs review
 L["Project description"] = "Irref\195\188hrung / Schurkenhandel benutzen ohne das Ziel zu verlieren. Erstellt Makro zum Setzen und Ansagen von Irref\195\188hrung / Schurkenhandel." -- Needs review
 L["Right Click For MDH Options"] = "Rechtsklick f\195\188r die Optionen von MDH"
 L["Right click target: %s"] = "Rechtskilck Ziel: %s" -- Needs review
+L["%s casts %s on %s"] = "\"player\" casts \"spell\" on \"target\"" -- Requires localization
 L["%s casts Tricks of the Trade on %s"] = "%s wirke Schurkenhandel auf %s" -- Needs review
 L["Select"] = "Select" -- Requires localization
 L["Select Channel for Buff Announcements"] = "Chatkanal f\195\188r die Buff Ansagen w\195\164hlen"

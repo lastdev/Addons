@@ -3,7 +3,7 @@ local Recount = _G.Recount
 LibStub:GetLibrary("AceComm-3.0"):Embed(Recount)
 LibStub:GetLibrary("AceSerializer-3.0"):Embed(Recount)
 
-local revision = tonumber(string.sub("$Revision: 1269 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1292 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -18,7 +18,6 @@ local GetNumGroupMembers = GetNumGroupMembers
 local GetNumPartyMembers = GetNumPartyMembers or GetNumSubgroupMembers
 local GetNumRaidMembers = GetNumRaidMembers or GetNumGroupMembers
 local IsInInstance = IsInInstance
-local IsInRaid = IsInRaid
 local UnitExists = UnitExists
 local UnitGUID = UnitGUID
 local UnitIsConnected = UnitIsConnected
@@ -54,10 +53,10 @@ local PARTY_GUARDIAN_OWNER_FLAGS			= COMBATLOG_OBJECT_AFFILIATION_RAID + COMBATL
 local oldSendCommMessage = Recount.SendCommMessage
 function Recount.SendCommMessage(self, a, b, channel, ...)
 
-	--[[local _, instanceType = IsInInstance()
+	local _, instanceType = IsInInstance()
 	if instanceType == "pvp" or instanceType == "party" then
 		return
-	end]] -- Disabled sync in all cross-realm content
+	end -- Disabled sync in all cross-realm content
 
 	if channel == "RAID" and GetNumRaidMembers() > 0 then
 		--Recount:DPrint("A "..a.." "..channel)
@@ -72,13 +71,13 @@ end
 
 function Recount:CheckVisible()
 
-	--[[local _ , instanceType = IsInInstance()
+	local _ , instanceType = IsInInstance()
 
 	if instanceType == "pvp" or instanceType == "party" then
 		return
-	end]] -- Disabled sync in all cross-realm content
+	end -- Disabled sync in all cross-realm content
 
-	if IsInRaid() and GetNumRaidMembers() > 0 then
+	if GetNumRaidMembers() > 0 then
 		for i = 1, GetNumRaidMembers(), 1 do
 			local unitid = "raid"..i
 			if not UnitIsVisible(unitid) and UnitExists(unitid) then
@@ -91,7 +90,6 @@ function Recount:CheckVisible()
 				end
 
 				dbCombatants[name].lazysync = true
-				Recount.lazysync = true
 			end
 		end
 	elseif GetNumPartyMembers() > 0 then
@@ -107,11 +105,9 @@ function Recount:CheckVisible()
 				end
 
 				dbCombatants[name].lazysync = true
-				Recount.lazysync = true
 			end
 		end
 	end
-
 end
 
 function Recount:SendSelf(target)
@@ -124,13 +120,13 @@ function Recount:SendSelf(target)
 	end
 
 	local serialdata
-	local damage = Recount:GetLazySyncAmount(myname, myname, "Damage") or 0
-	local damagetaken = Recount:GetLazySyncAmount(myname, myname, "DamageTaken") or 0
-	local healing = Recount:GetLazySyncAmount(myname, myname, "Healing") or 0
-	local healingtaken = Recount:GetLazySyncAmount(myname, myname, "HealingTaken") or 0
-	local overhealing = Recount:GetLazySyncAmount(myname, myname, "Overhealing") or 0
-	local activetime = Recount:GetLazySyncAmount(myname, myname, "ActiveTime") or 0
-	serialdata = Recount:Serialize("PS", myname, myname, damage, damagetaken, healing, overhealing, healingtaken, activetime)
+	local damage = Recount:GetLazySyncAmount(myname, myname,"Damage") or 0
+	local damagetaken = Recount:GetLazySyncAmount(myname, myname,"DamageTaken") or 0
+	local healing = Recount:GetLazySyncAmount(myname, myname,"Healing") or 0
+	local healingtaken = Recount:GetLazySyncAmount(myname, myname,"HealingTaken") or 0
+	local overhealing = Recount:GetLazySyncAmount(myname, myname,"Overhealing") or 0
+	local activetime = Recount:GetLazySyncAmount(myname, myname,"ActiveTime") or 0
+	serialdata = Recount:Serialize("PS",myname, myname, damage, damagetaken, healing, overhealing, healingtaken, activetime)
 
 	-- Prepare Pets
 	local data = combatant
@@ -140,14 +136,14 @@ function Recount:SendSelf(target)
 		for i = 1, #data.Pet do
 			local petname = data.Pet[i]
 			if Recount:GetLazySyncTouched(myname, petname) then
-				local damage = Recount:GetLazySyncAmount(myname, petname, "Damage") or 0
-				local damagetaken = Recount:GetLazySyncAmount(myname, petname, "DamageTaken") or 0
-				local healing = Recount:GetLazySyncAmount(myname, petname, "Healing") or 0
-				local healingtaken = Recount:GetLazySyncAmount(myname, petname, "HealingTaken") or 0
-				local overhealing = Recount:GetLazySyncAmount(myname, petname, "Overhealing") or 0
-				local activetime = Recount:GetLazySyncAmount(myname, petname, "ActiveTime") or 0
+				local damage = Recount:GetLazySyncAmount(myname, petname,"Damage") or 0
+				local damagetaken = Recount:GetLazySyncAmount(myname, petname,"DamageTaken") or 0
+				local healing = Recount:GetLazySyncAmount(myname, petname,"Healing") or 0
+				local healingtaken = Recount:GetLazySyncAmount(myname, petname,"HealingTaken") or 0
+				local overhealing = Recount:GetLazySyncAmount(myname, petname,"Overhealing") or 0
+				local activetime = Recount:GetLazySyncAmount(myname, petname,"ActiveTime") or 0
 				if damage + damagetaken + healing + overhealing + healingtaken ~= 0 then
-					tinsert(serialpetdata, Recount:Serialize("PS", myname, petname, damage, damagetaken, healing, overhealing, healingtaken, activetime))
+					tinsert(serialpetdata, Recount:Serialize("PS",myname, petname, damage, damagetaken, healing, overhealing, healingtaken, activetime))
 					Recount:ClearLazySyncTouched(myname, petname)
 				end
 			end
@@ -168,10 +164,11 @@ function Recount:BroadcastLazySync()
 		return
 	end -- Elsia: Nothing to lazy sync
 
-	--[[local _ , instanceType = IsInInstance()
+	local _ , instanceType = IsInInstance()
+
 	if instanceType == "pvp" or instanceType == "party" then
 		return
-	end]] -- Disabled sync in all cross-realm content
+	end -- Disabled sync in all cross-realm content
 
 	Recount.lazysync = false
 
@@ -186,12 +183,12 @@ function Recount:BroadcastLazySync()
 	--local myrecord = combatant.Sync
 	local serialdata
 	if Recount:GetLazySyncTouched(myname, myname) then
-		local damage = Recount:GetLazySyncAmount(myname, myname, "Damage") or 0
-		local damagetaken = Recount:GetLazySyncAmount(myname, myname, "DamageTaken") or 0
-		local healing = Recount:GetLazySyncAmount(myname, myname, "Healing") or 0
-		local healingtaken = Recount:GetLazySyncAmount(myname, myname, "HealingTaken") or 0
-		local overhealing = Recount:GetLazySyncAmount(myname, myname, "Overhealing") or 0
-		local activetime = Recount:GetLazySyncAmount(myname, myname, "ActiveTime") or 0
+		local damage = Recount:GetLazySyncAmount(myname, myname,"Damage") or 0
+		local damagetaken = Recount:GetLazySyncAmount(myname, myname,"DamageTaken") or 0
+		local healing = Recount:GetLazySyncAmount(myname, myname,"Healing") or 0
+		local healingtaken = Recount:GetLazySyncAmount(myname, myname,"HealingTaken") or 0
+		local overhealing = Recount:GetLazySyncAmount(myname, myname,"Overhealing") or 0
+		local activetime = Recount:GetLazySyncAmount(myname, myname,"ActiveTime") or 0
 		if damage + damagetaken + healing + overhealing + healingtaken ~= 0 then
 			serialdata = Recount:Serialize("PU", myname, myname, damage, damagetaken, healing, overhealing, healingtaken, activetime)
 			validdata = true
@@ -208,12 +205,12 @@ function Recount:BroadcastLazySync()
 			--local petrecord = dbCombatants[data.Pet[i]] and dbCombatants[data.Pet[i]].Sync
 			local petname = data.Pet[i]
 			if Recount:GetLazySyncTouched(myname, petname) then
-				local damage = Recount:GetLazySyncAmount(myname, petname, "Damage") or 0
-				local damagetaken = Recount:GetLazySyncAmount(myname, petname, "DamageTaken") or 0
-				local healing = Recount:GetLazySyncAmount(myname, petname, "Healing") or 0
-				local healingtaken = Recount:GetLazySyncAmount(myname, petname, "HealingTaken") or 0
-				local overhealing = Recount:GetLazySyncAmount(myname, petname, "Overhealing") or 0
-				local activetime = Recount:GetLazySyncAmount(myname, petname, "ActiveTime") or 0
+				local damage = Recount:GetLazySyncAmount(myname, petname,"Damage") or 0
+				local damagetaken = Recount:GetLazySyncAmount(myname, petname,"DamageTaken") or 0
+				local healing = Recount:GetLazySyncAmount(myname, petname,"Healing") or 0
+				local healingtaken = Recount:GetLazySyncAmount(myname, petname,"HealingTaken") or 0
+				local overhealing = Recount:GetLazySyncAmount(myname, petname,"Overhealing") or 0
+				local activetime = Recount:GetLazySyncAmount(myname, petname,"ActiveTime") or 0
 				if damage + damagetaken + healing + overhealing + healingtaken ~= 0 then
 					tinsert(serialpetdata, Recount:Serialize("PU", myname, petname, damage, damagetaken, healing, overhealing, healingtaken, activetime))
 					validdata = true
@@ -233,18 +230,18 @@ function Recount:BroadcastLazySync()
 	end
 
 	for k, v in pairs(dbCombatants) do
-		if v.type == "Boss" or (v.level and v.level > plevel + 2) then
+		if v.type == "Boss" or (v.level and v.level > plevel+2) then
 			--Recount:Print("Boss: "..k)
 			--local myrecord = v.Sync
 			if Recount:GetLazySyncTouched(myname, k) then
-				local damage = Recount:GetLazySyncAmount(myname, k, "Damage") or 0
-				local damagetaken = Recount:GetLazySyncAmount(myname, k, "DamageTaken") or 0
-				local healing = Recount:GetLazySyncAmount(myname, k, "Healing") or 0
-				local healingtaken = Recount:GetLazySyncAmount(myname, k, "HealingTaken") or 0
-				local overhealing = Recount:GetLazySyncAmount(myname, k, "Overhealing") or 0
-				local activetime = Recount:GetLazySyncAmount(myname, k, "ActiveTime") or 0
+				local damage = Recount:GetLazySyncAmount(myname, k,"Damage") or 0
+				local damagetaken = Recount:GetLazySyncAmount(myname, k,"DamageTaken") or 0
+				local healing = Recount:GetLazySyncAmount(myname, k,"Healing") or 0
+				local healingtaken = Recount:GetLazySyncAmount(myname, k,"HealingTaken") or 0
+				local overhealing = Recount:GetLazySyncAmount(myname, k,"Overhealing") or 0
+				local activetime = Recount:GetLazySyncAmount(myname, k,"ActiveTime") or 0
 				if damage + damagetaken + healing + overhealing + healingtaken ~= 0 then
-					tinsert(serialbossdata, Recount:Serialize("PU", myname, k, damage, damagetaken, healing, overhealing, healingtaken, activetime))
+					tinsert(serialbossdata, Recount:Serialize("PU",myname, k, damage, damagetaken, healing, overhealing, healingtaken, activetime))
 				end
 				validdata = true
 				Recount:ClearLazySyncTouched(myname, k)
@@ -263,19 +260,19 @@ function Recount:BroadcastLazySync()
 		if combatant and combatant.lazysync or Recount.SyncDebug then
 			-- Sync self
 			if serialdata then
-				Recount:SendCommMessage("RECOUNT", serialdata, "WHISPER", name) 
+				Recount:SendCommMessage("RECOUNT",serialdata,"WHISPER",name) 
 			end
 
 			-- Sync pets
 			for i = 1, #serialpetdata do
 				--Recount:Print("Pet"..i..": "..serialpetdata[i])
-				Recount:SendCommMessage("RECOUNT", serialpetdata[i], "WHISPER", name) 
+				Recount:SendCommMessage("RECOUNT",serialpetdata[i],"WHISPER",name) 
 			end
 
 			-- Sync bosses
 			for i = 1, #serialbossdata do
 				--Recount:Print("Boss"..i..": "..serialbossdata[i])
-				Recount:SendCommMessage("RECOUNT", serialbossdata[i], "WHISPER", name)
+				Recount:SendCommMessage("RECOUNT",serialbossdata[i],"WHISPER",name)
 			end
 
 			-- Done syncing, thank you very much.
@@ -283,28 +280,28 @@ function Recount:BroadcastLazySync()
 		end
 	end
 
-	if IsInRaid() and GetNumRaidMembers() > 0 then
-		for i = 1, GetNumRaidMembers(), 1 do
+	if GetNumRaidMembers() > 0 then
+		for i = 1, GetNumRaidMembers(), 1 do --GetNumRaidMembers()
 			if UnitExists("raid"..i) then
 				local name, realm = UnitName("raid"..i)
 
-				if Recount.VerNum and Recount.VerNum[name] --[[and (not realm or realm == "")]] then -- Elsia: Only sync if we have a valid version, and on same realm
+				if Recount.VerNum and Recount.VerNum[name] and not realm then -- Elsia: Only sync if we have a valid version, and on same realm
 
 					local combatant = dbCombatants[name]
-					if combatant and combatant.lazysync and name ~= Recount.PlayerName and UnitIsConnected(name) then -- We don't sync with self
+					if combatant and combatant.lazysync and name~= Recount.PlayerName and UnitIsConnected(name) then -- We don't sync with self
 						-- Sync self
 						if serialdata then
-							Recount:SendCommMessage("RECOUNT", serialdata, "WHISPER", name)
+							Recount:SendCommMessage("RECOUNT",serialdata,"WHISPER",name)
 						end
 
 						-- Sync pets
 						for i = 1, #serialpetdata do
-							Recount:SendCommMessage("RECOUNT", serialpetdata[i], "WHISPER", name) 
+							Recount:SendCommMessage("RECOUNT",serialpetdata[i],"WHISPER",name) 
 						end
 
 						-- Sync bosses
 						for i = 1, #serialbossdata do
-							Recount:SendCommMessage("RECOUNT", serialbossdata[i], "WHISPER", name)
+							Recount:SendCommMessage("RECOUNT",serialbossdata[i],"WHISPER",name)
 						end
 						combatant.lazysync = nil
 					end
@@ -315,18 +312,18 @@ function Recount:BroadcastLazySync()
 		for i = 1, GetNumPartyMembers(), 1 do
 			if UnitExists("party"..i) then
 				local name, realm = UnitName("party"..i)
-				if Recount.VerNum and Recount.VerNum[name] --[[and (not realm or realm == "")]] then -- Elsia: Only sync if we have a valid version, and on same realm
+				if Recount.VerNum and Recount.VerNum[name] and not realm then -- Elsia: Only sync if we have a valid version, and on same realm
 					local combatant = dbCombatants[name]
-					if combatant and combatant.lazysync and name ~= Recount.PlayerName and UnitIsConnected(name) then -- We don't sync with self
+					if combatant and combatant.lazysync and name~= Recount.PlayerName and UnitIsConnected(name) then -- We don't sync with self
 						-- Sync self
 						if serialdata then
-							Recount:SendCommMessage("RECOUNT", serialdata, "WHISPER", name)
+							Recount:SendCommMessage("RECOUNT", serialdata, "WHISPER", name) 
 						end
 
 						-- Sync pets
 						for i = 1, #serialpetdata do
 							--Recount:Print("Pet"..i..": "..serialpetdata[i])
-							Recount:SendCommMessage("RECOUNT", serialpetdata[i], "WHISPER", name)
+							Recount:SendCommMessage("RECOUNT", serialpetdata[i], "WHISPER", name) 
 						end
 
 						-- Sync bosses
@@ -410,7 +407,7 @@ function Recount:OnCommReceive(prefix, Msgs, distribution, target)
 						combatant = dbCombatants[name]
 					end
 
-					--local who = combatant
+					local who = combatant
 
 					--Recount:DPrint("PS with retention: "..name)
 					for k, _ in pairs(SyncTypes) do
@@ -439,8 +436,9 @@ function Recount:OnCommReceive(prefix, Msgs, distribution, target)
 				end
 			end
 		end
-	elseif distribution == "RAID" or distribution == "PARTY" then
-		local worked, cmd, owner, pet, petGUID = Recount:Deserialize(Msgs)
+	elseif distribution == "RAID" then
+		local worked, cmd, owner, pet, petGUID
+		worked, cmd, owner, pet, petGUID = Recount:Deserialize(Msgs)
 		if worked == true then
 			if cmd == "RS" then -- Reset broadcast
 				local name = owner
@@ -482,7 +480,7 @@ function Recount:ConfigComm()
 
 	Recount:RegisterComm("RECOUNT", "OnCommReceive")
 	Recount:RequestVersion()
-	if Recount.SyncDebug and GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
+	if --[[Recount.SyncDebug and]] GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
 		local owner = Recount.PlayerName or UnitName("player")
 		local version = Recount.Version
 		Recount.VerTable = Recount.VerTable or {} -- Elsia: This really shouldn't happen but it does!
@@ -514,7 +512,8 @@ function Recount:FreeComm()
 end
 
 function Recount:FlagSync()
-	if IsInRaid() and GetNumRaidMembers() > 0 then
+
+	if GetNumRaidMembers() > 0 then
 		for i = 1, GetNumRaidMembers(), 1 do
 			if UnitExists("raid"..i) then
 				dbCombatants[UnitName("raid"..i)].lazysync = true
@@ -532,11 +531,7 @@ function Recount:FlagSync()
 end
 
 function Recount:SendReset()
-	if IsInRaid() and GetNumRaidMembers() > 0 then
-		Recount:SendCommMessage("RECOUNT", Recount:Serialize("RS", Recount.PlayerName), "RAID")
-	elseif GetNumPartyMembers() > 0 then
-		Recount:SendCommMessage("RECOUNT", Recount:Serialize("RS", Recount.PlayerName), "PARTY")
-	end
+	Recount:SendCommMessage("RECOUNT", Recount:Serialize("RS", Recount.PlayerName), "RAID")
 	Recount:ResetLazySyncData(Recount.PlayerName)
 end
 
@@ -556,35 +551,18 @@ end
 
 function Recount:SendVersion(target)
 	if target then
-		--local _, realm = UnitName(target)
-		if UnitIsConnected(target) --[[and (not realm or realm == "")]] then
+		local _, realm = UnitName(target)
+		if UnitIsConnected(target) and not realm then
 			Recount:SendCommMessage("RECOUNT", Recount:Serialize("VS", Recount.PlayerName, Recount.Version), "WHISPER", target)
 			Recount:SendSelf(target)
 		end
 	else
-		if IsInRaid() and GetNumRaidMembers() > 0 then
-			if instanceType == "pvp" then
-				Recount:SendCommMessage("RECOUNT", Recount:Serialize("VS", Recount.PlayerName, Recount.Version), "INSTANCE_CHAT")
-			else
-				Recount:SendCommMessage("RECOUNT", Recount:Serialize("VS", Recount.PlayerName, Recount.Version), "RAID")
-			end
-		elseif GetNumPartyMembers() > 0 then
-			Recount:SendCommMessage("RECOUNT", Recount:Serialize("VS", Recount.PlayerName, Recount.Version), "PARTY")
-		end
+		Recount:SendCommMessage("RECOUNT", Recount:Serialize("VS", Recount.PlayerName, Recount.Version), "RAID")
 	end
 end
 
 function Recount:RequestVersion()
-	if IsInRaid() and GetNumRaidMembers() > 0 then
-		local _ , instanceType = IsInInstance()
-		if instanceType == "pvp" then
-			Recount:SendCommMessage("RECOUNT", Recount:Serialize("VQ", Recount.PlayerName, Recount.Version), "INSTANCE_CHAT")
-		else
-			Recount:SendCommMessage("RECOUNT", Recount:Serialize("VQ", Recount.PlayerName, Recount.Version), "RAID")
-		end
-	elseif GetNumPartyMembers() > 0 then
-		Recount:SendCommMessage("RECOUNT", Recount:Serialize("VQ", Recount.PlayerName, Recount.Version), "PARTY")
-	end
+	Recount:SendCommMessage("RECOUNT", Recount:Serialize("VQ" ,Recount.PlayerName, Recount.Version), "RAID")
 end
 
 --[[function Recount:SetSyncAmount(who, type, amount)
@@ -638,9 +616,6 @@ end
 end]]
 
 function Recount:AddOwnerPetLazySyncAmount(who, type, amount)
-	if not Recount.MySyncPartners then
-		return
-	end
 	if not who then
 		return
 	end
@@ -650,7 +625,7 @@ function Recount:AddOwnerPetLazySyncAmount(who, type, amount)
 		Recount:AddLazySyncAmount(who.Name, who.Name, type, amount)
 	elseif who.Owner == Recount.PlayerName or Recount.MySyncPartners and Recount.MySyncPartners[who.Owner] then
 		--Recount:DPrint("Adding sync pool player pet: "..who.Name.." "..who.Owner)
-		Recount:AddLazySyncAmount(who.Owner, who.Name.." <"..who.Owner..">", type, amount)
+		Recount:AddLazySyncAmount(who.Owner, who.Name.." <"..who.Owner..">",type, amount)
 	elseif Recount.MySyncPartners and (who.type == "Boss" or (who.level and who.level > UnitLevel("player") + 2)) then
 		--Recount:DPrint("Adding sync pool boss: "..who.Name)
 		for k, v in pairs(Recount.MySyncPartners) do

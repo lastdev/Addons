@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(168, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
 mod:SetCreatureID(45213)
 --mod:SetEncounterID(1082, 1083) Muiti encounter id. need to verify.
 mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5, 6, 7, 8)
-mod:SetModelSound("Sound\\Creature\\Sinestra\\VO_BT_Sinestra_Aggro01.wav", "Sound\\Creature\\Sinestra\\VO_BT_Sinestra_Kill02.wav")
+mod:SetModelSound("Sound\\Creature\\Sinestra\\VO_BT_Sinestra_Aggro01.ogg", "Sound\\Creature\\Sinestra\\VO_BT_Sinestra_Kill02.ogg")
 --Long: We were fools to entrust an imbecile like Cho'gall with such a sacred duty! I will deal with you intruders myself!
 --Short: Powerless....
 
@@ -37,9 +37,9 @@ local warnRedEssence		= mod:NewSpellAnnounce(87946, 3)
 local specWarnOrbs			= mod:NewSpecialWarning("SpecWarnOrbs", nil, nil, nil, true)
 local specWarnOrbOnYou		= mod:NewSpecialWarning("SpecWarnAggroOnYou")
 local specWarnBreath		= mod:NewSpecialWarningSpell(90125, false, nil, nil, true)
-local specWarnEggShield		= mod:NewSpecialWarningSpell(87654, mod:IsRanged())
-local specWarnEggWeaken		= mod:NewSpecialWarningSwitch("ej3238", mod:IsRanged())
-local specWarnIndomitable	= mod:NewSpecialWarningDispel(90045, mod:CanRemoveEnrage())
+local specWarnEggShield		= mod:NewSpecialWarningSpell(87654, "Ranged")
+local specWarnEggWeaken		= mod:NewSpecialWarningSwitch("ej3238", "Ranged")
+local specWarnIndomitable	= mod:NewSpecialWarningDispel(90045, "RemoveEnrage")
 
 local timerBreathCD			= mod:NewCDTimer(21, 90125)
 local timerOrbs				= mod:NewTimer(28, "TimerOrbs", 92852)

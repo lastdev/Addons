@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer - Price Level Utility module
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
-	Revision: $Id: CompactUI.lua 5496 2014-10-17 12:31:59Z brykrys $
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Revision: $Id: CompactUI.lua 5523 2014-11-23 17:55:39Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a price level indicator
@@ -37,31 +37,45 @@ local lib,parent,private = AucAdvanced.NewModule(libType, libName)
 if not lib then return end
 local aucPrint,decode,_,_,replicate,empty,get,set,default,debugPrint,fill,_TRANS = AucAdvanced.GetModuleLocals()
 
-private.cache = {}
+local CalcPriceLevel
+AucAdvanced.RegisterModuleCallback("pricelevel", function(lib) CalcPriceLevel = lib.CalcLevel end)
+local IsPlayerIgnored = AucAdvanced.NOPFUNCTION
+AucAdvanced.RegisterModuleCallback("basic", function(lib) IsPlayerIgnored = lib.IsPlayerIgnored end)
 
-local searchname, searchminLevel, searchmaxLevel, searchinvTypeIndex, searchclassIndex, searchsubclassIndex, searchpage, searchisUsable, searchqualityIndex, searchGetAll
+private.cachePriceLevel = {}
+private.pageContents = {}
+private.pageElements = {} -- cache pageContents subtables for reuse
+private.candy = {} -- decorative elements
+private.buttons = {}
 
-lib.Processors = {}
-function lib.Processors.config(callbackType, ...)
-	if private.SetupConfigGui then private.SetupConfigGui(...) end
-end
+local searchname, searchminLevel, searchmaxLevel, searchinvTypeIndex, searchclassIndex, searchsubclassIndex, searchpage, searchisUsable, searchqualityIndex, searchGetAll, searchExactMatch
 
-function lib.Processors.auctionui(callbackType, ...)
-	if private.HookAH then private.HookAH(...) end
-end
+lib.Processors = {
+	config = function(callbackType, gui)
+		if private.SetupConfigGui then private.SetupConfigGui(gui) end
+	end,
 
-function lib.Processors.configchanged()
-	if (private.Active) then
-		private.MyAuctionFrameUpdate()
-	end
-end
+	auctionui = function()
+		if private.HookAH then private.HookAH() end
+	end,
+
+	configchanged = function()
+		if (private.Active) then
+			private.MyAuctionFrameUpdate()
+		end
+	end,
+
+	scanstats = function()
+		wipe(private.cachePriceLevel)
+	end,
+
+	auctionclose = function()
+		wipe(private.cachePriceLevel)
+		wipe(private.pageContents)
+		wipe(private.pageElements)
+	end,
+}
 lib.Processors.blockupdate = lib.Processors.configchanged
-
-function lib.Processors.scanstats()
-	wipe(private.cache)
-end
-lib.Processors.auctionclose = lib.Processors.scanstats
-
 
 local OldSortAuctionApplySort
 function private.OnLoadRunOnce()
@@ -85,11 +99,9 @@ function lib.OnLoad()
 end
 
 --[[ Local functions ]]--
-private.candy = {}
-private.buttons = {}
 function private.OnQuery(...)
 	-- copy query details
-	searchname, searchminLevel, searchmaxLevel, searchinvTypeIndex, searchclassIndex, searchsubclassIndex, searchpage, searchisUsable, searchqualityIndex, searchGetAll = ...
+	searchname, searchminLevel, searchmaxLevel, searchinvTypeIndex, searchclassIndex, searchsubclassIndex, searchpage, searchisUsable, searchqualityIndex, searchGetAll, searchExactMatch = ...
 	-- other functions hooking the query
 	if private.UpdateDetailColumn then private.UpdateDetailColumn(...) end
 end
@@ -98,7 +110,7 @@ function private.QueryCurrent(SortTable, SortColumn, reverse)
 	if SortTable == "bidder" or SortTable == "owner" then
 		OldSortAuctionApplySort(SortTable, SortColumn, reverse)
 	else
-		QueryAuctionItems(searchname, searchminLevel, searchmaxLevel, searchinvTypeIndex, searchclassIndex, searchsubclassIndex, searchpage, searchisUsable, searchqualityIndex, searchGetAll)
+		QueryAuctionItems(searchname, searchminLevel, searchmaxLevel, searchinvTypeIndex, searchclassIndex, searchsubclassIndex, searchpage, searchisUsable, searchqualityIndex, searchGetAll, searchExactMatch)
 	end
 end
 
@@ -112,13 +124,13 @@ end
 
 function private.HookAH()
 	private.HookAH = nil
-	lib.inUse = true
+	lib.inUse = true -- deprecated
 	private.switchUI:SetParent(AuctionFrameBrowse)
 	private.switchUI:SetPoint("TOPRIGHT", AuctionFrameBrowse, "TOPRIGHT", -157, -17)
 
 
 	if (not get("util.compactui.activated")) then
-		private.MyAuctionFrameUpdate = function() end
+		private.MyAuctionFrameUpdate = AucAdvanced.NOPFUNCTION
 		return
 	end
 
@@ -510,35 +522,40 @@ function private.OwnerLeave(frame)
 	GameTooltip:Hide()
 end
 
-function private.BrowseSort(a, b)
-	local sort = private.headers.sort
-	local dir = private.headers.dir
-
-	if sort then
-		if sort == 1 then            col = 3       -- Count
-		elseif sort == 2 then                      --
-			local pos = private.headers.pos    --
-			if pos == 1 then     col = 6       -- Name
-			elseif pos == 2 then col = 5       -- Quality
-			end                                --
-		elseif sort == 3 then        col = 8       -- MinLevel
-		elseif sort == 4 then        col = 9       -- ItemLevel
-		elseif sort == 5 then        col = 10      -- TimeLeft
-		elseif sort == 6 then        col = 11      -- Owner
-		elseif sort == 7 then                      --
-			local pos = private.headers.pos    --
-			if pos == 1 then     col = 17      -- Buy
-			elseif pos == 2 then col = 16      -- Bid
-			elseif pos == 3 then col = 19      -- BuyEach
-			elseif pos == 4 then col = 18      -- BidEach
-			end                                --
-		elseif sort == 8 then        col = 22      -- PriceLevel
+local sortfuncCol, sortfuncDir
+local function SetupBrowseSortFunction()
+	sortfuncCol = nil
+	local cursort = private.headers.sort
+	if cursort == 1 then sortfuncCol = 3 -- Count
+	elseif cursort == 2 then
+		local pos = private.headers.pos
+		if pos == 1 then sortfuncCol = 6 -- Name
+		elseif pos == 2 then sortfuncCol = 5 -- Quality
 		end
+	elseif cursort == 3 then sortfuncCol = 8 -- MinLevel
+	elseif cursort == 4 then sortfuncCol = 9 -- ItemLevel
+	elseif cursort == 5 then sortfuncCol = 10 -- TimeLeft
+	elseif cursort == 6 then sortfuncCol = 11 -- Owner
+	elseif cursort == 7 then
+		local pos = private.headers.pos
+		if pos == 1 then sortfuncCol = 17 -- Buy
+		elseif pos == 2 then sortfuncCol = 16 -- Bid
+		elseif pos == 3 then sortfuncCol = 19 -- BuyEach
+		elseif pos == 4 then sortfuncCol = 18 -- BidEach
+		end
+	elseif cursort == 8 then sortfuncCol = 22 -- PriceLevel
 	end
+	sortfuncDir = private.headers.dir
 
-	if a[col] ~= b[col] then
-		if dir > 0 then return (a[col] < b[col])
-		else return (a[col] > b[col])
+	return sortfuncDir and sortfuncCol -- used to test if we can sort
+end
+local function BrowseSortFunction(a, b)
+	local ta, tb = a[sortfuncCol], b[sortfuncCol]
+	if ta ~= tb then
+		if sortfuncDir > 0 then
+			return ta < tb
+		else
+			return ta > tb
 		end
 	end
 	if a[5] ~= b[5] then return a[5] < b[5] end
@@ -546,22 +563,18 @@ function private.BrowseSort(a, b)
 	if a[3] ~= b[3] then return a[3] < b[3] end
 end
 
-private.pageContents = {}
-private.pageElements = {}
+local lookupTimeLeft = {"30m", "2h", "12h", "48h"}
 function private.RetrievePage()
-	for i = 1, #private.pageContents do
-		private.pageContents[i] = nil
-	end
+	wipe(private.pageContents)
 
 	local selected = GetSelectedAuctionItem("list") or 0
-	local pagesize = GetNumAuctionItems("list")
-	if pagesize < 50 then
-		pagesize = 50
-	--elseif pagesize > 50 then --If doing a GetAll, don't show anything
-	elseif pagesize > 3000 then -- ### temp fix for "Usable Items" setting returning more than 50 results at a time [ADV-686]
-		pagesize = 0
+	local numBatchAuctions, totalAuctions = GetNumAuctionItems("list")
+	--if numBatchAuctions > NUM_AUCTION_ITEMS_PER_PAGE then --If doing a GetAll, don't show anything
+	if numBatchAuctions > 3000 then -- ### temp fix for "Usable Items" setting returning more than 50 results at a time [ADV-686]
+		return 0, 0 -- numBatchAuctions, totalAuctions
 	end
-	for i = 1, pagesize do
+
+	for i = 1, numBatchAuctions do
 		if not private.pageElements[i] then private.pageElements[i] = {} end
 
 		local link = GetAuctionItemLink("list", i)
@@ -569,11 +582,7 @@ function private.RetrievePage()
 			local item = private.pageElements[i]
 
 			item[1] = i
-			if (selected == i) then
-				item[2] = true
-			else
-				item[2] = false
-			end
+			item[2] = selected == i
 
 			local name, texture, count, quality, canUse, level, levelColHeader, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner, ownerFullName, saleStatus, itemId =  GetAuctionItemInfo("list", i)
 			local _, _, _, itemLevel, itemDetail = GetItemInfo(itemId) -- itemDetail = minUseLevel
@@ -589,11 +598,9 @@ function private.RetrievePage()
 			itemDetail = tonumber(itemDetail) or 1
 
 			local timeLeft = GetAuctionItemTimeLeft("list", i)
-			if (timeLeft == 4) then timeLeftText = "48h"
-			elseif (timeLeft == 3) then timeLeftText = "12h"
-			elseif (timeLeft == 2) then timeLeftText = "2h"
-			else timeLeftText = "30m" end
-			if (not count or count < 1) then count = 1 end
+			local timeLeftText = lookupTimeLeft[timeLeft]
+
+			if not count or count < 1 then count = 1 end
 
 			local requiredBid
 			if bidAmount > 0 then
@@ -613,12 +620,15 @@ function private.RetrievePage()
 			end
 
 			local priceLevel, perItem, r,g,b
-			local cacheSig = strjoin(":", link, count, requiredBid, buyoutPrice)
-			if private.cache[cacheSig] then
-				priceLevel, perItem, r,g,b = unpack(private.cache[cacheSig])
-			elseif AucAdvanced.Modules.Util.PriceLevel then
-				priceLevel, perItem, r,g,b = AucAdvanced.Modules.Util.PriceLevel.CalcLevel(link, count, requiredBid, buyoutPrice)
-				private.cache[cacheSig] = { priceLevel, perItem, r,g,b }
+			if CalcPriceLevel then
+				local cacheSig = strjoin(":", link, count, requiredBid, buyoutPrice)
+				local cacheData = private.cachePriceLevel[cacheSig]
+				if cacheData then
+					priceLevel, perItem, r,g,b = unpack(cacheData)
+				else
+					priceLevel, perItem, r,g,b = CalcPriceLevel(link, count, requiredBid, buyoutPrice)
+					private.cachePriceLevel[cacheSig] = {priceLevel, perItem, r,g,b}
+				end
 			end
 
 			item[3] = count
@@ -650,14 +660,11 @@ function private.RetrievePage()
 		end
 	end
 
-	table.sort(private.pageContents, private.BrowseSort)
-end
-
-function lib.GetContents(pos)
-	if private.pageContents[pos] then
-		return unpack(private.pageContents[pos], 1, 26)
+	if SetupBrowseSortFunction() then
+		sort(private.pageContents, BrowseSortFunction)
 	end
-	-- id, selected, count, texture, itemRarity, name, link, itemDetail, itemLevel, timeLeft, owner, ownerFullName, minBid, bidAmount, minIncrement, requiredBid, buyoutPrice, requiredBidEach, buyoutPriceEach, timeLeftText, highBidder, priceLevel, perItem, r, g, b
+
+	return numBatchAuctions, totalAuctions
 end
 
 function private.SetAuction(button, pos)
@@ -711,7 +718,7 @@ function private.SetAuction(button, pos)
 			end
 		end
 	end
-	if owner and AucAdvanced.Modules.Filter.Basic and AucAdvanced.Modules.Filter.Basic.IsPlayerIgnored and AucAdvanced.Modules.Filter.Basic.IsPlayerIgnored(owner) then
+	if IsPlayerIgnored(owner) then
 		button.Owner:SetTextColor(1,0,0) -- ignored player tinted red
 	elseif ownerFullName then
 		button.Owner:SetTextColor(.7,1,1) -- connected realm player tinted pale blue
@@ -756,72 +763,49 @@ function private.MyAuctionFrameUpdate()
 		return
 	end
 
-	local numBatchAuctions, totalAuctions = GetNumAuctionItems("list")
+	local numBatchAuctions, totalAuctions = private.RetrievePage()
 	local offset = FauxScrollFrame_GetOffset(BrowseScrollFrame)
-	local index, button
+
 	BrowseBidButton:Disable()
 	BrowseBuyoutButton:Disable()
-	--if (numBatchAuctions > 50) then
-	if (numBatchAuctions > 3000) then -- ### temp fix for "Usable Items" [ADV-686]
-		numBatchAuctions = 0
-		totalAuctions = 0
-	end
 
-	if ( numBatchAuctions == 0 ) then
-		BrowseNoResultsText:Show()
-	else
-		BrowseNoResultsText:Hide()
-	end
+	BrowseNoResultsText:SetShown(numBatchAuctions == 0)
 
 	private.RetrievePage()
-	local pagesize = NUM_AUCTION_ITEMS_PER_PAGE
 	for i=1, NUM_BROWSE_TO_DISPLAY do
-		index = offset + i + (pagesize * AuctionFrameBrowse.page)
-		button = private.buttons[i]
-		if ( index > (numBatchAuctions + (pagesize * AuctionFrameBrowse.page)) ) then
-			button:SetAuction()
-			-- If the last button is empty then set isLastSlotEmpty var
-			if ( i == NUM_BROWSE_TO_DISPLAY ) then
-				isLastSlotEmpty = 1
-			end
+		local index = offset + i
+		local button = private.buttons[i]
+		if index > numBatchAuctions then
+			button:SetAuction() -- empty auction
 		else
-			button:SetAuction(offset+i)
+			button:SetAuction(index)
 		end
 	end
 
-	if (totalAuctions > 0) then
-		for pos, candy in ipairs(private.candy) do candy:Show() end
+	if totalAuctions > 0 then
+		for _, candy in ipairs(private.candy) do candy:Show() end
 		BrowsePrevPageButton:Show()
 		BrowseNextPageButton:Show()
 		BrowseSearchCountText:Show()
-		local itemsMin = AuctionFrameBrowse.page * pagesize + 1
+		local itemsMin = AuctionFrameBrowse.page * NUM_AUCTION_ITEMS_PER_PAGE + 1
 		local itemsMax = itemsMin + numBatchAuctions - 1
-		BrowseSearchCountText:SetText(format(NUMBER_OF_RESULTS_TEMPLATE, itemsMin, itemsMax, totalAuctions ))
-		if ( isLastSlotEmpty ) then
-			if ( AuctionFrameBrowse.page == 0 ) then
-				BrowsePrevPageButton.isEnabled = nil
-			else
-				BrowsePrevPageButton.isEnabled = 1
-			end
-			if ( AuctionFrameBrowse.page == (ceil(totalAuctions/pagesize) - 1) ) then
-				BrowseNextPageButton.isEnabled = nil
-			else
-				BrowseNextPageButton.isEnabled = 1
-			end
+		local pageMax = ceil(totalAuctions/NUM_AUCTION_ITEMS_PER_PAGE)
+		BrowseSearchCountText:SetFormattedText(NUMBER_OF_RESULTS_TEMPLATE, itemsMin, itemsMax, totalAuctions)
+		if totalAuctions > NUM_AUCTION_ITEMS_PER_PAGE then
+			BrowsePrevPageButton.isEnabled = AuctionFrameBrowse.page > 0
+			BrowseNextPageButton.isEnabled = AuctionFrameBrowse.page < pageMax - 1
 		else
-			BrowsePrevPageButton.isEnabled = nil
-			BrowseNextPageButton.isEnabled = nil
+			BrowsePrevPageButton.isEnabled = false
+			BrowseNextPageButton.isEnabled = false
 		end
+		private.PageNum:SetFormattedText("%d/%d", AuctionFrameBrowse.page+1, pageMax)
 	else
-		for pos, candy in ipairs(private.candy) do candy:Hide() end
+		for _, candy in ipairs(private.candy) do candy:Hide() end
 		BrowsePrevPageButton:Hide()
 		BrowseNextPageButton:Hide()
 		BrowseSearchCountText:Hide()
 	end
-
-	private.PageNum:SetText(("%d/%d"):format(AuctionFrameBrowse.page+1, ceil(totalAuctions/pagesize)))
 	FauxScrollFrame_Update(BrowseScrollFrame, numBatchAuctions, NUM_BROWSE_TO_DISPLAY, AUCTIONS_BUTTON_HEIGHT)
-	BrowseScrollFrame:Show()
 	AucAdvanced.API.ListUpdate()
 end
 
@@ -891,4 +875,22 @@ function private.SetupConfigGui(gui)
 
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 5496 $")
+--[[ Exports ]]--
+
+function lib.GetContents(pos)
+	if private.pageContents[pos] then
+		return unpack(private.pageContents[pos], 1, 26)
+	end
+	-- id, selected, count, texture, itemRarity, name, link, itemDetail, itemLevel, timeLeft, owner, ownerFullName, minBid, bidAmount, minIncrement, requiredBid, buyoutPrice, requiredBidEach, buyoutPriceEach, timeLeftText, highBidder, priceLevel, perItem, r, g, b
+end
+
+function lib.IsActive()
+	return private.Active
+end
+
+function lib.GetButtons()
+	return private.buttons
+end
+
+
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-CompactUI/CompactUI.lua $", "$Rev: 5523 $")

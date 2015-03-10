@@ -6,7 +6,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local LD = LibStub("LibDropdown-1.0")
 
-local revision = tonumber(string.sub("$Revision: 1286 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1300 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -65,8 +65,8 @@ end
 -- This is comma_value() by Richard Warburton from: http://lua-users.org/wiki/FormattingNumbers with slight modifications (and a bug fix)
 function Recount.CommaNumber(n)
 	n = ("%.0f"):format(math_floor(n + 0.5))
-	local left, num, right = string_match(n,'^([^%d]*%d)(%d+)(.-)$')
-	return left and left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse()) or n --..right
+	local left, num, right = string_match(n, "^([^%d]*%d)(%d+)(.-)$")
+	return left and left..(num:reverse():gsub("(%d%d%d)", "%1,"):reverse()) or n --..right
 end
 
 local NumFormats = {
@@ -456,7 +456,7 @@ function me:FixRow(i)
 	local LText = row.LeftText:GetText()
 
 	if not Recount.db.profile.MainWindow.BarText.ServerName then
-		LText = string.gsub(LText, "%-[%a+]+", "")
+		LText = string.gsub(LText, "%-[^ >]+", "")
 	end
 	row.LeftText:SetText(LText)
 	while row.LeftText:GetStringWidth() > MaxNameWidth do

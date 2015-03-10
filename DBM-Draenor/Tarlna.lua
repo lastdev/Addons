@@ -1,46 +1,45 @@
 local mod	= DBM:NewMod(1211, "DBM-Draenor", nil, 557)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12134 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 13055 $"):sub(12, -3))
 mod:SetCreatureID(81535)
 mod:SetReCombatTime(20)
 mod:SetZone()
 mod:SetMinSyncRevision(11969)
 
-mod:RegisterCombat("combat_yell", L.Pull)
-
+mod:RegisterCombat("combat")--no yell
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 175973 175979",
 	"SPELL_CAST_SUCCESS 176013",
-	"SPELL_AURA_APPLIED 176004"
+	"SPELL_AURA_APPLIED 176004",
+	"SPELL_PERIODIC_DAMAGE 176037",
+	"SPELL_ABSORBED 176037"
 )
 
 --Oh look, someone designed a world boss that's a copy and paste of Yalnu with tweaks.
 --TODO, do dps siwtch to Untamed Mand, or just tanks.
---TODO, add Noxious Spit warnings
-local warnColossalBlow				= mod:NewSpellAnnounce(175973, 3)
-local warnGenesis					= mod:NewSpellAnnounce(175979, 4)
 local warnSavageVines				= mod:NewTargetAnnounce(176004, 2)
-local warnGrowUntamedMandragora		= mod:NewSpellAnnounce(176013, 3)
 
-local specWarnColossalBlow			= mod:NewSpecialWarningSpell(175973, nil, nil, nil, 2, nil, true)
-local specWarnGenesis				= mod:NewSpecialWarningSpell(175979, nil, nil, nil, nil, nil, true)--Everyone. "Switch" is closest generic to "run around stomping flowers". Might need custom message
+local specWarnColossalBlow			= mod:NewSpecialWarningDodge(175973, nil, nil, nil, 2, nil, 2)
+local specWarnGenesis				= mod:NewSpecialWarningSpell(175979, nil, nil, nil, nil, nil, 2)--Everyone. "Switch" is closest generic to "run around stomping flowers". Might need custom message
 local specWarnSavageVines			= mod:NewSpecialWarningYou(176004)
 local yellSavageVines				= mod:NewYell(176004)
 local specWarnSavageVinesNear		= mod:NewSpecialWarningClose(176004)
-local specWarnGrowUntamedMandragora	= mod:NewSpecialWarningSwitch(176013, not mod:IsHealer(), nil, nil, nil, nil, true)
+local specWarnGrowUntamedMandragora	= mod:NewSpecialWarningSwitch(176013, "-Healer", nil, nil, nil, nil, 2)
+local specWarnNoxiousSpit			= mod:NewSpecialWarningMove(176037)
 
 --local timerColossalBlowCD			= mod:NewNextTimer(60, 175973)
+local timerGenesis					= mod:NewCastTimer(14, 169613)
 local timerGenesisCD				= mod:NewCDTimer(45, 169613)--45-60 variation
 local timerGrowUntamedMandragoraCD	= mod:NewCDTimer(30, 176013)
 
 local voiceColossalBlow				= mod:NewVoice(175973)
-local voiceMandragora				= mod:NewVoice(176013, mod:IsDps())
+local voiceMandragora				= mod:NewVoice(176013, "Dps")
 local voiceGenesis					= mod:NewVoice(175979)
 
 --mod:AddReadyCheckOption(37462, false)
-mod:AddRangeFrameOption(8, 175979)
+--mod:AddRangeFrameOption(8, 175979)
 
 local UnitDebuff = UnitDebuff
 local debuffName = GetSpellInfo(176004)
@@ -49,10 +48,6 @@ do
 	debuffFilter = function(uId)
 		return UnitDebuff(uId, debuffName)
 	end
-end
-
-local function hideRangeFrame()
-	DBM.RangeCheck:Hide()
 end
 
 function mod:OnCombatStart(delay, yellTriggered)
@@ -73,13 +68,12 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 175973 then
-		warnColossalBlow:Show()
 		specWarnColossalBlow:Show()
 		--timerColossalBlow:Start()
 		voiceColossalBlow:Play("shockwave")
 	elseif spellId == 175979 then
-		warnGenesis:Show()
 		specWarnGenesis:Show()
+		timerGenesis:Start()
 		timerGenesisCD:Start()
 		voiceGenesis:Play("169613")
 	end
@@ -88,7 +82,6 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	local spellId = args.spellId
 	if spellId == 176013 then
-		warnGrowUntamedMandragora:Show()
 		specWarnGrowUntamedMandragora:Show()
 		timerGrowUntamedMandragoraCD:Start()
 		voiceMandragora:Play("killmob")
@@ -112,9 +105,16 @@ function mod:SPELL_AURA_APPLIED(args)
 			if UnitDebuff("player", debuffName) then
 				DBM.RangeCheck:Show(8, nil)
 			else
-				DBM.RangeCheck:Show(8, debuffFilter)
+				DBM.RangeCheck:Show(8, debuffFilter, nil, nil, nil, 8)
 			end
-			self:Schedule(8, hideRangeFrame)
 		end
 	end
 end
+
+function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID)-- only listen personal Noxious Spit event
+	if destGUID ~= UnitGUID("player") then return end
+	if self:AntiSpam(2, 1) then
+		specWarnNoxiousSpit:Show()
+	end
+end
+mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE

@@ -68,7 +68,7 @@ end
 function ns:Update()
 	local character = addon.Tabs.Characters:GetAltKey()
 	
-	AltoholicTabCharactersStatus:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), GLYPHS))
+	AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), GLYPHS))
 	
 	for spec = 1, 2 do
 		for id = 1, 6 do

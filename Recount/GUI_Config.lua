@@ -6,7 +6,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local BC = {} -- = LibStub("LibBabble-Class-3.0"):GetLookupTable()
 
-local revision = tonumber(string.sub("$Revision: 1273 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1288 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -538,6 +538,20 @@ function me:SetupFilterOptions(parent)
 		else
 			this:SetChecked(false)
 			Recount.db.profile.MergeAbsorbs = false
+		end
+		Recount:FullRefreshMainWindow()
+		Recount:RefreshMainWindow()
+	end)
+
+	theFrame.MergeDamageAbsorbs = me:CreateSavedCheckbox(L["Merge Absorbs w/ Damage"], theFrame, "Data", "MergeDamageAbsorbs")
+	theFrame.MergeDamageAbsorbs:SetPoint("TOPLEFT", theFrame.MergeAbsorbs, "BOTTOMLEFT", 0, 2)
+	theFrame.MergeDamageAbsorbs:SetScript("OnClick", function(this)
+		if this:GetChecked() then
+			this:SetChecked(true)
+			Recount.db.profile.MergeDamageAbsorbs = true
+		else
+			this:SetChecked(false)
+			Recount.db.profile.MergeDamageAbsorbs = false
 		end
 		Recount:FullRefreshMainWindow()
 		Recount:RefreshMainWindow()
@@ -1988,6 +2002,7 @@ function me:LoadConfig()
 
 	me.FilterOptions.MergePets:SetChecked(Recount.db.profile.MergePets)
 	me.FilterOptions.MergeAbsorbs:SetChecked(Recount.db.profile.MergeAbsorbs)
+	me.FilterOptions.MergeDamageAbsorbs:SetChecked(Recount.db.profile.MergeDamageAbsorbs)
 
 	me:ScaleConfigWindow(Recount.db.profile.Scaling)
 

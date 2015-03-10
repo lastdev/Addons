@@ -12,7 +12,7 @@ local addon = _G[addonName]
 
 local THIS_ACCOUNT = "Default"
 local commPrefix = "DS_Inv"		-- let's keep it a bit shorter than the addon name, this goes on a comm channel, a byte is a byte ffs :p
-local L = LibStub("AceLocale-3.0"):GetLocale("DataStore_Inventory")
+local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 -- Message types
 local MSG_SEND_AIL								= 1	-- Send AIL at login
@@ -23,9 +23,9 @@ local MSG_EQUIPMENT_TRANSFER					= 4	-- .. and send the data
 local AddonDB_Defaults = {
 	global = {
 		Options = {
-			AutoClearGuildInventory = 0,		-- Automatically clear guild members' inventory at login
-			BroadcastAiL = 1,						-- Broadcast professions at login or not
-			EquipmentRequestNotification = 0,	-- Get a warning when someone requests my equipment
+			AutoClearGuildInventory = false,		-- Automatically clear guild members' inventory at login
+			BroadcastAiL = true,						-- Broadcast professions at login or not
+			EquipmentRequestNotification = false,	-- Get a warning when someone requests my equipment
 		},
 		Guilds = {
 			['*'] = {			-- ["Account.Realm.Name"] 
@@ -283,7 +283,7 @@ local PublicMethods = {
 
 -- *** Guild Comm ***
 local function OnGuildAltsReceived(self, sender, alts)
-	if sender == UnitName("player") and GetOption("BroadcastAiL") == 1 then				-- if I receive my own list of alts in the same guild, same realm, same account..
+	if sender == UnitName("player") and GetOption("BroadcastAiL") then				-- if I receive my own list of alts in the same guild, same realm, same account..
 		GuildBroadcast(MSG_SEND_AIL, GetAIL(alts))	-- ..then broacast AIL
 	end
 end
@@ -293,7 +293,7 @@ local GuildCommCallbacks = {
 			local player = UnitName("player")
 			if sender ~= player then						-- don't send back to self
 				local alts = DataStore:GetGuildMemberAlts(player)			-- get my own alts
-				if alts and GetOption("BroadcastAiL") == 1 then
+				if alts and GetOption("BroadcastAiL") then
 					GuildWhisper(sender, MSG_AIL_REPLY, GetAIL(alts))		-- .. and send them back
 				end
 			end
@@ -303,7 +303,7 @@ local GuildCommCallbacks = {
 			SaveAIL(sender, ail)
 		end,
 	[MSG_EQUIPMENT_REQUEST] = function(sender, character)
-			if GetOption("EquipmentRequestNotification") == 1 then
+			if GetOption("EquipmentRequestNotification") then
 				addon:Print(format(L["%s is inspecting %s"], sender, character))
 			end
 	
@@ -346,7 +346,7 @@ function addon:OnEnable()
 	
 	addon:SetupOptions()
 	
-	if GetOption("AutoClearGuildInventory") == 1 then
+	if GetOption("AutoClearGuildInventory") then
 		ClearGuildInventories()
 	end
 end

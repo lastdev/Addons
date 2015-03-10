@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(179, "DBM-Party-Cataclysm", 11, 76, 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 142 $"):sub(12, -3))
 mod:SetCreatureID(52269)
 mod:SetZone()
 
@@ -16,14 +16,12 @@ mod.onlyHeroic = true
 local warnVanish			= mod:NewSpellAnnounce(96639, 3)
 local warnBlades			= mod:NewSpellAnnounce(96646, 4)
 
-local specWarnBlades		= mod:NewSpecialWarningRun(96646)
+local specWarnBlades		= mod:NewSpecialWarningRun("OptionVersion2", 96646, nil, nil, nil, 4)
 
 local timerBlades			= mod:NewBuffActiveTimer(11, 96646)--3sec cast + 8 sec duration
 local timerBladesCD			= mod:NewCDTimer(45, 96646)--Speculated, since log only cast it twice.
 local timerVanishCD			= mod:NewCDTimer(46.5, 96639)--Speculated, since log only cast it twice.
 local timerAmbush			= mod:NewNextTimer(2.5, 96640)--2.5 seconds after vanish.
-
-local soundBlades			= mod:NewSound(96646)
 
 function mod:OnCombatStart(delay)
 	timerVanishCD:Start(15-delay)--Consistent?
@@ -34,7 +32,6 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 96646 then
         warnBlades:Show()
         specWarnBlades:Show()
-        soundBlades:Play()
 		timerBlades:Start()
 		timerBladesCD:Start()
 	end

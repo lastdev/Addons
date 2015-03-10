@@ -6,7 +6,7 @@ zhCN localization strings for Ackis Recipe List
 File date: 2012-08-18T04:52:05Z 
 File revision: @file-revision@ 
 Project revision: @project-revision@
-Project version: 3.0.12
+Project version: 3.0.15
 ************************************************************************
 Original translated by: iCat, Kurax, 冰焱妩魅 @ CWDG, ananhaid
 Currently maintained by:
@@ -131,6 +131,7 @@ L["Ashleaf Sprite"] = "灰叶林精"
 L["Ashtongue Warrior"] = "灰舌战士"
 L["Aska Mistrunner"] = "阿丝卡·迷雾行者"
 L["Auchenai Monk"] = "奥金尼僧侣"
+L["Auria Irondreamer"] = true -- Needs review
 L["AUTOLOAD_DB_DESC"] = "当进行数据挖掘时自动加载所有 ARL 配方数据库。"
 L["Auto Load Recipe Database"] = "自动加载配方数据库"
 L["Auto Scan Map"] = "自动扫描地图"
@@ -276,6 +277,7 @@ L["\"Cookie\" McWeaksauce"] = "“曲奇”米维克索斯"
 L["Cookie One-Eye"] = "独眼曲奇"
 L["Coreiel"] = "克蕾伊"
 L["Corporal Bluth"] = "布鲁斯下士"
+L["Costan Highwall"] = true -- Needs review
 L["Cowardly Crosby"] = "怯懦的克罗斯比"
 L["CRAFTED_ENGINEERS"] = "工程学制造配方。"
 L["Crag Stalker"] = "峭壁捕猎者"
@@ -443,6 +445,7 @@ L["Enchanter Nalthanis"] = "附魔师纳萨尼斯"
 L["Enchantress Andiala"] = "附魔师安蒂亚拉"
 L["Enchantress Volali"] = "附魔师沃拉莉"
 L["ENG_DISC"] = "工程学制造物品随机发现此配方。"
+L["ENG_DISC_ARMY_KNIFE"] = "制造第一个侏儒军刀之后发现。"
 L["ENG_DISC_FIREWORKS"] = "制作潘达利亚烟火随机领悟。"
 L["ENG_FLOOR_ITEM_BRD"] = "在黑石深渊傀儡统帅阿格曼奇附近地面上可以找到结构图。只有工程学300以上可以学习。"
 L["ENG_GNOMER"] = "诺莫瑞根小怪掉落。"
@@ -455,6 +458,7 @@ L["Enraged Mammoth"] = "被激怒的猛犸象"
 L["Enraged Water Spirit"] = "愤怒的水灵"
 L["Eorain Dawnstrike"] = "艾欧莱·晨击"
 L["Eredar Deathbringer"] = "艾瑞达死亡使者"
+L["Eric Broadoak"] = true -- Needs review
 L["Eriden"] = "恩里德"
 L["Erika Tate"] = "艾瑞卡·塔特"
 L["Erilia"] = "艾瑞丽亚"
@@ -882,6 +886,7 @@ L["Marogg"] = "玛洛格"
 L["Martine Tramblay"] = "马丁·塔布雷"
 L["Maru'sa"] = "马露莎"
 L["Mary Edras"] = "玛丽·艾塔斯"
+L["Mary Kearie"] = true -- Needs review
 L["Master Bier"] = "毕迩大师"
 L["Master Cannon"] = "迦南大师"
 L["Master Chang"] = "常大师"
@@ -921,6 +926,7 @@ L["Mob Drop"] = "怪物掉落"
 L["MOB_DROP_DESC"] = "扫描中包含怪物掉落配方。"
 L["Modoru"] = "莫度鲁"
 L["MODULE_ERROR_FORMAT"] = "“Ackis Recipe List: %s”模块未被加载。 可能未下载或已禁用。"
+L["MODULE_WRONG_VERSION_FORMAT"] = "需要专业模块，“Ackis Recipe List: %s”版本为%d。当前支持的专业模块版本为%d。"
 L["Molt Thorn"] = "摩塔索恩"
 L["Moonrage Tailor"] = "月怒裁缝"
 L["Moordo"] = "莫多"
@@ -931,6 +937,7 @@ L["Mudduk"] = "玛杜克"
 L["Muheru the Weaver"] = "编织者姆赫鲁"
 L["Mukdrak"] = "穆德拉克"
 L["Mumman"] = "穆曼"
+L["Murg Stonecrack"] = true -- Needs review
 L["Murkblood Raider"] = "暗血掠夺者"
 L["Murne Greenhoof"] = true -- Needs review
 L["Muuran"] = "穆尔兰"
@@ -972,6 +979,7 @@ L["Nivi Weavewell"] = "妮维·精编"
 L["Nixx Sprocketspring"] = "尼克斯·斯普克斯宾"
 L["NO_DISPLAY"] = "没有配方。如果你看到了这个信息请到 http://www.wowace.com/addons/arl/tickets 提交一个 Ticket 说明你是如何选择过滤/如何选择排除，和你的专业以及已知/未知配方数目。"
 L["NoItemLink"] = "这个物品没有一个物品链接或者不是您的本地缓存。"
+L["Nonn Threeratchet"] = "诺恩·三棘"
 L["Noodles"] = "面条儿"
 L["NORMAL"] = "25人团队普通模式掉落。"
 L["NOTSCANNED"] = "您尚未扫描这个专业。请打开这个专业，然后扫描技能。"

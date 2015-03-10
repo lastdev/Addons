@@ -2,10 +2,10 @@
 ************************************************************************
 Vendor.lua
 ************************************************************************
-File date: 2014-12-14T20:50:11Z
-File hash: a4cd6d6
-Project hash: a4cd6d6
-Project version: 3.0.12
+File date: 2015-02-24T23:49:24Z
+File hash: 9fce6f9
+Project hash: 9fce6f9
+Project version: 3.0.15
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -143,6 +143,10 @@ function addon:InitVendor()
 	AddVendor(53881,	L["Ayla Shadowstorm"],			Z.MOLTEN_FRONT,			44.8,	86.6,	"Neutral") -- Leatherworking, Tailoring
 	AddVendor(59908,	L["Jaluu the Generous"],		Z.VALE_OF_ETERNAL_BLOSSOMS,	74.2,	42.6,	"Neutral") -- Leatherworking, Tailoring
 	AddVendor(64032,	L["Sage Whiteheart"],			Z.SHRINE_OF_SEVEN_STARS,	84.6,	63.6,	"Alliance") -- Enchanting, Tailoring
+	AddVendor(90894,	L["Alexi Hackercam"],			Z.LUNARFALL,			34.6,	33.0,	"Alliance") -- Blacksmithing, Engineering, Jewelcrafting
+	AddVendor(91030,	L["Trixxy Volt"],			Z.FROSTWALL,			40.8,	54.8,	"Horde") -- Blacksmithing, Engineering, Jewelcrafting
+	AddVendor(91031,	L["Nicholas Mitrik"],			Z.FROSTWALL,			40.8,	54.8,	"Horde") -- Alchemy, Inscription
+	AddVendor(91404,	L["Samantha Scarlet"],			Z.LUNARFALL,			34.6,	33.0,	"Alliance") -- Alchemy, Inscription
 
 	self.InitVendor = nil
 end

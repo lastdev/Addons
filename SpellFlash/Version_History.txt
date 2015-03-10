@@ -1,3 +1,12 @@
+== Version 6.19
+
+* fix lua error that occurred when libButtonGlow isn't installed.
+  - thought I tested it enough, but nope.
+
+== Version 6.18
+
+* support new libButtonGlow-1.0 as used in Bartender4 (and maybe other addons)
+
 == Version 6.17
 
 * Fixed calls to the function GetSpellInfo.

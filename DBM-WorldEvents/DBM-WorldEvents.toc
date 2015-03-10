@@ -1,4 +1,4 @@
-﻿## Interface: 60000
+﻿## Interface: 60100
 ## X-Min-Interface: 60000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0World Events|r
 ## Title-esES:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Eventos del Mundo|r
@@ -12,7 +12,8 @@
 ## Author: MysticalOS
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
-## SavedVariablesPerCharacter: DBMWorldEvents_SavedVars, DBMWorldEvents_SavedStats
+## SavedVariables: DBMWorldEvents_AllSavedVars
+## SavedVariablesPerCharacter: DBMWorldEvents_SavedStats
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: OTHER
 ## X-DBM-Mod-Category: WOD
@@ -40,6 +41,7 @@
 ## X-DBM-Mod-MapID: 230,189,33,547,1004, 1, 0
 ## X-DBM-Mod-Sort: 150
 ## X-DBM-Mod-LoadCID: 55003,54499,15467,15466,49687,15664
+## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua
 localization.ru.lua
 localization.fr.lua
@@ -56,3 +58,4 @@ Holidays\CorenDirebrew.lua
 Holidays\HeadlessHorseman.lua
 Holidays\Greench.lua
 Quests\Plants.lua
+Quests\Invasions.lua

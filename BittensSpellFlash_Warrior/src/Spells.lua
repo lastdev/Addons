@@ -4,902 +4,863 @@ local s = SpellFlashAddon
 local x = s.UpdatedVariables
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
-local GetTime = GetTime
-local math = math
+local min = math.min
+local max = math.max
 
 ------------------------------------------------------------------------ Common
-local bothShouts = { c.GetID("Battle Shout"), c.GetID("Commanding Shout") }
-
-local function chooseShout(z, fail)
-  if fail then
-    return false
-  end
-  
-  local ap = s.Buff(c.ATTACK_POWER_BUFFS, "player")
-  local sta = s.Buff(c.STAMINA_BUFFS, "player")
-  local battleID = c.GetID("Battle Shout")
-  local commandID = c.GetID("Commanding Shout")
-  if s.MyBuff(battleID, "player") then
-    return false --z.FlashID = battleID
-  elseif s.MyBuff(commandID, "player") then
-    return false --z.FlashID = commandID
-  elseif ap and sta then
-    z.FlashID = bothShouts
-  elseif ap then
-    return false --z.FlashID = commandID
-  elseif sta then  
-    return false --z.FlashID = battleID
-  else
-    z.FlashID = bothShouts
-  end
-  return true
-end
-
-local function noRoomForShoutRage()
-  if c.HasGlyph("Hoarse Voice") then
-    return a.EmptyRage < 15
-  else
-    return a.EmptyRage < 30
-  end
-end
-
-local function rageAfterHeroicStrike()
-  if c.GetCooldown("Heroic Strike", false, 1.5) == 0 then
-    return a.Rage - 30
-  else
-    return a.Rage
-  end
-end
-
-c.AddSpell("Shout", nil, {
-  ID = "Battle Shout",
-  CheckFirst = chooseShout
+c.AddSpell("Defensive Stance", nil, {
+   Type = "form"
 })
 
-c.AddSpell("Shout", "for Rage", {
-  ID = "Battle Shout",
-  CheckFirst = function(z)
-    return chooseShout(z, noRoomForShoutRage())
-  end
+c.AddSpell("Battle Stance", nil, {
+   Type = "form"
 })
 
-c.AddOptionalSpell("Shout", "for Buff", {
-  ID = "Battle Shout",
-  CheckFirst = function(z)
-    if not x.EnemyDetected then
-      return false
-    end
-    
-    local ap = c.RaidBuffNeeded(c.ATTACK_POWER_BUFFS)
-    local sta = c.RaidBuffNeeded(c.STAMINA_BUFFS)
-    local battleID = c.GetID("Battle Shout")
-    local commandID = c.GetID("Commanding Shout")
-    if s.MyBuff(battleID, "player") then
-      z.FlashID = battleID
-      return ap
-    elseif s.MyBuff(commandID, "player") then
-      z.FlashID = commandID
-      return sta
-    elseif ap and sta then
-      z.FlashID = bothShouts
-    elseif ap then
-      z.FlashID = battleID
-    elseif sta then
-      z.FlashID = commandID
-    else
-      return false
-    end
-    return true
-  end,
+c.AddSpell("Battle Shout", nil, {
+   NoRangeCheck = true,
+   CheckFirst = function(z)
+      if s.InRaidOrParty() then
+         c.MakeOptional(z, false)
+         return c.RaidBuffNeeded(c.ATTACK_POWER_BUFFS)
+      else
+         c.MakeOptional(z, c.HasMyBuff("Commanding Shout"))
+         return c.SelfBuffNeeded(c.ATTACK_POWER_BUFFS)
+      end
+   end
 })
 
---TALENT
---You become a whirling storm of destructive force, striking 
---all targets within 8 yards for 120% weapon damage every 1 sec 
---for 6 sec.
---During a Bladestorm, you can continue to dodge, block, and parry, 
---and are immune to movement impairing and loss of control effects. 
---However, you can only perform shout abilities.
+c.AddSpell("Commanding Shout", nil, {
+   NoRangeCheck = true,
+   CheckFirst = function(z)
+      if s.InRaidOrParty() then
+         if s.Buff(c.ATTACK_POWER_BUFFS, "raid|all|range|player") then
+            return false -- my own ap buff on all
+         else
+            c.MakeOptional(z, not c.RaidBuffNeeded(c.ATTACK_POWER_BUFFS))
+            return c.RaidBuffNeeded(c.STAMINA_BUFFS)
+         end
+      else
+         return false
+      end
+   end
+})
+
+c.AddOptionalSpell("Charge")
+
 c.AddSpell("Bladestorm", nil, {
-  Melee = true,
+   Melee = true,
+   Cooldown = 60,
 })
 
---TALENT
---Sends a wave of force in a frontal cone before you, 
---causing (75 / 100 * Attack power) damage and stunning 
---all enemy targets within 10 yards for 4 sec.
---Causing damage to 3 or more targets lowers the cooldown 
---of the next Shockwave by 20 sec.
+c.AddSpell("Bladestorm", "if Enraged", {
+   Melee = true,
+   Cooldown = 60,
+   CheckFirst = function()
+      return a.Enraged
+   end
+})
+
+c.AddSpell("Bladestorm", "if Enraged for duration", {
+   Melee = true,
+   Cooldown = 60,
+   CheckFirst = function()
+      return a.Enraged and c.GetBuffDuration("Enrage") >= 6
+   end
+})
+
+c.AddSpell("Bladestorm", "with Colossus Smash", {
+   Melee = true,
+   Cooldown = 60,
+   CheckFirst = function()
+      return a.Colossus
+         and a.Rage < 70
+   end
+})
+
 c.AddSpell("Shockwave", nil, {
-  Melee = true,
-  CheckFirst = function()
-     return s.HealthPercent() > 20 and not c.HasTalent("Unquenchable Thirst")
-  end
+   CheckFirst = function()
+       return not c.HasTalent("Unquenchable Thirst")
+   end
 })
 
---SPELL:
---Leap through the air towards a targeted location, slamming 
---down with destructive force to deal 1 (+ 50% of Attack power) 
---Physical damage to all enemies within 8 yards.
-c.MakeMini(c.AddOptionalSpell("Heroic Leap", nil, {
-  NoGCD = true,
---  CheckFirst = function()
---    return a.Smash > 0 and not c.IsSolo()
---  end
-}))
+-- c.MakeMini(c.AddOptionalSpell("Heroic Leap", nil, {
+--    NoGCD = true,
+-- --   CheckFirst = function()
+-- --      return a.Smash > 0 and not c.IsSolo()
+-- --   end
+-- }))
 
 local function victoryHealable()
-  if a.VictoriousDuration > 4 
-    and c.HasGlyph("Victory Rush") 
-    and not c.HasTalent("Impending Victory") then
-    
-    return c.GetHealthPercent("player") < 70
-  else
-    return c.GetHealthPercent("player") < 80
-  end
+   local heal = 15
+   if a.VictoriousDuration > 4 then
+      if c.HasGlyph("Victory Rush") and not c.HasTalent("Impending Victory") then
+         heal = heal * 1.5
+      end
+   end
+
+   return c.GetHealthPercent("player") + heal < (c.IsSolo() and 102 or 70)
 end
 
---TALENTS:
---Instantly attack the target, causing (200% of Attack power) 
---damage and healing you for 15% of your maximum health.
---Killing an enemy that yields experience or honor resets 
---the cooldown of Impending Victory.
---Replaces Victory Rush.
 c.AddSpell("Impending Victory", nil, {
-  Melee = true,
+   Rage = 10,
+   Cooldown = 30,
+   CheckFirst = function()
+      return c.GetHealthPercent("target") > 20
+         and not c.HasTalent("Unquenchable Thirst")
+   end
 })
 
 c.AddSpell("Impending Victory", "for Heals", {
-  Melee = true,
-  CheckFirst = victoryHealable,
-})
-
-c.AddSpell("Impending Victory", "for Free", {
-  Melee = true, 
-  CheckFirst = function()
-    return a.VictoriousDuration > 0
-  end
-})
-
-c.AddSpell("Impending Victory", "unless Execute", {
-  Melee = true, 
-  CheckFirst = function()
-    return not a.InExecute or a.VictoriousDuration > 0
-  end
-})
-
-c.AddOptionalSpell("Impending Victory", "for Heals, Optional", {
-  Melee = true,
-  CheckFirst = victoryHealable,
-})
-
-c.AddSpell("Victory Rush", nil, {
-  Melee = true,
-  CheckFirst = function()
-    return a.VictoriousDuration > 0
-  end,
+   Rage = 10,
+   Cooldown = 30,
+   CheckFirst = victoryHealable,
 })
 
 c.AddSpell("Victory Rush", "for Heals", {
-  Melee = true,
-  CheckFirst = function()
-    return a.VictoriousDuration > 0 and victoryHealable()
-  end,
+   Melee = true,
+   CheckFirst = function()
+      return a.VictoriousDuration > 0 and victoryHealable()
+   end,
 })
 
-c.AddOptionalSpell("Victory Rush", "for Heals, Optional", {
-  Melee = true,
-  CheckFirst = function()
-    return a.VictoriousDuration > 0 and victoryHealable()
-  end,
-})
-
---TALENT:
---Instantly heals you for 10% of your maximum health, 
---and an additional 20% over 5 sec.  Usable while stunned.
---c.AddOptionalSpell("Enraged Regeneration", nil, {
---  NoGCD = true,
---  NoPowerCheck = true,
---  CheckFirst = function()
---    return a.Enraged and c.GetHealthPercent("player") < 80
---  end,
---})
-
---TALENT:
---Every 30 rage that you spend reduces the remaining cooldown 
---of several of your abilities by 1 sec:
---  Avatar
---  Bloodbath
---  Bladestorm
---  Storm Bolt
---  Shockwave
---  Dragon Roar
---  Mocking Banner
---  Heroic Leap
---  Recklessness
---  Die by the Sword
-c.AddOptionalSpell("Anger Management", nil, {
-  NoGCD = true,
-})
-
---TALENT:  Associated Buff: Avatar
---Transform into a colossus for 24 sec, dealing 20% 
---increased damage and removing all roots and snares.
 c.AddOptionalSpell("Avatar", nil, {
-  NoGCD = true,
-  CheckFirst = function()
-    local reckCd = c.GetCooldown("Recklessness", true, 180)
-    return reckCd > 42 or reckCd < 6
-  end
+   NoGCD = true,
+   Cooldown = 3 * 60,
+   CheckFirst = function()
+      return c.HasBuff("Recklessness")
+         or c.GetHealthPercent("target") < 5
+   end
 })
 
-c.AddOptionalSpell("Sunder Armor", nil, {
-  CheckFirst = function()
-    return not c.IsSolo()
-      and (c.GetDebuffStack(c.ARMOR_DEBUFFS) < 3
-        or c.GetDebuffDuration(c.ARMOR_DEBUFFS) < 3)
-  end
+c.AddOptionalSpell("Siegebreaker", nil, {
+   Cooldown = 45
 })
+
+c.AddOptionalSpell("Storm Bolt", nil, {
+   Cooldown = 30,
+})
+
+c.AddOptionalSpell("Dragon Roar", nil, {
+   Melee = true,
+   Cooldown = 60,
+   CheckFirst = function()
+      return a.Bloodbath or not c.HasTalent("Bloodbath")
+   end
+})
+
+c.AddSpell("Execute", nil, {
+   Rage = function()
+      return s.Spec(1) and 10 or 30
+   end,
+   CheckFirst = function()
+      return a.InExecute
+   end
+})
+
+c.AddSpell("Execute", "with Sudden Death", {
+   CheckFirst = function()
+      return a.SuddenDeath
+   end
+})
+
+c.AddSpell("Whirlwind", nil, {
+   Melee = true,
+   Rage = 30,
+})
+
+c.AddSpell("Whirlwind", "near cap", {
+   Melee = true,
+   Rage = 30,
+   CheckFirst = function()
+      return a.EmptyRage <= 30
+   end
+})
+
 
 c.AddInterrupt("Pummel")
 c.AddInterrupt("Disrupting Shout")
 
 -------------------------------------------------------------------------- Arms
-local rendUpTime = 0
+c.AddSpell("Execute", "with Colossus Smash", {
+   Rage = 10,
+   CheckFirst = function()
+      if not a.InExecute then
+         return false
+      end
 
-local function getRendUptime(time)
-   if rendUpTime == 0 then
-      rendUpTime = GetTime()
-    return true
-   elseif (GetTime() - rendUpTime) >= 17 then
-      rendUpTime = 0
-    return true
-   else
-      return false
+      if a.Colossus then
+         return true
+      end
+
+      if c.GetHealthPercent("target") < (s.Boss() and 2 or 20) then
+         return true
+      end
+
+      return (a.Rage > 60 or c.EstimatedHarmTargets == 2)
+         and c.GetCooldown("Colossus Smash") >= c.LastGCD
    end
+})
 
-end
-
--- A vicious strike that deals 225% Physical damage and costs 20 rage.
--- Costs 20 rage.
 c.AddSpell("Mortal Strike", nil, {
-  Melee = true,
-  CheckLast = function()
-     return not a.InExecute and a.MSIsUsable
-  end
+   Rage = 20,
+   Cooldown = 6,
+   CheckFirst = function()
+      return c.GetCooldown("Colossus Smash") > 1
+         and not a.InExecute
+   end
 })
 
--- Wounds the target, causing (579.6% of Attack Power) bleed damage over 18 seconds and abilities
--- final burst (222.5% of Attack Power) bleed damage when the effect expires.
--- Costs 5 rage. 
-c.AddSpell("Rend", nil, { 
-  CheckFirst = function()
-    return not c.HasMyDebuff("Rend")
-  end
+c.AddSpell("Mortal Strike", "with two targets", {
+   Rage = 20,
+   Cooldown = 6,
+   CheckFirst = function()
+      return c.GetCooldown("Colossus Smash") > 1.5
+         and not a.InExecute
+         and c.EstimatedHarmTargets == 2
+   end
 })
+
+c.AddSpell("Rend", nil, {
+   Rage = 5,
+   MyDebuff = "Rend",
+   CheckFirst = function()
+      return not c.HasMyDebuff("Rend")
+   end
+})
+
+c.AssociateTravelTimes(0, "Rend")
+c.AddSpell("Rend", "early", {
+   Rage = 5,
+   MyDebuff = "Rend",
+   CheckFirst = function()
+      return c.ShouldCastToRefresh("Rend", "Rend", 6, true)
+   end
+})
+
+c.AddSpell("Rend", "early without Colossus Smash", {
+   Rage = 5,
+   MyDebuff = "Rend",
+   CheckFirst = function()
+      return c.ShouldCastToRefresh("Rend", "Rend", 5.4, true)
+         and not a.Colossus
+   end
+})
+
 c.AddOptionalSpell("Recklessness", "for Arms", {
-  CheckFirst = function(z)
-    z.FlashSize = nil
-    
-    if c.IsSolo() or c.WearingSet(4, "DpsT14") then
-      return true
-    end
-    
-    if not a.InExecute then
-      z.FlashSize = s.FlashSizePercent() / 2
-    end
-    return a.Bloodbath --or hasSmashFor(5)
-  end
+   Cooldown = 3 * 60,
+   CheckFirst = function()
+      local hp = c.GetHealthPercent("target")
+      local boss = s.Boss("target")
+
+      -- if target.time_to_die<10 then return true
+
+      if not c.HasMyDebuff("Rend") then
+         return false
+      end
+
+      if hp > 20 and not boss then
+         return false
+      end
+
+      if c.HasTalent("Bloodbath") then
+         return a.Bloodbath
+      elseif c.GetMyDebuffDuration("Colossus Smash") >= 5 then
+         return 0
+      else
+         return c.GetCooldown("Colossus Smash") - 2, 0.35
+      end
+   end
 })
 
 c.AddOptionalSpell("Bloodbath", "for Arms", {
-  NoGCD = true,
-  CheckFirst = function()
-    return a.Rage >= 70 and a.smashPending > 0
-  end
-})
-
-c.AddOptionalSpell("Berserker Rage", "for Arms", {
-  NoGCD = true,
-  CheckFirst = function()
-    return not a.Enraged and a.EmptyRage >= 10
-  end
-})
-
-c.AddOptionalSpell("Heroic Strike", "for Arms", {
-  NoGCD = true,
-  CheckFirst = function()
-    return (a.EmptyRage < 15 and not a.InExecute)
-      or (a.smashPending > 0 and a.Rage > 60 and c.WearingSet(2, "DpsT16"))
-  end
+   NoGCD = true,
+   Cooldown = 60,
+   CheckFirst = function()
+      return c.HasMyDebuff("Rend")
+         and c.GetCooldown("Colossus Smash") < 5
+   end
 })
 
 c.AddOptionalSpell("Sweeping Strikes", nil, {
-  NoGCD = true,
+   NoGCD = true,
+   Rage = 10,
 })
 
--- Hurls your weapon at an enemy, causing 60% Physical damage and stunning for 4 seconds.
--- Deals quadruple damage to targets permanently immune to stuns.
-c.AddSpell("Storm Bolt", "for Arms", {
-  CheckFirst = function()
-    return a.smashPending > 0
-  end
-})
-
--- Roar explosively, dealing (156% of Attack Power) damage to all enemies within 8 yards
--- and knocking them back and down for 0.50 seconds.  Damage ignores all armor and is 
--- always a critical strike.
 c.AddSpell("Dragon Roar", "for Arms", {
-  Melee = true,
+   Melee = true,
+   Cooldown = 60,
+   CheckFirst = function()
+      return c.GetCooldown("Colossus Smash") > c.LastGCD
+         and not a.Colossus
+   end
 })
 
--- Smashes a target for 150% Physical damage and causes your attacks to bypass all of their 
--- armor for 6 seconds.  Bypasses less armor on players.
-c.AddSpell("Colossus Smash", "for Arms", {
-  Melee = true,
-  Override = function()
-    return a.CSIsUsable
-  end
+-- @todo danielp 2015-01-22: not sure this actually makes sense, but there was
+-- definitely existing code tracking it, so maybe we should assume it sticks?
+--
+-- should test, once >= 81, if this is a buff, debuff, and on what, and if
+-- there is a travel time delay between the cast and the buff.
+c.AssociateTravelTimes(0, "Colossus Smash")
+c.AddSpell("Colossus Smash", nil, {
+   Cooldown = 20,
+   CheckFirst = function()
+      return not c.IsCastingOrInAir("Colossus Smash")
+         and not a.Colossus
+   end
 })
 
--- Attempt to finish off a wounded foe, causing 320% Physical damage. 
--- Only usable on enemies that have less than 20% health.
--- Costs 30 Rage
-c.AddSpell("Execute", "for Arms", {
-  CheckFirst = function()
-    return a.InExecute or a.freeExecute
-  end
+c.AddSpell("Colossus Smash", "with Rend", {
+   Cooldown = 20,
+   CheckFirst = function()
+      return not c.IsCastingOrInAir("Colossus Smash")
+         and c.HasMyDebuff("Rend")
+         and not a.Colossus
+   end
 })
 
--- Slam an opponent, causing 150% Physical damage.  Each consecutive use of Slam increases
--- the damage dealt by 50% and the Rage cost by 100%, stacking up to 2 times for 2 sec.
--- Costs 10 Rage.
 c.AddSpell("Slam", nil, {
-  CheckFirst = function(z)
-      if c.GetBuffStack("Slam") == 1 then
-       z.FlashSize = s.FlashSizePercent() * 0.75
-    elseif c.GetBuffStack("Slam") == 2 then
-       z.FlashSize = s.FlashSizePercent() * 1.5
-    end
-    return true
-  end
+   Rage = function()
+      return 10 + (c.GetBuffStack("Slam") * 10)
+   end,
+   CheckFirst = function()
+      return (a.Rage > 20 or c.GetCooldown("Colossus Smash") > c.LastGCD)
+         and not a.InExecute
+         and c.GetCooldown("Colossus Smash") > 1
+         and c.GetCooldown("Mortal Strike") > 1
+   end
 })
 
-c.AddSpell("Thunder Clap", nil, {
-  Melee = true,
+c.AddSpell("Whirlwind", "for Arms ST", {
+   Melee = true,
+   Rage = 20,
+   CheckFirst = function()
+      return not c.HasTalent("Slam")
+         and not a.InExecute
+         and (a.Rage >= 40 or c.WearingSet(4, "T17") or a.Colossus)
+         and c.GetCooldown("Colossus Smash") > 1
+         and c.GetCooldown("Mortal Strike") > 1
+   end,
 })
 
--- In a whirlwind of steel you attack all enemies within 8 yards, 
--- causing 100% Physical damage with your main-hand weapon to each enemy.
--- Costs 20 Rage.
-c.AddSpell("Whirlwind", "for Arms", {
-  Melee = true,
-  CheckFirst = function()
-    return a.Rage >= 20
-  end,
+c.AddSpell("Whirlwind", "for Arms AoE", {
+   Melee = true,
+   Rage = 20,
+   CheckFirst = function()
+      return c.GetCooldown("Colossus Smash") > 1.5
+         and (a.InExecute or c.EstimatedHarmTargets > 3)
+   end,
 })
 
--------------------------------------------------------------------------- Fury
--- 
+c.AddOptionalSpell("Ravager", "with Colossus Smash", {
+   Cooldown = 60,
+   GetDelay = function()
+      -- sync with colossus smash
+      return max(c.GetCooldown("Colossus Smash") - 4,
+                 c.GetCooldown("Ravager"))
+   end
+})
 
-local function shouldFlashBloodthirst()
-  return (not a.InExecute)
-    and not c.IsCasting("Bloodthirst")
-end
+c.AddOptionalSpell("Ravager", "sync with Bloodbath", {
+   Cooldown = 60,
+   GetDelay = function()
+      if c.HasTalent("Bloodbath") then
+         return max(c.GetCooldown("Bloodbath"), c.GetCooldown("Ravager"))
+      else
+         return c.GetCooldown("Ravager")
+      end
+   end
+})
+
+c.AddOptionalSpell("Storm Bolt", "with Colossus Smash", {
+   Cooldown = 30,
+   CheckFirst = function()
+      if a.Rage >= 90 then
+         return false
+      end
+
+      return a.Colossus
+         or c.GetCooldown("Colossus Smash") > 4
+   end
+})
+
+c.AddSpell("Impending Victory", "for Arms", {
+   Rage = 10,
+   Cooldown = 30,
+   CheckFirst = function()
+      return a.Rage < 40
+         and not a.InExecute
+         and c.GetCooldown("Colossus Smash") > 1
+         and c.GetCooldown("Mortal Strike") > 1
+   end
+})
+
+------------------------------------------------------------------------- Fury
 
 local function getRagingBlowStacks(noGCD)
-  local stacks = c.GetBuffStack("Raging Blow!", noGCD)
-  if c.IsCasting("Enrage") then
-    stacks = stacks + 1
-  end
-  if c.IsCasting("Raging Blow") then
-    stacks = stacks - 1
-  end
---  local str = tostring(math.min(math.max(0, stacks), 2))
-  return math.min(math.max(0, stacks), 2) 
+   local stacks = c.GetBuffStack("Raging Blow!", noGCD)
+   if c.IsCasting("Enrage") then
+      stacks = stacks + 1
+   end
+   if c.IsCasting("Raging Blow") then
+      stacks = stacks - 1
+   end
+--   local str = tostring(min(max(0, stacks), 2))
+   return min(max(0, stacks), 2)
 end
 
 c.AddOptionalSpell("Berserker Rage", "for Fury", {
-  NoGCD = true,
-  CheckFirst = function()
-     return not a.Enraged or (c.HasTalent("Unquenchable Thirst") and getRagingBlowStacks(true) < 2)
-  end
+   NoGCD = true,
+   Cooldown = 30,
+   CheckFirst = function()
+      return not a.Enraged
+         or (c.HasTalent("Unquenchable Thirst") and getRagingBlowStacks(true) < 0)
+   end
 })
 
-c.AddOptionalSpell("Bloodbath", "for Fury", {
-  NoGCD = true,
-  CheckFirst = function() 
-    return c.HasTalent("Bloodbath")
-  end
+c.AddOptionalSpell("Bloodbath", nil, {
+   NoGCD = true,
+   Cooldown = 60
 })
 
--- Instantly strike the target for 50% Physical damage, generating 10 Rage, 
--- and restoring 1% of your health.
--- Bloodthirst has an additional 30% chance to be a critical strike.
--- Replaces Heroic Strike.
--- 4.5 sec. cooldown and instant cast, no cost
-c.AddOptionalSpell("Bloodthirst", "early", {
-  CheckFirst = function()
-    return a.Rage < 80 and not c.HasTalent("Unquenchable Thirst")
-  end
+
+c.AddSpell("Bloodthirst", "early", {
+   Cooldown = 4.5,
+   CheckFirst = function()
+      return (a.Rage < 80 and not c.HasTalent("Unquenchable Thirst"))
+         or not a.Enraged
+   end
 })
 
--- If it is up late in rotation, use it
-c.AddOptionalSpell("Bloodthirst", "late", {
+c.AddSpell("Bloodthirst", nil, {
+   Cooldown = 4.5,
 })
 
--- Deals 1,371 damage to all enemies within 8 yards and knocking 
--- them back and down for .5 sec.  Damage ignores all armor and is 
--- always a critical strike.
--- Cooldown is 1 min. and is an instant cast, no cost.
-c.AddSpell("Dragon Roar", "for Fury", {
-  Melee = true,
-  NoGCD = false,
-  CheckFirst = function()
-    return a.Bloodbath or not c.HasTalent("Bloodbath")
-  end
+c.AddSpell("Bloodthirst", "during cleave", {
+   Cooldown = 4.5,
+   CheckFirst = function()
+      return not a.Enraged
+         or getRagingBlowStacks() <= 0
+         or a.Rage < 50
+   end
 })
 
--- Attempt to finish off a wounded foe, causing 3,237 Physical damage 
--- with main-hand and 969 Physical damage with off-hand.  Only usable on 
--- enemies with less than 20% health. Cost is 30 rage unless Sudden Death is up.
--- Not using as optional spell, if this is ready, need to use it.
-c.AddSpell("Execute", "for Fury", {
-  CheckFirst = function()
-    return a.InExecute or a.freeExecute
-  end
+c.AddSpell("Execute", "when Enraged", {
+   Rage = 30,
+   CheckFirst = function()
+      -- @todo danielp 2015-01-18: actually TTD < 12
+      return a.InExecute and (a.Enraged or c.GetHealthPercent("target") < 2)
+   end
 })
 
-c.AddOptionalSpell("Heroic Leap", "for Fury", {
-  NoGCD = true,
---  CheckFirst = function()
---    return a.Smash > 0 and not c.IsSolo()
---  end
-})
-
--- Throw your weapon at the enemy, causing 50% Physical damage.  Generates high threat.
--- Cast is instant with a 6 sec. cooldown.  Range is 8-30 yards
+-- Throw your weapon at the enemy, causing 50% Physical damage.   Generates high threat.
+-- Cast is instant with a 6 sec. cooldown.   Range is 8-30 yards
 c.AddOptionalSpell("Heroic Throw", "for Fury", {
-  NoGCD = false,
---  NoRangeCheck = false,
---  CheckFirst = function()
---    return a.EmptyRage <= 10
---      or (not a.InExecute and a.Rage >= 40 and a.smashPending > 0)
---  end
+--   NoRangeCheck = false,
+--   CheckFirst = function()
+--      return a.EmptyRage <= 10
+--         or (not a.InExecute and a.Rage >= 40 and a.smashPending > 0)
+--   end
 })
 
---Instantly attack the target, causing (200% of Attack power) damage and healing 
--- you for 15% of your maximum health.  Killing an enemy that yields experience or 
--- honor resets the cooldown of Impending Victory.  Replaces Victory Rush.
--- Cast is instant and cost is 10 rage with a 30 sec. cooldown.
-c.AddOptionalSpell("Impending Victory", "for Fury", {
-  Melee = true,
-  NoGCD = false,
-  CheckFirst = function()
-    local usable, pwr = s.UsableSpell("Impending Victory")
-    return usable and s.HealthPercent() >= 20 and not c.HasTalent("Unquenchable Thirst")
-  end
+c.AddSpell("Raging Blow", nil, {
+   Rage = 10,
+   CheckFirst = function()
+      -- Blizzard, why couldn't this just be normal spell charges?
+      return getRagingBlowStacks() > 0
+   end
 })
 
--- A mighty blow that deals 200% Physical damage with your main-hand weapon and deals 200% 
--- Physical damage with your off-hand weapon.
--- Becoming Enraged enables one charge of Raging Blow.  Limit 2 charges.
--- Cost 10 rage and is instant cast
--- When Raging Blow is available, less than two charges
-c.AddOptionalSpell("Raging Blow", nil, {
-  Melee = true,
-  NoGCD = false,
---  CheckFirst = function()
---    local usable, nuffpwer = s.UsableSpell("Raging Blow")
---    return usable
---  end
+c.AddSpell("Raging Blow", "with Meat Cleaver", {
+   Rage = 10,
+   CheckFirst = function()
+      -- Blizzard, why couldn't this just be normal spell charges?
+      return getRagingBlowStacks() > 0
+         and c.GetBuffStack("Meat Cleaver") > 0
+   end
 })
 
--- When Raging Blow has two charges
-c.AddSpell("Raging Blow", "Prime", {
-  Melee = true,
-  NoGCD = false,
-  CheckFirst = function()
-    return not a.InExecute
-      and getRagingBlowStacks() == 2
-  end
+c.AddSpell("Raging Blow", "with 2x Meat Cleaver", {
+   Rage = 10,
+   CheckFirst = function()
+      -- Blizzard, why couldn't this just be normal spell charges?
+      return getRagingBlowStacks() > 0
+         and c.GetBuffStack("Meat Cleaver") >= 2
+   end
 })
 
-c.AddSpell("Raging Blow", "AoE", {
-  Melee = true,
-  NoGCD = false,
-  CheckFirst = function()
-    local now = GetTime()
-    if c.IsCasting("Raging Blow") or now - a.CleaverDumpPending < .8 then
-      return false
-    end
-    
-    local stack = c.GetBuffStack("Meat Cleaver")
-    if GetTime() - a.CleaverPending < .8 then
-      stack = stack + 1
-    end
-    return stack >= 3
-  end
+c.AddSpell("Raging Blow", "with 3x Meat Cleaver", {
+   Rage = 10,
+   CheckFirst = function()
+      -- Blizzard, why couldn't this just be normal spell charges?
+      return getRagingBlowStacks() > 0
+         and c.GetBuffStack("Meat Cleaver") >= 3
+   end
+})
+c.AddSpell("Raging Blow", "with 3x Meat Cleaver and Enraged", {
+   Rage = 10,
+   CheckFirst = function()
+      -- Blizzard, why couldn't this just be normal spell charges?
+      return getRagingBlowStacks() > 0
+         and c.GetBuffStack("Meat Cleaver") >= 3
+         and a.Enraged
+   end
 })
 
--- Grants your special attacks an additional 15% chance to critically strike and 
--- increases your critical strike damage by 10%. Lasts 10 sec. Using this ability 
--- in Defensive Stance activates Battle Stance.  Has 3 min. Cooldown.  If this is available,
--- I am gonna flash it
 c.AddOptionalSpell("Recklessness", "for Fury", {
-  NoGCD = true,
---  CheckFirst = function()
---     return s.HealthPercent() >= 96     -- Beginning of fight
---           or (a.InExecute and select(1,s.UsableSpell("Recklessness")))  -- Use before Execute
---           or (s.HealthPercent() < 20 and (c.HasTalent("Bloodbath") and c.HasBuff("Bloodbath"))) -- Boosts melee near end of fight
---           or  c.HasTalent("Anger Management") -- I don't know about this yet
---  end
+   NoGCD = true,
+   Cooldown = 3 * 60,
+   CheckFirst = function()
+      local hp = c.GetHealthPercent("target")
+
+      -- @todo danielp 2015-01-18: should be "or TTD <= 12"
+      if c.HasTalent("Anger Management") or hp <= 5 then
+         return true
+      end
+
+      -- @todo danielp 2015-01-18: should be "TTD >= 190 or hp <= 20" here.
+      return (s.Boss("target") or hp <= 20)
+         and (a.Bloodbath or not c.HasTalent("Bloodbath"))
+   end
 })
 
--- Sends a wave of force in a frontal cone, causing (125% of Attack power) damage and stunning 
--- all enemies within 10 yards for 4 sec.  Cooldown reduced by 20 sec if it strikes at least 3 targets.
--- Cooldown is 40 sec and cast is instant
 c.AddSpell("Shockwave", "for Fury", {
-  NoGCD = false,
-  CheckFirst = function()
-     return not c.HasTalent("Unquenchable Thirst")
-  end
+   CheckFirst = function()
+       return not c.HasTalent("Unquenchable Thirst")
+   end
 })
 
--- Hurls your weapon at an enemy, causing 60% Physical damage and stunning for 4 sec.  
--- Deals quadruple damage to targets permanently immune to stuns.
--- Cast is instant with a 30 sec. cooldown.
-c.AddSpell("Storm Bolt", "for Fury", { 
-  NoGCD = false, 
- -- CheckLast = function()
- --   return select(1, s.UsableSpell("Storm Bolt"))
- -- end
+c.AddSpell("Whirlwind", "for Meat Cleaver", {
+   Melee = true,
+   Rage = 20,
+   CheckFirst = function()
+      return not c.HasBuff("Meat Cleaver")
+   end
 })
 
--- In a whirlwind of steel you attack all enemies within 8 yards 
--- causing 100% Physical damage with main-hand to each enemy.
--- Cost is 20 rage and cast is instant
-c.AddOptionalSpell("Whirlwind", "for Fury", {
-  Melee = true,
-  NoGCD = false,
-  CheckFirst = function()
-    return a.Rage >= a.maxPower - 20
-  end,
-})
+local function wildStrikeCost()
+   if c.HasBuff("Bloodsurge") then
+      return 0
+   elseif c.HasTalent("Furious Strikes") then
+      return 20
+   else
+      return 45
+   end
+end
 
--- A quick strike with your off-hand weapon that deals 375% Physical damage and 
--- reduces the effectiveness of healing on the target for 10 sec.  
--- Bloodthirst has a 20% chance of granting 2 charges of Wild Strike that cost no Rage.
--- Cost 45 rage and is instant
-c.AddOptionalSpell("Wild Strike", "for Fury", {  
-  NoPowerCheck = false,
-  NoGCD = false,
-  CheckLast = function()
-    return a.Rage >= 110 and s.HealthPercent() > 20
-  end
+c.AddSpell("Wild Strike", "at Cap", {
+   Rage = wildStrikeCost,
+   SpecialGCD = 1,
+   CheckFirst = function()
+      return a.EmptyRage <= 10 and s.HealthPercent() > 20
+   end
 })
 
 -- Bloodsurge is up so cost is zero, fire away ...
-c.AddSpell("Wild Strike", "with Bloodsurge for Fury", {  
-  NoPowerCheck = true,
-  NoGCD = false,
-  CheckFirst = function()
-    return c.HasBuff("Bloodsurge")
-  end
+c.AddSpell("Wild Strike", "with Bloodsurge", {
+   Rage = wildStrikeCost,
+   SpecialGCD = 1,
+   CheckFirst = function()
+      return c.HasBuff("Bloodsurge")
+   end
 })
 
--- Enraged, so this would be a rage dump.
-c.AddOptionalSpell("Wild Strike", "with Enrage for Fury", {  
-  NoPowerCheck = true,
-  CheckFirst = function()
-    return a.Enraged and s.HealthPercent() > 20
-  end
+c.AddSpell("Wild Strike", "if Enraged", {
+   Rage = wildStrikeCost,
+   SpecialGCD = 1,
+   CheckFirst = function()
+      return a.Enraged
+   end
+})
+
+c.AddSpell("Wild Strike", "with Bloodsurge to avoid cap", {
+   Rage = wildStrikeCost,
+   SpecialGCD = 1,
+   CheckFirst = function()
+      return c.HasBuff("Bloodsurge")
+         and a.Rage > 75
+   end
+})
+
+c.AddOptionalSpell("Ravager", "for Fury", {
+   Cooldown = 60,
+   GetDelay = function()
+      -- delay until BB comes off cooldown, to sync them, unless that is more
+      -- than ten seconds wait.  given they are both on a one minute CD, most
+      -- people will likely macro the two and all, so we def. want this to
+      -- flash as soon as it is usable, since they may not even have BB on
+      -- their bars to flash at them, just macro'ed into this.
+      local cd = c.GetCooldown("Bloodbath")
+      if a.Bloodbath or cd > 10 or c.GetHealthPercent("target") < 5 then
+         return 0
+      else
+         return cd
+      end
+   end
 })
 
 -------------------------------------------------------------------- Protection
-local function shouldDumpProt()
-  return c.HasBuff("Ultimatum", true) 
-    or c.HasBuff("Incite", true)
-    or (c.HasGlyph("Incite") and c.IsCasting("Demoralizing Shout"))
-    or (a.EmptyRage < 20 and not c.IsTanking())
-    or c.InDamageMode()
-end
+c.AddSpell("Shield Block", nil, {
+   Rage = 60,
+})
 
---You go berserk, removing and granting immunity to Fear,
---Sap, and Incapacitate effects for 6 sec.  Has a 30 sec. Cooldown.
+c.AddSpell("Shield Barrier", nil, {
+   Rage = 60,
+   ShouldHold = function()
+      if a.Rage >= 85 then
+         return false
+      end
+
+      local charges, tilNext = c.GetChargeInfo("Shield Block")
+      if charges == 0 and tilNext > 9 then
+         return false
+      end
+
+      return true
+   end
+})
+
+c.AddSpell("Demoralizing Shout", nil, {
+   Cooldown = 60,
+   ShouldHold = function()
+      -- incoming_damage_2500ms>health.max*0.1
+      return c.GetHealthPercent("player") > 90
+   end
+})
+
+c.AddSpell("Enraged Regeneration", nil, {
+   Cooldown = 60,
+   ShouldHold = function()
+      -- incoming_damage_2500ms>health.max*0.1
+      return c.GetHealthPercent("player") > 90
+   end
+})
+
+c.AddSpell("Shield Wall", nil, {
+   Cooldown = 3 * 60,
+   ShouldHold = function()
+      -- incoming_damage_2500ms>health.max*0.1
+      return c.GetHealthPercent("player") > 90
+   end
+})
+
+c.AddSpell("Last Stand", nil, {
+   Cooldown = 3 * 60,
+   ShouldHold = function()
+      -- incoming_damage_2500ms>health.max*0.1
+      return c.GetHealthPercent("player") > 90
+   end
+})
+
+
+
 c.AddOptionalSpell("Berserker Rage", "for Prot", {
-  NoGCD = true,
-  CheckFirst = function()
-    return (c.IsTanking() or c.InDamageMode()) and c.GetCooldown("Berserker Rage") == 0
-  end,
+   NoGCD = true,
+   CheckFirst = function()
+      return (c.IsTanking() or c.InDamageMode()) and c.GetCooldown("Berserker Rage") == 0
+   end,
 })
 
---  For the next 12 sec, your melee damage abilities and their multistrikes 
--- deal 30% additional  damage as a bleed over 6 sec. While bleeding, 
--- targets move 50% slower.  Has a 60 sec Cooldown
 c.AddOptionalSpell("Bloodbath", "for Prot", {
-  NoGCD = true,
-  CheckFirst = function()
-     return c.GetCooldown("Bloodbath")  == 0
-  end,
+   NoGCD = true,
+   Cooldown = 60,
+   CheckFirst = function()
+      if c.HasTalent("Dragon Roar") then
+         return c.GetCooldown("Dragon Roar") <= c.LastGCD
+      elseif c.HasTalent("Storm Bolt") then
+         return c.GetCooldown("Storm Bolt") <= c.LastGCD
+      else -- shockwave
+         return true
+      end
+   end
 })
 
-c.AddOptionalSpell("Defensive Stance", nil, {
-  Type = "form",
+c.AddOptionalSpell("Avatar", "for Prot", {
+   NoGCD = true,
+   Cooldown = 3 * 60,
+   CheckFirst = function()
+      if c.HasTalent("Ravager") and c.GetCooldown("Ravager") > c.LastGCD then
+         return false
+      end
+
+      if c.HasTalent("Dragon Roar") and c.GetCooldown("Dragon Roar") > c.LastGCD then
+         return false
+      end
+
+      if c.HasTalent("Storm Bolt") and c.GetCooldown("Storm Bolt") > c.LastGCD then
+         return false
+      end
+
+      return true
+   end
 })
 
-c.AddSpell("No Mitigation if Victory Available", nil, {
-  ID = 0,
-  RunFirst = function(z)
-    z.ID = c.HasTalent("Impending Victory")
-      and c.GetID("Impending Victory")
-      or c.GetID("Victory Rush")
-  end,
-  ShouldHold = function()
-    return true
-  end
+c.AddOptionalSpell("Ravager", nil, {
+   Cooldown = 60,
 })
 
---10122014 rdh: Added Cooldown
---Demoralizes all enemies within 10 yards, reducing the
---damage they do to you by 20% for 8 sec.
-c.AddOptionalSpell("Demoralizing Shout", "for Prot", {
-  NoGCD = true,
-  Melee = true,
-  IsUp = function()
-    return c.HasMyDebuff("Demoralizing Shout", true)
-  end,
-  CheckFirst = function(z)
-    return not z.IsUp()
-  end,
-})
-
--- Deals 200% Physical damage, and has a 30% chance to reset the cooldown on 
--- Shield Slam and cause it to generate 5 more Rage.  GCD is 1.5 sec.
 c.AddSpell("Devastate", "for Prot", {
-  Melee = true,
-  CheckFirst = function()
-     return c.GetBuffStack("Unyielding Strikes") <= 5
-  end,
+   Melee = true,
+   CheckFirst = function()
+       return c.GetBuffStack("Unyielding Strikes") <= 5
+   end,
 })
 
--- Deals (165% of Attack Power) damage to all enemies within 8 yards and knocking 
--- them back and down for 0.5 sec.  Damage ignores all armor and is 
+-- Deals (165% of Attack Power) damage to all enemies within 8 yards and knocking
+-- them back and down for 0.5 sec.   Damage ignores all armor and is
 -- always a critical strike.
 -- Cooldown is 1 min. and is an instant cast, no cost with GCD of 1.5 sec.
 c.AddSpell("Dragon Roar", "for Prot", {
-  Melee = true,
-  CheckFirst = function()
-    return c.HasTalent("Dragon Roar") and c.GetCooldown("Dragon Roar") == 0
-  end
+   Melee = true,
+   CheckFirst = function()
+      if c.HasTalent("Bloodbath") then
+         return c.HasBuff("Bloodbath") or c.GetCooldown("Bloodbath") > 10
+      end
+
+      return true
+   end
 })
 
--- Instantly heals for 10% of your maximum health, and an additional
--- 20% over 5 sec.  Usable while stunned.
-c.AddOptionalSpell("Enraged Regeneration", "for Prot", {
-  NoGCD = true,
-  NoPowerCheck = true,
---  CheckFirst = function()
---    return a.Enraged
---  end,
-  ShouldHold = function()
-    return c.GetHealthPercent("player") < 50
-  end,
-})
-
--- Attempt to finish off a wounded foe, causing
--- 3,237 Physical damage with main-hand and 969 
--- Physical damage with off-hand.  Only usable on 
--- enemies with less than 20% health.
 c.AddSpell("Execute", "for Prot", {
-  CheckFirst = function()
-    return a.freeExecute or a.InExecute
-  end
+   CheckFirst = function()
+      return a.InExecute and a.EmptyRage < 30
+   end
 })
 
--- Instantly deals 105% Physical damage.  This ability is not on the global cooldown.
--- Costs 30 rage with 1.5 sec cooldown
-c.AddSpell("Heroic Strike", "for Prot", {
-  Continue = false,
-  NotIfActive = true,
-  CheckFirst = function()
-    return c.HasBuff("Ultimatum") 
-      or (c.HasTalent("Unyielding Strikes") and c.GetBuffStack("Unyielding Strikes") >= 5)
-       or a.Rage >= a.maxPower - 30     
-  end,
+c.AddOptionalSpell("Heroic Strike", nil, {
+   NoGCD = true,
+   FlashColor = "white",
+   Rage = function()
+      if c.HasBuff("Ultimatum") then
+         return 0
+      else
+         return max(0, 30 - (5 * c.GetBuffStack("Unyielding Strikes")))
+      end
+   end,
+   CheckFirst = function()
+      return c.HasBuff("Ultimatum")
+         or (c.HasTalent("Unyielding Strikes") and c.GetBuffStack("Unyielding Strikes") >= 6)
+      or a.EmptyRage < 10
+   end,
 })
 
--- Throw your weapon at the enemy, causing 50% Physical damage.  Generates high threat.
--- Cast is instant with a 6 sec. cooldown.  Range is 8-30 yards
+-- Throw your weapon at the enemy, causing 50% Physical damage.   Generates high threat.
+-- Cast is instant with a 6 sec. cooldown.   Range is 8-30 yards
 c.AddOptionalSpell("Heroic Throw", "for Prot", {
-  EnemyTargetNeeded = true,
-  CheckFirst = function()
-    return c.GetCooldown("Heroic Throw") == 0
-  end,
+   EnemyTargetNeeded = true,
+   CheckFirst = function()
+      return c.GetCooldown("Heroic Throw") == 0
+   end,
 })
 
--- Instantly attack the target, causing (200% of Attack power) 
--- damage and healing you for 15% of your maximum health.
--- Killing an enemy that yields experience or honor resets 
--- the cooldown of Impending Victory.  Has a 30 sec Cooldown and 
--- costs 10 rage.  GCD is 1.5 sec.
 c.AddSpell("Impending Victory", "for Prot", {
-  Melee = true,
-  CheckFirst = function()
-    return c.HasTalent("Impending Victory") and c.GetCooldown("Impending Victory") == 0
-  end,
+   Rage = 10,
+   Cooldown = 30,
+   CheckFirst = function()
+      -- since we are prot, allow some overheal on this, and don't waste rage
+      -- that can be used defensively if we won't benefit significantly from
+      -- the healing provided.
+      return c.GetCooldown("Shield Slam") <= c.LastGCD
+         and c.GetHealthPercent("player") < 90
+   end,
 })
 
---Increases Current and Maximum health by 30% for 15 sec.
-c.AddOptionalSpell("Last Stand", "for Prot", {
-  NoGCD = true,
-  ShouldHold = function()
-    return s.HealthPercent("player") > 70
-  end
+c.AddSpell("Victory Rush", "for Prot", {
+   CheckFirst = function()
+      -- since we are prot, allow some overheal on this, and don't waste rage
+      -- that can be used defensively if we won't benefit significantly from
+      -- the healing provided.
+      return c.GetCooldown("Shield Slam") <= c.LastGCD
+         and c.GetHealthPercent("player") < (c.HasGlyph("Victory Rush") and 82.5 or 90)
+   end,
 })
 
--- Throw a whirling axe at the target location that inflicts (82.5% of Attack power) 
--- damage to enemies within 6 yards every 1 sec. Lasts 10 sec.  Has a 60 sec. Cooldown.
 c.AddOptionalSpell("Ravager", "for Prot", {
-  CheckFirst = function() 
-    return c.HasTalent("Ravager") and c.GetCooldown("Ravager") == 0
-  end,
+   Cooldown = 60,
+   CheckFirst = function()
+      if c.HasTalent("Bloodbath") then
+         return c.HasBuff("Bloodbath") or c.GetCooldown("Bloodbath") > 10
+      end
+
+      return true
+   end,
 })
 
--- Instantly attack an enemy and two additional enemies, dealing (300% of Attack power) 
--- damage to the primary target and 50% damage to the secondary targets, and generating 20 Rage. 
+-- Instantly attack an enemy and two additional enemies, dealing (300% of Attack power)
+-- damage to the primary target and 50% damage to the secondary targets, and generating 20 Rage.
 -- Your successful dodges and parries reset the cooldown on Revenge.
 -- Cooldown is 9 sec and GCD = 1.5 sec.
-c.AddSpell("Revenge", "for Prot", {
-  NotIfActive = true,
-  CheckFirst = function() 
-    return c.GetCooldown("Revenge") == 0
-  end,
+c.AddSpell("Revenge", nil, {
+   Cooldown = 9,
 })
 
--- Raise our shield absorbing  899 damage for the next 6 seconds.
--- Consumes up to 40 additional Rage to increase the damage taken.
--- Note: WoD allows this on ALL Warriors. Confused how this works 
---      with Fury and Arms.
-c.AddOptionalSpell("Shield Barrier", "for Prot", {
-  NoGCD = true,
-  CheckFirst = function(z)
---    return c.IsTanking()
---      and not c.HasBuff("Shield Barrier", true) 
---      and not c.HasBuff("Shield Block", true)
---      and not c.InDamageMode()
-    if a.Rage > 60 
-      and not c.HasBuff("Shield Barrier", true) 
-      and not c.HasBuff("Shield Block", true)
-      and not c.InDamageMode() then
-        z.FlashSize = s.FlashSizePercent() / 2
-    end
-    return a.Rage > 60 
-      and not c.HasBuff("Shield Barrier", true) 
-      and not c.HasBuff("Shield Block", true)
-      and not c.InDamageMode()
-  end,
+c.AddSpell("Shield Slam", nil, {
+   Cooldown = 6,
 })
 
--- Raise your shield blocking every melee attack for the next 6 seconds.
--- These can be critical blocks.  Maximum 2 charges.
--- Cost is 60 rage and has a Cooldown of 1.5 seconds
-c.AddOptionalSpell("Shield Block", "for Prot", {
-  NoGCD = true,
-  Melee = true,
-  CheckFirst = function()
-    return not (c.HasDebuff("Demoralizing Shout")
-             or c.HasBuff("Ravager")
-             or c.HasBuff("Shield Wall")
-             or c.HasBuff("Last Stand")
-             or c.HasBuff("Enraged Regeneration")
-             or c.HasBuff("Shield Block"))
---  CheckFirst = function(z)
---    if not (a.Rage > 60)
---      and not c.HasBuff("Shield Barrier", true)
---      and not c.InDamageMode() then
---        z.FlashSize = s.FlashSizePercent() / 2
---    end
---    return a.Rage > 60
---      and not c.HasBuff("Shield Barrier", true)
---      and not c.InDamageMode()
-  end,
+c.AddSpell("Shield Slam", "with Shield Block", {
+   Cooldown = 6,
+   CheckFirst = function()
+      return c.HasBuff("Shield Block")
+   end
 })
 
--- Slam the target with your shield, causing [(Attack power * 0.36)] damage and 
--- generating 20 Rage.  Critical strikes with Shield Slam cause your next 
--- Heroic Strike to cost no Rage and be a critical strike.
--- Cooldown is 6 sec and GCD is 1.5 sec.
-c.AddSpell("Shield Slam", "for Prot", {
-  NotIfActive= true,
---  CheckFirst = function() 
---    return c.GetCooldown("Shield Slam") == 0
---  end,
-})
-
---Reduces all damage taken by 40% for 8 sec.
-c.AddOptionalSpell("Shield Wall", "under 3 min", {
-  NoGCD = true,
-  Enabled = function()
-    return not c.HasGlyph("Shield Wall")
-  end,
-})
-
---Reduces all damage taken by 40% for 8 sec.
-c.AddOptionalSpell("Shield Wall", "3+ min", {
-  NoGCD = true,
-  Enabled = function()
-    return c.HasGlyph("Shield Wall")
-  end,
-})
-
--- Hurls your weapon at an enemy, causing 60% Physical damage and stunning for 4 sec.  
+-- Hurls your weapon at an enemy, causing 60% Physical damage and stunning for 4 sec.
 -- Deals quadruple damage to targets permanently immune to stuns.
 -- Cast is instant with a 30 sec. cooldown.
-c.AddSpell("Storm Bolt", "for Prot", { 
-  NoGCD = false, 
-  CheckLast = function()
-    return c.HasTalent("Storm Bolt") and c.GetCooldown("Storm Bolt") == 0
-  end
+c.AddSpell("Storm Bolt", "for Prot", {
+   CheckFirst = function()
+      return c.HasTalent("Storm Bolt") and c.GetCooldown("Storm Bolt") == 0
+   end
 })
 
---10122014 rdh: Removed Weakend_Blows and changed cooldown from 6 to 5.54
+c.AssociateTravelTimes(0, "Thunder Clap")
 c.AddSpell("Thunder Clap", "for Debuff", {
-  Melee = true,
-  CheckFirst = function()
---    local debuffNeeded = not c.HasDebuff(c.WEAKENED_BLOWS_DEBUFFS)
-    local damageMode = c.InDamageMode()
-    if c.AoE then
---      return debuffNeeded or damageMode
-      return damageMode
-    else
---      return debuffNeeded and not damageMode
-            return not damageMode
-    end
-  end,
+   Rage = 10,
+   Cooldown = 6,
+   MyDebuff = "Deep Wounds",
+   CheckFirst = function()
+      return c.ShouldCastToRefresh("Thunder Clap", "Deep Wounds", 15 * .3, true)
+   end,
 })
 
-c.AddSpell("Thunder Clap", "for Refresh", {
-  Melee = true,
-  CheckFirst = function()
---    return c.GetDebuffDuration(c.WEAKENED_BLOWS_DEBUFFS) < 4 or c.AoE
-       return c.AoE
-  end,
+c.AddSpell("Thunder Clap", nil, {
+   Rage = 10,
+   Cooldown = 6,
 })
 
 c.AddSpell("Delay for Prot Rage Generator", nil, {
-  ID = "Battle Shout",
-  IsMinDelayDefinition = true,
-  GetDelay = function()
-    return math.min(
-        c.GetCooldown("Shield Slam", false, 6), 
-        c.GetCooldown("Revenge", false, 9),
-        c.GetCooldown("Battle Shout", false, 60)), 
-      c.InDamageMode() and .2 or .5
-  end,
+   ID = "Battle Shout",
+   IsMinDelayDefinition = true,
+   GetDelay = function()
+      return min(
+            c.GetCooldown("Shield Slam", false, 6),
+            c.GetCooldown("Revenge", false, 9),
+            c.GetCooldown("Battle Shout", false, 60)),
+         c.InDamageMode() and .2 or .5
+   end,
 })
 
 c.AddTaunt("Heroic Throw", nil, {
-  NoGCD = true,
-  CheckFirst = function()
-    return c.GetCooldown("Heroic Throw") == 0
-  end
+   NoGCD = true,
+   CheckFirst = function()
+      return c.GetCooldown("Heroic Throw") == 0
+   end
 })
 
--- Throw down a war banner within 30 yards that forces all enemies 
--- within 15 yards of the banner to focus attacks on the Warrior for 6 sec. 
+-- Throw down a war banner within 30 yards that forces all enemies
+-- within 15 yards of the banner to focus attacks on the Warrior for 6 sec.
 -- Lasts 30 sec. with a 3 min. Cooldown
 -- You can Intervene to your war banner.
 c.AddTaunt("Mocking Banner", nil, {
-  NoGCD = true,
-  CheckFirst = function()
-    return c.GetCooldown("Mocking Banner") == 0
-  end
+   NoGCD = true,
+   CheckFirst = function()
+      return c.GetCooldown("Mocking Banner") == 0
+   end
 })
 
 c.AddTaunt("Taunt", nil, {
-  NoGCD = true,
-  CheckFirst = function()
-    return (c.HasTalent("Vigilance") and c.HasBuff("Vigilance")) or c.GetCooldown("Taunt") == 0 
-  end,
+   NoGCD = true,
+   CheckFirst = function()
+      return (c.HasTalent("Vigilance") and c.HasBuff("Vigilance")) or c.GetCooldown("Taunt") == 0
+   end,
 })

@@ -1363,8 +1363,11 @@ function HealBot_Action_EnableButton(button, isTarget)
                     HealBot_UnitTextRange["og"][ebUnit]=0
                     HealBot_UnitTextRange["ob"][ebUnit]=0
                 end
+                if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIR"] and hbGUID~=HealBot_Data["PGUID"] and UnitIsVisible(ebUnit) then
+                    HealBot_Action_ShowDirectionArrow(button, ebUnit)
+                end
             else
-                if uDirArrow and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIR"] and not UnitIsUnit("player",ebUnit) and not ebuUnitDead then
+                if uDirArrow and Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIR"] and hbGUID~=HealBot_Data["PGUID"] then
                     HealBot_Action_ShowDirectionArrow(button, ebUnit)
                 elseif HealBot_UnitDirection[ebUnit] then
                     HealBot_Action_HideDirectionArrow(button, ebUnit)
@@ -1493,7 +1496,7 @@ function HealBot_Action_EnableButton(button, isTarget)
 end
 
 function HealBot_Action_ShowDirectionArrow(button, unit)
-    if Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIRMOUSE"]==false or unit==HealBot_Data["TIPUNIT"] then
+    if (Healbot_Config_Skins.Icons[Healbot_Config_Skins.Current_Skin][button.frame]["SHOWDIRMOUSE"]==false or unit==HealBot_Data["TIPUNIT"]) and UnitIsPlayer(unit) then
         local hbX, hbY, hbD = HealBot_Direction_Check(unit)
         if hbD then
             if not HealBot_UnitDirection[unit] then 
@@ -2563,8 +2566,10 @@ function HealBot_Action_CheckRange(button)
                        ( not inRes and HealBot_UnitStatus[unit]>8 ) or
                        ( not UnitIsDeadOrGhost(unit) ) then 
                     HealBot_Action_ResetUnitStatus(unit)
-                elseif HealBot_UnitDirection[unit] then
+                elseif inRes and HealBot_UnitDirection[unit] then
                     HealBot_Action_HideDirectionArrow(button, unit)
+                elseif HealBot_UnitDirection[unit] then
+                    HealBot_Action_ShowDirectionArrow(button, unit)
                 end
             end
         elseif HealBot_UnitRange[unit]==-2 then
@@ -2712,12 +2717,42 @@ function HealBot_Action_ResetActiveUnitStatus()
     end
 end
 
-function HealBot_Action_MassRes()
-    for xUnit,_ in pairs(HealBot_Unit_Button) do
-        if UnitIsDeadOrGhost(xUnit) and UnitIsVisible(xUnit) and not HealBot_HasDebuff(HEALBOT_DEBUFF_MASS_RESURRECTED, xUnit) then
-            HealBot_UnitHasRes[xUnit]=GetTime()+12
-            HealBot_UnitStatus[xUnit]=1
-            HealBot_UnitRange[xUnit]=-2
+local resSpellsCastTime={}
+function HealBot_Action_SetResSpells()
+    local castTime = nil
+    _, _, _, castTime, _, _ = GetSpellInfo(HEALBOT_DEBUFF_MASS_RESURRECTED)
+    resSpellsCastTime[HEALBOT_DEBUFF_MASS_RESURRECTED] = ceil((castTime or 10000)/1000)
+    _, _, _, castTime, _, _ = GetSpellInfo(HEALBOT_RESUSCITATE)
+    resSpellsCastTime[HEALBOT_RESUSCITATE] = ceil((castTime or 7000)/1000)
+    _, _, _, castTime, _, _ = GetSpellInfo(HEALBOT_REVIVE)
+    resSpellsCastTime[HEALBOT_REVIVE] = ceil((castTime or 10000)/1000)
+    _, _, _, castTime, _, _ = GetSpellInfo(HEALBOT_REDEMPTION)
+    resSpellsCastTime[HEALBOT_REDEMPTION] = ceil((castTime or 10000)/1000)
+    _, _, _, castTime, _, _ = GetSpellInfo(HEALBOT_REBIRTH)
+    resSpellsCastTime[HEALBOT_REBIRTH] = ceil((castTime or 2000)/1000)
+    _, _, _, castTime, _, _ = GetSpellInfo(HEALBOT_ANCESTRALSPIRIT)
+    resSpellsCastTime[HEALBOT_ANCESTRALSPIRIT] = ceil((castTime or 10000)/1000)
+    _, _, _, castTime, _, _ = GetSpellInfo(HEALBOT_RESURRECTION)
+    resSpellsCastTime[HEALBOT_RESURRECTION] = ceil((castTime or 10000)/1000)
+end
+
+function HealBot_Action_Res(resSpell, unit)
+    local resTime = resSpellsCastTime[resSpell] or 10
+    local addResTime = GetTime()+resTime+HealBot_Globals.ResLagDuration
+    
+    if resSpell==HEALBOT_DEBUFF_MASS_RESURRECTED then
+        for xUnit,_ in pairs(HealBot_Unit_Button) do
+            if UnitIsDeadOrGhost(xUnit) and not UnitIsFeignDeath(xUnit) and UnitIsVisible(xUnit) and not HealBot_HasDebuff(HEALBOT_DEBUFF_MASS_RESURRECTED, xUnit) then
+                HealBot_UnitHasRes[xUnit]=addResTime
+                HealBot_UnitStatus[xUnit]=1
+                HealBot_UnitRange[xUnit]=-2
+            end
+        end
+    elseif unit then
+        if UnitIsDeadOrGhost(unit) and not UnitIsFeignDeath(unit) and UnitIsVisible(unit) then
+            HealBot_UnitHasRes[unit]=addResTime
+            HealBot_UnitStatus[unit]=1
+            HealBot_UnitRange[unit]=-2
         end
     end
 end
@@ -3054,10 +3089,16 @@ end
 
 function HealBot_Action_AlterSpell2Macro(spellName, spellTar, spellTrin1, spellTrin2, spellAvoidBC, unit, status)
     local smName=""
+    local scText=""
     local sysSoundSFX = strsub(GetCVar("Sound_EnableSFX") or "nil",1,1)
     local spellType="help"
     if status=="Enemy" then spellType="harm" end
-    
+    if spellName==HEALBOT_HOLY_WORD_SERENITY then
+        scText="/use [@"..unit.."] "..spellName..";\n"
+    else
+        scText="/cast [@"..unit..","..spellType.."] "..spellName..";\n"
+    end
+
     if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName=smName.."/console Sound_EnableSFX 0;\n" end
     if HealBot_Globals.MacroSuppressError==1 then smName=smName.."/script UIErrorsFrame:Hide();\n" end
     if spellTar then smName=smName.."/target "..unit..";\n" end
@@ -3066,7 +3107,7 @@ function HealBot_Action_AlterSpell2Macro(spellName, spellTar, spellTrin1, spellT
     if HealBot_Config.MacroUse10==1 then smName=smName.."/use 10;\n" end
     if HealBot_Globals.MacroSuppressError==1 then smName=smName.."/script UIErrorsFrame:Clear(); UIErrorsFrame:Show();\n" end
     if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName=smName.."/console Sound_EnableSFX 1;\n" end
-    smName=smName.."/cast [@"..unit..","..spellType.."] "..spellName..";\n"
+    smName=smName..scText
     if spellAvoidBC then smName=smName.."/use 4;" end
     if strlen(smName)>255 then
         smName=""
@@ -3076,7 +3117,7 @@ function HealBot_Action_AlterSpell2Macro(spellName, spellTar, spellTrin1, spellT
         if spellTrin2 then smName=smName.."/use 14;\n" end
         if HealBot_Config.MacroUse10==1 then smName=smName.."/use 10;\n" end
         if HealBot_Globals.MacroSuppressSound==1 and sysSoundSFX=="1" then smName=smName.."/console Sound_EnableSFX 1;\n" end
-        smName=smName.."/cast [@"..unit..","..spellType.."] "..spellName..";\n"
+        smName=smName..scText
         if spellAvoidBC then smName=smName.."/use 4;" end
         if strlen(smName)>255 then
             smName=""
@@ -3084,7 +3125,7 @@ function HealBot_Action_AlterSpell2Macro(spellName, spellTar, spellTrin1, spellT
             if spellTrin1 then smName=smName.."/use 13;\n" end
             if spellTrin2 then smName=smName.."/use 14;\n" end
             if HealBot_Config.MacroUse10==1 then smName=smName.."/use 10;\n" end
-            smName=smName.."/cast [@"..unit..","..spellType.."] "..spellName..";\n"
+            smName=smName..scText
             if spellAvoidBC then smName=smName.."/use 4;" end
             if strlen(smName)>255 then
                 smName=spellName

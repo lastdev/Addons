@@ -8,10 +8,73 @@
 		</Scripts>
 	</Button>
 
-	<!-- Item template -->
-	<Button name="AltoBagItemTemplate" inherits="ItemButtonTemplate" hidden="true" virtual="true">
+	<!-- Simple button template -->
+ 	<Button name="AltoButtonTemplate" virtual="true">
+		<Size x="37" y="37" />
+		<Layers>
+			<Layer level="BORDER">
+				<Texture parentKey="Icon"/>
+			</Layer>
+		</Layers>
+		<PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
+		<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
+	</Button>
+	
+	<Button name="AltoClassIconTemplate" inherits="AltoButtonTemplate" hidden="true" virtual="true">
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture parentKey="IconBorder" file="Interface\Buttons\UI-ActionButton-Border" alphaMode="ADD">
+					<Size x="67" y="67"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				local level = self:GetParent():GetFrameLevel()
+				self:SetFrameLevel(level + 1)
+				self:RegisterForClicks("LeftButtonDown", "RightButtonDown");
+				
+				self.Icon:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
+			</OnLoad>
+			<OnLeave>
+				AltoTooltip:Hide()
+			</OnLeave>
+		</Scripts>
+	</Button>
+	
+	<!-- Simple item button template -->
+ 	<Button name="AltoItemButtonTemplate" inherits="AltoButtonTemplate" virtual="true">
+		<Layers>
+			<Layer level="ARTWORK" textureSubLevel="2">
+				<FontString parentKey="Count" inherits="NumberFontNormal" justifyH="RIGHT" hidden="true" >
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" x="-5" y="2" />
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture parentKey="IconBorder" file="Interface\Buttons\UI-ActionButton-Border" hidden="true" alphaMode="ADD">
+					<Size x="67" y="67"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<NormalTexture parentKey="NormalTexture" file="Interface\Buttons\UI-Quickslot2" hidden="true">
+			<Size x="64" y="64" />
+			<Anchors>
+				<Anchor point="CENTER" x="0" y="-1" />
+			</Anchors>
+		</NormalTexture>
+	</Button>
+	
+	<Button name="AltoBagItemTemplate" inherits="AltoItemButtonTemplate" hidden="true" virtual="true">
 		<Frames>
-			<Cooldown name="$parentCooldown" inherits="CooldownFrameTemplate"/>
+			<Cooldown parentKey="Cooldown" inherits="CooldownFrameTemplate"/>
 		</Frames>
 		<Scripts>
 			<OnLoad>
@@ -30,177 +93,106 @@
 			</OnClick>
 		</Scripts>
 	</Button>
-
+	
 	<Button name="AltoContainerTemplate" hidden="true" virtual="true">
-		<Size>
-			<AbsDimension x="615" y="41"/>
-		</Size>
+		<Size x="615" y="41" />
 		<Frames>
-			<Button name="$parentItem1" inherits="AltoBagItemTemplate">
+			<Button parentKey="Item1" inherits="AltoBagItemTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="17" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="17" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem2" inherits="AltoBagItemTemplate">
+			<Button parentKey="Item2" inherits="AltoBagItemTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem1" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item1" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem3" inherits="AltoBagItemTemplate">
+			<Button parentKey="Item3" inherits="AltoBagItemTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem2" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item2" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem4" inherits="AltoBagItemTemplate">
+			<Button parentKey="Item4" inherits="AltoBagItemTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem3" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item3" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem5" inherits="AltoBagItemTemplate">
+			<Button parentKey="Item5" inherits="AltoBagItemTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem4" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item4" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem6" inherits="AltoBagItemTemplate">
+			<Button parentKey="Item6" inherits="AltoBagItemTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem5" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item5" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem7" inherits="AltoBagItemTemplate">
+			<Button parentKey="Item7" inherits="AltoBagItemTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem6" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item6" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem8" inherits="AltoBagItemTemplate">
+			<Button parentKey="Item8" inherits="AltoBagItemTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem7" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item7" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem9" inherits="AltoBagItemTemplate">
+			<Button parentKey="Item9" inherits="AltoBagItemTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem8" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item8" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem10" inherits="AltoBagItemTemplate">
+			<Button parentKey="Item10" inherits="AltoBagItemTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem9" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item9" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem11" inherits="AltoBagItemTemplate">
+			<Button parentKey="Item11" inherits="AltoBagItemTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem10" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item10" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem12" inherits="AltoBagItemTemplate">
+			<Button parentKey="Item12" inherits="AltoBagItemTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem11" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item11" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem13" inherits="AltoBagItemTemplate">
+			<Button parentKey="Item13" inherits="AltoBagItemTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem12" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item12" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem14" inherits="AltoBagItemTemplate">
+			<Button parentKey="Item14" inherits="AltoBagItemTemplate">
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem13" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item13" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
 		</Frames>
 	</Button>
 
+	
 	<!-- Navigation -->
 	<Button name="AltoMenuItemTemplate" hidden="true" virtual="true">
-		<Size>
-			<AbsDimension x="136" y="20"/>
-		</Size>
+		<Size x="136" y="20" />
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture name="$parentLines" file="Interface\AuctionFrame\UI-AuctionFrame-FilterLines">
-					<Size>
-						<AbsDimension x="7" y="20"/>
-					</Size>
+				<Texture parentKey="Lines" file="Interface\AuctionFrame\UI-AuctionFrame-FilterLines">
+					<Size x="7" y="20" />
 					<Anchors>
-						<Anchor point="LEFT">
-							<Offset>
-								<AbsDimension x="13" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="LEFT" x="13" y="0" />
 					</Anchors>
 					<TexCoords left="0" right="0.4375" top="0" bottom="0.625"/>
 				</Texture>
 			</Layer>
 		</Layers>
-		<NormalTexture name="$parentNormalTexture" file="Interface\AuctionFrame\UI-AuctionFrame-FilterBg">
+		<NormalTexture parentKey="NormalTexture" file="Interface\AuctionFrame\UI-AuctionFrame-FilterBg">
 			<TexCoords left="0" right="0.53125" top="0" bottom="0.625"/>
 		</NormalTexture>
 		<HighlightTexture file="Interface\PaperDollInfoFrame\UI-Character-Tab-Highlight" alphaMode="ADD"/>
-		<ButtonText name="$parentNormalText">
-			<Size>
-				<AbsDimension x="128" y="8"/>
-			</Size>
+		<ButtonText parentKey="Text">
+			<Size x="128" y="8" />
 			<Anchors>
-				<Anchor point="LEFT">
-					<Offset>
-						<AbsDimension x="4" y="0"/>
-					</Offset>
-				</Anchor>
+				<Anchor point="LEFT" x="4" y="0" />
 			</Anchors>
 		</ButtonText>
 		<NormalFont style="GameFontNormalSmallLeft"/>
@@ -208,9 +200,7 @@
 	</Button>
 
 	<Button name="AltoMenuNamedIconTemplate" virtual="true">
-		<Size>
-			<AbsDimension x="136" y="40"/>
-		</Size>
+		<Size x="136" y="40" />
 		<Layers>
 			<Layer level="BORDER">
 				<Texture file="Interface\Icons\INV_BannerPVP_02">
@@ -229,15 +219,9 @@
 			</Layer>
 			<Layer level="OVERLAY">
 				<FontString name="$parentText" inherits="GameFontNormal" justifyH="CENTER" text="Reputations">
-					<Size>
-						<AbsDimension x="80" y="18"/>
-					</Size>
+					<Size x="80" y="18" />
 					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="50" y="-9"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" x="50" y="-9" />
 					</Anchors>
 					<Color r="1" g="1" b="1" /> 
 				</FontString>
@@ -245,35 +229,28 @@
 		</Layers>
 	</Button>
 
-	
 	<Button name="AltoSortButtonTemplate" virtual="true">
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture name="$parentLeft" file="Interface\FriendsFrame\WhoFrame-ColumnTabs">
-					<Size>
-						<AbsDimension x="5" y="19"/>
-					</Size>
+				<Texture parentKey="Left" file="Interface\FriendsFrame\WhoFrame-ColumnTabs">
+					<Size x="5" y="19" />
 					<Anchors>
 						<Anchor point="TOPLEFT"/>
 					</Anchors>
 					<TexCoords left="0" right="0.078125" top="0" bottom="0.59375"/>
 				</Texture>
-				<Texture name="$parentRight" file="Interface\FriendsFrame\WhoFrame-ColumnTabs">
-					<Size>
-						<AbsDimension x="4" y="19"/>
-					</Size>
+				<Texture parentKey="Right" file="Interface\FriendsFrame\WhoFrame-ColumnTabs">
+					<Size x="4" y="19" />
 					<Anchors>
 						<Anchor point="TOPRIGHT"/>
 					</Anchors>
 					<TexCoords left="0.90625" right="0.96875" top="0" bottom="0.59375"/>
 				</Texture>
-				<Texture name="$parentMiddle" file="Interface\FriendsFrame\WhoFrame-ColumnTabs">
-					<Size>
-						<AbsDimension x="10" y="19"/>
-					</Size>
+				<Texture parentKey="Middle" file="Interface\FriendsFrame\WhoFrame-ColumnTabs">
+					<Size x="10" y="19" />
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT"/>
-						<Anchor point="RIGHT" relativeTo="$parentRight" relativePoint="LEFT"/>
+						<Anchor point="LEFT" relativeKey="$parent.Left" relativePoint="RIGHT"/>
+						<Anchor point="RIGHT" relativeKey="$parent.Right" relativePoint="LEFT"/>
 					</Anchors>
 					<TexCoords left="0.078125" right="0.90625" top="0" bottom="0.59375"/>
 				</Texture>
@@ -281,42 +258,22 @@
 		</Layers>
 		<ButtonText name="$parentText">
 			<Anchors>
-				<Anchor point="LEFT">
-					<Offset>
-						<AbsDimension x="8" y="-2"/>
-					</Offset>
-				</Anchor>
+				<Anchor point="LEFT" x="8" y="-2" />
 			</Anchors>
 		</ButtonText>
 		<NormalFont style="GameFontHighlightSmall"/>
 		<NormalTexture name="$parentArrow" file="Interface\Buttons\UI-SortArrow">
-			<Size>
-				<AbsDimension x="9" y="8"/>
-			</Size>
+			<Size x="9" y="8" />
 			<Anchors>
-				<Anchor point="LEFT" relativeTo="$parentText" relativePoint="RIGHT">
-					<Offset>
-						<AbsDimension x="3" y="-2"/>
-					</Offset>
-				</Anchor>
+				<Anchor point="LEFT" relativeTo="$parentText" relativePoint="RIGHT" x="3" y="-2" />
 			</Anchors>
 			<TexCoords left="0" right="0.5625" top="0" bottom="1.0"/>
 		</NormalTexture>
 		<HighlightTexture file="Interface\PaperDollInfoFrame\UI-Character-Tab-Highlight" alphaMode="ADD">
-			<Size>
-				<AbsDimension x="5" y="24"/>
-			</Size>
+			<Size x="5" y="24" />
 			<Anchors>
-				<Anchor point="LEFT">
-					<Offset>
-						<AbsDimension x="0" y="-2"/>
-					</Offset>
-				</Anchor>
-				<Anchor point="RIGHT">
-					<Offset>
-						<AbsDimension x="4" y="0"/>
-					</Offset>
-				</Anchor>
+				<Anchor point="LEFT" x="0" y="-2" />
+				<Anchor point="RIGHT" x="4" y="0" />
 			</Anchors>
 		</HighlightTexture>
 		<Scripts>
@@ -328,36 +285,28 @@
 	
 	<!-- IconList, used by Pets & Achievements -->
 	<Button name="AltoIconListItemTemplate" hidden="true" virtual="true">
-		<Size>
-			<AbsDimension x="34" y="34"/>
-		</Size>
+		<Size x="34" y="34" />
 		<Layers> 
 			<Layer level="BACKGROUND"> 
-				<Texture name="$parent_Background">
-					<Size>
-						<AbsDimension x="29" y="29"/>
-					</Size>
+				<Texture parentKey="Background">
+					<Size x="29" y="29" />
 					<Anchors>
-						<Anchor point="LEFT">
-							<Offset>
-								<AbsDimension x="2" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="LEFT" x="2" y="0" />
 					</Anchors>
 					<Color r="0.2" g="0.2" b="0.2" a="1" /> 
 				</Texture> 
 			</Layer>
-			<Layer level="OVERLAY"> 
-				<FontString name="$parentName" inherits="GameFontNormalSmall" justifyH="CENTER" >
-					<Size>
-						<AbsDimension x="30" y="18"/>
-					</Size>
+			<Layer level="OVERLAY">
+				<Texture parentKey="IconBorder" file="Interface\Buttons\UI-ActionButton-Border" alphaMode="ADD">
+					<Size x="67" y="67"/>
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT">
-							<Offset>
-								<AbsDimension x="5" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+				<FontString parentKey="Name" inherits="GameFontNormalSmall" justifyH="CENTER" >
+					<Size x="30" y="18" />
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" x="5" y="0" />
 					</Anchors>
 					<Color r="1" g="1" b="1" /> 
 				</FontString>
@@ -373,7 +322,7 @@
 				AltoTooltip:Hide();
 			</OnLeave>
 		</Scripts>
-		<Backdrop name="$parentBackdrop" bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+		<Backdrop parentKey="Backdrop" bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
 			<EdgeSize>
 				<AbsValue val="8"/>
 			</EdgeSize>
@@ -386,162 +335,86 @@
 			<Color r="1" g="1" b="1" a="0"/>
 		</Backdrop>
 	</Button>
-		
-	<Button name="AltoIconListtEntryTemplate" virtual="true">
-		<Size>
-			<AbsDimension x="615" y="38"/>
-		</Size>
-		<Layers>
-			<Layer level="BACKGROUND">
-				<FontString name="$parentName" inherits="GameFontNormal" justifyH="LEFT" justifyV="MIDDLE">
-					<Size>
-						<AbsDimension x="160" y="37"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="10" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
-		<Frames>
-			<Button name="$parentItem1" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="185" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parentItem2" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem1" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parentItem3" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem2" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parentItem4" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem3" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parentItem5" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem4" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parentItem6" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem5" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parentItem7" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem6" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parentItem8" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem7" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parentItem9" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem8" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parentItem10" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem9" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parentItem11" inherits="AltoIconListItemTemplate">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentItem10" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-			</Button>
-		</Frames>
-	</Button>
-	
-	<Button name="AltoMenuIconTemplate" virtual="true">
-		<Size>
-			<AbsDimension x="36" y="36"/>
-		</Size>
-		<Layers>
-			<Layer level="BORDER">
-				<Texture name="$parentIconTexture"/>
-			</Layer>
-		</Layers>
-		<Frames>
-			<Frame name="$parentShine" inherits="AutoCastShineTemplate">
-				<Anchors>
-					<Anchor point="CENTER">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Size>
-					<AbsDimension x="34" y="34"/>
-				</Size>
-			</Frame>
-		</Frames>
 
-		<PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
-		<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
+	<Button name="AltoIconListEntryTemplate" virtual="true">
+		<Size x="615" y="38" />
+		<Frames>
+			<Button parentKey="Name">
+				<Size x="160" y="37"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="0" y="0" />
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<FontString parentKey="Text" inherits="GameFontNormal" justifyH="LEFT" justifyV="MIDDLE">
+							<Size x="160" y="37"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" x="10" y="0" />
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Button>
+			<Button parentKey="Item1" inherits="AltoIconListItemTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent" relativePoint="BOTTOMLEFT" x="185" y="0" />
+				</Anchors>
+			</Button>
+			<Button parentKey="Item2" inherits="AltoIconListItemTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item1" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+			</Button>
+			<Button parentKey="Item3" inherits="AltoIconListItemTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item2" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+			</Button>
+			<Button parentKey="Item4" inherits="AltoIconListItemTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item3" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+			</Button>
+			<Button parentKey="Item5" inherits="AltoIconListItemTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item4" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+			</Button>
+			<Button parentKey="Item6" inherits="AltoIconListItemTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item5" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+			</Button>
+			<Button parentKey="Item7" inherits="AltoIconListItemTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item6" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+			</Button>
+			<Button parentKey="Item8" inherits="AltoIconListItemTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item7" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+			</Button>
+			<Button parentKey="Item9" inherits="AltoIconListItemTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item8" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+			</Button>
+			<Button parentKey="Item10" inherits="AltoIconListItemTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item9" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+			</Button>
+			<Button parentKey="Item11" inherits="AltoIconListItemTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Item10" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+			</Button>
+		</Frames>
 	</Button>
-	
-	<Frame name="AltoRightClickMenuTemplate" inherits="UIDropDownMenuTemplate" hidden="true" virtual="true">
-		<Size>
-			<AbsDimension x="100" y="40"/>
-		</Size>
+
+	<Frame name="AltoContextualMenuTemplate" inherits="UIDropDownMenuTemplate" hidden="true" virtual="true">
+		<Size x="100" y="40" />
 	</Frame>
 	
 </Ui>

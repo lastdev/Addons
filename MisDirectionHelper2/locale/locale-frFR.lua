@@ -42,6 +42,7 @@ L["Profiles"] = "Profils"
 L["Project description"] = "Utiliser D\195\169tournement / Ficelles du m\195\169tier en un clic, sans perdre votre cible. Cr\195\169er une Macro automatiquement pour appliquer et annoncer D\195\169tournement / Ficelles du m\195\169tier"
 L["Right Click For MDH Options"] = "Clic droit pour les Options de MDH"
 L["Right click target: %s"] = "Clic droit sur la cible : %s"
+L["%s casts %s on %s"] = "\"player\" casts \"spell\" on \"target\"" -- Requires localization
 L["%s casts Tricks of the Trade on %s"] = "%s lance Ficelles du m\195\169tier sur %s"
 L["Select"] = "Select" -- Requires localization
 L["Select Channel for Buff Announcements"] = "S\195\169lectionner le canal pour les annonces de buff"

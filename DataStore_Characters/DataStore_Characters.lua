@@ -15,8 +15,8 @@ local THIS_ACCOUNT = "Default"
 local AddonDB_Defaults = {
 	global = {
 		Options = {
-			RequestPlayTime = 1,		-- Request play time at logon
-			HideRealPlayTime = 0,	-- Hide real play time to client addons (= return 0 instead of real value)
+			RequestPlayTime = true,		-- Request play time at logon
+			HideRealPlayTime = false,	-- Hide real play time to client addons (= return 0 instead of real value)
 		},
 		Characters = {
 			['*'] = {				-- ["Account.Realm.Name"] 
@@ -268,7 +268,7 @@ local function _GetGuildInfo(character)
 end
 
 local function _GetPlayTime(character)
-	return (GetOption("HideRealPlayTime") == 1) and 0 or character.played
+	return (GetOption("HideRealPlayTime")) and 0 or character.played
 end
 
 local function _GetLocation(character)
@@ -344,7 +344,7 @@ function addon:OnEnable()
 	
 	addon:SetupOptions()
 	
-	if GetOption("RequestPlayTime") == 1 then
+	if GetOption("RequestPlayTime") then
 		RequestTimePlayed()	-- trigger a TIME_PLAYED_MSG event
 	end
 end

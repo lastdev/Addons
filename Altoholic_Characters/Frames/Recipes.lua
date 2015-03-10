@@ -289,7 +289,7 @@ function ns:Update()
 	if VisibleCount == 0 then
 		status = format("%s : %s", status, L["No data"])
 	end
-	AltoholicTabCharactersStatus:SetText(status)
+	AltoholicTabCharacters.Status:SetText(status)
 	
 	_G[parent]:Show()
 	

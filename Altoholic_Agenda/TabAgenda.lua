@@ -5,7 +5,8 @@ local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 local GREEN		= "|cFF00FF00"
 
-local parent = "AltoholicTabAgenda"
+local parentName = "AltoholicTabAgenda"
+local parent
 
 local currentMode
 
@@ -39,10 +40,10 @@ function ns:MenuItem_OnClick(id)
 	f:Show()
 	o:Update()
 	
-	for i=1, 5 do 
-		_G[ parent .. "MenuItem"..i ]:UnlockHighlight();
+	for i = 1, 5 do 
+		parent["MenuItem"..i]:UnlockHighlight()
 	end
-	_G[ parent .. "MenuItem"..id ]:LockHighlight();
+	parent["MenuItem"..id]:LockHighlight()
 end
 
 function ns:SetMode(mode)
@@ -76,11 +77,12 @@ function ns:RegisterChildPane(pane)
 end
 
 function ns:OnLoad()
-	_G[ parent .. "MenuItem1"]:SetText(L["Calendar"])
-	_G[ parent .. "MenuItem2"]:SetText("Contacts")
-	_G[ parent .. "MenuItem3"]:SetText("Tasks")
-	_G[ parent .. "MenuItem4"]:SetText("Notes")
-	_G[ parent .. "MenuItem5"]:SetText("Mail")
+	parent = _G[parentName]
+	parent.MenuItem1:SetText(L["Calendar"])
+	parent.MenuItem2:SetText("Contacts")
+	parent.MenuItem3:SetText("Tasks")
+	parent.MenuItem4:SetText("Notes")
+	parent.MenuItem5:SetText("Mail")
 	
 	addon:RegisterMessage("DATASTORE_ITEM_COOLDOWN_UPDATED")
 	addon:RegisterMessage("DATASTORE_CALENDAR_SCANNED")

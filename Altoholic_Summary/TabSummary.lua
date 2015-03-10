@@ -8,6 +8,8 @@ local GREEN		= "|cFF00FF00"
 local parent = "AltoholicTabSummary"
 local rcMenuName = parent .. "RightClickMenu"	-- name of right click menu frames (add a number at the end to get it)
 
+local OPTION_REALMS = "UI.Tabs.Summary.CurrentRealms"
+
 local THISREALM_THISACCOUNT = 1
 local THISREALM_ALLACCOUNTS = 2
 local ALLREALMS_THISACCOUNT = 3
@@ -40,7 +42,7 @@ local locationLabels = {
 local function OnRealmFilterChange(self)
 	UIDropDownMenu_SetSelectedValue(AltoholicTabSummary_SelectLocation, self.value);
 	
-	addon:SetOption("TabSummaryMode", self.value)
+	addon:SetOption(OPTION_REALMS, self.value)
 	addon.Characters:BuildList()
 	addon.Characters:BuildView()
 	ns:Refresh()
@@ -104,9 +106,9 @@ function ns:MenuItem_OnClick(id)
 	o:Update()
 	
 	for i=1, #childrenFrames do 
-		_G[ "AltoholicTabSummaryMenuItem"..i ]:UnlockHighlight();
+		AltoholicTabSummary["MenuItem"..i]:UnlockHighlight()
 	end
-	_G[ "AltoholicTabSummaryMenuItem"..id ]:LockHighlight();
+	AltoholicTabSummary["MenuItem"..id]:LockHighlight()
 end
 
 function ns:SetMode(mode)
@@ -235,7 +237,7 @@ function ns:AccountSharingButton_OnEnter(self)
 end
 
 function ns:AccountSharingButton_OnClick()
-	if addon:GetOption("AccSharingHandlerEnabled") == 0 then
+	if addon:GetOption("UI.AccountSharing.IsEnabled") == 0 then
 		addon:Print(L["Both parties must enable account sharing\nbefore using this feature (see options)"])
 		return
 	end
@@ -359,16 +361,16 @@ local function DataStoreOptionsIcon_Initialize(self, level)
 end
 
 function ns:OnLoad()
-	AltoholicTabSummaryMenuItem1:SetText(L["Account Summary"])
-	AltoholicTabSummaryMenuItem2:SetText(L["Bag Usage"])
-	AltoholicTabSummaryMenuItem4:SetText(L["Activity"])
+	AltoholicTabSummary.MenuItem1:SetText(L["Account Summary"])
+	AltoholicTabSummary.MenuItem2:SetText(L["Bag Usage"])
+	AltoholicTabSummary.MenuItem4:SetText(L["Activity"])
 	AltoholicTabSummary_RequestSharing:SetText(L["Account Sharing"])
 
 	addon:DDM_Initialize(_G[rcMenuName.."1"], AltoholicOptionsIcon_Initialize)
 	addon:DDM_Initialize(_G[rcMenuName.."2"], DataStoreOptionsIcon_Initialize)
 	
 	local f = AltoholicTabSummary_SelectLocation
-	UIDropDownMenu_SetSelectedValue(f, addon:GetOption("TabSummaryMode"))
-	UIDropDownMenu_SetText(f, select(addon:GetOption("TabSummaryMode"), locationLabels[THISREALM_THISACCOUNT], locationLabels[THISREALM_ALLACCOUNTS], locationLabels[ALLREALMS_THISACCOUNT], locationLabels[ALLREALMS_ALLACCOUNTS]))
+	UIDropDownMenu_SetSelectedValue(f, addon:GetOption(OPTION_REALMS))
+	UIDropDownMenu_SetText(f, select(addon:GetOption(OPTION_REALMS), locationLabels[THISREALM_THISACCOUNT], locationLabels[THISREALM_ALLACCOUNTS], locationLabels[ALLREALMS_THISACCOUNT], locationLabels[ALLREALMS_ALLACCOUNTS]))
 	addon:DDM_Initialize(f, DropDownLocation_Initialize)
 end

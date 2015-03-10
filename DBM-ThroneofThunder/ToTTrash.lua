@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("ToTTrash", "DBM-ThroneofThunder")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 40 $"):sub(12, -3))
 mod:SetModelID(47785)
 mod:SetZone()
 
@@ -22,7 +22,7 @@ local warnFixated				= mod:NewSpellAnnounce(140306, 3)
 local warnConductiveShield		= mod:NewTargetAnnounce(140296, 4)
 
 local specWarnStormEnergy		= mod:NewSpecialWarningYou(139322)
-local specWarnShadowNova		= mod:NewSpecialWarningRun(139899, mod:IsMelee(), nil, nil, 3)--This hurls you pretty damn far. If you aren't careful you're as good as gone.
+local specWarnShadowNova		= mod:NewSpecialWarningRun(139899, "Melee", nil, nil, 3)--This hurls you pretty damn far. If you aren't careful you're as good as gone.
 local specWarnStormCloud		= mod:NewSpecialWarningYou(139900)
 local specWarnSonicScreech		= mod:NewSpecialWarningInterrupt(136751)
 local specWarnConductiveShield	= mod:NewSpecialWarningTarget(140296)
@@ -73,7 +73,7 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 139895 then
 		self:Schedule(0.2, SpiritFireTarget, args.sourceGUID)
 		timerSpiritfireCD:Start()
-		if self.Options.RangeFrame and not DBM.RangeCheck:IsShown() then
+		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(3)
 		end
 	elseif spellId == 136751 and (args.sourceGUID == UnitGUID("target") or args.sourceGUID == UnitGUID("focus")) then
@@ -93,7 +93,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnStormEnergy:Show()
 		end
-		if self.Options.RangeFrame and not DBM.RangeCheck:IsShown() then
+		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(10)
 		end
 		self:Unschedule(warnStormEnergyTargets)
@@ -103,7 +103,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if args:IsPlayer() then
 			specWarnStormCloud:Show()
 		end
-		if self.Options.RangeFrame and not DBM.RangeCheck:IsShown() then
+		if self.Options.RangeFrame then
 			DBM.RangeCheck:Show(10)
 		end
 		self:Unschedule(warnStormCloudTargets)

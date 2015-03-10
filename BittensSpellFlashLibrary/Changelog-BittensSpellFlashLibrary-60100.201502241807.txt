@@ -1,0 +1,74 @@
+------------------------------------------------------------------------
+r374 | slippycheeze | 2015-02-25 02:08:09 +0000 (Wed, 25 Feb 2015) | 1 line
+Changed paths:
+   A /tags/60100.201502241807 (from /trunk:373)
+
+Create tag 60100.201502241807
+------------------------------------------------------------------------
+r373 | slippycheeze | 2015-02-25 02:07:43 +0000 (Wed, 25 Feb 2015) | 1 line
+Changed paths:
+   M /trunk/BittensSpellFlashLibrary.toc
+
+Bump TOC for patch 6.1
+------------------------------------------------------------------------
+r371 | slippycheeze | 2015-02-15 22:13:57 +0000 (Sun, 15 Feb 2015) | 9 lines
+Changed paths:
+   M /trunk/src/BittensSpellFlashLibrary.lua
+
+Add Resolve, Versatility, and Crit query functions
+
+These wrap up the logic of fetching and transforming the relevant values
+into a percentage multiplier, so that we don't have to repeat the same
+code everywhere.
+
+In an ideal world the Blizzard functions would do this, but with random
+stuff like needing to fetch and add two numbers for versatility, or
+transform a percentage into a float, this makes life easier.
+------------------------------------------------------------------------
+r370 | slippycheeze | 2015-02-15 22:13:52 +0000 (Sun, 15 Feb 2015) | 1 line
+Changed paths:
+   M /trunk/src/BittensSpellFlashLibrary.lua
+
+Add c.GetResolve() to return resolve bonus to healing effects.
+------------------------------------------------------------------------
+r368 | slippycheeze | 2015-02-15 09:05:26 +0000 (Sun, 15 Feb 2015) | 5 lines
+Changed paths:
+   M /trunk/src/BittensSpellFlashLibrary.lua
+   M /trunk/src/Events.lua
+   M /trunk/src/Flashing.lua
+
+Improve integration of spell GetDelay into the delay flashing
+
+Previously a spell-supplied GetDelay would override many of the core
+features, including charges and power regen delay calculations; this
+updates the code to integrate it cleanly into the core calculation.
+------------------------------------------------------------------------
+r366 | slippycheeze | 2015-02-02 02:21:48 +0000 (Mon, 02 Feb 2015) | 1 line
+Changed paths:
+   M /trunk/src/Events.lua
+   M /trunk/src/Flashing.lua
+
+Internal updates to allow better scheduling in rotation addons
+------------------------------------------------------------------------
+r365 | slippycheeze | 2015-02-02 02:21:43 +0000 (Mon, 02 Feb 2015) | 1 line
+Changed paths:
+   M /trunk/src/Flashing.lua
+
+Add several additional power types to core getPowerDelay
+------------------------------------------------------------------------
+r363 | slippycheeze | 2015-01-25 20:06:09 +0000 (Sun, 25 Jan 2015) | 5 lines
+Changed paths:
+   M /trunk/src/Flashing.lua
+
+Support Combo Points and multiple power types, including secondary power types.
+
+This extends the core support for power management in DelayPriorityFlash
+to include secondary power types (Combo Points, specifically) as well as
+Energy and Rage, and to correctly handle delays for them.
+------------------------------------------------------------------------
+r362 | slippycheeze | 2015-01-25 20:06:04 +0000 (Sun, 25 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/src/Flashing.lua
+
+Add energy support to power delay calculations
+------------------------------------------------------------------------

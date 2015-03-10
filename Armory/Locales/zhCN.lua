@@ -397,6 +397,8 @@ L["ARMORY_OPEN_HINT"] = "Click to open" -- Requires localization
 L["ARMORY_PANDARIA_GEM_RESEARCH"] = "Pandaria Gem Research" -- Requires localization
 L["ARMORY_QUEST_TOOLTIP_LABEL"] = "以下小号有此任务:"
 L["ARMORY_RECIPE"] = "配方"
+L["ARMORY_RECIPE_WARNING"] = [=[Recipe %s not found in LibCraftInfo. Trying to make an educated guess.
+Please check with '/armory find skill ...' to be sure.]=] -- Requires localization
 L["ARMORY_REPUTATION_SUMMARY"] = "%1$s - %2$s (%3$d/%4$d, %5$d left)" -- Requires localization
 L["ARMORY_SEARCHING"] = "Searching..." -- Requires localization
 L["ARMORY_SELECT_UNIT_HINT"] = "Left-click to select this character." -- Requires localization

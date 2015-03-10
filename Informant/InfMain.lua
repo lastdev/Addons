@@ -1,8 +1,8 @@
 ﻿--[[
 	Informant - An addon for World of Warcraft that shows pertinent information about
 	an item in a tooltip when you hover over the item in the game.
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
-	Revision: $Id: InfMain.lua 5500 2014-10-18 14:29:01Z brykrys $
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Revision: $Id: InfMain.lua 5533 2014-12-11 22:11:04Z brykrys $
 	URL: http://auctioneeraddon.com/dl/Informant/
 
 	License:
@@ -27,9 +27,9 @@
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Informant/InfMain.lua $","$Rev: 5500 $")
+Informant_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Informant/InfMain.lua $","$Rev: 5533 $")
 
-INFORMANT_VERSION = "5.21c.5521"
+INFORMANT_VERSION = "5.21d.5538"
 if (INFORMANT_VERSION == "<".."%version%>") then
 	INFORMANT_VERSION = "5.2.DEV"
 end
@@ -1196,7 +1196,7 @@ end
 --                nil, otherwise
 -------------------------------------------------------------------------------
 function infDebugPrint(message, category, title, errorCode, level)
-	return debug(addonName, message, category, title, errorCode, level)
+	return debug(message, category, title, errorCode, level)
 end
 
 -------------------------------------------------------------------------------

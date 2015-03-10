@@ -2,42 +2,29 @@
 	<Script file="Options.lua"></Script>
 
 	<Frame name="DataStoreMailOptions" hidden="true">
-		<Size>
-			<AbsDimension x="615" y="306"/>
-		</Size>
+		<Size x="615" y="306" />
 		<Frames>
 			<Slider name="$parent_SliderMailExpiry" inherits="OptionsSliderTemplate"  minValue="1" maxValue="15" defaultValue="5" valueStep="1">
-				<Size>
-					<AbsDimension x="180" y="16"/>
-				</Size>
+				<Size x="180" y="16" />
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="40" y="-40" />
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="40" y="-40" />
 				</Anchors>
 				<Scripts>
 					<OnValueChanged>
 						local L = LibStub("AceLocale-3.0"):GetLocale("DataStore_Mails")
 						
 						local name = self:GetName()
-						_G[name .. "Text"]:SetText(L["Mail Expiry Warning"] .. " (" .. self:GetValue() ..")");
-						DataStore:SetOption("DataStore_Mails", "MailWarningThreshold", self:GetValue())
+						local value = math.floor(self:GetValue())
+						_G[name .. "Text"]:SetText(L["Mail Expiry Warning"] .. " (" .. value ..")");
+						DataStore:SetOption("DataStore_Mails", "MailWarningThreshold", value)
 					</OnValueChanged>
 				</Scripts>
 			</Slider>
 
 			<CheckButton parentKey="CheckMailExpiry" inherits="InterfaceOptionsCheckButtonTemplate">
-				<Size>
-					<AbsDimension x="20" y="20"/>
-				</Size>
+				<Size x="20" y="20" />
 				<Anchors> 
-					<Anchor point="TOPLEFT" relativeTo="$parent_SliderMailExpiry" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension  x="0" y="-20"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="$parent_SliderMailExpiry" relativePoint="BOTTOMLEFT" x="0" y="-20" />
 				</Anchors>      
 				<Scripts>
 					<OnClick>
@@ -45,16 +32,21 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-			<CheckButton parentKey="ScanMailBody" inherits="InterfaceOptionsCheckButtonTemplate">
-				<Size>
-					<AbsDimension x="20" y="20"/>
-				</Size>
+			<CheckButton parentKey="ReportExpiredMailsToChat" inherits="InterfaceOptionsCheckButtonTemplate">
+				<Size x="20" y="20" />
 				<Anchors> 
-					<Anchor point="TOP" relativeKey="$parent.CheckMailExpiry" relativePoint="BOTTOM" >
-						<Offset>
-							<AbsDimension  x="0" y="-10"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOP" relativeKey="$parent.CheckMailExpiry" relativePoint="BOTTOM" x="0" y="-10" />
+				</Anchors> 
+				<Scripts>
+					<OnClick>
+						DataStore:ToggleOption(self, "DataStore_Mails", "ReportExpiredMailsToChat")
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			<CheckButton parentKey="ScanMailBody" inherits="InterfaceOptionsCheckButtonTemplate">
+				<Size x="20" y="20" />
+				<Anchors> 
+					<Anchor point="TOP" relativeKey="$parent.ReportExpiredMailsToChat" relativePoint="BOTTOM" x="0" y="-10" />
 				</Anchors> 
 				<Scripts>
 					<OnClick>
@@ -63,15 +55,9 @@
 				</Scripts>
 			</CheckButton>
 			<CheckButton parentKey="CheckMailExpiryAllAccounts" inherits="InterfaceOptionsCheckButtonTemplate">
-				<Size>
-					<AbsDimension x="20" y="20"/>
-				</Size>
+				<Size x="20" y="20" />
 				<Anchors> 
-					<Anchor point="TOP" relativeKey="$parent.ScanMailBody" relativePoint="BOTTOM" >
-						<Offset>
-							<AbsDimension  x="0" y="-10"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOP" relativeKey="$parent.ScanMailBody" relativePoint="BOTTOM" x="0" y="-10" />
 				</Anchors> 
 				<Scripts>
 					<OnClick>
@@ -80,15 +66,9 @@
 				</Scripts>
 			</CheckButton>
 			<CheckButton parentKey="CheckMailExpiryAllRealms" inherits="InterfaceOptionsCheckButtonTemplate">
-				<Size>
-					<AbsDimension x="20" y="20"/>
-				</Size>
+				<Size x="20" y="20" />
 				<Anchors> 
-					<Anchor point="TOP" relativeKey="$parent.CheckMailExpiryAllAccounts" relativePoint="BOTTOM" >
-						<Offset>
-							<AbsDimension  x="0" y="-10"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOP" relativeKey="$parent.CheckMailExpiryAllAccounts" relativePoint="BOTTOM" x="0" y="-10" />
 				</Anchors> 
 				<Scripts>
 					<OnClick>

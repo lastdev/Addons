@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Xariona", "DBM-Party-Cataclysm", 15)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 121 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
 mod:SetCreatureID(50061)
 mod:SetModelID(32229)
 mod:SetZone()
@@ -24,7 +24,7 @@ local warnTwilightBuffet		= mod:NewTargetAnnounce(93551, 3)
 local warnUnleashedMagicSoon	= mod:NewPreWarnAnnounce(93556, 10, 3)
 local warnUnleashedMagic		= mod:NewCastAnnounce(93556, 4)--An attack that one shots anyone not in a twilight zone.
 
-local specWarnUnleashedMagic	= mod:NewSpecialWarningSpell(93556, nil, nil, nil, true)
+local specWarnUnleashedMagic	= mod:NewSpecialWarningSpell(93556, nil, nil, nil, 2)
 local specWarnTwilightFissure	= mod:NewSpecialWarningYou(93546)
 
 local timerTwilightFissureCD	= mod:NewCDTimer(23, 93546)

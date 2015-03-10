@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 652 2014-10-19T10:25:00Z
+    Revision: 665 2015-01-25T20:06:17Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -941,12 +941,12 @@ function Armory:GetInventorySearchAllFilter()
 end
 
 local scanItem = {};
-function Armory:ScanInventory(link, bagsOnly)
+function Armory:ScanInventory(link, reagentScan)
     local count, bagCount, bankCount, reagentBankCount, mailCount, auctionCount, voidCount = 0, 0, 0, 0, 0, 0, 0;
     local perSlotCount, result;
     if ( link ) then
         scanItem[1] = link;
-        result = self:ScanInventoryItems(scanItem, bagsOnly)[1];
+        result = self:ScanInventoryItems(scanItem, reagentScan)[1];
         count = result.count;
         bagCount = result.bags;
         bankCount = result.bank;
@@ -960,7 +960,7 @@ function Armory:ScanInventory(link, bagsOnly)
 end
 
 local scanResult = {};
-function Armory:ScanInventoryItems(items, bagsOnly)
+function Armory:ScanInventoryItems(items, reagentScan)
     local result = scanResult;
     local id, itemCount, name, link, itemString;
     local itemContainer;
@@ -1027,7 +1027,7 @@ function Armory:ScanInventoryItems(items, bagsOnly)
 
         for i = 1, #ArmoryInventoryContainers do
             id = ArmoryInventoryContainers[i];
-            if ( (bagsOnly and id >= BACKPACK_CONTAINER and id <= NUM_BAG_SLOTS) or (not bagsOnly and not self:IsDummyContainer(id)) ) then 
+            if ( (reagentScan and ((id >= BACKPACK_CONTAINER and id <= NUM_BAG_SLOTS) or id == ARMORY_REAGENTBANK_CONTAINER)) or (not reagentScan and not self:IsDummyContainer(id)) ) then 
                 itemContainer = InventoryContainerName(id);
                 if ( result[k].item and ItemCacheExists(itemContainer) ) then
                     itemCount = GetCachedItemCount(itemContainer, result[k].item);

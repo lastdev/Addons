@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Auriaya", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 
 mod:SetCreatureID(33515)--34014--Add this (kitties) to pull detection when it can be ignored in kill
 mod:SetEncounterID(1131)
@@ -18,15 +18,6 @@ mod:RegisterEventsInCombat(
 	"UNIT_DIED"
 )
 
-local canInterrupt
-do
-	local class = select(2, UnitClass("player"))
-	canInterrupt = class == "SHAMAN"
-		or class == "WARRIOR"
-		or class == "ROGUE"
-		or class == "MAGE"
-end
-
 local warnSwarm 		= mod:NewTargetAnnounce(64396, 2)
 local warnFear 			= mod:NewSpellAnnounce(64386, 3)
 local warnFearSoon	 	= mod:NewSoonAnnounce(64386, 1)
@@ -34,7 +25,7 @@ local warnCatDied 		= mod:NewAnnounce("WarnCatDied", 3, 64455)
 local warnCatDiedOne	= mod:NewAnnounce("WarnCatDiedOne", 3, 64455)
 local warnSonic			= mod:NewSpellAnnounce(64688, 2)
 
-local specWarnBlast		= mod:NewSpecialWarning("SpecWarnBlast", canInterrupt)
+local specWarnBlast		= mod:NewSpecialWarningInterrupt(64389)
 local specWarnVoid 		= mod:NewSpecialWarningMove(64675)
 
 local enrageTimer		= mod:NewBerserkTimer(600)

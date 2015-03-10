@@ -1,12 +1,12 @@
 local g = BittensGlobalTables
 local c = g.GetOrMakeTable("BittensSpellFlashLibrary", 2)
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "MainFile", tonumber("20141215204639") or time()) then
+if u.SkipOrUpgrade(c, "MainFile", tonumber("20150225020743") or time()) then
    return
 end
 
 local s = SpellFlashAddon
-local x = s.UpdatedVariables
+-- local x = s.UpdatedVariables
 
 local GetNumGroupMembers = GetNumGroupMembers
 local GetPowerRegen = GetPowerRegen
@@ -38,7 +38,7 @@ local pairs = pairs
 local print = print
 local select = select
 local string = string
-local tinsert = tinsert
+local tinsert = table.insert
 local type = type
 local unpack = unpack
 local wipe = wipe
@@ -67,8 +67,8 @@ function c.RegisterAddon()
       local inCombat = s.InCombat()
       if (IsMounted() and not inCombat)
          or UnitIsDeadOrGhost("player")
-         or UnitInVehicle("player") then
-
+         or UnitInVehicle("player")
+      then
          return
       end
 
@@ -105,8 +105,17 @@ function c.GetCurrentRotation()
       local optionName = "Flash" .. name
       if (rotation.CheckFirst == nil or rotation.CheckFirst())
          and rotation.Spec == GetSpecialization()
-         and (not c.HasOption(optionName) or c.GetOption(optionName)) then
-
+         and (not c.HasOption(optionName) or c.GetOption(optionName))
+      then
+         if rotation.Warning then
+            u.Schedule(
+               15, print,
+               "|TInterface/TargetingFrame/UI-RaidTargetingIcon_8:0|t  " ..
+                  "|cFFFF0000" .. rotation.Warning .. "|r -- SlippyCheeze" ..
+                  "  |TInterface/TargetingFrame/UI-RaidTargetingIcon_8:0|t"
+            )
+            rotation.Warning = nil
+         end
          return rotation
       end
    end
@@ -203,7 +212,9 @@ function c.GetID(name)
    if id then
       return id
    else
-      print("No spell defined (or no ID attribute):", name)
+      if name ~= nil then
+         print("No spell defined (or no ID attribute):", name)
+      end
    end
 end
 
@@ -255,6 +266,10 @@ function c.HasGlyph(name)
    else
       return s.HasGlyph(id)
    end
+end
+
+function c.Form(name)
+   return s.Form(name and c.GetID(name) or nil)
 end
 
 local function getCastTime(localizedNameOrId)
@@ -391,7 +406,8 @@ function c.GetPower(regen, powerType)
    end
 
    -- current gcd
-   t, power = advancePowerCalc(
+   local _
+   _, power = advancePowerCalc(
       t, power, GetTime() + s.GlobalCooldown(), regen, max)
 --c.Debug("GetPower", power, "After Current GCD")
    return power
@@ -433,7 +449,7 @@ function c.AddSpell(spellName, tag, attributes)
    if attributes == nil then
       attributes = { }
    end
-   for k, v in pairs(attributes) do
+   for k, _ in pairs(attributes) do
       convertToIDs(attributes, k, "ID", "Debuff%d*", "Buff%d*")
    end
    if attributes.ID == nil then
@@ -616,6 +632,45 @@ function c.GetHealthPercent(unit)
    else
       return 100 * c.GetHealth(unit) / max
    end
+end
+
+-- Uses data from http://us.battle.net/wow/en/forum/topic/13087818929#2
+-- ItemScaling value by player level:
+local itemScaling = {
+   -- ten levels per line
+     3,   3,   4,   4,   5,   6,   6,   7,   7,   8,
+     8,   9,   9,  10,  10,  11,  11,  12,  12,  13,
+    13,  14,  14,  15,  15,  16,  16,  17,  17,  18,
+    18,  19,  19,  20,  20,  21,  21,  22,  22,  23,
+    23,  24,  24,  25,  25,  26,  26,  27,  27,  28,
+    28,  29,  29,  30,  30,  31,  31,  32,  32,  32,
+    35,  37,  39,  39,  40,  40,  41,  44,  44,  44,
+    44,  44,  45,  46,  49,  49,  50,  50,  51,  51,
+    52,  52,  54,  56,  57,  60,  61,  62,  64,  67,
+   101, 118, 139, 162, 190, 225, 234, 242, 252, 261}
+
+local resolveBuffName = GetSpellInfo(158298)
+
+-- percentage that resolve will increase healing, etc, effects
+function c.GetResolve()
+   -- Base resolve out of combat
+   local stamina = UnitStat("player", 3)
+   local resolve_base = stamina / 250.0 / (itemScaling[UnitLevel("Player")] or 1)
+   local resolve_buff = select(17, UnitBuff("player", resolveBuffName)) or 0
+
+   -- Resolve: http://us.battle.net/wow/en/forum/topic/13087818929#2
+   return 1 + (resolve_buff / stamina / 60 * 0.25 + resolve_base)
+end
+
+-- percentage that versatility will boost healing or damage
+function c.GetVersatility()
+   local percent = GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE)
+      + GetVersatilityBonus(CR_VERSATILITY_DAMAGE_DONE)
+   return 1 + (percent / 100)
+end
+
+function c.GetCritChance()
+   return 1 + (GetCritChance() / 100)
 end
 
 function c.MakeMini(spell, condition)

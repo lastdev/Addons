@@ -8,19 +8,19 @@ local util = oRA.util
 local module = oRA:NewModule("Durability")
 local L = scope.locale
 
-module.VERSION = tonumber(("$Revision: 806 $"):sub(12, -3))
+module.VERSION = tonumber(("$Revision: 855 $"):sub(12, -3))
 
 local durability = {}
 
 function module:OnRegister()
 	-- should register durability table with the oRA3 core GUI for sortable overviews
 	oRA:RegisterList(
-		L["Durability"],
+		L.durability,
 		durability,
-		L["Name"],
-		L["Average"],
-		L["Minimum"],
-		L["Broken"]
+		L.name,
+		L.average,
+		L.minimum,
+		L.broken
 	)
 	oRA.RegisterCallback(self, "OnStartup")
 	oRA.RegisterCallback(self, "OnShutdown")
@@ -30,12 +30,12 @@ function module:OnRegister()
 	SLASH_ORADURABILITY1 = "/radur"
 	SLASH_ORADURABILITY2 = "/radurability"
 	SlashCmdList.ORADURABILITY = function()
-		oRA:OpenToList(L["Durability"])
+		oRA:OpenToList(L.durability)
 	end
 end
 
 function module:OnGroupChanged()
-	oRA:UpdateList(L["Durability"])
+	oRA:UpdateList(L.durability)
 end
 
 function module:OnStartup()
@@ -79,7 +79,7 @@ function module:OnCommReceived(_, sender, prefix, perc, minimum, broken)
 		durability[k][3] = tonumber(minimum)
 		durability[k][4] = tonumber(broken)
 
-		oRA:UpdateList(L["Durability"])
+		oRA:UpdateList(L.durability)
 	end
 end
 

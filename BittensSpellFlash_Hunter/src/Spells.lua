@@ -1,10 +1,8 @@
-local addonName, a = ...
+local _, a = ...
 local s = SpellFlashAddon
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
-local GetPowerRegen = GetPowerRegen
 local GetTime = GetTime
-local IsMounted = IsMounted
 local UnitExists = UnitExists
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned
 local UnitInParty = UnitInParty
@@ -24,34 +22,53 @@ c.AssociateTravelTimes(
    "Chimaera Shot",
    "Aimed Shot",
    "Tranquilizing Shot",
-   "Multi-Shot")
-
-local function sufficientResources(z)
-   return c.GetCost(z.ID) <= a.Focus
-end
-
-local function modSpell(spell)
-   spell.EvenIfNotUsable = true
-   spell.NoPowerCheck = true
-   spell.CheckLast = sufficientResources
-end
-
-local function addSpell(name, tag, attributes)
-   modSpell(c.AddSpell(name, tag, attributes))
-end
-
-local function addOptionalSpell(name, tag, attributes)
-   modSpell(c.AddOptionalSpell(name, tag, attributes))
-end
+   "Multi-Shot"
+)
 
 local function avoidCapping(spell, padding)
    local castTime = c.GetCastTime(spell)
    local added = a.FocusAdded(spell, c.GetBusyTime() + castTime)
    local regen = castTime * a.Regen
-   return (a.EmptyFocus - added - regen) >= padding
+   return (a.EmptyFocus - added - regen) >= (padding or 0)
 end
 
 ------------------------------------------------------------------------ Common
+c.AddSpell("Focusing Shot", nil, {
+   FlashID = { "Focusing Shot", "Cobra Shot", "Steady Shot" },
+})
+
+c.AddSpell("Cobra Shot", nil, {
+   FlashID = { "Cobra Shot", "Steady Shot" },
+   CheckFirst = function()
+      -- focusing shot replaces cobra shot
+      return not c.HasTalent("Focusing Shot")
+   end
+})
+
+c.AddSpell("Steady Shot")
+
+c.AddSpell("Cobra Shot", "for Steady Focus", {
+   FlashID = { "Cobra Shot", "Steady Shot" },
+   CheckFirst = function()
+      return c.HasTalent("Steady Focus")
+         and a.startedSteadyFocus
+         and avoidCapping("Cobra Shot")
+         and not c.HasTalent("Focusing Shot")
+      -- @todo danielp 2014-11-29: no padding here, which might be
+      -- a mistake.  consider if we end up focus capping regularly here.
+   end
+})
+
+c.AddSpell("Steady Shot", "for Steady Focus", {
+   CheckFirst = function()
+      return c.HasTalent("Steady Focus")
+         and a.startedSteadyFocus
+         and avoidCapping("Steady Shot")
+         and not c.HasTalent("Focusing Shot")
+   end
+})
+
+
 c.AddOptionalSpell("Call Pet", nil, {
    ID = "Call Pet 1",
    FlashID = {
@@ -95,51 +112,39 @@ c.AddOptionalSpell("Exhilaration", nil, {
    end,
 })
 
-addOptionalSpell("A Murder of Crows", nil, {
+c.AddOptionalSpell("A Murder of Crows", nil, {
    MyDebuff = "A Murder of Crows",
+   Focus = 30,
 })
 
-addOptionalSpell("Powershot", nil, {
+c.AddOptionalSpell("Powershot", nil, {
    Cooldown = 45,
-   CechkFirst = function(z)
+   Focus = function()
+      return a.BestialWrath and 7.5 or 15
+   end,
+   CheckFirst = function(z)
       c.MakeOptional(z, s.Moving("player"))
-      return s.EmptyFocus > a.Regen * c.GetCastTime("Powershot")
+      return avoidCapping("Powershot")
    end,
 })
 
-addOptionalSpell("Powershot", "for AoE", {
+c.AddOptionalSpell("Powershot", "for AoE", {
    Cooldown = 45,
-   CechkFirst = function(z)
+   Focus = function()
+      return a.BestialWrath and 7.5 or 15
+   end,
+   CheckFirst = function(z)
       c.MakeOptional(z, s.Moving("player"))
       return c.EstimatedHarmTargets > 1
-         and s.EmptyFocus > a.Regen * c.GetCastTime("Powershot")
-   end,
-})
-
-addOptionalSpell("Barrage", nil, {
-   Cooldown = 30,
-})
-
-addOptionalSpell("Barrage", "for BM", {
-   Cooldown = 30,
-   CheckFirst = function()
-      local frenzy = s.BuffStack(c.GetID("Frenzy"), "pet")
-      local ff = c.HasBuff("Focus Fire")
-
-      -- if we are not under focus fire, delay if we are at four stacks so
-      -- that we can combine the two and improve barrage a bit.
-      return ff or frenzy < 4
-   end,
-})
-
-addOptionalSpell("Barrage", "for AoE", {
-   Cooldown = 30,
-   CheckFirst = function()
-      return c.EstimatedHarmTargets > 1
+         and avoidCapping("Powershot")
    end,
 })
 
 c.RegisterForFullChannels("Barrage", 3)
+c.AddOptionalSpell("Barrage", nil, {
+   Cooldown = 30,
+   Focus = 60,
+})
 
 c.AddOptionalSpell("Dire Beast", nil, {
    CheckFirst = function()
@@ -147,23 +152,8 @@ c.AddOptionalSpell("Dire Beast", nil, {
    end
 })
 
-c.AddSpell("Arcane Shot", "under Thrill of the Hunt", {
-   CheckFirst = function()
-      local stacks = c.GetBuffStack("Thrill of the Hunt")
-      if c.IsCasting("Arcane Shot") or c.IsCasting("Multi-Shot") then
-         stacks = stacks - 1
-      end
-      return stacks > 0 and a.Focus > 35
-   end
-})
-
-c.AddSpell("Arcane Shot", "under Bestial Wrath", {
-   CheckFirst = function()
-      return c.HasBuff("Bestial Wrath")
-   end
-})
-
 c.AddOptionalSpell("Rapid Fire", nil, {
+   Cooldown = 120,
    CheckFirst = function()
       return not s.Buff(c.BLOODLUST_BUFFS, "player")
          and not c.HasBuff("Rapid Fire")
@@ -177,46 +167,18 @@ c.AddOptionalSpell("Stampede", nil, {
    end,
 })
 
-c.AddSpell("Cobra Shot", nil, {
-   CheckFirst = function()
-      -- focusing shot replaces cobra shot
-      return avoidCapping("Cobra Shot", 0) and not c.HasTalent("Focusing Shot")
-   end
-})
-
-c.AddSpell("Focusing Shot", nil, {
-   CheckFirst = function()
-      local castTime = c.GetCastTime("Focusing Shot")
-      -- we are out of other things, allow some overcap.
-      return (a.EmptyFocus - 50 - (castTime * a.Regen)) >= -10
-   end
-})
-
-c.AddSpell("Cobra Shot", "for Steady Focus", {
-   CheckFirst = function()
-      return c.HasTalent("Steady Focus")
-         and a.startedSteadyFocus
-         and avoidCapping("Cobra Shot", 0)
-         and not c.HasTalent("Focusing Shot")
-      -- @todo danielp 2014-11-29: no padding here, which might be
-      -- a mistake.  consider if we end up focus capping regularly here.
-   end
-})
-
-c.AddSpell("Steady Shot", "for Leveling", {
-   CheckFirst = function()
-      -- encourage people to swap Cobra Shot onto their bars as soon as they
-      -- get the spell
-      return not c.HasSpell("Cobra Shot")
+c.AddSpell("Glaive Toss", nil, {
+   Cooldown = 15,
+   Focus = function()
+      return a.BestialWrath and 7.5 or 15
    end,
 })
 
-addSpell("Glaive Toss", nil, {
+c.AddSpell("Glaive Toss", "for AoE", {
    Cooldown = 15,
-})
-
-addSpell("Glaive Toss", "for AoE", {
-   Cooldown = 15,
+   Focus = function()
+      return a.BestialWrath and 7.5 or 15
+   end,
    CheckFirst = function()
       return c.EstimatedHarmTargets > 2
    end
@@ -232,7 +194,7 @@ c.AddOptionalSpell("Bullheaded", nil, {
 c.AddOptionalSpell("Growl", nil, {
    Type = "pet",
    FlashColor = "red",
-   CheckFirst = function(z)
+   CheckFirst = function()
       local primaryTarget = s.GetPrimaryThreatTarget()
       return primaryTarget
          and (UnitIsUnit(primaryTarget, "player")
@@ -267,12 +229,12 @@ c.AddOptionalSpell("Mend Pet", nil, {
    end,
 })
 
-c.AddOptionalSpell("Mend Pet", "at 50", {
+c.AddOptionalSpell("Mend Pet", "in combat", {
    Buff = "Mend Pet",
    BuffUnit = "pet",
    EarlyRefresh = 2,
    CheckFirst = function()
-      return c.GetHealthPercent("pet") < 50
+      return c.GetHealthPercent("pet") < (c.IsSolo() and 80 or 50)
    end,
 })
 
@@ -296,40 +258,153 @@ c.AddSpell("Kill Shot", nil, {
          return false
       end
 
-      -- avoidCapping("Kill Shot", -10)
-      -- c.GetCooldown("Kill Shot", false, 10) <= c.GetBusyTime()
       return c.GetHealthPercent("target") <= execute
+         and avoidCapping("Kill Shot")
    end,
 })
 
 ----------------------------------------------------------------- Beast Mastery
-c.AddOptionalSpell("Focus Fire", nil, {
+c.AddSpell("Focusing Shot", "for AoE", {
+   FlashID = { "Focusing Shot", "Cobra Shot", "Steady Shot" },
    CheckFirst = function()
-      local wrath = c.GetBuffDuration("Bestial Wrath")
-      return s.BuffStack(c.GetID("Frenzy"), "pet") >= 5
-         and not c.HasBuff("Focus Fire")
-         and (wrath <= 0 or wrath >= 3)
+      return c.EstimatedHarmTargets > 5
    end
 })
 
-addSpell("Kill Command", nil, {
+c.AddSpell("Cobra Shot", "for AoE", {
+   FlashID = { "Cobra Shot", "Steady Shot" },
+   CheckFirst = function()
+      return c.EstimatedHarmTargets > 5
+   end
+})
+
+c.AddOptionalSpell("Focus Fire", nil, {
+   GetDelay = function()
+      return c.GetBuffDuration("Focus Fire")
+   end,
+   CheckFirst = function()
+      local stacks = c.GetBuffStack("Frenzy")
+      if stacks <= 0 then
+         return false
+      end
+
+      if c.GetBuffDuration("Frenzy") < 3 * c.LastGCD then
+         -- don't waste it, regardless of number of stacks.
+         return true
+      end
+
+      if c.GetCooldown("Bestial Wrath") < c.LastGCD then
+         -- use early if we are about to enter bestial wrath
+         return stacks > 0
+      end
+
+      -- otherwise wait to cap
+      return stacks >= 5
+   end
+})
+
+c.AddSpell("Kill Command", nil, {
    Cooldown = 6,
+   MaxWait = 1,
+   Focus = function() return a.BestialWrath and 20 or 40 end,
+   RunFirst = function(z)
+      c.MakeOptional(z, a.KillCommandFailed)
+
+      if c.GetCooldown("Kill Command", false, 6) < c.GetCooldown("Barrage", false, 20) then
+         z.MaxWait = 1
+      else
+         z.MaxWait = 0
+      end
+   end,
    CheckFirst = function()
       return c.EstimatedHarmTargets < 8
    end
 })
 
-addSpell("Multi-Shot", nil, {
+c.AddSpell("Multi-Shot", "for BM", {
+   Focus = function()
+      if a.BestialWrath then
+         return a.TotH > 0 and 10 or 20
+      end
+      return a.TotH > 0 and 20 or 40
+   end,
    CheckFirst = function()
-      -- five targets, or if beast cleave is down
-      local cleave = s.Buff(c.GetID("Beast Cleave"), "pet")
-      return c.EstimatedHarmTargets >= (cleave and 5 or 2)
+      return c.EstimatedHarmTargets > 1
+   end,
+   GetDelay = function()
+      if c.EstimatedHarmTargets > 5 then
+         return 0
+      end
+
+      -- hold this until beast cleave drops.
+      return s.BuffDuration(c.GetID("Beast Cleave"), "pet") - 0.5, 0.5
    end
 })
 
-addSpell("Arcane Shot", "for BM", {
+c.AddOptionalSpell("Barrage", "for AoE", {
+   Cooldown = 30,
+   Focus = function()
+      return a.BestialWrath and 30 or 60
+   end,
    CheckFirst = function()
-      return a.Focus >= 64
+      return c.EstimatedHarmTargets > 1
+   end,
+})
+
+
+c.AddSpell("Focusing Shot", "for BM", {
+   FlashID = { "Focusing Shot", "Cobra Shot", "Steady Shot" },
+   Focus = function() return c.HasBuff("Steady Focus") and -75 or -50 end,
+})
+
+c.AddSpell("Cobra Shot", "for BM", {
+   FlashID = { "Focusing Shot", "Cobra Shot", "Steady Shot" },
+   Focus = function() return c.HasBuff("Steady Focus") and -21 or -14 end,
+})
+
+
+c.AddOptionalSpell("Barrage", "for BM", {
+   Cooldown = 30,
+   Focus = function()
+      return a.BestialWrath and 30 or 60
+   end,
+   CheckFirst = function()
+      local frenzy = c.GetBuffStack("Frenzy")
+      local ff = c.HasBuff("Focus Fire")
+
+      -- if we are not under focus fire, delay if we are at four stacks so
+      -- that we can combine the two and improve barrage a bit.
+      return (ff or frenzy < 4)
+   end,
+})
+
+c.AddSpell("Arcane Shot", "for BM", {
+   Focus = function()
+      local cost = (a.TotH > 0 and 10 or 30)
+      if a.BestialWrath then
+         cost = cost / 2
+      end
+      return cost
+   end,
+   CheckFirst = function()
+      -- @todo danielp 2015-02-22: this can be more sophisticated, accounting
+      -- for the higher priority spenders, in future, but for now...
+      return a.Focus >= 120
+         - (c.HasTalent("Focusing Shot") and 50 or 14)
+         - (c.GetBusyTime() * a.Regen)
+   end
+})
+
+c.AddSpell("Arcane Shot", "during BW", {
+   Focus = function()
+      local cost = (a.TotH > 0 and 10 or 30)
+      if a.BestialWrath then
+         cost = cost / 2
+      end
+      return cost
+   end,
+   CheckFirst = function()
+      return c.HasBuff("Bestial Wrath")
    end
 })
 
@@ -343,12 +418,6 @@ c.AddOptionalSpell("Bestial Wrath", nil, {
    end
 })
 
-c.AddOptionalSpell("Rapid Fire", "for BM", {
-   CheckFirst = function()
-      return not c.HasBuff("Rapid Fire")
-   end
-})
-
 c.AddOptionalSpell("Explosive Trap", nil, {
 --   FlashSize = s.FlashSizePercent() / 2,  @todo danielp 2014-11-29: yes/no?
    FlashID = { "Explosive Trap", "Explosive Trap Launched" },
@@ -359,39 +428,22 @@ c.AddOptionalSpell("Explosive Trap", nil, {
 })
 
 ------------------------------------------------------------------ Marksmanship
-addSpell("Chimaera Shot", nil, {
+c.AddSpell("Chimaera Shot", nil, {
    Cooldown = 9,
+   Focus = 35,
 })
 
-addOptionalSpell("Stampede", "for Marksmanship", {
+c.AddOptionalSpell("Stampede", "for MM", {
    FlashSize = s.FlashSizePercent() / 2,
    CheckFirst = function()
       return (c.HasBuff("Rapid Fire") or c.HasBuff(c.BLOODLUST_BUFFS))
-         and c.HasBuff("Steady Focus")
    end,
 })
 
-addSpell("Aimed Shot", nil, {
-   CheckFirst = function(z)
-      return a.Focus >= 50
+c.AddSpell("Aimed Shot", nil, {
+   Focus = function()
+      return a.TotH > 0 and 25 or 50
    end,
-})
-
-addSpell("Aimed Shot", "under Thrill of the Hunt", {
-   CheckFirst = function(z)
-      return a.Focus >= 50 and c.HasBuff("Thrill of the Hunt")
-   end,
-})
-
-addSpell("Steady Shot")
-
-addSpell("Steady Shot", "for Steady Focus", {
-   CheckFirst = function()
-      return c.HasTalent("Steady Focus")
-         and a.startedSteadyFocus
-         and avoidCapping("Steady Shot", 0)
-         and not c.HasTalent("Focusing Shot")
-   end
 })
 
 local function shouldCastToPool(spell)
@@ -406,7 +458,7 @@ local function shouldCastToPool(spell)
    return rf <= (casts_needed * ct)
 end
 
-addSpell("Steady Shot", "to pool", {
+c.AddSpell("Steady Shot", "to pool", {
    CheckFirst = function()
       return shouldCastToPool("Steady Shot")
          and not c.HasTalent("Focusing Shot")
@@ -422,9 +474,11 @@ c.AddSpell("Focusing Shot", "to pool", {
    end
 })
 
-addSpell("Multi-Shot", "for MM", {
-   EarlyRefresh = 1,
-   CheckFirst = function(z)
+c.AddSpell("Multi-Shot", "for MM", {
+   Focus = function()
+      return a.TotH > 0 and 20 or 40
+   end,
+   CheckFirst = function()
       return c.EstimatedHarmTargets >= 7
          and s.HealthPercent("target") < 80
          and not c.HasBuff("Rapid Fire")
@@ -432,41 +486,48 @@ addSpell("Multi-Shot", "for MM", {
 })
 
 ---------------------------------------------------------------------- Survival
-addSpell("Explosive Shot", nil, {
+c.AddSpell("Explosive Shot", nil, {
+   Focus = 15,
+   Cooldown = 6,
    CheckFirst = function()
-      return not c.IsCasting("Explosive Shot") and
-         (c.EstimatedHarmTargets < 7 or c.HasBuff("Lock and Load"))
+      return c.EstimatedHarmTargets < 7
+         or c.HasBuff("Lock and Load")
    end,
 })
 
-addSpell("Black Arrow", nil, {
-   EarlyRefresh = 1,
-   CheckFirst = function(z)
-      return c.ShouldCastToRefresh(
-         "Black Arrow", "Black Arrow", z.EarlyRefresh, true)
+c.AddSpell("Black Arrow", nil, {
+   Focus = 35,
+   CheckFirst = function()
+      return c.ShouldCastToRefresh("Black Arrow", "Black Arrow", 1, true)
    end
 })
 c.ManageDotRefresh("Black Arrow", 2)
 
-addSpell("Arcane Shot", "for Survival", {
-   EarlyRefresh = 1,
-   CheckFirst = function(z)
+c.AddSpell("Arcane Shot", "for Survival", {
+   Focus = 30,
+   CheckFirst = function()
       return avoidCapping("Arcane Shot", a.Regen * 2)
-         or c.ShouldCastToRefresh(
-            "Arcane Shot", "Serpent Sting", z.EarlyRefresh, true)
+         or c.ShouldCastToRefresh("Arcane Shot", "Serpent Sting", 1, true)
    end
 })
 
-addSpell("Multi-Shot", "for SV", {
-   EarlyRefresh = 1,
-   CheckFirst = function(z)
+c.AddSpell("Arcane Shot", "under Thrill of the Hunt", {
+   Focus = 10,
+   CheckFirst = function()
+      return avoidCapping("Arcane Shot", a.Regen * 2)
+         and c.HasBuff("Thrill of the Hunt")
+   end,
+})
+
+c.AddSpell("Multi-Shot", "for SV", {
+   Focus = 40,
+   CheckFirst = function()
       if c.EstimatedHarmTargets <= 1 then
          return false
       end
 
       if c.EstimatedHarmTargets <= 4 then
-         return c.ShouldCastToRefresh(
-            "Multi-Shot", "Serpent Sting", z.EarlyRefresh, true)
+         return c.ShouldCastToRefresh("Multi-Shot", "Serpent Sting", 1, true)
       else
          return true
       end

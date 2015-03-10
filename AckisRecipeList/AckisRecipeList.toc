@@ -14,7 +14,7 @@
 #@debug@
 # ## Title: Ackis Recipe List - Development Version
 #@end-debug@
-## X-Curse-Packaged-Version: 3.0.12
+## X-Curse-Packaged-Version: 3.0.15
 ## X-Curse-Project-Name: Ackis Recipe List
 ## X-Curse-Project-ID: arl
 ## X-Curse-Repository-ID: wow/arl/mainline
@@ -38,11 +38,11 @@
 
 ## Author: Ackis, Torhal, Zhinjio
 
-## Interface: 60000
-## X-Compatible-With: 60000
-## Version: 3.0.12
-## X-Revision: a4cd6d6
-## X-Date: 2014-11-23T04:28:24Z
+## Interface: 60100
+## X-Compatible-With: 60100
+## Version: 3.0.15
+## X-Revision: 9fce6f9
+## X-Date: 2015-02-24T14:39:16Z
 
 ## X-Credits: FGWarmonger, Kagaro, Speeddymon, Xinhuan, Aesir, BWMerlin, everyone who translated stuff and more!
 ## X-Category: Tradeskill

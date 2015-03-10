@@ -1,6 +1,6 @@
 ﻿--[[
 	Auctioneer - Search UI - Searcher Arbitrage
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
 	Revision: $Id: SearcherArbitrage.lua 5498 2014-10-18 13:24:18Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -297,4 +297,4 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Util-SearchUI/SearcherArbitrage.lua $", "$Rev: 5498 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SearchUI/SearcherArbitrage.lua $", "$Rev: 5498 $")

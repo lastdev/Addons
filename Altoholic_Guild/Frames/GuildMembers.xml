@@ -1,7 +1,7 @@
 ﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="GuildMembers.lua"></Script>
 
-	<Button name="AltoAltEquipmentTemplate" inherits="ItemButtonTemplate" virtual="true">
+	<Button name="AltoAltEquipmentTemplate" inherits="AltoItemButtonTemplate" virtual="true">
 		<Scripts>
 			<OnLoad>
 				self:RegisterForClicks("LeftButtonDown", "RightButtonDown");
@@ -19,60 +19,34 @@
 	</Button>
 	
 	<Button name="AltoGuildMembersTemplate" virtual="true">
-		<Size>
-			<AbsDimension x="460" y="22"/>
-		</Size>
+		<Size x="460" y="22" />
 		<Layers>
 			<Layer level="BACKGROUND">
-				<FontString name="$parentLevel" inherits="GameFontNormalSmall" justifyH="CENTER">
-					<Size>
-						<AbsDimension x="55" y="18"/>
-					</Size>
+				<FontString parentKey="Level" inherits="GameFontNormalSmall" justifyH="CENTER">
+					<Size x="55" y="18" />
 					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="150" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" x="150" y="0" />
 					</Anchors>
 				</FontString>
-				<FontString name="$parentVersion" inherits="GameFontNormalSmall" justifyH="CENTER">
-					<Size>
-						<AbsDimension x="80" y="18"/>
-					</Size>
+				<FontString parentKey="Version" inherits="GameFontNormalSmall" justifyH="CENTER">
+					<Size x="80" y="18" />
 					<Anchors>
-						<Anchor point="BOTTOMLEFT" relativeTo="$parentLevel" relativePoint="BOTTOMRIGHT">
-							<Offset>
-								<AbsDimension x="70" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="BOTTOMLEFT" relativeKey="$parent.Level" relativePoint="BOTTOMRIGHT" x="70" y="0" />
 					</Anchors>
 				</FontString>
-				<FontString name="$parentClass" inherits="GameFontNormalSmall" justifyH="LEFT">
-					<Size>
-						<AbsDimension x="100" y="18"/>
-					</Size>
+				<FontString parentKey="Class" inherits="GameFontNormalSmall" justifyH="LEFT">
+					<Size x="100" y="18" />
 					<Anchors>
-						<Anchor point="BOTTOMLEFT" relativeTo="$parentVersion" relativePoint="BOTTOMRIGHT">
-							<Offset>
-								<AbsDimension x="5" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="BOTTOMLEFT" relativeKey="$parent.Version" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 					</Anchors>
 				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button name="$parentCollapse" hidden="true">
-				<Size>
-					<AbsDimension x="16" y="16"/>
-				</Size>
+			<Button parentKey="Collapse" hidden="true">
+				<Size x="16" y="16" />
 				<Anchors>
-					<Anchor point="LEFT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" x="5" y="0" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -83,27 +57,15 @@
 				<HighlightTexture file="Interface\Buttons\UI-PlusButton-Hilight" alphaMode="ADD" />
 			</Button>
 
-			<Button name="$parentName">
-				<Size>
-					<AbsDimension x="170" y="18"/>
-				</Size>
+			<Button parentKey="Name">
+				<Size x="170" y="18" />
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="25" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="25" y="0" />
 				</Anchors>
-				<ButtonText name="$parentNormalText" justifyH="LEFT">
-					<Size>
-						<AbsDimension x="170" y="18"/>
-					</Size>
+				<ButtonText parentKey="Text" justifyH="LEFT">
+					<Size x="170" y="18" />
 					<Anchors>
-						<Anchor point="LEFT">
-							<Offset>
-								<AbsDimension x="0" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="LEFT" x="0" y="0" />
 					</Anchors>
 				</ButtonText>
 				<Scripts>
@@ -121,27 +83,15 @@
 				<NormalFont style="GameFontNormalSmallLeft"/>
 				<HighlightFont style="GameFontHighlightSmallLeft"/>
 			</Button>
-			<Button name="$parentAvgILevel">
-				<Size>
-					<AbsDimension x="65" y="18"/>
-				</Size>
+			<Button parentKey="AvgILevel">
+				<Size x="65" y="18" />
 				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentLevel" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Level" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
-				<ButtonText name="$parentNormalText" justifyH="CENTER">
-					<Size>
-						<AbsDimension x="60" y="18"/>
-					</Size>
+				<ButtonText parentKey="Text" justifyH="CENTER">
+					<Size x="60" y="18" />
 					<Anchors>
-						<Anchor point="LEFT">
-							<Offset>
-								<AbsDimension x="0" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="LEFT" x="0" y="0" />
 					</Anchors>
 				</ButtonText>
 				<Scripts>
@@ -171,29 +121,17 @@
 		</Scripts>
 	</Button>
 
-	<Frame name="AltoholicFrameGuildMembers" parent="AltoholicTabGuild" hidden="true">
-		<Size>
-			<AbsDimension x="615" y="306"/>
-		</Size>
+	<Frame parent="AltoholicTabGuild" parentKey="Members" hidden="true">
+		<Size x="615" y="306" />
 		<Anchors>
-			<Anchor point="TOPRIGHT">
-				<Offset>
-					<AbsDimension x="39" y="-105"/>
-				</Offset>
-			</Anchor>
+			<Anchor point="TOPRIGHT" x="39" y="-105" />
 		</Anchors>
 		<Layers>
 			<Layer level="ARTWORK">
-				<FontString name="$Parent_Name" inherits="DialogButtonNormalText" justifyH="Center">
-					<Size>
-						<AbsDimension x="150" />
-					</Size>
+				<FontString parentKey="Name" inherits="DialogButtonNormalText" justifyH="Center">
+					<Size x="150" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT">
-							<Offset>
-								<AbsDimension x="0" y="20"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="BOTTOMRIGHT" x="0" y="20" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -204,7 +142,7 @@
 			</OnLoad>
 		</Scripts>
 		<Frames>
-			<ScrollFrame name="$parentScrollFrame" inherits="FauxScrollFrameTemplate">
+			<ScrollFrame name="$parentScrollFrame" parentKey="ScrollFrame" inherits="FauxScrollFrameTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" />
 					<Anchor point="BOTTOMRIGHT" />
@@ -212,28 +150,16 @@
 				<Layers>
 					<Layer level="ARTWORK">
 						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size>
-								<AbsDimension x="31" y="256"/>
-							</Size>
+							<Size x="31" y="256" />
 							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
-									<Offset>
-										<AbsDimension x="-2" y="5"/>
-									</Offset>
-								</Anchor>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="5" />
 							</Anchors>
 							<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
 						</Texture>
 						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size>
-								<AbsDimension x="31" y="106"/>
-							</Size>
+							<Size x="31" y="106" />
 							<Anchors>
-								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
-									<Offset>
-										<AbsDimension x="-2" y="0"/>
-									</Offset>
-								</Anchor>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-2" y="0" />
 							</Anchors>
 							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
 						</Texture>
@@ -247,255 +173,175 @@
 			</ScrollFrame>
 			
 			<!-- Scrollframe entries -->
-			<Button name="$parentEntry1" inherits="AltoGuildMembersTemplate">
+			<Button parentKey="Entry1" inherits="AltoGuildMembersTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentScrollFrame" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="$parentScrollFrame" relativePoint="TOPLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentEntry2" inherits="AltoGuildMembersTemplate">
+			<Button parentKey="Entry2" inherits="AltoGuildMembersTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry1" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Entry1" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button name="$parentEntry3" inherits="AltoGuildMembersTemplate">
+			<Button parentKey="Entry3" inherits="AltoGuildMembersTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry2" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Entry2" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button name="$parentEntry4" inherits="AltoGuildMembersTemplate">
+			<Button parentKey="Entry4" inherits="AltoGuildMembersTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry3" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Entry3" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button name="$parentEntry5" inherits="AltoGuildMembersTemplate">
+			<Button parentKey="Entry5" inherits="AltoGuildMembersTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry4" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Entry4" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button name="$parentEntry6" inherits="AltoGuildMembersTemplate">
+			<Button parentKey="Entry6" inherits="AltoGuildMembersTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry5" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Entry5" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button name="$parentEntry7" inherits="AltoGuildMembersTemplate">
+			<Button parentKey="Entry7" inherits="AltoGuildMembersTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry6" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Entry6" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button name="$parentEntry8" inherits="AltoGuildMembersTemplate">
+			<Button parentKey="Entry8" inherits="AltoGuildMembersTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry7" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Entry7" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button name="$parentEntry9" inherits="AltoGuildMembersTemplate">
+			<Button parentKey="Entry9" inherits="AltoGuildMembersTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry8" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Entry8" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button name="$parentEntry10" inherits="AltoGuildMembersTemplate">
+			<Button parentKey="Entry10" inherits="AltoGuildMembersTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry9" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Entry9" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button name="$parentEntry11" inherits="AltoGuildMembersTemplate">
+			<Button parentKey="Entry11" inherits="AltoGuildMembersTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry10" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Entry10" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button name="$parentEntry12" inherits="AltoGuildMembersTemplate">
+			<Button parentKey="Entry12" inherits="AltoGuildMembersTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry11" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Entry11" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button name="$parentEntry13" inherits="AltoGuildMembersTemplate">
+			<Button parentKey="Entry13" inherits="AltoGuildMembersTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry12" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Entry12" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
-			<Button name="$parentEntry14" inherits="AltoGuildMembersTemplate">
+			<Button parentKey="Entry14" inherits="AltoGuildMembersTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentEntry13" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPLEFT" relativeKey="$parent.Entry13" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 			</Button>
 
 			<!-- Equipment Icons on the right of the frame -->
-			<Button name="$parentItem1" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item1" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="470" y="-10"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="470" y="-10" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem2" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item2" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem1" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="-2"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item1" relativePoint="BOTTOMLEFT" x="0" y="-2" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem3" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item3" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem2" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="-2"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item2" relativePoint="BOTTOMLEFT" x="0" y="-2" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem4" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item4" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem3" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="-2"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item3" relativePoint="BOTTOMLEFT" x="0" y="-2" />
 				</Anchors>
 			</Button>
 			
-			<Button name="$parentItem5" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item5" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem1" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="10" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item1" relativePoint="TOPRIGHT" x="10" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem6" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item6" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem5" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="-2"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item5" relativePoint="BOTTOMLEFT" x="0" y="-2" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem7" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item7" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem6" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="-2"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item6" relativePoint="BOTTOMLEFT" x="0" y="-2" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem8" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item8" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem7" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="-2"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item7" relativePoint="BOTTOMLEFT" x="0" y="-2" />
 				</Anchors>
 			</Button>
 			
-			<Button name="$parentItem9" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item9" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem5" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="10" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item5" relativePoint="TOPRIGHT" x="10" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem10" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item10" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem9" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="-2"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item9" relativePoint="BOTTOMLEFT" x="0" y="-2" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem11" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item11" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem10" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="-2"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item10" relativePoint="BOTTOMLEFT" x="0" y="-2" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem12" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item12" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem11" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="-2"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item11" relativePoint="BOTTOMLEFT" x="0" y="-2" />
 				</Anchors>
 			</Button>
 			
-			<Button name="$parentItem13" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item13" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="$parentItem8" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="15" y="-10"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPRIGHT" relativeKey="$parent.Item8" relativePoint="BOTTOMLEFT" x="15" y="-10" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem14" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item14" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem8" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="-15" y="-10"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item8" relativePoint="BOTTOMRIGHT" x="-15" y="-10" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem15" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item15" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="$parentItem13" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPRIGHT" relativeKey="$parent.Item13" relativePoint="TOPLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem16" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item16" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem14" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item14" relativePoint="TOPRIGHT" x="0" y="0" />
 				</Anchors>
 			</Button>
 			
-			<Button name="$parentItem18" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item18" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem8" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="-56"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item8" relativePoint="BOTTOMLEFT" x="0" y="-56" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem17" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item17" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="$parentItem18" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPRIGHT" relativeKey="$parent.Item18" relativePoint="TOPLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentItem19" inherits="AltoAltEquipmentTemplate">
+			<Button parentKey="Item19" inherits="AltoAltEquipmentTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentItem18" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Item18" relativePoint="TOPRIGHT" x="0" y="0" />
 				</Anchors>
 			</Button>
 	

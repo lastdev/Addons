@@ -5,7 +5,7 @@
 
 	AddOn: Auctioneer
 	Revision: $Id: CoreStrings.lua 5501 2014-10-18 16:01:18Z brykrys $
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
 
 	License:
 		This program is free software; you can redistribute it and/or

@@ -1,29 +1,21 @@
-local addonName, a = ...
-local L = a.Localize
+local _, a = ...
+--local L = a.Localize
 local s = SpellFlashAddon
 local x = s.UpdatedVariables
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
-local GetComboPoints = GetComboPoints
 local GetSpellBonusHealing = GetSpellBonusHealing
-local GetSpellCharges = GetSpellCharges
-local GetTime = GetTime
+local IsSpellInRange = IsSpellInRange
 local UnitAttackPower = UnitAttackPower
 local UnitHealthMax = UnitHealthMax
-local UnitInRange = UnitInRange
-local UnitIsUnit = UnitIsUnit
-local UnitPower = UnitPower
-local UnitPowerMax = UnitPowerMax
-local UnitStat = UnitStat
-local select = select
-local math = math
+local min = math.min
 
 local function substantialFight()
    return a.Substantial
 end
 
 local function forceOfNatureCheck(z)
-   local charges, untilNext, untilMax = c.GetChargeInfo(z.ID, true)
+   local _, _, untilMax = c.GetChargeInfo(z.ID, true)
    return untilMax < 1
 end
 
@@ -37,11 +29,13 @@ local function setFaerieID(z)
 end
 
 local function canTakeHealingTouch()
-   local heal = 21800 + 1.86 * GetSpellBonusHealing()
+   local heal = 3.6 * GetSpellBonusHealing() * c.GetVersatility() * c.GetCritChance()
+
    if c.HasTalent("Dream of Cenarius") then
       heal = 1.2 * heal
    end
-   return c.GetHealth("player") + heal < UnitHealthMax("player")
+
+   return c.GetHealth("player") + heal <= UnitHealthMax("player")
 end
 
 ------------------------------------------------------------------------ Common
@@ -56,14 +50,7 @@ c.AddSpell("Faerie Fire", nil, {
    Cooldown = 6,
 })
 
-c.AddOptionalSpell("Faerie Fire", "for Debuff", {
-   Debuff = c.ARMOR_DEBUFFS,
-   EarlyRefresh = 5,
-   RunFirst = setFaerieID,
-   CheckFirst = substantialFight,
-})
-
-c.AddOptionalSpell("Healing Touch", "Solo", {
+c.AddOptionalSpell("Healing Touch", nil, {
    NoRangeCheck = true,
    CheckFirst = canTakeHealingTouch,
 })
@@ -75,12 +62,13 @@ c.AddOptionalSpell("Nature's Vigil", nil, {
 
 c.AddOptionalSpell("Renewal", nil, {
    NoGCD = true,
+   Cooldown = 120,
    CheckFirst = function()
-      return c.GetHealthPercent("player") < 70
+      return c.GetHealthPercent("player") < (c.IsSolo() and 70 or 50)
    end,
 })
 
-c.AddDispel("Soothe", nil, "")
+c.AddDispel("Soothe")
 
 c.AddInterrupt("Skull Bash", nil, {
    NoGCD = true,
@@ -101,28 +89,13 @@ c.AddOptionalSpell("Force of Nature: Balance", nil, {
 
 c.AddOptionalSpell("Incarnation: Chosen of Elune", nil, {
    CheckFirst = function()
-      return a.Energy >= 100 or a.Energy <= -100
+      return a.eclipseEnergy < 0
    end
 })
 
 c.AddOptionalSpell("Celestial Alignment", nil, {
-   Override = function()
-      if a.Lunar
-         or a.Solar
-         or c.GetCooldown("Celestial Alignment", false, 180) > 0
-         or c.GetCooldown("Incarnation: Chosen of Elune", false, 180)
-            < 10 then
-
-         return false
-      end
-
-      if not c.HasBuff("Starfall") then
-         c.PredictFlash("Starfall")
-      end
-      if not c.HasBuff("Shooting Stars") then
-         c.PredictFlash("Moonfire")
-      end
-      return true
+   CheckFirst = function()
+      return a.eclipseEnergy < -40
    end
 })
 
@@ -144,133 +117,102 @@ c.AddOptionalSpell("Starfall", nil, {
    end
 })
 
-c.AddSpell("Astral Communion", "Instant", {
-   CheckFirst = function()
-      -- @todo danielp 2014-11-11: no longer have astral insight buff
-      -- return c.HasBuff("Astral Insight")
-      --    and ((a.GoingUp and not a.Lunar and a.Energy < 70)
-      --       or (not a.GoingUp and not a.Solar and a.Energy > -60))
-      --    and not c.IsCasting("Astral Communion")
-      return ((a.GoingUp and not a.Lunar and a.Energy < 70)
-            or (not a.GoingUp and not a.Solar and a.Energy > -60))
-         and not c.IsCasting("Astral Communion")
-   end
-})
-
 c.AddSpell("Starsurge", nil, {
-   Cooldown = 15,
-})
-
-c.AddSpell("Starsurge", "under Shooting Stars", {
+   NotIfActive = true,
    CheckFirst = function()
-      return c.HasBuff("Shooting Stars")
+      if not c.HasBuff("Lunar Empowerment") and a.eclipseEnergy < -20 then
+         return true
+      end
+
+      if not c.HasBuff("Solar Empowerment") and a.eclipseEnergy > 40 then
+         return true
+      end
+
+      local charges, nextCharge = c.GetChargeInfo("Starsurge")
+      return charges >= 3
+         or (charges == 2 and nextCharge < 6)
    end
 })
-
-local function notCastThisEclipse(duration)
-   return a.EclipsePending
-      -- or duration < c.GetBuffDuration("Nature's Grace") - 2
-end
-
-local function dotCheck(z, duration, tick, desiredEclipse, minEnergy, maxEnergy)
-   if not desiredEclipse or duration > (a.LunarShower > 0 and tick or 0) then
-      return false
-   end
-
-   local hold = c.GetCooldown("Celestial Alignment") < 2
-      and (a.Energy < minEnergy or a.Energy > maxEnergy)
-   c.MakeOptional(z, hold)
-   c.MakeMini(z, hold)
-   return true
-end
 
 c.AddSpell("Moonfire", nil, {
-   CheckFirst = function(z)
-      return dotCheck(z, a.Moonfire, a.MoonfireTick, a.Solar, 40, 999)
-   end
-})
+   CheckFirst = function()
+      if a.eclipseEnergy > 0 then
+         return false
+      end
 
-c.AddSpell("Moonfire", "under Eclipse", {
-   CheckFirst = function(z)
-      return a.Lunar
-         and (notCastThisEclipse(a.Moonfire) or a.Moonfire < a.MoonfireTick)
+      local remains = c.GetMyDebuffDuration("Moonfire")
+      if remains < 4 then
+         return true
+      end
+
+      if remains >= a.nextChange + 20 then
+         return false
+      end
+
+      if c.HasBuff("Lunar Peak") and not c.HasTalent("Balance of Power") then
+         return true
+      end
+
+      if c.HasBuff("Celestial Alignment") and c.GetBuffDuration("Celestial Alignment") <= 2 then
+         return true
+      end
+
+      return false
    end
 })
 
 c.AddSpell("Sunfire", nil, {
-   CheckFirst = function(z)
-      return dotCheck(z, a.Sunfire, a.SunfireTick, a.Lunar, -999, -40)
-   end
-})
-
-c.AddSpell("Sunfire", "under Eclipse", {
-   CheckFirst = function(z)
-      return a.Solar
-         and (notCastThisEclipse(a.Sunfire) or a.Sunfire < a.SunfireTick)
-   end
-})
-
-c.AddSpell("Wrath", "under Celestial Alignment", {
+   -- yes, this is as horrible as it sounds, but this is literally moonfire as
+   -- far as all the API is concerned!
+   ID = "Moonfire",
    CheckFirst = function()
-      return a.Alignment > c.GetCastTime("Wrath") + .1
+      if a.eclipseEnergy < 1 then
+         return false
+      end
+
+      if c.GetMyDebuffDuration("Sunfire") < 7 then
+         return true
+      end
+
+      if c.HasBuff("Solar Peak") and not c.HasTalent("Balance of Power") then
+         return true
+      end
+
+      return false
+   end
+})
+
+c.AddSpell("Stellar Flare", nil, {
+   CheckFirst = function()
+      return c.GetMyDebuffDuration("Stellar Flare") < 7
+   end
+})
+
+c.AddSpell("Wrath", nil, {
+   CheckFirst = function()
+      local ct = c.GetCastTime("Wrath")
+      return (a.eclipseEnergy > 0 and a.nextChange > ct)
+         or (a.eclipseEnergy <= 0 and a.nextChange <= ct)
    end
 })
 
 c.AddSpell("Starfire", nil, {
    CheckFirst = function()
-      return a.GoingUp
-   end
-})
-
-c.AddSpell("Starfire", "under Celestial Alignment", {
-   CheckFirst = function()
-      return a.Alignment > c.GetCastTime("Starfire") + .1
+      local ct = c.GetCastTime("Starfire")
+      return (a.eclipseEnergy < 0 and a.nextChange > ct)
+         or (a.eclipseEnergy >= 0 and a.nextChange <= ct)
    end
 })
 
 c.AddInterrupt("Solar Beam")
 
 ------------------------------------------------------------------------- Feral
-local function getDelay(cost, usesCC)
-   if usesCC and a.Clearcasting then
-      return 0
-   end
-
-   if a.Berserk > 0 then
-      local delay = (cost / 2 - a.Energy) / a.Regen
-      if delay < a.Berserk then
-         return math.max(0, delay)
-      end
-   end
-
-   return math.max(0, (cost - a.Energy) / a.Regen)
-end
-
-local function modForDelay(spell, cost, usesCC)
-   local delay = getDelay(cost, usesCC)
-   c.MakePredictor(spell, delay > 0)
-   return delay
-end
-
 c.AddSpell("Survival Instincts", "under 30", {
    NoGCD = true,
    FlashColor = "red",
    CheckFirst = function()
       return c.GetHealthPercent("player") < 30
    end
-})
-
-c.AddSpell("Barkskin", "under 30", {
-   NoGCD = true,
-   FlashColor = "red",
-   CheckFirst = function()
-      return c.GetHealthPercent("player") < 30
-   end
-})
-
-c.AddOptionalSpell("Force of Nature: Feral", nil, {
-   NoGCD = true,
-   CheckFirst = forceOfNatureCheck,
 })
 
 c.AddOptionalSpell("Maul", "for Feral", {
@@ -287,20 +229,20 @@ c.AddOptionalSpell("Heart of the Wild: Feral", nil, {
    FlashSize = s.FlashSizePercent() / 2,
 })
 
-c.AddSpell("Thrash(Bear Form)", "for Feral", {
-   FlashID = { "Thrash", "Thrash(Bear Form)", "Thrash(Cat Form)" },
+c.AddSpell("Thrash (Bear Form)", "for Feral", {
+   FlashID = { "Thrash", "Thrash (Bear Form)", "Thrash (Cat Form)" },
    Melee = true,
    Cooldown = 6,
    CheckFirst = function()
-      return (c.GetMyDebuffDuration("Thrash(Bear Form)", false, true, true)
+      return (c.GetMyDebuffDuration("Thrash (Bear Form)", false, true, true)
                < 2
             and a.Substantial)
          or c.AoE
    end,
 })
 
-c.AddSpell("Thrash(Bear Form)", "for Feral AoE", {
-   FlashID = { "Thrash", "Thrash(Bear Form)", "Thrash(Cat Form)" },
+c.AddSpell("Thrash (Bear Form)", "for Feral AoE", {
+   FlashID = { "Thrash", "Thrash (Bear Form)", "Thrash (Cat Form)" },
    Melee = true,
    Cooldown = 6,
    CheckFirst = substantialFight,
@@ -314,52 +256,40 @@ c.AddSpell("Mangle", "for Feral", {
 
 c.AddSpell("Cat Form", nil, {
    Type = "form",
-   CheckFirst = function(z)
-      if not x.EnemyDetected then
-         return false
-      end
-
-      -- If you change these, also adjust conditions in Swipe(Bear Form) Prime
-      if not s.Form(c.GetID("Bear Form"))
-         or a.TimeToCap < (a.Clearcasting and 4 or 3) then
-
-         return true
-      elseif c.AoE then
-         return c.GetMyDebuffDuration("Thrash(Cat Form)", false, true) < 3
-      else
-         return a.MinRip < (a.CP == 0 and 4 or 3) and a.Substantial
-      end
-   end,
 })
 
 c.AddOptionalSpell("Tiger's Fury", nil, {
    NoGCD = true,
+   Cooldown = 30,
    CheckFirst = function()
-      return a.Energy <= 35
-         and not a.Clearcasting
-         and a.Berserk == 0
+      return a.MissingEnergy >= (c.HasBuff("Omen of Clarity: Cat") and 80 or 60)
    end
 })
 
-local function furySync(z, maxDelay)
-   local wait = a.TigersFury == 0
-      and a.Substantial
-      and (not maxDelay or a.TigerCool < maxDelay)
-   c.MakePredictor(z, wait, "yellow")
-   return (a.TigersFury > 0 or a.TigerCool == 0)
-      or (wait and a.TigerCool < 3)
-      or not a.Substantial
-end
-
-c.AddOptionalSpell("Berserk", nil, {
+c.AddOptionalSpell("Berserk", "for Feral", {
    NoGCD = true,
    Cooldown = 180,
-   CheckFirst = function(z)
-      return furySync(z, 6)
+   CheckFirst = function()
+      return c.HasBuff("Tiger's Fury")
    end
 })
 
-c.AddOptionalSpell("Incarnation: King of the Jungle")
+c.AddOptionalSpell("Incarnation: King of the Jungle", nil, {
+   MyBuff = "Incarnation: King of the Jungle",
+   Cooldown = 3 * 60,
+   CheckFirst = function()
+      return c.GetCooldown("Berserk") < 10
+         and a.MissingEnergy >= a.Regen -- time to max energy > 1
+   end
+})
+
+c.AddOptionalSpell("Incarnation: King of the Jungle", "pre-pull", {
+   MyBuff = "Incarnation: King of the Jungle",
+   Cooldown = 3 * 60,
+   CheckFirst = function()
+      return not c.HasBuff("Prowl")
+   end
+})
 
 c.AddSpell("Healing Touch", "for Dream", {
    Override = function()
@@ -367,6 +297,22 @@ c.AddSpell("Healing Touch", "for Dream", {
          and a.Swiftness > 0
          and a.Energy + a.Regen < 100
          and c.HasTalent("Dream of Cenarius")
+   end
+})
+
+c.AddSpell("Healing Touch", "for Bloodtalons", {
+   CheckFirst = function()
+      if not c.HasTalent("Bloodtalons") then return false end
+
+      local ps = c.GetBuffDuration("Predatory Swiftness")
+      return ps > 0 and (a.ComboPoints >= 4 or ps <= c.LastGCD)
+   end
+})
+
+c.AddSpell("Healing Touch", "for Bloodtalons pre-pull", {
+   CheckFirst = function()
+      return c.HasTalent("Bloodtalons")
+         and c.GetBuffDuration("Bloodtalons") <= 9
    end
 })
 
@@ -388,73 +334,47 @@ c.AddOptionalSpell("Healing Touch", "for Feral Heal", {
 })
 
 c.AddSpell("Savage Roar", nil, {
-   Override = function(z)
-      return (a.CP > 0 or c.HasGlyph("Savage Roar"))
-         and modForDelay(z, 25) >= a.Roar
-   end,
-})
-
-c.AddSpell("Savage Roar", "Early", {
-   Override = function(z)
-      return a.CP == 5
-         and a.Roar < a.Rip + 2
-         and a.Roar - modForDelay(z, 25) < 6
-         and a.Substantial
+   Energy = 25,
+   ComboPoints = 5,
+   NoRangeCheck = true,
+   CheckFirst = function()
+      return a.SavageRoar < 12
    end
 })
 
-c.AddSpell("Savage Roar", "for AoE", {
-   Override = function(z)
-      return (a.CP > 0 or c.HasGlyph("Savage Roar"))
-         and (modForDelay(z, 25) >= a.Roar
-            or (a.CP == 5 and a.Roar < 10))
-   end,
-})
-
-c.AddSpell("Ferocious Bite", nil, {
-   Melee = true,
-   Override = function(z)
-      local delay = modForDelay(z, 25, true)
-      return a.CP == 5
-         and (a.InExecute or a.Rip - delay > 6 or not a.Substantial)
+c.AddSpell("Savage Roar", "to refresh", {
+   Energy = 25,
+   ComboPoints = 1,
+   NoRangeCheck = true,
+   CheckFirst = function()
+      return a.SavageRoar < 3
    end
 })
 
-c.AddSpell("Ferocious Bite", "on Last Tick", {
-   Melee = true,
-   Override = function(z)
-      local rip = a.Rip - modForDelay(z, 25, true)
-      return a.InExecute and a.CP > 0 and rip > .1 and rip < 4
+c.AssociateTravelTimes(0, "Ferocious Bite")
+c.AddSpell("Ferocious Bite", "to extend Rip", {
+   Energy = 25,
+   ComboPoints = 1,
+   CheckFirst = function()
+      return c.InExecute and c.ShouldCastToRefresh("Ferocious Bite", "Rip", 3, false)
    end
 })
 
-c.AddSpell("Ferocious Bite", "for AoE", {
-   Melee = true,
-   Override = function(z)
-      local delay = modForDelay(z, 25, true)
-      return a.CP == 5
-         and a.InExecute
-         and a.Rip - delay < 10
-         and a.Substantial
+c.AddSpell("Ferocious Bite", "at 5", {
+   Energy = 25,
+   ComboPoints = 5,
+   RunFirst = function(z)
+      c.MakePredictor(z, a.Energy < 50)
    end
 })
-
-local function swiftable()
-   return a.Swiftness == 0
-      and a.DreamStacks == 0
-      and a.CP == 5
-      and a.Energy + a.Regen < 100
-      and c.HasTalent("Dream of Cenarius")
-      and a.Substantial
-end
 
 c.AddSpell("Rip", nil, {
-   Melee = true,
-   Override = function(z)
-      return a.CP == 5
-         and (not a.InExecute or a.Rip == 0)
-         and a.Rip - modForDelay(z, 30, true) < 2
-         and a.Substantial
+   Energy = 30,
+   ComboPoints = 5,
+   CheckFirst = function()
+      -- @todo danielp 2015-01-24: handle this on both:
+      -- target.time_to_die-remains>18
+      return a.Rip < 3 or a.ripWouldBeStronger(a.ComboPoints)
    end
 })
 
@@ -469,507 +389,152 @@ c.MakePredictor(c.AddSpell("Rip", "Delay", {
 }))
 
 c.AddSpell("Rake", nil, {
-   Melee = true,
-   Override = function(z)
-      local dur = a.Rake - modForDelay(z, 35, true)
-      return dur < 3 or (dur < 6 and a.DreamStacks == 1 and a.CP >= 4)
+   Energy = 35,
+   CheckFirst = function()
+      if a.ComboPoints >= 5 then
+         return false
+      end
+
+      if c.HasTalent("Bloodtalons") then
+         return a.Rake <= 4.5
+            and (
+                  not c.HasBuff("Predatory Swiftness")
+                  or c.HasBuff("Bloodtalons")
+                  or a.rakeWouldBeStronger()
+            )
+            -- and ((target.time_to_die-remains>3&active_enemies<3)|target.time_to_die-remains>6)
+      end
+
+      return a.Rake <= 3 or (a.Rake <= 4.5 and a.rakeWouldBeStronger())
    end
 })
 
-c.AddSpell("Thrash(Cat Form)", nil, {
-   FlashID = { "Thrash", "Thrash(Bear Form)", "Thrash(Cat Form)" },
-   Melee = true,
-   Override = function()
-      return getDelay(50, true) == 0
-         and c.GetMyDebuffDuration("Thrash(Cat Form)", false, true, true) < 3
-         and (a.Clearcasting or a.Rip > 7 or a.CP == 5)
-         and a.Substantial
+c.AddSpell("Rake", "Late", {
+   Energy = 35,
+   CheckFirst = function()
+      return a.ComboPoints < 5
+         and a.rakeWouldBeStronger()
+         and c.EstimatedHarmTargets <= 1
    end
 })
 
-c.AddSpell("Thrash(Cat Form)", "for AoE", {
-   FlashID = { "Thrash", "Thrash(Bear Form)", "Thrash(Cat Form)" },
-   Melee = true,
-   Override = function(z)
-      return c.GetMyDebuffDuration("Thrash(Cat Form)", false, true, true)
-            - modForDelay(z, 50, true)
-         < 3
+c.AddSpell("Rake", "with stealth", {
+   Energy = 35,
+   CheckFirst = function()
+      -- prowl and incarnation both enhance rake
+      return a.rakeWouldBeStronger()
+         and (c.HasBuff("Prowl")
+                 or c.HasBuff("Incarnation: King of the Jungle")
+                 or c.HasBuff("Shadowmeld"))
    end
 })
+
+c.AddSpell("Thrash (Cat Form)", nil, {
+   FlashID = { "Thrash", "Thrash (Bear Form)", "Thrash (Cat Form)" },
+   Energy = 50,
+   CheckFirst = function()
+      return c.HasBuff("Omen of Clarity: Cat")
+         and c.GetMyDebuffDuration("Thrash (Cat Form)") < 4.5
+         and (c.EstimatedHarmTargets > 1
+                 or (a.ComboPoints >= 5 and not c.HasTalent("Bloodtalons")))
+   end
+})
+
+c.AddSpell("Thrash (Cat Form)", "AoE delay", {
+   FlashID = { "Thrash", "Thrash (Bear Form)", "Thrash (Cat Form)" },
+   Energy = 50,
+   MaxWait = 1,
+   CheckFirst = function()
+      return c.GetMyDebuffDuration("Thrash (Cat Form)") < 4.5
+         and c.EstimatedHarmTargets > 1
+   end
+})
+
+c.AddSpell("Thrash (Cat Form)", "at 5", {
+   FlashID = { "Thrash", "Thrash (Bear Form)", "Thrash (Cat Form)" },
+   ComboPoints = 5,
+   CheckFirst = function()
+      return c.HasTalent("Bloodtalons")
+         and c.GetMyDebuffDuration("Thrash (Cat Form)") < 4.5
+         and c.HasBuff("Omen of Clarity: Cat")
+   end
+})
+
 
 c.AddSpell("Shred", nil, {
-   Melee = true,
-   Override = function(z)
-      local delay = modForDelay(z, 40, true)
-      local _, targetID = s.UnitInfo()
-      return (a.Clearcasting or a.Berserk > delay or a.Regen > 15)
-         and (not (a.NoShred[targetID] or c.IsTanking())
-            or (c.HasGlyph("Shred")
-               and (a.TigersFury > delay or a.Berserk > delay)))
+   Energy = 40,
+})
+
+c.AddSpell("Swipe", nil, {
+   Energy = 45,
+   CheckFirst = function()
+      return c.EstimatedHarmTargets >= 3
    end
 })
 
 c.AddSpell("Mangle", nil, {
-   Melee = true,
-   Override = function(z)
-      modForDelay(z, 35, true)
+   Cooldown = 6,
+})
+
+c.AddOptionalSpell("Prowl", nil, {
+   MyBuff = "Prowl",
+   Cooldown = 10,
+   CheckFirst = function()
+      return not c.HasBuff("Incarnation: King of the Jungle")
+         and not c.HasBuff("Prowl")
+   end
+})
+
+c.AddSpell("Force of Nature: Feral", nil, {
+   NoGCD = true,
+   CheckFirst = function(z)
+      local charges, _, tilCap = c.GetChargeInfo("Force of Nature: Feral")
+
+      -- avoid capping, and burn if we have a trinket proc of some sort
+      --
+      -- @todo danielp 2015-01-24: we have no way of detecting that right now,
+      -- so lets just leave it up to the user -- optional if not capping.
+      local capping = (charges >= 3 or tilCap <= 3 * c.LastGCD)
+      c.MakeMini(z, not capping)
       return true
    end
 })
 
-c.AddOptionalSpell("Bear Form", "for Feral", {
-   Type = "form",
-   Melee = true,
-   NotIfActive = true,
+c.AddOptionalSpell("Wild Charge: Cat", nil, {
+   FlashID = { "Wild Charge", "Wild Charge: Cat" },
+   Cooldown = 15,
    CheckFirst = function()
-      if a.Energy >= 35
-         or a.TimeToCap < 4
-         or a.Berserk > 0 then
-
-         return false
-      elseif c.AoE then
-         return c.GetMyDebuffDuration("Thrash(Cat Form)", false, false, true)
-               > 4.5
-            and a.TigerCool > 4.5
-      elseif a.Substantial then
-         return a.MinRip > (a.CP == 0 and 4.5 or 5.5)
-               and a.Rake > 4.5
-               and a.TigerCool > 4.5
-      else
-         return a.TigerCool > 0
-      end
+      -- work around a SpellFlash core / Blizzard bug -- spellflash uses the
+      -- full and sub names for IsSpellInRange, but Blizzard demands only the
+      -- base name of the spell.  "Wild Charge(Talent)" == fail, basically.
+      return IsSpellInRange(s.SpellName(c.GetID("Wild Charge: Cat"), true), "target") == 1
    end
 })
 
-c.AddOptionalSpell("Bear Form", "for Feral AoE", {
-   Type = "form",
-   Melee = true,
-   NotIfActive = true,
+c.AddOptionalSpell("Shadowmeld", "for Feral", {
+   Cooldown = 120,
    CheckFirst = function()
-      return a.Energy < 45
-         and a.TimeToCap > 4
-         and a.Berserk == 0
-         and c.GetMyDebuffDuration("Thrash(Cat Form)", false, false, true)
-               > 4
-         and a.TigerCool > 4
+      return a.Rake < 4.5
+         and a.Energy >= 35
+         and a.rakeWouldBeStronger(2)
+         and (c.HasBuff("Bloodtalons") or not c.HasTalent("Bloodtalons"))
+         and c.GetCooldown("Incarnation: King of the Jungle") > 15
+         and not c.HasBuff("Incarnation: King of the Jungle")
    end
 })
 
--- c.AddSpell("Swipe(Bear Form)", "for Feral", {
---    FlashID = { "Swipe", "Swipe(Bear Form)", "Swipe(Cat Form)" },
---    Melee = true,
---    Cooldown = 3,
---    CheckFirst = function()
---       return c.AoE
---    end,
--- })
--- 
--- c.AddSpell("Swipe(Bear Form)", "Prime for Feral", {
---    FlashID = { "Swipe", "Swipe(Bear Form)", "Swipe(Cat Form)" },
---    Melee = true,
---    Cooldown = 3,
---    CheckFirst = function()
---       return c.AoE
---          and a.TimeToCap > (a.Clearcasting and 5.5 or 4.5)
---          and c.GetMyDebuffDuration("Thrash(Cat Form)", false, true) > 4.5
---    end,
--- })
--- 
--- c.AddSpell("Swipe(Cat Form)", "for Feral", {
---    FlashID = { "Swipe", "Swipe(Bear Form)", "Swipe(Cat Form)" },
---    Melee = true,
---    Override = function(z)
---       modForDelay(z, 45, true)
---       return true
---    end
--- })
-
---------------------------------- beta
-
-c.AddSpell("Healing Touch", "for Feral Beta", {
-   NoRangeCheck = true,
-   WhiteFlashOffset = -1,
-   GetDelay = function(z)
-      c.MakeOptional(z, a.Vigil == 0)
-      return a.Swiftness > 0
-         and (a.Vigil > 0 or c.GetHealthPercent("player") < 85)
-         and 1
-   end,
-})
-
-c.AddSpell("Healing Touch", "for Dream Beta", {
-   NoRangeCheck = true,
-   GetDelay = function()
-      if a.DreamStacks > 0
-         or not c.HasTalent("Dream of Cenarius")
-         or a.Swiftness == 0 then
-
-         return false
-      elseif a.CP >= 4 then
-         return 0
-      else
-         return a.Swiftness - 1.5
-      end
-   end,
-})
-
-c.AddOptionalSpell("Bear Form", "while Pooling", {
-   Type = "form",
-   Melee = true,
-   NotIfActive = true,
-   WhiteFlashOffset = -4.5,
-   GetDelay = function()
-      return c.GetOption("FeralBear") and a.TigerCool > 0 and 4.5
-   end,
-})
-
-c.AddSpell("Ferocious Bite", "on Last Tick Beta", {
-   Melee = true,
-   GetDelay = function()
-      local delay = getDelay(25, true)
-      return a.InExecute
-         and a.CP > 0
-         and a.Rip - delay > .1
-         and math.max(a.Rip - 3, delay)
+c.AddSpell("Moonfire", "for Feral", {
+   Energy = 30,
+   CheckFirst = function()
+      return c.HasTalent("Lunar Inspiration")
+         and a.ComboPoints < 5
+         and c.GetMyDebuffDuration("Moonfire") < 4.2
+         and c.EstimatedHarmTargets < 6
+         -- and target.time_to_die-remains>tick_time*5
    end
 })
 
-c.AddSpell("Ferocious Bite", "in Execute Pooling", {
-   Melee = true,
-   IsMinDelayDefinition = true,
-   GetDelay = function()
-      return a.InExecute
-         and a.CP == 5
-         and a.Substantial
-         and math.min(a.Rip, getDelay(50))
-   end
-})
 
-c.AddSpell("Ferocious Bite", "in Execute", {
-   Melee = true,
-   GetDelay = function()
-      local delay = getDelay(25, true)
-      return a.InExecute
-         and a.CP == 5
-         and a.Rip - delay > .1
-         and delay
-   end
-})
-
-c.AddSpell("Ferocious Bite", "Pooling", {
-   Melee = true,
-   IsMinDelayDefinition = true,
-   GetDelay = function()
-      if a.CP < 5 or not a.Substantial then
-         return false
-      end
-
-      local delay = math.min(a.Rip, a.TimeToCap - 1)
-      local to25 = getDelay(50)
-      if to25 < a.Berserk then
-         delay = math.min(delay, to25)
-      end
-      local rage = c.GetBuffDuration("Feral Rage")
-      if rage > 0 then
-         delay = math.min(delay, rage - 1)
-      end
-      return delay
-   end
-})
-
-c.AddSpell("Ferocious Bite", "Beta", {
-   Melee = true,
-   GetDelay = function()
-      local delay = getDelay(25, true)
-      return a.CP == 5
-         and (a.Rip > delay or not a.Substantial)
-         and delay
-   end
-})
-
-c.AddSpell("Savage Roar", "at 0", {
-   NoRangeCheck = true,
-   GetDelay = function()
-      return (a.CP > 0 or c.HasGlyph("Savage Roar"))
-         and math.max(getDelay(25), a.Roar)
-   end,
-})
-
-c.AddSpell("Savage Roar", "at 3 in Execute", {
-   NoRangeCheck = true,
-   GetDelay = function()
-      return a.CP > 0
-         and a.InExecute
-         and math.max(getDelay(25), a.Roar - 3)
-   end,
-})
-
-c.AddSpell("Savage Roar", "at 3", {
-   NoRangeCheck = true,
-   GetDelay = function()
-      -- If it's about to fall off, and we'll be casting Rip soon, refresh
-      -- now so we can build up CP for Rip.
-      return a.CP > 0
-         and a.Roar > a.Rip - 2 -- only if Rip is falling off
-         and math.max(getDelay(25), a.Roar - 3)
-   end,
-})
-
-c.AddSpell("Savage Roar", "at 6", {
-   NoRangeCheck = true,
-   GetDelay = function()
-      -- refresh early if it won't be up when refreshing Rip
-      local delay = math.max(getDelay(25), a.Roar - 6)
-      return a.CP == 5
-         and a.Roar < a.Rip - 2 -- only if it falls off before rip
-         and a.Rip > delay
-         and delay
-   end,
-})
-
-c.AddSpell("Savage Roar", "at 12", {
-   NoRangeCheck = true,
-   GetDelay = function()
-      -- if we're about to energy cap,
-      local delay = math.max(getDelay(25), a.Roar - 12, a.TimeToCap - 1)
-      return a.CP == 5
-         and a.Roar < a.Rip + 6
-         and a.Rip > delay
-         and delay
-   end,
-})
-
-c.AddOptionalSpell("Incarnation: King of the Jungle", "Beta", {
-   GetDelay = function()
-      local delay = math.max(
-         c.GetCooldown("Incarnation: King of the Jungle", false, 180),
-         a.TigerCool - 1)
-      return a.Energy + a.Regen * delay < 35 and delay
-   end,
-})
-
-c.AddOptionalSpell("Tiger's Fury", "Beta", {
-   NoGCD = true,
-   GetDelay = function()
-      local delay = math.max(a.TigerCool, a.Berserk)
-      return not a.Clearcasting
-         and a.Energy + a.Regen * delay < 35
-         and delay
-   end,
-})
-
-c.AddOptionalSpell("Nature's Vigil", "Beta", {
-   NoRangeCheck = true,
-   NoGCD = true,
-   Cooldown = 90,
-   CheckFirst = function(z)
-      return furySync(z)
-   end,
-})
-
-c.AddSpell("Thrash(Cat Form)", "under Omen", {
-   FlashID = { "Thrash", "Thrash(Bear Form)", "Thrash(Cat Form)" },
-   Melee = true,
-   GetDelay = function()
-      return a.Clearcasting
-         and a.Substantial
-         and math.max(a.ThrashCat - 3, getDelay(50, true))
-   end,
-})
-
-local function thrashCatDelay(forMinDelay)
-   local energyDelay = getDelay(50, true)
-   local delay = math.max(energyDelay, a.ThrashCat - 3)
-   return (not forMinDelay or delay == energyDelay)
-      and a.Rip > delay
-      and (a.CP == 5
-         or a.Berserk > delay
-         or (a.Rip > delay + 8 and a.Roar > delay + 12))
-      and a.Substantial
-      and delay
-end
-
-c.AddSpell("Thrash(Cat Form)", "Beta", {
-   FlashID = { "Thrash", "Thrash(Bear Form)", "Thrash(Cat Form)" },
-   Melee = true,
-   GetDelay = function()
-      return thrashCatDelay(false)
-   end,
-})
-
-c.AddSpell("Thrash(Cat Form)", "Delay", {
-   Melee = true,
-   IsMinDelayDefinition = true,
-   GetDelay = function()
-      return thrashCatDelay(true)
-   end,
-})
-
-local function thrashOriginationDelay(forMinDelay)
-   local rig = c.GetBuffDuration("Re-Origination")
-   local energyDelay = getDelay(50, true)
-   local delay = math.max(rig - 1.5, a.ThrashCat - 9, energyDelay)
-   return (not forMinDelay or delay == energyDelay)
-      and rig > delay
-      and a.Rip > delay
-      and (a.CP == 5
-         or a.Berserk > delay
-         or (a.Rip > delay + 8 and a.Roar > delay + 12))
-      and a.Substantial
-      and delay
-end
-
-c.AddSpell("Thrash(Cat Form)", "Re-Origination", {
-   FlashID = { "Thrash", "Thrash(Bear Form)", "Thrash(Cat Form)" },
-   Melee = true,
-   GetDelay = function()
-      return thrashOriginationDelay(false)
-   end,
-})
-
-c.AddSpell("Thrash(Cat Form)", "Re-Origination Delay", {
-   Melee = true,
-   IsMinDelayDefinition = true,
-   GetDelay = function()
-      return thrashOriginationDelay(true)
-   end,
-})
-
-c.AddSpell("Rip", "Overwrite", {
-   Melee = true,
-   GetDelay = function()
-      if not a.Substantial or a.CP < 5 then
-         return false
-      end
-
-      local delay = getDelay(30, true)
-      if a.CalcDamage("Rip") < 1.15 * a.ExistingBleedDamage("Rip") then
-         delay = math.max(delay, a.Rip)
-      end
-      return delay
-   end,
-})
-
-c.AddSpell("Rip", "for Re-Origination", {
-   Melee = true,
-   GetDelay = function()
-      local rig = c.GetBuffDuration("Re-Origination")
-      local delay = getDelay(30, true)
-      return a.Substantial
-         and a.CP >= 4
-         and rig > 0
-         and rig - delay < 1.5
-         and a.CalcDamage("Rip") > .95 * a.ExistingBleedDamage("Rip")
-         and math.max(rig - 1.5, delay)
-   end,
-})
-
-c.AddSpell("Rip", "unless Fury Soon", {
-   Melee = true,
-   GetDelay = function()
-      local delay = getDelay(30, true)
-      return a.Substantial
-         and a.CP == 5
-         and (a.Rip + 2 < a.TigerCool or a.Berserk > delay)
-         and math.max(a.Rip - 2, delay)
-   end,
-})
-
-c.AddSpell("Rake", "for Re-Origination", {
-   Melee = true,
-   GetDelay = function()
-      local rig = c.GetBuffDuration("Re-Origination")
-      local delay = getDelay(30, true)
-      return rig > 0
-         and rig - delay < 1.5
-         and math.max(rig - 1.5, a.Rake - 9, delay)
-   end,
-})
-
-c.AddSpell("Rake", "Overwrite", {
-   Melee = true,
-   GetDelay = function()
-      local existing = a.ExistingBleedDamage("Rake")
-      local delay = getDelay(30, true)
-      if not a.Substantial then
-         return existing == 0 and delay
-      end
-
-      local new = a.CalcDamage("Rake")
-      if new > existing then
-         return delay
-      elseif new > .75 * existing then
-         return math.max(delay, a.Rake - 3)
-      else
-         return math.max(delay, a.Rake)
-      end
-   end,
-})
-
-c.AddSpell("Rake", "Filler", {
-   Melee = true,
-   GetDelay = function()
-      local new = a.CalcDamage("Rake")
-      local mangle = a.CalcDamage("Mangle")
-      local delay = getDelay(30, true)
-      if a.Substantial then
-         local existing = a.ExistingBleedDamage("Rake")
-         local ticks = math.floor(a.Rake / 3) + 1
-         return new * (ticks + 1) > mangle + existing * ticks
-            and delay
-      else
-         return new > mangle and delay
-      end
-   end,
-})
-
-c.AddSpell("Filler Delay", nil, {
-   ID = "Mangle",
-   Melee = true,
-   IsMinDelayDefinition = true,
-   GetDelay = function()
-      if a.Clearcasting or not a.Substantial then
-         return false
-      end
-
-      -- If you can sneak in a filler before any of these conditions, do it.
-      -- Otherwise wait (for clearcasting or the energy cap).
-      local unless = math.max(
-         c.GetBuffDuration("Feral Fury"),
-         a.Berserk,
-         a.TigersFury,
-         a.TigerCool - 3)
-      if a.CP == 0 then
-         unless = math.max(unless, a.Roar - 2)
-      end
-      if a.CP < 5 then
-         unless = math.max(unless, a.Rip - 3)
-      end
-
-      local delay = a.TimeToCap - 1
-      return unless < delay and delay, delay - unless
-   end,
-})
-
-c.AddSpell("Shred", "Filler", {
-   Melee = true,
-   GetDelay = function()
-      local delay = math.max(getDelay(40, true), a.King)
-      local _, targetID = s.UnitInfo()
-      return (a.Clearcasting or a.Berserk > delay or a.Regen > 15)
-         and (not (a.NoShred[targetID] or c.IsTanking())
-            or (c.HasGlyph("Shred")
-               and (a.TigersFury > delay or a.Berserk > delay)))
-         and delay
-   end,
-})
-
-c.AddSpell("Mangle", "Filler", {
-   Melee = true,
-   GetDelay = function()
-      return math.max(getDelay(35, true), a.King)
-   end,
-})
 
 ---------------------------------------------------------------------- Guardian
 c.AddOptionalSpell("Bear Form", nil, {
@@ -1006,20 +571,25 @@ c.AddOptionalSpell("Tooth and Claw", nil, {
 
 c.AddOptionalSpell("Cenarion Ward", "for Guardian", {
    NoRangeCheck = true,
-   CheckFirst = function()
-      return not c.InDamageMode()
-   end,
+   Cooldown = 30,
 })
 
 c.AddOptionalSpell("Barkskin", nil, {
    NoGCD = true,
+   Cooldown = 60,
+   ShouldHold = function()
+      return not c.HasBuff("Bristling Fur")
+   end,
 })
 
-c.AddOptionalSpell("Flashing Steel Talisman", nil, {
-   Type = "item",
-   NoRangeCheck = true,
-   Buff = "Flashing Steel",
-   BuffUnit = "player",
+c.AddOptionalSpell("Bristling Fur", nil, {
+   NoGCD = true,
+   Cooldown = 60,
+   MyBuff = "Bristling Fur",
+   ShouldHold = function()
+      return not c.HasBuff("Barkskin")
+         and not c.HasBuff("Savage Defense")
+   end,
 })
 
 c.AddOptionalSpell("Renewal", "for Guardian", {
@@ -1049,50 +619,7 @@ c.AddOptionalSpell("Survival Instincts", "Glyphed", {
    end,
 })
 
-c.AddOptionalSpell("Fortitude of the Zandalari", nil, {
-   Type = "item",
-   NoGCD = true,
-   ShouldHold = function()
-      return c.GetHealthPercent("player") > 90
-   end,
-})
-
-c.AddOptionalSpell("Berserk", "for Guardian", {
-   NoGCD = true,
-   CheckFirst = function()
-      return not c.AoE
-         and c.GetDebuffDuration(c.WEAKENED_BLOWS_DEBUFFS) > 13.5
-   end,
-   ShouldHold = function()
-      return c.GetCooldown("Mangle") < .5
-   end,
-})
-
-c.AddOptionalSpell("Berserk", "in Damage Mode", {
-   NoGCD = true,
-   CheckFirst = function()
-      return not c.AoE
-         and c.GetDebuffDuration(c.WEAKENED_BLOWS_DEBUFFS) > 13.5
-         and c.InDamageMode()
-   end,
-   ShouldHold = function()
-      return c.GetCooldown("Mangle") < .5
-   end,
-})
-
 c.AddOptionalSpell("Incarnation: Son of Ursoc", nil, {
-   CheckFirst = function()
-      return not c.AoE
-   end,
-   ShouldHold = function()
-      return c.GetCooldown("Mangle") < .5
-   end,
-})
-
-c.AddOptionalSpell("Incarnation: Son of Ursoc", "in Damage Mode", {
-   CheckFirst = function()
-      return not c.AoE and c.InDamageMode()
-   end,
    ShouldHold = function()
       return c.GetCooldown("Mangle") < .5
    end,
@@ -1100,53 +627,68 @@ c.AddOptionalSpell("Incarnation: Son of Ursoc", "in Damage Mode", {
 
 c.AddOptionalSpell("Frenzied Regeneration", nil, {
    NoGCD = true,
+   Cooldown = 1.5,
    CheckFirst = function()
-      if c.HasGlyph("Frenzied Regeneration") then
-         return a.Rage >= 50
-            and not c.HasBuff("Frenzied Regeneration", true)
-            and s.HealthPercent("player") < 85
-            and c.IsTanking()
-            and not c.IsSolo()
-      else
-         local maxHeal = math.max(
-               2 * UnitAttackPower("player") - 4 * UnitStat("player", 2),
-               2.5 * UnitStat("player", 3))
-            * (1 + .1 * c.GetBuffStack("Improved Regeneration"))
-         if c.WearingSet(4, "GuardianT14") then
-            maxHeal = maxHeal * 1.1
-         end
-         return a.Rage > 0
-            and s.MaxHealth("player") - c.GetHealth("player")
-               > math.min(1, a.Rage / 50) * maxHeal
+      if a.Rage <= 0 then
+         return false
       end
+
+      local heal = 6
+         * UnitAttackPower("player")
+         * c.GetResolve()
+         * c.GetVersatility()
+         * c.GetCritChance()
+         * min(1, a.Rage / 60)
+
+      return c.GetHealth("player") + heal <= UnitHealthMax("player")
    end,
 })
 
 c.AddOptionalSpell("Savage Defense", nil, {
    NoGCD = true,
    Melee = true,
+   Cooldown = 1.5,
+   Rage = 60,
    CheckFirst = function()
-      return c.IsTanking() and not c.InDamageMode()
+      return c.IsTanking() and not c.HasBuff("Barkskin")
+   end
+})
+
+c.AddOptionalSpell("Berserk", "for Guardian", {
+   NoGCD = true,
+   Cooldown = 180,
+   CheckFirst = function()
+      return c.GetBuffDuration("Pulverize") > 10
+         or not c.HasTalent("Pulverize")
+   end
+})
+
+c.AddOptionalSpell("Pulverize", nil, {
+   GetDelay = function()
+      return c.GetBuffDuration("Pulverize") - 3.6, 0.5
+         and c.GetMyDebuffStack("Lacerate") >= 3
    end
 })
 
 local bleeds = c.GetIDs(
    "Lacerate",
-   "Thrash(Bear Form)",
-   "Thrash(Cat Form)",
+   "Thrash (Bear Form)",
+   "Thrash (Cat Form)",
    "Rake",
    "Rip",
    "Pounce Bleed",
    "Deep Wounds",
    "Rupture",
    "Hemorrhage",
-   "Garrote")
+   "Garrote"
+)
 
 c.AddOptionalSpell("Maul", "for Guardian", {
    NoGCD = true,
+   Cooldown = 3,
+   Rage = 20,
    CheckFirst = function()
-      return (a.EmptyRage < 10
-            and (c.HasBuff("Tooth and Claw", true) or not c.IsTanking()))
+      return (a.EmptyRage < 10 and (c.HasBuff("Tooth and Claw", true) or not c.IsTanking()))
          or (c.InDamageMode() and c.HasDebuff(bleeds))
    end,
 })
@@ -1155,67 +697,23 @@ c.AddTaunt("Growl", nil, {
    NoGCD = true,
 })
 
-c.AddSpell("Thrash(Bear Form)", nil, {
-   FlashID = { "Thrash", "Thrash(Bear Form)", "Thrash(Cat Form)" },
-   Melee = true,
-   Cooldown = 6,
+c.AddSpell("Thrash (Bear Form)", "if down", {
+   FlashID = { "Thrash", "Thrash (Bear Form)", "Thrash (Cat Form)" },
+   MyDebuff = "Thrash (Bear Form)"
 })
 
-c.AddSpell("Thrash(Bear Form)", "for Weakened Blows", {
-   FlashID = { "Thrash", "Thrash(Bear Form)", "Thrash(Cat Form)" },
-   Melee = true,
-   Debuff = c.WEAKENED_BLOWS_DEBUFFS,
-   EarlyRefresh = 1.5,
-   Cooldown = 6,
-   CheckFirst = function()
-      return not c.InDamageMode()
-   end,
-})
-
-c.AddSpell("Thrash(Bear Form)", "for Bleed", {
-   FlashID = { "Thrash", "Thrash(Bear Form)", "Thrash(Cat Form)" },
-   Melee = true,
-   MyDebuff = "Thrash(Bear Form)",
-   UseBuffID = true,
-   EarlyRefresh = 2,
-   Cooldown = 6,
-})
-
-c.AddSpell("Thrash(Bear Form)", "for Damage", {
-   FlashID = { "Thrash", "Thrash(Bear Form)", "Thrash(Cat Form)" },
-   Melee = true,
-   MyDebuff = "Thrash(Bear Form)",
-   UseBuffID = true,
-   EarlyRefresh = 2,
-   Cooldown = 6,
-   CheckFirst = c.InDamageMode,
-})
-
-c.AddSpell("Thrash(Bear Form)", "for AoE", {
-   FlashID = { "Thrash", "Thrash(Bear Form)", "Thrash(Cat Form)" },
-   Melee = true,
-   Cooldown = 6,
-   CheckFirst = function()
-      return c.AoE
-   end
+c.AddSpell("Thrash (Bear Form)", "early", {
+   FlashID = { "Thrash", "Thrash (Bear Form)", "Thrash (Cat Form)" },
+   MyDebuff = "Thrash (Bear Form)",
+   EarlyRefresh = 4.8,
 })
 
 c.AddOptionalSpell("Rejuvenation", "for Guardian", {
    NoRangeCheck = true,
    GetDelay = function()
-      return c.HasBuff("Heart of the Wild: Feral")
+      return c.HasBuff("Heart of the Wild: Guardian")
          and not c.InDamageMode()
-         and c.GetMyBuffDuration("Rejuvenation"), 0
-   end,
-})
-
-c.AddOptionalSpell("Rejuvenation", "Refresh for Guardian", {
-   Tick = 3,
-   NoRangeCheck = true,
-   GetDelay = function(z)
-      return c.HasBuff("Heart of the Wild: Feral")
-         and not c.InDamageMode()
-         and c.GetMyBuffDuration("Rejuvenation") - z.EarlyRefresh, 0
+         and c.GetMyBuffDuration("Rejuvenation") - 3.6, 0
    end,
 })
 
@@ -1236,34 +734,29 @@ c.AddSpell("Mangle", "Delay", {
    end
 })
 
-c.AddSpell("Faerie Fire", "for Debuff for Guardian", {
-   Debuff = c.ARMOR_DEBUFFS,
-   RunFirst = setFaerieID,
-   SpecialGCD = "hasted",
-   Cooldown = 6,
+c.AddSpell("Lacerate", "for Pulverize", {
+   CheckFirst = function()
+      return c.HasTalent("Pulverize")
+         and not c.HasBuff("Berzerk")
+         and c.GetBuffDuration("Pulverize") <= (c.LastGCD * (3 - c.GetMyDebuffStack("Lacerate"))) + 0.5
+   end
 })
 
-c.AddSpell("Lacerate", "for Guardian", {
-   Cooldown = 3,
+c.AddSpell("Lacerate", "for Debuff", {
+   MyDebuff = "Lacerate"
 })
 
--- c.AddSpell("Swipe(Bear Form)", "for AoE", {
---    FlashID = { "Swipe", "Swipe(Bear Form)", "Swipe(Cat Form)" },
---    Melee = true,
---    Cooldown = 3,
---    CheckFirst = function()
---       return c.AoE
---    end
--- })
--- 
--- c.AddSpell("Swipe(Bear Form)", "for AoE Delay", {
---    IsMinDelayDefinition = true,
---    FlashID = { "Swipe", "Swipe(Bear Form)", "Swipe(Cat Form)" },
---    Melee = true,
---    GetDelay = function()
---       return c.AoE and c.GetCooldown("Swipe(Bear Form)", false, 3), .5
---    end
--- })
+c.AddSpell("Lacerate")
+
+c.AddOptionalSpell("Heart of the Wild: Guardian", nil, {
+   Melee = true,
+   FlashSize = s.FlashSizePercent() / 2,
+   CheckFirst = function()
+      return not c.IsTanking()
+         or c.InDamageMode()
+   end,
+})
+
 
 ------------------------------------------------------------------- Restoration
 c.RegisterForFullChannels("Tranquility")

@@ -1,5 +1,5 @@
 if GetLocale() ~= "itIT" then return end
-DBM_CORE_NEED_SUPPORT				= "Sei bravo come programmatore? Se si, il team di DBM ha bisogno del tuo aiuto per mantenere DBM il miglior Boss Mod per WoW. Entra nel nostro gruppo visitando www.deadlybossmods.com o mandando un messaggio a tandanu@deadlybossmods.com or nitram@deadlybossmods.com."
+DBM_CORE_NEED_SUPPORT				= "Sei bravo come programmatore? Se si, il team di DBM ha bisogno del tuo aiuto per mantenere DBM il miglior Boss Mod per WoW. Entra nel nostro gruppo visitando http://forums.elitistjerks.com/topic/132449-dbm-localizers-needed/"
 DBM_HOW_TO_USE_MOD					= "Benvenuto in DBM. Scrivi /dbm help per avere una lista dei comandi supportati. Per accedere alle opzioni scrivi in chat /dbm. Carica le zone specifiche per configurare manualmente ogni settaggio di ogni boss. DBM prova a farlo per te controllando la tua specializzazione alla prima esecuzione, ma alcuni potrebbero volere alcune opzioni attivate."
 
 DBM_CORE_LOAD_MOD_ERROR				= "Errore nel caricamento del Boss Mod per %s: %s"
@@ -21,7 +21,7 @@ DBM_CORE_TIMER_FORMAT				= "%d |4minuto:minuti; e %d |4secondo:secondi;"
 DBM_CORE_MIN						= "min"
 DBM_CORE_MIN_FMT					= "%d min"
 DBM_CORE_SEC						= "sec"
-DBM_CORE_SEC_FMT					= "%d sec"
+DBM_CORE_SEC_FMT					= "%s sec"
 DBM_CORE_DEAD						= "Morto"
 DBM_CORE_OK							= "Ok"
 
@@ -186,22 +186,28 @@ DBM_CORE_AUTO_SPEC_WARN_OPTIONS.you 		= "Mostra un Avviso Speciale quando sei af
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.target 		= "Mostra un Avviso Speciale quando qualcuno e' afflitto da $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.close 		= "Mostra un Avviso Speciale quando qualcuno vicino a te e' afflitto da $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move 		= "Mostra un Avviso Speciale quando sei afflitto da\n $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.dodge 		= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.move--FIXME (this is a temp until localized properly as a dodge warning)
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.run 		= "Mostra un Avviso Speciale per $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.cast 		= "Mostra un Avviso Speciale per il lancio di $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.stack 		= "Mostra un Avviso Speciale per Accumuli >=%d di $spell:%s"
 DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch		= "Mostra un Avviso Speciale per cambiare Bersaglio per $spell:%s"
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switchcount = DBM_CORE_AUTO_SPEC_WARN_OPTIONS.switch
+DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interruptcount	= DBM_CORE_AUTO_SPEC_WARN_OPTIONS.interrupt
 
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.spell		= "%s!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.dispel	= "%s su >%%s< - rimuovilo ora!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.interrupt	= "%s - interrompi >%%s<!"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.interruptcount	= "%s - interrompi >%%s<! (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.you		= "%s su di te"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.target	= "%s su >%%s<"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.close		= "%s su >%%s< vicino a te"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.move		= "%s - Spostati"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.dodge 	= DBM_CORE_AUTO_SPEC_WARN_TEXTS.move--FIXME (this is a temp until localized properly as a dodge warning)
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.run		= "%s - Corri Via!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.cast		= "%s - Smetti di Attaccare!"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.stack		= "%s (%%d)"
 DBM_CORE_AUTO_SPEC_WARN_TEXTS.switch	= ">%s< - Cambia Bersaglio"
+DBM_CORE_AUTO_SPEC_WARN_TEXTS.switchcount	= ">%s< - Cambia Bersaglio (%%d)"
 
 
 DBM_CORE_AUTO_ICONS_OPTION_TEXT			= "Imposta Icone sui bersagli di $spell:%s"
@@ -209,7 +215,7 @@ DBM_CORE_AUTO_SOUND_OPTION_TEXT			= "Fai il suono \"muoviti\" per $spell:%s"
 DBM_CORE_AUTO_COUNTDOWN_OPTION_TEXT		= "Esegui il conto alla rovescia per $spell:%s"
 DBM_CORE_AUTO_COUNTOUT_OPTION_TEXT		= "Esegui il conteggio per la durata di $spell:%s"
 DBM_CORE_AUTO_YELL_OPTION_TEXT			= "Urla quando sei afflitto da $spell:%s"
-DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT		= "%s su di " .. UnitName("player") .. "!"
+DBM_CORE_AUTO_YELL_ANNOUNCE_TEXT.yell	= "%s su di " .. UnitName("player") .. "!"
 
 
 -- New special warnings
@@ -238,8 +244,9 @@ DBM_INSTANCE_INFO_REQUESTED			= "Mandala richiesta di informazioni sul lock del 
 DBM_INSTANCE_INFO_STATUS_UPDATE		= "Ricevute le risposte di %d giocatori of %d utenti DBM : %d Dati inviati, %d richieste negate. Attendo qualche secondo per le altre %d risposte..."
 DBM_INSTANCE_INFO_ALL_RESPONSES		= "Ricevute le risposte da tutti."
 DBM_INSTANCE_INFO_DETAIL_DEBUG		= "Mittente: %s Tipo di Risultato: %s Nome Incursione: %s ID: %s Difficulta': %d Dimensione: %d Progress: %s"
-DBM_INSTANCE_INFO_DETAIL_HEADER		= "%s (%d), difficulta' %d:"
+DBM_INSTANCE_INFO_DETAIL_HEADER		= "%s, difficulta' %s:"
 DBM_INSTANCE_INFO_DETAIL_INSTANCE	= "    ID %s, progress %d: %s"
+DBM_INSTANCE_INFO_DETAIL_INSTANCE2	= "    progress %d: %s"
 DBM_INSTANCE_INFO_STATS_DENIED		= "Hanno rifiutato la richiesta: %s"
 DBM_INSTANCE_INFO_STATS_AWAY		= "In pausa: %s"
 DBM_INSTANCE_INFO_STATS_NO_RESPONSE	= "Nessuna versione di DBM installata: %s"

@@ -1,7 +1,7 @@
 --[[
 	Enchantrix Addon for World of Warcraft(tm).
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
-	Revision: $Id: EnxSettings.lua 5465 2014-07-05 11:05:46Z brykrys $
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Revision: $Id: EnxSettings.lua 5536 2014-12-12 15:26:40Z brykrys $
 	URL: http://enchantrix.org/
 
 	Settings GUI
@@ -63,7 +63,7 @@ Usage:
 
 ]]
 
-Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Enchantrix/EnxSettings.lua $", "$Rev: 5465 $")
+Enchantrix_RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Enchantrix/EnxSettings.lua $", "$Rev: 5536 $")
 
 local lib = {}
 Enchantrix.Settings = lib
@@ -577,8 +577,7 @@ function lib.MakeGuiConfig()
 	gui:AddControl(id, "Checkbox",   0, 2, "autoLootDE", _ENCH("GuiAutoLootDE"))
 
 	gui:AddControl(id, "Subhead",    0,    "AutoDisenchant: Permanently Ignored Items")
-	local autoDElist = gui:AddControl(id, "Selectbox",  0, 1, "autode.items", "autode.selectitem")
-	autoDElist:SetWidth(280) -- Wider width needed for very long item names (SetWidth not directly supported by AddControl)
+	gui:AddControl(id, "Selectbox",  0, 1, "autode.items", "autode.selectitem", 280)
 	gui:AddControl(id, "Button",     0, 1, "autode.deleteItem", "remove item")
 	gui:AddControl(id, "Button",     0, 1, "autode.reset", "reset all items")
 

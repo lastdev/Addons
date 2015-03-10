@@ -398,6 +398,8 @@ L["ARMORY_OPEN_HINT"] = "Pulsa para abrir"
 L["ARMORY_PANDARIA_GEM_RESEARCH"] = "Investigación de gemas de Pandaria"
 L["ARMORY_QUEST_TOOLTIP_LABEL"] = "Alters en esta misión:"
 L["ARMORY_RECIPE"] = "Receta"
+L["ARMORY_RECIPE_WARNING"] = [=[Recipe %s not found in LibCraftInfo. Trying to make an educated guess.
+Please check with '/armory find skill ...' to be sure.]=] -- Requires localization
 L["ARMORY_REPUTATION_SUMMARY"] = "%1$s - %2$s (%3$d/%4$d, %5$d restante)"
 L["ARMORY_SEARCHING"] = "Buscando..."
 L["ARMORY_SELECT_UNIT_HINT"] = "Clic-izquierdo para seleccionar este personaje."

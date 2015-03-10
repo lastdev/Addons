@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Jaraxxus", "DBM-Coliseum")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 133 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(34780)
 mod:SetEncounterID(1087)
 mod:SetModelID(29615)
@@ -27,13 +27,13 @@ local warnFelFireball			= mod:NewCastAnnounce(66532, 2)
 local warnPortalSoon			= mod:NewSoonAnnounce(66269, 3)
 local warnVolcanoSoon			= mod:NewSoonAnnounce(66258, 3)
 local warnFlame					= mod:NewTargetAnnounce(66197, 4)
-local warnFlesh					= mod:NewTargetAnnounce(66237, 4, nil, mod:IsHealer())
+local warnFlesh					= mod:NewTargetAnnounce(66237, 4, nil, "Healer")
 local warnNetherPower			= mod:NewTargetAnnounce(67009, 4)
 
-local specWarnFlame				= mod:NewSpecialWarningRun(66877)
+local specWarnFlame				= mod:NewSpecialWarningRun("OptionVersion2", 66877, nil, nil, nil, 4)
 local specWarnFlesh				= mod:NewSpecialWarningYou(66237)
-local specWarnKiss				= mod:NewSpecialWarningYou("OptionVersion2", 66334, mod:IsSpellCaster())
-local specWarnNetherPower		= mod:NewSpecialWarningDispel(67009, mod:IsMagicDispeller())
+local specWarnKiss				= mod:NewSpecialWarningYou("OptionVersion2", 66334, "SpellCaster")
+local specWarnNetherPower		= mod:NewSpecialWarningDispel(67009, "MagicDispeller")
 local specWarnFelInferno		= mod:NewSpecialWarningMove(66496)
 local SpecWarnFelFireball		= mod:NewSpecialWarningInterrupt(66532, false)
 local SpecWarnFelFireballDispel	= mod:NewSpecialWarningDispel("OptionVersion2", 66532, false)
@@ -47,8 +47,6 @@ local timerFlesh				= mod:NewTargetTimer(12, 66237)
 local timerFleshCD				= mod:NewCDTimer(23, 66237) 
 local timerPortalCD				= mod:NewCDTimer(120, 66269)
 local timerVolcanoCD			= mod:NewCDTimer(120, 66258)
-
-local soundLegionFlame			= mod:NewSound(66197)
 
 mod:AddSetIconOption("LegionFlameIcon", 66197)
 mod:AddSetIconOption("IncinerateFleshIcon", 66237)
@@ -106,7 +104,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerFlameCD:Start()
 		if args:IsPlayer() then
 			specWarnFlame:Show()
-			soundLegionFlame:Play()
 		end
 		if self.Options.LegionFlameIcon then
 			self:SetIcon(args.destName, 7, 8)

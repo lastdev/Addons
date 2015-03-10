@@ -5383,5 +5383,23 @@ function module:InitializeRecipes()
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DRAENOR_DEFAULT")
 
+	-- Powerful Hexweave Essence -- 181418
+	recipe = AddRecipe(181418, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(1, 1, 700, 702, 705)
+	recipe:SetRecipeItem(122549, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(122540, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("TAILORING_ITEM_ENHANCEMENT")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddVendor(91025, 91034)
+
+	-- Primal Weaving -- 182123
+	recipe = AddRecipe(182123, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(1, 1, 700, 700, 700)
+	recipe:SetRecipeItem(122716, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(111556, "BIND_ON_PICKUP")
+	recipe:SetItemFilterType("TAILORING_MATERIALS")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddVendor(91025, 91034)
+
 	self.InitializeRecipes = nil
 end

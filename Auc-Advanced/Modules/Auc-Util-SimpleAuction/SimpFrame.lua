@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Simplified Auction Posting
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
-	Revision: $Id: SimpFrame.lua 5514 2014-10-31 12:04:13Z brykrys $
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Revision: $Id: SimpFrame.lua 5531 2014-12-10 15:27:31Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a simple dialog for
@@ -909,10 +909,10 @@ function private.Refresh(background)
 	if not name then return end
 	aucPrint(("Refreshing view of {{%s}}"):format(name))--Refreshing view of {{%s}}
 	if background and type(background) == 'boolean' then
-		StartPushedScan(name, minLevel, minLevel, nil, typeId, subtypeId, nil, quality)
+		StartPushedScan(name, minLevel, minLevel, nil, typeId, subtypeId, nil, quality, true)
 	else
 		PushScan()
-		StartScan(name, minLevel, minLevel, nil, typeId, subtypeId, nil, quality)
+		StartScan(name, minLevel, minLevel, nil, typeId, subtypeId, nil, quality, nil, true)
 	end
 end
 
@@ -1368,4 +1368,4 @@ function private.CreateFrames()
 	frame:RegisterEvent("BAG_UPDATE")
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 5514 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-SimpleAuction/SimpFrame.lua $", "$Rev: 5531 $")

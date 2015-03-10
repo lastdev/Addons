@@ -1,13 +1,13 @@
 local mod	= DBM:NewMod(157, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 131 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
 mod:SetCreatureID(45992, 45993)
 mod:SetEncounterID(1032)
 mod:DisableEEKillDetection()
 mod:SetZone()
 mod:SetUsedIcons(6, 7, 8)
-mod:SetModelSound("Sound\\Creature\\Chogall\\VO_BT_Chogall_BotEvent10.wav", "Sound\\Creature\\Valiona\\VO_BT_Valiona_Event06.wav")
+mod:SetModelSound("Sound\\Creature\\Chogall\\VO_BT_Chogall_BotEvent10.ogg", "Sound\\Creature\\Valiona\\VO_BT_Valiona_Event06.ogg")
 --Long: Valiona, Theralion put them in their place!
 --Short: Enter twilight!
 
@@ -40,21 +40,21 @@ local warnDeepBreath				= mod:NewCountAnnounce(86059, 4)--Used by Valiona just b
 local warnTwilightShift				= mod:NewStackAnnounce(93051, 2)
 
 --Valiona Ground Phase
-local specWarnDevouringFlames		= mod:NewSpecialWarningSpell(86840, nil, nil, nil, true)
-local specWarnDazzlingDestruction	= mod:NewSpecialWarningSpell(86408, nil, nil, nil, true)
+local specWarnDevouringFlames		= mod:NewSpecialWarningSpell(86840, nil, nil, nil, 2)
+local specWarnDazzlingDestruction	= mod:NewSpecialWarningSpell(86408, nil, nil, nil, 2)
 local specWarnBlackout				= mod:NewSpecialWarningYou(86788)
 mod:AddBoolOption("TBwarnWhileBlackout", false, "announce")
 local specWarnTwilightBlast			= mod:NewSpecialWarningMove(86369, false)
 local specWarnTwilightBlastNear		= mod:NewSpecialWarningClose(86369, false)
 local yellTwilightBlast				= mod:NewYell(86369, nil, false)
 --Theralion Ground Phase
-local specWarnDeepBreath			= mod:NewSpecialWarningSpell(86059, nil, nil, nil, true)
+local specWarnDeepBreath			= mod:NewSpecialWarningSpell(86059, nil, nil, nil, 2)
 local specWarnFabulousFlames		= mod:NewSpecialWarningMove(86505)
 local specWarnFabulousFlamesNear	= mod:NewSpecialWarningClose(86505)
 local yellFabFlames					= mod:NewYell(86505)
 local specWarnTwilightMeteorite		= mod:NewSpecialWarningYou(88518)
 local yellTwilightMeteorite			= mod:NewYell(88518, nil, false)
-local specWarnEngulfingMagic		= mod:NewSpecialWarningYou(86622)
+local specWarnEngulfingMagic		= mod:NewSpecialWarningMoveAway(86622, nil, nil, nil, 3)
 local yellEngulfingMagic			= mod:NewYell(86622)
 
 local specWarnTwilightZone			= mod:NewSpecialWarningStack(86214, nil, 20)
@@ -75,8 +75,6 @@ local timerTwilightShift			= mod:NewTargetTimer(100, 93051)
 local timerTwilightShiftCD			= mod:NewCDTimer(20, 93051)
 
 local berserkTimer					= mod:NewBerserkTimer(600)
-
-local soundEngulfingMagic			= mod:NewSound(86622)
 
 mod:AddBoolOption("TwilightBlastArrow", false)
 mod:AddBoolOption("BlackoutIcon")
@@ -226,7 +224,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		timerEngulfingMagicNext:Start()
 		if args:IsPlayer() then
 			specWarnEngulfingMagic:Show()
-			soundEngulfingMagic:Play()
 			yellEngulfingMagic:Yell()
 		end
 		if self.Options.EngulfingIcon then

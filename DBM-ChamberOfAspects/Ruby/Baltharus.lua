@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Baltharus", "DBM-ChamberOfAspects", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(39751)
 mod:SetEncounterID(1147)
 mod:SetModelID(31761)
@@ -17,13 +17,13 @@ mod:RegisterEventsInCombat(
 
 local warningSplitSoon		= mod:NewAnnounce("WarningSplitSoon", 2)
 local warningRepellingWave	= mod:NewSpellAnnounce(74509, 3)
-local warnWhirlwind			= mod:NewSpellAnnounce(75125, 3, nil, mod:IsTank() or mod:IsHealer())
+local warnWhirlwind			= mod:NewSpellAnnounce(75125, 3, nil, "Tank|Healer")
 local warningWarnBrand		= mod:NewTargetAnnounce(74505, 4)
 
 local specWarnBrand			= mod:NewSpecialWarningYou(74505)
 local specWarnRepellingWave	= mod:NewSpecialWarningSpell(74509)
 
-local timerWhirlwind		= mod:NewBuffActiveTimer(4, 75125, nil, mod:IsTank() or mod:IsHealer())
+local timerWhirlwind		= mod:NewBuffActiveTimer(4, 75125, nil, "Tank|Healer")
 local timerRepellingWave	= mod:NewBuffActiveTimer(4, 74509)--1 second cast + 3 second stun
 local timerBrand			= mod:NewBuffActiveTimer(10, 74505)
 

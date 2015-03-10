@@ -44,11 +44,11 @@ local UnitGroupRolesAssigned = UnitGroupRolesAssigned
 local UnitHealthMax = UnitHealthMax
 local CreateFont = CreateFont
 local InCombatLockdown = InCombatLockdown
-local string, unpack, type, select = string, unpack, type, select
+local string, unpack, type, select, format = string, unpack, type, select, format
 local pairs, ipairs, strsplit, tonumber = pairs, ipairs, strsplit, tonumber
 local CreateMacro, EditMacro, GetMacroIndexByName, IsAddOnLoaded = CreateMacro, EditMacro, GetMacroIndexByName, IsAddOnLoaded
 local GetNumGroupMembers, GetNumSubgroupMembers, IsInRaid, IsInGroup = GetNumGroupMembers, GetNumSubgroupMembers, IsInRaid, IsInGroup
-local GetInstanceInfo, UnitIsGhost, UnitExists = GetInstanceInfo, UnitIsGhost, UnitExists
+local GetInstanceInfo, UnitIsGhost, UnitExists, GetSpellLink = GetInstanceInfo, UnitIsGhost, UnitExists, GetSpellLink
 local UnitAffectingCombat, UnitInRaid, GetStablePetInfo, UnitIsPlayer = UnitAffectingCombat, UnitInRaid, GetStablePetInfo, UnitIsPlayer
 local SendChatMessage, CreateFrame = SendChatMessage, CreateFrame
 local GameTooltipText, GameTooltipHeaderText = GameTooltipText, GameTooltipHeaderText
@@ -135,8 +135,8 @@ function MDH:MDHEditMacro()
 	MDH:MDHTextUpdate()
 	singlemacro = "#showtooltip\n/use [mod:" .. modkey .. ",@none][@%s,nodead] %s; %s"
 	multiplemacro = "#showtooltip\n/use [mod:" .. modkey .. ",@none][btn:1,@%s,nodead][btn:2,@%s,nodead] %s; %s"
-	if MDH.db.profile.target2 then macro = string.format(multiplemacro, MDH.db.profile.target or "target", MDH.db.profile.target2 or "target", spell, spell)
-	else macro = string.format(singlemacro, MDH.db.profile.target or "target", spell, spell) end
+	if MDH.db.profile.target2 then macro = format(multiplemacro, MDH.db.profile.target or "target", MDH.db.profile.target2 or "target", spell, spell)
+	else macro = format(singlemacro, MDH.db.profile.target or "target", spell, spell) end
 	macroid = GetMacroIndexByName(mname)
 	if macroid == 0 then CreateMacro(mname , iconm[id], macro, 1, 1)
 	else EditMacro(macroid, mname , iconm[id], macro) end
@@ -144,9 +144,11 @@ end
 
 function MDH:MDHChat()
 	if IsAddOnLoaded("CastYeller2") or IsAddOnLoaded("CastYeller") then return end
-	local msg = string.format((uc == "HUNTER") and L["%s Misdirects to %s"] or L["%s casts Tricks of the Trade on %s"], UnitName("player"), misdtarget)
+	--local msg = format((uc == "HUNTER") and L["%s Misdirects to %s"] or L["%s casts Tricks of the Trade on %s"], UnitName("player"), misdtarget)
 	local chan = MDH.db.profile.cChannel or "RAID"
 	local s
+	local spelllink = (uc == "HUNTER") and GetSpellLink(35079) or GetSpellLink(57934)
+	local msg = format(L["%s casts %s on %s"], UnitName("player"), spelllink, misdtarget)
 	--LFD fix courtesy of Eincrou
 	--*****
 	if chan == "PARTY" and GetNumSubgroupMembers() ~= 0 then 
@@ -926,7 +928,8 @@ function MDH:OnEnable()
 	local mdhfont = CreateFont("ElvFont")
 	if IsAddOnLoaded("Tukui") then
 		local T, C, L = unpack(Tukui)
-		mdhfont:SetFont(C.Medias.font, 12)
+		if C.Medias then mdhfont:SetFont(C.Medias.Font, 12)
+		else mdhfont:SetFont(C.Media.font, 12) end
 	elseif IsAddOnLoaded("ElvUI") then
 		local E, L, V, P, G, DF = unpack(ElvUI)
 		mdhfont:SetFont(E["media"].normFont, 12)
@@ -958,7 +961,7 @@ function MDH:OnEnable()
 	for k, v in pairs(MDH.db.global.custom) do MDH.themes[k] = v end
 	updateThemeList()
 	_G.SLASH_MDH_CMD1 = "/mdh"
-	_G.SlashCmdList["MDH_CMD"] = function(input) InterfaceOptionsFrame_OpenToCategory(MDH.optionsFrame) end
+	_G.SlashCmdList["MDH_CMD"] = function(input) InterfaceOptionsFrame_OpenToCategory(MDH.optionsFrame) InterfaceOptionsFrame_OpenToCategory(MDH.optionsFrame) end
 end
 
 function MDH:MDHOnload()

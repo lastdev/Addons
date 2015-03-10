@@ -1,7 +1,7 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
-	Revision: $Id: CoreMain.lua 5461 2014-06-19 10:37:18Z brykrys $
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Revision: $Id: CoreMain.lua 5524 2014-11-23 18:06:32Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds statistical history to the auction data that is collected
@@ -344,8 +344,9 @@ local function OnEnteringWorld(frame)
 	tooltip:AltChatLinkRegister(HookAltChatLinkTooltip)
 	ALTCHATLINKTOOLTIP_OPEN = tooltip:AltChatLinkConstants()
 
-	-- CoreResources must be activated first, in case other modules need to use the resources
+	-- CoreResources & CoreServers must be activated first
 	internal.Resources.Activate()
+	internal.Servers.Activate()
 
 	-- send general activate message
 	AucAdvanced.SendProcessorMessage("gameactive")
@@ -410,4 +411,4 @@ do -- ScheduleMessage handler
 end
 
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Advanced/CoreMain.lua $", "$Rev: 5461 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreMain.lua $", "$Rev: 5524 $")

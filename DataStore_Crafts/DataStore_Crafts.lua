@@ -13,7 +13,7 @@ local addon = _G[addonName]
 local THIS_ACCOUNT = "Default"
 -- local commPrefix = "DS_Craft"
 
-local L = LibStub("AceLocale-3.0"):GetLocale("DataStore_Crafts")
+local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 local MSG_SEND_LOGIN								= 1	-- Sends a login message, to request crafts to other players
 local MSG_LOGIN_REPLY							= 2	-- ..reply
@@ -25,7 +25,7 @@ local THREEOCLOCK = 10800
 local AddonDB_Defaults = {
 	global = {
 		Options = {
-			BroadcastProfs = 1,					-- Broadcast professions at login or not
+			BroadcastProfs = true,					-- Broadcast professions at login or not
 		},
 		Guilds = {
 			['*'] = {			-- ["Account.Realm.Name"] 
@@ -199,7 +199,7 @@ end
 -- end
 
 -- local function SendAllProfessions(alts, recipient)
-	-- if GetOption("BroadcastProfs") == 0 then
+	-- if GetOption("BroadcastProfs") == false then
 		-- return
 	-- end
 

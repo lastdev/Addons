@@ -5,6 +5,7 @@
 --
 -- "GroupInSpecT_Update", guid, unit, info
 -- "GroupInSpecT_Remove, guid
+-- "GroupInSpecT_InspectReady", guid, unit
 --
 -- Where <info> is a table containing some or all of the following:
 --   .guid
@@ -52,8 +53,8 @@
 --
 -- Functions for external use:
 --
---   lib:Rescan ()
---     Force a rescan of all current group members
+--   lib:Rescan (guid or nil)
+--     Force a rescan of the given group member GUID, or of all current group members if nil.
 --
 --   lib:QueuedInspections ()
 --     Returns an array of GUIDs of outstanding inspects.
@@ -72,7 +73,7 @@
 --     Returns an array with the set of unit ids for the current group.
 --]]
 
-local MAJOR, MINOR = "LibGroupInSpecT-1.1", tonumber (("$Revision: 73 $"):match ("(%d+)") or 0)
+local MAJOR, MINOR = "LibGroupInSpecT-1.1", tonumber (("$Revision: 78 $"):match ("(%d+)") or 0)
 
 if not LibStub then error(MAJOR.." requires LibStub") end
 local lib = LibStub:NewLibrary (MAJOR, MINOR)
@@ -84,6 +85,7 @@ if not lib.events then error(MAJOR.." requires CallbackHandler") end
 
 local UPDATE_EVENT = "GroupInSpecT_Update"
 local REMOVE_EVENT = "GroupInSpecT_Remove"
+local INSPECT_READY_EVENT = "GroupInSpecT_InspectReady"
 
 local COMMS_PREFIX = "LGIST11"
 local COMMS_FMT = "0"
@@ -103,6 +105,17 @@ local function debug (...)
 end
 --@end-debug@]===]
 
+function lib.events:OnUsed(target, eventname)
+  if eventname == INSPECT_READY_EVENT then
+    target.inspect_ready_used = true
+  end
+end
+
+function lib.events:OnUnused(target, eventname)
+  if eventname == INSPECT_READY_EVENT then
+    target.inspect_ready_used = nil
+  end
+end
 
 -- Frame for events
 local frame = _G[MAJOR .. "_Frame"] or CreateFrame ("Frame", MAJOR .. "_Frame")
@@ -233,6 +246,18 @@ local class_fixed_roles_detailed = {
   ROGUE = "melee",
   WARLOCK = "ranged",
 }
+
+local warrior_protection_spec_id = 73
+local warrior_anger_management_talent = 21204
+local warrior_ravager_talent = 21205
+local warrior_gladiators_resolve_talent = 21206
+local warrior_gladiator_stance = GetSpellInfo(156291)
+
+local function HasGladiatorStance (unit, info)
+  -- Check for "not the other two level-100 talents" in case talent info isn't ready.
+  local talents = info.talents
+  return talents and (talents[warrior_gladiators_resolve_talent] or (not talents[warrior_anger_management_talent] and not talents[warrior_ravager_talent])) and UnitBuff(unit, warrior_gladiator_stance)
+end
 
 
 -- Inspects only work after being fully logged in, so track that
@@ -515,6 +540,15 @@ function lib:BuildInfo (unit)
     info.spec_role_detailed  = global_spec_id_roles_detailed[gspec_id]
   end
 
+  -- Fix role if unit is a protection warrior in Gladiator Stance.
+  -- Check for "not the other two level-100 talents" in case talent info isn't ready.
+  if info.global_spec_id == warrior_protection_spec_id then
+    if HasGladiatorStance (unit, info) then
+      info.spec_role = "DAMAGER"
+      info.spec_role_detailed = "melee"
+    end
+  end
+
   if not info.spec_role then info.spec_role = class and class_fixed_roles[class] end
   if not info.spec_role_detailed then info.spec_role_detailed = class and class_fixed_roles_detailed[class] end
 
@@ -580,6 +614,7 @@ function lib:INSPECT_READY (guid)
     end
 
     self.events:Fire (UPDATE_EVENT, guid, unit, self:BuildInfo (unit))
+    self.events:Fire (INSPECT_READY_EVENT, guid, unit)
   end
   if finalize then
     ClearInspectPlayer ()
@@ -733,6 +768,15 @@ function lib:CHAT_MSG_ADDON (prefix, datastr, scope, sender)
   info.spec_role           = gspecs[gspec_id].role
   info.spec_role_detailed  = global_spec_id_roles_detailed[gspec_id]
 
+  -- Fix role if unit is a protection warrior in Gladiator Stance.
+  -- Check for "not the other two level-100 talents" in case talent info isn't ready.
+  if info.global_spec_id == warrior_protection_spec_id then
+    if HasGladiatorStance (unit, info) then
+      info.spec_role = "DAMAGER"
+      info.spec_role_detailed = "melee"
+    end
+  end
+
   local need_inspect = nil
   info.talents = wipe (info.talents or {})
   local talents = self.static_cache.talents[info.class_id]
@@ -777,8 +821,10 @@ function lib:CHAT_MSG_ADDON (prefix, datastr, scope, sender)
     end
   end
 
-  self.state.mainq[guid], self.state.staleq[guid] = need_inspect, nil
-  if need_inspect then self.frame:Show () end
+  local mainq, staleq = self.state.mainq, self.state.staleq
+  local want_inspect = not need_inspect and self.inspect_ready_used and (mainq[guid] or staleq[guid]) and 1 or nil
+  mainq[guid], staleq[guid] = need_inspect, want_inspect
+  if need_inspect or want_inspect then self.frame:Show () end
 
   --[===[@debug@
   debug ("Firing LGIST update event for unit "..unit..", GUID "..guid) --@end-debug@]===]
@@ -840,24 +886,42 @@ function lib:UNIT_AURA (unit)
   local group = self.cache
   local guid = UnitGUID (unit)
   local info = guid and group[guid]
-  if info and not UnitIsUnit (unit, "player") then
-    if UnitIsVisible (unit) then
-      if info.not_visible then
-        info.not_visible = nil
-        --[===[@debug@
-        debug (unit..", aka "..(UnitName(unit) or "nil")..", is now visible") --@end-debug@]===]
-        if not self.state.mainq[guid] then
-          self.state.staleq[guid] = 1
-          self.frame:Show ()
+  if info then
+    if not UnitIsUnit (unit, "player") then
+      if UnitIsVisible (unit) then
+        if info.not_visible then
+          info.not_visible = nil
+          --[===[@debug@
+          debug (unit..", aka "..(UnitName(unit) or "nil")..", is now visible") --@end-debug@]===]
+          if not self.state.mainq[guid] then
+            self.state.staleq[guid] = 1
+            self.frame:Show ()
+          end
         end
+      elseif UnitIsConnected (unit) then
+        --[===[@debug@
+        if not info.not_visible then
+          debug (unit..", aka "..(UnitName(unit) or "nil")..", is no longer visible")
+        end
+        --@end-debug@]===]
+        info.not_visible = true
       end
-    elseif UnitIsConnected (unit) then
-      --[===[@debug@
-      if not info.not_visible then
-        debug (unit..", aka "..(UnitName(unit) or "nil")..", is no longer visible")
+    end
+
+    -- Fix role if unit is a protection warrior in Gladiator Stance.
+    -- Check for "not the other two level-100 talents" in case talent info isn't ready.
+    if info.global_spec_id == warrior_protection_spec_id then
+      if HasGladiatorStance (unit, info) then
+        if info.spec_role ~= "DAMAGER" then
+          info.spec_role = "DAMAGER"
+          info.spec_role_detailed = "melee"
+          self.events:Fire (UPDATE_EVENT, guid, unit, info)
+        end
+      elseif info.spec_role ~= "TANK" then
+        info.spec_role = "TANK"
+        info.spec_role_detailed = "tank"
+        self.events:Fire (UPDATE_EVENT, guid, unit, info)
       end
-      --@end-debug@]===]
-      info.not_visible = true
     end
   end
 end
@@ -898,17 +962,27 @@ function lib:GetCachedInfo (guid)
 end
 
 
-function lib:Rescan ()
+function lib:Rescan (guid)
   local mainq, staleq = self.state.mainq, self.state.staleq
-  for i,unit in ipairs (self:GroupUnits ()) do
-    if UnitExists (unit) then
+  if guid then
+    local unit = self:GuidToUnit (guid)
+    if unit then
       if UnitIsUnit (unit, "player") then
-        self.events:Fire (UPDATE_EVENT, UnitGUID("player"), "player", self:BuildInfo ("player"))
-      else
-        local guid = UnitGUID (unit)
-        if guid then
-          mainq[guid] = 1
-          staleq[guid] = nil
+        self.events:Fire (UPDATE_EVENT, guid, "player", self:BuildInfo ("player"))
+      elseif not mainq[guid] then
+        staleq[guid] = 1
+      end
+    end
+  else
+    for i,unit in ipairs (self:GroupUnits ()) do
+      if UnitExists (unit) then
+        if UnitIsUnit (unit, "player") then
+          self.events:Fire (UPDATE_EVENT, UnitGUID("player"), "player", self:BuildInfo ("player"))
+        else
+          local guid = UnitGUID (unit)
+          if guid and not mainq[guid] then
+            staleq[guid] = 1
+          end
         end
       end
     end

@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(156, "DBM-BastionTwilight", nil, 72)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 99 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
 mod:SetCreatureID(44600)
 mod:SetEncounterID(1030)
 mod:DisableEEKillDetection()
 mod:SetZone()
-mod:SetModelSound("Sound\\Creature\\Chogall\\VO_BT_Chogall_BotEvent02.wav", "Sound\\Creature\\Halfus\\VO_BT_Halfus_Event07.wav")
+mod:SetModelSound("Sound\\Creature\\Chogall\\VO_BT_Chogall_BotEvent02.ogg", "Sound\\Creature\\Halfus\\VO_BT_Halfus_Event07.ogg")
 --Long: Halfus! Hear me! The master calls, the master wants! Protect our secrets, Halfus! Destroy the intruders! Murder for his glory, murder for his hunger!
 --Short: Dragons to my side!
 
@@ -25,7 +25,7 @@ local warnFuriousRoar		= mod:NewSpellAnnounce(83710, 3)
 local warnVengeance			= mod:NewSpellAnnounce(87683, 3)
 local warnShadowNova		= mod:NewSpellAnnounce(83703, 4)
 local warnParalysis			= mod:NewSpellAnnounce(84030, 2)
-local warnMalevolentStrike	= mod:NewStackAnnounce(83908, 2, nil, mod:IsTank() or mod:IsHealer())
+local warnMalevolentStrike	= mod:NewStackAnnounce(83908, 2, nil, "Tank|Healer")
 
 local specWarnShadowNova	= mod:NewSpecialWarningInterrupt(83703, false)
 local specWarnMalevolent	= mod:NewSpecialWarningStack(83908, nil, 8)
@@ -35,7 +35,7 @@ local timerBreathCD			= mod:NewCDTimer(20, 83707)--every 20-25 seconds.
 local timerParalysis		= mod:NewBuffActiveTimer(12, 84030)
 local timerParalysisCD		= mod:NewCDTimer(35, 84030)
 local timerNovaCD			= mod:NewCDTimer(7.2, 83703)--7.2 is actually exact next timer, but since there are other variables like roars, or paralysis that could mis time it, we use CD bar instead so we don't give false idea of precision.
-local timerMalevolentStrike	= mod:NewTargetTimer(30, 83908, nil, mod:IsTank() or mod:IsHealer())
+local timerMalevolentStrike	= mod:NewTargetTimer(30, 83908, nil, "Tank|Healer")
 
 local berserkTimer			= mod:NewBerserkTimer(360)
 

@@ -89,7 +89,7 @@ function ns:Update()
 	local character = addon.Tabs.Characters:GetAltKey()
 	
 	local numMails = DS:GetNumMails(character) or 0
-	AltoholicTabCharactersStatus:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(L["Mails %s(%d)"], GREEN, numMails)))
+	AltoholicTabCharacters.Status:SetText(format("%s|r / %s", DataStore:GetColoredCharacterName(character), format(L["Mails %s(%d)"], GREEN, numMails)))
 	if numMails == 0 then		-- make sure the scroll frame is cleared !
 		addon:ClearScrollFrame( _G[ frame.."ScrollFrame" ], entry, VisibleLines, 41)
 		return

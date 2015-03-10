@@ -776,7 +776,12 @@ function Outfitter.OutfitBar._Button:SetOutfit(pOutfit)
 end
 
 function Outfitter.OutfitBar._Button:Update()
-	self.Widgets.Icon:SetTexture(Outfitter.OutfitBar:GetOutfitTexture(self.Outfit))
+	local vTexture = Outfitter.OutfitBar:GetOutfitTexture(self.Outfit)
+	if type(vTexture) == "number" then
+		self.Widgets.Icon:SetToFileData(vTexture)
+	else
+		self.Widgets.Icon:SetTexture(vTexture)
+	end
 	
 	if Outfitter:WearingOutfit(self.Outfit) then
 		self:SetChecked(true)
@@ -1033,7 +1038,11 @@ function Outfitter.OutfitBar._ChooseIconDialog:UpdateIcons()
 			end
 			
 			vIconButton.Texture = vTexture
-			vIconButton.Widgets.Icon:SetTexture(vTexture)
+			if type(vTexture) == "number" then
+				vIconButton.Widgets.Icon:SetToFileData(vTexture)
+			else
+				vIconButton.Widgets.Icon:SetTexture(vTexture)
+			end
 			vIconButton:Show()
 			
 			vTextureIndex = vTextureIndex + 1
@@ -1095,7 +1104,7 @@ function Outfitter.OutfitBar._IconButton:OnEnter()
 	end
 	
 	GameTooltip:SetOwner(self, "ANCHOR_LEFT")
-	GameTooltip:AddLine(vTextureName)
+	GameTooltip:AddLine(Outfitter:ConvertTextureIDToString(vTextureName))
 	GameTooltip:Show()
 end
 
@@ -1163,7 +1172,12 @@ function Outfitter.OutfitBar.TextureSets.All:GetNumTextures()
 end
 
 function Outfitter.OutfitBar.TextureSets.All:GetIndexedTexture(pIndex)
-	return Outfitter.OutfitBar.cBlizzardIconPath .. self.icons[pIndex]
+	local vTexture = self.icons[pIndex]
+	if type(vTexture) == "number" then
+		return vTexture
+	else
+		return Outfitter.OutfitBar.cBlizzardIconPath .. vTexture
+	end
 end
 
 ----------------------------------------
@@ -1177,7 +1191,12 @@ function Outfitter.OutfitBar.TextureSets.Items:GetNumTextures()
 end
 
 function Outfitter.OutfitBar.TextureSets.Items:GetIndexedTexture(pIndex)
-	return Outfitter.OutfitBar.cBlizzardIconPath .. self.icons[pIndex]
+	local vTexture = self.icons[pIndex]
+	if type(vTexture) == "number" then
+		return vTexture
+	else
+		return Outfitter.OutfitBar.cBlizzardIconPath .. vTexture
+	end
 end
 
 ----------------------------------------
@@ -1191,7 +1210,12 @@ function Outfitter.OutfitBar.TextureSets.Abilities:GetNumTextures()
 end
 
 function Outfitter.OutfitBar.TextureSets.Abilities:GetIndexedTexture(pIndex)
-	return Outfitter.OutfitBar.cBlizzardIconPath .. self.icons[pIndex]
+	local vTexture = self.icons[pIndex]
+	if type(vTexture) == "number" then
+		return vTexture
+	else
+		return Outfitter.OutfitBar.cBlizzardIconPath .. vTexture
+	end
 end
 
 ----------------------------------------
@@ -1331,8 +1355,9 @@ function Outfitter.OutfitBar.TextureSets.Filtered:SetFilter(pTextureSet, pFilter
 	
 	for vIndex = 1, vNumTextures do
 		local vTexture = self.TextureSet:GetIndexedTexture(vIndex)
+		local vTextureString = Outfitter:ConvertTextureIDToString(vTexture)
 		
-		if strfind(strlower(vTexture), self.Filter) then
+		if strfind(strlower(vTextureString), self.Filter) then
 			table.insert(self.TextureList, vTexture)
 		end
 	end

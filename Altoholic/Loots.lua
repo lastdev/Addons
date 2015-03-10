@@ -732,7 +732,7 @@ local function OnNoMatch()
 	unknownCount = unknownCount + 1
 	
 	if allowedQueries > 0 then
-		if addon:GetOption("SearchAutoQuery") == 1 then		-- if autoquery is enabled
+		if addon:GetOption("UI.Tabs.Search.ItemInfoAutoQuery") then		-- if autoquery is enabled
 			local itemID = filters:GetSearchedItemInfo("itemID")
 			if not addon:IsItemUnsafe(itemID) then		-- if the item is not known to be unsafe
 				GameTooltip:SetHyperlink("item:"..itemID..":0:0:0:0:0:0:0")	-- this line queries the server for an unknown id

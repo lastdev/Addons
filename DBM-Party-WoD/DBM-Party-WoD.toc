@@ -1,7 +1,7 @@
-﻿## Interface: 60000
+﻿## Interface: 60100
 ## X-Min-Interface: 60000
 ## Title:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Party-WoD|r
-## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf05인 던전(드레노어의 전쟁군주)|r
+## Title-koKR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf05인던전-드레노어의 전쟁군주|r
 ## Title-deDE:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Gruppe-WoD|r
 ## Title-frFR:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Groupe-WoD|r
 ## Title-ruRU:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0Групповые подземелья-WoD|r
@@ -9,7 +9,8 @@
 ## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM|r|cffffe00a>|r |cff69ccf0队伍首领(德拉诺之王)|r
 ## LoadOnDemand: 1
 ## RequiredDeps: DBM-Core
-## SavedVariablesPerCharacter: DBMPartyWoD_SavedVars, DBMPartyWoD_SavedStats
+## SavedVariables: DBMPartyWoD_AllSavedVars
+## SavedVariablesPerCharacter: DBMPartyWoD_SavedStats
 ## X-DBM-Mod: 1
 ## X-DBM-Mod-Type: PARTY
 ## X-DBM-Mod-Category: WOD
@@ -27,12 +28,15 @@
 ## X-DBM-Mod-Name-zhCN: 队伍首领(德拉诺之王)
 ## X-DBM-Mod-Sort: 125
 ## X-DBM-Mod-MapID: 1182, 1175, 1208, 1195, 1279, 1176, 1209, 1358
+## X-DBM-Mod-MinCoreRevision: 12473
 localization.en.lua
 localization.kr.lua
 localization.de.lua
 localization.ru.lua
 localization.tw.lua
 localization.cn.lua
+localization.fr.lua
+localization.br.lua
 Auchindoun\AuchTrash.lua
 Auchindoun\ProtectorOfAuch.lua
 Auchindoun\Nyami.lua

@@ -24,8 +24,8 @@ local rarityIcons = {
 local NUM_GUILDBANK_ROWS = 7
 local MAX_BANK_TABS = 8
 
-local parent = "AltoholicFrameGuildBank"
-local rcMenuName = parent .. "RightClickMenu"	-- name of right click menu frames (add a number at the end to get it)
+local parentName = "AltoholicTabGuild"
+local parent
 
 local currentGuildKey
 local currentGuildBankTab = 0
@@ -37,14 +37,19 @@ local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
 
 local function UpdateBankTabButtons()
 	if not currentGuildKey then return end
-
+	
+	local button
 	for i = 1, MAX_BANK_TABS do 
+		button = parent.Bank["TabButton"..i]
+	
 		local tabName = DataStore:GetGuildBankTabName(currentGuildKey, i)
 		if tabName then
-			addon:SetItemButtonTexture(parent .. "TabButton"..i, DataStore:GetGuildBankTabIcon(currentGuildKey, i), 30, 30)
-			_G[parent .. "TabButton" ..i]:Show()
+			button.Icon:SetWidth(30)
+			button.Icon:SetHeight(30)
+			button.Icon:SetTexture(DataStore:GetGuildBankTabIcon(currentGuildKey, i))
+			button:Show()
 		else
-			_G[parent .. "TabButton" ..i]:Hide()
+			button:Hide()
 		end
 	end
 end
@@ -76,20 +81,22 @@ local function OnGuildChange(self)
 	currentGuildBankTab = nil
 	
 	local _, _, guildName = strsplit(".", currentGuildKey)
-	AltoholicTabGuildStatus:SetText(format("%s %s/", GREEN..guildName, WHITE))
+	parent.Status:SetText(format("%s %s/", GREEN..guildName, WHITE))
 
 	local currentGuild = GetGuildInfo("player")
+	
+	local menuIcons = parent.Bank.MenuIcons
 	if guildName == currentGuild then
-		_G[parent .. "_UpdateIcon"]:Enable()
-		_G[parent .. "_UpdateIconIconTexture"]:SetDesaturated(false)
+		menuIcons.UpdateIcon:Enable()
+		menuIcons.UpdateIcon.Icon:SetDesaturated(false)
 	else
-		_G[parent .. "_UpdateIcon"]:Disable()
-		_G[parent .. "_UpdateIconIconTexture"]:SetDesaturated(true)
+		menuIcons.UpdateIcon:Disable()
+		menuIcons.UpdateIcon.Icon:SetDesaturated(true)
 	end
 	
-	_G[parent .. "Info1"]:SetText("")
-	_G[parent .. "Info2"]:SetText("")
-	_G[parent .. "Info3"]:SetText("")
+	parent.Bank.Info1:SetText("")
+	parent.Bank.Info2:SetText("")
+	parent.Bank.Info3:SetText("")
 	
 	UpdateBankTabButtons()
 	
@@ -136,15 +143,21 @@ local function OnRarityChange(self)
 	local rarity = self.value
 
 	addon:SetOption("UI.Tabs.Guild.BankItemsRarity", rarity)
-	addon:SetItemButtonTexture(parent .. "_RarityIcon", rarityIcons[rarity], 30, 30)
+	
+	local icon = parent.Bank.MenuIcons.RarityIcon.Icon
+	icon:SetWidth(30)
+	icon:SetHeight(30)
+	icon:SetTexture(rarityIcons[rarity])
+
 	ns:Update()
 end
 
 function ns:Update()
-	local entry = parent .. "Entry"
+	local frame = parent.Bank
+
 	if not currentGuildKey or not currentGuildBankTab then		-- no tab found ? exit
 		for rowIndex = 1, NUM_GUILDBANK_ROWS do
-			_G[ entry..rowIndex ]:Hide()
+			frame["Entry"..rowIndex]:Hide()
 		end
 		return 
 	end
@@ -153,71 +166,70 @@ function ns:Update()
 	if not tab.name then return end		-- tab not yet scanned ? exit
 	
 	local _, _, guildName = strsplit(".", currentGuildKey)
-	AltoholicTabGuildStatus:SetText(format("%s %s/ %s", GREEN..guildName, WHITE, tab.name))
+	parent.Status:SetText(format("%s %s/ %s", GREEN..guildName, WHITE, tab.name))
 
-	_G[parent .. "Info1"]:SetText(format(L["Last visit: %s by %s"], GREEN..tab.ClientDate..WHITE, GREEN..tab.visitedBy))
+	frame.Info1:SetText(format(L["Last visit: %s by %s"], GREEN..tab.ClientDate..WHITE, GREEN..tab.visitedBy))
 	local localTime, realmTime
 	localTime = format("%s%02d%s:%s%02d", GREEN, tab.ClientHour, WHITE, GREEN, tab.ClientMinute )
 	realmTime = format("%s%02d%s:%s%02d", GREEN, tab.ServerHour, WHITE, GREEN, tab.ServerMinute )
-	_G[parent .. "Info2"]:SetText(format(L["Local Time: %s   %sRealm Time: %s"], localTime, WHITE, realmTime))
+	frame.Info2:SetText(format(L["Local Time: %s   %sRealm Time: %s"], localTime, WHITE, realmTime))
 	
 	local money = DataStore:GetGuildBankMoney(currentGuildKey)
-	_G[parent .. "Info3"]:SetText(MONEY .. ": " .. addon:GetMoneyString(money or 0, WHITE))
+	frame.Info3:SetText(MONEY .. ": " .. addon:GetMoneyString(money or 0, WHITE))
 	
 	local rarity = addon:GetOption("UI.Tabs.Guild.BankItemsRarity")
 	
+	local rowFrame
+	local itemButton
+	
 	for rowIndex = 1, NUM_GUILDBANK_ROWS do
+		rowFrame = frame["Entry"..rowIndex]
 	
 		local from = mod(rowIndex, NUM_GUILDBANK_ROWS)
 		if from == 0 then from = NUM_GUILDBANK_ROWS end
 	
 		for columnIndex = 14, 1, -1 do
-			local itemName = entry..rowIndex .. "Item" .. columnIndex;
-			local itemButton = _G[itemName]
-			local itemTexture = _G[itemName.."IconTexture"]
-			
-			addon:CreateButtonBorder(itemButton)
-			itemButton.border:Hide()
-			itemTexture:SetDesaturated(false)
+			itemButton = rowFrame["Item" .. columnIndex]
+			itemButton.IconBorder:Hide()
+			itemButton.Icon:SetDesaturated(false)
 			
 			local itemIndex = from + ((columnIndex - 1) * NUM_GUILDBANK_ROWS)
 			
 			local itemID, itemLink, itemCount = DataStore:GetSlotInfo(tab, itemIndex)
 			
 			if itemID then
-				addon:SetItemButtonTexture(itemName, GetItemIcon(itemID));
+				itemButton.Icon:SetTexture(GetItemIcon(itemID))
 				
 				if rarity ~= 0 then
 					local _, _, itemRarity = GetItemInfo(itemID)
 					if itemRarity and itemRarity == rarity then
 						local r, g, b = GetItemQualityColor(itemRarity)
-						itemButton.border:SetVertexColor(r, g, b, 0.5)
-						itemButton.border:Show()
+						itemButton.IconBorder:SetVertexColor(r, g, b, 0.5)
+						itemButton.IconBorder:Show()
 					else
-						itemTexture:SetDesaturated(true)
+						itemButton.Icon:SetDesaturated(true)
 					end
 				end
 			else
-				addon:SetItemButtonTexture(itemName, "Interface\\PaperDoll\\UI-Backpack-EmptySlot");
+				itemButton.Icon:SetTexture("Interface\\PaperDoll\\UI-Backpack-EmptySlot")
 			end
 			
 			itemButton.id = itemID
 			itemButton.link = itemLink
-				itemButton:SetScript("OnEnter", function(self) 
-						addon:Item_OnEnter(self)
-					end)
+			itemButton:SetScript("OnEnter", function(self) 
+					addon:Item_OnEnter(self)
+				end)
 			
-			local countWidget = _G[itemName .. "Count"]
 			if not itemCount or (itemCount < 2) then
-				countWidget:Hide();
+				itemButton.Count:Hide();
 			else
-				countWidget:SetText(itemCount);
-				countWidget:Show();
+				itemButton.Count:SetText(itemCount);
+				itemButton.Count:Show();
 			end
 		
-			_G[ itemName ]:Show()
+			itemButton:Show()
 		end
-		_G[ entry..rowIndex ]:Show()
+		rowFrame:Show()
 	end
 end
 
@@ -236,16 +248,6 @@ end
 function ns:TabIcon_OnClick(frame, button)
 	currentGuildBankTab = frame:GetID()
 	ns:Update()
-end
-
-function ns:Icon_OnEnter(frame)
-	local currentMenuID = frame:GetID()
-	
-	-- hide all
-	CloseDropDownMenus()
-
-	-- show current
-	ToggleDropDownMenu(1, nil, _G[ rcMenuName .. currentMenuID ], frame:GetName(), 0, -5);	
 end
 
 local function GuildIcon_Initialize(self, level)
@@ -371,15 +373,50 @@ local function RarityIcon_Initialize(self, level)
 	DDM_AddCloseMenu()
 end
 
+local menuIconCallbacks = {
+	GuildIcon_Initialize,
+	TabsIcon_Initialize,
+	UpdateIcon_Initialize,
+	RarityIcon_Initialize,
+}
+
+function ns:Icon_OnEnter(frame)
+	local currentMenuID = frame:GetID()
+	
+	addon:DDM_Initialize(parent.Bank.ContextualMenu, menuIconCallbacks[currentMenuID])
+	
+	-- hide all
+	CloseDropDownMenus()
+
+	-- show current
+	ToggleDropDownMenu(1, nil, parent.Bank.ContextualMenu, "AltoholicTabGuildBank_MenuIcons", (currentMenuID-1)*42, -5)
+end
+
 function ns:OnLoad()
-	addon:SetItemButtonTexture(parent .. "_GuildIcon", ICON_GUILD, 30, 30)
-	addon:SetItemButtonTexture(parent .. "_TabsIcon", ICON_GUILDBANK, 30, 30)
-	addon:SetItemButtonTexture(parent .. "_UpdateIcon", ICON_REMOTE_UPDATE, 30, 30)
-	
+	parent = _G[parentName]
+
 	local rarity = addon:GetOption("UI.Tabs.Guild.BankItemsRarity")
+	local menuIcons = parent.Bank.MenuIcons
+	local icon = menuIcons.RarityIcon.Icon
+	icon:SetWidth(30)
+	icon:SetHeight(30)
+	icon:SetTexture(rarityIcons[rarity])
 	
-	addon:SetItemButtonTexture(parent .. "_RarityIcon", rarityIcons[rarity], 30, 30)
+	icon = menuIcons.GuildIcon.Icon
+	icon:SetWidth(30)
+	icon:SetHeight(30)
+	icon:SetTexture(ICON_GUILD)
 	
+	icon = menuIcons.TabsIcon.Icon
+	icon:SetWidth(30)
+	icon:SetHeight(30)
+	icon:SetTexture(ICON_GUILDBANK)
+	
+	icon = menuIcons.UpdateIcon.Icon
+	icon:SetWidth(30)
+	icon:SetHeight(30)
+	icon:SetTexture(ICON_REMOTE_UPDATE)
+		
 	-- load the drop down with a guild
 	local currentRealm = GetRealmName()
 	local currentGuild = GetGuildInfo("player")
@@ -387,8 +424,8 @@ function ns:OnLoad()
 	-- if the player is not in a guild, set the drop down to the first available guild on this realm, if any.
 	if not currentGuild then
 		-- if the guild that will be displayed is not the one the current player is in, then disable the button
-		_G[parent .. "_UpdateIcon"]:Disable()
-		_G[parent .. "_UpdateIconIconTexture"]:SetDesaturated(true)
+		parent.Bank.UpdateIcon:Disable()
+		parent.Bank.UpdateIcon.Icon:SetDesaturated(true)
 	
 		for guildName, guild in pairs(DataStore:GetGuilds(currentRealm, THIS_ACCOUNT)) do
 			local money = DataStore:GetGuildBankMoney(guild)
@@ -412,11 +449,6 @@ function ns:OnLoad()
 			end
 		end
 	end
-	
-	addon:DDM_Initialize(_G[rcMenuName.."1"], GuildIcon_Initialize)
-	addon:DDM_Initialize(_G[rcMenuName.."2"], TabsIcon_Initialize)
-	addon:DDM_Initialize(_G[rcMenuName.."3"], UpdateIcon_Initialize)
-	addon:DDM_Initialize(_G[rcMenuName.."4"], RarityIcon_Initialize)
 	
 	UpdateBankTabButtons()
 end

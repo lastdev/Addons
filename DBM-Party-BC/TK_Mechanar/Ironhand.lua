@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Ironhand", "DBM-Party-BC", 13)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 529 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 554 $"):sub(12, -3))
 mod:SetCreatureID(19710)
 mod:SetModelID(21191)--Bad angle, but not terrible enough to disable i guess
 
@@ -15,13 +15,13 @@ mod:RegisterEventsInCombat(
 )
 
 local warnShadowpower       = mod:NewSpellAnnounce(35322)
+local WarnJackHammer		= mod:NewSpellAnnounce(39194)
+
+local specWarnJackHammer	= mod:NewSpecialWarningRun(39194, "Melee", nil, nil, 4)
+local specWarnShadowpower   = mod:NewSpecialWarningDispel(35322, "MagicDispeller")
+
 local timerShadowpower      = mod:NewBuffActiveTimer(15, 35322)
 local timerJackhammer       = mod:NewBuffActiveTimer(8, 39194)
-local WarnJackHammer		= mod:NewSpellAnnounce(39194)
-local specWarnJackHammer	= mod:NewSpecialWarningRun(39194, mod:IsMelee())
-local specWarnShadowpower   = mod:NewSpecialWarningDispel(35322, mod:IsMagicDispeller())
-
-local soundJackhammer = mod:NewSound(39194, mod:IsMelee())
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(39193, 35322) and not args:IsDestTypePlayer() and self:IsInCombat() then     --Shadow Power
@@ -47,6 +47,5 @@ function mod:RAID_BOSS_EMOTE(msg)
 	if msg == L.JackHammer then
 		WarnJackHammer:Show()
 		specWarnJackHammer:Show()
-		soundJackhammer:Play()
 	end
 end

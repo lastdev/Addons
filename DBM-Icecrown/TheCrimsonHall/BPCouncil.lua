@@ -1,12 +1,13 @@
 local mod	= DBM:NewMod("BPCouncil", "DBM-Icecrown", 3)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 163 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 183 $"):sub(12, -3))
 mod:SetCreatureID(37970, 37972, 37973)
 mod:SetEncounterID(1095)
 mod:DisableEEKillDetection()--IEEU fires for this boss.
 mod:SetModelID(30858)
 mod:SetUsedIcons(7, 8)
+mod:SetBossHPInfoToHighest()
 
 mod:SetBossHealthInfo(
 	37972, L.Keleseth,
@@ -34,14 +35,14 @@ local warnEmpoweredFlames		= mod:NewTargetAnnounce(72040, 4)
 local warnGliteringSparks		= mod:NewTargetAnnounce(71807, 2, nil, false)
 local warnShockVortex			= mod:NewTargetAnnounce(72037, 3)				-- 1,5sec cast
 local warnEmpoweredShockVortex	= mod:NewCastAnnounce(72039, 4)					-- 4,5sec cast
-local warnKineticBomb			= mod:NewSpellAnnounce(72053, 3, nil, mod:IsRanged())
+local warnKineticBomb			= mod:NewSpellAnnounce(72053, 3, nil, "Ranged")
 local warnDarkNucleus			= mod:NewSpellAnnounce(71943, 1, nil, false)	-- instant cast
 
 local specWarnVortex			= mod:NewSpecialWarningYou(72037)
 local yellVortex				= mod:NewYell(72037)
 local specWarnVortexNear		= mod:NewSpecialWarningClose(72037)
-local specWarnEmpoweredShockV	= mod:NewSpecialWarningRun(72039)
-local specWarnEmpoweredFlames	= mod:NewSpecialWarningRun(72040)
+local specWarnEmpoweredShockV	= mod:NewSpecialWarningMoveAway(72039)
+local specWarnEmpoweredFlames	= mod:NewSpecialWarningRun(72040, nil, nil, nil, 4)
 local specWarnShadowPrison		= mod:NewSpecialWarningStack(72999, nil, 6)
 
 local timerTargetSwitch			= mod:NewTimer(47, "TimerTargetSwitch", 70952)	-- every 46-47seconds
@@ -49,12 +50,10 @@ local timerDarkNucleusCD		= mod:NewCDTimer(10, 71943, nil, false)	-- usually eve
 local timerConjureFlamesCD		= mod:NewCDTimer(20, 71718)				-- every 20-30 seconds but never more often than every 20sec
 local timerGlitteringSparksCD	= mod:NewCDTimer(20, 71807)				-- This is pretty nasty on heroic
 local timerShockVortex			= mod:NewCDTimer(16.5, 72037)			-- Seen a range from 16,8 - 21,6
-local timerKineticBombCD		= mod:NewCDTimer(18, 72053, nil, mod:IsRanged())				-- Might need tweaking
+local timerKineticBombCD		= mod:NewCDTimer(18, 72053, nil, "Ranged")				-- Might need tweaking
 local timerShadowPrison			= mod:NewBuffFadesTimer(10, 72999)		-- Hard mode debuff
 
 local berserkTimer				= mod:NewBerserkTimer(600)
-
-local soundEmpoweredFlames		= mod:NewSound(72040)
 
 mod:AddBoolOption("EmpoweredFlameIcon", true)
 mod:AddBoolOption("ActivePrinceIcon", false)
@@ -198,7 +197,6 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 		warnEmpoweredFlames:Show(target)
 		if target == UnitName("player") then
 			specWarnEmpoweredFlames:Show()
-			soundEmpoweredFlames:Play()
 		end
 		if self.Options.EmpoweredFlameIcon then
 			self:SetIcon(target, 7, 10)

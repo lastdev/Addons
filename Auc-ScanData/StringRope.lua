@@ -1,6 +1,6 @@
 --[[
 	StringRope Lib for World of Warcraft (tm)
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
 	Revision: $Id: StringRope.lua 3938 2008-12-27 09:35:32Z norganna $
 	URL: http://norganna.org
 

@@ -3,10 +3,10 @@
 Scanner.lua
 Vendor/trainer scanning for Ackis Recipe List.
 ************************************************************************
-File date: 2014-12-14T16:48:18Z
-File hash: 87d43b2
-Project hash: a4cd6d6
-Project version: 3.0.12
+File date: 2015-01-11T08:31:23Z
+File hash: b0dcb38
+Project hash: 9fce6f9
+Project version: 3.0.15
 ************************************************************************
 Please see http://www.wowace.com/addons/arl/ for more information.
 ************************************************************************
@@ -672,8 +672,8 @@ do
 					top = 4,
 					bottom = 4
 				}
-			});
-			progress_bar:SetBackdropColor(0, 0, 0, 1);
+			})
+			progress_bar:SetBackdropColor(0, 0, 0, 1)
 
 			progress_bar.fg = progress_bar:CreateTexture()
 			progress_bar.fg:SetPoint("LEFT", progress_bar, "LEFT", 5, 0)

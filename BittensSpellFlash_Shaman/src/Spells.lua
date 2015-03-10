@@ -6,19 +6,17 @@ local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
 
+local GetCombatRatingBonus = GetCombatRatingBonus
 local GetInventoryItemID = GetInventoryItemID
 local GetItemInfo = GetItemInfo
-local GetTime = GetTime
-local GetTotemInfo = GetTotemInfo
-local IsSwimming = IsSwimming
-local UnitGUID = UnitGUID
-local UnitSpellHaste = UnitSpellHaste
 local GetMasteryEffect = GetMasteryEffect
-local GetCombatRatingBonus = GetCombatRatingBonus
+local GetSpellInfo = GetSpellInfo
+local IsSwimming = IsSwimming
+local UnitSpellHaste = UnitSpellHaste
 
 local CR_MULTISTRIKE = CR_MULTISTRIKE
 
-local math = math
+local max = math.max
 local select = select
 
 local fishingPoleType = select(17, GetAuctionItemSubClasses(1))
@@ -50,7 +48,19 @@ local function walkingCheck(z)
       or c.GetCastTime(z.ID) == 0
 end
 
+local function swgCooldown (z)
+   z.Cooldown = c.HasGlyph("Spiritwalker's Focus") and 60 or 120
+end
+
+
 ------------------------------------------------------------------------ Common
+c.AddOptionalSpell("Spiritwalker's Grace", nil, {
+   RunFirst = swgCooldown,
+   CheckFirst = function()
+      return s.Moving("player")
+   end
+})
+
 c.AddOptionalSpell("Lightning Shield", nil, {
    Override = function()
       return c.GetBuffStack("Lightning Shield") < 2
@@ -59,29 +69,39 @@ c.AddOptionalSpell("Lightning Shield", nil, {
 })
 
 c.AddOptionalSpell("Earth Elemental Totem", nil, {
+   Cooldown = 5 * 60,
    CheckFirst = function()
       return c.GetCooldown("Fire Elemental Totem") > 50
    end
 })
 
+local searingTotem = c.GetID("Searing Totem")
+local function overwriteFireTotem()
+      local duration, name = c.GetTotemDuration(1)
+      local id = select(7, GetSpellInfo(name))
+      return not a.LiquidMagma
+         and (duration == 0 or id == searingTotem)
+end
+
 c.AddOptionalSpell("Fire Elemental Totem", nil, {
-   CheckFirst = function()
-      return c.IsMissingTotem(1)
-   end
+   Cooldown = 5 * 60,
+   RunFirst = function(z)
+      z.Cooldown = 60 * (c.HasGlyph("Fire Elemental Totem") and 2.5 or 5)
+   end,
+   CheckFirst = overwriteFireTotem
 })
 
 c.AddOptionalSpell("Storm Elemental Totem", nil, {
-   CheckFirst = function()
-      return c.IsMissingTotem(1)
-   end,
+   Cooldown = 5 * 60,
+   CheckFirst = overwriteFireTotem
 })
 
-c.AddOptionalSpell("Elemental Mastery")
+c.AddOptionalSpell("Elemental Mastery", nil, {
+   Cooldown = 120,
+})
 
-c.AddSpell("Elemental Mastery", "for Elemental", {
-   RunFirst = function(spell)
-      c.MakeOptional(spell, s.Boss())
-   end,
+c.AddOptionalSpell("Elemental Mastery", "for Elemental", {
+   Cooldown = 120,
    CheckFirst = function()
       return c.GetCastTime("Lava Burst") >= 1.2
    end,
@@ -90,27 +110,28 @@ c.AddSpell("Elemental Mastery", "for Elemental", {
 c.AddSpell("Elemental Blast", nil, {
    NotIfActive = true,
    RunFirst = walkingCheck,
+   Cooldown = 12,
 })
 
 c.AddOptionalSpell("Searing Totem", nil, {
    CheckFirst = function()
-      if c.HasTalent("Liquid Magma") then
-         local duration, name = c.GetTotemDuration(1)
-         local searing = name == s.SpellName(c.GetID("Searing Totem"))
-         return c.IsMissingTotem(1) or
-            (searing and duration <= 20 and not c.HasBuff("Liquid Magma"))
-      else
-         return c.IsMissingTotem(1)
+      return not a.LiquidMagma and c.IsMissingTotem(1)
+   end
+})
+
+c.AddOptionalSpell("Searing Totem", "for Liquid Magma", {
+   CheckFirst = function()
+      local duration = c.GetTotemDuration(1)
+      if duration <= (11 + c.LastGCD) and overwriteFireTotem() then
+         return true
       end
    end
 })
 
 c.AddOptionalSpell("Liquid Magma", "for Elemental", {
+   Cooldown = 45,
    CheckFirst = function()
-      local dur, name = c.GetTotemDuration(1)
-      return dur >= 15 and
-         (name == s.SpellName(c.GetID("Searing Totem")) or
-             name == s.SpellName(c.GetID("Fire Elemental Totem")))
+      return c.GetTotemDuration(1) >= (11 + c.LastGCD)
    end,
 })
 
@@ -140,12 +161,14 @@ local function burstCheck(z)
 end
 
 c.AddOptionalSpell("Spiritwalker's Grace", "for Elemental with Ascendance", {
+   RunFirst = swgCooldown,
    CheckFirst = function()
       return s.Moving("player") and a.Ascended
    end
 })
 
 c.AddOptionalSpell("Spiritwalker's Grace", "for Elemental", {
+   RunFirst = swgCooldown,
    CheckFirst = function()
       return s.Moving("player") and
          (c.GetCooldown("Elemental Blast") == 0 or
@@ -154,6 +177,7 @@ c.AddOptionalSpell("Spiritwalker's Grace", "for Elemental", {
 })
 
 c.AddOptionalSpell("Ancestral Swiftness", "for Elemental", {
+   Cooldown = 90,
    CheckFirst = function()
       return c.GetCastTime("Lightning Bolt") > 1.2 and not a.Ascended
    end
@@ -162,6 +186,7 @@ c.AddOptionalSpell("Ancestral Swiftness", "for Elemental", {
 c.AddOptionalSpell("Ascendance", "for Elemental", {
    Buff = "Ascendance",
    BuffUnit = "player",
+   Cooldown = 3 * 60,
    CheckFirst = function(z)
       if c.EstimatedHarmTargets > 1 then
          z.PredictFlashID = nil
@@ -178,47 +203,68 @@ c.AddSpell("Unleash Flame", "for Unleashed Fury", {
    Cooldown = 15,
    NoRangeCheck = true,
    CheckFirst = function()
+      -- use this on cooldown, but not if ascended, and delay it to sync up
+      -- with Flame Shock, if we are likely to cast that some time soon.
       return c.HasTalent("Unleashed Fury: Elemental")
          and not a.Ascended
-         and c.GetCooldown("Unleash Flame") <= 0
+         and (c.GetMyDebuffDuration("Flame Shock") > 9
+                 or c.GetCooldown("Flame Shock", false, 5) <= c.LastGCD)
    end,
 })
 
-c.AddSpell("Flame Shock", "Prime for Elemental", {
+c.AddSpell("Flame Shock", "when expiring", {
    NotIfActive = true,
+   MyDebuff = "Flame Shock",
+   Cooldown = 5,
+   GetDelay = function()
+      return max(
+         c.GetMyDebuffDuration("Flame Shock") - (c.GetCastTime("Lava Burst") + .2),
+         c.GetCooldown("Flame Shock", false, 5)
+      )
+   end,
+})
+
+c.AddSpell("Flame Shock", "to upgrade", {
+   Cooldown = 5,
    CheckFirst = function()
-      return c.GetMyDebuffDuration("Flame Shock")
-         <= c.GetCastTime("Lava Burst") + .2
+      return c.HasMyDebuff("Flame Shock")
+         and a.NextFlameShockStrength() > a.LastFlameShockStrength()
    end,
 })
 
-c.AddSpell("Flame Shock", "for Elemental", {
-   Tick = 3,
+c.AddSpell("Flame Shock", "Early", {
    NotIfActive = true,
-   CheckFirst = function(z)
-      local duration = c.GetMyDebuffDuration("Flame Shock")
-      if c.HasBuff("Elemental Mastery") or c.HasBuff(c.BLOODLUST_BUFFS) then
-         return duration <= 2 * z.EarlyRefresh
+   MyDebuff = "Flame Shock",
+   EarlyRefresh = 9,
+   Cooldown = 5,
+   CheckFirst = function()
+      -- don't overwrite a stronger FS with a weaker one.
+      if c.HasMyDebuff("Flame Shock") then
+         return a.NextFlameShockStrength() >= a.LastFlameShockStrength()
       else
-         return duration <= z.EarlyRefresh
+         return true
       end
+   end,
+   GetDelay = function(z)
+      local duration = c.GetMyDebuffDuration("Flame Shock")
+      local hasted = c.HasBuff("Elemental Mastery") or c.HasBuff(c.BLOODLUST_BUFFS)
+      local delay = duration - (z.EarlyRefresh * (hasted and 2 or 1))
+      local cd = c.GetCooldown("Flame Shock", false, 5)
+      return max(delay, cd, 0)
    end
 })
 
 c.AddSpell("Flame Shock", "refresh for Ascendance", {
+   Cooldown = 5,
    CheckFirst = function(z)
       local duration = c.GetMyDebuffDuration("Flame Shock")
       return duration <= 15 and (c.GetCooldown("Ascendance") + 15) < duration
    end
 })
 
-c.AddSpell("Flame Shock", "Early", {
-   MyDebuff = "Flame Shock",
-   EarlyRefresh = 9,
-})
-
 c.AddSpell("Lava Burst", nil, {
    EvenIfNotUsable = true,
+   Cooldown = 8,
    CheckFirst = function (z)
       -- either the target has flame shock when the spell lands, or they are
       -- far enough away that we can cast it on them before LB hits, or we
@@ -231,6 +277,7 @@ c.AddSpell("Lava Burst", nil, {
 })
 
 c.AddSpell("Earth Shock", "for Elemental", {
+   Cooldown = 5,
    CheckFirst = function()
       local stacks = c.GetBuffStack("Lightning Shield")
       if c.WearingSet(4, "T17") then
@@ -241,7 +288,16 @@ c.AddSpell("Earth Shock", "for Elemental", {
    end
 })
 
+c.AddSpell("Earth Shock", "at cap", {
+   Cooldown = 5,
+   CheckFirst = function()
+      return c.GetBuffStack("Lightning Shield") >=
+         (c.HasSpell("Improved Lightning Shield") and 20 or 15)
+   end
+})
+
 c.AddSpell("Earth Shock", nil, {
+   Cooldown = 5,
    CheckFirst = function()
       return c.GetBuffStack("Lightning Shield") >= 7
    end
@@ -256,6 +312,9 @@ c.AddOptionalSpell("Searing Totem", "for Elemental", {
 
 c.AddOptionalSpell("Thunderstorm", nil, {
    NotIfActive = true,
+   RunFirst = function(z)
+      z.Cooldown = c.HasGlyph("Thunder") and 35 or 45
+   end,
    CheckFirst = function()
       return s.PowerPercent("player") < 85
    end
@@ -263,6 +322,9 @@ c.AddOptionalSpell("Thunderstorm", nil, {
 
 c.AddOptionalSpell("Thunderstorm", "for damage", {
    NotIfActive = true,
+   RunFirst = function(z)
+      z.Cooldown = c.HasGlyph("Thunder") and 35 or 45
+   end,
    CheckFirst = function()
       return c.EstimatedHarmTargets >= 10
    end
@@ -272,7 +334,8 @@ c.AddSpell("Lightning Bolt")
 
 c.AddSpell("Lava Beam", nil, {
    FlashID = { "Chain Lightning", "Lava Beam" },
-   Override = function()
+   RunFirst = walkingCheck,
+   CheckFirst = function()
       return a.Ascended
    end,
 })
@@ -286,16 +349,18 @@ c.AddSpell("Chain Lightning", nil, {
 })
 
 c.AddOptionalSpell("Earthquake", "for AoE", {
+   Cooldown = 10,
+   NoRangeCheck = true,
    CheckFirst = function()
-      return (c.HasBuff("Enhanced Chain Lightning") or
-                 not c.HasSpell("Enhanced Chain Lightning"))
-   end
+      return c.HasBuff("Improved Chain Lightning")
+         or not c.HasSpell("Enhanced Chain Lightning")
+   end,
 })
 
 c.AddOptionalSpell("Earthquake", "single target", {
+   Cooldown = 10,
+   NoRangeCheck = true,
    CheckFirst = function()
-      -- return c.GetCooldown("Earthquake") > 1
-
       -- @todo danielp 2014-11-18: this is a cheap "time to die" > 10
       if c.GetHealth("target") < 2 * s.MaxHealth("player") then
          return false
@@ -318,7 +383,6 @@ c.AddOptionalSpell("Earthquake", "single target", {
       -- math thanks to SimCraft 603-9 / theorycrafting
       required = required + ((1.25 * 0.226305) + 1.25 * (2 * 0.226305 * multistrike))
 
-
       if (em == 0 and bloodlust == 0) or em >= 10 or bloodlust >= 10 then
          return effect >= required
       end
@@ -333,6 +397,7 @@ c.AddOptionalSpell("Earthquake", "single target", {
 
 ----------------------------------------------------------------------- Enhance
 c.AddOptionalSpell("Ascendance", "for Enhancement", {
+   Cooldown = 3 * 60,
    CheckFirst = function()
       return c.GetCooldown("Stormstrike") > 3
          and not a.Ascended
@@ -341,6 +406,7 @@ c.AddOptionalSpell("Ascendance", "for Enhancement", {
 
 c.AddSpell("Unleash Elements", "with Unleashed Fury", {
    NoRangeCheck = true,
+   Cooldown = 15,
    CheckFirst = function()
       return c.HasTalent("Unleashed Fury: Enhancement") and not a.Ascended
    end
@@ -413,12 +479,14 @@ c.AddOptionalSpell("Ancestral Swiftness", "under 2", {
 })
 
 c.AddSpell("Flame Shock", "Apply", {
+   Cooldown = 5,
    CheckFirst = function()
       return not c.HasMyDebuff("Flame Shock")
    end
 })
 
 c.AddSpell("Flame Shock", "Empowered Apply", {
+   Cooldown = 5,
    CheckFirst = function()
       return c.HasBuff("Unleash Flame") and not c.HasMyDebuff("Flame Shock")
    end
@@ -426,10 +494,12 @@ c.AddSpell("Flame Shock", "Empowered Apply", {
 
 c.AddOptionalSpell("Feral Spirit", nil, {
    NoRangeCheck = true,
+   Cooldown = 120,
 })
 
 c.AddOptionalSpell("Feral Spirit", "4pT15", {
    NoRangeCheck = true,
+   Cooldown = 120,
    CheckFirst = function()
       return c.WearingSet(4, "EnhanceT15")
    end
@@ -459,6 +529,7 @@ c.AddOptionalSpell("Water Shield", nil, {
 })
 
 c.AddOptionalSpell("Spiritwalker's Grace", "for Resto", {
+   RunFirst = swgCooldown,
    CheckFirst = function()
       return s.Moving("player")
    end
@@ -484,6 +555,7 @@ c.AddOptionalSpell("Earth Shield", nil, {
 })
 
 c.AddOptionalSpell("Healing Stream Totem", nil, {
+   Cooldown = 30,
    CheckFirst = function()
       return c.IsMissingTotem(3) or c.HasTalent("Totemic Persistence")
    end

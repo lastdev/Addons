@@ -13,9 +13,8 @@ local YELLOW	= "|cFFFFFF00"
 local GREY		= "|cFF808080"
 local GOLD		= "|cFFFFD700"
 
-local parent = "AltoholicTabCharacters"
-local rcMenuName = parent .. "RightClickMenu"	-- name of right click menu frames (add a number at the end to get it)
-local classMenu = parent .. "ClassIconMenu"	-- name of mouse over menu frames (add a number at the end to get it)
+local parentName = "AltoholicTabCharacters"
+local parent
 
 local currentCategory = 1	-- current category (characters, equipment, rep, currencies, etc.. )
 local currentView = 0		-- current view in the characters category
@@ -67,12 +66,6 @@ local BAG_ICONS = {
 
 local ICON_BAGS_HALLOWSEND = "Interface\\Icons\\INV_Misc_Bag_28_Halloween"
 local ICON_VIEW_BAGS = "Interface\\Icons\\INV_MISC_BAG_09"
-local ICON_VIEW_TALENTS = "Interface\\Icons\\Spell_Nature_NatureGuardian"
-local ICON_VIEW_QUESTS = "Interface\\LFGFrame\\LFGIcon-Quest"
-local ICON_VIEW_AUCTIONS = "Interface\\Icons\\INV_Misc_Coin_01"
-local ICON_VIEW_MAILS = "Interface\\Icons\\INV_Misc_Note_01"
-local ICON_VIEW_SPELLBOOK = "Interface\\Icons\\INV_Misc_Book_09"
-local ICON_VIEW_PROFESSIONS = "Interface\\Icons\\Achievement_GuildPerk_WorkingOvertime"
 
 -- ** Left menu **
 local ICON_CHARACTERS = "Interface\\Icons\\Achievement_GuildPerk_Everyones a Hero_rank2"
@@ -85,15 +78,14 @@ local ns = addon.Tabs.Characters		-- ns = namespace
 local lastButton
 
 local function StartAutoCastShine(button)
-	local item = button:GetName()
-	AutoCastShine_AutoCastStart(_G[ item .. "Shine" ]);
-	lastButton = item
+	AutoCastShine_AutoCastStart(button.Shine);
+	lastButton = button
 end
 
 local function StopAutoCastShine()
 	-- stop autocast shine on the last button that was clicked
 	if lastButton then
-		AutoCastShine_AutoCastStop(_G[ lastButton .. "Shine" ]);
+		AutoCastShine_AutoCastStop(lastButton.Shine)
 	end
 end
 
@@ -109,9 +101,9 @@ local function HideAll()
 	AltoholicFrameSpellbook:Hide()
 end
 
-local function EnableIcon(name)
-	_G[name]:Enable()
-	_G[name.."IconTexture"]:SetDesaturated(false)
+local function EnableIcon(frame)
+	frame:Enable()
+	frame.Icon:SetDesaturated(false)
 end
 
 local DDM_Add = addon.Helpers.DDM_Add
@@ -120,7 +112,7 @@ local DDM_AddCloseMenu = addon.Helpers.DDM_AddCloseMenu
 
 function ns:OnShow()
 	if currentView == 0 then
-		StartAutoCastShine(_G[parent .. "_Characters"])
+		StartAutoCastShine(parent.Characters)
 		ns:ViewCharInfo(VIEW_BAGS)
 	end
 end
@@ -135,14 +127,15 @@ function ns:MenuItem_OnClick(frame, button)
 	local id = frame:GetID()
 	currentCategory = id
 
-	_G[parent .. "_CharactersIcon"]:Show()
-	_G[parent .. "_BagsIcon"]:Show()
-	_G[parent .. "_QuestsIcon"]:Show()
-	_G[parent .. "_TalentsIcon"]:Show()
-	_G[parent .. "_AuctionIcon"]:Show()
-	_G[parent .. "_MailIcon"]:Show()
-	_G[parent .. "_SpellbookIcon"]:Show()
-	_G[parent .. "_ProfessionsIcon"]:Show()
+	local menuIcons = parent.MenuIcons
+	menuIcons.CharactersIcon:Show()
+	menuIcons.BagsIcon:Show()
+	menuIcons.QuestsIcon:Show()
+	menuIcons.TalentsIcon:Show()
+	menuIcons.AuctionIcon:Show()
+	menuIcons.MailIcon:Show()
+	menuIcons.SpellbookIcon:Show()
+	menuIcons.ProfessionsIcon:Show()
 end
 
 -- ** realm selection **
@@ -153,13 +146,13 @@ local function OnRealmChange(self, account, realm)
 	currentAccount = account
 	currentRealm = realm
 	
-	UIDropDownMenu_ClearAll(AltoholicTabCharacters_SelectRealm);
-	UIDropDownMenu_SetSelectedValue(AltoholicTabCharacters_SelectRealm, account .."|".. realm)
-	UIDropDownMenu_SetText(AltoholicTabCharacters_SelectRealm, GREEN .. account .. ": " .. WHITE.. realm)
+	UIDropDownMenu_ClearAll(parent.SelectRealm);
+	UIDropDownMenu_SetSelectedValue(parent.SelectRealm, account .."|".. realm)
+	UIDropDownMenu_SetText(parent.SelectRealm, GREEN .. account .. ": " .. WHITE.. realm)
 	
 	if oldRealm and oldAccount then	-- clear the "select char" drop down if realm or account has changed
 		if (oldRealm ~= realm) or (oldAccount ~= account) then
-			AltoholicTabCharactersStatus:SetText("")
+			parent.Status:SetText("")
 			currentAlt = nil
 			currentProfession = nil
 			
@@ -215,7 +208,6 @@ function ns:DropDownRealm_Initialize()
 	end
 end
 
-
 function ns:ViewCharInfo(index)
 	index = index or self.value
 	
@@ -227,9 +219,7 @@ end
 
 function ns:ShowCharInfo(view)
 	if view == VIEW_BAGS then
-		addon:ClearScrollFrame(_G[ "AltoholicFrameContainersScrollFrame" ], "AltoholicFrameContainersEntry", 7, 41)
-		
-		addon.Containers:SetView((addon:GetOption("UI.Tabs.Characters.ViewBagsAllInOne") == 1))
+		addon.Containers:SetView(addon:GetOption("UI.Tabs.Characters.ViewBagsAllInOne"))
 		AltoholicFrameContainers:Show()
 		addon.Containers:Update()
 		
@@ -333,7 +323,7 @@ function ns:SetAlt(alt, realm, account)
 	
 	-- set drop down menu
 	ns:DropDownRealm_Initialize()
-	UIDropDownMenu_SetSelectedValue(AltoholicTabCharacters_SelectRealm, account .."|".. realm)
+	UIDropDownMenu_SetSelectedValue(parent.SelectRealm, account .."|".. realm)
 end
 
 
@@ -343,13 +333,14 @@ local function OnCharacterChange(self)
 	local _, _, newAlt = strsplit(".", self.value)
 	currentAlt = newAlt
 	
-	EnableIcon(parent .. "_BagsIcon")
-	EnableIcon(parent .. "_QuestsIcon")
-	EnableIcon(parent .. "_TalentsIcon")
-	EnableIcon(parent .. "_AuctionIcon")
-	EnableIcon(parent .. "_MailIcon")
-	EnableIcon(parent .. "_SpellbookIcon")
-	EnableIcon(parent .. "_ProfessionsIcon")
+	local menuIcons = parent.MenuIcons
+	EnableIcon(menuIcons.BagsIcon)
+	EnableIcon(menuIcons.QuestsIcon)
+	EnableIcon(menuIcons.TalentsIcon)
+	EnableIcon(menuIcons.AuctionIcon)
+	EnableIcon(menuIcons.MailIcon)
+	EnableIcon(menuIcons.SpellbookIcon)
+	EnableIcon(menuIcons.ProfessionsIcon)
 	
 	if (not oldAlt) or (oldAlt == newAlt) then return end
 
@@ -358,7 +349,7 @@ local function OnCharacterChange(self)
 		ns:ShowCharInfo(currentView)		-- this will show the same info from another alt (ex: containers/mail/ ..)
 	else
 		HideAll()
-		AltoholicTabCharactersStatus:SetText(format("%s|r /", DataStore:GetColoredCharacterName(self.value)))
+		parent.Status:SetText(format("%s|r /", DataStore:GetColoredCharacterName(self.value)))
 	end
 end
 
@@ -503,15 +494,6 @@ end
 
 
 -- ** Menu Icons **
-function ns:Icon_OnEnter(frame)
-	local currentMenuID = frame:GetID()
-	
-	-- hide all
-	CloseDropDownMenus()
-
-	-- show current
-	ToggleDropDownMenu(1, nil, _G[ rcMenuName .. currentMenuID ], frame:GetName(), 0, -5);	
-end
 
 local function CharactersIcon_Initialize(self, level)
 	DDM_AddTitle(L["Characters"])
@@ -535,11 +517,11 @@ local function BagsIcon_Initialize(self, level)
 
 	DDM_AddTitle(format("%s / %s", L["Containers"], DataStore:GetColoredCharacterName(currentCharacterKey)))
 	DDM_Add(L["View"], nil, function() ns:ViewCharInfo(VIEW_BAGS) end)
-	DDM_Add(L["Bags"], 1, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewBags") == 1))
-	DDM_Add(L["Bank"], 2, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewBank") == 1))
-	DDM_Add(VOID_STORAGE, 3, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewVoidStorage") == 1))
-	DDM_Add(REAGENT_BANK , 4, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewReagentBank") == 1))
-	DDM_Add(L["All-in-one"], 5, OnContainerChange, nil, (addon:GetOption("UI.Tabs.Characters.ViewBagsAllInOne") == 1))
+	DDM_Add(L["Bags"], 1, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewBags"))
+	DDM_Add(L["Bank"], 2, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewBank"))
+	DDM_Add(VOID_STORAGE, 3, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewVoidStorage"))
+	DDM_Add(REAGENT_BANK , 4, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewReagentBank"))
+	DDM_Add(L["All-in-one"], 5, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewBagsAllInOne"))
 		
 	DDM_AddTitle(" ")
 	DDM_AddTitle("|r" ..RARITY)
@@ -837,20 +819,46 @@ local function ProfessionsIcon_Initialize(self, level)
 	end
 end
 
+local menuIconCallbacks = {
+	CharactersIcon_Initialize,
+	BagsIcon_Initialize,
+	QuestsIcon_Initialize,
+	TalentsIcon_Initialize,
+	AuctionIcon_Initialize,
+	MailIcon_Initialize,
+	SpellbookIcon_Initialize,
+	ProfessionsIcon_Initialize,
+}
+
+function ns:Icon_OnEnter(frame)
+	local currentMenuID = frame:GetID()
+	
+	addon:DDM_Initialize(parent.ContextualMenu, menuIconCallbacks[currentMenuID])
+	
+	-- hide all
+	CloseDropDownMenus()
+
+	-- show current
+	ToggleDropDownMenu(1, nil, parent.ContextualMenu, AltoholicTabCharacters_MenuIcons, (currentMenuID-1)*42, -5)
+end
 
 function ns:OnLoad()
+	parent = _G[parentName]
+
+	-- Left Menu
+	parent.Text1:SetText(L["Realm"])
+	
 	-- Menu Icons
 	-- mini easter egg, change the character icon depending on the time of year :)
 	-- if you find this code, please don't spoil it :)
-	
-	local size = 30
+
 	local faction = UnitFactionGroup("player")
 	local day = (tonumber(date("%m")) * 100) + tonumber(date("%d"))	-- ex: dec 15 = 1215, for easy tests below
-	local icon = (faction == "Alliance") and ICON_CHARACTERS_ALLIANCE or ICON_CHARACTERS_HORDE
+	local charIcon = (faction == "Alliance") and ICON_CHARACTERS_ALLIANCE or ICON_CHARACTERS_HORDE
 	local bagIcon = ICON_VIEW_BAGS
 
 	-- bag icon gets better with more chars at lv max
-	local LVMax = 90
+	local LVMax = 100
 	local numLvMax = 0
 	for _, character in pairs(DataStore:GetCharacters()) do
 		if DataStore:GetCharacterLevel(character) >= LVMax then
@@ -863,40 +871,23 @@ function ns:OnLoad()
 	end
 	
 	if (day >= 1215) or (day <= 102) then				-- winter veil
-		icon = (faction == "Alliance") and ICON_CHARACTERS_WINTERVEIL_ALLIANCE or ICON_CHARACTERS_WINTERVEIL_HORDE
+		charIcon = (faction == "Alliance") and ICON_CHARACTERS_WINTERVEIL_ALLIANCE or ICON_CHARACTERS_WINTERVEIL_HORDE
 	elseif (day >= 621) and (day <= 704) then			-- midsummer
-		icon = ICON_CHARACTERS_MIDSUMMER
+		charIcon = ICON_CHARACTERS_MIDSUMMER
 	elseif (day >= 1018) and (day <= 1031) then		-- hallow's end
-		icon = (faction == "Alliance") and ICON_CHARACTERS_HALLOWSEND_ALLIANCE or ICON_CHARACTERS_HALLOWSEND_HORDE
+		charIcon = (faction == "Alliance") and ICON_CHARACTERS_HALLOWSEND_ALLIANCE or ICON_CHARACTERS_HALLOWSEND_HORDE
 		bagIcon = ICON_BAGS_HALLOWSEND
 	elseif (day >= 1101) and (day <= 1102) then		-- day of the dead
-		icon = (faction == "Alliance") and ICON_CHARACTERS_DOTD_ALLIANCE or ICON_CHARACTERS_DOTD_HORDE
+		charIcon = (faction == "Alliance") and ICON_CHARACTERS_DOTD_ALLIANCE or ICON_CHARACTERS_DOTD_HORDE
 	end
 	
-	addon:SetItemButtonTexture(parent .. "_CharactersIcon", icon, size, size)
-	addon:SetItemButtonTexture(parent .. "_BagsIcon", bagIcon, size, size)
-	addon:SetItemButtonTexture(parent .. "_QuestsIcon", ICON_VIEW_QUESTS, size, size)
-	addon:SetItemButtonTexture(parent .. "_TalentsIcon", ICON_VIEW_TALENTS, size, size)
-	addon:SetItemButtonTexture(parent .. "_AuctionIcon", ICON_VIEW_AUCTIONS, size, size)
-	addon:SetItemButtonTexture(parent .. "_MailIcon", ICON_VIEW_MAILS, size, size)
-	addon:SetItemButtonTexture(parent .. "_SpellbookIcon", ICON_VIEW_SPELLBOOK, size, size)
-	addon:SetItemButtonTexture(parent .. "_ProfessionsIcon", ICON_VIEW_PROFESSIONS, size, size)
-	
-	addon:DDM_Initialize(_G[rcMenuName.."1"], CharactersIcon_Initialize)
-	addon:DDM_Initialize(_G[rcMenuName.."2"], BagsIcon_Initialize)
-	addon:DDM_Initialize(_G[rcMenuName.."3"], QuestsIcon_Initialize)
-	addon:DDM_Initialize(_G[rcMenuName.."4"], TalentsIcon_Initialize)
-	addon:DDM_Initialize(_G[rcMenuName.."5"], AuctionIcon_Initialize)
-	addon:DDM_Initialize(_G[rcMenuName.."6"], MailIcon_Initialize)
-	addon:DDM_Initialize(_G[rcMenuName.."7"], SpellbookIcon_Initialize)
-	addon:DDM_Initialize(_G[rcMenuName.."8"], ProfessionsIcon_Initialize)
-	
-	-- Left Menu
-	_G[parent .. "Text1"]:SetText(L["Realm"])
+	local menuIcons = parent.MenuIcons
+	menuIcons.CharactersIcon.Icon:SetTexture(charIcon)
+	menuIcons.BagsIcon.Icon:SetTexture(bagIcon)
 	
 	-- ** Characters / Equipment / Reputations / Currencies **
-	addon:SetItemButtonTexture(parent .. "_Characters", ICON_CHARACTERS, size, size)
-	_G[parent .. "_Characters"].text = L["Characters"]
+	parent.Characters.Icon:SetTexture(ICON_CHARACTERS)
+	parent.Characters.text = L["Characters"]
 	
 	addon:RegisterMessage("DATASTORE_RECIPES_SCANNED")
 end

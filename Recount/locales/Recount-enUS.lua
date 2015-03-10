@@ -200,6 +200,7 @@ L["Mana Gained"] = true
 L["Mana Sources"] = true
 L["Max"] = true
 L["Melee"] = true
+L["Merge Absorbs w/ Damage"] = true
 L["Merge Absorbs w/ Heals"] = true
 L["Merge Pets w/ Owners"] = true
 L["Messages"] = true

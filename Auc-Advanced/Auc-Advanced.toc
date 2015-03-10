@@ -5,11 +5,11 @@
 ## LoadOnDemand: 0
 ## Dependencies: Stubby
 ## OptionalDependencies: !nLog, SlideBar, Configator, Babylonian, DebugLib, TipHelper, LibExtraTip, LibDataBroker
-## SavedVariables: AucAdvancedConfig, AucAdvancedData
+## SavedVariables: AucAdvancedConfig, AucAdvancedData, AucAdvancedServers
 ## SavedVariablesPerCharacter: AucAdvancedLocal
 ##
-## Version: 5.21c.5521 (SanctimoniousSwamprat)
-## Revision: $Id: Auc-Advanced.toc 5499 2014-10-18 14:22:33Z brykrys $
+## Version: 5.21d.5538 (SanctimoniousSwamprat)
+## Revision: $Id: Auc-Advanced.toc 5524 2014-11-23 18:06:32Z brykrys $
 ## Author: Norganna's AddOns
 ## X-Part-Of: Auctioneer
 ## X-Category: Auction House
@@ -23,6 +23,7 @@ CoreModule.lua
 CoreStrings.lua
 CoreConst.lua
 CoreResources.lua
+CoreServers.lua
 
 CoreMain.lua
 CoreUtil.lua

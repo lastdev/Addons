@@ -2,53 +2,31 @@
 	<Script file="Options.lua"></Script>
 
 	<Frame name="DataStoreGeneralOptions" hidden="true">
-		<Size>
-			<AbsDimension x="615" y="306"/>
-		</Size>
+		<Size x="615" y="306" />
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString name="$parent_Title" inherits="GameFontHighlightLarge" justifyH="CENTER">
-					<Size>
-						<AbsDimension x="400" y="30"/>
-					</Size>
+					<Size x="400" y="30" />
 					<Anchors>
 						<Anchor point="TOP" />
 					</Anchors>
 				</FontString>
 				<FontString name="$parent_AddonsText" inherits="GameFontNormal" justifyH="LEFT">
-					<Size>
-						<AbsDimension x="60" y="20"/>
-					</Size>
+					<Size x="60" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="20" y="-40"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" x="20" y="-40" />
 					</Anchors>
 				</FontString>
 				<FontString name="$parent_AddonsList" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
-					<Size>
-						<AbsDimension x="220" y="240"/>
-					</Size>
+					<Size x="220" y="240" />
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parent_AddonsText" relativePoint="BOTTOMLEFT">
-							<Offset>
-								<AbsDimension x="20" y="-20"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" relativeTo="$parent_AddonsText" relativePoint="BOTTOMLEFT" x="20" y="-20" />
 					</Anchors>
 				</FontString>
 				<FontString name="$parent_AddonsMem" inherits="GameFontNormal" justifyH="RIGHT" justifyV="TOP">
-					<Size>
-						<AbsDimension x="60" y="240"/>
-					</Size>
+					<Size x="60" y="240" />
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parent_AddonsList" relativePoint="TOPRIGHT">
-							<Offset>
-								<AbsDimension x="20" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" relativeTo="$parent_AddonsList" relativePoint="TOPRIGHT" x="20" y="0" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -60,15 +38,9 @@
 		</Scripts>
 		<Frames>
 			<Button name="$parent_Refresh" inherits="UIPanelButtonTemplate" text="Refresh">
-				<Size>
-					<AbsDimension x="100" y="24"/>
-				</Size>
+				<Size x="100" y="24" />
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_AddonsList" relativePoint="BOTTOMLEFT" >
-						<Offset>
-							<AbsDimension x="30" y="-30"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="$parent_AddonsList" relativePoint="BOTTOMLEFT" x="30" y="-30" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -80,9 +52,7 @@
 	</Frame>
 	
 	<Frame name="DataStoreHelp" hidden="true">
-		<Size>
-			<AbsDimension x="615" y="400"/>
-		</Size>
+		<Size x="615" y="400" />
 		<Scripts>
 			<OnUpdate>
 				DataStore:OnUpdate(self)
@@ -93,40 +63,22 @@
 		</Scripts>
 		<Frames>
 			<ScrollFrame name="$parent_ScrollFrame" inherits="UIPanelScrollFrameTemplate">
-				<Size>
-					<AbsDimension x="615" y="400"/>
-				</Size>
+				<Size x="615" y="400" />
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="10" y="-20"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="10" y="-20" />
 				</Anchors>
 				<ScrollChild>
 					<Frame name="$parentScrollChildFrame">
-						<Size>
-							<AbsDimension x="270" y="304"/>
-						</Size>
+						<Size x="270" y="304" />
 						<Anchors>
-							<Anchor point="TOPLEFT">
-								<Offset>
-									<AbsDimension x="0" y="0"/>
-								</Offset>
-							</Anchor>
+							<Anchor point="TOPLEFT" x="0" y="0" />
 						</Anchors>
 						<Layers>
 							<Layer level="OVERLAY">
 								<FontString name="DataStoreHelp_Text" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
-									<Size>
-										<AbsDimension x="580" />
-									</Size>
+									<Size x="580" />
 									<Anchors>
-										<Anchor point="TOPLEFT">
-											<Offset>
-												<AbsDimension x="0" y="0"/>
-											</Offset>
-										</Anchor>
+										<Anchor point="TOPLEFT" x="0" y="0" />
 									</Anchors>
 								</FontString>
 							</Layer>

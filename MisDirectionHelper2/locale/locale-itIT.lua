@@ -42,6 +42,7 @@ L["Profiles"] = "Profili" -- Needs review
 L["Project description"] = "Use Misdirection / Tricks of the Trade with one click without losing your target. Create Smart Macros for Applying and Announcing Misdirection / Tricks of the Trade." -- Requires localization
 L["Right Click For MDH Options"] = "Click destro per le Opzioni" -- Needs review
 L["Right click target: %s"] = "Bersaglio Click Destro: %s" -- Needs review
+L["%s casts %s on %s"] = "\"player\" casts \"spell\" on \"target\"" -- Requires localization
 L["%s casts Tricks of the Trade on %s"] = "%s applica Trucchi del Mestiere su %s" -- Needs review
 L["Select"] = "Seleziona" -- Needs review
 L["Select Channel for Buff Announcements"] = "Seleziona il canale per gli annunci del Buff" -- Needs review

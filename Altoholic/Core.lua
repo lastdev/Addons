@@ -4,8 +4,8 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v6.0.003"
-addon.VersionNum = 600003
+addon.Version = "v6.0.004"
+addon.VersionNum = 600004
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -72,74 +72,33 @@ local AddonDB_Defaults = {
 		},
 		unsafeItems = {},
 		options = {
-			-- ** Misc options **
-			TabSummaryMode = 2,
-			lastContainerView = 1,			-- default container view = bags+bank
-			
-			-- ** General options **
-			RestXPMode = 0, 					-- display max rest xp in normal 100% mode or in level equivalent 150% mode (1) ?
-			AccSharingHandlerEnabled = 0,	-- account sharing communication handler is disabled by default
-			GuildBankAutoUpdate = 0,		-- can the guild bank tabs update requests be answered automatically or not.
-			GuildHandlerEnabled = 1,		-- guild communication handler is enabled by default
-			UIScale = 1.0,
-			UITransparency = 1.0,
-			ClampWindowToScreen = 0,
-			
-			-- ** Search options **
-			TotalLoots = 0,					-- make at least one search in the loot tables to initialize these values
-			UnknownLoots = 0,
-			SearchAutoQuery = 0,
-			SortDescending = 0, 				-- display search results in the loot table in ascending (0) or descending (1) order ?
-			IncludeNoMinLevel = 1,
-			IncludeMailbox = 1,
-			IncludeGuildBank = 1,
-			IncludeRecipes = 1,
-			IncludeGuildSkills = 1,			-- search other guild members' professions ? (via their profession links)
-
-			-- ** Mail options **
-			GuildMailWarning = 1,			-- be informed when a guildie sends a mail to one of my alts
-			NameAutoComplete = 1,
-			
-			-- ** Minimap options **
-			MinimapIconAngle = 180,
-			MinimapIconRadius = 78,
-			ShowMinimap = 1,
-			
-			-- ** Tooltip options **
-			TooltipSource = 1,
-			TooltipCount = 1,
-			TooltipTotal = 1,
-			TooltipRecipeInfo = 1,
-			TooltipPetInfo = 1,
-			TooltipItemID = 0,				-- display item id & item level in the tooltip (default: off)
-			TooltipGatheringNode = 1,		-- display counters when mousing over a gathering node (default:  on)
-			TooltipCrossFaction = 1,		-- display counters for both factions on a pve server
-			TooltipMultiAccount = 1,		-- display counters for all accounts on the same realm
-			TooltipConnectedRealms = 1,	-- display counters for characters on connected realms
-			
-			TooltipGuildBank = 1,
-			TooltipGuildBankCount = 1,		-- total count = alts + guildbank (1) or alts only (0)
-			TooltipGuildBankCountPerTab = 0,	-- guild count = guild:count or guild (tab 1: x, tab2: y ..)
-			
-			-- ** Calendar options **
-			WeekStartsMonday = 0,
-			WarningDialogBox = 0,			-- use a dialog box for warnings (1), or default chat frame (0)
-			DisableWarnings = 0,
-			WarningType1 = "30|15|10|5|4|3|2|1",		-- for profession cooldowns
-			WarningType2 = "30|15|10|5|4|3|2|1",		-- for dungeon resets
-			WarningType3 = "30|15|10|5|4|3|2|1",		-- for calendar events
-			WarningType4 = "30|15|10|5|4|3|2|1",		-- for item timers (like mysterious egg)
+			-- ** Summary tab options **
+			["UI.Tabs.Summary.ShowRestXP150pc"] = false,						-- display max rest xp in normal 100% mode or in level equivalent 150% mode ?
+			["UI.Tabs.Summary.CurrentRealms"] = 2,								-- selected realms (current/all in current/all accounts)
 			
 			-- ** Character tab options **
-			["UI.Tabs.Characters.ViewBags"] = 1,
-			["UI.Tabs.Characters.ViewBank"] = 1,
-			["UI.Tabs.Characters.ViewBagsAllInOne"] = 0,
-			["UI.Tabs.Characters.ViewBagsRarity"] = 0,
-			["UI.Tabs.Characters.ViewVoidStorage"] = 1,
-			["UI.Tabs.Characters.ViewReagentBank"] = 1,
+			["UI.Tabs.Characters.ViewBags"] = true,
+			["UI.Tabs.Characters.ViewBank"] = true,
+			["UI.Tabs.Characters.ViewBagsAllInOne"] = false,
+			["UI.Tabs.Characters.ViewVoidStorage"] = true,
+			["UI.Tabs.Characters.ViewReagentBank"] = true,
+			["UI.Tabs.Characters.ViewBagsRarity"] = 0,						-- rarity level of items (not a boolean !)
 			
-			["UI.Tabs.Guild.BankItemsRarity"] = 0,		-- rarity filter in the guild bank tab
+			-- ** Search tab options **
+			["UI.Tabs.Search.ItemInfoAutoQuery"] = false,
+			["UI.Tabs.Search.SortDescending"] = false,				-- display search results in the loot table in ascending (0) or descending (1) order ?
+			["UI.Tabs.Search.IncludeNoMinLevel"] = true,				-- include items with no minimum level
+			["UI.Tabs.Search.IncludeMailboxItems"] = true,
+			["UI.Tabs.Search.IncludeGuildBankItems"] = true,
+			["UI.Tabs.Search.IncludeKnownRecipes"] = true,
+			TotalLoots = 0,					-- make at least one search in the loot tables to initialize these values
+			UnknownLoots = 0,
 			
+			-- ** Guild Bank tab options **
+			["UI.Tabs.Guild.BankItemsRarity"] = 0,								-- rarity filter in the guild bank tab
+			["UI.Tabs.Guild.BankAutoUpdate"] = false,							-- can the guild bank tabs update requests be answered automatically or not.
+			
+			-- ** Grids tab options **
 			["UI.Tabs.Grids.Reputations.CurrentXPack"] = 1,					-- Current expansion pack 
 			["UI.Tabs.Grids.Reputations.CurrentFactionGroup"] = 1,		-- Current faction group in that xpack
 			["UI.Tabs.Grids.Currencies.CurrentTokenType"] = nil,			-- Current token type (default to nil = all-in-one)
@@ -151,11 +110,54 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Grids.Dungeons.CurrentXPack"] = 1,						-- Current expansion pack 
 			["UI.Tabs.Grids.Dungeons.CurrentRaids"] = 1,						-- Current raid index
 			["UI.Tabs.Grids.Garrisons.CurrentBuildings"] = 1,				-- Current building type
+			["UI.Tabs.Grids.Garrisons.CurrentFollowers"] = 1,				-- Current follower type
+			["UI.Tabs.Grids.Garrisons.CurrentStats"] = 1,					-- Current stats (abilities = 1, traits = 2, counters = 3)
 			
-			["UI.AHColorCoding"] = 1,						-- color coded recipes at the AH
-			["UI.VendorColorCoding"] = 1,					-- color coded recipes at vendors
-			["UI.Mail.LastExpiryWarning"] = 0,			-- Last time a mail expiry warning was triggered
-			["UI.Mail.TimeToNextWarning"] = 3,			-- Time before the warning is repeated ('3' = no warning for 3 hours)
+			-- ** Tooltip options **
+			["UI.Tooltip.ShowItemSource"] = true,
+			["UI.Tooltip.ShowItemCount"] = true,
+			["UI.Tooltip.ShowTotalItemCount"] = true,
+			["UI.Tooltip.ShowKnownRecipes"] = true,
+			["UI.Tooltip.ShowKnownPets"] = true,
+			["UI.Tooltip.ShowItemID"] = false,						-- display item id & item level in the tooltip (default: off)
+			["UI.Tooltip.ShowGatheringNodesCount"] = true,		-- display counters when mousing over a gathering node (default:  on)
+			["UI.Tooltip.ShowCrossFactionCount"] = true,			-- display counters for both factions on a pve server
+			["UI.Tooltip.ShowMergedRealmsCount"] = true,			-- display counters for characters on connected realms
+			["UI.Tooltip.ShowAllAccountsCount"] = true,			-- display counters for all accounts on the same realm
+			["UI.Tooltip.ShowGuildBankCount"] = true,				-- display guild bank counters
+			["UI.Tooltip.IncludeGuildBankInTotal"] = true,		-- total count = alts + guildbank (1) or alts only (0)
+			["UI.Tooltip.ShowGuildBankCountPerTab"] = false,	-- guild count = guild:count or guild (tab 1: x, tab2: y ..)
+			
+			-- ** Mail options **
+			["UI.Mail.GuildMailWarning"] = true,					-- be informed when a guildie sends a mail to one of my alts
+			["UI.Mail.AutoCompleteRecipient"] = true,				-- Auto complete recipient name when sending a mail
+			["UI.Mail.LastExpiryWarning"] = 0,						-- Last time a mail expiry warning was triggered
+			["UI.Mail.TimeToNextWarning"] = 3,						-- Time before the warning is repeated ('3' = no warning for 3 hours)
+			
+			-- ** Minimap options **
+			["UI.Minimap.ShowIcon"] = true,
+			["UI.Minimap.IconAngle"] = 180,
+			["UI.Minimap.IconRadius"] = 78,
+			
+			-- ** Calendar options **
+			["UI.Calendar.WarningsEnabled"] = true,
+			["UI.Calendar.UseDialogBoxForWarnings"] = false,	-- use a dialog box for warnings (true), or default chat frame (false)
+			["UI.Calendar.WeekStartsOnMonday"] = false,
+
+			WarningType1 = "30|15|10|5|4|3|2|1",		-- for profession cooldowns
+			WarningType2 = "30|15|10|5|4|3|2|1",		-- for dungeon resets
+			WarningType3 = "30|15|10|5|4|3|2|1",		-- for calendar events
+			WarningType4 = "30|15|10|5|4|3|2|1",		-- for item timers (like mysterious egg)
+			
+			-- ** Global options **
+			["UI.AHColorCoding"] = true,					-- color coded recipes at the AH
+			["UI.VendorColorCoding"] = true,				-- color coded recipes at vendors
+			["UI.AccountSharing.IsEnabled"] = false,	-- account sharing communication handler is disabled by default
+			
+			["UI.Scale"] = 1.0,
+			["UI.Transparency"] = 1.0,
+			["UI.ClampWindowToScreen"] = false,
+
 		},
 }}
 

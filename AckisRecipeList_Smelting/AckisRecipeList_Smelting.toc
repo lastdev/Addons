@@ -1,13 +1,13 @@
-## Interface: 60000
+## Interface: 60100
 ## Title: Ackis Recipe List: Smelting
 ## Notes: Smelting data for Ackis Recipe List.
 ## Author: Ackis, Pompy, Ressy, Torhal
-## Version: 6.0.3.1
-## X-Revision: 553c0ac
-## X-Date: 2014-07-23T01:57:44Z
+## Version: 6.1.0.1
+## X-Revision: cdbafca
+## X-Date: 2015-02-24T14:44:16Z
 ## Dependencies: AckisRecipeList
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: 6.0.3.1
+## X-Curse-Packaged-Version: 6.1.0.1
 ## X-Curse-Project-Name: Ackis Recipe List: Smelting
 ## X-Curse-Project-ID: arl-smelting
 ## X-Curse-Repository-ID: wow/arl-smelting/mainline

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Saviana", "DBM-ChamberOfAspects", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 112 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(39747)
 mod:SetEncounterID(1149)
 mod:SetModelID(31577)
@@ -20,12 +20,12 @@ local warningWarnEnrage		= mod:NewSpellAnnounce(78722, 3)
 local warningWarnBreath		= mod:NewSpellAnnounce(74403, 3)
 
 local specWarnBeacon		= mod:NewSpecialWarningYou(74453)--Target scanning may not even work since i haven't done encounter yet it's just a guess.
-local specWarnTranq			= mod:NewSpecialWarningDispel(78722, mod:CanRemoveEnrage())
+local specWarnTranq			= mod:NewSpecialWarningDispel(78722, "RemoveEnrage")
 
 local timerBeacon			= mod:NewBuffActiveTimer(5, 74453)
 local timerConflag			= mod:NewBuffActiveTimer(5, 74456)
 local timerConflagCD		= mod:NewNextTimer(50, 74452)
-local timerBreath			= mod:NewCDTimer(25, 74403, nil, mod:IsTank() or mod:IsHealer())
+local timerBreath			= mod:NewCDTimer(25, 74403, nil, "Tank|Healer")
 local timerEnrage			= mod:NewBuffActiveTimer(10, 78722)
 
 mod:AddBoolOption("RangeFrame", true)

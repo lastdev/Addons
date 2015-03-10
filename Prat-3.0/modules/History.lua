@@ -211,9 +211,9 @@ Prat:AddModuleToLoad(function()
     L:AddLocale("zhCN",
     {
 	["Chat history options."] = "历史聊天记录选项",
-	-- ["Color GMOTD"] = "",
-	-- ["Colors the GMOTD label"] = "",
-	-- delaygmotd_desc = "",
+	["Color GMOTD"] = "每日公会信息颜色", -- Needs review
+	["Colors the GMOTD label"] = "为每日公会信息标签着色", -- Needs review
+	delaygmotd_desc = "延迟每日公会信息直到起始垃圾信息显示完毕为止", -- Needs review
 	delaygmotd_name = "延迟 GMOTD", -- Needs review
 	divider = "========== 回卷结束 ==========", -- Needs review
 	History = "历史记录",
@@ -221,13 +221,13 @@ Prat:AddModuleToLoad(function()
 	["Save Command History"] = "命令记录存储",
 	["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "存储会话之间命令的历史记录(使用alt+上箭头键或仅上箭头键)",
 	Scrollback = "回卷", -- Needs review
-	-- scrollbacklen_desc = "",
+	scrollbacklen_desc = "聊天内容回滚缓冲数量", -- Needs review
 	scrollbacklen_name = "回卷长度", -- Needs review
-	-- ["Scrollback Options"] = "",
+	["Scrollback Options"] = "回滚选项", -- Needs review
 	["Set Chat Lines"] = "聊天行设置",
 	["Set Command History"] = "命令历史记录",
 	["Set the number of lines of chat history for each window."] = "为每个聊天窗口设置聊天历史记录行数",
-	-- ["Store the chat lines between sessions"] = "",
+	["Store the chat lines between sessions"] = "在会话之间存储聊天内容", -- Needs review
 }
 
     )

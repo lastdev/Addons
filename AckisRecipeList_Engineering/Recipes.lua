@@ -2893,11 +2893,12 @@ function module:InitializeRecipes()
 
 	-- Ultimate Gnomish Army Knife -- 162208
 	recipe = AddRecipe(162208, V.WOD, Q.COMMON)
-	recipe:SetSkillLevels(1, 600, 700, 702, 705)
+	recipe:SetSkillLevels(1, 1, 625, 627, 630)
 	recipe:SetCraftedItem(109253, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("ENGINEERING_CREATED_ITEM")
 	recipe:AddFilters(F.MISC1)
-	recipe:AddCustom("DRAENOR_DEFAULT")
+	recipe:SetPreviousRankID(169140)
+	recipe:AddDiscovery("ENG_DISC_ARMY_KNIFE")
 
 	-- Mechanical Axebeak -- 162209
 	recipe = AddRecipe(162209, V.WOD, Q.COMMON)
@@ -2978,9 +2979,13 @@ function module:InitializeRecipes()
 	recipe:AddFilters(F.MISC1)
 	recipe:AddCustom("DRAENOR_DEFAULT")
 
-	-- Ultimate Gnomish Army Knife -- 169140 -- NOT USED
+	-- Ultimate Gnomish Army Knife -- 169140
 	recipe = AddRecipe(169140, V.WOD, Q.COMMON)
-	recipe:SetSkillLevels(0, 0, 0, 0, 0)
+	recipe:SetSkillLevels(1, 1, 700, 700, 700)
+	recipe:SetCraftedItem(111366, "BIND_ON_PICKUP")
+	recipe:SetItemFilterType("ENGINEERING_CREATED_ITEM")
+	recipe:AddFilters(F.MISC1)
+	recipe:AddCustom("DRAENOR_DEFAULT")
 
 	-- Hemet's Heartseeker -- 173289
 	recipe = AddRecipe(173289, V.WOD, Q.COMMON)
@@ -3030,12 +3035,29 @@ function module:InitializeRecipes()
 	recipe:SetItemFilterType("ENGINEERING_ITEM_ENHANCEMENT")
 	recipe:AddVendor(77365, 79826, 87065, 87552)
 
-	-- Blackrock Rifling -- 177364 -- unknown location
+	-- Blackrock Rifling -- 177364
 	recipe = AddRecipe(177364, V.WOD, Q.COMMON)
 	recipe:SetSkillLevels(1, 1, 700, 702, 705)
 	recipe:SetRecipeItem(120267, "BIND_ON_PICKUP")
 	recipe:SetCraftedItem(119823, "BIND_ON_EQUIP")
 	recipe:SetItemFilterType("ENGINEERING_ITEM_ENHANCEMENT")
+	recipe:AddVendor(77365, 79826, 87065, 87552)
+
+	-- Oglethorpe's Octagonal Lenses  -- 181423
+	recipe = AddRecipe(181423, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(1, 1, 700, 702, 705)
+	recipe:SetRecipeItem(122546, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(122545, "BIND_ON_EQUIP")
+	recipe:SetItemFilterType("ENGINEERING_ITEM_ENHANCEMENT")
+	recipe:AddVendor(90894, 91030)
+
+	-- Primal Welding -- 182120
+	recipe = AddRecipe(182120, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(1, 1, 700, 702, 705)
+	recipe:SetRecipeItem(122712, "BIND_ON_PICKUP")
+	recipe:SetCraftedItem(111366, "BIND_ON_PICKUP")
+	recipe:SetItemFilterType("ENGINEERING_MATERIALS")
+	recipe:AddVendor(90894, 91030)
 
 	self.InitializeRecipes = nil
 end

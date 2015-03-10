@@ -23,7 +23,7 @@
 			"Auc-Util-SimpleAuction",
 			"Auc-Util-VendMarkup",
 		}
-		AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Advanced/Modules/rebuild.pl $", "$Rev: 3029 $")
+		AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/Modules/rebuild.pl $", "$Rev: 3029 $")
 	</Script>
 
 	<Include file="Auc-Filter-Outlier\Embed.xml"/>

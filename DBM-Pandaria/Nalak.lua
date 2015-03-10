@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(814, "DBM-Pandaria", nil, 322)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 3 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(69099)
 mod:SetReCombatTime(20)
 mod:SetZone()
@@ -15,18 +15,15 @@ mod:RegisterEventsInCombat(
 
 local warnStormcloud				= mod:NewTargetAnnounce(136340, 3)
 local warnLightningTether			= mod:NewTargetAnnounce(136339, 3)
-local warnArcNova					= mod:NewCastAnnounce(136338, 3)
 
 local specWarnStormcloud			= mod:NewSpecialWarningYou(136340)
 local yellStormcloud				= mod:NewYell(136340)
 local specWarnLightningTether		= mod:NewSpecialWarningYou(136339)--Is this important enough?
-local specWarnArcNova				= mod:NewSpecialWarningRun(136338, mod:IsMelee())
+local specWarnArcNova				= mod:NewSpecialWarningRun("OptionVersion2", 136338, "Melee", nil, nil, 4)
 
 local timerStormcloudCD				= mod:NewCDTimer(24, 136340)
 local timerLightningTetherCD		= mod:NewCDTimer(35, 136339)--Needs more data, they may have tweaked it some.
 local timerArcNovaCD				= mod:NewCDTimer(39, 136338)
-
-local soundArcNova					= mod:NewSound(136338, mod:IsMelee())
 
 mod:AddBoolOption("RangeFrame")--For Stormcloud, might tweek to not show all the time with actual better logs than me facepulling it and dying with 20 seconds
 mod:AddReadyCheckOption(32518, false)
@@ -82,10 +79,8 @@ function mod:SPELL_CAST_START(args)
 	if spellId == 136340 then
 		timerStormcloudCD:Start()
 	elseif spellId == 136338 then
-		warnArcNova:Show()
 		specWarnArcNova:Show()
 		timerArcNovaCD:Start()
-		soundArcNova:Play()
 	elseif spellId == 136339 then
 		timerLightningTetherCD:Start()
 	end

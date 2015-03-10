@@ -4,6 +4,7 @@ if not L then return end
 
 L["Check mail expiries on all known accounts"] = "Vérifier les expirations sur tous les comptes connus"
 L["Check mail expiries on all known realms"] = "Vérifier les expirations sur tous les royaumes connus"
+L["EXPIRED_EMAILS_WARNING"] = "%s (%s) a du courrier expiré (ou proche de l'expiration)" -- Needs review
 L["EXPIRY_ALL_ACCOUNTS_DISABLED"] = "Seul le compte en cours d'utilisation sera pris en considération; les comptes importés seront ignorés."
 L["EXPIRY_ALL_ACCOUNTS_ENABLED"] = "La routine de vérification recherchera les courriers expirés sur tous les comptes connus."
 L["EXPIRY_ALL_ACCOUNTS_TITLE"] = "Vérifier tous les comptes"

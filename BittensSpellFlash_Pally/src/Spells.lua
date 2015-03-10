@@ -1,12 +1,12 @@
-local addonName, a = ...
+local _, a = ...
 local L = a.Localize
 local s = SpellFlashAddon
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
-local GetSpecialization = GetSpecialization
 local GetSpellBonusDamage = GetSpellBonusDamage
 local UnitCreatureType = UnitCreatureType
 local UnitLevel = UnitLevel
+
 local max = math.max
 local min = math.min
 
@@ -55,7 +55,7 @@ c.AddInterrupt("Rebuke")
 c.AddSpell("Seal of Truth", "for Maraad's Truth", {
    Type = "form",
    GetDelay = function()
-      if not c.HasTalent("Empowered Seals") or s.Form(c.GetID("Seal of Truth")) then
+      if not c.HasTalent("Empowered Seals") or c.Form("Seal of Truth") then
          return false
       end
 
@@ -76,7 +76,7 @@ c.AddSpell("Seal of Truth", "for Maraad's Truth", {
 c.AddSpell("Seal of Righteousness", "for Liadrin's Righteousness", {
    Type = "form",
    GetDelay = function()
-      if not c.HasTalent("Empowered Seals") or s.Form(c.GetID("Seal of Righteousness")) then
+      if not c.HasTalent("Empowered Seals") or c.Form("Seal of Righteousness") then
          return false
       end
 
@@ -97,7 +97,7 @@ c.AddSpell("Seal of Righteousness", "for Liadrin's Righteousness", {
 c.AddSpell("Seal of Insight", "for Uther's Insight", {
    Type = "form",
    GetDelay = function()
-      if not c.HasTalent("Empowered Seals") or s.Form(c.GetID("Seal of Insight")) then
+      if not c.HasTalent("Empowered Seals") or c.Form("Seal of Insight") then
          return false
       end
 
@@ -200,9 +200,6 @@ c.AddOptionalSpell("Save Selfless Healer", nil, {
 -------------------------------------------------------------------- Protection
 c.AddOptionalSpell("Seal of Insight", "for Prot", {
    Type = "form",
-   CheckFirst = function()
-      return not s.Form()
-   end
 })
 
 c.AddOptionalSpell("Righteous Fury", nil, {
@@ -211,28 +208,36 @@ c.AddOptionalSpell("Righteous Fury", nil, {
    BuffUnit = "player",
 })
 
-c.AddOptionalSpell("Eternal Flame", "Refresh", {
-   MyBuff = "Eternal Flame",
-   BuffUnit = "player",
-   EarlyRefresh = 2,
-   Cooldown = 1,
-   GetDelay = function()
-      if c.GetBuffStack("Bastion of Glory", true) <= 2 or a.HolyPower < 3 then
-         return false
-      end
-
-      return min(a.DivinePurpose, a.BastionOfPower)
-   end,
-})
-
-c.AddOptionalSpell("Eternal Flame", "with Bastion of Power", {
+c.AddOptionalSpell("Eternal Flame", nil, {
+   FlashID = { "Eternal Flame", "Word of Glory" },
    MyBuff = "Eternal Flame",
    BuffUnit = "player",
    Cooldown = 1,
    CheckFirst = function()
-      return a.HolyPower > 0 and
-         a.BastionOfPower and
-         c.GetBuffStack("Bastion of Glory", true) >= 5
+      local hp = max(3, a.BastionOfPower and 3 or a.HolyPower)
+      if a.HolyPower <= 0 or hp <= 0 then -- can't cast, so don't even bother
+         return false
+      end
+
+      local existing = c.GetBuffDuration("Eternal Flame")
+      local health = c.GetHealthPercent("player")
+      local bog = c.GetBuffStack("Bastion of Glory")
+
+      if existing > 9 then
+         return health < 50
+      elseif existing > 0 then
+         if hp > a.EternalFlameStrength.hp then
+            return true
+         elseif hp == a.EternalFlameStrength.hp then
+            return bog >= a.EternalFlameStrength.bog
+         else
+            return health < 75
+         end
+      else
+         return (hp == 1 and health < 45)
+            or (hp == 2 and health < 60)
+            or (hp >= 3 and (bog >= 3 or health < 75))
+      end
    end,
 })
 
@@ -332,7 +337,7 @@ c.AddOptionalSpell("Shield of the Righteous", "to save Buffs", {
          return true
       end
 
-      local duration = c.GetBuffDuration("Divine Purpose")
+      duration = c.GetBuffDuration("Divine Purpose")
       if duration > 0 and duration < 1.6 then
          return true
       end
@@ -503,7 +508,10 @@ c.AddSpell("Hammer of Wrath", nil, {
 local getConsecrationDelay = function(z)
    if c.HasGlyph("Consecration") then
       z.Melee = nil
-      return c.GetCooldown("Consecration Glyphed", false, 9)
+      return c.GetCooldown("Consecration with Consecration", false, 9)
+   elseif c.HasGlyph("Consecrator") then
+      z.Melee = true
+      return c.GetCooldown("Consecration with Consecrator", false, 9)
    else
       z.Melee = true
       return c.GetCooldown("Consecration", false, 9)
@@ -529,12 +537,12 @@ c.AddTaunt("Reckoning", nil, { NoGCD = true })
 c.AddOptionalSpell("Seal of Truth", nil, {
    Type = "form",
    CheckFirst = function()
-      return s.Form() == nil
+      return not c.Form("Seal of Truth")
    end
 })
 
 -- sync both these spells with seraphim, if we have that talent.
-c.AddSpell("Holy Avenger", nil, {
+c.AddOptionalSpell("Holy Avenger", nil, {
    NoGCD = true,
    GetDelay = function()
       local cd = c.GetCooldown("Holy Avenger", false, 120)
@@ -582,21 +590,21 @@ c.AddOptionalSpell("Execution Sentence", nil, {
 
 c.AddSpell("Templar's Verdict", "at 3, no Seraphim", {
    Melee = true,
-   CheckFirst = function(z)
+   CheckFirst = function()
       return a.HolyPower >= 3 and c.GetCooldown("Seraphim", true, 30) > 4
    end,
 })
 
 c.AddSpell("Templar's Verdict", "at 4, no Seraphim", {
    Melee = true,
-   CheckFirst = function(z)
+   CheckFirst = function()
       return a.HolyPower >= 4 and c.GetCooldown("Seraphim", true, 30) > 4
    end,
 })
 
 c.AddSpell("Templar's Verdict", "at 5", {
    Melee = true,
-   CheckFirst = function(z)
+   CheckFirst = function()
       return a.HolyPower >= 5 or
          (a.HolyPower >= 3 and a.HolyAvenger > c.LastGCD and c.GetCooldown("Seraphim", true, 30) > 4)
    end,
@@ -614,21 +622,28 @@ c.AddSpell("Templar's Verdict", "4pT15", {
 
 c.AddSpell("Templar's Verdict", "with Divine Purpose < 4", {
    Melee = true,
-   CheckFirst = function(z)
+   CheckFirst = function()
       return a.HolyPower >= 3 and a.DivinePurpose < 4
    end
 })
 
 c.AddSpell("Templar's Verdict", "with Divine Purpose Talent", {
    Melee = true,
-   CheckFirst = function(z)
+   CheckFirst = function()
       return a.HolyPower >= 3 and c.HasTalent("Divine Purpose")
+   end
+})
+
+c.AddSpell("Templar's Verdict", "with Divine Purpose", {
+   Melee = true,
+   CheckFirst = function()
+      return c.HasBuff("Divine Purpose")
    end
 })
 
 c.AddSpell("Templar's Verdict", "with Avenging Wrath", {
    Melee = true,
-   CheckFirst = function(z)
+   CheckFirst = function()
       return a.HolyPower >= 3 and a.AvengingWrath and c.GetCooldown("Seraphim", true, 30) > 4
    end
 })
@@ -658,13 +673,13 @@ c.AddSpell("Final Verdict", "with Holy Avenger", {
 })
 
 c.AddSpell("Final Verdict", "with Divine Purpose < 4", {
-   CheckFirst = function(z)
+   CheckFirst = function()
       return a.HolyPower >= 3 and a.DivinePurpose < 4
    end
 })
 
 c.AddSpell("Final Verdict", "with Divine Purpose", {
-   CheckFirst = function(z)
+   CheckFirst = function()
       return a.HolyPower >= 3 and a.DivinePurpose
    end
 })
@@ -692,7 +707,7 @@ c.AddSpell("Hammer of Wrath", "Delay", {
 c.AddSpell("Judgment", "for Liadrin's Righteousness < 5", {
    CheckFirst = function()
       return c.HasTalent("Empowered Seals") and
-         s.Form(c.GetID("Seal of Righteousness")) and
+         c.Form("Seal of Righteousness") and
          c.GetBuffDuration("Liadrin's Righteousness") <= 5
    end,
 })
@@ -700,7 +715,7 @@ c.AddSpell("Judgment", "for Liadrin's Righteousness < 5", {
 c.AddSpell("Judgment", "for Liadrin's Righteousness", {
    CheckFirst = function()
       return c.HasTalent("Empowered Seals") and
-         s.Form(c.GetID("Seal of Righteousness")) and
+         c.Form("Seal of Righteousness") and
          c.GetBuffDuration("Liadrin's Righteousness") <= c.GetCooldown("Judgment", true, 6)*2
    end,
 })
@@ -708,7 +723,7 @@ c.AddSpell("Judgment", "for Liadrin's Righteousness", {
 c.AddSpell("Judgment", "for Maraad's Truth", {
    CheckFirst = function()
       return c.HasTalent("Empowered Seals") and
-         s.Form(c.GetID("Seal of Truth")) and
+         c.Form("Seal of Truth") and
          c.GetBuffDuration("Maraad's Truth") <= c.GetCooldown("Judgment", true, 6)*2
    end,
 })

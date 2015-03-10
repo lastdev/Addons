@@ -479,7 +479,7 @@ function ns:Update()
 
 	currentTreeName = DataStore:GetTreeNameByID(currentClass, currentTreeID or 1)
 	status = format("%s / %s", status, currentTreeName)
-	AltoholicTabCharactersStatus:SetText(status)
+	AltoholicTabCharacters.Status:SetText(status)
 	
 	-- background
 	DrawBackground(PLAYER_TREE, currentClass, currentTreeName)

@@ -2,233 +2,143 @@
 	<Script file="TabSearch.lua"></Script>
 	
 	<Frame name="AltoholicTabSearch" parent="AltoholicFrame" hidden="true">
-		<Size>
-			<AbsDimension x="758" y="447"/>
-		</Size>
+		<Size x="758" y="447" />
 		<Anchors>
 			<Anchor point="TOPLEFT"/>
 		</Anchors>
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString name="$parentLevelRange" inherits="GameFontNormalSmall" text="LEVEL_RANGE">
+				<FontString parentKey="LevelRange" inherits="GameFontNormalSmall" text="LEVEL_RANGE">
 					<Size x="70" y="20" />
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" >
-							<Offset x="33" y="0" />
-						</Anchor>
+						<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" x="33" y="0" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
-				<FontString name="$parentRarity" inherits="GameFontNormalSmall" text="RARITY">
+				<FontString parentKey="Rarity" inherits="GameFontNormalSmall" text="RARITY">
 					<Size x="90" y="20" />
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="$parentLevelRange" relativePoint="RIGHT" >
-							<Offset x="10" y="0" />
-						</Anchor>
+						<Anchor point="LEFT" relativeKey="$parent.LevelRange" relativePoint="RIGHT" x="10" y="0" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
-				<FontString name="$parentSlot" inherits="GameFontNormalSmall">
+				<FontString parentKey="Slot" inherits="GameFontNormalSmall">
 					<Size x="100" y="20" />
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="$parentRarity" relativePoint="RIGHT" >
-							<Offset x="40" y="0" />
-						</Anchor>
+						<Anchor point="LEFT" relativeKey="$parent.Rarity" relativePoint="RIGHT" x="40" y="0" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
-				<FontString name="$parentLocation" inherits="GameFontNormalSmall">
+				<FontString parentKey="Location" inherits="GameFontNormalSmall">
 					<Size x="100" y="20" />
 					<Anchors>
-						<Anchor point="LEFT" relativeTo="$parentSlot" relativePoint="RIGHT" >
-							<Offset x="20" y="0" />
-						</Anchor>
+						<Anchor point="LEFT" relativeKey="$parent.Slot" relativePoint="RIGHT" x="20" y="0" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
-				<FontString name="$parentStatus" inherits="GameFontNormal" justifyH="LEFT">
+				<FontString parentKey="Status" inherits="GameFontNormal" justifyH="LEFT">
 					<Size x="320" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT">
-							<Offset x="-250" y="13" />
-						</Anchor>
+						<Anchor point="BOTTOMRIGHT" x="-250" y="13" />
 					</Anchors>
 					<Color r="255" g="255" b="255" />
 				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button name="$parentMenuItem1" inherits="AltoMenuItemTemplate" id="1">
+			<Button parentKey="MenuItem1" inherits="AltoMenuItemTemplate" id="1">
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="23" y="-105"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="23" y="-105" />
 				</Anchors>
 			</Button>
-			<Button name="$parentMenuItem2" inherits="AltoMenuItemTemplate" id="2">
+			<Button parentKey="MenuItem2" inherits="AltoMenuItemTemplate" id="2">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem1" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem1" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentMenuItem3" inherits="AltoMenuItemTemplate" id="3">
+			<Button parentKey="MenuItem3" inherits="AltoMenuItemTemplate" id="3">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem2" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem2" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentMenuItem4" inherits="AltoMenuItemTemplate" id="4">
+			<Button parentKey="MenuItem4" inherits="AltoMenuItemTemplate" id="4">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem3" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem3" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentMenuItem5" inherits="AltoMenuItemTemplate" id="5">
+			<Button parentKey="MenuItem5" inherits="AltoMenuItemTemplate" id="5">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem4" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem4" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentMenuItem6" inherits="AltoMenuItemTemplate" id="6">
+			<Button parentKey="MenuItem6" inherits="AltoMenuItemTemplate" id="6">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem5" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem5" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentMenuItem7" inherits="AltoMenuItemTemplate" id="7">
+			<Button parentKey="MenuItem7" inherits="AltoMenuItemTemplate" id="7">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem6" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem6" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentMenuItem8" inherits="AltoMenuItemTemplate" id="8">
+			<Button parentKey="MenuItem8" inherits="AltoMenuItemTemplate" id="8">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem7" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem7" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentMenuItem9" inherits="AltoMenuItemTemplate" id="9">
+			<Button parentKey="MenuItem9" inherits="AltoMenuItemTemplate" id="9">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem8" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem8" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentMenuItem10" inherits="AltoMenuItemTemplate" id="10">
+			<Button parentKey="MenuItem10" inherits="AltoMenuItemTemplate" id="10">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem9" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem9" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentMenuItem11" inherits="AltoMenuItemTemplate" id="11">
+			<Button parentKey="MenuItem11" inherits="AltoMenuItemTemplate" id="11">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem10" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem10" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentMenuItem12" inherits="AltoMenuItemTemplate" id="12">
+			<Button parentKey="MenuItem12" inherits="AltoMenuItemTemplate" id="12">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem11" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem11" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentMenuItem13" inherits="AltoMenuItemTemplate" id="13">
+			<Button parentKey="MenuItem13" inherits="AltoMenuItemTemplate" id="13">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem12" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem12" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentMenuItem14" inherits="AltoMenuItemTemplate" id="14">
+			<Button parentKey="MenuItem14" inherits="AltoMenuItemTemplate" id="14">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem13" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem13" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="$parentMenuItem15" inherits="AltoMenuItemTemplate" id="15">
+			<Button parentKey="MenuItem15" inherits="AltoMenuItemTemplate" id="15">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMenuItem14" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem14" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
 			<ScrollFrame name="AltoholicSearchMenuScrollFrame" inherits="FauxScrollFrameTemplate">
-				<Size>
-					<AbsDimension x="160" y="305"/>
-				</Size>
+				<Size x="160" y="305" />
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="158" y="-105"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPRIGHT" relativePoint="TOPLEFT" x="158" y="-105" />
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
 						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size>
-								<AbsDimension x="31" y="256"/>
-							</Size>
+							<Size x="31" y="256" />
 							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
-									<Offset>
-										<AbsDimension x="-2" y="5"/>
-									</Offset>
-								</Anchor>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="5" />
 							</Anchors>
 							<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
 						</Texture>
 						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
-							<Size>
-								<AbsDimension x="31" y="106"/>
-							</Size>
+							<Size x="31" y="106" />
 							<Anchors>
-								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
-									<Offset>
-										<AbsDimension x="-2" y="-2"/>
-									</Offset>
-								</Anchor>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-2" y="-2" />
 							</Anchors>
 							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
 						</Texture>
@@ -244,12 +154,10 @@
 				</Scripts>
 			</ScrollFrame>
 			
-			<EditBox name="$parent_MinLevel" letters="2" numeric="true" autoFocus="false" inherits="InputBoxTemplate">
+			<EditBox parentKey="MinLevel" letters="2" numeric="true" autoFocus="false" inherits="InputBoxTemplate">
 				<Size x="25" y="16" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="AltoholicFrame_SearchEditBox" relativePoint="RIGHT" >
-						<Offset x="10" y="0" />
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="AltoholicFrame_SearchEditBox" relativePoint="RIGHT" x="10" y="0" />
 				</Anchors>
 				<Scripts>
 					<OnEnterPressed>
@@ -257,12 +165,10 @@
 					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
-			<EditBox name="$parent_MaxLevel" letters="2" numeric="true" autoFocus="false" inherits="InputBoxTemplate">
+			<EditBox parentKey="MaxLevel" letters="2" numeric="true" autoFocus="false" inherits="InputBoxTemplate">
 				<Size x="25" y="16" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_MinLevel" relativePoint="RIGHT" >
-						<Offset x="12" y="0" />
-					</Anchor>
+					<Anchor point="LEFT" relativeKey="$parent.MinLevel" relativePoint="RIGHT" x="12" y="0" />
 				</Anchors>
 				<Scripts>
 					<OnEnterPressed>
@@ -270,13 +176,9 @@
 					</OnEnterPressed>
 				</Scripts>
 			</EditBox>
-			<Frame name="$parent_SelectRarity" inherits="UIDropDownMenuTemplate">
+			<Frame parentKey="SelectRarity" name="$parent_SelectRarity" inherits="UIDropDownMenuTemplate">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_MaxLevel" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="0" y="-5"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeKey="$parent.MaxLevel" relativePoint="RIGHT" x="0" y="-5" />
 				</Anchors>
 				<Scripts>
 					<OnLoad>
@@ -288,13 +190,9 @@
 					</OnLoad>
 				</Scripts>
 			</Frame>
-			<Frame name="$parent_SelectSlot" inherits="UIDropDownMenuTemplate">
+			<Frame parentKey="SelectSlot" name="$parent_SelectSlot" inherits="UIDropDownMenuTemplate">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_MaxLevel" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="130" y="-5"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeKey="$parent.MaxLevel" relativePoint="RIGHT" x="130" y="-5" />
 				</Anchors>
 				<Scripts>
 					<OnLoad>
@@ -308,13 +206,9 @@
 					</OnLoad>
 				</Scripts>
 			</Frame>
-			<Frame name="$parent_SelectLocation" inherits="UIDropDownMenuTemplate">
+			<Frame parentKey="SelectLocation" name="$parent_SelectLocation" inherits="UIDropDownMenuTemplate">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_MaxLevel" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="250" y="-5"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeKey="$parent.MaxLevel" relativePoint="RIGHT" x="250" y="-5" />
 				</Anchors>
 				<Scripts>
 					<OnLoad>
@@ -330,99 +224,51 @@
 			</Frame>		
 			
 			<Button name="$parent_Sort1" inherits="AltoSortButtonTemplate" hidden="true" id="1">
-				<Size>
-					<AbsDimension x="240" y="19"/>
-				</Size>
+				<Size x="240" y="19" />
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="AltoholicFrame_SearchEditBox" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="10" y="-10"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AltoholicFrame_SearchEditBox" relativePoint="BOTTOMRIGHT" x="10" y="-10" />
 				</Anchors>
 			</Button>
 			<Button name="$parent_Sort2" inherits="AltoSortButtonTemplate" hidden="true" id="2">
-				<Size>
-					<AbsDimension x="160" y="19"/>
-				</Size>
+				<Size x="160" y="19" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort1" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="$parent_Sort1" relativePoint="RIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parent_Sort3" inherits="AltoSortButtonTemplate" hidden="true" id="3">
-				<Size>
-					<AbsDimension x="150" y="19"/>
-				</Size>
+				<Size x="150" y="19" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort2" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="$parent_Sort2" relativePoint="RIGHT" x="5" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parent_Sort4" inherits="AltoSortButtonTemplate" hidden="true" id="4">
-				<Size>
-					<AbsDimension x="50" y="19"/>
-				</Size>
+				<Size x="50" y="19" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort3" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="$parent_Sort3" relativePoint="RIGHT" x="0" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parent_Sort5" inherits="AltoSortButtonTemplate" hidden="true" id="5">
-				<Size>
-					<AbsDimension x="50" y="19"/>
-				</Size>
+				<Size x="50" y="19" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort4" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="$parent_Sort4" relativePoint="RIGHT" x="0" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parent_Sort6" inherits="AltoSortButtonTemplate" hidden="true" id="6">
-				<Size>
-					<AbsDimension x="50" y="19"/>
-				</Size>
+				<Size x="50" y="19" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort5" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="$parent_Sort5" relativePoint="RIGHT" x="0" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parent_Sort7" inherits="AltoSortButtonTemplate" hidden="true" id="7">
-				<Size>
-					<AbsDimension x="50" y="19"/>
-				</Size>
+				<Size x="50" y="19" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort6" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="$parent_Sort6" relativePoint="RIGHT" x="0" y="0" />
 				</Anchors>
 			</Button>
 			<Button name="$parent_Sort8" inherits="AltoSortButtonTemplate" hidden="true" id="8">
-				<Size>
-					<AbsDimension x="50" y="19"/>
-				</Size>
+				<Size x="50" y="19" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parent_Sort7" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="$parent_Sort7" relativePoint="RIGHT" x="0" y="0" />
 				</Anchors>
 			</Button>
 			

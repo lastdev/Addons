@@ -53,7 +53,7 @@ L["Asleep"] = "Schlafend"
 L["Blink Spells"] = "Zaubersprüche aufblinken"
 L["Configure Class Module"] = "Klassen-Module konfigurieren"
 L["Default Proc Highlighting"] = "Standard Proc Hervorhebung"
--- L["Error loading:"] = ""
+L["Error loading:"] = "Fehler beim Laden:" -- Needs review
 L["Flash Brightness:"] = "Aufblitz-Leuchtkraft:"
 L["Flash Macros"] = "Aufblitz-Makros"
 L["Flash Size:"] = "Aufblitz-Größe:"
@@ -65,7 +65,7 @@ L["Shields"] = "Schilde"
 L["Spell Flashing"] = "Aufblitzende Zauber"
 L["SpellFlash settings have been reset for all players"] = "SpellFlash-Einstellungen wurden für alle Spieler zurückgesetzt."
 L["<SPELL> has not been defined in a table!"] = "<SPELL> wurde in keiner Funktion definiert!" -- Needs review
--- L["This module has not been updated to work with the latest expansion:"] = ""
+L["This module has not been updated to work with the latest expansion:"] = "Dieses Modul ist nicht aktualisiert worden, um mit der neuesten Erweiterung zu arbeiten:" -- Needs review
 L["Use All Class Modules"] = "Alle Klassen-Module verwenden"
 
 elseif GetLocale() == "koKR" then -- Korean

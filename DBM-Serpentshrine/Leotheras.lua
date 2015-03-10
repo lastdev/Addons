@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Leotheras", "DBM-Serpentshrine")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 547 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 556 $"):sub(12, -3))
 mod:SetCreatureID(21215, 21806)
 mod:SetModelID(20514)
 mod:SetZone()
@@ -111,7 +111,7 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		self:Schedule(60, humanWarns)
 	elseif msg == L.YellPhase2 or msg:find(L.YellPhase2) then
 		phase2 = true
-		self:Unschedule(60, humanWarns)
+		self:Unschedule(humanWarns)
 		timerPhase:Cancel()
 		timerWhirl:Cancel()
 		timerWhirlCD:Cancel()

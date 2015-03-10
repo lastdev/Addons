@@ -269,6 +269,7 @@ Outfitter.Douchebags =
 		Blaydin = true,
 		Flintlockz = true,
 		Matticus = true,
+		Elhorn = true,
 	},
 	["Terenas"] =
 	{
@@ -285,6 +286,10 @@ Outfitter.Douchebags =
 	["Hakkar"] =
 	{
 		Forcore = true, -- idiot
+	},
+	["Farstriders"] =
+	{
+		Leyton = true,
 	},
 }
 
@@ -1358,9 +1363,11 @@ end
 
 function Outfitter:UpdateCurrentOutfitIcon()
 	local _, vOutfit = self:GetCurrentOutfitInfo()
-	
 	local vTexture = self.OutfitBar:GetOutfitTexture(vOutfit)
 	
+	if type(vTexture) == "number" then
+		vTexture = 	self:ConvertTextureIDToPath(vTexture)
+	end
 	SetPortraitToTexture(OutfitterMinimapButton.CurrentOutfitTexture, vTexture)
 end
 
@@ -5383,6 +5390,30 @@ function Outfitter:Initialize()
 	-- Fire things up with a simulated entrance
 	
 	self:SchedulePlayerEnteringWorld()
+end
+
+-- Blizzard added icon numbers in patch 6 but no API for mapping between the number and the path, so create a texture to use for doing the mapping
+function Outfitter:ConvertTextureIDToPath(pID)
+	if type(pID) ~= "number" then
+		return pID
+	end
+
+	if not self.IDConversionTexture then
+		self.IDConversionTexture = OutfitterFrame:CreateTexture(nil, "BACKGROUND")
+		self.IDConversionTexture:Hide()
+	end
+
+	self.IDConversionTexture:SetToFileData(pID)
+	return self.IDConversionTexture:GetTexture()
+end
+
+function Outfitter:ConvertTextureIDToString(pID)
+	if type(pID) ~= "number" then
+		return pID
+	end
+
+	local vPath = self:ConvertTextureIDToPath(pID)
+	return string.match(vPath, ".-([^\\]-)$")
 end
 
 function Outfitter:InitializeSettings()

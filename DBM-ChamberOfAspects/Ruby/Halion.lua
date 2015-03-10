@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Halion", "DBM-ChamberOfAspects", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 167 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(39863)--40142 (twilight form)
 mod:SetEncounterID(1150)
 mod:SetModelID(31952)
@@ -31,13 +31,13 @@ local warnPhase3					= mod:NewPhaseAnnounce(3)
 local warningShadowConsumption		= mod:NewTargetAnnounce(74792, 4)
 local warningFieryCombustion		= mod:NewTargetAnnounce(74562, 4)
 local warningMeteor					= mod:NewSpellAnnounce(74648, 3)
-local warningShadowBreath			= mod:NewSpellAnnounce(74806, 2, nil, mod:IsTank() or mod:IsHealer())
-local warningFieryBreath			= mod:NewSpellAnnounce(74525, 2, nil, mod:IsTank() or mod:IsHealer())
+local warningShadowBreath			= mod:NewSpellAnnounce(74806, 2, nil, "Tank|Healer")
+local warningFieryBreath			= mod:NewSpellAnnounce(74525, 2, nil, "Tank|Healer")
 local warningTwilightCutter			= mod:NewAnnounce("TwilightCutterCast", 4, 74769)
 
-local specWarnShadowConsumption		= mod:NewSpecialWarningRun(74792)
+local specWarnShadowConsumption		= mod:NewSpecialWarningRun(74792, nil, nil, nil, 4)
 local yellShadowconsumption			= mod:NewYell(74792)
-local specWarnFieryCombustion		= mod:NewSpecialWarningRun(74562)
+local specWarnFieryCombustion		= mod:NewSpecialWarningRun(74562, nil, nil, nil, 4)
 local yellFieryCombustion			= mod:NewYell(74562)
 local specWarnMeteorStrike			= mod:NewSpecialWarningMove(74648)
 local specWarnTwilightCutter		= mod:NewSpecialWarningSpell(74769)
@@ -49,12 +49,10 @@ local timerMeteorCast				= mod:NewCastTimer(7, 74648)--7-8 seconds from boss yel
 local timerTwilightCutterCast		= mod:NewCastTimer(5, 74769)
 local timerTwilightCutter			= mod:NewBuffActiveTimer(10, 74769)
 local timerTwilightCutterCD			= mod:NewNextTimer(15, 74769)
-local timerShadowBreathCD			= mod:NewCDTimer(19, 74806, nil, mod:IsTank() or mod:IsHealer())--Same as debuff timers, same CD, can be merged into 1.
-local timerFieryBreathCD			= mod:NewCDTimer(19, 74525, nil, mod:IsTank() or mod:IsHealer())--But unique icons are nice pertaining to phase you're in ;)
+local timerShadowBreathCD			= mod:NewCDTimer(19, 74806, nil, "Tank|Healer")--Same as debuff timers, same CD, can be merged into 1.
+local timerFieryBreathCD			= mod:NewCDTimer(19, 74525, nil, "Tank|Healer")--But unique icons are nice pertaining to phase you're in ;)
 
 local berserkTimer					= mod:NewBerserkTimer(480)
-
-local soundConsumption 				= mod:NewSound(74562, nil, "SoundOnConsumption")
 
 mod:AddBoolOption("AnnounceAlternatePhase", true, "announce")
 mod:AddBoolOption("WhisperOnConsumption", false, "announce")
@@ -119,7 +117,6 @@ function mod:SPELL_AURA_APPLIED(args)--We don't use spell cast success for actua
 		end
 		if args:IsPlayer() then
 			specWarnShadowConsumption:Show()
-			soundConsumption:Play()
 			yellShadowconsumption:Yell()
 		end
 		if not self.Options.AnnounceAlternatePhase then
@@ -137,7 +134,6 @@ function mod:SPELL_AURA_APPLIED(args)--We don't use spell cast success for actua
 		end
 		if args:IsPlayer() then
 			specWarnFieryCombustion:Show()
-			soundConsumption:Play()
 			yellFieryCombustion:Yell()
 		end
 		if not self.Options.AnnounceAlternatePhase then

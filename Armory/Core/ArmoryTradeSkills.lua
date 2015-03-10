@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 660 2014-12-10T12:44:11Z
+    Revision: 665 2015-01-25T20:06:17Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -27,6 +27,8 @@
 --]]
 
 local Armory, _ = Armory;
+local LCI = LibStub("LibCraftInfo-1.0");
+
 local container = "Professions";
 local itemContainer = "SkillLines";
 local recipeContainer = "Recipes";
@@ -80,6 +82,7 @@ end
 local professionLines = {};
 local dirty = true;
 local owner = "";
+local invSlot = {};
 
 local function GetRecipeValue(id, ...)
     return Armory:GetSharedValue(container, recipeContainer, id, ...);
@@ -99,11 +102,23 @@ local function IsRecipe(skillType)
     return skillType and skillType ~= "header" and skillType ~= "subheader";
 end
 
-local function IsSameRecipe(skillName, recipeName)
+local function IsSameRecipe(skillName, recipeName, ...)
     skillName = strlower(strtrim(skillName));
     recipeName = strlower(strtrim(recipeName));
+    if ( skillName:find(recipeName) ) then
+        return true;
+    elseif ( recipeName:find("[%-%:%(]%s*"..skillName) or recipeName:find(skillName.."%s*%-") ) then
+        -- not 100% but we tried
+        Armory:FillUnbrokenTable(invSlot, ...);
+        for _, slot in ipairs(invSlot) do
+            if ( recipeName:find(strlower(slot)) ) then
+                return true;
+            end
+        end
+    end
     --return skillName:sub(1, strlen(recipeName)) == recipeName;
-    return skillName:find(recipeName);
+    --return skillName:find(recipeName);
+    return false;
 end
 
 local function SelectProfession(baseEntry, name)
@@ -120,7 +135,6 @@ local function GetProfessionNumValues(dbEntry)
 end
 
 local groups = {};
-local invSlot = {};
 local function GetProfessionLines()
     local dbEntry = Armory.selectedDbBaseEntry;
     local group = { index=0, expanded=true, included=true, items={} };
@@ -162,10 +176,9 @@ local function GetProfessionLines()
                         for index = 1, numReagents do
                             names = names.."\t"..(GetReagentInfo(id, index) or "");
                         end
-
-                        Armory:FillTable(invSlot, GetRecipeValue(id, "InvSlot"));
                         if ( extended and tradeSkillInvSlotFilter ) then
                             isIncluded = false;
+                            Armory:FillUnbrokenTable(invSlot, GetRecipeValue(id, "InvSlot"));
                             for _, slot in ipairs(invSlot) do
                                 if ( tradeSkillInvSlotFilter[slot] ) then
                                     isIncluded = true;
@@ -539,7 +552,7 @@ end
 
 local invSlotTypes = {};
 local function UpdateTradeSkillExtended(dbEntry)
-    local name, hasCooldown;
+    local name, category, slotType, hasCooldown;
     local dataMissing;
     
     -- retrieve slot types (would be to time consuming if put in funcAdditionalInfo)
@@ -548,21 +561,30 @@ local function UpdateTradeSkillExtended(dbEntry)
     for i = 1, #invSlots do
         _G.SetTradeSkillInvSlotFilter(i, 1, 1);
         for id = 1, _G.GetNumTradeSkills() do
-            name = _G.GetTradeSkillInfo(id);
-            if ( invSlotTypes[name] ) then
-                table.insert(invSlotTypes[name], invSlots[i]);
+            name, skillType = _G.GetTradeSkillInfo(id);
+            if ( IsRecipe(skillType) ) then
+                slotType = (category or "")..name;
+                if ( invSlotTypes[slotType] ) then
+                    table.insert(invSlotTypes[slotType], invSlots[i]);
+                else
+                    invSlotTypes[slotType] = {invSlots[i]};
+                end
             else
-                invSlotTypes[name] = {invSlots[i]};
+                category = name;
             end
         end
     end
     _G.SetTradeSkillInvSlotFilter(0, 1, 1);
+    category = nil;
 
     local funcNumLines = _G.GetNumTradeSkills;
     local funcGetLineInfo = _G.GetTradeSkillInfo;
     local funcGetLineState = function(index)
-        local _, skillType, _, isExpanded = _G.GetTradeSkillInfo(index);
+        local name, skillType, _, isExpanded = _G.GetTradeSkillInfo(index);
         local isHeader = not IsRecipe(skillType);
+        if ( isHeader ) then
+            category = name;
+        end
         return isHeader, isExpanded;
     end;
     local funcAdditionalInfo = function(index)
@@ -572,8 +594,9 @@ local function UpdateTradeSkillExtended(dbEntry)
         if ( cooldown ) then
             hasCooldown = true;
         end
-        if ( invSlotTypes[name] ) then
-            recipe.InvSlot = dbEntry.Save(unpack(invSlotTypes[name]));
+        slotType = (category or "")..name;
+        if ( invSlotTypes[slotType] ) then
+            recipe.InvSlot = dbEntry.Save(unpack(invSlotTypes[slotType]));
         end
         return id;
     end
@@ -1103,7 +1126,7 @@ function Armory:FindSkill(itemList, ...)
         -- need low-level access because of all the possible active filters
         local professions = dbEntry:GetValue(container);
         if ( professions ) then
-            local text, link, skillName, skillType, id;
+            local text, link, skillName, skillType, id, slotInfo;
             for name in pairs(professions) do
                 for i = 1, dbEntry:GetNumValues(container, name, itemContainer) do
                     skillName, skillType = dbEntry:GetValue(container, name, itemContainer, i, "Info");
@@ -1120,6 +1143,10 @@ function Armory:FindSkill(itemList, ...)
                             text = skillName;
                         end
                         if ( self:FindTextParts(text, ...) ) then
+                            slotInfo = strjoin(", ", GetRecipeValue(id, "InvSlot"));
+                            if ( slotInfo ) then
+                                skillName = skillName .. " ("..slotInfo..")";
+                            end
                             table.insert(list, {label=name, name=skillName, link=link});
                         end
                     end
@@ -1185,20 +1212,32 @@ function Armory:GetRecipeAltInfo(name, link, profession, reqRank, reqReputation,
 
 	if ( name and name ~= "" and self:HasTradeSkills() and (self:GetConfigShowKnownBy() or self:GetConfigShowHasSkill() or self:GetConfigShowCanLearn()) ) then
         local currentProfile = self:CurrentProfile();
-        local skillName, skillType, dbEntry, character;
+        local skillID, skillName, dbEntry, character;
+
+        local recipeID = self:GetItemId(link);
+        local id = LCI:GetRecipeLearnedSpell(tonumber(recipeID));
+        local warn = not id;
 
         for _, profile in ipairs(self:GetConnectedProfiles()) do
             self:SelectProfile(profile);
 
             dbEntry = self.selectedDbBaseEntry;
-
+            
             local known;
             for i = 1, dbEntry:GetNumValues(container, profession, itemContainer) do
-                skillName, skillType = dbEntry:GetValue(container, profession, itemContainer, i, "Info");
-                if ( IsRecipe(skillType) and IsSameRecipe(skillName, name) ) then
-                    known = true;
-                    AddKnownBy(profile);
-                    break;
+                skillID = dbEntry:GetValue(container, profession, itemContainer, i, "Data");
+                if ( skillID ) then
+                    if ( id ) then
+                        known = (id == tonumber(skillID));
+                    else
+                        skillName = dbEntry:GetValue(container, profession, itemContainer, i, "Info");
+                        known = IsSameRecipe(skillName, name, GetRecipeValue(skillID, "InvSlot"));
+                    end
+                    if ( known ) then
+                        warn = false;
+                        AddKnownBy(profile);
+                        break;
+                    end
                 end
             end
 
@@ -1252,6 +1291,10 @@ function Armory:GetRecipeAltInfo(name, link, profession, reqRank, reqReputation,
             end
         end
         self:SelectProfile(currentProfile);
+
+        if ( warn ) then
+            self:PrintWarning(format(ARMORY_RECIPE_WARNING, recipeID));
+        end
     end
 
     return recipeOwners, recipeHasSkill, recipeCanLearn;

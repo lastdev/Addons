@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(171, "DBM-BlackwingDescent", nil, 73)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 103 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 150 $"):sub(12, -3))
 mod:SetCreatureID(41442)
 mod:SetEncounterID(1022)
 mod:SetZone()
 mod:SetUsedIcons(8)
-mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_AtramedesIntro.wav", "Sound\\Creature\\Atramedes\\VO_BD_Atramedes_Event03.wav")
+mod:SetModelSound("Sound\\Creature\\Nefarian\\VO_BD_Nefarian_AtramedesIntro.ogg", "Sound\\Creature\\Atramedes\\VO_BD_Atramedes_Event03.ogg")
 --Long: Atramedes, are you going deaf as well as blind? Hurry up and kill them all.
 --Short: Death waits in the darkness!
 
@@ -33,13 +33,13 @@ local warnPhaseShift		= mod:NewSpellAnnounce(92681, 3)
 local warnObnoxious			= mod:NewCastAnnounce(92677, 4, nil, false)
 local warnSearingFlameSoon	= mod:NewSoonAnnounce(77840, 3, nil, false)
 
-local specWarnSearingFlame	= mod:NewSpecialWarningSpell(77840, nil, nil, nil, true)
-local specWarnSonarPulse	= mod:NewSpecialWarningSpell(77672, false, nil, nil, true)
-local specWarnTracking		= mod:NewSpecialWarningYou(78092)
+local specWarnSearingFlame	= mod:NewSpecialWarningSpell(77840, nil, nil, nil, 2)
+local specWarnSonarPulse	= mod:NewSpecialWarningSpell(77672, false, nil, nil, 2)
+local specWarnTracking		= mod:NewSpecialWarningRun(78092, nil, nil, nil, 4)
 local specWarnPestered		= mod:NewSpecialWarningYou(92685)
 local yellPestered			= mod:NewYell("ej3082")
-local specWarnObnoxious		= mod:NewSpecialWarningInterrupt(92677, mod:IsMelee())
-local specWarnAddTargetable	= mod:NewSpecialWarningSwitch("ej3082", mod:IsRanged())
+local specWarnObnoxious		= mod:NewSpecialWarningInterrupt(92677, "Melee")
+local specWarnAddTargetable	= mod:NewSpecialWarningSwitch("ej3082", "Ranged")
 
 local timerSonarPulseCD		= mod:NewCDTimer(10, 77672)
 local timerSonicBreath		= mod:NewCDTimer(41, 78075)
@@ -48,8 +48,6 @@ local timerAirphase			= mod:NewNextTimer(85, "ej3081", nil, nil, nil, "Interface
 local timerGroundphase		= mod:NewNextTimer(31.5, "ej3061", nil, nil, nil, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")--I just never remember to log and /yell at right times since they lack most accurate triggers.
 
 local berserkTimer			= mod:NewBerserkTimer(600)
-
-local soundTracking			= mod:NewSound(78092)
 
 mod:AddBoolOption("TrackingIcon")
 mod:AddBoolOption("InfoFrame")
@@ -94,7 +92,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnTracking:Show(args.destName)
 		if args:IsPlayer() then
 			specWarnTracking:Show()
-			soundTracking:Play()
 		end
 		if self.Options.TrackingIcon then
 			self:SetIcon(args.destName, 8)

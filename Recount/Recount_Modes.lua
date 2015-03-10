@@ -4,7 +4,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale( "Recount" )
 local Epsilon = 0.000000000000000001
 
-local revision = tonumber(string.sub("$Revision: 1286 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1300 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -42,8 +42,8 @@ DetailTitles.Attacks = {
 
 DetailTitles.Resisted = {
 	TopNames = L["Ability Name"],
-	TopCount = L["Count"],
-	TopAmount = L["Resisted"],
+	TopCount = L["Resisted"],
+	TopAmount = L["Count"],
 	BotNames = L["Type"],
 	BotMin = L["Min"],
 	BotAvg = L["Avg"],
@@ -263,7 +263,7 @@ function DataModes:DamageReturner(data, num)
 		return damage, dps
 	end
 
-	return damage, {{data.Fights[Recount.db.profile.CurDataSet].Attacks, L["'s Hostile Attacks"], DetailTitles.Attacks}, {data.Fights[Recount.db.profile.CurDataSet].DamagedWho, " "..L["Damaged Who"], DetailTitles.DamagedWho}, {data.Fights[Recount.db.profile.CurDataSet].PartialResist, L["'s Partial Resists"],DetailTitles.Resisted}, {data.Fights[Recount.db.profile.CurDataSet].TimeDamaging, L["'s Time Spent Attacking"], DetailTitles.DamageTime}}
+	return damage, {{data.Fights[Recount.db.profile.CurDataSet].Attacks, L["'s Hostile Attacks"], DetailTitles.Attacks}, {data.Fights[Recount.db.profile.CurDataSet].DamagedWho, " "..L["Damaged Who"], DetailTitles.DamagedWho}, {data.Fights[Recount.db.profile.CurDataSet].PartialResist, L["'s Partial Resists"], DetailTitles.Resisted}, {data.Fights[Recount.db.profile.CurDataSet].TimeDamaging, L["'s Time Spent Attacking"], DetailTitles.DamageTime}}
 end
 
 function DataModes:DPSReturner(data, num)
@@ -277,7 +277,7 @@ function DataModes:DPSReturner(data, num)
 		return dps
 	end
 
-	return dps, {{data.Fights[Recount.db.profile.CurDataSet].Attacks, L["'s Hostile Attacks"], DetailTitles.Attacks}, {data.Fights[Recount.db.profile.CurDataSet].DamagedWho, " "..L["Damaged Who"],DetailTitles.DamagedWho}, {data.Fights[Recount.db.profile.CurDataSet].PartialResist, L["'s Partial Resists"], DetailTitles.Resisted}, {data.Fights[Recount.db.profile.CurDataSet].TimeDamaging, L["'s Time Spent Attacking"], DetailTitles.DamageTime}}
+	return dps, {{data.Fights[Recount.db.profile.CurDataSet].Attacks, L["'s Hostile Attacks"], DetailTitles.Attacks}, {data.Fights[Recount.db.profile.CurDataSet].DamagedWho, " "..L["Damaged Who"], DetailTitles.DamagedWho}, {data.Fights[Recount.db.profile.CurDataSet].PartialResist, L["'s Partial Resists"], DetailTitles.Resisted}, {data.Fights[Recount.db.profile.CurDataSet].TimeDamaging, L["'s Time Spent Attacking"], DetailTitles.DamageTime}}
 end
 
 
@@ -533,7 +533,7 @@ function TooltipFuncs:Damage(name, data)
 				Damage = Damage / (Damage + (data.Fights[Recount.db.profile.CurDataSet].Damage or 0))
 				GameTooltip:AddLine(" ")
 				GameTooltip:AddDoubleLine(L["Pet"]..":",data.Pet[petindex].." ("..math_floor(Damage * 100 + 0.5).."%)", nil, nil, nil, 1, 1, 1)
-				Recount:AddSortedTooltipData(L["Top 3"].." "..L["Pet Damage Abilities"],dbCombatants[data.Pet[petindex] ].Fights and dbCombatants[data.Pet[petindex] ].Fights[Recount.db.profile.CurDataSet].Attacks, 3)
+				Recount:AddSortedTooltipData(L["Top 3"].." "..L["Pet Damage Abilities"], dbCombatants[data.Pet[petindex] ].Fights and dbCombatants[data.Pet[petindex] ].Fights[Recount.db.profile.CurDataSet].Attacks, 3)
 				GameTooltip:AddLine("")
 				Recount:AddSortedTooltipData(L["Top 3"].." "..L["Pet Attacked"],dbCombatants[data.Pet[petindex] ].Fights and dbCombatants[data.Pet[petindex] ].Fights[Recount.db.profile.CurDataSet].DamagedWho, 3)
 			end

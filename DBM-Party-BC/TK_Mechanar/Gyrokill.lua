@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Gyrokill", "DBM-Party-BC", 13)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 526 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 554 $"):sub(12, -3))
 mod:SetCreatureID(19218)
 mod:SetModelID(18816)--Bad angle, but not terrible enough to disable i guess
 
@@ -14,7 +14,7 @@ mod:RegisterEventsInCombat(
 
 local warnShadowpower       = mod:NewSpellAnnounce(35322)
 local timerShadowpower      = mod:NewBuffActiveTimer(15, 35322)
-local specWarnShadowpower   = mod:NewSpecialWarningDispel(35322, mod:IsMagicDispeller())
+local specWarnShadowpower   = mod:NewSpecialWarningDispel(35322, "MagicDispeller")
 
 function mod:SPELL_AURA_APPLIED(args)
 	if args:IsSpellID(39193, 35322) and not args:IsDestTypePlayer() and self:IsInCombat() then     --Shadow Power

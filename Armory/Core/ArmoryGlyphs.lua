@@ -1,6 +1,6 @@
 --[[
     Armory Addon for World of Warcraft(tm).
-    Revision: 602 2013-12-07T22:13:41Z
+    Revision: 664 2015-01-14T16:52:38Z
     URL: http://www.wow-neighbours.com
 
     License:
@@ -110,19 +110,20 @@ local buzzWords;
 local words = {};
 function Armory:GetGlyphKey(name)
     if ( not buzzWords ) then
-        buzzWords = "|"..strupper(ARMORY_GLYPH).."|";
+        buzzWords = "|";
         for word in ARMORY_BUZZ_WORDS:gmatch("%S+") do
             buzzWords = buzzWords..strupper(word).."|";
         end
     end
 
+    name = strtrim(strupper(name):gsub(strupper(ARMORY_GLYPH), ""));
     table.wipe(words);
     for word in name:gmatch("%S+") do
-        if ( not buzzWords:find("|"..strupper(word).."|") ) then
-            table.insert(words, strupper(word));
+        if ( not buzzWords:find("|"..word.."|") ) then
+            table.insert(words, word);
         end
     end
-    return strjoin("_", unpack(words));
+    return strjoin("_", unpack(words)):gsub("^%p(.+)%p$", "%1");
 end
 
 ----------------------------------------------------------

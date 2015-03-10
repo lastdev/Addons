@@ -394,7 +394,9 @@ a.Rotations.Frost = {
          "Pillar of Frost",
          "Death Strike with Dark Succor",
          "Death Siphon",
-         "Horn of Winter for Buff, Optional")
+         "Death Pact",
+         "Horn of Winter for Buff, Optional"
+      )
 
       -- c.Debug("aoe", "harm", c.EstimatedHarmTargets, "heal", c.EstimatedHealTargets)
 
@@ -544,6 +546,7 @@ a.Rotations.Unholy = {
       c.FlashAll(
          "Death Strike with Dark Succor",
          "Death Siphon",
+         "Death Pact",
          "Horn of Winter for Buff, Optional"
       )
 

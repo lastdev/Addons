@@ -1,12 +1,16 @@
 local mod	= DBM:NewMod(665, "DBM-Party-MoP", 7, 246)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetCreatureID(59153)
 mod:SetEncounterID(1428)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
+
+mod:RegisterEvents(
+	"CHAT_MSG_MONSTER_YELL"
+)
 
 mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED",
@@ -21,10 +25,11 @@ local warnBoneSpike		= mod:NewTargetAnnounce(113999, 3)
 
 local specWarnGetBoned	= mod:NewSpecialWarning("SpecWarnGetBoned")
 local specWarnSoulFlame	= mod:NewSpecialWarningMove(114009)--Not really sure what the point of this is yet. It's stupid easy to avoid and seems to serve no fight purpose yet, besides maybe cover some of the bone's you need for buff.
-local specWarnRusting	= mod:NewSpecialWarningStack(113765, mod:IsTank(), 5)
+local specWarnRusting	= mod:NewSpecialWarningStack(113765, "Tank", 5)
+local SpecWarnDoctor	= mod:NewSpecialWarning("SpecWarnDoctor")
 
-local timerBoneSpikeCD	= mod:NewNextTimer(8, 113999)
-local timerRusting		= mod:NewBuffActiveTimer(15, 113765, nil, mod:IsTank())
+local timerBoneSpikeCD	= mod:NewCDTimer(8, 113999)
+local timerRusting		= mod:NewBuffActiveTimer(15, 113765, nil, "Tank")
 
 mod:AddBoolOption("InfoFrame")
 
@@ -60,7 +65,7 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnRusting:Show(args.amount)
 		end
 	end
-end		
+end
 mod.SPELL_AURA_APPLIED_DOSE = mod.SPELL_AURA_APPLIED
 
 function mod:SPELL_AURA_REMOVED(args)
@@ -81,5 +86,11 @@ end
 function mod:SPELL_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 	if spellId == 114009 and destGUID == UnitGUID("player") and self:AntiSpam(2, 2) then
 		specWarnSoulFlame:Show()
+	end
+end
+
+function mod:CHAT_MSG_MONSTER_YELL(msg, npc)
+	if npc and not UnitIsFriend("player", npc) and (msg == L.TheolenSpawn or msg:find(L.TheolenSpawn)) then
+		SpecWarnDoctor:Show()
 	end
 end

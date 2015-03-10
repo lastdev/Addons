@@ -336,7 +336,7 @@ function ns:OnClick(frame, button)
 
 	addon.Tabs:OnClick("Characters")
 	addon.Tabs.Characters:SetAlt(charName, realm, account)
-	addon.Tabs.Characters:MenuItem_OnClick(AltoholicTabCharacters_Characters, "LeftButton")
+	addon.Tabs.Characters:MenuItem_OnClick(AltoholicTabCharacters.Characters, "LeftButton")
 	addon.Tabs.Characters:SetCurrentProfession(skillName)
 end
 

@@ -1,7 +1,7 @@
 --[[
 	Auctioneer - Price Level Utility module
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
-	Revision: $Id: PriceLevel.lua 5458 2014-06-13 10:40:11Z brykrys $
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
+	Revision: $Id: PriceLevel.lua 5535 2014-12-12 15:12:36Z brykrys $
 	URL: http://auctioneeraddon.com/
 
 	This is an addon for World of Warcraft that adds a price level indicator
@@ -39,25 +39,26 @@ local print,decode,_,_,replicate,empty,get,set,default,debugPrint,fill = AucAdva
 
 local data
 
-lib.Processors = {}
-function lib.Processors.itemtooltip(callbackType, ...)
-	lib.ProcessTooltip(...)
-end
+lib.Processors = {
+	itemtooltip = function(callbackType, ...)
+		lib.ProcessTooltip(...)
+	end,
+
+	config = function(callbackType, gui)
+		private.SetupConfigGui(gui)
+	end,
+
+	listupdate = function()
+		private.ListUpdate()
+	end,
+
+	configchanged = function(callbackType, setting, value, subsetting, module)
+		if module == "pricelevel" and AuctionFrameBrowse:IsVisible() then
+			private.ListUpdate()
+		end
+	end,
+}
 lib.Processors.battlepettooltip = lib.Processors.itemtooltip
-
-function lib.Processors.config(callbackType, ...)
-	private.SetupConfigGui(...)
-end
-
-function lib.Processors.listupdate(callbackType, ...)
-	private.ListUpdate(...)
-end
-
-function lib.Processors.configchanged(callbackType, ...)
-	if (AuctionFrameBrowse_Update) then
-		AuctionFrameBrowse_Update()
-	end
-end
 
 
 function lib.ProcessTooltip(tooltip, hyperlink, serverKey, quantity, decoded, additional, order)
@@ -323,4 +324,4 @@ function lib.CalcLevel(link, quantity, bidPrice, buyPrice, itemWorth, serverKey)
 	return priceLevel, perItem, r,g,b, lvl, itemWorth
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Util-PriceLevel/PriceLevel.lua $", "$Rev: 5458 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Util-PriceLevel/PriceLevel.lua $", "$Rev: 5535 $")

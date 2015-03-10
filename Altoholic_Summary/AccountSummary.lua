@@ -145,7 +145,7 @@ local function GetRestedXP(character)
 	local rate = DataStore:GetRestXPRate(character)
 
 	local coeff = 1
-	if addon:GetOption("RestXPMode") == 1 then
+	if addon:GetOption("UI.Tabs.Summary.ShowRestXP150pc") then
 		coeff = 1.5
 	end
 	rate = rate * coeff
@@ -423,7 +423,7 @@ function ns:Level_OnClick(frame, button)
 		
 		local tc = addon.Tabs.Characters
 		tc:SetAlt(Characters:GetInfo(line))
-		tc:MenuItem_OnClick(AltoholicTabCharacters_Characters, "LeftButton")
+		tc:MenuItem_OnClick(AltoholicTabCharacters.Characters, "LeftButton")
 		addon.Containers:UpdateCache()
 		tc:ViewCharInfo(VIEW_BAGS)
 	end

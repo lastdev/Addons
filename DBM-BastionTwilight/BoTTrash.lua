@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BoTrash", "DBM-BastionTwilight")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 60 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
 mod:SetModelID(37193)
 mod:SetZone()
 mod.isTrashMod = true
@@ -18,9 +18,9 @@ local warnFrostWhirl		= mod:NewSpellAnnounce(93340, 4)--This is nasty frost whir
 local warnFlameStrike		= mod:NewTargetAnnounce(93362, 4)--This is Flame strike we need to not stand in unless we're dispeling frost dudes shield.
 local warnRupture			= mod:NewTargetAnnounce(93377, 4)--This is twilight rupture the big guys do in hallway before halfus.
 
-local specWarnVolcanicWrath	= mod:NewSpecialWarningSpell(87903, nil, nil, nil, true)
-local specWarnRupture		= mod:NewSpecialWarningSpell(93377, nil, nil, nil, true)
-local specWarnFrostWhirl	= mod:NewSpecialWarningSpell(93340, false, nil, nil, true)
+local specWarnVolcanicWrath	= mod:NewSpecialWarningSpell(87903, nil, nil, nil, 2)
+local specWarnRupture		= mod:NewSpecialWarningSpell(93377, nil, nil, nil, 2)
+local specWarnFrostWhirl	= mod:NewSpecialWarningSpell(93340, false, nil, nil, 2)
 local specWarnFlameStrike	= mod:NewSpecialWarningMove(93362)
 local yellFlamestrike		= mod:NewYell(93362)
 

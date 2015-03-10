@@ -7,7 +7,6 @@ local u = BittensGlobalTables.GetTable("BittensUtilities")
 
 local GetTime = GetTime
 local SPELL_POWER_SHADOW_ORBS = SPELL_POWER_SHADOW_ORBS
-local UnitSpellHaste = UnitSpellHaste
 local min = math.min
 local max = math.max
 local string = string

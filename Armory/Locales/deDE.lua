@@ -449,6 +449,8 @@ L["ARMORY_OPEN_HINT"] = "Zum Öffnen klicken"
 L["ARMORY_PANDARIA_GEM_RESEARCH"] = "Juwelenschleifen-Forschung von Pandaria"
 L["ARMORY_QUEST_TOOLTIP_LABEL"] = "Charaktere auf dieser Quest:"
 L["ARMORY_RECIPE"] = "Rezept"
+L["ARMORY_RECIPE_WARNING"] = [=[Recipe %s not found in LibCraftInfo. Trying to make an educated guess.
+Please check with '/armory find skill ...' to be sure.]=] -- Requires localization
 L["ARMORY_REPUTATION_SUMMARY"] = "%1$s - %2$s (%3$d/%4$d,%5$d verbleibend)"
 L["ARMORY_SEARCHING"] = "Suche ..."
 L["ARMORY_SELECT_UNIT_HINT"] = "Klicke um diesen Charakter auszuwählen."

@@ -443,34 +443,29 @@ local callbacks = {
 			end
 		end,
 	GetSize = function() return #view end,
-	RowSetup = function(self, entry, row, dataRowID)
+	RowSetup = function(self, rowFrame, dataRowID)
 			currentFaction = view[dataRowID]
-			
-			local rowName = entry .. row
-			_G[rowName.."Name"]:SetText(WHITE .. currentFaction.name)
-			_G[rowName.."Name"]:SetJustifyH("LEFT")
-			_G[rowName.."Name"]:SetPoint("TOPLEFT", 15, 0)
+
+			rowFrame.Name.Text:SetText(WHITE .. currentFaction.name)
+			rowFrame.Name.Text:SetJustifyH("LEFT")
 		end,
-	ColumnSetup = function(self, entry, row, column, dataRowID, character)
-			local itemName = entry.. row .. "Item" .. column;
-			local itemTexture = _G[itemName .. "_Background"]
-			local itemButton = _G[itemName]
-			local itemText = _G[itemName .. "Name"]
-		
+	RowOnEnter = function()	end,
+	RowOnLeave = function() end,
+	ColumnSetup = function(self, button, dataRowID, character)
 			local faction = currentFaction
 			
 			if faction.left then		-- if it's not a full texture, use tcoords
-				itemTexture:SetTexture(faction.icon)
-				itemTexture:SetTexCoord(faction.left, faction.right, faction.top, faction.bottom)
+				button.Background:SetTexture(faction.icon)
+				button.Background:SetTexCoord(faction.left, faction.right, faction.top, faction.bottom)
 			else
-				itemTexture:SetTexture("Interface\\Icons\\"..faction.icon)
-				itemTexture:SetTexCoord(0, 1, 0, 1)
+				button.Background:SetTexture("Interface\\Icons\\"..faction.icon)
+				button.Background:SetTexCoord(0, 1, 0, 1)
 			end		
 			
-			itemText:SetFontObject("GameFontNormalSmall")
-			itemText:SetJustifyH("CENTER")
-			itemText:SetPoint("BOTTOMRIGHT", 5, 0)
-			itemTexture:SetDesaturated(false)
+			button.Name:SetFontObject("GameFontNormalSmall")
+			button.Name:SetJustifyH("CENTER")
+			button.Name:SetPoint("BOTTOMRIGHT", 5, 0)
+			button.Background:SetDesaturated(false)
 			
 			local status, _, _, rate = DataStore:GetReputationInfo(character, faction.name)
 			if status and rate then 
@@ -478,29 +473,29 @@ local callbacks = {
 				if status == FACTION_STANDING_LABEL8 then
 					text = ICON_READY
 				else
-					itemTexture:SetDesaturated(true)
-					itemText:SetFontObject("NumberFontNormalSmall")
-					itemText:SetJustifyH("RIGHT")
-					itemText:SetPoint("BOTTOMRIGHT", 0, 0)
+					button.Background:SetDesaturated(true)
+					button.Name:SetFontObject("NumberFontNormalSmall")
+					button.Name:SetJustifyH("RIGHT")
+					button.Name:SetPoint("BOTTOMRIGHT", 0, 0)
 					text = format("%2d", floor(rate)) .. "%"
 				end
 
 				local vc = VertexColors[status]
-				itemTexture:SetVertexColor(vc.r, vc.g, vc.b);
+				button.Background:SetVertexColor(vc.r, vc.g, vc.b);
 				
 				local color = WHITE
 				if status == FACTION_STANDING_LABEL1 or status == FACTION_STANDING_LABEL2 then
 					color = DARK_RED
 				end
 
-				itemButton.key = character
-				itemButton:SetID(dataRowID)
-				itemText:SetText(color..text)
+				button.key = character
+				button:SetID(dataRowID)
+				button.Name:SetText(color..text)
 			else
-				itemTexture:SetVertexColor(0.3, 0.3, 0.3);	-- greyed out
-				itemText:SetText(ICON_NOTREADY)
-				itemButton:SetID(0)
-				itemButton.key = nil
+				button.Background:SetVertexColor(0.3, 0.3, 0.3);	-- greyed out
+				button.Name:SetText(ICON_NOTREADY)
+				button:SetID(0)
+				button.key = nil
 			end
 		end,
 		

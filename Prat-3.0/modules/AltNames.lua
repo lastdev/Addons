@@ -730,7 +730,8 @@ Prat:AddModuleToLoad(function()
 	["alt name exists: %s -> %s; not overwriting as set in preferences"] = "马甲名称存在: %s -> %s;没有覆盖参数设置",
 	AltNames = "马甲名称",
 	["Alts:"] = "马甲:",
-	-- autoguildalts_desc = "",
+	autoguildalts_desc = [=[后台自动从公会信息中导入
+]=], -- Needs review
 	-- autoguildalts_name = "",
 	["Be quiet"] = "禁言",
 	["character removed: %s"] = "删除角色: %s",

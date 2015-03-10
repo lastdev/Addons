@@ -1,5 +1,5 @@
 local g = BittensGlobalTables
-local u = g.GetOrMakeTable("BittensUtilities", 5)
+local u = g.GetOrMakeTable("BittensUtilities", 6)
 
 local function skipOrUpgrade(table, feature, version)
 	local vName = feature .. "Version"

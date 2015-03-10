@@ -1,6 +1,6 @@
 ﻿--[[
 	Auctioneer
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
 	Revision: $Id: CoreSettings.lua 5518 2014-11-06 11:35:20Z brykrys $
 	URL: http://auctioneeraddon.com/
 
@@ -793,4 +793,4 @@ function private.CheckObsolete()
 	end
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/Auc-Advanced/CoreSettings.lua $", "$Rev: 5518 $")
+AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/trunk/Auc-Advanced/CoreSettings.lua $", "$Rev: 5518 $")

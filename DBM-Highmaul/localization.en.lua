@@ -57,6 +57,15 @@ L:SetOptionLocalization({
 --------------------
 L= DBM:GetModLocalization(1153)
 
+
+L:SetWarningLocalization({
+	specWarnExpelMagicFelFades	= "Fel fading in 5s - move to start"
+})
+
+L:SetOptionLocalization({
+	specWarnExpelMagicFelFades	= "Show special warning to move to start position for $spell:172895 expiring"
+})
+
 L:SetMiscLocalization({
 	supressionTarget1	= "I will crush you!",
 	supressionTarget2	= "Silence!",
@@ -69,7 +78,15 @@ L:SetMiscLocalization({
 --------------------------
 L= DBM:GetModLocalization(1197)
 
+L:SetTimerLocalization({
+	timerNightTwistedCD		= "Next Night-Twisted Adds"
+})
+
 L:SetOptionLocalization({
+	GazeYellType		= "Set yell type for Gaze of the Abyss",
+	Countdown			= "Countdown until expires",
+	Stacks				= "Stacks as they are applied",
+	timerNightTwistedCD	= "Show timer for Next Night-Twisted Faithful",
 	--Auto generated, don't copy to non english files, not needed.
 	warnBranded						= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.stack:format(156225),
 	warnResonance					= DBM_CORE_AUTO_ANNOUNCE_OPTIONS.spell:format(156467),
@@ -80,7 +97,10 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	BrandedYell			= "Branded (%s) on %s"
+	BrandedYell			= "Branded (%d) %dy",
+	GazeYell			= "Gaze fading in %d",
+	GazeYell2			= "Gaze (%d) on %s",
+	PlayerDebuffs		= "Closest to Glimpse"
 })
 
 -------------

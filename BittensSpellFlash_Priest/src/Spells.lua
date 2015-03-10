@@ -4,11 +4,7 @@ local s = SpellFlashAddon
 local c = BittensGlobalTables.GetTable("BittensSpellFlashLibrary")
 
 local CheckInteractDistance = CheckInteractDistance
-local GetTime = GetTime
-local IsItemInRange = IsItemInRange
 local min = math.min
-local max = math.max
-local pairs = pairs
 
 local function mendingIsDown()
    return not s.MyBuff(
@@ -26,6 +22,7 @@ c.AddOptionalSpell("Power Word: Fortitude", nil, {
 })
 
 c.AddOptionalSpell("Power Infusion", nil, {
+   Cooldown = 2 * 60,
    NoGCD = true,
    NoRangeCheck = true,
 })
@@ -599,7 +596,7 @@ c.AddOptionalSpell("Power Word: Shield", "for Shadow", {
 })
 
 c.AddOptionalSpell("Mind Sear", "for AoE", {
-   CheckFirst = function(z)
+   CheckFirst = function()
       return c.EstimatedHarmTargets >= 4
    end,
 })
@@ -608,7 +605,7 @@ c.AssociateTravelTimes(0, "Void Entropy")
 c.AddSpell("Void Entropy", nil, {
    MyDebuff = "Void Entropy",
    Tick = 3,
-   CheckFirst = function(z)
+   CheckFirst = function()
       return a.Orbs >= 3 and not c.HasMyDebuff("Void Entropy")
    end,
 })

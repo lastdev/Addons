@@ -1,6 +1,6 @@
 --[[
 	BeanCounter Addon for World of Warcraft(tm).
-	Version: 5.21c.5521 (SanctimoniousSwamprat)
+	Version: 5.21d.5538 (SanctimoniousSwamprat)
 	Revision: $Id: BeanCounterLocale.lua 3583 2008-10-11 16:50:02Z Norganna $
 	URL: http://auctioneeraddon.com/
 
@@ -30,7 +30,7 @@
 		since that is it's designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
 ]]
-LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/branches/5.21c/BeanCounter/BeanCounterLocale.lua $","$Rev: 3583 $","5.1.DEV.", 'auctioneer', 'libs')
+LibStub("LibRevision"):Set("$URL: http://svn.norganna.org/auctioneer/trunk/BeanCounter/BeanCounterLocale.lua $","$Rev: 3583 $","5.1.DEV.", 'auctioneer', 'libs')
 
 local libName = "BeanCounter"
 local libType = "Util"

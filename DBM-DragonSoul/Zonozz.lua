@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(324, "DBM-DragonSoul", nil, 187)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 108 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 145 $"):sub(12, -3))
 mod:SetCreatureID(55308)
 mod:SetEncounterID(1294)
 --mod:DisableRegenDetection()--Uncomment in next dbm release
@@ -26,8 +26,8 @@ local warnFocusedAnger			= mod:NewStackAnnounce(104543, 3, nil, false)
 local warnPsychicDrain			= mod:NewSpellAnnounce(104322, 4)
 local warnShadows				= mod:NewSpellAnnounce(103434, 3)
 
-local specWarnVoidofUnmaking	= mod:NewSpecialWarningSpell(103571, nil, nil, nil, true)
-local specWarnBlackBlood		= mod:NewSpecialWarningSpell(104378, nil, nil, nil, true)
+local specWarnVoidofUnmaking	= mod:NewSpecialWarningSpell(103571, nil, nil, nil, 2)
+local specWarnBlackBlood		= mod:NewSpecialWarningSpell(104378, nil, nil, nil, 2)
 local specWarnPsychicDrain		= mod:NewSpecialWarningSpell(104322, false)
 local specWarnShadows			= mod:NewSpecialWarningYou(103434)
 local yellShadows				= mod:NewYell(103434, nil, false, L.ShadowYell)--Requested by 10 man guilds, but a spammy mess in 25s, so off by default. With the option to enable when desired.

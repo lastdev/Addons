@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("d504", "DBM-Scenario-MoP")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 2 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 32 $"):sub(12, -3))
 mod:SetZone()
 
 mod:RegisterCombat("scenario", 1030)
@@ -28,12 +28,12 @@ local warnDarkforce			= mod:NewSpellAnnounce(120215, 4)--normal 5, heroic 3.5 ca
 
 --Jin Ironfist
 --local specWarnRelentless	= mod:NewSpecialWarningRun(120817)--Maybe on heroic this actually deadly and you must run? if so, uncomment
-local specWarnEnrage		= mod:NewSpecialWarningDispel(127823, mod:CanRemoveEnrage())
+local specWarnEnrage		= mod:NewSpecialWarningDispel(127823, "RemoveEnrage")
 --Maragor
 local specWarnFear			= mod:NewSpecialWarningInterrupt(142884)
-local specWarnGuardianStrike= mod:NewSpecialWarningRun(119843, mod:IsMelee())
+local specWarnGuardianStrike= mod:NewSpecialWarningRun(119843, "Melee")
 --Abomination of Anger
-local specWarnDarkforce		= mod:NewSpecialWarningRun(120215)
+local specWarnDarkforce		= mod:NewSpecialWarningRun(120215, nil, nil, nil, 4)
 
 --Jin Ironfist
 local timerRelentless		= mod:NewTargetTimer(10, 120817)
@@ -44,8 +44,6 @@ local timerBreathCD			= mod:NewCDTimer(21.5, 120929)--Limited sample size, may b
 local timerCloudofAngerCD	= mod:NewCDTimer(17, 120824)--Limited sample size, may be shorter
 local timerDarkforce		= mod:NewCastTimer(5, 120215)
 local timerDarkforceCD		= mod:NewCDTimer(32, 120215)
-
-local soundDarkforce		= mod:NewSound(120215)
 
 mod:RemoveOption("HealthFrame")
 
@@ -80,7 +78,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args.spellId == 120215 then
 		warnDarkforce:Show()
 		specWarnDarkforce:Show()
-		soundDarkforce:Play()
 		timerDarkforce:Start(self:IsDifficulty("heroic5") and 3.5 or 5)
 		timerDarkforceCD:Start()
 	end

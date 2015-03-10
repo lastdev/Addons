@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Nefarian-Classic", "DBM-BWL", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 502 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 554 $"):sub(12, -3))
 mod:SetCreatureID(11583)
 mod:SetModelID(11380)
 mod:RegisterCombat("yell", L.YellPull)
@@ -23,7 +23,7 @@ local warnFear			= mod:NewCastAnnounce(22686, 2)
 local warnVeilShadow	= mod:NewTargetAnnounce(22687, 3)
 local warnMC			= mod:NewTargetAnnounce(22667, 4)
 
-local specwarnMC		= mod:NewSpecialWarningTarget(22667, mod:IsTank())
+local specwarnMC		= mod:NewSpecialWarningTarget(22667, "Tank")
 
 local timerClassCall	= mod:NewTimer(30, "TimerClassCall")
 local timerShadowFlame	= mod:NewCastTimer(2, 22539)

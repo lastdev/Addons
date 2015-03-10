@@ -1,17 +1,21 @@
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "Flashing", tonumber("20141215204639") or time()) then
+if u.SkipOrUpgrade(c, "Flashing", tonumber("20150225020743") or time()) then
    return
 end
 
 local CalendarGetDate = CalendarGetDate
 local GetItemCount = GetItemCount
 local GetZoneText = GetZoneText
+local GetSpellCharges = GetSpellCharges
+
+local SPELL_POWER_ENERGY = SPELL_POWER_ENERGY
+local SPELL_POWER_RAGE = SPELL_POWER_RAGE
+
 local max = math.max
 local pairs = pairs
 local select = select
-local type = type
 local format = string.format
 
 local s = SpellFlashAddon
@@ -37,6 +41,12 @@ local function spellCastable(spell)
       return false -- TODO: Add lag or cushion?
    end
 
+   -- if the spell uses charges, and we don't have any, it can't be cast.
+   local charges = GetSpellCharges(spell.ID)
+   if charges and charges <= 0 then
+      return false
+   end
+
    local isUsable, notEnoughPower = s.UsableSpell(spell.ID)
    if notEnoughPower then
       if not spell.NoPowerCheck then
@@ -47,9 +57,9 @@ local function spellCastable(spell)
    end
 
    if not (spell.NoRangeCheck or spell.Melee or spell.Range)
-      and s.SpellHasRange(spell.ID)
-      and not s.SpellInRange(spell.ID) then
-
+      and (s.SpellHasRange(spell.ID) or spell.ForceRangeCheck)
+      and not s.SpellInRange(spell.ID)
+   then
       return false
    end
 
@@ -57,14 +67,24 @@ local function spellCastable(spell)
 end
 
 local function getFlashColor(spell, rotation)
-   return spell.FlashColor
-      or (c.AoE and (rotation and rotation.AoEColor or c.AoeColor))
+   if spell.FlashColor then
+      return spell.FlashColor
+   elseif rotation and rotation.FlashColor then
+      return rotation.FlashColor
+   end
 end
 
 local function flashable(spell)
    if spell.RunFirst then
       spell:RunFirst()
    end
+
+   -- after RunFirst, in case that changes the spell ID or something else
+   -- crazy like that.
+   if not c.HasSpell(spell.ID) then
+      return false
+   end
+
    if spell.CheckFirst and not spell:CheckFirst() then
       return false
    end
@@ -78,19 +98,15 @@ local function flashable(spell)
       or spell.Debuff
       or spell.MyBuff
       or spell.Interrupt
-      or spell.Dispel then
+      or spell.Dispel
+   then
+      local early = c.GetBusyTime(spell.NoGCD) + max(0, c.GetCastTime(spell.ID) or 0)
 
-      local early =
-         c.GetBusyTime(spell.NoGCD) + max(0, c.GetCastTime(spell.ID) or 0)
-      if spell.Interrupt
-         and s.GetCastingOrChanneling(nil, nil, true) - early <= 0 then
-
+      if spell.Interrupt and s.GetCastingOrChanneling(nil, nil, true) - early <= 0 then
          return false -- TODO: Add lag or cushion?
       end
 
-      if spell.Dispel
-         and not s.Buff(nil, nil, early, nil, nil, nil, spell.Dispel) then
-
+      if spell.Dispel and not s.Buff(nil, nil, early, nil, nil, nil, spell.Dispel) then
          return false
       end
 
@@ -99,8 +115,8 @@ local function flashable(spell)
       if auraCheck(spell, spell.Buff, pending, s.Buff, early)
          or auraCheck(spell, spell.MyDebuff, pending, s.MyDebuff, early)
          or auraCheck(spell, spell.Debuff, pending, s.Debuff, early)
-         or auraCheck(spell, spell.MyBuff, pending, s.MyBuff, early) then
-
+         or auraCheck(spell, spell.MyBuff, pending, s.MyBuff, early)
+      then
          return false
       end
    end
@@ -137,8 +153,8 @@ local function flashable(spell)
    local flashID = spell.FlashID or spell.ID
    if (flashableFunc and not flashableFunc(flashID))
       or not castableFunc(spell)
-      or (spell.CheckLast and not spell:CheckLast()) then
-
+      or (spell.CheckLast and not spell:CheckLast())
+   then
       return false
    end
 
@@ -235,52 +251,117 @@ local function auraDelay(spell, aura, func, early)
    end
 end
 
-local function getDelay(spell)
+local powerDelayFields = {
+   Chi = SPELL_POWER_CHI,
+   ComboPoints = 4, -- no constant, but it works in 6.0.3
+   Energy = SPELL_POWER_ENERGY,
+   Focus = SPELL_POWER_FOCUS,
+   HolyPower = SPELL_POWER_HOLY_POWER,
+   Rage = SPELL_POWER_RAGE,
+   RunicPower = SPELL_POWER_RUNIC_POWER,
+   ShadowOrbs = SPELL_POWER_SHADOW_ORBS,
+}
+
+local function getPowerDelay(spell)
+   local delay = 0
+
+   for field, powerType in pairs(powerDelayFields) do
+      local needed = spell[field]
+      if needed then
+         if type(needed) == "function" then
+            needed = needed(spell)
+         end
+
+         if needed and needed > 0 then
+            local power = UnitPower("player", powerType)
+            if power < needed then
+               -- if we regen the appropriate power type...
+               if UnitPowerType("player") == powerType then
+                  delay = max(delay, (needed - power) / select(2, GetPowerRegen()))
+               else
+                  --- ...nope, just gotta wait for secondary power to build.
+                  return false, format("need %d %s, have %d", needed, field, power)
+               end
+            end
+         end
+      end
+   end
+
+   return delay
+end
+
+function c.GetDelay(spell)
+   if type(spell) ~= "table" then
+      spell = c.GetSpell(spell)
+   end
+
    if spell.RunFirst then
       spell:RunFirst()
    end
 
    if spell.CheckFirst and not spell:CheckFirst() then
-      return false
+      return false, "CheckFirst failed"
    end
 
-   if spell.Melee then
-      if not s.MeleeDistance() then
-         return nil
-      end
+   if spell.Melee and not s.MeleeDistance() then
+      return false, "Melee spell out of range"
    elseif not spell.NoRangeCheck
-      and s.SpellHasRange(spell.ID)
-      and not s.SpellInRange(spell.ID) then
-
-      return false
+      and (s.SpellHasRange(spell.ID) or spell.ForceRangeCheck)
+      and not s.SpellInRange(spell.ID)
+   then
+      return false, "Ranged spell out of range"
    end
 
    if spell.Type == "form" and c.IsCasting(spell.ID) then
-      return false
+      return false, "form is being cast"
    end
 
    if spell.Range and c.DistanceAtTheMost() > spell.Range then
-      return nil
+      return false, "spell.Range check failed"
    end
 
    -- TODO support items? forms? pet spells?
    if not s.Flashable(spell.FlashID or spell.ID) then
-      return nil
+      return false, "s.Flashable failed"
    end
 
+   if spell.CheckLast and not spell:CheckLast() then
+      return false, "CheckLast failed"
+   end
+
+   local delay, modDelay = 0, nil
    if spell.GetDelay then
-      return spell:GetDelay()
+      delay, modDelay = spell:GetDelay()
+      if not delay then
+         return false, "spell:GetDelay failed"
+      end
+   end
+
+   local powerDelay, excuse = getPowerDelay(spell)
+   if not powerDelay then
+      return false, excuse
    end
 
    local early = (spell.EarlyRefresh or 0) + c.GetCastTime(spell.ID)
+
+   local charges, nextCharge = GetSpellCharges(spell.ID)
+      and c.GetChargeInfo(spell.ID)
+      or nil, 0
+
+   if charges and charges <= 0 then
+      return false, "charges <= 0 failed"
+   end
+
    return max(
+      delay,
+      nextCharge,
+      powerDelay,
       auraDelay(spell, spell.Buff, c.GetBuffDuration, early),
       auraDelay(spell, spell.MyDebuff, c.GetMyDebuffDuration, early),
       auraDelay(spell, spell.Debuff, c.GetDebuffDuration, early),
       auraDelay(spell, spell.MyBuff, c.GetMyBuffDuration, early),
-      spell.Cooldown
-         and c.GetCooldown(spell.ID, spell.NoGCD, spell.Cooldown)
-         or 0)
+      c.GetCooldown(spell.ID, spell.NoGCD, spell.Cooldown)
+   ), modDelay
 end
 
 local function delayFlash(spell, delay, minDelay, rotation)
@@ -326,7 +407,8 @@ function c.DelayPriorityFlash(...)
       if nextDelay > minDelay then
          local name = select(i, ...)
          local spell = c.GetSpell(name)
-         local delay, modDelay = getDelay(spell)
+         local delay, modDelay = c.GetDelay(spell)
+         modDelay = modDelay or spell.MaxWait
 --c.Debug("DelayPriorityFlash", name, delay, modDelay)
          if delay then
             if spell.IsMinDelayDefinition then
@@ -356,6 +438,12 @@ function c.DelayPriorityFlash(...)
                   end
                end
             end
+         elseif spell.Debug then
+            local d = format("%s: %s", s.SpellName(spell.ID), modDelay)
+            if c.DebugLastSpell ~= d then
+               c.Debug("Flash", d)
+               c.DebugLastSpell = d
+            end
          end
       end
    end
@@ -367,10 +455,11 @@ function c.DelayPriorityFlash(...)
    if nextSpell then
       if c.DebugLastFlashedSpell ~= nextSpellName then
          local targets = format("T:%d/%d", c.EstimatedHarmTargets, c.EstimatedHealTargets)
+         local strDelay = format("%.2f", nextDelay)
          if rotation.ExtraDebugInfo then
-            c.Debug("Flash", targets, rotation.ExtraDebugInfo(), nextSpellName, nextDelay)
+            c.Debug("Flash", targets, rotation.ExtraDebugInfo(), nextSpellName, strDelay)
          else
-            c.Debug("Flash", targets, nextSpellName, nextDelay)
+            c.Debug("Flash", targets, nextSpellName, strDelay)
          end
          c.DebugLastFlashedSpell = nextSpellName
       end

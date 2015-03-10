@@ -1,7 +1,7 @@
 local mod = DBM:NewMod(547, "DBM-Party-BC", 10, 253)
 local L = mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 526 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 553 $"):sub(12, -3))
 mod:SetCreatureID(18708)
 mod:SetUsedIcons(8)
 
@@ -16,13 +16,12 @@ mod:RegisterEventsInCombat(
 local warnBoom          = mod:NewCastAnnounce(33923, 4)
 local warnTouch         = mod:NewTargetAnnounce(33711, 3)
 
-local specWarnBoom		= mod:NewSpecialWarningSpell(33923, nil, nil, nil, 2)
-local specWarnTouch		= mod:NewSpecialWarningMove(33711)
+local specWarnBoom		= mod:NewSpecialWarningRun(33923, nil, nil, nil, 4)
+local specWarnTouch		= mod:NewSpecialWarningMoveAway(33711)
 
 local timerBoomCast     = mod:NewCastTimer(5, 33923)
 local timerTouch        = mod:NewTargetTimer(14, 33711)
 
-local soundBoom = mod:NewSound(33923)
 mod:AddBoolOption("SetIconOnTouchTarget", true)
 
 function mod:SPELL_CAST_START(args)
@@ -30,7 +29,6 @@ function mod:SPELL_CAST_START(args)
 		warnBoom:Show()
 		specWarnBoom:Show()
 		timerBoomCast:Start()
-		soundBoom:Play()
 	end
 end
 

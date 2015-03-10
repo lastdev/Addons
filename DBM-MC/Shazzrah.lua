@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Shazzrah", "DBM-MC", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 549 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 554 $"):sub(12, -3))
 mod:SetCreatureID(12264)
 --mod:SetEncounterID(667)
 mod:SetModelID(13032)
@@ -14,12 +14,12 @@ mod:RegisterEvents(
 )
 
 local warnCurse			= mod:NewSpellAnnounce(19713)
-local warnGrounding		= mod:NewTargetAnnounce(19714, 2, nil, mod:IsMagicDispeller())
+local warnGrounding		= mod:NewTargetAnnounce(19714, 2, nil, "MagicDispeller")
 local warnCntrSpell		= mod:NewSpellAnnounce(19715)
 local warnGate			= mod:NewSpellAnnounce(23138)
 
-local specWarnGrounding	= mod:NewSpecialWarningDispel(19714, mod:IsMagicDispeller())
-local specWarnGate		= mod:NewSpecialWarningSpell(23138, mod:IsTank())--aggro wipe, needs fresh taunt
+local specWarnGrounding	= mod:NewSpecialWarningDispel(19714, "MagicDispeller")
+local specWarnGate		= mod:NewSpecialWarningSpell(23138, "Tank")--aggro wipe, needs fresh taunt
 
 local timerCurseCD		= mod:NewCDTimer(20, 19713)
 local timerGrounding	= mod:NewBuffActiveTimer(30, 19714, nil, false)

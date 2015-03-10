@@ -1,0 +1,47 @@
+------------------------------------------------------------------------
+r510 | tiker | 2015-01-27 02:28:26 +0000 (Tue, 27 Jan 2015) | 1 line
+Changed paths:
+   A /tags/6.0.17 (from /trunk:509)
+
+Tagging as 6.0.17
+------------------------------------------------------------------------
+r509 | tiker | 2015-01-27 02:27:37 +0000 (Tue, 27 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/GoGoMount.toc
+   M /trunk/GoGoMountData.lua
+
+tagging for release
+------------------------------------------------------------------------
+r508 | tiker | 2015-01-27 01:48:35 +0000 (Tue, 27 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/GoGoMount.lua
+   M /trunk/GoGoMountData.lua
+
+- Filtering out Nagrand ability mounts that try to summon if added as favorites outside of Nagrand (Draenor)
+------------------------------------------------------------------------
+r507 | tiker | 2015-01-06 01:45:11 +0000 (Tue, 06 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/GoGoMountData.lua
+
+Added support to remove "Make Like A Tree" from "Ancient's Bloom" toy (but requires a second click to mount)
+------------------------------------------------------------------------
+r506 | tiker | 2015-01-06 01:38:37 +0000 (Tue, 06 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/GoGoMount.lua
+
+Allow flying in "Coldridge Valley"
+------------------------------------------------------------------------
+r505 | tiker | 2015-01-06 01:31:22 +0000 (Tue, 06 Jan 2015) | 1 line
+Changed paths:
+   M /trunk/GoGoMountData.lua
+
+Removed flying flags from Creeping Carpet mount
+------------------------------------------------------------------------
+r504 | tiker | 2014-12-10 19:42:13 +0000 (Wed, 10 Dec 2014) | 3 lines
+Changed paths:
+   M /trunk/GoGoMount.lua
+
+Druids should now be able to use travel form's version of "Aquaform" in "indoor" areas.
+Minor improvements over indoor water mounting.
+Aquaform speeds GoGoMount detects for Druids with "Glyph of the Stag" and "Glyph of Aquaform" should now be more accurate.
+------------------------------------------------------------------------

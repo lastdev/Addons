@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1207, "DBM-Party-WoD", 5, 556)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 12113 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 12458 $"):sub(12, -3))
 mod:SetCreatureID(83894, 83892, 83893)--Dulhu 83894, Gola 83892, Telu
 mod:SetEncounterID(1757)
 mod:SetBossHPInfoToHighest()
@@ -10,10 +10,11 @@ mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_CAST_START 168082 168041 168105 168383 175997",
+	"SPELL_CAST_SUCCESS 168375",
 	"SPELL_AURA_APPLIED 168105 168041 168520",
 	"SPELL_AURA_REMOVED 168520",
 	"SPELL_PERIODIC_DAMAGE 167977",
-	"SPELL_PERIODIC_MISSED 167977",
+	"SPELL_ABSORBED 167977",
 	"UNIT_DIED"
 )
 
@@ -21,28 +22,28 @@ mod:SetBossHealthInfo(83894, 83892, 83893)
 
 --Timers are too difficult to do, rapidTides messes up any chance of ever having decent timers.
 local warnRevitalizingWaters		= mod:NewSpellAnnounce(168082, 4)
-local warnBriarskin					= mod:NewTargetAnnounce("OptionVersion2", 168041, 3, nil, mod:IsMagicDispeller())
+local warnBriarskin					= mod:NewTargetAnnounce("OptionVersion2", 168041, 3, nil, "MagicDispeller")
 local warnRapidTides				= mod:NewTargetAnnounce(168105, 4)
 local warnGraspingVine				= mod:NewTargetAnnounce(168375, 2)
 local warnSlash						= mod:NewSpellAnnounce("OptionVersion3", 168383, 3)
 local warnNoxious					= mod:NewSpellAnnounce("OptionVersion2", 175997, 3)
 local warnShapersFortitude			= mod:NewTargetAnnounce(168520, 3)
 
-local specWarnRevitalizingWaters	= mod:NewSpecialWarningInterrupt(168082, not mod:IsHealer())
+local specWarnRevitalizingWaters	= mod:NewSpecialWarningInterrupt(168082, "-Healer")
 local specWarnBriarskin				= mod:NewSpecialWarningInterrupt(168041, false)--if you have more than one interruptor, great. but off by default because we can't assume you can interrupt every bosses abilities. and heal takes priority
 local specWarnBriarskinDispel		= mod:NewSpecialWarningDispel(168041, false)--Not as important as rapid Tides and to assume you have at least two dispellers is big assumption
-local specWarnRapidTidesDispel		= mod:NewSpecialWarningDispel(168105, mod:IsMagicDispeller(), nil, nil, 3)
+local specWarnRapidTidesDispel		= mod:NewSpecialWarningDispel(168105, "MagicDispeller", nil, nil, 3)
 local specWarnSlash					= mod:NewSpecialWarningSpell(168383)
 local specWarnNoxious				= mod:NewSpecialWarningRun("OptionVersion2", 175997)
 local specWarnBramble				= mod:NewSpecialWarningMove(167977)
 
 local timerShapersFortitude			= mod:NewTargetTimer("OptionVersion2", 15, 168520, nil, false)
-local timerNoxiousCD				= mod:NewCDTimer(16, 175997, nil, mod:IsMelee())
+local timerNoxiousCD				= mod:NewCDTimer(16, 175997, nil, "Melee")
 local timerGraspingVineCD			= mod:NewNextTimer(31.5, 168375)
 
-local voiceRevitalizingWaters		= mod:NewVoice(168082, not mod:IsHealer())
-local voiceNoxious					= mod:NewVoice(175997, mod:IsMelee())
-local voiceRapidTides				= mod:NewVoice(168105, mod:IsMagicDispeller())
+local voiceRevitalizingWaters		= mod:NewVoice(168082, "-Healer")
+local voiceNoxious					= mod:NewVoice(175997, "Melee")
+local voiceRapidTides				= mod:NewVoice(168105, "MagicDispeller")
 local voiceBramble					= mod:NewVoice(167977)
 
 function mod:GraspingVineTarget(targetname, uId)
@@ -108,7 +109,7 @@ function mod:SPELL_PERIODIC_DAMAGE(_, _, _, _, destGUID, _, _, _, spellId)
 		voiceBramble:Play("runaway")
 	end
 end
-mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
+mod.SPELL_ABSORBED = mod.SPELL_PERIODIC_DAMAGE
 
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)

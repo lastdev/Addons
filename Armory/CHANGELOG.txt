@@ -4,6 +4,16 @@ The Armory archive can be found on http://www.wow-neighbours.com/.
 
 Thanks for using Armory. You can show your appreciation and support future development by donating!
 
+==== v12.2.0 ====
+# Because Blizzard now uses the same skill name for different slots, slot info was stored incorrectly. Hence selecting a specific slot could show wrong recipes; this has been fixed (needs profession rescan).
+# Added LibCraftInfo to deal with recipe name changes that make it impossible to determine if certain recipes are known or not.
+# Added a hot fix to LibCraftInfo.
+# Added a warning message in case it is not possible to tell with certainty if a recipe is learnable.
+# Expanded the hot fix with more recipes but LibCraftInfo can't handle multiple recipe sources so this is still a problem.
+# Added a fix for comparing glyphs in non-Roman languages.
+# Added a fix for comparing glyphs in German.
+# Included reagent bank when calculating counts in trade skill frame.
+
 ==== v12.1.4 ====
 # Blizzard made an error in engineering data causing Armory to display an empty frame; this has been fixed.
 

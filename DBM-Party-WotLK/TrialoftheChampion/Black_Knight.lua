@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(637, "DBM-Party-WotLK", 13, 284)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 142 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(35451, 10000)		-- work around, DBM API failes to handle a Boss to die, rebirth, die again, rebirth again and die to loot...
 mod:SetEncounterID(340, 341)
 mod:SetUsedIcons(8)
@@ -25,13 +25,12 @@ local warnGhoulExplode		= mod:NewTargetAnnounce(67751, 4)
 local warnMarked			= mod:NewTargetAnnounce(67823, 3)
 
 local specWarnDesecration	= mod:NewSpecialWarningMove(67781)
-local specWarnExplode		= mod:NewSpecialWarningRun(67751, mod:IsMelee())
+local specWarnExplode		= mod:NewSpecialWarningRun("OptionVersion2", 67751, "Melee", nil, nil, 4)
 
 local timerCombatStart		= mod:NewCombatTimer(55.5)
 local timerMarked			= mod:NewTargetTimer(10, 67823)
 local timerExplode			= mod:NewCastTimer(4, 67729)
 
-local soundExplode	 		= mod:NewSound(67751, mod:IsMelee())
 mod:AddBoolOption("SetIconOnMarkedTarget", false)
 mod:AddBoolOption("AchievementCheck", false, "announce")
 
@@ -45,7 +44,6 @@ function mod:SPELL_CAST_START(args)
 	if args.spellId == 67729 and self:AntiSpam(2, 2) then
 		warnExplode:Show()
 		specWarnExplode:Show()
-		soundExplode:Play()
 		timerExplode:Start()
 	end
 end
@@ -72,7 +70,6 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args.spellId == 67751 and self:AntiSpam(2, 2) then	-- Ghoul Explode (BK exlodes Army of the dead. Phase 3)
 		warnGhoulExplode:Show(args.destName)
 		specWarnExplode:Show()
-		soundExplode:Play()
 	end
 end
 

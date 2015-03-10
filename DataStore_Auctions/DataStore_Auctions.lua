@@ -15,7 +15,7 @@ local THIS_ACCOUNT = "Default"
 local AddonDB_Defaults = {
 	global = {
 		Options = {
-			AutoClearExpiredItems = 1,		-- Automatically clear expired auctions and bids
+			AutoClearExpiredItems = true,		-- Automatically clear expired auctions and bids
 		},
 		Characters = {
 			['*'] = {				-- ["Account.Realm.Name"] 
@@ -136,7 +136,7 @@ function addon:OnEnable()
 	addon:RegisterEvent("AUCTION_HOUSE_SHOW")
 	addon:SetupOptions()
 	
-	if GetOption("AutoClearExpiredItems") == 1 then
+	if GetOption("AutoClearExpiredItems") then
 		addon:ScheduleTimer(CheckExpiries, 3)	-- check AH expiries 3 seconds later, to decrease the load at startup
 	end
 end

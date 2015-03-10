@@ -1,7 +1,7 @@
 local g = BittensGlobalTables
 local c = g.GetTable("BittensSpellFlashLibrary")
 local u = g.GetTable("BittensUtilities")
-if u.SkipOrUpgrade(c, "OptionsFrames", tonumber("20141220081111") or time()) then
+if u.SkipOrUpgrade(c, "OptionsFrames", tonumber("20150225020743") or time()) then
    return
 end
 
@@ -23,8 +23,6 @@ local pairs = pairs
 local print = print
 local select = select
 local tonumber = tonumber
-local tostring = tostring
-local type = type
 
 function c.SetOption(name, value)
    if c.A.Options[name] == nil then
@@ -104,7 +102,7 @@ function c.RegisterOptions()
    local parent = addonName .. "_SpellFlashAddonOptionsFrame"
    local frame = CreateFrame(
       "Frame", parent, nil, "SpellFlashAddon_OptionsFrameTemplate2")
-   for name, option in pairs(a.Options) do
+   for _, option in pairs(a.Options) do
       local widgetName = parent .. option.Widget
       local widget = _G[widgetName]
       local label = _G[widgetName .. "Text"]

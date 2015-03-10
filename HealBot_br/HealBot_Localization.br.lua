@@ -1,9 +1,9 @@
-ï»¿-- Brazilian maintained by aldetal.
+ï»¿-- Brazilian translator required
 
 ---------------
 -- Brazilian --
 ---------------
--- http://www.wowwiki.com/Localizing_an_addon
+--
 -------------
 -- À = \195\128
 -- Á = \195\129
@@ -21,6 +21,12 @@
 -- ó = \195\179
 -- õ = \195\181
 -- ú = \195\186
+--
+-- (http://www.wowwiki.com/Localizing_an_addon)
+--
+-- To localize this addon, it can be cloned from GitHub, find it at https://github.com/davidmarshall15/HealBot_br
+--
+--
 
 
 function HealBot_Lang_ptBR()

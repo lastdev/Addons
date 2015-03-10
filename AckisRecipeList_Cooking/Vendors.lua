@@ -128,6 +128,9 @@ function module:InitializeVendors()
 	AddVendor(64084,	L["Jojo"],				Z.SHRINE_OF_SEVEN_STARS,	62.4,	26.6,	"Alliance")
 	AddVendor(64395,	L["Nam Ironpaw"],			Z.VALLEY_OF_THE_FOUR_WINDS,	53.5,	51.3,	"Neutral")
 	AddVendor(64465,	L["Noodles"],				Z.VALLEY_OF_THE_FOUR_WINDS,	52.4,	51.6,	"Neutral")
+	AddVendor(79828,	L["Murg"],				Z.FROSTWALL,			58.6,	26.8,	"Horde")
+	AddVendor(80159,	L["Arsenio Zerep"],			Z.LUNARFALL,			60.9,	76.2,	"Alliance")
+
 
 	self.InitializeVendors = nil
 end

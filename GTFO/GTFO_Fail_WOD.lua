@@ -150,6 +150,11 @@ GTFO.SpellID["176464"] = {
 	sound = 3;
 };
 
+GTFO.SpellID["176463"] = {
+	--desc = "Tail Sweep (Spirit of Kairozdormu)";
+	sound = 3;
+};
+
 GTFO.SpellID["151691"] = {
 	--desc = "Black Skies (Commander Vorka)";
 	sound = 3;
@@ -178,6 +183,47 @@ GTFO.SpellID["160066"] = {
 
 GTFO.SpellID["169108"] = {
 	--desc = "Collateral Damage (Solar Magnifier)";
+	sound = 3;
+};
+
+GTFO.SpellID["165907"] = {
+	--desc = "Earthrending Slam (Stribit)";
+	sound = 3;
+};
+
+GTFO.SpellID["162726"] = {
+	--desc = "Overload (No'losh)";
+	sound = 3;
+};
+
+GTFO.SpellID["176675"] = {
+	--desc = "Drops From Heaven (Ancestral Prelate)";
+	sound = 3;
+};
+
+GTFO.SpellID["176694"] = {
+	--desc = "Divine Smash (Ancestral Warden)";
+	sound = 3;
+};
+
+GTFO.SpellID["161474"] = {
+	--desc = "Blind Recompense (Spirit of Maraad)";
+	sound = 3;
+};
+
+GTFO.SpellID["176868"] = {
+	--desc = "Heaven's Wrath (Spirit of Maraad)";
+	sound = 3;
+};
+
+GTFO.SpellID["176749"] = {
+	--desc = "Explosive Trap (Exarch Naielle)";
+	sound = 3;
+	applicationOnly = true;
+};
+
+GTFO.SpellID["176640"] = {
+	--desc = "Surge of Light (Exarch Akama)";
 	sound = 3;
 };
 
@@ -702,7 +748,6 @@ GTFO.SpellID["162271"] = {
 GTFO.SpellID["172115"] = {
 	--desc = "Earthen Thrust";
 	sound = 3;
-	test = true;
 };
 
 GTFO.SpellID["161634"] = {
@@ -776,6 +821,11 @@ GTFO.SpellID["166183"] = {
 	sound = 3;
 };
 
+GTFO.SpellID["166175"] = {
+	--desc = "Earthdevastating Slam (Ogron Earthshaker)";
+	sound = 3;
+};
+
 GTFO.SpellID["178024"] = {
 	--desc = "Arcane Barrage (Gorian Arcanist)";
 	sound = 3;
@@ -838,4 +888,14 @@ GTFO.SpellID["159200"] = {
 GTFO.SpellID["158609"] = {
 	--desc = "Mark of Chaos (Imperator Mar'gok)";
 	sound = 4;
+};
+
+GTFO.SpellID["158648"] = {
+	--desc = "Orb of Chaos (Imperator Mar'gok)";
+	sound = 3;
+};
+
+GTFO.SpellID["174437"] = {
+	--desc = "Nether Font (Gorian High Sorcerer)";
+	sound = 3;
 };

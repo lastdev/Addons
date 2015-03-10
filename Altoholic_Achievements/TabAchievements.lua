@@ -13,8 +13,8 @@ local ICON_PARTIAL = "Interface\\RaidFrame\\ReadyCheck-Waiting"
 local ICON_COMPLETED = "Interface\\RaidFrame\\ReadyCheck-Ready" 
 local CHARS_PER_FRAME = 11
 
-local parent = "AltoholicTabAchievements"
-local classMenu = parent .. "ClassIconMenu"	-- name of mouse over menu frames (add a number at the end to get it)
+local parentName = "AltoholicTabAchievements"
+local parent
 
 local view
 local highlightIndex
@@ -96,17 +96,15 @@ function ns:UpdateClassIcons()
 		end
 	end
 	
-	local itemName, itemButton, itemTexture
+	local itemName, itemButton
 	local class, _
 	
+	local frame = parent.ClassIcons
+	
 	for i = 1, CHARS_PER_FRAME do
-		itemName = parent .. "_ClassIcon" .. i
-		itemButton = _G[itemName]
+		itemButton = frame["Icon"..i]
 		
 		key = addon:GetOption(format("Tabs.Achievements.%s.%s.Column%d", currentAccount, currentRealm, i))
-		itemTexture = _G[itemName .. "IconTexture"]
-		addon:CreateButtonBorder(itemButton)
-		
 		if key then
 			_, class = DataStore:GetCharacterClass(key)
 		end
@@ -114,27 +112,27 @@ function ns:UpdateClassIcons()
 		if key and class then
 			local tc = CLASS_ICON_TCOORDS[class]
 		
-			itemTexture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes");
-			itemTexture:SetTexCoord(tc[1], tc[2], tc[3], tc[4]);
+			itemButton.Icon:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes");
+			itemButton.Icon:SetTexCoord(tc[1], tc[2], tc[3], tc[4]);
 	
 			if DataStore:GetCharacterFaction(key) == "Alliance" then
-				itemButton.border:SetVertexColor(0.1, 0.25, 1, 0.5)
+				itemButton.IconBorder:SetVertexColor(0.1, 0.25, 1, 0.5)
 			else
-				itemButton.border:SetVertexColor(1, 0, 0, 0.5)
+				itemButton.IconBorder:SetVertexColor(1, 0, 0, 0.5)
 			end
 
 		else	-- no key ? display a question mark icon
-			itemTexture:SetTexture(ICON_PARTIAL)
-			itemTexture:SetTexCoord(0, 1, 0, 1)
+			itemButton.Icon:SetTexture(ICON_PARTIAL)
+			itemButton.Icon:SetTexCoord(0, 1, 0, 1)
 			
-			itemButton.border:SetVertexColor(0, 1, 0, 0.5)
+			itemButton.IconBorder:SetVertexColor(0, 1, 0, 0.5)
 		end
 		
-		itemTexture:SetWidth(33)
-		itemTexture:SetHeight(33)
-		itemTexture:SetAllPoints(itemButton)
+		itemButton.Icon:SetWidth(33)
+		itemButton.Icon:SetHeight(33)
+		itemButton.Icon:SetAllPoints(itemButton)
 		
-		itemButton.border:Show()
+		itemButton.IconBorder:Show()
 		itemButton:SetWidth(34)
 		itemButton:SetHeight(34)
 		itemButton:Show()
@@ -146,7 +144,7 @@ function ns:Update()
 		BuildView()
 	end
 
-	local VisibleLines = 15
+	local numRows = 15
 
 	local categoryIndex				-- index of the category in the menu table
 	local categoryCacheIndex		-- index of the category in the cache table
@@ -178,45 +176,48 @@ function ns:Update()
 		buttonWidth = 136
 	end
 	
-	local scrollFrame = AltoholicAchievementsMenuScrollFrame
-	local offset = FauxScrollFrame_GetOffset( scrollFrame );
-	local itemButtom = parent .. "MenuItem"
-	for i=1, VisibleLines do
-		local line = i + offset
+	local scrollFrame = parent.ScrollFrame
+	local offset = FauxScrollFrame_GetOffset( scrollFrame )
+	local menuButton
+	
+	for rowIndex = 1, numRows do
+		menuButton = parent["MenuItem"..rowIndex]
+		
+		local line = rowIndex + offset
 		
 		if line > #MenuCache then
-			_G[itemButtom..i]:Hide()
+			menuButton:Hide()
 		else
 			local p = MenuCache[line]
 			
-			_G[itemButtom..i]:SetWidth(buttonWidth)
-			_G[itemButtom..i.."NormalText"]:SetWidth(buttonWidth - 21)
+			menuButton:SetWidth(buttonWidth)
+			menuButton.Text:SetWidth(buttonWidth - 21)
 			if p.needsHighlight then
-				_G[itemButtom..i]:LockHighlight()
+				menuButton:LockHighlight()
 			else
-				_G[itemButtom..i]:UnlockHighlight()
+				menuButton:UnlockHighlight()
 			end			
 			
 			if p.linetype == 1 then
 				local catName = GetCategoryInfo(view[p.nameIndex].id)
 				
-				_G[itemButtom..i.."NormalText"]:SetText(WHITE .. catName)
-				_G[itemButtom..i]:SetScript("OnClick", Header_OnClick)
-				_G[itemButtom..i].categoryIndex = p.nameIndex
+				menuButton.Text:SetText(WHITE .. catName)
+				menuButton:SetScript("OnClick", Header_OnClick)
+				menuButton.categoryIndex = p.nameIndex
 			elseif p.linetype == 2 then
 				local catName = GetCategoryInfo(view[p.nameIndex])
 				
-				_G[itemButtom..i.."NormalText"]:SetText("|cFFBBFFBB   " .. catName)
-				_G[itemButtom..i]:SetScript("OnClick", Item_OnClick)
-				_G[itemButtom..i].categoryIndex = p.parentIndex
-				_G[itemButtom..i].subCategoryIndex = p.nameIndex
+				menuButton.Text:SetText("|cFFBBFFBB   " .. catName)
+				menuButton:SetScript("OnClick", Item_OnClick)
+				menuButton.categoryIndex = p.parentIndex
+				menuButton.subCategoryIndex = p.nameIndex
 			end
 
-			_G[itemButtom..i]:Show()
+			menuButton:Show()
 		end
 	end
 	
-	FauxScrollFrame_Update( scrollFrame, #MenuCache, VisibleLines, 20);
+	FauxScrollFrame_Update( scrollFrame, #MenuCache, numRows, 20);
 end
 
 function ns:GetRealm()
@@ -232,14 +233,14 @@ local function OnRealmChange(self, account, realm)
 	currentAccount = account
 	currentRealm = realm
 
-	UIDropDownMenu_ClearAll(_G[ parent .. "_SelectRealm" ]);
-	UIDropDownMenu_SetSelectedValue(_G[ parent .. "_SelectRealm" ], account .."|".. realm)
-	UIDropDownMenu_SetText(_G[ parent .. "_SelectRealm" ], GREEN .. account .. ": " .. WHITE.. realm)
+	UIDropDownMenu_ClearAll(parent.SelectRealm);
+	UIDropDownMenu_SetSelectedValue(parent.SelectRealm, account .."|".. realm)
+	UIDropDownMenu_SetText(parent.SelectRealm, GREEN .. account .. ": " .. WHITE.. realm)
 	
 	if oldRealm and oldAccount then	-- clear the "select char" drop down if realm or account has changed
 		if (oldRealm ~= realm) or (oldAccount ~= account) then
 			ns:UpdateClassIcons()
-			_G[ parent .. "Status" ]:SetText("")
+			parent.Status:SetText("")
 			addon.Achievements:Update()
 		end
 	end
@@ -328,12 +329,13 @@ end
 -- ** Menu Icons **
 function ns:Icon_OnEnter(frame)
 	local currentMenuID = frame:GetID()
+	parent.ContextualMenu.menuID = currentMenuID
 	
 	-- hide all
 	CloseDropDownMenus()
 
 	-- show current
-	ToggleDropDownMenu(nil, nil, _G[ classMenu .. currentMenuID ], frame:GetName(), 0, -5);	
+	ToggleDropDownMenu(1, nil, parent.ContextualMenu, "AltoholicTabAchievements_ClassIcons", (currentMenuID-1)*39, 0)
 	
 	local key = addon:GetOption(format("Tabs.Achievements.%s.%s.Column%d", currentAccount, currentRealm, currentMenuID))
 	if key then
@@ -342,7 +344,7 @@ function ns:Icon_OnEnter(frame)
 end
 
 local function ClassIcon_Initialize(self, level)
-	local id = self:GetID()
+	local id = self.menuID
 	
 	DDM_AddTitle(L["Characters"])
 	local nameList = {}		-- we want to list characters alphabetically
@@ -379,9 +381,8 @@ local function ClassIcon_Initialize(self, level)
 end
 
 function ns:OnLoad()
-	for i = 1, CHARS_PER_FRAME do
-		addon:DDM_Initialize(_G[classMenu..i], ClassIcon_Initialize)
-	end
+	parent = _G[parentName]
+	addon:DDM_Initialize(parent.ContextualMenu, ClassIcon_Initialize)
 end
 
 local function OnAchievementEarned(event, id)

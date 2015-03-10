@@ -455,32 +455,28 @@ end);
 -- This is a rather slow operation, so it's only done once, and the result is subsequently saved
 function WeakAuras.CreateIconCache(callback)
   local func = function()
-  local id = 0;
-  local misses = 0;
-  
-  while (misses < 200) do
-    id = id + 1;
-    local name, _, icon = GetSpellInfo(id);
-    if(name) then
-    if not(iconCache[name]) then
-      iconCache[name] = icon;
+    local id = 0;
+    local misses = 0;
+    
+    while (misses < 200) do
+      id = id + 1;
+      local name, _, icon = GetSpellInfo(id);
+      if(name) then
+        iconCache[name] = icon;
+        if not(idCache[name]) then
+          idCache[name] = {}
+        end
+        idCache[name][id] = true;
+        misses = 0;
+      else
+        misses = misses + 1;
+      end
+      coroutine.yield();
+    end  
+    if(callback) then
+      callback();
     end
-    if not(idCache[name]) then
-      idCache[name] = {}
-    end
-    idCache[name][id] = true;
-    misses = 0;
-    else
-    misses = misses + 1;
-    end
-    coroutine.yield();
   end
-  
-  if(callback) then
-    callback();
-  end
-  end
-
   local co = coroutine.create(func);
   dynFrame:AddAction(callback, co);
 end
@@ -931,7 +927,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
             type = "toggle",
             name = L["Specific Unit"],
             order = order,
-            hidden = function() return (not trigger["use_specific_"..realname]) or (type(hidden) == "function" and hidden() or hidden) end,
+            hidden = function() return (not trigger["use_specific_"..realname]) or (type(hidden) == "function" and hidden(trigger)) or (type(hidden) ~= "function" and hidden) end,
             get = function() return true end,
             set = function(info, v)
               trigger["use_specific_"..realname] = nil;
@@ -944,7 +940,7 @@ function WeakAuras.ConstructOptions(prototype, data, startorder, subPrefix, subS
             name = L["Specific Unit"],
             desc = L["Can be a name or a UID (e.g., party1). Only works on friendly players in your group."],
             order = order,
-            hidden = function() return (not trigger["use_specific_"..realname]) or (type(hidden) == "function" and hidden() or hidden) end,
+            hidden = function() return (not trigger["use_specific_"..realname]) or (type(hidden) == "function" and hidden(trigger)) or (type(hidden) ~= "function" and hidden) end,
             get = function() return trigger[realname] end,
             set = function(info, v)
               trigger[realname] = v;
@@ -2098,6 +2094,58 @@ function WeakAuras.AddOption(id, data)
           WeakAuras.Add(data);
         end,
         args = {
+          init_header = {
+            type = "header",
+            name = L["On Init"],
+            order = 0.005
+          },
+          init_do_custom = {
+            type = "toggle",
+            name = L["Custom"],
+            order = 0.011,
+            width = "double"
+          },
+          init_custom = {
+            type = "input",
+            width = "normal",
+            name = L["Custom Code"],
+            order = 0.013,
+            multiline = true,
+            hidden = function() return not data.actions.init.do_custom end
+          },
+          init_expand = {
+            type = "execute",
+            order = 0.014,
+            name = L["Expand Text Editor"],
+            func = function()
+              WeakAuras.TextEditor(data, {"actions", "init", "custom"}, true)
+            end,
+            hidden = function() return not data.actions.init.do_custom end
+          },
+          init_customError = {
+            type = "description",
+            name = function()
+              if not(data.actions.init.custom) then
+                return "";
+              end
+              local _, errorString = loadstring("return function() "..data.actions.init.custom.." end");
+              return errorString and "|cFFFF0000"..errorString or "";
+            end,
+            width = "double",
+            order = 0.015,
+            hidden = function()
+              if not(data.actions.init.do_custom and data.actions.init.custom) then
+                return true;
+              else
+                local loadedFunction, errorString = loadstring("return function() "..data.actions.init.custom.." end");
+                if(errorString and not loadedFunction) then
+                  return false;
+                else
+                  return true;
+                end
+              end
+            end
+          },
           start_header = {
             type = "header",
             name = L["On Show"],
@@ -6030,8 +6078,10 @@ function WeakAuras.CreateFrame()
     db.frame = db.frame or {};
     db.frame.xOffset = xOffset;
     db.frame.yOffset = yOffset;
-    db.frame.width = frame:GetWidth();
-    db.frame.height = frame:GetHeight();
+	if(not frame.minimized) then
+		db.frame.width = frame:GetWidth();
+		db.frame.height = frame:GetHeight();
+	end
     frame:ClearAllPoints();
     frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", xOffset, yOffset);
   end
@@ -6121,7 +6171,7 @@ function WeakAuras.CreateFrame()
     if(frame.minimized) then
       frame.minimized = nil;
       if db.frame then
-        if db.frame.height <= 40 then
+        if db.frame.height < 240 then
           db.frame.height = 500
         end
       end
@@ -6854,6 +6904,7 @@ function WeakAuras.CreateFrame()
       importexportbox.editBox:SetScript("OnMouseUp", nil);
       importexportbox.editBox:SetScript("OnTextChanged", function()
         local str = importexportbox:GetText();
+        str = str:match( "^%s*(.-)%s*$" )
         importexportbox:SetLabel(""..#str);
         if(#str > 20) then
           WeakAuras.ImportString(str);
@@ -8000,7 +8051,12 @@ tXmdmY4fDE5]];
       
       if(displayButtons[centerId]) then
         local _, _, _, _, yOffset = displayButtons[centerId].frame:GetPoint(1);
-        self.buttonsScroll:SetScrollPos(yOffset, yOffset - 32);
+        if not yOffset then
+          yOffset = displayButtons[centerId].frame.yOffset
+        end
+        if yOffset then
+          self.buttonsScroll:SetScrollPos(yOffset, yOffset - 32);
+        end
       end
     end
   end

@@ -700,10 +700,12 @@ function HealBot_Lang_enALL()
 			
 			--[[=GetMapNameByID(944) or "--Highmaul" 
             Trash]]
-            [HEALBOT_DEBUFF_TAINED_CLAWS]            = 11, -- Trash
+            [HEALBOT_DEBUFF_MOLTEN_BOMB]             = 8, -- Trash  
+			[HEALBOT_DEBUFF_TAINED_CLAWS]            = 11, -- Trash
             [HEALBOT_DEBUFF_DEVOUR]                  = 3, -- Trash
 			[HEALBOT_DEBUFF_RADIATING_POISON]        = 10, -- Trash 
-            [HEALBOT_DEBUFF_STAGGERING_BLOW]         = 11, -- Trash
+            [HEALBOT_DEBUFF_INFESTED_WATERS]         = 6, -- Trash
+			[HEALBOT_DEBUFF_STAGGERING_BLOW]         = 11, -- Trash
 			[HEALBOT_DEBUFF_RUNE_OF_DESTRUCTION]     = 10, -- Trash  
             [HEALBOT_DEBUFF_RUNE_OF_DISINTEGRATION]  = 10, -- Trash
             [HEALBOT_DEBUFF_RENDING_SLASH]           = 10, -- Trash
@@ -711,6 +713,8 @@ function HealBot_Lang_enALL()
 			[HEALBOT_DEBUFF_FROZEN_CORE]             = 4, -- Trash
 			[HEALBOT_DEBUFF_WILD_FLAMES]             = 13, -- Trash
 			[HEALBOT_DEBUFF_RENDING_THROW]           = 10, -- Trash
+			[HEALBOT_DEBUFF_ARCANE_RESIDUE]          = 2, -- Trash  
+			[HEALBOT_DEBUFF_PULVERIZED]              = 9, -- Trash
 			--The Butcher
             [HEALBOT_DEBUFF_GUSHING_WOUNDS]          = 5, -- The Butcher  
             [HEALBOT_DEBUFF_THE_TENDERIZER]          = 11, -- The Butcher  
@@ -726,6 +730,7 @@ function HealBot_Lang_enALL()
             [HEALBOT_DEBUFF_IRON_BOMB]               = 6, -- Kargath Bladefist
             [HEALBOT_DEBUFF_GRAPPLE]                 = 5, -- Kargath Bladefist
             [HEALBOT_DEBUFF_FLAME_JET]               = 4, -- Kargath Bladefist
+			[HEALBOT_DEBUFF_ON_THE_HUNT]             = 9, -- Kargath Bladefist
             --Twin Ogron 
             [HEALBOT_DEBUFF_ENFEEBLING_ROAR]         = 4, -- Twin Ogron
             [HEALBOT_DEBUFF_BLAZE]                   = 2, -- Twin Ogron
@@ -751,7 +756,7 @@ function HealBot_Lang_enALL()
             [HEALBOT_DEBUFF_ROT]                     = 10, -- Brackenspore
             [HEALBOT_DEBUFF_NECROTIC_BREATH]         = 8, -- Brackenspore
             [HEALBOT_DEBUFF_FLESH_EATER]             = 4, -- Brackenspore
-			--[HEALBOT_DEBUFF_MIND_FUNGUS]             = 8, -- Brackenspore
+			[HEALBOT_DEBUFF_MIND_FUNGUS]             = 8, -- Brackenspore
             --Imperator Mar'gok 
             [HEALBOT_DEBUFF_BRANDED]                 = 2, -- Imperator Mar'gok 
             [HEALBOT_DEBUFF_DESTRUCTIVE_RESONANCE]   = 3, -- Imperator Mar'gok  
@@ -860,7 +865,8 @@ function HealBot_Lang_enALL()
     HEALBOT_ABOUT_FAQ_QUESTION             = "Question"
     HEALBOT_ABOUT_FAQ_ANSWER               = "Answer"
 
-    HEALBOT_ABOUT_FAQ_QUESTIONS = {   [1]   = "Buffs - All the bars are White, what happened",
+    HEALBOT_ABOUT_FAQ_QUESTIONS = {   [1]   = "Adult - Single and wondering what to do between raids",
+                                      --[1]   = "Buffs - All the bars are White, what happened",
 									  [2]   = "Casting - Sometimes the cursor turns blue and I can't do anything",
                                       [3]   = "Macros - Do you have any cooldown examples",
                                       [4]   = "Macros - Do you have any spell casting examples",
@@ -890,9 +896,18 @@ function HealBot_Lang_enALL()
                                               "turn off Always Use Enabled  \n" ..
                                               "and set the spells for disabled bars"
                                               
-    HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "You are monitoring for missing buffs \n\n" .. 
-                                              "This can be turned off on the buffs tab \n" ..
-                                              "Alternatively click on the bar and cast the buff",
+    HEALBOT_ABOUT_FAQ_ANSWERS = {     [1]   = "Join the club. The Free MyOnlineDating club!\n\n" ..
+                                              "www.myonlinedating.club \n\n" ..
+                                              "For Free you can: \n" ..
+                                              " - Register and create a profile \n" ..
+                                              " - Add high quality photos to your profile \n" ..
+                                              " - Unlimited searching of members profiles \n" ..
+                                              " - Unlimited private messaging with other members \n" ..
+                                              " - Forum access and unlimited profile blogs \n\n" ..
+                                              "Naughty or Nice? You can decide that too",                                          
+                                      --[1]   = "You are monitoring for missing buffs \n\n" .. 
+                                      --        "This can be turned off on the buffs tab \n" ..
+                                      --        "Alternatively click on the bar and cast the buff",
                                       [2]   = "This is blizzard functionality, not Healbot \n\n" .. 
                                               "Using the standard blizzard frames, \n" ..
                                               "try casting a spell thats on Cooldown \n" ..

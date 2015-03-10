@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("GeneralVezax", "DBM-Ulduar")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 163 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 182 $"):sub(12, -3))
 mod:SetCreatureID(33271)
 mod:SetEncounterID(1134)
 mod:SetModelID(28548)
@@ -23,7 +23,7 @@ local warnLeechLife				= mod:NewTargetAnnounce(63276, 3)
 
 local specWarnShadowCrash		= mod:NewSpecialWarning("SpecialWarningShadowCrash")
 local specWarnShadowCrashNear	= mod:NewSpecialWarning("SpecialWarningShadowCrashNear")
-local specWarnSurgeDarkness		= mod:NewSpecialWarningSpell(62662, mod:IsTank() or mod:IsHealer())
+local specWarnSurgeDarkness		= mod:NewSpecialWarningSpell(62662, "Tank|Healer")
 local specWarnLifeLeechYou		= mod:NewSpecialWarningYou(63276)
 local specWarnLifeLeechNear 	= mod:NewSpecialWarning("SpecialWarningLLNear", false)
 

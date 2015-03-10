@@ -12,13 +12,16 @@ local addon = _G[addonName]
 
 local THIS_ACCOUNT = "Default"
 
+local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+
 local AddonDB_Defaults = {
 	global = {
 		Reference = {
 			FollowerNamesToID = {},			-- ex: ["Nat Pagle"] = 202 ... necessary because the id's do not remain constant in game, and the full list varies per character.
 		},
 		Options = {
-			ReportUncollected = 1,			-- Report uncollected resources
+			ReportUncollected = true,			-- Report uncollected resources
+			ReportLevel = 400,
 		},
 		Characters = {
 			['*'] = {				-- ["Account.Realm.Name"] 
@@ -70,7 +73,7 @@ local BUILDING_TRADING_POST = "TradingPost"
 
 local BUILDING_TOWN_HALL = "TownHall"
 
-local BuildingTypes = {
+local buildingTypes = {
 	[76] = BUILDING_ALCHEMY,
 	[119] = BUILDING_ALCHEMY,
 	[120] = BUILDING_ALCHEMY,
@@ -167,12 +170,13 @@ end
 local function CheckUncollectedResources()
 	local account, realm, name
 	local num
+	local reportLevel = GetOption("ReportLevel")
 	
 	for key, character in pairs(addon.db.global.Characters) do
 		account, realm, name = strsplit(".", key)
 		num = GetNumUncollectedResources(character.lastResourceCollection)
-		if name and num >= 400 then
-			addon:Print(format("%s has %s uncollected resources", name, num))
+		if name and num >= reportLevel then
+			addon:Print(format(L["UNCOLLECTED_RESOURCES_ALERT"], name, num))
 		end
 	end
 end
@@ -207,7 +211,7 @@ local function ScanBuildings()
 			info.id = id
 			info.rank = rank
 
-			buildings[BuildingTypes[id]] = info
+			buildings[buildingTypes[id]] = info
 		end
 	end
 end
@@ -225,6 +229,7 @@ local function ScanFollowers()
 	local name		-- follower name
 	local link		-- follower link
 	local id			-- follower id
+	local rarity, level, iLevel, ability1, ability2, ability3, ability4
 	
 	local numFollowers = 0	-- number of followers
 	local num100 = 0	-- number of followers at level 100
@@ -233,6 +238,44 @@ local function ScanFollowers()
 	local num645 = 0	-- number of followers at iLevel 645+
 	local numRare = 0	-- number of rare followers (blue)
 	local numEpic = 0	-- number of epic followers (violet)
+	
+	local abilities = {}
+	local traits = {}
+	local counters = {}
+	
+	local function IncTableIndex(tableName, index)
+		if not tableName[index] then
+			tableName[index] = 0
+		end
+		tableName[index] = tableName[index] + 1		
+	end
+	
+	local function IncAbility(id)
+		if id and id ~= 0 then
+			IncTableIndex(abilities, id)
+		end
+	end
+	
+	local function IncTrait(id)
+		if id and id ~= 0 then
+			IncTableIndex(traits, id)
+		end
+	end
+	
+	local function IncCounter(id)
+		if id and id ~= 0 then
+			IncTableIndex(counters, C_Garrison.GetFollowerAbilityCounterMechanicInfo(id))
+		end
+		
+		-- id = tonumber(id)
+		-- if not id or id == 0 then return end	-- exit if id is invalid
+
+		-- local counterID = C_Garrison.GetFollowerAbilityCounterMechanicInfo(id)
+		-- if not counters[counterID] then
+			-- counters[counterID] = 0
+		-- end
+		-- counters[counterID] = counters[counterID] + 1
+	end
 	
 	for k, follower in pairs(followersList) do
 		name = follower.name
@@ -243,7 +286,7 @@ local function ScanFollowers()
 			-- therefore, it has to be extracted from the link
 			-- also, the link is only valid for collected followers, otherwise it is nil
 			link = C_Garrison.GetFollowerLink(follower.followerID)
-			id = link:match("garrfollower:(%d+)")
+			id, rarity, level, iLevel, ability1, ability2, ability3, ability4, trait1, trait2, trait3, trait4 = link:match("garrfollower:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%d+)")
 			id = tonumber(id)
 			
 			local info = {}
@@ -251,25 +294,44 @@ local function ScanFollowers()
 			info.xp = follower.xp
 			info.levelXP = follower.levelXP
 			info.link = link
-			followers[name] = info
+			-- followers[name] = info
+			followers[id] = info
 			
 			-- Stats
 			numFollowers = numFollowers + 1
+			rarity = tonumber(rarity)
+			level = tonumber(level)
+			iLevel = tonumber(iLevel)
 			
-			if link then
-				local _, rarity, level, iLevel = link:match("garrfollower:(%d+):(%d+):(%d+):(%d+)")
-				
-				rarity = tonumber(rarity)
-				level = tonumber(level)
-				iLevel = tonumber(iLevel)
-				
-				if level == 100 then num100 = num100 + 1 end
-				if iLevel >= 615 then num615 = num615 + 1	end
-				if iLevel >= 630 then num630 = num630 + 1	end
-				if iLevel >= 645 then num645 = num645 + 1	end
-				if rarity == 3 then numRare = numRare + 1 end
-				if rarity == 4 then numEpic = numEpic + 1	end
-			end
+			if level == 100 then num100 = num100 + 1 end
+			if iLevel >= 615 then num615 = num615 + 1	end
+			if iLevel >= 630 then num630 = num630 + 1	end
+			if iLevel >= 645 then num645 = num645 + 1	end
+			if rarity == 3 then numRare = numRare + 1 end
+			if rarity == 4 then numEpic = numEpic + 1	end
+			
+			-- abilities & counters
+			ability1 = tonumber(ability1)
+			ability2 = tonumber(ability2)
+			ability3 = tonumber(ability3)
+			ability4 = tonumber(ability4)
+			trait1 = tonumber(trait1)
+			trait2 = tonumber(trait2)
+			trait3 = tonumber(trait3)
+			trait4 = tonumber(trait4)
+			
+			IncAbility(ability1)
+			IncAbility(ability2)
+			IncAbility(ability3)
+			IncAbility(ability4)
+			IncTrait(trait1)
+			IncTrait(trait2)
+			IncTrait(trait3)
+			IncTrait(trait4)
+			IncCounter(ability1)
+			IncCounter(ability2)
+			IncCounter(ability3)
+			IncCounter(ability4)
 		end
 		
 		ref.FollowerNamesToID[name] = id	-- ["Nat Pagle"] = 202
@@ -284,6 +346,9 @@ local function ScanFollowers()
 	c.numFollowersAtiLevel645 = num645
 	c.numRareFollowers = numRare
 	c.numEpicFollowers = numEpic
+	c.Abilities = abilities
+	c.Traits = traits
+	c.AbilityCounters = counters
 	
 	addon.ThisCharacter.lastUpdate = time()
 end
@@ -317,11 +382,14 @@ local function OnGarrisonBuildingRemoved()
 	ScanBuildings()
 end
 
-local function OnShowLootToast(event, lootType, link, quantity)
+local function OnShowLootToast(event, lootType, link, quantity, specID, sex, isPersonal, lootSource)
 	if lootType ~= "currency" then return end
 	
+	-- From AlertFrames.lua
+	-- local LOOT_SOURCE_GARRISON_CACHE = 10
+	
 	-- make sure it is garrison resources
-	if link and link:match("currency:824") then	
+	if link and link:match("currency:824") and lootSource == 10 then	
 		ScanResourceCollectionTime()
 	end
 end
@@ -338,20 +406,35 @@ local function _GetFollowers(character)
 	return character.Followers
 end
 
-local function _GetFollowerInfo(character, name)
-	local follower = character.Followers[name]
+local function _GetFollowerInfo(character, id)
+	local follower = character.Followers[id]
 	if not follower then return end
 	
 	local link = follower.link
 	if not link then return end
-	
-	local id, rarity, level, iLevel = link:match("garrfollower:(%d+):(%d+):(%d+):(%d+)")
 
-	return id, tonumber(rarity), tonumber(level), tonumber(iLevel), follower.xp, follower.levelXP
+	-- ability id's are positions 5 to 8 in the follower link
+	-- trait id's are positions 9 to 12 in the follower link
+	local _, rarity, level, iLevel, ab1, ab2, ab3, ab4, tr1, tr2, tr3, tr4 = link:match("garrfollower:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%d+)")
+
+	return tonumber(rarity), tonumber(level), tonumber(iLevel), 
+		tonumber(ab1), tonumber(ab2), tonumber(ab3), tonumber(ab4),
+		tonumber(tr1), tonumber(tr2), tonumber(tr3), tonumber(tr4),
+		follower.xp, follower.levelXP
 end
 
-local function _GetFollowerLink(character, name)
-	local follower = character.Followers[name]
+local function _GetFollowerSpellCounters(character, counterType, id)
+	-- "counters" as in "to count", not as in "to counter"
+	-- counterType = "Abilities", "Traits", "AbilityCounters"
+	
+	if type(character[counterType]) == "table" then 
+		return character[counterType][id] or 0
+	end
+	return 0
+end
+
+local function _GetFollowerLink(character, id)
+	local follower = character.Followers[id]
 	if not follower then return end
 	
 	return follower.link
@@ -403,6 +486,7 @@ end
 local PublicMethods = {
 	GetFollowers = _GetFollowers,
 	GetFollowerInfo = _GetFollowerInfo,
+	GetFollowerSpellCounters = _GetFollowerSpellCounters,
 	GetFollowerLink = _GetFollowerLink,
 	GetFollowerID = _GetFollowerID,
 	GetNumFollowers = _GetNumFollowers,
@@ -422,6 +506,7 @@ function addon:OnInitialize()
 	DataStore:RegisterModule(addonName, addon, PublicMethods)
 	DataStore:SetCharacterBasedMethod("GetFollowers")
 	DataStore:SetCharacterBasedMethod("GetFollowerInfo")
+	DataStore:SetCharacterBasedMethod("GetFollowerSpellCounters")
 	DataStore:SetCharacterBasedMethod("GetFollowerLink")
 	DataStore:SetCharacterBasedMethod("GetNumFollowers")
 	DataStore:SetCharacterBasedMethod("GetNumFollowersAtLevel100")
@@ -448,7 +533,7 @@ function addon:OnEnable()
 	addon:RegisterEvent("SHOW_LOOT_TOAST", OnShowLootToast)
 	
 	addon:SetupOptions()
-	if GetOption("ReportUncollected") == 1 then
+	if GetOption("ReportUncollected") then
 		CheckUncollectedResources()
 	end
 end
@@ -461,5 +546,6 @@ function addon:OnDisable()
 	addon:UnregisterEvent("GARRISON_BUILDING_ACTIVATED")
 	addon:UnregisterEvent("GARRISON_BUILDING_UPDATE")
 	addon:UnregisterEvent("GARRISON_BUILDING_REMOVED")
+	addon:UnregisterEvent("SHOW_LOOT_TOAST")
 	addon:UnregisterEvent("ADDON_LOADED")
 end

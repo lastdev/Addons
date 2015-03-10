@@ -7467,11 +7467,29 @@ function module:InitializeRecipes()
 
 	-- Secrets of Draenor Jewelcrafting -- 176087
 	recipe = AddRecipe(176087, V.WOD, Q.COMMON)
-	recipe:SetSkillLevels(1, 600, 600, 650, 700)
+	recipe:SetSkillLevels(1, 1, 600, 650, 700)
 	recipe:SetCraftedItem(118723, "BIND_ON_PICKUP")
 	recipe:SetItemFilterType("JEWELCRAFTING_CREATED_ITEM")
 	recipe:AddFilters(F.ALLIANCE, F.HORDE, F.MISC1)
 	recipe:AddCustom("DRAENOR_DEFAULT")
+
+	-- Powerful Taladite Amplifier -- 181419
+	recipe = AddRecipe(181419, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(1, 1, 700, 702, 705)
+	recipe:SetCraftedItem(118723, "BIND_ON_EQUIP")
+	recipe:SetRecipeItem(122551, "BIND_ON_PICKUP")
+	recipe:SetItemFilterType("JEWELCRAFTING_ITEM_ENHANCEMENT")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddVendor(90894, 91030)
+
+	-- Primal Gemcutting -- 182127
+	recipe = AddRecipe(182127, V.WOD, Q.COMMON)
+	recipe:SetSkillLevels(1, 1, 700, 700, 700)
+	recipe:SetCraftedItem(115524, "BIND_ON_PICKUP")
+	recipe:SetRecipeItem(122714, "BIND_ON_PICKUP")
+	recipe:SetItemFilterType("JEWELCRAFTING_CREATED_ITEM")
+	recipe:AddFilters(F.ALLIANCE, F.HORDE)
+	recipe:AddVendor(90894, 91030)
 
 	self.InitializeRecipes = nil
 end

@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(575, "DBM-Party-BC", 6, 261)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 526 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 554 $"):sub(12, -3))
 mod:SetCreatureID(17798)
 
 mod:RegisterCombat("combat")
@@ -15,7 +15,7 @@ local WarnChannel   = mod:NewSpellAnnounce("ej6001", 2, 31543)
 local WarnReflect   = mod:NewSpellAnnounce(31534, 4)
 
 local specWarnChannel	= mod:NewSpecialWarningSwitch("ej6001", false)
-local specWarnReflect	= mod:NewSpecialWarningSpell(31534, not mod:IsMelee())
+local specWarnReflect	= mod:NewSpecialWarningSpell(31534, "-Melee")
 
 local timerReflect  = mod:NewBuffActiveTimer(8, 31534)
 

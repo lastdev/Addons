@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("Twins", "DBM-Sunwell")
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 547 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 553 $"):sub(12, -3))
 mod:SetCreatureID(25165, 25166)
 mod:SetModelID(23334)
 mod:SetZone()
@@ -43,8 +43,6 @@ local timerConflag			= mod:NewCastTimer(3.5, 45333)
 local timerNova				= mod:NewCastTimer(3.5, 45329)
 
 local berserkTimer			= mod:NewBerserkTimer(360)
-
-local soundConflag			= mod:NewSound(45333)
 
 mod:AddBoolOption("RangeFrame", true)
 mod:AddBoolOption("ConflagIcon", false)
@@ -119,7 +117,6 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, _, _, _, target)
 		timerConflagCD:Start()
 		if target == UnitName("player") then
 			specWarnConflag:Show()
-			soundConflag:Play()
 		end
 		if self.Options.ConflagIcon then
 			self:SetIcon(target, 8, 5)

@@ -1,13 +1,13 @@
-## Interface: 60000
+## Interface: 60100
 ## Title: Ackis Recipe List: Engineering
 ## Notes: Engineering data for Ackis Recipe List.
 ## Author: Ackis, Pompy, Ressy, Torhal
-## Version: 6.0.3.2
-## X-Revision: 7cd584d
-## X-Date: 2014-07-23T01:50:18Z
+## Version: 6.1.0.2
+## X-Revision: faf89ea
+## X-Date: 2015-02-24T14:43:17Z
 ## Dependencies: AckisRecipeList
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: 6.0.3.2
+## X-Curse-Packaged-Version: 6.1.0.2
 ## X-Curse-Project-Name: Ackis Recipe List: Engineering
 ## X-Curse-Project-ID: arl-engineering
 ## X-Curse-Repository-ID: wow/arl-engineering/mainline
